@@ -204,8 +204,11 @@ StatusCode CherenkovAngleMonitor::execute()
                        -ckRange[rad],ckRange[rad], nBins1D() )->fill(delTheta);
           richHisto2D( hid(rad,"ckDiffTrueVPhi"), "Rec-Exp CK theta all V CK Phi : true",
                        0, 2*M_PI, nBins2D(), -ckRange[rad], ckRange[rad], nBins2D() )->fill(phiRec, delTheta);
+
           richProfile1D( hid(rad,"ckDiffTrueVP"), "Rec-Exp CK theta Versus Ptot all : true",
-                         minP, maxP, 50 )->fill(pTot, delTheta);
+                         minP, maxP, 50 )->fill(pTot,delTheta);
+          richProfile1D( hid(rad,"ckDiffTrueVCKtheta"), "Rec-Exp CK theta Versus CK theta all : true",
+                         minCkTheta[rad], maxCkTheta[rad], 50 )->fill(thetaRec,delTheta);
 
           // theta versus phi plots
           richHisto2D( hid(rad,"thetaVphiTrue"), "CK theta V phi : true CK photons",
