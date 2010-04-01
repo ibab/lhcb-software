@@ -6,7 +6,9 @@
 
 ! 2010-04-01 - Chris Jones
  - Make the histogramming methods in RichHistoBase const
- - Make the 'Functional' CK resolution tool the default
+ - Make the 'Functional' CK resolution tool the Offline default. HLT 
+   still using the binned implementation, awaiting testing of the
+   Functional tool.
 
 ! 2010-03-30 - Chris Jones
  - Protect against negative errors (squared !) from Track States.
