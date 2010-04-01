@@ -4,6 +4,9 @@
 ! Purpose     : Utility tracks tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+! 2010-04-01 - Chris Jones
+ - Improvements to the functional CK theta resolution tool.
+
 !======================== RichRecTrackTools v1r18 2010-03-24 ================
 ! 2010-03-24 - Rob Lambert
  - fixed windows warning in RichGeomEffFixedValue

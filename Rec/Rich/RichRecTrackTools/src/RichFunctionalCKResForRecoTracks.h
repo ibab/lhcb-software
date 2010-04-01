@@ -37,6 +37,9 @@
 // kernel
 #include "RichKernel/RichGeomFunctions.h"
 
+// boost
+#include "boost/assign/list_of.hpp"
+
 namespace Rich
 {
   namespace Rec
@@ -118,18 +121,25 @@ namespace Rich
       /// Transport Service
       mutable ITransportSvc * m_transSvc;
 
-      std::vector<double> m_matThickness; ///< Material thickness infront of each radiator
-
       double m_scatt; ///< Scattering coefficent
 
       /// Asymtopic Errors
       std::vector<double> m_asmpt[Rich::NRadiatorTypes];
 
-      /// Flag to turn on the use of the full TransportService in calculating the effective length of a track
-      bool m_useTS;
-
       /// Particle ID types to consider in the photon creation checks
       Rich::Particles m_pidTypes;
+
+      /// Absolute max CK theta resolution per radiator
+      std::vector<float> m_maxRes;
+
+      /// RICH HPD contributions to CK theta resolution
+      std::vector<double> m_hpdErr;
+
+      /// Use last measured point when calculating material traversed
+      std::vector<bool> m_useLastMP;
+
+      /// Overall factors for each radiator
+      std::vector<double> m_scale;
 
     };
 
