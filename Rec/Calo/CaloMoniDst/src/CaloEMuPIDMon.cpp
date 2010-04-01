@@ -196,7 +196,9 @@ CaloEMuPIDMon::CaloEMuPIDMon( const std::string &name, ISvcLocator *isvc )
   declareProperty( "nEventMin",       m_nEventMin = 200,   "minimal number of events to check");
   declareProperty( "useIsMuonLoose",  m_muonLoose = true,  "use IsMuonLoose instead of IsMuon for muon selection");
 
-  setProperty( "histoList",           boost::assign::list_of<std::string>("All"));
+  // DG: on SLC5 I get 'warning: type qualifiers ignired on function return type' if I combine the two follwing lines in one call (?)
+  std::vector<std::string> histoList = boost::assign::list_of<std::string>("All");
+  setProperty( "histoList",           histoList);
   setProperty( "removeFromHistoList", std::vector<std::string>() );
   setProperty( "SaturationBin1D",     false);
   setProperty( "SaturationBin2D",     false);
