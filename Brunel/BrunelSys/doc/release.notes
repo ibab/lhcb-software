@@ -3,7 +3,7 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
-</PRE><H1><A NAME=v37r0>2010-03-31 Brunel v37r0</A></H1><PRE>
+</PRE><H1><A NAME=v37r0>2010-04-01 Brunel v37r0</A></H1><PRE>
 This version uses projects Gaudi v21r8, LHCb v30r0, Lbcom v9r0, Rec v9r0
  and SQLDDDB v5r23, ParamFiles v8r2, FieldMap v5r3, AppConfig v3r*
 
@@ -40,7 +40,7 @@ or later otherwise
    . New early data tuning for seed tracks (TsaAlgorithms v3r18)
    . Retune dEdx in velo to match 2009 data (TrackTools v3r28, SQLDDDB v5r23)
    . Update of ST measurement uncertainty tuning for early data 
-     (TrackSys v4r31, STTools v3r18)
+     (TrackSys v4r31, STTools v3r19)
    . Use detailed Bethe Bloch dE/dx tool as default in fit
      (TrackExtrapolators v2r26)
 
