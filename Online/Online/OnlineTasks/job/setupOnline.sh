@@ -46,10 +46,20 @@ if [[ ${ARCH} == "x86_64" ]]
      if test -z "${DEBUGGING}";
        then 
 	 #echo running normal sw;
-          export CMTCONFIG=x86_64-slc5-gcc43-opt
+          if test "`uname -r`" = "2.6.18-164.6.1.el5"; 	        
+             then  	 
+                export CMTCONFIG=x86_64-slc5-gcc43-opt 	 
+             else 	 
+                export CMTCONFIG=slc4_amd64_gcc34 	 
+          fi      
        else 
 	 #echo running debug sw;
-          export CMTCONFIG=x86_64-slc5-gcc43-dbg
+	  if test "`uname -r`" = "2.6.18-164.6.1.el5"; 	 
+             then  	 
+                export CMTCONFIG=x86_64-slc5-gcc43-dbg 	 
+             else  	 
+                export CMTCONFIG=slc4_amd64_gcc34_dbg    	 
+          fi   
      fi        
   else
     if test -z "${DEBUGGING}";
