@@ -95,7 +95,7 @@ Rich::HistoBase<PBASE>::richHisto1D( const Rich::HistogramID & id,
                                      const std::string &    title,
                                      const double             low,
                                      const double            high,
-                                     const unsigned long     bins )
+                                     const unsigned long     bins ) const
 {
   // Already been booked ?
   AIDA::IHistogram1D *& h = m_1dhmap.getmap(id.packedData())[id.id()];
@@ -120,7 +120,7 @@ Rich::HistoBase<PBASE>::richHisto2D( const Rich::HistogramID & id,
                                      const unsigned long     binsX,
                                      const double             lowY,
                                      const double            highY,
-                                     const unsigned long     binsY )
+                                     const unsigned long     binsY ) const
 {
   // Already been booked ?
   AIDA::IHistogram2D *& h = m_2dhmap.getmap(id.packedData())[id.id()];
@@ -143,7 +143,7 @@ Rich::HistoBase<PBASE>::richProfile1D( const Rich::HistogramID & id,
                                        const std::string &    title,
                                        const double             low,
                                        const double            high,
-                                       const unsigned long     bins )
+                                       const unsigned long     bins ) const
 {
   // Already been booked ?
   AIDA::IProfile1D *& h = m_1dpmap.getmap(id.packedData())[id.id()];
@@ -168,7 +168,7 @@ Rich::HistoBase<PBASE>::richProfile2D( const Rich::HistogramID & id,
                                        const unsigned long     binsX,
                                        const double             lowY,
                                        const double            highY,
-                                       const unsigned long     binsY )
+                                       const unsigned long     binsY ) const
 {
   // Already been booked ?
   AIDA::IProfile2D *& h = m_2dpmap.getmap(id.packedData())[id.id()];

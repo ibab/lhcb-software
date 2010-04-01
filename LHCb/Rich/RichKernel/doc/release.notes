@@ -4,6 +4,12 @@
 ! Purpose     : General purpose RICH classes
 !-----------------------------------------------------------------------
 
+! 2010-04-01 - Chris Jones
+ - Make the histogramming methods in RichHistoBase const
+
+! 2010-03-30 - Chris Jones
+ - Protect against negative errors (squared !) from Track States.
+
 ! 2010-03-23 - Chris Jones
  - Add option to python configurables to run photon reconstruction with
    additional smearing, to simulate worse CK theta resolution.

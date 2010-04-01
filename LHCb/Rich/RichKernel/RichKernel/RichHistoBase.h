@@ -123,7 +123,7 @@ namespace Rich
                                      const std::string &    title,
                                      const double             low,
                                      const double            high,
-                                     const unsigned long     bins );
+                                     const unsigned long     bins ) const;
 
     /** Book a 2D histogram
      *
@@ -145,7 +145,7 @@ namespace Rich
                                      const unsigned long     binsX,
                                      const double             lowY,
                                      const double            highY,
-                                     const unsigned long     binsY );
+                                     const unsigned long     binsY ) const;
 
     /** Book a 1D profile histogram
      *
@@ -161,7 +161,7 @@ namespace Rich
                                      const std::string &    title,
                                      const double             low,
                                      const double            high,
-                                     const unsigned long     bins );
+                                     const unsigned long     bins ) const;
 
     /** Book a 2D profile histogram
      *
@@ -183,7 +183,7 @@ namespace Rich
                                      const unsigned long     binsX,
                                      const double             lowY,
                                      const double            highY,
-                                     const unsigned long     binsY );
+                                     const unsigned long     binsY ) const;
 
     //-----------------------------------------------------------------------------------------
 
@@ -230,19 +230,19 @@ namespace Rich
   private:
 
     /// Flag to indicate if histograms have been booked or not
-    bool m_histosAreBooked;
+    mutable bool m_histosAreBooked;
 
     /// 1D histo map
-    Map1DH m_1dhmap;
+    mutable Map1DH m_1dhmap;
 
     /// 2D histo map
-    Map2DH m_2dhmap;
+    mutable Map2DH m_2dhmap;
 
     /// 1D Profile map
-    Map1DP m_1dpmap;
+    mutable Map1DP m_1dpmap;
 
     /// 2D Profile map
-    Map2DP m_2dpmap;
+    mutable Map2DP m_2dpmap;
 
   protected:
 
@@ -254,7 +254,7 @@ namespace Rich
      *
      * @return Pointer to booked histogram
      */
-    inline AIDA::IHistogram1D * richHisto1D( const Rich::HistogramID & id )
+    inline AIDA::IHistogram1D * richHisto1D( const Rich::HistogramID & id ) const
     {
       typename Map1DH::StringToHist & map = m_1dhmap.getmap(id.packedData());
       typename Map1DH::StringToHist::iterator iH = map.find(id.id());
@@ -271,7 +271,7 @@ namespace Rich
      *
      * @return Pointer to booked histogram
      */
-    inline AIDA::IHistogram2D * richHisto2D( const Rich::HistogramID & id )
+    inline AIDA::IHistogram2D * richHisto2D( const Rich::HistogramID & id ) const
     {
       typename Map2DH::StringToHist & map = m_2dhmap.getmap(id.packedData());
       typename Map2DH::StringToHist::iterator iH = map.find(id.id());
@@ -288,7 +288,7 @@ namespace Rich
      *
      * @return Pointer to booked histogram
      */
-    inline AIDA::IProfile1D * richProfile1D( const Rich::HistogramID & id )
+    inline AIDA::IProfile1D * richProfile1D( const Rich::HistogramID & id ) const
     {
       typename Map1DP::StringToHist & map = m_1dpmap.getmap(id.packedData());
       typename Map1DP::StringToHist::iterator iH = map.find(id.id());
@@ -305,7 +305,7 @@ namespace Rich
      *
      * @return Pointer to booked histogram
      */
-    inline AIDA::IProfile2D * richProfile2D( const Rich::HistogramID & id )
+    inline AIDA::IProfile2D * richProfile2D( const Rich::HistogramID & id ) const
     {
       typename Map2DP::StringToHist & map = m_2dpmap.getmap(id.packedData());
       typename Map2DP::StringToHist::iterator iH = map.find(id.id());

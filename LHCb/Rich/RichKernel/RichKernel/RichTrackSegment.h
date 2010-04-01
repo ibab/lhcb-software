@@ -110,11 +110,11 @@ namespace LHCb
                    const float errTY2 = 0, ///< error on y slope squared
                    const float errP2  = 0  ///< error on momentum squared
                    )
-        : m_errX2  ( errX2  ),
-          m_errY2  ( errY2  ),
-          m_errTX2 ( errTX2 ),
-          m_errTY2 ( errTY2 ),
-          m_errP2  ( errP2  ) { }
+        : m_errX2  ( fabs(errX2)  ),
+          m_errY2  ( fabs(errY2)  ),
+          m_errTX2 ( fabs(errTX2) ),
+          m_errTY2 ( fabs(errTY2) ),
+          m_errP2  ( fabs(errP2)  ) { }
 
       /// Constructor with explicit double values
       StateErrors( const double errX2,  ///< error on x squared
@@ -123,11 +123,11 @@ namespace LHCb
                    const double errTY2, ///< error on y slope squared
                    const double errP2   ///< error on momentum squared
                    )
-        : m_errX2  ( static_cast<float>(errX2)  ),
-          m_errY2  ( static_cast<float>(errY2)  ),
-          m_errTX2 ( static_cast<float>(errTX2) ),
-          m_errTY2 ( static_cast<float>(errTY2) ),
-          m_errP2  ( static_cast<float>(errP2)  ) { }
+        : m_errX2  ( fabs(static_cast<float>(errX2))  ),
+          m_errY2  ( fabs(static_cast<float>(errY2))  ),
+          m_errTX2 ( fabs(static_cast<float>(errTX2)) ),
+          m_errTY2 ( fabs(static_cast<float>(errTY2)) ),
+          m_errP2  ( fabs(static_cast<float>(errP2))  ) { }
 
       inline float errX2()  const { return m_errX2;  }  ///< Access the x error squared
       inline float errY2()  const { return m_errY2;  }  ///< Access the y error squared
@@ -351,7 +351,7 @@ namespace LHCb
      */
     inline double pathLength() const
     {
-      return ( std::sqrt((entryPoint()-middlePoint()).mag2()) + 
+      return ( std::sqrt((entryPoint()-middlePoint()).mag2()) +
                std::sqrt((middlePoint()-exitPoint()).mag2())  );
     }
 
@@ -614,12 +614,12 @@ LHCb::RichTrackSegment::vectorAtThetaPhi( const double theta,
                                                std::cos(theta) );
 }
 
-inline Gaudi::XYZVector 
+inline Gaudi::XYZVector
 LHCb::RichTrackSegment::vectorAtCosSinThetaPhi ( const double cosTheta,
                                                  const double sinTheta,
                                                  const double cosPhi,
                                                  const double sinPhi ) const
-{ 
+{
   return rotationMatrix2() * Gaudi::XYZVector( sinTheta*cosPhi,
                                                sinTheta*sinPhi,
                                                cosTheta );
