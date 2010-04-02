@@ -3,6 +3,10 @@ Package             : DaVinciSys
 Package Coordinator : Juan Palacios
 Purpose             : LHCb physics analysis application
 
+! 2010-04-02 - Rob Lambert
+ - Added nightly test davincisys.qms/stripping.qms/test_rdst_appconfig.qmt
+ - Run stripping on an RDST just as it is done offline
+
 </PRE><H1><A NAME=v25r2p1>2010-03-17 DaVinci v25r2p1. Patch release for Early 2010 data stripping. </A></H1><PRE>
   Based on Hlt v9r2p1 and with updated StrippingSelections and DaVinciMonitors
 
