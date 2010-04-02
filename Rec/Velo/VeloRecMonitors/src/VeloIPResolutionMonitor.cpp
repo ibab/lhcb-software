@@ -1,4 +1,4 @@
-// $Id: VeloIPResolutionMonitor.cpp,v 1.17 2010-02-18 16:50:17 malexand Exp $
+// $Id: VeloIPResolutionMonitor.cpp,v 1.18 2010-04-02 16:09:45 malexand Exp $
 // Include files
 #include "VeloIPResolutionMonitor.h"
 
@@ -57,6 +57,8 @@ Velo::VeloIPResolutionMonitor::VeloIPResolutionMonitor( const std::string& name,
 {
   // set whether to write the ntuple
   declareProperty("WriteTuple",m_writeTuple=false);
+
+  //declareProperty("WithMC",m_withMC=false);
 
   // Set the binning options
   declareProperty("StatOverflows", m_statOverflows = false );
@@ -283,9 +285,9 @@ StatusCode Velo::VeloIPResolutionMonitor::execute() {
   counter( "Events Analysed" )++;
 
   // get L0DU report to check L0 decision, if required
-  LHCb::L0DUReport* report = new L0DUReport();
-  if( m_requireL0 && exist<LHCb::L0DUReport>(LHCb::L0DUReportLocation::Default) ){
-    report = get<LHCb::L0DUReport>(LHCb::L0DUReportLocation::Default);
+  L0DUReport* report = new L0DUReport();
+  if( m_requireL0 && exist<L0DUReport>(L0DUReportLocation::Default) ){
+    report = get<L0DUReport>(L0DUReportLocation::Default);
   }
   else if( m_requireL0 ) {
     if ( msgLevel(MSG::DEBUG) ) debug() << "Could not find L0DU report!" << endmsg;
@@ -297,17 +299,19 @@ StatusCode Velo::VeloIPResolutionMonitor::execute() {
   if( m_requireL0 && !report->decision() ) return StatusCode::SUCCESS;
       
   // Get PVs
-  if( !exist<LHCb::RecVertices>(LHCb::RecVertexLocation::Primary) ){
+  if( !exist<RecVertices>(RecVertexLocation::Primary) ){
     counter("No data at 'Rec/Vertex/Primary'")++;
     debug() << "No data at 'Rec/Vertex/Primary'!" << endmsg;
     return StatusCode::SUCCESS;
   }
-  const LHCb::RecVertices* pvs = get<LHCb::RecVertices>(LHCb::RecVertexLocation::Primary);  
+  const RecVertices* pvs = get<RecVertices>(RecVertexLocation::Primary);  
 
+  if( pvs->size() != 1 ) return StatusCode::SUCCESS;
+  
   counter("Events Selected")++;
     
   // Loop over PVs
-  for ( LHCb::RecVertices::const_iterator ipv = pvs->begin() ;
+  for ( RecVertices::const_iterator ipv = pvs->begin() ;
         ipv != pvs->end() ; ++ipv ){
     if( !(*ipv)->isPrimary() ) continue;
         
@@ -315,14 +319,16 @@ StatusCode Velo::VeloIPResolutionMonitor::execute() {
     counter("PVs Analysed")++;
         
     // Get tracks from current PV & loop
-    const SmartRefVector< LHCb::Track > & PVtracks = m_pv->tracks();
+    Track::ConstVector PVtracks;
 
     // count number of tracks making this pv that are reconstructed in the velo 
     unsigned int nVeloTracks(0);
-    for ( SmartRefVector< LHCb::Track >::const_iterator tr = PVtracks.begin(); 
-          tr != PVtracks.end() ; tr++ ){
-      if( (*tr)->type()==Track::Velo || (*tr)->type()==Track::Upstream || (*tr)->type()==Track::Long )
+    for ( SmartRefVector< Track >::const_iterator tr = m_pv->tracks().begin(); 
+          tr != m_pv->tracks().end() ; tr++ ){
+      PVtracks.push_back( &(**tr) );
+      if( (*tr)->type()==Track::Velo || (*tr)->type()==Track::Upstream || (*tr)->type()==Track::Long ){
         nVeloTracks += 1;
+      }
     }
     
     // can't refit a PV with only one track!
@@ -332,12 +338,26 @@ StatusCode Velo::VeloIPResolutionMonitor::execute() {
     counter("PVs Selected")++;
         
     m_h_TrackMultiplicity->Fill( PVtracks.size() );
+
+
+    if( !exist<Tracks>(TrackLocation::Default ) )
+    {
+      counter("No tracks at TrackLocation::Default")++;
+      return StatusCode::SUCCESS;
+    }
         
-    for ( SmartRefVector< LHCb::Track >::const_iterator tr = PVtracks.begin(); 
-          tr != PVtracks.end() ; tr++ ){
+    Tracks* tracks = get<Tracks>(TrackLocation::Default);
+    
+    //for ( SmartRefVector< Track >::const_iterator tr = PVtracks.begin(); 
+    //      tr != PVtracks.end() ; tr++ ){
 
-      m_track = &(**tr);
-
+    for( Tracks::const_iterator tr = tracks->begin(); tr != tracks->end(); ++tr ){
+      
+      if( (*tr)->type() != Track::Velo && (*tr)->type() != Track::Upstream && (*tr)->type() != Track::Long ) continue;
+      
+      //m_track = &(**tr);
+      m_track = *tr;
+      
       double inversePT;
       if( !m_useLogScale ) inversePT = 1./(m_track->pt()/GeV);
       else inversePT = log10( 1./(m_track->pt()/GeV) );
@@ -350,30 +370,41 @@ StatusCode Velo::VeloIPResolutionMonitor::execute() {
       counter("Tracks selected")++;
         
       // refit PV removing current track
+      bool isInPV = false;
       if( m_refitPVs ){
           
-        std::vector< const LHCb::Track* > newTracks;
-        for ( SmartRefVector< LHCb::Track >::const_iterator trackIt = PVtracks.begin(); 
+        std::vector< const Track* > newTracks;
+        for ( Track::ConstVector::const_iterator trackIt = PVtracks.begin(); 
               trackIt != PVtracks.end() ; trackIt++ ){
+          
+          if( *trackIt == m_track ){
             
-          if( *trackIt == *tr ) continue;
-          newTracks.push_back( &(**trackIt) );
+            isInPV = true;
+            continue;
+          }
+          newTracks.push_back( *trackIt );
+          
         }
           
-        LHCb::RecVertex* newVertex  = m_vertexer->fit( newTracks );
-        if( newVertex ){
-          m_pv = newVertex;
+        if( isInPV ){ 
+          RecVertex* newVertex  = m_vertexer->fit( newTracks );
+          if( newVertex ){
+            m_pv = newVertex;
+          }
+          else{
+            counter("PV refit fails")++;
+            continue;
+          }
         }
-        else continue;
       }
-
+      
       double ip3d, ip3dsigma, ipx, ipxsigma, ipy, ipysigma;
       calculateIPs( m_pv, m_track, ip3d, ip3dsigma, ipx, ipxsigma, ipy, ipysigma );
 
       // only make histos for Long tracks in given PT range
       if( inversePT < *(m_bins.rbegin()) && *(m_bins.begin()) < inversePT && m_track->type() == Track::Long )
       {
-
+        
         m_h_InversePTFreq->Fill( inversePT );
           
         // fill histograms
@@ -392,6 +423,8 @@ StatusCode Velo::VeloIPResolutionMonitor::execute() {
       }
 
       if( m_writeTuple ){
+        
+        m_tuple->column( "isInPV", isInPV );
         m_tuple->column( "TrackType", m_track->type() );
         m_tuple->column( "IPRes3D", ip3d );
         m_tuple->column( "IPRes3Dsigma", ip3dsigma );
@@ -418,38 +451,37 @@ StatusCode Velo::VeloIPResolutionMonitor::execute() {
         m_tuple->column( "PVXerr", sqrt( m_pv->covMatrix()(0,0) ) );
         m_tuple->column( "PVYerr", sqrt( m_pv->covMatrix()(1,1) ) );
         m_tuple->column( "PVZerr", sqrt( m_pv->covMatrix()(2,2) ) );
-        if( m_refitPVs ){
-          m_tuple->column( "PVXNoRefit", (*ipv)->position().x() );
-          m_tuple->column( "PVYNoRefit", (*ipv)->position().y() );
-          m_tuple->column( "PVZNoRefit", (*ipv)->position().z() );
-          m_tuple->column( "PVXerrNoRefit", sqrt( (*ipv)->covMatrix()(0,0) ) );
-          m_tuple->column( "PVYerrNoRefit", sqrt( (*ipv)->covMatrix()(1,1) ) );
-          m_tuple->column( "PVZerrNoRefit", sqrt( (*ipv)->covMatrix()(2,2) ) );
-        }
+        m_tuple->column( "PVXNoRefit", (*ipv)->position().x() );
+        m_tuple->column( "PVYNoRefit", (*ipv)->position().y() );
+        m_tuple->column( "PVZNoRefit", (*ipv)->position().z() );
+        m_tuple->column( "PVXerrNoRefit", sqrt( (*ipv)->covMatrix()(0,0) ) );
+        m_tuple->column( "PVYerrNoRefit", sqrt( (*ipv)->covMatrix()(1,1) ) );
+        m_tuple->column( "PVZerrNoRefit", sqrt( (*ipv)->covMatrix()(2,2) ) );
+        
         std::vector<double> statesX;
         std::vector<double> statesY;
         std::vector<double> statesZ;
         std::vector<unsigned int> stationNos;
         std::vector<bool> isR;
         std::vector<unsigned int> sensorNos;
-        for( LHCb::Track::ConstNodeRange::const_iterator inode = m_track->nodes().begin();
+        for( Track::ConstNodeRange::const_iterator inode = m_track->nodes().begin();
              inode != m_track->nodes().end(); ++inode){
             
-          if( (*inode)->type() != LHCb::Node::HitOnTrack ) continue;
+          if( (*inode)->type() != Node::HitOnTrack ) continue;
             
           if( (*inode)->measurement().lhcbID().isVelo() ){
               
             statesX.push_back( (*inode)->state().position().x() );
             statesY.push_back( (*inode)->state().position().y() );
             statesZ.push_back( (*inode)->state().position().z() );
-            if( (*inode)->measurement().type() == LHCb::Measurement::VeloPhi ){
-              stationNos.push_back( ((LHCb::VeloPhiMeasurement&)((*inode)->measurement())).sensor().station() );
-              sensorNos.push_back( ((LHCb::VeloPhiMeasurement&)((*inode)->measurement())).sensor().sensorNumber() );
+            if( (*inode)->measurement().type() == Measurement::VeloPhi ){
+              stationNos.push_back( ((VeloPhiMeasurement&)((*inode)->measurement())).sensor().station() );
+              sensorNos.push_back( ((VeloPhiMeasurement&)((*inode)->measurement())).sensor().sensorNumber() );
               isR.push_back( false );
             }
             else{
-              stationNos.push_back( ((LHCb::VeloRMeasurement&)((*inode)->measurement())).sensor().station() );
-              sensorNos.push_back( ((LHCb::VeloRMeasurement&)((*inode)->measurement())).sensor().sensorNumber() );
+              stationNos.push_back( ((VeloRMeasurement&)((*inode)->measurement())).sensor().station() );
+              sensorNos.push_back( ((VeloRMeasurement&)((*inode)->measurement())).sensor().sensorNumber() );
               isR.push_back( true );
             }
           }
@@ -460,11 +492,38 @@ StatusCode Velo::VeloIPResolutionMonitor::execute() {
         m_tuple->farray( "MeasStationNos", stationNos, "nMeasurements", 42 );
         m_tuple->farray( "MeasSensorNos", sensorNos, "nMeasurements", 42 );
         m_tuple->farray( "MeasIsR", isR, "nMeasurements", 42 );
+
+        /*if( m_withMC ){
+          MCVertex* mcpv = new MCVertex();
+          mcpv->setPosition( Gaudi::XYZPoint( -999, -999, -999 ) );
+          unsigned int mctype;
+          double mcInversePT;
+          checkMCAssoc( m_track, m_pv, mcpv, mcInversePT, mctype );
+          RecVertex dummyPV = RecVertex( mcpv->position() );
+          std::vector<float> matrixValues( 6, 0. );
+          dummyPV.setCovMatrix( Gaudi::SymMatrix3x3( matrixValues.begin(), matrixValues.end() ) );
+          double mcip3d, mcip3dsigma, mcipx, mcipxsigma, mcipy, mcipysigma;
+          calculateIPs( (const RecVertex*)(&dummyPV), m_track, mcip3d, mcip3dsigma, mcipx, mcipxsigma, mcipy, mcipysigma );
+
+          m_tuple->column( "MCType", mctype );
+          m_tuple->column( "MCIPRes3D", mcip3d );
+          m_tuple->column( "MCIPRes3Dsigma", mcip3dsigma );
+          m_tuple->column( "MCIPRes_X", mcipx );
+          m_tuple->column( "MCIPRes_Xsigma", mcipxsigma );
+          m_tuple->column( "MCIPRes_Y", mcipy );
+          m_tuple->column( "MCIPRes_Ysigma", mcipysigma );
+          m_tuple->column( "MCInversePT", mcInversePT );
+          m_tuple->column( "MCPVX", mcpv->position().x() );
+          m_tuple->column( "MCPVY", mcpv->position().y() );
+          m_tuple->column( "MCPVZ", mcpv->position().z() );
+          delete mcpv;
+          }*/
+
         m_tuple->write();
       }
-
-      if( m_refitPVs ) delete m_pv;
-        
+      
+      if( m_refitPVs && isInPV ) delete m_pv;
+      
     } // close loop over tracks
       
   } // close loop over pvs
@@ -514,7 +573,7 @@ StatusCode Velo::VeloIPResolutionMonitor::finalize() {
 // Calculate ip_3D, ip_X and ip_y & their associated chi2
 //====================================================================
 
-StatusCode Velo::VeloIPResolutionMonitor::calculateIPs( const LHCb::RecVertex* pv, const LHCb::Track* track, 
+StatusCode Velo::VeloIPResolutionMonitor::calculateIPs( const RecVertex* pv, const Track* track, 
                                                         double& ip3d, double& ip3dsigma, double& ipx, double& ipxsigma,
                                                         double& ipy, double& ipysigma ){
   
@@ -522,17 +581,19 @@ StatusCode Velo::VeloIPResolutionMonitor::calculateIPs( const LHCb::RecVertex* p
 
   // extrapolate the current track to its point of closest approach to the PV 
   // to get the 3D IP
-  LHCb::State POCAtoPVstate;
+  State POCAtoPVstate;
   isSuccess = m_trackExtrapolator->propagate( *track, pv->position(), POCAtoPVstate );
   isSuccess = distance( pv, POCAtoPVstate, ip3d, ip3dsigma, 0 );
   
   // extrapolate the current track to the same Z position as the PV to get X & Y IP
-  LHCb::State stateAtPVZ = track->firstState();
+  State stateAtPVZ = track->firstState();
   isSuccess = m_trackExtrapolator->propagate( stateAtPVZ, pv->position().z() );
 
-  isSuccess = distance( pv, stateAtPVZ, ipx, ipxsigma, 1 );
+  //isSuccess = distance( pv, stateAtPVZ, ipx, ipxsigma, 1 );
+  isSuccess = distance( pv, POCAtoPVstate, ipx, ipxsigma, 1 );
 
-  isSuccess = distance( pv, stateAtPVZ, ipy, ipysigma, 2 );
+  //isSuccess = distance( pv, stateAtPVZ, ipy, ipysigma, 2 );
+  isSuccess = distance( pv, POCAtoPVstate, ipy, ipysigma, 2 );
 
   return isSuccess;
 
@@ -543,7 +604,7 @@ StatusCode Velo::VeloIPResolutionMonitor::calculateIPs( const LHCb::RecVertex* p
 // error is calculated assuming the PV position & state position are uncorrelated
 //====================================================================
 
-StatusCode Velo::VeloIPResolutionMonitor::distance( const LHCb::RecVertex* pv, LHCb::State& state, 
+StatusCode Velo::VeloIPResolutionMonitor::distance( const RecVertex* pv, State& state, 
                                                     double& dist, double& sigma, int type=0 )
 {
   const Gaudi::XYZVector delta ( pv->position() - state.position() ) ;
@@ -571,8 +632,8 @@ StatusCode Velo::VeloIPResolutionMonitor::distance( const LHCb::RecVertex* pv, L
   /*if ( !cov.Invert() ){
     chi2 = -999;
     return Error ( "Error in matrix inversion" , 905 ) ;
-  }
-  chi2 = Gaudi::Math::Similarity ( delta , cov ) ;*/
+    }
+    chi2 = Gaudi::Math::Similarity ( delta , cov ) ;*/
   
 
   return StatusCode::SUCCESS ;
@@ -830,3 +891,48 @@ StatusCode Velo::VeloIPResolutionMonitor::plotMean ( std::vector< TH1D* > source
   return StatusCode::SUCCESS;
   
 }
+
+//=========================================================================
+//  Check MC association of tracks, rejecting non-prompt and/or using MC PV position if selected
+//=========================================================================
+/*StatusCode Velo::VeloIPResolutionMonitor::checkMCAssoc( const Track* track, const RecVertex* pv,
+                                                        MCVertex*& mcpv, 
+                                                        double& inversept, unsigned int& type )
+{
+  type = 999;
+  inversept = 1./(-0.0001*GeV);
+  
+  LinkedTo<MCParticle,Track> directLink( evtSvc(), msgSvc(), TrackLocation::Default );
+  MCParticle* mcPart = directLink.first( track );
+  if( mcPart==NULL ){ 
+    type = 2;
+    counter("Ghost tracks")++;
+    return StatusCode::SUCCESS;
+  }
+  inversept = 1./( mcPart->pt()/GeV );
+  delete mcpv;
+  mcpv = (MCVertex*)(mcPart->primaryVertex()->clone()) ;
+  if( !mcpv ){ 
+    counter("No MC primary vertex")++;
+    return StatusCode::SUCCESS;
+  }
+
+  else if( mcPart->mother()==NULL || (*(mcPart->mother()->endVertices().begin()))->position() == mcpv->position() ) {
+    if( (mcpv->position() - pv->position()).mag2() > 25.*( pv->covMatrix()(0,0) + pv->covMatrix()(1,1) + pv->covMatrix()(2,2) ) ){
+      counter("Prompt assoc. MC w/ MCPV > 5 sigma from rec PV")++;
+      type = 4;
+    }
+    else{    
+      counter("Prompt assoc. MC particles")++;
+      type = 0;
+    }
+    return StatusCode::SUCCESS;
+  }
+  else { 
+    counter("Secondary assoc. MC particles")++;
+    type = 1;
+    return StatusCode::SUCCESS;
+  }
+          
+}
+*/

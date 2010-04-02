@@ -1,4 +1,4 @@
-// $Id: VeloIPResolutionMonitor.h,v 1.8 2010-02-18 16:50:17 malexand Exp $
+// $Id: VeloIPResolutionMonitor.h,v 1.9 2010-04-02 16:09:45 malexand Exp $
 #ifndef VELORECMONITORS_VELOIPRESOLUTIONMONITOR_H 
 #define VELORECMONITORS_VELOIPRESOLUTIONMONITOR_H 1
 
@@ -16,6 +16,11 @@
 
 #include <TH1D.h>
 #include <TProfile.h>
+
+/*#include "Event/MCHeader.h"
+#include "Event/MCParticle.h"
+#include "Kernel/Particle2MCLinker.h"
+#include "Kernel/IDaVinciAssociatorsWrapper.h"*/
 
 /** @class VeloIPResolutionMonitor VeloIPResolutionMonitor.h
  *  
@@ -60,6 +65,8 @@ namespace Velo
     StatusCode fitDbl2DGausAndPlotMean( std::vector< TH1D* >, TH1D* );
     StatusCode fitLandauAndPlotMPV( std::vector< TH1D* >, TH1D* );
 
+    //StatusCode checkMCAssoc( const LHCb::Track*, const LHCb::RecVertex*, LHCb::MCVertex*&, double&, unsigned int& );
+
   protected:
 
   private:
@@ -68,6 +75,8 @@ namespace Velo
     const LHCb::Track* m_track;
 
     bool m_requireL0;
+
+    //bool m_withMC;
 
     bool m_useLogScale;
     bool m_statOverflows;
