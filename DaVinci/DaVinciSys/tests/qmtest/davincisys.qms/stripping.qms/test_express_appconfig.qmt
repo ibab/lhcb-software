@@ -4,7 +4,7 @@
 <argument name="program"><text>gaudirun.py</text></argument>
 <argument name="timeout"><integer>3600</integer></argument>
 <argument name="args"><set>
-  <text>$APPCONFIGOPTS/DaVinci/DVStrippingETC-RealData.py</text>
+  <text>$APPCONFIGOPTS/DaVinci/DVMonitor-RealData.py</text>
   <text>$APPCONFIGOPTS/UseOracle.py</text>
   <text>$APPCONFIGOPTS/DaVinci/DataType-2010.py</text>
     <text>--option</text>
