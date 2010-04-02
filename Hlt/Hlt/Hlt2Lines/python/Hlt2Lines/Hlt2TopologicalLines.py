@@ -1,7 +1,7 @@
-## $Id: Hlt2TopologicalLines.py,v 1.39 2010-04-02 14:17:25 spradlin Exp $
+## $Id: Hlt2TopologicalLines.py,v 1.40 2010-04-02 17:10:01 spradlin Exp $
 __author__  = 'Patrick Spradlin'
-__date__    = '$Date: 2010-04-02 14:17:25 $'
-__version__ = '$Revision: 1.39 $'
+__date__    = '$Date: 2010-04-02 17:10:01 $'
+__version__ = '$Revision: 1.40 $'
 
 ###
 #
@@ -42,7 +42,8 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
     # steering variables
     #------------------------
     # Don't touch my variables!
-    __slots__ = { 'ComRobAllTrkPtLL'        : 300.0      # in MeV
+    __slots__ = { ## Cut values for robust stages.
+                  'ComRobAllTrkPtLL'        : 300.0      # in MeV
                 , 'ComRobAllTrkPLL'         : 2000.0     # in MeV
                 , 'ComRobAllTrkPVIPLL'      : 0.05       # in mm
                 , 'ComRobPairMinDocaUL'     : 0.10       # in mm
@@ -52,6 +53,7 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
                 , 'ComRobVtxPVRDispLL'      : 0.2        # in mm
                 , 'ComRobUseGEC'            : True       # do or do not 
                 , 'ComRobGEC'               : 120        # max number of tracks
+                ## Cut values for post-track fit stages
                 , 'ComTFAllTrkPtLL'         : 300.0      # in MeV
                 , 'ComTFAllTrkPLL'          : 2000.0     # in MeV
                 , 'ComTFAllTrkPVIPChi2LL'   : 9.0        # unitless
@@ -62,6 +64,17 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
                 , 'ComTFVtxPVDispChi2LL'    : 100.0      # unitless
                 , 'RobustPointingUL'        : 0.20       # unitless
                 , 'TFPointUL'               : 0.10       # unitless
+                ## Cut values for one stage track-fit (OSTF) lines.
+                , 'OSTFAllTrkPtLL'          : 300.0      # in MeV
+                , 'OSTFAllTrkPLL'           : 2000.0     # in MeV
+                , 'OSTFAllTrkPVIPChi2LL'    : 9.0        # unitless
+                , 'OSTFAllTrkChi2UL'        : 10.0       # unitless
+                , 'OSTFPairMinDocaUL'       : 0.10       # in mm
+                , 'OSTFPairMaxDocaUL'       : 1.0        # in mm
+                , 'OSTFTrkMaxPtLL'          : 1500.0     # in MeV
+                , 'OSTFVtxPVDispChi2LL'     : 100.0      # unitless
+                , 'OSTFPointUL'             : 0.10       # unitless
+                ## Pre- and Post-scales for lines.
                 , 'Prescale'                : {'Hlt2TopoTF2BodySA' : 1.00
                                                , 'Hlt2TopoTF3BodySA' : 0.001
                                                , 'Hlt2TopoTF4BodySA' : 0.001
@@ -86,6 +99,9 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
                                    , 'Hlt2TopoTF4BodyReq2YesDecision' : 50820
                                    , 'Hlt2TopoTF4BodyReq3YesDecision' : 50830
                                    , 'Hlt2TopoTF4BodyReq4YesDecision' : 50840
+                                   , 'Hlt2TopoOSTF2BodyDecision'      : 50733
+                                   , 'Hlt2TopoOSTF3BodyDecision'      : 50773
+                                   , 'Hlt2TopoOSTF4BodyDecision'      : 50813
                                    }
                   }
 
@@ -268,6 +284,77 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
     # }
 
 
+    def __ostfCombine(self, name, inputSeq, decayDesc, extracuts = None) : # {
+        """
+        # Function to configure track fit particle combinations
+        #   used by the one stage topological lines.  It lashes the new
+        #   CombineParticles to a bindMembers with its antecedents.
+        # Its arguments:
+        #     name      : string name
+        #     inputSeq  : list of input particle sequences
+        #     decayDesc : list of string decay descriptors
+        #     extracuts : dictionary of extra cuts to be applied.
+        #                 Can include cuts at the CombinationCut or at
+        #                 the MotherCut level.
+        #                 e.g. : { 'CombinationCut' : '(AM>4*GeV)'
+        #                        , 'MotherCut'      : '(BPVDIRA>0.5)' }
+        """
+        from HltLine.HltLine import Hlt2Member, bindMembers
+        from Configurables import FilterDesktop, CombineParticles
+
+        # Construct a cut string for the combination.
+        combcuts = "(AMAXDOCA('LoKi::TrgDistanceCalculator')< %(OSTFPairMaxDocaUL)s ) & (AALLSAMEBPV)" % self.getProps()
+
+        # extracuts allows additional cuts to be applied for special
+        #   cases, including the tight doca requirement of the 2-body and
+        #   the additional cuts to reduce stored combinations in the 4-body.
+        if extracuts and extracuts.has_key('CombinationCut') :
+            combcuts = combcuts + '&' + extracuts['CombinationCut']
+
+        # Construct a cut string for the vertexed combination.
+        parentcuts = """(BPVVDCHI2> %(OSTFVtxPVDispChi2LL)s )
+            & (MAXTREE((('pi+'==ABSID) | ('K+'==ABSID)) ,PT)> %(OSTFTrkMaxPtLL)s *MeV)""" % self.getProps()
+
+        if extracuts and extracuts.has_key('MotherCut') :
+            parentcuts = parentcuts  + '&' + extracuts['MotherCut']
+
+        combineTopoNBody = Hlt2Member( CombineParticles
+                                       , 'Combine'
+                                       , DecayDescriptors = decayDesc
+                                       , InputLocations = inputSeq
+                                       , CombinationCut = combcuts
+                                       , MotherCut = parentcuts
+                                     )
+
+        topoNBody = bindMembers( name, inputSeq + [ combineTopoNBody ] )
+        return topoNBody
+    # }
+
+
+    def __ostfFilter(self, name, inputSeq, extracode = None) : # {
+        """
+        # Function to configure a filter for the one stage track-fit
+        #   topological lines.  It lashes the new FilterDesktop to a
+        #   bindMembers with its antecedents.
+        # The argument inputSeq should be a list of bindMember sequences that
+        #   produces the particles to filter.
+        """
+        from HltLine.HltLine import Hlt2Member, bindMembers
+        from Configurables import FilterDesktop, CombineParticles
+
+        codestr = "(BPVTRGPOINTINGWPT< %(OSTFPointUL)s ) & (M>4*GeV)" % self.getProps()
+        if extracode :
+          codestr = codestr + '&' + extracode
+        filter = Hlt2Member( FilterDesktop
+                             , 'TFFilter'
+                             , InputLocations = inputSeq
+                             , Code = codestr
+                           )
+        filterSeq = bindMembers( name, inputSeq + [ filter ] )
+        return filterSeq
+    # }
+
+
     def __seqGEC(self) : # {
         """
         # Defines a Global Event Cut (mild badness) on all events with more
@@ -333,8 +420,8 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
     def __tfInPartFilter(self, name, inputContainers) : # {
         """
         # Function to configure a filter for the input particles of the
-        #   robust stages of the topological.  It lashes the new FilterDesktop
-        #   to a bindMembers with its antecedents.
+        #   post-track-fit stages of the topological.  It lashes the new
+        #   FilterDesktop to a bindMembers with its antecedents.
         # The argument inputContainer should be 
         #   a list of bindMember sequences that produces the particles
         #   to filter.
@@ -347,6 +434,37 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
                     & (P> %(ComTFAllTrkPLL)s *MeV)
                     & (MIPCHI2DV(PRIMARY)> %(ComTFAllTrkPVIPChi2LL)s )
                     & (TRCHI2DOF< %(ComTFAllTrkChi2UL)s )""" % self.getProps()
+
+        filter = Hlt2Member( FilterDesktop
+                            , 'Filter'
+                            , InputLocations = inputContainers
+                            , Code = incuts
+                           )
+
+        ## Require the PV3D reconstruction before our cut on IP.
+        filterSeq = bindMembers( name, [ PV3D()] + inputContainers + [filter ] )
+
+        return filterSeq
+    # }
+
+
+    def __ostfInPartFilter(self, name, inputContainers) : # {
+        """
+        # Function to configure a filter for the input particles of the
+        #   one stage track fit lines.  It lashes the new FilterDesktop
+        #   to a bindMembers with its antecedents.
+        # The argument inputContainer should be 
+        #   a list of bindMember sequences that produces the particles
+        #   to filter.
+        """
+        from HltLine.HltLine import Hlt2Member, bindMembers
+        from Configurables import FilterDesktop, CombineParticles
+        from HltTracking.HltPVs import PV3D
+
+        incuts = """(PT> %(OSTFAllTrkPtLL)s *MeV)
+                    & (P> %(OSTFAllTrkPLL)s *MeV)
+                    & (MIPCHI2DV(PRIMARY)> %(OSTFAllTrkPVIPChi2LL)s )
+                    & (TRCHI2DOF< %(OSTFAllTrkChi2UL)s )""" % self.getProps()
 
         filter = Hlt2Member( FilterDesktop
                             , 'Filter'
@@ -522,5 +640,61 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
                 self.__makeLine(lineName, algos = [ robustNReqSeq[robSeq], tfNBodySeq[tfSeq] ])
 
 
+
+        ###################################################################
+        # Combinations for one stage lines that run on fitted tracks, for
+        # low rate running.
+        ###################################################################
+        lclOSTFInputKaons = self.__ostfInPartFilter('TopoOSTFInputKaons', [ BiKalmanFittedKaons ] )
+        lclOSTFInputPions = self.__ostfInPartFilter('TopoOSTFInputPions', [ BiKalmanFittedPions ] )
+
+        # one stage 2-body combinations
+        ###################################################################
+        topoOSTF2Body = self.__ostfCombine(  name = 'TopoOSTF2Body'
+                                , inputSeq = [ lclOSTFInputKaons ]
+                                , decayDesc = ["K*(892)0 -> K+ K+", "K*(892)0 -> K+ K-", "K*(892)0 -> K- K-"]
+                                , extracuts = { 'CombinationCut' : "(AMINDOCA('LoKi::TrgDistanceCalculator')< %(OSTFPairMinDocaUL)s )" % self.getProps() }
+                               )
+
+        # one stage 3-body combinations
+        ###################################################################
+        topoOSTF3Body = self.__ostfCombine(  name = 'TopoOSTF3Body'
+                                , inputSeq = [ lclOSTFInputPions, topoOSTF2Body ]
+                                , decayDesc = ["D*(2010)+ -> K*(892)0 pi+", "D*(2010)+ -> K*(892)0 pi-"]
+                               )
+
+        # one stage 4-body combinations
+        # Unlike the 3-body and 4-body, apply a mass lower limit.
+        ###################################################################
+        topoOSTF4Body = self.__ostfCombine(  name = 'TopoOSTF4Body'
+                                , inputSeq = [ lclOSTFInputPions, topoOSTF3Body ]
+                                , decayDesc = ["B0 -> D*(2010)+ pi-","B0 -> D*(2010)+ pi+"]
+                                , extracuts = { 'CombinationCut' : '(AM>4*GeV)'
+                                              , 'MotherCut'      : "(BPVTRGPOINTINGWPT< %(OSTFPointUL)s)" % self.getProps()
+                                              }
+                               )
+
+
+        ###################################################################
+        # Create full decision sequences for the one stage lines.
+        ###################################################################
+
+        # 2-body decision
+        ###################################################################
+        ostf2BodySeq = self.__ostfFilter('OSTFTopo2Body', [topoOSTF2Body])
+
+        # 3-body decision
+        ###################################################################
+        ostf3BodySeq = self.__ostfFilter('OSTFTopo3Body', [topoOSTF3Body])
+
+        # 4-body decision
+        ###################################################################
+        ostf4BodySeq = self.__ostfFilter('OSTFTopo4Body', [topoOSTF4Body])
+
+        # Line creation for one stage track fit lines.
+        ###################################################################
+        self.__makeLine('TopoOSTF2Body', algos = [ostf2BodySeq])
+        self.__makeLine('TopoOSTF3Body', algos = [ostf3BodySeq])
+        self.__makeLine('TopoOSTF4Body', algos = [ostf4BodySeq])
 
 
