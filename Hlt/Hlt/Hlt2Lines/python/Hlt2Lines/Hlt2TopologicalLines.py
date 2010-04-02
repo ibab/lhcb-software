@@ -1,7 +1,7 @@
-## $Id: Hlt2TopologicalLines.py,v 1.38 2010-03-31 17:39:27 spradlin Exp $
+## $Id: Hlt2TopologicalLines.py,v 1.39 2010-04-02 14:17:25 spradlin Exp $
 __author__  = 'Patrick Spradlin'
-__date__    = '$Date: 2010-03-31 17:39:27 $'
-__version__ = '$Revision: 1.38 $'
+__date__    = '$Date: 2010-04-02 14:17:25 $'
+__version__ = '$Revision: 1.39 $'
 
 ###
 #
@@ -42,24 +42,24 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
     # steering variables
     #------------------------
     # Don't touch my variables!
-    __slots__ = { 'ComRobAllTrkPtLL'        : 300        # in MeV
-                , 'ComRobAllTrkPLL'         : 2000       # in MeV
+    __slots__ = { 'ComRobAllTrkPtLL'        : 300.0      # in MeV
+                , 'ComRobAllTrkPLL'         : 2000.0     # in MeV
                 , 'ComRobAllTrkPVIPLL'      : 0.05       # in mm
                 , 'ComRobPairMinDocaUL'     : 0.10       # in mm
-                , 'ComRobPairMaxDocaUL'     : 1          # in mm
-                , 'ComRobTrkMaxPtLL'        : 1500       # in MeV
-                , 'ComRobVtxPVDispLL'       : 2          # in mm
+                , 'ComRobPairMaxDocaUL'     : 1.0        # in mm
+                , 'ComRobTrkMaxPtLL'        : 1500.0     # in MeV
+                , 'ComRobVtxPVDispLL'       : 2.0        # in mm
                 , 'ComRobVtxPVRDispLL'      : 0.2        # in mm
                 , 'ComRobUseGEC'            : True       # do or do not 
                 , 'ComRobGEC'               : 120        # max number of tracks
-                , 'ComTFAllTrkPtLL'         : 300        # in MeV
-                , 'ComTFAllTrkPLL'          : 2000       # in MeV
-                , 'ComTFAllTrkPVIPChi2LL'   : 9          # unitless
-                , 'ComTFAllTrkChi2UL'       : 10         # unitless
+                , 'ComTFAllTrkPtLL'         : 300.0      # in MeV
+                , 'ComTFAllTrkPLL'          : 2000.0     # in MeV
+                , 'ComTFAllTrkPVIPChi2LL'   : 9.0        # unitless
+                , 'ComTFAllTrkChi2UL'       : 10.0       # unitless
                 , 'ComTFPairMinDocaUL'      : 0.10       # in mm
-                , 'ComTFPairMaxDocaUL'      : 1          # in mm
-                , 'ComTFTrkMaxPtLL'         : 1500       # in MeV
-                , 'ComTFVtxPVDispChi2LL'    : 100        # unitless
+                , 'ComTFPairMaxDocaUL'      : 1.0        # in mm
+                , 'ComTFTrkMaxPtLL'         : 1500.0     # in MeV
+                , 'ComTFVtxPVDispChi2LL'    : 100.0      # unitless
                 , 'RobustPointingUL'        : 0.20       # unitless
                 , 'TFPointUL'               : 0.10       # unitless
                 , 'Prescale'                : {'Hlt2TopoTF2BodySA' : 1.00
@@ -91,7 +91,7 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
 
 
 
-    def updateHltANNSvc(self,line) : # {
+    def __updateHltANNSvc(self,line) : # {
         """
         Wrapper for updating the HltANNSvc after a new line has been
         constructed.  This should eventually become obsolete.
@@ -103,7 +103,7 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
     # }
 
 
-    def makeLine(self, lineName, algos) : # {
+    def __makeLine(self, lineName, algos) : # {
         """
         Wrapper for line construction that also registers it to the HltANNSvc.
         """
@@ -111,7 +111,7 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
 
         lclAlgos = []
         ## Prepend a filter on the number of tracks
-        Hlt2TopoKillTooManyInTrk = self.seqGEC()
+        Hlt2TopoKillTooManyInTrk = self.__seqGEC()
         lclAlgos = [ Hlt2TopoKillTooManyInTrk ]
         lclAlgos.extend(algos)
 
@@ -120,11 +120,11 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
                         , postscale = self.postscale
                         , algos = lclAlgos
                        )
-        self.updateHltANNSvc(lineName)
+        self.__updateHltANNSvc(lineName)
     # }
 
 
-    def robustCombine(self, name, inputSeq, decayDesc, extracuts = None) : # {
+    def __robustCombine(self, name, inputSeq, decayDesc, extracuts = None) : # {
         """
         # Function to configure common particle combinations used by the
         #   robust stages of the topological lines.  It lashes the new
@@ -172,7 +172,7 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
     # }
 
 
-    def robustFilter(self, name, inputSeq, extracode = None) : # {
+    def __robustFilter(self, name, inputSeq, extracode = None) : # {
         """
         # Function to configure a filter for the robust stages of the
         #   topological.  It lashes the new FilterDesktop to a bindMembers
@@ -197,7 +197,7 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
     # }
 
 
-    def tfCombine(self, name, inputSeq, decayDesc, extracuts = None) : # {
+    def __tfCombine(self, name, inputSeq, decayDesc, extracuts = None) : # {
         """
         # Function to configure post-track-fit particle combinations
         #   used by the topological lines.  It lashes the new
@@ -244,7 +244,7 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
     # }
 
 
-    def tfFilter(self, name, inputSeq, extracode = None) : # {
+    def __tfFilter(self, name, inputSeq, extracode = None) : # {
         """
         # Function to configure a post-track-fit filter for the topological.
         #   It lashes the new FilterDesktop to a bindMembers with its
@@ -268,7 +268,7 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
     # }
 
 
-    def seqGEC(self) : # {
+    def __seqGEC(self) : # {
         """
         # Defines a Global Event Cut (mild badness) on all events with more
         # than a configurable upper limit of tracks.
@@ -302,7 +302,7 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
     # }
 
 
-    def robInPartFilter(self, name, inputSeq) : # {
+    def __robInPartFilter(self, name, inputSeq) : # {
         """
         # Function to configure a filter for the input particles of the
         #   robust stages of the topological.  It lashes the new FilterDesktop
@@ -330,7 +330,7 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
     # }
 
 
-    def tfInPartFilter(self, name, inputContainers) : # {
+    def __tfInPartFilter(self, name, inputContainers) : # {
         """
         # Function to configure a filter for the input particles of the
         #   robust stages of the topological.  It lashes the new FilterDesktop
@@ -366,8 +366,8 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         ## Filter the input particles.
         ###################################################################
         from Hlt2SharedParticles.GoodParticles import GoodPions, GoodKaons
-        lclRobInputKaons = self.robInPartFilter('TopoInputKaons', [ GoodKaons ])
-        lclRobInputPions = self.robInPartFilter('TopoInputPions', [ GoodPions ])
+        lclRobInputKaons = self.__robInPartFilter('TopoInputKaons', [ GoodKaons ])
+        lclRobInputPions = self.__robInPartFilter('TopoInputPions', [ GoodPions ])
 
 
         ###################################################################
@@ -376,7 +376,7 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         ##   if the heaviest mass hypothesis for a set of tracks passes our
         ##   mass lower limit.
         ###################################################################
-        topo2Body = self.robustCombine(  name = 'Topo2Body'
+        topo2Body = self.__robustCombine(  name = 'Topo2Body'
                                   , inputSeq = [ lclRobInputKaons ]
                                   , decayDesc = ["K*(892)0 -> K+ K+", "K*(892)0 -> K+ K-", "K*(892)0 -> K- K-"]
                                   , extracuts = { 'CombinationCut' : "(AMINDOCA('LoKi::TrgDistanceCalculator')< %(ComRobPairMinDocaUL)s )" % self.getProps() }
@@ -384,7 +384,7 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
 
         ## CombineParticles for the robust 3-body combinations.
         ###################################################################
-        topo3Body = self.robustCombine(  name = 'Topo3Body'
+        topo3Body = self.__robustCombine(  name = 'Topo3Body'
                                   , inputSeq = [ lclRobInputPions, topo2Body ]
                                   , decayDesc = ["D*(2010)+ -> K*(892)0 pi+", "D*(2010)+ -> K*(892)0 pi-"])
 
@@ -393,7 +393,7 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         ###################################################################
         ## There seems to be a lot of CPUT consumed in managing the large number
         ##   of 4-body candidates.  The list needs to be as small as possible.
-        topo4Body = self.robustCombine(  name = 'Topo4Body'
+        topo4Body = self.__robustCombine(  name = 'Topo4Body'
                                   , inputSeq = [lclRobInputPions, topo3Body ]
                                   , decayDesc = ["B0 -> D*(2010)+ pi-","B0 -> D*(2010)+ pi+"]
                                   , extracuts = { 'CombinationCut' : '(AM>4*GeV)'
@@ -409,15 +409,15 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
 
         # Construct a bindMember for the topological robust 2-body decision
         ###################################################################
-        robust2BodySeq = self.robustFilter('RobustTopo2Body', [topo2Body])
+        robust2BodySeq = self.__robustFilter('RobustTopo2Body', [topo2Body])
 
         # Construct a bindMember for the topological robust 3-body decision
         ###################################################################
-        robust3BodySeq = self.robustFilter('RobustTopo3Body', [topo3Body])
+        robust3BodySeq = self.__robustFilter('RobustTopo3Body', [topo3Body])
 
         # Construct a bindMember for the topological robust 4-body decision
         ###################################################################
-        robust4BodySeq = self.robustFilter('RobustTopo4Body', [topo4Body])
+        robust4BodySeq = self.__robustFilter('RobustTopo4Body', [topo4Body])
 
 
 
@@ -425,12 +425,12 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         ## Filter post-track fit input particles.
         ###################################################################
         from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedKaons, BiKalmanFittedPions
-        lclTFInputKaons = self.tfInPartFilter('TopoTFInputKaons', [ BiKalmanFittedKaons ] )
-        lclTFInputPions = self.tfInPartFilter('TopoTFInputPions', [ BiKalmanFittedPions ] )
+        lclTFInputKaons = self.__tfInPartFilter('TopoTFInputKaons', [ BiKalmanFittedKaons ] )
+        lclTFInputPions = self.__tfInPartFilter('TopoTFInputPions', [ BiKalmanFittedPions ] )
 
         # post-track-fit 2-body combinations
         ###################################################################
-        topoTF2Body = self.tfCombine(  name = 'TopoTF2Body'
+        topoTF2Body = self.__tfCombine(  name = 'TopoTF2Body'
                                 , inputSeq = [ lclTFInputKaons ]
                                 , decayDesc = ["K*(892)0 -> K+ K+", "K*(892)0 -> K+ K-", "K*(892)0 -> K- K-"]
                                 , extracuts = { 'CombinationCut' : "(AMINDOCA('LoKi::TrgDistanceCalculator')< %(ComTFPairMinDocaUL)s )" % self.getProps() }
@@ -438,7 +438,7 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
 
         # post-track-fit 3-body combinations
         ###################################################################
-        topoTF3Body = self.tfCombine(  name = 'TopoTF3Body'
+        topoTF3Body = self.__tfCombine(  name = 'TopoTF3Body'
                                 , inputSeq = [ lclTFInputPions, topoTF2Body ]
                                 , decayDesc = ["D*(2010)+ -> K*(892)0 pi+", "D*(2010)+ -> K*(892)0 pi-"]
                                )
@@ -446,7 +446,7 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         # post-track-fit 4-body combinations
         # Unlike the 3-body and 4-body, apply a mass lower limit.
         ###################################################################
-        topoTF4Body = self.tfCombine(  name = 'TopoTF4Body'
+        topoTF4Body = self.__tfCombine(  name = 'TopoTF4Body'
                                 , inputSeq = [ lclTFInputPions, topoTF3Body ]
                                 , decayDesc = ["B0 -> D*(2010)+ pi-","B0 -> D*(2010)+ pi+"]
                                 , extracuts = { 'CombinationCut' : '(AM>4*GeV)'
@@ -463,15 +463,15 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
 
         # Construct a bindMember for the topological post-TF 2-body decision
         ###################################################################
-        tf2BodySeq = self.tfFilter('PostTFTopo2Body', [topoTF2Body])
+        tf2BodySeq = self.__tfFilter('PostTFTopo2Body', [topoTF2Body])
 
         # Construct a bindMember for the topological post-TF 3-body decision
         ###################################################################
-        tf3BodySeq = self.tfFilter('PostTFTopo3Body', [topoTF3Body])
+        tf3BodySeq = self.__tfFilter('PostTFTopo3Body', [topoTF3Body])
 
         # Construct a bindMember for the topological post-TF 4-body decision
         ###################################################################
-        tf4BodySeq = self.tfFilter('PostTFTopo4Body', [topoTF4Body])
+        tf4BodySeq = self.__tfFilter('PostTFTopo4Body', [topoTF4Body])
 
 
         ###################################################################
@@ -501,7 +501,7 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         ###################################################################
         for robSeq in robustNBodySeq.keys() :
             lineName = robSeq + 'SA'
-            self.makeLine(lineName, algos = [robustNBodySeq[robSeq]])
+            self.__makeLine(lineName, algos = [robustNBodySeq[robSeq]])
 
 
         ###################################################################
@@ -510,7 +510,7 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         ###################################################################
         for tfSeq in tfNBodySeq.keys() :
             lineName = tfSeq + 'SA'
-            self.makeLine(lineName, algos = [tfNBodySeq[tfSeq]] )
+            self.__makeLine(lineName, algos = [tfNBodySeq[tfSeq]] )
 
 
         ###################################################################
@@ -519,7 +519,7 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         for tfSeq in tfNBodySeq.keys() :
             for robSeq in robustNReqSeq.keys() :
                 lineName = tfSeq + robSeq
-                self.makeLine(lineName, algos = [ robustNReqSeq[robSeq], tfNBodySeq[tfSeq] ])
+                self.__makeLine(lineName, algos = [ robustNReqSeq[robSeq], tfNBodySeq[tfSeq] ])
 
 
 

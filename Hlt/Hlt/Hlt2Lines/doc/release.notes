@@ -8,6 +8,12 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2010-04-02 - P. Spradlin
+ - Hlt2TopologicalLines.py and Hlt2CharmLines.py
+   Prepended __ to names of all methods that do not need to be public (all of
+   them).  Changed default values of slots for continuous values to floating 
+   points (some of them were integer literals).  The values are unchanged.
+
 ! 2010-04-01 - Gerhard Raven
  - add some monitoring histograms to Hlt2ExpressLines
 

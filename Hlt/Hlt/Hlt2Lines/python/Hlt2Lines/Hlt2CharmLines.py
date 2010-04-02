@@ -1,7 +1,7 @@
-## $Id: Hlt2CharmLines.py,v 1.13 2010-03-31 17:39:27 spradlin Exp $
+## $Id: Hlt2CharmLines.py,v 1.14 2010-04-02 14:17:25 spradlin Exp $
 __author__  = 'Patrick Spradlin'
-__date__    = '$Date: 2010-03-31 17:39:27 $'
-__version__ = '$Revision: 1.13 $'
+__date__    = '$Date: 2010-04-02 14:17:25 $'
+__version__ = '$Revision: 1.14 $'
 
 ## ######################################################################
 ## Defines a configurable to define and configure Hlt2 lines for selecting
@@ -15,24 +15,24 @@ class Hlt2CharmLinesConf(HltLinesConfigurableUser) :
     # steering variables
     #------------------------
     # Don't touch my variables!
-    __slots__ = { 'ComRobAllTrkPtLL'        : 300        # in MeV
-                , 'ComRobAllTrkPLL'         : 2000       # in MeV
+    __slots__ = { 'ComRobAllTrkPtLL'        : 300.0      # in MeV
+                , 'ComRobAllTrkPLL'         : 2000.0     # in MeV
                 , 'ComRobAllTrkPVIPLL'      : 0.05       # in mm
                 , 'ComRobPairMinDocaUL'     : 0.10       # in mm
-                , 'ComRobPairMaxDocaUL'     : 1          # in mm
-                , 'ComRobTrkMaxPtLL'        : 1500       # in MeV
-                , 'ComRobVtxPVDispLL'       : 2          # in mm
+                , 'ComRobPairMaxDocaUL'     : 1.0        # in mm
+                , 'ComRobTrkMaxPtLL'        : 1500.0     # in MeV
+                , 'ComRobVtxPVDispLL'       : 2.0        # in mm
                 , 'ComRobVtxPVRDispLL'      : 0.2        # in mm
                 , 'ComRobUseGEC'            : True       # do or do not 
                 , 'ComRobGEC'               : 120        # max number of tracks
-                , 'ComTFAllTrkPtLL'         : 300        # in MeV
-                , 'ComTFAllTrkPLL'          : 2000       # in MeV
-                , 'ComTFAllTrkPVIPChi2LL'   : 9          # unitless
-                , 'ComTFAllTrkChi2UL'       : 10         # unitless
+                , 'ComTFAllTrkPtLL'         : 300.0      # in MeV
+                , 'ComTFAllTrkPLL'          : 2000.0     # in MeV
+                , 'ComTFAllTrkPVIPChi2LL'   : 9.0        # unitless
+                , 'ComTFAllTrkChi2UL'       : 10.0       # unitless
                 , 'ComTFPairMinDocaUL'      : 0.10       # in mm
-                , 'ComTFPairMaxDocaUL'      : 1          # in mm
-                , 'ComTFTrkMaxPtLL'         : 1500       # in MeV
-                , 'ComTFVtxPVDispChi2LL'    : 100        # unitless
+                , 'ComTFPairMaxDocaUL'      : 1.0        # in mm
+                , 'ComTFTrkMaxPtLL'         : 1500.0     # in MeV
+                , 'ComTFVtxPVDispChi2LL'    : 100.0      # unitless
                 , 'RobustPointingUL'        : 0.10       # unitless
                 , 'TFPointUL'               : 0.10       # unitless
                 , 'Prescale'                : {'Hlt2CharmTF2BodyWideMass' : 0.05
@@ -58,7 +58,7 @@ class Hlt2CharmLinesConf(HltLinesConfigurableUser) :
 
 
 
-    def updateHltANNSvc(self,line) : # {
+    def __updateHltANNSvc(self,line) : # {
         """
         Wrapper for updating the HltANNSvc after a new line has been
         constructed.  This should eventually become obsolete.
@@ -70,7 +70,7 @@ class Hlt2CharmLinesConf(HltLinesConfigurableUser) :
     # }
 
 
-    def makeLine(self, lineName, algos) : # {
+    def __makeLine(self, lineName, algos) : # {
         """
         Wrapper for line construction that also registers it to the HltANNSvc.
         """
@@ -78,7 +78,7 @@ class Hlt2CharmLinesConf(HltLinesConfigurableUser) :
 
         lclAlgos = []
         ## Prepend a filter on the number of tracks, if required.
-        Hlt2CharmKillTooManyInTrk = self.seqGEC()
+        Hlt2CharmKillTooManyInTrk = self.__seqGEC()
         lclAlgos = [ Hlt2CharmKillTooManyInTrk ]
         lclAlgos.extend(algos)
 
@@ -87,11 +87,11 @@ class Hlt2CharmLinesConf(HltLinesConfigurableUser) :
                         , postscale = self.postscale
                         , algos = lclAlgos
                        )
-        self.updateHltANNSvc(lineName)
+        self.__updateHltANNSvc(lineName)
     # }
 
 
-    def robustCombine(self, name, inputSeq, decayDesc, extracuts = None) : # {
+    def __robustCombine(self, name, inputSeq, decayDesc, extracuts = None) : # {
         """
         # Function to configure common particle combinations used by the
         #   robust stages of the charm lines.  It lashes the new
@@ -139,7 +139,7 @@ class Hlt2CharmLinesConf(HltLinesConfigurableUser) :
     # }
 
 
-    def robustFilter(self, name, inputSeq, extracode = None) : # {
+    def __robustFilter(self, name, inputSeq, extracode = None) : # {
         """
         # Function to configure a robust filter for the charm.
         #   It lashes the new FilterDesktop to a bindMembers with its
@@ -164,7 +164,7 @@ class Hlt2CharmLinesConf(HltLinesConfigurableUser) :
     # }
 
 
-    def tfCombine(self, name, inputSeq, decayDesc, extracuts = None) : # {
+    def __tfCombine(self, name, inputSeq, decayDesc, extracuts = None) : # {
         """
         # Function to configure post-track-fit particle combinations
         #   used by the charm lines.  It lashes the new
@@ -211,7 +211,7 @@ class Hlt2CharmLinesConf(HltLinesConfigurableUser) :
     # }
 
 
-    def tfFilter(self, name, inputSeq, extracode = None) : # {
+    def __tfFilter(self, name, inputSeq, extracode = None) : # {
         """
         # Function to configure a post-track-fit filter for the charm.
         #   It lashes the new FilterDesktop to a bindMembers with its
@@ -236,7 +236,7 @@ class Hlt2CharmLinesConf(HltLinesConfigurableUser) :
     # }
 
 
-    def seqGEC(self) : # {
+    def __seqGEC(self) : # {
         """
         # Defines a Global Event Cut (mild badness) on all events with more
         # than a configurable upper limit of tracks.
@@ -269,7 +269,7 @@ class Hlt2CharmLinesConf(HltLinesConfigurableUser) :
     # }
 
 
-    def robInPartFilter(self, name, inputSeq) : # {
+    def __robInPartFilter(self, name, inputSeq) : # {
         """
         # Function to configure a filter for the input particles of the
         #   robust stages of the charm lines.  It lashes the new FilterDesktop
@@ -297,7 +297,7 @@ class Hlt2CharmLinesConf(HltLinesConfigurableUser) :
     # }
 
 
-    def tfInPartFilter(self, name, inputContainers) : # {
+    def __tfInPartFilter(self, name, inputContainers) : # {
         """
         # Function to configure a filter for the input particles of the
         #   post-track-fit stages of the charm lines.  It lashes the new
@@ -334,8 +334,8 @@ class Hlt2CharmLinesConf(HltLinesConfigurableUser) :
         ## Filter the input particles.
         ###################################################################
         from Hlt2SharedParticles.GoodParticles import GoodPions, GoodKaons
-        lclRobInputKaons = self.robInPartFilter('CharmInputKaons', [ GoodKaons ])
-        lclRobInputPions = self.robInPartFilter('CharmInputPions', [ GoodPions ])
+        lclRobInputKaons = self.__robInPartFilter('CharmInputKaons', [ GoodKaons ])
+        lclRobInputPions = self.__robInPartFilter('CharmInputPions', [ GoodPions ])
 
 
         ###################################################################
@@ -344,7 +344,7 @@ class Hlt2CharmLinesConf(HltLinesConfigurableUser) :
 
         # CombineParticles for the robust 2-body combinations.
         ###################################################################
-        charm2Body = self.robustCombine(  name = 'Charm2Body'
+        charm2Body = self.__robustCombine(  name = 'Charm2Body'
                                   , inputSeq = [ lclRobInputKaons, lclRobInputPions ]
                                   , decayDesc = [ "K*(892)0 -> pi+ pi+"
                                                 , "K*(892)0 -> pi+ pi-"
@@ -361,7 +361,7 @@ class Hlt2CharmLinesConf(HltLinesConfigurableUser) :
 
         # CombineParticles for the robust 3-body combinations.
         ###################################################################
-        charm3Body = self.robustCombine(  name = 'Charm3Body'
+        charm3Body = self.__robustCombine(  name = 'Charm3Body'
                                   , inputSeq = [ lclRobInputPions, charm2Body ]
                                   , decayDesc = ["D*(2010)+ -> K*(892)0 pi+", "D*(2010)+ -> K*(892)0 pi-"])
 
@@ -369,7 +369,7 @@ class Hlt2CharmLinesConf(HltLinesConfigurableUser) :
         # Construct a bindMember for the charm robust 4-body decision
         # CombineParticles for the 4-body combinations.
         ###################################################################
-        charmRob4Body = self.robustCombine(  name = 'CharmRobust4Body'
+        charmRob4Body = self.__robustCombine(  name = 'CharmRobust4Body'
                                   , inputSeq = [lclRobInputPions, charm3Body ]
                                   , decayDesc = ["B0 -> D*(2010)+ pi-","B0 -> D*(2010)+ pi+"]
                                   , extracuts = {'CombinationCut' : '(AM>1700*MeV) & (AM<2100*MeV)'
@@ -381,17 +381,17 @@ class Hlt2CharmLinesConf(HltLinesConfigurableUser) :
         ###################################################################
         # Construct a bindMember for the charm robust 2-body decision
         ###################################################################
-        charmRobust2BodySeq = self.robustFilter('CharmRobust2Body', [charm2Body], extracode = '(SUMQ==0)')
+        charmRobust2BodySeq = self.__robustFilter('CharmRobust2Body', [charm2Body], extracode = '(SUMQ==0)')
 
 
         # Construct a bindMember for the charm robust 3-body decision
         ###################################################################
-        charmRobust3BodySeq = self.robustFilter('CharmRobust3Body', [charm3Body], extracode = '((SUMQ==1) | (SUMQ == -1))')
+        charmRobust3BodySeq = self.__robustFilter('CharmRobust3Body', [charm3Body], extracode = '((SUMQ==1) | (SUMQ == -1))')
 
 
         # Construct a bindMember for the charm robust 4-body decision
         ###################################################################
-        charmRobust4BodySeq = self.robustFilter('CharmRobust4Body', [charmRob4Body])
+        charmRobust4BodySeq = self.__robustFilter('CharmRobust4Body', [charmRob4Body])
 
 
 
@@ -399,8 +399,8 @@ class Hlt2CharmLinesConf(HltLinesConfigurableUser) :
         ## Filter post-track fit input particles.
         ###################################################################
         from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedKaons, BiKalmanFittedPions
-        lclTFInputKaons = self.tfInPartFilter('CharmTFInputKaons', [ BiKalmanFittedKaons] )
-        lclTFInputPions = self.tfInPartFilter('CharmTFInputPions', [ BiKalmanFittedPions] )
+        lclTFInputKaons = self.__tfInPartFilter('CharmTFInputKaons', [ BiKalmanFittedKaons] )
+        lclTFInputPions = self.__tfInPartFilter('CharmTFInputPions', [ BiKalmanFittedPions] )
 
 
         ###################################################################
@@ -410,7 +410,7 @@ class Hlt2CharmLinesConf(HltLinesConfigurableUser) :
 
         # post-track-fit 2-body combinations
         ###################################################################
-        charmTF2Body = self.tfCombine(  name = 'CharmTF2Body'
+        charmTF2Body = self.__tfCombine(  name = 'CharmTF2Body'
                                 , inputSeq = [ lclTFInputKaons, lclTFInputPions ]
                                 #, decayDesc = ["K*(892)0 -> pi+ pi-", "K*(892)0 -> K+ K-", "K*(892)0 -> K+ pi-", "K*(892)0 -> pi+ K-"]
                                 , decayDesc = [ "K*(892)0 -> pi+ pi+"
@@ -428,14 +428,14 @@ class Hlt2CharmLinesConf(HltLinesConfigurableUser) :
 
         # post-track-fit 3-body combinations
         ###################################################################
-        charmTF3Body = self.tfCombine(  name = 'CharmTF3Body'
+        charmTF3Body = self.__tfCombine(  name = 'CharmTF3Body'
                                 , inputSeq = [ lclTFInputPions, charmTF2Body ]
                                 , decayDesc = ["D*(2010)+ -> K*(892)0 pi+", "D*(2010)+ -> K*(892)0 pi-"]
                                )
 
         # post-track-fit 4-body combinations
         ###################################################################
-        charmTF4Body = self.tfCombine(  name = 'CharmTF4Body'
+        charmTF4Body = self.__tfCombine(  name = 'CharmTF4Body'
                                 , inputSeq = [ lclTFInputPions, charmTF3Body ]
                                 , decayDesc = ["B0 -> D*(2010)+ pi-","B0 -> D*(2010)+ pi+"]
                                 , extracuts = { 'CombinationCut' : '(AM>1839*MeV) & (AM<1889*MeV)'
@@ -445,21 +445,21 @@ class Hlt2CharmLinesConf(HltLinesConfigurableUser) :
         ###################################################################
         # Main 2-body charm post-track-fit sequence and line.
         ###################################################################
-        charmTF2BodySeq = self.tfFilter('CharmPostTF2Body'
+        charmTF2BodySeq = self.__tfFilter('CharmPostTF2Body'
                                      , [charmTF2Body]
                                      , extracode = '(M>1839*MeV) & (M<1889*MeV) & (SUMQ == 0)')
 
 
         # Main 3-body charm post-track-fit sequence and line.
         ###################################################################
-        charmTF3BodySeq = self.tfFilter('CharmPostTF3Body'
+        charmTF3BodySeq = self.__tfFilter('CharmPostTF3Body'
                                      , [charmTF3Body]
                                      , extracode = '(((M>1844*MeV) & (M<1894*MeV)) | ((M>1943*MeV) & (M<1993*MeV)) & ((SUMQ == -1) |(SUMQ == 1)))')
 
 
         # Main 4-body charm post-track-fit sequence and line.
         ###################################################################
-        charmTF4BodySeq = self.tfFilter('CharmPostTF4Body'
+        charmTF4BodySeq = self.__tfFilter('CharmPostTF4Body'
                                      , [charmTF4Body]
                                      , extracode = '(M>1839*MeV) & (M<1889*MeV)')
 
@@ -483,7 +483,7 @@ class Hlt2CharmLinesConf(HltLinesConfigurableUser) :
         # Heavily post-scaled.
         ###################################################################
         for charmSeq in charmRobustNBodySeq.keys() :
-            self.makeLine(charmSeq, algos = [charmRobustNBodySeq[charmSeq]] )
+            self.__makeLine(charmSeq, algos = [charmRobustNBodySeq[charmSeq]] )
 
 
         ##
@@ -491,13 +491,13 @@ class Hlt2CharmLinesConf(HltLinesConfigurableUser) :
         # Define the main charm lines
         #
         ##
-        self.makeLine('CharmTF2BodySignal'
+        self.__makeLine('CharmTF2BodySignal'
                  , algos = [ charmRobust2BodySeq, charmTF2BodySeq ])
 
-        self.makeLine('CharmTF3BodySignal'
+        self.__makeLine('CharmTF3BodySignal'
                  , algos = [ charmRobust3BodySeq, charmTF3BodySeq ])
 
-        self.makeLine('CharmTF4BodySignal'
+        self.__makeLine('CharmTF4BodySignal'
                  , algos = [ charmRobust4BodySeq, charmTF4BodySeq])
 
 
@@ -508,27 +508,27 @@ class Hlt2CharmLinesConf(HltLinesConfigurableUser) :
         ##
         # Line for 2-body charm mass sidebands.  Heavily pre-scaled.
         ###################################################################
-        charmTF2BodySBSeq = self.tfFilter('CharmPostTF2BodyWideMass'
+        charmTF2BodySBSeq = self.__tfFilter('CharmPostTF2BodyWideMass'
                                      , [charmTF2Body]
                                      , extracode = '(M>1700*MeV) & (M<2100*MeV)')
 
-        self.makeLine('CharmTF2BodyWideMass'
+        self.__makeLine('CharmTF2BodyWideMass'
                  , algos = [ charmRobust2BodySeq, charmTF2BodySBSeq ])
 
 
         # Line for 3-body charm mass sidebands.  Heavily pre-scaled.
         ###################################################################
-        charmTF3BodySBSeq = self.tfFilter('CharmPostTF3BodyWideMass'
+        charmTF3BodySBSeq = self.__tfFilter('CharmPostTF3BodyWideMass'
                                      , [charmTF3Body]
                                      , extracode = '(M>1700*MeV) & (M<2100*MeV)')
 
-        self.makeLine('CharmTF3BodyWideMass'
+        self.__makeLine('CharmTF3BodyWideMass'
                  , algos = [ charmRobust3BodySeq, charmTF3BodySBSeq ])
 
 
         # Line for 4-body charm mass sidebands.  Heavily pre-scaled.
         ###################################################################
-        charmTF4BodySB = self.tfCombine(  name = 'CharmWMTF4Body'
+        charmTF4BodySB = self.__tfCombine(  name = 'CharmWMTF4Body'
                                 , inputSeq = [ lclTFInputPions, charmTF3Body ]
                                 , decayDesc = ["B0 -> D*(2010)+ pi-","B0 -> D*(2010)+ pi+"]
                                 , extracuts = { 'CombinationCut' : '(AM>1700*MeV) & (AM<2100*MeV)' 
@@ -536,11 +536,11 @@ class Hlt2CharmLinesConf(HltLinesConfigurableUser) :
                                               }
                                  )
 
-        charmTF4BodySBSeq = self.tfFilter('CharmPostTF4BodyWideMass'
+        charmTF4BodySBSeq = self.__tfFilter('CharmPostTF4BodyWideMass'
                                      , [charmTF4BodySB]
                                      , extracode = '(M>1700*MeV) & (M<2100*MeV)')
 
-        self.makeLine('CharmTF4BodyWideMass'
+        self.__makeLine('CharmTF4BodyWideMass'
                  , algos = [ charmRobust4BodySeq, charmTF4BodySBSeq])
 
 
