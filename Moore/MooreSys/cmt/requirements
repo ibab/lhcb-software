@@ -1,5 +1,5 @@
 package MooreSys
-version v9r0
+version v8r8p2
 
 branches doc cmt
 
@@ -7,9 +7,17 @@ branches doc cmt
 # Don't forget the applications
 #=======================================================
 
-use  Moore              v9r0     Hlt
+use  Moore              v8r8p2    Hlt
 
-use CaloReco            v5r4p1  Calo
+use HltCommon           v5r19p1 Hlt
+use Hlt1Lines           v2r3p2  Hlt
+use Hlt2Lines           v2r4p1  Hlt
+use HltConf             v6r5p2  Hlt
+use HltSettings         v1r11p2 Hlt
+use LoKiHlt             v2r7p1  Phys
+use LoKiCore            v9r11p1 Phys
+use PuVeto              v7r7p1  L0
+use VeloDAQ             v4r13   Velo
 
 
 # Declare this as a container package
