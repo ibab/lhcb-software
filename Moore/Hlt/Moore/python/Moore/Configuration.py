@@ -1,7 +1,7 @@
 """
 High level configuration tool(s) for Moore
 """
-__version__ = "$Id: Configuration.py,v 1.110 2010-03-31 07:25:29 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.111 2010-04-03 11:33:07 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ, path
@@ -20,6 +20,7 @@ from  ctypes import c_uint
 def _ext(name) : 
     x =  path.splitext(name)[-1].lstrip('.').upper()
     if x == 'MDF' : x = 'RAW'
+    if x == 'XDST' : x = 'DST'
     return x
 
 def _datafmt(fn) : 
@@ -76,6 +77,7 @@ class Moore(LHCbConfigurableUser):
         , 'RequireL0ForEndSequence'     : False
         , 'SkipHltRawBankOnRejectedEvents' : True
         , 'HistogrammingLevel' : 'Line'
+        , 'EnableMonitoring' : False
         , "RunOnline"         : False
         , "UseDBSnapshot"     : True
         , "DBSnapshotDirectory" : "/group/online/hlt/conditions"
@@ -341,6 +343,8 @@ class Moore(LHCbConfigurableUser):
 
                     if check(c,'HistoProduce',False) :
                         addOverrule(c,'HistoProduce:@OnlineEnv.Monitor@False')
+                    if c.getType() in ['FilterDesktop','CombineParticles' ] and  check(c,'Monitor',False) :
+                        addOverrule(c,'Monitor:@OnlineEnv.Monitor@False')
                     if check(c,'Enable',False) :
                         addOverrule(c,'OutputLevel:3')
                     for p in [ 'Members','Filter0','Filter1' ] :
@@ -398,6 +402,7 @@ class Moore(LHCbConfigurableUser):
                             , 'RequireL0ForEndSequence'
                             , 'SkipHltRawBankOnRejectedEvents'
                             , 'HistogrammingLevel' 
+                            , 'EnableMonitoring'
                             , "EnableLumiEventWriting"
                             , "EnableAcceptIfSlow"
                             , 'ForceSingleL0Configuration'
