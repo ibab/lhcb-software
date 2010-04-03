@@ -5,6 +5,10 @@
 !-----------------------------------------------------------------------------
 
 
+! 2010-04-03 - Gerhard Raven
+ - add Dstar line to express line list
+ - add Physics_MinBiasL0_PassThroughHlt1_ExpressHlt2_Feb10 which is 
+   Physics_MinBiasL0_PassThroughHlt_Feb10 with Hlt2 express lines added
 !========================== HltSettings v1r12   2010-03-28 ===================
 ! 2010-03-26 - Gerhard Raven
  - add Commissioning_Beamgas setting

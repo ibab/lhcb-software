@@ -23,5 +23,6 @@ class Express_Hlt2_Jan10 :
                , 'Hlt2ExpressKS'
                , 'Hlt2ExpressDs2PhiPi'
                , 'Hlt2ExpressBeamHalo'
+               , 'Hlt2ExpressDStar2D0Pi'
                ]
         return lines
