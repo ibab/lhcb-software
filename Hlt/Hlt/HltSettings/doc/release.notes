@@ -5,6 +5,11 @@
 !-----------------------------------------------------------------------------
 
 
+!========================== HltSettings v1r11p2 2010-04-03 ===================
+! 2010-04-03 - Gerhard Raven
+ - remove J/psi tag and probe for the Moore v8r8p2 release which does
+   not have the changes in HLT_v10r0 needed for this line
+
 ! 2010-04-03 - Gerhard Raven
  - add Dstar line to express line list
  - add Physics_MinBiasL0_PassThroughHlt1_ExpressHlt2_Feb10 which is 
