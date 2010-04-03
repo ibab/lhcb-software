@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.181 2010-03-22 16:03:17 ibelyaev Exp $ 
+! $Id: release.notes,v 1.182 2010-04-03 11:50:12 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiCore
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -14,6 +14,9 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! 
 ! -----------------------------------------------------------------------------
+! 2010-04-02 - Gerhard Raven
+ - randomize the initial phase of the periodic rate limiter, to avoid multiple
+   HLT tasks from running in sync.
 
 ! 2010-03-22 - Vanya Belyaev
 
@@ -89,7 +92,6 @@
     new "void"-functors:
         EXISTS    LoKi::TES::Exists   to check existence of object in TES 
         CONTAINS  LoKi::TES::Contains to check existence and size of Container in TES 
-    The concept belongs to Gerhard The Great Raven 
 
  - cmt/requirements 
     version incremement to v9r11  
@@ -750,7 +752,7 @@
 
 ! 2007-11-30 - Vanya BELYAEV  
  - new MAJOR version of LoKi  
-   Many new concepts from Gerhard "The Great" for functional programming
+   Many new concepts from Gerhard for functional programming
    essentially the whole "functor"-business is reqritten 
  - cmt/requirements 
    version incrmeent to v7r0

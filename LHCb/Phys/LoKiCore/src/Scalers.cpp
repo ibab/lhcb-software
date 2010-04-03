@@ -1,4 +1,4 @@
-// $Id: Scalers.cpp,v 1.1 2009-12-06 18:20:57 ibelyaev Exp $
+// $Id: Scalers.cpp,v 1.2 2010-04-03 11:50:12 graven Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -301,6 +301,10 @@ bool LoKi::Scalers::RateLimitV::eval
   bool accept = false ;
   if( m_rate > 0 ) 
   {
+
+    // randomize initial phase in case of periodic limiter
+    if ( m_next == 0  && !m_random )  m_next = m_interval * m_uniform(0);
+
     size_t currenttick   = m_rateSvc->tick() ;
     if ( ( accept = ( currenttick >= m_next ) ) )  
     {
