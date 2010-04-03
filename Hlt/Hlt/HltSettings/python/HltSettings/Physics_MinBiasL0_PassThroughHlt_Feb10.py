@@ -117,8 +117,6 @@ class Physics_MinBiasL0_PassThroughHlt_Feb10 :
                                                 , 'Postscale' : { 'Hlt1Tell1Error' : 'RATE(1)' }
                                                 }
                  , Hlt2CommissioningLinesConf : { 'Prescale' : { 'Hlt2PassThrough'  : 1.
-                                                               , 'Hlt2Forward'      : 0. # first needs a check that /Hlt/Track/Long actually exists..
-                                                               , 'Hlt2DebugEvent'   : 0.0001
                                                                }              }
                  
                  }
@@ -145,7 +143,7 @@ class Physics_MinBiasL0_PassThroughHlt_Feb10 :
                , 'Hlt1Lumi'
                , 'Hlt1LumiLowBeam1' , 'Hlt1LumiLowBeam2' , 'Hlt1LumiLowBeamCrossing' , 'Hlt1LumiLowNoBeam'
                , 'Hlt1BeamGasBeam1', 'Hlt1BeamGasBeam2', 'Hlt1BeamGasCrossing', 'Hlt1BeamGasCrossingForcedRZReco'
-               , 'Hlt1MBNoBias' # , 'Hlt1MBMiniBias'
+               , 'Hlt1MBNoBias'
                , 'Hlt1MBMicroBiasRZVelo', 'Hlt1MBMicroBiasTStation'
                , 'Hlt1SingleHadron',     'Hlt1SingleHadronViaT'
                , 'Hlt1DiHadron',         'Hlt1DiHadronViaT',    'Hlt1DiHadronSoft'
