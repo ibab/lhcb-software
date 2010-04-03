@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.183 2010-04-03 14:44:04 graven Exp $ 
+! $Id: release.notes,v 1.184 2010-04-03 14:46:31 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiCore
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -15,9 +15,6 @@
 ! 
 ! -----------------------------------------------------------------------------
 
-! 2010-04-02 - Gerhard Raven
- - randomize the initial phase of the periodic rate limiter, to avoid multiple
-   HLT tasks from running in sync.
 
 ! 2010-03-22 - Vanya Belyaev
 
@@ -86,6 +83,10 @@
 
        version increment to v9r12 
 
+! =========================== LoKiCore v9r11p1 2010-04-02 =======================
+! 2010-04-02 - Gerhard Raven
+ - randomize the initial phase of the periodic rate limiter, to avoid multiple
+   HLT tasks from running in sync.
 
 ! =========================== LoKiCore v9r11 2010-02-24 =======================
 ! 2010-02-13 - Vanya Belyaev
