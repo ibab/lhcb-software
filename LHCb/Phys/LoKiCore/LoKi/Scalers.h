@@ -1,4 +1,4 @@
-// $Id: Scalers.h,v 1.2 2010-02-13 16:31:06 ibelyaev Exp $
+// $Id: Scalers.h,v 1.3 2010-04-03 22:19:38 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_SCALERS_H 
 #define LOKI_SCALERS_H 1
@@ -12,6 +12,7 @@
 // LoKi 
 // ============================================================================
 #include "LoKi/Random.h"
+#include "LoKi/Listener.h"
 // ============================================================================
 namespace LoKi 
 {
@@ -122,7 +123,10 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2009-12-04
      */
-    class RateLimitV : public LoKi::Functor<void,bool> 
+    //class RateLimitV : public LoKi::Functor<void,bool> 
+    class RateLimitV
+      : public LoKi::Functor<void,bool>  
+      , public LoKi::Listener 
     {
     public:
       // ======================================================================
@@ -151,6 +155,11 @@ namespace LoKi
                    const double          maxRate        , 
                    const bool            random  = true ) ;
       // ======================================================================
+      /** copy construcor 
+       *  take care abotu rundomization of initial phase 
+       */
+      RateLimitV ( const RateLimitV& right ) ;
+      // ======================================================================
       /// MANDATORY: virtual destructor 
       virtual ~RateLimitV () ;
       /// MANDATORY: clone method ("virtual constructor")
@@ -178,6 +187,20 @@ namespace LoKi
       // ======================================================================
       /// get the service
       StatusCode getService ( const std::string& service ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// perform the initialization
+      void initialize_ ( const std::string& svc ) ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /** handle incidents 
+       *  @see LoKi::Listener 
+       *  @see IIncidentListener
+       *  @param incident (INPUT) incident to listen
+       */
+      virtual void handle ( const Incident& incident ) ;
       // ======================================================================
     private:
       // ======================================================================

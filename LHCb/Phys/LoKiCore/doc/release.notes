@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.184 2010-04-03 14:46:31 graven Exp $ 
+! $Id: release.notes,v 1.185 2010-04-03 22:19:38 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiCore
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -15,6 +15,15 @@
 ! 
 ! -----------------------------------------------------------------------------
 
+! 2010-04-04 - Vanya Belyaev 
+
+ - LoKi/Listener.h, src/Listener.cpp 
+
+    helper class for listeting incidents 
+
+ - LoKi::Scalers::RateLimitV
+
+     implements listeting the incidents (needed for Moore)
 
 ! 2010-03-22 - Vanya Belyaev
 
