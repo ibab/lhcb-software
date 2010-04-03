@@ -8,10 +8,10 @@
   <text>$APPCONFIGOPTS/UseOracle.py</text>
   <text>$APPCONFIGOPTS/DaVinci/DataType-2010.py</text>
     <text>--option</text>
-    <text>from Configurables import DaVinci; DaVinci().EvtMax=100; EventSelector().Input = ["DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/data/2010/DST/00006220/0000/00006220_00000001_1.dst' TYP='POOL_ROOTTREE' OPT='READ'"];</text>
+    <text>from Configurables import DaVinci; DaVinci().EvtMax=600; EventSelector().Input = ["DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/data/2010/DST/00006220/0000/00006220_00000001_1.dst' TYP='POOL_ROOTTREE' OPT='READ'"];</text>
 </set></argument>  <argument name="validator"><text>
 findReferenceBlock("""
-DaVinciInit       SUCCESS 100 events processed
+DaVinciInit       SUCCESS 600 events processed
 """, stdout, result, causes, signature_offset = 0, id = "4100")
 countErrorLines({"FATAL":0})
 </text></argument>
