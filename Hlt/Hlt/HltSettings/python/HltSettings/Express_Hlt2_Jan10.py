@@ -16,13 +16,12 @@ class Express_Hlt2_Jan10 :
         Returns a list of active lines
         """
 
-        lines = [
-                 'Hlt2ExpressJPsi'
-               , 'Hlt2ExpressJPsiTagProbe'
-               , 'Hlt2ExpressLambda'
-               , 'Hlt2ExpressKS'
-               , 'Hlt2ExpressDs2PhiPi'
-               , 'Hlt2ExpressBeamHalo'
-               , 'Hlt2ExpressDStar2D0Pi'
-               ]
+        lines = [ 'Hlt2ExpressJPsi'
+                # , 'Hlt2ExpressJPsiTagProbe' # not available prior to HLT_v10r0
+                , 'Hlt2ExpressLambda'
+                , 'Hlt2ExpressKS'
+                , 'Hlt2ExpressDs2PhiPi'
+                , 'Hlt2ExpressBeamHalo'
+                , 'Hlt2ExpressDStar2D0Pi'
+                ]
         return lines
