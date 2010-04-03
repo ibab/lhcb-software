@@ -1,4 +1,4 @@
-// $Id: VeloTrackMonitor.cpp,v 1.29 2010-02-09 18:55:47 siborghi Exp $
+// $Id: VeloTrackMonitor.cpp,v 1.30 2010-04-03 13:38:12 krinnert Exp $
 // Include files 
 
 // from Gaudi
@@ -216,7 +216,6 @@ StatusCode Velo::VeloTrackMonitor::execute() {
 StatusCode Velo::VeloTrackMonitor::finalize() {
   
   if ( m_debugLevel ) debug() << "==> Finalize" << endmsg;
-  m_event = 0;
 
   return VeloMonitorBase::finalize();  // must be called after all other actions
 }
@@ -284,12 +283,12 @@ StatusCode Velo::VeloTrackMonitor::monitorTracks ( ) {
   //Number of R, Phi and total clusters in tracks per Event
   unsigned int nRClusEvent (0), nPhiClusEvent (0), nSumClusEvent (0);
  // RESET AFTER CERTAIN EVENTS
-  if ( ( context() == "Online" ) &&  (m_event == m_resetProfile) ) { m_prof_sensors -> reset() ; } 
-  if ( (context() == "Online") &&  (m_event == m_resetProfile) ) { m_prof_pos_mom_res -> reset() ; } 
-  if ( (context() == "Online") &&  (m_event == m_resetProfile) ) { m_prof_neg_mom_res -> reset() ; } 
-  if ( (context() == "Online") &&  (m_event == m_resetProfile) ) { m_prof_thetaR -> reset() ; } 
-  if ( (context() == "Online") &&  (m_event == m_resetProfile) ) { m_prof_thetaTot -> reset() ; } 
-  if ( (context() == "Online") &&  (m_event == m_resetProfile) ) { m_prof_pseudoEffsens -> reset() ; } 
+  if ( (context() != "Offline" ) &&  (m_event == m_resetProfile) ) { m_prof_sensors -> reset() ; } 
+  if ( (context() != "Offline") &&  (m_event == m_resetProfile) ) { m_prof_pos_mom_res -> reset() ; } 
+  if ( (context() != "Offline") &&  (m_event == m_resetProfile) ) { m_prof_neg_mom_res -> reset() ; } 
+  if ( (context() != "Offline") &&  (m_event == m_resetProfile) ) { m_prof_thetaR -> reset() ; } 
+  if ( (context() != "Offline") &&  (m_event == m_resetProfile) ) { m_prof_thetaTot -> reset() ; } 
+  if ( (context() != "Offline") &&  (m_event == m_resetProfile) ) { m_prof_pseudoEffsens -> reset() ; } 
 
   //Loop over track container
   LHCb::Tracks::const_iterator itTrk;
@@ -716,7 +715,7 @@ StatusCode Velo::VeloTrackMonitor::monitorTracks ( ) {
   
   // online alignment monitoring
   if( ( m_alignMoniBasic )  && ( context() != "Offline" ) ) {
-    error() << "Filling online context" << endmsg;
+    if (m_debugLevel) debug() << "Filling online context" << endmsg;
     // reset histograms
     m_h_aliMon_Mean_R_A->reset();
     m_h_aliMon_Mean_R_C->reset();
@@ -778,9 +777,9 @@ StatusCode Velo::VeloTrackMonitor::unbiasedResiduals (LHCb::Track *track )
     // RESET AFTER CERTAIN EVENTS
     if ( m_event ==  m_resetProfile ) { m_prof_unsensors -> reset() ; } 
     // RESET AFTER CERTAIN EVENTS
-    if ( (context() == "Online") &&  (m_event == m_resetProfile) ) { m_prof_pos_mom_unres -> reset() ; } 
+    if ( (context() != "Offline") &&  (m_event == m_resetProfile) ) { m_prof_pos_mom_unres -> reset() ; } 
     // RESET AFTER CERTAIN EVENTS
-    if ( (context() == "Online") &&  (m_event == m_resetProfile) ) { m_prof_neg_mom_unres -> reset() ; } 
+    if ( (context() != "Offline") &&  (m_event == m_resetProfile) ) { m_prof_neg_mom_unres -> reset() ; } 
     
     //Loop over nodes
     LHCb::Track::ConstNodeRange nodes = track->nodes();

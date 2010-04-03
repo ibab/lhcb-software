@@ -1,4 +1,4 @@
-// $Id: Hist1D.h,v 1.1 2010-03-27 19:49:24 krinnert Exp $
+// $Id: Hist1D.h,v 1.2 2010-04-03 13:38:12 krinnert Exp $
 #ifndef INCLUDE_HIST1D_H
 #define INCLUDE_HIST1D_H 1
 #include <numeric>
@@ -21,7 +21,7 @@ class Hist1D {
 			, m_min(h->GetXaxis()->GetXmin())
 		  , m_max(h->GetXaxis()->GetXmax())
 		 	, m_binWidth((m_max-m_min)/m_nBins)
-		 	, m_entries(h->GetEntries())
+		 	, m_entries(static_cast<unsigned int>(h->GetEntries()))
 		 	, m_h(h)
 		 	, m_array(h->GetArray())
 	{ ; }
