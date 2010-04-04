@@ -1,4 +1,4 @@
-// $Id: Scalers.h,v 1.3 2010-04-03 22:19:38 ibelyaev Exp $
+// $Id: Scalers.h,v 1.4 2010-04-04 12:20:56 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_SCALERS_H 
 #define LOKI_SCALERS_H 1
@@ -117,43 +117,64 @@ namespace LoKi
       // ======================================================================
     } ;
     // ========================================================================
+    /** @enum RateLimitType
+     *  helper enum to define the actual type of rate limiter
+     *  The idea comes from Wouter Hulsbergen and Gerhard ``The Great'' Raven
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date 2010-04-04
+     */
+    enum RateLimitType
+      {
+        // ====================================================================
+        /// pure random limiter 
+        RandomLimiter              = 0 ,  // pure random limiter 
+        /// periodic limiter with random intial phase 
+        RandomPhasePeriodicLimiter     ,  // periodic limiter with random phase 
+        /// plain periodic limiter
+        PlainPeriodicLimiter              // plain periodic limiter
+        // ====================================================================
+      } ;  
+    // ========================================================================
     /** @class RateLimitV 
      *  simple scaler that scales the predicate according to event rate 
      *  @see IReferenceRate
+     *  @see LoKi::Scalers::RateLimitTypes
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2009-12-04
      */
-    //class RateLimitV : public LoKi::Functor<void,bool> 
     class RateLimitV
       : public LoKi::Functor<void,bool>  
       , public LoKi::Listener 
     {
     public:
       // ======================================================================
-      /** constructor from rate and "random" flag 
+      /** constructor from rate and the limiter type   
        *  @param maxRate the maximal rate 
-       *  @param random the random flag 
+       *  @param flag    the limiter type 
        */
-      RateLimitV ( const double maxRate        , 
-                   const bool   random  = true ) ;
+      RateLimitV
+      ( const double maxRate                      , 
+        const RateLimitType  flag = RandomLimiter ) ;
       // ======================================================================
       /** constructor from the service , rate and "random" flag 
        *  @param svc     the rate service 
        *  @param maxRate the maximal rate 
        *  @param random the random flag 
        */
-      RateLimitV ( const IReferenceRate* service        ,  
-                   const double          maxRate        , 
-                   const bool            random  = true ) ;
+      RateLimitV 
+      ( const IReferenceRate* service              ,  
+        const double          maxRate              , 
+        const RateLimitType   flag = RandomLimiter ) ;
       // ======================================================================
       /** constructor from the service name , rate and "random" flag 
        *  @param svc     the rate service name 
        *  @param maxRate the maximal rate 
        *  @param random the random flag 
        */
-      RateLimitV ( const std::string&    service        ,  
-                   const double          maxRate        , 
-                   const bool            random  = true ) ;
+      RateLimitV 
+      ( const std::string&    service                 ,  
+        const double          maxRate                 , 
+        const RateLimitType   flag    = RandomLimiter ) ;
       // ======================================================================
       /** copy construcor 
        *  take care abotu rundomization of initial phase 
@@ -175,8 +196,8 @@ namespace LoKi
       bool eval ( /* argument v = 0 */ ) const ;              // get the result 
       /// get the rate 
       double rate() const { return m_rate ; }                   // get the rate 
-      /// get the random 
-      bool   random() const { return m_random ; }             // get the random 
+      /// get the actual limiter type 
+      RateLimitType limitType () const { return m_limitType; } // get the type
       // ======================================================================
     private:
       // ======================================================================
@@ -205,13 +226,13 @@ namespace LoKi
     private:
       // ======================================================================
       /// rate service 
-      mutable LoKi::Interface<IReferenceRate> m_rateSvc ; //       rate service
+      mutable LoKi::Interface<IReferenceRate> m_rateSvc   ; //     rate service
       /// random numbers source  
-      LoKi::Random::Uniform                   m_uniform ; //     random numbers 
+      LoKi::Random::Uniform                   m_uniform   ; //   random numbers 
       /// The rate limit 
-      double                                  m_rate    ; //     the rate limit 
-      // the random flag 
-      bool                                    m_random  ; //        random flag 
+      double                                  m_rate      ; //   the rate limit 
+      /// the actual type                    
+      LoKi::Scalers::RateLimitType            m_limitType ; //     limiter type 
       // ======================================================================
     private:
       // ======================================================================
@@ -309,6 +330,8 @@ namespace LoKi
     /** @class RateLimit 
      *  simple scaler that scales the predicate according to event rate 
      *  @see IReferenceRate
+     *  @see LoKi::Scalers::RateLimitV 
+     *  @see LoKi::Scalers::RateLimitType
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2009-12-04
      */
@@ -320,25 +343,25 @@ namespace LoKi
        *  @param maxRate the maximal rate 
        *  @param random the random flag 
        */
-      RateLimit ( const double maxRate        , 
-                  const bool   random  = true ) ;
+      RateLimit ( const double        maxRate                 , 
+                  const RateLimitType flag    = RandomLimiter ) ;
       // ======================================================================
       /** constructor from the service , rate and "random" flag 
        *  @param svc     the rate service 
        *  @param maxRate the maximal rate 
        *  @param random the random flag 
        */
-      RateLimit ( const IReferenceRate* service        ,  
-                  const double          maxRate        , 
-                  const bool            random  = true ) ;
+      RateLimit ( const IReferenceRate* service                 ,  
+                  const double          maxRate                 , 
+                  const RateLimitType   flag    = RandomLimiter ) ;
       /** constructor from the service name , rate and "random" flag 
        *  @param svc     the rate service name 
        *  @param maxRate the maximal rate 
        *  @param random the random flag 
        */
-      RateLimit ( const std::string&    service        ,  
-                  const double          maxRate        , 
-                  const bool            random  = true ) ;
+      RateLimit ( const std::string&    service                 ,  
+                  const double          maxRate                 , 
+                  const RateLimitType   flag    = RandomLimiter ) ;
       // ======================================================================
       /// MANDATORY: virtual destructor 
       virtual ~RateLimit () ;
@@ -352,12 +375,22 @@ namespace LoKi
     public:
       // ======================================================================
       /// get the result ;
-      bool eval ( argument v = 0 ) const ;                  // get the result ;
+      bool          eval ( argument v = 0 ) const ;         // get the result ;
+      // ======================================================================
+      /// get the rate 
+      double        rate      () const { return m_rateLimit.rate()      ; }
+      /// get the actual limiter type 
+      RateLimitType limitType () const { return m_rateLimit.limitType() ; } 
+      // ======================================================================
+    public :
+      // ======================================================================
+      /// get the underlying basic  rate limiter 
+      LoKi::Scalers::RateLimitV& rateLimiter () { return m_rateLimit ;}
       // ======================================================================
     private:
       // ======================================================================
       /// Default constructor is disabled 
-      RateLimit() ;                         // Default constructor is disabled 
+      RateLimit () ;                         // Default constructor is disabled 
       // ======================================================================
     private:
       // ======================================================================
@@ -366,7 +399,6 @@ namespace LoKi
       // ======================================================================
     };
     // ========================================================================
-
   } //                                           end of namespace LoKi::Scalers 
   // ==========================================================================
 } //                                                      end of namespace LoKi 

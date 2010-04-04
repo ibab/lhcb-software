@@ -1,7 +1,7 @@
 <!-- 
-     * $Id: LoKiCore.xml,v 1.18 2010-04-03 22:19:38 ibelyaev Exp $ 
+     * $Id: LoKiCore.xml,v 1.19 2010-04-04 12:20:56 ibelyaev Exp $ 
      * ========================================================================
-     * CVS tag:$Name: not supported by cvs2svn $, version $Revision: 1.18 $ 
+     * CVS tag:$Name: not supported by cvs2svn $, version $Revision: 1.19 $ 
      * ======================================================================== 
      * @file
      * The seleciton file to build Reflex dictionaries for Phys/LoKiCore package
@@ -22,7 +22,6 @@
   <class name      = "LoKi::RangeBase_"      />
   <class name      = "LoKi::AuxFunBase"      />
   <class name      = "LoKi::KeeperBase"      />
-  <class name      = "LoKi::Listener"        />
 
   <class name      = "LoKi::Services"        />
   
@@ -66,7 +65,14 @@
 
   <class name    = "IStatSvc"      />
   <class name    = "IChronoSvc"    />
-
+  
+  <class name    = "LoKi::Listener">
+    <field name = "m_incSvc" transient = "true"/>
+  </class>
+  
+  <class name =        "implements1<IIncidentListener>" />
+  <class name = "extend_interfaces1<IIncidentListener>" />
+  
   <exclusion>
     <function name    = "LoKi::tokenize" /> 
     <function name    = "LoKi::Range_Local::rangeException" /> 
@@ -85,6 +91,12 @@
     </class>
     <class pattern="std::binary_function&lt;*&gt;">
       <method name="=" />
+    </class>
+
+    <class pattern="LoKi::Listener">
+      <method name="release"  />
+      <method name="addRef"   />
+      <method name="refCount" />
     </class>
     
   </exclusion>

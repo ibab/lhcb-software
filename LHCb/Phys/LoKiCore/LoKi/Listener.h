@@ -1,4 +1,4 @@
-// $Id: Listener.h,v 1.1 2010-04-03 22:19:38 ibelyaev Exp $
+// $Id: Listener.h,v 1.2 2010-04-04 12:20:56 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_LISTENER_H 
 #define LOKI_LISTENER_H 1
@@ -39,6 +39,8 @@ namespace LoKi
     // ========================================================================
     /// default constructor 
     Listener () ;                              // default constructor 
+    /// copy  constructor 
+    Listener ( const Listener& ) ;             // copy constructor 
     /// MANDATORY: virtual destructor
     virtual ~Listener () ;                     // MANDATORY: virtual destrcutor
     // ========================================================================    
@@ -64,6 +66,11 @@ namespace LoKi
      *  @see IInterface 
      */
     virtual unsigned long release() ;
+    // ========================================================================
+  public:
+    // ========================================================================
+    /// assignement 
+    Listener& operator=( const Listener& ) ;                    // assignement 
     // ========================================================================
   private:
     // ========================================================================

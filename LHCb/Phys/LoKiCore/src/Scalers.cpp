@@ -1,4 +1,4 @@
-// $Id: Scalers.cpp,v 1.3 2010-04-03 22:19:38 ibelyaev Exp $
+// $Id: Scalers.cpp,v 1.4 2010-04-04 12:20:56 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -195,16 +195,16 @@ std::ostream& LoKi::Scalers::Skipper::fillStream( std::ostream& s ) const
  */
 // ============================================================================
 LoKi::Scalers::RateLimitV::RateLimitV
-( const double maxRate , 
-  const bool   random  ) 
+( const double                       maxRate , 
+  const LoKi::Scalers::RateLimitType flag    ) 
   : LoKi::Functor<void,bool> () 
   , LoKi::Listener           () 
-  , m_rateSvc  ()
-  , m_uniform  ( 0.0 , 1.0 ) 
-  , m_rate     ( maxRate ) 
-  , m_random   ( random  ) 
-  , m_interval ( 1 ) 
-  , m_next     ( 1 ) 
+  , m_rateSvc   ()
+  , m_uniform   ( 0.0 , 1.0 ) 
+  , m_rate      ( maxRate   ) 
+  , m_limitType ( flag      ) 
+  , m_interval  ( 1 ) 
+  , m_next      ( 1 ) 
 {
   initialize_ ( s_RATESVC ) ;
 }
@@ -216,17 +216,17 @@ LoKi::Scalers::RateLimitV::RateLimitV
  */
 // ============================================================================
 LoKi::Scalers::RateLimitV::RateLimitV
-( const IReferenceRate* service ,  
-  const double          maxRate , 
-  const bool            random  ) 
+( const IReferenceRate*              service ,  
+  const double                       maxRate , 
+  const LoKi::Scalers::RateLimitType flag    ) 
   : LoKi::Functor<void,bool> ()  
   , LoKi::Listener           () 
-  , m_rateSvc  ( service   )
-  , m_uniform  ( 0.0 , 1.0 ) 
-  , m_rate     ( maxRate   ) 
-  , m_random   ( random    ) 
-  , m_interval ( 1 ) 
-  , m_next     ( 1 )
+  , m_rateSvc   ( service   )
+  , m_uniform   ( 0.0 , 1.0 ) 
+  , m_rate      ( maxRate   ) 
+  , m_limitType ( flag      ) 
+  , m_interval  ( 1 ) 
+  , m_next      ( 1 )
 {
   initialize_ ( s_RATESVC ) ;
 }
@@ -238,17 +238,17 @@ LoKi::Scalers::RateLimitV::RateLimitV
  */
 // ============================================================================
 LoKi::Scalers::RateLimitV::RateLimitV
-( const std::string&    service ,  
-  const double          maxRate , 
-  const bool            random  ) 
+( const std::string&                 service ,  
+  const double                       maxRate , 
+  const LoKi::Scalers::RateLimitType flag    ) 
   : LoKi::Functor<void,bool> ()  
   , LoKi::Listener           () 
-  , m_rateSvc  (  )
-  , m_uniform  ( 0.0 , 1.0 ) 
-  , m_rate     ( maxRate   ) 
-  , m_random   ( random    ) 
-  , m_interval ( 1 ) 
-  , m_next     ( 1 ) 
+  , m_rateSvc   (  )
+  , m_uniform   ( 0.0 , 1.0 ) 
+  , m_rate      ( maxRate   ) 
+  , m_limitType ( flag      ) 
+  , m_interval  ( 1 ) 
+  , m_next      ( 1 ) 
 {
   initialize_ ( service ) ;
 }
@@ -268,7 +268,13 @@ void LoKi::Scalers::RateLimitV::initialize_ ( const std::string& svc )
   m_next = m_rateSvc -> tick () ;
   //
   // randomize initial phase in case of perioding limiter
-  if ( !m_random  ) { m_next += m_interval * m_uniform ( m_next ) ; }
+  switch ( limitType() ) 
+  {
+  case LoKi::Scalers::RandomPhasePeriodicLimiter : 
+    m_next += m_interval * m_uniform ( m_next ) ;  break ;
+  default:
+    m_next += 0 ;
+  }
   //
   // subscribe the incident:
   //
@@ -283,18 +289,24 @@ void LoKi::Scalers::RateLimitV::initialize_ ( const std::string& svc )
 // ============================================================================
 LoKi::Scalers::RateLimitV::RateLimitV 
 ( const LoKi::Scalers::RateLimitV& right ) 
-  : LoKi::Functor<void,bool>   ( right ) 
+  : LoKi::AuxFunBase           ( right ) 
+  , LoKi::Functor<void,bool>   ( right ) 
   , LoKi::Listener             ( right ) 
-  , LoKi::AuxFunBase           ( right ) 
-  , m_rateSvc  ( right.m_rateSvc  )
-  , m_uniform  ( right.m_uniform  ) 
-  , m_rate     ( right.m_rate     ) 
-  , m_random   ( right.m_random   ) 
-  , m_interval ( right.m_interval ) 
-  , m_next     ( right.m_next     ) 
+  , m_rateSvc   ( right.m_rateSvc   )
+  , m_uniform   ( right.m_uniform   ) 
+  , m_rate      ( right.m_rate      ) 
+  , m_limitType ( right.m_limitType ) 
+  , m_interval  ( right.m_interval  ) 
+  , m_next      ( right.m_next      ) 
 {
   // randomize initial phase in case of perioding limiter
-  if ( !m_random  ) { m_next += m_interval * m_uniform ( m_next ) ; }
+  switch ( limitType() ) 
+  {
+  case LoKi::Scalers::RandomPhasePeriodicLimiter : 
+    m_next += m_interval * m_uniform ( m_next ) ; break ;
+  default:
+    m_next += 0 ;
+  }
 }
 // ============================================================================
 // MANDATORY: virtual destructor 
@@ -320,21 +332,24 @@ bool LoKi::Scalers::RateLimitV::eval
 ( /* LoKi::Scalers::RateLimitV::argument v */ ) const 
 {
   //
-  bool accept = false ;
-  if( m_rate > 0 ) 
+  if ( m_rate <= 0 ) { return false ; }
+  
+  // get the current tick form the service 
+  const size_t currenttick   = m_rateSvc->tick() ;
+  
+  // accept ?
+  const bool accept = currenttick >= m_next ;
+  
+  // adjust the next:
+  if ( accept ) 
   {
-
-    // randomize initial phase in case of periodic limiter
-    if ( m_next == 0  && !m_random )  m_next = m_interval * m_uniform(0);
-
-    size_t currenttick   = m_rateSvc->tick() ;
-    if ( ( accept = ( currenttick >= m_next ) ) )  
+    switch ( limitType() ) 
     {
-      m_next += 
-        m_random ? 
-        m_interval * -std::log ( m_uniform ( 0 ) ) : m_interval ;
-      
-    }
+    case LoKi::Scalers::RandomLimiter : 
+      m_next += m_interval * -std::log ( m_uniform ( m_next ) ) ; break ;
+    default:
+      m_next += m_interval ;
+    } 
   }
   //
   return accept ;
@@ -366,27 +381,40 @@ LoKi::Scalers::RateLimitV::getService
  *  @param incident (INPUT) incident to listen
  */
 // ===========================================================================
-void LoKi::Scalers::RateLimitV:: handle ( const Incident& incident ) 
+void LoKi::Scalers::RateLimitV:: handle ( const Incident& /* incident */ ) 
 {
   //
   if ( 0 < m_rate ) { m_interval = m_rateSvc->rate() / m_rate ; }
   m_next = m_rateSvc -> tick () ;
   //
   // randomize initial phase in case of perioding limiter
-  if ( !m_random  ) { m_next += m_interval * m_uniform ( m_next ) ; }
+  switch ( limitType() ) 
+  {
+  case LoKi::Scalers::RandomPhasePeriodicLimiter : 
+    m_next += m_interval * m_uniform ( m_next ) ; break ;
+  default:
+    m_next += 0 ;
+  }
   //
 }
 // ===========================================================================
 std::ostream& LoKi::Scalers::RateLimitV::fillStream( std::ostream& s ) const 
 {
-  s << "FRATE( " << m_rate ;
-  if ( !m_random ) { s << ", False " ; }
+  s << " RATE( " << m_rate ;
+  switch ( limitType() ) 
+  {
+    // pure random limiter   
+  case LoKi::Scalers::RandomLimiter              :      break ;
+  case LoKi::Scalers::RandomPhasePeriodicLimiter :
+    s << ", LoKi.Scalers.RandomPhasePeriodicLimiter " ; break ;
+  case LoKi::Scalers::PlainPeriodicLimiter       : 
+    s << ", LoKi.Scalers.PlainPeriodicLimiter "       ; break ;
+  default :
+    s << "," << (int) limitType() << " " ;
+  }
   return s << ") ";
 }
 // ===========================================================================
-
-
-
 
 
 // ============================================================================
@@ -396,10 +424,10 @@ std::ostream& LoKi::Scalers::RateLimitV::fillStream( std::ostream& s ) const
  */
 // ============================================================================
 LoKi::Scalers::RateLimit::RateLimit
-( const double maxRate , 
-  const bool   random  ) 
+( const double                       maxRate , 
+  const LoKi::Scalers::RateLimitType flag    ) 
   : LoKi::Functor<double,bool> () 
-  , m_rateLimit ( maxRate , random ) 
+  , m_rateLimit ( maxRate , flag ) 
 {}
 // ============================================================================
 /*  constructor from the service , rate and "random" flag 
@@ -409,11 +437,11 @@ LoKi::Scalers::RateLimit::RateLimit
  */
 // ============================================================================
 LoKi::Scalers::RateLimit::RateLimit
-( const IReferenceRate* service ,  
-  const double          maxRate , 
-  const bool            random  ) 
+( const IReferenceRate*              service ,  
+  const double                       maxRate , 
+  const LoKi::Scalers::RateLimitType flag    ) 
   : LoKi::Functor<double,bool> () 
-  , m_rateLimit ( service , maxRate , random ) 
+  , m_rateLimit ( service , maxRate , flag ) 
 {}
 // ============================================================================
 /*  constructor from the service , rate and "random" flag 
@@ -423,11 +451,11 @@ LoKi::Scalers::RateLimit::RateLimit
  */
 // ============================================================================
 LoKi::Scalers::RateLimit::RateLimit
-( const std::string&    service ,  
-  const double          maxRate , 
-  const bool            random  ) 
+( const std::string&                 service ,  
+  const double                       maxRate , 
+  const LoKi::Scalers::RateLimitType flag    ) 
   : LoKi::Functor<double,bool> () 
-  , m_rateLimit ( service , maxRate , random ) 
+  , m_rateLimit ( service , maxRate , flag ) 
 {}
 // ============================================================================
 // MANDATORY: virtual destructor 
@@ -455,8 +483,19 @@ bool LoKi::Scalers::RateLimit::eval
 // ===========================================================================
 std::ostream& LoKi::Scalers::RateLimit::fillStream( std::ostream& s ) const 
 {
-  s << "XRATE( " << m_rateLimit.rate() ;
-  if ( !m_rateLimit.random() ) { s << ", False " ; }
+  s << "XRATE( " << rate() ;
+  //
+  switch ( limitType() ) 
+  {
+  case LoKi::Scalers::RandomLimiter              :      break ;
+  case LoKi::Scalers::RandomPhasePeriodicLimiter :
+    s << ", LoKi.Scalers.RandomPhasePeriodicLimiter " ; break ;
+  case LoKi::Scalers::PlainPeriodicLimiter       : 
+    s << ", LoKi.Scalers.PlainPeriodicLimiter "       ; break ;
+  default :
+    s << "," << (int) limitType() << " " ;
+  }
+  //
   return s << ") ";
 }
 // ===========================================================================

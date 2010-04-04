@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.185 2010-04-03 22:19:38 ibelyaev Exp $ 
+! $Id: release.notes,v 1.186 2010-04-04 12:20:56 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiCore
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -14,6 +14,13 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! 
 ! -----------------------------------------------------------------------------
+
+! 2010-04-04 - Vanya Belyaev
+
+ - few fixes into LoKi::Listener  
+ - add enum instead of boolean argumetn for RateLimit/RateLimitV 
+    ( needed for Moore) 
+
 
 ! 2010-04-04 - Vanya Belyaev 
 

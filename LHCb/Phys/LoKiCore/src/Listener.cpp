@@ -1,4 +1,4 @@
-// $Id: Listener.cpp,v 1.1 2010-04-03 22:19:38 ibelyaev Exp $
+// $Id: Listener.cpp,v 1.2 2010-04-04 12:20:56 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -35,6 +35,18 @@ LoKi::Listener::Listener()
   , m_incidents () 
 {}
 // ============================================================================
+// copy constructor 
+// ============================================================================
+LoKi::Listener::Listener ( const LoKi::Listener& right ) 
+  : LoKi::AuxFunBase ( right          ) 
+  , m_incSvc         ( right.m_incSvc )
+  , m_incidents      () 
+{
+  // subscribe to all incidents 
+  for ( Incidents::const_iterator ii = right.m_incidents.begin() ;
+        right.m_incidents.end() != ii ; ++ii ) { subscribe ( *ii ).ignore() ; }
+}
+// ============================================================================
 // MANDATORY: virtual destructor
 // ============================================================================
 LoKi::Listener::~Listener()
@@ -44,6 +56,31 @@ LoKi::Listener::~Listener()
     m_incSvc->removeListener ( this , m_incidents.back() ) ;
     m_incidents.pop_back() ;
   }
+}
+// ============================================================================
+// assignement 
+// ============================================================================
+LoKi::Listener& LoKi::Listener:: operator=( const LoKi::Listener& right ) 
+{
+  // avoid self-assignement 
+  if ( &right == this ) { return *this ; }
+  
+  // 0. unsubscribe all own incidents 
+  unsubscribe ().ignore() ;
+  
+  //
+  // start the actual assignement: 
+  //
+  
+  // 1. assign the base 
+  LoKi::AuxFunBase::operator= ( right ) ;
+  // 2. copy the service 
+  m_incSvc = right.m_incSvc ;
+  // 3. subscribe to all incidents from the right: 
+  for ( Incidents::const_iterator ii = right.m_incidents.begin() ;
+        right.m_incidents.end() != ii ; ++ii ) { subscribe ( *ii ).ignore() ; }
+  // 
+  return *this ;
 }
 // ============================================================================
 // subscribe the incident 
@@ -56,8 +93,7 @@ StatusCode LoKi::Listener::subscribe  ( const std::string& incident )
   if ( m_incidents.end() != ifind ) 
   {
     return Warning ( "subscribe: Incident '" + incident + "' alsready in the list", 
-                     StatusCode( StatusCode::SUCCESS , true ) ) ;
-    
+                     StatusCode::SUCCESS ) ;
   }
   // 
   if ( !m_incSvc ) 
