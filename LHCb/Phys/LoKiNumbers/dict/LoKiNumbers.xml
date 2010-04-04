@@ -1,5 +1,5 @@
 <!-- 
-     * $Id: LoKiNumbers.xml,v 1.12 2010-02-13 16:30:32 ibelyaev Exp $ 
+     * $Id: LoKiNumbers.xml,v 1.13 2010-04-04 12:21:44 ibelyaev Exp $ 
      * ========================================================================
      * @file
      * The XML seleciton file to build Reflex 
@@ -64,6 +64,8 @@
   <class name = "LoKi::TES::Contains" >
     <field name = "m_algorithm" transient = "true"/>
   </class>
+
+  <enum name = "LoKi::Scalers::RateLimitType"  />
   
   <exclusion>
     

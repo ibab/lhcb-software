@@ -4,6 +4,16 @@
 ! Purpose     : Set of dictionaries for LoKi functions 
 ! -----------------------------------------------------------------------------
 
+! 2010-04-04 - Vanya Belyaev
+
+ - add enum LoKi::Scalers::RateLimitTyepintothe dictionary 
+
+    (needed for Moore) 
+
+ - cmt/requirements 
+
+    version increment to v8r6 
+
 !========================== LoKiNumbers v8r5 2010-03-17 =======================
 ! 2010-03-07 - Vanya Belyaev
 
