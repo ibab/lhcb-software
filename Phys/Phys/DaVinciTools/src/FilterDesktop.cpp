@@ -1,4 +1,4 @@
-// $Id: FilterDesktop.cpp,v 1.22 2010-03-22 13:57:22 jpalac Exp $
+// $Id: FilterDesktop.cpp,v 1.23 2010-04-04 19:13:49 graven Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -535,7 +535,7 @@ StatusCode FilterDesktop::execute ()       // the most interesting method
   
   // monitor output (if required) 
   if ( monitor() && !m_postMonitorCode.empty() ) 
-  { m_postMonitor ( particles ) ; }
+  { m_postMonitor ( LHCb::Particle::ConstVector(accepted.begin(), accepted.end()) ) ; }
 
   /// make the filter decision
   setFilterPassed ( !accepted.empty() );

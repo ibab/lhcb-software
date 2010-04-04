@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.531 2010-03-27 12:09:39 graven Exp $
+! $Id: release.notes,v 1.532 2010-04-04 19:13:48 graven Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2010-04-04 - Gerhard Raven
+ - src/FilterDesktop: postmonitor should moniter accepted, not particles
 
 !========================== DaVinciTools v21r0 2010-03-27 ===================
 ! 2010-03-22 - Juan Palacios
