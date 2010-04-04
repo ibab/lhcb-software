@@ -31,8 +31,8 @@ class SurveyConstraints( list ):
     def Velo( self ) :
         self += [ self.defaultSurveyDir() + "Velo/Modules.xml" ]
         self += [ self.defaultSurveyDir() + "Velo/Detectors.xml" ]
-        AlignChisqConstraintTool().XmlUncertainties += ["Module(PU|).. : 0.02 0.02 0.02 0.000001 0.000001 0.000001",
-                                                        "Detector(PU|)..-.. : 0.005 0.005 0.005 0.000001 0.000001 0.000001" ]
+        AlignChisqConstraintTool().XmlUncertainties += ["Module(PU|).. : 0.02 0.02 0.02 0.0002 0.0002 0.0002",
+                                                        "Detector(PU|)..-.. : 0.005 0.005 0.005 0.0001 0.0001 0.0001" ]
         self.append("Velo      : 0 0 0 -0.0001 0 -0.0001 : 0.2 0.2 0.2 0.0001 0.0001 0.0001" )
         self.append("Velo/Velo(Right|Left) : 0 0 0 0 0 0 : 10 1 0.2 0.0001 0.0001 0.0001" ) 
         
@@ -73,19 +73,11 @@ class SurveyConstraints( list ):
         self += [ self.defaultSurveyDir() + "TT/Modules.xml" ]
         self += [ self.defaultSurveyDir() + "TT/Sensors.xml" ]
         AlignChisqConstraintTool().XmlUncertainties += [ "TTSystem             : 0.5 0.5 0.5 0.001 0.001 0.001",
+                                                         "TT.                  : 0.1 0.1 0.1 0.0005 0.0005 0.0005",
+                                                         "TT..Layer            : 0.1 0.1 0.1 0.0005 0.0005 0.0005",
+                                                         "TT..Layer.Side       : 0.1 0.1 0.1 0.0005 0.0005 0.0005",
                                                          "TT..LayerR.Module.*? : 0.1 0.1 0.1 0.0005 0.0005 0.0005"]
         
-        #self.append(".*?/TT/.*?/Module.{2} : Tx : 0.1")
-        #self.append(".*?/TT/.*?/Module.{2} : Rz : 0.0001")
-        # halflayers
-        self.append("TTaXLayerASide : 0 0 0 0 0 0 : 0.1 0.1 0.1 0.0002 0.0002 0.0002")
-        self.append("TTaULayerASide : 0 0 0 0 0 0 : 0.1 0.1 0.1 0.0002 0.0002 0.0002")
-        self.append("TTaXLayerCSide : 0 0 0 0 0 0 : 0.1 0.1 0.1 0.0002 0.0002 0.0002")
-        self.append("TTaULayerCSide : 0 0 0 0 0 0 : 0.1 0.1 0.1 0.0002 0.0002 0.0002")
-        self.append("TTbVLayerASide : 0 0 0 0 0 0 : 0.1 0.1 0.1 0.0002 0.0002 0.0002")
-        self.append("TTbXLayerASide : 0 0 0 0 0 0 : 0.1 0.1 0.1 0.0002 0.0002 0.0002")
-        self.append("TTbVLayerCSide : 0 0 0 0 0 0 : 0.1 0.1 0.1 0.0002 0.0002 0.0002")
-        self.append("TTbXLayerCSide : 0 0 0 0 0 0 : 0.1 0.1 0.1 0.0002 0.0002 0.0002")
         # boxes
         self.append("TTASide : 0 0 0 0 0 0 : 0.2 0.2 0.2 0.001 0.001 0.001")
         self.append("TTCSide : 0 0 0 0 0 0 : 0.2 0.2 0.2 0.001 0.001 0.001")
