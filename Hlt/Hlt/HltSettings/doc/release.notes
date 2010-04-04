@@ -5,8 +5,10 @@
 !-----------------------------------------------------------------------------
 
 
+!========================== HltSettings v1r13   2010-04-04 ===================
 ! 2010-04-03 - Gerhard Raven
  - add back J/psi tag and probe 
+
 !========================== HltSettings v1r11p2 2010-04-03 ===================
 ! 2010-04-03 - Gerhard Raven
  - remove J/psi tag and probe for the Moore v8r8p2 release which does
