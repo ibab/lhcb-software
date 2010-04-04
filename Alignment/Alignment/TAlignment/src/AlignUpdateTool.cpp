@@ -354,15 +354,15 @@ namespace Al
     }
     
     info() << "\n";
-    info() << "==> iteration " << iteration << " : Initial alignment conditions  : [";
+    debug() << "==> iteration " << iteration << " : Initial alignment conditions  : [";
     const Elements& elements = m_elementProvider->elements() ;
     std::vector<double> deltas;
     deltas.reserve(elements.size()*6u);  
     getAlignmentConstants(elements, deltas);
     for (std::vector<double>::const_iterator i = deltas.begin(), iEnd = deltas.end(); i != iEnd; ++i) {
-      info() << (*i) << (i != iEnd-1u ? ", " : "]");
+      debug() << (*i) << (i != iEnd-1u ? ", " : "]");
     }
-    info() << endmsg;
+    debug() << endmsg;
     
     info() << "==> Updating constants" << endmsg ;
     std::ostringstream logmessage ;
@@ -415,12 +415,13 @@ namespace Al
     size_t numParameters(0), numExcluded(0) ;
     for (Elements::const_iterator it = elements.begin(); it != elements.end(); ++it ) {
       if (equations.element((*it)->index()).numHits() >= m_minNumberOfHits &&
-	  equations.element((*it)->index()).d2Chi2DAlpha2().Trace()>0) {
+	  equations.element((*it)->index()).d2Chi2DAlpha2().Trace()>0 &&
+	  (*it)->dofMask().nActive()>0) {
 	(*it)->setActiveParOffset( numParameters ) ;
 	numParameters += (*it)->dofMask().nActive() ;
       } else {
 	(*it)->setActiveParOffset(-1) ;
-	++numExcluded ;
+	if( (*it)->dofMask().nActive()>0 ) ++numExcluded ;
       }
     }
 
@@ -529,7 +530,7 @@ namespace Al
 	  logmessage << std::endl ;
 	  
 	  int offset = (*it)->activeParOffset() ;
-	  if( offset < 0 ) {
+	  if( offset < 0 && (*it)->dofMask().nActive()>0) {
 	    logmessage << "Not enough hits for alignment. Skipping update." << std::endl ;
 	  } else {
 	    AlParameters delta( solution, covmatrix, halfD2Chi2dX2, (*it)->dofMask(), offset ) ;
@@ -556,11 +557,12 @@ namespace Al
 	    // AlParameters or AlEquation
 	    //const Gaudi::SymMatrix6x6& thisdChi2dAlpha2 = equations.element(iElem).d2Chi2DAlpha2() ;
 	    //Gaudi::Vector6 thisAlpha = delta.parameterVector6() ;
-	    double thisLocalDeltaChi2 = ROOT::Math::Similarity(delta.parameterVector6(),
+	    double thisLocalDeltaChi2 = ROOT::Math::Similarity(delta.transformParameters(),
 							       equations.element(iElem).d2Chi2DAlpha2() ) ;
 	    logmessage << "local delta chi2 / dof: " << thisLocalDeltaChi2 << " / " << delta.dim() << std::endl ;
 	    totalLocalDeltaChi2 += thisLocalDeltaChi2 ;
 	    //double d2 = equations.elements()[iElem].M()[iElem]
+	    LHCb::ChiSquare surveychisqbefore = m_chisqconstrainttool->chiSquare( **it ) ;
 	    
 	    
 	    // need const_cast because loki range givess access only to const values 
@@ -568,15 +570,13 @@ namespace Al
 
 	    // print this one after the update
 	    LHCb::ChiSquare surveychisq = m_chisqconstrainttool->chiSquare( **it ) ;
-	    logmessage << "survey chi2 / dof: " << surveychisq.chi2() << " / " << surveychisq.nDoF() << std::endl ;
-	    const IAlignChisqConstraintTool::SurveyData survey = m_chisqconstrainttool->surveyData( **it ) ;
-	    logmessage << "survey pars: "
-		       << survey.par[0] << " " << survey.par[1] << " " << survey.par[2] << " "
-		       << survey.par[3] << " " << survey.par[4] << " " << survey.par[5] << std::endl ;
-	    logmessage << "survey errors: "
-		       << survey.err[0] << " " << survey.err[1] << " " << survey.err[2] << " "
-		       << survey.err[3] << " " << survey.err[4] << " " << survey.err[5] << std::endl ;
-	    
+	    logmessage << "survey chi2 / dof (before/after): " << surveychisqbefore.chi2() << " "
+		       << surveychisq.chi2() << " / " << surveychisq.nDoF() << std::endl ;
+	    const AlParameters* survey = m_chisqconstrainttool->surveyParameters( **it ) ;
+	    if( survey != 0 ) {
+	      logmessage << "survey pars:   " << survey->transformParameters() << std::endl ;
+	      logmessage << "survey errors: "<< survey->transformErrors() << std::endl ;
+	    }
 	    if (!sc.isSuccess()) error() << "Failed to set alignment condition for " << (*it)->name() << endmsg ;
 	   
 	    std::string name = (*it)->name(); 
@@ -620,13 +620,13 @@ namespace Al
     logmessage << "********************* END OF ALIGNMENT LOG ************************" ;
     info() << logmessage.str() << endmsg ;
     info() << "\n";
-    info() << "==> iteration " << iteration << " : Updated alignment conditions  : [";
+    debug() << "==> iteration " << iteration << " : Updated alignment conditions  : [";
     deltas.clear();
     getAlignmentConstants(elements, deltas);
     for (std::vector<double>::const_iterator i = deltas.begin(), iEnd = deltas.end(); i != iEnd; ++i) {
-      info() << (*i) << (i != iEnd-1u ? ", " : "]");
+      debug() << (*i) << (i != iEnd-1u ? ", " : "]");
     }
-    info() << endmsg;
+    debug() << endmsg;
     m_logMessage << logmessage.str() ;
     
     if( iteration == 0 ) {
@@ -697,22 +697,23 @@ namespace Al
     DofChisq dofchi2 ;
     size_t index(0);
     for( Al::Equations::ElementContainer::const_iterator ieq = equations.elements().begin() ;
-	 ieq != equations.elements().end(); ++ieq, ++index ) {
-      dofchi2.element = elements[index] ;
-      for(dofchi2.dof = 0; dofchi2.dof<6; ++dofchi2.dof) {
-	double dChi2DAlpha = ieq->dChi2DAlpha()(dofchi2.dof) ;
-	double d2Chi2DAlpha2 = ieq->d2Chi2DAlpha2()(dofchi2.dof,dofchi2.dof) ;
-	// I could be a factor 2 wrong here
-	dofchi2.chi2 = dChi2DAlpha * 1/d2Chi2DAlpha2 * dChi2DAlpha ;
-	dofchi2.par  = - 1/d2Chi2DAlpha2 * dChi2DAlpha ;
-	dofchi2.err  = 1/std::sqrt(d2Chi2DAlpha2) ;
-	dofchi2s.push_back( dofchi2 ) ;
+	 ieq != equations.elements().end(); ++ieq, ++index ) 
+      if( ieq->numHits() > 0 ) {
+	dofchi2.element = elements[index] ;
+	for(dofchi2.dof = 0; dofchi2.dof<6; ++dofchi2.dof) {
+	  double dChi2DAlpha = ieq->dChi2DAlpha()(dofchi2.dof) ;
+	  double d2Chi2DAlpha2 = ieq->d2Chi2DAlpha2()(dofchi2.dof,dofchi2.dof) ;
+	  // I could be a factor 2 wrong here
+	  dofchi2.chi2 = dChi2DAlpha * 1/d2Chi2DAlpha2 * dChi2DAlpha ;
+	  dofchi2.par  = - 1/d2Chi2DAlpha2 * dChi2DAlpha ;
+	  dofchi2.err  = 1/std::sqrt(d2Chi2DAlpha2) ;
+	  dofchi2s.push_back( dofchi2 ) ;
+	}
       }
-    }
     std::sort( dofchi2s.begin(), dofchi2s.end() ) ;
-
+    
     logmessage << "Most important dofs: " << std::endl ;
-    for(size_t i=0; i<10; ++i) 
+    for(size_t i=0; i<10 && i<dofchi2s.size() ; ++i) 
       logmessage << "  " << i << " " << dofchi2s[i].element->name() 
 		 << " dof=" << dofchi2s[i].dof 
 		 << " chi2= " << dofchi2s[i].chi2 
