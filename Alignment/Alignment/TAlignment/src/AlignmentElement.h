@@ -1,4 +1,4 @@
-// $Id: AlignmentElement.h,v 1.21 2010-02-09 12:48:17 wouter Exp $
+// $Id: AlignmentElement.h,v 1.22 2010-04-04 15:28:51 wouter Exp $
 #ifndef TALIGNMENT_ALIGNMENTELEMENT_H
 #define TALIGNMENT_ALIGNMENTELEMENT_H 1
 
@@ -219,6 +219,8 @@ public:
       with the dofs shared with its daughters. */
   std::vector<int> redundantDofs() const ;
 
+  static Gaudi::Transform3D toGlobalMatrixMinusDelta( const DetectorElement& element) ;
+  
 private:
   static std::string stripElementName(const std::string& name) ;
 
