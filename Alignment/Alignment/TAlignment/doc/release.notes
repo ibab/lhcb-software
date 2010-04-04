@@ -3,6 +3,13 @@ Package	:	Alignment/TAlignment
 Package Coordinator	:	Jan Amoraal, Johan Blouw
 Purpose	: collection of alignment algorithms
 
+! 2010-04-04 - Wouter Hulsbergen
+ - alignment frame is now by default defined as nominal local frame
+ (so before applying delta). this seems to make things more stable.
+ - another revision of chi2constrainttool for TT alignment. elements
+ with more than one detector element, now make a proper average of the
+ survey
+
 ! 2010-03-29 - Wouter Hulsbergen
  - added IT sensor survey
  - added TT modules (rather than half modules) to Alignables.py
