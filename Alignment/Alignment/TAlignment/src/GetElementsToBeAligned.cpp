@@ -1,4 +1,4 @@
-// $Id: GetElementsToBeAligned.cpp,v 1.29 2010-02-19 08:54:35 rlambert Exp $
+// $Id: GetElementsToBeAligned.cpp,v 1.30 2010-04-04 15:27:52 wouter Exp $
 // Include files
 
 //from STL
@@ -390,7 +390,7 @@ void GetElementsToBeAligned::initEquations( Al::Equations& equations ) const
   equations = Al::Equations( m_elements.size(), initTime() ) ;
   for(Elements::const_iterator ielem = m_elements.begin(); ielem!= m_elements.end(); ++ielem) {
     // get the current delta (called alpha in Al::Equations)
-    Gaudi::Vector6 alpha = (*ielem)->currentTotalDelta().parameterVector6() ;
+    Gaudi::Vector6 alpha = (*ielem)->currentTotalDelta().transformParameters() ;
     equations.element( (*ielem)->index() ).m_alpha = alpha ;
     equations.element( (*ielem)->index() ).m_alphaIsSet = true ;
   }
