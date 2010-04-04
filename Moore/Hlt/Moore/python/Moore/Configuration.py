@@ -1,7 +1,7 @@
 """
 High level configuration tool(s) for Moore
 """
-__version__ = "$Id: Configuration.py,v 1.111 2010-04-03 11:33:07 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.112 2010-04-04 17:58:17 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ, path
@@ -364,12 +364,12 @@ class Moore(LHCbConfigurableUser):
         from Configurables import L0DUFromRawAlg, L0DUFromRawTool
         #L0DUFromRawAlg('L0DUFromRaw').ProcessorDataOnTES = False
         l0du   = L0DUFromRawAlg("L0DUFromRaw")
-        l0du.WriteProcData       = False
+        #l0du.WriteProcData       = False
         l0du.addTool(L0DUFromRawTool,name = "L0DUFromRawTool")
         l0du = getattr( l0du, 'L0DUFromRawTool' )
-        l0du.FillDataMap         = False
-        l0du.EncodeProcessorData = False
-        l0du.Emulate             = False
+        #l0du.FillDataMap         = False
+        #l0du.EncodeProcessorData = False
+        #l0du.Emulate             = False
         l0du.StatusOnTES         = False
 
         if ( self.getProp("DataType") == 'DC06' and not self.getProp("L0") ):

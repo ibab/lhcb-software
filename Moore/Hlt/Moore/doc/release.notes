@@ -10,6 +10,8 @@ Purpose     : LHCb HLT application
 ! 2010-04-02 - Gerhard Raven
  - add apply_pattern GaudiApp to enable use of Moore in ganga
  - add tags used in MooreSys v8r8p2
+ - do not cut corners on default L0DU decoding to avoid killing
+   information used by LumiFromL0DU
 
 ! 2010-04-02 - Gerhard Raven
  - add EnableMonitoring slot to switch on monitoring in FilterDesktop
