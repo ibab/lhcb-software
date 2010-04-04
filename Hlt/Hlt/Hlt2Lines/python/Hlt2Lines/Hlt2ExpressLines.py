@@ -1,5 +1,5 @@
 # =============================================================================
-# $Id: Hlt2ExpressLines.py,v 1.23 2010-04-01 19:18:43 graven Exp $
+# $Id: Hlt2ExpressLines.py,v 1.24 2010-04-04 11:47:32 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of Hlt2 Lines for the express stream
@@ -11,7 +11,7 @@
 """
 # =============================================================================
 __author__  = "Johannes Albrecht albrecht@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.23 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.24 $"
 # =============================================================================
 
 from HltLine.HltLinesConfigurableUser import *
@@ -135,8 +135,8 @@ class Hlt2ExpressLinesConf(HltLinesConfigurableUser):
                              , InputLocations  = [ DiMuon ]
                              , InputPrimaryVertices = "None"
                              , UseP2PVRelations = False
-                             , PreMonitor  =  __monitor__( "M","M(#mu#mu)",3097,self.getProp("ExJPsiMassWindow"),'M_in',nbins=201) 
-                             , PostMonitor =  __monitor__( "M","M(#mu#mu)",3097,self.getProp("ExJPsiMassWindow"),'M_out',nbins=201)
+                             , PreMonitor  =  __monitor__( "M","M(#mu#mu)",3097,self.getProp("ExJPsiMassWindow"),'M_in',nbins=101) 
+                             , PostMonitor =  __monitor__( "M","M(#mu#mu)",3097,self.getProp("ExJPsiMassWindow"),'M_out',nbins=101)
                              )
       
       line = Hlt2Line('ExpressJPsi'
