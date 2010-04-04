@@ -9,6 +9,7 @@
 #include "Math/Transform3D.h"
 #include "Math/SMatrix.h"
 #include "boost/array.hpp"
+#include "GaudiKernel/SymmetricMatrixTypes.h"
 
 class AlParameters
 {
@@ -18,18 +19,20 @@ public:
   typedef AlVec                             Vector ;
   typedef AlSymMat                          Covariance ;
   typedef ROOT::Math::SMatrix<double, 6, 6> Matrix6x6 ;
-  typedef ROOT::Math::SVector<double, 6>    Vector6 ;
-  typedef boost::array<double,NumPars>      TransformParameters ;
+  typedef ROOT::Math::SVector<double, 6>    TransformParameters ;
+  typedef Gaudi::SymMatrix6x6               TransformCovariance ;
   typedef AlDofMask                         DofMask ; 
 
   /** Constructors */
-  AlParameters(DofMask mask=DofMask(NumPars)) ;
+  AlParameters(size_t size = NumPars) ;
+  AlParameters(DofMask mask) ;
   AlParameters(const Vector& parameters, const Covariance& covariance, DofMask mask=DofMask(NumPars), size_t offset = 0u) ;
   AlParameters(const Vector& parameters, const Covariance& covariance, const Covariance& weightmatrix,
 	       DofMask mask=DofMask(NumPars), size_t offset = 0u) ;
   AlParameters(const double parameters[6], DofMask mask=DofMask(NumPars)) ;
   AlParameters(const TransformParameters& parameters, DofMask mask=DofMask(NumPars)) ;
   AlParameters(const ROOT::Math::Transform3D& transform, DofMask mask=DofMask(NumPars)) ;
+  AlParameters(const TransformParameters& parameters, const TransformCovariance& covariance) ;
   
   size_t dim() const { return m_mask.nActive() ; }
   static std::string parName( int ) ;
@@ -39,20 +42,28 @@ public:
   std::vector<double> errRotation() const;
   ROOT::Math::Transform3D transform() const ;
   // create the transform for a given delta
-  static ROOT::Math::Transform3D transform(const boost::array<double, 6>& pars) ;
+  static ROOT::Math::Transform3D transform(const TransformParameters& pars) ;
+  // create a delta from a transform
+  static TransformParameters transformParameters(const ROOT::Math::Transform3D& T ) ;
   // compute the delta jacobian for a given coordinate transformation
   static Matrix6x6 jacobian(const ROOT::Math::Transform3D& transform) ;
+  // same but now numerical
   static Matrix6x6 jacobianNumeric(const ROOT::Math::Transform3D& transform) ;
+  // dump to stream
   std::ostream& fillStream(std::ostream& s) const;
-
+  // get a new set of parameters in a new frame
+  AlParameters AlParameters::transformTo( const ROOT::Math::Transform3D& T ) const;
+  
   std::string activeParName( int iactive ) const { return parName( m_mask.parIndex(iactive) ) ; }
   const Vector& parameters() const { return m_parameters ; }
   const Covariance& covariance() const { return m_covariance ; }
   double globalCorrelationCoefficient(int iactive) const ;
   double measurementCoordinateSigma(double weightR) const ;
-  TransformParameters parameterArray() const ;
+  TransformParameters transformParameters() const ;
+  TransformCovariance transformCovariance() const ;
+  // returns a vector with the sqrt of the diagonal elements of the cov matrix
+  TransformParameters transformErrors() const ;
   static double signedSqrt(double root) ;
-  Vector6 parameterVector6() const ;
 private:
   DofMask     m_mask;
   Vector      m_parameters ;

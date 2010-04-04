@@ -11,6 +11,11 @@
 
 #include "DetDesc/3DTransformationFunctions.h"
 
+AlParameters::AlParameters(size_t size) 
+  : m_mask(size), m_parameters(size), m_covariance(size) 
+{
+}
+
 AlParameters::AlParameters(DofMask mask) 
   : m_mask(mask), m_parameters(dim()), m_covariance(dim()) 
 {
@@ -39,6 +44,17 @@ AlParameters::AlParameters(const Vector& parameters, const Covariance& covarianc
   }
 }
 
+
+AlParameters::AlParameters(const TransformParameters& parameters, const TransformCovariance& covariance) 
+  : m_mask(NumPars), m_parameters(6), m_covariance(6), m_weightmatrix(6)
+{
+  for (unsigned int i = 0u; i < dim(); ++i) {
+    m_parameters[i] = parameters[i] ;
+    for (unsigned int j = 0u; j <= i; ++j)
+      m_covariance[i][j] = covariance[i][j] ;
+  }
+}
+
 AlParameters::AlParameters(const double parameters[6], DofMask mask)
   : m_mask(mask), m_parameters(dim()), m_covariance(dim())
 {
@@ -56,12 +72,9 @@ AlParameters::AlParameters(const TransformParameters& parameters, DofMask mask)
 AlParameters::AlParameters(const ROOT::Math::Transform3D& transform, DofMask mask)
   : m_mask(mask), m_parameters(dim()), m_covariance(dim())
 {
-  std::vector<double> translations(3,0.0), rotations(3,0.0);
-  DetDesc::getZYXTransformParameters(transform, translations, rotations);
-  for( unsigned int i = 0u; i < dim(); ++i) {
-    unsigned int index = mask.parIndex(i) ;
-    m_parameters[i] = index<3 ? translations[index] : rotations[index-3] ;
-  }
+  TransformParameters parameters = transformParameters( transform ) ;
+  for( unsigned int i = 0u; i < dim(); ++i) 
+    m_parameters[i] = parameters[mask.parIndex(i)] ;
 }
 
 std::string AlParameters::parName(int parindex)
@@ -128,26 +141,33 @@ std::vector<double> AlParameters::errRotation() const {
   return errR;
 }
 
-AlParameters::TransformParameters AlParameters::parameterArray() const 
+AlParameters::TransformParameters AlParameters::transformParameters() const 
 {
-  TransformParameters pars;
-  /// Initialise all elements to 0.0
-  std::fill(pars.begin(), pars.end(), 0.0);
-  /// Set unmasked parameters
+  TransformParameters pars ;
   for (size_t iactive = 0u; iactive < dim(); ++iactive) pars[m_mask.parIndex(iactive)] = m_parameters[iactive] ;
   return pars ;
 }
 
-AlParameters::Vector6 AlParameters::parameterVector6() const 
+AlParameters::TransformCovariance AlParameters::transformCovariance() const 
 {
-  Vector6 pars ;
-  for (size_t iactive = 0u; iactive < dim(); ++iactive) pars[m_mask.parIndex(iactive)] = m_parameters[iactive] ;
-  return pars ;
+  TransformCovariance cov ;
+  for (size_t iactive = 0u; iactive < dim(); ++iactive) 
+    for (size_t jactive = 0u; jactive <= iactive; ++jactive) 
+      cov(m_mask.parIndex(iactive), m_mask.parIndex(jactive)) = m_covariance(iactive,jactive) ;
+  return cov ;
+}
+
+AlParameters::TransformParameters AlParameters::transformErrors() const 
+{
+  TransformParameters err ;
+  for (size_t iactive = 0u; iactive < dim(); ++iactive) 
+    err(m_mask.parIndex(iactive)) = std::sqrt(m_covariance(iactive,iactive)) ;
+  return err ;
 }
 
 ROOT::Math::Transform3D AlParameters::transform() const
 {
-  return transform( parameterArray() ) ;
+  return transform( transformParameters() ) ;
 }
 
 ROOT::Math::Transform3D AlParameters::transform(const TransformParameters& pars)
@@ -158,6 +178,35 @@ ROOT::Math::Transform3D AlParameters::transform(const TransformParameters& pars)
   //ROOT::Math::RotationY(pars[4])*
   //ROOT::Math::RotationZ(pars[5])) ;
   return translation * rotation ;
+}
+
+AlParameters::TransformParameters AlParameters::transformParameters(const ROOT::Math::Transform3D& T ) 
+{
+  std::vector<double> translations(3,0.0), rotations(3,0.0);
+  DetDesc::getZYXTransformParameters(T, translations, rotations);
+  TransformParameters rc ;
+  for( unsigned int i = 0u; i <3; ++i) {
+    rc[i] = translations[i] ;
+    rc[i+3] = rotations[i] ;
+  }
+  return rc ;
+}
+
+
+AlParameters AlParameters::transformTo( const ROOT::Math::Transform3D& T ) const
+{
+  // T is the transform that brings us from the frame in which these
+  // parameters are defined to the new frame
+  ROOT::Math::Transform3D Tinv = T.Inverse() ;
+  ROOT::Math::Transform3D oldtransform = transform() ;
+  ROOT::Math::Transform3D newtransform = T * oldtransform * Tinv ;
+
+  TransformCovariance oldcov = transformCovariance() ;
+  Matrix6x6 jac = jacobian(T) ;
+  TransformCovariance newcov = ROOT::Math::Similarity( jac, oldcov ) ;
+  TransformParameters newpars = transformParameters( newtransform ) ;
+
+  return AlParameters( newpars, newcov ) ;
 }
 
 
@@ -251,8 +300,7 @@ AlParameters::Matrix6x6 AlParameters::jacobianNumeric( const ROOT::Math::Transfo
   ROOT::Math::Transform3D Tinv = T.Inverse() ;
   
   for(int j=0; j<6; ++j) {
-    boost::array<double, 6> delta;
-    std::fill(delta.begin(), delta.end(), 0.0);
+    TransformParameters delta ;
     delta[j] += epsilon ;
     ROOT::Math::Transform3D Delta      = transform(delta) ;
     ROOT::Math::Transform3D DeltaPrime = T * Delta * Tinv ;
