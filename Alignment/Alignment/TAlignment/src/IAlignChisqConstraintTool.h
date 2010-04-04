@@ -16,16 +16,6 @@ namespace Al
   class IAlignChisqConstraintTool : virtual public IAlgTool
   {
   public:
-    struct SurveyData
-    {
-      SurveyData() {
-	err[0] = err[1] = err[2] = err[3] = err[4] = err[5] = -1 ;
-	par[0] = par[1] = par[2] = par[3] = par[4] = par[5] = 0 ;
-      }
-      std::string name ;
-      double par[6] ;
-      double err[6] ;
-    } ;
 
     typedef IGetElementsToBeAligned::Elements Elements ;
 
@@ -38,8 +28,8 @@ namespace Al
 					   Al::Equations& equations,
 					   std::ostream& logmessage) const = 0 ;
     virtual LHCb::ChiSquare chiSquare( const AlignmentElement& element, bool activeonly=true) const = 0 ;
-
-    virtual SurveyData surveyData( const AlignmentElement& element ) const = 0 ;
+    // this returns the survey in the AlignmentFrame of the element, taking correlations into account.
+    virtual const AlParameters* surveyParameters( const AlignmentElement& element ) const = 0 ;
   } ;
 }
 
