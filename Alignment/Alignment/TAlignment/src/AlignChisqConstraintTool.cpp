@@ -18,6 +18,23 @@
 
 namespace Al
 {
+  struct ConfiguredSurveyData
+  {
+    ConfiguredSurveyData() {}
+    std::string name ;
+    Gaudi::Vector6 par ;
+    Gaudi::Vector6 err ;
+  } ;
+
+  struct XmlSurveyData
+  {
+    XmlSurveyData() {
+      pivot[0] = pivot[1] = pivot[2] = 0 ;
+    }
+    std::string name ;
+    Gaudi::Vector6 par ;
+    double pivot[3] ;
+  } ;
 
   class AlignChisqConstraintTool : public GaudiTool,
                                    virtual public IAlignChisqConstraintTool
@@ -35,23 +52,24 @@ namespace Al
                                    Al::Equations& equations,
                                    std::ostream& logmessage) const ;
     LHCb::ChiSquare chiSquare( const AlignmentElement& element, bool activeonly ) const ;
-    SurveyData surveyData( const AlignmentElement& element ) const {
-      const SurveyData* s = findSurveyData(element) ;
-      return s ? *s : SurveyData() ;
-    }
+    const AlParameters* surveyParameters(const AlignmentElement& element) const ;
+
   private:
     StatusCode parseXmlFile( const std::string& filename) ;
     StatusCode parseXmlUncertainties( const std::string& patterm ) ;
     StatusCode parseElement( const std::string& element) ;
-    const SurveyData* findSurveyData( const AlignmentElement& element ) const ;
-    
+    const Gaudi::Vector6* findXmlUncertainty(const std::string& name) const ;
   private:
-    typedef std::map<std::string, SurveyData> XmlData ;
-    XmlData m_xmldata ;
-    typedef std::map<std::string, SurveyData> ConstraintData ;
-    mutable ConstraintData m_constraints ;
     std::vector< std::string > m_constraintNames ;
     std::vector< std::string > m_xmlUncertainties ;
+    typedef std::map<std::string, XmlSurveyData> XmlData ;
+    XmlData m_xmldata ;
+    typedef std::map<std::string, ConfiguredSurveyData> ConstraintData ;
+    ConstraintData m_configuredSurvey ;
+    typedef std::pair<std::string, Gaudi::Vector6> NamedXmlUncertainty ;
+    std::vector<NamedXmlUncertainty> m_xmlUncertaintyMap ;
+    typedef std::map<const AlignmentElement*, AlParameters> SurveyParameters ;
+    mutable SurveyParameters m_cachedSurvey ;
   } ;
   
   DECLARE_TOOL_FACTORY( AlignChisqConstraintTool );
@@ -88,7 +106,7 @@ namespace Al
     }
     
     info() << "Number of entries in xml data: " << m_xmldata.size() << endreq ;
-    info() << "Number of entries specified by job-option: " << m_constraints.size() << endreq ;
+    info() << "Number of entries specified by job-option: " << m_configuredSurvey.size() << endreq ;
     
     return sc ;
   }
@@ -221,8 +239,8 @@ namespace Al
         jpos = linestr.find_first_of( "<", ipos+1) ;
         std::vector<std::string> numbers = tokenize(linestr.substr(ipos+1,jpos-ipos-1)," ") ;
         assert(numbers.size()==3) ;
-        std::vector<double> pospars ;
-        for( size_t i=0; i<3; ++i) pospars.push_back( extractdouble(numbers[i]) ) ;
+        std::vector<double> pospars(3,0) ;
+        for( size_t i=0; i<3; ++i) pospars[i] = extractdouble(numbers[i]) ;
 	
         //std::cout << "position string: "
         //<< std::endl << numbers << std::endl ;
@@ -233,33 +251,26 @@ namespace Al
         jpos = linestr.find_first_of( "<", ipos+1) ;
         numbers = tokenize(linestr.substr(ipos+1,jpos-ipos-1)," ") ;
         assert(numbers.size()==3) ;
-        std::vector<double> rotpars ;
-        for( size_t i=0; i<3; ++i) rotpars.push_back( extractdouble(numbers[i]) ) ;
+        std::vector<double> rotpars(3,0) ;
+        for( size_t i=0; i<3; ++i) rotpars[i] = extractdouble(numbers[i]) ;
 	
         ipos = linestr.find( "pivotXYZ",jpos+1 ) ;
+	std::vector<double> pivotpars(3,0) ;
         if( ipos != std::string::npos ) {
           ipos = linestr.find_first_of( ">",ipos ) ;
           jpos = linestr.find_first_of( "<", ipos+1) ;
           numbers = tokenize(linestr.substr(ipos+1,jpos-ipos-1)," ") ;
           assert(numbers.size()==3) ;
-          std::vector<double> pivotpars ;
-          for( size_t i=0; i<3; ++i) pivotpars.push_back( extractdouble(numbers[i]) ) ;
-          if( std::abs(pivotpars[0]) > 1e-9 || std::abs(pivotpars[1]) > 1e-9 || std::abs(pivotpars[2]) > 1e-9) {
-            // shit, need to correct everything for pivot point translation
-            Gaudi::Transform3D T = DetDesc::localToGlobalTransformation( pospars,rotpars,pivotpars ) ;
-            DetDesc::getZYXTransformParameters(T,pospars,rotpars) ;
-          }
+          for( size_t i=0; i<3; ++i) pivotpars[i] = extractdouble(numbers[i]);
         }
         // now put the result in the dictionary
-        SurveyData entry ;
-        entry.name    = conditionname ;
-        entry.par[0] = pospars[0] ;
-        entry.par[1] = pospars[1] ;
-        entry.par[2] = pospars[2] ;
-        entry.par[3] = rotpars[0] ;
-        entry.par[4] = rotpars[1] ;
-        entry.par[5] = rotpars[2] ;
-        m_xmldata[entry.name] = entry ;
+	XmlSurveyData& entry = m_xmldata[conditionname] ;
+        entry.name = conditionname ;
+	for(int i=0;i<3; ++i) {
+	  entry.par[i]   = pospars[i] ;
+	  entry.par[i+3] = rotpars[i] ;
+	  entry.pivot[i] = pivotpars[i] ;
+	}
       }
     }
     return StatusCode::SUCCESS ;
@@ -279,7 +290,7 @@ namespace Al
       sc = StatusCode::FAILURE ;
     } else {
       std::string name = removechars(tokens[0]," ") ;
-      SurveyData& entry = m_constraints[name] ;
+      ConfiguredSurveyData& entry = m_configuredSurvey[name] ;
       entry.name = name ;
 
       // first see if definition is of the old type
@@ -287,24 +298,9 @@ namespace Al
       std::string dofstr = removechars(tokens[1]," ,") ;
       size_t dof = std::distance( dofnames.begin(), std::find(dofnames.begin(),dofnames.end(),dofstr)) ;
       if( dof < dofnames.size() ) {
-        // just repace +/- with a space, because that is what we'll use to tokenize 
-        // (we cannot tokenize with +/-!)
-        std::string errstr = replacestring(tokens[2], "+/-", " ") ;
-        std::vector<std::string> valuetokens = tokenize(errstr," ") ;
-        // if only single token, then this is just the error
-        if( valuetokens.size() == 1 )
-          entry.err[dof] = boost::lexical_cast<double>(valuetokens[0]) ;
-        else if( valuetokens.size() == 2 ) {
-          entry.par[dof] = boost::lexical_cast<double>(valuetokens[0]) ;
-          entry.err[dof] = boost::lexical_cast<double>(valuetokens[1]) ;
-          //std::cout << "dof, val, err: " << dof << " " <<  entry.par[dof] << " " << entry.err[dof] << std::endl ;
-        } else {
-          error() << "constraint value has wrong number of tokens: " << element << endreq ;
-          sc = StatusCode::FAILURE ;
-        }
+	error() << "constraint value has wrong number of tokens: " << element << endreq ;
+	sc = StatusCode::FAILURE ;
       } else {
-
-        // this must be the new type, then
         std::vector<std::string> numbers = tokenize(tokens[1]," ") ;
         if( numbers.size() != 6 ) {
           error() << "constraint has wrong number of deltas: " << tokens[1] << endreq ;
@@ -341,114 +337,151 @@ namespace Al
       error() << "xml uncertainty pattern has wrong number of errors: " << tokens[1] << endreq ;
       sc = StatusCode::FAILURE ;
     }
-    double errors[6] ;
+    Gaudi::Vector6 errors ;
     for(int i=0; i<6; ++i) errors[i] = boost::lexical_cast<double>(valuetokens[i]) ;
-    // now find all matching elements
-    size_t nummatches(0) ;
-    for( ConstraintData::iterator it = m_xmldata.begin() ; it != m_xmldata.end(); ++it ) 
-      // match the name of the alignable, or, if there is only one element, match the name of the condition
-      if( match(it->first,pattern) ) {
-        ++nummatches ;
-        for(int i=0; i<6; ++i) it->second.err[i] = errors[i] ;
-      }
-    if( nummatches==0 ) warning() << "Found no matches for xml uncertainty pattern: \'" << pattern << "\'" << endreq ;
-    debug() << "Parsed xml uncertainties for "
-	    << pattern << " with " << nummatches << " matching elements "
-	    << errors[2] << endreq ;
+    m_xmlUncertaintyMap.push_back(std::make_pair(pattern,errors)) ;
     return sc ;
   }
-  
-  const AlignChisqConstraintTool::SurveyData* AlignChisqConstraintTool::findSurveyData( const AlignmentElement& element ) const 
+
+  const Gaudi::Vector6* AlignChisqConstraintTool::findXmlUncertainty(const std::string& name) const 
   {
-    debug() << "Locating survey data for alignable: "
-	    << element.name() << endreq ;
-    const SurveyData* rc(0) ;
-    std::string elementname = element.name() ;
-    // extract the condition name, but only if this alignable has only one detector element
-    std::string condname ;
-    const IGeometryInfo* geom(0) ;
-    const AlignmentCondition* cond(0) ;
-    if( element.detelements().size()==1 &&
-        (geom=element.detelements().front()->geometry()) &&
-        (cond=geom->alignmentCondition() ) )
-      // need to remove a leading slash
-      condname = cond->name().substr( 1, cond->name().size()-1 ) ;
-    
-    // did we add information for this alignable explicitely?
-    for( ConstraintData::const_iterator it = m_constraints.begin() ;
-         it != m_constraints.end() && !rc; ++it ) 
-      // match the name of the alignable, or, if there is only one element, match the name of the condition
-      if( elementname == it->first || 
-	  match(elementname,it->first ) || 
-          (condname.size()>0 && match(condname, it->first) ) )
-        rc = &(it->second) ;
-
-    if( rc ) 
-      debug() << "Found element in explicit constraints: " << rc->name << endreq ;
-
-    // if there is only one detelement, we look in the survey database
-    if( rc==0 && condname.size()>0 ) {
-      XmlData::const_iterator it = m_xmldata.find( condname ) ;
-      if( it != m_xmldata.end() ) {
-        rc = &(it->second) ;
-      } else {
-        debug() << "Cannot find condition \"" << cond->name() << "\" for alignable "
-                << element.name() << " in survey dictionary." << endreq ;
-      }
+    // always take the last one:
+    const Gaudi::Vector6* rc=0 ;
+    BOOST_FOREACH( const NamedXmlUncertainty& entry, m_xmlUncertaintyMap ) {
+      if( match( name, entry.first) ) rc = &entry.second ;
     }
-
-    if( rc==0 ) {
-      // let's see if we can match all daughters to entries in the
-      // survey database.  this is really quite tricky. it looks of
-      // course a lot like what happens in AlignmentElement.
-
-      Gaudi::Transform3D frame = element.alignmentFrame() ;
-      Gaudi::Transform3D frameInv = frame.Inverse() ;
-      double par[6] = {0,0,0,0,0,0} ;
-      double err[6] = {0,0,0,0,0,0} ;
-      size_t numfound(0) ;
-      BOOST_FOREACH( const DetectorElement* ielem, element.detelements() )
-	if( (geom=ielem->geometry()) &&(cond=geom->alignmentCondition()) ) {
-	  condname = cond->name().substr( 1, cond->name().size()-1 ) ;
-	  XmlData::const_iterator it = m_xmldata.find( condname ) ;
-	  if( it != m_xmldata.end() ) {
-	    Gaudi::Transform3D localDelta = AlParameters(it->second.par,AlDofMask(AlParameters::NumPars)).transform() ;
-	    const Gaudi::Transform3D& global = (ielem->geometry())->toGlobalMatrix();
-	    Gaudi::Transform3D localDeltaInGlobal = global * localDelta * global.Inverse() ;
-	    // now transform it into the alignment frame
-	    Gaudi::Transform3D alignDeltaMatrix = frameInv * localDeltaInGlobal * frame;
-	    std::vector<double> translations(3,0.0), rotations(3,0.0);
-	    DetDesc::getZYXTransformParameters(alignDeltaMatrix, translations, rotations);//, it->pivot());
-	    for(size_t i=0; i<3; ++i) {
-	      par[i]   += translations[i] ;
-	      par[i+3] += rotations[i] ;
-	    }
-	    for(size_t i=0; i<6; ++i) err[i] += it->second.err[i] ;
-	    ++numfound ;
-	  }
-	}
-      if( numfound == element.detelements().size() ) {
-	Al::IAlignChisqConstraintTool::SurveyData& newentry = m_constraints[ elementname ] ;
-	newentry.name = elementname ;
-	for(size_t i=0; i<6; ++i) {
-	  newentry.par[i] = par[i] / numfound ;
-	  newentry.err[i] = err[i] / numfound ;
-	}
-	warning() << "Constructing average survey for element: " << elementname << endreq ;
-	rc = &newentry ;
-      }
-    }
-    
-    if( rc==0 ) {
-      warning() << "No survey data for alignable: " << element.name() << " " << condname << endreq ;
-    } else {
-      debug() << "found element in xml data: "
-	      << condname << endreq ;
-    }
-    
     return rc ;
   }
-  
+
+  const AlParameters* AlignChisqConstraintTool::surveyParameters(const AlignmentElement& element) const
+  {    
+    const AlParameters* rc(0) ;
+    SurveyParameters::const_iterator it = m_cachedSurvey.find( &element ) ;
+    if( it != m_cachedSurvey.end() ) {
+      rc = &(it->second) ;
+    } else {
+
+      AlParameters newsurvey ;
+
+      // did we add information for this alignable explicitely?
+      bool found=false ;
+      for( ConstraintData::const_iterator it = m_configuredSurvey.begin() ;
+	   it != m_configuredSurvey.end() && !found; ++it ) 
+	// match the name of the alignable, or, if there is only one element, match the name of the condition
+	if( element.name() == it->first || 
+	    match(element.name(),it->first ) ) {
+	  const ConfiguredSurveyData& survey = it->second ;
+	  AlParameters::TransformParameters parameters = survey.par ;
+	  AlParameters::TransformCovariance covmatrix ;
+	  for(int i=0; i<6; ++i) covmatrix(i,i) = survey.err[i] * survey.err[i] ;
+	  newsurvey = AlParameters( parameters, covmatrix ) ;
+	  found = true ;
+	}
+    
+      if(!found) {
+	// OK. Here is the new strategy which should also work for
+	// groups of elements. Make an average of the xml found for all
+	// daughters. Assign the errors based on the xml-error
+	// patterns. Let's first look for that pattern.
+	
+	// for the error pattern we have the following rule:
+	// - if there is only a single element, we first try to match the name of the condition
+	// - if there is a single element, we then try to match the name of the element
+	// - finally we match the name of the alignable
+	// extract the condition name, but only if this alignable has only one detector element
+	
+	const IGeometryInfo* geom(0) ;
+	const AlignmentCondition* cond(0) ;
+	const Gaudi::Vector6* errors = 0 ;
+	if( element.detelements().size()==1 ) {
+	  if((geom=element.detelements().front()->geometry()) &&
+	     (cond=geom->alignmentCondition() ) ) {
+	    // need to remove a leading slash
+	    std::string condname = cond->name().substr( 1, cond->name().size()-1 ) ;
+	    errors = findXmlUncertainty( condname ) ;
+	  }
+	  
+	  if (!errors) 
+	    errors = findXmlUncertainty(element.detelements().front()->name()) ;
+	}
+	if (!errors) 
+	  errors = findXmlUncertainty(element.name()) ;
+	
+	if(!errors) {
+	  error() << "Cannot find XML uncertainties for alignable: "
+		  << element.name() << endreq ;
+	} else {
+	  AlParameters::TransformCovariance localcovmatrix ;
+	  for(int i=0; i<6; ++i) 
+	    localcovmatrix(i,i) = (*errors)[i] * (*errors)[i]  ;
+	  
+	  AlParameters::TransformParameters sumparameters ;
+	  AlParameters::TransformCovariance sumcovmatrix ;
+	  
+	  size_t numfound(0) ;
+	  
+	  // now loop over all daughter elements
+	  BOOST_FOREACH( const DetectorElement* detelem,element.detelements() ) {
+	    // find this element in the XML catalogue
+	    std::string condname ;
+	    if((geom=detelem->geometry()) &&
+	       (cond=geom->alignmentCondition() ) ) 
+	      // need to remove a leading slash
+	      condname = cond->name().substr( 1, cond->name().size()-1 ) ;
+	    
+	    XmlData::const_iterator it = m_xmldata.find( condname ) ;
+	    if( it == m_xmldata.end() ) {
+	      error() << "Cannot find condition \"" << cond->name() << "\" for alignable "
+		      << element.name() << " in survey dictionary." << endreq ;
+	    } else {
+	      const XmlSurveyData& survey = it->second ;
+	      
+	      Gaudi::Transform3D nominalFrame = 
+		AlignmentElement::toGlobalMatrixMinusDelta( *detelem ) ;
+	      AlParameters surveypars( survey.par, localcovmatrix ) ;
+	      const ROOT::Math::Translation3D pivot(survey.pivot[0],survey.pivot[1],survey.pivot[2]) ;
+	      Gaudi::Transform3D surveyFrame = nominalFrame * pivot ;
+	      // get the transform from survey to alignment and transform the survey
+	      Gaudi::Transform3D fromSurveyToAlignment = element.alignmentFrame().Inverse() * surveyFrame ;
+	      AlParameters surveyParameters = surveypars.transformTo( fromSurveyToAlignment ) ;
+	      
+	      sumparameters += surveyParameters.transformParameters() ;
+	      sumcovmatrix  += surveyParameters.transformCovariance() ;
+	      ++numfound ;
+	    }
+	  }
+	  
+	  if(numfound == element.detelements().size()) {
+	    // now solve a peculiar problem: if we share xml parameters
+	    // with the daughters (because there is no xml for this
+	    // alignable) set the survey for these parameters to
+	    // 0. otherwise, it cannot converge.
+	    std::vector<int> shareddofs = element.redundantDofs() ;
+	    BOOST_FOREACH(int idof, shareddofs) {
+	      sumparameters(idof) = 0 ;
+	      for(int jdof=0; jdof<6; ++jdof)
+		sumcovmatrix(idof,jdof) = 0 ;
+	      sumcovmatrix(idof,idof) = numfound * localcovmatrix(idof,idof) ;
+	    }
+	  
+	    newsurvey = AlParameters( sumparameters/numfound, Gaudi::SymMatrix6x6(sumcovmatrix/numfound) ) ;
+	    found = true ;
+	    
+	  }
+	}
+      }
+      if(!found) {
+	error() << "Haven't been able to construct survey for " << element.name() << endreq ;
+      } else {
+	m_cachedSurvey[&element] = newsurvey ;
+	rc = &(m_cachedSurvey[&element]) ;
+      }
+    }
+
+    return rc ;
+  }
+
+
   LHCb::ChiSquare AlignChisqConstraintTool::addConstraints(const IGetElementsToBeAligned::Elements& inputelements,
                                                            AlVec& halfDChi2DAlpha, AlSymMat& halfD2Chi2DAlpha2,
                                                            std::ostream& logmessage) const
@@ -457,38 +490,35 @@ namespace Al
     double totalchisq(0) ;
     for( IGetElementsToBeAligned::Elements::const_iterator ielem = inputelements.begin() ;
          ielem != inputelements.end(); ++ielem) {
-      const SurveyData* survey = findSurveyData( **ielem ) ;
-      if( survey ) {
-        AlParameters currentdelta = (*ielem)->currentLocalDelta() ;
-        for(int idof=0 ; idof<6; ++idof ) {
+      const AlParameters * psurvey = surveyParameters(**ielem) ;
+      if( psurvey ) {
+	const AlParameters& surveypars = *psurvey ;
+	//AlParameters currentdelta = (*ielem)->currentLocalDelta() ;
+	AlParameters currentdelta = (*ielem)->currentDelta() ;
+	AlParameters::TransformParameters residual = surveypars.transformParameters() -  currentdelta.transformParameters() ;
+	AlParameters::TransformCovariance weight = surveypars.transformCovariance() ;
+	weight.Invert() ;
+	// FIX ME: take only active dofs when evaluating survey chisq
+	totalchisq +=  ROOT::Math::Similarity( residual, weight ) ;
+	totalnumconstraints += 6 ;
+	Gaudi::Vector6      dChi2DAlpha = weight * residual ;
+	Gaudi::SymMatrix6x6 d2Chi2DAlpha2 = weight ;
+	for(int idof=0 ; idof<6; ++idof ) {
           int ipar = (*ielem)->activeParIndex( idof ) ;
-          if( ipar>=0 ) 
-          {
-            if( survey->err[idof] > 0 ) 
-            {
-              double weight = 1/( survey->err[idof] * survey->err[idof] ) ;
-              double residual = survey->par[idof] - currentdelta.parameters()(idof) ;
-              halfDChi2DAlpha(ipar) += weight * residual; 
-              halfD2Chi2DAlpha2.fast(ipar,ipar) += weight ;
-              ++ totalnumconstraints;
-              totalchisq += weight * residual * residual ;
-              info() << "adding survey constraint: "
-                     << (*ielem)->name() << " "
-                     << currentdelta.parName(idof) << " "
-                     << survey->par[idof] << " " << survey->err[idof] << endreq ;
-            } 
-            else 
-            {
-              warning() << "No survey constraint for dof: "
-                        << (*ielem)->name() << " " << currentdelta.parName(idof) << endreq ;
-            }
-          }
-        }
+	  if( ipar>=0) {
+	    halfDChi2DAlpha(ipar) += dChi2DAlpha( idof ) ;
+	    for(int jdof=0; jdof<=idof; ++jdof) {
+	      int jpar = (*ielem)->activeParIndex( jdof ) ;
+	      if( jpar>=0) 
+		halfD2Chi2DAlpha2.fast(ipar,jpar) += d2Chi2DAlpha2(idof,jdof) ;
+	    }
+	  }
+	}
       }
     }
     logmessage << "Total chisquare of survey constraints: " << totalchisq << " / " << totalnumconstraints << std::endl ;
     return LHCb::ChiSquare(totalchisq,totalnumconstraints) ;
-  }   
+  } 
 
 
   LHCb::ChiSquare AlignChisqConstraintTool::addConstraints(const IGetElementsToBeAligned::Elements& inputelements,
@@ -498,41 +528,20 @@ namespace Al
     size_t totalnumconstraints(0) ;
     double totalchisq(0) ;
     for( IGetElementsToBeAligned::Elements::const_iterator ielem = inputelements.begin() ;
-         ielem != inputelements.end(); ++ielem) 
-    {
-      const SurveyData* survey = findSurveyData( **ielem ) ;
-      ElementData& elemdata = equations.element((*ielem)->index()) ;
-      if( survey ) 
-      {
-        AlParameters currentdelta = (*ielem)->currentLocalDelta() ;
-        for(int idof=0 ; idof<6; ++idof ) 
-        {
-          if( (*ielem)->dofMask().isActive(idof) )
-          {
-            if( survey->err[idof] > 0 ) 
-            {
-              double weight = 1/( survey->err[idof] * survey->err[idof] ) ;
-              double residual = survey->par[idof] - currentdelta.parameters()(idof) ;
-              // FIXME: the sign is odd here simlpy because we have from the start reversed the sign of dChi2DAlpha
-              elemdata.m_dChi2DAlpha(idof)        += weight * residual ; 
-              elemdata.m_d2Chi2DAlpha2(idof,idof) += weight ;
-              ++ totalnumconstraints;
-              totalchisq += weight * residual * residual ;
-              debug() << "adding survey constraint: "
-                      << (*ielem)->name() << " "
-                      << currentdelta.parName(idof) << " "
-		      << survey->name << " "
-                      << survey->par[idof] << " " << survey->err[idof] << endreq ;
-            } 
-            else 
-            {
-              warning() << "No survey constraint for dof: "
-                        << (*ielem)->name() << " " << currentdelta.parName(idof) << endreq ;
-            }
-          }//end if ielem..isActive
-          
-        }
-      }
+         ielem != inputelements.end(); ++ielem) {
+      const AlParameters * psurvey = surveyParameters(**ielem) ;
+      if( psurvey ) {
+	const AlParameters& surveypars = *psurvey ;
+      	ElementData& elemdata = equations.element((*ielem)->index()) ;
+	AlParameters currentdelta = (*ielem)->currentDelta() ;
+	AlParameters::TransformParameters residual = surveypars.transformParameters() -  currentdelta.transformParameters() ;
+	AlParameters::TransformCovariance weight = surveypars.transformCovariance() ;
+	weight.InvertChol() ;
+	totalchisq +=  ROOT::Math::Similarity( residual, weight ) ;
+	elemdata.m_dChi2DAlpha   += weight * residual ;
+	elemdata.m_d2Chi2DAlpha2 += weight ;
+	totalnumconstraints += 6 ;
+      }//end if ielem..isActive
     }
     logmessage << "Total chisquare of survey constraints: " << totalchisq << " / " << totalnumconstraints << std::endl ;
     return LHCb::ChiSquare(totalchisq,totalnumconstraints) ;
@@ -543,19 +552,24 @@ namespace Al
   {
     size_t totalnumconstraints(0) ;
     double totalchisq(0) ;
-    const SurveyData* survey = findSurveyData( element ) ;
-    if( survey ) 
-    {
-      AlParameters currentdelta = element.currentLocalDelta() ;
-      for(int idof=0 ; idof<6; ++idof ) 
-        if( (!activeonly || element.dofMask().isActive( idof ) ) &&
-            survey->err[idof] > 0 ) 
-        {
-          double weight = 1/( survey->err[idof] * survey->err[idof] ) ;
-          double residual = survey->par[idof] - currentdelta.parameters()(idof) ;
-          ++totalnumconstraints;
-          totalchisq += weight * residual * residual ;
-        }
+    const AlParameters * psurvey = surveyParameters(element) ;
+    if( psurvey ) {
+      const AlParameters& surveypars = *psurvey ;
+      AlParameters currentdelta = element.currentDelta() ;
+      AlParameters::TransformParameters residual = surveypars.transformParameters() -  currentdelta.transformParameters() ;
+      AlParameters::TransformCovariance weight = surveypars.transformCovariance() ;
+      totalnumconstraints += 6 ;
+      if( activeonly ) {
+	// this is extremely lazy: just set errors on inactive parameters 'big'
+	const double largeerrors[6] = {1000,1000,1000,1,1,1} ;
+	for(int idof=0; idof<6; ++idof)
+	  if( ! element.dofMask().isActive( idof ) ) {
+	    weight(idof,idof) += largeerrors[idof] * largeerrors[idof] ;
+	    --totalnumconstraints ;
+	  }
+      }
+      weight.InvertChol() ;
+      totalchisq +=  ROOT::Math::Similarity( residual, weight ) ;
     }
     return LHCb::ChiSquare(totalchisq,totalnumconstraints) ;
   }
