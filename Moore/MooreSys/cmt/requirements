@@ -10,6 +10,11 @@ branches doc cmt
 use  Moore              v9r0     Hlt
 
 use CaloReco            v5r4p1  Calo
+use Hlt2Lines           v3r1    Hlt
+use HltConf             v7r0p1  Hlt
+use HltGlobalMonitor    v3r3    Hlt
+use HltSettings         v1r13   Hlt
+
 
 
 # Declare this as a container package
