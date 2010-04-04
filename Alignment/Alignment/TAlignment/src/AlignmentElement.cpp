@@ -1,4 +1,4 @@
-// $Id: AlignmentElement.cpp,v 1.29 2010-03-29 14:52:55 wouter Exp $
+// $Id: AlignmentElement.cpp,v 1.30 2010-04-04 15:34:14 wouter Exp $
 // Include files
 
 // from STD
@@ -29,6 +29,13 @@
 
 // local
 #include "AlignmentElement.h"
+
+Gaudi::Transform3D AlignmentElement::toGlobalMatrixMinusDelta( const DetectorElement& element)
+{
+  const Gaudi::Transform3D& localDelta   = element.geometry()->ownToOffNominalMatrix() ;
+  const Gaudi::Transform3D& global       = element.geometry()->toGlobalMatrix();
+  return global * localDelta.Inverse() ;
+}
 
 std::string AlignmentElement::stripElementName(const std::string& name)
 {
@@ -139,7 +146,8 @@ void AlignmentElement::initAlignmentFrame() {
   // Calculate the center of gravity (the 'local' center)
   Gaudi::XYZVector averageR(0.0, 0.0, 0.0);
   for (ElemIter i = m_elements.begin(), iEnd = m_elements.end(); i != iEnd; ++i) {
-    averageR += ((*i)->geometry()->toGlobal(Gaudi::XYZPoint(0.0, 0.0, 0.0))) - Gaudi::XYZPoint(0.0, 0.0, 0.0);
+    averageR += toGlobalMatrixMinusDelta( **i ) * Gaudi::XYZPoint(0,0,0)  - Gaudi::XYZPoint(0,0,0);
+    //averageR += (((*i)->geometry()->toGlobal(Gaudi::XYZPoint(0.0, 0.0, 0.0))) - Gaudi::XYZPoint(0.0, 0.0, 0.0);
   }
   averageR /= double(m_elements.size());
   m_centerOfGravity = Gaudi::XYZPoint(0.0, 0.0, 0.0) + averageR;
@@ -150,12 +158,15 @@ void AlignmentElement::initAlignmentFrame() {
   if( m_useLocalFrame ) {
     if( m_elements.size() == 1 )
       // if there is only only element, takes its frame
-      m_alignmentFrame = m_elements.front()->geometry()->toGlobalMatrix() ;
+      //m_alignmentFrame = m_elements.front()->geometry()->toGlobalMatrix() ;
+      m_alignmentFrame = toGlobalMatrixMinusDelta( *m_elements.front() ) ;
     else {
       // if there is more than one element, we'll use the center of
       // gravity for the translation, and the frame of the first
       // element for the rotation.
-      ROOT::Math::Rotation3D rotation =  m_elements.front()->geometry()->toGlobalMatrix().Rotation() ;
+      //ROOT::Math::Rotation3D rotation =  m_elements.front()->geometry()->toGlobalMatrix().Rotation() ;
+      ROOT::Math::Rotation3D rotation = toGlobalMatrixMinusDelta( *m_elements.front() ).Rotation() ;
+
       m_alignmentFrame = Gaudi::Transform3D(averageR) * rotation ;
     }
   } else {
@@ -234,7 +245,7 @@ AlParameters AlignmentElement::currentTotalDelta() const {
 
 AlParameters AlignmentElement::currentActiveTotalDelta() const 
 {
-  return AlParameters(currentTotalDelta().parameterArray(),m_dofMask ) ;
+  return AlParameters(currentTotalDelta().transformParameters(),m_dofMask ) ;
 }
 
 AlParameters AlignmentElement::currentDelta() const {
@@ -296,7 +307,7 @@ AlParameters AlignmentElement::currentLocalDelta(const Gaudi::Transform3D& frame
 
 AlParameters AlignmentElement::currentActiveDelta() const 
 {
-  return AlParameters(currentDelta().parameterArray(),m_dofMask ) ;
+  return AlParameters(currentDelta().transformParameters(),m_dofMask ) ;
 }
 
 bool AlignmentElement::operator==(const DetectorElement* rhs) const {
