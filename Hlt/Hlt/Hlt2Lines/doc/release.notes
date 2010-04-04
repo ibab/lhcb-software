@@ -8,6 +8,11 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2010-04-04 - Patrick Spradlin
+ - Hlt2B2DXLines.py
+   Removed a vestigial reference to `Topo' by changing the name of
+   Hlt2TopoTFInFilter to Hlt2B2DXTFInFilter.
+
 ! 2010-04-02 - Patrick Spradlin
  - Hlt2TopologicalLines.py
    Added 3 one stage lines to the topological trigger (Hlt2TopoOSTF.Body)

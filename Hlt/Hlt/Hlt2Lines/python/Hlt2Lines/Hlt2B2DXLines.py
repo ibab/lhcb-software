@@ -218,7 +218,7 @@ class Hlt2B2DXLinesConf(HltLinesConfigurableUser) :
                              , Code = incuts
                              )
         #explicitly require the primary vertex as we are paranoid
-        lclTFInputParticles = bindMembers('TopoTFIn', [ BiKalmanFittedPions, BiKalmanFittedKaons, PV3D(), filter ])
+        lclTFInputParticles = bindMembers('B2DXTFIn', [ BiKalmanFittedPions, BiKalmanFittedKaons, PV3D(), filter ])
         
         
         ###################################################################
