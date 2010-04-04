@@ -1,4 +1,4 @@
-// $Id: VeloOccupancyMonitor.cpp,v 1.15 2010-03-28 12:58:43 krinnert Exp $
+// $Id: VeloOccupancyMonitor.cpp,v 1.16 2010-04-04 14:15:44 keaveney Exp $
 // Include files 
 // -------------
 
@@ -117,6 +117,8 @@ StatusCode Velo::VeloOccupancyMonitor::initialize() {
   m_channelOccupancyHistPerSensor.resize(maxSensNum+1,0);
   h_veloOccVsBunchId.resize(2);
   m_nClusters.resize(2);
+
+  m_histBCIDSpec = Gaudi::Utils::Aida2ROOT::aida2root(book1D("BCID Spectrum", "BCID Spectrum",-0.5,3563.5,3564));  
 
   for (unsigned int lr=0;lr<h_veloOccVsBunchId.size();lr++){
     std::string side="ASide";
@@ -354,6 +356,9 @@ void Velo::VeloOccupancyMonitor::monitorOccupancy() {
 
   // these are only available when the ODIN bank is present
   if ( m_useOdin && 0 != m_odin ) {
+
+    m_histBCIDSpec->Fill(m_odin->bunchId());    
+
     for(int t=0; t<2; t++){
       m_percOcc = ((m_nClusters[t])/(m_nstrips));  
       h_veloOccVsBunchId[t]->fill(m_odin->bunchId(),m_percOcc*100.0);
