@@ -1,4 +1,4 @@
-// $Id: STClusterCreator.cpp,v 1.18 2009-03-02 08:10:50 mneedham Exp $
+// $Id: STClusterCreator.cpp,v 1.19 2010-04-05 09:37:01 mneedham Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -18,6 +18,8 @@
 // local
 #include "STClusterCreator.h"
 
+#include "LHCbMath/LHCbMath.h"
+
 using namespace LHCb;
 
 DECLARE_ALGORITHM_FACTORY( STClusterCreator );
@@ -25,13 +27,16 @@ DECLARE_ALGORITHM_FACTORY( STClusterCreator );
 STClusterCreator::STClusterCreator( const std::string& name,
                                     ISvcLocator* pSvcLocator):
   ST::AlgBase(name, pSvcLocator),
-  m_sigNoiseTool(0),
   m_positionTool(0)
 {
+
+  declareProperty("forceOptions", m_forceOptions = false);
   declareProperty("DigitSignal2Noise",m_digitSig2NoiseThreshold = 3.0);
   declareProperty("ClusterSignal2Noise",m_clusterSig2NoiseThreshold = 4.0);
   declareProperty("HighSignal2Noise",m_highThreshold = 10.0);
-  declareProperty("SigNoiseTool",m_sigNoiseToolName = "STSignalToNoiseTool");
+  declareSTConfigProperty( "conditionLocation", 
+			   m_conditionLocation  , "/dd/Conditions/ReadoutConf/TT/ClusteringThresholds" );
+
   declareProperty("PositionTool",m_positionToolName = "STOnlinePosition");
   declareSTConfigProperty("InputLocation",m_inputLocation, STDigitLocation::TTDigits);
   declareSTConfigProperty("OutputLocation",
@@ -52,21 +57,31 @@ STClusterCreator::~STClusterCreator()
 
 StatusCode STClusterCreator::initialize()
 {
+
   StatusCode sc = ST::AlgBase::initialize();
   if (sc.isFailure()) return Error("Failed to initialize", sc);
 
-  // sig to noise tool
-  m_sigNoiseTool = tool<ISTSignalToNoiseTool>(m_sigNoiseToolName, 
-                                              m_sigNoiseToolName+detType());
+  // get the cuts from condition if present
+  if (existDet<Condition>(m_conditionLocation) == false || 
+      m_forceOptions == true ){
+    info() <<  "Default to jobOptions for cuts" <<endmsg;
+  }
+  else {
+    registerCondition(m_conditionLocation,
+                    &STClusterCreator::loadCutsFromConditions );
+    sc = runUpdate();
+    if (sc.isFailure()) return Error("Failed to update conditions", sc);
+  }
 
   // calculate cut values
   const std::vector<DeSTSector*>& tSectors = tracker()->sectors(); 
   std::vector<DeSTSector*>::const_iterator iterS = tSectors.begin();
   for ( ; iterS != tSectors.end(); ++iterS ){
-    const double adc =  m_sigNoiseTool->noiseInADC(*iterS);
-    m_digitSig2NoiseCut[*iterS] = m_digitSig2NoiseThreshold*adc;
-    m_clusterSig2NoiseCut[*iterS] = m_clusterSig2NoiseThreshold*adc; 
-    m_highSig2NoiseCut[*iterS] = m_highThreshold*adc; 
+    const double NoiseInADC = (*iterS)->sectorNoise();
+    m_clusterSig2NoiseCut[*iterS] = LHCb::Math::round(m_clusterSig2NoiseThreshold*NoiseInADC); 
+    m_highSig2NoiseCut[*iterS] = LHCb::Math::round(m_highThreshold*NoiseInADC);
+; 
+
   }
   // position tool
   m_positionTool = tool<ISTClusterPosition>(m_positionToolName);
@@ -79,6 +94,7 @@ StatusCode STClusterCreator::initialize()
 
 StatusCode STClusterCreator::execute()
 {
+
   // retrieve Digitizations
   const STDigits* digitCont = get<STDigits>(m_inputLocation);
 
@@ -173,8 +189,8 @@ bool STClusterCreator::aboveDigitSignalToNoise(const STDigit* aDigit,
                                                const DeSTSector* aSector) const
 {
   // digit above threshold ?
-  return (aDigit->depositedCharge() > m_digitSig2NoiseCut[aSector]  ?  
-          true : false);
+  const unsigned int threshold = LHCb::Math::round(m_digitSig2NoiseThreshold* aSector->noise(aDigit->channelID()));
+  return (aDigit->depositedCharge() > threshold  ?  true : false);
 }
 
 bool STClusterCreator::aboveClusterSignalToNoise(const double charge, 
@@ -261,4 +277,18 @@ STClusterCreator::strips(const SmartRefVector<STDigit>& clusteredDigits,
   } // i
 
   return tVec;
+}
+
+StatusCode STClusterCreator::loadCutsFromConditions(){
+
+
+  // load conditions
+  Condition* cInfo = getDet<Condition>(m_conditionLocation);
+  info() << "Loading cuts tagged as " << cInfo->param<std::string>("tag") << endmsg;
+
+  m_digitSig2NoiseThreshold = cInfo->param<double>("HitThreshold");
+  m_clusterSig2NoiseThreshold = cInfo->param<double>("ConfirmationThreshold");
+  m_highThreshold = cInfo->param<double>("SpilloverThreshold");
+
+  return StatusCode::SUCCESS;
 }

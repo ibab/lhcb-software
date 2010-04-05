@@ -2,6 +2,12 @@
 ! Package manager : Matt Needham
 !-----------------------------------------------------------------------------
 
+
+!  2010-03-20 M.Needham
+ - Remove ISTSignalToNoiseTool
+ - Allow use of cuts from conditions in STClusterCreator 
+ - Make threshold integer + cut >= (was >)
+
 !======================= STAlgorithms v3r10 2009-11-13 =======================
 ! 2009-10-28 J Luisier
  - Bug fix in WriteSTNoiseConditions (that wrote the strip status)

@@ -1,4 +1,4 @@
-// $Id: STClusterCreator.h,v 1.4 2009-03-02 08:10:50 mneedham Exp $
+// $Id: STClusterCreator.h,v 1.5 2010-04-05 09:37:01 mneedham Exp $
 #ifndef STCLUSTERCREATOR_H
 #define STCLUSTERCREATOR_H 1
 
@@ -8,7 +8,6 @@
 
 class DeSTSDetector;
 class DeSTSector;
-class ISTSignalToNoiseTool;
 class ISTClusterPosition;
 
 /** @class STClusterCreator STClusterCreator.h
@@ -57,13 +56,18 @@ private:
                                     clusteredDigits,
                                     const LHCb::STChannelID closestChan) const;
  
+
+  StatusCode loadCutsFromConditions();
+
+  bool m_forceOptions;
+  std::string  m_conditionLocation;
   double m_digitSig2NoiseThreshold;
   double m_clusterSig2NoiseThreshold;
   double m_highThreshold;
 
-  typedef std::map<const DeSTSector*,double> CutMap;
+  typedef std::map<const DeSTSector*,unsigned int> CutMap;
  
-  mutable CutMap m_digitSig2NoiseCut;
+
   mutable CutMap m_clusterSig2NoiseCut;
   mutable CutMap m_highSig2NoiseCut;
 
@@ -71,7 +75,7 @@ private:
   int m_maxSize;
   bool m_byBeetle;
 
-  std::string m_sigNoiseToolName;
+
   std::string m_positionToolName;
 
   std::string m_inputLocation;
@@ -79,7 +83,7 @@ private:
   std::string m_spillName;
   LHCb::STCluster::Spill m_spill;
   
-  ISTSignalToNoiseTool* m_sigNoiseTool;
+
   ISTClusterPosition* m_positionTool;
  
 };
