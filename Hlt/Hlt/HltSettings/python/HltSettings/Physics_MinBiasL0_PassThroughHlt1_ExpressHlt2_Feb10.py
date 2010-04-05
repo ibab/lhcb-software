@@ -19,7 +19,6 @@ class Physics_MinBiasL0_PassThroughHlt1_ExpressHlt2_Feb10 ( Physics_MinBiasL0_Pa
         thresholds = Physics_MinBiasL0_PassThroughHlt_Feb10.Thresholds(self)
         from Configurables import Hlt2ExpressLinesConf
         thresholds.update( { Hlt2ExpressLinesConf : { 'ExKSMassWin'         :  70
-                                                    , 'ExJPsiMassWindow'    : 500
                                                     , 'ExLambdaMassWin'     :  40 # just catch the threshold which is at -37.2...
                                                     , 'ExLambdaMassWinWide' :  60
                                                     } } )
