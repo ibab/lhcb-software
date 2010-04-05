@@ -52,7 +52,7 @@ public:
   // dump to stream
   std::ostream& fillStream(std::ostream& s) const;
   // get a new set of parameters in a new frame
-  AlParameters AlParameters::transformTo( const ROOT::Math::Transform3D& T ) const;
+  AlParameters transformTo( const ROOT::Math::Transform3D& T ) const;
   
   std::string activeParName( int iactive ) const { return parName( m_mask.parIndex(iactive) ) ; }
   const Vector& parameters() const { return m_parameters ; }
