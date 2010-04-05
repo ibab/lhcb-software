@@ -18,24 +18,10 @@ class Physics_MinBiasL0_PassThroughHlt1_ExpressHlt2_Feb10 ( Physics_MinBiasL0_Pa
     def Thresholds(self) :
         thresholds = Physics_MinBiasL0_PassThroughHlt_Feb10.Thresholds(self)
         from Configurables import Hlt2ExpressLinesConf
-        thresholds.update( { Hlt2ExpressLinesConf : { 'Postscale'           :  { 'Hlt2ExpressJPsi'        : 'FALL'
-                                                                               , 'Hlt2ExpressJPsiTagProbe': 'FALL'
-                                                                               , 'Hlt2ExpressLambda'      : 'FALL'
-                                                                               , 'Hlt2ExpressKS'          : 'FALL'
-                                                                               , 'Hlt2ExpressDs2PhiPi'    : 'FALL'
-                                                                               , 'Hlt2ExpressBeamHalo'    : 'FALL'
-                                                                               , 'Hlt2ExpressDStar2D0Pi'  : 'FALL' 
-                                                                               }
-                                                    , 'ExKSMassWin'         :  70
-                                                    , 'ExJPsiMassWindow'    :1000
-                                                    #, 'ExJPsiMuPt'          : 250
+        thresholds.update( { Hlt2ExpressLinesConf : { 'ExKSMassWin'         :  70
+                                                    , 'ExJPsiMassWindow'    : 500
                                                     , 'ExLambdaMassWin'     :  40 # just catch the threshold which is at -37.2...
-                                                    , 'ExLambdaMassWinWide' : 100
-                                                    , 'ExDsMassWinWide'     : 510
-                                                    , 'ExDsMassWin'         : 500
-                                                    , 'ExD0MassWinWide'     : 510
-                                                    , 'ExD0MassWin'         : 500
-                                                    , 'ExDStarMassDiff'     : 180
+                                                    , 'ExLambdaMassWinWide' :  60
                                                     } } )
         return thresholds
     
