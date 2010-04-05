@@ -1,7 +1,6 @@
 <lcgdict>
 
   <class name = "ISTReadoutTool"       />
-  <class name = "ISTSignalToNoiseTool" />
   <class name = "ST::ISTNoiseCalculationTool" />
   <class name = "ISTClusterSelector" />
   <class name = "ISTChannelIDSelector" />
