@@ -1,10 +1,9 @@
-// $Id: TTOccupancy.h,v 1.7 2009-01-06 13:47:56 mneedham Exp $
+// $Id: TTOccupancy.h,v 1.8 2010-04-05 09:49:19 mneedham Exp $
 #ifndef TTOccupancy_H
 #define TTOccupancy_H 1
 
 #include "Kernel/STHistoAlgBase.h"
 
-class ISTSignalToNoiseTool;
 
 /** @class TTOccupancy TTOccupancy.h
  *
@@ -44,18 +43,21 @@ private:
 
   void fillHistograms(const PBASE* obj);
 
-   unsigned int weight(const PBASE* obj) const; 
+  unsigned int weight(const PBASE* obj) const; 
   
-  ISTSignalToNoiseTool* m_sigNoiseTool;
+  double SN(const PBASE* obj) const;
+
  
   int m_nBins; 
   int m_hMax;  
 
   // job options
   std::vector<double> m_threshold;   ///< List of threshold values
-  std::string m_sigNoiseToolName;    ///< Name of the S/N tool 
+
   int m_binSize;                     ///< Number of channels in each bin
   std::string m_dataLocation;        ///< Location of the digits
+
+  std::string m_histoLocation;
 
 };
 

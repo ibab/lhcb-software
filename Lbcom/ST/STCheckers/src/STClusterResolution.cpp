@@ -1,4 +1,4 @@
-// $Id: STClusterResolution.cpp,v 1.20 2009-01-09 16:16:42 jvantilb Exp $
+// $Id: STClusterResolution.cpp,v 1.21 2010-04-05 09:49:19 mneedham Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -196,11 +196,20 @@ void STClusterResolution::fillHistograms( const STCluster* aCluster,
     // Plot the residual versus the angle
     double angle = ROOT::Math::VectorUtil::Angle( distance, 
                                                   aSensor->plane().Normal() );
+
     angle -= 0.5*M_PI;
     plot2D(angle, residual, 100, "residual vs angle",-1.55,1.55,
            -0.5,0.5,50,50);
-    plot2D(angle, residual, 100+id, "residual vs angle "+histTitle,-1.55,1.55,
-           -0.5,0.5,50,50);
+
+    // cluster size v angle
+    plot2D(angle, measVal.clusterSize, 1001, "trimmed size vs angle",-1.55,1.55,
+           -0.5, 10.5, 100, 11);
+
+   plot2D(angle, aCluster->size(), 1002, "size vs angle",-1.55,1.55,
+           -0.5, 10.5, 100, 11);
+
+    
+
   } // aHit
   
   // end

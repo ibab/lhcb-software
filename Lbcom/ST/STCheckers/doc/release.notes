@@ -2,6 +2,13 @@
 ! Package manager : Jeroen van Tilburg
 !------------------------------------------------------------------------------
 
+
+
+
+!  2010-03-20 M.Needham
+ - Remove ISTSignalToNoiseTool
+ - add cluster size versus angle plots to STClusterResolution
+
 !=========================== STCheckers v2r14 2009-09-03 ======================
 ! 2009-09-03 - Marco Cattaneo
  - Remove obsolete file src/STCheckers_dll.cpp

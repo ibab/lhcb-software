@@ -1,4 +1,4 @@
-// $Id: ITOccupancy.icpp,v 1.3 2009-01-06 13:47:56 mneedham Exp $
+// $Id: ITOccupancy.icpp,v 1.4 2010-04-05 09:49:18 mneedham Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -9,9 +9,9 @@
 // xml geometry
 #include "STDet/DeSTDetector.h"
 #include "STDet/DeITLadder.h"
+#include "STDet/DeSTSector.h"
 
-// GaudiKernel
-#include "Kernel/ISTSignalToNoiseTool.h"
+
 
 // Event
 
@@ -33,14 +33,13 @@ using namespace LHCb;
 template <class PBASE>
 inline ITOccupancy<PBASE>::ITOccupancy( const std::string& name, 
                           ISvcLocator* pSvcLocator ) :
-  ST::HistoAlgBase(name, pSvcLocator),
-  m_sigNoiseTool(0)
+  ST::HistoAlgBase(name, pSvcLocator)
 {
   // constructer
   declareProperty("Threshold",m_threshold);
-  declareProperty("SigNoiseTool",m_sigNoiseToolName = "STSignalToNoiseTool");
   declareProperty("BinSize", m_binSize = 32);
   declareProperty("DataLocation",m_dataLocation = dataLocation());
+  declareProperty("HistoLocation" , m_histoLocation = histoDirName()) ;
 
   setDetType("IT");
   setForcedInit();
@@ -62,17 +61,12 @@ template <class PBASE>
 inline StatusCode ITOccupancy<PBASE>::initialize()
 {
   // Set the top directory to IT or TT.
-  setHistoDir(histoDirName());
+  setHistoDir(m_histoLocation);
   if( "" == histoTopDir() ) setHistoTopDir(detType()+"/");
  
   // Initialize GaudiHistoAlg
   StatusCode sc = ST::HistoAlgBase::initialize();
   if (sc.isFailure()) return Error("Failed to initialize", sc);
-
-
-  // signal to noise tool
-  m_sigNoiseTool = tool<ISTSignalToNoiseTool>(m_sigNoiseToolName, 
-                                              m_sigNoiseToolName + detType());
 
   // intialize histos
   this->initHistograms();
@@ -132,6 +126,8 @@ inline StatusCode ITOccupancy<PBASE>::execute()
 
   // retrieve Digitizations
   const Container* objCont = get<Container>(m_dataLocation);
+
+  unsigned int nClus = 0;
   
   std::map<unsigned int, unsigned int> SectorMap;
   std::map<std::string, unsigned int> BeetleMap;
@@ -139,6 +135,12 @@ inline StatusCode ITOccupancy<PBASE>::execute()
   // histos per digit
   iterator iterObj = objCont->begin();
   for( ; iterObj != objCont->end(); ++iterObj){
+
+    const double signalToNoise = SN(*iterObj);
+    if (signalToNoise <
+      m_threshold[(*iterObj)->station()-tracker()->firstStation()] ) continue;
+
+    ++nClus;
     this->fillHistograms(*iterObj);
     SectorMap[(*iterObj)->channelID().uniqueSector()] += weight(*iterObj);
     BeetleMap[uniqueBeetle((*iterObj)->channelID())] += weight(*iterObj) ;
@@ -176,29 +178,29 @@ inline StatusCode ITOccupancy<PBASE>::execute()
     ++iCount;
   }
  
+  plot(nClus,"nClus", 0., 2000., 500);
+ 
   return StatusCode::SUCCESS;
 }
 
 template <class PBASE>
 void ITOccupancy<PBASE>::fillHistograms(const PBASE* obj)
 {
-  // retrieve geom info
-  if (m_sigNoiseTool->signalToNoise(obj) >
-      m_threshold[obj->station()-tracker()->firstStation()]){
+
   
-    // get the channel and map to number in local vector
-    const STChannelID aChan = obj->channelID();  
-    int id = uniqueInt(aChan);
-    int numInVector = m_mapping[id];
+  // get the channel and map to number in local vector
+  const STChannelID aChan = obj->channelID();  
+  int id = uniqueInt(aChan);
+  int numInVector = m_mapping[id];
 
-    // get the number of strips
-    const unsigned int nstrips = findSector(aChan)->nStrip();
+  // get the number of strips
+  const unsigned int nstrips = findSector(aChan)->nStrip();
 
-    m_stripOccVector[numInVector]->fill( (double) aChan.strip() - 1. +
+  m_stripOccVector[numInVector]->fill( (double) aChan.strip() - 1. +
                                         (nstrips*(aChan.sector()-1)));
-    ++m_layerOccVector[numInVector];
+  ++m_layerOccVector[numInVector];
 
-  } // if above threshold
+  plot(aChan.station(), "station", -0.5, 5.5, 6);
 
   return;
 }
@@ -212,4 +214,10 @@ inline int ITOccupancy<PBASE>::uniqueInt(const STChannelID aChan) const
 template <class PBASE>
 inline unsigned int ITOccupancy<PBASE>::weight(const PBASE* ) const{
   return 1;
+}
+
+template <class PBASE>
+inline double ITOccupancy<PBASE>::SN(const PBASE* obj) const{ 
+   const DeSTSector* sector = findSector(obj->channelID());
+   return obj->depositedCharge() / sector->noise(obj->channelID());
 }

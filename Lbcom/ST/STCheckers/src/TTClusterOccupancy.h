@@ -1,4 +1,4 @@
-// $Id: TTClusterOccupancy.h,v 1.3 2009-02-12 16:39:10 mneedham Exp $
+// $Id: TTClusterOccupancy.h,v 1.4 2010-04-05 09:49:19 mneedham Exp $
 
 #ifndef TTClusterOccupancy_H 
 #define TTClusterOccypancy_H !
@@ -31,6 +31,16 @@ template <>
 inline unsigned int TTClusterOccupancy::weight(const LHCb::STCluster* obj) const {
   return obj->size();
 }
+
+#include "STDet/DeSTSector.h"
+
+template <>
+inline double  TTClusterOccupancy::SN(const LHCb::STCluster* obj) const{ 
+   const DeSTSector* sector = findSector(obj->channelID());
+   return obj->totalCharge() / sector->noise(obj->channelID());
+}
+
+
 
 //template class TTOccupancy<LHCb::STCluster>;
 

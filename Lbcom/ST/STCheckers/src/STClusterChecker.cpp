@@ -1,4 +1,4 @@
-// $Id: STClusterChecker.cpp,v 1.17 2008-10-16 13:10:34 mneedham Exp $
+// $Id: STClusterChecker.cpp,v 1.18 2010-04-05 09:49:18 mneedham Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -7,8 +7,8 @@
 #include "Event/STCluster.h"
 #include "Event/MCHit.h"
 
-// LHCbKernel
-#include "Kernel/ISTSignalToNoiseTool.h"
+// Det
+#include "STDet/DeSTSector.h"
 
 #include "MCInterfaces/IMCParticleSelector.h"
 
@@ -31,7 +31,7 @@ STClusterChecker::STClusterChecker( const std::string& name,
   m_clusterLocation(STClusterLocation::TTClusters)
 {
   // constructer
-  declareProperty("SigNoiseTool", m_sigNoiseToolName = "STSignalToNoiseTool");
+
   declareProperty("SelectorName", m_selectorName     = "MCParticleSelector" );
 
   addToFlipList(&m_clusterLocation);
@@ -56,9 +56,7 @@ StatusCode STClusterChecker::initialize()
   }
 
   
-  // sig to noise tool
-  m_sigNoiseTool = tool<ISTSignalToNoiseTool>( m_sigNoiseToolName,
-                                               m_sigNoiseToolName+detType() );
+
 
   // MCParticle selection tool
   m_selector = tool<IMCParticleSelector>(m_selectorName,m_selectorName,this);
@@ -100,8 +98,9 @@ void STClusterChecker::fillHistograms( const STCluster* aCluster,
 
       std::string dType = detectorType(aCluster->channelID());
       plot(aCluster->totalCharge(),dType+"/1","Charge", 0., 200., 200);
-        plot(m_sigNoiseTool->signalToNoise(aCluster),
-             dType+"/2","S/N",0.,100., 100);
+      const DeSTSector* sector = findSector(aCluster->channelID()); 
+      const double signalToNoise = aCluster->totalCharge()/sector->noise(aCluster->channelID()); 
+      plot(signalToNoise,dType+"/2","S/N",0.,100., 100);
     }  // accepted
   } // aHit 
 }

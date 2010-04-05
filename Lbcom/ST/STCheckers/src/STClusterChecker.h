@@ -1,4 +1,4 @@
-// $Id: STClusterChecker.h,v 1.7 2008-10-16 13:10:34 mneedham Exp $
+// $Id: STClusterChecker.h,v 1.8 2010-04-05 09:49:18 mneedham Exp $
 #ifndef STClusterChecker_H
 #define STClusterChecker_H 1
 
@@ -17,7 +17,7 @@ namespace LHCb{
 };
 
 class IMCParticleSelector;
-class ISTSignalToNoiseTool;
+
 
 /** @class STClusterChecker STClusterChecker.h
  *
@@ -58,8 +58,7 @@ private:
   std::string m_clusterLocation; 
   std::string m_asctLocation; 
 
-  std::string m_sigNoiseToolName;
-  ISTSignalToNoiseTool* m_sigNoiseTool;
+
 
   // selector
   std::string m_selectorName;

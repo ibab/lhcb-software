@@ -1,4 +1,4 @@
-// $Id: STClusterClassification.h,v 1.3 2008-10-16 13:10:34 mneedham Exp $
+// $Id: STClusterClassification.h,v 1.4 2010-04-05 09:49:19 mneedham Exp $
 #ifndef STClusterClassification_H
 #define STClusterClassification_H 1
 
@@ -65,7 +65,7 @@ private:
   // index of event spill
   int m_eventIndex;
   int m_nStation;
-
+  int m_nEvent;
 
   std::string m_asctLocation;
   std::string m_clusterLocation;

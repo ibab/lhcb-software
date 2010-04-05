@@ -1,4 +1,4 @@
-// $Id: ITOccupancy.h,v 1.7 2008-12-29 12:55:16 mneedham Exp $
+// $Id: ITOccupancy.h,v 1.8 2010-04-05 09:49:18 mneedham Exp $
 #ifndef ITOccupancy_H
 #define ITOccupancy_H 1
 
@@ -14,7 +14,7 @@ namespace LHCb{
 
 class DeSTDetector;
 
-class ISTSignalToNoiseTool;
+
 
 /** @class ITOccupancy ITOccupancy.h
  *
@@ -58,19 +58,23 @@ private:
 
   int uniqueInt(const LHCb::STChannelID aChan) const;
 
+  double SN(const PBASE* obj) const;
+
   std::map<int,int> m_mapping;
   std::vector<double> m_nStripsVector;
   std::vector<double> m_layerOccVector;
   std::vector<AIDA::IHistogram1D*> m_layerOccHistos;
   std::vector<AIDA::IHistogram1D*> m_stripOccVector;
   
-  ISTSignalToNoiseTool* m_sigNoiseTool;  
+ 
  
   // job options
   std::vector<double> m_threshold;   ///< List of threshold values
-  std::string m_sigNoiseToolName;    ///< Name of the S/N tool 
+ 
   int m_binSize;                     ///< Number of channels in each bin
   std::string m_dataLocation;        ///< Location of the digits
+
+  std::string m_histoLocation;
  
 };
 

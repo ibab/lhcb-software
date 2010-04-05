@@ -1,4 +1,4 @@
-// $Id: STClusterClassification.cpp,v 1.7 2008-12-16 18:07:41 mneedham Exp $
+// $Id: STClusterClassification.cpp,v 1.8 2010-04-05 09:49:18 mneedham Exp $
 
 
 // Gaudi
@@ -29,7 +29,8 @@ DECLARE_ALGORITHM_FACTORY( STClusterClassification );
 
 STClusterClassification::STClusterClassification(const std::string& name, 
                               ISvcLocator* pSvcLocator) :
-  ST::HistoAlgBase(name, pSvcLocator) 
+  ST::HistoAlgBase(name, pSvcLocator),
+  m_nEvent(0) 
 {
   // constructer
   this->declareProperty("SpillVector", m_spillVector);
@@ -72,6 +73,7 @@ StatusCode STClusterClassification::execute()
 {
   // retrieve clusters
   const STClusters* clusterCont = get<STClusters>(m_clusterLocation);
+  ++m_nEvent;
 
   // linker
   AsctTool associator(evtSvc(), m_asctLocation);
@@ -108,7 +110,7 @@ StatusCode  STClusterClassification::finalize()
   info() << "   |---> Secondary " << m_infoMap["secondary"]/ double(total) 
          << endmsg;
   info() << "   |---> Unknown " << m_infoMap["unknown"]/double(total) << endmsg;
-  info() << "Noise " << m_infoMap["noise"]/double(total) << endmsg ;
+  info() << "Noise " << m_infoMap["noise"]/double(total) <<" # per event " <<  m_infoMap["noise"]/m_nEvent << endmsg ;
   info() << "Spillover "  << spillover/double(total) << endmsg;
   
   std::map<std::string, unsigned int>::const_iterator iter = m_infoMap.begin();
