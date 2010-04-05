@@ -5,7 +5,7 @@
  *  Header file for reconstruction tool : TrackSelectorBase
  *
  *  CVS Log :-
- *  $Id: TrackSelectorBase.h,v 1.1 2009-07-06 15:50:02 jonrob Exp $
+ *  $Id: TrackSelectorBase.h,v 1.2 2010-04-05 19:18:56 wouter Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   30/06/2009
@@ -61,15 +61,16 @@ public:
   virtual bool accept ( const LHCb::Track & aTrack ) const = 0;
 
 protected:
+  enum { Backward = 12, MaxType = 32 } ;
 
   // Check track type
   inline bool checkTrackType( const LHCb::Track & aTrack ) const
   {
     bool OK = true;
-    if ( !m_selTypes[aTrack.type()] )
-    {
+    int type = aTrack.checkFlag(LHCb::Track::Backward) ? Backward : aTrack.type() ;
+    if ( !m_selTypes[type] ) {
       if ( msgLevel(MSG::VERBOSE) )
-        verbose() << " -> Track type " << aTrack.type() << " is rejected" << endreq;
+	verbose() << " -> Track type " << aTrack.type() << " is rejected" << endreq;
       OK = false;
     }
     return OK;
@@ -82,7 +83,7 @@ private: // data
   TrackTypes m_trTypes; ///< List of track types to select
 
   /// Mapping type linking track types to selection boolean
-  typedef GaudiUtils::HashMap < const LHCb::Track::Types, bool > SelTypes;
+  typedef std::vector<bool> SelTypes;
   SelTypes m_selTypes;  ///< Mapping linking track types to selection boolean
 
 };
