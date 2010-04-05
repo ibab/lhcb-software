@@ -1,8 +1,20 @@
-! $Id: release.notes,v 1.532 2010-04-04 19:13:48 graven Exp $
+! $Id: release.notes,v 1.533 2010-04-05 14:59:25 ibelyaev Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+
+! 2010-04-05 - Vanya Belyaev
+
+ 1. FilterDesktop:
+
+      fix the problem with the range for temporary vectors
+
+ 2. FilterInTrees:
+
+      new algorithm, just a small varination of FilterDesktop, 
+      but it scans the input trees, and filter "good" particles in decay trees.
 
 ! 2010-04-04 - Gerhard Raven
  - src/FilterDesktop: postmonitor should moniter accepted, not particles
