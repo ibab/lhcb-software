@@ -1,4 +1,4 @@
-// $Id: DeSTSensor.h,v 1.7 2009-11-06 12:31:20 mneedham Exp $
+// $Id: DeSTSensor.h,v 1.8 2010-04-05 09:43:18 mneedham Exp $
 #ifndef _DeSTSensor_H_
 #define _DeSTSensor_H_
 
@@ -158,6 +158,12 @@ public:
   /**  sensor capacitance **/
   double capacitance() const;
 
+  /** x sense of local frame relative to global */
+  bool xInverted() const;
+
+  /** y sense of local frame relative to global */
+  bool yInverted() const;
+  
   /** print to stream */
   std::ostream& printOut( std::ostream& os ) const;
 
@@ -279,6 +285,14 @@ inline bool DeSTSensor::localInBondGap( const double v, double tol) const{
 
   return ((v+tol > m_uMinLocal) && (v-tol < m_uMaxLocal) );
 
+}
+
+inline bool DeSTSensor::xInverted() const {
+  return  m_xInverted;
+}
+
+inline bool DeSTSensor::yInverted() const {
+  return  m_yInverted;
 }
 
 /** ouput operator for class DeSTSensor

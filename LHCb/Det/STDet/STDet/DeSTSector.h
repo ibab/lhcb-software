@@ -1,4 +1,4 @@
-// $Id: DeSTSector.h,v 1.46 2010-01-19 12:44:40 cattanem Exp $
+// $Id: DeSTSector.h,v 1.47 2010-04-05 09:43:18 mneedham Exp $
 #ifndef _DeSTSector_H_
 #define _DeSTSector_H_
 
@@ -426,6 +426,12 @@ public:
   
   /** direct access to the noise condition, for experts only */
   const Condition* noiseCondition() const;
+
+  /** x sense of local frame relative to global */
+  bool xInverted() const;
+
+  /** y sense of local frame relative to global */
+  bool yInverted() const;
   
 protected:
 
@@ -686,6 +692,14 @@ inline const DeSTSector::Sensors& DeSTSector::sensors() const{
 
 inline DeSTSensor* DeSTSector::middleSensor() const {
   return m_sensors[m_sensors.size()/2u];
+}
+
+inline bool DeSTSector::xInverted() const {
+  return middleSensor()->xInverted();
+}
+
+inline bool DeSTSector::yInverted() const {
+  return middleSensor()->yInverted();
 }
 
 /** ouput operator for class DeSTSector
