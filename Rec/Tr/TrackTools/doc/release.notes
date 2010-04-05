@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2010-04-05 - Wouter Hulsbergen
+ - Added Backward as track type to TrackSelectorBase
+
 !======================== TrackTools v3r28 2010-03-25 ======================
 ! 2010-03-25 - David Hutchcroft
  - Fixed conditon to monitor in TrackVelodEdxCharge.cpp
