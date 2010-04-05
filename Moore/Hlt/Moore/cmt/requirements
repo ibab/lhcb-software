@@ -1,5 +1,5 @@
 #============================================================================
-# $Id: requirements,v 1.115 2010-04-03 21:47:11 graven Exp $
+# $Id: requirements,v 1.116 2010-04-05 18:06:32 graven Exp $
 # Created    : 03/06/2005 by P. Koppenburg
 # Maintainer : G. Raven
 #============================================================================
@@ -37,15 +37,21 @@ use GaudiPython         v*                  -no_auto_imports
 use L0Interfaces        v*    L0            -no_auto_imports
 
 #-- Lbcom packages 
+use CaloReco            v5r4p1  Calo
 use LbcomSys            v*                  -no_auto_imports
 
 #-- Rec packages 
 use RecSys              v*                  -no_auto_imports
 
 #-- HLT packages 
+use Hlt2Lines           v3r1    Hlt
+use HltConf             v7r0p1  Hlt
+use HltGlobalMonitor    v3r3    Hlt
+use HltSettings         v1r13   Hlt
 use HltSys              v*                  -no_auto_imports
 
 #-- Phys packages 
+use DaVinciTools        v21r0p1 Phys
 use PhysSys             v*                  -no_auto_imports
 
 #-- Online ??
