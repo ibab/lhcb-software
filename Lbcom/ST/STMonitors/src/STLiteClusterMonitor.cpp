@@ -1,4 +1,4 @@
-// $Id: STLiteClusterMonitor.cpp,v 1.1 2009-05-16 21:31:12 mtobin Exp $
+// $Id: STLiteClusterMonitor.cpp,v 1.2 2010-04-05 10:00:35 mneedham Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -10,8 +10,6 @@
 // STDet
 #include "STDet/DeSTDetector.h"
 
-// from LHCbKernel
-#include "Kernel/ISTSignalToNoiseTool.h"
 
 // local
 #include "STLiteClusterMonitor.h"

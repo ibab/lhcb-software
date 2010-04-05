@@ -1,9 +1,10 @@
-// $Id: STOfflinePosition.cpp,v 1.19 2010-02-26 09:08:10 mneedham Exp $
+// $Id: STOfflinePosition.cpp,v 1.20 2010-04-05 09:57:33 mneedham Exp $
  
 // Kernel
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/cbrt.h"  // for cbrt on Windows
 #include "GaudiKernel/IIncidentSvc.h"
+#include "GaudiKernel/SystemOfUnits.h"
  
 // Event
 #include "Event/STDigit.h"
@@ -21,6 +22,12 @@
 #include "Kernel/STDataFunctor.h"
 
 #include "STOfflinePosition.h"
+
+#include "Kernel/ILHCbMagnetSvc.h"
+#include "GaudiKernel/Vector3DTypes.h"
+#include "GaudiKernel/Point3DTypes.h"
+
+#include "STDet/DeSTSector.h"
 
 using namespace boost::assign;
 using namespace LHCb;
@@ -46,6 +53,10 @@ STOfflinePosition::STOfflinePosition(const std::string& type,
   declareSTConfigProperty("InputData", m_clusterLocation , 
                           STClusterLocation::TTClusters);
   declareProperty("APE", m_APE = 0.0); // Alignment Precision Error
+
+  declareProperty("applyLorentzCorrection", m_applyLorentzCorrection = false);
+  declareProperty("lorentzFactor", m_lorentzFactor = 0.025/Gaudi::Units::tesla);
+
   declareInterface<ISTClusterPosition>(this);
   
 }
@@ -71,6 +82,10 @@ StatusCode STOfflinePosition::initialize()
   // Add incident at begin of each event
   if( m_mergeClusters ) incSvc()->addListener( this, IncidentType::BeginEvent );
 
+  // mag field for lorentz shift...
+  if (m_applyLorentzCorrection == true) {
+    m_fieldSvc = svc<ILHCbMagnetSvc>("MagneticFieldSvc", true);
+  }
   return StatusCode::SUCCESS; 
 };
 
@@ -135,14 +150,20 @@ ISTClusterPosition::Info STOfflinePosition::estimate(const STCluster*
                                     firstChan.sector(), 
                                     (unsigned int)stripNum+firstChan.strip());
   
+  double stripFrac = stripFraction( stripNum - floor(stripNum),
+                                    info.second );
+                                                                             
+  if (m_applyLorentzCorrection == true){
+    lorentzShift(theChan, stripFrac);
+  }  
+
   ISTClusterPosition::Info theInfo; 
   theInfo.strip = theChan;
-  theInfo.fractionalPosition = stripFraction( stripNum - floor(stripNum),
-                                              info.second );
+  theInfo.fractionalPosition = stripFrac;
   theInfo.fractionalError = error(info.second);
   theInfo.clusterSize = info.second;
-                                                                             
   return theInfo;
+
 }
 
 ISTClusterPosition::Info
@@ -155,11 +176,17 @@ STOfflinePosition::estimate(const SmartRefVector<STDigit>& digits) const
   STChannelID theChan = STChannelID(firstChan.type(), firstChan.station(),
                                     firstChan.layer(), firstChan.detRegion(),
                                     firstChan.sector(), (unsigned int)stripNum);
+
+  double stripFrac = stripFraction( stripNum - floor(stripNum),
+                                    info.second );
                                                                              
-  ISTClusterPosition::Info theInfo; 
+  if (m_applyLorentzCorrection == true){
+    lorentzShift(theChan, stripFrac);
+  }
+
+  ISTClusterPosition::Info theInfo;
   theInfo.strip = theChan;
-  theInfo.fractionalPosition = stripFraction( stripNum - floor(stripNum),
-                                              info.second );
+  theInfo.fractionalPosition = stripFrac;
   theInfo.fractionalError = error(info.second);
   theInfo.clusterSize = info.second;
 
@@ -228,4 +255,17 @@ double STOfflinePosition::chargeSharingCorr(const double origDist) const
 
   return newDist+0.5;
   
+}
+
+void STOfflinePosition::lorentzShift(const STChannelID& chan , double& fracPosition) const{
+
+  // calculate the lorentz shift, 
+
+  const DeSTSector* sector = findSector(chan);  
+  const Gaudi::XYZVector field = m_fieldSvc->fieldVector(sector->globalCentre()) ; 
+
+  // note fracPosition local frame (pitch units), lorentz shift global frame (mm)
+  double dx = sector->thickness() * field.y() * m_lorentzFactor/sector->pitch();
+  if (sector->xInverted() == true) dx *= -1.0; 
+  fracPosition += dx ;
 }

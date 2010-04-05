@@ -1,10 +1,12 @@
-// $Id: STOfflinePosition.h,v 1.9 2009-07-24 12:15:31 mneedham Exp $
+// $Id: STOfflinePosition.h,v 1.10 2010-04-05 09:57:33 mneedham Exp $
 #ifndef STOfflinePosition_H
 #define STOfflinePosition_H 1
 
 // Gaudi
 #include "GaudiKernel/IIncidentListener.h"
 #include "Kernel/STToolBase.h"
+#include "Kernel/ILHCbMagnetSvc.h"
+
 
 // LHCbKernel
 #include "Kernel/ISTClusterPosition.h"
@@ -57,6 +59,8 @@ private:
 
   double chargeSharingCorr( const double dist ) const;
 
+  void lorentzShift(const LHCb::STChannelID& chan , double& fracPosition) const;
+
   /// STCluster container, needed to merge splitted clusters
   mutable LHCb::STClusters* m_clusters;
 
@@ -71,6 +75,11 @@ private:
   bool m_mergeClusters;            ///< Flag to merge split clusters
   std::string m_clusterLocation;   ///< Location STClusters (needed for merging)
   double m_APE;
+
+  const ILHCbMagnetSvc* m_fieldSvc ; ///< Pointer to the magnetic field service
+  bool m_applyLorentzCorrection;
+  double m_lorentzFactor;
+
 
 };
 

@@ -4,7 +4,9 @@
 #============================================================================
 package           STTools
 
-version           v3r19
+
+version           v4r0
+
 
 branches          cmt doc src options
 include_path      none

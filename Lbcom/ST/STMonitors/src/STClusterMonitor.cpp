@@ -1,4 +1,4 @@
-// $Id: STClusterMonitor.cpp,v 1.24 2010-03-23 09:19:35 mtobin Exp $
+// $Id: STClusterMonitor.cpp,v 1.25 2010-04-05 10:00:35 mneedham Exp $
 // Include files 
 
 // from Gaudi
@@ -13,7 +13,7 @@
 #include "Kernel/STChannelID.h"
 #include "Kernel/TTNames.h"
 #include "Kernel/ITNames.h"
-#include "Kernel/ISTSignalToNoiseTool.h"
+
 
 #include "Event/ODIN.h"
 #include "Kernel/TTDetectorPlot.h"
@@ -58,11 +58,7 @@ ST::STClusterMonitor::STClusterMonitor( const std::string& name,
   declareSTConfigProperty("ClusterLocation", m_clusterLocation, 
                           LHCb::STClusterLocation::TTClusters);
 
-  /// Use signal to noise tool
-  declareProperty("SignalToNoise", m_stn=false );
-  // Signal to noise
-  declareProperty("SignalToNoiseTool",
-                  m_sigNoiseToolName="STSignalToNoiseTool");
+
 
   /// Plots per service box
   declareProperty( "ByServiceBox", m_plotBySvcBox=false );
@@ -116,9 +112,6 @@ StatusCode ST::STClusterMonitor::initialize() {
     m_plotByPort = true;
   }
 
-  // sig to noise tool
-  if(m_stn) m_sigNoiseTool = tool<ISTSignalToNoiseTool>( m_sigNoiseToolName,
-                                               m_sigNoiseToolName + detType());
 
   // Get the tell1 mapping from source ID to tell1 number
   m_nTELL1s = readoutTool()->nBoard();
@@ -286,10 +279,9 @@ void ST::STClusterMonitor::bookHistograms() {
   m_1d_ClusterSize = book1D("Cluster Size", 0.5, 4.5, 4); 
   m_2d_ClusterSizeVsTELL1 = book2D("Cluster Size vs TELL1", 0.5, 
                                    m_nTELL1s+0.5, m_nTELL1s, 0.5, 4.5, 4);
-  if(m_stn) {
-    m_2d_STNVsTELL1 = book2D("Signal to Noise vs TELL1", 0.5, 
+  m_2d_STNVsTELL1 = book2D("Signal to Noise vs TELL1", 0.5, 
                              m_nTELL1s+0.5, m_nTELL1s, 0., 100., 25);
-  }
+  
   m_2d_ChargeVsTELL1 = book2D("Cluster Charge vs TELL1", 0.5, 
                               m_nTELL1s+0.5, m_nTELL1s, 0., 60., 60);
   if(m_plotByPort) {
@@ -382,9 +374,10 @@ void ST::STClusterMonitor::fillHistograms(const LHCb::STCluster* cluster){
   m_nClustersPerTELL1[TELL1ID-1] += 1;
   m_1d_ClusterSize->fill(clusterSize);
   m_2d_ClusterSizeVsTELL1->fill(TELL1ID, clusterSize);
-  if(m_stn) {
-    m_2d_STNVsTELL1->fill(TELL1ID, m_sigNoiseTool->signalToNoise(cluster));
-  }
+  const DeSTSector* sector = findSector(cluster->channelID()); 
+  const double signalToNoise = cluster->totalCharge()/sector->noise(cluster->channelID());
+  m_2d_STNVsTELL1->fill(TELL1ID, signalToNoise);
+  
   m_2d_ChargeVsTELL1->fill(TELL1ID, totalCharge);
   if(m_plotByPort) {
     const unsigned int tell1Channel = cluster->tell1Channel();
@@ -445,8 +438,9 @@ void ST::STClusterMonitor::fillDetailedHistograms(const LHCb::STCluster*
   }
   // charge and S/N
   plot1D(totalCharge,cluster->layerName()+"/Charge", "Charge",-0.5, 500.5, 501);
-  if(m_stn) plot1D( m_sigNoiseTool->signalToNoise(cluster),
-                    cluster->layerName()+"/Signal to noise","S/N",0., 100.,100);
+  const DeSTSector* sector = findSector(cluster->channelID()); 
+  const double signalToNoise = cluster->totalCharge()/sector->noise(cluster->channelID());
+  plot1D(signalToNoise,cluster->layerName()+"/Signal to noise","S/N",0., 100.,100);
 
   // Plot cluster ADCs for 1, 2, 3, 4 strip clusters
   std::string svcBox = (this->readoutTool())->serviceBox(cluster->firstChannel());

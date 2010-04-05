@@ -1,4 +1,4 @@
-// $Id: STClusterMonitor.h,v 1.12 2010-03-23 09:19:35 mtobin Exp $
+// $Id: STClusterMonitor.h,v 1.13 2010-04-05 10:00:35 mneedham Exp $
 #ifndef STCLUSTERMONITOR_H 
 #define STCLUSTERMONITOR_H 1
 
@@ -9,7 +9,7 @@
 namespace LHCb{
   class STCluster;
 }
-class ISTSignalToNoiseTool;
+
 
 // Boost accumulator classes to store MPVs of sectors
 #include <boost/accumulators/accumulators.hpp>
@@ -75,10 +75,7 @@ namespace ST
 
     std::string m_clusterLocation; ///< Input location for clusters
 
-    ///< Name of signal to noise tool
-    std::string m_sigNoiseToolName;
-    ISTSignalToNoiseTool* m_sigNoiseTool; 
-    bool m_stn;
+
 
     /// Toggles to turn plots off/on
     bool m_plot2D; ///< Toggle 2D plots on/off

@@ -2,9 +2,14 @@
 ! Package manager : Jeroen van Tilburg
 !------------------------------------------------------------------------------
 
+
+!  2010-03-20 M.Needham
+ - Remove STSignalToNoiseTool
+
 !=========================== STTools v3r19 2010-04-01 =========================
 ! 2010-04-01 S. Hansmann-Menzemer
  - Fix for TT measurement uncertainties
+
 
 !=========================== STTools v3r18 2010-03-18 =========================
 ! 2010-03-15 S. Hansmann-Menzemer
