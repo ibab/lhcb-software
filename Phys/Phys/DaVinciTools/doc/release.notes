@@ -1,18 +1,16 @@
-! $Id: release.notes,v 1.533 2010-04-05 14:59:25 ibelyaev Exp $
+! $Id: release.notes,v 1.534 2010-04-05 17:17:44 graven Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
 
 
+!========================== DaVinciTools v21r0p1 2010-04-05 ===================
 ! 2010-04-05 - Vanya Belyaev
-
  1. FilterDesktop:
-
       fix the problem with the range for temporary vectors
 
  2. FilterInTrees:
-
       new algorithm, just a small varination of FilterDesktop, 
       but it scans the input trees, and filter "good" particles in decay trees.
 
