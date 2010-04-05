@@ -27,6 +27,7 @@ RawEventDump::RawEventDump( const std::string& name,
   : GaudiAlgorithm ( name , pSvcLocator )
 {
   declareProperty( "DumpData", m_dump = false );
+  declareProperty( "RawBanks", m_banks);
 }
 //=============================================================================
 // Destructor
@@ -39,9 +40,11 @@ RawEventDump::~RawEventDump() {};
 StatusCode RawEventDump::execute() {
 
   RawEvent* raw = get<RawEvent>(RawEventLocation::Default);
-
   for(int j=0; j<256; ++j)  {
     RawBank::BankType i = RawBank::BankType(j);
+
+    if( !acceptBank(i) )continue;
+
     const std::vector<RawBank*>& b = raw->banks(i);
     if ( b.size() > 0 )  {
       info() << b.size() << " banks of type " << i << ": [size, source, version, magic]";
@@ -71,4 +74,12 @@ StatusCode RawEventDump::execute() {
   return StatusCode::SUCCESS;
 };
 
+
+bool RawEventDump::acceptBank(LHCb::RawBank::BankType i) {
+  if(m_banks.empty())return true;
+  for(std::vector<std::string>::iterator it = m_banks.begin();m_banks.end()!=it;++it){
+    if( *it == LHCb::RawBank::typeName( i ) )return true;
+  }
+  return false;
+}
 //=============================================================================

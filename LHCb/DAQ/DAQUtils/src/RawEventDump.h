@@ -25,6 +25,8 @@ public:
 protected:
 
 private:
+  bool acceptBank(LHCb::RawBank::BankType i);
   bool m_dump; ///< Property "DumpData". If true, full bank contents are dumped
+  std::vector<std::string> m_banks; // RawBanks to be dumped  (default ALL banks)
 };
 #endif // TESTS_RAWEVENTDUMP_H

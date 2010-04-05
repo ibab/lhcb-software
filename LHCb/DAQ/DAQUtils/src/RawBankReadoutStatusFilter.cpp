@@ -28,6 +28,7 @@ RawBankReadoutStatusFilter::RawBankReadoutStatusFilter( const std::string& name,
 {
   declareProperty( "BankType", m_type = LHCb::RawBank::LastType);
   declareProperty( "RejectionMask", m_mask = 0x0); // filterPassed = true anyway
+  declareProperty( "InvertedFilter" , m_invert = false);
 }
 //=============================================================================
 // Destructor
@@ -55,7 +56,7 @@ StatusCode RawBankReadoutStatusFilter::execute() {
 
     
 
-  setFilterPassed(true); // accept by defaut
+  setFilterPassed(!m_invert); // accept by defaut
   int value = LHCb::RawBankReadoutStatus::OK;
 
   if(m_type == LHCb::RawBank::LastType){
@@ -82,8 +83,10 @@ StatusCode RawBankReadoutStatusFilter::execute() {
     value = LHCb::RawBankReadoutStatus::Missing;
   }
 
-  int decision = value && m_mask;  
-  if(decision !=0 )setFilterPassed(false); // reject
+  int decision = value & m_mask;  
+  if(decision !=0 )setFilterPassed(m_invert); // reject by default
+  if(filterPassed())counter("Accepted events")+=1;
+  else counter("Rejected events")+=1;
 
   debug() << "Status value : " << value << " Mask : " << m_mask << " => " << filterPassed() << endmsg;
 

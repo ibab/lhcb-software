@@ -30,5 +30,6 @@ protected:
 private:
   int m_type;
   long m_mask;
+  bool m_invert;
 };
 #endif // COMPONENT_RAWBANKREADOUTSTATUSFILTER_H

@@ -4,9 +4,14 @@
 ! Purpose     : Various utilities for manipulating RawEvent
 !-----------------------------------------------------------------------------
 
-!========================= DAQUtils v1r2 2010-03-17 ==========================
+! 2010-04-05 - Olivier Deschamps
+	- OdinTypesFilter : fix printout
+  - RawBankReadoutStatusFilter : bug fix + implement property-driven filtering inversion
+  - RawEventDump : allow to select the RawBank to be dumped (default ALL)
+
 ! 2010-03-11 - Patrick Koppenburg
  - Add .ignore() to all Warning()
+
 
 ! 2010-03-08 - Patrick Koppenburg
  - bankKiller: 

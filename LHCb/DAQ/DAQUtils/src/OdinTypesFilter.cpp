@@ -124,7 +124,7 @@ StatusCode OdinTypesFilter::initialize() {
   info() << m_log << endmsg;
   info() << "Accepted ReadoutTypes : " << m_ros << endmsg;
   info() << m_log << endmsg;
-  info() << "TAE Window in [" << m_winmin << "," << m_winmax <<"]"<< endmsg;
+  info() << "TAE Window in [" << m_winmin+1 << "," << m_winmax-1 <<"]"<< endmsg;
 
 
 
