@@ -1,5 +1,5 @@
 #============================================================================
-# $Id: requirements,v 1.116 2010-04-05 18:06:32 graven Exp $
+# $Id: requirements,v 1.117 2010-04-06 12:26:30 graven Exp $
 # Created    : 03/06/2005 by P. Koppenburg
 # Maintainer : G. Raven
 #============================================================================
@@ -44,6 +44,7 @@ use LbcomSys            v*                  -no_auto_imports
 use RecSys              v*                  -no_auto_imports
 
 #-- HLT packages 
+use Hlt1Lines           v3r0p1  Hlt
 use Hlt2Lines           v3r1    Hlt
 use HltConf             v7r0p1  Hlt
 use HltGlobalMonitor    v3r3    Hlt
