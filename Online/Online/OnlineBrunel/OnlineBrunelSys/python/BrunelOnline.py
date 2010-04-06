@@ -3,7 +3,7 @@
 
      @author M.Frank
 """
-__version__ = "$Id: BrunelOnline.py,v 1.21 2010-03-28 06:09:57 frankb Exp $"
+__version__ = "$Id: BrunelOnline.py,v 1.22 2010-04-06 10:46:08 jblouw Exp $"
 __author__  = "Markus Frank <Markus.Frank@cern.ch>"
 
 import os, sys
@@ -97,7 +97,7 @@ def patchBrunel(true_online_version):
   sys.stdout.flush()
   
   if true_online_version:
-    brunel.OutputLevel    = 4
+    brunel.OutputLevel    = 999
     brunel.PrintFreq      = -1
     
   if processingType == 'Reprocessing':
