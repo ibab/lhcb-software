@@ -1,9 +1,13 @@
-// $Id: ATypes.h,v 1.1 2009-11-16 11:54:26 ibelyaev Exp $
+// $Id: ATypes.h,v 1.2 2010-04-06 20:17:18 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_ATYPES_H 
 #define LOKI_ATYPES_H 1
 // ============================================================================
 // Include files
+// ============================================================================
+// GaudiKernel
+// ============================================================================
+#include "GaudiKernel/Range.h"
 // ============================================================================
 // Event
 // ============================================================================
@@ -12,7 +16,6 @@
 // LoKi
 // ============================================================================
 #include "LoKi/Functions.h"
-#include "LoKi/Range.h"
 #include "LoKi/PhysTypes.h"
 // ============================================================================
 namespace LoKi 
@@ -24,7 +27,7 @@ namespace LoKi
     /** The actual argument type for Exclusive HLT processing, 
      *  as requested by Gerhard RAVEN and Patrick KOPPENBURG
      */
-    typedef LoKi::Range_<LHCb::Particle::ConstVector>          Combination ;
+    typedef Gaudi::Range_<LHCb::Particle::ConstVector>         Combination ;
     /// type of 'cuts' for the combination (interface)
     typedef LoKi::BasicFunctors<Combination>::Predicate              ACuts ;
     /// type of 'functions' for the combination (interface)

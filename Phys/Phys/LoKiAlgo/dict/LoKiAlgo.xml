@@ -1,5 +1,5 @@
 <!-- 
-     * $Id: LoKiAlgo.xml,v 1.8 2008-11-02 21:13:24 ibelyaev Exp $ 
+     * $Id: LoKiAlgo.xml,v 1.9 2010-04-06 20:21:02 ibelyaev Exp $ 
      * ========================================================================
      * @file
      * The seleciton file to build Reflex dictionaries for Phys/LoKiAlgo package
@@ -69,10 +69,10 @@
       <method name="=" />
     </class>
     
-    <class pattern="LoKi::Range_&lt;*&gt;">
+    <class pattern="Gaudi::Range_&lt;*&gt;">
       <method name="=" />
     </class>
-    <class pattern="LoKi::NamedRange_&lt;*&gt;">
+    <class pattern="Gaudi::NamedRange_&lt;*&gt;">
       <method name="=" />
     </class>
     <class pattern="LoKi::RangeList_&lt;*&gt;">

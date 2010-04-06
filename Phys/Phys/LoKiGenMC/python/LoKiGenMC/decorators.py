@@ -28,7 +28,7 @@ A.Golutvin, P.Koppenburg have been used in the design.
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV ibelyaev@physics.syr.edu"
-__version__ = "CVS tag $NaMe:$, version $Revision: 1.5 $  "
+__version__ = "CVS tag $NaMe:$, version $Revision: 1.6 $  "
 # =============================================================================
 
 import LoKiCore.decorators as _LoKiCore
@@ -47,50 +47,34 @@ def decorate ( name = _name ) :
 
     # MCParticle -> double
     
-    _functions = _LoKiCore.getInherited (
-        name                                   , ## moduel name  
-        LoKi.Functor   (_mcp,'double')         ) ## the base
-    _decorated  = _LoKiCore.decorateCalls       (
-        _functions                             , ## list of functor types
-        LoKi.Dicts.FunCalls (LHCb.MCParticle)  ) ## call-traits
-    _decorated |= _LoKiCore.decorateFunctionOps (
-        _functions                             , ## list of functor types
+    _decorated  = _LoKiCore.getAndDecorateFunctions ( 
+        name                                   , ## module name  
+        LoKi.Functor   (_mcp,'double')         , ## the base
+        LoKi.Dicts.FunCalls (LHCb.MCParticle)  , ## call-traits
         LoKi.Dicts.FuncOps  (_mcp,_mcp)        ) ## operators&operations
     
     # MCVertex -> double
     
-    _functions = _LoKiCore.getInherited (
-        name                                   , ## moduel name  
-        LoKi.Functor   (_mcv,'double')         ) ## the base
-    _decorated |= _LoKiCore.decorateCalls       (
-        _functions                             , ## list of functor types
-        LoKi.Dicts.FunCalls (LHCb.MCVertex)  ) ## call-traits
-    _decorated |= _LoKiCore.decorateFunctionOps (
-        _functions                             , ## list of functor types
+    _decorated |= _LoKiCore.getAndDecorateFunctions ( 
+        name                                   , ## module name  
+        LoKi.Functor   (_mcv,'double')         , ## the base
+        LoKi.Dicts.FunCalls (LHCb.MCVertex)    , ## call-traits
         LoKi.Dicts.FuncOps  (_mcv,_mcv)        ) ## operators&operations
     
     # MCParticle -> bool
     
-    _functions = _LoKiCore.getInherited (
-        name                                   , ## moduel name  
-        LoKi.Functor   (_mcp,bool)             ) ## the base
-    _decorated |= _LoKiCore.decorateCalls       (
-        _functions                             , ## list of functor types
-        LoKi.Dicts.CutCalls (LHCb.MCParticle)  ) ## call-traits
-    _decorated |= _LoKiCore.decoratePredicateOps (
-        _functions                             , ## list of functor types
+    _decorated |= _LoKiCore.getAndDecoratePredicates (  
+        name                                   , ## module name  
+        LoKi.Functor   (_mcp,bool)             , ## the base
+        LoKi.Dicts.CutCalls (LHCb.MCParticle)  , ## call-traits
         LoKi.Dicts.CutsOps  (_mcp,_mcp)        ) ## operators&operations
 
     # MCVertex -> bool
     
-    _functions = _LoKiCore.getInherited (
+    _decorated |= _LoKiCore.getAndDecoratePredicates (  
         name                                   , ## moduel name  
-        LoKi.Functor   (_mcv,bool)             ) ## the base
-    _decorated |= _LoKiCore.decorateCalls       (
-        _functions                             , ## list of functor types
-        LoKi.Dicts.CutCalls (LHCb.MCVertex)    ) ## call-traits
-    _decorated |= _LoKiCore.decoratePredicateOps (
-        _functions                             , ## list of functor types
+        LoKi.Functor   (_mcv,bool)             , ## the base
+        LoKi.Dicts.CutCalls (LHCb.MCVertex)    , ## call-traits
         LoKi.Dicts.CutsOps  (_mcv,_mcv)        ) ## operators&operations
   
     ## HepMC:
@@ -100,45 +84,28 @@ def decorate ( name = _name ) :
 
     # HepMC -> double
     
-    _functions = _LoKiCore.getInherited (
+    _decorated |= _LoKiCore.getAndDecorateFunctions ( 
         name                                    , ## moduel name  
-        LoKi.Functor   (_gp,'double')           ) ## the base
-    _decorated |= _LoKiCore.decorateCalls       (
-        _functions                              , ## list of functor types
-        LoKi.Dicts.FunCalls (HepMC.GenParticle) ) ## call-traits
-    _decorated |= _LoKiCore.decorateFunctionOps (
-        _functions                              , ## list of functor types
+        LoKi.Functor   (_gp,'double')           , ## the base
+        LoKi.Dicts.FunCalls (HepMC.GenParticle) , ## call-traits
         LoKi.Dicts.FuncOps  (_gp,_gp)           ) ## operators&operations
-    _functions = _LoKiCore.getInherited (
+    _decorated |= _LoKiCore.getAndDecorateFunctions ( 
         name                                    , ## module name  
-        LoKi.Functor   (_gv,'double')           ) ## the base
-    _decorated |= _LoKiCore.decorateCalls       (
-        _functions                              , ## list of functor types
-        LoKi.Dicts.FunCalls (HepMC.GenVertex)   ) ## call-traits
-    _decorated |= _LoKiCore.decorateFunctionOps (
-        _functions                              , ## list of functor types
+        LoKi.Functor   (_gv,'double')           , ## the base
+        LoKi.Dicts.FunCalls (HepMC.GenVertex)   , ## call-traits
         LoKi.Dicts.FuncOps  (_gv,_gv)           ) ## operators&operations
 
     # HepMC -> bool
 
-    _functions = _LoKiCore.getInherited (
-        name                                    , ## moduel name  
-        LoKi.Functor   (_gp,bool)               ) ## the base
-    _decorated |= _LoKiCore.decorateCalls        (
-        _functions                              , ## list of functor types
-        LoKi.Dicts.CutCalls (HepMC.GenParticle) ) ## call-traits
-    _decorated |= _LoKiCore.decoratePredicateOps (
-        _functions                              , ## list of functor types
+    _decorated |= _LoKiCore.getAndDecoratePredicates (  
+        name                                    , ## module name  
+        LoKi.Functor   (_gp,bool)               , ## the base
+        LoKi.Dicts.CutCalls (HepMC.GenParticle) , ## call-traits
         LoKi.Dicts.CutsOps  (_gp,_gp)           ) ## operators&operations
-
-    _functions = _LoKiCore.getInherited (
-        name                                    , ## moduel name  
-        LoKi.Functor   (_gv,bool)               ) ## the base
-    _decorated |= _LoKiCore.decorateCalls        (
-        _functions                              , ## list of functor types
-        LoKi.Dicts.CutCalls (HepMC.GenVertex)   ) ## call-traits
-    _decorated |= _LoKiCore.decoratePredicateOps (
-        _functions                              , ## list of functor types
+    _decorated |= _LoKiCore.getAndDecoratePredicates (  
+        name                                    , ## module name  
+        LoKi.Functor   (_gv,bool)               , ## the base
+        LoKi.Dicts.CutCalls (HepMC.GenVertex)   , ## call-traits
         LoKi.Dicts.CutsOps  (_gv,_gv)           ) ## operators&operations
 
     ## 

@@ -1,5 +1,5 @@
 <!-- 
-     * $Id: LoKiArrayFunctors.xml,v 1.13 2009-05-09 19:29:41 ibelyaev Exp $ 
+     * $Id: LoKiArrayFunctors.xml,v 1.14 2010-04-06 20:23:17 ibelyaev Exp $ 
      * ========================================================================
      * @file
      * The seleciton file to build Reflex dictionaries for Phys/LoKiExHlt package
@@ -58,7 +58,7 @@
   <class pattern   = "std::unary_function<*Range_*LHCb::Particle*>"          />
   <class pattern   = "std::binary_function<*Range_*LHCb::Particle*>"          />
   
-  <class pattern = "LoKi::Range_<std::vector<LHCb::Particle*> >" />
+  <class pattern = "Gaudi::Range_<std::vector<LHCb::Particle*> >" />
   
   <class name = "std::unary_function<LHCb::Particle * const,double>" />
   <class name = "std::unary_function<LHCb::Particle * const,bool>"   />
@@ -66,8 +66,12 @@
   <class name = "std::unary_function<LHCb::VertexBase * const,double>" />
   <class name = "std::unary_function<LHCb::VertexBase * const,bool>"   />
   
-  <class pattern = "std::unary_function<LoKi::Range*>" />
-  <class pattern = "std::unary_function<const LoKi::Range*>" />
+  <class pattern = "std::unary_function<Gaudi::Range*>" />
+  <class pattern = "std::unary_function<LoKi::Range*>"  />
+  <class pattern = "std::unary_function<Gaudi::NamedRange*>" />
+  <class pattern = "std::unary_function<const LoKi::Range*>"       />
+  <class pattern = "std::unary_function<const Gaudi::Range*>"      />
+  <class pattern = "std::unary_function<const Gaudi::NamedRange*>" />
   <class pattern = "std::unary_function<std::vector<*>,LHCb::Particle*>" />
   <class pattern = "std::unary_function<std::vector<*>,LHCb::VertexBase*>" />
   <class pattern = "std::unary_function<std::vector<*>,*>" />
@@ -118,10 +122,10 @@
       <method name="=" />
     </class>
     
-    <class pattern="LoKi::Range_&lt;*&gt;">
+    <class pattern="Gaudi::Range_&lt;*&gt;">
       <method name="=" />
     </class>
-    <class pattern="LoKi::NamedRange_&lt;*&gt;">
+    <class pattern="Gaudi::NamedRange_&lt;*&gt;">
       <method name="=" />
     </class>
     <class pattern="LoKi::RangeList_&lt;*&gt;">

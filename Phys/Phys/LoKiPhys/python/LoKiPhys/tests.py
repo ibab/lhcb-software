@@ -64,6 +64,11 @@ def test1() :
     print ' v>>min_value(ID)                : %s'%(v>>min_value(ID))
     print ' v>>("e+"!=ABSID)>>SIZE          : %s'%(v>>('e+'!=ABSID)>>SIZE)
     print ' v>>select("mu+"!=ABSID)>>EPMTY  : %s'%(v>>select('mu+'!=ABSID)>>EMPTY)
+    
+    f1 = in_list ( ID    , [ "e+" , "e-" , 'mu+' , 'mu-'] ) 
+    f2 = in_list ( ABSID , [ "e+" , "e-" , 'mu+' , 'mu-'] ) 
+    print ' in_list ( ID    , [ "e+" , "e-" , "mu+" , "mu-"] ) : %s %s ' % ( f1 , f1(p1) ) 
+    print ' in_list ( ABSID , [ "e+" , "e-" , "mu+" , "mu-"] ) : %s %s ' % ( f2 , f2(p1) ) 
 
 # =============================================================================
 ## Perform all known tests

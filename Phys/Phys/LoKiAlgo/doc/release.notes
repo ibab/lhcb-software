@@ -1,9 +1,17 @@
-! $Id: release.notes,v 1.55 2010-02-17 14:55:57 jpalac Exp $ 
+! $Id: release.notes,v 1.56 2010-04-06 20:21:02 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiAlgo
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
 ! Purpose     : LoKi-algorithm related stuff 
 ! -----------------------------------------------------------------------------
+
+! 2010-04-06 - Vanya Belyaev
+
+ - replace LoKi::Range with Gaudi::Range 
+ - new decorators 
+ - cmt/requirements 
+    version increment to v9r0 
+
 
 !========================== LoKiAlgo v8r2 2010-02-17 ==========================
 

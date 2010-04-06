@@ -1,9 +1,16 @@
-! $Id: release.notes,v 1.31 2010-02-17 14:53:50 jpalac Exp $ 
+! $Id: release.notes,v 1.32 2010-04-06 20:22:13 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiAlgoMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
 ! Purpose     : MC-analogue for the basic LoKi algorithm 
 ! -----------------------------------------------------------------------------
+
+! 2010-04-06 - Vanya Belyaev
+
+ - replace LoKi::Range with Gaudi::Range 
+ - new decorators 
+ - version increment to v9r0
+
 
 !========================== LoKiAlgoMC v8r2 2010-02-17 ========================
 

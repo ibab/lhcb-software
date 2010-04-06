@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.38 2009-01-12 06:53:15 cattanem Exp $ 
+! $Id: release.notes,v 1.39 2010-04-06 20:15:58 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiGenMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -15,6 +15,14 @@
 ! 
 ! -----------------------------------------------------------------------------
 
+! 2010-04-06 - Vanya Belyaev
+
+ - replace LoKi::Raneg with Gaudi::Range
+	 
+  cmt/requirements 
+
+    version inrement to v9r0 
+	
 !========================== LoKiGenMC v8r1 2009-01-12 =========================
 ! 2009-01-10 - Chris Jones
  - Add CLHEP dependency for OSX

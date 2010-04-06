@@ -1,10 +1,16 @@
-! $Id: release.notes,v 1.71 2010-03-27 12:14:36 graven Exp $ 
+! $Id: release.notes,v 1.72 2010-04-06 20:19:40 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhysMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
 ! Purpose     : RC <--> MC part of LoKi 
 ! -----------------------------------------------------------------------------
 
+! 2010-04-06 - Vanya Belyaev
+ - replace LoKi::Range with Gaudi::Range
+ - new decorators 
+ - cmt/requirements 
+    version increment to v9r0 
+  
 !========================== LoKiPhysMC v8r8 2010-03-27 ========================
 ! 2010-03-14 - Vanya Belyaev
 
