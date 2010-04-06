@@ -1,4 +1,4 @@
-// $Id: FilterDesktop.cpp,v 1.24 2010-04-05 14:59:26 ibelyaev Exp $
+// $Id: FilterDesktop.cpp,v 1.25 2010-04-06 10:27:42 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -361,19 +361,8 @@ StatusCode FilterDesktop::execute ()       // the most interesting method
   LHCb::Particle::ConstVector accepted ;
   accepted.reserve ( particles.size() );
   // 
-  StatusCode sc = filter ( particles , accepted ) ;
-  
   // Filter particles!!  - the most important line :-) 
-  LoKi::select ( particles.begin() , 
-                 particles.end  () , 
-                 std::back_inserter ( accepted ) , m_cut ) ;
-  // 
-  // some countings 
-  StatEntity& cnt = counter ( "efficiency" ) ;
-  const size_t size1 = accepted  . size () ;
-  const size_t size2 = particles . size () ;
-  for ( size_t i1 = 0     ; size1 != i1 ; ++i1 ) { cnt += true  ; }
-  for ( size_t i2 = size1 ; size2 != i2 ; ++i2 ) { cnt += false ; }
+  StatusCode sc = filter ( particles , accepted ) ;
   
   // make the final plots 
   if ( produceHistos () && 0 != m_outputPlots ) 
@@ -417,8 +406,9 @@ StatusCode FilterDesktop::filter
   // some countings 
   StatEntity& cnt = counter ( "efficiency" ) ;
   //
-  const size_t size1 = input     . size () ;
-  const size_t size2 = filtered  . size () ;
+  const size_t size1 = filtered  . size () ;
+  const size_t size2 = input     . size () ;
+  //
   for ( size_t i1 = 0     ; size1 > i1 ; ++i1 ) { cnt += true  ; }
   for ( size_t i2 = size1 ; size2 > i2 ; ++i2 ) { cnt += false ; }
   //
@@ -434,7 +424,7 @@ LHCb::Particle::Range FilterDesktop::_save
   //
   PARTICLES*              p_tes = new PARTICLES () ;
   VERTICES*               v_tes = new VERTICES  () ;
-  Particle2Vertex::Table* table = new Particle2Vertex::Table    () ;
+  Particle2Vertex::Table* table = new Particle2Vertex::Table    ( p_in.size() ) ;
   //
   put ( p_tes , outputLocation + "/Particles"                ) ;
   put ( v_tes , outputLocation + "/Vertices"                 ) ;
