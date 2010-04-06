@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: tests.py,v 1.4 2008-11-27 10:30:28 ibelyaev Exp $
+# $Id: tests.py,v 1.5 2010-04-06 20:14:39 ibelyaev Exp $
 # =============================================================================
 ## @file   LoKiMC/tests.py
 #   
@@ -79,8 +79,12 @@ def test1() :
     print 'v>>("e+"!=MCABSID)>>MCSIZE         : %s'%(v>>('e+'!=MCABSID)>>MCSIZE)
     print 'v>>("e+"!=MCABSID)>>MCSIZE         : %s'%(v>>('e+'!=MCABSID)>>MCSIZE)
     print 'v>>select("mu+"!=MCABSID)>>MCEMPTY : %s'%(v>>select('mu+'!=MCABSID)>>~MCEMPTY)
-  
-
+    
+    f1 = in_list ( MCID    , [ "e+" , "e-" , 'mu+' , 'mu-'] ) 
+    f2 = in_list ( MCABSID , [ "e+" , "e-" , 'mu+' , 'mu-'] ) 
+    print ' in_list ( MCID    , [ "e+" , "e-" , "mu+" , "mu-"] ) : %s %s ' % ( f1 , f1(p1) ) 
+    print ' in_list ( MCABSID , [ "e+" , "e-" , "mu+" , "mu-"] ) : %s %s ' % ( f2 , f2(p1) ) 
+    
 # =============================================================================
 ## Perform all known tests
 def testAll() :

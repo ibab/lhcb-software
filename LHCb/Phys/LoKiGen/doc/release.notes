@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.82 2010-02-12 17:10:07 cattanem Exp $ 
+! $Id: release.notes,v 1.83 2010-04-06 20:11:52 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiGen
 ! Responsible : Vanya BELYAEV
@@ -13,6 +13,14 @@
 !   contributions and advices from G.Raven, J.van Tilburg, 
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
+
+! 2010-04-06 - Vanya Belyaev
+
+ - replace LoKi::Raneg by Gaudi::Range 
+
+ - cmt/requirements 
+     version incremen tto v9r0 
+
 
 !========================== LoKiGen v8r8 2010-02-12 ===========================
 ! 2010-02-10 - Vanya Belyaev

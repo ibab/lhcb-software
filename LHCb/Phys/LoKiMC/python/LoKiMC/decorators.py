@@ -106,199 +106,103 @@ def _decorate ( name = _name ) :
     
     # MCParticle -> double
     
-    _functions = _LoKiCore.getInherited (
-        name                                   , ## moduel name  
-        LoKi.Functor   (_mcp,'double')         ) ## the base
-    _decorated  = _LoKiCore.decorateCalls       (
-        _functions                             , ## list of functor types
-        LoKi.Dicts.FunCalls (LHCb.MCParticle)  ) ## call-traits
-    _decorated |= _LoKiCore.decorateFunctionOps (
-        _functions                             , ## list of functor types
+    _decorated = _LoKiCore.getAndDecorateFunctions ( 
+        name                                   , ## modulr name  
+        LoKi.Functor   (_mcp,'double')         , ## the base
+        LoKi.Dicts.FunCalls (LHCb.MCParticle)  , ## call-traits
         LoKi.Dicts.FuncOps  (_mcp,_mcp)        ) ## operators&operations
     
     # MCVertex -> double
     
-    _functions = _LoKiCore.getInherited (
+    _decorated != _LoKiCore.getAndDecorateFunctions ( 
         name                                   , ## moduel name  
-        LoKi.Functor   (_mcv,'double')         ) ## the base
-    _decorated |= _LoKiCore.decorateCalls       (
-        _functions                             , ## list of functor types
-        LoKi.Dicts.FunCalls (LHCb.MCVertex)  ) ## call-traits
-    _decorated |= _LoKiCore.decorateFunctionOps (
-        _functions                             , ## list of functor types
+        LoKi.Functor   (_mcv,'double')         , ## the base
+        LoKi.Dicts.FunCalls (LHCb.MCVertex)    , ## call-traits
         LoKi.Dicts.FuncOps  (_mcv,_mcv)        ) ## operators&operations
     
     # MCParticle -> bool
     
-    _functions = _LoKiCore.getInherited (
-        name                                   , ## moduel name  
-        LoKi.Functor   (_mcp,bool)             ) ## the base
-    _decorated |= _LoKiCore.decorateCalls       (
-        _functions                             , ## list of functor types
-        LoKi.Dicts.CutCalls (LHCb.MCParticle)  ) ## call-traits
-    _decorated |= _LoKiCore.decoratePredicateOps (
-        _functions                             , ## list of functor types
+    _decorated != _LoKiCore.getAndDecoratePredicates  (
+        name                                   , ## module name  
+        LoKi.Functor   (_mcp,bool)             , ## the base
+        LoKi.Dicts.CutCalls (LHCb.MCParticle)  , ## call-traits
         LoKi.Dicts.CutsOps  (_mcp,_mcp)        ) ## operators&operations
-
+    
     # MCVertex -> bool
     
-    _functions = _LoKiCore.getInherited (
-        name                                   , ## moduel name  
-        LoKi.Functor   (_mcv,bool)             ) ## the base
-    _decorated |= _LoKiCore.decorateCalls       (
-        _functions                             , ## list of functor types
-        LoKi.Dicts.CutCalls (LHCb.MCVertex)    ) ## call-traits
-    _decorated |= _LoKiCore.decoratePredicateOps (
-        _functions                             , ## list of functor types
+    _decorated != _LoKiCore.getAndDecoratePredicates  (
+        name                                   , ## module name  
+        LoKi.Functor   (_mcv,bool)             , ## the base
+        LoKi.Dicts.CutCalls (LHCb.MCVertex)    , ## call-traits
         LoKi.Dicts.CutsOps  (_mcv,_mcv)        ) ## operators&operations
 
     ## functional part:
     
     # vector<T> -> vector<double>
     
-    _functions = _LoKiCore.getInherited (
+    _decorated |= _LoKiCore.getAndDecorateMaps (
         name                                   , ## moduel name  
-        LoKi.Functor   (_vp,_vd)               ) ## the base
-    _decorated |= _LoKiCore.decorateCalls  (
-        _functions                             , ## list of functor types
+        LoKi.Functor   (_vp,_vd)               , ## the base
         LoKi.Dicts.MapsOps(_mcp)               ) ## call-traits
-    _decorated |= _LoKiCore.decorateMaps   (
-        _functions                             , ## list of functor types
-        LoKi.Dicts.MapsOps(_mcp)               ) ## call-traits
-    
-    _functions = _LoKiCore.getInherited (
+    _decorated |= _LoKiCore.getAndDecorateMaps (
         name                                   , ## moduel name  
-        LoKi.Functor   (_vv,_vd)               ) ## the base
-    _decorated |= _LoKiCore.decorateCalls  (
-        _functions                             , ## list of functor types
-        LoKi.Dicts.MapsOps(_mcv)               ) ## call-traits
-    _decorated |= _LoKiCore.decorateMaps   (
-        _functions                             , ## list of functor types
+        LoKi.Functor   (_vv,_vd)               , ## the base
         LoKi.Dicts.MapsOps(_mcv)               ) ## call-traits
 
     # vector<T> -> vector<T>
 
-    _functions = _LoKiCore.getInherited (
+    _decorated |= _LoKiCore.getAndDecoratePipes (
         name                                   , ## module name  
-        LoKi.Functor   (_vp,_vp)               ) ## the base
-    _decorated |= _LoKiCore.decorateCalls  (
-        _functions                             , ## list of functor types
+        LoKi.Functor   (_vp,_vp)               , ## the base
         LoKi.Dicts.PipeOps(_mcp,_mcp)          ) ## call-traits
-    _decorated |= _LoKiCore.decorateMaps   (
-        _functions                             , ## list of functor types
-        LoKi.Dicts.PipeOps(_mcp,_mcp)          ) ## call-traits
-
-    _functions = _LoKiCore.getInherited (
+    _decorated |= _LoKiCore.getAndDecoratePipes (
         name                                   , ## module name  
-        LoKi.Functor   (_vv,_vv)               ) ## the base
-    _decorated |= _LoKiCore.decorateCalls  (
-        _functions                             , ## list of functor types
-        LoKi.Dicts.PipeOps(_mcv,_mcv)          ) ## call-traits
-    _decorated |= _LoKiCore.decorateMaps   (
-        _functions                             , ## list of functor types
+        LoKi.Functor   (_vv,_vv)               , ## the base
         LoKi.Dicts.PipeOps(_mcv,_mcv)          ) ## call-traits
 
     # vector<T> -> double
-
-    _functions = _LoKiCore.getInherited (
+    
+    _decorated |= _LoKiCore.getAndDecorateFunVals ( 
         name                                   , ## module name  
-        LoKi.Functor   (_vp,'double')          ) ## the base
-    _decorated |= _LoKiCore.decorateCalls  (
-        _functions                             , ## list of functor types
+        LoKi.Functor   (_vp,'double')          , ## the base
         LoKi.Dicts.FunValOps(_mcp)             ) ## call-traits
-    _decorated |= _LoKiCore.decorateFunctionOps (
-        _functions                             , ## list of functor types
-        LoKi.Dicts.FunValOps(_mcp)             ) ## call-traits
-    _decorated |= _LoKiCore.decorateMaps   (
-        _functions                             , ## list of functor types
-        LoKi.Dicts.FunValOps(_mcp)             ) ## call-traits
-
-    _functions = _LoKiCore.getInherited (
+    _decorated |= _LoKiCore.getAndDecorateFunVals ( 
         name                                   , ## module name  
-        LoKi.Functor   (_vv,'double')          ) ## the base
-    _decorated |= _LoKiCore.decorateCalls  (
-        _functions                             , ## list of functor types
-        LoKi.Dicts.FunValOps(_mcv)             ) ## call-traits
-    _decorated |= _LoKiCore.decorateFunctionOps (
-        _functions                             , ## list of functor types
-        LoKi.Dicts.FunValOps(_mcv)             ) ## call-traits
-    _decorated |= _LoKiCore.decorateMaps   (
-        _functions                             , ## list of functor types
+        LoKi.Functor   (_vv,'double')          , ## the base
         LoKi.Dicts.FunValOps(_mcv)             ) ## call-traits
 
     # vector<T> -> bool
 
-    _functions = _LoKiCore.getInherited (
+    _decorated |= _LoKiCore.getAndDecorateCutVals ( 
         name                                   , ## module name  
-        LoKi.Functor   (_vp,bool)              ) ## the base
-    _decorated |= _LoKiCore.decorateCalls  (
-        _functions                             , ## list of functor types
+        LoKi.Functor   (_vp,bool)              , ## the base
         LoKi.Dicts.CutValOps(_mcp)             ) ## call-traits
-    _decorated |= _LoKiCore.decoratePredicateOps (
-        _functions                             , ## list of functor types
-        LoKi.Dicts.CutValOps(_mcp)             ) ## call-traits
-    _decorated |= _LoKiCore.decorateMaps   (
-        _functions                             , ## list of functor types
-        LoKi.Dicts.CutValOps(_mcp)             ) ## call-traits
-
-    _functions = _LoKiCore.getInherited (
+    _decorated |= _LoKiCore.getAndDecorateCutVals ( 
         name                                   , ## module name  
-        LoKi.Functor   (_vv,bool)              ) ## the base
-    _decorated |= _LoKiCore.decorateCalls  (
-        _functions                             , ## list of functor types
-        LoKi.Dicts.CutValOps(_mcv)             ) ## call-traits
-    _decorated |= _LoKiCore.decorateFunctionOps (
-        _functions                             , ## list of functor types
-        LoKi.Dicts.CutValOps(_mcv)             ) ## call-traits
-    _decorated |= _LoKiCore.decorateMaps   (
-        _functions                             , ## list of functor types
+        LoKi.Functor   (_vv,bool)              , ## the base
         LoKi.Dicts.CutValOps(_mcv)             ) ## call-traits
 
     # vector<T> -> T
 
-    _functions = _LoKiCore.getInherited (
+    _decorated |= _LoKiCore.getAndDecorateElements (  
         name                                   , ## module name  
-        LoKi.Functor   (_vp,_mcp)              ) ## the base
-    _decorated |= _LoKiCore.decorateCalls  (
-        _functions                             , ## list of functor types
+        LoKi.Functor   (_vp,_mcp)              , ## the base
         LoKi.Dicts.ElementOps(_mcp,_mcp)       ) ## call-traits
-    _decorated |= _LoKiCore.decorateMaps   (
-        _functions                             , ## list of functor types
-        LoKi.Dicts.ElementOps(_mcp,_mcp)       ) ## call-traits
-
-
-    _functions = _LoKiCore.getInherited (
+    _decorated |= _LoKiCore.getAndDecorateElements (  
         name                                   , ## module name  
-        LoKi.Functor   (_vv,_mcv)              ) ## the base
-    _decorated |= _LoKiCore.decorateCalls  (
-        _functions                             , ## list of functor types
-        LoKi.Dicts.ElementOps(_mcv,_mcv)       ) ## call-traits
-    _decorated |= _LoKiCore.decorateMaps   (
-        _functions                             , ## list of functor types
+        LoKi.Functor   (_vv,_mcv)              , ## the base
         LoKi.Dicts.ElementOps(_mcv,_mcv)       ) ## call-traits
 
      #sources : void -> vector<T>
 
-    _functions = _LoKiCore.getInherited (
+    _decorated |= _LoKiCore.getAndDecorateSources  (  
         name                                   , ## module name  
-        LoKi.Functor   ('void',_vp)            ) ## the base
-    _decorated |= _LoKiCore.decorateCalls  (
-        _functions                             , ## list of functor types
+        LoKi.Functor   ('void',_vp)            , ## the base
         LoKi.Dicts.SourceOps(_mcp,_mcp)        ) ## call-traits
-    _decorated |= _LoKiCore.decorateMaps   (
-        _functions                             , ## list of functor types
-        LoKi.Dicts.SourceOps(_mcp,_mcp)        ) ## call-traits
-
-    _functions = _LoKiCore.getInherited (
+    _decorated |= _LoKiCore.getAndDecorateSources  (  
         name                                   , ## module name  
-        LoKi.Functor   ('void',_vv)            ) ## the base
-    _decorated |= _LoKiCore.decorateCalls  (
-        _functions                             , ## list of functor types
+        LoKi.Functor   ('void',_vv)            , ## the base
         LoKi.Dicts.SourceOps(_mcv,_mcv)        ) ## call-traits
-    _decorated |= _LoKiCore.decorateMaps   (
-        _functions                             , ## list of functor types
-        LoKi.Dicts.SourceOps(_mcv,_mcv)        ) ## call-traits
-
    
     ## decorate pids (Comparison with strings, integers and ParticleID objects:
     for t in ( MCID , MCABSID ) :

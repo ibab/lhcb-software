@@ -1,7 +1,7 @@
 <!-- 
-     * $Id: LoKiCore.xml,v 1.19 2010-04-04 12:20:56 ibelyaev Exp $ 
+     * $Id: LoKiCore.xml,v 1.20 2010-04-06 20:06:40 ibelyaev Exp $ 
      * ========================================================================
-     * CVS tag:$Name: not supported by cvs2svn $, version $Revision: 1.19 $ 
+     * CVS tag:$Name: not supported by cvs2svn $, version $Revision: 1.20 $ 
      * ======================================================================== 
      * @file
      * The seleciton file to build Reflex dictionaries for Phys/LoKiCore package
@@ -11,6 +11,10 @@
 -->
 
 <lcgdict>
+  
+  <!--
+      <class name      = "Gaudi::RangeBase_"     />
+  -->
 
   <class name      = "LoKi::ILoKiSvc"        />
   <class name      = "LoKi::IReporter"       />
@@ -19,7 +23,6 @@
   <class name      = "LoKi::Report"          />
   <class name      = "LoKi::Base"            />
 
-  <class name      = "LoKi::RangeBase_"      />
   <class name      = "LoKi::AuxFunBase"      />
   <class name      = "LoKi::KeeperBase"      />
 
@@ -75,7 +78,6 @@
   
   <exclusion>
     <function name    = "LoKi::tokenize" /> 
-    <function name    = "LoKi::Range_Local::rangeException" /> 
     
     <class pattern="LoKi::Interface&lt;*&gt;">
       <method name="=" />

@@ -1,4 +1,4 @@
-// $Id: Selected.h,v 1.8 2008-06-12 08:14:31 ibelyaev Exp $
+// $Id: Selected.h,v 1.9 2010-04-06 20:06:39 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_SELECTED_H 
 #define LOKI_SELECTED_H 1
@@ -12,10 +12,10 @@
 // GaudiKernel
 // ============================================================================
 #include "GaudiKernel/HashMap.h"
+#include "GaudiKernel/NamedRange.h"
 // ============================================================================
 // LoKi 
 // ============================================================================
-#include "LoKi/NamedRange.h"
 #include "LoKi/select.h"
 // ============================================================================
 /** @file
@@ -46,21 +46,22 @@ namespace LoKi
   class Selected_ 
   {
   public:    
+    // ========================================================================
     /// actual container type 
     typedef          CONTAINER                              Container ;
     /// underlying map 
     typedef typename GaudiUtils::HashMap<std::string,Container> Map   ;
     /// return type 
-    typedef typename LoKi::NamedRange_<Container>           Range     ;
+    typedef typename Gaudi::NamedRange_<Container>          Range     ;
     /// actual iterator type 
     typedef typename Range::iterator                        iterator  ;
     /// own type 
     typedef          Selected_<Container>                   _Self     ;
-    //
+    /// iterator type 
     typedef typename Map::const_iterator                    map_iterator ;
-    typedef typename Map::const_iterator                    mao_iterator ;
-    //
+    // ========================================================================
   public:
+    // ========================================================================
     /// Standard constructor
     Selected_() : m_map() {}
     /// destructor 
@@ -134,19 +135,24 @@ namespace LoKi
     map_iterator end   () const { return m_map.end   () ; }
     /// clear the selected particles 
     _Self& clear() { m_map.clear() ; return *this ;}
+    // ========================================================================
   private:
-    /// copy constructor is desibled 
-    Selected_        ( const _Self& );
-    /// assignement      is desibled 
-    _Self& operator= ( const _Self& );
+    // ========================================================================
+    /// copy constructor is disabled 
+    Selected_        ( const _Self& ) ;         // copy constructor is disabled 
+    /// assignement      is disabled 
+    _Self& operator= ( const _Self& ) ;         // assignement      is disabled 
+    // ========================================================================
   private:
-    // actual representation of the storage 
-    Map m_map;
+    // ========================================================================
+    /// actual representation of the storage 
+    Map m_map;                         // actual representation of the storage 
+    // ========================================================================
   } ;
   // ==========================================================================
-} // enfd of namespace LoKi
+} //                                                      end of namespace LoKi
 // ============================================================================
-// The END 
+//                                                                      The END 
 // ============================================================================
 #endif // LOKI_SELECTED_H
 // ============================================================================

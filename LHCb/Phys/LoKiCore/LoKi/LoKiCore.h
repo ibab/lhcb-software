@@ -1,4 +1,4 @@
-// $Id: LoKiCore.h,v 1.23 2008-04-03 11:27:10 cattanem Exp $
+// $Id: LoKiCore.h,v 1.24 2010-04-06 20:06:39 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -14,8 +14,6 @@
 #include "LoKi/Functions.h"
 #include "LoKi/Math.h"
 #include "LoKi/Operators.h"
-#include "LoKi/Range.h"
-#include "LoKi/NamedRange.h"
 #include "LoKi/RangeList.h"
 #include "LoKi/Record.h"
 #include "LoKi/Tokens.h"

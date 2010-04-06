@@ -1,4 +1,4 @@
-// $Id: LoKiHltDict.h,v 1.5 2010-02-12 14:17:28 ibelyaev Exp $
+// $Id: LoKiHltDict.h,v 1.6 2010-04-06 20:26:34 ibelyaev Exp $
 // ============================================================================
 #ifndef DICT_LOKIDAQDICT_H 
 #define DICT_LOKIDAQDICT_H 1
@@ -44,10 +44,12 @@ namespace LoKi
     class FunCalls<LHCb::ODIN> 
     {
     private:
+      // ======================================================================
       typedef LHCb::ODIN                                Type ;
       typedef LoKi::BasicFunctors<const Type*>::Function Fun  ;
+      // ======================================================================
     public:
-      //
+      // ======================================================================
       static Fun::result_type __call__ 
       ( const Fun& fun  , const Type*           o ) { return fun ( o ) ; }
       // ======================================================================
@@ -74,19 +76,21 @@ namespace LoKi
    class CutCalls<LHCb::ODIN> 
     {
     private:
+      // ======================================================================
       typedef LHCb::ODIN                                 Type ;
       typedef LoKi::BasicFunctors<const Type*>::Predicate Fun  ;
+      // ======================================================================
     public:
-      //
+      // ======================================================================
       static Fun::result_type __call__ 
       ( const Fun& fun  , const Type*                       o ) { return fun ( o ) ; }
-      // ======================================================================
+      //
       static Fun::result_type  __rrshift__ 
       ( const Fun& fun  , const Type*                       o ) { return fun ( o ) ; }
-      // ======================================================================
+      //
       static LoKi::FunctorFromFunctor<const Type*,bool> __rshift__            
       ( const Fun& fun  , const Fun&                        o ) { return fun >> o  ; }
-      //
+      // ======================================================================
    } ;
     // ========================================================================
     // L0 
@@ -125,10 +129,12 @@ namespace LoKi
    class CutCalls<LHCb::L0DUReport> 
     {
     private:
+      // ======================================================================
       typedef LHCb::L0DUReport                            Type ;
       typedef LoKi::BasicFunctors<const Type*>::Predicate Fun  ;
+      // ======================================================================
     public:
-      //
+      // ======================================================================
       static Fun::result_type __call__ 
       ( const Fun& fun  , const Type*                       o ) { return fun ( o ) ; }
       // ======================================================================
@@ -137,7 +143,7 @@ namespace LoKi
       // ======================================================================
       static LoKi::FunctorFromFunctor<const Type*,bool> __rshift__            
       ( const Fun& fun  , const Fun&                        o ) { return fun >> o  ; }
-      //
+      // ======================================================================
    } ;
     // ========================================================================
     // HDR 
@@ -176,23 +182,27 @@ namespace LoKi
    class CutCalls<LHCb::HltDecReports> 
     {
     private:
+      // ======================================================================
       typedef LHCb::HltDecReports                         Type ;
       typedef LoKi::BasicFunctors<const Type*>::Predicate Fun  ;
+      // ======================================================================
     public:
-      //
+      // ======================================================================
       static Fun::result_type __call__ 
       ( const Fun& fun  , const Type*                       o ) { return fun ( o ) ; }
-      // ======================================================================
+      //
       static Fun::result_type  __rrshift__ 
       ( const Fun& fun  , const Type*                       o ) { return fun ( o ) ; }
-      // ======================================================================
+      //
       static LoKi::FunctorFromFunctor<const Type*,bool> __rshift__            
       ( const Fun& fun  , const Fun&                        o ) { return fun >> o  ; }
       //
+      // ======================================================================
    } ;
     // ========================================================================
-  } // end of namespace LoKi::Dicts 
-} // end of namespace LoKi
+  } //                                             end of namespace LoKi::Dicts 
+  // ==========================================================================
+} //                                                      end of namespace LoKi
 // ============================================================================
 namespace
 {
@@ -254,9 +264,9 @@ namespace
     // ========================================================================
   };  
   // ==========================================================================
-} // end of anonymous namespace 
+} //                                                 end of anonymous namespace 
 // ============================================================================
-// The END 
+//                                                                      The END 
 // ============================================================================
 #endif // DICT_LOKINUMBERSDICT_H
 // ============================================================================

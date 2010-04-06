@@ -1,4 +1,4 @@
-// $Id: Combiner.h,v 1.7 2008-04-03 09:59:08 ibelyaev Exp $
+// $Id: Combiner.h,v 1.8 2010-04-06 20:06:39 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_Combiner_H 
 #define LOKI_Combiner_H 1
@@ -11,9 +11,9 @@
 #include <functional>
 #include <algorithm>
 // ============================================================================
-// LoKi
+// GaudiKernel
 // ============================================================================
-#include "LoKi/Range.h"
+#include "GaudiKernel/Range.h"
 // ============================================================================
 /** @file
  *
@@ -109,13 +109,12 @@ namespace LoKi
   template<class CONTAINER>
   class Combiner_
   {
-    //
   public:    
-    //
+    // ========================================================================
     /// type for container itself 
     typedef          CONTAINER                 Container ;
     /// type for effective range 
-    typedef Range_<Container>                  Range     ;
+    typedef Gaudi::Range_<Container>           Range     ;
     /// iterator type  
     typedef typename Range::const_iterator     iterator  ;
     /// definition of (multy)iterator 
@@ -124,9 +123,9 @@ namespace LoKi
     typedef std::pair<Select,size_t>           BackUp    ;
     /// container of back-ups 
     typedef std::vector<BackUp>                BackUps   ;
-    //
+    // ========================================================================
   private:
-    //
+    // ========================================================================
     /// the Combiner_ itself 
     typedef std::vector<Range>                 Ranges    ;
     /// iterator over selected combination 
@@ -385,8 +384,9 @@ namespace LoKi
     /// 'State' of the combiner 
     BackUps             m_backups  ; // 'State' of the combiner 
     // ========================================================================
-  }; // end of class Combiner_
-} // end of namespace LoKi
+  }; //                                                  end of class Combiner_
+  // ==========================================================================
+} //                                                      end of namespace LoKi
 // ============================================================================
 // The END 
 // ============================================================================

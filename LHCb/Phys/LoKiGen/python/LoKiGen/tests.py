@@ -1,6 +1,6 @@
 #!/usr/bin/env python 
 # =============================================================================
-# $Id: tests.py,v 1.7 2008-11-27 10:31:17 ibelyaev Exp $
+# $Id: tests.py,v 1.8 2010-04-06 20:11:52 ibelyaev Exp $
 # =============================================================================
 ## @file   LoKiGen/tests.py
 #
@@ -60,6 +60,7 @@ def test1() :
     p2 = HepMC.GenParticle()
     p2.set_pdg_id(22)
     v.push_back( p2 )
+
     
     print ' v>>GID                           : %s'%(v>>GID)
     print ' v>>yields(GID)                   : %s'%(v>>yields(GID))
@@ -69,7 +70,12 @@ def test1() :
     print ' v>>("e+"!=GABSID)>>GSIZE         : %s'%(v>>('e+'!=GABSID)>>GSIZE)
     print ' v>>select("mu+"!=GABSID)>>GEMPTY : %s'%(v>>select('mu+'!=GABSID)>>GEMPTY)
     
-        
+    f1 = in_list ( GID    , [ "e+" , "e-" , 'mu+' , 'mu-'] ) 
+    f2 = in_list ( GABSID , [ "e+" , "e-" , 'mu+' , 'mu-'] ) 
+    print ' in_list ( GID    , [ "e+" , "e-" , "mu+" , "mu-"] ) : %s %s ' % ( f1 , f1(p1) ) 
+    print ' in_list ( GABSID , [ "e+" , "e-" , "mu+" , "mu-"] ) : %s %s ' % ( f2 , f2(p1) ) 
+
+
 # =============================================================================
 def testAll() :
     test1()

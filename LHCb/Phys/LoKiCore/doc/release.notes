@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.186 2010-04-04 12:20:56 ibelyaev Exp $ 
+! $Id: release.notes,v 1.187 2010-04-06 20:06:40 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiCore
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -14,6 +14,27 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! 
 ! -----------------------------------------------------------------------------
+
+
+! 2010-04-06 - Vanya Belyaev
+
+     remove LoKi::Range, replace it by Gaudi::Range 
+
+   FIXME: remove temporary iteration over ranges 
+    
+      uncomment the lines in LoKiCore.decorator after
+       fix in Gaudi::RangeBase_ 
+
+ - cmt/requirements 
+    
+     version increment to v10r0 
+
+! 2010-04-06 - Vanya Belyaev
+
+ - new functions for object decorations 
+	 + new operators for particle pids ...
+   + new shifters (streamers) 
+  
 
 ! 2010-04-04 - Vanya Belyaev
 
@@ -40,7 +61,7 @@
 
  - cmt/requirements 
     
-     verison increment to v9r13 
+     version increment to v9r13 
    
 ! =========================== LoKiCore v9r12 2010-03-17 =======================
 ! 2010-03-15 - Vanya Belyaev

@@ -1,4 +1,4 @@
-// $Id: MCParticles.h,v 1.24 2010-02-18 14:18:51 ibelyaev Exp $
+// $Id: MCParticles.h,v 1.25 2010-04-06 20:14:39 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_MCPARTICLES_H 
 #define LOKI_MCPARTICLES_H 1
@@ -889,10 +889,6 @@ namespace LoKi
     {
     public:
       // ======================================================================
-      typedef std::vector<const LHCb::MCParticle*> Objects;
-      // ======================================================================
-    public:
-      // ======================================================================
       /** constructor from 1 particle 
        *  @param object object to be compared 
        */
@@ -901,10 +897,6 @@ namespace LoKi
        *  @param obj range of object to be compared 
        */
       IsParticle( const LoKi::MCTypes::MCRange& obj ) ;
-      /** constructor from range of particles 
-       *  @param obj range object to be compared 
-       */
-      IsParticle( const LoKi::MCTypes::MCRange::Base& obj ) ;
       /** templated constructor
        *  @param begin 'begin'-iterator for sequence of objects 
        *  @param end   'end'-iterator for sequence of objects 
@@ -931,9 +923,9 @@ namespace LoKi
       // ======================================================================
     private:
       // ======================================================================
-      Objects m_objects ;  
+      LHCb::MCParticle::ConstVector m_objects ;  
       // ======================================================================
-   };
+    };
     // ========================================================================    
     /** @class IsContainedObject 
      *  Trivial predicate to check 

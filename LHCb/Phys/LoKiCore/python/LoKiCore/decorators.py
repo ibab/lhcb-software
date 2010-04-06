@@ -20,8 +20,8 @@ LoKi = _global.LoKi
 LHCb = _global.LHCb
 
 
-# (auto) load the obejcts from LoKiCoreDict dictionary 
-LoKi.RangeBase_
+# (auto) load the objects from LoKiCoreDict dictionary 
+## FIXME: LoKi.RangeBase_ = cpp.Gaudi.RangeBase_ 
 LoKi.KeeperBase
 
 from LoKiCore.functions import vct_from_list
@@ -78,8 +78,8 @@ def _slice_ ( self , i , j ) :
 # =============================================================================
 ## decorate the ranges
 # =============================================================================
-LoKi.RangeBase_  .__iter__     = _iter_1_ 
-LoKi.RangeBase_  .__getslice__ = _slice_ 
+## FIXME: LoKi.RangeBase_  .__iter__     = _iter_1_ 
+## FIXME: LoKi.RangeBase_  .__getslice__ = _slice_ 
 # =============================================================================
 ## decorate the functions 
 # =============================================================================
@@ -242,31 +242,14 @@ def getSymbols ( modules = [] ) :
     
 # =============================================================================
 ## Decorate the functions using the proper adapters 
-def decorateCalls ( funcs , calls ) :
+def decorateShifts ( funcs , calls ) :
     """
     Decorate the functions calls 
     """
     
-    _call_      = None
     _rshift_    = None
     _rrshift_   = None
     
-    # operator():
-    if hasattr ( calls , '__call__' ) :
-        def _call_ (s,*a) :
-            """
-            Invoke the functional operator: fun(arg)
-            
-            >>> arg = ...
-            >>> result = fun(arg)
-            >>> result = fun(arg1,arg2) # for 2-argument functions 
-            
-            Uses:\n
-            """ 
-            return calls.__call__ (s,*a)
-        _call_ . __doc__  += calls.__call__ . __doc__
-
-
     # streamers: right shift 
     if hasattr ( calls , '__rshift__' ) :                    
         def _rshift_ ( s , a ) :
@@ -300,14 +283,89 @@ def decorateCalls ( funcs , calls ) :
     for fun in funcs :
         
         # finally redefine the methods:
-        if _call_            : fun . __call__    = _call_      # operator() 
         if _rrshift_         : fun . __rrshift__ = _rrshift_   # (right) operator>> 
         if _rshift_          : fun . __rshift__  = _rshift_    #         operator>> 
         
-        for attr in ( '__or__' , '__and__' ) :
-            if hasattr ( fun , attr ) : setattr ( fun , attr , None )
-
     return funcs
+
+# =============================================================================
+## Decorate the functions using the proper adapters 
+def decorateCallsFun ( funcs , calls ) :
+    """
+    Decorate the functions calls 
+    """
+    
+    _call_      = None
+    
+    # operator():
+    if hasattr ( calls , '__call__' ) :
+        def _call_ (s,*a) :
+            """
+            Invoke the functional operator: fun(arg)
+            
+            >>> arg = ...
+            >>> result = fun(arg)
+            >>> result = fun(arg1,arg2) # for 2-argument functions 
+            
+            Uses:\n
+            """ 
+            return calls.__call__ (s,*a)
+        _call_ . __doc__  += calls.__call__ . __doc__
+        
+    # decorate the functions 
+    for fun in funcs :
+        # finally redefine the methods:
+        if _call_  : fun . __call__ = _call_  
+
+    return decorateShifts ( funcs , calls ) 
+
+# =============================================================================
+## Decorate the functions using the proper adapters 
+def decorateCallsMap ( funcs , calls ) :
+    """
+    Decorate the functions calls 
+    """
+    return decorateCallsFun ( funcs , calls ) 
+        
+## Decorate the functions using the proper adapters 
+def decorateCallsMap ( funcs , calls ) :
+    """
+    Decorate the functions calls 
+    """
+    return decorateCallsFun ( funcs , calls ) 
+
+## Decorate the predicate using the proper adapters 
+def decorateCallsCut ( funcs , calls ) :
+    """
+    Decorate the functions calls 
+    """
+    
+    _call_      = None
+    
+    # operator():
+    if hasattr ( calls , '__call__' ) :
+        def _call_ (s,*a) :
+            """
+            Invoke the functional operator: fun(arg)
+            
+            >>> arg = ...
+            >>> result = fun(arg)
+            >>> result = fun(arg1,arg2) # for 2-argument functions 
+            
+            Uses:\n
+            """
+            result = True if calls.__call__ (s,*a) else False 
+            return result
+        
+        _call_ . __doc__  += calls.__call__ . __doc__
+
+    # decorate the functions 
+    for fun in funcs :
+        # finally redefine the methods:
+        if _call_  : fun . __call__ = _call_
+        
+    return decorateShifts ( funcs , calls ) 
+
 
 # ================================================================================
 ## Decorate the function operations  using the proper adapters 
@@ -1242,7 +1300,7 @@ def decorateFunctions ( funcs , calls , opers ) :
     """
     decorate the functions  (everything whiich evaluated to double)
     """
-    funcs = decorateCalls ( funcs , calls )
+    funcs = decorateCallsFun   ( funcs , calls )
     return decorateFunctionOps ( funcs , opers ) 
 
 # =============================================================================
@@ -1447,31 +1505,38 @@ def decoratePredicateOps ( cuts , opers ) :
 ## Decorate the function operations  using the proper adapters 
 def decoratePredicates ( funcs , calls , opers ) :
     """
-    decorate the functions  (everything whiich evaluated to double)
+    decorate the predicates  (everything which evaluated to bool)
     """
-    funcs = decorateCalls ( funcs , calls )
+    funcs = decorateCallsCut    ( funcs , calls )
     return decoratePredicateOps ( funcs , opers ) 
 
 # =============================================================================
 ## get all functors and decorate them 
 def getAndDecorateFunctions  ( name , base , calls , opers ) :
-    """ get all functors and decorate them """
+    """
+    get all functors and decorate them
+    """
     funcs = getInherited ( name , base )
     return decorateFunctions ( funcs , calls , opers )   ## RETURN 
 # =============================================================================
 ## get all functors and decorate them 
 def getAndDecoratePredicates ( name , base , calls , opers ) :
-    """ get all functors and decorate them """
+    """
+    get all functors and decorate them
+    """
     funcs = getInherited ( name , base )
     return decoratePredicates ( funcs , calls , opers )  ## RETURN 
 # =============================================================================
 # the special case of decoration of ID/ABSID functions:
 def decoratePID ( fun , opers ) :
-    """ the special case of decoration of ID/ABSID functions """
+    """
+    the special case of decoration of ID/ABSID functions
+    """
     # equality
 
-    _eq_ = None
-    _ne_ = None
+    _eq_      = None
+    _ne_      = None
+    _in_list_ = None
     
     if hasattr ( opers , '__cpp_eq__' ) : 
         def _eq_ (s,a) :
@@ -1540,10 +1605,29 @@ def decoratePID ( fun , opers ) :
             return opers.__ne__  (s,a)
         _ne_   . __doc__  += opers.__ne__   . __doc__    
         
+    # "in_list"
+    if hasattr ( opers , '__in_list__' ) :
+        def _in_list_ ( fun , lst , *args ) :
+            """
+            Create the predicate which checks if  the function value 'in-list'
+
+            >>> fun  = ... 
+            >>> cut  = in_list ( fun , 'K-' ,'pi-' ) 
+            >>> cut  = in_list ( fun , [ 'D0' , 'D+' ] )
+
+            """
+            if issubclass ( type(lst) , ( tuple , list ) ) or args :
+                vct = vct_from_list ( lst , *args ) 
+                return opers.__in_list__ ( fun , vct )
+            #
+            return opers.__in_list__ ( fun , lst )    
+        _in_list_ . __doc__ += opers.__in_list__ .  __doc__ 
+
     
     # decorate the function:
-    if not not _eq_ : fun . __eq__ = _eq_
-    if not not _ne_ : fun . __ne__ = _ne_
+    if not not _eq_      : fun . __eq__      = _eq_
+    if not not _ne_      : fun . __ne__      = _ne_
+    if not not _in_list_ : fun . __in_list__ = _in_list_
     
     fun . _pid_opers_ = opers
     
@@ -1557,42 +1641,10 @@ def decorateMaps ( funcs , opers ) :
     Decorate all mapping functions
     """
     
-    _call_    = None
+    _tee_     = None
     _rshift_  = None
     _rrshift_ = None
-    _tee_     = None
-
     
-    ## Use the vector function 
-    if hasattr ( opers , '__call__' ) : 
-        def _call_ ( s ,*a ) :
-            """
-            Use the vector function as streamer
-            
-            >>> object =
-            >>> result = functor ( object ) 
-            
-            Uses:\n
-            """
-            return opers.__call__ ( s , *a )
-        # documentation
-        _call_.__doc__     += opers . __call__ . __doc__ 
-
-    ## Use the vector function as streamer
-    if hasattr ( opers , '__rrshift__' ) : 
-        def _rrshift_ ( s ,*a ) :
-            """
-            Use the vector function as streamer
-            
-            >>> object =
-            >>> result = object >> functor
-            
-            Uses:\n
-            """
-            return opers.__rrshift__ ( s , *a )
-        # documentation
-        _rrshift_.__doc__     += opers . __rrshift__ . __doc__ 
-
     ## Use the vector function as streamer
     if hasattr ( opers , '__rshift__' ) : 
         def _rshift_ ( s ,*a ) :
@@ -1609,6 +1661,20 @@ def decorateMaps ( funcs , opers ) :
         # documentation
         _rshift_ .__doc__   += opers . __rshift__  . __doc__ 
             
+    # streamers: right right shift 
+    if hasattr ( opers , '__rrshift__' ) :                    
+        def _rrshift_ ( s , a ) :
+            """
+            Streamer (map here)
+            
+            >>> a =
+            >>> function =
+            >>> result = a >> function
+            
+            """
+            return opers.__rrshift__ ( s , a )
+        _rrshift_ . __doc__  += opers.__rrshift__ . __doc__
+                    
     if hasattr ( opers , '__tee__' ) : 
         def _tee_  ( s ) :
             """
@@ -1627,22 +1693,72 @@ def decorateMaps ( funcs , opers ) :
         
     # finally redefine the functions:
     for fun in funcs :
-        if _call_    : fun . __call__    =  _call_ 
-        if _rrshift_ : fun . __rrshift__ =  _rrshift_ 
-        if _rshift_  : fun . __rshift__  =  _rshift_ 
-        if _tee_     : fun . __tee__     =  _tee_
+        
+        if _rrshift_ : fun . __rrshift__  =  _rrshift_
+        if _rshift_  : fun . __rshift__   =  _rshift_
+        if _tee_     : fun . __tee__      =  _tee_
         
             
     return funcs                                 ## RETURN
 
 # =============================================================================
-## get all mapping functors and decorate them 
+## get all Mapping functors and decorate them 
 def getAndDecorateMaps   ( name , base , opers ) :
     """
-    get all maps  and decorate them
+    get all ``maps''  and decorate them
     """
-    funcs = getInherited ( name , base )
-    return decorateMaps  ( funcs , opers )  ## RETURN 
+    funcs = getInherited     ( name , base   )
+    funcs = decorateCallsMap ( funcs , opers )
+    return decorateMaps      ( funcs , opers )  ## RETURN
+
+## get all Piping functors and decorate them 
+def getAndDecoratePipes ( name , base , opers ) :
+    """
+    get all ``pipes'' and decorate them
+    """
+    funcs = getInherited     ( name , base   )
+    funcs = decorateCallsMap ( funcs , opers ) 
+    return decorateMaps      ( funcs , opers )  ## RETURN
+
+## get all Cun-val functors and decorate them 
+def getAndDecorateFunVals ( name , base , opers ) :
+    """
+    get all ``fun-vals''  and decorate them
+    """
+    funcs = getInherited        ( name , base   )
+    funcs = decorateCallsFun    ( funcs , opers )
+    funcs = decorateFunctionOps ( funcs , opers )
+    return decorateMaps         ( funcs , opers )  ## RETURN
+
+## get all Cut-val functors and decorate them 
+def getAndDecorateCutVals ( name , base , opers ) :
+    """
+    get all ``cut-vals''  and decorate them
+    """
+    funcs = getInherited         ( name , base   )
+    funcs = decorateCallsCut     ( funcs , opers )
+    funcs = decoratePredicateOps ( funcs , opers )
+    return decorateMaps          ( funcs , opers )  ## RETURN
+
+## get all Element functors and decorate them 
+def getAndDecorateElements ( name , base , opers ) :
+    """
+    get all ``elements''  and decorate them
+    """
+    funcs = getInherited         ( name , base   )
+    funcs = decorateCallsFun     ( funcs , opers )
+    return decorateMaps          ( funcs , opers )  ## RETURN
+
+## get all Source functors and decorate them 
+def getAndDecorateSources ( name , base , opers ) :
+    """
+    get all ``sources''  and decorate them
+    """
+    funcs = getInherited         ( name , base   )
+    funcs = decorateCallsFun     ( funcs , opers )
+    return decorateMaps          ( funcs , opers )  ## RETURN
+
+
 # =============================================================================
 
 ## Decorate the functions 'extra-info' using the proper adapters

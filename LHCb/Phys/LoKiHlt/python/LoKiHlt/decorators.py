@@ -26,7 +26,7 @@ A.Golutvin, P.Koppenburg have been used in the design.
 """
 # =============================================================================
 __author__ = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl" 
-__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $  "
+__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $  "
 # =============================================================================
 
 from   LoKiHlt.functions   import *
@@ -44,80 +44,54 @@ def _decorate ( name = _name  ) :
     o1   = LHCb.ODIN
     l0   = LHCb.L0DUReport
     hlt  = LHCb.HltDecReports
-
-    # "function" : ODIN -> double 
     
-    _functions = _LoKiCore.getInherited (
-        name                                   , ## moduel name  
-        LoKi.Functor   (_o1,'double')            ) ## the base
-    _decorated  = _LoKiCore.decorateCalls       (
-        _functions                             , ## list of functor types
-        LoKi.Dicts.FunCalls (o1)               ) ## call-traits
-    _decorated |= _LoKiCore.decorateFunctionOps (
-        _functions                             , ## list of functor types
+    # "function" : ODIN -> double
+    
+    _decorated  = _LoKiCore.getAndDecorateFunctions ( 
+        name                                   , ## module name  
+        LoKi.Functor   (_o1,'double')          , ## the base
+        LoKi.Dicts.FunCalls (o1)               , ## call-traits
         LoKi.Dicts.FuncOps  (_o1,_o1)          ) ## operators&operations
    
     # "function" : L0 -> double 
     
-    _functions = _LoKiCore.getInherited (
-        name                                   , ## moduel name  
-        LoKi.Functor   (_l0,'double')            ) ## the base
-    _decorated |= _LoKiCore.decorateCalls       (
-        _functions                             , ## list of functor types
-        LoKi.Dicts.FunCalls (l0)               ) ## call-traits
-    _decorated |= _LoKiCore.decorateFunctionOps (
-        _functions                             , ## list of functor types
+    _decorated |= _LoKiCore.getAndDecorateFunctions (
+        name                                   , ## module name  
+        LoKi.Functor   (_l0,'double')          , ## the base
+        LoKi.Dicts.FunCalls (l0)               , ## call-traits
         LoKi.Dicts.FuncOps  (_l0,_l0)          ) ## operators&operations
-
+    
     # "function" : HLT -> double 
     
-    _functions = _LoKiCore.getInherited (
-        name                                   , ## moduel name  
-        LoKi.Functor   (_hlt,'double')         ) ## the base
-    _decorated |= _LoKiCore.decorateCalls       (
-        _functions                             , ## list of functor types
-        LoKi.Dicts.FunCalls (hlt)              ) ## call-traits
-    _decorated |= _LoKiCore.decorateFunctionOps (
-        _functions                             , ## list of functor types
+    _decorated |= _LoKiCore.getAndDecorateFunctions ( 
+        name                                   , ## module name  
+        LoKi.Functor   (_hlt,'double')         , ## the base
+        LoKi.Dicts.FunCalls (hlt)              , ## call-traits
         LoKi.Dicts.FuncOps  (_hlt,_hlt)        ) ## operators&operations
-
     
     # "predicate/cut" :  ODIN -> bool
     
-    _functions = _LoKiCore.getInherited (
-        name                                   , ## moduel name  
-        LoKi.Functor   (_o1,bool)              ) ## the base
-    _decorated |= _LoKiCore.decorateCalls       (
-        _functions                             , ## list of functor types
-        LoKi.Dicts.CutCalls (o1)    ) ## call-traits
-    _decorated |= _LoKiCore.decoratePredicateOps (
-        _functions                             , ## list of functor types
+    _decorated |= _LoKiCore.getAndDecoratePredicates ( 
+        name                                   , ## module name  
+        LoKi.Functor   (_o1,bool)              , ## the base
+        LoKi.Dicts.CutCalls (o1)               , ## call-traits
         LoKi.Dicts.CutsOps  (_o1,_o1)          ) ## operators&operations
-
+    
     # "predicate/cut" :  L0 -> bool
     
-    _functions = _LoKiCore.getInherited (
-        name                                   , ## moduel name  
-        LoKi.Functor   (_l0,bool)              ) ## the base
-    _decorated |= _LoKiCore.decorateCalls       (
-        _functions                             , ## list of functor types
-        LoKi.Dicts.CutCalls (l0)    ) ## call-traits
-    _decorated |= _LoKiCore.decoratePredicateOps (
-        _functions                             , ## list of functor types
+    _decorated |= _LoKiCore.getAndDecoratePredicates ( 
+        name                                   , ## module name  
+        LoKi.Functor   (_l0,bool)              , ## the base
+        LoKi.Dicts.CutCalls (l0)               , ## call-traits
         LoKi.Dicts.CutsOps  (_l0,_l0)          ) ## operators&operations
-
-    # "predicate/cut" :  HLT -> bool
     
-    _functions = _LoKiCore.getInherited (
-        name                                   , ## moduel name  
-        LoKi.Functor   (_hlt,bool)             ) ## the base
-    _decorated |= _LoKiCore.decorateCalls       (
-        _functions                             , ## list of functor types
-        LoKi.Dicts.CutCalls (hlt)    ) ## call-traits
-    _decorated |= _LoKiCore.decoratePredicateOps (
-        _functions                             , ## list of functor types
+    # "predicate/cut" :  HLT -> bool
+    _decorated |= _LoKiCore.getAndDecoratePredicates ( 
+        name                                   , ## module name  
+        LoKi.Functor   (_hlt,bool)             , ## the base
+        LoKi.Dicts.CutCalls (hlt)              , ## call-traits
         LoKi.Dicts.CutsOps  (_hlt,_hlt)        ) ## operators&operations
-
+    
     ## 
     return _decorated                            ## RETURN
 

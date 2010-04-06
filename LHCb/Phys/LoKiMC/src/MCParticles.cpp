@@ -1,4 +1,4 @@
-// $Id: MCParticles.cpp,v 1.23 2010-02-18 14:18:51 ibelyaev Exp $
+// $Id: MCParticles.cpp,v 1.24 2010-04-06 20:14:39 ibelyaev Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -863,16 +863,6 @@ LoKi::MCParticles::IsParticle::IsParticle
   , m_objects ( range.begin() , range.end() )
 {}
 // ============================================================================
-/*  constructor from range of particles 
- *  @param range range object to be compared 
- */
-// ============================================================================
-LoKi::MCParticles::IsParticle::IsParticle
-( const LoKi::MCTypes::MCRange::Base& range ) 
-  : LoKi::BasicFunctors<const LHCb::MCParticle*>::Predicate() 
-  , m_objects ( range.begin() , range.end() )
-{}
-// ============================================================================
 /*  copy constructor
  *  @param right  object to be copied 
  */
@@ -900,7 +890,7 @@ LoKi::MCParticles::IsParticle::result_type
 LoKi::MCParticles::IsParticle::operator() 
   ( LoKi::MCParticles::IsParticle::argument p ) const 
 {
-  Objects::const_iterator it = 
+  LHCb::MCParticle::ConstVector::const_iterator it = 
     std::find( m_objects.begin() , m_objects.end() , p ) ;
   return m_objects.end() != it ;
 }

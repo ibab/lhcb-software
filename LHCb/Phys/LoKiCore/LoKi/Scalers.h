@@ -1,4 +1,4 @@
-// $Id: Scalers.h,v 1.4 2010-04-04 12:20:56 ibelyaev Exp $
+// $Id: Scalers.h,v 1.5 2010-04-06 20:06:39 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_SCALERS_H 
 #define LOKI_SCALERS_H 1
@@ -126,12 +126,12 @@ namespace LoKi
     enum RateLimitType
       {
         // ====================================================================
-        /// pure random limiter 
-        RandomLimiter              = 0 ,  // pure random limiter 
         /// periodic limiter with random intial phase 
-        RandomPhasePeriodicLimiter     ,  // periodic limiter with random phase 
+        RandomPhasePeriodicLimiter = 0 ,  // periodic limiter with random phase 
+        /// pure random limiter 
+        RandomLimiter              = 1 ,  // pure random limiter 
         /// plain periodic limiter
-        PlainPeriodicLimiter              // plain periodic limiter
+        PlainPeriodicLimiter       = 2    // plain periodic limiter
         // ====================================================================
       } ;  
     // ========================================================================

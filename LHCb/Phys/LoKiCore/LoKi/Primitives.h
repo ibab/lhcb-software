@@ -1,4 +1,4 @@
-// $Id: Primitives.h,v 1.20 2010-01-03 08:47:09 ibelyaev Exp $
+// $Id: Primitives.h,v 1.21 2010-04-06 20:06:39 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PRIMITIVES_H 
 #define LOKI_PRIMITIVES_H 1
@@ -8,6 +8,7 @@
 // STD & STL 
 // ============================================================================
 #include <functional>
+#include <algorithm>
 // ============================================================================
 // LHCb 
 // ============================================================================
@@ -2249,7 +2250,9 @@ namespace LoKi
       : LoKi::Functor<TYPE,bool>() 
       , m_fun ( fun ) 
       , m_vct ( vct ) 
-    {}
+    { 
+      adjust () ; 
+    }
     /** constructor from the function and the value 
      *  @param fun the function
      *  @param vct the vector of values 
@@ -2260,7 +2263,9 @@ namespace LoKi
       : LoKi::Functor<TYPE,bool>() 
       , m_fun ( fun ) 
       , m_vct ( vct.begin() , vct.end() ) 
-    {}
+    { 
+      adjust () ; 
+    }
     /** constructor from the function and the value 
      *  @param fun the function
      *  @param vct the vector of values 
@@ -2271,7 +2276,24 @@ namespace LoKi
       : LoKi::Functor<TYPE,bool>() 
       , m_fun ( fun ) 
       , m_vct ( vct.begin() , vct.end() ) 
-    {}
+    { 
+      adjust () ;
+    }
+    /** constructor from the function and the value 
+     *  @param fun the function
+     *  @param vct the vector of values 
+     */
+    template <class ITERATOR>
+    EqualToList
+    ( const LoKi::Functor<TYPE,double>&  fun    , 
+      ITERATOR                           first  , 
+      ITERATOR                           last   ) 
+      : LoKi::Functor<TYPE,bool>() 
+      , m_fun ( fun ) 
+      , m_vct ( first , last ) 
+    { 
+      adjust () ;
+    }
     // ========================================================================
     /// MANDATORY: virtual destructor 
     virtual ~EqualToList(){} ;
@@ -2283,8 +2305,8 @@ namespace LoKi
     { return equal_to ( a ) ; }
     /// OPTIONAL: the specific printout 
     virtual std::ostream& fillStream ( std::ostream& s ) const 
-    { return s << "(" << this->func() << "== " 
-               << Gaudi::Utils::toString ( m_vct ) << " )" ; }
+    { return s << " ( " << this->func() << " == " 
+               << Gaudi::Utils::toString ( m_vct ) << " ) " ; }
     // ========================================================================
   public:
     // ========================================================================
@@ -2307,6 +2329,17 @@ namespace LoKi
     const LoKi::Functor<TYPE,double>& func () const { return m_fun.func() ; }
     /// get the vector 
     const std::vector<double>& vect() const { return m_vct ; }
+    // ========================================================================
+  private:
+    // ========================================================================
+    size_t  adjust () 
+    {
+      std::sort ( m_vct.begin() , m_vct.end() ) ;
+      std::vector<double>::iterator ilast = 
+        std::unique ( m_vct.begin() , m_vct.end() ) ;
+      if ( m_vct.end() != ilast ) { m_vct.erase  ( ilast , m_vct.end() ) ; }
+      return m_vct.size() ;
+    }
     // ========================================================================
   private:
     // ========================================================================
@@ -2368,6 +2401,18 @@ namespace LoKi
       : LoKi::Functor<TYPE,bool>() 
       , m_equal ( fun , vct ) 
     {}
+    /** constructor from the function and the value 
+     *  @param fun the function
+     *  @param vct the vector of values 
+     */
+    template <class ITERATOR>
+    NotEqualToList
+    ( const LoKi::Functor<TYPE,double>&  fun    , 
+      ITERATOR                           first  , 
+      ITERATOR                           last   ) 
+      : LoKi::Functor<TYPE,bool>() 
+      , m_equal ( fun , first , last ) 
+    {}
     // ========================================================================
     /// MANDATORY: virtual destructor 
     virtual ~NotEqualToList(){} ;
@@ -2380,8 +2425,8 @@ namespace LoKi
     { return not_equal_to ( a ) ; }
     /// OPTIONAL: the specific printout 
     virtual std::ostream& fillStream ( std::ostream& s ) const 
-    { return s << "( " << this->func() << " != " 
-               << Gaudi::Utils::toString ( m_equal.vect() ) << " )" ; }
+    { return s << " ( " << this->func() << " != " 
+               << Gaudi::Utils::toString ( m_equal.vect() ) << " ) " ; }
     // ========================================================================
   public:
     // ========================================================================

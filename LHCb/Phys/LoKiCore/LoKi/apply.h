@@ -1,9 +1,18 @@
-// $Id: apply.h,v 1.4 2008-10-19 16:11:40 ibelyaev Exp $
+// $Id: apply.h,v 1.5 2010-04-06 20:06:40 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_APPLY_H 
 #define LOKI_APPLY_H 1
 // ============================================================================
 // Include files
+// ============================================================================
+// STD& STL 
+// ============================================================================
+#include <vector>
+// ============================================================================
+// GaudiKernel
+// ============================================================================
+#include "GaudiKernel/Range.h"
+#include "GaudiKernel/NamedRange.h"
 // ============================================================================
 // LoKi
 // ============================================================================
@@ -253,6 +262,53 @@ namespace LoKi
     { if ( LoKi::apply ( fun , *first ) ) { *out = *first ; ++out ; } }
     return out ;
   }
+  // ==========================================================================  
+  template <class INPUT, class CONTAINER, class OUTPUT> 
+  inline 
+  typename LoKi::Functor<CONTAINER,OUTPUT>::result_type 
+  apply ( const LoKi::Functor<CONTAINER,OUTPUT>& o     , 
+          INPUT                                  first , 
+          INPUT                                  last  ) 
+  {
+    const CONTAINER cnt ( first , last ) ;
+    return LoKi::apply ( o , cnt ) ;  
+  }
+  // ==========================================================================  
+  //   template <class CONTAINER, class TYPE2> 
+  //   inline 
+  //   typename LoKi::Functor<CONTAINER,TYPE2>::result_type 
+  //   apply ( const LoKi::Functor<CONTAINER,TYPE2>& o , 
+  //           const Gaudi::Range_<CONTAINER>&       a )
+  //   {
+  //     return LoKi::apply ( o , a.begin() , a.end() ) ;
+  //   }
+  //   // ==========================================================================
+  //   template <class CONTAINER, class TYPE2> 
+  //   inline 
+  //   typename LoKi::Functor<CONTAINER,TYPE2>::result_type 
+  //   apply ( const LoKi::Functor<CONTAINER,TYPE2>& o , 
+  //           const Gaudi::NamedRange_<CONTAINER>&  a )
+  //   {
+  //     return LoKi::apply ( o , a.begin() , a.end() ) ;
+  //   }
+  // ==========================================================================
+  template <class CONTAINER, class TYPEI, class TYPE2> 
+  inline 
+  typename LoKi::Functor<std::vector<TYPEI>,TYPE2>::result_type 
+  apply ( const LoKi::Functor<std::vector<TYPEI>,TYPE2>& o , 
+          const Gaudi::Range_<CONTAINER>&                a )
+  {
+    return LoKi::apply ( o , a.begin() , a.end() ) ;
+  }
+  // ==========================================================================
+  template <class CONTAINER, class TYPEI, class TYPE2> 
+  inline 
+  typename LoKi::Functor<std::vector<TYPEI>,TYPE2>::result_type 
+  apply ( const LoKi::Functor<std::vector<TYPEI>,TYPE2>& o , 
+          const Gaudi::NamedRange_<CONTAINER>&           a )
+  {
+    return LoKi::apply ( o , a.begin() , a.end() ) ;
+  }
   // ==========================================================================
   /** @struct Apply 
    *
@@ -265,12 +321,17 @@ namespace LoKi
   struct Apply 
   {
   public:
+    // ========================================================================
     /// needed for the proper template instantiation 
     typedef typename LoKi::Functor<TYPE,TYPE2>::result_type result_type ;
+    // ========================================================================
   public:
+    // ========================================================================
     /// the constructor 
     Apply ( const LoKi::Functor<TYPE,TYPE2>* fun ) : m_functor ( fun ) {}
+    // ========================================================================
   public:
+    // ========================================================================
     /// the only one essential method 
     template <class ARGUMENT>
     inline typename LoKi::Functor<TYPE,TYPE2>::result_type 
@@ -289,14 +350,19 @@ namespace LoKi
     inline typename LoKi::Functor<TYPE,TYPE2>::result_type 
     eval       ( typename LoKi::Functor<TYPE,TYPE2>::argument a ) const 
     { return LoKi::apply ( *m_functor , a ) ; }    
+    // ========================================================================
   private:
-    // the default constructor is disabled 
-    Apply() ; ///< the default constructor is disabled
+    // ========================================================================
+    /// the default constructor is disabled 
+    Apply() ;                             // the default constructor is disabled
+    // ========================================================================
   private:
+    // ========================================================================
     /// the functor itself 
     const LoKi::Functor<TYPE,TYPE2>* m_functor ; // the functor itself 
+    // ========================================================================
   } ;
-  // ============================================================================
+  // ==========================================================================
   template <class TYPE2>
   struct Apply<void,TYPE2> 
   {
@@ -335,9 +401,9 @@ namespace LoKi
     // ========================================================================
   } ;
   // ==========================================================================
-} // end of namespace LoKi
+} //                                                      end of namespace LoKi
 // ============================================================================
-// The END 
+//                                                                      The END 
 // ============================================================================
 #endif // LOKI_APPLY_H
 // ============================================================================

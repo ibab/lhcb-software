@@ -1,5 +1,5 @@
 <!-- 
-     * $Id: LoKiMC.xml,v 1.28 2009-07-12 12:34:59 ibelyaev Exp $ 
+     * $Id: LoKiMC.xml,v 1.29 2010-04-06 20:14:39 ibelyaev Exp $ 
      * ========================================================================
      * @file
      * The seleciton file to build Reflex dictionaries for Phys/LoKiMC package
@@ -21,10 +21,10 @@
 
   <class name = "LoKi::MCFinderObj" />
   <class name = "LoKi::MCFinder"    />
-
-  <class pattern   = "LoKi::Range_<*LHCb::MC*>"      />
-  <class pattern   = "LoKi::NamedRange_<*LHCb::MC*>" />
-  <class pattern   = "LoKi::RangeList_<*LHCb::MC*>"  />
+  
+  <class pattern   = "Gaudi::Range_<*LHCb::MC*>"      />
+  <class pattern   = "Gaudi::NamedRange_<*LHCb::MC*>" />
+  <class pattern   = "LoKi::RangeList_<*LHCb::MC*>"   />
   
   <class pattern   = "LoKi::Keeper<LHCb::MC*>"        />
   <class pattern   = "LoKi::UniqueKeeper<LHCb::MC*>"  />
@@ -146,10 +146,10 @@
       <method name="=" />
     </class>
     
-    <class pattern="LoKi::Range_&lt;*&gt;">
+    <class pattern="Gaudi::Range_&lt;*&gt;">
       <method name="=" />
     </class>
-    <class pattern="LoKi::NamedRange_&lt;*&gt;">
+    <class pattern="Gaudi::NamedRange_&lt;*&gt;">
       <method name="=" />
     </class>
     <class pattern="LoKi::RangeList_&lt;*&gt;">

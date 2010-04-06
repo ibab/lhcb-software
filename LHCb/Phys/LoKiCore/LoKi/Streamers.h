@@ -1,4 +1,4 @@
-// $Id: Streamers.h,v 1.2 2008-05-28 13:40:29 cattanem Exp $
+// $Id: Streamers.h,v 1.3 2010-04-06 20:06:40 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_STREAMERS_H 
 #define LOKI_STREAMERS_H 1
@@ -76,7 +76,7 @@ operator >>
   const LoKi::Functor<TYPE,bool>& cut2 ) 
 { return LoKi::And<TYPE> ( cut1 , cut2 ) ; }
 // ============================================================================
-/** evaluate the function throgh stremer operation:
+/** evaluate the function through stremer operation:
  *  
  *  @code 
  *
@@ -237,7 +237,27 @@ operator>>  ( typename LoKi::Functor<TYPE,TYPE2>::argument  a ,
               const LoKi::Functor<std::vector<TYPE>,TYPE2>& f )
 {
   return LoKi::apply ( f , a ) ;
-}        
+}
+// ============================================================================
+/// use "light" range as input vector 
+template <class CONTAINER, class OUTPUT> 
+inline 
+typename LoKi::Functor<CONTAINER,OUTPUT>::result_type 
+operator>> ( const Gaudi::Range_<CONTAINER>&        a , 
+             const LoKi::Functor<CONTAINER,OUTPUT>& o )
+{
+  return LoKi::apply ( o , a ) ; 
+}  
+// ============================================================================
+/// use "light" range as input vector 
+template <class CONTAINER, class OUTPUT> 
+inline 
+typename LoKi::Functor<CONTAINER,OUTPUT>::result_type 
+operator>> ( const Gaudi::NamedRange_<CONTAINER>&   a , 
+             const LoKi::Functor<CONTAINER,OUTPUT>& o )
+{
+  return LoKi::apply ( o , a ) ; 
+}  
 // ============================================================================
 /** "source" : produce the sequence from nothing 
  *

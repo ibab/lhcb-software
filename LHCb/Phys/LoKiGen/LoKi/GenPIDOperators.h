@@ -1,4 +1,4 @@
-// $Id: GenPIDOperators.h,v 1.6 2007-11-28 14:08:28 ibelyaev Exp $
+// $Id: GenPIDOperators.h,v 1.7 2010-04-06 20:11:52 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_GENPIDOPERATORS_H 
 #define LOKI_GENPIDOPERATORS_H 1
@@ -139,6 +139,162 @@ operator==( const std::string&                       name ,
 LoKi::GenTypes::GCut
 operator!=( const std::string&                       name , 
             const LoKi::GenParticles::AbsIdentifier& id   ) ;
+// ============================================================================
+
+// ============================================================================
+// vectors 
+// ============================================================================
+LoKi::BasicFunctors<const HepMC::GenParticle*>::PredicateFromPredicate
+operator==( const LoKi::GenParticles::Identifier&   id   , 
+            const std::vector<int>&              pids ) ;
+// ============================================================================
+LoKi::BasicFunctors<const HepMC::GenParticle*>::PredicateFromPredicate
+operator==( const LoKi::GenParticles::Identifier&   id   , 
+            const std::vector<unsigned int>&     pids ) ;
+// ============================================================================
+LoKi::BasicFunctors<const HepMC::GenParticle*>::PredicateFromPredicate
+operator==( const LoKi::GenParticles::Identifier&   id   , 
+            const std::vector<std::string>&      pids ) ;
+// ============================================================================
+LoKi::BasicFunctors<const HepMC::GenParticle*>::PredicateFromPredicate
+operator==( const LoKi::GenParticles::Identifier&   id   , 
+            const std::vector<LHCb::ParticleID>& pids ) ;
+// ============================================================================
+// abspid 
+// ============================================================================
+LoKi::BasicFunctors<const HepMC::GenParticle*>::PredicateFromPredicate
+operator==( const LoKi::GenParticles::AbsIdentifier&   id   , 
+            const std::vector<int>&                 pids ) ;
+// ============================================================================
+LoKi::BasicFunctors<const HepMC::GenParticle*>::PredicateFromPredicate
+operator==( const LoKi::GenParticles::AbsIdentifier&   id   , 
+            const std::vector<unsigned int>&        pids ) ;
+// ============================================================================
+LoKi::BasicFunctors<const HepMC::GenParticle*>::PredicateFromPredicate
+operator==( const LoKi::GenParticles::AbsIdentifier&   id   , 
+            const std::vector<std::string>&         pids ) ;
+// ============================================================================
+LoKi::BasicFunctors<const HepMC::GenParticle*>::PredicateFromPredicate
+operator==( const LoKi::GenParticles::AbsIdentifier&   id   , 
+            const std::vector<LHCb::ParticleID>&    pids ) ;
+// ============================================================================
+
+// ============================================================================
+// vectors 
+// ============================================================================
+inline LoKi::BasicFunctors<const HepMC::GenParticle*>::PredicateFromPredicate
+operator== ( const std::vector<int>&              pids , 
+             const LoKi::GenParticles::Identifier&   id   ) { return id == pids ; }
+// ============================================================================
+inline LoKi::BasicFunctors<const HepMC::GenParticle*>::PredicateFromPredicate
+operator== ( const std::vector<unsigned int>&     pids , 
+             const LoKi::GenParticles::Identifier&   id   ) { return id == pids ; }
+// ============================================================================
+inline LoKi::BasicFunctors<const HepMC::GenParticle*>::PredicateFromPredicate
+operator== ( const std::vector<std::string>&      pids , 
+             const LoKi::GenParticles::Identifier&   id   ) { return id == pids ; }
+// ============================================================================
+inline LoKi::BasicFunctors<const HepMC::GenParticle*>::PredicateFromPredicate
+operator== ( const std::vector<LHCb::ParticleID>&  pids , 
+             const LoKi::GenParticles::Identifier&    id   ) { return id == pids ; }
+// ============================================================================
+// abspid 
+// ============================================================================
+inline LoKi::BasicFunctors<const HepMC::GenParticle*>::PredicateFromPredicate
+operator== ( const std::vector<int>&                 pids , 
+             const LoKi::GenParticles::AbsIdentifier&   id   ) { return id == pids ; }
+// ============================================================================
+inline LoKi::BasicFunctors<const HepMC::GenParticle*>::PredicateFromPredicate
+operator== ( const std::vector<unsigned int>&        pids , 
+             const LoKi::GenParticles::AbsIdentifier&   id   ) { return id == pids ; }
+// ============================================================================
+inline LoKi::BasicFunctors<const HepMC::GenParticle*>::PredicateFromPredicate
+operator== ( const std::vector<std::string>&         pids , 
+             const LoKi::GenParticles::AbsIdentifier&   id   ) { return id == pids ; }
+// ============================================================================
+inline LoKi::BasicFunctors<const HepMC::GenParticle*>::PredicateFromPredicate
+operator== ( const std::vector<LHCb::ParticleID>&    pids , 
+             const LoKi::GenParticles::AbsIdentifier&   id   ) { return id == pids ; }
+// ============================================================================
+
+// ============================================================================
+// vectors 
+// ============================================================================
+LoKi::BasicFunctors<const HepMC::GenParticle*>::PredicateFromPredicate
+operator!=( const LoKi::GenParticles::Identifier&   id   , 
+            const std::vector<int>&              pids ) ;
+// ============================================================================
+LoKi::BasicFunctors<const HepMC::GenParticle*>::PredicateFromPredicate
+operator!=( const LoKi::GenParticles::Identifier&   id   , 
+            const std::vector<unsigned int>&     pids ) ;
+// ============================================================================
+LoKi::BasicFunctors<const HepMC::GenParticle*>::PredicateFromPredicate
+operator!=( const LoKi::GenParticles::Identifier&   id   , 
+            const std::vector<std::string>&      pids ) ;
+// ============================================================================
+LoKi::BasicFunctors<const HepMC::GenParticle*>::PredicateFromPredicate
+operator!=( const LoKi::GenParticles::Identifier&   id   , 
+            const std::vector<LHCb::ParticleID>& pids ) ;
+// ============================================================================
+// abspid 
+// ============================================================================
+LoKi::BasicFunctors<const HepMC::GenParticle*>::PredicateFromPredicate
+operator!=( const LoKi::GenParticles::AbsIdentifier&   id   , 
+            const std::vector<int>&                 pids ) ;
+// ============================================================================
+LoKi::BasicFunctors<const HepMC::GenParticle*>::PredicateFromPredicate
+operator!=( const LoKi::GenParticles::AbsIdentifier&   id   , 
+            const std::vector<unsigned int>&        pids ) ;
+// ============================================================================
+LoKi::BasicFunctors<const HepMC::GenParticle*>::PredicateFromPredicate
+operator!=( const LoKi::GenParticles::AbsIdentifier&   id   , 
+            const std::vector<std::string>&         pids ) ;
+// ============================================================================
+LoKi::BasicFunctors<const HepMC::GenParticle*>::PredicateFromPredicate
+operator!=( const LoKi::GenParticles::AbsIdentifier&   id   , 
+            const std::vector<LHCb::ParticleID>&    pids ) ;
+// ============================================================================
+
+// ============================================================================
+// vectors 
+// ============================================================================
+inline LoKi::BasicFunctors<const HepMC::GenParticle*>::PredicateFromPredicate
+operator!= ( const std::vector<int>&              pids , 
+             const LoKi::GenParticles::Identifier&   id   ) { return id != pids ; }
+// ============================================================================
+inline LoKi::BasicFunctors<const HepMC::GenParticle*>::PredicateFromPredicate
+operator!= ( const std::vector<unsigned int>&     pids , 
+             const LoKi::GenParticles::Identifier&   id   ) { return id != pids ; }
+// ============================================================================
+inline LoKi::BasicFunctors<const HepMC::GenParticle*>::PredicateFromPredicate
+operator!= ( const std::vector<std::string>&      pids , 
+             const LoKi::GenParticles::Identifier&   id   ) { return id != pids ; }
+// ============================================================================
+inline LoKi::BasicFunctors<const HepMC::GenParticle*>::PredicateFromPredicate
+operator!= ( const std::vector<LHCb::ParticleID>& pids ,
+             const LoKi::GenParticles::Identifier&   id   ) { return id != pids ; }
+// ============================================================================
+// abspid 
+// ============================================================================
+inline LoKi::BasicFunctors<const HepMC::GenParticle*>::PredicateFromPredicate
+operator!= ( const std::vector<int>&                 pids , 
+             const LoKi::GenParticles::AbsIdentifier&   id   ) { return id != pids ; }
+// ============================================================================
+inline LoKi::BasicFunctors<const HepMC::GenParticle*>::PredicateFromPredicate
+operator!= ( const std::vector<unsigned int>&        pids , 
+             const LoKi::GenParticles::AbsIdentifier&   id   ) { return id != pids ; }
+// ============================================================================
+inline LoKi::BasicFunctors<const HepMC::GenParticle*>::PredicateFromPredicate
+operator!= ( const std::vector<std::string>&         pids , 
+             const LoKi::GenParticles::AbsIdentifier&   id   ) { return id != pids ; }
+// ============================================================================
+inline LoKi::BasicFunctors<const HepMC::GenParticle*>::PredicateFromPredicate
+operator!= ( const std::vector<LHCb::ParticleID>&    pids , 
+             const LoKi::GenParticles::AbsIdentifier&   id   ) { return id != pids ; }
+// ============================================================================
+
+
+
 // ============================================================================
 // The END 
 // ============================================================================

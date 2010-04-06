@@ -1,4 +1,4 @@
-// $Id: FuncOps.h,v 1.26 2010-03-07 18:10:49 ibelyaev Exp $
+// $Id: FuncOps.h,v 1.27 2010-04-06 20:06:39 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_FUNCOPS_H 
 #define LOKI_FUNCOPS_H 1
@@ -17,9 +17,11 @@
 #include  "LoKi/compose.h"
 #include  "LoKi/ExtraInfo.h"
 #include  "LoKi/Math.h"
+#include  "LoKi/Streamers.h"
 // ============================================================================
 namespace LoKi
 {
+  // ==========================================================================
   namespace Dicts
   {
     // ========================================================================
@@ -608,6 +610,16 @@ namespace LoKi
       __rrshift__ ( const Map& fun , 
                     const typename std::vector<TYPE>::value_type& val ) 
       { return fun ( std::vector<TYPE>( 1 , val ) ) ; }
+      // __rrshift__ 
+      static std::vector<double>
+      __rrshift__ ( const Map&                                    fun , 
+                    const Gaudi::Range_<std::vector<TYPE> >&      val ) 
+      { return val >> fun ; }
+      // __rrshift__ 
+      static std::vector<double>
+      __rrshift__ ( const Map&                                    fun , 
+                    const Gaudi::NamedRange_<std::vector<TYPE> >& val ) 
+      { return val >> fun ; }
       // ======================================================================
     public:
       // ======================================================================
@@ -690,6 +702,16 @@ namespace LoKi
       __rrshift__ ( const Pipe& fun , 
                     const typename std::vector<TYPE>::value_type& val ) 
       { return fun ( std::vector<TYPE>( 1 , val ) ) ; }
+      // __rrshift__ 
+      static std::vector<TYPE>
+      __rrshift__ ( const Pipe&                                   fun , 
+                    const Gaudi::Range_<std::vector<TYPE> >&      val ) 
+      { return val >> fun ; }
+      // __rrshift__ 
+      static std::vector<TYPE>
+      __rrshift__ ( const Pipe&                                   fun , 
+                    const Gaudi::NamedRange_<std::vector<TYPE> >& val ) 
+      { return val >> fun ; }
       // ======================================================================
     public:
       // ======================================================================
@@ -743,6 +765,16 @@ namespace LoKi
       __rrshift__ ( const FunVal& fun , 
                     const typename std::vector<TYPE>::value_type& val ) 
       { return fun ( std::vector<TYPE>( 1 , val ) ) ; }
+      // __rrshift__ 
+      static double 
+      __rrshift__ ( const FunVal&                                 fun , 
+                    const Gaudi::Range_<std::vector<TYPE> >&      val ) 
+      { return val >> fun ; }
+      // __rrshift__ 
+      static double 
+      __rrshift__ ( const FunVal&                                 fun , 
+                    const Gaudi::NamedRange_<std::vector<TYPE> >& val ) 
+      { return val >> fun  ; }
       // ======================================================================
     public:
       // ======================================================================
@@ -797,6 +829,16 @@ namespace LoKi
       __rrshift__ ( const Element& fun , 
                     const typename std::vector<TYPE>::value_type& val ) 
       { return fun ( std::vector<TYPE>( 1 , val ) ) ; }
+      // __rrshift__ 
+      static TYPE 
+      __rrshift__ ( const Element&                                fun , 
+                    const Gaudi::Range_<std::vector<TYPE> >&      val ) 
+      { return val >> fun ; }
+      // __rrshift__ 
+      static TYPE 
+      __rrshift__ ( const Element&                                fun , 
+                    const Gaudi::NamedRange_<std::vector<TYPE> >& val ) 
+      { return val >> fun  ; }
       // ======================================================================
     public:
       // ======================================================================
@@ -895,13 +937,23 @@ namespace LoKi
       // ======================================================================
       // __rrshift__ 
       static bool 
-      __rrshift__ ( const CutVal& fun , const std::vector<TYPE>& val ) 
+      __rrshift__ ( const CutVal& fun , const std::vector<TYPE>&  val ) 
       { return fun ( val ) ; }
       // __rrshift__ 
       static bool 
       __rrshift__ ( const CutVal& fun , 
                     const typename std::vector<TYPE>::value_type& val ) 
       { return fun ( std::vector<TYPE>( 1 , val ) ) ; }
+      // __rrshift__ 
+      static bool
+      __rrshift__ ( const CutVal&                                 fun , 
+                    const Gaudi::Range_<std::vector<TYPE> >&      val ) 
+      { return val >> fun ; }
+      // __rrshift__ 
+      static bool 
+      __rrshift__ ( const CutVal&                                 fun , 
+                    const Gaudi::NamedRange_<std::vector<TYPE> >& val ) 
+      { return val >> fun  ; }
       // ======================================================================
      public:
       // ======================================================================
@@ -931,10 +983,11 @@ namespace LoKi
       // ======================================================================
     } ;
     // ========================================================================
-  } // end of namespace LoKi::Dicts
-} // end of namespace LoKi
+  } //                                             end of namespace LoKi::Dicts
+  // ==========================================================================
+} //                                                      end of namespace LoKi
 // ============================================================================
-// The END 
+//                                                                      The END 
 // ============================================================================
 #endif // LOKI_FUNCOPS_H
 // ============================================================================

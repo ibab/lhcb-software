@@ -1,13 +1,14 @@
-// $Id: RangeList.h,v 1.9 2008-10-29 13:35:59 ibelyaev Exp $
+// $Id: RangeList.h,v 1.10 2010-04-06 20:06:39 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_RANGELIST_H 
 #define LOKI_RANGELIST_H 1
 // ============================================================================
 // Include files
 // ============================================================================
-// LoKi
+// GaudiKernel
 // ============================================================================
-#include "LoKi/NamedRange.h"
+#include "GaudiKernel/Range.h"
+#include "GaudiKernel/NamedRange.h"
 // ============================================================================
 /** @file
  *
@@ -26,7 +27,8 @@
 namespace LoKi
 { 
   // ==========================================================================
-  /** @class RangeList RangeList.h LoKi/RangeList.h
+  /** @class RangeList LoKi/RangeList.h
+   *  The list of ranges 
    *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
    *  @date   2004-11-18
    */
@@ -34,13 +36,18 @@ namespace LoKi
   class RangeList_ 
   {
   public:
+    // ========================================================================
     typedef RANGE                                 Range    ;
     typedef std::vector<Range>                    Ranges   ;
     typedef typename Ranges::const_iterator       iterator ;
     typedef typename Ranges::const_iterator const_iterator ;
+    // ========================================================================
   protected:
+    // ========================================================================
     typedef RangeList_<RANGE>                      Self ;
+    // ========================================================================
   public:
+    // ========================================================================
     /** Standard constructor
      *  create empty list of ranges 
      */
@@ -64,7 +71,9 @@ namespace LoKi
     };
     /// destructor
     virtual ~RangeList_(){} ;
+    // ========================================================================
   public:
+    // ========================================================================
     /// empty list ? 
     bool          empty() const { return m_ranges.empty() ; }
     /// number of components 
@@ -92,13 +101,18 @@ namespace LoKi
     Self& operator+= ( const Ranges& range ) { add ( range ) ; return *this ; }
     /// add 
     Self& operator+= ( const Self&   range ) { add ( range ) ; return *this ; }
+    // ========================================================================
   public:
   protected:
+    // ========================================================================
     /// access to the underlying storage 
     const Ranges& ranges() const { return m_ranges ; }
+    // ========================================================================
   private:
-    // list of ranges itself 
-    Ranges m_ranges ;
+    // ========================================================================
+    /// list of ranges itself 
+    Ranges m_ranges ;     // list of ranges itself
+    // ========================================================================
   };
   // ==========================================================================
 } // end of namespace LoKi 
@@ -136,7 +150,7 @@ operator+( const typename LoKi::RangeList_<RANGE>::Range& range1 ,
   return  LoKi::RangeList_<RANGE>( range1 , range2 ) ;
 } 
 // ============================================================================
-// The END 
+//                                                                      The END 
 // ============================================================================
 #endif // LOKI_RANGELIST_H
 // ============================================================================

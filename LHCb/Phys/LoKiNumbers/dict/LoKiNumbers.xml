@@ -1,5 +1,5 @@
 <!-- 
-     * $Id: LoKiNumbers.xml,v 1.13 2010-04-04 12:21:44 ibelyaev Exp $ 
+     * $Id: LoKiNumbers.xml,v 1.14 2010-04-06 20:08:15 ibelyaev Exp $ 
      * ========================================================================
      * @file
      * The XML seleciton file to build Reflex 
@@ -102,10 +102,10 @@
       <method name="=" />
     </class>
     
-    <class pattern="LoKi::Range_&lt;*&gt;">
+    <class pattern="Gaudi::Range_&lt;*&gt;">
       <method name="=" />
     </class>
-    <class pattern="LoKi::NamedRange_&lt;*&gt;">
+    <class pattern="Gaudi::NamedRange_&lt;*&gt;">
       <method name="=" />
     </class>
     <class pattern="LoKi::RangeList_&lt;*&gt;">
