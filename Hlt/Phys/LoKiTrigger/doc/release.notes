@@ -1,9 +1,14 @@
-! $Id: release.notes,v 1.68 2010-03-28 20:28:44 graven Exp $
+! $Id: release.notes,v 1.69 2010-04-06 20:24:49 ibelyaev Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiTrigger
 ! Responsible : Vanya BELYAEV
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
+
+! 2010-04-06 - Vanya Belyaev
+ - replace LoKi::Range with Gaudi::Range 
+ - new decorators 
+ - version increment to v9r0 
 
 !========================== LoKiTrigger v9r9 2010-03-28 ===================
 ! 2010-03-11 - V. Gligorov
