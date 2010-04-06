@@ -9,6 +9,13 @@ from math import sqrt
 
 from GaudiKernel.SystemOfUnits import MeV 
 
+import copy 
+import ROOT 
+import KaliCalo.Kali  as Kali
+CellID = Kali.CellID 
+from GaudiPython.Bindings import gbl as cpp
+
+
 # ========================== some global variables =========================
 #== histograms and coefficients
 FilledHistos={}                        # array of the pi0mass histograms
@@ -118,17 +125,13 @@ def HiCreate(alam, FilledHistos, index):
 ### EOF
 
 
-import copy 
-import ROOT 
-import KaliCalo.Kali  as Kali
-CellID = Kali.CellID 
-from GaudiPython.Bindings import gbl as cpp
+
 
 
 ## use Wim Lavrijsen's trick: 
 ##selector = '$KALICALOROOT/root/TPySelectorFix.C' 
 ##if 0 > ROOT.gROOT.LoadMacro ( selector ) : 
-##    raise RunTimeError, "Unable to LoadMacro '%s'" % selector  
+##    raise RunTimeError, "Unable to LoadMacro '%s'" % selector
 Kali.TPySelectorFix = cpp.Kali_TPySelectorFix
 
 # =============================================================================
@@ -194,7 +197,7 @@ class FillPi0( Kali.TPySelectorFix  ):
         if not self._frequency :
             entries  = bamboo.GetEntries()
             entries  = int ( entries /  50.0 / 10000.0 ) * 10000
-            entries  = max ( entries , 50000 ) 
+            entries  = max ( entries , 100000 ) 
             self._frequency = entries
             
         # == printout
@@ -349,7 +352,7 @@ def fillHistos ( tree                          ,
                          Unit = Unit )  
 
     print '#entries in tree: %10d ' % tree.GetEntries() 
-    ##tree.Process ( selector , '' , 50000 )
+    ## tree.Process ( selector , '' , 200000 )
     tree.Process ( selector )
     
     lambdas = selector.lambdas ()

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: FitTask.py,v 1.3 2010-04-01 16:04:10 ibelyaev Exp $
+# $Id: FitTask.py,v 1.4 2010-04-06 19:11:46 ibelyaev Exp $
 # =============================================================================
 ## @file KaliKalo/FitTask.py
 #  The helper class for parallel fitting using GaudiPython.Parallel
@@ -14,7 +14,7 @@ The helper class for parallel fitting using GaudiPython.Parallel
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@itep.ru "
 __date__    = " 2010-03-27 "
-__version__ = " CVS Tag $Name: not supported by cvs2svn $ , version $Revision: 1.3 $ "
+__version__ = " CVS Tag $Name: not supported by cvs2svn $ , version $Revision: 1.4 $ "
 __all__     = (
     "FitTask"   ,
     "fitHistos"
@@ -63,26 +63,36 @@ class FitTask ( Parallel.Task ) :
         """
         Local initialization
         """
-        print 'FitTask : Start parallel processing (local)'
+        print 'FitTask: Start parallel processing (local)'
         self.output = {}
         
     ## local initialization 
     def initializeRemote ( self ) :
         """
-        Local initialization
+        Remote initialization
         """
-        print 'FitTask : Start parallel processing (remote)'
+        import os
+        host = os.environ['HOSTNAME']
+        #
+        print 'FitTask: Start parallel processing (%s)' % host 
         return Parallel.Task.initializeRemote ( self )
     
     def _resetOutput ( self ) :
         self.output ={}
         
     ## process the list of histo sets 
-    def process  ( self , histos ) :
+    def process  ( self , histogroup ) :
 
         """
         Process the list of histo-sets 
         """
+        histos, igroup = histogroup
+        
+        import os
+        host = os.environ['HOSTNAME']
+        #
+        print 'FitTask: Start of processing at ', host , igroup , len ( histos ) 
+
         for histoset in histos :
             
             key = histoset.cellID()
@@ -103,7 +113,7 @@ class FitTask ( Parallel.Task ) :
 
             self.output [ key ] = histoset
             
-        print 'FitTask: End of processing ', len(self.output) 
+        print 'FitTask: End   of processing at ', host , igroup , len(self.output) 
 
     ## finalization of the task 
     def finalize ( self ) :
@@ -121,21 +131,17 @@ class FitTask ( Parallel.Task ) :
 
 # ==============================================================================
 ## perform the fit for the histograms 
-def __fit_p_Histos ( histomap ,
-                     manager  ) :
+def __fit_p_Histos ( histomap       ,
+                     manager        ,
+                     nHistos   = 60 ) :
     """
     Perform the ``parallel'' fit for the histograms 
     """
     task = FitTask ( histomap ) 
 
-    data = histomap.split( 5 )
-    
-    print ' FIT-BEFORE : ' ,  len ( data  )
+    data = histomap.split ( nHistos )
     
     status = manager.process ( task , data ) 
-    
-    print ' FIT-STATUS : ' , status, len( task.output )
-
     
     for key in task.output :
         histomap.insert ( task.output[key] )
@@ -191,13 +197,14 @@ def __fit_s_Histos ( histomap ) :
 # ==============================================================================
 ## perform the fit for the histograms 
 def fitHistos ( histomap          ,
-                manager   = None  ) :
+                manager   = None  ,
+                nHistos   = 60    ) :
     """
     perform the paralell fit for the histograms
     """
 
     if manager :
-        histomap = __fit_p_Histos ( histomap , manager )
+        histomap = __fit_p_Histos ( histomap , manager , nHistos )
     else :
         histomap = __fit_s_Histos ( histomap )
 

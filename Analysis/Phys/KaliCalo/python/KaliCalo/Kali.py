@@ -13,7 +13,7 @@ for ``iterative pi0'' Ecal calibration
 # ======================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@itep.ru "
 __date__    = " 2010-03-17 "
-__version__ = " CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.8 $ "
+__version__ = " CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.9 $ "
 # ======================================================================
 import ROOT
 from GaudiPython.Bindings import gbl as cpp
@@ -24,19 +24,24 @@ import CaloUtils.CellID
 CellID     = LHCb.CaloCellID
 
 ## the whole Ecal 
-EcalZone   = CellID ( 'Ecal' , 'PinArea', 1 , 1 ) ## the whole Ecal 
+EcalZone   = CellID ( 'Ecal' , 'PinArea', 31 , 31 ) ## the whole Ecal 
 ## inner  zone only 
-InnerZone  = CellID ( 'Ecal' , 'Inner'  , 0 , 0 ) ## inner  zone only 
+InnerZone  = CellID ( 'Ecal' , 'Inner'  , 31 , 31 ) ## inner  zone only 
 ## middle zone only 
-MiddleZone = CellID ( 'Ecal' , 'Middle' , 0 , 0 ) ## middle zone only 
+MiddleZone = CellID ( 'Ecal' , 'Middle' , 31 , 31 ) ## middle zone only 
 ## Outer  zone only 
-OuterZone  = CellID ( 'Ecal' , 'Outer'  , 0 , 0 ) ## Outer  zone only 
+OuterZone  = CellID ( 'Ecal' , 'Outer'  , 31 , 31 ) ## Outer  zone only 
 
 Zones      = (
     OuterZone  ,
     MiddleZone , 
     InnerZone  ,
-    EcalZone 
+    EcalZone   ,
+    CellID ( 'Ecal' , 'PinArea' , 0 , 0 ) ,
+    CellID ( 'Ecal' , 'PinArea' , 1 , 1 ) ,
+    CellID ( 'Ecal' , 'Inner'   , 0 , 0 ) ,
+    CellID ( 'Ecal' , 'Middle'  , 0 , 0 ) ,
+    CellID ( 'Ecal' , 'Outer'   , 0 , 0 ) 
     )
 
 Counter    = cpp.StatEntity
@@ -45,8 +50,12 @@ VE         = cpp.Gaudi.Math.ValueWithError
 def _ve_str_ ( self , fmt = '( %.3g +- %.3g )' ) :
     return fmt % ( self.value() , self.error() )
 
+def _ve_abs_ ( self ) :
+    return VE ( abs( self.value() ) , self.cov2() )
+
 VE.__str__  = _ve_str_
 VE.__repr__ = _ve_str_
+VE.__abs__  = _ve_abs_
 
 # =============================================================================
 ## the simplest 'cell-func'
@@ -348,45 +357,42 @@ class HistoMap(object) :
         lst =  [ sum ( self._histos[k].entries() ) for k in self._histos ]
         return sum ( lst )
 
-    ## get the dictionary with number of entries in histograms 
-    def getEntries ( self , index ) :
+    ## Get the dictionary of histos
+    def get ( self , func ) :
         """
-        Get the dictionary with number of entries in histograms
+        Get the dictionary of histos
         """
         _entries = {}
         for key in self :
-            h = self._histos[key].histos()[index]
-            _entries[ key ] = h.GetEntries() 
-        return _entries 
-
-    ## get the fit-parameters 
-    def getFits ( self , index ) :
-        """
-        Get the fit-parameters         
-        """
-        _fits = {}
-        from KaliCalo.Pi0HistoFit import getPi0Params as _getPi0Par
-        for key in self :
-            h = self._histos[key].histos()[index]
-            pars =  _getPi0Par ( h )
-            if pars : _fits [ key ] = pars 
-        return _fits
-
+            if func ( self[key] ) :
+                _entries [ key ] = self[key]
+        return _entries
+    
     ## split histograms into groups (e.g. for parallel processing)
     def split ( self , num = 60 ) :
          """
-         split histograms into groups (e.g. for parallel processins
+         split histograms into groups (e.g. for parallel processing)
          """
-         if num > len ( self ) : return self.split ( num/ 2 )
-         ##
+         if num > len ( self ) : return self.split ( int(num/2) )
+         if 0 >= num           : num = 1    
+         #
          result = []
          group  = []
-         for key in self :
+         #
+         keys = self.keys ()
+         keys.sort()
+         for key in keys :
              if len ( group ) == num :
-                 result.append ( group )
+                 result.append ( ( group , len ( result ) ) )
                  group = []
-             group.append ( self[key] )
+             group += [ self[key] ]
              
+         if group : result.append ( ( group , len ( result ) ) )
+         
+         ## require at least two groups 
+         if 0 < len ( self ) and len ( result ) < 2 and 2 < num :
+             return self.split ( int ( num / 2 ) )
+         
          return result 
                  
         
@@ -482,6 +488,7 @@ class LambdaMap(object) :
         """
         _ls = {}
         for key in self._lambdas :
+            if key in Zones : continue 
             lams = self._lambdas[key]
             if 1.0 == lams[ -1 ] : continue 
             _ls [ key ] = self._lambdas[key][-1]
@@ -493,12 +500,43 @@ class LambdaMap(object) :
         get the mean value for correction coefficients
         Attention: missing keys do nto contribute! 
         """
+        if not self : return VE ( 1 , 0 )
+        
         cnt = Counter()
         for key in  self._lambdas :
+            if key in Zones : continue 
             lam = self._lambdas[key][-1]
             cnt += lam
-        return VE ( cnt.flag() , cnt.flagRMS() ) 
+        return VE ( cnt.flagMean() , cnt.flagRMS() ) 
 
+    ## get the delta of "last" measurement 
+    def delta ( self , last = 1 , prev = 1 ) :
+        """
+        Get the delta of measurements
+        """
+        cnt = Counter()
+        for key in self._lambdas :
+            if key in Zones : continue 
+            lam = self._lambdas[key]
+            if len ( lam ) <  last + prev : continue
+            d = float( lam[ -last ] ) / lam[ -(last+prev) ] 
+            cnt += ( d - 1.0 ) 
+        return cnt 
+
+    ## get list of cells with 'large' corrections 
+    def large ( self , delta ) :
+        """
+        get list of cells with 'large' corrections
+        """
+        result = []
+        for key in self._lambdas :
+            if key in Zones : continue 
+            lam = self._lambdas[key]
+            if len ( lam ) < 2 : continue
+            d = abs ( float( lam[-1] ) / lam[-2] - 1.0 )  
+            if d > delta : result.append  ( key )
+        return result 
+        
     ## Get the number of items/keys 
     def __len__     ( self ) :
         """
@@ -509,7 +547,35 @@ class LambdaMap(object) :
         """
         return len ( self._lambdas )
 
-            
+    ## produce short report 
+    def report ( self , values = ( 0.150 , 0.099 , 0.090  ,
+                                   0.080 , 0.070 , 0.060  ,
+                                   0.050 , 0.040 , 0.030  ,
+                                   0.020 , 0.010 , 0.005 ) ) :
+        """
+        Produce short report
+        """
+        _m  = self.mean  ()
+        _d  = self.delta ()
+        print ' Lambdas : ' , _m
+        print ' Deltas  : ( %.4f +- %.4f )  %.4f   %.4f ' % (
+            _d.flagMean () ,
+            _d.flagRMS  () ,
+            _d.flagMin  () ,
+            _d.flagMax  () )
+        for v in values :
+            print ' > %3g%% : %d ' % ( v*100 , len ( self.large  ( v ) ) )    
+
+class FakeCell(object) :
+    
+    def __call__ ( self , cell ) :
+        
+        return CellID ( cell.calo ()         ,
+                        cell.area ()         ,
+                        cell.row  () % 4 + 1 ,
+                        cell.col  () % 4 + 1 ) 
+                                
+
 # =============================================================================
 if '__main__' == __name__ :
     

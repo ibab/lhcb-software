@@ -23,7 +23,8 @@ except ImportError:
 import os
 import zlib        ## use zlib to compress dbfile
 import shelve      ## 
-        
+import shutil
+
 # =============================================================================
 ## Zipped-version of ``shelve''-database     
 class ZipShelf(shelve.Shelf):
@@ -50,8 +51,8 @@ class ZipShelf(shelve.Shelf):
         if filename.rfind ( '.gz' ) + 3 == len ( filename ) :
             
             if os.path.exists ( filename ) and 'r' == flag :
-                ## copy into temporary location and unzip 
-                filename_ = self.__gunzip ( filename ) 
+                ## gunzip into temporary location
+                filename_ = self._gunzip ( filename ) 
                 if not os.path.exists ( filename_ ) :
                     raise TypeError ( "Unable to gunzip properly:" + filename )
                 if not self.__silent : 
@@ -64,17 +65,15 @@ class ZipShelf(shelve.Shelf):
             elif os.path.exists ( filename ) and 'r' != flag :
                 ## unzip in place
                 filename_     = filename[:-3]
-                import popen2
                 # remove existing file (if needed) 
-                if os.path.exists ( filename_ ) : os.remove ( filename_ )                
-                command = 'gunzip -f %s ' % filename
-                cout,cin,cerr = popen2.popen3( command )
-                for line in cerr : print ' STDERR: ' , line
-                for line in cout : print ' STDOUT: ' , line
+                if os.path.exists ( filename_ ) : os.remove ( filename_ )
+                size1 = os.path.getsize ( filename  ) 
+                # gunzip in place 
+                self.__in_place_gunzip  ( filename ) 
+                ##
                 if not os.path.exists ( filename_ ) :
                     raise TypeError ( "Unable to gunzip properly:" + filename )
                 if not self.__silent : 
-                    size1 = os.path.getsize ( filename  ) 
                     size2 = os.path.getsize ( filename_ )
                     print "GZIP uncompression %s: %.1f%%" %  ( filename , (size2*100.0)/size1 )
                 filename        = filename_ 
@@ -96,7 +95,13 @@ class ZipShelf(shelve.Shelf):
         
         self.compresslevel = compress
         
-
+    ## destructor 
+    def __del__ ( self ) :
+        """
+        Destructor 
+        """
+        self.close()  
+    
     ## cloze and gzip (if needed)
     def close ( self ) :
         """
@@ -109,40 +114,114 @@ class ZipShelf(shelve.Shelf):
             os.remove ( self.__filename )
         ##
         if self.__gzip and os.path.exists ( self.__filename ) :
+            # get the initial size 
             size1 = os.path.getsize( self.__filename )
-            command = 'gzip -f -9 %s ' % self.__filename
-            import popen2
-            # remove gzipped file (if exist)
-            if os.path.exists ( self.__filename + '.gz' ) :
-                os.remove ( self.__filename + '.gz' )
-            # gzip the file 
-            cout,cin,cerr = popen2.popen3( command )
-            for line in cerr : print ' STDERR: ' , line
-            for line in cout : print ' STDOUT: ' , line
+            # gzip the file
+            self.__in_place_gzip ( self.__filename ) 
+            #
             if not os.path.exists ( self.__filename + '.gz' ) :
                 print 'Unable to compress the file ', self.__filename   
             size2 = os.path.getsize( self.__filename + '.gz' )
             if not self.__silent : 
                 print 'GZIP compression %s: %.1f%%' % ( self.__filename, (size2*100.0)/size1 )
 
-    ## gunzip the file 
-    def __gunzip ( self , filein ) :
+    ## gzip the file (``in-place'') 
+    def __in_place_gzip   ( self , filein ) :
         """
-        Gunzip the file
+        Gzip the file ``in-place''
+        
+        It is better to use here ``os.system'' or ``popen''-family,
+        but it does not work properly for multiprocessing environemnt
+        
+        """
+        if os.path.exists ( filein + '.gz' ) : os.remove ( filein + '.gz' )
+        #
+        # gzip the file 
+        fileout = self._gzip ( filein )
+        # 
+        if os.path.exists ( fileout ) :
+            # rename the temporary file 
+            shutil.move ( fileout , filein + '.gz' )
+            #
+            import time
+            time.sleep( 3 )
+            #
+            # remove the original
+            os.remove   ( filein ) 
+
+    ## gunzip the file (``in-place'') 
+    def __in_place_gunzip   ( self , filein ) :
+        """
+        Gunzip the file ``in-place''
+        
+        It is better to use here ``os.system'' or ``popen''-family,
+        but unfortunately it does not work properly for multithreaded environemnt
+        
+        """
+        #
+        filename = filein[:-3]            
+        if os.path.exists ( filename ) : os.remove ( filename )
+        #
+        # gunzip the file 
+        fileout = self._gunzip ( filein )
+        #        
+        if os.path.exists ( fileout ) :
+            # rename the temporary file 
+            shutil.move ( fileout , filename )
+            #
+            import time
+            time.sleep( 3 )
+            #
+            # remove the original
+            os.remove   ( filein ) 
+
+    ## gzip the file into temporary location, keep original
+    def _gzip   ( self , filein ) :
+        """
+        Gzip the file into temporary location, keep original
         """
         if not os.path.exists  ( filein  ) :
-            raise NameError ( "GUNZIP: non existing file: " + filein ) 
+            raise NameError ( "GZIP: non existing file: " + filein )
+        #
+        fin  =      file ( filein  , 'r' )
+        #
+        import tempfile 
+        fd,fileout = tempfile.mkstemp ( prefix = 'tmp_' , suffix = '_zdb.gz' )
+        #
+        import gzip 
+        fout = gzip.open ( fileout , 'w' )
+        #
+        try : 
+            for all in fin : fout.write ( all )
+        finally:
+            fout.close()
+            fin .close()   
+            import time
+            time.sleep( 3 ) 
+        return fileout
+        
+    ## gzip the file into temporary location, keep original
+    def _gunzip ( self , filein ) :
+        """
+        Gunzip the file into temporary location, keep original
+        """
+        if not os.path.exists  ( filein  ) :
+            raise NameError ( "GUNZIP: non existing file: " + filein )
+        #
         import gzip 
         fin  = gzip.open ( filein  , 'r' )
+        #
         import tempfile 
         fd,fileout = tempfile.mkstemp ( prefix = 'tmp_' , suffix = '_zdb' )
         fout = file ( fileout , 'w' )
-        ##
+        #
         try : 
             for all in fin : fout.write ( all )
         finally: 
             fout.close()
             fin .close()
+            import time
+            time.sleep( 3 ) 
         return fileout
     
 # =============================================================================

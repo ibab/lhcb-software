@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: TreeTask.py,v 1.3 2010-04-01 16:04:10 ibelyaev Exp $
+# $Id: TreeTask.py,v 1.4 2010-04-06 19:11:47 ibelyaev Exp $
 # =============================================================================
 ## @file KaliKalo/TreeTask.py
 #  The helper class for parallel filling of histograms  using GaudiPython.Parallel
@@ -14,7 +14,7 @@ The helper class for parallel filling of historgams using GaudiPython.Parallel
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@itep.ru "
 __date__    = " 2010-03-28 "
-__version__ = " CVS Tag $Name: not supported by cvs2svn $ , version $Revision: 1.3 $ "
+__version__ = " CVS Tag $Name: not supported by cvs2svn $ , version $Revision: 1.4 $ "
 __all__     = (
     "TreeTask"   ,
     "fillHistos"
@@ -42,10 +42,10 @@ class TreeTask ( Parallel.Task ) :
     """
     
     ## constructor from lambda-map 
-    def __init__ ( self                       ,
-                   lambdas                    ,
-                   Unit     = MeV             ,
-                   cellFunc = Kali.SameCell() ) :
+    def __init__ ( self           ,
+                   lambdas        ,
+                   cellFunc       , 
+                   Unit     = MeV ) : 
         
         ## initialize the base class 
         Parallel.Task.__init__ ( self )
@@ -65,9 +65,12 @@ class TreeTask ( Parallel.Task ) :
     ## local initialization 
     def initializeRemote ( self ) :
         """
-        Local initialization
+        Remote initialization
         """
-        print 'FillTask : Start parallel processing (remote) '
+        import os
+        host = os.environ['HOSTNAME']
+        #
+        print 'FillTask : Start parallel processing (%s) ' % host
         return Parallel.Task.initializeRemote ( self ) 
         
     ## process the list of histo sets 
@@ -76,7 +79,11 @@ class TreeTask ( Parallel.Task ) :
         """
         Process the list of histo-sets 
         """
-
+        import os
+        host = os.environ['HOSTNAME']
+        #
+        print 'FillTask: Start processing at ', host
+        
         files,dbase = file_pair 
         
         histos, lambdas, badfiles = Fill.fillDataBase (
@@ -93,7 +100,9 @@ class TreeTask ( Parallel.Task ) :
             self.output[1].add (  b )
 
         if hasattr ( self , 'histos' ) :
-            print 'I have HISTOS attribute!!!' , len ( self.histos ) , self.histos.entries() 
+            print 'I have HISTOS attribute!!!' , len ( self.histos ) , self.histos.entries()
+            
+        print 'FillTask: End   processing at ', host
             
     ## finalization of the task 
     def finalize ( self ) :
@@ -105,7 +114,7 @@ class TreeTask ( Parallel.Task ) :
     ## merge the result form the different processes 
     def _mergeResults ( self, result ) :
         """
-        merge the results form the different processes
+        merge the results from the different processes
         """
         import os 
         if not hasattr ( self , 'histos' ) :
@@ -126,8 +135,8 @@ __managers = []
 def __fill_p_Histos ( lambdas                      ,
                       file_names                   ,
                       manager                      ,
+                      cellFunc                     ,   
                       dbase_name = 'kali_p_db.gz'  ,
-                      cellFunc   = Kali.SameCell() , 
                       Unit       = MeV             ) :
     """
     Perform the ``parallel'' fill for the histograms 
@@ -143,8 +152,8 @@ def __fill_p_Histos ( lambdas                      ,
         tmpdir = os.path.abspath('./')
         
     task = TreeTask ( lambdas             ,
-                      Unit     = Unit     ,
-                      cellFunc = cellFunc )
+                      cellFunc = cellFunc ,
+                      Unit     = Unit     ) 
 
     ## prepare the names for temporary files 
     import sets
@@ -165,7 +174,7 @@ def __fill_p_Histos ( lambdas                      ,
 
     if dbase_name :
         print 'Save histos in ', dbase_name 
-        ##histomap.save ( dbase_name )
+        histomap.save ( dbase_name )
         
     return histomap,badfiles 
 
@@ -173,8 +182,8 @@ def __fill_p_Histos ( lambdas                      ,
 ## perform the regular ``sequential'' fill for the histograms 
 def __fill_s_Histos ( lambdas                      ,
                       file_names                   ,
+                      cellFunc                     ,
                       dbase_name = 'kali_s_db.gz'  ,
-                      cellFunc   = Kali.SameCell() , 
                       Unit       = MeV             ,
                       **args                       ) :
     """
@@ -182,19 +191,20 @@ def __fill_s_Histos ( lambdas                      ,
     """
     
     histomap, lambdas, badfiles = Fill.fillDataBase (
-        lambdas                 ,
-        file_names              ,
-        cellFunc     = cellFunc ,
-        Unit         = Unit     , 
+        lambdas                ,
+        file_names             ,
+        cellFunc    = cellFunc ,
+        Unit        = Unit     , 
         **args )
     
     return histomap,badfiles
 
 # ==============================================================================
 ## Fill for the histograms 
-def fillHistos ( lambdas           ,
-                 file_names        ,
-                 manager    = None , 
+def fillHistos ( lambdas                      ,
+                 file_names                   ,
+                 manager    = None            , 
+                 cellFunc   = Kali.SameCell() , 
                  **args            ) :
     """
     Fill for the histograms
@@ -202,13 +212,18 @@ def fillHistos ( lambdas           ,
     ##
     if manager :
         return __fill_p_Histos (
-            lambdas           ,
-            file_names        ,
-            manager = manager , 
-            **args            )
+            lambdas               ,
+            file_names            ,
+            manager    = manager  ,
+            cellFunc   = cellFunc , 
+            **args                )
     else         :
-        return __fill_s_Histos ( lambdas , file_names , **args )
-
+        return __fill_s_Histos (
+            lambdas             ,
+            file_names          ,
+            cellFunc = cellFunc ,
+            **args              )
+    
     
 # =============================================================================
 if '__main__' == __name__ :

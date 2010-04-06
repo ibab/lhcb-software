@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Pi0HistoFit.py,v 1.8 2010-03-30 15:40:59 ibelyaev Exp $ 
+# $Id: Pi0HistoFit.py,v 1.9 2010-04-06 19:11:47 ibelyaev Exp $ 
 # =============================================================================
 """
 A module for fitting the histograms with pi0-mass
@@ -9,7 +9,7 @@ A module for fitting the histograms with pi0-mass
 # =============================================================================
 __author__  = " ??? "
 __date__    = " 2009-12-?? "
-__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.8 $ "
+__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.9 $ "
 # =============================================================================
 from ROOT  import TH1F, TF1
 from math  import sqrt, pi,exp
@@ -18,9 +18,8 @@ from array import array
 
 ## few helper math utilities 
 import LHCbMath.Types
-from   GaudiPython.Bindings import gbl as cpp
 import GaudiPython.HistoUtils 
-import KaliCalo.Kali as Kali
+import KaliCalo.Kali        as Kali
 
 VE = Kali.VE 
 
@@ -160,7 +159,7 @@ pi0Func.SetParameter ( 4 ,   0 )
 pi0Func.SetParameter ( 5 ,   0 )
 
 _low    =  50.000
-_high   = 250.000
+_high   = 235.000
 _mass0  = 135.000
 _sigma0 =  13.001
 _slope0 =   0.001 
@@ -226,8 +225,11 @@ def adjust12 ( func , mass , sigma , fixMass = False , fixSigma = False ) :
     par1  = func.GetParameter( 1 )
     par1  = abs  ( par1  )
 
-    par1  = min  ( par1  , mass + 2 * sigma )
-    par1  = max  ( par1  , mass - 2 * sigma )
+    ##par1  = min  ( par1  , mass + 2 * sigma  )
+    ##par1  = max  ( par1  , mass - 2 * sigma )
+    
+    par1  = min  ( par1  , 150.0 )
+    par1  = max  ( par1  , 120.0 )
 
     if fixMass : func.FixParameter ( 1 , par1 )
     else       : func.SetParameter ( 1 , par1 )
@@ -235,8 +237,8 @@ def adjust12 ( func , mass , sigma , fixMass = False , fixSigma = False ) :
     par2  = func.GetParameter( 2 )
     par2  = abs  ( par2  )
 
-    par2  = min  ( par2  , 1.5 * sigma )
-    par2  = max  ( par2  , 0.7 * sigma )
+    par2  = min  ( par2  , 20.0 )
+    par2  = max  ( par2  ,  7.0 )
 
     if fixSigma : func.FixParameter ( 2 , par2 )
     else        : func.SetParameter ( 2 , par2 )
@@ -476,6 +478,10 @@ def _preFitSignal ( func              ,
             slope0  = b[4] . value () 
             curve0  = b[5] . value () 
 
+    if not 7   <= sigma0 <=  20 : sigma0 = _sigma0
+    if not 0   <= backg0        : backg0 = 0.0
+    if not 120 <= mass0  <= 150 : mass0  = _mass0 
+    
     ## number of fits
     nFit = 0 
     ##     
@@ -513,7 +519,7 @@ def _preFitSignal ( func              ,
     sigma1 = func.GetParameter ( 2 )
     ## adjustment 
     mass1,sigma1 = adjust12 ( func , mass0 , sigma0 ) 
-    ## 
+    ##    
     func.FixParameter ( 1 , mass1  )
     func.FixParameter ( 2 , sigma1 )
     func.ReleaseParameter ( 4 ) 
@@ -521,13 +527,13 @@ def _preFitSignal ( func              ,
     ## adjust
     adjust03 ( func ) 
     st = histo.Fit ( func, opts ,'', _low , _high )
-    nFit += 1 
+    nFit += 1    
     if 0 != st.Status() and not isFixed ( func , 5 )  : 
         func.FixParameter ( 5 , curve0 )
         adjust03 ( func ) 
         mass1,sigma1 = adjust12 ( func , mass0 , sigma0 ) 
         st = histo.Fit ( func, opts ,'', _low , _high )
-        nFit += 1 
+        nFit += 1
     if 0 != st.Status() and not isFixed ( func , 4 ) :
         func.FixParameter ( 4 , slope0 )
         mass1,sigma1 = adjust12 ( func , mass0 , sigma0 ) 
@@ -544,30 +550,31 @@ def _preFitSignal ( func              ,
     func.FixParameter ( 5 , curve1  )
     ##
     mass1,sigma1 = adjust12 ( func , mass0 , sigma0 ) 
-    adjust03 ( func ) 
-    ## 4 fit it!
+    adjust03 ( func )
+    ##
+    ## 4. fit it!
     st = histo.Fit ( func, opts ,'', _low , _high )
     nFit += 1 
-    
     if 0 == st.Status() :
+        adjust03 ( func ) 
+        mass_x,sigma_x = adjust12 ( func , mass0 , sigma0 ) 
         func.ReleaseParameter ( 4 )
         func.ReleaseParameter ( 5 )
+        st = histo.Fit ( func, opts ,'', _low , _high )
+        nFit += 1
+    if 0 != st.Status() and not isFixed ( func , 5 ) : 
+        func.FixParameter ( 5 , curve1 )
         mass1,sigma1 = adjust12 ( func , mass0 , sigma0 ) 
         adjust03 ( func ) 
-        nFit += 1 
-        if 0 != st.Status() and not isFixed ( func , 5 ) : 
-            func.FixParameter ( 5 , curve1 )
-            mass1,sigma1 = adjust12 ( func , mass0 , sigma0 ) 
-            adjust03 ( func ) 
-            st = histo.Fit ( func, opts ,'', _low , _high )
-            nFit += 1 
-        if 0 != st.Status() and not isFixed ( func , 4 ) : 
-            func.FixParameter ( 4 , slope1 )
-            mass1,sigma1 = adjust12 ( func , mass0 , sigma0 ) 
-            adjust03 ( func ) 
-            st = histo.Fit ( func, opts ,'', _low , _high )
-            nFit += 1 
-
+        st = histo.Fit ( func, opts ,'', _low , _high )
+        nFit += 1
+    if 0 != st.Status() and not isFixed ( func , 4 ) : 
+        func.FixParameter ( 4 , slope1 )
+        mass1,sigma1 = adjust12 ( func , mass0 , sigma0 ) 
+        adjust03 ( func ) 
+        st = histo.Fit ( func, opts ,'', _low , _high )
+        nFit += 1
+    ##
     par0 = func.GetParameter ( 0 ) 
     if abs ( par0 ) > histo.GetEntries () :
         func.SetParameter ( 0 , histo.GetEntries() ) 
@@ -578,8 +585,8 @@ def _preFitSignal ( func              ,
         mass1,sigma1 = adjust12 ( func , mass0 , sigma0 ) 
         adjust03 ( func ) 
         st = histo.Fit ( func, opts ,'', _low , _high )
-        nFit += 1 
-
+        nFit += 1
+    ##
     if 0 != st.Status () : 
         mass1,sigma1 = adjust12 ( func , mass0 , sigma0 ) 
         adjust03 ( func ) 
@@ -600,29 +607,33 @@ def _preFitSignal ( func              ,
         func.SetParameter( 1 , mass0 )
         st = histo.Fit ( func, opts ,'', _low , _high )
         nFit += 1 
-
+        
     if 0 != st.Status () :
         if background :
             b = getPi0Params( background )
             if not b :
                 ok, nfitsb = fitBkg ( func , background )
+                nFit += nfitsb 
                 if ok  :
                     ok , nfits2 = _preFitSignal ( func       ,
                                                   histo      ,
                                                   background ,
                                                   signal     ,
                                                   options    )
-                    if ok : return ok, nFit + nfitsb + fits2
-        
+                    nFits += nfits2
+                    if ok : return ok , nFits 
+
     ## the last adjustment: sigma and width
-    if 0 != st.Status() :
+    goodSigma = 7.0 <= func.GetParameter(2) <= 20.0 
+    if 0 != st.Status() or not goodSigma :
         mass1 , sigma1 = adjust12 ( func , mass0 , sigma0 , fixSigma = True )
         adjust03 ( func ) 
         func.SetParameter( 1 , mass0 )        
         st = histo.Fit ( func, opts ,'', _low , _high )
         nFit += 1
 
-    if 0 != st.Status() :
+    goodSigma = 7.0 <= func.GetParameter(2) <= 20.0 
+    if 0 != st.Status() or not goodSigma : 
         mass1 , sigma1 = adjust12 ( func , mass0 , sigma0 , fixMass = True )
         if not isFixed ( func , 2 ) : func.FixParameter ( 2 , sigma1 ) 
         if not isFixed ( func , 4 ) : func.FixParameter ( 4 , slope0 ) 
@@ -634,7 +645,29 @@ def _preFitSignal ( func              ,
         st = histo.Fit ( func, opts ,'', _low , _high )
         nFit += 1
             
-    if 0 != st.Status () : 
+    ## the really last adjustment: adjust everything ...
+    goodSigma = 7.0 <= func.GetParameter(2) <= 20.0 
+    if 0 != st.Status() or not goodSigma : 
+        mass1 , sigma1 = adjust12 ( func , mass0 , sigma0 , fixSigma = True )
+        adjust03 ( func ) 
+        if not isFixed ( func , 3 ) : func.FixParameter ( 3 , backg0 ) 
+        if not isFixed ( func , 4 ) : func.FixParameter ( 4 , slope0 ) 
+        if not isFixed ( func , 5 ) : func.FixParameter ( 5 , curve0 )
+        func.FixParameter ( 2 , sigma0 )        
+        func.SetParameter ( 1 , mass0  )        
+        st = histo.Fit ( func, opts ,'', _low , _high )
+        nFit += 1
+
+    ## the really last adjustment: adjust everything ...
+    goodSigma = 7.0 <= func.GetParameter(2) <= 20.0 
+    if 0 != st.Status() or not goodSigma :
+        func.FixParameter ( 2 , _sigma0 )
+        func.SetParameter ( 1 ,   mass0 )
+        st = histo.Fit ( func, opts ,'', _low , _high )
+        nFit += 1
+        
+    goodSigma = 7.0 <= func.GetParameter(2) <= 20.0  
+    if 0 != st.Status () or not goodSigma : 
         pars = getPi0Params  ( histo )
         print 'SIGNAL    : signal=%20s mass =%20s sigma=%20s %8d %25s ' % (
             pars[0] ,
@@ -651,12 +684,12 @@ def _preFitSignal ( func              ,
             backg0  ,
             slope0  ,
             curve0  )
-        print ' FIXED? : ' , ( isFixed ( func , 0 ) ,
-                               isFixed ( func , 1 ) ,
-                               isFixed ( func , 2 ) ,
-                               isFixed ( func , 3 ) ,
-                               isFixed ( func , 4 ) ,
-                               isFixed ( func , 5 ) )
+        print ' FIXED?   : ' , ( isFixed ( func , 0 ) ,
+                                 isFixed ( func , 1 ) ,
+                                 isFixed ( func , 2 ) ,
+                                 isFixed ( func , 3 ) ,
+                                 isFixed ( func , 4 ) ,
+                                 isFixed ( func , 5 ) )
                                
     if options :
         adjust03 ( func ) 
@@ -664,6 +697,10 @@ def _preFitSignal ( func              ,
         nFit += 1 
 
     histo.GetFunction( func.GetName() ).ResetBit( 1<<9 )
+
+    goodSigma = 7.0 <= func.GetParameter(2) <= 20.0
+    if not goodSigma :
+        print ' I  AM BAD SIGMA!!! '
 
     return  0 == st.Status() , nFit 
 
@@ -751,8 +788,10 @@ def checkHisto ( histo ) :
     if pars[0].value() > histo.GetEntries()     : return False
     if pars[1].value() > _mass0 + 2.5 * _sigma0 : return False
     if pars[1].value() < _mass0 - 2.5 * _sigma0 : return False
-    if pars[2].value() > 2.0 * _sigma0          : return False
-    if pars[2].value() < 0.5 * _sigma0          : return False
+    ##if pars[2].value() > 20 * _sigma          : return False
+    ##if pars[2].value() < 0.5 * _sigma0          : return False
+    if pars[2].value() > 20                     : return False
+    if pars[2].value() <  7                     : return False
     ##
     return True 
 
@@ -768,7 +807,7 @@ def fitHistoSet ( histoset , set0 , force = False ) :
     
     h0 = histoset  [0]
     h1 = histoset  [1]
-    h2 = histoset  [2]
+    h2 = histoset  [2]    
     h3 = histoset  [3]
     h4 = histoset  [4]
     h5 = histoset  [5]
@@ -807,7 +846,7 @@ def fitHistoSet ( histoset , set0 , force = False ) :
         ok0  = -1
         if not force :
             result =  (-2,-2,ok0, nFits)
-            histoset.result = result 
+            histoset.result = result
             return result 
                 
     ## no-Prs +Prs 
@@ -847,32 +886,32 @@ def fitHistoSet ( histoset , set0 , force = False ) :
     ok2 = 0
     ## use own background and signal (Prs+no-Prs)
     res2 , nFit =  fitSignal    ( _func , h0 , background = h3 , signal = h1 )
-    nFits += nFit 
+    nFits += nFit
     if not res2 or not checkHisto ( h0 ) :
         ok2 = 1 
         ## use reference background and own signal (Prs+Prs)
         res2 , nFit = fitSignal ( _func , h0 , background = r3 , signal = h2 )
-        nFits += nFit         
+        nFits += nFit
     if not res2 or not checkHisto ( h0 ) :
         ok2 = 2 
         ## use own background and reference signal (Prs+no-Prs)
         res2 , nFit = fitSignal ( _func , h0 , background = h3 , signal = r1 )
-        nFits += nFit 
+        nFits += nFit
     if not res2 or not checkHisto ( h0 ) :
         ok2 = 3 
         ## use reference background and reference signal (Prs+no-Prs)
         res2 , nFit = fitSignal ( _func , h0 , background = r3 , signal = r1 )
-        nFits += nFit 
+        nFits += nFit
     if not res2 or not checkHisto ( h0 ) :
         ok2 = 4 
         ## use own background and reference signal (Prs+Prs)
         res2 , nFit = fitSignal ( _func , h0 , background = h3 , signal = r2 )
-        nFits += nFit 
+        nFits += nFit
     if not res2 or not checkHisto ( h0 ) :
         ok2 = 5 
         ## use reference background and reference signal (Prs+Prs)
         res2 , nFit = fitSignal ( _func , h0 , background = r3 , signal = r2 )
-        nFits += nFit 
+        nFits += nFit
     if not res2 or not checkHisto ( h0 ) :
         ok2 = -1 
         if not force :
