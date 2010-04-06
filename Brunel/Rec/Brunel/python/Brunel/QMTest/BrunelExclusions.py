@@ -7,6 +7,8 @@ preprocessor = LHCbPreprocessor + \
   LineSkipper(["ToolSvc.PatTTMa...   INFO  No B field detected."]) + \
   LineSkipper(["Gas       INFO Refractive index update triggered : Pressure ="]) + \
   LineSkipper(["LHCBCOND_"]) + \
+  LineSkipper(["SIMCOND_"]) + \
+  LineSkipper(["DDDB_"]) + \
   LineSkipper(["INFO MuonIDAlg v"]) + \
   LineSkipper(["Memory for the event exceeds 3*sigma"]) + \
   LineSkipper(["AfterMagnetRegion/"]) + \
