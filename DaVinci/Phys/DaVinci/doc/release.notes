@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.418 2010-03-28 14:29:54 gligorov Exp $
+! $Id: release.notes,v 1.419 2010-04-06 13:47:45 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -9,6 +9,12 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2010-04-06 - Juan Palacios
+ - python/DaVinci/Configuration.py
+  . Set HltDecReportsDecoder().InputRawEventLocation = "pRec/RawEvent" when InputType is RDST. Should fix Savannah bug #64886.
+ - cmt/requirements
+  . Increase version to v25r3.
+
 ! 2010-03-28 - V. Gligorov
  - Fix propagation of overruled L0 TCK; see Savannah bug 65012.
 
@@ -17,7 +23,7 @@
  - Change the default values of DDDBTag amd CondDBTag from "deafult" to ""
  - This allows direct use of LHCbApp().DDDBTag, etc
  - For DC06 and MC09, "default" is passed to LHCbApp() (backward compatible)
-   For nay other data one MUST give the appropriate tags.
+   For any other data one MUST give the appropriate tags.
 
 !========================== DaVinci v25r2 2010-03-08 =======================
 
