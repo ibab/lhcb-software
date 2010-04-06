@@ -4,6 +4,10 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2010-04-06 J Luisier
+ - Changed ITIsolatedTackSelector property, allows to have two different cuts
+	 for max number of hits, according to track type.
+
 ! 2010-04-05 - Wouter Hulsbergen
  - Added Backward as track type to TrackSelectorBase
 
