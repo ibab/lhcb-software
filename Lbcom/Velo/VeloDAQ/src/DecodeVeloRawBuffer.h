@@ -1,4 +1,4 @@
-// $Id: DecodeVeloRawBuffer.h,v 1.9 2007-09-16 16:56:23 krinnert Exp $
+// $Id: DecodeVeloRawBuffer.h,v 1.10 2010-04-06 15:13:17 dhcroft Exp $
 
 #ifndef DECODEVELORAWBUFFER_H 
 #define DECODEVELORAWBUFFER_H 1
@@ -52,7 +52,7 @@ private:
    *
    * @see VeloCluster
    */
-  StatusCode decodeToVeloClusters(const std::vector<LHCb::RawBank*>& banks) const;
+  StatusCode decodeToVeloClusters(const std::vector<LHCb::RawBank*>& banks);
 
   /** Write VeloClusters to stdout   
    * 
@@ -90,5 +90,6 @@ private:
   // helpers
 
   const DeVelo* m_velo;
+
 };
 #endif // DECODEVELORAWBUFFER_H

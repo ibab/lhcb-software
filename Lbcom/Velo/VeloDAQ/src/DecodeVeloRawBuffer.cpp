@@ -1,6 +1,8 @@
-// $Id: DecodeVeloRawBuffer.cpp,v 1.21 2010-03-17 18:33:19 krinnert Exp $
+// $Id: DecodeVeloRawBuffer.cpp,v 1.22 2010-04-06 15:13:17 dhcroft Exp $
 
 #include "GaudiKernel/AlgFactory.h"
+#include "GaudiKernel/IIncidentSvc.h"
+#include "GaudiKernel/Incident.h"
 
 #include "Event/RawEvent.h"
 #include "Event/RawBank.h"
@@ -170,7 +172,7 @@ StatusCode DecodeVeloRawBuffer::decodeToVeloLiteClusters(const std::vector<LHCb:
   return StatusCode::SUCCESS;
 }
 
-StatusCode DecodeVeloRawBuffer::decodeToVeloClusters(const std::vector<LHCb::RawBank*>& banks) const 
+StatusCode DecodeVeloRawBuffer::decodeToVeloClusters(const std::vector<LHCb::RawBank*>& banks) 
 {
   LHCb::VeloClusters* clusters = new LHCb::VeloClusters();
 
@@ -205,7 +207,6 @@ StatusCode DecodeVeloRawBuffer::decodeToVeloClusters(const std::vector<LHCb::Raw
 
     //info() << "Decoding Clusters on sensor " << sensor << endmsg;
 
-    unsigned int oldSize = clusters->size();
     unsigned int bankVersion = m_forcedBankVersion ? m_forcedBankVersion : rb->version();
 
     std::string errorMsg;
@@ -227,16 +228,17 @@ StatusCode DecodeVeloRawBuffer::decodeToVeloClusters(const std::vector<LHCb::Raw
           << " is not supported."
           << endmsg;
     }
-
     if (rb->size() != byteCount) {
       error() << "Byte count mismatch between RawBank size and decoded bytes." 
 	      << " RawBank: " << rb->size() 
 	      << " Decoded: " << byteCount 
-        << " Will remove clusters for source ID " << rb->sourceID()
 	      << endmsg;
-      LHCb::VeloClusters::iterator start = clusters->begin();
-      std::advance(start,oldSize);
-      clusters->erase(start,clusters->end());
+      // Get pointer to IncidentSvc 
+      IIncidentSvc * incidentSvc = svc<IIncidentSvc>("IncidentSvc",true);
+      // Fire the incident in execute()
+      incidentSvc->fireIncident(Incident(name(),IncidentType::AbortEvent));
+      setFilterPassed( false );
+      return Error("Can not continue this event due to raw data corruption in the VELO", StatusCode::SUCCESS);
     } 
 
   }

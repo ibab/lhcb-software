@@ -3,6 +3,10 @@
 ! Responsible : Kurt Rinnert, Chris Parkes
 !--------------------------------------------------------------------------
 
+! 2010-04-06 - David Hutchcroft
+ - Made a corrupted bank length in the full cluster decoding an Abort event
+   incident and caused the algorthm processing of that event to cease.
+
 ! 2010-03-19 - Serena Oggero
  - DecodePileUpData : changed info() messages to Info() for non existing PU
    banks
