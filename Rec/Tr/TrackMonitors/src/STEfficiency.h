@@ -1,4 +1,4 @@
-// $Id: STEfficiency.h,v 1.5 2010-01-06 14:44:48 jluisier Exp $
+// $Id: STEfficiency.h,v 1.6 2010-04-06 14:49:53 jluisier Exp $
 #ifndef STEFFICIENCY_H 
 #define STEFFICIENCY_H 1
 
@@ -40,12 +40,14 @@ protected:
 private:
 
   bool foundHitInSector( const ISTClusterCollector::Hits& hits,
+			 LHCb::Track* const& track,
 			 const unsigned int testsector,
 			 const double resCut  ) const;
 
   bool foundHitInLayer( const ISTClusterCollector::Hits& hits,
-			 const unsigned int testlayer,
-			 const double resCut  ) const;
+			LHCb::Track* const& track,
+			const unsigned int testlayer,
+			const double resCut  ) const;
 
   std::string formatNumber( const double& nbr, const unsigned int& digits = 2u ) const;
 
@@ -147,5 +149,19 @@ private:
    */
   std::vector< unsigned int > m_wantedTypes;
 
+  /**
+   * Toggles off / on picking only hits from the track.\n
+   * \e true => every found hit is taken\n
+   * \e false => only hits picked up by the pattern recognition are
+   * taken into account.
+   */
+  bool m_everyHit;
+
+  /**
+   * Cut on the active region
+   */
+  double m_minDistToEdge;
+
+  
 };
 #endif // STEFFICIENCY_H

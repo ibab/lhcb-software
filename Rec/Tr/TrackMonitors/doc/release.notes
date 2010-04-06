@@ -4,6 +4,9 @@
 ! Purpose     : Package for track data quality monitoring algorithms
 !-----------------------------------------------------------------------------
 
+! 2010-04-06 J Luisier
+ - Changed efficiency algorithm.
+
 !========================== TrackMonitors v1r22 2010-03-20 ==================
 ! 2010-03-23 - Wouter Hulsbergen
  - split residuals in overlap regions in left and right in TTTrackMonitor
