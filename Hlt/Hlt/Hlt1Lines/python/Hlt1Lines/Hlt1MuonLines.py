@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: Hlt1MuonLines.py,v 1.16 2010-03-21 01:35:11 depaula Exp $
+# $Id: Hlt1MuonLines.py,v 1.17 2010-04-06 12:21:14 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of Muon Lines
@@ -14,7 +14,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.16 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.17 $"
 # =============================================================================
 
 
@@ -233,9 +233,9 @@ class Hlt1MuonLinesConf(HltLinesConfigurableUser) :
 				                         'FitVertexMinIP_PV2DBest': ('IP Best',0.,2,100) }
 				   )
                            , Member( 'VF','Mass'
-                                   , FilterDescriptor = [ 'VertexDimuonMass,>,'+str(self.getProp('DiMuonIP_MassCut')) ]
-                                   , HistoDescriptor = { 'VertexDimuonMass': ('Di Muon Invariant Mass',0.,5000,100),
-				                         'VertexDimuonMassBest': ('Di Muon Invariant Mass - Best',0.,5000,100) }
+                                   , FilterDescriptor = [ 'FitVertexDimuonMass,>,'+str(self.getProp('DiMuonIP_MassCut')) ]
+                                   , HistoDescriptor = { 'FitVertexDimuonMass': ('Di Muon Invariant Mass',0.,5000,100),
+				                         'FitVertexDimuonMassBest': ('Di Muon Invariant Mass - Best',0.,5000,100) }
 			           )
                            , Member( 'VF' , 'Chi2Mu'
                                    , FilterDescriptor = ['FitVertexMaxMuChi2,<,'+str(self.getProp('Muon_FitMuChi2Cut'))]

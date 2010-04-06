@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.158 2010-03-30 15:34:18 gligorov Exp $
+! $Id: release.notes,v 1.159 2010-04-06 12:21:14 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
@@ -9,6 +9,11 @@
 ! for the production. Commit them AS WELL in branch production200912. 
 !
 !-----------------------------------------------------------------------------
+
+
+!========================== Hlt1Lines v3r0p1 2010-04-06 ===================
+! 2010-04-06 - Roel Aaij + Gerhard Raven
+ - fix typo in Hlt1MuonLines which made them fail the independence test
 
 ! 2010-03-30 - V. Gligorov
  - Correct the formatting in the Hlt1 HadronViaT lines and enlarge the search
