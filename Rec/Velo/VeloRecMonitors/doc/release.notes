@@ -3,6 +3,12 @@
 ! Responsible : VELO monitoring group
 ! Purpose     : VELO monitoring algorithms for reconstruction data (ZS data)
 !-----------------------------------------------------------------------------
+
+! 2010-04-06 - Eduardo Rodrigues
+ - bug fix in VeloTrackMonitor: protection against missing clusters
+   (can happen with corrupted data for which no cluster corresponding to a
+   given LHCbID is possible)
+
 !2010-04-04 - James Keaveney
 - added BCID spectrum to VeloOccupancyMonitor.cpp
 

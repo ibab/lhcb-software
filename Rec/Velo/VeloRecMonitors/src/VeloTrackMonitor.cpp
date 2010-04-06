@@ -1,4 +1,4 @@
-// $Id: VeloTrackMonitor.cpp,v 1.30 2010-04-03 13:38:12 krinnert Exp $
+// $Id: VeloTrackMonitor.cpp,v 1.31 2010-04-06 14:04:20 erodrigu Exp $
 // Include files 
 
 // from Gaudi
@@ -265,17 +265,16 @@ StatusCode Velo::VeloTrackMonitor::getVeloTracks ( ) {
 //=========================================================================
 // Monitor the VeloTracks 
 //=========================================================================
-StatusCode Velo::VeloTrackMonitor::monitorTracks ( ) {
+StatusCode Velo::VeloTrackMonitor::monitorTracks ( )
+{ 
+  if ( m_debugLevel ) debug() <<"--> Excecuting trackMonitor"<< endmsg;
   
-  
-  if (m_debugLevel ) debug()<<"--> Excecuting trackMonitor"<< endmsg;
-  if (!m_tracks) return (StatusCode::SUCCESS);
-  
-  if (m_tracks->size() == 0) {
-    if (m_debugLevel ) debug()<<"---Track Container retrieved but EMPTY---"<< endmsg;
+  if ( ! m_tracks ) return StatusCode::SUCCESS;
+  if ( m_tracks -> size() == 0 ) {
+    if ( m_debugLevel ) debug() <<"---Track Container retrieved but EMPTY---"<< endmsg;
     return StatusCode::SUCCESS;
   }
-
+  
   //Number of Tracks per Event
   unsigned int nTracks = m_tracks->size();
   //PolarAngle of Tracks
@@ -283,17 +282,19 @@ StatusCode Velo::VeloTrackMonitor::monitorTracks ( ) {
   //Number of R, Phi and total clusters in tracks per Event
   unsigned int nRClusEvent (0), nPhiClusEvent (0), nSumClusEvent (0);
  // RESET AFTER CERTAIN EVENTS
-  if ( (context() != "Offline" ) &&  (m_event == m_resetProfile) ) { m_prof_sensors -> reset() ; } 
-  if ( (context() != "Offline") &&  (m_event == m_resetProfile) ) { m_prof_pos_mom_res -> reset() ; } 
-  if ( (context() != "Offline") &&  (m_event == m_resetProfile) ) { m_prof_neg_mom_res -> reset() ; } 
-  if ( (context() != "Offline") &&  (m_event == m_resetProfile) ) { m_prof_thetaR -> reset() ; } 
-  if ( (context() != "Offline") &&  (m_event == m_resetProfile) ) { m_prof_thetaTot -> reset() ; } 
-  if ( (context() != "Offline") &&  (m_event == m_resetProfile) ) { m_prof_pseudoEffsens -> reset() ; } 
+  if ( (context() != "Offline" ) && (m_event == m_resetProfile) ) {
+    m_prof_sensors       -> reset();
+    m_prof_pos_mom_res   -> reset();
+    m_prof_neg_mom_res   -> reset();
+    m_prof_thetaR        -> reset();
+    m_prof_thetaTot      -> reset();
+    m_prof_pseudoEffsens -> reset();
+  }
 
   //Loop over track container
   LHCb::Tracks::const_iterator itTrk;
   
-  for(itTrk=m_tracks->begin();itTrk!=m_tracks->end();itTrk++){
+  for ( itTrk=m_tracks->begin(); itTrk!=m_tracks->end(); ++itTrk ) {
     LHCb::Track* track = (*itTrk);
     
     //Skip the tracks without VELO(Velo, VeloR, Upstream and Long)hits
@@ -361,17 +362,21 @@ StatusCode Velo::VeloTrackMonitor::monitorTracks ( ) {
         
         //evaluation of adcsum for clusters associated to a track
         LHCb::VeloCluster *cluster;
-        cluster = (LHCb::VeloCluster*)m_rawClusters->containedObject( (iter)->channelID() );
-        double sumadc = cluster ->totalCharge();
-        m_track_adcsum->fill(sumadc);
-        if(cluster->isRType()){
-          double Radc = cluster ->totalCharge();
-          m_track_radc->fill(Radc);
-        }  
-        if(cluster->isPhiType()){
-          double Phiadc = cluster ->totalCharge();
-          m_track_phiadc->fill(Phiadc);
+        cluster = (LHCb::VeloCluster*) m_rawClusters->containedObject( (iter)->channelID() );
+        if ( cluster ) {
+          double sumadc = cluster ->totalCharge();
+          m_track_adcsum->fill(sumadc);
+          if(cluster->isRType()){
+            double Radc = cluster ->totalCharge();
+            m_track_radc->fill(Radc);
+          }
+          if(cluster->isPhiType()){
+            double Phiadc = cluster ->totalCharge();
+            m_track_phiadc->fill(Phiadc);
+          }
         }
+        else
+          Error( "Cannot find cluster for VeloChannelID => skipped!" ).ignore();
       }
       
     }  // loop ids  
@@ -476,6 +481,11 @@ StatusCode Velo::VeloTrackMonitor::monitorTracks ( ) {
       
       LHCb::VeloCluster* cluster = m_clusters->object(vcID);
       
+      if ( ! cluster ) {
+        Error( "Cannot find cluster for VeloChannelID => skipped!" ).ignore();
+        continue;
+      }
+     
       SiPositionInfo<LHCb::VeloChannelID> toolInfo;
       toolInfo=m_clusterTool->position(cluster);
       double interStripFr = toolInfo.fractionalPosition; 
@@ -592,8 +602,7 @@ StatusCode Velo::VeloTrackMonitor::monitorTracks ( ) {
         phiCoor_s[2*sensorID+1] = interceptAngle;
         rCoor_s[2*sensorID+1] = interceptRadius;
       }
-    }//end of loop over measurements
-
+    } // end of loop over measurements
 
 
     //Loop over module
@@ -648,7 +657,7 @@ StatusCode Velo::VeloTrackMonitor::monitorTracks ( ) {
         m_zx_hitmap->fill(z_glob[i], x_glob[i]);
       }
       
-    }//for loop on module
+    } // for loop on module
     
     nSumClus = nRClus +  nPhiClus;
     
@@ -796,6 +805,12 @@ StatusCode Velo::VeloTrackMonitor::unbiasedResiduals (LHCb::Track *track )
       
       LHCb::VeloChannelID vcID = lhcbID.veloID();
       LHCb::VeloCluster* cluster = m_clusters->object(vcID);
+
+      if ( ! cluster ) {
+        Error( "Cannot find cluster for VeloChannelID => skipped!" ).ignore();
+        return StatusCode::FAILURE;
+      }
+      
       int sensorID = vcID.sensor();
       const DeVeloSensor* sensor = m_veloDet->sensor(sensorID);
       
