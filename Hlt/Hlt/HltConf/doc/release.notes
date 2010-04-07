@@ -1,9 +1,14 @@
-! $Id: release.notes,v 1.442 2010-04-04 12:06:49 graven Exp $ 
+! $Id: release.notes,v 1.443 2010-04-07 21:19:37 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2010-04-07 - Gerhard Raven
+ - add routing bits based on ODIN and L0DU, needs Hlt/HltDAQ v1r5 or later,
+   imported from v6r5 branch
+
 
 !========================== HltConf v7r0p1 2010-04-04 ===================
 ! 2010-03-31 - Gerhard Raven

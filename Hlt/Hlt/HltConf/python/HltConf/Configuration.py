@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.176 2010-04-01 19:53:52 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.177 2010-04-07 21:19:37 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -183,12 +183,18 @@ class HltConf(LHCbConfigurableUser):
         from Configurables import HltRoutingBitsWriter
         HltRoutingBitsWriter().Preambulo = [ "Hlt1ExpressPhysics = scale(HLT_PASS_RE('Hlt1(?!Lumi).*Decision'), RATE(1))" ]
                
-        routingBits = { 32 : "HLT_PASS('Hlt1Global')"
+        routingBits = {  0 : '( ODIN_BXTYP == LHCb.ODIN.Beam1 ) | ( ODIN_BXTYP == LHCb.ODIN.BeamCrossing )'
+                      ,  1 : '( ODIN_BXTYP == LHCb.ODIN.Beam2 ) | ( ODIN_BXTYP == LHCb.ODIN.BeamCrossing )'
+                      ,  8 : 'L0_DECISION'
+                      ,  9 : "L0_CHANNEL_RE('B?gas')"
+                      , 10 : "|".join( [ "L0_CHANNEL('%s')" % chan for chan in [ 'CALO','MUON,minbias','PU','SPD40','PU20' ] ] )
+                      , 11 : "|".join( [ "L0_CHANNEL('%s')" % chan for chan in [ 'Photon','Hadron','Muon','DiMuon','Muon,lowMult','DiMuon,lowMult','LocalPi0','GlobalPi0'] ] )
+                      , 32 : "HLT_PASS('Hlt1Global')"
                       , 33 : "HLT_PASS_SUBSTR('Hlt1Lumi')" 
                       , 34 : "HLT_PASS_RE('Hlt1(?!Lumi).*Decision')"  # note: we need the 'Decision' at the end to _exclude_ Hlt1Global
                       , 35 : "HLT_PASS_SUBSTR('Hlt1Velo')"
-                      , 36 : "scale(%s,RATE(%s))" % ( "|".join([ "HLT_PASS_RE('Hlt2Express.*Decision')", "Hlt1ExpressPhysics" ]), self.getProp('ExpressStreamRateLimit') )
-                      , 37 : "HLT_PASS('Hlt1ODINPhysicsDecision')"
+                      , 36 : "scale(%s,RATE(%s))" % ( "HLT_PASS_RE('Hlt2Express.*Decision')|Hlt1ExpressPhysics", self.getProp('ExpressStreamRateLimit') )
+                      , 37 : "HLT_PASS('Hlt1ODINPhysicsDecision')" 
                       , 38 : "HLT_PASS('Hlt1ODINTechnicalDecision')"
                       , 39 : "HLT_PASS_SUBSTR('Hlt1L0')"
                       , 40 : "HLT_PASS_RE('Hlt1.*Hadron.*Decision')"
@@ -197,9 +203,10 @@ class HltConf(LHCbConfigurableUser):
                       , 43 : "HLT_PASS_RE('Hlt1.*MuTrack.*Decision')"
                       , 44 : "HLT_PASS_RE('Hlt1.*Electron.*Decision')"
                       , 45 : "HLT_PASS_RE('Hlt1.*Pho.*Decision')"
-                      , 46 : "HLT_PASS_RE('Hlt1(?!ODIN)(?!L0)(?!Lumi).*Decision')"    # I don't like these
-                      , 47 : "HLT_PASS_SUBSTR('Hlt1MB')"
-                      , 48 : "HLT_PASS_SUBSTR('Hlt1BeamGas')"
+                      , 46 : "HLT_PASS_RE('Hlt1(?!ODIN)(?!L0)(?!Lumi)(?!Tell1)(?!MB)(?!Velo)(?!BeamGas)(?!Incident).*Decision')"    # exclude 'non-physics' lines
+                      , 47 : "HLT_PASS_RE('Hlt1MBMicroBias.*Decision')"
+                      , 48 : "HLT_PASS('Hlt1MBNoBiasDecision')"
+                      , 49 : "HLT_PASS_SUBSTR('Hlt1BeamGas')"
                       # 64--96: Hlt2
                       , 64 : "HLT_PASS('Hlt2Global')"
                       , 65 : "HLT_PASS('Hlt2DebugEventDecision')"
