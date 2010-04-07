@@ -1,4 +1,4 @@
-// $Id: VeloClusterPosition.cpp,v 1.23 2010-04-07 17:17:45 szumlat Exp $
+// $Id: VeloClusterPosition.cpp,v 1.24 2010-04-07 17:31:13 szumlat Exp $
 // Include files
 
 // stl
@@ -55,7 +55,7 @@ VeloClusterPosition::VeloClusterPosition(const std::string& type,
     m_maxAngle ( 0. ),
     m_trackDir ( ),
     m_gloPoint ( ),
-    m_fracPos ( 0. )
+    m_fraPos ( 0. )
 {
   declareInterface<IVeloClusterPosition>(this);
   // default paramertrizations are of form error=slope*pitch+const
@@ -173,12 +173,12 @@ double VeloClusterPosition::fracPosLA(const LHCb::VeloCluster* cluster) const
   if(fractionalPos>0.9376) fractionalPos=0;
   //
   if(abs(fractionalPos-cluster->interStripFraction())>0.5){
-    info()<< " clu size: " << stripNumber
+    if( msgLevel(MSG::DEBUG) ) debug()<< " clu size: " << stripNumber
           << " strip adcs: " <<endmsg;
     for(int str=0; str<stripNumber; str++){
-      info()<< " adc[ " << str << "] = " << (cluster->adcValue(str)) <<endmsg;
+      if( msgLevel(MSG::DEBUG) ) debug()<< " adc[ " << str << "] = " << (cluster->adcValue(str)) <<endmsg;
     }
-    info() << " frac pos tool: " << fractionalPos
+    if( msgLevel(MSG::DEBUG) ) debug() << " frac pos tool: " << fractionalPos
            << " frac pos clu: " << cluster->interStripFraction() <<endmsg;
   }
   return  ( fractionalPos );
