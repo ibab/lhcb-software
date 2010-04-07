@@ -1,4 +1,4 @@
-// $Id: TrackMonitorBase.h,v 1.3 2010-03-19 14:10:38 wouter Exp $
+// $Id: TrackMonitorBase.h,v 1.4 2010-04-07 21:30:23 wouter Exp $
 #ifndef TRACKMONITORBASE_H
 #define TRACKMONITORBASE_H 1
  
@@ -11,7 +11,6 @@
 #include <map>
 
 // interfaces
-#include "TrackInterfaces/ITrackSelector.h"
 #include "TrackInterfaces/ITrackExtrapolator.h"
 #include "Kernel/ITrajPoca.h"
 #include "GaudiKernel/IMagneticFieldSvc.h"
@@ -52,15 +51,10 @@ class TrackMonitorBase : public GaudiHistoAlg {
   */
   ITrajPoca* pocaTool() const;
 
-  /** Get a pointer to the track selection tool
-  *  @return field service
-  */
-  ITrackSelector* selector(LHCb::Track::Types aType) const;
-
   /** Get a pointer to the track extrapolator
   *  @return extrapolator
   */
-  ITrackExtrapolator* extrapolator() const;
+  const ITrackExtrapolator* extrapolator() const;
 
   /** Input track container location 
   *  @return location
@@ -73,8 +67,6 @@ class TrackMonitorBase : public GaudiHistoAlg {
   bool splitByAlgorithm() const;
   bool splitByType() const { return  m_splitByType; }
   
-  typedef std::map<LHCb::Track::Types,ITrackSelector*> Selectors;
-
   /** To avoid hard coding...
   *  @return all string
   */ 
@@ -83,17 +75,15 @@ class TrackMonitorBase : public GaudiHistoAlg {
  protected:
   void setSplitByType(bool b) { m_splitByType = b ; }
 
+  std::string histoDirName( const LHCb::Track& track) const ;
+
  private:
-
-  mutable Selectors m_selectors; 
-    
-
   std::string m_extrapolatorName;
   std::string m_tracksInContainer;    ///< Input Tracks container location
  
   ITrajPoca*         m_poca;          ///< Pointer to the ITrajPoca interface  
   IMagneticFieldSvc* m_pIMF;          ///< Pointer to the magn. field service
-  ITrackExtrapolator* m_extrapolator; ///< Pointer to extrapolator
+  const ITrackExtrapolator* m_extrapolator; ///< Pointer to extrapolator
 
   bool m_splitByAlgorithm;
   bool m_splitByType;
@@ -109,12 +99,7 @@ inline ITrajPoca* TrackMonitorBase::pocaTool() const{
   return m_poca;
 }
 
-inline ITrackSelector* TrackMonitorBase::selector(LHCb::Track::Types aType) const{
-  return m_splitByAlgorithm == true ? m_selectors[aType] : 
-                                      m_selectors[LHCb::Track::TypeUnknown];
-}
-
-inline ITrackExtrapolator* TrackMonitorBase::extrapolator() const{
+inline const ITrackExtrapolator* TrackMonitorBase::extrapolator() const{
   return m_extrapolator;
 }
 

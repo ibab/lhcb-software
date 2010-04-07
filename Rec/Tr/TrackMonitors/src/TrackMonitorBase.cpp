@@ -1,4 +1,4 @@
-// $Id: TrackMonitorBase.cpp,v 1.3 2008-09-17 21:29:42 wouter Exp $
+// $Id: TrackMonitorBase.cpp,v 1.4 2010-04-07 21:30:23 wouter Exp $
 // Include files 
 #include "TrackMonitorBase.h"
 #include "Event/Track.h"
@@ -38,30 +38,23 @@ StatusCode TrackMonitorBase::initialize()
   StatusCode sc = GaudiHistoAlg::initialize();
   if ( sc.isFailure() ) { return sc; }
 
-  //  m_selector = tool<ITrackSelector>( m_selectorName,
-  //                                        "TrackSelector", this );
-  
-  m_extrapolator = tool<ITrackExtrapolator>(m_extrapolatorName);
+  m_extrapolator = tool<ITrackExtrapolator>(m_extrapolatorName,this);
   
   // Retrieve the magnetic field and the poca tool
   m_poca = tool<ITrajPoca>("TrajPoca");
   m_pIMF = svc<IMagneticFieldSvc>( "MagneticFieldSvc",true );
 
-  if (m_splitByAlgorithm == true){
-    const TrackMonitorMaps::TypeMap& tMap = TrackMonitorMaps::typeDescription();
-    TrackMonitorMaps::TypeMap::const_iterator iterM = tMap.begin();
-    for (; iterM != tMap.end(); ++iterM ){
-      // make a tool from this
-      std::string name = iterM->first+"Selector";
-      ITrackSelector* selector = tool<ITrackSelector>("TrackSelector",name);  
-      m_selectors[iterM->second] = selector;  
-    } // iterM
-  }
-  else {
-    std::string name = m_allString+"Selector";
-    ITrackSelector* selector = tool<ITrackSelector>("TrackSelector",name);  
-    m_selectors[LHCb::Track::TypeUnknown] = selector;  
-  } // splitByType
-
   return StatusCode::SUCCESS;
 };
+
+std::string TrackMonitorBase::histoDirName(const LHCb::Track& track) const
+{
+  std::string type = "" ;
+  if( splitByType() ) {
+    type = Gaudi::Utils::toString(track.type()) ;
+    if( track.checkFlag( LHCb::Track::Backward ) ) type += "Backward" ;
+  } else if( splitByAlgorithm() ) {
+    type = Gaudi::Utils::toString(track.history()) ;
+  } 
+  return type ;
+}
