@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.419 2010-04-06 13:47:45 jpalac Exp $
+! $Id: release.notes,v 1.420 2010-04-07 13:44:18 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -9,11 +9,15 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2010-04-07 - Juan Palacios
+ - python/DaVinci/Configuration.py
+  . Set ANNDispatchSvc().RawEventLocation to "pRec/RawEvent" when InputType is RDST. Fixes Savannah bug #64886.
+
 ! 2010-04-06 - Juan Palacios
  - python/DaVinci/Configuration.py
   . Set HltDecReportsDecoder().InputRawEventLocation = "pRec/RawEvent" when InputType is RDST. Should fix Savannah bug #64886.
  - cmt/requirements
-  . Increase version to v25r3.
+  . Increase version to v25r2p2.
 
 ! 2010-03-28 - V. Gligorov
  - Fix propagation of overruled L0 TCK; see Savannah bug 65012.
