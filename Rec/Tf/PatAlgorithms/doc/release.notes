@@ -4,6 +4,12 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+
+! 2009-02-13 - Sascha Stahl
+ - modified early data tuning for PatDownstream algorithm
+
+
+
 !========================= PatAlgorithms v3r29 2010-02-15 ====================
 ! 2009-02-13 - Stephanie Hansmann-Menzemer
  - modify early data tuning for PatForward and PatDownstream algorithms
