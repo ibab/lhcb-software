@@ -1,11 +1,16 @@
 package DaVinciSys
-version v25r3
+version v25r2p2
 
 branches doc cmt
 
 #=======================================================
-use  DaVinci                 	v25r3   Phys
+use  DaVinci                 	v25r2p2   Phys
 
+# patched packages
+use HltCommon                   v5r21     Hlt
+use DaVinciTools                v21r0p1   Phys
+use VertexFit                   v6r2p1    Phys
+use DaVinciMonitors             v1r9p1    Phys
 #  
 # Declare this as a container package
 apply_pattern container_package
