@@ -10,7 +10,7 @@
 # =============================================================================
 __author__  = "Jaap Panman jaap.panman@cern.ch"
 __author__  = "Plamen Hopchev phopchev@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.16 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.17 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -59,7 +59,7 @@ class Hlt1BeamGasLinesConf(HltLinesConfigurableUser) :
                                      DefaultHitManagerName = name + 'DefaultVeloRHitManager' )
 
         algRZTracking = Tf__PatVeloRTracking( 'Hlt1RZVeloBeamGas'+whichBeam,
-                                              OutputTracksName = "Hlt1/Track/RZVeloBeamGas",
+                                              OutputTracksName = "Hlt/Track/RZVeloBeamGas",
                                               ZVertexMin  = self.getProp(whichBeam+"VtxRangeLow"),
                                               ZVertexMax  = self.getProp(whichBeam+"VtxRangeUp"),
                                               HitManagerName = rm.splitName()[ -1 ] )
@@ -78,7 +78,7 @@ class Hlt1BeamGasLinesConf(HltLinesConfigurableUser) :
                                         )           
  
         from HltLine.HltLine import Hlt1Line as Line
-        from HltTracking.HltReco import DecodeVELO
+        from HltLine.HltReco import DecodeVELO
         channel = self.getProp('L0Channel' + whichBeam)
         ##  Only create an Hlt1 line if the corresponding L0 channel exists...
         from Hlt1Lines.HltL0Candidates import L0Channels
@@ -103,7 +103,7 @@ class Hlt1BeamGasLinesConf(HltLinesConfigurableUser) :
         lineName = "BeamGasCrossing"
 
         ### To check the existence of tracks !!!
-        from HltTracking.HltReco import MinimalRZVelo
+        from HltLine.HltReco import MinimalRZVelo
         from Configurables import LoKi__VoidFilter as VoidFilter
         algCheckTracks = VoidFilter('Hlt1BeamGasRequireRZVelo' , Code = "CONTAINS('%s') > 0" % MinimalRZVelo.outputSelection() )
         
@@ -130,7 +130,7 @@ class Hlt1BeamGasLinesConf(HltLinesConfigurableUser) :
         from Configurables import Tf__PatVeloRTracking
         algRTracking2 = Tf__PatVeloRTracking(   'Hlt1BeamGasRZVeloSecondPass'
                                             , HitManagerName = hitmgr.name()
-                                            , OutputTracksName = "Hlt1/Track/RZVeloBeamGas"
+                                            , OutputTracksName = "Hlt/Track/RZVeloBeamGas"
                                             , ZVertexMin  = self.getProp("Beam1VtxRangeLow")
                                             , ZVertexMax  = self.getProp("Beam2VtxRangeUp")
                                             )
@@ -163,7 +163,7 @@ class Hlt1BeamGasLinesConf(HltLinesConfigurableUser) :
         # FIXME: why does 'clone' not get prescaled right??? because the prescale _value_ not the function is cloned...
         #        hence we repeat prescale and postscale here explicitly...
         # NOTE: we remove the 'priority' from the clone to make sure it runs first...
-        from HltTracking.HltReco import MinimalRZVelo
+        from HltLine.HltReco import MinimalRZVelo
         limit =  self.getProp('ForcedInputRateLimit') 
         line_beamCrossingForcedRZReco = line_beamCrossing.clone( lineName+"ForcedRZReco"
                                                                , priority = None
