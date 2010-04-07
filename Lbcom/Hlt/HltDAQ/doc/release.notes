@@ -4,6 +4,11 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !-----------------------------------------------------------------------------
 
+!========================== HltDAQ v1r5 2010-04-07 ===========================
+! 2010-04-07 - Gerhard Raven
+ - In HltRoutingBitsWriter, set bits [0,7] based on ODIN, bits [8,32] based on
+   L0DUReport
+
 !========================== HltDAQ v1r4 2010-03-18 ===========================
 ! 2010-03-03 - Tomasz Skwarnicki
  - add check of RawBank magic pattern in HltDec/Sel/VertexReportsDecoder,
