@@ -1,4 +1,4 @@
-// $Id: TrackMonitor.h,v 1.6 2009-09-01 13:54:55 smenzeme Exp $
+// $Id: TrackMonitor.h,v 1.7 2010-04-07 21:44:10 wouter Exp $
 #ifndef TRACKMONITOR_H
 #define TRACKMONITOR_H 1
  
@@ -57,8 +57,9 @@ class TrackMonitor : public TrackMonitorBase {
   IHitExpectation* m_ttExpectation;
   IHitExpectation* m_itExpectation;
   IHitExpectation* m_otExpectation;
-
-
+  
+  typedef  std::map<std::string, unsigned int> MultiplicityMap ;
+  MultiplicityMap m_multiplicityMap;
 };
 
 

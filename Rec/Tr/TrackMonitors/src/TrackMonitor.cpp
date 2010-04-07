@@ -1,4 +1,4 @@
-// $Id: TrackMonitor.cpp,v 1.27 2010-03-23 12:44:52 wouter Exp $
+// $Id: TrackMonitor.cpp,v 1.28 2010-04-07 21:44:10 wouter Exp $
 // Include files 
 #include "TrackMonitor.h"
 
@@ -35,6 +35,7 @@
 // Boost
 #include <boost/lambda/bind.hpp>
 #include <boost/lambda/lambda.hpp>
+#include <boost/foreach.hpp>
 
 using namespace boost::lambda;
 using namespace LHCb;
@@ -81,39 +82,31 @@ StatusCode TrackMonitor::execute()
   // get the input data
   LHCb::Track::Range tracks = get<LHCb::Track::Range>(inputContainer());
 
-  std::map<std::string, unsigned int> tMap;
-  std::string type = "";
-
+  for(MultiplicityMap::iterator it = m_multiplicityMap.begin() ;
+      it != m_multiplicityMap.end(); ++it) it->second = 0 ;
+  
   // # number of tracks
   plot(tracks.size(),1, "# tracks", 0., 500., 50);
   plot(tracks.size(),"TrackMultiplicityFine", "# tracks", -0.5, 50.5, 51);
   
   // histograms per track
-  LHCb::Track::Range::const_iterator iterT = tracks.begin();
-  for (; iterT != tracks.end(); ++iterT){
-    if (/*selector((*iterT)->type())->accept(**iterT) ==*/ true){
-      type = all() ;
-      if( splitByType() ) {
-	type = Gaudi::Utils::toString((*iterT)->type()) ;
-	if( (*iterT)->checkFlag( LHCb::Track::Backward ) ) type += "Backward" ;
-      } else if( splitByAlgorithm() ) {
-	type = Gaudi::Utils::toString((*iterT)->history()) ;
-      } 
-      
-      tMap[type]+= 1;
-      fillHistograms(**iterT,type);
-      plot((*iterT)->type(),2, "track type" ,-0.5, 10.5, 11);
-      plot((*iterT)->history(),"history" ,"track history",-0.5, 10.5, 11);
-    }
-  } // iterT
+  BOOST_FOREACH( const LHCb::Track* track, tracks) {
+    std::string type = histoDirName(*track) ;
+    m_multiplicityMap[type] += 1;
+    fillHistograms(*track,type);
+    plot(track->type(),2, "track type" ,-0.5, 10.5, 11);
+    plot(track->history(),"history" ,"track history",-0.5, 20.5, 21);
+  }
 
   // fill counters....
   counter("#Tracks") += tracks.size();
-  for (std::map<std::string,unsigned int>::const_iterator iterS = tMap.begin();
-       iterS != tMap.end(); ++iterS){
-    counter("#"+iterS->first) += iterS->second;
+  for(MultiplicityMap::const_iterator it = m_multiplicityMap.begin() ;
+      it != m_multiplicityMap.end(); ++it) {
+    counter("#"+it->first) += it->second;
+    plot( it->second, it->first + "/multiplicity", 
+	  it->first + " multiplicity", -0.5,50.5,51) ;
   } // iterS
-
+  
   return StatusCode::SUCCESS;
 };
 
