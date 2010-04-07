@@ -1,4 +1,4 @@
-// $Id: THitExpectation.cpp,v 1.4 2008-10-18 10:35:02 mneedham Exp $
+// $Id: THitExpectation.cpp,v 1.5 2010-04-07 21:51:06 wouter Exp $
 
 // from GaudiKernel
 #include "GaudiKernel/PhysicalConstants.h"
@@ -29,7 +29,7 @@ THitExpectation::THitExpectation(const std::string& type,
 { 
   // constructor
 
-  declareProperty("extrapolatorName", m_extrapolatorName = "TrackFastParabolicExtrapolator");
+  declareProperty("extrapolatorName", m_extrapolatorName = "TrackParabolicExtrapolator");
   declareInterface<IHitExpectation>(this);
 }
 

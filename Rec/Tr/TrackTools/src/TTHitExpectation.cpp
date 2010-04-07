@@ -1,4 +1,4 @@
-// $Id: TTHitExpectation.cpp,v 1.10 2010-01-18 10:33:34 mtobin Exp $
+// $Id: TTHitExpectation.cpp,v 1.11 2010-04-07 21:51:06 wouter Exp $
 
 // from GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
@@ -34,7 +34,7 @@ TTHitExpectation::TTHitExpectation(const std::string& type,
 { 
   // constructer
 
-  declareProperty("extrapolatorName", m_extrapolatorName = "TrackFastParabolicExtrapolator");
+  declareProperty("extrapolatorName", m_extrapolatorName = "TrackParabolicExtrapolator");
   declareProperty( "SelectorType", m_selectorType = "STSelectChannelIDByElement" );
   declareProperty( "SelectorName", m_selectorName = "ALL" ); 
   declareProperty( "allStrips", m_allStrips = false);
