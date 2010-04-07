@@ -37,8 +37,7 @@ FunctionalCKResForRecoTracks ( const std::string& type,
     m_trExt         ( NULL                          ),
     m_Ext           ( "TrackRungeKuttaExtrapolator" ),
     m_transSvc      ( NULL                          ),
-    m_scatt         ( 13.6e-03                      ), // should be used with p in GeV
-    m_scale         ( Rich::NRadiatorTypes, 1.0 )
+    m_scatt         ( 13.6e-03                      ) // should be used with p in GeV
 {
   using namespace boost::assign;
 
@@ -50,20 +49,20 @@ FunctionalCKResForRecoTracks ( const std::string& type,
   declareProperty( "TrackExtrapolator", m_Ext );
 
   // Allows for additional adhoc contributions as needed
-  m_asmpt[Rich::Aerogel] = std::vector<double>( Rich::Rec::Track::NTrTypes, 0.0 );
+  m_asmpt[Rich::Aerogel]  = std::vector<double>( Rich::Rec::Track::NTrTypes, 0.0 );
   declareProperty( "AerogelAsymptopicErr", m_asmpt[Rich::Aerogel] );
   m_asmpt[Rich::Rich1Gas] = std::vector<double>( Rich::Rec::Track::NTrTypes, 0.0 );
   declareProperty( "Rich1GasAsymptopicErr", m_asmpt[Rich::Rich1Gas] );
   m_asmpt[Rich::Rich2Gas] = std::vector<double>( Rich::Rec::Track::NTrTypes, 0.0 );
   declareProperty( "Rich2GasAsymptopicErr", m_asmpt[Rich::Rich2Gas] );
 
-  declareProperty( "HPDErrors", m_hpdErr = list_of(0.0005)(0.0006)(0.0002) );
+  declareProperty( "HPDErrors",           m_hpdErr = list_of(0.0005)(0.0006)(0.0002) );
 
-  declareProperty( "MaxCKThetaRes", m_maxRes = list_of(0.01)(0.01)(0.01) );
+  declareProperty( "MaxCKThetaRes",       m_maxRes = list_of(0.01)(0.01)(0.01) );
 
   declareProperty( "UseLastMeasPoint", m_useLastMP = list_of(false)(false)(false) );
 
-  declareProperty( "ScaleFactor", m_scale );
+  declareProperty( "ScaleFactor",          m_scale = list_of(1.0)(1.0)(1.0) );
 
   // default to having histograms disabled
   setProduceHistos ( false             );
@@ -97,6 +96,8 @@ double
 FunctionalCKResForRecoTracks::ckThetaResolution( LHCb::RichRecSegment * segment,
                                                  const Rich::ParticleIDType id ) const
 {
+  using namespace Gaudi::Units;
+
   // Protect against the non-physical below threshold hypothesis
   if ( Rich::BelowThreshold == id ) return 0;
 
@@ -108,7 +109,7 @@ FunctionalCKResForRecoTracks::ckThetaResolution( LHCb::RichRecSegment * segment,
     const LHCb::RichTrackSegment & tkSeg = segment->trackSegment();
 
     // momentum for this segment, in GeV units
-    const double ptot = std::sqrt(tkSeg.bestMomentum().Mag2()) / Gaudi::Units::GeV;
+    const double ptot = std::sqrt(tkSeg.bestMomentum().Mag2()) / GeV;
     if ( ptot > 0 )
     {
 
@@ -133,7 +134,8 @@ FunctionalCKResForRecoTracks::ckThetaResolution( LHCb::RichRecSegment * segment,
       //-------------------------------------------------------------------------------
       const double hpdErr = gsl_pow_2( m_hpdErr[rad] );
       res2 += hpdErr;
-      
+      //-------------------------------------------------------------------------------
+
       //-------------------------------------------------------------------------------
       // multiple scattering
       //-------------------------------------------------------------------------------
@@ -148,7 +150,8 @@ FunctionalCKResForRecoTracks::ckThetaResolution( LHCb::RichRecSegment * segment,
       }
       else
       {
-        effectiveLength = transSvc()->distanceInRadUnits(tkSeg.entryPoint(),tkSeg.exitPoint());
+        effectiveLength = transSvc()->distanceInRadUnits( tkSeg.entryPoint(),
+                                                          tkSeg.exitPoint() );
       }
       if ( effectiveLength > 0 )
       {
@@ -164,8 +167,8 @@ FunctionalCKResForRecoTracks::ckThetaResolution( LHCb::RichRecSegment * segment,
       //-------------------------------------------------------------------------------
       const double curvErr =
         ( Rich::Aerogel == rad ? 0 :
-          gsl_pow_2(Rich::Geom::AngleBetween(tkSeg.entryMomentum(),tkSeg.exitMomentum())/4) );
-      // CRJ : What is the 4 for ?
+          gsl_pow_2( Rich::Geom::AngleBetween( tkSeg.entryMomentum(), 
+                                               tkSeg.exitMomentum() ) / 4.0 ) );
       res2 += curvErr;
       //-------------------------------------------------------------------------------
 
@@ -186,14 +189,15 @@ FunctionalCKResForRecoTracks::ckThetaResolution( LHCb::RichRecSegment * segment,
         const double ckExp = m_ckAngle->avgCherenkovTheta( segment, *hypo );
         if ( ckExp > 1e-6 )
         {
-          // tan(cktheta)
+          // cache tan(cktheta)
           const double tanCkExp = std::tan(ckExp);
 
           //-------------------------------------------------------------------------------
           // chromatic error
           //-------------------------------------------------------------------------------
           const double index      = m_refIndex->refractiveIndex(segment);
-          const double chromFact  = ( index>0 ? m_refIndex->refractiveIndexRMS(segment)/index : 0 );
+          const double chromFact  = ( index>0 ? 
+                                      m_refIndex->refractiveIndexRMS(segment)/index : 0 );
           const double chromatErr = gsl_pow_2( chromFact / tanCkExp );
           hypo_res2 += chromatErr;
           //-------------------------------------------------------------------------------
@@ -201,9 +205,9 @@ FunctionalCKResForRecoTracks::ckThetaResolution( LHCb::RichRecSegment * segment,
           //-------------------------------------------------------------------------------
           // momentum error
           //-------------------------------------------------------------------------------
-          const double mass2      = m_richPartProp->massSq(*hypo)/(Gaudi::Units::GeV*Gaudi::Units::GeV);
+          const double mass2      = m_richPartProp->massSq(*hypo)/(GeV*GeV);
           const double massFactor = mass2 / ( mass2 + ptot*ptot );
-          const double momErr     = ( tkSeg.entryErrors().errP2()/(Gaudi::Units::GeV*Gaudi::Units::GeV) *
+          const double momErr     = ( tkSeg.entryErrors().errP2()/(GeV*GeV) *
                                       gsl_pow_2( massFactor / ptot / tanCkExp ) );
           hypo_res2 += momErr;
           //-------------------------------------------------------------------------------
@@ -304,7 +308,7 @@ FunctionalCKResForRecoTracks::ckThetaResolution( LHCb::RichRecSegment * segment,
 
     } // ptot>0
 
-  }
+  } // res not already calculated
 
   return segment->ckThetaResolution( id );
 }
