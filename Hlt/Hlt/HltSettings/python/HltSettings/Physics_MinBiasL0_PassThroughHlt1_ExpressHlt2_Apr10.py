@@ -1,5 +1,5 @@
-from HltSettings.Physics_MinBiasL0_PassThroughHlt_Feb10  import Physics_MinBiasL0_PassThroughHlt_Feb10 
-class Physics_MinBiasL0_PassThroughHlt1_ExpressHlt2_Feb10 ( Physics_MinBiasL0_PassThroughHlt_Feb10 ) :
+from HltSettings.Physics_MinBiasL0_PassThroughHlt_Apr10  import Physics_MinBiasL0_PassThroughHlt_Apr10 
+class Physics_MinBiasL0_PassThroughHlt1_ExpressHlt2_Apr10 ( Physics_MinBiasL0_PassThroughHlt_Apr10 ) :
     """
     Threshold settings for Hlt1+Hlt2 for 2010 conditions
     
@@ -12,11 +12,11 @@ class Physics_MinBiasL0_PassThroughHlt1_ExpressHlt2_Feb10 ( Physics_MinBiasL0_Pa
     __all__ = ( 'ActiveHlt2Lines' )
 
     def HltType(self) :
-        self.verifyType( Physics_MinBiasL0_PassThroughHlt1_ExpressHlt2_Feb10 )
-        return          'Physics_MinBiasL0_PassThroughHlt_ExpressHlt2_Feb10'
+        self.verifyType( Physics_MinBiasL0_PassThroughHlt1_ExpressHlt2_Apr10 )
+        return          'Physics_MinBiasL0_PassThroughHlt_ExpressHlt2_Apr10'
 
     def Thresholds(self) :
-        thresholds = Physics_MinBiasL0_PassThroughHlt_Feb10.Thresholds(self)
+        thresholds = Physics_MinBiasL0_PassThroughHlt_Apr10.Thresholds(self)
         from Configurables import Hlt2ExpressLinesConf
         thresholds.update( { Hlt2ExpressLinesConf : { 'ExKSMassWin'         :  70
                                                     , 'ExLambdaMassWin'     :  40 # just catch the threshold which is at -37.2...

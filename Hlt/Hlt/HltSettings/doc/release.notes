@@ -5,6 +5,14 @@
 !-----------------------------------------------------------------------------
 
 
+! 2010-04-07 - Gerhard Raven
+- add Physics_MinBiasL0_PassThroughHlt_Apr10 which has minimal changes 
+  to non-physics triggers compared to Physics_MinBiasL0_PassThroughHlt_Feb10
+- add Physics_MinBiasL0_PassThroughHlt1_ExpressHlt2_Apr10 which is 
+   Physics_MinBiasL0_PassThroughHlt_Apr10 with Hlt2 express lines added
+- remove Physics_MinBiasL0_PassThroughHlt1_ExpressHlt2_Feb10 which has never
+  been used, and has been superseded by Physics_MinBiasL0_PassThroughHlt1_ExpressHlt2_Apr10
+
 !========================== HltSettings v1r13   2010-04-04 ===================
 ! 2010-04-03 - Gerhard Raven
  - add back J/psi tag and probe 
