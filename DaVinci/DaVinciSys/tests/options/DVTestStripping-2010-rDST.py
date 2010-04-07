@@ -28,10 +28,15 @@ CondDB(UseOracle = True)
 # Configure DaVinci
 #
 
+from Configurables import L0DUFromRawAlg, L0DUFromRawTool
+l0du = L0DUFromRawAlg('L0DUFromRaw')
+l0du.addTool(L0DUFromRawTool, name = 'L0DUFromRawTool')
+l0du.L0DUFromRawTool.RawLocation = "pRec/RawEvent"
+
 from Configurables import DaVinci
 
 DaVinci().appendToMainSequence( [ sc.sequence() ] )
-DaVinci().EvtMax = 1000
+DaVinci().EvtMax = 100
 DaVinci().DataType = "2010"     
 DaVinci().Simulation = False
 DaVinci().InputType = 'RDST'

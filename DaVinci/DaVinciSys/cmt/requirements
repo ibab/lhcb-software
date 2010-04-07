@@ -8,6 +8,7 @@ use  DaVinci                 	v25r2p2   Phys
 
 # patched packages
 use HltCommon                   v5r21     Hlt
+use HltDAQ                      v1r6      Hlt
 use VertexFit                   v6r2p1    Phys
 use DaVinciMonitors             v1r9p1    Phys
 #  
