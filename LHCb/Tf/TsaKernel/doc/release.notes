@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2010-04-07 - Wouter Hulsbergen
+ - Replaced Loki::Range with Gaudi::Range
+
 !======================= TsaKernel v3r5p1 2009-05-29 =========================
 ! 2009-05-29 - Marco Cattaneo
  - In SeedStub.h and SeedTrack.h, do not include boost_allocator.h on Win32

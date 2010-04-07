@@ -3,7 +3,7 @@
 # Maintainer : Matt Needham 
 #============================================================================
 package           TsaKernel
-version           v3r5p1
+version           v3r6
 
 #============================================================================
 # Structure
@@ -15,7 +15,6 @@ branches          cmt doc src TsaKernel
 #============================================================================
 use DigiEvent   v*  Event
 use TrackEvent  v*  Event
-use LoKiCore    v*  Phys  
 use OTDet       v*  Det  
 use STDet       v*  Det
 use GSL         v*  LCG_Interfaces

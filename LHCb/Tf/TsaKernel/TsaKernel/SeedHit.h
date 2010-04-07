@@ -1,4 +1,4 @@
-// $Id: SeedHit.h,v 1.7 2009-05-29 13:38:52 cattanem Exp $
+// $Id: SeedHit.h,v 1.8 2010-04-07 18:02:55 wouter Exp $
 #ifndef SEEDHIT_H
 #define SEEDHIT_H 1
 
@@ -12,7 +12,7 @@
 #include <algorithm>
 #include <iostream>
 
-#include "LoKi/Range.h"
+#include "GaudiKernel/Range.h"
 
 // Class ID definition
 static const CLID CLID_TsaSeedHit = 19112;
@@ -219,7 +219,7 @@ namespace Tf
 
     };
 
-    typedef LoKi::Range_<std::vector<SeedHit*> > SeedHitRange;
+    typedef Gaudi::Range_<std::vector<SeedHit*> > SeedHitRange;
 
     // Definition of keyed container for Tsa::Track
     //typedef std::vector<SeedHit*> SeedHits;
