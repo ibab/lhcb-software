@@ -1,4 +1,4 @@
-// $Id: HltRoutingBitsWriter.cpp,v 1.4 2010-04-07 10:55:28 graven Exp $
+// $Id: HltRoutingBitsWriter.cpp,v 1.5 2010-04-07 14:36:51 graven Exp $
 // Include files 
 // from Boost
 #include "boost/foreach.hpp"
@@ -178,13 +178,15 @@ StatusCode HltRoutingBitsWriter::execute() {
   // check if L0DU exists (may not!)
   if ( exist<LHCb::L0DUReport>( m_l0_location ) ) {
     LHCb::L0DUReport* l0du = get<LHCb::L0DUReport>( m_l0_location );
-    for (unsigned i=8;i<32;++i) {
-          LoKi::Types::L0_Cut* eval = m_l0_evaluators[ i-8 ].predicate;
-          if ( eval == 0 ) continue;
-          bool result = (*eval)(l0du);
-          *(m_l0_evaluators[ i-8 ].counter) += result;
-          always() << " " << i << " " << *eval << " = " << (result?"pass":"fail") << endmsg;
-          if ( result ) w |= (0x01UL << i); 
+    if (l0du->valid()) {
+        for (unsigned i=8;i<32;++i) {
+              LoKi::Types::L0_Cut* eval = m_l0_evaluators[ i-8 ].predicate;
+              if ( eval == 0 ) continue;
+              bool result = (*eval)(l0du);
+              *(m_l0_evaluators[ i-8 ].counter) += result;
+              always() << " " << i << " " << *eval << " = " << (result?"pass":"fail") << endmsg;
+              if ( result ) w |= (0x01UL << i); 
+        }
     }
   }
 
