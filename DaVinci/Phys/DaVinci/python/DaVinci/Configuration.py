@@ -1,7 +1,7 @@
 """
 High level configuration tools for DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.97 2010-04-06 13:46:41 jpalac Exp $"
+__version__ = "$Id: Configuration.py,v 1.98 2010-04-07 10:33:15 jpalac Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -186,9 +186,9 @@ class DaVinci(LHCbConfigurableUser) :
                 init.Members += [ analysisinit ]
         if inputType == 'RDST' :
             log.info('Setting HltDecReportsDecoder().InputRawEventLocation to "pRec/RawEvent"')
-            from Configurables import HltDecReportsDecoder
+            from Configurables import HltDecReportsDecoder, ANNDispatchSvc
             HltDecReportsDecoder().InputRawEventLocation = "pRec/RawEvent"
-
+            ANNDispatchSvc().RawEventLocation = "pRec/RawEvent"
 ################################################################################
 # Lumi setup
 #
