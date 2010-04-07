@@ -10,7 +10,7 @@
 # =============================================================================
 __author__  = "Jaap Panman jaap.panman@cern.ch"
 __author__  = "Plamen Hopchev phopchev@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.15 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.16 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -31,10 +31,11 @@ class Hlt1BeamGasLinesConf(HltLinesConfigurableUser) :
                 , 'BGVtxExclRangeMax'       :   250.      # only for the Lines for bb BX
                 , 'MaxBinValueCut'          :     4
                 , 'HistoBinWidth'           :    14
+                , 'ForcedInputRateLimit'    :  1000.
                 , 'Prescale'                : { 'Hlt1BeamGasBeam1' :                1.0
                                               , 'Hlt1BeamGasBeam2' :                1.0
-                                              , 'Hlt1BeamGasCrossingForcedRZReco' : 0.001
                                               , 'Hlt1BeamGasCrossing' :             1.0
+                                              , 'Hlt1BeamGasCrossingForcedRZReco' : 0.001
                                               }
                 , 'Postscale'               : { 'Hlt1BeamGasBeam1' :                'RATE(25)'
                                               , 'Hlt1BeamGasBeam2' :                'RATE(25)'
@@ -163,9 +164,11 @@ class Hlt1BeamGasLinesConf(HltLinesConfigurableUser) :
         #        hence we repeat prescale and postscale here explicitly...
         # NOTE: we remove the 'priority' from the clone to make sure it runs first...
         from HltTracking.HltReco import MinimalRZVelo
+        limit =  self.getProp('ForcedInputRateLimit') 
         line_beamCrossingForcedRZReco = line_beamCrossing.clone( lineName+"ForcedRZReco"
                                                                , priority = None
                                                                , prescale = self.prescale
+                                                               , ODIN = 'scale( ODIN_ALL, RATE(%s) )' % limit if limit else 'ODIN_ALL'
                                                                , algos = [ MinimalRZVelo ] + bgTrigAlgos 
                                                                , postscale = self.postscale 
                                                                )
