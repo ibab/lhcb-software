@@ -11,6 +11,7 @@
 
     version increment to v9r0 
 
+!========================== LoKiNumbers v8r6 2010-04-07 =======================
 ! 2010-04-04 - Vanya Belyaev
 
  - add enum LoKi::Scalers::RateLimitTyepintothe dictionary 
