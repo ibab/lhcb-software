@@ -1,4 +1,4 @@
-// $Id: ITTrackMonitor.cpp,v 1.10 2010-03-23 10:16:41 wouter Exp $
+// $Id: ITTrackMonitor.cpp,v 1.11 2010-04-07 21:45:42 wouter Exp $
 // Include files 
 #include "ITTrackMonitor.h"
 
@@ -83,25 +83,18 @@ StatusCode ITTrackMonitor::execute()
   std::vector<unsigned int> usedIDs; usedIDs.reserve(clusters->size());
 
   // histograms per track
-  for ( LHCb::Track::Range::const_iterator iterT = tracks.begin(); iterT != tracks.end(); ++iterT) {
-    if (selector((*iterT)->type())->accept(**iterT) == true){
-
+  BOOST_FOREACH( const LHCb::Track* track, tracks) {
+    if (track->hasT()){
+      
       // find the IT hits on the track 
-      const std::vector<LHCb::LHCbID>& ids = (*iterT)->lhcbIDs();
+      const std::vector<LHCb::LHCbID>& ids = track->lhcbIDs();
       std::vector<LHCb::LHCbID> itHits; itHits.reserve(ids.size());
       LoKi::select(ids.begin(), ids.end(), std::back_inserter(itHits), bind(&LHCbID::isIT,_1));
 
       if (ids.size() < m_minNumITHits) continue;
 
-      std::string type ;
-      if( splitByType() ) {
-	type = LHCb::Track::TypesToString((*iterT)->type());
-	if( (*iterT)->checkFlag( LHCb::Track::Backward ) ) type += "Backward" ;
-      } else if( splitByAlgorithm() ) {
-	type = LHCb::Track::HistoryToString((*iterT)->history()) ;
-      } 
-      
-      fillHistograms(**iterT,type,ids);
+      std::string type = histoDirName( *track ) ;
+      fillHistograms(*track,type,ids);
 
       // insert into tmp container
       BOOST_FOREACH( LHCb::LHCbID id, ids ){
@@ -142,7 +135,7 @@ void ITTrackMonitor::fillHistograms(const LHCb::Track& track,
   plot(track.nMeasurementsRemoved(),ittype+"/outliers","#outliers", -0.5, 10.5, 11);
 
   // track parameters at some reference z
-  LHCb::State aState;
+  LHCb::StateVector aState;
   StatusCode sc = extrapolator()->propagate(track, m_refZ,aState );
   if( sc.isFailure() ) return ;
 
