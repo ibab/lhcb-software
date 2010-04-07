@@ -1,4 +1,4 @@
-// $Id: STEfficiency.cpp,v 1.8 2010-04-06 14:49:53 jluisier Exp $
+// $Id: STEfficiency.cpp,v 1.9 2010-04-07 21:44:41 wouter Exp $
 // Include files 
 
 // from Gaudi
@@ -208,10 +208,6 @@ StatusCode STEfficiency::execute()
     // Track type selection
     if ( find( typeBegin, typeEnd,
                static_cast<unsigned int>((*It) -> type()) ) == typeEnd )
-      continue;
-
-    // Track selection depending on track type
-    if ( ! selector( (*It) -> type() ) -> accept( **It ) )
       continue;
 
     plot( static_cast<unsigned int>((*It) -> type()),
