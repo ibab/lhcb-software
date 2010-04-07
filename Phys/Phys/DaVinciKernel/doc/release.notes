@@ -1,8 +1,14 @@
-!$Id: release.notes,v 1.343 2010-03-27 12:04:51 graven Exp $
+!$Id: release.notes,v 1.344 2010-04-07 12:59:20 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciKernel
 ! Responsible : J.P. Palacios
 !============================================================================
+
+! 2010-04-07 - Juan Palacios
+ - src/Lib/DVAlgorithm.cpp
+  . Fix problem with PreloadTools=False.
+ - cmt/requirements
+  . Increase version to v8r6p1.
 
 !======================== DaVinciKernel v8r6 2010-03-27 =====================
 ! 2010-03-18 - Juan Palacios

@@ -1,10 +1,10 @@
-# $Id: requirements,v 1.75 2010-03-01 18:11:01 jpalac Exp $
+# $Id: requirements,v 1.76 2010-04-07 12:59:20 jpalac Exp $
 # Created    : 05/02/2002
 # Maintainer : P. Koppenburg, J. Palcios
 #============================================================================
 
 package           DaVinciKernel
-version           v8r6
+version           v8r6p1
 
 # Structure, i.e. directories to process. 
 #============================================================================

@@ -1,4 +1,4 @@
-// $Id: DVAlgorithm.cpp,v 1.73 2010-03-19 15:52:49 jpalac Exp $
+// $Id: DVAlgorithm.cpp,v 1.74 2010-04-07 12:59:20 jpalac Exp $
 // ============================================================================
 // Include 
 // ============================================================================
@@ -253,8 +253,6 @@ StatusCode DVAlgorithm::initialize ()
 StatusCode DVAlgorithm::loadTools() 
 {
   
-  if ( !m_preloadTools ) 
-  { return Warning( "Not preloading tools", StatusCode::SUCCESS ) ; }
   
   if (msgLevel(MSG::DEBUG)) debug() << ">>> Preloading tools" << endmsg;
  
@@ -273,6 +271,10 @@ StatusCode DVAlgorithm::loadTools()
   desktop()->setOutputLocation(outputLocation);
   
  
+  if ( !m_preloadTools ) 
+  { return Warning( "Not preloading tools", StatusCode::SUCCESS ) ; }
+
+
   // vertex fitter
   
   if ( m_particleCombinerNames.end() == m_particleCombinerNames.find("") )
