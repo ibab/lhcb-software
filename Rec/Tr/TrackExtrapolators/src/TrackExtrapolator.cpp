@@ -1,4 +1,4 @@
-// $Id: TrackExtrapolator.cpp,v 1.28 2010-04-07 15:34:54 wouter Exp $
+// $Id: TrackExtrapolator.cpp,v 1.29 2010-04-07 21:08:22 wouter Exp $
 // Include files
 
 // from Gaudi
@@ -16,15 +16,13 @@
 using namespace LHCb;
 using namespace Gaudi;
 
-DECLARE_TOOL_FACTORY( TrackExtrapolator );
-
 //=============================================================================
 // Propagate a state vector from zOld to zNew
 //=============================================================================
 StatusCode TrackExtrapolator::propagate( Gaudi::TrackVector& stateVec,
                                          double zOld,
                                          double zNew,
-                                         LHCb::ParticleID pid )
+                                         LHCb::ParticleID pid ) const
 {
   TrackMatrix* transMat = NULL;
   StatusCode sc = propagate( stateVec, zOld, zNew, transMat, pid );
@@ -35,35 +33,11 @@ StatusCode TrackExtrapolator::propagate( Gaudi::TrackVector& stateVec,
 
 //=============================================================================
 // Propagate a state vector from zOld to zNew
-// Transport matrix is calulated when transMat pointer is not NULL
-//=============================================================================
-StatusCode TrackExtrapolator::propagate( Gaudi::TrackVector& /* stateVec */,
-                                         double zOld,
-                                         double zNew,
-                                         Gaudi::TrackMatrix* /* transMat */,
-                                         LHCb::ParticleID pid )
-{
-  StatusCode sc = StatusCode::FAILURE;
-
-  Warning( "Cannot propagate state vector to given Z position, see debug.",
-           StatusCode::SUCCESS, 1 ).ignore();
-  
-  debug() << " can not propagate state vector at z" << zOld
-          << " to the z position " << zNew
-          << " of pid " << pid.pid() << endmsg;
-
-  return sc;
-}
-
-
-
-//=============================================================================
-// Propagate a state vector from zOld to zNew
 //=============================================================================
 StatusCode TrackExtrapolator::propagate( LHCb::StateVector& state,
 					 double z,
 					 Gaudi::TrackMatrix* transportmatrix,
-					 LHCb::ParticleID pid ) 
+					 LHCb::ParticleID pid ) const
 {
   StatusCode sc = propagate(state.parameters(),state.z(),z,transportmatrix,pid) ;
   if (sc.isSuccess()) state.setZ(z);
@@ -76,7 +50,7 @@ StatusCode TrackExtrapolator::propagate( LHCb::StateVector& state,
 StatusCode TrackExtrapolator::propagate( const Track& track,
                                          double z,
                                          State& state,
-                                         ParticleID pid )
+                                         ParticleID pid ) const
 {
   // get state closest to z
   const State& closest = track.closestState( z );
@@ -94,7 +68,7 @@ StatusCode TrackExtrapolator::propagate( const Track& track,
 StatusCode TrackExtrapolator::propagate( const Track& track,
                                          double z,
                                          StateVector& state,
-                                         ParticleID pid )
+                                         ParticleID pid ) const
 {
   // get state closest to z
   const State& closest = track.closestState( z );
@@ -111,7 +85,7 @@ StatusCode TrackExtrapolator::propagate( const Track& track,
 //=============================================================================
 StatusCode TrackExtrapolator::propagate( State& state, 
                                          double z,
-                                         ParticleID pid )
+                                         ParticleID pid ) const
 {
   Gaudi::TrackMatrix transMat = TrackMatrix( ROOT::Math::SMatrixIdentity() );
   StatusCode sc = propagate( state, z, &transMat, pid );
@@ -126,7 +100,7 @@ StatusCode TrackExtrapolator::propagate( State& state,
 StatusCode TrackExtrapolator::propagate( State& state, 
                                          double z,
                                          Gaudi::TrackMatrix* transMat,
-                                         ParticleID pid )
+                                         ParticleID pid ) const
 {
   StatusCode sc = propagate( state.stateVector(), state.z(), z, transMat, pid );
   state.setZ(z);
@@ -142,7 +116,7 @@ StatusCode TrackExtrapolator::propagate( State& state,
 StatusCode TrackExtrapolator::propagate( const Track& track,
                                          const Gaudi::XYZPoint& point,
 					 LHCb::State& state,
-                                         ParticleID  pid )
+                                         ParticleID  pid ) const
 {
   // get state closest to z of point
   const State& closest = track.closestState( point.z() );
@@ -159,7 +133,7 @@ StatusCode TrackExtrapolator::propagate( const Track& track,
 //=============================================================================
 StatusCode TrackExtrapolator::propagate( State& state,
                                          const Gaudi::XYZPoint& point,
-                                         ParticleID  pid )
+                                         ParticleID  pid ) const
 {
   StatusCode sc = StatusCode::FAILURE;
 
@@ -180,7 +154,7 @@ StatusCode TrackExtrapolator::propagate( const Track& track,
                                          const Gaudi::Plane3D& plane,
 					 LHCb::State& state,
                                          double tolerance,
-                                         ParticleID pid )
+                                         ParticleID pid ) const
 {
   // get state closest to the plane
   const State& closest = track.closestState( plane );
@@ -198,7 +172,7 @@ StatusCode TrackExtrapolator::propagate( const Track& track,
 StatusCode TrackExtrapolator::propagate( State& state,
                                          const Gaudi::Plane3D& plane,
                                          double tolerance,
-                                         ParticleID pid )
+                                         ParticleID pid ) const
 {
   StatusCode sc = StatusCode::FAILURE ;
   Gaudi::XYZPoint intersect ;
@@ -249,7 +223,7 @@ StatusCode TrackExtrapolator::positionAndMomentum( const Track& track,
                                                    Gaudi::XYZPoint& pos,
                                                    Gaudi::XYZVector& mom,
                                                    Gaudi::SymMatrix6x6& cov6D,
-                                                   ParticleID pid )
+                                                   ParticleID pid ) const
 {
   State tmpState;
 
@@ -267,7 +241,7 @@ StatusCode TrackExtrapolator::positionAndMomentum( const Track& track,
                                                    double z,
                                                    Gaudi::XYZPoint& pos,
                                                    Gaudi::XYZVector& mom,
-                                                   ParticleID pid )
+                                                   ParticleID pid ) const
 {
   State tmpState;
 
@@ -290,7 +264,7 @@ StatusCode TrackExtrapolator::position( const Track& track,
                                         double z,
                                         Gaudi::XYZPoint& pos,
                                         Gaudi::SymMatrix3x3& errPos,
-                                        ParticleID pid )
+                                        ParticleID pid ) const
   
 {
   State tmpState;
@@ -311,7 +285,7 @@ StatusCode TrackExtrapolator::position( const Track& track,
 StatusCode TrackExtrapolator::position( const Track& track,
                                         double z,
                                         Gaudi::XYZPoint& pos,
-                                        ParticleID pid )
+                                        ParticleID pid ) const
 
 {
   State tmpState;
@@ -331,7 +305,7 @@ StatusCode TrackExtrapolator::slopes( const Track& track,
                                       double z,
                                       Gaudi::XYZVector& slopes,
                                       Gaudi::SymMatrix3x3& errSlopes,
-                                      ParticleID pid )
+                                      ParticleID pid ) const
 {
   State tmpState;
 
@@ -351,7 +325,7 @@ StatusCode TrackExtrapolator::slopes( const Track& track,
 StatusCode TrackExtrapolator::slopes( const Track& track,
                                       double z,
                                       Gaudi::XYZVector& slopes,
-                                      ParticleID pid )
+                                      ParticleID pid ) const
 {
   State tmpState;
 
@@ -368,7 +342,7 @@ StatusCode TrackExtrapolator::slopes( const Track& track,
 StatusCode TrackExtrapolator::p( const Track& track,
                                  double z,
                                  double& p,
-                                 ParticleID pid )
+                                 ParticleID pid ) const
 {
   State tmpState;
 
@@ -385,7 +359,7 @@ StatusCode TrackExtrapolator::p( const Track& track,
 StatusCode TrackExtrapolator::pt( const Track& track,
                                   double z,
                                   double& pt,
-                                  ParticleID pid )
+                                  ParticleID pid ) const
 {
   State tmpState;
 
@@ -404,7 +378,7 @@ StatusCode TrackExtrapolator::momentum( const Track& track,
                                         double z,
                                         Gaudi::XYZVector& mom,
                                         Gaudi::SymMatrix3x3& errMom,
-                                        ParticleID pid )
+                                        ParticleID pid ) const
 {
   State tmpState;
 
@@ -423,7 +397,7 @@ StatusCode TrackExtrapolator::momentum( const Track& track,
 StatusCode TrackExtrapolator::momentum( const Track& track,
                                         double z,
                                         Gaudi::XYZVector& mom,
-                                        ParticleID pid )
+                                        ParticleID pid ) const
 {
   State tmpState;
 
