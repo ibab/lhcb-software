@@ -4,6 +4,10 @@
 ! Purpose     : Core classes for the Tf framework
 !-----------------------------------------------------------------------------
 
+! 2010-04-07 Wouter Hulsbergen
+ - replaced LoKi::Range with Gaudi::Range
+ - added method to IITHitCreator interface to create hit for given LHCbID
+
 !============================ TfKernel v2r16 2010-03-17 ======================
 ! 2010-03-15 - Stephanie Hansmann-Menzemer
  - add setXAtYEq0 method to the LineHit class
