@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking extrapolators
 !-----------------------------------------------------------------------------
 
+! 2010-04-07 - Wouter Hulsbergen
+ - added method to extropolate a statevector from a track
+
 !======================= TrackExtrapolators v2r26 2010-03-20=================
 ! 2010-03-15 - Stephanie Hansmann-Menzemer
  - switch on the use auf DetailedBetheBloch model per default
