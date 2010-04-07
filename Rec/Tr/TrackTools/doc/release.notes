@@ -3,6 +3,10 @@
 ! Responsible : Jose Hernando, Eduardo Rodrigues
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
+
+! 2010-04-07 - Wouter Hulsbergen
+ - replaced FastParabolicExtraplator by ParabolicExtrapolator
+
 ! 2010-04-07 - Stephanie Hansmann-Menzemer
  - add polarity in FastMomentumEstimate
 
