@@ -1,4 +1,4 @@
-// $Id: TrackExtrapolator.h,v 1.14 2009-09-24 15:35:27 wouter Exp $
+// $Id: TrackExtrapolator.h,v 1.15 2010-04-07 15:34:54 wouter Exp $
 #ifndef TRACKEXTRAPOLATORS_TRACKEXTRAPOLATOR_H 
 #define TRACKEXTRAPOLATORS_TRACKEXTRAPOLATOR_H 1
 
@@ -50,7 +50,13 @@ public:
                                 double z,
                                 LHCb::State& state,
                                 LHCb::ParticleID pid = LHCb::ParticleID(211) );
-
+  
+  /// Propagate a track to a given z-position
+  virtual StatusCode propagate(const LHCb::Track&, 
+			       double z, 
+			       LHCb::StateVector&, 
+			       LHCb::ParticleID pid = LHCb::ParticleID(211)) ;
+  
   /// Propagate a state to a given z-position
   virtual StatusCode propagate( LHCb::State& state,
                                 double z,

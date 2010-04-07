@@ -1,4 +1,4 @@
-// $Id: TrackExtrapolator.cpp,v 1.27 2009-12-08 13:33:54 cattanem Exp $
+// $Id: TrackExtrapolator.cpp,v 1.28 2010-04-07 15:34:54 wouter Exp $
 // Include files
 
 // from Gaudi
@@ -85,6 +85,24 @@ StatusCode TrackExtrapolator::propagate( const Track& track,
   // propagate the closest state
   StatusCode sc = propagate( state, z, pid );
 
+  return sc;
+}
+
+//=============================================================================
+// Propagate a track to a given z-position
+//=============================================================================
+StatusCode TrackExtrapolator::propagate( const Track& track,
+                                         double z,
+                                         StateVector& state,
+                                         ParticleID pid )
+{
+  // get state closest to z
+  const State& closest = track.closestState( z );
+  state = LHCb::StateVector( closest.stateVector(), closest.z()) ;
+
+  // propagate the closest state
+  StatusCode sc = propagate( state, z, 0, pid );
+  
   return sc;
 }
 
