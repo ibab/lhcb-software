@@ -4,6 +4,9 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+! 2010-04-07 - V. Gligorov 
+ - Allow the user to set the raw event location in the ANNDispatchSvc. 
+
 !========================== HltCommon v5r20 2010-03-28 ===================
 ! 2010-03-27 - Gerhard Raven
  - use std::vector::insert instead of std::copy

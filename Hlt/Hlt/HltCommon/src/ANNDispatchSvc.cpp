@@ -62,6 +62,7 @@ private:
   mutable bool m_uptodate;
   std::string       m_propertyConfigSvcName;
   std::string       m_instanceName;
+  std::string       m_rawEventLocation;
   mutable unsigned int      m_currentTCK;
   mutable PropertyConfig::digest_type m_currentDigest;
 };
@@ -82,6 +83,7 @@ ANNDispatchSvc::ANNDispatchSvc( const string& name, ISvcLocator* pSvcLocator)
 {
    declareProperty("IANNSvcInstance",m_instanceName = "HltANNSvc");
    declareProperty("IPropertyConfigSvcInstance",m_propertyConfigSvcName = "PropertyConfigSvc");
+   declareProperty("RawEventLocation",m_rawEventLocation = LHCb::RawEventLocation::Default); 
 }
 
 StatusCode
