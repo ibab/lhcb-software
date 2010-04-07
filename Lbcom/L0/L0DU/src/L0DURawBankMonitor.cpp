@@ -1,4 +1,4 @@
-// $Id: L0DURawBankMonitor.cpp,v 1.23 2010-02-24 10:28:20 odescham Exp $
+// $Id: L0DURawBankMonitor.cpp,v 1.24 2010-04-07 20:26:30 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -43,7 +43,7 @@ L0DURawBankMonitor::L0DURawBankMonitor( const std::string& name,
   declareProperty( "xLabelOptions"     , m_lab ="" );
   declareProperty( "genericPath"       , m_generic = true );
   declareProperty( "CaloReadoutTool"   ,  m_caloTool  = "CaloDataProvider" );
-    
+  declareProperty( "ErrorFilterMask"   ,  m_mask = 0x0);
 
   setHistoDir( name );
 }
@@ -92,7 +92,10 @@ StatusCode L0DURawBankMonitor::execute() {
 
   debug() << "==> Execute" << endmsg;
 
+  if( 0x0 != m_mask )setFilterPassed( false );
+
   // check L0Processor banks are produced
+  //  LHCb::RawEvent* rawEvt = NULL ;
   bool mOk = false;
   bool cOk = false;
   bool pOk = false;
@@ -319,6 +322,7 @@ StatusCode L0DURawBankMonitor::execute() {
       fill( histo1D(toHistoID("Status/Summary/1")), L0DUBase::L0DUError::InputData  , 1 );
       if(m_warn)Warning(" Status::Warning : L0DU bank monitor summary : -- input data error bit -- "
                         ,StatusCode::SUCCESS).ignore();
+      if( (m_mask == L0DUBase::L0DUError::InputData)  )setFilterPassed(true);
     }
     if( mOk && (0x7F & m_fromRaw->bcid().first) != m_fromRaw->bcid().second){
       if( odBX == 3561 || odBX == 3562 || odBX == 3563 || odBX == 0 ){
@@ -327,6 +331,7 @@ StatusCode L0DURawBankMonitor::execute() {
         fill( histo1D(toHistoID("Status/Summary/1")), L0DUBase::L0DUError::BxPGAShift , 1 );
         if(m_warn)Warning("Status::Warning : L0DU bank monitor summary : -- PGA2/3 BXID misaligned -- "
                           ,StatusCode::SUCCESS).ignore();
+        if(( m_mask == L0DUBase::L0DUError::BxPGAShift )  )setFilterPassed(true);
       }
       debug() << "BCID ODIN/L0DU&0x7F/PGA3 : " << odBX << "/" 
               <<  (0x7F &m_fromRaw->bcid().first) << " / " << m_fromRaw->bcid().second<< endmsg;
@@ -335,51 +340,57 @@ StatusCode L0DURawBankMonitor::execute() {
       fill( histo1D(toHistoID("Status/Summary/1")), L0DUBase::L0DUError::BxOdinShift , 1 );
       if(m_warn)Warning("Status::Warning : L0DU bank monitor summary : -- ODIN/L0DU BXID misaligned -- "
                         ,StatusCode::SUCCESS).ignore();
+      if( ( m_mask == L0DUBase::L0DUError::BxOdinShift )  )setFilterPassed(true);
       debug() << "BCID L0DU/ODIN : " <<  m_fromRaw->bcid().first << " / " << odBX << endmsg;
     }
     if( (m_fromRaw->status() & 0x1) ){
       fill( histo1D(toHistoID("Status/Summary/1")), L0DUBase::L0DUError::IdleLink , 1 );
+      if( ( m_mask == L0DUBase::L0DUError::IdleLink ) )setFilterPassed(true);
       if(m_warn)Warning("Status::Warning  : L0DU bank monitor summary : --IddleLink error bit -- "
                         ,StatusCode::SUCCESS).ignore();
     }
     if( (m_fromRaw->status() & 0x2) ){
       fill( histo1D(toHistoID("Status/Summary/1")), L0DUBase::L0DUError::TLK , 1 );
+      if(  m_mask == L0DUBase::L0DUError::TLK  )setFilterPassed(true);
       if(m_warn)Warning("Status::Warning : L0DU bank monitor summary : -- TLK error bit -- "
                         ,StatusCode::SUCCESS).ignore();
     }
     if( (m_fromRaw->status() & 0x4) ){
       fill( histo1D(toHistoID("Status/Summary/1")), L0DUBase::L0DUError::DeMux   , 1 );
+      if( ( m_mask == L0DUBase::L0DUError::DeMux )  )setFilterPassed(true);
       if(m_warn)Warning("Status::Warning : L0DU bank monitor summary : -- DeMultiplexer error bit -- "
                         ,StatusCode::SUCCESS).ignore();
     }
-    if( (m_fromRaw->status() & 0x8) ){
-      fill( histo1D(toHistoID("Status/Summary/1")), L0DUBase::L0DUError::IdleLink , 1 );
-      if(m_warn)Warning("Status::Warning : L0DU bank monitor summary : -- Idle link error bit -- ",StatusCode::SUCCESS).ignore();
-    }
     if( !check ){
       fill( histo1D(toHistoID("Status/Summary/1")), L0DUBase::L0DUError::EmulatorCheck , 1 );
+      if( ( m_mask == L0DUBase::L0DUError::EmulatorCheck )  )setFilterPassed(true);
       if(m_warn)Warning("Status::Warning : L0DU bank monitor summary : -- Emulator check error -- ",StatusCode::SUCCESS).ignore();
     }    
     if( NULL == config ){
       fill( histo1D(toHistoID("Status/Summary/1")), L0DUBase::L0DUError::UnknownTCK , 1 );
+      if( ( m_mask == L0DUBase::L0DUError::UnknownTCK )  )setFilterPassed(true);
       if(m_warn)Warning("Status::Warning  : L0DU bank monitor summary : -- unknown TCK -- ",StatusCode::SUCCESS).ignore();
     }
     unsigned int nSpdDAQ = 0;
     if( m_spd->ok() )nSpdDAQ = m_spd->adcs().size();
     if( m_fromRaw->data("Spd(Mult)") != nSpdDAQ ){ 
       fill( histo1D(HistoID("Status/Summary/1")), L0DUBase::L0DUError::WrongSpdMult , 1 );
+      if( ( m_mask == L0DUBase::L0DUError::WrongSpdMult )  )setFilterPassed(true);
       if(m_warn)Warning("Status::Warning  : L0DU bank monitor summary : -- Wrong Spd Mult -- ",StatusCode::SUCCESS).ignore();
     }
     if( !mOk ){
       fill( histo1D(HistoID("Status/Summary/1")), L0DUBase::L0DUError::MissL0Muon , 1 );
+      if( ( m_mask == L0DUBase::L0DUError::MissL0Muon ) )setFilterPassed(true);
       if(m_warn)Warning("Status::Warning : L0DU bank monitor summary : -- L0Muon banks missing -- ",StatusCode::SUCCESS).ignore();
     }
     if( !cOk ){
       fill( histo1D(HistoID("Status/Summary/1")), L0DUBase::L0DUError::MissL0Calo , 1 );
+      if( ( m_mask == L0DUBase::L0DUError::MissL0Calo ) )setFilterPassed(true);
       if(m_warn)Warning("Status::Warning : L0DU bank monitor summary : -- L0Calo banks missing -- ",StatusCode::SUCCESS).ignore();
     }
     if( !pOk ){
       fill( histo1D(HistoID("Status/Summary/1")), L0DUBase::L0DUError::MissL0PU , 1 );
+      if( ( m_mask == L0DUBase::L0DUError::MissL0PU )  )setFilterPassed(true);
       if(m_warn)Warning("Status::Warning : L0DU bank monitor summary : -- L0PU banks missing -- ",StatusCode::SUCCESS).ignore();
     }
   }

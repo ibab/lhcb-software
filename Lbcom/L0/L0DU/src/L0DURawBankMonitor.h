@@ -1,4 +1,4 @@
-// $Id: L0DURawBankMonitor.h,v 1.11 2010-02-23 20:06:09 odescham Exp $
+// $Id: L0DURawBankMonitor.h,v 1.12 2010-04-07 20:26:30 odescham Exp $
 #ifndef L0DURAWBANKMONITOR_H 
 #define L0DURAWBANKMONITOR_H 1
 
@@ -84,5 +84,6 @@ private:
   std::string m_caloTool;
   GaudiAlg::HistoID toHistoID(std::string unit);
   bool m_first;
+  int m_mask;
 };
 #endif // L0DURAWBANKMONITOR_H

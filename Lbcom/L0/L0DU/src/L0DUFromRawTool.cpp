@@ -1,4 +1,4 @@
-// $Id: L0DUFromRawTool.cpp,v 1.30 2010-03-02 16:36:49 odescham Exp $
+// $Id: L0DUFromRawTool.cpp,v 1.31 2010-04-07 20:26:30 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -123,13 +123,22 @@ bool L0DUFromRawTool::getL0DUBanksFromRaw( ){
   m_roStatus = LHCb::RawBankReadoutStatus( LHCb::RawBank::L0DU );
   m_roStatus.addStatus( 0, LHCb::RawBankReadoutStatus::OK);
 
-  if( !exist<LHCb::RawEvent>( m_rawLocation ) ){
-    warning() << "rawEvent not found at location '" << rootInTES() + m_rawLocation << "'" << endmsg;
+  std::string loc = "";
+  if( exist<LHCb::RawEvent>( m_rawLocation ) ) // get rawEvent from user-defined location
+    loc = m_rawLocation;
+  else if( exist<LHCb::RawEvent>( LHCb::RawEventLocation::Copied ) ) // if not, try in pReC
+    loc = LHCb::RawEventLocation::Copied;
+  else if( exist<LHCb::RawEvent>( LHCb::RawEventLocation::Default) ) // if not, try in Rec
+    loc = LHCb::RawEventLocation::Default;
+
+  // if not : complain
+  if( "" == loc){
+    Warning("rawEvent not found in  '" + rootInTES() + m_rawLocation +"' nor in standard locations",StatusCode::SUCCESS).ignore();
     m_roStatus.addStatus( 0 , LHCb::RawBankReadoutStatus::Missing);
     return false;
   }      
   
-  rawEvt= get<LHCb::RawEvent>( m_rawLocation );
+  rawEvt= get<LHCb::RawEvent>( loc );
   m_banks= &rawEvt->banks(   LHCb::RawBank::L0DU );
 
 
