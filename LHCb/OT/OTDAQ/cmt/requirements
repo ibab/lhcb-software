@@ -1,5 +1,5 @@
 package OTDAQ
-version v7r7
+version v7r8
 
 branches OTDAQ cmt dict doc src options Event
 
@@ -7,7 +7,6 @@ use GaudiAlg    v*
 use DAQEvent	v*      Event
 use DigiEvent   v*      Event
 use OTDet	v*	Det
-use LoKiCore    v*      Phys
 use GSL         v*      LCG_Interfaces
 
 #---- Copy header  files to the InstallArea

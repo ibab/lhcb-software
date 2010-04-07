@@ -2,6 +2,9 @@ Package         : OTDAQ
 Package manager : J.Amoraal
 !------------------------------------------------------------------------------
 
+! 2010-04-04 - Wouter Hulsbergen
+ - replaced Loki::Range with Gaudi::Range_
+
 !======================= OTDAQ v7r7 2010-03-17 ================================
 ! 2010-03-01 - Alexandr Kozlinskiy
  - Added check for RawBank::magic in OTRawBankDecoder
