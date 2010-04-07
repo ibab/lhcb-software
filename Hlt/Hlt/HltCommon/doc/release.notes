@@ -4,6 +4,12 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+!========================== HltCommon v5r21 2010-04-07 ===================
+
+! 2010-04-07 - Juan Palacios
+ - cmt/requirements
+  . Increase version to v5r21.
+
 ! 2010-04-07 - V. Gligorov 
  - Allow the user to set the raw event location in the ANNDispatchSvc. 
 
