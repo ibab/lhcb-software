@@ -1,4 +1,4 @@
-// $Id: TTTrackMonitor.cpp,v 1.10 2010-03-22 09:41:09 wouter Exp $
+// $Id: TTTrackMonitor.cpp,v 1.11 2010-04-07 21:46:18 wouter Exp $
 // Include files 
 #include "TTTrackMonitor.h"
 
@@ -77,39 +77,31 @@ StatusCode TTTrackMonitor::execute()
   const LHCb::STClusters* clusters = get<LHCb::STClusters>(m_clusterLocation);
 
   std::map<std::string, unsigned int> tMap;
-  std::string type = "";
 
   // tmp container for ids
   std::vector<unsigned int> usedIDs; usedIDs.reserve(clusters->size());
 
   // histograms per track
-  for (LHCb::Track::Range::const_iterator iterT = tracks.begin(); iterT != tracks.end(); ++iterT) {
-    if (selector((*iterT)->type())->accept(**iterT) == true){
-
+  BOOST_FOREACH( const LHCb::Track* track, tracks) 
+    if( track->hasTT()) {
+    
       // find the IT hits on the track 
-      const std::vector<LHCb::LHCbID>& ids = (*iterT)->lhcbIDs();
+      const std::vector<LHCb::LHCbID>& ids = track->lhcbIDs();
       std::vector<LHCb::LHCbID> ttHits; ttHits.reserve(ids.size());
       LoKi::select(ids.begin(), ids.end(), std::back_inserter(ttHits), bind(&LHCbID::isTT,_1));
-
+      
       if (ids.size() < m_minNumTTHits) continue;
-
-      type = "" ;
-      if( splitByType() ) {
-        type = LHCb::Track::TypesToString((*iterT)->type());
-        if( (*iterT)->checkFlag( LHCb::Track::Backward ) ) type += "Backward" ;
-      } else if( splitByAlgorithm() ) {
-        type = LHCb::Track::HistoryToString((*iterT)->history()) ;
-      } 
+      
+      std::string type = histoDirName(*track) ;
       
       // insert into tmp container
       BOOST_FOREACH( LHCb::LHCbID id, ids ){
-        usedIDs.push_back(id.stID());
+	usedIDs.push_back(id.stID());
       } // for each
       
-      fillHistograms(**iterT,ids,type);
+      fillHistograms(*track,ids,type);
     }
-  } // iterT
-
+  
   // see how many hits in the IT were actually used
   if (clusters->size() > 0u) {
     std::sort(usedIDs.begin(), usedIDs.end());
@@ -134,7 +126,7 @@ void TTTrackMonitor::fillHistograms(const LHCb::Track& track,
 {
 
   // track parameters at some reference z
-  LHCb::State aState;
+  LHCb::StateVector aState;
   StatusCode sc = extrapolator()->propagate(track, m_refZ,aState );
   if( fullDetail() ) {
     plot2D(aState.x()/Gaudi::Units::cm,
