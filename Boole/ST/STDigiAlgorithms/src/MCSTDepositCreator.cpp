@@ -1,4 +1,4 @@
-// $Id: MCSTDepositCreator.cpp,v 1.10 2010-04-07 09:27:37 mneedham Exp $
+// $Id: MCSTDepositCreator.cpp,v 1.11 2010-04-07 09:48:00 mneedham Exp $
 
 // GSL 
 #include "gsl/gsl_math.h"
@@ -45,7 +45,7 @@ MCSTDepositCreator::MCSTDepositCreator( const std::string& name,
 
   declareProperty("TofVector", m_tofVector, "vector of flight times");
   declareProperty("SamplesVector", m_sampleNames = boost::assign::list_of("/"));
-  declareProperty("SampleTimes", m_sampleTimes = boost::assign::list_of(-4.));
+  declareProperty("SampleTimes", m_sampleTimes = boost::assign::list_of(0.));
   declareProperty("SpillVector", m_spillNames = boost::assign::list_of("/")("/Prev/")("/PrevPrev/")("/Next/")("/LHCBackground/"));
   declareProperty("SpillTimes", m_spillTimes = boost::assign::list_of(0.0)(-25.0)(-50.0)(25.0)(-3.3));
   declareProperty("MinDist", m_minDistance = 5.0e-3*Gaudi::Units::mm);
