@@ -4,6 +4,16 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !-----------------------------------------------------------------------------
 
+!========================== HltDAQ v1r6 2010-04-07 ===========================
+
+! 2010-04-07 - Juan Palacios
+ - HltLumiWriter, HltRoutingBitsFilter:
+  . Look for RawEvent in locations given by RawEventLocation property, LHCb::RawEventLocation::Copied or LHCb::RawEventLocation::Default. Pick the first one found.
+
+! 2010-04-07 - Juan Palacios
+ - src/HltLumiWriter.h
+  . Bug fix: declare m_rawEventLocation.
+
 ! 2010-04-07 - V. Gligorov
  - Allow the user to set the raw event location in the ANNDispatchSvc.
 
