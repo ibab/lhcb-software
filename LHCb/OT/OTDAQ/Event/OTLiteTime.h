@@ -5,7 +5,7 @@
  *  Header file for track find class LHCb::OTLiteTime
  *
  *  CVS Log :-
- *  $Id: OTLiteTime.h,v 1.6 2008-05-29 10:53:06 smenzeme Exp $
+ *  $Id: OTLiteTime.h,v 1.7 2010-04-07 04:26:37 wouter Exp $
  *
  *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
  *  @date   2007-05-30
@@ -16,8 +16,8 @@
 #define OTDAQ_OTLITETIME_HH__ 1
 
 #include <vector>
+#include "GaudiKernel/Range.h"
 #include "Kernel/OTChannelID.h"
-#include "LoKi/Range.h"
 
 namespace LHCb
 {
@@ -33,6 +33,11 @@ namespace LHCb
   {
 
   public:
+    /// typedef Vector
+    typedef std::vector<OTLiteTime> Vector ;
+
+    /// typedef Range
+    typedef Gaudi::Range_<Vector> Range;
 
     /// Default constructor does nothing
     OTLiteTime() : m_channelid(0), m_calibratedTime(0) {}
@@ -68,10 +73,10 @@ namespace LHCb
   } ;
 
   /// Type for a container of OTLiteTime objects
-  typedef std::vector<OTLiteTime> OTLiteTimeContainer ;
+  typedef OTLiteTime::Vector OTLiteTimeContainer ;
 
   /// Range object for OTLiteTimeContainer
-  typedef LoKi::Range_<OTLiteTimeContainer> OTLiteTimeRange ;
+  typedef OTLiteTime::Range OTLiteTimeRange ;
 
 }
 
