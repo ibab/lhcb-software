@@ -50,7 +50,7 @@ DetailedTrSegMakerFromRecoTracks( const std::string& type,
   // context specific defaults
   if ( contextContains("HLT") )
   {
-    m_trExt1Name   = "TrackFastParabolicExtrapolator";    
+    m_trExt1Name   = "TrackParabolicExtrapolator";    
     m_trExt2Name   = "TrackLinearExtrapolator";
     // Rads                  Aerogel   Rich1Gas  Rich2Gas
     m_zTolerance   = list_of (3000*mm) (3000*mm) (4000*mm) ;

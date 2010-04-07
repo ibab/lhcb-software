@@ -4,6 +4,10 @@
 ! Purpose     : Utility tracks tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+! 2010-04-07 - Chris Jones
+ - Switch from the TrackFast ParabolicExtrapolator to the 
+   TrackParabolicExtrapolator in DetailedTrSegMakerFromRecoTracks
+
 ! 2010-04-01 - Chris Jones
  - Improvements to the functional CK theta resolution tool.
 
