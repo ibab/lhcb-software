@@ -5,7 +5,7 @@
  *  Header file for track finding class Tf::STHit
  *
  *  CVS Log :-
- *  $Id: STHit.h,v 1.7 2008-11-07 07:52:12 mneedham Exp $
+ *  $Id: STHit.h,v 1.8 2010-04-07 05:17:03 wouter Exp $
  *
  *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
  *  @date   2007-05-30
@@ -18,8 +18,7 @@
 // TfKernel
 #include "TfKernel/LineHit.h"
 
-// LoKi
-#include "LoKi/Range.h"
+#include "GaudiKernel/Range.h"
 
 #include "Event/STLiteCluster.h"
 
@@ -92,7 +91,7 @@ namespace Tf
   /// Type for container for OTHit
   typedef std::vector<const STHit* > STHits;
   /// Type for range of STHits within a container
-  typedef LoKi::Range_<STHits> STHitRange ;
+  typedef Gaudi::Range_<STHits> STHitRange ;
   /// Type for a container for STHitRange
   typedef std::vector<STHitRange> STHitRanges;
 

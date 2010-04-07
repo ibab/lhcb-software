@@ -4,7 +4,7 @@
  *
  *  Header file for class : Tf::TStationHitManager
  *
- *  $Id: TStationHitManager.h,v 1.26 2009-01-17 19:43:29 jonrob Exp $
+ *  $Id: TStationHitManager.h,v 1.27 2010-04-07 05:17:03 wouter Exp $
  *
  *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
  *  @date   2007-06-01
@@ -125,7 +125,7 @@ namespace Tf
     typedef std::vector< Hit* > Hits;
 
     /// range object for Hits
-    typedef LoKi::Range_<Hits> HitRange;
+    typedef Gaudi::Range_<Hits> HitRange;
 
   public:
 

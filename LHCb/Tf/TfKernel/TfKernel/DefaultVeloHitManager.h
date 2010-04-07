@@ -1,11 +1,11 @@
-// $Id: DefaultVeloHitManager.h,v 1.13 2008-05-29 10:55:11 smenzeme Exp $
+// $Id: DefaultVeloHitManager.h,v 1.14 2010-04-07 05:17:03 wouter Exp $
 #ifndef INCLUDE_TF_DEFAULTVELOHITMANAGER_H
 #define INCLUDE_TF_DEFAULTVELOHITMANAGER_H 1
 
 #include <iostream>
 #include <algorithm>
 
-#include "LoKi/Range.h"
+#include "GaudiKernel/Range.h"
 
 #include "Event/VeloLiteCluster.h"
 #include "Event/VeloCluster.h"
@@ -48,8 +48,8 @@ namespace Tf {
 
   private:
     
-    typedef LoKi::Range_<LHCb::VeloClusters>     ClusterRange;
-    typedef LoKi::Range_<LHCb::VeloLiteCluster::FastContainer> LiteClusterRange;
+    typedef Gaudi::Range_<LHCb::VeloClusters>     ClusterRange;
+    typedef Gaudi::Range_<LHCb::VeloLiteCluster::FastContainer> LiteClusterRange;
   
   public:
 

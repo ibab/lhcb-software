@@ -1,7 +1,8 @@
-// $Id: VeloPhiHit.h,v 1.8 2009-03-13 16:18:51 ocallot Exp $
+// $Id: VeloPhiHit.h,v 1.9 2010-04-07 05:17:03 wouter Exp $
 #ifndef INCLUDE_VELOPHIHIT_H
 #define INCLUDE_VELOPHIHIT_H 1
 
+#include "GaudiKernel/Range.h"
 #include "GaudiKernel/PhysicalConstants.h"
 #include "TfKernel/VeloHit.h"
 
@@ -29,7 +30,7 @@ namespace Tf {
     //----------------------------------------------------------------------
 
     typedef std::vector<VeloPhiHit* > container_type;
-    typedef LoKi::Range_<container_type> range_type;
+    typedef Gaudi::Range_<container_type> range_type;
 
     typedef velo_phihit_tag hit_type_tag; ///< the hit type tag
 

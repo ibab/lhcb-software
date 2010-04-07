@@ -5,7 +5,7 @@
  *  Header file for track finding 'Region' objects
  *
  *  CVS Log :-
- *  $Id: Region.h,v 1.5 2008-05-29 10:55:11 smenzeme Exp $
+ *  $Id: Region.h,v 1.6 2010-04-07 05:17:03 wouter Exp $
  *
  *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
  *  @date   2007-05-30
@@ -16,7 +16,7 @@
 #define TFKERNEL_REGION_H 1
 
 #include "TfKernel/RegionID.h"
-#include "LoKi/Range.h"
+#include "GaudiKernel/Range.h"
 #include "DetDesc/SolidBox.h"
 
 namespace Tf
@@ -209,7 +209,7 @@ namespace Tf
     virtual ~Region() {}
     typedef HitTypeT HitType ;
     typedef std::vector<const HitTypeT*> HitContainer ; ///< Type for container of pointers to hits
-    typedef LoKi::Range_<HitContainer> HitRangeType ;   ///< Type for a range of elements from a HitContainer
+    typedef Gaudi::Range_<HitContainer> HitRangeType ;   ///< Type for a range of elements from a HitContainer
     //const HitRangeType& hits() const { return m_hitrange ; }
     /// Access the all hits for this region
     virtual HitRangeType hits() const = 0 ;

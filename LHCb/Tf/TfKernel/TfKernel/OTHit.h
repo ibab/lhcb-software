@@ -5,7 +5,7 @@
  *  Header file for track finding class Tf::OTHit
  *
  *  CVS Log :-
- *  $Id: OTHit.h,v 1.10 2008-05-29 10:55:11 smenzeme Exp $
+ *  $Id: OTHit.h,v 1.11 2010-04-07 05:17:03 wouter Exp $
  *
  *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
  *  @date   2007-05-30
@@ -17,7 +17,7 @@
 
 // Include files
 #include "TfKernel/LineHit.h"
-#include "LoKi/Range.h"
+#include "GaudiKernel/Range.h"
 #include "Event/OTLiteTime.h"
 
 
@@ -136,7 +136,7 @@ namespace Tf
   typedef std::vector<const OTHit*> OTHits;
 
   /// Type for range of OTHits within a container
-  typedef LoKi::Range_<OTHits> OTHitRange;
+  typedef Gaudi::Range_<OTHits> OTHitRange;
 
   /// Type for a container for OTHitRange
   typedef std::vector<OTHitRange> OTHitRanges;
