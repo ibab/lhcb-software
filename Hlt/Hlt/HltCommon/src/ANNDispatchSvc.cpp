@@ -148,7 +148,7 @@ void ANNDispatchSvc::faultHandler() const {
     
     //Decode the raw event to get the TCK from the raw Hlt DecReports
     unsigned int TCK = 0;
-    SmartDataPtr<LHCb::RawEvent> rawEvent(m_evtSvc, LHCb::RawEventLocation::Default); 
+    SmartDataPtr<LHCb::RawEvent> rawEvent(m_evtSvc, m_rawEventLocation); 
     if (!rawEvent) {
       verbose() << " No RawEvent found! We will get ANN info from HltInit instead." << endmsg;
       m_uptodate = true;
