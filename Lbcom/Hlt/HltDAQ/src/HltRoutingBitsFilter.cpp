@@ -1,4 +1,4 @@
-// $Id: HltRoutingBitsFilter.cpp,v 1.4 2010-04-07 15:10:15 gligorov Exp $
+// $Id: HltRoutingBitsFilter.cpp,v 1.5 2010-04-07 16:59:08 jpalac Exp $
 // Include files 
 #include <vector>
 #include "boost/assign/list_of.hpp"
@@ -17,8 +17,10 @@ public:
   virtual StatusCode initialize();    ///< Algorithm initialisation
   virtual StatusCode execute   ();    ///< Algorithm execution
 private:
-   std::vector<unsigned int> m_r,m_v;
-   std::string m_rawEventLocation; 
+  std::vector<unsigned int> m_r,m_v;
+  std::string m_inputRawEventLocation; 
+  std::vector<std::string> m_rawEventLocations;
+  
 };
 
 
@@ -37,11 +39,19 @@ DECLARE_ALGORITHM_FACTORY( HltRoutingBitsFilter );
 //=============================================================================
 HltRoutingBitsFilter::HltRoutingBitsFilter( const std::string& name,
                                         ISvcLocator* pSvcLocator)
-  : GaudiAlgorithm ( name , pSvcLocator )
+  : GaudiAlgorithm ( name , pSvcLocator ),
+    m_inputRawEventLocation("")
 {
+
+
   declareProperty("VetoMask", m_v = boost::assign::list_of(0x0)(0x0)(0x0));
   declareProperty("RequireMask", m_r = boost::assign::list_of(0xFFFF)(0xFFFF)(0xFFFF));
-  declareProperty("RawEventLocation",m_rawEventLocation = LHCb::RawEventLocation::Default);
+  declareProperty("RawEventLocation", m_inputRawEventLocation);
+
+  m_rawEventLocations.push_back(m_inputRawEventLocation);
+  m_rawEventLocations.push_back(LHCb::RawEventLocation::Copied);
+  m_rawEventLocations.push_back(LHCb::RawEventLocation::Default);
+
 }
 //=============================================================================
 // Destructor
@@ -69,15 +79,25 @@ StatusCode HltRoutingBitsFilter::initialize() {
 //=============================================================================
 StatusCode HltRoutingBitsFilter::execute() {
 
-  LHCb::RawEvent* rawEvent = get<LHCb::RawEvent>(m_rawEventLocation);
+  
+  LHCb::RawEvent* rawEvent = 0;
+  std::vector<std::string>::const_iterator iLoc = m_rawEventLocations.begin();
+  for (; iLoc != m_rawEventLocations.end() && rawEvent==0 ; ++iLoc ) {
+    if (exist<LHCb::RawEvent>(*iLoc)) {
+      rawEvent = get<LHCb::RawEvent>(*iLoc);
+    }
+  }     
+
   const std::vector<LHCb::RawBank*>& banks = rawEvent->banks(LHCb::RawBank::HltRoutingBits);
   if (banks.size()!=1) {
     setFilterPassed(true);
-    return Error("Unexpected # of HltRoutingBits rawbanks",StatusCode::SUCCESS,0);
+    return Error("Unexpected # of HltRoutingBits rawbanks",
+                 StatusCode::SUCCESS,0);
   }
   if (banks.front()->size()!=3*sizeof(unsigned int)) {
     setFilterPassed(true);
-    return Error("Unexpected HltRoutingBits rawbank size",StatusCode::FAILURE,0);
+    return Error("Unexpected HltRoutingBits rawbank size",
+                 StatusCode::FAILURE,0);
   }
   const unsigned int *data = banks.front()->data();
 

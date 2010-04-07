@@ -1,4 +1,4 @@
-// $Id: HltLumiWriter.h,v 1.2 2009-08-20 07:27:31 panmanj Exp $
+// $Id: HltLumiWriter.h,v 1.3 2010-04-07 16:59:08 jpalac Exp $
 #ifndef HLTLUMIWRITER_H 
 #define HLTLUMIWRITER_H 1
 
@@ -37,6 +37,8 @@ private:
   int m_nbEvents;
   std::vector<unsigned int> m_bank;
   LHCb::RawBank::BankType m_bankType;  
+  std::string m_inputRawEventLocation;
+  std::vector<std::string> m_rawEventLocations;
 
 };
 #endif // HLTLUMIWRITER_H

@@ -1,4 +1,4 @@
-// $Id: HltLumiWriter.cpp,v 1.3 2010-04-07 15:10:15 gligorov Exp $
+// $Id: HltLumiWriter.cpp,v 1.4 2010-04-07 16:59:08 jpalac Exp $
 // Include files 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
@@ -22,10 +22,16 @@ DECLARE_ALGORITHM_FACTORY( HltLumiWriter );
 //=============================================================================
 HltLumiWriter::HltLumiWriter( const std::string& name,
                                       ISvcLocator* pSvcLocator)
-  : GaudiAlgorithm ( name , pSvcLocator )
+  : GaudiAlgorithm ( name , pSvcLocator ),
+    m_inputRawEventLocation("")
 {
   declareProperty( "InputBank", m_inputBank = LHCb::HltLumiSummaryLocation::Default );
-  declareProperty("RawEventLocation",m_rawEventLocation = LHCb::RawEventLocation::Default);
+  declareProperty("RawEventLocation",m_inputRawEventLocation );
+
+  m_rawEventLocations.push_back(m_inputRawEventLocation);
+  m_rawEventLocations.push_back(LHCb::RawEventLocation::Copied);
+  m_rawEventLocations.push_back(LHCb::RawEventLocation::Default);
+
 }
 //=============================================================================
 // Destructor
@@ -71,7 +77,14 @@ StatusCode HltLumiWriter::execute() {
   
   int totDataSize = 0;
 
-  LHCb::RawEvent* rawEvent = get<LHCb::RawEvent>( m_rawEventLocation );
+  LHCb::RawEvent* rawEvent = 0;
+  std::vector<std::string>::const_iterator iLoc = m_rawEventLocations.begin();
+  for (; iLoc != m_rawEventLocations.end() && rawEvent==0 ; ++iLoc ) {
+    if (exist<LHCb::RawEvent>(*iLoc)) {
+      rawEvent = get<LHCb::RawEvent>(*iLoc);
+    }
+  }
+
   // set source, type, version 
   rawEvent->addBank( 0, m_bankType, 0, m_bank );   
   totDataSize += m_bank.size();
