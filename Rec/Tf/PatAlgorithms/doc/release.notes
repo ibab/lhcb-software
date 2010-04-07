@@ -3,15 +3,14 @@
 ! Responsible : Stephanie-Hansmann-Menzemer
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
+! 2010-04-07 - Stephanie Hansmann-Menzemer
+ - take care of polarity in qOverP computation in pattern reco
 
-
-! 2009-02-13 - Sascha Stahl
+! 2010-04-07 - Sascha Stahl
  - modified early data tuning for PatDownstream algorithm
 
-
-
 !========================= PatAlgorithms v3r29 2010-02-15 ====================
-! 2009-02-13 - Stephanie Hansmann-Menzemer
+! 2010-02-13 - Stephanie Hansmann-Menzemer
  - modify early data tuning for PatForward and PatDownstream algorithms
 
 ! 2010-02-08 - Michel De Cian
@@ -24,7 +23,7 @@
 
 
 !========================= PatAlgorithms v3r28 2010-01-21 ====================
-! 2009-01-18 - Stephanie Hansmann-Menzemer
+! 2010-01-18 - Stephanie Hansmann-Menzemer
  - make algorithms use ignore flag of HitBase class 
 
 !========================= PatAlgorithms v3r27 2009-12-11 ====================
