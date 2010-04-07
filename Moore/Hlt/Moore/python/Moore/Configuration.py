@@ -1,7 +1,7 @@
 """
 High level configuration tool(s) for Moore
 """
-__version__ = "$Id: Configuration.py,v 1.112 2010-04-04 17:58:17 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.113 2010-04-07 21:16:02 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ, path
@@ -334,7 +334,9 @@ class Moore(LHCbConfigurableUser):
         def genConfigAction() :
             def gather( c, overrule ) :
                     def check(config,prop,value) :
-                        return prop in config.getDefaultProperties() and hasattr(config,prop) and getattr(config,prop) == value 
+                        if prop not in config.getDefaultProperties() : return False
+                        if hasattr(config,prop) : return getattr(config,prop) == value 
+                        return config.getDefaultProperties()[prop] == value
                     def addOverrule(config,rule):
                         if c.name() not in overrule.keys() :
                            overrule[c.name()] = []     
