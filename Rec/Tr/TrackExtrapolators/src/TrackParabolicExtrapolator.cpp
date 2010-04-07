@@ -49,7 +49,7 @@ StatusCode TrackParabolicExtrapolator::propagate( Gaudi::TrackVector& stateVec,
                                                   double zOld,
                                                   double zNew,
                                                   Gaudi::TrackMatrix* transMat,
-                                                  LHCb::ParticleID /*pid*/ )
+                                                  LHCb::ParticleID /*pid*/ ) const
 {
   // Bail out if already at destination
   const double dz = zNew - zOld;
@@ -64,7 +64,7 @@ StatusCode TrackParabolicExtrapolator::propagate( Gaudi::TrackVector& stateVec,
   const double xMid = stateVec[0] + (0.5*stateVec[2]*dz);
   const double yMid = stateVec[1] + (0.5*stateVec[3]*dz);
   XYZPoint P( xMid, yMid, zOld+(0.5*dz) );
-  m_B = fieldVector( P ) ;
+  Gaudi::XYZVector m_B = fieldVector( P ) ;
 
   // to save some typing...
   const double Tx   = stateVec[2];
@@ -74,8 +74,8 @@ StatusCode TrackParabolicExtrapolator::propagate( Gaudi::TrackVector& stateVec,
   const double norm = std::sqrt( nTx2 + nTy2 - 1.0 );
 
   // calculate the A factors 
-  m_ax = norm*( Ty*(Tx*m_B.x()+m_B.z())-(nTx2*m_B.y()));
-  m_ay = norm*(-Tx*(Ty*m_B.y()+m_B.z())+(nTy2*m_B.x()));
+  double m_ax = norm*( Ty*(Tx*m_B.x()+m_B.z())-(nTx2*m_B.y()));
+  double m_ay = norm*(-Tx*(Ty*m_B.y()+m_B.z())+(nTy2*m_B.x()));
 
   const double fac = eplus*c_light*dz;
   const double fact = fac * stateVec[4];
@@ -87,7 +87,8 @@ StatusCode TrackParabolicExtrapolator::propagate( Gaudi::TrackVector& stateVec,
   stateVec[3] += m_ay * fact;
 
   if( transMat != NULL ) {
-    updateTransportMatrix( dz, stateVec, *transMat );
+    updateTransportMatrix( dz, stateVec, *transMat,
+			   m_B, m_ax, m_ay);
   }
 
   return StatusCode::SUCCESS;
@@ -98,7 +99,7 @@ StatusCode TrackParabolicExtrapolator::propagate( Gaudi::TrackVector& stateVec,
 //=============================================================================
 StatusCode TrackParabolicExtrapolator::propagate( State& state,
                                                   const Gaudi::XYZPoint& point,
-                                                  ParticleID pid )
+                                                  ParticleID pid ) const
 {
   StatusCode sc = StatusCode::SUCCESS;
 
@@ -108,7 +109,7 @@ StatusCode TrackParabolicExtrapolator::propagate( State& state,
   if( diff.R() < TrackParameters::propagationTolerance ) { return StatusCode::SUCCESS; }
   
   XYZPoint midP = P + 0.5*diff;
-  m_B = fieldVector( midP ) ;
+  Gaudi::XYZVector m_B = fieldVector( midP ) ;
 
   // The distance between the reference point and a point on the parabola
   // can be minimized by taking the derivative wrt Z and equal that to zero.
@@ -119,8 +120,8 @@ StatusCode TrackParabolicExtrapolator::propagate( State& state,
   double nTx2 = 1.0+Tx*Tx;
   double nTy2 = 1.0+Ty*Ty;
   double norm = std::sqrt( nTx2 + nTy2 - 1.0 );
-  m_ax = norm*( Ty*(Tx*m_B.x()+m_B.z())-(nTx2*m_B.y()));
-  m_ay = norm*(-Tx*(Ty*m_B.y()+m_B.z())+(nTy2*m_B.x()));
+  double m_ax = norm*( Ty*(Tx*m_B.x()+m_B.z())-(nTx2*m_B.y()));
+  double m_ay = norm*(-Tx*(Ty*m_B.y()+m_B.z())+(nTy2*m_B.x()));
   double varA  = 0.5*m_ax*state.qOverP()*eplus*c_light;
   double varB  = 0.5*m_ay*state.qOverP()*eplus*c_light;
   double alpha = 2.*( varA*varA + varB*varB );
@@ -162,7 +163,9 @@ StatusCode TrackParabolicExtrapolator::propagate( State& state,
 //=============================================================================
 void TrackParabolicExtrapolator::updateTransportMatrix( const double dz, 
                                                         Gaudi::TrackVector& stateVec,
-                                                        Gaudi::TrackMatrix& transMat )
+                                                        Gaudi::TrackMatrix& transMat,
+							const Gaudi::XYZVector& m_B,
+							double m_ax, double m_ay ) const
 {
   // Reset the transport matrix. It turns out that this is so expensive
   // in gcc 3.4 that we better just set the elements explicitely, below.

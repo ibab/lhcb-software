@@ -1,4 +1,4 @@
-// $Id: TrackKiselExtrapolator.cpp,v 1.15 2009-09-01 20:48:14 wouter Exp $
+// $Id: TrackKiselExtrapolator.cpp,v 1.16 2010-04-07 21:08:38 wouter Exp $
 
 // from Gaudi
 #include "GaudiKernel/PhysicalConstants.h"
@@ -45,7 +45,7 @@ StatusCode TrackKiselExtrapolator::propagate( Gaudi::TrackVector& stateVec,
                                               double zOld,
                                               double zNew,
                                               Gaudi::TrackMatrix* transMat,
-                                              LHCb::ParticleID /*pid*/)
+                                              LHCb::ParticleID /*pid*/) const
 {
   // Bail out if already at destination
   const double dz = zNew - zOld;
@@ -87,7 +87,8 @@ StatusCode TrackKiselExtrapolator::propagate( Gaudi::TrackVector& stateVec,
 void TrackKiselExtrapolator::getCoefficients( const double x, const double y,
 					      double Xi  [3][3]      , double Yi  [3][3],
 					      double Xii [3][3][3]   , double Yii [3][3][3], 
-					      double Xiii[3][3][3][3], double Yiii[3][3][3][3]){
+					      double Xiii[3][3][3][3], double Yiii[3][3][3][3]) const
+{
   const double xx = x*x;
   const double xy = x*y;
   const double yy = y*y;
@@ -259,7 +260,8 @@ void TrackKiselExtrapolator::integrateField( const Gaudi::XYZPoint& p0,
                                              const Gaudi::XYZPoint& p2,
                                              double si  [3]      , double Si  [3],
                                              double sii [3][3]   , double Sii [3][3], 
-                                             double siii[3][3][3], double Siii[3][3][3]){
+                                             double siii[3][3][3], double Siii[3][3][3]) const
+{
   double dz = p2.z() - p0.z();
 
   m_B[0] = fieldVector(p0) ;
@@ -335,7 +337,8 @@ void TrackKiselExtrapolator::extrapolateAnalytic( const double T_in[], // input 
 						  double J[], // output covariance matrix
 						  const double z_in,
 						  double z_out   // extrapolate to this z position
-						  ){
+						  ) const
+{
   //
   //  Part of the exact extrapolation formula with error (c_light*B*dz)^4/4!
   //

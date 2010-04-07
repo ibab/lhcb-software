@@ -41,24 +41,21 @@ public:
                         double zOld,
                         double zNew,
                         Gaudi::TrackMatrix* transMat,
-                        LHCb::ParticleID pid = LHCb::ParticleID(211) );
+                        LHCb::ParticleID pid = LHCb::ParticleID(211) ) const ;
   
   /// Propagate a state to the closest position to the specified point
   StatusCode propagate( LHCb::State& state,
                         const Gaudi::XYZPoint& point,
-                        LHCb::ParticleID pid = LHCb::ParticleID(211) );
+                        LHCb::ParticleID pid = LHCb::ParticleID(211) ) const ;
 
 protected:
 
   /// update transport matrix
-  virtual void updateTransportMatrix( const double dz,
-                                      Gaudi::TrackVector& stateVec,
-                                      Gaudi::TrackMatrix& transMat );
-  
-  double             m_ax;
-  double             m_ay;
-  Gaudi::XYZVector   m_B;
-
+  void updateTransportMatrix( const double dz,
+			      Gaudi::TrackVector& stateVec,
+			      Gaudi::TrackMatrix& transMat,
+			      const Gaudi::XYZVector& B,
+			      double ax, double ay) const ;
 };
 
 #endif // TRACKPARABOLICEXTRAPOLATOR_H

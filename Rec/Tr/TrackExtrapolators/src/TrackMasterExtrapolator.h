@@ -1,4 +1,4 @@
-// $Id: TrackMasterExtrapolator.h,v 1.17 2009-03-08 17:31:54 smenzeme Exp $
+// $Id: TrackMasterExtrapolator.h,v 1.18 2010-04-07 21:08:38 wouter Exp $
 #ifndef TRACKEXTRAPOLATORS_TRACKMASTEREXTRAPOLATOR_H
 #define TRACKEXTRAPOLATORS_TRACKMASTEREXTRAPOLATOR_H 1
 
@@ -60,14 +60,14 @@ class TrackMasterExtrapolator: public TrackExtrapolator
                                 double zOld,
                                 double zNew,
                                 Gaudi::TrackMatrix* transMat,
-                                LHCb::ParticleID pid = LHCb::ParticleID(211) );
+                                LHCb::ParticleID pid = LHCb::ParticleID(211) ) const ;
 
   /// Propagate a state to a given z-position
   /// Transport matrix is calulated when transMat pointer is not NULL
   virtual StatusCode propagate( LHCb::State& state,
                                 double z,
                                 Gaudi::TrackMatrix* transMat,
-                                LHCb::ParticleID partId = LHCb::ParticleID(211) );
+                                LHCb::ParticleID partId = LHCb::ParticleID(211) ) const ;
 
  private:
   /// z scatter

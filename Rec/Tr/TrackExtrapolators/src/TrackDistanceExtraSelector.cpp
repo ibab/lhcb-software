@@ -1,4 +1,4 @@
-// $Id: TrackDistanceExtraSelector.cpp,v 1.8 2010-02-23 16:45:10 wouter Exp $
+// $Id: TrackDistanceExtraSelector.cpp,v 1.9 2010-04-07 21:08:38 wouter Exp $
 
 // Include files
 
@@ -63,8 +63,8 @@ StatusCode TrackDistanceExtraSelector::initialize()
 //=============================================================================
 //
 //=============================================================================
-ITrackExtrapolator* TrackDistanceExtraSelector::select( const double zStart,
-                                                        const double zEnd ) const
+const ITrackExtrapolator* TrackDistanceExtraSelector::select( const double zStart,
+							      const double zEnd ) const
 {
   return ( std::abs(zEnd-zStart) < m_shortDist ?
            m_shortDistanceExtrapolator : m_longDistanceExtrapolator );

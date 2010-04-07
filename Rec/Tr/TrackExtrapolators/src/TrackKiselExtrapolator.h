@@ -34,31 +34,31 @@ public:
                                 double zOld,
                                 double zNew,
                                 Gaudi::TrackMatrix* transMat,
-                                LHCb::ParticleID pid = LHCb::ParticleID(211) );
+                                LHCb::ParticleID pid = LHCb::ParticleID(211) ) const ;
 
 private:
   
  void getCoefficients( const double x, const double y,
                        double Xi  [3][3]      , double Yi  [3][3],
                        double Xii [3][3][3]   , double Yii [3][3][3], 
-                       double Xiii[3][3][3][3], double Yiii[3][3][3][3]);
+                       double Xiii[3][3][3][3], double Yiii[3][3][3][3]) const ;
 
   void integrateField(const Gaudi::XYZPoint& p0, 
                       const Gaudi::XYZPoint& p1, 
                       const Gaudi::XYZPoint& p2,
                           double si  [3]      , double Si  [3],
                           double sii [3][3]   , double Sii [3][3], 
-			  double siii[3][3][3], double Siii[3][3][3]);
+			  double siii[3][3][3], double Siii[3][3][3]) const ;
 
   void extrapolateAnalytic( const double T_in [], 
                             double T_out[], 
                             double J[],const double z_in, 
-                            double  z_out);
+                            double  z_out) const ;
 
   int m_order;
 
-  Gaudi::XYZPoint           m_point;  ///< to compute the field
-  std::vector<Gaudi::XYZVector>  m_B;      ///< returned field
+  mutable Gaudi::XYZPoint           m_point;  ///< to compute the field
+  mutable std::vector<Gaudi::XYZVector>  m_B;      ///< returned field
 };
 
 #endif // TRACKKISELEXTRAPOLATOR_H

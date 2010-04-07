@@ -1,4 +1,4 @@
-// $Id: TrackDistanceExtraSelector.h,v 1.5 2009-09-01 20:07:11 wouter Exp $
+// $Id: TrackDistanceExtraSelector.h,v 1.6 2010-04-07 21:08:38 wouter Exp $
 #ifndef TrackDistanceExtraSelector_H
 #define TrackDistanceExtraSelector_H 1
 
@@ -30,13 +30,13 @@ public:
 
   StatusCode initialize();
 
-  virtual ITrackExtrapolator* select( const double zStart,
-                                      const double zEnd ) const;
+  virtual const ITrackExtrapolator* select( const double zStart,
+					    const double zEnd ) const ;
 
  private:
   double m_shortDist;
-  ITrackExtrapolator* m_shortDistanceExtrapolator;
-  ITrackExtrapolator* m_longDistanceExtrapolator; 
+  const ITrackExtrapolator* m_shortDistanceExtrapolator;
+  const ITrackExtrapolator* m_longDistanceExtrapolator; 
   /// extrapolator to use for short transport in mag field
   std::string m_shortDistanceExtrapolatorType;
   /// extrapolator to use for long transport in mag field

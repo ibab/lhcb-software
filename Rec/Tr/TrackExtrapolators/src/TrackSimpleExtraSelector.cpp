@@ -1,4 +1,4 @@
-// $Id: TrackSimpleExtraSelector.cpp,v 1.4 2006-05-31 12:50:57 erodrigu Exp $
+// $Id: TrackSimpleExtraSelector.cpp,v 1.5 2010-04-07 21:08:38 wouter Exp $
 
 #include "TrackSimpleExtraSelector.h"
 
@@ -49,8 +49,8 @@ StatusCode TrackSimpleExtraSelector::initialize()
 //=============================================================================
 // 
 //=============================================================================
-ITrackExtrapolator* TrackSimpleExtraSelector::select( const double,
-                                                      const double) const
+const ITrackExtrapolator* TrackSimpleExtraSelector::select( const double,
+							    const double) const
 {
   return m_extrapolator;
 }

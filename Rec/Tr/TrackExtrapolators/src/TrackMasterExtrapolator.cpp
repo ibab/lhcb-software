@@ -1,4 +1,4 @@
-// $Id: TrackMasterExtrapolator.cpp,v 1.35 2010-03-15 12:47:24 smenzeme Exp $
+// $Id: TrackMasterExtrapolator.cpp,v 1.36 2010-04-07 21:08:38 wouter Exp $
 // Include files
 // -------------
 // from Gaudi
@@ -110,9 +110,9 @@ StatusCode TrackMasterExtrapolator::propagate( Gaudi::TrackVector& stateVec,
                                                double zOld,
                                                double zNew,
                                                Gaudi::TrackMatrix* transMat,
-                                               LHCb::ParticleID pid )
+                                               LHCb::ParticleID pid ) const
 { 
-  ITrackExtrapolator* thisExtrapolator = m_extraSelector->select( zOld, zNew );
+  const ITrackExtrapolator* thisExtrapolator = m_extraSelector->select( zOld, zNew );
   return thisExtrapolator->propagate( stateVec, zOld, zNew, transMat, pid );
 }
 
@@ -122,7 +122,7 @@ StatusCode TrackMasterExtrapolator::propagate( Gaudi::TrackVector& stateVec,
 StatusCode TrackMasterExtrapolator::propagate( LHCb::State& state, 
                                                double zNew,
                                                Gaudi::TrackMatrix* transMat,
-                                               LHCb::ParticleID partId )
+                                               LHCb::ParticleID partId ) const
 {
   StatusCode sc(StatusCode::SUCCESS,true) ;
   // Create transport update matrix
@@ -196,7 +196,7 @@ StatusCode TrackMasterExtrapolator::propagate( LHCb::State& state,
 	double zWall = zScatter( it->z1, it->z2, isUpstream );
 	double tWall = fabs( it->z2 - it->z1 ) ;
 	//for thick scatterers it is always z2. double zWall = it->z2 ;
-	ITrackExtrapolator* thisExtrapolator = m_extraSelector->select(state.z(),zWall);
+	const ITrackExtrapolator* thisExtrapolator = m_extraSelector->select(state.z(),zWall);
 	sc = thisExtrapolator->propagate( state, zWall, upMat );
 	
 	// check for success
@@ -239,7 +239,7 @@ StatusCode TrackMasterExtrapolator::propagate( LHCb::State& state,
     // propagate from last wall to target
     double ztarget = start.z() + vect.z() ;
     if( fabs( state.z() - ztarget )> TrackParameters::propagationTolerance ) {
-      ITrackExtrapolator* thisExtrapolator = m_extraSelector->select(state.z(),ztarget);
+      const ITrackExtrapolator* thisExtrapolator = m_extraSelector->select(state.z(),ztarget);
       sc = thisExtrapolator->propagate( state, ztarget, upMat );
       
       // check for success

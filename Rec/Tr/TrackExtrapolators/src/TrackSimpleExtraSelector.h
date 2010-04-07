@@ -1,4 +1,4 @@
-// $Id: TrackSimpleExtraSelector.h,v 1.4 2006-05-17 06:42:53 mneedham Exp $
+// $Id: TrackSimpleExtraSelector.h,v 1.5 2010-04-07 21:08:38 wouter Exp $
 #ifndef TrackSimpleExtraSelector_H
 #define TrackSimpleExtraSelector_H 1
 
@@ -28,11 +28,11 @@ public:
 
   StatusCode initialize();
 
-  virtual ITrackExtrapolator* select( const double zStart,
+  virtual const ITrackExtrapolator* select( const double zStart,
                                       const double zEnd ) const;
-
+  
 private:
-  ITrackExtrapolator* m_extrapolator;
+  const ITrackExtrapolator* m_extrapolator;
   std::string         m_extraName;
   
 };

@@ -40,7 +40,7 @@ public:
 			double zOld,
 			double zNew,
 			Gaudi::TrackMatrix* transMat,
-			LHCb::ParticleID pid = LHCb::ParticleID(211) );
+			LHCb::ParticleID pid = LHCb::ParticleID(211) ) const ;
 
   // public methods that are not in the interface. used for debugging with the extrapolator tester
 public:

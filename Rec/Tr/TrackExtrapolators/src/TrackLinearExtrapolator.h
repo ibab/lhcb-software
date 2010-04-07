@@ -39,12 +39,12 @@ public:
                         double zOld,
                         double zNew,
                         Gaudi::TrackMatrix* transMat,
-                        LHCb::ParticleID pid = LHCb::ParticleID(211) );
+                        LHCb::ParticleID pid = LHCb::ParticleID(211) ) const ;
   
   /// Propagate a state to the closest position to the specified point
   StatusCode propagate( LHCb::State& state,
                         const Gaudi::XYZPoint& point,
-                        LHCb::ParticleID pid = LHCb::ParticleID(211) );
+                        LHCb::ParticleID pid = LHCb::ParticleID(211) ) const ;
   
 };
 

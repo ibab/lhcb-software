@@ -306,7 +306,7 @@ TrackRungeKuttaExtrapolator::propagate( Gaudi::TrackVector& state,
 					double zin,
 					double zout,
 					Gaudi::TrackMatrix* transMat,
-					LHCb::ParticleID /*pid*/ )
+					LHCb::ParticleID /*pid*/ ) const
 {
   // Bail out if already at destination
   if( std::abs(zin-zout) < TrackParameters::propagationTolerance ) { 
@@ -474,11 +474,17 @@ TrackRungeKuttaExtrapolator::extrapolate( RKState& state,
     // final check: bail out for vertical or looping tracks
     if( std::abs( state.tx() ) > m_maxSlope || std::abs( state.ty() ) > m_maxSlope ) {
       debug() << "State has very large slope, probably curling: tx, ty = "
-	      << state.tx() << ", " << state.ty() << endreq ;
+	      << state.tx() << ", " << state.ty() 
+	      << " z_origin, target, current: "
+	      << zout - totalStep << " " << zout << " " << state.z 
+	      << endreq ;
       rc = RKCurling ;
     } else if( std::abs(state.qop * rkcache.stage[0].Bfield.y() ) > m_maxCurvature ) {
       debug() << "State has too small curvature radius: "
-	      << state.qop * rkcache.stage[0].Bfield.y() << endreq ;
+	      << state.qop * rkcache.stage[0].Bfield.y() 
+	      << " z_origin, target, current: "
+	      << zout - totalStep << " " << zout << " " << state.z 
+	      << endreq ;
       rc = RKCurling ;
     } else if( stats.numfailedstep + rkcache.step  >= m_maxNumRKSteps ) {
       debug() << "Exceeded max numsteps. " << endreq ;

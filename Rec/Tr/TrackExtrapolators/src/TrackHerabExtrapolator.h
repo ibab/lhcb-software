@@ -38,7 +38,7 @@ public:
                                 double zOld,
                                 double zNew,
                                 Gaudi::TrackMatrix* transMat,
-                                LHCb::ParticleID pid = LHCb::ParticleID(211) );
+                                LHCb::ParticleID pid = LHCb::ParticleID(211) ) const ;
 
 private:
  
@@ -48,7 +48,7 @@ private:
                     double& zNew, 
                     double pOut[5],
                     double fQp[25], 
-                    int& istat);
+                    int& istat) const ;
 
 
   /// Interface to 4th order Runga-Kutta
@@ -57,7 +57,7 @@ private:
                  double& z_out,
                  double* p_out,
                  double* rkd,
-                 int& ierror);
+                 int& ierror) const ;
 
   /// Interface to fast 4th order Runga-Kutta  
   void rk4fast(  double& z_in ,
@@ -65,7 +65,7 @@ private:
                  double& z_out ,
                  double* p_out,
                  double* rkd,
-                 int& ierror );
+                 int& ierror ) const ;
 
   /// Interface to 5th order Runga-Kutta
   void rk5order( double& z_in ,
@@ -74,7 +74,7 @@ private:
                  double& z_out ,
                  double* p_out,
                  double* rkd,
-                 int& ierror);
+                 int& ierror) const ;
 
   /// Interface to fast 5th order Runga-Kutta
   void rk5fast(  double& z_in ,
@@ -83,7 +83,7 @@ private:
                  double& z_out,
                  double* p_out,
                  double* rkd,
-                 int& ierror);
+                 int& ierror) const ;
 
  /// interface to 5th order with derivatives caculated by numerical derivatives
   void rk5numde( double& z_in ,
@@ -92,26 +92,26 @@ private:
                  double& z_out,
                  double* p_out,
                  double* rkd,
-                 int& ierror);
+                 int& ierror) const ;
 
   /// Without derivatives rkd and ierror flag 
   void rk5fast(  double& z_in, 
                  double* p_in, 
                  double& error, 
                  double& z_out,
-                 double* p_out);
+                 double* p_out) const ;
 
   /// Without derivatives rkd and ierror flag
   void rk4fast(  double& z_in, 
                  double* p_in, 
                  double& z_out, 
-                 double* p_out);
+                 double* p_out) const ;
  
   int m_extrapolatorID;
 
-  double             m_error;  ///< Error
-  Gaudi::XYZPoint           m_point;  ///< to compute the field
-  Gaudi::XYZVector          m_B;      ///< returned field
+  mutable double           m_error;  ///< Error
+  mutable Gaudi::XYZPoint  m_point;  ///< to compute the field
+  mutable Gaudi::XYZVector m_B;      ///< returned field
  
   // Parameters for Runge-Kutta
   double             m_qpCurls;    ///< Maximum curvature

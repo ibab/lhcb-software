@@ -1,4 +1,4 @@
-// $Id: TrackHerabExtrapolator.cpp,v 1.27 2009-12-07 17:42:16 cattanem Exp $
+// $Id: TrackHerabExtrapolator.cpp,v 1.28 2010-04-07 21:08:38 wouter Exp $
 
 // from Gaudi
 #include "GaudiKernel/PhysicalConstants.h"
@@ -59,7 +59,7 @@ StatusCode TrackHerabExtrapolator::propagate( Gaudi::TrackVector& stateVec,
                                               double zOld,
                                               double zNew,
                                               Gaudi::TrackMatrix* transMat,
-                                              LHCb::ParticleID /*pid*/ )
+                                              LHCb::ParticleID /*pid*/ ) const
 {
   // Bail out if already at destination
   const double dz = zNew - zOld;
@@ -115,7 +115,7 @@ StatusCode TrackHerabExtrapolator::propagate( Gaudi::TrackVector& stateVec,
 void TrackHerabExtrapolator::extrapolate(double& zIn,double pIn[5], 
                                          double& zNew,
                                          double pOut[5], double fQp[25],
-                                         int& istat)
+                                         int& istat) const
 {
   switch ( m_extrapolatorID ) {
 
@@ -160,7 +160,7 @@ void TrackHerabExtrapolator::rk5order(
                     double& z_out, // z value for output parameters
                     double* p_out, // output track parameters
                     double* rkd,   // derivatives d p_out[0-4] / d p_in[0-4]
-                    int&    ierror) // = 0 ok, = 1 track curls
+                    int&    ierror) const // = 0 ok, = 1 track curls
   //
   // Fifth-order Runge-Kutta method with adaptive stepsize control
   // for solution of the equation of motion of a particle with
@@ -419,7 +419,7 @@ void TrackHerabExtrapolator::rk5fast(
                       double& z_out, // z value for output parameters
                       double* p_out, // output track parameters
                       double* rkd,   // derivatives d p_out[0-4] / d p_in[0-4]
-                      int&    ierror)  // = 0 ok, = 1 track curls
+                      int&    ierror) const // = 0 ok, = 1 track curls
   //
   // Fifth-order Runge-Kutta method with adaptive stepsize control
   // for solution of the equation of motion of a particle with
@@ -583,7 +583,7 @@ void TrackHerabExtrapolator::rk5fast(                 // Without derivatives
                       double* p_in,  // input track parameters (x,y,tx,ty,Q/p)
                       double& error,  // acceptable errors in mm
                       double& z_out, // z value for output parameters
-                      double* p_out )// output track parameters
+                      double* p_out ) const // output track parameters
   //
   // Fifth-order Runge-Kutta method with adaptive stepsize control
   // for solution of the equation of motion of a particle with
@@ -712,7 +712,7 @@ void TrackHerabExtrapolator::rk5numde(   // Numerical Derivatives ( quite slow )
                        double& z_out, // z value for output parameters
                        double* p_out, // output track parameters
                        double* rkd,   // derivatives d p_out[0-4] / d p_in[0-4]
-                       int&    ierror) // = 0 ok, = 1 track curls
+                       int&    ierror) const // = 0 ok, = 1 track curls
   //
   // Fifth-order Runge-Kutta method with adaptive stepsize control
   // for solution of the equation of motion of a particle with
@@ -776,7 +776,7 @@ void TrackHerabExtrapolator::rk4order(
                        double& z_out, // z value for output parameters
                        double* p_out, // output track parameters
                        double* rkd,  // derivatives d p_out(1-5) / d p_in(1-5)
-                       int&    ierror)  // = 0 ok, = 1 track curls
+                       int&    ierror) const // = 0 ok, = 1 track curls
   //
   // Forth-order Runge-Kutta method for solution of the equation
   // of motion of a particle with parameter qp = Q /P
@@ -983,7 +983,7 @@ void TrackHerabExtrapolator::rk4fast(
                       double& z_out, // z value for output parameters
                       double* p_out, // output track parameters
                       double* rkd,  // derivatives d p_out[0-4] / d p_in[0-4]
-                      int&    ierror)  // = 0 ok, = 1 track curls
+                      int&    ierror) const // = 0 ok, = 1 track curls
   //
   // Forth-order Runge-Kutta method for solution of the equation
   // of motion of a particle with parameter qp = Q /P
@@ -1101,7 +1101,7 @@ void TrackHerabExtrapolator::rk4fast(                // Without derivatives
                       double& z_in , // z value for input parameters
                       double* p_in,  // input track parameters (x,y,tx,ty,Q/p)
                       double& z_out, // z value for output parameters
-                      double* p_out) // output track parameters
+                      double* p_out) const // output track parameters
   //
   // Forth-order Runge-Kutta method for solution of the equation
   // of motion of a particle with parameter qp = Q /P
