@@ -4,7 +4,7 @@
  *
  *  Implementation file for class : Tf::STHitCreator
  *
- *  $Id: STHitCreator.cpp,v 1.8 2010-01-27 23:25:06 wouter Exp $
+ *  $Id: STHitCreator.cpp,v 1.9 2010-04-07 05:13:57 wouter Exp $
  *
  *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
  *  @date   2007-06-01
@@ -17,9 +17,9 @@
 #include "Kernel/STDataFunctor.h"
 #include "STDet/DeSTDetector.h"
 #include "STDet/DeSTSector.h"
+#include "Event/STLiteCluster.h"
 
 #include "TfKernel/RegionID.h"
-
 #include "TfKernel/IITHitCreator.h"
 #include "TfKernel/ITTHitCreator.h"
 
@@ -68,10 +68,18 @@ namespace Tf
       // no loading on demand
       void loadHits( STRegionImp::ModuleContainer::const_iterator /*begin*/,
                      STRegionImp::ModuleContainer::const_iterator /*end*/) { loadHits() ; }
-
+      void clearEvent() {
+	m_clusters = 0 ;
+	Detector<STRegionImp>::clearEvent() ;
+      }
+      const LHCb::STLiteCluster::FastContainer* clusters() {
+	return m_clusters ? m_clusters :
+	  (m_clusters = m_parenttool->get<LHCb::STLiteCluster::FastContainer>(m_clusterlocation) ) ;
+      }
     private:
       std::string m_clusterlocation ;
       GaudiTool* m_parenttool ;
+      const LHCb::STLiteCluster::FastContainer* m_clusters ;
     } ;
 
     STDetector::STDetector(const DeSTDetector& stdetector, const std::string& clusterlocation,
@@ -102,9 +110,8 @@ namespace Tf
     {
       if(!isLoaded()) {
         // retrieve clusters
-        const LHCb::STLiteCluster::FastContainer* liteCont =
-          m_parenttool->get<LHCb::STLiteCluster::FastContainer>(m_clusterlocation);
-
+        const LHCb::STLiteCluster::FastContainer* liteCont = clusters() ;
+	
         // create hits clusters. don't assume anything about order
         HitCreatorGeom::STModule* cachedSector(0) ;
         unsigned int cachedSectorID(0xFFFFFFFF) ;
@@ -150,7 +157,7 @@ namespace Tf
 				    const std::string& name,
 				    const IInterface* parent):
     GaudiTool(type, name, parent),
-    m_detectordata(0)
+    m_stdet(0), m_detectordata(0)
   {
     declareInterface<typename Trait::ISTHitCreator>(this);
     declareProperty("ClusterLocation", m_clusterLocation=Trait::defaultClusterLocation()) ;
@@ -167,9 +174,9 @@ namespace Tf
     const StatusCode sc = GaudiTool::initialize();
     if (sc.isFailure()) return Error("Failed to initialize",sc);
 
-    // get geometry and copy the hierarchy y to navigate hits
-    const DeSTDetector* itdet = getDet<DeSTDetector>(m_detectorLocation);
-    m_detectordata = new HitCreatorGeom::STDetector(*itdet,m_clusterLocation,*this) ;
+    // get geometry and copy the hierarchy to navigate hits
+    m_stdet = getDet<DeSTDetector>(m_detectorLocation);
+    m_detectordata = new HitCreatorGeom::STDetector(*m_stdet,m_clusterLocation,*this) ;
 
     // reset pointer to list of clusters at beginevent
     incSvc()->addListener(this, IncidentType::BeginEvent);
@@ -265,6 +272,18 @@ namespace Tf
     return m_detectordata->region(iStation,iLayer,iRegion) ;
   }
 
+  template<class Trait>
+  Tf::STHit STHitCreator<Trait>::hit(LHCb::STChannelID stid) const
+  {
+    const DeSTSector* sector = m_stdet->findSector( stid ) ;
+    const LHCb::STLiteCluster::FastContainer* clusters = m_detectordata->clusters() ;
+    LHCb::STLiteCluster::FastContainer::const_iterator iclus =  
+      clusters->find< LHCb::STLiteCluster::findPolicy >( stid )  ;
+    if( iclus == clusters->end() )
+      throw GaudiException("STHitCreator::hit cannot find cluster", "STHitCreatorException" , StatusCode::FAILURE ) ;
+    return Tf::STHit(*sector, *iclus ) ;
+  }
+  
   //====================================================================================
   // template instantiations
   //====================================================================================

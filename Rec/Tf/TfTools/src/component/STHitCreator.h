@@ -4,7 +4,7 @@
  *
  *  Header file for class : Tf::STHitCreator
  *
- *  $Id: STHitCreator.h,v 1.4 2010-01-27 23:25:06 wouter Exp $
+ *  $Id: STHitCreator.h,v 1.5 2010-04-07 05:13:57 wouter Exp $
  *
  *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
  *  @date   2007-06-01
@@ -111,13 +111,16 @@ namespace Tf
                                    const typename Trait::LayerID iLayer,
                                    const typename Trait::RegionID  iRegion) const ;
 
+    // create a single STHit from an STChannelID
+    virtual Tf::STHit hit(LHCb::STChannelID stid) const ;
+
   private:
 
     /// Load the hits
     void loadHits() const ;
 
   private:
-    
+    const DeSTDetector* m_stdet ;
     mutable HitCreatorGeom::STDetector* m_detectordata ;
     std::string m_clusterLocation;
     std::string m_detectorLocation;
