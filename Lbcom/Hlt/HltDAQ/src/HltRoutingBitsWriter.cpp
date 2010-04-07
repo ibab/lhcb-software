@@ -1,4 +1,4 @@
-// $Id: HltRoutingBitsWriter.cpp,v 1.5 2010-04-07 14:36:51 graven Exp $
+// $Id: HltRoutingBitsWriter.cpp,v 1.6 2010-04-07 14:38:36 graven Exp $
 // Include files 
 // from Boost
 #include "boost/foreach.hpp"
@@ -170,7 +170,7 @@ StatusCode HltRoutingBitsWriter::execute() {
         if ( eval == 0 ) continue;
         bool result = (*eval)(odin);
         *(m_odin_evaluators[ i ].counter) += result;
-        always() << " " << i << " " << *eval << " = " << (result?"pass":"fail") << endmsg;
+        //always() << " " << i << " " << *eval << " = " << (result?"pass":"fail") << endmsg;
         if ( result ) w |= (0x01UL << i); 
     }
 
@@ -184,7 +184,7 @@ StatusCode HltRoutingBitsWriter::execute() {
               if ( eval == 0 ) continue;
               bool result = (*eval)(l0du);
               *(m_l0_evaluators[ i-8 ].counter) += result;
-              always() << " " << i << " " << *eval << " = " << (result?"pass":"fail") << endmsg;
+              //always() << " " << i << " " << *eval << " = " << (result?"pass":"fail") << endmsg;
               if ( result ) w |= (0x01UL << i); 
         }
     }
@@ -199,7 +199,7 @@ StatusCode HltRoutingBitsWriter::execute() {
         if ( eval == 0 ) continue;
         bool result = (*eval)(hdr);
         *(m_hlt_evaluators[ (j-1)*32+i ].counter) += result;
-        always() << " " << j*32+i << " " << *eval << " = " << (result?"pass":"fail") << endmsg;
+        //always() << " " << j*32+i << " " << *eval << " = " << (result?"pass":"fail") << endmsg;
         if ( result ) w |= (0x01UL << i); 
     }
   }
