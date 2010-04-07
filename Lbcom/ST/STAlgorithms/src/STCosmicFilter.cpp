@@ -1,4 +1,4 @@
-// $Id: STCosmicFilter.cpp,v 1.1 2009-07-03 13:43:54 mneedham Exp $
+// $Id: STCosmicFilter.cpp,v 1.2 2010-04-07 09:46:40 mneedham Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -12,7 +12,7 @@
 #include "STDet/DeSTSector.h"
 
 // from LHCbKernel
-#include "Kernel/ISTSignalToNoiseTool.h"
+
 #include "Kernel/STDetSwitch.h"
 #include "TsaKernel/Line.h"
 // local
