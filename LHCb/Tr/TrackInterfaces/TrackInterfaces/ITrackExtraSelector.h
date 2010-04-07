@@ -1,4 +1,4 @@
-// $Id: ITrackExtraSelector.h,v 1.3 2007-02-19 12:38:15 cattanem Exp $
+// $Id: ITrackExtraSelector.h,v 1.4 2010-04-07 20:58:29 wouter Exp $
 #ifndef TRACKINTERFACES_ITRACKEXTRASELECTOR_H
 #define TRACKINTERFACES_ITRACKEXTRASELECTOR_H 1
 
@@ -25,9 +25,9 @@ public:
 
   static const InterfaceID& interfaceID() {return IID_ITrackExtraSelector;}
 
-  virtual ITrackExtrapolator* select( const double zStart,
-                                      const double zEnd ) const = 0;
-
+  virtual const ITrackExtrapolator* select( const double zStart,
+					    const double zEnd ) const = 0;
+  
 };
 
 #endif // TRACKINTERFACES_ITRACKEXTRASELECTOR_H
