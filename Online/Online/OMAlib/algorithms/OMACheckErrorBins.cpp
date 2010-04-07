@@ -1,4 +1,4 @@
-// $Id: OMACheckErrorBins.cpp,v 1.2 2010-03-29 14:41:48 ggiacomo Exp $
+// $Id: OMACheckErrorBins.cpp,v 1.3 2010-04-07 09:40:13 ggiacomo Exp $
 
 #include <TH1F.h>
 #include <TF1.h>
@@ -15,7 +15,7 @@ OMACheckErrorBins::OMACheckErrorBins(OMAlib* Env) :
   m_inputNames.push_back("Mode");  m_inputDefValues.push_back(1.);
   m_npars = 1;
   m_parnames.push_back("Threshold");  m_parDefValues.push_back(0.);  
-  m_needRef = true;
+  m_needRef = false;
   m_doc = "Produce alarm if the content of a bin (indicating errors) is above Threshold.";
   m_doc += "Bin starts from 1, use -1 to check all histogram bins.";
   m_doc += "Threshold is the absolute bin content if Mode=1, the fraction wrt histogram area if Mode=2.";
@@ -53,7 +53,9 @@ void OMACheckErrorBins::exec(TH1 &Histo,
   for (int bin=minBin ; bin<=maxBin ; bin++) {
     double cont = Histo.GetBinContent(bin);
     if (Mode == 2) {
-      cont /= Histo.GetSumOfWeights();
+      if(Histo.GetSumOfWeights() > 0.1) {
+        cont /= Histo.GetSumOfWeights();
+      }
     }
     std::string binName=Histo.GetXaxis()->GetBinLabel(bin);
     if (binName.empty()) binName=Form("%d",bin);
