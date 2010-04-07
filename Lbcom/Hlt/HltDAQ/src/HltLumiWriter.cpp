@@ -1,4 +1,4 @@
-// $Id: HltLumiWriter.cpp,v 1.2 2009-08-20 07:27:31 panmanj Exp $
+// $Id: HltLumiWriter.cpp,v 1.3 2010-04-07 15:10:15 gligorov Exp $
 // Include files 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
@@ -25,6 +25,7 @@ HltLumiWriter::HltLumiWriter( const std::string& name,
   : GaudiAlgorithm ( name , pSvcLocator )
 {
   declareProperty( "InputBank", m_inputBank = LHCb::HltLumiSummaryLocation::Default );
+  declareProperty("RawEventLocation",m_rawEventLocation = LHCb::RawEventLocation::Default);
 }
 //=============================================================================
 // Destructor
@@ -70,7 +71,7 @@ StatusCode HltLumiWriter::execute() {
   
   int totDataSize = 0;
 
-  LHCb::RawEvent* rawEvent = get<LHCb::RawEvent>( LHCb::RawEventLocation::Default );
+  LHCb::RawEvent* rawEvent = get<LHCb::RawEvent>( m_rawEventLocation );
   // set source, type, version 
   rawEvent->addBank( 0, m_bankType, 0, m_bank );   
   totDataSize += m_bank.size();

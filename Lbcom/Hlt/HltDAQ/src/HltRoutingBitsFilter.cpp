@@ -1,4 +1,4 @@
-// $Id: HltRoutingBitsFilter.cpp,v 1.3 2009-10-14 16:27:22 cattanem Exp $
+// $Id: HltRoutingBitsFilter.cpp,v 1.4 2010-04-07 15:10:15 gligorov Exp $
 // Include files 
 #include <vector>
 #include "boost/assign/list_of.hpp"
@@ -18,6 +18,7 @@ public:
   virtual StatusCode execute   ();    ///< Algorithm execution
 private:
    std::vector<unsigned int> m_r,m_v;
+   std::string m_rawEventLocation; 
 };
 
 
@@ -40,7 +41,7 @@ HltRoutingBitsFilter::HltRoutingBitsFilter( const std::string& name,
 {
   declareProperty("VetoMask", m_v = boost::assign::list_of(0x0)(0x0)(0x0));
   declareProperty("RequireMask", m_r = boost::assign::list_of(0xFFFF)(0xFFFF)(0xFFFF));
-
+  declareProperty("RawEventLocation",m_rawEventLocation = LHCb::RawEventLocation::Default);
 }
 //=============================================================================
 // Destructor
@@ -68,7 +69,7 @@ StatusCode HltRoutingBitsFilter::initialize() {
 //=============================================================================
 StatusCode HltRoutingBitsFilter::execute() {
 
-  LHCb::RawEvent* rawEvent = get<LHCb::RawEvent>(LHCb::RawEventLocation::Default);
+  LHCb::RawEvent* rawEvent = get<LHCb::RawEvent>(m_rawEventLocation);
   const std::vector<LHCb::RawBank*>& banks = rawEvent->banks(LHCb::RawBank::HltRoutingBits);
   if (banks.size()!=1) {
     setFilterPassed(true);

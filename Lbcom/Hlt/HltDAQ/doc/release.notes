@@ -4,6 +4,9 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !-----------------------------------------------------------------------------
 
+! 2010-04-07 - V. Gligorov
+ - Allow the user to set the raw event location in the ANNDispatchSvc.
+
 !========================== HltDAQ v1r5 2010-04-07 ===========================
 ! 2010-04-07 - Gerhard Raven
  - In HltRoutingBitsWriter, set bits [0,7] based on ODIN, bits [8,32] based on
