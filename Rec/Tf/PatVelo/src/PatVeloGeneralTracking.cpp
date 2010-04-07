@@ -1,4 +1,4 @@
-// $Id: PatVeloGeneralTracking.cpp,v 1.24 2010-02-18 14:12:06 dhcroft Exp $
+// $Id: PatVeloGeneralTracking.cpp,v 1.25 2010-04-07 20:51:37 dhcroft Exp $
 // Include files
 
 // from Gaudi
@@ -55,6 +55,8 @@ Tf::PatVeloGeneralTracking::PatVeloGeneralTracking( const std::string& name,
   declareProperty( "OverlapSearch"    , m_overlapSearch = true );
   declareProperty( "OverlapXWindow"    , 
                    m_overlapXWindow = 1.*Gaudi::Units::mm );
+
+  declareProperty( "MaxPointsInZone", m_ZoneMaxPoints = 500 );
   
 }
 
@@ -241,6 +243,11 @@ build3DClusters(int zone,
               << " # points " 
               << createdPoints[rStation->sensor()->sensorNumber()].size() 
               << endreq;
+  if( createdPoints[rStation->sensor()->sensorNumber()].size() > m_ZoneMaxPoints ){
+    createdPoints[rStation->sensor()->sensorNumber()].clear();
+    Warning( "Very hot VELO sector, removing coordinates",
+	     StatusCode::SUCCESS, 0 ).ignore();
+  }
   m_Num3DCreated += createdPoints[rStation->sensor()->sensorNumber()].size();
   return;
 }

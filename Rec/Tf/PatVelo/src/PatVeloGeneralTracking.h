@@ -1,4 +1,4 @@
-// $Id: PatVeloGeneralTracking.h,v 1.11 2010-02-18 14:12:06 dhcroft Exp $
+// $Id: PatVeloGeneralTracking.h,v 1.12 2010-04-07 20:51:37 dhcroft Exp $
 #ifndef TF_PATVELOGENERALTRACKING_H 
 #define TF_PATVELOGENERALTRACKING_H 1
 
@@ -254,6 +254,9 @@ namespace Tf {
 
     ///Window to make clusters in (abs(x)) if in overlap region
     double m_overlapXWindow;
+
+    /// Number of 3D points in an R/Phi zone to cause the zone to be killed as too hot
+    unsigned int m_ZoneMaxPoints;
 
   };
 

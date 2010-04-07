@@ -4,6 +4,9 @@
 ! Purpose     : Velo pattern recognition
 !-----------------------------------------------------------------------------
 
+! 2010-04-07 - David Hutchcroft
+ - Protected PatVeloGeneralTracking against taking too long on pathalogical 
+   events see Savannah bug #65360
 
 !========================== PatVelo v3r20 2010-01-21 =========================
 ! 2010-02-18 - David Hutchcroft
