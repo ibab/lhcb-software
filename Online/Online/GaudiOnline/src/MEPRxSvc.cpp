@@ -8,7 +8,7 @@
 //  Author    : Niko Neufeld
 //                  using code by B. Gaidioz and M. Frank
 //
-//      Version   : $Id: MEPRxSvc.cpp,v 1.91 2010-03-29 11:59:09 frankb Exp $
+//      Version   : $Id: MEPRxSvc.cpp,v 1.92 2010-04-07 08:55:52 garnierj Exp $
 //
 //  ===========================================================
 #ifdef _WIN32
@@ -103,7 +103,9 @@ namespace LHCb  {
     int             m_nSrc;
     int             m_nrx;
     // run-time
+    u_int32_t       m_runNumber;
     u_int32_t       m_l0ID;
+    u_int32_t       m_prevL0ID;
     u_int32_t       m_brx; 
     u_int16_t       m_pf;
     u_int64_t       m_hdrtsc; // tsc after reception of MEP header
@@ -125,7 +127,9 @@ namespace LHCb  {
     MEPRx(const std::string &nam, MEPRxSvc *parent);
     virtual ~MEPRx();
     static void release(MEPRx* p)               {      delete p;            }
-    static bool cmpL0ID(MEPRx *r, u_int32_t id) {  return r->m_l0ID < id;   }
+    static bool cmpL0ID(MEPRx *r, u_int32_t id) {  
+        return r->m_l0ID < id;   
+    }
     static int spaceTimeOut(void *p) {
       MEPRx *self = (MEPRx *) p;
       if (self->m_spaceRC != -100) return 0;
@@ -236,7 +240,9 @@ MEPRx::MEPRx(const std::string &nam, MEPRxSvc *parent)
   m_MDFBankHdr->setVersion(DAQ_STATUS_BANK);
   m_MDFBankHdr->setSourceID(1025);
   m_MDFBankHdr->setMagic();
-  
+ 
+  m_prevL0ID=0; //XXX JC
+ 
   m_wasIncomplete = false;
 }
 
@@ -302,7 +308,7 @@ void MEPRx::incompleteEvent() {
   m_parent->addIncompleteEvent();
   for (i = 0; i < m_nSrc; ++i) nmiss += (m_seen[i] ? 0 : 1); 
   if (nmiss <= m_nSrc/2) {
-    m_log << MSG::ERROR << "Incomplete Event #" << e->evID 
+    m_log << MSG::ERROR << "Run # " << m_runNumber << " - Incomplete Event #" << (unsigned int) e->evID 
 	  << "  No packet from: ";
     for (int i = 0; i < m_nSrc; ++i) 
       if (!m_seen[i]) { 
@@ -310,7 +316,7 @@ void MEPRx::incompleteEvent() {
 	m_parent->m_misPkt[i]++;
       }
   } else  {
-    m_log << MSG::ERROR << "Incomplete Event #" << e->evID 
+    m_log << MSG::ERROR << "Run # " << m_runNumber << " - Incomplete Event #" << (unsigned int) e->evID 
 	  << "  Only packets from: ";
     for (int i = 0; i < m_nSrc; ++i) 
       if (m_seen[i]) { 
@@ -426,6 +432,8 @@ int MEPRx::spaceAction() {
   int sc = sendSpace();
   m_parent->m_complTimeTSC->fill(1.0 * (m_hdrtsc - m_firsthdrtsc), 1.0);
   m_parent->m_complTimeSock->fill(1.0 * (m_hdrrxtim - m_firsthdrrxtim), 1.0);
+  m_parent->m_L0IDDiff->fill(1.0 * m_l0ID-m_prevL0ID, 1.0); //XXX JC
+  m_prevL0ID=m_l0ID;
   //m_monSvc->updateAll(false);
 
   return sc;
@@ -476,14 +484,41 @@ int MEPRx::addMEP(int sockfd, const MEPHdr *hdr, int srcid, u_int64_t tsc,
     badPkt(EmptyMEP, srcid);
   if (m_pf != newhdr->m_nEvt) 
     badPkt(WrongPackingFactor, srcid);   
-  if (m_parent->m_srcFlags[srcid] & ODIN)
+  if (m_parent->m_srcFlags[srcid] & ODIN) {
       m_odinMEP = (u_int8_t *) newhdr;
+
+      // Record the run number of this event 
+      LHCb::RawBank *bank = (LHCb::RawBank *) (((u_int8_t *) m_odinMEP) +
+                                                 MEPHDRSIZ + MEPFHDRSIZ); 
+      LHCb::OnlineRunInfo *odin = bank->begin<LHCb::OnlineRunInfo>(); // raetselhaft
+      m_runNumber = odin->Run; 
+  
+  }
+
   m_parent->m_rxEvt[srcid] += m_pf;
   m_parent->m_totRxEvt += m_pf;
   m_parent->m_rxMEP[srcid]++;
   m_parent->m_totRxMEP++;
   return (m_nrx == m_nSrc) ? spaceAction() : MEP_ADDED;
 }
+
+void UpMonCommand::commandHandler(void) {
+  MsgStream log(m_msgSvc,getName());
+  log << MSG::INFO << "Received command, updating counters and histograms" << endmsg; 
+
+  SmartIF<IUpdateableIF> upda(m_mepRxObj->getMonSvc());
+  if ( upda ) {
+      upda->update(0).ignore();
+  }
+
+}
+
+void ClearMonCommand::commandHandler(void) {
+  MsgStream log(m_msgSvc,getName());
+  log << MSG::INFO << "Received command, clearing counters and histograms." << endmsg;
+  m_mepRxObj->clearCounters();
+}
+
 
 void MEPRQCommand::commandHandler(void) {
   MsgStream log(m_msgSvc,getName());
@@ -533,6 +568,8 @@ MEPRxSvc::MEPRxSvc(const std::string& nam, ISvcLocator* svc)
   m_trashCan  = new u_int8_t[MAX_R_PACKET];
   m_expectOdin = false;
   m_mepRQCommand = new MEPRQCommand(this, msgSvc(), RTL::processName());
+  m_clearMonCommand = new ClearMonCommand(this, msgSvc(), RTL::processName());
+  m_upMonCommand = new UpMonCommand(this, msgSvc(), RTL::processName());
 }
 
 // Standard Destructor
@@ -681,10 +718,13 @@ void MEPRxSvc::freeRx() {
       if (rx->m_wasIncomplete) {
 	rx->updateNoshow();
 	rx->m_wasIncomplete = false;
-      } else { 
+        if(! (rx->m_daqError & MissingOdin)) {
+          sendMEPReq(m_MEPsPerMEPReq);  // send mep requests only if the incomplete event contains the odin mep
+        } 
+      } else {
 	resetCounters(m_noShow, m_nSrc);
+        sendMEPReq(m_MEPsPerMEPReq);  
       }
-      sendMEPReq(m_MEPsPerMEPReq);
       m_freeDsc.push_back(rx);
     }
     else if (rc != MBM_REQ_CANCEL) {
@@ -764,7 +804,7 @@ StatusCode MEPRxSvc::run() {
 	  " free buffers. ";
 	log << MSG::DEBUG << endmsg;
         for(size_t i = 0; i < m_workDsc.size(); ++i) {
-	  log << MSG::DEBUG << "Event L0ID# " << m_workDsc[i]->m_l0ID << 
+	  log << MSG::DEBUG << "Run # " << m_workDsc[i]->m_runNumber << " - Event L0ID# " << m_workDsc[i]->m_l0ID << 
 	    " is missing ";
           log << MSG::DEBUG << printnum(m_workDsc[i]->m_nSrc - 
 					m_workDsc[i]->m_nrx," MEP");
@@ -821,6 +861,8 @@ StatusCode MEPRxSvc::run() {
 	// 
 	m_idleTimeTSC->fill(tsc - lasttsc, 1.0);
 	m_idleTimeSock->fill(rxtim - lastrxtim, 1.0);
+        
+
 //        m_monSvc->updateAll(false);
 
         try {
@@ -1087,6 +1129,8 @@ void MEPRxSvc::publishHists() {
   m_monSvc->declareInfo("idleTimeTSC",m_idleTimeTSC,"Time between (TSC)", this);
   m_monSvc->declareInfo("complTimeSock",m_complTimeSock,"Time to event-completion (Sock)", this);
   m_monSvc->declareInfo("idleTimeSock",m_idleTimeSock,"Time between events (Sock)", this);
+
+  m_monSvc->declareInfo("L0IDDiff",m_L0IDDiff,"L0ID difference between 2 consecutive events", this);
 }
 
 void MEPRxSvc::publishCounters()
@@ -1142,22 +1186,12 @@ void MEPRxSvc::clearCounters() {
   m_idleTimeTSC->reset();
   m_complTimeSock->reset();
   m_idleTimeSock->reset();
+  m_L0IDDiff->reset();
 } 
 
 int MEPRxSvc::setupCounters() {
   MsgStream log(msgSvc(),"MEPRx");
-/*
-  m_complTimeTSC = m_histSvc->book("complTime (TSC)", 
-				   "Time to event-completion (TSC)",
-				   50, 0., 1e09);
-  m_idleTimeTSC = m_histSvc->book("idleTime (TSC)", 
-				  "Time between events [TSC]", 50, 0., 1e09);
-  m_complTimeSock = m_histSvc->book("complTime (Sock)", 
-				   "Time to event-completion (Sock)",
-				   50, 0., 1e09);
-  m_idleTimeSock = m_histSvc->book("idleTime (Sock)", 
-				  "Time between events [Sock]", 50, 0., 1e09);
-*/
+
   m_complTimeTSC = m_histSvc->book("complTimeTSC", 
 				   "Time to event-completion (TSC)",
 				   50, 0., 1e09);
@@ -1168,6 +1202,12 @@ int MEPRxSvc::setupCounters() {
 				   50, 0., 1e09);
   m_idleTimeSock = m_histSvc->book("idleTimeSock", 
 				  "Time between events [Sock]", 50, 0., 1e09);
+  // title, description, interval, min val, max val
+  // here we want the difference between the previous l0id and the one we just received.
+  // 30000 is about nb nodes * packing factor
+  m_L0IDDiff = m_histSvc->book("L0IDDiff", 
+                                  "L0ID difference between 2 consecutive events", 50, -30000., 30000.); 
+
   publishHists();
 
   if(m_complTimeTSC == NULL || m_idleTimeTSC == NULL || m_complTimeSock == NULL || m_idleTimeSock == NULL) {
@@ -1176,6 +1216,7 @@ int MEPRxSvc::setupCounters() {
     if(m_complTimeSock == NULL) log << MSG::ERROR << "complTimeSock" << endmsg; 
     if(m_idleTimeTSC == NULL) log << MSG::ERROR << "idleTimeTSC" << endmsg; 
     if(m_idleTimeSock == NULL) log << MSG::ERROR << "idleTTimeSock" << endmsg; 
+    if(m_L0IDDiff == NULL) log << MSG::ERROR << "L0IDDiff" << endmsg; 
     return 1;
   }
 
