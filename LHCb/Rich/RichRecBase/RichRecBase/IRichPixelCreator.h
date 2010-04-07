@@ -20,9 +20,7 @@
 
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"
-
-// LoKi
-#include "LoKi/Range.h"
+#include "GaudiKernel/Range.h"
 
 // Event
 #include "Event/RichRecPixel.h"
@@ -58,9 +56,9 @@ namespace Rich
     public:
 
       /// Range for RichRecPixels
-      typedef LoKi::Range_<LHCb::RichRecPixels> PixelRange;
+      typedef Gaudi::Range_<LHCb::RichRecPixels> PixelRange;
       /// List of RichRecPixel Ranges
-      typedef std::vector<PixelRange>           PixelRanges;
+      typedef std::vector<PixelRange>            PixelRanges;
 
     public:
 
