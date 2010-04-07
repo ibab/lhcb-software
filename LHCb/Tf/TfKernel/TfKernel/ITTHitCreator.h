@@ -4,7 +4,7 @@
  *
  *  Header file for class : Tf::ITTHitCreator
  *
- *  $Id: ITTHitCreator.h,v 1.4 2010-01-27 23:10:49 wouter Exp $
+ *  $Id: ITTHitCreator.h,v 1.5 2010-04-07 05:18:00 wouter Exp $
  *
  *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
  *  @date   2007-06-01
@@ -229,7 +229,11 @@ namespace Tf
                                    const TTLayerID   iLayer,
                                    const TTRegionID iRegion) const = 0 ;
 
-    
+     /** create a single STHit from an STChannelID. note: not very fast.
+     * @param[in] stid STChannelID
+     * @ return a Tf::STHit
+     */
+    virtual Tf::STHit hit(LHCb::STChannelID stid) const = 0  ;   
   };
 }
 
