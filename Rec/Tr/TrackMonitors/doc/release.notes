@@ -4,6 +4,13 @@
 ! Purpose     : Package for track data quality monitoring algorithms
 !-----------------------------------------------------------------------------
 
+! 2010-04-07 Wouter Hulsbergen
+ - make check on track type before processing in IT/TTTrackMonitor
+   which removes all errors from extrapolator (and reduced CPU by factor >10)
+ - add multiplicity histo to TrackMonitor
+ - removed selector from base class
+ - add consts for extrapolator
+
 ! 2010-04-06 J Luisier
  - Changed efficiency algorithm.
 
