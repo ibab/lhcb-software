@@ -1,4 +1,4 @@
-// $Id: MCSTDepositCreator.cpp,v 1.9 2009-04-14 13:17:53 mneedham Exp $
+// $Id: MCSTDepositCreator.cpp,v 1.10 2010-04-07 09:27:37 mneedham Exp $
 
 // GSL 
 #include "gsl/gsl_math.h"
@@ -14,7 +14,7 @@
 #include "LHCbMath/LHCbMath.h"
 #include "Kernel/ISiAmplifierResponse.h"
 #include "MCInterfaces/ISiDepositedCharge.h"
-#include "Kernel/ISTSignalToNoiseTool.h"
+
 
 // xml geometry
 #include "STDet/DeSTDetector.h"
@@ -28,6 +28,8 @@
 
 #include <boost/foreach.hpp>
 #include "boost/assign/list_of.hpp"
+
+#include "Kernel/ILHCbMagnetSvc.h"
 
 using namespace LHCb;
 
@@ -43,10 +45,10 @@ MCSTDepositCreator::MCSTDepositCreator( const std::string& name,
 
   declareProperty("TofVector", m_tofVector, "vector of flight times");
   declareProperty("SamplesVector", m_sampleNames = boost::assign::list_of("/"));
-  declareProperty("SampleTimes", m_sampleTimes = boost::assign::list_of(0.0));
+  declareProperty("SampleTimes", m_sampleTimes = boost::assign::list_of(-4.));
   declareProperty("SpillVector", m_spillNames = boost::assign::list_of("/")("/Prev/")("/PrevPrev/")("/Next/")("/LHCBackground/"));
   declareProperty("SpillTimes", m_spillTimes = boost::assign::list_of(0.0)(-25.0)(-50.0)(25.0)(-3.3));
-  declareProperty("MinDist", m_minDistance = 10.0e-3*Gaudi::Units::mm);
+  declareProperty("MinDist", m_minDistance = 5.0e-3*Gaudi::Units::mm);
 
   declareProperty("ChargeSharerName",m_chargeSharerName ="STChargeSharingTool");
   declareProperty("DepChargeTool", m_depChargeToolName = "SiDepositedCharge");
@@ -59,15 +61,16 @@ MCSTDepositCreator::MCSTDepositCreator( const std::string& name,
   m_xTalkParams.push_back(0.08);
   m_xTalkParams.push_back(0.092/(55*Gaudi::Units::picofarad));
 
-
-
-  declareProperty("SigNoiseTool", m_sigNoiseToolName = "STSignalToNoiseTool");
   declareProperty("Scaling", m_scaling = 1.0);
   declareProperty("ResponseTypes", m_beetleResponseTypes);
   declareProperty("useStatusConditions", m_useStatusConditions = true);
   declareProperty("useSensDetID", m_useSensDetID = false);
 
-  declareProperty("pMin", m_pMin = 1e-3 *Gaudi::Units::MeV);
+  declareProperty("pMin", m_pMin = 1e-4 *Gaudi::Units::MeV);
+
+
+  declareProperty("applyLorentzCorrection", m_applyLorentzCorrection = false);
+  declareProperty("lorentzFactor", m_lorentzFactor = 0.025/Gaudi::Units::tesla);
 
   m_inputLocation = MCHitLocation::TT; 
   m_outputLocation = MCSTDepositLocation::TTDeposits;
@@ -89,10 +92,6 @@ StatusCode MCSTDepositCreator::initialize()
   StatusCode sc = ST::AlgBase::initialize();
   if (sc.isFailure()) return Error("Failed to initialize", sc);
 
-
-  // signal to noise tool
-  m_sigNoiseTool = tool<ISTSignalToNoiseTool>(m_sigNoiseToolName, 
-                                              m_sigNoiseToolName+detType());
 
   // charge sharing tool
   m_chargeSharer = tool<ISTChargeSharingTool>(m_chargeSharerName, 
@@ -126,6 +125,8 @@ StatusCode MCSTDepositCreator::initialize()
     m_outPaths.push_back("/Event"+(*iSampleName)+m_outputLocation);
     ++iSampleName;
   }
+
+  if (m_applyLorentzCorrection == true) m_fieldSvc = svc<ILHCbMagnetSvc>("MagneticFieldSvc", true);
 
   return StatusCode::SUCCESS;
 }
@@ -186,19 +187,25 @@ void MCSTDepositCreator::createDeposits( const MCHits* mcHitsCont,
       
       if (m_useStatusConditions && aSector->sectorStatus() == DeSTSector::Dead ) continue;
 
-      // global to local transformation
-
       // find the sensor
-      DeSTSensor* aSensor = aSector->findSensor(aHit->midPoint());
+      const Gaudi::XYZPoint globalMidPoint = aHit->midPoint();
+      DeSTSensor* aSensor = aSector->findSensor(globalMidPoint);
       if (aSensor == 0){
         Warning("Failed to find sensor", StatusCode::SUCCESS, 1).ignore();
         continue;
       } 
 
-      const Gaudi::XYZPoint entryPoint = aSensor->toLocal(aHit->entry());
-      const Gaudi::XYZPoint exitPoint = aSensor->toLocal(aHit->exit());
-      const Gaudi::XYZPoint midPoint = aSensor->toLocal(aHit->midPoint());
-        
+      Gaudi::XYZPoint globalEntry = aHit->entry();
+      Gaudi::XYZPoint globalExit = aHit->exit();
+
+      if (m_applyLorentzCorrection == true) lorentzShift(globalEntry,globalExit, 
+                                                         globalMidPoint);
+
+      // from now on work in local sensor frame
+      const Gaudi::XYZPoint entryPoint = aSensor->toLocal(globalEntry);
+      const Gaudi::XYZPoint exitPoint = aSensor->toLocal(globalExit);
+      const Gaudi::XYZPoint midPoint = aSensor->toLocal(globalMidPoint);
+    
       if (aSensor->localInActive(midPoint) == true) {
 
         // Calculate the deposited charge on strip
@@ -216,8 +223,12 @@ void MCSTDepositCreator::createDeposits( const MCHits* mcHitsCont,
         if (totWeightedCharge > 1e-3 ){
 
           // Determine cross talk level for this readout sector
+	  // const double xTalkLevel = m_xTalkParams[0] + 
+          //  m_xTalkParams[1]*aSector->capacitance();
           const double xTalkLevel = m_xTalkParams[0] + 
-            m_xTalkParams[1]*aSector->capacitance();
+            m_xTalkParams[1]*aSector->sensorCapacitance();
+ 
+
           const double scaling = m_scaling * (1.0+(2.0*xTalkLevel));
           STChannelID elemChan = aSector->elementID();
 
@@ -261,8 +272,8 @@ void MCSTDepositCreator::createDeposits( const MCHits* mcHitsCont,
                 const double electrons = ionization*beetleFraction*scaling*weightedCharge
                                    /totWeightedCharge;
 
-                const double adcCounts = m_sigNoiseTool->convertToADC(electrons);
-            
+                const double adcCounts = aSector->toADC(electrons, aChan);            
+
                 MCSTDeposit* newDeposit = new MCSTDeposit(adcCounts,aChan,aHit); 
                 depositCont[iTime]->insert(newDeposit);
 	      } // ok strip
@@ -402,4 +413,15 @@ double MCSTDepositCreator::beetleResponse(const double time,
                                 << endmsg;
 
   return (bResponse !=0 ? bResponse->response(time): 0);
+}
+
+void MCSTDepositCreator::lorentzShift(Gaudi::XYZPoint& entry,  
+                                      Gaudi::XYZPoint& exit, const Gaudi::XYZPoint& midPoint) const {
+  
+  Gaudi::XYZVector field = m_fieldSvc->fieldVector(midPoint) ;  
+  const double dz = (fabs)(entry.z() - exit.z());
+  double dx = dz * field.y() * m_lorentzFactor;
+  entry.SetX(entry.x() + dx);
+  exit.SetX(exit.x() + dx);
+
 }

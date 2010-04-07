@@ -1,4 +1,4 @@
-// $Id: STDigitCreator.h,v 1.3 2008-10-22 14:44:05 mneedham Exp $
+// $Id: STDigitCreator.h,v 1.4 2010-04-07 09:27:38 mneedham Exp $
 #ifndef STDigitCreator_H
 #define STDigitCreator_H 1
 
@@ -15,9 +15,11 @@
 #include "Event/MCSTDigit.h"
 #include "LHCbMath/LHCbMath.h"
 
-class ISTSignalToNoiseTool;
+
 class DeSTDetector;
 class DeSTSector;
+class ISTPedestalSimTool;
+class ISTCMSimTool;
 
 /** @class STDigitCreator STDigitCreator.h STAlgorithms/STDigitCreator
  *
@@ -65,23 +67,24 @@ private:
   SmartIF<IRndmGen> m_gaussDist; 
   SmartIF<IRndmGen> m_gaussTailDist; 
 
-  DeSTDetector* m_tracker;
-  ISTSignalToNoiseTool* m_sigNoiseTool;  
-
   LHCb::STDigits::iterator m_cachedIter;
   LHCb::STDigits::iterator m_lastIter;
   unsigned int m_numNoiseStrips;  
 
-  // job options
-  std::string m_effToolName;
-  std::string m_sigNoiseToolName;
   std::string m_inputLocation; 
   std::string m_outputLocation;
   double m_tailStart;
   double m_saturation;
-  std::string m_detType;
+  
   bool m_allStrips;
   bool m_useStatusConditions; ///< use dead strip info
+
+  bool m_addPedestal;
+  bool m_addCommonMode;
+  std::string m_pedestalToolName;
+  ISTPedestalSimTool* m_pedestalTool;
+  std::string m_cmToolName;
+  ISTCMSimTool* m_cmTool;
 
 
   class Less_by_Channel
@@ -107,6 +110,8 @@ private:
 inline double STDigitCreator::adcValue( double value ) const
 {
   return GSL_MIN(LHCb::Math::round(value), m_saturation);
+  //return GSL_MIN(int(value), m_saturation);
+
 }
 
 #endif // STDigitCreator_H

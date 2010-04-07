@@ -1,4 +1,4 @@
-// $Id: STDigitCreator.cpp,v 1.4 2008-10-22 14:44:05 mneedham Exp $
+// $Id: STDigitCreator.cpp,v 1.5 2010-04-07 09:27:38 mneedham Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -15,12 +15,15 @@
 #include "STDet/DeSTSector.h"
 
 // LHCbKernel
-#include "Kernel/ISTSignalToNoiseTool.h"
+
 #include "Kernel/STDataFunctor.h"
 
 
 // local
 #include "STDigitCreator.h"
+#include "ISTCMSimTool.h"
+#include "ISTPedestalSimTool.h"
+
 
 using namespace LHCb;
 
@@ -31,13 +34,18 @@ STDigitCreator::STDigitCreator( const std::string& name,
   ST::AlgBase(name, pSvcLocator)
 {
   //constructer
-  declareProperty("EffToolName", m_effToolName="STEffCalculator");
-  declareProperty("SigNoiseTool",m_sigNoiseToolName = "STSignalToNoiseTool");
+
   declareSTConfigProperty("InputLocation", m_inputLocation ,MCSTDigitLocation::TTDigits);
   declareSTConfigProperty("OutputLocation", m_outputLocation, STDigitLocation::TTDigits);
-  declareProperty("TailStart", m_tailStart = 3.0);
+  declareProperty("TailStart", m_tailStart = 2.5);
   declareProperty("Saturation", m_saturation = 127.);
  
+  declareProperty("addPedestal", m_addPedestal = false );
+  declareProperty("pedestalToolName", m_pedestalToolName = "STPedestalSimTool" );
+
+  declareProperty("addCommonMode", m_addCommonMode = false );
+  declareProperty("cmToolName", m_cmToolName = "STCMSimTool" );
+
   declareProperty("allStrips", m_allStrips = false);
   declareProperty("useStatusConditions", m_useStatusConditions = true);
 
@@ -54,9 +62,13 @@ StatusCode STDigitCreator::initialize()
   StatusCode sc = ST::AlgBase::initialize();
   if (sc.isFailure()) return Error("Failed to initialize", sc);
 
-  m_sigNoiseTool = tool<ISTSignalToNoiseTool>( m_sigNoiseToolName,
-                                               m_sigNoiseToolName+detType());
+  if (m_addPedestal) 
+    m_pedestalTool = tool<ISTPedestalSimTool>( m_pedestalToolName,  m_pedestalToolName,  this);
 
+  if (m_addCommonMode) 
+    m_cmTool = tool<ISTCMSimTool>( m_cmToolName,  m_cmToolName,  this);
+
+  
   // random numbers generators (flat, gaussian and gaussian tail)
   sc = randSvc()->generator(Rndm::Flat(0.,1.),m_uniformDist.pRef());
   sc = randSvc()->generator(Rndm::Gauss(0.,1.),m_gaussDist.pRef());
@@ -134,7 +146,7 @@ void STDigitCreator::genRanNoiseStrips(std::vector<digitPair>& noiseCont) const
 
       if (m_useStatusConditions == false ||  aSector->isOKStrip(aChan) == true){
         // Generate a ADC value following a gaussian tail distribution
-        double ranNoise = m_sigNoiseTool->noiseInADC(aSector) *
+        double ranNoise = aSector->noise(aChan) *
         m_gaussTailDist->shoot();
         noiseCont.push_back(std::make_pair(ranNoise,aChan));
       } // alive strip
@@ -146,7 +158,7 @@ void STDigitCreator::genRanNoiseStrips(std::vector<digitPair>& noiseCont) const
       for (unsigned int iStrip =1u;  iStrip <= (*iterS)->nStrip();  ++iStrip){
 
         STChannelID aChan = (*iterS)->stripToChan(iStrip);
-        double ranNoise = m_sigNoiseTool->noiseInADC(*iterS) * m_gaussDist->shoot();
+        double ranNoise = (*iterS)->noise(aChan) * m_gaussDist->shoot();
         noiseCont.push_back(std::make_pair(ranNoise,aChan));
       } // iStrip
     } // for
@@ -164,12 +176,23 @@ void STDigitCreator::createDigits(const MCSTDigits* mcDigitCont, STDigits* digit
   for ( ; iterMC != mcDigitCont->end(); ++iterMC ) {
 
     // charge including noise
+    const DeSTSector* sector = findSector((*iterMC)->channelID());
     const SmartRefVector<MCSTDeposit> depositCont = (*iterMC)->mcDeposit();
     double totalCharge =
        std::accumulate(depositCont.begin(),depositCont.end(), 0.,
                        STDataFunctor::Accumulate_Charge<const MCSTDeposit*>());
     totalCharge += (m_gaussDist->shoot() *
-                    m_sigNoiseTool->noiseInADC((*iterMC)->channelID()) );
+                    sector->noise((*iterMC)->channelID()) );
+
+    // sim pedestal
+    if (m_addPedestal) {
+      totalCharge += m_pedestalTool->pedestal((*iterMC)->channelID());
+    }
+
+    // sim cm noise
+    if (m_addCommonMode){
+      totalCharge += m_cmTool->noise((*iterMC)->channelID());
+    }
 
     // make digit and add to container.
     STDigit* newDigit = new STDigit( adcValue( totalCharge ) );
@@ -186,7 +209,18 @@ void STDigitCreator::mergeContainers( const std::vector<digitPair>& noiseCont,
   while (iterNoise != noiseCont.end()) {
     // if strip was not hit: add noise
     if ((0 == findDigit(iterNoise->second)) && (prevChan != iterNoise->second)){
-      STDigit* newDigit = new STDigit( adcValue(iterNoise->first) );
+
+      double totalCharge = iterNoise->first;
+      // sim pedestal
+      if (m_addPedestal) {
+         totalCharge += m_pedestalTool->pedestal(iterNoise->second);
+      }
+      // sim cm noise
+      if (m_addCommonMode){
+        totalCharge += m_cmTool->noise(iterNoise->second);
+      }
+
+      STDigit* newDigit = new STDigit( adcValue(totalCharge));
       digitsCont->insert(newDigit,iterNoise->second);
     }   // findDigit
     prevChan = iterNoise->second;

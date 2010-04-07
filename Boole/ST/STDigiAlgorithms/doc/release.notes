@@ -4,6 +4,15 @@
 ! Purpose     : Algorithms for ST Digitization
 !-----------------------------------------------------------------------------
 
+
+!  2010-03-20 M.Needham
+ - Add ISTCMSimTool, ISTPedestalSimTool + implementations
+ - update stcommonmodesim
+ - move stcharge sharing tool to base class
+ - Remove ISTSignalToNoiseTool
+ - Use strip capacitance for cap. coupling calculation
+ - Generate noise strips down to S/N = 2.5
+
 !========================= STDigiAlgorithms v1r7 2009-09-22 ==================
 ! 2009-09-10 - Tomasz Skwarnicki
  - make input/output locations of MCSTDigiCreator setable properties 

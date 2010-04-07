@@ -1,4 +1,4 @@
-// $Id: MCSTDepositCreator.h,v 1.5 2009-04-14 13:17:53 mneedham Exp $
+// $Id: MCSTDepositCreator.h,v 1.6 2010-04-07 09:27:37 mneedham Exp $
 #ifndef MCSTDEPOSITCREATOR_H
 #define MCSTDEPOSITCREATOR_H 1
 
@@ -8,12 +8,11 @@
 // Event
 #include "Event/MCSTDeposit.h"
 #include "Event/MCHit.h"
-
+#include "Kernel/ILHCbMagnetSvc.h"
 
 class DeSTSensor;
 class ISTChargeSharingTool;
 class ISiAmplifierResponse;
-class ISTSignalToNoiseTool;
 class ISiDepositedCharge;
 
 /** @class MCSTDepositCreator MCSTDepositCreator.h
@@ -70,10 +69,14 @@ private:
   double beetleResponse(const double time, const double capacitance,
                         const std::string& type);
 
+
+  void lorentzShift(Gaudi::XYZPoint& entry,  
+                    Gaudi::XYZPoint& exit, 
+                    const Gaudi::XYZPoint& midPoint) const;
+
   // Tools
   ISTChargeSharingTool* m_chargeSharer;  ///< Charge sharing tool 
   ISiDepositedCharge* m_depositedCharge; ///< Tool calculates accumulated charge
-  ISTSignalToNoiseTool* m_sigNoiseTool;  ///< S/N tool
 
   std::string m_inputLocation;           ///< Input: MCHits
   std::string m_outputLocation;          ///< Output: MCSTDeposits
@@ -96,13 +99,17 @@ private:
   int m_maxNumSites;                     ///< Max number of charge sharing bins
   std::vector<double> m_xTalkParams;     ///< Cross talk parameters
 
-  std::string m_sigNoiseToolName;        ///< Name of tool to calculate S/N 
+
   double m_scaling;                      ///< Scale the deposited charge
   /// Define tool names for different response types
   std::vector<std::string> m_beetleResponseTypes;
   bool m_useStatusConditions; ///< use dead strip info
   bool m_useSensDetID;
   double m_pMin; ///< min momentum particle to digitize
+
+  const ILHCbMagnetSvc* m_fieldSvc ; ///< Pointer to the magnetic field service
+  bool m_applyLorentzCorrection;
+  double m_lorentzFactor;
 
 };
 

@@ -1,4 +1,4 @@
-// $Id: STChargeSharingTool.cpp,v 1.1 2008-02-15 14:49:05 cattanem Exp $
+// $Id: STChargeSharingTool.cpp,v 1.2 2010-04-07 09:27:37 mneedham Exp $
 
 // Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -14,7 +14,7 @@ DECLARE_TOOL_FACTORY( STChargeSharingTool );
 STChargeSharingTool::STChargeSharingTool( const std::string& type, 
                                           const std::string& name,
                                           const IInterface* parent ) :
-  GaudiTool(type, name, parent),
+  ST::ToolBase(type, name, parent),
   m_responseSpline(0)
 {
   // constructer
@@ -30,7 +30,7 @@ STChargeSharingTool::~STChargeSharingTool()
 
 StatusCode STChargeSharingTool::initialize()
 {
-  StatusCode sc = GaudiTool::initialize();
+  StatusCode sc = ST::ToolBase::initialize();
   if (sc.isFailure()) return Error("Failed to initialize", sc);
 
   unsigned int nBin = m_sharingFunction.size();
