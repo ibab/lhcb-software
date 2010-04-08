@@ -4,6 +4,14 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+!========================== HltCommon v5r22 2010-04-08 ===================
+
+! 2010-04-08 - Juan Palacios
+ - src/ANNDispatchSvc.cpp
+  . Look for RawEvent in locations given by RawEventLocation property, LHCb::RawEventLocation::Copied or LHCb::RawEventLocation::Default. Pick the first one found.
+ - cmt/requirements
+  . Increase to v5r22
+
 !========================== HltCommon v5r21 2010-04-07 ===================
 
 ! 2010-04-07 - Juan Palacios
