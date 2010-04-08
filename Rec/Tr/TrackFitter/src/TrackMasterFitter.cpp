@@ -1,4 +1,4 @@
-// $Id: TrackMasterFitter.cpp,v 1.86 2010-03-22 13:57:27 rlambert Exp $
+// $Id: TrackMasterFitter.cpp,v 1.87 2010-04-08 11:48:14 wouter Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -11,9 +11,7 @@
 // from TrackInterfaces
 #include "TrackInterfaces/ITrackManipulator.h"
 #include "TrackInterfaces/IMaterialLocator.h"
-#include "TrackInterfaces/ITrackExtrapolator.h"            
-#include "TrackInterfaces/ITrackKalmanFilter.h"
-#include "TrackInterfaces/IMeasurementProvider.h"
+#include "TrackInterfaces/ITrackExtrapolator.h"
 #include "TrackInterfaces/ITrackProjector.h"
 
 
@@ -61,20 +59,20 @@ TrackMasterFitter::TrackMasterFitter( const std::string& type,
                                       const std::string& name,
                                       const IInterface* parent)
   : GaudiTool( type, name, parent)
-  , m_extrapolator(0)
-  , m_veloExtrapolator(0)
-  , m_trackNodeFitter(0)
-  , m_measProvider(0)
-  , m_materialLocator(0)
+  , m_extrapolator("TrackMasterExtrapolator", this)
+  , m_veloExtrapolator("TrackLinearExtrapolator",this)
+  , m_trackNodeFitter("TrackKalmanFilter", this)
+  , m_measProvider("MeasurementProvider", this )
+  , m_materialLocator("DetailedMaterialLocator",this)
   , m_projectorSelector("TrackProjectorSelector",this)
 {
   declareInterface<ITrackFitter>( this );
 
   declareProperty( "Projector", m_projectorSelector ) ;
-  declareProperty( "Extrapolator"        , m_extrapolatorName =
-                   "TrackMasterExtrapolator" );
-  declareProperty( "VeloExtrapolator"    , m_veloExtrapolatorName =
-                   "TrackLinearExtrapolator" );
+  declareProperty( "MeasProvider", m_measProvider ) ;
+  declareProperty( "NodeFitter", m_trackNodeFitter ) ;
+  declareProperty( "Extrapolator", m_extrapolator ) ;
+  declareProperty( "VeloExtrapolator"    , m_veloExtrapolator ) ;
   declareProperty( "FitUpstream"         , m_upstream         = true        );
   declareProperty( "NumberFitIterations" , m_numFitIter       = 10          );
   declareProperty( "Chi2Outliers"        , m_chi2Outliers     = 9.0         );
@@ -91,7 +89,7 @@ TrackMasterFitter::TrackMasterFitter( const std::string& type,
   declareProperty( "ErrorQoP"       , m_errorQoP = boost::assign::list_of(0.0)(0.01) );
   declareProperty( "MakeNodes"      , m_makeNodes = false                   );
   declareProperty( "MakeMeasurements", m_makeMeasurements = false           );
-  declareProperty( "MaterialLocator", m_materialLocatorName = "DetailedMaterialLocator");
+  declareProperty( "MaterialLocator", m_materialLocator);
   declareProperty( "UpdateTransport", m_updateTransport = true );
   declareProperty( "UpdateMaterial", m_updateMaterial  = false );
   declareProperty( "MinMomentumELossCorr", m_minMomentumForELossCorr = 10.*Gaudi::Units::MeV );
@@ -119,8 +117,12 @@ TrackMasterFitter::~TrackMasterFitter() {
 //=========================================================================
 StatusCode TrackMasterFitter::finalize() 
 {
-  StatusCode sc = m_projectorSelector.retrieve() ;
-  if ( sc.isFailure() ) return sc;
+  m_extrapolator.release().ignore();
+  m_veloExtrapolator.release().ignore();
+  m_projectorSelector.release().ignore();
+  m_measProvider.release().ignore() ;
+  m_trackNodeFitter.release().ignore() ;
+  m_materialLocator.release().ignore() ;
   return GaudiTool::finalize() ;
 }
 
@@ -135,13 +137,20 @@ StatusCode TrackMasterFitter::initialize()
   sc = m_projectorSelector.retrieve() ;
   if ( sc.isFailure() ) return sc;
 
-  
+  sc = m_measProvider.retrieve() ;
+  if ( sc.isFailure() ) return sc;
 
-  m_extrapolator      = tool<ITrackExtrapolator>( m_extrapolatorName, "Extrapolator",this );
-  m_veloExtrapolator  = tool<ITrackExtrapolator>( m_veloExtrapolatorName, "VeloExtrapolator",this );
-  m_trackNodeFitter   = tool<ITrackKalmanFilter>( "TrackKalmanFilter", "NodeFitter", this ) ;
-  m_measProvider      = tool<IMeasurementProvider>( "MeasurementProvider","MeasProvider", this );
-  m_materialLocator   = tool<IMaterialLocator>(m_materialLocatorName, "MaterialLocator", this) ;
+  sc = m_extrapolator.retrieve() ;
+  if ( sc.isFailure() ) return sc;
+
+  sc = m_veloExtrapolator.retrieve() ;
+  if ( sc.isFailure() ) return sc;
+
+  sc = m_trackNodeFitter.retrieve() ;
+  if ( sc.isFailure() ) return sc;
+
+  sc = m_materialLocator.retrieve() ;
+  if ( sc.isFailure() ) return sc;
   
   m_debugLevel   = msgLevel( MSG::DEBUG ) || msgLevel( MSG::VERBOSE ) ;  
 
@@ -525,6 +534,11 @@ StatusCode TrackMasterFitter::makeNodes( Track& track, LHCb::ParticleID pid ) co
 	      << ", " << fitresult.nMeasurements() << endmsg;
   }
 
+  // check that there are sufficient measurements. in fact, one is
+  // enough for the fit not to fail
+  if( fitresult.measurements().empty() )
+    return Warning("No measurements on track", StatusCode::FAILURE, 0);
+  
   // Create the nodes for the measurements.
   const std::vector<Measurement*>& measures = fitresult.measurements();
   TrackFitResult::NodeContainer& nodes = fitresult.nodes();
@@ -692,7 +706,7 @@ StatusCode TrackMasterFitter::updateTransport(LHCb::Track& track) const
   
   LHCb::TrackFitResult::NodeContainer& nodes = track.fitResult()->nodes() ;
   if( nodes.size()>1 ) {
-    ITrackExtrapolator* extrap = extrapolator(track.type()) ;
+    const ITrackExtrapolator* extrap = extrapolator(track.type()) ;
     LHCb::TrackFitResult::NodeContainer::iterator inode = nodes.begin() ;
     const LHCb::StateVector* refvector = &((*inode)->refVector()) ;
     TrackMatrix F = TrackMatrix( ROOT::Math::SMatrixIdentity() );
@@ -800,7 +814,7 @@ StatusCode TrackMasterFitter::initializeRefStates(LHCb::Track& track,
     std::sort( states.begin(), states.end(), LessThanFirst<ZPosWithState> ) ;
     
     // create the states in between
-    ITrackExtrapolator* extrap = extrapolator( track.type() ) ;
+    const ITrackExtrapolator* extrap = extrapolator( track.type() ) ;
     LHCb::Track::StateContainer newstates ;
     for( ZPosWithStateContainer::iterator it = states.begin();
          it != states.end() ; ++it) 

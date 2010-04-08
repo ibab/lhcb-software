@@ -1,4 +1,4 @@
-// $Id: TrackMasterFitter.h,v 1.32 2010-03-24 12:50:15 rlambert Exp $
+// $Id: TrackMasterFitter.h,v 1.33 2010-04-08 11:48:15 wouter Exp $
 #ifndef TRACKFITTER_TRACKMASTERFITTER_H 
 #define TRACKFITTER_TRACKMASTERFITTER_H 1
 
@@ -11,12 +11,15 @@
 // interface base class
 #include "TrackInterfaces/ITrackFitter.h"
 #include "TrackInterfaces/ITrackProjectorSelector.h"
+#include "TrackInterfaces/IMeasurementProvider.h"
+#include "TrackInterfaces/ITrackKalmanFilter.h"
+#include "TrackInterfaces/IMaterialLocator.h"
+#include "TrackInterfaces/ITrackExtrapolator.h"
 
 // Forward declarations
 class ITrackManipulator ;
 class IMaterialLocator ;
 class ITrackExtrapolator ;
-class IMeasurementProvider ;
 
 namespace LHCb {
   class Track ;
@@ -88,10 +91,9 @@ private:
   //! Update transport matrices stored in nodes
   StatusCode updateTransport( LHCb::Track& track ) const ;
 
-  ITrackExtrapolator* extrapolator( LHCb::Track::Types tracktype ) const {
-    if(tracktype == LHCb::Track::Velo || 
-       tracktype == LHCb::Track::VeloR  ) return m_veloExtrapolator;
-    return m_extrapolator;
+  const ITrackExtrapolator* extrapolator( LHCb::Track::Types tracktype ) const {
+    if(tracktype == LHCb::Track::Velo ||  tracktype == LHCb::Track::VeloR  ) return &(*m_veloExtrapolator) ;
+    return &(*m_extrapolator);
   }
 
   //! check that this was a prefit iteration
@@ -99,13 +101,12 @@ private:
 private:
 
  
-  ITrackExtrapolator* m_extrapolator;     ///< extrapolator
-  ITrackExtrapolator* m_veloExtrapolator; ///< extrapolator for Velo-only tracks
-  ITrackKalmanFilter* m_trackNodeFitter;    ///< delegate to actual track fitter (which fits from nodes)
-  IMeasurementProvider* m_measProvider;
-  IMaterialLocator*     m_materialLocator ;
+  ToolHandle<ITrackExtrapolator> m_extrapolator;     ///< extrapolator
+  ToolHandle<ITrackExtrapolator> m_veloExtrapolator; ///< extrapolator for Velo-only tracks
+  ToolHandle<ITrackKalmanFilter> m_trackNodeFitter; ///< delegate to actual track fitter (which fits from nodes)
+  ToolHandle<IMeasurementProvider> m_measProvider;
+  ToolHandle<IMaterialLocator>   m_materialLocator ;
   ToolHandle<ITrackProjectorSelector> m_projectorSelector ;
-  std::string           m_materialLocatorName ;
 
 private:
 
