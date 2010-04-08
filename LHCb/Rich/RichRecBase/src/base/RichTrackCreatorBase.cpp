@@ -50,6 +50,8 @@ namespace Rich
       declareProperty( "RichRecTrackLocation", 
                        m_richRecTrackLocation = contextSpecificTES(LHCb::RichRecTrackLocation::Default),
                        "The TES location for the transient RichRecTrack objects" );
+      declareProperty( "MaxInputTracks",  m_maxInputTracks = 99999 );
+      declareProperty( "MaxUsedTracks",   m_maxSelTracks   = 99999 );
 
     }
 
@@ -81,6 +83,8 @@ namespace Rich
       info() << "Aerogel  Track " << m_traceModeRad[Rich::Aerogel]  << endmsg;
       info() << "Rich1Gas Track " << m_traceModeRad[Rich::Rich1Gas] << endmsg;
       info() << "Rich2Gas Track " << m_traceModeRad[Rich::Rich2Gas] << endmsg;
+
+      info() << "Maximum number of RICH tracks per event = " << m_maxSelTracks << endmsg;
 
       return sc;
     }

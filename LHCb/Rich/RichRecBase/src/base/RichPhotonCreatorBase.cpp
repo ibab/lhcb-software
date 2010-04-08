@@ -55,7 +55,7 @@ namespace Rich
       if ( contextContains("HLT") )
       {
         m_nSigma = list_of (3.5) (2.8) (3.0) ;
-      
+
       }
       else // Offline settings
       {
@@ -63,7 +63,7 @@ namespace Rich
       }
 
       // set properties
-      declareProperty( "RichRecPhotonLocation", 
+      declareProperty( "RichRecPhotonLocation",
                        m_richRecPhotonLocation = contextSpecificTES(LHCb::RichRecPhotonLocation::Default),
                        "The TES location for the transient RichRecPhoton objects" );
       declareProperty( "DoBookKeeping", m_bookKeep = true,
@@ -78,6 +78,8 @@ namespace Rich
                        "The minimum allowed photon probability values for each radiator (Aero/R1Gas/R2Gas)" );
       declareProperty( "NSigma", m_nSigma,
                        "The CK theta # sigma selection range for each radiator (Aero/R1Gas/R2Gas)");
+      declareProperty( "MaxPhotons", m_maxPhotons = 9999999,
+                       "The maximum number of photon candidates to allow per event" );
 
     }
 
@@ -141,6 +143,8 @@ namespace Rich
 
       m_pidTypes = m_richPartProp->particleTypes();
       info() << "Particle types considered = " << m_pidTypes << endmsg;
+
+      info() << "Maximum number of photon candidates per event = " << m_maxPhotons << endmsg;
 
       return sc;
     }
@@ -219,6 +223,7 @@ namespace Rich
                                     pixelCreator()->richPixels()->size() ) / 20 );
 
         // Iterate over all tracks
+        bool abortPhotonReco(false);
         for ( LHCb::RichRecTracks::const_iterator iTrack =
                 trackCreator()->richTracks()->begin();
               iTrack != trackCreator()->richTracks()->end();
@@ -255,35 +260,56 @@ namespace Rich
               {
                 // search all hits in associated RICH/panel
 
-                // Which Rich
-                const Rich::DetectorType rich = segment->trackSegment().rich();
-
-                // get appropriate pixel range
-                const bool has1 = segment->hasPhotonsIn(Rich::top);
-                const bool has2 = segment->hasPhotonsIn(Rich::bottom);
-                IPixelCreator::PixelRange range = ( has1 && has2 ?
-                                                    pixelCreator()->range(rich) :
-                                                    has1 ? pixelCreator()->range(rich,Rich::top) :
-                                                    pixelCreator()->range(rich,Rich::bottom) );
-                for ( IPixelCreator::PixelRange::const_iterator iPixel = range.begin();
-                      iPixel != range.end(); ++iPixel )
+                // only make photons if reco has not been aborted
+                if ( !abortPhotonReco )
                 {
-                  //if ( msgLevel(MSG::VERBOSE) )
-                  //{
-                  //  verbose() << " -> Trying pixel " << (*iPixel)->key() << endmsg;
-                  //}
-                  reconstructPhoton( segment, *iPixel );
-                } // pixel loop
+
+                  // Which Rich
+                  const Rich::DetectorType rich = segment->trackSegment().rich();
+
+                  // get appropriate pixel range
+                  const bool has1 = segment->hasPhotonsIn(Rich::top);
+                  const bool has2 = segment->hasPhotonsIn(Rich::bottom);
+                  IPixelCreator::PixelRange range = ( has1 && has2 ?
+                                                      pixelCreator()->range(rich) :
+                                                      has1 ? pixelCreator()->range(rich,Rich::top) :
+                                                      pixelCreator()->range(rich,Rich::bottom) );
+                  for ( IPixelCreator::PixelRange::const_iterator iPixel = range.begin();
+                        iPixel != range.end(); ++iPixel )
+                  {
+                    //if ( msgLevel(MSG::VERBOSE) )
+                    //{
+                    //  verbose() << " -> Trying pixel " << (*iPixel)->key() << endmsg;
+                    //}
+                    reconstructPhoton( segment, *iPixel );
+                  } // pixel loop
+
+                } // reco not aborted
+
+                // check on size of photon container
+                abortPhotonReco = ( richPhotons()->size() > m_maxPhotons );
 
                 segment->setAllPhotonsDone(true);
-              }
-
+                
+              } // segment not already done
+              
             } // segment loop
-
+            
             track->setAllPhotonsDone(true);
-          }
-
+            
+          } // track not already done
+          
         } // track loop
+
+        if ( abortPhotonReco )
+        {
+          std::ostringstream mess;
+          mess << "Number of photon candidates exceeds maximum of " 
+               << m_maxPhotons << " -> Processing aborted";
+          Warning( mess.str(), StatusCode::SUCCESS, 0 ).ignore();
+          richPhotons()->clear();
+          deleteAllCrossReferences();
+        }
 
       } // have tracks and pixels
 
@@ -514,6 +540,33 @@ namespace Rich
 
     }
 
+    void PhotonCreatorBase::deleteAllCrossReferences() const
+    {
+      // loop over tracks
+      for ( LHCb::RichRecTracks::const_iterator iTk = richTracks()->begin();
+            iTk != richTracks()->end(); ++iTk )
+      {
+        (*iTk)->setRichRecPixels  ( LHCb::RichRecTrack::Pixels()    );
+        (*iTk)->setRichRecPhotons ( LHCb::RichRecTrack::Photons()   );
+      }
+      // loop over segments
+      for ( LHCb::RichRecSegments::const_iterator iSeg = richSegments()->begin();
+            iSeg != richSegments()->end(); ++iSeg )
+      {
+        (*iSeg)->setRichRecPixels  ( LHCb::RichRecSegment::Pixels()  );
+
+        (*iSeg)->setRichRecPhotons ( LHCb::RichRecSegment::Photons() );
+
+      }
+      // loop over pixels
+      for ( LHCb::RichRecPixels::const_iterator iPix = richPixels()->begin();
+            iPix != richPixels()->end(); ++iPix )
+      {
+        (*iPix)->richRecPhotons().clear();
+        (*iPix)->richRecTracks().clear();
+      }
+    }
+
     bool
     PhotonCreatorBase::checkAngleInRange( LHCb::RichRecSegment * segment,
                                           const double ckTheta ) const
@@ -536,7 +589,7 @@ namespace Rich
       if ( !ok && msgLevel(MSG::VERBOSE) )
       {
         verbose() << "    -> photon FAILED checkAngleInRange test" << endmsg;
-      } 
+      }
       return ok;
     }
 

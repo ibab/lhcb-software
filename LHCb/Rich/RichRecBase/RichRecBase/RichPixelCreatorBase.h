@@ -344,6 +344,9 @@ namespace Rich
       /// Should HPD occupancy be monitored
       bool m_applyPixelSuppression;
 
+      /// Maximum number of pixels per event
+      unsigned int m_maxPixels;
+
     private: // methods
 
       /// Printout the pixel creation statistics

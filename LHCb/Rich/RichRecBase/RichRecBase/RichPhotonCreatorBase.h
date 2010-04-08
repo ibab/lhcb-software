@@ -238,6 +238,9 @@ namespace Rich
       /// Returns the number of processed events
       inline unsigned int nEvents() const { return m_Nevts; }
 
+      /// Delete all photon cross references
+      void deleteAllCrossReferences() const;
+
     protected: // data
 
       /// Flag to indicate if the tool has been used in a given event
@@ -303,8 +306,10 @@ namespace Rich
       /// Particle ID types to consider in the photon creation checks
       Rich::Particles m_pidTypes;
 
-      /// Flag to turn on use of nearest-HPD hit selection
-      //std::vector<bool> m_useNearHPD;
+    protected: // data
+
+      /// Maximum number of photon candidates
+      unsigned int m_maxPhotons;
 
     private: // methods
 
@@ -319,8 +324,6 @@ namespace Rich
     {
       // # sigma * resolution
       return m_nSigma[segment->trackSegment().radiator()] * m_ckRes->ckThetaResolution(segment,id);
-      // Fixed range per radiator
-      //return m_CKTol[segment->trackSegment().radiator()];
     }
 
     inline double

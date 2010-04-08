@@ -5,6 +5,10 @@
 !-----------------------------------------------------------------------------
 
 ! 2010-04-07 - Chris Jones
+ - Add protection to pixel, track and photon creator base class to abort event
+   processing on large events.
+
+! 2010-04-07 - Chris Jones
  - Change LoKi::Range to Gaudi::Range
 
 !===================== RichRecBase v3r28 2010-03-17 ==========================

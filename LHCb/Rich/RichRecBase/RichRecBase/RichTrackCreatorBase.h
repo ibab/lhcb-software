@@ -213,6 +213,14 @@ namespace Rich
       /// Cached trace modes for each radiator
       std::vector<LHCb::RichTraceMode> m_traceModeRad;
 
+    protected: // data
+
+      /// Maximum number of raw input tracks per event to consider for processing
+      unsigned int m_maxInputTracks;
+
+      /// Maximum number of selected tracks per event to consider for processing
+      unsigned int m_maxSelTracks;
+
     };
 
     inline bool TrackCreatorBase::bookKeep() const

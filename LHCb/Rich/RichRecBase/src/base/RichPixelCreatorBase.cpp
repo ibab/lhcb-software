@@ -58,12 +58,13 @@ namespace Rich
       declareProperty( "RichRecPixelLocation", 
                        m_richRecPixelLocation = contextSpecificTES(LHCb::RichRecPixelLocation::Default),
                        "The TES location for the transient RichRecPixel objects" );
-      declareProperty( "DoBookKeeping",       m_bookKeep  );
-      declareProperty( "UseDetectors",        m_usedDets  );
-      declareProperty( "CheckHPDsAreActive",  m_hpdCheck  );
-      declareProperty( "ApplyPixelSuppression", m_applyPixelSuppression );
-      declareProperty( "ApplyPixelClustering",  m_clusterHits );
+      declareProperty( "DoBookKeeping",          m_bookKeep  );
+      declareProperty( "UseDetectors",           m_usedDets  );
+      declareProperty( "CheckHPDsAreActive",     m_hpdCheck  );
+      declareProperty( "ApplyPixelSuppression",  m_applyPixelSuppression );
+      declareProperty( "ApplyPixelClustering",   m_clusterHits );
       declareProperty( "SuppressClusterFinding", m_noClusterFinding );
+      declareProperty( "MaxPixels",              m_maxPixels = 999999 );
 
       // Initialise
       m_hpdOcc[Rich::Rich1]  = NULL;
@@ -104,6 +105,8 @@ namespace Rich
       if ( m_applyPixelSuppression && m_usedDets[Rich::Rich2] ) { hpdSuppTool(Rich::Rich2); }
       // load clustering tools
       if ( !m_noClusterFinding ) { hpdClusTool(Rich::Rich1); hpdClusTool(Rich::Rich2); }
+
+      info() << "Maximum number of pixels per event = " << m_maxPixels << endmsg;
 
       return sc;
     }
@@ -386,11 +389,22 @@ namespace Rich
           } // Ingresses
         } // L1 boards
 
+        // Too many pixels ?
+        if ( richPixels()->size() > m_maxPixels )
+        {
+          std::ostringstream mess;
+          mess << "Number of selected pixels exceeds maximum of " << m_maxPixels << " -> Abort";
+          Warning( mess.str(), StatusCode::SUCCESS, 0 ).ignore();
+          richPixels()->clear();
+        }
+ 
+        // Must do the following, even for empty comtainers.
+
         // sort the final pixels
         sortPixels();
-
+        
         // find iterators
-        fillIterators();
+        fillIterators();          
 
       }
 
