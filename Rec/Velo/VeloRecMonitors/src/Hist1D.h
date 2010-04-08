@@ -1,4 +1,4 @@
-// $Id: Hist1D.h,v 1.2 2010-04-03 13:38:12 krinnert Exp $
+// $Id: Hist1D.h,v 1.3 2010-04-08 13:45:11 krinnert Exp $
 #ifndef INCLUDE_HIST1D_H
 #define INCLUDE_HIST1D_H 1
 #include <numeric>
@@ -67,6 +67,13 @@ class Hist1D {
       }
     }
 
+    /// set number of entries, trigger update
+    inline void setEntries(unsigned int n) 
+    {
+      m_entries = n;
+			m_h->SetEntries(m_entries);
+    }
+    
 		/// call this to sync the number of entries
 		inline void updateEntries()
 		{

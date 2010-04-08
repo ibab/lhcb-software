@@ -4,6 +4,11 @@
 ! Purpose     : VELO monitoring algorithms for reconstruction data (ZS data)
 !-----------------------------------------------------------------------------
 
+! 2010-04-08 - Kurt Rinnert
+ - allow setting number of entries in histogram wrapper interface
+ - set number of entries in occupancy per sensor plots to number of
+   contributing events
+
 ! 2010-04-06 - Eduardo Rodrigues
  - bug fix in VeloTrackMonitor: protection against missing clusters
    (can happen with corrupted data for which no cluster corresponding to a

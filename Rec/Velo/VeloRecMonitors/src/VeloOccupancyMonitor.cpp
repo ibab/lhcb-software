@@ -1,4 +1,4 @@
-// $Id: VeloOccupancyMonitor.cpp,v 1.16 2010-04-04 14:15:44 keaveney Exp $
+// $Id: VeloOccupancyMonitor.cpp,v 1.17 2010-04-08 13:45:11 krinnert Exp $
 // Include files 
 // -------------
 
@@ -392,6 +392,7 @@ void Velo::VeloOccupancyMonitor::monitorOccupancy() {
     if ( 0 != occs ) {
       double avrgOcc =  occs->integral()/2048.0;
       m_histAvrgSensor->SetBinContent(s + 1, avrgOcc);
+
       // power on step 1, 1 station ( 2 modules ) powered. also included in step 2.
       if ( 0 == s || 1 == s || 64 == s || 65 == s ) {
         m_histAvrgSensorPO1->SetBinContent(s + 1, avrgOcc);
@@ -406,7 +407,10 @@ void Velo::VeloOccupancyMonitor::monitorOccupancy() {
       }
     }
   }
-
+  // set the number of entries to the number of events 
+  m_histAvrgSensor->SetEntries(m_occupancyDenom-1);
+  m_histAvrgSensorPO1->SetEntries(m_occupancyDenom-1);
+  m_histAvrgSensorPO11->SetEntries(m_occupancyDenom-1);
 }
 
 
