@@ -18,6 +18,9 @@ cmt qmtest_run davincisys.stripping.test_realdata >! realdata &
 cmt qmtest_run davincisys.stripping.test_stripping >! stripping & 
 cmt qmtest_run davincisys.stripping.test_commonparticles >! commonparticles & 
 cmt qmtest_run davincisys.stripping.test_v0 >! v0 & 
+cmt qmtest_run davincisys.stripping.test_rdst_appconfig >! rdst_appconfig &
+cmt qmtest_run davincisys.stripping.test_express_appconfig >! express_appconfig &
+cmt qmtest_run davincisys.stripping.test_stripping_2010_rdst >! stripping_2010_rdst  &
 cmt qmtest_run davincisys.tagging.test_tag >! tag & 
 cmt qmtest_run davincisys.io.test_dst >! dst &  
 cmt qmtest_run davincisys.io.test_rdst >! rdst &  
