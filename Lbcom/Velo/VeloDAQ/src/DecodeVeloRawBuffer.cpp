@@ -1,4 +1,4 @@
-// $Id: DecodeVeloRawBuffer.cpp,v 1.22 2010-04-06 15:13:17 dhcroft Exp $
+// $Id: DecodeVeloRawBuffer.cpp,v 1.23 2010-04-08 17:06:01 dhcroft Exp $
 
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/IIncidentSvc.h"
@@ -238,7 +238,7 @@ StatusCode DecodeVeloRawBuffer::decodeToVeloClusters(const std::vector<LHCb::Raw
       // Fire the incident in execute()
       incidentSvc->fireIncident(Incident(name(),IncidentType::AbortEvent));
       setFilterPassed( false );
-      return Error("Can not continue this event due to raw data corruption in the VELO", StatusCode::SUCCESS);
+      return Error(format("Can not continue this event due to raw data corruption in the VELO, bank source ID %i",rb->sourceID()), StatusCode::SUCCESS);
     } 
 
   }
