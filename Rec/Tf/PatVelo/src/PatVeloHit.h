@@ -1,4 +1,4 @@
-// $Id: PatVeloHit.h,v 1.6 2009-07-20 11:35:32 dhcroft Exp $
+// $Id: PatVeloHit.h,v 1.7 2010-04-08 05:02:40 wouter Exp $
 #ifndef INCLUDE_TF_PATVELOHIT_H
 #define INCLUDE_TF_PATVELOHIT_H 1
 
@@ -31,7 +31,7 @@ namespace Tf {
         //----------------------------------------------------------------------
 
         typedef std::vector<PatVeloHit* > container_type; 
-        typedef LoKi::Range_<container_type> range_type;
+        typedef Gaudi::Range_<container_type> range_type;
 
       public:
 

@@ -4,6 +4,9 @@
 ! Purpose     : Velo pattern recognition
 !-----------------------------------------------------------------------------
 
+! 2010-04-08 - Wouter Hulsbergen
+ - replaced LoKi::Range with Gaudi::Range
+
 ! 2010-04-07 - David Hutchcroft
  - Protected PatVeloGeneralTracking against taking too long on pathalogical 
    events see Savannah bug #65360
