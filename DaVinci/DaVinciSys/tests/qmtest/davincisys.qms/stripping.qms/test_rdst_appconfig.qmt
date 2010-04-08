@@ -13,7 +13,7 @@
     <text>from Configurables import DaVinci; DaVinci().EvtMax=600; EventSelector().Input = ["DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/data/2010/RDST/00006165/0000/00006165_00000004_1.rdst' TYP='POOL_ROOTTREE' OPT='READ'"];</text>
 </set></argument>  <argument name="validator"><text>
 findReferenceBlock("""
-DaVinciInit       SUCCESS 600 events processed
+DaVinciInit                                                 SUCCESS 600 events processed
 """, stdout, result, causes, signature_offset = 0, id = "4100")
 countErrorLines({"FATAL":0})
 </text></argument>
