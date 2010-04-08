@@ -39,7 +39,6 @@ DaVinci().appendToMainSequence( [ sc.sequence() ] )
 DaVinci().EvtMax = 1000
 DaVinci().DataType = "2010"     
 DaVinci().Simulation = False
-DaVinci().InputType = 'RDST'
 DaVinci().HistogramFile = "DVHistos.root"
 DaVinci().Input = [
     "DATAFILE='/castor/cern.ch/grid/lhcb/data/2010/RDST/00006165/0000/00006165_00000004_1.rdst' TYP='POOL_ROOTTREE' OPT='READ'",
