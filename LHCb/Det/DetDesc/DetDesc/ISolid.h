@@ -33,7 +33,7 @@ public:
    *  with intersections of the solid and the line 
    */
   typedef double               Tick  ;
-  typedef StaticArray<Tick,64> Ticks ;
+  typedef StaticArray<Tick,96> Ticks ;
 
 public:
   
