@@ -4,6 +4,10 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2010-04-08 - Wouter Hulsbergen
+- cleanup configuration of fitter option file since it gave error after 
+  introducing toolhandle in track fit
+
 !========================== PatVeloTT v3r11 2010-03-19 ======================
 ! 2010-03-13 - Mariusz Witek
 - Bug fix in pattern recognition (found by Adam Webber). 
