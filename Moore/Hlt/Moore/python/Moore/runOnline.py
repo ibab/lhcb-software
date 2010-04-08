@@ -13,7 +13,6 @@ def start() :
     import OnlineEnv 
 
     Moore().RunOnline = True
-    Moore().EnableTimeOutCatcher = False
 
     ### default database setup
     Moore().Simulation = False
