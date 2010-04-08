@@ -67,6 +67,7 @@ SolidTrd::SolidTrd
   /// set bounding parameters
   setBP();
   ///
+  checkTickContainerCapacity() ;
 };
 
 // ============================================================================

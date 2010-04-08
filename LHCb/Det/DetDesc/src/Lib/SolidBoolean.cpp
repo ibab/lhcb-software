@@ -116,7 +116,8 @@ StatusCode SolidBoolean::addChild( ISolid*                  child ,
   SolidChild* pChild = 
     new  SolidChild( child , mtrx , "Child For " + name () ); 
   if( 0 == pChild ) { return StatusCode::FAILURE; }
-  m_sb_childrens.push_back(pChild); 
+  m_sb_childrens.push_back(pChild);
+  checkTickContainerCapacity() ;
   return StatusCode::SUCCESS; 
 };
 
@@ -135,7 +136,8 @@ StatusCode SolidBoolean::addChild   ( ISolid*               child    ,
   SolidChild* pChild =
     new  SolidChild( child , position , rotation , "Child For " + name () ); 
   if( 0 == pChild ) { return StatusCode::FAILURE; }
-  m_sb_childrens.push_back(pChild); 
+  m_sb_childrens.push_back(pChild);  
+  checkTickContainerCapacity() ;
   return StatusCode::SUCCESS; 
 };
 

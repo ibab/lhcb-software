@@ -83,7 +83,8 @@ SolidTrap::SolidTrap( const std::string&  Name             ,
    makeAll();
    /// set bounding parameters
    setBP();
-   
+   ///
+   checkTickContainerCapacity() ;
 }; 
 
 // ============================================================================

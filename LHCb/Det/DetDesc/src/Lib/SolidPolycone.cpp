@@ -62,6 +62,8 @@ SolidPolycone::SolidPolycone( const std::string&             Name          ,
     }
   // set bounding parameters 
   setBP();
+  ///
+  checkTickContainerCapacity() ;
 };
 
 // ============================================================================
@@ -404,6 +406,9 @@ unsigned int SolidPolycone::intersectionTicksImpl ( const aPoint & Point,
                                                     ISolid::Ticks& ticks  
                                                     ) const 
 { 
+  // check tick capacity
+  checkTickContainerCapacity() ;
+  
   /// clear the container 
   ticks.clear() ;
   
