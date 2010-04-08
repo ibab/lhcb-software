@@ -3,6 +3,16 @@ Package             : PhysSys
 Package Coordinator : Juan Palacios
 Purpose             : LHCb physics packages
 
+</PRE><H1><A NAME=v9r3p1>2010-04-08 Phys v9r3p1 </A></H1><PRE>
+
+###############################################################################
+#                                 PHYS v9r3p1                                 #
+###############################################################################
+
+- Based on LHCb v30r0 and Gaudi v21r8
+
+  * Important patches to VertexFit and DaVinciTools.
+
 </PRE><H1><A NAME=v9r2>2010-03-27 Phys v9r3 </A></H1><PRE>
 
 ###############################################################################
