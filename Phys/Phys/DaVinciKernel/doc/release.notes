@@ -1,8 +1,10 @@
-!$Id: release.notes,v 1.344 2010-04-07 12:59:20 jpalac Exp $
+!$Id: release.notes,v 1.345 2010-04-08 15:00:02 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciKernel
 ! Responsible : J.P. Palacios
 !============================================================================
+
+!======================== DaVinciKernel v8r6p1 2010-04-09 ===================
 
 ! 2010-04-07 - Juan Palacios
  - src/Lib/DVAlgorithm.cpp
