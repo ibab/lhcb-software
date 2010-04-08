@@ -31,7 +31,7 @@ stream.appendLines( [
                         StrippingDY2ee.line1,
                         StrippingDY2ee.line2,
 		        StrippingDY2ee.line3,
-		        StrippingDY2ee.line4,
+		        StrippingDY2ee.line4, 
                         StrippingDisplVertices.line1,  # bug 64490
                         StrippingDisplVertices.line2,  # bug 64490
 		    ] )

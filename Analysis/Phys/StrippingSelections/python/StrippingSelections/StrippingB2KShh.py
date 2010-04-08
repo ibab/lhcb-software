@@ -1,21 +1,21 @@
 
 __author__ = 'Jussara Miranda'
-__date__ = '16/03/2010'
+__date__ = '02/04/2010'
 __version__ = '$Revision: 1.1 $'
 
 '''
-Stripping selection for B->KShh , B==(Bs,Bd); h=(K,pi) 
+Stripping selection for B->KShh' , B==(Bs,Bd); h,h'=(K,pi) 
 '''
 #################################################################
-#  This strip is GOOD for both Bd and Bs to KSLL of KSDD and hh(h=k,pi)
+#  This strip is GOOD for both Bd and Bs to KSLL of KSDD and hh'(h,h'=k,pi)
 #  Asymmetrical mass window, Bd: (-200,+280 MeV)
-#  There are 4 lines KK and pipi for  KSLL and the KSDD; 
+#  There are 6 lines KK, pipi and Kpi for  KSLL and the KSDD; 
 #################################################################
 
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
 
-class StrippingB2KSKK_KSpipiConf(LHCbConfigurableUser):
+class StrippingB2KShhConf(LHCbConfigurableUser):
     __slots__ = { 
            'B_Mlow'      :  200. 
         ,  'B_Mhigh'     :  280.   
@@ -35,7 +35,7 @@ class StrippingB2KSKK_KSpipiConf(LHCbConfigurableUser):
         ,  'B_PTmed_DD'  :  800.   
         ,  'B_PTsum_DD'  :  3800.
         ,  'B_FDchi2_DD' :  10.   
-        ,  'KS_FDopv_DD' :  80.   
+        ,  'KS_FDopv_DD' :  100.   
         }
 
     _propertyDocDct = {
@@ -101,6 +101,24 @@ class StrippingB2KSKK_KSpipiConf(LHCbConfigurableUser):
                              , algos = [KSDDforB2KShh,B2KSDDpipi]
                              , postscale = 1
                              )
+    def B2KSLLKpi( self ) :
+        from StrippingConf.StrippingLine import StrippingLine, StrippingMember
+        KSLLforB2KShh = self.KSLLforB2KShhAlg()
+        B2KSLLKpi = self.B2KSLLKpiAlg()
+        return StrippingLine('B2KSLLKpi_line'
+                             , prescale = 1
+                             , algos = [KSLLforB2KShh,B2KSLLKpi]
+                            , postscale = 1
+                             )
+    def B2KSDDKpi( self ) :
+        from StrippingConf.StrippingLine import StrippingLine, StrippingMember
+        KSDDforB2KShh = self.KSDDforB2KShhAlg()
+        B2KSDDKpi = self.B2KSDDKpiAlg()
+        return StrippingLine('B2KSDDKpi_line'
+                             , prescale = 1
+                             , algos = [KSDDforB2KShh,B2KSDDKpi]
+                             , postscale = 1
+                             )
     ########
     # KSLL # 
     ########
@@ -152,7 +170,7 @@ class StrippingB2KSKK_KSpipiConf(LHCbConfigurableUser):
 	B2KSLLKK=CombineParticles("StripB2KSLLKK")
 	B2KSLLKK.InputLocations = ["StdLooseKaons", "StripKSLLforB2KShh"]
 	B2KSLLKK.DecayDescriptor = "B0 -> K+ K- KS0"
-	B2KSLLKK.DaughtersCuts = {"K+": "TRCHI2DOF<20"}
+	B2KSLLKK.DaughtersCuts = {"K+": "TRCHI2DOF<10"}
 	B2KSLLKK.CombinationCut = BLL_CombCuts
 	B2KSLLKK.MotherCut = BLL_MotherCuts
         return B2KSLLKK
@@ -180,7 +198,7 @@ class StrippingB2KSKK_KSpipiConf(LHCbConfigurableUser):
 	B2KSDDKK=CombineParticles("StripB2KSDDKK")
 	B2KSDDKK.InputLocations = ["StdLooseKaons", "StripKSDDforB2KShh"]
 	B2KSDDKK.DecayDescriptor = "B0 -> K+ K- KS0"
-	B2KSDDKK.DaughtersCuts = {"K+": "TRCHI2DOF<20"}
+	B2KSDDKK.DaughtersCuts = {"K+": "TRCHI2DOF<10"}
 	B2KSDDKK.CombinationCut = BDD_CombCuts
 	B2KSDDKK.MotherCut = BDD_MotherCuts
         return B2KSDDKK
@@ -242,6 +260,64 @@ class StrippingB2KSKK_KSpipiConf(LHCbConfigurableUser):
 	B2KSDDpipi.CombinationCut = BDD_CombCuts
 	B2KSDDpipi.MotherCut = BDD_MotherCuts
         return B2KSDDpipi
+
+    #############
+    # B-KSLL Kpi# 
+    #############
+    def B2KSLLKpiAlg(self):
+        from Configurables import CombineParticles
+        import GaudiKernel.SystemOfUnits as Units    
+        
+        BLL_CombCuts="(AM>(5279-%(B_Mlow)s) *MeV)\
+	              &(AM<(5279+%(B_Mhigh)s) *MeV)\
+	              &(AVAL_MAX(MIPDV(PRIMARY), PT)>%(B_IPPTmax)s) \
+	              &(ANUM(PT > %(B_PTmed_LL)s *MeV)>=2) \
+	              &((APT1+APT2+APT3)>%(B_PTsum_LL)s *MeV) \
+		      &((ACHILD(MIPCHI2DV(PRIMARY),1)+ACHILD(MIPCHI2DV(PRIMARY),2))>%(B_IPsumhh)s)"% self.getProps()
+
+        BLL_MotherCuts="(BPVDIRA>%(B_dira)s)\
+		       &(VFASPF(VMINVDDV(PRIMARY))>%(B_FDpvsv)s)\
+		       &(VFASPF(VCHI2)<%(B_Vchi2)s)\
+		       &(MIPDV(PRIMARY)<%(B_IP_LL)s)\
+		       &(BPVTRGPOINTINGWPT<%(B_pointpt)s)\
+		       &(BPVVDCHI2>%(B_FDchi2_LL)s)"% self.getProps()
+
+
+	B2KSLLKpi=CombineParticles("StripB2KSLLKpi")
+	B2KSLLKpi.InputLocations = ["StdLoosePions",  "StdLooseKaons", "StripKSLLforB2KShh"]
+	B2KSLLKpi.DecayDescriptor = "[B0 -> K+ pi- KS0]cc"
+	B2KSLLKpi.DaughtersCuts = {"K+": "TRCHI2DOF<10","pi+": "TRCHI2DOF<10"}
+	B2KSLLKpi.CombinationCut = BLL_CombCuts
+	B2KSLLKpi.MotherCut = BLL_MotherCuts
+        return B2KSLLKpi
+    ##############
+    #  B-KSDD Kpi #  
+    ##############
+    def B2KSDDKpiAlg(self):
+        from Configurables import CombineParticles
+        import GaudiKernel.SystemOfUnits as Units    
+        
+        BDD_CombCuts="(AM>(5279-%(B_Mlow)s) *MeV)\
+	              &(AM<(5279+%(B_Mhigh)s) *MeV)\
+	              &(AVAL_MAX(MIPDV(PRIMARY), PT)>%(B_IPPTmax)s)\
+	              &(ANUM(PT > %(B_PTmed_DD)s *MeV)>=2)\
+		      &((APT1+APT2+APT3)>%(B_PTsum_DD)s *MeV)\
+		      &((ACHILD(MIPCHI2DV(PRIMARY),1)+ACHILD(MIPCHI2DV(PRIMARY),2))> %(B_IPsumhh)s)"% self.getProps()
+
+        BDD_MotherCuts="(BPVDIRA>%(B_dira)s)\
+		       &(VFASPF(VMINVDDV(PRIMARY))>%(B_FDpvsv)s)\
+		       &(VFASPF(VCHI2)<%(B_Vchi2)s)\
+		       &(MIPDV(PRIMARY)<%(B_IP_DD)s)\
+		       &(BPVTRGPOINTINGWPT<%(B_pointpt)s)\
+		       &(BPVVDCHI2>%(B_FDchi2_DD)s)"% self.getProps()
+
+	B2KSDDKpi=CombineParticles("StripB2KSDDKpi")
+	B2KSDDKpi.InputLocations = ["StdLoosePions", "StdLooseKaons", "StripKSDDforB2KShh"]
+	B2KSDDKpi.DecayDescriptor = "[B0 -> K+ pi- KS0]cc"
+	B2KSDDKpi.DaughtersCuts =  {"K+": "TRCHI2DOF<10","pi+": "TRCHI2DOF<10"}
+	B2KSDDKpi.CombinationCut = BDD_CombCuts
+	B2KSDDKpi.MotherCut = BDD_MotherCuts
+        return B2KSDDKpi
 
     def getProps(self) :
         d = dict()
