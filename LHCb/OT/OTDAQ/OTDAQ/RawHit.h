@@ -16,7 +16,7 @@
 #define OTDAQ_OTChannelHit_H 1
 
 #include <vector>
-#include "LoKi/Range.h"
+#include "GaudiKernel/Range.h"
 
 namespace OTDAQ
 {
@@ -92,7 +92,7 @@ namespace OTDAQ
   typedef std::vector<RawHit> RawHitContainer ;
   
   /// Range object for RawHitContainer
-  typedef LoKi::Range_<RawHitContainer> RawHitRange ;
+  typedef Gaudi::Range_<RawHitContainer> RawHitRange ;
   
   // -----------------------------------------------------------------------------
   // end of class
