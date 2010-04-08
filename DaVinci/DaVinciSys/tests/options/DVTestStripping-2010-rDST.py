@@ -36,7 +36,7 @@ l0du.L0DUFromRawTool.RawLocation = "pRec/RawEvent"
 from Configurables import DaVinci
 
 DaVinci().appendToMainSequence( [ sc.sequence() ] )
-DaVinci().EvtMax = 100
+DaVinci().EvtMax = 1000
 DaVinci().DataType = "2010"     
 DaVinci().Simulation = False
 DaVinci().InputType = 'RDST'

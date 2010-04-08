@@ -5,11 +5,11 @@
 <argument name="timeout"><integer>3600</integer></argument>
 <argument name="args"><set>
   <text>../options/DVTestStripping-2010-rDST.py</text>
-  <text>$APPCONFIGOPTS/DaVinci/DVMonitor-v25r2p1-rm-MuIDMonitor-patch.py</text>
 </set></argument>
 <argument name="validator"><text>
 findReferenceBlock("""
 DaVinciInit                                                 SUCCESS 1000 events processed
 """, stdout, result, causes, signature_offset = 0)
+countErrorLines({"FATAL":0})
 </text></argument>
 </extension>
