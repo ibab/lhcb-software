@@ -352,7 +352,7 @@ def fillHistos ( tree                          ,
                          Unit = Unit )  
 
     print '#entries in tree: %10d ' % tree.GetEntries() 
-    ## tree.Process ( selector , '' , 200000 )
+    ##tree.Process ( selector , '' , 20000 )
     tree.Process ( selector )
     
     lambdas = selector.lambdas ()

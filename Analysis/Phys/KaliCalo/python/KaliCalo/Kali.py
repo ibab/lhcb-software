@@ -13,7 +13,7 @@ for ``iterative pi0'' Ecal calibration
 # ======================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@itep.ru "
 __date__    = " 2010-03-17 "
-__version__ = " CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.9 $ "
+__version__ = " CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.10 $ "
 # ======================================================================
 import ROOT
 from GaudiPython.Bindings import gbl as cpp
@@ -389,6 +389,9 @@ class HistoMap(object) :
              
          if group : result.append ( ( group , len ( result ) ) )
          
+         if 20 < len( self ) and len ( result ) < 10 and 2 < num : 
+             return self.split ( int ( num / 2 ) )
+             
          ## require at least two groups 
          if 0 < len ( self ) and len ( result ) < 2 and 2 < num :
              return self.split ( int ( num / 2 ) )

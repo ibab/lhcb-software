@@ -44,6 +44,7 @@ class ZipShelf(shelve.Shelf):
         self.__filename      = filename
         self.__remove        = False
         self.__silent        = silent
+        self.__opened        = False 
 
         if not self.__silent :
             print 'ZipShelve: ', filename
@@ -94,20 +95,24 @@ class ZipShelf(shelve.Shelf):
             writeback                              )
         
         self.compresslevel = compress
+        self.__opened      = True 
         
     ## destructor 
     def __del__ ( self ) :
         """
         Destructor 
         """
-        self.close()  
+        if self.__opened : self.close()  
     
     ## cloze and gzip (if needed)
     def close ( self ) :
         """
         Close the file (and gzip it if required) 
         """
+        if not self.__opened : return 
+        ##
         shelve.Shelf.close ( self )
+        self.__opened = False  
         ##
         if self.__remove and os.path.exists ( self.__filename ) :
             if not self.__silent : print 'REMOVE: ', self.__filename
@@ -115,7 +120,7 @@ class ZipShelf(shelve.Shelf):
         ##
         if self.__gzip and os.path.exists ( self.__filename ) :
             # get the initial size 
-            size1 = os.path.getsize( self.__filename )
+            size1 = os.path.getsize ( self.__filename )
             # gzip the file
             self.__in_place_gzip ( self.__filename ) 
             #
