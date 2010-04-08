@@ -14,6 +14,7 @@ use VertexFit                   v6r2p1    Phys
 use DaVinciMonitors             v1r9p1    Phys
 use StrippingSelections         v1r19     Phys
 use StrippingConf               v3r1      Phys
+use StrippingAlgs               v1r1      Phys
 use DisplVertices               v6r4      Phys
 #  
 # Declare this as a container package
