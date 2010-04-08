@@ -8,14 +8,11 @@ from Configurables import ( PatVeloTT, PatVeloTTTool,
 patVTT = PatVeloTT("PatVeloTT")
 patVTT.InputUsedTracksNames = ["Rec/Track/Forward","Rec/Track/Match"]
 
-
-patVTT.addTool(ConfiguredMasterFitter( "Fitter"))
+patVTT.addTool(TrackMasterFitter,"Fitter")
+ConfiguredMasterFitter(patVTT.Fitter)
 patVTT.Fitter.NumberFitIterations = 1
 patVTT.Fitter.MaxNumberOutliers = 1
 patVTT.Fitter.Extrapolator.ExtraSelector = "TrackSimpleExtraSelector"
-patVTT.Fitter.Extrapolator.addTool(TrackSimpleExtraSelector, "ExtraSelector")
-patVTT.Fitter.NodeFitter.addTool(TrackMasterExtrapolator, "Extrapolator")
-patVTT.Fitter.NodeFitter.Extrapolator.ExtraSelector = "TrackSimpleExtraSelector";
 patVTT.Fitter.StateAtBeamLine = False
 
 patVTT.addTool(PatVeloTTTool, name="PatVeloTTTool")
