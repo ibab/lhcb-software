@@ -1,4 +1,4 @@
-// $Id: TrackKalmanFilter.cpp,v 1.78 2009-12-17 10:46:19 wouter Exp $
+// $Id: TrackKalmanFilter.cpp,v 1.79 2010-04-08 11:46:07 wouter Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -253,14 +253,12 @@ StatusCode TrackKalmanFilter::fit( Track& track ) const
   // First locate the first and last node that actually have information
   NodeContainer::iterator firstMeasurementNode = nodes.begin() ;
   while( firstMeasurementNode!=nodes.end() &&
-	 //(*firstMeasurementNode)->type()!=LHCb::Node::Outlier &&
 	 (*firstMeasurementNode)->type()!=LHCb::Node::HitOnTrack 
 	 ) ++firstMeasurementNode ; 
   
   NodeContainer::iterator lastMeasurementNode = nodes.end() ;
   --lastMeasurementNode ;
-  while( lastMeasurementNode!=firstMeasurementNode &&
-         //(*lastMeasurementNode)->type()!=LHCb::Node::Outlier &&
+  while( lastMeasurementNode!=nodes.begin() &&
          (*lastMeasurementNode)->type()!=LHCb::Node::HitOnTrack
          ) --lastMeasurementNode ; 
   NodeContainer::iterator endMeasurementNode = lastMeasurementNode ; ++endMeasurementNode;

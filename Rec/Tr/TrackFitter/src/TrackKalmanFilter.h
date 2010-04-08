@@ -1,4 +1,4 @@
-// $Id: TrackKalmanFilter.h,v 1.31 2009-11-11 21:12:52 wouter Exp $
+// $Id: TrackKalmanFilter.h,v 1.32 2010-04-08 11:46:07 wouter Exp $
 #ifndef TRACKFITTER_TRACKKALMANFILTER_H 
 #define TRACKFITTER_TRACKKALMANFILTER_H 1
 
@@ -15,7 +15,7 @@
 #include "Event/FitNode.h"
 
 // From LoKi
-#include "LoKi/Range.h"
+#include "GaudiKernel/Range.h"
 
 /** @class TrackKalmanFilter TrackKalmanFilter.h
  *  
@@ -45,7 +45,7 @@ public:
   
 protected:
   typedef std::vector<LHCb::Node*> NodeContainer ;
-  typedef LoKi::Range_<NodeContainer> NodeRange;
+  typedef Gaudi::Range_<NodeContainer> NodeRange;
 
   // ! Fit a range of nodes
   StatusCode fit( LHCb::Track& track, NodeRange& nodes, const Gaudi::TrackSymMatrix& seedCov ) const ;
