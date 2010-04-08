@@ -36,10 +36,6 @@ def ConfiguredMasterFitter( Name,
             raise ValueError, 'ConfiguredMasterFitter: instance with name '+Name+' already exists'
         fitter = TrackMasterFitter(Name)
         
-    # add the tools that need to be modified
-    fitter.addTool( TrackMasterExtrapolator, name = "Extrapolator" )
-    fitter.addTool( TrackKalmanFilter, name = "NodeFitter" )
-    
     # apply material corrections
     if not ApplyMaterialCorrections:
         fitter.ApplyMaterialCorrections = False
@@ -55,7 +51,7 @@ def ConfiguredMasterFitter( Name,
     
     # set up the material locator
     if SimplifiedGeometry:
-        fitter.addTool(SimplifiedMaterialLocator, name="MaterialLocator")
+        fitter.MaterialLocator = SimplifiedMaterialLocator()
         fitter.Extrapolator.addTool(SimplifiedMaterialLocator, name="MaterialLocator")
         
     # not yet used for DC09 production    
@@ -89,7 +85,6 @@ def ConfiguredMasterFitter( Name,
 
     # use lite clusters for velo and ST
     if LiteClusters:
-        fitter.addTool( MeasurementProvider(), name = "MeasProvider")
         from Configurables import (MeasurementProviderT_MeasurementProviderTypes__VeloLiteR_,
                                    MeasurementProviderT_MeasurementProviderTypes__VeloLitePhi_,
                                    MeasurementProviderT_MeasurementProviderTypes__TTLite_,
@@ -100,7 +95,6 @@ def ConfiguredMasterFitter( Name,
         fitter.MeasProvider.ITProvider = MeasurementProviderT_MeasurementProviderTypes__ITLite_()
 
     if TrackSys().cosmics():
-        fitter.addTool( MeasurementProvider(), name = "MeasProvider")
         fitter.MeasProvider.OTProvider.RawBankDecoder = 'OTMultiBXRawBankDecoder'
 
     return fitter
@@ -168,7 +162,6 @@ def ConfiguredFastEventFitter( Name, TracksInContainer,
 
 def ConfiguredFastVeloOnlyEventFitter( Name, TracksInContainer ):
     eventfitter = ConfiguredFastFitter( Name, TracksInContainer,FieldOff=True )
-    eventfitter.Fitter.addTool( MeasurementProvider, name = 'MeasProvider')
     eventfitter.Fitter.MeasProvider.IgnoreIT = True
     eventfitter.Fitter.MeasProvider.IgnoreOT = True
     eventfitter.Fitter.MeasProvider.IgnoreTT = True
