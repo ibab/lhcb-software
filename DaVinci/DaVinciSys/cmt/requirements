@@ -16,6 +16,7 @@ use StrippingSelections         v1r19     Phys
 use StrippingConf               v3r1      Phys
 use StrippingAlgs               v1r1      Phys
 use DisplVertices               v6r4      Phys
+use PuVeto                      v7r7p1    L0
 #  
 # Declare this as a container package
 apply_pattern container_package
