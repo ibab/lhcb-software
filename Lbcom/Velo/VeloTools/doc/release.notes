@@ -4,6 +4,9 @@
 ! Purpose     : Velo Tools for reconstruction
 !-----------------------------------------------------------------------------
 ! 2010-04-07 - Tomasz Szumlak
+ - a (magic??) typo m_fraPsos -> m_fracPos removed 
+
+! 2010-04-07 - Tomasz Szumlak
  - fix in cluster position tool - the tool now follows the Tell1 way completely
    
 !========================== VeloTools v3r4 2009-10-20 ========================

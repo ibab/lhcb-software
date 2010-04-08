@@ -1,4 +1,4 @@
-// $Id: VeloClusterPosition.cpp,v 1.24 2010-04-07 17:31:13 szumlat Exp $
+// $Id: VeloClusterPosition.cpp,v 1.25 2010-04-08 08:46:52 szumlat Exp $
 // Include files
 
 // stl
@@ -55,7 +55,7 @@ VeloClusterPosition::VeloClusterPosition(const std::string& type,
     m_maxAngle ( 0. ),
     m_trackDir ( ),
     m_gloPoint ( ),
-    m_fraPos ( 0. )
+    m_fracPos ( 0. )
 {
   declareInterface<IVeloClusterPosition>(this);
   // default paramertrizations are of form error=slope*pitch+const
