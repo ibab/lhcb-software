@@ -15,6 +15,9 @@
 #ifndef RICHGLOBALPID_RichGlobalPIDTrTrackSel_H
 #define RICHGLOBALPID_RichGlobalPIDTrTrackSel_H 1
 
+// STL
+#include <sstream>
+
 // Base class
 #include "RichGlobalPIDAlgBase.h"
 

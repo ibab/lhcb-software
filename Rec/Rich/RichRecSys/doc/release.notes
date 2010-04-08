@@ -4,6 +4,10 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+! 2010-04-08 - Chris Jones
+ - Add cuts on the maximum number of pixels, tracks and photons to abort
+   processing on excessively large events.
+
 ! 2010-03-29 - Chris Jones
  - Add "Simulation" slot to Configurables.
  - Disable "EarlyData" tweaks for simulated data

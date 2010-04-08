@@ -31,7 +31,17 @@ class RichTrackCreatorConfig(RichConfigurableUser):
        ,"OutputLevel"   : INFO    # The output level to set all algorithms and tools to use
        ,"TrackTypes"    : [ "Forward","Match","Seed","VeloTT","KsTrack" ]
        ,"TrackCuts"     : { } # { "Chi2Cut" : [0,50] }
+       ,"MaxInputTracks" : None
+       ,"MaxUsedTracks"  : None
         }
+
+    ## Initialize 
+    def initialize(self):
+        # default values
+        self.setRichDefaults ( "MaxInputTracks", { "Offline" : 99999, 
+                                                   "HLT"     : 99999 } )
+        self.setRichDefaults ( "MaxUsedTracks",  { "Offline" : 500, 
+                                                   "HLT"     : 500 } )
 
     ## @brief Set OutputLevel 
     def setOutputLevel(self,conponent):
@@ -51,6 +61,10 @@ class RichTrackCreatorConfig(RichConfigurableUser):
         
         # Track creator
         trackCr = self.richTools().trackCreator(nickname)
+
+        # Track cuts
+        trackCr.MaxInputTracks = self.getProp("MaxInputTracks")
+        trackCr.MaxUsedTracks  = self.getProp("MaxUsedTracks")
 
         # OutputLevel
         self.setOutputLevel(trackCr)

@@ -35,7 +35,8 @@ class RichGlobalPIDConfig(RichConfigurableUser):
         "InitAlgorithms"          : True,
         "InitTools"               : True,
         "NIterations"             : 0,
-        "MaxUsedPixels"           : 12000,
+        "MaxUsedPixels"           : 20000,
+        "MaxUsedTracks"           : 500,
         "FinalDLLCheck"           : [ False, True, True, True ],
         "TrackFreezeOutDLL"       : None,
         "TrackForceChangeDLL"     : None,
@@ -94,6 +95,7 @@ class RichGlobalPIDConfig(RichConfigurableUser):
         gPixSel = self.makeRichAlg(Rich__Rec__GlobalPID__DigitSel,"Rich"+cont+"GPIDDigSel")
         gPixSel.MaxUsedPixels = self.getProp("MaxUsedPixels")
         gTrkSel = self.makeRichAlg(Rich__Rec__GlobalPID__TrackSel,"Rich"+cont+"GPIDTrSel")
+        gTrkSel.MaxUsedTracks = self.getProp("MaxUsedTracks")
         initSeq.Members += [ gInit, gPixSel, gTrkSel ]
 
         # track creator tool

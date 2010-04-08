@@ -4,6 +4,9 @@
 ! Purpose     : The Rich Global PID algorithm
 !-----------------------------------------------------------------------------
 
+! 2010-04-08 - Chris Jones
+ - Fine tune the messages that are issued when event processing is aborted
+
 !======================= RichGlobalPID v3r11 2010-03-18 ====================
 ! 2010-03-05 - Chris Jones
  - Various changes to support the configuration of multiple reconstruction 

@@ -98,7 +98,10 @@ StatusCode TrackSel::eventInit()
     procStatus()->addAlgorithmStatus( gpidName(), Rich::Rec::ReachedTrTrackLimit );
     richStatus()->setEventOK( false );
     deleteGPIDEvent();
-    return Warning("Maximum number of input tracks exceeded -> Abort",StatusCode::SUCCESS,0);
+    std::ostringstream mess;
+    mess << "Number of input tracks exceeds maximum of "
+         << m_maxInputTracks << " -> Abort";
+    return Warning(mess.str(),StatusCode::SUCCESS,0);
   }
 
   // Make sure RichRecTracks are available
@@ -115,7 +118,10 @@ StatusCode TrackSel::eventInit()
     procStatus()->addAlgorithmStatus( gpidName(), Rich::Rec::ReachedRichTrackLimit );
     richStatus()->setEventOK( false );
     deleteGPIDEvent();
-    return Warning("Maximum number of RICH tracks exceeded -> Abort",StatusCode::SUCCESS,0);
+    std::ostringstream mess;
+    mess << "Number of RICH tracks exceeds maximum of "
+         << m_maxUsedTracks << " -> Abort";
+    return Warning(mess.str(),StatusCode::SUCCESS,0);
   }
 
   return StatusCode::SUCCESS;

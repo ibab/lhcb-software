@@ -77,7 +77,9 @@ StatusCode DigitSel::execute()
   { // too many pixels
     procStatus()->addAlgorithmStatus( gpidName(), Rich::Rec::ReachedPixelLimit );
     richStatus()->setEventOK( false );
-    return Warning( "Max. number of pixels exceeded -> Abort", StatusCode::SUCCESS, 0 );
+    std::ostringstream mess;
+    mess << "Number of selected pixels exceeds maximum of " << m_maxUsedPixels << " -> Abort";
+    return Warning( mess.str(), StatusCode::SUCCESS, 0 );
   }
 
   // final printout of selected number of pixels

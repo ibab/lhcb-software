@@ -15,6 +15,8 @@
 #ifndef RICHGLOBALPID_RICHGLOBALPIDDIGITSEL_H
 #define RICHGLOBALPID_RICHGLOBALPIDDIGITSEL_H 1
 
+#include <sstream>
+
 // Base
 #include "RichGlobalPIDAlgBase.h"
 #include "RichRecBase/RichRecProcCode.h"

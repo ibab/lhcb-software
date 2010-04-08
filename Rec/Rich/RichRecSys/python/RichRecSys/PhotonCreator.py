@@ -20,18 +20,21 @@ class RichPhotonCreatorConfig(RichConfigurableUser):
     ## Default options
     __slots__ = {
         "Context"       : "Offline" # The context within which to run
-       ,"Radiators"     : [] # The radiators to use (Aerogel/Rich1Gas/Rich2Gas)
+       ,"Radiators"     : []        # The radiators to use (Aerogel/Rich1Gas/Rich2Gas)
        ,"SelectionMode" : "Tight"
        ,"SpecialData"   : []
-       ,"Simulation"    : False         # Simulated data
-       ,"OutputLevel"   : INFO # The output level to set all algorithms and tools to use
+       ,"Simulation"    : False     # Simulated data
+       ,"OutputLevel"   : INFO      # The output level to set all algorithms and tools to use
+       ,"MaxPhotons"    : None      # Maximum number of photon candidates
         }
 
     ## Initialize 
     def initialize(self):
         # default values
-        self.setRichDefault("Radiators","Offline",[True,True,True])
-        self.setRichDefault("Radiators","HLT",    [True,True,True])
+        self.setRichDefaults ( "Radiators", { "Offline" : [True,True,True], 
+                                              "HLT"     : [True,True,True] } )
+        self.setRichDefaults ( "MaxPhotons", { "Offline" : 1000000, 
+                                               "HLT"     : 1000000 } )
 
     ## Apply configurations
     def applyConf(self):
@@ -57,6 +60,9 @@ class RichPhotonCreatorConfig(RichConfigurableUser):
 
         # OutputLevel
         self.setOutputLevel(creator)
+
+        # Number photon candidates
+        creator.MaxPhotons = self.getProp("MaxPhotons")
 
         # -----------------------------------------------------------------------
         # Photon predictor (a.k.a. pre-selection)

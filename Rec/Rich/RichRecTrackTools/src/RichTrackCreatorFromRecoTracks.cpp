@@ -79,16 +79,38 @@ StatusCode TrackCreatorFromRecoTracks::newTracks() const
     const LHCb::Tracks * tracks = trTracks();
     if ( tracks )
     {
+
+      // check the number of input tracks
+      if ( tracks->size() > m_maxInputTracks )
+      {
+        std::ostringstream mess;
+        mess << "Number of input tracks exceeds maximum of "
+             << m_maxInputTracks << " -> Abort";
+        return Warning( mess.str(), StatusCode::SUCCESS, 10 );
+      }
+      
+      // make rich tracks
       richTracks()->reserve( nInputTracks() );
       for ( LHCb::Tracks::const_iterator track = tracks->begin();
             track != tracks->end(); ++track )
       {
         newTrack( *track );
       }
+      
+      // Too many selected tracks ?
+      if ( richTracks()->size() > m_maxSelTracks )
+      {
+        richTracks()->clear();
+        std::ostringstream mess;
+        mess << "Number of RICH tracks exceeds maximum of "
+             << m_maxSelTracks << " -> Abort";
+        return Warning( mess.str(), StatusCode::SUCCESS, 0 );
+      }
+      
     }
-
+    
   }
-
+  
   return StatusCode::SUCCESS;
 }
 

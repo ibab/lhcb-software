@@ -22,15 +22,22 @@ class RichPixelCreatorConfig(RichConfigurableUser):
 
     ## Default options
     __slots__ = {
-        "Context":       "Offline"   # The context within which to run
-       ,"Detectors": [True,True]     # Which RICH detectors to use (RICH1/RICH2)
-       ,"PixelCleaning": "None" # Turn on RICH pixel cleaning (hot HPDs etc.)
-       ,"FindClusters": True # Find clusters in the HPD data
-       ,"UseClustersAsPixels": [ False, False ] # Use clusters as the raw pixel objects
-       ,"MaxHotPixelClusterSize": [ 10, 8 ] # Max size of clusters for HotClusters pixel cleaning (RICH1,RICH2)
-       ,"BookKeeping": False
-       ,"OutputLevel"   : INFO    # The output level to set all algorithms and tools to use
+        "Context"                : "Offline"   # The context within which to run
+       ,"Detectors"              : [True,True]     # Which RICH detectors to use (RICH1/RICH2)
+       ,"PixelCleaning"          : "None" # Turn on RICH pixel cleaning (hot HPDs etc.)
+       ,"FindClusters"           : True # Find clusters in the HPD data
+       ,"UseClustersAsPixels"    : [ False, False ] # Use clusters as the raw pixel objects
+       ,"MaxHotPixelClusterSize" : [ 10, 8 ] # Max size of clusters for HotClusters pixel cleaning (RICH1,RICH2)
+       ,"MaxPixels"              : 30000 # Max pixels per event
+       ,"BookKeeping"            : False
+       ,"OutputLevel"            : INFO # The output level to set all algorithms and tools to use
         }
+
+    ## Initialize 
+    def initialize(self):
+        # default values
+        self.setRichDefaults ( "MaxPixels",  { "Offline" : 30000, 
+                                               "HLT"     : 30000 } )
 
     ## @brief Check the configuration is OK
     #
@@ -50,6 +57,9 @@ class RichPixelCreatorConfig(RichConfigurableUser):
         pixmaker = self.richTools().pixelCreator()
         pixmaker.UseDetectors  = self.getProp("Detectors")
         pixmaker.DoBookKeeping = self.getProp("BookKeeping")
+
+        # Max pixel limit
+        pixmaker.MaxPixels = self.getProp("MaxPixels")
 
         # OutputLevel
         self.setOutputLevel(pixmaker)

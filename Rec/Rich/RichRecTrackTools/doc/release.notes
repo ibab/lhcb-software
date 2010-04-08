@@ -4,6 +4,9 @@
 ! Purpose     : Utility tracks tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+! 2010-04-08 - Chris Jones
+ - Implement maximum number of tracks cut in RichRecTrack creator.
+
 ! 2010-04-07 - Chris Jones
  - Switch from the TrackFast ParabolicExtrapolator to the 
    TrackParabolicExtrapolator in DetailedTrSegMakerFromRecoTracks
