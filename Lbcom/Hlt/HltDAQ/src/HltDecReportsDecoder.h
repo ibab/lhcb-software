@@ -1,4 +1,4 @@
-// $Id: HltDecReportsDecoder.h,v 1.1.1.1 2009-06-24 15:38:52 tskwarni Exp $
+// $Id: HltDecReportsDecoder.h,v 1.2 2010-04-08 08:12:02 jpalac Exp $
 #ifndef HLTDECREPORTSDECODER_H 
 #define HLTDECREPORTSDECODER_H 1
 
@@ -44,7 +44,8 @@ private:
   StringProperty m_outputHltDecReportsLocation;
 
   /// location of input
-  StringProperty m_inputRawEventLocation;
+  std::string m_inputRawEventLocation;
+  std::vector<std::string> m_rawEventLocations;
 
   /// HltANNSvc for making selection names to int selection ID
   IANNSvc* m_hltANNSvc;

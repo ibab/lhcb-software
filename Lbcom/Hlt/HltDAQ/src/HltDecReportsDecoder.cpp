@@ -1,4 +1,4 @@
-                                          // $Id: HltDecReportsDecoder.cpp,v 1.3 2010-03-03 03:56:04 tskwarni Exp $
+                                          // $Id: HltDecReportsDecoder.cpp,v 1.4 2010-04-08 08:12:02 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -64,17 +64,20 @@ namespace {
 // Standard constructor, initializes variables
 //=============================================================================
 HltDecReportsDecoder::HltDecReportsDecoder( const std::string& name,
-                                          ISvcLocator* pSvcLocator)
-    : GaudiAlgorithm ( name , pSvcLocator )
+                                            ISvcLocator* pSvcLocator)
+  : GaudiAlgorithm ( name , pSvcLocator ),
+    m_inputRawEventLocation(""),
+    m_hltANNSvc(0)
 {
 
   declareProperty("OutputHltDecReportsLocation",
-    m_outputHltDecReportsLocation= LHCb::HltDecReportsLocation::Default);  
+                  m_outputHltDecReportsLocation= LHCb::HltDecReportsLocation::Default);  
   declareProperty("InputRawEventLocation",
-    m_inputRawEventLocation= LHCb::RawEventLocation::Default);  
+                  m_inputRawEventLocation);  
 
-
-  m_hltANNSvc = 0;
+  m_rawEventLocations.push_back(m_inputRawEventLocation);
+  m_rawEventLocations.push_back(LHCb::RawEventLocation::Copied);
+  m_rawEventLocations.push_back(LHCb::RawEventLocation::Default);
 
 }
 //=============================================================================
@@ -105,11 +108,13 @@ StatusCode HltDecReportsDecoder::execute() {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
 
-  // get input
-  if( !exist<RawEvent>(m_inputRawEventLocation) ){    
-    return Error(" No RawEvent at "+ m_inputRawEventLocation.value());
-  }  
-  RawEvent* rawEvent = get<RawEvent>(m_inputRawEventLocation);
+  LHCb::RawEvent* rawEvent = 0;
+  std::vector<std::string>::const_iterator iLoc = m_rawEventLocations.begin();
+  for (; iLoc != m_rawEventLocations.end() && rawEvent==0 ; ++iLoc ) {
+    if (exist<LHCb::RawEvent>(*iLoc)) {
+      rawEvent = get<LHCb::RawEvent>(*iLoc);
+    }
+  }
 
   // create output container and put it on TES
   HltDecReports* outputSummary = new HltDecReports();

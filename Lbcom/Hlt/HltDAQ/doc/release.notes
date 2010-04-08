@@ -4,6 +4,13 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !-----------------------------------------------------------------------------
 
+!========================== HltDAQ v1r7 2010-04-08 ===========================
+
+! 2010-04-07 - Juan Palacios
+ - HltDecReportsDecoder
+  . Look for RawEvent in locations given by RawEventLocation property, LHCb::RawEventLocation::Copied or LHCb::RawEventLocation::Default. Pick the first one found.
+ - increase to v1r7.
+
 !========================== HltDAQ v1r6 2010-04-07 ===========================
 
 ! 2010-04-07 - Juan Palacios
