@@ -6,7 +6,7 @@ Purpose             : LHCb physics analysis application
 </PRE><H1><A NAME=v25r2p2>2010-04-07 DaVinci v25r2p2. Patch release for Early 2010 data stripping. </A></H1><PRE>
 
  * Fixes problems with HltDecReports, L0DU construction from the raw bank, 
-   and stripping when reading RDSTs.
+   stripping, and others, present when reading RDSTs.
 
 ! 2010-04-03 - Rob Lambert
  - Modified two new tests to run 600 events (enough to see the segfault)
