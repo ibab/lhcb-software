@@ -5,6 +5,7 @@
 !               of events with exotic displaced vertices
 !-----------------------------------------------------------------------------
 
+!========================== DisplVertices v6r4 2010-04-08 ===================
 ! 2010-03-22 - Neal Gauvin
  - remove any print out in initialize() for default
 
