@@ -5,6 +5,10 @@
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
 
+! 2010-04-08 - Wouter Hulsbergen 
+- increased max capcity of ISolid::Ticks
+- throw exceptions from complicated Solids if capacity insufficient
+
 !====================== DetDesc v18r19 2010-01-20 =============================
 ! 2010-01-11 - Wouter Hulsbergen 
 - Added method to set pivot point to AlignmentCondition
