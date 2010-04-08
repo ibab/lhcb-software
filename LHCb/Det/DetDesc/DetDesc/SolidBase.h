@@ -5,6 +5,7 @@
 // DetDesc 
 #include "DetDesc/Services.h"
 #include "DetDesc/ISolid.h"
+#include "DetDesc/SolidException.h"
 
 /// forward declarations 
 class IMessageSvc;
@@ -429,6 +430,18 @@ protected:
    */
   IMessageSvc* msgSvc() const;
     
+  /** check that maxNumberOfTicks is smaller than the maximum capacity of Ticks container
+   *  @exception SolidException if maxNumberOfTicks too large
+   */
+  inline void checkTickContainerCapacity() const {
+    if( maxNumberOfTicks() > ISolid::Ticks::MaxSize ) {
+      std::stringstream msg ;
+      msg << "Volume \'" << name() << "\' has too large maxNumberOfTicks: "
+	  << maxNumberOfTicks() << ". Please increase max capacity in ISolid::Ticks" ;
+      throw SolidException(msg.str()) ;
+    }
+  }
+  
 protected:
   
   /** standard constructor 
