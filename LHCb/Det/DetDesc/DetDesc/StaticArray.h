@@ -39,6 +39,11 @@ public:
   typedef std::ptrdiff_t                        difference_type;       
   ///@}
 
+  ///@{
+  /** enums */
+  enum { MaxSize=N } ;
+  ///@}
+  
   /** constructor */
   StaticArray() : m_size(0) {}
 
