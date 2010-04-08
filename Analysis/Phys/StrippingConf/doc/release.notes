@@ -1,10 +1,11 @@
-!$Id: release.notes,v 1.52 2010-03-24 11:07:37 poluekt Exp $
+!$Id: release.notes,v 1.53 2010-04-08 12:32:09 pkoppenb Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/StrippingConf
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
 
+!========================== StrippingConf v3r1 2010-04-08 =================
 ! 2010-03-24 - Anton Poluektov 
  - Added StrippingLine.filterMembers() and StrippingStream.filterMembers() functions
    to get the flat list of all filter algorithms (CombineParticles, FilterDesktops etc.)
