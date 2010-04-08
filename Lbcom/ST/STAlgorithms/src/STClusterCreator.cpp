@@ -1,4 +1,4 @@
-// $Id: STClusterCreator.cpp,v 1.19 2010-04-05 09:37:01 mneedham Exp $
+// $Id: STClusterCreator.cpp,v 1.20 2010-04-08 08:02:07 mneedham Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -7,7 +7,7 @@
 #include "Kernel/STChannelID.h"
 #include "Kernel/STDetSwitch.h"
 #include "Kernel/ISTClusterPosition.h"
-#include "Kernel/ISTSignalToNoiseTool.h"
+
 #include "Kernel/ISTReadoutTool.h"
 #include "Kernel/LHCbConstants.h"
 
