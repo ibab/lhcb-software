@@ -4,6 +4,8 @@
 ! Purpose     : Pure python ntuple and histogram classes and helper code.
 !-----------------------------------------------------------------------------
 
+!======================= AnalysisPyAna v1r0 2010-04-08 =======================
+
 ! 2010-03-23 - Juan Palacios
  - First import to SVN. Contains modules:
    * pyhistogram
