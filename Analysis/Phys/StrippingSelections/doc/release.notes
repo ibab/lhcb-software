@@ -5,6 +5,10 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+!========================== StrippingSelections v1r19 2010-04-08 ===================
+! 2010-04-08 - Patrick Koppenburg
+ - StreamEW : no W->e until tests are done
+
 ! 2010-04-08 - Anton Poluektov 
  - StrippingB2KSKK_KSpipi is replaced by StrippingB2KShh.py (Jussara Miranda). 
    B->KSKPi mode added to it. 

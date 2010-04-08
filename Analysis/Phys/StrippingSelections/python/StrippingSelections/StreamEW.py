@@ -27,11 +27,11 @@ stream.appendLines( [
 		        StrippingDY2MuMu.line3,
 		        StrippingDY2MuMu.line4,
                         StrippingZ02ee.line,
-                      # StrippingWe.line,
+                      # StrippingWe.line,   # commented out until James finishes tests
                         StrippingDY2ee.line1,
                         StrippingDY2ee.line2,
 		        StrippingDY2ee.line3,
 		        StrippingDY2ee.line4, 
-                        StrippingDisplVertices.line1,  # bug 64490
-                        StrippingDisplVertices.line2,  # bug 64490
+                        StrippingDisplVertices.line1,  
+                        StrippingDisplVertices.line2,  
 		    ] )
