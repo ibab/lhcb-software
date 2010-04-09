@@ -2,12 +2,11 @@
 ! Package manager : Matt Needham
 !-----------------------------------------------------------------------------
 
+!======================= STAlgorithms v3r11 2010-04-09 =======================
 ! 2010-04-08 M. Needham
-
  - Remove a stray header inc of ISTSignalToNoiseTool
 
 ! 2010-04-07 M Needham
-
  - Remove ISTSignalToNoiseTool
  - Allow use of cuts from conditions in STClusterCreator 
  - Make threshold integer + cut >= (was >)
