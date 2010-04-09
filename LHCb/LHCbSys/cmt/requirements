@@ -110,8 +110,8 @@ use RecInterfaces         v1r0p1  Kernel  # Marco Cattaneo et al.
 use RichKernel            v7r33   Rich    # In SVN. Chris Jones
 use RichRecBase           v3r29   Rich    # In SVN. Chris Jones
 use SimComponents         v2r20   Sim     # Gloria Corti, Marco Cattaneo
-use STKernel              v1r19   ST      # Matt Needham
-use STTELL1Event          v2r0    ST      # Matt Needham
+use STKernel              v2r0    ST      # Matt Needham
+use STTELL1Event          v1r9    ST      # Matt Needham
 use CondDBEntityResolver  v5r1    Tools   # In SVN. Marco Clemencic
 use CondDBUI              v3r3    Tools   # In SVN. Marco Clemencic
 use XmlTools              v6r3p1  Tools   # In SVN. Marco Clemencic
