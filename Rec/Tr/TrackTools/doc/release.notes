@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2010-04-09 - Wouter Hulsbergen
+ - fixed compilation warning in TrackSelectorBase
+
 ! 2010-04-07 - Wouter Hulsbergen
  - replaced FastParabolicExtraplator by ParabolicExtrapolator
 
