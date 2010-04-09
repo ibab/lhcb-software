@@ -1,10 +1,11 @@
-! $Id: release.notes,v 1.179 2010-03-31 21:19:22 odescham Exp $
+! $Id: release.notes,v 1.180 2010-04-09 13:48:38 rlambert Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Calo/CaloReco
 ! Responsible : Olivier Deschamps odescham@in2p3.fr 
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
 ! -----------------------------------------------------------------------------
 
+!========================== CaloReco v5r4p2  2010-04-09 ========================
 ! 2010-03-27 - Olivier Deschamps
   - add missing Prs threshold in Standalone Electron selection (CaloStandaloneClusterSelection.opts)
 
