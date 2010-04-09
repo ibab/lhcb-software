@@ -3,6 +3,7 @@
 ! Responsible : Wouter Hulsbergen
 !----------------------------------------------------------------------------
 
+!=========================== TrackFitter v2r47 2010-04-09=================
 ! 2010-04-08 - Wouter Hulsbergen
  - fixed crash when track has no measurements
  - replaced LoKi::Range with Gaudi::Range
