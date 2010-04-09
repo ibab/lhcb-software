@@ -51,6 +51,8 @@ namespace LHCb  {
   struct MEPRx;
   class MEPRxSvc;
   class MEPRQCommand;
+  class ClearMonCommand;
+  class UpMonCommand;
 
   struct DAQErrorEntry {    
        /* LHCb Bankheader */
@@ -126,11 +128,13 @@ namespace LHCb  {
     lib_rtl_lock_t              m_freeDscLock;
     lib_rtl_lock_t              m_usedDscLock;
     MEPRQCommand                *m_mepRQCommand;
+    UpMonCommand		*m_upMonCommand;
+    ClearMonCommand		*m_clearMonCommand;
+
     //SourceStatService           *m_statService;
     
     IIncidentSvc*               m_incidentSvc; 
     IMonitorSvc*                m_monSvc;
-    //IGauchoMonitorSvc*                m_monSvc;
     IHistogramSvc*              m_histSvc;
 
     int                         m_sourceID;
@@ -175,9 +179,10 @@ namespace LHCb  {
     std::vector<int64_t>        m_emptyPkt;
     std::vector<int64_t>	m_multipleEvt;
     IHistogram1D                *m_complTimeTSC; // how long to complete an evt
-    IHistogram1D                *m_idleTimeTSC;  // how long between tow evts
+    IHistogram1D                *m_idleTimeTSC;  // how long between two evts
     IHistogram1D                *m_complTimeSock; // how long to complete an evt
-    IHistogram1D                *m_idleTimeSock;  // how long between tow evts
+    IHistogram1D                *m_idleTimeSock;  // how long between two evts
+    IHistogram1D		*m_L0IDDiff ; //L0ID gap between two evts
     /// Standard Constructor
     MEPRxSvc(const std::string& name, ISvcLocator* svc);
     /// Standard Destructor
@@ -223,12 +228,55 @@ namespace LHCb  {
     int checkPartitionID(u_int32_t addr, struct MEPHdr *);
     void cryError(void);
     void truncatedPkt(struct RTL::IPHeader *);
+
+    IMonitorSvc* getMonSvc() {return m_monSvc;}
+
   private:
     void srcSwap(int, int);
     int srcFindMedianOfMedians(int, int);
     int srcFindMedianIndex(int, int, int);
     int srcPart(int, int);
     void srcSort(int, int);
+  };
+
+  /**
+   * A simple DIM command implementation that causes the monitoring counters and histogram to be reset.
+   */
+  class ClearMonCommand : public DimCommand {
+    MEPRxSvc *m_mepRxObj;
+    IMessageSvc* m_msgSvc;
+
+    public:
+
+    // Constructor
+    ClearMonCommand(MEPRxSvc *mepRxObj, IMessageSvc *log, const std::string& cmd_name)
+   : DimCommand(std::string(cmd_name + "/ClearMonitor").c_str(), (char*)"I"),
+      m_mepRxObj(mepRxObj),m_msgSvc(log) {
+    }
+
+    ~ClearMonCommand() { }
+
+    virtual void commandHandler(void);
+  };
+
+  /**
+   * A simple DIM command implementation that causes the histograms to be updated.
+   */
+  class UpMonCommand : public DimCommand {
+    MEPRxSvc *m_mepRxObj;
+    IMessageSvc* m_msgSvc;
+
+    public:
+
+    // Constructor
+    UpMonCommand(MEPRxSvc *mepRxObj, IMessageSvc *log, const std::string& cmd_name)
+   : DimCommand(std::string(cmd_name + "/UpMon").c_str(), (char*)"I"),
+      m_mepRxObj(mepRxObj),m_msgSvc(log) {
+    }
+
+    ~UpMonCommand() { }
+
+    virtual void commandHandler(void);
   };
 
   /**
