@@ -2,7 +2,7 @@
 ! Package manager : Matt Needham
 !-----------------------------------------------------------------------------
 
-!======================= STAlgorithms v3r11 2010-04-09 =======================
+!======================= STAlgorithms v4r0 2010-04-09 ========================
 ! 2010-04-08 M. Needham
  - Remove a stray header inc of ISTSignalToNoiseTool
 
