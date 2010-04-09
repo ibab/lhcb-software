@@ -74,7 +74,7 @@ use HltInterfaces         v3r2    Kernel  # Patrick Koppenburg
 use KernelSys             v12r1   Kernel  # Marco Cattaneo
 use LHCbAlgs              v2r34   Kernel  # Marco Cattaneo
 use LHCbKernel            v11r12  Kernel  # Marco Cattaneo
-use LHCbMath              v3r16   Kernel  # Juan Palacios
+use LHCbMath              v3r17   Kernel  # Juan Palacios
 use MCInterfaces          v1r11   Kernel  # Marco Cattaneo et al.
 use PartProp              v1r6    Kernel  # Vanya Belyaev 
 use Relations             v5r9p1  Kernel  # Ivan Belyaev
@@ -87,7 +87,7 @@ use L0MuonKernel          v9r1    L0      # Julien Cogan
 use ProcessorKernel       v6r0    L0      # Julien Cogan
 
 use MuonDAQ               v4r8    Muon    # Alessia Satta
-use MuonInterfaces        v1r0p1  Muon    # Alessia Satta
+use MuonInterfaces        v1r1    Muon    # Alessia Satta
 
 # L1/Raw buffer encoding and decoding
 use DAQSys                v6r0    DAQ     # Marco Cattaneo
