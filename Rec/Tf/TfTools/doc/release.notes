@@ -4,6 +4,7 @@
 ! Purpose     : Core classes for the Tf framework
 !-----------------------------------------------------------------------------
 
+!============================ TfTools v1r13 2010-04-09 ========================
 ! 2010-04-07 - Wouter Hulsbergen
  - add method to STHitCreator to create Tf::STHit for single lhcbid
 
