@@ -9,6 +9,7 @@ use  DaVinci                 	HEAD   Phys
 # patched packages
 use HltCommon                   v5r22     Hlt
 use HltDAQ                      v1r7      Hlt
+use CaloReco                    v5r4p1  Calo
 #  
 # Declare this as a container package
 apply_pattern container_package
