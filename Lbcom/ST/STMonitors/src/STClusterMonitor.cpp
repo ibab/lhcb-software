@@ -1,4 +1,4 @@
-// $Id: STClusterMonitor.cpp,v 1.25 2010-04-05 10:00:35 mneedham Exp $
+// $Id: STClusterMonitor.cpp,v 1.26 2010-04-09 07:20:42 mneedham Exp $
 // Include files 
 
 // from Gaudi
@@ -82,7 +82,8 @@ ST::STClusterMonitor::STClusterMonitor( const std::string& name,
 
   /// Reset rate for histograms/accumulators
   declareProperty("ResetRate", m_resetRate=1000);
-  
+
+  setForcedInit();  
 }
 //=============================================================================
 // Destructor
@@ -375,9 +376,14 @@ void ST::STClusterMonitor::fillHistograms(const LHCb::STCluster* cluster){
   m_1d_ClusterSize->fill(clusterSize);
   m_2d_ClusterSizeVsTELL1->fill(TELL1ID, clusterSize);
   const DeSTSector* sector = findSector(cluster->channelID()); 
-  const double signalToNoise = cluster->totalCharge()/sector->noise(cluster->channelID());
-  m_2d_STNVsTELL1->fill(TELL1ID, signalToNoise);
-  
+  double noise = sector->noise(cluster->channelID());
+  if (noise > 1e-3) {
+    const double signalToNoise = cluster->totalCharge()/noise;
+    m_2d_STNVsTELL1->fill(TELL1ID, signalToNoise);
+  }
+  else {
+    Warning("Zero S/N for some clusters",StatusCode::SUCCESS,1);
+  }
   m_2d_ChargeVsTELL1->fill(TELL1ID, totalCharge);
   if(m_plotByPort) {
     const unsigned int tell1Channel = cluster->tell1Channel();
@@ -438,10 +444,15 @@ void ST::STClusterMonitor::fillDetailedHistograms(const LHCb::STCluster*
   }
   // charge and S/N
   plot1D(totalCharge,cluster->layerName()+"/Charge", "Charge",-0.5, 500.5, 501);
-  const DeSTSector* sector = findSector(cluster->channelID()); 
-  const double signalToNoise = cluster->totalCharge()/sector->noise(cluster->channelID());
-  plot1D(signalToNoise,cluster->layerName()+"/Signal to noise","S/N",0., 100.,100);
-
+  const DeSTSector* sector = findSector(cluster->channelID());
+  double noise = sector->noise(cluster->channelID()); 
+  if (noise > 1e-3){
+    const double signalToNoise = cluster->totalCharge()/noise;
+    plot1D(signalToNoise,cluster->layerName()+"/Signal to noise","S/N",0., 100.,100);
+  }
+  else {
+    Warning("Some cluster have zero noise", StatusCode::SUCCESS,1);
+  }
   // Plot cluster ADCs for 1, 2, 3, 4 strip clusters
   std::string svcBox = (this->readoutTool())->serviceBox(cluster->firstChannel());
   std::string idhStrip = " (" + boost::lexical_cast<std::string>(clusterSize) + " strip)";
