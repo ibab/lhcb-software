@@ -4,6 +4,7 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+!=========================== RichTools v2r29p2 2010-04-09 ====================
 ! 2010-03-22 - Chris Jones
  - Minor update to Rich::TabulatedRefractiveIndex to correctly use the HLT
    or Offline refractive indices from RichDet depending on if the tool is
