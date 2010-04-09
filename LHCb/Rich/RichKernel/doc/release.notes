@@ -4,6 +4,7 @@
 ! Purpose     : General purpose RICH classes
 !-----------------------------------------------------------------------
 
+!====================== RichKernel v7r33 2010-04-09 ====================
 ! 2010-04-01 - Chris Jones
  - Make the histogramming methods in RichHistoBase const
  - Make the 'Functional' CK resolution tool the Offline default. HLT 
