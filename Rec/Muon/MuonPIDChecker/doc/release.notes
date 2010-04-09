@@ -2,6 +2,7 @@
 ! Responsible : E. Polycarpo, H. Lopes    
 !----------------------------------------------------------------------------
 
+!====================== MuonPIDChecker v5r1 2010-03-24 ======================
 ! 2010-03-30 - Erica Polycarpo 
  - change configurable to look at Downstream tracks also in OfflineFull mode
 
