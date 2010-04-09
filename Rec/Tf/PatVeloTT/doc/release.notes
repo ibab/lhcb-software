@@ -4,6 +4,7 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+!========================== PatVeloTT v3r12 2010-04-09 ======================
 ! 2010-04-08 - Wouter Hulsbergen
 - cleanup configuration of fitter option file since it gave error after 
   introducing toolhandle in track fit
