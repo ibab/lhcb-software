@@ -5,6 +5,9 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
+</PRE><H1><A NAME=v9r1>2010-04-09 RecSys v9r1</A></H1><PRE>
+This version uses Gaudi v21r8 and LHCb v30r1
+
 ! 2010-03-29 - Dmitry Golubkov
  - RecMoniConf: propagate the Histograms slot to CaloMoniDstConf
 
