@@ -3,6 +3,14 @@ Package     : AnalysisSys
 Package Coordinator : Juan Palacios
 Purpose     : LHCb analysis packages
 
+</PRE><H1><A NAME=v4r3>2010-04-09 Analysis v4r3 </A></H1><PRE>
+
+ - Highlights:
+  * Various bug fixes.
+  * Some new stripping selections plus StrippingReport algorithm with stats of stripping.
+  * New module PyAna with experimental pure-python ntuple and 1D histogram classes.
+  * AnalysisPython now accesses matplotlib, available in LCG externals.
+
 </PRE><H1><A NAME=v4r2>2010-03-08 Analysis v4r2 </A></H1><PRE>
 
 </PRE><H1><A NAME=v4r1>2010-02-22 Analysis v4r1 </A></H1><PRE>
