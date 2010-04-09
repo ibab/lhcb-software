@@ -1,5 +1,5 @@
 package LHCbSys
-version v30r0
+version v30r1
 
 branches doc cmt test
 
@@ -27,7 +27,7 @@ use BcmDet                v1r3    Det     # Magnus Lieng
 use CaloDet               v10r5   Det     # Olivier Deschamps
 use CaloDetXmlCnv         v3r2    Det     # Olivier Deschamps
 use DDDB                  v1r29   Det     # Marco Cattaneo
-use DetCond               v12r11  Det     # In SVN. Marco Clemencic
+use DetCond               v12r12  Det     # In SVN. Marco Clemencic
 use DetDesc               v18r19  Det     # In SVN. Marco Clemencic,Juan Palacios
 use DetDescChecks         v5r2    Det     # In SVN. Marco Clemencic, Ivan Belyaev
 use DetDescCnv            v4r11   Det     # In SVN. Marco Clemencic,Juan Palacios
@@ -35,10 +35,10 @@ use DetDescSvc            v2r4    Det     # In SVN. Marco Clemencic, Matt Needha
 use Magnet                v5r7    Det     # Marco Cattaneo
 use MuonDet               v9r2    Det     # Alessia Satta, Alessio Sarti
 use OTDet                 v8r4    Det     # Jan Amoraal
-use RichDet               v14r0   Det     # Chris Jones
-use STDet                 v4r18   Det     # Jeroen van Tilburg, Matt Needham
+use RichDet               v14r1   Det     # Chris Jones
+use STDet                 v4r19   Det     # Jeroen van Tilburg, Matt Needham
 use VeloDet               v13r9   Det     # Mark Tobin, Kurt Rinnert
-use VeloPixDet            v1r3    Det     # Victor Coco
+use VeloPixDet            v1r4    Det     # Victor Coco
 
 # Event data model
 use DAQEvent              v9r1    Event   # Marco Cattaneo, Markus Frank
@@ -99,24 +99,24 @@ use DaVinciInterfaces     v2r2    Phys    # Juan Palacios
 use DaVinciTypes          v1r1    Phys    # Juan Palacios
 use HepMCBack             v1r1   Gen     # Gloria Corti, Patrick Robbe
 use LinkerInstances       v3r5    Event   # Thomas Ruf
-use LoKiCore              v9r12   Phys    # Ivan Belyaev
+use LoKiCore              v9r13   Phys    # Ivan Belyaev
 use LoKiGen               v8r8    Phys    # Ivan Belyaev
 use LoKiHlt               v2r8    Phys    # Ivan Belyaev
 use LoKiMC                v8r9    Phys    # Ivan Belyaev
-use LoKiNumbers           v8r5    Phys    # Ivan Belyaev
+use LoKiNumbers           v8r6    Phys    # Ivan Belyaev
 use MDF_ROOT              v1r2   DAQ     # Markus Frank
 use PatKernel             v2r3p1  Tf      # Stephanie Hansmann-Menzemer
 use RecInterfaces         v1r0p1  Kernel  # Marco Cattaneo et al.
-use RichKernel            v7r32   Rich    # In SVN. Chris Jones
-use RichRecBase           v3r28   Rich    # In SVN. Chris Jones
+use RichKernel            v7r33   Rich    # In SVN. Chris Jones
+use RichRecBase           v3r29   Rich    # In SVN. Chris Jones
 use SimComponents         v2r20   Sim     # Gloria Corti, Marco Cattaneo
 use STKernel              v1r19   ST      # Matt Needham
-use STTELL1Event          v1r9    ST      # Matt Needham
+use STTELL1Event          v2r0    ST      # Matt Needham
 use CondDBEntityResolver  v5r1    Tools   # In SVN. Marco Clemencic
 use CondDBUI              v3r3    Tools   # In SVN. Marco Clemencic
 use XmlTools              v6r3p1  Tools   # In SVN. Marco Clemencic
 use TfKernel              v2r16   Tf      # Stephanie Hansmann-Menzemer
-use TrackInterfaces       v4r11   Tr      # Matt Needham
+use TrackInterfaces       v4r12   Tr      # Matt Needham
 use TrackKernel           v1r2    Tr      # Wouter Hulsbergen
 use TsaKernel             v3r5p1  Tf      # Matt Needham
 
