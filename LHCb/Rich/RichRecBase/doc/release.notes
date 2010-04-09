@@ -4,6 +4,7 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+!===================== RichRecBase v3r29 2010-04-09 ==========================
 ! 2010-04-08 - Chris Jones
  - Add protection to pixel, track and photon creator base class to abort event
    processing on large events.
