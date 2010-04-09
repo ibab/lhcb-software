@@ -3,7 +3,9 @@
 ! Responsible : Antonis Papanestis
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
-!2010-03-25  - Sajan Easo 
+
+!======================== RichDet v14r1 2010-04-09 ===========================
+! 2010-03-25  - Sajan Easo 
  - Added the capability to use the C3F8  as RICH1Gas in DeRichGasRadiator.cpp.
    This modification is backward compatible.
 ! 2010-03-23 - Chris Jones
