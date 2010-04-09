@@ -1,11 +1,14 @@
-! $Id: release.notes,v 1.201 2010-04-07 20:26:30 odescham Exp $
+! $Id: release.notes,v 1.202 2010-04-09 16:16:48 cattanem Exp $
 ! Package		: L0/L0DU
 ! Package Manager : Olivier Deschamps
 !--------------------------------------------------------------------------
 
+!========================== L0DU v10r5 2010-04-09 =========================
 ! 2010-04-07 Olivier Deschamps
-  - L0DUFromRawTool : try alternative standard RawEventLocations (::Copied, ::Default)  if  rawEvent not found in the user-defined location
-  - L0DURawBankMonitor : implement filterPassed to filter out problematic event (according to a mask set via options)
+  - L0DUFromRawTool : try alternative standard RawEventLocations 
+    (::Copied, ::Default)  if  rawEvent not found in the user-defined location
+  - L0DURawBankMonitor : implement filterPassed to filter out problematic event
+    (according to a mask set via options)
 
 !========================== L0DU v10r4 2010-03-17 =========================
 ! 2010-03-01 Olivier Deschamps
