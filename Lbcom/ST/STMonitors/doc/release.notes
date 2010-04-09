@@ -4,6 +4,7 @@
 ! Purpose     : Standard package for monitoring NZS and ZS data.
 !-----------------------------------------------------------------------------
 
+!======================= STMonitors v3r0 2010-04-09 ==========================
 ! 2010-04-09 M Needham
  - Additional Protection in STClusterMonitor
 
@@ -13,7 +14,7 @@
 ! 2010-03-23 - Mark Tobin
  - Added possibilty to cut on maximum number of clusters in STClusterMonitor.
  - Finalize STDumpADCs with STTupleAlgBase::finalize.
- - Added algorithm (STDumpClusters) to dump all clusters in an event to an ntuple.
+ - Added algorithm (STDumpClusters) to dump all clusters in an event to an ntuple
 
 !======================= STMonitors v2r6 2010-03-18 ==========================
 ! 2010-03-12 - Nicola Chiapolini
