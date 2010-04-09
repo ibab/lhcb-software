@@ -1,8 +1,9 @@
-!$Id: release.notes,v 1.194 2010-04-05 09:43:18 mneedham Exp $
+!$Id: release.notes,v 1.195 2010-04-09 14:51:36 cattanem Exp $
 !Package         : STDet
 !Package manager : M. Needham
 !-------------------------------------------------------------------------
 
+!======================== STDet v4r19 2010-04-09 =========================
 ! 2010-04-05 M Needham
  - Add isInvertedX() methods to sensor + sector class
 
