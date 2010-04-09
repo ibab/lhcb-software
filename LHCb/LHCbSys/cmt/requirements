@@ -28,7 +28,7 @@ use CaloDet               v10r5   Det     # Olivier Deschamps
 use CaloDetXmlCnv         v3r2    Det     # Olivier Deschamps
 use DDDB                  v1r29   Det     # Marco Cattaneo
 use DetCond               v12r12  Det     # In SVN. Marco Clemencic
-use DetDesc               v18r19  Det     # In SVN. Marco Clemencic,Juan Palacios
+use DetDesc               v18r20  Det     # In SVN. Marco Clemencic,Juan Palacios
 use DetDescChecks         v5r2    Det     # In SVN. Marco Clemencic, Ivan Belyaev
 use DetDescCnv            v4r11   Det     # In SVN. Marco Clemencic,Juan Palacios
 use DetDescSvc            v2r4    Det     # In SVN. Marco Clemencic, Matt Needham
