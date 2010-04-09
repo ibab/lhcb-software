@@ -3,6 +3,7 @@
 ! Responsible : Kurt Rinnert, Chris Parkes
 !--------------------------------------------------------------------------
 
+!=========================  VeloDAQ v5r0 2010-04-09 =======================
 ! 2010-04-06 - David Hutchcroft
  - Made a corrupted bank length in the full cluster decoding an Abort event
    incident and caused the algorthm processing of that event to cease.
