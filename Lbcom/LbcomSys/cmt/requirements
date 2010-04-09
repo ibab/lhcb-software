@@ -18,7 +18,7 @@ use CaloTools         v5r16   Calo      # Olivier Deschamps
 use DAQMonitors       v1r2    DAQ       # In SVN. Olivier Deschamps
 
 # HLT
-use HltDAQ            v1r4    Hlt       # Tomasz Skwarnicki
+use HltDAQ            v1r7    Hlt       # Tomasz Skwarnicki
 
 # L0 trigger simulation
 use L0Calo            v11r1   L0        # Olivier Deschamps, Patrick Robbe
