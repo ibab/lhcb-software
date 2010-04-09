@@ -179,6 +179,11 @@ StatusCode DisplVertices::initialize() {
   }
   if( m_PurityMin < 1.1 ) m_MC = true;
 
+  if( context() == "HLT" ){
+    m_SaveTuple = false; m_MC = false;
+  }
+
+
   if( context() == "Info" ){
     info()<<"--------------------------------------------------------"<<endmsg;
     info() << "DisplVertices will select " << m_Prey 
@@ -318,6 +323,7 @@ StatusCode DisplVertices::execute(){
     if( fillHeader( tuple ).isFailure() || 
         SaveTrigInfinTuple( tuple ).isFailure() )
       Warning("Not being able to save trigger infos in tuple !");
+    if( !(tuple->write()) ) return StatusCode::FAILURE;
   }
 
   //------------------Set the beam line------------------
@@ -465,6 +471,7 @@ StatusCode DisplVertices::execute(){
     if( !m_SaveTrigInfos ) tuple->column( "FromMother", m_IsPreyFromMother );
     tuple->column( "BLX", m_BeamLine->referencePoint().x() );
     tuple->column( "BLY", m_BeamLine->referencePoint().y() );
+    tuple->column( "BLZ", m_BeamLine->referencePoint().z() );
     if( !SaveGEC( tuple, Cands ) ) return StatusCode::FAILURE;
     if( m_SaveTrigInfos && !SaveTrigInfinTuple( tuple ) ) 
       return StatusCode::FAILURE;
@@ -502,7 +509,7 @@ StatusCode DisplVertices::finalize() {
   info()<<"-------------------------------------------------------"<< endreq;
   info()<<"Number of reconstructed "<< m_Prey <<"               : " 
         << counter("Nb of candidates").flag() << endreq;
-  info()<<"Number of reconstructed Mother             : " 
+  info()<<"Number of reconstructed "<<  m_MotherPrey <<"                 : " 
         << counter("Nb of mothers").flag() << endreq;
   if( m_MC ){
     info()<<"Percentage of reconstructed "<< m_Prey <<"           : " 
@@ -2551,7 +2558,7 @@ bool DisplVertices::IsAPointInDet( const Particle* P, int mode, double range ){
       return false; 
     } 
     int size = path.size();
-    plot( size, "NbofDetV", 0, 5 );
+    if( context() == "Info" ) plot( size, "NbofDetV", 0, 5 );
       if( msgLevel(MSG::DEBUG) )
         debug()<<"Found "<< size <<" physical volumes related to point "
                << RV->position() <<endmsg;
@@ -2589,7 +2596,7 @@ bool DisplVertices::IsAPointInDet( const Particle* P, int mode, double range ){
     double radlength = m_transSvc->distanceInRadUnits
       ( start, end, 1e-35, dum, m_lhcbGeo );
 
-    plot( radlength, "RVRadLength", 0, 0.01);
+    if( context() == "Info" ) plot( radlength, "RVRadLength", 0, 0.01);
     if( msgLevel(MSG::DEBUG) )
       debug()<<"Radiation length from "<< start <<" to "
 	     << end <<" : "<< radlength 
@@ -3220,10 +3227,13 @@ StatusCode DisplVertices::SaveTrigInfinTuple( Tuple & tuple ){
   }
   tuple->column( "FromMother", mother );
 
-  //Was a prey reconstructed ?
-  //tuple->column( "Reco", m_ok );
-  //if( msgLevel(MSG::DEBUG) && m_ok ) 
-  //debug()<<"Event has a reconstructed prey !"<< endmsg;
+  //Was a prey reconstructed ? Look in the preselection container !
+  Particle::ConstVector cands = desktop()->particles();
+  bool cand = false;
+  if( cands.size() > 0 ) cand = true;
+  tuple->column( "Reco", cand );
+  if( msgLevel(MSG::DEBUG) && cand ) 
+    debug()<<"Event has a reconstructed prey !"<< endmsg;
  
   //Get L0 info and save decision in tuple
   if (!exist<L0DUReport>( L0DUReportLocation::Default )){
@@ -3339,9 +3349,11 @@ StatusCode DisplVertices::ReconstructMother( Particle::ConstVector & Cands ){
   Mother = (Cands.at(0)->momentum())+(Cands.at(1)->momentum());
   debug()<< m_MotherPrey <<" momentum " << Mother 
 	 << " Mass " << Mother.M() << endmsg;
-  plot( Mother.M()/1000., "RecMotherMass", 0., 160. );
-  plot( (Cands.at(0)->measuredMass())/1000.,"PreyMassfromMother", 0., 70.);
-  plot( (Cands.at(1)->measuredMass())/1000.,"PreyMassfromMother", 0., 70.);
+  if( context() == "Info" ){
+    plot( Mother.M()/1000., "RecMotherMass", 0., 160. );
+    plot( (Cands.at(0)->measuredMass())/1000.,"PreyMassfromMother", 0., 70.);
+    plot( (Cands.at(1)->measuredMass())/1000.,"PreyMassfromMother", 0., 70.);
+  }
   
   //Study dispersion between preys
   //StudyDispersion( Cands.at(0), Cands.at(1) );

@@ -6,6 +6,9 @@
 //get the Header of the event
 #include "Event/RecHeader.h"
 
+//Use ODIN
+#include "Event/ODIN.h"
+
 // local
 #include "RecVertices2Particles.h"
 
@@ -30,6 +33,7 @@ RecVertices2Particles::RecVertices2Particles( const std::string& name,
   : DVAlgorithm ( name , pSvcLocator )
     , m_vFit(0)
     , pi(3.1415926)
+    , m_pt(400.)
 {
   declareProperty("SaveTuple", m_SaveTuple = false );//save prey infos in Tuple
   declareProperty("Prey", m_Prey = "~chi_10" );
@@ -52,6 +56,7 @@ RecVertices2Particles::RecVertices2Particles( const std::string& name,
   declareProperty("RCutMethod", m_RCut = "FromUpstreamPV" );
   declareProperty("BeamLineLocation", 
 		  m_BLLoc = "HLT/Hlt2LineDisplVertices/BeamLine");
+  declareProperty("UseMap", m_UseMap = false );
 }
 //=============================================================================
 // Destructor
@@ -80,6 +85,10 @@ StatusCode RecVertices2Particles::initialize() {
   m_PreyID = Prey->particleID( ); 
   m_PreyPID = m_PreyID.pid ();
 
+  //Get the pion mass
+  const ParticleProperty* Ppion = ppSvc()->find( "pi+" );
+  m_piMass = Ppion->mass();
+
   //Sanity checks
   if( m_RemFromRFFoil && m_RemVtxFromDet == 4 ){
     info()<<"RemFromRFFoil = "<< m_RemFromRFFoil <<" and RemVtxFromDet = "
@@ -87,6 +96,14 @@ StatusCode RecVertices2Particles::initialize() {
 	  << endmsg;
     m_RemFromRFFoil = false;
   }
+
+  //Sanity checks
+  if( context() == "HLT" ){
+    m_SaveTuple = false; m_UseMap = true;
+  }
+  if( m_UseMap ) m_Fitter = "none";
+    
+  
 
   if( context() == "Info" ){
     info()<<"--------------------------------------------------------"<<endmsg;
@@ -220,13 +237,14 @@ StatusCode RecVertices2Particles::initialize() {
       debug() <<"Upstream PV position "<< UpPV->position() << endmsg;
   }
 
+  if( m_UseMap ) m_map.clear(); //Re-initialize the map
 
   //Retrieve data Particles from Desktop.
   Particle::ConstVector Parts = desktop()->particles();
   int size = Parts.size() ;
   if( msgLevel(MSG::DEBUG) )
     debug()<< "Number of Particles in TES " << size << endmsg;
-  plot( size,"NbofPartsTES", 0,500 );
+  if( context() == "Info" ) plot( size,"NbofPartsTES", 0,500 );
 
 
   //Retrieve Reconstructed Vertices
@@ -298,7 +316,7 @@ StatusCode RecVertices2Particles::initialize() {
   size = RecParts.size();
   if( msgLevel(MSG::DEBUG) )
     debug()<<"# of Preys " << size << endmsg;
-  plot( size, "NbofPreys", 0, 20 );
+  if( context() == "Info" ) plot( size, "NbofPreys", 0, 20 );
 
   //Save Preys infos in tuple
   if( m_SaveTuple ){
@@ -308,9 +326,7 @@ StatusCode RecVertices2Particles::initialize() {
   }
 
   //Save Preys from Desktop to the TES.
-  desktop()->saveDesktop() ;
-
-  return StatusCode::SUCCESS;
+  return desktop()->cloneTrees( RecParts );
 }
 
 //=============================================================================
@@ -343,7 +359,7 @@ void RecVertices2Particles::GetRecVertices( RecVertex::ConstVector & RV )
   unsigned int size = RV.size();
   if( msgLevel(MSG::DEBUG) )
     debug()<< "Number of Reconstructed Vertices " << size << endmsg;
-  plot( size,"NbofRecVtx", 0,50 );
+  if( context() == "Info" ) plot( size,"NbofRecVtx", 0,50 );
   
 }
 
@@ -370,15 +386,19 @@ const RecVertex * RecVertices2Particles::GetUpstreamPV(){
 //=============================================================================
 // Turn RecVertices into Particles (from Parts) saved in RecParts
 //=============================================================================
-bool RecVertices2Particles::RecVertex2Particle( const RecVertex* rv, 
-					Particle::ConstVector & Parts, 
-					Particle::ConstVector & RecParts ){
+bool RecVertices2Particles::RecVertex2Particle( const RecVertex* rv,
+                                Particle::ConstVector & Parts,
+                                Particle::ConstVector & RecParts ){  
   
 
   Gaudi::LorentzVector mom;
   SmartRefVector< Track >::const_iterator iVtx = rv->tracks().begin();
+  SmartRefVector< Track >::const_iterator iVtxend = rv->tracks().end();
   int endkey = rv->tracks().back()->key();
-  
+
+  //Create map if necessary
+  if( m_UseMap && m_map.empty() ) CreateMap( Parts );
+    
   if( m_Fitter == "none" ){
 
     //Create an decay vertex
@@ -393,33 +413,55 @@ bool RecVertices2Particles::RecVertex2Particle( const RecVertex* rv,
     //Fix end vertex
     tmpPart.setEndVertex( &tmpVtx );
     tmpPart.setReferencePoint( point );
-    
-    //Find all particles that have tracks in RecVertex
-    Particle::ConstVector::const_iterator jend = Parts.end();
-    for ( Particle::ConstVector::const_iterator j = Parts.begin();
-          j != jend;++j) {
-      if( (*j)->proto()->track() == NULL ) continue;
-      const Track * tk = (*j)->proto()->track();
-      while( ((*iVtx)->key() < tk->key()) && (*iVtx)->key() != endkey ){
-        ++iVtx;
+ 
+    if( m_UseMap ){
+      //Loop on RecVertex daughter tracks and save corresponding Particles
+      for( ; iVtx != iVtxend; ++iVtx ){
+        //       debug()<<"Key "<< (*iVtx)->key() <<" type "
+        // 	     <<(*iVtx)->type()  <<" slope "<< (*iVtx)->slopes() << endmsg;
+        const int key = (*iVtx)->key();
+        GaudiUtils::VectorMap<int, const Particle *>::const_iterator it;
+        it = m_map.find( key );
+        const Particle * part = NULL; 
+        
+        //Give a default pion with pT of 400 MeV
+        if( it != m_map.end() ) part = it->second; 
+        //debug()<<"got Particle from map with slope "<< part->slopes() <<endmsg;
+        if( it == m_map.end() ) part = DefaultParticle(*iVtx);
+        if( part != NULL ){
+          tmpVtx.addToOutgoingParticles( part );
+          tmpPart.addToDaughters( part );
+          mom += part->momentum();
+        }      
       }
-      if( (*iVtx)->key() == tk->key() ){ 
-        //debug()<<"Track should be the same "<< (*iVtx)->momentum() <<" "
-        //     << tk->momentum() << endmsg;
-        //debug() <<"Track type "<< tk->type() << endmsg;
-        if( (*iVtx)->key() != endkey ) ++iVtx; 
-        tmpVtx.addToOutgoingParticles ( *j );
-        tmpPart.addToDaughters( *j );
-        mom += (*j)->momentum();
-        continue;
+    } else {
+   
+      //Find all particles that have tracks in RecVertex
+      Particle::ConstVector::const_iterator jend = Parts.end();
+      for ( Particle::ConstVector::const_iterator j = Parts.begin();
+            j != jend;++j) {
+        if( (*j)->proto()->track() == NULL ) continue;
+        const Track * tk = (*j)->proto()->track();
+        while( ((*iVtx)->key() < tk->key()) && (*iVtx)->key() != endkey ){
+          ++iVtx;
+        }
+        if( (*iVtx)->key() == tk->key() ){ 
+          //debug()<<"Track should be the same "<< (*iVtx)->momentum() <<" "
+          //     << tk->momentum() << endmsg;
+          //debug() <<"Track type "<< tk->type() << endmsg;
+          if( (*iVtx)->key() != endkey ) ++iVtx; 
+          tmpVtx.addToOutgoingParticles ( *j );
+          tmpPart.addToDaughters( *j );
+          mom += (*j)->momentum();
+          continue;
+        }
       }
     }
-    //Should be 100%
-    //if the efficiency is less than 100%, you can work with pion with 
-    //default pt of 400MeV. See Hlt2SelHidValley for implementation.
-    //double eff = 100.*(double)tmpPart.daughters().size()/
-    // (double)rv->tracks().size();
-    //plot( eff, "BestTrk2PartEff", 0., 101. );
+    if( context()=="Info" ){
+      double eff = 100.*(double)tmpPart.daughters().size()/
+        (double)rv->tracks().size();
+      plot( eff, "Trk2PartEff", 0., 101.);
+    }
     //debug()<<"Found "<< Daughters.size() <<" related particles."<< endmsg;
     //Do I really care about the number of tracks found ?
     //if( Daughters.size() < m_nTracks ) return;
@@ -514,6 +556,66 @@ bool RecVertices2Particles::RecVertex2Particle( const RecVertex* rv,
 }
 
 //=============================================================================
+// Create a map between Particles and their Velo tracks ancestors
+//=============================================================================
+void RecVertices2Particles::CreateMap( Particle::ConstVector & Parts ){
+
+  m_map.reserve( Parts.size() );
+  int nb = 0;
+
+  for ( Particle::ConstVector::const_iterator j = Parts.begin();
+	j != Parts.end();++j) {
+    
+    if( (*j)->proto()->track() == NULL ) continue;
+    const Track * tk = (*j)->proto()->track();
+    
+    SmartRefVector< Track > old = tk->ancestors();
+
+    for( SmartRefVector<Track>::const_iterator i = 
+	   old.begin(); i != old.end(); ++i ){
+//       debug()<<"Part "<< (*j)->key() <<" type "<< tk->type() 
+//              <<" slope "<< (*j)->slopes() 
+//              << " Ancestor " << (*i)->key() <<" type "
+//              <<(*i)->type()  <<" slope "<< (*i)->slopes() << endmsg;
+
+      if( !((*i)->checkType(Track::Velo)) ) continue;
+      m_map.insert( (*i)->key(), (*j) );
+      nb++;
+      //debug()<<"a track has been inserted !" << endmsg;
+      break;
+    }
+  }
+//   if( context() == "Info" ){
+//     double eff = 100.*( (double)nb )/( (double)Parts.size() );
+//     int clone = nb - m_map.size();
+//     plot( eff, "MapEff", 0., 105. ); //always 100%
+//     plot( clone, "NbClonePart", 0., 10. );
+//     debug() <<"eff "<< eff <<" nb of clone "<< clone <<" Nb of Part "
+//             << Parts.size() <<" Map size "<< m_map.size() << endmsg;
+//   }
+  
+  return;
+}
+
+//=============================================================================
+// Create default pions with 400 MeV pt, see p. 128
+//=============================================================================
+const Particle * RecVertices2Particles::DefaultParticle( const Track * p ){
+
+  double sx = p->slopes().x(); double sy = p->slopes().y();
+  double pz = m_pt/sqrt( sx*sx + sy*sy );
+  double e = std::sqrt( m_piMass*m_piMass + m_pt*m_pt + pz*pz );
+  Particle pion;
+  const Gaudi::LorentzVector mom = Gaudi::LorentzVector(sx*pz, sy*pz, pz,e );
+  pion.setMomentum(mom);
+
+  //debug()<<"Creating default pion for key "<< p->key() <<" and slopes "
+  // <<sx<<" "<<sy<<" yielding momentum "<< mom << endmsg;
+
+  return desktop()->keep(&pion);
+}
+
+//=============================================================================
 //  Loop on the daughter track to see if there is a backward track
 //=============================================================================
 
@@ -577,7 +679,7 @@ bool RecVertices2Particles::IsAPointInDet( const Particle & P, int mode,
       return false; 
     } 
     int size = path.size();
-    plot( size, "NbofDetV", 0, 5 );
+    if( context() == "Info" ) plot( size, "NbofDetV", 0, 5 );
     if( msgLevel(MSG::DEBUG) )
       debug()<<"Found "<< size <<" physical volumes related to point "
              << RV->position() <<endmsg;
@@ -615,7 +717,7 @@ bool RecVertices2Particles::IsAPointInDet( const Particle & P, int mode,
     double radlength = m_transSvc->distanceInRadUnits
       ( start, end, 1e-35, dum, m_lhcbGeo );
 
-    plot( radlength, "RVRadLength", 0, 0.01);
+    if( context() == "Info" ) plot( radlength, "RVRadLength", 0, 0.01);
     if( msgLevel(MSG::DEBUG) )
       debug()<<"Radiation length from "<< start <<" to "
 	     << end <<" : "<< radlength 
@@ -729,6 +831,34 @@ StatusCode RecVertices2Particles::fillHeader( Tuple & tuple ){
   //debug() << "Filling Tuple Event " << header->evtNumber() << endmsg ;
   tuple->column("Event", (int)header->evtNumber());
   tuple->column("Run", (int)header->runNumber());
+
+  LHCb::ODIN * odin = get<LHCb::ODIN>( LHCb::ODINLocation::Default );
+  if( odin ){
+    //NoBeam = 0, Beam1 = 1, Beam2 = 2, BeamCrossing = 3
+    tuple->column("BXType", 
+                  static_cast<unsigned int>( odin->bunchCrossingType()  ) );
+//     //tuple->column("Event", odin->eventNumber()); //ulonglong !
+//     tuple->column("Run", odin->runNumber());
+//     tuple->column("BunchID", odin->bunchId());
+//     tuple->column("BunchCurrent", odin->bunchCurrent());
+//     //tuple->column("GpsTime", (double)odin->gpsTime()); //ulonglong !
+//     //tuple->column("EventTime", odin->eventTime() );
+//     tuple->column("OrbitNumber", odin->orbitNumber());
+  
+  if( msgLevel( MSG::DEBUG ) && false )
+    debug() <<"Reading of ODIN banks : Event nb "<< odin->eventNumber() 
+            <<" Run nb "<< odin->runNumber() <<" BunchID "<< odin->bunchId() 
+            <<" BunchCurrent "<< odin->bunchCurrent() <<" GpsTime "
+            << odin->gpsTime() <<" EventTime " << odin->eventTime() 
+            <<" OrbitNumber "<< odin->orbitNumber() <<" Bunch Crossing Type " 
+            << odin->bunchCrossingType() << endmsg;
+  
+  
+  } else {
+    Warning("Can't get LHCb::ODINLocation::Default");
+  }
+
+
   return StatusCode::SUCCESS ;
 }
 

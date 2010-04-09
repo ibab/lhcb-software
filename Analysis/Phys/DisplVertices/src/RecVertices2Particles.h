@@ -5,6 +5,9 @@
 // from DaVinci, this is a specialized GaudiAlgorithm
 #include "Kernel/DVAlgorithm.h"
 
+// from Gaudi
+#include "GaudiKernel/VectorMap.h"
+
 //To recreate track measurements
 #include "TrackInterfaces/IMeasurementProvider.h"
 
@@ -51,6 +54,10 @@ private:
   bool RecVertex2Particle( const LHCb::RecVertex*, 
 			   LHCb::Particle::ConstVector &, 
 			   LHCb::Particle::ConstVector & );
+  /// Create a map between the Particles and the Velo Tracks
+  void CreateMap( LHCb::Particle::ConstVector & );
+  /// Creates a pion with 400 MeV pt from track slopes.
+  const LHCb::Particle* DefaultParticle( const LHCb::Track * p );
   /// Has a RecVertex a backward track ?
   bool HasBackwardTracks( const LHCb::RecVertex* );
   /// Is a vertex isolated from other vertices ?
@@ -109,6 +116,7 @@ private:
   bool   m_RemFromRFFoil;
   bool   m_KeepLowestZ ;      ///< keep the RV with the lowest Z (particle gun)
   bool   m_SaveTuple ;        ///< Save candidate infos in a tuple
+  bool   m_UseMap ;           ///< Use a map to store Particle Track relation
   /// Where RecVertices are stored on the TES
   std::vector<std::string> m_RVLocation ;
   std::string m_Fitter ;      ///< method for fitting the RecVertex
@@ -124,6 +132,11 @@ private:
 
   Gaudi::Transform3D m_toVeloLFrame; ///< to transform to local velo L frame
   Gaudi::Transform3D m_toVeloRFrame; ///< to transform to local velo R frame
+
+  GaudiUtils::VectorMap<int, const LHCb::Particle *> m_map;
+
+  double m_piMass;  ///< the pion mass
+  double m_pt;      ///< default pt for default pions
 
   ///To sort the reconstructed vertices according to the z position
   class CondRVz{
