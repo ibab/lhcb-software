@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.159 2010-04-06 12:21:14 graven Exp $
+! $Id: release.notes,v 1.160 2010-04-09 18:32:36 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
@@ -10,6 +10,10 @@
 !
 !-----------------------------------------------------------------------------
 
+
+!========================== Hlt1Lines v3r0p2 2010-04-09 ===================
+! 2010-04-09 - Gerhard Raven
+ - import beamgas changes from v2r3 branch
 
 !========================== Hlt1Lines v3r0p1 2010-04-06 ===================
 ! 2010-04-06 - Roel Aaij + Gerhard Raven
