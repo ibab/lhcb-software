@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.82 2010-04-01 23:07:06 dgolubko Exp $ 
+! $Id: release.notes,v 1.83 2010-04-09 13:42:05 rlambert Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Calo/CaloMoniDst
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! Purpose     : Calo monitoring of Dst tape 
 ! -----------------------------------------------------------------------------
+
+! 2010-04-09 - Rob Lambert
+ - Fixed windows warnings in CaloEMuPIDMon.cpp and CaloPi0Checker.cpp
 
 ! 2010-04-02 - Dmitry Golubkov
  - CaloEMuPIDMon.cpp: fixed an SLC5 warning: type qualifiers ignored on function return type 

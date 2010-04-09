@@ -104,13 +104,13 @@ StatusCode CaloEMuPIDMon::execute()
     if ( ( track->pt() < m_minPt || track->pt() > m_maxPt ) && !m_uncut ) continue;
 
 
-    bool  inprs = proto->info( LHCb::ProtoParticle::InAccPrs,  false );
-    bool inecal = proto->info( LHCb::ProtoParticle::InAccEcal, false );
-    bool inhcal = proto->info( LHCb::ProtoParticle::InAccHcal, false );
+    bool  inprs = (proto->info( LHCb::ProtoParticle::InAccPrs,  double(false) )!=0);
+    bool inecal = (proto->info( LHCb::ProtoParticle::InAccEcal, double(false) )!=0);
+    bool inhcal = (proto->info( LHCb::ProtoParticle::InAccHcal, double(false) )!=0);
 
-    float prse  = proto->info(LHCb::ProtoParticle::CaloPrsE,  -1 * Gaudi::Units::GeV);
-    float ecale = proto->info(LHCb::ProtoParticle::CaloEcalE, -1 * Gaudi::Units::GeV);
-    float hcale = proto->info(LHCb::ProtoParticle::CaloHcalE, -1 * Gaudi::Units::GeV);
+    float prse  = (float) proto->info(LHCb::ProtoParticle::CaloPrsE,  -1 * Gaudi::Units::GeV);
+    float ecale = (float) proto->info(LHCb::ProtoParticle::CaloEcalE, -1 * Gaudi::Units::GeV);
+    float hcale = (float) proto->info(LHCb::ProtoParticle::CaloHcalE, -1 * Gaudi::Units::GeV);
 
 
     // -----------------------------------------------------------------
@@ -157,9 +157,11 @@ StatusCode CaloEMuPIDMon::execute()
     // muon histograms
     // -----------------------------------------------------------------
 
-    bool ismuon = (bool) proto->muonPID()
-      ? ( m_muonLoose ? proto->muonPID()->IsMuonLoose() : proto->muonPID()->IsMuon() )
-      : false;
+    bool ismuon = (0!= 
+                   ( proto->muonPID()
+                     ? ( m_muonLoose ? proto->muonPID()->IsMuonLoose() : proto->muonPID()->IsMuon() )
+                     : false)
+                   );
 
     if ( ismuon || m_uncut ){
       if ( inprs) hFill1( "prsem",  prse);

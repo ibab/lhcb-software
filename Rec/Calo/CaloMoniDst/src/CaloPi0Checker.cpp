@@ -1,4 +1,4 @@
-// $Id: CaloPi0Checker.cpp,v 1.7 2010-03-24 11:56:30 rlambert Exp $
+// $Id: CaloPi0Checker.cpp,v 1.8 2010-04-09 13:42:05 rlambert Exp $
 
 // ============================================================================
 // Include files
@@ -165,7 +165,7 @@ StatusCode CaloPi0Checker::execute(){
       std::find_if( clusters1.begin(), clusters1.end(), m_calo );
     if ( clusters1.end() == cluster1 ) continue;
     // get all MCtruth information for this cluster
-    const float cut1 = (*cluster1)->e() * m_cut;
+    const float cut1 = (float) ((*cluster1)->e() * m_cut);
     const Range range1 = table->relations( *cluster1, cut1, true );
     
     // loop over the second photon
