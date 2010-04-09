@@ -4,6 +4,7 @@
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
 
+!===================== Det/DetCond v12r12 2010-04-09 =========================
 ! 2010-03-27 - Illya Shapoval
  - CondDB configurable is tuned to override all default and user tags settings 
    by the latest tags for defined DataType if the 'UseLatestTags' property is 
