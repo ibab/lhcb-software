@@ -1,4 +1,4 @@
-// $Id: HltL0GlobalMonitor.cpp,v 1.4 2010-04-01 17:06:25 graven Exp $
+// $Id: HltL0GlobalMonitor.cpp,v 1.5 2010-04-09 18:39:33 graven Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -183,7 +183,7 @@ void HltL0GlobalMonitor::monitorL0DU(const LHCb::L0DUReport* l0du) {
       m_L0Input->setTitle(txt);   
   }
   
-  if (!l0du->decision()) return;
+  //if (!l0du->decision()) return;
   
   LHCb::ODIN* odin = fetch<LHCb::ODIN>( LHCb::ODINLocation::Default);
   if (odin == 0) return;

@@ -1,9 +1,12 @@
-!$Id: release.notes,v 1.71 2010-04-04 11:53:30 graven Exp $
+!$Id: release.notes,v 1.72 2010-04-09 18:39:33 graven Exp $
 Package     : Hlt/HltGlobalMonitor
 Package Coordinator : Bruno Souza de Paula 
 Purpose     : LHCb HLT Global Monitoring
 ! -----------------------------------------------------------------------------
 
+!========================== HltGlobalMonitor v3r3p1 2010-04-09 ===================
+! 2010-04-09 - Gerhard Raven
+ - fill L0 channels even if L0 did not accept the event
 
 !========================== HltGlobalMonitor v3r3 2010-04-04 ===================
 ! 2010-04-01 - Gerhard Raven
