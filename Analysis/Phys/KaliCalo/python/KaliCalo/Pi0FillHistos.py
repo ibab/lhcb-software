@@ -231,7 +231,7 @@ class FillPi0( Kali.TPySelectorFix  ):
 
         # == caculating the corrected mass
         corrMass = bamboo.m12 * sqrt( lam1 * lam2 ) * self._Unit
-        if not 0 < corrMass < 250 : return 1                ## RETURN
+        if not 0 < corrMass < 320 : return 1                ## RETURN
 
         ## get the histograms for the first cell 
         hs1  = self._histos  [ ic1 ].histos()        
@@ -288,6 +288,8 @@ class FillPi0( Kali.TPySelectorFix  ):
                 hc2[1]   += factor2
                 cz2[1]   += factor2
                 cgl[1]   += factor2                
+
+        if corrmass > 250  : return 1 
 
         if not background :
 
