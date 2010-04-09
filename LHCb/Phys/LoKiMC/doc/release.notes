@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.85 2010-04-06 20:14:39 ibelyaev Exp $ 
+! $Id: release.notes,v 1.86 2010-04-09 08:40:51 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -14,6 +14,12 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 !
 ! -----------------------------------------------------------------------------
+
+! 2010-04-09 - Vanya Belyaev
+
+ - LoKiMC/functions.py
+
+    LoKi.NamedRange -> Gaudi.NamedRange 
 
 ! 2010-04-06 - Vanya Belyaev
  - replace LoKi::Raneg by Gaudi::Range 

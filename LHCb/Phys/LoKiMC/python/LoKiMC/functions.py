@@ -32,11 +32,12 @@ __author__ = "Vanya BELYAEV ibelyaev@physics.syr.edu"
 import LoKiCore.decorators as _LoKiCore
 
 # Namespaces:
-_global  = _LoKiCore._global
-cpp      = _global 
+cpp      = _LoKiCore.cpp
 std      = _LoKiCore.std
 LoKi     = _LoKiCore.LoKi
 LHCb     = _LoKiCore.LHCb
+Gaudi    = cpp.Gaudi 
+
 
 _MCP = 'const LHCb::MCParticle*'
 _MCV = 'const LHCb::MCVertex*'
@@ -45,8 +46,8 @@ _c1 = std.vector( _MCP )
 _c2 = std.vector( _MCV )
 
 ## ranges
-MCRange   = LoKi.NamedRange_ ( _c1      )
-MCVRange  = LoKi.NamedRange_ ( _c2      )
+MCRange   = Gaudi.NamedRange_ ( _c1      )
+MCVRange  = Gaudi.NamedRange_ ( _c2      )
 ## range-lists: 
 MCRangeL  = LoKi.RangeList_  (  MCRange )
 MCVRangeL = LoKi.RangeList_  ( MCVRange )
