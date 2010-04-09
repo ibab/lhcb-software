@@ -5,6 +5,7 @@
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
 
+!====================== DetDesc v18r20 2010-04-09 =============================
 ! 2010-04-08 - Wouter Hulsbergen 
 - increased max capcity of ISolid::Ticks
 - throw exceptions from complicated Solids if capacity insufficient
