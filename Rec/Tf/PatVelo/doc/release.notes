@@ -4,6 +4,7 @@
 ! Purpose     : Velo pattern recognition
 !-----------------------------------------------------------------------------
 
+!========================== PatVelo v3r21 2010-04-09 =========================
 ! 2010-04-08 - Wouter Hulsbergen
  - replaced LoKi::Range with Gaudi::Range
 
