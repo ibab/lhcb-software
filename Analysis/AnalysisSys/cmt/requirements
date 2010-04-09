@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.173 2010-04-08 14:12:50 jpalac Exp $
+# $Id: requirements,v 1.174 2010-04-09 08:35:20 jpalac Exp $
 package AnalysisSys
 version v4r3
 
@@ -27,7 +27,7 @@ use  VertexFitCheck             v1r5     Phys   # Yuehong Xie
 use  MCStandardParticles        v1r3     Phys   # Juan Palacios
 use  FlavourTaggingChecker      v5r2     Phys   # Marco Musy
 use  ParticleMakerChecker       v1r3p2   Phys   # Chris Jones
-use  DecayTreeTuple             v3r2     Phys   # Rob Lambert
+use  DecayTreeTuple             v3r3     Phys   # Rob Lambert
 use  LoKiJets                   v5r1     Phys   # Victor Coco
 use  DisplVertices              v6r4     Phys   # Neal Gauvin
 ####################################################################
