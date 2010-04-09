@@ -38,10 +38,11 @@ if sys.platform == 'win32' : PyCintex.loadDict (    "HepMCRflx" )
 else                       : PyCintex.loadDict ( "libHepMCRflx" )  
     
 # Namespaces:
-_global  = _LoKiCore._global 
+cpp      = _LoKiCore.cpp
 std      = _LoKiCore.std
 LoKi     = _LoKiCore.LoKi
-HepMC    = _global.HepMC
+HepMC    = cpp.HepMC
+Gaudi    = cpp.Gaudi 
 
 _GP = 'const HepMC::GenParticle*'
 _GV = 'const HepMC::GenVertex*'
@@ -50,8 +51,8 @@ _c1 = std.vector( _GP )
 _c2 = std.vector( _GV )
 
 ## ranges
-GRange   = LoKi.NamedRange_ ( _c1     )
-GVRange  = LoKi.NamedRange_ ( _c2     )
+GRange   = Gaudi.NamedRange_ ( _c1     )
+GVRange  = Gaudi.NamedRange_ ( _c2     )
 ## range-lists: 
 GRangeL  = LoKi.RangeList_  (  GRange )
 GVRangeL = LoKi.RangeList_  ( GVRange )

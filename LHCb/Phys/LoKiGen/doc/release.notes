@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.83 2010-04-06 20:11:52 ibelyaev Exp $ 
+! $Id: release.notes,v 1.84 2010-04-09 08:40:30 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiGen
 ! Responsible : Vanya BELYAEV
@@ -13,6 +13,12 @@
 !   contributions and advices from G.Raven, J.van Tilburg, 
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
+
+! 2010-04-09 - Vanya Belyaev
+
+  - LoKiGen/functions.py
+
+     LoKi.NamedRange -> Gaudi.NamedRange 
 
 ! 2010-04-06 - Vanya Belyaev
 
