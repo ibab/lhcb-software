@@ -5,7 +5,7 @@
  *  Header file for reconstruction tool : TrackSelectorBase
  *
  *  CVS Log :-
- *  $Id: TrackSelectorBase.h,v 1.2 2010-04-05 19:18:56 wouter Exp $
+ *  $Id: TrackSelectorBase.h,v 1.3 2010-04-09 07:54:59 wouter Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   30/06/2009
@@ -67,7 +67,7 @@ protected:
   inline bool checkTrackType( const LHCb::Track & aTrack ) const
   {
     bool OK = true;
-    int type = aTrack.checkFlag(LHCb::Track::Backward) ? Backward : aTrack.type() ;
+    int type = aTrack.checkFlag(LHCb::Track::Backward) ? int(Backward) : int(aTrack.type()) ;
     if ( !m_selTypes[type] ) {
       if ( msgLevel(MSG::VERBOSE) )
 	verbose() << " -> Track type " << aTrack.type() << " is rejected" << endreq;
