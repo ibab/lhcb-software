@@ -1,18 +1,16 @@
-!$Id: release.notes,v 1.73 2010-04-10 21:47:16 graven Exp $
+!$Id: release.notes,v 1.74 2010-04-10 21:48:23 graven Exp $
 Package     : Hlt/HltGlobalMonitor
 Package Coordinator : Bruno Souza de Paula 
 Purpose     : LHCb HLT Global Monitoring
 ! -----------------------------------------------------------------------------
 
-<<<<<<< release.notes
 ! 2010-04-10 - Gerhard Raven
  - be even more paranoid about pointers obtained from L0DU. See
    http://lblogbook.cern.ch/HLT+Trigger/128
-=======
+
 !========================== HltGlobalMonitor v3r3p1 2010-04-09 ===================
 ! 2010-04-09 - Gerhard Raven
  - fill L0 channels even if L0 did not accept the event
->>>>>>> 1.72
 
 !========================== HltGlobalMonitor v3r3 2010-04-04 ===================
 ! 2010-04-01 - Gerhard Raven
