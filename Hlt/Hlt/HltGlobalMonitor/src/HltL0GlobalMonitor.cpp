@@ -1,4 +1,4 @@
-// $Id: HltL0GlobalMonitor.cpp,v 1.5 2010-04-09 18:39:33 graven Exp $
+// $Id: HltL0GlobalMonitor.cpp,v 1.6 2010-04-10 21:47:16 graven Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -151,15 +151,22 @@ void HltL0GlobalMonitor::monitorL0DU(const LHCb::L0DUReport* l0du) {
   if (l0du == 0) return;
 
   if (!l0du->valid()) { 
+      Error("Failed to obtain valid L0DUReport" ).ignore();
       return;
   }
-
-
 
   counter("L0Accept") += l0du->decision();
   counter("L0Forced") += l0du->forceBit();
 
-  LHCb::L0DUChannel::Map channels = l0du->configuration()->channels();
+  const LHCb::L0DUConfig* config = l0du->configuration();
+  if (config==0) {
+      Error("Failed to obtain valid L0DU configuration" ).ignore();
+      return;
+  }
+  LHCb::L0DUChannel::Map channels = config->channels();
+
+
+
 
   //define the bin labels
   unsigned int L0TCK = l0du->tck();
