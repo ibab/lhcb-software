@@ -1,8 +1,9 @@
-// $Id: PatVeloHit.h,v 1.7 2010-04-08 05:02:40 wouter Exp $
+// $Id: PatVeloHit.h,v 1.8 2010-04-10 07:51:29 cattanem Exp $
 #ifndef INCLUDE_TF_PATVELOHIT_H
 #define INCLUDE_TF_PATVELOHIT_H 1
 
 #include <math.h>
+#include "GaudiKernel/Range.h"
 
 #include "VeloDet/DeVeloRType.h"
 #include "VeloDet/DeVeloPhiType.h"
