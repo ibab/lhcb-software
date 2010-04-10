@@ -103,7 +103,7 @@ StatusCode MEPHolderSvc::saveEvents(void* data, size_t length) {
     // Now write the events to the output buffer
     for(SubEvents::const_iterator i=events.begin(); i!=events.end(); ++i)  {
       RawEvent* raw = (*i).second;
-      size_t len, ev_len = rawEventLength(raw);
+      size_t len, raw_len, ev_len = rawEventLength(raw);
       int ret = m_producer->getSpace(ev_len);
       if ( MBM_NORMAL == ret )    {
 	unsigned int trMask[] = {0x0,0x0,0x0,m_routingBits};
@@ -117,8 +117,11 @@ StatusCode MEPHolderSvc::saveEvents(void* data, size_t length) {
 	  RawBank* b = *j;
 	  if( b->version() == DAQ_STATUS_BANK ) {
 	    oi = odin.empty() ? odin_info : odin[0]->begin<OnlineRunInfo>();
+	    MDFHeader* hdr = b->begin<MDFHeader>();
+	    raw_len = ev_len - b->totalSize();
+	    hdr->setSize(raw_len);
 	    if ( oi ) {
-	      MDFHeader::SubHeader sh = b->begin<MDFHeader>()->subHeader();
+	      MDFHeader::SubHeader sh = hdr->subHeader();
 	      sh.H1->setTriggerMask(trMask);
 	      sh.H1->setRunNumber(oi->Run);
 	      sh.H1->setOrbitNumber(oi->Orbit);
