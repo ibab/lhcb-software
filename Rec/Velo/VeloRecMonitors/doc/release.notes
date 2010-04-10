@@ -4,6 +4,9 @@
 ! Purpose     : VELO monitoring algorithms for reconstruction data (ZS data)
 !-----------------------------------------------------------------------------
 
+! 2010-04-10 - Eduardo Rodrigues
+ - bin range for # of clusters plots adjusted
+
 !======================= VeloRecMonitors v2r8 2010-04-09 ====================
 ! 2010-04-08 - Kurt Rinnert
  - allow setting number of entries in histogram wrapper interface

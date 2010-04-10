@@ -1,4 +1,4 @@
-// $Id: VeloClusterMonitor.cpp,v 1.23 2009-10-14 13:46:41 erodrigu Exp $
+// $Id: VeloClusterMonitor.cpp,v 1.24 2010-04-10 07:29:33 erodrigu Exp $
 // Include files 
 // -------------
 // from STL
@@ -86,7 +86,7 @@ StatusCode Velo::VeloClusterMonitor::initialize() {
   
   char nCluTitle[100];
   sprintf( nCluTitle, "Number of VELO clusters per event (%s)", m_tae.c_str() );
-  m_hNCluEvt = book1D( "# VELO clusters", nCluTitle, -0.5, 20000.5, 2000 );
+  m_hNCluEvt = book1D( "# VELO clusters", nCluTitle, -0.5, 4000.5, 1000 );
   m_hCluSize = book1D( "Cluster size", "Number of strips per cluster",
                        -0.5, 5.5, 6 );
   m_hCluADC = book1D( "Cluster ADC value", "ADC value per cluster",
@@ -204,10 +204,10 @@ void Velo::VeloClusterMonitor::monitorClusters() {
   // ----------------------------
   unsigned int nclus = m_clusters -> size();
   counter( "# VeloClusters" ) += nclus;
-  if ( nclus > 0 && nclus < 20000 )
+  if ( nclus > 0 && nclus < 4000 )
     m_hNCluEvt->fill(nclus);
   else if ( nclus > 0 )
-    m_hNCluEvt->fill(20000);
+    m_hNCluEvt->fill(4000);
 
   // Loop over the VeloClusters
   LHCb::VeloClusters::const_iterator itVC;
