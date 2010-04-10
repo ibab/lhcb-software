@@ -1,9 +1,9 @@
-// $Id: OMAFitFunction.h,v 1.5 2009-04-02 10:27:25 ggiacomo Exp $
+// $Id: OMAFitFunction.h,v 1.6 2010-04-10 14:26:04 ggiacomo Exp $
 #ifndef OMALIB_OMAFITFUNCTION_H 
 #define OMALIB_OMAFITFUNCTION_H 1
 #include <string>
 #include <vector>
-class TF1;
+#include <TF1.h>
 class TH1;
 
 
@@ -13,18 +13,17 @@ class TH1;
  *  @author Giacomo GRAZIANI
  *  @date   2009-02-10
  */
-class OMAFitFunction {
+class OMAFitFunction : public TF1 {
 public: 
   /// constructor for derived class (implementing custom fit function)
   OMAFitFunction(std::string Name);
-  /// cunstructor for simple fit functions defined by funcString
+  /// constructor for simple fit functions defined by funcString
   OMAFitFunction(std::string Name,
                  std::string FuncString,
                  std::vector<std::string> &ParNames,
                  bool MustInit,
                  std::string Doc,
                  bool predefined); 
-
   virtual ~OMAFitFunction( ); ///< Destructor
 
   inline std::string& name() {return m_name;}
@@ -38,7 +37,7 @@ public:
   std::vector<float>& inputDefValues() {return m_inputDefValues;}
   void checkDefValues();
   virtual void fit(TH1* histo, std::vector<float>* initValues);
-  TF1* fittedfun() {return m_fitfun;}
+  TF1* fittedfun() {return this;}
 protected:
   virtual void init(std::vector<float>* initValues, TH1* histo=NULL);
   void initfun();
@@ -51,8 +50,8 @@ protected:
   bool m_mustInit;
   std::string m_doc;
   std::string m_funcString;
-  TF1* m_fitfun;
   bool m_predef;
+  bool m_useTF1;
 };
 
 
@@ -79,7 +78,7 @@ class OMAFitTH2withSinCosC: public OMAFitFunction {
   virtual ~OMAFitTH2withSinCosC();
   virtual void fit(TH1* histo, std::vector<float>* initValues);
 private:
-  TF1* GausP1;
+  TF1 GausP1;
 };
  
 

@@ -1,7 +1,6 @@
-// $Id: OMAFitFunction.cpp,v 1.5 2009-04-02 10:27:25 ggiacomo Exp $
+// $Id: OMAFitFunction.cpp,v 1.6 2010-04-10 14:26:04 ggiacomo Exp $
 #include <sstream>
 #include <cmath>
-#include <TF1.h>
 #include <TH1.h>
 
 #include "OMAlib/OMAFitFunction.h"
@@ -14,9 +13,9 @@
 //-----------------------------------------------------------------------------
 //=============================================================================
 // constructor for derived class (implementing custom fit function)
-OMAFitFunction::OMAFitFunction( std::string Name ) :
-  m_name(Name), m_mustInit(true), m_doc(""), 
-  m_funcString(""), m_fitfun(NULL) {}
+OMAFitFunction::OMAFitFunction( std::string Name ) : TF1(),
+                                                     m_name(Name), m_mustInit(true), m_doc(""), 
+                                                     m_funcString(""), m_predef(false), m_useTF1(false){}
 
 // cunstructor for simple fit functions defined by funcString
 OMAFitFunction::OMAFitFunction(std::string Name,
@@ -24,15 +23,15 @@ OMAFitFunction::OMAFitFunction(std::string Name,
                                std::vector<std::string> &ParNames,
                                bool MustInit,
                                std::string Doc,
-                               bool predefined) :
+                               bool predefined) : TF1(),
   m_name(Name), m_parNames(ParNames), m_mustInit(MustInit), m_doc(Doc), 
-  m_funcString(FuncString), m_fitfun(NULL), m_predef(predefined) {
+  m_funcString(FuncString), m_predef(predefined), m_useTF1(false) {
   initfun();
 }
 
 OMAFitFunction::~OMAFitFunction() {
-  if(m_fitfun) delete m_fitfun;
 } 
+
 
 
 void OMAFitFunction::checkDefValues() {
@@ -47,22 +46,29 @@ void OMAFitFunction::checkDefValues() {
 }
 
 void OMAFitFunction::initfun() {
+  TF1* fitfun;
   if(!m_predef) {
-    m_fitfun=new TF1(m_name.c_str(),m_funcString.c_str());
+    fitfun=new TF1(m_name.c_str(),m_funcString.c_str());
     for (Int_t ip=0; ip < (Int_t) m_parNames.size(); ip++)
-      m_fitfun->SetParName(ip,(m_parNames[ip]).c_str());
+      fitfun->SetParName(ip,(m_parNames[ip]).c_str());
+    m_useTF1 = true;
   }
+  else { // predefined function: we could need TF1 anyway to init parameters
+    std::string myname="OMA"+m_name;
+    fitfun=new TF1(myname.c_str(),m_funcString.c_str());
+  }
+  TF1& thisfunction = *this;
+  thisfunction = *fitfun;
+  delete fitfun;
 }
 
 
 void OMAFitFunction::init(std::vector<float>* initValues, TH1* histo) {
   histo=histo; // avoid compil. warning
-  if(m_fitfun) {
-    if((int) initValues->size() > np() )
-      initValues->resize(np());  
-    for (Int_t ip=0; ip < (Int_t) initValues->size(); ip++)
-      m_fitfun->SetParameter(ip, (double) initValues->at(ip));
-  }
+  if((int) initValues->size() > np() )
+    initValues->resize(np());  
+  for (Int_t ip=0; ip < (Int_t) initValues->size(); ip++)
+    SetParameter(ip, (double) initValues->at(ip));
 }
 
 
@@ -73,29 +79,23 @@ void OMAFitFunction::fit(TH1* histo, std::vector<float>* initValues)
   if(initValues) {
     if(! initValues->empty() ) {
       noInit=false;
-      if(!m_fitfun) {
-        // in case init. parameters are passed to a predefined function
-        std::string myname="OMA"+m_name;
-        m_fitfun=new TF1(myname.c_str(),m_funcString.c_str());
-      }
+      // in case init. parameters are passed to a predefined function we need to use the TF1
+      m_useTF1=true;      
       init(initValues,histo);
     }
   }
-  else {
+  if(noInit) {
     if(false == m_predef) {
-      // default init
-      init(NULL,histo);
+      init(NULL,histo);       // default init
+    }
+    else {
+      // if predefined function is called without init. parameters , check we don't use TF1
+      m_useTF1=false;
     }
   }
  
-  if(m_predef && noInit && m_fitfun) {
-    // if predefined function is called without init. parameters , check we don't use TF1
-    delete m_fitfun;
-    m_fitfun=NULL;
-  }
-
-  if(m_fitfun)
-    histo->Fit(m_fitfun,"Q");
+  if(m_useTF1)
+    histo->Fit((TF1*) this,"Q");
   else
     histo->Fit(m_funcString.c_str(),"Q");
 }
@@ -131,7 +131,7 @@ void OMAFitDoubleGaus::init(std::vector<float>* initValues, TH1* histo) {
       initValues->at(3) *= k;
     }
     for (Int_t ip=0; ip < np() ; ip++)
-      m_fitfun->SetParameter(ip, (double) initValues->at(ip));
+      SetParameter(ip, (double) initValues->at(ip));
   }
 }
 
@@ -187,7 +187,7 @@ void OMAFitGausPlusBkg::init(std::vector<float>* initValues, TH1* histo) {
       }
     }
     for (Int_t ip=0; ip < np() ; ip++)
-      m_fitfun->SetParameter(ip, (double) initValues->at(ip));
+      SetParameter(ip, (double) initValues->at(ip));
   }
   else { // default init
     // estimate background from sides
@@ -197,18 +197,18 @@ void OMAFitGausPlusBkg::init(std::vector<float>* initValues, TH1* histo) {
       (Ye+Yi)/2.;
     double rms=histo->GetRMS();
     double gConst = rms >0 ? (histo->Integral("width")-bkg)/(sqrt(2*acos(-1E0))*rms ) : 0.;
-    m_fitfun->SetParameter(0, gConst);
-    m_fitfun->SetParameter(1, histo->GetMean() );
-    m_fitfun->SetParameter(2, rms);
+    SetParameter(0, gConst);
+    SetParameter(1, histo->GetMean() );
+    SetParameter(2, rms);
     if (0 == m_degree) {
-      m_fitfun->SetParameter(3, (Ye+Yi)/2.);
+      SetParameter(3, (Ye+Yi)/2.);
     }
     else {
       double slope =  (Ye-Yi)/(histo->GetXaxis()->GetXmax() - histo->GetXaxis()->GetXmin());
-      m_fitfun->SetParameter(3, Yi - slope* histo->GetXaxis()->GetXmin());
-      m_fitfun->SetParameter(4, slope);
+      SetParameter(3, Yi - slope* histo->GetXaxis()->GetXmin());
+      SetParameter(4, slope);
       for (deg=2 ; deg <= m_degree; deg++) {
-        m_fitfun->SetParameter(3+deg, 0.);
+        SetParameter(3+deg, 0.);
       }
     }
   }

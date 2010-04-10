@@ -1,8 +1,13 @@
-! $Id: release.notes,v 1.36 2010-03-15 18:00:50 ggiacomo Exp $
+! $Id: release.notes,v 1.37 2010-04-10 14:26:04 ggiacomo Exp $
 ! Package     : OMAlib
 ! Responsible : G. Graziani
 ! Purpose     : Online Monitoring Analysis library
 
+! 20100410 GG
+ - remove pointers from OMAFitFunction class for thread safety (Presenter copies the objects).
+   This fixes Presenter crashes when using fits with custom functions.
+
+! ======== v2r14 ===============
 ! 20100315
 - bug fix in OMAMsgInterface (avoid crashes when not using histDB)
 
