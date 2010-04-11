@@ -5,6 +5,12 @@
 !-----------------------------------------------------------------------------
 
 
+
+! 2010-04-11 - Gerhard Raven
+ - fix some postscales in Physics_MinBiasL0_PassThroughHlt_Feb10.py 
+   Physics_MinBiasL0_PassThroughHlt_Apr10.py in preparation for new
+   defaults in their Hlt1Lines...
+
 !========================== HltSettings v1r14   2010-04-09 ===================
 ! 2010-04-07 - Gerhard Raven
 - add Physics_MinBiasL0_PassThroughHlt_Apr10 which has minimal changes 

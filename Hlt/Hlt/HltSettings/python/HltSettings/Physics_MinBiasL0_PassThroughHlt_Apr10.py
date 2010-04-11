@@ -106,7 +106,9 @@ class Physics_MinBiasL0_PassThroughHlt_Apr10 :
                                                           }
                                           }
 
-                 , Hlt1MBLinesConf :      { 'Prescale' : { 'Hlt1MBMicroBias.*' : 1. } } # To be modified during clone
+                 , Hlt1MBLinesConf :      { 'Prescale' : { 'Hlt1MBMicroBias.*' : 1. } 
+                                          , 'Postscale': { 'Hlt1MBMicroBias.*' : 1. }
+                                          } 
                  , Hlt1VeloLinesConf :    { 'ODIN'     : '( ODIN_BXTYP == LHCb.ODIN.BeamCrossing )' 
                                           , 'L0DU'     : "( L0_CHANNEL('CALO') )"
                                           , 'Prescale' : { 'Hlt1Velo.*' : 0. }       # To be modified during clone
