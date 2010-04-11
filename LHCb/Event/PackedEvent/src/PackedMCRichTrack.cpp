@@ -1,4 +1,4 @@
-// $Id: PackedMCRichTrack.cpp,v 1.4 2009-11-07 12:20:27 jonrob Exp $
+// $Id: PackedMCRichTrack.cpp,v 1.5 2010-04-11 14:27:15 jonrob Exp $
 
 // local
 #include "Event/PackedMCRichTrack.h"
@@ -48,7 +48,7 @@ void MCRichTrackPacker::pack( const DataVector & tracks,
   else
   {
     std::ostringstream mess;
-    mess << "Unknown packed data version " << ptracks.packingVersion();
+    mess << "Unknown packed data version " << (int)ptracks.packingVersion();
     throw GaudiException( mess.str(), "MCRichTrackPacker", StatusCode::FAILURE );
   }
 }
@@ -89,7 +89,7 @@ void MCRichTrackPacker::unpack( const PackedDataVector & ptracks,
   else
   {
     std::ostringstream mess;
-    mess << "Unknown packed data version " << ptracks.packingVersion();
+    mess << "Unknown packed data version " << (int)ptracks.packingVersion();
     throw GaudiException( mess.str(), "MCRichTrackPacker", StatusCode::FAILURE );
   }
 }

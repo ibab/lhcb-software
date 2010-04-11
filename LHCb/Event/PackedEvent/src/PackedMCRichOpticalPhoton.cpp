@@ -1,4 +1,4 @@
-// $Id: PackedMCRichOpticalPhoton.cpp,v 1.5 2009-11-07 12:20:27 jonrob Exp $
+// $Id: PackedMCRichOpticalPhoton.cpp,v 1.6 2010-04-11 14:27:15 jonrob Exp $
 
 // local
 #include "Event/PackedMCRichOpticalPhoton.h"
@@ -71,7 +71,7 @@ void MCRichOpticalPhotonPacker::pack( const DataVector & phots,
   else
   {
     std::ostringstream mess;
-    mess << "Unknown packed data version " << pphots.packingVersion();
+    mess << "Unknown packed data version " << (int)pphots.packingVersion();
     throw GaudiException( mess.str(), "MCRichOpticalPhotonPacker", StatusCode::FAILURE );
   }
 }
@@ -135,7 +135,7 @@ void MCRichOpticalPhotonPacker::unpack( const PackedDataVector & pphots,
   else
   {
     std::ostringstream mess;
-    mess << "Unknown packed data version " << pphots.packingVersion();
+    mess << "Unknown packed data version " << (int)pphots.packingVersion();
     throw GaudiException( mess.str(), "MCRichOpticalPhotonPacker", StatusCode::FAILURE );
   }
 

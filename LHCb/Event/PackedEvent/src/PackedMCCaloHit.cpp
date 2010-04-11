@@ -1,4 +1,4 @@
-// $Id: PackedMCCaloHit.cpp,v 1.4 2009-11-07 12:20:27 jonrob Exp $
+// $Id: PackedMCCaloHit.cpp,v 1.5 2010-04-11 14:27:14 jonrob Exp $
 
 // local
 #include "Event/PackedMCCaloHit.h"
@@ -38,7 +38,7 @@ void MCCaloHitPacker::pack( const DataVector & hits,
   else
   {
     std::ostringstream mess;
-    mess << "Unknown packed data version " << phits.packingVersion();
+    mess << "Unknown packed data version " << (int)phits.packingVersion();
     throw GaudiException( mess.str(), "MCCaloHitPacker", StatusCode::FAILURE );
   }
 }
@@ -72,7 +72,7 @@ void MCCaloHitPacker::unpack( const PackedDataVector & phits,
   else
   {
     std::ostringstream mess;
-    mess << "Unknown packed data version " << phits.packingVersion();
+    mess << "Unknown packed data version " << (int)phits.packingVersion();
     throw GaudiException( mess.str(), "MCCaloHitPacker", StatusCode::FAILURE );
   }
 }

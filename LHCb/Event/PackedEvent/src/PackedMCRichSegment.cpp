@@ -1,4 +1,4 @@
-// $Id: PackedMCRichSegment.cpp,v 1.4 2009-11-07 12:20:27 jonrob Exp $
+// $Id: PackedMCRichSegment.cpp,v 1.5 2010-04-11 14:27:15 jonrob Exp $
 
 // local
 #include "Event/PackedMCRichSegment.h"
@@ -89,7 +89,7 @@ void MCRichSegmentPacker::pack( const DataVector       & segs,
   else
   {
     std::ostringstream mess;
-    mess << "Unknown packed data version " << psegs.packingVersion();
+    mess << "Unknown packed data version " << (int)psegs.packingVersion();
     throw GaudiException( mess.str(), "MCRichSegmentPacker", StatusCode::FAILURE );
   }
 }
@@ -163,7 +163,7 @@ void MCRichSegmentPacker::unpack( const PackedDataVector & psegs,
   else
   {
     std::ostringstream mess;
-    mess << "Unknown packed data version " << psegs.packingVersion();
+    mess << "Unknown packed data version " << (int)psegs.packingVersion();
     throw GaudiException( mess.str(), "MCRichSegmentPacker", StatusCode::FAILURE );
   }
 }

@@ -1,4 +1,4 @@
-// $Id: PackedRichPID.cpp,v 1.8 2010-03-09 18:35:20 jonrob Exp $
+// $Id: PackedRichPID.cpp,v 1.9 2010-04-11 14:27:15 jonrob Exp $
 
 // local
 #include "Event/PackedRichPID.h"
@@ -43,7 +43,7 @@ void RichPIDPacker::pack( const DataVector & pids,
   else
   {
     std::ostringstream mess;
-    mess << "Unknown packed data version " << ppids.packingVersion();
+    mess << "Unknown packed data version " << (int)ppids.packingVersion();
     throw GaudiException( mess.str(), "RichPIDPacker", StatusCode::FAILURE );
   }
 }
@@ -83,7 +83,7 @@ void RichPIDPacker::unpack( const PackedDataVector & ppids,
   else
   {
     std::ostringstream mess;
-    mess << "Unknown packed data version " << ppids.packingVersion();
+    mess << "Unknown packed data version " << (int)ppids.packingVersion();
     throw GaudiException( mess.str(), "RichPIDPacker", StatusCode::FAILURE );
   }
 }

@@ -1,4 +1,4 @@
-// $Id: PackedMuonPID.cpp,v 1.3 2009-11-10 10:24:09 jonrob Exp $
+// $Id: PackedMuonPID.cpp,v 1.4 2010-04-11 14:27:15 jonrob Exp $
 
 // local
 #include "Event/PackedMuonPID.h"
@@ -45,7 +45,7 @@ void MuonPIDPacker::pack( const DataVector & pids,
   else
   {
     std::ostringstream mess;
-    mess << "Unknown packed data version " << ppids.packingVersion();
+    mess << "Unknown packed data version " << (int)ppids.packingVersion();
     throw GaudiException( mess.str(), "MuonPIDPacker", StatusCode::FAILURE );
   }
 }
@@ -87,7 +87,7 @@ void MuonPIDPacker::unpack( const PackedDataVector & ppids,
   else
   {
     std::ostringstream mess;
-    mess << "Unknown packed data version " << ppids.packingVersion();
+    mess << "Unknown packed data version " << (int)ppids.packingVersion();
     throw GaudiException( mess.str(), "MuonPIDPacker", StatusCode::FAILURE );
   }
 }
