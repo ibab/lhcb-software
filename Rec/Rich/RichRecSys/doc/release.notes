@@ -4,6 +4,9 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+! 2010-04-11 - Chris Jones
+ - Turn on suppression of very high occupancy HPDs (>200 hits)
+
 !====================== RichRecSys v3r28 2010-04-09 ==========================
 ! 2010-04-08 - Chris Jones
  - Add cuts on the maximum number of pixels, tracks and photons to abort
