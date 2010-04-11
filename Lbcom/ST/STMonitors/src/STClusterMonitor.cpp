@@ -1,4 +1,4 @@
-// $Id: STClusterMonitor.cpp,v 1.26 2010-04-09 07:20:42 mneedham Exp $
+// $Id: STClusterMonitor.cpp,v 1.27 2010-04-11 07:50:01 mneedham Exp $
 // Include files 
 
 // from Gaudi
@@ -382,7 +382,7 @@ void ST::STClusterMonitor::fillHistograms(const LHCb::STCluster* cluster){
     m_2d_STNVsTELL1->fill(TELL1ID, signalToNoise);
   }
   else {
-    Warning("Zero S/N for some clusters",StatusCode::SUCCESS,1);
+    Warning("Zero S/N for some clusters",StatusCode::SUCCESS,1).ignore();
   }
   m_2d_ChargeVsTELL1->fill(TELL1ID, totalCharge);
   if(m_plotByPort) {
@@ -451,7 +451,7 @@ void ST::STClusterMonitor::fillDetailedHistograms(const LHCb::STCluster*
     plot1D(signalToNoise,cluster->layerName()+"/Signal to noise","S/N",0., 100.,100);
   }
   else {
-    Warning("Some cluster have zero noise", StatusCode::SUCCESS,1);
+    Warning("Some cluster have zero noise", StatusCode::SUCCESS,1).ignore();
   }
   // Plot cluster ADCs for 1, 2, 3, 4 strip clusters
   std::string svcBox = (this->readoutTool())->serviceBox(cluster->firstChannel());
