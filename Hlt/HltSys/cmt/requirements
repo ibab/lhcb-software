@@ -29,7 +29,7 @@ use HltTracking         v5r0    Hlt   # Jose Angel Hernando-Morata
 use TCKPresenter        v1r1p1  Hlt   # Klaus Neumann / Stephan Nies
 use TCKUtils            v1r6p4  Hlt   # Gerhard Raven
 use Fidel               v1r3p4  Phys  # Sara Furcas
-use LoKiTrigger         v10r0   Phys  # Vanya Belyaev
+use LoKiTrigger         v9r9    Phys  # Vanya Belyaev
 use TisTosTobbing       v4r1    Phys  # Tomasz Skwarnicki
 
 # Declare this as a container package
