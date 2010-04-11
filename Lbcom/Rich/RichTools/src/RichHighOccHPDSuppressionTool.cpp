@@ -35,7 +35,7 @@ HighOccHPDSuppressionTool( const std::string& type,
   declareInterface<IPixelSuppressionTool>(this);
 
   // job ops
-  declareProperty( "PrintHPDSuppressions", m_sumPrint  = false  );
+  declareProperty( "PrintHPDSuppressions", m_sumPrint  = true   );
   declareProperty( "AbsoluteMaxHPDOcc", m_overallMax   = 100    );
   declareProperty( "OccCutScaleFactor", m_scale        = 4      );
 
@@ -85,7 +85,7 @@ applyPixelSuppression( const LHCb::RichSmartID hpdID,
     {
       std::ostringstream hpd;
       hpd << hpdID;
-      Warning( "Fully suppressed     HPD "+hpd.str(), StatusCode::SUCCESS, 10 );
+      Warning( "Fully suppressed     HPD "+hpd.str(), StatusCode::SUCCESS, 0 );
     }
     // clear vector (i.e. actually do the suppression)
     smartIDs.clear();

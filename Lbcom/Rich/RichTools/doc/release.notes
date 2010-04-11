@@ -4,6 +4,9 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+! 2010-04-11 - Chris Jones
+ - Turn on summary printout of suppressed high occunpancy HPDs
+
 !=========================== RichTools v2r29p2 2010-04-09 ====================
 ! 2010-03-22 - Chris Jones
  - Minor update to Rich::TabulatedRefractiveIndex to correctly use the HLT

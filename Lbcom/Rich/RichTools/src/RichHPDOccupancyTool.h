@@ -173,7 +173,7 @@ namespace Rich
     mutable LHCb::RichSmartID m_lastHPD; ///< The last HPD to to analysed
 
     /** @brief Flag to turn on the use of a running average
-     *  If set true then a running average of each HPD's occupancy will be kep
+     *  If set true then a running average of each HPD's occupancy will be kept
      *  If false, then the average occupancies read from file will be used throughout
      */
     bool m_useRunAv;
@@ -183,7 +183,7 @@ namespace Rich
 
   protected:
 
-   // Min number fills before applying occupancy cut
+    // Min number fills before applying occupancy cut
     unsigned int m_minFills;
 
   };
