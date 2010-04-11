@@ -13,7 +13,7 @@ for ``iterative pi0'' Ecal calibration
 # ======================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@itep.ru "
 __date__    = " 2010-03-17 "
-__version__ = " CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.10 $ "
+__version__ = " CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.11 $ "
 # ======================================================================
 import ROOT
 from GaudiPython.Bindings import gbl as cpp
@@ -440,6 +440,13 @@ class LambdaMap(object) :
         if self._lambdas.has_key ( cellID ) :
             del self._lambdas[ cellID ]
 
+    ## check the presence of the certain key 
+    def has_key ( self , key ) :
+        """
+        check the presence of the certain key
+        """
+        return self._lambdas.has_key ( key )
+    
     ## Save lambdas to data base 
     def save ( self , dbasename , prefix = '' , **args ) :
         """
@@ -471,7 +478,25 @@ class LambdaMap(object) :
 
         dbase.close() 
         return len ( self )
-    
+
+    ## Construct the map from the subsequent iterations
+    def __imul__    ( self , other ) :
+        """
+        Construct the map from the subsequent iterations
+        """
+        for key in self :
+            if key in Zones             : continue 
+            if not other.has_key( key ) : continue
+            lams = self[key]
+            if not lams                 : continue 
+            lam  = float( lams[-1] ) 
+            olams = other[key]
+            for ol in olams:
+                lams.append ( lam * ol )
+
+        return self
+        
+
     ## iteration 
     def __iter__    ( self ) :
         """
@@ -510,7 +535,7 @@ class LambdaMap(object) :
             if key in Zones : continue 
             lam = self._lambdas[key][-1]
             cnt += lam
-        return VE ( cnt.flagMean() , cnt.flagRMS() ) 
+        return VE ( cnt.flagMean() , cnt.flagRMS()**2 ) 
 
     ## get the delta of "last" measurement 
     def delta ( self , last = 1 , prev = 1 ) :
