@@ -1,4 +1,4 @@
-// $Id: MooreInit.cpp,v 1.1 2010-03-26 07:35:14 graven Exp $
+// $Id: MooreInit.cpp,v 1.2 2010-04-11 15:23:34 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -72,5 +72,11 @@ StatusCode MooreInit::execute() {
 
 
   return StatusCode::SUCCESS;
+};
+
+StatusCode MooreInit::finalize() {
+  //StatusCode sc = LbAppInit::finalize(); // must be executed first
+  return GaudiAlgorithm::finalize(); // very dirty, to avoid printing...
+
 };
 

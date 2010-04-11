@@ -1,4 +1,4 @@
-// $Id: MooreInit.h,v 1.1 2010-03-26 07:35:14 graven Exp $
+// $Id: MooreInit.h,v 1.2 2010-04-11 15:23:34 graven Exp $
 #ifndef MOOREINIT_H 
 #define MOOREINIT_H 1
 
@@ -25,6 +25,7 @@ public:
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
+  virtual StatusCode finalize  ();    ///< Algorithm execution
 
 private:
   ToolHandle<IGenericTool> m_odinTool;   ///< Pointer to odin encoding tool

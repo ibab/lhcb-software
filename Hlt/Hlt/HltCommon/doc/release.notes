@@ -4,6 +4,9 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+! 2010-04-11 - Gerhard Raven
+ - make sure MooreInit does not print something during finalize
+
 !========================== HltCommon v5r22 2010-04-08 ===================
 
 ! 2010-04-08 - Juan Palacios
