@@ -1,4 +1,4 @@
-// $Id: STCMSimTool.cpp,v 1.1 2010-04-07 09:27:37 mneedham Exp $
+// $Id: STCMSimTool.cpp,v 1.2 2010-04-11 07:50:01 mneedham Exp $
 
 #include "GaudiKernel/IIncidentSvc.h"
 
@@ -68,7 +68,7 @@ void STCMSimTool::initEvent() const {
 double STCMSimTool::noise(const LHCb::STChannelID& chan) const
 {
   
-  if (m_isInitialized = false) initEvent();
+  if (m_isInitialized == false) initEvent();
 
   return m_cmValues[chan];
 }

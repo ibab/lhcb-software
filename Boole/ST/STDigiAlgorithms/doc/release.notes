@@ -4,6 +4,8 @@
 ! Purpose     : Algorithms for ST Digitization
 !-----------------------------------------------------------------------------
 
+! 2010-04-11 M Needham
+ - Bug fix in ISTCMSimTool
 
 !  2010-03-20 M.Needham
  - Add ISTCMSimTool, ISTPedestalSimTool + implementations
