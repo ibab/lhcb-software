@@ -1,4 +1,4 @@
-// $Id: CLTool.cpp,v 1.6 2009-10-02 18:23:50 jcidvida Exp $
+// $Id: CLTool.cpp,v 1.7 2010-04-12 09:57:48 rlambert Exp $
 // Include files 
 
 // from Gaudi
@@ -29,7 +29,28 @@ DECLARE_TOOL_FACTORY( CLTool );
 CLTool::CLTool( const std::string& type,
                 const std::string& name,
                 const IInterface* parent )
-  : GaudiTool ( type, name , parent )
+  : GaudiTool ( type, name , parent ),
+    m_leftRight(""),
+    m_overlap(false),
+    m_applyLast(false),
+    m_nrange(0),
+    m_nrangeNmuons(0),
+    m_range(0),
+    m_rangeNmuons(0),
+    m_mombinsCenter(0),
+    m_mombinsCenterNmuons(0),
+    m_yvals(0),
+    m_nvals(0),
+    m_minMomentum(0.),
+    m_lbinCenter(0.),
+    m_lbinCenterNmuons(0.),
+    m_signal(0),
+    m_bkg(0),
+    m_vsignal(0),
+    m_vbkg(0),
+    m_unifsignal(), //why is there no default constructor for uniformer??
+    m_unifbkg(),    //why is there no default constructor for uniformer??
+    m_init(StatusCode::FAILURE)
 {
   declareInterface<ICLTool>(this);
   //Get momentum bins for signal distributions 

@@ -2,6 +2,9 @@
 ! Responsible : Erica Polycarpo, Miriam Gandelman
 !-----------------------------------------------------------------------------
 
+! 2010-04-12 - Rob Lambert
+ - Intitialize all variables in CLTool.cpp
+
 !======================== MuonID v7r8 2010-03-24 ===========================
 ! 2010-03-24 - Rob Lambert
  - Fixed another windows warning
