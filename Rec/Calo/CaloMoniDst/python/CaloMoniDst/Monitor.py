@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Monitor.py,v 1.6 2010-03-31 19:54:47 dgolubko Exp $
+# $Id: Monitor.py,v 1.7 2010-04-12 19:15:51 dgolubko Exp $
 # =============================================================================
 ## The major building blocks of Calorimeter Monitoring
 #  @author Vanya BELYAEV Ivan.Belyaev@nikhe.nl
@@ -11,7 +11,7 @@ The major building blocks of Calorimeter Monitoring
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $"
 # =============================================================================
 __all__ = (
     'digitsMoni'     , 
@@ -50,11 +50,16 @@ def digitsMoni ( context ) :
     alg2 = getAlgo ( CaloDigitMonitor , "HcalDigitMon"  , context ) 
     alg3 = getAlgo ( CaloDigitMonitor , "PrsDigitMon"   , context ) 
     alg4 = getAlgo ( CaloDigitMonitor , "SpdDigitMon"   , context ) 
-    
-    alg1.histoList   = [ "1", "2" , "3" , "6" , "7" ]
-    alg2.histoList   = [ "1", "2" , "3" , "6" , "7" ]
-    alg3.histoList   = [ "1", "2" , "3" , "6" , "7" ]
-    alg4.histoList   = [ "1", "2" , "3" , "6" ]
+
+
+    if not alg1.isPropertySet('histoList') :
+        alg1.histoList   = [ "1", "2" , "3" , "6" , "7" ]
+    if not alg2.isPropertySet('histoList') :
+        alg2.histoList   = [ "1", "2" , "3" , "6" , "7" ]
+    if not alg3.isPropertySet('histoList') :
+        alg3.histoList   = [ "1", "2" , "3" , "6" , "7" ]
+    if not alg4.isPropertySet('histoList') :
+        alg4.histoList   = [ "1", "2" , "3" , "6" ]
     
     alg.Members = [
         alg1 ,
@@ -87,11 +92,16 @@ def eflowMoni ( context ) :
                     'EcalEFlowMon'  ,
                     context         )
 
-    alg.histoList       = [ 'all' ]
-    alg.SplitAreas      = False
-    alg.OneDimension    =  True
-    alg.EtFilterMax     =  1 * GeV
-    alg.EnergyFilterMax = 10 * GeV
+    if not alg.isPropertySet('histoList') :
+        alg.histoList       = [ 'all' ]
+    if not alg.isPropertySet('SplitAreas') :
+        alg.SplitAreas      = False
+    if not alg.isPropertySet('OneDimension') :
+        alg.OneDimension    =  True
+    if not alg.isPropertySet('EtFilterMax') :
+        alg.EtFilterMax     =  1 * GeV
+    if not alg.isPropertySet('EnergyFilterMax') :
+        alg.EnergyFilterMax = 10 * GeV
     
     seq.Members = [ alg ] 
 
@@ -121,8 +131,9 @@ def clustersMoni ( context ) :
     alg2 = getAlgo ( CaloClusterMonitor      ,
                      'EcalSplitClusterMon'  ,
                      context                 )
-    
-    alg1.histoList = [ "1", "2" , "3" , "4" , "7" , "8" ,  "9" ]
+ 
+    if not alg1.isPropertySet('histoList') :
+        alg1.histoList = [ "1", "2" , "3" , "4" , "7" , "8" ,  "9" ]
 
 #    delegate to CaloAlgUtils  
 #    alg1.Input = 'Rec/Calo/EcalClusters'
@@ -170,17 +181,21 @@ def hyposMoni ( context ) :
 #    alg4.Input = 'Rec/Calo/MergedPi0s'
 
 
-    alg1 .histoList = [ "1", "2" , "3" , "7" , "8" , "9" , "10" , "11" ]
-    alg2 .histoList = [ "1", "2" , "3" , "7" , "8" , "9" , "10" , "11" ]
-    alg3 .histoList = [ "1", "2" , "3" , "7" , "8" , "9" , "10" , "11" ]
-    alg4 .histoList = [ "1", "2" , "3" , "4" , "7", "8" , "9"]
-    
-    
+    if not alg1.isPropertySet('histoList') :
+        alg1 .histoList = [ "1", "2" , "3" , "7" , "8" , "9" , "10" , "11" ]
+    if not alg2.isPropertySet('histoList') :
+        alg2 .histoList = [ "1", "2" , "3" , "7" , "8" , "9" , "10" , "11" ]
+    if not alg3.isPropertySet('histoList') :
+        alg3 .histoList = [ "1", "2" , "3" , "7" , "8" , "9" , "10" , "11" ]
+    if not alg4.isPropertySet('histoList') :
+        alg4 .histoList = [ "1", "2" , "3" , "4" , "7", "8" , "9"]
+
+ 
     alg.Members = [ alg1 , alg2 , alg3 , alg4 ]
-    
+
 
     setTheProperty ( alg , 'Context' , context )
-    
+ 
     return alg
 
 
@@ -201,9 +216,11 @@ def pi0sMoni ( context ) :
                      'ResolvedPi0Mon' ,
                      context          )
     
-    alg.PhotonPtFilter = 500.*MeV;
+    if not alg.isPropertySet('PhotonPtFilter') :
+        alg.PhotonPtFilter = 500.*MeV;
 
-    alg.histoList = [ "1", "2" , "3" , "4" ]
+    if not alg.isPropertySet('histoList') :
+        alg.histoList = [ "1", "2" , "3" , "4" ]
 
     setTheProperty ( alg , 'Context' , context )
     
@@ -222,9 +239,10 @@ def protosMoni ( context ) :
     alg = getAlgo  ( CaloProtoElectronMonitor   ,
                      'ProtoElectronMon' ,
                      context          )
-    
 
-    alg.histoList = [ "All" ]
+
+    if not alg.isPropertySet('histoList') :
+        alg.histoList = [ "All" ]
 
     setTheProperty ( alg , 'Context' , context )
     
@@ -275,19 +293,19 @@ def pidsMoni ( context, Histograms ) :
 #    alg3.Input  =   'Rec/Calo/BremMatch'
 #    alg3.Inputs = [ 'Rec/Calo/Photons'      ]
 
-    alg5.uncut     = True
-    alg5.SplitSides= True
+    if not alg5.isPropertySet(     'uncut') : alg5.uncut     = True
+    if not alg5.isPropertySet('SplitSides') : alg5.SplitSides= True
 
-    alg7.pTmin     = 500.
-    alg7.RichDLLe  = 4.
-    alg7.maxEHcalE = 1000.
-    alg7.minPrsE   =-1.e10
+    if not alg7.isPropertySet(     'pTmin') : alg7.pTmin     = 500.
+    if not alg7.isPropertySet(  'RichDLLe') : alg7.RichDLLe  = 4.
+    if not alg7.isPropertySet( 'maxEHcalE') : alg7.maxEHcalE = 1000.
+    if not alg7.isPropertySet(   'minPrsE') : alg7.minPrsE   =-1.e10
 
     alg.Members = [ alg1 , alg2 , alg3 ,        alg5, alg6, alg7 ]
 
 
     setTheProperty ( alg , 'Context' , context )
-    
+
     return alg
   
     

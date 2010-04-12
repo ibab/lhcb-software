@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.86 2010-04-12 19:09:58 rlambert Exp $ 
+! $Id: release.notes,v 1.87 2010-04-12 19:15:51 dgolubko Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Calo/CaloMoniDst
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
@@ -6,6 +6,9 @@
 ! -----------------------------------------------------------------------------
 
 !========================== CaloMoniDst v5r0 2010-04-12 =======================
+! 2010-04-12 - Dmitry GOLUBKOV
+ - Monitor.py : check if properties were already set before setting them
+
 ! 2010-04-12 - Dmitry GOLUBKOV
  - CaloEMuPIDMon.cpp: fixed an unchecked StatusCode in the finalize() method
  - cmt/requirements: version incremented to v5r1
