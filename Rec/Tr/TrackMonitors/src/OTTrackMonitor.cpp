@@ -69,6 +69,8 @@ private:
   AIDA::IHistogram1D* m_hitMultiplicity ;
   AIDA::IHistogram1D* m_driftTimeUse ;
 
+  AIDA::IHistogram1D* histEventAverageTimeResidual;
+
 public:
   /** Standard construtor */
   OTTrackMonitor(const std::string& name, ISvcLocator* pSvcLocator);
@@ -261,6 +263,9 @@ StatusCode OTTrackMonitor::initialize()
   m_hotMultiplicity = book("hotmultiplicity","hot multiplicity", 0, 5000, 200) ;
   m_driftTimeUse    = book("drifttimeuse","drift time strategy flag", -0.5,5.5,6) ;
 
+  histEventAverageTimeResidual = book("eventavtimeres", "event average time residual",
+    -10, 10);
+
   debug() << "------------ TrackMonitor::initialize() / end ---------" << endmsg;
 
   return statusCode;
@@ -290,6 +295,9 @@ StatusCode OTTrackMonitor::execute()
   setHistoTopDir("OT/");
 
   LHCb::Track::Range tracks = get<LHCb::Track::Range>(m_trackLocation) ;
+
+  double eventAverageTimeResidual = 0;
+  int eventAverageTimeResidualN = 0;
 
   // iterate over all tracks
   size_t numHots(0);
@@ -438,8 +446,8 @@ StatusCode OTTrackMonitor::execute()
         fill(profileTimeResidualVsDistance, std::abs(trackDistance), drifttimeResidual, 1.0);
         fill(profileResidualVsDistance, std::abs(trackDistance), residual, 1.0);
         fill(profileResidualPullVsDistance, std::abs(trackDistance), residualPull, 1.0);
-	double y = unbiasedState.y() - fitnode->measurement().trajectory().beginPoint().y() ;
-	histAverageTimeResidualVsY[histIndex]->fill( y, drifttimeResidual ) ;
+        double y = unbiasedState.y() - fitnode->measurement().trajectory().beginPoint().y() ;
+        histAverageTimeResidualVsY[histIndex]->fill( y, drifttimeResidual ) ;
       }
 
       fill(histDeltaToF, measurement->deltaTimeOfFlight(), 1.0);
@@ -475,6 +483,8 @@ StatusCode OTTrackMonitor::execute()
           {
             ++timeResidualSumN;
             timeResidualSum += drifttimeResidual;
+            ++eventAverageTimeResidualN;
+            eventAverageTimeResidual += drifttimeResidual;
           }
         }
       } // if(isGoodTrack)
@@ -490,6 +500,11 @@ StatusCode OTTrackMonitor::execute()
       fill(histAverageTimeResidualVsMomentum, track->p() / 1000.0, timeResidualSum / timeResidualSumN, 1.0);
     } // if(timeResidualSumN > 5)
   } // BOOST_FOREACH(const LHCb::Track* track,tracks)
+
+  if(eventAverageTimeResidualN > 9)
+  {
+    fill(histEventAverageTimeResidual, eventAverageTimeResidual / eventAverageTimeResidualN, 1.0);
+  }
 
   BOOST_FOREACH(const DeOTModule* module, m_otdet->modules())
   {

@@ -4,6 +4,9 @@
 ! Purpose     : Package for track data quality monitoring algorithms
 !-----------------------------------------------------------------------------
 
+! 2010-04-12 Alexandr Kozlinskiy
+ - added 'event average time residual' plot to OTTrackMonitor
+
 !========================== TrackMonitors v1r23 2010-04-09 ==================
 ! 2010-04-07 Wouter Hulsbergen
  - make check on track type before processing in IT/TTTrackMonitor
