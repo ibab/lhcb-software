@@ -1,3 +1,5 @@
+// Decode the IT clustes in different spills in TAE mode
+
 ApplicationMgr.TopAlg += { 
   "GaudiSequencer/DecodeITSeq"
 };

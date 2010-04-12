@@ -1,4 +1,4 @@
-// $Id: STFullDecoding.cpp,v 1.3 2009-03-17 17:46:22 jvantilb Exp $
+// $Id: STFullDecoding.cpp,v 1.4 2010-04-12 13:21:28 mtobin Exp $
 // Include files
 
 // from Gaudi
@@ -72,6 +72,9 @@ StatusCode STFullDecoding::initialize() {
 StatusCode STFullDecoding::execute()
 {
   // Get the raw data
+  if (!exist<RawEvent>(m_inputLocation)){
+    return Warning("Failed to find raw data", StatusCode::SUCCESS,1);
+  }
   RawEvent* raw = get<RawEvent>( m_inputLocation );
 
   // make container of TELL1 boards

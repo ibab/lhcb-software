@@ -4,6 +4,11 @@
 ! Purpose     : Encode and decode Raw banks for ST
 !-----------------------------------------------------------------------------
 
+! 2010-04-12 - Mark Tobin
+ - Add protection to STFullDecoding so that it doesn't give an exception when
+ the RawEvent is missing.  It now returns a warning which is ignored.
+ - Add options files (.opts and .py) to run the full decoding in TAE mode.
+
 !=============================== STDAQ v3r21 2010-01-21 ======================
 ! 2010-01-13 - Marco Cattaneo
  - Add dependency on DAQUtils, new location of BankWriter.h helper

@@ -1,0 +1,50 @@
+// Decode the NZS bank for different spills (+/- 2 in TAE mode) for the TT.
+
+ApplicationMgr.TopAlg += {
+  "GaudiSequencer/DecodeTTNZSSeq" 
+};
+
+// TTFullDecoding options
+DecodeTTNZSSeq.MeasureTime = true;
+DecodeTTNZSSeq.Members += { "STFullDecoding/TTFullDecodingCentral"
+                           ,"STFullDecoding/TTFullDecodingPrev2"
+                           ,"STFullDecoding/TTFullDecodingPrev1"
+                           ,"STFullDecoding/TTFullDecodingNext1"
+                           ,"STFullDecoding/TTFullDecodingNext2" 
+};
+
+TTFullDecodingPrev2.PrintErrorInfo   = 0;
+TTFullDecodingPrev2.DetType   	= "TT";
+TTFullDecodingPrev2.OutputLevel	= 4;
+TTFullDecodingPrev2.InputLocation = "/Event/Prev2/DAQ/RawEvent";
+TTFullDecodingPrev2.OutputLocation = "/Event/Prev2/Raw/TT/Full";
+TTFullDecodingPrev2.EventInfoLocation = "/Event/Prev2/Raw/TT/EventInfo";
+
+TTFullDecodingPrev1.PrintErrorInfo   = 0;
+TTFullDecodingPrev1.DetType   	= "TT";
+TTFullDecodingPrev1.OutputLevel	= 4;
+TTFullDecodingPrev1.InputLocation = "/Event/Prev1/DAQ/RawEvent";
+TTFullDecodingPrev1.OutputLocation = "/Event/Prev1/Raw/TT/Full";
+TTFullDecodingPrev1.EventInfoLocation = "/Event/Prev1/Raw/TT/EventInfo";
+ 
+TTFullDecodingCentral.PrintErrorInfo   = 0;
+TTFullDecodingCentral.DetType   	= "TT";
+TTFullDecodingCentral.OutputLevel	= 4;
+TTFullDecodingCentral.InputLocation = "/Event/DAQ/RawEvent";
+TTFullDecodingCentral.OutputLocation = "/Event/Raw/TT/Full";
+TTFullDecodingCentral.EventInfoLocation = "/Event/Raw/TT/EventInfo";
+
+TTFullDecodingNext1.PrintErrorInfo   = 0;
+TTFullDecodingNext1.DetType   	= "TT";
+TTFullDecodingNext1.OutputLevel	= 4;
+TTFullDecodingNext1.InputLocation = "/Event/Next1/DAQ/RawEvent";
+TTFullDecodingNext1.OutputLocation = "/Event/Next1/Raw/TT/Full";
+TTFullDecodingNext1.EventInfoLocation = "/Event/Next1/Raw/TT/EventInfo";
+ 
+TTFullDecodingNext2.PrintErrorInfo   = 0;
+TTFullDecodingNext2.DetType   	= "TT";
+TTFullDecodingNext2.OutputLevel	= 4;
+TTFullDecodingNext2.InputLocation = "/Event/Next2/DAQ/RawEvent";
+TTFullDecodingNext2.OutputLocation = "/Event/Next2/Raw/TT/Full";
+TTFullDecodingNext2.EventInfoLocation = "/Event/Next2/Raw/TT/EventInfo";
+
