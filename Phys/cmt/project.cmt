@@ -1,6 +1,6 @@
 project PHYS
 
-use LHCB	LHCB_v30r0
+use LHCB	LHCB_v30r1
 
 container      PhysSys
 build_strategy	with_installarea
