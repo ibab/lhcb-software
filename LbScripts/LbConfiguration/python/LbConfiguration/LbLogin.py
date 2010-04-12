@@ -57,7 +57,7 @@ from LbUtils.Path import multiPathGet, multiPathGetFirst, multiPathJoin
 import logging
 import shutil
 
-__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.74 $")
+__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.75 $")
 
 
 def getLoginCacheName(cmtconfig=None, shell="csh", location=None):
@@ -469,6 +469,8 @@ class LbLoginScript(SourceScript):
                 ev["LHCBRELEASES"] = multiPathJoin(opts.mysiteroot, "lhcb")
                 ev["GAUDISOFT"] = ev["LHCBRELEASES"]
                 ev["LHCBPROJECTPATH"] = os.pathsep.join([ev["LHCBRELEASES"], ev["LCG_release_area"]])
+                ev["EMACSDIR"] = multiPathGetFirst(ev["LHCBRELEASES"], os.path.join("TOOLS", "Tools", "Emacs", "pro"))
+                ev["LHCBSTYLE"] = multiPathGetFirst(ev["LHCBRELEASES"], os.path.join("TOOLS", "Tools", "Styles", "pro"))
                 if opts.nightlies_dir :
                     ev["LHCBNIGHTLIES"] = opts.nightlies_dir
             else :

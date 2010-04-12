@@ -1,5 +1,6 @@
 2010-04-12  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
+	* python/LbConfiguration/LbLogin.py: added support for EMACSDIR and LHCBSTYLE for local installation.
 	* python/LbConfiguration/Package.py: added support for the TOOLS unversioned project and the 
 	Tools/Emacs standalone package.
 
