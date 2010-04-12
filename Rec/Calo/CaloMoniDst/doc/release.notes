@@ -1,17 +1,17 @@
-! $Id: release.notes,v 1.87 2010-04-12 19:15:51 dgolubko Exp $ 
+! $Id: release.notes,v 1.88 2010-04-12 20:30:53 dgolubko Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Calo/CaloMoniDst
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! Purpose     : Calo monitoring of Dst tape 
 ! -----------------------------------------------------------------------------
+! 2010-04-12 - Dmitry GOLUBKOV
+ - doc/release.notes : corrected the place of the second comment from 2010-04-12
+ - Monitor.py : check if properties were already set before setting them
+ - cmt/requirements: version incremented to v5r1 
 
 !========================== CaloMoniDst v5r0 2010-04-12 =======================
 ! 2010-04-12 - Dmitry GOLUBKOV
- - Monitor.py : check if properties were already set before setting them
-
-! 2010-04-12 - Dmitry GOLUBKOV
  - CaloEMuPIDMon.cpp: fixed an unchecked StatusCode in the finalize() method
- - cmt/requirements: version incremented to v5r1
 
 ! 2010-04-09 - Rob Lambert
  - Fixed windows warnings in CaloEMuPIDMon.cpp and CaloPi0Checker.cpp
