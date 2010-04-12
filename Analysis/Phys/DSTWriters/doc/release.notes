@@ -1,9 +1,15 @@
-!$Id: release.notes,v 1.18 2010-04-08 13:43:27 jpalac Exp $
+!$Id: release.notes,v 1.19 2010-04-12 13:07:29 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DSTWriters
 ! Responsible : Juan PALACIOS
 ! Purpose     : Python code for DST writers.
 !-----------------------------------------------------------------------------
+
+! 2010-04-12 - Juan Palacios
+ - python/DSTWriters/dstwriterutils.py
+  . Fix typo in algorithm list getter method for SelectionSequence.
+ - cmt/requirements
+  . Increase version to v1r4p1
 
 ! ======================== DSTWriters v1r4 2010-04-08 ========================
 
