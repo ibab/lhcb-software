@@ -1,9 +1,11 @@
-!$Id: release.notes,v 1.19 2010-04-12 13:07:29 jpalac Exp $
+!$Id: release.notes,v 1.20 2010-04-12 13:08:17 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DSTWriters
 ! Responsible : Juan PALACIOS
 ! Purpose     : Python code for DST writers.
 !-----------------------------------------------------------------------------
+
+! ======================== DSTWriters v1r4p1 2010-04-12 ======================
 
 ! 2010-04-12 - Juan Palacios
  - python/DSTWriters/dstwriterutils.py
