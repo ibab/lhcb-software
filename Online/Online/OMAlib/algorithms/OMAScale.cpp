@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/algorithms/OMAScale.cpp,v 1.8 2010-04-12 16:00:25 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/algorithms/OMAScale.cpp,v 1.9 2010-04-12 16:09:03 ggiacomo Exp $
 #include <TH1F.h>
 #include <TH2F.h>
 #include "OMAlib/OMAAlgorithms.h"
@@ -34,7 +34,6 @@ TH1* OMAScale::exec( const std::vector<TH1*> *sources,
   TH1* scaledHist=existingHisto;
   bool cloned= false;
   int shift=0;
-  }
   if(!scaledHist) {
     if( ( std::string(scalefactorH->GetName()) != std::string(H->GetName()) ) || (dynamic_cast<TH2*>(H) != NULL) ) {
       scaledHist=(TH1*) H->Clone();
