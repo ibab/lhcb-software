@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.37 2010-04-10 14:26:04 ggiacomo Exp $
+! $Id: release.notes,v 1.38 2010-04-12 16:00:25 ggiacomo Exp $
 ! Package     : OMAlib
 ! Responsible : G. Graziani
 ! Purpose     : Online Monitoring Analysis library
+
+
+! 20100412 GG
+ - bug fix in OMAScale for 2D histograms
 
 ! 20100410 GG
  - remove pointers from OMAFitFunction class for thread safety (Presenter copies the objects).
