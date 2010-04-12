@@ -294,7 +294,7 @@ def make_tar(pname, pversion, binary=''):
     for p in path_list:
         if p.find(PACK) != -1: break
         dver = os.path.basename(p)
-        if dver == 'DBASE' or dver == 'PARAM' : continue
+        if dver == 'DBASE' or dver == 'PARAM' or dver == 'TOOLS' : continue
         dnam = dver.split('_')[0]
         if dnam == 'LCGCMT' or p.find('OpenScientist') != -1 or p.find('osc_vis') != -1 :
             if dnam != 'LCGCMT' :
@@ -326,9 +326,10 @@ def make_tar(pname, pversion, binary=''):
     else :
         os.chdir(os.path.join(maindir, packSys, pversion, 'cmt'))
     for line in os.popen('cmt show uses').readlines():
-        if line.find('DBASE') != -1 or line.find('PARAM') != -1:
+        if line.find('DBASE') != -1 or line.find('PARAM') != -1 or line.find('TOOLS') != -1:
             dnam = 'DBASE'
             if line.find('PARAM') != -1 : dnam = 'PARAM'
+            if line.find('TOOLS') != -1 : dnam = 'TOOLS'
             file = line.split('(')[0].split()
             print file
             name = file[1]

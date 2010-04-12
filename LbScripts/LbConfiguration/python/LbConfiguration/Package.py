@@ -6,7 +6,7 @@ import sys, os
 
 # ------------------------------------------------------------------------------------
 # list of unversioned data projects
-project_names = ["DBASE", "PARAM" ]
+project_names = ["DBASE", "PARAM", "TOOLS" ]
 
 
 # ------------------------------------------------------------------------------------
@@ -26,7 +26,8 @@ package_names = ['XmlDDDB',
                  'MIBData',
                  'L0TCK',
                  'HltTCK',
-                 'AppConfig']
+                 'AppConfig',
+                 'Emacs']
 
 class PackageConfException(Exception): 
     pass
@@ -80,8 +81,10 @@ class PackageConf(object):
             if full :
                 tbname += ".tar.gz"
         return tbname
+    def DistPrefix(self):
+        return self._project.upper()
     def TarBallDir(self):
-        return os.path.join(self.DistLocation(), self._project.upper())
+        return os.path.join(self.DistLocation(), self.DistPrefix())
     def HTMLDir(self):
         return os.path.join(self.DistLocation(), "html")
     def releasePrefix(self, version=None):
@@ -194,3 +197,5 @@ HltTCK.setProject("DBASE")#IGNORE:E0602
 
 AppConfig.setProject("DBASE")#IGNORE:E0602
 
+Emacs.setHat("Tools")#IGNORE:E0602
+Emacs.setProject("TOOLS")#IGNORE:E0602

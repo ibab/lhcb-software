@@ -413,16 +413,21 @@ def createDir(here , logname):
                     if multiple_mysiteroot :
                         found_dbase = False
                         found_param = False
+                        found_tools = False
                         for b in lhcb_dir.split(os.pathsep)[1:] :
                             if os.path.isdir(os.path.join(b, 'DBASE')) :
                                 found_dbase = True
                             if os.path.isdir(os.path.join(b, 'PARAM')) :
                                 found_param = True
+                            if os.path.isdir(os.path.join(b, 'TOOLS')) :
+                                found_tools = True
                         if not found_dbase :
                             os.mkdir(os.path.join(dirnm, 'DBASE'))
                         if not found_param :
                             os.mkdir(os.path.join(dirnm, 'PARAM'))
-                        if found_dbase or found_param :
+                        if not found_tools :
+                            os.mkdir(os.path.join(dirnm, 'TOOLS'))
+                        if found_dbase or found_param or found_tools:
                             os.mkdir(os.path.join(dirnm, 'EXTRAPACKAGES'))
                             os.mkdir(os.path.join(dirnm, 'EXTRAPACKAGES', 'cmt'))
                             f = open(os.path.join(dirnm, 'EXTRAPACKAGES', 'cmt', 'project.cmt'), "w")
@@ -431,6 +436,7 @@ def createDir(here , logname):
                     else :
                         os.mkdir(os.path.join(dirnm, 'DBASE'))
                         os.mkdir(os.path.join(dirnm, 'PARAM'))
+                        os.mkdir(os.path.join(dirnm, 'TOOLS'))
                 if fix_perm :
                     changePermissions(dirnm, recursive=True)
             if dirnm == "tmp" :
@@ -712,7 +718,7 @@ def getPackVer(fname):
         file_base = []
         for bd in base_dir :
             file_base.append(os.path.join(bd, name, vers))
-    if packver[0] == "DBASE" or packver[0] == "PARAM":
+    if packver[0] == "DBASE" or packver[0] == "PARAM" or packver[0] == "TOOLS":
         if len(packver) == 3:
             name = packver[1]
         else:
@@ -965,6 +971,8 @@ def getProjectTar(tar_list, already_present_list=None):
                             extradir = 'DBASE'
                         elif pack_ver[3].find('PARAM') != -1 :
                             extradir = 'PARAM'
+                        elif pack_ver[3].find('TOOLS') != -1 :
+                            extradir = 'TOOLS'
                         if extradir is not None :
                             f = os.path.join(pack_ver[0], pack_ver[1])
                             tdir = os.path.dirname(os.path.join('EXTRAPACKAGES', f))
@@ -974,7 +982,7 @@ def getProjectTar(tar_list, already_present_list=None):
                             if fix_perm :
                                 changePermissions(os.path.join('EXTRAPACKAGES', f), recursive=True)
                             shutil.rmtree(extradir, ignore_errors=True)
-                if latest_data_link and (pack_ver[3].find('DBASE') != -1 or pack_ver[3].find('PARAM') != -1):
+                if latest_data_link and (pack_ver[3].find('DBASE') != -1 or pack_ver[3].find('PARAM') != -1 or pack_ver[3].find('TOOLS') != -1):
                     # create link to the latest version "v99r9" if requested
                     f = os.path.join(pack_ver[0], pack_ver[1])
                     extradir = None
@@ -982,6 +990,8 @@ def getProjectTar(tar_list, already_present_list=None):
                         extradir = 'DBASE'
                     elif pack_ver[3].find('PARAM') != -1 :
                         extradir = 'PARAM'
+                    elif pack_ver[3].find('TOOLS') != -1 :
+                        extradir = 'TOOLS'                    
                     exdir = os.path.join('EXTRAPACKAGES', f)
                     regul_dir = os.path.join(extradir, f)
                     if os.path.exists(regul_dir) :
@@ -990,7 +1000,10 @@ def getProjectTar(tar_list, already_present_list=None):
                         tg_dir = exdir
                     if os.path.isdir(tg_dir) :
                         tdir = os.path.dirname(tg_dir)
-                        ltg = os.path.join(tdir, "v99r9")
+                        if extradir == "TOOLS" :
+                            ltg = os.path.join(tdir, "pro")
+                        else :
+                            ltg = os.path.join(tdir, "v99r9")
                         if os.path.islink(ltg) or os.path.isfile(ltg):
                             os.remove(ltg)
                         elif os.path.isdir(ltg) :
@@ -1359,6 +1372,8 @@ def removeProject(project, pvers):
         head = os.path.join(this_lhcb_dir, 'DBASE', 'Gen')
     if project.find('L0TCK') != -1 :
         head = os.path.join(this_lhcb_dir, 'DBASE', "TCK")
+    if project.find('Emacs') != -1 :
+        head = os.path.join(this_lhcb_dir, 'TOOLS', "Tools")
     if os.path.isdir(os.path.join(head, project, pvers)):
         shutil.rmtree(os.path.join(head, project, pvers))
         log.info('remove %s' % os.path.join(head, project, pvers))

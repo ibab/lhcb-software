@@ -26,7 +26,8 @@ data_files = {'XmlDDDB':'DBASE_Det_XmlDDDB',
                 'MIBData':'PARAM_MIBData',
                 'L0TCK': 'DBASE_TCK_L0TCK',
                 'HltTCK': 'DBASE_TCK_HltTCK',
-                'AppConfig': 'DBASE_AppConfig'}
+                'AppConfig': 'DBASE_AppConfig',
+                'Emacs': 'TOOLS_Tools_Emacs'}
 
 ext_lhcb = ['LCGCMT', 'GENSER', 'OpenScientist']
 

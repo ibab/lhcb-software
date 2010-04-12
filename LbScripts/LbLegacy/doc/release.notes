@@ -1,5 +1,7 @@
 2010-04-12  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
+	* scripts/mkLHCbtar: added support for the TOOLS unversioned project.
+	* python/LbLegacy/install_project.py: added support for the TOOLS unversioned project.
 	* scripts/mkproject: prevent the creation of the debug binary tarball if the "d" action has not
 	been requested.
 
