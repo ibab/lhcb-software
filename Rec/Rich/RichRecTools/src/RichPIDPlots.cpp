@@ -125,6 +125,9 @@ void PIDPlots::plots( const LHCb::RichPID * pid,
     // Heavy or light ?
     const bool heavy = ( (int)hypo > (int)(Rich::Pion) );
 
+    // stream for titles
+    std::ostringstream title;
+
     // Loop over all combinations of PID pairs
     for ( Rich::Particles::const_reverse_iterator i = Rich::particles().rbegin();
           i != Rich::particles().rend(); ++i )
@@ -138,33 +141,39 @@ void PIDPlots::plots( const LHCb::RichPID * pid,
         const std::string DllDiff = Rich::text(first) + "-" + Rich::text(last);
 
         // Dll(X-Y) distributions
-        std::string title = "RichDLL("+DllDiff+")";
+        title.str("");
+        title << "RichDLL(" << DllDiff << ")";
         const double dll = pid->particleDeltaLL(first) - pid->particleDeltaLL(last);
-        richHisto1D( HID(title,hypo), title,
+        richHisto1D( HID(title.str(),hypo), title.str(),
                      -m_dllRange, m_dllRange, nBins1D() )->fill(dll);
 
         // Efficiency
         const double eff( dll>m_dllCut ? 100.0 : 0.0 );
 
         // Efficiency plots
-        title = "Eff. RichDLL("+DllDiff+")>0 Versus P (MeV/c)";
-        richProfile1D( HID(title,hypo), title,
+        title.str("");
+        title << "Eff. RichDLL(" << DllDiff << ")>" << m_dllCut << " Versus P (MeV/c)";
+        richProfile1D( HID(title.str(),hypo), title.str(),
                        config.minP, config.maxP, nBins1D() )->fill(pTot,eff);
-        title = "Eff. RichDLL("+DllDiff+")>0 Versus Pt (MeV/c)";
-        richProfile1D( HID(title,hypo), title,
+        title.str("");
+        title << "Eff. RichDLL(" << DllDiff << ")>" << m_dllCut << " Versus Pt (MeV/c)";
+        richProfile1D( HID(title.str(),hypo), title.str(),
                        config.minPt, config.maxPt, nBins1D() )->fill(pT,eff);
-        title = "Eff. RichDLL("+DllDiff+")>0 Versus P,Pt (MeV/c)";
-        richProfile2D( HID(title,hypo), title,
+        title.str("");
+        title << "Eff. RichDLL(" << DllDiff << ")>" << m_dllCut << " Versus P,Pt (MeV/c)";
+        richProfile2D( HID(title.str(),hypo), title.str(),
                        config.minP,  config.maxP,  nBins2D(),
                        config.minPt, config.maxPt, nBins2D() )->fill(pTot,pT,eff);
 
         // # Sigma distributions
-        title = "# Sigma("+DllDiff+")";
+        title.str("");
+        title << "# Sigma(" << DllDiff << ")";
         const double nsigma = pid->nSigmaSeparation(first,last);
-        richHisto1D( HID(title,hypo), title,
+        richHisto1D( HID(title.str(),hypo), title.str(),
                      -30, 30, nBins1D() )->fill(nsigma);
-        title = "# Sigma("+DllDiff+") Versus P (MeV/c)";
-        richProfile1D( HID(title,hypo), title,
+        title.str("");
+        title << "# Sigma(" << DllDiff << ") Versus P (MeV/c)";
+        richProfile1D( HID(title.str(),hypo), title.str(),
                        config.minP, config.maxP, nBins1D() )->fill(pTot,nsigma);
 
       }

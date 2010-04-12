@@ -15,6 +15,9 @@
 #ifndef RICHRECTOOLS_RICHPIDPLOTS_H
 #define RICHRECTOOLS_RICHPIDPLOTS_H 1
 
+// STL
+#include <sstream>
+
 // base class
 #include "RichRecBase/RichRecHistoToolBase.h"
 
