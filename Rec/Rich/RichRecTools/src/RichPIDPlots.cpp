@@ -163,6 +163,9 @@ void PIDPlots::plots( const LHCb::RichPID * pid,
         const double nsigma = pid->nSigmaSeparation(first,last);
         richHisto1D( HID(title,hypo), title,
                      -30, 30, nBins1D() )->fill(nsigma);
+        title = "# Sigma("+DllDiff+") Versus P (MeV/c)";
+        richProfile1D( HID(title,hypo), title,
+                       config.minP, config.maxP, nBins1D() )->fill(pTot,nsigma);
 
       }
     }
