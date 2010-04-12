@@ -40,6 +40,7 @@
         <enumval name="PV3D"       value = "11"  desc="number of 3D vertices"/>
         <enumval name="PU"         value = "13"  desc="number of PU vertices"/>
         <enumval name="Method"     value = "20"  desc="method: 0 or missing is random method"/>
+        <enumval name="Random"     value = "21"  desc="random method: 0 or missing is L0 method"/>
         <enumval name="Unknown"    value = "98"  desc="unknown value"/>
         <enumval name="LastGlobal" value = "99"  desc="The last official flag value. Private user variables should use
  flags greater than this value"/>

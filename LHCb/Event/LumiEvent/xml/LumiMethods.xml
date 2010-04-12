@@ -26,8 +26,9 @@
         name="methodKey"
         strTypConv = 'TRUE'
         access="PUBLIC" >
-        <enumval name="RandomMethod"  value = "0"   desc="Random Method"/>
+        <enumval name="NoMethod"      value = "0"   desc="Method undefined"/>
         <enumval name="L0RateMethod"  value = "1"   desc="L0Rate Method"/>
+        <enumval name="RandomMethod"  value = "2"   desc="Random Method"/>
         <enumval name="Unknown"       value = "98"  desc="unknown value"/>
         <enumval name="LastGlobal"    value = "99"  desc="The last official flag value. Private user variables should use
  flags greater than this value"/>

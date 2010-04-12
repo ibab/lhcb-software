@@ -4,6 +4,12 @@
 ! Purpose     : EventModel for Lumi data
 !-----------------------------------------------------------------------------
 
+! 2010-04-12 - Jaap Panman
+ - Enable an additional lumi bookkeeping method for random lumi events
+   (needed due to microbias trigger)
+ - add counter value in enum of LumiCounters
+ - add enum value in LumiMethod to hold values to flag random Lumi 
+
 !======================== LumiEvent v2r5 2010-02-12 ==========================
 ! 2010-01-28 - Jaap Panman
  - Enable an additional lumi bookkeeping method for low lumi conditions 
