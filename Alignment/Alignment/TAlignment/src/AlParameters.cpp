@@ -242,7 +242,19 @@ AlParameters::Matrix6x6 AlParameters::jacobian( const ROOT::Math::Transform3D& t
   
   // R ( deps ) R^{-1} for each three components
   Matrix3x3 RdrotR[3] ;
-  for(int i=0; i<3; ++i) RdrotR[i] = R * (drot[i] * Rinv) ;
+  // this breaks in optimization on SLC5. the solution was to create a
+  // temporary in the loop. (Thanks Lorenzo)
+  for(int i=0; i<3; ++i) {
+    Matrix3x3 tmp = drot[i] * Rinv ;
+    RdrotR[i] = R * tmp ;
+  }
+
+  //   for(int i=0; i<3; ++i)
+  //     for(int irow=0; irow<3; ++irow)
+  //       for(int krow=0; krow<3; ++krow)
+  // 	for(int lrow=0; lrow<3; ++lrow)
+  // 	  for(int jrow=0; jrow<3; ++jrow)
+  // 	    RdrotR[i](irow,jrow) += R(irow,krow) * drot[i](krow,lrow) * Rinv(lrow,jrow) ;
   
   // now construct all components of the jacobian
   Matrix6x6 jacobian ;
