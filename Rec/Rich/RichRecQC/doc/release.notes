@@ -4,6 +4,10 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+!======================= RichRecQC v2r39 2010-04-12 ========================
+! 2010-04-02 - Chris Jones
+ - Make sure MC histograms that can be made without extended MC RICH 
+
 ! 2010-03-29 - Chris Jones
  - Downgrade DB mis-match messages from ERROR to WARNING
  - Add RICH and L1 ID to DB check messages
