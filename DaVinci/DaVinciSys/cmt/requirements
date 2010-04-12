@@ -7,8 +7,20 @@ branches doc cmt
 use  DaVinci                 	v25r2p3   Phys
 
 # patched packages
+
+use HltCommon                   v5r22     Hlt
 use HltDAQ                      v1r7      Hlt
-use CaloReco                    v5r4p1    Calo
+use Hlt1Lines                   v2r3p2    Hlt
+use VertexFit                   v6r2p1    Phys
+use DaVinciMonitors             v1r9p1    Phys
+use StrippingSelections         v1r19     Phys
+use StrippingConf               v3r1      Phys
+use StrippingAlgs               v1r1      Phys
+use DisplVertices               v6r4      Phys
+use PuVeto                      v7r7p1    L0
+use PackedEvent                 v4r0p1    Event
+use EventPacker                 v2r0      Event
+
 #  
 # Declare this as a container package
 apply_pattern container_package

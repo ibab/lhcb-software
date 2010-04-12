@@ -3,8 +3,9 @@ Package             : DaVinciSys
 Package Coordinator : Juan Palacios
 Purpose             : LHCb physics analysis application
 
-</PRE><H1><A NAME=v25r2p2>2010-04-07 DaVinci v25r2p2. Patch release for Early 2010 data stripping. </A></H1><PRE>
+</PRE><H1><A NAME=v25r2p3>2010-04-12 DaVinci v25r2p3. Patch release for Early 2010 data stripping. </A></H1><PRE>
 
+ * Fixes problems with RichPIDPacker reading rDST.
  * Fixes problems with HltDecReports, L0DU construction from the raw bank, 
    stripping, and others, present when reading RDSTs.
 
