@@ -212,8 +212,9 @@ StatusCode CaloEMuPIDMon::finalize()
 {
   debug() << "==> Finalize" << endmsg;
 
-  if (counter("nEvents").nEntries() >= m_nEventMin)
-    this->check();
+// dummy method -- commented out for the time being
+//if (counter("nEvents").nEntries() >= m_nEventMin)
+//  this->check().ignore();
 
   return CaloMoniAlg::finalize();
 }
