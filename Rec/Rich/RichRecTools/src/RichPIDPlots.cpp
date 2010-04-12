@@ -26,12 +26,14 @@ PIDPlots::PIDPlots( const std::string& type,
   // interface
   declareInterface<Rich::Rec::IPIDPlots>(this);
   // JOs
-  declareProperty( "HistoBins",    m_bins = 50 );
-  declareProperty( "ExtraHistos",  m_extraHistos = false );
-  declareProperty( "DllCut",       m_dllCut = 0.0 );
-  declareProperty( "DllPlotRange", m_dllRange = 100 );
+  declareProperty ( "ExtraHistos",  m_extraHistos = false );
+  declareProperty ( "DllCut",       m_dllCut      = 0.0   );
+  declareProperty ( "DllPlotRange", m_dllRange    = 100   );
   // turn off histo printing by default
-  setProperty("HistoPrint",false);
+  setProperty ( "HistoPrint", false );
+  // Default number of bins
+  setProperty ( "NBins1DHistos", 50 );
+  setProperty ( "NBins2DHistos", 20 );
 }
 
 PIDPlots::~PIDPlots() {}
@@ -54,11 +56,13 @@ void PIDPlots::plots( const LHCb::ProtoParticle * proto,
                       const Rich::ParticleIDType hypo,
                       const Configuration & config ) const
 {
-  if ( !proto ) { Warning( "Null ProtoParticle pointer passed !" ).ignore(); return; }
+  if ( !proto ) 
+  { Warning( "Null ProtoParticle pointer passed !" ).ignore(); return; }
 
   // Get the Track pointer
   const LHCb::Track * track = proto->track();
-  if ( !track ) { Warning( "ProtoParticle has null Track pointer !" ).ignore(); return; }
+  if ( !track ) 
+  { Warning( "ProtoParticle has null Track pointer !" ).ignore(); return; }
 
   // track selection
   if ( !selected(track,config) ) return;
@@ -76,24 +80,20 @@ void PIDPlots::plots( const LHCb::ProtoParticle * proto,
     const double pTot = trackP ( track );
     const double pT   = trackPt( track );
     
-    // hypo as string
-    const std::string shypo = Rich::text(hypo);
-    
     // Efficiency to have a RichPID data object associated (~ RICH Acceptance)
-    const double accEff = double( proto->richPID() ? 100.0 : 0.0 );
+    const double accEff( proto->richPID() ? 100.0 : 0.0 );
     
     // Eff v P and Pt plots
-    std::string title = "Eff. RICH acceptance Versus P (MeV/c) : "+shypo;;
-    profile1D( pTot, accEff, hPath(hypo)+title, title,
-               config.minP, config.maxP, m_bins );
-    title = "Eff. RICH acceptance Versus Pt (MeV/c) : "+shypo;;
-    profile1D( pT, accEff, hPath(hypo)+title, title,
-               config.minPt, config.maxPt, m_bins );
-    title = "Eff. RICH acceptance Versus P,Pt (MeV/c) : "+shypo;;
-    profile2D( pTot, pT, accEff, hPath(hypo)+title, title,
-               config.minP,  config.maxP,
-               config.minPt, config.maxPt,
-               m_bins, m_bins );
+    std::string title = "Eff. RICH acceptance Versus P (MeV/c)";
+    richProfile1D( HID(title,hypo), title,
+                   config.minP, config.maxP, nBins1D() )->fill(pTot,accEff);
+    title = "Eff. RICH acceptance Versus Pt (MeV/c)";
+    richProfile1D( HID(title,hypo), title,
+                   config.minPt, config.maxPt, nBins1D() )->fill(pT,accEff);
+    title = "Eff. RICH acceptance Versus P,Pt (MeV/c)";
+    richProfile2D( HID(title,hypo), title,
+                   config.minP,  config.maxP,  nBins2D(),
+                   config.minPt, config.maxPt, nBins2D() )->fill(pTot,pT,accEff);
     
   }
   
@@ -122,9 +122,6 @@ void PIDPlots::plots( const LHCb::RichPID * pid,
     const double pTot = trackP ( pid->track() );
     const double pT   = trackPt( pid->track() );
 
-    // hypo as string
-    const std::string shypo = Rich::text(hypo);
-
     // Heavy or light ?
     const bool heavy = ( (int)hypo > (int)(Rich::Pion) );
 
@@ -141,37 +138,31 @@ void PIDPlots::plots( const LHCb::RichPID * pid,
         const std::string DllDiff = Rich::text(first) + "-" + Rich::text(last);
 
         // Dll(X-Y) distributions
-        std::string title = "RichDLL("+DllDiff+") : "+shypo;
+        std::string title = "RichDLL("+DllDiff+")";
         const double dll = pid->particleDeltaLL(first) - pid->particleDeltaLL(last);
-        plot1D( dll,
-                hPath(hypo)+title, title,
-                -m_dllRange, m_dllRange, m_bins );
+        richHisto1D( HID(title,hypo), title,
+                     -m_dllRange, m_dllRange, nBins1D() )->fill(dll);
 
         // Efficiency
-        const double eff = double( dll>m_dllCut ? 100.0 : 0.0 );
+        const double eff( dll>m_dllCut ? 100.0 : 0.0 );
 
         // Efficiency plots
-        title = "Eff. RichDLL("+DllDiff+")>0 Versus P (MeV/c) : "+shypo;
-        profile1D( pTot, eff,
-                   hPath(hypo)+title, title,
-                   config.minP, config.maxP, m_bins );
-        title = "Eff. RichDLL("+DllDiff+")>0 Versus Pt (MeV/c) : "+shypo;
-        profile1D( pT, eff,
-                   hPath(hypo)+title, title,
-                   config.minPt, config.maxPt, m_bins );
-        title = "Eff. RichDLL("+DllDiff+")>0 Versus P,Pt (MeV/c) : "+shypo;
-        profile2D( pTot, pT, eff,
-                   hPath(hypo)+title, title,
-                   config.minP,  config.maxP,
-                   config.minPt, config.maxPt,
-                   m_bins, m_bins );
+        title = "Eff. RichDLL("+DllDiff+")>0 Versus P (MeV/c)";
+        richProfile1D( HID(title,hypo), title,
+                       config.minP, config.maxP, nBins1D() )->fill(pTot,eff);
+        title = "Eff. RichDLL("+DllDiff+")>0 Versus Pt (MeV/c)";
+        richProfile1D( HID(title,hypo), title,
+                       config.minPt, config.maxPt, nBins1D() )->fill(pT,eff);
+        title = "Eff. RichDLL("+DllDiff+")>0 Versus P,Pt (MeV/c)";
+        richProfile2D( HID(title,hypo), title,
+                       config.minP,  config.maxP,  nBins2D(),
+                       config.minPt, config.maxPt, nBins2D() )->fill(pTot,pT,eff);
 
         // # Sigma distributions
-        title = "# Sigma("+DllDiff+") : "+shypo;
+        title = "# Sigma("+DllDiff+")";
         const double nsigma = pid->nSigmaSeparation(first,last);
-        plot1D( nsigma,
-                hPath(hypo)+title, title,
-                -30, 30, m_bins );
+        richHisto1D( HID(title,hypo), title,
+                     -30, 30, nBins1D() )->fill(nsigma);
 
       }
     }
@@ -189,20 +180,10 @@ void PIDPlots::plots( const LHCb::Track * track,
   // track selection
   if ( !selected(track,config) ) return;
 
-  // Rich Histo ID
-  const Rich::HistoID hid;
-
-  // Number of each type of hypothesis
-  //plot1D( (int)hypo, "nPIDsPerHypo", "# PIDs per hypothesis", -1.5, 5.5, 7 );
-
   // Track momentum in GeV/c
   const double tkPtot = trackP( track );
 
-  // hypo as string
-  const std::string shypo = Rich::text(hypo);
-
   // Momentum spectra
-  plot1D( tkPtot, hPath(hypo)+"Ptot",
-          "Ptot : "+shypo,
-          config.minP, config.maxP, m_bins );
+  richHisto1D( HID("Ptot",hypo), "Ptot",
+               config.minP, config.maxP, nBins1D() )->fill(tkPtot);
 }

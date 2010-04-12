@@ -99,12 +99,6 @@ namespace Rich
         return ( pid ? trackPt(pid->track()) : 0 );
       }
 
-      /// Return the correct histogram path
-      inline const std::string hPath( const Rich::ParticleIDType hypo ) const
-      {
-        return Rich::text(hypo)+"/";
-      }
-
       /// Track selection
       inline bool selected( const LHCb::Track * track,
                             const Configuration & config ) const
@@ -121,7 +115,6 @@ namespace Rich
       mutable const ITrackSelector * m_trSelector;  ///< Track selector
 
       // Job Options
-      int m_bins;                 ///< Number of bins
       bool m_extraHistos;         ///< Fill full set of histograms
       double m_dllCut;            ///< Dll cut value  
       double m_dllRange;          ///< Dll range for plots
