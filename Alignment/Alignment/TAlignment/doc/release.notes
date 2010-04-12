@@ -3,6 +3,9 @@ Package	:	Alignment/TAlignment
 Package Coordinator	:	Jan Amoraal, Johan Blouw
 Purpose	: collection of alignment algorithms
 
+! 2010-04-12 - Wouter Hulsbergen
+ - patch in src/AlParameters to work around problem with optimization in gcc4.3
+
 ! 2010-04-04 - Wouter Hulsbergen
  - alignment frame is now by default defined as nominal local frame
  (so before applying delta). this seems to make things more stable.
