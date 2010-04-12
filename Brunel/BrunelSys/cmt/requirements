@@ -1,5 +1,5 @@
 package BrunelSys
-version v37r0
+version v37r1
 
 branches cmt doc tests
  
@@ -8,7 +8,7 @@ branches cmt doc tests
 #=======================================================
 
 # Brunel application
-use Brunel v37r0 Rec
+use Brunel v37r1 Rec
 
 # Add here any component libraries to be added as patches
 
@@ -22,5 +22,3 @@ apply_pattern container_package
 apply_pattern QMTestSummarize
 
 # Packages from other projects updated temporarily in this release
-use TsaAlgorithms v3r18 Tf
-use STTools       v3r19 ST
