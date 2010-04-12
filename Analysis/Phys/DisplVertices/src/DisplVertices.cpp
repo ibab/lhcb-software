@@ -501,8 +501,12 @@ StatusCode DisplVertices::execute(){
 //  Finalize
 //=============================================================================
 StatusCode DisplVertices::finalize() {
-
   debug() << "==> Finalize" << endmsg;
+
+  if (NULL!=m_pLinker) delete m_pLinker ;
+
+  if( context() == "HLT" ) return DVAlgorithm::finalize(); 
+
 
   info()<<"-------------------------------------------------------"<< endreq;
   info()<<"              DisplVertices Statistics                 "<< endreq;
@@ -533,9 +537,9 @@ StatusCode DisplVertices::finalize() {
 
 
 
-  if (NULL!=m_pLinker) delete m_pLinker ; 
 
-  return DVAlgorithm::finalize(); //=== For DC04, return StatusCode::SUCCESS;
+
+  return DVAlgorithm::finalize();
 }
 
 //============================================================================

@@ -159,7 +159,7 @@ StatusCode RecVertices2Particles::initialize() {
   //   m_measProvider = tool<IMeasurementProvider>
   //     ( "MeasurementProvider","MeasProvider", this );
 
-  if( m_RemVtxFromDet != 0 ){
+  if( m_RemVtxFromDet != 0 || m_SaveTuple){
     //Get detector elements
     IDetectorElement* lhcb = getDet<IDetectorElement>
       ( "/dd/Structure/LHCb/BeforeMagnetRegion/Velo" );
