@@ -97,6 +97,13 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
                                                               , ValueName='L0RateMethod'
                                                               , OutputContainer='Hlt/LumiSummary' ) )
             
+        # flag now also the random lumi lines - needed due to microbias lines
+        else  :
+            lumiCountSequence.Members.append( LumiFlagMethod( seqCountName+'FlagMethod'
+                                                              , CounterName='Random'
+                                                              , ValueName='RandomMethod'
+                                                              , OutputContainer='Hlt/LumiSummary' ) )
+            
         # populate count sequence from the definition
         createdCounters = []
         histoThresholds = []
