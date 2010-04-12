@@ -98,6 +98,18 @@ namespace Rich
       : m_id(id), m_data(Rich::InvalidDetector,Rich::InvalidSide,rad,pid)
     { }
 
+    /** Constructor with RICH specific information
+     *  @param id    Histogram string ID
+     *  @param pid   The mass hypothesis
+     */
+    HistogramID( const std::string &         id,
+                 const Rich::ParticleIDType pid )
+      : m_id(id), m_data( Rich::InvalidDetector,
+                          Rich::InvalidSide,
+                          Rich::InvalidRadiator,
+                          pid )
+    { }
+
   public:
 
     /// Access the Detector type

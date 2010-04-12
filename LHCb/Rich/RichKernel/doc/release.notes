@@ -4,6 +4,10 @@
 ! Purpose     : General purpose RICH classes
 !-----------------------------------------------------------------------
 
+! 2010-04-12 - Chris Jones
+ - Add new Constructor to the Rich::HistogramID class that takes a
+   string and a Rich::ParticleIDType.
+
 !====================== RichKernel v7r33 2010-04-09 ====================
 ! 2010-04-01 - Chris Jones
  - Make the histogramming methods in RichHistoBase const
