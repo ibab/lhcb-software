@@ -5,14 +5,106 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
-</PRE><H1><A NAME=v9r1>2010-04-09 RecSys v9r1</A></H1><PRE>
+</PRE><H1><A NAME=v9r1>2010-04-12 RecSys v9r1</A></H1><PRE>
 This version uses Gaudi v21r8 and LHCb v30r1
 
-! 2010-03-29 - Dmitry Golubkov
- - RecMoniConf: propagate the Histograms slot to CaloMoniDstConf
+- Early data improvements for 2009 reprocessing, and for 2010 data
 
-! 2010-03-29 - Chris Jones
- - Add "Simulation" slot to RecSysConf and propagate to RichRecSysConf
+- In RecSys itself:
+  . Add "Simulation" slot to RecSysConf and propagate to RichRecSysConf
+  . RecMoniConf: propagate the Histograms slot to CaloMoniDstConf
+
+- Packages Updated:
+  Calo/CaloMoniDst v5r0, Calo/CaloReco v5r4p2, Muon/MuonPIDChecker v5r1,
+  Muon/MuonTrackRec v3r2, Rich/RichGlobalPID v3r12, Rich/RichRecMonitors v2r27,
+  Rich/RichRecQC v2r39, Rich/RichRecSys v3r28, Rich/RichRecTrackTools v1r19,
+  Tf/PatAlgorithms v4r0, Tf/PatVelo v3r21, Tf/PatVeloTT v3r12,
+  Tf/TfTools v1r13, Tf/TsaAlgorithms v3r18, Tr/TrackExtrapolators v2r27,
+  Tr/TrackFitter v2r47, Tr/TrackMonitors v1r23, Tr/TrackTools v3r29,
+  Tr/TrackUtils v1r35, Velo/VeloRecMonitors v2r8
+
+- In Calo/CaloMoniDst v5r0:
+  . Many Minor improvements
+  . Add simplified PID monitoring algo CaloEMuPIDMon 
+  . remove completely CaloEMuMonitor and CaloEMuChecker 
+
+- In Calo/CaloReco v5r4p2:
+  . fix missing Prs Threshold in CaloStandaloneClusterSelection.opts 
+  . fix bug in Configuration 
+
+- In Muon/MuonPIDChecker v5r1:
+  . Change configurable to look at Dowstream tracks also in OffllineFull mode 
+
+- In Muon/MuonTrackRec v3r2:
+  . Add method for fake hits to MuonHitDecode 
+
+- In Rich/RichGlobalPID v3r12:
+  . Fine tune event abort messages 
+
+- In Rich/RichGlobalPID v3r12:
+  . Fine tune event abort messages 
+
+- In Rich/RichRecMonitors v2r27:
+  . Improvements to the CK theta and resolution detailed monitors 
+
+- In Rich/RichRecQC v2r39:
+  . Fine tune the data/DB cross check messages 
+  . Make sure MC histograms that can be made without extended MC RICH 
+
+- In Rich/RichRecSys v3r28:
+  . Implement maximum pixel, track and photon cuts abort large events 
+  . Add "Simulation" slot to configurables, early Data tweaks disabled for MC 
+
+- In Rich/RichRecTrackTools v1r19:
+  . Improvements to the functional CK theta resolution tool
+  . Adapt to retirement of fast track parabolic extrapolator 
+  . Implement maximum track cuts 
+
+- In Tf/PatAlgorithms v4r0:
+  . New tuning of PatDownstream 
+  . fix for polarity of B field problem with extrapolation
+
+- In Tf/PatVelo v3r21:
+  . Protected PatVeloGeneralTracking from pathological events 
+  . replace LoKi::Range with Gaudi::Range 
+
+- In Tf/PatVeloTT v3r12:
+  . clean up configuration of track fit. 
+
+- In Tf/TfTools v1r13:
+  . add method to STHitCreator to create Tf::STHit for single lhcbid 
+
+- In Tf/TsaAlgorithms v3r18:
+  . New tuning of the seeding for early data
+
+- In Tr/TrackExtrapolators v2r27:
+  . added method to extropolate a statevector from a track 
+  . added consts
+  . removed TrackFastParabolicExtrapolator 
+
+- In Tr/TrackFitter v2r47:
+  . replaced Loki::Range by Gaudi::Range
+  . fixed crash when track without measurements bug #64336
+
+- In Tr/TrackMonitors v1r23:
+  . make check on track type before processing in IT/TTTrackMonitor 
+  . Reduces CPU by factor >10 and all extrapolator errors
+
+- In Tr/TrackTools v3r29:
+  . fixed compilation warning in TrackSelectorBase.h 
+  . fix for B field polarity problem with extrapolation
+  . Added 'Backward' as to track types 
+  . Replaced FastParabolicExtraplator by ParabolicExtrapolator 
+
+- In Tr/TrackUtils v1r35:
+  . new option to TrackPrepareVelo to reverse arbitrary charges on Velo tracks 
+
+- In Velo/VeloRecMonitors v2r8:
+  . Bug fix in VeloTrackMonitor: protection against missing clusters 
+  . Changes to histogram wrapper baseclass
+  . Other minor improvements to ranges and plots
+
+
 
 </PRE><H1><A NAME=v9r0>2010-03-24 RecSys v9r0</A></H1><PRE>
 This version uses Gaudi v21r8 and LHCb v30r0
