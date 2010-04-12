@@ -4,6 +4,9 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2010-04-12 - Rob Lambert
+ - Removed MM from basic particles in TupleToolKinematic
+
 !========================== DecayTreeTuple v3r3 2010-04-09 ================
 
 ! 2010-04-08 - Juan Palacios

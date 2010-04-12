@@ -1,4 +1,4 @@
-// $Id: TupleToolKinematic.cpp,v 1.5 2010-03-16 13:23:19 xieyu Exp $
+// $Id: TupleToolKinematic.cpp,v 1.6 2010-04-12 12:34:58 rlambert Exp $
 // Include files
 
 // from Gaudi
@@ -78,7 +78,7 @@ StatusCode TupleToolKinematic::fill( const LHCb::Particle* mother
     // mass before fit (what CombinationCut cuts on)
     //if(isVerbose() && !(P->isBasicParticle()) ) test &= tuple->column( prefix+"_PreFitMass", preFitMass(P) );
     
-    test &= tuple->column( prefix+"_MM", P->measuredMass() );
+    if( !P->isBasicParticle() ) test &= tuple->column( prefix+"_MM", P->measuredMass() );
     if( !P->isBasicParticle() )
       test &= tuple->column( prefix+"_MMERR", P->measuredMassErr() );
     test &= tuple->column( prefix+"_M", P->momentum().M() );
