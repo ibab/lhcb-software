@@ -4,11 +4,9 @@
 ! Purpose     : Standard package for monitoring NZS and ZS data.
 !-----------------------------------------------------------------------------
 
+!======================= STMonitors v3r0 2010-04-12 ==========================
 ! 2010-04-11 M Needham
  - Ignore some statusCodes
-
-=======
-!======================= STMonitors v3r0 2010-04-09 ==========================
 
 ! 2010-04-09 M Needham
  - Additional Protection in STClusterMonitor
