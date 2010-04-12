@@ -1,29 +1,5 @@
+
 // C++ header files
-#include <string>
-
-namespace LHCb {
-
-  class ErrorFile {
-    std::string m_name;
-    char*       m_memory;
-    size_t      m_length;
-    int         m_badBlock;
-    int         m_badVsn;
-    int         m_badHdr;
-    int         m_numEvt;
-    int         m_numBank;
-    int         m_print;
-  public:
-    enum { PRINT_ERRORS = 1, PRINT_MDF_HEADERS = 2, PRINT_BANKS = 4 };
-    ErrorFile(int prt, const std::string& nam);
-    virtual ~ErrorFile();
-    int read();
-    int analyze();
-    int summarize();
-    void printEvt();
-  };
-}
-
 #include <iostream>
 #include <iomanip>
 #include "RTL/rtl.h"
@@ -34,33 +10,35 @@ namespace LHCb {
 #include <fcntl.h>
 
 #ifdef _WIN32
+#include <io.h>
+#define open64 open
 #else
 #include <unistd.h>
 static const int O_BINARY = 0;
 #endif
 
+#include "Event/RawBank.h"
 #include "MDF/MDFHeader.h"
 #include "MDF/RawEventPrintout.h"
-#include "Event/RawBank.h"
+#include "GaudiOnline/ErrorFile.h"
 
 static const char* line="=====================================================";
 
 using namespace std;
 using namespace LHCb;
 
+static void printEvt(ErrorFile* f) {
+  cout << "Event:" << dec << setw(10) << left << f->numEvents() << " ";
+}
+
 ErrorFile::ErrorFile(int prt, const string& nam) 
   : m_name(nam), m_memory(0), m_badBlock(0), m_badVsn(0), m_badHdr(0), m_numEvt(0), m_numBank(0), m_print(prt)
 {
 }
 
-
 ErrorFile::~ErrorFile() {
   if ( m_memory ) ::free(m_memory);
   m_memory = 0;
-}
-
-void ErrorFile::printEvt() {
-  cout << "Event:" << dec << setw(10) << left << m_numEvt << " ";
 }
 
 void printMDFHeader(int evt, MDFHeader* h) {
@@ -94,7 +72,7 @@ int ErrorFile::analyze() {
     if ( *sp == 0xcbcb ) {
       RawBank* b = (RawBank*)sp;
       if ( num_jump > 0 ) {
-	printEvt();
+	printEvt(this);
 	cout << "!!!!!! Detected unreadable data of size " << num_jump*2 << " Bytes." << endl;
 	num_jump = 0;
 	++m_badBlock;
@@ -113,7 +91,7 @@ int ErrorFile::analyze() {
       // Looks like we got an MDF header
       MDFHeader* hdr = (MDFHeader*)q;
       if ( num_jump > 0 ) {
-	printEvt();
+	printEvt(this);
 	cout << "!!!!!! Detected unreadable data of size " << num_jump*2 << " Bytes." << endl;
 	num_jump = 0;
 	++m_badBlock;
@@ -124,7 +102,7 @@ int ErrorFile::analyze() {
 	cout << "=== Number of banks for event:" << m_numEvt << ": " << num_bank << endl;
 	num_bank = 0;
 	if ( last_hdr->size0() != diff ) {
-	  printEvt();
+	  printEvt(this);
 	  cout << "!!!!!! Inconsistent MDF Header at " 
 	       << dec << (size_t)(((char*)last_hdr)-((char*)m_memory))
 	       << ": Event size of event " << m_numEvt << " is " 
@@ -140,7 +118,7 @@ int ErrorFile::analyze() {
 	q += hdr->sizeOf(hdr->headerVersion());
 	continue;
       }
-      printEvt();
+      printEvt(this);
       cout << "!!!!!! Inconsistent MDF header version" << endl;
       ++m_badVsn;
     }
@@ -198,7 +176,9 @@ int ErrorFile::summarize() {
 
 static void help()  {
   ::lib_rtl_output(LIB_RTL_ALWAYS,"check_errfile -opt [-opt]\n");
-  ::lib_rtl_output(LIB_RTL_ALWAYS,"    -name=<name>      file name\n");
+  ::lib_rtl_output(LIB_RTL_ALWAYS,"    -n(ame)=<name> file name\n");
+  ::lib_rtl_output(LIB_RTL_ALWAYS,"    -m(dfheaders)  Dump MDF headers\n");
+  ::lib_rtl_output(LIB_RTL_ALWAYS,"    -b(anks)       Dump Bank headers\n");
 }
 
 
@@ -208,7 +188,7 @@ extern "C" int check_errfile(int argc, char** argv) {
   std::string name="";
 
   cli.getopt("name",1,name);
-  if ( cli.getopt("headers",1) ) prt += ErrorFile::PRINT_MDF_HEADERS;
+  if ( cli.getopt("mdfheaders",1) ) prt += ErrorFile::PRINT_MDF_HEADERS;
   if ( cli.getopt("banks",1)   ) prt += ErrorFile::PRINT_BANKS;
   ErrorFile f(prt, name);
   if ( f.read() )  {
