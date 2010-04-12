@@ -1,5 +1,7 @@
-// $Id: STClusterMonitor.cpp,v 1.27 2010-04-11 07:50:01 mneedham Exp $
+// $Id: STClusterMonitor.cpp,v 1.28 2010-04-12 13:13:24 mtobin Exp $
 // Include files 
+
+#include <string.h>
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
@@ -58,8 +60,6 @@ ST::STClusterMonitor::STClusterMonitor( const std::string& name,
   declareSTConfigProperty("ClusterLocation", m_clusterLocation, 
                           LHCb::STClusterLocation::TTClusters);
 
-
-
   /// Plots per service box
   declareProperty( "ByServiceBox", m_plotBySvcBox=false );
 
@@ -81,7 +81,7 @@ ST::STClusterMonitor::STClusterMonitor( const std::string& name,
   declareProperty("MinMPVCharge",m_minMPVCharge=8.);//< Cut on the charge of the cluster when calculating MPV
 
   /// Reset rate for histograms/accumulators
-  declareProperty("ResetRate", m_resetRate=1000);
+  declareProperty("ResetRate", m_resetRate=2000);
 
   setForcedInit();  
 }
@@ -137,21 +137,16 @@ StatusCode ST::STClusterMonitor::execute() {
   if(m_debug) debug() << "==> Execute" << endmsg;
 
   const LHCb::ODIN* odin = get<LHCb::ODIN> ( LHCb::ODINLocation::Default );
-  if( !m_bunchID.empty() && 
-      std::find(m_bunchID.begin(), m_bunchID.end(), 
-                odin->bunchId()) == m_bunchID.end()) return StatusCode::SUCCESS;
-  plot1D(odin->bunchId(),"BCID","BCID",-0.5,6000.5,6001);
+  if( !m_bunchID.empty() 
+      &&  std::find(m_bunchID.begin(), m_bunchID.end(), odin->bunchId()) == m_bunchID.end()) return StatusCode::SUCCESS;
+  plot1D(odin->bunchId(),"BCID","BCID",-0.5,2808.5,2808);
 
   counter("Number of events") += 1; 
 
+  if(counter("Number of events").nEntries() == 1) m_runNumber = odin->runNumber();
+  if(odin->runNumber() != m_runNumber) resetAccumulators();
   // code goes here  
   monitorClusters();
-
-  // this is where any histograms/counters are reset
-  if(m_resetRate > 0 && counter("Number of events").nEntries()%m_resetRate == 0) {
-    if(m_hitMaps) fillMPVMap();
-    resetAccumulators();
-  }
 
   return StatusCode::SUCCESS;
 }
@@ -198,10 +193,9 @@ void ST::STClusterMonitor::monitorClusters() {
     }// End of cluster iterator
 
     // Fill histogram for number of clusters/TELL1
-    std::vector<unsigned int>::const_iterator itClPerTELL1;
     unsigned int TELL1=1;
-    for(itClPerTELL1 = m_nClustersPerTELL1.begin(); 
-        itClPerTELL1 != m_nClustersPerTELL1.end(); ++itClPerTELL1, ++TELL1) {
+    std::vector<unsigned int>::const_iterator itClPerTELL1 = m_nClustersPerTELL1.begin();
+    for(; itClPerTELL1 != m_nClustersPerTELL1.end(); ++itClPerTELL1, ++TELL1) {
       if(m_verbose) verbose() << "TELL1: " << TELL1 << ",clusters: " 
                               << (*itClPerTELL1) << endmsg;
       unsigned int nClusters = (*itClPerTELL1);
@@ -209,13 +203,38 @@ void ST::STClusterMonitor::monitorClusters() {
         m_2d_nClustersVsTELL1->fill(TELL1, nClusters);
     }
     m_nClustersPerTELL1.clear();
+
+    // this is where any histograms/counters are reset
+    if(m_resetRate > 0 && counter("Number of events").nEntries()%m_resetRate == 0) {
+      if(m_hitMaps) {
+        fillMPVMap();
+        resetMPVCounters();
+      }
+    }
+
   } else Warning("No clusters found at "+m_clusterLocation, StatusCode::SUCCESS,0).ignore(); // End of cluster exists
 
 }
 //==============================================================================
-// Reset accumulators
+// Reset MPV counters
+//==============================================================================
+void ST::STClusterMonitor::resetMPVCounters() {
+  std::map<const unsigned int,TH1D*>::iterator itH = m_1ds_chargeBySector.begin();
+  for(; itH != m_1ds_chargeBySector.end(); ++itH) {
+    //(*itH).second->Reset();
+    TH1D* h = (*itH).second;
+    double* data = h->GetArray();
+    memset(data,0,static_cast<size_t>(h->GetNbinsX()+2)*sizeof(double));
+    h->SetEntries(0);
+  }
+  resetAccumulators();
+
+}
+//==============================================================================
+// Reset accumulators after a change of run number
 //==============================================================================
 void ST::STClusterMonitor::resetAccumulators() {
+  if(m_debug) debug() << "Resetting accumulators" << endreq;
   m_sectorMPVs.clear();
   m_sectorMeans.clear();
   std::vector<DeSTSector*>::const_iterator Sectors = tracker()->sectors().begin();
@@ -229,38 +248,30 @@ void ST::STClusterMonitor::resetAccumulators() {
 //================================================================================================================================
 void ST::STClusterMonitor::fillMPVMap() {
 
-  m_2d_sectorMPVs->reset();
-  m_2d_sectorMPVsNorm->reset();
-
   std::vector<DeSTSector*>::const_iterator Sectors = tracker()->sectors().begin();
-  std::map<const unsigned int,ST::MedianAccumulator>::const_iterator iMed = m_sectorMPVs.begin();
-  std::map<const unsigned int,ST::MeanAccumulator>::const_iterator iMean = m_sectorMeans.begin();
-  std::map<const unsigned int,TH1D*>::const_iterator iH = m_1ds_chargeBySector.begin();
-  for(; Sectors != tracker()->sectors().end(); ++Sectors, ++iMed, ++iMean, ++iH) {
-    double mpv = (*iH).second->GetBinCenter((*iH).second->GetMaximumBin());
-    double nEntries = (*iH).second->GetEntries();
-    if(detType() == "TT") {
-      const DeTTSector* ttSector = dynamic_cast<const DeTTSector* >((*Sectors));
-      ST::TTDetectorPlot hitMap("map","map");
-      ST::TTDetectorPlot::Bins bins = hitMap.toBins(ttSector);
-      double xBin = bins.xBin;
-      // Hack to make real x-y distribution plot (not occupancy)
-      for( int yBin = bins.beginBinY; yBin != bins.endBinY; ++yBin ) {
-        m_2d_sectorMPVs->fill(xBin,yBin,mpv);
-        m_2d_sectorMPVsNorm->fill(xBin,yBin,1.);
+  for(; Sectors != tracker()->sectors().end(); ++Sectors) {
+    if(m_1ds_chargeBySector.find((*Sectors)->elementID().uniqueSector()) != m_1ds_chargeBySector.end()) {
+      TH1D* hSec = m_1ds_chargeBySector[(*Sectors)->elementID().uniqueSector()];
+      double mpv = hSec->GetBinCenter(hSec->GetMaximumBin());
+      //      double nEntries = hSec->GetEntries();
+      if(detType() == "TT") {
+        const DeTTSector* ttSector = dynamic_cast<const DeTTSector* >((*Sectors));
+        ST::TTDetectorPlot hitMap("map","map");
+        ST::TTDetectorPlot::Bins bins = hitMap.toBins(ttSector);
+        double xBin = bins.xBin;
+        // Hack to make real x-y distribution plot (not occupancy)
+        for( int yBin = bins.beginBinY; yBin != bins.endBinY; ++yBin ) {
+          m_2d_sectorMPVs->fill(xBin,yBin,mpv);
+          m_2d_sectorMPVsNorm->fill(xBin,yBin,1.);
+        }
+      } else if( detType() == "IT" ) {// Cluster map for IT
+        ST::ITDetectorPlot hitMap("map", "map");
+        ST::ITDetectorPlot::Bins bins = hitMap.toBins((*Sectors)->elementID());
+        // Hack to make real x-y distribution plot (not occupancy)
+        m_2d_sectorMPVs->fill(bins.xBin, bins.yBin, mpv);
+        m_2d_sectorMPVsNorm->fill(bins.xBin, bins.yBin, 1.);
       }
-    } else if( detType() == "IT" ) {// Cluster map for IT
-      ST::ITDetectorPlot hitMap("map", "map");
-      ST::ITDetectorPlot::Bins bins = hitMap.toBins((*Sectors)->elementID());
-      // Hack to make real x-y distribution plot (not occupancy)
-      m_2d_sectorMPVs->fill(bins.xBin, bins.yBin, mpv);
-      m_2d_sectorMPVsNorm->fill(bins.xBin, bins.yBin, 1.);
-    }
-    if(m_debug) debug() << (*Sectors)->elementID()
-                        << " median=" << boost::accumulators::median((*iMed).second) 
-                        << " mean=" << boost::accumulators::mean((*iMean).second) 
-                        << " mpv=" << mpv << " n=" << nEntries
-                        << endmsg;
+    } else Warning("Invalid Sector",0,StatusCode::SUCCESS).ignore();
   } // End of sector iterator loop
 
 }
@@ -349,7 +360,7 @@ void ST::STClusterMonitor::bookHistograms() {
       m_1ds_chargeBySector[(*Sectors)->elementID().uniqueSector()] 
         = Gaudi::Utils::Aida2ROOT::aida2root ( book1D("BySector/"+idh,title,0.,100.,100) );
     }
-  }
+  }// end of hitmaps
 }
 
 //==============================================================================
@@ -362,10 +373,10 @@ void ST::STClusterMonitor::fillHistograms(const LHCb::STCluster* cluster){
   
   // calculate MPVs
   if(totalCharge > m_minMPVCharge) { 
-    m_sectorMPVs[cluster->firstChannel().uniqueSector()](totalCharge); 
-    m_sectorMeans[cluster->firstChannel().uniqueSector()](totalCharge);
+    m_sectorMPVs[cluster->channelID().uniqueSector()](totalCharge); 
+    m_sectorMeans[cluster->channelID().uniqueSector()](totalCharge);
     if(m_hitMaps) {
-      m_1ds_chargeBySector[cluster->firstChannel().uniqueSector()]->Fill(totalCharge);
+      m_1ds_chargeBySector[cluster->channelID().uniqueSector()]->Fill(totalCharge);
     }
   }
   const unsigned int clusterSize = cluster->size();
@@ -380,10 +391,7 @@ void ST::STClusterMonitor::fillHistograms(const LHCb::STCluster* cluster){
   if (noise > 1e-3) {
     const double signalToNoise = cluster->totalCharge()/noise;
     m_2d_STNVsTELL1->fill(TELL1ID, signalToNoise);
-  }
-  else {
-    Warning("Zero S/N for some clusters",StatusCode::SUCCESS,1).ignore();
-  }
+  } else Warning("Zero S/N for some clusters",StatusCode::SUCCESS,1).ignore();
   m_2d_ChargeVsTELL1->fill(TELL1ID, totalCharge);
   if(m_plotByPort) {
     const unsigned int tell1Channel = cluster->tell1Channel();
@@ -393,7 +401,7 @@ void ST::STClusterMonitor::fillHistograms(const LHCb::STCluster* cluster){
   // Always fill histograms per readout quadrant for TT
   // Get service box and set up histogram IDs
   m_1d_totalCharge->fill(totalCharge);
-  std::string svcBox = readoutTool()->serviceBox(cluster->firstChannel());
+  std::string svcBox = readoutTool()->serviceBox(cluster->channelID());
   if(detType() == "TT") {
     std::string quadrant = svcBox.substr(0,2);
     m_1ds_chargeByServiceBox[quadrant]->fill(totalCharge);
@@ -449,12 +457,9 @@ void ST::STClusterMonitor::fillDetailedHistograms(const LHCb::STCluster*
   if (noise > 1e-3){
     const double signalToNoise = cluster->totalCharge()/noise;
     plot1D(signalToNoise,cluster->layerName()+"/Signal to noise","S/N",0., 100.,100);
-  }
-  else {
-    Warning("Some cluster have zero noise", StatusCode::SUCCESS,1).ignore();
-  }
+  } else Warning("Some cluster have zero noise", StatusCode::SUCCESS,1).ignore();
   // Plot cluster ADCs for 1, 2, 3, 4 strip clusters
-  std::string svcBox = (this->readoutTool())->serviceBox(cluster->firstChannel());
+  std::string svcBox = (this->readoutTool())->serviceBox(cluster->channelID());
   std::string idhStrip = " (" + boost::lexical_cast<std::string>(clusterSize) + " strip)";
   std::string idh;
   if(detType() == "TT") {
@@ -463,7 +468,6 @@ void ST::STClusterMonitor::fillDetailedHistograms(const LHCb::STCluster*
   }
   idh = "Cluster ADCs in " + svcBox+idhStrip;
   plot1D(totalCharge,idh, idh,0.,200.,100);
-  
 
 }
 //==============================================================================
@@ -484,7 +488,6 @@ void ST::STClusterMonitor::fillHitMaps(const LHCb::STCluster* cluster) {
       m_2d_hitmap->fill(xBin,yBin,1./nBins);
     }
   } else if( detType() == "IT" ) {// Cluster map for IT
-    //    const unsigned int nBinsPerSector = 16u; // equals ports per sector in TT
     ST::ITDetectorPlot hitMap(idMap, idMap, m_nBinsPerITSector);
     ST::ITDetectorPlot::Bins bins = hitMap.toBins(cluster->channelID());
     // Hack to make real x-y distribution plot (not occupancy)

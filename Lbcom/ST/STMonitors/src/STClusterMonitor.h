@@ -1,4 +1,4 @@
-// $Id: STClusterMonitor.h,v 1.13 2010-04-05 10:00:35 mneedham Exp $
+// $Id: STClusterMonitor.h,v 1.14 2010-04-12 13:13:24 mtobin Exp $
 #ifndef STCLUSTERMONITOR_H 
 #define STCLUSTERMONITOR_H 1
 
@@ -136,11 +136,17 @@ namespace ST
     std::map<const unsigned int,ST::MedianAccumulator> m_sectorMPVs;
     std::map<const unsigned int,ST::MeanAccumulator> m_sectorMeans;
     std::map<const unsigned int,TH1D*> m_1ds_chargeBySector;
+
+    /// Resets the boost accumlators after a change of run number
     void resetAccumulators();
+
+    /// Reset the MPV counters (histograms and boost accumulators) with a frequency given by the resetRate.
+    void resetMPVCounters();
 
     /// Reset rate for accumulators/MPV histograms
     unsigned int m_resetRate;
-
+    /// Store run number so that accumulators can be reset at end of each run
+    unsigned int m_runNumber;
   };
 } // End of ST namespace
 #endif // STCLUSTERMONITOR_H

@@ -1,4 +1,4 @@
-// $Id: STErrorMonitor.cpp,v 1.15 2010-02-15 12:35:07 mtobin Exp $
+// $Id: STErrorMonitor.cpp,v 1.16 2010-04-12 13:13:24 mtobin Exp $
 // Include files 
 
 // from Gaudi
@@ -82,7 +82,7 @@ StatusCode STErrorMonitor::initialize()
     // Create a title for the histogram
     std::string strTellID  = boost::lexical_cast<std::string>(tellID);
     HistoID histoID        = "error-types_$tell" + strTellID;
-    std::string histoTitle = "Error types tell" + strTellID;
+    std::string histoTitle = "Error types " + detType() + "TELL" + strTellID;
     m_errorHistos[tellID] = book2D(histoID, histoTitle, 0., noptlinks, nports*noptlinks, 0., 10., 10);
     labelHistoErrorTypes( m_errorHistos[tellID] );
     // Work out the total number of links for the detector (over-estimate for TT as some links not enabled)

@@ -4,6 +4,12 @@
 ! Purpose     : Standard package for monitoring NZS and ZS data.
 !-----------------------------------------------------------------------------
 
+! 2010-04-12 - Mark Tobin
+ - Add detType to histogram titles in STErrorMonitor and STNZSMonitor
+ - Use cluster channel ID rather than first channel in STClusterMonitor
+ - Bug fix when filling MPV histogram in STClusterMonitor
+ - Bug fix in STPulseMonitor when running over NZS data
+
 !======================= STMonitors v3r0 2010-04-12 ==========================
 ! 2010-04-11 M Needham
  - Ignore some statusCodes
@@ -11,13 +17,13 @@
 ! 2010-04-09 M Needham
  - Additional Protection in STClusterMonitor
 
-!  2010-03-20 M.Needham
- - Remove ISTSignalToNoiseTool
-
 ! 2010-03-23 - Mark Tobin
  - Added possibilty to cut on maximum number of clusters in STClusterMonitor.
  - Finalize STDumpADCs with STTupleAlgBase::finalize.
  - Added algorithm (STDumpClusters) to dump all clusters in an event to an ntuple
+
+!  2010-03-20 M.Needham
+ - Remove ISTSignalToNoiseTool
 
 !======================= STMonitors v2r6 2010-03-18 ==========================
 ! 2010-03-12 - Nicola Chiapolini

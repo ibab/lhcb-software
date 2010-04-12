@@ -1,4 +1,4 @@
-// $Id: STPulseMonitor.cpp,v 1.3 2009-12-05 23:11:58 jvantilb Exp $
+// $Id: STPulseMonitor.cpp,v 1.4 2010-04-12 13:13:24 mtobin Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -93,7 +93,7 @@ StatusCode STPulseMonitor::execute()
     std::string dataLocation = "/Event" + spillName + "/" + m_dataLocation;
     if( m_useNZSdata ) {
       if(!exist<STTELL1Datas>(dataLocation) ) dataNZS.push_back(0)  ;
-      dataNZS += get<STTELL1Datas>(dataLocation) ;
+      else dataNZS += get<STTELL1Datas>(dataLocation) ;
     } else { 
       if(!exist<STClusters>(dataLocation) ) dataZS.push_back(0)  ;
       else dataZS += get<STClusters>(dataLocation) ;

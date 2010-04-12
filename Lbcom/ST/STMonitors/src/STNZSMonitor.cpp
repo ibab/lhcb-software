@@ -1,4 +1,4 @@
-// $Id: STNZSMonitor.cpp,v 1.15 2010-02-08 14:23:17 mtobin Exp $
+// $Id: STNZSMonitor.cpp,v 1.16 2010-04-12 13:13:24 mtobin Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -104,10 +104,10 @@ void STNZSMonitor::bookHistograms() {
     // Create a title for the histogram
     std::string strTellID  = boost::lexical_cast<std::string>(tellID);
     HistoID noiseHistoID        = "noise_$tell" + strTellID;
-    std::string noiseHistoTitle = "Noise for Tell" + strTellID;
+    std::string noiseHistoTitle = "Noise for " + detType() + "TELL" + strTellID;
     m_noiseHistos[sourceID] = bookProfile1D(noiseHistoID, noiseHistoTitle, -0.5, nStripsPerBoard-0.5, nStripsPerBoard);
     HistoID pedHistoID        = "pedestal_$tell" + strTellID;
-    std::string pedHistoTitle = "Pedestal for Tell" + strTellID;
+    std::string pedHistoTitle = "Pedestal for " + detType() + "TELL" + strTellID;
     m_pedestalHistos[sourceID] = bookProfile1D(pedHistoID, pedHistoTitle, -0.5, nStripsPerBoard-0.5, nStripsPerBoard);
   }
 }
