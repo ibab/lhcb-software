@@ -4,6 +4,9 @@
 ! Purpose     : package for tracking tools accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2010-04-12 - Wouter Hulsbergem
+ - replace (retired) TrackFastParabolicExtrapolator by TrackParabolicExtrapolator
+
 !======================= TrackMCTools v2r24 2009-06-17 =======================
 ! 2009-06-04 - Stephanie Hansmann-Menzemer
  - fix bug in LongTrack GhostClassification & two more categories
