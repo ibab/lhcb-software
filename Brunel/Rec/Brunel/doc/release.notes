@@ -11,6 +11,20 @@ Purpose: LHCb reconstruction program
   . Edited global/local db to follow new CondDB configurable
   . Edited brunel-mc09-withtruth to follow RichRecQCConf change
 
+- Changes to references to reflect changes in Brunel v37r1 output:
+  . Add protection against large events (RichRecBase)
+  . Make the Functional CK theta resolution tool the default for Offline
+    reconstruction (RichKernel)
+  . Reorganisation of CaloPID monitoring (CaloMoniDst v5r0)
+  . MuonPIDChecker looks at Dowstream tracks also in OffllineFull mode
+    (MuonPIDChecker v5r1) 
+  . ST noise taken from conditions (STMonitors)
+  . Add multiplicity histo to TrackMonitor (TrackMonitors v1r23)
+  . Make check on track type before processing in IT/TTTrackMonitor which
+    removes all errors from extrapolator (and reduced CPU by factor >10)
+    (TrackMonitors v1r23)
+  . New earlyData tuning of PatDownstream (PatAlgorithms v4r0)
+
 </PRE><H1><A NAME=v37r0>2010-03-29 Brunel v37r0</A></H1><PRE>
 - Changes to Configurable
   . Add cleaning of PID information from charged ProtoParticles before saving
@@ -28,7 +42,7 @@ Purpose: LHCb reconstruction program
      o LHCBCOND connection strings for local tags (needed for new localdb test)
      o Warnings about total memory of event exceeding 3*sigma
 
-- Changes to references to reflect changes in Brunel v36r3 output:
+- Changes to references to reflect changes in Brunel v37r0 output:
    . Printout APE values from STOfflinePositionTool (STTools v3r17)
    . Suppress warning message about empty HPD data blocks
      (RichRecBase v3r27p1)
