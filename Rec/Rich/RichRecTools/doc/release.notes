@@ -4,6 +4,12 @@
 ! Purpose     : Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+! 2010-04-12 - Chris Jones
+ - Add some additional plots to the RichPID plot tool (as used by the 
+   monitoring in DaVinci)
+  + Add plots for DLL efficiency versus Pt and (P,Pt)
+  + Add plots for the RICH acceptance eff., V P, Pt and (P,Pt)
+
 !===================== RichRecTools v4r10 2010-03-19 =========================
 ! 2010-03-05 - Chris Jones
  - Various changes to support the configuration of multiple reconstruction 
