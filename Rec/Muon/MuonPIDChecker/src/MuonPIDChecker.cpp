@@ -1,4 +1,4 @@
-// $Id: MuonPIDChecker.cpp,v 1.24 2010-03-24 08:31:58 cattanem Exp $
+// $Id: MuonPIDChecker.cpp,v 1.25 2010-04-12 15:15:23 polye Exp $
 // Include files 
 #include <cmath>
 #include <iomanip>
@@ -47,7 +47,7 @@ MuonPIDChecker::MuonPIDChecker( const std::string& name,
   // Swap between real and MC data   
   declareProperty( "RunningMC", m_RunningMC = false );
 
-  declareProperty( "MonitorCutValues", m_monitCutValues );
+  declareProperty( "MonitorCutValues", m_monitCutValues);
 
   // Limits for the DLL histos
   declareProperty( "DLLlower", m_DLLlower = -1. ); // -10 for DLLFlag = 0
@@ -91,9 +91,9 @@ StatusCode MuonPIDChecker::initialize() {
   if ( msgLevel(MSG::DEBUG) ) debug() << "initialize:: #of cuts = "<<m_nMonitorCuts<< endmsg;
   for (int j=0;j<m_nMonitorCuts+2;j++) {
       m_ntotTr.push_back(0);
-      if ( msgLevel(MSG::DEBUG) ) debug() <<"initialize:: cut "<<i<<""<<m_monitCutValues[j]<<endmsg;
+      if ( m_nMonitorCuts>0 && msgLevel(MSG::DEBUG) ) debug() <<"initialize:: cut "<<i<<""<<m_monitCutValues[j]<<endmsg;
   }
-  if ( msgLevel(MSG::DEBUG) ) debug() <<"initialize:: size of ntotTr"<<m_ntotTr.size()<<endmsg;
+  if ( msgLevel(MSG::DEBUG) ) debug() <<"initialize:: size of ntotTr="<<m_ntotTr.size()<<endmsg;
 
   return StatusCode::SUCCESS;
 }
@@ -189,8 +189,10 @@ StatusCode MuonPIDChecker::execute() {
 
   fillMultiplicityPlots(m_HistosOutput);
 
-  m_ntotTr[3] += m_nTrIsMuon;
-  m_ntotTr[2] += m_nTrIsMuonLoose;
+  if (m_nMonitorCuts>3) {
+    m_ntotTr[3] += m_nTrIsMuon;
+    m_ntotTr[2] += m_nTrIsMuonLoose;
+  }
   m_ntotTr[1] += m_nTrPreSel;
   m_ntotTr[0] += m_nTr;
   return StatusCode::SUCCESS;
@@ -202,7 +204,7 @@ StatusCode MuonPIDChecker::execute() {
 StatusCode MuonPIDChecker::finalize() {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
-  if (0<m_ntotTr[1]) {
+  if (2<m_nMonitorCuts && 0<m_ntotTr[1]) {
     std::vector<double> rate(m_nMonitorCuts), rateError(m_nMonitorCuts);
     std::vector<std::string> CutName; 
     CutName.push_back("IsMuonLoose         = "); 
@@ -241,8 +243,10 @@ StatusCode MuonPIDChecker::finalize() {
   info()<< "----------------------------------------------------------------"<< endmsg;
   info()<< "Total Number of Tracks analysed: "<< m_ntotTr[0] << endmsg; 
   info()<< "Total Number of PreSelected Tracks: "<< m_ntotTr[1] << endmsg; 
-  info()<< "Total Number of IsMuonLoose Candidates: "<< m_ntotTr[2] << endmsg; 
-  info()<< "Total Number of IsMuon Candidates: "<< m_ntotTr[3] << endmsg; 
+  if (3<m_nMonitorCuts){
+    info()<< "Total Number of IsMuonLoose Candidates: "<< m_ntotTr[2] << endmsg; 
+    info()<< "Total Number of IsMuon Candidates: "<< m_ntotTr[3] << endmsg; 
+  }
   info()<< "----------------------------------------------------------------"<< endmsg;
   
   return GaudiHistoAlg::finalize();  // must be called after all other actions
@@ -476,9 +480,9 @@ void MuonPIDChecker::fillPreSelPlots(int level) {
 //====================================================================
 void MuonPIDChecker::fillIMLPlots(int level) {
 
-  if (exp(m_TrMuonLhd)<m_monitCutValues[2]) m_ntotTr[4]++;
-  if ((m_TrMuonLhd-m_TrNMuonLhd)<m_monitCutValues[4]) m_ntotTr[6]++;
-  if (m_TrNShared<m_monitCutValues[6]) m_ntotTr[8]++;
+  if (2<m_nMonitorCuts && exp(m_TrMuonLhd)<m_monitCutValues[2]) m_ntotTr[4]++;
+  if (4<m_nMonitorCuts && (m_TrMuonLhd-m_TrNMuonLhd)<m_monitCutValues[4]) m_ntotTr[6]++;
+  if (6<m_nMonitorCuts && m_TrNShared<m_monitCutValues[6]) m_ntotTr[8]++;
 
   if (level>0){
     plot1D( m_Trp0, "hIMLMomentum", "IsMuonLoose Candidate Momentum (GeV/c^2)", -100., 100., 100);
@@ -531,9 +535,11 @@ void MuonPIDChecker::fillIMLPlots(int level) {
 //  Fill Plots for IsMuon Candidates    
 //====================================================================
 void MuonPIDChecker::fillIMPlots(int level) {
-  if (exp(m_TrMuonLhd)<m_monitCutValues[3]) m_ntotTr[5]++;
-  if ((m_TrMuonLhd-m_TrNMuonLhd)<m_monitCutValues[5]) m_ntotTr[7]++;
-  if (m_TrNShared<m_monitCutValues[7]) m_ntotTr[9]++;
+  if (m_nMonitorCuts>7){
+    if (3<m_nMonitorCuts && exp(m_TrMuonLhd)<m_monitCutValues[3]) m_ntotTr[5]++;
+    if (5<m_nMonitorCuts && (m_TrMuonLhd-m_TrNMuonLhd)<m_monitCutValues[5]) m_ntotTr[7]++;
+    if (7<m_nMonitorCuts && m_TrNShared<m_monitCutValues[7]) m_ntotTr[9]++;
+  }
   if (level>1){
     plot1D( m_Trp0, "hIMMomentum", "IsMuon candidate Momentum (GeV/c^2)", -100., 100., 100);
     plot1D( m_TrpT, "hIMPT", "IsMuon candidate p_T (GeV/c^2)", -10., 10., 100);

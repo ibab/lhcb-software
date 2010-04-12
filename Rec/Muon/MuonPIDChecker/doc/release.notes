@@ -2,6 +2,8 @@
 ! Responsible : E. Polycarpo, H. Lopes    
 !----------------------------------------------------------------------------
 
+! 2010-04-12 - Erica Polycarpo 
+ - protect counters for different number of cuts used to monitore performance 
 !====================== MuonPIDChecker v5r1 2010-03-24 ======================
 ! 2010-03-30 - Erica Polycarpo 
  - change configurable to look at Downstream tracks also in OfflineFull mode
