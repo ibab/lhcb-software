@@ -20,7 +20,7 @@ This version uses Gaudi v21r8 and LHCb v30r1
   Rich/RichRecQC v2r39, Rich/RichRecSys v3r28, Rich/RichRecTrackTools v1r19,
   Tf/PatAlgorithms v4r0, Tf/PatVelo v3r21, Tf/PatVeloTT v3r12,
   Tf/TfTools v1r13, Tf/TsaAlgorithms v3r18, Tr/TrackExtrapolators v2r27,
-	TrackMCTools v2r25,
+	TrackMCTools v2r25, Muon/MuonID v7r8p1
   Tr/TrackFitter v2r47, Tr/TrackMonitors v1r23, Tr/TrackTools v3r29,
   Tr/TrackUtils v1r35, Velo/VeloRecMonitors v2r8
 
@@ -32,6 +32,10 @@ This version uses Gaudi v21r8 and LHCb v30r1
 - In Calo/CaloReco v5r4p2:
   . fix missing Prs Threshold in CaloStandaloneClusterSelection.opts 
   . fix bug in Configuration 
+
+- In Muon/MuonID v7r8p1:
+  . Fix for savannah bug #65618
+    - an uninitialized variable in CLTool.cpp
 
 - In Muon/MuonPIDChecker v5r1:
   . Change configurable to look at Dowstream tracks also in OffllineFull mode 
