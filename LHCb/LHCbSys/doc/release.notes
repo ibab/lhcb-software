@@ -5,6 +5,82 @@
 ! Purpose     : LHCb base classes and event model
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v30r1>2010-04-12 LHCbSys v30r1</A></H1><PRE>
+This version uses Gaudi v21r8 and LCG_58b
+
+- Packages modified: DetCond v12r12, DetDesc v18r20, RichDet v14r1, STDet v4r19,
+    VeloPixDet v1r4, LHCbMath v3r17, MuonInterfaces v1r1, LoKiCore v9r13,
+    LoKiNumbers v8r6, RichKernel v7r33, RichRecBase v3r29, STKernel v2r0,
+    TrackInterfaces v4r12
+
+- In DetCond v12r12
+  . CondDB configurable is tuned to override all default and user tags settings 
+    by the latest tags for defined DataType if the 'UseLatestTags' property is 
+    set (before an exception was thrown if found multiple definitions). 
+  . Added new CondDB().UseLatestTags = [DataType,OnlyGlobalTags=False] property.
+    Previous  CondDB().useLatestTags(DataType,OnlyGlobalTags=False) method is 
+    preserved. Now it is possible to set the latest tags also for the simulation 
+    case.
+
+- In DetDesc v18r20
+  . Increased max capacity of ISolid::Ticks. Throw exceptions from complicated
+    Solids if capacity insufficient (fixes bug #65440)
+
+- In RichDet v14r1
+  . Added the capability to use the C3F8  as RICH1Gas in DeRichGasRadiator.cpp.
+  . Minor speed improvements to DeRichHPD when updating for T/P condition changes
+
+- In STDet v4r19
+  . Add isInvertedX() methods to sensor + sector class
+
+- In VeloPixDet v1r4
+  . Bug fix in DeVeloPixSquareType (interdistChip/2 missing in x position
+    calculation for outer chips).
+
+- In LHCbMath v3r17
+  . LHCbMath/Types.py: add symbols from Gaudi::TrackMatrix and the rest of 
+    SMatrix/SVector classes mentioned Event model headers
+  . ValueWithError 
+    o add helper function for evalaution of "fraction" a/(a+b) 
+    o add "asymmetry" (a-b)/(a+b) 
+    o add possibility to define the printout format 
+    o add function to evaluate binomina-efficiency 
+    o add these functionalities into the dictionary 
+
+- In MuonInterfaces v1r1
+  . add IMuonHitDecode::fakehits() method
+
+- In LoKiCore v9r13
+  . LoKi/Listener.h, src/Listener.cpp 
+    helper class for listening incidents 
+  . LoKi::Scalers::RateLimitV
+    implements listening the incidents (needed for Moore)
+  . LoKiCore/DataUtils.py
+    few helper utilities for Bender 
+
+- In LoKiNumbers v8r6
+  . add enum LoKi::Scalers::RateLimitType into the dictionary (needed for Moore)
+
+- In RichKernel v7r33
+  . Make the histogramming methods in RichHistoBase const
+  . Make the 'Functional' CK resolution tool the Offline default. HLT 
+    still using the binned implementation
+  . Protect against negative errors (squared !) from Track States.
+  . Add option to python configurables to run photon reconstruction with
+    additional smearing, to simulate worse CK theta resolution.
+
+- In RichRecBase v3r29
+  . Add protection to pixel, track and photon creator base class to abort event
+    processing on large events.
+  . Change LoKi::Range to Gaudi::Range
+
+- In STKernel v2r0
+  . Remove ISTSignalToNoiseTool
+
+- In TrackInterfaces v4r12
+  . Added method to ITrackExtrapolator to extrapolate a statevector on a track
+  . Added missing consts to ITrackExtrapolator and ITrackExtraSelector
+
 </PRE><H1><A NAME=v30r0>2010-03-25 LHCbSys v30r0</A></H1><PRE>
 This version uses Gaudi v21r8 and LCG_58b
 
