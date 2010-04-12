@@ -1,4 +1,4 @@
-// $Id: VeloClusterPosition.cpp,v 1.25 2010-04-08 08:46:52 szumlat Exp $
+// $Id: VeloClusterPosition.cpp,v 1.26 2010-04-12 13:03:46 szumlat Exp $
 // Include files
 
 // stl
@@ -172,7 +172,7 @@ double VeloClusterPosition::fracPosLA(const LHCb::VeloCluster* cluster) const
   // Tell1 feature related with the resolution
   if(fractionalPos>0.9376) fractionalPos=0;
   //
-  if(abs(fractionalPos-cluster->interStripFraction())>0.5){
+  if(fabs(fractionalPos-cluster->interStripFraction())>0.5){
     if( msgLevel(MSG::DEBUG) ) debug()<< " clu size: " << stripNumber
           << " strip adcs: " <<endmsg;
     for(int str=0; str<stripNumber; str++){
