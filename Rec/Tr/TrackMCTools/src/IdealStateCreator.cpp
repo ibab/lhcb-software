@@ -1,4 +1,4 @@
-// $Id: IdealStateCreator.cpp,v 1.20 2008-07-10 11:27:00 wouter Exp $
+// $Id: IdealStateCreator.cpp,v 1.21 2010-04-12 12:34:34 wouter Exp $
 // Include files
 
 // from Gaudi
@@ -41,7 +41,7 @@ IdealStateCreator::IdealStateCreator( const std::string& type,
 
   // declare properties
   declareProperty( "Extrapolator",
-                   m_extrapolatorName = "TrackFastParabolicExtrapolator" );
+                   m_extrapolatorName = "TrackParabolicExtrapolator" );
   declareProperty( "ErrorX2",  m_eX2  = 0.0*Gaudi::Units::mm2 );
   declareProperty( "ErrorY2",  m_eY2  = 0.0*Gaudi::Units::mm2 );
   declareProperty( "ErrorTx2", m_eTx2 = 0.0                   );
