@@ -71,19 +71,19 @@ void PIDPlots::plots( const LHCb::ProtoParticle * proto,
   // Extra plots
   if ( m_extraHistos )
   {
-
+    
     // track momentum
     const double pTot = trackP ( track );
     const double pT   = trackPt( track );
-
+    
     // hypo as string
     const std::string shypo = Rich::text(hypo);
-
+    
     // Efficiency to have a RichPID data object associated (~ RICH Acceptance)
     const double accEff = double( proto->richPID() ? 100.0 : 0.0 );
-
+    
     // Eff v P and Pt plots
-    std::string title = "Eff. RICH acceptance Versus Ptot (MeV/c) : "+shypo;;
+    std::string title = "Eff. RICH acceptance Versus P (MeV/c) : "+shypo;;
     profile1D( pTot, accEff, hPath(hypo)+title, title,
                config.minP, config.maxP, m_bins );
     title = "Eff. RICH acceptance Versus Pt (MeV/c) : "+shypo;;
@@ -94,9 +94,9 @@ void PIDPlots::plots( const LHCb::ProtoParticle * proto,
                config.minP,  config.maxP,
                config.minPt, config.maxPt,
                m_bins, m_bins );
-
+    
   }
-
+  
 }
 
 void PIDPlots::plots( const LHCb::RichPID * pid,
@@ -151,7 +151,7 @@ void PIDPlots::plots( const LHCb::RichPID * pid,
         const double eff = double( dll>m_dllCut ? 100.0 : 0.0 );
 
         // Efficiency plots
-        title = "Eff. RichDLL("+DllDiff+")>0 Versus Ptot (MeV/c) : "+shypo;
+        title = "Eff. RichDLL("+DllDiff+")>0 Versus P (MeV/c) : "+shypo;
         profile1D( pTot, eff,
                    hPath(hypo)+title, title,
                    config.minP, config.maxP, m_bins );
