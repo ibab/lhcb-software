@@ -54,9 +54,15 @@ HltANNSvc().Hlt1SelectionID = {
     "Hlt1ODINPhysicsDecision"               :   71,
     "Hlt1L0ForcedDecision"                  :   72,
     "Hlt1L0AnyDecision"                     :   73,
+    "Hlt1L0AnyRateLimitedDecision"          :   74,
     # XP
     "Hlt1XPressDecision"                    :   80,
     "Hlt1AlignVeloDecision"                 :   81,
+    #  more lumi:
+    "Hlt1LumiLowNoBeamRateLimitedDecision"  :   90,
+    "Hlt1LumiLowBeam2RateLimitedDecision"   :   91,
+    "Hlt1LumiLowBeam1RateLimitedDecision"   :   92,
+    "Hlt1LumiLowBeamCrossingRateLimitedDecision"  :   93,
     # MU Hlt1(Single|Di)Muon.*Decision
     "Hlt1SingleMuonNoIPL0Decision"          :  100,
     "Hlt1SingleMuonNoIPGECDecision"         :  101,
