@@ -3,12 +3,13 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
-! 2010-03-29 - Chris Jones
- - Use named instance of RichRecQCConf (Same as in RecSys)
- - Propagate "Simulation" property to RecSys (for use by RichRecSysConf)
-
-! 2010-03-28 - Rob Lambert
- - Edited global/local db to follow new CondDB configurable
+- Changes to Configurable
+  . Use named instance of RichRecQCConf (Same as in RecSys)
+  . Propagate "Simulation" property to RecSys (for use by RichRecSysConf)
+ 
+- Changes to tests
+  . Edited global/local db to follow new CondDB configurable
+  . Edited brunel-mc09-withtruth to follow RichRecQCConf change
 
 </PRE><H1><A NAME=v37r0>2010-03-29 Brunel v37r0</A></H1><PRE>
 - Changes to Configurable
