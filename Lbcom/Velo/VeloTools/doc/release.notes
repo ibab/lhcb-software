@@ -3,10 +3,11 @@
 ! Responsible : Tomasz Szumlak
 ! Purpose     : Velo Tools for reconstruction
 !-----------------------------------------------------------------------------
+
+!========================== VeloTools v3r5 2010-04-12 ========================
 ! 2010-04-12 - Tomasz Szumlak
  - fixed compilation warning abs --> fabs
 
-!========================== VeloTools v3r5 2010-04-09 ========================
 ! 2010-04-07 - Tomasz Szumlak
  - a (magic??) typo m_fraPsos -> m_fracPos removed 
 
