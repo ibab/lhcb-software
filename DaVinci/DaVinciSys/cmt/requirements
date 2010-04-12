@@ -1,15 +1,14 @@
 package DaVinciSys
-version v25r3
+version v25r2p3
 
 branches doc cmt
 
 #=======================================================
-use  DaVinci                 	HEAD   Phys
+use  DaVinci                 	v25r2p3   Phys
 
 # patched packages
-use HltCommon                   v5r22     Hlt
 use HltDAQ                      v1r7      Hlt
-use CaloReco                    v5r4p1  Calo
+use CaloReco                    v5r4p1    Calo
 #  
 # Declare this as a container package
 apply_pattern container_package
