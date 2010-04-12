@@ -4,6 +4,11 @@
 ! Purpose     : Monitoring algorithms after reconstruction
 !-----------------------------------------------------------------------------
 
+! 2010-04-12 - Chris Jones
+ - Update the RichPlotTool to remove the requirement that the RichPID object
+   is defined (to allow acceptance plots to be made) and pass the 
+   ProtoParticle pointer instead.
+
 !========================== DaVinciMonitors v1r9p1 2010-04-07 =================
 
 ! 2010-03-30 - Rob Lambert
