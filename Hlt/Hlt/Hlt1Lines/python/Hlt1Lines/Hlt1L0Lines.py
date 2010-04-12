@@ -9,13 +9,15 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.7 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.8 $"
 # =============================================================================
 
 from HltLine.HltLinesConfigurableUser import *
 
 class Hlt1L0LinesConf(HltLinesConfigurableUser) :
-   __slots__ = { 'Postscale' : { 'Hlt1L0(?!Any).*' : 0.000001 } # set new default Postscale for these lines!
+   __slots__ = { 'Postscale' : { 'Hlt1L0(?!Any).*' : 0.000001  # set new default Postscale for these lines!
+                               , 'Hlt1L0.*RateLimited' : 'RATE(100)'
+                               }
                , 'Prescale'  : { 'Hlt1L0Any'       : 0.000001 }
                , 'L0Channels' : []  # if empty, use all pre-defined channels
                }
@@ -38,10 +40,12 @@ class Hlt1L0LinesConf(HltLinesConfigurableUser) :
                  )
         #  How to deal with the MASKing ???
         #  Actually, we don't have to -- ODIN will do this 'upstream' of us ;-)
-        Line('L0Any' ,  L0DU = 'L0_DECISION_PHYSICS' 
+        l = Line('L0Any' ,  L0DU = 'L0_DECISION_PHYSICS' 
             , prescale = self.prescale
             , postscale = self.postscale
             )
+
+        l.clone( l.name().lstrip('Hlt1')+'RateLimited', prescale = self.prescale, postscale = self.postscale )
         #Line('L0Forced', L0DU = 'L0_FORCEBIT'
         #    , prescale = self.prescale
         #    , postscale = self.postscale

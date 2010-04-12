@@ -11,9 +11,7 @@ class Hlt1MBLinesConf(HltLinesConfigurableUser) :
     __slots__ = { 'MiniBiasL0Channels'     : ['CALO'] #'Hadron'
                 , 'BXTypes'                : ['NoBeam', 'BeamCrossing','Beam1','Beam2']
                 , 'MaxNoBiasRate'          : 97.
-                #, 'Postscale'              : { 'Hlt1MBMicro.*R500' : 'RATE(500)' 
-                #                             , 'Hlt1MBMicro.*P1000' : 0.001 
-                #                             }
+                , 'Postscale'              : { 'Hlt1MBMicroBias.*RateLimited' : 'RATE(500)' }
                 }
 
     def __create_nobias_line__(self ):
@@ -30,18 +28,18 @@ class Hlt1MBLinesConf(HltLinesConfigurableUser) :
                     ) 
     def __create_microbias_line__(self, name, tracking) :
         from HltLine.HltLine import Hlt1Member as Member
-        Line ( 'MBMicroBias%s' % name 
-               , prescale = self.prescale
-               , ODIN = '(ODIN_TRGTYP == LHCb.ODIN.LumiTrigger)'
-               , algos = [ tracking
-                         , Member( 'Hlt::TrackFilter','All'
-                                 , Code = [ 'TrALL' ]
-                                 , InputSelection = 'TES:%s' % tracking.outputSelection()
-                                 , OutputSelection = '%Decision'
-                                 ) 
-                         ]
-               , postscale = self.postscale
-               ) 
+        return Line ( 'MBMicroBias%s' % name 
+                    , prescale = self.prescale
+                    , ODIN = '(ODIN_TRGTYP == LHCb.ODIN.LumiTrigger)'
+                    , algos = [ tracking
+                              , Member( 'Hlt::TrackFilter','All'
+                                      , Code = [ 'TrALL' ]
+                                      , InputSelection = 'TES:%s' % tracking.outputSelection()
+                                      , OutputSelection = '%Decision'
+                                      ) 
+                              ]
+                    , postscale = self.postscale
+                    ) 
 
     def __create_minibias_line__(self ):
         '''
@@ -62,8 +60,7 @@ class Hlt1MBLinesConf(HltLinesConfigurableUser) :
 
         from HltTracking.HltReco import MinimalRZVelo, Hlt1Seeding
         rz = self.__create_microbias_line__('RZVelo',MinimalRZVelo)
+        rz.clone( rz.name().lstrip('Hlt1') + 'RateLimited',  postscale = self.postscale )
         ts = self.__create_microbias_line__('TStation',Hlt1Seeding)
-        #for i in [ rz, ts ] :
-        #    i.clone( i.name() + 'R500',  postscale = self.postscale )
-        #    i.clone( i.name() + 'P1000',  postscale = self.postscale )
+        ts.clone( ts.name().lstrip('Hlt1') + 'RateLimited', postscale = self.postscale )
 

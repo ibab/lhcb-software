@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.160 2010-04-09 18:32:36 graven Exp $
+! $Id: release.notes,v 1.161 2010-04-12 18:27:16 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
@@ -10,6 +10,10 @@
 !
 !-----------------------------------------------------------------------------
 
+
+! 2010-04-12 - Gerhard Raven
+ - changes to generate new configuration with rate limited L0Any,LumiLow
+   and MBMicroBias in addition to pre(post)scaled versions
 
 !========================== Hlt1Lines v3r0p2 2010-04-09 ===================
 ! 2010-04-09 - Gerhard Raven

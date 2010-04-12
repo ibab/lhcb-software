@@ -7,7 +7,6 @@ from GaudiConf.Configuration import *
 
 from HltLine.HltLinesConfigurableUser import *
 
-from Hlt1Lines.LumiCounterDefinition import LumiCounterDefinitionConf
 from Configurables import ( LumiCountVertices,
                             LumiCountTracks,
                             LumiFromL0DU,
@@ -47,13 +46,29 @@ def _combine( op, arg ) :
 
 ############# start building the lumi line(s)...
 class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
-    __used_configurables__ = [ LumiCounterDefinitionConf ]
 
     __slots__ = { 'TriggerType'            : 'LumiTrigger'  # ODIN trigger type accepted for Lumi
                 , 'L0Channel'              : ['CALO']     # L0 channels accepted for LowLumi
                 , 'LumiLines'              : ['Count','VDM']
                 , 'EnableReco'             : True 
                 , 'MaxRate'                : 997. # pick a prime number...
+                , 'LumiLowRateLimits'      : { 'BeamCrossing' : 'RATE(70)'
+                                             , 'Beam1'        : 'RATE(15)'
+                                             , 'Beam2'        : 'RATE(10)'
+                                             , 'NoBeam'       : 'RATE( 5)'
+                                             }
+                , 'Postscale'              : { 'Hlt1LumiLow.*RateLimited' : 1.0 }
+                , 'CounterDefinition' : { 'RZVelo'   : [LumiCountTracks   , True    , 'Hlt/Track/RZVelo',   5,  200]
+                                        , 'Muon'     : [LumiCountTracks   , False   , 'Hlt/Track/Muons' ,   5,  200]
+                                        , 'TTIP'     : [LumiCountTracks   , True    , 'Hlt/Track/TTIP'  ,   5,  100]
+                                        , 'TTMIB'    : [LumiCountTracks   , False   , 'Hlt/Track/TTMIB' ,   5,  100]
+                                        , 'PV2D'     : [LumiCountVertices , True    , 'Hlt/Vertex/PV2D' ,   1,   20]
+                                        , 'PV3D'     : [LumiCountVertices , False   , 'Hlt/Vertex/PV3D' ,   1,   20]
+                                        , 'RZVeloBW' : [LumiCountHltTracks, True    , 'RZVeloBW'        ,   5,  200]
+                                        , 'SPDMult'  : [LumiFromL0DU      , True    , 'Spd(Mult)'       ,   6,  500]
+                                        , 'PUMult'   : [LumiFromL0DU      , True    , 'PUHits(Mult)'    ,   3,  200]
+                                        , 'CaloEt'   : [LumiFromL0DU      , True    , 'Sum(Et)'         , 500, 6000]
+                                        }
                 , 'OutputLevel'            : WARNING
                 }
 
@@ -62,7 +77,7 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
         returns algorithm sequences for Hlt1 Lumi Lines
         '''
         # get counters
-        counters = LumiCounterDefinitionConf().defineCounters()
+        counters = self.getProp('CounterDefinition')
         
         # debugging options
         debugOPL = self.getProp('OutputLevel')
@@ -211,7 +226,7 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
                     , postscale = self.postscale
                     ) 
 
-    def __create_lumi_low_line__(self, BXType ):
+    def __create_lumi_low_line__(self, BXType, extension = '' ):
         '''
         returns an Hlt1 "Line" including input filter, reconstruction sequence and counting
         adds histogramming
@@ -219,7 +234,7 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
         postfix = 'Low'
         from HltLine.HltLine import Hlt1Line   as Line
         l0du = ' | '.join( [ (" ( L0_CHANNEL('%s') ) "%(x)) for x in  self.getProp('L0Channel') ] )
-        return Line ( 'Lumi'+postfix+BXType
+        return Line ( 'Lumi'+postfix+BXType + extension
                     , prescale = self.prescale
                     , ODIN = ' ( ODIN_BXTYP == LHCb.ODIN.%s ) ' % BXType
                     , L0DU  = l0du
@@ -236,6 +251,9 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
         self.__create_lumi_line__()
         # PhysicsTrigger lines
         lines = map( self.__create_lumi_low_line__, ['NoBeam', 'BeamCrossing','Beam1','Beam2'] )
-        #for i in lines :
-        #    i.clone( i.name()+'P1000', ODIN = '(%s) & ODIN_PRESCALE(0.001)' % i._ODIN )
-        #    i.clone( i.name()+'R100',  ODIN = 'scale(%s,RATE(100,False))'   % i._ODIN )
+        for i in lines :
+            i.clone( i.name().lstrip('Hlt1')+'RateLimited'
+                   , L0DU = 'scale( %s , %s)' % ( i._L0DU , self.getProp('LumiLowRateLimits')[i.name().lstrip('Hlt1LumiLow')] ) 
+                   , postscale = self.postscale
+                   )
+
