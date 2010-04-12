@@ -1,15 +1,15 @@
-! $Id: release.notes,v 1.85 2010-04-12 17:32:52 dgolubko Exp $ 
+! $Id: release.notes,v 1.86 2010-04-12 19:09:58 rlambert Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Calo/CaloMoniDst
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! Purpose     : Calo monitoring of Dst tape 
 ! -----------------------------------------------------------------------------
 
+!========================== CaloMoniDst v5r0 2010-04-12 =======================
 ! 2010-04-12 - Dmitry GOLUBKOV
  - CaloEMuPIDMon.cpp: fixed an unchecked StatusCode in the finalize() method
  - cmt/requirements: version incremented to v5r1
 
-!========================== CaloMoniDst v5r0 2010-04-09 =======================
 ! 2010-04-09 - Rob Lambert
  - Fixed windows warnings in CaloEMuPIDMon.cpp and CaloPi0Checker.cpp
 
