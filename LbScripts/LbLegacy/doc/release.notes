@@ -1,3 +1,8 @@
+2010-04-12  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* scripts/mkproject: prevent the creation of the debug binary tarball if the "d" action has not
+	been requested.
+
 2010-03-29  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/requirements: release of version v3r1

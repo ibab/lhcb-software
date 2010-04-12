@@ -479,15 +479,15 @@ def release_project(pname, pversion, action=None, yes_mode=False, parallel_mode=
     if tar :
         log.info('build tar files')
         os.chdir(rel_dir)
-#        str = os.path.join(script_dir,'mkLHCbtar')+' -p '+pname+' -v '+pversion
         str = 'mkLHCbtar -p ' + pname + ' -v ' + pversion
         rc = os.system(str)
         log.info('tar source rc = %s' % rc)
         if projconf.hasBinary() :
             rc = os.system(str + ' -b ' + CMTCONFIG)
             log.info('tar %s rc= %s ' % (CMTCONFIG, rc))
-            rc = os.system(str + ' -b ' + CMTDEB)
-            log.info('tar %s rc= %s ' % (CMTDEB, rc))
+            if debug :
+                rc = os.system(str + ' -b ' + CMTDEB)
+                log.info('tar %s rc= %s ' % (CMTDEB, rc))
 
 # ======================= action: run glimpse index ==========================================
     if glimpse :
