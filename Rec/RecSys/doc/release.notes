@@ -20,6 +20,7 @@ This version uses Gaudi v21r8 and LHCb v30r1
   Rich/RichRecQC v2r39, Rich/RichRecSys v3r28, Rich/RichRecTrackTools v1r19,
   Tf/PatAlgorithms v4r0, Tf/PatVelo v3r21, Tf/PatVeloTT v3r12,
   Tf/TfTools v1r13, Tf/TsaAlgorithms v3r18, Tr/TrackExtrapolators v2r27,
+	TrackMCTools v2r25,
   Tr/TrackFitter v2r47, Tr/TrackMonitors v1r23, Tr/TrackTools v3r29,
   Tr/TrackUtils v1r35, Velo/VeloRecMonitors v2r8
 
@@ -85,6 +86,9 @@ This version uses Gaudi v21r8 and LHCb v30r1
 - In Tr/TrackFitter v2r47:
   . replaced Loki::Range by Gaudi::Range
   . fixed crash when track without measurements bug #64336
+
+- In Tr/TrackMCTools v2r25:
+  . Replaced FastParabolicExtraplator by ParabolicExtrapolator 
 
 - In Tr/TrackMonitors v1r23:
   . make check on track type before processing in IT/TTTrackMonitor 
