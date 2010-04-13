@@ -1,4 +1,4 @@
-// $Id: STClusterMonitor.cpp,v 1.30 2010-04-13 20:03:45 mtobin Exp $
+// $Id: STClusterMonitor.cpp,v 1.31 2010-04-13 20:10:05 mtobin Exp $
 // Include files 
 
 #include <string>
@@ -125,7 +125,7 @@ StatusCode ST::STClusterMonitor::initialize() {
   bookHistograms();
 
   // Reset the accumulators
-  m_runNumber = sizeof(unsigned int);
+  m_runNumber = std::numeric_limits<unsigned int>::max();
   resetAccumulators();
 
   return StatusCode::SUCCESS;
