@@ -128,11 +128,11 @@ HltReferenceRateSvc::i_updateConditions()
     m_first =  ~ulonglong(0);
     m_last = 0 ; 
     // and update settings
-    always() << "updating lumipars" << endmsg;
+    debug() << "updating lumipars" << endmsg;
     std::vector<double> lumipars = m_lumipars->param<std::vector<double> >("LumiPars");
-    always() << "updated lumipars: " << lumipars << endmsg;
+    debug() << "updated lumipars: " << lumipars << endmsg;
     m_rate = 1000*std::accumulate(lumipars.begin(),lumipars.end(),double(0));
-    always() << "updated lumi rate: " << m_rate << endmsg;
+    debug() << "updated lumi rate: " << m_rate << endmsg;
     return StatusCode::SUCCESS;
 }
 
