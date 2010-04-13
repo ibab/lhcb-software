@@ -15,5 +15,10 @@ findReferenceBlock("""
 DaVinciInit                                                 SUCCESS 600 events processed
 """, stdout, result, causes, signature_offset = 0, id = "4100")
 countErrorLines({"FATAL":0})
+bad_strings = ["WARNING rawEvent not found at location 'DAQ/RawEvent'", "WARNING L0DUFromRawAlg:: Unable to decode L0DU rawBank"]
+for bad_string in bad_strings :
+   if stdout.find(bad_string) !=-1 :
+      causes.append('Excluded string')
+      result['GaudiTest.ExcludedString: '+bad_string] = result.Quote('ERROR: Found string '+bad_string)
 </text></argument>
 </extension>
