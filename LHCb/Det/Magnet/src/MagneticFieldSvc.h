@@ -1,4 +1,4 @@
-// $Id: MagneticFieldSvc.h,v 1.30 2010-04-13 11:36:01 wouter Exp $
+// $Id: MagneticFieldSvc.h,v 1.31 2010-04-13 11:45:14 wouter Exp $
 #ifndef MAGNETICFIELDSVC_H
 #define MAGNETICFIELDSVC_H 1
 
@@ -87,15 +87,11 @@ public:
 
   bool   useRealMap() const; ///< True is using real map
 
-  /// Return the polarity of the field
-  int polarity() const { 
-    Gaudi::XYZVector bf = m_magFieldGrid.fieldVectorClosestPoint(Gaudi::XYZPoint(0,0,5200)) ;
-    return bf.y() < 0 ? -1 : 1 ;
-  }
+  /// Return current value of polarity
+  int polarity() const { return m_polarity; }
   
-  /// Return the absolute value of the scale factor with respect to
-  /// the 'nominal' field. Warning: this method will be depricated.
-  double scaleFactor() const { return std::abs(m_magFieldGrid.scaleFactor()) ; }
+  /// For consistence, always return the scale factor that is in the grid
+  double scaleFactor() const { return m_magFieldGrid.scaleFactor() ; }
   
 private:
 
