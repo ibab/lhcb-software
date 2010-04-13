@@ -4,7 +4,7 @@
 <package name="MCEvent">
 
 <!-- **************************************************************************
-  * $Id: MCRichHit.xml,v 1.16 2008-01-30 10:49:44 jonrob Exp $
+  * $Id: MCRichHit.xml,v 1.17 2010-04-13 09:12:15 jonrob Exp $
   *****************************************************************************
   * XML-description of RichSmartID class                                      *
   * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
@@ -70,6 +70,7 @@
                 <bitfield desc="Hit from a photon reflected by the kovar in the HPD"                              length="1"  name="hpdReflKovar"      />
                 <bitfield desc="Hit from a photon reflected by the kapton in the HPD"                             length="1"  name="hpdReflKapton"     />
                 <bitfield desc="Hit from a photon reflected by the PC/QW interface in the HPD"                    length="1"  name="hpdReflPCQW"       />
+                <bitfield desc="Hit from a photon created via scintillation in the radiator"                      length="1"  name="radScintillation"  /> 
         </attribute>
 
         <method 
@@ -230,7 +231,8 @@
                                                    gasQuartzCK()      ||
                                                    hpdQuartzCK()      ||
                                                    nitrogenCK()       ||
-                                                   aeroFilterCK()      ) );
+                                                   aeroFilterCK()     ||
+                                                   radScintillation() ) );
                 </code>
         </method>
 

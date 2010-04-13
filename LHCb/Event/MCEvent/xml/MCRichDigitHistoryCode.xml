@@ -4,7 +4,7 @@
 <package name="MCEvent">
 
 <!-- **************************************************************************
-  * $Id: MCRichDigitHistoryCode.xml,v 1.14 2008-01-30 11:04:18 jonrob Exp $
+  * $Id: MCRichDigitHistoryCode.xml,v 1.15 2010-04-13 09:12:15 jonrob Exp $
   *****************************************************************************
   * XML-description of MCRichDigitHistoryCode class                           *
   * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
@@ -73,7 +73,7 @@
                 <bitfield desc="One of the contributing hits came from a photon reflected by the kovar in the HPD"                              length="1"  name="hpdReflKovar"      />
                 <bitfield desc="One of the contributing hits came from a photon reflected by the kapton in the HPD"                             length="1"  name="hpdReflKapton"     />
                 <bitfield desc="One of the contributing hits came from a photon reflected by the PC/QW interface in the HPD"                    length="1"  name="hpdReflPCQW"       />
-
+                <bitfield desc="One of the contributing hits came from a photon created via scintillation in the radiator"                      length="1"  name="radScintillation"  /> 
         </attribute>
 
         <method 
@@ -120,7 +120,8 @@
                            nitrogenCK()       || 
                            aeroFilterCK()     ||
                            chargeShareHit()   || 
-                           darkHit()          );
+                           darkHit()          ||
+                           radScintillation() );
                 </code>
         </method>
 

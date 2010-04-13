@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.124 2009-11-27 12:33:29 cattanem Exp $
+! $Id: release.notes,v 1.125 2010-04-13 09:12:14 jonrob Exp $
 ! Package     : Event/MCEvent
 ! Responsible : Marco Cattaneo, Gloria Corti
 ! Purpose     : LHCb Event model. MC truth classes (Gauss and Boole output) 
 !-----------------------------------------------------------------------------
+
+! 2010-04-13 - Chris Jones
+ - Add support for new RICH background source; Scintillation in the CF4 
+   radiator medium
 
 !======================== MCEvent v2r16 2009-11-27 ===========================
 ! 2009-11-27 - Marcin Kucharczyk
