@@ -1,4 +1,4 @@
-// $Id: DecodeVeloRawBuffer.cpp,v 1.23 2010-04-08 17:06:01 dhcroft Exp $
+// $Id: DecodeVeloRawBuffer.cpp,v 1.24 2010-04-13 15:21:12 dhcroft Exp $
 
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/IIncidentSvc.h"
@@ -47,6 +47,8 @@ DecodeVeloRawBuffer::DecodeVeloRawBuffer( const std::string& name,
   declareProperty("VeloClusterLocation",m_veloClusterLocation=LHCb::VeloClusterLocation::Default);
   declareProperty("AssumeChipChannelsInRawBuffer",m_assumeChipChannelsInRawBuffer=false);
   declareProperty("ForceBankVersion",m_forcedBankVersion=0);
+
+  declareProperty("MaxVeloClusters",m_maxVeloClusters = 10000);
 }
 
 
@@ -80,7 +82,9 @@ StatusCode DecodeVeloRawBuffer::initialize() {
     }
   }
   
-  
+  info() << "Cancel processing of events with more than " << m_maxVeloClusters
+         << " Velo clusters" << endmsg;
+
   m_velo = getDet<DeVelo>( DeVeloLocation::Default );
 
   return StatusCode::SUCCESS;
@@ -133,7 +137,7 @@ StatusCode DecodeVeloRawBuffer::finalize() {
 // Private helpers
 //=============================================================================
 
-StatusCode DecodeVeloRawBuffer::decodeToVeloLiteClusters(const std::vector<LHCb::RawBank*>& banks) const
+StatusCode DecodeVeloRawBuffer::decodeToVeloLiteClusters(const std::vector<LHCb::RawBank*>& banks) 
 {
   LHCb::VeloLiteCluster::FastContainer* fastCont = new LHCb::VeloLiteCluster::FastContainer();
 
@@ -168,6 +172,16 @@ StatusCode DecodeVeloRawBuffer::decodeToVeloLiteClusters(const std::vector<LHCb:
   }
   std::sort(fastCont->begin(),fastCont->end(),SiDataFunctor::Less_by_Channel< LHCb::VeloLiteCluster >());
   put(fastCont,m_veloLiteClusterLocation);
+
+  if( fastCont->size() > m_maxVeloClusters){
+    // Get pointer to IncidentSvc 
+    IIncidentSvc * incidentSvc = svc<IIncidentSvc>("IncidentSvc",true);
+    // Fire the incident in execute()
+    incidentSvc->fireIncident(Incident(name(),IncidentType::AbortEvent));
+    setFilterPassed( false );
+    return Error("Can not continue this event due to too many lite VELO clusters", 
+                 StatusCode::SUCCESS);
+  }
  
   return StatusCode::SUCCESS;
 }
@@ -245,6 +259,17 @@ StatusCode DecodeVeloRawBuffer::decodeToVeloClusters(const std::vector<LHCb::Raw
 
   put(clusters,m_veloClusterLocation);
   if (m_dumpVeloClusters) dumpVeloClusters(clusters);
+
+  if( clusters->size() > m_maxVeloClusters){
+    // Get pointer to IncidentSvc 
+    IIncidentSvc * incidentSvc = svc<IIncidentSvc>("IncidentSvc",true);
+    // Fire the incident in execute()
+    incidentSvc->fireIncident(Incident(name(),IncidentType::AbortEvent));
+    setFilterPassed( false );
+    return Error("Can not continue this event due to too many full VELO clusters", 
+                 StatusCode::SUCCESS);
+  }
+ 
 
   return StatusCode::SUCCESS;
 }

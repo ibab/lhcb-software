@@ -1,4 +1,4 @@
-// $Id: DecodeVeloRawBuffer.h,v 1.10 2010-04-06 15:13:17 dhcroft Exp $
+// $Id: DecodeVeloRawBuffer.h,v 1.11 2010-04-13 15:21:12 dhcroft Exp $
 
 #ifndef DECODEVELORAWBUFFER_H 
 #define DECODEVELORAWBUFFER_H 1
@@ -44,7 +44,7 @@ private:
    *
    * @see VeloLiteCluster
    */
-  StatusCode decodeToVeloLiteClusters(const std::vector<LHCb::RawBank*>& banks) const;
+  StatusCode decodeToVeloLiteClusters(const std::vector<LHCb::RawBank*>& banks);
 
   /** Decode raw buffer to clusters  
    * This decodes the raw buffer to VeloClusters and
@@ -83,13 +83,16 @@ private:
   std::string m_veloLiteClusterLocation;
   std::string m_veloClusterLocation;
 
-  // do we assume chip channels instead of strips in the raw buffer?
-  // (useful for some testbeam TELL1 cinfigurations, defaults to false)
+  /// do we assume chip channels instead of strips in the raw buffer?
+  /// (useful for some testbeam TELL1 cinfigurations, defaults to false)
   bool m_assumeChipChannelsInRawBuffer;
 
-  // helpers
-
+  /// helpers
   const DeVelo* m_velo;
+
+  /// maximum permissible number of VELO clusters, 
+  /// more than this will force an IncidentType::AbortEvent
+  unsigned int m_maxVeloClusters;
 
 };
 #endif // DECODEVELORAWBUFFER_H
