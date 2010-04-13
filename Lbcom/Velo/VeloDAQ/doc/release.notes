@@ -3,12 +3,12 @@
 ! Responsible : Kurt Rinnert, Chris Parkes
 !--------------------------------------------------------------------------
 
+!=========================  VeloDAQ v5r0 2010-04-13 =======================
 ! 2010-04-13 - David Hutchcroft
  - On advice from Gerhard about the trigger changed the behviour when too
    many VELO clusters to printing an error and erasing all of the clusters 
    (both lite and full)
 
-!=========================  VeloDAQ v5r0 2010-04-13 =======================
 ! 2010-04-13 - David Hutchcroft
  - Made decoding more that 10k Velo clusters an AbortEvent incident to cap 
    the tracking reconstruction time 
