@@ -83,7 +83,7 @@ private:
 
   DeVeloPix* m_veloPixDet;                  /// detector element
   std::vector<double> m_defaultResolution;  /// resolution para one angle
-  mutable std::vector<double> m_errAnglePara;       /// angle projection para
+  mutable std::vector< std::pair<double,double> > m_errAnglePara;       /// angle projection para
 
   mutable Gaudi::XYZVector m_trackDir;      /// a track direction in global ref. frame
   mutable Gaudi::XYZPoint m_gloPoint;       /// point on sensor global ref. frame

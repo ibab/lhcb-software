@@ -74,7 +74,7 @@ StatusCode VeloPixClusterPosition::initialize()
   StatusCode sc=GaudiTool::initialize();
   if ( sc.isFailure() ) return sc;
   // get VeloPix detector
-  m_errAnglePara.reserve(6);
+  m_errAnglePara.reserve(7);
   m_veloPixDet=getDet<DeVeloPix>( DeVeloPixLocation::Default );
   //
   return ( StatusCode::SUCCESS );
@@ -110,6 +110,7 @@ toolInfo VeloPixClusterPosition::position(const LHCb::VeloPixLiteCluster* cluste
 toolInfo VeloPixClusterPosition::position(const LHCb::VeloPixChannelID &centreChannel,
 				       const Pair &fractionalPos) const{
   toolInfo myInfo;
+
   const DeVeloPixSensor* sens=m_veloPixDet->sensor(centreChannel.sensor());
   const DeVeloPixSquareType* sqSens=dynamic_cast<const DeVeloPixSquareType*>(sens);
   Gaudi::XYZPoint aPoint = sqSens->globalXYZ(centreChannel.pixel()) ;
@@ -117,12 +118,20 @@ toolInfo VeloPixClusterPosition::position(const LHCb::VeloPixChannelID &centreCh
   aDirection.first=aPoint.x()/aPoint.z();
   aDirection.second=aPoint.y()/aPoint.z();
 
-  m_errAnglePara[0]=0.0134901;
-  m_errAnglePara[1]=-6.46661;
-  m_errAnglePara[2]=15.6350;
-  m_errAnglePara[3]=0.0113722;
-  m_errAnglePara[4]= -0.000419185;
-  m_errAnglePara[5]= 0.00000866839;
+  m_errAnglePara[0]=std::make_pair(6.5,6.5);
+//   m_errAnglePara[1]=std::make_pair(1.27544e-02,1.26542e-02);
+//   m_errAnglePara[2]=std::make_pair(-3.12746e+00,-1.76532e+00);
+//   m_errAnglePara[3]=std::make_pair(1.61792e+01,1.33267e+01);
+//   m_errAnglePara[4]=std::make_pair(1.21796e-02,0.0116024) ;
+//   m_errAnglePara[5]=std::make_pair(-3.46670e-04,-0.000285165) ;
+//   m_errAnglePara[6]=std::make_pair(1.72014e-05,1.47024e-05) ;
+
+  m_errAnglePara[1]=std::make_pair(0.0130112,0.0130665);
+  m_errAnglePara[2]=std::make_pair(-0.000547622,-0.000563597);
+  m_errAnglePara[3]=std::make_pair(3.27229e-05,3.09884e-05);
+  m_errAnglePara[4]=std::make_pair(-3.34741e-07,-2.68732e-07) ;
+  m_errAnglePara[5]=std::make_pair(0.,0.) ;
+  m_errAnglePara[6]=std::make_pair(0.,0.) ;
 
   return ( position(centreChannel,fractionalPos, aPoint, aDirection) );
 }
@@ -135,6 +144,7 @@ toolInfo VeloPixClusterPosition::position(const LHCb::VeloPixLiteCluster* cluste
 {
   if( msgLevel(MSG::DEBUG) ) 
     debug()<< " ==> position (LiteCluster,VectorState) " <<endmsg;
+
   unsigned int sensorNumber=cluster->channelID().sensor();
   const DeVeloPixSensor* sensor=m_veloPixDet->sensor(sensorNumber);
   double z=sensor->z();
@@ -144,12 +154,23 @@ toolInfo VeloPixClusterPosition::position(const LHCb::VeloPixLiteCluster* cluste
   Direction aDirection;
   aDirection.first=aState.tx();
   aDirection.second=aState.ty();
-  m_errAnglePara[0]=0.0127046;
-  m_errAnglePara[1]=-2.65707;
-  m_errAnglePara[2]=12.9359;
-  m_errAnglePara[3]=0.0192615;
-  m_errAnglePara[4]=-0.00146512;
-  m_errAnglePara[5]=0.0000355052;
+  
+  verbose()<<"With Direction"<<endreq;
+  m_errAnglePara[0]=std::make_pair(10.5,10.5);                 //limit gaussian / pol2
+//   m_errAnglePara[1]=std::make_pair(1.27213e-02,1.27219e-02);   //Cste
+//   m_errAnglePara[2]=std::make_pair(-2.56244e+00,-2.55358e+00 );//mean
+//   m_errAnglePara[3]=std::make_pair(1.36982e+01,1.37099e+01);   //sigma
+//   m_errAnglePara[4]=std::make_pair(1.70390e-02,0.0178506) ;    //p0
+//   m_errAnglePara[5]=std::make_pair(-1.18557e-03 ,-0.00120728) ;//p1
+//   m_errAnglePara[6]=std::make_pair(2.70955e-05 ,2.63303e-05) ; //p2
+ 
+  m_errAnglePara[1]=std::make_pair(0.0126,0.0125928);
+  m_errAnglePara[2]=std::make_pair(-0.000138665,-0.000133091);
+  m_errAnglePara[3]=std::make_pair(-5.29756e-05,-5.36509e-05);
+  m_errAnglePara[4]=std::make_pair(2.58067e-06,2.61561e-06 ) ;
+  m_errAnglePara[5]=std::make_pair(-3.07851e-08,-3.14333e-08) ;
+  m_errAnglePara[6]=std::make_pair(0.,0.) ;
+
   return ( position(cluster->channelID(),cluster->interPixelFraction(), aPoint, aDirection) );
 }
 
@@ -160,6 +181,23 @@ toolInfo VeloPixClusterPosition::position(const LHCb::VeloPixLiteCluster* cluste
                                        const Gaudi::XYZPoint& aGlobalPoint,
                                        const Direction& aDirection) const
 {
+  verbose()<<"With Direction"<<endreq; 
+  m_errAnglePara[0]=std::make_pair(10.5,10.5);                 //limit gaussian / pol2
+//   m_errAnglePara[1]=std::make_pair(1.27213e-02,1.27219e-02);   //Cste
+//   m_errAnglePara[2]=std::make_pair(-2.56244e+00,-2.55358e+00 );//mean
+//   m_errAnglePara[3]=std::make_pair(1.36982e+01,1.37099e+01);   //sigma
+//   m_errAnglePara[4]=std::make_pair(1.70390e-02,0.0178506) ;    //p0
+//   m_errAnglePara[5]=std::make_pair(-1.18557e-03 ,-0.00120728) ;//p1
+//   m_errAnglePara[6]=std::make_pair(2.70955e-05 ,2.63303e-05) ; //p2
+ 
+  m_errAnglePara[1]=std::make_pair(0.0126,0.0125928);
+  m_errAnglePara[2]=std::make_pair(-0.000138665,-0.000133091);
+  m_errAnglePara[3]=std::make_pair(-5.29756e-05,-5.36509e-05);
+  m_errAnglePara[4]=std::make_pair(2.58067e-06,2.61561e-06 ) ;
+  m_errAnglePara[5]=std::make_pair(-3.07851e-08,-3.14333e-08) ;
+  m_errAnglePara[6]=std::make_pair(0.,0.) ;
+
+
   if( msgLevel(MSG::DEBUG) ) 
     debug() << " ==> position(litecluster, point, direction) " <<endmsg;
   return position(cluster->channelID(),cluster->interPixelFraction(),
@@ -191,14 +229,17 @@ toolInfo VeloPixClusterPosition::position(const LHCb::VeloPixChannelID &centreCh
   // fill partially the toolInfo structure
   anInfo.pixel=centreChan;
   anInfo.fractionalPosition=fracPos;
+  
   m_trackDir=Gaudi::XYZVector(aDirection.first, aDirection.second, 1.);
   m_gloPoint=aGlobalPoint;
   Pair pixelSize = sensor->PixelSize(centreChan);
   // get the angles between aDirection and the sensor
   Pair aProjAngle =projectedAngle(sensor);
+  
   //-- error estimate
   Pair error=errorEstimate(aProjAngle, pixelSize);
 
+  
   anInfo.fractionalError=error;
   //
   return ( anInfo );
@@ -219,27 +260,44 @@ Pair VeloPixClusterPosition::errorEstimate(const Pair projAngle,
 {
   if( msgLevel(MSG::DEBUG) ) debug() << " ==> errorEstimate() " <<endmsg;
   // Set the angles to degrees
+  //verbose()<<"Angles (should be in rad ) "<<projAngle.first<<" "<<projAngle.second<<endreq;
+  
   Pair angle=std::make_pair(fabs(projAngle.first*180/Gaudi::Units::pi),fabs(projAngle.second*180/Gaudi::Units::pi));
   Pair error(0.,0.);
   // Parametrisation is taken from digitization simulation
   // Gaussian for angle below 10.5 degree
-  if (angle.first < 10.5){
-    error.first = m_errAnglePara[0]*exp(pow((angle.first-m_errAnglePara[1])/m_errAnglePara[2],2));
+//   if (angle.first < m_errAnglePara[0].first){
+//     error.first = m_errAnglePara[1].first*exp(-pow((angle.first-m_errAnglePara[2].first)/m_errAnglePara[3].first,2));
+//   }
+//   // 2nd order Polynome otherwise
+//   else{
+//     error.first = m_errAnglePara[6].first*angle.first*angle.first+m_errAnglePara[5].first*angle.first+m_errAnglePara[4].first;
+//   }
+//   if (angle.second < m_errAnglePara[0].second){
+//     error.second = m_errAnglePara[1].second*exp(-pow((angle.second-m_errAnglePara[2].second)/m_errAnglePara[3].second,2));
+//   }
+//   // 2nd order Polynome otherwise
+//   else{
+//     error.second = m_errAnglePara[6].second*angle.second*angle.second+m_errAnglePara[5].second*angle.second+m_errAnglePara[4].second;
+//   }
+
+  error.first = m_errAnglePara[1].first+angle.first*m_errAnglePara[2].first+pow(angle.first,2)*m_errAnglePara[3].first
+    +pow(angle.first,3)*m_errAnglePara[4].first+pow(angle.first,4)*m_errAnglePara[5].first
+    +pow(angle.first,5)*m_errAnglePara[6].first;
+  
+  error.second = m_errAnglePara[1].second+angle.second*m_errAnglePara[2].second+pow(angle.second,2)*m_errAnglePara[3].second
+    +pow(angle.second,3)*m_errAnglePara[4].second+pow(angle.second,4)*m_errAnglePara[5].second
+    +pow(angle.second,5)*m_errAnglePara[6].second;
+  
+  if (pixelSize.first > 0.7)//case of long pixel
+  {
+    error.first = 0.1 ; //Look not too bad...
   }
-  // 2nd order Polynome otherwise
-  else{
-    error.first = m_errAnglePara[3]*angle.first*angle.first+m_errAnglePara[4]*angle.first+m_errAnglePara[5];
-  }
-  if (angle.second < 10.5){
-    error.second = m_errAnglePara[0]*exp(pow((angle.second-m_errAnglePara[1])/m_errAnglePara[2],2));
-  }
-  // 2nd order Polynome otherwise
-  else{
-    error.second = m_errAnglePara[3]*angle.second*angle.second+m_errAnglePara[4]*angle.second+m_errAnglePara[5];
-  }
+  
   error.first /= pixelSize.first;
   error.second /= pixelSize.second;
-  
+
+  verbose()<<angle.first<<" "<<angle.second<<" "<<error.first<<" "<<error.second<<" Limit: "<< m_errAnglePara[0].second<<endreq;
   //
   return ( error );
 }
