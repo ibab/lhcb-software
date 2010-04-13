@@ -8,6 +8,19 @@
  */
 #define MAX_FILE_NAME 256
 #define MAX_TRIGGER_TYPES 8
+#define MAX_STAT_TYPES 10
+
+#define PHYSIN    0
+#define MBIASIN   1
+#define LUMIIN    2
+#define BEAMGASIN 3
+#define RANDIN    4
+#define PHYSEX    5
+#define MBIASEX   6
+#define LUMIEX    7
+#define BEAMGASEX 8
+#define RANDEX    9
+ 
 
 /**
  * Encapsulates a command that is accompanied by data to be written.
@@ -34,12 +47,22 @@ struct cmd_start_header {
  */
 struct cmd_stop_header {
 	__uint32_t seq_num;        /**< The sequence number of this command */
+        __uint64_t size;           /**< The total size of the file */
+
+} __attribute__((__packed__));
+
+/**
+ * PDU format of a close command.
+ * It actually won't be sent to the writerd because this one does not care about these information.
+ * It is just stored in the close command for failover purpose.
+ */
+struct cmd_stop_pdu {
 	unsigned char md5_sum[16]; /**< The MD5 checksum calculated at client */
 	__uint32_t adler32_sum;    /**< The Adler checksum calculated at client */
-        __uint64_t size;
-        __uint32_t events;
-        __uint32_t physEvents;
-        __uint32_t trgEvents[MAX_TRIGGER_TYPES];
+        __uint32_t events;         /**< The number of events stored in the file */
+        __uint32_t physStat;       /**< The number of physics events */
+        __uint32_t trgEvents[MAX_TRIGGER_TYPES]; /**< The triggers in the Odin banks */
+        __uint32_t statEvents[MAX_STAT_TYPES];   /**< Exclusive and inclusive counters of some routing bits */
 } __attribute__((__packed__));
 
 

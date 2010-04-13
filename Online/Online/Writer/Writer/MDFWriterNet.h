@@ -10,6 +10,7 @@
 #include "Writer/Connection.h"
 #include "Writer/RPCComm.h"
 #include "TMD5.h"
+#include "chunk_headers.h"
 
 #include <map>
 
@@ -31,6 +32,7 @@
 #ifndef MDFWRITERNET_H
 #define MDFWRITERNET_H
 
+class MDFHeader;
 class ISvcLocator;
 class IIncidentSvc;
 
@@ -71,10 +73,13 @@ namespace LHCb {
       
       /// The number of phys events, that means bit 34 in the trigger mask
       /// was set
-      unsigned int m_physEvents;
+      unsigned int m_physStat;
 
       /// A counter array for ODIN trigger types
-      unsigned int m_trgEvents[8];
+      unsigned int m_trgEvents[MAX_TRIGGER_TYPES];
+
+      /// Inclusive and exclusives counters for file and run statistics
+      unsigned int m_statEvents[MAX_STAT_TYPES];
 
       /// The sequence number of the last command that was sent for this file.
       unsigned int m_seqNum;
@@ -129,7 +134,7 @@ namespace LHCb {
     inline void incEvents() { m_mon->m_events++; }
     
     /// increases the number of phys events by one
-    inline void incPhysEvents() { m_mon->m_physEvents++; }
+    inline void incPhysStat() { m_mon->m_physStat++; }
 
     /// Increment the trigger type statistic
     inline bool incTriggerType(int trg) { 
@@ -139,7 +144,37 @@ namespace LHCb {
         else ret = false; 
         return ret;
     }
+
+    unsigned int getPhysEventsIn(){ return m_mon->m_statEvents[PHYSIN]; }
+    unsigned int getPhysEventsEx(){ return m_mon->m_statEvents[PHYSEX]; }
+    unsigned int getMBiasEventsIn(){ return m_mon->m_statEvents[MBIASIN]; }
+    unsigned int getMBiasEventsEx(){ return m_mon->m_statEvents[MBIASEX]; }
+    unsigned int getRandEventsIn(){ return m_mon->m_statEvents[RANDIN]; }
+    unsigned int getRandEventsEx(){ return m_mon->m_statEvents[RANDEX]; }
+    unsigned int getLumiEventsIn(){ return m_mon->m_statEvents[LUMIIN]; }
+    unsigned int getLumiEventsEx(){ return m_mon->m_statEvents[LUMIEX]; }
+    unsigned int getBeamGasEventsIn(){ return m_mon->m_statEvents[BEAMGASIN]; }
+    unsigned int getBeamGasEventsEx(){ return m_mon->m_statEvents[BEAMGASEX]; }
     
+    void incPhysEventsIn(){  m_mon->m_statEvents[PHYSIN]++; }
+    void incPhysEventsEx(){  m_mon->m_statEvents[PHYSEX]++; }
+    void incMBiasEventsIn(){  m_mon->m_statEvents[MBIASIN]++; }
+    void incMBiasEventsEx(){  m_mon->m_statEvents[MBIASEX]++; }
+    void incRandEventsIn(){  m_mon->m_statEvents[RANDIN]++; }
+    void incRandEventsEx(){  m_mon->m_statEvents[RANDEX]++; }
+    void incLumiEventsIn(){  m_mon->m_statEvents[LUMIIN]++; }
+    void incLumiEventsEx(){  m_mon->m_statEvents[LUMIEX]++; }
+    void incBeamGasEventsIn(){  m_mon->m_statEvents[BEAMGASIN]++; }
+    void incBeamGasEventsEx(){  m_mon->m_statEvents[BEAMGASEX]++; }
+
+    inline int getStatEvents(unsigned int * destBuffer, int size) {
+       if(size == MAX_STAT_TYPES) {
+            memcpy((void*) destBuffer, (void*) m_mon->m_statEvents, size*sizeof(unsigned int));
+            return 0;
+        }
+        return -1; 
+    }
+
     /// set the value of events, used when there where events before the
     /// file was created
     inline void setEvents(unsigned int events) {
@@ -150,19 +185,16 @@ namespace LHCb {
     inline unsigned int getEvents() { return m_mon->m_events; }
 
     /// get the number of phys events
-    inline unsigned int getPhysEvents() { return m_mon->m_physEvents; }
+    inline unsigned int getPhysStat() { return m_mon->m_physStat; }
 
     /// get the number of trigger events
-    inline int getTrgEvents(unsigned int * destBuffer) { 
-        if(sizeof(destBuffer) >= MAX_TRIGGER_TYPES) {
-            memcpy((void*) destBuffer, (void*) m_mon->m_trgEvents, MAX_TRIGGER_TYPES*sizeof(unsigned int));
+    inline int getTrgEvents(unsigned int * destBuffer, int size) { 
+        if(size == MAX_TRIGGER_TYPES) {
+            memcpy((void*) destBuffer, (void*) m_mon->m_trgEvents, size*sizeof(unsigned int));
             return 0;
         }
         return -1;
     }
-
-    /// get the phys stat which is number of events - lumi events
-//    inline unsigned int getPhysStat() { return m_mon->m_events - m_mon->m_lumiEvents;}
 
     /// Returns the name of the file.
     inline std::string* getFileName() { return &m_fileName; }
@@ -381,13 +413,19 @@ namespace LHCb {
     virtual void constructNet(void);
 
     /// Returns the run number from an MDF header.
-    virtual unsigned int getRunNumber(const void *data, size_t len);
+    virtual unsigned int getRunNumber(MDFHeader *mHeader, size_t len);
 
     /// Check if an event is a phys event
-    virtual bool checkForPhysEvent(const void*, size_t);
+    virtual bool checkForPhysStat(MDFHeader *mHeader, size_t);
 
     /// Increment the trigger type statistic for this event
-    virtual bool incTriggerType(const void *, size_t);
+    virtual bool incTriggerType(const MDFHeader *mHeader, size_t);
+
+    /// Count the HLT routing statistics, inclusive and exclusive.
+    virtual void countRouteStat(MDFHeader *mHeader, size_t);
+
+    /// Check the integrity of the MDFHeader. Statistics can only be performed on version 3 
+    virtual bool checkHeader(const MDFHeader *mHeader, size_t);
 
     /// Returns a File object for the specified run number
 
