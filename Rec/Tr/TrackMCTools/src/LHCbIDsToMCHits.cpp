@@ -1,4 +1,4 @@
-// $Id: LHCbIDsToMCHits.cpp,v 1.2 2007-06-27 06:58:53 mneedham Exp $
+// $Id: LHCbIDsToMCHits.cpp,v 1.3 2010-04-13 09:53:39 cocov Exp $
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/IIncidentSvc.h"
@@ -9,6 +9,7 @@
 #include "Event/Track.h"
 #include "Event/STCluster.h"
 #include "Event/VeloCluster.h"
+#include "Event/VeloPixCluster.h"
 #include "Event/OTTime.h"
 #include "Event/MuonCoord.h"
 
@@ -24,11 +25,13 @@ LHCbIDsToMCHits::LHCbIDsToMCHits(const std::string& type,
   m_ttLinks(0,0,""),
   m_otLinks(0,0,""),
   m_veloLinks(0,0,""),
+  m_veloPixLinks(0,0,""),
   m_muonLinks(0,0,""),
   m_configuredOT(false),
   m_configuredIT(false),
   m_configuredTT(false),
   m_configuredVelo(false),
+  m_configuredVeloPix(false),
   m_configuredMuon(false),
   m_endString("2MCHits") {
 
@@ -85,6 +88,9 @@ StatusCode LHCbIDsToMCHits::link(const LHCbID& id, LinkMap& output) const{
  case LHCbID::Velo:
    linkVelo(id,output);
    break;
+ case LHCbID::VeloPix:
+   linkVeloPix(id,output);
+   break;
  case LHCbID::OT:   
    linkOT(id,output);
    break;
@@ -106,6 +112,7 @@ void LHCbIDsToMCHits::handle ( const Incident& incident )
     m_configuredIT = false;
     m_configuredTT = false;
     m_configuredVelo = false;
+    m_configuredVeloPix = false;
     m_configuredMuon = false;
   }
 }
@@ -162,6 +169,21 @@ void LHCbIDsToMCHits::linkVelo(const LHCbID& lhcbid, LinkMap& output) const{
     }
   }
   linkToDetTruth(lhcbid.veloID(),m_veloLinks, output);
+ 
+}
+
+void LHCbIDsToMCHits::linkVeloPix(const LHCbID& lhcbid, LinkMap& output) const{
+
+  if (!m_configuredVeloPix){
+    m_configuredVeloPix = true;
+    //m_veloPixLinks = VeloPixLinks( evtSvc(), msgSvc(),LHCb::VeloPixClusterLocation::VeloPixClusterLocation+m_endString);
+    m_veloPixLinks = VeloPixLinks( evtSvc(), msgSvc(),"VeloPix/Clusters"+m_endString);
+    if (m_veloPixLinks.notFound()) {
+      throw GaudiException("no veloPixLinker", "LHCbIDsToMCHits" ,
+                           StatusCode::FAILURE);
+    }
+  }
+  linkToDetTruth(lhcbid.velopixID(),m_veloPixLinks, output);
  
 }
 
