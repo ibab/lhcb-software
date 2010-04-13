@@ -3,11 +3,11 @@
 ! Responsible : Kurt Rinnert, Chris Parkes
 !--------------------------------------------------------------------------
 
+!=========================  VeloDAQ v5r0 2010-04-13 =======================
 ! 2010-04-13 - David Hutchcroft
  - Made decoding more that 10k Velo clusters an AbortEvent incident to cap 
    the tracking reconstruction time 
 
-!=========================  VeloDAQ v5r0 2010-04-09 =======================
 ! 2010-04-06 - David Hutchcroft
  - Made a corrupted bank length in the full cluster decoding an Abort event
    incident and caused the algorthm processing of that event to cease.
