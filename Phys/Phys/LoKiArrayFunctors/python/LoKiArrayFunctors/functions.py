@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: functions.py,v 1.16 2009-11-30 11:17:38 ibelyaev Exp $ 
+# $Id: functions.py,v 1.17 2010-04-13 12:23:28 ibelyaev Exp $ 
 # =============================================================================
 ## @file
 #  The set of basic objects from LoKiHlt library
@@ -35,12 +35,13 @@ __author__ = "Vanya BELYAEV ibelyaev@physics.syr.edu"
 import LoKiCore.decorators as _LoKiCore 
 
 # Namespaces:
-_global  = _LoKiCore._global 
-std      = _global.std
-LoKi     = _global.LoKi
-LHCb     = _global.LHCb
+cpp      = _LoKiCore.cpp
+std      = cpp.std
+LoKi     = cpp.LoKi
+LHCb     = cpp.LHCb
+Gaudi    = cpp.Gaudi
 
-_x_R = 'LoKi::Range_<std::vector<const LHCb::Particle*> >'
+_x_R = 'Gaudi::Range_<std::vector<const LHCb::Particle*> >'
 _T   = _x_R
 
 # =============================================================================

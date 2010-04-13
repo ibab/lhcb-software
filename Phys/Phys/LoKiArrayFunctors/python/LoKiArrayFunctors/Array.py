@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Array.py,v 1.2 2007-12-02 17:10:44 ibelyaev Exp $ 
+# $Id: Array.py,v 1.3 2010-04-13 12:23:28 ibelyaev Exp $ 
 # =============================================================================
 ## @file
 #  collection of utilities for useful 'decoration' of Array-objects
@@ -31,9 +31,9 @@ A.Golutvin, P.Koppenburg have been used in the design.
 __author__ = 'Vanya BELYAEV ibelyaev@physics.syr.edu'
 # =============================================================================
 
-from   LoKiArrayFunctors.functions import LoKi,LHCb,std
+from   LoKiArrayFunctors.functions import LoKi,LHCb,std,Gaudi
 
-_T = LoKi.Range_('std::vector<const LHCb::Particle*>')
+_T = Gaudi.Range_('std::vector<const LHCb::Particle*>')
 
 # =============================================================================
 ## Get number of child particles :

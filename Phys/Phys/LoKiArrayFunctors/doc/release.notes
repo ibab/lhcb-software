@@ -1,9 +1,12 @@
-$Id: release.notes,v 1.55 2010-04-06 20:23:18 ibelyaev Exp $ 
+$Id: release.notes,v 1.56 2010-04-13 12:23:28 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiArrayFunctors
 ! Responsible : Vanya BELYAEV
 ! Purpose     : Some special "vector-like" functors to Exclusive "HLT"
 ! -----------------------------------------------------------------------------
+
+! 2010-04-13 - Vanya Belyaev
+ - replace LoKi::Range with Gaudi::Range 
 
 ! 2010-04-06 - Vanya Belyaev
  - replace LoKi::Range with Gaudi::Range 
