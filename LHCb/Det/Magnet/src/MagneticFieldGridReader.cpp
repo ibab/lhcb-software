@@ -146,14 +146,17 @@ void MagneticFieldGridReader::fillGridFromQuadrants( GridQuadrant* quadrants,
   grid.m_min_FL[1] = - ((Nyquad-1) * grid.m_Dxyz[1]) ;
   grid.m_min_FL[2] = quadrants[0].zOffset ;
   
-  m_msg << MSG::DEBUG 
+  //m_msg << MSG::DEBUG 
+  std::cout 
 	<< "Field grid , nbins x,y,z  : (" << grid.m_Nxyz[0] << "," << grid.m_Nxyz[1] << "," <<  grid.m_Nxyz[2] << ")" << std::endl
 	<< "dx, xmin, xmax: "
 	<< "(" << grid.m_Dxyz[0] << "," << grid.m_min_FL[0] << "," << grid.m_min_FL[0] + (grid.m_Nxyz[0]-1) * grid.m_Dxyz[0] << ")" << std::endl 
 	<< "dy, ymin, ymax: "
 	<< "(" << grid.m_Dxyz[0] << "," << grid.m_min_FL[1] << "," << grid.m_min_FL[1] + (grid.m_Nxyz[1]-1) * grid.m_Dxyz[1] << ")" << std::endl 
 	<< "dz, zmin, zmax: "
-	<< "(" << grid.m_Dxyz[0] << "," << grid.m_min_FL[2] << "," << grid.m_min_FL[2] + (grid.m_Nxyz[2]-1) * grid.m_Dxyz[2] << ")" << endmsg ;
+	<< "(" << grid.m_Dxyz[0] << "," << grid.m_min_FL[2] << "," << grid.m_min_FL[2] + (grid.m_Nxyz[2]-1) * grid.m_Dxyz[2] << ")" 
+	<< std::endl ;
+    //<< endmsg ;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -216,7 +219,12 @@ StatusCode MagneticFieldGridReader::readQuadrant( const std::string& filename,
     quad.Nxyz[1] = atoi( sGeom[4].c_str() );
     quad.Nxyz[2] = atoi( sGeom[5].c_str() );
     quad.zOffset   = atof( sGeom[6].c_str() ) * Gaudi::Units::cm;
-    
+
+    m_msg << MSG::DEBUG << "Reading fieldgrid: (nx,ny,nz)=("
+	  << quad.Nxyz[0] << "," << quad.Nxyz[1] << "," << quad.Nxyz[2] << ") "
+	  << "(dx,dy,dz)=(" << quad.Dxyz[0] << ","
+	  << quad.Dxyz[1] << "," << quad.Dxyz[2] << ")" << endreq ;
+   
     // Number of lines with data to be read
     long int nlines = ( npar - 7 ) / 3;
     quad.Q.clear();

@@ -4,6 +4,12 @@
 ! Purpose     : Provides magnetic field map and Bdl tools
 !-----------------------------------------------------------------------------
 
+! 2010-04-13 - Wouter Hulsbergen
+ - Fix definition of polarity and scaleFactor in MagneticFielsSvc
+   interface. These calls should be depricated.
+ - Make sure that if fieldmap is specified by property, it is still 
+   read when using ConDB.
+
 !====================== Magnet v5r7 2010-02-12 ===============================
 ! 2010-02-08 - Marco Cattaneo
  - Register MagneticFieldSvc with UpdateManagerSvc even in cases when not using
