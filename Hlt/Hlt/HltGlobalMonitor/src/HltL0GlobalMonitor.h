@@ -45,6 +45,8 @@ private:
   std::string m_L0DUReportLocation;
 
   AIDA::IHistogram1D* m_L0Input;
+  AIDA::IHistogram1D* m_histL0Enabled;
+  AIDA::IHistogram1D* m_histL0Disabled;
 
   int m_events;
 
