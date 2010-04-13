@@ -1,7 +1,8 @@
-// $Id: STClusterMonitor.cpp,v 1.29 2010-04-13 15:35:01 mtobin Exp $
+// $Id: STClusterMonitor.cpp,v 1.30 2010-04-13 20:03:45 mtobin Exp $
 // Include files 
 
-#include <string.h>
+#include <string>
+#include <limits>
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
@@ -76,12 +77,12 @@ ST::STClusterMonitor::STClusterMonitor( const std::string& name,
 
   /// Some data quality cuts
   declareProperty("ChargeCut", m_chargeCut=0);//< charge on the cluster
-  declareProperty("MinTotalClusters", m_minNClusters=0);/// cuts on the total number of clusters in the event
-  declareProperty("MaxTotalClusters", m_maxNClusters=sizeof(unsigned int));/// cuts on the total number of clusters in the event
+  declareProperty("MinTotalClusters", m_minNClusters=0);/// cuts on the minimum number of clusters in the event
+  declareProperty("MaxTotalClusters", m_maxNClusters=std::numeric_limits<unsigned int>::max());/// cut on maximum number clusters 
   declareProperty("MinMPVCharge",m_minMPVCharge=8.);//< Cut on the charge of the cluster when calculating MPV
 
-  /// Reset rate for histograms/accumulators (Not reset by default
-  declareProperty("ResetRate", m_resetRate=sizeof(unsigned int));
+  /// Reset rate for histograms/accumulators
+  declareProperty("ResetRate", m_resetRate=std::numeric_limits<unsigned int>::max());
 
   setForcedInit();  
 }
