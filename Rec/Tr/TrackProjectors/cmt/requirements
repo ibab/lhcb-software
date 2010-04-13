@@ -3,7 +3,7 @@
 # Maintainer : Jose Hernando, Eduardo Rodrigues
 #============================================================================
 package           TrackProjectors
-version           v2r27p1
+version           v2r28
 
 #============================================================================
 # Structure, i.e. directories to process. 
@@ -28,6 +28,7 @@ use   RecEvent	      v*     Event
 use   OTDet           v*     Det
 use   STDet           v*     Det
 use   VeloDet         v*     Det
+use   VeloPixDet      v*     Det
 
 #============================================================================
 # Component library building rule

@@ -1,4 +1,4 @@
-// $Id: TrackProjectorSelector.cpp,v 1.4 2009-01-19 10:26:12 dhcroft Exp $
+// $Id: TrackProjectorSelector.cpp,v 1.5 2010-04-13 09:34:28 cocov Exp $
 // Include files 
 
 // from Gaudi
@@ -35,6 +35,8 @@ TrackProjectorSelector::TrackProjectorSelector( const std::string& type,
 		   = "TrajProjector<Velo>/TrajVeloLiteRProjector" );
   declareProperty( "VeloLitePhi", m_projNames[Measurement::VeloLitePhi] 
 		   = "TrajProjector<Velo>/TrajVeloLitePhiProjector" );
+
+  declareProperty( "VeloPixLite", m_projNames[Measurement::VeloPixLite] = "TrajProjector<VeloPix>/TrajVeloPixLiteProjector" );
   declareProperty( "TT",      m_projNames[Measurement::TT]      = "TrajProjector<ST>/TrajTTProjector" );
   declareProperty( "IT",      m_projNames[Measurement::IT]      = "TrajProjector<ST>/TrajITProjector" );
   declareProperty( "OT",      m_projNames[Measurement::OT]      = "TrajOTProjector" );
