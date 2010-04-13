@@ -11,7 +11,7 @@
 ##
 # =============================================================================
 __author__  = "V. Gligorov vladimir.gligorov@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.9 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.10 $"
 # =============================================================================
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
@@ -87,6 +87,7 @@ class Hlt2Tracking(LHCbConfigurableUser):
                              , Hlt2Dst2D2XXLinesConf
                              ]
     __slots__ = { "DataType"                        : '2009' # datatype  2009, MC09, DC06...
+                , "EarlyDataTracking"               : False
                 , "Hlt2Tracks"                      : Hlt2ForwardTracksName
                 , "Prefix"                          : HltSharedTracksPrefix 
                 , "FastFitType"                 	: HltUnfittedTracksSuffix
@@ -271,6 +272,7 @@ class Hlt2Tracking(LHCbConfigurableUser):
         log.warning('## INFO You have configured an instance of the Hlt2 tracking')
         log.warning('## INFO ----------------------------------------------------')
         log.warning('## INFO The data type is '     + str(self.getProp("DataType"       )))
+        log.warning('## INFO Early data tuning? '   + str(self.getProp("EarlyDataTracking")))
         log.warning('## INFO Tracks to make are '   + str(self.getProp("Hlt2Tracks"     )))
         log.warning('## INFO The prefix is '        + str(self.getProp("Prefix"         )))
         log.warning('## INFO The fit type is '      + str(self.getProp("FastFitType"    )))
@@ -973,6 +975,11 @@ class Hlt2Tracking(LHCbConfigurableUser):
     
         recoVeloGeneral		 = Tf__PatVeloGeneralTracking(self.getProp("Prefix")+'RecoVeloGeneral'
                                        	, OutputTracksLocation = veloTracksOutputLocation )
+
+        if self.getProp("EarlyDataTracking") :
+            # Do something special in case of early data
+            # For the moment just a dummy setting
+            dummy = 0
    
         # Build the bindMembers        
         bm_name         = self.getProp("Prefix")+"VeloTracking"
@@ -1001,6 +1008,11 @@ class Hlt2Tracking(LHCbConfigurableUser):
         PatForwardTool( MinMomentum = 1000., MinPt = 1000., AddTTClusterName = "" )
         recoForward.addTool(PatForwardTool, name='PatForwardTool')
         recoForward.PatForwardTool.AddTTClusterName = "PatAddTTCoord"
+
+        if self.getProp("EarlyDataTracking") :
+            # Do something special in case of early data
+            # For the moment just a dummy setting
+            dummy = 0
 
         # Build the bindMembers        
         bm_name         = self.getProp("Prefix")+"ForwardTracking"
@@ -1032,7 +1044,12 @@ class Hlt2Tracking(LHCbConfigurableUser):
         recoSeeding.PatSeedingTool.UseForward		= True
         recoSeeding.PatSeedingTool.ForwardCloneMergeSeg = True
         recoSeeding.PatSeedingTool.InputTracksName	= fwdtracks.outputSelection()
-   
+  
+        if self.getProp("EarlyDataTracking") :
+            # Do something special in case of early data
+            # For the moment just a dummy setting
+            dummy = 0
+ 
         # Build the bindMembers        
         bm_name         = self.getProp("Prefix")+"SeedTracking" 
         bm_members      = self.__hlt2TrackerDecoding().members() + [recoSeeding]
@@ -1058,6 +1075,11 @@ class Hlt2Tracking(LHCbConfigurableUser):
                          		, SeedInput = self.__hlt2SeedTracking().outputSelection()
                                 	, MatchOutput = matchTrackOutputLocation)
    
+        if self.getProp("EarlyDataTracking") :
+            # Do something special in case of early data
+            # For the moment just a dummy setting
+            dummy = 0
+
         # Build the bindMembers        
         bm_name         = self.getProp("Prefix")+"MatchTracking"
         bm_members      = self.__hlt2VeloTracking().members() + self.__hlt2SeedTracking().members() + [recoMatch]
@@ -1085,7 +1107,12 @@ class Hlt2Tracking(LHCbConfigurableUser):
         #PatDownstream.SeedFilter	= True
         PatDownstream.RemoveUsed	= True
         PatDownstream.RemoveAll		= True
-   
+  
+        if self.getProp("EarlyDataTracking") :
+            # Do something special in case of early data
+            # For the moment just a dummy setting
+            dummy = 0
+ 
         # Build the bindMembers        
         bm_name         = self.getProp("Prefix")+"DownstreamTracking" 
         bm_members      = self.__hlt2SeedTracking().members() + [PatDownstream]

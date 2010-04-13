@@ -1,9 +1,13 @@
-!$Id: release.notes,v 1.108 2010-04-13 12:03:29 fdettori Exp $
+!$Id: release.notes,v 1.109 2010-04-13 12:46:50 gligorov Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/HltTracking
 ! Responsible : Jose A. Hernando
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
+
+! 2010-04-13 - V. Gligorov
+  - Add an option for "Early Data" tracking to Hlt2 tracking, currently this
+    is just a dummy if statement...   
 
 ! 2010-04-13 - Francesco Dettori 
  - adding Hlt2Dst2D2XXLines to Hlt2Tracking.py 
