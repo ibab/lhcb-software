@@ -1,4 +1,4 @@
-// $Id: MagneticFieldSvc.cpp,v 1.50 2010-04-13 11:40:03 wouter Exp $
+// $Id: MagneticFieldSvc.cpp,v 1.51 2010-04-13 11:42:39 wouter Exp $
 
 // Include files
 #include "GaudiKernel/SvcFactory.h"
@@ -168,6 +168,10 @@ StatusCode MagneticFieldSvc::initializeWithCondDB()
         << "Requested condDB but using manually set field map file name(s) = "
         << m_mapFileNames << endmsg;
     m_mapFromOptions = true;
+    StatusCode sc = m_mapFileNames.size() == 1 ? 
+      m_magFieldGridReader.readDC06File( m_mapFileNames.front(), m_magFieldGrid ) : 
+      m_magFieldGridReader.readFiles( m_mapFileNames, m_magFieldGrid ) ; 
+    if( !sc.isSuccess() ) return sc ;
   }
   else {
     m_updMgrSvc->registerCondition( this, MagnetCondLocations::FieldMapFilesUp,
