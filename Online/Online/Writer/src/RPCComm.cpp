@@ -33,14 +33,14 @@ void RPCComm::confirmFile(char *fileName,
 {
   int ret;
   char headerData[1024];
-  char xmlData[1024];
+  char xmlData[4096];
   char response[1024];
 
   char adler32String[9];
   char md5CharString[33];
 
-  char trgEventsCharString[33]; 
-  char statEventsCharString[41];
+  char trgEventsCharString[256]; 
+  char statEventsCharString[512];
 
   /* We need to send this as a string because it's not very clear how the
    * XMLRPC library handles unsigned values.
@@ -54,20 +54,27 @@ void RPCComm::confirmFile(char *fileName,
   sprintf(adler32String, "%08X", adlerSum);
 
   //sprintf(trgEventsCharString, "%8X%8X%8X%8X%8X%8X%8X%8X", 
-  sprintf(trgEventsCharString, "%d;%d;%d;%d;%d;%d;%d;%d", 
+  ret = sprintf(trgEventsCharString, "%d;%d;%d;%d;%d;%d;%d;%d", 
       trgEvents[0], trgEvents[1], trgEvents[2], trgEvents[3], 
       trgEvents[4], trgEvents[5], trgEvents[6], trgEvents[7]);
-
-  sprintf(statEventsCharString, "PHYSIN:%d;MBIASIN:%d;LUMIIN:%d;BEAMGASIN:%d;RANDIN:%d;PHYSEX:%d;MBIASEX:%d;LUMIEX:%d;BEAMGASEX:%d;RANDEX:%d", 
+  if(ret < 0 || ret > sizeof(trgEventsCharString)) {
+    throw std::runtime_error("Could not format trigger counters correctly.");
+  } 
+  ret = sprintf(statEventsCharString, "PHYSIN:%d;MBIASIN:%d;LUMIIN:%d;BEAMGASIN:%d;RANDIN:%d;PHYSEX:%d;MBIASEX:%d;LUMIEX:%d;BEAMGASEX:%d;RANDEX:%d", 
       statEvents[PHYSIN], statEvents[MBIASIN], statEvents[LUMIIN], statEvents[BEAMGASIN], 
       statEvents[RANDIN], statEvents[PHYSEX], statEvents[MBIASEX], statEvents[LUMIEX],
       statEvents[BEAMGASEX], statEvents[RANDEX]);
-  
+  if(ret < 0 || ret > sizeof(statEventsCharString)) {
+    throw std::runtime_error("Could not format stat counters correctly.");
+  } 
 
   /* Now we fill up templates. */
-  snprintf(xmlData, sizeof(xmlData), CONFIRM_TEMPLATE,
+  ret = snprintf(xmlData, sizeof(xmlData), CONFIRM_TEMPLATE,
            fileName, adler32String, md5CharString, size, events, physEvents, 
            trgEventsCharString, statEventsCharString);
+  if(ret < 0 || ret > sizeof(xmlData)) {
+    throw std::runtime_error("Could not format rpc call correctly.");
+  } 
 
   snprintf(headerData, sizeof(headerData), HEADER_TEMPLATE,
            "WriterHost",  strlen(xmlData));
