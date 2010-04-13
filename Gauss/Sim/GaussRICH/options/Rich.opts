@@ -15,6 +15,12 @@ GiGa.ModularPL.GiGaPhysConstructorOp.RichMaxPhotonsPerCherenkovStepInRich1Gas=40
 GiGa.ModularPL.GiGaPhysConstructorOp.RichMaxPhotonsPerCherenkovStepInRich2Gas=40;
 GiGa.ModularPL.GiGaPhysConstructorOp.RichMaxNumPhotPerCherenkovStep=40;
 
+// By setting the following option to false allows to switch off the Scintilation process in CF4 in RICH2,
+// to get a backward compatible version. By default this Scintillation process is switched on 
+// from April 2010 onwards.
+GiGa.ModularPL.GiGaPhysConstructorOp.RichActivateCF4Scintillation=false;
+//
+//  
 // The following options allow the possibility of switching off RICH specific physics processes in order to
 // study the simulation performance of other subdetectors without RICH. By default they are
 // switched on so that RICH is switched on by default. 
