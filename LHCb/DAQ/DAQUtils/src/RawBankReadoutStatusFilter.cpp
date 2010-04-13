@@ -67,19 +67,22 @@ StatusCode RawBankReadoutStatusFilter::execute() {
   
 
   LHCb::RawBankReadoutStatus* status = NULL;
-  LHCb::RawBankReadoutStatuss*  statuss =get<LHCb::RawBankReadoutStatuss>(LHCb::RawBankReadoutStatusLocation::Default);
+  LHCb::RawBankReadoutStatuss*  statuss = NULL;
+
+  if( exist<LHCb::RawBankReadoutStatuss>(LHCb::RawBankReadoutStatusLocation::Default) )
+    statuss = get<LHCb::RawBankReadoutStatuss>(LHCb::RawBankReadoutStatusLocation::Default);
   if(NULL != statuss){
     status = statuss->object( LHCb::RawBank::BankType(m_type) );  
   } else {
-    warning() << "No Readout status container found at "<< LHCb::RawBankReadoutStatusLocation::Default 
-              <<" -> will act as the bank " << m_type << " was Missing !!"  << endmsg;    
+    Warning("No Readout status container found at "+ LHCb::RawBankReadoutStatusLocation::Default 
+            + " -> will act as the bank " + Gaudi::Utils::toString(m_type) + " was Missing !!",StatusCode::SUCCESS).ignore();    
     value = LHCb::RawBankReadoutStatus::Missing;
   }
   if(NULL != status){
     value = status->status();
   }else{ 
-    warning() << "No Readout status found for bankType "<< m_type 
-              <<" -> will act as the bank " << m_type << " was Missing !!"  << endmsg; 
+    Warning("No Readout status found for bankType "+ Gaudi::Utils::toString(m_type) 
+            +" -> will act as the bank  was Missing !!",StatusCode::SUCCESS).ignore(); 
     value = LHCb::RawBankReadoutStatus::Missing;
   }
 

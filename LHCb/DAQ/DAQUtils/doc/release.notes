@@ -4,6 +4,11 @@
 ! Purpose     : Various utilities for manipulating RawEvent
 !-----------------------------------------------------------------------------
 
+
+! 2010-04-13 - Olivier Deschamps
+  - RawBankReadoutStatusFilter : protect against missing status container
+
+
 ! 2010-04-05 - Olivier Deschamps
 	- OdinTypesFilter : fix printout
   - RawBankReadoutStatusFilter : bug fix + implement property-driven filtering inversion
