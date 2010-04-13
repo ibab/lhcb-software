@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.444 2010-04-09 18:35:58 graven Exp $ 
+! $Id: release.notes,v 1.445 2010-04-13 12:04:44 fdettori Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2010-04-13 - Francesco Dettori 
+ - adding Hlt2Dst2D2XXLines to Hlt2.py 
 
 !========================== HltConf v7r1   2010-04-09 ===================
 ! 2010-04-07 - Gerhard Raven
