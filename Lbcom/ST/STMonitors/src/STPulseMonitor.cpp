@@ -1,4 +1,4 @@
-// $Id: STPulseMonitor.cpp,v 1.4 2010-04-12 13:13:24 mtobin Exp $
+// $Id: STPulseMonitor.cpp,v 1.5 2010-04-13 15:35:01 mtobin Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -77,10 +77,13 @@ StatusCode STPulseMonitor::execute()
   m_evtNumber++;
 
   // Select the correct bunch id
-  const ODIN* odin = get<ODIN> ( ODINLocation::Default );
-  if( !m_bunchID.empty() && 
-      std::find(m_bunchID.begin(), m_bunchID.end(), 
-                odin->bunchId()) == m_bunchID.end()) return StatusCode::SUCCESS;
+  if(exist<ODIN> ( ODINLocation::Default ) ) {
+    const ODIN* odin = get<ODIN> ( ODINLocation::Default );
+    if( !m_bunchID.empty() && 
+        std::find(m_bunchID.begin(), m_bunchID.end(), 
+                  odin->bunchId()) == m_bunchID.end()) return StatusCode::SUCCESS;
+  } else return Warning("No ODIN bank found", StatusCode::SUCCESS,1);
+
   counter("Number of selected events") += 1;
 
   // Get the NZS or ZS data for the different spills
@@ -103,16 +106,16 @@ StatusCode STPulseMonitor::execute()
   
   // Check cluster location exists
   if(!exist<STClusters>(m_clusterLocation)) return StatusCode::SUCCESS;
-
+  
   // Loop over the clusters
   LHCb::STClusters* clusters = get<LHCb::STClusters>(m_clusterLocation);
   LHCb::STClusters::const_iterator itClus;
   for(itClus = clusters->begin(); itClus != clusters->end(); ++itClus) {
-
+    
     // Select clusters above a certain threshold
     const LHCb::STCluster* cluster = (*itClus);
     if( cluster->totalCharge() < m_chargeCut ) continue;
-
+    
     // Get the DetectorElement
     DeSTSector* sector = findSector( cluster->channelID());
 
@@ -155,19 +158,23 @@ StatusCode STPulseMonitor::execute()
       if( m_useNZSdata ) {
         if( dataNZS[iSpill] == 0 ) continue;
         STTELL1Data* boardData = dataNZS[iSpill]->object(sourceID);
+        if(boardData == 0) {
+          std::string sWarning = "No valid data from source "+boost::lexical_cast<std::string>(sourceID)+" in "+spillName;
+          Warning(sWarning, StatusCode::SUCCESS,1).ignore();
+          continue;
+        }
         const STTELL1Data::Data& dataValues = boardData->data();
-        
         // Loop over the strips in this cluster and calculate charge in ADC
         STCluster::ADCVector::const_iterator iVec = adcVec.begin();
+
         for( ; iVec < adcVec.end(); ++iVec ) {       
-          
           // Determine Tell1 channel of this strip
           STChannelID iChan = STChannelID(int(chanID) + iVec->first);
           STDAQ::chanPair cPair = readoutTool()->offlineChanToDAQ(iChan, 0.0);
           int iStrip = cPair.second;
           
           // Add the charges and find the highest charge
-          charge +=dataValues[iStrip/nStripsInBeetle][iStrip%nStripsInBeetle];
+          charge += dataValues[iStrip/nStripsInBeetle][iStrip%nStripsInBeetle];
           if( iVec->first == highestStrip ) 
             highCharge = 
               dataValues[iStrip/nStripsInBeetle][iStrip%nStripsInBeetle];

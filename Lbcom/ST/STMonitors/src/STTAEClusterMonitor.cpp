@@ -1,4 +1,4 @@
-// $Id: STTAEClusterMonitor.cpp,v 1.13 2010-02-12 14:55:33 mtobin Exp $
+// $Id: STTAEClusterMonitor.cpp,v 1.14 2010-04-13 15:35:01 mtobin Exp $
 // Include files 
 
 // from Gaudi
@@ -185,11 +185,12 @@ StatusCode ST::STTAEClusterMonitor::execute() {
 
   debug() << "==> Execute" << endmsg;
   // Select the correct bunch id
-  const LHCb::ODIN* odin = get<LHCb::ODIN> ( LHCb::ODINLocation::Default );
-  if( !m_bunchID.empty() && 
-      std::find(m_bunchID.begin(), m_bunchID.end(), 
-                odin->bunchId()) == m_bunchID.end()) return StatusCode::SUCCESS;
-
+  if(exist<LHCb::ODIN> ( LHCb::ODINLocation::Default )) {
+    const LHCb::ODIN* odin = get<LHCb::ODIN> ( LHCb::ODINLocation::Default );
+    if( !m_bunchID.empty() && 
+        std::find(m_bunchID.begin(), m_bunchID.end(), 
+                  odin->bunchId()) == m_bunchID.end()) return StatusCode::SUCCESS;
+  } else return Warning("No ODIN bank found", StatusCode::SUCCESS,1);
 
   counter("Number of events") += 1; 
 

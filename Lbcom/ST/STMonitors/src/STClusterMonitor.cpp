@@ -1,4 +1,4 @@
-// $Id: STClusterMonitor.cpp,v 1.28 2010-04-12 13:13:24 mtobin Exp $
+// $Id: STClusterMonitor.cpp,v 1.29 2010-04-13 15:35:01 mtobin Exp $
 // Include files 
 
 #include <string.h>
@@ -77,11 +77,11 @@ ST::STClusterMonitor::STClusterMonitor( const std::string& name,
   /// Some data quality cuts
   declareProperty("ChargeCut", m_chargeCut=0);//< charge on the cluster
   declareProperty("MinTotalClusters", m_minNClusters=0);/// cuts on the total number of clusters in the event
-  declareProperty("MaxTotalClusters", m_maxNClusters=10000000);/// cuts on the total number of clusters in the event
+  declareProperty("MaxTotalClusters", m_maxNClusters=sizeof(unsigned int));/// cuts on the total number of clusters in the event
   declareProperty("MinMPVCharge",m_minMPVCharge=8.);//< Cut on the charge of the cluster when calculating MPV
 
-  /// Reset rate for histograms/accumulators
-  declareProperty("ResetRate", m_resetRate=2000);
+  /// Reset rate for histograms/accumulators (Not reset by default
+  declareProperty("ResetRate", m_resetRate=sizeof(unsigned int));
 
   setForcedInit();  
 }
@@ -124,6 +124,7 @@ StatusCode ST::STClusterMonitor::initialize() {
   bookHistograms();
 
   // Reset the accumulators
+  m_runNumber = sizeof(unsigned int);
   resetAccumulators();
 
   return StatusCode::SUCCESS;
@@ -136,15 +137,18 @@ StatusCode ST::STClusterMonitor::execute() {
 
   if(m_debug) debug() << "==> Execute" << endmsg;
 
-  const LHCb::ODIN* odin = get<LHCb::ODIN> ( LHCb::ODINLocation::Default );
-  if( !m_bunchID.empty() 
-      &&  std::find(m_bunchID.begin(), m_bunchID.end(), odin->bunchId()) == m_bunchID.end()) return StatusCode::SUCCESS;
-  plot1D(odin->bunchId(),"BCID","BCID",-0.5,2808.5,2808);
+  unsigned int runNumber;
+  if( exist<LHCb::ODIN> ( LHCb::ODINLocation::Default ) ) {
+    const LHCb::ODIN* odin = get<LHCb::ODIN> ( LHCb::ODINLocation::Default );
+    if( !m_bunchID.empty() 
+        &&  std::find(m_bunchID.begin(), m_bunchID.end(), odin->bunchId()) == m_bunchID.end()) return StatusCode::SUCCESS;
+    plot1D(odin->bunchId(),"BCID","BCID",-0.5,2808.5,2808);
+    runNumber = odin->runNumber();
+  } else return Warning("No ODIN bank found", StatusCode::SUCCESS,1);
 
   counter("Number of events") += 1; 
 
-  if(counter("Number of events").nEntries() == 1) m_runNumber = odin->runNumber();
-  if(odin->runNumber() != m_runNumber) resetAccumulators();
+  if(runNumber != m_runNumber) resetAccumulators();
   // code goes here  
   monitorClusters();
 
