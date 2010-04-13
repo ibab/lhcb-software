@@ -4,6 +4,10 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+! 2010-04-13 - Gerhard Raven
+ - update HltReferenceRateSvc: always check ODIN trigger type,
+   pick up rate from conditions DB.
+
 ! 2010-04-11 - Gerhard Raven
  - make sure MooreInit does not print something during finalize
 
