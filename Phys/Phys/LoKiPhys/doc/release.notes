@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.134 2010-04-06 20:17:18 ibelyaev Exp $ 
+! $Id: release.notes,v 1.135 2010-04-13 12:13:58 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhys
 ! Responsible : Vanya Belyaev
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
+
+! 2010-04-13 - Vanya Belyaev
+
+ - replace LoKi.NamedRange_ with Gaudi.NamedRange_
 
 ! 2010-04-06 - Vanya Belyaev
 

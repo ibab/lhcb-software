@@ -33,11 +33,11 @@ import LoKiCore.decorators    as      _LoKiCore
 from   LoKiCore.functions     import  equal_to 
 
 # Namespaces:
-_global  = _LoKiCore._global
-cpp      = _global 
-std      = _LoKiCore.std
-LoKi     = _LoKiCore.LoKi
-LHCb     = _LoKiCore.LHCb
+cpp      = _LoKiCore.cpp 
+std      = cpp.std
+LoKi     = cpp.LoKi
+LHCb     = cpp.LHCb
+Gaudi    = cpp.Gaudi 
 
 _RCP = 'const LHCb::Particle*'
 _RCV = 'const LHCb::VertexBase*'
@@ -46,8 +46,8 @@ _c1 = std.vector( _RCP )
 _c2 = std.vector( _RCV )
 
 ## ranges
-Range   = LoKi.NamedRange_ ( _c1    )
-VRange  = LoKi.NamedRange_ ( _c2    )
+Range   = Gaudi.NamedRange_ ( _c1    )
+VRange  = Gaudi.NamedRange_ ( _c2    )
 ## range-lists: 
 RangeL  = LoKi.RangeList_  (  Range )
 VRangeL = LoKi.RangeList_  ( VRange )
