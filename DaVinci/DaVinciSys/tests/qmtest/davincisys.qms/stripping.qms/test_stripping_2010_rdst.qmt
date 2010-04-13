@@ -5,6 +5,7 @@
 <argument name="timeout"><integer>3600</integer></argument>
 <argument name="args"><set>
   <text>../options/DVTestStripping-2010-rDST.py</text>
+  <text>$APPCONFIGOPTS/DaVinci/L0Patch.py</text>
 </set></argument>
 <argument name="validator"><text>
 findReferenceBlock("""

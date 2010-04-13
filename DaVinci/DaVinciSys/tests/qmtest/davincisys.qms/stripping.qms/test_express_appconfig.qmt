@@ -6,6 +6,7 @@
 <argument name="args"><set>
   <text>$APPCONFIGOPTS/DaVinci/DVMonitor-RealData.py</text>
   <text>$APPCONFIGOPTS/UseOracle.py</text>
+  <text>$APPCONFIGOPTS/DaVinci/L0Patch.py</text>
   <text>$APPCONFIGOPTS/DaVinci/DataType-2010.py</text>
     <text>--option</text>
     <text>from Configurables import DaVinci; DaVinci().EvtMax=600; EventSelector().Input = ["DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/data/2010/DST/00006220/0000/00006220_00000001_1.dst' TYP='POOL_ROOTTREE' OPT='READ'"];</text>
