@@ -20,10 +20,10 @@ if 'Velo' in TrackSys().TrackPatRecAlgorithms :
    
 if 'VeloPix' in TrackSys().getProp("TrackPatRecAlgorithms") :
    print 'to uncomment'
-   GaudiSequencer("CheckPatSeq").Members    += [ TrackAssociatorUpgrade("AssocVeloPix")]
+   GaudiSequencer("CheckPatSeq").Members    += [ TrackAssociatorUpgrade("AssocVeloPix"),
+                                                 TrackAssociatorUpgrade("AssocVeloPixFitted")]
    TrackAssociatorUpgrade("AssocVeloPix").TracksInContainer       = "Rec/Track/VeloPix";
    TrackAssociatorUpgrade("AssocVeloPix").UseVeloPix       = True;
-   GaudiSequencer("CheckPatSeq").Members    += [ TrackAssociatorUpgrade("AssocVeloPixFitted")]
    TrackAssociatorUpgrade("AssocVeloPixFitted").TracksInContainer       = "Rec/Track/PreparedVeloPix";
    TrackAssociatorUpgrade("AssocVeloPixFitted").UseVeloPix       = True;
 if 'VeloPixTT' in TrackSys().getProp("TrackPatRecAlgorithms") :
@@ -31,17 +31,39 @@ if 'VeloPixTT' in TrackSys().getProp("TrackPatRecAlgorithms") :
    TrackAssociatorUpgrade("AssocVeloPixTT").TracksInContainer     = "Rec/Track/VeloPixTT";
    TrackAssociatorUpgrade("AssocVeloPixTT").UseVeloPix       = True;
 
+   TrackAssociatorUpgrade("AssocForward").TracksInContainer    = "Rec/Track/Forward";
+   TrackAssociatorUpgrade("AssocForward").UseVeloPix       = True;
+
+   TrackAssociator("AssocTTrack").TracksInContainer     = "Rec/Track/Seed";
+   TrackAssociatorUpgrade("AssocMatch").TracksInContainer      = "Rec/Track/Match";
+   TrackAssociatorUpgrade("AssocMatch").UseVeloPix       = True;
+   TrackAssociator("AssocDownstream").TracksInContainer = "Rec/Track/Downstream";
 
 
 if 'VeloPix' in TrackSys().getProp("TrackPatRecAlgorithms") :
-   GaudiSequencer("CheckPatSeq").Members    += [ VeloPixChecker("VeloPixCheckerFitted") ]
+   
+   from Configurables import DataPacking__Unpack_LHCb__MCVeloPixHitPacker_
+   
+   unfitChecker = VeloPixChecker("VeloPixChecker")
+   unfitChecker.InputTracks  = "Rec/Track/VeloPix"
+   unfitChecker.NtupleName   = "Tracks"
+   #unfitChecker.addTool( LHCbIDsToMCHits(), name = "IDsToMCHits")
+   #unfitChecker.IDsToMCHits 
+   #           fitter.Fitter.MeasProvider.VeloPixProvider = VeloPixLiteMeasurementProvider()
+    
    fitChecker = VeloPixChecker("VeloPixCheckerFitted")
    fitChecker.InputTracks  = "Rec/Track/PreparedVeloPix"
    fitChecker.NtupleName = "TracksFitted"
-   GaudiSequencer("CheckPatSeq").Members    += [ VeloPixChecker("VeloPixChecker") ]
-   unfitChecker = VeloPixChecker("VeloPixChecker")
-   unfitChecker.InputTracks  = "Rec/Track/VeloPix"
-   unfitChecker.NtupleName = "Tracks"
+##    fitTTChecker = VeloPixChecker("VeloPixTTCheckerFitted")
+##    fitTTChecker.InputTracks  = "Rec/Track/VeloPixTT"
+##    fitTTChecker.NtupleName = "TracksVeloPixTTFitted"
+##    fitFwdChecker = VeloPixChecker("ForwardChecker")
+##    fitFwdChecker.InputTracks  = "Rec/Track/Forward"
+##    fitFwdChecker.NtupleName = "TracksForward"
+                                                
+   GaudiSequencer("CheckPatSeq").Members    += [ DataPacking__Unpack_LHCb__MCVeloPixHitPacker_("UnpackMCVeloPixHits"),
+                                                 unfitChecker, fitChecker]#,fitTTChecker,fitFwdChecker]
+
 else :
    GaudiSequencer("CheckPatSeq").Members    += [ TrackAssociator("AssocForward"),
                                                  TrackAssociator("AssocTTrack"),

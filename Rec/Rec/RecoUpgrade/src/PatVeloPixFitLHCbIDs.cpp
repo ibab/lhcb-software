@@ -94,6 +94,7 @@ StatusCode Tf::PatVeloPixFitLHCbIDs::fit( LHCb::Track & track, LHCb::ParticleID)
   
   for( iID = track.lhcbIDs().begin() ; iID != track.lhcbIDs().end() ; ++iID){
     const LHCb::VeloPixLiteCluster* liteclus = m_clusters->object( iID->velopixID () );
+    if(liteclus == NULL) continue;
     IVeloPixClusterPosition::toolInfo clusInfo = m_positiontool->position(liteclus) ;
     const DeVeloPixSquareType* sqDet = 
       static_cast<const DeVeloPixSquareType*>(m_veloPix->squareSensor(clusInfo.pixel.sensor()));

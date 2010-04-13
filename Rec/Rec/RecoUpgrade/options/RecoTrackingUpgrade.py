@@ -22,7 +22,7 @@ from Configurables import ( ProcessPhase, MagneticFieldSvc,
                             Tf__Tsa__Seed, Tf__Tsa__SeedTrackCnv,
                             PatSeeding,
                             TrackMatchVeloSeed, PatDownstream, PatVeloTT,
-                            TrackStateInitAlg,TrackStateInitTool,
+                            TrackStateInitAlg,TrackStateInitTool,TrackStateVeloPixInitTool,
                             TrackEventCloneKiller, TrackPrepareVelo,
                             TrackAddLikelihood, TrackLikelihood, TrackAddNNGhostId, Tf__OTHitCreator,
                             TrackBuildCloneTable, TrackCloneCleaner, AlignMuonRec,
@@ -41,6 +41,29 @@ def ConfiguredFitVeloPix( Name = "FitVeloPix",
                                         ApplyMaterialCorrections = True,
                                         StateAtBeamLine = False,
                                         MaxNumberOutliers = 3)
+    
+    eventfitter.Fitter.MeasProvider.VeloPixProvider = VeloPixLiteMeasurementProvider()
+    eventfitter.Fitter.MeasProvider.IgnoreVelo = True
+    eventfitter.Fitter.MeasProvider.IgnoreVeloPix = False
+    return eventfitter
+
+def ConfiguredFitVeloPixTT( Name = "FitVeloPixTT",
+                       TracksInContainer = "Rec/Track/VeloPixTT"):
+    # note that we ignore curvatue in velo. in the end that seems the
+    # most sensible thing to do.
+    eventfitter = ConfiguredEventFitter(Name,TracksInContainer,
+                                        FieldOff = True,
+                                        SimplifiedGeometry = False,
+                                        NoDriftTimes       = None,
+                                        KalmanSmoother     = True,
+                                        LiteClusters = True,
+                                        ApplyMaterialCorrections = True,
+                                        StateAtBeamLine = False,
+                                        MaxNumberOutliers = 3)
+    
+    eventfitter.Fitter.MeasProvider.VeloPixProvider = VeloPixLiteMeasurementProvider()
+    eventfitter.Fitter.MeasProvider.IgnoreVelo = True
+    eventfitter.Fitter.MeasProvider.IgnoreVeloPix = False
     return eventfitter
 
 
@@ -114,11 +137,7 @@ if "VeloPix" in trackAlgs :
    DataOnDemandSvc().NodeMap[ "/Event/Link" ]    = "DataObject"
    DataOnDemandSvc().NodeMap[ "/Event/Link/MC" ] = "DataObject"
 
-
-        
-   from Configurables import DataPacking__Unpack_LHCb__MCVeloPixHitPacker_
    GaudiSequencer("RecoVELOPIXSeq").Members += [PatLHCbIDUp2MCParticle("PatLHCbID2MCParticleVeloPix"),
-                                                DataPacking__Unpack_LHCb__MCVeloPixHitPacker_("UnpackMCVeloPixHits"),
                                                 CheatedVeloPixPat("CheatedPatVeloPixTracking")]
    patLHCbID2MCP = PatLHCbIDUp2MCParticle("PatLHCbID2MCParticleVeloPix")
    patLHCbID2MCP.LinkVELO = False
@@ -178,15 +197,24 @@ if "Forward" in trackAlgs :
    GaudiSequencer("TrackForwardPatSeq").Members +=  [ PatForward("PatForward") ]
    importOptions("$PATALGORITHMSROOT/options/PatForward.py")
    if "VeloPix" in trackAlgs :
-      PatForward("PatForward").InputTracksName = "LHCb::TrackLocation::VeloPix" ;
+      PatForward("PatForward").InputTracksName = "/Event/Rec/Track/VeloPix" ;
    cloneKiller.TracksInContainers += ["Rec/Track/Forward"]
    if stdSeq :
       # Fit now
       track.DetectorList += [ "ForwardFit" ]
       GaudiSequencer("TrackForwardFitSeq").Members += [TrackStateInitAlg("InitForwardFit")]
+      if "VeloPix" in trackAlgs :
+          TrackStateInitAlg("InitForwardFit").StateInitTool = TrackStateVeloPixInitTool("TrackStateInitToolForVeloPixInitForwardFit")
       TrackStateInitAlg("InitForwardFit").TrackLocation = "Rec/Track/Forward"
       ## Forward fit
-      GaudiSequencer("TrackForwardFitSeq").Members += [ConfiguredFit("FitForward","Rec/Track/Forward")]
+      fitter = ConfiguredFit("FitForward","Rec/Track/Forward")
+      GaudiSequencer("TrackForwardFitSeq").Members += [ fitter ]
+      if "VeloPix" in trackAlgs :
+          fitter.Fitter.addTool( MeasurementProvider(), name = "MeasProvider")
+          fitter.Fitter.MeasProvider.VeloPixProvider = VeloPixLiteMeasurementProvider()
+          fitter.Fitter.MeasProvider.IgnoreVelo = True
+          fitter.Fitter.MeasProvider.IgnoreVeloPix = False
+      
       
 ## Seed pattern
 if "TsaSeed" in trackAlgs and "PatSeed" in trackAlgs :
@@ -209,25 +237,44 @@ if "TsaSeed" in trackAlgs or "PatSeed" in trackAlgs :
       track.DetectorList += [ "SeedFit" ]
       ## Seed fit initialization
       GaudiSequencer("TrackSeedFitSeq").Members += [TrackStateInitAlg("InitSeedFit")]
+      if "VeloPix" in trackAlgs :
+          TrackStateInitAlg("InitSeedFit").StateInitTool = TrackStateVeloPixInitTool("TrackStateInitToolForVeloPixInitSeedFit")
       TrackStateInitAlg("InitSeedFit").TrackLocation = "Rec/Track/Seed"
       # Choose fitter configuration
       if stdSeq and "Match" not in trackAlgs :
          # Use standard fitter
-         GaudiSequencer("TrackSeedFitSeq").Members += [ConfiguredFit("FitSeed", "Rec/Track/Seed")]
+         fitter = ConfiguredFit("FitSeed", "Rec/Track/Seed")
+         if "VeloPix" in trackAlgs :
+             fitter.Fitter.addTool( MeasurementProvider(), name = "MeasProvider")
+             fitter.Fitter.MeasProvider.VeloPixProvider = VeloPixLiteMeasurementProvider()
+             fitter.Fitter.MeasProvider.IgnoreVelo = True
+             fitter.Fitter.MeasProvider.IgnoreVeloPix = False
+         GaudiSequencer("TrackSeedFitSeq").Members += [fitter]
       if "Match" in trackAlgs :
          # Use small ErrorQoP fitter, needed for Match
-         GaudiSequencer("TrackSeedFitSeq").Members += [ConfiguredFitSeed()]
+         fitter = ConfiguredFitSeed()
+         if "VeloPix" in trackAlgs :
+             fitter.Fitter.addTool( MeasurementProvider(), name = "MeasProvider")
+             fitter.Fitter.MeasProvider.VeloPixProvider = VeloPixLiteMeasurementProvider()
+             fitter.Fitter.MeasProvider.IgnoreVelo = True
+             fitter.Fitter.MeasProvider.IgnoreVeloPix = False
+         GaudiSequencer("TrackSeedFitSeq").Members += [fitter]
        
 ## Match
 if "Match" in trackAlgs and "PatMatch" in trackAlgs :
    raise RuntimeError("Cannot run both TrackMatching and PatMatch at once")
 if "Match" in trackAlgs :
    track.DetectorList += [ "MatchPat" ]
-   GaudiSequencer("TrackMatchPatSeq").Members += [ TrackMatchVeloSeed("TrackMatch") ]
-   importOptions("$TRACKMATCHINGROOT/options/TrackMatch.py")
-   TrackMatchVeloSeed("TrackMatch").LikCut = -99999.   
+   trmatchVSeed = TrackMatchVeloSeed("TrackMatch")
+   trmatchVSeed.LikCut = -99999.
    if "VeloPix" in trackAlgs :
-      TrackMatchVeloSeed("TrackMatch").InputVeloTracks =  "TrackLocation::VeloPix"
+       trmatchVSeed.addTool( MeasurementProvider(), name = "MeasProvider")
+       trmatchVSeed.MeasProvider.VeloPixProvider = VeloPixLiteMeasurementProvider()
+       trmatchVSeed.MeasProvider.IgnoreVelo = True
+       trmatchVSeed.MeasProvider.IgnoreVeloPix = False
+       trmatchVSeed.InputVeloTracks =  "/Event/Rec/Track/VeloPix"
+   GaudiSequencer("TrackMatchPatSeq").Members += [ trmatchVSeed ]
+   importOptions("$TRACKMATCHINGROOT/options/TrackMatch.py")
  
 if "PatMatch" in trackAlgs :
    track.DetectorList += [ "MatchPat" ]
@@ -238,9 +285,17 @@ if "Match" in trackAlgs or "PatMatch" in trackAlgs :
       ## Match fit initialization
       track.DetectorList += [ "MatchFit" ]
       GaudiSequencer("TrackMatchFitSeq").Members += [TrackStateInitAlg("InitMatchFit")]
+      if "VeloPix" in trackAlgs :
+          TrackStateInitAlg("InitMatchFit").StateInitTool = TrackStateVeloPixInitTool("TrackStateInitToolForVeloPixInitMatchFit")
       TrackStateInitAlg("InitMatchFit").TrackLocation = "Rec/Track/Match"
       ## Match fit
-      GaudiSequencer("TrackMatchFitSeq").Members += [ConfiguredFit("FitMatch","Rec/Track/Match")]
+      fitter=ConfiguredFit("FitMatch","Rec/Track/Match")
+      GaudiSequencer("TrackMatchFitSeq").Members += [fitter]
+      if "VeloPix" in trackAlgs :
+          fitter.Fitter.addTool( MeasurementProvider(), name = "MeasProvider")
+          fitter.Fitter.MeasProvider.VeloPixProvider = VeloPixLiteMeasurementProvider()
+          fitter.Fitter.MeasProvider.IgnoreVelo = True
+          fitter.Fitter.MeasProvider.IgnoreVeloPix = False
    
 ## Downstream
 if "Downstream" in trackAlgs :
@@ -252,8 +307,16 @@ if "Downstream" in trackAlgs :
       track.DetectorList += [ "DownstreamFit" ]
       GaudiSequencer("TrackDownstreamFitSeq").Members += [TrackStateInitAlg("InitDownstreamFit")]
       TrackStateInitAlg("InitDownstreamFit").TrackLocation = "Rec/Track/Downstream"
+      if "VeloPix" in trackAlgs :
+          TrackStateInitAlg("InitDownstreamFit").StateInitTool = TrackStateVeloPixInitTool("TrackStateInitToolForVeloPixInitDownstreamFit")
       ## Downstream fit
-      GaudiSequencer("TrackDownstreamFitSeq").Members += [ConfiguredFit("FitDownstream","Rec/Track/Downstream")]
+      fitter = ConfiguredFit("FitDownstream","Rec/Track/Downstream")
+      GaudiSequencer("TrackDownstreamFitSeq").Members += [fitter]
+      if "VeloPix" in trackAlgs :
+          fitter.Fitter.addTool( MeasurementProvider(), name = "MeasProvider")
+          fitter.Fitter.MeasProvider.VeloPixProvider = VeloPixLiteMeasurementProvider()
+          fitter.Fitter.MeasProvider.IgnoreVelo = True
+          fitter.Fitter.MeasProvider.IgnoreVeloPix = False
       
 ## Velo-TT pattern
 if "VeloTT" in trackAlgs :
@@ -276,16 +339,16 @@ if "VeloPixTT" in trackAlgs :
    GaudiSequencer("TrackVeloPixTTPatSeq").Members += [ PatVeloTT("PatVeloPixTT")]
    PatVeloTT("PatVeloPixTT").InputTracksName="Rec/Track/VeloPix"
    PatVeloTT("PatVeloPixTT").OutputTracksName="Rec/Track/VeloPixTT"
-   importOptions ("$PATVELOTTROOT/options/PatVeloPixTT.py")
+   importOptions ("$RECOUPGRADEROOT/options/PatVeloPixTT.py")
    cloneKiller.TracksInContainers += ["Rec/Track/VeloPixTT"]
    if stdSeq :
-      track.DetectorList += ["VeloPixTTFit"]
+   ##    track.DetectorList += ["VeloPixTTFit"]
       GaudiSequencer("TrackVeloPixTTFitSeq").Members += [TrackStateInitAlg("InitVeloPixTTFit")]
       TrackStateInitAlg("InitVeloPixTTFit").TrackLocation = "Rec/Track/VeloPixTT"
-      TrackStateInitAlg("InitVeloPixTTFit").StateInitTool = TrackStateInitTool("TrackStateInitToolForVeloPix")
-      TrackStateInitTool("TrackStateInitToolForVeloPix").UseVeloPix = True
-      ## Velo-TT fit
-      GaudiSequencer("TrackVeloPixTTFitSeq").Members += [ ConfiguredFit("FitVeloPixTT","Rec/Track/VeloPixTT") ]
+      TrackStateInitAlg("InitVeloPixTTFit").StateInitTool = TrackStateVeloPixInitTool("TrackStateInitToolForVeloPix")
+   ##    ## Velo-TT fit  --> if does not work, look a the configurable of before
+      fitter = ConfiguredFitVeloPixTT("FitVeloPixTT","Rec/Track/VeloPixTT")
+      GaudiSequencer("TrackVeloPixTTFitSeq").Members += [ fitter ]
     
 
 if stdSeq and "Match" in trackAlgs :
@@ -293,10 +356,17 @@ if stdSeq and "Match" in trackAlgs :
    track.DetectorList += [ "SeedRefit" ]
    ## Seed refit initialization
    GaudiSequencer("TrackSeedRefitSeq").Members += [TrackStateInitAlg("InitSeedRefit")]
+   if "VeloPix" in trackAlgs :
+       TrackStateInitAlg("InitSeedRefit").StateInitTool = TrackStateVeloPixInitTool("TrackStateInitToolForVeloPixInitSeedReFit")
    TrackStateInitAlg("InitSeedRefit").TrackLocation = "Rec/Track/Seed"
    ## Seed refit
-   GaudiSequencer("TrackSeedRefitSeq").Members += [ConfiguredFit("RefitSeed", "Rec/Track/Seed")]
-
+   fitter = ConfiguredFit("RefitSeed", "Rec/Track/Seed")
+   GaudiSequencer("TrackSeedRefitSeq").Members += [fitter]
+   if "VeloPix" in trackAlgs :
+       fitter.Fitter.addTool( MeasurementProvider(), name = "MeasProvider")
+       fitter.Fitter.MeasProvider.VeloPixProvider = VeloPixLiteMeasurementProvider()
+       fitter.Fitter.MeasProvider.IgnoreVelo = True
+       fitter.Fitter.MeasProvider.IgnoreVeloPix = False
 
 if stdSeq :
    track.DetectorList += ["PostFit"]
@@ -306,7 +376,15 @@ else :
    GaudiSequencer("TrackFitSeq").Members += [ cloneKiller ]
    GaudiSequencer("TrackFitSeq").Members += [TrackStateInitAlg("InitBestFit")]
    TrackStateInitAlg("InitBestFit").TrackLocation = "Rec/Track/Best"
-   GaudiSequencer("TrackFitSeq").Members += [ConfiguredFit("FitBest","Rec/Track/Best")]
+   if "VeloPix" in trackAlgs :
+       TrackStateInitAlg("InitBestFit").StateInitTool = TrackStateVeloPixInitTool("TrackStateInitToolForVeloPixInitBestFit")
+   fitter = ConfiguredFit("FitBest","Rec/Track/Best")
+   GaudiSequencer("TrackFitSeq").Members += [fitter]
+   if "VeloPix" in trackAlgs :
+       fitter.Fitter.addTool( MeasurementProvider(), name = "MeasProvider")
+       fitter.Fitter.MeasProvider.VeloPixProvider = VeloPixLiteMeasurementProvider()
+       fitter.Fitter.MeasProvider.IgnoreVelo = True
+       fitter.Fitter.MeasProvider.IgnoreVeloPix = False
 
 ## Velo fitting
 if "Velo" in trackAlgs :
@@ -333,9 +411,6 @@ if "VeloPix" in trackAlgs :
 
    ## Fit the velo tracks
    fitter = ConfiguredFitVeloPix("FitVeloPix","Rec/Track/PreparedVeloPix")
-   fitter.Fitter.MeasProvider.VeloPixProvider = VeloPixLiteMeasurementProvider()
-   fitter.Fitter.MeasProvider.IgnoreVelo = True
-   fitter.Fitter.MeasProvider.IgnoreVeloPix = False
    GaudiSequencer("TrackVeloPixFitSeq").Members += [fitter]
    
    ##   ConfiguredFit("FitVeloPix","Rec/Track/PreparedVeloPix") ]
