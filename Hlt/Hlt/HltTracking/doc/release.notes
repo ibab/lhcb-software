@@ -1,9 +1,12 @@
-!$Id: release.notes,v 1.107 2010-03-28 20:26:11 graven Exp $
+!$Id: release.notes,v 1.108 2010-04-13 12:03:29 fdettori Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/HltTracking
 ! Responsible : Jose A. Hernando
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
+
+! 2010-04-13 - Francesco Dettori 
+ - adding Hlt2Dst2D2XXLines to Hlt2Tracking.py 
 
 !========================== HltTracking v5r0   2010-03-28 ===================
 ! 2010-03-27 - Gerhard Raven
