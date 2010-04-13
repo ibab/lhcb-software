@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.39 2010-04-13 09:05:01 robbep Exp $
+! $Id: release.notes,v 1.40 2010-04-13 18:22:40 robbep Exp $
 ! Package     : OMAlib
 ! Responsible : G. Graziani
 ! Purpose     : Online Monitoring Analysis library
@@ -6,6 +6,9 @@
 ! 20100413 Patrick Robbe
  - src/OMAFitFunction.cpp: draw fit function on top of histo in case of fitting
    an overlaid histogram.
+ - OMAlib/OMAFitFunction.h: ROOT garbage collector needs a new of GausP1
+ - algorithms/OMAFitTH2withSinCosC.cpp: use pointer to GausP1
+ - src/OMAlib.cpp: cleaning of functions is done by ROOT garbage collector
 
 ! 20100412 GG
  - bug fix in OMAScale for 2D histograms
