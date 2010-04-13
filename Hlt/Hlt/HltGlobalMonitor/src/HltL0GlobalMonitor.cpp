@@ -1,4 +1,4 @@
-// $Id: HltL0GlobalMonitor.cpp,v 1.6 2010-04-10 21:47:16 graven Exp $
+// $Id: HltL0GlobalMonitor.cpp,v 1.7 2010-04-13 09:55:22 albrecht Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -86,43 +86,46 @@ StatusCode HltL0GlobalMonitor::initialize() {
   StatusCode sc = HltBaseAlg::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
-  m_L0Input         = book1D("L0 channel",-0.5,21.5,22);
+  m_L0Input         = book1D("L0 channel summary",-0.5,21.5,22);
+  m_histL0Enabled   = book1D("L0 channel summary, enabled",-0.5,21.5,22);
+  m_histL0Disabled  = book1D("L0 channel summary, disabled",-0.5,21.5,22);
 
-  /**
-   * 2010-03-29 J.A.
-   *This is to put labels on the histogram at initialize
-   *Will be updated with corresponding flags during the run
-   *I am not sure if the saveset has a "2010 type" L0 TCK 
-   * --> be save and do it by hand
-   */
-  std::vector< std::pair<unsigned, std::string> > labels;
-  labels.push_back(std::make_pair( 0, "HCAL"));
-  labels.push_back(std::make_pair( 1, "SPD"));
-  labels.push_back(std::make_pair( 2, "CALO"));
-  labels.push_back(std::make_pair( 3, "MUON,minbias"));
-  labels.push_back(std::make_pair( 4, "PU"));
-  labels.push_back(std::make_pair( 5, "SPD40"));
-  labels.push_back(std::make_pair( 6, "PU20"));
-  labels.push_back(std::make_pair( 7, "Electron"));
-  labels.push_back(std::make_pair( 8, "Photon"));
-  labels.push_back(std::make_pair( 9, "Hadron"));
-  labels.push_back(std::make_pair( 10, "Muon"));
-  labels.push_back(std::make_pair( 11, "DiMuon"));
-  labels.push_back(std::make_pair( 12, "Muon,lowMult"));
-  labels.push_back(std::make_pair( 13, "DiMuon,lowMult"));
-  labels.push_back(std::make_pair( 14, "LocalPi0"));
-  labels.push_back(std::make_pair( 15, "GlobalPi0"));
-  labels.push_back(std::make_pair( 16, "B1gas"));
-  labels.push_back(std::make_pair( 17, "B2gas"));
-  labels.push_back(std::make_pair( 18, "B1gas * ODIN BE"));
-  labels.push_back(std::make_pair( 19, "B2gas * ODIN EB"));
-  labels.push_back(std::make_pair( 20, "L0 Global"));
-  if (!setBinLabels( m_L0Input, labels )) {
-    error() << "failed to set binlables on L0 hist" << endmsg;
-  }
+// #if 0
+//   /**
+//    * 2010-03-29 J.A.
+//    *This is to put labels on the histogram at initialize
+//    *Will be updated with corresponding flags during the run
+//    *I am not sure if the saveset has a "2010 type" L0 TCK 
+//    * --> be save and do it by hand
+//    */
+//   std::vector< std::pair<unsigned, std::string> > labels;
+//   labels.push_back(std::make_pair( 0, "HCAL"));
+//   labels.push_back(std::make_pair( 1, "SPD"));
+//   labels.push_back(std::make_pair( 2, "CALO"));
+//   labels.push_back(std::make_pair( 3, "MUON,minbias"));
+//   labels.push_back(std::make_pair( 4, "PU"));
+//   labels.push_back(std::make_pair( 5, "SPD40"));
+//   labels.push_back(std::make_pair( 6, "PU20"));
+//   labels.push_back(std::make_pair( 7, "Electron"));
+//   labels.push_back(std::make_pair( 8, "Photon"));
+//   labels.push_back(std::make_pair( 9, "Hadron"));
+//   labels.push_back(std::make_pair( 10, "Muon"));
+//   labels.push_back(std::make_pair( 11, "DiMuon"));
+//   labels.push_back(std::make_pair( 12, "Muon,lowMult"));
+//   labels.push_back(std::make_pair( 13, "DiMuon,lowMult"));
+//   labels.push_back(std::make_pair( 14, "LocalPi0"));
+//   labels.push_back(std::make_pair( 15, "GlobalPi0"));
+//   labels.push_back(std::make_pair( 16, "B1gas"));
+//   labels.push_back(std::make_pair( 17, "B2gas"));
+//   labels.push_back(std::make_pair( 18, "B1gas * ODIN BE"));
+//   labels.push_back(std::make_pair( 19, "B2gas * ODIN EB"));
+//   labels.push_back(std::make_pair( 20, "L0 Global"));
+//   if (!setBinLabels( m_L0Input, labels )) {
+//     error() << "failed to set binlables on L0 hist" << endmsg;
+//   }
 
-  m_L0Input->setTitle("L0 channel summary, L0TCK: _not yet set_");
- 
+//   m_L0Input->setTitle("L0 channel summary, L0TCK: _not yet set_");
+// #endif 
 
   declareInfo("COUNTER_TO_RATE[L0Accept]",counter("L0Accept"),"L0Accept");
   
@@ -151,43 +154,48 @@ void HltL0GlobalMonitor::monitorL0DU(const LHCb::L0DUReport* l0du) {
   if (l0du == 0) return;
 
   if (!l0du->valid()) { 
-      Error("Failed to obtain valid L0DUReport" ).ignore();
+      Warning("L0DUReport Invalid... skipping L0 monitoring" ).ignore();
       return;
   }
+
+
 
   counter("L0Accept") += l0du->decision();
   counter("L0Forced") += l0du->forceBit();
 
   const LHCb::L0DUConfig* config = l0du->configuration();
   if (config==0) {
-      Error("Failed to obtain valid L0DU configuration" ).ignore();
+      Error("Failed to obtain valid L0DU configuration... skipping L0 monitoring" ).ignore();
       return;
   }
   LHCb::L0DUChannel::Map channels = config->channels();
-
-
-
 
   //define the bin labels
   unsigned int L0TCK = l0du->tck();
   if (L0TCK != m_lastL0TCK && m_L0Input!=0) {
       std::vector< std::pair<unsigned, std::string> > labels;
       for(LHCb::L0DUChannel::Map::iterator i = channels.begin();i!=channels.end();++i){
-	
 	std::string name=i->first;
-	if( i->second->decisionType() == LHCb::L0DUDecision::Disable ){
-	  name="disabled | "+name;
-	}
+// #if 0	
+// 	if( i->second->decisionType() == LHCb::L0DUDecision::Disable ){
+// 	  name="disabled | "+name;
+// 	}
+// #endif
 	labels.push_back(std::make_pair( i->second->id(),name  ));
       }
       labels.push_back(std::make_pair( 18, "B1gas * ODIN BE"));
       labels.push_back(std::make_pair( 19, "B2gas * ODIN EB"));
       labels.push_back(std::make_pair( 20, "L0 Global"));
       setBinLabels( m_L0Input, labels );
+      if( 0!=m_histL0Enabled) setBinLabels( m_histL0Enabled, labels );
+      if( 0!=m_histL0Disabled) setBinLabels( m_histL0Disabled, labels );
+      
       m_lastL0TCK = L0TCK;
-      char txt[128];
-      sprintf(txt,"L0 channel summary, L0TCK: 0x%x",L0TCK);
-      m_L0Input->setTitle(txt);   
+// #if 0
+//       char txt[128];
+//       sprintf(txt,"L0 channel summary, L0TCK: 0x%x",L0TCK);
+//       m_L0Input->setTitle(txt);   
+// #endif
   }
   
   //if (!l0du->decision()) return;
@@ -201,9 +209,19 @@ void HltL0GlobalMonitor::monitorL0DU(const LHCb::L0DUReport* l0du) {
   for(LHCb::L0DUChannel::Map::iterator i = channels.begin();i!=channels.end();++i){
       fill( m_L0Input, i->second->id(), l0du->channelDecision( i->second->id() ) );
 
+      if( i->second->decisionType() != LHCb::L0DUDecision::Disable ){
+	fill( m_histL0Enabled, i->second->id(), l0du->channelDecision( i->second->id() ) );
+      }
+      else {
+	fill( m_histL0Disabled, i->second->id(), l0du->channelDecision( i->second->id() ) );
+      }
+      
+
       if(i->second->id()==16 
 	 && odin->bunchCrossingType() == LHCb::ODIN::Beam1 ){
 	fill( m_L0Input, 18, l0du->channelDecision( i->second->id() ) );
+	fill( m_histL0Enabled, 18, l0du->channelDecision( i->second->id() ) );
+
 	if(l0du->channelDecision( i->second->id() )) odinBGas=true;
       }
       
@@ -211,6 +229,7 @@ void HltL0GlobalMonitor::monitorL0DU(const LHCb::L0DUReport* l0du) {
       if(i->second->id()==17 
 	 && odin->bunchCrossingType() == LHCb::ODIN::Beam2 ){
 	fill( m_L0Input, 19, l0du->channelDecision( i->second->id() ) );
+	fill( m_histL0Enabled, 19, l0du->channelDecision( i->second->id() ) );
 	if(l0du->channelDecision( i->second->id() )) odinBGas=true;
       }
       
@@ -224,7 +243,11 @@ void HltL0GlobalMonitor::monitorL0DU(const LHCb::L0DUReport* l0du) {
 
   }
   //fill the global L0 decision  
-  if(odinBGas || l0Physics) fill( m_L0Input, 20,1);
+  if(odinBGas || l0Physics) {
+    fill( m_L0Input, 20,1);
+    fill( m_histL0Enabled, 20,1);
+  }
+  
   
 
 
