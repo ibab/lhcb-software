@@ -4578,14 +4578,18 @@ void PresenterMainFrame::nextInterval() {
 
 bool PresenterMainFrame::threadSafePage() {
   bool out=true;
-  std::vector<DbRootHist*>::iterator pageHistoIt = dbHistosOnPage.begin();
-  while( pageHistoIt !=  dbHistosOnPage.end() ) {
+  std::vector<DbRootHist*>::iterator pageHistoIt ;
+  for ( pageHistoIt = dbHistosOnPage.begin() ; pageHistoIt != dbHistosOnPage.end() ;
+	++pageHistoIt ) {
+    if ( 0 == (*pageHistoIt) -> onlineHistogram() ) {
+      out = false ;
+      break ;
+    }
     if ( (*pageHistoIt)->onlineHistogram()->hasFitFunction() ||
          (*pageHistoIt)->onlineHistogram()->isAnaHist() ) {
       out=false;
       break;
     }
-    pageHistoIt++;
   }
   return out;
 }
