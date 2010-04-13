@@ -3,7 +3,16 @@
 ! Responsible	: Sajan Easo 
 ! Purpose     : collection of sensitive detectors, G4 actions, etc for RICH
 !----------------------------------------------------------------------------- 
-
+! 2010-04-12  Sajan Easo
+  - Added the CF4 scintillation proces, with the name RichG4scintillation.
+  - This can be switched off for backward compatibility as described in  options/Rich.opts.
+    Temporarily this is switched off in Rich.opts until the corresponding DDDB inputs
+    are available in the LHCb release area. Once these inputs are available this process 
+    is expected to be switched on by default. 
+  -The monitoring histograms set2 are updated to show the hits with
+    and without the CF4 scintillation hits in RICH2.
+  - The output into the MCRichHit in GetMCRichHitsAlg.cpp is modified 
+    so that an extra flag is added to MCRichHit to tag the Scintillation hits.
 !========================= GaussRICH v10r1 2010-03-23 =========================
 ! 2010-03-19  - Sajan Easo
  - Added the capability to use C3F8 as the Rich1gas radiator. These changes are
