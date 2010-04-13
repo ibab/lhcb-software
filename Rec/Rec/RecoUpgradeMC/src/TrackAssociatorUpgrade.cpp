@@ -91,10 +91,7 @@ StatusCode TrackAssociatorUpgrade::execute() {
   // Retrieve the MCParticles
   MCParticles* mcParts = get<MCParticles> ( MCParticleLocation::Default );
 
-  LHCb::VeloPixClusters* veloPixclusters = NULL ;
-  if (m_useVeloPix == true ) {
-    veloPixclusters = get<LHCb::VeloPixClusters>(LHCb::VeloPixClusterLocation::VeloPixClusterLocation );
-  }
+
 
 
   // Create the Linker table from Track to MCParticle
@@ -115,6 +112,11 @@ StatusCode TrackAssociatorUpgrade::execute() {
   // Get the linker table VeloPixCluster => MCParticle
   ///LinkedTo<MCParticle,VeloPixCluster> 
   ///   veloPixLink( evtSvc(), msgSvc(), LHCb::VeloPixClusterLocation::VeloPixClusterLocation );
+
+  LHCb::VeloPixClusters* veloPixclusters = NULL ;
+  if (m_useVeloPix == true ) {
+    veloPixclusters = get<LHCb::VeloPixClusters>(LHCb::VeloPixClusterLocation::VeloPixClusterLocation );
+  }
   LinkedTo<MCParticle,VeloPixCluster>
     veloPixLink( evtSvc(), msgSvc(),  "VeloPix/Clusters2MCParticles"  );
   if( veloPixLink.notFound() && m_useVeloPix == true) {

@@ -5,6 +5,12 @@
 !               classes
 !-----------------------------------------------------------------------------
 
+! 2010-04-13 - Victor Coco
+ - CheatedVeloPixPat usable
+ - PatLHCbIDUp2MCParticle/PatLHCbIDUp2MCHit finished
+ - TrackAssociatorUpgrade finished
+ - VeloPixCheker under developpment but usable
+
 ! 2010-03-22 - Victor Coco
  - Creation of the package, most of the classes are still in developpment
 

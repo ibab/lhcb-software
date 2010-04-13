@@ -47,7 +47,7 @@ PatLHCbIDUp2MCHit::~PatLHCbIDUp2MCHit() {};
 StatusCode PatLHCbIDUp2MCHit::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
-  m_linkTool = tool<ILHCbIDsToMCHits>("LHCbIDsToMCHits");
+  m_linkTool = tool<ILHCbIDsToMCHits>("LHCbIDsToMCHits","ID2MCHit",this);
   debug() << "==> Initialize" << endmsg;
 
   return StatusCode::SUCCESS;

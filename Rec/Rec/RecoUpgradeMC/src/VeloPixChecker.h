@@ -5,6 +5,11 @@
 // Include files
 // from Gaudi
 #include "GaudiAlg/GaudiTupleAlg.h"
+#include "VeloPixDet/DeVeloPix.h"
+#include "TrackInterfaces/IVeloPixClusterPosition.h"
+#include "VeloPixDet/DeVeloPix.h"
+#include "Event/VeloPixLiteCluster.h"
+#include "MCInterfaces/ILHCbIDsToMCHits.h"
 
 
 /** @class VeloPixChecker VeloPixChecker.h
@@ -26,13 +31,22 @@
     virtual StatusCode initialize();    ///< Algorithm initialization
     virtual StatusCode execute   ();    ///< Algorithm execution
     virtual StatusCode finalize  ();    ///< Algorithm finalization
+    ILHCbIDsToMCHits* linkTool() const;
     
   protected:
     
   private:
     std::string m_tupleName;
     std::string m_container;
-    
+    DeVeloPix* m_veloPix;
+    IVeloPixClusterPosition* m_positiontool ;
+    ILHCbIDsToMCHits* m_linkTool;
+    LHCb::VeloPixLiteCluster::VeloPixLiteClusters* m_clusters;
   };
+
+
+inline ILHCbIDsToMCHits* VeloPixChecker::linkTool() const{
+  return m_linkTool;
+}
 
 #endif // VELOPIXCHECKER_H

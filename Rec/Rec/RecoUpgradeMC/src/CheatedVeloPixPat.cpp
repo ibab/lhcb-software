@@ -35,6 +35,8 @@ CheatedVeloPixPat::CheatedVeloPixPat( const std::string& name,
 {
   declareProperty( "outputTracksLocation",    m_outputTracksLocation = LHCb::TrackLocation::VeloPix);
   declareProperty( "MinimalMCHitForTrack",    m_minIDs = 2 );
+  declareProperty( "UseLinearFit",    m_UseLinearFit = true );
+  
 }
 //=============================================================================
 // Destructor
@@ -51,49 +53,9 @@ StatusCode CheatedVeloPixPat::initialize() {
   // retrieve the postion tool
   m_positiontool =  tool<IVeloPixClusterPosition>("VeloPixClusterPosition");
   
-  m_linkTool = tool<ILHCbIDsToMCHits>("LHCbIDsToMCHits");
   m_veloPix = getDet<DeVeloPix>( DeVeloPixLocation::Default );
   
   m_veloPixFitter = tool<ITrackFitter>("Tf::PatVeloPixFitLHCbIDs") ;
-  LHCb::VeloPixChannelID channelInit ;
-  channelInit.setChannelID (0);
-  channelInit.setChip (4);
-  
-
-  const DeVeloPixSquareType* sqDettest =static_cast<const DeVeloPixSquareType*>(m_veloPix->squareSensor(channelInit.sensor()));
-  
-  //Gaudi::XYZPoint theRefPoint(5.8,-7.5,sqDettest->z());
-  Gaudi::XYZPoint theRefPoint = sqDettest->globalXYZ(channelInit.pixel()) ;
-  always()<<theRefPoint<<endreq;
-  
-  for(int i = 0 ; i < 5200 ; i++){
-    for (int j = 0 ; j < 2600 ; j++){
-      //const Gaudi::XYZPoint thePoint(theRefPoint.x()+0.0055*i,theRefPoint.y()+0.0055*j,theRefPoint.z());
-      const Gaudi::XYZPoint thePoint(theRefPoint.x()+0.0055*i,theRefPoint.y()+0.0055*j,theRefPoint.z());
-      Tuple testPos = nTuple( "Position" );
-      testPos->column("x",thePoint.x());
-      testPos->column("y",thePoint.y());
-      LHCb::VeloPixChannelID channel; 
-      std::pair< double, double > fraction;
-      StatusCode testSc = sqDettest->pointToChannel (thePoint,channel,fraction);
-      std::pair< double, double >  pixSize = sqDettest->PixelSize(channel);
-      testPos->column("P2Csuccess",testSc.isSuccess());
-      testPos->column("fracX",fraction.first);
-      testPos->column("fracY",fraction.second);
-      testPos->column("pixX",channel.pixel_lp ());
-      testPos->column("pixY",channel.pixel_hp ());
-      testPos->column("chip",channel.chip ());
-      Gaudi::XYZPoint thePixPoint = sqDettest->globalXYZ(channel.pixel(),fraction) ;
-      Gaudi::XYZPoint thePixPointNoFrac = sqDettest->globalXYZ(channel.pixel()) ;
-      testPos->column("xtrans",thePixPoint.x());
-      testPos->column("ytrans",thePixPoint.y());
-      testPos->column("xtrans_NoFrac",thePixPointNoFrac.x());
-      testPos->column("ytrans_NoFrac",thePixPointNoFrac.y());
-      testPos->write();
-    }
-  }
-
-
 
   return StatusCode::SUCCESS;
 };
@@ -138,18 +100,15 @@ StatusCode CheatedVeloPixPat::execute() {
     put(outputTracks, m_outputTracksLocation );
   }
   // make space for the new tracks 
-  outputTracks->reserve(linkedIds.size());
-
-
-  
+  outputTracks->reserve(linkedIds.size());  
   
   //== Loop over MCParticle and create LHCb::Track out of the LHCbIDs
-  
   LHCb::MCParticles::const_iterator itP;
   for ( itP = mcParts->begin(); mcParts->end() != itP; ++itP ) {
     LHCb::MCParticle* part = *itP;   
     LHCb::Track* newTrack = new LHCb::Track(outputTracks->size());
     newTrack->setHistory(LHCb::Track::PatVeloPixCheated);
+    // this is for cheated cheated...
     double tx(part->momentum().px()/part->momentum().pz());
     double ty(part->momentum().py()/part->momentum().pz()); 
     if (part->momentum().pz()<0){
@@ -187,53 +146,18 @@ StatusCode CheatedVeloPixPat::execute() {
         Gaudi::XYZPoint thePixPoint = sqDet->globalXYZ(clusInfo.pixel.pixel(),clusInfo.fractionalPosition) ;
         std::pair<double,double> pixSize = sqDet->PixelSize(clusInfo.pixel.pixel());
 
-        ILHCbIDsToMCHits::LinkMap testMap;
-        StatusCode sc = linkTool()->link(temp,testMap);
-        ILHCbIDsToMCHits::LinkMap::iterator it = testMap.begin();
-        LHCb::MCHit* hit = it->first;     
-        
-        if (hit != NULL ){
-          Tuple tPoint = nTuple( "Hits" );
-          tPoint->column("dx",hit->midPoint () .x()-thePixPoint.x());
-          tPoint->column("dy",hit->midPoint () .y()-thePixPoint.y());
-          tPoint->column("dz",hit->midPoint () .z()-thePixPoint.z());
-          tPoint->column("mcx",hit->midPoint () .x());
-          tPoint->column("mcy",hit->midPoint () .y());
-          tPoint->column("x",thePixPoint.x());
-          tPoint->column("y",thePixPoint.y());
-          tPoint->column("zSens",thePixPoint.z());
-          tPoint->column("thetax",atan(hit->displacement ().x()/hit->displacement ().z()));
-          tPoint->column("thetay",atan(hit->displacement ().y()/hit->displacement ().z()));
-          tPoint->column("fracx",clusInfo.fractionalPosition.first);
-          tPoint->column("fracy",clusInfo.fractionalPosition.second);
-          tPoint->column("zoutMzin",hit->displacement ().z());
-          tPoint->column("isLong",sqDet->isLong(clusInfo.pixel.pixel()));
-          tPoint->column("lp",temp.velopixID ().pixel_lp());
-          tPoint->column("hp",temp.velopixID ().pixel_hp());
-          tPoint->column("chipNum",temp.velopixID ().chip());
-          tPoint->column("countHits",temp.velopixID ().chip());
-          tPoint->column("sensor",clusInfo.pixel.sensor());
-          tPoint->column("entry_x",hit->entry() .x());
-          tPoint->column("entry_y",hit-> entry() .y());
-          tPoint->column("exit_x",hit->exit () .x());
-          tPoint->column("exit_y",hit-> exit() .y());
-          tPoint->column("dz",hit->midPoint () .z()-thePixPoint.z());
-          
-          tPoint->write();
-        }
-
         double dx = pixSize.first*clusInfo.fractionalError.first ;
         if (sqDet->isLong(clusInfo.pixel.pixel())) dx = 0.1 ;//fixed to 0.1 mm whatever is the angle for long pixel
         double dy = pixSize.second*clusInfo.fractionalError.second;
 
         LHCb::State aState;
-        aState.setState(thePixPoint.x(),thePixPoint.y(),thePixPoint.z() ,0.,0.,0.);
+        aState.setState(thePixPoint.x(),thePixPoint.y(),thePixPoint.z() ,tx,ty,0.);
         Gaudi::TrackSymMatrix aCov;
         aCov(0,0)=dx*dx;
         aCov(1,1)=dy*dy;
         // Not so sure...
-        //aCov(2,2)= 6.e-5 ;
-        //aCov(3,3)= 6.e-5 ;
+        aCov(2,2)= 6.e-5 ;
+        aCov(3,3)= 6.e-5 ;
         aCov(4,4)= 1.e-6 ;
         aState.setCovariance(aCov);
         aState.setLocation( LHCb::State::EndVelo );
@@ -247,9 +171,11 @@ StatusCode CheatedVeloPixPat::execute() {
     }
     // Be aware that the hit from same sensors are counted only once, but are all added to the list of ID
     if (countHits>m_minIDs){
-      StatusCode scFit = m_veloPixFitter->fit(*newTrack, LHCb::ParticleID(211));
-      if(!scFit.isSuccess()){
-        warning()<<"The linear fit failed"<<endreq;
+      if (m_UseLinearFit == true){
+        StatusCode scFit = m_veloPixFitter->fit(*newTrack, LHCb::ParticleID(211));
+        if(!scFit.isSuccess()){
+          warning()<<"The linear fit failed"<<endreq;
+        }
       }
       outputTracks->insert(newTrack);
     }
