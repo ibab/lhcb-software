@@ -11,24 +11,28 @@
 #include <TString.h>
 #include <TPRegexp.h>
 
-//#include "presenter.h"
 #include "PresenterMainFrame.h"
 #include "OnlineHistDB/OnlineHistDBEnv.h"
-//#include "OnlineHistDB/OnlineHistogram.h"
-//#include "ParallelWait.h"
 #include "OMAlib/OMAlib.h"
-//#include "HistogramIdentifier.h"
-//#include "dim/dic.hxx"
-//#include "OnlineHistDB/OnlineHistDB.h"
-//#include "OMAlib/OMAlib.h"
-//#include "DbRootHist.h"
 
 #include <boost/program_options.hpp>
 #include <boost/filesystem.hpp>
+#include <boost/thread/mutex.hpp>
+#include <boost/thread/recursive_mutex.hpp>
 
 using namespace pres;
 using namespace boost::program_options;
 using namespace boost::filesystem;
+
+// global variables ("mutex)
+namespace PresenterMutex {
+  boost::mutex           listMutex ;
+  boost::mutex           archiveMutex ;
+  boost::recursive_mutex oraMutex ;
+  boost::recursive_mutex dimMutex ;
+  boost::recursive_mutex rootMutex ;
+};
+
 
 void setSystemEnvironment(const char* environmentVariable, const char* value) {
   // inspired by WhateverBox, innotek/Sun Microsystems/Whomever
