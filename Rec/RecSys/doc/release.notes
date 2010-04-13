@@ -10,9 +10,16 @@ This version uses Gaudi v21r8 and LHCb v30r1
 
 - Early data improvements for 2009 reprocessing, and for 2010 data
 
+- Fixes for excessive online warnings, and fixes for magnet polarity
+
 - In RecSys itself:
   . Add "Simulation" slot to RecSysConf and propagate to RichRecSysConf
   . RecMoniConf: propagate the Histograms slot to CaloMoniDstConf
+
+- Packages Added:
+  Det/Magnet v6r0 -- use this version instead of what is released in the lower
+                     packages. this use statment should be deleted in the next release.
+                  -- new Major version with better handling of magnet polatities
 
 - Packages Updated:
   Calo/CaloMoniDst v5r0, Calo/CaloReco v5r4p2, Muon/MuonPIDChecker v5r1,
