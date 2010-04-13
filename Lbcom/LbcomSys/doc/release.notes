@@ -6,6 +6,55 @@
 !             : project contain components used by all applications except Gauss
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v9r1>2010-04-14 LbcomSys v9r1</A></H1><PRE>
+This version uses Gaudi v21r8 and LHCb v30r1
+
+- Packages modified: HltDAQ v1r7, L0DU v10r5, RichTools v2r29p2,
+    STAlgorithms v4r0, STCheckers v3r0, STMonitors v3r0, STTools v4r0,
+    VeloDAQ v5r0, VeloTools v3r5
+
+- In HltDAQ v1r7
+  . HltDecReportsDecoder: try alternative standard RawEventLocations 
+    (::Copied, ::Default)  if  rawEvent not found in the user-defined location
+
+- In L0DU v10r5
+  . L0DUFromRawTool : try alternative standard RawEventLocations 
+    (::Copied, ::Default)  if  rawEvent not found in the user-defined location
+  . L0DURawBankMonitor : implement filterPassed to filter out problematic event
+    (according to a mask set via options)
+
+- In RichTools v2r29p2
+  . Minor update to Rich::TabulatedRefractiveIndex to correctly use the HLT
+    or Offline refractive indices from RichDet depending on if the tool is
+    in an HLT or Offline context.
+
+- In STTools v4r0, STMonitors v3r0, STCheckers v3r0, STAlgorithms v4r0
+  . Remove STSignalToNoiseTool
+
+- In STAlgorithms v4r0
+  . Allow use of cuts from conditions in STClusterCreator 
+  . Make threshold integer + cut >= (was >)
+
+- In STCheckers v3r0
+  . add cluster size versus angle plots to STClusterResolution
+
+- In STMonitors v3r0
+  . Additional Protection in STClusterMonitor
+  . Added possibility to cut on maximum number of clusters in STClusterMonitor.
+  . Finalize STDumpADCs with STTupleAlgBase::finalize.
+  . Added algorithm (STDumpClusters) to dump all clusters in an event to an ntuple
+
+- In VeloDAQ v5r0
+  . Made decoding more that 10k Velo clusters an AbortEvent incident to cap 
+    the tracking reconstruction time 
+  . Made a corrupted bank length in the full cluster decoding an Abort event
+    incident and caused the algorthm processing of that event to cease.
+  . DecodePileUpData : changed info() messages to Info() for non existing PU
+    banks
+
+- In VeloTools v3r5
+  . Fix in cluster position tool - the tool now follows the Tell1 way completely
+
 </PRE><H1><A NAME=v9r0>2010-03-25 LbcomSys v9r0</A></H1><PRE>
 This version uses Gaudi v21r8 and LHCb v30r0
 
