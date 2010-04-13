@@ -4,6 +4,11 @@
 ! Purpose     : GUI to allow the visualization of all data quality histograms
 !-----------------------------------------------------------------------------
 
+! 2010-04-13 - Patrick Robbe
+ - Archive.h/.cpp: move header files to cpp file
+ - DbRootHist, ParallelWait: add extra protections for multi thread
+ - PresenterMainFrame.cpp: add namespace
+
 !============ Presenter v1r0 2010-03-29 =============
 ! 2010-03-29 - Olivier Callot
  - Made the stat box transparent. Draw it only once -> smaller if single line
