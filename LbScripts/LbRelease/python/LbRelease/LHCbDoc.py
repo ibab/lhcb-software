@@ -521,13 +521,16 @@ class Doc(object):
             output = Popen(["fs", "lq", self.path], stdout = PIPE).communicate()[0].splitlines()[-1].split()
             quota = int(output[1])
             used = int(output[2])
-            if quota < (1.1 * (used + usage)):
-                output = Popen(["afs_admin", "sq", self.path, str(int(1.1 * (used + usage)))], stdout = PIPE).wait()
+            reqsize = int(1.1 * (used + usage))
+            if quota < reqsize:
+                self._log.info("Increasing AFS volume size to %d", reqsize)
+                output = Popen(["afs_admin", "sq", self.path, str(reqsize)], stdout = PIPE).wait()
         # copy the documentation from the temporary directory to the final place with a temporary name
+        self._log.info("Copy generated files from temporary directory")
         shutil.copytree(tempdir, self.output + ".new")
         if self.isAfsVolume:
             # Give read access to everybody
-            self._log("Give read access (recursively) to %s", self.path)
+            self._log.debug("Give read access (recursively) to %s", self.path)
             for dirpath, _, _ in os.walk(self.path):
                 Popen(["fs", "setacl", "-dir", dirpath, "-acl", "system:anyuser", "rl"]).wait()
         # Swap the old and the new documentation (avoid that the users see an incomplete doc)
@@ -543,6 +546,7 @@ class Doc(object):
         os.remove(os.path.join(self.path, "conf", "DoxyFileTmp.cfg"))
         # Mark as built
         self.toBeBuilt = False
+        self._log.debug("Documentation ready")
         
     def __len__(self):
         """
