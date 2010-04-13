@@ -1,14 +1,10 @@
 #ifndef DBROOTHIST_H
 #define DBROOTHIST_H 1
-#include "OnlineHistDB/OnlineHistDB.h"
-#include "OnlineHistDB/OnlineHistogram.h"
+
 #include "HistogramIdentifier.h"
-#include "OMAlib/OMAlib.h"
+
 #include "dic.hxx"
 #include "presenter.h"
-
-
-#include <boost/thread/recursive_mutex.hpp>
 
 #include <TH1.h>
 #include <TPad.h>
@@ -26,6 +22,13 @@ class DimBrowser;
 class vector;
 class PresenterMainFrame;
 class OMAFitFunction;
+class OnlineHistDB ;
+class OnlineHistogram ;
+class OMAlib ;
+
+namespace boost {
+  class recursive_mutex ;
+};
 
 enum ReferenceVisibility {
     Show = 0,
@@ -44,10 +47,10 @@ class DbRootHist : public HistogramIdentifier
                OnlineHistogram* onlineHist,
                pres::MsgLevel verbosity,
                DimBrowser* DimBr,
-               boost::recursive_mutex & oraMutex,
-               boost::recursive_mutex & dimMutex,
+               boost::recursive_mutex * oraMutex,
+               boost::recursive_mutex * dimMutex,
                std::vector<std::string*> & tasksNotRunning,
-               boost::recursive_mutex & rootMutex);
+               boost::recursive_mutex * rootMutex);
 
     DbRootHist (const DbRootHist & );
     DbRootHist & operator= (const DbRootHist &);
@@ -206,10 +209,10 @@ class DbRootHist : public HistogramIdentifier
 
     bool m_isOverlap;
 
-     boost::recursive_mutex* m_oraMutex;
-     boost::recursive_mutex* m_dimMutex;
-     std::vector<std::string*>* m_tasksNotRunning;
-     boost::recursive_mutex* m_rootMutex;
+    boost::recursive_mutex * m_oraMutex;
+    boost::recursive_mutex * m_dimMutex;
+    std::vector<std::string*>* m_tasksNotRunning;
+    boost::recursive_mutex * m_rootMutex;
 
     void cleanAnaSources();
     void loadAnaSources();
