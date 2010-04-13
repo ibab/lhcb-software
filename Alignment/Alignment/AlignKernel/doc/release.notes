@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.9 2010-02-05 16:44:18 jblouw Exp $
+! $Id: release.notes,v 1.10 2010-04-13 14:33:52 wouter Exp $
 ! Package     : AlignKernel
 ! Responsible : Adlene Hicheur en Wouter Hulsbergen
 !-------------------------------------------------------------------------------
+
+! 2010-04-13 -Wouter Hulsbergen
+ - made AlEquations less verbose when adding up
 
 ! 2010-02-05 Johan Blouw
  - tagged the package with v3r2
