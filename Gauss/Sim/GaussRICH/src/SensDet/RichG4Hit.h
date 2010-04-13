@@ -135,7 +135,10 @@ private:
                                        // if it is non zero one can unpack the bits to see where it reflected.
 
   G4ThreeVector m_HpdQuartzWindowExtSurfPhotIncidentPosition; // Photon incidence point on the external surface of the HPD Quartz Window.
-
+  G4int m_PhotonSourceProcessInfo; // 0 means unknown, 1 means Cherenkov process, 2 means Scintillation process
+                                   // This is the process which created the corresponding optical photon.
+                                   // for hits from backscattered pe, this is 0.
+  
 public:
 
   inline void SetEdep(const G4double de)
@@ -341,6 +344,16 @@ public:
   void setHpdQuartzWindowExtSurfPhotIncidentPosition (const G4ThreeVector & aHpdQuartzWindowExtSurfPhotIncidentPosition) {
     m_HpdQuartzWindowExtSurfPhotIncidentPosition=aHpdQuartzWindowExtSurfPhotIncidentPosition;
   }
+
+  inline const G4int PhotonSourceProcessInfo() const 
+  {
+    return m_PhotonSourceProcessInfo;
+  }
+
+  void setPhotonSourceProcessInfo(const G4int aSourceProcCode ) 
+  { m_PhotonSourceProcessInfo=aSourceProcCode;}
+
+
   inline Rich::DetectorType detectorType() const
   {
     return ( GetCurRichDetNum() < 0 ?

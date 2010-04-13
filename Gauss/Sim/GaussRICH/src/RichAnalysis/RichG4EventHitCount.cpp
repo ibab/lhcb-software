@@ -1222,7 +1222,9 @@ void RichG4EventHitCount::RichG4CountSaturatedHits(const G4Event* anEvent,  int 
     std::vector<int>TrajNumHitGasRich2( NumTrajR2,0);
     std::vector<int>TrajSatNumHitGasRich2( NumTrajR2,0);
     std::vector<int>TrajSatNumHitGasRich2NoHpdRefl( NumTrajR2,0);
-
+    std::vector<int>TrajSatNumHitGasRich2Scint( NumTrajR2,0);
+    std::vector<int>TrajSatNumHitGasRich2NoHpdReflNoScint( NumTrajR2,0);
+    
 
     
     for (int ihcolb=0; ihcolb<NumRichCollection; ihcolb++) {
@@ -1243,6 +1245,8 @@ void RichG4EventHitCount::RichG4CountSaturatedHits(const G4Event* anEvent,  int 
 
           RichG4Hit* bHit = (*RHCB)[ihb];
 
+          G4int aPhotSource = bHit->PhotonSourceProcessInfo();
+          
           //is it a reflected hit?    
 
 	       std::vector<bool> aHpdRefl = bHit->DecodeRichHpdReflectionFlag();
@@ -1372,6 +1376,9 @@ void RichG4EventHitCount::RichG4CountSaturatedHits(const G4Event* anEvent,  int 
 
                   TrajSatNumHitGasRich2[it2]++;
                   if(!areflectedInHpd) TrajSatNumHitGasRich2NoHpdRefl[it2]++;
+                  if((!areflectedInHpd) && (aPhotSource != 2 ))TrajSatNumHitGasRich2NoHpdReflNoScint[it2]++;
+                  if(aPhotSource == 2 )TrajSatNumHitGasRich2Scint[it2]++;
+                  
                   //  }
 
                 }
@@ -1426,7 +1433,9 @@ void RichG4EventHitCount::RichG4CountSaturatedHits(const G4Event* anEvent,  int 
     aRichCounter-> setNumHitPerTrackRich2Gas(TrajNumHitGasRich2);
     aRichCounter-> setNumHitSaturatedPerTrackRich2Gas(TrajSatNumHitGasRich2);
     aRichCounter-> setNumHitSaturatedPerTrackRich2GasNoHpdRefl(TrajSatNumHitGasRich2NoHpdRefl);
-
+    aRichCounter-> setNumHitSaturatedPerTrackRich2GasNoHpdReflNoScint(TrajSatNumHitGasRich2NoHpdReflNoScint);
+    aRichCounter-> setNumHitSaturatedPerTrackRich2GasScint(TrajSatNumHitGasRich2Scint);
+    
 
     // now to test the procedure
     //         for(int i=0; i< (int) TrajIdVectR1.size(); i++ ) {
@@ -1548,6 +1557,8 @@ void RichG4EventHitCount::RichG4CountAndClassifyHits( const G4Event* anEvent,  i
             G4int ChtkId =  aHit-> GetChTrackID();
             G4double ChTkPDGMass =  aHit->RichChTrackMass();
 
+            G4int aPhotonSource= aHit->PhotonSourceProcessInfo();
+            
             G4double ChTkEnergy =
               pow( (ChTkPDGMass*ChTkPDGMass+ aChTrackTotMom* aChTrackTotMom),0.5);
             G4double ChTkBeta=0.0;
@@ -1579,6 +1590,8 @@ void RichG4EventHitCount::RichG4CountAndClassifyHits( const G4Event* anEvent,  i
 
               aRichCounter->bumpNumHitTotRich1Gas();
 
+              if(aPhotonSource == 1   ) aRichCounter->bumpNumHitTotRich1GasCherenkovProc();
+              
 	      // now for the hpd reflection, backscattering etc.
 	      if(  areflectedInHpd) {                
                  aRichCounter->bumpNumHitTotRich1GasHpdRefl();                               
@@ -1614,6 +1627,8 @@ void RichG4EventHitCount::RichG4CountAndClassifyHits( const G4Event* anEvent,  i
 
               aRichCounter->bumpNumHitTotRich1Agel();
 
+              if(aPhotonSource == 1   ) aRichCounter->bumpNumHitTotRich1AgelCherenkovProc();
+
               if(aHpdKapDetRefl){
 		aRichCounter->bumpNumHitTotRich1AerogelHpdKaptonRefl();
 	      }
@@ -1626,60 +1641,70 @@ void RichG4EventHitCount::RichG4CountAndClassifyHits( const G4Event* anEvent,  i
             } else if (  aRadiatorNum == Rich2CF4CkvRadiatorNum ) {
 
               aRichCounter->bumpNumHitTotRich2Gas();
+              if(aPhotonSource == 1   ) { 
+                    aRichCounter->bumpNumHitTotRich2GasCherenkovProc();
+              }else if(aPhotonSource == 2   ){aRichCounter->bumpNumHitTotRich2GasScintProc(); 
+              }
+              
+            
+              
 
-	      if(  areflectedInHpd) {                
-                 aRichCounter->bumpNumHitTotRich2GasHpdRefl();                               
-	      }
-              if(aBackScatFlag >0 ) {
-		aRichCounter->bumpNumHitTotRich2GasHpdBackScat();
-	      }
+           	      if(  areflectedInHpd) {                
+                   aRichCounter->bumpNumHitTotRich2GasHpdRefl();                               
+	                }
+                  if(aBackScatFlag >0 ) {
+              		  aRichCounter->bumpNumHitTotRich2GasHpdBackScat();
+	                }
 
-              if(aHpdQwPcRefl ) {
-          	aRichCounter->bumpNumHitTotRich2GasHpdQWPCRefl();
-	      }
-              if( aHpdChroRefl ) {
-                aRichCounter-> bumpNumHitTotRich2GasHpdChromRefl();
-	      }
-              if(aHpdSiDetRefl){
-		aRichCounter-> bumpNumHitTotRich2GasHpdSiliconRefl();
-	      }
-              if(aHpdKovDetRefl){
-		aRichCounter-> bumpNumHitTotRich2GasHpdKovarRefl();
-	      }
-              if(aHpdKapDetRefl){
-		aRichCounter-> bumpNumHitTotRich2GasHpdKaptonRefl();
-	      }
+                 if(aHpdQwPcRefl ) {
+                	aRichCounter->bumpNumHitTotRich2GasHpdQWPCRefl();
+                 }
+                if( aHpdChroRefl ) {
+                  aRichCounter-> bumpNumHitTotRich2GasHpdChromRefl();
+	              }
+                if(aHpdSiDetRefl){
+	              	aRichCounter-> bumpNumHitTotRich2GasHpdSiliconRefl();
+	              }
+                if(aHpdKovDetRefl){
+	             	aRichCounter-> bumpNumHitTotRich2GasHpdKovarRefl();
+	              }
+                if(aHpdKapDetRefl){
+             		aRichCounter-> bumpNumHitTotRich2GasHpdKaptonRefl();
+	              }
 
 
 
               if(  ChtkId <= 1 ) {
 
                 aRichCounter->bumpNumHitPartGunPrimaryPartRich2Gas();
-
+                
               }
+              
+              
+              
 
             }else if (aRadiatorNum == RichFilterGenericCkvRadiatorNum ) {
-	      aRichCounter-> bumpNumHitTotRich1FilterGeneric();
+      	      aRichCounter-> bumpNumHitTotRich1FilterGeneric();
 
             }else if ( aRadiatorNum == RichFilterD263CkvRadiatorNum ) {
-	      aRichCounter->bumpNumHitTotRich1FilterD263();
+         	      aRichCounter->bumpNumHitTotRich1FilterD263();
 
             }else if ( aRadiatorNum == Rich1GasQWindowCkvRadiatorNum) {
-	      aRichCounter->bumpNumHitTotRich1GasQw();
+          	      aRichCounter->bumpNumHitTotRich1GasQw();
             }else if ( aRadiatorNum == Rich2GasQWindowCkvRadiatorNum) {
-	      aRichCounter->bumpNumHitTotRich2GasQw();
-	    }else if ( aRadiatorNum == RichHpdQuartzWindowCkvRadiatorNum) {
+	                aRichCounter->bumpNumHitTotRich2GasQw();
+	          }else if ( aRadiatorNum == RichHpdQuartzWindowCkvRadiatorNum) {
               
               if(ihcol == 0 || ihcol == 1 ) {
-	        aRichCounter-> bumpNumHitTotRich1HpdQw();
-	      }else if (ihcol == 2 || ihcol == 3 ) {
-	        aRichCounter-> bumpNumHitTotRich2HpdQw();
+	               aRichCounter-> bumpNumHitTotRich1HpdQw();
+	            }else if (ihcol == 2 || ihcol == 3 ) {
+	               aRichCounter-> bumpNumHitTotRich2HpdQw();
               } 
 
              } else {
    
 
-	      aRichCounter->bumpNumHitTotNoRadiator();
+       	      aRichCounter->bumpNumHitTotNoRadiator();
              
             }
           }

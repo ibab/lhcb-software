@@ -6,7 +6,7 @@
 #include "RichG4AnalysisConstGauss.h"
 #include "RichG4GaussPathNames.h"
 
-G4Track* RichPEInfoAttach(const G4Track& aPhotonTk, G4Track* aPETk)
+G4Track* RichPEInfoAttach(const G4Track& aPhotonTk, G4Track* aPETk,const G4ThreeVector & aLocalElectronOrigin)
 {
   G4VUserTrackInformation* aTkInfo=aPhotonTk.GetUserInformation();
   GaussTrackInformation* CurRichPhotTrackInfo=(GaussTrackInformation*)aTkInfo;
@@ -48,6 +48,9 @@ G4Track* RichPEInfoAttach(const G4Track& aPhotonTk, G4Track* aPETk)
           CurRichPEInfo->  setPhotOriginRadiatorNumber(aPhotInfo->PhotProdRadiatorNum());
             CurRichPEInfo->setHpdPhotonReflectionFlag(aPhotInfo->PhotonHpdReflectionFlag());
             CurRichPEInfo->setQW2PCreflFlagSave(aPhotInfo->QW2PCreflFlagSave());
+            CurRichPEInfo->setPhotonSourceInformation( aPhotInfo->PhotonSourceInfo() );
+            //G4cout<<" PE INFo attach photon source "<< aPhotInfo->PhotonSourceInfo() <<G4endl;
+            
 
           // fill the following only for verbose tag mode.
           if( aPhotInfo->  VerbosePhotTagFlag() ) {
@@ -84,6 +87,7 @@ G4Track* RichPEInfoAttach(const G4Track& aPhotonTk, G4Track* aPETk)
     }
   }
 
+  CurRichPEInfo ->setHpdPeLocalOriginPosition(aLocalElectronOrigin);
   CurRichPEInfo-> setPhotonEmisPoint(aPhotonTk.GetVertexPosition());
   CurRichPEInfo->  setMotherOfPhotonId(aPhotonTk.GetParentID());
   CurRichPEInfo-> setOptPhotonId(aPhotonTk.GetTrackID());

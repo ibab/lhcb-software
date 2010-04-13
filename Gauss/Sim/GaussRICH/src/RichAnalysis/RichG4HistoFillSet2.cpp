@@ -66,6 +66,11 @@ void RichG4HistoFillSet2:: FillRichG4HistoSet2( const G4Event* anEvent,
                                                      "RICHG4HISTOSET2/123");
   SmartDataPtr<IHistogram1D>hNumTotHitGasRich1Large(CurrentHistoSvc,
                                                     "RICHG4HISTOSET2/153");
+
+  SmartDataPtr<IHistogram1D>hNumTotHitRich2NonScint(CurrentHistoSvc,
+                                                 "RICHG4HISTOSET2/171");
+  SmartDataPtr<IHistogram1D>hNumTotHitRich2Scint(CurrentHistoSvc,
+                                                 "RICHG4HISTOSET2/172");
   SmartDataPtr<IHistogram1D>hNumTotHitRich2Large(CurrentHistoSvc,
                                                  "RICHG4HISTOSET2/173");
 
@@ -119,7 +124,9 @@ void RichG4HistoFillSet2:: FillRichG4HistoSet2( const G4Event* anEvent,
 
   G4int NumtotRich1=0;
   G4int NumtotRich2=0;
-
+  G4int NumtotRich2NonScint=0;
+  G4int NumtotRich2Scint=0;
+  
 
 
   G4int NumRichCollection= NumRichColl;
@@ -150,7 +157,8 @@ void RichG4HistoFillSet2:: FillRichG4HistoSet2( const G4Event* anEvent,
           G4double CkvTheta=      aHit->  ThetaCkvAtProd();
           G4int ChtkId =  aHit-> GetChTrackID();
           G4int aRichDetNum =  aHit-> GetCurRichDetNum();
-
+          G4int aPhotSource = aHit->PhotonSourceProcessInfo() ;
+          
 	  //  G4ThreeVector aTrackMomAtCkv    = aHit->ChTrackMomVect();
 	  // G4ThreeVector aTrackPreStepPos  = aHit-> ChTrackCkvPreStepPos();
 
@@ -170,6 +178,13 @@ void RichG4HistoFillSet2:: FillRichG4HistoSet2( const G4Event* anEvent,
           } else if ( aRichDetNum == 1 ) {
 
             NumtotRich2++;
+            if(aPhotSource == 2 ) {
+              NumtotRich2Scint++;
+            }else {
+              NumtotRich2NonScint++;
+            }
+            
+            
 
           }
 
@@ -251,6 +266,14 @@ void RichG4HistoFillSet2:: FillRichG4HistoSet2( const G4Event* anEvent,
       hNumTotHitRich2Large->fill(NumtotRich2*1.0,1.0);
   }
 
+  if(NumtotRich2Scint> 0 ) {
+    if(hNumTotHitRich2Scint)hNumTotHitRich2Scint->fill(NumtotRich2Scint*1.0, 1.0);
+    
+  }
+  if(NumtotRich2NonScint>0 ) {
+    if(hNumTotHitRich2NonScint  )  hNumTotHitRich2NonScint->fill(NumtotRich2NonScint*1.0,1.0);
+  }
+  
 
   if( NumtotAgel > 0 )  {
 
@@ -424,8 +447,12 @@ void RichG4HistoFillSet2:: FillRichG4HistoSet2A()
   SmartDataPtr<IHistogram1D>hNumTotHitCF4Sat(CurrentHistoSvc,
                                              "RICHG4HISTOSET2/179");;
 
-  SmartDataPtr<IHistogram1D>hNumTotHitCF4SatNoRefl(CurrentHistoSvc,
+  SmartDataPtr<IHistogram1D>hNumTotHitCF4SatNoReflNoScint(CurrentHistoSvc,
                                              "RICHG4HISTOSET2/180");
+  SmartDataPtr<IHistogram1D>hNumTotHitCF4SatNoRefl(CurrentHistoSvc,
+                                             "RICHG4HISTOSET2/181");
+  SmartDataPtr<IHistogram1D>hNumTotHitCF4SatScint(CurrentHistoSvc,
+                                             "RICHG4HISTOSET2/182");
 
 
   RichG4Counters* aRichCounter = RichG4Counters::getInstance();
@@ -447,6 +474,13 @@ void RichG4HistoFillSet2:: FillRichG4HistoSet2A()
 
   const std::vector<int> & NumRich2GasSatHit =
     aRichCounter->NumHitSaturatedPerTrackRich2Gas();
+
+  const std::vector<int> & NumRich2GasSatHitNoReflNoScint =
+    aRichCounter->NumHitSaturatedPerTrackRich2GasNoHpdReflNoScint();
+
+  const std::vector<int> & NumRich2GasSatHitScint =
+    aRichCounter->NumHitSaturatedPerTrackRich2GasScint();
+  
 
   const std::vector<int> & NumRich2GasSatHitNoRefl =
     aRichCounter->NumHitSaturatedPerTrackRich2GasNoHpdRefl();
@@ -506,7 +540,16 @@ void RichG4HistoFillSet2:: FillRichG4HistoSet2A()
     if( nhitc1 > 0) {
       if(hNumTotHitCF4SatNoRefl) hNumTotHitCF4SatNoRefl->fill(nhitc1,1.0);
     }
+    int nhitc2 =  NumRich2GasSatHitNoReflNoScint[ihtrc];
+    if( nhitc2 > 0) {
+      if(hNumTotHitCF4SatNoReflNoScint) hNumTotHitCF4SatNoReflNoScint->fill(nhitc2,1.0);
+    }
+    int nhitc3 =  NumRich2GasSatHitScint[ihtrc];
+    if( nhitc3 > 0) {
+      if(hNumTotHitCF4SatScint) hNumTotHitCF4SatScint->fill(nhitc3,1.0);
+    }
 
+    
   }
 
 

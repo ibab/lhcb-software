@@ -100,7 +100,7 @@ void RichG4HistoDefineSet2::bookRichG4HistogramsSet2() {
   title="Total number of Rich1 Hits in Aerogel per event ";
 
   m_hNumTotHitAgelRich1= CurHistoSvc->book(m_RichG4HistoPathSet2+"125",
-                              title,100,0.0,50.0);
+                              title,100,0.0,25.0);
   if(! m_hNumTotHitAgelRich1) {
   RichG4Histolog << MSG::ERROR<<"Failed to book histo   "<<title<<endreq;
 
@@ -110,7 +110,7 @@ void RichG4HistoDefineSet2::bookRichG4HistogramsSet2() {
   title="Number of Rich1 Hits from Aerogel from primary particlegun per event ";
 
   m_hNumHitAgelPrim= CurHistoSvc->book(m_RichG4HistoPathSet2+"127",
-                              title,100,0.0,50.0);
+                              title,100,0.0,25.0);
   if(! m_hNumHitAgelPrim) {
   RichG4Histolog << MSG::ERROR<<"Failed to book histo   "<<title<<endreq;
 
@@ -119,7 +119,7 @@ void RichG4HistoDefineSet2::bookRichG4HistogramsSet2() {
   title="Number of  saturated(beta gt 0.999)  Rich1 Hits inluding Rayleigh in Aerogel per track ";
 
   m_hNumHitAgelWithRlySat= CurHistoSvc->book(m_RichG4HistoPathSet2+"128",
-                              title,100,0.0,50.0);
+                              title,100,0.0,25.0);
   if(! m_hNumHitAgelWithRlySat) {
   RichG4Histolog << MSG::ERROR<<"Failed to book histo   "<<title<<endreq;
 
@@ -128,7 +128,7 @@ void RichG4HistoDefineSet2::bookRichG4HistogramsSet2() {
   title="Number of  saturated(beta gt 0.999)  Rich1 Hits in Aerogel per track ";
 
   m_hNumHitAgelSat= CurHistoSvc->book(m_RichG4HistoPathSet2+"129",
-                              title,100,0.0,50.0);
+                              title,100,0.0,25.0);
   if(! m_hNumHitAgelSat) {
   RichG4Histolog << MSG::ERROR<<"Failed to book histo   "<<title<<endreq;
 
@@ -137,7 +137,7 @@ void RichG4HistoDefineSet2::bookRichG4HistogramsSet2() {
   title="Number of  Rich1 Hits in Aerogel per saturated track with no hpd refl or backscatter";
 
   m_hNumHitAgelSatNoRefl= CurHistoSvc->book(m_RichG4HistoPathSet2+"130",
-                              title,100,0.0,50.0);
+                              title,100,0.0,25.0);
   if(! m_hNumHitAgelSat) {
   RichG4Histolog << MSG::ERROR<<"Failed to book histo   "<<title<<endreq;
 
@@ -146,7 +146,7 @@ void RichG4HistoDefineSet2::bookRichG4HistogramsSet2() {
   title="Number of  saturated  Rich1 Hits in Aerogel per track for All Tracks in RICH1 ";
 
   m_hNumTotHitAgelFullAcceptSat = CurHistoSvc->book(m_RichG4HistoPathSet2+"329",
-                              title,100,0.0,50.0);
+                              title,100,0.0,25.0);
   if(! m_hNumTotHitAgelFullAcceptSat) {
   RichG4Histolog << MSG::ERROR<<"Failed to book histo   "<<title<<endreq;
   }
@@ -154,24 +154,24 @@ void RichG4HistoDefineSet2::bookRichG4HistogramsSet2() {
   title="Number of  Sat Hits Vs polar Angle in Aerogel  ";
 
   m_hNumHitVsAngAgelFullAcceptSat = CurHistoSvc->book(m_RichG4HistoPathSet2+"322",
-                              title,100,0.0,0.4,100,0.0,20.0);
+                              title,100,0.0,0.4,100,0.0,25.0);
   if(! m_hNumHitVsAngAgelFullAcceptSat) {
   RichG4Histolog << MSG::ERROR<<"Failed to book histo   "<<title<<endreq;
   }
 
 
-  title="Total number of Rich1 Hits in C4F10 per event ";
+  title="Total number of Rich1 Hits in Rich1Gas per event ";
 
 
   m_hNumTotHitC4F10Rich1= CurHistoSvc->book(m_RichG4HistoPathSet2+"155",
-                          title,100,0.0,200.0);
+                          title,100,0.0,100.0);
   if(! m_hNumTotHitC4F10Rich1) {
   RichG4Histolog << MSG::ERROR<<"Failed to book histo   "<<title<<endreq;
 
   }
 
 
-  title="Number of Rich1 Hits in C4F10 from primary particlegun per event";
+  title="Number of Rich1 Hits in Rich1Gas from primary particlegun per event";
 
 
   m_hNumHitC4F10Prim= CurHistoSvc->book(m_RichG4HistoPathSet2+"157",
@@ -181,7 +181,7 @@ void RichG4HistoDefineSet2::bookRichG4HistogramsSet2() {
 
   }
 
-  title="Number of Rich1 saturated (beta gt 0.999) Hits in C4F10 per track";
+  title="Number of Rich1 saturated (beta gt 0.999) Hits in Rich1Gas per track";
 
 
   m_hNumHitC4F10Sat= CurHistoSvc->book(m_RichG4HistoPathSet2+"159",
@@ -191,7 +191,7 @@ void RichG4HistoDefineSet2::bookRichG4HistogramsSet2() {
 
   }
 
-  title="Number of Rich1 Hits from C4F10 per saturated track with no hpd refl or backscatter";
+  title="Number of Rich1 Hits from Rich1Gas per saturated track with no hpd refl or backscatter";
 
 
   m_hNumHitC4F10SatNoRefl= CurHistoSvc->book(m_RichG4HistoPathSet2+"160",
@@ -201,7 +201,7 @@ void RichG4HistoDefineSet2::bookRichG4HistogramsSet2() {
 
   }
 
-  title="Number of Rich1 saturated Hits in C4F10 per track for All Tracks in Rich1";
+  title="Number of Rich1 saturated Hits in Rich1Gas per track for All Tracks in Rich1";
 
 
   m_hNumTotHitC4F10FullAcceptSat = CurHistoSvc->book(m_RichG4HistoPathSet2+"359",
@@ -211,7 +211,7 @@ void RichG4HistoDefineSet2::bookRichG4HistogramsSet2() {
 
   }
 
-  title="Number of Sat hits vs Track Polar Angle in C4F10 ";
+  title="Number of Sat hits vs Track Polar Angle in Rich1Gas ";
 
 
   m_hNumHitVsAngC4F10FullAcceptSat = CurHistoSvc->book(m_RichG4HistoPathSet2+"352",
@@ -224,9 +224,28 @@ void RichG4HistoDefineSet2::bookRichG4HistogramsSet2() {
 
 
 
+  title="Total number of Non-scint Rich2 Hits in Rich2Gas per event ";
 
 
-  title="Total number of Rich2 Hits in CF4 per event ";
+  m_hNumTotHitCF4NonScintRich2= CurHistoSvc->book(m_RichG4HistoPathSet2+"171",
+                     title,100,0.0,100.0);
+  if(! m_hNumTotHitCF4NonScintRich2) {
+  RichG4Histolog << MSG::ERROR<<"Failed to book histo   "<<title<<endreq;
+
+  }
+
+  title="Total number of Scintillation Rich2 Hits in Rich2Gas per event ";
+
+
+  m_hNumTotHitCF4ScintRich2= CurHistoSvc->book(m_RichG4HistoPathSet2+"172",
+                     title,100,0.0,100.0);
+  if(! m_hNumTotHitCF4ScintRich2) {
+  RichG4Histolog << MSG::ERROR<<"Failed to book histo   "<<title<<endreq;
+
+  }
+
+
+  title="Total number of Rich2 Hits in Rich2Gas per event ";
 
 
   m_hNumTotHitCF4Rich2= CurHistoSvc->book(m_RichG4HistoPathSet2+"175",
@@ -236,46 +255,68 @@ void RichG4HistoDefineSet2::bookRichG4HistogramsSet2() {
 
   }
 
-  title="Number of Rich2 Hits in CF4 from primary particlegun per event";
+  title="Number of Rich2 Hits in Rich2Gas from primary particlegun per event";
 
 
   m_hNumHitCF4Prim= CurHistoSvc->book(m_RichG4HistoPathSet2+"177",
-                     title,100,0.0,200.0);
+                     title,100,0.0,100.0);
   if(! m_hNumHitCF4Prim) {
   RichG4Histolog << MSG::ERROR<<"Failed to book histo   "<<title<<endreq;
 
   }
 
-  title="Number of Rich2 saturated (beta gt 0.999 ) Hits in CF4 per track";
+  title="Number of Rich2 saturated (beta gt 0.999 ) Hits in Rich2Gas per track";
 
 
   m_hNumHitCF4Sat= CurHistoSvc->book(m_RichG4HistoPathSet2+"179",
-                     title,100,0.0,200.0);
+                     title,100,0.0,100.0);
   if(! m_hNumHitCF4Sat) {
   RichG4Histolog << MSG::ERROR<<"Failed to book histo   "<<title<<endreq;
 
   }
 
-  title="Number of Rich2 Hits in CF4 per saturated track with no hpd refl or backscatter";
+  title="Number of Rich2 Hits in Rich2Gas per saturated track with no hpd refl or backscatter or Scintillation";
 
 
-  m_hNumHitCF4SatNoRefl= CurHistoSvc->book(m_RichG4HistoPathSet2+"180",
-                     title,100,0.0,200.0);
-  if(! m_hNumHitCF4Sat) {
+  m_hNumHitCF4SatNoReflNoScint= CurHistoSvc->book(m_RichG4HistoPathSet2+"180",
+                     title,100,0.0,100.0);
+  if(! m_hNumHitCF4SatNoReflNoScint) {
+  RichG4Histolog << MSG::ERROR<<"Failed to book histo   "<<title<<endreq;
+
+  }
+  title="Number of Rich2 Hits in Rich2Gas per saturated track with no hpd refl or backscatter";
+
+
+  m_hNumHitCF4SatNoRefl= CurHistoSvc->book(m_RichG4HistoPathSet2+"181",
+                     title,100,0.0,100.0);
+  if(!m_hNumHitCF4SatNoRefl ) {
   RichG4Histolog << MSG::ERROR<<"Failed to book histo   "<<title<<endreq;
 
   }
 
-  title="Number of Rich2 saturated Hits in CF4 per track for All Tracks in Rich2";
+  title="Number of Rich2 Hits in Rich2Gas per saturated track from Scintillation ";
+
+
+  m_hNumHitCF4SatScin= CurHistoSvc->book(m_RichG4HistoPathSet2+"182",
+                     title,100,0.0,50.0);
+  if(!m_hNumHitCF4SatScin ) {
+  RichG4Histolog << MSG::ERROR<<"Failed to book histo   "<<title<<endreq;
+
+  }
+
+
+
+
+  title="Number of Rich2 saturated Hits in Rich2Gas per track for All Tracks in Rich2";
 
 
   m_hNumTotHitCF4FullAcceptSat = CurHistoSvc->book(m_RichG4HistoPathSet2+"379",
-                     title,100,0.0,200.0);
+                     title,100,0.0,100.0);
   if(!m_hNumTotHitCF4FullAcceptSat ) {
   RichG4Histolog << MSG::ERROR<<"Failed to book histo   "<<title<<endreq;
 
   }
-  title="Number of Sat  Hits vs polar Angle in CF4 ";
+  title="Number of Sat  Hits vs polar Angle in Rich2Gas ";
 
 
   m_hNumHitVsAngCF4FullAcceptSat = CurHistoSvc->book(m_RichG4HistoPathSet2+"372",
@@ -324,7 +365,7 @@ void RichG4HistoDefineSet2::bookRichG4HistogramsSet2() {
   RichG4Histolog << MSG::ERROR<<"Failed to book histo   "<<title<<endreq;
 
   }
-  title="Cherenkov Theta Angle at Photon Production in C4F10 vs Track Momemtum ";
+  title="Cherenkov Theta Angle at Photon Production in Rich1Gas vs Track Momemtum ";
 
 
   m_hCkvProdC4F10Rich1= CurHistoSvc->book(m_RichG4HistoPathSet2+"610",title,
@@ -335,7 +376,7 @@ void RichG4HistoDefineSet2::bookRichG4HistogramsSet2() {
   }
    
 
-  title="Cherenkov Theta Angle at Photon Production in CF4 vs Track Momemtum ";
+  title="Cherenkov Theta Angle at Photon Production in Rich2Gas vs Track Momemtum ";
 
 
   m_hCkvProdCF4Rich2= CurHistoSvc->book(m_RichG4HistoPathSet2+"620",

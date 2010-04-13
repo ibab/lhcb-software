@@ -388,7 +388,7 @@ RichHpdPhotoElectricEffect::PostStepDoIt(const G4Track& aTrack,
     aSecPETrack->SetTouchableHandle((G4VTouchable*)0);
     aSecPETrack->SetParentID(aTrack.GetTrackID());
     aSecPETrack->SetGoodForTrackingFlag(true);
-    G4Track* aTaggedSecPETrack = RichPEInfoAttach(aTrack,aSecPETrack);
+    G4Track* aTaggedSecPETrack = RichPEInfoAttach(aTrack,aSecPETrack,LocalElectronOrigin);
     aParticleChange.AddSecondary(aTaggedSecPETrack);
 
     //  G4cout<<" RichHpdPhotoelectric effect : Now created a photoelectron with energy =  "

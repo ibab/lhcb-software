@@ -139,7 +139,7 @@ RichG4OpRayleigh::PostStepDoIt(const G4Track& aTrack, const G4Step& aStep)
         if(G4UniformRand() < 0.5)CosTheta = -CosTheta;
 
 
-  // Addtions made by SE to tag the photon as
+  // Additions made by SE to tag the photon as
   // rayleighscattered photon  Oct 2003.
   // This is put under a switch .
   // To allow for the test of the filter 

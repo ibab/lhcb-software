@@ -79,6 +79,11 @@ private:
   int m_NumHitTotRich2GasHpdSiliconRefl;
   int m_NumHitTotRich2GasHpdKovarRefl;
   int m_NumHitTotRich2GasHpdKaptonRefl;
+
+  int m_NumHitTotRich2GasCherenkovProc;
+  int m_NumHitTotRich2GasScintProc;
+  int m_NumHitTotRich1GasCherenkovProc;
+  int m_NumHitTotRich1AgelCherenkovProc;
   
 
   std::vector<int> m_NumHitPerTrackRich1Gas;
@@ -92,6 +97,11 @@ private:
   std::vector<int> m_NumHitSaturatedPerTrackRich1GasNoHpdRefl;
   std::vector<int> m_NumHitSaturatedPerTrackRich1AgelNoHpdRefl;
   std::vector<int> m_NumHitSaturatedPerTrackRich2GasNoHpdRefl;
+  
+  std::vector<int> m_NumHitSaturatedPerTrackRich2GasNoHpdReflNoScint;
+  std::vector<int> m_NumHitSaturatedPerTrackRich2GasScint;
+  
+
 
   std::vector<int> m_NumHitPerTrackRich1WithRlyAgel;
   std::vector<int> m_NumHitSaturatedPerTrackRich1WithRlyAgel;

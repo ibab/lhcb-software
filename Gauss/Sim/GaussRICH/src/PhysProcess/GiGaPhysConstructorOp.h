@@ -104,9 +104,16 @@ public:
   
   bool activateRICHOpticalPhysProcStatus()  {  return m_ActivateRICHOpticalPhysProc;}
   void setRICHOpticalPhysProcActivation(bool aAct) 
-  {m_ActivateRICHOpticalPhysProc=aAct;}
+  {m_ActivateRICHOpticalPhysProc=aAct;} 
+ 
+  bool activateRICHCF4Scintillation() 
+  {  return m_activateRICHCF4Scintillation;}
   
-    
+  //  bool activateRICHCF4ScintillationHisto() 
+  //{return m_activateRICHCF4ScintillationHisto;}
+  
+
+  
       
   
     
@@ -130,7 +137,9 @@ private:
   bool m_IsPSFPreDc06Flag;
   bool m_HpdQEUseNominalTable;
   bool m_ActivateRICHOpticalPhysProc;
-  
+  bool m_activateRICHCF4Scintillation;
+  // bool m_activateRICHCF4ScintillationHisto;
+    
   
     
   

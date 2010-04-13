@@ -42,12 +42,17 @@ private:
   IHistogram1D*         m_hNumHitC4F10Sat;
   IHistogram1D*         m_hNumHitC4F10SatNoRefl;
   IHistogram1D*         m_hNumTotHitCF4Rich2;
+  IHistogram1D*         m_hNumTotHitCF4NonScintRich2;
+  IHistogram1D*         m_hNumTotHitCF4ScintRich2;
+  
   IHistogram1D*         m_hNumTotHitNoRadiatorRich1;
   IHistogram1D*         m_hNumTotHitNoRadiatorRich2;
   IHistogram1D*         m_hNumTotHitNoRadiator;
   IHistogram1D*          m_hNumHitCF4Prim;
   IHistogram1D*          m_hNumHitCF4Sat;
   IHistogram1D*          m_hNumHitCF4SatNoRefl;
+  IHistogram1D*          m_hNumHitCF4SatNoReflNoScint;
+  IHistogram1D*          m_hNumHitCF4SatScin;
   IHistogram1D*         m_hNumTotHitRich1Large;
   IHistogram1D*         m_hNumTotHitAgelRich1Large;
   IHistogram1D*         m_hNumTotHitGasRich1Large;

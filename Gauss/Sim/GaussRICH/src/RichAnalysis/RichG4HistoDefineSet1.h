@@ -64,6 +64,11 @@ private:
   // IHistogram2D*         m_hGlobalPEOriginAgelBotXY;
   // IHistogram2D*         m_hGlobalPEOriginC4F10BotXY;
 
+  //  IHistogram1D*  m_hEnergyLossInCF4;
+  
+  // IHistogram1D* m_hNumScintPhotProdInCF4;
+  
+
   std::string m_RichG4HistoPathSet1; ///< Histo path
   ISvcLocator* m_svcLocSet1;
 

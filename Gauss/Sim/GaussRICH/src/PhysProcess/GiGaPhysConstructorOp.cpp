@@ -71,7 +71,8 @@ GiGaPhysConstructorOp::GiGaPhysConstructorOp
     m_UseHpdMagDistortions(false),
     m_IsPSFPreDc06Flag(false),
     m_HpdQEUseNominalTable(false),
-    m_ActivateRICHOpticalPhysProc(true)
+    m_ActivateRICHOpticalPhysProc(true),
+    m_activateRICHCF4Scintillation(true)
 {
   // in the above 3 is for the three radiators.
 
@@ -102,6 +103,10 @@ GiGaPhysConstructorOp::GiGaPhysConstructorOp
 
   declareProperty("RichHpdUseNominalQETable", m_HpdQEUseNominalTable);
   declareProperty("RichOpticalPhysicsProcessActivate", m_ActivateRICHOpticalPhysProc);
+
+  declareProperty("RichActivateCF4Scintillation",  m_activateRICHCF4Scintillation);
+
+  //  declareProperty("RichActivateCF4ScintHisto" , m_activateRICHCF4ScintillationHisto);
   
 
 }
@@ -231,7 +236,7 @@ void  GiGaPhysConstructorOp::ConstructPeProcess()
 #include "RichG4OpRayleigh.hh"
 #include "RichG4OpBoundaryProcess.hh"
 #include "RichHpdPhotoElectricEffect.h"
-
+#include "RichG4Scintillation.hh"
 
 //=============================================================================
 // ConstructOp
@@ -255,12 +260,23 @@ void GiGaPhysConstructorOp::ConstructOp() {
   RichHpdPhotoElectricEffect* theRichHpdPhotoElectricProcess= 
     new RichHpdPhotoElectricEffect(this,
                      "RichHpdPhotoelectricProcess", fOptical);
+
+
+
+  RichG4Scintillation* theRichScintillationProcess= 0;
+  
+  if( m_activateRICHCF4Scintillation ) {
+    
+    theRichScintillationProcess = new RichG4Scintillation("RichG4Scintillation",fOptical);
+    theRichScintillationProcess->SetVerboseLevel(0);
+    
+  }
   
   theCerenkovProcess->SetVerboseLevel(0);
   theAbsorptionProcess->SetVerboseLevel(0);
   theRayleighScatteringProcess->SetVerboseLevel(0);
   theBoundaryProcess->SetVerboseLevel(0);
-
+  
   theRichHpdPhotoElectricProcess->setUseHpdMagDistortions( (G4bool) m_UseHpdMagDistortions);
   theRichHpdPhotoElectricProcess->setPSFPreDc06Flag(m_IsPSFPreDc06Flag);
   theRichHpdPhotoElectricProcess->setHpdQEUsingNominalTable(m_HpdQEUseNominalTable);
@@ -304,6 +320,14 @@ void GiGaPhysConstructorOp::ConstructOp() {
     SetRichVerboseInfoTag( (G4bool) m_RichActivateVerboseProcessInfoTag);
   theCerenkovProcess->
     SetMaxPhotonPerRadiatorFlag((G4bool) m_ApplyMaxPhotCkvLimitPerRadiator);  
+
+  if( m_activateRICHCF4Scintillation ) {
+    
+    theRichScintillationProcess->
+          SetRichVerboseInfoTag( (G4bool) m_RichActivateVerboseProcessInfoTag);
+    theRichScintillationProcess->SetTrackSecondariesFirst(false);
+  }
+  
   
   G4OpticalSurfaceModel themodel = glisur;
   theBoundaryProcess->SetModel(themodel);
@@ -323,14 +347,29 @@ void GiGaPhysConstructorOp::ConstructOp() {
     G4String particleName = particle->GetParticleName();
     if(particleName != "pe-" )
       {
+
+        G4ProcessManager* pmanager = particle->GetProcessManager();
         if (theCerenkovProcess->IsApplicable(*particle)) 
           {
-            G4ProcessManager* pmanager = particle->GetProcessManager();
-	    // pmanager->AddContinuousProcess(theCerenkovProcess);
+            //      G4ProcessManager* pmanager = particle->GetProcessManager();
+	          // pmanager->AddContinuousProcess(theCerenkovProcess);
             // this modif to be similar to that G4.9.1 onwards. SE 5-8-2008
             pmanager->AddProcess(theCerenkovProcess);
             pmanager->SetProcessOrdering(theCerenkovProcess,idxPostStep);
           }
+
+        if(   m_activateRICHCF4Scintillation ) {
+          
+          if(theRichScintillationProcess->IsApplicable(*particle)){
+
+              pmanager->AddProcess(theRichScintillationProcess);
+              pmanager->SetProcessOrderingToLast(theRichScintillationProcess, idxAtRest);
+              pmanager->SetProcessOrderingToLast(theRichScintillationProcess, idxPostStep);
+
+          }
+        }
+        
+        
       }
     //    G4cout<<"Particle name  "<<particleName<<endl;
     if (particleName == "opticalphoton") 

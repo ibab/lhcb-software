@@ -75,6 +75,9 @@ private:
   /// Back-scattering from Si hits
   DMap m_siBackScatt;
 
+  ///  Scintillation hits
+  DMap m_scintillationHits;
+  
   /// overall hits from all types of HPD reflections
   DMap m_hpdReflHits;
   /// overall hits from photons reflected by the QW/PC interface in the HPD

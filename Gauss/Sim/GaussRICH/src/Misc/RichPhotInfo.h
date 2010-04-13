@@ -143,7 +143,11 @@ public:
   void setHpdQWPhotIncidentPosition(const  G4ThreeVector & aHpdQWPhotIncidentPosition) {
     m_HpdQWPhotIncidentPosition=aHpdQWPhotIncidentPosition;
   }
-
+  
+  G4int PhotonSourceInfo()  {  return m_PhotonSourceInfo;}
+  void setPhotonSourceInfo(G4int aSourceInfo) 
+  { m_PhotonSourceInfo=aSourceInfo;  }
+  
 
 private:
 
@@ -173,7 +177,8 @@ private:
                                    // some part of the hpd
 
   G4ThreeVector m_HpdQWPhotIncidentPosition;
-
+  G4int m_PhotonSourceInfo; // 0 means unknown,  1 means cherenkov process , 2 means scintillation process
+  
 };
 
 #endif

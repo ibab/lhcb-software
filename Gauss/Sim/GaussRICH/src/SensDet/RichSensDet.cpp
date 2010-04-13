@@ -178,6 +178,10 @@ bool RichSensDet::ProcessHits( G4Step* aStep ,
   G4ThreeVector CurLocalPos = theNavigator->
     GetGlobalToLocalTransform().
     TransformPoint(CurGlobalPos);
+  // The following is a dummy initial value , valid 
+  // for the case where there is no Si chip shift from hpd axis.
+  // It is modfied with the correct value few lines below, with the value stored from
+  // when the pe was created. SE 6-4-2010
   G4ThreeVector CurPEOriginLocal = theNavigator->
     GetGlobalToLocalTransform().
     TransformPoint(CurPEOrigin);
@@ -223,7 +227,8 @@ bool RichSensDet::ProcessHits( G4Step* aStep ,
   G4int CurPhotoElectricFlag=0;
   G4int CurHpdReflectionFlag=0;
   G4ThreeVector CurHpdQwPhotIncidentPosition;
-
+  G4int CurPhotonSourceProcInfo=0;
+  
 
 
   G4VUserTrackInformation* aUserTrackinfo=aTrack->GetUserInformation();
@@ -258,8 +263,10 @@ bool RichSensDet::ProcessHits( G4Step* aStep ,
             CurElectronBackScatFlag = aPEInfo->BackscatteredPeFlag();
             CurPhotoElectricFlag = aPEInfo->PhotoElectricFlag();
             CurHpdReflectionFlag=aPEInfo->HpdPhotonReflectionFlag();
-
-
+            CurPEOriginLocal= aPEInfo->HpdPeLocalOriginPosition();
+            CurPhotonSourceProcInfo=aPEInfo->PhotonSourceInformation();
+            
+   
             log << MSG::DEBUG << "Now in ProcessHits()  "
                 <<" Track id of charged tk opt phot pe "
                 << CurOptPhotMotherChTrackID <<"   "
@@ -269,6 +276,9 @@ bool RichSensDet::ProcessHits( G4Step* aStep ,
               log << MSG::DEBUG << "Now in RichSensDet ProcessHits() backscattered eln  "
                   << CurElectronBackScatFlag << endreq;
             }
+            //log<<MSG::INFO<<" Now in processHits Photon source info "<<CurPhotonSourceProcInfo
+            //   <<endreq;
+            
 
             if(  aPEInfo->  VerbosePeTagFlag() ) {
               aRichVerboseFlag =1;
@@ -343,7 +353,8 @@ bool RichSensDet::ProcessHits( G4Step* aStep ,
   newHit ->  setPhotoElectricProductionFlag(CurPhotoElectricFlag);
   newHit->   setRichHpdPhotonReflectionFlag(CurHpdReflectionFlag);
   newHit->   setHpdQuartzWindowExtSurfPhotIncidentPosition (CurHpdQwPhotIncidentPosition);
-
+  newHit ->  setPhotonSourceProcessInfo( CurPhotonSourceProcInfo );
+  
 
   // for now the trackID from the Gausshit base class.
   // if the mother of the corresponding optical photon exists it is set

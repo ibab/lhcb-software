@@ -50,7 +50,8 @@ RichG4Hit::RichG4Hit(const RichG4Hit &right)
     m_ElectronBackScatterFlag(right.m_ElectronBackScatterFlag),
     m_PhotoElectricProductionFlag(right.m_PhotoElectricProductionFlag),
     m_RichHpdPhotonReflectionFlag(right.m_RichHpdPhotonReflectionFlag),
-    m_HpdQuartzWindowExtSurfPhotIncidentPosition(right.m_HpdQuartzWindowExtSurfPhotIncidentPosition)
+    m_HpdQuartzWindowExtSurfPhotIncidentPosition(right.m_HpdQuartzWindowExtSurfPhotIncidentPosition),
+    m_PhotonSourceProcessInfo(right.m_PhotonSourceProcessInfo)
 {}
 
 const RichG4Hit& RichG4Hit::operator=(const RichG4Hit &right)
@@ -93,7 +94,8 @@ const RichG4Hit& RichG4Hit::operator=(const RichG4Hit &right)
   m_PhotoElectricProductionFlag=right.m_PhotoElectricProductionFlag;
   m_RichHpdPhotonReflectionFlag=right.m_RichHpdPhotonReflectionFlag;
   m_HpdQuartzWindowExtSurfPhotIncidentPosition=right.m_HpdQuartzWindowExtSurfPhotIncidentPosition;
-
+  m_PhotonSourceProcessInfo=right.m_PhotonSourceProcessInfo;
+  
   return *this;
 }
 
@@ -224,6 +226,9 @@ void RichG4Hit::Print()
     G4cout<<"RichG4Hit  Hpd QW Incidence Point "<<m_HpdQuartzWindowExtSurfPhotIncidentPosition.x()
           <<"   "<<m_HpdQuartzWindowExtSurfPhotIncidentPosition.y()<<"    "
           << m_HpdQuartzWindowExtSurfPhotIncidentPosition.z()  <<G4endl;
+
+    G4cout<<" RichG4Hit source process info "<<m_PhotonSourceProcessInfo<<G4endl;
+    
   
   }
   

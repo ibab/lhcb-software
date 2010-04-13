@@ -316,6 +316,16 @@ void RichG4HistoDefineSet1::bookRichG4HistogramsSet1() {
 
   
 
+  //    title="Energy Loss in CF4 in 1 meter ";
+  //  m_hEnergyLossInCF4 = CurHistoSvc->book(m_RichG4HistoPathSet1+"901",
+  //                                                      title,100,0.0, 10.0);
+  //
+  //   title = "Number of Scintillating Photons produced in 1 meter in CF4";
+  //
+  //    m_hNumScintPhotProdInCF4 =CurHistoSvc->book( m_RichG4HistoPathSet1+"910",
+  //                                                            title, 100,0.0, 3000.0);
+  //
+
 }
 
 

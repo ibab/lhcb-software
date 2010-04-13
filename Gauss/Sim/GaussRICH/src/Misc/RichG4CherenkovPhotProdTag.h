@@ -6,6 +6,7 @@ extern G4Track* RichG4CherenkovPhotProdTag(const G4Track& aChTrack,
                                   const G4double CkvCosTheta,
                                   const G4double CkvPhi,
                                   const G4double CkvPhotEnergy,
-                                   const G4bool aVerboseTagFlag  );
+                                   const G4bool aVerboseTagFlag,
+                                   const G4int aPhotoProdTag  );
 #endif
 

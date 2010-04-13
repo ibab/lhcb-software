@@ -194,6 +194,10 @@ StatusCode GetMCRichHitsAlg::execute()
         // Back scattered electrons
         mchit->setHpdSiBackscatter( g4hit->ElectronBackScatterFlag() );
 
+        // Photon produced by Scintilation process 
+        mchit->setRadScintillation   ( ( g4hit-> PhotonSourceProcessInfo()) == 2 );
+        
+
         // HPD reflections
         mchit->setHpdReflQWPC   ( g4hit->isHpdQwPCRefl()     );
         mchit->setHpdReflChr    ( g4hit->isHpdChromiumRefl() );
@@ -203,6 +207,7 @@ StatusCode GetMCRichHitsAlg::execute()
         mchit->setHpdReflKovar  ( g4hit->isHpdKovarRefl()    );
         mchit->setHpdReflKapton ( g4hit->isHpdKaptonRefl()   );
         mchit->setHpdReflPCQW   ( g4hit->isHpdPCQwRefl()     );
+
 
         // get sensitive detector identifier from det elem
         const RichSmartID detID( m_richDets[rich]->sensitiveVolumeID(mchit->entry()) );
@@ -250,6 +255,7 @@ StatusCode GetMCRichHitsAlg::execute()
           if ( mchit->nitrogenCK()       ) ++m_nitroHits[rich];
           if ( mchit->aeroFilterCK()     ) ++m_aeroFilterHits[rich];
           if ( mchit->hpdSiBackscatter() ) ++m_siBackScatt[rich];
+          if ( mchit->radScintillation()    ) ++m_scintillationHits[rich];
           if ( mchit->chargedTrack()     ) ++m_ctkHits[rich];
           if ( mchit->hpdReflection()    )  
           {
@@ -326,6 +332,7 @@ StatusCode GetMCRichHitsAlg::finalize()
   printStat( "Av. # Aero Filter CK hits",     m_aeroFilterHits );
   printStat( "Av. # Si back-scattering",      m_siBackScatt );
   printStat( "Av. # Charged Track hits",      m_ctkHits );
+  printStat( "Av. # Scintillation hits",       m_scintillationHits );
   printStat( "Av. # All HPD reflection hits", m_hpdReflHits );
   printStat( "  Av. # QW/PC refl. hits",      m_hpdReflHitslQWPC );
   printStat( "  Av. # Chromium refl. hits",   m_hpdReflHitslChr );

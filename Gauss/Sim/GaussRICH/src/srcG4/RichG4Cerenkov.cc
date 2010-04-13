@@ -353,9 +353,11 @@ RichG4Cerenkov::PostStepDoIt(const G4Track& aTrack, const G4Step& aStep)
 
     //Additions made by SE to Tag the info regarding photon
     //production. SE 15-10-2002.
+
+    
     G4Track* aTaggedSecondaryTrack
       = RichG4CherenkovPhotProdTag(aTrack,aSecondaryTrack,
-                                   cosTheta,phi,sampledEnergy,fRichVerboseInfoTag );
+                                   cosTheta,phi,sampledEnergy,fRichVerboseInfoTag,1 );
     aParticleChange.AddSecondary(aTaggedSecondaryTrack);
     // end of additions by SE to tag the info on photon production.
     // also the next line is commented out as as result.

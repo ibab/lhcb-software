@@ -77,6 +77,9 @@ void RichG4Counters::InitRichEventCounters()
   m_NumHitSaturatedPerTrackRich1WithRlyAgelNoHpdRefl.clear();
   m_NumHitSaturatedPerTrackRich2GasNoHpdRefl.clear();
 
+  m_NumHitSaturatedPerTrackRich2GasNoHpdReflNoScint.clear();
+  m_NumHitSaturatedPerTrackRich2GasScint.clear();
+  
   m_NumHitPartGunPrimaryPartRich1Gas=0;
   m_NumHitPartGunPrimaryPartRich1Agel=0;
   m_NumHitPartGunPrimaryPartRich2Gas=0;
@@ -109,6 +112,12 @@ void RichG4Counters::InitRichEventCounters()
   m_NumHitTotRich1GasHpdSiliconRefl=0;
   m_NumHitTotRich1GasHpdKovarRefl=0;
   m_NumHitTotRich1GasHpdKaptonRefl=0;
+
+  m_NumHitTotRich2GasCherenkovProc=0;
+  m_NumHitTotRich2GasScintProc=0;
+  m_NumHitTotRich1GasCherenkovProc=0;
+  m_NumHitTotRich1AgelCherenkovProc=0;
+  
 
   m_NumHitTotRich1AerogelHpdKaptonRefl=0;
 

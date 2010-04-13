@@ -166,6 +166,10 @@ inline const std::vector<int> & NumHitSaturatedPerTrackRich2GasNoHpdRefl() const
   return  m_NumHitSaturatedPerTrackRich2GasNoHpdRefl;
 }
 
+inline const std::vector<int> & NumHitSaturatedPerTrackRich2GasNoHpdReflNoScint() const
+{ return m_NumHitSaturatedPerTrackRich2GasNoHpdReflNoScint;}
+inline const std::vector<int> & NumHitSaturatedPerTrackRich2GasScint() const
+{ return m_NumHitSaturatedPerTrackRich2GasScint;}
 
 
 inline int NumHitPartGunPrimaryPartRich1Gas() const
@@ -418,6 +422,12 @@ inline void setNumHitSaturatedPerTrackRich2GasNoHpdRefl(const std::vector<int> &
   m_NumHitSaturatedPerTrackRich2GasNoHpdRefl=aGasSatHit2;
 }
 
+inline void setNumHitSaturatedPerTrackRich2GasNoHpdReflNoScint(const std::vector<int> & aGasSatHit2NS)
+{ m_NumHitSaturatedPerTrackRich2GasNoHpdReflNoScint=aGasSatHit2NS;}
+
+inline void setNumHitSaturatedPerTrackRich2GasScint(const std::vector<int> & aGasSatHit2S) 
+{ m_NumHitSaturatedPerTrackRich2GasScint=aGasSatHit2S;}
+
 inline void bumpNumHitPartGunPrimaryPartRich1Gas()
 {
   ++m_NumHitPartGunPrimaryPartRich1Gas;
@@ -512,6 +522,18 @@ inline int NumHitTotRich1GasHpdSiliconRefl(){return m_NumHitTotRich1GasHpdSilico
 inline int NumHitTotRich1GasHpdKovarRefl(){return m_NumHitTotRich1GasHpdKovarRefl;}
 inline int NumHitTotRich1GasHpdKaptonRefl(){return m_NumHitTotRich1GasHpdKaptonRefl;}
 
+
+inline int NumHitTotRich2GasCherenkovProc()
+{  return m_NumHitTotRich2GasCherenkovProc;}
+inline int NumHitTotRich2GasScintProc()
+{  return m_NumHitTotRich2GasScintProc;}
+inline int NumHitTotRich1GasCherenkovProc()
+{  return m_NumHitTotRich1GasCherenkovProc;}
+inline int NumHitTotRich1AgelCherenkovProc()
+{  return m_NumHitTotRich1AgelCherenkovProc;}
+
+
+
 inline int NumHitTotRich1AerogelHpdKaptonRefl(){return m_NumHitTotRich1AerogelHpdKaptonRefl;}
 
 inline int NumHitTotRich2GasHpdRefl(){return  m_NumHitTotRich2GasHpdRefl;}
@@ -531,6 +553,15 @@ inline void bumpNumHitTotRich1GasHpdChromRefl(){m_NumHitTotRich1GasHpdChromRefl+
 inline void bumpNumHitTotRich1GasHpdSiliconRefl(){m_NumHitTotRich1GasHpdSiliconRefl++;}
 inline void bumpNumHitTotRich1GasHpdKovarRefl(){m_NumHitTotRich1GasHpdKovarRefl++;}
 inline void bumpNumHitTotRich1GasHpdKaptonRefl(){m_NumHitTotRich1GasHpdKaptonRefl++;}
+
+inline void bumpNumHitTotRich2GasCherenkovProc()
+{m_NumHitTotRich2GasCherenkovProc++;}
+inline void bumpNumHitTotRich2GasScintProc()
+{m_NumHitTotRich2GasScintProc++;}
+inline void bumpNumHitTotRich1GasCherenkovProc()
+{ m_NumHitTotRich1GasCherenkovProc++;}
+inline void bumpNumHitTotRich1AgelCherenkovProc()
+{m_NumHitTotRich1AgelCherenkovProc++;}
 
 inline void bumpNumHitTotRich1AerogelHpdKaptonRefl(){m_NumHitTotRich1AerogelHpdKaptonRefl++;}
 
