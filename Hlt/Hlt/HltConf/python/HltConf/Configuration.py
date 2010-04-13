@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.178 2010-04-13 20:51:07 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.179 2010-04-13 22:00:50 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -216,14 +216,6 @@ class HltConf(LHCbConfigurableUser):
 
         ## and record the settings in the ANN service
         HltANNSvc().RoutingBits = dict( [ (v,k) for k,v in routingBits.iteritems() ] )
-        from Configurables import HltReferenceRateSvc
-        rsvc = HltReferenceRateSvc( ReferenceRate = 80
-                                  , ODINPredicate = '( ODIN_TRGTYP == LHCb.ODIN.LumiTrigger )'
-                                  )
-        # add explicitly as ExtSvc to avoid being triggered from within HltRoutingBitsWriter's decode,
-        # which implies we start to decode the above ODINPredicate at the time one of HltRoutingBitsWriter's 
-        # predicates is being decoded -- the hybrid factory doesn't like going recursive!
-        ApplicationMgr().ExtSvc.append( rsvc ) 
         # LoKi::Hybrid::HltFactory is what RoutingBitsWriter uses as predicate factory..
         # make sure 'strings' is known... 
         # make sure 'RATE,SCALE and SKIP' are known...

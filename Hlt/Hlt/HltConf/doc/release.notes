@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.446 2010-04-13 20:51:07 graven Exp $ 
+! $Id: release.notes,v 1.447 2010-04-13 22:00:50 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2010-04-13 - Gerhard Raven
+ - remove HltReferenceRateSvc configuration -- now fully automated
 
 ! 2010-04-13 - Francesco Dettori 
  - adding Hlt2Dst2D2XXLines to Hlt2.py 
