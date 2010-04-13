@@ -7,7 +7,8 @@
 ! 2010-04-13 - Patrick Robbe
  - Archive.h/.cpp: move header files to cpp file
  - DbRootHist, ParallelWait: add extra protections for multi thread
- - PresenterMainFrame.cpp: add namespace
+ - PresenterMainFrame.cpp: add namespace, and allow refresh of histograms
+   not in the db.
 
 !============ Presenter v1r0 2010-03-29 =============
 ! 2010-03-29 - Olivier Callot
