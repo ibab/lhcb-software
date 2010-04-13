@@ -3470,15 +3470,15 @@ void PresenterMainFrame::addHistoToPage( const std::string& histogramUrl,
       currentPartition = histogramUrl;
     }
   }
-  DbRootHist* dbRootHist = getPageHistogram(this,
-                                            histogramUrl,
-                                            currentPartition,
-                                            2, newHistoInstance,
-                                            histogramDB,
-                                            analysisLib(),
-                                            onlineHistogram,
-                                            m_verbosity,
-                                            dimBrowser);
+  DbRootHist* dbRootHist = Presenter::getPageHistogram(this,
+						       histogramUrl,
+						       currentPartition,
+						       2, newHistoInstance,
+						       histogramDB,
+						       analysisLib(),
+						       onlineHistogram,
+						       m_verbosity,
+						       dimBrowser);
   dbRootHist->setOverlapMode(overlapMode);
   if ((0 != m_archive) && //isConnectedToHistogramDB() &&
       (false == m_savesetFileName.empty()) &&
@@ -4081,16 +4081,11 @@ void PresenterMainFrame::loadSelectedPageFromDB(const std::string & pageName,
         ParallelWait parallelWait(this);
         parallelWait.loadHistograms(&m_onlineHistosOnPage, &dbHistosOnPage);
 
-        //          m_onlineHistosOnPageIt = m_onlineHistosOnPage.begin();
         std::vector<DbRootHist*>::iterator drawHist_dbHistosOnPageIt;
-        //     if (gSystem->ProcessEvents()) break; -> handle fast pageload clicks?
 
         for (drawHist_dbHistosOnPageIt = dbHistosOnPage.begin();
              drawHist_dbHistosOnPageIt != dbHistosOnPage.end();
              drawHist_dbHistosOnPageIt++) {
-
-          // HLTA0101_Adder_1/GauchoJob/MonitorSvc/monRate/TCK
-          //
 
           if ( (m_verbosity >= Verbose) &&
                (*drawHist_dbHistosOnPageIt) &&
