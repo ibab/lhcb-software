@@ -42,22 +42,41 @@ ErrorFile::~ErrorFile() {
   m_memory = 0;
 }
 
-void printMDFHeader(int evt, MDFHeader* h) {
-  cout << line << line << endl;
-  cout << "MDFHeader [" << evt << "]: size" 
-       << " [0]:" << left << dec << setw(10) << h->size0() 
-       << " [1]:" << left << dec << setw(10) << h->size1() 
-       << " [2]:" << left << dec << setw(10) << h->size2() 
-       << endl
-       << "       Checksum:" << left << hex << setw(10) << h->checkSum()  
-       << "    Compression:" << left << hex << setw(10) << (int)h->compression()
-       << endl
-       << "        Version:" << left << hex << setw(10) << (int)h->headerVersion() 
-       << "      Sublength:" << left << dec << setw(10) << (int)h->subheaderLength()
-       << endl
-       << "        HdrSize:" << left << dec << setw(10) << h->sizeOf(h->headerVersion()) 
-       << "      Data type:" << left << dec << setw(10) << (int)h->dataType() 
-       << endl;
+static void printMDFHeader(int evt, MDFHeader* h) {
+  cout 
+    << line << line << endl
+    << "MDFHeader [" << dec << evt << "]:\t\t" << " size" 
+    << " [0]:" << left << dec << setw(10) << h->size0() 
+    << " [1]:" << left << dec << setw(10) << h->size1() 
+    << " [2]:" << left << dec << setw(10) << h->size2() 
+    << endl
+    << "    Checksum:   " << left << hex << setw(10) << h->checkSum()  
+    << "    Compression:" << left << hex << setw(10) << (int)h->compression()
+    << "    Version:    " << left << hex << setw(10) << (int)h->headerVersion() 
+    << endl
+    << "    Sublength:  " << left << dec << setw(10) << (int)h->subheaderLength()
+    << "    HdrSize:    " << left << dec << setw(10) << h->sizeOf(h->headerVersion()) 
+    << "    Data type:  " << left << dec << setw(10) << (int)h->dataType() 
+    << endl;
+}
+
+static void printHeader1(int /* evt */, MDFHeader* h) {
+  MDFHeader::Header1* h1 = h->subHeader().H1;
+  const unsigned int* m = h1->triggerMask();
+  cout 
+    << "    Run No:     " << left << dec << setw(10) <<  h1->runNumber()
+    << "    Orbit:      " << left << dec << setw(10) <<  h1->orbitNumber()
+    << "    Bunch ID:   " << left << dec << setw(10) <<  h1->bunchID()
+    << endl;
+  cout 
+    <<  setfill('0')
+    << "    TriggerMask" 
+    << ":"      << right << hex << setw(8) << m[0]
+    << "      " << right << hex << setw(8) << m[1]
+    << "    "   << right << hex << setw(8) << m[2]
+    << "      " << right << hex << setw(8) << m[3]
+    <<  setfill(' ')
+    << endl;
 }
 
 int ErrorFile::analyze() {
@@ -115,7 +134,10 @@ int ErrorFile::analyze() {
 	}
       }
       ++m_numEvt;
-      if ( (m_print&PRINT_MDF_HEADERS) ) printMDFHeader(m_numEvt,hdr);
+      if ( (m_print&PRINT_MDF_HEADERS) )  {
+	printMDFHeader(m_numEvt, hdr);
+	printHeader1(m_numEvt, hdr);
+      }
       last_hdr = hdr;
       if ( hdr->headerVersion() == 3 ) {
 	q += hdr->sizeOf(hdr->headerVersion());
