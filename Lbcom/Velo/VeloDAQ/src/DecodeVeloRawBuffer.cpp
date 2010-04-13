@@ -1,4 +1,4 @@
-// $Id: DecodeVeloRawBuffer.cpp,v 1.24 2010-04-13 15:21:12 dhcroft Exp $
+// $Id: DecodeVeloRawBuffer.cpp,v 1.25 2010-04-13 20:53:56 dhcroft Exp $
 
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/IIncidentSvc.h"
@@ -170,18 +170,15 @@ StatusCode DecodeVeloRawBuffer::decodeToVeloLiteClusters(const std::vector<LHCb:
     VeloDAQ::decodeRawBankToLiteClusters(rawBank,sensor,m_assumeChipChannelsInRawBuffer,fastCont);
 
   }
+  if( fastCont->size() > m_maxVeloClusters){
+    Error(format("Deleted all lite VELO clusters as more than limit %i in the event",
+                 m_maxVeloClusters),StatusCode::SUCCESS).ignore();
+    fastCont->clear();
+  }
+
   std::sort(fastCont->begin(),fastCont->end(),SiDataFunctor::Less_by_Channel< LHCb::VeloLiteCluster >());
   put(fastCont,m_veloLiteClusterLocation);
 
-  if( fastCont->size() > m_maxVeloClusters){
-    // Get pointer to IncidentSvc 
-    IIncidentSvc * incidentSvc = svc<IIncidentSvc>("IncidentSvc",true);
-    // Fire the incident in execute()
-    incidentSvc->fireIncident(Incident(name(),IncidentType::AbortEvent));
-    setFilterPassed( false );
-    return Error("Can not continue this event due to too many lite VELO clusters", 
-                 StatusCode::SUCCESS);
-  }
  
   return StatusCode::SUCCESS;
 }
@@ -257,19 +254,14 @@ StatusCode DecodeVeloRawBuffer::decodeToVeloClusters(const std::vector<LHCb::Raw
 
   }
 
+  if( clusters->size() > m_maxVeloClusters){
+    Error(format("Deleted all full VELO clusters as more than limit %i in the event",
+                 m_maxVeloClusters),StatusCode::SUCCESS).ignore();
+    clusters->clear();
+  }
+
   put(clusters,m_veloClusterLocation);
   if (m_dumpVeloClusters) dumpVeloClusters(clusters);
-
-  if( clusters->size() > m_maxVeloClusters){
-    // Get pointer to IncidentSvc 
-    IIncidentSvc * incidentSvc = svc<IIncidentSvc>("IncidentSvc",true);
-    // Fire the incident in execute()
-    incidentSvc->fireIncident(Incident(name(),IncidentType::AbortEvent));
-    setFilterPassed( false );
-    return Error("Can not continue this event due to too many full VELO clusters", 
-                 StatusCode::SUCCESS);
-  }
- 
 
   return StatusCode::SUCCESS;
 }
