@@ -9,10 +9,13 @@
 #include <TList.h>
 
 #include <boost/filesystem.hpp>
+#include <boost/date_time/posix_time/posix_time.hpp>
 
 #include "PresenterMainFrame.h"
+#include "OnlineHistDB/OnlineHistDB.h"
 #include "Archive.h"
 #include "DbRootHist.h"
+#include "OnlineHistDB/OnlineHistogram.h"
 
 //class boost::mutex;
 

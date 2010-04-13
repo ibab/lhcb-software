@@ -7,10 +7,9 @@
   #include <Windows4Root.h>
 #endif
 
-#include <boost/filesystem.hpp>
-#include <boost/date_time/posix_time/posix_time.hpp>
-#include <boost/date_time/gregorian/gregorian.hpp>
 #include "presenter.h"
+#include <boost/filesystem.hpp>
+#include <boost/date_time/gregorian/gregorian.hpp>
 
 class DbRootHist;
 class OnlineHistDB;

@@ -17,6 +17,10 @@
 #include <TSystem.h>
 #include <TGMsgBox.h>
 
+#include <boost/date_time/posix_time/posix_time.hpp>
+#include "OnlineHistDB/OnlineHistogram.h"
+#include "OMAlib/OMAlib.h"
+
 using namespace pres;
 using namespace std;
 using namespace boost::filesystem;
@@ -73,7 +77,6 @@ void Archive::refreshDirectory(const DirectoryType & directoryType,
                                const boost::gregorian::date_period & datePeriod,
                                const std::string & taskName)
 {
-
   switch (directoryType) {
     case Savesets:
       m_foundSavesets = listAvailableRootFiles(m_savesetPath, datePeriod, taskName);
