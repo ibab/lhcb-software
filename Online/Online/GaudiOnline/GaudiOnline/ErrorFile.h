@@ -27,7 +27,7 @@ namespace LHCb {
     int         m_print;
   public:
     /// Printout enums. Value passed to the constructor may be OR of these
-    enum { PRINT_ERRORS = 1, PRINT_MDF_HEADERS = 2, PRINT_BANKS = 4 };
+    enum { PRINT_ERRORS = 1, PRINT_EVTS = 2, PRINT_MDF_HEADERS = 4, PRINT_BANKS = 8 };
     /// Standard constructor
     ErrorFile(int prt, const std::string& nam);
     /// Default destructor
@@ -44,4 +44,4 @@ namespace LHCb {
     int summarize();
   };
 }
-#endif ONLINEKERNEL_ERRORFILE_H
+#endif // ONLINEKERNEL_ERRORFILE_H

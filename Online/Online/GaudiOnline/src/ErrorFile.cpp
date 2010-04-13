@@ -2,6 +2,7 @@
 // C++ header files
 #include <iostream>
 #include <iomanip>
+#include <cerrno>
 #include "RTL/rtl.h"
 
 
@@ -66,7 +67,7 @@ int ErrorFile::analyze() {
   MDFHeader* last_hdr = 0;
   const char* p = m_memory, *q = p;
   
-  for(size_t i=0; i<1000 && q<p+m_length; ++i ) {
+  for(size_t i=0; i<m_length/2 && q<p+m_length; ++i ) {
     const unsigned short* sp=(const unsigned short*)q;
     const unsigned int*   ip=(const unsigned int*)q;
     if ( *sp == 0xcbcb ) {
@@ -77,7 +78,7 @@ int ErrorFile::analyze() {
 	num_jump = 0;
 	++m_badBlock;
       }
-      if ( m_print >= PRINT_BANKS ) {
+      if ( (m_print&PRINT_BANKS) ) {
 	cout << "RawBank at offset:" << dec << left << setw(10) << size_t(q-p) << " "
 	     << RawEventPrintout::bankHeader(b) << endl;
       }
@@ -99,7 +100,9 @@ int ErrorFile::analyze() {
       if ( last_hdr ) {
 	const char* a = (const char*)last_hdr;
 	size_t diff = q-a;
-	cout << "=== Number of banks for event:" << m_numEvt << ": " << num_bank << endl;
+	if ( (m_print&PRINT_EVTS) ) {
+          cout << "=== Number of banks for event:" << m_numEvt << ": " << num_bank << endl;
+	}
 	num_bank = 0;
 	if ( last_hdr->size0() != diff ) {
 	  printEvt(this);
@@ -112,7 +115,7 @@ int ErrorFile::analyze() {
 	}
       }
       ++m_numEvt;
-      if ( m_print >= PRINT_MDF_HEADERS ) printMDFHeader(m_numEvt,hdr);
+      if ( (m_print&PRINT_MDF_HEADERS) ) printMDFHeader(m_numEvt,hdr);
       last_hdr = hdr;
       if ( hdr->headerVersion() == 3 ) {
 	q += hdr->sizeOf(hdr->headerVersion());
@@ -144,12 +147,20 @@ int ErrorFile::read() {
     if ( fd > 0 ) {
       off_t tmp = 0;
       char* p = m_memory;
+      cout << "File length: " << buf.st_size << endl;
       while ( tmp < buf.st_size )  {
 	int sc = ::read(fd,p+tmp,buf.st_size-tmp);
 	if ( sc >  0 ) tmp += sc;
-	else if ( sc == 0 ) break;
-	else                break;
+	else     {
+	  //cout << "Read " << tmp << " [" << sc << "] bytes. errno=" << errno << endl;
+	  if ( errno == EINTR ) continue;
+	  if ( errno == EAGAIN ) continue;
+	  //if ( sc == 0 ) continue;
+	  //cout << "Read " << tmp << " [" << sc << "] bytes. errno=" << errno << endl;
+	  break;
+	}
       }
+      //cout << "Read " << tmp << " bytes. errno=" << errno << endl;
       m_length = tmp;
       ::close(fd);
       return buf.st_size == tmp ? 1 : 0;
@@ -179,6 +190,7 @@ static void help()  {
   ::lib_rtl_output(LIB_RTL_ALWAYS,"    -n(ame)=<name> file name\n");
   ::lib_rtl_output(LIB_RTL_ALWAYS,"    -m(dfheaders)  Dump MDF headers\n");
   ::lib_rtl_output(LIB_RTL_ALWAYS,"    -b(anks)       Dump Bank headers\n");
+  ::lib_rtl_output(LIB_RTL_ALWAYS,"    -e(events)     Print read events\n");
 }
 
 
@@ -189,6 +201,7 @@ extern "C" int check_errfile(int argc, char** argv) {
 
   cli.getopt("name",1,name);
   if ( cli.getopt("mdfheaders",1) ) prt += ErrorFile::PRINT_MDF_HEADERS;
+  if ( cli.getopt("events",1)   ) prt += ErrorFile::PRINT_EVTS;
   if ( cli.getopt("banks",1)   ) prt += ErrorFile::PRINT_BANKS;
   ErrorFile f(prt, name);
   if ( f.read() )  {
