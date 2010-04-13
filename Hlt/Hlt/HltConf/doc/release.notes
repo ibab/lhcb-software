@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.445 2010-04-13 12:04:44 fdettori Exp $ 
+! $Id: release.notes,v 1.446 2010-04-13 20:51:07 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
@@ -7,6 +7,10 @@
 
 ! 2010-04-13 - Francesco Dettori 
  - adding Hlt2Dst2D2XXLines to Hlt2.py 
+
+!========================== HltConf v7r1   2010-04-13 ===================
+! 2010-04-13 - Gerhard Raven
+ - in L0DU routing bits, use L0_DECISION_PHYSICS instead of old L0_DECISION
 
 !========================== HltConf v7r1   2010-04-09 ===================
 ! 2010-04-07 - Gerhard Raven
