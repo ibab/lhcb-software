@@ -1,4 +1,4 @@
-// $Id: MeasurementProvider.h,v 1.21 2009-10-16 15:16:58 wouter Exp $
+// $Id: MeasurementProvider.h,v 1.22 2010-04-13 09:17:45 cocov Exp $
 #ifndef TRACKTOOLS_MEASUREMENTPROVIDER_H 
 #define TRACKTOOLS_MEASUREMENTPROVIDER_H
 
@@ -55,12 +55,14 @@ private:
   // Handles to actual measurement providers
   ToolHandle<IMeasurementProvider> m_veloRProvider ;
   ToolHandle<IMeasurementProvider> m_veloPhiProvider ;
+  ToolHandle<IMeasurementProvider> m_veloPixProvider ;
   ToolHandle<IMeasurementProvider> m_ttProvider ;
   ToolHandle<IMeasurementProvider> m_itProvider ;
   ToolHandle<IMeasurementProvider> m_otProvider ;
   ToolHandle<IMeasurementProvider> m_muonProvider ;
   
   bool m_ignoreVelo;    ///< Ignore Velo hits
+  bool m_ignoreVeloPix;    ///< Ignore Velo hits
   bool m_ignoreTT;      ///< Ignore TT hits
   bool m_ignoreIT;      ///< Ignore IT hits
   bool m_ignoreOT;      ///< Ignore OT hits

@@ -4,6 +4,12 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2010-04-13 - Victor Coco
+ - add VeloPixLiteMeasurementProvider classto deal with VeloPixLiteMeasurement
+   in the track fit
+ - make MeasurmentProvider aware of it
+
+
 !======================== TrackTools v3r29 2010-04-09 ======================
 ! 2010-04-09 - Wouter Hulsbergen
  - fixed compilation warning in TrackSelectorBase

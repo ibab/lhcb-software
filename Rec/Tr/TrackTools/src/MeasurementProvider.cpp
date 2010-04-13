@@ -1,4 +1,4 @@
-// $Id: MeasurementProvider.cpp,v 1.45 2009-10-30 14:39:39 cattanem Exp $
+// $Id: MeasurementProvider.cpp,v 1.46 2010-04-13 09:17:45 cocov Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -36,6 +36,7 @@ MeasurementProvider::MeasurementProvider( const std::string& type,
   : GaudiTool ( type, name , parent ),
     m_veloRProvider(  "MeasurementProviderT<MeasurementProviderTypes::VeloR>/VeloRMeasurementProvider", this ),
     m_veloPhiProvider("MeasurementProviderT<MeasurementProviderTypes::VeloPhi>/VeloPhiMeasurementProvider", this ),
+    m_veloPixProvider("VeloPixLiteMeasurementProvider", this ),
     m_ttProvider(     "MeasurementProviderT<MeasurementProviderTypes::TT>/TTMeasurementProvider", this ),
     m_itProvider(     "MeasurementProviderT<MeasurementProviderTypes::IT>/ITMeasurementProvider", this ),
     m_otProvider(     "OTMeasurementProvider", this ),
@@ -43,6 +44,7 @@ MeasurementProvider::MeasurementProvider( const std::string& type,
 {
   declareInterface<IMeasurementProvider>(this);
   declareProperty( "IgnoreVelo", m_ignoreVelo = false );
+  declareProperty( "IgnoreVeloPix", m_ignoreVeloPix = true ); // VeloPix does not exist in default detector
   declareProperty( "IgnoreTT",   m_ignoreTT   = false );
   declareProperty( "IgnoreIT",   m_ignoreIT   = false );
   declareProperty( "IgnoreOT",   m_ignoreOT   = false );
@@ -51,6 +53,7 @@ MeasurementProvider::MeasurementProvider( const std::string& type,
 
   declareProperty( "VeloRProvider", m_veloRProvider ) ;
   declareProperty( "VeloPhiProvider", m_veloPhiProvider ) ;
+  declareProperty( "VeloPixProvider", m_veloPixProvider ) ;
   declareProperty( "TTProvider", m_ttProvider ) ;
   declareProperty( "ITProvider", m_itProvider ) ;
   declareProperty( "OTProvider", m_otProvider ) ;
@@ -72,7 +75,7 @@ StatusCode MeasurementProvider::initialize()
   if (sc.isFailure()) return sc;  // error already reported by base class
 
   m_providermap.clear() ;
-  m_providermap.resize(LHCb::Measurement::Muon+1,0) ;
+  m_providermap.resize(LHCb::Measurement::VeloPixLite+1,0) ;
 
   if(!m_ignoreVelo) {
     sc = m_veloRProvider.retrieve() ;
@@ -82,6 +85,12 @@ StatusCode MeasurementProvider::initialize()
     sc = m_veloPhiProvider.retrieve() ;
     if (sc.isFailure()) return sc; 
     m_providermap[LHCb::Measurement::VeloPhi] = &(*m_veloPhiProvider) ;
+  }
+
+  if(!m_ignoreVeloPix) {
+    sc = m_veloPixProvider.retrieve() ;
+    if (sc.isFailure()) return sc;  
+    m_providermap[LHCb::Measurement::VeloPixLite] = &(*m_veloPixProvider) ;
   }
 
   if(!m_ignoreTT) {
@@ -123,6 +132,10 @@ StatusCode MeasurementProvider::finalize()
     sc = m_veloPhiProvider.release() ;
     if (sc.isFailure()) return sc;
   }
+  if(!m_ignoreVeloPix) {
+    sc = m_veloPixProvider.release() ;
+    if (sc.isFailure()) return sc;
+  }
   if(!m_ignoreTT) {
     sc = m_ttProvider.release() ;
     if (sc.isFailure()) return sc;
@@ -162,11 +175,11 @@ StatusCode MeasurementProvider::load( Track& track ) const
     if ( track.fitResult()->measurement( id ) ) {
       Warning("Found measurements already loaded on track!",StatusCode::SUCCESS,0) ;
       if( msgLevel( MSG::DEBUG ) || msgLevel( MSG::VERBOSE ) )
-	debug() << "Measurement had already been loaded for the LHCbID"
-		<< " channelID, detectorType = "
-		<< id.channelID() << " , " << id.detectorType()
-		<< "  -> Measurement loading skipped for this LHCbID!"
-		<< endreq;
+        debug() << "Measurement had already been loaded for the LHCbID"
+                << " channelID, detectorType = "
+                << id.channelID() << " , " << id.detectorType()
+                << "  -> Measurement loading skipped for this LHCbID!"
+                << endreq;
     } else newids.push_back( id ) ;
   }
   
@@ -175,6 +188,7 @@ StatusCode MeasurementProvider::load( Track& track ) const
   
   // create all measurements for selected IDs
   LHCb::TrackFitResult::MeasurementContainer newmeasurements ;
+  
   addToMeasurements(newids,newmeasurements,reftraj) ;
 
   // remove all zeros, just in case.
@@ -202,10 +216,11 @@ inline LHCb::Measurement::Type measurementtype(const LHCb::LHCbID& id)
   case LHCb::LHCbID::Velo: 
     rc = id.isVeloR() ? LHCb::Measurement::VeloR : LHCb::Measurement::VeloPhi ;
     break ;
-  case LHCb::LHCbID::TT:   rc = LHCb::Measurement::TT ; break ;
-  case LHCb::LHCbID::IT:   rc = LHCb::Measurement::IT ; break ;
-  case LHCb::LHCbID::OT:   rc = LHCb::Measurement::OT ; break ;
-  case LHCb::LHCbID::Muon: rc = LHCb::Measurement::Muon ; break ;
+  case LHCb::LHCbID::VeloPix: rc = LHCb::Measurement::VeloPixLite ; break ;
+  case LHCb::LHCbID::TT:      rc = LHCb::Measurement::TT      ; break ;
+  case LHCb::LHCbID::IT:      rc = LHCb::Measurement::IT      ; break ;
+  case LHCb::LHCbID::OT:      rc = LHCb::Measurement::OT      ; break ;
+  case LHCb::LHCbID::Muon:    rc = LHCb::Measurement::Muon    ; break ;
   default: {}
   }
   return rc ;
@@ -236,8 +251,10 @@ void MeasurementProvider::addToMeasurements( const std::vector<LHCb::LHCbID>& id
 {
   // map the ids to measurement-providers
   std::vector<std::vector<LHCb::LHCbID> > idsbytype(m_providermap.size());
-  for ( std::vector<LHCbID>::const_iterator it = ids.begin(); it != ids.end(); ++it )
+  for ( std::vector<LHCbID>::const_iterator it = ids.begin(); it != ids.end(); ++it ){
     idsbytype[measurementtype( *it )].push_back( *it );
+  }
+  
   // now call all the providers
   for( size_t i = 0; i<m_providermap.size(); ++i)
     if( m_providermap[i] && !idsbytype[i].empty()) 
