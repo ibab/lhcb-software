@@ -1,4 +1,4 @@
-// $Id: DeVeloPixSquareType.cpp,v 1.13 2009-12-03 15:05:18 cocov Exp $
+// $Id: DeVeloPixSquareType.cpp,v 1.14 2010-04-13 10:09:43 cocov Exp $
 //==============================================================================
 #define VELOPIXDET_DEVELOPIXSQUARETYPE_CPP 1
 //==============================================================================
@@ -161,7 +161,8 @@ StatusCode DeVeloPixSquareType::initialize()
     msgSvc()->setOutputLevel("DeVeloPixSquareType", outputLevel);
   }
   delete pmgr;
-
+  msg() << MSG::INFO<<"USE THE CORRECT"<<endreq;
+  
   sc = DeVeloPixSensor::initialize();
   if(!sc.isSuccess()) {
     msg() << MSG::ERROR << "Failed to initialise DeVeloPixSensor" << endreq;
@@ -245,7 +246,6 @@ std::auto_ptr<LHCb::Trajectory> DeVeloPixSquareType::trajectory(const LHCb::Velo
   return autoTraj;
 
 }
-
 
 
 

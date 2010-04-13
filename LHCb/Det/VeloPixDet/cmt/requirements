@@ -1,11 +1,11 @@
-# $Id: requirements,v 1.6 2010-04-09 14:53:28 cattanem Exp $
+# $Id: requirements,v 1.7 2010-04-13 10:09:43 cocov Exp $
 # =========================================================================
 
 # Maintained by : Victor Coco
 
 # =============== structure ===============================================
 package VeloPixDet
-version v1r4
+version v1r5
 branches         src cmt doc VeloPixDet dict
 
 # =============== used packages ===========================================
