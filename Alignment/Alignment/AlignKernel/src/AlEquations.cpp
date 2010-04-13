@@ -206,7 +206,8 @@ namespace Al
       	   rhsit != ncrhs.m_elements.end(); ++rhsit, ++index) {
       	// compute dela-alpha (usign the 'old' rhs)
       	Gaudi::Vector6 deltaalpha = rhs.m_elements[index].m_alpha - m_elements[index].m_alpha ;
-	std::cout << "**************** Correcting for shifted alignment: "
+	if( ROOT::Math::Dot(deltaalpha,deltaalpha) > 1e-12 )
+	  std::cout << "**************** Correcting for shifted alignment: "
 		    << deltaalpha << std::endl ;
 	// first the diagonal
       	rhsit->m_dChi2DAlpha += rhsit->m_d2Chi2DAlpha2 * deltaalpha ;
