@@ -10,9 +10,11 @@ use     MCEvent         v*      Event
 use     DigiEvent       v*      Event
 use     DAQEvent        v*      Event
 use     MCInterfaces    v*      Kernel
+use     TrackKernel     v*      Tr
 
 use     VeloPixDet      v*      Det
 use     TrackFitEvent      v*     Tr
+use     PatAlgorithms       v*      Tf
 
 
 use  VeloPixDet     v*       Det
