@@ -8,6 +8,7 @@
 
 #include <unistd.h>
 #include "Writer/MM.h"
+#include "Writer/chunk_headers.h"
 
 using namespace LHCb;
 
@@ -72,8 +73,10 @@ struct cmd_header* MM::allocAndCopyCommand(struct cmd_header *header, void *data
 
   switch(header->cmd) {
     case CMD_OPEN_FILE:
-    case CMD_CLOSE_FILE:
       dataSize = 0;
+      break;
+    case CMD_CLOSE_FILE:
+      dataSize = sizeof(struct cmd_stop_pdu);
       break;
     case CMD_WRITE_CHUNK:
       dataSize = header->data.chunk_data.size;
@@ -109,8 +112,11 @@ void MM::freeCommand(struct cmd_header *cmd)
   switch(cmd->cmd) {
     case CMD_WRITE_CHUNK:
       totLen += cmd->data.chunk_data.size;
-    case CMD_OPEN_FILE:
+      totLen += sizeof(struct cmd_header);
+      break;
     case CMD_CLOSE_FILE:
+      totLen += sizeof(struct cmd_stop_pdu);
+    case CMD_OPEN_FILE:
       totLen += sizeof(struct cmd_header);
       break;
     default:

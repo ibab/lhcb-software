@@ -93,6 +93,7 @@ void SendThread::stop(void) {
 
 /** Processes elements from the send queue.
  * The elements from this queue are sent over a socket, one by one.
+ * Note that the pdu of the close command is not sent as it is used only for failover.
  */
 int SendThread::processSends(void)
 {

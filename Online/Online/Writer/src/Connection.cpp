@@ -245,7 +245,7 @@ void Connection::sendCommand(struct cmd_header *header)
  *               by this method.
  * @param data   In case of the WRITE_CHUNK command, this will
  *               be non-NULL. The sizeof this buffer will be
- *      determined from header.
+ *      determined from header in case of a WRITE command, and from a size of for a close command.
  */
 void Connection::sendCommand(struct cmd_header *header, void *data)
 {
@@ -258,7 +258,7 @@ void Connection::sendCommand(struct cmd_header *header, void *data)
     case CMD_WRITE_CHUNK:
       totalSize += header->data.chunk_data.size;
     case CMD_CLOSE_FILE:
-      m_state = STATE_CONN_OPEN;
+      m_state = STATE_CONN_OPEN; //XXX principle ok for the totalSize summing but the m_State value is then incorrect on close ...
     case CMD_OPEN_FILE:
       m_state = STATE_FILE_OPEN;
       totalSize += sizeof(struct cmd_header);

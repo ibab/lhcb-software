@@ -50,17 +50,26 @@ using namespace LHCb;
 /**
  * Macro for initialising a close command.
  */
-#define INIT_CLOSE_COMMAND(h, fname, adler_32, md_5, seqno, rno, thesize, noofevents, noofphysevents, trgevents) { \
+/*#define INIT_CLOSE_COMMAND(h, fname, adler_32, md_5, seqno, rno, thesize, noofevents, noofphysstat, trgevents) { \
+*/
+#define INIT_CLOSE_COMMAND(h, fname, seqno, rno, thesize) { \
     (h)->cmd = CMD_CLOSE_FILE; \
     (h)->run_no = rno;  \
     (h)->data.chunk_data.seq_num = seqno; \
-    (h)->data.stop_data.adler32_sum = (adler_32); \
-    (md_5)->Final((h)->data.stop_data.md5_sum); \
     (h)->data.stop_data.size = thesize; \
-    (h)->data.stop_data.events = noofevents; \
-    (h)->data.stop_data.physEvents = noofphysevents; \
     strncpy((h)->file_name, (fname), MAX_FILE_NAME); \
-    memcpy((h)->data.stop_data.trgEvents, (trgevents), MAX_TRIGGER_TYPES*sizeof(unsigned int)); \
+}
+
+/**
+ * Macro for initialising a close command pdu.
+ */
+#define INIT_CLOSE_PDU(p, adler_32, md_5, noofevents, noofphysstat, trgevents, statevents) { \
+    (p)->adler32_sum = (adler_32); \
+    (md_5)->Final((p)->md5_sum); \
+    (p)->events = noofevents; \
+    (p)->physStat = noofphysstat; \
+    memcpy((p)->trgEvents, (trgevents), MAX_TRIGGER_TYPES*sizeof(unsigned int)); \
+    memcpy((p)->statEvents, (statevents), MAX_TRIGGER_TYPES*sizeof(unsigned int)); \
 }
 
 /**
@@ -125,7 +134,7 @@ void File::init(const std::string& fileName, unsigned int runNumber) {
   m_mon->m_fileOpen = false;
   m_mon->m_bytesWritten = 0;
   m_mon->m_events = 0;
-  m_mon->m_physEvents = 0;
+  m_mon->m_physStat = 0;
   m_fileName = fileName;
   m_md5 = new TMD5();
   m_streamID = "FULL";
@@ -135,6 +144,7 @@ void File::init(const std::string& fileName, unsigned int runNumber) {
   std::string svc = RTL::processName()+txt;
 
   memset(m_mon->m_trgEvents, 0, MAX_TRIGGER_TYPES*sizeof(unsigned int));
+  memset(m_mon->m_statEvents, 0, MAX_STAT_TYPES*sizeof(unsigned int));
 
   m_mon->m_svcID = ::dis_add_service((char *) svc.c_str(),(char *) "C",0,0,feedMonitor,(long)m_mon);
 }
@@ -443,44 +453,67 @@ File* MDFWriterNet::createAndOpenFile(unsigned int runNumber)
 void MDFWriterNet::closeFile(File *currFile)
 {
   struct cmd_header header;
-  memset(&header, 0, sizeof(struct cmd_header));
+  struct cmd_stop_pdu pdu;
+  ::memset(&header, 0, sizeof(struct cmd_header));
+  ::memset(&pdu, 0, sizeof(struct cmd_stop_pdu));
 
 
   unsigned int trgEvents[MAX_TRIGGER_TYPES];
-  if(currFile->getTrgEvents(trgEvents) != 0) {
+  if(currFile->getTrgEvents(trgEvents, MAX_TRIGGER_TYPES) != 0) {
     *m_log << MSG::ERROR << WHERE << "Error getting the triggered event statistics" << endmsg;
   } 
 
+  unsigned int statEvents[MAX_STAT_TYPES];
+  if(currFile->getStatEvents(statEvents, MAX_STAT_TYPES) != 0) {
+    *m_log << MSG::ERROR << WHERE << "Error getting the routed event statistics" << endmsg;
+  }
+
   INIT_CLOSE_COMMAND(&header,
 		     currFile->getFileName()->c_str(),
-		     currFile->getAdlerChecksum(),
-		     currFile->getMD5Checksum(),
 		     currFile->getSeqNum(),
 		     currFile->getRunNumber(),
-             currFile->getBytesWritten(),
+             currFile->getBytesWritten());
+
+  INIT_CLOSE_PDU(&pdu, 
+		     currFile->getAdlerChecksum(),
+		     currFile->getMD5Checksum(),
              currFile->getEvents(),
-             currFile->getPhysEvents(),
-             trgEvents);
+             currFile->getPhysStat(),
+             trgEvents,
+             statEvents
+            );
+
   *m_log << MSG::INFO << " Command: " << header.cmd << " "
          << "Filename: "   << header.file_name << " "
 	 << "RunNumber: "  << header.run_no << " "
-         << "Adler32: "    << header.data.stop_data.adler32_sum << " "
-         << "MD5: "        << header.data.stop_data.md5_sum << " "
          << "Seq Nr: "     << header.data.chunk_data.seq_num << " "
          << "Size: "       << header.data.stop_data.size << " "
-         << "Events: "     << header.data.stop_data.events << " "
-         << "Phys:  "      << header.data.stop_data.physEvents << " "
-         << "Trg0 : " << header.data.stop_data.trgEvents[0] << " "
-         << "Trg1 : " << header.data.stop_data.trgEvents[1] << " "
-         << "Trg2 : " << header.data.stop_data.trgEvents[2] << " "
-         << "Trg3 : " << header.data.stop_data.trgEvents[3] << " "
-         << "Trg4 : " << header.data.stop_data.trgEvents[4] << " "
-         << "Trg5 : " << header.data.stop_data.trgEvents[5] << " "
-         << "Trg6 : " << header.data.stop_data.trgEvents[6] << " "
-         << "Trg7 : " << header.data.stop_data.trgEvents[7] << " " 
-         << "Command size is: " << sizeof(header)
+         << "Adler32: "    << pdu.adler32_sum << " "
+         << "MD5: "        << pdu.md5_sum << " "
+         << "Events: "     << pdu.events << " "
+         << "Phys:  "      << pdu.physStat << " "
+         << "Trg0 : " << pdu.trgEvents[0] << " "
+         << "Trg1 : " << pdu.trgEvents[1] << " "
+         << "Trg2 : " << pdu.trgEvents[2] << " "
+         << "Trg3 : " << pdu.trgEvents[3] << " "
+         << "Trg4 : " << pdu.trgEvents[4] << " "
+         << "Trg5 : " << pdu.trgEvents[5] << " "
+         << "Trg6 : " << pdu.trgEvents[6] << " "
+         << "Trg7 : " << pdu.trgEvents[7] << " "
+         << "PHYSIN : " << pdu.statEvents[PHYSIN] << " "
+         << "MBIASIN : " << pdu.statEvents[MBIASIN] << " "
+         << "BEAMGASIN : " << pdu.statEvents[BEAMGASIN] << " "
+         << "LUMIIN : " << pdu.statEvents[LUMIIN] << " "
+         << "RANDIN : " << pdu.statEvents[RANDIN] << " "
+         << "PHYSEX : " << pdu.statEvents[PHYSEX] << " "
+         << "MBIASEX : " << pdu.statEvents[MBIASEX] << " "
+         << "BEAMGASEX : " << pdu.statEvents[BEAMGASEX] << " "
+         << "LUMIEX : " << pdu.statEvents[LUMIEX] << " "
+         << "RANDEX : " << pdu.statEvents[RANDEX] << " "
+         << "Command size is: " << sizeof(header) + sizeof(pdu)
          << endmsg;
-  m_srvConnection->sendCommand(&header);
+
+  m_srvConnection->sendCommand(&header, &pdu);
   
   // log closing of file
   if(m_mq_available) {
@@ -490,7 +523,7 @@ void MDFWriterNet::closeFile(File *currFile)
           DELIMITER, currFile->getMonitor()->m_name, 
           DELIMITER, "bytesWritten=", currFile->getBytesWritten(), 
           DELIMITER, "events=", currFile->getEvents(), 
-          DELIMITER, "physEvents=", currFile->getPhysEvents()) + 1;
+          DELIMITER, "physEvents=", currFile->getPhysStat()) + 1; //XXX Change physEvents to physStat, see with Rainer
 
       char* msg = (char*) malloc(msg_size);
 //      snprintf(msg, msg_size, "closefile%c%i%c%s", DELIMITER, getpid(), DELIMITER, currFile->getMonitor()->m_name);
@@ -499,7 +532,7 @@ void MDFWriterNet::closeFile(File *currFile)
           DELIMITER, currFile->getMonitor()->m_name, 
           DELIMITER, "bytesWritten=", currFile->getBytesWritten(), 
           DELIMITER, "events=", currFile->getEvents(), 
-          DELIMITER, "physEvents=", currFile->getPhysEvents());
+          DELIMITER, "physEvents=", currFile->getPhysStat()); //XXX
       if(mq_send(m_mq, msg, msg_size, 0) < 0) {
           *m_log << MSG::WARNING
                  << "Could not send message"
@@ -537,6 +570,14 @@ StatusCode MDFWriterNet::writeBuffer(void *const /*fd*/, const void *data, size_
 {
   struct cmd_header header;
 
+  MDFHeader *mHeader;
+  RawBank* b = (RawBank*)data;
+  if ( b->magic() == RawBank::MagicPattern ) {
+    mHeader = b->begin<MDFHeader>();
+  }
+  else
+    mHeader = (MDFHeader*)data;
+
   /*DEBUGGING ONLY - To inject run numbers into the events by reading the run number
    * off a file.
    */
@@ -562,7 +603,7 @@ StatusCode MDFWriterNet::writeBuffer(void *const /*fd*/, const void *data, size_
   } 
 
   static int nbLate=0;
-  unsigned int runNumber = getRunNumber(data, len);
+  unsigned int runNumber = getRunNumber(mHeader, len);
 
   // If we get a newer run number, start a timeout on the previous run opened file. 
   if(m_currentRunNumber < runNumber) {
@@ -643,16 +684,25 @@ StatusCode MDFWriterNet::writeBuffer(void *const /*fd*/, const void *data, size_
   size_t totalBytesWritten = m_currFile->updateWrite(data, len);
   m_currFile->incSeqNum();
 
+
   // count event
   m_currFile->incEvents();
   ++m_TotEvts;
 
-  // check type of event
-  if( checkForPhysEvent(data, len)) {
-      m_currFile->incPhysEvents();
-  }
+  // If we can interpret the header, we perform all statistic computing. 
+  // Else we just go to the next event, while a DAQ_ERROR has already been triggered.
+  if( checkHeader(mHeader, len)) {
+    // check type of event
+    if( checkForPhysStat(mHeader, len)) {
+        m_currFile->incPhysStat();
+    }
+    incTriggerType(mHeader, len);
 
-  incTriggerType(data, len);
+    countRouteStat(mHeader, len);
+
+  }
+ 
+
  
   // after every MB send statistics
   if (m_mq_available && totalBytesWritten % 1048576 < len) {
@@ -661,14 +711,14 @@ StatusCode MDFWriterNet::writeBuffer(void *const /*fd*/, const void *data, size_
       DELIMITER, m_currFile->getMonitor()->m_name,
       DELIMITER, "bytesWritten=", totalBytesWritten,
       DELIMITER, "events=", m_currFile->getEvents(), 
-      DELIMITER, "physEvents=", m_currFile->getPhysEvents()) + 1;
+      DELIMITER, "physEvents=", m_currFile->getPhysStat()) + 1; //XXX this one see with David to change to physStat
       char* msg = (char*) malloc(msg_size);
       snprintf(msg, msg_size, "log%c%i%c%s%c%s%zu%c%s%u%c%s%u", 
       DELIMITER, getpid(), 
       DELIMITER, m_currFile->getMonitor()->m_name,
       DELIMITER, "bytesWritten=", totalBytesWritten,
       DELIMITER, "events=", m_currFile->getEvents(), 
-      DELIMITER, "physEvents=", m_currFile->getPhysEvents());
+      DELIMITER, "physEvents=", m_currFile->getPhysStat()); //XXX same
 
       if(mq_send(m_mq, msg, msg_size, 0) < 0) {
           *m_log << MSG::WARNING
@@ -707,38 +757,112 @@ StatusCode MDFWriterNet::writeBuffer(void *const /*fd*/, const void *data, size_
  * @param len   The length of the data.
  * @return The run number.
  */
-inline unsigned int MDFWriterNet::getRunNumber(const void *data, size_t /*len*/)    {
+inline unsigned int MDFWriterNet::getRunNumber(MDFHeader *mHeader, size_t /*len*/)    {
+/*
   MDFHeader *mHeader;
   RawBank* b = (RawBank*)data;
   if ( b->magic() == RawBank::MagicPattern )
     mHeader = b->begin<MDFHeader>();
   else
     mHeader = (MDFHeader*)data;
+*/
   return mHeader->subHeader().H1->m_runNumber;
 }
 
+/**
+ * For statistics, get some routing bit information from the MDFHeader and count them exclusive and inclusive.
+ * Interesting bits are:
+ * - Physics = Bit 46 AND Bit 11
+ * - Minimum bias = bit 47
+ * - Lumi = bit 33
+ * - Beam-gas = bit 49 
+ * - Random/Other = the rest
+ */
+inline void MDFWriterNet::countRouteStat(MDFHeader *mHeader, size_t) {
+  static const unsigned int bit46 =0x4000;
+  static const unsigned int bit11 =0x800;
+  static const unsigned int bit33 =0x2;
+  static const unsigned int bit47 =0x8000;
+  static const unsigned int bit49 =0x20000;
+
+  unsigned int routeBitMask0 = mHeader->subHeader().H1->m_trMask[0];
+  unsigned int routeBitMask1 = mHeader->subHeader().H1->m_trMask[1];
+//  unsigned int routeBitMask2 = mHeader->subHeader().H1->m_trMask[2];
+//  unsigned int routeBitMask3 = mHeader->subHeader().H1->m_trMask[3];
+
+  bool isPhys = false, isMBias = false, isLumi = false, isBeamGas = false;
+  
+    
+
+  isPhys = ((routeBitMask1 & bit46) && (routeBitMask0 & bit11));
+  isMBias = (routeBitMask1 & bit47);
+  isLumi = (routeBitMask1 & bit33);
+  isBeamGas = (routeBitMask1 & bit49);
+
+  if(isPhys) m_currFile->incPhysEventsIn();
+  if(isMBias) m_currFile->incMBiasEventsIn();
+  if(isLumi) m_currFile->incLumiEventsIn();
+  if(isBeamGas) m_currFile->incBeamGasEventsIn();
+
+
+  if(!isPhys && !isMBias && !isLumi && !isBeamGas) m_currFile->incRandEventsEx();
+  if(isPhys && !isMBias && !isLumi && !isBeamGas) m_currFile->incPhysEventsEx();
+  if(!isPhys && isMBias && !isLumi && !isBeamGas) m_currFile->incMBiasEventsEx();
+  if(!isPhys && !isMBias && isLumi && !isBeamGas) m_currFile->incLumiEventsEx();
+  if(!isPhys && !isMBias && !isLumi && isBeamGas) m_currFile->incBeamGasEventsEx();
+
+}
+/*
+> -          Physics  = OR(40:45) AND bits(0:1) = ‘11’
+
+alternative: bit 46 AND bits(0:1) = '11', or just plain bit 46.
+Note that offline we have been advertising bit 46 as 'the physics triggers',
+see https://twiki.cern.ch/twiki/bin/view/LHCb/HltEfficiency.
+
+> -          MinBias = bit 47
+> -          Lumi       = bit 33
+> -          BeamGas = bit 49 AND ( bits(0:1) = ‘01’  OR bits(0:1) = ‘10’ )
+> -          Other    = the rest. This means random, “physics” trigger on beam-empty not seen by the beam gas, and anything else
+
+routingBits = {  0 : '( ODIN_BXTYP == LHCb.ODIN.Beam1 ) | ( ODIN_BXTYP == LHCb.ODIN.BeamCrossing )'
+                      ,  1 : '( ODIN_BXTYP == LHCb.ODIN.Beam2 ) | ( ODIN_BXTYP == LHCb.ODIN.BeamCrossing )'
+                      ,  8 : 'L0_DECISION'
+                      ,  9 : "L0_CHANNEL_RE('B?gas')"
+                      , 10 : "|".join( [ "L0_CHANNEL('%s')" % chan for chan in [ 'CALO','MUON,minbias','PU','SPD40','PU20' ] ] )
+                      , 11 : "|".join( [ "L0_CHANNEL('%s')" % chan for chan in [ 'Photon','Hadron','Muon','DiMuon','Muon,lowMult','DiMuon,LowMult','LocalPi0','GlobalPi0'] ] )
+                      , 32 : "HLT_PASS('Hlt1Global')"
+                      , 33 : "HLT_PASS_SUBSTR('Hlt1Lumi')"
+                      , 34 : "HLT_PASS_RE('Hlt1(?!Lumi).*Decision')"  # note: we need the 'Decision' at the end to _exclude_ Hlt1Global
+                      , 35 : "HLT_PASS_SUBSTR('Hlt1Velo')"
+                      , 36 : "scale(%s,RATE(%s))" % ( "HLT_PASS_RE('Hlt2Express.*Decision')|Hlt1ExpressPhysics", self.getProp('ExpressStreamRateLimit') )
+- Hide quoted text -
+                      , 37 : "HLT_PASS('Hlt1ODINPhysicsDecision')"
+                      , 38 : "HLT_PASS('Hlt1ODINTechnicalDecision')"
+                      , 39 : "HLT_PASS_SUBSTR('Hlt1L0')"
+                      , 40 : "HLT_PASS_RE('Hlt1.*Hadron.*Decision')"
+                      , 41 : "HLT_PASS_RE('Hlt1.*SingleMuon.*Decision')"
+                      , 42 : "HLT_PASS_RE('Hlt1.*DiMuon.*Decision')"
+                      , 43 : "HLT_PASS_RE('Hlt1.*MuTrack.*Decision')"
+                      , 44 : "HLT_PASS_RE('Hlt1.*Electron.*Decision')"
+                      , 45 : "HLT_PASS_RE('Hlt1.*Pho.*Decision')"
+                      , 46 : "HLT_PASS_RE('Hlt1(?!ODIN)(?!L0)(?!Lumi)(?!Tell1)(?!MB)(?!Velo)(?!BeamGas)(?!Incident).*Decision')"    # exclude 'non-physics' lines
+                      , 47 : "HLT_PASS_RE('Hlt1MBMicroBias.*Decision')"
+                      , 48 : "HLT_PASS('Hlt1MBNoBiasDecision')"
+                      , 49 : "HLT_PASS_SUBSTR('Hlt1BeamGas')"
+                      # 64--96: Hlt2
+                      , 64 : "HLT_PASS('Hlt2Global')"
+                      , 65 : "HLT_PASS('Hlt2DebugEventDecision')"
+                      , 66 : "HLT_PASS_RE('Hlt2(?!Transparent).*Decision')"
+                      }
+
+
+*/
 
 
 /**
  * Reach the Odin bank in the MDF, and increment the number of event of this Odin trigger for the current file
  */
-inline bool MDFWriterNet::incTriggerType(const void *data, size_t) {
-    MDFHeader *mHeader;
-    RawBank* b = (RawBank*)data;
-    if ( b->magic() == RawBank::MagicPattern ) {
-        mHeader = b->begin<MDFHeader>();
-    }
-    else
-        mHeader = (MDFHeader*)data;
-
-
-    if( !( (mHeader->size0() == mHeader->size1()) && (mHeader->size0() == mHeader->size2()) ) ) {
-        *m_log << MSG::ERROR << WHERE << "MDFHeader corrupted, aborting!" << endmsg;
-        Incident incident(name(),"DAQ_ERROR");
-        m_incidentSvc->fireIncident(incident);
-        return false;
-    }
-
+inline bool MDFWriterNet::incTriggerType(const MDFHeader *mHeader, size_t) {
     RawBank *rBanks = (RawBank *) mHeader->data();
     char *ccur = (char*) mHeader->data();
 
@@ -762,19 +886,10 @@ inline bool MDFWriterNet::incTriggerType(const void *data, size_t) {
 }
 
 
-/** Checks if it is a phys event (which means that bit 34 is set).
- * @param data  The data from which MDF information may be retrieved
- * @param len   The length of the data.
- * @return true if it is a phys event, false otherwise
+/**
+ *
  */
-inline bool MDFWriterNet::checkForPhysEvent(const void *data, size_t ) {
-  MDFHeader *mHeader;
-  RawBank* b = (RawBank*)data;
-  if ( b->magic() == RawBank::MagicPattern ) {
-    mHeader = b->begin<MDFHeader>();
-  }
-  else
-    mHeader = (MDFHeader*)data;
+inline bool MDFWriterNet::checkHeader(const MDFHeader *mHeader, size_t) {
 
   if( !( (mHeader->size0() == mHeader->size1()) && (mHeader->size0() == mHeader->size2()) ) ) {
       *m_log << MSG::ERROR << WHERE << "MDFHeader corrupted, aborting!" << endmsg;
@@ -782,17 +897,33 @@ inline bool MDFWriterNet::checkForPhysEvent(const void *data, size_t ) {
       m_incidentSvc->fireIncident(incident);
       return false;
   }
-  unsigned int physBitMask=0;
 
-  // Expect a version 3 to apply header1 :)
-  if(mHeader->headerVersion() == 3)
-      physBitMask = mHeader->subHeader().H1->m_trMask[1];
-  else {
+  // Expect a version 3 only, to apply header1 later :)
+  if(mHeader->headerVersion() != 3) {
       *m_log << MSG::ERROR << WHERE << "Unknown MDFHeader version " << mHeader->headerVersion() << ", aborting!" << endmsg;
       Incident incident(name(),"DAQ_ERROR");
       m_incidentSvc->fireIncident(incident);
-      return false; 
+
   }
+
+  return true; 
+}
+
+/** Checks if it is a phys event (which means that bit 34 is set).
+ * @param data  The data from which MDF information may be retrieved
+ * @param len   The length of the data.
+ * @return true if it is a phys event, false otherwise
+ */
+inline bool MDFWriterNet::checkForPhysStat(MDFHeader *mHeader, size_t) {
+/*
+  MDFHeader *mHeader;
+  RawBank* b = (RawBank*)data;
+  if ( b->magic() == RawBank::MagicPattern )
+    mHeader = b->begin<MDFHeader>();
+  else
+    mHeader = (MDFHeader*)data;
+*/
+  unsigned int physBitMask = mHeader->subHeader().H1->m_trMask[1];
 
   if(physBitMask & (unsigned int) 4) {
       return true;
@@ -851,36 +982,48 @@ void MDFWriterNet::notifyOpen(struct cmd_header *cmd)
  */
 void MDFWriterNet::notifyClose(struct cmd_header *cmd)
 {
+  struct cmd_stop_pdu *pdu=(struct cmd_stop_pdu *) ((char*)cmd + sizeof(struct cmd_header));
     *m_log << MSG::INFO << WHERE << " notifyClose start" << endmsg;
   try {
     m_rpcObj->confirmFile(cmd->file_name,
-			              cmd->data.stop_data.adler32_sum,
-			              cmd->data.stop_data.md5_sum,
+			              pdu->adler32_sum,
+			              pdu->md5_sum,
                           cmd->data.stop_data.size,
-                          cmd->data.stop_data.events,
-                          cmd->data.stop_data.physEvents,
-                          cmd->data.stop_data.trgEvents);
+                          pdu->events,
+                          pdu->physStat,
+                          pdu->trgEvents,
+                          pdu->statEvents);
     *m_log << MSG::INFO << "Confirmed file " << cmd->file_name 
          << "RunNumber: "  << cmd->run_no << " "
-         << "Adler32: "    << cmd->data.stop_data.adler32_sum << " "
-         << "MD5: "        << cmd->data.stop_data.md5_sum << " "
-         << "Seq Nr: "     << cmd->data.chunk_data.seq_num << " "
+         << "Adler32: "    << pdu->adler32_sum << " "
+         << "MD5: "        << pdu->md5_sum << " "
+         << "Seq Nr: "     << cmd->data.stop_data.seq_num << " "
          << "Size: "       << cmd->data.stop_data.size << " "
-         << "Events: "     << cmd->data.stop_data.events << " "
-         << "Phys:  "      << cmd->data.stop_data.physEvents << " "
-         << "Trg0 : " << cmd->data.stop_data.trgEvents[0] << " "
-         << "Trg1 : " << cmd->data.stop_data.trgEvents[1] << " "
-         << "Trg2 : " << cmd->data.stop_data.trgEvents[2] << " "
-         << "Trg3 : " << cmd->data.stop_data.trgEvents[3] << " "
-         << "Trg4 : " << cmd->data.stop_data.trgEvents[4] << " "
-         << "Trg5 : " << cmd->data.stop_data.trgEvents[5] << " "
-         << "Trg6 : " << cmd->data.stop_data.trgEvents[6] << " "
-         << "Trg7 : " << cmd->data.stop_data.trgEvents[7] << " " 
+         << "Events: "     << pdu->events << " "
+         << "Phys:  "      << pdu->physStat << " "
+         << "Trg0 : " << pdu->trgEvents[0] << " "
+         << "Trg1 : " << pdu->trgEvents[1] << " "
+         << "Trg2 : " << pdu->trgEvents[2] << " "
+         << "Trg3 : " << pdu->trgEvents[3] << " "
+         << "Trg4 : " << pdu->trgEvents[4] << " "
+         << "Trg5 : " << pdu->trgEvents[5] << " "
+         << "Trg6 : " << pdu->trgEvents[6] << " "
+         << "Trg7 : " << pdu->trgEvents[7] << " " 
+         << "PHYSIN : " << pdu->statEvents[PHYSIN] << " "
+         << "MBIASIN : " << pdu->statEvents[MBIASIN] << " "
+         << "BEAMGASIN : " << pdu->statEvents[BEAMGASIN] << " "
+         << "LUMIIN : " << pdu->statEvents[LUMIIN] << " "
+         << "RANDIN : " << pdu->statEvents[RANDIN] << " "
+         << "PHYSEX : " << pdu->statEvents[PHYSEX] << " "
+         << "MBIASEX : " << pdu->statEvents[MBIASEX] << " "
+         << "BEAMGASEX : " << pdu->statEvents[BEAMGASEX] << " "
+         << "LUMIEX : " << pdu->statEvents[LUMIEX] << " "
+         << "RANDEX : " << pdu->statEvents[RANDEX] << " "
          << endmsg;
 
   } catch(std::exception& rte) {
     char md5buf[33];
-    unsigned char *md5sum = cmd->data.stop_data.md5_sum;
+    unsigned char *md5sum = pdu->md5_sum;
     sprintf(md5buf, "%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X",
 	        md5sum[0],md5sum[1],md5sum[2],md5sum[3],
 	        md5sum[4],md5sum[5],md5sum[6],md5sum[7],
@@ -892,7 +1035,7 @@ void MDFWriterNet::notifyClose(struct cmd_header *cmd)
            << rte.what() << endmsg;
     *m_log << MSG::ERROR << " Could not update Run Database Record. Check the RunDB XML_RPC logfile /clusterlogs/services/xmlrpc.log";
     *m_log << " Record is: FileName=" << cmd->file_name;
-    *m_log << " Adler32 Sum=" << cmd->data.stop_data.adler32_sum;
+    *m_log << " Adler32 Sum=" << pdu->adler32_sum;
     *m_log << " MD5 Sum=" << md5buf << endmsg;
   }
   *m_log << MSG::INFO << WHERE << " notifyClose end" << endmsg;

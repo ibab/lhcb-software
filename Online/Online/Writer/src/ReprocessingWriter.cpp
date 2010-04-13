@@ -26,18 +26,31 @@ template <class T> void _delete(T& p) {
   p = 0;
 }
 
-/// Macro for initialising a close command.
-#define INIT_CLOSE_COMMAND(h, fname, adler_32, md_5, seqno, rno, thesize, noofevents, noofphysevents) { \
+/**
+ * Macro for initialising a close command.
+ */
+/*#define INIT_CLOSE_COMMAND(h, fname, adler_32, md_5, seqno, rno, thesize, noofevents, noofphysstat, trgevents) { \
+*/
+#define INIT_CLOSE_COMMAND(h, fname, seqno, rno, thesize) { \
     (h)->cmd = CMD_CLOSE_FILE; \
     (h)->run_no = rno;  \
     (h)->data.chunk_data.seq_num = seqno; \
-    (h)->data.stop_data.adler32_sum = (adler_32); \
-    (md_5)->Final((h)->data.stop_data.md5_sum); \
     (h)->data.stop_data.size = thesize; \
-    (h)->data.stop_data.events = noofevents; \
-    (h)->data.stop_data.physEvents = noofphysevents; \
-    ::strncpy((h)->file_name, (fname), MAX_FILE_NAME); \
+    strncpy((h)->file_name, (fname), MAX_FILE_NAME); \
 }
+
+/**
+ * Macro for initialising a close command pdu.
+ */
+#define INIT_CLOSE_PDU(p, adler_32, md_5, noofevents, noofphysstat, trgevents, statevents) { \
+    (p)->adler32_sum = (adler_32); \
+    (md_5)->Final((p)->md5_sum); \
+    (p)->events = noofevents; \
+    (p)->physStat = noofphysstat; \
+    memcpy((p)->trgEvents, (trgevents), MAX_TRIGGER_TYPES*sizeof(unsigned int)); \
+    memcpy((p)->statEvents, (statevents), MAX_STAT_TYPES*sizeof(unsigned int)); \
+}
+
 
 /// Macro for initialising a write command.
 #define INIT_WRITE_COMMAND(h, len, off, fname, seqno, rno) { \
@@ -207,19 +220,39 @@ File* ReprocessingWriter::createAndOpenFile(unsigned int runNumber)    {
 /// Queues a command that closes a file.
 void ReprocessingWriter::closeFile(File *f)   {
   struct cmd_header header;
+  struct cmd_stop_pdu pdu;
   ::memset(&header, 0, sizeof(struct cmd_header));
+  ::memset(&pdu, 0, sizeof(struct cmd_stop_pdu));
   *m_log << MSG::INFO << "RUN:" << f->getRunNumber()
 	 << " ...closing file:" << *(f->getFileName()) << endmsg;
+
+  unsigned int trgEvents[MAX_TRIGGER_TYPES];
+  if(f->getTrgEvents(trgEvents, MAX_TRIGGER_TYPES) != 0) {
+    *m_log << MSG::ERROR << WHERE << "Error getting the triggered event statistics" << endmsg;
+  }
+
+  unsigned int statEvents[MAX_STAT_TYPES];
+  if(f->getStatEvents(statEvents, MAX_STAT_TYPES) != 0) {
+    *m_log << MSG::ERROR << WHERE << "Error getting the routed event statistics" << endmsg;
+  }
+
+
   INIT_CLOSE_COMMAND(&header,
-		     f->getFileName()->c_str(),
-		     f->getAdlerChecksum(),
-		     f->getMD5Checksum(),
-		     f->getSeqNum(),
-		     f->getRunNumber(),
-		     f->getBytesWritten(),
-		     f->getEvents(),
-                     0);
-  m_srvConnection->sendCommand(&header);
+                     f->getFileName()->c_str(),
+                     f->getSeqNum(),
+                     f->getRunNumber(),
+             f->getBytesWritten());
+  
+  INIT_CLOSE_PDU(&pdu,
+                     f->getAdlerChecksum(),
+                     f->getMD5Checksum(),
+             f->getEvents(),
+             f->getPhysStat(),
+             trgEvents,
+             statEvents);
+
+
+  m_srvConnection->sendCommand(&header, &pdu);
 }
 
 /* Writes out the buffer to the socket through the Connection object.
@@ -292,17 +325,19 @@ void ReprocessingWriter::notifyOpen(struct cmd_header *cmd)   {
 
 /// A notify listener callback, which is executed  when a close command is acked.
 void ReprocessingWriter::notifyClose(struct cmd_header *cmd)   {
+  struct cmd_stop_pdu *pdu = (struct cmd_stop_pdu *) ((char *) cmd + sizeof(struct cmd_header));
   char md5buf[33];
-  unsigned char *md5 = cmd->data.stop_data.md5_sum;
+  unsigned char *md5 = pdu->md5_sum;
   try {
     m_bufferLength -= cmd->data.stop_data.size;
     m_rpcObj->confirmFile(cmd->file_name,
-			  cmd->data.stop_data.adler32_sum,
-			  cmd->data.stop_data.md5_sum,
+			  pdu->adler32_sum,
+			  pdu->md5_sum,
                           cmd->data.stop_data.size,
-                          cmd->data.stop_data.events,
-                          cmd->data.stop_data.physEvents,
-                          cmd->data.stop_data.trgEvents);
+                          pdu->events,
+                          pdu->physStat,
+                          pdu->trgEvents,
+                          pdu->statEvents);
     *m_log << MSG::INFO << "Confirmed ";
   }
   catch(exception& rte) {
@@ -315,7 +350,7 @@ void ReprocessingWriter::notifyClose(struct cmd_header *cmd)   {
 	    md5[8],md5[9],md5[10],md5[11],
 	    md5[12],md5[13],md5[14],md5[15]);
   *m_log << "File:" << cmd->file_name;
-  *m_log << " Adler32:" << hex << cmd->data.stop_data.adler32_sum;
+  *m_log << " Adler32:" << hex << pdu->adler32_sum;
   *m_log << " MD5:" << md5buf << endmsg;
 }
 

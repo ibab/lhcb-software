@@ -27,7 +27,8 @@ void RPCComm::confirmFile(char *fileName,
                           unsigned long size,
                           unsigned long events,
                           unsigned long physEvents,
-                          unsigned int *trgEvents
+                          unsigned int *trgEvents,
+                          unsigned int *statEvents
                           )
 {
   int ret;
@@ -39,6 +40,7 @@ void RPCComm::confirmFile(char *fileName,
   char md5CharString[33];
 
   char trgEventsCharString[33]; 
+  char statEventsCharString[41];
 
   /* We need to send this as a string because it's not very clear how the
    * XMLRPC library handles unsigned values.
@@ -56,11 +58,17 @@ void RPCComm::confirmFile(char *fileName,
       trgEvents[0], trgEvents[1], trgEvents[2], trgEvents[3], 
       trgEvents[4], trgEvents[5], trgEvents[6], trgEvents[7]);
 
+  sprintf(statEventsCharString, "PHYSIN:%d;MBIASIN:%d;LUMIIN:%d;BEAMGASIN:%d;RANDIN:%d;PHYSEX:%d;MBIASEX:%d;LUMIEX:%d;BEAMGASEX:%d;RANDEX:%d", 
+      statEvents[PHYSIN], statEvents[MBIASIN], statEvents[LUMIIN], statEvents[BEAMGASIN], 
+      statEvents[RANDIN], statEvents[PHYSEX], statEvents[MBIASEX], statEvents[LUMIEX],
+      statEvents[BEAMGASEX], statEvents[RANDEX]);
   
 
   /* Now we fill up templates. */
   snprintf(xmlData, sizeof(xmlData), CONFIRM_TEMPLATE,
-           fileName, adler32String, md5CharString, size, events, physEvents, trgEventsCharString);
+           fileName, adler32String, md5CharString, size, events, physEvents, 
+           trgEventsCharString, statEventsCharString);
+
   snprintf(headerData, sizeof(headerData), HEADER_TEMPLATE,
            "WriterHost",  strlen(xmlData));
 
