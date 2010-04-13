@@ -1,4 +1,4 @@
-// $Id: OMAFitFunction.cpp,v 1.6 2010-04-10 14:26:04 ggiacomo Exp $
+// $Id: OMAFitFunction.cpp,v 1.7 2010-04-13 09:05:01 robbep Exp $
 #include <sstream>
 #include <cmath>
 #include <TH1.h>
@@ -94,10 +94,15 @@ void OMAFitFunction::fit(TH1* histo, std::vector<float>* initValues)
     }
   }
  
-  if(m_useTF1)
-    histo->Fit((TF1*) this,"Q");
-  else
-    histo->Fit(m_funcString.c_str(),"Q");
+  if(m_useTF1) {
+    histo->Fit((TF1*) this,"0Q");
+    TF1 * fitf = histo -> GetFunction( this -> GetName() ) ;
+    if ( fitf ) fitf -> Draw( "LSAME" ) ;
+  } else {
+    histo->Fit(m_funcString.c_str(),"0Q");
+    TF1 * fitf = histo -> GetFunction( m_funcString.c_str() ) ;
+    if ( fitf ) fitf -> Draw( "LSAME" ) ;
+  }
 }
 
 OMAFitDoubleGaus::OMAFitDoubleGaus() :
