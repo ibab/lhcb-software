@@ -5,6 +5,9 @@
 !               of events with exotic displaced vertices
 !-----------------------------------------------------------------------------
 
+! 2010-04-14 - Neal Gauvin
+ - Comfort improvement in RecVertices2Particles and DisplVertices
+
 ! 2010-04-12 - Neal Gauvin
  - bug fixed in RecVertices2Particles and DisplVertices
 

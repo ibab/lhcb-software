@@ -276,7 +276,7 @@ StatusCode DisplVertices::execute(){
   ++counter("Processed evt nb");
   if( msgLevel( MSG::DEBUG ) )
     debug() << "==> Execute the DisplVertices algorithm, event "
-            << counter("Processed evt nb") << endmsg;
+            << counter("Processed evt nb").flag() << endmsg;
   setFilterPassed(false);   // Mandatory. Set to true if event is accepted.
 
   //------------------Some Studies------------------

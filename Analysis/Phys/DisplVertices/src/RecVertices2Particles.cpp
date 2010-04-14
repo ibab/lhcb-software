@@ -99,7 +99,7 @@ StatusCode RecVertices2Particles::initialize() {
 
   //Sanity checks
   if( context() == "HLT" ){
-    m_SaveTuple = false; m_UseMap = true;
+    m_UseMap = true;
   }
   if( m_UseMap ) m_Fitter = "none";
     
@@ -210,7 +210,7 @@ StatusCode RecVertices2Particles::initialize() {
   ++counter("Processed evt nb");
   if( msgLevel(MSG::DEBUG) )
     debug() << "==> Execute the RecVertices2Particles algorithm, event "
-	    << counter("Processed evt nb") << endmsg;
+	    << counter("Processed evt nb").flag() << endmsg;
 
   //Check track and Particle content
   //PrintTrackandParticles();
@@ -240,7 +240,7 @@ StatusCode RecVertices2Particles::initialize() {
   if( m_UseMap ) m_map.clear(); //Re-initialize the map
 
   //Retrieve data Particles from Desktop.
-  Particle::ConstVector Parts = desktop()->particles();
+  const Particle::ConstVector & Parts = desktop()->particles();
   int size = Parts.size() ;
   if( msgLevel(MSG::DEBUG) )
     debug()<< "Number of Particles in TES " << size << endmsg;
@@ -387,9 +387,8 @@ const RecVertex * RecVertices2Particles::GetUpstreamPV(){
 // Turn RecVertices into Particles (from Parts) saved in RecParts
 //=============================================================================
 bool RecVertices2Particles::RecVertex2Particle( const RecVertex* rv,
-                                Particle::ConstVector & Parts,
+                                const Particle::ConstVector & Parts,
                                 Particle::ConstVector & RecParts ){  
-  
 
   Gaudi::LorentzVector mom;
   SmartRefVector< Track >::const_iterator iVtx = rv->tracks().begin();
@@ -398,7 +397,7 @@ bool RecVertices2Particles::RecVertex2Particle( const RecVertex* rv,
 
   //Create map if necessary
   if( m_UseMap && m_map.empty() ) CreateMap( Parts );
-    
+
   if( m_Fitter == "none" ){
 
     //Create an decay vertex
@@ -407,7 +406,7 @@ bool RecVertices2Particles::RecVertex2Particle( const RecVertex* rv,
     tmpVtx.setNDoF( rv->nDoF());
     tmpVtx.setChi2( rv->chi2());
     tmpVtx.setCovMatrix( rv->covMatrix() );
-    
+
     //Create a particle
     Particle tmpPart = Particle( m_PreyID );
     //Fix end vertex
@@ -417,16 +416,21 @@ bool RecVertices2Particles::RecVertex2Particle( const RecVertex* rv,
     if( m_UseMap ){
       //Loop on RecVertex daughter tracks and save corresponding Particles
       for( ; iVtx != iVtxend; ++iVtx ){
-        //       debug()<<"Key "<< (*iVtx)->key() <<" type "
-        // 	     <<(*iVtx)->type()  <<" slope "<< (*iVtx)->slopes() << endmsg;
+        //debug()<<"Key "<< (*iVtx)->key() <<" type "
+        //    <<(*iVtx)->type()  <<" slope "<< (*iVtx)->slopes() << endmsg;
         const int key = (*iVtx)->key();
         GaudiUtils::VectorMap<int, const Particle *>::const_iterator it;
+
         it = m_map.find( key );
         const Particle * part = NULL; 
-        
+
         //Give a default pion with pT of 400 MeV
-        if( it != m_map.end() ) part = it->second; 
-        //debug()<<"got Particle from map with slope "<< part->slopes() <<endmsg;
+        if( it != m_map.end() ){ 
+          part = it->second; 
+          //debug()<<"got Particle from map with slope "
+          //     << part->slopes() <<endmsg;
+        }
+
         if( it == m_map.end() ) part = DefaultParticle(*iVtx);
         if( part != NULL ){
           tmpVtx.addToOutgoingParticles( part );
@@ -435,16 +439,20 @@ bool RecVertices2Particles::RecVertex2Particle( const RecVertex* rv,
         }      
       }
     } else {
-   
+
       //Find all particles that have tracks in RecVertex
       Particle::ConstVector::const_iterator jend = Parts.end();
       for ( Particle::ConstVector::const_iterator j = Parts.begin();
             j != jend;++j) {
+
+        if( (*j)->proto() == NULL ) continue;
         if( (*j)->proto()->track() == NULL ) continue;
         const Track * tk = (*j)->proto()->track();
+
         while( ((*iVtx)->key() < tk->key()) && (*iVtx)->key() != endkey ){
           ++iVtx;
         }
+
         if( (*iVtx)->key() == tk->key() ){ 
           //debug()<<"Track should be the same "<< (*iVtx)->momentum() <<" "
           //     << tk->momentum() << endmsg;
@@ -457,11 +465,11 @@ bool RecVertices2Particles::RecVertex2Particle( const RecVertex* rv,
         }
       }
     }
-    if( context()=="Info" ){
-      double eff = 100.*(double)tmpPart.daughters().size()/
-        (double)rv->tracks().size();
-      plot( eff, "Trk2PartEff", 0., 101.);
-    }
+    //Should always be 100%
+    //double eff = 100.*(double)tmpPart.daughters().size()/
+      //(double)rv->tracks().size();
+//     plot( eff, "Trk2PartEff", 0., 101.);
+    //debug()<<"Track to Particle matching efficiency "<< eff << endmsg;
     //debug()<<"Found "<< Daughters.size() <<" related particles."<< endmsg;
     //Do I really care about the number of tracks found ?
     //if( Daughters.size() < m_nTracks ) return;
@@ -558,26 +566,26 @@ bool RecVertices2Particles::RecVertex2Particle( const RecVertex* rv,
 //=============================================================================
 // Create a map between Particles and their Velo tracks ancestors
 //=============================================================================
-void RecVertices2Particles::CreateMap( Particle::ConstVector & Parts ){
+void RecVertices2Particles::CreateMap( const Particle::ConstVector & Parts ){
 
   m_map.reserve( Parts.size() );
   int nb = 0;
 
   for ( Particle::ConstVector::const_iterator j = Parts.begin();
 	j != Parts.end();++j) {
-    
+
     if( (*j)->proto()->track() == NULL ) continue;
     const Track * tk = (*j)->proto()->track();
     
     SmartRefVector< Track > old = tk->ancestors();
 
     for( SmartRefVector<Track>::const_iterator i = 
-	   old.begin(); i != old.end(); ++i ){
+           old.begin(); i != old.end(); ++i ){
 //       debug()<<"Part "<< (*j)->key() <<" type "<< tk->type() 
 //              <<" slope "<< (*j)->slopes() 
 //              << " Ancestor " << (*i)->key() <<" type "
 //              <<(*i)->type()  <<" slope "<< (*i)->slopes() << endmsg;
-
+      
       if( !((*i)->checkType(Track::Velo)) ) continue;
       m_map.insert( (*i)->key(), (*j) );
       nb++;
@@ -585,14 +593,15 @@ void RecVertices2Particles::CreateMap( Particle::ConstVector & Parts ){
       break;
     }
   }
-//   if( context() == "Info" ){
-//     double eff = 100.*( (double)nb )/( (double)Parts.size() );
-//     int clone = nb - m_map.size();
-//     plot( eff, "MapEff", 0., 105. ); //always 100%
-//     plot( clone, "NbClonePart", 0., 10. );
-//     debug() <<"eff "<< eff <<" nb of clone "<< clone <<" Nb of Part "
-//             << Parts.size() <<" Map size "<< m_map.size() << endmsg;
-//   }
+  //if( context() == "Info" ){
+  //double eff = 100.*( (double)nb )/( (double)Parts.size() );
+  //a few particles may originate from the same Velo ancestor !
+  //int clone = nb - m_map.size();
+  //plot( eff, "MapEff", 0., 105. ); //always 100%
+  //plot( clone, "NbClonePart", 0., 10. );
+  //debug() <<"eff "<< eff <<" nb of clone "<< clone <<" Nb of Part "
+  //        << Parts.size() <<" Map size "<< m_map.size() << endmsg;
+  //}
   
   return;
 }
@@ -610,7 +619,7 @@ const Particle * RecVertices2Particles::DefaultParticle( const Track * p ){
   pion.setMomentum(mom);
 
   //debug()<<"Creating default pion for key "<< p->key() <<" and slopes "
-  // <<sx<<" "<<sy<<" yielding momentum "<< mom << endmsg;
+  //     <<sx<<" "<<sy<<" yielding momentum "<< mom << endmsg;
 
   return desktop()->keep(&pion);
 }

@@ -52,10 +52,10 @@ private:
   const LHCb::RecVertex * GetUpstreamPV();
   ///Turn a RecVertex into a Particle
   bool RecVertex2Particle( const LHCb::RecVertex*, 
-			   LHCb::Particle::ConstVector &, 
+			   const LHCb::Particle::ConstVector &, 
 			   LHCb::Particle::ConstVector & );
   /// Create a map between the Particles and the Velo Tracks
-  void CreateMap( LHCb::Particle::ConstVector & );
+  void CreateMap( const LHCb::Particle::ConstVector & );
   /// Creates a pion with 400 MeV pt from track slopes.
   const LHCb::Particle* DefaultParticle( const LHCb::Track * p );
   /// Has a RecVertex a backward track ?
