@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Pi0HistoFit.py,v 1.9 2010-04-06 19:11:47 ibelyaev Exp $ 
+# $Id: Pi0HistoFit.py,v 1.10 2010-04-14 11:28:07 ibelyaev Exp $ 
 # =============================================================================
 """
 A module for fitting the histograms with pi0-mass
@@ -9,7 +9,7 @@ A module for fitting the histograms with pi0-mass
 # =============================================================================
 __author__  = " ??? "
 __date__    = " 2009-12-?? "
-__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.9 $ "
+__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.10 $ "
 # =============================================================================
 from ROOT  import TH1F, TF1
 from math  import sqrt, pi,exp
@@ -159,7 +159,7 @@ pi0Func.SetParameter ( 4 ,   0 )
 pi0Func.SetParameter ( 5 ,   0 )
 
 _low    =  50.000
-_high   = 235.000
+_high   = 210.000
 _mass0  = 135.000
 _sigma0 =  13.001
 _slope0 =   0.001 
