@@ -1,8 +1,11 @@
-!$Id: release.notes,v 1.75 2010-04-13 10:01:43 albrecht Exp $
+!$Id: release.notes,v 1.76 2010-04-14 07:30:00 albrecht Exp $
 Package     : Hlt/HltGlobalMonitor
 Package Coordinator : Bruno Souza de Paula 
 Purpose     : LHCb HLT Global Monitoring
 ! -----------------------------------------------------------------------------
+! 2010-04-14 - Johannes Albrecht
+ - add L0 and ODIN histograms after HLT1 and HLT2 
+
 ! 2010-04-13 - Johannes Albrecht
  - add two histograms with enabled and disabled L0 channels
 
