@@ -120,7 +120,7 @@ export LOGFIFO=/tmp/logGaudi.fifo
 ##export GAUDIONLINEROOT=/home/online/ONLINE/Online_v4r30/Online/GaudiOnline
 ##export LD_LIBRARY_PATH=$GAUDIONLINEROOT/${CMTCONFIG}:${LD_LIBRARY_PATH}:$GAUDIONLINEROOT/${CMTCONFIG}
 ##echo $LD_LIBRARY_PATH
-export gaudi_exe="/usr/bin/nice -n 20 $GAUDIONLINEROOT/$CMTCONFIG/Gaudi.exe $GAUDIONLINEROOT/$CMTCONFIG/libGaudiOnline.so OnlineTask -msgsvc=LHCb::FmcMessageSvc"  
+export gaudi_exe="/bin/nice -n 20 $GAUDIONLINEROOT/$CMTCONFIG/Gaudi.exe $GAUDIONLINEROOT/$CMTCONFIG/libGaudiOnline.so OnlineTask -msgsvc=LHCb::FmcMessageSvc"  
 export HLTOPTS=${ONLINETASKSROOT}/hltopts
 export CLASS1_TASK="${gaudi_exe} -tasktype=LHCb::Class1Task -main=/group/online/dataflow/templates/options/Main.opts"
 #export CLASS0_TASK="${gaudi_exe} -tasktype=LHCb::Class0Task -opt=${GAUDIONLINEROOT}/options/Daemon.opts"
