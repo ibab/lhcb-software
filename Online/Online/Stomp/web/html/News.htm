@@ -2,10 +2,10 @@
 <HTML>
 <HEAD>
   <TITLE>LHCb Bookkeeping home page</TITLE>
-  <META HTTP-EQUIV="Pragma"  CONTENT="no-cache">
-  <META HTTP-EQUIV="Expires" CONTENT="0">
-  <META   content="text/html; charset=iso-8859-1" http-equiv=Content-Type>
-  <LINK   href="../lhcb.display.general.css" rel=stylesheet type=text/css>
+  <META HTTP-EQUIV="Pragma"  CONTENT="no-cache"></META>
+  <META HTTP-EQUIV="Expires" CONTENT="0"></META>
+  <META   content="text/html; charset=iso-8859-1" http-equiv=Content-Type></META>
+  <LINK   href="../Style/lhcb.display.general.css" rel="stylesheet" type="text/css"></LINK>
   <SCRIPT language="JavaScript"   src="../lhcb.display.webutils.cpp"></SCRIPT>
 </HEAD>
 
@@ -22,7 +22,7 @@
 
       <P><B>Description:</B> <BR>
       <UL>
-      <LI>Help: This page
+      <LI><B>Help:</B> This page
       </LI>
       <LI><B>Online Home:</B> Link to the main online home page.
       </LI>
@@ -42,10 +42,37 @@
       <LI><B>HV Status:</B>
           High volatge and LHCb detector status summary display.
       </LI>
+      <LI><B>BCM:</B>
+          Reading of the Beam Conditions Monitors.
+      </LI>
+      <LI><B>Magnet:</B>
+          Magnet status and field readings.
+      </LI>
       <LI><B>LHC Status:</B>
           LHC status around point 8/LHCb.
       </LI>
+      <LI><B>ELog:</B>
+          LHCb logbook -- what's going on at Pit 8?
+      </LI>
       </UL>
+<script>
+var open_desktop = function()  {
+  parent.location.assign('http://cern.ch/frankm/Desktop');
+}
+var open_screenshot = function()  {
+  document.location.assign('../Desktop/images/screenshot.jpg');
+}
+</script>
+<font color="red">
+      <P><B>Experimental Section:</B> <BR>
+
+      If you want to go fancy and have a more elaborate interface,
+      you may use the <A href="javascript:open_desktop()"><B>LHCb Online web
+      desktop</B></A>. It allows you to configure the look and feel and
+      offers much more information. Great toy for big kids!<br>
+      To get an idea, see the <A href="javascript:open_screenshot()">screenshot</A>.
+</font>
+
       <P></P>
       <H3>Please note, that this application requires on:</H3>
       <UL>

@@ -1,10 +1,11 @@
+_loadScript('lhcb.display.constants.cpp');
 _loadFile('lhcb.display.general','css');
 var HTML_HEAD = new Object();
 
 function setupHTML_HEAD() {
   HTML_HEAD.head = document.getElementsByTagName("head")[0];
-  HTML_HEAD.url_base = the_displayObject.url_base;
-  HTML_HEAD.url_comet = 'http://lbcomet.cern.ch/static/RunStatus';
+  HTML_HEAD.url_base  = the_displayObject.url_base;
+  HTML_HEAD.url_comet = lhcb.constants.lhcb_comet_url();
   HTML_HEAD.img_base  = 'http://cern.ch/frankm/Online';
 }
 
@@ -87,6 +88,13 @@ var NavigationBar = function() {
     return this.addSized(text, tooltip, url, style, small_pic, 16, 16, large_pic, 32, 32);
   }
 
+  table.addURL = function(tooltip, url) {
+    return this.addSized(url.title, tooltip, 
+			 'JavaScript:navBar.open_abs_url("'+url.src+'")',
+			 'NavigationBar',
+			 url.img.icon, 16, 16, url.img.src, 32, 32);
+  }
+
   table.setImages = function(small) {
     if ( small ) {
       if ( this.icons ) this.icons.innerHTML = 'Large Icons';
@@ -157,89 +165,25 @@ var navbar_body = function()  {
   setupHTML_BASE(HTML_HEAD.url_base+'/..');
   navBar = NavigationBar();
   navBar.icons = navBar.addButton('Small Icons','Change icon layout', 'DisplayButton', navBar.changeImages);
-  navBar.add('Online Home',
-	     'Got to the LHCb Online home page',
-	     'JavaScript:navBar.open_abs_url("http://lhcb-online.web.cern.ch/lhcb-online")',
-	     'NavigationBar',
-	     '../Images/Home_16x16.gif',
-	     '../Images/Home_32x32.gif');
+
+  //navBar.addURL('Got to the LHCb Online home page',lhcb.constants.lhcb.online_home_page);
   navBar.add('Help',
 	     'Help',
 	     'JavaScript:navBar.open_abs_url("News.htm")',
 	     'NavigationBar',
 	     '../Images/Help_16x16.gif',
 	     '../Images/Help_32x32.gif');
-
-  navBar.add('Page 1',
-	     'Show LHCb Page 1',
-	     'JavaScript:navBar.open_url("lhcb.display.htm?type=page1")',
-	     'NavigationBar',
-	     '../Images/Search_16x16.gif',
-	     '../Images/Search_32x32.gif');
-
-  navBar.add('LHCb Run Status',
-	     'Show LHCb run status display',
-	     'JavaScript:navBar.open_url("lhcb.display.htm?type=status&system=LHCb")',
-	     'NavigationBar',
-	     '../Images/LookFile_16x16.gif',
-	     '../Images/LookFile_32x32.gif');
-
-  navBar.add('FEST Run Status',
-	     'Show FEST run status display',
-	     'JavaScript:navBar.open_url("lhcb.display.htm?type=status&system=FEST")',
-	     'NavigationBar',
-	     '../Images/Options_16x16.gif',
-	     '../Images/Options_32x32.gif');
-
-  navBar.add('Subdetector Run Status',
-	     'Show run status display with coice of detector',
-	     'JavaScript:navBar.open_url("lhcb.display.htm?type=status")',
-	     'NavigationBar',
-	     '../Images/LookJob_16x16.gif',
-	     '../Images/LookJob_32x32.gif');
-
-  navBar.add('Collimators',
-	     'Show collimator settings around Point 8',
-	     'JavaScript:navBar.open_url("lhcb.display.htm?type=collimators")',
-	     'NavigationBar',
-	     '../Images/LookProd_16x16.gif',
-	     '../Images/LookProd_32x32.gif');
-
-  navBar.add('HV Status',
-	     'Show LHCb HV status',
-	     'JavaScript:navBar.open_url("lhcb.display.htm?type=detstatus")',
-	     'NavigationBar',
-	     '../Images/Wizard_16x16.gif',
-	     '../Images/Wizard_32x32.gif');
-
-  navBar.add('BCM',
-	     'Show BCM status',
-	     'JavaScript:navBar.open_url("lhcb.display.htm?type=bcm&charts=1")',
-	     'NavigationBar',
-	     '../Images/BCM.png',
-	     '../Images/BCM.png');
-
-  navBar.add('Magnet',
-	     'Show Magnet status',
-	     'JavaScript:navBar.open_url("lhcb.display.htm?type=magnet")',
-	     'NavigationBar',
-	     '../Images/LHCb/Magnet_Icon.png',
-	     '../Images/LHCb/Magnet_Icon.png');
-
-  navBar.addSized('LHC Status',
-		  'LHC status around LHCb',
-		  'JavaScript:navBar.open_url("lhcb.display.htm?type=lhc")',
-		  'NavigationBar',
-  		  '../Images/Beams.jpg',16,16,
-  		  '../Images/Beams.jpg',32,32);
-  //		  '../Images/LHC3.jpg',24,16,
-  //		  '../Images/LHC3.jpg',48,32);
-  navBar.addSized('Elog',
-		  'LHCb electronic logbook',
-		  'JavaScript:navBar.open_abs_url("http://lblogbook.cern.ch/Shift/")',
-		  'NavigationBar',
-		  '../Images/logbook.png',16,16,
-		  '../Images/logbook.png',32,32);
+  navBar.addURL('Show LHCb Page 1',lhcb.constants.urls.lhcb.page1);
+  navBar.addURL('Show LHCb run status display',lhcb.constants.urls.lhcb.lhcb_run_status);
+  navBar.addURL('Show FEST run status display',lhcb.constants.urls.lhcb.fest_run_status);
+  navBar.addURL('Show subdetector run status display',lhcb.constants.urls.lhcb.sdet_run_status);
+  navBar.addURL('Show collimator settings around Point 8',lhcb.constants.urls.lhcb.collimators);
+  navBar.addURL('Show LHCb HV status',lhcb.constants.urls.lhcb.detstatus);
+  lhcb.constants.urls.lhcb.bcm.src += '&charts=1';
+  navBar.addURL('Show BCM status',lhcb.constants.urls.lhcb.bcm);
+  navBar.addURL('Show Magnet status',lhcb.constants.urls.lhcb.magnet);
+  navBar.addURL('LHC status around LHCb',lhcb.constants.urls.lhcb.lhc_status);
+  navBar.addURL('LHCb electronic logbook',lhcb.constants.urls.lhcb.elog);
   /*
   navBar.addSized('Ramses',
 		  'Radiation Monitoring in LHCb',
@@ -250,29 +194,19 @@ var navbar_body = function()  {
   */
   navBar.addSized('LHCb',
 		  'LHCb home page',
-		  'JavaScript:navBar.open_abs_url("http://lhcb.cern.ch")',
+		  'JavaScript:navBar.open_abs_url("'+lhcb.constants.urls.lhcb.home_page.src+'")',
 		  'NavigationBar',
-		  'http://lhcb.cern.ch/lhcblogo.gif',64,32,
-		  'http://lhcb.cern.ch/lhcblogo.gif',64,32);
+		  lhcb.constants.images.lhcb.icon,64,32,
+		  lhcb.constants.images.lhcb.src,64,32);
   
-  navBar.addSized('LHC',
-		  'LHC collider home page',
-		  'JavaScript:navBar.open_abs_url("http://cern.ch/lhc")',
-		  'NavigationBar',
-		  'http://lhc.web.cern.ch/lhc/images/LHC.gif',32,32,
-		  'http://lhc.web.cern.ch/lhc/images/LHC.gif',48,48);
+  navBar.addURL(  'LHC collider home page',lhcb.constants.urls.lhc.project);
   navBar.addSized('Operations',
 		  'CERN collider operations home page',
 		  'JavaScript:navBar.open_abs_url("http://op-webtools.web.cern.ch/op-webtools/vistar/vistars.php?usr=SPS1")',
 		  'NavigationBar',
-		  '../Images/BeamsDep.jpg',80,16,
-		  '../Images/BeamsDep.jpg',120,32);
-  navBar.addSized('CERN',
-		  'CERN home page',
-		  'JavaScript:navBar.open_abs_url("http://cern.ch")',
-		  'NavigationBar',
-		  'http://user.web.cern.ch/User/zCommonImages/CERNLogo.png',32,32,
-		  'http://user.web.cern.ch/User/zCommonImages/CERNLogo.png',48,48);
+		  lhcb.constants.images.beams_department.icon,80,16,
+		  lhcb.constants.images.beams_department.src,120,32);
+  navBar.addURL('CERN home page',lhcb.constants.urls.cern);
   
   navBar.build();
   HTML_HEAD.body = document.getElementsByTagName('body')[0];

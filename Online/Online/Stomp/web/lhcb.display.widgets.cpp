@@ -351,9 +351,9 @@ if ( !lhcb.widgets ) {
     tab.hltRateRun     = StyledItem('lbWeb.'+sys+'_RunInfo.HLTFarm.runHltRate',  null,'%8.2f Hz');
     tab.deadTime       = StyledItem('lbWeb.'+sys+'_RunInfo.TFC.deadTime',        null,'%8.2f %%');
     tab.deadTimeRun    = StyledItem('lbWeb.'+sys+'_RunInfo.TFC.runDeadTime',     null,'%8.2f %%');
-    tab.magnetField    = StyledItem('lbWeb.lbHyst.B',                               null,'%7.4f');
-    tab.magnetPolarity = StyledItem('lbWeb.lbHyst.Polarity',                             null, null);
-    tab.veloPosition   = StyledItem('lbWeb.LHCCOM/LHC.LHCb.RunControl.VeloPos',          null, null);
+    tab.magnetField    = StyledItem('lbWeb.lbHyst.B',                            null,'%7.4f');
+    tab.magnetPolarity = StyledItem('lbWeb.lbHyst.Polarity',                     null, null);
+    tab.veloPosition   = StyledItem('lbWeb.LHCCOM/LHC.LHCb.Specific.VELO.Position',null, null);
     tab.figureOfMerit1 = StyledItem('lbWeb.BCM_DP_S0.RS2_REL',                           null, 'S0:%7.3f');
     tab.figureOfMerit2 = StyledItem('lbWeb.BCM_DP_S0.RS32_REL',                          null, '%7.3f');
     tab.figureOfMerit3 = StyledItem('lbWeb.BCM_DP_S1.RS2_REL',                           null, 'S1:%7.3f');

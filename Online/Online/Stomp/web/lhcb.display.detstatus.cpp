@@ -104,7 +104,8 @@ var DetStatus = function(msg)   {
     tb.appendChild(this.addHTState('RICH1'));
     tb.appendChild(this.addHTState('TT'));
     tb.appendChild(this.addHTState('IT'));
-    tb.appendChild(this.addHTState('OT'));
+    tb.appendChild(this.addHTState('OTA'));
+    tb.appendChild(this.addHTState('OTC'));
     tb.appendChild(this.addHTState('RICH2'));
     tb.appendChild(this.addHTState('PRS'));
     //tb.appendChild(this.addHTState('SPD'));
@@ -281,7 +282,7 @@ var DetStatus = function(msg)   {
     tab.className = tb.className   = 'MonitorPage';
     cell.style.width = '25%';
     // Velo position
-    this.veloPosition   = StyledItem('lbWeb.LHCCOM/LHC.LHCb.RunControl.VeloPos',          null, null);
+    this.veloPosition   = StyledItem('lbWeb.LHCCOM/LHC.LHCb.Specific.VELO.Position', null, null);
     tb.appendChild(tr);
     tr.appendChild(cell);
     tr.appendChild(this.veloPosition);
@@ -351,7 +352,8 @@ var DetStatus = function(msg)   {
     this.subscribeItem(this.hvStateRICH1);
     this.subscribeItem(this.hvStateTT);
     this.subscribeItem(this.hvStateIT);
-    this.subscribeItem(this.hvStateOT);
+    this.subscribeItem(this.hvStateOTA);
+    this.subscribeItem(this.hvStateOTC);
     this.subscribeItem(this.hvStateRICH2);
     this.subscribeItem(this.hvStatePRS);
     //this.subscribeItem(this.hvStateSPD);
@@ -365,7 +367,8 @@ var DetStatus = function(msg)   {
     this.subscribeItem(this.hvTripsRICH1);
     this.subscribeItem(this.hvTripsTT);
     this.subscribeItem(this.hvTripsIT);
-    this.subscribeItem(this.hvTripsOT);
+    this.subscribeItem(this.hvTripsOTA);
+    this.subscribeItem(this.hvTripsOTC);
     this.subscribeItem(this.hvTripsRICH2);
     this.subscribeItem(this.hvTripsPRS);
     //this.subscribeItem(this.hvTripsSPD);

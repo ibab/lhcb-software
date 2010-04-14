@@ -1,8 +1,9 @@
 _loadScript('lhcb.display.tooltips.cpp');
 _loadScript('lhcb.display.items.cpp');
 _loadScript('lhcb.display.widgets.cpp');
-
+_loadScript('lhcb.display.constants.cpp');
 _loadFile('lhcb.display.general','css');
+
 
 var MagnetStatus = function(msg)   {
   var tr, td, tb, tab;
@@ -61,7 +62,7 @@ var MagnetStatus = function(msg)   {
     tr.appendChild(this.magnetField);
     tr.appendChild(c=Cell('<font size="+2">Polarity:</font>',null,'Text-Center'));
     c.style.width='15%';
-    this.magnetPolarity = StyledItem('lbWeb.LbMagnet.Polarity','Text-Center',null);//'Polarity:%d');
+    this.magnetPolarity = StyledItem('lbWeb.LbMagnet.Polarity','Text-Center',null);
     this.magnetPolarity.conversion = function(data) {
       var x = document.getElementById('polarity_arrow');
       if ( data>0 ) {
@@ -74,7 +75,7 @@ var MagnetStatus = function(msg)   {
     this.magnetPolarity.style.width='5%';
     this.magnetPolarity.style.textAlign='left';
     tr.appendChild(this.magnetPolarity);
-    tr.appendChild(c=Cell('<img id="polarity_arrow" src="'+_fileBase+'/Images/LHCb/Magnet.jpg" height="90%" width="80"/>',null,'Text-Left'));
+    tr.appendChild(c=Cell('<img id="polarity_arrow" src="'+lhcb.constants.images.magnet_big.src+'" height="90%" width="80"/>',null,'Text-Left'));
     c.style.width = '10%';
     this.magnetCurrent = StyledItem('lbWeb.LbMagnet.Current',null,'Current: %7.0f A');
     this.magnetCurrent.style.width='20%';
@@ -97,27 +98,27 @@ var MagnetStatus = function(msg)   {
 
     this.magnetTemp0   = StyledItem('lbWeb.LbMagnet.BSensor0.Temp','Text-Center','%7.2f &#186;C');
     this.magnetField0  = StyledItem('lbWeb.LbMagnet.BSensor0.Babs','Text-Center','%7.4f');
-    this.magnetFieldX0 = StyledItem('lbWeb.LbMagnet.BSensor0.Bx','Text-Center','%7.4f');
-    this.magnetFieldY0 = StyledItem('lbWeb.LbMagnet.BSensor0.By','Text-Center','%7.4f');
-    this.magnetFieldZ0 = StyledItem('lbWeb.LbMagnet.BSensor0.Bz','Text-Center','%7.4f');
+    this.magnetFieldX0 = StyledItem('lbWeb.LbMagnet.BSensor0.Bx',  'Text-Center','%7.4f');
+    this.magnetFieldY0 = StyledItem('lbWeb.LbMagnet.BSensor0.By',  'Text-Center','%7.4f');
+    this.magnetFieldZ0 = StyledItem('lbWeb.LbMagnet.BSensor0.Bz',  'Text-Center','%7.4f');
 
     this.magnetTemp1   = StyledItem('lbWeb.LbMagnet.BSensor1.Temp','Text-Center','%7.2f &#186;C');
     this.magnetField1  = StyledItem('lbWeb.LbMagnet.BSensor1.Babs','Text-Center','%7.4f');
-    this.magnetFieldX1 = StyledItem('lbWeb.LbMagnet.BSensor1.Bx','Text-Center','%7.4f');
-    this.magnetFieldY1 = StyledItem('lbWeb.LbMagnet.BSensor1.By','Text-Center','%7.4f');
-    this.magnetFieldZ1 = StyledItem('lbWeb.LbMagnet.BSensor1.Bz','Text-Center','%7.4f');
+    this.magnetFieldX1 = StyledItem('lbWeb.LbMagnet.BSensor1.Bx',  'Text-Center','%7.4f');
+    this.magnetFieldY1 = StyledItem('lbWeb.LbMagnet.BSensor1.By',  'Text-Center','%7.4f');
+    this.magnetFieldZ1 = StyledItem('lbWeb.LbMagnet.BSensor1.Bz',  'Text-Center','%7.4f');
 
     this.magnetTemp2   = StyledItem('lbWeb.LbMagnet.BSensor2.Temp','Text-Center','%7.2f &#186;C');
     this.magnetField2  = StyledItem('lbWeb.LbMagnet.BSensor2.Babs','Text-Center','%7.4f');
-    this.magnetFieldX2 = StyledItem('lbWeb.LbMagnet.BSensor2.Bx','Text-Center','%7.4f');
-    this.magnetFieldY2 = StyledItem('lbWeb.LbMagnet.BSensor2.By','Text-Center','%7.4f');
-    this.magnetFieldZ2 = StyledItem('lbWeb.LbMagnet.BSensor2.Bz','Text-Center','%7.4f');
+    this.magnetFieldX2 = StyledItem('lbWeb.LbMagnet.BSensor2.Bx',  'Text-Center','%7.4f');
+    this.magnetFieldY2 = StyledItem('lbWeb.LbMagnet.BSensor2.By',  'Text-Center','%7.4f');
+    this.magnetFieldZ2 = StyledItem('lbWeb.LbMagnet.BSensor2.Bz',  'Text-Center','%7.4f');
 
     this.magnetTemp3   = StyledItem('lbWeb.LbMagnet.BSensor3.Temp','Text-Center','%7.2f &#186;C');
     this.magnetField3  = StyledItem('lbWeb.LbMagnet.BSensor3.Babs','Text-Center','%7.4f');
-    this.magnetFieldX3 = StyledItem('lbWeb.LbMagnet.BSensor3.Bx','Text-Center','%7.4f');
-    this.magnetFieldY3 = StyledItem('lbWeb.LbMagnet.BSensor3.By','Text-Center','%7.4f');
-    this.magnetFieldZ3 = StyledItem('lbWeb.LbMagnet.BSensor3.Bz','Text-Center','%7.4f');
+    this.magnetFieldX3 = StyledItem('lbWeb.LbMagnet.BSensor3.Bx',  'Text-Center','%7.4f');
+    this.magnetFieldY3 = StyledItem('lbWeb.LbMagnet.BSensor3.By',  'Text-Center','%7.4f');
+    this.magnetFieldZ3 = StyledItem('lbWeb.LbMagnet.BSensor3.Bz',  'Text-Center','%7.4f');
 
     tr = document.createElement('tr');
     tr.appendChild(c=Cell('Sensors:',null,'MonitorDataHeaderRED'));
@@ -229,11 +230,11 @@ var MagnetStatus = function(msg)   {
 
   table.Magnet_plots = function() {
     var field, c, tab = document.createElement('table');
-    var tb = document.createElement('tbody');
-    var trh = document.createElement('tr');
-    var trp = document.createElement('tr');
-    var plot = document.createElement('td');
-    var url = 'http://lbmagnet.cern.ch/data/plots/highres/';
+    var tb    = document.createElement('tbody');
+    var trh   = document.createElement('tr');
+    var trp   = document.createElement('tr');
+    var plot  = document.createElement('td');
+    var url   = 'http://lbmagnet.cern.ch/data/plots/highres/';
     this.img  = document.createElement('img');
 
     tab.style.width = tb.style.width = '100%';
@@ -324,7 +325,7 @@ var MagnetStatus = function(msg)   {
     tab.style.fontSize = '90%';
 
     this.heading = document.createElement('tr');
-    var cell = Cell('<IMG src="'+_fileBase+'/Images/LHCb/Magnet.jpg" width="100"></IMG>&nbsp;LHCb Magnet Status',1,'MonitorBigHeader');
+    var cell = Cell('<IMG src="'+lhcb.constants.images.magnet_big.src+'" width="100"></IMG>&nbsp;LHCb Magnet Status',1,'MonitorBigHeader');
     cell.style.textAlign = 'left';
     cell.style.width = '360px';
     this.heading.appendChild(cell);
@@ -334,7 +335,7 @@ var MagnetStatus = function(msg)   {
     this.heading.appendChild(this.head_date);
     this.head_pic = Cell(lhcb_online_picture(),1,null);
     this.heading.appendChild(this.head_pic);
-    this.heading.onclick = function() { document.location = "http://lhcb.cern.ch";};
+    this.heading.onclick = function() { document.location = lhcb.constants.urls.lhcb.home_page.src;};
     tooltips.set(this.heading,'LHCb magnet status page<br>Click to go to LHCb home page');
     tb.appendChild(this.heading);
 

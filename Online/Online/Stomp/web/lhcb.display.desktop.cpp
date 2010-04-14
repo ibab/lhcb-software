@@ -1,4 +1,4 @@
-//------------------------------------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------------------------------
 if ( !_lhcb().desktop ) {
   lhcb.desktop = function() {
 
@@ -31,19 +31,20 @@ if ( !_lhcb().desktop ) {
 	var desktop = this.app.getDesktop();
 	var win = desktop.getWindow(this.url.nick);
 	if(!win)   {
-	  win = desktop.createWindow({id:              this.url.nick,
-							 title:           this.url.title,
-							 width:           this.url.size.width,
-							 height:          this.url.size.height,
-							 initHidden:      true,
-							 html:            lhcb.desktop.make_iframe(this.url.src),
-							 iconCls:         this.url.cls,
-							 shim:            false,
-							 animCollapse:    false,
-							 autoScroll:      true,
-							 layout:          'fit',
-							 constrainHeader: true
-							 });
+	  win = desktop.createWindow({
+                                 id:              this.url.nick,
+				 title:           this.url.title,
+				 width:           this.url.size.width,
+				 height:          this.url.size.height,
+				 initHidden:      true,
+				 html:            lhcb.desktop.make_iframe(this.url.src),
+				 iconCls:         this.url.cls,
+				 shim:            false,
+				 animCollapse:    false,
+				 autoScroll:      true,
+				 layout:          'fit',
+				 constrainHeader: true
+						    });
 	}
 	win.show();
       },
@@ -51,9 +52,13 @@ if ( !_lhcb().desktop ) {
       _launch: function(url) {
 	this.url            = url;
 	this.id             = url.nick;
+        this.tooltip        = url.nick+'\n'+url.title,
 	this.createWindow   = function(src) {this._createWin();};
-	this.launcher       = {text:           '<img src="'+this.url.img.icon+'" width="16" height="16"/>&nbsp;&nbsp;'+this.url.title,
-			       iconCls:        '',
+	//this.launcher       = {text:           '<img src="'+this.url.img.icon+'" width="16" height="16"/>&nbsp;&nbsp;'+this.url.title,
+	this.launcher       = {text:           this.url.title,
+			       iconCls:        this.url.cls,
+			       shortcutIconCls:this.url.iconCls,
+                               tooltip:        'Click to move to the requested page:\n'+this.url.title+'\n'+this.url.src,
 			       handler:        this.createWindow,
 			       scope:          this
 	};
@@ -63,22 +68,23 @@ if ( !_lhcb().desktop ) {
     this.menuWindowIndex = 0;
 
     this.URLMenuModule = Ext.extend(Ext.app.Module, {
-      iconCls: '',
-      img:     lhcb.constants.images.bogus,
+      iconCls:    '',
+      img:        lhcb.constants.images.bogus,
+      moduleType: 'menu',
       init: function()  {
 	this.launcher = {
 	  text:     'Window '+(++lhcb.desktop.menuWindowIndex),
 	  iconCls:  'bogus',
-	  handler : this.createWindow,
-	  scope:    this,
-	  windowId: lhcb.desktop.menuWindowIndex
+	  handler:   this.createWindow,
+	  scope:     this,
+	  windowId:  lhcb.desktop.menuWindowIndex
 	}
       },
       _launchSize: function(title,img,items,size) {
 	this.img = img;
 	if ( this.img ) {
-	  this.text    = lhcb.desktop._makeIconSize(this.img,size)+'&nbsp;'+title;
-	  this.iconCls = '';
+	  this.text    = title;//lhcb.desktop._makeIconSize(this.img,size)+'&nbsp;'+title;
+	  this.iconCls = 'bogus';
 	}
 	else {
 	  this.text    = title;
@@ -117,7 +123,7 @@ if ( !_lhcb().desktop ) {
 	var item = {
 	  id:      id,
 	  title:   title,
-	  text:    lhcb.desktop._makeIcon(constants.images.bogus)+'&nbsp;&nbsp;&nbsp;'+title,
+	  text:    title,//lhcb.desktop._makeIcon(constants.images.bogus)+'&nbsp;&nbsp;&nbsp;'+title,
 	  url:     url,
 	  width:   width,
 	  height:  height,
@@ -134,8 +140,7 @@ if ( !_lhcb().desktop ) {
 	return item;
       },
       menuItem : function(title,url,width,height)   {
-	var item = this.menuItemId(title,title,url,width,height);
-	return item;
+	return this.menuItemId(title,title,url,width,height);
       },
       menuURL : function(url)   { 
 	var item = this.menuItemId(url.title,url.nick,url.src,url.size.width,url.size.height);
@@ -154,7 +159,7 @@ if ( !_lhcb().desktop ) {
 	w = url.img.iconSize.large.width;
 	h = url.img.iconSize.large.height;
       }
-      ref.innerHTML='<img src="'+url.img.src+'" width="'+w+'" height="'+h+'"/><div>'+url.title+'</div>';
+      ref.innerHTML=url.title;//'<img src="'+url.img.src+'" width="'+w+'" height="'+h+'"/><div>'+url.title+'</div>';
       cut.appendChild(ref);
       return cut;
     }

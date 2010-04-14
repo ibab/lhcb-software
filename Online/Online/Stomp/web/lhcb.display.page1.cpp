@@ -2,6 +2,7 @@ _loadScript('lhcb.display.tooltips.cpp');
 _loadScript('lhcb.display.items.cpp');
 _loadScript('lhcb.display.widgets.cpp');
 _loadScript('lhcb.display.zoom.cpp');
+_loadScript('lhcb.display.constants.cpp');
 _loadFile('lhcb.display.general','css');
 _loadFile('lhcb.display.fsm','css');
 
@@ -73,7 +74,7 @@ var Page1 = function(msg, sys)   {
     cell.style.width = '360px';
     cell.onmouseout  = function() { document.body.style.cursor="default";     };
     cell.onmouseover = function() { document.body.style.cursor="pointer";     };
-    cell.onclick     = function() { document.location = "http://lhcb.cern.ch";};
+    cell.onclick     = function() { document.location = lhcb.constants.urls.lhcb.home_page.src;};
     tooltips.set(cell,'LHCb page1:<br>General status information of<br>-- the LHC collider and<br>-- the LHCb experiment<br>Click to go to home page');
     this.heading.appendChild(cell);
 
@@ -126,14 +127,14 @@ var Page1 = function(msg, sys)   {
     td = document.createElement('td');
     td.appendChild(this.LHC_summary=lhcb.widgets.LHC_summary());
     tooltips.set(td,'LHC collider status information<br>Click to move to LHC info page.');
-    td.onclick     = function() { document.location = "lhcb.display.htm?type=lhc";};
+    td.onclick     = function() { document.location = lhcb.constants.urls.lhcb.lhc_status.src;};
     tr.appendChild(td);
 
     td = document.createElement('td');
     this.LHCb_summary = lhcb.widgets.Det_Run_Summary(this.system);
     this.LHCb_summary.height = '230px';
     td.appendChild(this.LHCb_summary);
-    td.onclick     = function() { document.location = "lhcb.display.htm?type=detstatus";};
+    td.onclick     = function() { document.location = lhcb.constants.urls.lhcb.detstatus.src;};
     tooltips.set(td,'LHCb detector information<br>Click to see LHCb detector hardware status.');
     td.rowSpan = 2;
     tr.appendChild(td);
@@ -150,7 +151,7 @@ var Page1 = function(msg, sys)   {
     tr = document.createElement('tr');
     td = document.createElement('td');
     td.appendChild(this.LHCb_shift=lhcb.widgets.LHCb_shift_comments());
-    td.onclick     = function() { document.location = "http://lblogbook.cern.ch/Shift/";};
+    td.onclick     = function() { document.location = lhcb.constants.urls.lhcb.elog.src;};
     tooltips.set(td,'The last entries from elog (LHCb)<br>Click to see full elog.');
     td.colSpan = 2;
     tr.appendChild(td);

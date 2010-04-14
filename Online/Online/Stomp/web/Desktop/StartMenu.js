@@ -231,6 +231,7 @@ Ext.ux.StartMenu = Ext.extend(Ext.menu.Menu, {
     },
 
     addToolMenuItem : function(config){
+	//alert('addToolMenuItem:'+config.text);
         if(!(config instanceof Ext.menu.Item)){
             if(typeof config.checked == "boolean"){ // must be check menu item config?
                 config = new Ext.menu.CheckItem(config);

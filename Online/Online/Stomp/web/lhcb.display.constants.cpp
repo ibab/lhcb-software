@@ -4,7 +4,7 @@ if ( !_lhcb().constants ) {
     this.lhcb_comet_url = function() { return 'http://lbcomet.cern.ch/static/RunStatus'; }
 
     this.lhcb_display_url = function(name) {    return this.lhcb_comet_url()+'/lhcb.display.htm?type='+name; }
-    this.lhcb_static      = function(name) {    return 'http://cern.ch/~frankm/Online/'+name; }
+    this.lhcb_static      = function(name) {    return 'http://cern.ch/frankm/Online/'+name; }
     this.operations_url   = function(name) {    return 'http://op-webtools.web.cern.ch/op-webtools/vistar/vistars.php?usr='+name; }
     this.sls_service_url  = function(name) {    return 'http://sls.cern.ch/sls/service.php?id='+name; }
     this.mmm_url          = function(name) {    var n = 'https://mmm.cern.ch'; if ( name ) n = n + name; return n; }
@@ -20,8 +20,8 @@ if ( !_lhcb().constants ) {
     }
 
     this.images = {
-      bogus:            this.mkAbsImage('http://cern.ch/~frankm/Online/Desktop/images/bogus.png'),
-      window:           this.mkAbsImage('http://cern.ch/~frankm/Online/Desktop/images/bogus.png'),
+      bogus:            this.mkAbsImage('Desktop/images/bogus.png'),
+      window:           this.mkAbsImage('Desktop/images/bogus.png'),
       wizard:           this.mkImage('Wizard','gif'),
       options:          this.mkImage('Options','gif'),
       lookfile:         this.mkImage('LookFile','gif'),
@@ -29,6 +29,8 @@ if ( !_lhcb().constants ) {
       lookprod:         this.mkImage('LookProd','gif'),
       search:           this.mkImage('Search','gif'),
       wizard:           this.mkImage('Wizard','gif'),
+      home:             this.mkImage('Home','gif'),
+      help:             this.mkImage('Help','gif'),
       database:         this.mkStaticImage('database.jpg'),
       mail:             this.mkAbsImage('https://mmmservices.web.cern.ch/mmmservices/Images/Icons/outlook.gif'),
       webstats:         this.mkAbsImage('https://web-statistics.web.cern.ch/web-statistics/icon/other/awstats_logo6.png'),
@@ -37,17 +39,20 @@ if ( !_lhcb().constants ) {
       lhcb:             this.mkAbsImage('http://lhcb.web.cern.ch/lhcb/lhcblogo.gif'),
       lhcb_online:      this.mkAbsImage('http://lhcb-online.web.cern.ch/lhcb-online/elog/images/lhcb-online-logo.png'),
       dirac:            this.mkStaticImage('DIRAC.png'),
-      magnet:           this.mkStaticImage('LHCb/Magnet_Icon.png'),
-      bcm:              this.mkStaticImage('BCM.png'),
-      lhc:              this.mkAbsImage('http://lhc.web.cern.ch/lhc/images/LHC.gif'),
-      elog:             this.mkStaticImage('logbook.png'),
+      magnet:           this.mkImage('LHCb/Magnet_Icon','png'),
+      magnet_big:       this.mkStaticImage('LHCb/Magnet.jpg'),
+      bcm:              this.mkImage('BCM','png'),
+      lhc:              this.mkImage('LHC','gif'),
+      elog:             this.mkImage('ELOG','png'),
+      indico:           this.mkImage('indico','gif'),
 
-      alice:            this.mkStaticImage('ALICE.gif'),
-      atlas:            this.mkStaticImage('ATLAS.png'),
-      cms:              this.mkStaticImage('CMS.gif'),
+      alice:            this.mkImage('ALICE','gif'),
+      atlas:            this.mkImage('ATLAS','png'),
+      cms:              this.mkImage('CMS','gif'),
 
-      beams:            this.mkStaticImage('Beams.jpg'),
-      beams_department: this.mkStaticImage('BeamsDep.jpg'),
+      ramses:           this.mkStaticImage('LHCb/Ramses_icon.png'),
+      beams:            this.mkImage('Beams','jpg'),
+      beams_department: this.mkImage('BeamsDep','jpg'),
       cern:             this.mkAbsImage('http://lhc.web.cern.ch/lhc/images/logoCERN.GIF')
     };
     this.images.dirac.iconSize = { 
@@ -83,6 +88,17 @@ if ( !_lhcb().constants ) {
 	cls:    'bogus',
 	size:   {width:  1000,	height: 850}
       },
+      lhc: {
+	project: {
+	  src:    'http://cern.ch/lhc',
+	  img:    this.images.lhc,
+	  title:  'LHC Project',
+	  nick:   'lhc-win',
+	  cls:    'LHC16',
+	  iconCls:'LHC32',
+	  size:   {width:  1000,	height: 850}
+	}
+      },
       lhcb: {
 	home_page: {
 	  src:    'http://lhcb.cern.ch',
@@ -112,10 +128,11 @@ if ( !_lhcb().constants ) {
 	},
 	online_home_page: {
 	  src:    'http://lhcb-online.web.cern.ch/lhcb-online',
-	  img:    this.images.window,
+	  img:    this.images.home,
 	  title:  'Online Home Page',
 	  nick:   'lhcb-online-home-page-win',
-	  cls:    'bogus',
+	  cls:    'Home16',
+	  iconCls:'Home32',
 	  size:   {width:  900,	height: 800}
 	},
 	computing_home_page: {
@@ -132,6 +149,7 @@ if ( !_lhcb().constants ) {
 	  title:  'TWiki',
 	  nick:   'lhcb-twiki-page-win',
 	  cls:    'bogus',
+	  iconCls:'bogus',
 	  size:   {width:  900,	height: 800}
 	},
 	lhcb_run_status: {
@@ -139,7 +157,8 @@ if ( !_lhcb().constants ) {
 	  img:    this.images.lookfile,
 	  title:  'LHCb Run Status',
 	  nick:   'lhcb-daq-status-win',
-	  cls:    'LHCbDAQ',
+	  cls:    'LHCbDAQ16',
+	  iconCls:'LHCbDAQ32',
 	  size:   {width:  950,	height: 820}
 	},
 	fest_run_status: {
@@ -147,7 +166,8 @@ if ( !_lhcb().constants ) {
 	  img:    this.images.options,
 	  title:  'FEST Run Status',
 	  nick:   'fest-daq-status-win',
-	  cls:    'FESTDAQ',
+	  cls:    'FESTDAQ16',
+	  iconCls:'FESTDAQ32',
 	  size:   {width:  950,	height: 600}
 	},
 	sdet_run_status: {
@@ -155,15 +175,26 @@ if ( !_lhcb().constants ) {
 	  img:    this.images.lookjob,
 	  title:  'Subdetector Run Status',
 	  nick:   'lhcb-sdet-daq-status-win',
-	  cls:    'SdetDAQ',
+	  cls:    'SdetDAQ16',
+	  iconCls:'SdetDAQ32',
 	  size:   {width:  950,	height: 820}
+	},
+	display_news: {
+	  src:    this.lhcb_static('html/News.htm'),
+	  img:    this.images.help,
+	  title:  'LHCb Online Displays',
+	  nick:   'lhcb-display-news-win',
+	  cls:    'Help16',
+	  iconCls:'Help32',
+	  size:   {width:  590,	height: 700}
 	},
 	page1: {
 	  src:    this.lhcb_display_url('page1'),
 	  img:    this.images.search,
 	  title:  'LHCb Page 1',
 	  nick:   'lhcb-page1-win',
-	  cls:    'Page1',
+	  cls:    'Page116',
+	  iconCls:'Page132',
 	  size:   {width:  770,	height: 820}
 	},
 	detstatus: {
@@ -171,7 +202,8 @@ if ( !_lhcb().constants ) {
 	  img:    this.images.wizard,
 	  title:  'HV Status',
 	  nick:   'lhcb-detstatus-win',
-	  cls:    'DetStatus',
+	  cls:    'DetStatus16',
+	  iconCls:'DetStatus32',
 	  size:   {width:  950,	height: 500}
 	},
 	magnet: {
@@ -179,7 +211,8 @@ if ( !_lhcb().constants ) {
 	  img:    this.images.magnet,
 	  title:  'LHCb Magnet Summary',
 	  nick:   'lhcb-magnet-win',
-	  cls:    'bogus',
+	  cls:    'Magnet16',
+	  iconCls:'Magnet32',
 	  size:   {width:  950,	height: 820}
 	},
 	collimators: {
@@ -187,7 +220,8 @@ if ( !_lhcb().constants ) {
 	  img:    this.images.lookprod,
 	  title:  'Collimators',
 	  nick:   'lhcb-collimators-win',
-	  cls:    'bogus',
+	  cls:    'Collimators16',
+	  iconCls:'Collimators32',
 	  size:   {width:  950,	height: 400}
 	},
 	bcm: {
@@ -195,7 +229,8 @@ if ( !_lhcb().constants ) {
 	  img:    this.images.bcm,
 	  title:  'BCM',
 	  nick:   'lhcb-bcm-win',
-	  cls:    'bogus',
+	  cls:    'BCM16',
+	  iconCls:'BCM32',
 	  size:   {width:  900,	height: 400}
 	},
 	lhc_status: {
@@ -203,7 +238,8 @@ if ( !_lhcb().constants ) {
 	  img:    this.images.beams,
 	  title:  'LHC Status',
 	  nick:   'lhcb-lhc-status-win',
-	  cls:    'bogus',
+	  cls:    'Beams16',
+	  iconCls:'Beams32',
 	  size:   {width:  900,	height: 820}
 	},
 	elog: {
@@ -211,23 +247,17 @@ if ( !_lhcb().constants ) {
 	  img:    this.images.elog,
 	  title:  'ELog LHCb',
 	  nick:   'lhcb-elog-win',
-	  cls:    'bogus',
-	  size:   {width:  1000,	height: 850}
-	},
-	lhc_project: {
-	  src:    'http://lhc.web.cern.ch/lhc',
-	  img:    this.images.lhc,
-	  title:  'LHC Project',
-	  nick:   'lhc-win',
-	  cls:    'bogus',
+	  cls:    'ELOG16',
+	  iconCls:'ELOG32',
 	  size:   {width:  1000,	height: 850}
 	},
 	weekly_meetings: {
 	  src:    'http://indico.cern.ch/categOverview.py?selCateg=1l22&period=week&detail=conference',
-	  img:    this.images.window,
+	  img:    this.images.indico,
 	  title:  'Meetings',
 	  nick:   'lhcb-meetings-win',
-	  cls:    'bogus',
+	  cls:    'INDICO16',
+	  iconCls:'INDICO32',
 	  size:   {width:  1000,	height: 850}
 	},
 	offline_databases_status: {
@@ -236,6 +266,7 @@ if ( !_lhcb().constants ) {
 	  title:  'Offline databases',
 	  nick:   'lhcb-offline_databases_status-win',
 	  cls:    'bogus',
+	  iconCls:'bogus',
 	  size:   {width:  1100,	height: 800}
 	},
 	online_databases_status: {
@@ -244,6 +275,7 @@ if ( !_lhcb().constants ) {
 	  title:  'Online databases',
 	  nick:   'lhcb-online_databases_status-win',
 	  cls:    'bogus',
+	  iconCls:'bogus',
 	  size:   {width:  1100,	height: 800}
 	}
       }

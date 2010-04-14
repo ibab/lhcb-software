@@ -4,10 +4,19 @@
  * licensing@extjs.com
  * http://www.extjs.com/license
  */
-#bg {position:fixed; top:0; left:0; width:100%; height:100%;}
+
 html, body {
+	background-color: #3d71b8;
+/*
+        background-repeat: no-repeat;
+        background-position: center;
+ url() no-repeat left top;
+	background:#3d71b8 url(../wallpapers/gene-2008-004.jpg) no-repeat left top;
+
+	background:#3d71b8 url(ExtJs/resources/wallpapers/thumbnails/blue-swirl.jpg) no-repeat left top;
+
 	background:#3d71b8 url(http://doc.cern.ch//archive/electronic/cern/others/PHO/photo-lhb/gene/gene-2008-004.jpg) no-repeat left top;
-	/* 
+	background:#3d71b8 url(http://doc.cern.ch//archive/electronic/cern/others/PHO/photo-lhb/gene/gene-2008-004.jpg) no-repeat left top;
 	background:#3d71b8 url(http://mediaarchive.cern.ch/MediaArchive/Photo/Public/2007/0706032/0706032_02/0706032_02-A4-at-144-dpi.jpg) no-repeat left top;
 	background {#3d71b8 url(http://mediaarchive.cern.ch/MediaArchive/Photo/Public/2009/0901183/0901183/0901183-A4-at-144-dpi.jpg) no-repeat left top;
 	background:#3d71b8 url(http://mediaarchive.cern.ch/MediaArchive/Photo/Public/2006/0606027/0606027_01/0606027_01-A4-at-144-dpi.jpg) no-repeat left top;
@@ -27,44 +36,123 @@ html, body {
 	height: 100%;
 }
 
-.Page1 	  {	background-image: url( http://frankm.web.cern.ch/frankm/Online/Images/Search_16x16.gif ) !important;  }
-.LHCbDAQ  {	background-image: url( http://frankm.web.cern.ch/frankm/Online/Images/LookFile_16x16.gif ) !important;  }
-.FESTDAQ  {	background-image: url( http://frankm.web.cern.ch/frankm/Online/Images/Options_16x16.gif ) !important;  }
-.SDetDAQ  {	background-image: url( http://frankm.web.cern.ch/frankm/Online/Images/LookJob_16x16.gif ) !important;  }
-.Collimators  {	background-image: url( http://frankm.web.cern.ch/frankm/Online/Images/LookProd_16x16.gif  ) !important;  }
-.DetStatus  {	background-image: url( http://frankm.web.cern.ch/frankm/Online/Images/Wizard_16x16.gif.bog  ) !important;  }
 
+.Home16	  {    background-image: url( ../Images/Home_16x16.gif     ) !important; }
+.Home32	  {    background-image: url( ../Images/Home_32x32.gif     ) !important; }
+.Help16	  {    background-image: url( ../Images/Help_16x16.gif     ) !important; }
+.Help32	  {    background-image: url( ../Images/Help_32x32.gif     ) !important; }
+.Page116  {    background-image: url( ../Images/Search_16x16.gif   ) !important; }
+.Page132  {    background-image: url( ../Images/Search_32x32.gif   ) !important; }
+.LHCbDAQ16{    background-image: url( ../Images/LookFile_16x16.gif ) !important; }
+.LHCbDAQ32{    background-image: url( ../Images/LookFile_32x32.gif ) !important; }
+.FESTDAQ16{    background-image: url( ../Images/Options_16x16.gif  ) !important; }
+.FESTDAQ32{    background-image: url( ../Images/Options_32x32.gif  ) !important; }
+.SDetDAQ16{    background-image: url( ../Images/LookJob_16x16.gif  ) !important; }
+.SDetDAQ32{    background-image: url( ../Images/LookJob_32x32.gif  ) !important; }
+.Collimators16{background-image: url( ../Images/LookProd_16x16.gif ) !important; }
+.Collimators32{background-image: url( ../Images/LookProd_32x32.gif ) !important; }
+.DetStatus16{  background-image: url( ../Images/Wizard_16x16.gif   ) !important; }
+.DetStatus32{  background-image: url( ../Images/Wizard_32x32.gif   ) !important; }
+.BCM16    {    background-image: url( ../Images/BCM_16x16.png     ) !important; }
+.BCM32    {    background-image: url( ../Images/BCM_32x32.png     ) !important; }
+.ELOG16   {    background-image: url( ../Images/ELOG_16x16.png     ) !important; }
+.ELOG32   {    background-image: url( ../Images/ELOG_32x32.png     ) !important; }
+.Magnet16 {    background-image: url( ../Images/LHCb/Magnet_Icon_16x16.png ) !important; }
+.Magnet32 {    background-image: url( ../Images/LHCb/Magnet_Icon_32x32.png ) !important; }
+.Beams16  {     background-image: url( ../Images/Beams_16x16.jpg   ) !important; }
+.Beams32  {     background-image: url( ../Images/Beams_32x32.jpg   ) !important; }
+.BeamsDep16  {     background-image: url( ../Images/BeamsDep_16x16.jpg   ) !important; }
+.BeamsDep32  {     background-image: url( ../Images/BeamsDep_32x32.jpg   ) !important; }
+.INDICO16    {     background-image: url( ../Images/indico_16x16.gif     ) !important; }
+.INDICO32    {     background-image: url( ../Images/indico_32x32.gif     ) !important; }
+.LHC16    {     background-image: url( ../Images/LHC_16x16.gif     ) !important; }
+.LHC32    {     background-image: url( ../Images/LHC_32x32.gif     ) !important; }
+.CMS16    {     background-image: url( ../Images/CMS_16x16.gif     ) !important; }
+.CMS32    {     background-image: url( ../Images/CMS_32x32.gif     ) !important; }
+.ALICE16    {     background-image: url( ../Images/ALICE_16x16.gif     ) !important; }
+.ALICE32    {     background-image: url( ../Images/ALICE_32x32.gif     ) !important; }
+.ATLAS16    {     background-image: url( ../Images/ATLAS_16x16.png     ) !important; }
+.ATLAS32    {     background-image: url( ../Images/ATLAS_32x32.png     ) !important; }
+
+
+/*
 a.x-menu-item {
     padding: 3px 1px 3px 1px;
 }
 
-.Magnet1  {
-        background-size:  16px 16px;
-	background-image: url( http://frankm.web.cern.ch/frankm/Online/Images/LHCb/Magnet_Icon.png ) !important;
+.x-menu-list-item {
+    padding: 3px 1px 3px px;
 }
-.Magnet  {
-        background-size:  auto auto;
+*/
+/* Begin: shortcuts */
+.ux-shortcut-item {
+	font:normal 10px tahoma,arial,verdana,sans-serif;
+	height:44px;
+	overflow:hidden;
+	position:absolute;
+	text-align:center;
+	width:64px;
 }
-.BCM  {
-        background-size:  16px 16px;
-	background-image: url( http://frankm.web.cern.ch/frankm/Online/Images/BCM.png ) !important;
+.ux-shortcut-btn {
+    cursor:pointer;
+}
+.ux-shortcut-btn-text {
+    width:100%;
+    color:#000000;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    cursor:pointer;
+}
+.ux-shortcut-item .ux-shortcut-btn .x-btn-text {
+    background-repeat: no-repeat;
+    background-position: top center;
 }
 
-.start {
-	background-image: url( ../Desktop/images/taskbar/black/startbutton-icon.gif ) !important;
+.ext-ie .ux-shortcut-btn img {
+    background:transparent !important;
 }
 
-.bogus {
-	background-image: url( ../Desktop/images/bogus.png ) !important;
+.ux-shortcut-btn img {
+    width:32px !important;
+    height:32px !important;
 }
 
-.logout {
-	background-image: url( ../Desktop/images/logout.gif ) !important;
+/* End: shortcuts */
+.wait-cursor {
+	cursor:wait;
+}
+.transparent {
+	-moz-opacity: 0.8;
+    opacity: .80;
+    filter: alpha(opacity=80);
+}
+.wallpaper-tile {
+	background-repeat: repeat;
+	background-position: left top;
+}
+.wallpaper-center {
+	background-position: center;
 }
 
-.settings {
-	background-image: url( ../Desktop/images/gears.gif ) !important;
+.x-icon-alert {
+	background-image: url(../Desktop/images/icons/caution.gif) !important;
 }
+.x-icon-information {
+	background-image: url(../Desktop/images/icons/quote.gif) !important;
+}
+.x-icon-waiting {
+	background-image: url(../Desktop/images/icons/hourglass.gif) !important;
+}
+.x-icon-done {
+	background-image: url(../Desktop/images/icons/clock.gif) !important;
+}
+
+
+.start   {background-image: url( ../Desktop/images/taskbar/black/startbutton-icon.gif ) !important; }
+.bogus   {background-image: url( ../Desktop/images/bogus.png ) !important;}
+.logout  {background-image: url( ../Desktop/images/logout.gif ) !important;}
+.settings16 { background-image: url( ../Desktop/images/gears.gif ) !important;}
+.settings32 { background-image: url( ../Desktop/images/gears.png ) !important;}
 
 #dpanels {
 	width: 250px;
@@ -98,20 +186,7 @@ a.x-menu-item {
     zoom:1;
 }
 
-#ux-taskbar .x-btn {
-	margin: 1px 0 0 1px;
-}
 
-#ux-taskbar-start .x-btn {
-	margin: 0;
-}
-
-#ux-taskbar button {
-	/* width: 150px;
-	overflow: hidden; */
-	text-align: left;
-	color: #ffffff;
-}
 #title-bar-wrapper {
 	height:35px;
 }
@@ -134,24 +209,15 @@ a.x-menu-item {
 	padding:3px 0pt 3px 18px;
 }
 
-#ux-taskbar {
-	background:transparent none;
-	height:30px;
-	margin:0;
-	padding:0;
-	position:relative;
-	z-index:12001;
-}
-
 /*  x-btn is the start menu button   */
-.x-btn-icon .ux-taskbutton-center .x-btn-text{
+.x-btn-icon .ux-taskbutton-center .x-btn-text {
 	background-position: center;
 	background-repeat: no-repeat;
 	height: 16px;
 	width:  16px;
 	cursor:pointer;
 	white-space: nowrap;
-    padding:0;
+        padding:0;
 }
 .x-btn-icon .ux-taskbutton-center{
 	padding:1px;
@@ -161,14 +227,14 @@ a.x-menu-item {
 	background-position: 0 6px;
 	background-repeat: no-repeat;
 	padding:7px 0px 7px 20px;
-}
+ }
 
 .x-btn-text-icon .ux-startbutton-center .x-btn-text{
 	background-position: 0 4px;
 	background-repeat: no-repeat;
 	color:#000000 !important;
 	font-weight:bold;
-	padding:7px 0px 7px 24px;
+	padding:7px 0px 7px 28px;
 }
 
 .ux-taskbutton-left, .ux-taskbutton-right{
@@ -201,48 +267,6 @@ a.x-menu-item {
 	white-space:nowrap;
 }
 
-#ux-taskbar .ux-taskbutton-left{
-	background-position:0 0;
-}
-#ux-taskbar .ux-taskbutton-right{
-	background-position:0 -28px;
-}
-#ux-taskbar .ux-taskbutton-center{
-	background-position:0 -56px;
-}
-
-#ux-taskbar .x-btn-over .ux-taskbutton-left{
-	background-position:0 -252px;
-}
-#ux-taskbar .x-btn-over  .ux-taskbutton-right{
-	background-position:0 -280px;
-}
-#ux-taskbar .x-btn-over .ux-taskbutton-center{
-	background-position:0 -308px;
-}
-
-#ux-taskbar .x-btn-click .ux-taskbutton-left{
-	background-position:0 -168px;
-}
-#ux-taskbar .x-btn-click  .ux-taskbutton-right{
-	background-position:0 -196px;
-}
-#ux-taskbar .x-btn-click .ux-taskbutton-center{
-	background-position:0 -224px;
-}
-
-#ux-taskbar .active-win .ux-taskbutton-left{
-	background-position:0 -84px;
-}
-#ux-taskbar .active-win  .ux-taskbutton-right{
-	background:url( ../Desktop/images/taskbar/black/taskbutton.gif ) no-repeat 0 -112px;
-}
-#ux-taskbar .active-win .ux-taskbutton-center{
-	background:url( ../Desktop/images/taskbar/black/taskbutton.gif ) repeat-x 0 -140px;
-}
-#ux-taskbar .active-win .ux-taskbutton-center button {
-    color:#fff;
-}
 
 #spacer {
 	height: 25px;
@@ -286,7 +310,7 @@ a.x-menu-item {
 /* IM window icons */
 
 .user {
-    background-image:url( ../../shared/icons/fam/user.gif ) !important;
+    background-image:url( ../Desktop/images/user.gif ) !important;
 }
 
 .user-add {
@@ -369,29 +393,29 @@ a.x-menu-item {
 }
 
 .ux-start-menu-bl {
-	background: transparent url( ../Desktop/images/taskbar/black/start-menu-left-corners.png ) no-repeat 0 bottom;
-	padding-left:6px;
-    zoom:1;
+  background: transparent url( ../Desktop/images/taskbar/black/start-menu-left-corners.png ) no-repeat 0 bottom;
+  padding-left:6px;
+  zoom:1;
 }
 
 .ux-start-menu-br {
-	background: transparent url( ../Desktop/images/taskbar/black/start-menu-right-corners.png ) no-repeat right bottom;
-	padding-right:6px;
-    zoom:1;
+  background: transparent url( ../Desktop/images/taskbar/black/start-menu-right-corners.png ) no-repeat right bottom;
+  padding-right:6px;
+  zoom:1;
 }
 
 .x-panel-nofooter .ux-start-menu-bc {
-	height:6px;
+  height:6px;
 }
 
 .ux-start-menu-splitbar-h {
-	background-color:#d0d0d0;
+  background-color:#d0d0d0;
 }
 
 
 .ux-start-menu-bwrap {
-	background:transparent none;
-	border:0px none;
+  background:transparent none;
+  border:0px none;
 }
 
 .ux-start-menu-body {
@@ -405,21 +429,86 @@ a.x-menu-item {
 }
 
 .ux-start-menu-tools-panel {
-	border:0px none;
-	background:transparent url( ../Desktop/images/taskbar/black/start-menu-right.png ) repeat-y scroll right 0pt;
+  border:0px none;
+  background:transparent url( ../Desktop/images/taskbar/black/start-menu-right.png ) repeat-y scroll right 0pt;
 }
 
-#ux-taskbar-start {
-	background:#000000 url( ../Desktop/images/taskbar/black/taskbar-start-panel-bg.gif ) repeat-x left top;
+#ux-taskbar .x-btn {
+	margin: 1px 0 0 1px;
+}
+#ux-taskbar-start .x-btn {
+	margin: 0;
+}
+
+#ux-taskbar button {
+	/* width: 150px;
+	overflow: hidden; */
+	text-align: left;
+	color: #ffffff;
+}
+#ux-taskbar .ux-taskbutton-left{
+	background-position:0 0;
+}
+#ux-taskbar .ux-taskbutton-right{
+	background-position:0 -28px;
+}
+#ux-taskbar .ux-taskbutton-center{
+	background-position:0 -56px;
+}
+
+#ux-taskbar .x-btn-over .ux-taskbutton-left{
+	background-position:0 -252px;
+}
+#ux-taskbar .x-btn-over  .ux-taskbutton-right{
+	background-position:0 -280px;
+}
+#ux-taskbar .x-btn-over .ux-taskbutton-center{
+	background-position:0 -308px;
+}
+
+#ux-taskbar .x-btn-click .ux-taskbutton-left{
+	background-position:0 -168px;
+}
+#ux-taskbar .x-btn-click  .ux-taskbutton-right{
+	background-position:0 -196px;
+}
+#ux-taskbar .x-btn-click .ux-taskbutton-center{
+	background-position:0 -224px;
+}
+
+#ux-taskbar .active-win .ux-taskbutton-left{
+	background-position:0 -84px;
+}
+#ux-taskbar .active-win  .ux-taskbutton-right{
+	background:url( ../Desktop/images/taskbar/black/taskbutton.gif ) no-repeat 0 -112px;
+}
+#ux-taskbar .active-win .ux-taskbutton-center{
+	background:url( ../Desktop/images/taskbar/black/taskbutton.gif ) repeat-x 0 -140px;
+}
+#ux-taskbar .active-win .ux-taskbutton-center button {
+    color:#fff;
+}
+#ux-taskbar {
+	background:transparent none;
+	height:30px;
+	margin:0;
+	padding:0;
+	position:relative;
+	z-index:12001;
+}
+
+#ux-quickstart-panel {
+	background:transparent url(../Desktop/images/taskbar/black/taskbar-start-panel-bg.gif) repeat-x left top;
 	left:0px;
 	padding:0;
 	position:absolute;
 }
 
-#ux-taskbar-start .x-toolbar {
-	background: none;
-	padding:0px;
-	border:0px none;
+#ux-systemtray-panel {
+	background:transparent url(../Desktop/images/taskbar/black/taskbuttons-panel-bg.gif) repeat-x left top;
+	left:0px;
+	padding:0;
+	position:absolute;
 }
 
 #ux-taskbuttons-panel {
@@ -427,27 +516,63 @@ a.x-menu-item {
 	padding-top:0;
 	position:relative;
 }
+#ux-taskbar-panel-wrap {
+	background:transparent none;
+}
+#ux-taskbar .x-splitbar-h {
+	background:transparent url(../Desktop/images/taskbar/black/taskbar-split-h.gif) no-repeat 0 0;
+	width:14px;
+}
+/* End: taskbar */
 
-.ux-taskbuttons-strip-wrap {
-	/* overflow:hidden;
-	position:relative;
-	width:100%; */
 
-	width:100%;
+.ux-quickstart-strip-wrap {
+    width:100%;
     overflow:hidden;
     position:relative;
     zoom:1;
 }
 
-ul.ux-taskbuttons-strip {
+ul.ux-quickstart-strip {
 	display:block;
 	width:5000px;
     zoom:1;
 }
 
-ul.ux-taskbuttons-strip li {
+ul.ux-quickstart-strip li {
     float:left;
-    margin-left:2px;
+    margin-left:0px;
+}
+
+
+ul.ux-quickstart-strip li.ux-quickstart-edge {
+    float:left;
+    margin:0 !important;
+    padding:0 !important;
+    border:0 none !important;
+    font-size:1px !important;
+    line-height:1px !important;
+    overflow:hidden;
+    zoom:1;
+    background:transparent !important;
+    width:1px;
+}
+
+.ux-taskbuttons-strip-wrap {
+    width:100%;
+    overflow:hidden;
+    position:relative;
+}
+
+ul.ux-taskbuttons-strip {
+  display:block;
+  width:5000px;
+  zoom:1;
+}
+
+ul.ux-taskbuttons-strip li {
+  float:left;
+  margin-left:2px;
 }
 
 
@@ -535,31 +660,31 @@ td.ux-taskButtons-edge {
 }
 
 .ux-toolmenu-sep {
-	background-color:#18191a;
-	border-bottom:1px solid #858789;
-	display:block;
-	font-size:1px;
-	line-height:1px;
-	margin:2px 3px;
+  background-color:#18191a;
+  border-bottom:1px solid #858789;
+  display:block;
+  font-size:1px;
+  line-height:1px;
+  margin:2px 3px;
 }
 
 .ux-start-menu-tools-panel ul.x-menu-list li.x-menu-list-item a.x-menu-item {
-	color:#ffffff;
+  color:#ffffff;
 }
 
 .ux-start-menu-tools-panel ul.x-menu-list li.x-menu-list-item .x-menu-item-active a.x-menu-item {
-	color:#000000;
+  color:#000000;
 }
 
 .ux-start-menu-tools-panel .x-menu-item-active {
-	background: #525456 url( ../Desktop/images/taskbar/black/item-over.gif ) repeat-x left bottom;
-	border:1px solid #000000;
-	padding: 0;
+  background: #525456 url( ../Desktop/images/taskbar/black/item-over.gif ) repeat-x left bottom;
+  border:1px solid #000000;
+  padding: 0;
 }
 
 #ux-taskbar .x-splitbar-h {
-	background:#000000 url( ../Desktop/images/taskbar/black/taskbar-split-h.gif ) no-repeat 0 0;
-	width:8px;
+  background:#000000 url( ../Desktop/images/taskbar/black/taskbar-split-h.gif ) no-repeat 0 0;
+  width:8px;
 }
 
 .x-window-header-text {
@@ -570,25 +695,25 @@ td.ux-taskButtons-edge {
  * Begin Start button
  */
 .ux-startbutton-left, .ux-startbutton-right{
-	font-size:1px;
-    line-height:1px;
+  font-size:1px;
+  line-height:1px;
 }
 .ux-startbutton-left{
-	width:10px;
-	height:28px;
-	background:url( ../Desktop/images/taskbar/black/startbutton.gif ) no-repeat 0 0;
+  width:10px;
+  height:28px;
+  background:url( ../Desktop/images/taskbar/black/startbutton.gif ) no-repeat 0 0;
 }
 .ux-startbutton-right{
-	width:10px;
-	height:30px;
-	background:url( ../Desktop/images/taskbar/black/startbutton.gif ) no-repeat 0 -28px;
+  width:10px;
+  height:30px;
+  background:url( ../Desktop/images/taskbar/black/startbutton.gif ) no-repeat 0 -28px;
 }
 .ux-startbutton-left i, .ux-startbutton-right i{
-	display:block;
-    width:10px;
-    overflow:hidden;
-    font-size:1px;
-    line-height:1px;
+  display:block;
+  width:10px;
+  overflow:hidden;
+  font-size:1px;
+  line-height:1px;
 }
 .ux-startbutton-center{
 	background:url( ../Desktop/images/taskbar/black/startbutton.gif ) repeat-x 0 -56px;
