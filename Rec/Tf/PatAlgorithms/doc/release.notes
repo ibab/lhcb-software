@@ -4,7 +4,11 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+! 2010-04-14 - Stephanie Hansmann-Menzemer
+ - one more place to check for the polarity
+
 !========================= PatAlgorithms v4r0 2010-04-08 ====================
+
 ! 2010-04-07 - Stephanie Hansmann-Menzemer
  - take care of polarity in qOverP computation in pattern reco
 
