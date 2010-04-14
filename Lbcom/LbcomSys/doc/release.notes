@@ -45,8 +45,9 @@ This version uses Gaudi v21r8 and LHCb v30r1
   . Added algorithm (STDumpClusters) to dump all clusters in an event to an ntuple
 
 - In VeloDAQ v5r0
-  . Made decoding more that 10k Velo clusters an AbortEvent incident to cap 
-    the tracking reconstruction time 
+  . When more than 10k VeloClusters are to be decoded, decoding is aborted, an 
+    Error is printed and empty containers are provided instead (both lite and
+    full). Protects against excessive reconstruction time and memory
   . Made a corrupted bank length in the full cluster decoding an Abort event
     incident and caused the algorthm processing of that event to cease.
   . DecodePileUpData : changed info() messages to Info() for non existing PU
