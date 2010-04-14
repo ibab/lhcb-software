@@ -251,7 +251,7 @@ RichG4Scintillation::PostStepDoIt(const G4Track& aTrack, const G4Step& aStep)
         // end of modif by SE to conform to LHCb
 
 
-        // Birks law saturation:
+        //  Birks law saturation:
 
         G4double constBirks = 0.0;
 
@@ -281,7 +281,7 @@ RichG4Scintillation::PostStepDoIt(const G4Track& aTrack, const G4Step& aStep)
         // Avoid the rare cases of extremely large number of photons produced and spending too much
         // cpu time.
         G4int aLargeNumPhot = 
-              (MeanNumberOfPhotons <1000)  ? 2000 : (MeanNumberOfPhotons + 20* sqrt(MeanNumberOfPhotons));
+              (MeanNumberOfPhotons <1000)  ? 2000 : (G4int) (MeanNumberOfPhotons + 20* sqrt(MeanNumberOfPhotons));
          if(NumPhotons > aLargeNumPhot )NumPhotons= aLargeNumPhot;        
         // end modif by SE        
 
