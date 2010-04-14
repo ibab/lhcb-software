@@ -982,8 +982,8 @@ void DisplVertices::StudyDispersion( const LHCb::Particle * p1,
 void DisplVertices::StudyEoverNbTrk(){
 
   double PtMin = 1*GeV;
-  double E, ET;
-  int nblong = 0, nbhighpt = 0;
+  double E = 0.; double ET = 0.;
+  int nblong = 0; int nbhighpt = 0;
   int nbdown = 0;
 
   //Get tracks
