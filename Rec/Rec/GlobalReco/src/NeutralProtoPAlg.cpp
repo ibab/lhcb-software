@@ -1,4 +1,4 @@
-// $Id: NeutralProtoPAlg.cpp,v 1.22 2010-03-08 13:16:43 odescham Exp $
+// $Id: NeutralProtoPAlg.cpp,v 1.23 2010-04-14 12:50:19 odescham Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -339,7 +339,7 @@ double NeutralProtoPAlg::CaloSpd  ( const LHCb::CaloHypo*  hypo  )  const{
   //
   LHCb::CaloHypo::Digits::const_iterator it = 
     std::find_if ( digits.begin(),digits.end(),isSpd );
-  return  ( it == digits.begin() ) ? 0. : +1.;
+  return  ( it == digits.end() ) ? 0. : +1.;
 }
 // ============================================================================
 double NeutralProtoPAlg::CaloPrs  ( const LHCb::CaloHypo*  hypo  )  const
