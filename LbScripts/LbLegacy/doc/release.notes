@@ -1,3 +1,7 @@
+2010-04-14  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* scripts/mkLHCbtar: fixed the creation of data package tarballs for packages with hat.
+
 2010-04-12  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* scripts/mkLHCbtar: added support for the TOOLS unversioned project.

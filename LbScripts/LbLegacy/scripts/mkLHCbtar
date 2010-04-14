@@ -447,7 +447,10 @@ def data_files_tar(pname, pversion):
     global TARSRC
 
     p = getPackage(pname)
-    prefix = "_".join([p.project().upper(), p.hat()])
+    if p.hat() :
+        prefix = "_".join([p.project().upper(), p.hat(), p.Name()])
+    else :
+        prefix = "_".join([p.project().upper(), p.Name()])
     maindir = os.path.join(prefix.replace("_", os.sep), pversion)
     packver = prefix + '_' + pversion
 
