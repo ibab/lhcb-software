@@ -3,6 +3,13 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+
+ - Changes to references to reflect changes in Boole v21r1 output:
+   . Cluster cuts can be taken from conditions (STAlgorithms)
+   . Noise taken from conditions (STAlgorithms, STDigiAlgorithms, STTools)
+     Breaks support for MC09 and previous, not implement in SIMCOND. 
+   . Velo decoding protected against excessive clusters (VeloDAQ) 
+
 </PRE><H1><A NAME=v21r1>2010-03-30 Boole v21r1</A></H1></PRE>
  - Changes to references to reflect changes in Boole v21r1 output:
    . New tuning of noise and gain in Velo, to match 2009 data
