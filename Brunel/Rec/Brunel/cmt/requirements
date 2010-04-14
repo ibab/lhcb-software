@@ -1,5 +1,5 @@
 package Brunel
-version v37r0
+version v37r1
 
 branches doc cmt job options
 
@@ -7,40 +7,40 @@ branches doc cmt job options
 set BRUNELOPTS ${BRUNELROOT}/options
 
 # Packages needed to compile and link the application
-use GaudiConf  v*                     -no_auto_imports
+use GaudiConf    v*  -no_auto_imports
 use GaudiKernel  v*  
 
 # Packages needed to resolve external dependencies at run time
 use Python  v*  LCG_Interfaces -no_auto_imports
-use HepMC  v*  LCG_Interfaces -no_auto_imports
+use HepMC   v*  LCG_Interfaces -no_auto_imports
 
 # Databases
-use DDDB  v*  Det            -no_auto_imports
-use ParamFiles  v8r2                   -no_auto_imports
-use FieldMap  v5r*                   -no_auto_imports
-use AppConfig  v3r*                   -no_auto_imports
+use DDDB        v*    Det  -no_auto_imports
+use ParamFiles  v8r2       -no_auto_imports
+use FieldMap    v5r*       -no_auto_imports
+use AppConfig   v3r*       -no_auto_imports
 
 # The rest are needed only to set up environment variables for job options
 # and to give a cmt broadcast dependency for user checked out component packages
 
-use Gaudi  v*                     -no_auto_imports
-use GaudiPoolDb  v*                     -no_auto_imports
+use Gaudi        v*                   -no_auto_imports
+use GaudiPoolDb  v*                   -no_auto_imports
 
 # From LHCbSys
-use EventPacker  v*  Event          -no_auto_imports
-use LHCbAlgs  v*  Kernel         -no_auto_imports
+use EventPacker    v*  Event          -no_auto_imports
+use LHCbAlgs       v*  Kernel         -no_auto_imports
 use SimComponents  v*  Sim            -no_auto_imports
-use XmlTools  v*  Tools          -no_auto_imports
+use XmlTools       v*  Tools          -no_auto_imports
 use CaloDetXmlCnv  v*  Det            -no_auto_imports
-use DetDescSvc  v*  Det            -no_auto_imports
-use Magnet  v*  Det            -no_auto_imports
-use MDF  HEAD  DAQ            -no_auto_imports
+use DetDescSvc     v*  Det            -no_auto_imports
+use Magnet         v*  Det            -no_auto_imports
+use MDF            v*  DAQ            -no_auto_imports
 
 # The whole LBCOM project
-use LbcomSys  v9r0                     -no_auto_imports
+use LbcomSys  v*                      -no_auto_imports
 
 # The whole REC project
-use RecSys  v9r0                     -no_auto_imports
+use RecSys  v*                        -no_auto_imports
 
 # ========================= Install configurable ============================
 apply_pattern install_python_modules
