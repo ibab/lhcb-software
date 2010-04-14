@@ -1,5 +1,5 @@
 """ LHCb version style definition and massaging """
-# $Id: Version.py,v 1.5 2010-03-11 13:47:34 hmdegaud Exp $
+# $Id: Version.py,v 1.6 2010-04-14 15:45:05 marcocle Exp $
 
 from fnmatch import fnmatch
 
@@ -35,11 +35,11 @@ class CoreVersion:
         try :
             m = self.version_style.match(self._vname)
         except TypeError:
-            raise NotAVersion
+            raise NotAVersion, vname
         if m :
             a, b, c = m.groups()
             if a is None or b is None :
-                raise NotAVersion
+                raise NotAVersion, vname
             a = int(a)
             b = int(b)
             if c is not None:
@@ -47,13 +47,15 @@ class CoreVersion:
                 c = int(c)
             self._version = (a, b, c)
         else :
-            raise NotAVersion
+            raise NotAVersion, vname
     def __str__(self):
         return self._vname
     def __repr__(self):
         return "%s %s" % (self.__class__, self._vname)
     def __cmp__(self, other):
         return cmp(self._version, other.version())
+    def __hash__(self):
+        return hash(self._vname)
     def name(self):
         return self._vname
     def version(self):

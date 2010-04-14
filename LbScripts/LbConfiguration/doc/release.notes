@@ -1,3 +1,8 @@
+2010-04-14  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* python/LbConfiguration/Version.py: added a __hash__ function and an exception
+	message to CoreVersion.
+
 2010-04-12  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbConfiguration/LbLogin.py: added support for EMACSDIR and LHCBSTYLE for local installation.
