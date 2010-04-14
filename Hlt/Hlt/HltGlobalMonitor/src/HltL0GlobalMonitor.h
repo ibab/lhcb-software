@@ -43,10 +43,16 @@ private:
   };
   std::string m_ODINLocation;
   std::string m_L0DUReportLocation;
+  std::string m_HltDecReportsLocation;
+  std::string m_hlt1Decision;
+  std::string m_hlt2Decision;
+  
 
   AIDA::IHistogram1D* m_L0Input;
   AIDA::IHistogram1D* m_histL0Enabled;
   AIDA::IHistogram1D* m_histL0Disabled;
+  AIDA::IHistogram1D* m_histL0EnabledHLT1;
+  AIDA::IHistogram1D* m_histL0EnabledHLT2;
 
   int m_events;
 

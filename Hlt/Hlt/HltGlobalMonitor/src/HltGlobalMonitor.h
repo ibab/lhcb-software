@@ -33,7 +33,7 @@ public:
   void handle(const Incident&);
 
 private:
-  void monitorODIN(const LHCb::ODIN*);
+  void monitorODIN(const LHCb::ODIN*,const LHCb::HltDecReports*);
   void monitorHLT1 (const LHCb::HltDecReports*);
   void monitorHLT2 (const LHCb::HltDecReports*);
   void monitorMemory();
@@ -60,7 +60,12 @@ private:
 
   std::string m_HltDecReportsLocation;
   std::string m_ODINLocation;
+  std::string m_hlt1Decision;
+  std::string m_hlt2Decision;
+
   AIDA::IHistogram1D* m_odin;
+  AIDA::IHistogram1D* m_odinHLT1;
+  AIDA::IHistogram1D* m_odinHLT2;
 
   AIDA::IHistogram1D* m_hlt1Alley;
   AIDA::IHistogram1D* m_hlt2Alley;

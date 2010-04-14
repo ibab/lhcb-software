@@ -1,4 +1,4 @@
-// $Id: HltGlobalMonitor.cpp,v 1.63 2010-03-27 20:07:53 graven Exp $
+// $Id: HltGlobalMonitor.cpp,v 1.64 2010-04-14 07:28:08 albrecht Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -88,6 +88,9 @@ HltGlobalMonitor::HltGlobalMonitor( const std::string& name,
   declareProperty("TimeInterval",      m_timeInterval = 1 ); // binwidth in minutes 
   declareProperty("DecToGroupHlt1",    m_DecToGroup1);
   declareProperty("DecToGroupHlt2",    m_DecToGroup2);
+  declareProperty("Hlt1DecName", m_hlt1Decision = "Hlt1Global" );
+  declareProperty("Hlt2DecName", m_hlt2Decision = "Hlt2Global" );
+
 }
 //=============================================================================
 // Destructor
@@ -101,7 +104,10 @@ StatusCode HltGlobalMonitor::initialize() {
   StatusCode sc = HltBaseAlg::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
-  m_odin            = book1D("ODIN trigger type",  "ODIN trigger Type ",-0.5, 7.5, 8);
+  m_odin = book1D("ODIN trigger type",  "ODIN trigger Type ",-0.5, 7.5, 8);
+  m_odinHLT1 = book1D("ODIN_HLT1",  "ODIN trigger Type, after HLT1 ",-0.5, 7.5, 8);
+  m_odinHLT2 = book1D("ODIN_HLT2",  "ODIN trigger Type, after HLT2 ",-0.5, 7.5, 8);
+
   std::vector<std::pair<unsigned,std::string> > odinLabels = boost::assign::list_of< std::pair<unsigned,std::string> >
     (ODIN::PhysicsTrigger,    "Physics")
     (ODIN::BeamGasTrigger,    "BeamGas")
@@ -114,6 +120,10 @@ StatusCode HltGlobalMonitor::initialize() {
   if (!setBinLabels( m_odin, odinLabels )) {
     error() << "failed to set binlables on ODIN hist" << endmsg;
   }
+  if(m_odinHLT1) setBinLabels( m_odinHLT1, odinLabels );
+  if(m_odinHLT2) setBinLabels( m_odinHLT2, odinLabels );
+  
+  
 
   m_gpstimesec=0;
   m_startClock = System::currentTime( System::microSec );
@@ -244,7 +254,7 @@ StatusCode HltGlobalMonitor::execute() {
   LHCb::HltDecReports* hlt = fetch<LHCb::HltDecReports>( m_HltDecReportsLocation );
   LHCb::ODIN*         odin = fetch<LHCb::ODIN>( LHCb::ODINLocation::Default);
  
-  monitorODIN(odin);
+  monitorODIN(odin,hlt);
   monitorHLT1(hlt);
   monitorHLT2(hlt);
   monitorMemory();
@@ -256,7 +266,7 @@ StatusCode HltGlobalMonitor::execute() {
 }
 
 //==============================================================================
-void HltGlobalMonitor::monitorODIN(const LHCb::ODIN* odin) {
+void HltGlobalMonitor::monitorODIN(const LHCb::ODIN* odin,const LHCb::HltDecReports* hlt) {
   if (odin == 0 ) return;
   unsigned long long gpstime=odin->gpsTime();
   if (msgLevel(MSG::DEBUG)) debug() << "gps time" << gpstime << endreq;
@@ -264,6 +274,17 @@ void HltGlobalMonitor::monitorODIN(const LHCb::ODIN* odin) {
   counter("ODIN::Lumi")    += (odin->triggerType()==ODIN::LumiTrigger);
   counter("ODIN::NotLumi") += (odin->triggerType()!=ODIN::LumiTrigger);
   fill(m_odin, odin->triggerType(), 1.);
+
+  //now check HLT decisions for rejected events after Hlt
+  if (hlt!=0){
+    const LHCb::HltDecReport*  report = hlt->decReport( m_hlt1Decision );
+    if (report != 0 ) fill(m_odinHLT1, odin->triggerType(), 1.);
+    
+    report = hlt->decReport( m_hlt2Decision );
+    if (report != 0 ) fill(m_odinHLT2, odin->triggerType(), 1.);
+    
+  }//end if hlt
+
   return;
 }
 

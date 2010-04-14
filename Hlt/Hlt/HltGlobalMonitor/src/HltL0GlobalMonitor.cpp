@@ -1,4 +1,4 @@
-// $Id: HltL0GlobalMonitor.cpp,v 1.7 2010-04-13 09:55:22 albrecht Exp $
+// $Id: HltL0GlobalMonitor.cpp,v 1.8 2010-04-14 07:28:53 albrecht Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -71,9 +71,13 @@ HltL0GlobalMonitor::HltL0GlobalMonitor( const std::string& name,
   , m_events(0)
   , m_lastL0TCK(0)
 {
-  declareProperty("ODIN",              m_ODINLocation = LHCb::ODINLocation::Default);
-  declareProperty("L0DUReport",        m_L0DUReportLocation = LHCb::L0DUReportLocation::Default);
-  }
+  declareProperty("ODIN",m_ODINLocation = LHCb::ODINLocation::Default);
+  declareProperty("HltDecReports",m_HltDecReportsLocation = LHCb::HltDecReportsLocation::Default);
+  declareProperty("L0DUReport",m_L0DUReportLocation = LHCb::L0DUReportLocation::Default);
+  declareProperty("Hlt1DecName", m_hlt1Decision = "Hlt1Global" );
+  declareProperty("Hlt2DecName", m_hlt2Decision = "Hlt2Global" );
+
+}
 //=============================================================================
 // Destructor
 //=============================================================================
@@ -89,6 +93,9 @@ StatusCode HltL0GlobalMonitor::initialize() {
   m_L0Input         = book1D("L0 channel summary",-0.5,21.5,22);
   m_histL0Enabled   = book1D("L0 channel summary, enabled",-0.5,21.5,22);
   m_histL0Disabled  = book1D("L0 channel summary, disabled",-0.5,21.5,22);
+  m_histL0EnabledHLT1   = book1D("L0 channel summary, enabled, after HLT1",-0.5,21.5,22);
+  m_histL0EnabledHLT2   = book1D("L0 channel summary, enabled, after HLT2",-0.5,21.5,22);
+
 
 // #if 0
 //   /**
@@ -189,7 +196,8 @@ void HltL0GlobalMonitor::monitorL0DU(const LHCb::L0DUReport* l0du) {
       setBinLabels( m_L0Input, labels );
       if( 0!=m_histL0Enabled) setBinLabels( m_histL0Enabled, labels );
       if( 0!=m_histL0Disabled) setBinLabels( m_histL0Disabled, labels );
-      
+      if( 0!=m_histL0EnabledHLT1) setBinLabels( m_histL0EnabledHLT1, labels );
+      if( 0!=m_histL0EnabledHLT2) setBinLabels( m_histL0EnabledHLT2, labels );
       m_lastL0TCK = L0TCK;
 // #if 0
 //       char txt[128];
@@ -203,6 +211,17 @@ void HltL0GlobalMonitor::monitorL0DU(const LHCb::L0DUReport* l0du) {
   LHCb::ODIN* odin = fetch<LHCb::ODIN>( LHCb::ODINLocation::Default);
   if (odin == 0) return;
 
+ //now check HLT decisions for rejected events after Hlt
+  LHCb::HltDecReports* hlt = fetch<LHCb::HltDecReports>( m_HltDecReportsLocation ); 
+  bool hlt1=false, hlt2=false;
+  if (hlt!=0){
+    const LHCb::HltDecReport*  report = hlt->decReport( m_hlt1Decision );
+    if (report != 0 ) hlt1=report->decision();
+    
+    report = hlt->decReport( m_hlt2Decision );
+    if (report != 0 ) hlt2=report->decision();
+  }//end if hlt
+
   bool odinBGas=false;
   bool l0Physics=false;
   //fill the histogram containing the l0 channels
@@ -211,6 +230,9 @@ void HltL0GlobalMonitor::monitorL0DU(const LHCb::L0DUReport* l0du) {
 
       if( i->second->decisionType() != LHCb::L0DUDecision::Disable ){
 	fill( m_histL0Enabled, i->second->id(), l0du->channelDecision( i->second->id() ) );
+	if(hlt1) fill( m_histL0EnabledHLT1, i->second->id(), l0du->channelDecision( i->second->id() ) );
+	if(hlt2) fill( m_histL0EnabledHLT2, i->second->id(), l0du->channelDecision( i->second->id() ) );
+
       }
       else {
 	fill( m_histL0Disabled, i->second->id(), l0du->channelDecision( i->second->id() ) );
@@ -221,7 +243,8 @@ void HltL0GlobalMonitor::monitorL0DU(const LHCb::L0DUReport* l0du) {
 	 && odin->bunchCrossingType() == LHCb::ODIN::Beam1 ){
 	fill( m_L0Input, 18, l0du->channelDecision( i->second->id() ) );
 	fill( m_histL0Enabled, 18, l0du->channelDecision( i->second->id() ) );
-
+	if(hlt1) fill( m_histL0EnabledHLT1, 18, l0du->channelDecision( i->second->id() ) );
+	if(hlt2) fill( m_histL0EnabledHLT2, 18, l0du->channelDecision( i->second->id() ) );
 	if(l0du->channelDecision( i->second->id() )) odinBGas=true;
       }
       
@@ -230,6 +253,8 @@ void HltL0GlobalMonitor::monitorL0DU(const LHCb::L0DUReport* l0du) {
 	 && odin->bunchCrossingType() == LHCb::ODIN::Beam2 ){
 	fill( m_L0Input, 19, l0du->channelDecision( i->second->id() ) );
 	fill( m_histL0Enabled, 19, l0du->channelDecision( i->second->id() ) );
+	if(hlt1) fill( m_histL0EnabledHLT1, 19, l0du->channelDecision( i->second->id() ) );
+	if(hlt2) fill( m_histL0EnabledHLT2, 19, l0du->channelDecision( i->second->id() ) );
 	if(l0du->channelDecision( i->second->id() )) odinBGas=true;
       }
       
@@ -246,9 +271,9 @@ void HltL0GlobalMonitor::monitorL0DU(const LHCb::L0DUReport* l0du) {
   if(odinBGas || l0Physics) {
     fill( m_L0Input, 20,1);
     fill( m_histL0Enabled, 20,1);
+    if(hlt1) fill( m_histL0EnabledHLT1, 20,1);
+    if(hlt2) fill( m_histL0EnabledHLT2, 20,1);
   }
-  
-  
 
-
+  return;
 };
