@@ -1,9 +1,15 @@
-! $Id: release.notes,v 1.88 2010-04-09 15:17:59 cattanem Exp $
+! $Id: release.notes,v 1.89 2010-04-14 11:14:17 mneedham Exp $
 ! Package     : STKernel
 ! Responsible : M. Needham
 !----------------------------------------------------------------------------
 
+
+! 2010-03-20 M Needham
+ - Comment out hack for TED run
+
+
 !====================== STKernel v2r0 2010-04-09 ============================
+
 !  2010-03-20 M.Needham
  - Remove ISTSignalToNoiseTool
 

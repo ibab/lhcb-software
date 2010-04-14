@@ -1,4 +1,4 @@
-// $Id: STTell1Board.cpp,v 1.14 2009-10-26 14:21:47 jvantilb Exp $
+// $Id: STTell1Board.cpp,v 1.15 2010-04-14 11:14:17 mneedham Exp $
 #include "Kernel/STTell1Board.h"
 #include "Kernel/STDAQDefinitions.h"
 #include "Kernel/LHCbConstants.h"
@@ -71,6 +71,7 @@ STTell1Board::chanPair STTell1Board::DAQToOffline(const unsigned int fracStrip,
 
   
   // hack for TED run 
+  /*
   STChannelID chan = STChannelID(STChannelID::typeIT, ITNames::IT3, 
                                  ITNames::X1, ITNames::Top, 1, 0);
   
@@ -86,6 +87,7 @@ STTell1Board::chanPair STTell1Board::DAQToOffline(const unsigned int fracStrip,
     } 
   }  
   
+  */
   return std::make_pair(STChannelID(m_sectorsVector[index].type(),
                      m_sectorsVector[index].station(), 
                      m_sectorsVector[index].layer(),
