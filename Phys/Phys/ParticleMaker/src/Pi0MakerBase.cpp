@@ -1,5 +1,5 @@
 // $Id
-// $Id: Pi0MakerBase.cpp,v 1.1 2009-04-23 10:39:31 pkoppenb Exp $
+// $Id: Pi0MakerBase.cpp,v 1.2 2010-04-14 12:42:39 odescham Exp $
 // ============================================================================
 // Include files
 #include "GaudiKernel/DeclareFactoryEntries.h"
@@ -72,8 +72,10 @@ StatusCode Pi0MakerBase::initialize    ()
 
 StatusCode Pi0MakerBase::finalize      ()
 {
+
+  double f = (m_count[0] == 0) ? 0. :  (float) m_count[1]/ (float) m_count[0];
   info() << " - Pi0MakerBase Summary -----" << endreq;
-  info() << " Created : " << (float) m_count[1]/m_count[0] << " Resolved " << m_pid << "per event" << endreq;
+  info() << " Created : " << f << " " << m_pid << "per event" << endreq;
   info() << " --------------------------------" << endreq;
   // finalize the base class
   return ParticleMakerBase::finalize ();

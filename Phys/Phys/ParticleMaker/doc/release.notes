@@ -1,7 +1,15 @@
-! $Id: release.notes,v 1.111 2010-01-29 12:42:24 jpalac Exp $ 
+! $Id: release.notes,v 1.112 2010-04-14 12:42:39 odescham Exp $ 
 ! Package     : ParticleMaker
 ! Responsible : Chris Jones, J. Palacios, Olivier Deschamps
 !==============================================================================
+
+
+! 2010-04-14 Olivier Deschamps
+ - PhotonMaker : 
+  - patch the definition of converted/unconverted photons (workaround for bug in NeutralProtoPAlg)
+  - add PrsThreshold cut in properties 
+ - Photon/Pi0Makers : add statistics counters 
+
 
 ========================== ParticleMaker v5r5 2010-01-29 ====================
 

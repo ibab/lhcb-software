@@ -70,6 +70,7 @@ PhotonMaker::PhotonMaker
   declareProperty ( "PtCut"                      , m_ptCut       = 150.0  ) ;
   declareProperty ( "ConvertedPhotons"           , m_converted   = true   ) ;
   declareProperty ( "UnconvertedPhotons"         , m_unconverted = true   ) ;
+  declareProperty ( "PrsThreshold"               , m_prs = -1.   ) ;
 
   // declare new interface
   declareInterface<ICaloParticleMaker> (this);
@@ -148,10 +149,13 @@ PhotonMaker::~PhotonMaker() {};
 // ============================================================================
 
 StatusCode PhotonMaker::finalize      ()
-{
+{  
+  double f = (m_count[0] == 0 ) ? 0. :  (float) ( m_count[1]+m_count[2])/(float)m_count[0];
+  double fc =  (m_count[1]+m_count[2] ==0)? 0 : (float) m_count[2]/(float)(m_count[1] + m_count[2])*100.0;
+  
   info() << " - PhotonMaker Summary -----" << endreq;
-  info() << " Created : " << (float) ( m_count[1]+m_count[2])/m_count[0] << " photons per event" << endreq;
-  info() << " " <<  (float) m_count[2]/(m_count[1] + m_count[2])*100.0 << "% are converted (SPD based)"<< endreq;
+  info() << " Created : " << f << " photons per event" << endreq;
+  info() << " " << fc  << "% are converted (SPD based)"<< endreq;
   info() << " ---------------------------" << endreq;
   // finalize the base class
   return GaudiTool::finalize ();
@@ -202,12 +206,15 @@ StatusCode PhotonMaker::makeParticles (LHCb::Particle::Vector & particles )
     if( hypo->e() <= 0 ) continue;
 
     // Photon conversion (Spd-based for late conversion after magnet)
-    bool cnv = (bool) pp->info(LHCb::ProtoParticle::CaloNeutralSpd, 0.) ;
-    debug() << " Conversion " << cnv << " " << pp->info(LHCb::ProtoParticle::CaloNeutralSpd,0.) << endreq;
+    bool cnv = ( pp->info(LHCb::ProtoParticle::CaloDepositID, 0.)<0) ;  // temporary re-definition of conversion
+    //    bool cnv = (bool) pp->info(LHCb::ProtoParticle::CaloNeutralSpd, 0.) ; // failed due to bug in NeutralProtoPAlg
+    debug() << " Conversion " << cnv << " " << pp->info(LHCb::ProtoParticle::CaloDepositID,0.) << endreq;
     
     // selected (un)converted photons
     if( !cnv && !m_unconverted  ) { continue ; }
     if( cnv  && !m_converted    ) { continue ; }
+    if( pp->info(LHCb::ProtoParticle::CaloNeutralPrs,0) < m_prs)continue;
+    
     
     cnv ? ++nConverted : ++nUnconverted;
     
@@ -263,6 +270,10 @@ StatusCode PhotonMaker::makeParticles (LHCb::Particle::Vector & particles )
   }
   m_count[1] += nSelUnconverted ;
   m_count[2] += nSelConverted ;
+  counter("Created converted photons")+= nSelConverted;
+  counter("Created unConverted photons")+= nSelUnconverted;
+  
+
   if (msgLevel(MSG::DEBUG)){
     debug() << " " << endreq;
     debug() << "-----------------------" << endreq;

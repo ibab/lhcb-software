@@ -1,5 +1,5 @@
 // $Id
-// $Id: ResolvedPi0Maker.cpp,v 1.10 2009-04-23 10:39:31 pkoppenb Exp $
+// $Id: ResolvedPi0Maker.cpp,v 1.11 2010-04-14 12:42:40 odescham Exp $
 // ============================================================================
 // Include files
 #include "GaudiKernel/DeclareFactoryEntries.h"
@@ -153,10 +153,20 @@ StatusCode ResolvedPi0Maker::makeParticles (LHCb::Particle::Vector & pi0s )
       (*ip1).second = true ;
       (*ip2).second = true ;
 
-      // print out
+  
+      LHCb::Particle* g1 = ((*ip1).first).particle();
+      LHCb::Particle* g2 = ((*ip2).first).particle();
+      // statistics
+      counter("Created resolved " + m_pid) += 1;
+      bool cnv1 = (g1->proto()->info(LHCb::ProtoParticle::CaloDepositID,0.) <0);
+      bool cnv2 = (g2->proto()->info(LHCb::ProtoParticle::CaloDepositID,0.) <0);
+      if( cnv1 && cnv2 )counter("Created resolved "+m_pid+"->(ee)(ee)")+=1;
+      else if( cnv1 || cnv2)counter("Created resolved "+m_pid+"->g(ee)")+=1;
+      else if( !cnv1 && !cnv2)counter("Created resolved "+m_pid+"->gg")+=1;
+
+
+    // print out
       if ( msgLevel(MSG::VERBOSE)){
-        LHCb::Particle* g1 = ((*ip1).first).particle();
-        LHCb::Particle* g2 = ((*ip2).first).particle();
         verbose() << " ---- Resolved " << m_pid <<" found [" << nPi0 << "]"<< endreq;
         verbose() << "Point   : " << pi0->referencePoint() << endreq;
         verbose() << "Pt("<<m_pid<<") : "  << pi0->momentum().Pt() << endreq;
@@ -178,7 +188,7 @@ StatusCode ResolvedPi0Maker::makeParticles (LHCb::Particle::Vector & pi0s )
       delete ( (*ip).first ).particle();
     }
   }
-
+  
   if (msgLevel(MSG::DEBUG)){
     debug() << " " << endreq;
     debug() << "-----------------------" << endreq;

@@ -1,4 +1,4 @@
-// $Id: MergedPi0Maker.cpp,v 1.10 2009-08-14 11:35:30 pkoppenb Exp $
+// $Id: MergedPi0Maker.cpp,v 1.11 2010-04-14 12:42:39 odescham Exp $
 // ============================================================================
 #include "GaudiKernel/DeclareFactoryEntries.h" 
 #include "GaudiKernel/DeclareFactoryEntries.h"
@@ -242,6 +242,7 @@ StatusCode MergedPi0Maker::makeParticles (LHCb::Particle::Vector & particles )
     particles.push_back( particle );
 
   }
+  counter("Created merged " + m_pid) += nSelPp;
   if (msgLevel(MSG::DEBUG)){
     debug() << " " << endreq;
     debug() << "-----------------------" << endreq;

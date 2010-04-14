@@ -75,5 +75,6 @@ private:
   bool                               m_converted        ;
   bool                               m_unconverted      ;
   unsigned long  m_count[3];
+  double m_prs;
 };
 #endif // PHOTONMAKER_H
