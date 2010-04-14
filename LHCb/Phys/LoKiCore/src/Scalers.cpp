@@ -1,4 +1,4 @@
-// $Id: Scalers.cpp,v 1.4 2010-04-04 12:20:56 ibelyaev Exp $
+// $Id: Scalers.cpp,v 1.5 2010-04-14 10:59:17 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -63,7 +63,6 @@ bool LoKi::Scalers::RandomScaleV::eval
 std::ostream& LoKi::Scalers::RandomScaleV::fillStream( std::ostream& s ) const 
 { return s << " FSCALE( " << m_prob << " ) " ; }
 // ===========================================================================
-
 
 // ===========================================================================
 /*  constructor from probability and random service 
@@ -292,6 +291,10 @@ LoKi::Scalers::RateLimitV::RateLimitV
   : LoKi::AuxFunBase           ( right ) 
   , LoKi::Functor<void,bool>   ( right ) 
   , LoKi::Listener             ( right ) 
+  , IInterface                 ( right ) 
+  , IIncidentListener          ( right ) 
+  , extend_interfaces1<IIncidentListener> ( right ) 
+  , implements1<IIncidentListener>        ( right ) 
   , m_rateSvc   ( right.m_rateSvc   )
   , m_uniform   ( right.m_uniform   ) 
   , m_rate      ( right.m_rate      ) 

@@ -1,4 +1,4 @@
-// $Id: Listener.cpp,v 1.2 2010-04-04 12:20:56 ibelyaev Exp $
+// $Id: Listener.cpp,v 1.3 2010-04-14 10:59:16 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -38,9 +38,13 @@ LoKi::Listener::Listener()
 // copy constructor 
 // ============================================================================
 LoKi::Listener::Listener ( const LoKi::Listener& right ) 
-  : LoKi::AuxFunBase ( right          ) 
-  , m_incSvc         ( right.m_incSvc )
-  , m_incidents      () 
+  : LoKi::AuxFunBase  ( right          ) 
+  , IInterface        ( right          ) 
+  , IIncidentListener ( right          ) 
+  , extend_interfaces1<IIncidentListener> ( right ) 
+  , implements1<IIncidentListener>        ( right ) 
+  , m_incSvc          ( right.m_incSvc )
+  , m_incidents       () 
 {
   // subscribe to all incidents 
   for ( Incidents::const_iterator ii = right.m_incidents.begin() ;
@@ -52,10 +56,11 @@ LoKi::Listener::Listener ( const LoKi::Listener& right )
 LoKi::Listener::~Listener()
 {
   while ( !m_incidents.empty()  && m_incSvc.validPointer() )
-  {
-    m_incSvc->removeListener ( this , m_incidents.back() ) ;
-    m_incidents.pop_back() ;
-  }
+    {
+      m_incSvc->removeListener ( this , m_incidents.back() ) ;
+      m_incidents.pop_back() ;
+    }
+  m_incSvc.release() ;
 }
 // ============================================================================
 // assignement 
@@ -101,7 +106,7 @@ StatusCode LoKi::Listener::subscribe  ( const std::string& incident )
     SmartIF<IIncidentSvc> iis ( lokiSvc().getObject() ) ;
     m_incSvc = iis ;
   }
-  Assert ( !(!m_incSvc) , "Unable to get IIncident Service" ) ;
+  Assert ( !(!m_incSvc) , "Unable to get Incident Service" ) ;
   //
   m_incSvc->addListener ( this , incident ) ;
   m_incidents.push_back ( incident ) ;
