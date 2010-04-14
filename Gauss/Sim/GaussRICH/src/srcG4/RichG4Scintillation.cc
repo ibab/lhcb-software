@@ -277,7 +277,13 @@ RichG4Scintillation::PostStepDoIt(const G4Track& aTrack, const G4Step& aStep)
         {
           NumPhotons = G4int(G4Poisson(MeanNumberOfPhotons));
         }
-
+        // Modif by SE
+        // Avoid the rare cases of extremely large number of photons produced and spending too much
+        // cpu time.
+        G4int aLargeNumPhot = 
+              (MeanNumberOfPhotons <1000)  ? 2000 : (MeanNumberOfPhotons + 20* sqrt(MeanNumberOfPhotons));
+         if(NumPhotons > aLargeNumPhot )NumPhotons= aLargeNumPhot;        
+        // end modif by SE        
 
 	if (NumPhotons <= 0)
         {
