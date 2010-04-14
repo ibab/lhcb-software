@@ -318,7 +318,7 @@ class Doc(object):
         project = project.upper() # ensure upper case
         # check if the project is already there
         if project in self.projects:
-            # @todo: check if the version is the same as the contained one
+            ## @todo: check if the version is the same as the contained one
             raise ValueError("Project %s already in %s" % (project, self.name))
         else:
             self._log.debug("Adding project %s %s", project, version)
@@ -329,6 +329,7 @@ class Doc(object):
             self.projects[project] = version
             os.symlink(root, os.path.join(self.path,
                                           "%s_%s" % (project, version)))
+            ## @todo: the creation of the link to the documentation should be done once the documentation has been built
             # make the link to the doc directory in the common one
             doclinkdir = os.path.join(self.root, self._docCollDir)
             if not os.path.isdir(doclinkdir):
@@ -406,6 +407,8 @@ class Doc(object):
             # Exclude some generated files
             "*/html/*",
             "*/genConf/*",
+            # Exclude problematic files
+            "*/doc/MainPage.h",
             ]
         doxycfg["EXCLUDE_PATTERNS"] = excludes
         
@@ -642,9 +645,44 @@ def makeDocs(projects, root = None, no_build = False):
             doc._generateDoxyFile()
         else:
             doc.build()
+    ## @todo: probably, this step should be done inside the build step
+    # Update links pointing to the latest versions
+    doclinkdir = os.path.join(Doc._root(root), Doc._docCollDir)
+    for p in getLatestVersions([ x for x in os.listdir(doclinkdir)
+                                 if not x.startswith("LCGCMT") ]):
+        latest = p.split("_")[0].upper() + "_latest"
+        latest = os.path.join(doclinkdir, latest)
+        if not (os.path.islink(latest) and (os.readlink(latest) == p)):
+            # the link doesn't exist or doesn't point to the most recent version
+            if os.path.exists(latest) or os.path.islink(latest):
+                # ensure that the link is not present before creating the new one
+                os.remove(latest)
+            _log.debug("Moving link %s to %s", os.path.basename(latest), p)
+            os.symlink(p, latest)
+
     projects -= projects_added
     if projects:
-        _log.warning("Projects not added: %s", list(projects)) 
+        _log.warning("Projects not added: %s", list(projects))
+
+def getLatestVersions(versions):
+    """
+    Given a list of project versions in the form of "<PROJECT>_<version>",
+    return a list of the latest version for each project.
+    """
+    from LbConfiguration.Version import CoreVersion
+    projects = {} # dictionary with a list of versions per project
+    for p, v in [ pv.split("_") for pv in versions ]:
+        p = p.upper()
+        v = CoreVersion(v) # Sortable class to wrap a version string
+        try:
+            projects[p].append(v)
+        except:
+            projects[p] = [v]
+    # sort the versions of each project and get the last one
+    for p in projects:
+        projects[p].sort()
+        projects[p] = projects[p].pop()
+    return [ "%s_%s" % t for t in projects.items() ]        
 
 def main():
     from optparse import OptionParser

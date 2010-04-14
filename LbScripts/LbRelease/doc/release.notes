@@ -1,3 +1,9 @@
+2010-04-14  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* python/LbRelease/LHCbDoc.py: Exclude MainPage.h (of the projects) from
+	the documentation. Added symlinks to the latest version of a project in
+	the docs directory.
+
 2010-03-29  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/requirements: release of version v3r1
