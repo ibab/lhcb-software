@@ -3,6 +3,9 @@ Package             : DaVinciSys
 Package Coordinator : Juan Palacios
 Purpose             : LHCb physics analysis application
 
+! 2010-04-15 - Rob Lambert
+ - Modified davincisys.stripping.test_express_appconfig, new file from BKK
+
 </PRE><H1><A NAME=v25r2p3>2010-04-12 DaVinci v25r2p3. Patch release for Early 2010 data stripping. </A></H1><PRE>
 
  * Fixes problems with RichPIDPacker reading rDST.
