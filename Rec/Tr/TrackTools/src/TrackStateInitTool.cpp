@@ -209,11 +209,15 @@ StatusCode TrackStateInitTool::createTTState(LHCb::Track& track ) const
 
   // collect the TT hits
   std::vector< LHCb::LHCbID > ttids ;
+  std::set<int> ttlayers ;
   BOOST_FOREACH( const LHCb::LHCbID& id, track.lhcbIDs() ) 
-    if( id.isTT() ) ttids.push_back( id ) ;
+    if( id.isTT() ) {
+      ttids.push_back( id ) ;
+      ttlayers.insert( id.stID().layer() ) ;
+    }
 
   // we'll only try something more complicated if there are enough TT hits
-  if( ttids.size() >= 3 ) {
+  if( ttlayers.size() >= 3 ) {
     
     double xtt(0) ;
     typedef Gaudi::Math::Line<Gaudi::XYZPoint,Gaudi::XYZVector> LineHit ;
