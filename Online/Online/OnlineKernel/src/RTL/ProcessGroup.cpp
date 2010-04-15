@@ -122,12 +122,12 @@ extern "C" int rtl_test_process_group(int, char** ) {
   Process* p1, *p2, *p3;
   ProcessGroup pg;
   const char *a1[] = {"5",0}, *a2[]={"10",0}, *a3[]={"15",0};
-  Process::setDebug(true);
   pg.add(p1=new Process("SLEEPER_1","/bin/sleep",a1));
   pg.add(p2=new Process("SLEEPER_2","/bin/sleep",a2));
   pg.add(p3=new Process("SLEEPER_3","/bin/sleep",a3));
   time_t start = ::time(0);
   pg.start();
+  Process::setDebug(true);
   ::lib_rtl_sleep(200);
   cout << "Stop process " << p2->name() << endl;
   p2->stop();
