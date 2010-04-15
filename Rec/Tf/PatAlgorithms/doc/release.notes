@@ -4,6 +4,10 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+! 2010-04-15 - Michel De Cian
+ - Change in parametrisation in PatAddTTCoord (increased purity), 
+minor changes in member functions in PatAddTTCoord.
+
 !========================= PatAlgorithms v4r0 2010-04-14 ====================
 ! 2010-04-14 - Stephanie Hansmann-Menzemer
  - one more place to check for the polarity

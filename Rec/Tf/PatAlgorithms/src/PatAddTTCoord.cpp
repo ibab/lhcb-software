@@ -1,4 +1,4 @@
-// $Id: PatAddTTCoord.cpp,v 1.9 2010-04-14 19:40:40 smenzeme Exp $
+// $Id: PatAddTTCoord.cpp,v 1.10 2010-04-15 11:42:44 decianm Exp $
 // Include files
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -37,9 +37,9 @@ PatAddTTCoord::PatAddTTCoord( const std::string& type,
   declareProperty( "YTolSlope" , m_yTolSlope           =  40000.                   );
   declareProperty( "XTol"      , m_xTol                =  1.0                      );
   declareProperty( "XTolSlope" , m_xTolSlope           =  28000.0                  );
-  declareProperty( "MaxProjTol" , m_maxProjTol         =  1.7                      );
-  declareProperty( "MaxProjSlope" , m_maxProjSlope      =  0.5                     );
- 
+  declareProperty( "MajAxProj" , m_majAxProj           =  17  * Gaudi::Units::mm   );
+  declareProperty( "MinAxProj" , m_minAxProj           =  2   * Gaudi::Units::mm   );
+
 }
 //=============================================================================
 // Destructor
@@ -91,7 +91,6 @@ StatusCode PatAddTTCoord::addTTClusters( LHCb::Track& track){
   PatTTHits myTTHits;
   double chi2 = 0;
 
-   
   double momentum = track.p();
 
   StatusCode sc = returnTTClusters(state, myTTHits, chi2, momentum);
@@ -105,6 +104,9 @@ StatusCode PatAddTTCoord::addTTClusters( LHCb::Track& track){
     return StatusCode::SUCCESS;
   }
   
+  // -- Only add hits if there are 3 or more
+  if( myTTHits.size() < 3 ) return StatusCode::SUCCESS;
+
 
   for ( PatTTHits::iterator itT = myTTHits.begin(); myTTHits.end() != itT; ++itT ) {
 
@@ -152,10 +154,10 @@ StatusCode PatAddTTCoord::returnTTClusters( LHCb::State& state, PatTTHits& ttHit
   // -- If only two hits are selected, end algorithm
   if ( 3 > selected.size() ){
     ttHits.clear();
+    ttHits = selected;
+    finalChi2 = 0;
     return StatusCode::SUCCESS;
   }
-
-  
 
   // -- Loop over all hits and make "groups" of hits to form a candidate
 
@@ -165,9 +167,9 @@ StatusCode PatAddTTCoord::returnTTClusters( LHCb::State& state, PatTTHits& ttHit
     int nbPlane = 0;
     std::vector<int> firedPlanes(4, 0);
     PatTTHits::iterator itEnd = itBeg;
-
-    double maxProj =  firstProj + m_maxProjTol + m_maxProjSlope * fabs(firstProj );
     
+    double maxProj =  firstProj + sqrt( m_minAxProj * m_minAxProj * (1 - firstProj*firstProj/( m_majAxProj * m_majAxProj )));
+        
     // -- Make "group" of hits which are within a certain distance to the first hit of the group
     while ( itEnd != selected.end() ) {
 
