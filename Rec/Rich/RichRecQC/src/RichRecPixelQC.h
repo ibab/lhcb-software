@@ -90,7 +90,8 @@ namespace Rich
             isBkg(false),isHPDQCK(false),isGasCK(false),isN2CK(false),
             isChargedTk(false),isChargeShare(false),isAeroFiltCK(false),isSiBackScatter(false),
             isHPDIntReflect(false),
-            isSignal(false),isAerogelCK(false),isRich1GasCK(false),isRich2GasCK(false) { }
+            isSignal(false),isAerogelCK(false),isRich1GasCK(false),isRich2GasCK(false),
+            isRadScint(false) { }
           // data members
           bool isBkg;           ///< Hit is background, of any sort
           bool isHPDQCK;        ///< Hit is from CK radiation from the HPD quartz windows
@@ -105,6 +106,7 @@ namespace Rich
           bool isAerogelCK;     ///< Hit is from (unscattered) CK radiation from the aerogel radiator
           bool isRich1GasCK;    ///< Hit is from (unscattered) CK radiation from the Rich1 gas radiator
           bool isRich2GasCK;    ///< Hit is from (unscattered) CK radiation from the Rich2 gas radiator
+          bool isRadScint;       ///< Hit is from Radiator Scintillation
         };
 
         /// Stores tallys opf various types
@@ -124,7 +126,9 @@ namespace Rich
               nbackscatter      ( Rich::NRiches,        0 ),
               nhpdintreflect    ( Rich::NRiches,        0 ),
               signal            ( Rich::NRiches,        0 ),
-              radHits           ( Rich::NRadiatorTypes, 0 ) {}
+              radHits           ( Rich::NRadiatorTypes, 0 ),
+              radScint          ( Rich::NRiches,   0 ){}
+
           // data members
           std::vector<unsigned int> pixels;   ///< Total number of pixels hit
           std::vector<unsigned int> bkgs;     ///< Total number of background hits
@@ -138,6 +142,7 @@ namespace Rich
           std::vector<unsigned int> nhpdintreflect; ///< Total number of HPD internal reflection hits
           std::vector<unsigned int> signal;   ///< Total number of signal hits
           std::vector<unsigned int> radHits;  ///< Total number of signal hits for each radiator
+          std::vector<unsigned int> radScint; ///< Total number of hits from Scintillation
         };
 
       private: // methods

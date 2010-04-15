@@ -135,6 +135,7 @@ StatusCode PixelQC::execute()
             if ( flags.isAeroFiltCK    ) { ++m_rawTally.naerofilter[rich]; }
             if ( flags.isSiBackScatter ) { ++m_rawTally.nbackscatter[rich]; }
             if ( flags.isHPDIntReflect ) { ++m_rawTally.nhpdintreflect[rich]; }
+            if ( flags.isRadScint      ) { ++m_rawTally.radScint[rich];}
             if ( flags.isSignal        ) { ++m_rawTally.signal[rich]; }
             if ( flags.isAerogelCK     ) { ++m_rawTally.radHits[Rich::Aerogel]; }
             if ( flags.isRich1GasCK    ) { ++m_rawTally.radHits[Rich::Rich1Gas]; }
@@ -167,6 +168,7 @@ StatusCode PixelQC::execute()
               if ( flags.isAeroFiltCK    ) { ++m_recoTally.naerofilter[rich]; }
               if ( flags.isSiBackScatter ) { ++m_recoTally.nbackscatter[rich]; }
               if ( flags.isHPDIntReflect ) { ++m_recoTally.nhpdintreflect[rich]; }
+              if ( flags.isRadScint      ) { ++m_recoTally.radScint[rich];}
               if ( flags.isSignal        ) { ++nHPDSignalHits; ++signal[rich]; ++m_recoTally.signal[rich]; }
               if ( flags.isAerogelCK     ) { ++m_recoTally.radHits[Rich::Aerogel]; }
               if ( flags.isRich1GasCK    ) { ++m_recoTally.radHits[Rich::Rich1Gas]; }
@@ -231,6 +233,7 @@ PixelQC::MCFlags PixelQC::getHistories( const LHCb::RichSmartID id ) const
       if ( (*iS)->history().aeroFilterCK()     ) { flags.isAeroFiltCK  = true; }
       if ( (*iS)->history().hpdSiBackscatter() ) { flags.isSiBackScatter = true; }
       if ( (*iS)->history().hpdReflection()    ) { flags.isHPDIntReflect = true; }
+      if ( (*iS)->history().radScintillation() ) { flags.isRadScint =true;       }
     }
     else
     {
@@ -340,6 +343,10 @@ void PixelQC::printRICH( const Rich::DetectorType rich ) const
     if ( m_rawTally.nchargeshare[rich] > 0 )
       info() << "        :   - Si Charge Share : " << occ(m_recoTally.nchargeshare[rich],m_nEvts)
              << "   Eff. = " << pois(m_recoTally.nchargeshare[rich],m_rawTally.nchargeshare[rich]) << " %" << endmsg;
+
+    if ( m_rawTally.radScint[rich] > 0 )
+      info() << "        :   - Scintillation   : " << occ(m_recoTally.radScint[rich],m_nEvts)
+             << "   Eff. = " << pois(m_recoTally.radScint[rich],m_rawTally.radScint[rich]) << " %" << endmsg;
 
   }
 
