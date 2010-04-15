@@ -1,4 +1,4 @@
-// $Id: P2MCRelatorAlg.cpp,v 1.3 2009-08-25 13:21:28 jpalac Exp $
+// $Id: P2MCRelatorAlg.cpp,v 1.4 2010-04-15 13:06:15 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -72,11 +72,10 @@ StatusCode P2MCRelatorAlg::execute() {
   
   for (StringVector::const_iterator iLoc = _begin; iLoc!=_end; ++iLoc) {
 
-    const LHCb::Particle::Container* particles = 
-      get<LHCb::Particle::Container>( *iLoc );
+    const LHCb::Particle::Range particles = get<LHCb::Particle::Range>(*iLoc);
     m_table.clear();
-    if (0!=particles) {
-      i_particleLoop( particles->begin(), particles->end() );
+    if (particles.empty()) {
+      i_particleLoop( particles.begin(), particles.end() );
       m_table.i_sort();
     } else {
       Warning("Found no Particles in "+ *iLoc,
