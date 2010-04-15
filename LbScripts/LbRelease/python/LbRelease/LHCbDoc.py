@@ -649,7 +649,7 @@ def makeDocs(projects, root = None, no_build = False):
     # Update links pointing to the latest versions
     doclinkdir = os.path.join(Doc._root(root), Doc._docCollDir)
     for p in getLatestVersions([ x for x in os.listdir(doclinkdir)
-                                 if not x.startswith("LCGCMT") ]):
+                                 if not x.startswith("LCGCMT") and not x.endswith("_latest") ]):
         latest = p.split("_")[0].upper() + "_latest"
         latest = os.path.join(doclinkdir, latest)
         if not (os.path.islink(latest) and (os.readlink(latest) == p)):
@@ -671,9 +671,9 @@ def getLatestVersions(versions):
     """
     from LbConfiguration.Version import CoreVersion
     projects = {} # dictionary with a list of versions per project
-    for p, v in [ pv.split("_") for pv in versions ]:
-        p = p.upper()
-        v = CoreVersion(v) # Sortable class to wrap a version string
+    for p, v in [ (p.upper(),      # ensure we use the uppercase name
+                   CoreVersion(v)) # Sortable class to wrap a version string
+                  for p, v in [ pv.split("_") for pv in versions ] ]:
         try:
             projects[p].append(v)
         except:
