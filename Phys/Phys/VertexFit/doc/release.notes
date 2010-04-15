@@ -1,8 +1,16 @@
-! $Id: release.notes,v 1.187 2010-04-07 13:50:33 jpalac Exp $
+! $Id: release.notes,v 1.188 2010-04-15 12:57:04 jpalac Exp $
 !===========================================================================
 ! Package     : VertexFit
 ! Responsible : Yuehong Xie
 !===========================================================================
+
+!========================== VertexFit v6r2p2 2010-04-15 ===============
+
+! 2010-04-15 - Juan Palacios
+ - src/PVReFitterAlg.cpp
+  . use Particle::Range and RecVertex::Range for inputs.
+ - cmt/requirements
+  . Increase to v6r2p2
 
 !========================== VertexFit v6r2p1 2010-04-07 ===============
 
