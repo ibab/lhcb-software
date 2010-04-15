@@ -1,4 +1,4 @@
-// $Id: HltGuidedForward.cpp,v 1.1 2009-05-30 12:40:21 graven Exp $
+// $Id: HltGuidedForward.cpp,v 1.2 2010-04-15 09:30:00 albrecht Exp $
 // Include files 
 
 // from Gaudi
@@ -37,7 +37,7 @@ StatusCode HltGuidedForward::initialize() {
   m_l0ConfExtrapolator  = tool<IL0ConfExtrapolator>("L0ConfExtrapolator");
   m_hitMan = 
     tool<Tf::TStationHitManager <PatForwardHit> >("PatTStationHitManager");
-  m_forwardTool = tool<ITracksFromTrack>("PatForwardTool"); 
+  m_forwardTool = tool<ITracksFromTrack>("PatForwardTool", this ); 
 
   return sc;
 }
