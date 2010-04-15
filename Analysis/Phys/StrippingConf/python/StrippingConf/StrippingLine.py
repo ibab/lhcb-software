@@ -209,7 +209,7 @@ class StrippingMember ( object ) :
     def __init__ ( self       ,    
                    Type       ,   
                    name  = '' ,   
-                   InputLocations = None, 
+#                   InputLocations = None, 
                    tools = [] ,   
                    **Args     ) :
 
@@ -225,7 +225,7 @@ class StrippingMember ( object ) :
         self.Name  = deepcopy ( name  )
         self.Args  = deepcopy ( Args  )
         self.Tools = deepcopy ( tools )
-        self.InputLocations = deepcopy ( InputLocations )
+#        self.InputLocations = deepcopy ( InputLocations )
 
     def subtype( self )        :
         " Return the 'subtype' of the member "
@@ -246,7 +246,7 @@ class StrippingMember ( object ) :
 
     def _InputLocations( self, line ) :
         _input = []
-        for i in  self.InputLocations :
+        for i in  self.Args['InputLocations'] :
             if type(i) is bindMembers : i = i.outputLocation() 
             if i : 
         	if i[0] == '%' : i = 'Stripping' + line + i[1:]
@@ -262,7 +262,7 @@ class StrippingMember ( object ) :
         _name = self.name( line )
         # see if alg has any special Tool requests...
 
-        if self.InputLocations:
+        if 'InputLocations' in self.Args :
             args['InputLocations'] = self._InputLocations(line)
 
         instance =  self.Type( _name, **args)
@@ -529,7 +529,7 @@ class StrippingLine(object):
         _seq   = {} # arguments for sequencer
         _other = {} # the rest (probably reconfiguration of members)
         for key in args :
-            if    key in GaudiSequencer.__slots__ : _seq   [keq] = args[key]
+            if    key in GaudiSequencer.__slots__ : _seq   [key] = args[key]
             elif  key in  _myslots_               : _own   [key] = args[key] 
             else                                  : _other [key] = args[key]
 
@@ -554,7 +554,13 @@ class StrippingLine(object):
         for alg in [ i for i in __algos if type(i) is StrippingMember ] :
             id = alg.id()
             if id in _other :
+        	 print "Updating StrippingMember arg: %s to %s" % (id, _other[id])
+        	 print "Before update: "
+        	 print alg.Args
                  alg.Args.update( _other [id] ) 
+        	 print "After update: "
+        	 print alg.Args
+        	 print "\n"
                  del _other [id]
 
         # unknown parameters/arguments 

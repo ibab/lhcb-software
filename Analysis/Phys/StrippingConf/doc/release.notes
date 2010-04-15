@@ -1,9 +1,14 @@
-!$Id: release.notes,v 1.53 2010-04-08 12:32:09 pkoppenb Exp $
+!$Id: release.notes,v 1.54 2010-04-15 11:35:18 poluekt Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/StrippingConf
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
+
+! 2010-04-15 - Anton Poluektov 
+ - Fixed typo in line cloning with modification of GaudiSequencer slots ('keq'->'key')
+ - Fixed bug that prevented modification of InputLocations of StrippingMember while 
+   cloning lines. 
 
 !========================== StrippingConf v3r1 2010-04-08 =================
 ! 2010-03-24 - Anton Poluektov 
