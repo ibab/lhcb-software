@@ -1,4 +1,4 @@
-// $Id: PVReFitterAlg.cpp,v 1.15 2009-11-11 16:56:18 jpalac Exp $
+// $Id: PVReFitterAlg.cpp,v 1.16 2010-04-15 12:56:20 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -118,31 +118,33 @@ StatusCode PVReFitterAlg::execute() {
   
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
 
-  if (!exist<LHCb::Particle::Container>(m_particleInputLocation)) {
-    return Error("No LHCb::Particle::Container found at " + 
+  if (!exist<LHCb::Particle::Container>(m_particleInputLocation) &&
+      !exist<LHCb::Particle::Range>(m_particleInputLocation) ) {
+    return Error("No LHCb::Particle::Range found at " + 
                  m_particleInputLocation,
                  StatusCode::SUCCESS);
   }
-  if (!exist<LHCb::RecVertex::Container>(m_PVInputLocation)) {
-    return Error("No LHCb::RecVertex::Container found at " +
+  if (!exist<LHCb::RecVertex::Container>(m_PVInputLocation) &&
+      !exist<LHCb::RecVertex::Selection>(m_PVInputLocation) ) {
+    return Error("No LHCb::RecVertex::Range found at " +
                  m_PVInputLocation,
                  StatusCode::SUCCESS);
   }
 
-  LHCb::Particle::Container* particles = 
-    get<LHCb::Particle::Container>(m_particleInputLocation);
+  const LHCb::Particle::Range particles = 
+    get<LHCb::Particle::Range>(m_particleInputLocation);
 
-  if (0==particles) {
-    return Error("No LHCb::Particles in LHCb::Particle::Container " +
+  if (particles.empty()) {
+    return Error("No LHCb::Particles in LHCb::Particle::Range " +
                  m_particleInputLocation,
                  StatusCode::SUCCESS);
   }
 
-  LHCb::RecVertex::Container* vertices = 
-    get<LHCb::RecVertex::Container>(m_PVInputLocation);
+  const LHCb::RecVertex::Range vertices = 
+    get<LHCb::RecVertex::Range>(m_PVInputLocation);
 
-  if (0==vertices) {
-    return Error("No LHCb::RecVertices in LHCb::Particle::Container "+
+  if (vertices.empty()) {
+    return Error("No LHCb::RecVertices in LHCb::Particle::Range "+
                  m_PVInputLocation,
                  StatusCode::SUCCESS);
   }
@@ -162,14 +164,14 @@ StatusCode PVReFitterAlg::execute() {
 
   put( newTable, m_particle2VertexRelationsOutputLocation);
 
-  verbose() << "Loop over " << particles->size() << " particles" << endmsg;
+  verbose() << "Loop over " << particles.size() << " particles" << endmsg;
 
-  for ( LHCb::Particle::Container::const_iterator itP = particles->begin();
-        itP != particles->end(); 
+  for ( LHCb::Particle::Range::const_iterator itP = particles.begin();
+        itP != particles.end(); 
         ++itP) {
     
-    for (LHCb::RecVertex::Container::const_iterator itPV = vertices->begin();
-         itPV != vertices->end();
+    for (LHCb::RecVertex::Range::const_iterator itPV = vertices.begin();
+         itPV != vertices.end();
          ++itPV) {
       
       verbose() << "Re-fitting vertex for particle\n" 
