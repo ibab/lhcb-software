@@ -12,7 +12,6 @@ Purpose: LHCb reconstruction program
   . Edited global/local db to follow new CondDB configurable
   . Edited brunel-mc09-withtruth to follow RichRecQCConf change
   . Edited brunel-mc09-mctruth-withfield to follow change in MagneticFieldSvc
-    options
 
 - Changes to references to reflect changes in Brunel v37r1 output:
   . Add protection against large events (RichRecBase v3r29)
