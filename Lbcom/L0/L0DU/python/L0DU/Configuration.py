@@ -31,6 +31,7 @@ class L0Conf(LHCbConfigurableUser) :
         ,"EnableL0DecodingOnDemand" : False
         ,"FastL0DUDecoding"         : False
         ,"FullL0MuonDecoding"       : False
+        ,"IgnoreL0MuonCondDB"       : False
         ,"L0DecodingContext"        : None
         ,"L0EmulatorContext"        : None
         ,"verbose"        : False 
@@ -121,12 +122,17 @@ class L0Conf(LHCbConfigurableUser) :
         l0pileup = emulateL0PileUp()
         l0du     = emulateL0DU()
 
+        # CondDB
+        l0muon.IgnoreCondDB = self.getProp("IgnoreL0MuonCondDB")
+        
         # Raw banks
         if writeBanks is not None:
             l0calo.WriteBanks = writeBanks
             l0muon.WriteBanks = writeBanks
             l0du.WriteBanks   = writeBanks
-
+            if self.getProp("DataType").upper() in ["2009"]:
+                l0du.BankVersion = 1
+                
         # Write on TES
         if writeOnTes is not None:     
             l0calo.WriteOnTES = writeOnTes
@@ -173,6 +179,10 @@ class L0Conf(LHCbConfigurableUser) :
                 else:                         # Use default TCK
                     if self.getProp("DataType").upper() in ["DC06"]:
                         l0du.TCK = "0xFFF8"
+                    elif self.getProp("DataType").upper() in ["2009"]:
+                        l0du.TCK = "0x1309"
+                    elif self.getProp("DataType").upper() in ["2010"]:
+                        l0du.TCK = "0x1810"
                     else:
                         l0du.TCK = "0xDC09"
             log.info("L0DUAlg will use TCK=%s"%l0du.getProp('TCK'))
@@ -334,6 +344,8 @@ class L0Conf(LHCbConfigurableUser) :
             from Configurables import DataOnDemandSvc
             log.info("L0 on demand activated")
             DataOnDemandSvc().AlgMap["Trig/L0/MuonCtrl"]   = "L0MuonCandidatesFromRaw/"+L0MuonFromRawAlgName
+            if self.getProp("FullL0MuonDecoding"):
+                DataOnDemandSvc().AlgMap["Trig/L0/MuonData"]   = "L0MuonCandidatesFromRaw/"+L0MuonFromRawAlgName
             DataOnDemandSvc().AlgMap["Trig/L0/Calo"]       = "L0CaloCandidatesFromRaw/"+L0CaloFromRawAlgName
             DataOnDemandSvc().AlgMap["Trig/L0/FullCalo"]   = "L0CaloCandidatesFromRaw/"+L0CaloFromRawAlgName
             DataOnDemandSvc().AlgMap["Trig/L0/L0DUReport"] = "L0DUFromRawAlg/"+L0DUFromRawAlgName

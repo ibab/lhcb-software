@@ -1,8 +1,15 @@
-! $Id: release.notes,v 1.202 2010-04-09 16:16:48 cattanem Exp $
+! $Id: release.notes,v 1.203 2010-04-15 15:53:54 jucogan Exp $
 ! Package		: L0/L0DU
 ! Package Manager : Olivier Deschamps
 !--------------------------------------------------------------------------
 
+! 2010-04-15 - Julien Cogan
+ - L0Conf: 
+    - add default TCK for 2009 (0x1309) and 2010 (0x1810) data types
+    - add property to enable/disable the use of condDB for the L0Muon
+      by default : now use the condDB (was not used by default up to this change) 
+    - add the on demand decoding of the L0MuonProcData bank 
+ 
 !========================== L0DU v10r5 2010-04-09 =========================
 ! 2010-04-07 Olivier Deschamps
   - L0DUFromRawTool : try alternative standard RawEventLocations 
