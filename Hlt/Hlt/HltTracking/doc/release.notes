@@ -1,9 +1,12 @@
-!$Id: release.notes,v 1.109 2010-04-13 12:46:50 gligorov Exp $
+!$Id: release.notes,v 1.110 2010-04-15 09:31:44 albrecht Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/HltTracking
 ! Responsible : Jose A. Hernando
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
+
+! 2010-04-15 - Johannes Albrecht
+ - HltGuidedForward: make forward tool private
 
 ! 2010-04-13 - V. Gligorov
   - Add an option for "Early Data" tracking to Hlt2 tracking, currently this
