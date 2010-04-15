@@ -19,7 +19,7 @@ from StrippingSelections import StrippingD2hhNoPID
 
 from StrippingSelections.StrippingDstarPromptWithD02HH import StrippingDstarPromptWithD02HHConf
 from StrippingSelections.StrippingDstarD2KShh          import StrippingDstarD2KShhConf
-
+from StrippingSelections.StrippingCcbar2Ppbar import StrippingCcbar2PpbarConf
 
 stream = StrippingStream("Charm")
 
@@ -69,4 +69,6 @@ stream.appendLines( [
     ] )
 stream.appendLines( StrippingDstarPromptWithD02HHConf().lines() )
 stream.appendLines( StrippingDstarD2KShhConf().MakeLines() )
+# Charmonium -> p pbar
+stream.appendLines( [ StrippingCcbar2PpbarConf().Nominal_Line() ] )
 

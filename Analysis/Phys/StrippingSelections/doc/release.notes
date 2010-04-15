@@ -5,6 +5,10 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-04-15 - Jibo He
+ - Stripping for Charmonium -> p pbar added and put in Charm stream.
+   StrippingCcbar2Ppbar.py
+
 ! 2010-04-15 - Anton Poluektov
  - Fixed Bs2PhiPhi line: duplicate creation of two identical StrippingLines fixed. 
    Got rid of "Line Bs2PhiPhi declared but not appended" warning. 
