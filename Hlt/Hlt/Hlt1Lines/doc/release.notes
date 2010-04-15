@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.161 2010-04-12 18:27:16 graven Exp $
+! $Id: release.notes,v 1.162 2010-04-15 14:39:56 albrecht Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
@@ -10,6 +10,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2010-04-15 - Johannes Albrecht
+ - configure forward and seeding centrally in one file, 
+   electron alley bug fix
 
 ! 2010-04-12 - Gerhard Raven
  - changes to generate new configuration with rate limited L0Any,LumiLow
