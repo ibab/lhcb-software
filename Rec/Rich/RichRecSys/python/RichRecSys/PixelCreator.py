@@ -122,6 +122,7 @@ class RichPixelCreatorConfig(RichConfigurableUser):
             # RICH1 cleaning
             pixmaker.addTool(Rich__DAQ__HighOccHPDSuppressionTool,name=r1CleanerName)
             r1Cleaner = pixmaker.PixelSuppressRich1
+            r1Cleaner.WhichRich = "RICH1"
             self.toolRegistry().Tools += [r1Cleaner]
             r1Cleaner.AbsoluteMaxHPDOcc      = maxHPDOcc[0]
             r1Cleaner.OccCutScaleFactor      = hpdOccScale[0]
@@ -129,6 +130,7 @@ class RichPixelCreatorConfig(RichConfigurableUser):
             # RICH2 cleaning
             pixmaker.addTool(Rich__DAQ__HighOccHPDSuppressionTool,name=r2CleanerName)
             r2Cleaner = pixmaker.PixelSuppressRich2
+            r2Cleaner.WhichRich = "RICH2"
             self.toolRegistry().Tools += [r2Cleaner]
             r2Cleaner.AbsoluteMaxHPDOcc      = maxHPDOcc[1]
             r2Cleaner.OccCutScaleFactor      = hpdOccScale[1]
