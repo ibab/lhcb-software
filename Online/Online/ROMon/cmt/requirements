@@ -19,3 +19,7 @@ macro_append  ROMon_dependencies       " XMLRPC "
 apply_pattern linker_library   library=XMLRPC
 apply_pattern linker_library   library=ROMon
 apply_pattern install_python_modules
+#
+#
+set ROMONDATA ${ROMONROOT}/xml
+

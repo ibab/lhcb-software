@@ -1,12 +1,9 @@
 #!/bin/bash
 . /group/online/dataflow/scripts/nodeMonitors.sh
-. ${DATAFLOWDIR}/scripts/cleanEnviron.sh ROOTSYS DIM_DNS_NODE ROMONROOT
-#echo $LD_LIBRARY_PATH
-#echo $ROMONROOT
-cd ${ROMONROOT}
+. ${DATAFLOWDIR}/scripts/cleanEnviron.sh ROOTSYS DIM_DNS_NODE ROMONDATA
 h=`hostname -s`
 H=`echo $h|tr a-z A-Z`
 exec -a ${UTGID} `which gentest.exe` libROMon.so run_tasksupervisor \
-    -input=file://${ROMONROOT}/xml/${H}.xml \
-    -invent=file://${ROMONROOT}/xml/TaskInventory.xml \
+    -input=file://${ROMONDATA}/${H}.xml \
+    -invent=file://${ROMONDATA}/TaskInventory.xml \
     -node=${h} $*

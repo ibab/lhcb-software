@@ -29,9 +29,8 @@ PartitionListener::PartitionListener(Interactor* parent, const string& nam) : m_
 PartitionListener::PartitionListener(Interactor* parent, const string& nam, bool)
   : m_parent(parent), m_name(nam), m_subFarmDP(0), m_partIdDP(0), m_runStateDP(0)
 {
-  const char* c = ::getenv("ROMONROOT");
-  string sf_nam, dir_name = c ? c : "..";
-  dir_name += "/xml";
+  const char* c = ::getenv("ROMONDATA");
+  string sf_nam, dir_name = c ? c : "../xml";
   DIR* dir = ::opendir(dir_name.c_str());
   if ( dir ) {
     auto_ptr<StringV > f(new StringV());

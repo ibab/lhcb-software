@@ -3,7 +3,7 @@ args=$*;
 . /group/online/dataflow/scripts/nodeMonitors.sh
 directory=`dirname $0`
 export DIM_DNS_NODE=ecs03
-. ${directory}/cleanEnviron.sh DISPLAY TERM HOST DIM_DNS_NODE ROMONROOT
+. ${directory}/cleanEnviron.sh DISPLAY TERM HOST DIM_DNS_NODE ROMONROOT ROMONDATA
 #
 eval `${directory}/internal/getMonOpts.sh $args`
 export UTGID=${HOST}/FarmMon/$$;
