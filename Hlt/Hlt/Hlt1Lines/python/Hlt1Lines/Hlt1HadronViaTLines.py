@@ -9,7 +9,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.18 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.19 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -54,6 +54,9 @@ class Hlt1HadronViaTLinesConf(HltLinesConfigurableUser) :
         from HltTracking.HltReco import RZVelo
         from HltTracking.HltPVs  import PV2D
 
+        from Configurables import HltTrackUpgradeTool, PatForwardTool
+        from Hlt1Lines.HltConfigurePR import ConfiguredPR
+
         ## alias to get the slot associated to a name
         _cut = lambda x: str(self.getProp(x))
         
@@ -85,34 +88,31 @@ class Hlt1HadronViaTLinesConf(HltLinesConfigurableUser) :
 	
             #Define the tool which actually makes the forward tracks
             #from the L0 confirmed objects
-            Hlt1HadronViaTTUTConf = Member ( 'TU', 
-                                             'TConf',  
-                                             tools = [Tool( type = HltTrackUpgradeTool, 
-                                                            name = 'HltTrackUpgradeTool',
-                                                            tools=[Tool( type = L0ConfirmWithT, 
-					      				                                 name='THadronConf',
-                                                                         tools = [ Tool( type = PatConfirmTool, 
-											                                            name = 'PatConfirmTool',
-               										                                    tools = [ Tool( type = PatSeedingTool,
-                                                                                                        name = 'PatSeedingTool',
-                                                                                                        zMagnet = 0
-                                                                                                       )
-      												                                            ],
-                                                                                         nSigmaX = 4,
-                                                                                         nSigmaY = 4,
-                                                                                         nSigmaTx = 4,
-                                                                                         nSigmaTy = 4,
-                                                                                         restrictSearch = True,
-                                                                                         debugMode = False 
-                                                                                       )
-                                                                                 ],
-                                                                         particleType = 1,
-									                                     trackingTool='PatConfirmTool'
-                                                                        )
-                                                                   ]
-                                                            )
-                                                       ],
-                                               RecoName = 'THadronConf' 
+            Hlt1HadronViaTTUTConf = Member ( 'TU', 'TConf', RecoName = 'THadronConf' 
+                                             , tools = [Tool( type = HltTrackUpgradeTool
+                                               , name = 'HltTrackUpgradeTool'
+                                               , tools=[Tool( type = L0ConfirmWithT
+                                                 , name='THadronConf'
+                                                 , particleType = 1
+                                                 , trackingTool='PatConfirmTool'
+                                                 , tools = [ Tool( type = PatConfirmTool
+                                                   , name = 'PatConfirmTool'
+                                                   , nSigmaX = 4
+                                                   , nSigmaY = 4
+                                                   , nSigmaTx = 4
+                                                   , nSigmaTy = 4
+                                                   , restrictSearch = True
+                                                   , debugMode = False 
+                                                   , tools = [ConfiguredPR( "PatSeeding" )]
+#                                                                  [ Tool( type = PatSeedingTool
+
+#                                                    , name = 'PatSeedingTool'
+#                                                    , zMagnet = 0
+#                                                                    )]
+                                                                )]
+                                                              )]
+                                                            )]
+                                               
                                            )
 
             conf = l0.members()  + [ DecodeIT 
@@ -181,7 +181,11 @@ class Hlt1HadronViaTLinesConf(HltLinesConfigurableUser) :
                 , Member ( 'VF', 'UVelo'
                            , FilterDescriptor = [ 'VertexDz_PV2D,>,'+_cut('HadViaTCompanion_DZCut')]
                            )
-                , Member ( 'VU', 'Forward', RecoName = 'Forward')
+                , Member ( 'VU', 'Forward'
+                           , RecoName = 'Forward'
+                           , tools = [ Tool( HltTrackUpgradeTool
+                                             ,tools = [ConfiguredPR( "Forward" )] )]
+                           )
                 , Member ( 'VF', '1Forward',
                            FilterDescriptor = [ 'VertexMinPT,>,'+PT2Cut]
                            )

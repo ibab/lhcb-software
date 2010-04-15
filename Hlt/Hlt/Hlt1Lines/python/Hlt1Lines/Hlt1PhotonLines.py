@@ -10,7 +10,7 @@
 '''
 # =============================================================================
 __author__  = 'Gerhard Raven Gerhard.Raven@nikhef.nl'
-__version__ = 'CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.7 $'
+__version__ = 'CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.8 $'
 # =============================================================================
 
 
@@ -44,6 +44,10 @@ class Hlt1PhotonLinesConf(HltLinesConfigurableUser):
         from HltLine.HltDecodeRaw import DecodeIT, DecodeECAL
         from Hlt1Lines.HltFastTrackFit import setupHltFastTrackFit
 
+        from Configurables import HltTrackUpgradeTool, PatForwardTool
+        from Hlt1Lines.HltConfigurePR import ConfiguredPR
+              
+
         ####
         #from Configurables import L0Calo2CaloTool
         #l0c2c = L0Calo2CaloTool()
@@ -59,7 +63,8 @@ class Hlt1PhotonLinesConf(HltLinesConfigurableUser):
                                , tools = [ Tool( HltTrackFunctionFactory,
                                  tools = [ Tool( HltAntiEleConf, 
                                  tools = [ Tool( L0ConfirmWithT,  particleType = 2 ,
-                                 tools = [ Tool( PatConfirmTool,  nSigmaX=10, nSigmaTx=10,nSigmaY=10,nSigmaTy=10 )])])])]
+                                 tools = [ Tool( PatConfirmTool,  nSigmaX=10, nSigmaTx=10,nSigmaY=10,nSigmaTy=10, tools = [ConfiguredPR( "PatSeeding" )]
+                                                 )])])])]
                                )
                       , DecodeECAL
                       , Member ('TF', 'Photon' , FilterDescriptor = ['IsPhoton,>,'+str(self.getProp('Pho_IsPho'))]
@@ -72,7 +77,11 @@ class Hlt1PhotonLinesConf(HltLinesConfigurableUser):
                                , HistogramUpdatePeriod = 0
                                , HistoDescriptor = { 'IP' : ('IP',-1.,3.,400), 'IPBest' : ('IPBest',-1.,3.,400) }
                                )
-                      , Member ('TU' ,'FirstForward' , RecoName = 'Forward') 
+                      , Member ('TU' ,'FirstForward'
+                                , RecoName = 'Forward'
+                                , tools = [ Tool( HltTrackUpgradeTool
+                                                  ,tools = [ConfiguredPR( "Forward" )] )]
+                                ) 
                       ]
         commonSeq2 =  [ Member ('TF', 'FirstForward'
                                , FilterDescriptor = ['PT,>,'+str(self.getProp('DiTrack_PtCut'))]
@@ -83,7 +92,11 @@ class Hlt1PhotonLinesConf(HltLinesConfigurableUser):
                                , HistogramUpdatePeriod = 0
                                , HistoDescriptor = { 'IP' : ('IP',-1.,3.,400), 'IPBest' : ('IPBest',-1.,3.,400) }
                                )
-                      , Member ('TU' ,'SecondForward' , RecoName = 'Forward')
+                      , Member ('TU' ,'SecondForward'
+                                , RecoName = 'Forward'
+                                , tools = [ Tool( HltTrackUpgradeTool
+                                                  ,tools = [ConfiguredPR( "Forward" )] )]
+                                )
                       , Member ('TF', 'SecondForward'
                                , FilterDescriptor = ['PT,>,'+str(self.getProp('DiTrack_PtCut'))]
                                , HistogramUpdatePeriod = 0

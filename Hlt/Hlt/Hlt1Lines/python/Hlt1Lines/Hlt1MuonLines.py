@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: Hlt1MuonLines.py,v 1.17 2010-04-06 12:21:14 graven Exp $
+# $Id: Hlt1MuonLines.py,v 1.18 2010-04-15 14:32:06 albrecht Exp $
 # =============================================================================
 ## @file
 #  Configuration of Muon Lines
@@ -14,7 +14,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.17 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.18 $"
 # =============================================================================
 
 
@@ -107,38 +107,31 @@ class Hlt1MuonLinesConf(HltLinesConfigurableUser) :
         from Configurables import PatMatchTool, PatSeedingTool
         from Configurables import HltTrackUpgradeTool, L0ConfirmWithT, PatConfirmTool
         from HltLine.HltDecodeRaw import DecodeIT, DecodeTT, DecodeVELO
+        from Configurables import HltTrackUpgradeTool, PatForwardTool
+        from Hlt1Lines.HltConfigurePR import ConfiguredPR
+
         MatchT = [ DecodeIT
-                    , Member ('TU', 'TConf' , RecoName = 'TMuonConf'
-                              ,tools = [ Tool( HltTrackUpgradeTool,
-                                               tools = [ Tool( L0ConfirmWithT, 'TMuonConf'
-                                                               ,  particleType = 0
-                                                               ,tools = [ Tool( PatConfirmTool,
-                                                                                nSigmaX=self.getProp('Muon_TConfNSigmaX'),
-                                                                                nSigmaY=self.getProp('Muon_TConfNSigmaY'),
-                                                                                nSigmaTx=self.getProp('Muon_TConfNSigmaTx'),
-                                                                                nSigmaTy=self.getProp('Muon_TConfNSigmaTy'),
-                                                                                restrictSearch = False
-                                                                                , tools = [ Tool(
-                                                                                PatSeedingTool,
-                                                                                OTNHitsLowThresh=12,
-                                                                                MinTotalPlanes = 7,
-                                                                                MaxMisses = 2,
-                                                                                MaxTrackChi2LowMult=10,
-                                                                                MaxFinalTrackChi2=20,
-                                                                                MaxFinalChi2=30,
-                                                                                MaxTrackChi2=40,
-                                                                                MaxChi2HitIT=10,
-                                                                                MaxChi2HitOT=30
-                                                                                ) ]
-                                                                                ) ]
-                                                               ) ] ) ] 
-                              , HistoDescriptor = { 'TMuonConfQuality': ( 'Seed track chi2',0.,20.,100) ,
-                                                    'TMuonConfQualityBest': ( 'Seed track chi2 Best',0.,20.,100)} )
-                    , Member ('TF', 'DeltaP' 
-                              , FilterDescriptor = ['DeltaP,>,%(Muon_DeltaPCut)s' %self.getProps()]
-                              , HistoDescriptor = { 'DeltaP': ( 'DeltaP',0.,2.,100), 'DeltaPBest': ( 'DeltaPBest',0.,2.,100)}
-                              )
-		 ]
+                   , Member ('TU', 'TConf' , RecoName = 'TMuonConf'
+                     , tools = [ Tool( HltTrackUpgradeTool
+                       , tools = [ Tool( L0ConfirmWithT, 'TMuonConf'
+                         , particleType = 0
+                         , tools = [ Tool( PatConfirmTool
+                         , nSigmaX=self.getProp('Muon_TConfNSigmaX')
+                         , nSigmaY=self.getProp('Muon_TConfNSigmaY')
+                         , nSigmaTx=self.getProp('Muon_TConfNSigmaTx')
+                         , nSigmaTy=self.getProp('Muon_TConfNSigmaTy')
+                         , restrictSearch = False
+                         , tools = [ConfiguredPR( "PatSeeding" )]
+                                           )]
+                                         )]
+                                       )] 
+                     , HistoDescriptor = { 'TMuonConfQuality': ( 'Seed track chi2',0.,20.,100) ,
+                                           'TMuonConfQualityBest': ( 'Seed track chi2 Best',0.,20.,100)} )
+                   , Member ('TF', 'DeltaP' 
+                             , FilterDescriptor = ['DeltaP,>,%(Muon_DeltaPCut)s' %self.getProps()]
+                             , HistoDescriptor = { 'DeltaP': ( 'DeltaP',0.,2.,100), 'DeltaPBest': ( 'DeltaPBest',0.,2.,100)}
+                             )
+                   ]
         TMatchV = [ RZVelo
                     , Member ('TF', 'RZVelo'
                               , FilterDescriptor = ['RZVeloTMatch_%%TFDeltaP,||<,%(Muon_VeloTMatchCut)s'%self.getProps()]
@@ -767,6 +760,8 @@ class Hlt1MuonLinesConf(HltLinesConfigurableUser) :
                                        )
                              , Member( 'VU', 'VForward' # // Make forward the companion velo track
                                        , RecoName = 'Forward'
+                                       , tools = [ Tool( HltTrackUpgradeTool
+                                                         ,tools = [ConfiguredPR( "Forward" )] )]
                                        )
                              , Member( 'VF', 'VertexPt' # // Select vertices if Pt
                                        , FilterDescriptor = [ 'VertexTrack2PT,>,'+str(self.getProp('MuTrackTrPt'))]
@@ -949,6 +944,8 @@ class Hlt1MuonLinesConf(HltLinesConfigurableUser) :
                                             )
                                   , Member( 'VU', 'Vertex' # // Make forward the companion velo track
                                             , RecoName = 'Forward'
+                                            , tools = [ Tool( HltTrackUpgradeTool
+                                                              ,tools = [ConfiguredPR( "Forward" )] )]
                                             )
                                   , Member( 'VF', 'VertexPt' # // Select vertices if Pt
                                             , FilterDescriptor = ['VertexTrack1PT,>,'+str(self.getProp('MuTrackMuPt4JPsi')),

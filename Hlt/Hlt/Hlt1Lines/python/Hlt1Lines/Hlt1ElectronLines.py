@@ -42,7 +42,9 @@ class Hlt1ElectronLinesConf(HltLinesConfigurableUser) :
         from HltTracking.HltPVs  import PV2D
         from HltLine.HltDecodeRaw import DecodeIT, DecodeTT, DecodeVELO, DecodeECAL
         from Hlt1Lines.HltFastTrackFit import setupHltFastTrackFit
-
+        from Configurables import HltTrackUpgradeTool, PatForwardTool, HltGuidedForward, PatConfirmTool
+        from Hlt1Lines.HltConfigurePR import ConfiguredPR
+              
 
         ####
         #from Configurables import L0Calo2CaloTool
@@ -56,8 +58,18 @@ class Hlt1ElectronLinesConf(HltLinesConfigurableUser) :
         ##### common bodies IP
         prepareElectronWithIP = [ Member ( 'TF', 'L0Electrons', FilterDescriptor = [ 'L0ET,>,'+str(self.getProp('Ele_EtCut')) ] )
                                   , DecodeIT
-                                  , Member ( 'TU', 'TConf', RecoName = 'TEleConf',
-                                             tools = [ Tool( HltTrackUpgradeTool, tools = [ Tool( L0ConfirmWithT,'L0ConfirmWithT/TEleConf', particleType = 2 ) ] ) ] )
+                                  , Member ( 'TU', 'TConf', RecoName = 'TEleConf'
+                                             , tools = [ Tool( HltTrackUpgradeTool
+                                               , tools = [ Tool( L0ConfirmWithT
+#                                                 , 'L0ConfirmWithT/TEleConf'
+                                                 , 'TEleConf'
+                                                 , particleType = 2
+                                                 , tools = [ Tool( PatConfirmTool
+                                                   , tools = [ConfiguredPR( "PatSeeding" )]
+                                                                   )]
+                                                                 )]
+                                                               )]
+                                             )
                                   , RZVelo, PV2D().ignoreOutputSelection()
                                   , Member ( 'TF', 'RZVelo', FilterDescriptor = [ 'RZVeloTMatch_%TUTConf,||<,60.' ] )
                                   , Member ( 'TU', 'Velo', RecoName = 'Velo' )
@@ -75,7 +87,11 @@ class Hlt1ElectronLinesConf(HltLinesConfigurableUser) :
                                             , HistogramUpdatePeriod = 0
                                             , HistoDescriptor = { 'IP' : ('IP',-1.,3.,400), 'IPBest' : ('IPBest',-1.,3.,400) }
                                             )
-                                  , Member ( 'TU', 'CompanionForward', RecoName = 'Forward' )
+                                  , Member ( 'TU', 'CompanionForward'
+                                             , RecoName = 'Forward'
+                                             , tools = [ Tool( HltTrackUpgradeTool
+                                                               ,tools = [ConfiguredPR( "Forward" )] )]
+                                             )
                                   , Member ( 'TF', 'CompanionForward',  FilterDescriptor = ['PT,>,'+str(self.getProp('EleIPCompanion_PtCut'))]
                                             , HistogramUpdatePeriod = 0
                                             , HistoDescriptor =  { 'PT'     : ('PT',0.,8000.,100), 'PTBest' : ('PTBest',0.,8000.,100) }
@@ -91,7 +107,16 @@ class Hlt1ElectronLinesConf(HltLinesConfigurableUser) :
         prepareElectronNoIP   = [ Member ( 'TF', 'L0Electrons', FilterDescriptor = [ 'L0ET,>,'+str(self.getProp('Ele_EtCut')) ] )
                                   , DecodeIT
                                   , Member ( 'TU', 'TConf', RecoName = 'TEleConf',
-                                             tools = [ Tool( HltTrackUpgradeTool, tools = [ Tool( L0ConfirmWithT, 'L0ConfirmWithT/TEleConf',  particleType = 2 ) ] ) ] )
+                                             tools = [ Tool( HltTrackUpgradeTool
+                                             , tools = [ Tool( L0ConfirmWithT
+                                             , 'TEleConf'
+                                             ,  particleType = 2
+                                             , tools = [ Tool( PatConfirmTool
+                                               , tools = [ConfiguredPR( "PatSeeding" )]
+                                                               )]
+                                                            )]
+                                                          )]
+                                             )
                                   , RZVelo, PV2D().ignoreOutputSelection()
                                   , Member ( 'TF', 'RZVelo', FilterDescriptor = [ 'RZVeloTMatch_%TUTConf,||<,60.' ] )
                                   , Member ( 'TU', 'Velo', RecoName = 'Velo' )
@@ -102,7 +127,11 @@ class Hlt1ElectronLinesConf(HltLinesConfigurableUser) :
         companionTrackNoIP    = [ Velo
                                 , Member ( 'TF', 'CompanionVelo', 
                                            FilterDescriptor = [ 'DOCA_%TMVeloT,<,0.15' ])
-                                , Member ( 'TU', 'CompanionForward', RecoName = 'Forward' )
+                                , Member ( 'TU', 'CompanionForward'
+                                           , RecoName = 'Forward'
+                                           , tools = [ Tool( HltTrackUpgradeTool
+                                                             ,tools = [ConfiguredPR( "Forward" )] )]
+                                           )
                                 , Member ( 'TF', 'CompanionForward',  FilterDescriptor = ['PT,>,'+str(self.getProp('EleCompanion_PtCut'))]
                                           , HistogramUpdatePeriod = 0
                                           , HistoDescriptor =  { 'PT'     : ('PT',0.,8000.,100), 'PTBest' : ('PTBest',0.,8000.,100) }

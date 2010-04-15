@@ -9,7 +9,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.8 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.9 $"
 # =============================================================================
 
 import Gaudi.Configuration 
@@ -68,7 +68,9 @@ class Hlt1HadronLinesConf(HltLinesConfigurableUser) :
         from Hlt1Lines.HltFastTrackFit import setupHltFastTrackFit
         from HltTracking.HltReco import RZVelo
 	from HltTracking.HltPVs  import PV2D
-
+        from Configurables import HltTrackUpgradeTool, PatForwardTool, HltGuidedForward
+        from Hlt1Lines.HltConfigurePR import ConfiguredPR
+              
         
         # confirmed track
         #------------------------
@@ -115,7 +117,10 @@ class Hlt1HadronLinesConf(HltLinesConfigurableUser) :
                                     , DecodeIT
                                     , Member ( 'TU', 'GuidedForward'
                                              , RecoName = 'GuidedForward'
-                                             , HistogramUpdatePeriod = 1
+                                             , tools = [ Tool( HltTrackUpgradeTool
+                                                               , tools = [ Tool( HltGuidedForward
+                                                                                 ,tools = [ConfiguredPR( "Forward" )] )] )]
+                                               , HistogramUpdatePeriod = 1
                                              )
                                     , Member ( 'TF' , 'Confirmed'
                                              , FilterDescriptor = ['PT,>,%s'%self.getProp(type+"HadMain_PTCut")]
@@ -184,7 +189,11 @@ class Hlt1HadronLinesConf(HltLinesConfigurableUser) :
                            , HistogramUpdatePeriod = 1
                            , HistoDescriptor  = histosfilter('VertexDx_PV2D',1.,12.,200)                       
                            )
-                , Member ( 'VU', 'Forward', RecoName = 'Forward')
+                , Member ( 'VU', 'Forward'
+                           , RecoName = 'Forward'
+                           , tools = [ Tool( HltTrackUpgradeTool
+                                             ,tools = [ConfiguredPR( "Forward" )] )]
+                           )
                 , Member ( 'VF', '1Forward',
                            FilterDescriptor = [ 'VertexMinPT,>,%s'%self.getProp("HadCompanion_PTCut")],
                            HistogramUpdatePeriod = 1,
