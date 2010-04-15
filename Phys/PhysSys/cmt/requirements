@@ -1,4 +1,4 @@
-#$Id: requirements,v 1.223 2010-04-15 09:34:23 jpalac Exp $
+#$Id: requirements,v 1.224 2010-04-15 13:00:57 jpalac Exp $
 package PhysSys
 version v9r4
 
@@ -17,7 +17,7 @@ use  ProtoParticleFilter        v1r4     Phys    # Chris Jones
 use  DaVinciTools       	v21r0p1  Phys    # Juan Palacios
 use  DaVinciTransporter 	v3r9p1   Phys    # Juan Palacios
 use  ParticleMaker      	v5r5p1 	 Phys    # Chris Jones
-use  VertexFit			v6r2p1   Phys    # Yuehong Xie
+use  VertexFit			v6r2p2   Phys    # Yuehong Xie
 use  LoKiFitters                v2r4p1   Phys    # Vanya Belyaev
 use  DecayTreeFitter            v1r6     Phys    # Wouter Hulsbergen
 use  PhysDict                   v4r2     Phys    # Juan Palacios
