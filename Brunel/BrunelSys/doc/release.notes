@@ -3,6 +3,78 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
+
+</PRE><H1><A NAME=v37r1>2010-04-15 Brunel v37r1</A></H1><PRE>
+This version uses projects Gaudi v21r8, LHCb v30r1, Lbcom v9r1, Rec v9r1
+ and SQLDDDB v5r26, ParamFiles v8r2, FieldMap v5r3, AppConfig v3r*
+
+This is a production version for processing 2010 data and MonteCarlo
+
+Output requires DaVinci v25r2p3 or later if saving packed DST, DaVinci v24r5p1
+or later otherwise
+
+- Changes to Configurable
+  . Use named instance of RichRecQCConf (Same as in RecSys)
+  . Propagate "Simulation" property to RecSys (for use by RichRecSysConf)
+
+- New tuning
+  . Early Data tweaks disabled for MC in Rich (RichRecSys v3r28) 
+  . Make the Functional CK theta resolution tool the default (RichKernel v7r33)
+  . New earlyData tuning of PatDownstream (PatAlgorithms v4r0)
+  . Replaced FastParabolicExtraplator by ParabolicExtrapolator 
+    (TrackMCTools v2r25, TrackTools v3r29, RichRecTrackTools v1r19) 
+  . Minor speed improvements to DeRichHPD when updating for T/P condition changes
+    (RichDet v14r1)
+
+- New functionality
+  . New option to TrackPrepareVelo to reverse arbitrary charges on Velo tracks 
+    (TrackUtils v1r35)
+  . Allow use of cuts from conditions in STClusterCreator (STAlgorithms v4r0)
+  . Added the capability to use the C3F8  as RICH1Gas (RichDet v14r1)
+
+- Bug fixes
+  . Fix to handling of "Up" polarity of Magnetic field in extrapolation. Fix
+    includes better handling of polarity in MagneticFieldSvc 
+    (PatAlgorithms v4r0, TrackTools v3r29, Magnet v6r0)
+  . Bug #65360: Protected PatVeloGeneralTracking from pathological events
+    (PatVelo v3r21)
+  . Bug #65441: 
+    o Implement maximum pixel, track and photon cuts; abort large events
+      (RichRecSys v3r28, RichRecTrackTools v1r19, RichRecBase v3r29)
+    o Abort Velo decoding when more than 10k VeloClusters are to be decoded, 
+      empty containers are provided instead (both lite and full) (VeloDAQ v5r0)
+  . Bug #64336: Fixed crash when track without measurements (TrackFitter v2r47)
+  . VeloTrackMonitor: protection against missing clusters (VeloRecMonitors v2r8)
+  . Added protection against huge Velo events when more than 10k VeloClusters are
+    to be decoded, decoding is aborted, an Error is printed and empty containers
+    are provided instead (both lite and full) (VeloDAQ v5r0)
+  . Made a corrupted bank length in the full cluster decoding an Abort event
+    incident (VeloDAQ v5r0)
+  . Bug 65440: Increased max capacity of ISolid::Ticks. Throw exceptions from
+    complicated Solids if capacity insufficient (DetDesc v18r20)
+  . Protect against bug 65121 (negative errors (squared !) from Track States)
+    (RichKernel v7r33)
+
+- Monitoring changes
+  . Add simplified PID monitoring algo CaloEMuPIDMon (CaloMoniDst v5r0)
+  . Remove completely CaloEMuMonitor and CaloEMuChecker (CaloMoniDst v5r0)
+  . MuonPIDChecker looks at Downstream tracks also in OffllineFull mode
+    (MuonPIDChecker v5r1) 
+  . Fine tune event abort messages (RichGlobalPID v3r12, RichGlobalPID v3r12)
+  . Improvements to the CK theta and resolution detailed monitors 
+    (RichRecMonitors v2r27)
+  . Fine tune the data/DB cross check messages (RichRecQC v2r39)
+  . Make check on track type before processing in IT/TTTrackMonitor, removes all
+    errors from extrapolator and reduces CPU by factor >10 (TrackMonitors v1r23)
+  . Add multiplicity histo to TrackMonitor (TrackMonitors v1r23)
+  . ST noise taken from conditions (not supported for MC09) (STMonitors v3r0)
+
+- Changes to tests
+  . Edited global/local db to follow new CondDB configurable
+  . Edited brunel-mc09-withtruth to follow RichRecQCConf change
+  . Edited brunel-mc09-mctruth-withfield to follow change in MagneticFieldSvc
+    and use new TrackPrepareVelo to reverse arbitrary charges on Velo tracks
+
 </PRE><H1><A NAME=v37r0>2010-04-01 Brunel v37r0</A></H1><PRE>
 This version uses projects Gaudi v21r8, LHCb v30r0, Lbcom v9r0, Rec v9r0
  and SQLDDDB v5r23, ParamFiles v8r2, FieldMap v5r3, AppConfig v3r*
