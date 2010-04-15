@@ -1,0 +1,110 @@
+// $Id: VertexListRefiner.cpp,v 1.1 2010-04-15 09:30:50 wouter Exp $
+
+
+/** @class VertexListRefiner VertexListRefiner.h
+ *
+ *  Make a subselection of a track list
+ *
+ *  @author Wouter Hulsbergen
+ *  @date   05/01/2010
+ */
+
+#include "GaudiAlg/GaudiAlgorithm.h"
+#include "GaudiKernel/SharedObjectsContainer.h"
+#include <string>
+#include "GaudiKernel/AlgFactory.h"
+#include "Event/RecVertex.h"
+#include "TrackKernel/TrackPredicates.h"
+#include <boost/foreach.hpp>
+
+class VertexListRefiner: public GaudiAlgorithm {
+
+public:
+
+  // Constructors and destructor
+  VertexListRefiner(const std::string& name,
+              ISvcLocator* pSvcLocator);
+  virtual ~VertexListRefiner();
+  virtual StatusCode execute();
+
+private:
+  std::string m_inputLocation;
+  std::string m_outputLocation;
+  int m_minNumTracks ;
+  int m_minNumBackwardTracks ;
+  int m_minNumForwardTracks ;
+  int m_minNumLongTracks ;
+  double m_maxChi2PerDoF ;
+  bool m_deepCopy ;
+};
+
+
+DECLARE_ALGORITHM_FACTORY( VertexListRefiner );
+
+VertexListRefiner::VertexListRefiner(const std::string& name,
+                       ISvcLocator* pSvcLocator):
+  GaudiAlgorithm(name, pSvcLocator)
+{
+  // constructor
+  declareProperty( "InputLocation",  m_inputLocation ) ;
+  declareProperty( "OutputLocation", m_outputLocation ) ;
+  declareProperty( "MinNumBackwardTracks", m_minNumBackwardTracks = 0) ;
+  declareProperty( "MinNumForwardTracks", m_minNumForwardTracks = 0) ;
+  declareProperty( "MinNumLongTracks", m_minNumLongTracks = 0) ;
+  declareProperty( "MinNumTracks", m_minNumTracks = 0) ;
+  declareProperty( "MaxChi2PerDoF", m_maxChi2PerDoF = -1 ) ;
+  declareProperty( "DeepCopy", m_deepCopy = false ) ;
+}
+
+VertexListRefiner::~VertexListRefiner()
+{
+  // destructor
+}
+
+StatusCode VertexListRefiner::execute()
+{
+  LHCb::RecVertex::Range verticesin  = get<LHCb::RecVertex::Range>(m_inputLocation) ;
+  std::vector< const LHCb::RecVertex* > verticesout ;
+  
+  // loop 
+  BOOST_FOREACH( const LHCb::RecVertex* vertex , verticesin ) {
+
+    bool accept = true ;
+
+    // unfortunately stl doesn't work with the smartrefs in vertex
+    std::vector<const LHCb::Track*> tracks(vertex->tracks().size()) ;
+    std::copy(vertex->tracks().begin(),vertex->tracks().end(),tracks.begin()) ;
+    
+    accept = accept && (m_maxChi2PerDoF<0 || vertex->chi2PerDoF() < m_maxChi2PerDoF) ;
+    
+    accept = accept && int(tracks.size()) >= m_minNumTracks ;
+
+    accept = accept && (m_minNumLongTracks == 0 ||
+      std::count_if( tracks.begin(), tracks.end(),
+		     TrackPredicates::Type(LHCb::Track::Long) ) >= m_minNumLongTracks) ;
+    
+    if( accept && (m_minNumBackwardTracks > 0 || m_minNumForwardTracks>0 ) ) {
+      int numback = std::count_if( tracks.begin(), tracks.end(),
+				   TrackPredicates::Flag(LHCb::Track::Backward) ) ;
+      int numforward = tracks.size() - numback ;
+      accept = numback>=m_minNumBackwardTracks && numforward>=m_minNumForwardTracks ;
+    }
+    
+    if( accept ) verticesout.push_back( vertex ) ;
+  }
+
+  if( m_deepCopy ) {
+    LHCb::RecVertices* copies = new LHCb::RecVertices() ;
+    put( copies, m_outputLocation) ;
+    BOOST_FOREACH( const LHCb::RecVertex* vertex, verticesout ) 
+      copies->insert( vertex->clone() ) ;
+  } else {
+    LHCb::RecVertex::Selection* selection = new LHCb::RecVertex::Selection() ;
+    put( selection, m_outputLocation) ;
+    BOOST_FOREACH( const LHCb::RecVertex* vertex, verticesout ) 
+      selection->insert( vertex->clone() ) ;
+  }
+  
+  return StatusCode::SUCCESS;
+};
+
