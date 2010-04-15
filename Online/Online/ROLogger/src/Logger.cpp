@@ -1,4 +1,4 @@
-// $Id: Logger.cpp,v 1.12 2008-11-19 11:09:38 frankb Exp $
+// $Id: Logger.cpp,v 1.13 2010-04-15 16:04:59 frankb Exp $
 //====================================================================
 //  ROLogger
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/Logger.cpp,v 1.12 2008-11-19 11:09:38 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/Logger.cpp,v 1.13 2010-04-15 16:04:59 frankb Exp $
 
 #include "ROLogger/Logger.h"
 #include "CPP/IocSensor.h"
@@ -125,6 +125,12 @@ void Logger::handle(const Event& ev) {
     connectMessages(ev.type==CMD_CONNECT_CLUSTER,*data.str);
     delete data.str;
     return;
+  case CMD_UPDATE_RUNNUMBER:   {
+    char text[64];
+    ::sprintf(text,"R:%d",*(int*)(&ev.data));
+    sendData(text);
+    return;
+  }
   case CMD_UPDATE_FARMS:
     connectMessages(*data.vec);
     delete data.vec;

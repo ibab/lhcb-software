@@ -1,4 +1,4 @@
-// $Id: PartitionListener.cpp,v 1.19 2009-03-26 16:44:21 frankb Exp $
+// $Id: PartitionListener.cpp,v 1.20 2010-04-15 16:04:59 frankb Exp $
 //====================================================================
 //  ROLogger
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/PartitionListener.cpp,v 1.19 2009-03-26 16:44:21 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/PartitionListener.cpp,v 1.20 2010-04-15 16:04:59 frankb Exp $
 
 // Framework include files
 #include "ROLogger/PartitionListener.h"
@@ -40,7 +40,7 @@ typedef vector<string> _SV;
 
 /// Standard constructor with object setup through parameters
 PartitionListener::PartitionListener(Interactor* parent,const string& nam, const string& fac) 
-  : m_parent(parent), m_name(nam), m_facility(fac)
+  : m_parent(parent), m_name(nam), m_facility(fac), m_runNoDP(0)
 {
   string name;
   name = "RunInfo/" + m_name + "/HLTsubFarms";
@@ -57,6 +57,9 @@ PartitionListener::PartitionListener(Interactor* parent,const string& nam, const
   ::upic_write_message2("Monitoring slice info for %s_RunInfo from:%s",m_name.c_str(),name.c_str());
   name = "RunInfo/" + m_name + "/StorageSlice";
   m_storSliceDP    = ::dic_info_service((char*)name.c_str(),MONITORED,0,0,0,storSliceHandler,(long)this,0,0);
+  name = "RunInfo/" + m_name + "/RunNumber";
+  m_runNoDP        = ::dic_info_service((char*)name.c_str(),MONITORED,0,0,0,runnoHandler,(long)this,0,0);
+
   m_recSliceDP = 0;
   ::upic_write_message2("Storage slice info for %s_RunInfo from:%s",m_name.c_str(),name.c_str());
   if ( m_name.substr(0,4) == "LHCb" || m_name.substr(0,4) == "FEST" ) {
@@ -73,7 +76,19 @@ PartitionListener::~PartitionListener() {
   ::dic_release_service(m_nodesDP);
   ::dic_release_service(m_storSliceDP);
   ::dic_release_service(m_monSliceDP);
+  if ( m_runNoDP != 0 )    ::dic_release_service(m_runNoDP);
   if ( m_recSliceDP != 0 ) ::dic_release_service(m_recSliceDP);
+}
+
+/// DIM command service callback for run number changes
+void PartitionListener::runnoHandler(void* tag, void* address, int* size) {
+  PartitionListener* h = *(PartitionListener**)tag;
+  if(*size > 0)  {
+    int value = *(int*)address;
+    if ( value > 0 ) {
+      IocSensor::instance().send(h->m_parent,CMD_UPDATE_RUNNUMBER,(void*)value);
+    }
+  }
 }
 
 /// DIM command service callback

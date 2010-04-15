@@ -1,4 +1,4 @@
-// $Id: ErrorLog.cpp,v 1.15 2010-02-19 15:09:12 frankb Exp $
+// $Id: ErrorLog.cpp,v 1.16 2010-04-15 16:04:59 frankb Exp $
 //====================================================================
 //  ROLogger
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/ErrorLog.cpp,v 1.15 2010-02-19 15:09:12 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/ErrorLog.cpp,v 1.16 2010-04-15 16:04:59 frankb Exp $
 
 // Framework include files
 #include <sstream>
@@ -121,6 +121,7 @@ void ErrorLog::handle(const Event& ev) {
     case CMD_CONNECT_STORAGE:           // From PartitionListener
     case CMD_UPDATE_NODES:              // From PartitionListener
     case CMD_UPDATE_FARMS:              // From PartitionListener
+    case CMD_UPDATE_RUNNUMBER:          // From PartitionListener
       ioc.send(m_partDisplay,ev.type,ev.data);
       return;
     case CMD_DELETE:

@@ -1,4 +1,4 @@
-// $Id: PartitionListener.h,v 1.6 2009-01-09 10:31:20 frankb Exp $
+// $Id: PartitionListener.h,v 1.7 2010-04-15 16:04:59 frankb Exp $
 //====================================================================
 //  ROLogger
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/ROLogger/PartitionListener.h,v 1.6 2009-01-09 10:31:20 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/ROLogger/PartitionListener.h,v 1.7 2010-04-15 16:04:59 frankb Exp $
 #ifndef ROLOGGER_PARTITIONLISTENER_H
 #define ROLOGGER_PARTITIONLISTENER_H
 
@@ -50,7 +50,9 @@ namespace ROLogger {
     int         m_storSliceDP;
     /// Dim service ID for reconstruction nodes (if availible)
     int         m_recSliceDP;
-    
+    /// Dim service ID for run number of this partition
+    int         m_runNoDP;
+
   public:
     /// Standard constructor with object setup through parameters
     PartitionListener(Interactor* parent,const std::string& name, const std::string& facility="gaudi");
@@ -70,6 +72,8 @@ namespace ROLogger {
     static void monSliceHandler(void* tag, void* address, int* size);
     /// DIM command service callback
     static void recSliceHandler(void* tag, void* address, int* size);
+    /// DIM command service callback for run number changes
+    static void runnoHandler(void* tag, void* address, int* size);
   };
 }      /* End namespace ROLogger */
 #endif /* ROLOGGER_PARTITIONLISTENER_H */

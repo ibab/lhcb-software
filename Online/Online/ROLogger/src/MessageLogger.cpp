@@ -1,4 +1,4 @@
-// $Id: MessageLogger.cpp,v 1.18 2008-11-19 11:09:39 frankb Exp $
+// $Id: MessageLogger.cpp,v 1.19 2010-04-15 16:04:59 frankb Exp $
 //====================================================================
 //  ROLogger
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/MessageLogger.cpp,v 1.18 2008-11-19 11:09:39 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/MessageLogger.cpp,v 1.19 2010-04-15 16:04:59 frankb Exp $
 // Framework include files
 #include <cerrno>
 #include <cstring>
@@ -53,7 +53,7 @@ static string msg_src(const string& m) {
 
 /// Standard constructor
 MessageLogger::MessageLogger(int argc, char** argv) 
-: m_severity(3), m_colors(true), m_historySize(0), m_wrapped(false)
+  : m_severity(3), m_colors(true), m_historySize(0), m_wrapped(false), m_runNo(0), m_printRunNo(0)
 {
   string name;
   RTL::CLI cli(argc, argv, help_fun);
@@ -434,6 +434,23 @@ void MessageLogger::loadFilters(const string& s) {
   }
 }
 
+/// Set new run number in callback
+void MessageLogger::newRunNumber(const string& run) {
+  errno = 0;
+  int res = ::strtol(run.c_str(),0,10);
+  if ( 0 == errno ) {
+    m_runNo = res;
+    if ( m_printRunNo >= 0 ) {
+      for(int i=0; i<m_printRunNo;++i)
+	printMessage( "                    ",true);
+      printMessage(  ("                      Run:"+run+" started.").c_str(),true);
+      for(int j=0; j<m_printRunNo;++j)
+	printMessage( "                    ",true);
+    }
+    return;
+  }
+}
+
 /// DIM command service callback
 void MessageLogger::requestHandler(void* tag, void* address, int* size) {
   MessageLogger* h = *(MessageLogger**)tag;
@@ -471,6 +488,9 @@ void MessageLogger::requestHandler(void* tag, void* address, int* size) {
       return;
     case 'S': // Summarize history
       h->summarizeHistory();
+      return;
+    case 'R': // Run number change
+      h->newRunNumber(nam);
       return;
     case 'T': // Show title
       h->printHeader(nam);

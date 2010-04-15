@@ -10,7 +10,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/PartitionDisplay.cpp,v 1.18 2010-03-03 14:47:12 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/PartitionDisplay.cpp,v 1.19 2010-04-15 16:04:59 frankb Exp $
 
 // Framework include files
 #include "ROLogger/PartitionDisplay.h"
@@ -213,6 +213,11 @@ void PartitionDisplay::handle(const Event& ev) {
     case CMD_UPDATE_CLUSTERS:
       updateFarms();
       return;
+    case CMD_UPDATE_RUNNUMBER:
+      ioc.send(m_msg,ev.type,ev.data);
+      ioc.send(m_history,ev.type,ev.data);
+      ::upic_write_message2("Run: %d started...",*(int*)(&ev.data));
+      break;
     case CMD_DELETE:
       upic_set_cursor(m_id,m_menuCursor,0);
       delete (Interactor*)ev.data;

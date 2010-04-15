@@ -1,4 +1,4 @@
-// $Id: MessageLogger.h,v 1.11 2008-11-19 11:09:38 frankb Exp $
+// $Id: MessageLogger.h,v 1.12 2010-04-15 16:04:59 frankb Exp $
 //====================================================================
 //  ROLogger
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/ROLogger/MessageLogger.h,v 1.11 2008-11-19 11:09:38 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/ROLogger/MessageLogger.h,v 1.12 2010-04-15 16:04:59 frankb Exp $
 #ifndef ROLOGGER_MESSAGELOGGER_H
 #define ROLOGGER_MESSAGELOGGER_H
 
@@ -87,6 +87,10 @@ namespace ROLogger {
     std::string       m_reconstruction;
     /// Message counter by type
     std::vector<int>  m_numMsg;
+    /// Currently known run number
+    int               m_runNo;
+    /// Flag to print the run number (default on)
+    int               m_printRunNo;
 
     /// Print summary of history records from stored memory
     void summarizeHistory();
@@ -98,6 +102,8 @@ namespace ROLogger {
     bool checkFilters(const char* msg) const;
     /// Get summary line from running messages
     std::string getSummary();
+    /// Set new run number in callback
+    void newRunNumber(const std::string& run);
 
     /// Handle DIM message
     virtual void handleMessage(const char* msg);

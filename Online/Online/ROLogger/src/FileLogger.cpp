@@ -1,4 +1,4 @@
-// $Id: FileLogger.cpp,v 1.13 2010-03-28 06:08:20 frankb Exp $
+// $Id: FileLogger.cpp,v 1.14 2010-04-15 16:04:59 frankb Exp $
 //====================================================================
 //  ROLogger
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/FileLogger.cpp,v 1.13 2010-03-28 06:08:20 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/FileLogger.cpp,v 1.14 2010-04-15 16:04:59 frankb Exp $
 
 #include "ROLogger/FileLogger.h"
 
@@ -103,6 +103,7 @@ FileLogger::FileLogger(int argc, char** argv)
   UpiSensor::instance().add(this,m_id);
   m_quit = new UPI::ReallyClose(m_id,CMD_CLOSE);
   ::upic_set_cursor(m_id,CMD_SHOW,0);
+  m_printRunNo = 1;
 }
 
 /// Standard destructor
@@ -244,6 +245,12 @@ void FileLogger::handle(const Event& ev) {
   case CMD_DISCONNECT_RECONSTRUCTION:
     m_reconstruction = "";
     ioc.send(this,CMD_UPDATE,this);
+    return;
+  case CMD_UPDATE_RUNNUMBER: {
+    char text[32];
+    ::sprintf(text,"%d",*(int*)(&ev.data));
+    newRunNumber(text);
+    }
     return;
   case CMD_UPDATE_FARMS:
     m_farms = *data.vec;

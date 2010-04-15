@@ -86,6 +86,8 @@ namespace ROLogger {
     CMD_APPLY_FILTERS,
 
     CMD_EXECUTE = 25000,
+    
+    CMD_UPDATE_RUNNUMBER,
 
     CMD_LAST
   };
