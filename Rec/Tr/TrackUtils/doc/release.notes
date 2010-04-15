@@ -4,6 +4,9 @@
 ! Purpose     : Package for general utility algorithms
 !-----------------------------------------------------------------------------
 
+! 2010-04-15 Wouter Hulsbergen
+ - Added VertexListRefiner and VertexListFilter for use in Alignment
+
 !========================== TrackUtils v1r35 2010-02-15 ======================
 ! 2010-03-26 - David Hutchcroft
  - Added an option to TrackPrepareVelo to reverse the arbitary charge assigned 

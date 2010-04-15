@@ -3,7 +3,7 @@
 # Maintainer : Eduardo Rodrigues
 #============================================================================
 package           TrackUtils
-version           v1r35
+version           v1r36
 
 #============================================================================
 # Structure, i.e. directories to process. 
@@ -25,6 +25,7 @@ use   LHCbMath           v*    Kernel
 use   PartProp           v*    Kernel
 use   STDet              v*    Det
 use   OTDet              v*    Det
+use   CaloDet            v*    Det
 
 include_path      none
 #============================================================================

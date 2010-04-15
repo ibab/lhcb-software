@@ -5,8 +5,10 @@
 !-----------------------------------------------------------------------------
 
 ! 2010-04-15 - Wouter Hulsbergen
- - bug fix for downstream tracks in TrackStateInitTool
+ - added VeloTrackSelector and ITTrackSelector for use in Alignment
 
+! 2010-04-15 - Wouter Hulsbergen
+ - bug fix for downstream tracks in TrackStateInitTool
 
 ! 2010-04-13 - Victor Coco
  - add VeloPixLiteMeasurementProvider classto deal with VeloPixLiteMeasurement
