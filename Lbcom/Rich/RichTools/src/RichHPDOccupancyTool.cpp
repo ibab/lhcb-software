@@ -150,8 +150,10 @@ StatusCode HPDOccupancyTool::umsUpdateRICH2()
 
 StatusCode HPDOccupancyTool::initOccMap( const Rich::DetectorType rich )
 {
-  info() << "Update triggered for " << rich << " HPD average occupancies" << endmsg;
-
+  if ( msgLevel(MSG::DEBUG) )
+    debug() << "Update triggered for " << rich 
+            << " HPD average occupancies" << endmsg;
+  
   // read data from conditions
   const Condition * data = getDet<Condition>(m_condBDLocs[rich]);
   // vector of data values
