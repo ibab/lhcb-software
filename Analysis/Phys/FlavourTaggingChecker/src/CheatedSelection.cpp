@@ -74,8 +74,8 @@ StatusCode CheatedSelection::execute() {
 
   debug() << "Getting tagging particles saved in "<<m_inputLocation<< endmsg ;
   Particle::ConstVector parts ;
-  const Particles* ptmp = get<Particles>( m_inputLocation );
-  for( Particles::const_iterator ip=ptmp->begin(); ip!=ptmp->end(); ip++){
+  const Particle::Range ptmp = get<Particle::Range>( m_inputLocation );
+  for( Particle::Range::const_iterator ip=ptmp.begin(); ip!=ptmp.end(); ip++){
     const MCParticle* mcp= m_linker->first(*ip);
     if (mcp) debug()<<"part: "<< (*ip)->pt()<< "  mcpart: "<< mcp->pt()<<endreq;
     parts.push_back(*ip);
