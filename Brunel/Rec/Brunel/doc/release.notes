@@ -3,6 +3,21 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+
+- Changes to options
+  . Use consistent DDDB and SIMCOND tags in 2009-FEST-Data.py, following
+    change in default 2009 DDDB tag
+
+- Changes to references to reflect changes in Brunel v37r2 output:
+  . New OTTrackMonitor histogram
+  . Bug fix in NeutralProtoP (GlobalReco)
+  . Change in parametrisation and some other small changes in PatAddTTCoord 
+    (PatAlgorithms)
+  . Turn on suppression of very high occupancy HPDs (>200 hits)
+    (RichRecSys)
+  . bug fix for downstream tracks in TrackStateInitTool (TrackTools)
+  . New default database tags (DDDB)
+
 </PRE><H1><A NAME=v37r1>2010-04-15 Brunel v37r1</A></H1><PRE>
 - Changes to Configurable
   . Use named instance of RichRecQCConf (Same as in RecSys)
