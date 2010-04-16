@@ -1,4 +1,4 @@
-// $Id: LoKiJetParticleMaker.cpp,v 1.5 2009-12-14 12:34:33 cocov Exp $
+// $Id: LoKiJetParticleMaker.cpp,v 1.6 2010-04-16 14:49:09 jpalac Exp $
 // ============================================================================
 // include files  
 // ============================================================================
@@ -108,17 +108,17 @@ StatusCode LoKi::JetParticleMaker::makeParticles
   // loop over all input locations 
   for ( Inputs::const_iterator  i = m_inputs.begin() ; m_inputs.end() != i ; ++i ) 
   {
-    if ( exist<LHCb::Particle::Container> ( *i ) ) 
+    if ( exist<LHCb::Particle::Range> ( *i ) ) 
     {
-      const LHCb::Particle::Container* parts = 
-        get<LHCb::Particle::Container> ( *i ) ;
-      inputs.insert( inputs.end() , parts -> begin() , parts -> end() ) ;
+      const LHCb::Particle::Range parts = 
+        get<LHCb::Particle::Range> ( *i ) ;
+      inputs.insert( inputs.end() , parts.begin() , parts.end() ) ;
     }
-    else if ( exist<LHCb::Particle::Container> ( (*i)  + "/Particles" ) ) 
+    else if ( exist<LHCb::Particle::Range> ( (*i)  + "/Particles" ) ) 
     {
-      const LHCb::Particle::Container* parts = 
-        get<LHCb::Particle::Container> ( (*i) + "/Particles") ;
-      inputs.insert( inputs.end() , parts -> begin() , parts -> end() ) ;      
+      const LHCb::Particle::Range parts = 
+        get<LHCb::Particle::Range> ( (*i) + "/Particles") ;
+      inputs.insert( inputs.end() , parts.begin() , parts.end() ) ;      
     }
     else { return Error ( "No valid location: " + (*i) ) ; }
   }        

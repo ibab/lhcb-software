@@ -1,4 +1,4 @@
-// $Id: LoKiJets2JetsAlg.cpp,v 1.1 2009-12-14 12:34:33 cocov Exp $
+// $Id: LoKiJets2JetsAlg.cpp,v 1.2 2010-04-16 14:49:10 jpalac Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -115,10 +115,10 @@ StatusCode LoKi::Jets2JetsAlg::analyse   ()
   using namespace LoKi        ;
   using namespace LoKi::Types ;
   
-  LHCb::Particles* PartsA    = get<LHCb::Particles>(m_jetALocation);
-  LHCb::Particles* PartsB    = get<LHCb::Particles>(m_jetBLocation);
+  const LHCb::Particle::Range PartsA    = get<LHCb::Particle::Range>(m_jetALocation);
+  const LHCb::Particle::Range PartsB    = get<LHCb::Particle::Range>(m_jetBLocation);
 
-  if (PartsA->size()==0 || PartsB->size()==0 ){
+  if (PartsA.size()==0 || PartsB.size()==0 ){
    Warning("No jets to match in the event") ;
     setFilterPassed ( false ); 
     return StatusCode::SUCCESS ;
@@ -127,8 +127,8 @@ StatusCode LoKi::Jets2JetsAlg::analyse   ()
   IJets2Jets::Jets* JetsA(0);
   IJets2Jets::Jets* JetsB(0);
 
-  for (LHCb::Particles::const_iterator ip = PartsA->begin() ; PartsA->end() != ip ; ip++ ) JetsA->push_back((*ip)->clone());
-  for (LHCb::Particles::const_iterator ip = PartsB->begin() ; PartsB->end() != ip ; ip++ ) JetsB->push_back((*ip)->clone());
+  for (LHCb::Particle::Range::const_iterator ip = PartsA.begin() ; PartsA.end() != ip ; ip++ ) JetsA->push_back((*ip)->clone());
+  for (LHCb::Particle::Range::const_iterator ip = PartsB.begin() ; PartsB.end() != ip ; ip++ ) JetsB->push_back((*ip)->clone());
   
   if ( 0 == m_jetMatcher ) m_jetMatcher = tool<IJets2Jets> ( m_jetMatcherName ,m_jetMatcherName, this ) ;
   
