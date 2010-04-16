@@ -4,6 +4,11 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+! 2010-04-16 - V. Gligorov
+ - Commit helper functions to be used in the lifetime unbiased
+   hlt1 hadron lines, code written by U. Kerzel. Adds a dependency
+   on LoKi and involves the making of particles in Hlt1.
+
 ! 2010-04-13 - Gerhard Raven
  - update HltReferenceRateSvc: always check ODIN trigger type,
    pick up rate from conditions DB.

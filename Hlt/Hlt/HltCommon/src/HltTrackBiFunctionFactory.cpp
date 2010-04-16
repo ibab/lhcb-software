@@ -1,4 +1,4 @@
-// $Id: HltTrackBiFunctionFactory.cpp,v 1.3 2008-06-02 19:57:57 graven Exp $
+// $Id: HltTrackBiFunctionFactory.cpp,v 1.4 2010-04-16 01:17:13 gligorov Exp $
 // Include files
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h" 
@@ -48,9 +48,11 @@ HltTrackBiFunctionFactory::function(const std::string& fn)
 
   std::string name = boost::algorithm::erase_regex_copy(fn, boost::regex(",.*"));
   Hlt::TrackBiFunction* fun = 
-           name == "DOCA"       ? new Hlt::DOCA()       :
-           name == "DimuonMass" ? new Hlt::DimuonMass() :
-           name == "SumPT"      ? new Hlt::SumPT()      :
+           name == "DOCA"         ? new Hlt::DOCA()          :
+           name == "DimuonMass"   ? new Hlt::DimuonMass()    :
+           name == "DikaonMass"   ? new Hlt::DikaonMass()    :
+           name == "SumPT"        ? new Hlt::SumPT()         :
+           name == "CosThetaStar" ? new Hlt:: CosThetaStar() :
            (Hlt::TrackBiFunction*)0;
   
   Assert( fun != 0, " function() not able to create function" + name);

@@ -1,4 +1,4 @@
-// $Id: HltFunctionFactories.cpp,v 1.34 2009-12-02 13:27:02 albrecht Exp $
+// $Id: HltFunctionFactories.cpp,v 1.35 2010-04-16 01:17:13 gligorov Exp $
 // Include files 
 
 // from Gaudi
@@ -40,6 +40,7 @@ StatusCode HltTrackFunctionFactory::initialize() {
   declare("L0ET");
   declare<Hlt::PT>("PT");
   declare<Hlt::PT>("PT0");
+  declare<Hlt::P>("P");
   declare<Hlt::TrackFlag>("IsBackward");
   declare<Hlt::MissedVeloHits>("MissedVeloHits");
   declare<Hlt::NumberOfASideVeloHits>("NumberOfASideVeloHits");
@@ -70,6 +71,8 @@ StatusCode HltTrackFunctionFactory::initialize() {
   declare<ITrackBiFunctionTool,zen::abs_min,const Hlt::TrackSelection> ("Ecal3DChi2","HltVeloEcalMatch");
 
   declare<ITrackFunctionTool>("ptAtOrigin","PtTransporter");
+
+  declare<Hlt::CosThetaStar,zen::abs_min,const Hlt::TrackSelection> ("CosThetaStar");
   return sc;
 }
 //=============================================================================
@@ -113,11 +116,17 @@ StatusCode HltVertexFunctionFactory::initialize() {
   declare<Hlt::VertexDOCA>("FitVertexDOCA");
   declare<Hlt::VertexDimuonMass>("VertexDimuonMass");
   declare<Hlt::VertexDimuonMass>("FitVertexDimuonMass");
+  declare<Hlt::VertexDikaonMass>("VertexDikaonMass");
+  declare<Hlt::VertexDikaonMass>("FitVertexDikaonMass");
   declare<Hlt::VertexSumPT>("VertexSumPT");
   declare<Hlt::VertexMinPT>("VertexMinPT");
   declare<Hlt::VertexMaxPT>("VertexMaxPT");
+  declare<Hlt::VertexMinP>("VertexMinP");
+  declare<Hlt::VertexMaxP>("VertexMaxP");
   declare<Hlt::VertexMinPT>("FitVertexMinPT");
   declare<Hlt::VertexMaxPT>("FitVertexMaxPT");
+  declare<Hlt::VertexMinP>("FitVertexMinP");
+  declare<Hlt::VertexMaxP>("FitVertexMaxP");
   declare<Hlt::VertexTrack1PT>("VertexTrack1PT");
   declare<Hlt::VertexTrack1PT>("FitVertexTrack1PT");
   declare<Hlt::VertexTrack2PT>("VertexTrack2PT");

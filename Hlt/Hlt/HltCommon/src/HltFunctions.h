@@ -1,4 +1,4 @@
-// $Id: HltFunctions.h,v 1.28 2009-12-02 13:26:09 albrecht Exp $
+// $Id: HltFunctions.h,v 1.29 2010-04-16 01:17:13 gligorov Exp $
 #ifndef HLTBASE_HLTFUNCTIONS_H 
 #define HLTBASE_HLTFUNCTIONS_H 1
 
@@ -20,6 +20,14 @@
 #include "Event/Node.h"
 #include "Event/TrackFunctor.h"
 #include "GaudiAlg/GaudiTool.h"
+
+#include <Event/ProtoParticle.h>
+#include <Event/Particle.h>
+#include <Kernel/ParticleID.h>
+#include <LoKi/ParticleCuts.h>
+#include <Event/State.h>
+
+#include "GaudiKernel/Vector4DTypes.h"
 
 #include "EFunctions.h"
 #include <memory>
@@ -195,6 +203,22 @@ namespace Hlt {
     double operator() (const LHCb::RecVertex& v) const {
       return HltUtils::VertexMaxPT(v);}
     VertexMaxPT* clone() const {return new VertexMaxPT();}
+  };
+
+  class VertexMinP : public Hlt::VertexFunction {
+  public:
+    explicit VertexMinP() {}
+    double operator() (const LHCb::RecVertex& v) const {
+      return HltUtils::VertexMinP(v);}
+    VertexMinP* clone() const {return new VertexMinP();}
+  };
+
+  class VertexMaxP : public Hlt::VertexFunction {
+  public:
+    explicit VertexMaxP() {}
+    double operator() (const LHCb::RecVertex& v) const {
+      return HltUtils::VertexMaxP(v);}
+    VertexMaxP* clone() const {return new VertexMaxP();}
   };
 
   class VertexMatchIDsFraction : public Hlt::VertexBiFunction {
@@ -389,6 +413,18 @@ namespace Hlt {
     }
     DimuonMass* clone() const {return new DimuonMass();}
   };
+
+  class DikaonMass : public Hlt::TrackBiFunction {
+  public:
+    explicit DikaonMass() {}
+    double operator() (const LHCb::Track& track1, 
+                       const LHCb::Track& track2) const {
+      return HltUtils::invariantMass(track1,track2,
+                                     493.677,493.677);
+    }
+    DikaonMass* clone() const {return new DikaonMass();}
+  };
+
   
   class VertexDOCA : public Hlt::VertexFunction {
   public:
@@ -425,7 +461,17 @@ namespace Hlt {
     VertexDimuonMass* clone() const {return new VertexDimuonMass();}
   };
 
-  
+  class VertexDikaonMass : public Hlt::VertexFunction {
+  public:
+    explicit VertexDikaonMass() {}
+    double operator() (const LHCb::RecVertex& vertex) const {
+      const LHCb::Track& t1 = *(vertex.tracks()[0]);
+      const LHCb::Track& t2 = *(vertex.tracks()[1]);
+      return Hlt::DikaonMass()(t1,t2);
+    }
+    VertexDikaonMass* clone() const {return new VertexDikaonMass();}
+  };
+
   class SumPT : public Hlt::TrackBiFunction {
   public:
     explicit SumPT() {}
@@ -651,6 +697,60 @@ namespace Hlt {
     VertexMaxMuChi2* clone() const {return new VertexMaxMuChi2();}
   };
 
+
+  ///* return the helicity angle cos(theta*) of the daughters in the mother rest frame (from LoKi)
+  class CosThetaStar : public Hlt::TrackBiFunction {
+  public:
+    explicit CosThetaStar(){}
+    double operator() (const LHCb::Track& track1,
+                       const LHCb::Track& track2) const {
+      
+      const double mass = 493.677;
+      LHCb::ProtoParticle protoP1; protoP1.setTrack(&track1);
+      LHCb::ProtoParticle protoP2; protoP2.setTrack(&track2);
+      LHCb::ParticleID    pidKPlus(321);
+      LHCb::ParticleID    pidKMinus(-321);
+      LHCb::ParticleID    pidBs(531);      //for this purpose the choice of particle ID doesn't matter
+      
+      LHCb::Particle p1(pidKPlus);  p1.setMeasuredMass(mass); p1.setMeasuredMassErr(0); 
+      LHCb::Particle p2(pidKMinus); p2.setMeasuredMass(mass); p2.setMeasuredMassErr(0);
+      
+      if (track1.charge()>0) {
+        p1.setProto(&protoP1);
+        p2.setProto(&protoP2);
+      } else {
+        p1.setProto(&protoP2);
+        p2.setProto(&protoP1);        
+      } // if charge
+
+      // the next part is taken from "Particle2State" - but don't do the errors
+      const double e1 = std::sqrt( track1.momentum().mag2()+mass*mass );
+      const double e2 = std::sqrt( track2.momentum().mag2()+mass*mass );
+      p1.setMomentum( Gaudi::XYZTVector(track1.momentum().X(),track1.momentum().Y(),track1.momentum().Z(),e1) ) ;
+      p2.setMomentum( Gaudi::XYZTVector(track2.momentum().X(),track2.momentum().Y(),track2.momentum().Z(),e2) ) ;
+
+
+      //std::cout << "track1p " << track1.momentum() << "proto " << protoP1.track()->momentum() << " particle " << p1.momentum() << std::endl;
+     
+      LHCb::Particle mother(pidBs);
+      mother.addToDaughters(&p1);
+      mother.addToDaughters(&p2);
+      mother.setMeasuredMass(HltUtils::invariantMass(track1,track2, mass, mass));
+      mother.setMeasuredMassErr(0);
+      mother.setMomentum(p1.momentum() + p2.momentum());
+      
+      //std::cout << "mother p" << mother.momentum() << std::endl;
+      const double cosTheta = LoKi::Cuts::LV01(&mother);
+
+      if (!isnan(cosTheta)){
+        // sometimes get NAN?
+        return fabs(cosTheta);
+      } else {
+        return -999;
+      }
+    } // double ()
+    CosThetaStar* clone() const {return new CosThetaStar();}
+  }; // class CosThetaStar
 
   //---------- extra utilities -----------------------------
   
