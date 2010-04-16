@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltLine.py,v 1.35 2010-03-17 22:35:39 gligorov Exp $ 
+# $Id: HltLine.py,v 1.36 2010-04-16 01:05:34 gligorov Exp $ 
 # =============================================================================
 ## @file
 #
@@ -54,7 +54,7 @@ Also few helper symbols are defined:
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.35 $ "
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.36 $ "
 # =============================================================================
 
 __all__ = ( 'Hlt1Line'     ,  ## the Hlt1 line itself 
@@ -97,6 +97,7 @@ from Configurables import HltVertexToTracks      as VertexToTracks
 from Configurables import HltAddPhotonToVertex   as AddPhotonToVertex
 from Configurables import Hlt__Line              as Line
 from Configurables import HltCopySelection_LHCb__Particle_ as HltCopyParticleSelection
+from Configurables import HltGlobalHcalCut   as GlobalHcalCut
 from SelPy.selection import FlatSelectionListBuilder
 
 ## Convention: the name of 'Filter' algorithm inside HltLine
@@ -336,6 +337,7 @@ _types_ = { TrackUpgrade  : 'TU'
           , SelectTracksForSwimming : 'SelectTracksForSwimming'   
           , Hlt__TrackFilter : 'Hlt::TrackFilter'
           , Hlt__TrackPipe : 'Hlt::TrackPipe'
+          , GlobalHcalCut  : 'GlobalHcalCut'
           } 
 
 ## protected attributes 

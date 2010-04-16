@@ -107,6 +107,13 @@ struct maxPT {
 struct minPT {
     double operator()(double init,const LHCb::Track* t) { return std::min(init, t->pt()); }
 };
+
+struct maxP {
+  double operator()(double init,const LHCb::Track* t) { return std::max(init, t->p()); }
+};
+struct minP {
+  double operator()(double init,const LHCb::Track* t) { return std::min(init, t->p()); }
+};
 };
 
 double HltUtils::VertexMinPT(const LHCb::RecVertex& vertex) {
@@ -118,6 +125,17 @@ double HltUtils::VertexMaxPT(const LHCb::RecVertex& vertex) {
   const SmartRefVector<LHCb::Track>& tracks = vertex.tracks();
   return std::accumulate(tracks.begin(),tracks.end(),-1e12,maxPT());
 }
+
+double HltUtils::VertexMinP(const LHCb::RecVertex& vertex) {
+  const SmartRefVector<LHCb::Track>& tracks = vertex.tracks();
+  return std::accumulate(tracks.begin(),tracks.end(),1e12,minP());
+}
+
+double HltUtils::VertexMaxP(const LHCb::RecVertex& vertex) {
+  const SmartRefVector<LHCb::Track>& tracks = vertex.tracks();
+  return std::accumulate(tracks.begin(),tracks.end(),-1e12,maxP());
+}
+
 
 namespace {
     struct isMuonStation {

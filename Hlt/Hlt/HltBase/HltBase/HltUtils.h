@@ -111,6 +111,11 @@ namespace HltUtils
 
   double VertexMaxPT(const LHCb::RecVertex& vertex);
 
+  double VertexMinP(const LHCb::RecVertex& vertex);
+
+  double VertexMaxP(const LHCb::RecVertex& vertex);
+
+
   inline double matchIDsFraction(const LHCb::Track& tref, 
                                  const LHCb::Track& track) {
       return (tref.lhcbIDs().empty()) ? 0. :

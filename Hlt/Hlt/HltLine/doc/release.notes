@@ -1,9 +1,14 @@
-! $Id: release.notes,v 1.97 2010-03-28 20:19:21 graven Exp $
+! $Id: release.notes,v 1.98 2010-04-16 01:07:22 gligorov Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltLine
 ! Responsible : Gerhard Raven, Vanya Belyaev
 ! Purpose     : Infrastructure for HLT 'lines'
 ! -----------------------------------------------------------------------------
+
+! 2010-04-16 - V. Gligorov
+ - Let HltLine know about helper functions to be used in the lifetime unbiased
+   hlt1 hadron lines, code written by U. Kerzel. 
+
 !========================== HltLine v4r0  2010-03-28 ===================
 ! 2010-03-17 - V. Gligorov
  - Continuing work on Savannah tasks #12691,13784.
