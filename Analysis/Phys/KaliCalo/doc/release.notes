@@ -1,6 +1,6 @@
-! $Id: release.notes,v 1.45 2010-04-16 15:30:36 jpalac Exp $ 
+! $Id: release.notes,v 1.46 2010-04-16 15:31:44 jpalac Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.45 $
+! CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.46 $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/KaliCalo
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@lapp.in2p3.fr
@@ -10,6 +10,8 @@
 ! 2010-04-16 - Juan Palacios
  - src/Destroyer.cpp
   . Access Particle::Range instead of Particle::Container.
+ - cmt/requirements
+  . Increase to v4r2.
 
 ! 2010-04-11 - Vanya Belyaev
 
