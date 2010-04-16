@@ -9,7 +9,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.10 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.11 $"
 # =============================================================================
 
 import Gaudi.Configuration 
@@ -67,7 +67,7 @@ class Hlt1HadronLinesConf(HltLinesConfigurableUser) :
         from HltLine.HltLine import hlt1Lines  
         from Hlt1Lines.HltFastTrackFit import setupHltFastTrackFit
         from HltTracking.HltReco import RZVelo
-	    from HltTracking.HltPVs  import PV2D
+        from HltTracking.HltPVs  import PV2D
         from Configurables import HltTrackUpgradeTool, PatForwardTool, HltGuidedForward
         from Hlt1Lines.HltConfigurePR import ConfiguredPR
         
