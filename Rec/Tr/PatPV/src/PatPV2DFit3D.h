@@ -1,4 +1,4 @@
-// $Id: PatPV2DFit3D.h,v 1.6 2010-03-04 09:43:33 pmorawsk Exp $
+// $Id: PatPV2DFit3D.h,v 1.7 2010-04-16 13:25:41 pmorawsk Exp $
 #ifndef PATPV2DFIT3D_H
 #define PATPV2DFIT3D_H 1
 
@@ -12,6 +12,7 @@
 
 #include "TrackInterfaces/IPVOfflineTool.h"
 #include "GaudiAlg/ISequencerTimerTool.h"
+#include "DetDesc/IGeometryInfo.h"
 
 /** @class PatPV2DFit3D PatPV2DFit3D.h
  *  PV reconstruction in 2D
@@ -33,7 +34,7 @@ public:
 private:
 
   void addTracks(int n);
-  StatusCode updateVelo();
+//   StatusCode updateVelo();
 
 private:
   // steering parameters for PV reconstruction
@@ -45,11 +46,12 @@ private:
   std::vector<LHCb::Track*> m_sTracks;
 
   std::vector<double> m_phiOfSector;
-  Gaudi::XYZVector m_boxOffsetLeft[2];
-  Gaudi::XYZVector m_boxOffsetRight[2];
+  const IGeometryInfo* m_velo[2];
+//   Gaudi::XYZVector m_boxOffsetLeft[2];
+//   Gaudi::XYZVector m_boxOffsetRight[2];
 
-  double m_zLeft[2];
-  double m_zRight[2];
+//   double m_zLeft[2];
+//   double m_zRight[2];
   int     m_multiQualityPV;
   int     m_minBackQualityPV;
   double  m_dzQualityPV;

@@ -1,10 +1,10 @@
-// $Id: PatPV2DFit3D.cpp,v 1.6 2010-03-04 09:43:33 pmorawsk Exp $
+// $Id: PatPV2DFit3D.cpp,v 1.7 2010-04-16 13:25:35 pmorawsk Exp $
 // Include files
 
 // from Gaudi
 #include "GaudiKernel/SystemOfUnits.h"
 #include "GaudiKernel/AlgFactory.h"
-#include "GaudiKernel/IUpdateManagerSvc.h"
+// #include "GaudiKernel/IUpdateManagerSvc.h"
 
 
 // from gsl
@@ -13,9 +13,11 @@
 // from Event
 #include "Event/Track.h"
 #include "VeloDet/DeVelo.h"
+#include "DetDesc/IDetectorElement.h"
 
 // local
 #include "PatPV2DFit3D.h"
+// #include "Random.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : PatPV2DFit3D
@@ -58,17 +60,6 @@ PatPV2DFit3D::PatPV2DFit3D( const std::string& name,
   declareProperty( "MeasureTime"     , m_measureTime      =  false      );
   declareProperty( "InputTracksName"    , m_inputTracksName     =  LHCb::TrackLocation::RZVelo);
   declareProperty( "OutputVerticesName" , m_outputVerticesName  =  LHCb::RecVertexLocation::Velo2D );
-  
-  //construct double arrays
-  for (int it=0; it<2; it++)
-  {
-    m_boxOffsetLeft[it]=Gaudi::XYZVector();
-    m_boxOffsetRight[it]=Gaudi::XYZVector();
-    m_zLeft[it]=0;
-    m_zRight[it]=0;
-    
-  }
-  
 }
 //=============================================================================
 // Destructor
@@ -86,18 +77,25 @@ StatusCode PatPV2DFit3D::initialize() {
 
 
   addTracks(100);
-
-  // subscribe to the updatemanagersvc with a dependency on the magnetic field svc
-  IUpdateManagerSvc* updMgrSvc = svc<IUpdateManagerSvc>("UpdateManagerSvc", true);
+  
+    //== Get Velo detector element, to get the R sector angle
   DeVelo* velo = getDet<DeVelo>( DeVeloLocation::Default );
-  updMgrSvc->registerCondition( this,velo,&PatPV2DFit3D::updateVelo);
-  // initialize with the current conditions
-  if (!updMgrSvc->update(this)) {
-    err() << "error when requesting update from UpdateManagerSvc" << endmsg;
-    return  StatusCode::FAILURE;
+  for (IDetectorElement::IDEContainer::const_iterator i = velo->childBegin();i!=velo->childEnd();++i) {
+    debug () << " got " << (*i)->name() << endmsg;
+    if ((*i)->name().find("VeloLeft") != std::string::npos) {
+      debug() << "found left half!" << endmsg;
+      m_velo[0] = (*i)->geometry();
+    }
+    if ((*i)->name().find("VeloRight") != std::string::npos) {
+      debug() << "found right half!" << endmsg;
+      m_velo[1] = (*i)->geometry();
+    }
   }
-
-
+  if (msgLevel(MSG::DEBUG)){
+    Gaudi::XYZPoint localZero(0.,0.,0.);
+    debug()<< "VeloLeft  position " << m_velo[0]->toGlobal(localZero)-localZero << endmsg;
+    debug()<< "VeloRight position " << m_velo[1]->toGlobal(localZero)-localZero << endmsg;
+  }
 
   // Access PVSeedTool
   m_pvSeedTool = tool<IPVSeeding>( "PVSeedTool", this );
@@ -174,49 +172,85 @@ StatusCode PatPV2DFit3D::execute() {
     double phi     = m_phiOfSector[ sector ];
     Gaudi::TrackSymMatrix cov = pTr2d->firstState().covariance();
     bool   isRight = sector > 3;
+    
+//================== eld fix =====================================
+//     double xVeloOffset, yVeloOffset, zVeloOffset;
+//     double r[2], x[2], y[2], tx, ty, z[2], xFirst, yFirst;
+//     for (int it=0; it<2; it++){
+//       if (isRight) {
+//         xVeloOffset = m_boxOffsetRight[it].x();
+//         yVeloOffset = m_boxOffsetRight[it].y();
+//         zVeloOffset = m_boxOffsetRight[it].z();
+//         z[it]       = m_zRight[it];
+//       }else{
+//         xVeloOffset = m_boxOffsetLeft[it].x();
+//         yVeloOffset = m_boxOffsetLeft[it].y();
+//         zVeloOffset = m_boxOffsetLeft[it].z();
+//         z[it]       = m_zLeft[it];
+//       }
+//       r[it] =  rFirst + trFirst*(z[it] - zFirst);
+//       x[it] =  r[it]*cos(phi);
+//       y[it] =  r[it]*sin(phi);      
+//       x[it] += xVeloOffset;
+//       y[it] += yVeloOffset;
+//       z[it] += zVeloOffset;
+//     }
+//     tx = (x[0] - x[1])/(z[0] - z[1]);
+//     ty = (y[0] - y[1])/(z[0] - z[1]);
+//     trFirst = tx*cos(phi) + ty*sin(phi);
+//     xFirst = x[0] + tx*(zFirst - z[0]);
+//     yFirst = y[0] + ty*(zFirst - z[0]);
+//     phi = atan(yFirst/xFirst);
+//     if (isRight) phi += M_PI;
+//     rFirst = sqrt(xFirst*xFirst + yFirst*yFirst);
+//     double z0      = zFirst - rFirst/trFirst; // where r = 0.
+//================== old fix end =================================
 
-    //     correction of VeLo Offset
-    double xVeloOffset, yVeloOffset, zVeloOffset;
-    double r[2], x[2], y[2], tx, ty, z[2], xFirst, yFirst;
-    for (int it=0; it<2; it++){
-      if (isRight) {
-        xVeloOffset = m_boxOffsetRight[it].x();
-        yVeloOffset = m_boxOffsetRight[it].y();
-        zVeloOffset = m_boxOffsetRight[it].z();
-        z[it]       = m_zRight[it];
-      }else{
-        xVeloOffset = m_boxOffsetLeft[it].x();
-        yVeloOffset = m_boxOffsetLeft[it].y();
-        zVeloOffset = m_boxOffsetLeft[it].z();
-        z[it]       = m_zLeft[it];
-      }
-      r[it] =  rFirst + trFirst*(z[it] - zFirst);
-      x[it] =  r[it]*cos(phi);
-      y[it] =  r[it]*sin(phi);
+//================== new fix =====================================
+//     ROOT::Math::Random r(0);
 
-      x[it] += xVeloOffset;
-      y[it] += yVeloOffset;
-      z[it] += zVeloOffset;
+    Gaudi::XYZPoint  position(rFirst*cos(phi), rFirst*sin(phi), zFirst);
+    Gaudi::XYZVector slope(trFirst*cos(phi), trFirst*sin(phi), 1.0);
+    if(msgLevel(MSG::DEBUG)){
+      debug() << "Local  position " << position << endmsg;
+      debug() << "Local  slope    " << slope    << endmsg;
     }
-    tx = (x[0] - x[1])/(z[0] - z[1]);
-    ty = (y[0] - y[1])/(z[0] - z[1]);
-    trFirst = tx*cos(phi) + ty*sin(phi);
-    xFirst = x[0] + tx*(zFirst - z[0]);
-    yFirst = y[0] + ty*(zFirst - z[0]);
-    phi = atan(yFirst/xFirst);
-    if (isRight) phi += M_PI;
-
-    rFirst = sqrt(xFirst*xFirst + yFirst*yFirst);
-    double z0      = zFirst - rFirst/trFirst; // where r = 0.
+    if (isRight){
+      position = m_velo[1]->toGlobal(position);
+      slope    = m_velo[1]->toGlobal(slope);
+    }
+    else{
+      position = m_velo[0]->toGlobal(position);
+      slope    = m_velo[0]->toGlobal(slope);
+    }
+    if(msgLevel(MSG::DEBUG)){
+      debug() << "Global position " << position << endmsg;
+      debug() << "Global slope    " << slope    << endmsg;
+    }
+    slope.SetX(slope.x()/slope.z());
+    slope.SetY(slope.y()/slope.z());
+    slope.SetZ(1.0);
+//     phi = atan(position.y()/position.x());
+//     if (isRight) phi += M_PI;
+    rFirst  = sqrt(position.x()*position.x() + position.y()*position.y());
+    trFirst = sqrt(slope.x()*slope.x() + slope.y()*slope.y());
+    double z0      = position.z() - rFirst/trFirst; // where r = 0.
+//================== new fix end =================================
+      
 
     if( maxZ > fabs(z0) ) {
       m_sTracks[iTrack]->setFlags(pTr2d->flag());
       m_sTracks[iTrack]->setType(LHCb::Track::Velo);
-      m_sTracks[iTrack]->firstState().setX(xFirst);
-      m_sTracks[iTrack]->firstState().setY(yFirst);
-      m_sTracks[iTrack]->firstState().setZ(zFirst);
-      m_sTracks[iTrack]->firstState().setTx(trFirst*cos(phi));
-      m_sTracks[iTrack]->firstState().setTy(trFirst*sin(phi));
+//       m_sTracks[iTrack]->firstState().setX(xFirst);
+//       m_sTracks[iTrack]->firstState().setY(yFirst);
+//       m_sTracks[iTrack]->firstState().setZ(zFirst);
+//       m_sTracks[iTrack]->firstState().setTx(trFirst*cos(phi));
+//       m_sTracks[iTrack]->firstState().setTy(trFirst*sin(phi));
+      m_sTracks[iTrack]->firstState().setX(position.x());
+      m_sTracks[iTrack]->firstState().setY(position.y());
+      m_sTracks[iTrack]->firstState().setZ(position.z());
+      m_sTracks[iTrack]->firstState().setTx(slope.x());
+      m_sTracks[iTrack]->firstState().setTy(slope.y());
 
       cov(0,0) = d2r0*cos(phi)*cos(phi);
       cov(1,1) = d2r0*sin(phi)*sin(phi);
@@ -308,36 +342,4 @@ StatusCode PatPV2DFit3D::finalize() {
   debug() << "==> Finalize" << endmsg;
 
   return GaudiHistoAlg::finalize();  // must be called after all other actions
-}
-
-//=============================================================================
-
-StatusCode PatPV2DFit3D::updateVelo() {
-
-  debug() << "updating Velo position" << endmsg;
-
-  //== Get Velo detector element, to get the R sector angle
-  DeVelo* velo = getDet<DeVelo>( DeVeloLocation::Default );
-
-  std::vector<double> dum( 8, 0. );
-  m_phiOfSector = dum;  // make it 8 words..
-
-  //== First R sensor
-  std::vector<DeVeloRType*>::const_iterator sensorRIt = velo->rSensorsBegin();
-
-  for (unsigned int izone = 0; izone<4; izone++) {
-    m_phiOfSector[izone] = 0.5*((*sensorRIt)->phiMinZone(izone)
-                                + (*sensorRIt)->phiMaxZone(izone) );
-    m_phiOfSector[izone+4] = m_phiOfSector[izone] + M_PI;
-  };
-  Gaudi::XYZPoint localZero(0.,0.,0.);
-  for (int iSens = 0; iSens < 2; iSens++){
-    int sensNo = iSens*40;
-    m_boxOffsetLeft[iSens]  = velo->rSensor(sensNo  )->veloHalfBoxToGlobal(localZero) - localZero;
-    m_boxOffsetRight[iSens] = velo->rSensor(sensNo+1)->veloHalfBoxToGlobal(localZero) - localZero;
-    m_zLeft[iSens]  = velo->rSensor(sensNo  )->z();
-    m_zRight[iSens] = velo->rSensor(sensNo+1)->z();
-    debug()<< "offset" << sensNo << " " << m_boxOffsetLeft[iSens] << " " << m_boxOffsetRight[iSens] << endmsg;
-  }
-  return StatusCode::SUCCESS;
 }

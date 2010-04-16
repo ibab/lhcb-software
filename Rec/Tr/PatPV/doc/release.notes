@@ -4,6 +4,9 @@
 ! Purpose     : Compute primary vertices
 !-----------------------------------------------------------------------------
 
+! 2010-04-16 - Piotr Morawski
+ - new method of transforming tracks to global coordinate system in PatPV2DFit3D
+
 !============================= PatPV v3r14 2010-03-19 ======================
 ! 2010-03-11 - Mariusz Witek
  - fix Initialize/Finalize misbalance in PVSeed3DOfflineTool
