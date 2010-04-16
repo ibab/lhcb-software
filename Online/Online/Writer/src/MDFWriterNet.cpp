@@ -517,47 +517,22 @@ void MDFWriterNet::closeFile(File *currFile)
   
   // log closing of file
   if(m_mq_available) {
-
-      char trgEventsCharString[256];
-      char statEventsCharString[512];
-
-      ret = sprintf(trgEventsCharString, "%d;%d;%d;%d;%d;%d;%d;%d",
-          trgEvents[0], trgEvents[1], trgEvents[2], trgEvents[3],
-          trgEvents[4], trgEvents[5], trgEvents[6], trgEvents[7]);
-      if(ret < 0 || (unsigned int) ret > sizeof(trgEventsCharString)) {
-        throw std::runtime_error("Could not format trigger counters correctly.");
-      } 
-      ret = sprintf(statEventsCharString, "PHYSIN:%d;MBIASIN:%d;LUMIIN:%d;BEAMGASIN:%d;RANDIN:%d;PHYSEX:%d;MBIASEX:%d;LUMIEX:%d;BEAMGASEX:%d;RANDEX:%d",   
-          statEvents[PHYSIN], statEvents[MBIASIN], statEvents[LUMIIN], statEvents[BEAMGASIN],
-          statEvents[RANDIN], statEvents[PHYSEX], statEvents[MBIASEX], statEvents[LUMIEX],
-          statEvents[BEAMGASEX], statEvents[RANDEX]);
-      if(ret < 0 || (unsigned int) ret > sizeof(statEventsCharString)) {
-        throw std::runtime_error("Could not format trigger counters correctly.");
-      }
-
- 
-
 //      size_t msg_size = snprintf(NULL, 0, "closefile%c%i%c%s",  DELIMITER, getpid(), DELIMITER, currFile->getMonitor()->m_name) + 1;
-      size_t msg_size = snprintf(NULL, 0, "closefile%c%i%c%s%c%s%zu%c%s%u%c%s%u%s%s%s%s",  
+      size_t msg_size = snprintf(NULL, 0, "closefile%c%i%c%s%c%s%zu%c%s%u%c%s%u",  
           DELIMITER, getpid(), 
           DELIMITER, currFile->getMonitor()->m_name, 
           DELIMITER, "bytesWritten=", currFile->getBytesWritten(), 
           DELIMITER, "events=", currFile->getEvents(), 
-          DELIMITER, "physEvents=", currFile->getPhysStat(),
-          DELIMITER, "trgEvents=", trgEventsCharString, 
-          DELIMITER, "statEvents=", statEventsCharString 
-        ) + 1; //XXX Change physEvents to physStat, see with Rainer
+          DELIMITER, "physEvents=", currFile->getPhysStat()) + 1; //XXX Change physEvents to physStat, see with Rainer
 
       char* msg = (char*) malloc(msg_size);
 //      snprintf(msg, msg_size, "closefile%c%i%c%s", DELIMITER, getpid(), DELIMITER, currFile->getMonitor()->m_name);
-      snprintf(msg, msg_size, "closefile%c%i%c%s%c%s%zu%c%s%u%c%s%u%s%s%s%s", 
+      snprintf(msg, msg_size, "closefile%c%i%c%s%c%s%zu%c%s%u%c%s%u", 
           DELIMITER, getpid(), 
           DELIMITER, currFile->getMonitor()->m_name, 
           DELIMITER, "bytesWritten=", currFile->getBytesWritten(), 
           DELIMITER, "events=", currFile->getEvents(), 
-          DELIMITER, "physEvents=", currFile->getPhysStat(),
-          DELIMITER, "trgEvents=", trgEventsCharString,
-          DELIMITER, "statEvents=", statEventsCharString); //XXX
+          DELIMITER, "physEvents=", currFile->getPhysStat()); //XXX
       if(mq_send(m_mq, msg, msg_size, 0) < 0) {
           *m_log << MSG::WARNING
                  << "Could not send message"
@@ -830,7 +805,7 @@ inline void MDFWriterNet::countRouteStat(MDFHeader *mHeader, size_t) {
   if(isBeamGas) m_currFile->incBeamGasEventsIn();
 
 
-  if(!isPhys && !isMBias && !isLumi && !isBeamGas) m_currFile->incRandEventsEx();
+  if(!isPhys && !isMBias && !isLumi && !isBeamGas) m_currFile->incRandEventsEx(); 
   if(isPhys && !isMBias && !isLumi && !isBeamGas) m_currFile->incPhysEventsEx();
   if(!isPhys && isMBias && !isLumi && !isBeamGas) m_currFile->incMBiasEventsEx();
   if(!isPhys && !isMBias && isLumi && !isBeamGas) m_currFile->incLumiEventsEx();
