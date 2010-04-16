@@ -17,7 +17,7 @@ from StrippingSelections.Streams import allStreams
 from StrippingSelections.Streams import StreamBhadron
 from StrippingConf.Configuration import StrippingConf
 
-sc = StrippingConf( Streams = [ StreamBhadron.stream ] )
+sc = StrippingConf( Streams = allStreams )
 
 print sc
 

@@ -1,6 +1,6 @@
 __author__ = 'Patrick Koppenburg, Rob Lambert, Mitesh Patel'
 __date__ = '21/01/2009'
-__version__ = '$Revision: 1.16 $'
+__version__ = '$Revision: 1.17 $'
 
 """
 Bd->K*MuMu selections 
@@ -38,6 +38,8 @@ class StrippingBd2KstarMuMuConf(LHCbConfigurableUser):
                 ,  'SimpleDiMuonPT'     : 500        # MeV
                 ,  'SimpleBdFDChi2'     : 100        # adimentional1
                    }
+                   
+    _line_for_nominal_high = None
 
 ####################################################################################################
 # Mitesh's selections. Stripping workshop December 2009
@@ -390,12 +392,17 @@ class StrippingBd2KstarMuMuConf(LHCbConfigurableUser):
         """
         The '10 Hz' line
         """
-        from StrippingConf.StrippingLine import StrippingLine, StrippingMember       
-        return StrippingLine('Bd2KstarMuMu_ForNominal_High'
+        
+        if StrippingBd2KstarMuMuConf._line_for_nominal_high == None :
+        
+            from StrippingConf.StrippingLine import StrippingLine, StrippingMember       
+	    StrippingBd2KstarMuMuConf._line_for_nominal_high = StrippingLine('Bd2KstarMuMu_ForNominal_High'
                              , prescale = 1
                              , algos = [ self._Strip_loose_Bd2KstarMuMu(),
                                          self._ForNominal_Bd2KstarMuMu_High() ]
                              )
+
+        return StrippingBd2KstarMuMuConf._line_for_nominal_high
 
     def line_for_nominal_med(self):
         """
