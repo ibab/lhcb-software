@@ -1,4 +1,4 @@
-// $Id: MCParticleLinkerMaker.cpp,v 1.1 2006-06-22 12:38:48 jpalac Exp $
+// $Id: MCParticleLinkerMaker.cpp,v 1.2 2010-04-16 14:17:32 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -60,17 +60,16 @@ StatusCode MCParticleLinkerMaker::execute() {
 
   // code goes here  
 
-  LHCb::Particles*     particles = get<LHCb::Particles>(m_inputParticle);
-  //  LHCb::MCParticles* mcparticles = get<LHCb::MCParticles>(m_inputParticle);
+  const LHCb::Particle::Range particles = get<LHCb::Particle::Range>(m_inputParticle);
 
-  if ( !mcparticles || (0 == mcparticles->size()) ||!particles || (0 == particles->size()) ){
+  if ( (!mcparticles || mcparticles->empty()) || particles.empty() ) {
     debug() << "    No MCParticles/Particles retrieved from" << m_inputMC << "/" <<m_inputParticle<< endmsg;
     return StatusCode::SUCCESS;
   }
   LinkerWithKey<LHCb::MCParticle,  LHCb::Particle>  myLink(evtSvc(), msgSvc(),m_inputParticle);
 
   bool linked;
-  for ( LHCb::Particles::const_iterator ip = particles->begin(); ip != particles->end() ; ++ip ){
+  for ( LHCb::Particle::Range::const_iterator ip = particles.begin(); ip != particles.end() ; ++ip ){
     linked=false;
     if((*ip)->hasKey()) {
       for ( LHCb::MCParticle::Container::const_iterator imc = mcparticles->begin() ;

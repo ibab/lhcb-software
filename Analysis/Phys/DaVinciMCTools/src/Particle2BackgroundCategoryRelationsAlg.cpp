@@ -86,18 +86,18 @@ StatusCode Particle2BackgroundCategoryRelationsAlg::backCategoriseParticles(cons
     return Error ( "No particle location provided" ) ;
   }
   //Get the input particles
-  LHCb::Particle::Container* myParticles = get<LHCb::Particle::Container>(location);
+  const LHCb::Particle::Range myParticles = get<LHCb::Particle::Range>(location);
   //Check that this returns something 
-  if (!myParticles) {
+  if (myParticles.empty()) {
     return Error ( "No particles at the location provided" );
   }
 
   //Make the relations table
   LHCb::Relation1D<LHCb::Particle, int>* catRelations =
-    new LHCb::Relation1D<LHCb::Particle, int>( myParticles->size() );
+    new LHCb::Relation1D<LHCb::Particle, int>( myParticles.size() );
 
-  for(LHCb::Particle::Container::const_iterator iP = myParticles->begin(); 
-      iP != myParticles->end(); ++iP ){
+  for(LHCb::Particle::Range::const_iterator iP = myParticles.begin(); 
+      iP != myParticles.end(); ++iP ){
     int thisCat = static_cast<int>(m_bkg->category(*iP));
     catRelations->i_relate(*iP,thisCat);
   }
