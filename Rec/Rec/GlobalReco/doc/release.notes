@@ -4,6 +4,9 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+! 2010-04-15 - Olivier Deschamps
+ - ChargedProtoParticleAddEcalInfo : fix (old) bug in CaloSpd method (same as for neutralProtoP but harmless here)
+
 ! 2010-04-14 - Olivier Deschamps
  - NeutralProtoPALg : fix (old) bug in CaloSpd method
 
