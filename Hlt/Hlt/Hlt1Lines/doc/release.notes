@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.162 2010-04-15 14:39:56 albrecht Exp $
+! $Id: release.notes,v 1.163 2010-04-16 04:20:20 gligorov Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
@@ -9,6 +9,11 @@
 ! for the production. Commit them AS WELL in branch production200912. 
 !
 !-----------------------------------------------------------------------------
+
+! 2010-04-16 - V. Gligorov
+ - Break up hadron confirmation into pre-ipcut, ipcut, and post-ipcut
+   stages in order to remove the duplication of the ip cuts between the
+   "confirmation" stage and the "single/dihad" stages. 
 
 ! 2010-04-15 - Johannes Albrecht
  - configure forward and seeding centrally in one file, 
