@@ -1,4 +1,4 @@
-// $Id: SpotLight.cpp,v 1.2 2009-01-12 13:49:15 pkoppenb Exp $
+// $Id: SpotLight.cpp,v 1.3 2010-04-16 14:26:39 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -163,22 +163,22 @@ LHCb::Particle::ConstVector  SpotLight::headCandidates() const {
     //    if (msgLevel(MSG::VERBOSE)) verbose() << "Looking for " << location << endmsg ;
       if ( location != (*iselRes)->location()) continue ;
       // now do the work
-      if (!exist<LHCb::Particles>(location+"/Particles")) {
+      if (!exist<LHCb::Particle::Range>(location+"/Particles")) {
         Warning("No particles at "+location,StatusCode::FAILURE,1);
         continue ;
       }
-      LHCb::Particle::Container* candidates = get<LHCb::Particles>(location+"/Particles") ;      
-      if ((msgLevel(MSG::VERBOSE)) && (!candidates->empty())) verbose() << "Cleaning " 
-                                                                        << candidates->size() << " candidates in " 
-                                                                        << location << endmsg ;
-      for ( LHCb::Particle::Container::const_iterator i = candidates->begin() ;
-            i != candidates->end() ; ++i){
+      const LHCb::Particle::Range candidates = get<LHCb::Particle::Range>(location+"/Particles") ;      
+      if ((msgLevel(MSG::VERBOSE)) && (!candidates.empty())) verbose() << "Cleaning " 
+                                                                       << candidates.size() << " candidates in " 
+                                                                       << location << endmsg ;
+      for ( LHCb::Particle::Range::const_iterator i = candidates.begin() ;
+            i != candidates.end() ; ++i){
         if (msgLevel(MSG::VERBOSE)) m_print->printTree(*i);
         // check if the candidate is a daughter of another one. In that case ignore. Need for some LoKi algos
         // @todo remove that once there are no such cases anymore.
         bool isdaut = false ;
-        for ( LHCb::Particle::Container::const_iterator j = candidates->begin() ;
-              j != candidates->end() ; ++j){
+        for ( LHCb::Particle::Range::const_iterator j = candidates.begin() ;
+              j != candidates.end() ; ++j){
           for ( LHCb::Particle::ConstVector::const_iterator k = (*j)->daughtersVector().begin() ;
                 k != (*j)->daughtersVector().end() ; ++k){
             if ( (*k)==(*i)) {
