@@ -1,9 +1,13 @@
-!$Id: release.notes,v 1.54 2010-04-15 11:35:18 poluekt Exp $
+!$Id: release.notes,v 1.55 2010-04-16 06:39:27 poluekt Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/StrippingConf
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
+
+! 2010-04-16 - Anton Poluektov
+ - Warning is printed if the StrippingLine with duplicate name is created
+ - Fixed printout of StrippingAlg from python (Filter sequence was not printed)
 
 ! 2010-04-15 - Anton Poluektov 
  - Fixed typo in line cloning with modification of GaudiSequencer slots ('keq'->'key')

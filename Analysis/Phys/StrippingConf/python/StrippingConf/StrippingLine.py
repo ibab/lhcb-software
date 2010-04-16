@@ -74,6 +74,12 @@ def _add_to_stripping_lines_( line ) :
     """
     Add the line into the local storage of created Hlt1Lines 
     """
+    
+    for i in _stripping_lines__ : 
+	if i.name() == line.name() : 
+	    log.warning("Created StrippingLine with duplicate name "+line.name())
+	    break
+    
     _stripping_lines__.append ( line ) 
 
 def strippingLines () :
@@ -453,6 +459,10 @@ class StrippingLine(object):
 		    _flattenedMembers += [ i ]
 	    _members = _flattenedMembers
 	    if not _foundSequencer : break
+	    
+	print "FilterMembers for line %s : " % self.name()
+	print _members
+	    
 	return _members
 
     def subname   ( self ) :

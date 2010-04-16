@@ -239,7 +239,7 @@ def __enroll__ ( self       ,   ## the object
         for _m in getattr(self,'Members') : line += __enroll__ ( _m , level + 1 , lst ) 
 
     if type(self) is StrippingAlg :
-        for i in [ 'Prescale','ODIN','L0DU','HLT','Filter','Postscale' ] :
+        for i in [ 'Prescale','ODIN','L0DU','HLT','Filter1','Postscale' ] :
             if hasattr(self,i) : line += __enroll__( getattr(self,i), level + 1, lst )
 
     if type(self) is StrippingConf : 
