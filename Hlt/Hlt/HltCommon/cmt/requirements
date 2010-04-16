@@ -27,6 +27,8 @@ use TrackInterfaces     v*    Tr
 
 use Boost        v*   LCG_Interfaces
 
+use LoKi                v*    Phys
+
 #### for CORAL access
 use           DetCond             v*      Det
 
