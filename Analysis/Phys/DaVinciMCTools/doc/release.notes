@@ -1,8 +1,14 @@
-! $Id: release.notes,v 1.291 2010-03-08 11:25:29 jpalac Exp $
+! $Id: release.notes,v 1.292 2010-04-16 14:17:57 jpalac Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
 !=============================================================================
+
+! 2010-04-16 - Juan Palacios
+ - src/MCParticleLinkerMaker.cpp, src/Particle2BackgroundCategoryRelationsAlg.cpp
+  . Use Particle::Range instead of Particle::Container* for inputs.
+ - cmt/requirements
+  . Increase version to v9r25p2
 
 !========================== DaVinciMCTools v9r25p1 2010-03-08 ================
 
