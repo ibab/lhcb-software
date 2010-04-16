@@ -1,5 +1,5 @@
 ##############################################################################
-# $Id: MuIDMonitor.py,v 1.2 2009-11-24 13:21:28 asarti Exp $
+# $Id: MuIDMonitor.py,v 1.3 2010-04-16 12:56:11 asarti Exp $
 #
 # Author Alessio Sarti <Alessio.Sarti@lnf.infn.it>
 #
@@ -198,3 +198,12 @@ muonIDm2BSeq_Lam.Members += [ MuIDLambdaPlot ]
 
 DaVinci().MoniSequence += [ muonIDm2BSeq_Lam ] # Muon ID monitoring Lambda sequence
 DaVinci().MoniSequence += [ muonIDm2BSeq_Jps ] # Muon ID monitoring Lambda sequence
+
+def checkDST():
+    inputType = DaVinci().getProp( "InputType" ).upper()
+    print inputType
+    if ( inputType == "DST") :
+        MuIDJpsiPlot.HitInFoi = 1
+        MuIDLambdaPlot.HitInFoi = 1
+
+appendPostConfigAction(checkDST)

@@ -6,6 +6,7 @@
 #include <string>
 #include <map>
 #include <vector>
+#include "boost/assign/list_of.hpp"
 
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"

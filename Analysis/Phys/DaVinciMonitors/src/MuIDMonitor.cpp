@@ -46,6 +46,8 @@ MuIDMonitor::MuIDMonitor( const std::string& name,
                                   ISvcLocator* pSvcLocator)
   : DVAlgorithm ( name , pSvcLocator ) {
 
+  using namespace boost::assign;
+
   // Destination of MuonPID
   declareProperty("MuonTrackLocation",
                   m_MuonTracksPath = LHCb::TrackLocation::Muon);
@@ -63,23 +65,23 @@ MuIDMonitor::MuIDMonitor( const std::string& name,
   declareProperty( "PreSelMomentum", m_PreSelMomentum = 3000.0);
 
   // Different depths of stations considered in different momentum ranges
-  declareProperty( "MomentumCuts", m_MomentumCuts );
+  declareProperty( "MomentumCuts", m_MomentumCuts = list_of  (6000.)   (10000.)  );
 
   // function that defines the field of interest size
   // here momentum is scaled to Gaudi::Units::GeV....
   // new formula: p(1) + p(2)*momentum + p(3)*exp(-p(4)*momentum)
 
-  declareProperty( "XFOIParameter1", m_xfoiParam1 );
-  declareProperty( "XFOIParameter2", m_xfoiParam2 );
-  declareProperty( "XFOIParameter3", m_xfoiParam3 );
-  declareProperty( "YFOIParameter1", m_yfoiParam1 );
-  declareProperty( "YFOIParameter2", m_yfoiParam2 );
-  declareProperty( "YFOIParameter3", m_yfoiParam3 );
+  declareProperty( "XFOIParameter1", m_xfoiParam1 = list_of(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.) );
+  declareProperty( "XFOIParameter2", m_xfoiParam2 = list_of(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.) );
+  declareProperty( "XFOIParameter3", m_xfoiParam3 = list_of(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.) );
+  declareProperty( "YFOIParameter1", m_yfoiParam1 = list_of(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.) );
+  declareProperty( "YFOIParameter2", m_yfoiParam2 = list_of(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.) );
+  declareProperty( "YFOIParameter3", m_yfoiParam3 = list_of(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.) );
 
   declareProperty("FOIfactor",m_foifactor = 1.);
 
-  declareProperty("distMuon",m_distMuon);
-  declareProperty("distPion",m_distPion);
+  declareProperty("distMuon",m_distMuon = list_of(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.) );
+  declareProperty("distPion",m_distPion = list_of(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.)(1.) );
 
 }
 

@@ -3,6 +3,10 @@
 ! Responsible : Patrick Koppenburg
 ! Purpose     : Monitoring algorithms after reconstruction
 !-----------------------------------------------------------------------------
+! 2010-04-16 - Alessio Sarti
+ - Re-enabled the MuIDMonitor.py [since the bug is understood and fixed]
+   This monitor can be run with no problem on both DSTs and rDSTs!
+ - Properly initialized all the properties in the MuIDMonitor.cpp code
 
 ! 2010-04-12 - Chris Jones
  - Update the RichPlotTool to remove the requirement that the RichPID object
