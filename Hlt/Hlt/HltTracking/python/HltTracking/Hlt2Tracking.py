@@ -11,7 +11,7 @@
 ##
 # =============================================================================
 __author__  = "V. Gligorov vladimir.gligorov@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.10 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.11 $"
 # =============================================================================
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
@@ -998,21 +998,34 @@ class Hlt2Tracking(LHCbConfigurableUser):
         from Configurables	import PatForward
         from Configurables      import PatForwardTool
     	from HltLine.HltLine	import bindMembers
-    
+#        from Hlt1Lines.HltConfigurePR import ConfiguredPR
+        
         forwardTrackOutputLocation = _baseTrackLocation(self.getProp("Prefix"),Hlt2ForwardTracksName) 
     
         recoForward		   = PatForward( self.getProp("Prefix")+'RecoForward'
                            		, InputTracksName  = self.__hlt2VeloTracking().outputSelection() 
                             		, OutputTracksName = forwardTrackOutputLocation )
 
-        PatForwardTool( MinMomentum = 1000., MinPt = 1000., AddTTClusterName = "" )
+
+        #JA: TODO: put something in like: if(early data):
+        #recoForward.addTool(ConfiguredPR( "Forward" ))
+
+#        PatForwardTool( MinMomentum = 1000., MinPt = 1000., AddTTClusterName = "" )
+
         recoForward.addTool(PatForwardTool, name='PatForwardTool')
         recoForward.PatForwardTool.AddTTClusterName = "PatAddTTCoord"
-
+       
         if self.getProp("EarlyDataTracking") :
-            # Do something special in case of early data
-            # For the moment just a dummy setting
-            dummy = 0
+            # configure pattern reco with early data flags
+            # first forward algorithm
+            recoForward.PatForwardTool.MinXPlanes = 4
+            recoForward.PatForwardTool.MinPlanes = 8
+            recoForward.PatForwardTool.MaxSpreadX = 1.5
+            recoForward.PatForwardTool.MaxSpreadY = 3.0
+            recoForward.PatForwardTool.MaxChi2 = 40
+            recoForward.PatForwardTool.MaxChi2Track = 40
+            recoForward.PatForwardTool.MinHits = 12
+            recoForward.PatForwardTool.MinOTHits = 14
 
         # Build the bindMembers        
         bm_name         = self.getProp("Prefix")+"ForwardTracking"
@@ -1041,15 +1054,26 @@ class Hlt2Tracking(LHCbConfigurableUser):
         #### Seeding 
         recoSeeding = PatSeeding(self.getProp("Prefix")+'Seeding', OutputTracksName = seedTrackOutputLocation)
         recoSeeding.addTool(PatSeedingTool, name="PatSeedingTool")
+
+        #JA: TODO: put something in like: if(early data):
+        #recoSeeding.addTool(ConfiguredPR( "PatSeeding" ))
+
         recoSeeding.PatSeedingTool.UseForward		= True
         recoSeeding.PatSeedingTool.ForwardCloneMergeSeg = True
         recoSeeding.PatSeedingTool.InputTracksName	= fwdtracks.outputSelection()
   
         if self.getProp("EarlyDataTracking") :
             # Do something special in case of early data
-            # For the moment just a dummy setting
-            dummy = 0
- 
+            recoSeeding.PatSeedingTool.OTNHitsLowThresh=12
+            recoSeeding.PatSeedingTool.MinTotalPlanes = 7
+            recoSeeding.PatSeedingTool.MaxMisses = 2
+            recoSeeding.PatSeedingTool.MaxTrackChi2LowMult=10
+            recoSeeding.PatSeedingTool.MaxFinalTrackChi2=20
+            recoSeeding.PatSeedingTool.MaxFinalChi2=30
+            recoSeeding.PatSeedingTool.MaxTrackChi2=40
+            recoSeeding.PatSeedingTool.MaxChi2HitIT=10
+            recoSeeding.PatSeedingTool.MaxChi2HitOT=30
+         
         # Build the bindMembers        
         bm_name         = self.getProp("Prefix")+"SeedTracking" 
         bm_members      = self.__hlt2TrackerDecoding().members() + [recoSeeding]
@@ -1110,8 +1134,15 @@ class Hlt2Tracking(LHCbConfigurableUser):
   
         if self.getProp("EarlyDataTracking") :
             # Do something special in case of early data
-            # For the moment just a dummy setting
-            dummy = 0
+            PatDownstream.xPredTol2 = 20.0
+            PatDownstream.TolMatch = 1.5
+            PatDownstream.TolUV = 2.0
+            PatDownstream.maxWindowSize = 10.0
+            PatDownstream.MaxChisq  = 20.0
+            PatDownstream.MaxDistance = 0.3
+            PatDownstream.deltaP = 2.0
+            PatDownstream.errorZMagnet = 30.0
+
  
         # Build the bindMembers        
         bm_name         = self.getProp("Prefix")+"DownstreamTracking" 
