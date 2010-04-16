@@ -1,7 +1,7 @@
 """
 High level configuration tools for DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.99 2010-04-16 13:20:46 jpalac Exp $"
+__version__ = "$Id: Configuration.py,v 1.100 2010-04-16 13:54:09 jpalac Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -117,7 +117,7 @@ class DaVinci(LHCbConfigurableUser) :
             if not self.getProp("Simulation"):
                 log.warning("Setting Simulation = True for "+dataType)
                 self.setProp("Simulation",True)
-        if InputType == 'MDST' and self.getProp('Lumi') :
+        if inputType == 'MDST' and self.getProp('Lumi') :
             log.warning('Lumi = True not valid for InputType MDST. Setting Lumi = False')
             self.setProp('Lumi', False )
         if ( self.getProp("Simulation") & ( inputType != "MDF" ) & (inputType != "DIGI") & (inputType != "MDST") ):
