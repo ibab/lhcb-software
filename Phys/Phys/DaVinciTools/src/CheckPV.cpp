@@ -1,4 +1,4 @@
-// $Id: CheckPV.cpp,v 1.19 2009-02-04 16:57:19 pkoppenb Exp $
+// $Id: CheckPV.cpp,v 1.20 2010-04-16 09:13:28 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -95,8 +95,8 @@ StatusCode CheckPV::execute() {
     if ( m_maxPV >= 0 ){              // some maximum?
       ok = (ok && ( n <= m_maxPV ));  // less than m_maxPV
     }
-    counter("Events")+=ok;
   }
+  counter("Events")+=ok;
   if (msgLevel(MSG::DEBUG)){
     if (ok) debug() << "Event accepted because there are " << n << " primary vertices." << endreq ;
     else    debug() << "Event rejected because there are " << n << " primary vertices." << endreq ; 

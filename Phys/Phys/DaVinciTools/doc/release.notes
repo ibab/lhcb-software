@@ -1,9 +1,11 @@
-! $Id: release.notes,v 1.534 2010-04-05 17:17:44 graven Exp $
+! $Id: release.notes,v 1.535 2010-04-16 09:13:28 pkoppenb Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
 
+! 2010-04-16 - Patrick Koppenburg
+ - Move counter in CheckPV.
 
 !========================== DaVinciTools v21r0p1 2010-04-05 ===================
 ! 2010-04-05 - Vanya Belyaev
