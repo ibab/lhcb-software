@@ -73,8 +73,8 @@ L0DUFromRawAlgName   = "L0DUFromRaw"
 ## L0Calo algorithm
 def decodeL0Calo():
     """ Returns the algorithm to decode the L0Calo data."""
-    from Configurables import L0CaloFromRawAlg
-    return L0CaloFromRawAlg(L0CaloFromRawAlgName)
+    from Configurables import L0CaloCandidatesFromRaw 
+    return L0CaloCandidatesFromRaw(L0CaloFromRawAlgName)
 
 ## L0Calo sequence
 def decodeL0CaloSeq():

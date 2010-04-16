@@ -1,7 +1,12 @@
-! $Id: release.notes,v 1.203 2010-04-15 15:53:54 jucogan Exp $
+! $Id: release.notes,v 1.204 2010-04-16 12:41:23 jucogan Exp $
 ! Package		: L0/L0DU
 ! Package Manager : Olivier Deschamps
 !--------------------------------------------------------------------------
+
+! 2010-04-16 - Julien Cogan
+ - Fix bug (wrong algorithm name for L0CaloDecoding) 
+   - affecting L0Conf().DecodeL0=True 
+   - introduced in version v10r2
 
 ! 2010-04-15 - Julien Cogan
  - L0Conf: 
