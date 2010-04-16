@@ -5,6 +5,11 @@
 !               of events with exotic displaced vertices
 !-----------------------------------------------------------------------------
 
+! 2010-04-16 - Juan Palacios
+ - src/DisplVertices.cpp, src/RecVertices2Particles.cpp
+  . Use Track::Range instead of Track::Container for input.
+  . To-do: do the same for Particles.
+
 ! 2010-04-14 - Neal Gauvin
  - Comfort improvement in RecVertices2Particles and DisplVertices
 
