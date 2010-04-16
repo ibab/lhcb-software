@@ -57,22 +57,23 @@ void RPCComm::confirmFile(char *fileName,
   ret = sprintf(trgEventsCharString, "%d;%d;%d;%d;%d;%d;%d;%d", 
       trgEvents[0], trgEvents[1], trgEvents[2], trgEvents[3], 
       trgEvents[4], trgEvents[5], trgEvents[6], trgEvents[7]);
-  if(ret < 0 || ret > sizeof(trgEventsCharString)) {
+  if(ret < 0 || (unsigned int) ret > sizeof(trgEventsCharString)) {
     throw std::runtime_error("Could not format trigger counters correctly.");
   } 
   ret = sprintf(statEventsCharString, "PHYSIN:%d;MBIASIN:%d;LUMIIN:%d;BEAMGASIN:%d;RANDIN:%d;PHYSEX:%d;MBIASEX:%d;LUMIEX:%d;BEAMGASEX:%d;RANDEX:%d", 
       statEvents[PHYSIN], statEvents[MBIASIN], statEvents[LUMIIN], statEvents[BEAMGASIN], 
-      statEvents[RANDIN], statEvents[PHYSEX], statEvents[MBIASEX], statEvents[LUMIEX],
+      statEvents[RANDEX], statEvents[PHYSEX], statEvents[MBIASEX], statEvents[LUMIEX],
       statEvents[BEAMGASEX], statEvents[RANDEX]);
-  if(ret < 0 || ret > sizeof(statEventsCharString)) {
+  if(ret < 0 || (unsigned int) ret > sizeof(statEventsCharString)) {
     throw std::runtime_error("Could not format stat counters correctly.");
   } 
+  /* XXX Tricky here, send RANDEX value for RANDIN, as RANDIN should be greater or equal to RANDEX and nothing is counted in it */
 
   /* Now we fill up templates. */
   ret = snprintf(xmlData, sizeof(xmlData), CONFIRM_TEMPLATE,
            fileName, adler32String, md5CharString, size, events, physEvents, 
            trgEventsCharString, statEventsCharString);
-  if(ret < 0 || ret > sizeof(xmlData)) {
+  if(ret < 0 || (unsigned int) ret > sizeof(xmlData)) {
     throw std::runtime_error("Could not format rpc call correctly.");
   } 
 
