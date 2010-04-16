@@ -987,13 +987,9 @@ void DisplVertices::StudyEoverNbTrk(){
   int nbdown = 0;
 
   //Get tracks
-  Tracks* gettracks = get<Tracks>( TrackLocation::Default );
-  debug() << "There are " << gettracks->size() << " tracks" << endmsg ;
-  Track::ConstVector tracks;
-  for( Tracks::const_iterator i = gettracks->begin();
-	i != gettracks->end();++i) {
-    tracks.push_back( *i );
-  }
+  const Track::Range gettracks = get<Track::Range>( TrackLocation::Default );
+  debug() << "There are " << gettracks.size() << " tracks" << endmsg ;
+  Track::ConstVector tracks(gettracks.begin(), gettracks.end());
 
   // Retrieve Primary vertices and remove tracks that contributed
   if( false ){
@@ -2331,12 +2327,12 @@ StatusCode  DisplVertices::SaveGEC( Tuple & tuple,
   double sumXYTrackfirstStates = 0.;
 
   //Get forward tracks
-  Tracks* inputTracks = get<Tracks>(TrackLocation::Default);
+  Track::Range inputTracks = get<Track::Range>(TrackLocation::Default);
 
-  for(Track::Container::const_iterator itr = inputTracks->begin(); 
-      inputTracks->end() != itr; itr++) {
+  for(Track::Range::const_iterator itr = inputTracks.begin(); 
+      inputTracks.end() != itr; itr++) {
     const Track* trk = *itr;
-    double xyfState = sqrt(trk->firstState().x() * trk->firstState().x() +
+    const double xyfState = sqrt(trk->firstState().x() * trk->firstState().x() +
 			   trk->firstState().y() * trk->firstState().y());
     sumPtTracks += trk->pt();
     sumXYTrackfirstStates += xyfState;
@@ -2344,7 +2340,7 @@ StatusCode  DisplVertices::SaveGEC( Tuple & tuple,
 
   //Find the upstream PV
   const RecVertex::Container* primVertices = this->primaryVertices();
-  if((primVertices->size() == 0) && inputTracks->size() == 0)
+  if((primVertices->size() == 0) && inputTracks.size() == 0)
     return StatusCode::FAILURE; 
   vector<const RecVertex*> primVrtcs;
   for( RecVertex::Container::const_iterator 

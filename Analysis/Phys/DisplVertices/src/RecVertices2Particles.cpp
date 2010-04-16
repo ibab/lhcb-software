@@ -347,14 +347,14 @@ void RecVertices2Particles::GetRecVertices( RecVertex::ConstVector & RV )
   vector<string>::iterator itName;
   for( itName = m_RVLocation.begin(); itName != m_RVLocation.end();
        ++itName ) {
-    RecVertices* tRV = get<RecVertices>( *itName );
-    if(!tRV) {
+    const RecVertex::Range tRV = get<RecVertex::Range>( *itName );
+    if(tRV.empty()) {
       warning() << "No reconstructed vertices found at location: " 
                 << *itName << endmsg;
       continue;
     }
-    RecVertices::const_iterator i = tRV->begin();
-    for( ; i != tRV->end(); ++i ) RV.push_back( *i );
+    RecVertex::Range::const_iterator i = tRV.begin();
+    for( ; i != tRV.end(); ++i ) RV.push_back( *i );
   }
   unsigned int size = RV.size();
   if( msgLevel(MSG::DEBUG) )
@@ -1029,11 +1029,11 @@ void RecVertices2Particles::PrintTrackandParticles(){
 
   //TrackLocation::Default = Rec/Track/Best 
   //(Upstream,Long,Ttrack,Downstream, Velo)
-  Tracks* BestTrks = get<Tracks>( TrackLocation::Default );
+  const Track::Range BestTrks = get<Track::Range>( TrackLocation::Default );
   debug()<<"Dumping "<< TrackLocation::Default <<" Track content, size "
-	 << BestTrks->size() <<endmsg;
-  for(Track::Container::const_iterator itr = BestTrks->begin(); 
-      BestTrks->end() != itr; ++itr) {
+	 << BestTrks.size() <<endmsg;
+  for(Track::Range::const_iterator itr = BestTrks.begin(); 
+      BestTrks.end() != itr; ++itr) {
     const Track* trk = *itr;
     string s = "False !";
     if ( trk->checkFlag( Track::Backward ) ) s = "True !";
