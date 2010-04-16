@@ -1,4 +1,4 @@
-// $Id: Destroyer.cpp,v 1.3 2010-02-19 12:03:13 ibelyaev Exp $
+// $Id: Destroyer.cpp,v 1.4 2010-04-16 15:30:25 jpalac Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -206,11 +206,11 @@ StatusCode Kali::Destroyer::execute ()
   for ( Locations::const_iterator iparticle = m_particles.begin() ; 
         m_particles.end() != iparticle ; ++iparticle ) 
   {
-    if ( exist<LHCb::Particle::Container> ( *iparticle ) ) 
+    if ( exist<LHCb::Particle::Range> ( *iparticle ) ) 
     {
-      const LHCb::Particle::Container* p = 
-        get<LHCb::Particle::Container> ( *iparticle ) ;
-      particles.insert ( particles.end() , p->begin() , p->end() ) ;
+      const LHCb::Particle::Range p = 
+        get<LHCb::Particle::Range> ( *iparticle ) ;
+      particles.insert ( particles.end() , p.begin() , p.end() ) ;
     }
     else { Warning ( "Invalid Location for Particles: " + (*iparticle) , 
                      StatusCode::SUCCESS ) ; }
