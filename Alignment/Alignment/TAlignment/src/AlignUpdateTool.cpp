@@ -44,7 +44,7 @@ namespace Al
     void postCondition(AlVec& dChi2dAlpha, AlSymMat& d2Chi2dAlpha2, const AlVec& scale) const ;
     void getAlignmentConstants(const Elements& elements, AlignConstants& alignConstants) const ;
     void fillIterProfile( const HistoID& id,const std::string& title,size_t numiter,size_t iter,double val, double err=0) const ;
-    void addDaughterDerivatives(Al::Equations& equations) const ;
+    StatusCode addDaughterDerivatives(Al::Equations& equations) const ;
     void dumpMostImportantDofs(const Elements& elements,const Al::Equations& equations,std::ostream& logmessage) const ;
 
   private:
@@ -213,7 +213,7 @@ namespace Al
     h1->SetBinError(iter+1, error);
   }
 
-  void AlignUpdateTool::addDaughterDerivatives(Al::Equations& equations) const
+  StatusCode AlignUpdateTool::addDaughterDerivatives(Al::Equations& equations) const
   {
     // Propagate information accumulated for daughters back to
     // parents.
@@ -246,6 +246,10 @@ namespace Al
 	  int ierr ;
 	  Gaudi::Matrix6x6 totalJacobian = parentJacobian * 
 	    ROOT::Math::Transpose( (*idau)->jacobian().Inverse(ierr)) ;
+	  if( ierr ) {
+	    error() << "Inversion error in AlignUpdateTool::addDaughterDerivatives. Failure." << endreq ;
+	    return StatusCode::FAILURE ;
+	  }
 	  
 	  // 2. add everything from the daughter, except for its
 	  // correlations: those we'll do below all at once.
@@ -324,6 +328,7 @@ namespace Al
 	  }
 	elementdata.m_d2Chi2DAlphaDBeta = keepelements ;
       }
+    return StatusCode::SUCCESS ;
   }
   
   StatusCode AlignUpdateTool::process( const Al::Equations& constequations,
@@ -391,8 +396,9 @@ namespace Al
     // if there are mother-daughter relations, the information from
     // the daugters must be transformed to the mothers. This is kind
     // of tricky. it should also be done only once!
-    addDaughterDerivatives( equations ) ;
-    
+    info() << "Adding daughter derivatives" << endreq ;
+    sc = addDaughterDerivatives( equations ) ;
+    if( !sc.isSuccess() ) return sc ;
 
     if (printDebug()) { 
       size_t index(0) ;
@@ -407,7 +413,9 @@ namespace Al
     }
     
     // add the survey constraints
+    info() << "Adding survey constraints. " << endreq ;
     LHCb::ChiSquare surveychisq = m_chisqconstrainttool->addConstraints(elements,equations,logmessage) ;
+    info() << "End of adding survey constraints. " << endreq ;
 
     // Create the dof mask and a map from AlignableElements to an
     // offset. The offsets are initialized with '-1', which signals 'not
@@ -486,19 +494,27 @@ namespace Al
       AlVec    scale(halfD2Chi2dX2.size()) ;
       AlSymMat covmatrix = halfD2Chi2dX2 ;
       AlVec    solution  = halfDChi2dX ;
-      if (m_usePreconditioning) preCondition(elements,equations,solution,covmatrix, scale) ;
+      if (m_usePreconditioning) {
+	info() << "Applying pre-conditioning" << endreq ;
+	preCondition(elements,equations,solution,covmatrix, scale) ;
+      }
+      info() << "Calling solver tool" << endreq ;
       bool solved = m_matrixSolverTool->compute(covmatrix, solution);
-      if (m_usePreconditioning) postCondition(solution,covmatrix, scale) ;
+      if (m_usePreconditioning) {
+	info() << "Applying post-conditioning" << endreq ;
+	postCondition(solution,covmatrix, scale) ;
+      }
       
       if (solved) {
+	info() << "computing delta-chi2" << endreq ;
 	double deltaChi2 = solution * halfDChi2dX ; //somewhere we have been a bit sloppy with two minus signs!
 	if( deltaChi2 < 0 ) {
-	  error() << "Serious problem in update: delta-chi2 is negative: " << deltaChi2 << std::endl
-		  << "Will recopute solution without scaling to see what that does! " << endreq ;
-	  covmatrix = halfD2Chi2dX2 ;
-	  solution  = halfDChi2dX ;
-	  solved = m_matrixSolverTool->compute(covmatrix, solution);
-	  deltaChi2 = solution * halfDChi2dX ;
+	  error() << "Serious problem in update: delta-chi2 is negative: " << deltaChi2 << endreq ;
+	  //<< "Will recopute solution without scaling to see what that does! " << endreq ;
+	  //covmatrix = halfD2Chi2dX2 ;
+	  //solution  = halfDChi2dX ;
+	  //solved = m_matrixSolverTool->compute(covmatrix, solution);
+	  //deltaChi2 = solution * halfDChi2dX ;
 	}
 	
 	if (printDebug()) {
