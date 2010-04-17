@@ -1,4 +1,4 @@
-// $Id: HltGlobalMonitor.cpp,v 1.64 2010-04-14 07:28:08 albrecht Exp $
+// $Id: HltGlobalMonitor.cpp,v 1.65 2010-04-17 22:54:21 graven Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -258,6 +258,7 @@ StatusCode HltGlobalMonitor::execute() {
   monitorHLT1(hlt);
   monitorHLT2(hlt);
   monitorMemory();
+
   
   counter("#events")++;
 
@@ -425,3 +426,4 @@ void HltGlobalMonitor::storeTrend(AIDA::IProfile1D* h, double Value)
 #endif
   h->fill(m_currentTime/60, Value); // go from seconds -> minutes
 }
+

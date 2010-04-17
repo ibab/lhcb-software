@@ -1,4 +1,4 @@
-// $Id: HltL0GlobalMonitor.cpp,v 1.8 2010-04-14 07:28:53 albrecht Exp $
+// $Id: HltL0GlobalMonitor.cpp,v 1.9 2010-04-17 22:54:21 graven Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -182,13 +182,8 @@ void HltL0GlobalMonitor::monitorL0DU(const LHCb::L0DUReport* l0du) {
   if (L0TCK != m_lastL0TCK && m_L0Input!=0) {
       std::vector< std::pair<unsigned, std::string> > labels;
       for(LHCb::L0DUChannel::Map::iterator i = channels.begin();i!=channels.end();++i){
-	std::string name=i->first;
-// #if 0	
-// 	if( i->second->decisionType() == LHCb::L0DUDecision::Disable ){
-// 	  name="disabled | "+name;
-// 	}
-// #endif
-	labels.push_back(std::make_pair( i->second->id(),name  ));
+        std::string name=i->first;
+        labels.push_back(std::make_pair( i->second->id(),name  ));
       }
       labels.push_back(std::make_pair( 18, "B1gas * ODIN BE"));
       labels.push_back(std::make_pair( 19, "B2gas * ODIN EB"));
@@ -205,8 +200,6 @@ void HltL0GlobalMonitor::monitorL0DU(const LHCb::L0DUReport* l0du) {
 //       m_L0Input->setTitle(txt);   
 // #endif
   }
-  
-  //if (!l0du->decision()) return;
   
   LHCb::ODIN* odin = fetch<LHCb::ODIN>( LHCb::ODINLocation::Default);
   if (odin == 0) return;
@@ -275,5 +268,4 @@ void HltL0GlobalMonitor::monitorL0DU(const LHCb::L0DUReport* l0du) {
     if(hlt2) fill( m_histL0EnabledHLT2, 20,1);
   }
 
-  return;
 };
