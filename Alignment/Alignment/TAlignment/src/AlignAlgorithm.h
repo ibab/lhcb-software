@@ -1,4 +1,4 @@
-// $Id: AlignAlgorithm.h,v 1.38 2010-01-25 16:20:42 wouter Exp $
+// $Id: AlignAlgorithm.h,v 1.39 2010-04-17 16:21:39 wouter Exp $
 #ifndef TALIGNMENT_ALIGNALGORITHM_H
 #define TALIGNMENT_ALIGNALGORITHM_H 1
 
@@ -116,6 +116,7 @@ protected:
   void splitVertex( const LHCb::RecVertex& vertex, const TrackContainer& tracks,
 		    VertexContainer& splitvertices) const  ;
   LHCb::RecVertex* cloneVertex( const LHCb::RecVertex& vertex, const TrackContainer& selectedtracks ) const ;
+  bool testNodes( const LHCb::Track& track ) const ;
   
 private:
 

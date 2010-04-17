@@ -1,4 +1,4 @@
-// $Id: AlignAlgorithm.cpp,v 1.61 2010-01-25 16:20:42 wouter Exp $
+// $Id: AlignAlgorithm.cpp,v 1.62 2010-04-17 16:21:39 wouter Exp $
 // Include files
 // from std
 // #include <utility>
@@ -36,6 +36,7 @@
 #include "AlignKernel/AlEquations.h"
 #include "Event/AlignSummaryData.h"
 
+#include <boost/foreach.hpp>
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : AlignAlgorithm
@@ -217,8 +218,10 @@ StatusCode AlignAlgorithm::execute() {
   for(  LHCb::Track::Range::const_iterator iTrack = tracks.begin() ; iTrack != tracks.end() ; ++iTrack)
     // just a sanity check
     if( (*iTrack)->fitStatus()==LHCb::Track::Fitted &&
+	!(*iTrack)->checkFlag( LHCb::Track::Invalid ) &&
 	(*iTrack)->nDoF() > 0 &&
-	!(*iTrack)->nodes().empty() ) {
+	!(*iTrack)->nodes().empty() &&
+	testNodes( **iTrack ) ) {
       const Al::Residuals* res = m_trackresidualtool->get(**iTrack) ;
       if( res ) {
 	selectedtracks.push_back( *iTrack ) ;
@@ -229,10 +232,10 @@ StatusCode AlignAlgorithm::execute() {
 	++m_covFailure;
       }
     } else {
-      warning() << "Skipping bad track:"
-		<< " fitstatus = " << (*iTrack)->fitStatus()
-		<< " nDoF = " << (*iTrack)->nDoF()
-		<< " #nodes = " << (*iTrack)->nodes().size() << endreq ;
+      debug() << "Skipping bad track:"
+	      << " fitstatus = " << (*iTrack)->fitStatus()
+	      << " nDoF = " << (*iTrack)->nDoF()
+	      << " #nodes = " << (*iTrack)->nodes().size() << endreq ;
     }
   
   // Now I got a bit worried about overlaps. Sort these tracks in the
@@ -297,10 +300,11 @@ StatusCode AlignAlgorithm::execute() {
   }
   
   if( !m_vertexLocation.empty() ) {
-    const LHCb::RecVertices* vertices = get<LHCb::RecVertices>(m_vertexLocation);
-    if(vertices ) {
-      for( LHCb::RecVertices::const_iterator ivertex = vertices->begin() ;
-	   ivertex != vertices->end(); ++ivertex ) {
+    LHCb::RecVertex::Range vertices = get<LHCb::RecVertex::Range>(m_vertexLocation);
+
+    if( !vertices.empty() ) {
+      for( LHCb::RecVertex::Range::const_iterator ivertex = vertices.begin() ;
+	   ivertex != vertices.end(); ++ivertex ) {
 	// split this vertex in vertices of the right size
 	VertexContainer splitvertices ;
 	splitVertex( **ivertex, selectedtracks, splitvertices ) ;
@@ -344,9 +348,10 @@ StatusCode AlignAlgorithm::execute() {
 
 bool AlignAlgorithm::accumulate( const Al::Residuals& residuals )
 {
-  bool accept = true ;
-  if( residuals.size() > 0 &&
-      (residuals.nAlignables() > 1 || residuals.nExternalHits()>0 ) ) {
+  bool accept = false ;
+  if( residuals.size() > 0 /* &&
+			      (residuals.nAlignables() > 1 || residuals.nExternalHits()>0 )*/ ) {
+    accept = true ;
     
     // let's first get the derivatives
     typedef Gaudi::Matrix1x6 Derivative ;
@@ -674,4 +679,36 @@ void AlignAlgorithm::splitVertex( const LHCb::RecVertex& vertex,
   //     //std::cout << "    #tracks = " << iver->tracks().size() << std::endl ;
   //     assert( iver->tracks().size() >= m_minTracksPerVertex ) ;
   //   }
+}
+
+
+bool AlignAlgorithm::testNodes( const LHCb::Track& track ) const
+{
+  bool success = true ;
+  BOOST_FOREACH( const LHCb::Node* node, track.nodes() ) 
+    if( node->hasMeasurement() && node->type() == LHCb::Node::HitOnTrack ) {
+
+      if( !(node->errResidual2() > TrackParameters::lowTolerance )) {
+	warning() << "Found node with zero error on residual: " << track.type() << " "
+		  << node->measurement().type() << " " << node->errResidual2() << endreq ;
+	success = false ;
+      } else if( !(node->errResidual2() < node->errMeasure2() ) ) {
+	warning() << "Found node with R2 > V2: " << track.type() << " "
+		  << node->measurement().type() << " " << node->errResidual2() << " " << node->errMeasure2() << endreq ;
+	success = false ;
+      } else if( !( node->errMeasure2() > 1e-6 ) ) {
+	warning() << "Found node with very small error on measurement: " << track.type() << " "
+		  << node->measurement().type() << " " << node->errMeasure2() << endreq ;
+	success = false ;
+      } else if( node->errResidual2() < 1e-2 * node->errMeasure2() ) {
+	std::stringstream str ;
+	str << "Found node with negligible weight: " << track.type() << " " << node->measurement().type() ;
+	Warning(str.str(),StatusCode::FAILURE,1).ignore() ;
+	debug() << "Found node with negligible weight: " << track.type() << " "
+		<< node->measurement().type() << " " << node->errResidual2() << " " << node->errMeasure2() << endreq ;
+	success = false ;
+      }
+    }
+
+  return success ;
 }
