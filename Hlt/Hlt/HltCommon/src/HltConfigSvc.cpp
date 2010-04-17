@@ -1,4 +1,4 @@
-// $Id: HltConfigSvc.cpp,v 1.36 2010-01-31 20:49:04 graven Exp $
+// $Id: HltConfigSvc.cpp,v 1.37 2010-04-17 22:17:23 graven Exp $
 // Include files 
 
 #include <algorithm>
@@ -97,26 +97,27 @@ StatusCode HltConfigSvc::finalize() {
 //=============================================================================
 StatusCode HltConfigSvc::initialize() {
   // see if we're running online... HLTXYY_ZZZZ_#
+  // HLTC0101_GauchoJob_1
   std::string taskName( System::argv()[0] );
   static boost::regex expr("^HLT.*_(.*)_([0-9]+)");
   boost::smatch what;
   if (boost::regex_match(taskName,what,expr)) {
-        bool found = false;
         m_id = boost::lexical_cast<unsigned int>( what[2] );
-#if linux
-        char name[HOST_NAME_MAX]; size_t len=0;
-        if (!gethostname(name,len)) {
-            struct hostent *x = gethostbyname(name);
-            if (x) {
-                unsigned char *addr = (unsigned char*)(x->h_addr+x->h_length-2);
-                m_id = m_id << 8 | *addr++;
-                m_id = m_id << 8 | *addr++;
-                found = true;
-            }
-        } 
-#endif  
-        if (!found) m_id = m_id <<16;
   }
+  bool found = false;
+#if linux
+  char name[HOST_NAME_MAX]; size_t len=0;
+  if (!gethostname(name,len)) {
+      struct hostent *x = gethostbyname(name);
+      if (x) {
+          unsigned char *addr = (unsigned char*)(x->h_addr+x->h_length-2);
+          m_id = m_id << 8 | *addr++;
+          m_id = m_id << 8 | *addr++;
+          found = true;
+      }
+  } 
+#endif  
+  if (!found) m_id = m_id <<16;
 
 
   StatusCode status = PropertyConfigSvc::initialize();

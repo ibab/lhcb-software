@@ -4,6 +4,9 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+! 2010-04-18 - Gerhard Raven
+ - HltConfigSvc: always pick up lower 16 bits of IP address
+
 ! 2010-04-16 - V. Gligorov
  - Commit helper functions to be used in the lifetime unbiased
    hlt1 hadron lines, code written by U. Kerzel. Adds a dependency
