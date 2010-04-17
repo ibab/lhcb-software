@@ -1,4 +1,4 @@
-// $Id: PatPV2DFit3D.h,v 1.7 2010-04-16 13:25:41 pmorawsk Exp $
+// $Id: PatPV2DFit3D.h,v 1.8 2010-04-17 17:51:31 graven Exp $
 #ifndef PATPV2DFIT3D_H
 #define PATPV2DFIT3D_H 1
 
@@ -45,13 +45,7 @@ private:
   bool   m_saveSeedsAsPV; // Save seeds as PVs (for monitoring)
   std::vector<LHCb::Track*> m_sTracks;
 
-  std::vector<double> m_phiOfSector;
   const IGeometryInfo* m_velo[2];
-//   Gaudi::XYZVector m_boxOffsetLeft[2];
-//   Gaudi::XYZVector m_boxOffsetRight[2];
-
-//   double m_zLeft[2];
-//   double m_zRight[2];
   int     m_multiQualityPV;
   int     m_minBackQualityPV;
   double  m_dzQualityPV;
@@ -73,5 +67,7 @@ private:
   int m_timeTrMod;
   int m_timePrep;
   bool m_measureTime;
+
+
 };
 #endif // PATPV2DFIT3D_H

@@ -1,11 +1,9 @@
-// $Id: PatPV2DFit3D.cpp,v 1.7 2010-04-16 13:25:35 pmorawsk Exp $
+// $Id: PatPV2DFit3D.cpp,v 1.8 2010-04-17 17:51:31 graven Exp $
 // Include files
 
 // from Gaudi
 #include "GaudiKernel/SystemOfUnits.h"
 #include "GaudiKernel/AlgFactory.h"
-// #include "GaudiKernel/IUpdateManagerSvc.h"
-
 
 // from gsl
 #include "gsl/gsl_math.h"
@@ -17,7 +15,6 @@
 
 // local
 #include "PatPV2DFit3D.h"
-// #include "Random.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : PatPV2DFit3D
@@ -38,7 +35,6 @@ PatPV2DFit3D::PatPV2DFit3D( const std::string& name,
     m_dzSeparHisto(0.0),
     m_saveSeedsAsPV(false),
     m_sTracks(0),
-    m_phiOfSector(0),
     m_multiQualityPV(0),
     m_minBackQualityPV(0),
     m_dzQualityPV(0),
@@ -50,6 +46,8 @@ PatPV2DFit3D::PatPV2DFit3D( const std::string& name,
     m_pvsfit(0),
     m_timer(0)
 {
+  m_velo[0]=0;
+  m_velo[1]=0;
   declareProperty( "maxNumPv"        , m_maxNumPv      = 10             );
   declareProperty( "maxIter"         , m_maxIter       =  3             );
   declareProperty( "minMult"         , m_minMult       =  6             );
@@ -75,10 +73,9 @@ StatusCode PatPV2DFit3D::initialize() {
 
   debug() << "==> Initialize" << endmsg;
 
-
   addTracks(100);
   
-    //== Get Velo detector element, to get the R sector angle
+    //== Get Velo detector element
   DeVelo* velo = getDet<DeVelo>( DeVeloLocation::Default );
   for (IDetectorElement::IDEContainer::const_iterator i = velo->childBegin();i!=velo->childEnd();++i) {
     debug () << " got " << (*i)->name() << endmsg;
@@ -91,10 +88,21 @@ StatusCode PatPV2DFit3D::initialize() {
       m_velo[1] = (*i)->geometry();
     }
   }
+  if (m_velo[0]==0) {
+      error() << "Could not find VeloLeft" << endmsg;
+      return StatusCode::FAILURE;
+  }
+  if (m_velo[1]==0) {
+      error() << "Could not find VeloRight" << endmsg;
+      return StatusCode::FAILURE;
+  }
   if (msgLevel(MSG::DEBUG)){
-    Gaudi::XYZPoint localZero(0.,0.,0.);
-    debug()<< "VeloLeft  position " << m_velo[0]->toGlobal(localZero)-localZero << endmsg;
-    debug()<< "VeloRight position " << m_velo[1]->toGlobal(localZero)-localZero << endmsg;
+    Gaudi::XYZPoint zero(0.,0.,0.);
+    Gaudi::XYZVector one(0.,0.,1.);
+    debug()<< "VeloLeft  position " << m_velo[0]->toGlobal(zero)-zero << endmsg;
+    debug()<< "VeloLeft  z axis " << m_velo[0]->toGlobal(one) << endmsg;
+    debug()<< "VeloRight position " << m_velo[1]->toGlobal(zero)-zero << endmsg;
+    debug()<< "VeloRight z axis " << m_velo[1]->toGlobal(one) << endmsg;
   }
 
   // Access PVSeedTool
@@ -112,7 +120,6 @@ StatusCode PatPV2DFit3D::initialize() {
   }
   
   setProduceHistos(false);
-//   std::cout << "XXXXXXXXXXXXXX2" << std::endl;
   if (m_measureTime){
     m_timer = tool<ISequencerTimerTool>( "SequencerTimerTool", this );
     m_timer->increaseIndent();
@@ -154,103 +161,46 @@ StatusCode PatPV2DFit3D::execute() {
 //   int nTracks = m_inputTracks.size();
   if (nTracks > m_sTracks.size()) addTracks(nTracks - m_sTracks.size());
   std::vector<const LHCb::Track*> rtracks;
-  if (m_measureTime) m_timer->stop(m_timePrep);
+  if (m_measureTime) { 
+      m_timer->stop(m_timePrep);
+      m_timer->start(m_timeTrMod);
+  }
 
   int iTrack = 0;
   for (std::vector<LHCb::Track*>::const_iterator itT = m_inputTracks->begin(); m_inputTracks->end() != itT; itT++ ) {
-    if (m_measureTime) m_timer->start(m_timeTrMod);
     LHCb::Track* pTr2d = (*itT);
 
     if (pTr2d->checkFlag( LHCb::Track::Invalid ))   continue;
 
     double zFirst  = pTr2d->firstState().z();
     double rFirst  = pTr2d->firstState().x();
+    double phi     = pTr2d->firstState().y();
     double trFirst = pTr2d->firstState().tx();
     double d2r0    = pTr2d->firstState().errX2();
     double d2tr    = pTr2d->firstState().errTx2();
     int    sector  = pTr2d->specific();
-    double phi     = m_phiOfSector[ sector ];
+
+
     Gaudi::TrackSymMatrix cov = pTr2d->firstState().covariance();
-    bool   isRight = sector > 3;
     
-//================== eld fix =====================================
-//     double xVeloOffset, yVeloOffset, zVeloOffset;
-//     double r[2], x[2], y[2], tx, ty, z[2], xFirst, yFirst;
-//     for (int it=0; it<2; it++){
-//       if (isRight) {
-//         xVeloOffset = m_boxOffsetRight[it].x();
-//         yVeloOffset = m_boxOffsetRight[it].y();
-//         zVeloOffset = m_boxOffsetRight[it].z();
-//         z[it]       = m_zRight[it];
-//       }else{
-//         xVeloOffset = m_boxOffsetLeft[it].x();
-//         yVeloOffset = m_boxOffsetLeft[it].y();
-//         zVeloOffset = m_boxOffsetLeft[it].z();
-//         z[it]       = m_zLeft[it];
-//       }
-//       r[it] =  rFirst + trFirst*(z[it] - zFirst);
-//       x[it] =  r[it]*cos(phi);
-//       y[it] =  r[it]*sin(phi);      
-//       x[it] += xVeloOffset;
-//       y[it] += yVeloOffset;
-//       z[it] += zVeloOffset;
-//     }
-//     tx = (x[0] - x[1])/(z[0] - z[1]);
-//     ty = (y[0] - y[1])/(z[0] - z[1]);
-//     trFirst = tx*cos(phi) + ty*sin(phi);
-//     xFirst = x[0] + tx*(zFirst - z[0]);
-//     yFirst = y[0] + ty*(zFirst - z[0]);
-//     phi = atan(yFirst/xFirst);
-//     if (isRight) phi += M_PI;
-//     rFirst = sqrt(xFirst*xFirst + yFirst*yFirst);
-//     double z0      = zFirst - rFirst/trFirst; // where r = 0.
-//================== old fix end =================================
-
-//================== new fix =====================================
-//     ROOT::Math::Random r(0);
-
-    Gaudi::XYZPoint  position(rFirst*cos(phi), rFirst*sin(phi), zFirst);
-    Gaudi::XYZVector slope(trFirst*cos(phi), trFirst*sin(phi), 1.0);
+    Gaudi::XYZPoint  position( rFirst*cos(phi),  rFirst*sin(phi), zFirst);
+    Gaudi::XYZVector slope   (trFirst*cos(phi), trFirst*sin(phi), 1.0);
     if(msgLevel(MSG::DEBUG)){
       debug() << "Local  position " << position << endmsg;
       debug() << "Local  slope    " << slope    << endmsg;
     }
-    if (isRight){
-      position = m_velo[1]->toGlobal(position);
-      slope    = m_velo[1]->toGlobal(slope);
-    }
-    else{
-      position = m_velo[0]->toGlobal(position);
-      slope    = m_velo[0]->toGlobal(slope);
-    }
+    position = m_velo[sector>3?1:0]->toGlobal(position);
+    slope    = m_velo[sector>3?1:0]->toGlobal(slope);
     if(msgLevel(MSG::DEBUG)){
       debug() << "Global position " << position << endmsg;
       debug() << "Global slope    " << slope    << endmsg;
     }
-    slope.SetX(slope.x()/slope.z());
-    slope.SetY(slope.y()/slope.z());
-    slope.SetZ(1.0);
-//     phi = atan(position.y()/position.x());
-//     if (isRight) phi += M_PI;
-    rFirst  = sqrt(position.x()*position.x() + position.y()*position.y());
-    trFirst = sqrt(slope.x()*slope.x() + slope.y()*slope.y());
-    double z0      = position.z() - rFirst/trFirst; // where r = 0.
-//================== new fix end =================================
-      
 
+    double z0 = position.z() - position.Rho()/slope.Rho(); // where r = 0.
     if( maxZ > fabs(z0) ) {
       m_sTracks[iTrack]->setFlags(pTr2d->flag());
       m_sTracks[iTrack]->setType(LHCb::Track::Velo);
-//       m_sTracks[iTrack]->firstState().setX(xFirst);
-//       m_sTracks[iTrack]->firstState().setY(yFirst);
-//       m_sTracks[iTrack]->firstState().setZ(zFirst);
-//       m_sTracks[iTrack]->firstState().setTx(trFirst*cos(phi));
-//       m_sTracks[iTrack]->firstState().setTy(trFirst*sin(phi));
-      m_sTracks[iTrack]->firstState().setX(position.x());
-      m_sTracks[iTrack]->firstState().setY(position.y());
-      m_sTracks[iTrack]->firstState().setZ(position.z());
-      m_sTracks[iTrack]->firstState().setTx(slope.x());
-      m_sTracks[iTrack]->firstState().setTy(slope.y());
+      m_sTracks[iTrack]->firstState().setState( LHCb::StateVector( position, slope ) );
 
       cov(0,0) = d2r0*cos(phi)*cos(phi);
       cov(1,1) = d2r0*sin(phi)*sin(phi);
@@ -263,14 +213,18 @@ StatusCode PatPV2DFit3D::execute() {
       travec_3d.push_back(m_sTracks[iTrack]);
     }
     iTrack++;
-    if (m_measureTime) m_timer->stop(m_timeTrMod);
   }
-  if (m_measureTime) m_timer->start(m_timeFit);
+  if (m_measureTime) {
+      m_timer->stop(m_timeTrMod);
+      m_timer->start(m_timeFit);
+  }
   std::vector<LHCb::RecVertex> rvts;
   StatusCode scfit = m_pvsfit->reconstructMultiPVFromTracks(rtracks,rvts);
-  if (m_measureTime) m_timer->stop(m_timeFit);
+  if (m_measureTime) {
+     m_timer->stop(m_timeFit);
+     m_timer->start(m_timeIns);
+  }
   if (scfit == StatusCode::SUCCESS) {
-    if (m_measureTime) m_timer->start(m_timeIns);
     // insert reconstructed vertices
      for(std::vector<LHCb::RecVertex>::iterator iv = rvts.begin(); iv != rvts.end(); iv++) {
        LHCb::RecVertex* vertex = new LHCb::RecVertex();
@@ -297,17 +251,15 @@ StatusCode PatPV2DFit3D::execute() {
        }
        m_outputVertices->insert(vertex);
      }
-     if (m_measureTime) m_timer->stop(m_timeIns);
   }
-  if (m_measureTime) m_timer->start(m_timeHist);
+  if (m_measureTime) { 
+      m_timer->stop(m_timeIns);
+      m_timer->start(m_timeHist);
+  }
   if( produceHistos() ){
      for(std::vector<LHCb::RecVertex>::iterator iv = rvts.begin(); iv != rvts.end(); iv++) {
-       double xv = iv->position().x();
-       double yv = iv->position().y();
-       double zv = iv->position().z();
-       double rv = std::sqrt(xv*xv+yv*yv);
-       plot1D(zv,"PV2DFit3DVertexZPosition", -200,200,200);
-       plot1D(rv,"PV2DFit3DVertexTransversePosition", 0,1,200);       
+       plot1D(iv->position().z(),"PV2DFit3DVertexZPosition", -200,200,200);
+       plot1D(iv->position().Rho(),"PV2DFit3DVertexTransversePosition", 0,1,200);       
      }
   }
   if (m_measureTime) m_timer->stop(m_timeHist);

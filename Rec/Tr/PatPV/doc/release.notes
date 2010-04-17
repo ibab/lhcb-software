@@ -4,6 +4,12 @@
 ! Purpose     : Compute primary vertices
 !-----------------------------------------------------------------------------
 
+! 2010-04-17 - Gerhard Raven
+ - PatPV2DFit3D:
+   o in transform mentioned below, pick up the phi from the track
+   o other small cosmetic changes
+
+
 ! 2010-04-16 - Piotr Morawski
  - new method of transforming tracks to global coordinate system in PatPV2DFit3D
 
