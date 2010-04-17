@@ -1,10 +1,11 @@
-// $Id: Scalers.cpp,v 1.5 2010-04-14 10:59:17 ibelyaev Exp $
+// $Id: Scalers.cpp,v 1.6 2010-04-17 22:05:07 graven Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
 // STD & STL 
 // ============================================================================
 #include <cmath>
+#include <limits>
 // ============================================================================
 // GaudiKernel
 // ============================================================================
@@ -277,8 +278,8 @@ void LoKi::Scalers::RateLimitV::initialize_ ( const std::string& svc )
   //
   // subscribe the incident:
   //
-  subscribe (              "RunChange" ).ignore() ;
-  subscribe ( IncidentType::BeginRun   ).ignore() ;
+  subscribe (              "RunChange", std::numeric_limits<long>::max() ).ignore() ;
+  subscribe ( IncidentType::BeginRun,   std::numeric_limits<long>::max() ).ignore() ;
   //
 }
 // ============================================================================
@@ -346,6 +347,9 @@ bool LoKi::Scalers::RateLimitV::eval
   // adjust the next:
   if ( accept ) 
   {
+    // recompute interval -- the rate of the rateSvc may have changed!
+    m_interval = m_rateSvc->rate() / m_rate ; 
+
     switch ( limitType() ) 
     {
     case LoKi::Scalers::RandomLimiter : 

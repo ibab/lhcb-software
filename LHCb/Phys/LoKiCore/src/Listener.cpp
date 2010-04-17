@@ -1,4 +1,4 @@
-// $Id: Listener.cpp,v 1.3 2010-04-14 10:59:16 ibelyaev Exp $
+// $Id: Listener.cpp,v 1.4 2010-04-17 22:05:07 graven Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -16,6 +16,13 @@
 // ============================================================================
 #include "LoKi/Listener.h"
 #include "LoKi/ILoKiSvc.h"
+namespace { 
+    struct match_first {
+        match_first(const std::string _val) : val(_val) {}
+        bool operator()(const std::pair<std::string,long>& x) const { return x.first == val; }
+        std::string val;
+    };
+}
 // ============================================================================
 /** @file Listener.cpp
  *  Implementation file for class : Listener
@@ -48,7 +55,7 @@ LoKi::Listener::Listener ( const LoKi::Listener& right )
 {
   // subscribe to all incidents 
   for ( Incidents::const_iterator ii = right.m_incidents.begin() ;
-        right.m_incidents.end() != ii ; ++ii ) { subscribe ( *ii ).ignore() ; }
+        right.m_incidents.end() != ii ; ++ii ) { subscribe ( ii->first, ii->second ).ignore() ; }
 }
 // ============================================================================
 // MANDATORY: virtual destructor
@@ -57,7 +64,7 @@ LoKi::Listener::~Listener()
 {
   while ( !m_incidents.empty()  && m_incSvc.validPointer() )
     {
-      m_incSvc->removeListener ( this , m_incidents.back() ) ;
+      m_incSvc->removeListener ( this , m_incidents.back().first ) ;
       m_incidents.pop_back() ;
     }
   m_incSvc.release() ;
@@ -83,18 +90,18 @@ LoKi::Listener& LoKi::Listener:: operator=( const LoKi::Listener& right )
   m_incSvc = right.m_incSvc ;
   // 3. subscribe to all incidents from the right: 
   for ( Incidents::const_iterator ii = right.m_incidents.begin() ;
-        right.m_incidents.end() != ii ; ++ii ) { subscribe ( *ii ).ignore() ; }
+        right.m_incidents.end() != ii ; ++ii ) { subscribe ( ii->first, ii->second ).ignore() ; }
   // 
   return *this ;
 }
 // ============================================================================
 // subscribe the incident 
 // ============================================================================
-StatusCode LoKi::Listener::subscribe  ( const std::string& incident ) 
+StatusCode LoKi::Listener::subscribe  ( const std::string& incident, long priority ) 
 {
   // specific incident ? 
-  Incidents::const_iterator ifind = std::find 
-    ( m_incidents.begin() , m_incidents.end() , incident ) ;
+  Incidents::const_iterator ifind = std::find_if
+    ( m_incidents.begin() , m_incidents.end() , match_first(incident) ) ;
   if ( m_incidents.end() != ifind ) 
   {
     return Warning ( "subscribe: Incident '" + incident + "' alsready in the list", 
@@ -108,14 +115,15 @@ StatusCode LoKi::Listener::subscribe  ( const std::string& incident )
   }
   Assert ( !(!m_incSvc) , "Unable to get Incident Service" ) ;
   //
-  m_incSvc->addListener ( this , incident ) ;
-  m_incidents.push_back ( incident ) ;
+  m_incSvc->addListener ( this , incident, priority ) ;
+  m_incidents.push_back ( std::make_pair(incident,priority) ) ;
   //
   return StatusCode::SUCCESS ;
 }
 // ============================================================================
-// unsibscrive the incident
+// unsubscribe the incident
 // ============================================================================
+
 StatusCode LoKi::Listener::unsubscribe ( const std::string& incident ) 
 {
   // no incidents? 
@@ -137,13 +145,13 @@ StatusCode LoKi::Listener::unsubscribe ( const std::string& incident )
     //
     while ( !m_incidents.empty() )
     {
-      m_incSvc->removeListener ( this , m_incidents.back() ) ;
+      m_incSvc->removeListener ( this , m_incidents.back().first ) ;
       m_incidents.pop_back() ;
     }
   }
   // specific incident ? 
-  Incidents::iterator ifind = std::find 
-    ( m_incidents.begin() , m_incidents.end() , incident ) ;
+  Incidents::iterator ifind = std::find_if
+    ( m_incidents.begin() , m_incidents.end() , match_first(incident) ) ;
   if ( m_incidents.end() == ifind ) 
   {
     StatusCode sc ( 811 , true ) ;

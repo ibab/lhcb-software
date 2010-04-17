@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.188 2010-04-14 10:59:16 ibelyaev Exp $ 
+! $Id: release.notes,v 1.189 2010-04-17 22:05:07 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiCore
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -14,6 +14,10 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! 
 ! -----------------------------------------------------------------------------
+
+! 2010-04-17 - Gerhard Raven
+ - Listeners: specify priority
+ - Scalers: do not assume reference rate is constant
 
 ! 2010-04-14 - Vanya Belyaev
 
