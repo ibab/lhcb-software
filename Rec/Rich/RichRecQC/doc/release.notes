@@ -6,7 +6,7 @@
 
 ! 2010-04-18 - Chris Jones
  - Make CK theta pull plots for isolated tracks only in RichRecoQC
- - Fix bug in COnfiguration that caused the trackless ring monitoring to be
+ - Fix bug in Configuration that caused the trackless ring monitoring to be
    looking in the wrong TES locations ...
  - Add a warning to the trackless ring monitor to print a warning in the 
    case the requested TES location to monitor has no data ...
