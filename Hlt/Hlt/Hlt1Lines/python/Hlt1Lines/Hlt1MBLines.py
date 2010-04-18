@@ -23,7 +23,7 @@ class Hlt1MBLinesConf(HltLinesConfigurableUser) :
             if i not in HltFactory('ToolSvc.HltFactory').Modules : HltFactory('ToolSvc.HltFactory').Modules += [ i ]
         return Line ( 'MBNoBias'
                     , prescale = self.prescale
-                    , ODIN = 'scale( ODIN_TRGTYP == LHCb.ODIN.LumiTrigger , RATE(%s,False)) ' % ( self.getProp('MaxNoBiasRate') )
+                    , ODIN = 'scale( ODIN_TRGTYP == LHCb.ODIN.LumiTrigger , RATE(%s,LoKi.Scalers.RandomPhasePeriodicLimiter)) ' % ( self.getProp('MaxNoBiasRate') )
                     , postscale = self.postscale
                     ) 
     def __create_microbias_line__(self, name, tracking) :
