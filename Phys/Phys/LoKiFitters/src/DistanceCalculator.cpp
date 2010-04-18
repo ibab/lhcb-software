@@ -1,4 +1,4 @@
-// $Id: DistanceCalculator.cpp,v 1.7 2010-03-27 16:02:01 graven Exp $
+// $Id: DistanceCalculator.cpp,v 1.8 2010-04-18 14:10:59 graven Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -721,15 +721,15 @@ StatusCode LoKi::DistanceCalculator::_distance
     // prepare the Kalman Filter machinery 
     StatusCode sc = LoKi::KalmanFilter::load ( *good , m_entry ) ;
     if ( sc.isFailure() ) 
-    { return Error("distance(I): error from KalmanFilter::load", sc ) ; }
+    { return Warning("distance(I): KalmanFilter::load failed", sc ) ; }
     // get the "the previus" Kalman Filter estimate == vertex
     Gaudi::SymMatrix3x3 ci = vertex.covMatrix() ; // the gain matrix 
     if ( !ci.Invert() ) 
-    { return Error ( "distance(I): unable to calculate the gain matrix" ) ; }
+    { return Warning ( "distance(I): unable to calculate the gain matrix" ) ; }
     // make one step of Kalman filter 
     sc = LoKi::KalmanFilter::step ( m_entry , vertex.position() , ci , 0 ) ;
     if ( sc.isFailure() ) 
-    { return Error ( "distance(I): error from Kalman Filter step" , sc ) ; }
+    { return Warning ( "distance(I): error from Kalman Filter step" , sc ) ; }
     // get the chi2 
     *chi2 = m_entry.m_chi2 ;
   }
