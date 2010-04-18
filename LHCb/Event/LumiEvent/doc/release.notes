@@ -4,6 +4,7 @@
 ! Purpose     : EventModel for Lumi data
 !-----------------------------------------------------------------------------
 
+!======================== LumiEvent v2r6 2010-04-18 ==========================
 ! 2010-04-12 - Jaap Panman
  - Enable an additional lumi bookkeeping method for random lumi events
    (needed due to microbias trigger)
