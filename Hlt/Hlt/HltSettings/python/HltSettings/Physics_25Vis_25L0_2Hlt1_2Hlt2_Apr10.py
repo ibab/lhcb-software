@@ -53,8 +53,8 @@ class Physics_25Vis_25L0_2Hlt1_2Hlt2_Apr10 ( Physics_MinBiasL0_PassThroughHlt1_E
         Returns a list of active lines
         """
         lines = Physics_MinBiasL0_PassThroughHlt1_ExpressHlt2_Apr10.ActiveHlt1Lines(self)
-        lines += [ '%sRateLimited' % i for i in lines 
-                                        if i.startswith('Hlt1MBMicroBias') 
-                                        or i.startswith('Hlt1LumiLow') 
-                                        or i.startswith('Hlt1L0Any') ]
+        lines += [ i + 'RateLimited' for i in lines 
+                                     if i.startswith('Hlt1MBMicroBias') 
+                                     or i.startswith('Hlt1LumiLow') 
+                                     or i.startswith('Hlt1L0Any') ]
         return lines
