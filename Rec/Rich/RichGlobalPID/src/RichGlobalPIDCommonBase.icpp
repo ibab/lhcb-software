@@ -29,7 +29,6 @@ void Rich::Rec::GlobalPID::CommonBase<PBASE>::initConstructor()
 {
   m_GPIDtracks   = NULL;
   m_GPIDs        = NULL;
-  m_procStat     = NULL;
   m_richPartProp = NULL;
   this->declareProperty( "RichGlobalPIDTrackLocation", 
                          m_richGPIDTrackLocation = 
@@ -38,8 +37,6 @@ void Rich::Rec::GlobalPID::CommonBase<PBASE>::initConstructor()
                          m_richGPIDLocation = 
                          this->contextSpecificTES(LHCb::RichGlobalPIDLocation::Default) );
   this->declareProperty( "GlobalName", m_richGPIDName = "RichGloPID"+this->context() );
-  this->declareProperty( "ProcStatusLocation",
-                         m_procStatLocation = LHCb::ProcStatusLocation::Default );
 }
 
 //=============================================================================
@@ -93,5 +90,4 @@ void Rich::Rec::GlobalPID::CommonBase<PBASE>::deleteGPIDEvent()
   */
   m_GPIDtracks  = NULL;
   m_GPIDs       = NULL;
-  m_procStat    = NULL;
 }

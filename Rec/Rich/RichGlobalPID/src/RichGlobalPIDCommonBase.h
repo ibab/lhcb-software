@@ -19,7 +19,6 @@
 #include "Event/RichRecStatus.h"
 #include "Event/RichGlobalPIDTrack.h"
 #include "Event/RichGlobalPID.h"
-#include "Event/ProcStatus.h"
 
 // interfaces
 #include "RichKernel/IRichParticleProperties.h"
@@ -74,7 +73,6 @@ namespace Rich
 
         LHCb::RichGlobalPIDTracks  * gpidTracks() const;  ///< Access RichGlobalPIDTracks
         LHCb::RichGlobalPIDs       * gpidPIDs() const;    ///< Access RichGlobalPIDPIDs
-        LHCb::ProcStatus           * procStatus() const;  ///< Access the ProcStatus object
 
         /// The GPID sequence name
         inline const std::string& gpidName() const { return m_richGPIDName; }
@@ -98,9 +96,6 @@ namespace Rich
         /// Pointer to parent RichGlobalPID container
         mutable LHCb::RichGlobalPIDs * m_GPIDs;
 
-        /// Pointer to the ProcStatus object
-        mutable LHCb::ProcStatus * m_procStat;
-
         /// Location of working RICH Global PID tracks in TES
         std::string m_richGPIDTrackLocation;
 
@@ -109,9 +104,6 @@ namespace Rich
 
         /// Global algorithm name. Common to all sub-algorithms
         std::string m_richGPIDName;
-
-        /// Location of processing status object in TES
-        std::string m_procStatLocation;
 
         /// Pointer to RichParticleProperties interface
         const IParticleProperties * m_richPartProp;
@@ -143,18 +135,6 @@ namespace Rich
                                                                                      m_richGPIDLocation );
         }
         return m_GPIDs;
-      }
-
-      template <class PBASE>
-      inline LHCb::ProcStatus * CommonBase<PBASE>::procStatus() const
-      {
-        if ( !m_procStat )
-        {
-          m_procStat = 
-            this -> template getOrCreate<LHCb::ProcStatus,LHCb::ProcStatus>( this->evtSvc(), 
-                                                                             m_procStatLocation );
-        }
-        return m_procStat;
       }
 
     }

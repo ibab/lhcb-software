@@ -4,6 +4,9 @@
 ! Purpose     : The Rich Global PID algorithm
 !-----------------------------------------------------------------------------
 
+! 2010-04-18 - Chris Jones
+ - Remove code to load ProcStatus object (now available via base class)
+
 !======================= RichGlobalPID v3r12 2010-04-09 ====================
 ! 2010-04-08 - Chris Jones
  - Fine tune the messages that are issued when event processing is aborted

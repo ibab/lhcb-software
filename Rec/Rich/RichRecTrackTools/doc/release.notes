@@ -4,6 +4,9 @@
 ! Purpose     : Utility tracks tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+! 2010-04-18 - Chris Jones
+ - Update ProcStatus when processing is aborted due to too many tracks
+
 !======================== RichRecTrackTools v1r19 2010-04-09 ================
 ! 2010-04-08 - Chris Jones
  - Implement maximum number of tracks cut in RichRecTrack creator.

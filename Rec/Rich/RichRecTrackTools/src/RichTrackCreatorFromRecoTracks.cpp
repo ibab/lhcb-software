@@ -83,6 +83,7 @@ StatusCode TrackCreatorFromRecoTracks::newTracks() const
       // check the number of input tracks
       if ( tracks->size() > m_maxInputTracks )
       {
+        procStatus()->addAlgorithmStatus( name(), Rich::Rec::ReachedTrTrackLimit );
         std::ostringstream mess;
         mess << "Number of input tracks exceeds maximum of "
              << m_maxInputTracks << " -> Abort";
@@ -100,6 +101,7 @@ StatusCode TrackCreatorFromRecoTracks::newTracks() const
       // Too many selected tracks ?
       if ( richTracks()->size() > m_maxSelTracks )
       {
+        procStatus()->addAlgorithmStatus( name(), Rich::Rec::ReachedRichTrackLimit );
         richTracks()->clear();
         std::ostringstream mess;
         mess << "Number of RICH tracks exceeds maximum of "
