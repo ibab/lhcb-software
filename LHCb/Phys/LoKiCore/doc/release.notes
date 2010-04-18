@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.189 2010-04-17 22:05:07 graven Exp $ 
+! $Id: release.notes,v 1.190 2010-04-18 14:13:48 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiCore
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -14,15 +14,6 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! 
 ! -----------------------------------------------------------------------------
-
-! 2010-04-17 - Gerhard Raven
- - Listeners: specify priority
- - Scalers: do not assume reference rate is constant
-
-! 2010-04-14 - Vanya Belyaev
-
-  Listener + Scalers:
-    fix compilation warnings for slc4-platform 
 
 
 ! 2010-04-06 - Vanya Belyaev
@@ -45,6 +36,17 @@
    + new shifters (streamers) 
   
 
+! =========================== LoKiCore v9r13 2010-04-18 =======================
+! 2010-04-17 - Gerhard Raven
+ - Listeners: specify priority
+ - Scalers: do not assume reference rate is constant
+
+! 2010-04-14 - Vanya Belyaev
+
+  Listener + Scalers:
+    fix compilation warnings for slc4-platform 
+
+
 ! 2010-04-04 - Vanya Belyaev
 
  - few fixes into LoKi::Listener  
@@ -60,7 +62,7 @@
 
  - LoKi::Scalers::RateLimitV
 
-     implements listeting the incidents (needed for Moore)
+     implements listening to incidents (needed for Moore)
 
 ! 2010-03-22 - Vanya Belyaev
 
