@@ -10,7 +10,7 @@
 # =============================================================================
 __author__  = "Jaap Panman jaap.panman@cern.ch"
 __author__  = "Plamen Hopchev phopchev@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.19 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.20 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -168,7 +168,7 @@ class Hlt1BeamGasLinesConf(HltLinesConfigurableUser) :
         line_beamCrossingForcedRZReco = line_beamCrossing.clone( lineName+"ForcedRZReco"
                                                                , priority = None
                                                                , prescale = self.prescale
-                                                               , ODIN = 'scale( ODIN_ALL, RATE(%s) )' % limit if limit else 'ODIN_ALL'
+                                                               , L0DU = 'scale( %s, RATE(%s) )' % (line_beamCrossing._L0DU, limit) if limit else line_beamCrossing._L0DU
                                                                , algos = [ MinimalRZVelo ] + bgTrigAlgos 
                                                                , postscale = self.postscale 
                                                                )
