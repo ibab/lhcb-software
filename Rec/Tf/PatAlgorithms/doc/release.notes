@@ -6,9 +6,16 @@
 
 ! 2010-04-15 - Michel De Cian
  - Change in parametrisation in PatAddTTCoord (increased purity), 
-minor changes in member functions in PatAddTTCoord.
+   minor changes in member functions in PatAddTTCoord.
+
+!========================= PatAlgorithms v3r30 2010-04-14 ====================
+! 2010-04-18 - Gerhard Raven
+ - retag v4r0 as v3r30 to allow it to be used as patch on top of a REC which
+   uses v3rxxx -- cmt does not accept it if a 'higher level' project overrules
+   a package in a 'lower level' project with different major version.
 
 !========================= PatAlgorithms v4r0 2010-04-14 ====================
+
 ! 2010-04-14 - Stephanie Hansmann-Menzemer
  - one more place to check for the polarity
 
