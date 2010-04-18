@@ -46,6 +46,7 @@
 // Boost
 #include "boost/multi_array.hpp"
 
+
 namespace Rich
 {
   namespace Rec
@@ -357,7 +358,7 @@ namespace Rich
 
       /// returns a pointer to the HPD clustering tool for the given RICH
       const Rich::DAQ::IPixelClusteringTool * hpdClusTool( const Rich::DetectorType rich ) const;
-
+      
     };
 
     inline void PixelCreatorBase::sortPixels() const

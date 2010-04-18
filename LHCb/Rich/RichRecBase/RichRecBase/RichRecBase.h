@@ -25,6 +25,7 @@ namespace LHCb
 #include "Event/RichRecSegment.h"
 #include "Event/RichRecPixel.h"
 #include "Event/RichRecPhoton.h"
+#include "Event/ProcStatus.h"
 
 // Interfaces
 #include "RichRecBase/IRichSegmentCreator.h"
@@ -32,6 +33,9 @@ namespace LHCb
 #include "RichRecBase/IRichPhotonCreator.h"
 #include "RichRecBase/IRichPixelCreator.h"
 #include "RichRecBase/IRichStatusCreator.h"
+
+// Processing abort codes
+#include "RichRecBase/RichRecProcCode.h"
 
 namespace Rich
 {
@@ -289,6 +293,20 @@ namespace Rich
         return statusCreator()->richStatus();
       }
 
+    protected:
+
+      /// Access the ProcStatus object
+      inline LHCb::ProcStatus * procStatus() const
+      {
+        if ( !m_procStat )
+        {
+          m_procStat =
+            base() -> template getOrCreate<LHCb::ProcStatus,LHCb::ProcStatus>( base()->evtSvc(),
+                                                                      m_procStatLocation );
+        }
+        return m_procStat;
+      }
+
     private:
 
       PBASE * m_base; ///< Pointer to derived class
@@ -306,6 +324,12 @@ namespace Rich
       std::string m_segmentCrName;    ///< Segment creator nickname
       std::string m_photonCrName;     ///< Photon creator nickname
       std::string m_statusCrName;     ///< Status creator nickname
+
+      /// Location of processing status object in TES
+      std::string m_procStatLocation;
+
+      /// Pointer to the ProcStatus object
+      mutable LHCb::ProcStatus * m_procStat;
 
     };
 

@@ -396,9 +396,10 @@ namespace Rich
           mess << "Number of selected pixels exceeds maximum of " << m_maxPixels << " -> Abort";
           Warning( mess.str(), StatusCode::SUCCESS, 0 ).ignore();
           richPixels()->clear();
+          procStatus()->addAlgorithmStatus( name(), Rich::Rec::ReachedPixelLimit );
         }
  
-        // Must do the following, even for empty comtainers.
+        // Must always do the following, even for empty comtainers.
 
         // sort the final pixels
         sortPixels();

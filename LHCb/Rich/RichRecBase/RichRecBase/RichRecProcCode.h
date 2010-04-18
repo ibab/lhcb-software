@@ -25,12 +25,13 @@ namespace Rich
      */
     enum ProcStat
       {
-        ProcStatAbort         = -1, ///< Processing was aborted prior to the RICH
-        NoRichPixels          = -2, ///< No RICH pixels were found
-        ReachedPixelLimit     = -3, ///< The maximum number of pixels was exceeded
-        NoRichTracks          = -4, ///< No tracks were found with RICH information
-        ReachedTrTrackLimit   = -5, ///< The maximum number of raw tracks was exceeded
-        ReachedRichTrackLimit = -6  ///< The maximum number of tracks with RICH information was exceeded
+        ProcStatAbort          = -1, ///< Processing was aborted prior to the RICH
+        NoRichPixels           = -2, ///< No RICH pixels were found
+        ReachedPixelLimit      = -3, ///< The maximum number of pixels was exceeded
+        NoRichTracks           = -4, ///< No tracks were found with RICH information
+        ReachedTrTrackLimit    = -5, ///< The maximum number of raw tracks was exceeded
+        ReachedRichTrackLimit  = -6, ///< The maximum number of tracks with RICH information was exceeded
+        ReachedRichPhotonLimit = -7  ///< The maximum number of RICH photon candidates was exceeded
       };
 
   }

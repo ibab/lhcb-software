@@ -303,6 +303,7 @@ namespace Rich
 
         if ( abortPhotonReco )
         {
+          procStatus()->addAlgorithmStatus( name(), Rich::Rec::ReachedRichPhotonLimit );
           std::ostringstream mess;
           mess << "Number of photon candidates exceeds maximum of " 
                << m_maxPhotons << " -> Processing aborted";
