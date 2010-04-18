@@ -1,7 +1,7 @@
 """
 High level configuration tool(s) for Moore
 """
-__version__ = "$Id: Configuration.py,v 1.113 2010-04-07 21:16:02 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.114 2010-04-18 06:38:06 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ, path
@@ -154,13 +154,6 @@ class Moore(LHCbConfigurableUser):
         self._configureOnlineMessageSvc()
 
 
-    def _configureReferenceRate(self):
-        from Configurables import HltReferenceRateSvc
-        rsvc = HltReferenceRateSvc()
-        rsvc.ReferenceRate = self.getProp('ReferenceRate')
-        rsvc.ODINPredicate = self.getProp('ReferencePredicate')
-        ApplicationMgr().ExtSvc.append( rsvc ) 
-
 
     def _configureOnlineMessageSvc(self):
         # setup the message service
@@ -225,6 +218,7 @@ class Moore(LHCbConfigurableUser):
             rch = RunChangeHandlerSvc()
             rch.Conditions = { "Conditions/Online/LHCb/Magnet/Set"  : online_xml
                              , "Conditions/Online/Velo/MotionSystem": online_xml
+                             , "Conditions/Online/LHCb/Lumi/LumiSettings" : online_xml
                              }
             ApplicationMgr().ExtSvc.append(rch)
 
@@ -474,7 +468,6 @@ class Moore(LHCbConfigurableUser):
         self._outputLevel()
 
         if self.getProp('UseDBSnapshot') : self._configureDBSnapshot()
-        self._configureReferenceRate()
 
         if self.getProp('UseTCK') :
             self._config_with_tck()

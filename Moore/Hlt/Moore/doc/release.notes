@@ -6,6 +6,12 @@ Purpose     : LHCb HLT application
 ! 2010-04-03 - Gerhard Raven
  - version of top of HLT_v10r0
 
+!========================== Moore v8r10 2009-04-18 ===================
+! 2010-04-18 - Gerhard Raven
+ - change reference rate setup: settings are now picked up from
+   conditions DB & runChangeHandler
+
+
 !========================== Moore v8r8p2 2009-04-02 ===================
 ! 2010-04-02 - Gerhard Raven
  - add apply_pattern GaudiApp to enable use of Moore in ganga
