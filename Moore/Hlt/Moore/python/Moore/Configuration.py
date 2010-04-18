@@ -1,7 +1,7 @@
 """
 High level configuration tool(s) for Moore
 """
-__version__ = "$Id: Configuration.py,v 1.114 2010-04-18 06:38:06 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.115 2010-04-18 22:26:34 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ, path
@@ -258,7 +258,7 @@ class Moore(LHCbConfigurableUser):
     def getRelease(self):
         import re,fileinput
         #  do not pick up the pz in vxrypz
-        version = re.compile('^version (v\dr\d)(p\d)?')
+        version = re.compile('^version (v\d+r\d+)(p\d+)?')
         for line in fileinput.input(os.environ.get('MOOREROOT')+'/cmt/requirements') :
             match = version.match(line)
             if not match: continue
