@@ -146,10 +146,18 @@ class RichRecQCConf(RichConfigurableUser):
     def addMonitor(self,monitor):
         if monitor not in self.__added_monitors__ : self.__added_monitors__.append(monitor)
 
-    ## Remove a monitor to a given histo set
+    ## Add a list of monitors to a given histo set
+    def addMonitors(self,monitors):
+        for monitor in monitors : self.addMonitor(monitor)
+    
+    ## Remove a monitor from a given histo set
     def removeMonitor(self,monitor):
         if monitor not in self.__removed_monitors__ : self.__removed_monitors__.append(monitor)
-                
+
+    ## Remove a list of monitors from a given histo set
+    def removeMonitors(self,monitors):
+        for monitor in monitors : self.removeMonitor(monitor)
+
     ## Set the histogram and ntuple producing options
     def setHistosTupleOpts(self,mon):
         if "NTupleProduce" in mon.properties() :
@@ -252,7 +260,7 @@ class RichRecQCConf(RichConfigurableUser):
 
         # The list of monitors to run
         monitors = self.getHistoOptions("Monitors")
-        
+  
         # Some monitoring of raw information
         if self.getProp("DataType") not in ["DC06"]:
 
@@ -325,8 +333,7 @@ class RichRecQCConf(RichConfigurableUser):
             self.hpdImageShifts(self.newSeq(sequence,"RichHPDImageShifts"))
 
         # Expert Monitoring
-        if self.getProp("Histograms") == "Expert" :
-            self.expertMonitoring( self.newSeq(sequence,"RichExpertChecks") )
+        self.expertMonitoring( self.newSeq(sequence,"RichExpertChecks") )
 
     ## standalone ring finder monitors
     def ringsMoni(self,type,sequence):
@@ -348,12 +355,14 @@ class RichRecQCConf(RichConfigurableUser):
                 raise RuntimeError("ERROR : Unknown trackless ring finder type")
             conf.enableHistos( True )
 
+        context = self.getProp("Context")
+
         histoSet = self.getProp("Histograms")
  
         # Add monitors
         for ringclass in self.getHistoOptions("TracklessRingClasses") :
             moni = self.createMonitor(Rich__Rec__MC__TracklessRingMoni,type+"RingMoni"+ringclass)
-            moni.RingLocation = "Rec/Rich/"+type+"/Rings"+ringclass
+            moni.RingLocation = "Rec/Rich/"+type+"/"+context+"/Rings"+ringclass
             sequence.Members += [moni]
 
     ## standalone ring finder peak searches
@@ -456,7 +465,7 @@ class RichRecQCConf(RichConfigurableUser):
         RichIFBMon.WantIFB               = True
         RichIFBMon.WantHitmaps           = False
         RichIFBMon.WantQuickHitmap       = False
-        sequence.Members      += [RichIFBMon]
+        sequence.Members += [RichIFBMon]
 
     ## HPD image shift monitoring
     def hpdImageShifts(self,sequence):
@@ -478,9 +487,10 @@ class RichRecQCConf(RichConfigurableUser):
         checks  = self.getHistoOptions("Monitors")
         tkTypes = self.getHistoOptions("RecoTrackTypes")
 
-        # Turn on/off histos in CK resolution tool
-        if "HistoProduce" in self.richTools().ckResolution().properties() :
-            self.richTools().ckResolution().HistoProduce = self.getProp("Histograms") != "None"
+        # Turn on/off histos in CK resolution tool when in expert mode
+        if "Expert" == self.getProp("Histograms"):
+            if "HistoProduce" in self.richTools().ckResolution().properties() :
+                self.richTools().ckResolution().HistoProduce = self.getProp("Histograms") != "None"
 
         check = "RichPixelPositions"
         if check in checks :

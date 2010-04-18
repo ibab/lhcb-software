@@ -1,3 +1,4 @@
+
 //-------------------------------------------------------------------------------
 /** @file RichRecoQC.cpp
  *
@@ -105,10 +106,10 @@ StatusCode RecoQC::prebookHistograms()
                  -0.5, 50.5, 51 );
     richHisto1D( HID("totalPhotonsIsolated",*rad),"Photon Yield | Isolated Tracks",
                  -0.5, 50.5, 51 );
-    richHisto1D( HID("ckPull",*rad), "(Rec-Exp)/Res CKtheta",
+    richHisto1D( HID("ckPullIso",*rad), "(Rec-Exp)/Res CKtheta | Isolated Tracks",
                  -4, 4, nBins1D() );
-    //richProfile1D( HID("ckPullVtheta",*rad), "(Rec-Exp)/Res CKtheta Versus CKtheta",
-    //               m_ckThetaMin[*rad], m_ckThetaMax[*rad], nBins1D() );
+    richProfile1D( HID("ckPullVthetaIso",*rad), "(Rec-Exp)/Res CKtheta Versus CKtheta | Isolated Tracks",
+                   m_ckThetaMin[*rad], m_ckThetaMax[*rad], nBins1D() );
   }
 
   return StatusCode::SUCCESS;
@@ -231,10 +232,10 @@ StatusCode RecoQC::execute()
 
       // CK theta Pull plots
       const double ckPull = ( resExpTrue>0 ? deltaTheta/resExpTrue : -999 );
-      if ( resExpTrue>0 )
+      if ( isolated && resExpTrue>0 )
       {
-        richHisto1D( HID("ckPull",rad) ) -> fill( ckPull );
-        //richProfile1D( HID("ckPullVtheta",rad) ) -> fill( thetaRec, ckPull );
+        richHisto1D( HID("ckPullIso",rad) ) -> fill( ckPull );
+        richProfile1D( HID("ckPullVthetaIso",rad) ) -> fill( thetaRec, ckPull );
       }
       
       // MC based plots
@@ -252,12 +253,13 @@ StatusCode RecoQC::execute()
           if ( resExpTrue>0 )
           {
             // pull plots
-            richHisto1D ( HID("ckPullTrue",rad), "(Rec-Exp)/Res Cktheta | MC true photons",
+            richHisto1D ( HID("ckPullTrueIso",rad), 
+                          "(Rec-Exp)/Res Cktheta | MC true photons",
                           -4, 4, nBins1D() ) -> fill( ckPull );
-            //richProfile1D( HID("ckPullVthetaTrue",rad), 
-            //               "(Rec-Exp)/Res CKtheta Versus CKtheta | MC true photons",
-            //               m_ckThetaMin[rad], m_ckThetaMax[rad], nBins1D() ) 
-            //  -> fill( thetaRec, ckPull );
+            richProfile1D( HID("ckPullVthetaTrueIso",rad), 
+                           "(Rec-Exp)/Res CKtheta Versus CKtheta | MC true photons",
+                           m_ckThetaMin[rad], m_ckThetaMax[rad], nBins1D() ) 
+              -> fill( thetaRec, ckPull );
           }
         }
         else // fake photon

@@ -3,8 +3,17 @@
 ! Responsible : Chris Jones
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
+
+! 2010-04-18 - Chris Jones
+ - Make CK theta pull plots for isolated tracks only in RichRecoQC
+ - Fix bug in COnfiguration that caused the trackless ring monitoring to be
+   looking in the wrong TES locations ...
+ - Add a warning to the trackless ring monitor to print a warning in the 
+   case the requested TES location to monitor has no data ...
+
 ! 2010-04-15 - Sajan Easo
   Added the printout for CF4 scintillation hits in RichRecPixelQC.cpp,h
+
 !======================= RichRecQC v2r39 2010-04-12 ========================
 ! 2010-04-02 - Chris Jones
  - Make sure MC histograms that can be made without extended MC RICH 

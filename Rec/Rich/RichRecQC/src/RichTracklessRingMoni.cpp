@@ -92,7 +92,10 @@ StatusCode TracklessRingMoni::execute()
   if ( !richStatus()->eventOK() ) return StatusCode::SUCCESS;
 
   // Retrieve rings
-  if ( !exist<LHCb::RichRecRings>(m_ringLoc) ) return StatusCode::SUCCESS;
+  if ( !exist<LHCb::RichRecRings>(m_ringLoc) ) 
+  {
+    return Warning( "No rings found at "+m_ringLoc, StatusCode::SUCCESS );
+  }
   const LHCb::RichRecRings * rings = get<LHCb::RichRecRings>( m_ringLoc );
   if ( msgLevel(MSG::DEBUG) )
     debug() << "Found " << rings->size() << " rings at " << m_ringLoc << endmsg;
