@@ -3,6 +3,13 @@
 ! Responsible : Kurt Rinnert, Chris Parkes
 !--------------------------------------------------------------------------
 
+!=========================  VeloDAQ v4r14 2010-04-18 =======================
+! 2010-04-18 - Gerhard Raven
+ - retag v5r0 as v4r14 so it can be used in Moore v8r10. cmt does not accept
+   it when an application project has a package with a different major number
+   from the underlying project
+
+
 !=========================  VeloDAQ v5r0 2010-04-13 =======================
 ! 2010-04-13 - David Hutchcroft
  - On advice from Gerhard about the trigger changed the behviour when too
