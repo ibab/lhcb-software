@@ -6,7 +6,7 @@
  *  Header file for Tstation alignment algorithm: TAlignment
  *
  *  CVS Log :-
- *  $Id: TStation.h,v 1.4 2010-03-17 16:37:54 jblouw Exp $
+ *  $Id: TStation.h,v 1.5 2010-04-19 09:08:43 jblouw Exp $
  *
  *  @author J. Blouw  Johan.Blouw@cern.ch
  *  @author M.Needham Matt.Needham@cern.ch
@@ -22,17 +22,21 @@
 
 #include "TrackInterfaces/ITrackCaloMatch.h"
 #include "AlignmentInterfaces/IATrackSelectorTool.h"
-
+#include "TrackInterfaces/ITrackFitter.h"
 #include <string>
 
 // GaudiKernel
 #include "GaudiAlg/GaudiTupleAlg.h"
 #include "GaudiKernel/HashMap.h"
+#include "GaudiKernel/IIncidentListener.h"
+#include "GaudiKernel/IIncidentSvc.h"
+#include "GaudiKernel/Incident.h"
 
 #include "Event/Track.h"
 
-class TStation : public GaudiTupleAlg {
-
+class TStation : public GaudiTupleAlg, 
+  virtual public IIncidentListener {
+  
 public:
 
   /// constructer
@@ -59,7 +63,10 @@ public:
    *  @retval false Track is rejected
    */
 
-
+   StatusCode queryInterface( const InterfaceID &, void ** );
+   void handle(const Incident& incident);
+   StatusCode Reset();
+   StatusCode PrintTD();
  private:
 
   std::string m_inputcontainer;
@@ -69,7 +76,7 @@ public:
   
   IATrackSelectorTool* m_trackselection;
   ITrackCaloMatch *m_trackenergy;
-
+  ITrackFitter *m_tfit;
   
   AIDA::IHistogram1D* CaloEnergy;
 
@@ -80,6 +87,7 @@ public:
   double m_minOTHitCut;  ///< Min hit cut
   double m_minTTHitCut;  ///< Min hit cut
   double m_minVeloHitCut;  ///< Min hit cut
+    int m_total; 
 };
 
 #endif // TRACKTOOLS_JBSelector_H

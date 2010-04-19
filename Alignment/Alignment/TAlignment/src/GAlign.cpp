@@ -4,7 +4,7 @@
  *  Implementation file for RICH reconstruction tool : GAlign
  *
  *  CVS Log :-
- *  $Id: GAlign.cpp,v 1.24 2010-03-17 16:37:53 jblouw Exp $
+ *  $Id: GAlign.cpp,v 1.25 2010-04-19 09:08:43 jblouw Exp $
  *
  *  @author J.Blouw Johan.Blouw@cern.ch
  *  @date   30/12/2005
@@ -320,7 +320,6 @@ StatusCode GAlign::execute() {
     //----------------------------
     Tracks *inCont = get<Tracks>(m_inputcontainer);
     Tracks::const_iterator iterT;
-    bool acceptTr = false;
     const LHCb::Track *atrack = NULL;
     for ( iterT = inCont->begin(); iterT != inCont->end(); iterT++) {
       atrack = *iterT;

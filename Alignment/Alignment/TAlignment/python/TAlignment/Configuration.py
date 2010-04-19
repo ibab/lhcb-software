@@ -70,6 +70,7 @@ class TAlignment( LHCbConfigurableUser ):
 	    print "******* setting up Milledede style alignment ******"
 	    self.setProp("Incident", 'GlobalMPedeFit')
 	    self.GAlignSeq()
+
                     
 	if self.getProp("Method") == 'Kalman' :
             print "****** setting up Kalman type alignment!"
@@ -85,11 +86,11 @@ class TAlignment( LHCbConfigurableUser ):
 	print "Adding ", TStation().name(), " to sequence ", alseq.name()
 	GAlignConf.GAlignConf().Sequencer = self.getProp("Sequencer")
 	GAlignConf.GAlignConf().InputContainer = self.getProp("TrackLocation")
+	GAlignConf.GAlignConf().Constraints = self.getProp("Constraints")
+	GAlignConf.GAlignConf().CondFilePrefix = self.getProp("CondFilePrefix")
+	GAlignConf.GAlignConf().OutputLevel = self.getProp("OutputLevel")
 	ga = GAlignConf.GAlignConf()
-#	alseq.Members.append( ga )
-#        listOfCondToWrite = self.getProp( "WriteCondSubDetList" )
-#        if listOfCondToWrite:
-#           alseq.Members.append( self.writeSeq( listOfCondToWrite ) )
+
 	ga.configure()
 
     def getProp( self, name ) :

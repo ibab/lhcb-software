@@ -3,6 +3,11 @@ Package	:	Alignment/TAlignment
 Package Coordinator	:	Jan Amoraal, Johan Blouw
 Purpose	: collection of alignment algorithms
 
+! 2010-04-19 - Johan Blouw
+ - update of TStation so that it now can create a homogenous track distribution in OT.
+ - minor changes to GAlign.
+ - minor update of GAlignConf
+
 ! 2010-04-12 - Wouter Hulsbergen
  - patch in src/AlParameters to work around problem with optimization in gcc4.3
 

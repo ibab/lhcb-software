@@ -41,28 +41,30 @@ class GAlignConf( LHCbConfigurableUser ):
 
     def configure(self):
         print "******* calling ", self.name()
- 	print "******* configuring reco sequence ******"
-        from Configurables import TrackSys
 	log.info("Aligning OT")
+	alseq = self.getProp("Sequencer")
         log.info("GAlignConf: initalizing TAlignment!")
 
         from Configurables import AlignTrTools
         AlignTrTools().Constraints = self.getProp("Constraints")
-        # AlignTrTools().Degrees_of_Freedom = self.getProp("DoF")
-	alseq = self.getProp("Sequencer")
+	AlignTrTools().AlignmentLevel = self.getProp("Level")
+	AlignTrTools().Tools = ["TAConfig", "Derivatives", "WriteAlignmentConditions" ]
         from Configurables import GAlign
-        importOptions("$TALIGNMENTROOT/options/GAlign.py")
-        print "Adding GAlign to sequence ", alseq.name()
-	alseq.Members.append( GAlign() )
+	GAlign().forceIterations = False
+	GAlign().MaxIterations = 0
+	GAlign().OutputLevel = 3
 	GAlign().InputContainer = self.getProp("InputContainer")
 	GAlign().skipBigCluster = self.getProp("skipBigCluster")
+
+	
         if len( GAlign().Detectors ) == 0:
            GAlign().Detectors = self.getProp("Detectors")
+        print "Adding GAlign to sequence ", alseq.name()
+	alseq.Members.append( GAlign() )
 	if self.Detectors:
 	   from Configurables import WriteAlignmentConditions
 	   if 'OT' in self.Detectors:
 	      alseq.Members.append ( self.writeAlg( 'OT','Elements', [] ) )
-        log.info( self )
 
     def writeAlg( self, subdet, condname, depths, outputLevel = INFO) :
         from Configurables import WriteAlignmentConditions
