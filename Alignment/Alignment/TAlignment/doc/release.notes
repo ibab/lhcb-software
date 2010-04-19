@@ -3,6 +3,10 @@ Package	:	Alignment/TAlignment
 Package Coordinator	:	Jan Amoraal, Johan Blouw
 Purpose	: collection of alignment algorithms
 
+! 2010-04-20 - Wouter Hulsbergen
+ - Add TrackDoubleHitPruner
+ - make sure Update fails if it cannot handle configured mother-daughter relations
+
 ! 2010-04-19 - Johan Blouw
  - update of TStation so that it even puts the output track container on the TES
    when the container is empty (GAlign was complaining about it...)
