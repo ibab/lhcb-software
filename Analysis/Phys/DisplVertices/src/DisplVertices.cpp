@@ -329,8 +329,10 @@ StatusCode DisplVertices::execute(){
   //------------------Set the beam line------------------
   if( m_RCut=="FromBeamLine" ){
     if( exist<Particles>( m_BLLoc ) ){
-      Particles* BL = get<Particles>( m_BLLoc );      
-      m_BeamLine = *(BL->begin());
+      const Particle::Range BL = get<Particle::Range>( m_BLLoc );      
+      const LHCb::Particle* tmp = *(BL.begin());
+      m_BeamLine->setReferencePoint( tmp->referencePoint() );
+      m_BeamLine->setMomentum( tmp->momentum() );
       if( msgLevel(MSG::DEBUG) )
         debug()<<"Beam line position "<< m_BeamLine->referencePoint()
 	       <<" direction " << m_BeamLine->momentum() << endmsg;
