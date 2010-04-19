@@ -27,6 +27,9 @@ use GlobalReco           v6r32   Rec  # Chris Jones
 use LumiAlgs             v3r4    Rec  # Jaap Panman
 use RecAlgs              v1r8    Rec  # Marco Cattaneo
 use RecUtils             v1r5    Rec  # Juan Palacios, Patrick Koppenburg
+# Non sub-detector specific components upgrade related
+use RecoUpgrade          v1r0    Rec  # Victor Coco
+use RecoUpgradeMC        v1r0    Rec  # Victor Coco
 
 # Rich
 use RichGlobalPID        v3r12   Rich # Chris Jones

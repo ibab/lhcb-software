@@ -5,6 +5,11 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
+- Package Added: 
+  Rec/RecoUpgrade   v1r0 -- needed for reconstruction of upgraded detector
+  Rec/RecoUpgradeMC v1r0 -- needed for reconstruction of upgraded detector (MC related)
+  
+
 </PRE><H1><A NAME=v9r1>2010-04-12 RecSys v9r1</A></H1><PRE>
 This version uses Gaudi v21r8 and LHCb v30r1
 
