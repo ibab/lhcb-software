@@ -21,8 +21,8 @@ from StrippingSelections.Streams import allStreams
 
 sc = StrippingConf( Streams = allStreams )
 
-from Configurables import CondDB
-CondDB(UseOracle = True)
+#from Configurables import CondDB
+#CondDB(UseOracle = True)
 
 from Configurables import DaVinci
 
