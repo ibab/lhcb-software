@@ -9,7 +9,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.11 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.12 $"
 # =============================================================================
 
 import Gaudi.Configuration 
@@ -172,12 +172,7 @@ class Hlt1HadronLinesConf(HltLinesConfigurableUser) :
                             FilterDescriptor = ['PT,>,%(SingleHadron_PTCut)s'%self.getProps()],
                             HistogramUpdatePeriod = 1,
                             HistoDescriptor  = histosfilter('PT',0.,8000.,200)
-                            ),
-                   Member ( 'TF' , 'SingleHadronIP' ,
-                            FilterDescriptor = [ 'IP_PV2D,||>,%(HadSingle_IPCut)s'% self.getProps()],
-                            HistogramUpdatePeriod = 1,
-                            HistoDescriptor = histosfilter('IP_PV2D',-0.2,1.8,200)
-                          )
+                            )
                    ]
             return sh
 
@@ -186,17 +181,11 @@ class Hlt1HadronLinesConf(HltLinesConfigurableUser) :
         #------------------------------------
         def companion(type=""):
             prefix = "HadCompanion"+type
-            OutputOfConfirmation = confirmationpostip(type).outputSelection()
             if   type == "Soft"   : cutvalue = self.getProp("SoftHadDi_IPCut")
             elif type == "Di"     : cutvalue = self.getProp("HadDi_IPCut")
             else                  : return None # Not an allowed value!
             comp = [ RZVelo , PV2D().ignoreOutputSelection()
                 , Member ( 'TU', 'UVelo' , RecoName = 'Velo')
-                , Member ( 'TF', '1UVelo'
-                           , FilterDescriptor = ['MatchIDsFraction_%s,<,0.9' %OutputOfConfirmation ]
-                           , HistogramUpdatePeriod = 1
-                           , HistoDescriptor  = histosfilter('MatchIDsFraction_%s' %OutputOfConfirmation,0.,8000.,200)
-                           )
                 , Member ( 'TF', 'Companion'
                            , FilterDescriptor = [ 'IP_PV2D,||>,%s'%cutvalue]
                            , HistogramUpdatePeriod = 1
@@ -226,7 +215,12 @@ class Hlt1HadronLinesConf(HltLinesConfigurableUser) :
                          , FilterDescriptor = [ 'DOCA,<,'+str(self.getProp('HadCompanion_DOCACut'))]
                          , HistoDescriptor  = histosfilter('DOCA_'+type,0.,1.,200)
                            )
-                , Member ( 'VF', 'UVelo'
+                , Member ( 'VF', '1UVelo'
+                           , FilterDescriptor = ['VertexTracksMatchIDsFraction,<,0.9']
+                           , HistogramUpdatePeriod = 1
+                           , HistoDescriptor  = histosfilter('VertexTracksMatchIDsFraction',0.,1.,100)
+                           )
+                , Member ( 'VF', '2UVelo'
                            , FilterDescriptor = [ 'VertexDz_PV2D,>,%s'%self.getProp('HadCompanion_DZCut')]
                            , HistogramUpdatePeriod = 1
                            , HistoDescriptor  = histosfilter('VertexDx_PV2D_'+type,1.,12.,200)                       

@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.165 2010-04-19 14:41:02 graven Exp $
+! $Id: release.notes,v 1.166 2010-04-19 22:01:02 gligorov Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
@@ -9,6 +9,12 @@
 ! for the production. Commit them AS WELL in branch production200912. 
 !
 !-----------------------------------------------------------------------------
+
+! 2010-04-19 - V. Gligorov
+ - DiHadron line now kills clones not by filtering the companion and
+   confirmed tracks (which does not work if there is more than one
+   confirmed track in the event) but by filtering the tracks making up
+   the dihadron vertex using a new filter in HltCommon.
 
 !========================== Hlt1Lines v3r1 2010-04-19 ===================
 ! 2010-04-18 - Gerhard Raven
