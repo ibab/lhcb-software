@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltReco.py,v 1.1 2010-03-17 22:40:11 gligorov Exp $
+# $Id: HltReco.py,v 1.2 2010-04-19 08:03:57 albrecht Exp $
 # =============================================================================
 ## @file HltTracking/HltReco.py
 #  Collection of predefined algorithms to perform reconstruction
@@ -46,6 +46,32 @@ from Configurables import PVOfflineTool
 from Configurables import HltTrackFilter, HltVertexFilter, HltTrackUpgrade
 from HltLine.HltLine import bindMembers
 from Configurables import PatSeeding, PatSeedingTool
+
+# J. Albrecht 2010-04-16
+# globally set the resolutions for ST
+#when syntax errors there are fixed take from 
+#importOptions( "$STTOOLSROOT/options/Brunel_EarlyData.opts" )
+from Configurables import STOfflinePosition, STOnlinePosition
+
+STOnlinePosition().ErrorVec=[0.289,0.339,0.322]
+STOnlinePosition().APE = 0.197
+
+ITOnl = STOnlinePosition("ITLiteClusterPosition")
+ITOnl.ErrorVec=[0.28,0.20,0.3]
+ITOnl.APE=0.05
+#ITOnl.DetType = "IT"
+
+STPos = STOfflinePosition("ITClusterPosition")
+STPos.LinSharingCorr2 = 0.61
+STPos.LinSharingCorr2 = 0.61
+STPos.CubicSharingCorr2 = 7.4
+STPos.LinSharingCorr4 = 0.63
+STPos.DetType = "IT"
+STPos.ErrorVec = [0.28, 0.20, 0.3, 0.2]
+STPos.APE = 0.05
+
+STOfflinePosition().ErrorVec = [0.289, 0.339, 0.322, 0.459]
+STOfflinePosition().APE = 0.197
 
 #############################################################################################
 # Configure pattern recognition algorithms
