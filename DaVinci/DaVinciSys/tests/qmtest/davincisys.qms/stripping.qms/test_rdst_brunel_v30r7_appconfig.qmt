@@ -7,6 +7,7 @@
   <text>$APPCONFIGOPTS/DaVinci/StrippingLinesPrescales-1003.py</text>
   <text>$APPCONFIGOPTS/DaVinci/DVStrippingETC-RealData.py</text>
 <!--  <text>$APPCONFIGOPTS/UseOracle.py</text> -->
+  <text>$APPCONFIGOPTS/DaVinci/DVMonitor-v25r2p1-rm-MuIDMonitor-patch.py</text>
   <text>$APPCONFIGOPTS/DaVinci/L0Patch.py</text>
   <text>$APPCONFIGOPTS/DaVinci/DataType-2010.py</text>
     <text>--option</text>
