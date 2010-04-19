@@ -4,7 +4,7 @@
  *  Implementation file for RICH reconstruction tool : TStation
  *
  *  CVS Log :-
- *  $Id: TStation.cpp,v 1.8 2010-04-19 09:08:43 jblouw Exp $
+ *  $Id: TStation.cpp,v 1.9 2010-04-19 13:12:12 jblouw Exp $
  *
  *  @author M.Needham Matt.Needham@cern.ch
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
@@ -84,7 +84,7 @@ StatusCode TStation::execute() {
   setHistoTopDir("OT/");
   if ( ! exist<LHCb::Tracks>( m_inputcontainer ) ) {
     error() << "Container " << m_inputcontainer << " does not exist!" << endreq;
-    return StatusCode::SUCCESS;
+    return StatusCode::FAILURE;
   }
   LHCb::Tracks* inCont = get<LHCb::Tracks>(m_inputcontainer);
   ITTracks = new LHCb::Tracks();
@@ -127,7 +127,7 @@ StatusCode TStation::execute() {
   debug() << "Number of usable tracks = " << num_tracks << endreq;
   m_total += num_tracks;
   //  info() << "Size of Tracks container = " << OTTracks->size() << endreq;
-  if ( OTTracks->size() > 0 ) 
+  if ( OTTracks->size() >= 0 ) 
     put ( OTTracks, m_OTTrackLocation  );
   
   return StatusCode::SUCCESS;

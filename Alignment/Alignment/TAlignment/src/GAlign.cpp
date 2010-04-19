@@ -4,7 +4,7 @@
  *  Implementation file for RICH reconstruction tool : GAlign
  *
  *  CVS Log :-
- *  $Id: GAlign.cpp,v 1.25 2010-04-19 09:08:43 jblouw Exp $
+ *  $Id: GAlign.cpp,v 1.26 2010-04-19 13:12:12 jblouw Exp $
  *
  *  @author J.Blouw Johan.Blouw@cern.ch
  *  @date   30/12/2005
@@ -308,8 +308,8 @@ StatusCode GAlign::execute() {
           << "***********************" << endreq;
   m_nEvents++;
   if ( ! exist<Tracks>( m_inputcontainer ) ) {
-    info() << "Error: no tracks in container " << m_inputcontainer << endreq;
-    return StatusCode::FAILURE;
+    warning() << "Error: container " << m_inputcontainer << " does not exist!" << endreq;
+    return StatusCode::SUCCESS;
   } else {
     
     //-----------------------------

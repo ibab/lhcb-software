@@ -4,6 +4,8 @@ Package Coordinator	:	Jan Amoraal, Johan Blouw
 Purpose	: collection of alignment algorithms
 
 ! 2010-04-19 - Johan Blouw
+ - update of TStation so that it even puts the output track container on the TES
+   when the container is empty (GAlign was complaining about it...)
  - update of TStation so that it now can create a homogenous track distribution in OT.
  - minor changes to GAlign.
  - minor update of GAlignConf
