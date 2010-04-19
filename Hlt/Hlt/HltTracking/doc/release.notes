@@ -1,4 +1,4 @@
-!$Id: release.notes,v 1.112 2010-04-19 08:04:51 albrecht Exp $
+!$Id: release.notes,v 1.113 2010-04-19 11:33:12 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/HltTracking
 ! Responsible : Jose A. Hernando
@@ -9,9 +9,6 @@
 
 ! 2010-04-16 - Johannes Albrecht
  - Hlt2Tracking.py: set options for early data running
-
-! 2010-04-15 - Johannes Albrecht
- - HltGuidedForward: make forward tool private
 
 ! 2010-04-13 - V. Gligorov
   - Add an option for "Early Data" tracking to Hlt2 tracking, currently this
@@ -79,6 +76,10 @@
 
 ! 2010-03-01 - Gerhard Raven
  - fix windows compiler warnings
+
+!========================== HltTracking v4r5 2010-04-19 ===================
+! 2010-04-15 - Johannes Albrecht
+ - HltGuidedForward: make forward tool private
 
 !========================== HltTracking v4r4p2 2010-02-17 ===================
 ! 2010-02-11 - Gerhard Raven
