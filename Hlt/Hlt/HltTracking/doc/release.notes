@@ -1,9 +1,11 @@
-!$Id: release.notes,v 1.111 2010-04-16 07:20:42 albrecht Exp $
+!$Id: release.notes,v 1.112 2010-04-19 08:04:51 albrecht Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/HltTracking
 ! Responsible : Jose A. Hernando
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
+! 2010-04-19 - Johannes Albrecht
+ - HltReco.py: add ST calibrations for early data
 
 ! 2010-04-16 - Johannes Albrecht
  - Hlt2Tracking.py: set options for early data running
