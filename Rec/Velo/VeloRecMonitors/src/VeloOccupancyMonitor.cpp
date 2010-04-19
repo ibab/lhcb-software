@@ -1,4 +1,4 @@
-// $Id: VeloOccupancyMonitor.cpp,v 1.17 2010-04-08 13:45:11 krinnert Exp $
+// $Id: VeloOccupancyMonitor.cpp,v 1.18 2010-04-19 15:27:21 krinnert Exp $
 // Include files 
 // -------------
 
@@ -171,13 +171,14 @@ StatusCode Velo::VeloOccupancyMonitor::execute() {
 
   // Increment the occpancy denominator, reset at configurable
   // frequency
-  if ( 0 == m_occupancyDenom % m_occupancyResetFreq ) {
+  if ( 0 == (m_occupancyDenom % m_occupancyResetFreq) ) {
     m_occupancyDenom = 1;
     for ( std::vector<DeVeloSensor*>::const_iterator si = m_veloDet->sensorsBegin();
         si != m_veloDet->sensorsEnd();
         ++si ) {
       unsigned int s = (*si)->sensorNumber();
       m_occupancies[s]->reset();  
+      m_occupanciesCh[s]->reset();  
     }
   } else {
     ++m_occupancyDenom;
@@ -187,6 +188,7 @@ StatusCode Velo::VeloOccupancyMonitor::execute() {
         ++si ) {
       unsigned int s = (*si)->sensorNumber();
       m_occupancies[s]->scale(scale);
+      m_occupanciesCh[s]->scale(scale);
     }
   }
 
@@ -380,9 +382,9 @@ void Velo::VeloOccupancyMonitor::monitorOccupancy() {
         m_fastHistOccSpectLow->fillFast(occ);
       }
     }
-    // sync number of entries here to avoid separate loop
-    m_occupancies[sens]->updateEntries(); 
-    m_occupanciesCh[sens]->updateEntries(); 
+    // set number of entries here to avoid separate loop
+    m_occupancies[sens]->setEntries(m_occupancyDenom-1); 
+    m_occupanciesCh[sens]->setEntries(m_occupancyDenom-1); 
   }
   m_fastHistOccSpectAll->updateEntries();
   m_fastHistOccSpectLow->updateEntries();
@@ -411,6 +413,7 @@ void Velo::VeloOccupancyMonitor::monitorOccupancy() {
   m_histAvrgSensor->SetEntries(m_occupancyDenom-1);
   m_histAvrgSensorPO1->SetEntries(m_occupancyDenom-1);
   m_histAvrgSensorPO11->SetEntries(m_occupancyDenom-1);
+
 }
 
 

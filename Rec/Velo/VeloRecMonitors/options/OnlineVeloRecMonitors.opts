@@ -112,6 +112,10 @@ VOCCNext1.PropertiesPrint = false;
 //VOCCNext6.PropertiesPrint = false;
 //VOCCNext7.PropertiesPrint = false;
 
+VOCCDefault.OccupancyResetFrequency = 3300;
+VOCCPrev1.OccupancyResetFrequency = 3300;
+VOCCNext1.OccupancyResetFrequency = 3300;
+
 //VCMPrev7.OutputLevel = 2;
 //VCMNext1.OutputLevel = 2;
 //VCMDefault.OutputLevel = 2;

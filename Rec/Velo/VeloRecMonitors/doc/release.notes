@@ -4,6 +4,13 @@
 ! Purpose     : VELO monitoring algorithms for reconstruction data (ZS data)
 !-----------------------------------------------------------------------------
 
+! 2010-04-19 - Kurt Rinnert
+ - bug fix in occupancy monitor: per channel occ. plots were not scaled
+   properly in events with no clusters.
+ - per channe and per strip plots now have the number of contributing events
+   set as the number of entries.
+ - adjusted reset frequency of occupany plots
+
 !======================= VeloRecMonitors v2r8 2010-04-12 ====================
 ! 2010-04-10 - Eduardo Rodrigues
  - bin range for # of clusters plots adjusted
