@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.164 2010-04-18 14:25:08 graven Exp $
+! $Id: release.notes,v 1.165 2010-04-19 14:41:02 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
@@ -10,6 +10,7 @@
 !
 !-----------------------------------------------------------------------------
 
+!========================== Hlt1Lines v3r1 2010-04-19 ===================
 ! 2010-04-18 - Gerhard Raven
  - rate limit beamgas at the level of the L0 filter
  - specify type of rate limiters using new enum
