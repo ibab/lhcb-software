@@ -3,7 +3,7 @@
 #  @author Johan Blouw <Johan.Blouw@physi.uni-heidelberg.de>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.18 2010-03-17 16:44:12 jblouw Exp $"
+__version__ = "$Id: Configuration.py,v 1.19 2010-04-19 10:30:19 jblouw Exp $"
 __author__  = "Johan Blouw <Johan.Blouw@physi.uni-heidelberg.de>"
 
 from Gaudi.Configuration  import *
@@ -134,6 +134,12 @@ class Escher(LHCbConfigurableUser):
                            PrintFreq = self.getProp("PrintFreq"))
         GaudiSequencer("InitEscherSeq").Members += [ recInit ]
         alignSeq = GaudiSequencer("AlignSequence")
+        # if the patter reco is not run, we need the DataOnDemand svc
+        # so that e.g. the track container(s) is unpacked:
+        if not GaudiSequencer("RecoTrSeq").getProp("Enable"):
+	    ApplicationMgr().ExtSvc += [ "DataOnDemandSvc" ]
+	    stConf( EnableUnpack = True )
+
         if  self.getProp("Millepede") :
             self.setProp("Kalman", False )
             log.info("Using Millepede type alignment!")

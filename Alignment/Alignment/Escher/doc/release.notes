@@ -4,6 +4,9 @@ Package Coordinator : Johan Blouw
 Purpose : Gaudi application used to perform 
           alignment of the LHCb detector components
 
+! 2010-04-19 Johan Blouw
+ - if the pattern reco is not being run, the dst is unpacked autimatically. 
+
 ! 2010-03-19 Johan Blouw
  - renamed 2009-MPede.py to Millepede.py and modified a few other python options for the M'pede style alignment.
 
