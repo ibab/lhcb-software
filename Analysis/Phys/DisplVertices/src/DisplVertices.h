@@ -121,8 +121,10 @@ private:
   bool IsAPointInDet( const LHCb::Particle *, int mode = 2,
                       double range = 1*Gaudi::Units::mm );
   bool IsInRFFoil( const Gaudi::XYZPoint & );
+  /// Has a RecVertex a backward track ?
   bool HasBackwardTracks( const LHCb::Particle * );
   bool HasBackwardTracks( const LHCb::RecVertex * );
+  /// Has a candidate a daughter muon ?
   double HasMuons( const LHCb::Particle * );
   const LHCb::MCParticle * WhichMother( const LHCb::Particle * );
   const LHCb::MCParticle * WhichMother( const LHCb::MCParticle * );

@@ -60,6 +60,8 @@ private:
   const LHCb::Particle* DefaultParticle( const LHCb::Track * p );
   /// Has a RecVertex a backward track ?
   bool HasBackwardTracks( const LHCb::RecVertex* );
+  /// Has a candidate a daughter muon ?
+  double HasMuons( const LHCb::Particle * );
   /// Is a vertex isolated from other vertices ?
   bool IsIsolated( const LHCb::RecVertex*, LHCb::RecVertex::ConstVector & );
   ///Is a vertex too close to detector material ?

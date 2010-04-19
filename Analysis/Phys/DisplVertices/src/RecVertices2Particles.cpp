@@ -639,6 +639,27 @@ bool RecVertices2Particles::HasBackwardTracks( const RecVertex* RV ){
   return false;
 }
 
+//============================================================================
+// if particule has a daughter muon, return highest pt
+//============================================================================
+double RecVertices2Particles::HasMuons( const Particle * p ){
+
+  double muonpt = 0;
+  //loop on daughters
+  SmartRefVector<Particle>::const_iterator iend = p->daughters().end();
+  for( SmartRefVector<Particle>::const_iterator i = 
+	 p->daughters().begin(); i != iend; ++i ){
+    //check if tracks could be a muon
+    if( (*i)->proto() == NULL ) continue;
+    if( (*i)->proto()->muonPID() == NULL ) continue;
+    if( !( (*i)->proto()->muonPID()->IsMuonLoose() ) ) continue;
+    double pt = p->pt();    
+    if( pt > muonpt ) muonpt = pt;
+  }
+
+  return muonpt;
+}
+
 //=============================================================================
 //  Check if RV is isolated from other RVs
 //=============================================================================
@@ -786,7 +807,7 @@ bool RecVertices2Particles::IsAPointInDet( const Particle & P, int mode,
 StatusCode RecVertices2Particles::SavePreysTuple( Tuple & tuple, Particle::ConstVector & RecParts ){
 
   vector<int>  nboftracks;
-  vector<double> chindof, px, py, pz, e, x, y, z, sumpts, indets;
+  vector<double> chindof, px, py, pz, e, x, y, z, sumpts, indets, muons;
   
   Particle::ConstVector::const_iterator iend = RecParts.end();
   for( Particle::ConstVector::const_iterator is = RecParts.begin();
@@ -798,11 +819,13 @@ StatusCode RecVertices2Particles::SavePreysTuple( Tuple & tuple, Particle::Const
     const Gaudi::XYZPoint & pos = p->endVertex()->position();
     Gaudi::LorentzVector mom = p->momentum();
     double sumpt = GetSumPt(p);
+    double muon = HasMuons(p);
 
     nboftracks.push_back( nbtrks ); chindof.push_back( chi );
-    e.push_back(mom.e());
+    e.push_back(mom.e()); muons.push_back(muon);
     px.push_back(mom.x()); py.push_back(mom.y()); pz.push_back(mom.z());
     x.push_back(pos.x()); y.push_back(pos.y()); z.push_back(pos.z());
+
     double indet = 0;
     if( IsAPointInDet( *p, 2 ) ) indet += 1;
     if( IsAPointInDet( *p, 3, 2 ) ) indet += 10;
@@ -822,6 +845,7 @@ StatusCode RecVertices2Particles::SavePreysTuple( Tuple & tuple, Particle::Const
   tuple->farray( "PreyXZ", z.begin(), z.end(), "NbPrey", NbPreyMax );
   tuple->farray( "PreySumPt", sumpts.begin(), sumpts.end(), 
 		 "NbPrey", NbPreyMax );
+  tuple->farray( "Muon", muons.begin(), muons.end(), "NbPrey", NbPreyMax );
   tuple->farray( "InDet", indets.begin(),indets.end(), "NbPrey", NbPreyMax );
   tuple->farray( "PreyNbofTracks", nboftracks.begin(), nboftracks.end(),
 		 "NbPrey", NbPreyMax );
