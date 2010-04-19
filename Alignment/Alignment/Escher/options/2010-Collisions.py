@@ -36,16 +36,49 @@ myOnline.ConnectionString = 'sqlite_file:/afs/cern.ch/user/w/wouter/public/Align
 CondDB().addLayer( myOnline )
 
 otCalib = CondDBAccessSvc( 'OTCalib' )
-otCalib.ConnectionString = 'sqlite_file:/afs/cern.ch/user/a/akozlins/public/OT/LHCBCOND/ModuleT0s_2.7ns_3.35ns_180310.db/LHCBCOND'
+#otCalib.ConnectionString = 'sqlite_file:/afs/cern.ch/user/a/akozlins/public/OT/LHCBCOND/ModuleT0s_2.7ns_3.35ns_180310.db/LHCBCOND'
+otCalib.ConnectionString = 'sqlite_file:/afs/cern.ch/user/a/akozlins/public/OT/LHCBCOND/ModuleT0s_69648_140410.db/LHCBCOND'
 CondDB().addLayer( otCalib )
 
 ttPitchFix = CondDBAccessSvc( 'TTPitchFix' )
 ttPitchFix.ConnectionString = 'sqlite_file:/afs/cern.ch/user/w/wouter/public/AlignDB/TTPitchFix.db/DDDB'
 CondDB().addLayer( ttPitchFix )
 
-EventSelector().Input = [
-    "DATAFILE='/pool/spool/wouter/069355_0000000001.raw' SVC='LHCb::MDFSelector'"
-    ]
+import os
+path = '/castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/'
+runnrs = ['69355']
+data = []
+for runnr in runnrs:
+    put, get = os.popen4("rfdir " + path  + runnr)
+    for line in get.readlines():
+        splittedline = line.split(' ')
+        filestring = splittedline[len(splittedline)-1].strip(' ')
+        filestring = filestring.replace('\n','')
+        print 'adding file: ', runnr + "/" + filestring
+        data.append( (path + runnr , filestring) )
+
+# let's take only the first one
+data = [ data[0] ]
+
+print "found data files: ", data
+
+# now stage the files locally. they will not like this:-)
+EventSelector().Input = []
+import os
+targetdir = '/tmp/wouter/'
+
+if os.path.isdir( '/pool/spool/' ) :
+    if not os.path.exists( '/pool/spool/wouter' ):
+        os.system('mkdir /pool/spool/wouter')
+    targetdir = '/pool/spool/wouter/'
+
+for d in data:
+    print 'd:', d
+    if not os.path.exists( targetdir + d[1] ):
+        os.system('rfcp ' + d[0] + "/" + d[1] + ' ' + targetdir)
+    EventSelector().Input.append( "DATAFILE='" + targetdir +  d[1] + "' " +"SVC='LHCb::MDFSelector'")
+
+print "EvenSelector.Input:", EventSelector().Input
 
 #from Configurables import CondDB
 #CondDB(UseOracle = True)
