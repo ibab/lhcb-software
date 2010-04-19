@@ -829,6 +829,7 @@ StatusCode RecVertices2Particles::SavePreysTuple( Tuple & tuple, Particle::Const
 		 "NbPrey", NbPreyMax );
   tuple->column( "BLX", m_BeamLine->referencePoint().x() );
   tuple->column( "BLY", m_BeamLine->referencePoint().y() );
+  tuple->column( "BLZ", m_BeamLine->referencePoint().z() );
   
   return tuple->write();
 }
