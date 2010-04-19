@@ -228,6 +228,11 @@ RichG4Scintillation::PostStepDoIt(const G4Track& aTrack, const G4Step& aStep)
         // Modif  by SE to conform to LHCb 
       	G4MaterialPropertyVector* theScintillationYieldVect =
           aMaterialPropertiesTable->GetProperty("SCINTILLATIONYIELD");
+        if( !theScintillationYieldVect ) { 
+          // skip out if no Property vector present. This can be from using old versions of DB.
+             return G4VRestDiscreteProcess::PostStepDoIt(aTrack, aStep);           
+        }
+        
         theScintillationYieldVect->ResetIterator();
         ++(*theScintillationYieldVect);// advance to 1st entry
         G4double ScintillationYield = theScintillationYieldVect->GetProperty();
