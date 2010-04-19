@@ -1,9 +1,14 @@
-!$Id: release.notes,v 1.113 2010-04-19 11:33:12 graven Exp $
+!$Id: release.notes,v 1.114 2010-04-19 22:04:10 gligorov Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/HltTracking
 ! Responsible : Jose A. Hernando
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
+
+! 2010-04-19 - V. Gligorov
+ - Return 3D PVs when asked for 2D PVs; this cheat is to be used while the
+   real 2D PVs are being fixed.
+
 ! 2010-04-19 - Johannes Albrecht
  - HltReco.py: add ST calibrations for early data
 
