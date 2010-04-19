@@ -3,7 +3,7 @@
 #  @author Johan Blouw <Johan.Blouw@physi.uni-heidelberg.de>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.19 2010-04-19 10:30:19 jblouw Exp $"
+__version__ = "$Id: Configuration.py,v 1.20 2010-04-19 11:35:10 jblouw Exp $"
 __author__  = "Johan Blouw <Johan.Blouw@physi.uni-heidelberg.de>"
 
 from Gaudi.Configuration  import *
@@ -138,7 +138,7 @@ class Escher(LHCbConfigurableUser):
         # so that e.g. the track container(s) is unpacked:
         if not GaudiSequencer("RecoTrSeq").getProp("Enable"):
 	    ApplicationMgr().ExtSvc += [ "DataOnDemandSvc" ]
-	    stConf( EnableUnpack = True )
+	    DstConf( EnableUnpack = True )
 
         if  self.getProp("Millepede") :
             self.setProp("Kalman", False )
