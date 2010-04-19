@@ -227,12 +227,19 @@ namespace Al
       if( !(*ielem)->daughters().empty() ) {
 	debug() << "Accumulating daughter data for element: "
 	       << (*ielem)->name() << endreq ;
+
 	// Important note: we accumulate the correlations first inside
 	// the parent element. If that means that the correlation gets
 	// in the wrong place (e.g. below the diagonal rather than
 	// above), then we fix that only in the end. 
 
 	ElementData& elementdata = const_cast<ElementData&>(equations.element((*ielem)->index())) ;
+	if( elementdata.numHits() != 0 ) {
+	  error() << "AlignUpdateTool::addDaughterDerivatives does not yet work if only subset of hits taken by daughters."
+		  << endreq ;
+	  return StatusCode::FAILURE ;
+	}
+	
 	// the transpose is because we once made mistake to use a column vector for the derivative.
 	Gaudi::Matrix6x6 parentJacobian = ROOT::Math::Transpose( (*ielem)->jacobian() ) ;
 	// now accumulate information from all daughters. save the jacobians.
