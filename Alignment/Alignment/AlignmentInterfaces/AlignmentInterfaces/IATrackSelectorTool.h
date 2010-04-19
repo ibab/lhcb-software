@@ -28,6 +28,10 @@ public:
                            int& nOTHits, 
                            int& nITHits ,
                            int& nTTHits) = 0;
+  virtual StatusCode Reset() = 0;
+
+  virtual void PrintUniformTD() = 0;
+
  protected:
 
  private:

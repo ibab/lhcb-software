@@ -3,6 +3,9 @@ Package : AlignmentInterfaces
 Package Coordinator : Johan Blouw
 Purpose :  Collection of interfaces needed for the T-station alignment
 
+! 2010/04/19 Johan Blouw
+- Updated interface to the ATrackSelector
+
 ! 2010/02/06 Johan Blouw
 - removed an unused variable from ITAConfig::CalcResidual method.
 
