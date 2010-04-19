@@ -3,6 +3,12 @@
 ! Responsible	: Sajan Easo 
 ! Purpose     : collection of sensitive detectors, G4 actions, etc for RICH
 !----------------------------------------------------------------------------- 
+! 2010-04-19  Sajan Easo
+  - In Rich.opts the CF4 scintillation is activated as default by commenting out
+     GiGa.ModularPL.GiGaPhysConstructorOp.RichActivateCF4Scintillation=false
+  - Minor addition to RichG4Scintillation so that it can technically run even with
+    old versions of the dddb database, although without creating any scintillation photons.
+    The recent database (dddb rich-20100419 onwards) is needed to create these type of photons.
 ! 2010-04-14  Sajan Easo
   - minor fixes in RichG4Scintillation.cc to avoid compilation warnings and
      avoid creating too many photons well above the expectations causing excessive cpu time. 
