@@ -85,7 +85,7 @@ applyPixelSuppression( const LHCb::RichSmartID hpdID,
     {
       std::ostringstream hpd;
       hpd << hpdID;
-      Warning( "Fully suppressed     HPD "+hpd.str(), StatusCode::SUCCESS, 0 );
+      Warning( "Fully suppressed     HPD "+hpd.str(), StatusCode::SUCCESS, 0 ).ignore();
     }
     // clear vector (i.e. actually do the suppression)
     smartIDs.clear();

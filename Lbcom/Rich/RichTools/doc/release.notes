@@ -4,6 +4,9 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+! 2010-04-19 - Chris Jones
+ - Fix untested status code in HighOccHPDSuppressionTool
+
 ! 2010-04-15 - Chris Jones
  - Downgrade HPD occupancy update messages to debug
 
