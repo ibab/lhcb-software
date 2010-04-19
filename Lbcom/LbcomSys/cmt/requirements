@@ -61,6 +61,7 @@ use VeloTools         v3r5    Velo      # Tomasz Szumlak
 
 # VeloPix
 use VeloPixDAQ        v1r1    VeloPix  # Marcin Kucharczyk
+use VeloPixTools      v1r0    VeloPix  # Victor Coco
 
 # Declare this as a container package
 apply_pattern container_package

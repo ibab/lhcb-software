@@ -6,6 +6,9 @@
 !             : project contain components used by all applications except Gauss
 !-----------------------------------------------------------------------------
 
+- Packages added in SVN: VeloPix/VeloPixTools : Tools to deal with pixel 
+  position and errors
+
 </PRE><H1><A NAME=v9r1>2010-04-14 LbcomSys v9r1</A></H1><PRE>
 This version uses Gaudi v21r8 and LHCb v30r1
 
