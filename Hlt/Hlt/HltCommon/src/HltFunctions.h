@@ -1,4 +1,4 @@
-// $Id: HltFunctions.h,v 1.29 2010-04-16 01:17:13 gligorov Exp $
+// $Id: HltFunctions.h,v 1.30 2010-04-19 22:01:36 gligorov Exp $
 #ifndef HLTBASE_HLTFUNCTIONS_H 
 #define HLTBASE_HLTFUNCTIONS_H 1
 
@@ -221,6 +221,15 @@ namespace Hlt {
     VertexMaxP* clone() const {return new VertexMaxP();}
   };
 
+  class VertexTracksMatchIDsFraction : public Hlt::VertexFunction {
+  public:
+    explicit VertexTracksMatchIDsFraction() {}
+    double operator() (const LHCb::RecVertex& v) const {
+      return HltUtils::matchIDsFraction(*(v.tracks()[0]),*(v.tracks()[1]));
+    } 
+    VertexTracksMatchIDsFraction* clone() const {return new VertexTracksMatchIDsFraction();}
+  };
+
   class VertexMatchIDsFraction : public Hlt::VertexBiFunction {
   public:
     explicit VertexMatchIDsFraction() {}
@@ -233,8 +242,7 @@ namespace Hlt {
     VertexMatchIDsFraction* clone() const
     {return new VertexMatchIDsFraction();}
   };
-  
-
+ 
   class VertexMinIP: public Hlt::VertexBiFunction {
   public:
     explicit VertexMinIP(){}
