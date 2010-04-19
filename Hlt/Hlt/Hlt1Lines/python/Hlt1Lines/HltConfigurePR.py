@@ -26,6 +26,10 @@ def ConfiguredPR( tool ):
                      MaxChi2HitIT=10,
                      MaxChi2HitOT=30
                      ) 
+    else :
+        raise KeyError('unknown tool %s requested' % tool)
+
+
     
             ## else if tool is "TsaSeeding":
 ##                 if  TrackSys().earlyData():
