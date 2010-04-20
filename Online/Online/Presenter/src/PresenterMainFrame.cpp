@@ -1236,6 +1236,9 @@ void PresenterMainFrame::dataDropped(TGListTreeItem* folder, TDNDData* data) {
 void PresenterMainFrame::CloseWindow() {
   if (0 != m_pageRefreshTimer) { m_pageRefreshTimer->Stop(); }
   if (0 != m_clockTimer) { m_clockTimer->Stop(); }
+  
+  removeHistogramsFromPage();
+  if (0 != m_analysisLib) { delete m_analysisLib; m_analysisLib = NULL; }
   gApplication->Terminate();
 }
 void PresenterMainFrame::dockAllFrames() {
