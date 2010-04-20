@@ -5,6 +5,9 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-04-20 - Jacopo Nardulli
+ - Add The B2DX Loose selection in the Hadron stream
+
 ! 2010-04-20 - Patrick Koppenburg
  - Add the 2 simple B->MuMuK* lines 
 

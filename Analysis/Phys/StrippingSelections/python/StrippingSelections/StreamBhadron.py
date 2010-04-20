@@ -14,6 +14,7 @@ from StrippingConf.StrippingStream import StrippingStream
 
 from StrippingSelections import StrippingB2Charged2Body
 from StrippingSelections import StrippingB2DPi
+from StrippingSelections import StrippingB2DPiLoose
 from StrippingSelections import StrippingB2D3Pi
 from StrippingSelections.StrippingBs2PhiPhi import StrippingBs2PhiPhiConf #from StrippingSelections import StrippingBs2PhiPhi
 from StrippingSelections.StrippingBu2D0K_D02KSPiPi import StrippingBu2D0K_D02KSPiPiConf
@@ -29,7 +30,9 @@ stream = StrippingStream("Bhadron")
 stream.appendLines( [ 
 		        StrippingB2Charged2Body.line,  
 		        StrippingB2DPi.line1,  
-		        StrippingB2DPi.line2,  
+		        StrippingB2DPi.line2,
+                        StrippingB2DPiLoose.line1,  
+		        StrippingB2DPiLoose.line2,  
                         StrippingB2D3Pi.line1,
                         StrippingB2D3Pi.line2,
 			StrippingBs2PhiPhiConf().normal(),  #StrippingBs2PhiPhi.line1, 
