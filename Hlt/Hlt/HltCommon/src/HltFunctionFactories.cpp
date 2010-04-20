@@ -1,4 +1,4 @@
-// $Id: HltFunctionFactories.cpp,v 1.35 2010-04-16 01:17:13 gligorov Exp $
+// $Id: HltFunctionFactories.cpp,v 1.36 2010-04-20 08:23:23 gligorov Exp $
 // Include files 
 
 // from Gaudi
@@ -109,7 +109,8 @@ StatusCode HltVertexFunctionFactory::initialize() {
   declare<Hlt::VertexTrack2IP,zen::abs_min,const Hlt::VertexSelection>("FitVertexTrack2IP");
 
   declare<Hlt::VertexMatchIDsFraction,zen::abs_max,const Hlt::VertexSelection>("VertexMatchIDsFraction");
-  
+  declare<Hlt::VertexTracksMatchIDsFraction>("VertexTracksMatchIDsFraction");
+
   declare<Hlt::VertexAngle>("VertexAngle");
   declare<Hlt::VertexAngle>("FitVertexAngle");
   declare<Hlt::VertexDOCA>("VertexDOCA");

@@ -4,6 +4,9 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+! 2010-04-20 - V. Gligorov
+ - Add function factory for said clone killing function.
+
 ! 2010-04-19 - V. Gligorov
  - Add new vertex filter to cut on the number of matching LHCbIDs
    in the two tracks making up the vertex; i.e. a clone killer.
