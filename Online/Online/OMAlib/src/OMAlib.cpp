@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/src/OMAlib.cpp,v 1.22 2010-04-13 18:22:15 robbep Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/src/OMAlib.cpp,v 1.23 2010-04-20 12:20:49 ggiacomo Exp $
 /*
   Online Monitoring Analysis library
   G. Graziani (INFN Firenze)
@@ -87,9 +87,9 @@ OMAlib::~OMAlib() {
   std::map<std::string, OMAalg*>::iterator ia;
   for (ia=m_algorithms.begin(); ia != m_algorithms.end(); ++ia)
     delete (*ia).second ;
-  //  std::map<std::string, OMAFitFunction*>::iterator i;
-  //  for (i=m_fitfunctions.begin(); i != m_fitfunctions.end(); ++i)
-  //    delete (*i).second ;
+  std::map<std::string, OMAFitFunction*>::iterator i;
+  for (i=m_fitfunctions.begin(); i != m_fitfunctions.end(); ++i)
+    delete (*i).second ;
 }
 
 

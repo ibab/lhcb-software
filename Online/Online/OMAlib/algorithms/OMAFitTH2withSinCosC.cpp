@@ -18,7 +18,7 @@
 
 OMAFitTH2withSinCosC::OMAFitTH2withSinCosC() :
   OMAFitFunction("Rich2DSinCosC"),
-  GausP1(0)
+  GausP1("GausP1","[0]*TMath::Gaus(x,[1],[2]) + [3]*x + [4]")
 {
   m_parNames.push_back("SinAmp");
   m_parNames.push_back("CosAmp");
@@ -31,13 +31,11 @@ OMAFitTH2withSinCosC::OMAFitTH2withSinCosC() :
   m_funcString= "[0]*sin(x) + [1]*cos(x) + [2]";
   initfun();
   
-  GausP1 = new TF1( "GausP1","[0]*TMath::Gaus(x,[1],[2]) + [3]*x + [4]") ;
-
-  GausP1 -> SetParName(0, "Gaus_weight");
-  GausP1 -> SetParName(1, "Gaus_mean");
-  GausP1 -> SetParName(2, "Gaus_sigma");
-  GausP1 -> SetParName(3, "P1_gradient");
-  GausP1 -> SetParName(4, "P1_intercept");
+  GausP1.SetParName(0, "Gaus_weight");
+  GausP1.SetParName(1, "Gaus_mean");
+  GausP1.SetParName(2, "Gaus_sigma");
+  GausP1.SetParName(3, "P1_gradient");
+  GausP1.SetParName(4, "P1_intercept");
 }
 
 OMAFitTH2withSinCosC::~OMAFitTH2withSinCosC() {
@@ -90,17 +88,17 @@ void OMAFitTH2withSinCosC::fit(TH1* histo, std::vector<float>* initValues) {
              / (Stripe.GetBinCenter(ybins-2) - Stripe.GetBinCenter(2));
     
     //initialise function and fit
-    GausP1 -> SetParameter(0, Stripe.GetBinContent(Stripe.GetMaximumBin())-NoiseEst);
-    GausP1 -> SetParLimits(0, 0, Stripe.GetBinContent(Stripe.GetMaximumBin())*1000); //i.e. no maximum
-    GausP1 -> SetParameter(1, Stripe.GetBinCenter(Stripe.GetMaximumBin()));
-    GausP1 -> SetParameter(2, TDRsigma); //TDR single Photon Precision
-    GausP1 -> SetParameter(3, SlopeEst);
-    GausP1 -> SetParameter(4, NoiseEst);
-    Stripe.Fit(GausP1, "", "", fitmin, fitmax);
+    GausP1.SetParameter(0, Stripe.GetBinContent(Stripe.GetMaximumBin())-NoiseEst);
+    GausP1.SetParLimits(0, 0, Stripe.GetBinContent(Stripe.GetMaximumBin())*1000); //i.e. no maximum
+    GausP1.SetParameter(1, Stripe.GetBinCenter(Stripe.GetMaximumBin()));
+    GausP1.SetParameter(2, TDRsigma); //TDR single Photon Precision
+    GausP1.SetParameter(3, SlopeEst);
+    GausP1.SetParameter(4, NoiseEst);
+    Stripe.Fit(&GausP1, "", "", fitmin, fitmax);
     
     //output fit mean to TGraphErrors
-    cleanPlot.SetPoint(i, (i+0.5)*xwidth, GausP1 -> GetParameter(1));
-    cleanPlot.SetPointError(i, 0.5*xwidth/sqrt(Stripe.GetEntries()), GausP1 -> GetParError(1));    
+    cleanPlot.SetPoint(i, (i+0.5)*xwidth, GausP1.GetParameter(1));
+    cleanPlot.SetPointError(i, 0.5*xwidth/sqrt(Stripe.GetEntries()), GausP1.GetParError(1));    
   }
    
   //Fitting Reduced 2DHist (TGraphErrors)
