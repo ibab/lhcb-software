@@ -6,7 +6,7 @@
  *  Header file for Tstation alignment : ATrackSelector
  *
  *  CVS Log :-
- *  $Id: ATrackSelector.h,v 1.7 2010-03-17 16:42:02 jblouw Exp $
+ *  $Id: ATrackSelector.h,v 1.8 2010-04-20 12:42:30 jblouw Exp $
  *
  *  @author J. Blouw johan.blouw@cern.ch
  *  @date   31/09/2006
@@ -65,6 +65,10 @@ class ATrackSelector : public GaudiTool,
 		    int& nOThits,
 		    int& nIThits,
 		    int& nTThits);
+   StatusCode Reset();
+
+   void PrintUniformTD();
+
  private :
    bool uniformTD( const LHCb::OTChannelID & );
    bool yCut( const LHCb::Track & );
@@ -77,13 +81,13 @@ class ATrackSelector : public GaudiTool,
    inline int uniqueModule(const LHCb::OTChannelID& channelID) const {
        return uniqueQuarter(channelID) * 9 + channelID.module() - 1;
      };
+   void PrintSummary();
  private:
    //Interfaces:
    IATrackSelectorTool* m_trackselector;    
    ITrackExtrapolator* m_extrapolator;
    ITrackCaloMatch *m_trackenergy;    
 
-   void PrintUniformTD();
    bool Unify( const LHCb::Track&  );
    bool uniformCut( int & );
    double m_minChi2Cut; // Min chi^2 cut
@@ -101,6 +105,9 @@ class ATrackSelector : public GaudiTool,
    bool m_weights; // attempt to create uniform track distrubution in (OT)
    int m_uniCut; // module IDs larger than m_uniCut will be uniformed.
    double m_energyMinCut;    // Min energy cut
+
+   int m_wrong_charge, m_total, m_bad_chi2, m_bad_p, m_bad_pt;
+   int m_few_hits, m_bad_energy, m_not_uniform;
    
    // Track types to accept
    typedef std::vector<std::string> TrackTypes;

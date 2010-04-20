@@ -24,17 +24,22 @@ class AlignTrTools( LHCbConfigurableUser ):
           , "minChi2"               	: 10    # value = -1 : no chi2 cut
           , "Outlier"             	: 4     # max outlier value for MP track fit
           , "Sim"                   	: False
-
+	  , "OutputLevel"		: 3 # output printing level
+	  , "AlignmentLevel"		: "layers"
           }
      
      
      def __apply_configuration__( self ):
+         GaudiKernel.ProcessJobOptions.PrintOff()
+         GaudiKernel.ProcessJobOptions.PrintOn()
+
          print "******* calling ", self.name()
 	 print "Tools used: ", self.getProp("Tools")
          for tool in self.getProp("Tools"):
              print "Configuring tool ", tool
              if tool == "TAConfig":
  		self.TAConfigure()
+		TAConfig().OutputLevel = self.getProp("OutputLevel")
  		TAConfig().Constrain_OT = self.getProp("Constraints")
                 TAConfig().Degrees_of_Freedom = self.getProp("Degrees_of_Freedom")
 		TAConfig().nTrackModelParameters = self.getProp("nTrackModelParameters")
@@ -43,7 +48,19 @@ class AlignTrTools( LHCbConfigurableUser ):
 		TAConfig().minChi2 = self.getProp("minChi2")
 		TAConfig().Outlier = self.getProp("Outlier")
 		TAConfig().Sim       = self.getProp("Sim")
+		if self.getProp("AlignmentLevel") == "layers":
+		    TAConfig().OT_halflayer = True
+		    TAConfig().OT_module = False
+ 		else:
+		    if self.getProp("AlignmentLevel") == "modules":
+		      TAConfig().OT_halflayer = False
+		      TAConfig().OT_module = True
+		
                 print "TAConfig degrees of freedom = ", TAConfig().getProp("Degrees_of_Freedom")
+                log.info( self.getProperties() )
+                GaudiKernel.ProcessJobOptions.PrintOff()
+
+
              if tool  == "ATrackSelector":
 		self.TrackSelection()
              if tool == "WriteAlignmentConditions": 
@@ -64,12 +81,12 @@ class AlignTrTools( LHCbConfigurableUser ):
 	TAConfig().PenaltyTerms       	= [100000.0,300000.0,300000.0,300000.0,30000.0,30000.0]
 	TAConfig().Degrees_of_Freedom 	= [1,0,0,0,0,0];
 	TAConfig().nTrackModelParameters = 4; #4;
-	TAConfig().Constrain_OT 	= []
+	TAConfig().Constrain_OT		= []
 	TAConfig().Chi_sq_factor        = 10.0;   #startfctr in Centipede/Millepede-->x*3sigma of chi2/ndf function
 	TAConfig().initial_residual_cut = 100.0;  #1st outlier rejection
 	TAConfig().n_l_stdev            = 3.0;
-	TAConfig().Chi2Scale          = -1;    # value = -1 : no chi2 cut
-	TAConfig().Outlier            = 10; #4;
+	TAConfig().Chi2Scale		 = -1;    # value = -1 : no chi2 cut
+	TAConfig().Outlier     	        = 10; #4;
 	TAConfig().residual_cut         = 116.0; #not used...
 	TAConfig().OT_system   		= False;
 	TAConfig().OT_layer    		= False;

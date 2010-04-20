@@ -4,6 +4,11 @@ Package Coordinator : Johan Blouw
 Responsibles : J. Amoraal, J. Blouw, A. Hicheur, L. Nicolas
 Purpose: LHCb Alignment Tools
 
+! 2010-04-19 - Johan Blouw
+ - Accomodated a problem caused by the use of ATrackSelector in case one
+   iterates over the data.
+ - Update of Configurable with more & new variables in __slots__.
+ - minor changes to TAConfig class.
 
 ! 2010-03-19 - Johan Blouw
  - Added a few variables to the __slots__ to accomodate the configuration of TAConfig.

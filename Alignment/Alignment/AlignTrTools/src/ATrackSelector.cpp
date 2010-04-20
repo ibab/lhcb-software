@@ -4,7 +4,7 @@
  *  Implementation file for T-station alignment tool : TrackSelector
  *
  *  CVS Log :-
- *  $Id: ATrackSelector.cpp,v 1.8 2010-03-17 16:42:01 jblouw Exp $
+ *  $Id: ATrackSelector.cpp,v 1.9 2010-04-20 12:42:30 jblouw Exp $
  *
  *  @author J. Blouw  Johan.Blouw@cern.ch
  *  @date   31/09/2006
@@ -66,12 +66,12 @@ StatusCode ATrackSelector::initialize() {
   else 
     m_trackenergy = NULL;
   
-  for ( unsigned int i = 0; i < 3; i++ )  // stations
-    for ( unsigned int j = 0; j < 4; j++ ) // quadrants
-      for ( unsigned int k = 0; k < 4; k++ ) // layers
-	for ( unsigned int l = 0; l < 9; l++ )
-	  m_uniform[i][j][k][l] = 0;
-  if ( m_uniCut < 1 ) {
+  StatusCode sc = Reset();
+  if ( ! sc ) {
+    error() << "Error reseting uniformity distribution..." << endreq;
+    return StatusCode::FAILURE;
+  }
+  if ( m_uniCut < 1 || m_weights == false ) {
     warning() << "Resetting uniformity cut to m_uniCut = 1" << endreq;
     m_uniCut = 1;
   } else {
@@ -82,11 +82,23 @@ StatusCode ATrackSelector::initialize() {
     m_extrapolator = tool<ITrackExtrapolator>( "TrackMasterExtrapolator" );
   } else
     m_extrapolator = NULL;
+  // initialize track counters
+  return StatusCode::SUCCESS;
+}
+
+StatusCode ATrackSelector::Reset() {
+  for ( unsigned int i = 0; i < 3; i++ )  // stations
+    for ( unsigned int j = 0; j < 4; j++ ) // quadrants
+      for ( unsigned int k = 0; k < 4; k++ ) // layers
+	for ( unsigned int l = 0; l < 9; l++ )
+	  m_uniform[i][j][k][l] = 0;  
+  debug() << "Resetted the uniform distribution!!!!" << endreq;
+  m_total = m_bad_chi2 = m_bad_p = m_bad_pt = m_few_hits = 0;
+  m_bad_energy = m_not_uniform = 0;
   return StatusCode::SUCCESS;
 }
 
 StatusCode ATrackSelector::finalize() {
-  this->PrintUniformTD();
   debug() << "Finalize track selector tool" << endreq;
   return StatusCode::SUCCESS;
 }
@@ -96,14 +108,15 @@ bool ATrackSelector::accept ( const LHCb::Track& aTrack ) {
     debug() << "Trying Track " << aTrack.key() << " " << aTrack.type()
             << endreq;
   }
-
+  m_total++;
   // simple cuts first
 
   // select positively and/or negatively charged tracks
-  if(m_charge != -1){
+  if( m_charge != 0 ){
     const int charge = aTrack.charge();
     if ( m_charge*charge < 0 ) {
       debug() << "Removing particle with charge " << charge << endreq;
+      m_wrong_charge++;
       return false;
     }
   }
@@ -114,6 +127,7 @@ bool ATrackSelector::accept ( const LHCb::Track& aTrack ) {
   if ( chi2 < m_minChi2Cut || chi2 > m_maxChi2Cut ) {
     if ( msgLevel(MSG::DEBUG) )
         debug() << " -> Chi^2 " << chi2 << " failed cut" << endreq;
+    m_bad_chi2++;
         //info()  << " -> Chi^2 " << chi2 << " failed cut" << endreq;
     return false;
   }
@@ -124,6 +138,7 @@ bool ATrackSelector::accept ( const LHCb::Track& aTrack ) {
     if ( p < m_minPCut || p > m_maxPCut ) {
       if ( msgLevel(MSG::DEBUG) )
 	debug() << " -> P " << aTrack.p() << " failed cut" << endreq;
+      m_bad_p++;
       return false;
     }
   }
@@ -134,6 +149,7 @@ bool ATrackSelector::accept ( const LHCb::Track& aTrack ) {
     if ( pt < m_minPtCut || pt > m_maxPtCut ) {
       if ( msgLevel(MSG::DEBUG) )
 	debug() << " -> Pt " << aTrack.pt() << " failed cut" << endreq;
+      m_bad_pt++;
       return false;
     }
   }
@@ -145,12 +161,16 @@ bool ATrackSelector::accept ( const LHCb::Track& aTrack ) {
     debug() << "--> " << OThits <<  "  hits in  OT !" << endmsg;
   else {
     debug() << "--> not enough  hits in  OT: "<< OThits << endmsg;
-      return false;
-  }
-  // Generate uniform track distribution in x direction
-  if ( ! Unify( aTrack ) ) {
+    m_few_hits++;
     return false;
   }
+  // Generate uniform track distribution in x direction
+  if ( m_weights ) 
+    if( ! Unify( aTrack ) ) {
+      debug() << "Not uniform... rejecting track" << endreq;
+      m_not_uniform++;
+      return false;
+    }
   // cut on energy deposited in calorimeters:
   if( m_energyMinCut > 0.0 ) {
     double energy = m_trackenergy->energy( aTrack );
@@ -158,6 +178,7 @@ bool ATrackSelector::accept ( const LHCb::Track& aTrack ) {
     if ( energy < m_energyMinCut ) {
       if ( msgLevel(MSG::DEBUG) )
 	debug() << " -> energy " << energy << " failed cut" << endreq;
+      m_bad_energy++;
       return false;
     }
   }
@@ -174,8 +195,6 @@ bool ATrackSelector::accept ( const LHCb::Track& aTrack ) {
   }
   if ( msgLevel(MSG::DEBUG) ) debug() << " -> Track selected" << endreq;
     
-  if ( m_weights ) 
-    return test;
   return true;
 }
 
@@ -183,6 +202,7 @@ bool ATrackSelector::accept ( const LHCb::Track& aTrack ) {
 bool ATrackSelector::Unify( const LHCb::Track& aTrack ) {
   LHCb::Track::ConstNodeRange::const_iterator node;
   if ( m_extrapolator && ! yCut( aTrack ) ) {
+    debug() << "No track extrapolator or does not fit yCut..." << endreq;
     return false;
   }
   for ( node = aTrack.nodes().begin(); aTrack.nodes().end() != node; node++ ) {
@@ -203,8 +223,10 @@ bool ATrackSelector::Unify( const LHCb::Track& aTrack ) {
 	dynamic_cast<const LHCb::OTMeasurement*>(&aNode->measurement());
       const LHCb::OTChannelID channel = otm->channel();
       bool res = uniformTD( channel );
-      if ( ! res ) 
+      if ( ! res ) {
+	debug() << "unformTD = " << res << " channelID = " << channel.channelID() << endreq;
 	return false;
+      }
     }
   }
   return true;
@@ -235,7 +257,7 @@ bool ATrackSelector::uniformCut( int &mod ) {
   unsigned int prev[9];
   for (unsigned int t = 0; t<9;t++)
     prev[t] = 0;
-  unsigned int tot, s = 0;
+  unsigned int s = 0;
   // always return true when an outside module was hit
   if ( mod < m_uniCut )
     return true;
@@ -246,7 +268,7 @@ bool ATrackSelector::uniformCut( int &mod ) {
 	prev[m] += m_uniform[s][q][l][m];
   // check if the number of hits in this module
   // is more than what we want:
-  if ( prev[mod-1] >= (int) (0.9*prev[mod]) ){
+  if ( prev[mod-1] >= (unsigned int) (0.9*prev[mod]) ){
     // debug() << "Keeping track..." << endreq;
     return true;
   }
@@ -340,7 +362,25 @@ int ATrackSelector::traversesIT(LHCb::Track& aTrack, int& nOThits, int& nIThits 
   return 11;
 }
 
+void ATrackSelector::PrintSummary() {
+  info() << "------ Track Selection Summary ----------" << endreq;
+  info() << "------ Rejected number of tracks        " << endreq;
+  info() << "       Total nr. available : " << m_total << endreq;
+  if ( m_charge != 0 )
+    info() << "       wrong charge:       : " << m_wrong_charge << endreq;
+  info() << "       bad chi^2           : " << m_bad_chi2 << endreq;
+  if ( m_maxPCut != -1)
+    info() << "       bad momentum        : " << m_bad_p << endreq;
+  if ( m_maxPtCut != -1 ) 
+    info() << "       bad tr. momentum    : " << m_bad_pt << endreq;
+  info() << "       insufficient hits   : " << m_few_hits << endreq;
+  if ( m_energyMinCut > 0.0 )
+    info() << "       insufficient energy : " << m_bad_energy << endreq;
+  info() << "       not uniform distro  : " << m_not_uniform << endreq; 
+}
+
 void ATrackSelector::PrintUniformTD() {
+  this->PrintSummary();
   unsigned int prev[4][9];
   for ( unsigned int i = 0; i < 3; i++ )  // stations
     for ( unsigned int l = 0; l < 9; l++ )
@@ -371,3 +411,6 @@ void ATrackSelector::PrintUniformTD() {
     info() << endreq;
   }
 }
+
+
+

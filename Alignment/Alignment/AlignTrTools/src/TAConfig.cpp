@@ -4,7 +4,7 @@
  *  Implementation file for Millepede configuration tool : TAConfig
  *
  *  CVS Log :-
- *  $Id: TAConfig.cpp,v 1.34 2010-03-19 14:24:48 jblouw Exp $
+ *  $Id: TAConfig.cpp,v 1.35 2010-04-20 12:42:30 jblouw Exp $
  *
  *  @author J. Blouw (johan.blouw@mpi-hd.mpg.de)
  *  @date   12/04/2007
@@ -83,7 +83,7 @@ TAConfig::TAConfig( const std::string& type,
   m_cntfix(0),
   m_stereoAngle(0),
   m_nAlignObj(1){
-
+  
   // Interface
   declareInterface<ITAConfigTool>(this);
   info() << "Creating TAConfig object" << endreq;
@@ -169,7 +169,7 @@ StatusCode TAConfig::Initialize( std::vector<std::string> &m_dets ) {
   for( unsigned int i = 0; i < m_dof.size(); i++ ) 
     if ( m_dof[i] )
       m_n_dof++;
-
+  
   m_scaleIter = m_scale;
   return StatusCode::SUCCESS;
 }
@@ -236,6 +236,7 @@ StatusCode TAConfig::CacheDetElements() {
       m_deot = getDet<DetectorElement>(DeOTDetectorLocation::Default);
       ot_detector = true;
       sc = ConfigOT( m_DETmap , m_ot);
+      
       if ( sc.isFailure() ) {
         return sc;
       }
@@ -243,7 +244,7 @@ StatusCode TAConfig::CacheDetElements() {
     info() << "Continue initialization..." << endreq;
     info() << "Number of elements in m_DETmap : " << m_DETmap.size() << endreq;
   }
-
+  
   // Initialize the derivative tool with the number of track parameters,
   // the number of alignable objects, and the degrees of freedom
   // to count the number of alignable objects,
@@ -257,16 +258,16 @@ StatusCode TAConfig::CacheDetElements() {
   info() << "Degrees of freedom: " << m_dof << endreq;
   info() << "Total number of global parameters:" <<  m_n_dof * m_nAlignObj << endreq;
   m_derivatives->initialize( m_ntrack_pars, m_nAlignObj, m_dof );
-
+  
   //fill the m_stereoAngle vector correct
   m_stereoAngle.resize(m_nAlignObj);
   std::map<int, std::pair<double,double> >::iterator iter = m_RnkZAngle.begin();
   for(; iter != m_RnkZAngle.end(); iter++){
     m_stereoAngle.at(iter->first) =  (iter->second).second;
   }
-
-
-
+  
+  
+  
   info() << "Number of elements in m_DETmap : " << m_DETmap.size() << endreq;
   //  m_totStations = m_VeloStations + m_TTStations + m_ITStations + m_OTStations;
   info() << "--> Printing ranking vector..." << endreq;
@@ -286,12 +287,12 @@ StatusCode TAConfig::CacheDetElements() {
     if( m_OTConstrain.size() != 0. ) sc = ConstrainPositionsOT();
     else if(m_OTConstrain.size() == 0. ) sc = ConstrainLagrangeMultOT();
   }
-
+  
   //zero out the vector
   for(int i=0;i<NumAlignPars();i++)
-  {
-    m_prevAlipar.push_back(0.);
-  }
+    {
+      m_prevAlipar.push_back(0.);
+    }
   
   //   // For Inner Tracker
   //   if ( it_detector ) sc = ConstrainPositions( constrain_it );
@@ -299,7 +300,7 @@ StatusCode TAConfig::CacheDetElements() {
   //   if ( tt_detector ) sc = ConstrainPositions( constrain_tt );
   //   // For Velo
   //   if ( velo_detector ) sc = ConstrainPositions( constrain_velo );
-
+  
   //   std::vector< double >::const_iterator itSh = m_shearNom.begin();
   //   for(; itSh != m_shearNom.end(); ++itSh){
   //     info() << " shearNom = " << *itSh <<  endreq;
@@ -315,7 +316,7 @@ StatusCode TAConfig::CacheDetElements() {
 StatusCode TAConfig::ConstrainLagrangeMultOT(){
   // 1st we have to get the sigma of the z positions;
   // with that we can calculate the shearing terms
-
+  
   double meanRight = 0;
   double meanLeft  = 0;;
   double meanRightZ[24];
@@ -326,8 +327,8 @@ StatusCode TAConfig::ConstrainLagrangeMultOT(){
     meanLeftZ[i] = 0.; 
     mstereo[i] =0.;
   }
-
-
+  
+  
   //  calculate mean z position
   if(m_otHalfLayer) {
     double rightZ = 0.; //right detector half
@@ -349,7 +350,7 @@ StatusCode TAConfig::ConstrainLagrangeMultOT(){
         meanLeftZ[iter->first] += (iter->second).first/18;
         info() << "LM left obj = " << iter->first << " zpos = " << (iter->second).first 
 	       << " LM meanleft = "  << " " << meanLeftZ[iter->first]  << endreq; 
-
+	
       }
     }
     //divide by 18 = nof modules per halflayer and nof alignable objects per HALF=12!!
@@ -370,9 +371,9 @@ StatusCode TAConfig::ConstrainLagrangeMultOT(){
     }
     m_misalDetEl_Z = m_layerZ ;
     m_misalDetEl_meanZ = meanLeft;//because a layer was shifted...Aside=Cside...
- 
-  }
     
+  }
+  
   //get the mean for 
   //all other Objects
   //(station,layer etc...)
@@ -433,9 +434,9 @@ StatusCode TAConfig::ConstrainLagrangeMultOT(){
         m_shearXZ.at(rnk) = ((m_layerZ.at(rnk)-m_zmean_ot) / m_Sigzmean_ot)*cos(m_stereoAngle[rnk]);
         //}
         if(m_stereoAngle[rnk]!=0.){
-           m_consTU.at(rnk)  = cos(m_stereoAngle[rnk])+sin(m_stereoAngle[rnk]); // y;
-           m_shearXU.at(rnk) = ((m_layerZ.at(rnk)-m_zmean_ot) / m_Sigzmean_ot)*cos(m_stereoAngle[rnk])
-             +((m_layerZ.at(rnk)-m_zmean_ot) / m_Sigzmean_ot)*sin(m_stereoAngle[rnk]);// y          ;
+	  m_consTU.at(rnk)  = cos(m_stereoAngle[rnk])+sin(m_stereoAngle[rnk]); // y;
+	  m_shearXU.at(rnk) = ((m_layerZ.at(rnk)-m_zmean_ot) / m_Sigzmean_ot)*cos(m_stereoAngle[rnk])
+	    +((m_layerZ.at(rnk)-m_zmean_ot) / m_Sigzmean_ot)*sin(m_stereoAngle[rnk]);// y          ;
         }
       }
       
@@ -470,7 +471,7 @@ StatusCode TAConfig::ConstrainLagrangeMultOT(){
       m_Centipede->ConstF(m_shearXU,0.);  
       //   m_Centipede->ConstF(m_consTV,0.);  
       //m_Centipede->ConstF(m_shearXV,0.);  
-
+      
     }
     
     
@@ -508,7 +509,7 @@ StatusCode TAConfig::ConstrainLagrangeMultOT(){
 //   info() << "(2) Map = " << map << endreq;
 //   return StatusCode::SUCCESS;
 // }
-  
+
 StatusCode TAConfig::ConfigTT( std::vector<Gaudi::Transform3D> & TTmap ) {
   unsigned int nStations = m_tt->nStation();
   //  tt = TTmap.size();
@@ -530,7 +531,7 @@ StatusCode TAConfig::ConfigTT( std::vector<Gaudi::Transform3D> & TTmap ) {
       (m_dett->geometry()->alignmentCondition());
     m_ALImap.push_back( tt_cond->offNominalMatrix() ); // save the alignment conditions of the tt sys
   }
-
+  
   m_zmoy_tt = 0;
   int rank = m_rank.size();
   m_TTStations = m_dett->childIDetectorElements();
@@ -553,7 +554,7 @@ StatusCode TAConfig::ConfigTT( std::vector<Gaudi::Transform3D> & TTmap ) {
     }
   }
   m_zmoy_tt /= nStations;
-
+  
   for ( unsigned int i = 0; i < m_TTStations.size(); i++ ) {
     m_TTLayers = m_TTStations[i]->childIDetectorElements();
     for ( unsigned int j = 0; j < m_TTLayers.size(); j++ ) {
@@ -604,16 +605,16 @@ StatusCode TAConfig::ConfigOT( std::vector<Gaudi::Transform3D> &OTmap , DeOTDete
       int mhalf = (-1);   //count halflayers
       m_OTQuadrants = m_OTLayers[j]->childIDetectorElements();
       for ( unsigned int k = 0; k < m_OTQuadrants.size(); k++ ) {
-
+	
         if(m_otModule || m_otHalfLayer){
           mhalf = mhalf*(-1); // next quadrant belongs to different half
           rank = 0;
           if(mhalf == 1)    rank = mrank;
           if(mhalf == (-1)) rank = mrank+nQua;
         }
-        
-        
-
+	
+	
+	
         //my counting convention to sort modules in halflayers
         //         -----------------
         //        |        |        |
@@ -625,18 +626,18 @@ StatusCode TAConfig::ConfigOT( std::vector<Gaudi::Transform3D> &OTmap , DeOTDete
         //        |        |        |
         //         -----------------
         //        mhalf=-1 | mhalf =+1
-        
+	
         m_OTModules = m_OTQuadrants[k]->childIDetectorElements();
         for ( unsigned int l = 0; l < m_OTModules.size(); l++ ) {
           /*************************
            ***** HalfLayer**********
            *************************/
-           if ( m_otHalfLayer) {
-            
+	  if ( m_otHalfLayer) {
+	    
             debug() << " --> mrank " << mrank << " rank " << rank << endreq
                     << " --> call - CreateMap() - " << endreq;
             CreateMap( rank, m_OTModules[l], m_zmean_ot );
-
+	    
             /********************************
              * in our alignment frame, the 
              * shifts are applied in the global
@@ -650,9 +651,9 @@ StatusCode TAConfig::ConfigOT( std::vector<Gaudi::Transform3D> &OTmap , DeOTDete
             std::vector<double> rotlocal(3,0.), shiftlocal(3,0.);
             DetDesc::getZYXTransformParameters(deltalocal, shiftlocal, rotlocal);
             DetDesc::getZYXTransformParameters(deltaGlobal, shiftGlobal, rotGlobal);            
-
-
-
+	    
+	    
+	    
             const Gaudi::Transform3D misalGlobalL = m_OTLayers[j]->geometry()->toGlobalMatrix();
             const Gaudi::Transform3D nominGlobalL = m_OTLayers[j]->geometry()->toGlobalMatrixNominal();
             const Gaudi::Transform3D deltaGlobalL = misalGlobalL*nominGlobalL.Inverse();
@@ -661,34 +662,35 @@ StatusCode TAConfig::ConfigOT( std::vector<Gaudi::Transform3D> &OTmap , DeOTDete
             std::vector<double> rotlocalL(3,0.), shiftlocalL(3,0.);
             DetDesc::getZYXTransformParameters(deltalocalL, shiftlocalL, rotlocalL);
             DetDesc::getZYXTransformParameters(deltaGlobalL, shiftGlobalL, rotGlobalL);            
-            
-
-
+	    
+	    
+	    
             std::vector<DeOTLayer*> layers = deotdet->layers();
             unsigned mid = i*4+j;
             debug() <<"stat " << i << " lay " << j <<" name " << m_OTModules[l]->name() << endreq
-                   << " mid = >  "<< mid<<endreq;
-
+		    << " mid = >  "<< mid<<endreq;
+	    
             DeOTLayer* mlay = layers.at(mid);
             int rnk = rank;
             Gaudi::XYZPoint HlRef(0.,0.,0.);
             Gaudi::XYZPoint HlRefnom(0.,0.,0.);
             GetHalflayerReference(mlay, HlRef,HlRefnom, rnk);
             CreateHalflayerReferenceMap(rnk,HlRefnom);
-
-            debug() << " Lay rotlocal    = " << rotlocalL  << " shiftlocal  = " <<  shiftlocalL <<endreq
-                   << " Lay rotglobal   = " << rotGlobalL << " shiftglobal = " << shiftGlobalL <<  endreq;
-            debug() << " Mod rotlocal    = " << rotlocal  << " shiftlocal  = " <<  shiftlocal <<endreq
-                   << " Mod rotglobal   = " << rotGlobal << " shiftglobal = " << shiftGlobal <<  endreq
-                   <<"---------------------------------------------------------------"<<endreq;
-            debug() << " HL rotlocal    = " << rotlocal  << " shiftlocal  = " <<  HlRef.x()-HlRefnom.x()
-                   <<  " " << HlRef.y()-HlRefnom.y()<< " " << HlRef.z()-HlRefnom.z()<< endreq
-                   <<"---------------------------------------------------------------"<<endreq;
-
-
-//             ROOT::Math::Transform3D transM( ROOT::Math::XYZVector(shiftlocalL[0], shiftlocalL[1], shiftlocalL[2])) ;
-//             ROOT::Math::Transform3D rotM( ROOT::Math::RotationX(rotlocalL[0])*ROOT::Math::RotationY(rotlocalL[1])*
-//                                           ROOT::Math::RotationZ(rotlocalL[2])) ;
+	    
+            debug()  << " Lay rotlocal    = " << rotlocalL  << " shiftlocal  = " <<  shiftlocalL <<endreq
+		     << " Lay rotglobal   = " << rotGlobalL << " shiftglobal = " << shiftGlobalL <<  endreq;
+	    debug()  << " Module name     = " << m_OTModules[l]->name() << endreq;
+            debug()  << " Mod rotlocal    = " << rotlocal  << " shiftlocal  = " <<  shiftlocal <<endreq
+		     << " Mod rotglobal   = " << rotGlobal << " shiftglobal = " << shiftGlobal <<  endreq
+		     << "---------------------------------------------------------------"<<endreq;
+            debug()  << " HL rotlocal    = " << rotlocal  << " shiftlocal  = " <<  HlRef.x()-HlRefnom.x()
+		     << " " << HlRef.y()-HlRefnom.y()<< " " << HlRef.z()-HlRefnom.z()<< endreq
+		     << "---------------------------------------------------------------"<<endreq;
+	    
+	    
+	    //             ROOT::Math::Transform3D transM( ROOT::Math::XYZVector(shiftlocalL[0], shiftlocalL[1], shiftlocalL[2])) ;
+	    //             ROOT::Math::Transform3D rotM( ROOT::Math::RotationX(rotlocalL[0])*ROOT::Math::RotationY(rotlocalL[1])*
+	    //                                           ROOT::Math::RotationZ(rotlocalL[2])) ;
             ROOT::Math::Transform3D transM( ROOT::Math::XYZVector(0, 0, 0)) ;
             ROOT::Math::Transform3D rotM( ROOT::Math::RotationX(0)*ROOT::Math::RotationY(0)*
                                           ROOT::Math::RotationZ(0)) ;
@@ -703,21 +705,24 @@ StatusCode TAConfig::ConfigOT( std::vector<Gaudi::Transform3D> &OTmap , DeOTDete
             const Gaudi::Transform3D del  = nomi.Inverse()*delt*nomi;
             std::vector<double> rot(3,0.), shift(3,0.);
             DetDesc::getZYXTransformParameters(del, shift, rot);
-            m_misalInput_X.at(rank) = HlRef.x()-HlRefnom.x();
-            m_misalInput_Y.at(rank) = HlRef.y()-HlRefnom.y();
-            m_misalInput_Z.at(rank) = HlRef.z()-HlRefnom.z();
-                        
-            
-            m_misalInput_A.at(rank) = rotlocalL[0];
-            m_misalInput_B.at(rank) = rotlocalL[1];
-            m_misalInput_C.at(rank) = rotlocalL[2];
+	    //	    m_misalInput_X.at(rank) = HlRef.x()-HlRefnom.x();
+	    //	    m_misalInput_Y.at(rank) = HlRef.y()-HlRefnom.y();
+	    //	    m_misalInput_Z.at(rank) = HlRef.z()-HlRefnom.z();
+	    m_misalInput_X.at(rank) = shiftlocal[0];
+	    m_misalInput_Y.at(rank) = shiftlocal[1];
+	    m_misalInput_Z.at(rank) = shiftlocal[2];
+	    
+	    
+            m_misalInput_A.at(rank) = rotlocal[0];
+            m_misalInput_B.at(rank) = rotlocal[1];
+            m_misalInput_C.at(rank) = rotlocal[2];
           }//m_otHalflayer        
           /*************************
            ***** Modules  **********
            *************************/
           if ( m_otModule ) {
             CreateMap( rank, m_OTModules[l], m_zmean_ot );
-            
+	    
             /********************************
              * in our alignment frame, the 
              * shifts are applied in the global
@@ -731,58 +736,58 @@ StatusCode TAConfig::ConfigOT( std::vector<Gaudi::Transform3D> &OTmap , DeOTDete
             std::vector<double> rotlocal(3,0.), shiftlocal(3,0.);
             DetDesc::getZYXTransformParameters(deltalocal, shiftlocal, rotlocal);
             DetDesc::getZYXTransformParameters(deltaGlobal, shiftGlobal, rotGlobal);            
-
+	    
             debug() << rank << "  " <<m_OTModules[l]->name() << endreq;
             debug() << " rotlocal    = " << rotlocal  << " shiftlocal  = " <<  shiftlocal <<endreq
-                   << " rotglobal   = " << rotGlobal << " shiftglobal = " << shiftGlobal <<  endreq
-                   <<"---------------------------------------------------------------"<<endreq;
-
-          /*
-            const Gaudi::Transform3D misalGlobalQ = m_OTQuadrants[k]->geometry()->toGlobalMatrix();
-            const Gaudi::Transform3D nominGlobalQ = m_OTQuadrants[k]->geometry()->toGlobalMatrixNominal();
-            const Gaudi::Transform3D deltaGlobalQ = misalGlobalQ*nominGlobalQ.Inverse();
-            const Gaudi::Transform3D deltalocalQ  = nominGlobalQ.Inverse()*deltaGlobalQ*nominGlobalQ;
-            std::vector<double> rotGlobalQ(3,0.), shiftGlobalQ(3,0.);
-            std::vector<double> rotlocalQ(3,0.), shiftlocalQ(3,0.);
-            DetDesc::getZYXTransformParameters(deltalocalQ, shiftlocalQ, rotlocalQ);
-            DetDesc::getZYXTransformParameters(deltaGlobalQ, shiftGlobalQ, rotGlobalQ);            
-                        
-            const Gaudi::Transform3D misalGlobalL = m_OTLayers[j]->geometry()->toGlobalMatrix();
-            const Gaudi::Transform3D nominGlobalL = m_OTLayers[j]->geometry()->toGlobalMatrixNominal();
-            const Gaudi::Transform3D deltaGlobalL = misalGlobalL*nominGlobalL.Inverse();
-            const Gaudi::Transform3D deltalocalL  = nominGlobalL.Inverse()*deltaGlobalL*nominGlobalL;
-            std::vector<double> rotGlobalL(3,0.), shiftGlobalL(3,0.);
-            std::vector<double> rotlocalL(3,0.), shiftlocalL(3,0.);
-            DetDesc::getZYXTransformParameters(deltalocalL, shiftlocalL, rotlocalL);
-            DetDesc::getZYXTransformParameters(deltaGlobalL, shiftGlobalL, rotGlobalL);            
-
-
-            const Gaudi::Transform3D misalGlobalS = m_OTStations[i]->geometry()->toGlobalMatrix();
-            const Gaudi::Transform3D nominGlobalS = m_OTStations[i]->geometry()->toGlobalMatrixNominal();
-            const Gaudi::Transform3D deltaGlobalS = misalGlobalS*nominGlobalS.Inverse();
-            const Gaudi::Transform3D deltalocalS  = nominGlobalS.Inverse()*deltaGlobalS*nominGlobalS;
-            std::vector<double> rotGlobalS(3,0.), shiftGlobalS(3,0.);
-            std::vector<double> rotlocalS(3,0.), shiftlocalS(3,0.);
-            DetDesc::getZYXTransformParameters(deltalocalS, shiftlocalS, rotlocalS);
-            DetDesc::getZYXTransformParameters(deltaGlobalS, shiftGlobalS, rotGlobalS);            
-
+		    << " rotglobal   = " << rotGlobal << " shiftglobal = " << shiftGlobal <<  endreq
+		    <<"---------------------------------------------------------------"<<endreq;
+	    
+	    /*
+	      const Gaudi::Transform3D misalGlobalQ = m_OTQuadrants[k]->geometry()->toGlobalMatrix();
+	      const Gaudi::Transform3D nominGlobalQ = m_OTQuadrants[k]->geometry()->toGlobalMatrixNominal();
+	      const Gaudi::Transform3D deltaGlobalQ = misalGlobalQ*nominGlobalQ.Inverse();
+	      const Gaudi::Transform3D deltalocalQ  = nominGlobalQ.Inverse()*deltaGlobalQ*nominGlobalQ;
+	      std::vector<double> rotGlobalQ(3,0.), shiftGlobalQ(3,0.);
+	      std::vector<double> rotlocalQ(3,0.), shiftlocalQ(3,0.);
+	      DetDesc::getZYXTransformParameters(deltalocalQ, shiftlocalQ, rotlocalQ);
+	      DetDesc::getZYXTransformParameters(deltaGlobalQ, shiftGlobalQ, rotGlobalQ);            
+	      
+	      const Gaudi::Transform3D misalGlobalL = m_OTLayers[j]->geometry()->toGlobalMatrix();
+	      const Gaudi::Transform3D nominGlobalL = m_OTLayers[j]->geometry()->toGlobalMatrixNominal();
+	      const Gaudi::Transform3D deltaGlobalL = misalGlobalL*nominGlobalL.Inverse();
+	      const Gaudi::Transform3D deltalocalL  = nominGlobalL.Inverse()*deltaGlobalL*nominGlobalL;
+	      std::vector<double> rotGlobalL(3,0.), shiftGlobalL(3,0.);
+	      std::vector<double> rotlocalL(3,0.), shiftlocalL(3,0.);
+	      DetDesc::getZYXTransformParameters(deltalocalL, shiftlocalL, rotlocalL);
+	      DetDesc::getZYXTransformParameters(deltaGlobalL, shiftGlobalL, rotGlobalL);            
+	      
+	      
+	      const Gaudi::Transform3D misalGlobalS = m_OTStations[i]->geometry()->toGlobalMatrix();
+	      const Gaudi::Transform3D nominGlobalS = m_OTStations[i]->geometry()->toGlobalMatrixNominal();
+	      const Gaudi::Transform3D deltaGlobalS = misalGlobalS*nominGlobalS.Inverse();
+	      const Gaudi::Transform3D deltalocalS  = nominGlobalS.Inverse()*deltaGlobalS*nominGlobalS;
+	      std::vector<double> rotGlobalS(3,0.), shiftGlobalS(3,0.);
+	      std::vector<double> rotlocalS(3,0.), shiftlocalS(3,0.);
+	      DetDesc::getZYXTransformParameters(deltalocalS, shiftlocalS, rotlocalS);
+	      DetDesc::getZYXTransformParameters(deltaGlobalS, shiftGlobalS, rotGlobalS);            
+	      
             */
-            
+	    
             m_misalInput_X.at(rank) = shiftlocal[0];
             m_misalInput_Y.at(rank) = shiftlocal[1];
             m_misalInput_Z.at(rank) = shiftlocal[2];
             m_misalInput_A.at(rank) = rotlocal[0];
             m_misalInput_B.at(rank) = rotlocal[1];
             m_misalInput_C.at(rank) = rotlocal[2];
-
+	    
             //std::vector<double> rotcond(3,0.), shiftcond(3,0.);
             //const AlignmentCondition* aliCond  = m_OTModules[l]->geometry()->alignmentCondition();
             //const Gaudi::Transform3D deltacond = aliCond->offNominalMatrix();;
             // DetDesc::getZYXTransformParameters(deltacond, shiftcond, rotcond);
             //debug() << " --> M delta SHIFT (cond) = " << shiftcond << "rot = " << rotcond  <<  endreq;            
-
-
-        
+	    
+	    
+	    
             rank++;
           }
           /*************************************
@@ -790,7 +795,7 @@ StatusCode TAConfig::ConfigOT( std::vector<Gaudi::Transform3D> &OTmap , DeOTDete
            *************************************/
           if ( m_otModuleShort ) {
             CreateMap( rank, m_OTModules[l], m_zmean_ot );
-            
+	    
             /********************************
              * in our alignment frame, the 
              * shifts are applied in the global
@@ -804,12 +809,12 @@ StatusCode TAConfig::ConfigOT( std::vector<Gaudi::Transform3D> &OTmap , DeOTDete
             std::vector<double> rotlocal(3,0.), shiftlocal(3,0.);
             DetDesc::getZYXTransformParameters(deltalocal, shiftlocal, rotlocal);
             DetDesc::getZYXTransformParameters(deltaGlobal, shiftGlobal, rotGlobal);            
-
+	    
             debug() << rank << "  " <<m_OTModules[l]->name() << endreq;
             debug() << " rotlocal    = " << rotlocal  << " shiftlocal  = " <<  shiftlocal <<endreq
-                   << " rotglobal   = " << rotGlobal << " shiftglobal = " << shiftGlobal <<  endreq
-                   <<"---------------------------------------------------------------"<<endreq;
-
+		    << " rotglobal   = " << rotGlobal << " shiftglobal = " << shiftGlobal <<  endreq
+		    <<"---------------------------------------------------------------"<<endreq;
+	    
             m_misalInput_X.at(rank) = shiftlocal[0];
             m_misalInput_Y.at(rank) = shiftlocal[1];
             m_misalInput_Z.at(rank) = shiftlocal[2];
@@ -836,14 +841,14 @@ StatusCode TAConfig::ConfigOT( std::vector<Gaudi::Transform3D> &OTmap , DeOTDete
           DetDesc::getZYXTransformParameters(deltaGlobal, shiftGlobal, rotGlobal);            
           debug( ) << " --> delta ROT   (local)  = " << rotlocal    << " shift = " << shiftlocal <<  endreq;
           debug() << " --> delta SHIFT (global) = " << shiftGlobal << " rot   = " << rotGlobal <<  endreq;
-
+	  
           m_misalInput_X.at(rank) = shiftlocal[0];
           m_misalInput_Y.at(rank) = shiftlocal[1];
           m_misalInput_Z.at(rank) = shiftlocal[2];
           m_misalInput_A.at(rank) = rotlocal[0];
           m_misalInput_B.at(rank) = rotlocal[1];
           m_misalInput_C.at(rank) = rotlocal[2];
-
+	  
           rank++;
         }
       }
@@ -854,7 +859,7 @@ StatusCode TAConfig::ConfigOT( std::vector<Gaudi::Transform3D> &OTmap , DeOTDete
         //create a map with 3DTransformation* objects , i.e. 
         // 3DTransformation* objects =  from OTLayers[j]->geometry()->toGlobalMatrix()
         CreateMap( rank, m_OTLayers[j], m_zmean_ot );
-
+	
         const Gaudi::Transform3D misalGlobal = m_OTLayers[j]->geometry()->toGlobalMatrix();
         const Gaudi::Transform3D nominGlobal = m_OTLayers[j]->geometry()->toGlobalMatrixNominal();
         const Gaudi::Transform3D deltaGlobal = misalGlobal*nominGlobal.Inverse();
@@ -863,21 +868,21 @@ StatusCode TAConfig::ConfigOT( std::vector<Gaudi::Transform3D> &OTmap , DeOTDete
         std::vector<double> rotlocal(3,0.), shiftlocal(3,0.);
         DetDesc::getZYXTransformParameters(deltalocal, shiftlocal, rotlocal);
         DetDesc::getZYXTransformParameters(deltaGlobal, shiftGlobal, rotGlobal);            
-
+	
         debug() << rank << "  " <<m_OTLayers[j]->name() << endreq;
         debug() << " rotlocal    = " << rotlocal  << " shiftlocal  = " <<  shiftlocal <<endreq
-               << " rotglobal   = " << rotGlobal << " shiftglobal = " << shiftGlobal <<  endreq
-               <<"---------------------------------------------------------------"<<endreq;
-        
+		<< " rotglobal   = " << rotGlobal << " shiftglobal = " << shiftGlobal <<  endreq
+		<<"---------------------------------------------------------------"<<endreq;
+	
         m_misalInput_X.at(rank) = shiftlocal[0];
         m_misalInput_Y.at(rank) = shiftlocal[1];
         m_misalInput_Z.at(rank) = shiftlocal[2];
         m_misalInput_A.at(rank) = rotlocal[0];
         m_misalInput_B.at(rank) = rotlocal[1];
         m_misalInput_C.at(rank) = rotlocal[2];
-        
+	
         rank++; // count the rank of the alignable object
-        
+	
       }
     }
     
@@ -886,9 +891,17 @@ StatusCode TAConfig::ConfigOT( std::vector<Gaudi::Transform3D> &OTmap , DeOTDete
       rank++;
     }
   }
-
+  info() << "Printing all alignment pars" << endreq;
+  for(int i = 0; i < rank; i++ ) {
+    info() << "rank : " << i << " shift x: " << m_misalInput_X.at(i) << endreq;
+    info() << "rank : " << i << " shift y: " << m_misalInput_Y.at(i) << endreq;
+    info() << "rank : " << i << " shift z: " << m_misalInput_Z.at(i) << endreq;
+    info() << "rank : " << i << " rot a: " << m_misalInput_A.at(i) << endreq;
+    info() << "rank : " << i << " rot b: " << m_misalInput_B.at(i) << endreq;
+    info() << "rank : " << i << " rot c: " << m_misalInput_C.at(i) << endreq;
+  }
   info() << "--> size of rank =" <<  rank << endreq;
-
+  
   return StatusCode::SUCCESS;
 }
 
@@ -908,7 +921,7 @@ StatusCode TAConfig::ConfigIT( std::vector<Gaudi::Transform3D> &ITmap ) {
       (m_deit->geometry()->alignmentCondition() );
     m_ALImap.push_back( it_cond->offNominalMatrix() );
   }
-
+  
   m_zmoy_it = 0.0;
   int rank = m_rank.size();
   m_ITStations = m_deit->childIDetectorElements();
@@ -997,7 +1010,7 @@ StatusCode TAConfig::ConfigIT( std::vector<Gaudi::Transform3D> &ITmap ) {
 
 //   // Measurement
 //   Measurement& hit = t.measurement( id );
-  
+
 //   // State of track at z of hit
 //   State &state = t.closestState( hit.z() );
 
@@ -1020,7 +1033,7 @@ StatusCode TAConfig::ConfigIT( std::vector<Gaudi::Transform3D> &ITmap ) {
 
 //   // Determine the actual minimum with the Poca tool
 //   m_poca->minimize( refTraj, s1, measTraj, s2, distance, m_tolerance );
-  
+
 //   return distance;
 // }
 
@@ -1042,7 +1055,7 @@ void TAConfig::CreateMap( int & r,  IDetectorElement* id, double &m_zmoy ) {
   
   debug() << "--->  fill detmap  !" << endreq;
   m_DETmap.push_back( id->geometry()->toGlobalMatrix() );
-
+  
   //MD store stereo angle of detector element,
   // i.e. of this rank, for later use
   IDetectorElement::IDEContainer::iterator ModIt;
@@ -1058,7 +1071,7 @@ void TAConfig::CreateMap( int & r,  IDetectorElement* id, double &m_zmoy ) {
     ModIt = id->childBegin();
     info() << " child name ( from Quadrant) = " << (*ModIt)->name() << endreq;  
   }
-
+  
   Gaudi::Rotation3D rotation;
   Gaudi::XYZVector position;
   if(m_otLayer ) 
@@ -1075,7 +1088,7 @@ void TAConfig::CreateMap( int & r,  IDetectorElement* id, double &m_zmoy ) {
   std::pair<double, double> zstereo(myz,m_stereoAngle.back());
   //  m_RnkPosZ.insert(std::make_pair(r,myz));
   m_RnkZAngle.insert(std::make_pair(r,zstereo));
-
+  
   std::multimap<int, std::pair<double,double> >::iterator t = m_RnkZAngle.find( r );
   if ( t != m_RnkZAngle.end() ) {
     debug() << "key of map (rank) = " << (*t).first 
@@ -1104,8 +1117,8 @@ StatusCode TAConfig::ConfigMillepede() {
   m_Centipede->InitMille(num_objects, nlocal,  
                          m_l_chimax, m_nstd, 
                          m_residual_cut, m_ini_residual_cut);
-
-
+  
+  
   return StatusCode::SUCCESS;
 }
 
@@ -1136,22 +1149,22 @@ StatusCode TAConfig::ResetGlVars() {
 //   local_vec[1] += wght*rmeas*z_cor*cos(stereo); //'x'
 //   local_vec[2] += wght*rmeas*sin(stereo);  //'u'
 //   local_vec[3] += wght*rmeas*z_cor*sin(stereo); //'u'
-  
+
 //   local_mat[0][0] += wght*cos(stereo)*cos(stereo);
 //   local_mat[0][1] += wght*cos(stereo)*z_cor*cos(stereo);
 //   local_mat[0][2] += wght*cos(stereo)*sin(stereo);
 //   local_mat[0][3] += wght*cos(stereo)*z_cor*sin(stereo);
-  
+
 //   local_mat[1][0] += wght*z_cor*cos(stereo)*cos(stereo);
 //   local_mat[1][1] += wght*z_cor*cos(stereo)*z_cor*cos(stereo);
 //   local_mat[1][2] += wght*z_cor*cos(stereo)*sin(stereo);
 //   local_mat[1][3] += wght*z_cor*cos(stereo)*z_cor*sin(stereo);
-  
+
 //   local_mat[2][0] += wght*sin(stereo)*cos(stereo);
 //   local_mat[2][1] += wght*sin(stereo)*z_cor*cos(stereo);
 //   local_mat[2][2] += wght*sin(stereo)*sin(stereo);
 //   local_mat[2][3] += wght*sin(stereo)*z_cor*sin(stereo);
-  
+
 //   local_mat[3][0] += wght*z_cor*sin(stereo)*cos(stereo);
 //   local_mat[3][1] += wght*z_cor*sin(stereo)*z_cor*cos(stereo);
 //   local_mat[3][2] += wght*z_cor*sin(stereo)*sin(stereo);
@@ -1170,7 +1183,7 @@ StatusCode TAConfig::ConfMatrix( double rmeas,
                                  ) {
   
   // first we need the derivatives computed for some fixed track parameters and some fixed alignment parameters  
-   
+  
   // get track parameters
   std::vector<double> trpar;
   if(m_ntrack_pars==4){
@@ -1180,7 +1193,7 @@ StatusCode TAConfig::ConfMatrix( double rmeas,
     trpar.push_back(m_trty[0]);
   }
   debug() << "---> CONFMAT: trpar= " << trpar[0] << " " << trpar[1] << " " << trpar[2] << " "<< trpar[3] <<endreq;
-
+  
   m_derLC.clear();
   m_derLC.resize( m_ntrack_pars ,0.);
   Gaudi::XYZVector origin( trpar.at(0), trpar.at(2), 0.0);
@@ -1202,29 +1215,29 @@ StatusCode TAConfig::ConfMatrix( double rmeas,
     local_vec[1] += wght*rmeas*m_derLC[1]; 
     local_vec[2] += wght*rmeas*m_derLC[2];  
     local_vec[3] += wght*rmeas*m_derLC[3]; 
-  
+    
     local_mat[0][0] += wght*m_derLC[0] * m_derLC[0];
     local_mat[0][1] += wght*m_derLC[0] * m_derLC[1];
     local_mat[0][2] += wght*m_derLC[0] * m_derLC[2];
     local_mat[0][3] += wght*m_derLC[0] * m_derLC[3];
-  
+    
     local_mat[1][0] += wght*m_derLC[1] * m_derLC[0];
     local_mat[1][1] += wght*m_derLC[1] * m_derLC[1];
     local_mat[1][2] += wght*m_derLC[1] * m_derLC[2];
     local_mat[1][3] += wght*m_derLC[1] * m_derLC[3];
-  
+    
     local_mat[2][0] += wght*m_derLC[2]*m_derLC[0];
     local_mat[2][1] += wght*m_derLC[2]*m_derLC[1];
     local_mat[2][2] += wght*m_derLC[2]*m_derLC[2];
     local_mat[2][3] += wght*m_derLC[2]*m_derLC[3];
-  
+    
     local_mat[3][0] += wght*m_derLC[3]*m_derLC[0];
     local_mat[3][1] += wght*m_derLC[3]*m_derLC[1];
     local_mat[3][2] += wght*m_derLC[3]*m_derLC[2];
     local_mat[3][3] += wght*m_derLC[3]*m_derLC[3];
   }
-
-
+  
+  
   return StatusCode::SUCCESS;
 }
 
@@ -1239,20 +1252,20 @@ StatusCode TAConfig::ConfMatrixP( double rmeas,
                                   ) {
   
   // first we need the derivatives computed for some fixed track parameters and some fixed alignment parameters  
-   
+  
   // get track parameters
   std::vector<double> trpar;
   double dRatio = -3.81831e-4;
   double mslope = m_trtx[0] + m_trQ[0]*( 2*zpos + 3*dRatio*zpos*zpos);
-
+  
   trpar.push_back(m_trx0[0]);
   trpar.push_back(mslope);
   trpar.push_back(m_try0[0]);
   trpar.push_back(m_trty[0]);
-
+  
   debug() << "---> CONFMAT: trpar= " << trpar[0] << " " << trpar[1] << " " << trpar[2] 
           << " "<< trpar[3] << " " << trpar[4] << endreq;
-
+  
   m_derLC.clear();
   m_derLC.resize( m_ntrack_pars ,0.);
   Gaudi::XYZVector origin( trpar.at(0), trpar.at(2), 0.0);
@@ -1269,26 +1282,26 @@ StatusCode TAConfig::ConfMatrixP( double rmeas,
           << "---> CONFMAT: origin[1] = " << origin.y()<<" slopes[1] = " << slopes.y()<<endreq
           << "---> CONFMAT: origin[2] = " << origin.z()<<" slopes[2] = " << slopes.z()<<endreq;
   
-
+  
   if(m_ntrack_pars==5){
     local_vec[0] += wght*rmeas*m_derLC[0]; 
     local_vec[1] += wght*rmeas*m_derLC[1]; 
     local_vec[2] += wght*rmeas*m_derLC[2]; 
     local_vec[3] += wght*rmeas*m_derLC[3];  
     local_vec[4] += wght*rmeas*m_derLC[4]; 
-
+    
     local_mat[0][0] += wght*m_derLC[0] * m_derLC[0];
     local_mat[0][1] += wght*m_derLC[0] * m_derLC[1];
     local_mat[0][2] += wght*m_derLC[0] * m_derLC[2];
     local_mat[0][3] += wght*m_derLC[0] * m_derLC[3];  
     local_mat[0][4] += wght*m_derLC[0] * m_derLC[4];
-      
+    
     local_mat[1][0] += wght*m_derLC[1] * m_derLC[0];
     local_mat[1][1] += wght*m_derLC[1] * m_derLC[1];
     local_mat[1][2] += wght*m_derLC[1] * m_derLC[2];
     local_mat[1][3] += wght*m_derLC[1] * m_derLC[3];
     local_mat[1][4] += wght*m_derLC[1] * m_derLC[4];
-      
+    
     local_mat[2][0] += wght*m_derLC[2] * m_derLC[0];
     local_mat[2][1] += wght*m_derLC[2] * m_derLC[1];
     local_mat[2][2] += wght*m_derLC[2] * m_derLC[2];
@@ -1300,16 +1313,16 @@ StatusCode TAConfig::ConfMatrixP( double rmeas,
     local_mat[3][2] += wght*m_derLC[3] * m_derLC[2];
     local_mat[3][3] += wght*m_derLC[3] * m_derLC[3];
     local_mat[3][4] += wght*m_derLC[3] * m_derLC[4];
-  
+    
     local_mat[4][0] += wght*m_derLC[4] * m_derLC[0];
     local_mat[4][1] += wght*m_derLC[4] * m_derLC[1];
     local_mat[4][2] += wght*m_derLC[4] * m_derLC[2];
     local_mat[4][3] += wght*m_derLC[4] * m_derLC[3];
     local_mat[4][4] += wght*m_derLC[4] * m_derLC[4];
-  
+    
   }
-
-
+  
+  
   return StatusCode::SUCCESS;
 }
 
@@ -1345,7 +1358,7 @@ int TAConfig::InvMatrix(double v[][4], double b[],const int &n) {
   bool *flag = new  bool[n];
   double *diag = new double[n];
   double *temp = new double[n];
-
+  
   for (i=0; i<n; i++) {
     flag[i] = true;
     diag[i] = fabs(v[i][i]);     // save diagonal elem absolute values 	
@@ -1353,22 +1366,22 @@ int TAConfig::InvMatrix(double v[][4], double b[],const int &n) {
       v[j][i] = v[i][j] ;
     }
   }
-	
+  
   int nrank = 0;
-
+  
   for (i=0; i<n; i++) {
     vkk = 0.0;
     k = -1;
-
+    
     //TRACE("&&& in local inverting fct &&& " << PRINTV(i) << PRINTV(diag[i]) << PRINTV(v[i][i]) );
-		
+    
     for (j=0; j<n; j++) {// First look for the pivot, ie max unused diagonal element 
       if (flag[j] && ( (fabs(v[j][j]) > std::max(fabs(vkk),eps*diag[j])) ) ){
         vkk = v[j][j];
         k = j;
       }
     }
-		
+    
     if (k >= 0) {  // pivot found
       nrank++;
       flag[k] = false;
@@ -1382,7 +1395,7 @@ int TAConfig::InvMatrix(double v[][4], double b[],const int &n) {
           }					
         }					
       }
-
+      
       for (j=0; j<n; j++) {
         if (j != k) {// Pivot row or column elements 
           v[j][k] = (v[j][k])*vkk; // Column
@@ -1401,7 +1414,7 @@ int TAConfig::InvMatrix(double v[][4], double b[],const int &n) {
       break;  // No more pivots anyway, stop here
     }
   }
-
+  
   for (j=0; j<n; j++) {
     temp[j] = 0.0;
     for (jj=0; jj<n; jj++) { // Reverse matrix elements
@@ -1409,10 +1422,10 @@ int TAConfig::InvMatrix(double v[][4], double b[],const int &n) {
       temp[j] += v[j][jj]*b[jj];
     }					
   }
-
+  
   for (j=0; j<n; j++)
     b[j] = temp[j];
-
+  
   delete[] temp;
   delete[] flag;
   delete[] diag;
@@ -1427,7 +1440,7 @@ int TAConfig::InvMatrixP(double v[][5], double b[],const int &n) {
   bool *flag = new  bool[n];
   double *diag = new double[n];
   double *temp = new double[n];
-
+  
   for (i=0; i<n; i++) {
     flag[i] = true;
     diag[i] = fabs(v[i][i]);     // save diagonal elem absolute values 	
@@ -1435,22 +1448,22 @@ int TAConfig::InvMatrixP(double v[][5], double b[],const int &n) {
       v[j][i] = v[i][j] ;
     }
   }
-	
+  
   int nrank = 0;
-
+  
   for (i=0; i<n; i++) {
     vkk = 0.0;
     k = -1;
-
+    
     //TRACE("&&& in local inverting fct &&& " << PRINTV(i) << PRINTV(diag[i]) << PRINTV(v[i][i]) );
-		
+    
     for (j=0; j<n; j++) {// First look for the pivot, ie max unused diagonal element 
       if (flag[j] && ( (fabs(v[j][j]) > std::max(fabs(vkk),eps*diag[j])) ) ){
         vkk = v[j][j];
         k = j;
       }
     }
-		
+    
     if (k >= 0) {  // pivot found
       nrank++;
       flag[k] = false;
@@ -1464,7 +1477,7 @@ int TAConfig::InvMatrixP(double v[][5], double b[],const int &n) {
           }					
         }					
       }
-
+      
       for (j=0; j<n; j++) {
         if (j != k) {// Pivot row or column elements 
           v[j][k] = (v[j][k])*vkk; // Column
@@ -1483,7 +1496,7 @@ int TAConfig::InvMatrixP(double v[][5], double b[],const int &n) {
       break;  // No more pivots anyway, stop here
     }
   }
-
+  
   for (j=0; j<n; j++) {
     temp[j] = 0.0;
     for (jj=0; jj<n; jj++) { // Reverse matrix elements
@@ -1491,10 +1504,10 @@ int TAConfig::InvMatrixP(double v[][5], double b[],const int &n) {
       temp[j] += v[j][jj]*b[jj];
     }					
   }
-
+  
   for (j=0; j<n; j++)
     b[j] = temp[j];
-
+  
   delete[] temp;
   delete[] flag;
   delete[] diag;
@@ -1515,7 +1528,7 @@ StatusCode TAConfig::FillMatrix( int rank,
   // prepare Millepede;
   // configure the local (= track model) and global (= geometry) models:
   //-----------------------------
-
+  
   m_derLC.clear();
   m_derGB.clear();
   m_derLC.resize( m_ntrack_pars ,0.);
@@ -1524,29 +1537,29 @@ StatusCode TAConfig::FillMatrix( int rank,
   double dRatio = -3.81831e-4;
   double mslope = m_trtx[0] + m_trQ[0]*( 2*zpos + 3*dRatio*zpos*zpos);
   std::vector<double> trt;
-
+  
   trt.push_back(m_trx0[0]);
   trt.push_back(mslope);
   trt.push_back(m_try0[0]);
   trt.push_back(m_trty[0]);
-
+  
   Gaudi::XYZVector origin( trt.at(0), trt.at(2), 0.0);
   Gaudi::XYZVector slopes( trt.at(1), trt.at(3), 0.0);
   //set derivatives
   m_derivatives->SetLocal( m_derLC, zpos, stereo_angle );
   m_derivatives->SetGlobal( slopes, origin, pred, m_derGB, rank, stereo_angle );
-
+  
   debug() << " --> FILLMATRIX after SetGlobal : derGB.size = " << m_derGB.size() << " rank = " << rank << endreq
           << "     track parameter at z = "<< zpos<<" : "<< endreq;
   for(unsigned int i=0;i<trt.size();i++) debug() <<" Param "<< i <<" "<<trt.at(i) <<endreq;
   
   
   
-
+  
   
   //fill arrays of MP       
   m_Centipede->EquLoc( m_derGB, m_derLC, meas, resolution ); 
-
+  
   //exclude objects from global fit that where not hit
   
   return StatusCode::SUCCESS;
@@ -1563,19 +1576,19 @@ StatusCode TAConfig::CalcResidual( const LHCb::LHCbID &id,
   //  const Measurement& trMeas = track->measurement(id); // Get measurement
   
   if(id.isOT()){
-
+    
     //    weight = 1./pow(trMeas.errMeasure(),2.);
     //weight = (1./.2)*(1./.2);
     //weight = (1./1.44)*(1./1.44);
     double stereo_angle  = 0.;
     stereo_angle         = m_ot->findLayer( id.otID() )->angle();
     stereo               = stereo_angle;
-
-
+    
+    
     debug() << "------------------------------" <<endreq;
     debug() << "----> CALCRES RANK =  " << rank << "     stereo = "<<stereo_angle << endreq;
     debug() << "------------------------------" <<endreq;
-   
+    
     //build previous traj
     //    LineTraj prevtraj = LineTraj(m_pointa,m_pointb);
     // info()<<" 1.   prevtraj = " << prevtraj.direction(0.) << " " << prevtraj.position(0.)<<endreq;
@@ -1594,17 +1607,17 @@ StatusCode TAConfig::CalcResidual( const LHCb::LHCbID &id,
     //    info() << " my new y1 = " << mpointy1 << "  y2 = " << mpointy2<< endreq;
     //meas.y = mpointy1.y();
     //give infos for next round
-//     m_pointa = lhcbidTraj->beginPoint();
-//     m_pointb = lhcbidTraj->endPoint();
-//     info() << " my starting point = " << m_pointa<< " endpoint "<< m_pointb <<endreq
-//            << " middle point " << idTrajPoint << " and dir " << idTrajDir << endreq;
+    //     m_pointa = lhcbidTraj->beginPoint();
+    //     m_pointb = lhcbidTraj->endPoint();
+    //     info() << " my starting point = " << m_pointa<< " endpoint "<< m_pointb <<endreq
+    //            << " middle point " << idTrajPoint << " and dir " << idTrajDir << endreq;
     
     // get sensor where hit appeared
     DeOTLayer*   layer  = m_ot->findLayer( id.otID() );
     DeOTQuarter* quarter= m_ot->findQuarter( id.otID() );
     DeOTModule*  module = m_ot->findModule( id.otID() );
-
-
+    
+    
     debug() << " quarter has support n geometry tree : " << quarter->geometry()->hasSupport() <<endreq;
     
     //get otchannelid and straw and monolayer
@@ -1625,7 +1638,7 @@ StatusCode TAConfig::CalcResidual( const LHCb::LHCbID &id,
       trajeD.SetXYZ(trajeDa.x()/sqrt(trajeDa.Mag2()),
                     trajeDa.y()/sqrt(trajeDa.Mag2()),
                     trajeDa.z()/sqrt(trajeDa.Mag2()));
-
+    
     Gaudi::Rotation3D R, Rnom,rModNom,rQuNom,rQuShift;
     Gaudi::XYZVector Lay,Mod,Pnom,sModNom,sQuNom,sQuShift;
     //MD
@@ -1640,19 +1653,19 @@ StatusCode TAConfig::CalcResidual( const LHCb::LHCbID &id,
     // Get center of Layer and Rotation matrix in LHCb coordinate frame
     layer->geometry()->toGlobalMatrix().GetDecomposition( R, Lay);
     layer->geometry()->toGlobalMatrixNominal().GetDecomposition( Rnom, Pnom);    
-
+    
     quarter->geometry()->toGlobalMatrix().GetDecomposition( rQuShift, sQuShift);
     quarter->geometry()->toGlobalMatrixNominal().GetDecomposition( rQuNom, sQuNom);    
-
+    
     module->geometry()->toGlobalMatrix().GetDecomposition( R, Mod);    // get center of Module including misalignments
     module->geometry()->toGlobalMatrixNominal().GetDecomposition( rModNom, sModNom);    
-
+    
     const Gaudi::XYZPoint misalLay(Lay.x(),Lay.y(),Lay.z());
     const Gaudi::XYZPoint nomLay(Pnom.x(),Pnom.y(),Pnom.z());
-
+    
     const Gaudi::XYZPoint misalQu(sQuShift.x(),sQuShift.y(),sQuShift.z());
     const Gaudi::XYZPoint nomQu(sQuNom.x(),sQuNom.y(),sQuNom.z());
-
+    
     const Gaudi::XYZPoint misalMod(Mod.x(),Mod.y(),Mod.z());
     const Gaudi::XYZPoint nomMod(sModNom.x(),sModNom.y(),sModNom.z());
     
@@ -1663,13 +1676,13 @@ StatusCode TAConfig::CalcResidual( const LHCb::LHCbID &id,
             << "--> nomMod   ="<<nomMod <<endreq
             << "    misalMod ="<<misalMod << endreq;
     
-   
-  
+    
+    
     
     /*********************
      ** new Mod Center ***
      ********************/
-  
+    
     std::auto_ptr< LHCb::Trajectory > mLayTraj;
     std::auto_ptr< LHCb::Trajectory > bmLayTraj;
     //get the plane of first monolayer
@@ -1690,12 +1703,12 @@ StatusCode TAConfig::CalcResidual( const LHCb::LHCbID &id,
     Gaudi::XYZPoint  bmLayP = bmLayTraj->position(0.);
     Gaudi::XYZVector dLay(mLayP.x()-bmLayP.x(),mLayP.y()-bmLayP.y(),mLayP.z()-bmLayP.z());  //dist between two trajs
     Gaudi::XYZPoint  monoMod =  mLayP-0.5*dLay;     //new center of  Monolayer
-    //*******************************
+    // *******************************
     // distance between orig. module center and new monoMod is the same as for layer center and new layer center!!
-    //*******************************
+    // *******************************
     Gaudi::XYZVector monoCenDist;
     monoCenDist.SetXYZ(0.,monoMod.y()-misalMod.y(),monoMod.z()-misalMod.z());
-
+    
     
     /*********************
      ** new Lay Center***
@@ -1707,7 +1720,7 @@ StatusCode TAConfig::CalcResidual( const LHCb::LHCbID &id,
     Gaudi::XYZPoint misalMod_mono(0.,0.,0.);
     Gaudi::XYZPoint misalRef_mono(0.,0.,0.);
     double misalZpos = 0.;
-    
+      
     
     if(m_otLayer){
       nomMonoRef                    = nomLay + monoCenDist;  
@@ -1720,384 +1733,384 @@ StatusCode TAConfig::CalcResidual( const LHCb::LHCbID &id,
     if(m_otHalfLayer){
       Gaudi::XYZPoint HlRef(0.,0.,0.);
       Gaudi::XYZPoint HlRefnom(0.,0.,0.);
-      GetHalflayerReference(layer, HlRef,HlRefnom, rank);
-      misalRef_mono             = HlRef + monoCenDist;
-      misalZpos                 = misalRef_mono.z();    //get misaligned z position of object
-      plot(HlRef.x()-HlRefnom.x(),"HLdx","HLdx",-5,5,100);
-      plot(HlRef.y()-HlRefnom.y(),"HLdy","HLdy",-5,5,100);
-      plot(HlRef.z()-HlRefnom.z(),"HLdz","HLdz",-5,5,100);
-      
-    }
-    
-    if(m_otModule){
-      mPivot                        = nomMod   + monoCenDist;
-      nomMonoRef                    = nomLay + monoCenDist;  
-      misalLay_mono                 = misalLay + monoCenDist;
-      misalRef_mono                 = misalMod + monoCenDist;
-      /**************************
-       ** module center at
-       ** y==0
-       **************************/
-      double toYzero  =  (0.-misalRef_mono.y())/trajeD.y(); 
-      Gaudi::XYZVector vecYzero = toYzero*trajeD;
-      misalRef_mono             = misalRef_mono + vecYzero;
-      misalZpos                 = misalRef_mono.z();    
-      debug() << " " << endreq
-              << "--> NEW misalRef_mono " << misalRef_mono << endreq
-              << "    vecYzero          " << vecYzero << "  trajeD  " << trajeD << endreq;
-    }
-    if(m_otModuleShort){
-      mPivot                        = nomMod   + monoCenDist;
-      nomMonoRef                    = nomLay + monoCenDist;  
-      misalLay_mono                 = misalLay + monoCenDist;
-      misalRef_mono                 = misalMod + monoCenDist;
-      misalZpos                     = misalRef_mono.z();    
-    }
-
-
-    /********************************************************
-     ** poca LayerCenter & wire                            **
-     ** -> trajs get the geometry information              **
-     **    from previous run, therefore we always make the **
-     **    poca to a nominal center                        **
-     ********************************************************/
-    Gaudi::XYZVector Mtraje(-999999.9999,-999999.9999,-999999.99999);
-    double onwire=0.;
-    //use false = not restircted to range of traj
-    //m_poca-> minimize( (*lhcbidTraj), onwire, false, nomMonoRef, Mtraje, m_tolerance);
-    m_poca-> minimize( (*lhcbidTraj), onwire, false, misalRef_mono, Mtraje, m_tolerance);
-    //    m_poca-> minimize( (*lhcbidTraj), onwire, monoMod, Mtraje, m_tolerance); //module wise
-    if(Mtraje.x()>0.){
-      meas.x = sqrt(Mtraje.x()*Mtraje.x()+Mtraje.y()*Mtraje.y());  //sqrt(Mtraje.Mag2()); 
-    }
-    else{
-      meas.x =-sqrt(Mtraje.x()*Mtraje.x()+Mtraje.y()*Mtraje.y());//Mtraje.Mag2());
-    }
-    zpos = misalZpos;//-Mtraje.z();
-
-
-    double start = (misalRef_mono.y()-idTrajPoint.y())/trajeD.y(); //way to y position
-    if(  idTrajPoint.y() < 0. ) start=-1*start; //traj::direction d is d> 0 for p>0;d<0 for p<0;
-    Gaudi::XYZPoint startZ = lhcbidTraj->position(start);
-    Zref = startZ.z()-m_meanZ;
-    
-
-
-    //------------------------------------------------------
-    //
-    //  transform the measurement into global (LHCb) system
-    //
-    //------------------------------------------------------
-    double doca = meas.x;
-    meas.x = meas.x +  misalRef_mono.x()*cos(stereo_angle) +  misalRef_mono.y()*sin(stereo_angle);
-    
-    debug() <<"---------------------------------" << endreq
-            << " misalRef_mono " << misalRef_mono << endreq
-            << " Mtraje        " << Mtraje << endreq;
-    debug() << " ---> CALCRES    "<<endreq
-            << "      lhcbIdTra         " << lhcbidTraj->position(0.) <<  endreq
-            << "      doca              " << doca << endreq
-            << "      meas.x            " << meas.x << " Mtraje.y()/Matreje.x() = "
-            << atan(Mtraje.y()/Mtraje.x()) << endreq
-            << "      zpos              " << zpos << endreq 
-            << "      Zref              " << Zref <<endreq
-            << "      m_meanZ           " << m_meanZ <<endreq 
-            <<"              -> z =     " << zpos-m_meanZ   << endreq;
-    
-    
-    // be sure to set meas.y = 0 , since it is just used for OTTimes
-    meas.y = Mtraje.y();
-    if(fitok && m_trty[0] !=0.){
-      //----------------------------------
-      // get the y pos of hit at z
-      //----------------------------------
-      //       double hity = m_try0[0]+m_trty[0]*(misalRef_mono.z()-m_meanZ);
-      //       double hitx = m_trx0[0]+m_trtx[0]*(misalRef_mono.z()-m_meanZ);
-      double dRatio = -3.81831e-4;
-      double hity = m_try0[0]+m_trty[0]*(Zref);
-      double hitx = m_trx0[0]+m_trtx[0]*(Zref) + m_trQ[0]*( Zref*Zref + dRatio*Zref*Zref*Zref);
-      //-------------------------------------------
-      // get the way along the wire in y direction
-      //------------------------------------------
-      double way = (hity-idTrajPoint.y())/trajeD.y(); //way to y position
-      if(  idTrajPoint.y() < 0. ) way=-1*way; //traj::direction d is d> 0 for p>0;d<0 for p<0;
-      //----------------------------------
-      // get the point at yhit on the wire
-      //----------------------------------
-      Gaudi::XYZPoint wayP = lhcbidTraj->position(way);
-
-      //----------------------------------
-      // get the relative position
-      //----------------------------------
-      double Y_m  = hity - misalRef_mono.y();// two sides from module center and module center at + or - y
-      double X_m  = hitx - misalRef_mono.x();// two sides from module center and module center at + or - x
-      double Z_m  = wayP.z() - misalRef_mono.z();// two sides from module center and module center at + or - z
-      locPos.x    = X_m;//hitx;
-      locPos.y    = Y_m;//hity;
-
-      //---------------------
-      // get new Zref
-      //--------------------
-      Zref = wayP.z()-m_meanZ;
-      
-      plot2D(X_m,Y_m,"X_m_VS_Y_m","X_m_VS_Y_m",-200.,200.,-3000.,3000,200,1000);
-
-      debug() << "''''''''''''''''''''''''''''''''''''''''"<<endreq
-              << " wayP                     = "  << wayP << " (along wire : "<< way << " )"<<endreq
-              << " hit x / y / z            = " << hitx<<" " <<hity<< " "<< misalRef_mono.z()-m_meanZ<< endreq
-              << " X_m,Y_m,Z_m (module frame) " << X_m << " " << Y_m<< " " << Z_m << endreq
-              << " Stereo dx                  " << Y_m*tan(stereo_angle) << endreq
-              << " Tilt   dz                  " << hity*tan(0.003601)     << endreq
-              << " new Zref                   " << Zref <<  " (old with tilt " <<  zpos-m_meanZ+(hity*tan(0.003601))<<endreq
-              << endreq
-              << ",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,"<<endreq;
-      plot( zpos-m_meanZ+(hity*tan(0.003601))-Zref,"diffZ","diffZ",-2,2,1000);
-      
-      //--------------------------------------
-      //straw @ y of reference/rotation point 
-      //-------------------------------------
-      double dY_c  =  (misalRef_mono.y()-idTrajPoint.y())/trajeD.y(); 
-      //      if( m_otModule && misalRef_mono.y() < 0.) dY_c = -1*dY_c;
-      if(idTrajPoint.y() < 0.) dY_c = -1*dY_c;
-      Gaudi::XYZPoint yStraw_c = lhcbidTraj->position(dY_c);
-     
-      //locPos.x    = misalRef_mono.x()-yStraw_c.x();         
-      //------------------------------------
-      //
-      //    for dRotZ
-      //
-      //------------------------------------
-
-      // alt
-      //       double alongY_c  =  (0.-idTrajPoint.y())/trajeD.y(); 
-      //       if(idTrajPoint.y() < 0.) alongY_c = -1*alongY_c;
-      //       Gaudi::XYZPoint y0Straw_c = lhcbidTraj->position(alongY_c);
-      //       double dmeas_c = y0Straw_c.x() - wayP.x() - wayP.y()*tan(stereo_angle);
-      
-
-      //------------------------------------
-      //double dY_c    = Y_m;//Mtraje.y()-Y_m;
-      //double meas_c  = X_m - dY_c*tan(stereo_angle);//Mtraje.x() + dY_c*tan(stereo_angle)-X_m;
-      //double gamma   = dmeas_c/dY_c ;
-     
-      double dX_c     = yStraw_c.x() - wayP.x() - Y_m*tan(stereo_angle);
-      double gamma = dX_c/Y_m;
-
-      //-------------------------------------------------------
-      // get new x measurement for x layer (stereo_angle == 0) 
-      // get new measurement for stereo layer
-      //------------------------------------------------------
-      double wayAbs = wayP.x()*cos(stereo_angle)+ wayP.y()*sin(stereo_angle);
-      
-      debug() << "--> GAMMA          input " << m_misalInput_C.at(rank) << endreq
-              << " gamma here  =  " << (wayAbs - meas.x)/wayP.y() <<  endreq
-              << " yStraw_c       " << yStraw_c << endreq
-              << " dY*tan(stereo_angle) " << Y_m*tan(stereo_angle) << endreq
-              << " dX_c           " << dX_c << endreq
-              << " gamma  local=  " << gamma << endreq
-              << "------------------------------------"<<endreq;
-      
-      //------------------------------
-      // pass the new measurement
-      //------------------------------
-      //      if(m_otLayer) meas.x += dmeas_c;// += (meas.x-wayAbs);
-      //       if(m_otLayer) meas.x += dX_c;// += (meas.x-wayAbs);
-      //       if(m_otModule || m_otHalfLayer) meas.x += dX_c;//dmeas_c;
-      meas.x += dX_c;//dmeas_c;
-      plot(dX_c,"dmeas_c","dmeas_c",-.2,.2,100);            
-
-      //------------------------------------
-      //
-      //    for dRotX
-      //
-      //------------------------------------
-      //----------------------------------
-      // get the z pos of hit at y, take y point 
-      // from dRotZ = wayP
-      //----------------------------------
-
-      /* the follwing must be used if the track fit is done without using the 
-         z position of the straws, but the z of the module center
-
-      double dY_a    = Y_m;
-      double dZ_a    = wayP.z() - yStraw_c.z() - dY_a*tan(0.0036);
-      double dmeas_a = dZ_a*(cos(stereo_angle)*m_trtx[0]+sin(stereo_angle)*m_trty[0]);
-      double alpha   = dmeas_a/((cos(stereo_angle)*dY_a*m_trtx[0]+
-                                        sin(stereo_angle)*dY_a*m_trty[0]));
-
-      Gaudi::XYZPoint y0Straw_a;
-      //      if(m_otLayer){
-      double alongY_a  =  (0-idTrajPoint.y())/trajeD.y(); 
-      if(idTrajPoint.y() < 0.) alongY_a = -1*alongY_a;
-      // the straw position at y=0
-      y0Straw_a = lhcbidTraj->position(alongY_a);
-      // relative z shift
-      double A_relaZ = wayP.z()-y0Straw_a.z()-wayP.y()*tan(0.0036);
-      debug()<<"A_relaz="<<A_relaZ<<endreq
-            <<"hity   =" <<hity<<endreq;
-      
-      //calculate x misalignment due to rotation around X axis      
-      double Amisal  = A_relaZ*(cos(stereo_angle)*m_trtx[0]+sin(stereo_angle)*m_trty[0]);
-      double dalpha  =  Amisal/((cos(stereo_angle)*hity*m_trtx[0]+sin(stereo_angle)*hity*m_trty[0]));
-      
-      debug() << " ALPHA          input  "<< m_misalInput_A.at(rank)  <<"  stereo:"<< stereo_angle<<endreq
-              << " y0Straw:"<<y0Straw_a<<endreq
-              << " Amisal = " << Amisal << endreq
-              << " ===> alpha = "<< dalpha <<endreq
-        // <<"  derGB = " << (cos(stereo_angle)*dY_a*m_trtx[0]+sin(stereo_angle)*dY_a*m_trty[0])<<endreq
-              << " dY_a            " << dY_a << endreq
-              << " dZ_a            " << dZ_a << endreq
-              << " dmeas_a       = " << dmeas_a << endreq
-              << " alpha (geom)  = " << dZ_a/dY_a << endreq
-              << " alpha new     = " << alpha <<endreq
-              << "---------------------------------------------------"<< endreq;
-
-      //      meas.x += Amisal;
-      // meas.x += dmeas_a;
-      plot(dmeas_a,"dmeas_a","dmeas_a",-.2,.2,100);      
-
-      if(stereo_angle == 0 )
-        plot(alpha-m_misalInput_A.at(rank),"dalphanewX","dalphanewX",-0.01,0.01,1000);
-      if(stereo_angle != 0 )
-        plot(alpha-m_misalInput_A.at(rank),"dalphanewUV","dalphanewUV",-0.01,0.01,1000);
-      
-      
-      plot(dalpha-m_misalInput_A.at(rank),"dalphaold","dalphaold",-0.01,0.01,1000);
-      
-
-      
-
-      
-      //------------------------------------
-      //
-      //    for dRotY
-      //
-      //------------------------------------
-      //------------------------------------
-      // get z pos of wire at y=0
-      //------------------------------------
-      double alongY  =  (0-idTrajPoint.y())/trajeD.y(); 
-      if(idTrajPoint.y() < 0.) alongY = -1*alongY;
-      // the straw position at y=0
-      Gaudi::XYZPoint y0Straw = lhcbidTraj->position(alongY);
-      Gaudi::XYZVector  mLayDu,bmLayDu;
-      Gaudi::XYZVector  mLayD  = mLayTraj->direction(0.);
-      Gaudi::XYZVector  bmLayD = bmLayTraj->direction(0.);
-      if(mLayD.y() < 0.) 
-        mLayDu.SetXYZ(-mLayD.x()/sqrt(mLayD.Mag2()),-mLayD.y()/sqrt(mLayD.Mag2()),-mLayD.z()/sqrt(mLayD.Mag2()));
-      else
-        mLayDu.SetXYZ(mLayD.x()/sqrt(mLayD.Mag2()),mLayD.y()/sqrt(mLayD.Mag2()),mLayD.z()/sqrt(mLayD.Mag2()));
-      if(bmLayD.y() < 0.) 
-        bmLayDu.SetXYZ(-bmLayD.x()/sqrt(bmLayD.Mag2()),-bmLayD.y()/sqrt(bmLayD.Mag2()),-bmLayD.z()/sqrt(bmLayD.Mag2()));
-      else
-        bmLayDu.SetXYZ(bmLayD.x()/sqrt(bmLayD.Mag2()),bmLayD.y()/sqrt(bmLayD.Mag2()),bmLayD.z()/sqrt(bmLayD.Mag2()));
-
-      double toY0  =  (0.-mLayP.y())/mLayDu.y(); 
-      double btoY0 =  (0.-bmLayP.y())/bmLayDu.y(); 
-      if(mLayP.y()  < 0.) toY0  = -1.*toY0;
-      if(bmLayP.y() < 0.) btoY0 = -1.*btoY0;
-      // the straw position at y=0
-      Gaudi::XYZPoint atY0  = mLayTraj->position(toY0);
-      Gaudi::XYZPoint batY0 = bmLayTraj->position(btoY0);
-      Gaudi::XYZVector datY0(atY0.x()-batY0.x(),atY0.y()-batY0.y(),atY0.z()-batY0.z());  //dist between two trajs
-
-      
-
-      //      double perpToStraw     = (0.-y0Straw.x())/datY0.x();
-      double perpToStraw     = (misalRef_mono.x()-y0Straw.x())/datY0.x();
-      Gaudi::XYZPoint ZatX0  = y0Straw+datY0*perpToStraw;
-      double dZ              = y0Straw.z()-ZatX0.z();
-      double Bmisalnew = dZ*(cos(stereo_angle)*m_trtx[0]+sin(stereo_angle)*m_trty[0]);
-      //double    beta   = Bmisalnew/ (  -sin(stereo_angle)*m_trty[0]*hitx
-      //                               -cos(stereo_angle)*m_trtx[0]*hitx);
-      double    beta   = Bmisalnew/ (  -sin(stereo_angle)*m_trty[0]*X_m
-                                       -cos(stereo_angle)*m_trtx[0]*X_m);
-
-
-      //-------------------------------
-      double diffx = misalRef_mono.x()-yStraw_c.x();//batY0.x();
-      double diffz = misalRef_mono.z()-yStraw_c.z();//-batY0.z();
-      double angle1 = fabs(diffz/diffx);
-      
-      debug() << " angle straws " << angle1 <<endreq;
-      
-
-      //        double ndZ     = yStraw_c.z() - misalRef_mono.z();
-      //         double dmeas_b = ndZ*(cos(stereo_angle)*m_trtx[0]+sin(stereo_angle)*m_trty[0]);      
-      //         double nbeta   = dmeas_b/ (  -sin(stereo_angle)*m_trty[0]*X_m
-      //         -cos(stereo_angle)*m_trtx[0]*X_m);
-      //         double nbetageom = ndZ/X_m;
-
-      double ndZ     = diffz;//Z_m-Y_m*tan(0.003601);//yStraw_c.z() - misalRef_mono.z();
-      double dmeas_b = ndZ*(cos(stereo_angle)*m_trtx[0]+sin(stereo_angle)*m_trty[0]);      
-      double nbeta   = dmeas_b/ (  -sin(stereo_angle)*m_trty[0]*diffx
-                                   -cos(stereo_angle)*m_trtx[0]*diffx);
-      double nbetageom = ndZ/X_m;
-      double percent   = ( (fabs(beta) - fabs(m_misalInput_B.at(rank)))/ fabs(m_misalInput_B.at(rank)) );
-      
-      if( percent >  0.02 
-          && fabs(m_misalInput_B.at(rank))  > 1e-4 ){
-        
-        debug() << " beta DIFF " << percent
-                << " X_M = " << X_m <<endreq;
-        if( stereo_angle == 0) plot2D(X_m,percent,"beta_X_m_VS_diffInput(percent)_X","beta_X_m_VS_diffInput(percent)_X"
-                                      ,-200.,200.,0.,1.3,200,100);
-        if( stereo_angle != 0) plot2D(X_m,percent,"beta_X_m_VS_diffInput(percent)_UV","beta_X_m_VS_diffInput(percent)_UV"
-                                      ,-200.,200.,0.,1.3,200,100);
-        
+	GetHalflayerReference(layer, HlRef,HlRefnom, rank);
+	misalRef_mono             = HlRef + monoCenDist;
+	misalZpos                 = misalRef_mono.z();    //get misaligned z position of object
+	plot(HlRef.x()-HlRefnom.x(),"HLdx","HLdx",-5,5,100);
+	plot(HlRef.y()-HlRefnom.y(),"HLdy","HLdy",-5,5,100);
+	plot(HlRef.z()-HlRefnom.z(),"HLdz","HLdz",-5,5,100);
+	
       }
       
-      //      meas.x += Bmisalnew;
-      plot(Bmisalnew,"dmeas_b","dmeas_b",-.2,.2,100);
-      //       meas.x += dmeas_b;
-      //       plot(dmeas_b,"dmeas_b","dmeas_b",-.2,.2,100);
+      if(m_otModule){
+	mPivot                        = nomMod   + monoCenDist;
+	nomMonoRef                    = nomLay + monoCenDist;  
+	misalLay_mono                 = misalLay + monoCenDist;
+	misalRef_mono                 = misalMod + monoCenDist;
+	/**************************
+	 ** module center at
+	 ** y==0
+	 **************************/
+	double toYzero  =  (0.-misalRef_mono.y())/trajeD.y(); 
+	Gaudi::XYZVector vecYzero = toYzero*trajeD;
+	misalRef_mono             = misalRef_mono + vecYzero;
+	misalZpos                 = misalRef_mono.z();    
+	debug() << " " << endreq
+		<< "--> NEW misalRef_mono " << misalRef_mono << endreq
+		<< "    vecYzero          " << vecYzero << "  trajeD  " << trajeD << endreq;
+      }
+      if(m_otModuleShort){
+	mPivot                        = nomMod   + monoCenDist;
+	nomMonoRef                    = nomLay + monoCenDist;  
+	misalLay_mono                 = misalLay + monoCenDist;
+	misalRef_mono                 = misalMod + monoCenDist;
+	misalZpos                     = misalRef_mono.z();    
+      }
       
-      debug() << " BETA      input "<< m_misalInput_B.at(rank)  <<"  stereo:"<< stereo_angle<<endreq
-              << " diffInput(perc)" << percent << endreq
-              << " straw @ y=Ref  " << yStraw_c << endreq
-              << " ndZ            " << ndZ   << endreq
-              << " dmeas_b        " << dmeas_b << endreq
-              << " nbeta          " << nbeta << endreq
-              << " nbetageom      " << nbetageom << endreq
-              << " ZatX0          " << ZatX0 <<endreq
-              << " BmisalNew =    " << Bmisalnew << endreq
-              << " beta      =    " << beta << endreq
-              <<"---------------------------------------"<<endreq;
-
-      */
+      
+      /********************************************************
+      ** poca LayerCenter & wire                            **
+      ** -> trajs get the geometry information              **
+      **    from previous run, therefore we always make the **
+      **    poca to a nominal center                        **
+      ********************************************************/
+      Gaudi::XYZVector Mtraje(-999999.9999,-999999.9999,-999999.99999);
+      double onwire=0.;
+      //use false = not restircted to range of traj
+      //m_poca-> minimize( (*lhcbidTraj), onwire, false, nomMonoRef, Mtraje, m_tolerance);
+      m_poca-> minimize( (*lhcbidTraj), onwire, false, misalRef_mono, Mtraje, m_tolerance);
+      //    m_poca-> minimize( (*lhcbidTraj), onwire, monoMod, Mtraje, m_tolerance); //module wise
+      if(Mtraje.x()>0.){
+	meas.x = sqrt(Mtraje.x()*Mtraje.x()+Mtraje.y()*Mtraje.y());  //sqrt(Mtraje.Mag2()); 
+      }
+      else{
+	meas.x =-sqrt(Mtraje.x()*Mtraje.x()+Mtraje.y()*Mtraje.y());//Mtraje.Mag2());
+      }
+      zpos = misalZpos;//-Mtraje.z();
       
       
-    }
-    
-    
-    //******** This stuff is for OTTimes **********
-    //     Gaudi::XYZPoint posRec;
-    //     Gaudi::XYZVector slRec;
-    //     m_extrapolator->position((*track),zpos,posRec);
-    //     m_extrapolator->slopes((*track),zpos,slRec);
-    //     double calTime = 0.;
-    //     double drDist  = 0.;
-    //     //get OTTimes
-    //     LHCb::OTTimes* m_ottimes = get<LHCb::OTTimes>(LHCb::OTTimeLocation::Default);
-    //     LHCb::OTTimes::const_iterator iTimes = m_ottimes->begin();
-    //     for ( ; iTimes != m_ottimes->end(); ++iTimes ) {
-    //       if (  track->isOnTrack( (*iTimes)->channel() ) &&  (*iTimes)->channel() == id.otID() ) {
-    // 	calTime =  (*iTimes)->calibratedTime();
-    // 	plot((*iTimes)->calibratedTime(),"caltime","caltime",-100,100,100);
-    // // 	DeOTDetector* m_ot1 = getDet<DeOTDetector>(DeOTDetectorLocation::Default);
-    // // 	DeOTModule* module1 = m_ot1->findModule( id.otID() );
-    // 	drDist = module->driftRadius(calTime-m_ot->propagationTime(id.otID(), posRec.x(), posRec.y()));
-    // 	plot(drDist,"drdist","drdist",-5,5,50);
-    //       }	      
-    //     }
-    //     double slangle = atan(slRec.x());
-    //     double uDist   = drDist/cos(slangle);
-    //     double help = 0.;
-    //     Gaudi::XYZVector helpV;
-    //     m_poca-> minimize( (*lhcbidTraj), help, false, posRec, helpV, m_tolerance);
-    //     if(helpV.x() < 0. ) meas.y = uDist; 
-    //     if(helpV.x() > 0. ) meas.y = -uDist; 
-  }
+      double start = (misalRef_mono.y()-idTrajPoint.y())/trajeD.y(); //way to y position
+      if(  idTrajPoint.y() < 0. ) start=-1*start; //traj::direction d is d> 0 for p>0;d<0 for p<0;
+      Gaudi::XYZPoint startZ = lhcbidTraj->position(start);
+      Zref = startZ.z()-m_meanZ;
+      
+      
+      
+      //------------------------------------------------------
+      //
+      //  transform the measurement into global (LHCb) system
+      //
+      //------------------------------------------------------
+      double doca = meas.x;
+      meas.x = meas.x +  misalRef_mono.x()*cos(stereo_angle) +  misalRef_mono.y()*sin(stereo_angle);
+      
+      debug() <<"---------------------------------" << endreq
+	      << " misalRef_mono " << misalRef_mono << endreq
+	      << " Mtraje        " << Mtraje << endreq;
+      debug() << " ---> CALCRES    "<<endreq
+	      << "      lhcbIdTra         " << lhcbidTraj->position(0.) <<  endreq
+	      << "      doca              " << doca << endreq
+	      << "      meas.x            " << meas.x << " Mtraje.y()/Matreje.x() = "
+	      << atan(Mtraje.y()/Mtraje.x()) << endreq
+	      << "      zpos              " << zpos << endreq 
+	      << "      Zref              " << Zref <<endreq
+	      << "      m_meanZ           " << m_meanZ <<endreq 
+	      <<"              -> z =     " << zpos-m_meanZ   << endreq;
+      
+      
+      // be sure to set meas.y = 0 , since it is just used for OTTimes
+      meas.y = Mtraje.y();
+      if(fitok && m_trty[0] !=0.){
+	//----------------------------------
+	// get the y pos of hit at z
+	//----------------------------------
+	//       double hity = m_try0[0]+m_trty[0]*(misalRef_mono.z()-m_meanZ);
+	//       double hitx = m_trx0[0]+m_trtx[0]*(misalRef_mono.z()-m_meanZ);
+	double dRatio = -3.81831e-4;
+	double hity = m_try0[0]+m_trty[0]*(Zref);
+	double hitx = m_trx0[0]+m_trtx[0]*(Zref) + m_trQ[0]*( Zref*Zref + dRatio*Zref*Zref*Zref);
+	//-------------------------------------------
+	// get the way along the wire in y direction
+	//------------------------------------------
+	double way = (hity-idTrajPoint.y())/trajeD.y(); //way to y position
+	if(  idTrajPoint.y() < 0. ) way=-1*way; //traj::direction d is d> 0 for p>0;d<0 for p<0;
+	//----------------------------------
+	// get the point at yhit on the wire
+	//----------------------------------
+	Gaudi::XYZPoint wayP = lhcbidTraj->position(way);
+	
+	//----------------------------------
+	// get the relative position
+	//----------------------------------
+	double Y_m  = hity - misalRef_mono.y();// two sides from module center and module center at + or - y
+	double X_m  = hitx - misalRef_mono.x();// two sides from module center and module center at + or - x
+	double Z_m  = wayP.z() - misalRef_mono.z();// two sides from module center and module center at + or - z
+	locPos.x    = X_m;//hitx;
+	locPos.y    = Y_m;//hity;
+	
+	//---------------------
+	// get new Zref
+	//--------------------
+	Zref = wayP.z()-m_meanZ;
+	
+	plot2D(X_m,Y_m,"X_m_VS_Y_m","X_m_VS_Y_m",-200.,200.,-3000.,3000,200,1000);
+	
+	debug() << "''''''''''''''''''''''''''''''''''''''''"<<endreq
+		<< " wayP                     = "  << wayP << " (along wire : "<< way << " )"<<endreq
+		<< " hit x / y / z            = " << hitx<<" " <<hity<< " "<< misalRef_mono.z()-m_meanZ<< endreq
+		<< " X_m,Y_m,Z_m (module frame) " << X_m << " " << Y_m<< " " << Z_m << endreq
+		<< " Stereo dx                  " << Y_m*tan(stereo_angle) << endreq
+		<< " Tilt   dz                  " << hity*tan(0.003601)     << endreq
+		<< " new Zref                   " << Zref <<  " (old with tilt " <<  zpos-m_meanZ+(hity*tan(0.003601))<<endreq
+		<< endreq
+		<< ",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,"<<endreq;
+	plot( zpos-m_meanZ+(hity*tan(0.003601))-Zref,"diffZ","diffZ",-2,2,1000);
+	
+	//--------------------------------------
+	//straw @ y of reference/rotation point 
+	//-------------------------------------
+	double dY_c  =  (misalRef_mono.y()-idTrajPoint.y())/trajeD.y(); 
+	//      if( m_otModule && misalRef_mono.y() < 0.) dY_c = -1*dY_c;
+	if(idTrajPoint.y() < 0.) dY_c = -1*dY_c;
+	Gaudi::XYZPoint yStraw_c = lhcbidTraj->position(dY_c);
+	
+	//locPos.x    = misalRef_mono.x()-yStraw_c.x();         
+	//------------------------------------
+	//
+	//    for dRotZ
+	//
+	//------------------------------------
+	
+	// alt
+	//       double alongY_c  =  (0.-idTrajPoint.y())/trajeD.y(); 
+	//       if(idTrajPoint.y() < 0.) alongY_c = -1*alongY_c;
+	//       Gaudi::XYZPoint y0Straw_c = lhcbidTraj->position(alongY_c);
+	//       double dmeas_c = y0Straw_c.x() - wayP.x() - wayP.y()*tan(stereo_angle);
+	
+	
+	//------------------------------------
+	//double dY_c    = Y_m;//Mtraje.y()-Y_m;
+	//double meas_c  = X_m - dY_c*tan(stereo_angle);//Mtraje.x() + dY_c*tan(stereo_angle)-X_m;
+	//double gamma   = dmeas_c/dY_c ;
+	
+	double dX_c     = yStraw_c.x() - wayP.x() - Y_m*tan(stereo_angle);
+	double gamma = dX_c/Y_m;
+	
+	//-------------------------------------------------------
+	// get new x measurement for x layer (stereo_angle == 0) 
+	// get new measurement for stereo layer
+	//------------------------------------------------------
+	double wayAbs = wayP.x()*cos(stereo_angle)+ wayP.y()*sin(stereo_angle);
+	
+	debug() << "--> GAMMA          input " << m_misalInput_C.at(rank) << endreq
+		<< " gamma here  =  " << (wayAbs - meas.x)/wayP.y() <<  endreq
+		<< " yStraw_c       " << yStraw_c << endreq
+		<< " dY*tan(stereo_angle) " << Y_m*tan(stereo_angle) << endreq
+		<< " dX_c           " << dX_c << endreq
+		<< " gamma  local=  " << gamma << endreq
+		<< "------------------------------------"<<endreq;
+	
+	//------------------------------
+	// pass the new measurement
+	//------------------------------
+	//      if(m_otLayer) meas.x += dmeas_c;// += (meas.x-wayAbs);
+	//       if(m_otLayer) meas.x += dX_c;// += (meas.x-wayAbs);
+	//       if(m_otModule || m_otHalfLayer) meas.x += dX_c;//dmeas_c;
+	meas.x += dX_c;//dmeas_c;
+	plot(dX_c,"dmeas_c","dmeas_c",-.2,.2,100);            
+	
+	//------------------------------------
+	//
+	//    for dRotX
+	//
+	//------------------------------------
+	//----------------------------------
+	// get the z pos of hit at y, take y point 
+	// from dRotZ = wayP
+	//----------------------------------
+	
+	/* the follwing must be used if the track fit is done without using the 
+	   z position of the straws, but the z of the module center
+	   
+	   double dY_a    = Y_m;
+	   double dZ_a    = wayP.z() - yStraw_c.z() - dY_a*tan(0.0036);
+	   double dmeas_a = dZ_a*(cos(stereo_angle)*m_trtx[0]+sin(stereo_angle)*m_trty[0]);
+	   double alpha   = dmeas_a/((cos(stereo_angle)*dY_a*m_trtx[0]+
+	   sin(stereo_angle)*dY_a*m_trty[0]));
+	   
+	   Gaudi::XYZPoint y0Straw_a;
+	   //      if(m_otLayer){
+	   double alongY_a  =  (0-idTrajPoint.y())/trajeD.y(); 
+	   if(idTrajPoint.y() < 0.) alongY_a = -1*alongY_a;
+	   // the straw position at y=0
+	   y0Straw_a = lhcbidTraj->position(alongY_a);
+	   // relative z shift
+	   double A_relaZ = wayP.z()-y0Straw_a.z()-wayP.y()*tan(0.0036);
+	   debug()<<"A_relaz="<<A_relaZ<<endreq
+	   <<"hity   =" <<hity<<endreq;
+	   
+	   //calculate x misalignment due to rotation around X axis      
+	   double Amisal  = A_relaZ*(cos(stereo_angle)*m_trtx[0]+sin(stereo_angle)*m_trty[0]);
+	   double dalpha  =  Amisal/((cos(stereo_angle)*hity*m_trtx[0]+sin(stereo_angle)*hity*m_trty[0]));
+	   
+	   debug() << " ALPHA          input  "<< m_misalInput_A.at(rank)  <<"  stereo:"<< stereo_angle<<endreq
+	   << " y0Straw:"<<y0Straw_a<<endreq
+	   << " Amisal = " << Amisal << endreq
+	   << " ===> alpha = "<< dalpha <<endreq
+	   // <<"  derGB = " << (cos(stereo_angle)*dY_a*m_trtx[0]+sin(stereo_angle)*dY_a*m_trty[0])<<endreq
+	   << " dY_a            " << dY_a << endreq
+	   << " dZ_a            " << dZ_a << endreq
+	   << " dmeas_a       = " << dmeas_a << endreq
+	   << " alpha (geom)  = " << dZ_a/dY_a << endreq
+	   << " alpha new     = " << alpha <<endreq
+	   << "---------------------------------------------------"<< endreq;
+	   
+	   //      meas.x += Amisal;
+	   // meas.x += dmeas_a;
+	   plot(dmeas_a,"dmeas_a","dmeas_a",-.2,.2,100);      
+	   
+	   if(stereo_angle == 0 )
+	   plot(alpha-m_misalInput_A.at(rank),"dalphanewX","dalphanewX",-0.01,0.01,1000);
+	   if(stereo_angle != 0 )
+	   plot(alpha-m_misalInput_A.at(rank),"dalphanewUV","dalphanewUV",-0.01,0.01,1000);
+	   
+	   
+	   plot(dalpha-m_misalInput_A.at(rank),"dalphaold","dalphaold",-0.01,0.01,1000);
+	   
+	   
+	   
+	   
+	   
+	   //------------------------------------
+	   //
+	   //    for dRotY
+	   //
+	   //------------------------------------
+	   //------------------------------------
+	   // get z pos of wire at y=0
+	   //------------------------------------
+	   double alongY  =  (0-idTrajPoint.y())/trajeD.y(); 
+	   if(idTrajPoint.y() < 0.) alongY = -1*alongY;
+	   // the straw position at y=0
+	   Gaudi::XYZPoint y0Straw = lhcbidTraj->position(alongY);
+	   Gaudi::XYZVector  mLayDu,bmLayDu;
+	   Gaudi::XYZVector  mLayD  = mLayTraj->direction(0.);
+	   Gaudi::XYZVector  bmLayD = bmLayTraj->direction(0.);
+	   if(mLayD.y() < 0.) 
+	   mLayDu.SetXYZ(-mLayD.x()/sqrt(mLayD.Mag2()),-mLayD.y()/sqrt(mLayD.Mag2()),-mLayD.z()/sqrt(mLayD.Mag2()));
+	   else
+	   mLayDu.SetXYZ(mLayD.x()/sqrt(mLayD.Mag2()),mLayD.y()/sqrt(mLayD.Mag2()),mLayD.z()/sqrt(mLayD.Mag2()));
+	   if(bmLayD.y() < 0.) 
+	   bmLayDu.SetXYZ(-bmLayD.x()/sqrt(bmLayD.Mag2()),-bmLayD.y()/sqrt(bmLayD.Mag2()),-bmLayD.z()/sqrt(bmLayD.Mag2()));
+	   else
+	   bmLayDu.SetXYZ(bmLayD.x()/sqrt(bmLayD.Mag2()),bmLayD.y()/sqrt(bmLayD.Mag2()),bmLayD.z()/sqrt(bmLayD.Mag2()));
+	   
+	   double toY0  =  (0.-mLayP.y())/mLayDu.y(); 
+	   double btoY0 =  (0.-bmLayP.y())/bmLayDu.y(); 
+	   if(mLayP.y()  < 0.) toY0  = -1.*toY0;
+	   if(bmLayP.y() < 0.) btoY0 = -1.*btoY0;
+	   // the straw position at y=0
+	   Gaudi::XYZPoint atY0  = mLayTraj->position(toY0);
+	   Gaudi::XYZPoint batY0 = bmLayTraj->position(btoY0);
+	   Gaudi::XYZVector datY0(atY0.x()-batY0.x(),atY0.y()-batY0.y(),atY0.z()-batY0.z());  //dist between two trajs
+	   
+	   
+	   
+	   //      double perpToStraw     = (0.-y0Straw.x())/datY0.x();
+	   double perpToStraw     = (misalRef_mono.x()-y0Straw.x())/datY0.x();
+	   Gaudi::XYZPoint ZatX0  = y0Straw+datY0*perpToStraw;
+	   double dZ              = y0Straw.z()-ZatX0.z();
+	   double Bmisalnew = dZ*(cos(stereo_angle)*m_trtx[0]+sin(stereo_angle)*m_trty[0]);
+	   //double    beta   = Bmisalnew/ (  -sin(stereo_angle)*m_trty[0]*hitx
+	   //                               -cos(stereo_angle)*m_trtx[0]*hitx);
+	   double    beta   = Bmisalnew/ (  -sin(stereo_angle)*m_trty[0]*X_m
+	   -cos(stereo_angle)*m_trtx[0]*X_m);
+	   
+	   
+	   //-------------------------------
+	   double diffx = misalRef_mono.x()-yStraw_c.x();//batY0.x();
+	   double diffz = misalRef_mono.z()-yStraw_c.z();//-batY0.z();
+	   double angle1 = fabs(diffz/diffx);
+	   
+	   debug() << " angle straws " << angle1 <<endreq;
+	   
+	   
+	   //        double ndZ     = yStraw_c.z() - misalRef_mono.z();
+	   //         double dmeas_b = ndZ*(cos(stereo_angle)*m_trtx[0]+sin(stereo_angle)*m_trty[0]);      
+	   //         double nbeta   = dmeas_b/ (  -sin(stereo_angle)*m_trty[0]*X_m
+	   //         -cos(stereo_angle)*m_trtx[0]*X_m);
+	   //         double nbetageom = ndZ/X_m;
+	   
+	   double ndZ     = diffz;//Z_m-Y_m*tan(0.003601);//yStraw_c.z() - misalRef_mono.z();
+	   double dmeas_b = ndZ*(cos(stereo_angle)*m_trtx[0]+sin(stereo_angle)*m_trty[0]);      
+	   double nbeta   = dmeas_b/ (  -sin(stereo_angle)*m_trty[0]*diffx
+	   -cos(stereo_angle)*m_trtx[0]*diffx);
+	   double nbetageom = ndZ/X_m;
+	   double percent   = ( (fabs(beta) - fabs(m_misalInput_B.at(rank)))/ fabs(m_misalInput_B.at(rank)) );
+	   
+	   if( percent >  0.02 
+	   && fabs(m_misalInput_B.at(rank))  > 1e-4 ){
+	   
+	   debug() << " beta DIFF " << percent
+	   << " X_M = " << X_m <<endreq;
+	   if( stereo_angle == 0) plot2D(X_m,percent,"beta_X_m_VS_diffInput(percent)_X","beta_X_m_VS_diffInput(percent)_X"
+	   ,-200.,200.,0.,1.3,200,100);
+	   if( stereo_angle != 0) plot2D(X_m,percent,"beta_X_m_VS_diffInput(percent)_UV","beta_X_m_VS_diffInput(percent)_UV"
+	   ,-200.,200.,0.,1.3,200,100);
+	   
+	   }
+	   
+	   //      meas.x += Bmisalnew;
+	   plot(Bmisalnew,"dmeas_b","dmeas_b",-.2,.2,100);
+	   //       meas.x += dmeas_b;
+	   //       plot(dmeas_b,"dmeas_b","dmeas_b",-.2,.2,100);
+	   
+	   debug() << " BETA      input "<< m_misalInput_B.at(rank)  <<"  stereo:"<< stereo_angle<<endreq
+	   << " diffInput(perc)" << percent << endreq
+	   << " straw @ y=Ref  " << yStraw_c << endreq
+	   << " ndZ            " << ndZ   << endreq
+	   << " dmeas_b        " << dmeas_b << endreq
+	   << " nbeta          " << nbeta << endreq
+	   << " nbetageom      " << nbetageom << endreq
+	   << " ZatX0          " << ZatX0 <<endreq
+	   << " BmisalNew =    " << Bmisalnew << endreq
+	   << " beta      =    " << beta << endreq
+	   <<"---------------------------------------"<<endreq;
+	   
+	*/
+	
+	
+      }
+      
+      
+      //******** This stuff is for OTTimes **********
+	  //     Gaudi::XYZPoint posRec;
+	  //     Gaudi::XYZVector slRec;
+	  //     m_extrapolator->position((*track),zpos,posRec);
+	  //     m_extrapolator->slopes((*track),zpos,slRec);
+	  //     double calTime = 0.;
+	  //     double drDist  = 0.;
+	  //     //get OTTimes
+	  //     LHCb::OTTimes* m_ottimes = get<LHCb::OTTimes>(LHCb::OTTimeLocation::Default);
+	  //     LHCb::OTTimes::const_iterator iTimes = m_ottimes->begin();
+	  //     for ( ; iTimes != m_ottimes->end(); ++iTimes ) {
+	  //       if (  track->isOnTrack( (*iTimes)->channel() ) &&  (*iTimes)->channel() == id.otID() ) {
+	  // 	calTime =  (*iTimes)->calibratedTime();
+	  // 	plot((*iTimes)->calibratedTime(),"caltime","caltime",-100,100,100);
+	  // // 	DeOTDetector* m_ot1 = getDet<DeOTDetector>(DeOTDetectorLocation::Default);
+	  // // 	DeOTModule* module1 = m_ot1->findModule( id.otID() );
+	  // 	drDist = module->driftRadius(calTime-m_ot->propagationTime(id.otID(), posRec.x(), posRec.y()));
+	  // 	plot(drDist,"drdist","drdist",-5,5,50);
+	  //       }	      
+	  //     }
+	  //     double slangle = atan(slRec.x());
+	  //     double uDist   = drDist/cos(slangle);
+	  //     double help = 0.;
+	  //     Gaudi::XYZVector helpV;
+	  //     m_poca-> minimize( (*lhcbidTraj), help, false, posRec, helpV, m_tolerance);
+	  //     if(helpV.x() < 0. ) meas.y = uDist; 
+	  //     if(helpV.x() > 0. ) meas.y = -uDist; 
+	  }
   else if( !id.isOT()){
     info() << " no OT id given !!! " << endmsg;
   }
@@ -2115,7 +2128,7 @@ StatusCode TAConfig::CalcResidual( const LHCb::LHCbID &id,
 //                                    double & stereo  //MD
 //                                    ) {
 //   //  const Measurement& trMeas = track->measurement(id); // Get measurement
-  
+
 //   if(id.isOT()){
 //     debug() << "------------------------------" <<endreq;
 //     debug() << "----> CALCRES RANK =  " << rank << endreq;
@@ -2127,7 +2140,7 @@ StatusCode TAConfig::CalcResidual( const LHCb::LHCbID &id,
 //     double stereo_angle  = 0.;
 //     stereo_angle         = m_ot->findLayer( id.otID() )->angle();
 //     stereo               = stereo_angle;
-   
+
 //     //build previous traj
 //     //    LineTraj prevtraj = LineTraj(m_pointa,m_pointb);
 //     // info()<<" 1.   prevtraj = " << prevtraj.direction(0.) << " " << prevtraj.position(0.)<<endreq;
@@ -2142,7 +2155,7 @@ StatusCode TAConfig::CalcResidual( const LHCb::LHCbID &id,
 //     //     m_poca->minimize((*lhcbidTraj),mwire1,prevtraj,mwire2,mvec,m_tolerance);
 //     //     Gaudi::XYZPoint mpointy1 = lhcbidTraj->position(mwire1);
 //     //     Gaudi::XYZPoint mpointy2 = prevtraj.position(mwire2);
-    
+
 //     //    info() << " my new y1 = " << mpointy1 << "  y2 = " << mpointy2<< endreq;
 //     //meas.y = mpointy1.y();
 //     //give infos for next round
@@ -2150,16 +2163,16 @@ StatusCode TAConfig::CalcResidual( const LHCb::LHCbID &id,
 // //     m_pointb = lhcbidTraj->endPoint();
 // //     info() << " my starting point = " << m_pointa<< " endpoint "<< m_pointb <<endreq
 // //            << " middle point " << idTrajPoint << " and dir " << idTrajDir << endreq;
-    
+
 //     // get sensor where hit appeared
 //     DeOTLayer*  layer  =  m_ot->findLayer( id.otID() );
 //     DeOTModule* module = m_ot->findModule( id.otID() );
-    
+
 //     //get otchannelid and straw and monolayer
 //     const OTChannelID  chID   = id.otID();
 //     const unsigned int straw  = chID.straw();
 //     bool mLayA                = module->monoLayerA(straw);
-    
+
 //     //   get measurement trajectory and its direction
 //     //MD    const Trajectory& measTraj = trMeas.trajectory();
 //     Gaudi::XYZVector trajeDa =  idTrajDir;//MD measTraj.direction(0.);
@@ -2194,18 +2207,18 @@ StatusCode TAConfig::CalcResidual( const LHCb::LHCbID &id,
 //     const Gaudi::XYZPoint misalMod(Mod.x(),Mod.y(),Mod.z());
 //     const Gaudi::XYZPoint nomMod(sModNom.x(),sModNom.y(),sModNom.z());
 //     const Gaudi::XYZPoint own(ownMod.x(),ownMod.y(),ownMod.z());
-    
+
 //     if(own.x() !=0 || own.y()!=0 ||own.z()!=0){
 //       info() << "--> nomLay="<<nomLay << " misalLay="<<misalLay << endreq
 //              << "--> nomMod="<<nomMod << " misalMod="<<misalMod << endreq
 //              << "--> nomMod="<<nomMod << " own     ="<<own << endreq;
 //     }
-    
-    
+
+
 //     /*********************
 //      ** new Mod Center ***
 //      ********************/
-  
+
 //     std::auto_ptr< LHCb::Trajectory > mLayTraj;
 //     std::auto_ptr< LHCb::Trajectory > bmLayTraj;
 //     //get the plane of first monolayer
@@ -2221,7 +2234,7 @@ StatusCode TAConfig::CalcResidual( const LHCb::LHCbID &id,
 //       mLayTraj = module->trajectoryFirstWire(1);//second monolayerRight
 //       bmLayTraj = module->trajectoryLastWire(1);//second monolayerLeft
 //     }
-    
+
 //     Gaudi::XYZPoint  mLayP  = mLayTraj->position(0.);
 //     Gaudi::XYZPoint  bmLayP = bmLayTraj->position(0.);
 //     Gaudi::XYZVector dLay(mLayP.x()-bmLayP.x(),mLayP.y()-bmLayP.y(),mLayP.z()-bmLayP.z());  //dist between two trajs
@@ -2231,22 +2244,22 @@ StatusCode TAConfig::CalcResidual( const LHCb::LHCbID &id,
 //     //*******************************
 //     Gaudi::XYZVector monoCenDist;
 //     monoCenDist.SetXYZ(0.,monoMod.y()-misalMod.y(),monoMod.z()-misalMod.z());
-    
+
 //     /*********************
 //      ** new Lay Center***
 //      ********************/
 //     Gaudi::XYZPoint nomMonolayer(0.,0.,0.);
 //     Gaudi::XYZPoint misalLay_mono(0.,0.,0.);
-    
+
 //     double misalZpos = 0.;
-    
-    
+
+
 //     if(m_otLayer){
 //       nomMonolayer                  = nomLay + monoCenDist;  
 //       misalLay_mono                 = misalLay + monoCenDist;
 //       misalZpos = misalLay_mono.z();    //get misaligned z position of layer
 //     }
-    
+
 //     if(m_otModule || m_otHalfLayer){
 //       nomMonolayer                  = nomLay + monoCenDist;//trackfit in global coor.
 //       misalLay_mono                 = misalLay + monoCenDist;
@@ -2269,7 +2282,7 @@ StatusCode TAConfig::CalcResidual( const LHCb::LHCbID &id,
 //     //use false = not restircted to range of traj
 //     m_poca-> minimize( (*lhcbidTraj), onwire, false, nomMonolayer, Mtraje, m_tolerance);
 //     //    m_poca-> minimize( (*lhcbidTraj), onwire, monoMod, Mtraje, m_tolerance); //module wise
-    
+
 //     if(Mtraje.x()>0.){
 //       meas.x = sqrt(Mtraje.x()*Mtraje.x()+Mtraje.y()*Mtraje.y());  //sqrt(Mtraje.Mag2()); 
 //     }
@@ -2313,7 +2326,7 @@ StatusCode TAConfig::CalcResidual( const LHCb::LHCbID &id,
 // //       //------------------------------
 // //      meas.x = wayAbs;
 // //      debug()<<std::setw(5) << "--> GAMMA meas.x modified = " << meas.x << " stereo = " << stereo_angle << endreq;
-     
+
 
 
 
@@ -2335,7 +2348,7 @@ StatusCode TAConfig::CalcResidual( const LHCb::LHCbID &id,
 //               <<Cmisal<<" gamma="<<Cmisal/hity <<endreq;
 
 //       //      meas.x -= Cmisal;
-      
+
 
 
 //       //------------------------------------
@@ -2390,14 +2403,14 @@ StatusCode TAConfig::CalcResidual( const LHCb::LHCbID &id,
 
 // //       Gaudi::XYZPoint locstr = module->geometry()->toLocal(strawhit);
 // //       Gaudi::XYZPoint loccent = module->geometry()->toLocal(idTrajPoint);
-      
+
 // // //       double dYa = strawhit.y()-idTrajPoint.y();
 // // //       double dZa = strawhit.z()-idTrajPoint.z();
 // //       double dYa = locstr.y()-loccent.y();
 // //       double dZa = locstr.z()-loccent.z();
 // //       double Amisal2 = dZa*(cos(stereo_angle)*m_trtx[0]+sin(stereo_angle)*m_trty[0]);
 // //       double alpha2  = dZa/dYa;
-      
+
 // //       debug() << "---> trajcenter " << idTrajPoint << " hity " << hity <<endreq
 // //               << "direction "<<endreq
 // //               << al_a <<endreq
@@ -2406,9 +2419,9 @@ StatusCode TAConfig::CalcResidual( const LHCb::LHCbID &id,
 // //               <<"dYa " << dYa << "  dZa "<< dZa <<endreq
 // //               <<"Amisal2 "<< endreq
 // //               << Amisal2 << " alpha2 = "<< alpha2 << endreq;
-      
 
-      
+
+
 //       //------------------------------------
 //       //
 //       //    for dRotY
@@ -2449,7 +2462,7 @@ StatusCode TAConfig::CalcResidual( const LHCb::LHCbID &id,
 //       Gaudi::XYZPoint batY0 = bmLayTraj->position(btoY0);
 //       Gaudi::XYZVector datY0(atY0.x()-batY0.x(),atY0.y()-batY0.y(),atY0.z()-batY0.z());  //dist between two trajs
 
-      
+
 //       //       info() <<"---------- rnk "<<rank<<" -------------------"<<endreq;
 //       //       info() <<"relZ  = "<< relZ << " hitpos = " << wayP << endreq;
 //       //       info() <<"--> BETA deltameas.x = " << Bmisal  << endreq
@@ -2459,7 +2472,7 @@ StatusCode TAConfig::CalcResidual( const LHCb::LHCbID &id,
 //       Gaudi::XYZPoint ZatX0  = y0Straw+datY0*perpToStraw;
 //       double dZ              = y0Straw.z()-ZatX0.z();
 //       //if(dZ >0.001) info() <<" dZ=" << dZ << " dLAY="<<datY0<<endreq;
-      
+
 //       //       info() << "y0Straw = " << y0Straw << " dLay*perpToStraw= "<<dLay*perpToStraw <<"-->  ZatX0 "<< ZatX0 << endreq
 //       //              << "dZ= "<< dZ << " Bmisal'= " << dZ*(cos(stereo_angle)*m_trtx[0]+sin(stereo_angle)*m_trty[0])
 //       //              << " --> beta'= "<< (dZ*(cos(stereo_angle)*m_trtx[0]+sin(stereo_angle)*m_trty[0]))/div 
@@ -2484,14 +2497,14 @@ StatusCode TAConfig::CalcResidual( const LHCb::LHCbID &id,
 // // 	       <<" ZatX0"<< endreq
 // // 	       <<ZatX0<<endreq;
 //       debug() << " BmisalNew =" << Bmisalnew << endreq;
-      
+
 // // 	       <<"---------------------------------------"<<endreq;}
 //       // info()<<std::setw(5) << "--> BETA deltameas.x = " << Bmisal  << endreq;
 
-      
-      
+
+
 //     }
-    
+
 //     //******** This stuff is for OTTimes **********
 //     //     Gaudi::XYZPoint posRec;
 //     //     Gaudi::XYZVector slRec;
@@ -2524,7 +2537,7 @@ StatusCode TAConfig::CalcResidual( const LHCb::LHCbID &id,
 //     info() << " no OT id given !!! " << endmsg;
 //   }
 //   return StatusCode::SUCCESS;
-  
+
 // }
 
 
@@ -2540,7 +2553,7 @@ StatusCode TAConfig::CalcResidual( const LHCb::LHCbID &id,
  ** allowed :   S1_L1_Q0_M0
  **************************************************/
 StatusCode TAConfig::ConstrainPositionsOT() {
-
+  
   unsigned int alipar = m_nAlignObj; //nof params to align
   const unsigned int size = m_OTConstrain.size();
   std::vector<int> cons(size,0);
@@ -2553,9 +2566,9 @@ StatusCode TAConfig::ConstrainPositionsOT() {
     //interpret every string
     std::string str_fix = m_OTConstrain[i];
     int dcnt =0; //count no dof
-        
+    
     for(unsigned int c=0; c < str_fix.size(); c++){
-
+      
       if(str_fix[c] == 'X' ){
         if(m_dof[0] != 1 ) {
           error() << "--> Constrain does not match number of degree of freedom" << endreq;
@@ -2572,7 +2585,7 @@ StatusCode TAConfig::ConstrainPositionsOT() {
         for(int n=0; n < 2; n++) if(m_dof[n] == 1) dcnt++;
         dcnt = alipar*dcnt;
       }
-
+      
       if(str_fix[c] == 'A' ){
         if(m_dof[3] != 1 ) {
           error() << "--> Constrain does not match number of degree of freedom" << endreq;
@@ -2581,7 +2594,7 @@ StatusCode TAConfig::ConstrainPositionsOT() {
         for(int n=0; n < 3; n++) if(m_dof[n] == 1) dcnt++;
         dcnt = alipar*dcnt;
       }
-
+      
       if(str_fix[c] == 'B' ){
         if(m_dof[4] != 1 ) {
           error() << "--> Constrain does not match number of degree of freedom" << endreq;
@@ -2590,7 +2603,7 @@ StatusCode TAConfig::ConstrainPositionsOT() {
         for(int n=0; n < 4; n++) if(m_dof[n] == 1) dcnt++;
         dcnt = alipar*dcnt;
       }
-
+      
       if(str_fix[c] == 'C' ){
         if(m_dof[5] != 1 ) {
           error() << "--> Constrain does not match number of degree of freedom" << endreq;
@@ -2614,7 +2627,7 @@ StatusCode TAConfig::ConstrainPositionsOT() {
         if(str_fix[c+1] == 'M') elements[3] = num;
       }
     }
-
+    
     for(int j=0; j < 4 ; j++){
       debug() << " --> elements["<<j<<"] = "<< elements[j] << endreq; 
     }
@@ -2622,7 +2635,7 @@ StatusCode TAConfig::ConstrainPositionsOT() {
     int modules   = 9;
     int quarters  = 4;
     int layers    = 4;
-
+    
     //calculate dofs with respect to alignable objects
     if(m_otStation)  layers=quarters=modules=1;
     if(m_otLayer)    quarters=modules=1;
@@ -2631,12 +2644,12 @@ StatusCode TAConfig::ConstrainPositionsOT() {
       modules=1;
       quarters /= 2;}
     if(m_otModule) quarters /= 2;
-
+    
     int modStation = (elements[0]-1) * layers*quarters*modules;
     int modLayer   = (elements[1]-1) * quarters*modules;
     int modQuarter = (elements[2]-1) * modules;
     int modModule  = (elements[3]-1);
-
+    
     //since we add the number of modules, we have to set not used 
     //objects to zero 
     if(m_otStation)  modLayer=modQuarter=modModule=0;
@@ -2648,12 +2661,12 @@ StatusCode TAConfig::ConstrainPositionsOT() {
       modModule=0; 
     }
     
-
+    
     int moduleRnk  = modStation + modLayer + modQuarter + modModule;// = rank of the selected module(if m_otModule = true)
     debug() << "  modStation " << modStation << "  modLayer " << modLayer 
             << " modQuarter " << modQuarter
             << " modModule " << modModule <<  " = rnk : " << moduleRnk << endreq;;
-
+    
     int nObjects = 0;
     // fix a single module 
     if(elements[3] != 0 && elements[2] != 0 && elements[1] != 0){
@@ -2674,7 +2687,7 @@ StatusCode TAConfig::ConstrainPositionsOT() {
       moduleRnk =  modStation;
       nObjects  =  layers*quarters*modules;
     }
-
+    
     StatusCode sc;
     //fix everything else; single or in a set
     if(nObjects != 0) {
@@ -2790,7 +2803,7 @@ StatusCode TAConfig::finalize() {
 // Florin New procedure to set track paramdters for tracks (I do not know yet if I realy need this since track parameters    
 // are propagated at this level too and could be used to set trtx and co directly)
 void TAConfig::SetTrackPar(const std::vector<double>  vt) {
-
+  
   m_trx0.clear();
   m_trtx.clear();
   m_try0.clear();
@@ -2836,7 +2849,7 @@ void TAConfig::MakeAlignParVec() {
   //  m_estimate.resize(n,0.0);
   m_estimateB4.resize(m_n_dof*m_nAlignObj);
   m_estimate.resize(m_n_dof*m_nAlignObj);
-
+  
 }
 void TAConfig::MakeTrackParVec() {
   debug() << " ---> in MakeTrackParVec() " <<  endreq;
@@ -2848,279 +2861,281 @@ void TAConfig::MakeTrackParVec() {
   m_trQ.resize(1,0.);
 }
 
-/***************************************************************************
-
-PrintParameter sets up the memory,i.e. the new constants are saved in memory 
-to be used in next iteration.
-Get the new information from the DetElements.
-
-for a stereo layer: translation[0] = translation in measurement direction !!!
-(same definition as we do the alignment)
-
-NOTE:
-What is saved in the XML file at the end of the job are the misalignments in 
-the coordinate system of the object (e.g. module)
-
-*****************************************************************************/
-  StatusCode TAConfig::PrintParameters( std::vector<double> &ali_par , int iteration) {
-    // Alternative:
-    debug() << " --->  alipar.size = " << ali_par.size() << endreq;
-
-    for(unsigned i=0;i<ali_par.size();i++){
-      info() <<i<< " param of prev iter = "<< m_prevAlipar[i] << " param of this iter = "<< ali_par[i];
-      m_prevAlipar[i] += ali_par[i];      
-      info() << " --> sum w param of this iter = " << m_prevAlipar[i] << endreq;
-      debug() << " begin m_prevAlipar["<<i<<"] "<< m_prevAlipar[i] << endreq;
-    }
-    
+// **************************************************************************
+//   
+// PrintParameter sets up the memory,i.e. the new constants are saved in memory 
+// to be used in next iteration.
+// Get the new information from the DetElements.
+// 
+// for a stereo layer: translation[0] = translation in measurement direction !!!
+// (same definition as we do the alignment)
+//
+// NOTE:
+// What is saved in the XML file at the end of the job are the misalignments in 
+// the coordinate system of the object (e.g. module)
+//
+// **************************************************************************** 
 
 
-    std::vector<double>::iterator i       = ali_par.begin();
-    std::map<std::string,int>::iterator t = m_C_pos.begin();
-
-    // loop over the detector elements we wanted to align.
-    // check for each element which degrees of freedom were determined.
-    //  int cnt_rnk  = -1;
-    unsigned cnt = 0;
-    for ( ; t != m_C_pos.end(); ++t ) {
-      debug() << "--------------------------------------------------------------------------------------"<<endreq;
-      debug() << "Parameter name = " << t->first << " || rank = " << t->second  << " ,m_nAlignObj=" << m_nAlignObj 
-              << ", cnt = " << cnt << endreq;
-      
-      if ( m_dof[0] ){ 
-        debug() << "cnt="<<cnt<< " ali_par["<<t->second+cnt*m_nAlignObj<<"]=" << ali_par[t->second+cnt*m_nAlignObj]<<endreq; 
-        cnt++;
-      }
-      if ( m_dof[1] ){
-        debug() << "cnt="<<cnt<< " ali_par["<<t->second+cnt*m_nAlignObj<<"]=" << ali_par[t->second+cnt*m_nAlignObj]<<endreq; 
-        cnt++;
-      }
-      if ( m_dof[2] ){
-        debug() << "cnt="<<cnt<< " ali_par["<<t->second+cnt*m_nAlignObj<<"]=" << ali_par[t->second+cnt*m_nAlignObj]<<endreq; 
-        cnt++; 
-      }
-      if ( m_dof[3] ){
-        debug() << "cnt="<<cnt<< " ali_par["<<t->second+cnt*m_nAlignObj<<"]=" << ali_par[t->second+cnt*m_nAlignObj]<<endreq; 
-        cnt++; 
-      }
-      if ( m_dof[4] ){
-        debug() << "cnt="<<cnt<< " ali_par["<<t->second+cnt*m_nAlignObj<<"]=" << ali_par[t->second+cnt*m_nAlignObj]<<endreq; 
-        cnt++; 
-      }
-      if ( m_dof[5] ){
-        debug() << "cnt="<<cnt<< " ali_par["<<t->second+cnt*m_nAlignObj<<"]=" << ali_par[t->second+cnt*m_nAlignObj]<<endreq; 
-        cnt++; 
-      }
-      cnt=0;
-      
-      IDetectorElement *det = getDet<IDetectorElement>(t->first);
-      IGeometryInfo *geo = det->geometry();
-
-
-      // get the input misalignments
-      // i.e. alignment constants from previous 
-      // iteration
-      const Gaudi::Transform3D misalGlobal = geo->toGlobalMatrix();
-      const Gaudi::Transform3D nominGlobal = geo->toGlobalMatrixNominal();
-      const Gaudi::Transform3D deltaGlobal = misalGlobal*nominGlobal.Inverse();
-      const Gaudi::Transform3D deltalocal  = nominGlobal.Inverse()*deltaGlobal*nominGlobal;
-      std::vector<double> rotGlobal(3,0.), shiftGlobal(3,0.);
-      std::vector<double> rotlocal(3,0.), shiftlocal(3,0.);
-      
-      DetDesc::getZYXTransformParameters(deltalocal, shiftlocal, rotlocal);
-      DetDesc::getZYXTransformParameters(deltaGlobal, shiftGlobal, rotGlobal);            
-
-      //       info() << "Rnk = "<<t->second << " name " << t->first << endreq
-      //              << " alignment param     = " <<  ali_par[t->second+cnt*m_nAlignObj] << endreq 
-      debug()<< " prev : transl.(loc) = "  <<std::setw(15) <<  shiftlocal 
-            << " prev : rotation (loc)= " <<std::setw(15) <<   rotlocal << endreq 
-            << " prev : transl.(glo) = "  <<std::setw(15) <<  shiftGlobal 
-            << " prev : rotation (glo)= " <<std::setw(15) <<   rotGlobal <<endreq
-            << "--------" << endreq; 
-      
-
-      Gaudi::XYZVector  nomModT;
-      Gaudi::Rotation3D nomModR;
-      nominGlobal.GetDecomposition(nomModR,nomModT);
-      const Gaudi::XYZPoint Mod(nomModT.x(),nomModT.y(),nomModT.z());
-      debug() << "--> Mod   ="<< Mod <<endreq;
-          
- 
-      // Convert alignment parameters into
-      // a vector containing translations
-      // a vector containing rotations and
-      // a vector with the pivot point.
-      // That vector should actually be obtained from the detector element!
-      std::vector<double> translation(3,0.);
-      std::vector<double> rotation(3,0.);
-      std::vector<double> pivot(3,0.);
-      if(m_otModule){
-        double thisStereo = 0.;
-        std::multimap<int, std::pair<double,double> >::iterator i = m_RnkZAngle.begin();
-        for(; i != m_RnkZAngle.end(); i++){
-          if((i->first == t->second) ) {
-            thisStereo = (i->second).second;
-            debug() <<"t->second "<< t->second << " III rank = " << i->first << " zpos = " 
-                   << (i->second).first  << " stereo "<< (i->second).second<<endreq; 
-          }
-        }
-        pivot[0] = -Mod.y()*sin(thisStereo);
-        pivot[1] = -Mod.y();
-        if(Mod.y() > 0) pivot[2] = -Mod.y()*tan(0.0036);
-        if(Mod.y() < 0) pivot[2] = -Mod.y()*tan(0.0036);
-      }
-      if(m_otHalfLayer){
-        Gaudi::XYZPoint mref = m_HLRefmap[t->second];// nominal
-        pivot[0] = mref.x()-Mod.x();
-        pivot[1] = mref.y()-Mod.y();
-        pivot[2] = mref.z()-Mod.z();
-      }
-      
-      // !! mit pivot kann man input misalignment nicht korrekt bestimmen!!      
-      // Get the translation, rotation and pivot vectors from
-      // the geometry object:
-      //       const Gaudi::Transform3D position = geo->toLocalMatrixNominal();
-      //       Gaudi::XYZVector P( 0.0, 0.0, 0.0 );
-      //       Gaudi::Rotation3D R;
-      //       position.GetDecomposition( R, P );
-      //       pivot.push_back( P.X() );
-      //       pivot.push_back( P.Y() );
-      //       pivot.push_back( P.Z() );
-
-      // check if we have simulation or real data
-      // signs of alignment constants and input differ for simulation
-      // -> below addition gives zero for new DB entries which is good for
-      //    iterations using simulated data;
-      // for Dz the sign is the same for sim and real data
-      // -> for simulation one has to change the sign for Dz to get the zero
-      //    for the addition;
-      // want to calculate Input-AlignmentConstants which gives position of 'sign'
-      double sign = 1.;
-      if(m_Simulation) sign = -1.;
-      bool ModSim = false;
-      if(m_Simulation && m_otModule) ModSim = true;
-      
-      // fill the translation & rotation vectors
-      // by looping over the number of degrees of freedom
-      // since alipar has size of rank, only update new vectors 
-      // for  new rank (m_Cpos may contain several entries 
-      // with the same rank no.)
-      if ( m_dof[0] ){
-        // add input and reocnstructed misalignments:
-        // alipar is in measurement direction, got it from alignment in global system!! 
-        // the layer is shifted in the global LHCb co system, i.e. it is shifted by the 
-        // difference between input and output misalignment
-        translation[0] = sign*ali_par[t->second]+shiftlocal[0]; 
-        cnt++;
-      }
-      if ( m_dof[1] ) {
-        translation[1] = ali_par[t->second+cnt*m_nAlignObj]+shiftlocal[1];
-        cnt++;
-      }
-      if ( m_dof[2] ) {
-        translation[2] = sign*ali_par[t->second+cnt*m_nAlignObj]+shiftlocal[2];
-        cnt++;
-      }
-      if ( m_dof[3] ) {
-        rotation[0] = sign*ali_par[t->second+cnt*m_nAlignObj]+rotlocal[0];
-        cnt++;
-      }
-      if ( m_dof[4] ) {
-        rotation[1] = sign*ali_par[t->second+cnt*m_nAlignObj]+rotlocal[1];
-        cnt++;
-      }
-      if ( m_dof[5] ) {
-        rotation[2] = sign*ali_par[t->second+cnt*m_nAlignObj]+rotlocal[2];
-        cnt++;
-      }
-      cnt=0;
-      //      if(!m_Simulation){ //i.e. of no input misalignments are known!!!!!!
-      if( !ModSim || m_otHalfLayer){
-        double help = 0.;
-        if(iteration > 1) help = 1.;
-        if ( m_dof[0] ){
-          // add input and reocnstructed misalignments:
-          // alipar is in measurement direction, got it from alignment in global system!! 
-          // modules are shifted in the frame of its parents, therefore we have to shift 
-          // them not with the difference input-output but with the output.
-          debug() << "  m_prevAlipar[0] = " <<  m_prevAlipar[t->second+cnt*m_nAlignObj] << endreq;         
-          translation[0]   = sign*m_prevAlipar[t->second+cnt*m_nAlignObj];//shiftlocal[0]; 
-          cnt++;
-        }
-        if ( m_dof[1] ) {
-          debug() << "  m_prevAlipar[1] = " <<  m_prevAlipar[t->second+cnt*m_nAlignObj] << endreq;         
-          translation[1]    = m_prevAlipar[t->second+cnt*m_nAlignObj];//shiftlocal[1];
-          cnt++;
-        }
-        if ( m_dof[2] ) {
-          debug() << "  m_prevAlipar[2] = " <<  m_prevAlipar[t->second+cnt*m_nAlignObj] << endreq;
-          translation[2]   = sign*m_prevAlipar[t->second+cnt*m_nAlignObj];//shiftlocal[2];
-          cnt++;
-        }
-        if ( m_dof[3] ) {
-          debug() << "  m_prevAlipar[3] = " <<  m_prevAlipar[t->second+cnt*m_nAlignObj] << endreq;
-          rotation[0]      = sign*m_prevAlipar[t->second+cnt*m_nAlignObj];//rotlocal[0];
-          cnt++;
-        }
-        if ( m_dof[4] ) {
-          debug() << "  m_prevAlipar[4] = " <<  m_prevAlipar[t->second+cnt*m_nAlignObj] << endreq;         
-          rotation[1]      = sign*m_prevAlipar[t->second+cnt*m_nAlignObj];//rotlocal[1];
-          cnt++;
-        }
-        if ( m_dof[5] ) {
-          debug() << "  m_prevAlipar[5] = " <<  m_prevAlipar[t->second+cnt*m_nAlignObj] << endreq;         
-          rotation[2]      = sign*m_prevAlipar[t->second+cnt*m_nAlignObj];//rotlocal[2];
-          cnt++;
-        }
-        cnt=0;
-        }
-        //}
-      
-      
- 
-      
-      debug() << " final Translation vector: " << translation  
-             << " final Rotation vector   : " << rotation << endreq
-             << " pivot point             : " << pivot << endreq
-             <<"------------------------------------------------------"<<endreq;
-      
-    
-      StatusCode sc = geo->ownToOffNominalParams(translation,
-                                                 rotation,
-                                                 pivot);
-      if ( sc.isFailure() ) {
-        error() << "Error storing translation, rotation and pivot vectors\n"
-                << "from geometry object" << endreq;
-        error() << "Translation vector : " << translation << "\n"
-                << "Rotation vector    : " << rotation << "\n"
-                << "pivot vector       : " << pivot << endreq;
-        return StatusCode::FAILURE;    
-      }
-    
-      const Gaudi::Transform3D misalGlobalnew = geo->toGlobalMatrix();
-      const Gaudi::Transform3D nominGlobalnew = geo->toGlobalMatrixNominal();
-      const Gaudi::Transform3D deltaGlobalnew = misalGlobalnew*nominGlobalnew.Inverse();
-      const Gaudi::Transform3D deltalocalnew  = nominGlobalnew.Inverse()*deltaGlobalnew*nominGlobalnew;
-      std::vector<double> rotGlobalnew(3,0.), shiftGlobalnew(3,0.);
-      std::vector<double> rotlocalnew(3,0.), shiftlocalnew(3,0.);
-      std::vector<double> pivotnew = pivot;
-      DetDesc::getZYXTransformParameters(deltalocalnew, shiftlocalnew, rotlocalnew,pivot);
-      DetDesc::getZYXTransformParameters(deltaGlobalnew, shiftGlobalnew, rotGlobalnew,pivot);           
-      debug() << " new : pivot          " <<std::setw(15) << pivotnew << endreq
-             << " new : transl.(loc) = "  <<std::setw(15) <<  shiftlocalnew 
-             << " new : rotation (loc)= " <<std::setw(15) <<   rotlocalnew << endreq 
-             << " new : transl.(glo) = "  <<std::setw(15) <<  shiftGlobalnew 
-             << " new : rotation (glo)= " <<std::setw(15) <<   rotGlobalnew <<endreq
-             << "--------" << endreq; 
-
-
-      if (sc.isFailure()) {
-        std::cout << "Failed to update local delta matrix of detector element " + det->name() <<  std::endl;
-        return StatusCode::FAILURE;  
-      }
-    }
-    return StatusCode::SUCCESS;
+StatusCode TAConfig::PrintParameters( std::vector<double> &ali_par , int iteration) {
+  // Alternative:
+  debug() << " --->  alipar.size = " << ali_par.size() << endreq;
+  
+  for(unsigned i=0;i<ali_par.size();i++){
+    info() <<i<< " param of prev iter = "<< m_prevAlipar[i] << " param of this iter = "<< ali_par[i];
+    m_prevAlipar[i] += ali_par[i];      
+    info() << " --> sum w param of this iter = " << m_prevAlipar[i] << endreq;
+    debug() << " begin m_prevAlipar["<<i<<"] "<< m_prevAlipar[i] << endreq;
   }
+  
+  
+  
+  std::vector<double>::iterator i       = ali_par.begin();
+  std::map<std::string,int>::iterator t = m_C_pos.begin();
+  
+  // loop over the detector elements we wanted to align.
+  // check for each element which degrees of freedom were determined.
+  //  int cnt_rnk  = -1;
+  unsigned cnt = 0;
+  for ( ; t != m_C_pos.end(); ++t ) {
+    debug() << "--------------------------------------------------------------------------------------"<<endreq;
+    debug() << "Parameter name = " << t->first << " || rank = " << t->second  << " ,m_nAlignObj=" << m_nAlignObj 
+	    << ", cnt = " << cnt << endreq;
+    
+    if ( m_dof[0] ){ 
+      debug() << "cnt="<<cnt<< " ali_par["<<t->second+cnt*m_nAlignObj<<"]=" << ali_par[t->second+cnt*m_nAlignObj]<<endreq; 
+      cnt++;
+    }
+    if ( m_dof[1] ){
+      debug() << "cnt="<<cnt<< " ali_par["<<t->second+cnt*m_nAlignObj<<"]=" << ali_par[t->second+cnt*m_nAlignObj]<<endreq; 
+      cnt++;
+    }
+    if ( m_dof[2] ){
+      debug() << "cnt="<<cnt<< " ali_par["<<t->second+cnt*m_nAlignObj<<"]=" << ali_par[t->second+cnt*m_nAlignObj]<<endreq; 
+      cnt++; 
+    }
+    if ( m_dof[3] ){
+      debug() << "cnt="<<cnt<< " ali_par["<<t->second+cnt*m_nAlignObj<<"]=" << ali_par[t->second+cnt*m_nAlignObj]<<endreq; 
+      cnt++; 
+    }
+    if ( m_dof[4] ){
+      debug() << "cnt="<<cnt<< " ali_par["<<t->second+cnt*m_nAlignObj<<"]=" << ali_par[t->second+cnt*m_nAlignObj]<<endreq; 
+      cnt++; 
+    }
+    if ( m_dof[5] ){
+      debug() << "cnt="<<cnt<< " ali_par["<<t->second+cnt*m_nAlignObj<<"]=" << ali_par[t->second+cnt*m_nAlignObj]<<endreq; 
+      cnt++; 
+    }
+    cnt=0;
+    
+    IDetectorElement *det = getDet<IDetectorElement>(t->first);
+    IGeometryInfo *geo = det->geometry();
+    
+    
+    // get the input misalignments
+    // i.e. alignment constants from previous 
+    // iteration
+    const Gaudi::Transform3D misalGlobal = geo->toGlobalMatrix();
+    const Gaudi::Transform3D nominGlobal = geo->toGlobalMatrixNominal();
+    const Gaudi::Transform3D deltaGlobal = misalGlobal*nominGlobal.Inverse();
+    const Gaudi::Transform3D deltalocal  = nominGlobal.Inverse()*deltaGlobal*nominGlobal;
+    std::vector<double> rotGlobal(3,0.), shiftGlobal(3,0.);
+    std::vector<double> rotlocal(3,0.), shiftlocal(3,0.);
+    
+    DetDesc::getZYXTransformParameters(deltalocal, shiftlocal, rotlocal);
+    DetDesc::getZYXTransformParameters(deltaGlobal, shiftGlobal, rotGlobal);            
+    
+    //       info() << "Rnk = "<<t->second << " name " << t->first << endreq
+    //              << " alignment param     = " <<  ali_par[t->second+cnt*m_nAlignObj] << endreq 
+    info ()<< " prev : transl.(loc) = "  <<std::setw(15) <<  shiftlocal 
+	   << " prev : rotation (loc)= " <<std::setw(15) <<   rotlocal << endreq 
+	   << " prev : transl.(glo) = "  <<std::setw(15) <<  shiftGlobal 
+	   << " prev : rotation (glo)= " <<std::setw(15) <<   rotGlobal <<endreq
+	   << "--------" << endreq; 
+    
+    
+    Gaudi::XYZVector  nomModT;
+    Gaudi::Rotation3D nomModR;
+    nominGlobal.GetDecomposition(nomModR,nomModT);
+    const Gaudi::XYZPoint Mod(nomModT.x(),nomModT.y(),nomModT.z());
+    debug() << "--> Mod   ="<< Mod <<endreq;
+    
+    
+    // Convert alignment parameters into
+    // a vector containing translations
+    // a vector containing rotations and
+    // a vector with the pivot point.
+    // That vector should actually be obtained from the detector element!
+    std::vector<double> translation(3,0.);
+    std::vector<double> rotation(3,0.);
+    std::vector<double> pivot(3,0.);
+    if(m_otModule){
+      double thisStereo = 0.;
+      std::multimap<int, std::pair<double,double> >::iterator i = m_RnkZAngle.begin();
+      for(; i != m_RnkZAngle.end(); i++){
+	if((i->first == t->second) ) {
+	  thisStereo = (i->second).second;
+	  debug() <<"t->second "<< t->second << " III rank = " << i->first << " zpos = " 
+		  << (i->second).first  << " stereo "<< (i->second).second<<endreq; 
+	}
+      }
+      pivot[0] = -Mod.y()*sin(thisStereo);
+      pivot[1] = -Mod.y();
+      pivot[2] = -Mod.y()*tan(0.0036);
+    }
+    if(m_otHalfLayer){
+      Gaudi::XYZPoint mref = m_HLRefmap[t->second];// nominal
+      pivot[0] = mref.x()-Mod.x();
+      pivot[1] = mref.y()-Mod.y();
+      pivot[2] = mref.z()-Mod.z();
+    }
+    
+    // !! mit pivot kann man input misalignment nicht korrekt bestimmen!!      
+    // Get the translation, rotation and pivot vectors from
+    // the geometry object:
+    //       const Gaudi::Transform3D position = geo->toLocalMatrixNominal();
+    //       Gaudi::XYZVector P( 0.0, 0.0, 0.0 );
+    //       Gaudi::Rotation3D R;
+    //       position.GetDecomposition( R, P );
+    //       pivot.push_back( P.X() );
+    //       pivot.push_back( P.Y() );
+    //       pivot.push_back( P.Z() );
+    
+    // check if we have simulation or real data
+    // signs of alignment constants and input differ for simulation
+    // -> below addition gives zero for new DB entries which is good for
+    //    iterations using simulated data;
+    // for Dz the sign is the same for sim and real data
+    // -> for simulation one has to change the sign for Dz to get the zero
+    //    for the addition;
+    // want to calculate Input-AlignmentConstants which gives position of 'sign'
+    double sign = 1.;
+    if(m_Simulation) sign = -1.;
+    bool ModSim = false;
+    if(m_Simulation && m_otModule) ModSim = true;
+    
+    // fill the translation & rotation vectors
+    // by looping over the number of degrees of freedom
+    // since alipar has size of rank, only update new vectors 
+    // for  new rank (m_Cpos may contain several entries 
+    // with the same rank no.)
+      // add input and reconstructed misalignments:
+      // alipar is in measurement direction, got it from alignment in global system!! 
+      // the layer is shifted in the global LHCb co system, i.e. it is shifted by the 
+      // difference between input and output misalignment
+    if ( m_dof[0] ){
+      translation[0] = sign*ali_par[t->second]+shiftlocal[0]; 
+      cnt++;
+    }
+    if ( m_dof[1] ) {
+      translation[1] = ali_par[t->second+cnt*m_nAlignObj]+shiftlocal[1];
+      cnt++;
+    }
+    if ( m_dof[2] ) {
+      translation[2] = sign*ali_par[t->second+cnt*m_nAlignObj]+shiftlocal[2];
+      cnt++;
+    }
+    if ( m_dof[3] ) {
+      rotation[0] = sign*ali_par[t->second+cnt*m_nAlignObj]+rotlocal[0];
+      cnt++;
+    }
+    if ( m_dof[4] ) {
+      rotation[1] = sign*ali_par[t->second+cnt*m_nAlignObj]+rotlocal[1];
+      cnt++;
+    }
+    if ( m_dof[5] ) {
+      rotation[2] = sign*ali_par[t->second+cnt*m_nAlignObj]+rotlocal[2];
+      cnt++;
+    }
+    cnt=0;
+    //      if(!m_Simulation){ //i.e. of no input misalignments are known!!!!!!
+    if( !ModSim || m_otHalfLayer){ // alignment on data (not MC!) for half-layers
+      // Need to take care of the pre-existing conditions, so that they don't get lost
+      // between iterations!!! 
+      // Therefore, add them...
+      // add input and reconstructed misalignments:
+      // alipar is in measurement direction, got it from alignment in global system!! 
+      // modules are shifted in the frame of its parents, therefore we have to shift 
+      // them not with the difference input-output but with the output.
+      if ( m_dof[0] ){
+	debug() << "  m_prevAlipar[0] = " <<  m_prevAlipar[t->second+cnt*m_nAlignObj] << endreq;         
+	translation[0]   = sign*ali_par[t->second+cnt*m_nAlignObj] + shiftlocal[0];//shiftlocal[0]; 
+	cnt++;
+      } else translation[0] = shiftlocal[0];
+      if ( m_dof[1] ) {
+	debug() << "  m_prevAlipar[1] = " <<  m_prevAlipar[t->second+cnt*m_nAlignObj] << endreq;         
+	translation[1]    = ali_par[t->second+cnt*m_nAlignObj] + shiftlocal[1];//shiftlocal[1];
+	cnt++;
+      } else translation[1] = shiftlocal[1];
+      if ( m_dof[2] ) {
+	debug() << "  m_prevAlipar[2] = " <<  m_prevAlipar[t->second+cnt*m_nAlignObj] << endreq;
+	translation[2]   = sign*ali_par[t->second+cnt*m_nAlignObj] + shiftlocal[2];//shiftlocal[2];
+	cnt++;
+      } else translation[2] = shiftlocal[2];
+      if ( m_dof[3] ) {
+	debug() << "  m_prevAlipar[3] = " <<  m_prevAlipar[t->second+cnt*m_nAlignObj] << endreq;
+	rotation[0]      = sign*ali_par[t->second+cnt*m_nAlignObj] + rotlocal[0];//rotlocal[0];
+	cnt++;
+      } else rotation[0] = rotlocal[0];
+      if ( m_dof[4] ) {
+	debug() << "  m_prevAlipar[4] = " <<  m_prevAlipar[t->second+cnt*m_nAlignObj] << endreq;         
+	rotation[1]      = sign*ali_par[t->second+cnt*m_nAlignObj] + rotlocal[1];//rotlocal[1];
+	cnt++;
+      } else rotation[1] = rotlocal[1];
+      if ( m_dof[5] ) {
+	debug() << "  m_prevAlipar[5] = " <<  m_prevAlipar[t->second+cnt*m_nAlignObj] << endreq;         
+	rotation[2]      = sign*ali_par[t->second+cnt*m_nAlignObj] + rotlocal[2];//rotlocal[2];
+	cnt++;
+      } else rotation[2] = rotlocal[2];
+      cnt=0;
+      
+    }
+    
+    
+    
+    
+    info() << " final Translation vector: " << translation  
+	    << " final Rotation vector   : " << rotation << endreq
+	    << " pivot point             : " << pivot << endreq
+	    <<"------------------------------------------------------"<<endreq;
+    
+    
+    StatusCode sc = geo->ownToOffNominalParams(translation,
+					       rotation,
+					       pivot);
+    if ( sc.isFailure() ) {
+      error() << "Error storing translation, rotation and pivot vectors\n"
+	      << "from geometry object" << endreq;
+      error() << "Translation vector : " << translation << "\n"
+	      << "Rotation vector    : " << rotation << "\n"
+	      << "pivot vector       : " << pivot << endreq;
+      return StatusCode::FAILURE;    
+    }
+    
+    const Gaudi::Transform3D misalGlobalnew = geo->toGlobalMatrix();
+    const Gaudi::Transform3D nominGlobalnew = geo->toGlobalMatrixNominal();
+    const Gaudi::Transform3D deltaGlobalnew = misalGlobalnew*nominGlobalnew.Inverse();
+    const Gaudi::Transform3D deltalocalnew  = nominGlobalnew.Inverse()*deltaGlobalnew*nominGlobalnew;
+    std::vector<double> rotGlobalnew(3,0.), shiftGlobalnew(3,0.);
+    std::vector<double> rotlocalnew(3,0.), shiftlocalnew(3,0.);
+    std::vector<double> pivotnew = pivot;
+    DetDesc::getZYXTransformParameters(deltalocalnew, shiftlocalnew, rotlocalnew,pivot);
+    DetDesc::getZYXTransformParameters(deltaGlobalnew, shiftGlobalnew, rotGlobalnew,pivot);           
+    info() << " new : pivot          " <<std::setw(15) << pivotnew << endreq
+	    << " new : transl.(loc) = "  <<std::setw(15) <<  shiftlocalnew 
+	    << " new : rotation (loc)= " <<std::setw(15) <<   rotlocalnew << endreq 
+	    << " new : transl.(glo) = "  <<std::setw(15) <<  shiftGlobalnew 
+	    << " new : rotation (glo)= " <<std::setw(15) <<   rotGlobalnew <<endreq
+	    << "--------" << endreq; 
+    
+    
+    if (sc.isFailure()) {
+      std::cout << "Failed to update local delta matrix of detector element " + det->name() <<  std::endl;
+      return StatusCode::FAILURE;  
+    }
+  }
+  return StatusCode::SUCCESS;
+}
 
 void TAConfig::CheckLChi2(const double &chi2, const int &trsize,const int &nmes, bool & flagC, double mscale)
 {
@@ -3131,21 +3146,21 @@ void TAConfig::CheckLChi2(const double &chi2, const int &trsize,const int &nmes,
   //info()<<"new scale  " <<  mscale << endreq;
   double scale=mscale; 
   if(mscale<3.0){ scale= 1;}
-
-
+  
+  
   double sdtdevb= m_nstd; //set in options
   m_Centipede->CheckLChi2(bchi2,trsize,nmes, scale, sdtdevb, flagb );
-
+  
   flagC=flagb; //if true, than track passed chi2 cut
 }
 
 
 StatusCode TAConfig::NewMeasurement(double & meas, const int rank,
                                     const struct Point pred, 
-//				    const double zpos,
+				    //				    const double zpos,
                                     const double stereo_angle)
 {
-
+  
   //info() << " ---> called TACONFIG::new measurement " << endreq;
   m_derGB.clear();
   m_derGB.resize( m_n_dof*m_nAlignObj ,0.);
@@ -3163,7 +3178,7 @@ StatusCode TAConfig::NewMeasurement(double & meas, const int rank,
     trt.push_back(m_trty[0]);
     trt.push_back(m_trQ[0]);
   }
-
+  
   Gaudi::XYZVector origin( trt.at(0), trt.at(2), 0.0);
   Gaudi::XYZVector slopes( trt.at(1), trt.at(3), 0.0);
   m_derivatives->SetGlobal( slopes, origin, pred, m_derGB, rank, stereo_angle );
@@ -3283,8 +3298,8 @@ StatusCode TAConfig::ConstrainMovements(){
     }// one string
   }//# strings 
   
-    
-
+  
+  
   for( int i=0; i< m_nAlignObj; i++){        
     if(m_dof[0]){
       if( vdof[0] != 0.){
@@ -3332,7 +3347,7 @@ StatusCode TAConfig::ConstrainMovements(){
   return StatusCode::SUCCESS;
   
 }
-  
+
 StatusCode TAConfig::GetHalflayerReference(DeOTLayer* lay, Gaudi::XYZPoint& ref, Gaudi::XYZPoint& refnom,int rank)
 {
   double sumX[4]={0.,0.,0.,0.}; double meanX[4]={0.,0.,0.,0.};
@@ -3347,11 +3362,11 @@ StatusCode TAConfig::GetHalflayerReference(DeOTLayer* lay, Gaudi::XYZPoint& ref,
   for(unsigned k=0; k< quart.size();k++){
     //Cside
     if(rank%2 == 0 && k%2 ==0){
-
+      
       //get the modules
       std::vector<DeOTModule*>  mod = quart.at(k)->modules();
       for(unsigned l=0; l< mod.size();l++){ //neglect small modules at beampipe   
-
+	
         Gaudi::Rotation3D R,Rnom;
         Gaudi::XYZVector  T,Tnom;
         mod.at(l)->geometry()->toGlobalMatrix().GetDecomposition( R, T);    // get center of Module including misalignments
@@ -3365,7 +3380,7 @@ StatusCode TAConfig::GetHalflayerReference(DeOTLayer* lay, Gaudi::XYZPoint& ref,
         sumXnom[k] += Tnom.x();
         sumYnom[k] += Tnom.y();
         sumZnom[k] += Tnom.z();
-        
+	
       }
       meanX[k] = sumX[k]/9;
       meanY[k] = sumY[k]/9;
@@ -3384,7 +3399,7 @@ StatusCode TAConfig::GetHalflayerReference(DeOTLayer* lay, Gaudi::XYZPoint& ref,
       //get the modules
       std::vector<DeOTModule*>  mod = quart.at(k)->modules();
       for(unsigned l=0; l< mod.size();l++){ //neglect small modules at beampipe   
-
+	
         Gaudi::Rotation3D R,Rnom;
         Gaudi::XYZVector  T,Tnom;
         mod.at(l)->geometry()->toGlobalMatrix().GetDecomposition( R, T);    // get center of Module including misalignments
@@ -3398,7 +3413,7 @@ StatusCode TAConfig::GetHalflayerReference(DeOTLayer* lay, Gaudi::XYZPoint& ref,
         sumXnom[k] += Tnom.x();
         sumYnom[k] += Tnom.y();
         sumZnom[k] += Tnom.z();
-        
+	
       }
       meanX[k] = sumX[k]/9;
       meanY[k] = sumY[k]/9;
@@ -3410,7 +3425,7 @@ StatusCode TAConfig::GetHalflayerReference(DeOTLayer* lay, Gaudi::XYZPoint& ref,
       debug() << rank << " Quarter "<< quart.at(k)->name() << endreq
               << " misal mean X,Y,Z "<< meanX[k]<<" " << meanY[k]<<" "<<meanZ[k]<<endreq
               << " nom   mean X,Y,Z "<< meanXnom[k]<<" " << meanYnom[k]<<" "<<meanZnom[k]<<endreq;
-
+      
     } 
   }
   
@@ -3435,7 +3450,7 @@ StatusCode TAConfig::GetHalflayerReference(DeOTLayer* lay, Gaudi::XYZPoint& ref,
   ref.SetX(hlX/2);
   ref.SetY(hlY/2);
   ref.SetZ(hlZ/2);
-
+  
   refnom.SetX(hlXnom/2);
   refnom.SetY(hlYnom/2);
   refnom.SetZ(hlZnom/2);
