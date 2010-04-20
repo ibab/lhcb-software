@@ -1,6 +1,6 @@
 __author__ = 'Patrick Koppenburg, Rob Lambert, Mitesh Patel'
 __date__ = '21/01/2009'
-__version__ = '$Revision: 1.17 $'
+__version__ = '$Revision: 1.18 $'
 
 """
 Bd->K*MuMu selections 
@@ -37,6 +37,7 @@ class StrippingBd2KstarMuMuConf(LHCbConfigurableUser):
 # simple selection
                 ,  'SimpleDiMuonPT'     : 500        # MeV
                 ,  'SimpleBdFDChi2'     : 100        # adimentional1
+                ,  'SimpleBdLT'         : 0.00001       # unit ?
                    }
                    
     _line_for_nominal_high = None
@@ -280,10 +281,11 @@ class StrippingBd2KstarMuMuConf(LHCbConfigurableUser):
 
 ####################################################################################################
 #
+# Simplest lines. One based on FDchi2 and one on LT (better)
 #
-    def simplestLine( self ):
+    def simplestDiMuon( self ):
         """
-        Very simple line based on TWO cuts!
+        Very simple line based on ONE cut!
         
         @author P. Koppenburg
         @date 25/2/2010
@@ -293,7 +295,6 @@ class StrippingBd2KstarMuMuConf(LHCbConfigurableUser):
         from Configurables import FilterDesktop, CombineParticles
         
 	_muons =  DataOnDemand('stdVeryLooseDiMuon', Location = 'Phys/StdVeryLooseDiMuon')
-	_kstar =  DataOnDemand('stdVeryLooseDetachedKst2Kpi', Location = 'Phys/StdVeryLooseDetachedKst2Kpi')
 
         _diMu = FilterDesktop("FilterForSimpleBd2KstarMuMu")
         _diMu.Code = "(PT > %(SimpleDiMuonPT)s *GeV)" % self.getProps()
@@ -301,18 +302,69 @@ class StrippingBd2KstarMuMuConf(LHCbConfigurableUser):
                        Algorithm = _diMu,
                        RequiredSelections = [ _muons ] )
 
-        _comb = CombineParticles("SimpleBd2KstarMuMu",
+        return _sd
+
+    def simplestCombineFD( self ):
+        """
+        Very simple line based on ONE cut!
+        
+        @author P. Koppenburg
+        @date 25/2/2010
+        """
+        from Configurables import CombineParticles
+        _comb = CombineParticles("SimpleBd2KstarMuMuFD",
                                  DecayDescriptor = "[B0 -> J/psi(1S) K*(892)0 ]cc" ,
                                  CombinationCut = "(ADAMASS('B0') < %(BMassMedWin)s *MeV)"  % self.getProps(),
                                  MotherCut = "(VFASPF(VCHI2/VDOF) < %(IntVertexCHI2Tight)s ) & ( BPVVDCHI2 > %(SimpleBdFDChi2)s )" % self.getProps() )
+        return _comb 
         
-        _sb = Selection("SelSimpleBd2KstarMuMu",
+    def simplestCombineLT( self ):
+        """
+        Very simple line based on ONE cut!
+        
+        @author P. Koppenburg
+        @date 25/2/2010
+        """
+        _comb = self.simplestCombineFD().clone("SimpleBd2KstarMuMuLT")
+        _comb.MotherCut = "(VFASPF(VCHI2/VDOF) < %(IntVertexCHI2Tight)s ) & ( BPVLTIME() > %(SimpleBdLT)s )" % self.getProps()
+        return _comb 
+        
+       
+    def simplestFDLine( self ):
+        """
+        Very simple line based on ONE cut! : the FD significance
+        
+        @author P. Koppenburg
+        @date 25/2/2010
+        """
+        from StrippingConf.StrippingLine import StrippingLine
+        from PhysSelPython.Wrappers import Selection, SelectionSequence, DataOnDemand
+
+ 	_kstar =  DataOnDemand('stdVeryLooseDetachedKst2Kpi', Location = 'Phys/StdVeryLooseDetachedKst2Kpi')
+        _comb = self.simplestCombineFD()
+        _sb = Selection("SelSimpleBd2KstarMuMuFD",
                        Algorithm = _comb,
-                       RequiredSelections = [ _sd, _kstar ] )
-	ss = SelectionSequence("SeqSelSimpleBd2KstarMuMu", TopSelection = _sb )
-	return StrippingLine('SimpleBd2KstarMuMu', prescale = 1, algos = [ ss ])   
+                       RequiredSelections = [ self.simplestDiMuon(), _kstar ] )
+	ss = SelectionSequence("SeqSelSimpleBd2KstarMuMuFD", TopSelection = _sb )
+	return StrippingLine('SimpleBd2KstarMuMuFD', prescale = 1, algos = [ ss ])   
 
+    def simplestLTLine( self ):
+        """
+        Very simple line based on ONE cut! : the lifetime
+        
+        @author P. Koppenburg
+        @date 25/2/2010
+        """
+        from StrippingConf.StrippingLine import StrippingLine
+        from PhysSelPython.Wrappers import Selection, SelectionSequence, DataOnDemand
 
+ 	_kstar =  DataOnDemand('stdVeryLooseDetachedKst2Kpi', Location = 'Phys/StdVeryLooseDetachedKst2Kpi')
+        _comb = self.simplestCombineLT()
+        _sb = Selection("SelSimpleBd2KstarMuMuLT",
+                       Algorithm = _comb,
+                       RequiredSelections = [ self.simplestDiMuon(), _kstar ] )
+	ss = SelectionSequence("SeqSelSimpleBd2KstarMuMuLT", TopSelection = _sb )
+	return StrippingLine('SimpleBd2KstarMuMuLT', prescale = 1, algos = [ ss ])   
 #
 #
 ####################################################################################################
