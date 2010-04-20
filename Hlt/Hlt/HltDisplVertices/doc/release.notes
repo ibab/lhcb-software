@@ -4,6 +4,8 @@
 ! Purpose     : Apply some cuts on reconstructed vertices
 !-----------------------------------------------------------------------------
 
+! 2010-April-20 - Neal Gauvin
+ - Add new algorithms Hlt2PreSelDV and Hlt2SelDV, remove Hlt2LonglivedPartsDEV
 
 !========================== HltDisplVertices v2r0 2010-03-28 ===================
 ! 2010-03-17 - V. Gligorov
