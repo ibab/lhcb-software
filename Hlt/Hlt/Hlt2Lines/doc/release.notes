@@ -9,12 +9,10 @@
 !-----------------------------------------------------------------------------
 
 
-! 2010-04-16 - Neal Gauvin
+! 2010-04-20 - Neal Gauvin
  - Hlt2DisplVertices line split in 2 : 
 	 Hlt2DisplVerticesSingle and Hlt2DisplVerticesDouble. 
-	 The two lines take now the algos from Phys/DisplVertices instead of 
-	 Hlt/HltDisplVertices. 
-   Note : use DisplVertices v6r6 Phys.
+
 
 !2010-04-16 - Johannes Albrecht
  - Hlt2InclusiveDiMuonLines: add DiMuonLowMass, update defaults, beautify selections

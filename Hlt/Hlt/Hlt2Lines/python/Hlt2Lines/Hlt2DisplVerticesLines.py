@@ -4,13 +4,13 @@
 #
 # Maintainer : Neal Gauvin 
 # Date       : 16 july 2009
-# Revised    : 16 avril 2010
+# Revised    : 20 avril 2010
 #
 # 3 steps :
 #      - Reconstruction of all vertices with >= 4 tracks
 #        with PatPV3D, with optimized cuts for "smaller" vertices
 #        than PV's.
-#      - RecVertices2Particles loops on all reconstructed vertices.
+#      - Hlt2PreSelDV loops on all reconstructed vertices.
 #        The one with lowest z (upstream) is not considered
 #        Vertices with at least one backward track are not considered.
 #        Vertices close to the beam line removed.
@@ -19,7 +19,7 @@
 #        When no Hlt2Pions found, default pions with 0.4 GeV pt are created.
 #        Vertices that are found to be close to the detector material
 #        could be possibly eliminated.
-#      - DisplVertices : basic cuts on the selected candidates
+#      - Hlt2SelDV : basic cuts on the selected candidates
 #        2 kinds of cuts are applied to the set of displaced vertices :
 #           >1 prey passing thighter cuts
 #               --> when hunting single long-lived particles
@@ -102,9 +102,9 @@ class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
         
         #######################################################################
         #Run Get the candidates
-        from Configurables import RecVertices2Particles
+        from Configurables import Hlt2PreSelDV
 
-        Hlt2RV2P = RecVertices2Particles("Hlt2RV2P")
+        Hlt2RV2P = Hlt2PreSelDV("Hlt2RV2P")
         DVSeq.append( Hlt2RV2P )
         Hlt2RV2P.InputLocations = [NoCutsPions.outputSelection()]
         Hlt2RV2P.RecVerticesLocation = [Hlt2PatPV3D.OutputVerticesName] 
@@ -117,9 +117,9 @@ class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
 
         #######################################################################
         #Run Single LLP selection
-        from Configurables import DisplVertices
+        from Configurables import Hlt2SelDV
         InputParts = ["HLT/Hlt2RV2P"]
-        Hlt2SingleLonglived = DisplVertices("Hlt2SingleLonglived")
+        Hlt2SingleLonglived = Hlt2SelDV("Hlt2SingleLonglived")
         Hlt2SingleLonglived.InputLocations = InputParts
         Hlt2SingleLonglived.MinNBCands = 1
         Hlt2SingleLonglived.RMin = self.getProp('RMin')['Hlt2SingleLonglived']
@@ -137,7 +137,7 @@ class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
 
         #######################################################################
         #Run Hlt2LonglivedParts : double LLP selection
-        Hlt2DoubleLonglived = DisplVertices("Hlt2DoubleLonglived")
+        Hlt2DoubleLonglived = Hlt2SelDV("Hlt2DoubleLonglived")
         Hlt2DoubleLonglived.InputLocations = InputParts
         Hlt2DoubleLonglived.MinNBCands = 2
         Hlt2DoubleLonglived.RMin = self.getProp('RMin')['Hlt2DoubleLonglived']
