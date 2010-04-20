@@ -2,7 +2,7 @@ package LbScriptsPolicy
 version v2r8
 
 
-macro install_excludes " -xCVS"
+macro install_excludes " -xCVS -x.svn"
 macro install_command 'python $(LbScriptsPolicy_root)/cmt/fragments/install.py $(install_excludes) --log=./install.history '
 macro uninstall_command 'python $(LbScriptsPolicy_root)/cmt/fragments/install.py -u --log=./install.history '
 

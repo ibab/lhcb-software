@@ -1,3 +1,7 @@
+2010-04-20  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* cmt/requirements: fixed the exclusion of the .svn directory for the install command
+
 2010-03-29  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/requirements: release of version v2r8
