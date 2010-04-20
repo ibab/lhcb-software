@@ -5,6 +5,8 @@
 !               of events with exotic displaced vertices
 !-----------------------------------------------------------------------------
 
+!========================== DisplVertices v6r6 2010-04-20 ===================
+
 ! 2010-04-16 - Neal Gauvin
  - src/DisplVertices.cpp, src/RecVertices2Particles.cpp
   . Use Particle::Range instead of Particle::Container for input.
