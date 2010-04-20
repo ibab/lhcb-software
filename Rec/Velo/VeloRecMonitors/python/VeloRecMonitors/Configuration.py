@@ -1,10 +1,11 @@
 """
 Configuration of the Velo Monitoring Histograms
 """
-__version__ = "$Id: Configuration.py,v 1.6 2010-02-24 16:45:24 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.7 2010-04-20 09:44:18 gersabec Exp $"
 __author__  = "Rob Lambert"
 
 from Gaudi.Configuration import *
+from Configurables import TrackSys
 
 class VeloRecMonitors(ConfigurableUser):
     __slots__ = {
@@ -45,6 +46,8 @@ class VeloRecMonitors(ConfigurableUser):
             VTM.OutputLevel     = self.getProp( 'OutputLevel' )
             VCM.PropertiesPrint = False
             VTM.PropertiesPrint = False
+            if TrackSys().getProp( "OutputType" ).upper() == "RDST":
+                VTM.TrackLocation = 'Rec/Track/PreparedVelo'
             theseq.Members += [ VCM, VTM ]
             
         return
