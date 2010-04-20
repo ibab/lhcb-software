@@ -1,4 +1,4 @@
-// $Id: DecayTreeTuple.cpp,v 1.16 2009-06-01 15:40:26 pkoppenb Exp $
+// $Id: DecayTreeTuple.cpp,v 1.17 2010-04-20 06:40:48 rlambert Exp $
 // Include files 
 
 
@@ -69,7 +69,6 @@ StatusCode DecayTreeTuple::execute(){
   if (msgLevel(MSG::VERBOSE)) verbose() << "I have " << mothers.size()
                                         << " particles to handle" << endreq;
 
-  Tuple tuple = nTuple( m_tupleName,  m_tupleName );
   LHCb::Particle::ConstVector heads;
   StatusCode test = getDecayMatches( mothers, heads );
   if( test ){
@@ -81,7 +80,8 @@ StatusCode DecayTreeTuple::execute(){
     setFilterPassed(false);
     return StatusCode::SUCCESS;
   }
-
+  //don't create the ntuple if there's nothing to fill!
+  Tuple tuple = nTuple( m_tupleName,  m_tupleName );
   test = fillTuple( tuple, heads, m_dkFinder );
 
   if( test ){

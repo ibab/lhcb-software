@@ -4,6 +4,10 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2010-04-20 - Rob Lambert
+ - Fixed DecayTreeTuples such that the tuple is not created unless the 
+   given decay was seen, savannah bug #65947
+
 !========================== DecayTreeTuple v3r3 2010-04-12 ================
 
 ! 2010-04-12 - Rob Lambert

@@ -1,4 +1,4 @@
-// $Id: MCDecayTreeTuple.cpp,v 1.5 2009-07-13 10:44:19 rlambert Exp $
+// $Id: MCDecayTreeTuple.cpp,v 1.6 2010-04-20 06:40:48 rlambert Exp $
 // Include files 
 
 #include "boost/lexical_cast.hpp" 
@@ -68,7 +68,6 @@ StatusCode MCDecayTreeTuple::execute(){
   if (msgLevel(MSG::VERBOSE)) verbose() << "I have " << mothers.size()
                                         << " particles to handle" << endreq;
 
-  Tuple tuple = nTuple( m_tupleName,  m_tupleName );
   LHCb::MCParticle::ConstVector heads;
   StatusCode test = getDecayMatches( mothers, heads );
   if( test ){
@@ -80,7 +79,8 @@ StatusCode MCDecayTreeTuple::execute(){
     setFilterPassed(false);
     return StatusCode::SUCCESS;
   }
-
+  //don't create the ntuple if there's nothing to fill!
+  Tuple tuple = nTuple( m_tupleName,  m_tupleName );
   test = fillTuple( tuple, heads, m_mcdkFinder );
 
   if( test ){
