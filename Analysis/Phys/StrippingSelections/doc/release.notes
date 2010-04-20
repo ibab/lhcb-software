@@ -5,6 +5,9 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-04-21 - Greig Cowan
+ - Fixed StrippingBd2DstarMuNu.py. Removed reference to DC06 particles.
+
 ! 2010-04-20 - Jacopo Nardulli
  - Add The B2DX Loose selection in the Hadron stream
 
