@@ -9,6 +9,7 @@
 <!--  <text>$APPCONFIGOPTS/UseOracle.py</text> -->
   <text>$APPCONFIGOPTS/DaVinci/L0Patch.py</text>
   <text>$APPCONFIGOPTS/DaVinci/DataType-2010.py</text>
+  <text>$APPCONFIGOPTS/DaVinci/InputType-RDST.py</text>
     <text>--option</text>
     <text>from Configurables import DaVinci; DaVinci().EvtMax=600; EventSelector().Input = ["DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/data/2010/RDST/00006165/0000/00006165_00000004_1.rdst' TYP='POOL_ROOTTREE' OPT='READ'"];</text>
 </set></argument>  <argument name="validator"><text>

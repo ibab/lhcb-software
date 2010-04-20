@@ -7,9 +7,9 @@
   <text>$APPCONFIGOPTS/DaVinci/StrippingLinesPrescales-1003.py</text>
   <text>$APPCONFIGOPTS/DaVinci/DVStrippingETC-RealData.py</text>
 <!--  <text>$APPCONFIGOPTS/UseOracle.py</text> -->
-  <text>$APPCONFIGOPTS/DaVinci/DVMonitor-v25r2p1-rm-MuIDMonitor-patch.py</text>
   <text>$APPCONFIGOPTS/DaVinci/L0Patch.py</text>
   <text>$APPCONFIGOPTS/DaVinci/DataType-2010.py</text>
+  <text>$APPCONFIGOPTS/DaVinci/InputType-RDST.py</text>
     <text>--option</text>
     <text>from Configurables import DaVinci; DaVinci().EvtMax=600; EventSelector().Input = ["DATAFILE='PFN:castor:/castor/cern.ch/user/j/jpalac/RDST/Brunel_v37r0/Brv37r0-Data2010.rdst' TYP='POOL_ROOTTREE' OPT='READ'"];</text>
 </set></argument>  <argument name="validator"><text>
