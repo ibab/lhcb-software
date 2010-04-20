@@ -4,6 +4,9 @@
 ! Purpose     : GUI to allow the visualization of all data quality histograms
 !-----------------------------------------------------------------------------
 
+! 2010-04-20 - Giacvomo Graziani
+ - small fix for labels in history trend mode 
+
 ! 2010-04-13 - Patrick Robbe
  - Archive.h/.cpp: move header files to cpp file
  - DbRootHist, ParallelWait: add extra protections for multi thread

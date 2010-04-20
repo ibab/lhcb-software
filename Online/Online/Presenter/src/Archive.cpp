@@ -239,10 +239,13 @@ void Archive::fillHistogram(DbRootHist* histogram,
                                                  htitle,
                                                  histogram->isEmptyHisto() ? NULL : histogram->rootHistogram);
         histogram->beRegularHisto();
+        if (m_mainFrame->isHistoryTrendPlotMode()) {
+          histogram->setHistoryTrendPlotMode(true);
+        }
       }
       else {
         histogram->beEmptyHisto(); 
-      }
+      }      
     }
     if (! (histogram->rootHistogram) ) {
       histogram->beEmptyHisto();
