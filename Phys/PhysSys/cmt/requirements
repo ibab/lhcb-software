@@ -1,4 +1,4 @@
-#$Id: requirements,v 1.225 2010-04-20 07:38:24 jpalac Exp $
+#$Id: requirements,v 1.226 2010-04-20 13:12:12 jpalac Exp $
 package PhysSys
 version v9r4
 
@@ -21,7 +21,6 @@ use  VertexFit			v6r2p2   Phys    # Yuehong Xie
 use  LoKiFitters                v2r4p1   Phys    # Vanya Belyaev
 use  DecayTreeFitter            v1r6     Phys    # Wouter Hulsbergen
 use  PhysDict                   v4r2     Phys    # Juan Palacios
-use  DisplVertices              v6r6     Phys    # Neal Gueissaz
 
 #===================================================================
 use LoKi                        v8r1     Phys    # Ivan Belyaev
