@@ -129,6 +129,14 @@ HltReferenceRateSvc::i_updateConditions()
     m_last = 0 ; 
     // and update settings
     debug() << "updating lumipars" << endmsg;
+    if (m_lumipars==0) { 
+        warning() << "Could not obtain Condition for lumi parameters from conditions DB" << endmsg;
+        return StatusCode::FAILURE;
+    }
+    if (!m_lumipars->exists("LumiPars")) {
+        warning() << "Condition does not contain LumiPars " << endmsg;
+        return StatusCode::FAILURE;
+    }
     std::vector<double> lumipars = m_lumipars->param<std::vector<double> >("LumiPars");
     debug() << "updated lumipars: " << lumipars << endmsg;
     m_rate = 1000*std::accumulate(lumipars.begin(),lumipars.end(),double(0));

@@ -4,6 +4,9 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+! 2010-04-21 - Gerhard Raven
+ - check for existence of LumiPar condition in HltRefenenceRateSvc
+
 ! 2010-04-20 - V. Gligorov
  - Add function factory for said clone killing function.
 
