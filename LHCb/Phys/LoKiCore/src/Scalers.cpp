@@ -1,4 +1,4 @@
-// $Id: Scalers.cpp,v 1.6 2010-04-17 22:05:07 graven Exp $
+// $Id: Scalers.cpp,v 1.7 2010-04-21 12:28:37 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -104,7 +104,6 @@ bool LoKi::Scalers::RandomScale::eval
 std::ostream& LoKi::Scalers::RandomScale::fillStream( std::ostream& s ) const 
 { return s << " XSCALE( " << m_scaler.prob() << " ) " ; }
 // ===========================================================================
-
 
 // ===========================================================================
 /* constructor from probability and random service 
@@ -290,12 +289,12 @@ void LoKi::Scalers::RateLimitV::initialize_ ( const std::string& svc )
 LoKi::Scalers::RateLimitV::RateLimitV 
 ( const LoKi::Scalers::RateLimitV& right ) 
   : LoKi::AuxFunBase           ( right ) 
-  , LoKi::Functor<void,bool>   ( right ) 
-  , LoKi::Listener             ( right ) 
   , IInterface                 ( right ) 
   , IIncidentListener          ( right ) 
   , extend_interfaces1<IIncidentListener> ( right ) 
   , implements1<IIncidentListener>        ( right ) 
+  , LoKi::Functor<void,bool>   ( right ) 
+  , LoKi::Listener             ( right ) 
   , m_rateSvc   ( right.m_rateSvc   )
   , m_uniform   ( right.m_uniform   ) 
   , m_rate      ( right.m_rate      ) 
@@ -303,7 +302,7 @@ LoKi::Scalers::RateLimitV::RateLimitV
   , m_interval  ( right.m_interval  ) 
   , m_next      ( right.m_next      ) 
 {
-  // randomize initial phase in case of perioding limiter
+  // randomize initial phase in case of periodic limiter
   switch ( limitType() ) 
   {
   case LoKi::Scalers::RandomPhasePeriodicLimiter : 
