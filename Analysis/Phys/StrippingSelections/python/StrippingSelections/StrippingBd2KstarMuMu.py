@@ -1,6 +1,6 @@
 __author__ = 'Patrick Koppenburg, Rob Lambert, Mitesh Patel'
 __date__ = '21/01/2009'
-__version__ = '$Revision: 1.18 $'
+__version__ = '$Revision: 1.19 $'
 
 """
 Bd->K*MuMu selections 
@@ -283,7 +283,7 @@ class StrippingBd2KstarMuMuConf(LHCbConfigurableUser):
 #
 # Simplest lines. One based on FDchi2 and one on LT (better)
 #
-    def simplestDiMuon( self ):
+    def simplestDiMuon( self, trail="" ):
         """
         Very simple line based on ONE cut!
         
@@ -298,7 +298,7 @@ class StrippingBd2KstarMuMuConf(LHCbConfigurableUser):
 
         _diMu = FilterDesktop("FilterForSimpleBd2KstarMuMu")
         _diMu.Code = "(PT > %(SimpleDiMuonPT)s *GeV)" % self.getProps()
-        _sd = Selection("SelFilterForSimpleBd2KstarMuMu",
+        _sd = Selection("SelFilterForSimpleBd2KstarMuMu"+trail,
                        Algorithm = _diMu,
                        RequiredSelections = [ _muons ] )
 
@@ -344,7 +344,7 @@ class StrippingBd2KstarMuMuConf(LHCbConfigurableUser):
         _comb = self.simplestCombineFD()
         _sb = Selection("SelSimpleBd2KstarMuMuFD",
                        Algorithm = _comb,
-                       RequiredSelections = [ self.simplestDiMuon(), _kstar ] )
+                       RequiredSelections = [ self.simplestDiMuon("FD"), _kstar ] )
 	ss = SelectionSequence("SeqSelSimpleBd2KstarMuMuFD", TopSelection = _sb )
 	return StrippingLine('SimpleBd2KstarMuMuFD', prescale = 1, algos = [ ss ])   
 
@@ -362,7 +362,7 @@ class StrippingBd2KstarMuMuConf(LHCbConfigurableUser):
         _comb = self.simplestCombineLT()
         _sb = Selection("SelSimpleBd2KstarMuMuLT",
                        Algorithm = _comb,
-                       RequiredSelections = [ self.simplestDiMuon(), _kstar ] )
+                       RequiredSelections = [ self.simplestDiMuon("LT"), _kstar ] )
 	ss = SelectionSequence("SeqSelSimpleBd2KstarMuMuLT", TopSelection = _sb )
 	return StrippingLine('SimpleBd2KstarMuMuLT', prescale = 1, algos = [ ss ])   
 #
