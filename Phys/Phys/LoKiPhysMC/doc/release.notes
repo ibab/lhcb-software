@@ -1,9 +1,19 @@
-! $Id: release.notes,v 1.72 2010-04-06 20:19:40 ibelyaev Exp $ 
+! $Id: release.notes,v 1.73 2010-04-21 12:47:43 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhysMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
 ! Purpose     : RC <--> MC part of LoKi 
 ! -----------------------------------------------------------------------------
+
+! 2010-04-21 - Vanya Belyaev
+
+ - src/Component/P2MCBase.h
+
+     Container -> Range 
+
+   see task #13342 
+
+
 
 ! 2010-04-06 - Vanya Belyaev
  - replace LoKi::Range with Gaudi::Range

@@ -1,4 +1,4 @@
-// $Id: P2MCBase.h,v 1.1 2008-06-25 17:27:39 ibelyaev Exp $
+// $Id: P2MCBase.h,v 1.2 2010-04-21 12:47:43 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKIPHYSMC_P2MCBASE_H 
 #define LOKIPHYSMC_P2MCBASE_H 1
@@ -104,9 +104,9 @@ namespace LoKi
     // linker object
     MCLinker*                 m_linker  ; ///< linker object 
     // ========================================================================
- } ;
+  } ;
   // ==========================================================================
-} // end of namespace LoKi
+} //                                                      end of namespace LoKi
 // ============================================================================
 #define INHERITS(T1,T2) \
      (Relations::IsConvertible<const T1*,const T2*>::value && \
@@ -171,7 +171,7 @@ namespace
   struct iGet : public _iGet<TABLE,INHERITS(TABLE,IRelationWeightedBase)>
   {} ;
   // ==========================================================================
-} // end of anonymous namespace 
+} //                                                 end of anonymous namespace 
 // ============================================================================
 /// copy links from linker to relation table 
 // ============================================================================
@@ -193,30 +193,32 @@ inline StatusCode LoKi::P2MCBase::fillTable ( TABLE* table )
   for ( Addresses::const_iterator iaddr = addresses.begin() ; 
         addresses.end() != iaddr ; ++iaddr )
   {
-    const LHCb::Particle::Container* particles = 0 ;
     const std::string loc = (*iaddr)  + "/Particles" ;
-    if      ( exist<LHCb::Particle::Container>  (  loc   ) ) 
-    { particles = get<LHCb::Particle::Container>(  loc   ) ; }
-    else if ( exist<LHCb::Particle::Container>  ( *iaddr ) ) 
-    { particles = get<LHCb::Particle::Container>( *iaddr ) ; }
-    // check the container:
-    if ( 0 == particles ) 
+    // 
+    LHCb::Particle::Range range ;
+    if      ( exist<LHCb::Particle::Range>  (  loc   ) ) 
+    { range = get<LHCb::Particle::Range>    (  loc   ) ; }
+    else if ( exist<LHCb::Particle::Range>  ( *iaddr ) ) 
+    { range = get<LHCb::Particle::Range>    ( *iaddr ) ; }
+    else 
     {
-      Error ( "No valid LHCb::Particle::Container found for '"+(*iaddr)+"'",OK) ;
+      Error ( "No valid LHCb::Particle::Range found for '"+(*iaddr)+"'",OK) ;
       continue ;                                                     // CONTINUE 
     }
     // for statistics 
-    nParticles += particles->size() ;
+    nParticles += range.size() ;
     // loop over all particles 
-    for ( LHCb::Particles::const_iterator ipart = particles->begin() ; 
-          particles->end() != ipart ; ++ipart )
+    for ( LHCb::Particle::Range::iterator ipart = range.begin() ; 
+          range.end() != ipart ; ++ipart )
     {
       const LHCb::Particle* p = *ipart ;
       if ( 0 == p ) { continue ; }                                  // CONTINUE
       // copy the links 
       getter.copy ( m_linker , p , table ) ;                // ATTENTION i_push 
     } // end f the loop over particles in the container
+    // 
   } // end of the loop over input containers
+  //
   // MANDATORY call of i_sort after i_push!
   table->i_sort() ;                                    // MANDATORY i_sort
   // simple check 
