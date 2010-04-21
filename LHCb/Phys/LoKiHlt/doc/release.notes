@@ -1,11 +1,18 @@
-! $Id: release.notes,v 1.37 2010-04-06 20:26:34 ibelyaev Exp $ 
+! $Id: release.notes,v 1.38 2010-04-21 14:25:58 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiHlt
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 ! Purpose     : collection of functors&factory for HLT 
 ! -----------------------------------------------------------------------------
 
+! 2010-04-21 - Vanya Belyaev
+
+ - LoKi::Hybrid::EvtTupleTool
+
+     fix a stupid bug. Many thanks to Albert Bursche for kind help...
+
 ! 2010-04-06 - Vanya Belyaev
+
  - replace LoKi::Range with Gaudi::Range 
  - new decorators 
  - version increment to v3r0 

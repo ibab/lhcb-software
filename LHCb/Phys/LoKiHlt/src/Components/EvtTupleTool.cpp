@@ -1,4 +1,4 @@
-// $Id: EvtTupleTool.cpp,v 1.3 2010-02-19 11:52:27 ibelyaev Exp $
+// $Id: EvtTupleTool.cpp,v 1.4 2010-04-21 14:25:58 ibelyaev Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -59,7 +59,7 @@ namespace LoKi
      *      "size" : " HLT_SIZE "      
      *    }
      *
-     *    XXXTool.Void_Variables = 
+     *    XXXTool.VOID_Variables = 
      *    { 
      *      "nPV" : " CONTAINS ( 'Rex/Vertex/Primary') "
      *    }
@@ -286,19 +286,19 @@ LoKi::Hybrid::EvtTupleTool::EvtTupleTool
   //
   declareProperty 
     ( "L0DU_Variables" , 
-      m_map_odin       , 
+      m_map_l0         , 
       "The map { 'name' : 'functor'} of variables: LHCb::L0DUReport -> double   " ) 
     -> declareUpdateHandler  ( &LoKi::Hybrid::EvtTupleTool::handleL0DU , this ) ;
   //
   declareProperty 
     ( "HLT_Variables"  , 
-      m_map_odin       , 
+      m_map_hdr        , 
       "The map { 'name' : 'functor'} of variables:  LHCb::HltDecReports-> double " ) 
     -> declareUpdateHandler ( &LoKi::Hybrid::EvtTupleTool::handleHLT , this ) ;
   //
   declareProperty 
     ( "VOID_Variables" , 
-      m_map_odin       , 
+      m_map_void       , 
       "The map { 'name' : 'functor'} of variables: void -> double "     ) 
     -> declareUpdateHandler ( &LoKi::Hybrid::EvtTupleTool::handleVOID , this ) ;
 }
