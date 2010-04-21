@@ -1,4 +1,4 @@
-// $Id: TupleToolTrackInfo.h,v 1.3 2010-01-26 15:39:27 rlambert Exp $
+// $Id: TupleToolTrackInfo.h,v 1.4 2010-04-21 13:51:47 rlambert Exp $
 #ifndef JBOREL_TUPLETOOLTRACKINFO_H
 #define JBOREL_TUPLETOOLTRACKINFO_H 1
 
@@ -23,6 +23,7 @@
  * - X_TRACK_NDOF : track ndof
  * - X_TRACK_VeloCHI2NDOF : Track fit velo chi2/nDoF
  * - X_TRACK_TCHI2NDOF : Track fit T chi2/nDoF
+ * - X_TRACK_VELO_UTID : hopefully unique double constructed from multiplying all Velo hit IDs
  *
  * \sa DecayTreeTuple
  *

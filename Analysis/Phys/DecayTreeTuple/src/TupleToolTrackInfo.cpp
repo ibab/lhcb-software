@@ -1,4 +1,4 @@
-// $Id: TupleToolTrackInfo.cpp,v 1.10 2010-01-26 15:39:27 rlambert Exp $
+// $Id: TupleToolTrackInfo.cpp,v 1.11 2010-04-21 13:51:47 rlambert Exp $
 // Include files
 
 // from Gaudi
@@ -91,6 +91,26 @@ StatusCode TupleToolTrackInfo::fill( const LHCb::Particle*
     if(isVerbose()) test &= tuple->column( prefix+"_TRACK_VeloCHI2NDOF",-1.);
     if(isVerbose()) test &= tuple->column( prefix+"_TRACK_TCHI2NDOF",-1.);
   }
+  if(isVerbose())
+  {
+    //hopefully unique double constructed from multiplying all Velo hit IDs
+    double veloUTID=1.;
+    //std::vector< unsigned int > veloIDs;
+    const std::vector< LHCb::LHCbID > lhcbIDs = track->lhcbIDs();
+    std::vector< LHCb::LHCbID >::const_iterator itID = lhcbIDs.begin();
+    for ( ; itID != lhcbIDs.end(); itID++ ) 
+    {
+      if ( (*itID).isVelo() ) 
+      {
+        //veloIDs.push_back( (*itID).veloID().channelID() );
+        veloUTID*=(double((*itID).veloID().channelID())/1000000.);
+      }
+    }
+    //veloIDs.push_back( 0 );
+    test &= tuple->column( head+"_VELO_UTID", veloUTID );
+  }
+  
+  //}
   double ghostProbability = -1.0;
   if (track->ghostProbability() != 0)
     ghostProbability = track->ghostProbability();
