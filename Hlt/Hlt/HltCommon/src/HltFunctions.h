@@ -1,4 +1,4 @@
-// $Id: HltFunctions.h,v 1.32 2010-04-21 13:56:22 gligorov Exp $
+// $Id: HltFunctions.h,v 1.33 2010-04-21 14:10:49 gligorov Exp $
 #ifndef HLTBASE_HLTFUNCTIONS_H 
 #define HLTBASE_HLTFUNCTIONS_H 1
 
@@ -31,7 +31,7 @@
 
 #include "EFunctions.h"
 #include <memory>
-#include <math.h>
+#include "GaudiAlg/CheckForNaN.h"
 
 namespace Hlt {  
 
@@ -752,7 +752,7 @@ namespace Hlt {
       //std::cout << "mother p" << mother.momentum() << std::endl;
       const double cosTheta = LoKi::Cuts::LV01(&mother);
 
-      if (!isnan(cosTheta)){
+      if (!lnan(cosTheta)){
         // sometimes get NAN?
         return fabs(cosTheta);
       } else {
