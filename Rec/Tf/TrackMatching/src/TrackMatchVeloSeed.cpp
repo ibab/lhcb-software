@@ -1,4 +1,4 @@
-// $Id: TrackMatchVeloSeed.cpp,v 1.19 2010-03-22 02:35:29 rlambert Exp $
+// $Id: TrackMatchVeloSeed.cpp,v 1.20 2010-04-21 09:36:26 mneedham Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -27,6 +27,8 @@
 #include <boost/assign/std/vector.hpp>
 #include <boost/assign/list_of.hpp>
 #include <boost/foreach.hpp>
+
+#include "Event/ProcStatus.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : TrackMatchVeloSeed
@@ -98,6 +100,12 @@ TrackMatchVeloSeed::TrackMatchVeloSeed( const std::string& name,
   declareProperty( "DiscardUsedVelo"      , m_discardUsedVelo    = false      );
   declareProperty( "DiscardChi2"         , m_discardChi2    = 1.5      );
 
+  declareProperty("maxNVelo", m_maxNVelo = 1000);
+  declareProperty("maxNSeed", m_maxNSeed = 2000);
+
+ 
+
+
 }
 //=============================================================================
 // Destructor
@@ -145,6 +153,32 @@ StatusCode TrackMatchVeloSeed::execute()
   // Retrieve velo and seed tracks from EvDS
   Tracks* veloTracks = get<Tracks>( m_veloTracks );
   Tracks* seedTracks = get<Tracks>( m_seedTracks );
+
+  //  plot(veloTracks->size(), "v size", 0, 1000, 100);
+  // plot(seedTracks->size(), "s size", 0, 1000, 100);
+
+
+  if (veloTracks->size() > m_maxNVelo) {
+     LHCb::ProcStatus* procStat =
+	getOrCreate<LHCb::ProcStatus,LHCb::ProcStatus>(
+	    LHCb::ProcStatusLocation::Default);
+      // give some indication that we had to skip this event
+      // (ProcStatus returns zero status for us in cases where we don't
+      // explicitly add a status code)
+     procStat->addAlgorithmStatus(name(), -3);  
+     return Warning("To many velo tracks", StatusCode::SUCCESS, 1);
+  }
+
+  if (seedTracks->size() > m_maxNSeed) {
+        LHCb::ProcStatus* procStat =
+	getOrCreate<LHCb::ProcStatus,LHCb::ProcStatus>(
+	    LHCb::ProcStatusLocation::Default);
+      // give some indication that we had to skip this event
+      // (ProcStatus returns zero status for us in cases where we don't
+      // explicitly add a status code)
+      procStat->addAlgorithmStatus(name(), -3);
+    return Warning("To many seed tracks", StatusCode::SUCCESS, 1);
+  }
 
   // make a vector of selected velo tracks
   VeloCandidates selectedVelo; selectedVelo.reserve(veloTracks->size());
