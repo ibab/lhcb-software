@@ -1,4 +1,4 @@
-// $Id: DecodeVeloRawBuffer.h,v 1.11 2010-04-13 15:21:12 dhcroft Exp $
+// $Id: DecodeVeloRawBuffer.h,v 1.12 2010-04-21 14:59:50 dhcroft Exp $
 
 #ifndef DECODEVELORAWBUFFER_H 
 #define DECODEVELORAWBUFFER_H 1
@@ -36,6 +36,16 @@ public:
   virtual StatusCode execute   ();    ///< Algorithm execution
   virtual StatusCode finalize  ();    ///< Algorithm finalisation
 
+  enum AlgStatusType{ 
+    OK = 0,
+    BadTELL1IDMapping = 1,
+    UnsupportedBufferVersion = 2,
+    CorruptVeloBuffer = 3,
+    TooManyClusters = 4,
+    Other = 99
+  };
+    
+
 private:
 
   /** Decode raw buffer to lite clusters  
@@ -68,6 +78,11 @@ private:
    * */
   void createEmptyBanks(); 
 
+  /// Add DecodeVeloRawBuffer to list of failed algorithms
+  StatusCode failEvent(const std::string &ErrorText,
+                       AlgStatusType status = Other,
+                       bool AbortEvent = false);  
+
 private:
 
   // configuration
@@ -93,6 +108,10 @@ private:
   /// maximum permissible number of VELO clusters, 
   /// more than this will force an IncidentType::AbortEvent
   unsigned int m_maxVeloClusters;
+
+  /// if true will add setFilterPass(false) to the algorihtm when an error 
+  /// is detected, defaults to false for Brunel to keep going
+  bool  m_setFilterPass;
 
 };
 #endif // DECODEVELORAWBUFFER_H

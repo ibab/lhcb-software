@@ -1,4 +1,4 @@
-// $Id: DecodeVeloRawBuffer.cpp,v 1.25 2010-04-13 20:53:56 dhcroft Exp $
+// $Id: DecodeVeloRawBuffer.cpp,v 1.26 2010-04-21 14:59:50 dhcroft Exp $
 
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/IIncidentSvc.h"
@@ -8,6 +8,7 @@
 #include "Event/RawBank.h"
 #include "Event/VeloLiteCluster.h"
 #include "Event/VeloCluster.h"
+#include "Event/ProcStatus.h"
 
 #include "VeloDet/DeVelo.h"
 #include "VeloDet/DeVeloSensor.h"
@@ -48,7 +49,8 @@ DecodeVeloRawBuffer::DecodeVeloRawBuffer( const std::string& name,
   declareProperty("AssumeChipChannelsInRawBuffer",m_assumeChipChannelsInRawBuffer=false);
   declareProperty("ForceBankVersion",m_forcedBankVersion=0);
 
-  declareProperty("MaxVeloClusters",m_maxVeloClusters = 10000);
+  declareProperty("MaxVeloClusters", m_maxVeloClusters = 10000);
+  declareProperty("SetFilterPassed", m_setFilterPass = false);
 }
 
 
@@ -158,10 +160,8 @@ StatusCode DecodeVeloRawBuffer::decodeToVeloLiteClusters(const std::vector<LHCb:
 
     const DeVeloSensor* sensor = m_velo->sensorByTell1Id(static_cast<unsigned int>(rb->sourceID()));
     if (!sensor) {
-      error() << "Could not map source ID "          
-	      << rb->sourceID()
-	      << " to sensor number!"
-	      << endmsg;
+      failEvent(format("Could not map source ID %i to sensor number!",
+                       rb->sourceID()),BadTELL1IDMapping).ignore();
       continue;
     }
 
@@ -171,14 +171,13 @@ StatusCode DecodeVeloRawBuffer::decodeToVeloLiteClusters(const std::vector<LHCb:
 
   }
   if( fastCont->size() > m_maxVeloClusters){
-    Error(format("Deleted all lite VELO clusters as more than limit %i in the event",
-                 m_maxVeloClusters),StatusCode::SUCCESS).ignore();
     fastCont->clear();
+    failEvent(format("Deleted all lite VELO clusters as more than limit %i in the event",
+                     m_maxVeloClusters),TooManyClusters).ignore();
   }
 
   std::sort(fastCont->begin(),fastCont->end(),SiDataFunctor::Less_by_Channel< LHCb::VeloLiteCluster >());
   put(fastCont,m_veloLiteClusterLocation);
-
  
   return StatusCode::SUCCESS;
 }
@@ -209,10 +208,8 @@ StatusCode DecodeVeloRawBuffer::decodeToVeloClusters(const std::vector<LHCb::Raw
 
     const DeVeloSensor* sensor = m_velo->sensorByTell1Id(static_cast<unsigned int>(rb->sourceID()));
     if (!sensor) {
-      error() << "Could not map source ID "          
-	      << rb->sourceID()
-	      << " to sensor number!"
-	      << endmsg;
+      failEvent(format("Could not map source ID %i to sensor number!",
+                       rb->sourceID()),BadTELL1IDMapping).ignore();
       continue;
     }
 
@@ -233,31 +230,24 @@ StatusCode DecodeVeloRawBuffer::decodeToVeloClusters(const std::vector<LHCb::Raw
           Warning(errorMsg, StatusCode::SUCCESS, msgCount).ignore();
         }
         break;
-      default: // bank version is not supported
-        error() << "VELO raw buffer version "
-          << bankVersion
-          << " is not supported."
-          << endmsg;
+      default: // bank version is not supported: kill the event
+        return failEvent(format("VELO raw buffer version %i is not supported.",
+                                rb->sourceID()),UnsupportedBufferVersion,true);
     }
-    if (rb->size() != byteCount) {
+    if (rb->size() != byteCount) {      
       error() << "Byte count mismatch between RawBank size and decoded bytes." 
 	      << " RawBank: " << rb->size() 
 	      << " Decoded: " << byteCount 
 	      << endmsg;
-      // Get pointer to IncidentSvc 
-      IIncidentSvc * incidentSvc = svc<IIncidentSvc>("IncidentSvc",true);
-      // Fire the incident in execute()
-      incidentSvc->fireIncident(Incident(name(),IncidentType::AbortEvent));
-      setFilterPassed( false );
-      return Error(format("Can not continue this event due to raw data corruption in the VELO, bank source ID %i",rb->sourceID()), StatusCode::SUCCESS);
+      return failEvent(format("Can not continue this event due to raw data corruption in the VELO, bank source ID %i",
+                              rb->sourceID()),CorruptVeloBuffer,true);
     } 
 
   }
 
   if( clusters->size() > m_maxVeloClusters){
-    Error(format("Deleted all full VELO clusters as more than limit %i in the event",
-                 m_maxVeloClusters),StatusCode::SUCCESS).ignore();
     clusters->clear();
+    failEvent(format("Deleted all full VELO clusters as more than limit %i in the event",m_maxVeloClusters),TooManyClusters).ignore();
   }
 
   put(clusters,m_veloClusterLocation);
@@ -311,4 +301,22 @@ void DecodeVeloRawBuffer::createEmptyBanks() {
     LHCb::VeloClusters* clusters = new LHCb::VeloClusters();
     put(clusters,m_veloClusterLocation);
   }
+}
+
+StatusCode DecodeVeloRawBuffer::failEvent(const std::string &ErrorText,
+                                          AlgStatusType status,
+                                          bool AbortEvent){ // default false
+  // set ProcStat for this event to failed in DecodeVeloRawBuffer
+  LHCb::ProcStatus *pStat = 
+    getOrCreate<LHCb::ProcStatus,LHCb::ProcStatus>(LHCb::ProcStatusLocation::Default);
+  // hard code algorithm name in case people rename it in HLT lines
+  pStat->addAlgorithmStatus("DecodeVeloRawBuffer",status); 
+  if( m_setFilterPass ) setFilterPassed( false );
+  if( AbortEvent ){
+    // Get pointer to IncidentSvc 
+    IIncidentSvc * incidentSvc = svc<IIncidentSvc>("IncidentSvc",true);
+    // Fire the incident in execute()
+    incidentSvc->fireIncident(Incident(name(),IncidentType::AbortEvent));
+  }
+  return Error(ErrorText,StatusCode::SUCCESS);
 }
