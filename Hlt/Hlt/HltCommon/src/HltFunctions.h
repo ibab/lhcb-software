@@ -1,4 +1,4 @@
-// $Id: HltFunctions.h,v 1.30 2010-04-19 22:01:36 gligorov Exp $
+// $Id: HltFunctions.h,v 1.31 2010-04-21 08:40:16 gligorov Exp $
 #ifndef HLTBASE_HLTFUNCTIONS_H 
 #define HLTBASE_HLTFUNCTIONS_H 1
 
@@ -225,7 +225,8 @@ namespace Hlt {
   public:
     explicit VertexTracksMatchIDsFraction() {}
     double operator() (const LHCb::RecVertex& v) const {
-      return HltUtils::matchIDsFraction(*(v.tracks()[0]),*(v.tracks()[1]));
+        //The order matters! 
+        return HltUtils::matchIDsFraction(*(v.tracks()[1]),*(v.tracks()[0]));
     } 
     VertexTracksMatchIDsFraction* clone() const {return new VertexTracksMatchIDsFraction();}
   };
