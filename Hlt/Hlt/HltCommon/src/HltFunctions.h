@@ -1,4 +1,4 @@
-// $Id: HltFunctions.h,v 1.31 2010-04-21 08:40:16 gligorov Exp $
+// $Id: HltFunctions.h,v 1.32 2010-04-21 13:56:22 gligorov Exp $
 #ifndef HLTBASE_HLTFUNCTIONS_H 
 #define HLTBASE_HLTFUNCTIONS_H 1
 
@@ -31,6 +31,7 @@
 
 #include "EFunctions.h"
 #include <memory>
+#include <math.h>
 
 namespace Hlt {  
 
