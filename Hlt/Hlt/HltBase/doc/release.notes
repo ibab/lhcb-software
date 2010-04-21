@@ -3,6 +3,7 @@
 ! Responsible : Gerhard Raven
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
+!========================== HltBase v8r2 2010-04-21 ===================
 ! 2010-04-16 - V. Gligorov
  - Commit helper functions to be used in the lifetime unbiased 
    hlt1 hadron lines, code written by U. Kerzel.

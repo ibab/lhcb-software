@@ -1,10 +1,10 @@
-#$Id: requirements,v 1.56 2010-03-28 20:03:38 graven Exp $
+#$Id: requirements,v 1.57 2010-04-21 08:14:31 graven Exp $
 #============================================================================
 # Created    : 2005-11-15
 # Maintainer : Gerhard Raven
 #============================================================================
 package           HltBase
-version           v8r1p1
+version           v8r2
 
 # Structure, i.e. directories to process. 
 #============================================================================
