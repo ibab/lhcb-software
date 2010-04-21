@@ -1,4 +1,4 @@
-// $Id: MCBs2JpsiPhiAngleCalculator.h,v 1.1 2008-06-04 16:17:29 pkoppenb Exp $
+// $Id: MCBs2JpsiPhiAngleCalculator.h,v 1.2 2010-04-21 09:58:02 gcowan Exp $
 #ifndef MCANGLECALCULATOR_H 
 #define MCANGLECALCULATOR_H 1
 
@@ -27,18 +27,18 @@ public:
   StatusCode calculateAngles( const LHCb::MCParticle* particle , 
                               double &thetal, double &thetak, double &phi );
 
-  double calculateThetaL( const LHCb::MCParticle* particle  );
-  double calculateThetaK( const LHCb::MCParticle* particle  );
-  double calculatePhi( const LHCb::MCParticle* particle  );
+  double calculateThetaL( const LHCb::MCParticle* particle );
+  double calculateThetaK( const LHCb::MCParticle* particle );
+  double calculatePhi( const LHCb::MCParticle* particle );
 
   StatusCode calculateTransversityAngles( const LHCb::MCParticle* particle , 
                                           double &Theta_tr, 
                                           double &Phi_tr, 
                                           double &Theta_V );
 
-  double calculateTransThetaTr( const LHCb::MCParticle* particle  );
-  double calculateTransPhiTr( const LHCb::MCParticle* particle  );
-  double calculateTransThetaV( const LHCb::MCParticle* particle  );
+  double calculateTransThetaTr( const LHCb::MCParticle* particle );
+  double calculateTransPhiTr( const LHCb::MCParticle* particle );
+  double calculateTransThetaV( const LHCb::MCParticle* particle );
   
   double calculateMass( const LHCb::MCParticle* particle );
 
@@ -46,12 +46,16 @@ public:
 
 protected:
   
-  void fillDescendants( const LHCb::MCParticle*, LHCb::MCParticle::ConstVector& , int);
+  void fillDescendants( const LHCb::MCParticle*, LHCb::MCParticle::ConstVector&, int);
   IP2VVAngleCalculator* m_angle;
   
-    
 private:
-  int m_depth ;
-  
+  int m_depth;
+  StatusCode getParticles(const LHCb::MCParticle*,
+                          LHCb::MCParticle::ConstVector&,
+			  const LHCb::MCParticle*,
+                          const LHCb::MCParticle*,
+                          const LHCb::MCParticle*,
+                          const LHCb::MCParticle*);
 };
 #endif // MCANGLECALCULATOR_H

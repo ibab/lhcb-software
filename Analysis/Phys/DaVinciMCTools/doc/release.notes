@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.292 2010-04-16 14:17:57 jpalac Exp $
+! $Id: release.notes,v 1.293 2010-04-21 09:58:02 gcowan Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
 !=============================================================================
+
+! 2010-04-21 - Greig Cowan
+ - Updated MCBs2JpsiPhiAngleCalculator to use
+   $DAVINCIKERNELROOT/Kernel/DaVinciP2VVAngles.h
 
 ! 2010-04-16 - Juan Palacios
  - src/MCParticleLinkerMaker.cpp, src/Particle2BackgroundCategoryRelationsAlg.cpp

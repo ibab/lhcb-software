@@ -1,4 +1,4 @@
-// $Id: MCBs2JpsiPhiAngleCalculator.cpp,v 1.1 2008-06-04 16:17:29 pkoppenb Exp $
+// $Id: MCBs2JpsiPhiAngleCalculator.cpp,v 1.2 2010-04-21 09:58:02 gcowan Exp $
 // Include files 
 
 // from Gaudi
@@ -8,6 +8,8 @@
 #include "Event/Particle.h"
 #include "Event/MCParticle.h"
 #include "Math/Boost.h"
+// DaVinci
+#include "Kernel/DaVinciP2VVAngles.h"
 // local
 #include "Kernel/IP2VVAngleCalculator.h"
 #include "MCBs2JpsiPhiAngleCalculator.h"
@@ -48,8 +50,6 @@ StatusCode MCBs2JpsiPhiAngleCalculator::initialize() {
   
   info() << "Initializing Angle Calculator Tool" << endmsg ;
   
-  m_angle = tool<IP2VVAngleCalculator>("P2VVAngleCalculator",this);
-
   return sc ;
 }
 
@@ -87,7 +87,7 @@ StatusCode MCBs2JpsiPhiAngleCalculator::calculateAngles( const LHCb::MCParticle*
                                                            double& thetal, double& thetak, double& phi )
 {
   LHCb::MCParticle::ConstVector descendants ;
-  fillDescendants( particle, descendants , m_depth );
+  fillDescendants( particle, descendants, m_depth );
   
   if ( !(descendants.size() >= 4) ) return StatusCode::FAILURE;
 
@@ -96,160 +96,92 @@ StatusCode MCBs2JpsiPhiAngleCalculator::calculateAngles( const LHCb::MCParticle*
   const LHCb::MCParticle* particleKaonMinus = 0;
   const LHCb::MCParticle* particleKaonPlus = 0;
 
-  LHCb::ParticleID id = particle->particleID() ;
+  StatusCode sc = getParticles(particle, descendants, particleLeptonPlus, particleLeptonMinus, particleKaonPlus, particleKaonMinus);
+  if (!sc) return sc;
 
-  for ( LHCb::MCParticle::ConstVector::const_iterator ipart = descendants.begin() ;
-        ipart != descendants.end() ; ++ipart ){
-    
-    id = (*ipart)->particleID();
-    
-    if ( id.isLepton()) {
-       if (  id.pid() > 0 ) particleLeptonMinus = (*ipart);
-       else particleLeptonPlus = (*ipart);
-    }
-    else if ( 321 == id.abspid() ) {
-       if ( id.pid() < 0 ) particleKaonMinus = (*ipart);
-       else particleKaonPlus = (*ipart);
-    }
-  }
-  
+  phi    = DaVinci::P2VVAngles::calculatePlaneAngle( particleLeptonPlus->momentum()
+                                                   , particleLeptonMinus->momentum()
+                                                   , particleKaonPlus->momentum()
+                                                   , particleKaonMinus->momentum() );
 
-  if ( !particleLeptonMinus || !particleLeptonPlus || 
-       !particleKaonMinus || !particleKaonPlus ) {
-    
-    err() << "Could not find required particles !" << endmsg;
-    return StatusCode::FAILURE ;
-  }  
-    
-  
-  thetak = m_angle->calculatePolarAngle( particle->momentum() , 
-                                         particleKaonPlus->momentum(),
-                                         particleKaonMinus->momentum() );
-  thetak = Gaudi::Units::pi -thetak;
-  
-  phi    = m_angle->calculatePlaneAngle( particle->momentum(), 
-                                         particleLeptonPlus->momentum(), 
-                                         particleLeptonMinus->momentum(), 
-                                         particleKaonPlus->momentum(),
-                                         particleKaonMinus->momentum() );
-  
-  thetal = m_angle->calculatePolarAngle( particle->momentum(), 
-                                         particleLeptonPlus->momentum(),
-                                         particleLeptonMinus->momentum() );
-      
+  thetak = DaVinci::P2VVAngles::calculateHelicityPolarAngle( particleLeptonPlus->momentum()
+                                                   , particleLeptonMinus->momentum()
+                                                   , particleKaonPlus->momentum()
+                                                   , particleKaonMinus->momentum());
+
+  thetal = DaVinci::P2VVAngles::calculateHelicityPolarAngle( particleKaonPlus->momentum()
+                                                   , particleKaonMinus->momentum()
+                                                   , particleLeptonPlus->momentum()
+                                                   , particleLeptonMinus->momentum());
   return StatusCode::SUCCESS ;
 }
+
 
 double MCBs2JpsiPhiAngleCalculator::calculateThetaK( const LHCb::MCParticle* particle  )
 {
   LHCb::MCParticle::ConstVector descendants;
-  fillDescendants(particle, descendants , m_depth );
+  fillDescendants(particle, descendants, m_depth );
  
-  
+  if ( !(descendants.size() >= 4) ) return StatusCode::FAILURE;
+
+  const LHCb::MCParticle* particleLeptonMinus = 0;
+  const LHCb::MCParticle* particleLeptonPlus = 0;
   const LHCb::MCParticle* particleKaonMinus = 0;
   const LHCb::MCParticle* particleKaonPlus = 0;
-  LHCb::ParticleID id;
   
-  for ( LHCb::MCParticle::ConstVector::const_iterator idaughter = descendants.begin() ;
-        idaughter != descendants.end(); ++idaughter ){
-    
-    id = (*idaughter)->particleID() ;
-   
-    if ( 321 == id.abspid() ) {
-      if ( id.pid() < 0)  particleKaonMinus = (*idaughter); 
-      else particleKaonPlus = (*idaughter);
-    }
-  }
-  
-  
-  if ( !particleKaonMinus || !particleKaonPlus){
-    Exception("Could not find required particles !");
-  }
-  
-  double thetak = m_angle->calculatePolarAngle( particle->momentum() , 
-                                         particleKaonPlus->momentum(), 
-                                         particleKaonMinus->momentum() );  
+  StatusCode sc = getParticles(particle, descendants, particleLeptonPlus, particleLeptonMinus, particleKaonPlus, particleKaonMinus);
+  if (!sc) return sc;
 
-  thetak = Gaudi::Units::pi - thetak ;//flip angle due to definition 
+  double thetak = DaVinci::P2VVAngles::calculateHelicityPolarAngle( particleLeptonPlus->momentum()
+                                                          , particleLeptonMinus->momentum()
+                                                          , particleKaonPlus->momentum()
+                                                          , particleKaonMinus->momentum());
   return thetak;
 }
 
 double MCBs2JpsiPhiAngleCalculator::calculatePhi( const LHCb::MCParticle* particle  )
 {
   LHCb::MCParticle::ConstVector descendants;
-  fillDescendants(particle, descendants , m_depth );
+  fillDescendants(particle, descendants, m_depth );
+
+  if ( !(descendants.size() >= 4) ) return StatusCode::FAILURE;
 
   const LHCb::MCParticle* particleLeptonMinus = 0;
   const LHCb::MCParticle* particleLeptonPlus = 0;
   const LHCb::MCParticle* particleKaonMinus = 0;
   const LHCb::MCParticle* particleKaonPlus = 0;
 
-  LHCb::ParticleID id;
-  
-  for ( LHCb::MCParticle::ConstVector::const_iterator ipart = descendants.begin(); 
-        ipart != descendants.end(); ++ipart ){
-    
-    id = (*ipart)->particleID();
-    
-    if ( id.isLepton() ){       
-      if (  id.pid() > 0 ) particleLeptonMinus = (*ipart);
-      else particleLeptonPlus = (*ipart);
-    }
-    
-    else if ( 321 == id.abspid() ) {
-       if (id.pid() < 0) particleKaonMinus = (*ipart); 
-       else particleKaonPlus = (*ipart);
-    }
-  }
+  StatusCode sc = getParticles(particle, descendants, particleLeptonPlus, particleLeptonMinus, particleKaonPlus, particleKaonMinus);
+  if (!sc) return sc;
 
-  if ( !particleLeptonMinus || !particleLeptonPlus || 
-       !particleKaonMinus || !particleKaonPlus ) {
-    Exception("Could not find required particles !");
-  }
-  
-  double phi    = m_angle->calculatePlaneAngle( particle->momentum(), 
-                                         particleLeptonPlus->momentum(), 
-                                         particleLeptonMinus->momentum(), 
-                                         particleKaonPlus->momentum(),
-                                         particleKaonMinus->momentum() );
+  double phi = DaVinci::P2VVAngles::calculatePlaneAngle( particleLeptonPlus->momentum()
+                                                       , particleLeptonMinus->momentum()
+                                                       , particleKaonPlus->momentum()
+                                                       , particleKaonMinus->momentum() );
   return phi;
 }
-
 
 double MCBs2JpsiPhiAngleCalculator::calculateThetaL( const LHCb::MCParticle* particle )
 {
   LHCb::MCParticle::ConstVector descendants;
-  fillDescendants(particle, descendants ,2 );
+  fillDescendants(particle, descendants, m_depth );
   
+  if ( !(descendants.size() >= 4) ) return StatusCode::FAILURE;
+
   const LHCb::MCParticle* particleLeptonMinus = 0;
   const LHCb::MCParticle* particleLeptonPlus = 0;
+  const LHCb::MCParticle* particleKaonMinus = 0;
+  const LHCb::MCParticle* particleKaonPlus = 0;
   
-  LHCb::ParticleID id;
+  StatusCode sc = getParticles(particle, descendants, particleLeptonPlus, particleLeptonMinus, particleKaonPlus, particleKaonMinus);
+  if (!sc) return sc;
   
-  // loop over descendants and find leptons 
-  for ( LHCb::MCParticle::ConstVector::const_iterator ipart = descendants.begin() ;
-        ipart != descendants.end() ; ++ipart ){
-    
-    id = (*ipart)->particleID();
-    if ( id.isLepton() ){
-      if ( id.pid() > 0 ) particleLeptonMinus = (*ipart);
-      else particleLeptonPlus = (*ipart);
-    }
-  }
-
-  if ( !particleLeptonMinus || !particleLeptonPlus ) {
-    Exception("Could not find required particles !") ;
-  }  
-
-  double thetal = m_angle->calculatePolarAngle( particle->momentum(), 
-                                         particleLeptonPlus->momentum(),
-                                         particleLeptonMinus->momentum() ) ;
-
+  double thetal = DaVinci::P2VVAngles::calculateHelicityPolarAngle( particleKaonPlus->momentum()
+                                                          , particleKaonMinus->momentum()
+                                                          , particleLeptonPlus->momentum()
+                                                          , particleLeptonMinus->momentum());
   return thetal;
 }
-
-
-
 
 double MCBs2JpsiPhiAngleCalculator::calculateMass( const LHCb::MCParticle* particle )
 {  
@@ -280,7 +212,6 @@ double MCBs2JpsiPhiAngleCalculator::calculateMass( const LHCb::MCParticle* parti
    return mass ;
 }
 
-
 StatusCode MCBs2JpsiPhiAngleCalculator::calculateTransversityAngles( 
    const LHCb::MCParticle* particle, double& Theta_tr, 
    double& Phi_tr, double& Theta_V )
@@ -298,179 +229,125 @@ StatusCode MCBs2JpsiPhiAngleCalculator::calculateTransversityAngles(
    const LHCb::MCParticle* particleLeptonMinus = 0; 
    const LHCb::MCParticle* particleKaonPlus = 0;
    const LHCb::MCParticle* particleKaonMinus = 0;
-   
-   LHCb::ParticleID id ;
   
-  for ( LHCb::MCParticle::ConstVector::const_iterator 
-           idaughter = descendants.begin() ;
-        idaughter != descendants.end(); ++idaughter ){
-    
-    id = (*idaughter)->particleID() ;
+   StatusCode sc = getParticles(particle, descendants, particleLeptonPlus, particleLeptonMinus, particleKaonPlus, particleKaonMinus);
+   if (!sc) return sc;
+ 
+   Theta_tr = DaVinci::P2VVAngles::calculateThetaTr( particleLeptonPlus->momentum()
+                                                   , particleLeptonMinus->momentum()
+                                                   , particleKaonPlus->momentum()
+                                                   , particleKaonMinus->momentum());
 
-    //if ( id.isLepton() ){
-    if ( id.isLepton() ){
-      if ( id.pid() > 0 ) particleLeptonMinus = (*idaughter);
-      else particleLeptonPlus = (*idaughter);
-    }
-    
-    else if ( 321 == id.abspid() ) {
-       if (id.pid() < 0) particleKaonMinus = (*idaughter); 
-       else particleKaonPlus = (*idaughter);
-    }
-    
-  }
-  
-  if ( !particleKaonMinus || !particleLeptonMinus || !particleLeptonPlus 
-       || !particleKaonPlus){
-    error() << "Could not find required particles !" << endmsg;
-    return StatusCode::FAILURE ;
-  }
-  
-  
-  Theta_tr = m_angle->calculateThetaTr( particleLeptonPlus->momentum(), 
-                                         particleLeptonMinus->momentum(),
-                                         particleKaonPlus->momentum(),
-                                         particleKaonMinus->momentum() );
-  
-  Phi_tr = m_angle->calculatePhiTr( particleLeptonPlus->momentum(), 
-                                     particleLeptonMinus->momentum(),
-                                     particleKaonPlus->momentum(),
-                                     particleKaonMinus->momentum() );
-  
-  Theta_V = m_angle->calculatePolarAngle( particle->momentum(),
-					  particleKaonPlus->momentum(),
-					  particleKaonMinus->momentum() );
-  
+   Phi_tr   = DaVinci::P2VVAngles::calculatePhiTr( particleLeptonPlus->momentum()
+                                                 , particleLeptonMinus->momentum()
+                                                 , particleKaonPlus->momentum()
+                                                 , particleKaonMinus->momentum() );
 
-      
-  return StatusCode::SUCCESS ;
+   Theta_V  = DaVinci::P2VVAngles::calculateHelicityPolarAngle( particleLeptonPlus->momentum()
+                                                , particleLeptonMinus->momentum()
+                                                , particleKaonPlus->momentum()
+                                                , particleKaonMinus->momentum() );
+   return StatusCode::SUCCESS ;
 }
 
 double MCBs2JpsiPhiAngleCalculator::calculateTransThetaTr( 
    const LHCb::MCParticle* particle ) 
 {
-
    LHCb::MCParticle::ConstVector descendants;
    fillDescendants( particle, descendants , m_depth );
   
+   if ( !(descendants.size() >= 4) ) return StatusCode::FAILURE;
+
    const LHCb::MCParticle* particleLeptonPlus = 0;
    const LHCb::MCParticle* particleLeptonMinus = 0; 
    const LHCb::MCParticle* particleKaonPlus = 0;
    const LHCb::MCParticle* particleKaonMinus = 0;
   
-   LHCb::ParticleID id ;
-  
-   for ( LHCb::MCParticle::ConstVector::const_iterator idaughter = 
-            descendants.begin() ;
-         idaughter != descendants.end(); ++idaughter ){
-    
-      id = (*idaughter)->particleID() ;
+   StatusCode sc = getParticles(particle, descendants, particleLeptonPlus, particleLeptonMinus, particleKaonPlus, particleKaonMinus);
+   if (!sc) return sc;
 
-      if ( id.isLepton() ){
-         if ( id.pid() > 0 ) particleLeptonMinus = (*idaughter);
-         else particleLeptonPlus = (*idaughter);
-      }
-     
-      else if ( 321 == id.abspid() ) {
-         if (id.pid() < 0) particleKaonMinus = (*idaughter); 
-         else particleKaonPlus = (*idaughter);
-      }   
-   }
-  
-   if ( !particleKaonMinus || !particleLeptonMinus || !particleLeptonPlus 
-        || !particleKaonPlus){
-      Exception("Could not find required particles !");
-   }
-
-  
-  double Theta_tr = m_angle->calculateThetaTr(particleLeptonPlus->momentum(), 
-                                               particleLeptonMinus->momentum(),
-                                               particleKaonPlus->momentum(),
-                                               particleKaonMinus->momentum() );
-  
-  return Theta_tr;
-   
+   double Theta_tr = DaVinci::P2VVAngles::calculateThetaTr( particleLeptonPlus->momentum()
+                                                          , particleLeptonMinus->momentum()
+                                                          , particleKaonPlus->momentum()
+                                                          , particleKaonMinus->momentum());
+   return Theta_tr;
 }
 
 double MCBs2JpsiPhiAngleCalculator::calculateTransPhiTr( 
    const LHCb::MCParticle* particle ) 
 {
-
    LHCb::MCParticle::ConstVector descendants;
    fillDescendants( particle, descendants , m_depth );
   
+   if ( !(descendants.size() >= 4) ) return StatusCode::FAILURE;
+
    const LHCb::MCParticle* particleLeptonPlus = 0;
    const LHCb::MCParticle* particleLeptonMinus = 0; 
    const LHCb::MCParticle* particleKaonPlus = 0;
    const LHCb::MCParticle* particleKaonMinus = 0;
   
-   LHCb::ParticleID id ;
-  
-   for ( LHCb::MCParticle::ConstVector::const_iterator idaughter = 
-            descendants.begin() ;
-         idaughter != descendants.end(); ++idaughter ){
-    
-      id = (*idaughter)->particleID() ;
+   StatusCode sc = getParticles(particle, descendants, particleLeptonPlus, particleLeptonMinus, particleKaonPlus, particleKaonMinus);
+   if (!sc) return sc;
 
-      if ( id.isLepton() ){
-         if ( id.pid() > 0 ) particleLeptonMinus = (*idaughter);
-         else particleLeptonPlus = (*idaughter);
-      }
-     
-      else if ( 321 == id.abspid() ) {
-         if (id.pid() < 0) particleKaonMinus = (*idaughter); 
-         else particleKaonPlus = (*idaughter);
-      }   
-   }
-  
-   if ( !particleKaonMinus || !particleLeptonMinus || !particleLeptonPlus 
-        || !particleKaonPlus){
-     Exception("Could not find required particles !");
-   }
-  
-  
-  double Phi_tr = m_angle->calculatePhiTr(particleLeptonPlus->momentum(), 
-                                           particleLeptonMinus->momentum(),
-                                           particleKaonPlus->momentum(),
-                                           particleKaonMinus->momentum() );
-  
-  return Phi_tr;
-
+   double Phi_tr = DaVinci::P2VVAngles::calculatePhiTr( particleLeptonPlus->momentum()
+                                                     , particleLeptonMinus->momentum()
+                                                     , particleKaonPlus->momentum()
+                                                     , particleKaonMinus->momentum() );
+   return Phi_tr;
 }
 
 double MCBs2JpsiPhiAngleCalculator::calculateTransThetaV( 
    const LHCb::MCParticle* particle ) 
 {
-
    LHCb::MCParticle::ConstVector descendants;
    fillDescendants( particle, descendants , m_depth );
   
+   if ( !(descendants.size() >= 4) ) return StatusCode::FAILURE;
+
+   const LHCb::MCParticle* particleLeptonPlus = 0;
+   const LHCb::MCParticle* particleLeptonMinus = 0;
    const LHCb::MCParticle* particleKaonPlus = 0;
    const LHCb::MCParticle* particleKaonMinus = 0;
-  
-   LHCb::ParticleID id ;
-  
-   for ( LHCb::MCParticle::ConstVector::const_iterator idaughter = 
-            descendants.begin() ;
-         idaughter != descendants.end(); ++idaughter ){
-    
-      id = (*idaughter)->particleID() ;
-      
-      if ( 321 == id.abspid() ) {
-         if (id.pid() < 0) particleKaonMinus = (*idaughter); 
-         else particleKaonPlus = (*idaughter);
-      }   
-   }
-  
-   if ( !particleKaonMinus || !particleKaonPlus){
-     Exception("Could not find required particles !");
-   }
-  
-   
-   double Theta_V = m_angle->calculatePolarAngle( particle->momentum(),
-                                                  particleKaonPlus->momentum(),
-                                                  particleKaonMinus->momentum() );
-  
-  return Theta_V;
+
+   StatusCode sc = getParticles(particle, descendants, particleLeptonPlus, particleLeptonMinus, particleKaonPlus, particleKaonMinus);
+   if (!sc) return sc;
+
+   double Theta_V = DaVinci::P2VVAngles::calculateHelicityPolarAngle( particleLeptonPlus->momentum()
+                                                           , particleLeptonMinus->momentum()
+                                                           , particleKaonPlus->momentum()
+                                                           , particleKaonMinus->momentum());
+   return Theta_V;
 }
 
+StatusCode MCBs2JpsiPhiAngleCalculator::getParticles(const LHCb::MCParticle* particle,
+						     LHCb::MCParticle::ConstVector& descendants,
+						     const LHCb::MCParticle* particleLeptonPlus,
+                                                     const LHCb::MCParticle* particleLeptonMinus,
+                                                     const LHCb::MCParticle* particleKaonPlus,
+                                                     const LHCb::MCParticle* particleKaonMinus)
+{
+  LHCb::ParticleID id = particle->particleID() ;
+
+  for ( LHCb::MCParticle::ConstVector::const_iterator ipart = descendants.begin() ;
+        ipart != descendants.end() ; ++ipart ){
+    
+    id = (*ipart)->particleID();
+    
+    if ( id.isLepton()) {
+       if (  id.pid() > 0 ) particleLeptonMinus = (*ipart);
+       else particleLeptonPlus = (*ipart);
+    }
+    else if ( 321 == id.abspid() ) {
+       if ( id.pid() < 0 ) particleKaonMinus = (*ipart);
+       else particleKaonPlus = (*ipart);
+    }
+  }
+  
+  if ( !particleLeptonMinus || !particleLeptonPlus || 
+       !particleKaonMinus || !particleKaonPlus ) {
+    
+    err() << "Could not find required particles !" << endmsg;
+    return StatusCode::FAILURE;
+  }
+    return StatusCode::SUCCESS;
+}
