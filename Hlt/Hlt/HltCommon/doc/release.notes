@@ -4,6 +4,8 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+!========================== HltCommon v5r23 2010-04-21 ===================
+
 ! 2010-04-21 - Gerhard Raven
  - check for existence of LumiPar condition in HltRefenenceRateSvc
 
