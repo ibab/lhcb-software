@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.180 2010-04-17 22:09:26 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.181 2010-04-21 07:18:20 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -524,11 +524,11 @@ class HltConf(LHCbConfigurableUser):
             log.warning('### Setting requests stripped down HltEndSequence ###')
             strip = getattr(sets,'StripEndSequence')
             #  TODO: check not explicitly set if so, provide warning....
-            self.EnableHltGlobalMonitor = True if 'EnableHltGlobalMonitor' in strip else False
-            self.EnableHltL0GlobalMonitor = True if 'EnableHltL0GlobalMonitor' in strip else False
-            self.EnableHltSelReports    = True if 'EnableHltSelReports' in strip else False
-            self.EnableHltVtxReports    = True if 'EnableHltVtxReports' in strip else False
-            self.EnableLumiEventWriting = True if 'EnableLumiEventWriting' in strip else False
+            self.EnableHltGlobalMonitor   = ( 'EnableHltGlobalMonitor'   in strip )
+            self.EnableHltL0GlobalMonitor = ( 'EnableHltL0GlobalMonitor' in strip )
+            self.EnableHltSelReports      = ( 'EnableHltSelReports'      in strip )
+            self.EnableHltVtxReports      = ( 'EnableHltVtxReports'      in strip )
+            self.EnableLumiEventWriting   = ( 'EnableLumiEventWriting'   in strip )
                         
         # note: the following is a list and not a dict, as we depend on the order of iterating through it!!!
         from Configurables import Hlt__Line as Line
