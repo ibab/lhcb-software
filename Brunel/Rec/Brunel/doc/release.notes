@@ -3,6 +3,8 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+- Changes to configurable
+  . Add support for SDST
 
 - Changes to options
   . Use consistent DDDB and SIMCOND tags in 2009-FEST-Data.py, following

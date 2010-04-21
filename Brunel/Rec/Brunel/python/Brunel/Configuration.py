@@ -3,7 +3,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.125 2010-03-29 19:58:48 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.126 2010-04-21 12:02:38 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration  import *
@@ -83,7 +83,7 @@ class Brunel(LHCbConfigurableUser):
        ,'RecL0Only'    : """ Flags whether to reconstruct and output only events passing L0 (default False) """
        ,'InputType'    : """ Type of input file. Can be one of self.KnownInputTypes (default 'MDF') """
        ,'DigiType'     : """ Type of digi, can be ['Minimal','Default','Extended'] """
-       ,'OutputType'   : """ Type of output file. Can be one of self.KnownOutputTypes (default 'DST') """
+       ,'OutputType'   : """ Type of output file. Can be one of DstConf().KnownDstTypes (default 'DST') """
        ,'PackType'     : """ Type of packing for the output file. Can be one of ['TES','MDF','NONE'] (default 'TES') """
        ,'WriteFSR'     : """ Flags whether to write out an FSR """
        ,'WriteLumi'    : """ Flags whether to write out Lumi-only events to DST """
@@ -105,8 +105,7 @@ class Brunel(LHCbConfigurableUser):
        ,'RawBanksToKill':""" Raw banks to remove from RawEvent before processing. Removed also from DST copy of RawEvent """
        }
 
-    KnownInputTypes  = [ "MDF",  "DST", "RDST", "XDST", "DIGI", "ETC" ]
-    KnownOutputTypes = [ "NONE", "DST", "RDST", "XDST" ]
+    KnownInputTypes  = [ "MDF",  "DST", "RDST", "SDST", "XDST", "DIGI", "ETC" ]
     KnownHistograms  = [ "None", "Online", "OfflineExpress", "OfflineFull", "Expert" ]
 
     def defineGeometry(self):
@@ -128,8 +127,6 @@ class Brunel(LHCbConfigurableUser):
             raise TypeError( "Invalid inputType '%s'"%inputType )
 
         outputType = self.getProp( "OutputType" ).upper()
-        if outputType not in self.KnownOutputTypes:
-            raise TypeError( "Invalid outputType '%s'"%outputType )
 
         histOpt = self.getProp("Histograms")
         if histOpt not in self.KnownHistograms:
@@ -137,12 +134,12 @@ class Brunel(LHCbConfigurableUser):
 
         withMC = self.getProp("WithMC")
         if withMC:
-            if inputType in [ "MDF", "RDST" ]:
+            if inputType in [ "MDF", "RDST", "SDST" ]:
                 log.warning( "WithMC = True, but InputType = '%s'. Forcing WithMC = False"%inputType )
-                withMC = False # Force it, MDF and RDST never contain MC truth
-            if outputType == "RDST":
+                withMC = False # Force it, MDF, RDST, SDST never contain MC truth
+            if outputType in [ "RDST", "SDST" ]:
                 log.warning( "WithMC = True, but OutputType = '%s'. Forcing WithMC = False"%inputType )
-                withMC = False # Force it, RDST never contains MC truth
+                withMC = False # Force it, RDST, SDST never contains MC truth
 
         if self.getProp("WriteFSR") and self.getProp("PackType").upper() in ["MDF"]:
             if hasattr( self, "WriteFSR" ): log.warning("Don't know how to write FSR to MDF output file")
@@ -300,7 +297,7 @@ class Brunel(LHCbConfigurableUser):
         if self.isPropertySet( "RawBanksToKill" ):
             bkKill.BankTypes = self.getProp( "RawBanksToKill" )
         else:
-            if ("2009" == self.getProp("DataType")) and (inputType in ["MDF","ETC","RDST"]):
+            if ("2009" == self.getProp("DataType")) and (inputType in ["MDF","ETC","RDST","SDST"]):
                 bkKill.BankTypes = ["VeloFull", "L0PUFull"]
         GaudiSequencer("InitBrunelSeq").Members += [ bkKill ]
         
@@ -346,7 +343,7 @@ class Brunel(LHCbConfigurableUser):
         # Only set to zero if not previously set to something else.
         if not IODataManager().isPropertySet("AgeLimit") : IODataManager().AgeLimit = 0
         
-        if inputType in [ "XDST", "DST", "RDST", "ETC" ]:
+        if inputType in [ "XDST", "DST", "RDST", "SDST", "ETC" ]:
             # Kill knowledge of any previous Brunel processing
             from Configurables import ( TESCheck, EventNodeKiller )
             InitReprocSeq = GaudiSequencer( "InitReprocSeq" )
@@ -363,7 +360,7 @@ class Brunel(LHCbConfigurableUser):
             # Read ETC selection results into TES for writing to DST
             IODataManager().AgeLimit += 1
 
-        if inputType in [ "MDF", "RDST", "ETC" ]:
+        if inputType in [ "MDF", "RDST", "SDST", "ETC" ]:
             # In case raw data resides in MDF file
             EventPersistencySvc().CnvServices.append("LHCb::RawDataCnvSvc")
 
@@ -375,7 +372,7 @@ class Brunel(LHCbConfigurableUser):
         """
         Set up output stream
         """
-        if dstType in [ "XDST", "DST", "RDST" ]:
+        if dstType in [ "XDST", "DST", "RDST", "SDST" ]:
             writerName = "DstWriter"
             packType  = self.getProp( "PackType" )
             # Do not pack DC06 DSTs, for consistency with existing productions
