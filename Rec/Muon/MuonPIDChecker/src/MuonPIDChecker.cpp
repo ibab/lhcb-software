@@ -1,7 +1,9 @@
-// $Id: MuonPIDChecker.cpp,v 1.25 2010-04-12 15:15:23 polye Exp $
+// $Id: MuonPIDChecker.cpp,v 1.26 2010-04-21 21:11:59 polye Exp $
 // Include files 
 #include <cmath>
 #include <iomanip>
+#include <vector>
+#include "boost/assign/list_of.hpp"
 
 
 // from Gaudi
@@ -47,7 +49,7 @@ MuonPIDChecker::MuonPIDChecker( const std::string& name,
   // Swap between real and MC data   
   declareProperty( "RunningMC", m_RunningMC = false );
 
-  declareProperty( "MonitorCutValues", m_monitCutValues);
+  declareProperty( "MonitorCutValues", m_monitCutValues = boost::assign::list_of(-1.)(-1.)(-1.)(-1.)(-1.)(-1.)(-1.)(-1.) );
 
   // Limits for the DLL histos
   declareProperty( "DLLlower", m_DLLlower = -1. ); // -10 for DLLFlag = 0
@@ -88,12 +90,14 @@ StatusCode MuonPIDChecker::initialize() {
 
   // Reset overall counters
   m_nMonitorCuts = m_monitCutValues.size();
+  if (m_nMonitorCuts ==0 ) Warning ("initialize: no cuts to monitore, finalize will give no info");
   if ( msgLevel(MSG::DEBUG) ) debug() << "initialize:: #of cuts = "<<m_nMonitorCuts<< endmsg;
   for (int j=0;j<m_nMonitorCuts+2;j++) {
       m_ntotTr.push_back(0);
-      if ( m_nMonitorCuts>0 && msgLevel(MSG::DEBUG) ) debug() <<"initialize:: cut "<<i<<""<<m_monitCutValues[j]<<endmsg;
+      if ( m_nMonitorCuts>j && msgLevel(MSG::DEBUG) ) debug() <<"initialize:: cut "<<i<<""<<m_monitCutValues[j]<<endmsg;
   }
-  if ( msgLevel(MSG::DEBUG) ) debug() <<"initialize:: size of ntotTr="<<m_ntotTr.size()<<endmsg;
+  if ( msgLevel(MSG::DEBUG) ) debug() <<"initialize:: TrackType "<< m_TrackType <<endmsg;
+  if ( msgLevel(MSG::DEBUG) ) debug() <<"initialize:: HistosOutput "<<m_HistosOutput <<endmsg;
 
   return StatusCode::SUCCESS;
 }
@@ -104,8 +108,8 @@ StatusCode MuonPIDChecker::initialize() {
 StatusCode MuonPIDChecker::execute() {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
-  if ( msgLevel(MSG::DEBUG) ) debug() <<"initialize:: TrackType "<< m_TrackType <<endmsg;
-  if ( msgLevel(MSG::DEBUG) ) debug() <<"initialize:: HistosOutput "<<m_HistosOutput <<endmsg;
+  if ( msgLevel(MSG::DEBUG) ) debug() <<"execute:: TrackType "<< m_TrackType <<endmsg;
+  if ( msgLevel(MSG::DEBUG) ) debug() <<"execute:: HistosOutput "<<m_HistosOutput <<endmsg;
 
   // Get tracks to loop over
   LHCb::Tracks* trTracks = get<LHCb::Tracks>(m_TracksPath);
@@ -155,10 +159,10 @@ StatusCode MuonPIDChecker::execute() {
       }
 
       getMuonPIDInfo(pTrack, pMuids);
-      if ( msgLevel(MSG::DEBUG) ) debug() << "execute:: MuonPID info retrieved" << endmsg;
+      if ( msgLevel(MSG::DEBUG) ) debug() << "execute:: MuonPID info retrieved for track "<< m_nTr  << endmsg;
 
       getMuonTrackInfo(pTrack, muTracks);
-      if ( msgLevel(MSG::DEBUG) ) debug() << "execute:: MuonTrack info retrieved" << endmsg;
+      if ( msgLevel(MSG::DEBUG) ) debug() << "execute:: MuonTrack info retrieved for track "<< m_nTr << endmsg;
 
      if (m_TrIsPreSel>0) {
        m_nTrPreSel++;
@@ -189,12 +193,13 @@ StatusCode MuonPIDChecker::execute() {
 
   fillMultiplicityPlots(m_HistosOutput);
 
-  if (m_nMonitorCuts>3) {
-    m_ntotTr[3] += m_nTrIsMuon;
-    m_ntotTr[2] += m_nTrIsMuonLoose;
-  }
-  m_ntotTr[1] += m_nTrPreSel;
   m_ntotTr[0] += m_nTr;
+  m_ntotTr[1] += m_nTrPreSel;
+  
+ if(m_nMonitorCuts>0)  m_ntotTr[2] += m_nTrIsMuonLoose;
+ if(m_nMonitorCuts>1)  m_ntotTr[3] += m_nTrIsMuon;
+  if ( msgLevel(MSG::DEBUG) ) for (int i=0;i<m_nMonitorCuts+2;i++)
+	  debug() << "execute:: "<<i<<"-> m_ntotTr[i]"<<m_ntotTr[i]<< endmsg;
   return StatusCode::SUCCESS;
 }
 
@@ -204,21 +209,21 @@ StatusCode MuonPIDChecker::execute() {
 StatusCode MuonPIDChecker::finalize() {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
-  if (2<m_nMonitorCuts && 0<m_ntotTr[1]) {
+  if (0<m_nMonitorCuts && 0<m_ntotTr[1]) {
     std::vector<double> rate(m_nMonitorCuts), rateError(m_nMonitorCuts);
     std::vector<std::string> CutName; 
     CutName.push_back("IsMuonLoose         = "); 
     CutName.push_back("IsMuon              = "); 
-    CutName.push_back("IsMuoLoose MuonProb > "); 
-    CutName.push_back("IsMuon     MuonProb > "); 
+    CutName.push_back("IsMuoLoose MuonProb < "); 
+    CutName.push_back("IsMuon     MuonProb < "); 
     CutName.push_back("IsMuoLoose DLL      > "); 
     CutName.push_back("IsMuon     DLL      > "); 
-    CutName.push_back("IsMuonLoose NShared > "); 
-    CutName.push_back("IsMuon     NShared  > "); 
+    CutName.push_back("IsMuonLoose NShared < "); 
+    CutName.push_back("IsMuon     NShared  < "); 
     for (int i=2;i<m_nMonitorCuts+2;i++) {
         rate[i-2]= 100.* (double)m_ntotTr[i]/(double)m_ntotTr[1];
 	rateError[i-2]= getRateError( rate[i-2]/100., m_ntotTr[1]);
-	if ( msgLevel(MSG::DEBUG) ) debug() << "finalize:: cut"<<i-2 <<":"<< m_ntotTr[i] <<endmsg;
+	if ( msgLevel(MSG::DEBUG) ) debug() << "finalize:: "<<i<<" "<<CutName[i-2] <<m_monitCutValues[i]<<":"<< m_ntotTr[i] <<endmsg;
     }
     
     info()<< "----------------------------------------------------------------"<< endmsg;
@@ -228,16 +233,20 @@ StatusCode MuonPIDChecker::finalize() {
     info()<< "----------------------------------------------------------------"<< endmsg;
     info()<< "  Criterium                          Rate After IsMuonLoose (%) "<< endmsg;
     info()<< "----------------------------------------------------------------"<< endmsg;
-    for (int i=0;i<m_nMonitorCuts;i=i+2) 
+    for (int i=0;i<m_nMonitorCuts;i=i+2){ 
       info()<< CutName[i] << format( "%3.1f      :", m_monitCutValues[i])<< format("  %7.3f +-%7.3f ", 
 	  rate[i], rateError[i])  << endmsg;
+      if ( msgLevel(MSG::DEBUG) ) debug() << "finalize:: i="<<i<< " cutname"<<CutName[i] <<":"<< m_ntotTr[i+2] <<endmsg;
+    }
                        
     info()<< "----------------------------------------------------------------"<< endmsg;
     info()<< "  Criterium                            Rate After IsMuon (%) "<< endmsg;
     info()<< "----------------------------------------------------------------"<< endmsg;
-    for (int i=1;i<m_nMonitorCuts;i=i+2) 
+    for (int i=1;i<m_nMonitorCuts;i=i+2){ 
       info()<< CutName[i] << format( "%3.1f      :", m_monitCutValues[i])<< format("  %7.3f +-%7.3f ", 
 	  rate[i], rateError[i])  << endmsg;
+      if ( msgLevel(MSG::DEBUG) ) debug() << "finalize:: i="<<i<< " cutname"<<CutName[i] <<":"<< m_ntotTr[i+2] <<endmsg;
+    }
                        
   }
   info()<< "----------------------------------------------------------------"<< endmsg;
@@ -481,8 +490,13 @@ void MuonPIDChecker::fillPreSelPlots(int level) {
 void MuonPIDChecker::fillIMLPlots(int level) {
 
   if (2<m_nMonitorCuts && exp(m_TrMuonLhd)<m_monitCutValues[2]) m_ntotTr[4]++;
-  if (4<m_nMonitorCuts && (m_TrMuonLhd-m_TrNMuonLhd)<m_monitCutValues[4]) m_ntotTr[6]++;
+  if (4<m_nMonitorCuts && (m_TrMuonLhd-m_TrNMuonLhd)>m_monitCutValues[4]) m_ntotTr[6]++;
   if (6<m_nMonitorCuts && m_TrNShared<m_monitCutValues[6]) m_ntotTr[8]++;
+  if ( msgLevel(MSG::DEBUG) ) debug() << "fillIMLPlots:: MuProb="<<exp(m_TrMuonLhd)<< 
+          " DLL="<<(m_TrMuonLhd-m_TrNMuonLhd) << " IM="<< m_TrIsMuon 
+	  <<" nShared=" << m_TrNShared<< endmsg;
+  if ( msgLevel(MSG::DEBUG) ) for (int i=0;i<m_nMonitorCuts+2;i++)
+	  debug() << "IMLPlots:: "<<i<<"-> m_ntotTr[i]"<<m_ntotTr[i]<< endmsg;
 
   if (level>0){
     plot1D( m_Trp0, "hIMLMomentum", "IsMuonLoose Candidate Momentum (GeV/c^2)", -100., 100., 100);
@@ -535,11 +549,11 @@ void MuonPIDChecker::fillIMLPlots(int level) {
 //  Fill Plots for IsMuon Candidates    
 //====================================================================
 void MuonPIDChecker::fillIMPlots(int level) {
-  if (m_nMonitorCuts>7){
-    if (3<m_nMonitorCuts && exp(m_TrMuonLhd)<m_monitCutValues[3]) m_ntotTr[5]++;
-    if (5<m_nMonitorCuts && (m_TrMuonLhd-m_TrNMuonLhd)<m_monitCutValues[5]) m_ntotTr[7]++;
-    if (7<m_nMonitorCuts && m_TrNShared<m_monitCutValues[7]) m_ntotTr[9]++;
-  }
+  if (3<m_nMonitorCuts && exp(m_TrMuonLhd)<m_monitCutValues[3]) m_ntotTr[5]++;
+  if (5<m_nMonitorCuts && (m_TrMuonLhd-m_TrNMuonLhd)>m_monitCutValues[5]) m_ntotTr[7]++;
+  if (7<m_nMonitorCuts && m_TrNShared<m_monitCutValues[7]) m_ntotTr[9]++;
+  if ( msgLevel(MSG::DEBUG) ) for (int i=0;i<m_nMonitorCuts+2;i++)
+	  debug() << "IMPlots:: "<<i<<"-> m_ntotTr[i]"<<m_ntotTr[i]<< endmsg;
   if (level>1){
     plot1D( m_Trp0, "hIMMomentum", "IsMuon candidate Momentum (GeV/c^2)", -100., 100., 100);
     plot1D( m_TrpT, "hIMPT", "IsMuon candidate p_T (GeV/c^2)", -10., 10., 100);
