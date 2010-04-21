@@ -110,18 +110,18 @@ void File::feedMessageQueue(mqd_t /* mq */) {
 }
 
 /// New constructor with stream id
-File::File(const std::string& fileName, unsigned int runNumber, const std::string& streamID) {
-    init(fileName, runNumber);
+File::File(const std::string& fileName, unsigned int runNumber, const std::string& streamID, bool enableMD5) {
+    init(fileName, runNumber, enableMD5);
     m_streamID = streamID;
 }
 
 /// Constructor
-File::File(const std::string& fileName, unsigned int runNumber) {
-    init(fileName, runNumber);
+File::File(const std::string& fileName, unsigned int runNumber, bool enableMD5) {
+    init(fileName, runNumber, enableMD5);
 }
 
 /// Constructor
-void File::init(const std::string& fileName, unsigned int runNumber) {
+void File::init(const std::string& fileName, unsigned int runNumber, bool enableMD5) {
   static int s_seqNo = 0;
   char txt[32];
   m_mon = &m_monBuffer;
@@ -143,6 +143,8 @@ void File::init(const std::string& fileName, unsigned int runNumber) {
   sprintf(txt,"/File#%02d",s_seqNo++);
   std::string svc = RTL::processName()+txt;
 
+  m_enableMD5 = enableMD5;
+
   memset(m_mon->m_trgEvents, 0, MAX_TRIGGER_TYPES*sizeof(unsigned int));
   memset(m_mon->m_statEvents, 0, MAX_STAT_TYPES*sizeof(unsigned int));
 
@@ -153,6 +155,16 @@ void File::init(const std::string& fileName, unsigned int runNumber) {
 File::~File() {
   delete m_md5;
   ::dis_remove_service(m_mon->m_svcID);
+}
+
+size_t File::updateWrite(const void *data, size_t len) {
+  if(m_enableMD5) {
+    m_md5->Update((UChar_t*)data, (UInt_t)len);
+  }
+  m_mon->m_adler32 = adler32Checksum(m_mon->m_adler32, (const char*)data, len);
+  m_mon->m_bytesWritten += len;
+  m_mon->m_lastUpdated = time(NULL);
+  return m_mon->m_bytesWritten;
 }
 
 
@@ -191,6 +203,7 @@ void MDFWriterNet::constructNet()
   declareProperty("StreamID",              m_streamID="NONE");
   declareProperty("RunFileTimeoutSeconds", m_runFileTimeoutSeconds=10);
   declareProperty("MaxQueueSizeBytes",     m_maxQueueSizeBytes=1073741824);
+  declareProperty("EnableMD5",             m_enableMD5=false);
 
   m_log = new MsgStream(msgSvc(), name());
 
@@ -202,6 +215,9 @@ StatusCode MDFWriterNet::initialize(void)
 {
   *m_log << MSG::INFO << " Writer " << getpid() <<
     " Initializing." << endmsg;
+
+  if (m_enableMD5) *m_log << MSG::INFO << "MD5 sum on-the-fly computing enabled." << endmsg;
+  else *m_log << MSG::INFO << "MD5 sum on-the-fly computing disabled." << endmsg;
 
   m_currFile = NULL;
   m_srvConnection = new Connection(m_serverAddr, m_serverPort,
@@ -411,7 +427,7 @@ File* MDFWriterNet::createAndOpenFile(unsigned int runNumber)
            << runNumber << " ..." << endmsg;
     std::string f = this->createNewFile(runNumber);
     *m_log << MSG::INFO << "new filename: " << f << endmsg;
-    currFile = new File(f, runNumber, m_streamID);
+    currFile = new File(f, runNumber, m_streamID, m_enableMD5);
   } catch (std::exception &e) {
     currFile = NULL; 
     *m_log << MSG::ERROR
