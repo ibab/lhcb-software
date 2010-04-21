@@ -50,6 +50,9 @@ namespace LHCb {
    */
   class File {
   private:
+    /// Condition to perform the MD5 sum on the fly
+    bool m_enableMD5;
+
     /// The current file being written to.
     std::string m_fileName;
     
@@ -112,7 +115,7 @@ namespace LHCb {
 
     static void feedMonitor(void* tag, void** buf, int* size, int* first);
 
-    void init(const std::string& fname,  unsigned int runNumber);
+    void init(const std::string& fname,  unsigned int runNumber, bool enableMD5);
 
   public:
     /// get the monitor values
@@ -242,19 +245,13 @@ namespace LHCb {
 //      m_prev = NULL;
 //      m_next = NULL;
 //    }
-    File(const std::string& fileName, unsigned int runNumber);
+    File(const std::string& fileName, unsigned int runNumber, bool enableMD5=false);
 
-    File(const std::string& fileName, unsigned int runNumber, const std::string& streamID);
+    File(const std::string& fileName, unsigned int runNumber, const std::string& streamID, bool enableMD5=false);
 
     /// Updates the checksums and the bytes written count for the file, given a new chunk to be written.
     /// Returns the number of bytes written in all so far.
-    inline size_t updateWrite(const void *data, size_t len) {
-      m_md5->Update((UChar_t*)data, (UInt_t)len);
-      m_mon->m_adler32 = adler32Checksum(m_mon->m_adler32, (const char*)data, len);
-      m_mon->m_bytesWritten += len;
-      m_mon->m_lastUpdated = time(NULL);
-      return m_mon->m_bytesWritten;
-    }
+    size_t updateWrite(const void *data, size_t len);
 
     /// Destructor.
     ~File();
@@ -327,6 +324,9 @@ namespace LHCb {
   class MDFWriterNet : public MDFWriter, INotifyClient, virtual public IIncidentListener {
     typedef LHCb::Connection Connection;
   protected:
+    /// Condition to perform the MD5 sum on the fly
+    bool m_enableMD5;
+
     /// The initial storage server hostname to connect to.
     std::string m_serverAddr;
 
