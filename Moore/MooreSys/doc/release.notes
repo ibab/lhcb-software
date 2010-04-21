@@ -3,14 +3,14 @@ Package     : MooreSys
 Package Coordinator : G.Raven
 Purpose     : LHCb HLT application
 
-</PRE><H1><A NAME=v9r0>2010-03-31 Moore v9r0</A></H1><PRE>
-Release on top of LHCb v30r0, HLT v10r0
+</PRE><H1><A NAME=v9r1>2010-04-21 Moore v9r1</A></H1><PRE>
+Release on top of HLT v10r1
 
-</PRE><H1><A NAME=v8r10>2010-04-18 Moore v8r10</A></H1><PRE>
+</PRE><H1><A NAME=v8r9>2010-04-09 Moore v8r9</A></H1><PRE>
 More maintenance fixes for data taking
 
-</PRE><H1><A NAME=v8r9>2010-04-02 Moore v8r9</A></H1><PRE>
-Minor maintenance fixes for data taking
+</PRE><H1><A NAME=v9r0>2010-03-31 Moore v9r0</A></H1><PRE>
+Release on top of LHCb v30r0, HLT v10r0
 
 </PRE><H1><A NAME=v8r8p1>2010-03-19 Moore v8r8p1</A></H1><PRE>
 Minor fixes for data taking

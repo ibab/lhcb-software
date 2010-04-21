@@ -1,5 +1,5 @@
 package MooreSys
-version v9r0
+version v9r1
 
 branches doc cmt
 
@@ -7,15 +7,21 @@ branches doc cmt
 # Don't forget the applications
 #=======================================================
 
-use  Moore              v9r0     Hlt
+use  Moore              v9r1     Hlt
 
 use CaloReco            v5r4p1  Calo
-use Hlt1Lines           v3r0p1  Hlt
-use Hlt2Lines           v3r1    Hlt
-use HltConf             v7r0p1  Hlt
-use HltGlobalMonitor    v3r3    Hlt
-use HltSettings         v1r13   Hlt
-use DaVinciTools        v21r0p1 Phys
+use Magnet              v6r0    Det
+use LumiEvent           v2r6    Event ## needs HltLuminosity to be recompiled!
+use HltDAQ              v1r7    Hlt
+use HltLuminosity       v2r16   Hlt
+use LoKiCore            v9r13   Phys
+use LoKiFitters         v2r4p2  Phys
+use LoKiNumbers         v8r6    Phys
+use PatAlgorithms       v3r30   Tf
+use PatVelo             v3r20p1 Tf
+use PatPV               v3r15   Tr
+use TrackTools          v3r29   Tr
+use VeloDAQ             v4r14   Velo
 
 
 
