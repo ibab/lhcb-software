@@ -1,10 +1,11 @@
-!$Id: release.notes,v 1.114 2010-04-19 22:04:10 gligorov Exp $
+!$Id: release.notes,v 1.115 2010-04-21 08:25:01 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/HltTracking
 ! Responsible : Jose A. Hernando
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+!========================== HltTracking v5r1   2010-04-21 ===================
 ! 2010-04-19 - V. Gligorov
  - Return 3D PVs when asked for 2D PVs; this cheat is to be used while the
    real 2D PVs are being fixed.
