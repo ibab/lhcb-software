@@ -1,15 +1,12 @@
-! $Id: release.notes,v 1.166 2010-04-19 22:01:02 gligorov Exp $
+! $Id: release.notes,v 1.167 2010-04-21 08:12:01 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 !
-! This is the development branch (HEAD). Changes in here will not be taken
-! for the production. Commit them AS WELL in branch production200912. 
-!
-!-----------------------------------------------------------------------------
 
+!========================== Hlt1Lines v3r2 2010-04-21 ===================
 ! 2010-04-19 - V. Gligorov
  - DiHadron line now kills clones not by filtering the companion and
    confirmed tracks (which does not work if there is more than one
