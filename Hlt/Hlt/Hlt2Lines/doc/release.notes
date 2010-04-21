@@ -8,6 +8,16 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2010-21-04 - Patrick Spradlin
+ - Hlt2CharmLines.py
+   + Added 6 one stage lines to the charm trigger (Hlt2CharmOSTF.Body,
+     Hlt2CharmOSTF.BodyWideMass) and slots to configure them.  The lines use
+     fitted tracks as input and can be be configured indepently of the main
+     topological.
+   + Added 6 monitoring lines for the post-track-fit stages that were
+     missing from previous versions (Hlt2CharmTF.BodySA,
+     Hlt2CharmTF.BodyWideMassSA).
+
 
 !========================== Hlt2Lines v3r2 2010-04-21 ===================
 ! 2010-04-20 - Neal Gauvin
