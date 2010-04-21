@@ -1,8 +1,13 @@
-! $Id: release.notes,v 1.535 2010-04-16 09:13:28 pkoppenb Exp $
+! $Id: release.notes,v 1.536 2010-04-21 09:59:23 gcowan Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2010-04-21 - Greig Cowan
+ - Updated Bs2JpsiPhiAngleCalculator to use
+   $DAVINCIKERNELROOT/Kernel/DaVinciP2VVAngles.h
+ - Removed P2VVAnglesFun.h
 
 ! 2010-04-16 - Patrick Koppenburg
  - Move counter in CheckPV.

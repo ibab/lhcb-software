@@ -1,4 +1,4 @@
-// $Id: Bs2JpsiPhiAngleCalculator.cpp,v 1.6 2009-09-06 17:02:11 gcowan Exp $
+// $Id: Bs2JpsiPhiAngleCalculator.cpp,v 1.7 2010-04-21 09:59:24 gcowan Exp $
 // Include files 
 
 // from Gaudi
@@ -10,7 +10,7 @@
 #include "Kernel/IP2VVAngleCalculator.h"
 // DaVinci
 //#include "Kernel/DaVinciFun.h"
-#include "P2VVAnglesFun.h"
+#include "Kernel/DaVinciP2VVAngles.h"
 // local
 #include "Bs2JpsiPhiAngleCalculator.h"
 //-----------------------------------------------------------------------------
