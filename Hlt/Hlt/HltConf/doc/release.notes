@@ -1,10 +1,11 @@
-! $Id: release.notes,v 1.447 2010-04-13 22:00:50 graven Exp $ 
+! $Id: release.notes,v 1.448 2010-04-21 08:17:03 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
 
+!========================== HltConf v7r2   2010-04-21 ===================
 ! 2010-04-13 - Gerhard Raven
  - remove HltReferenceRateSvc configuration -- now fully automated
 
