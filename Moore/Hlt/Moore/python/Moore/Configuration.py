@@ -1,7 +1,7 @@
 """
 High level configuration tool(s) for Moore
 """
-__version__ = "$Id: Configuration.py,v 1.115 2010-04-18 22:26:34 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.116 2010-04-21 19:02:07 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ, path
@@ -153,8 +153,6 @@ class Moore(LHCbConfigurableUser):
         AuditorSvc().Auditors = []
         self._configureOnlineMessageSvc()
 
-
-
     def _configureOnlineMessageSvc(self):
         # setup the message service
         from Configurables import LHCb__FmcMessageSvc as MessageSvc
@@ -216,8 +214,8 @@ class Moore(LHCbConfigurableUser):
             online_xml = '%s/%s/online_%%d.xml' % (baseloc, OnlineEnv.PartitionName )
             from Configurables import RunChangeHandlerSvc
             rch = RunChangeHandlerSvc()
-            rch.Conditions = { "Conditions/Online/LHCb/Magnet/Set"  : online_xml
-                             , "Conditions/Online/Velo/MotionSystem": online_xml
+            rch.Conditions = { "Conditions/Online/LHCb/Magnet/Set"        : online_xml
+                             , "Conditions/Online/Velo/MotionSystem"      : online_xml
                              , "Conditions/Online/LHCb/Lumi/LumiSettings" : online_xml
                              }
             ApplicationMgr().ExtSvc.append(rch)
@@ -240,7 +238,7 @@ class Moore(LHCbConfigurableUser):
         writer = None 
         if _ext(fname).upper() == 'RAW'  : 
             from Configurables import LHCb__MDFWriter as MDFWriter
-            writer = MDFWriter( 'MDFWriter'
+            writer = MDFWriter( 'Writer'
                               , Compress = 0
                               , ChecksumType = 1
                               , GenerateMD5 = True
@@ -249,9 +247,10 @@ class Moore(LHCbConfigurableUser):
         if _ext(fname).upper() == 'DST'  : 
             importOptions("$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts")
             from Configurables import InputCopyStream
-            writer = InputCopyStream("InputCopyStream")
-            writer.RequireAlgs = self.getProp('WriterRequires')
-            writer.Output = "DATAFILE='PFN:%s' TYP='POOL_ROOTTREE' OPT='REC'" % fname
+            writer = InputCopyStream("Writer"
+                                    , RequireAlgs = self.getProp('WriterRequires')
+                                    , Output = "DATAFILE='PFN:%s' TYP='POOL_ROOTTREE' OPT='REC'" % fname
+                                    )
         if not writer : raise NameError('unsupported filetype for file "%s"'%fname)
         ApplicationMgr().OutStream.append( writer )
 
