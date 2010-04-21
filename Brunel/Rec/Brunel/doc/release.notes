@@ -9,6 +9,18 @@ Purpose: LHCb reconstruction program
 - Changes to options
   . Use consistent DDDB and SIMCOND tags in 2009-FEST-Data.py, following
     change in default 2009 DDDB tag
+  . Added example options for 2010 data:
+    COLLISION10-Beam3500GeV-VeloClosed-MagDown.py
+    COLLISION10-Beam3500GeV-VeloClosed-MagOff.py
+    COLLISION10-Beam3500GeV-VeloClosed-MagUp.py
+
+- Changes to tests
+  . Add tests on 2010 data:
+    brunel.brunel2010magdown - tests also MDF SDST output
+    brunel.brunel2010magup   - tests also MDF RDST output
+    brunel.brunel2010magoff  - tests also packed DST output
+  . Add test on selected big events that caused problems in early 2010 data:
+    brunel.brunel-bigevents  - tests also unpacked DST output
 
 - Changes to references to reflect changes in Brunel v37r2 output:
   . New OTTrackMonitor histogram
