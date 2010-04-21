@@ -1,4 +1,4 @@
-// $Id: STDQSummaryAlg.cpp,v 1.9 2010-03-12 09:07:00 nchiapol Exp $
+// $Id: STDQSummaryAlg.cpp,v 1.10 2010-04-21 08:37:34 mneedham Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -31,7 +31,8 @@ using namespace LHCb;
 STDQSummaryAlg::STDQSummaryAlg( const std::string& name, 
                                     ISvcLocator* pSvcLocator ) :
   ST::TupleAlgBase(name, pSvcLocator),
-  m_lastRunNumber(-1)
+  m_lastRunNumber(-1),
+  Counters(0)
 {
 
   declareSTConfigProperty("summaryLocation",m_summaryLocation , STSummaryLocation::TTSummary );
@@ -39,36 +40,18 @@ STDQSummaryAlg::STDQSummaryAlg( const std::string& name,
   declareProperty("writeTxtFile", m_writeTxtFile = true);
   declareProperty("separator",    m_separator = "|");
   declareProperty("writeTuple",   m_writeTuple = true);
-  declareProperty("outputFile",   m_outputFileName = "STDQSummary.txt");
+  declareSTConfigProperty("outputFile",   m_outputFileName , "TTDQSummary.txt");
   declareProperty("minADC",       m_minADC = 15);
   declareProperty("maxADC",       m_maxADC = 45);
   declareProperty("fpPrecision",  m_fpPrecision = 2);
 
-
-
   // S/N cut
-  declareProperty("threshold", m_threshold = 5);
+  declareProperty("threshold", m_threshold = 6);
   
   setForcedInit();
 }
 
 STDQSummaryAlg::~STDQSummaryAlg() { }
-
-
-
-
-StatusCode STDQSummaryAlg::initialize()
-{
-
-  StatusCode sc = ST::TupleAlgBase::initialize();
-  if (sc.isFailure()) return Error("Failed to initialize", sc);
-
-  // zero everthing
-  Counters = new STDQCounters(m_minADC, m_maxADC);
-  
-  return StatusCode::SUCCESS;
-}
-
 
 
 
@@ -86,10 +69,8 @@ StatusCode STDQSummaryAlg::execute(){
 
   if (run != m_lastRunNumber){
     // new run output and reset
-    if (m_lastRunNumber != -1) {
-      outputInfo();
-      resetCounters(odin->eventTime());
-    }
+    if (m_lastRunNumber != -1) outputInfo();
+    resetCounters(odin->eventTime());
     m_lastRunNumber = run;
   }
  
@@ -98,8 +79,6 @@ StatusCode STDQSummaryAlg::execute(){
 
   return StatusCode::SUCCESS;
 }
-
-
 
 
 void STDQSummaryAlg::outputInfo(){
@@ -128,14 +107,17 @@ void STDQSummaryAlg::outputInfo(){
 
 void STDQSummaryAlg::resetCounters(Gaudi::Time time){
   
-  delete Counters;
+
+  if (Counters != 0) delete Counters;
   Counters = new STDQCounters(m_minADC, m_maxADC);
 
   Counters->m_RunDate  = boost::lexical_cast<std::string>(time.year(0));
   Counters->m_RunDate += "-"+boost::lexical_cast<std::string>(time.month(0)+1);
   Counters->m_RunDate += "-"+boost::lexical_cast<std::string>(time.day(0));
-  
+
+
 }
+
 
 
 
@@ -212,7 +194,7 @@ void STDQSummaryAlg::writeTxtFile() {
   std::vector<STDQCounters::DataRow>::iterator endIt = m_dataStorage.end();
   for(it = m_dataStorage.begin(); it < endIt; it++) {
     writeTxtEntry(oFile,it->run        );      
-    writeTxtEntry(oFile,it->runDate    );      
+    writeTxtEntry(oFile,it->runDate    );
     writeTxtEntry(oFile,it->event      );
     writeTxtEntry(oFile,it->clus       );
     writeTxtEntry(oFile,it->noise      );

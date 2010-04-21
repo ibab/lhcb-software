@@ -1,4 +1,4 @@
-// $Id: STDQSummaryAlg.h,v 1.5 2010-03-12 09:07:00 nchiapol Exp $
+// $Id: STDQSummaryAlg.h,v 1.6 2010-04-21 08:37:34 mneedham Exp $
 #ifndef STDQSummaryAlg_H
 #define STDQSummaryAlg_H 1
 
@@ -33,9 +33,6 @@ public:
 
   /// destructor
   virtual ~STDQSummaryAlg();
-
-  /// initialize
-  virtual StatusCode initialize();
 
   /// execute
   StatusCode execute();
