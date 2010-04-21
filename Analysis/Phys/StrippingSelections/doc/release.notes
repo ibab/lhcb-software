@@ -5,6 +5,9 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-04-21 - Rob Lambert
+ - Added B0q2DplusMuX, which is not used anywhere yet, but defines some lines
+
 ! 2010-04-21 - Patrick Koppenburg
  - Fix B->MuuK* configurable.
 
