@@ -1,4 +1,4 @@
-// $Id: EvtTupleTool.cpp,v 1.4 2010-04-21 14:25:58 ibelyaev Exp $
+// $Id: EvtTupleTool.cpp,v 1.5 2010-04-21 16:18:23 ibelyaev Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -549,10 +549,10 @@ StatusCode LoKi::Hybrid::EvtTupleTool::updateHLT ()  // update HLT-variables
 // ============================================================================
 // update  Void-variables 
 // ============================================================================
-StatusCode LoKi::Hybrid::EvtTupleTool::updateVOID ()  // update HLT-variables 
+StatusCode LoKi::Hybrid::EvtTupleTool::updateVOID ()  // update VOID-variables 
 {
   // get the factory
-  ICoreFactory* factory = tool<ICoreFactory> ( m_hlt , this ) ;
+  ICoreFactory* factory = tool<ICoreFactory> ( m_core , this ) ;
   //
   m_void.clear() ;
   m_void.reserve ( m_map_void.size() ) ;
