@@ -4,6 +4,11 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2010-04-21 - Chris Jones
+ - Set NtupleProduce to False by default,so ntuple ROOT file is not booked
+   by default
+ - Remove ExpertCheck sequence which was empty in normal productions
+
 ! 2010-04-18 - Chris Jones
  - Make CK theta pull plots for isolated tracks only in RichRecoQC
  - Fix bug in Configuration that caused the trackless ring monitoring to be

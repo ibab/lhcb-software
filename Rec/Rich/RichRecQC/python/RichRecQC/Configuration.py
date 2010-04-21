@@ -35,13 +35,13 @@ class RichRecQCConf(RichConfigurableUser):
                            "AlignmentMonitoring", "HPDIFBMonitoring",
                            "HPDImageShifts",
                            "RichPixelPositions", "HPDHitPlots",
-                           "RichTrackGeometry","RichGhostTracks",
-                           "RichCKThetaResolution","RichTrackResolution",
-                           "RichPhotonSignal","RichTrackCKResolutions",
-                           "RichPhotonGeometry","PhotonRecoEfficiency",
-                           "RichPhotonTrajectory","RichStereoFitterTests",
-                           "RichRayTracingTests","RichDataObjectChecks",
-                           "RichRecoTiming" ]
+                           "RichTrackGeometry", "RichGhostTracks",
+                           "RichCKThetaResolution", "RichTrackResolution",
+                           "RichPhotonSignal", "RichTrackCKResolutions",
+                           "RichPhotonGeometry", "PhotonRecoEfficiency",
+                           "RichPhotonTrajectory", "RichStereoFitterTests",
+                           "RichRayTracingTests", "RichDataObjectChecks",
+                           "RichRecoTiming", "RichFuncCKResPlots" ]
 
     ## Added monitors
     __added_monitors__ = [ ]
@@ -60,13 +60,13 @@ class RichRecQCConf(RichConfigurableUser):
                                             "PhotonMonitoring", "TracklessRingAngles",
                                             "TracklessRingPeakSearch",
                                             "AlignmentMonitoring", "HPDIFBMonitoring",
-                                            "HPDImageShifts",
+                                            "HPDImageShifts", "RichFuncCKResPlots",
                                             "RichPixelPositions", "HPDHitPlots",
-                                            "RichTrackGeometry","RichGhostTracks",
-                                            "RichCKThetaResolution","RichTrackResolution",
-                                            "RichPhotonSignal","RichTrackCKResolutions",
-                                            "RichPhotonGeometry","PhotonRecoEfficiency",
-                                            "RichPhotonTrajectory","RichStereoFitterTests"
+                                            "RichTrackGeometry", "RichGhostTracks",
+                                            "RichCKThetaResolution", "RichTrackResolution",
+                                            "RichPhotonSignal", "RichTrackCKResolutions",
+                                            "RichPhotonGeometry", "PhotonRecoEfficiency",
+                                            "RichPhotonTrajectory", "RichStereoFitterTests"
                                             #,"RichRayTracingTests","RichDataObjectChecks","RichRecoTiming"
                                             ],
                        "OfflineFull"    : [ "L1SizeMonitoring", "DBConsistencyCheck",
@@ -126,7 +126,7 @@ class RichRecQCConf(RichConfigurableUser):
                                   "Online"         : [ "Isolated" ],
                             }
        ,"Histograms"    : "OfflineFull"
-       ,"NTupleProduce" : True
+       ,"NTupleProduce" : False
        ,"WithMC"        : False # set to True to use MC truth
        ,"OutputLevel"   : INFO  # The output level to set all algorithms and tools to use
        ,"EventCuts"     : { }   # Event selection cuts for monitoring. Default no cuts
@@ -333,7 +333,7 @@ class RichRecQCConf(RichConfigurableUser):
             self.hpdImageShifts(self.newSeq(sequence,"RichHPDImageShifts"))
 
         # Expert Monitoring
-        self.expertMonitoring( self.newSeq(sequence,"RichExpertChecks") )
+        self.expertMonitoring( sequence )
 
     ## standalone ring finder monitors
     def ringsMoni(self,type,sequence):
@@ -487,8 +487,8 @@ class RichRecQCConf(RichConfigurableUser):
         checks  = self.getHistoOptions("Monitors")
         tkTypes = self.getHistoOptions("RecoTrackTypes")
 
-        # Turn on/off histos in CK resolution tool when in expert mode
-        if "Expert" == self.getProp("Histograms"):
+        check = "RichFuncCKResPlots"
+        if check in checks :
             if "HistoProduce" in self.richTools().ckResolution().properties() :
                 self.richTools().ckResolution().HistoProduce = self.getProp("Histograms") != "None"
 
