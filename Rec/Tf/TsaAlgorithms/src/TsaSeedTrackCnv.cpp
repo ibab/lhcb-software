@@ -1,4 +1,4 @@
-// $Id: TsaSeedTrackCnv.cpp,v 1.5 2009-07-02 10:43:03 mneedham Exp $
+// $Id: TsaSeedTrackCnv.cpp,v 1.6 2010-04-21 09:35:41 mneedham Exp $
 //
 // This File contains the implementation of the TsaEff
 // C++ code for 'LHCb Tracking package(s)'
@@ -45,7 +45,7 @@ StatusCode SeedTrackCnv::execute()
 
   // get the tracks
   SeedTracks* trackCont = get<SeedTracks>(m_inputLocation);
-  debug() << "Found " << trackCont->size() << " SeedTracks at " << m_inputLocation << endreq;
+  // debug() << "Found " << trackCont->size() << " SeedTracks at " << m_inputLocation << endreq;
 
   // output container
   LHCb::Tracks* output = new LHCb::Tracks();
@@ -55,8 +55,7 @@ StatusCode SeedTrackCnv::execute()
   for (SeedTracks::const_iterator iterTrack = trackCont->begin();
        iterTrack != trackCont->end(); ++iterTrack)
   {
-    verbose() << "SeedTrack " << (*iterTrack)->key() << " " << (*iterTrack)->select()
-              << " " << (*iterTrack)->lik() << endreq;
+  
     if ( ((*iterTrack)->select() != 0) && ((*iterTrack)->lik() > m_likCut) )
     {
       //LHCb::Track* fitTrack = this->convert(*iterTrack);
@@ -65,7 +64,7 @@ StatusCode SeedTrackCnv::execute()
     }
   }
 
-  debug() << "Created " << output->size() << " converted SeedTracks at " << m_outputLocation << endreq;
+  //  debug() << "Created " << output->size() << " converted SeedTracks at " << m_outputLocation << endreq;
 
   return StatusCode::SUCCESS;
 }

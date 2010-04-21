@@ -1,4 +1,4 @@
-// $Id: TsaSeedAddHits.cpp,v 1.9 2010-01-19 13:24:23 smenzeme Exp $
+// $Id: TsaSeedAddHits.cpp,v 1.10 2010-04-21 09:35:41 mneedham Exp $
 
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
@@ -182,7 +182,7 @@ StatusCode SeedAddHits::execute(SeedTracks* seeds, SeedHits* hits ){
                 hint = (*itIter)->stChannelID().sector();
                 SeedHit* aHit = new SeedHit(*itIter);
                 hits->insert(aHit);
-                verbose() << "SeedHit inserted " << *aHit << endreq;
+                
                 SeedPnt pnt(aHit);
                 if (layer == 1 || layer == 2){
                   const double slope = seed->xSlope(aHit->z(),TsaConstants::z0);
@@ -191,7 +191,7 @@ StatusCode SeedAddHits::execute(SeedTracks* seeds, SeedHits* hits ){
                   Gaudi::Plane3D plane = Gaudi::Plane3D(vec,point);
                   if (Tf::intersection(*itIter,plane,iPoint) )
                   {
-                    verbose() << "  Intersection Point " << iPoint << endreq;
+                
                     aHit->setY( iPoint.y() );
                     aHit->setZ( iPoint.z() );
                     (*it)->addToYPnts(pnt);

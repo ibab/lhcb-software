@@ -17,6 +17,10 @@
 #include "TsaKernel/TsaTStationHitManager.h"
 #include "TsaKernel/TsaSeedingHit.h"
 
+#include "Event/STLiteCluster.h"
+#include "OTDAQ/IOTRawBankDecoder.h"
+
+#include "Event/ProcStatus.h"
 
 using namespace Tf::Tsa;
 using namespace boost::lambda;
@@ -42,7 +46,11 @@ Seed::Seed(const std::string& name,
   declareProperty("seedStubLocation", m_seedStubLocation = SeedStubLocation::Default);
   declareProperty("OnlyGood", m_onlyGood = false);
   declareProperty("DiscardChi2", m_discardChi2 = 1.5);
-  
+  declareProperty( "maxITHits" ,  m_maxNumberITHits = 2500);  
+  declareProperty( "maxOTHits" , m_maxNumberOTHits = 9000 );
+  declareProperty("ITLiteClusters", m_clusterLocation = LHCb::STLiteClusterLocation::ITClusters);
+
+
 }
 
 Seed::~Seed(){}
@@ -55,6 +63,9 @@ StatusCode Seed::initialize()
   if (sc.isFailure()){
     return Error("Failed to initialize");
   }
+
+  // tool handle to the ot raw bank decoder
+  m_rawBankDecoder = tool<IOTRawBankDecoder>("OTRawBankDecoder",this);
 
   // init the tools
   for (unsigned int i = 0; i < 3; ++i){
@@ -95,11 +106,41 @@ StatusCode Seed::execute(){
   seedSel->reserve(1000);
   std::vector<SeedTrack*> tempSel; tempSel.reserve(1000);
 
+  // reject hot events
+  const LHCb::STLiteCluster::STLiteClusters* clusterCont = get<LHCb::STLiteCluster::STLiteClusters>(m_clusterLocation);
+  if (clusterCont->size() > m_maxNumberITHits ){
+     LHCb::ProcStatus* procStat =
+	getOrCreate<LHCb::ProcStatus,LHCb::ProcStatus>(
+	    LHCb::ProcStatusLocation::Default);
+      // give some indication that we had to skip this event
+      // (ProcStatus returns zero status for us in cases where we don't
+      // explicitly add a status code)
+      procStat->addAlgorithmStatus(name(), -3);     
+    return Warning("To many IT hits event rejected", StatusCode::SUCCESS, 1);
+  }  
+
+  
+
+  const unsigned int nHitsInOT = m_rawBankDecoder->totalNumberOfHits();
+  if (nHitsInOT > m_maxNumberOTHits){
+    LHCb::ProcStatus* procStat =
+	getOrCreate<LHCb::ProcStatus,LHCb::ProcStatus>(
+	    LHCb::ProcStatusLocation::Default);
+      // give some indication that we had to skip this event
+      // (ProcStatus returns zero status for us in cases where we don't
+      // explicitly add a status code)
+     procStat->addAlgorithmStatus(name(), -3);
+      
+    return Warning("To Many OT hits event rejected", StatusCode::SUCCESS,1); 
+  }
+
+  
+
   if (m_onlyGood) {
     // retrieve all TsaSeedingHits
     ITHitMan* m_hitMan = tool<ITHitMan>("Tf::Tsa::TStationHitManager","TsaDataManager");
     Hits allhits = m_hitMan->hits();
-    debug() << "All Tsa hits: " << allhits.size() << endreq;
+   
     
     LHCb::Tracks* fwdTracks = get<LHCb::Tracks>( LHCb::TrackLocation::Forward );
     for ( LHCb::Tracks::const_iterator itT = fwdTracks->begin(); fwdTracks->end() != itT; ++itT ) {
@@ -113,7 +154,7 @@ StatusCode Seed::execute(){
       // maybe we will have good discriminating property from pat reco only
       //  if (tr->info(LHCb::Track::PatQuality, -1.) < 4.0) continue;
       //}
-      debug() << "*** Found bad PatFwd track, marking TsaSeedingHits unused. " ;
+   
       int nHits = 0;
       for ( std::vector<LHCb::LHCbID>::const_iterator itId = tr->lhcbIDs().begin();
             tr->lhcbIDs().end() != itId; ++itId ) {
@@ -125,7 +166,7 @@ StatusCode Seed::execute(){
           }
         }
       }
-      debug() << nHits << " hits marked." << endreq; 
+   
     }
   }
   
@@ -149,37 +190,35 @@ StatusCode Seed::execute(){
 
   // Loop over sectors of tracker (0-2 are IT, 3-4 are OT)
   for ( int sector = 0; sector < 5; ++sector ) {
-    verbose() << "Sector : " << sector << endreq;
+    
 
     std::vector<SeedHit*> hits[6], sHits[6];  //  Hits per layer in X and stereo
 
     std::vector<SeedTrack*> seeds;            //  Seed candidates within the sector
     seeds.reserve(1000);
 
-    verbose() << "Starting X Search" << endreq;
+    
     sc = m_xSearchStep[sector]->execute(seeds,hits);  // x search
     if (sc.isFailure()) {
       return Error("x search failed", StatusCode::FAILURE,1);
     }
-    verbose() << " -> XSearch found " << seeds.size() << " seeds" << endreq;
-
-    verbose() << "Starting X selection" << endreq;
+    
     if (sector >2 ) {
       sc = m_xSelection->execute(seeds); // x selection
       if (sc.isFailure()) {
         return Error("x selection failed", StatusCode::FAILURE,1);
       }
-      verbose() << " -> XSelection found " << seeds.size() << " seeds" << endreq;
+    
     }
 
-    verbose() << "Starting Stereo Search" << endreq;
+    
     sc = m_stereoStep[sector]->execute(seeds,sHits); // add stereo
     if (sc.isFailure()) {
       return Error("stereo search failed", StatusCode::FAILURE,1);
     }
-    verbose() << " -> StereoSearch found " << seeds.size() << " seeds" << endreq;
+    
 
-    verbose() << "Starting First Likelihood calculation" << endreq;
+    
     if (m_calcLikelihood) {
       sc = m_likelihood->execute(seeds); // likelihood
       if (sc.isFailure()) {
@@ -187,17 +226,17 @@ StatusCode Seed::execute(){
       }
     }
 
-    verbose() << "Starting Final Selection" << endreq;
+    
     sc = m_finalSelection->execute(seeds); // final selection
     if (sc.isFailure()) {
       return Error("selection failed", StatusCode::FAILURE,1);
     }
-    verbose() << " -> Final Selection found " << seeds.size() << " seeds" << endreq;
+    
 
     //Delete the temporary objects that have been created
     for ( std::vector<SeedTrack*>::iterator it = seeds.begin(); seeds.end() != it; ++it ) {
       seedSel->insert(*it);
-      verbose() << "SeedTrack inserted " << **it << endreq;
+     
     }
 
     if ( sector <= 2 ) {
@@ -209,7 +248,7 @@ StatusCode Seed::execute(){
 
     //  After the IT stub finding is finished, try to link the stubs to make seed candidates
     if ( sector == 2 ) {
-      verbose() << "Starting 'thing I don't understand' #1" << endreq;
+     
       std::vector<SeedTrack*> linkedSeeds; linkedSeeds.reserve(50);
       sc = m_stubLinker->execute( stubs, linkedSeeds );
       if (sc.isFailure()) {
@@ -227,13 +266,12 @@ StatusCode Seed::execute(){
       }
       for ( std::vector<SeedTrack*>::iterator itLinked = linkedSeeds.begin(); linkedSeeds.end() != itLinked; ++itLinked ) {
         seedSel->insert( *itLinked);
-        verbose() << "SeedTrack inserted " << **itLinked << endreq;
+     
       }  // it
     }
 
     //  For those IT stubs that remain, try to extend them into the OT
     if ( sector > 2 ) {
-      verbose() << "Starting 'thing I don't understand' #2" << endreq;
       std::vector<SeedTrack*> extendedSeeds; extendedSeeds.reserve(50);
       sc = m_extendStubs->execute( sector, stubs, hits, sHits, extendedSeeds );
       if (sc.isFailure()) {
@@ -251,7 +289,7 @@ StatusCode Seed::execute(){
       }
       for ( std::vector<SeedTrack*>::iterator itEx = extendedSeeds.begin(); extendedSeeds.end() != itEx; ++itEx ) {
         seedSel->insert( *itEx);
-        verbose() << "SeedTrack inserted " << **itEx << endreq;
+     
       }
     }
 
@@ -259,12 +297,12 @@ StatusCode Seed::execute(){
       for ( std::vector<SeedHit*>::iterator it = hits[lay].begin(); hits[lay].end() != it; ++it )
       {
         hitsCont->insert(*it);
-        verbose() << "SeedHit inserted " << **it << endreq;
+     
       }
       for ( std::vector<SeedHit*>::iterator it = sHits[lay].begin(); sHits[lay].end() != it; ++it )
       {
         hitsCont->insert(*it);
-        verbose() << "SeedHit inserted " << **it << endreq;
+     
       }
     }
   }
@@ -273,13 +311,12 @@ StatusCode Seed::execute(){
   for ( int stn = 0; stn < 3; ++stn ) {
     for ( std::vector<SeedStub*>::iterator it = stubs[stn].begin(); stubs[stn].end() != it; ++it ) {
       stubsCont->insert(*it);
-      verbose() << "SeedStub inserted " << **it << endreq;
+     
     }
   }
 
   // add hits in IT overlap region
   if (m_addHitsInITOverlap == true) {
-    verbose() << "Adding Overlap Hits" << endreq;
     sc = m_addHits->execute(seedSel, hitsCont);
     if (sc.isFailure()) {
       return Error("failed to add hits", StatusCode::FAILURE,1);

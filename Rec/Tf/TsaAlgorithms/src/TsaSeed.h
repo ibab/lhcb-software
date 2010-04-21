@@ -1,4 +1,4 @@
-// $Id: TsaSeed.h,v 1.5 2009-11-12 17:20:33 kholubye Exp $
+// $Id: TsaSeed.h,v 1.6 2010-04-21 09:35:41 mneedham Exp $
 #ifndef _TSASEED_H_
 #define _TSASEED_H_
 
@@ -18,6 +18,7 @@
 
 #include "ITsaSeedAddHits.h"
 
+class IOTRawBankDecoder;
 
 namespace Tf
 {
@@ -68,6 +69,12 @@ namespace Tf
 
       bool m_onlyGood;
       double m_discardChi2;
+
+      unsigned int m_maxNumberOTHits;      
+      unsigned int m_maxNumberITHits;
+      
+      IOTRawBankDecoder* m_rawBankDecoder;
+      std::string m_clusterLocation;
       
 
     };

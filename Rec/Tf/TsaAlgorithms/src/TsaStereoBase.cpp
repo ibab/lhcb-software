@@ -1,4 +1,4 @@
-// $Id: TsaStereoBase.cpp,v 1.7 2007-12-08 15:46:43 mschille Exp $
+// $Id: TsaStereoBase.cpp,v 1.8 2010-04-21 09:35:41 mneedham Exp $
 
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
@@ -91,7 +91,7 @@ void StereoBase::cleanup(std::vector<SeedHit*> hits[6])
     for ( std::vector<SeedHit*>::iterator it = hits[lay].begin(); hits[lay].end() != it; ++it )
     {
       hitsCont->insert(*it);
-      verbose() << "SeedHit inserted " << **it << endreq;
+
     }
   } // lay
 }
@@ -130,7 +130,7 @@ unsigned int StereoBase::collectHits(SeedTrack* seed, std::vector<SeedHit*> hits
         if ( iPoint.y() > hit->yMax() + m_yTol ) break;
         if ( iPoint.y() < hit->yMin() - m_yTol) continue;
       }
-      verbose() << "  Intersection Point " << iPoint << endreq;
+     
       hit->setY( iPoint.y() );
       hit->setZ( iPoint.z() );
       yHits[lay].push_back( hit );

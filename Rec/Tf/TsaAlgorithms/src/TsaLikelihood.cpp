@@ -1,4 +1,4 @@
-// $Id: TsaLikelihood.cpp,v 1.6 2009-12-08 14:44:14 mneedham Exp $
+// $Id: TsaLikelihood.cpp,v 1.7 2010-04-21 09:35:40 mneedham Exp $
 
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
@@ -100,20 +100,19 @@ StatusCode Likelihood::execute(std::vector<SeedTrack*>& seeds, std::vector<SeedH
   //  Calc the likelihood
   //-------------------------------------------------------------------------
 
-  debug() << "Been passed " << seeds.size() << " SeedTracks" << endreq;
+  //debug() << "Been passed " << seeds.size() << " SeedTracks" << endreq;
 
   for ( std::vector<SeedTrack*>::iterator it = seeds.begin(); seeds.end() != it; ++it ) {
     SeedTrack* seed = *it;
     if ( !seed ) { Warning( "Been passed a NULL SeedTrack pointer" ); continue; }
-    verbose() << " SeedTrack " << *seed << endreq;
+   
     if ( seed->live() == false ) continue;
-    verbose() << "  -> Passes 'live' selection" << endreq;
+   
 
     int sect = seed->sector();
 
     std::vector<SeedPnt>& pnts = seed->xPnts();
-    verbose() << "  -> Found " << pnts.size() << " SeedPoints" << endreq;
-    for ( std::vector<SeedPnt>::iterator it = pnts.begin(); pnts.end() != it; ++it ) {
+       for ( std::vector<SeedPnt>::iterator it = pnts.begin(); pnts.end() != it; ++it ) {
       SeedPnt & pnt = *it;
       //double dy = seed->y(pnt.hit()->z(),TsaConstants::z0) - pnt.hit()->clus()->yMid();
       // CRJ : Update for ateam (need to check this really is the same thing)
@@ -251,7 +250,7 @@ void Likelihood::expectationOT(const Line& aLine, const Parabola& aParab,
       if (sc.isFailure()){
         Warning("Failed to calculate expected hits",StatusCode::SUCCESS,1);
       }
-      verbose() << "Found " << output.size() << " OTPairs" << endreq;
+     
       for (OTPairs::iterator iter = output.begin() ;iter != output.end(); ++iter ){
         std::vector<SeedPnt>::iterator pntIter  = std::find_if(pnts.begin(),
                                                                pnts.end(),
@@ -289,7 +288,7 @@ void Likelihood::expectationIT(const Line& aLine, const Parabola& aParab,
         Warning("Failed to calculate expected hits",StatusCode::SUCCESS,1);
       }
       int old = -1;
-      verbose() << "Found " << output.size() << " ITPairs" << endreq;
+     
       for (ITPairs::iterator iter = output.begin(); iter != output.end(); ++iter )
       {
         if ( int(iter->second) != old)

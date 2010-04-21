@@ -1,4 +1,4 @@
-// $Id: TsaOTStereoSearch.cpp,v 1.9 2010-01-19 13:24:23 smenzeme Exp $
+// $Id: TsaOTStereoSearch.cpp,v 1.10 2010-04-21 09:35:41 mneedham Exp $
 
 #include <algorithm>
 
@@ -202,7 +202,7 @@ void OTStereoSearch::loadData(std::vector<SeedHit*> hits[6]) const
       if ( layer > 1 ) ++lay;
       const TfTsHitNumMap::TfRegions & tfRegions = m_hitNumMap.tfOTRegions(sector()-2);
       int nHits(0); // debug only
-      debug() << "OT hits for Tsa : station=" << station+1 << " layer=" << layer << " region=" << sector()-2 << endreq;
+ 
       for ( TfTsHitNumMap::TfRegions::const_iterator iTfR = tfRegions.begin();
             iTfR != tfRegions.end(); ++iTfR )
       {
@@ -211,12 +211,10 @@ void OTStereoSearch::loadData(std::vector<SeedHit*> hits[6]) const
         nHits += oRange.size();
         for (Hits::const_iterator otIter = oRange.begin(); otIter != oRange.end(); ++otIter)
         {
-          debug() << "  -> " << (*otIter)->hit()->lhcbID() << endreq
-                  << "   -> driftRadius=" << (*otIter)->driftRadius() << endreq;
+ 
           // no hit cleaning as yet
           //if ( clus->isHot() ) { debug() << "   -> IsHot -> Rejecting" << endreq; continue; }
-          if ( (*otIter)->driftRadius() >= m_maxDriftRadius )
-          { debug() << "    -> Drift dist " << (*otIter)->driftRadius() << " failed max cut " << m_maxDriftRadius << endreq; continue; }
+          if ( (*otIter)->driftRadius() >= m_maxDriftRadius ) continue; 
           
 	  if ((*otIter)->hit()->ignore()) continue;
 	  if (m_onlyUnusedHits && (*otIter)->hit()->testStatus(Tf::HitBase::UsedByPatForward)) continue;
@@ -224,7 +222,7 @@ void OTStereoSearch::loadData(std::vector<SeedHit*> hits[6]) const
           hits[lay].push_back( hit );
         }
       }
-      debug() << " -> Found " << nHits << " hits" << endreq;
+
       std::sort( hits[lay].begin(), hits[lay].end(), SeedFunctor::increasingX<const SeedHit*>() );
     } // layer
   } // station

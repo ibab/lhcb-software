@@ -1,4 +1,4 @@
-// $Id: TsaStubFind.cpp,v 1.1.1.1 2007-08-14 13:50:47 jonrob Exp $
+// $Id: TsaStubFind.cpp,v 1.2 2010-04-21 09:35:41 mneedham Exp $
 
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
@@ -39,17 +39,17 @@ StatusCode StubFind::execute(std::vector<SeedHit*> hits[],
   //  Loop over IT stations
   for ( int stn = 0; stn < 3; ++stn ) {
     int lay = 2*stn;
-    debug() << "Layer = " << lay   << " # hits  = " << hits[lay].size() << endreq;
-    debug() << "Layer = " << lay+1 << " # hits  = " << hits[lay+1].size() << endreq;
-    debug() << "Layer = " << lay   << " # shits = " << sHits[lay].size() << endreq;
-    debug() << "Layer = " << lay+1 << " # shits = " << sHits[lay+1].size() << endreq;
+    //  debug() << "Layer = " << lay   << " # hits  = " << hits[lay].size() << endreq;
+    //  debug() << "Layer = " << lay+1 << " # hits  = " << hits[lay+1].size() << endreq;
+    // debug() << "Layer = " << lay   << " # shits = " << sHits[lay].size() << endreq;
+    // debug() << "Layer = " << lay+1 << " # shits = " << sHits[lay+1].size() << endreq;
 
     //  Loop over hits in first X layer of station
     std::vector<SeedHit*>::iterator start = hits[lay+1].begin();
     for ( std::vector<SeedHit*>::iterator it1 = hits[lay].begin(); hits[lay].end() != it1; ++it1 ) {
       SeedHit* hit1 = (*it1);
       if ( hit1->onTrack() == true ) continue;  // only use hits that haven't been previously used
-      verbose() << " -> Using hit1 " << *hit1 << endreq;
+   
 
       double x1 = hit1->x();
       double z1 = hit1->z();
@@ -59,18 +59,18 @@ StatusCode StubFind::execute(std::vector<SeedHit*> hits[],
       for ( std::vector<SeedHit*>::iterator it2 = start; hits[lay+1].end() != it2; ++it2 ) {
         SeedHit* hit2 = (*it2);
         if ( hit2->onTrack() == true ) continue;
-        verbose() << " -> Using hit2 " << *hit2 << endreq;
+   
         double sx = (hit2->x()-x1) /( hit2->z() - z1);
         if ( sx < -m_sxCut ) continue;
         if ( first ) {
           first = false;
           start = it2;
         }
-        if ( sx > m_sxCut ) { verbose() << "  -> Break1" << endreq; break; } // cuts to select stub candidates
-        if ( fabs(x1*m_xsParam - sx) > m_dAngle ) { verbose() << "  -> Cut1" << endreq; continue; }
+        if ( sx > m_sxCut ) break;  // cuts to select stub candidates
+        if ( fabs(x1*m_xsParam - sx) > m_dAngle ) continue; 
 
         //  Now for the stereo hits
-        if (sHits[lay].empty()) { verbose() << "No Stereo Hits" << endreq; continue; }
+        if (sHits[lay].empty()) continue; 
 
         SeedHit* firstHit3 = hits[lay].front();
         Gaudi::XYZVector vec(1., TsaConstants::tilt*sx, -sx);
@@ -86,11 +86,10 @@ StatusCode StubFind::execute(std::vector<SeedHit*> hits[],
               sHits[lay].end() != it3; ++it3 ) {
           SeedHit* hit3 = (*it3);
           if ( hit3->onTrack() == true ) continue;
-          verbose() << " -> Using hit3 " << *hit3 << endreq;
+  
 
-          if ( !Tf::intersection(hit3->tfHit(),plane3,iPoint) )
-          { verbose() << "   -> Failed Intersection" << endreq; continue; }
-          verbose() << "Intersection Point 3 " << iPoint << endreq;
+          if ( !Tf::intersection(hit3->tfHit(),plane3,iPoint) ) continue; 
+        
 
           double y3 = iPoint.y();
           //if ( y3 > hit3->clus()->yMax() + m_yTol ) continue;
@@ -113,11 +112,10 @@ StatusCode StubFind::execute(std::vector<SeedHit*> hits[],
                 sHits[lay+1].end() != it4; ++it4 ) {
             SeedHit* hit4 = (*it4);
             if ( hit4->onTrack() == true ) continue;
-            verbose() << " -> Using hit4 " << *hit4 << endreq;
 
-            if ( !Tf::intersection(hit4->tfHit(),plane4,iPoint) )
-            { verbose() << "   -> Failed Intersection" << endreq; continue; }
-            verbose() << "Intersection Point 4 " << iPoint << endreq;
+
+            if ( !Tf::intersection(hit4->tfHit(),plane4,iPoint) )continue; 
+        
 
             double y4 = iPoint.y();
             // if ( y4 > hit4->clus()->yMax() + m_yTol ) break;
@@ -132,7 +130,7 @@ StatusCode StubFind::execute(std::vector<SeedHit*> hits[],
             double dy = y4 - (y3 + ( hit4->z() - hit3->z())*y3/hit3->z() );
             if ( fabs( dy ) > m_yCut ) continue;
 
-            verbose() << "   -> Making a SeedStub" << endreq;
+        
 
             //  Make a stub candidate
             SeedHit* xHit1 = hit1->clone();

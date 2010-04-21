@@ -1,4 +1,4 @@
-// $Id: TsaXSearchBase.cpp,v 1.4 2009-07-02 10:43:04 mneedham Exp $
+// $Id: TsaXSearchBase.cpp,v 1.5 2010-04-21 09:35:41 mneedham Exp $
 
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
@@ -87,8 +87,7 @@ void XSearchBase::cleanup(std::vector<SeedHit*> hits[6]){
   for ( int lay = 0; lay < 6; ++lay ) {
     for ( std::vector<SeedHit*>::iterator it = hits[lay].begin(); hits[lay].end() != it; ++it )
     {
-      hitsCont->insert(*it);
-      verbose() << "SeedHit inserted " << **it << endreq;
+      hitsCont->insert(*it); 
     }
   } // lay
 }

@@ -1,4 +1,4 @@
-// $Id: ITExpectedHits.cpp,v 1.4 2008-07-14 10:24:52 mneedham Exp $
+// $Id: ITExpectedHits.cpp,v 1.5 2010-04-21 09:35:40 mneedham Exp $
 
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
@@ -63,7 +63,6 @@ StatusCode ITExpectedHits::collect(const Parabola& parab,
 
   const DeSTLayer* layer = m_tracker->findLayer(layerID);
 
-  verbose() << "iSector = " << iSector << " ibox=" << ibox << " layerID=" << (int)layerID << " layer=" << layer << endreq;
 
   if (layer != 0){
 

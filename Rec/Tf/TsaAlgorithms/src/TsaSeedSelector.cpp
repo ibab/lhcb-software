@@ -1,4 +1,4 @@
-// $Id: TsaSeedSelector.cpp,v 1.4 2007-10-10 18:48:10 smenzeme Exp $
+// $Id: TsaSeedSelector.cpp,v 1.5 2010-04-21 09:35:41 mneedham Exp $
 
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
@@ -45,10 +45,10 @@ StatusCode SeedSelector::execute( std::vector<SeedTrack*>& seeds,
   const StatusCode sc = select(seeds);
   if ( msgLevel(MSG::VERBOSE) )
   {
-    verbose() << "Sorted and Selected Seeds :-" << endreq;
+
     for ( std::vector<SeedTrack*>::const_iterator iS = seeds.begin(); iS != seeds.end(); ++iS )
     {
-      verbose() << "  -> " << **iS << endreq;
+
     }
   }
   return sc;

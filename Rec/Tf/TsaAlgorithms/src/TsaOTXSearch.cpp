@@ -1,4 +1,4 @@
-// $Id: TsaOTXSearch.cpp,v 1.8 2010-03-24 12:11:35 mneedham Exp $
+// $Id: TsaOTXSearch.cpp,v 1.9 2010-04-21 09:35:41 mneedham Exp $
 
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
@@ -277,7 +277,7 @@ void OTXSearch::loadData(std::vector<SeedHit*> hits[6]) const
       if ( layer > 0 ) ++lay;
       const TfTsHitNumMap::TfRegions & tfRegions = m_hitNumMap.tfOTRegions(sector()-2);
       int nHits(0); // debug only
-      debug() << "OT hits for Tsa : station=" << station+1 << " layer=" << layer << " region=" << sector()-2 << endreq;
+ 
       for ( TfTsHitNumMap::TfRegions::const_iterator iTfR = tfRegions.begin();
             iTfR != tfRegions.end(); ++iTfR )
       {
@@ -286,12 +286,10 @@ void OTXSearch::loadData(std::vector<SeedHit*> hits[6]) const
         nHits += oRange.size();
         for (Hits::const_iterator otIter = oRange.begin(); otIter != oRange.end(); ++otIter)
         {
-          debug() << "  -> " << (*otIter)->hit()->lhcbID() << endreq
-                  << "   -> driftRadius=" << (*otIter)->driftRadius() << endreq;
+ 
           // no cleaning as yet
           //if ( clus->isHot() ) { debug() << "   -> IsHot -> Rejecting" << endreq; continue; }
-          if ( (*otIter)->driftRadius() >= m_maxDriftRadius )
-          { debug() << "    -> Drift dist " << (*otIter)->driftRadius() << " failed max cut " << m_maxDriftRadius << endreq; continue; }
+          if ( (*otIter)->driftRadius() >= m_maxDriftRadius ) continue; 
           
 	  if ((*otIter)->hit()->ignore()) continue;
 	  if (m_onlyUnusedHits && (*otIter)->hit()->testStatus(Tf::HitBase::UsedByPatForward)) continue;
@@ -299,7 +297,7 @@ void OTXSearch::loadData(std::vector<SeedHit*> hits[6]) const
           hits[lay].push_back( hit );
         }
       }
-      debug() << " -> Found " << nHits << " hits" << endreq;
+
       std::sort( hits[lay].begin(), hits[lay].end(), SeedFunctor::increasingX<const SeedHit*>() );
     } // layer
   } //stn

@@ -1,4 +1,4 @@
-// $Id: TsaStubExtender.cpp,v 1.5 2009-07-02 10:43:04 mneedham Exp $
+// $Id: TsaStubExtender.cpp,v 1.6 2010-04-21 09:35:41 mneedham Exp $
 
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
@@ -199,7 +199,7 @@ StatusCode StubExtender::execute(int& sect, std::vector<SeedStub*> stubs[], std:
 
           //if ( !Tsa::ClusFun::intersection(hit->clus(),plane,iPoint) ) continue;
           if ( !Tf::intersection(hit->tfHit(),plane,iPoint) ) continue;
-          verbose() << "  Intersection Point " << iPoint << endreq;
+         
 
           double y = iPoint.y();
           double dy = y - hit->r()*m_scth - ( stub->y() / stub->z2() )*iPoint.z();
