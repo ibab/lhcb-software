@@ -35,7 +35,7 @@ class DstConf(LHCbConfigurableUser):
          }
 
     _propertyDocDct = { 
-        'DstType'       : """ Type of dst, can be ['DST','RDST','XDST'] """
+        'DstType'       : """ Type of dst, can be ['DST','RDST','XDST','SDST'] """
        ,'SimType'       : """ Type of simulation output, can be ['None','Minimal','Full'] """
        ,'EnableUnpack'  : """ Flag to set up on demand unpacking of DST containers """
        ,'EnablePackingChecks' : """ Flag to turn on the running of various unpacking checks, to test the quality of the data packing """
@@ -56,7 +56,7 @@ class DstConf(LHCbConfigurableUser):
         ]
     
     KnownSimTypes  = ['None','Minimal','Full']
-    KnownDstTypes  = ['NONE','DST','RDST','XDST']
+    KnownDstTypes  = ['NONE','DST','RDST','XDST','SDST']
     KnownPackTypes = ['NONE','TES','MDF']
 
     def _doWrite( self, dType, pType, sType ):
@@ -68,7 +68,8 @@ class DstConf(LHCbConfigurableUser):
         self._defineOutputData( dType, pType, sType, writer )
         
         if pType == 'MDF':
-            if dType == 'DST': raise TypeError( "Only RDST are supported with MDF packing" )
+            if dType == 'DST' or dType == 'XDST' :
+                raise TypeError( "Only RDST and SDST are supported with MDF packing" )
             self._doWriteMDF( writer.ItemList )
         else:
             self._doWritePOOL( writer.ItemList, writer.OptItemList )
@@ -81,7 +82,8 @@ class DstConf(LHCbConfigurableUser):
         
         # Choose whether to write packed or unpacked objects
         if pType == 'NONE':
-            if dType == 'RDST': raise TypeError( "RDST should always be in a packed format" )
+            if dType == 'RDST' : raise TypeError( "RDST should always be in a packed format" )
+            if dType == 'SDST' : raise TypeError( "SDST should always be in a packed format" )
             recDir = "Rec"
             if sType != "None":
                 DigiConf().setProp("EnablePack", False)
@@ -123,8 +125,8 @@ class DstConf(LHCbConfigurableUser):
         else:
             writer.ItemList += [ "/Event/" + recDir + "/Track/Muon" + depth ]
 
-            # Additional objects not packable as MDF
-            if pType != "MDF":
+            # Additional objects not on SDST and not packable as MDF
+            if dType != "SDST" and pType != "MDF":
                 writer.ItemList += [ "/Event/DAQ/RawEvent#1" ]
 
                 # Add selection results if DST commes from stripping ETC
@@ -169,7 +171,7 @@ class DstConf(LHCbConfigurableUser):
 
     def _doWritePOOL( self, items, optItems ):
         """
-        Write a DST (or RDST, XDST) in POOL format
+        Write a DST (or RDST, SDST, XDST) in POOL format
         """
         writer = OutputStream( self.getProp("Writer") )
         ApplicationMgr().OutStream.append( writer )
@@ -182,7 +184,7 @@ class DstConf(LHCbConfigurableUser):
 
     def _doWriteMDF( self, items ):
         """
-        Write an RDST in MDF format
+        Write an RDST or SDST in MDF format
         """
         from Configurables import  WritePackedDst, LHCb__MDFWriter
 

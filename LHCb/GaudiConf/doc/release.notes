@@ -3,6 +3,10 @@
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
 
+! 2010-04-21 - Marco Cattaneo
+ - Add SDST ("slim" or "stripping" DST) type to DstConf. Content is identical
+   to real data DST, minus DAQ/RawEvent.
+
 !======================== GaudiConf v13r4p2 2010-03-17 ======================
 ! 2010-003-09 - Chris Jones
  - Update RichPID packing version to 1
