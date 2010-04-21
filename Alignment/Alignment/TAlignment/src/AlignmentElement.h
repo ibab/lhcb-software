@@ -1,4 +1,4 @@
-// $Id: AlignmentElement.h,v 1.22 2010-04-04 15:28:51 wouter Exp $
+// $Id: AlignmentElement.h,v 1.23 2010-04-21 11:45:50 wouter Exp $
 #ifndef TALIGNMENT_ALIGNMENTELEMENT_H
 #define TALIGNMENT_ALIGNMENTELEMENT_H 1
 
@@ -219,6 +219,13 @@ public:
       with the dofs shared with its daughters. */
   std::vector<int> redundantDofs() const ;
 
+  // returns the local delta of an element. normaly this is just
+  // ownToOffNominal, but not for velo-halves
+  static Gaudi::Transform3D localDelta( const DetectorElement& element) ;
+
+  // returns the total transform minus the local delta. so, this is
+  // basically the nominal transform but then including delta's of
+  // mothers.
   static Gaudi::Transform3D toGlobalMatrixMinusDelta( const DetectorElement& element) ;
   
 private:

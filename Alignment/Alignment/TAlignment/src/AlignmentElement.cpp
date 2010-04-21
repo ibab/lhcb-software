@@ -1,4 +1,4 @@
-// $Id: AlignmentElement.cpp,v 1.30 2010-04-04 15:34:14 wouter Exp $
+// $Id: AlignmentElement.cpp,v 1.31 2010-04-21 11:45:50 wouter Exp $
 // Include files
 
 // from STD
@@ -18,6 +18,7 @@
 #include "DetDesc/3DTransformationFunctions.h"
 #include "DetDesc/GlobalToLocalDelta.h"
 #include "DetDesc/AlignmentCondition.h"
+#include "VeloDet/VeloAlignCond.h"
 
 // from BOOST
 #include "boost/regex.hpp"
@@ -30,11 +31,26 @@
 // local
 #include "AlignmentElement.h"
 
+Gaudi::Transform3D AlignmentElement::localDelta( const DetectorElement& element)
+{
+  Gaudi::Transform3D delta = element.geometry()->ownToOffNominalMatrix() ;
+  const VeloAlignCond* velocond = dynamic_cast<const VeloAlignCond*>(element.geometry()->alignmentCondition()) ;
+  if(velocond) {
+    // ok, this is tricky. this is a velo half and we need to subtract
+    // the transform of the motion system.
+    // from the VeloAlignCond code, I think: total = ( motion-systym-transform * alignmenttransform )
+    Gaudi::Transform3D mstransform = velocond->motionSystemTransform() ;
+    Gaudi::Transform3D alignmenttransform = mstransform.Inverse() * delta ;
+    delta = alignmenttransform ;
+  }
+  return delta ;
+}
+
 Gaudi::Transform3D AlignmentElement::toGlobalMatrixMinusDelta( const DetectorElement& element)
 {
-  const Gaudi::Transform3D& localDelta   = element.geometry()->ownToOffNominalMatrix() ;
+  Gaudi::Transform3D localdelta = localDelta( element ) ;
   const Gaudi::Transform3D& global       = element.geometry()->toGlobalMatrix();
-  return global * localDelta.Inverse() ;
+  return global * localdelta.Inverse() ;
 }
 
 std::string AlignmentElement::stripElementName(const std::string& name)
@@ -264,7 +280,7 @@ AlParameters AlignmentElement::currentDelta(const Gaudi::Transform3D& frame) con
   double par[6] = {0,0,0,0,0,0} ;
   for (ElemIter ielem = m_elements.begin(); ielem != m_elements.end(); ++ielem) {
     // here I want just the _local_ delta.
-    const Gaudi::Transform3D& localDelta   = ((*ielem)->geometry())->ownToOffNominalMatrix() ;
+    Gaudi::Transform3D localdelta = localDelta( **ielem ) ;
     // this one includes the localDelta, I think.
     const Gaudi::Transform3D& global        = ((*ielem)->geometry())->toGlobalMatrix();
     // so we subtract the delta to get the transformation matrix to global
@@ -272,7 +288,7 @@ AlParameters AlignmentElement::currentDelta(const Gaudi::Transform3D& frame) con
     // transform the local delta into the global frame
     // Gaudi::Transform3D localDeltaInGlobal = globalMinusDelta * localDelta * globalMinusDelta.Inverse() ;
     // which could be shorter written like this (really!)
-    Gaudi::Transform3D localDeltaInGlobal = global * localDelta * global.Inverse() ;
+    Gaudi::Transform3D localDeltaInGlobal = global * localdelta * global.Inverse() ;
     // now transform it into the alignment frame
     Gaudi::Transform3D alignDeltaMatrix = frameInv * localDeltaInGlobal * frame;
     std::vector<double> translations(3,0.0), rotations(3,0.0);
@@ -335,10 +351,6 @@ StatusCode AlignmentElement::updateGeometry( const AlParameters& parameters)
   initAlignmentFrame() ;
   return sc;
 }
-
-// inline const Gaudi::Transform3D AlignmentElement::localDeltaMatrix() const {
-//   return m_element->geometry()->ownToOffNominalMatrix();
-// }
 
 std::ostream& AlignmentElement::fillStream(std::ostream& lhs) const {
   const std::vector<double> t = deltaTranslations();
