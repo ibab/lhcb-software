@@ -1,11 +1,10 @@
 """
 Configuration of the Velo Monitoring Histograms
 """
-__version__ = "$Id: Configuration.py,v 1.7 2010-04-20 09:44:18 gersabec Exp $"
+__version__ = "$Id: Configuration.py,v 1.8 2010-04-21 09:26:26 gersabec Exp $"
 __author__  = "Rob Lambert"
 
 from Gaudi.Configuration import *
-from Configurables import TrackSys
 
 class VeloRecMonitors(ConfigurableUser):
     __slots__ = {
@@ -34,6 +33,7 @@ class VeloRecMonitors(ConfigurableUser):
         #histograms to be added in this mode            
         from Configurables import Velo__VeloClusterMonitor
         from Configurables import Velo__VeloTrackMonitor
+        from Configurables import TrackSys
         if hasattr( self, "MoniSequence" ):
             # set by RecMoniConf to GaudiSequencer('MoniVELOSeq')
             theseq=self.getProp("MoniSequence")

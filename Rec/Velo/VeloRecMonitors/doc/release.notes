@@ -4,6 +4,9 @@
 ! Purpose     : VELO monitoring algorithms for reconstruction data (ZS data)
 !-----------------------------------------------------------------------------
 
+! 2010-04-21 - Marco Gersabeck
+ - small fix to the configurable to avoid a warning
+
 ! 2010-04-20 - Marco Gersabeck
  - adapted configurable to deal with missing Velo tracks in Rec/Track/Best in case of writing to RDST.
 
