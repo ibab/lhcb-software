@@ -1,12 +1,12 @@
 #============================================================================
-# $Id: requirements,v 1.117 2010-04-06 12:26:30 graven Exp $
+# $Id: requirements,v 1.118 2010-04-21 18:59:14 graven Exp $
 # Created    : 03/06/2005 by P. Koppenburg
 # Maintainer : G. Raven
 #============================================================================
 
 #============================================================================
 package Moore
-version v9r0
+version v9r1
 
 branches doc cmt options python
 
@@ -23,7 +23,25 @@ use DDDB                v*      Det         -no_auto_imports
 use ParamFiles          v8r*                -no_auto_imports
 use FieldMap            v5r*                -no_auto_imports
 use HltTCK              v1r*    TCK         -no_auto_imports
-use L0TCK               v3r*    TCK         -no_auto_imports
+use L0TCK               v*      TCK         -no_auto_imports
+use AppConfig           v3r*                -no_auto_imports
+
+#### patches
+
+use CaloReco            v5r4p1  Calo
+use Magnet              v6r0    Det
+use LumiEvent           v2r6    Event ## needs HltLuminosity to be recompiled!
+use HltDAQ              v1r7    Hlt
+use HltLuminosity       v2r16   Hlt
+use LoKiCore            v9r13   Phys
+use LoKiFitters         v2r4p2  Phys
+use LoKiNumbers         v8r6    Phys
+use PatAlgorithms       v3r30   Tf
+use PatVelo             v3r20p1 Tf
+use PatPV               v3r15   Tr
+use TrackTools          v3r29   Tr
+use VeloDAQ             v4r14   Velo
+
 
 # The rest are needed only to set up environment variables for job options
 # and to give a cmt broadcast dependency for user checked out component packages
@@ -37,22 +55,15 @@ use GaudiPython         v*                  -no_auto_imports
 use L0Interfaces        v*    L0            -no_auto_imports
 
 #-- Lbcom packages 
-use CaloReco            v5r4p1  Calo
 use LbcomSys            v*                  -no_auto_imports
 
 #-- Rec packages 
 use RecSys              v*                  -no_auto_imports
 
 #-- HLT packages 
-use Hlt1Lines           v3r0p1  Hlt
-use Hlt2Lines           v3r1    Hlt
-use HltConf             v7r0p1  Hlt
-use HltGlobalMonitor    v3r3    Hlt
-use HltSettings         v1r13   Hlt
 use HltSys              v*                  -no_auto_imports
 
 #-- Phys packages 
-use DaVinciTools        v21r0p1 Phys
 use PhysSys             v*                  -no_auto_imports
 
 #-- Online ??
