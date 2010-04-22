@@ -1,7 +1,7 @@
-## $Id: Hlt2CharmLines.py,v 1.15 2010-04-21 19:50:50 spradlin Exp $
+## $Id: Hlt2CharmLines.py,v 1.16 2010-04-22 16:33:16 spradlin Exp $
 __author__  = 'Patrick Spradlin'
-__date__    = '$Date: 2010-04-21 19:50:50 $'
-__version__ = '$Revision: 1.15 $'
+__date__    = '$Date: 2010-04-22 16:33:16 $'
+__version__ = '$Revision: 1.16 $'
 
 ## ######################################################################
 ## Defines a configurable to define and configure Hlt2 lines for selecting
@@ -45,6 +45,39 @@ class Hlt2CharmLinesConf(HltLinesConfigurableUser) :
                 , 'OSTFTrkMaxPtLL'          : 1500.0     # in MeV
                 , 'OSTFVtxPVDispChi2LL'     : 100.0      # unitless
                 , 'OSTFPointUL'             : 0.10       # unitless
+                ## Slots for K_S h h' lines
+                , 'KshhTFHHTrkPLL'          : 1500.0     # in MeV
+                , 'KshhTFHHTrkChi2UL'       : 20.0       # unitless
+                , 'KshhTFHHTrkMaxPVIPLL'    : 0.1        # in mm
+                , 'KshhTFHHVtxChi2UL'       : 20.0       # in mm
+                , 'KshhTFHHVtxPVDispLL'     : -1.0       # in mm
+                , 'KshhTFHHPtLL'            : 500.0      # in mm
+                , 'KshhTFKsLLTrkPLL'        : 2000.0     # in MeV
+                , 'KshhTFKsLLTrkPVIPChi2LL' : 9.0        # unitless
+                , 'KshhTFKsLLTrkChi2UL'     : 20.0       # unitless
+                , 'KshhTFKsLLCombSymMassWin': 50.0       # in MeV
+                , 'KshhTFKsLLMothSymMassWin': 11.4       # in MeV
+                , 'KshhTFKsLLVtxChi2UL'     : 30.0       # unitless
+                , 'KshhTFKsLLVtxPVDispZLL'  : -1000.0    # in mm
+                , 'KshhTFKsLLVtxPVDispZUL'  : 650.0      # in mm
+                , 'KshhTFKsLLVtxPVDispChi2LL' : 100.0    # unitless
+                , 'KshhTFKsLLDiraLL'        : 0.9997     # unitless
+                , 'KshhTFKsDDTrkPLL'        : 2000.0     # in MeV
+                , 'KshhTFKsDDTrkPVIPChi2LL' : 4.0        # unitless
+                , 'KshhTFKsDDTrkChi2UL'     : 20.0       # unitless
+                , 'KshhTFKsDDCombSymMassWin': 80.0       # in MeV
+                , 'KshhTFKsDDMothSymMassWin': 24.9       # in MeV
+                , 'KshhTFKsDDVtxChi2UL'     : 30.0       # unitless
+                , 'KshhTFKsDDVtxPVDispZLL'  : 0.0        # in mm
+                , 'KshhTFKsDDVtxPVDispZUL'  : 2300.0     # in mm
+                , 'KshhTFKsDDVtxPVDispChi2LL' : 100.0    # unitless
+                , 'KshhTFKsDDDiraLL'        : 0.9997     # unitless
+                , 'KshhTFDVtxChi2UL'        : 20.0       # unitless
+                , 'KshhTFDVtxPVDispLL'      : -1.0       # in mm
+                , 'KshhTFDPtLL'             : 500.0      # in MeV
+                , 'KshhTFDDiraLL'           : 0.999      # unitless
+                , 'KshhTFDwKsLLSymMassWin'  : 100.0      # in MeV
+                , 'KshhTFDwKsDDSymMassWin'  : 120.0      # in MeV
                 , 'Prescale'                : {
                                                  'Hlt2CharmTF2BodySA' : 0.001
                                                , 'Hlt2CharmTF3BodySA' : 0.001
@@ -92,6 +125,9 @@ class Hlt2CharmLinesConf(HltLinesConfigurableUser) :
                                    , 'Hlt2CharmOSTF2BodyWideMassDecision' : 50885
                                    , 'Hlt2CharmOSTF3BodyWideMassDecision' : 50915
                                    , 'Hlt2CharmOSTF4BodyWideMassDecision' : 50955
+                                   ## Kshh' lines
+                                   , 'Hlt2CharmTFD2HHKsLLDecision' : 50967
+                                   , 'Hlt2CharmTFD2HHKsDDDecision' : 50968
                                    }
                   }
 
@@ -470,6 +506,87 @@ class Hlt2CharmLinesConf(HltLinesConfigurableUser) :
     # }
 
 
+    def __KshhTFHHInPartFilter(self, name, inputContainers) : # {
+        """
+        # Function to configure a filter for the input particles of the
+        #   of the 2-body reconstruction for Kshh.  It lashes the new
+        #   FilterDesktop to a bindMembers with its antecedents.
+        # The argument inputContainer should be 
+        #   a list of bindMember sequences that produces the particles
+        #   to filter.
+        """
+        from HltLine.HltLine import Hlt2Member, bindMembers
+        from Configurables import FilterDesktop, CombineParticles
+        from HltTracking.HltPVs import PV3D
+
+        incuts = """(P> %(KshhTFHHTrkPLL)s *MeV)
+                    & (TRCHI2DOF< %(KshhTFHHTrkChi2UL)s )
+                    & (TRPCHI2>0.00001)""" % self.getProps()
+
+        filter = Hlt2Member( FilterDesktop
+                            , 'Filter'
+                            , InputLocations = inputContainers
+                            , Code = incuts
+                           )
+
+        ## Remember to require the PV3D reconstruction before cutting on IP.
+        filterSeq = bindMembers( name, inputContainers + [PV3D(), filter] )
+
+        return filterSeq
+    # }
+
+
+    def __KshhTFDCombine(self, name, inputSeq, decayDesc = [ "D0 -> K*(892)0 KS0" ], extracuts = None) : # {
+        """
+        # Function to configure the D0 -> K_S K*0 combinations
+        #   It lashes the new CombineParticles to a bindMembers with its
+        #   antecedents.
+        # Its arguments:
+        #     name      : string name
+        #     inputSeq  : list of input particle sequences
+        #     decayDesc : list of string decay descriptors
+        #     extracuts : dictionary of extra cuts to be applied.
+        #                 Can include cuts at the CombinationCut or at
+        #                 the MotherCut level.
+        #                 e.g. : { 'CombinationCut' : '(AM>4*GeV)'
+        #                        , 'MotherCut'      : '(BPVDIRA>0.5)' }
+        """
+        from HltLine.HltLine import Hlt2Member, bindMembers
+        from Configurables import FilterDesktop, CombineParticles
+        from HltTracking.HltPVs import PV3D
+
+        # Construct a cut string for the combination.
+        combcuts = ""
+
+        # extracuts allows additional cuts to be applied for special
+        #   cases, including the tight doca requirement of the 2-body and
+        #   the additional cuts to reduce stored combinations in the 4-body.
+        if extracuts and extracuts.has_key('CombinationCut') :
+            combcuts = combcuts + extracuts['CombinationCut']
+
+        # Construct a cut string for the vertexed combination.
+        parentcuts = """(VFASPF(VCHI2/VDOF)< %(KshhTFDVtxChi2UL)s )
+                          & (BPVVD> %(KshhTFDVtxPVDispLL)s *mm)
+                          & (PT> %(KshhTFDPtLL)s *MeV)
+                          & (BPVDIRA > %(KshhTFDDiraLL)s )""" % self.getProps()
+
+        if extracuts and extracuts.has_key('MotherCut') :
+            parentcuts = parentcuts  + '&' + extracuts['MotherCut']
+
+        combineNBody = Hlt2Member( CombineParticles
+                                   , 'Combine'
+                                   , DecayDescriptors = decayDesc
+                                   , InputLocations = inputSeq
+                                   , CombinationCut = combcuts
+                                   , MotherCut = parentcuts
+                                 )
+
+        charmNBody = bindMembers( name, inputSeq + [ PV3D(), combineNBody ] )
+        return charmNBody
+    # }
+
+
+
     def __apply_configuration__(self) :
         ###################################################################
         # Decay descriptors
@@ -515,7 +632,7 @@ class Hlt2CharmLinesConf(HltLinesConfigurableUser) :
                                   , inputSeq = [lclRobInputPions, charm3Body ]
                                   , decayDesc = decayDesc4Body
                                   , extracuts = {'CombinationCut' : '(AM>1700*MeV) & (AM<2100*MeV)'
-                                                , 'MotherCut'     : "(SUMQ == 0) & (BPVTRGPOINTINGWPT< %(RobustPointingUL)s )" % self.getProps()
+                                                , 'MotherCut'     : "(BPVTRGPOINTINGWPT< %(RobustPointingUL)s )" % self.getProps()
                                                 }
                                   )
 
@@ -528,7 +645,7 @@ class Hlt2CharmLinesConf(HltLinesConfigurableUser) :
 
         # Construct a bindMember for the charm robust 3-body decision
         ###################################################################
-        charmRobust3BodySeq = self.__robustFilter('CharmRobust3Body', [charm3Body], extracode = '((SUMQ==1) | (SUMQ == -1))')
+        charmRobust3BodySeq = self.__robustFilter('CharmRobust3Body', [charm3Body])
 
 
         # Construct a bindMember for the charm robust 4-body decision
@@ -572,7 +689,7 @@ class Hlt2CharmLinesConf(HltLinesConfigurableUser) :
                                 , inputSeq = [ lclTFInputPions, charmTF3Body ]
                                 , decayDesc = decayDesc4Body
                                 , extracuts = { 'CombinationCut' : '(AM>1839*MeV) & (AM<1889*MeV)'
-                                              , 'MotherCut' : '(SUMQ==0) & (BPVTRGPOINTINGWPT< %(TFPointUL)s )' % self.getProps()
+                                              , 'MotherCut' : '(BPVTRGPOINTINGWPT< %(TFPointUL)s )' % self.getProps()
                                               }
                                  )
         ###################################################################
@@ -587,7 +704,7 @@ class Hlt2CharmLinesConf(HltLinesConfigurableUser) :
         ###################################################################
         charmTF3BodySeq = self.__tfFilter('CharmPostTF3Body'
                                      , [charmTF3Body]
-                                     , extracode = '(((M>1844*MeV) & (M<1894*MeV)) | ((M>1943*MeV) & (M<1993*MeV)) & ((SUMQ == -1) |(SUMQ == 1)))')
+                                     , extracode = '(((M>1844*MeV) & (M<1894*MeV)) | ((M>1943*MeV) & (M<1993*MeV)))')
 
 
         # Main 4-body charm post-track-fit sequence and line.
@@ -711,7 +828,7 @@ class Hlt2CharmLinesConf(HltLinesConfigurableUser) :
                                 , inputSeq = [ lclOSTFInputPions, charmOSTF3Body ]
                                 , decayDesc = decayDesc4Body
                                 , extracuts = { 'CombinationCut' : '(AM>1839*MeV) & (AM<1889*MeV)'
-                                              , 'MotherCut' : '(SUMQ==0) & (BPVTRGPOINTINGWPT< %(OSTFPointUL)s )' % self.getProps()
+                                              , 'MotherCut' : '(BPVTRGPOINTINGWPT< %(OSTFPointUL)s )' % self.getProps()
                                               }
                                  )
         ###################################################################
@@ -729,7 +846,7 @@ class Hlt2CharmLinesConf(HltLinesConfigurableUser) :
         ###################################################################
         charmOSTF3BodySeq = self.__ostfFilter('CharmOSTF3Body'
                                      , [charmOSTF3Body]
-                                     , extracode = '(((M>1844*MeV) & (M<1894*MeV)) | ((M>1943*MeV) & (M<1993*MeV)) & ((SUMQ == -1) |(SUMQ == 1)))')
+                                     , extracode = '(((M>1844*MeV) & (M<1894*MeV)) | ((M>1943*MeV) & (M<1993*MeV)))')
 
 
         # 4-body decision
@@ -782,4 +899,102 @@ class Hlt2CharmLinesConf(HltLinesConfigurableUser) :
             oswmTFLineName = 'CharmOSTF' + charmSeq + 'WideMass'
             self.__makeLine(osLineName, algos = [ charmOSNBodySeq[charmSeq]['Std'] ])
             self.__makeLine(oswmTFLineName, algos = [ charmOSNBodySeq[charmSeq]['Wide'] ])
+
+
+
+        ###################################################################
+        # Lines for D decays with K_S
+        ###################################################################
+
+
+        ## Input particles for 2-body HH part of KsHH
+        ###################################################################
+        lclKshhTFInputKaons = self.__KshhTFHHInPartFilter('CharmKshhTFHHInputKaons', [ BiKalmanFittedKaons] )
+        lclKshhTFInputPions = self.__KshhTFHHInPartFilter('CharmKshhTFHHInputPions', [ BiKalmanFittedPions] )
+
+
+        ## 2-body construction for KsHH
+        ###################################################################
+        KshhHHcombcuts = """(AM<2100*MeV) 
+                            & (AMAXCHILD(MIPDV(PRIMARY), (('pi+'==ABSID) | ('K+'==ABSID)))> %(KshhTFHHTrkMaxPVIPLL)s *mm)
+                            & (AALLSAMEBPV)""" % self.getProps()
+        KshhHHparentcuts = """(VFASPF(VCHI2/VDOF)< %(KshhTFHHVtxChi2UL)s )
+                              & (BPVVD> %(KshhTFHHVtxPVDispLL)s *mm)
+                              & (PT> %(KshhTFHHPtLL)s *MeV)""" % self.getProps()
+
+        from HltLine.HltLine import Hlt2Member, bindMembers
+        from Configurables import CombineParticles
+        combineKshhTF2Body = Hlt2Member( CombineParticles
+                                       , 'Combine'
+                                       , DecayDescriptors = [ "K*(892)0 -> pi+ pi-", "K*(892)0 -> K+ K-", "K*(892)0 -> K+ pi-", "K*(892)0 -> pi+ K-" ]
+                                       , InputLocations = [ lclKshhTFInputKaons, lclKshhTFInputPions ]
+                                       , CombinationCut = KshhHHcombcuts
+                                       , MotherCut = KshhHHparentcuts
+                                     )
+
+        from HltTracking.HltPVs import PV3D
+        charmKshhTF2Body = bindMembers( 'CharmKshhTF2Body',  [lclKshhTFInputKaons, lclKshhTFInputPions, PV3D(), combineKshhTF2Body ] )
+
+
+        ## Ks reconstruction
+        ## These should probably be moved to SharedParticles
+        ###################################################################
+        KshhKsLLdaugcuts = { "pi+" : "(P> %(KshhTFKsLLTrkPLL)s *MeV) & (MIPCHI2DV(PRIMARY)> %(KshhTFKsLLTrkPVIPChi2LL)s ) & (TRCHI2DOF< %(KshhTFKsLLTrkChi2UL)s)" % self.getProps() }
+        KshhKsLLcombcuts = "ADAMASS('KS0')< %(KshhTFKsLLCombSymMassWin)s *MeV" % self.getProps()
+        KshhKsLLparentcuts = """(VFASPF(VCHI2/VDOF)< %(KshhTFKsLLVtxChi2UL)s ) 
+                        & (BPVVDZ> %(KshhTFKsLLVtxPVDispZLL)s *mm) 
+                        & (BPVVDZ< %(KshhTFKsLLVtxPVDispZUL)s *mm) 
+                        & (BPVDIRA > %(KshhTFKsLLDiraLL)s ) 
+                        & (ADMASS('KS0')< %(KshhTFKsLLMothSymMassWin)s *MeV) 
+                        & (BPVVDCHI2> %(KshhTFKsLLVtxPVDispChi2LL)s )""" % self.getProps()
+        combineKshhTFKsLL = Hlt2Member( CombineParticles
+                                      , "KsLL"
+                                      , DecayDescriptor = "KS0 -> pi+ pi-"
+                                      , DaughtersCuts   = KshhKsLLdaugcuts
+                                      , CombinationCut  = KshhKsLLcombcuts
+                                      , MotherCut       = KshhKsLLparentcuts
+                                      , InputLocations  = [ BiKalmanFittedPions ]
+                                      )
+        charmKshhTFKsLL = bindMembers( "CharmKshhTFKsLL", [ BiKalmanFittedPions, PV3D(), combineKshhTFKsLL ] )
+
+
+        ## Repeat for KsDD with independent cuts.
+        ###################################################################
+        from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedDownPions
+
+        KshhKsDDdaugcuts = { "pi+" : "(P> %(KshhTFKsDDTrkPLL)s *MeV) & (MIPCHI2DV(PRIMARY)> %(KshhTFKsDDTrkPVIPChi2LL)s ) & (TRCHI2DOF< %(KshhTFKsDDTrkChi2UL)s)" % self.getProps() }
+        KshhKsDDcombcuts = "ADAMASS('KS0')< %(KshhTFKsDDCombSymMassWin)s *MeV" % self.getProps()
+        KshhKsDDparentcuts = """(VFASPF(VCHI2/VDOF)< %(KshhTFKsDDVtxChi2UL)s ) 
+                        & (BPVVDZ> %(KshhTFKsDDVtxPVDispZLL)s *mm) 
+                        & (BPVVDZ< %(KshhTFKsDDVtxPVDispZUL)s *mm) 
+                        & (BPVDIRA > %(KshhTFKsDDDiraLL)s ) 
+                        & (ADMASS('KS0')< %(KshhTFKsDDMothSymMassWin)s *MeV) 
+                        & (BPVVDCHI2> %(KshhTFKsDDVtxPVDispChi2LL)s )""" % self.getProps()
+        combineKshhTFKsDD = Hlt2Member( CombineParticles
+                                      , "KsDD"
+                                      , DecayDescriptor = "KS0 -> pi+ pi-"
+                                      , DaughtersCuts   = KshhKsDDdaugcuts
+                                      , CombinationCut  = KshhKsDDcombcuts
+                                      , MotherCut       = KshhKsDDparentcuts
+                                      , InputLocations  = [ BiKalmanFittedDownPions ]
+                                      )
+        charmKshhTFKsDD = bindMembers( "CharmKshhTFKsDD", [ BiKalmanFittedDownPions, PV3D(), combineKshhTFKsDD ] )
+
+
+        ## D0 -> K_S K* construction sequences.
+        ###################################################################
+        combineKshhTFD2HHKsLL = self.__KshhTFDCombine('CharmKshhTFD2HHKsLL'
+                                        , [charmKshhTF2Body, charmKshhTFKsLL]
+                                        , extracuts = { 'CombinationCut' : "(ADAMASS('D0')< %(KshhTFDwKsLLSymMassWin)s *MeV)" % self.getProps() } 
+                                        )
+        combineKshhTFD2HHKsDD = self.__KshhTFDCombine('CharmKshhTFD2HHKsDD'
+                                        , [charmKshhTF2Body, charmKshhTFKsDD]
+                                        , extracuts = { 'CombinationCut' : "(ADAMASS('D0')< %(KshhTFDwKsDDSymMassWin)s *MeV)" % self.getProps() } 
+                                        )
+
+        ## Make the lines
+        ###################################################################
+        self.__makeLine('CharmTFD2HHKsLL' , algos = [ combineKshhTFD2HHKsLL ])
+        self.__makeLine('CharmTFD2HHKsDD' , algos = [ combineKshhTFD2HHKsDD ])
+
 
