@@ -4,13 +4,14 @@
  *  Implementation file for T-station alignment tool : TrackSelector
  *
  *  CVS Log :-
- *  $Id: ATrackSelector.cpp,v 1.9 2010-04-20 12:42:30 jblouw Exp $
+ *  $Id: ATrackSelector.cpp,v 1.10 2010-04-22 09:47:24 jblouw Exp $
  *
  *  @author J. Blouw  Johan.Blouw@cern.ch
  *  @date   31/09/2006
  */
 //-----------------------------------------------------------------------------
 #include <string>
+#include <iomanip>
 
 #include "GaudiKernel/ToolFactory.h"
 
@@ -92,7 +93,11 @@ StatusCode ATrackSelector::Reset() {
       for ( unsigned int k = 0; k < 4; k++ ) // layers
 	for ( unsigned int l = 0; l < 9; l++ )
 	  m_uniform[i][j][k][l] = 0;  
-  debug() << "Resetted the uniform distribution!!!!" << endreq;
+  
+  for ( unsigned int i = 0; i < 9; i++ )
+    for ( unsigned int j = 0; j < 9; j++ )
+      m_HitMatrix[i][j] = 0;
+  debug() << "Reset the uniform distribution!!!!" << endreq;
   m_total = m_bad_chi2 = m_bad_p = m_bad_pt = m_few_hits = 0;
   m_bad_energy = m_not_uniform = 0;
   return StatusCode::SUCCESS;
@@ -156,7 +161,7 @@ bool ATrackSelector::accept ( const LHCb::Track& aTrack ) {
 
   int OThits = 0, IThits = 0 , TThits = 0;
   //if all ok so far, cut on #Hits
-  bool test = countTHits( aTrack, OThits, IThits ,TThits);
+  countTHits( aTrack, OThits, IThits ,TThits);
   if ( OThits >= m_minOTHitCut )      
     debug() << "--> " << OThits <<  "  hits in  OT !" << endmsg;
   else {
@@ -284,6 +289,8 @@ bool ATrackSelector::countTHits(const LHCb::Track& aTrack, int& nOThits, int& nI
   if ( m_extrapolator && ! yCut( aTrack ) ) {
     return false;
   }
+  int module_a = -1;
+  int module_b = -1;
   for ( node = aTrack.nodes().begin(); aTrack.nodes().end() != node; node++ ) {
     const LHCb::FitNode *aNode = dynamic_cast<const LHCb::FitNode*>(*node);
     if ( ( aNode->type() != LHCb::Node::HitOnTrack 
@@ -305,6 +312,18 @@ bool ATrackSelector::countTHits(const LHCb::Track& aTrack, int& nOThits, int& nI
 	const LHCb::OTMeasurement* otm = 
 	  dynamic_cast<const LHCb::OTMeasurement*>(&aNode->measurement());
 	const LHCb::OTChannelID channel = otm->channel();
+	int station = channel.station() -1;
+	int layer = channel.layer();
+	if ( station == 0 && layer == 0 ) {
+	  module_a = channel.module() - 1;
+	}
+	if ( station == 2 && layer == 3 ) {
+	  module_b = channel.module() - 1;
+	}
+	//	if (module_b > -1 && module_a > -1 )
+	//	  info() << "module a = " << module_a << " module_b = " << module_b << endreq;
+	if (module_b > -1 && module_a > -1 ) 
+	  m_HitMatrix[module_a][module_b]++;
         otSum++;
       }
       else if ( id.stID().isTT() ) {
@@ -380,36 +399,68 @@ void ATrackSelector::PrintSummary() {
 }
 
 void ATrackSelector::PrintUniformTD() {
+  int tot = -1;
   this->PrintSummary();
-  unsigned int prev[4][9];
-  for ( unsigned int i = 0; i < 3; i++ )  // stations
-    for ( unsigned int l = 0; l < 9; l++ )
-      prev[i][l] = 0;
-  
-  for ( unsigned int i = 0; i < 3; i++ )  {// stations
-    info() << "Station nr. " << i << " : ";
-    for ( unsigned int j = 0; j < 4; j++ ) {// quadrants
-      info() << "Quadrant nr: " << j << endreq;
-      for ( unsigned int k = 0; k < 4; k++ ) {// layers
-	info() << "Layer nr " << k << " : ";
-	for ( unsigned int l = 0; l < 9; l++ )
-	  info() << m_uniform[i][j][k][l] << " ";
-	info() << endreq;
-      }
+  for ( unsigned int i = 0; i < 9; i++ ) 
+    for ( unsigned int j = 0; j < 9; j++ ) 
+      if ( tot < m_HitMatrix[j][i] )
+	tot = m_HitMatrix[j][i];
+  /*
+  info() << "Total nr. of hits: " << tot << endreq;
+  info() << "Hit Correlation Matrix between modules in first and last layer in OT" << endreq;
+  info() << "Module nr:      0     1     2     3     4     5     6     7     8" << endreq;
+  info() <<   "         |-------------------------------------------------------|" << endreq;
+  for ( unsigned int i = 0; i < 9; i++ ) {
+    info() << "   " << std::setw(5) << i << " | ";
+    for ( unsigned int j = 0; j < 9; j++ ) {
+      info() << " " << std::setprecision(5) << std::setw(5) << m_HitMatrix[j][i]/tot;
     }
-  }
-  for ( unsigned int i = 0; i < 3; i++ )  // stations
-    for ( unsigned int j = 0; j < 4; j++ ) // quadrants
-      for ( unsigned int k = 0; k < 4; k++ ) // layers
-	for ( unsigned int l = 0; l < 9; l++ )
-	  prev[i][l] += m_uniform[i][j][k][l];
-  for ( unsigned int i = 0; i < 3; i++ )  {// stations
-    info() << "Station " << i << endreq;
-    info() << "Hits : ";
-    for ( unsigned int l = 0; l < 9; l++ )
-      info() << prev[i][l] << " ";
     info() << endreq;
   }
+  */
+  info() << "Hit Correlation Matrix between modules in first and last layer in OT" << endreq;
+  info() << "Module nr:      0     1     2     3     4     5     6     7     8" << endreq;
+  info() <<   "         |-------------------------------------------------------|" << endreq;
+  for ( unsigned int i = 0; i < 9; i++ ) {
+    info() << "   " << std::setw(5) << i << " | ";
+    for ( unsigned int j = 0; j < 9; j++ ) {
+      info() << " " << std::setw(5) << m_HitMatrix[j][i];
+    }
+    info() << endreq;
+  }
+  if ( m_weights ) {
+    unsigned int prev[4][9];
+    for ( unsigned int i = 0; i < 3; i++ )  // stations
+      for ( unsigned int l = 0; l < 9; l++ )
+	prev[i][l] = 0;
+    
+    for ( unsigned int i = 0; i < 3; i++ )  {// stations
+      info() << "Station nr. " << i << " : ";
+      for ( unsigned int j = 0; j < 4; j++ ) {// quadrants
+	info() << "Quadrant nr: " << j << endreq;
+	for ( unsigned int k = 0; k < 4; k++ ) {// layers
+	  info() << "Layer nr " << k << " : ";
+	  for ( unsigned int l = 0; l < 9; l++ )
+	    info() << m_uniform[i][j][k][l] << " ";
+	  info() << endreq;
+	}
+      }
+    }
+    for ( unsigned int i = 0; i < 3; i++ )  // stations
+      for ( unsigned int j = 0; j < 4; j++ ) // quadrants
+	for ( unsigned int k = 0; k < 4; k++ ) // layers
+	  for ( unsigned int l = 0; l < 9; l++ )
+	    prev[i][l] += m_uniform[i][j][k][l];
+    for ( unsigned int i = 0; i < 3; i++ )  {// stations
+      info() << "Station " << i << endreq;
+      info() << "Hits : ";
+      for ( unsigned int l = 0; l < 9; l++ )
+	info() << prev[i][l] << " ";
+      info() << endreq;
+    }
+  }
+      
+
 }
 
 
