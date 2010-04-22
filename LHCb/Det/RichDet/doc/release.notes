@@ -3,6 +3,11 @@
 ! Responsible : Antonis Papanestis
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
+
+! 2010-04-22 - Antonis Papanestis
+ - Changes for a new HPD magnification algorithm in the presence of magnetic 
+   field.
+
 ! 2010-04-22 - Stephanie Hansmann-Menzemer
  - addapt to changes in magnetic field service
 

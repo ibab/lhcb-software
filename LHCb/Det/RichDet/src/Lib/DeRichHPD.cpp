@@ -18,8 +18,6 @@
 #include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/Bootstrap.h"
 
-#include "Kernel/ILHCbMagnetSvc.h"
-
 // DetDesc
 #include "DetDesc/Condition.h"
 #include "DetDesc/SolidBox.h"
@@ -28,9 +26,6 @@
 #include "RichDet/DeRichHPD.h"
 #include "RichDet/DeRich.h"
 #include "RichDet/DeRichSystem.h"
-
-// GSL
-#include "gsl/gsl_math.h"
 
 // Boost
 #include "boost/lexical_cast.hpp"
@@ -547,7 +542,10 @@ StatusCode DeRichHPD::fillHpdDemagTable(unsigned int field)
 StatusCode DeRichHPD::fillHpdMagTable( unsigned int field )
 {
   const std::string paraLoc = "hpd"+boost::lexical_cast<std::string>(m_number)+"_rec";
-  const std::vector<double> & coeff_rec = m_demagConds[field]->paramVect<double>(paraLoc);
+  const std::vector<double>& coeff_rec = m_demagConds[field]->paramVect<double>(paraLoc);
+  m_MDMS_version = 0;
+  if ( m_demagConds[field]->exists("version") )
+    m_MDMS_version = m_demagConds[field]->param<int>("version");
 
   // working data tables, used to initialise the interpolators
   std::map<double,double> tableR, tablePhi;
@@ -604,78 +602,121 @@ StatusCode DeRichHPD::fillHpdMagTable( unsigned int field )
   m_magMapR[field]   -> initInterpolator( tableR   );
   m_magMapPhi[field] -> initInterpolator( tablePhi );
 
+  if ( m_MDMS_version > 0 )
+  {
+    if ( coeff_rec.size() < 12 )
+    {
+      error() << "MDMS_version = " << m_MDMS_version << "and coeff_rec.size() = "
+              << coeff_rec.size() << endmsg;
+      return StatusCode::FAILURE;
+    }
+    m_MDMSRotCentre = Gaudi::XYZVector( coeff_rec[8], coeff_rec[9], 0.0 );
+    m_magnificationCoef1 = coeff_rec[10];
+    m_magnificationCoef2 = coeff_rec[11];
+  }
+  else
+  {
+    m_MDMSRotCentre = Gaudi::XYZPoint( 0.0, 0.0, 0.0 );
+    m_magnificationCoef1 = 0.0;
+    m_magnificationCoef2 = 0.0;
+  }
+
   return StatusCode::SUCCESS;
 }
 
 //=========================================================================
 //  magnification to cathode and transformation to Global coordinates
+//  with the magnet ON
 //=========================================================================
-StatusCode DeRichHPD::magnifyToGlobal( Gaudi::XYZPoint& detectPoint,
-                                       bool photoCathodeSide ) const
+StatusCode DeRichHPD::magnifyToGlobalMagnetON( Gaudi::XYZPoint& detectPoint,
+                                               bool photoCathodeSide ) const
 {
+  detectPoint =  ( m_MDMS_version == 0 ?
+                   m_SiSensorToHPDMatrix * detectPoint :
+                   detectPoint -= m_MDMSRotCentre );
+
+  detectPoint.SetZ(0.0);
+
   const double rAnode = detectPoint.R();
-  bool isMagnetOn = ( std::abs(m_magFieldSvc->signedRelativeCurrent()) > 0.5 || m_UseHpdMagDistortions );
-  int field = 1;
-  if (m_magFieldSvc->isDown())
-    field = -1;
+  const unsigned int field = (m_magFieldSvc->isDown() ? 0 : 1);
+  double rCathode = magnification_RtoR(field)->value( rAnode );
 
-    //info() << m_magFieldSvc->signedRelativeCurrent() << " polarity:" << m_magFieldSvc->isDown()<<endmsg;
+  if ( m_MDMS_version != 0 )
+  {
+    detectPoint = m_SiSensorToHPDMatrix * detectPoint;
+    detectPoint.SetZ(0.0);
+    const double new_rAnode = detectPoint.R();
+    rCathode =  m_magnificationCoef1*new_rAnode+m_magnificationCoef2*new_rAnode*new_rAnode;
+  }
 
+  // calculate angle phi
+  double anodePhi = std::atan2( detectPoint.Y(), detectPoint.X() );
+  if ( detectPoint.Y() < 0 ) anodePhi += Gaudi::Units::twopi;
 
-// chose method to use for the rCathode
-  double rCathode =
-    ( isMagnetOn ?
-      // use magnetic distortion
-      magnification_RtoR(field)->value( rAnode ) :
+  const double result_phi = magnification_RtoPhi(field)->value( rAnode );
 
-      // use "old" demagnification
-      // To go from the cathode to the anode Ra = Rc*(-d0 + d1*Rc)
-      // The minus sign in d0 is for the cross-focussing effect
-      // To go from the anode to the cathode solve: d1*Rc^2 - d0*Rc - Ra = 0
-      // The difference is that Ra is now positive.
-      // Chose the solution with the minus sign
-      (m_deMagFactor[0] - std::sqrt(gsl_pow_2( m_deMagFactor[0] ) -
-                                    4*m_deMagFactor[1]*rAnode))/(2*m_deMagFactor[1] ) );
-
+  double new_phi = anodePhi + result_phi + Gaudi::Units::pi;
+  if ( new_phi > Gaudi::Units::twopi ) new_phi -= Gaudi::Units::twopi;
 
   // check if this point could have come from the photoCathode
   if ( m_winInRsq < rCathode*rCathode ) return StatusCode::FAILURE;
 
-  if ( !photoCathodeSide ) {
-    // add "extra" radius for the refraction on the HPD window,
-    // assuming 90 degrees angle
-    rCathode  = rCathode + m_refactParams[3]*gsl_pow_3(rCathode)+
-      m_refactParams[2]*gsl_pow_2(rCathode)+m_refactParams[1]*rCathode+
-      m_refactParams[0];
-  }
+  // add "extra" radius for the refraction on the HPD window,
+  // assuming 90 degrees angle
+  if ( !photoCathodeSide )
+    rCathode  = rCathode + extraRadiusForRefraction(rCathode);
 
-  double xWindow(0.0), yWindow(0.0);
-  if ( isMagnetOn )
-  {
-    const double result_phi = magnification_RtoPhi(field)->value( rAnode );
-
-    double anodePhi = std::atan2( detectPoint.Y(), detectPoint.X() );
-    if ( detectPoint.Y() < 0 ) anodePhi += Gaudi::Units::twopi;
-
-    double new_phi = anodePhi + result_phi + Gaudi::Units::pi;
-    if ( new_phi > Gaudi::Units::twopi ) new_phi -= Gaudi::Units::twopi;
-
-    xWindow = rCathode * cos(new_phi);
-    yWindow = rCathode * sin(new_phi);
-  }
-  else
-  {
-    // the minus sign is for the cross-focussing
-    const double scaleUp = ( rAnode>0 ? -rCathode/rAnode : 0 );
-
-    xWindow = scaleUp*detectPoint.x();
-    yWindow = scaleUp*detectPoint.y();
-  }
+  const double xWindow = rCathode * cos(new_phi);
+  const double yWindow = rCathode * sin(new_phi);
   const double XsqPlusYsq = xWindow*xWindow+yWindow*yWindow;
 
   const double winRadiusSq = ( photoCathodeSide ? m_winInRsq :m_winOutRsq );
   if ( winRadiusSq < XsqPlusYsq ) return StatusCode::FAILURE;
-  const double zWindow = std::sqrt(winRadiusSq - XsqPlusYsq);
+  const double zWindow = sqrt(winRadiusSq - XsqPlusYsq);
+
+  detectPoint = m_fromWindowToGlobal * Gaudi::XYZPoint(xWindow,yWindow,zWindow);
+
+  return StatusCode::SUCCESS;
+}
+//=========================================================================
+//  magnification to cathode and transformation to Global coordinates
+//  with the magnet OFF
+//=========================================================================
+StatusCode DeRichHPD::magnifyToGlobalMagnetOFF( Gaudi::XYZPoint& detectPoint,
+                                                bool photoCathodeSide ) const
+{
+  detectPoint = m_SiSensorToHPDMatrix * detectPoint;
+  detectPoint.SetZ(0.0);
+  const double rAnode = detectPoint.R();
+
+  // To go from the cathode to the anode Ra = Rc*(-d0 + d1*Rc)
+  // The minus sign in d0 is for the cross-focussing effect
+  // To go from the anode to the cathode solve: d1*Rc^2 - d0*Rc - Ra = 0
+  // The difference is that Ra is now positive.
+  // Chose the solution with the minus sign
+  double rCathode =
+    (m_deMagFactor[0]-sqrt(gsl_pow_2(m_deMagFactor[0])-4*m_deMagFactor[1]*rAnode))
+    /(2*m_deMagFactor[1]);
+
+  // check if this point could have come from the photoCathode
+  if ( m_winInRsq < rCathode*rCathode ) return StatusCode::FAILURE;
+
+  // add "extra" radius for the refraction on the HPD window,
+  // assuming 90 degrees angle
+  if ( !photoCathodeSide )
+    rCathode  = rCathode + extraRadiusForRefraction(rCathode);
+
+
+  // the minus sign is for the cross-focussing
+  const double scaleUp = ( rAnode>0 ? -rCathode/rAnode : 0 );
+
+  const double xWindow = scaleUp*detectPoint.x();
+  const double yWindow = scaleUp*detectPoint.y();
+  const double XsqPlusYsq = xWindow*xWindow+yWindow*yWindow;
+
+  const double winRadiusSq = ( photoCathodeSide ? m_winInRsq :m_winOutRsq );
+  if ( winRadiusSq < XsqPlusYsq ) return StatusCode::FAILURE;
+  const double zWindow = sqrt(winRadiusSq - XsqPlusYsq);
 
   detectPoint = m_fromWindowToGlobal * Gaudi::XYZPoint(xWindow,yWindow,zWindow);
 

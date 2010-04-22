@@ -21,11 +21,15 @@
 
 // LHCbKernel
 #include "Kernel/RichSmartID.h"
+#include "Kernel/ILHCbMagnetSvc.h"
 
 // RichDet
 #include "RichDet/DeRichBase.h"
 #include "RichDet/Rich1DTabFunc.h"
 #include "RichDet/Rich1DTabProperty.h"
+
+// GSL
+#include "gsl/gsl_math.h"
 
 #include <bitset>
 
@@ -285,6 +289,15 @@ private: // functions
     return m_siliconHalfLengthY - smartID.pixelRow()*m_pixelSize - m_pixelSize/2.0;
   }
 
+  /// parameterised extra radius for the defraction in the HPD window
+  inline double extraRadiusForRefraction( double rCathode ) const
+  {
+    return ( m_refactParams[3]*gsl_pow_3(rCathode) +
+             m_refactParams[2]*gsl_pow_2(rCathode) +
+             m_refactParams[1]*rCathode +
+             m_refactParams[0] );
+  }
+
   /// Get parameters from Rich1
   StatusCode getParameters();
 
@@ -294,8 +307,10 @@ private: // functions
   /// Update the magnification and demagnification information
   StatusCode updateDemagProperties();
 
-  // go from a point on silicon to a point on the photo-cathode
-  StatusCode magnifyToGlobal( Gaudi::XYZPoint& detectPoint, bool photoCathodeSide ) const;
+  // go from a point on silicon to a point on the photo-cathode with magnet ON
+  StatusCode magnifyToGlobalMagnetON( Gaudi::XYZPoint& detectPoint, bool photoCathodeSide ) const;
+  // go from a point on silicon to a point on the photo-cathode with magnet OFF
+  StatusCode magnifyToGlobalMagnetOFF( Gaudi::XYZPoint& detectPoint, bool photoCathodeSide ) const;
 
   /// Initialise the interpolators for demagnification (cathode to anode)
   StatusCode fillHpdDemagTable( unsigned int  field );
@@ -331,6 +346,8 @@ private: // data
   /// The demagnification factor of the HPD.  Element [0] is the linear
   /// term, and element[1] the non-linear term for small corrections.
   double m_deMagFactor[2];
+  double m_magnificationCoef1;
+  double m_magnificationCoef2;
 
   /// Interpolated function for HPD R for demagnification
   std::vector<Rich::TabulatedFunction1D*> m_demagMapR;
@@ -358,6 +375,7 @@ private: // data
   bool   m_UseHpdMagDistortions;
   bool   m_UseBFieldTestMap ;
   double m_LongitudinalBField ;
+  bool   m_MDMS_version;
 
   // Cached parameters for speed reasons.
   Gaudi::Transform3D m_SiSensorToHPDMatrix; ///< silicon to HPD transform
@@ -368,6 +386,10 @@ private: // data
   Gaudi::Transform3D m_fromHPDToPanel; ///< HPD to HPD Panel transform
   /// The centre of the HPD window (inside) in the mother (panel) coordinate system
   Gaudi::XYZPoint m_windowInsideCentreMother;
+
+  /// Rotional centre for MDMS corrections
+  Gaudi::XYZVector m_MDMSRotCentre;
+
   /// pointer to the magnetic field service
   ILHCbMagnetSvc* m_magFieldSvc;
 };
@@ -379,11 +401,10 @@ inline StatusCode DeRichHPD::detectionPoint ( const LHCb::RichSmartID smartID,
                                               Gaudi::XYZPoint& detectPoint,
                                               bool photoCathodeSide ) const
 {
-  // convert pixel number to silicon coordinates
-  // and transform the point to get the misalignment of the Si sensor
-  detectPoint = m_SiSensorToHPDMatrix * pointOnSilicon(smartID);
-  detectPoint.SetZ(0.0);
-  return magnifyToGlobal( detectPoint, photoCathodeSide );
+  detectPoint = pointOnSilicon(smartID);
+  return ( (fabs( m_magFieldSvc->signedRelativeCurrent() ) > 0.5 || m_UseHpdMagDistortions) ?
+           magnifyToGlobalMagnetON( detectPoint, photoCathodeSide ) :
+           magnifyToGlobalMagnetOFF( detectPoint, photoCathodeSide ) );
 }
 
 //=========================================================================
@@ -401,12 +422,12 @@ inline StatusCode DeRichHPD::detectionPoint ( double fracPixelCol,
     return StatusCode::FAILURE;
   }
 
-  Gaudi::XYZPoint onAnode( fracPixelCol*m_pixelSize - m_siliconHalfLengthX,
-                           m_siliconHalfLengthY - fracPixelRow*m_pixelSize,
-                           0.0 );
-  detectPoint = m_SiSensorToHPDMatrix * onAnode;
-  detectPoint.SetZ(0.0);
-  StatusCode sc = magnifyToGlobal( detectPoint, photoCathodeSide );
+  detectPoint = Gaudi::XYZPoint( fracPixelCol*m_pixelSize - m_siliconHalfLengthX,
+                                 m_siliconHalfLengthY - fracPixelRow*m_pixelSize,
+                                 0.0 );
+  StatusCode sc = ( fabs( m_magFieldSvc->signedRelativeCurrent() ) > 0.5 || m_UseHpdMagDistortions) ?
+    magnifyToGlobalMagnetON( detectPoint, photoCathodeSide ) :
+    magnifyToGlobalMagnetOFF( detectPoint, photoCathodeSide );
   detectPoint = geometry()->toLocal(detectPoint);
   return sc;
 }
