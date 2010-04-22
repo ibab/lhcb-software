@@ -1,4 +1,4 @@
-// $Id: ILHCbMagnetSvc.h,v 1.3 2009-12-10 10:32:23 cattanem Exp $
+// $Id: ILHCbMagnetSvc.h,v 1.4 2010-04-22 08:16:22 smenzeme Exp $
 #ifndef KERNEL_ILHCBMAGNETSVC_H 
 #define KERNEL_ILHCBMAGNETSVC_H 1
 
@@ -29,9 +29,9 @@ public:
   // Return the interface ID
   static const InterfaceID& interfaceID() { return IID_ILHCbMagnetSvc; }
 
-  virtual double scaleFactor() const = 0; ///< Return the field scaling factor
-  virtual bool   useRealMap()  const = 0; ///< True if using measured map
-  virtual int    polarity()    const = 0; ///< Return the magnet polarity
+  virtual bool   useRealMap()            const = 0; ///< True if using measured map
+  virtual bool   isDown()                const = 0; ///< True if the down polarity map is loaded
+  virtual double signedRelativeCurrent() const = 0; ///< scale factor including polarity and current
 
   /** Implementation of IMagneticFieldSvc interface.
    * @param[in]  xyz Point at which magnetic field vector will be given

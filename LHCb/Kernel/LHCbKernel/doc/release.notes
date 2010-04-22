@@ -3,6 +3,8 @@
 ! Package manager: M.Cattaneo
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
+! 2010-04-22 - Stephanie Hansmann-Menzemer
+ - Adapt to changes in magentic field service interface
 
 !===================== LHCbKernel v11r12 2010-03-17 =======================
 ! 2010-03-17 - Victor Coco
