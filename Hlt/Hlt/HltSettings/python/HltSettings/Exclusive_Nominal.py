@@ -63,7 +63,8 @@ class Exclusive_Nominal :
 #            , 'Hlt2Bu2MuMuKJpsi'
 #            , 'Hlt2Bu2MuMuKHighMass'
         # Hlt2DisplVerticesLines.py
-              'Hlt2DisplVertices'
+               'Hlt2DisplVerticesSingle'
+             , 'Hlt2DisplVerticesDouble'
         # Hlt2B2XGammaLines.py
               , 'Hlt2Bs2PhiGamma'
               , 'Hlt2Bs2PhiGammaNoCutsK'

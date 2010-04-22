@@ -4,6 +4,10 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+!========================== HltSettings v1r16   2010-04-22 ===================
+! 2010-04-22 - Patrick Koppenburg
+ - Exclusive_Nominal : Split Hlt2DiplVertices in 2 Lines.
+
 ! 2010-04-22 - Gerhard Raven
  - in Physics_25Vis_25L0_2Hlt1_2Hlt2_Apr10, set postscale of Hlt1L0Muon.* to one.
 
