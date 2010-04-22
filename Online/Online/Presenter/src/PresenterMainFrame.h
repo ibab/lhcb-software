@@ -97,6 +97,7 @@ public:
       OVERLAY_REFERENCE_HISTO_COMMAND,
       FAST_HITMAP_DRAW_COMMAND,
       SHOW_ALARM_LIST_COMMAND,
+      SHOW_KNOWNPROBLEM_LIST_COMMAND,
       PICK_REFERENCE_HISTO_COMMAND,
       SAVE_AS_REFERENCE_HISTO_COMMAND,
       HELP_CONTENTS_COMMAND,
@@ -333,6 +334,8 @@ public:
   void saveSelectedHistogramAsReference();
   void toggleReferenceOverlay();
   void toggleShowAlarmList();
+  /// Show panel with list of known problems
+  void toggleShowKnownProblemList() ;
   void toggleFastHitMapDraw();
   void toggleHistoryPlots();
   void paintHist(DbRootHist* histogram, TPad* overlayOnPad);
@@ -401,6 +404,8 @@ private:
   TGDockableFrame*  m_toolBarDock;
   TGDockableFrame*  m_databaseHistogramsDock;
   TGDockableFrame*  m_databaseAlarmsDock;
+  /// Frame to contain list of known problems
+  TGDockableFrame * m_knownProblemDock ;
   TGDockableFrame*  m_pageDock;
   TGDockableFrame*  m_mainCanvasInfoDock;
   TPad*             m_drawPattern;
@@ -448,6 +453,8 @@ private:
   TGHotString*  m_viewToggleReferenceOverlayText;
   TGHotString*  m_viewToggleFastHitMapDrawText;
   TGHotString*  m_viewAlarmListText;
+  /// Menu for known problems list
+  TGHotString * m_viewKnownProblemListText ;
   TGHotString*  m_viewInspectHistoText;
   TGHotString*  m_viewHistogramDescriptionText;
   TGHotString*  m_viewInspectPageText;

@@ -82,6 +82,7 @@
 #include "Elog.h"
 #include "ElogDialog.h"
 #include "ShiftDB.h"
+#include "KnownProblemList.h"
 #include "ProblemDB.h"
 
 using namespace pres;
@@ -312,6 +313,7 @@ void PresenterMainFrame::buildGUI() {
     m_viewToggleReferenceOverlayText = new TGHotString("&Overlay reference");
     m_viewToggleFastHitMapDrawText = new TGHotString("&Fast hitmap draw");
     m_viewAlarmListText = new TGHotString("Show &alarm list");
+    m_viewKnownProblemListText = new TGHotString( "Show &known problems" );
     m_viewInspectHistoText = new TGHotString("&Inspect histogram");
     m_viewHistogramDescriptionText = new TGHotString("Histogram &description");
     m_viewInspectPageText  = new TGHotString("Inspect &page");
@@ -418,6 +420,8 @@ void PresenterMainFrame::buildGUI() {
     m_viewMenu->AddSeparator();
     m_viewMenu->AddEntry(m_viewAlarmListText, SHOW_ALARM_LIST_COMMAND);
     m_viewMenu->CheckEntry(SHOW_ALARM_LIST_COMMAND);
+    m_viewMenu->AddEntry(m_viewKnownProblemListText, SHOW_KNOWNPROBLEM_LIST_COMMAND);
+    m_viewMenu->CheckEntry(SHOW_KNOWNPROBLEM_LIST_COMMAND);
     m_viewMenu->AddEntry(m_viewUnDockPageText, UNDOCK_PAGE_COMMAND);
     m_viewMenu->AddEntry(m_viewDockAllText, DOCK_ALL_COMMAND);
     m_viewMenu->Connect("Activated(Int_t)", "PresenterMainFrame",
@@ -893,6 +897,25 @@ void PresenterMainFrame::buildGUI() {
                                                         kLHintsExpandX |
                                                         kLHintsExpandY,
                                                         0, 0, 0, 0));
+
+    //=========================================================================
+    // List of known problems
+    
+    m_knownProblemDock = new TGDockableFrame( m_leftMiscFrame ) ;
+    m_knownProblemDock -> SetWindowName( "List of known problems" ) ;
+    m_knownProblemDock -> EnableUndock( true ) ;
+    m_knownProblemDock -> EnableHide( true ) ;
+    m_knownProblemDock -> Resize( 220 , 494 ) ;
+    m_leftMiscFrame -> AddFrame( m_knownProblemDock ,
+				 new TGLayoutHints(kLHintsLeft | kLHintsTop |
+						   kLHintsExpandX | kLHintsExpandY,
+						   0, 0, 0, 0 ) ) ;
+    KnownProblemList * kpList = new KnownProblemList( m_knownProblemDock ,  
+						      m_pbdbConfig ) ;
+    m_knownProblemDock -> AddFrame( kpList , 
+				    new TGLayoutHints( kLHintsLeft | kLHintsTop |
+						   kLHintsExpandX | kLHintsExpandY,
+						   0, 0, 0, 0 ) ) ;
     // -------------------------
     m_pageDock = new TGDockableFrame(m_mainHorizontalFrame, -1, kVerticalFrame | kFixedWidth );
     m_pageDock->SetWindowName("LHCb Presenter Page");
@@ -1250,6 +1273,7 @@ void PresenterMainFrame::dockAllFrames() {
   m_dimBrowserDock->DockContainer();
   m_databasePagesDock->DockContainer();
   m_databaseAlarmsDock->DockContainer();
+  m_knownProblemDock -> DockContainer () ;
 }
 void PresenterMainFrame::handleCommand(Command cmd) {
   // ROOT GUI workaround: slot mechanism differs on different signals from
@@ -1277,6 +1301,9 @@ void PresenterMainFrame::handleCommand(Command cmd) {
   case SHOW_ALARM_LIST_COMMAND:
     toggleShowAlarmList();
     break;
+  case SHOW_KNOWNPROBLEM_LIST_COMMAND:
+    toggleShowKnownProblemList() ;
+    break ;
   case CLEAR_PAGE_COMMAND:
     removeHistogramsFromPage();
     break;
@@ -3716,6 +3743,19 @@ void PresenterMainFrame::toggleShowAlarmList() {
   }
 }
 
+//===================================================================
+// Display window listing already known problems
+//===================================================================
+void PresenterMainFrame::toggleShowKnownProblemList() {
+  if (m_viewMenu->IsEntryChecked(SHOW_KNOWNPROBLEM_LIST_COMMAND)) {
+    m_viewMenu->UnCheckEntry(SHOW_KNOWNPROBLEM_LIST_COMMAND);
+    m_leftMiscFrame->HideFrame(m_knownProblemDock);
+  } else {
+    m_viewMenu->CheckEntry(SHOW_KNOWNPROBLEM_LIST_COMMAND);
+    m_leftMiscFrame->ShowFrame(m_knownProblemDock);
+  }
+}
+
 void PresenterMainFrame::pickReferenceHistogram() {
   DbRootHist* histogram = selectedDbRootHistogram();
 
@@ -4617,11 +4657,10 @@ void PresenterMainFrame::refreshPage() {
         std::cout << "refreshing histograms one by one..." << std::endl;
       }
       std::vector<DbRootHist*>::iterator dbHistosOnPageIt;
-      dbHistosOnPageIt = dbHistosOnPage.begin();
-      while (dbHistosOnPageIt != dbHistosOnPage.end()) {
+      for (dbHistosOnPageIt = dbHistosOnPage.begin() ; dbHistosOnPageIt != dbHistosOnPage.end() ;
+	   ++dbHistosOnPageIt ) {
         (*dbHistosOnPageIt)->fillHistogram();
-        (*dbHistosOnPageIt)->normalizeReference();
-        dbHistosOnPageIt++;
+	(*dbHistosOnPageIt)->normalizeReference();
       }
     }
     if (! gROOT->IsInterrupted()) {
@@ -4689,10 +4728,9 @@ void PresenterMainFrame::enableReferenceOverlay() {
     stopped = true;
   }
   std::vector<DbRootHist*>::iterator enableRef_dbHistosOnPageIt;
-  enableRef_dbHistosOnPageIt = dbHistosOnPage.begin();
-  while (enableRef_dbHistosOnPageIt != dbHistosOnPage.end()) {
+  for (enableRef_dbHistosOnPageIt = dbHistosOnPage.begin() ; 
+       enableRef_dbHistosOnPageIt != dbHistosOnPage.end() ; ++enableRef_dbHistosOnPageIt ) {
     (*enableRef_dbHistosOnPageIt)->referenceHistogram(Show);
-    enableRef_dbHistosOnPageIt++;
   }
   editorCanvas->Update();
   if (stopped) { startPageRefresh(); }
