@@ -619,7 +619,7 @@ StatusCode DeRichHPD::magnifyToGlobal( Gaudi::XYZPoint& detectPoint,
   if (m_magFieldSvc->isDown())
     field = -1;
 
-    //info() << m_magFieldSvc->signedRelativeCurvature() << " polarity:" << m_magFieldSvc->isDown()<<endmsg;
+    //info() << m_magFieldSvc->signedRelativeCurrent() << " polarity:" << m_magFieldSvc->isDown()<<endmsg;
 
 
 // chose method to use for the rCathode
