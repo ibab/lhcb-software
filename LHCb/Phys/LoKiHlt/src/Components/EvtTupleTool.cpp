@@ -1,4 +1,4 @@
-// $Id: EvtTupleTool.cpp,v 1.5 2010-04-21 16:18:23 ibelyaev Exp $
+// $Id: EvtTupleTool.cpp,v 1.6 2010-04-22 12:18:09 ibelyaev Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -244,8 +244,8 @@ LoKi::Hybrid::EvtTupleTool::EvtTupleTool
   : GaudiTool ( type , name , parent ) 
 // preambulo:
   , m_preambulo ( ) 
-  , m_core      ( "LoKi::Hybrid::Tool/HybridFactory:PUBLIC"     )
-  , m_hlt       ( "LoKi::Hybrid::HltFactory/HltFactory:PUBLIC"  ) 
+  , m_core      ( "LoKi::Hybrid::CoreFactory/CoreFactory:PUBLIC" )
+  , m_hlt       ( "LoKi::Hybrid::HltFactory/HltFactory:PUBLIC"   ) 
 // maps:
   , m_map_odin  ( ) 
   , m_map_l0    ( ) 
