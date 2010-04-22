@@ -1,4 +1,4 @@
-// $Id: MCBs2JpsiPhiAngleCalculator.cpp,v 1.2 2010-04-21 09:58:02 gcowan Exp $
+// $Id: MCBs2JpsiPhiAngleCalculator.cpp,v 1.3 2010-04-22 11:52:53 gcowan Exp $
 // Include files 
 
 // from Gaudi
@@ -64,7 +64,6 @@ void MCBs2JpsiPhiAngleCalculator::fillDescendants( const LHCb::MCParticle* parti
     descendants.push_back( particle );
     return;
   }
-  
   
   SmartRefVector<LHCb::MCVertex>::const_iterator vertex;
   
@@ -319,12 +318,12 @@ double MCBs2JpsiPhiAngleCalculator::calculateTransThetaV(
    return Theta_V;
 }
 
-StatusCode MCBs2JpsiPhiAngleCalculator::getParticles(const LHCb::MCParticle* particle,
+StatusCode MCBs2JpsiPhiAngleCalculator::getParticles(const LHCb::MCParticle*& particle,
 						     LHCb::MCParticle::ConstVector& descendants,
-						     const LHCb::MCParticle* particleLeptonPlus,
-                                                     const LHCb::MCParticle* particleLeptonMinus,
-                                                     const LHCb::MCParticle* particleKaonPlus,
-                                                     const LHCb::MCParticle* particleKaonMinus)
+						     const LHCb::MCParticle*& particleLeptonPlus,
+                                                     const LHCb::MCParticle*& particleLeptonMinus,
+                                                     const LHCb::MCParticle*& particleKaonPlus,
+                                                     const LHCb::MCParticle*& particleKaonMinus)
 {
   LHCb::ParticleID id = particle->particleID() ;
 

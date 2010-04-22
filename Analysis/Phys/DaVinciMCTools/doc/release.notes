@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.293 2010-04-21 09:58:02 gcowan Exp $
+! $Id: release.notes,v 1.294 2010-04-22 11:52:53 gcowan Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
 !=============================================================================
+
+! 2010-04-22 - Greig Cowan
+ - Fixed bug in MCBs2JpsiPhiAngleCalculator.
 
 ! 2010-04-21 - Greig Cowan
  - Updated MCBs2JpsiPhiAngleCalculator to use

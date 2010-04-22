@@ -1,4 +1,4 @@
-// $Id: MCBs2JpsiPhiAngleCalculator.h,v 1.2 2010-04-21 09:58:02 gcowan Exp $
+// $Id: MCBs2JpsiPhiAngleCalculator.h,v 1.3 2010-04-22 11:52:53 gcowan Exp $
 #ifndef MCANGLECALCULATOR_H 
 #define MCANGLECALCULATOR_H 1
 
@@ -51,11 +51,11 @@ protected:
   
 private:
   int m_depth;
-  StatusCode getParticles(const LHCb::MCParticle*,
+  StatusCode getParticles(const LHCb::MCParticle*&,
                           LHCb::MCParticle::ConstVector&,
-			  const LHCb::MCParticle*,
-                          const LHCb::MCParticle*,
-                          const LHCb::MCParticle*,
-                          const LHCb::MCParticle*);
+			  const LHCb::MCParticle*&,
+                          const LHCb::MCParticle*&,
+                          const LHCb::MCParticle*&,
+                          const LHCb::MCParticle*&);
 };
 #endif // MCANGLECALCULATOR_H
