@@ -4,6 +4,7 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+!========================== HltCommon v5r24 2010-04-22 ===================
 ! 2010-04-21 - V. Gligorov
  - For the  new vertex filter to cut on the number of matching LHCbIDs
    in the two tracks making up the vertex, take into account that order matters
