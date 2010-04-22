@@ -4,6 +4,15 @@
 ! Purpose     : GUI to allow the visualization of all data quality histograms
 !-----------------------------------------------------------------------------
 
+! 2010-04-22 - Patrick Robbe
+ - ProblemDB.cpp/.h: add getListOfOpenedProblems function to retrieve from 
+   Problems database the list of current problems
+ - KnownProblemList.h/.cpp: new object to vizualize list of problems in the
+   Problem database (add in cmt/requirements)
+ - presenter.cpp: add "hide-problem-list" option which turns off/on display
+   of list of know problems at start-up of presentetr
+ - PresenterMainFrame.cpp: add problem list pannel
+
 ! 2010-04-20 - Giacomo Graziani
  - small fix for labels in history trend mode 
  - call OMAlib destructor before root garbage collector
