@@ -614,11 +614,15 @@ StatusCode DeRichHPD::magnifyToGlobal( Gaudi::XYZPoint& detectPoint,
                                        bool photoCathodeSide ) const
 {
   const double rAnode = detectPoint.R();
-  bool isMagnetOn = ( m_magFieldSvc->scaleFactor() > 0.5 || m_UseHpdMagDistortions );
-  const int field = m_magFieldSvc->polarity();
-  //info() << m_magFieldSvc->scaleFactor() << " polarity:" << m_magFieldSvc->polarity() << endmsg;
+  bool isMagnetOn = ( std::abs(m_magFieldSvc->signedRelativeCurrent()) > 0.5 || m_UseHpdMagDistortions );
+  int field = 1;
+  if (m_magFieldSvc->isDown())
+    field = -1;
 
-  // chose method to use for the rCathode
+    //info() << m_magFieldSvc->signedRelativeCurvature() << " polarity:" << m_magFieldSvc->isDown()<<endmsg;
+
+
+// chose method to use for the rCathode
   double rCathode =
     ( isMagnetOn ?
       // use magnetic distortion
