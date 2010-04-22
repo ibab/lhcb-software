@@ -6,7 +6,7 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 #============================================================================
 package           CommonParticles
-version           v7r0
+version           v7r1
 
 #============================================================================
 # Structure, i.e. directories to process. 
@@ -22,4 +22,4 @@ apply_pattern install_python_modules
 #============================================================================
 use DaVinciKernel   v*   Phys
 #============================================================================
-
+apply_pattern QMTest
