@@ -3,6 +3,8 @@
 ! Responsible : Jose Hernando, Eduardo Rodrigues
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
+! 2010-04-22 - Stephanie Hansmann-Menzemer
+ - addapt to changes in interfaces of magnetic field service
 
 ! 2010-04-15 - Wouter Hulsbergen
  - added VeloTrackSelector and ITTrackSelector for use in Alignment

@@ -1,4 +1,4 @@
-// $Id: PatSeedingTool.cpp,v 1.35 2010-04-07 19:45:06 smenzeme Exp $
+// $Id: PatSeedingTool.cpp,v 1.36 2010-04-22 08:08:11 smenzeme Exp $
 // Include files
 
 #include <cmath>
@@ -411,15 +411,14 @@ void PatSeedingTool::killClonesAndStore(
     if ( 0 > maxUsed ) continue;
 
     if ( debug ) {
-      const double scaleFactor = m_magFieldSvc->scaleFactor();
-      const double polarity = m_magFieldSvc->polarity();
+      const double scaleFactor = m_magFieldSvc->signedRelativeCurrent();
       const double denom = m_momentumScale * track->curvature();
       double p;
       // avoid dividing by zero
       if (std::abs(denom) < 1e-42)
 	p = ((track->curvature() < 0.) ? -HUGE_VAL : HUGE_VAL);
       else
-	p = scaleFactor *(-1)*polarity / denom;
+	p = scaleFactor *(-1) / denom;
       info() << "** Store track, estimated P " << p << " nCoord "
 	<< track->nCoords() << " chi2 " << track->chi2() << endmsg;
       BOOST_FOREACH( const PatFwdHit* hit, track->coords() )
@@ -1260,8 +1259,7 @@ void PatSeedingTool::storeTrack ( const PatSeedTrack& track,
   {
     // if our momentum tool doesn't succeed, we have to try ourselves
     // so get q/p from curvature
-    const double scaleFactor = m_magFieldSvc->scaleFactor();
-    const double polarity = m_magFieldSvc->polarity();
+    const double scaleFactor = m_magFieldSvc->signedRelativeCurrent();
     if (std::abs(scaleFactor) < 1e-4) {
       // return a track of 1 GeV, with a momentum uncertainty which makes it
       // compatible with a 1 MeV track
@@ -1270,7 +1268,7 @@ void PatSeedingTool::storeTrack ( const PatSeedTrack& track,
       sigmaQOverP = 1. / Gaudi::Units::MeV;
     } else {
       // get qOverP from curvature
-      qOverP = track.curvature() * m_momentumScale / (-1*polarity*scaleFactor);
+      qOverP = track.curvature() * m_momentumScale / (-1*scaleFactor);
       sigmaQOverP = 0.5 * qOverP; // be conservative
     }
   }

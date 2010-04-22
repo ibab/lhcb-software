@@ -1,4 +1,4 @@
-// $Id: PatFwdTool.cpp,v 1.14 2010-04-07 19:45:06 smenzeme Exp $
+// $Id: PatFwdTool.cpp,v 1.15 2010-04-22 08:08:11 smenzeme Exp $
 // Include files
 
 // from Gaudi
@@ -606,8 +606,7 @@ double PatFwdTool::chi2PerDoF ( PatFwdTrackCandidate& track ) const {
 //=========================================================================
 double PatFwdTool::qOverP ( const PatFwdTrackCandidate& track ) const {
   double qop(1.0/Gaudi::Units::GeV) ;
-  double magscalefactor = m_magFieldSvc->scaleFactor() ;
-  double polarity = m_magFieldSvc->polarity();
+  double magscalefactor = m_magFieldSvc->signedRelativeCurrent() ;
   if( std::abs(magscalefactor) > 1e-6 ) {
     double bx = track.bx();
     double bx2 = bx * bx;
@@ -618,7 +617,7 @@ double PatFwdTool::qOverP ( const PatFwdTrackCandidate& track ) const {
 		    m_momentumParams[4] * track.slY2() +
 		    m_momentumParams[5] * track.slY2() * track.slY2() );
     double proj = sqrt( ( 1. + track.slX2() + track.slY2() ) / ( 1. + track.slX2() ) );
-    qop = track.dSlope() / ( coef * Gaudi::Units::GeV * proj * magscalefactor*polarity*(-1)) ;
+    qop = track.dSlope() / ( coef * Gaudi::Units::GeV * proj * magscalefactor*(-1)) ;
   }
   return qop ;
 }

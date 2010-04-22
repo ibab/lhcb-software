@@ -1,4 +1,4 @@
-// $Id: PatDownstream.cpp,v 1.17 2010-04-07 19:45:06 smenzeme Exp $
+// $Id: PatDownstream.cpp,v 1.18 2010-04-22 08:08:11 smenzeme Exp $
 // Include files 
 
 #include <algorithm>
@@ -207,13 +207,12 @@ StatusCode PatDownstream::execute() {
 
     if ( 0 <= m_seedKey && m_seedKey == tr->key() ) m_printing = true;
 
-    const double magScaleFactor = m_magFieldSvc->scaleFactor() ;
-    const double polarity = m_magFieldSvc->polarity();
-
+    const double magScaleFactor = m_magFieldSvc->signedRelativeCurrent() ;
+    
     if( std::abs(magScaleFactor) > 1e-6 ){
         m_magnetOff = false;
     } else m_magnetOff = true;
-    PatDownTrack track( tr, m_zTT, m_zMagnetParams, m_momentumParams, m_yParams, m_errZMag, magScaleFactor*polarity*(-1) );
+    PatDownTrack track( tr, m_zTT, m_zMagnetParams, m_momentumParams, m_yParams, m_errZMag, magScaleFactor*(-1) );
 
     //Y. Xie: get rid of particles from beampipe 
     const double xAtTT = track.xAtZ( m_zTTa );

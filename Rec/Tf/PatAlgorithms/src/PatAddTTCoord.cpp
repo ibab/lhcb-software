@@ -1,4 +1,4 @@
-// $Id: PatAddTTCoord.cpp,v 1.10 2010-04-15 11:42:44 decianm Exp $
+// $Id: PatAddTTCoord.cpp,v 1.11 2010-04-22 08:08:11 smenzeme Exp $
 // Include files
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -254,7 +254,7 @@ void PatAddTTCoord::selectHits(PatTTHits& selected, const LHCb::State& state, co
     double tyTr = state.ty();
     updateTTHitForTrack( tt, state.y()-state.z()*state.ty(), tyTr );
 
-    double magScaleFactor = -1 * m_magFieldSvc->polarity()*m_magFieldSvc->scaleFactor();
+    double magScaleFactor = -1 * m_magFieldSvc->signedRelativeCurrent();
 
     // -- Extrapolate the state to the acutal position of the hit, using a two staight line segments and a kink
     double xPred = state.x() + ( z-state.z() ) * state.tx() + m_ttParam * magScaleFactor*state.qOverP() * ( z - m_zTTField );

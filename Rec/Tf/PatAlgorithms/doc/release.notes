@@ -3,6 +3,8 @@
 ! Responsible : Stephanie-Hansmann-Menzemer
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
+! 2010-04-22 - Stephanie Hansmann-Menzemer
+ - addapt to changes in interface to magnetic field service
 
 ! 2010-04-15 - Michel De Cian
  - Change in parametrisation in PatAddTTCoord (increased purity), 
