@@ -1,3 +1,8 @@
+2010-04-22  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbLegacy/install_project.py: fixed wrong post install command for the wrapper scripts generation. Now
+	uses the new syntax with the --login-version option.
+
 2010-04-14  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* scripts/mkLHCbtar: fixed the creation of data package tarballs for packages with hat.
@@ -12,9 +17,9 @@
 2010-03-29  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/requirements: release of version v3r1
-	
+
 2010-03-29  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
-	
+
 	* python/LbLegacy/install_project.py: added support for "latest data link". It creates a link to
 	the version directory of a data package called "v99r9"
 	* scripts/makedoc: fixed the parsing of messages prefixed with the CMTMSGPREFIX
@@ -32,12 +37,12 @@
 
 2010-03-02  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* python/LbLegacy/install_project.py: added the possibility to fall back on $VO_LHCB_SW_DIR/lib if 
+	* python/LbLegacy/install_project.py: added the possibility to fall back on $VO_LHCB_SW_DIR/lib if
 	the MYSITEROOT variable is not defined.
 
 2010-02-19  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* python/LbLegacy/install_project.py: added more protection against the windows attributes. Now 
+	* python/LbLegacy/install_project.py: added more protection against the windows attributes. Now
 	removes them recursively in each untarred directory and each move directory. To be sure.
 
 2010-02-17  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
@@ -47,16 +52,16 @@
 
 2010-02-15  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* scripts/mkproject: 
+	* scripts/mkproject:
 	- fixed the quoting of the argument to "cmt br".
-	- fixed the top links ("doc" and "requirements") creation in case of a read only volume. 
+	- fixed the top links ("doc" and "requirements") creation in case of a read only volume.
 	* scripts/makedoc: create the target directory for the documentation is it doesn't
 	already exists.
 
 2010-02-12  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* python/LbLegacy/install_project.py: 
-	- make the "-p" and "-v" options not necessary: the syntax is 
+	* python/LbLegacy/install_project.py:
+	- make the "-p" and "-v" options not necessary: the syntax is
 	now "python install_project.py [options] <project> <version>.
 	The "-p" and "-v" options are kept for backward compatibility.
 	- factored out the arguments parsing
@@ -65,10 +70,10 @@
 
 2010-02-11  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* python/LbLegacy/install_project.py: 
+	* python/LbLegacy/install_project.py:
 	- fixed CMTCONFIG extraction from the environment in case of shared tarball
 	installation.
-	- fixed the formating 
+	- fixed the formating
 
 2010-02-05  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
@@ -84,19 +89,19 @@
 
 2010-01-18  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* python/LbLegacy/install_project.py: 
+	* python/LbLegacy/install_project.py:
 	- added the  -C or --compatible-configs options
 	that prints the avaible CMTCONFIGs for that platform and exits
 	- added the platform detection if no CMTCONFIG has been provided.
 
 2010-01-13  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* scripts/mkLCGCMTtar: fixed the creation of the LCG tarball for the LHCbDirac 
+	* scripts/mkLCGCMTtar: fixed the creation of the LCG tarball for the LHCbDirac
 	project.
 
 2010-01-12  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* python/LbLegacy/install_project.py: downloads the optimized version of the 
+	* python/LbLegacy/install_project.py: downloads the optimized version of the
 	Compat project in any case.
 
 2010-01-11  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
@@ -104,7 +109,7 @@
 	* scripts/mkLHCbtar: removed the usage of LHCb_config
 	* scripts/mkproject: removed the build of binary tarballs if the project has no
 	binary nature.
-	* python/LbLegacy/install_project.py: 
+	* python/LbLegacy/install_project.py:
 	- cleaned up a lot of messages.
 	- added the explicit listing of data packages.
 	- fixed the detection of the latest version of the script. to be activated in
@@ -113,21 +118,21 @@
 	version of the project to install any more.
 	- implemented the extraction of the latest version of the projet available
 	- downloads the latest version of Compat anyway.
-	- doesn't list the versions if none is specified: always gets the latest. 
+	- doesn't list the versions if none is specified: always gets the latest.
 
 2010-01-08  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* python/LbLegacy/install_project.py: 
+	* python/LbLegacy/install_project.py:
 	- removed completely the usage of LbLegacy.LHCb_config
-	- skip the creation of the base directories in the local MYSITEROOT if 
-	there is no write access 
+	- skip the creation of the base directories in the local MYSITEROOT if
+	there is no write access
 	- removed useless documentation.
 	- moved to LbScripts v4r4p1
 	- removed the need to run the script from the install location
 
 2009-12-17  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* python/LbLegacy/install_project.py: removed the download of the system tarball. It is 
+	* python/LbLegacy/install_project.py: removed the download of the system tarball. It is
 	replaced by the Compat project.
 	* tests/InstallProjectTest.py: new file for the unit testing of install_project.py.
 	* scripts/mkproject: added the build of "all_groups" by default. This will enable the build of the
@@ -146,7 +151,7 @@
 
 2009-11-24  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* python/LbLegacy/install_project.py: 
+	* python/LbLegacy/install_project.py:
 	- fixed the debug level for the call to SetupProject.
 	- use the function LbConfiguration.Tools.genProjectSetup for the generation
 	of the custom setup script.
@@ -159,9 +164,9 @@
 2009-11-23  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbLegacy/install_project.py: moved to LbScripts v4r4
-	* scripts/mkLCGCMTtar: 
-	* scripts/mkLHCbtar: 
-	* python/LbLegacy/LHCb_config.py: 
+	* scripts/mkLCGCMTtar:
+	* scripts/mkLHCbtar:
+	* python/LbLegacy/LHCb_config.py:
 	- Added full support for the VanDerMeer project. It is still needed for install_project.py.
 	- Added full support for the projects LHCbDIRAC and Integration.
 
@@ -184,12 +189,12 @@
 
 2009-10-26  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* python/LbLegacy/install_project.py: fixed the exception handling in the retrieve 
+	* python/LbLegacy/install_project.py: fixed the exception handling in the retrieve
 	function.
 
 2009-10-21  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* scripts/mkLCGCMTtar: 
+	* scripts/mkLCGCMTtar:
 	- exclude Qt and pyqt 3 for slc5
 	- fixed libshift link creation (on libdpm)
 
@@ -204,8 +209,8 @@
 
 2009-10-13  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* python/LbLegacy/install_project.py: 
-	* scripts/mkLCGCMTtar: 
+	* python/LbLegacy/install_project.py:
+	* scripts/mkLCGCMTtar:
 	* scripts/mkLHCbtar: added support for the Ganga distribution.
 
 2009-10-01  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
@@ -221,12 +226,12 @@
 
 2009-09-16  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* python/LbLegacy/install_project.py: Added the --nofixperm option to prevent 
-	the fixing of the permissions. This could improve the installation time on windows. 
+	* python/LbLegacy/install_project.py: Added the --nofixperm option to prevent
+	the fixing of the permissions. This could improve the installation time on windows.
 
 2009-08-21  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* python/LbLegacy/install_project.py: implemented retry loop for the 
+	* python/LbLegacy/install_project.py: implemented retry loop for the
 	software retrieval. Added tunable retry time option. The retry is performed
 	at random time t+uniform(-t/2,t/2). The default time is 120 seconds. The random
 	seed is initialized to the hash of "pid-hostname".
@@ -235,13 +240,13 @@
 
 	* python/LbLegacy/install_project.py:
 	  - use absolute patch for the local distribution.htm file
-      - put security around the usage of fixLinks. 
+      - put security around the usage of fixLinks.
 
 2009-08-10  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* scripts/MkLCGCMTtar: Added the creation of the link to libdpm.so called 
+	* scripts/MkLCGCMTtar: Added the creation of the link to libdpm.so called
 	libshift.so.2.1
-	* scripts/makedoc added the support for the VanDerMeer project. 
+	* scripts/makedoc added the support for the VanDerMeer project.
 
 2009-08-07  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
@@ -257,16 +262,16 @@
 
 2009-07-20  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* python/LbLegacy/install_project.py: added the option "--compatversion" to pass 
+	* python/LbLegacy/install_project.py: added the option "--compatversion" to pass
 	the version of the Compat project version to be installed. To noted that this project
 	can always be installed explicitly with "python install_project.py -p Compat -v vXrY -b"
 
 2009-07-09  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* python/LbLegacy/install_project.py:  
+	* python/LbLegacy/install_project.py:
 	 - don't try to create a log file in check mode.
      - changed the default CMT version to v1r20p20090520.
-    
+
 2009-07-07  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* scripts/MkLCGCMTtar: fixed the internal setting of the CMTCONFIG env variable.
@@ -277,15 +282,15 @@
 
 2009-07-01  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* python/LbLegacy/install_project.py: fixed downloading of latest_install_project.py. 
-	It has to be removed first from the local installation. 
+	* python/LbLegacy/install_project.py: fixed downloading of latest_install_project.py.
+	It has to be removed first from the local installation.
 
 2009-06-29  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbLegacy/install_project.py: readded the missing autoupdate feature (it
-	was forgotten in the previours release). Restarts itself automatically with the new 
-	version. 
-	* scripts/tbroadcast: fixed typo in the name of the argument for the Scheduler 
+	was forgotten in the previours release). Restarts itself automatically with the new
+	version.
+	* scripts/tbroadcast: fixed typo in the name of the argument for the Scheduler
 	constructor.
 
 2009-06-10  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
@@ -298,8 +303,8 @@
 
 2009-06-09  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* python/LbLegacy/install_project.py: 
-	- fixed strange behavior. Now --binary=value overwrites the CMTCONFIG environment 
+	* python/LbLegacy/install_project.py:
+	- fixed strange behavior. Now --binary=value overwrites the CMTCONFIG environment
 	  variable.
 	- fixed the installation of the dbg tarballs.
 
@@ -309,32 +314,32 @@
 
 2009-06-02  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* python/LbLegacy/install_project.py: 
+	* python/LbLegacy/install_project.py:
 	- added AppConfig and L0TCK to the removal process.
 	- added the download of the distribution.htm. Necessary for the used_projects script.
     - moved to LbScripts v4r1
-    
+
 2009-05-29  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* scripts/mkLHCbtar: fix for Panoramix. Since version v17r0 Openscientist
 	becomes osc_vis.
 	* scripts/mkexternaltar: added missing file. This is used for packaging
 	CMT, Openscientist and osc_vis
-	* python/LbLegacy/install_project.py: fixing problem at the creation of the 
+	* python/LbLegacy/install_project.py: fixing problem at the creation of the
 	prod link to the latest version of the LbScripts project.
 
 2009-05-26  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbLegacy/ProjectLinks.py: New file.
-	* python/LbLegacy/install_project.py: Reenabled the fixProjectLinks procedure 
+	* python/LbLegacy/install_project.py: Reenabled the fixProjectLinks procedure
 	to cure the link target starting with "/afs"
 	* scripts/FixProjectLinks: factored out the functions into the module LbLegacy.ProjectLinks
-	* scripts/mkproject: 
+	* scripts/mkproject:
 	  - making use of LbUtils.Links.fixLinks after the builds.
 	  - added a default logger
 	  - removed the call to LbInstallArea
 	* scripts/LbInstallArea: removed!!!
-	  
+
 2009-05-25  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* scripts/install_project: fixed the install_project wrapper.
@@ -343,7 +348,7 @@
 
 	* python/LbLegacy/tbroadcast.py: cleaned the indentation and the obsolete/unused imports
 	* scripts/tbroadcast: removed the dynamic import of the tbroadcast directory
-	* python/LbLegacy/install_project.py: fixed import of LHCb_config in the 
+	* python/LbLegacy/install_project.py: fixed import of LHCb_config in the
 	removeProject function
 
 2009-05-15  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
@@ -352,22 +357,22 @@
 
 2009-05-15  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* scripts/install_project.bat: New file. 
+	* scripts/install_project.bat: New file.
 	* scripts/install_project: New file. Shell wrappers for the call
-	to install_project.py 
+	to install_project.py
 	* python/LbLegacy/install_project.py: moved to LbScripts v4r0
 
 2009-05-14  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* python/LbLegacy/install_project.py: 
+	* python/LbLegacy/install_project.py:
 	- fixed the bootstrap of LbConfiguration and LbLegacy
 	- Download the Compat project
 	- use LbConfiguration.Platform for the binary massaging.
-	
+
 
 2009-05-13  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* python/LbLegacy/install_project.py: 
+	* python/LbLegacy/install_project.py:
 	- removed the using of the old scripts.tar.gz
 	package. Now the bootstrap scripts are contained in a LbScripts tarball.
 	- added the support for slc5. making use of LbConfiguration.Platform.binary_list
@@ -380,7 +385,7 @@
 
 2009-05-07  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* scripts/mkLHCbtar: readd the test* in the tar ball. excluded the *.pyc and *.pyo 
+	* scripts/mkLHCbtar: readd the test* in the tar ball. excluded the *.pyc and *.pyo
 	files
 	* python/LbLegacy/LHCb_config.py: added slc5 platforms names
 
@@ -422,12 +427,12 @@
 
 	* scripts/mkLHCbtar: added default value to the binary global variable.
 	* scripts/copy-Win2afs: replace the value of the repare variable into a boolean.
-	* python/LbLegacy/vol_for_releases.py: fixed the size statement which is 
+	* python/LbLegacy/vol_for_releases.py: fixed the size statement which is
 	now an integer instead of a string.
 
 2009-04-06  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* python/LbLegacy/install_project.py: 
+	* python/LbLegacy/install_project.py:
 	  - removed the usage of the obsolete string module.
 	  - moved to LbScripts v3r1
 
@@ -456,10 +461,10 @@
 	* scripts/tbroadcast: New file
 	* scripts/install_project.py: New file. imported latest version
 	* scripts/makedoc: remove obsolete string module
-	* scripts/mkLHCbtar: fixed global and import from LHCb_config 
+	* scripts/mkLHCbtar: fixed global and import from LHCb_config
 	* python/LbLegacy/LHCb_config.py: commented out settings which have
 	been replaced by LbConfiguration/Project.
-	
+
 	* scripts/mkproject: replaced configuration settings from LHCb_config with
 	the ones in LbConfiguration/Project.
 

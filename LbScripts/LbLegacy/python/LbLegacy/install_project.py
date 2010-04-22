@@ -292,7 +292,7 @@ def fixWinAttrib(dirpath):
             os.chdir(here)
     else :
         os.system("attrib -R -A -H %s" % dirpath)
-    
+
 
 def changePermissions(directory, recursive=True):
     """ change permissions according to the umask. and the
@@ -315,7 +315,7 @@ def changePermissions(directory, recursive=True):
                     fixWinAttrib(os.path.join(root,d))
                 for f in files :
                     os.chmod(os.path.join(root, f), stat.S_IWRITE)
-            
+
 def checkWriteAccess(directory):
     dirok = True
     log = logging.getLogger()
@@ -991,7 +991,7 @@ def getProjectTar(tar_list, already_present_list=None):
                     elif pack_ver[3].find('PARAM') != -1 :
                         extradir = 'PARAM'
                     elif pack_ver[3].find('TOOLS') != -1 :
-                        extradir = 'TOOLS'                    
+                        extradir = 'TOOLS'
                     exdir = os.path.join('EXTRAPACKAGES', f)
                     regul_dir = os.path.join(extradir, f)
                     if os.path.exists(regul_dir) :
@@ -1012,8 +1012,8 @@ def getProjectTar(tar_list, already_present_list=None):
                             shutil.copytree(tg_dir, ltg)
                         else :
                             os.symlink(pack_ver[1], ltg)
-                    
-                    
+
+
                 try :
                     from LbConfiguration.Project import getProject, ProjectConfException
                     prj = getProject(pack_ver[0])
@@ -1021,7 +1021,7 @@ def getProjectTar(tar_list, already_present_list=None):
                         cmtcontainer = os.path.join(pack_ver[3], prj.SteeringPackage(), "cmt")
                         postinstallscr = os.path.join(cmtcontainer, "PostInstall.py")
                         if os.path.exists(os.path.join(postinstallscr)) :
-                            registerPostInstallCommand(pack_ver[0], 
+                            registerPostInstallCommand(pack_ver[0],
                                                        "python %s" % postinstallscr,
                                                        cmtcontainer)
                 except ImportError:
@@ -1034,7 +1034,7 @@ def getProjectTar(tar_list, already_present_list=None):
                     os.environ["LHCBPROJECTPATH"] = os.pathsep.join([os.path.join(os.environ["MYSITEROOT"], "lhcb"), os.path.join(os.environ["MYSITEROOT"], "lcg", "external")])
                     log.debug("LHCBPROJECTPATH: %s" % os.environ.get("LHCBPROJECTPATH", None))
                     os.system("python %s --without-python --no-cache -m %s --login-version=%s" % (genlogscript, os.environ["MYSITEROOT"], pack_ver[1]))
-                    registerPostInstallCommand("LCGCMT", "python %s --no-cache -m %s %s" % (genlogscript, os.environ["MYSITEROOT"], pack_ver[1]))
+                    registerPostInstallCommand("LCGCMT", "python %s --no-cache -m %s --login-version=%s" % (genlogscript, os.environ["MYSITEROOT"], pack_ver[1]))
                     prodlink = os.path.join(os.path.dirname(pack_ver[3]), "prod")
                     if sys.platform != "win32" :
                         if os.path.exists(prodlink) :
@@ -1475,7 +1475,7 @@ def createBaseDirs(pname, pversion):
     mysiteroot = os.pathsep.join(path_list)
     os.environ["MYSITEROOT"] = mysiteroot
 
-        
+
     mypath = os.path.realpath(mysiteroot.split(os.pathsep)[0])
     thispwd = os.path.realpath(os.getcwd())
     if sys.platform == 'win32' :
@@ -1926,7 +1926,7 @@ def checkBinaryName(binary):
                 binary = m.CMTNativeConfig(debug=False)
             log.warning("No CMTCONFIG in the environment")
             log.warning("Guessed CMTCONFIG is %s" % binary)
- 
+
 
     os.environ['CMTCONFIG'] = binary
     os.environ['CMTDEB'] = binary
@@ -1962,7 +1962,7 @@ def parseArgs():
     binary = None
 
     arguments = sys.argv[1:]
-    
+
     if not arguments :
         print "No enough argument passed"
         usage()
@@ -2037,7 +2037,7 @@ def parseArgs():
     if pname.find("/") != -1 :
         plist = pname.split("/")
         pname = "/".join(plist[1:])
-        
+
     if not pversion and len(args) > 1 :
         pversion = args[1]
 
