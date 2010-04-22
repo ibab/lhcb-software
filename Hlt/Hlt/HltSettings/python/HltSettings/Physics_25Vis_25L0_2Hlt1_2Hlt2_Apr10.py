@@ -33,6 +33,7 @@ class Physics_25Vis_25L0_2Hlt1_2Hlt2_Apr10 ( Physics_MinBiasL0_PassThroughHlt1_E
         if Hlt1L0LinesConf not in thresholds : thresholds[Hlt1L0LinesConf] = dict()
         thresholds[Hlt1L0LinesConf].update( { 'Postscale' : { 'Hlt1L0Any$'           : 0.001
                                                             , 'Hlt1L0AnyRateLimited' : 'RATE(100)' 
+                                                            , 'Hlt1L0.*Muon.*'       : 1.0
                                                             }
                                             }
                                           )
