@@ -1,4 +1,4 @@
-// $Id: TrackMatchVeloSeed.cpp,v 1.20 2010-04-21 09:36:26 mneedham Exp $
+// $Id: TrackMatchVeloSeed.cpp,v 1.21 2010-04-22 07:39:10 mneedham Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -166,7 +166,7 @@ StatusCode TrackMatchVeloSeed::execute()
       // (ProcStatus returns zero status for us in cases where we don't
       // explicitly add a status code)
      procStat->addAlgorithmStatus(name(), -3);  
-     return Warning("To many velo tracks", StatusCode::SUCCESS, 1);
+     return Warning("Too many velo tracks", StatusCode::SUCCESS, 1);
   }
 
   if (seedTracks->size() > m_maxNSeed) {
@@ -177,7 +177,7 @@ StatusCode TrackMatchVeloSeed::execute()
       // (ProcStatus returns zero status for us in cases where we don't
       // explicitly add a status code)
       procStat->addAlgorithmStatus(name(), -3);
-    return Warning("To many seed tracks", StatusCode::SUCCESS, 1);
+    return Warning("Too many seed tracks", StatusCode::SUCCESS, 1);
   }
 
   // make a vector of selected velo tracks

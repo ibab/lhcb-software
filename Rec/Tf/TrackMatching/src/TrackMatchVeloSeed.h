@@ -1,4 +1,4 @@
-// $Id: TrackMatchVeloSeed.h,v 1.5 2010-04-21 09:36:26 mneedham Exp $
+// $Id: TrackMatchVeloSeed.h,v 1.6 2010-04-22 07:39:10 mneedham Exp $
 #ifndef TRACKMATCHVELOSEED_H 
 #define TRACKMATCHVELOSEED_H 1
 
@@ -161,8 +161,8 @@ private:
   bool m_discardUsedVelo;
   double m_discardChi2;
 
-  int m_maxNSeed;
-  int m_maxNVelo;
+  unsigned int m_maxNSeed;
+  unsigned int m_maxNVelo;
 
 };
 
