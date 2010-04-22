@@ -138,6 +138,7 @@ int main(int argc, char* argv[])
       ("logbook-settings,L", value<std::string>(), "logbook configuration")
       ("problem-settings,L", value<std::string>(), "Problem Database configuration")
       ("hide-alarm-list,A", value<bool>(), "hide alarm list")
+      ("hide-problem-list,A", value<bool>(), "hide problem list")
       ("config-file,C", value<std::string>(), "configuration file")
       ("key-file,K", value<std::string>(), "TCK list file")
       ("image-path,I", value<std::string>()->default_value(gSystem->TempDirectory()), "image dump directory")
@@ -240,6 +241,10 @@ int main(int argc, char* argv[])
                                          startupSettings["database-credentials"].as<std::string>());
 
 
+    if (startupSettings.count("problem-settings")) {
+      presenterMainFrame.setPbdbConfig(startupSettings["problem-settings"].as<std::string>());
+    }
+
     if (startupSettings.count("verbosity")) {
       if ("silent" == startupSettings["verbosity"].as<std::string>()) {
         messageLevelCli = Silent;
@@ -306,13 +311,14 @@ int main(int argc, char* argv[])
       presenterMainFrame.setLogbookConfig(startupSettings["logbook-settings"].as<std::string>());
     }
 
-    if (startupSettings.count("problem-settings")) {
-      presenterMainFrame.setPbdbConfig(startupSettings["problem-settings"].as<std::string>());
-    }
-
     if (startupSettings.count("hide-alarm-list") &&
         (true == startupSettings["hide-alarm-list"].as<bool>())) {
       presenterMainFrame.toggleShowAlarmList();
+    }
+
+    if (startupSettings.count("hide-problem-list") &&
+	( true == startupSettings[ "hide-problem-list" ].as< bool >() ) ) {
+      presenterMainFrame.toggleShowKnownProblemList() ;
     }
 
     if (startupSettings.count("startup-histograms")) {
