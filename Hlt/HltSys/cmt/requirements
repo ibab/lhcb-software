@@ -3,7 +3,7 @@ version v10r2
 
 branches cmt doc 
 
-use Hlt1Lines           v3r2    Hlt   # Gerhard Raven
+use Hlt1Lines           v3r2p1  Hlt   # Gerhard Raven
 use Hlt2Lines           v3r2    Hlt   # Patrick Koppenburg, Vava Gligorov, Gerhard Raven
 use Hlt2SharedParticles v4r0    Hlt   # Patrick Koppenburg, Gerhard Raven
 use HltBase             v8r2    Hlt   # Gerhard Raven
