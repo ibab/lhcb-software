@@ -4,6 +4,9 @@
 ! Purpose     : Tsa algorithms
 !----------------------------------------------------------------------------
 
+! 2010-04-22 M Needham
+ - Abort in case of hot events [this + previous commit] 
+
 !======================= TsaAlgorithms v3r18 2010-03-30====================
 2010-03-26 M. Needham
 - Anothe New early data tuning

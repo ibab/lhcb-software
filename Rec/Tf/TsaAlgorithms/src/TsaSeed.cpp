@@ -46,8 +46,8 @@ Seed::Seed(const std::string& name,
   declareProperty("seedStubLocation", m_seedStubLocation = SeedStubLocation::Default);
   declareProperty("OnlyGood", m_onlyGood = false);
   declareProperty("DiscardChi2", m_discardChi2 = 1.5);
-  declareProperty( "maxITHits" ,  m_maxNumberITHits = 2500);  
-  declareProperty( "maxOTHits" , m_maxNumberOTHits = 9000 );
+  declareProperty( "maxITHits" ,  m_maxNumberITHits = 3000);  
+  declareProperty( "maxOTHits" , m_maxNumberOTHits = 10000 );
   declareProperty("ITLiteClusters", m_clusterLocation = LHCb::STLiteClusterLocation::ITClusters);
 
 
@@ -65,7 +65,7 @@ StatusCode Seed::initialize()
   }
 
   // tool handle to the ot raw bank decoder
-  m_rawBankDecoder = tool<IOTRawBankDecoder>("OTRawBankDecoder",this);
+  m_rawBankDecoder = tool<IOTRawBankDecoder>("OTRawBankDecoder");
 
   // init the tools
   for (unsigned int i = 0; i < 3; ++i){
@@ -104,6 +104,7 @@ StatusCode Seed::execute(){
   //  startTimer();
   SeedTracks* seedSel = new SeedTracks();    //  Selected seed candidates
   seedSel->reserve(1000);
+  put(seedSel,m_seedTrackLocation);
   std::vector<SeedTrack*> tempSel; tempSel.reserve(1000);
 
   // reject hot events
@@ -182,7 +183,6 @@ StatusCode Seed::execute(){
   hitsCont->reserve(10000);
 
   // put output in the store
-  put(seedSel,m_seedTrackLocation);
   put(hitsCont, m_seedHitLocation);
   put(stubsCont, m_seedStubLocation);
 
