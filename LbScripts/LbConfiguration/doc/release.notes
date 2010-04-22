@@ -1,3 +1,8 @@
+2010-04-22  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbConfiguration/LbLogin.py: fixed the creation of the missing User_release_area. Now creates the
+	intermediate directories.
+
 2010-04-14  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* python/LbConfiguration/Version.py: added a __hash__ function and an exception
@@ -6,7 +11,7 @@
 2010-04-12  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbConfiguration/LbLogin.py: added support for EMACSDIR and LHCBSTYLE for local installation.
-	* python/LbConfiguration/Package.py: added support for the TOOLS unversioned project and the 
+	* python/LbConfiguration/Package.py: added support for the TOOLS unversioned project and the
 	Tools/Emacs standalone package.
 
 2010-03-29  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
@@ -28,13 +33,13 @@
 	* python/LbConfiguration/Package.py: added the support for tarball creation
 	* python/LbConfiguration/Version.py: added function to extract the version from
 	a directory
-	* python/LbConfiguration/Project.py: 
+	* python/LbConfiguration/Project.py:
 	 - added support for the MD5 file name.
 	 - added exact tarball directory for the project
 
 2010-03-09  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* python/LbConfiguration/Platform.py: moved from round to square brackets in list 
+	* python/LbConfiguration/Platform.py: moved from round to square brackets in list
 	expressions. The round ones are not supported in python 2.3
 
 2010-03-05  Marco Clemencic  <Marco.Clemencic@cern.ch>
@@ -46,9 +51,9 @@
 
 2010-03-04  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* python/LbConfiguration/LbLogin.py: make the usage of CMTEXTRATAGS optional before the 
+	* python/LbConfiguration/LbLogin.py: make the usage of CMTEXTRATAGS optional before the
 	call to SetupProject.
-	* scripts/generateLogin: 
+	* scripts/generateLogin:
 	- removed the use of CMTEXTRATAGS before the call to SetupProject
 	- fixed wrong option passing (reverted from a previous commit)
 
@@ -58,13 +63,13 @@
 
 2010-02-26  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* python/LbConfiguration/Platform.py: 
+	* python/LbConfiguration/Platform.py:
 	* python/LbConfiguration/Project.py: added informations for the tarball creation
 
 2010-02-09  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* python/LbConfiguration/AllProjectsSetup.py: 
-	* python/LbConfiguration/LbLogin.py: 
+	* python/LbConfiguration/AllProjectsSetup.py:
+	* python/LbConfiguration/LbLogin.py:
 	* scripts/generateLogin: Make use of the new class SourceScript from the LbUtils.Script
 	module. Please have a look at its release notes.
 
@@ -85,10 +90,10 @@
 
 2010-01-25  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* python/LbConfiguration/Platform.py: 
+	* python/LbConfiguration/Platform.py:
 	  - retains all digits internally for the compiler version.
 	  - fixed for the Leopard CMTCONFIG detection.
-	
+
 
 2010-01-22  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
@@ -117,13 +122,13 @@
 2010-01-15  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbConfiguration/Platform.py: extracted the compatible supported platforms.
-	* python/LbConfiguration/Project.py: 
+	* python/LbConfiguration/Project.py:
 	  - added the Erasmus project to the list of supported projects.
 	  - added custom name ERASM for the volume of the Erasmus project.
 
 2010-01-14  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* python/LbConfiguration/Platform.py: implemented the OS flavour and version 
+	* python/LbConfiguration/Platform.py: implemented the OS flavour and version
 	detection.
 
 2010-01-13  Marco Clemencic  <Marco.Clemencic@cern.ch>
@@ -154,14 +159,14 @@
 
 	* python/LbConfiguration/Version.py: added the function sortStrings that sorts a list of
 	strings that contains a version.
-	* python/LbConfiguration/LbLogin.py: 
+	* python/LbConfiguration/LbLogin.py:
 	- use of the LbUtils.Path module. Factored out multi path functions.
 	- fixed detection of gcc in case of multiple chained MYSITEROOT locations.
 	- removed the usage of the system tarball. It is replaced by the Compat project.
 
 2009-12-15  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* python/LbConfiguration/Version.py: fixed termination of the version name. Nothing 
+	* python/LbConfiguration/Version.py: fixed termination of the version name. Nothing
 	should appear after the final "rX" or "pX".
 
 2009-12-14  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
@@ -175,7 +180,7 @@
 
 2009-12-02  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* python/LbConfiguration/Tools.py: 
+	* python/LbConfiguration/Tools.py:
 	- make cmtconfig and version optional in genProjectSetup.
 	- added the treatment of the v* version in genProjectSetup.
 	* python/LbConfiguration/LbLogin.py: removed unused function for the cache generation.
@@ -190,7 +195,7 @@
 
 2009-11-27  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* python/LbConfiguration/Tools.py: 
+	* python/LbConfiguration/Tools.py:
 	* scripts/genProjectSetup: changed the extra argument to SetupProject into a list
 
 2009-11-25  Marco Clemencic  <Marco.Clemencic@cern.ch>
@@ -209,7 +214,7 @@
 2009-11-23  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbConfiguration/LbLogin.py: delayed the import of SetupProject in order to
-	avoid the loading from the already existing PYTHONPATH. This happens when moving from 
+	avoid the loading from the already existing PYTHONPATH. This happens when moving from
 	one version of LbScripts to the other.
 
 2009-11-23  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
@@ -218,17 +223,17 @@
 
 2009-11-23  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* python/LbConfiguration/Project.py: added full support for the projects LHCbDIRAC 
+	* python/LbConfiguration/Project.py: added full support for the projects LHCbDIRAC
 	and Integration.
-	* python/LbConfiguration/LbLogin.py: 
-	- fixed the CMTCONFIG reuse. If the initial CMTCONFIG is a 
+	* python/LbConfiguration/LbLogin.py:
+	- fixed the CMTCONFIG reuse. If the initial CMTCONFIG is a
 	debug one (ends with _dbg or -dbg) the final values after LbLogin will be in debug as well.
 	Before it was relying on the "debug" argument passed to LbLogin.
     - simplified the copy of the returned environment dictionary.
-    
+
 2009-11-20  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* python/LbConfiguration/LbLogin.py: 
+	* python/LbConfiguration/LbLogin.py:
 	- fixed variable name for the logging level.
 	- fixed bug in the function returning the dictionary of the environment. Before it was not
 	returning of copy and thus it was destroy with the instance of LbLogin.
@@ -245,7 +250,7 @@
 	     - GENERATE_TAGFILE (generate a tagfile called <PROJECT>_doxygen.tag in InstallArea/doc),
 	     - TAGFILES (add all the doxygen tags of the used projects)
 	  - include the optional file $(container)/cmt/Custom.mk to allow extensions
-	    to the makefile on a project-by-project basis 
+	    to the makefile on a project-by-project basis
 
 2009-11-12  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
@@ -263,7 +268,7 @@
 
 2009-10-19  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* python/LbConfiguration/LbLogin.py: added the possibility to choose the version of the 
+	* python/LbConfiguration/LbLogin.py: added the possibility to choose the version of the
 	Compat project to use.
 
 2009-10-15  Marco Clemencic  <Marco.Clemencic@cern.ch>
@@ -303,14 +308,14 @@
 2009-08-20  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbConfiguration/LbLogin.py: instrumented the file with debug messages.
-	
+
 2009-08-11  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* scripts/LbShowProjectConf: implemented the draft of this utility.
 
 2009-08-11  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* python/LbConfiguration/__ini__.py: added the createMakefile function. This makefile 
+	* python/LbConfiguration/__ini__.py: added the createMakefile function. This makefile
 	is LHCb specific (The one in LbUtils is generic for CMT projects)
 	* data/Makefile: top Makefile for LHCb CMT projects.
 	* python/LbConfiguration/SetupProject.py: use createProjectMakefile from the LbConfiguration module.
@@ -320,7 +325,7 @@
 	* scripts/generateLogin:
 	* python/LbConfiguration/LbLogin.py: added the env variable CMTVERS for the CMT
 	version. This is interpolated in the cache as well.
-	
+
 2009-07-10  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* scripts/generateLogin:
@@ -333,7 +338,7 @@
 
 2009-07-09  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* python/LbConfiguration/LbLogin.py: 
+	* python/LbConfiguration/LbLogin.py:
 	- fixed the native bin guessing for Darwin
 	- disabled the cache globally for Darwin.
 	* python/LbConfiguration/External.py: moved to CMT v1r20p20090520 as default.

@@ -575,7 +575,7 @@ class LbLoginScript(SourceScript):
                     newdir = True
                     self.addEcho(" --- a new cmtuser directory has been created in your HOME directory")
             else :
-                os.mkdir(opts.userarea)
+                os.makedirs(opts.userarea)
                 newdir = True
             if opts.cmtsite == "CERN" and sys.platform != "win32" and self.hasCommand("fs"):
                 if newdir :
@@ -768,7 +768,7 @@ class LbLoginScript(SourceScript):
 
 
             log.debug("Arguments to SetupProject: %s" % " ".join(setupprojargs))
-            
+
             if not opts.use_cmtextratags :
                 if os.environ.has_key("CMTEXTRATAGS") :
                     del os.environ["CMTEXTRATAGS"]
