@@ -1,4 +1,4 @@
-// $Id: PatVeloRTracking.h,v 1.6 2010-04-22 14:50:13 dhcroft Exp $
+// $Id: PatVeloRTracking.h,v 1.7 2010-04-22 17:30:31 dhcroft Exp $
 #ifndef TF_PATVELORTRACKING_H 
 #define TF_PATVELORTRACKING_H 1
 
@@ -51,7 +51,7 @@ namespace Tf {
           std::vector<PatRZTrack> &rzTracks);
 
       /** Take three sectors and set up the combinations to pass to 
-        seedInSectorTriplet for backward tracks (normally not used)
+        seedInSectorTriplet for backward tracks 
         */
     void makeBackwardSectorTriplets( 
         StationIterator station0, unsigned int zone0,
@@ -137,7 +137,7 @@ namespace Tf {
 
       /// Use correction for half boxes when looking for overlaps
       bool m_OverlapCorrection; 
-      /// Look for tracks in backward overlap region (default false)
+      /// Look for tracks in backward overlap region (default true)
       bool m_backWardOverlap;
   };
 }

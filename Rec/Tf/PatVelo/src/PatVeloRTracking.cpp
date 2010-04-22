@@ -1,4 +1,4 @@
-// $Id: PatVeloRTracking.cpp,v 1.12 2010-04-22 14:50:13 dhcroft Exp $
+// $Id: PatVeloRTracking.cpp,v 1.13 2010-04-22 17:30:31 dhcroft Exp $
 // Include files
 
 // from Gaudi
@@ -51,7 +51,7 @@ namespace Tf {
       declareProperty( "OnlyForward"     , m_onlyForward      = false     );
       declareProperty( "OnlyBackward"    , m_onlyBackward     = false     );
       declareProperty( "OverlapCorrection" , m_OverlapCorrection = true   );
-      declareProperty( "BackwardOverlapSearch" , m_backWardOverlap = false);
+      declareProperty( "BackwardOverlapSearch" , m_backWardOverlap = true );
     }
   //=============================================================================
   // Destructor
