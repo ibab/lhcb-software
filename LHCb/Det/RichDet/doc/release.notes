@@ -3,6 +3,8 @@
 ! Responsible : Antonis Papanestis
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
+! 2010-04-22 - Stephanie Hansmann-Menzemer
+ - addapt to changes in magnetic field service
 
 !======================== RichDet v14r1 2010-04-09 ===========================
 ! 2010-03-25  - Sajan Easo 
