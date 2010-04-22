@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.536 2010-04-21 09:59:23 gcowan Exp $
+! $Id: release.notes,v 1.537 2010-04-22 13:47:46 gcowan Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2010-04-22 - Greig Cowan
+ - Removed P2VVAnglesFun.h. Namespace moved to DaVinciKernel.
 
 ! 2010-04-21 - Greig Cowan
  - Updated Bs2JpsiPhiAngleCalculator to use
