@@ -1,10 +1,15 @@
-// $Id: ProblemDB.cpp,v 1.1 2010-03-23 12:51:41 ocallot Exp $
+// $Id: ProblemDB.cpp,v 1.2 2010-04-22 10:15:26 robbep Exp $
 // Include files 
 #include <iostream>
 #include <boost/asio.hpp>
-
+#include <boost/date_time/posix_time/posix_time_types.hpp>
+#include <boost/date_time/gregorian/formatters.hpp>
+#include <boost/xpressive/xpressive.hpp>
+#include <boost/algorithm/string.hpp>
 // local
 #include "ProblemDB.h"
+
+using namespace boost::xpressive ;
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : ProblemDB
@@ -103,3 +108,80 @@ std::string  ProblemDB::urlEncode ( std::string src) {
   return str;
 }
 //=============================================================================
+//
+//=============================================================================
+void ProblemDB::getListOfOpenedProblems( std::vector< std::vector< std::string > > & 
+					 problems ) {
+  problems.clear() ;
+  boost::asio::ip::tcp::iostream webStream( m_address , "http" ) ;
+
+  if ( ! webStream ) {
+    std::cout << "Cannot open the Problem Database at " << m_address  << std::endl ;
+    return ;
+  }
+
+  // Take date of tomorrow to have list of opened problems
+  boost::posix_time::ptime now =
+    boost::posix_time::second_clock::local_time() ;
+  boost::gregorian::date day = now.date() + boost::gregorian::date_duration( 1 ) ;
+
+
+  // Send HTTP request to web server
+  webStream << "GET /api/search/?_inline=True&system_visible=True"
+	    << "&open_or_closed_gte=" << boost::gregorian::to_iso_extended_string( day )
+	    << " HTTP/1.0\r\n"
+	    << "Host:" << m_address << "\r\n"
+	    << "\r\n" << std::flush ;
+
+  std::string line ;
+
+  // Check that the web server answers correctly
+  std::getline( webStream , line ) ;
+  if ( ! boost::algorithm::find_first( line , "200 OK" ) ) {
+    std::cerr << "ProblemDB server does not reply" << std::endl ;
+    return ;
+  }
+  
+
+  // Parse the web server answers
+  std::string pattern ;
+  pattern = "\\N{left-square-bracket}\\N{left-curly-bracket}(.*)" ;
+  pattern += "\\N{right-curly-bracket}\\N{right-square-bracket}" ;
+  
+  const boost::regex e( pattern ) ;
+
+  // retrieve individual fields
+  boost::xpressive::mark_tag system(1) , severity(2) , started_at(3) , id(4) , 
+    title(5) ;
+
+  boost::xpressive::sregex pb = "{\"system\": \"" >> (system=*~(set= '\"'))
+						  >> "\", \"severity\": \""
+						  >> (severity=*~(set= '\"'))
+						  >> "\", \"started_at\": \""
+						  >> (started_at=*~(set= '\"')) 
+						  >> "\", \"id\": \""
+						  >> (id=*~(set= '\"')) 
+						  >> "\", \"title\": \""
+						  >> (title=*~(set= '\"')) 
+						  >> "\"}" ;
+
+  std::vector< std::string > single_line ;
+
+  while ( std::getline( webStream , line ) ) {
+    if ( boost::regex_match( line , e ) ) {
+      boost::xpressive::sregex_iterator cur( line.begin() , line.end() , pb ) ;
+      boost::xpressive::sregex_iterator end ;
+      for ( ; cur != end ; ++cur ) {
+	single_line.clear() ;
+	boost::xpressive::smatch const &what = *cur ;
+	single_line.push_back( what[system] ) ;
+	single_line.push_back( what[severity] ) ;
+	single_line.push_back( what[started_at] ) ;
+	single_line.push_back( what[id] ) ;
+	single_line.push_back( what[title] ) ;
+	
+	problems.push_back( single_line ) ;
+      }
+    }
+  }
+}
