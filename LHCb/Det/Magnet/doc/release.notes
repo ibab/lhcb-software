@@ -3,6 +3,9 @@
 ! Responsible : Adlene Hicheur, Marco Cattaneo
 ! Purpose     : Provides magnetic field map and Bdl tools
 !-----------------------------------------------------------------------------
+! 2010-04-22 - Stephanie Hansmann-Menzemer
+ - change to unabmigious names of accessor functions for MagneticFieldSvc
+  (scaleFactor -> signedRelativeCurrent, polarity => is Down)
 
 !====================== Magnet v6r0 2010-04-13 ===============================
 ! 2010-04-13 - Wouter Hulsbergen

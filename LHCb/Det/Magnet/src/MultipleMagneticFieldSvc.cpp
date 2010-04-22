@@ -143,23 +143,6 @@ StatusCode MultipleMagneticFieldSvc::fieldVector(const Gaudi::XYZPoint&  r,
 }
 
 //=============================================================================
-// ScaleFactor: Get the average scale factor of member fields
-//=============================================================================
-double MultipleMagneticFieldSvc::scaleFactor() const
-{
-  /// Attaining scale factor of member fields (The average)
-  double scale    = 0.0;
-  double sumScale = 0.0;
-  int numFields = 0;
-  std::vector<ILHCbMagnetSvc*>::const_iterator field;
-  for( field = m_magneticFieldSvcs.begin(); field != m_magneticFieldSvcs.end(); field++) {
-    sumScale += (*field)->scaleFactor();
-  }
-  if( numFields != 0 ){scale = sumScale/numFields;}
-  return scale;
-}
-
-//=============================================================================
 // UseRealMap: Check if any member fields use real maps
 //=============================================================================
 bool MultipleMagneticFieldSvc::useRealMap() const
@@ -172,18 +155,46 @@ bool MultipleMagneticFieldSvc::useRealMap() const
   return realMap;
 }
 
+
+
 //=============================================================================
 // polarity: meaningless for multiple fields unless they are all the same
 //=============================================================================
-int MultipleMagneticFieldSvc::polarity() const
-{
-  std::vector<ILHCbMagnetSvc*>::const_iterator field;
-  int polarity = (*(m_magneticFieldSvcs.begin()))->polarity();
-  for( field = m_magneticFieldSvcs.begin(); field != m_magneticFieldSvcs.end(); field++) {
-    if( (*field)->polarity() != polarity) 
-      throw GaudiException( "Invalid call to MultipleMagneticFieldSvc::polarity()",
+bool MultipleMagneticFieldSvc::isDown() const {
+
+    std::vector<ILHCbMagnetSvc*>::const_iterator field;
+    bool isDown = (*(m_magneticFieldSvcs.begin()))->isDown();
+    for( field = m_magneticFieldSvcs.begin(); field != m_magneticFieldSvcs.end(); field++) {
+    if( (*field)->isDown() != isDown)
+      throw GaudiException( "Invalid call to MultipleMagneticFieldSvc::isDown()",
                             "INVALID_MULTIPLE_POLARITY", StatusCode::FAILURE );
-  }
-  return polarity;
+    }
+    return isDown;
 }
+
+
+//=============================================================================
+// signedRelativeCurrent: meaningless for multiple fields unless they 
+// are all the same polarity
+//=============================================================================
+
+double MultipleMagneticFieldSvc::signedRelativeCurrent() const
+{
+  /// Attaining scale factor of member fields (The average)
+  
+  double scale    = 0.0;
+  double sumScale = 0.0;
+  int numFields = 0;
+  std::vector<ILHCbMagnetSvc*>::const_iterator field;
+  
+  for( field = m_magneticFieldSvcs.begin(); field != m_magneticFieldSvcs.end(); field++) 
+    sumScale += (*field)->signedRelativeCurrent();
+  
+  
+  if( numFields != 0 )
+    scale = sumScale/numFields;
+  
+  return scale;
+}
+
 

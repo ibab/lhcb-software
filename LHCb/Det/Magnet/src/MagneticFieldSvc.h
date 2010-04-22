@@ -1,4 +1,4 @@
-// $Id: MagneticFieldSvc.h,v 1.32 2010-04-13 11:51:22 wouter Exp $
+// $Id: MagneticFieldSvc.h,v 1.33 2010-04-22 08:10:34 smenzeme Exp $
 #ifndef MAGNETICFIELDSVC_H
 #define MAGNETICFIELDSVC_H 1
 
@@ -87,16 +87,20 @@ public:
 
   bool   useRealMap() const; ///< True is using real map
 
-  /// Return the polarity of the field
-  int polarity() const { 
-    Gaudi::XYZVector bf = m_magFieldGrid.fieldVectorClosestPoint(Gaudi::XYZPoint(0,0,5200)) ;
-    return bf.y() < 0 ? -1 : 1 ;
+  double signedRelativeCurrent() const {
+    
+    int sign = +1;
+    if (isDown())
+      sign = -1;
+
+    return m_magFieldGrid.scaleFactor()*sign;
   }
-  
-  /// Return the absolute value of the scale factor with respect to
-  /// the 'nominal' field. Warning: this method will be depricated.
-  double scaleFactor() const { return std::abs(m_magFieldGrid.scaleFactor()) ; }
-  
+
+  bool isDown() const {
+    Gaudi::XYZVector bf = m_magFieldGrid.fieldVectorClosestPoint(Gaudi::XYZPoint(0,0,5200)) ;
+    return bf.y() < 0 ? true : false ;}
+
+ 
 private:
 
   /// Allow SvcFactory to instantiate the service.
@@ -116,15 +120,13 @@ private:
   std::vector<double> m_constFieldVector; ///< Option for constant field value
 
   // Properties to over-ride values in CondDB
-  std::vector<std::string> m_mapFileNames; ///< Field map file names
-  int                      m_polarityProperty; ///< Value of Polarity property
-  double                   m_scaleFactor;  ///< Field scaling factor
+  std::vector<std::string> m_mapFileNames; 
+  bool                     m_forcedToUseDownMap;
+  bool                     m_forcedToUseUpMap;
+  double                   m_forcedScaleFactor;
+  bool                     m_mapFromOptions;
 
   // Private data
-    
-  bool m_mapFromOptions;        ///< Set if not using condDB for field map.
-  bool m_scaleFromOptions;      ///< Set if not using condDB for scale factor.
-  int  m_polarity;              ///< Polarity
   
   Condition* m_mapFilesUpPtr;   ///< Pointer to FieldMapFilesUp condition
   Condition* m_mapFilesDownPtr; ///< Pointer to FieldMapFilesDown condition

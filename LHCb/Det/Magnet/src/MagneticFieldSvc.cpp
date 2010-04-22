@@ -1,4 +1,4 @@
-// $Id: MagneticFieldSvc.cpp,v 1.51 2010-04-13 11:42:39 wouter Exp $
+// $Id: MagneticFieldSvc.cpp,v 1.52 2010-04-22 08:10:34 smenzeme Exp $
 
 // Include files
 #include "GaudiKernel/SvcFactory.h"
@@ -33,10 +33,11 @@ DECLARE_SERVICE_FACTORY( MagneticFieldSvc );
 //=============================================================================
 MagneticFieldSvc::MagneticFieldSvc( const std::string& name, 
                                     ISvcLocator* svc ) : Service( name, svc ),
-                                                         m_mapFromOptions(false),
-                                                         m_scaleFromOptions(false),
-                                                         m_polarity(0),
-                                                         m_mapFilesUpPtr(0),
+                                                         m_forcedToUseDownMap(false),
+							 m_forcedToUseUpMap(false),
+                                                         m_forcedScaleFactor (9999),
+							 m_mapFromOptions(false),
+							 m_mapFilesUpPtr(0),
                                                          m_mapFilesDownPtr(0),
                                                          m_scaleUpPtr(0),
                                                          m_scaleDownPtr(0),
@@ -64,11 +65,12 @@ MagneticFieldSvc::MagneticFieldSvc( const std::string& name,
   declareProperty( "UseSetCurrent", m_UseSetCurrent = false );
   declareProperty( "FieldMapFiles", m_mapFileNames, 
                    "Vector of file names for the field map. If set, over-rides CondDB value" );
-  declareProperty( "ScaleFactor",   m_scaleFactor = 9999.,
+  declareProperty( "ForcedSignedCurrentScaling",   m_forcedScaleFactor = 9999.,
                    "Factor by which to rescale the field map. If set, over-rides CondDB value" );
-  declareProperty( "Polarity",      m_polarityProperty = 0,
-                   "Polarity of the magnet. If set, over-rides CondDB value" );
-  
+  declareProperty( "ForceToUseDownMap",         m_forcedToUseDownMap = false,
+                   "Force to use down map. If set, over-rides CondDB value" );
+  declareProperty( "ForceToUseUpMap",            m_forcedToUseUpMap = false,
+                   "Force to use up map. If set, over-rides CondDB value" );
   declareProperty( "UseConstantField",    m_useConstField = false );
   declareProperty( "ConstantFieldVector", m_constFieldVector );
 
@@ -162,11 +164,12 @@ StatusCode MagneticFieldSvc::initializeWithCondDB()
   }
 
   // FieldMap file name(s). If not over-ridden by options, get from CondDB
-  m_mapFromOptions = false;
+
   if( m_mapFileNames.size() != 0 ) {
     log << MSG::WARNING 
         << "Requested condDB but using manually set field map file name(s) = "
         << m_mapFileNames << endmsg;
+    
     m_mapFromOptions = true;
     StatusCode sc = m_mapFileNames.size() == 1 ? 
       m_magFieldGridReader.readDC06File( m_mapFileNames.front(), m_magFieldGrid ) : 
@@ -182,14 +185,12 @@ StatusCode MagneticFieldSvc::initializeWithCondDB()
   }
   
 
-  // Scaling factor. If not over-ridden by options, get it from CondDB
-  m_scaleFromOptions = false;
-  if( m_scaleFactor < 9998. ) {
+  // Scaling factor. If not over-ridden by options, get it from Options
+  if(m_forcedScaleFactor < 9998. ) {
     log << MSG::WARNING 
-        << "Requested condDB but using manually set scale factor = "
-        << m_scaleFactor << endmsg;
-    m_scaleFromOptions = true;
-    m_magFieldGrid.setScaleFactor( m_scaleFactor ) ;
+        << "Requested condDB but using manually set signed scale factor = "
+        << m_forcedScaleFactor  << endmsg;
+    m_magFieldGrid.setScaleFactor( m_forcedScaleFactor ) ;
   }
   else {
     m_updMgrSvc->registerCondition( this, MagnetCondLocations::ScaleUp,
@@ -216,14 +217,18 @@ StatusCode MagneticFieldSvc::initializeWithoutCondDB()
     log << MSG::ERROR << "Field Map filename(s) not set" << endmsg;
     return StatusCode::FAILURE;
   }
+
   m_mapFromOptions = true;
 
-  if( m_scaleFactor > 9998. ) {
-    m_scaleFactor = 1.;
-    log << MSG::DEBUG << "Scale factor set to default = " << m_scaleFactor << endmsg;
-  }
-  m_scaleFromOptions = true;
-  m_magFieldGrid.setScaleFactor( m_scaleFactor ) ;
+  double scaleFactor = m_forcedScaleFactor;;
+
+  if( m_forcedScaleFactor > 9998. ) {
+    scaleFactor = 1.;
+    log << MSG::DEBUG << "Scale factor set to default = " << scaleFactor << endmsg;
+   }
+  
+  m_magFieldGrid.setScaleFactor( scaleFactor ) ;
+
 
   // update the field
   StatusCode sc = m_mapFileNames.size() == 1 ?
@@ -259,36 +264,43 @@ StatusCode MagneticFieldSvc::i_updateConditions()
   MsgStream log(msgSvc(), name());
   log << MSG::DEBUG << "updateConditions called" << endmsg;
 
-  if( m_polarityProperty != 0 ) {
+
+  if (m_forcedToUseDownMap && m_forcedToUseUpMap)
     log << MSG::WARNING 
-        << "Requested condDB but using manually set polarity = " << m_polarityProperty << endmsg;
-    m_polarity = m_polarityProperty;
-  }
-  else
-    m_polarity = m_currentPtr->param<int>("Polarity");
+        << "inconsistent settings, forced to use Down AND Uo map = " << endmsg;
+
+  double polarity = 0;
+  
+  if( m_forcedToUseDownMap) 
+    polarity = -1.0;
+  if (m_forcedToUseUpMap)
+    polarity = +1.0;
+
+  if (!m_forcedToUseDownMap || !m_forcedToUseUpMap)
+    polarity = m_currentPtr->param<int>("Polarity");
   
   // Update the scale factor
-  if( !m_scaleFromOptions ) {
+  if(m_forcedScaleFactor > 9998. ){
+
     double current = m_currentPtr->param<double>("Current");
     
-    // ******* Check I have the correct convention!!
     std::vector<double> coeffs;
-    if( m_polarity > 0 )
+    if( polarity > 0 )
       coeffs = m_scaleUpPtr->param<std::vector<double> >("Coeffs");
     else
       coeffs = m_scaleDownPtr->param<std::vector<double> >("Coeffs");
   
-    m_scaleFactor = coeffs[0] + ( coeffs[1]*(current/m_nominalCurrent) );
-    m_magFieldGrid.setScaleFactor( m_scaleFactor ) ;
+    double scaleFactor = coeffs[0] + ( coeffs[1]*(current/m_nominalCurrent) );
+    m_magFieldGrid.setScaleFactor( scaleFactor ) ;
   }
    
   // Update the field map file
   StatusCode sc ;
-  if( !m_mapFromOptions ) {
+  if( !m_mapFromOptions) {
     
     // Convention used: positive polarity is "Up" (+y), negative is "Down" (-y)
     std::vector<std::string> files;
-    if( m_polarity > 0 )
+    if( polarity > 0 )
       files = m_mapFilesUpPtr->param<std::vector<std::string> >("Files");
     else
       files = m_mapFilesDownPtr->param<std::vector<std::string> >("Files");
@@ -309,8 +321,8 @@ StatusCode MagneticFieldSvc::i_updateConditions()
     }
   }
   
-  log << MSG::INFO << "Map scaled by factor " << m_scaleFactor 
-                   << " with polarity " << m_polarity << endmsg;
+  log << MSG::INFO << "Map scaled by factor " << m_magFieldGrid.scaleFactor()
+                   << " with polarity (-1:Down; +1: Up)" << polarity << endmsg;
   return sc ;
 }
 

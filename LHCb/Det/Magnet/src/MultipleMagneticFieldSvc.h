@@ -69,10 +69,13 @@ public:
   }
 
   // These should be incorperated in a better way...
-  bool   useRealMap() const; ///< True is using real map
-  double scaleFactor() const; ///< accessor to m_scaleFactor
-  int polarity() const; ///< Polarity (only if they are all the same!) 
+  bool   useRealMap() const;            ///< True is using real map
+  double scaleFactor() const;           ///< accessor to m_scaleFactor
+  int polarity() const;                 ///< Polarity (only if they are all the same!) 
+  bool isDown() const;                  /// sign of the polarity
+  double signedRelativeCurrent() const; /// includes scale factor for polarity and current
   const LHCb::MagneticFieldGrid* fieldGrid() const { return 0 ; }
+  
 
 private:
 
