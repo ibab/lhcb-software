@@ -4,6 +4,11 @@
 ! Purpose     : Velo pattern recognition
 !-----------------------------------------------------------------------------
 
+! 2010-04-22 - David Hutchcroft
+ - Added an option to PatVeloRTracking to do the same missing sensor and 
+   overlap search for RZ tracks in the backward direction as forward
+   Default is unchanged behaviour
+
 !========================== PatVelo v3r21 2010-04-10 =========================
 ! 2010-04-10 - Marco Cattaneo
  - Add missing include, needed to make previous change compatible with older

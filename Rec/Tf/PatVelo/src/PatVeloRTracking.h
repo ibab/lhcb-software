@@ -1,4 +1,4 @@
-// $Id: PatVeloRTracking.h,v 1.5 2010-01-16 19:42:53 dhcroft Exp $
+// $Id: PatVeloRTracking.h,v 1.6 2010-04-22 14:50:13 dhcroft Exp $
 #ifndef TF_PATVELORTRACKING_H 
 #define TF_PATVELORTRACKING_H 1
 
@@ -41,7 +41,7 @@ namespace Tf {
 
     private:
       /** Take three sectors and set up the combinations to pass to 
-        seedInSectorTriplet.
+        seedInSectorTriplet for forward tracks.
         */
       void makeForwardSectorTriplets(  StationReverseIterator station0, unsigned int zone0,
           StationReverseIterator station1, unsigned int zone1,
@@ -49,6 +49,17 @@ namespace Tf {
           StationReverseIterator rStationsEnd,
           unsigned int sector,      
           std::vector<PatRZTrack> &rzTracks);
+
+      /** Take three sectors and set up the combinations to pass to 
+        seedInSectorTriplet for backward tracks (normally not used)
+        */
+    void makeBackwardSectorTriplets( 
+        StationIterator station0, unsigned int zone0,
+        StationIterator station1, unsigned int zone1,
+        StationIterator station2, unsigned int zone2,
+        StationIterator stationsEnd, 
+        unsigned int sector,
+        std::vector<PatRZTrack> &rzTracks);
 
       /** find using 3 sector pointers seeds tracks into rzTracks
         also extends tracks from initial triplet, into opposite side
@@ -75,7 +86,7 @@ namespace Tf {
 
       /// add the hits from the other side of the detector to a track
       void addOppositeSideHits(PatRZTrack &newTrack, const int &zone,
-          const DeVeloRType* sensor );
+                               bool forward,const DeVeloRType* sensor );
 
       /// Merge tracks sharing hits
       void mergeTracks( std::vector<PatRZTrack> &rzTracks );
@@ -126,7 +137,8 @@ namespace Tf {
 
       /// Use correction for half boxes when looking for overlaps
       bool m_OverlapCorrection; 
-
+      /// Look for tracks in backward overlap region (default false)
+      bool m_backWardOverlap;
   };
 }
 #endif // TF_PATVELORTRACKING_H

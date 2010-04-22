@@ -1,4 +1,4 @@
-// $Id: PatVeloRTracking.cpp,v 1.11 2010-02-18 14:12:06 dhcroft Exp $
+// $Id: PatVeloRTracking.cpp,v 1.12 2010-04-22 14:50:13 dhcroft Exp $
 // Include files
 
 // from Gaudi
@@ -51,6 +51,7 @@ namespace Tf {
       declareProperty( "OnlyForward"     , m_onlyForward      = false     );
       declareProperty( "OnlyBackward"    , m_onlyBackward     = false     );
       declareProperty( "OverlapCorrection" , m_OverlapCorrection = true   );
+      declareProperty( "BackwardOverlapSearch" , m_backWardOverlap = false);
     }
   //=============================================================================
   // Destructor
@@ -226,11 +227,21 @@ namespace Tf {
             if ( station2 == stationsEnd ) continue;
             if ( (*station2)->empty(zone) ) continue;
 
-            seedInSectorTriplet(false,rzTracks, 0, zone,
-                station0, zone,
-                station1, zone,
-                station2, zone);
-
+            if( m_backWardOverlap ){
+              // not the default to keep the code faster
+              makeBackwardSectorTriplets(station0, zone,
+                                         station1, zone,
+                                         station2, zone,
+                                         stationsEnd,
+                                         zone,
+                                         rzTracks);
+            }else{
+              // default is check only continous tracks (do not look for skips)
+              seedInSectorTriplet(false,rzTracks, 0, zone,
+                                  station0, zone,
+                                  station1, zone,
+                                  station2, zone);
+            }
           } // zone loop
         } // station loop
       } // velo half loop
@@ -385,6 +396,41 @@ namespace Tf {
             sIter0, zone0,
             sIter1, zone1,
             sIter2, zone2); 
+      }
+      return;
+    }
+
+  void PatVeloRTracking::
+    makeBackwardSectorTriplets( StationIterator station0, unsigned int zone0,
+        StationIterator station1, unsigned int zone1,
+        StationIterator station2, unsigned int zone2,
+        StationIterator stationsEnd, 
+        unsigned int sector,
+        std::vector<PatRZTrack> &rzTracks){
+
+      // going to search for three matching clusters
+      // do this with three cases
+      for ( int iCase = 0; 3 > iCase; ++iCase ){
+
+        //case 0, clusters in consevutive stations
+        if ( 1 == iCase ) {
+          // case 1, cluster missing in third station
+          ++station2;
+          if (station2 == stationsEnd) return;
+        } else if ( 2 == iCase ) {
+          // case 2, cluster missing in second station
+          ++station1;
+        }        
+
+        // if any of sectors has no clusters continue
+        if ( (*station1)->empty(zone1) ) continue;
+        if ( (*station2)->empty(zone2) ) continue;
+
+        seedInSectorTriplet(false,rzTracks,
+            iCase, sector,
+            station0, zone0,
+            station1, zone1,
+            station2, zone2); 
       }
       return;
     }
@@ -544,11 +590,11 @@ namespace Tf {
           }
 
           //== Try to add hits on the other half station, if sector 0/3
-          // and forward and at least 5 hits long
-          if ( forward
+          // and (optionally) forward 
+          if ( ( forward || m_backWardOverlap )
               //&& ( 4 < newTrack.nbCoords()  )
               && (0 == zone0 || 3 == zone0 ) ) {
-            addOppositeSideHits(newTrack,zone0,(*station0)->sensor());
+            addOppositeSideHits(newTrack,zone0,forward,(*station0)->sensor());
           }
           if ( forward ) {
             std::sort( newTrack.coords()->begin(), newTrack.coords()->end(),
@@ -597,7 +643,6 @@ namespace Tf {
     double lastZ = (*station)->z();
     bool notFirst = false;
     while ( m_maxMissed >= nMiss ) {
-
       // if not doing opposite side must update sectPt first, then for both every time
       if(!extraCoord  || notFirst){     
         if(forward){
@@ -673,7 +718,7 @@ namespace Tf {
 
   /// add the hits from the other side of the detector to a track
   void PatVeloRTracking::
-    addOppositeSideHits(PatRZTrack &newTrack,const int &zone,
+        addOppositeSideHits(PatRZTrack &newTrack,const int &zone,bool forward,
         const DeVeloRType* sensor ){
 
       PatVeloRHits extraCoords;
@@ -689,7 +734,7 @@ namespace Tf {
       StationIterator station = m_hitManager->stationIterHalf( iSens);
 
       unsigned int nbUsed =0;
-      extendTrack(newTrack,station, otherZone,nbUsed, m_rOverlapTol, true, &extraCoords);
+      extendTrack(newTrack,station, otherZone,nbUsed, m_rOverlapTol, forward, &extraCoords);
 
       //== Store if relevant size...
       // track assumed to be fully passing through overlap region
