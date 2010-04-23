@@ -8,7 +8,7 @@
 </set></argument>
 <argument name="validator"><text>
 findReferenceBlock("""
- |*"46:HLT_PASS_RE('Hlt1(?!ODIN)(?!L0)(?!Lumi)(?!Te|      1000 |        413 |(  41.3000 +- 1.55702  )%|   -------   |   -------   |
+ |*"46:HLT_PASS_RE('Hlt1(?!ODIN)(?!L0)(?!Lumi)(?!Te|      1000 |        455 |(  45.5000 +- 1.57472  )%|   -------   |   -------   |
 """, stdout, result, causes, signature_offset = 0)
 countErrorLines({"FATAL":0})
 </text></argument>
