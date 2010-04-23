@@ -146,9 +146,8 @@ StatusCode DeRichGasRadiator::updateProperties ( )
   {
     const double curPressure = m_gasParametersCond->param<double>("Pressure") * 0.001*Gaudi::Units::bar; //convert to bar
     const double curTemp     = m_gasParametersCond->param<double>("Temperature");
-    double scaleFactor( 1.0 );
-    if ( m_scaleFactorCond )
-    { scaleFactor = m_scaleFactorCond->param<double>("CurrentScaleFactor"); }
+    const double scaleFactor = ( !m_scaleFactorCond ? 1.0 :
+                                 m_scaleFactorCond->param<double>("CurrentScaleFactor") );
     info() << "Refractive index update triggered : Pressure = " << curPressure/Gaudi::Units::bar
            << " bar : Temperature = " << curTemp << " K"
            << " : (n-1) Scale = " << scaleFactor
@@ -191,9 +190,10 @@ StatusCode DeRichGasRadiator::updateProperties ( )
 //  calcSellmeirRefIndex
 //=========================================================================
 
-StatusCode DeRichGasRadiator::calcSellmeirRefIndex (const std::vector<double>& momVect,
-                                                    const TabulatedProperty* tabProp,
-                                                    SmartRef<Condition> gasParamCond ) const
+StatusCode 
+DeRichGasRadiator::calcSellmeirRefIndex ( const std::vector<double>& momVect,
+                                          const TabulatedProperty* tabProp,
+                                          const SmartRef<Condition>& gasParamCond ) const
 {
   // test the tab property pointer
   if ( !tabProp )
@@ -203,7 +203,7 @@ StatusCode DeRichGasRadiator::calcSellmeirRefIndex (const std::vector<double>& m
   }
 
   // get temperature and pressure
-  double curPressure, curTemp;
+  double curPressure(0), curTemp(0);
   if ( gasParamCond )
   {
     curPressure = gasParamCond->param<double>("Pressure") * 0.001*Gaudi::Units::bar; //convert to bar
@@ -215,9 +215,9 @@ StatusCode DeRichGasRadiator::calcSellmeirRefIndex (const std::vector<double>& m
     curTemp     = m_temperatureCond->param<double>("CurrentTemperature");
   }
 
-  double scaleFactor( 1.0 );
-  if ( m_scaleFactorCond )
-    scaleFactor = m_scaleFactorCond->param<double>("CurrentScaleFactor");
+  // (n-1) scale factor
+  const double scaleFactor = ( !m_scaleFactorCond ? 1.0 :
+                               m_scaleFactorCond->param<double>("CurrentScaleFactor") );
 
   // reset table
   TabulatedProperty* modTabProp = const_cast<TabulatedProperty*>( tabProp );

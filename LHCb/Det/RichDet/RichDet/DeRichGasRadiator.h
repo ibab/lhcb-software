@@ -61,8 +61,6 @@ public:
    */
   virtual StatusCode initialize();
 
-protected:
-
 private:
 
   /// method to update the refractive index of the radiator
@@ -80,9 +78,9 @@ private:
 
   /// method for the calculation of the refractive index from the Sellmeir
   /// coeficients and update of the Tabulated Property
-  StatusCode calcSellmeirRefIndex (const std::vector<double>& momVect,
-                                   const TabulatedProperty* tabProp,
-                                   SmartRef<Condition> gasParamCond ) const;
+  StatusCode calcSellmeirRefIndex ( const std::vector<double>& momVect,
+                                    const TabulatedProperty* tabProp,
+                                    const SmartRef<Condition>& gasParamCond ) const;
 
   /// method to use the old separate temperature and pressure conditions
   StatusCode setupOldGasConditions();
