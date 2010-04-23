@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltPVs.py,v 1.3 2010-04-21 08:24:33 graven Exp $
+# $Id: HltPVs.py,v 1.4 2010-04-23 17:09:19 gligorov Exp $
 # =============================================================================
 ## @file HltTracking/HltPVs.py
 #  Define the 2D and 3D primary vertex making algorithms for the Hlt
@@ -55,13 +55,25 @@ def PV2D() :
     from HltReco import MinimalRZVelo
     from Configurables import HltVertexFilter
     from Configurables import PatPV3D
-    from Configurables import PVOfflineTool 
+    from Configurables import PVOfflineTool,PVSeedTool,LSAdaptPVFitter 
     
     # Temporary cheat while the 2D PVs are not fixed yet!
     recoCheatPV2D =  PatPV3D('HltPVsCheatPV2D' )
-    recoCheatPV2D.addTool( PVOfflineTool, name = 'PVOfflineTool' )
-    recoCheatPV2D.PVOfflineTool.InputTracks = [ "Hlt1/Track/Velo" ]
+    recoCheatPV2D.addTool( PVOfflineTool, "PVOfflineTool")
     recoCheatPV2D.OutputVerticesName = "Hlt/Vertex/PV2D"
+    recoCheatPV2D.PVOfflineTool.InputTracks = [ "Hlt1/Track/Velo" ]
+    
+    
+    EarlyData = False
+    if EarlyData :
+        recoCheatPV2D.PVOfflineTool.addTool(PVSeedTool, "PVSeedTool")
+        recoCheatPV2D.PVOfflineTool.addTool(LSAdaptPVFitter, "LSAdaptPVFitter")
+        recoCheatPV2D.PVOfflineTool.PVSeedTool.minClusterMult = 2
+        recoCheatPV2D.PVOfflineTool.PVSeedTool.minCloseTracksInCluster = 2
+        recoCheatPV2D.PVOfflineTool.PVSeedTool.ratioSig2HighMult = 1
+        recoCheatPV2D.PVOfflineTool.PVSeedTool.ratioSig2LowMult =1
+        recoCheatPV2D.PVOfflineTool.LSAdaptPVFitter.MinTracks = 2 
+        
 
     prepareCheatedPV2D = HltVertexFilter( 'Hlt1PrepareCheatedPV2D'
                              , InputSelection = "TES:" + recoCheatPV2D.OutputVerticesName
@@ -111,13 +123,26 @@ def PV3D() :
 
     from Configurables import PatPV3D
     from Hlt2TrackingConfigurations import Hlt2UnfittedForwardTracking
-    from Configurables import PVOfflineTool 
+    from Configurables import PVOfflineTool,PVSeedTool,LSAdaptPVFitter 
 
     output3DVertices = _vertexLocation(HltSharedVerticesPrefix,HltGlobalVertexLocation,Hlt3DPrimaryVerticesName)
 
     recoPV3D =  PatPV3D('HltPVsPV3D' )
-    recoPV3D.addTool( PVOfflineTool, name = 'PVOfflineTool' )
-    recoPV3D.PVOfflineTool.InputTracks = [ (Hlt2UnfittedForwardTracking().hlt2VeloTracking()).outputSelection() ]
+    recoPV3D.addTool(PVOfflineTool,"PVOfflineTool")
     recoPV3D.OutputVerticesName = output3DVertices
+    recoPV3D.PVOfflineTool.InputTracks = [ (Hlt2UnfittedForwardTracking().hlt2VeloTracking()).outputSelection() ]
 
+    
+    EarlyData = False
+    if EarlyData :
+
+        recoPV3D.PVOfflineTool.addTool(PVSeedTool, "PVSeedTool")
+        recoPV3D.PVOfflineTool.addTool(LSAdaptPVFitter, "LSAdaptPVFitter")
+        recoPV3D.PVOfflineTool.PVSeedTool.minClusterMult = 2
+        recoPV3D.PVOfflineTool.PVSeedTool.minCloseTracksInCluster = 2
+        recoPV3D.PVOfflineTool.PVSeedTool.ratioSig2HighMult = 1
+        recoPV3D.PVOfflineTool.PVSeedTool.ratioSig2LowMult =1
+        recoPV3D.PVOfflineTool.LSAdaptPVFitter.MinTracks = 2 
+        
+    
     return bindMembers( "HltPVsPV3D", [ Hlt2UnfittedForwardTracking().hlt2VeloTracking(), recoPV3D ] )
