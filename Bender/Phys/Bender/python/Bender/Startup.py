@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Startup.py,v 1.5 2010-03-12 16:41:43 ibelyaev Exp $ 
+# $Id: Startup.py,v 1.6 2010-04-23 11:16:34 ibelyaev Exp $ 
 # =============================================================================
 ## The trivial startup sctript for python Bender session
 #
@@ -42,7 +42,7 @@ with the campain of Dr.O.Callot et al.:
 # =============================================================================
 __author__  = 'Vanya BELYAEV belyaev@physics.syr.edu'
 __date__    = "2006-10-08"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $"
 __all__     = () 
 # =============================================================================
 
@@ -63,24 +63,27 @@ try:
     ## remove/backup the previous history file
     _rename_ ( __history__ , '.OLD' )
 
-    ## line completer 
-    import rlcompleter
-    import readline
-    readline.parse_and_bind("tab: complete")
-    
     ## write history at the end 
     def _prnt_() :
         print 'BENDER history file: %s' % __history__
         
+    ## line completer 
+    import rlcompleter
+    import readline
+    readline.parse_and_bind("tab: complete")
+
+
     import atexit
     atexit.register ( readline.write_history_file , __history__ )
     atexit.register ( _prnt_ )
 
     _prnt_() 
     
-except :
-    pass
+except:
+    pass 
 
+
+    
 # =============================================================================
 if __name__ == '__main__' :
     print '*'*120
