@@ -1,4 +1,4 @@
-// $Id: MCTupleToolKinematic.cpp,v 1.3 2010-01-26 15:39:25 rlambert Exp $
+// $Id: MCTupleToolKinematic.cpp,v 1.4 2010-04-23 11:09:28 pkoppenb Exp $
 // Include files 
 #include "gsl/gsl_sys.h"
 
@@ -107,7 +107,7 @@ StatusCode MCTupleToolKinematic::fill( const LHCb::MCParticle*
         Gaudi::XYZVector dist = endVertex - originVertex;
         // copied from DecayChainNTuple // 
         mcTau = trueP.M() * dist.Dot( trueP.Vect() ) / trueP.Vect().mag2();
-        mcTau /= Gaudi::Units::picosecond * Gaudi::Units::c_light;
+        mcTau /= Gaudi::Units::c_light;  // nanoseconds
         hasOsc = mcp->hasOscillated() ;
         if (msgLevel(MSG::DEBUG)) debug() << head << " " << mcPid << " time " << mcTau << " oscil" << hasOsc << endmsg ;
       }
