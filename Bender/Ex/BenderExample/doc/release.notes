@@ -1,10 +1,16 @@
-! $Id: release.notes,v 1.46 2010-03-19 14:34:18 ibelyaev Exp $
+! $Id: release.notes,v 1.47 2010-04-23 15:07:47 ibelyaev Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Ex/BenderExample
 ! Responsible : Vanya  BELYAEV ibelyaev@physics.syr.edu
 ! Purpose     : collection of examples to run Bender - 
 !             :                    -Python based physic sanalysis 
 ! -----------------------------------------------------------------------------
+
+! ====================== Ex/BenderExample v14r2 2010-03-18 ====================
+
+! 2010-04-23 - Vanya Belyaev
+
+ - add new example for reading Striping DST for real 2k+10 data by Graig Cowan 
 
 ! ====================== Ex/BenderExample v14rp1 2010-03-18 ====================
 
