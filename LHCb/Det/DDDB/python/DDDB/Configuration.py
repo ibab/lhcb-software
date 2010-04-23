@@ -171,7 +171,7 @@ class DDDBConf(ConfigurableUser):
         
         # Force negative polarity (i.e. don't take it from ONLINE)
         from Configurables import MagneticFieldSvc
-        MagneticFieldSvc(Polarity = -1,
+        MagneticFieldSvc(ForceToUseDownMap = True,
                          OutputLevel = ERROR)
         
         # Set initial event time to something close to 0 to avoid to use the current

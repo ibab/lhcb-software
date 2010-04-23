@@ -4,6 +4,9 @@
 ! Purpose     : Interface package to Geometry and Conditions DB
 !-----------------------------------------------------------------------------
 
+! 2010-04-23 - Marco Cattaneo
+ - Adapt to change of MagneticFieldSvc options
+
 ! 2010-04-16 - Marco Cattaneo
  - Changed default tags for 2009 and 2010 data:
    . head-20100407         for DDDB
