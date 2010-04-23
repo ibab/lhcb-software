@@ -5,6 +5,11 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-04-23 - Francesco Dettori 
+ - Added StrippingDstarD02xx.py which contains various stripping lines 
+   for Rare Charm studies.
+ - Added StrippingDstarD02xxConf to StreamCharm
+
 ! 2010-04-23 - Rob Lambert
  - Replace BsDsMu line with new B0q2DplusMuX, now "turned on"
 
@@ -41,6 +46,7 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! 2010-04-15 - Anton Poluektov
  - Fixed Bs2PhiPhi line: duplicate creation of two identical StrippingLines fixed. 
    Got rid of "Line Bs2PhiPhi declared but not appended" warning. 
+
 
 !========================== StrippingSelections v1r19 2010-04-08 ===================
 ! 2010-04-08 - Patrick Koppenburg
