@@ -4,6 +4,11 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2010-04-23 - Jibo He
+ - TupleToolTrackInfo
+   Track->key() added to help check whether several candidates in one event
+	 share the same track.  
+
 ! 2010-04-23 - Patrick Koppenburg
  - TupleToolPropertime, MCTupleToolKinematic : Store _TAU as nanoseconds and
    not picoseconds. Nanoseconds is the Gaudi convention. 
