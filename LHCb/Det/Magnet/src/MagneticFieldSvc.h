@@ -1,4 +1,4 @@
-// $Id: MagneticFieldSvc.h,v 1.33 2010-04-22 08:10:34 smenzeme Exp $
+// $Id: MagneticFieldSvc.h,v 1.34 2010-04-23 17:12:22 smenzeme Exp $
 #ifndef MAGNETICFIELDSVC_H
 #define MAGNETICFIELDSVC_H 1
 
@@ -93,7 +93,7 @@ public:
     if (isDown())
       sign = -1;
 
-    return m_magFieldGrid.scaleFactor()*sign;
+    return std::abs(m_magFieldGrid.scaleFactor())*sign;
   }
 
   bool isDown() const {
