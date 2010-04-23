@@ -1,8 +1,8 @@
-# $Id: StrippingBd2DstarMuNuLoose.py,v 1.3 2010-02-02 21:24:47 gcowan Exp $
+# $Id: StrippingBd2DstarMuNuLoose.py,v 1.4 2010-04-23 16:56:24 gcowan Exp $
 
 __author__ = 'Greig Cowan, Marta Calvi'
 __date__ = '10/12/2009'
-__version__ = '$Revision: 1.3 $'
+__version__ = '$Revision: 1.4 $'
 
 '''
 Bd->Dstar mu nu loose stripping selection using LoKi::Hybrid and python
@@ -20,9 +20,10 @@ class StrippingBd2DstarMuNuLooseConf(LHCbConfigurableUser):
     """
     __slots__ = { 
 			"MuonTRCHI2"		: 10.0		# adimensional 
-		,	"MuonPT"		: 800.0		# MeV 
+		,	"MuonPT"		: 500.0		# MeV 
 		,	"MuonMIPDV"		: 0.04		# mm
-		,	"D0PT"			: 1600.		# MeV
+		,	"D0PT"			: 1200.		# MeV
+		,	"D0BPVVDCHI2"		: 40.		# adimensional
 		,	"KaonPT"		: 350.0		# MeV  
 		,	"PionPT"		: 350.0		# MeV  
 		,	"BdDeltaMassLower"	: -2279.0	# MeV
@@ -52,6 +53,7 @@ class StrippingBd2DstarMuNuLooseConf(LHCbConfigurableUser):
 
 	DstarCutsD0 = "CHILDCUT("\
              	      "    (PT > %(D0PT)s *MeV)"\
+		      "  & (BPVVDCHI2 > %(D0BPVVDCHI2)s)"\
              	      ",1)" % self.getProps()
 
 	DstarCutsK = "& CHILDCUT("\
