@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.169 2010-04-22 20:59:15 graven Exp $
+! $Id: release.notes,v 1.170 2010-04-23 16:03:08 panmanj Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
+
+! 2010-04-23 - Jaap Panman
+ - add Hlt1LumiMidBeamCrossingDecision
 
 !========================== Hlt1Lines v3r2p1 2010-04-22 ===================
 ! 2010-04-21 - V. Gligorov

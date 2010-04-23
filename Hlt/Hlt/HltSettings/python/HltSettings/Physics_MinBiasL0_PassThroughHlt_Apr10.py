@@ -152,6 +152,7 @@ class Physics_MinBiasL0_PassThroughHlt_Apr10 :
                , 'Hlt1L0B1gas', 'Hlt1L0B2gas'
                , 'Hlt1VeloASide', 'Hlt1VeloCSide'
                , 'Hlt1Lumi'
+               , 'Hlt1LumiMidBeamCrossing'
                , 'Hlt1LumiLowBeam1' , 'Hlt1LumiLowBeam2' , 'Hlt1LumiLowBeamCrossing' , 'Hlt1LumiLowNoBeam'
                , 'Hlt1BeamGasBeam1', 'Hlt1BeamGasBeam2', 'Hlt1BeamGasCrossing', 'Hlt1BeamGasCrossingForcedRZReco'
                , 'Hlt1MBNoBias' # , 'Hlt1MBMiniBias'

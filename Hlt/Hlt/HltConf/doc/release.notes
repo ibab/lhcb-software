@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.448 2010-04-21 08:17:03 graven Exp $ 
+! $Id: release.notes,v 1.449 2010-04-23 15:58:54 panmanj Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2010-04-23 - Jaap Panman
+ - add Hlt1LumiMidBeamCrossingDecision
 
 !========================== HltConf v7r2   2010-04-21 ===================
 ! 2010-04-13 - Gerhard Raven

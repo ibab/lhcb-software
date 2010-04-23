@@ -49,6 +49,7 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
 
     __slots__ = { 'TriggerType'            : 'LumiTrigger'  # ODIN trigger type accepted for Lumi
                 , 'L0Channel'              : ['CALO']     # L0 channels accepted for LowLumi
+                , 'L0MidChannel'           : ['MUON']     # L0 channels accepted for MidLumi
                 , 'LumiLines'              : ['Count','VDM']
                 , 'EnableReco'             : True 
                 , 'MaxRate'                : 997. # pick a prime number...
@@ -105,12 +106,16 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
                                     , IgnoreFilterPassed = True
                                     , MeasureTime = True)
 
-        # LumiLow lines must be flagged - do not flag the traditional method, would interfere
+        # LumiLow lines must be flagged - traditional and low are flagged explicitely
         if postfix.find('Low') > -1  :
             lumiCountSequence.Members.append( LumiFlagMethod( seqCountName+'FlagMethod'
                                                               , CounterName='Method'
                                                               , ValueName='L0RateMethod'
                                                               , OutputContainer='Hlt/LumiSummary' ) )
+            
+        # LumiMid lines are not flagged - to be used for on-line reporting only
+        elif postfix.find('Mid') > -1  :
+            pass
             
         # flag now also the random lumi lines - needed due to microbias lines
         else  :
@@ -242,6 +247,22 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
                     , postscale = self.postscale
                     ) 
 
+    def __create_lumi_mid_line__(self, BXType='BeamCrossing', extension = '' ):
+        '''
+        returns an Hlt1 "Line" including input filter, reconstruction sequence and counting
+        adds histogramming
+        '''
+        postfix = 'Mid'
+        from HltLine.HltLine import Hlt1Line   as Line
+        l0du = ' | '.join( [ (" ( L0_CHANNEL('%s') ) "%(x)) for x in  self.getProp('L0MidChannel') ] )
+        return Line ( 'Lumi'+postfix+BXType + extension
+                    , prescale = self.prescale
+                    , ODIN = ' ( ODIN_BXTYP == LHCb.ODIN.%s ) ' % BXType
+                    , L0DU  = l0du
+                    , algos = self.__create_lumi_algos__( postfix+BXType )
+                    , postscale = self.postscale
+                    ) 
+
     def __apply_configuration__(self) :
         '''
         creates parallel HLT1 Lines for each beam crossing type
@@ -256,4 +277,9 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
                    , L0DU = 'scale( %s , %s)' % ( i._L0DU , self.getProp('LumiLowRateLimits')[i.name().lstrip('Hlt1LumiLow')] ) 
                    , postscale = self.postscale
                    )
+        # PhysicsTrigger lines for higher rates
+        lines = map( self.__create_lumi_mid_line__, ['BeamCrossing'] )
+        #
+        # NOTE: this line should not be rate-limited, but a fixed prescale can be used if needed.
+        #
 
