@@ -46,20 +46,22 @@ if [[ ${ARCH} == "x86_64" ]]
      if test -z "${DEBUGGING}";
        then 
 	 #echo running normal sw;
-          if test "`uname -r`" = "2.6.18-164.6.1.el5"; 	        
-             then  	 
-                export CMTCONFIG=x86_64-slc5-gcc43-opt 	 
-             else 	 
-                export CMTCONFIG=slc4_amd64_gcc34 	 
-          fi      
+	 #if test "`uname -r`" = "2.6.18-164.6.1.el5";
+	 #   then 
+	 #      export CMTCONFIG=x86_64-slc5-gcc43-opt
+	 #   else
+	 #      export CMTCONFIG=slc4_amd64_gcc34
+	 #fi 
+	 export CMTCONFIG=x86_64-slc5-gcc43-opt     
        else 
 	 #echo running debug sw;
-	  if test "`uname -r`" = "2.6.18-164.6.1.el5"; 	 
-             then  	 
-                export CMTCONFIG=x86_64-slc5-gcc43-dbg 	 
-             else  	 
-                export CMTCONFIG=slc4_amd64_gcc34_dbg    	 
-          fi   
+	 #if test "`uname -r`" = "2.6.18-164.6.1.el5";
+	 #   then 
+	 #      export CMTCONFIG=x86_64-slc5-gcc43-dbg
+	 #   else 
+	 #      export CMTCONFIG=slc4_amd64_gcc34_dbg   
+	 #fi 
+	 export CMTCONFIG=x86_64-slc5-gcc43-dbg     
      fi        
   else
     if test -z "${DEBUGGING}";
@@ -71,6 +73,8 @@ if [[ ${ARCH} == "x86_64" ]]
 	export CMTCONFIG=slc4_ia32_gcc34_dbg   
     fi
 fi
+
+
 
 # remove the args because they interfere with the cmt scripts
 export HOME=/home/$(/usr/bin/whoami)
@@ -127,4 +131,6 @@ export CLASS1_TASK="${gaudi_exe} -tasktype=LHCb::Class1Task -main=/group/online/
 export CLASS0_TASK="${gaudi_exe} -tasktype=LHCb::Class0Task -opt=${ONLINETASKSROOT}/options/Daemon.opts"
 
 export gaudi_exe3="$GAUDIONLINEROOT/$CMTCONFIG/Gaudi.exe $GAUDIONLINEROOT/$CMTCONFIG/libGaudiOnline.so GaudiOnline -msgsvc=LHCb::FmcMessageSvc"  
+
+export debug_exe="$GAUDIONLINEROOT/$CMTCONFIG/Gaudi.exe $GAUDIONLINEROOT/$CMTCONFIG/libGaudiOnline.so GaudiOnline"  
 export gaudi_exe4="/usr/bin/valgrind --tool=callgrind --log-file=SaverCallTrace.log $GAUDIONLINEROOT/$CMTCONFIG/Gaudi.exe $GAUDIONLINEROOT/$CMTCONFIG/libGaudiOnline.so GaudiOnline"  
