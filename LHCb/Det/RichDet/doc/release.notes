@@ -4,6 +4,9 @@
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
 
+! 2010-04-23 - Antonis Papanestis
+ - Fixed a bug (m_MDMS_version was a bool instead of an int)
+
 ! 2010-04-23 - Chris Jones
  - Include (n-1) scale factor in printout on gas refractive index updates.
 

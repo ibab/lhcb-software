@@ -375,7 +375,9 @@ private: // data
   bool   m_UseHpdMagDistortions;
   bool   m_UseBFieldTestMap ;
   double m_LongitudinalBField ;
-  bool   m_MDMS_version;
+
+  ///< version of MDMS corrections
+  int m_MDMS_version;
 
   // Cached parameters for speed reasons.
   Gaudi::Transform3D m_SiSensorToHPDMatrix; ///< silicon to HPD transform
