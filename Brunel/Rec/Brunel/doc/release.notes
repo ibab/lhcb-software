@@ -31,6 +31,12 @@ Purpose: LHCb reconstruction program
     (RichRecSys)
   . bug fix for downstream tracks in TrackStateInitTool (TrackTools)
   . New default database tags (DDDB)
+  . Change to MagneticFieldSvc options and printout (Magnet)
+  . Add CK theta pull plots (RichRecQC)
+  . Add protection against hot events (TsaAlgorithms)
+  . Switch on RZ overlap track finding in backward direction (PatVelo)
+  . Fixes to MuonPID Monitoring (MuonPIDChecker)
+  . Disable booking of Rich Root Ntuple by default. (RichRecQC)
 
 </PRE><H1><A NAME=v37r1>2010-04-15 Brunel v37r1</A></H1><PRE>
 - Changes to Configurable
