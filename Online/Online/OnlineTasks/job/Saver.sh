@@ -31,22 +31,27 @@ done
 
 export OPTIONS=/group/online/dataflow/options/${PARTNAME}/${PARTNAME}_Info.opts
 export INFOOPTIONS=/group/online/dataflow/options/${PARTNAME}/${PARTNAME}_Info.opts;
-echo "options "${OPTIONS}
+
 
 
 if test -n "${TOP}" 
    then export DIM_DNS_NODE=mona08;
 fi
 
+if [[ ${PARENT} == "mona09" ]]
+   then export DIM_DNS_NODE=mona09;
+fi   
 
+echo "options "${OPTIONS} "dim dns node "${DIM_DNS_NODE}  
 . ./setupOnline.sh 
 
 if [[ ${PARENT} == "cald07" ]]
   then ${gaudi_exe3} -options=../options/SaverCalibrationfarm.opts &
   else 
      if [[ ${PARENT} == "mona09" ]]
-       then ${gaudi_exe3} -options=../options/SaverRecBrunel.opts &
-       else exec -a ${UTGID} ${gaudi_exe3} -options=../options/Saver.opts &
-
+       then exec -a ${UTGID} ${gaudi_exe3} -options=../options/SaverRecBrunel.opts &
+      #else exec -a ${UTGID} ${gaudi_exe3} -options=../options/Saver.opts &
+    #  else exec -a ${UTGID} ${debug_exe} -options=../options/Saver.opts &  
+      else exec -a ${UTGID} ${CLASS1_TASK} -options=../options/Saver.opts &
      fi 
 fi  
