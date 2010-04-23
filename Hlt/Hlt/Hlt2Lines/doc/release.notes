@@ -8,17 +8,29 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2010-Apr-23 - Patrick Spradlin
+ - Hlt2CharmLines.py
+   . Modified default values of cut slots to the values shown in the
+     20 November 2009 Trigger and Stripping Workshop for the charm lines with
+     a total reduction factor of 25.
+ - Hlt2TopologicalLines.py
+   . Modified default values of cut slots to the values shown in the
+     20 November 2009 Trigger and Stripping Workshop for the topological lines
+     with a total reduction factor of 20.
+   + Added 3 test lines that apply the `robust' cuts to fitted tracks
+     (Hlt2TopoRobTF.Body).
+
 ! 2010-04-23 - Neal Gauvin
  - Solved bug #66297
 
-! 2010-22-04 - Patrick Spradlin and Mat Charles
+! 2010-04-22 - Patrick Spradlin and Mat Charles
  - Hlt2CharmLines.py
    + Added 2 lines to select D0 -> K_S h h (Hlt2CharmTFD2HHKs[LL,DD]) and
      slots to configure them.
    + Removed several instances of SUMQ cuts that weren't doing what i
      thought they were doing.
 
-! 2010-21-04 - Patrick Spradlin
+! 2010-04-21 - Patrick Spradlin
  - Hlt2CharmLines.py
    + Added 6 one stage lines to the charm trigger (Hlt2CharmOSTF.Body,
      Hlt2CharmOSTF.BodyWideMass) and slots to configure them.  The lines use

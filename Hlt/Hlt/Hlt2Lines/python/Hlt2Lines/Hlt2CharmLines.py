@@ -1,7 +1,7 @@
-## $Id: Hlt2CharmLines.py,v 1.16 2010-04-22 16:33:16 spradlin Exp $
+## $Id: Hlt2CharmLines.py,v 1.17 2010-04-23 21:25:38 spradlin Exp $
 __author__  = 'Patrick Spradlin'
-__date__    = '$Date: 2010-04-22 16:33:16 $'
-__version__ = '$Revision: 1.16 $'
+__date__    = '$Date: 2010-04-23 21:25:38 $'
+__version__ = '$Revision: 1.17 $'
 
 ## ######################################################################
 ## Defines a configurable to define and configure Hlt2 lines for selecting
@@ -17,34 +17,34 @@ class Hlt2CharmLinesConf(HltLinesConfigurableUser) :
     # Don't touch my variables!
     __slots__ = { 'ComRobAllTrkPtLL'        : 300.0      # in MeV
                 , 'ComRobAllTrkPLL'         : 2000.0     # in MeV
-                , 'ComRobAllTrkPVIPLL'      : 0.05       # in mm
-                , 'ComRobPairMinDocaUL'     : 0.10       # in mm
+                , 'ComRobAllTrkPVIPLL'      : 0.025      # in mm
+                , 'ComRobPairMinDocaUL'     : 0.20       # in mm
                 , 'ComRobPairMaxDocaUL'     : 1.0        # in mm
                 , 'ComRobTrkMaxPtLL'        : 1500.0     # in MeV
                 , 'ComRobVtxPVDispLL'       : 2.0        # in mm
                 , 'ComRobVtxPVRDispLL'      : 0.2        # in mm
-                , 'RobustPointingUL'        : 0.10       # unitless
+                , 'RobustPointingUL'        : 0.20       # unitless
                 , 'ComRobUseGEC'            : True       # do or do not 
                 , 'ComRobGEC'               : 120        # max number of tracks
                 , 'ComTFAllTrkPtLL'         : 300.0      # in MeV
                 , 'ComTFAllTrkPLL'          : 2000.0     # in MeV
                 , 'ComTFAllTrkPVIPChi2LL'   : 9.0        # unitless
                 , 'ComTFAllTrkChi2UL'       : 10.0       # unitless
-                , 'ComTFPairMinDocaUL'      : 0.10       # in mm
+                , 'ComTFPairMinDocaUL'      : 0.20       # in mm
                 , 'ComTFPairMaxDocaUL'      : 1.0        # in mm
                 , 'ComTFTrkMaxPtLL'         : 1500.0     # in MeV
-                , 'ComTFVtxPVDispChi2LL'    : 100.0      # unitless
-                , 'TFPointUL'               : 0.10       # unitless
+                , 'ComTFVtxPVDispChi2LL'    : 25.0       # unitless
+                , 'TFPointUL'               : 0.20       # unitless
                 ## Cut values for one stage track-fit (OSTF) lines.
                 , 'OSTFAllTrkPtLL'          : 300.0      # in MeV
                 , 'OSTFAllTrkPLL'           : 2000.0     # in MeV
                 , 'OSTFAllTrkPVIPChi2LL'    : 9.0        # unitless
                 , 'OSTFAllTrkChi2UL'        : 10.0       # unitless
-                , 'OSTFPairMinDocaUL'       : 0.10       # in mm
+                , 'OSTFPairMinDocaUL'       : 0.20       # in mm
                 , 'OSTFPairMaxDocaUL'       : 1.0        # in mm
                 , 'OSTFTrkMaxPtLL'          : 1500.0     # in MeV
                 , 'OSTFVtxPVDispChi2LL'     : 100.0      # unitless
-                , 'OSTFPointUL'             : 0.10       # unitless
+                , 'OSTFPointUL'             : 0.20       # unitless
                 ## Slots for K_S h h' lines
                 , 'KshhTFHHTrkPLL'          : 1500.0     # in MeV
                 , 'KshhTFHHTrkChi2UL'       : 20.0       # unitless

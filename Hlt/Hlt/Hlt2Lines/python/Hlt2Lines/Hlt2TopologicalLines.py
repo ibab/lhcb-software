@@ -1,7 +1,7 @@
-## $Id: Hlt2TopologicalLines.py,v 1.40 2010-04-02 17:10:01 spradlin Exp $
+## $Id: Hlt2TopologicalLines.py,v 1.41 2010-04-23 21:25:38 spradlin Exp $
 __author__  = 'Patrick Spradlin'
-__date__    = '$Date: 2010-04-02 17:10:01 $'
-__version__ = '$Revision: 1.40 $'
+__date__    = '$Date: 2010-04-23 21:25:38 $'
+__version__ = '$Revision: 1.41 $'
 
 ###
 #
@@ -45,12 +45,13 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
     __slots__ = { ## Cut values for robust stages.
                   'ComRobAllTrkPtLL'        : 300.0      # in MeV
                 , 'ComRobAllTrkPLL'         : 2000.0     # in MeV
-                , 'ComRobAllTrkPVIPLL'      : 0.05       # in mm
-                , 'ComRobPairMinDocaUL'     : 0.10       # in mm
+                , 'ComRobAllTrkPVIPLL'      : 0.025      # in mm
+                , 'ComRobPairMinDocaUL'     : 0.20       # in mm
                 , 'ComRobPairMaxDocaUL'     : 1.0        # in mm
                 , 'ComRobTrkMaxPtLL'        : 1500.0     # in MeV
                 , 'ComRobVtxPVDispLL'       : 2.0        # in mm
                 , 'ComRobVtxPVRDispLL'      : 0.2        # in mm
+                , 'RobustPointingUL'        : 0.28       # unitless
                 , 'ComRobUseGEC'            : True       # do or do not 
                 , 'ComRobGEC'               : 120        # max number of tracks
                 ## Cut values for post-track fit stages
@@ -58,22 +59,21 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
                 , 'ComTFAllTrkPLL'          : 2000.0     # in MeV
                 , 'ComTFAllTrkPVIPChi2LL'   : 9.0        # unitless
                 , 'ComTFAllTrkChi2UL'       : 10.0       # unitless
-                , 'ComTFPairMinDocaUL'      : 0.10       # in mm
+                , 'ComTFPairMinDocaUL'      : 0.20       # in mm
                 , 'ComTFPairMaxDocaUL'      : 1.0        # in mm
                 , 'ComTFTrkMaxPtLL'         : 1500.0     # in MeV
-                , 'ComTFVtxPVDispChi2LL'    : 100.0      # unitless
-                , 'RobustPointingUL'        : 0.20       # unitless
-                , 'TFPointUL'               : 0.10       # unitless
+                , 'ComTFVtxPVDispChi2LL'    : 64.0       # unitless
+                , 'TFPointUL'               : 0.28       # unitless
                 ## Cut values for one stage track-fit (OSTF) lines.
                 , 'OSTFAllTrkPtLL'          : 300.0      # in MeV
                 , 'OSTFAllTrkPLL'           : 2000.0     # in MeV
                 , 'OSTFAllTrkPVIPChi2LL'    : 9.0        # unitless
                 , 'OSTFAllTrkChi2UL'        : 10.0       # unitless
-                , 'OSTFPairMinDocaUL'       : 0.10       # in mm
+                , 'OSTFPairMinDocaUL'       : 0.20       # in mm
                 , 'OSTFPairMaxDocaUL'       : 1.0        # in mm
                 , 'OSTFTrkMaxPtLL'          : 1500.0     # in MeV
-                , 'OSTFVtxPVDispChi2LL'     : 100.0      # unitless
-                , 'OSTFPointUL'             : 0.10       # unitless
+                , 'OSTFVtxPVDispChi2LL'     : 64.0       # unitless
+                , 'OSTFPointUL'             : 0.28       # unitless
                 ## Pre- and Post-scales for lines.
                 , 'Prescale'                : {'Hlt2TopoTF2BodySA' : 1.00
                                                , 'Hlt2TopoTF3BodySA' : 0.001
@@ -102,6 +102,9 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
                                    , 'Hlt2TopoOSTF2BodyDecision'      : 50733
                                    , 'Hlt2TopoOSTF3BodyDecision'      : 50773
                                    , 'Hlt2TopoOSTF4BodyDecision'      : 50813
+                                   , 'Hlt2TopoRobTF2BodyDecision'     : 50735
+                                   , 'Hlt2TopoRobTF3BodyDecision'     : 50775
+                                   , 'Hlt2TopoRobTF4BodyDecision'     : 50815
                                    }
                   }
 
@@ -696,5 +699,62 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         self.__makeLine('TopoOSTF2Body', algos = [ostf2BodySeq])
         self.__makeLine('TopoOSTF3Body', algos = [ostf3BodySeq])
         self.__makeLine('TopoOSTF4Body', algos = [ostf4BodySeq])
+
+
+        ###################################################################
+        # Combinations for pseudo-robust lines---standalone lines that run
+        # the robust reconstruction and combinatorics on track-fit particles.
+        ###################################################################
+        lclRobTFInputKaons = self.__robInPartFilter('TopoRobTFInputKaons', [ BiKalmanFittedKaons ] )
+        lclRobTFInputPions = self.__robInPartFilter('TopoRobTFInputPions', [ BiKalmanFittedPions ] )
+
+        # one stage 2-body combinations
+        ###################################################################
+        topoRobTF2Body = self.__robustCombine(  name = 'TopoRobTF2Body'
+                                , inputSeq = [ lclRobTFInputKaons ]
+                                , decayDesc = ["K*(892)0 -> K+ K+", "K*(892)0 -> K+ K-", "K*(892)0 -> K- K-"]
+                                , extracuts = { 'CombinationCut' : "(AMINDOCA('LoKi::TrgDistanceCalculator')< %(ComRobPairMinDocaUL)s )" % self.getProps() }
+                               )
+
+        # one stage 3-body combinations
+        ###################################################################
+        topoRobTF3Body = self.__robustCombine(  name = 'TopoRobTF3Body'
+                                , inputSeq = [ lclRobTFInputPions, topoRobTF2Body ]
+                                , decayDesc = ["D*(2010)+ -> K*(892)0 pi+", "D*(2010)+ -> K*(892)0 pi-"]
+                               )
+
+        # one stage 4-body combinations
+        # Unlike the 3-body and 4-body, apply a mass lower limit.
+        ###################################################################
+        topoRobTF4Body = self.__robustCombine(  name = 'TopoRobTF4Body'
+                                , inputSeq = [ lclRobTFInputPions, topoRobTF3Body ]
+                                , decayDesc = ["B0 -> D*(2010)+ pi-","B0 -> D*(2010)+ pi+"]
+                                , extracuts = { 'CombinationCut' : '(AM>4*GeV)'
+                                              , 'MotherCut'      : "(BPVTRGPOINTINGWPT< %(RobustPointingUL)s)" % self.getProps()
+                                              }
+                               )
+
+
+        ###################################################################
+        # Create full decision sequences for the one stage lines.
+        ###################################################################
+
+        # 2-body decision
+        ###################################################################
+        robTF2BodySeq = self.__robustFilter('RobTFTopo2Body', [topoRobTF2Body])
+
+        # 3-body decision
+        ###################################################################
+        robTF3BodySeq = self.__robustFilter('RobTFTopo3Body', [topoRobTF3Body])
+
+        # 4-body decision
+        ###################################################################
+        robTF4BodySeq = self.__robustFilter('RobTFTopo4Body', [topoRobTF4Body])
+
+        # Line creation for one stage track fit lines.
+        ###################################################################
+        self.__makeLine('TopoRobTF2Body', algos = [robTF2BodySeq])
+        self.__makeLine('TopoRobTF3Body', algos = [robTF3BodySeq])
+        self.__makeLine('TopoRobTF4Body', algos = [robTF4BodySeq])
 
 
