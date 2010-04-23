@@ -1,3 +1,10 @@
+2010-04-23  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* scripts/generateLogin: 
+	- fixed the main usage of the wrapper: now the convention is that the .noLHCBLoginscript file 
+	must not exist in the $HOME directory
+	- completed the windows part.
+
 2010-04-22  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbConfiguration/LbLogin.py: fixed the creation of the missing User_release_area. Now creates the

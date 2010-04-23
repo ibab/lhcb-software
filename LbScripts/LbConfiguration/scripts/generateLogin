@@ -22,9 +22,9 @@ from LbConfiguration.Platform import binary_list, binary_opt_list, getBinaryOpt
 from LbConfiguration.Tools import genProjectSetup
 from optparse import OptionParser
 
-def fixNative(filename):
+def fixNativeString(data, dotbat=False):
     tobereplaced = {}
-    if os.environ.has_key("HOME") and not filename.endswith(".bat") :
+    if os.environ.has_key("HOME") and not dotbat :
         tobereplaced["HOME"] = os.environ["HOME"]        
     if os.environ.has_key("VO_LHCB_SW_DIR") :
         tobereplaced["VO_LHCB_SW_DIR"] = os.environ["VO_LHCB_SW_DIR"]
@@ -41,21 +41,27 @@ def fixNative(filename):
     if os.environ.has_key("AFSROOT") and filename.endswith(".bat"):
         tobereplaced["AFSROOT"] = os.environ["AFSROOT"]
 
-                   
-    inf = open(filename, "r")
-    data = inf.read()
-    inf.close()
-    out = open(filename, "w")
     for k in tobereplaced.keys() :
-        if not filename.endswith(".bat") :
+        if not dotbat :
             data = data.replace(tobereplaced[k], "${%s}" % k)
         else :
             data = data.replace("/","\\")
             data = data.replace(tobereplaced[k].replace("/","\\"), "%%%s%%" % k )
             if sys.platform != "win32" :
                 data = data.replace(":",";")
-    out.write(data)
-    out.close()    
+    return data
+
+def fixNative(filename):
+                   
+    inf = open(filename, "r")
+    data = inf.read()
+    inf.close()
+    out = open(filename, "w")
+    dotbat = False
+    if filename.endswith(".bat") :
+        dotbat = True
+    out.write(fixNativeString(data, dotbat))
+    out.close()
     
 def removeVariables(filename, varlist):
     inf = open(filename, "r")
@@ -259,7 +265,7 @@ def generateLogin(targetlocation, script, version="", mysiteroot=None, building=
                 content = """LbLogin_tmpfile=`%s/python/LbConfiguration/LbLogin.py --shell=sh --mktemp --scripts-version="%s" "$@"`
 """ % (targetlocation, version)
         content += """LbLoginStatus="$?"
-if [ "$LbLoginStatus" = 0 -a -n "$LbLogin_tmpfile" ]; then
+if [[ "$LbLoginStatus" = 0 -a -n "$LbLogin_tmpfile" ]]; then
     . $LbLogin_tmpfile
 fi
 rm -f $LbLogin_tmpfile
@@ -359,7 +365,7 @@ def generateGroupLogin(targetlocation, shell, version="", mysiteroot=None, build
     content = ""
     if shell == "sh" :
         content += """
-if [[ ! -e ${HOME}/.oldLHCBLoginscript ]]; then
+if [[ ! -e ${HOME}/.noLHCBLoginscript ]]; then
   lbvers=prod
   if [[ -e ${HOME}/.devLHCBLoginscript ]]; then
     lbvers=dev
@@ -392,7 +398,7 @@ fi
 """ 
     elif shell == "csh" :
         content += """
-if ( ! -e ${HOME}/.oldLHCBLoginscript ) then
+if ( ! -e ${HOME}/.noLHCBLoginscript ) then
   set lbvers=prod
   if ( -e ${HOME}/.devLHCBLoginscript ) then
     set lbvers=dev
@@ -424,7 +430,50 @@ endif
 
 """ 
     elif shell == "bat" :
-        content += "call %s\scripts\LbLogin.bat --quiet %%*" % targetlocation
+        content += """
+IF DEFINED HOME (
+  IF NOT EXIST %HOME%\.noLHCBLoginscript (
+    set lbvers="prod"
+    IF EXIST %HOME%\.devLHCBLoginscript (
+      set lbvers="dev"
+    ) """
+        if prodlocation :
+            content += """
+    IF EXIST %s\scripts\LbLogin.bat (
+      call %s\scripts\LbLogin.bat --quiet %%*
+    ) else (
+      IF EXIST %s\scripts\LbLogin.bat (
+        call %s\scripts\LbLogin.bat --quiet %%*
+      )
+    ) """ % (prodlocation, prodlocation, targetlocation, targetlocation)
+        else :
+            content += """
+    IF EXIST %s\scripts\LbLogin.bat (
+      call %s\scripts\LbLogin.bat --quiet %%*
+    )
+    set lbvers=
+  )
+) """ % (targetlocation, targetlocation)
+        if prodlocation :
+            content += """ELSE (
+    set lbvers="prod"
+    IF EXIST %s\scripts\LbLogin.bat (
+      call %s\scripts\LbLogin.bat --quiet %%*
+    ) ELSE (
+      IF EXIST %s\scripts\LbLogin.bat (
+        call %s\scripts\LbLogin.bat --quiet %%*
+      )
+    )
+    set lbvers=
+)
+""" % (prodlocation, prodlocation, targetlocation, targetlocation)
+        else :
+            content += """ELSE (
+    IF EXIST %s\scripts\LbLogin.bat (
+      call %s\scripts\LbLogin.bat --quiet %%*
+    )
+)
+""" % (targetlocation, targetlocation)
         
     f.write(content)
     f.close()
@@ -440,7 +489,7 @@ def generateGroupShell(targetlocation, shell, version="", mysiteroot=None, build
     content = ""
     if shell == "sh" :
         content += """
-if [[ ! -e ${HOME}/.oldLHCBLoginscript ]]; then
+if [[ ! -e ${HOME}/.noLHCBLoginscript ]]; then
   lbvers=prod
   if [[ -e ${HOME}/.devLHCBLoginscript ]]; then
     lbvers=dev
@@ -486,7 +535,7 @@ fi
     
     elif shell == "csh" :
         content += """
-if ( ! -e ${HOME}/.oldLHCBLoginscript ) then
+if ( ! -e ${HOME}/.noLHCBLoginscript ) then
   set lbvers=prod
   if ( -e ${HOME}/.devLHCBLoginscript ) then
     set lbvers=dev
@@ -530,7 +579,51 @@ endif
 
 """
     elif shell == "bat" :
-        content += "call %s\scripts\LbLogin.bat --silent %%*" % targetlocation
+        content += """
+IF DEFINED HOME (
+  IF NOT EXIST %HOME%\.noLHCBLoginscript (
+    set lbvers="prod"
+    IF EXIST %HOME%\.devLHCBLoginscript (
+      set lbvers="dev"
+    ) """
+        if prodlocation :
+            content += """
+    IF EXIST %s\scripts\LbLogin.bat (
+      call %s\scripts\LbLogin.bat --silent %%*
+    ) else (
+      IF EXIST %s\scripts\LbLogin.bat (
+        call %s\scripts\LbLogin.bat --silent %%*
+      )
+    ) """ % (prodlocation, prodlocation, targetlocation, targetlocation)
+        else :
+            content += """
+    IF EXIST %s\scripts\LbLogin.bat (
+      call %s\scripts\LbLogin.bat --silent %%*
+    )
+    set lbvers=
+  )
+) """ % (targetlocation, targetlocation)
+        if prodlocation :
+            content += """ELSE (
+    set lbvers="prod"
+    IF EXIST %s\scripts\LbLogin.bat (
+      call %s\scripts\LbLogin.bat --silent %%*
+    ) ELSE (
+      IF EXIST %s\scripts\LbLogin.bat (
+        call %s\scripts\LbLogin.bat --silent %%*
+      )
+    )
+    set lbvers=
+)
+""" % (prodlocation, prodlocation, targetlocation, targetlocation)
+        else :
+            content += """ELSE (
+    IF EXIST %s\scripts\LbLogin.bat (
+      call %s\scripts\LbLogin.bat --silent %%*
+    )
+)
+""" % (targetlocation, targetlocation)
+
     f.write(content)
     f.close()
     fixNative(script)
@@ -544,12 +637,15 @@ def generateMainWrapper(targetlocation, shell, version="", mysiteroot=None, buil
     prodlink = getProdLink(targetlocation)
     prodlocation = None
     if prodlink :
-        prodlocation = os.path.join(os.path.dirname(prodlink), "${lbvers}", "InstallArea")
+        if shell != "bat" :
+            prodlocation = os.path.join(os.path.dirname(prodlink), "${lbvers}", "InstallArea")
+        else :
+            prodlocation = os.path.join(os.path.dirname(prodlink), "%lbvers%", "InstallArea")            
     f = open(script, "w")
     content = ""
     if shell == "sh" :
         content += """
-if [[ -e ${HOME}/.useLHCBLoginscript ]]; then
+if [[ ! -e ${HOME}/.noLHCBLoginscript ]]; then
   lbvers=prod
   if [[ -e ${HOME}/.devLHCBLoginscript ]]; then
     lbvers=dev
@@ -592,7 +688,7 @@ fi
 """
     elif shell == "csh" :
         content += """
-if (  -e ${HOME}/.useLHCBLoginscript ) then
+if ( ! -e ${HOME}/.noLHCBLoginscript ) then
   set lbvers=prod
   if ( -e ${HOME}/.devLHCBLoginscript ) then
     set lbvers=dev
@@ -634,7 +730,51 @@ endif
         
 """
     elif shell == "bat" :
-        content += "call %s\scripts\group_login.bat %%*" % targetlocation
+        content += """
+IF DEFINED HOME (
+  IF NOT EXIST %HOME%\.noLHCBLoginscript (
+    set lbvers="prod"
+    IF EXIST %HOME%\.devLHCBLoginscript (
+      set lbvers="dev"
+    ) """
+        if prodlocation :
+            content += """
+    IF EXIST %s\scripts\group_login.bat (
+      call %s\scripts\group_login.bat %%*
+    ) else (
+      IF EXIST %s\scripts\group_login.bat (
+        call %s\scripts\group_login.bat %%*
+      )
+    ) """ % (prodlocation, prodlocation, targetlocation, targetlocation)
+        else :
+            content += """
+    IF EXIST %s\scripts\group_login.bat (
+      call %s\scripts\group_login.bat %%*
+    )
+    set lbvers=
+  )
+) """ % (targetlocation, targetlocation)
+        if prodlocation :
+            content += """ELSE (
+    set lbvers="prod"
+    IF EXIST %s\scripts\group_login.bat (
+      call %s\scripts\group_login.bat %%*
+    ) ELSE (
+      IF EXIST %s\scripts\group_login.bat (
+        call %s\scripts\group_login.bat %%*
+      )
+    )
+    set lbvers=
+)
+""" % (prodlocation, prodlocation, targetlocation, targetlocation)
+        else :
+            content += """ELSE (
+    IF EXIST %s\scripts\group_login.bat (
+      call %s\scripts\group_login.bat %%*
+    )
+)
+""" % (targetlocation, targetlocation)
+    
     f.write(content)
     f.close()
     fixNative(script)
