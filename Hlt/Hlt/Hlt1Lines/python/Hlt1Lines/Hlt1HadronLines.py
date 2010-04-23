@@ -9,7 +9,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.14 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.15 $"
 # =============================================================================
 
 import Gaudi.Configuration 
@@ -56,7 +56,15 @@ class Hlt1HadronLinesConf(HltLinesConfigurableUser) :
                 , 'SoftHadMain_ETCut'       : 2500. 
                 , 'SoftHadMain_PTCut'       : 1500.
                 , 'SoftHadDi_IPCut'         : 0.1
-                , 'Prescale'                : { 'Hlt1DiHadronSoft' : 0 }
+                , 'Prescale'                : { 'Hlt1DiHadronSoft'   : 0,
+                                                'Hlt1HadronMonConf1' : 1.,
+                                                'Hlt1HadronMonConf2' : 'RATE(50000)',
+                                                'Hlt1HadronMonComp'  : 'RATE(10000)'
+                                              }
+                , 'Postscale'               : { 'Hlt1HadronMonConf1' : 0.000001,
+                                                'Hlt1HadronMonConf2' : 0.000001,
+                                                'Hlt1HadronMonComp'  : 0.000001
+                                              }  
                 }
     
     def __apply_configuration__(self) : 
@@ -130,11 +138,15 @@ class Hlt1HadronLinesConf(HltLinesConfigurableUser) :
                            , HistoDescriptor = histosfilter('IP_PV2D_'+type,-0.2,1.8,200))]
 
             return bindMembers(prefix,conf)
-            
 
         def confirmationpostip(type=""):
-            OutputOfVeloIP = veloipcut(type).outputSelection()
-            OutputOfL0 = confirmationl0part(type).outputSelection()
+            if type.find('Mon') > -1 :
+                type = type.strip('Mon')
+                OutputOfVeloIP = confirmationpreip(type).outputSelection()
+            else :
+                OutputOfVeloIP = veloipcut(type).outputSelection()
+            
+            OutputOfL0     = confirmationl0part(type).outputSelection()
             prefix = 'HadronConfPostIP'+type
             from HltLine.HltDecodeRaw import DecodeIT
             conf =                  [ Member ( 'TM' , 'VeloCalo'
@@ -181,17 +193,32 @@ class Hlt1HadronLinesConf(HltLinesConfigurableUser) :
         #------------------------------------
         def companion(type=""):
             prefix = "HadCompanion"+type
+
+            comp = [ RZVelo , PV2D().ignoreOutputSelection()
+                , Member ( 'TU', 'UVelo' , RecoName = 'Velo')]
+
+            if (type.find('Mon') > -1) :
+                return bindMembers(prefix,comp)
+
             if   type == "Soft"   : cutvalue = self.getProp("SoftHadDi_IPCut")
             elif type == "Di"     : cutvalue = self.getProp("HadDi_IPCut")
             else                  : return None # Not an allowed value!
-            comp = [ RZVelo , PV2D().ignoreOutputSelection()
-                , Member ( 'TU', 'UVelo' , RecoName = 'Velo')
-                , Member ( 'TF', 'Companion'
+       
+            OutputOfConfirmation = confirmationpostip('Di').outputSelection()
+ 
+            comp += [ Member ( 'TF', '1UVelo'
+                               , FilterDescriptor = ['MatchIDsFraction_%s,<,0.9' %OutputOfConfirmation ]
+                               , HistogramUpdatePeriod = 1
+                               , HistoDescriptor  = histosfilter('MatchIDsFraction_%s' %OutputOfConfirmation,0.,8000.,200)
+                               )
+                    ]
+
+            comp += [ Member ( 'TF', 'Companion'
                            , FilterDescriptor = [ 'IP_PV2D,||>,%s'%cutvalue]
                            , HistogramUpdatePeriod = 1
                            , HistoDescriptor  = histosfilter('IP_PV2D_'+type,-0.3,30.,200)
                            )
-                ]
+                    ]
             return bindMembers(prefix,comp)
 
         #
@@ -215,12 +242,12 @@ class Hlt1HadronLinesConf(HltLinesConfigurableUser) :
                          , FilterDescriptor = [ 'DOCA,<,'+str(self.getProp('HadCompanion_DOCACut'))]
                          , HistoDescriptor  = histosfilter('DOCA_'+type,0.,1.,200)
                            )
+                #, Member ( 'VF', '1UVelo'
+                #           , FilterDescriptor = ['VertexTracksMatchIDsFraction,<,0.9']
+                #           , HistogramUpdatePeriod = 1
+                #           , HistoDescriptor  = histosfilter('VertexTracksMatchIDsFraction',0.,1.,100)
+                #           )
                 , Member ( 'VF', '1UVelo'
-                           , FilterDescriptor = ['VertexTracksMatchIDsFraction,<,0.9']
-                           , HistogramUpdatePeriod = 1
-                           , HistoDescriptor  = histosfilter('VertexTracksMatchIDsFraction',0.,1.,100)
-                           )
-                , Member ( 'VF', '2UVelo'
                            , FilterDescriptor = [ 'VertexDz_PV2D,>,%s'%self.getProp('HadCompanion_DZCut')]
                            , HistogramUpdatePeriod = 1
                            , HistoDescriptor  = histosfilter('VertexDx_PV2D_'+type,1.,12.,200)                       
@@ -287,7 +314,23 @@ class Hlt1HadronLinesConf(HltLinesConfigurableUser) :
                            )
                 ]
             return vafter
-            
+           
+        def mondecision(type=""):
+            if   type == 'Conf' :
+                return [Member('TF','MonConf',OutputSelection = "%Decision", FilterDescriptor = ['IsBackward,<,0.5'])]
+            elif type == 'Comp' :
+                return [Member( 'TU',
+                                'MonForward',
+                                RecoName = 'Forward',
+                                tools = [ Tool( HltTrackUpgradeTool,
+                                                tools = [ConfiguredPR( "Forward" )]
+                                              )
+                                        ]
+                              )
+                       ]+mondecision('Conf')
+            else                :
+                return None # Not an allowed type
+ 
         from Hlt1Lines.HltL0Candidates import L0Channels
         if self.getProp('L0Channel') in L0Channels() :
             # Single Hadron Line
@@ -317,6 +360,39 @@ class Hlt1HadronLinesConf(HltLinesConfigurableUser) :
                             [companion('Di')]+\
                             [dihadron('Di')]+\
                             vafterburn('Di')
+                 )
+
+            # Monitoring line : pre-confirmation reconstruction
+            #-----------------------------------
+            Line ( 'HadronMonConf1'
+                 , prescale = self.prescale
+                 , postscale = self.postscale
+                 , L0DU = "L0_CHANNEL('%(L0Channel)s')"%self.getProps()
+                 , algos = [confirmationl0part()]+\
+                           [confirmationpreip()]+\
+                           mondecision('Conf') 
+                 )
+            
+            # Monitoring line : post-confirmation reconstruction
+            #-----------------------------------
+            Line ( 'HadronMonConf2'
+                 , prescale = self.prescale
+                 , postscale = self.postscale
+                 , L0DU = "L0_CHANNEL('%(L0Channel)s')"%self.getProps()
+                 , algos = [confirmationl0part()]+\
+                           [confirmationpreip()]+\
+                           [confirmationpostip('SingleMon')]+\
+                           mondecision('Conf')
+                 )
+            
+            # Monitoring line : companion reconstruction
+            #-----------------------------------
+            Line ( 'HadronMonComp'
+                 , prescale = self.prescale
+                 , postscale = self.postscale
+                 , L0DU = "L0_CHANNEL('%(L0Channel)s')"%self.getProps()
+                 , algos = [companion('DiMon')]+\
+                           mondecision('Comp')
                  )
 
         # Soft DiHadron Line

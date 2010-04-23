@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.170 2010-04-23 16:03:08 panmanj Exp $
+! $Id: release.notes,v 1.171 2010-04-23 17:15:15 gligorov Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
+
+! 2010-04-23 - V. Gligorov
+ - Revert to old clone killing until differences are understood and
+   add monitoring lines for the hadrons.
 
 ! 2010-04-23 - Jaap Panman
  - add Hlt1LumiMidBeamCrossingDecision
