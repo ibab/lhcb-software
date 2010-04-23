@@ -96,7 +96,7 @@ if TrackSys().simplifiedGeometry():
 track = ProcessPhase("Track");
 GaudiSequencer("RecoTrSeq").Members += [ track ]
 
-if TrackSys().fieldOff() : MagneticFieldSvc().ScaleFactor = 0
+if TrackSys().fieldOff() : MagneticFieldSvc().ForcedSignedCurrentScaling = 0.
                
 if "noDrifttimes" in TrackSys().getProp("ExpertTracking"):
    Tf__OTHitCreator("OTHitCreator").NoDriftTimes = True
