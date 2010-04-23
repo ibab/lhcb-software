@@ -12,14 +12,17 @@ from StrippingConf.StrippingStream import StrippingStream
 
 from StrippingSelections import StrippingBd2DstarMuNu
 from StrippingSelections.StrippingBd2DstarMuNuLoose import StrippingBd2DstarMuNuLooseConf
-from StrippingSelections import StrippingBsDsMuNu
+#from StrippingSelections import StrippingBsDsMuNu
+#superceded by B0q2DplusMuX
 from StrippingSelections import Strippingb2DMuX
+from StrippingSelections import StrippingB0q2DplusMuX
 
 stream = StrippingStream("Semileptonic")
 stream.appendLines( [ 
 		        StrippingBd2DstarMuNu.line, 
 		        StrippingBd2DstarMuNuLooseConf().line(), 
-		        StrippingBsDsMuNu.line, 
+		        #StrippingBsDsMuNu.line, 
 			Strippingb2DMuX.line, 
 			Strippingb2DMuX.line1
 		    ] )
+stream.appendLines(StrippingB0q2DplusMuX.StrippingB0q2DplusMuXClass().Lines())

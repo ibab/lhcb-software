@@ -1,8 +1,8 @@
-# $Id: StrippingB0q2DplusMuX.py,v 1.1 2010-04-21 12:10:42 rlambert Exp $
+# $Id: StrippingB0q2DplusMuX.py,v 1.2 2010-04-23 14:46:47 rlambert Exp $
 
 __author__ = [ 'Rob LAmbert' ]
 __date__ = '2010-04-20'
-__version = '$Revision: 1.1 $'
+__version = '$Revision: 1.2 $'
 
 # Many selections are put in here,
 # A) MC09:   the full MC09 offline selection,
@@ -189,7 +189,7 @@ class StrippingB0q2DplusMuXClass(object) :
     def Lines(self):
         '''Return all known lines'''
         allLines=[]
-        for line in self.Lines:
+        for line in self.KnownLines:
             self.SelType=line
             line = StrippingLine("B0q2DplusMuX"+self.SelType
                                  , prescale = 1.
