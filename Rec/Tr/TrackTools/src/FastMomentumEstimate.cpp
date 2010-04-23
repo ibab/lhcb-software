@@ -150,26 +150,15 @@ StatusCode FastMomentumEstimate::calculate( const LHCb::State* veloState, const 
   double proj = sqrt( ( 1. + txV*txV + tyV*tyV ) / ( 1. + txV*txV ) );
 
 
-<<<<<<< FastMomentumEstimate.cpp
-  const double scaleFactor = m_magFieldSvc->signedRelativeCurrent();
- 
-=======
-  const double scaleFactor = m_magFieldSvc->scaleFactor();
-  const double polarity = m_magFieldSvc->polarity();
 
->>>>>>> 1.9
+  const double scaleFactor = m_magFieldSvc->signedRelativeCurrent();
+
   if (std::abs(scaleFactor) < 1e-6){
     qOverP = 1.0/Gaudi::Units::GeV;
     sigmaQOverP = 1.0/Gaudi::Units::MeV;
   }
   else {
-<<<<<<< FastMomentumEstimate.cpp
     qOverP = (txV-txT)/( coef * Gaudi::Units::GeV * proj*(-1)*scaleFactor);
-    
-=======
-    qOverP = (txV-txT)/( coef * Gaudi::Units::GeV * proj*(-1)*scaleFactor*polarity);
-    
->>>>>>> 1.9
     sigmaQOverP = m_veloPlusTResolution * std::fabs(qOverP);
   }
   
