@@ -4,6 +4,9 @@
 ! Purpose     : Package for track data quality monitoring algorithms
 !-----------------------------------------------------------------------------
 
+! 2010-04-23 Woute Hulsbergen
+ - added TrackVeloOverlapMonitor
+
 ! 2010-04-12 Alexandr Kozlinskiy
  - added 'event average time residual' plot to OTTrackMonitor
 
