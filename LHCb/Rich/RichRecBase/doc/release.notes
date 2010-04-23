@@ -4,6 +4,11 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+! 2010-04-23 - Chris Jones
+ - Fix inconsistency in the naming convention used by the Segment Hypo rings
+   "OfflineEvent" -> "RecoEvent", in order to be the same as other RichRec 
+   Event model classes.
+
 ! 2010-04-18 - Chris Jones
  - Add to Rec base class methods to access the ProcStatus object
  - Update pixel and photon creator base classes to update ProcStatus when the 

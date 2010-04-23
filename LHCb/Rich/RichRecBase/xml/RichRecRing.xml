@@ -31,7 +31,7 @@
         <import name="Event/RichRecPixelOnRing" soft="FALSE" />
         <import name="Event/RichRecSegment" soft="TRUE" />
 
-        <location name="SegmentHypoRings" place="Rec/Rich/OfflineEvent/SegmentHypoRings"/>
+        <location name="SegmentHypoRings" place="Rec/Rich/RecoEvent/SegmentHypoRings"/>
         <location name="MarkovRings"      place="Rec/Rich/Markov/Rings"/>
         <location name="TemplateRings"    place="Rec/Rich/Template/Rings"/>
         <location name="ENNRings"         place="Rec/Rich/ENN/Rings"/>
