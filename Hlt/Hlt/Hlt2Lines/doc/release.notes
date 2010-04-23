@@ -8,6 +8,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2010-04-23 - Neal Gauvin
+ - Solved bug #66297
+
 ! 2010-22-04 - Patrick Spradlin and Mat Charles
  - Hlt2CharmLines.py
    + Added 2 lines to select D0 -> K_S h h (Hlt2CharmTFD2HHKs[LL,DD]) and

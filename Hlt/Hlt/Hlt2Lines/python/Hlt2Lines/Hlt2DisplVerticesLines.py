@@ -118,9 +118,8 @@ class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
         #######################################################################
         #Run Single LLP selection
         from Configurables import Hlt2SelDV
-        InputParts = ["HLT/Hlt2RV2P"]
         Hlt2SingleLonglived = Hlt2SelDV("Hlt2SingleLonglived")
-        Hlt2SingleLonglived.InputLocations = InputParts
+        Hlt2SingleLonglived.InputLocations = [ Hlt2RV2P.getName() ]
         Hlt2SingleLonglived.MinNBCands = 1
         Hlt2SingleLonglived.RMin = self.getProp('RMin')['Hlt2SingleLonglived']
         Hlt2SingleLonglived.PreyMinMass = self.getProp('MinMass')['Hlt2SingleLonglived']
@@ -138,7 +137,7 @@ class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
         #######################################################################
         #Run Hlt2LonglivedParts : double LLP selection
         Hlt2DoubleLonglived = Hlt2SelDV("Hlt2DoubleLonglived")
-        Hlt2DoubleLonglived.InputLocations = InputParts
+        Hlt2DoubleLonglived.InputLocations = [ Hlt2RV2P.getName() ]
         Hlt2DoubleLonglived.MinNBCands = 2
         Hlt2DoubleLonglived.RMin = self.getProp('RMin')['Hlt2DoubleLonglived']
         Hlt2DoubleLonglived.PreyMinMass = self.getProp('MinMass')['Hlt2DoubleLonglived']
