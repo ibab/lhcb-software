@@ -1,4 +1,4 @@
-// $Id: MagneticFieldSvc.cpp,v 1.52 2010-04-22 08:10:34 smenzeme Exp $
+// $Id: MagneticFieldSvc.cpp,v 1.53 2010-04-23 16:54:43 smenzeme Exp $
 
 // Include files
 #include "GaudiKernel/SvcFactory.h"
@@ -65,7 +65,7 @@ MagneticFieldSvc::MagneticFieldSvc( const std::string& name,
   declareProperty( "UseSetCurrent", m_UseSetCurrent = false );
   declareProperty( "FieldMapFiles", m_mapFileNames, 
                    "Vector of file names for the field map. If set, over-rides CondDB value" );
-  declareProperty( "ForcedSignedCurrentScaling",   m_forcedScaleFactor = 9999.,
+  declareProperty( "ForcedSignedCurrentScaling",   m_forcedScaleFactor = +1,
                    "Factor by which to rescale the field map. If set, over-rides CondDB value" );
   declareProperty( "ForceToUseDownMap",         m_forcedToUseDownMap = false,
                    "Force to use down map. If set, over-rides CondDB value" );
@@ -322,7 +322,9 @@ StatusCode MagneticFieldSvc::i_updateConditions()
   }
   
   log << MSG::INFO << "Map scaled by factor " << m_magFieldGrid.scaleFactor()
-                   << " with polarity (-1:Down; +1: Up)" << polarity << endmsg;
+      << " with polarity (-1:Down; +1: Up)" << polarity <<"   "<<isDown()
+      <<"  !!!!! "<<signedRelativeCurrent()<<endmsg;
+ 
   return sc ;
 }
 
