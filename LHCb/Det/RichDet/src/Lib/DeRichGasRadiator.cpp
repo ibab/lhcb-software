@@ -146,8 +146,12 @@ StatusCode DeRichGasRadiator::updateProperties ( )
   {
     const double curPressure = m_gasParametersCond->param<double>("Pressure") * 0.001*Gaudi::Units::bar; //convert to bar
     const double curTemp     = m_gasParametersCond->param<double>("Temperature");
+    double scaleFactor( 1.0 );
+    if ( m_scaleFactorCond )
+    { scaleFactor = m_scaleFactorCond->param<double>("CurrentScaleFactor"); }
     info() << "Refractive index update triggered : Pressure = " << curPressure/Gaudi::Units::bar
-           << " bar Temperature = " << curTemp << " K"
+           << " bar : Temperature = " << curTemp << " K"
+           << " : (n-1) Scale = " << scaleFactor
            << endmsg;
   }
 

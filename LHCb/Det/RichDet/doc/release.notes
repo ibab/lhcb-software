@@ -4,6 +4,9 @@
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
 
+! 2010-04-23 - Chris Jones
+ - Include (n-1) scale factor in printout on gas refractive index updates.
+
 ! 2010-04-22 - Antonis Papanestis
  - Changes for a new HPD magnification algorithm in the presence of magnetic 
    field.
@@ -12,9 +15,10 @@
  - addapt to changes in magnetic field service
 
 !======================== RichDet v14r1 2010-04-09 ===========================
-! 2010-03-25  - Sajan Easo 
- - Added the capability to use the C3F8  as RICH1Gas in DeRichGasRadiator.cpp.
+! 2010-03-25 - Sajan Easo 
+ - Added the capability to use the C3F8 as RICH1 Gas in DeRichGasRadiator.cpp.
    This modification is backward compatible.
+
 ! 2010-03-23 - Chris Jones
  - Minor speed improvements to DeRichHPD when updating for T/P condition changes.
 
