@@ -694,9 +694,9 @@ StatusCode DeRichHPD::magnifyToGlobalMagnetOFF( Gaudi::XYZPoint& detectPoint,
   // To go from the anode to the cathode solve: d1*Rc^2 - d0*Rc - Ra = 0
   // The difference is that Ra is now positive.
   // Chose the solution with the minus sign
-  double rCathode =
-    (m_deMagFactor[0]-sqrt(gsl_pow_2(m_deMagFactor[0])-4*m_deMagFactor[1]*rAnode))
-    /(2*m_deMagFactor[1]);
+  double rCathode = ( m_deMagFactor[1] > 1e-6 ?
+                      (m_deMagFactor[0]-sqrt(gsl_pow_2(m_deMagFactor[0])-4*m_deMagFactor[1]*rAnode))/(2*m_deMagFactor[1]) :
+                      rAnode/m_deMagFactor[0] );
 
   // check if this point could have come from the photoCathode
   if ( m_winInRsq < rCathode*rCathode ) return StatusCode::FAILURE;
