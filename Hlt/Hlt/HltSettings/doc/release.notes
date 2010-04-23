@@ -4,7 +4,10 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
-!========================== HltSettings v1r16   2010-04-22 ===================
+!========================== HltSettings v1r16   2010-04-23 ===================
+! 2010-04-23 - Patrick Koppenburg
+ - Exclusive_Nominal : Split Hlt2DiplVertices lines. They are buggy.
+
 ! 2010-04-22 - Patrick Koppenburg
  - Exclusive_Nominal : Split Hlt2DiplVertices in 2 Lines.
 
