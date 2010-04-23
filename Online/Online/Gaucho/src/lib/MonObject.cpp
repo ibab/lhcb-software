@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Gaucho/src/lib/MonObject.cpp,v 1.16 2009-04-24 13:55:26 niko Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Gaucho/src/lib/MonObject.cpp,v 1.17 2010-04-23 13:01:32 evh Exp $
 
 // Include files
 #include "Gaucho/MonObject.h"
@@ -52,6 +52,7 @@ void MonObject::print(){
   msgStream <<MSG::INFO << " type:" << typeName()<<endreq;
   msgStream <<MSG::INFO << " version:"<< version()<<endreq;
   msgStream <<MSG::INFO << " comments:"<< comments()<<endreq;
+  msgStream <<MSG::INFO << " end of run:"<< endOfRun()<<endreq;
   msgStream <<MSG::INFO<<"*************************************"<<endreq;
   
 }

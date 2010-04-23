@@ -56,12 +56,11 @@ void MonH2D::save(boost::archive::binary_oarchive & ar, const unsigned int versi
 void MonH2D::load(boost::archive::binary_iarchive  & ar, const unsigned int version)
 {
   MonObject::load(ar, version);
-  load2(ar);
+  load2(ar, version);
 }
   
-void MonH2D::load2(boost::archive::binary_iarchive  & ar){
- // MsgStream msgStream = createMsgStream();
- // msgStream <<MSG::INFO<<"MonH2D::load2"<< endreq;  
+void MonH2D::load2(boost::archive::binary_iarchive  & ar, const unsigned int version){
+  
   ar & nbinsx;
   ar & nbinsy;
   ar & Xmin;
@@ -73,9 +72,7 @@ void MonH2D::load2(boost::archive::binary_iarchive  & ar){
   ar & sTitle;
   ar & bBinLabelX;
   ar & bBinLabelY;
-  ar & baxisLabelX;
-  ar & baxisLabelY;
-  
+
   if (binCont == 0) binCont = new double[(nbinsx+2)*(nbinsy+2)];
 
   for (int i = 0; i < (nbinsx+2)*(nbinsy+2) ; ++i){
@@ -105,14 +102,6 @@ void MonH2D::load2(boost::archive::binary_iarchive  & ar){
     }
   }
 
-  if (baxisLabelX){
-      ar & m_axisLabelX;
-  }
-  if (baxisLabelY){
-      ar & m_axisLabelY;
-  }
-
-
   ar & m_fDimension;
   //ar & m_fIntegral;
   ar & m_fMaximum;
@@ -131,6 +120,19 @@ void MonH2D::load2(boost::archive::binary_iarchive  & ar){
   for (int i=0 ; i < m_fSumSize; ++i) {
     ar & m_fSumw2[i];
   }
+  
+  //axis labels at the end
+  if (version >0) {
+     ar & baxisLabelX;
+     ar & baxisLabelY;
+     if (baxisLabelX){
+        ar & m_axisLabelX;
+     }
+     if (baxisLabelY){
+        ar & m_axisLabelY;
+     }
+  }   
+  
   isLoaded = true;
 }
 
@@ -140,8 +142,7 @@ void MonH2D::save2(boost::archive::binary_oarchive  & ar){
 }
 
 void MonH2D::save3(boost::archive::binary_oarchive  & ar){
-  //  MsgStream msgStream = createMsgStream();
-  //msgStream <<MSG::INFO<<"MonH2D::save3"  << endreq;  
+  
   if (!isLoaded) return;  
   
   ar & nbinsx;
@@ -155,31 +156,14 @@ void MonH2D::save3(boost::archive::binary_oarchive  & ar){
   ar & sTitle;
   ar & bBinLabelX;
   ar & bBinLabelY;
-  ar & baxisLabelX;
-  ar & baxisLabelY;
-  
+
   for (int i = 0; i < (nbinsx+2)*(nbinsy+2) ; ++i){
     ar & binCont[i];
   }
   for (int i = 0; i < (nbinsx+2)*(nbinsy+2) ; ++i){
     ar & binErr[i];
   }
-/*  if (bBinLabelX){
-    binLabelX.clear();
-    for (int i = 1; i < (nbinsx+1) ; ++i){
-      std::string labelX;
-      ar & labelX;
-      binLabelX.push_back(labelX);
-    }
-  }
-  if (bBinLabelY){
-    binLabelY.clear();
-    for (int i = 1; i < (nbinsy+1) ; ++i){
-      std::string labelY;
-      ar & labelY;
-      binLabelY.push_back(labelY);
-    }
-  }*/
+  
   if (bBinLabelX){
     for (int i = 0; i < (int)binLabelX.size() ; ++i){
       std::string labelX = binLabelX[i];
@@ -192,14 +176,7 @@ void MonH2D::save3(boost::archive::binary_oarchive  & ar){
       ar & labelY;
     }
   }
-  
-  if (baxisLabelX){
-      ar & m_axisLabelX;
-  }
-  if (baxisLabelY){
-      ar & m_axisLabelY;
-  }  
-  
+    
   ar & m_fDimension;
   //ar & m_fIntegral;
   ar & m_fMaximum;
@@ -217,6 +194,17 @@ void MonH2D::save3(boost::archive::binary_oarchive  & ar){
   for (int i=0 ; i < m_fSumSize; ++i) {
     ar & m_fSumw2[i];
   }
+  
+  //axis labels at the end
+  ar & baxisLabelX;
+  ar & baxisLabelY;
+  if (baxisLabelX){
+      ar & m_axisLabelX;
+  }
+  if (baxisLabelY){
+      ar & m_axisLabelY;
+  }  
+  
 }
 
 void MonH2D::setHist(TH2D * tH2D){
@@ -231,7 +219,7 @@ TH2D* MonH2D::hist(){
 void MonH2D::createObject(std::string name){
   if (!isLoaded) return;
   MsgStream msgStream = createMsgStream();
-  msgStream <<MSG::DEBUG<<"Creating TH1D " << name << endreq;
+ // msgStream <<MSG::DEBUG<<"Creating TH1D " << name << endreq;
   if (m_hist == 0) m_hist = new TH2D(name.c_str(), sTitle.c_str(), nbinsx, Xmin, Xmax, nbinsy, Ymin, Ymax);
   objectCreated = true;
 }
@@ -249,9 +237,8 @@ void MonH2D::write(){
 
 }
 void MonH2D::loadObject(){
-    MsgStream msgStream = createMsgStream();
- // msgStream <<MSG::INFO<<"MonH2D::loadobject" << endreq;  
   if (!objectCreated) {
+    MsgStream msgStream = createMsgStream();
     msgStream <<MSG::ERROR<<"Can't load object non created" << endreq;
     
     return;  
@@ -286,12 +273,10 @@ void MonH2D::loadObject(){
     }
   }
   
-  
   if (baxisLabelX) m_hist->GetXaxis()->SetTitle(m_axisLabelX.c_str());
       
   if (baxisLabelY) m_hist->GetYaxis()->SetTitle(m_axisLabelY.c_str());
   
-
   fot->fDimension = m_fDimension;
   //ar & fot->fIntegral = m_fIntegral;
   fot->fMaximum = m_fMaximum;
@@ -312,8 +297,7 @@ void MonH2D::loadObject(){
 }
 
 void MonH2D::splitObject(){
- //  MsgStream msgStream = createMsgStream();
- // msgStream <<MSG::INFO<<"MonH2D::splitobject"  << endreq;  
+  
   FriendOfTH2D * fot = (FriendOfTH2D *)m_hist; 
 
   nbinsx = m_hist->GetNbinsX();
@@ -357,7 +341,7 @@ void MonH2D::splitObject(){
   }
   
   bBinLabelY = false;
-  for (int i = 1; i < (nbinsy+1) ; ++i){
+  for (int i = 1; i < (nbinsx+1) ; ++i){
     std::string binLab = m_hist->GetYaxis()->GetBinLabel(i);
     if (binLab.length() > 0 ){
       bBinLabelY = true;
@@ -367,10 +351,11 @@ void MonH2D::splitObject(){
   
   if (bBinLabelY){
       binLabelY.clear();
-    for (int i = 1; i < (nbinsy+1) ; ++i){
+    for (int i = 1; i < (nbinsx+1) ; ++i){
       binLabelY.push_back(m_hist->GetYaxis()->GetBinLabel(i));
     }
   }
+
   
   m_axisLabelX = m_hist->GetXaxis()->GetTitle();
   if (m_axisLabelX.length() > 0) baxisLabelX = true;
@@ -403,7 +388,6 @@ void MonH2D::splitObject(){
 
 void MonH2D::combine(MonObject * H){
   MsgStream msg = createMsgStream();
-//  msg <<MSG::INFO<<"MonH2D::combine"  << endreq;  
   if (H->typeName() != this->typeName()){
     msg <<MSG::ERROR<<"Trying to combine "<<this->typeName() <<" and "<<H->typeName() << " failed." << endreq;
     return;
@@ -427,7 +411,7 @@ void MonH2D::combine(MonObject * H){
   if (Xmax !=  HH->Xmax) matchParam = false;
   if (Ymin !=  HH->Ymin) matchParam = false;
   if (Ymax !=  HH->Ymax) matchParam = false;
-  if (sTitle !=  HH->sTitle) matchParam = false;
+ // if (sTitle !=  HH->sTitle) matchParam = false;
 
   if (!matchParam){
     msg <<MSG::ERROR<<"Trying to combine uncompatible MonObjects" << endreq;
@@ -477,6 +461,7 @@ void MonH2D::combine(MonObject * H){
     }
   }
   
+    
   baxisLabelX = HH->baxisLabelX;
   if (baxisLabelX) {
      m_axisLabelX= HH->m_axisLabelX;
@@ -487,17 +472,16 @@ void MonH2D::combine(MonObject * H){
      m_axisLabelY= HH->m_axisLabelY;
   }  
   
+  
 }
 
 void MonH2D::copyFrom(MonObject * H){
-  MsgStream msgStream = createMsgStream();
-//  msgStream <<MSG::INFO<<"MonH2D::copyfrom"  << endreq;  
+    MsgStream msgStream = createMsgStream();
   if (H->typeName() != this->typeName()){
     msgStream <<MSG::ERROR<<"Trying to copy "<<this->typeName() <<" and "<<H->typeName() << " failed." << endreq;
     return;
   }
   std::vector<std::string>::iterator it;
-  std::vector<std::string>::iterator ity;
   MonH2D *HH = (MonH2D*)H;
   m_endOfRun = HH->endOfRun();
   m_comments=HH->comments();
@@ -540,11 +524,12 @@ void MonH2D::copyFrom(MonObject * H){
 
   if (bBinLabelY){
     binLabelY.clear();
-    for ( ity=HH->binLabelY.begin() ; ity < HH->binLabelY.end(); ity++ ) {
-      std::string labelY = *ity;
+    for ( it=HH->binLabelY.begin() ; it < HH->binLabelY.end(); it++ ) {
+      std::string labelY = *it;
       binLabelY.push_back(labelY);
     }
   }
+
   
   baxisLabelX = HH->baxisLabelX;
   if (baxisLabelX) {
@@ -555,7 +540,6 @@ void MonH2D::copyFrom(MonObject * H){
   if (baxisLabelY) {
      m_axisLabelY= HH->m_axisLabelY;
   }  
-  
   
 
   m_fDimension = HH->m_fDimension;
@@ -657,7 +641,7 @@ void MonH2D::print(){
     msgStream <<MSG::INFO<<"*************************************"<<endreq;
   }
   
-  
+    
   if (baxisLabelX) {
     msgStream <<MSG::INFO<<  "X axis label: " << m_axisLabelX << endreq;
   }   
@@ -665,6 +649,7 @@ void MonH2D::print(){
   if (baxisLabelY) {
     msgStream <<MSG::INFO<<  "Y axis label: "<<  m_axisLabelY << endreq;
   }  
+  
   
   
   msgStream <<MSG::INFO<<"Dimension="<< m_fDimension << endreq;
@@ -687,3 +672,4 @@ void MonH2D::print(){
   msgStream <<MSG::INFO<<"*************************************"<<endreq;
   
 }
+BOOST_CLASS_VERSION(MonH2D, 1)

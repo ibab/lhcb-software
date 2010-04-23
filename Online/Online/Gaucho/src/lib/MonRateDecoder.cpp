@@ -173,9 +173,12 @@ void MonRateDecoder::update(MonRate *monRate) {
     countexists=true;
   } 
   else m_dimSvcNumberOfCounters->updateService((void*)&m_numcountersData,nbcountdataSize);
-
+  //normally m_newCycleNumber - m_oldCycleNumber = 1
   double realDeltaT = (m_newCycleNumber - m_oldCycleNumber)*m_newDesiredDeltaT;
-  realDeltaT += (m_newOffsetGpsTimeLastEvInCycle - m_oldOffsetGpsTimeLastEvInCycle);
+  
+  //maybe this correction is not good
+  //realDeltaT += (m_newOffsetGpsTimeLastEvInCycle - m_oldOffsetGpsTimeLastEvInCycle);
+  realDeltaT = m_newDesiredDeltaT;
   double tmp = m_newCycleNumber - m_oldCycleNumber;
   double tmp1 = m_newOffsetGpsTimeLastEvInCycle - m_oldOffsetGpsTimeLastEvInCycle;
   
@@ -361,8 +364,8 @@ void MonRateDecoder::print(){
   msg << MSG::INFO << "************************************************"<<endreq;
 
   double realDeltaT = (m_newCycleNumber - m_oldCycleNumber)*m_newDesiredDeltaT;
-  realDeltaT += (m_newOffsetGpsTimeLastEvInCycle - m_oldOffsetGpsTimeLastEvInCycle);
-
+//  realDeltaT += (m_newOffsetGpsTimeLastEvInCycle - m_oldOffsetGpsTimeLastEvInCycle);
+  realDeltaT = m_newDesiredDeltaT;
   msg << MSG::INFO << " Real DeltaT: "<<  realDeltaT << endreq;
   msg << MSG::INFO << "************************************************"<<endreq;
 

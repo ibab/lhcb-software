@@ -66,6 +66,10 @@ namespace LHCb {
     virtual ~AdderSvc();
     /// Iservice overload: Initialize service
     StatusCode initialize();
+    /// Iservice overload: Start service
+    StatusCode start();
+    /// Iservice overload: Stop service
+    StatusCode stop();
     /// Iservice overload: Finalize service
     StatusCode finalize();
     /// Call to save the histograms
@@ -94,11 +98,14 @@ private:
   std::vector<std::string> m_objectName;
   std::string m_partitionName;
   std::string m_farm;
+  int m_adderType;
+  
   
   std::string m_dimClientDns;
   int m_refreshTime;
   bool m_enablePostEvents;
   bool m_reconfigured;
+  bool m_firststart;
   int m_publishRates;  
   };
 }  //end namespace LHCb  

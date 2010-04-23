@@ -76,38 +76,30 @@ void ProcessMgr::destroyTimerProcess() {
   if (m_dimTimerProcess) {delete m_dimTimerProcess; m_dimTimerProcess=0;}
 }
 
-void ProcessMgr::timerHandler(){
+bool ProcessMgr::timerHandler(){
   MsgStream msg(msgSvc(), name());
- // msg << MSG::DEBUG << "inside timerHandler"<< endreq;
-    
+  bool endofrun=false;  
   if (m_serviceOwner.compare(s_Adder) == 0){
-    m_serviceMap->add();
- //   msg << MSG::DEBUG << "isAdder"<< endreq;
+    endofrun=m_serviceMap->add();
+    endofrun=false;
   }
-  else if (m_serviceOwner.compare(s_Saver) == 0) { //it's a saver May be we have to save every deltaT
-//    msg << MSG::DEBUG << "isSaver"<< endreq;
-    //std::string fileName = "from timerHandler";
-    //int fileSize = 0;
-    //m_serviceMap->write(m_saveDir, *m_pFile);
- //   msg << MSG::DEBUG << "Before Save hiostograms in file: "<< m_fileName << endreq;
-    write();
-  //  msg << MSG::DEBUG << "After Save histograms in file: "<< m_fileName << endreq;
-    //m_pGauchoMonitorSvc->updateAll(false);
-    //msg << MSG::DEBUG << "After UpdateAll in Monitoring Service: "<< m_fileName << endreq;
+  else if (m_serviceOwner.compare(s_Saver) == 0) { 
+    endofrun=write();
   }
+  return endofrun;
 }
 
-void ProcessMgr::write(){
-   if ((m_runNumber==0)|| (m_runNumber ==-1)) {
-     m_runNumber = m_runNbSvc->getRunNb();
-   }  
-  m_serviceMap->write(m_saveDir, m_fileName, m_runNumber);
+bool ProcessMgr::write(){
+  MsgStream msg(msgSvc(), "ProcessMgr");
+  if (m_serviceOwner.compare(s_Saver) == 0) m_runNumber = m_runNbSvc->getRunNb();
+  bool endofrun;
+  endofrun=m_serviceMap->write(m_saveDir, m_fileName, m_runNumber);
+  return endofrun;
 }
 
 
 int ProcessMgr::getrunNumber(bool change){
   MsgStream msg(msgSvc(), "ProcessMgr");
-   //msg<<MSG::INFO<< "runnnumber "<< m_runNumber << endreq;
    if (((m_runNumber==0)|| (m_runNumber ==-1))||change) {
      m_runNumber = m_runNbSvc->getRunNb();
    }  
@@ -202,33 +194,6 @@ void ProcessMgr::updateServiceSet(std::string &dimString, std::set<std::string> 
     }
     else if (m_serviceOwner.compare(s_Saver)==0){
      if (serviceName.find("RunNumber") != std::string::npos) {
-      //service containing runnumber found
-      //subscribe to it and get the runnumber
-    
-    //   	int c=0;
-    //    if (m_runNbSvc==0) m_runNbSvc = new DimInfoRunNb(serviceName.c_str());
-
-    //    c=m_runNbSvc->getRunNb();
-    
-
-/*	char * service;
-	char * format;
-        int type;
-	DimBrowser dbr;
-	msg << MSG::INFO << "Looking for " << serviceName << endreq;
-	dbr.getServices(serviceName.c_str());
-        while( (type = dbr.getNextService(service, format)) ) {
-	   msg << MSG::INFO << "service found " << service << " format " << format << endreq;	
-	}
-
-        msg << MSG::INFO << "Subscribing to " << serviceName.c_str() << endreq; 
-	DimInfo runNumber(serviceName.c_str(),1,-1);
-	int ntries = 0;
-	while (ntries<20) {
-           msg << MSG::INFO << "Runnumber " << runNumber.getData()<< endreq;
-	   ntries ++;
-	   sleep(2);
-	   }*/
 
       }
       if (!m_monitoringFarm) {

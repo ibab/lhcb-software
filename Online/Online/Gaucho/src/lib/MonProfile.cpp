@@ -176,7 +176,7 @@ void MonProfile::deleteProfile(){
 void MonProfile::createObject(std::string name){
   if (!isLoaded) return;
   MsgStream msgStream = createMsgStream();
-  msgStream <<MSG::DEBUG<<"Creating TProfile " << name << endreq;
+ // msgStream <<MSG::DEBUG<<"Creating TProfile " << name << endreq;
   if (m_profile==0) m_profile = new TProfile(name.c_str(), sTitle.c_str(), nbinsx, Xmin, Xmax);
   objectCreated = true;
 }

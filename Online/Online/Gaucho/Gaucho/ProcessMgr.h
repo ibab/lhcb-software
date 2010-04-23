@@ -10,6 +10,7 @@
 #include <map>
 #include <vector>
 
+
 static const int s_saveHistos(123);
 static const int s_updateSvcMapFromInfoService(124);
 static const int s_updateSvcMapFromInfoServer(125);
@@ -88,8 +89,8 @@ public:
   void setSaveDiff(const int &saveDiff){m_saveDiff = saveDiff;}
   bool saveDiff () {if (0 == m_saveDiff) return false; else return true;}
   bool publishRates(){return m_publishRates;}
-  void timerHandler();
-  void write();
+  bool timerHandler();
+  bool write();
   std::string taskName() {return m_taskName;}
   std::string getPartitionName() {return m_partitionName;}
   std::string getFarm() {return m_farm;}

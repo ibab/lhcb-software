@@ -82,13 +82,10 @@ MonitorSvc::~MonitorSvc() {
 // @param ppvUnknown Pointer to Location for interface pointer
 StatusCode MonitorSvc::queryInterface(const InterfaceID& riid, void** ppvIF) {
   if(IMonitorSvc::interfaceID().versionMatch(riid)) {
-    *ppvIF = (IMonitorSvc*)this;
+    *ppvIF = dynamic_cast<IMonitorSvc*> (this);
   } 
-  else if (IUpdateableIF::interfaceID().versionMatch(riid)) {
-    *ppvIF = (IUpdateableIF*)this;
-  }
   else if (IGauchoMonitorSvc::interfaceID().versionMatch(riid)) {
-    *ppvIF = (IGauchoMonitorSvc*)this;
+    *ppvIF = dynamic_cast<IGauchoMonitorSvc*> (this);
   }
   else {
     return Service::queryInterface(riid, ppvIF);
@@ -142,6 +139,22 @@ StatusCode MonitorSvc::initialize() {
   return StatusCode::SUCCESS;
 }
 
+StatusCode MonitorSvc::start() {
+    MsgStream msg(msgSvc(),"MonitorSvc");
+    m_stopping=false;
+    msg << MSG::DEBUG << "Starting MonitorSvc " << endreq;
+    return StatusCode::SUCCESS;
+}
+
+
+StatusCode MonitorSvc::stop() {
+    MsgStream msg(msgSvc(),"MonitorSvc");
+    msg << MSG::INFO << "stopping and updating all histograms " << endreq;
+    updateAll(true,this);
+    m_stopping = true;
+    return StatusCode::SUCCESS;
+}
+
 
 StatusCode MonitorSvc::finalize() {
   
@@ -153,6 +166,8 @@ StatusCode MonitorSvc::finalize() {
     msg << MSG::DEBUG << "delete m_dimRcpGaucho" << endreq;
     if (m_dimRpcGaucho) delete m_dimRpcGaucho;  m_dimRpcGaucho = 0;
   }*/
+ /*
+ comment this - we keep the dimcmdsvr alive when stopping
   if ( 0 == m_disableDimCmdServer){
     msg << MSG::DEBUG << "delete m_dimcmdsvr" << endreq;
     if (m_dimcmdsvr) delete m_dimcmdsvr;  m_dimcmdsvr = 0;
@@ -166,6 +181,7 @@ StatusCode MonitorSvc::finalize() {
     msg << MSG::DEBUG << "delete m_monRate" << endreq;
     //if (m_monRate) delete m_monRate; m_monRate = 0;
   }
+  */
   //dim_unlock();
   msg << MSG::DEBUG << "finalized successfully" << endreq;
   
@@ -755,16 +771,10 @@ void MonitorSvc::undeclareAll( const IInterface* owner)
   undeclareAll(this);
 }
 
-StatusCode MonitorSvc::update(int endOfRun)  
-{
-  updateAll(endOfRun!=0,0);
-  return StatusCode::SUCCESS;
-}
-
 void MonitorSvc::updateAll( bool endOfRun, const IInterface* owner)
 {
   MsgStream msg(msgSvc(),"MonitorSvc");
-  msg << MSG::DEBUG << " inside updateAll" << endreq;
+  if (m_stopping) endOfRun=true;
   if( 0!=owner ){
     std::string ownerName = infoOwnerName( owner );
     std::set<std::string> * infoNamesSet = getInfos( owner );

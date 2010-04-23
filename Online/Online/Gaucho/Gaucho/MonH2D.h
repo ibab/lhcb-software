@@ -5,6 +5,7 @@
 #include "TH2D.h"
 #include "AIDA/IHistogram2D.h"
 #include <boost/serialization/list.hpp>
+#include <boost/serialization/version.hpp>
 
 
 class FriendOfTH2D: public TH2D{
@@ -28,7 +29,7 @@ public:
   virtual void load(boost::archive::binary_iarchive  & ar, const unsigned int version);
   void save2(boost::archive::binary_oarchive  & ar);
   void save3(boost::archive::binary_oarchive  & ar);
-  void load2(boost::archive::binary_iarchive  & ar);
+  void load2(boost::archive::binary_iarchive  & ar, const unsigned int version);
 
   void createObject();
   void createObject(std::string name);

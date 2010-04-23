@@ -44,10 +44,11 @@ void MonH1D::save(boost::archive::binary_oarchive & ar, const unsigned int versi
 void MonH1D::load(boost::archive::binary_iarchive  & ar, const unsigned int version)
 {
   MonObject::load(ar, version);
-  load2(ar);
+  load2(ar,version);
 }
   
-void MonH1D::load2(boost::archive::binary_iarchive  & ar){
+void MonH1D::load2(boost::archive::binary_iarchive  & ar, const unsigned int
+version){
   ar & nbinsx;
   ar & Xmin;
   ar & Xmax;
@@ -55,9 +56,7 @@ void MonH1D::load2(boost::archive::binary_iarchive  & ar){
   ar & sName;
   ar & sTitle;
   ar & bBinLabelX;
-  ar & baxisLabelX;
-  ar & baxisLabelY;
-    
+  
   if (binCont == 0 ) binCont = new double[(nbinsx+2)];
     
   for (int i = 0; i < (nbinsx+2) ; ++i){
@@ -79,13 +78,6 @@ void MonH1D::load2(boost::archive::binary_iarchive  & ar){
     }
   }
 
-  if (baxisLabelX){
-      ar & m_axisLabelX;
-  }
-  if (baxisLabelY){
-      ar & m_axisLabelY;
-  }
-
   ar & m_fDimension;
   //ar & m_fIntegral;
   ar & m_fMaximum;
@@ -101,6 +93,20 @@ void MonH1D::load2(boost::archive::binary_iarchive  & ar){
   for (int i=0 ; i < m_fSumSize; ++i) {
     ar & m_fSumw2[i];
   }
+  
+  //put axislabels at the end
+  if (version > 0) {
+     ar & baxisLabelX;
+     ar & baxisLabelY;
+  
+     if (baxisLabelX){
+         ar & m_axisLabelX;
+     }
+     if (baxisLabelY){
+         ar & m_axisLabelY;
+     } 
+  }   
+  
   isLoaded = true;
 }
 
@@ -119,8 +125,6 @@ void MonH1D::save3(boost::archive::binary_oarchive  & ar){
   ar & sName;
   ar & sTitle;
   ar & bBinLabelX;
-  ar & baxisLabelX;
-  ar & baxisLabelY;
   
   for (int i = 0; i < (nbinsx+2) ; ++i){
     ar & binCont[i];
@@ -133,14 +137,6 @@ void MonH1D::save3(boost::archive::binary_oarchive  & ar){
       std::string labelX = binLabelX[i];
       ar & labelX;
     }
-  }
-
-
-  if (baxisLabelX){
-      ar & m_axisLabelX;
-  }
-  if (baxisLabelY){
-      ar & m_axisLabelY;
   }
 
   ar & m_fDimension;
@@ -157,6 +153,18 @@ void MonH1D::save3(boost::archive::binary_oarchive  & ar){
   for (int i=0 ; i < m_fSumSize; ++i) {
     ar & m_fSumw2[i];
   }
+  
+  // axis labels at the end  
+  ar & baxisLabelX;
+  ar & baxisLabelY;
+  
+  
+  if (baxisLabelX){
+      ar & m_axisLabelX;
+  }
+  if (baxisLabelY){
+      ar & m_axisLabelY;
+  }
 }
 
 void MonH1D::setHist(TH1D * tH1D){
@@ -171,7 +179,7 @@ TH1D* MonH1D::hist(){
 void MonH1D::createObject(std::string name){
   if (!isLoaded) return;
   MsgStream msgStream = createMsgStream();
-  msgStream <<MSG::DEBUG<<"Creating TH1D " << name << endreq;
+ // msgStream <<MSG::DEBUG<<"Creating TH1D " << name << endreq;
   if (m_hist == 0 )  m_hist = new TH1D(name.c_str(), sTitle.c_str(), nbinsx, Xmin, Xmax);
   objectCreated = true;
 }
@@ -214,7 +222,7 @@ void MonH1D::loadObject(){
       i++;
     }
   }
-
+  
   if (baxisLabelX) m_hist->GetXaxis()->SetTitle(m_axisLabelX.c_str());
       
   if (baxisLabelY) m_hist->GetYaxis()->SetTitle(m_axisLabelY.c_str());
@@ -277,13 +285,12 @@ void MonH1D::splitObject(){
       binLabelX.push_back(m_hist->GetXaxis()->GetBinLabel(i));
     }
   }
-  
+
   m_axisLabelX = m_hist->GetXaxis()->GetTitle();
   if (m_axisLabelX.length() > 0) baxisLabelX = true;
       
   m_axisLabelY = m_hist->GetYaxis()->GetTitle();
   if (m_axisLabelY.length() > 0) baxisLabelY = true;
-  
 
   m_fDimension = fot->fDimension;
   //m_fIntegral = fot->fIntegral;
@@ -305,12 +312,13 @@ void MonH1D::splitObject(){
 
 void MonH1D::combine(MonObject * H){
   MsgStream msg = createMsgStream();
+  // msg <<MSG::INFO<<"Combining "<<H->typeName() <<" EOR "<<H->endOfRun() << endreq;
   if (H->typeName() != this->typeName()){
     msg <<MSG::ERROR<<"Trying to combine "<<this->typeName() <<" and "<<H->typeName() << " failed." << endreq;
     return;
   }
   if (H->endOfRun() != this->endOfRun()){
- //   msg <<MSG::DEBUG<<"Trying to combine two objects with different endOfRun flag failed." << endreq;
+    msg <<MSG::DEBUG<<"Can't combine two objects with different endOfRun flags." << endreq;
     return;
   }
   
@@ -318,7 +326,7 @@ void MonH1D::combine(MonObject * H){
     copyFrom(H);
     return;
   }
-
+// msg <<MSG::INFO<<"Combining "<<H->typeName() <<" EOR "<<H->endOfRun() << endreq;
   // add the two histos
   MonH1D *HH = (MonH1D*)H;
   
@@ -326,7 +334,7 @@ void MonH1D::combine(MonObject * H){
   if (nbinsx != HH->nbinsx) matchParam = false;
   if (Xmin !=  HH->Xmin) matchParam = false;
   if (Xmax !=  HH->Xmax) matchParam = false;
-  if (sTitle !=  HH->sTitle) matchParam = false;
+ // if (sTitle !=  HH->sTitle) matchParam = false;
   if (!matchParam){
     msg << MSG::ERROR<<"Trying to combine uncompatible MonObjects" << endreq;
     msg << MSG::ERROR<<"  nbinsx ="<<nbinsx << "; HH->nbinsx="<<HH->nbinsx << endreq;
@@ -358,7 +366,7 @@ void MonH1D::combine(MonObject * H){
     }
   }
   
-   baxisLabelX = HH->baxisLabelX;
+  baxisLabelX = HH->baxisLabelX;
   if (baxisLabelX) {
      m_axisLabelX= HH->m_axisLabelX;
   }   
@@ -427,7 +435,6 @@ void MonH1D::copyFrom(MonObject * H){
   if (baxisLabelY) {
      m_axisLabelY= HH->m_axisLabelY;
   }  
-  
 
   m_fDimension = HH->m_fDimension;
   m_fMaximum = HH->m_fMaximum;
@@ -508,7 +515,7 @@ void MonH1D::print(){
     msgStream <<MSG::INFO<<"*************************************"<<endreq;
   }
   
-    
+      
   if (baxisLabelX) {
     msgStream <<MSG::INFO<<  "X axis label: " << m_axisLabelX << endreq;
   }   
@@ -535,4 +542,4 @@ void MonH1D::print(){
   msgStream <<MSG::INFO<<"*************************************"<<endreq;
   
 }
-
+BOOST_CLASS_VERSION(MonH1D, 1)

@@ -46,8 +46,8 @@ public:
   void printMap();
   void printServiceSet();
 
-  void write(std::string saveDir, std::string &fileName, int runNumber);
-  void add();
+  bool write(std::string saveDir, std::string &fileName, int runNumber);
+  bool add();
   void setServiceSet(const std::set<std::string>& serviceSet){m_serviceSet = serviceSet;}
 
 private:

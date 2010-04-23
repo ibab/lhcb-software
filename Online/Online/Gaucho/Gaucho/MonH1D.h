@@ -4,6 +4,7 @@
 #include "Gaucho/MonObject.h"
 #include "TH1D.h"
 #include "AIDA/IHistogram1D.h"
+#include <boost/serialization/version.hpp>
 
 class FriendOfTH1D: public TH1D{
  public:
@@ -28,7 +29,7 @@ public:
   virtual void load(boost::archive::binary_iarchive  & ar, const unsigned int version);
   void save2(boost::archive::binary_oarchive  & ar);
   void save3(boost::archive::binary_oarchive  & ar);
-  void load2(boost::archive::binary_iarchive  & ar);
+  void load2(boost::archive::binary_iarchive  & ar, const unsigned int version);
 
   void createObject();
   void createObject(std::string name);

@@ -1,4 +1,4 @@
-// $Id: DimCmdServer.cpp,v 1.19 2010-02-17 13:44:46 evh Exp $
+// $Id: DimCmdServer.cpp,v 1.20 2010-04-23 13:01:32 evh Exp $
 
 #include "GaudiKernel/StatusCode.h"
 #include "GaudiKernel/MsgStream.h"
@@ -86,6 +86,7 @@ DimCmdServer::~DimCmdServer() {
   MsgStream log(m_msgsvc, "DimCmdServer");  
   delete [] m_nextcommand;
   if (m_histogramSvc) m_histogramSvc->release();
+  std::cout << "Deleting DimCmdServer" << std::endl;
 
 }
 
@@ -95,7 +96,7 @@ void DimCmdServer::commandHandler() {
   //! hardcoded string length limits
 
   m_nextcommand=getString();
-
+  std::cout << "DimCmdServer m_nextcommand= "<<m_nextcommand << std::endl;
   if ( m_incidentSvc ) {
      Incident incident("DimCmdServer","SAVE_HISTOS");
      Incident incident2("DimCmdServer","INSERT_HISTOS");

@@ -36,24 +36,30 @@ AdderSvc::AdderSvc(const std::string& name, ISvcLocator* ploc) : Service(name, p
   //declareProperty("savedir", m_saveDir);
   m_enablePostEvents = true;
   m_reconfigured = false;
+  m_firststart = true;
 }
 
 AdderSvc::~AdderSvc() {}
 
 StatusCode AdderSvc::initialize() {
   StatusCode sc = Service::initialize(); // must be executed first
-  lib_rtl_sleep(2000);
   MsgStream msg(msgSvc(), name());
   if ( !sc.isSuccess() )  {
-    msg << MSG::ERROR << "Cannot initialize service base class." << endmsg;
+    msg << MSG::ERROR << "Cannot initialize service base class." << endreq;
     return StatusCode::FAILURE;
   }
+   sc = service("IncidentSvc",m_incidentSvc,true);
+  if ( !sc.isSuccess() )  {
+    msg << MSG::ERROR << "Cannot access incident service." << endmsg;
+    return StatusCode::FAILURE;
+  }
+
+  m_incidentSvc->addListener(this,"RECONFIGURE");
 
   m_utgid = RTL::processName();
   std::size_t first_us = m_utgid.find("_");
   std::size_t second_us = m_utgid.find("_", first_us + 1);
   std::size_t third_us = m_utgid.find("_", second_us + 1);
-  std::string adderType;
   std::string taskName;
   if (third_us != std::string::npos) {
      // three underscores found in UTGID -> we're in the Monitoring Farm
@@ -66,13 +72,11 @@ StatusCode AdderSvc::initialize() {
      m_farm = "EFF";
      taskName = m_utgid.substr(first_us + 1, second_us - first_us - 1);
   }
-  if (m_nodeName.size() == 8) adderType = "First Level"; 
+  if (m_nodeName.size() == 8) m_adderType = 1; 
   else if ((m_nodeName.size() == 6)&&((m_nodeName.substr(0,4)!="PART")||(m_farm=="MF"))) {
-    lib_rtl_sleep(10000);
-    adderType = "Second Level"; }
+    m_adderType = 2; }
   else if ((m_nodeName.size() == 6)&&((m_nodeName.substr(0,4)=="PART")||(m_farm=="MF"))) {
-    lib_rtl_sleep(20000);
-  adderType = "Third Level"; }
+  m_adderType = 3; }
   else {
     msg << MSG::ERROR << "This is not an Adder because the nodeName do not correspond at any case" << endreq;
     msg << MSG::ERROR << "1rst level ==> HLTA0101" << endreq;
@@ -82,40 +86,24 @@ StatusCode AdderSvc::initialize() {
   }
 
 
-
   if (((taskName != "Adder")&&(taskName != "ADDER"))&&((taskName !="RecAdder")&&(taskName !="RECADDER"))) {
     msg << MSG::ERROR << "This is not an Adder !" << endreq;
     msg << MSG::ERROR << "Please try nodeName_Adder_1" << endreq;
     return StatusCode::FAILURE;
   }
 
-  sc = service("IncidentSvc",m_incidentSvc,true);
-  if ( !sc.isSuccess() )  {
-    msg << MSG::ERROR << "Cannot access incident service." << endmsg;
-    return StatusCode::FAILURE;
-  }
 
-  m_incidentSvc->addListener(this,"RECONFIGURE");
 
   m_dimcmdsvr = new DimCmdServer( (m_utgid+"/"), serviceLocator(), 0);
 
   DimClient::setDnsNode(m_dimClientDns.c_str());
-  m_processMgr = new ProcessMgr (s_Adder, msgSvc(), this, m_refreshTime);
-  m_processMgr->setSubFarmVector(m_subfarmName);
-  m_processMgr->setTaskName(m_taskName);
-  m_processMgr->setAlgorithmVector(m_algorithmName);
-  m_processMgr->setObjectVector(m_objectName);
-  m_processMgr->setUtgid(m_utgid);
-  m_processMgr->setFarm(m_farm);
-  m_processMgr->setPartitionName(m_partitionName);
-  if (m_publishRates == 1) m_processMgr->setPublishRates(true);
-
-  startUp();
  // msg << MSG::DEBUG << "Finishing the initialize method." << endreq;
   return StatusCode::SUCCESS;
 }
 
 void AdderSvc::startUp(){
+
+
   MsgStream msg(msgSvc(), name());
   m_processMgr->createInfoServers();
   m_processMgr->createTimerProcess();
@@ -179,13 +167,65 @@ void AdderSvc::handle(const Incident& inc) {
   IocSensor::instance().send(this, s_reconfigureAdder, this);
 }
 
+StatusCode AdderSvc::start() {
+  MsgStream msg(msgSvc(), name());
+  msg << MSG::INFO  << "Adder."<< endreq;
+  if (m_firststart) {
+     lib_rtl_sleep(5000);    
+     m_utgid = RTL::processName();
+     std::size_t first_us = m_utgid.find("_");
+     std::size_t second_us = m_utgid.find("_", first_us + 1);
+     std::size_t third_us = m_utgid.find("_", second_us + 1);
+     std::string taskName;
+     if (third_us != std::string::npos) {
+        // three underscores found in UTGID -> we're in the Monitoring Farm
+        m_nodeName = m_utgid.substr(first_us+1,second_us-first_us-1);
+        m_farm = "MF";
+        taskName = m_utgid.substr(second_us + 1, third_us - second_us - 1);
+     }   
+     else {
+        m_nodeName = m_utgid.substr(0, first_us);
+        m_farm = "EFF";
+        taskName = m_utgid.substr(first_us + 1, second_us - first_us - 1);
+     }
+    if (m_nodeName.size() == 8) m_adderType = 1; 
+    else if ((m_nodeName.size() == 6)&&((m_nodeName.substr(0,4)!="PART")||(m_farm=="MF"))) {
+       lib_rtl_sleep(12000);
+       m_adderType = 2; }
+    else if ((m_nodeName.size() == 6)&&((m_nodeName.substr(0,4)=="PART")||(m_farm=="MF"))) {
+       lib_rtl_sleep(22000);
+       m_adderType = 3; }
+
+     m_processMgr = new ProcessMgr (s_Adder, msgSvc(), this, m_refreshTime);
+     m_processMgr->setSubFarmVector(m_subfarmName);
+     m_processMgr->setTaskName(m_taskName);
+     m_processMgr->setAlgorithmVector(m_algorithmName);
+     m_processMgr->setObjectVector(m_objectName);
+     m_processMgr->setUtgid(m_utgid);
+     m_processMgr->setFarm(m_farm);
+     m_processMgr->setPartitionName(m_partitionName);
+     if (m_publishRates == 1) m_processMgr->setPublishRates(true);
+     startUp();
+     m_firststart = false;
+  }
+  else {
+    shutDown();
+    startUp();
+  }
+
+ return StatusCode::SUCCESS;
+ }
+
+StatusCode AdderSvc::stop() {
+  MsgStream msg(msgSvc(), name());
+  msg << MSG::INFO << "Adder stopping." << endreq;
+ return StatusCode::SUCCESS;
+ }
+
+
 StatusCode AdderSvc::finalize() {
   MsgStream msg(msgSvc(), name());
-  msg << MSG::DEBUG << "Finalize Adder..... " << endmsg;  
-  //keep alive in time to save histos
-   lib_rtl_sleep(5000);
-//  m_processMgr->serviceMap()->add();
-  m_enablePostEvents = false;
-  return Service::finalize();
+  msg << MSG::INFO << "Finalize Adder." << endreq; 
+  return Service::SUCCESS;
 }
 

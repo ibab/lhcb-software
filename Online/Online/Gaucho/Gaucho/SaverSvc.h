@@ -22,6 +22,10 @@ namespace LHCb {
     virtual ~SaverSvc();
     /// Iservice overload: Initialize service
     StatusCode initialize();
+    /// Iservice overload: Start service
+    StatusCode start();
+    /// Iservice overload: Stop service
+    StatusCode stop();
     /// Iservice overload: Finalize service
     StatusCode finalize();
     /// Call to save the histograms
@@ -55,8 +59,8 @@ private:
   std::string m_utgid;
   std::string m_nodeName;
   bool m_monitoringFarm;
-  bool m_finalizing;
   bool m_firstsave;
+  bool m_firststart;
   
   std::string m_tmpPart;
   std::vector<std::string> m_partName;

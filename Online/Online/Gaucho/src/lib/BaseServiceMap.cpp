@@ -17,6 +17,7 @@
 #include "TFile.h"
 #include "TDirectory.h"
 #include "TSystem.h"
+#include "RTL/rtl.h"
 
 BaseServiceMap::BaseServiceMap(ProcessMgr *processMgr): 
   m_name("BaseServiceMap"),
@@ -455,14 +456,13 @@ std::string BaseServiceMap::createSaverName (const std::string &serviceName){
 
 
 
-void BaseServiceMap::write(std::string saveDir, std::string &fileName, int runNumber)
+bool BaseServiceMap::write(std::string saveDir, std::string &fileName, int runNumber)
 {
   MsgStream msg(msgSvc(), name());
-//  msg << MSG::DEBUG << " We will try to Write " << endreq;
 
   if ((0 == m_serverMap.size())||(0 == m_serviceSet.size())||(0 == m_dimInfo.size())) {
-//    msg << MSG::DEBUG << " Writer can't write because ServerMap, ServiceMap or DimInfoMap is empty " << endreq;
-    return;
+    msg << MSG::DEBUG << " Writer can't write because ServerMap, ServiceMap or DimInfoMap is empty " << endreq;
+    return false;
   }
    //get the runnumber
   std::vector<std::string> savedirParts = Misc::splitString(saveDir, "/");
@@ -482,37 +482,47 @@ void BaseServiceMap::write(std::string saveDir, std::string &fileName, int runNu
   char year[5];
   char month[3];  
   char day[3];  
+
   time_t rawTime=time(NULL);
   struct tm* timeInfo = localtime(&rawTime);
   ::strftime(timestr, sizeof(timestr),"%Y%m%dT%H%M%S", timeInfo);
   ::strftime(year, sizeof(year),"%Y", timeInfo);
   ::strftime(month, sizeof(month),"%m", timeInfo);
   ::strftime(day, sizeof(day),"%d", timeInfo);
-
-
+  bool save=false;
+  
+  int mins;
+  mins=timeInfo->tm_min;
+  int secs;
+  secs=timeInfo->tm_sec;
+  if (((mins==0)||(mins==15)||(mins==30)||(mins==45))&& (secs<20))save=true;
+  bool endofrun=false;
+  
   for (m_dimInfoIt=m_dimInfo.begin(); m_dimInfoIt!=m_dimInfo.end(); ++m_dimInfoIt) 
-  {
-    
+  {   
      std::vector<std::string> serviceParts = Misc::splitString(m_dimInfoIt->first, "_");
      std::string farm=m_processMgr->getFarm();
-     std::string taskName="Moore";
+     //Moore breaks Presenter history mode
+     std::string taskName="GauchoJob";
      if (farm=="MF") {
        taskName = "RecBrunel";
      }  
-     
- /*    if (3 == serviceParts.size()) {
-       taskName = "Moore";
-     }
-     else if (4 == serviceParts.size()) {
-       taskName = serviceParts[2];
-     }*/
-
     
-   // std::string tmpfile = saveDir + m_dimInfoIt->first + "-" + timestr + ".root";
-    std::string tmpfile = saveDir + taskName + "/" + month +"/" +day + "/"+ taskName + "-" + runNumberstr +"-"+ timestr + ".root";
+    if (m_dimInfoIt->second.size()>0) endofrun=true;
+    else endofrun=false;
+    for (it=m_dimInfoIt->second.begin(); it!=m_dimInfoIt->second.end(); ++it) {
+      //check if all contributions have the end of run flag
+      endofrun = it->second->monObject()->endOfRun(); 
+    }
+    std::string eorstring="";
+    if (endofrun) {
+       eorstring="-EOR";
+       save=true;
+    }   
+       
+    if (save==true) {
+    std::string tmpfile = saveDir + taskName + "/" + month +"/" +day + "/"+ taskName + "-" + runNumberstr +"-"+ timestr + eorstring + ".root";
     fileName.replace(0, fileName.length(), tmpfile);
- //   msg << MSG::INFO << "SaverSvc will save histograms in file " << fileName << endreq;
-
     std::string dirName = saveDir + taskName + "/" + month +"/" +day ;  
     void *hdir = gSystem->OpenDirectory(dirName.c_str());
     if (hdir == 0) {
@@ -520,34 +530,24 @@ void BaseServiceMap::write(std::string saveDir, std::string &fileName, int runNu
     }
 
     f = new TFile(fileName.c_str(),"create");
-    
+
+            
     for (it=m_dimInfoIt->second.begin(); it!=m_dimInfoIt->second.end(); ++it) {
       std::string serverName = Misc::splitString(it->first, "/")[1];
- //     msg << MSG::DEBUG << "Term : " << it->first << " servername " << serverName << endreq;
-      //EvH I commented this line out for the moment because the servername is now the partitionname
-      //(for the presenter) - not that slice name PARTxx
-      //if (!m_processMgr->dimInfoServers()->isActive(serverName)) continue;
-     if(0 == it->second->monObject()) continue;
-
-   //   msg << MSG::DEBUG << "Term being saved: " << it->second->dimInfo()->getName() << endreq;
+      if(0 == it->second->monObject()) continue;
 
       std::string type = it->second->monObject()->typeName();
-      std::vector<std::string> HistoFullName = Misc::splitString(it->second->dimInfo()->getName(), "/");  
-      // check if we have the runnumber
-      
-      
+      std::vector<std::string> HistoFullName = Misc::splitString(it->second->dimInfo()->getName(), "/");       
       
       if ((s_monH1F == type)||(s_monH1D == type)||(s_monH2F == type)||(s_monH2D == type)||(s_monProfile == type)) {
           TDirectory *dir=0; 
           it->second->loadMonObject();
           it->second->monObject()->loadObject();
-	 // std::vector<std::string> HistoDirName;  
 	  for (int i=3;i<(int)HistoFullName.size()-1;i++) {
 	     //recreate the directory structure inside the root file before saving
              //HistoDirName keeps track of the directory names, to avoid rewriting them
 	        if (i>3) {   
 		    if (dir->GetDirectory(HistoFullName[i].c_str())) { 
-	//	          msg << MSG::DEBUG << "cding 1 into " << HistoFullName[i].c_str()<< endreq; 
 		          dir->cd(HistoFullName[i].c_str());}
 		    else {
 		       dir=dir->mkdir(HistoFullName[i].c_str(),TString::Format("subsubdir %02d",i)); 
@@ -557,12 +557,10 @@ void BaseServiceMap::write(std::string saveDir, std::string &fileName, int runNu
 	        else {
 		  if (dir) {
 		      dir=f->GetDirectory(HistoFullName[i].c_str());
-		//      msg << MSG::DEBUG << "cding 2 into " << HistoFullName[i].c_str()<< endreq; 
 		      dir->cd(HistoFullName[i].c_str());		       
 		  }    
 		  else { 
 		      if (!(dir=f->GetDirectory(HistoFullName[i].c_str()))) {
-		//      msg << MSG::DEBUG << "Making directory HistoFullName[" << i << "]= " << HistoFullName[i].c_str() <<endreq; 		      
 		      dir=f->mkdir(HistoFullName[i].c_str(),TString::Format("subdir %02d",i));
 		      }
 		  }   
@@ -574,10 +572,7 @@ void BaseServiceMap::write(std::string saveDir, std::string &fileName, int runNu
 	 else {	  
 	     f->cd();
 	 }
-	//  msg << MSG::DEBUG << "writing " << endreq; 
-	
           it->second->monObject()->write();
-
       }
       else {
         msg << MSG::ERROR << "MonObject of type " << type << " can not be written."<< endreq; 
@@ -587,33 +582,35 @@ void BaseServiceMap::write(std::string saveDir, std::string &fileName, int runNu
     f->Close();
     delete f;f=0;
   }
-  
+  }
+  return endofrun;
 //  msg << MSG::INFO << "SaverSvc saved histograms in file " << fileName << endreq;
 }
 
 
-void BaseServiceMap::add() {
+bool BaseServiceMap::add() {
   MsgStream msg(msgSvc(), name());
   bool endofrun=false;
   std::map<std::string, DimInfoMonObject*>::iterator it;
-
   if (0 == m_serverMap.size()){
-  //  msg << MSG::DEBUG << " Adder can't add because the ServerMap is empty " << endreq;
-    return;
+    msg << MSG::DEBUG << " Adder can't add because the ServerMap is empty " << endreq;
+    return false;
   }
   if (0 == m_serviceSet.size()) {
-  //  msg << MSG::DEBUG << " Adder can't add because the ServiceSet is empty " << endreq;
-    return;
+    msg << MSG::DEBUG << " Adder can't add because the ServiceSet is empty " << endreq;
+    return false;
   }
   if (0 == m_dimInfo.size()){
-  //  msg << MSG::DEBUG << " Adder can't add because the DimInfoMap is empty " << endreq;
-    return;
+    msg << MSG::DEBUG << " Adder can't add because the DimInfoMap is empty " << endreq;
+    return false;
   }
+  bool toteor=true;
 
   for (m_dimInfoIt=m_dimInfo.begin(); m_dimInfoIt!=m_dimInfo.end(); ++m_dimInfoIt) 
   {
+    //loop over services
     if (m_dimSrv.find(m_dimInfoIt->first) == m_dimSrv.end()) { 
-  //    msg << MSG::DEBUG << "No Adder Found " << m_dimInfoIt->first << endreq;
+      msg << MSG::DEBUG << "No Adder Found " << m_dimInfoIt->first << endreq;
       continue;
     }
 
@@ -624,27 +621,42 @@ void BaseServiceMap::add() {
         m_dimSrvStatus[m_dimInfoIt->first].first = true;
       }
       else {
-    //    msg << MSG::DEBUG << "Adder MonObject still unloaded for " << m_dimInfoIt->first << endreq;
+        msg << MSG::DEBUG << "Adder MonObject still unloaded for " << m_dimInfoIt->first << endreq;
         continue;
       }
     }
-    endofrun= m_dimSrv[m_dimInfoIt->first].second->endOfRun();
-    m_dimSrv[m_dimInfoIt->first].second->reset();
+       
+     m_dimSrv[m_dimInfoIt->first].second->reset();
 
-  //  msg << MSG::INFO << "endofrun: " << endofrun << endreq;
+     int eors=0;
+     for (it=m_dimInfoIt->second.begin(); it!=m_dimInfoIt->second.end(); ++it) {
+        bool tmpendofrun=false;
+        tmpendofrun= it->second->monObject()->endOfRun();  
+         //if we find an endof run, only set the endofrun flag if we have them all
+       if (tmpendofrun) eors++;
+     }
+     //we are at the end of the run, so set the recipient to end of run
+     if (eors == (int)m_serverMap.size()) {
+        m_dimSrv[m_dimInfoIt->first].second->setEndOfRun(true);
+	endofrun=true;
+     } 
+     else {
+       toteor=false;
+       if (eors>0) msg << MSG::DEBUG << eors << " EOR contributions received. Total should be: " << m_serverMap.size() << endreq;
+     }      
+       
 
     for (it=m_dimInfoIt->second.begin(); it!=m_dimInfoIt->second.end(); ++it) {
+      //loop over servers
       if (!m_processMgr->dimInfoServers()->isActive(it->first)) continue;
 
       if(0 == it->second->monObject()) continue;
-    //  msg << MSG::DEBUG << "Loading term : " << it->first << endreq;
       bool isLoaded = it->second->loadMonObject();
       if (!isLoaded){
-   //     msg << MSG::DEBUG << "Term : " << it->second->dimInfo()->getName() << " unloaded" << endreq;
         continue;
       }
-   //   msg << MSG::DEBUG << "Term : " << it->second->dimInfo()->getName() << " ok" << endreq;
 
+  
       if (m_dimSrv[m_dimInfoIt->first].second->typeName().compare(s_monRate) == 0){
         int countersAdder = ((MonRate*) (m_dimSrv[m_dimInfoIt->first].second))->numCounters();
         int countersTerm = ((MonRate*) it->second->monObject())->numCounters();
@@ -653,30 +665,20 @@ void BaseServiceMap::add() {
           ((MonRate*) (m_dimSrv[m_dimInfoIt->first].second))->setNumCounters(((MonRate*)it->second->monObject())->numCounters());
         }
       }
-      //msg << MSG::INFO << "Combining Service : " << endreq;
       m_dimSrv[m_dimInfoIt->first].second->combine(it->second->monObject());
     }
-   // msg << MSG::INFO << "Updating Service : " << endreq;
-    m_dimSrv[m_dimInfoIt->first].first->updateService(m_dimSrv[m_dimInfoIt->first].second->endOfRun());
+    //update after adding
+    m_dimSrv[m_dimInfoIt->first].first->updateService(endofrun);
  
     if (m_dimSrv[m_dimInfoIt->first].second->typeName().compare(s_monRate) == 0){
-     // msg << MSG::INFO << "Updating MonRate " << endreq;
       if (m_processMgr->publishRates()) m_monRateDecoder->update((MonRate*)(m_dimSrv[m_dimInfoIt->first].second));
     }
   }
-  //if we are at a (fast) endofrun (top level adder), send the save_histos command to the saver
-  //for other adders, do an immediate update
-  if (endofrun) {
-     std::string utgid = m_processMgr->utgid();
-     std::vector<std::string> utgidParts = Misc::splitString(utgid, "_");
-     if (utgidParts[0].find("PART")!= std::string::npos) {
-      std::string saversvc = utgidParts[0]+ "_Saver_1/";
-     // DimClient::setDnsNode("hlt01");  
-      std::string serviceName=saversvc+"/";
-      int commandret=DimClient::sendCommand(serviceName.c_str(),"save_histos");
-      if (commandret==1) msg << MSG::DEBUG << "Save_histos command succesfully sent. " << endreq;
-    } 
-    endofrun=false; 
-  } 
+  if ((endofrun)&(!toteor)) {
+     msg << MSG::DEBUG <<  " Waiting for all eor contributions endofrun=" << endofrun << " toteor="<< toteor<< endreq;
+  }
+
+   return toteor;
+
 }
 
