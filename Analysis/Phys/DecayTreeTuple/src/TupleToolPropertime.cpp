@@ -1,4 +1,4 @@
-// $Id: TupleToolPropertime.cpp,v 1.6 2010-01-26 15:39:26 rlambert Exp $
+// $Id: TupleToolPropertime.cpp,v 1.7 2010-04-23 09:34:39 pkoppenb Exp $
 // Include files
 
 // from Gaudi
@@ -104,8 +104,8 @@ StatusCode TupleToolPropertime::fill( const Particle* mother
   }
 
   bool test = true;
-  test &= tuple->column( prefix+"_TAU" , pt/Gaudi::Units::picosecond );
-  test &= tuple->column( prefix+"_TAUERR" , ept/Gaudi::Units::picosecond );
+  test &= tuple->column( prefix+"_TAU" , pt ); // nanoseconds
+  test &= tuple->column( prefix+"_TAUERR" , ept );
   test &= tuple->column( prefix+"_TAUCHI2" , chi2 );
   
   return StatusCode(test);

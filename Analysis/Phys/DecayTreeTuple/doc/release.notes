@@ -4,6 +4,10 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2010-04-23 - Patrick Koppenburg
+ - TupleToolPropertime: Store _TAU as nanoseconds and not picoseconds. Nanoseconds 
+   is the Gaudi convention. WARNING : Backward incompatible with previous Tuples.
+
 ! 2010-04-21 - Rob Lambert
  - TupleToolTrackInfo: Added VELO_UTID, the double obtained from multiplying
    all the velo hit IDs on the track together.
