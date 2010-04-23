@@ -1,6 +1,6 @@
 project BENDER
 
-use DAVINCI	DAVINCI_v25r2p1
+use DAVINCI	DAVINCI_v25r2p3
 
 build_strategy	with_installarea
 setup_strategy	root

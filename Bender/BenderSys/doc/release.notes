@@ -1,5 +1,5 @@
 <PRE>
-! $Id: release.notes,v 1.36 2010-03-25 18:24:28 ibelyaev Exp $ 
+! $Id: release.notes,v 1.37 2010-04-23 15:10:25 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : BenderSys
 ! Responsible : Vanya BELYAEV  vanya@nikhef.nl
@@ -9,7 +9,16 @@
 </PRE>
 
 <H1>
-<A NAME=v14r0p2>2010-04-25 Bender v14r0p2 based on the DaVinci v25r2p1 </A>
+<A NAME=v14r0p3>2010-04-23 Bender v14r0p3 based on the DaVinci v25r2p3 </A>
+</H1>	
+
+<PRE>		
+The version based on DaVinci v25r2p3. 
+</PRE>
+
+
+<H1>
+<A NAME=v14r0p2>2010-03-25 Bender v14r0p2 based on the DaVinci v25r2p1 </A>
 </H1>	
 
 <PRE>		
@@ -25,7 +34,6 @@ The calibration constants for Ecal/Prs:
 
 </PRE>
 
-</PRE>
 
 <H1>
 <A NAME=v14r0p1>2010-04-19 Bender v14r0p1 based on the DaVinci v25r2 </A>
