@@ -5,6 +5,11 @@
 !-----------------------------------------------------------------------------
 
 !========================== HltSettings v1r17   2010-04-24 ===================
+! 2010-04-24 - Gerhard Raven
+ - update Physics_25Vis_25L0_2Hlt1_2Hlt2_Apr10 after discussion with Jaap:
+    o remove the rate limited lumi low lines
+    o increase the lumi low postscales from 0.004 to 0.008
+
 ! 2010-04-23 - Jaap Panman
  - add Hlt1LumiMidBeamCrossingDecision
 

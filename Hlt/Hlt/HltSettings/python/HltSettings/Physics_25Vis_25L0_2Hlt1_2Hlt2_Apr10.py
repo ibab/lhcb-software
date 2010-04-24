@@ -38,7 +38,7 @@ class Physics_25Vis_25L0_2Hlt1_2Hlt2_Apr10 ( Physics_MinBiasL0_PassThroughHlt1_E
                                           )
         from Hlt1Lines.Hlt1LumiLines           import Hlt1LumiLinesConf
         if Hlt1LumiLinesConf not in thresholds : thresholds[Hlt1LumiLinesConf] = dict()
-        thresholds[Hlt1LumiLinesConf].update( { 'Postscale' : { 'Hlt1LumiLow.*(?<!RateLimited)$'    : 0.004
+        thresholds[Hlt1LumiLinesConf].update( { 'Postscale' : { 'Hlt1LumiLow.*(?<!RateLimited)$'    : 0.008
                                                               , 'Hlt1LumiLowNoBeamRateLimited'      : 'RATE(5)' 
                                                               , 'Hlt1LumiLowBeam2RateLimited'       : 'RATE(10)' 
                                                               , 'Hlt1LumiLowBeam1RateLimited'       : 'RATE(15)' 
@@ -55,6 +55,6 @@ class Physics_25Vis_25L0_2Hlt1_2Hlt2_Apr10 ( Physics_MinBiasL0_PassThroughHlt1_E
         lines = Physics_MinBiasL0_PassThroughHlt1_ExpressHlt2_Apr10.ActiveHlt1Lines(self)
         lines += [ i + 'RateLimited' for i in lines 
                                      if i.startswith('Hlt1MBMicroBias') 
-                                     or i.startswith('Hlt1LumiLow') 
+                                     #or i.startswith('Hlt1LumiLow') # do not use rate limited lumi lines to avoid confusing the lumi bookkeeping
                                      or i.startswith('Hlt1L0Any') ]
         return lines
