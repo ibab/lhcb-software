@@ -9,19 +9,10 @@ branches doc cmt
 
 use  Moore              v9r1     Hlt
 
-use CaloReco            v5r4p1  Calo
 use Magnet              v6r0    Det
 use LumiEvent           v2r6    Event ## needs HltLuminosity to be recompiled!
-use HltDAQ              v1r7    Hlt
 use HltLuminosity       v2r16   Hlt
-use LoKiCore            v9r13   Phys
-use LoKiFitters         v2r4p2  Phys
-use LoKiNumbers         v8r6    Phys
-use PatAlgorithms       v3r30   Tf
-use PatVelo             v3r20p1 Tf
 use PatPV               v3r15   Tr
-use TrackTools          v3r29   Tr
-use VeloDAQ             v4r14   Velo
 
 
 
