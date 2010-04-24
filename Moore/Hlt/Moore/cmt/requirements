@@ -1,5 +1,5 @@
 #============================================================================
-# $Id: requirements,v 1.118 2010-04-21 18:59:14 graven Exp $
+# $Id: requirements,v 1.119 2010-04-24 20:54:15 graven Exp $
 # Created    : 03/06/2005 by P. Koppenburg
 # Maintainer : G. Raven
 #============================================================================
@@ -28,19 +28,10 @@ use AppConfig           v3r*                -no_auto_imports
 
 #### patches
 
-use CaloReco            v5r4p1  Calo
 use Magnet              v6r0    Det
 use LumiEvent           v2r6    Event ## needs HltLuminosity to be recompiled!
-use HltDAQ              v1r7    Hlt
 use HltLuminosity       v2r16   Hlt
-use LoKiCore            v9r13   Phys
-use LoKiFitters         v2r4p2  Phys
-use LoKiNumbers         v8r6    Phys
-use PatAlgorithms       v3r30   Tf
-use PatVelo             v3r20p1 Tf
 use PatPV               v3r15   Tr
-use TrackTools          v3r29   Tr
-use VeloDAQ             v4r14   Velo
 
 
 # The rest are needed only to set up environment variables for job options
