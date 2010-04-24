@@ -49,7 +49,7 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
 
     __slots__ = { 'TriggerType'            : 'LumiTrigger'  # ODIN trigger type accepted for Lumi
                 , 'L0Channel'              : ['CALO']     # L0 channels accepted for LowLumi
-                , 'L0MidChannel'           : ['MUON']     # L0 channels accepted for MidLumi
+                , 'L0MidChannel'           : ['MUON,minbias']     # L0 channels accepted for MidLumi
                 , 'LumiLines'              : ['Count','VDM']
                 , 'EnableReco'             : True 
                 , 'MaxRate'                : 997. # pick a prime number...
