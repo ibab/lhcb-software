@@ -1,4 +1,4 @@
-// $Id: MCSTDepositCreator.cpp,v 1.11 2010-04-07 09:48:00 mneedham Exp $
+// $Id: MCSTDepositCreator.cpp,v 1.12 2010-04-24 11:35:12 mneedham Exp $
 
 // GSL 
 #include "gsl/gsl_math.h"
@@ -58,8 +58,12 @@ MCSTDepositCreator::MCSTDepositCreator( const std::string& name,
 
   declareProperty("XTalkParams", m_xTalkParams);
 
-  m_xTalkParams.push_back(0.08);
-  m_xTalkParams.push_back(0.092/(55*Gaudi::Units::picofarad));
+  m_xTalkParams.push_back(0.05);
+  m_xTalkParams.push_back(0.098/(55*Gaudi::Units::picofarad));
+
+
+  //  m_xTalkParams.push_back(0.08);
+  //m_xTalkParams.push_back(0.092/(55*Gaudi::Units::picofarad));
 
   declareProperty("Scaling", m_scaling = 1.0);
   declareProperty("ResponseTypes", m_beetleResponseTypes);
@@ -223,10 +227,10 @@ void MCSTDepositCreator::createDeposits( const MCHits* mcHitsCont,
         if (totWeightedCharge > 1e-3 ){
 
           // Determine cross talk level for this readout sector
-	  // const double xTalkLevel = m_xTalkParams[0] + 
-          //  m_xTalkParams[1]*aSector->capacitance();
-          const double xTalkLevel = m_xTalkParams[0] + 
-            m_xTalkParams[1]*aSector->sensorCapacitance();
+	   const double xTalkLevel = m_xTalkParams[0] + 
+             m_xTalkParams[1]*aSector->capacitance();
+	  //  const double xTalkLevel = m_xTalkParams[0] + 
+          //  m_xTalkParams[1]*aSector->sensorCapacitance();
  
 
           const double scaling = m_scaling * (1.0+(2.0*xTalkLevel));

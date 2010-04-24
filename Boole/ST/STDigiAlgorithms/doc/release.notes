@@ -4,6 +4,9 @@
 ! Purpose     : Algorithms for ST Digitization
 !-----------------------------------------------------------------------------
 
+! 2010-04-24 M Needham
+ - New tuning of capacitive coupling
+
 ! 2010-04-11 M Needham
  - Bug fix in ISTCMSimTool
 
