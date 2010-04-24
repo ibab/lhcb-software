@@ -51,7 +51,7 @@ StatusCode DataDecodingErrorMoni::initialize()
 
 StatusCode DataDecodingErrorMoni::prebookHistograms()
 {
-  richHisto1D( HID("decodingErrors"), "Decoding Errors", 0.5, 6.5, 6 );
+  richProfile1D( HID("decodingErrors"), "DAQ Decoding Error Rates (%)", 0.5, 6.5, 6 );
   return StatusCode::SUCCESS;
 }
 
@@ -77,27 +77,34 @@ StatusCode DataDecodingErrorMoni::execute()
       const Rich::DAQ::L1IngressHeader & ingressHeader = ingressInfo.ingressHeader();
 
       // Check if all HPDs are suppressed
-      if ( ingressHeader.hpdsSuppressed() ) { richHisto1D( HID("decodingErrors") )->fill(1); }
+      richProfile1D( HID("decodingErrors") )
+        -> fill( 1, ingressHeader.hpdsSuppressed() ? 100 : 0 );
 
       // Check Event ID between Rich and ODIN
-      if ( EventID(odin->eventNumber()) != ingressHeader.eventID() )
-      { richHisto1D( HID("decodingErrors") )->fill(2); } 
+      richProfile1D( HID("decodingErrors") ) 
+        -> fill( 2, EventID(odin->eventNumber()) != ingressHeader.eventID() ? 100 : 0 ); 
       
       // Check BX ID between Rich and ODIN
-      if ( EventID(odin->bunchId()) != ingressHeader.bxID() )
-      { richHisto1D( HID("decodingErrors") )->fill(3); } 
+      richProfile1D( HID("decodingErrors") )
+        -> fill( 3, BXID(odin->bunchId()) != ingressHeader.bxID() ? 100 : 0 ); 
 
       // Loop over HPDs in this ingress
       for ( Rich::DAQ::HPDMap::const_iterator iHPD = (*iIn).second.hpdData().begin();
             iHPD != (*iIn).second.hpdData().end(); ++iHPD )
       {
+        const bool inhibit = (*iHPD).second.header().inhibit();
         // inhibited HPDs
-        if      ( (*iHPD).second.header().inhibit() ) { richHisto1D( HID("decodingErrors") )->fill(4); }
-        // Invalid HPD (BD lookup error)
-        else if ( !(*iHPD).second.hpdID().isValid() ) { richHisto1D( HID("decodingErrors") )->fill(5); }
-        // Event IDs
-        else if ( (*iIn).second.ingressHeader().eventID() != (*iHPD).second.header().eventID() )
-        { richHisto1D( HID("decodingErrors") )->fill(6); }
+        richProfile1D( HID("decodingErrors") ) -> fill( 4, inhibit ? 100 : 0 ); 
+        if ( !inhibit )
+        {
+          // Invalid HPD (BD lookup error)
+          richProfile1D( HID("decodingErrors") )->fill( 5,!(*iHPD).second.hpdID().isValid() ? 100 : 0 ); 
+          // Event IDs
+          richProfile1D( HID("decodingErrors") )
+            -> fill( 6, 
+                     (*iIn).second.ingressHeader().eventID() != 
+                     (*iHPD).second.header().eventID() ? 100 : 0 ); 
+        }
       } // loop over HPDs
 
     } // ingresses
