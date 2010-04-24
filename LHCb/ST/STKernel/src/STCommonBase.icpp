@@ -4,7 +4,7 @@
  *  Implementation file for RICH base class : ST::CommonBase
  *
  *  CVS Log :-
- *  $Id: STCommonBase.icpp,v 1.12 2009-08-28 14:32:52 jvantilb Exp $
+ *  $Id: STCommonBase.icpp,v 1.13 2010-04-24 11:35:49 mneedham Exp $
  *
  *  @author Matthew Needham    Matthew.Needham@cern.ch
  *  @date   2008-11-10
@@ -200,4 +200,15 @@ void ST::CommonBase<PBASE>::flip(std::string& aString) const{
 template <class PBASE>
 inline const std::vector<std::string*>& ST::CommonBase<PBASE>::flipList() const{
  return m_toBeFlipped;
+}
+
+#include "Event/ProcStatus.h"
+template <class PBASE>
+inline StatusCode ST::CommonBase<PBASE>::procFailure() const{
+
+   LHCb::ProcStatus* procStat =
+      this-> template getOrCreate<LHCb::ProcStatus,LHCb::ProcStatus>(LHCb::ProcStatusLocation::Default);
+
+   procStat->addAlgorithmStatus(this->name(), -3);     
+   return this->Warning("Event processing failed", StatusCode::SUCCESS, 1);
 }

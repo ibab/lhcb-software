@@ -5,7 +5,7 @@
  *  Header file for ST base class : STCommonBase
  *
  *  CVS Log :-
- *  $Id: STCommonBase.h,v 1.7 2009-07-06 17:27:35 mtobin Exp $
+ *  $Id: STCommonBase.h,v 1.8 2010-04-24 11:35:49 mneedham Exp $
  *
  *  @author Matthew Needham    Matthew.Needham@cern.ch
  *  @date   2005-11-10
@@ -133,6 +133,9 @@ namespace ST
 
    /** safe finding of the sector - exception thrown if not valid */
    DeSTSector* findSector(const LHCb::STChannelID& aChannel) const;
+
+   /** return a procstatus in case event is aborted */
+   StatusCode procFailure() const;
 
   private:
 
