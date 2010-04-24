@@ -277,12 +277,12 @@ DeRichGasRadiator::calcSellmeirRefIndex ( const std::vector<double>& momVect,
     
     if( isC3F8Medium ) {
       nMinus1 = 
-      scaleFactor * (AParam* AMultParam *MomConvWave*  MomConvWave *  GasRhoCur)/(EphyZSq - (epho*epho));
+        scaleFactor * (AParam*AMultParam*MomConvWave*MomConvWave*GasRhoCur)/(EphyZSq-(epho*epho));
     }else {
       const double pfe  = (SellF1/( (SellE1* SellE1) - (epho * epho) ) )+
-      (SellF2/( (SellE2*SellE2) - (epho * epho) ));
+        (SellF2/( (SellE2*SellE2) - (epho * epho) ));
       const double cpfe = SellLorGasFac * (GasRhoCur / GasMolWeight ) * pfe;
-      nMinus1 = scaleFactor * (sqrt((1.0+2*cpfe)/(1.0-cpfe)) - 1.0);
+      nMinus1 = scaleFactor * (std::sqrt((1.0+2*cpfe)/(1.0-cpfe)) - 1.0);
     }
     
    
