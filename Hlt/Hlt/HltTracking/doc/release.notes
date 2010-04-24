@@ -1,9 +1,13 @@
-!$Id: release.notes,v 1.115 2010-04-21 08:25:01 graven Exp $
+!$Id: release.notes,v 1.116 2010-04-24 16:24:38 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/HltTracking
 ! Responsible : Jose A. Hernando
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
+
+!========================== HltTracking v5r1p1 2010-04-24 ===================
+! 2010-04-23 - V. Gligorov
+ - some more tweaks to cheated PV2D
 
 !========================== HltTracking v5r1   2010-04-21 ===================
 ! 2010-04-19 - V. Gligorov

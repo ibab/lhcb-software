@@ -1,4 +1,4 @@
-// $Id: HltTrackMatch.cpp,v 1.18 2010-03-02 11:24:29 gligorov Exp $
+// $Id: HltTrackMatch.cpp,v 1.19 2010-04-24 16:24:38 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -44,8 +44,8 @@ HltTrackMatch::HltTrackMatch( const std::string& name,
   m_selections.declareProperties();
 
   m_TESOutput = "";
-  m_qualityName = "";
-  m_quality2Name = "";
+  m_qualityName = "UNKNOWN";
+  m_quality2Name = "UNKNOWN2";
 }
 //=============================================================================
 // Destructor
