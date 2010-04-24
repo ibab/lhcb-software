@@ -2,7 +2,7 @@
 //-----------------------------------------------------------------------------
 /** @file RichHPDHitsMoni.h
  *
- *  Header file for algorithm class : Rich::Rec::MC::HPDHitsMoni
+ *  Header file for algorithm class : Rich::Rec::HPDHitsMoni
  *
  *  CVS Log :-
  *  $Id: RichHPDHitsMoni.h,v 1.6 2009-08-05 23:14:59 jonrob Exp $

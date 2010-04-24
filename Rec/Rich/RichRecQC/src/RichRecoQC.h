@@ -106,6 +106,15 @@ namespace Rich
         std::vector<double> m_ckThetaMax; ///< Max theta limit for histos for each rad
         std::vector<double> m_ckThetaMin; ///< Min theta limit for histos for each rad
 
+        std::vector<bool> m_rads; ///< Which radiators to monitor
+
+        std::vector<unsigned int> m_minRadSegs; ///< Minimum segments per radiator
+        std::vector<unsigned int> m_maxRadSegs; ///< Maximum segments per radiator
+
+        /** Flag to turn on the rejection of aerogel photons if they share the same
+         *  pixel with a Rich1Gas photon */
+        bool m_checkAeroGas;
+
         /// Histogram ranges for CK resolution plots
         std::vector<double> m_ckResRange;
 

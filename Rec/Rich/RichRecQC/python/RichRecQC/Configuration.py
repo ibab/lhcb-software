@@ -33,7 +33,7 @@ class RichRecQCConf(RichConfigurableUser):
                            "PhotonMonitoring", "TracklessRingAngles",
                            "TracklessRingPeakSearch",
                            "AlignmentMonitoring", "HPDIFBMonitoring",
-                           "HPDImageShifts",
+                           "HPDImageShifts", "DataDecodingErrors",
                            "RichPixelPositions", "HPDHitPlots",
                            "RichTrackGeometry", "RichGhostTracks",
                            "RichCKThetaResolution", "RichTrackResolution",
@@ -55,6 +55,7 @@ class RichRecQCConf(RichConfigurableUser):
        ,"DataType" : "2008" # Data type, can be ['DC06','2008',2009','2010']
        ,"MoniSequencer" : None # The sequencer to add the RICH monitoring algorithms to
        ,"Monitors" : { "Expert"         : [ "L1SizeMonitoring", "DBConsistencyCheck",
+                                            "DataDecodingErrors",
                                             "HotPixelFinder", "PidMonitoring",
                                             "PixelMonitoring", "TrackMonitoring",
                                             "PhotonMonitoring", "TracklessRingAngles",
@@ -73,15 +74,15 @@ class RichRecQCConf(RichConfigurableUser):
                                             "HotPixelFinder", "PidMonitoring",
                                             "PixelMonitoring", "TrackMonitoring",
                                             "PhotonMonitoring", "TracklessRingAngles",
-                                            "HPDImageShifts",
+                                            "HPDImageShifts", "DataDecodingErrors",
                                             "AlignmentMonitoring", "HPDIFBMonitoring" ],
                        "OfflineExpress" : [ "L1SizeMonitoring", "DBConsistencyCheck",
                                             "HotPixelFinder", "PidMonitoring",
                                             "PixelMonitoring", "TrackMonitoring",
                                             "PhotonMonitoring", "TracklessRingAngles",
-                                            "HPDImageShifts",
+                                            "HPDImageShifts", "DataDecodingErrors",
                                             "AlignmentMonitoring", "HPDIFBMonitoring" ],
-                       "Online"         : [ "DBConsistencyCheck",
+                       "Online"         : [ "DBConsistencyCheck", "DataDecodingErrors",
                                             "PhotonMonitoring", "TracklessRingAngles",
                                             "AlignmentMonitoring" ],
                        "None"           : [ ]
@@ -89,7 +90,7 @@ class RichRecQCConf(RichConfigurableUser):
        ,"PidMomentumRanges": { "Expert"         : [ [2,100], [2,10], [10,70], [70,100] ],
                                "OfflineFull"    : [ [2,100], [2,10], [10,70], [70,100] ],
                                "OfflineExpress" : [ [2,100], [2,10], [10,70], [70,100] ],
-                               "Online"         : [ [2,100], [2,10], [10,70], [70,100] ]
+                               "Online"         : [ [2,100] ]
                                }
        ,"MinTrackBeta"     : [ 0.9999, 0.9999, 0.9999 ]
        ,"PidTrackTypes":  { "Expert"         : [ ["All"],["Forward","Match"],
@@ -288,6 +289,13 @@ class RichRecQCConf(RichConfigurableUser):
                 hotpix.HPDAnalysisTools = ["RichHotPixelFinder"]
                 rawSeq.Members += [hotpix]
 
+            if "DataDecodingErrors" in monitors :
+
+                # Decoding error summaries
+                from Configurables import Rich__DAQ__DataDecodingErrorMoni
+                daqErrs = self.createMonitor(Rich__DAQ__DataDecodingErrorMoni,"RichDecodingErrors")
+                rawSeq.Members += [daqErrs]
+
         # RICH data monitoring
         if "PixelMonitoring" in monitors :
             self.pixelPerf(self.newSeq(sequence,"RichPixelMoni"))
@@ -439,19 +447,32 @@ class RichRecQCConf(RichConfigurableUser):
 
         # Track Types
         for trackType in self.getHistoOptions("RecoTrackTypes") :
-
+            
             # Construct the name for this monitor
             name = "RiCKRes" + self.trackSelName(trackType)
-
+            
             # Make a monitor alg
             mon = self.createMonitor(Rich__Rec__MC__RecoQC,name,trackType)
             mon.HistoPrint = False
-
+            
             # cuts
             mon.MinBeta = self.getProp("MinTrackBeta")
-
+        
             # Add to sequence
             sequence.Members += [mon]
+
+        # ----------------------------------------------------------------
+            # Specially tuned aerogel monitor
+            trackType = ['Forward','Match']
+            name = "RiAeroMoni" + self.trackSelName(trackType)
+            aeroMoni = self.createMonitor(Rich__Rec__MC__RecoQC,name,trackType)
+            aeroMoni.HistoPrint = False
+            aeroMoni.Radiators  = [ True, False, False ] # Only run on aerogel segments
+            aeroMoni.MaxRadSegs = [ 5, 0, 0, ]
+            aeroMoni.CheckAeroGasPhots = True
+            #aeroMoni.TrackSelector.MinPCut = 3
+            # Add to sequence
+            sequence.Members += [aeroMoni]
 
     ## Ion Feedback monitor
     def ionfeedbackMoni(self, sequence):

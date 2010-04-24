@@ -4,6 +4,13 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2010-04-24 - Chris Jones
+ - Fix some doxygen comments
+ - Add some options to RichRecoQC to allow a tuned 'aerogel' monitor, better
+   suited to extracting the signal.
+ - Add a new monitor that produces a single histogram that summarises the 
+   decoding errors (to be extended).
+
 ! 2010-04-21 - Chris Jones
  - Set NtupleProduce to False by default,so ntuple ROOT file is not booked
    by default
