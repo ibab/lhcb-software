@@ -63,6 +63,7 @@ HltANNSvc().Hlt1SelectionID = {
     "Hlt1LumiLowBeam2RateLimitedDecision"   :   91,
     "Hlt1LumiLowBeam1RateLimitedDecision"   :   92,
     "Hlt1LumiLowBeamCrossingRateLimitedDecision"  :   93,
+    "Hlt1LumiMidBeamCrossingDecision"       :   94,
     # MU Hlt1(Single|Di)Muon.*Decision
     "Hlt1SingleMuonNoIPL0Decision"          :  100,
     "Hlt1SingleMuonNoIPGECDecision"         :  101,
