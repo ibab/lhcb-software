@@ -4,6 +4,9 @@
 ! Purpose     : General purpose RICH classes
 !-----------------------------------------------------------------------
 
+! 2010-04-24 - Chris Jones
+ - Add over-loaded ostream printout for Rich::DAQ::BXID
+
 ! 2010-04-12 - Chris Jones
  - Add new Constructor to the Rich::HistogramID class that takes a
    string and a Rich::ParticleIDType.

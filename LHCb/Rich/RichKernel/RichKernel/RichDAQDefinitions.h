@@ -318,6 +318,10 @@ namespace Rich
       /// Operator LongType
       inline operator LongType() const { return data(); }
     public:
+      /// Overloaded output to ostream
+      friend inline std::ostream & operator << ( std::ostream & os, const BXID & id )
+      { return os << "[ BXID=" << id.data() << " bits=" << id.activeBits() << " ]"; }
+    public:
       /// Operator == that takes into account the correct number of bits
       inline bool operator== ( const BXID& id ) const
       {
