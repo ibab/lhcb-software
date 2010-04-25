@@ -4,6 +4,7 @@
 ! Purpose     : Package for the reconstruction in upgraded detector classes
 !-----------------------------------------------------------------------------
 
+!========================== RecoUpgrade v1r0 2010-04-26 =====================
 ! 2010-04-13 - Victor Coco
  - add TrackStateVeloPixInitTool + update the option files and configuration (but still under developpment)
  - PatVeloPixFitLHCbIDs close to completion, slope error missing in the fit
