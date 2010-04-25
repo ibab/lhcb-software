@@ -1,4 +1,4 @@
-// $Id: Particles3.cpp,v 1.11 2009-04-24 12:49:05 ibelyaev Exp $
+// $Id: Particles3.cpp,v 1.12 2010-04-25 18:00:02 graven Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -110,7 +110,7 @@ LoKi::Particles::ClosestApproach::chi2
   //
   if ( sc.isFailure ()  ) 
   { 
-    Error ( " Error from IDistanceCalculator, return 'InvalidChi2' ", sc ) ;
+    //Error ( " IDistanceCalculator::distance Failed, return 'InvalidChi2' ", sc ) ;
     return  LoKi::Constants::InvalidChi2 ; 
   }
   //

@@ -1,4 +1,4 @@
-// $Id: Particles4.cpp,v 1.16 2008-10-31 17:27:46 ibelyaev Exp $
+// $Id: Particles4.cpp,v 1.17 2010-04-25 18:00:02 graven Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -171,7 +171,7 @@ LoKi::Particles::ImpParChi2::ipchi2
   //
   if ( sc.isFailure() ) 
   {
-    Error("Error from IDistanceCalculator; return 'InvalidChi2'" , sc ) ;
+    //Error("IDistanceCalculator::distance failed; return 'InvalidChi2'" , sc ) ;
     return LoKi::Constants::InvalidChi2 ;                // RETURN 
   }
   //
