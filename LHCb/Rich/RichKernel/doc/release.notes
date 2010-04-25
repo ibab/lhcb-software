@@ -4,6 +4,10 @@
 ! Purpose     : General purpose RICH classes
 !-----------------------------------------------------------------------
 
+! 2010-04-25 - Chris Jones
+ - Some more fine tuning of the EventID and BXID printout to now include
+   the ID as Hex and also a dump of the bits.
+
 ! 2010-04-24 - Chris Jones
  - Add over-loaded ostream printout for Rich::DAQ::BXID
 

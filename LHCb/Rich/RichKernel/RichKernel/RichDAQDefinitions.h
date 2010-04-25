@@ -118,18 +118,31 @@ namespace Rich
       /// Operator --(int)  (postfix)
       inline NumericType<TYPE>  operator--(int) { NumericType<TYPE> tmp = *this; --m_id; return tmp; }
     public:
-      /// Raw dump of the word
-      inline void rawDump( std::ostream& os ) const
+      /// Print the word in Hex
+      inline void hexDump( std::ostream& os ) const
       {
         std::ostringstream hexW;
         hexW << std::hex << m_id;
         std::string tmpW = hexW.str();
         if ( tmpW.size() < 8 ) { tmpW = std::string(8-tmpW.size(),'0')+tmpW; }
-        os << tmpW << " :";
-        for ( int iCol = 8*sizeof(TYPE)-1; iCol >= 0; --iCol )
+        os << tmpW;
+      }
+      /// Bits dump
+      inline void bitsDump( std::ostream& os,
+                            const unsigned int nBits = 8*sizeof(TYPE),
+                            const std::string & spacer = " " ) const
+      {
+        for ( int iCol = nBits-1; iCol >= 0; --iCol )
         {
-          os << " " << isBitOn( iCol );
+          os << spacer << isBitOn( iCol );
         }
+      }
+      /// Raw dump of the word
+      inline void rawDump( std::ostream& os ) const
+      {
+        hexDump(os);
+        os << " :";
+        bitsDump(os);
       }
     protected:
       /// Update the internal data
@@ -261,7 +274,13 @@ namespace Rich
     public:
       /// Overloaded output to ostream
       friend inline std::ostream & operator << ( std::ostream & os, const EventID & id )
-      { return os << "[ EvtID=" << id.data() << " bits=" << id.activeBits() << " ]"; }
+      { 
+        os << "[ ID=" << id.data();
+        os << " Hex="; id.hexDump(os);
+        os << " Bits("<< id.activeBits() <<")="; 
+        id.bitsDump(os,id.activeBits(),"");
+        return os << " ]"; 
+      }
     public:
       /// Operator == that takes into account the correct number of bits
       inline bool operator== ( const EventID& id ) const
@@ -320,7 +339,13 @@ namespace Rich
     public:
       /// Overloaded output to ostream
       friend inline std::ostream & operator << ( std::ostream & os, const BXID & id )
-      { return os << "[ BXID=" << id.data() << " bits=" << id.activeBits() << " ]"; }
+      { 
+        os << "[ ID=" << id.data();
+        os << " Hex="; id.hexDump(os);
+        os << " Bits("<< id.activeBits() <<")="; 
+        id.bitsDump(os,id.activeBits(),"");
+        return os << " ]"; 
+      }
     public:
       /// Operator == that takes into account the correct number of bits
       inline bool operator== ( const BXID& id ) const
