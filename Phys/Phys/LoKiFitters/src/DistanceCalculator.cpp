@@ -1,4 +1,4 @@
-// $Id: DistanceCalculator.cpp,v 1.8 2010-04-18 14:10:59 graven Exp $
+// $Id: DistanceCalculator.cpp,v 1.9 2010-04-25 17:57:01 graven Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -699,7 +699,7 @@ StatusCode LoKi::DistanceCalculator::_distance
   
   // check for  the convergency
   if ( deltaZ >= m_deltaZ )
-  { Warning ( "There is no convergency-I", NoConvergency ).ignore() ; }
+  { Warning ( "There is no convergency-I", NoConvergency,0 ).ignore() ; }
   
   // evaluate chi2 (if needed) 
   if ( 0 != chi2 ) 
@@ -721,7 +721,7 @@ StatusCode LoKi::DistanceCalculator::_distance
     // prepare the Kalman Filter machinery 
     StatusCode sc = LoKi::KalmanFilter::load ( *good , m_entry ) ;
     if ( sc.isFailure() ) 
-    { return Warning("distance(I): KalmanFilter::load failed", sc ) ; }
+    { return Warning("distance(I): KalmanFilter::load failed", sc,0 ) ; }
     // get the "the previus" Kalman Filter estimate == vertex
     Gaudi::SymMatrix3x3 ci = vertex.covMatrix() ; // the gain matrix 
     if ( !ci.Invert() ) 

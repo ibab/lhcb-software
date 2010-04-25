@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.32 2010-04-18 14:10:58 graven Exp $ 
+! $Id: release.notes,v 1.33 2010-04-25 17:57:00 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiFitters
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@itep.ru
 ! Purpose     : collection of various kinematical LoKi-based fitters 
 ! -----------------------------------------------------------------------------
+
+!========================== LoKiFitters v2r4p3 2010-04-25 ===================
+! 2010-04-25 - Gerhard Raven
+ - only print some Warnings at end of job statistics
 
 !========================== LoKiFitters v2r4p2 2010-04-18 ===================
 ! 2010-04-18 - Gerhard Raven
