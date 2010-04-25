@@ -4,6 +4,7 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+!====================== RichRecSys v3r29 2010-04-26 ==========================
 ! 2010-04-24 - Chris Jones
  - Tune the "Tight" photon selection cuts for 2010 data and make these the
    default (remove the "Loose" setting for earlyData).

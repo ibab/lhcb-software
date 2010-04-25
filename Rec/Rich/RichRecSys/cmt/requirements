@@ -6,7 +6,7 @@
 #============================================================================
 
 package           RichRecSys
-version           v3r28
+version           v3r29
 
 # ================ structure ================================================
 branches          cmt doc options python
