@@ -4,6 +4,7 @@
 ! Purpose     : The Rich Global PID algorithm
 !-----------------------------------------------------------------------------
 
+!======================= RichGlobalPID v3r13 2010-04-26 ====================
 ! 2010-04-18 - Chris Jones
  - Remove code to load ProcStatus object (now available via base class)
 
