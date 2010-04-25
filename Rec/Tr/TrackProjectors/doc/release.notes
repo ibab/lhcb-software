@@ -4,6 +4,7 @@
 ! Purpose     : Package for tracking projectors
 !-----------------------------------------------------------------------------
 
+!====================== TrackProjectors v2r28 2010-03-26 ====================
 ! 2010-04-13 - Victor Coco
  - Make TrajProjector and TrackProjectorSelector aware of VeloPix
 
