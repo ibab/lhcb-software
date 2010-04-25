@@ -1,4 +1,4 @@
-// $Id: Strippingb2DMuX.py,v 1.3 2010-04-25 04:38:08 lzhang Exp $
+# $Id: Strippingb2DMuX.py,v 1.4 2010-04-25 04:49:37 lzhang Exp $
 # The stripping selection for inclusive b->DMuX.
 # The D includes D0 -> K-pi+, D+ -> K-pi+pi+, Ds+ -> K+K-pi+ and 
 # Lambda_c+ -> p+K-pi+.
@@ -14,7 +14,7 @@ Configuration file for 'Stripping inclusive DMuX events'
 """
 __author__  = "Liming Zhang"
 __date__ = '04/21/2010'
-__version__ = "version $Revision: 1.3 $"
+__version__ = "version $Revision: 1.4 $"
 
 from Gaudi.Configuration import *
 from Configurables import GaudiSequencer
