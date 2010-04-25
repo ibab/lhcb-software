@@ -1,5 +1,5 @@
 #============================================================================
-# $Id: requirements,v 1.119 2010-04-24 20:54:15 graven Exp $
+# $Id: requirements,v 1.120 2010-04-25 18:01:51 graven Exp $
 # Created    : 03/06/2005 by P. Koppenburg
 # Maintainer : G. Raven
 #============================================================================
@@ -32,6 +32,8 @@ use Magnet              v6r0    Det
 use LumiEvent           v2r6    Event ## needs HltLuminosity to be recompiled!
 use HltLuminosity       v2r16   Hlt
 use PatPV               v3r15   Tr
+use LoKiFitters         v2r4p3  Phys
+use LoKiPhys            v8r14p2 Phys
 
 
 # The rest are needed only to set up environment variables for job options
