@@ -4,6 +4,7 @@
 ! Purpose     : Package for the tracking fitting-related classes
 !-----------------------------------------------------------------------------
 
+=========================== TrackFitEvent v4r6 2010-04-26 ====================
 ! 2010-04-13 - Victor Coco
  - added VeloPixLiteMeasurment class to deal with pixel measurment for upgraded
  vertex locator. 
