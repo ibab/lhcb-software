@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.90 2010-04-24 11:35:49 mneedham Exp $
+! $Id: release.notes,v 1.91 2010-04-25 07:46:08 mneedham Exp $
 ! Package     : STKernel
 ! Responsible : M. Needham
 !----------------------------------------------------------------------------
+
+! 2010-04-25 M Needham
+ - Add dependency on RecEvent
 
 ! 2010-04-24 M. Needham
   - Add procFailure method to base class 

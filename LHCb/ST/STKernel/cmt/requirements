@@ -5,6 +5,7 @@ use GaudiKernel v*
 use GaudiAlg    v*
 use LHCbKernel  v* Kernel
 use DigiEvent   v* Event
+use RecEvent    v* Event
 use DAQEvent    v* Event
 use SiDAQ       v* Si
 use STDet       v* Det
