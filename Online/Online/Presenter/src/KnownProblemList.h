@@ -1,4 +1,4 @@
-// $Id: KnownProblemList.h,v 1.1 2010-04-22 10:18:00 robbep Exp $
+// $Id: KnownProblemList.h,v 1.2 2010-04-25 18:08:44 robbep Exp $
 #ifndef PRESENTER_KNOWNPROBLEMLIST_H
 #define PRESENTER_KNOWNPROBLEMLIST_H 1
 
@@ -21,7 +21,7 @@ class KnownProblemList: public TGListBox {
 
   virtual ~KnownProblemList( ); ///< Destructor
 
-  void retrieveListOfProblems() ;
+  bool retrieveListOfProblems( const std::string & system ) ;
 
 protected:
 

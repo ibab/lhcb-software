@@ -1,4 +1,4 @@
-// $Id: KnownProblemList.cpp,v 1.1 2010-04-22 10:18:00 robbep Exp $
+// $Id: KnownProblemList.cpp,v 1.2 2010-04-25 18:08:44 robbep Exp $
 // Include files
 
 // local
@@ -22,9 +22,7 @@
 KnownProblemList::KnownProblemList( const TGWindow * p ,
 				    const std::string & address ) : 
   TGListBox( p ) ,
-  m_problemDbServerAddress( address ) {
-  retrieveListOfProblems() ;
-}
+  m_problemDbServerAddress( address ) { }
 
 //=============================================================================
 // Destructor
@@ -34,10 +32,15 @@ KnownProblemList::~KnownProblemList() { }
 //=============================================================================
 // Retrieve current problems in problem DB
 //=============================================================================
-void KnownProblemList::retrieveListOfProblems() {
+bool KnownProblemList::retrieveListOfProblems( const std::string& system ) {
   ProblemDB pbdb( m_problemDbServerAddress ) ;
   std::vector< std::vector< std::string > > problems ;
-  pbdb.getListOfOpenedProblems( problems ) ;
+  pbdb.getListOfOpenedProblems( problems , system ) ;
+
+  if ( problems.empty() ) return false ;
+
+  RemoveAll() ;
+
   int id ;
   Pixel_t orange , green , red ;
   gClient -> GetColorByName( "orange" , orange ) ;
@@ -59,4 +62,19 @@ void KnownProblemList::retrieveListOfProblems() {
   }
 
   fLbc->ClearViewPort()  ;
+
+  // Resize according to the number of entries
+  int resizeMin = 1 ;
+  int resizeMax = 4 ;
+  if ( system == "" ) {
+    resizeMin = 2 ;
+    resizeMax = 15 ;
+  }
+
+  int nResize = 1 + problems.size() ;
+  if ( nResize <= resizeMin ) nResize = resizeMin ;
+  else if ( nResize >= resizeMax ) nResize = resizeMax ;
+  Resize( GetDefaultWidth( ) , nResize * GetItemVsize() ) ;  
+
+  return true ;
 }
