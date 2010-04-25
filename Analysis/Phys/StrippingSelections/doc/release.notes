@@ -5,6 +5,10 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-04-25 - Liming Zhang
+ - loosened cuts in Strippingb2DMuXRB and Strippingb2DMuX lines.
+ - added wrong-sign combination in Strippingb2DMuX line.
+
 ! 2010-04-23 - Greig Cowan 
  - Loosened cuts in StrippingBd2DstarMuNuLoose line. See
 http://indico.cern.ch/getFile.py/access?contribId=7&resId=1&materialId=slides&confId=77073
