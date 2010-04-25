@@ -9,7 +9,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.15 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.16 $"
 # =============================================================================
 
 import Gaudi.Configuration 
@@ -57,9 +57,6 @@ class Hlt1HadronLinesConf(HltLinesConfigurableUser) :
                 , 'SoftHadMain_PTCut'       : 1500.
                 , 'SoftHadDi_IPCut'         : 0.1
                 , 'Prescale'                : { 'Hlt1DiHadronSoft'   : 0,
-                                                'Hlt1HadronMonConf1' : 1.,
-                                                'Hlt1HadronMonConf2' : 'RATE(50000)',
-                                                'Hlt1HadronMonComp'  : 'RATE(10000)'
                                               }
                 , 'Postscale'               : { 'Hlt1HadronMonConf1' : 0.000001,
                                                 'Hlt1HadronMonConf2' : 0.000001,
