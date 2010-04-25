@@ -26,7 +26,7 @@ class TGPopupMenu;
 class TGMenuBar;
 class TGToolBar;
 class TGStatusBar;
-class TGTextView;
+class PageDescriptionTextView;
 class TGPicture;
 class TGTab;
 class TGComboBox;
@@ -55,6 +55,8 @@ class TDatime;
 class stringstream;
 
 class TBenchmark;
+
+class KnownProblemList ;
 
 class PresenterMainFrame : public TGMainFrame {
 public:
@@ -421,7 +423,7 @@ private:
   TGVerticalFrame* m_leftDatabaseAlarmFrame;
 
   std::string  m_currentPageHistogramHelp;
-  TGTextView*  m_pageDescriptionView;
+  PageDescriptionTextView*  m_pageDescriptionView;
   std::string  m_pageDescription;
 
   // File menu
@@ -568,6 +570,7 @@ private:
   TBenchmark* m_benchmark;
   int m_deadTasksOnPage;
   std::string m_currentTCK;
+
   std::vector<std::string> m_histoTimerName;
 
   std::string convDimToHistoID(const std::string & dimSvcName);
@@ -599,6 +602,9 @@ private:
   TGVerticalFrame*     m_alarmDBFilterFrame;
   TGComboBox*          m_histoDBFilterComboBox;
   TGComboBox*          m_alarmDBFilterComboBox;
+
+  /// Window with list of known problems
+  KnownProblemList *   m_globalKnownProblemList ;
 
   std::vector<int> m_alarmMessageIDs;
 

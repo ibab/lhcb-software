@@ -27,8 +27,6 @@
 #include <TGStatusBar.h>
 #include <TGTab.h>
 #include <TGTextEdit.h>
-#include <TGTextView.h>
-//#include <TGText.h>
 #include <TGToolBar.h>
 #include <TDatime.h>
 #include <TH1F.h>
@@ -37,7 +35,6 @@
 #include <TH2D.h>
 #include <TProfile.h>
 #include <TImage.h>
-//#include <TList.h>
 #include <TMath.h>
 #include <TObjArray.h>
 #include <TObject.h>
@@ -84,6 +81,7 @@
 #include "ShiftDB.h"
 #include "KnownProblemList.h"
 #include "ProblemDB.h"
+#include "PageDescriptionTextView.h"
 
 using namespace pres;
 using namespace std;
@@ -910,10 +908,10 @@ void PresenterMainFrame::buildGUI() {
 				 new TGLayoutHints(kLHintsLeft | kLHintsTop |
 						   kLHintsExpandX | kLHintsExpandY,
 						   0, 0, 0, 0 ) ) ;
-    KnownProblemList * kpList = new KnownProblemList( m_knownProblemDock ,  
-						      m_pbdbConfig ) ;
-    m_knownProblemDock -> AddFrame( kpList , 
-				    new TGLayoutHints( kLHintsLeft | kLHintsTop |
+    m_globalKnownProblemList = new KnownProblemList( m_knownProblemDock ,  
+						     m_pbdbConfig ) ;
+    m_knownProblemDock -> AddFrame( m_globalKnownProblemList , 
+				    new TGLayoutHints( kLHintsLeft | kLHintsBottom |
 						   kLHintsExpandX | kLHintsExpandY,
 						   0, 0, 0, 0 ) ) ;
     // -------------------------
@@ -970,18 +968,19 @@ void PresenterMainFrame::buildGUI() {
                                                    0, 0, 0, 0) );
 
     //== Page comments view
-    m_pageDescriptionView = new TGTextView( mainCanvasInfoGroupFrame,
-                                            600, commentSize);
+    m_pageDescriptionView = new PageDescriptionTextView( mainCanvasInfoGroupFrame,
+							 600, commentSize , m_pbdbConfig );
     mainCanvasInfoGroupFrame->AddFrame(m_pageDescriptionView, new TGLayoutHints( kLHintsLeft | kLHintsTop |
                                                                                  kLHintsExpandX,
                                                                                  2,2,2,2));
+ 
     //== splitter, to adjust the size of the page comment
     m_horizontalSplitter = new TGHSplitter( centralPageFrame,  4, 4 );
     m_horizontalSplitter->SetFrame( centralPageFrame, true);
     centralPageFrame->AddFrame( m_horizontalSplitter,
                                 new TGLayoutHints( kLHintsBottom | kLHintsExpandX));
 
-
+    
     //====================
 
     m_rightMiscFrame = new TGVerticalFrame(m_mainHorizontalFrame, 220, 494,
@@ -3753,6 +3752,7 @@ void PresenterMainFrame::toggleShowKnownProblemList() {
   } else {
     m_viewMenu->CheckEntry(SHOW_KNOWNPROBLEM_LIST_COMMAND);
     m_leftMiscFrame->ShowFrame(m_knownProblemDock);
+    m_globalKnownProblemList -> retrieveListOfProblems( "" ) ;
   }
 }
 
@@ -4195,7 +4195,13 @@ void PresenterMainFrame::loadSelectedPageFromDB(const std::string & pageName,
 
         m_pageDescriptionView->Clear();
         m_pageDescription = page->doc();
-        m_pageDescriptionView->LoadBuffer(m_pageDescription.c_str());
+
+	// If this is a Shift page, prepend to the page description
+	// the related list of problems from the ProblemDB
+	if ( "/Shift" == page -> folder() )
+	  m_pageDescriptionView -> retrieveListOfProblems( page -> name() ) ;
+	
+        m_pageDescriptionView->AddToBuffer(m_pageDescription.c_str());
         m_pageDescriptionView->DataChanged();
         // workaround attempt for ROOT painter objects:
         // reliable random crashes when below invoked... via TH painter (timing dependent?)

@@ -4,6 +4,15 @@
 ! Purpose     : GUI to allow the visualization of all data quality histograms
 !-----------------------------------------------------------------------------
 
+! 2010-04-25 - Patrick Robbe
+ - ProblemDB.cpp/.h: retrieve problems per subsystem (add an argument to the
+   function, if argument is "", returns all problems)
+ - KnownProblemList.h/.cpp: retrieve problems per subsystem
+ - PageDescriptionTextView.h/.cpp: new class to display page comments on presenter
+   (inherit most of methods from TGTextView) to allow to display known problems
+   on "Shifter" pages on top of the comment from the hist db
+ - PresenterMainFrame.cpp and requirements: use the PageDescriptionTextView class
+
 ! 2010-04-22 - Patrick Robbe
  - ProblemDB.cpp/.h: add getListOfOpenedProblems function to retrieve from 
    Problems database the list of current problems
