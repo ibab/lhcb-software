@@ -5,10 +5,96 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
-- Package Added: 
+</PRE><H1><A NAME=v9r2>2010-04-26 RecSys v9r2</A></H1><PRE>
+This version uses Gaudi v21r9 and LHCb v31r0
+
+- Early data improvements for 2009 reprocessing, and for 2010 data
+  Move to the latest new Gaudi release to fix processing on the GRID and Online issues
+  Including rate-limiting and signal-capturing watchdogs.
+
+- More fixes for excessive online warnings, magnet polarity, and problems processing large events
+
+- Repackaging of upgrade software see task #14927
+
+- Packages Added: 
   Rec/RecoUpgrade   v1r0 -- needed for reconstruction of upgraded detector
   Rec/RecoUpgradeMC v1r0 -- needed for reconstruction of upgraded detector (MC related)
   
+- Packages Updated:
+  Calo/CaloMoniDst  v5r1, Muon/MuonPIDChecker  v5r1p1, Rec/GlobalReco  v6r32p1 , Rich/RichGlobalPID v3r13,
+  Rich/RichRecQC v2r40, Rich/RichRecSys v3r29, Rich/RichRecTools v4r11, Rich/RichRecTrackTools  v1r20,
+  Tf/PatAlgorithms  v4r1, Tf/PatVelo  v3r22, Tf/TrackMatching  v2r28, Tf/TrackSys  v4r32, 
+  Tf/TsaAlgorithms  v3r19, Tr/PatPV  v3r15, Tr/TrackFitEvent  v4r6, Tr/TrackMCTools  v2r26,
+  Tr/TrackProjectors  v2r28, Tr/TrackTools  v3r30, Tr/TrackUtils  v1r36, Velo/VeloRecMonitors  v2r9
+
+- In Calo/CaloMoniDst  v5r1:
+  . test if the algorithm properties have been set before (re-)setting them in Monitor.py 
+
+- In Muon/MuonPIDChecker  v5r1p1:
+  . Initializes vector property in the cpp and fixes some definitions of cuts which are monitored 
+
+- In Rec/GlobalReco  v6r32p1:
+  . fix harmless bug in ChargedProtoParticleCALOBase 
+  . bug fix in NeutralProtoP 
+
+- In Rich/RichGlobalPID v3r13:
+  . Changes to implement updating ProcStatus when event processing aborts are triggered (task #14958) 
+
+- In Rich/RichRecQC v2r40:
+  . Many changes to histograms for online and offline monitoring
+
+- In Rich/RichRecSys v3r29:
+  . Turn on suppression of very high occupancy HPDs (>200 hits) 
+  . Reduces the # of photon candidates, speeds things up by ~ a factor of 4
+
+- In Rich/RichRecTools v4r11:
+  . Add some additional plots to the RichPID plot tool 
+
+- In Rich/RichRecTrackTools  v1r20:
+  . Changes to implement updating ProcStatus when event processing aborts are triggered (task #14958) 
+
+- In Tf/PatAlgorithms  v4r1:
+  . Change in parametrisation and some other small changes in PatAddTTCoord 
+  . Adapt to changes in MagneticFieldSvc 
+
+- In Tf/PatVelo  v3r22:
+  . Optional RZ overlap track finding in backward direction 
+
+- In Tf/TrackMatching v2r28:
+  . Add protection against hot events 
+
+- In Tf/TrackSys  v4r32:
+  . Adapt to change in MagneticFieldSvc options 
+
+- In Tf/TsaAlgorithms  v3r19:
+  . Add protection against hot events
+
+- In Tr/PatPV  v3r15:
+  . new method of transforming tracks to global coordinate system in PatPV2DFit3D 
+  . Use phi of track when transforming from R-phi to 3D and other cosmetic changes 
+
+- In Tr/TrackFitEvent  v4r6:
+  . Add VeloPixLiteMeasurement, to deal with upgraded Velo LiteCluster measurement
+
+- In Tr/TrackMCTools  v2r26:
+  . Add VeloPix case to LHCbIDsToMCHits 
+
+- In Tr/TrackProjectors  v2r28:
+  . Add VeloPix case to TrakProjectorSelector and TrajProjector 
+
+- In Tr/TrackTools  v3r30:
+  . bug fix for downstream tracks in TrackStateInitTool 
+  . added VeloTrackSelector and ITTrackSelector 
+  . adapt to changes in magnetic field service 
+
+- In Tr/TrackUtils  v1r36:
+  . Added VertexListRefiner and VertexListFilter 
+
+- In Velo/VeloRecMonitors  v2r9:
+  . bug fix in occupancy monitor
+  . Adapted configurable to deal with missing Velo tracks on RDST. Needed for offline DQ monitoring. 
+
+
 
 </PRE><H1><A NAME=v9r1>2010-04-12 RecSys v9r1</A></H1><PRE>
 This version uses Gaudi v21r8 and LHCb v30r1

@@ -32,7 +32,7 @@ use RecoUpgrade          v1r0    Rec  # Victor Coco
 use RecoUpgradeMC        v1r0    Rec  # Victor Coco
 
 # Rich
-use RichGlobalPID        v3r123  Rich # Chris Jones
+use RichGlobalPID        v3r13   Rich # Chris Jones
 use RichMarkovRingFinder v2r9    Rich # Chris Jones
 use RichPIDMerge         v2r8    Rich # Chris Jones
 use RichRecAlgorithms    v2r18   Rich # Chris Jones
