@@ -4,6 +4,7 @@
 ! Purpose     : Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+!===================== RichRecTools v4r11 2010-04-26 =========================
 ! 2010-04-12 - Chris Jones
  - Add some additional plots to the RichPID plot tool (as used by the 
    monitoring in DaVinci)
