@@ -2,6 +2,7 @@
 ! Responsible : E. Polycarpo, H. Lopes    
 !----------------------------------------------------------------------------
 
+!====================== MuonPIDChecker v5r1p1 2010-04-26 ======================
 ! 2010-04-21 - Erica Polycarpo 
  - initialized vector with values of cuts in the cpp
  - fixed some cut definitions 
