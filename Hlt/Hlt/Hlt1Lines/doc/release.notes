@@ -1,11 +1,15 @@
-! $Id: release.notes,v 1.172 2010-04-24 16:15:52 graven Exp $
+! $Id: release.notes,v 1.173 2010-04-25 10:27:00 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
-!========================== Hlt1Lines v3r3 2010-04-24 ===================
+!========================== Hlt1Lines v3r3 2010-04-25 ===================
+! 2010-04-25 - Gerhard Raven
+ - do not use PU and SPD L0 channels in beamgas lines, instead cut on the
+   PU and SPD multiplicities available from L0DU.
+
 ! 2010-04-23 - V. Gligorov
  - Revert to old clone killing until differences are understood and
    add monitoring lines for the hadrons.

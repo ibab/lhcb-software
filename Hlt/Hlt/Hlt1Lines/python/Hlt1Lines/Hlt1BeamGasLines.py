@@ -10,7 +10,7 @@
 # =============================================================================
 __author__  = "Jaap Panman jaap.panman@cern.ch"
 __author__  = "Plamen Hopchev phopchev@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.20 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.21 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -22,7 +22,8 @@ class Hlt1BeamGasLinesConf(HltLinesConfigurableUser) :
     # steering variables
     __slots__ = { 'L0ChannelBeam1'          : "B1gas"
                 , 'L0ChannelBeam2'          : "B2gas"
-                , 'L0ChannelBeamCrossing'   : [ "SPD" , "PU" ]
+                # , 'L0FilterBeamCrossing'    : "|".join( [ "L0_CHANNEL('%s')" % channel for channel in ['SPD','PU'] ] )
+                , 'L0FilterBeamCrossing'    : "|".join( [ "(L0_DATA('Spd(Mult)') > 2)" , "(L0_DATA('PUHits(Mult)') > 3)" ] )
                 , 'Beam1VtxRangeLow'        : -2000.
                 , 'Beam1VtxRangeUp'         :   600.
                 , 'Beam2VtxRangeLow'        :     0.
@@ -150,13 +151,10 @@ class Hlt1BeamGasLinesConf(HltLinesConfigurableUser) :
         bgTrigAlgos = [ algClusterCut, algExtractClust, algRTracking2, algVtxCut ]
 
         from HltLine.HltLine import Hlt1Line as Line
-        from Hlt1Lines.HltL0Candidates import L0Channels
-        channels = [ channel for channel in self.getProp('L0ChannelBeamCrossing') if channel in L0Channels() ]
-        if not channels  : return None
         line_beamCrossing = Line( lineName
                                 , priority = 200 
                                 , prescale = self.prescale
-                                , L0DU  = "|".join( [ "L0_CHANNEL('%s')" % channel for channel in channels ] )
+                                , L0DU  = self.getProp('L0FilterBeamCrossing')
                                 , algos = [ algCheckTracks ] + bgTrigAlgos
                                 , postscale = self.postscale )
 
