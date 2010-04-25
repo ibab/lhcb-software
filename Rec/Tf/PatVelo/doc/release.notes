@@ -4,6 +4,7 @@
 ! Purpose     : Velo pattern recognition
 !-----------------------------------------------------------------------------
 
+!========================== PatVelo v3r22 2010-04-26 =========================
 ! 2010-04-22 - David Hutchcroft
  - PatVeloRTracking now does the same missing sensor and 
    overlap search for RZ tracks in the backward direction as forward
