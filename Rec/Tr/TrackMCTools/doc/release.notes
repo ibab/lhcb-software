@@ -4,6 +4,7 @@
 ! Purpose     : package for tracking tools accessing MC information
 !-----------------------------------------------------------------------------
 
+!======================= TrackMCTools v2r26 2010-04-26 =======================
 ! 2010-04-13 - Victor Coco
  - Add VeloPix case to LHCbIDs2MCHits class
 
