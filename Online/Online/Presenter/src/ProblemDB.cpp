@@ -1,4 +1,4 @@
-// $Id: ProblemDB.cpp,v 1.2 2010-04-22 10:15:26 robbep Exp $
+// $Id: ProblemDB.cpp,v 1.3 2010-04-25 17:56:01 robbep Exp $
 // Include files 
 #include <iostream>
 #include <boost/asio.hpp>
@@ -111,7 +111,8 @@ std::string  ProblemDB::urlEncode ( std::string src) {
 //
 //=============================================================================
 void ProblemDB::getListOfOpenedProblems( std::vector< std::vector< std::string > > & 
-					 problems ) {
+					 problems ,
+					 const std::string & systemName ) {
   problems.clear() ;
   boost::asio::ip::tcp::iostream webStream( m_address , "http" ) ;
 
@@ -174,7 +175,11 @@ void ProblemDB::getListOfOpenedProblems( std::vector< std::vector< std::string >
       for ( ; cur != end ; ++cur ) {
 	single_line.clear() ;
 	boost::xpressive::smatch const &what = *cur ;
-	single_line.push_back( what[system] ) ;
+	std::string systn = what[ system ] ;
+	if ( "" != systemName ) 
+	  if ( systemName != systn ) 
+	    continue ;
+	single_line.push_back( systn ) ;
 	single_line.push_back( what[severity] ) ;
 	single_line.push_back( what[started_at] ) ;
 	single_line.push_back( what[id] ) ;

@@ -1,4 +1,4 @@
-// $Id: ProblemDB.h,v 1.2 2010-04-22 10:15:00 robbep Exp $
+// $Id: ProblemDB.h,v 1.3 2010-04-25 17:56:00 robbep Exp $
 #ifndef PROBLEMDB_H 
 #define PROBLEMDB_H 1
 
@@ -22,7 +22,8 @@ public:
   std::string getReference() const { return m_reference; }
 
   /// get list of currently open problems in database
-  void getListOfOpenedProblems( std::vector< std::vector< std::string > > & problems) ;
+  void getListOfOpenedProblems( std::vector< std::vector< std::string > > & problems , 
+				const std::string & system ) ;
   
 protected:
   std::string urlEncode( std::string src );
