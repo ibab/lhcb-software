@@ -1,5 +1,13 @@
-// $Id: RichPIDPlots.cpp,v 1.11 2010-02-11 20:05:28 jonrob Exp $
-// Include files
+
+//-----------------------------------------------------------------------------
+/** @file RichPIDPlots.cpp
+ *
+ *  Implementation file for RICH tool : Rich::Rec::PIDPlots
+ *
+ *  @author Chris Jones     Christopher.Rob.Jones@cern.ch
+ *  @date   2008-04-14
+ */
+//-----------------------------------------------------------------------------
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"

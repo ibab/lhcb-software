@@ -2,10 +2,7 @@
 //-----------------------------------------------------------------------------
 /** @file RichPIDPlots.h
  *
- *  Header file for RICH tool : Rich::PIDPlots
- *
- *  CVS Log :-
- *  $Id: RichPIDPlots.h,v 1.5 2009-05-04 13:54:44 jonrob Exp $
+ *  Header file for RICH tool : Rich::Rec::PIDPlots
  *
  *  @author Chris Jones     Christopher.Rob.Jones@cern.ch
  *  @date   2008-04-14
