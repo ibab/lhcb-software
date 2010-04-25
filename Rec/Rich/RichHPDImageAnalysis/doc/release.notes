@@ -4,6 +4,10 @@
 ! Purpose     : HPD image analysis from accumulated hit maps
 !-----------------------------------------------------------------------------
 
+! 2010-04-25 - Thomas BLAKE
+ - Added histograms of difference to CondDB value
+
+
 !================= Rich/RichHPDImageAnalysis v1r0 2010-03-24 ==================
 ! 2010-03-23 - Thomas BLAKE
  - Add check on existing CondDB value and protection against low occupancy

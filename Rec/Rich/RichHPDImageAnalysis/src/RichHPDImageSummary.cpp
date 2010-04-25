@@ -95,42 +95,20 @@ namespace Rich
       return StatusCode::SUCCESS;
     }
     
-    TH2D* RichHPDImageSummary::create2D( const std::string& name )
-    {
-      if ( produceHistos() ){
-        IHistogram2D* hist = book2D(name,name,-0.5,31.5,32, -0.5,31.5,32) ;
-        return Gaudi::Utils::Aida2ROOT::aida2root( hist );
-      }
-      
-      return new TH2D(name.c_str(),name.c_str(),32,-0.5,31.5,32,-0.5,31.5 ) ;
-    }
-    
-    
-    //=============================================================================
+     //=============================================================================
     // Main execution
     //=============================================================================
-    
-    StatusCode RichHPDImageSummary::timeInformation()
-    {
-      LHCb::ODIN* odin = get<LHCb::ODIN*>( LHCb::ODINLocation::Default );
-      if ( NULL == odin ){
-        return StatusCode::FAILURE;
-      }
-      else{
-        counter("RICH_EventTime") += odin->gpsTime() ;
-      }
-      return StatusCode::SUCCESS ;
-    }
-    
 
     StatusCode RichHPDImageSummary::execute() {
       
       if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
       m_nEvt++;
       
-      StatusCode sc = timeInformation();
-      if ( sc.isFailure() && m_displayWarnings ){
-        warning() << " Unable to retrieve ODIN " << endmsg;
+      LHCb::ODIN* odin = get<LHCb::ODIN*>( LHCb::ODINLocation::Default );
+      if ( odin ) {
+        counter("RICH_EventTime") += odin->gpsTime() ;
+      } else {
+        if ( m_displayWarnings ) warning() << " Unable to retrieve ODIN " << endmsg;
       }
       
       // Standard loop over Rich Smart IDs 
@@ -184,88 +162,8 @@ namespace Rich
     //=============================================================================
     //  Finalize
     //=============================================================================
-    
-    double RichHPDImageSummary::localXFromPixels( const double col ) const 
-    {
-      return col*m_pixelsize + 0.5*m_pixelsize - 0.5*m_siliconx ;
-    }
-    
-    double RichHPDImageSummary::localYFromPixels( const double row ) const 
-    {
-      return  0.5*m_silicony - row*m_pixelsize - 0.5*m_pixelsize ;
-    }
 
-    bool RichHPDImageSummary::existingCondDBIsValid( const unsigned int ID, 
-                                                       const double x0, 
-                                                       const double y0 ) const 
-    {
-      const LHCb::RichSmartID smartID = m_RichSys->richSmartID( Rich::DAQ::HPDCopyNumber( ID ) );
-      std::string sensorpath = m_RichSys->getDeHPDLocation(smartID);
-      sensorpath += ( "/SiSensor:" + boost::lexical_cast<std::string>( ID ) );
-      
-      DetectorElement* dd = getDet<DetectorElement>( sensorpath );
-      
-      Gaudi::XYZPoint zero;
-      Gaudi::XYZPoint offsetCondDB = (dd->geometry()->ownMatrix())*zero;
 
-      double condDBx = -offsetCondDB.x();
-      double condDBy = -offsetCondDB.y();
-      
-      double ds = sqrt( (x0-condDBx)*(x0-condDBx) + 
-                        (y0-condDBy)*(y0-condDBy) ) ;
-      
-      return ( ds < m_maxMovement ) ;
-    }    
-
-    void RichHPDImageSummary::summaryINFO( const unsigned int ID, const TH2D* hist ) const
-    {
-      int nPix = (int) hist->Integral();
-      if ( nPix < m_minOccupancy ) return ;
-      
-      HPDBoundaryFcn FCN( hist , m_cutFraction ); 
-      
-      int boundarySize = FCN.findBoundary() ;
-      if ( boundarySize < m_minBoundary ) return ;
-      
-      ROOT::Minuit2::MnUserParameters par;
-        
-      par.Add("Col0", 16. , 0.5 );
-      par.Add("Row0", 16. , 0.5 );
-      par.Add("Radius", 16. , 0.5 );
-      
-      ROOT::Minuit2::MnMigrad migrad( FCN, par );
-      ROOT::Minuit2::FunctionMinimum min = migrad() ;
-      
-      double Col = migrad.Value("Col0");
-      double Row = migrad.Value("Row0");
-      
-      double x0 = -1.0*localXFromPixels( Col );
-      double y0 = -1.0*localYFromPixels( Row );
-
-      if ( m_compareCondDB && 
-           existingCondDBIsValid( ID, x0, y0 ) ) {
-        if ( msgLevel(MSG::DEBUG) ) debug() << " Exisiting CondDB value ok for " << ID <<  endmsg;
-      }
-      else {
-        std::string nameHPD = "RICH_HPD_" + boost::lexical_cast<std::string>( ID );
-        
-        if ( msgLevel(MSG::DEBUG) ) debug() << " Adding " << nameHPD << endmsg ;
-        
-        double x0ErrSq = pow(m_pixelsize*migrad.Error("Col0"),2);
-        double y0ErrSq = pow(m_pixelsize*migrad.Error("Row0"),2);
-        
-        double Rad = m_pixelsize*migrad.Value("Radius");
-        double RadErrSq = pow(m_pixelsize*migrad.Error("Radius"),2);
-        
-        counter( nameHPD + "_XOffset" ) = StatEntity( nPix, nPix*x0, nPix*x0ErrSq, 0. , 0. );
-        counter( nameHPD + "_YOffset" ) = StatEntity( nPix, nPix*y0, nPix*y0ErrSq, 0. , 0. );
-        counter( nameHPD + "_Radius" )  = StatEntity( nPix, nPix*Rad, nPix*RadErrSq, 0. , 0. );
-      }
-      
-      return;
-    }
-    
-    
     StatusCode RichHPDImageSummary::finalize() {
       
       if ( msgLevel(MSG::DEBUG) ){ 
@@ -293,5 +191,106 @@ namespace Rich
       
       return RichRecHistoAlgBase::finalize();  // must be called after all other actions
     }
-  } 
-} 
+ 
+    //=============================================================================
+    
+    TH2D* RichHPDImageSummary::create2D( const std::string& name )
+    {
+      if ( produceHistos() ){
+        IHistogram2D* hist = book2D(name,name,-0.5,31.5,32, -0.5,31.5,32) ;
+        return Gaudi::Utils::Aida2ROOT::aida2root( hist );
+      }
+      
+      return new TH2D(name.c_str(),name.c_str(),32,-0.5,31.5,32,-0.5,31.5 ) ;
+    }
+    
+    //=============================================================================
+    
+    double RichHPDImageSummary::localXFromPixels( const double col ) const 
+    {
+      return col*m_pixelsize + 0.5*m_pixelsize - 0.5*m_siliconx ;
+    }
+
+    double RichHPDImageSummary::localYFromPixels( const double row ) const 
+    {
+      return  0.5*m_silicony - row*m_pixelsize - 0.5*m_pixelsize ;
+    }
+    
+    //=============================================================================
+    
+    double RichHPDImageSummary::distanceToCondDBValue( const unsigned int ID, 
+                                                       const double x0, 
+                                                       const double y0 ) const 
+    {
+      const LHCb::RichSmartID smartID = m_RichSys->richSmartID( Rich::DAQ::HPDCopyNumber( ID ) );
+      std::string sensorpath = m_RichSys->getDeHPDLocation(smartID);
+      sensorpath += ( "/SiSensor:" + boost::lexical_cast<std::string>( ID ) );
+      
+      DetectorElement* dd = getDet<DetectorElement>( sensorpath );
+      
+      Gaudi::XYZPoint zero;
+      Gaudi::XYZPoint offsetCondDB = (dd->geometry()->ownMatrix())*zero;
+
+      double condDBx = -offsetCondDB.x();
+      double condDBy = -offsetCondDB.y();
+      
+      return sqrt( (x0-condDBx)*(x0-condDBx) + 
+                   (y0-condDBy)*(y0-condDBy) ) ;
+    }    
+
+    //=============================================================================
+    
+    void RichHPDImageSummary::summaryINFO( const unsigned int ID, const TH2D* hist ) const
+    {
+      int nPix = (int) hist->Integral();
+      if ( nPix < m_minOccupancy ) return ;
+      
+      HPDBoundaryFcn FCN( hist , m_cutFraction ); 
+      
+      int boundarySize = FCN.findBoundary() ;
+      if ( boundarySize < m_minBoundary ) return ;
+      
+      ROOT::Minuit2::MnUserParameters par;
+        
+      par.Add("Col0", 16. , 0.5 );
+      par.Add("Row0", 16. , 0.5 );
+      par.Add("Radius", 16. , 0.5 );
+      
+      ROOT::Minuit2::MnMigrad migrad( FCN, par );
+      ROOT::Minuit2::FunctionMinimum min = migrad() ;
+      
+      double Col = migrad.Value("Col0");
+      double Row = migrad.Value("Row0");
+      
+      double x0 = -1.0*localXFromPixels( Col );
+      double y0 = -1.0*localYFromPixels( Row );
+
+      double ds = distanceToCondDBValue( ID, x0, y0 );
+      plot1D( ds, "dPosCondDB", "Distance between image centre and CondDB value",0.0,3.0,30);
+      plot1D( ID, "dPosCondDBvsCopyNr", "Distance versus HPD Copy Nr",-0.5,483.5,484,ds);
+      
+      if ( m_compareCondDB && ( ds < m_maxMovement ) ){
+        if ( msgLevel(MSG::DEBUG) ) debug() << " Exisiting CondDB value ok for " << ID <<  endmsg;
+      }
+      else {
+        std::string nameHPD = "RICH_HPD_" + boost::lexical_cast<std::string>( ID );
+        
+        if ( msgLevel(MSG::DEBUG) ) debug() << " Adding " << nameHPD << endmsg ;
+        
+        double x0ErrSq = pow(m_pixelsize*migrad.Error("Col0"),2);
+        double y0ErrSq = pow(m_pixelsize*migrad.Error("Row0"),2);
+        
+        double Rad = m_pixelsize*migrad.Value("Radius");
+        double RadErrSq = pow(m_pixelsize*migrad.Error("Radius"),2);
+        
+        counter( nameHPD + "_XOffset" ) = StatEntity( nPix, nPix*x0, nPix*x0ErrSq, 0. , 0. );
+        counter( nameHPD + "_YOffset" ) = StatEntity( nPix, nPix*y0, nPix*y0ErrSq, 0. , 0. );
+        counter( nameHPD + "_Radius" )  = StatEntity( nPix, nPix*Rad, nPix*RadErrSq, 0. , 0. );
+      }
+      
+      return;
+    }
+    
+    //=============================================================================
+  } // Namespace Mon 
+} // Namespace Rich

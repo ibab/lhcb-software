@@ -47,21 +47,20 @@ namespace Rich
       
       /// Perform fit and publish HPD summary information
       void summaryINFO( const unsigned int ID, const TH2D* hist ) const;
+      
+      //  Conditional booking of 2D histograms
       TH2D* create2D( const std::string& name )  ;
       
-      /// Retrieve ODIN gps time and update counters
-      StatusCode timeInformation() ;      
-
       /// Calculate the local x position from a col nr in pixels
       double localXFromPixels( const double col ) const ;
 
       /// Calculate the local y position from a row nr in pixels
       double localYFromPixels( const double row ) const ;
       
-      /// Check if existing CondDB value is valid
-      bool existingCondDBIsValid( const unsigned int ID, 
-                                  const double x0, 
-                                  const double y0 ) const ;
+      /// Distance from image centre to existing CondDB value
+      double distanceToCondDBValue( const unsigned int ID, 
+                                    const double x0, 
+                                    const double y0 ) const ;
       
     private:
       
