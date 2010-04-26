@@ -4,6 +4,7 @@
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
 
+!======================== RichDet v14r2 2010-04-26 ===========================
 ! 2010-04-23 - Antonis Papanestis
  - Added protection for a zero second order demagnification factor. The
    solution becomes linear with inverse 1st order factor
