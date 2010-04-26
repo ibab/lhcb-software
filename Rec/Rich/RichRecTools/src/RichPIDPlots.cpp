@@ -92,13 +92,13 @@ void PIDPlots::plots( const LHCb::ProtoParticle * proto,
     const double accEff( proto->richPID() ? 100.0 : 0.0 );
     
     // Eff v P and Pt plots
-    std::string title = "Eff. RICH acceptance Versus P (MeV/c)";
+    std::string title = "Eff. RICH acceptance Versus P (MeV)";
     richProfile1D( HID(title,hypo), title,
                    config.minP, config.maxP, nBins1D() )->fill(pTot,accEff);
-    title = "Eff. RICH acceptance Versus Pt (MeV/c)";
+    title = "Eff. RICH acceptance Versus Pt (MeV)";
     richProfile1D( HID(title,hypo), title,
                    config.minPt, config.maxPt, nBins1D() )->fill(pT,accEff);
-    title = "Eff. RICH acceptance Versus P,Pt (MeV/c)";
+    title = "Eff. RICH acceptance Versus P,Pt (MeV)";
     richProfile2D( HID(title,hypo), title,
                    config.minP,  config.maxP,  nBins2D(),
                    config.minPt, config.maxPt, nBins2D() )->fill(pTot,pT,accEff);
@@ -160,15 +160,15 @@ void PIDPlots::plots( const LHCb::RichPID * pid,
 
         // Efficiency plots
         title.str("");
-        title << "Eff. RichDLL(" << DllDiff << ")>" << m_dllCut << " Versus P (MeV/c)";
+        title << "Eff. RichDLL(" << DllDiff << ")>" << m_dllCut << " Versus P (MeV)";
         richProfile1D( HID(title.str(),hypo), title.str(),
                        config.minP, config.maxP, nBins1D() )->fill(pTot,eff);
         title.str("");
-        title << "Eff. RichDLL(" << DllDiff << ")>" << m_dllCut << " Versus Pt (MeV/c)";
+        title << "Eff. RichDLL(" << DllDiff << ")>" << m_dllCut << " Versus Pt (MeV)";
         richProfile1D( HID(title.str(),hypo), title.str(),
                        config.minPt, config.maxPt, nBins1D() )->fill(pT,eff);
         title.str("");
-        title << "Eff. RichDLL(" << DllDiff << ")>" << m_dllCut << " Versus P,Pt (MeV/c)";
+        title << "Eff. RichDLL(" << DllDiff << ")>" << m_dllCut << " Versus P,Pt (MeV)";
         richProfile2D( HID(title.str(),hypo), title.str(),
                        config.minP,  config.maxP,  nBins2D(),
                        config.minPt, config.maxPt, nBins2D() )->fill(pTot,pT,eff);
@@ -180,7 +180,7 @@ void PIDPlots::plots( const LHCb::RichPID * pid,
         richHisto1D( HID(title.str(),hypo), title.str(),
                      -30, 30, nBins1D() )->fill(nsigma);
         title.str("");
-        title << "# Sigma(" << DllDiff << ") Versus P (MeV/c)";
+        title << "# Sigma(" << DllDiff << ") Versus P (MeV)";
         richProfile1D( HID(title.str(),hypo), title.str(),
                        config.minP, config.maxP, nBins1D() )->fill(pTot,nsigma);
 
