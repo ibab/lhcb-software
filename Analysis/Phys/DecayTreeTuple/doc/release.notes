@@ -4,6 +4,10 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2010-04-26 - Patrick Koppenburg
+ - New tool TupleToolStripping that reads the stripping decisions from
+   DecReports.
+
 ! 2010-04-23 - Jibo He
  - TupleToolTrackInfo
    Track->key() added to help check whether several candidates in one event
