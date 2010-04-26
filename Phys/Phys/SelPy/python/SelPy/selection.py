@@ -261,8 +261,9 @@ class FlatSelectionListBuilder(object) :
                  TopSelection) :
 
         _alg = TopSelection.algorithm()
-        self.selectionList = [_alg]
+        self.selectionList = []
         if (_alg != None) :
+            self.selectionList.append(_alg)
             self._buildSelectionList( TopSelection.requiredSelections )
             self.selectionList.reverse()
             self.selectionList = remove_duplicates(self.selectionList)
