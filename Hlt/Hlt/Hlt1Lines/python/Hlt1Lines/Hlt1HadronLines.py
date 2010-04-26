@@ -9,7 +9,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.17 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.18 $"
 # =============================================================================
 
 import Gaudi.Configuration 
@@ -132,7 +132,7 @@ class Hlt1HadronLinesConf(HltLinesConfigurableUser) :
             conf = [Member ( 'TF', '2Velo', InputSelection = '%s' %OutputOfConf
                            , FilterDescriptor = [ 'IP_PV2D,||>,%s' %cutvalue ]
                            , HistogramUpdatePeriod = 1
-                           , HistoDescriptor = histosfilter('IP_PV2D_'+type,-0.2,1.8,200))]
+                           , HistoDescriptor = histosfilter('IP_PV2D_'+type,-0.3,3.,2000))]
 
             return bindMembers(prefix,conf)
 
@@ -201,7 +201,7 @@ class Hlt1HadronLinesConf(HltLinesConfigurableUser) :
             elif type == "Di"     : cutvalue = self.getProp("HadDi_IPCut")
             else                  : return None # Not an allowed value!
        
-            OutputOfConfirmation = confirmationpostip('Di').outputSelection()
+            OutputOfConfirmation = confirmationpostip(type).outputSelection()
  
             comp += [ Member ( 'TF', '1UVelo'
                                , FilterDescriptor = ['MatchIDsFraction_%s,<,0.9' %OutputOfConfirmation ]
