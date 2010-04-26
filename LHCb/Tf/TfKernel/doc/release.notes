@@ -4,6 +4,7 @@
 ! Purpose     : Core classes for the Tf framework
 !-----------------------------------------------------------------------------
 
+!============================ TfKernel v2r17 2010-04-26 ======================
 ! 2010-04-07 Wouter Hulsbergen
  - replaced LoKi::Range with Gaudi::Range
  - added method to IITHitCreator interface to create hit for given LHCbID
