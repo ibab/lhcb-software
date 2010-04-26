@@ -4,6 +4,7 @@
 ! Purpose     : Interface package to Geometry and Conditions DB
 !-----------------------------------------------------------------------------
 
+!========================== DDDB v1r30 2010-04-26 ============================
 ! 2010-04-23 - Marco Cattaneo
  - Adapt to change of MagneticFieldSvc options
 
