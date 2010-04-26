@@ -157,7 +157,7 @@ class _copyPVRelations(CopyWithBranch) :
                 if hasattr(sel,'algorithm') :
                     alg = sel.algorithm()
                     refitPVs = False
-                    if alg.properties().has_key('ReFitPVs') :
+                    if alg != None and alg.properties().has_key('ReFitPVs') :
                         refitPVs =  alg.getProp('ReFitPVs')
                     if refitPVs :
                         cloner.ClonerType = clonerType
