@@ -1,4 +1,4 @@
-// $Id: TrackMasterFitter.h,v 1.33 2010-04-08 11:48:15 wouter Exp $
+// $Id: TrackMasterFitter.h,v 1.34 2010-04-26 14:14:46 wouter Exp $
 #ifndef TRACKFITTER_TRACKMASTERFITTER_H 
 #define TRACKFITTER_TRACKMASTERFITTER_H 1
 
@@ -138,6 +138,7 @@ private:
 
   double m_scatteringPt ;           ///< transverse momentum used for scattering if track has no good momentum estimate
   double m_scatteringP ;            ///< momentum used for scattering in e.g. magnet off data
+  double m_minMomentumForScattering ; ///< Minimum momentum used for scattering
   double m_maxMomentumForScattering ; ///< Maximum momentum used for scattering
   size_t m_minNumVeloRHits   ; ///< Minimum number of VeloR hits
   size_t m_minNumVeloPhiHits ; ///< Minimum number of VeloPhi hits

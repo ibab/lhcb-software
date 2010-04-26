@@ -1,4 +1,4 @@
-// $Id: TrackMasterFitter.cpp,v 1.87 2010-04-08 11:48:14 wouter Exp $
+// $Id: TrackMasterFitter.cpp,v 1.88 2010-04-26 14:14:46 wouter Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -97,6 +97,7 @@ TrackMasterFitter::TrackMasterFitter( const std::string& type,
   declareProperty( "ApplyEnergyLossCorr", m_applyEnergyLossCorrections = true ) ;
   declareProperty( "TransverseMomentumForScattering", m_scatteringPt = 400.*Gaudi::Units::MeV );
   declareProperty( "MomentumForScattering", m_scatteringP = -1 );
+  declareProperty( "MinMomentumForScattering", m_minMomentumForScattering = 100.*Gaudi::Units::GeV );
   declareProperty( "MaxMomentumForScattering", m_maxMomentumForScattering = 500.*Gaudi::Units::GeV );
   declareProperty( "MinNumVeloRHitsForOutlierRemoval",   m_minNumVeloRHits   = 2 ) ;
   declareProperty( "MinNumVeloPhiHitsForOutlierRemoval", m_minNumVeloPhiHits = 2 ) ;
@@ -333,8 +334,9 @@ StatusCode TrackMasterFitter::determineStates( Track& track ) const
   for( LHCb::TrackFitResult::NodeContainer::reverse_iterator inode = nodes.rbegin() ;
        inode != nodes.rend() && !lastMeasurementNode; ++inode ) 
     if( (*inode)->hasMeasurement() ) lastMeasurementNode = *inode ;
-  if ( ( m_upstream && !track.checkFlag(Track::Backward ) ) ||
-       ( !m_upstream && track.checkFlag(Track::Backward ))) 
+  bool upstream = nodes.front()->z() > nodes.back()->z() ;
+  if ( ( upstream && !track.checkFlag(Track::Backward ) ) ||
+       ( !upstream && track.checkFlag(Track::Backward ))) 
     std::swap( lastMeasurementNode, firstMeasurementNode ) ;
   firstMeasurementNode->state().setLocation( State::FirstMeasurement );
   track.addToStates(firstMeasurementNode->state()) ;
@@ -573,12 +575,14 @@ StatusCode TrackMasterFitter::makeNodes( Track& track, LHCb::ParticleID pid ) co
   }
 
   // Sort the nodes in z
-  if ( m_upstream ) {
+  bool backward = track.checkFlag(LHCb::Track::Backward) ;
+  bool upstream = (m_upstream&&!backward) || (!m_upstream&&backward) ;
+  if ( upstream ) {
     std::stable_sort( nodes.begin(), nodes.end(), TrackFunctor::decreasingByZ<Node>());
   } else {
     std::stable_sort( nodes.begin(), nodes.end(), TrackFunctor::increasingByZ<Node>());
   }
-
+  
   // Set the reference using a TrackTraj
   LHCb::TrackTraj::StateContainer states ;
   states.insert( states.end(), track.states().begin(), track.states().end() ) ;
@@ -661,8 +665,9 @@ StatusCode TrackMasterFitter::updateMaterialCorrections(LHCb::Track& track, LHCb
       double tanth  = std::max(std::sqrt( slope2/(1+slope2)),1e-4) ;
       scatteringMomentum = m_scatteringPt/tanth ;
     }
-    // always allow some scattering
-    scatteringMomentum = std::min( scatteringMomentum, m_maxMomentumForScattering );
+    // set some limits for the momentum used for scattering
+    scatteringMomentum = std::min( scatteringMomentum, m_maxMomentumForScattering ) ;
+    scatteringMomentum = std::max( scatteringMomentum, m_minMomentumForScattering ) ;
 
     // if m_scatteringP is set, use it
     if( m_scatteringP>0 ) scatteringMomentum = m_scatteringP ;
@@ -710,14 +715,17 @@ StatusCode TrackMasterFitter::updateTransport(LHCb::Track& track) const
     LHCb::TrackFitResult::NodeContainer::iterator inode = nodes.begin() ;
     const LHCb::StateVector* refvector = &((*inode)->refVector()) ;
     TrackMatrix F = TrackMatrix( ROOT::Math::SMatrixIdentity() );
-    for(++inode; inode!=nodes.end(); ++inode) {
+    for(++inode; inode!=nodes.end() && sc.isSuccess() ; ++inode) {
       
       FitNode* node = dynamic_cast<FitNode*>(*inode) ;
       double z = node->z() ;
       LHCb::StateVector statevector = *refvector ;
       StatusCode thissc = extrap -> propagate(statevector,z,&F) ;
       if ( thissc.isFailure() ) {
-        error() << "unable to propagate reference vector from z=" << refvector->z() 
+	std::stringstream msg ;
+	msg << "Unable to propagate reference vector for track type: " << track.type() ;
+	Warning(msg.str(),StatusCode::SUCCESS).ignore() ;
+        debug() << "unable to propagate reference vector from z=" << refvector->z() 
 		<< " to " << z 
 		<< "; track type = " << track.type()
 		<< ": vec = " << refvector->parameters() << endmsg ;
@@ -817,7 +825,7 @@ StatusCode TrackMasterFitter::initializeRefStates(LHCb::Track& track,
     const ITrackExtrapolator* extrap = extrapolator( track.type() ) ;
     LHCb::Track::StateContainer newstates ;
     for( ZPosWithStateContainer::iterator it = states.begin();
-         it != states.end() ; ++it) 
+         it != states.end() && sc.isSuccess() ; ++it) 
       if( it->second == 0 ) {
         // find the nearest existing state to it
         ZPosWithStateContainer::iterator best= states.end() ;
@@ -833,20 +841,26 @@ StatusCode TrackMasterFitter::initializeRefStates(LHCb::Track& track,
         int direction = best > it ? -1 : +1 ;
         LHCb::StateVector statevec( best->second->stateVector(), best->second->z() ) ;
         for( ZPosWithStateContainer::iterator jt = best+direction ;
-             jt != it+direction ; jt += direction) {
+             jt != it+direction && sc.isSuccess() ; jt += direction) {
           StatusCode thissc = extrap->propagate( statevec, jt->first, 0, pid ) ;
-          LHCb::State* newstate = new LHCb::State( statevec ) ;
-          jt->second = newstate ;
-          newstates.push_back( newstate ) ;
-          if( !thissc.isSuccess() ) {
-            error() << "Problem propagating state in LongTrackReferenceCreator::createReferenceStates" << endmsg ;
+	  if( !thissc.isSuccess() ) {
+	    Warning("initializeRefStates() fails in propagating state",StatusCode::FAILURE).ignore() ;
+            debug() << "Problem propagating state: " << statevec << " to z= " << jt->first << endmsg ;
             sc = thissc ;
+          } else {
+	    LHCb::State* newstate = new LHCb::State( statevec ) ;
+	    jt->second = newstate ;
+	    newstates.push_back( newstate ) ;
           }
         }
       }
     
     // finally, copy the new states to the track. 
-    track.addToStates( newstates ) ;
+    if( sc.isSuccess() ) {
+      track.addToStates( newstates ) ;
+    } else {
+      BOOST_FOREACH( LHCb::State* state, newstates) delete state ;
+    }
   }
   return sc ;
 }
