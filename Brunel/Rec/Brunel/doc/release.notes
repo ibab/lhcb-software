@@ -37,6 +37,8 @@ Purpose: LHCb reconstruction program
   . Switch on RZ overlap track finding in backward direction (PatVelo)
   . Fixes to MuonPID Monitoring (MuonPIDChecker)
   . Disable booking of Rich Root Ntuple by default. (RichRecQC)
+  . Convert histos to profiles, add monitoring of decoding errors (RichRecQC)
+  . Improve Aerogel monitoring (RichRecQC)
 
 </PRE><H1><A NAME=v37r1>2010-04-15 Brunel v37r1</A></H1><PRE>
 - Changes to Configurable
