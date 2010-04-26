@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltPVs.py,v 1.4 2010-04-23 17:09:19 gligorov Exp $
+# $Id: HltPVs.py,v 1.5 2010-04-26 12:50:48 gligorov Exp $
 # =============================================================================
 ## @file HltTracking/HltPVs.py
 #  Define the 2D and 3D primary vertex making algorithms for the Hlt
@@ -49,6 +49,40 @@ from HltVertexNames import HltGlobalVertexLocation
 
 #### Primary vertex algorithms...
 
+def ForcedRecoVeloForPVs() :
+    # The temporary fix for the PV problem by Kalman fitting all the Velo tracks assuming
+    # a 400 MeV PT.
+    # TODO: replace this with a proper solution!!!
+
+    from HltReco import MinimalRZVelo
+ 
+    outputTracks = "Hlt/Track/ForcedVelo"
+    outputFitted = "Hlt/Track/SpecialFitted/ForcedVelo"
+
+    from Configurables import Tf__PatVeloSpaceTracking, Tf__PatVeloSpaceTool 
+    recoVelo		 = Tf__PatVeloSpaceTracking('HltForcedRecoVeloForPV'
+                                       	, InputTracksName  = MinimalRZVelo.outputSelection() 
+                                       	, OutputTracksName = outputTracks )
+    
+    recoVelo.addTool( Tf__PatVeloSpaceTool, name="PatVeloSpaceTool" )
+    recoVelo.PatVeloSpaceTool.MarkClustersUsed=False
+
+    from Configurables import TrackEventFitter, TrackMasterFitter
+    HltForcedFastFitForPV_name      = "HltForcedFastFitForPV"
+    HltForcedFastFitForPV           = TrackEventFitter(HltForcedFastFitForPV_name)
+    HltForcedFastFitForPV.TracksInContainer	    = outputTracks 
+    HltForcedFastFitForPV.TracksOutContainer    = outputFitted  
+    
+    HltForcedFastFitForPVSeq_name               = HltForcedFastFitForPV_name+'Seq'
+    HltForcedFastFitForPVSeq                    = GaudiSequencer(HltForcedFastFitForPVSeq_name)
+    HltForcedFastFitForPVSeq.Members            = [ HltForcedFastFitForPV ]
+  
+    HltForcedFastFitForPV.addTool(TrackMasterFitter, name = 'Fitter')
+    from TrackFitter.ConfiguredFitters import ConfiguredMasterFitter
+    fitter = ConfiguredMasterFitter(getattr(HltForcedFastFitForPV,'Fitter'), SimplifiedGeometry=True, LiteClusters=True)
+    
+    return bindMembers("HltForcedRecoVeloForPV",[recoVelo,HltForcedFastFitForPVSeq]).setOutputSelection(outputFitted) 
+
 def PV2D() :
 
     from Configurables import PatPV2DFit3D, PVOfflineTool
@@ -63,7 +97,6 @@ def PV2D() :
     recoCheatPV2D.OutputVerticesName = "Hlt/Vertex/PV2D"
     recoCheatPV2D.PVOfflineTool.InputTracks = [ "Hlt1/Track/Velo" ]
     
-    
     EarlyData = False
     if EarlyData :
         recoCheatPV2D.PVOfflineTool.addTool(PVSeedTool, "PVSeedTool")
@@ -75,7 +108,7 @@ def PV2D() :
         recoCheatPV2D.PVOfflineTool.LSAdaptPVFitter.MinTracks = 2 
         
 
-    prepareCheatedPV2D = HltVertexFilter( 'Hlt1PrepareCheatedPV2D'
+    prepareForcedPV2D = HltVertexFilter( 'Hlt1PrepareForcedPV2D'
                              , InputSelection = "TES:" + recoCheatPV2D.OutputVerticesName
                              , RequirePositiveInputs = False
                              , FilterDescriptor = ["VertexZPosition,>,-5000","VertexTransversePosition,>,-1"]
@@ -86,14 +119,17 @@ def PV2D() :
                                                     }
                              , OutputSelection   = "PV2D" )
 
-    from Configurables import HltTrackUpgradeTool
-    from HltLine.HltLine import Hlt1Member as Member
+    recoCheatPV2D.PVOfflineTool.InputTracks = [ForcedRecoVeloForPVs().outputSelection()]
 
-    upgrade2Dto3D =  Member ( 'TU', 'Velo',  RecoName = 'Velo')
+    return bindMembers( "HltPVsForcedPV2D", [ MinimalRZVelo, ForcedRecoVeloForPVs(), recoCheatPV2D, prepareForcedPV2D ] )  
+ 
+    #from Configurables import HltTrackUpgradeTool
+    #from HltLine.HltLine import Hlt1Member as Member 
+    #upgrade2Dto3D =  Member ( 'TU', 'Velo',  InputSelection = "TES:Hlt/Track/RZVelo" , RecoName = 'Velo')
+    #from HltReco import RZVelo
+    #return bindMembers( "HltPVsForcedPV2D", [ RZVelo, upgrade2Dto3D, recoCheatPV2D, prepareForcedPV2D ] )
 
-    from HltReco import RZVelo
-
-    return bindMembers( "HltPVsCheatedPV2D", [ RZVelo, upgrade2Dto3D, recoCheatPV2D, prepareCheatedPV2D ] )
+    #return bindMembers( "HltPVsForcedPV2D", [ MinimalRZVelo, upgrade2Dto3D, recoCheatPV2D, prepareForcedPV2D ] )
     
     # End of temporary cheat, rest of code is ignored for now!!!
 
@@ -123,6 +159,7 @@ def PV3D() :
 
     from Configurables import PatPV3D
     from Hlt2TrackingConfigurations import Hlt2UnfittedForwardTracking
+    from Hlt2TrackingConfigurations import Hlt2BiKalmanFittedLongTracking
     from Configurables import PVOfflineTool,PVSeedTool,LSAdaptPVFitter 
 
     output3DVertices = _vertexLocation(HltSharedVerticesPrefix,HltGlobalVertexLocation,Hlt3DPrimaryVerticesName)
@@ -130,9 +167,10 @@ def PV3D() :
     recoPV3D =  PatPV3D('HltPVsPV3D' )
     recoPV3D.addTool(PVOfflineTool,"PVOfflineTool")
     recoPV3D.OutputVerticesName = output3DVertices
-    recoPV3D.PVOfflineTool.InputTracks = [ (Hlt2UnfittedForwardTracking().hlt2VeloTracking()).outputSelection() ]
+    recoPV3D.PVOfflineTool.InputTracks = [ForcedRecoVeloForPVs().outputSelection()] 
+    #recoPV3D.PVOfflineTool.InputTracks = [ (Hlt2UnfittedForwardTracking().hlt2VeloTracking()).outputSelection() ]
+    #recoPV3D.PVOfflineTool.InputTracks = [ (Hlt2BiKalmanFittedLongTracking().hlt2PrepareTracks()).outputSelection() ]   
 
-    
     EarlyData = False
     if EarlyData :
 
@@ -143,6 +181,7 @@ def PV3D() :
         recoPV3D.PVOfflineTool.PVSeedTool.ratioSig2HighMult = 1
         recoPV3D.PVOfflineTool.PVSeedTool.ratioSig2LowMult =1
         recoPV3D.PVOfflineTool.LSAdaptPVFitter.MinTracks = 2 
-        
-    
-    return bindMembers( "HltPVsPV3D", [ Hlt2UnfittedForwardTracking().hlt2VeloTracking(), recoPV3D ] )
+     
+    return bindMembers( "HltPVsPV3D", [ ForcedRecoVeloForPVs(), recoPV3D ] )   
+    #return bindMembers( "HltPVsPV3D", [ Hlt2BiKalmanFittedLongTracking().hlt2PrepareTracks(), recoPV3D ] )
+    #return bindMembers( "HltPVsPV3D", [ Hlt2UnfittedForwardTracking().hlt2VeloTracking(), recoPV3D ] )
