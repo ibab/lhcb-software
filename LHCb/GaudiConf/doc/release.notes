@@ -3,6 +3,7 @@
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
 
+!======================== GaudiConf v13r5 2010-04-26 ========================
 ! 2010-04-21 - Marco Cattaneo
  - Add SDST ("slim" or "stripping" DST) type to DstConf. Content is identical
    to real data DST, minus DAQ/RawEvent.
