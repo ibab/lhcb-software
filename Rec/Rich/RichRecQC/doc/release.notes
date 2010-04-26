@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 !======================= RichRecQC v2r40 2010-04-26 ========================
+! 2010-04-26 - Chris Jones
+ - Suppress check between ODIN and Ingress Event ID (known not to work). Change aerogel CK theta plot lower limit.
+
 ! 2010-04-24 - Chris Jones
  - Fix some doxygen comments
  - Add some options to RichRecoQC to allow a tuned 'aerogel' monitor, better
