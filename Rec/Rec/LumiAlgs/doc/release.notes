@@ -4,6 +4,11 @@
 ! Purpose     : Accounting of LumiSummaries (offline code)
 !-----------------------------------------------------------------------------
 
+! 2010-04-27 - Rob Lambert
+ - Added PropagateFSRs algorithm
+   . Collects all filename->GUID releations
+   . Should also collect all FSRs and then write tree in Finalize
+
 !========================== LumiAlgs v3r4p1 2010-04-26 ========================
 ! 2010-04-26 - Juan Palacios
  - Configurable does not stop job if InputType == 'SDST'.
