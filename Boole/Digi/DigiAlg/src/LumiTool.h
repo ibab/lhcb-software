@@ -1,4 +1,4 @@
-// $Id: LumiTool.h,v 1.5 2005-12-15 13:56:37 cattanem Exp $ 
+// $Id: LumiTool.h,v 1.6 2010-04-26 15:30:37 cattanem Exp $ 
 #ifndef LUMITOOL_H
 #define LUMITOOL_H 1
 
@@ -43,8 +43,8 @@ public:
   StatusCode numInteractions( int& number );
 
 private:
-  float             m_bunchCrossRate; ///< bunch crossing rate (MHz)
-  float             m_totalXSection;  ///< total cross-section (mbarn)
+  double m_bunchCrossRate; ///< bunch crossing rate (MHz)
+  double m_totalXSection;  ///< total cross-section (mbarn)
 
   IRndmGenSvc*      m_randSvc;        ///< pointer to random numbers service
 };

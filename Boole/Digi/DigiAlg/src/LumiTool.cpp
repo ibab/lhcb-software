@@ -1,4 +1,4 @@
-// $Id: LumiTool.cpp,v 1.6 2006-05-10 15:54:54 cattanem Exp $ 
+// $Id: LumiTool.cpp,v 1.7 2010-04-26 15:30:37 cattanem Exp $ 
 
 // Include files
 #include "LumiTool.h"
@@ -67,7 +67,7 @@ StatusCode LumiTool::numInteractions( int& nEvents ) {
   // Get luminosity from generated event
   LHCb::GenHeader* pEvent = get<LHCb::GenHeader>( 
                                 LHCb::GenHeaderLocation::Default );
-  float currentLumi = pEvent->luminosity() * Gaudi::Units::cm2 
+  double currentLumi = pEvent->luminosity() * Gaudi::Units::cm2 
                                            * Gaudi::Units::s / 1.e32;
 
   if( 0. < currentLumi ) {
@@ -79,15 +79,15 @@ StatusCode LumiTool::numInteractions( int& nEvents ) {
   }
 
   //  Average number of interactions per bunch crossing
-  float averageInter = m_totalXSection * currentLumi / m_bunchCrossRate / 10.;
+  double averageInter = m_totalXSection * currentLumi / m_bunchCrossRate / 10.;
   
   SmartIF<IRndmGen> genRndmPois;
   StatusCode sc;
 
   sc = m_randSvc->generator(Rndm::Poisson(averageInter), genRndmPois.pRef());
   if(sc.isSuccess()){
-    float fltNEvents = genRndmPois->shoot();
-    float tmp = fltNEvents - (int)fltNEvents;
+    double fltNEvents = genRndmPois->shoot();
+    double tmp = fltNEvents - (int)fltNEvents;
     if ( tmp >= 0.5){
       nEvents = (int)(fltNEvents+0.5);
     }
