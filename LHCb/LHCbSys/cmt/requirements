@@ -116,9 +116,9 @@ use CondDBEntityResolver  v5r1    Tools   # In SVN. Marco Clemencic
 use CondDBUI              v3r3    Tools   # In SVN. Marco Clemencic
 use XmlTools              v6r3p1  Tools   # In SVN. Marco Clemencic
 use TfKernel              v2r17   Tf      # Stephanie Hansmann-Menzemer
-use TrackInterfaces       v4r12   Tr      # Matt Needham
-use TrackKernel           v1r2    Tr      # Wouter Hulsbergen
 use TsaKernel             v3r6    Tf      # Matt Needham
+use TrackInterfaces       v4r12   Tr      # Matt Needham
+use TrackKernel           v1r3    Tr      # Wouter Hulsbergen
 
 # Declare this as a container package
 apply_pattern container_package

@@ -5,6 +5,119 @@
 ! Purpose     : LHCb base classes and event model
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v31r0>2010-04-26 LHCbSys v31r0</A></H1><PRE>
+This version uses Gaudi v21r9 and LCG_58c
+
+- Packages modified: CaloDAQ v4r20, DAQUtils v1r3, DDDB v1r30, Magnet v7r0,
+    RichDet v14r2, VeloPixDet v1r5, LumiEvent v2r6, MCEvent v2r17,
+    PackedEvent v4r1p1, GaudiConf v13r5, LHCbKernel v12r0, OTDAQ v7r8,
+    LoKiCore v10r0, LoKiGen v9r0, LoKiHlt v3r0, LoKiMC v9r0, LoKiNumbers v9r0,
+    RichKernel v7r34, RichRecBase v3r30, STKernel v2r1, TfKernel v2r17,
+    TsaKernel v3r6, TrackKernel v1r3
+
+- In CaloDAQ v4r20
+  . (I)Calo(L0)DataProvider : implement user-defined default value in adc
+    (id,default=0) and digit(id,default=0) methods 
+
+- In DAQUtils v1r3
+  . RawBankReadoutStatusFilter:
+    o protect against missing status container
+  - o bug fix + implement property-driven filtering inversion
+	. OdinTypesFilter : fix printout
+  . RawEventDump : allow to select the RawBank to be dumped (default ALL)
+
+- In DDDB v1r30
+  . Adapt to change of MagneticFieldSvc options
+  . Changed default tags for 2009 and 2010 data:
+    o head-20100407         for DDDB
+    o head-20100414         for LHCBCOND
+  . Changed default tag for 2009 MC:
+    o MC-20100412-vc15mm-md100 for SIMCOND
+
+- In Magnet v7r0, v6r0
+  . Change to unambiguous names of accessor functions for MagneticFieldSvc
+    (scaleFactor -> signedRelativeCurrent, polarity => is Down)
+  . Fix definition of signedRelativeCurrent and isDown
+  . Make sure that if fieldmap is specified by property, it is still 
+    read when using ConDB.
+
+- In LHCbKernel v12r0, RichDet v14r2
+  . Adapt to changes in magnetic field service interface
+
+- In RichDet v14r2
+  . Added protection for a zero second order demagnification factor. The
+    solution becomes linear with inverse 1st order factor
+  . Fixed a bug (m_MDMS_version was a bool instead of an int)
+  . Include (n-1) scale factor in printout on gas refractive index updates.
+  . Changes for a new HPD magnification algorithm in the presence of magnetic 
+    field.
+
+- In VeloPixDet v1r5
+  . Bug fix in DeVeloPixSquareType ( reverse fraction in x position
+    calculation for outer chips).
+
+- In LumiEvent v2r6
+  . Enable an additional lumi bookkeeping method for random lumi events
+    (needed due to microbias trigger)
+  . add counter value in enum of LumiCounters
+  . add enum value in LumiMethod to hold values to flag random Lumi 
+
+- In MCEvent v2r17
+  . Add support for new RICH background source; Scintillation in the CF4 
+    radiator medium
+
+- In PackedEvent v4r1p1
+  . Fix printout of packing version number in case of exception
+
+- In GaudiConf v13r5
+  . Add SDST ("slim" or "stripping" DST) type to DstConf. Content is identical
+    to real data DST, minus DAQ/RawEvent.
+
+- In OTDAQ v7r8, LoKiGen v9r0, LoKiHlt v3r0, LoKiMC v9r0, LoKiNumbers v9r0,
+     TfKernel v2r17, TsaKernel v3r6
+  . Replaced Loki::Range with Gaudi::Range_
+
+- In LoKiCore v10r0
+  . Scalers.cpp: fix compilation warnings for slc4-ia32 platform 
+  . Remove LoKi::Range, replace it by Gaudi::Range 
+  . New functions for object decorations 
+	  o new operators for particle pids ...
+    o new shifters (streamers) 
+
+- In LoKiHlt v3r0
+  . LoKi::Hybrid::EvtTupleTool: Fix a stupid bug
+  . New decorators 
+
+- In LoKiMC v9r0
+  . Add new operators 
+
+- In RichKernel v7r34
+  . Some more fine tuning of the EventID and BXID printout to now include
+    the ID as Hex and also a dump of the bits.
+  . Add over-loaded ostream printout for Rich::DAQ::BXID
+  . Add new Constructor to the Rich::HistogramID class that takes a
+    string and a Rich::ParticleIDType.
+
+- In RichRecBase v3r30
+  . Fix inconsistency in the naming convention used by the Segment Hypo rings
+    "OfflineEvent" -> "RecoEvent", in order to be the same as other RichRec 
+    Event model classes.
+  . Add to Rec base class methods to access the ProcStatus object
+  . Update pixel and photon creator base classes to update ProcStatus when the 
+    RICH processing is aborted due to too many hits or photon candidates.
+
+- In STKernel v2r1
+  . Add dependency on RecEvent
+  . Add procFailure method to base class 
+  . Comment out hack for TED run
+
+- In TfKernel v2r17
+  . Added method to IITHitCreator interface to create hit for given LHCbID
+
+- In TrackKernel v1r3
+  . Add copy constructor and assignment operator to trackstatevertex.
+  . Add TrackPredicates
+
 </PRE><H1><A NAME=v30r1>2010-04-12 LHCbSys v30r1</A></H1><PRE>
 This version uses Gaudi v21r8 and LCG_58b
 
