@@ -6,8 +6,49 @@
 !             : project contain components used by all applications except Gauss
 !-----------------------------------------------------------------------------
 
-- Packages added in SVN: VeloPix/VeloPixTools : Tools to deal with pixel 
-  position and errors
+</PRE><H1><A NAME=v9r2>2010-04-26 LbcomSys v9r2</A></H1><PRE>
+This version uses Gaudi v21r9 and LHCb v31r0
+
+- Packages added   : VeloPix/VeloPixTools : Tools to deal with pixel position and errors
+- Packages modified: L0DU v10r6, RichTools v2r29p3, STDAQ v3r22, STMonitors v3r1,
+    VeloDAQ v5r1, VeloPixDAQ v1r2, VeloPixTools v1r0
+
+- In L0DU v10r6
+  . L0Conf: 
+    o Fix bug (wrong algorithm name for L0CaloDecoding) affecting
+      L0Conf().DecodeL0=True,  introduced in version v10r2
+    o Add default TCK for 2009 (0x1309) and 2010 (0x1810) data types
+    o Add property to enable/disable the use of condDB for the L0Muon
+      by default : now use the condDB (was not used by default up to this change)
+    o Add the on demand decoding of the L0MuonProcData bank 
+
+- In RichTools v2r29p3
+  . Fix untested status code in HighOccHPDSuppressionTool
+  . Downgrade HPD occupancy update messages to debug
+  . Turn on summary printout of suppressed high occunpancy HPDs
+
+- In STDAQ v3r22
+  . Add protection to STFullDecoding so that it doesn't give an exception when
+    the RawEvent is missing.  It now returns a warning which is ignored.
+  . Add options files (.opts and .py) to run the full decoding in TAE mode.
+
+- In STMonitors v3r1
+  . Changes in STDQSummaryAlg (bug fix in date printing, easier switch IT/TT)
+  . Bug fix in setting reset rate for counters in STClusterMonitor
+  . Add protections against missing ODIN bank.
+  . Add protections against missing data from TELL1 boards in STPulseMonitor
+  . Add detType to histogram titles in STErrorMonitor and STNZSMonitor
+  . Use cluster channel ID rather than first channel in STClusterMonitor
+  . Bug fix when filling MPV histogram in STClusterMonitor
+  . Bug fix in STPulseMonitor when running over NZS data
+
+- In VeloDAQ v5r1
+  . Added the ProcStatus object if the VELO decoding fails for any reason
+  . Added an option to setFilterPass(fail) (default to off) for HLT
+
+- In VeloPixDAQ v1r2
+  . Add in VeloPixRawBankToPartialCluster some checks in case of duplicated
+    channelID (probably comes from an earlier bug, temporary solution)
 
 </PRE><H1><A NAME=v9r1>2010-04-14 LbcomSys v9r1</A></H1><PRE>
 This version uses Gaudi v21r8 and LHCb v30r1
