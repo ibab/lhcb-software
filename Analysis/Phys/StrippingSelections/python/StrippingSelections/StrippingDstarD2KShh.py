@@ -1,8 +1,10 @@
-# $Id: StrippingDstarD2KShh.py,v 1.2 2010-03-26 19:54:10 mcharles Exp $
+# $Id: StrippingDstarD2KShh.py,v 1.3 2010-04-26 07:41:36 mcharles Exp $
 
 __author__ = [ 'Mat Charles' ]
 __date__ = '2010-02-05'
-__version = '$Revision: 1.2 $'
+__version = '$Revision: 1.3 $'
+
+# Please contact m.charles1@physics.ox.ac.uk before changing anything. Thanks.
 
 # We have many lines that look very similar, except for differing
 # inputs or cuts. Therefore we try to re-use code as much as possible.
@@ -17,6 +19,20 @@ __version = '$Revision: 1.2 $'
 # The main complication is that we have "signal" and "background"
 # lines, which have the same cuts except for the 2D mass windows
 # (signal box vs sidebands).
+
+# 26 Apr 2010:
+#   Loosened some cuts for early data running. This increases
+#   retention rate by about a factor of 10 in a control sample
+#   of L0*HLT1-stripped min-bias MC events. This change is
+#   aimed at getting more statistics in the early running, and
+#   is NOT intended to be kept long-term. The changes made were:
+#     DstarCutPT_pp: 3400.0 --> 2000.0 MeV
+#     DstarCutPT_Kp: 3400.0 --> 2000.0 MeV
+#     DstarCutPT_KK: 3200.0 --> 2000.0 MeV
+#     sidebandPrescale: 0.2 --> 1.0
+#   If the rate starts becoming too high, these changes can be
+#   reversed safely. Please change the sideband prescale first,
+#   and then the PT cuts if further reduction is needed.
 
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
@@ -66,15 +82,15 @@ class StrippingDstarD2KShhConf(LHCbConfigurableUser) :
         , 'signalDMCutUpper'    : 8.35     ## in MeV
         , 'wideDMCutLower'      : 0.0      ## in MeV
         , 'wideDMCutUpper'      : 13.35    ## in MeV
-        , 'DstarCutPT_pp'       : 3400.0   ## in MeV
-        , 'DstarCutPT_Kp'       : 3400.0   ## in MeV
-        , 'DstarCutPT_KK'       : 3200.0   ## in MeV
+        , 'DstarCutPT_pp'       : 2000.0   ## in MeV
+        , 'DstarCutPT_Kp'       : 2000.0   ## in MeV
+        , 'DstarCutPT_KK'       : 2000.0   ## in MeV
         , 'DstarCutChi2NDOF_pp' : 20.0     ## unitless
         , 'DstarCutChi2NDOF_Kp' : 20.0     ## unitless
         , 'DstarCutChi2NDOF_KK' : 60.0     ## unitless
         , 'SoftPionCutPIDe'     : 5.0      ## unitless
         , 'signalPrescale'      : 1.0
-        , 'sidebandPrescale'    : 0.2
+        , 'sidebandPrescale'    : 1.0
         }
 
     # Make a complete collection of stripping lines

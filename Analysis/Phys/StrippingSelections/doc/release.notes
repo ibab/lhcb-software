@@ -4,6 +4,10 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
+
+!2010-04-26 - Mat Charles
+ - Loosened cuts in StrippingDstarD2KShh.py
+
 ! 2010-04-26 - Celestino Rodriguez Cobo
  - cleaned some  comments in StrippingBs2Kst0Kst0.
  - added StrippingBs2PhiKst0 loose and nominal lines.
