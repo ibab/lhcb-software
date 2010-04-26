@@ -1,5 +1,5 @@
 package BooleSys
-version v21r1
+version v21r2
 
 branches cmt doc
  
@@ -8,8 +8,8 @@ branches cmt doc
 #=======================================================
 
 # Boole application                      # Maintainer  
-use Boole               v21r1   Digi     # Marco Cattaneo
-use DigiAlg             v4r18   Digi  # Marco Cattaneo
+use Boole               v21r2   Digi     # Marco Cattaneo
+use DigiAlg             v4r19   Digi  # Marco Cattaneo
 use BooleUMC            v1r0    Digi  # Tomasz Skwarnicki
 
 # Calorimeter
@@ -31,7 +31,7 @@ use RichMCAssociators   v2r7    Rich     # In SVN. Chris Jones
 use RichReadout         v2r12p2 Rich     # In SVN. Chris Jones
 
 # Silicon Tracker
-use STDigiAlgorithms    v1r7    ST    # Matt Needham
+use STDigiAlgorithms    v2r0    ST    # Matt Needham
 
 # VeloPix
 use VeloPixAlgorithms   v1r0    VeloPix  # Marcin Kucharczyk
