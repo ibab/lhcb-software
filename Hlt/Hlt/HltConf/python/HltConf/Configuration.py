@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.182 2010-04-23 15:58:54 panmanj Exp $"
+__version__ = "$Id: Configuration.py,v 1.183 2010-04-26 20:33:19 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -140,11 +140,10 @@ class HltConf(LHCbConfigurableUser):
         #
         # dispatch Hlt2 configuration
         #
-        if not thresClass or thresClass.ActiveHlt2Lines() :
-            Hlt2Conf()
-            self.setOtherProps(Hlt2Conf(),[ "DataType" ])
-            Hlt2Conf().ThresholdSettings = ThresholdSettings
-            Hlt2Conf().WithMC = self.getProp("WithMC")
+        Hlt2Conf()
+        self.setOtherProps(Hlt2Conf(),[ "DataType" ])
+        Hlt2Conf().ThresholdSettings = ThresholdSettings
+        Hlt2Conf().WithMC = self.getProp("WithMC")
 
 #########################################################################################
 # Utility function for setting thresholds both in Hlt1 and 2

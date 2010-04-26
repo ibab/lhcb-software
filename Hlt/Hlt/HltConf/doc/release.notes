@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.450 2010-04-24 16:14:32 graven Exp $ 
+! $Id: release.notes,v 1.451 2010-04-26 20:33:19 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+!========================== HltConf v7r2p2  2010-04-26 ===================
+! 2010-04-26 Gerhard Raven
+ - always invoke Hlt2 configuration
 
 !========================== HltConf v7r2p1  2010-04-24 ===================
 ! 2010-04-23 - Jaap Panman
