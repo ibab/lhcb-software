@@ -33,7 +33,7 @@ class LumiAlgsConf(LHCbConfigurableUser):
     __slots__ = {
         "Context"       : "Offline"  # The context within which to run
        ,"DataType"      : "2009"     # Data type, can be ['DC06','2008','MC09','2009']
-       ,"InputType"     : "MDF"      # Data type, can be ['MDF','DST','RDST','MDST','ETC','DIGI']. Different sequencer made.
+       ,"InputType"     : "MDF"      # Data type, can be ['MDF','DST','RDST', 'SDST', 'MDST','ETC','DIGI']. Different sequencer made.
        ,"ForceFullSequence" : False  # re-write the FSR independent of the InputType
        ,"SetFSRStatus"  : ""         # overwrite the event FSR status to something ['UNRELIABLE', 'ERROR','VERIFIED']
        ,"LumiSequencer" : None       # The sequencer to add the Lumi Accounting to - essential input
@@ -44,7 +44,7 @@ class LumiAlgsConf(LHCbConfigurableUser):
     _propertyDocDct = {
         "Context"       : """ The context within which to run """
        ,"DataType"      : "Data type, can be ['DC06','2008','MC09','2009']"
-       ,"InputType"     : "Input Data type, can be ['MDF','DST','RDST','MDST','ETC','DIGI']"
+       ,"InputType"     : "Input Data type, can be ['MDF','DST','RDST', 'SDST', 'MDST','ETC','DIGI']"
        ,"ForceFullSequence" : "False, re-write the FSR independent of the InputType"
        ,"SetFSRStatus"  : "overwrite the event FSR status to something ['UNRELIABLE', 'ERROR','VERIFIED']"
        ,"LumiSequencer" : "The sequencer to add the Lumi Accounting to - essential input"
@@ -180,7 +180,7 @@ class LumiAlgsConf(LHCbConfigurableUser):
         
         # Check input data type
         inputType = self.getProp("InputType")
-        if inputType not in [ "MDF", "DST", "DIGI", "ETC", "RDST", "MDST" ]:
+        if inputType not in [ "MDF", "DST", "DIGI", "ETC", "RDST", "MDST", "SDST" ]:
             raise RuntimeError("ERROR : Unknown input type " + str(inputType))
         
         forced=self.getProp("ForceFullSequence")
