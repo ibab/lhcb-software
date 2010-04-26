@@ -3,6 +3,11 @@
 ! Responsible : Wouter Hulsbergen
 !----------------------------------------------------------------------------
 
+! 2010-04-26 Wouter Hulsbergen
+- for HLT: fit velo-backward tracks towards vertex instead of away from it
+- reduced verbosity
+- introduced flag for minimum scattering momentum, but not yet used
+
 !=========================== TrackFitter v2r47 2010-04-09=================
 ! 2010-04-08 - Wouter Hulsbergen
  - fixed crash when track has no measurements
