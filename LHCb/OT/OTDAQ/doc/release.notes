@@ -2,6 +2,7 @@ Package         : OTDAQ
 Package manager : J.Amoraal
 !------------------------------------------------------------------------------
 
+!======================= OTDAQ v7r8 2010-04-26 ================================
 ! 2010-04-04 - Wouter Hulsbergen
  - replaced Loki::Range with Gaudi::Range_
 
