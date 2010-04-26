@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltPVs.py,v 1.6 2010-04-26 13:37:43 gligorov Exp $
+# $Id: HltPVs.py,v 1.7 2010-04-26 20:35:35 graven Exp $
 # =============================================================================
 ## @file HltTracking/HltPVs.py
 #  Define the 2D and 3D primary vertex making algorithms for the Hlt
@@ -72,11 +72,6 @@ def ForcedRecoVeloForPVs() :
     HltForcedFastFitForPV           = TrackEventFitter(HltForcedFastFitForPV_name)
     HltForcedFastFitForPV.TracksInContainer	    = outputTracks 
     HltForcedFastFitForPV.TracksOutContainer    = outputFitted  
-    
-    HltForcedFastFitForPVSeq_name               = HltForcedFastFitForPV_name+'Seq'
-    HltForcedFastFitForPVSeq                    = GaudiSequencer(HltForcedFastFitForPVSeq_name)
-    HltForcedFastFitForPVSeq.Members            = [ HltForcedFastFitForPV ]
-  
     HltForcedFastFitForPV.addTool(TrackMasterFitter, name = 'Fitter')
     from TrackFitter.ConfiguredFitters import ConfiguredFastFitter
     fitter = ConfiguredFastFitter(getattr(HltForcedFastFitForPV,'Fitter'))
@@ -84,7 +79,7 @@ def ForcedRecoVeloForPVs() :
     fitter.NodeFitter.Smooth        = True
     fitter.AddDefaultReferenceNodes = True 
     
-    return bindMembers("HltForcedRecoVeloForPV",[recoVelo,HltForcedFastFitForPVSeq]).setOutputSelection(outputFitted) 
+    return bindMembers("HltForcedRecoVeloForPV",[recoVelo,HltForcedFastFitForPV]).setOutputSelection(outputFitted) 
 
 def PV2D() :
 

@@ -1,14 +1,15 @@
-!$Id: release.notes,v 1.117 2010-04-26 12:53:20 gligorov Exp $
+!$Id: release.notes,v 1.118 2010-04-26 20:35:35 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/HltTracking
 ! Responsible : Jose A. Hernando
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+!========================== HltTracking v5r2   2010-04-26 ===================
 ! 2010-04-26 - V. Gligorov
  - Use the full offline track fit to make 3D primary vertices from Velo
    tracks. This is a temporary fix and should be removed as soon as the 
-   liner extrapolation is fixed! Hlt1 and Hlt2 now use identical primary
+   linaer extrapolation is fixed! Hlt1 and Hlt2 now use identical primary
    vertices except that Hlt1 PVs live in Hlt/Vertex/PV2D and Hlt2 PVs
    live in Hlt/Vertex/PV3D. 
 
