@@ -4,6 +4,7 @@
 ! Purpose     : Holds generic digitization algorithms
 !-----------------------------------------------------------------------------
 
+!========================== DigiAlg v4r19 2010-04-26 =========================
 ! 2010-04-26 - Marco Cattaneo
  - BooleInit now always sets TriggerType = LHCb::ODIN::LumiTrigger in ODIN,
    to follow what happens in real hardware. Treatment of BXType to be reviewed
