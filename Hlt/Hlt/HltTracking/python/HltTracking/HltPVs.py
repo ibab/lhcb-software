@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltPVs.py,v 1.5 2010-04-26 12:50:48 gligorov Exp $
+# $Id: HltPVs.py,v 1.6 2010-04-26 13:37:43 gligorov Exp $
 # =============================================================================
 ## @file HltTracking/HltPVs.py
 #  Define the 2D and 3D primary vertex making algorithms for the Hlt
@@ -78,8 +78,11 @@ def ForcedRecoVeloForPVs() :
     HltForcedFastFitForPVSeq.Members            = [ HltForcedFastFitForPV ]
   
     HltForcedFastFitForPV.addTool(TrackMasterFitter, name = 'Fitter')
-    from TrackFitter.ConfiguredFitters import ConfiguredMasterFitter
-    fitter = ConfiguredMasterFitter(getattr(HltForcedFastFitForPV,'Fitter'), SimplifiedGeometry=True, LiteClusters=True)
+    from TrackFitter.ConfiguredFitters import ConfiguredFastFitter
+    fitter = ConfiguredFastFitter(getattr(HltForcedFastFitForPV,'Fitter'))
+    fitter.NodeFitter.BiDirectionalFit  = True
+    fitter.NodeFitter.Smooth        = True
+    fitter.AddDefaultReferenceNodes = True 
     
     return bindMembers("HltForcedRecoVeloForPV",[recoVelo,HltForcedFastFitForPVSeq]).setOutputSelection(outputFitted) 
 
