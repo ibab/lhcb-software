@@ -4,6 +4,7 @@
 ! Purpose     : Standard package for monitoring NZS and ZS data.
 !-----------------------------------------------------------------------------
 
+!======================= STMonitors v3r1 2010-04-26 ==========================
 ! 2010-04-20 M Needham
  - Changes in STDQSummaryAlg (bug fix in date printing, easier switch IT/TT)
 
