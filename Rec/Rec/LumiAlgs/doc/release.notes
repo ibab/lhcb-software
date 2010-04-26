@@ -4,15 +4,11 @@
 ! Purpose     : Accounting of LumiSummaries (offline code)
 !-----------------------------------------------------------------------------
 
+!========================== LumiAlgs v3r4p1 2010-04-26 ========================
 ! 2010-04-26 - Juan Palacios
  - Configurable does not stop job if InputType == 'SDST'.
    To-do: decide on and implement correct behaviour for SDSTs.
  - Increase version to v3r5.
-
-! 2010-03-26 - Rob Lambert
- - Added PropagateFSRs algorithm
-   . Collects all filename->GUID releations
-   . Should also collect all FSRs and then write tree in Finalize
 
 !========================== LumiAlgs v3r4 2010-03-24 =========================
 ! 2010-03-22 - Jaap Panman
