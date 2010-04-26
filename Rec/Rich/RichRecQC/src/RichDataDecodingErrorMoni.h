@@ -18,6 +18,9 @@
 // STD
 #include <sstream>
 
+// GaudiUtils
+//#include "GaudiUtils/HistoLabels.h"
+
 // base class
 #include "RichKernel/RichHistoAlgBase.h"
 
@@ -30,6 +33,9 @@
 
 // Event
 #include "Event/ODIN.h"
+
+// boost
+#include "boost/assign/list_of.hpp"
 
 namespace Rich
 {

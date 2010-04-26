@@ -48,7 +48,7 @@ RecoQC::RecoQC( const std::string& name,
 
   // Ch Theta Rec histogram limits: low, high -> aerogel, Rich1Gas, Rich2Gas
   declareProperty( "ChThetaRecHistoLimitMin",
-                   m_ckThetaMin = list_of(0.100)(0.030)(0.010) );
+                   m_ckThetaMin = list_of(0.150)(0.030)(0.010) );
   declareProperty( "ChThetaRecHistoLimitMax",
                    m_ckThetaMax = list_of(0.325)(0.065)(0.036) );
   declareProperty( "CKResHistoRange",
