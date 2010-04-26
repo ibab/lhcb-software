@@ -4,6 +4,7 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+!===================== RichRecBase v3r30 2010-04-26 ==========================
 ! 2010-04-23 - Chris Jones
  - Fix inconsistency in the naming convention used by the Segment Hypo rings
    "OfflineEvent" -> "RecoEvent", in order to be the same as other RichRec 
