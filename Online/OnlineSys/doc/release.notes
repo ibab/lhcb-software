@@ -6,7 +6,21 @@
 !-----------------------------------------------------------------------------
 </PRE>
 
-<H1><A NAME=v4r36>2010-02-20 OnlineSys v4r38</A></H1>
+<H1><A NAME=v4r39>2010-04-26 OnlineSys v4r39</A></H1>
+<PRE>
+   Based in Gaudi v21r8.
+   New tags for online packages are:
+   Gaucho            v6r25    Online
+   GaudiOnline       v2r42    Online
+   OMAlib            v2r15    Online
+   OnlineKernel      v2r3     Online
+   OnlineTasks       v1r32    Online
+   ROMon             v1r23    Online
+   ROLogger          v0r19    Online
+   Writer            v1r26    Online
+</PRE>
+
+<H1><A NAME=v4r38>2010-02-20 OnlineSys v4r38</A></H1>
 <PRE>
    Based in Gaudi v21r8.
    New tags for online packages are:
