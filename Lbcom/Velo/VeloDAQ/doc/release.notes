@@ -3,6 +3,7 @@
 ! Responsible : Kurt Rinnert, Chris Parkes
 !--------------------------------------------------------------------------
 
+!=========================  VeloDAQ v5r1 2010-04-26 =======================
 ! 2010-04-21 - David Hutchcroft
  - Added the ProcStatus object if the VELO decoding fails for any reason
    Added an option to setFilterPass(fail) (default to off) for HLT
@@ -12,7 +13,6 @@
  - retag v5r0 as v4r14 so it can be used in Moore v8r10. cmt does not accept
    it when an application project has a package with a different major number
    from the underlying project
-
 
 !=========================  VeloDAQ v5r0 2010-04-13 =======================
 ! 2010-04-13 - David Hutchcroft
