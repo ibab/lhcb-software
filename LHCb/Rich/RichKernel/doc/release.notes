@@ -4,6 +4,7 @@
 ! Purpose     : General purpose RICH classes
 !-----------------------------------------------------------------------
 
+!====================== RichKernel v7r34 2010-04-26 ====================
 ! 2010-04-25 - Chris Jones
  - Some more fine tuning of the EventID and BXID printout to now include
    the ID as Hex and also a dump of the bits.
