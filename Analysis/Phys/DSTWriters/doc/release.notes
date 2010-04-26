@@ -1,10 +1,19 @@
-!$Id: release.notes,v 1.20 2010-04-12 13:08:17 jpalac Exp $
+!$Id: release.notes,v 1.21 2010-04-26 14:25:27 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DSTWriters
 ! Responsible : Juan PALACIOS
 ! Purpose     : Python code for DST writers.
 !-----------------------------------------------------------------------------
 
+! ======================== DSTWriters v1r4p2 2010-04-26 ======================
+
+! 2010-04-26 - Juan Palacios
+ - python/DSTWriters/microdstelements.py, MicroDSTWriter.py
+  . Protect against selection having no algorithm (as with DataOnDemand or
+    AutomaticData)
+ - cmt/requirements
+  . Increase to v1r4p2
+ 
 ! ======================== DSTWriters v1r4p1 2010-04-12 ======================
 
 ! 2010-04-12 - Juan Palacios
