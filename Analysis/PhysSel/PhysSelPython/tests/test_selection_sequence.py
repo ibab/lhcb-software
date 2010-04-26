@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-#$Id: test_selection_sequence.py,v 1.16 2010-02-26 13:15:39 jpalac Exp $
+#$Id: test_selection_sequence.py,v 1.17 2010-04-26 13:13:43 jpalac Exp $
 '''
 Test suite for SelectionSequence class.
 '''
@@ -48,7 +48,11 @@ def test_instantiate_sequencer() :
                     RequiredSelections = [sel00, sel01])
     seq = SelectionSequence('Seq00', TopSelection = sel)
 
-
+def test_instantiate_dataondemand_sequencer() :
+    sel00 = AutomaticData(Location = 'Phys/Sel00')
+    seq = SelectionSequence('Seq00DOD', TopSelection = sel00)
+    assert seq.outputLocation() == 'Phys/Sel00'
+    
 def test_sequencer_algos() :
     _sel00 = AutomaticData('Sel00', Location = 'Phys/Sel00')
     _sel01 = AutomaticData('Sel01', Location = 'Phys/Sel01')
