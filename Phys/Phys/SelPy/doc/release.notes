@@ -5,6 +5,15 @@
 ! Purpose     : Pure python core components for Selection "Framework".
 !-----------------------------------------------------------------------------
 
+!======================== SelPy v1r1p1 2010-04-26 ============================
+
+! 2010-04-26 - Juan Palacios
+ - python/SelPy/selection.py
+  . Bug fix: Avoid adding None to algorithm list when TopSelection has no
+    algorithm.
+ - cmt/requirements
+  . Increase to v1r1p1.
+
 !======================== SelPy v1r1 2010-04-08 ==============================
 
 ! 2010-03-23 - Juan Palacios
