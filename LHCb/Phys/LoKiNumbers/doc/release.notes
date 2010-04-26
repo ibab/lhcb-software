@@ -4,6 +4,7 @@
 ! Purpose     : Set of dictionaries for LoKi functions 
 ! -----------------------------------------------------------------------------
 
+!========================== LoKiNumbers v9r0 2010-04-26 =======================
 ! 2010-04-06 - Vanya Belyaev
  - use Gaudi::Raneg instead of LoKi::Range 
 
