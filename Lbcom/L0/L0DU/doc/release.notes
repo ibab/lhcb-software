@@ -1,8 +1,9 @@
-! $Id: release.notes,v 1.204 2010-04-16 12:41:23 jucogan Exp $
+! $Id: release.notes,v 1.205 2010-04-26 08:12:43 cattanem Exp $
 ! Package		: L0/L0DU
 ! Package Manager : Olivier Deschamps
 !--------------------------------------------------------------------------
 
+!========================== L0DU v10r6 2010-04-26 =========================
 ! 2010-04-16 - Julien Cogan
  - Fix bug (wrong algorithm name for L0CaloDecoding) 
    - affecting L0Conf().DecodeL0=True 
@@ -12,7 +13,7 @@
  - L0Conf: 
     - add default TCK for 2009 (0x1309) and 2010 (0x1810) data types
     - add property to enable/disable the use of condDB for the L0Muon
-      by default : now use the condDB (was not used by default up to this change) 
+      by default : now use the condDB (was not used by default up to this change)
     - add the on demand decoding of the L0MuonProcData bank 
  
 !========================== L0DU v10r5 2010-04-09 =========================
