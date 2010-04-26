@@ -1,16 +1,27 @@
-! $Id: release.notes,v 1.46 2010-04-16 15:31:44 jpalac Exp $ 
+! $Id: release.notes,v 1.47 2010-04-26 11:42:38 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.46 $
+! CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.47 $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/KaliCalo
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@lapp.in2p3.fr
 ! Purpose     : Collection of "physics" algorithms  for Calorimeter calibration
 ! -----------------------------------------------------------------------------
 
+! 2010-04-26 - Vanya Belyaev
+
+ - python/KaliCalo/KaliPi0.py 
+
+   . update the example to run on 2k+10 fmDSTs, produced  by Dasha 
+	
+
 ! 2010-04-16 - Juan Palacios
+
  - src/Destroyer.cpp
+
   . Access Particle::Range instead of Particle::Container.
+
  - cmt/requirements
+
   . Increase to v4r2.
 
 ! 2010-04-11 - Vanya Belyaev
