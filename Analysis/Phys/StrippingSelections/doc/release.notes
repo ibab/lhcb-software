@@ -5,6 +5,11 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-04-26 - Jibo He
+ - StrippingCcbar2Ppbar.py
+   A loose line added for Charmunion -> ppbar, using the same selection as the 1st stage of Hlt2:
+   http://indico.cern.ch/getFile.py/access?contribId=2&resId=2&materialId=slides&confId=82199
+
 ! 2010-04-26 - Jacopo Nardulli
  - Add StrippingB2DPiChi2 and StrippingB2DPiChi2Loose selections in CVS and in the Hadron Stream
 

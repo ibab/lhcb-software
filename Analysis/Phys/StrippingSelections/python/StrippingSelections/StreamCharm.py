@@ -81,6 +81,6 @@ stream.appendLines( StrippingDstarD2KShhConf().MakeLines() )
 stream.appendLines( StrippingDstarD02xxConf().lines() )
 # Charmonium -> p pbar
 stream.appendLines( [ StrippingCcbar2PpbarConf().Nominal_Line() ] )
-
+stream.appendLines( [ StrippingCcbar2PpbarConf().Loose_Line() ] )
 
 
