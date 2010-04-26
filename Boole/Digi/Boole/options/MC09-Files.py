@@ -8,6 +8,10 @@
 from Gaudi.Configuration import *
 from Configurables import Boole, LHCbApp
 
+# L0 TCK for MC09
+from Configurables import L0Conf
+L0Conf().TCK = '0xDC09'
+
 #-- File catalogs
 FileCatalog().Catalogs = [ "xmlcatalog_file:NewCatalog.xml" ]
 
