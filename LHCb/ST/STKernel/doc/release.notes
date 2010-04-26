@@ -1,8 +1,9 @@
-! $Id: release.notes,v 1.91 2010-04-25 07:46:08 mneedham Exp $
+! $Id: release.notes,v 1.92 2010-04-26 07:06:15 cattanem Exp $
 ! Package     : STKernel
 ! Responsible : M. Needham
 !----------------------------------------------------------------------------
 
+!====================== STKernel v2r1 2010-04-26 ============================
 ! 2010-04-25 M Needham
  - Add dependency on RecEvent
 
@@ -12,9 +13,7 @@
 ! 2010-03-20 M Needham
  - Comment out hack for TED run
 
-
 !====================== STKernel v2r0 2010-04-09 ============================
-
 !  2010-03-20 M.Needham
  - Remove ISTSignalToNoiseTool
 
