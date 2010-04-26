@@ -9,17 +9,19 @@
 from Gaudi.Configuration import *
 #######################################################################
 #
-# Load the sequencer from Ex 4 and catch it
+# Load the sequencer from Ex 4 
 #
-importOptions("$ANALYSISROOT/solutions/DaVinci4/TutorialSeq.py")
-tutorialseq = GaudiSequencer("TutorialSeq")
+# import the SelectionSequence
+from DaVinci4.solutions.Bs2JpsiPhi import SeqBs2JpsiPhi
+# get the GaudiSequencer with everything we need
+seq = SeqBs2JpsiPhi.sequence()
 #######################################################################
 #
 # DecayTreeTuple
 #
 from Configurables import DecayTreeTuple, PhysDesktop
 tuple = DecayTreeTuple() 
-tuple.InputLocations = [ "Bs2JpsiPhi" ]
+tuple.InputLocations = [ SeqBs2JpsiPhi.outputLocation() ]
 tuple.ToolList +=  [
 #      "TupleToolTrigger"
      "TupleToolMCTruth"
@@ -50,18 +52,19 @@ from Configurables import DaVinci
 DaVinci().TupleFile = "DVNtuples.root"         # Ntuple
 DaVinci().HistogramFile='DVHistos.root'
 DaVinci().EvtMax = 1000                        # Number of events
-DaVinci().DataType = "MC09"                    # Default is "MC09"
+DaVinci().DataType = "MC09"                    # 
 DaVinci().Simulation   = True                  # It's MC
 #
 # Add our own stuff
 #
-DaVinci().UserAlgorithms = [ tutorialseq, tuple, etuple ]
-DaVinci().MainOptions  = ""                    # None
+DaVinci().UserAlgorithms = [ seq ]             # The selection sequence
+DaVinci().MoniSequence = [ tuple, etuple ]
 #
 # Trigger (Restore when fixed on 2008 data)
 #
 DaVinci().Hlt = True
 DaVinci().HltThresholdSettings = "Physics_320Vis_300L0_10Hlt1_Aug09"   # some settings. See HltConf for more.
+DaVinci().ReplaceL0BanksWithEmulated = True  # to get L0 compatible with Hlt
 ########################################################################
 #
 # To run in shell :

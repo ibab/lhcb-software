@@ -1,4 +1,4 @@
-!$Id: release.notes,v 1.91 2010-01-28 09:48:30 pkoppenb Exp $
+!$Id: release.notes,v 1.92 2010-04-26 07:39:08 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Tutorial/Analysis
 ! Responsible : P. Koppenburg
@@ -8,6 +8,10 @@
 !   See https://twiki.cern.ch/twiki/bin/view/LHCb/DaVinciTutorial
 !
 !-----------------------------------------------------------------------------
+
+! 2010-04-26 - Patrick Koppenburg
+ - Updated solutions 5 and 6 to synchrnize with 4.
+ - v8r4
 
 !========================== Analysis v8r3p2 2010-01-28 ===============
 ! 2010-01-28 - Patrick Koppenburg

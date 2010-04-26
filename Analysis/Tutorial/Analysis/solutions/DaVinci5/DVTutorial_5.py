@@ -1,5 +1,5 @@
 6########################################################################
-# $Id: DVTutorial_5.py,v 1.10 2009-07-01 12:22:48 pkoppenb Exp $
+# $Id: DVTutorial_5.py,v 1.11 2010-04-26 07:39:08 pkoppenb Exp $
 #
 # Options for exercise 5
 #
@@ -12,20 +12,22 @@ from Gaudi.Configuration import *
 MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"
 #######################################################################
 #
-# Load the sequencer from Ex 4 and catch it
+# Load the sequencer from Ex 4 
 #
-importOptions("$ANALYSISROOT/solutions/DaVinci4/TutorialSeq.py")
-tutorialseq = GaudiSequencer("TutorialSeq")
+#
+# import the SelectionSequence
+from DaVinci4.solutions.Bs2JpsiPhi import SeqBs2JpsiPhi
+# get the GaudiSequencer with everything we need
+seq = SeqBs2JpsiPhi.sequence()
 #######################################################################
 #
 # Print Reconstructed Bs
 #
 from Configurables import PrintDecayTree, PrintDecayTreeTool, PhysDesktop
 tree = PrintDecayTree("PrintFoundBs")
-tree.InputLocations = [ "Bs2JpsiPhi" ]
+tree.InputLocations = [ SeqBs2JpsiPhi.outputLocation() ]
 tree.addTool( PrintDecayTreeTool, name = "PrintDecay" )
-tree.PrintDecay.Information = "Name M P Px Py Pz Pt chi2" 
-tutorialseq.Members += [ tree ]
+tree.PrintDecay.Information = "Name M P Px Py Pz Pt chi2"
 #######################################################################
 #
 # Print  Print All True Bs
@@ -36,20 +38,21 @@ mctree.addTool( PrintMCDecayTreeTool )
 mctree.PrintMCDecayTreeTool.Information = "Name M P Px Py Pz Pt chi2" 
 mctree.ParticleNames = [  "B_s0", "B_s~0" ]
 mctree.Depth = 2  # down to the K and mu
-tutorialseq.Members += [ mctree ]
 #######################################################################
 #
 # Configure the application
 #
 from Configurables import DaVinci
+DaVinci().UserAlgorithms = [ seq ]             # The selection sequence
+DaVinci().MoniSequence = [ tree, mctree ]      # The monitoring stuff
 DaVinci().HistogramFile = "DVHistos_5.root"    # Histogram file
 DaVinci().EvtMax = 1000                        # Number of events
-DaVinci().DataType = "2008"                    # Default is "DC06"
+DaVinci().DataType = "MC09"                    # Default is "2010"
 DaVinci().Simulation   = True                  # It's MC
 #
 # Add our own stuff
 #
-DaVinci().UserAlgorithms = [ tutorialseq ]
+DaVinci().UserAlgorithms = [ seq ]
 DaVinci().MainOptions  = ""                    # None
 ########################################################################
 #
