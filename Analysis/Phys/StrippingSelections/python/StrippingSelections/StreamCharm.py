@@ -49,6 +49,14 @@ stream.appendLines( [
         , StrippingD2hhh.lineD2KKK_B_LoosePID_Sig
         , StrippingD2hhh.lineD2KKP_A_NoPID_Sig
         , StrippingD2hhh.lineD2KKP_A_NoPID_Bkg
+        , StrippingD2hhh.lineDs2KPP_A_LoosePID_Sig
+        , StrippingD2hhh.lineDs2KPP_B_LoosePID_Sig
+        , StrippingD2hhh.lineDs2KPP_A_LoosePID_Bkg
+        , StrippingD2hhh.lineDs2KPP_B_LoosePID_Bkg
+        , StrippingD2hhh.lineD2KPP_DCS_A_LoosePID_Sig
+        , StrippingD2hhh.lineD2KPP_DCS_B_LoosePID_Sig
+        , StrippingD2hhh.lineD2KPP_DCS_A_LoosePID_Bkg
+        , StrippingD2hhh.lineD2KPP_DCS_B_LoosePID_Bkg
         , StrippingD2hhh.lineD2HHH
 	, StrippingDstarD2KShhRobust.line1 
 	, StrippingDstarD2KShhRobust.line2 

@@ -5,6 +5,9 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-04-26 - Hamish Gordon
+ - StrippingD2hhh and StreamCharm updated to include new lines for Ds+->K+pi-pi+ (SCS) and D+->K+pi-pi+ (DCS) modes.
+
 !2010-04-26 - Mat Charles
  - Loosened cuts in StrippingDstarD2KShh.py
 
@@ -64,6 +67,8 @@ http://indico.cern.ch/getFile.py/access?contribId=7&resId=1&materialId=slides&co
 
 
 !========================== StrippingSelections v1r19 2010-04-08 ===================
+
+
 ! 2010-04-08 - Patrick Koppenburg
  - StreamEW : no W->e until tests are done
 
