@@ -1,4 +1,4 @@
-// $Id: TrackMasterFitter.cpp,v 1.88 2010-04-26 14:14:46 wouter Exp $
+// $Id: TrackMasterFitter.cpp,v 1.89 2010-04-26 21:13:18 wouter Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -97,7 +97,7 @@ TrackMasterFitter::TrackMasterFitter( const std::string& type,
   declareProperty( "ApplyEnergyLossCorr", m_applyEnergyLossCorrections = true ) ;
   declareProperty( "TransverseMomentumForScattering", m_scatteringPt = 400.*Gaudi::Units::MeV );
   declareProperty( "MomentumForScattering", m_scatteringP = -1 );
-  declareProperty( "MinMomentumForScattering", m_minMomentumForScattering = 100.*Gaudi::Units::GeV );
+  declareProperty( "MinMomentumForScattering", m_minMomentumForScattering = 100.*Gaudi::Units::MeV );
   declareProperty( "MaxMomentumForScattering", m_maxMomentumForScattering = 500.*Gaudi::Units::GeV );
   declareProperty( "MinNumVeloRHitsForOutlierRemoval",   m_minNumVeloRHits   = 2 ) ;
   declareProperty( "MinNumVeloPhiHitsForOutlierRemoval", m_minNumVeloPhiHits = 2 ) ;
