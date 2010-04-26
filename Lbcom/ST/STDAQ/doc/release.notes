@@ -4,6 +4,7 @@
 ! Purpose     : Encode and decode Raw banks for ST
 !-----------------------------------------------------------------------------
 
+!=============================== STDAQ v3r22 2010-04-26 ======================
 ! 2010-04-12 - Mark Tobin
  - Add protection to STFullDecoding so that it doesn't give an exception when
  the RawEvent is missing.  It now returns a warning which is ignored.
