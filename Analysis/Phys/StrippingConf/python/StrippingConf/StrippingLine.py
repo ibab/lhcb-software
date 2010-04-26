@@ -441,8 +441,13 @@ class StrippingLine(object):
         __mdict = deepcopy ( mdict ) 
         from Configurables import StrippingAlg
         self._configurable = StrippingAlg ( self.name() , **__mdict )
+
+        # put upper limit on combinatorics
+        limitCombinatorics( self._configurable, maxCandidates = 2000 ) 
+
         print '# created StrippingAlg configurable for', name, '\n'
         print self._configurable
+
         return self._configurable
 
     def filterMembers( self ) : 
@@ -590,3 +595,25 @@ class StrippingLine(object):
                                postscale = __postscale  ,
                                algos     = __algos      , 
                                **__args )
+
+def limitCombinatorics( configurable, maxCandidates, incidentName = 'ExceedsCombinatoricsLimit' ) :
+    val = False
+    from Configurables import CombineParticles, StrippingAlg
+    if hasattr( configurable, 'Members' ) :
+        for i in getattr( configurable, 'Members' ) : 
+            # order is important to avoid shortcircuit from skipping call to limitCombinatorics!
+            val = limitCombinatorics( i, maxCandidates, incidentName ) or val
+        return val
+    elif type(configurable) == StrippingAlg :
+        stages = [ 'Filter1' ]
+        for i in [ getattr( configurable, j ) for j in stages if hasattr(configurable,j) ] :
+            # order is important to avoid shortcircuit from skipping call to limitCombinatorics!
+            val = limitCombinatorics( i, maxCandidates, incidentName ) or val
+        if val : configurable.IncidentsToBeFlagged += [ incidentName ]
+        return val
+    elif type(configurable) == CombineParticles :
+        configurable.StopAtMaxCandidates = True
+        configurable.MaxCandidates       = maxCandidates
+        configurable.StopIncidentType    = incidentName
+        return True
+

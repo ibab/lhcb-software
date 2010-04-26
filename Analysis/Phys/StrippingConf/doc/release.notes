@@ -1,9 +1,13 @@
-!$Id: release.notes,v 1.55 2010-04-16 06:39:27 poluekt Exp $
+!$Id: release.notes,v 1.56 2010-04-26 13:01:39 poluekt Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/StrippingConf
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
+
+! 2010-04-26 - Anton Poluektov
+ - Introduced limit on number of candidates created by CombineParticles 
+   (2000 at the moment). 
 
 ! 2010-04-16 - Anton Poluektov
  - Warning is printed if the StrippingLine with duplicate name is created
