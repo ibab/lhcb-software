@@ -1,5 +1,5 @@
 package Gaucho
-version v6r24
+version v6r25
 branches Gaucho src cmt doc
 
 # add "use" statements
