@@ -33,7 +33,7 @@ use GaudiUPI          v1r12    Online
 use HistDBPython      v1r5     Online
 use InsertDB          v1r8     Online
 use MBMDump           v1r14    Online
-use OMAlib            v2r14    Online
+use OMAlib            v2r15    Online
 #Obsolete: use OnlineDummyReader v1r4     Online
 use OnlineHistDB      v6r4     Online
 use OnlineBase        v1r3     Online
