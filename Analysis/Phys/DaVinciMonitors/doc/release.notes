@@ -4,6 +4,9 @@
 ! Purpose     : Monitoring algorithms after reconstruction
 !-----------------------------------------------------------------------------
 
+! 2010-04-26 - Chris Jones
+ - Set more sensible max Pt limit in RichPlotTool (10 not 100 Gev ...)
+
 ! 2010-04-16 - Alessio Sarti
  - Re-enabled the MuIDMonitor.py [since the bug is understood and fixed]
    This monitor can be run with no problem on both DSTs and rDSTs!

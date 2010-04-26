@@ -1,4 +1,4 @@
-// $Id: RichPlotTool.h,v 1.5 2009-08-03 09:14:25 jonrob Exp $
+// $Id: RichPlotTool.h,v 1.6 2010-04-26 16:06:34 jonrob Exp $
 #ifndef RichPlotTool_H
 #define RichPlotTool_H 1
 
@@ -68,7 +68,10 @@ private:
   mutable PIDToolMap m_pidTools;
 
   /// Fill full set of histograms
-  bool m_extraHistos;       
+  bool m_extraHistos;     
+
+  /// Plot Tool Configuration
+  Rich::Rec::IPIDPlots::Configuration m_pidConfig;
 
 };
 

@@ -1,4 +1,4 @@
-// $Id: RichPlotTool.cpp,v 1.8 2010-04-12 15:23:00 jonrob Exp $
+// $Id: RichPlotTool.cpp,v 1.9 2010-04-26 16:06:34 jonrob Exp $
 // Include files
 #include "GaudiKernel/DeclareFactoryEntries.h"
 
@@ -45,6 +45,12 @@ StatusCode RichPlotTool::initialize()
   pidTool("peak");
   pidTool("sideband");
 
+  // PID tool cuts (Should be a JO sometime ...)
+  m_pidConfig.minP  =   2 * Gaudi::Units::GeV;
+  m_pidConfig.maxP  = 100 * Gaudi::Units::GeV;
+  m_pidConfig.minPt =   0 * Gaudi::Units::GeV;
+  m_pidConfig.maxPt =  10 * Gaudi::Units::GeV;
+
   return sc;
 }
 
@@ -66,7 +72,7 @@ StatusCode RichPlotTool::fillImpl( const LHCb::Particle* p,
   const Rich::ParticleIDType pid = pidType(prop);
   
   // fill the plots 
-  pidTool(trailer)->plots( p->proto(), pid );
+  pidTool(trailer)->plots( p->proto(), pid, m_pidConfig );
   
   // return
   return StatusCode::SUCCESS;
