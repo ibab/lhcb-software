@@ -3,6 +3,8 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+- Use latest database tags in BooleSys qmtest. 
+
 </PRE><H1><A NAME=v21r1>2010-03-30 Boole v21r1</A></H1><PRE>
 This version uses projects Gaudi v21r8, LHCb v30r0, Lbcom v9r0
  and SQLDDDB v5r23, ParamFiles v8r2, FieldMap v5r3, L0TCK v3r1, AppConfig v3r*
