@@ -22,7 +22,7 @@ use MuonTrackRec         v3r2    Muon # Giacomo Graziani
 
 # Non sub-detector specific components
 use GlobalReco           v6r32p1 Rec  # Chris Jones
-use LumiAlgs             v3r4    Rec  # Jaap Panman
+use LumiAlgs             v3r4p1  Rec  # Jaap Panman
 use RecAlgs              v1r8    Rec  # Marco Cattaneo
 use RecUtils             v1r5    Rec  # Juan Palacios, Patrick Koppenburg
 # Non sub-detector specific components upgrade related

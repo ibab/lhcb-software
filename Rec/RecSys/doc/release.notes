@@ -25,7 +25,7 @@ This version uses Gaudi v21r9 and LHCb v31r0
   Rich/RichRecQC v2r40, Rich/RichRecSys v3r29, Rich/RichRecTools v4r11, Rich/RichRecTrackTools  v1r20,
   Tf/PatAlgorithms  v4r1, Tf/PatVelo  v3r22, Tf/TrackMatching  v2r28, Tf/TrackSys  v4r32, 
   Tf/TsaAlgorithms  v3r19, Tr/PatPV  v3r15, Tr/TrackFitEvent  v4r6, Tr/TrackMCTools  v2r26,
-  Tr/TrackProjectors  v2r28, Tr/TrackTools  v3r30, Tr/TrackUtils  v1r36, Velo/VeloRecMonitors  v2r9
+  Tr/TrackProjectors  v2r28, Tr/TrackTools  v3r30, Tr/TrackUtils  v1r36, Velo/VeloRecMonitors  v2r9, Rec/LumiAlgs v3r4p1
 
 - In Calo/CaloMoniDst  v5r1:
   . test if the algorithm properties have been set before (re-)setting them in Monitor.py 
@@ -89,6 +89,9 @@ This version uses Gaudi v21r9 and LHCb v31r0
 
 - In Tr/TrackUtils  v1r36:
   . Added VertexListRefiner and VertexListFilter 
+
+- In Rec/LumiAlgs  v3r4p1:
+  . SDST set just as RDST
 
 - In Velo/VeloRecMonitors  v2r9:
   . bug fix in occupancy monitor
