@@ -1,4 +1,4 @@
-// $Id: TrackVeloOverlapMonitor.cpp,v 1.1 2010-04-23 08:41:40 wouter Exp $
+// $Id: TrackVeloOverlapMonitor.cpp,v 1.2 2010-04-27 07:38:21 wouter Exp $
 // Include files 
 
 
@@ -128,7 +128,7 @@ StatusCode TrackVeloOverlapMonitor::execute()
 	    node->measurement().lhcbID().isVelo() ) {
 	  LHCb::VeloChannelID veloid = node->measurement().lhcbID().veloID() ;
 	  unsigned int station = (veloid.sensor()%64)/2 ; 
-	  unsigned int side    = (veloid.sensor()%2) ; 
+	  //unsigned int side    = (veloid.sensor()%2) ; 
 	  unsigned int type    = (veloid.sensor()/64) ;
 	  // ignore pile-up
 	  const LHCb::FitNode* fitnode = dynamic_cast<const LHCb::FitNode*>(node) ;
