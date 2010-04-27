@@ -55,7 +55,8 @@ RawDataFormatTool::RawDataFormatTool( const std::string& type,
   declareProperty( "UseExtendedFormat",  m_extendedFormat     = false  );
   declareProperty( "DecodeUsingODIN",    m_decodeUseOdin      = false  );
   declareProperty( "CheckDataIntegrity", m_checkDataIntegrity = true   );
-  declareProperty( "CheckEventIDs",      m_checkEventsIDs     = true   );
+  declareProperty( "CheckODINEventIDs",  m_checkODINEventsIDs = false  );
+  declareProperty( "CheckRICHEventIDs",  m_checkRICHEventsIDs = true   );
   declareProperty( "CheckBXIDs",         m_checkBxIDs         = true   );
   declareProperty( "UseFakeHPDID",       m_useFakeHPDID       = false  );
   declareProperty( "VerboseErrors",      m_verboseErrors      = false  );
@@ -93,13 +94,15 @@ StatusCode RawDataFormatTool::initialize()
   if ( m_extendedFormat ) info() << "Will encode RawEvent using extended HPD format" << endmsg;
 
   if ( m_decodeUseOdin )
-    Warning( "ODIN integrity checks are enabled",      StatusCode::SUCCESS ).ignore();
+    Warning( "ODIN integrity checks are enabled",          StatusCode::SUCCESS ).ignore();
   if ( !m_checkDataIntegrity )
-    Warning( "HPD Data integrity checks are disabled", StatusCode::SUCCESS ).ignore();
-  if ( !m_checkEventsIDs )
-    Warning( "Header Event ID checks are disabled",    StatusCode::SUCCESS ).ignore();
+    Warning( "HPD Data integrity checks are disabled",     StatusCode::SUCCESS ).ignore();
+  if ( !m_checkODINEventsIDs )
+    Warning( "Ingress/ODIN Event ID checks are disabled",  StatusCode::SUCCESS ).ignore();
+  if ( !m_checkRICHEventsIDs )
+    Warning( "Internal RICH Event ID checks are disabled", StatusCode::SUCCESS ).ignore();
   if ( !m_checkBxIDs )
-    Warning( "Header BX ID checks are disabled",       StatusCode::SUCCESS ).ignore();
+    Warning( "Header BX ID checks are disabled",           StatusCode::SUCCESS ).ignore();
 
   // Setup incident services
   incSvc()->addListener( this, IncidentType::BeginEvent );
@@ -809,19 +812,20 @@ void RawDataFormatTool::decodeToSmartIDs_2007( const LHCb::RawBank & bank,
       // Compare Ingress header to the ODIN
       if (  msgLevel(MSG::VERBOSE) )
       {
-        verbose() << "ODIN : EventNumber=" << odin()->eventNumber()
-                  << " BunchID=" << odin()->bunchId() << endmsg;
+        verbose() << "ODIN : EventNumber=" << EventID(odin()->eventNumber())
+                  << " BunchID=" << BXID(odin()->bunchId()) << endmsg;
       }
       const bool odinOK
         = ( !m_decodeUseOdin ? true :
-            ( !m_checkEventsIDs || ingressWord.eventID() == EventID(odin()->eventNumber()) ) &&
-            ( !m_checkBxIDs     || ingressWord.bxID()    == BXID   (odin()->bunchId())     ) );
+            ( !m_checkODINEventsIDs || ingressWord.eventID() == EventID(odin()->eventNumber()) ) &&
+            ( !m_checkBxIDs         || ingressWord.bxID()    == BXID   (odin()->bunchId())     ) );
       if ( !odinOK )
       {
         std::ostringstream mess;
         mess << "ODIN Mismatch : L1ID " << L1ID
-             << " : ODIN EvID=" << odin()->eventNumber() << " BxID=" << odin()->bunchId()
-             << " : L1IngressHeader " << ingressWord
+             << " : ODIN EvID="         << EventID(odin()->eventNumber()) 
+             << " BxID="                << BXID(odin()->bunchId())
+             << " : L1IngressHeader "   << ingressWord
              << " -> Data Suppressed";
         Error( mess.str() ).ignore();
       }
@@ -851,9 +855,10 @@ void RawDataFormatTool::decodeToSmartIDs_2007( const LHCb::RawBank & bank,
         {
 
           // Create data bank and decode into RichSmartIDs
-          std::auto_ptr<const HPDDataBank> hpdBank ( createDataBank( &bank.data()[lineC], // pointer to start of data
-                                                                     0, // Not needed here (to be removed). Must be 0 though
-                                                                     version ) );
+          std::auto_ptr<const HPDDataBank> 
+            hpdBank ( createDataBank( &bank.data()[lineC], // pointer to start of data
+                                      0, // Not needed here (to be removed). Must be 0 though
+                                      version ) );
 
           // is this HPD suppressed ?
           const bool hpdIsSuppressed = hpdBank->suppressed();
@@ -915,7 +920,7 @@ void RawDataFormatTool::decodeToSmartIDs_2007( const LHCb::RawBank & bank,
 
               // Compare Event IDs for errors
               bool OK = ( hpdIsSuppressed ? true :
-                          !m_checkEventsIDs || ingressWord.eventID() == hpdBank->eventID() );
+                          !m_checkRICHEventsIDs || ingressWord.eventID() == hpdBank->eventID() );
               if ( !OK )
               {
                 std::ostringstream mess;

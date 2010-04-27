@@ -319,8 +319,11 @@ namespace Rich
       /// Flag to turn on/off the use of the ODIN data bank during decoding for integrity checks
       bool m_decodeUseOdin;
 
-      /// Turn on/off Event ID integrity checks
-      bool m_checkEventsIDs;
+      /// Turn on/off Event ID integrity checks between the RICH ingress headers and the ODIN
+      bool m_checkODINEventsIDs;
+
+      /// Turn on/off internal RICH Event ID integrity checks between the ingress and HPD header words
+      bool m_checkRICHEventsIDs;
 
       /// Turn on/off BX ID integrity checks
       bool m_checkBxIDs;
