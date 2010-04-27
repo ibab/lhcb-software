@@ -3,7 +3,55 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
-- Use latest database tags in BooleSys qmtest. 
+ - Changes to references to reflect changes in Boole v21r1 output:
+   . Velo decoding protected against excessive clusters (VeloDAQ v5r1) 
+   . Use of CondDB for L0Muon FOI (L0DU v10r6). Not implemented in SIMCOND
+     for MC09 and before, must be given as options
+   . Default TCK is now 0x1810 for 2010 simulation (L0DU v10r6)
+   . Fixes to STCluster montirong (STMonitors v3r1)
+
+
+
+
+</PRE><H1><A NAME=v21r1>2010-04-28 Boole v21r2</A></H1><PRE>
+This version uses projects Gaudi v21r9, LHCb v31r0, Lbcom v9r2
+ and SQLDDDB v5r26, ParamFiles v8r2, FieldMap v5r3, L0TCK v3r1, AppConfig v3r*
+
+Production version for 2010 simulation. 
+Output needs Brunel v35r8 or later, Brunel v36r0 if decoding L0DU bank
+Needs SQLDDDB v5r25 or later with SIMCOND tags from *-20100412*
+
+ - Changes to configuration:
+   . Do not select any trigger type by default if "ODIN" is in 
+     Boole().FilterSequence, because all events are now LHCb::ODIN::LumiTrigger
+     TriggerType.
+
+ - Persistency changes
+   . BooleInit now always sets TriggerType = LHCb::ODIN::LumiTrigger in ODIN,
+     to follow what happens in real hardware and to allow Moore to have similar
+     behaviour as on real data. Previously, LHCb::ODIN::LumiTrigger was marking
+     simulated random triggers. Treatment of BXType should be reviewed
+     (DigiAlg v4r18)
+
+ - New tuning
+   . New tuning of ST capacitive coupling, using strip capacitance for the
+     calculation (STDigiAlgorithms v2r0)
+   . Update ST common mode simulation (STDigiAlgorithms v2r0)
+   . Generate noise strips down to S/N = 2.5 (STDigiAlgorithms v2r0)
+   . ST cluster cuts and noise now taken from SIMCOND 
+     Not usable for MC09 and previous: not implemented in SIMCOND. 
+     (STAlgorithms, STDigiAlgorithms, STTools)
+
+ - Changes to example options
+   . In MC09-Files.py, set L0 TCK for MC09 explicitly, no longer the default
+   . Add 2010-Files.py, example input files for 2010 digitization
+   . In Boole-2010.py, 
+     o remove explicit setting of TCK 0x1810, now the default
+     o remove explicit setting of L0Muon FOI, now picked up from SIMCOND
+
+ - Changes to tests
+   . Add python/Boole/QMTest/BooleExclusions.py and use it in the tests
+   . Add a test for 2010 simulation
 
 </PRE><H1><A NAME=v21r1>2010-03-30 Boole v21r1</A></H1><PRE>
 This version uses projects Gaudi v21r8, LHCb v30r0, Lbcom v9r0
