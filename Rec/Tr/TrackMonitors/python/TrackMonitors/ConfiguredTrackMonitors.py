@@ -3,7 +3,7 @@ from Configurables import (GaudiSequencer, TrackMonitor, TrackVertexMonitor,
                            TrackFitMatchMonitor,TrackV0Monitor,TrackDiMuonMonitor,
                            OTTrackMonitor, OTHitEfficiencyMonitor,OTTimeMonitor,
                            TrackCaloMatchMonitor,TrackMuonMatchMonitor,
-                           TrackITOverlapMonitor,
+                           TrackITOverlapMonitor,TrackVeloOverlapMonitor,
                            TTTrackMonitor, ITTrackMonitor)
 from Configurables import (RecSysConf, RecMoniConf, TrackSys)
 
@@ -19,6 +19,7 @@ def ConfiguredTrackMonitorSequence(Name = "TrackMonitorSequence",
         seq.Members.append( TrackFitMatchMonitor(HistoPrint=HistoPrint) )
         seq.Members.append( TrackAlignMonitor(HistoPrint=HistoPrint) )
         seq.Members.append( TrackITOverlapMonitor(HistoPrint=HistoPrint) )
+        seq.Members.append( TrackVeloOverlapMonitor(HistoPrint=HistoPrint) )
         seq.Members.append( TTTrackMonitor(HistoPrint=HistoPrint) )
         seq.Members.append( ITTrackMonitor(HistoPrint=HistoPrint) )
 
