@@ -14,6 +14,8 @@ from StrippingConf.StrippingStream import StrippingStream
 
 from StrippingSelections import StrippingB2Charged2Body
 from StrippingSelections import StrippingB2DPi
+from StrippingSelections import StrippingB2DPiChi2
+from StrippingSelections import StrippingB2DPiChi2Loose
 from StrippingSelections import StrippingB2DPiLoose
 from StrippingSelections import StrippingB2D3Pi
 from StrippingSelections.StrippingBs2PhiPhi import StrippingBs2PhiPhiConf #from StrippingSelections import StrippingBs2PhiPhi

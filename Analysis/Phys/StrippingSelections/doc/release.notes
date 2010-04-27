@@ -5,6 +5,9 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-04-27
+ - Fix a probleam in the Hadron stream created with my previous commit.
+
 ! 2010-04-26 - Jibo He
  - StrippingCcbar2Ppbar.py
    A loose line added for Charmunion -> ppbar, using the same selection as the 1st stage of Hlt2:
