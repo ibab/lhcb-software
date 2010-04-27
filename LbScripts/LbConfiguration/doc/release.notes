@@ -1,11 +1,16 @@
+2010-04-27  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* scripts/generateLogin: factored out the file testing in the generation of the wrapper shells group_login,
+	group_shell and LHCb.
+
 2010-04-27  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* scripts/generateLogin: fix after the change in "fixNative"
 
 2010-04-23  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* scripts/generateLogin: 
-	- fixed the main usage of the wrapper: now the convention is that the .noLHCBLoginscript file 
+	* scripts/generateLogin:
+	- fixed the main usage of the wrapper: now the convention is that the .noLHCBLoginscript file
 	must not exist in the $HOME directory
 	- completed the windows part.
 

@@ -25,7 +25,7 @@ from optparse import OptionParser
 def fixNativeString(data, dotbat=False):
     tobereplaced = {}
     if os.environ.has_key("HOME") and not dotbat :
-        tobereplaced["HOME"] = os.environ["HOME"]        
+        tobereplaced["HOME"] = os.environ["HOME"]
     if os.environ.has_key("VO_LHCB_SW_DIR") :
         tobereplaced["VO_LHCB_SW_DIR"] = os.environ["VO_LHCB_SW_DIR"]
     if os.environ.has_key("CMTBIN") :
@@ -51,8 +51,75 @@ def fixNativeString(data, dotbat=False):
                 data = data.replace(":",";")
     return data
 
+def ShellFileSnippet(base, shell, targetlocation, args = "", postargs="", prodlocation=None, offset=0):
+    content = ""
+    indent = 2
+    if shell == "sh" :
+        if prodlocation :
+            content += """
+if [[ -e %s/scripts/%s.sh ]]; then
+  . %s/scripts/%s.sh %s "$@" %s
+else
+  if [[ -e %s/scripts/%s.sh ]]; then
+    . %s/scripts/%s.sh %s "$@" %s
+  fi
+fi""" % (prodlocation, base,
+         prodlocation, base, args, postargs,
+         targetlocation, base,
+         targetlocation, base, args, postargs)
+        else :
+            content += """
+if [[ -e %s/scripts/%s.sh ]]; then
+  . %s/scripts/%s.sh %s "$@" %s
+fi""" % (targetlocation, base,
+         targetlocation, base, args, postargs)
+    elif shell == "csh" :
+        if prodlocation :
+            content += """
+if ( -e %s/scripts/%s.csh ) then
+  source %s/scripts/%s.csh %s ${*:q} %s
+else
+  if ( -e %s/scripts/%s.csh ) then
+    source %s/scripts/%s.csh %s ${*:q} %s
+  endif
+endif""" % (prodlocation, base,
+            prodlocation, base, args, postargs,
+            targetlocation, base,
+            targetlocation, base, args, postargs)
+        else :
+            content += """
+if ( -e %s/scripts/%s.csh ) then
+  source %s/scripts/%s.csh %s ${*:q} %s
+endif""" % (targetlocation, base,
+            targetlocation, base, args, postargs)
+
+    elif shell == "bat" :
+        if prodlocation :
+            content += """
+IF EXIST %s\scripts\%s.bat (
+  call %s\scripts\%s.bat %s %%* %s
+) else (
+  IF EXIST %s\scripts\%s.bat (
+    call %s\scripts\%s.bat %s %%* %s
+  )
+) """ % (prodlocation, base,
+         prodlocation, base, args, postargs,
+         targetlocation, base,
+         targetlocation, base, args, postargs)
+        else :
+            content += """
+IF EXIST %s\scripts\%s.bat (
+  call %s\scripts\%s.bat %s %%* %s
+)""" % (targetlocation, base,
+         targetlocation, base, args, postargs)
+
+    if offset :
+        content = content.replace("\n", "\n" + " "*offset*indent)
+
+    return content
+
 def fixNative(filename):
-                   
+
     inf = open(filename, "r")
     data = inf.read()
     inf.close()
@@ -62,13 +129,13 @@ def fixNative(filename):
         dotbat = True
     out.write(fixNativeString(data, dotbat))
     out.close()
-    
+
 def removeVariables(filename, varlist):
     inf = open(filename, "r")
     data = inf.readlines()
     inf.close()
     out = open(filename, "w")
-    
+
     for l in data :
         words = l.split()
         tobewritten = True
@@ -78,7 +145,7 @@ def removeVariables(filename, varlist):
                     tobewritten = False
         if tobewritten :
             out.write(" ".join(words) + "\n")
-    out.close()    
+    out.close()
 
 def fixPathes(filename):
     inf = open(filename, "r")
@@ -122,13 +189,13 @@ def fixPathes(filename):
                             out.write("fi\n")
                             written = True
                         elif filename.endswith(".bat") :
-                            out.write("IF DEFINED %s (\n" % p)                        
+                            out.write("IF DEFINED %s (\n" % p)
                             out.write("  set %s=%%%s%%\n" % (sp,p))
-                            out.write(")\n")                        
+                            out.write(")\n")
                             out.write(" ".join(words) + "\n")
-                            out.write("IF DEFINED %s (\n" % sp)                        
+                            out.write("IF DEFINED %s (\n" % sp)
                             out.write("  set %s=%%%s%%;%%%s%%\n" % (p, p, sp) )
-                            out.write(")\n")                        
+                            out.write(")\n")
                             written = True
             if not written :
                 out.write(" ".join(words) + "\n")
@@ -153,36 +220,36 @@ def fixPython(filename):
                     tobefixed = words[1].split("=")[1]
                 if tobefixed :
                     if filename.endswith(".csh") :
-                        components = tobefixed.split(":") 
+                        components = tobefixed.split(":")
                         newcmp = []
                         for c in components :
                             if c.find("Python") != -1 and c.endswith("/bin") :
                                 newcmp.append(c.replace("/bin", "${PYTHON_BINOFFSET}" ))
                             else :
                                 newcmp.append(c)
-                        words[2] = ":".join(newcmp) 
+                        words[2] = ":".join(newcmp)
                         out.write(" ".join(words) + "\n")
                         written = True
                     elif filename.endswith(".sh") :
                         components = tobefixed.split(":")
-                        newcmp = [] 
+                        newcmp = []
                         for c in components :
                             if c.find("Python") != -1 and c.endswith("/bin") :
                                 newcmp.append(c.replace("/bin", "${PYTHON_BINOFFSET}" ))
                             else :
                                 newcmp.append(c)
-                        words[1] = "%s=%s" % (p, ":".join(newcmp)) 
+                        words[1] = "%s=%s" % (p, ":".join(newcmp))
                         out.write(" ".join(words) + "\n")
                         written = True
                     elif filename.endswith(".bat") :
-                        components = tobefixed.split(";") 
-                        newcmp = [] 
+                        components = tobefixed.split(";")
+                        newcmp = []
                         for c in components :
                             if c.find("Python") != -1 and c.endswith("\\bin") :
-                                newcmp.append(c.replace("\\bin", "%PYTHON_BINOFFSET%" )) 
+                                newcmp.append(c.replace("\\bin", "%PYTHON_BINOFFSET%" ))
                             else :
-                                newcmp.append(c) 
-                        words[1] = "%s=%s" % (p, ";".join(newcmp)) 
+                                newcmp.append(c)
+                        words[1] = "%s=%s" % (p, ";".join(newcmp))
                         out.write(" ".join(words) + "\n")
                         written = True
         if not written :
@@ -199,10 +266,10 @@ def generateLoginCache(mysiteroot, shell="csh", version="", targetlocation=None,
     pardir = os.path.dirname(cachefilename)
     if not os.path.exists(pardir) :
         os.makedirs(pardir)
-    
+
     if os.environ.has_key("CMTEXTRATAGS") :
         del os.environ["CMTEXTRATAGS"]
-    
+
     os.environ["CMTCONFIG"] = "slc4_ia32_gcc34"
     llsargs = []
     llsargs.append("--silent")
@@ -214,7 +281,7 @@ def generateLoginCache(mysiteroot, shell="csh", version="", targetlocation=None,
     env = getLbLoginEnv(llsargs)
     for var in env.keys() :
         os.environ[var] = env[var]
-    
+
     setupprojargs = []
     setupprojargs.append("--silent")
     if not building :
@@ -222,11 +289,11 @@ def generateLoginCache(mysiteroot, shell="csh", version="", targetlocation=None,
     setupprojargs.append("--disable-CASTOR")
     setupprojargs.append("--no-touch-logfile")
     if not withoutpython :
-        setupprojargs.append("--runtime-project")            
+        setupprojargs.append("--runtime-project")
         setupprojargs.append("LCGCMT")
         setupprojargs.append("Python")
     genProjectSetup(cachefilename, "LbScripts", version, cmtconfig="slc4_ia32_gcc34",
-                    shell=shell, setup_project_extra_args=setupprojargs, 
+                    shell=shell, setup_project_extra_args=setupprojargs,
                     strip_path=True)
 
     if os.path.exists(cachefilename) :
@@ -240,8 +307,8 @@ def generateLoginCache(mysiteroot, shell="csh", version="", targetlocation=None,
         removeVariables(cachefilename, vartoremove )
         fixPathes(cachefilename)
         fixPython(cachefilename)
-        
-def generateLogin(targetlocation, script, version="", mysiteroot=None, building=False, 
+
+def generateLogin(targetlocation, script, version="", mysiteroot=None, building=False,
                   withoutpython=False, withoutcache=False):
     # @todo: use template system instead of hardcoding the files
     knownshells = ["sh", "csh", "tcsh", "zsh", "bat"]
@@ -300,33 +367,33 @@ unset LbLogin_tmpfile
         if mysiteroot :
             if withoutcache :
                 content = """ @echo off
-        
+
 set LbLogin_tmpfile="%%TEMP%%\LbLogin_tmpsetup.bat"
 
 python %s\python\LbConfiguration\LbLogin.py --shell=bat --output=%%LbLogin_tmpfile%% --mysiteroot=%s --scripts-version="%s" --no-cache %%*
 """ % (targetlocation, mysiteroot, version)
             else :
                 content = """ @echo off
-        
+
 set LbLogin_tmpfile="%%TEMP%%\LbLogin_tmpsetup.bat"
 
 python %s\python\LbConfiguration\LbLogin.py --shell=bat --output=%%LbLogin_tmpfile%% --mysiteroot=%s --scripts-version="%s" %%*
-""" % (targetlocation, mysiteroot, version)                
+""" % (targetlocation, mysiteroot, version)
         else :
             if withoutcache :
                 content = """@echo off
-        
+
 set LbLogin_tmpfile="%%TEMP%%\LbLogin_tmpsetup.bat"
 
 python %s\python\LbConfiguration\LbLogin.py --shell=bat --output=%%LbLogin_tmpfile%% --scripts-version="%s" --no-cache %%*
 """ % (targetlocation, version)
             else :
                 content = """@echo off
-        
+
 set LbLogin_tmpfile="%%TEMP%%\LbLogin_tmpsetup.bat"
 
 python %s\python\LbConfiguration\LbLogin.py --shell=bat --output=%%LbLogin_tmpfile%% --scripts-version="%s" %%*
-""" % (targetlocation, version)                
+""" % (targetlocation, version)
         content += """set LbLoginStatus=%ERRORLEVEL%
 
 if %LbLoginStatus% EQU 0 (
@@ -337,7 +404,7 @@ if exist %LbLogin_tmpfile% del %LbLogin_tmpfile%
 set LbLogin_tmpfile=
 
 """
-    
+
     f.write(content)
     f.close()
 
@@ -375,27 +442,17 @@ if [[ ! -e ${HOME}/.noLHCBLoginscript ]]; then
     rm -f ${LB_BANNER}
     unset LB_BANNER
   else"""
-        if prodlocation :
-            content += """
-    if [[ -e %s/scripts/LbLogin.sh ]]; then
-      . %s/scripts/LbLogin.sh --quiet "$@"
-    else
-      if [[ -e %s/scripts/LbLogin.sh ]]; then
-        . %s/scripts/LbLogin.sh --quiet "$@"
-      fi  
-    fi""" % (prodlocation, prodlocation, targetlocation, targetlocation)
-        else :
-            content += """
-    if [[ -e %s/scripts/LbLogin.sh ]]; then
-      . %s/scripts/LbLogin.sh --quiet "$@"
-    fi""" % (targetlocation, targetlocation)
+        content += ShellFileSnippet("LbLogin", shell,
+                                    targetlocation=targetlocation,
+                                    args="--quiet",
+                                    prodlocation=prodlocation, offset=2)
         content += """
   fi
   export LBLOGIN_DONE=yes
   unset lbvers
 fi
 
-""" 
+"""
     elif shell == "csh" :
         content += """
 if ( ! -e ${HOME}/.noLHCBLoginscript ) then
@@ -408,27 +465,17 @@ if ( ! -e ${HOME}/.noLHCBLoginscript ) then
     rm -f ${LB_BANNER}
     unsetenv LB_BANNER
   else"""
-        if prodlocation :
-            content += """
-    if ( -e %s/scripts/LbLogin.csh ) then 
-      source %s/scripts/LbLogin.csh --quiet ${*:q}
-    else
-      if ( -e %s/scripts/LbLogin.csh ) then 
-        source %s/scripts/LbLogin.csh --quiet ${*:q}
-      endif  
-    endif""" % (prodlocation, prodlocation, targetlocation, targetlocation)
-        else :
-            content += """
-    if ( -e %s/scripts/LbLogin.csh ) then 
-      source %s/scripts/LbLogin.csh --quiet ${*:q}
-    endif""" % (targetlocation, targetlocation)
+        content += ShellFileSnippet("LbLogin", shell,
+                                    targetlocation=targetlocation,
+                                    args="--quiet",
+                                    prodlocation=prodlocation, offset=2)
         content += """
   endif
   setenv LBLOGIN_DONE yes
   unset lbvers
-endif 
+endif
 
-""" 
+"""
     elif shell == "bat" :
         content += """
 IF DEFINED HOME (
@@ -437,48 +484,29 @@ IF DEFINED HOME (
     IF EXIST %HOME%\.devLHCBLoginscript (
       set lbvers="dev"
     ) """
-        if prodlocation :
-            content += """
-    IF EXIST %s\scripts\LbLogin.bat (
-      call %s\scripts\LbLogin.bat --quiet %%*
-    ) else (
-      IF EXIST %s\scripts\LbLogin.bat (
-        call %s\scripts\LbLogin.bat --quiet %%*
-      )
-    ) """ % (prodlocation, prodlocation, targetlocation, targetlocation)
-        else :
-            content += """
-    IF EXIST %s\scripts\LbLogin.bat (
-      call %s\scripts\LbLogin.bat --quiet %%*
-    )
+        content += ShellFileSnippet("LbLogin", shell,
+                                    targetlocation=targetlocation,
+                                    args="--quiet",
+                                    prodlocation=prodlocation, offset=2)
+        content += """
     set lbvers=
   )
-) """ % (targetlocation, targetlocation)
-        if prodlocation :
-            content += """ELSE (
-    set lbvers="prod"
-    IF EXIST %s\scripts\LbLogin.bat (
-      call %s\scripts\LbLogin.bat --quiet %%*
-    ) ELSE (
-      IF EXIST %s\scripts\LbLogin.bat (
-        call %s\scripts\LbLogin.bat --quiet %%*
-      )
-    )
-    set lbvers=
+) ELSE (
+  set lbvers="prod" """
+        content += ShellFileSnippet("LbLogin", shell,
+                                    targetlocation=targetlocation,
+                                    args="--quiet",
+                                    prodlocation=prodlocation, offset=1)
+
+        content += """
+  set lbvers=
 )
-""" % (prodlocation, prodlocation, targetlocation, targetlocation)
-        else :
-            content += """ELSE (
-    IF EXIST %s\scripts\LbLogin.bat (
-      call %s\scripts\LbLogin.bat --quiet %%*
-    )
-)
-""" % (targetlocation, targetlocation)
-        
+"""
+
     f.write(content)
     f.close()
     fixNative(script)
-    
+
 def generateGroupShell(targetlocation, shell, version="", mysiteroot=None, building=False):
     script = os.path.join(_scripts_dir,"group_shell.%s" % shell)
     prodlink = getProdLink(targetlocation)
@@ -495,44 +523,28 @@ if [[ ! -e ${HOME}/.noLHCBLoginscript ]]; then
     lbvers=dev
   fi
   if [[ -n "$LBLOGIN_DONE" ]]; then"""
-        if prodlocation :
-            content += """
-    if [[ -e %s/scripts/LbLogin.sh ]]; then
-      . %s/scripts/LbLogin.sh --silent "$@" >& /dev/null
-    else
-      if [[ -e %s/scripts/LbLogin.sh ]]; then
-        . %s/scripts/LbLogin.sh --silent "$@" >& /dev/null
-      fi
-    fi""" % (prodlocation, prodlocation, targetlocation, targetlocation)
-        else :
-            content += """
-    if [[ -e %s/scripts/LbLogin.sh ]]; then
-      . %s/scripts/LbLogin.sh --silent "$@" >& /dev/null
-    fi""" % (targetlocation, targetlocation)
+        content += ShellFileSnippet("LbLogin", shell,
+                                    targetlocation=targetlocation,
+                                    args="--silent",
+                                    postargs = ">& /dev/null",
+                                    prodlocation=prodlocation,
+                                    offset=2)
         content += """
   else
     export LB_BANNER=`mktemp`"""
-        if prodlocation :
-            content += """
-    if [[ -e %s/scripts/LbLogin.sh ]]; then
-      . %s/scripts/LbLogin.sh --quiet "$@" >> ${LB_BANNER}
-    else
-      if [[ -e %s/scripts/LbLogin.sh ]]; then
-        . %s/scripts/LbLogin.sh --quiet "$@" >> ${LB_BANNER}
-      fi
-    fi""" % (prodlocation, prodlocation, targetlocation, targetlocation)
-        else :
-            content += """
-    if [[ -e %s/scripts/LbLogin.sh ]]; then
-      . %s/scripts/LbLogin.sh --quiet "$@" >> ${LB_BANNER}
-    fi""" % (targetlocation, targetlocation)
+        content += ShellFileSnippet("LbLogin", shell,
+                                    targetlocation=targetlocation,
+                                    args="--quiet",
+                                    postargs = ">> ${LB_BANNER}",
+                                    prodlocation=prodlocation,
+                                    offset=2)
         content += """
   fi
   unset lbvers
-fi 
-             
+fi
+
 """
-    
+
     elif shell == "csh" :
         content += """
 if ( ! -e ${HOME}/.noLHCBLoginscript ) then
@@ -541,41 +553,25 @@ if ( ! -e ${HOME}/.noLHCBLoginscript ) then
     set lbvers=dev
   endif
   if ( $?LBLOGIN_DONE ) then"""
-        if prodlocation :
-            content += """
-    if ( -e %s/scripts/LbLogin.csh ) then
-      source %s/scripts/LbLogin.csh --silent ${*:q} >& /dev/null
-    else
-      if ( -e %s/scripts/LbLogin.csh ) then
-        source %s/scripts/LbLogin.csh --silent ${*:q} >& /dev/null
-      endif
-    endif""" % (prodlocation, prodlocation, targetlocation, targetlocation)
-        else :
-            content += """
-    if ( -e %s/scripts/LbLogin.csh ) then
-      source %s/scripts/LbLogin.csh --silent ${*:q} >& /dev/null
-    endif""" % (targetlocation, targetlocation)
-        content += """ 
+        content += ShellFileSnippet("LbLogin", shell,
+                                    targetlocation=targetlocation,
+                                    args="--silent",
+                                    postargs = ">& /dev/null",
+                                    prodlocation=prodlocation,
+                                    offset=2)
+        content += """
   else
     setenv LB_BANNER `mktemp`"""
-        if prodlocation :
-            content += """
-    if ( -e %s/scripts/LbLogin.csh ) then
-      source %s/scripts/LbLogin.csh --quiet ${*:q} >! ${LB_BANNER}
-    else
-      if ( -e %s/scripts/LbLogin.csh ) then
-        source %s/scripts/LbLogin.csh --quiet ${*:q} >! ${LB_BANNER}
-      endif
-    endif""" % (prodlocation, prodlocation, targetlocation, targetlocation)
-        else :
-            content += """
-    if ( -e %s/scripts/LbLogin.csh ) then
-      source %s/scripts/LbLogin.csh --quiet ${*:q} >! ${LB_BANNER}
-    endif""" % (targetlocation, targetlocation)
+        content += ShellFileSnippet("LbLogin", shell,
+                                    targetlocation=targetlocation,
+                                    args="--quiet",
+                                    postargs = ">! ${LB_BANNER}",
+                                    prodlocation=prodlocation,
+                                    offset=2)
         content += """
   endif
   unset lbvers
-endif 
+endif
 
 """
     elif shell == "bat" :
@@ -586,44 +582,25 @@ IF DEFINED HOME (
     IF EXIST %HOME%\.devLHCBLoginscript (
       set lbvers="dev"
     ) """
-        if prodlocation :
-            content += """
-    IF EXIST %s\scripts\LbLogin.bat (
-      call %s\scripts\LbLogin.bat --silent %%*
-    ) else (
-      IF EXIST %s\scripts\LbLogin.bat (
-        call %s\scripts\LbLogin.bat --silent %%*
-      )
-    ) """ % (prodlocation, prodlocation, targetlocation, targetlocation)
-        else :
-            content += """
-    IF EXIST %s\scripts\LbLogin.bat (
-      call %s\scripts\LbLogin.bat --silent %%*
-    )
+        content += ShellFileSnippet("LbLogin", shell,
+                                    targetlocation=targetlocation,
+                                    args="--silent",
+                                    prodlocation=prodlocation,
+                                    offset=2)
+        content += """
     set lbvers=
   )
-) """ % (targetlocation, targetlocation)
-        if prodlocation :
-            content += """ELSE (
-    set lbvers="prod"
-    IF EXIST %s\scripts\LbLogin.bat (
-      call %s\scripts\LbLogin.bat --silent %%*
-    ) ELSE (
-      IF EXIST %s\scripts\LbLogin.bat (
-        call %s\scripts\LbLogin.bat --silent %%*
-      )
-    )
-    set lbvers=
+) ELSE (
+  set lbvers="prod" """
+        content += ShellFileSnippet("LbLogin", shell,
+                                    targetlocation=targetlocation,
+                                    args="--silent",
+                                    prodlocation=prodlocation,
+                                    offset=1)
+        content += """
+  set lbvers=
 )
-""" % (prodlocation, prodlocation, targetlocation, targetlocation)
-        else :
-            content += """ELSE (
-    IF EXIST %s\scripts\LbLogin.bat (
-      call %s\scripts\LbLogin.bat --silent %%*
-    )
-)
-""" % (targetlocation, targetlocation)
-
+"""
     f.write(content)
     f.close()
     fixNative(script)
@@ -640,7 +617,7 @@ def generateMainWrapper(targetlocation, shell, version="", mysiteroot=None, buil
         if shell != "bat" :
             prodlocation = os.path.join(os.path.dirname(prodlink), "${lbvers}", "InstallArea")
         else :
-            prodlocation = os.path.join(os.path.dirname(prodlink), "%lbvers%", "InstallArea")            
+            prodlocation = os.path.join(os.path.dirname(prodlink), "%lbvers%", "InstallArea")
     f = open(script, "w")
     content = ""
     if shell == "sh" :
@@ -650,36 +627,18 @@ if [[ ! -e ${HOME}/.noLHCBLoginscript ]]; then
   if [[ -e ${HOME}/.devLHCBLoginscript ]]; then
     lbvers=dev
   fi"""
-        if prodlocation :
-            content += """
-  if [[ -e %s/scripts/group_shell.sh ]]; then
-    . %s/scripts/group_shell.sh "$@"
-  else
-    if [[ -e %s/scripts/group_shell.sh ]]; then
-      . %s/scripts/group_shell.sh "$@"
-    fi
-  fi""" % (prodlocation, prodlocation, targetlocation, targetlocation)
-        else :
-            content += """
-  if [[ -e %s/scripts/group_shell.sh ]]; then
-    . %s/scripts/group_shell.sh "$@"
-  fi""" % (targetlocation, targetlocation)
+        content += ShellFileSnippet("group_shell", shell,
+                                    targetlocation=targetlocation,
+                                    args="",
+                                    prodlocation=prodlocation,
+                                    offset=1)
         content += """
   if [[ -o login || -n "$LB_BANNER" ]]; then"""
-        if prodlocation :
-            content += """
-    if [[ -e %s/scripts/group_login.sh ]]; then
-      . %s/scripts/group_login.sh "$@"
-    else
-      if [[ -e %s/scripts/group_login.sh ]]; then
-        . %s/scripts/group_login.sh "$@"
-      fi
-    fi""" % (prodlocation, prodlocation, targetlocation, targetlocation)
-        else :
-            content += """
-    if [[ -e %s/scripts/group_login.sh ]]; then
-      . %s/scripts/group_login.sh "$@"
-    fi""" % (targetlocation, targetlocation)
+        content += ShellFileSnippet("group_login", shell,
+                                    targetlocation=targetlocation,
+                                    args="",
+                                    prodlocation=prodlocation,
+                                    offset=2)
         content += """
   fi
   unset lbvers
@@ -693,41 +652,23 @@ if ( ! -e ${HOME}/.noLHCBLoginscript ) then
   if ( -e ${HOME}/.devLHCBLoginscript ) then
     set lbvers=dev
   endif"""
-        if prodlocation :
-            content += """
-  if ( -e %s/scripts/group_shell.csh ) then
-    source %s/scripts/group_shell.csh ${*:q}
-  else
-    if ( -e %s/scripts/group_shell.csh ) then
-      source %s/scripts/group_shell.csh ${*:q}
-    endif
-  endif""" % (prodlocation, prodlocation, targetlocation, targetlocation)
-        else :
-            content += """
-  if ( -e %s/scripts/group_shell.csh ) then
-    source %s/scripts/group_shell.csh ${*:q}
-  endif""" % (targetlocation, targetlocation)
+        content += ShellFileSnippet("group_shell", shell,
+                                    targetlocation=targetlocation,
+                                    args="",
+                                    prodlocation=prodlocation,
+                                    offset=1)
         content += """
   if ($?loginsh  || $?LB_BANNER) then"""
-        if prodlocation :
-            content += """
-    if ( -e %s/scripts/group_login.csh ) then
-      source %s/scripts/group_login.csh ${*:q}
-    else
-      if ( -e %s/scripts/group_login.csh ) then
-        source %s/scripts/group_login.csh ${*:q}
-      endif
-    endif""" % (prodlocation, prodlocation, targetlocation, targetlocation)
-        else :
-            content += """
-    if ( -e %s/scripts/group_login.csh ) then
-      source %s/scripts/group_login.csh ${*:q}
-    endif""" % (targetlocation, targetlocation)
+        content += ShellFileSnippet("group_login", shell,
+                                    targetlocation=targetlocation,
+                                    args="",
+                                    prodlocation=prodlocation,
+                                    offset=2)
         content += """
   endif
   unset lbvers
-endif     
-        
+endif
+
 """
     elif shell == "bat" :
         content += """
@@ -737,55 +678,37 @@ IF DEFINED HOME (
     IF EXIST %HOME%\.devLHCBLoginscript (
       set lbvers="dev"
     ) """
-        if prodlocation :
-            content += """
-    IF EXIST %s\scripts\group_login.bat (
-      call %s\scripts\group_login.bat %%*
-    ) else (
-      IF EXIST %s\scripts\group_login.bat (
-        call %s\scripts\group_login.bat %%*
-      )
-    ) """ % (prodlocation, prodlocation, targetlocation, targetlocation)
-        else :
-            content += """
-    IF EXIST %s\scripts\group_login.bat (
-      call %s\scripts\group_login.bat %%*
-    )
+        content += ShellFileSnippet("group_login", shell,
+                                    targetlocation=targetlocation,
+                                    args="",
+                                    prodlocation=prodlocation,
+                                    offset=2)
+        content += """
     set lbvers=
   )
-) """ % (targetlocation, targetlocation)
-        if prodlocation :
-            content += """ELSE (
-    set lbvers="prod"
-    IF EXIST %s\scripts\group_login.bat (
-      call %s\scripts\group_login.bat %%*
-    ) ELSE (
-      IF EXIST %s\scripts\group_login.bat (
-        call %s\scripts\group_login.bat %%*
-      )
-    )
-    set lbvers=
+) ELSE (
+  set lbvers="prod" """
+        content += ShellFileSnippet("group_login", shell,
+                                    targetlocation=targetlocation,
+                                    args="",
+                                    prodlocation=prodlocation,
+                                    offset=1)
+        content += """
+  set lbvers=
 )
-""" % (prodlocation, prodlocation, targetlocation, targetlocation)
-        else :
-            content += """ELSE (
-    IF EXIST %s\scripts\group_login.bat (
-      call %s\scripts\group_login.bat %%*
-    )
-)
-""" % (targetlocation, targetlocation)
-    
+"""
+
     f.write(content)
     f.close()
     fixNative(script)
 
 
-def generateLogins(version, targetlocation=None, scripts=None, 
-                   mysiteroot=None, building=False, 
-                   withoutpython=False, withoutcache=False, 
+def generateLogins(version, targetlocation=None, scripts=None,
+                   mysiteroot=None, building=False,
+                   withoutpython=False, withoutcache=False,
                    withoutgwrap=False, withoutmwrap=False):
     shells = ["csh", "sh", "bat"]
-    if not targetlocation : 
+    if not targetlocation :
         targetlocation = os.path.realpath(_base_dir)
     if not scripts :
         scripts = []
@@ -818,11 +741,11 @@ if __name__ == '__main__':
     parser.set_defaults(withoutpython=False)
     parser.add_option("--without-python", dest="withoutpython", action="store_true",
                       help="prevents the setup of python from LCGCMT")
-    
+
     parser.set_defaults(withoutcache=False)
     parser.add_option("--no-cache", dest="withoutcache", action="store_true",
                       help="prevents the generation of the cache")
-    
+
     parser.set_defaults(withoutgroupwrapper=False)
     parser.add_option("--no-group-wrapper", dest="withoutgroupwrapper", action="store_true",
                       help="prevents the generation of the group wrapper scripts")
@@ -841,14 +764,14 @@ if __name__ == '__main__':
         cmtprojpathlist.insert(0, os.path.join(opts.mysiteroot, "lcg", "external"))
         cmtprojpathlist.insert(0, os.path.join(opts.mysiteroot, "lhcb"))
         os.environ["LHCBPROJECTPATH"] = os.pathsep.join(cmtprojpathlist)
-    
+
 
     version = opts.login_version
     if len(args) > 0 :
         targetlocation = os.path.realpath(args[0])
     if len(args) > 1 :
         scripts = args[1:]
-        
+
     generateLogins(version, targetlocation, scripts, opts.mysiteroot, opts.building,
                    opts.withoutpython, opts.withoutcache,
                    opts.withoutgroupwrapper, opts.withoutmainwrapper)
