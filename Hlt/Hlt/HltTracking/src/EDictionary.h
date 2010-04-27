@@ -25,8 +25,7 @@ namespace zen {
     dictionary() { }
 
     //! default destructor
-    virtual ~dictionary() 
-      {clear();}
+    ~dictionary()  {}
 
     template <class T>
     bool add(const Key& key, const T& t){
@@ -61,7 +60,7 @@ namespace zen {
     } 
 
     //! clear the dictionary
-    virtual void clear() {
+    void clear() {
       _map.clear();
       _keys.clear();
     }
