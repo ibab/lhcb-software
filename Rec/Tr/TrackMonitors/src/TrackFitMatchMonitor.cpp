@@ -2,8 +2,12 @@
 #include "GaudiKernel/ToolHandle.h"
 #include "GaudiAlg/GaudiHistoAlg.h"
 #include "Event/Track.h"
+#include "Event/TrackFitResult.h"
 #include "Event/FitNode.h"
+#include "AIDA/IProfile1D.h"
+#include "AIDA/IHistogram1D.h"
 
+#include <boost/foreach.hpp>
 
 class TrackFitMatchMonitor : public GaudiHistoAlg 
 {
@@ -31,9 +35,16 @@ private:
   inline void myPlot1D(double x, const std::string& path,const std::string& title, double xmin, double xmax) ;
   inline void myProfile1D(double x, double y, const std::string& path,const std::string& title, 
 			  double xmin, double xmax, size_t nbins) ;
+  void plotCurvatureMatch(const LHCb::Track& track) ;
 private:
   std::string m_trackContainerName;
   int m_constrainMethod ;
+  AIDA::IProfile1D* m_curvatureRatioTToLongPr ;
+  AIDA::IProfile1D* m_curvatureRatioVeloTTToLongPr ;
+  AIDA::IHistogram1D* m_curvatureRatioTToLongH1 ;
+  AIDA::IHistogram1D* m_curvatureRatioVeloTTToLongH1 ;
+  AIDA::IHistogram1D* m_curvatureRatioTToLongPullH1 ;
+  AIDA::IHistogram1D* m_curvatureRatioVeloTTToLongPullH1 ;
 } ;
 
 // Declaration of the Algorithm Factory
@@ -65,6 +76,15 @@ StatusCode TrackFitMatchMonitor::initialize()
 {
   StatusCode sc = GaudiHistoAlg::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;              // error printed already by GaudiAlgorithm
+
+  setHistoTopDir("Track/") ;
+  m_curvatureRatioTToLongPr = bookProfile1D("curvatureRatioTToLongVsQoP", "curvature ratio T to Long versus q/p",-0.4,0.4,40) ;
+  m_curvatureRatioVeloTTToLongPr = bookProfile1D("curvatureRatioVeloTTToLongVsQoP", "curvature ratio Velo-TT to Long versus q/p",-0.4,0.4,40) ;
+  m_curvatureRatioTToLongH1 = book1D("curvatureRatioTToLong", "curvature ratio T to Long",0,2) ;
+  m_curvatureRatioVeloTTToLongH1 = book1D("curvatureRatioVeloTTToLong", "curvature ratio Velo-TT to Long",0,2) ;
+  m_curvatureRatioTToLongPullH1 = book1D("curvatureRatioTToLongPull", "curvature ratio T to Long pull",-5,5) ;
+  m_curvatureRatioVeloTTToLongPullH1 = book1D("curvatureRatioVeloTTToLongPull", "curvature ratio Velo-TT to Long pull",-5,5) ;
+
   return sc;
 }
 
@@ -232,6 +252,7 @@ StatusCode TrackFitMatchMonitor::execute()
        itr != tracks->end(); ++itr) {
     //plot((**itr).chi2PerDoF(),"chi2 per dof",0,10) ;
     plot((**itr).info(LHCb::Track::FitMatchChi2,-1),"match chi2",0,50) ;
+    plotCurvatureMatch( **itr ) ;
 
     const LHCb::FitNode *lastVelo(0),*firstTT(0),*lastTT(0),*firstT(0) ;
     const LHCb::FitNode *fitnode(0) ;
@@ -281,4 +302,66 @@ StatusCode TrackFitMatchMonitor::execute()
     }
   }
   return StatusCode::SUCCESS ;
+}
+
+
+void TrackFitMatchMonitor::plotCurvatureMatch(const LHCb::Track& track)
+{
+  // inspired by the problems we see in the field. see also TT field study
+  
+  if( track.hasT() && track.hasVelo() && track.hasTT() && std::abs(track.firstState().qOverP()) > 0 ) {
+    
+    // first make sure that we have hits in all 3 T stations
+    int hitsInStation[3] = {0,0,0} ;
+    BOOST_FOREACH( LHCb::Node* node, track.fitResult()->nodes() ) {
+      if(node->type() == LHCb::Node::HitOnTrack ) {
+	LHCb::LHCbID id = node->measurement().lhcbID() ;
+	if( id.isOT() ) {
+	  hitsInStation[ id.otID().station()-1 ] += 1 ;
+	} else if( id.isIT() ) {
+	  hitsInStation[ id.stID().station()-1 ] += 1 ;
+	}
+      }
+    }
+      
+    if( hitsInStation[0] >=3 && hitsInStation[1] >=3 && hitsInStation[2] >=3 ) {
+
+      // first get the 3 measurements of the curvature with error
+      //nodes are sorted in decreasing z. find the nodes around the magnet
+      const LHCb::Node *nodeAfter(0), *nodeBefore(0), *firstNodeAfterT1(0) ;
+      BOOST_FOREACH( LHCb::Node* node, track.fitResult()->nodes() ) {
+	if( node->z() > 5200 ) {
+	  if( nodeAfter==0 || nodeAfter->z() > node->z() ) nodeAfter = node ;
+	} else {
+	  if( nodeBefore==0 || nodeBefore->z() < node->z() ) nodeBefore = node ;
+	}
+	if( node->z() > 8100 )
+	  if( firstNodeAfterT1 ==0 || firstNodeAfterT1->z() > node->z() ) firstNodeAfterT1 = node ;
+	
+      }
+      const LHCb::FitNode *fitNodeAfter = dynamic_cast<const LHCb::FitNode*>(nodeAfter) ;
+      const LHCb::FitNode *fitNodeBefore = dynamic_cast<const LHCb::FitNode*>(nodeBefore) ;
+      
+      // NOTE: we dont have the filtered states, so we take the
+      // predicted state at the next node! for q/p this is okay. don't
+      // do this for any of the other parameters!!
+      
+      double qopT      = fitNodeBefore->predictedStateForward().qOverP() ;
+      double qop       = fitNodeBefore->state().qOverP() ;
+      double qopVeloTT = fitNodeAfter->predictedStateBackward().qOverP() ;
+      
+      double qoperrT = std::sqrt(fitNodeBefore->predictedStateForward().covariance()(4,4));
+      double qoperrVeloTT = std::sqrt(fitNodeAfter->predictedStateForward().covariance()(4,4));
+      
+      m_curvatureRatioTToLongH1->fill(qopT / qop ) ;
+      m_curvatureRatioVeloTTToLongH1->fill(qopVeloTT / qop ) ;
+      m_curvatureRatioTToLongPullH1->fill( (qopT - qop) / qoperrT ) ;
+      m_curvatureRatioVeloTTToLongPullH1->fill( (qopVeloTT - qop) / qoperrVeloTT ) ;
+      
+      if( std::abs(qopT / qop - 1 ) < 1 ) 
+        m_curvatureRatioTToLongPr->fill(qop * Gaudi::Units::GeV, qopT / qop ) ;
+      if( std::abs(qopVeloTT / qop - 1 ) < 1 ) 
+	m_curvatureRatioVeloTTToLongPr->fill(qop * Gaudi::Units::GeV, qopVeloTT / qop ) ;
+    }
+  }
 }
