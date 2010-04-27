@@ -54,10 +54,16 @@ namespace LHCb {
 
     public:
       /**
+       * Update statistics about the file.
+       */
+      void updateFile(char *fileName,  unsigned int *trgEvents, unsigned int *statEvents);
+
+      /**
        * "Confirms" that the file is completely written to, closed,
        * and ready for migration to tape.
        */
-      void confirmFile(char *fileName, unsigned int adlerSum, unsigned const char *md5Sum, unsigned long size, unsigned long events, unsigned long physEvents, unsigned int *trgEvents, unsigned int *statEvents);
+      void confirmFile(char *fileName, unsigned int adlerSum, unsigned const char *md5Sum, unsigned long size, unsigned long events, unsigned long physEvents);
+//, unsigned int *trgEvents, unsigned int *statEvents);
 
       /**
        * Creates an entry in the Run Database for the specified file,
@@ -148,14 +154,22 @@ namespace LHCb {
   "   <param><value>\n" \
   "      <string>%lu</string>\n" \
   "    </value></param>\n" \
-  "   <param><value>\n" \
+  "  </params>\n"  \
+  "</methodCall>\n"
+
+#define UPDATE_TEMPLATE "<?xml version=\"1.0\"?>\n" \
+  "<methodCall>\n" \
+  "  <methodName>updateFile</methodName>\n" \
+  "  <params>\n"   \
+  "    <param><value>\n" \
   "      <string>%s</string>\n" \
   "    </value></param>\n" \
-  "   <param><value>\n" \
+  "    <param><value>\n" \
   "      <string>%s</string>\n" \
   "    </value></param>\n" \
   "  </params>\n"  \
   "</methodCall>\n"
+
 
 #define HEADER_TEMPLATE "POST /RPC2 HTTP/1.0\n" \
   "User-Agent: MDFWriterNet\n" \

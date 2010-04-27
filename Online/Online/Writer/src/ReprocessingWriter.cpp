@@ -330,14 +330,15 @@ void ReprocessingWriter::notifyClose(struct cmd_header *cmd)   {
   unsigned char *md5 = pdu->md5_sum;
   try {
     m_bufferLength -= cmd->data.stop_data.size;
+    m_rpcObj->updateFile(cmd->file_name,
+                          pdu->trgEvents,
+                          pdu->statEvents);
     m_rpcObj->confirmFile(cmd->file_name,
 			  pdu->adler32_sum,
 			  pdu->md5_sum,
                           cmd->data.stop_data.size,
                           pdu->events,
-                          pdu->physStat,
-                          pdu->trgEvents,
-                          pdu->statEvents);
+                          pdu->physStat);
     *m_log << MSG::INFO << "Confirmed ";
   }
   catch(exception& rte) {

@@ -158,6 +158,8 @@ namespace LHCb {
     unsigned int getLumiEventsEx(){ return m_mon->m_statEvents[LUMIEX]; }
     unsigned int getBeamGasEventsIn(){ return m_mon->m_statEvents[BEAMGASIN]; }
     unsigned int getBeamGasEventsEx(){ return m_mon->m_statEvents[BEAMGASEX]; }
+    unsigned int getLowLumi(){ return m_mon->m_statEvents[LOWLUMI]; }
+    unsigned int getMidLumi(){ return m_mon->m_statEvents[MIDLUMI]; }
     
     void incPhysEventsIn(){  m_mon->m_statEvents[PHYSIN]++; }
     void incPhysEventsEx(){  m_mon->m_statEvents[PHYSEX]++; }
@@ -169,6 +171,8 @@ namespace LHCb {
     void incLumiEventsEx(){  m_mon->m_statEvents[LUMIEX]++; }
     void incBeamGasEventsIn(){  m_mon->m_statEvents[BEAMGASIN]++; }
     void incBeamGasEventsEx(){  m_mon->m_statEvents[BEAMGASEX]++; }
+    void incLowLumi(){  m_mon->m_statEvents[LOWLUMI]++; }
+    void incMidLumi(){  m_mon->m_statEvents[MIDLUMI]++; }
 
     inline int getStatEvents(unsigned int * destBuffer, int size) {
        if(size == MAX_STAT_TYPES) {
@@ -324,7 +328,11 @@ namespace LHCb {
   class MDFWriterNet : public MDFWriter, INotifyClient, virtual public IIncidentListener {
     typedef LHCb::Connection Connection;
   protected:
-    /// Condition to perform the MD5 sum on the fly
+
+    /// Time when the Online statistics were updated for the last time in the RunDB. 
+    struct timeval m_prevUpdate;    
+
+    /// Condition to perform the MD5 sum on the fly.
     bool m_enableMD5;
 
     /// The initial storage server hostname to connect to.

@@ -14,6 +14,7 @@
 #include <sys/msg.h>
 #include <sys/ipc.h>
 #include <sys/stat.h>
+#include <sys/time.h>
 #include <pthread.h>
 #include <errno.h>
 #include <fcntl.h>
@@ -149,6 +150,7 @@ void File::init(const std::string& fileName, unsigned int runNumber, bool enable
   memset(m_mon->m_statEvents, 0, MAX_STAT_TYPES*sizeof(unsigned int));
 
   m_mon->m_svcID = ::dis_add_service((char *) svc.c_str(),(char *) "C",0,0,feedMonitor,(long)m_mon);
+
 }
 
 /// Destructor.
@@ -218,6 +220,8 @@ StatusCode MDFWriterNet::initialize(void)
 
   if (m_enableMD5) *m_log << MSG::INFO << "MD5 sum on-the-fly computing enabled." << endmsg;
   else *m_log << MSG::INFO << "MD5 sum on-the-fly computing disabled." << endmsg;
+
+  gettimeofday(&m_prevUpdate, NULL);
 
   m_currFile = NULL;
   m_srvConnection = new Connection(m_serverAddr, m_serverPort,
@@ -446,9 +450,21 @@ File* MDFWriterNet::createAndOpenFile(unsigned int runNumber)
 
   // log opening of file
   if(m_mq_available) {
-      size_t msg_size = snprintf(NULL, 0, "openfile%c%i%c%s", DELIMITER, getpid(), DELIMITER, currFile->getMonitor()->m_name) + 1;
+
+      struct timeval tv;
+      gettimeofday(&tv, NULL);
+
+      size_t msg_size = snprintf(NULL, 0, "openfile%c%i%c%s%c%u%c%d", 
+          DELIMITER, getpid(), 
+          DELIMITER, currFile->getMonitor()->m_name,
+          DELIMITER, (unsigned int) tv.tv_sec,
+          DELIMITER, (int) tv.tv_usec) + 1;
       char* msg = (char*) malloc(msg_size);
-      snprintf(msg, msg_size, "openfile%c%i%c%s", DELIMITER, getpid(), DELIMITER, currFile->getMonitor()->m_name);
+      snprintf(msg, msg_size, "openfile%c%i%c%s%c%u%c%d", 
+          DELIMITER, getpid(), 
+          DELIMITER, currFile->getMonitor()->m_name,
+          DELIMITER, (unsigned int) tv.tv_sec,
+          DELIMITER, (int) tv.tv_usec);
       if(mq_send(m_mq, msg, msg_size, 0) < 0) {
           *m_log << MSG::WARNING
                  << "Could not send message"
@@ -526,6 +542,8 @@ void MDFWriterNet::closeFile(File *currFile)
          << "BEAMGASEX : " << pdu.statEvents[BEAMGASEX] << " "
          << "LUMIEX : " << pdu.statEvents[LUMIEX] << " "
          << "RANDEX : " << pdu.statEvents[RANDEX] << " "
+         << "LOWLUMI : " << pdu.statEvents[LOWLUMI] << " "
+         << "MIDLUMI : " << pdu.statEvents[MIDLUMI] << " "
          << "Command size is: " << sizeof(header) + sizeof(pdu)
          << endmsg;
 
@@ -533,22 +551,45 @@ void MDFWriterNet::closeFile(File *currFile)
   
   // log closing of file
   if(m_mq_available) {
+
+      unsigned int statEvents[MAX_STAT_TYPES];
+      if(m_currFile->getStatEvents(statEvents, MAX_STAT_TYPES) != 0) {
+        *m_log << MSG::ERROR << WHERE << "Error getting the routed event statistics" << endmsg;
+      }
+
+      char statEventsCharString[512];
+
+      //XXX test return
+      sprintf(statEventsCharString, "PHYSIN:%d;MBIASIN:%d;LUMIIN:%d;BEAMGASIN:%d;RANDIN:%d;PHYSEX:%d;MBIASEX:%d;LUMIEX:%d;BEAMGASEX:%d;RANDEX:%d;LOWLUMI:%d;MIDLUMI:%d", 
+      statEvents[PHYSIN], statEvents[MBIASIN], statEvents[LUMIIN], statEvents[BEAMGASIN],
+      statEvents[RANDEX], statEvents[PHYSEX], statEvents[MBIASEX], statEvents[LUMIEX],
+      statEvents[BEAMGASEX], statEvents[RANDEX], statEvents[LOWLUMI], statEvents[MIDLUMI]);
+
+      struct timeval tv;
+      gettimeofday(&tv, NULL);
+
 //      size_t msg_size = snprintf(NULL, 0, "closefile%c%i%c%s",  DELIMITER, getpid(), DELIMITER, currFile->getMonitor()->m_name) + 1;
-      size_t msg_size = snprintf(NULL, 0, "closefile%c%i%c%s%c%s%zu%c%s%u%c%s%u",  
+      size_t msg_size = snprintf(NULL, 0, "closefile%c%i%c%s%c%s%zu%c%s%u%c%s%u%c%u%c%d%c%s",  
           DELIMITER, getpid(), 
           DELIMITER, currFile->getMonitor()->m_name, 
           DELIMITER, "bytesWritten=", currFile->getBytesWritten(), 
           DELIMITER, "events=", currFile->getEvents(), 
-          DELIMITER, "physEvents=", currFile->getPhysStat()) + 1; //XXX Change physEvents to physStat, see with Rainer
+          DELIMITER, "physEvents=", currFile->getPhysStat(),
+          DELIMITER, (unsigned int) tv.tv_sec,
+          DELIMITER, (int) tv.tv_usec,
+          DELIMITER, statEventsCharString) + 1; //XXX Change physEvents to physStat, see with Rainer
 
       char* msg = (char*) malloc(msg_size);
 //      snprintf(msg, msg_size, "closefile%c%i%c%s", DELIMITER, getpid(), DELIMITER, currFile->getMonitor()->m_name);
-      snprintf(msg, msg_size, "closefile%c%i%c%s%c%s%zu%c%s%u%c%s%u", 
+      snprintf(msg, msg_size, "closefile%c%i%c%s%c%s%zu%c%s%u%c%s%u%c%u%c%d%c%s", 
           DELIMITER, getpid(), 
           DELIMITER, currFile->getMonitor()->m_name, 
           DELIMITER, "bytesWritten=", currFile->getBytesWritten(), 
           DELIMITER, "events=", currFile->getEvents(), 
-          DELIMITER, "physEvents=", currFile->getPhysStat()); //XXX
+          DELIMITER, "physEvents=", currFile->getPhysStat(),
+          DELIMITER, (unsigned int) tv.tv_sec,
+          DELIMITER, (int) tv.tv_usec,
+          DELIMITER, statEventsCharString); 
       if(mq_send(m_mq, msg, msg_size, 0) < 0) {
           *m_log << MSG::WARNING
                  << "Could not send message"
@@ -718,23 +759,65 @@ StatusCode MDFWriterNet::writeBuffer(void *const /*fd*/, const void *data, size_
 
   }
  
+  struct timeval tv;
+  gettimeofday(&tv, NULL);
+  if(tv.tv_sec - m_prevUpdate.tv_sec > 2) {
+      //update rundb stats ...
+
+      unsigned int trgEvents[MAX_TRIGGER_TYPES];
+      if(m_currFile->getTrgEvents(trgEvents, MAX_TRIGGER_TYPES) != 0) {
+        *m_log << MSG::ERROR << WHERE << "Error getting the triggered event statistics" << endmsg;
+      }
+
+      unsigned int statEvents[MAX_STAT_TYPES];
+      if(m_currFile->getStatEvents(statEvents, MAX_STAT_TYPES) != 0) {
+        *m_log << MSG::ERROR << WHERE << "Error getting the routed event statistics" << endmsg;
+      }
+
+      m_rpcObj->updateFile((char *)m_currFile->getFileName()->c_str(),
+                          trgEvents,
+                          statEvents);
+      m_prevUpdate.tv_sec = tv.tv_sec;
+      m_prevUpdate.tv_usec = tv.tv_usec;
+  }
 
  
   // after every MB send statistics
   if (m_mq_available && totalBytesWritten % 1048576 < len) {
-      size_t msg_size = snprintf(NULL, 0, "log%c%i%c%s%c%s%zu%c%s%u%c%s%u",  
+
+      unsigned int statEvents[MAX_STAT_TYPES];
+      if(m_currFile->getStatEvents(statEvents, MAX_STAT_TYPES) != 0) {
+        *m_log << MSG::ERROR << WHERE << "Error getting the routed event statistics" << endmsg;
+      }      
+ 
+      char statEventsCharString[512];
+
+      //XXX test return value
+      sprintf(statEventsCharString, "PHYSIN:%d;MBIASIN:%d;LUMIIN:%d;BEAMGASIN:%d;RANDIN:%d;PHYSEX:%d;MBIASEX:%d;LUMIEX:%d;BEAMGASEX:%d;RANDEX:%d;LOWLUMI:%d;MIDLUMI:%d", 
+      statEvents[PHYSIN], statEvents[MBIASIN], statEvents[LUMIIN], statEvents[BEAMGASIN],
+      statEvents[RANDEX], statEvents[PHYSEX], statEvents[MBIASEX], statEvents[LUMIEX],
+      statEvents[BEAMGASEX], statEvents[RANDEX], statEvents[LOWLUMI], statEvents[MIDLUMI]);
+
+
+      size_t msg_size = snprintf(NULL, 0, "log%c%i%c%s%c%s%zu%c%s%u%c%s%u%c%u%c%d%c%s",  
       DELIMITER, getpid(), 
       DELIMITER, m_currFile->getMonitor()->m_name,
       DELIMITER, "bytesWritten=", totalBytesWritten,
       DELIMITER, "events=", m_currFile->getEvents(), 
-      DELIMITER, "physEvents=", m_currFile->getPhysStat()) + 1; //XXX this one see with David to change to physStat
+      DELIMITER, "physEvents=", m_currFile->getPhysStat(),
+      DELIMITER, (unsigned int) tv.tv_sec, 
+      DELIMITER, (int) tv.tv_usec,
+      DELIMITER, statEventsCharString ) + 1;
       char* msg = (char*) malloc(msg_size);
-      snprintf(msg, msg_size, "log%c%i%c%s%c%s%zu%c%s%u%c%s%u", 
+      snprintf(msg, msg_size, "log%c%i%c%s%c%s%zu%c%s%u%c%s%u%c%u%c%d%c%s", 
       DELIMITER, getpid(), 
       DELIMITER, m_currFile->getMonitor()->m_name,
       DELIMITER, "bytesWritten=", totalBytesWritten,
       DELIMITER, "events=", m_currFile->getEvents(), 
-      DELIMITER, "physEvents=", m_currFile->getPhysStat()); //XXX same
+      DELIMITER, "physEvents=", m_currFile->getPhysStat(),
+      DELIMITER, (unsigned int) tv.tv_sec, 
+      DELIMITER, (int) tv.tv_usec,
+      DELIMITER, statEventsCharString );
 
       if(mq_send(m_mq, msg, msg_size, 0) < 0) {
           *m_log << MSG::WARNING
@@ -800,6 +883,8 @@ inline void MDFWriterNet::countRouteStat(MDFHeader *mHeader, size_t) {
   static const unsigned int bit33 =0x2;
   static const unsigned int bit47 =0x8000;
   static const unsigned int bit49 =0x20000;
+  static const unsigned int bit50 =0x40000;
+  static const unsigned int bit51 =0x80000;
 
   unsigned int routeBitMask0 = mHeader->subHeader().H1->m_trMask[0];
   unsigned int routeBitMask1 = mHeader->subHeader().H1->m_trMask[1];
@@ -820,6 +905,8 @@ inline void MDFWriterNet::countRouteStat(MDFHeader *mHeader, size_t) {
   if(isLumi) m_currFile->incLumiEventsIn();
   if(isBeamGas) m_currFile->incBeamGasEventsIn();
 
+  if(routeBitMask1 & bit50) m_currFile->incLowLumi();
+  if(routeBitMask1 & bit51) m_currFile->incMidLumi();
 
   if(!isPhys && !isMBias && !isLumi && !isBeamGas) m_currFile->incRandEventsEx(); 
   if(isPhys && !isMBias && !isLumi && !isBeamGas) m_currFile->incPhysEventsEx();
@@ -1001,14 +1088,16 @@ void MDFWriterNet::notifyClose(struct cmd_header *cmd)
   struct cmd_stop_pdu *pdu=(struct cmd_stop_pdu *) ((char*)cmd + sizeof(struct cmd_header));
     *m_log << MSG::INFO << WHERE << " notifyClose start" << endmsg;
   try {
+    m_rpcObj->updateFile(cmd->file_name,
+                          pdu->trgEvents,
+                          pdu->statEvents);
     m_rpcObj->confirmFile(cmd->file_name,
 			              pdu->adler32_sum,
 			              pdu->md5_sum,
                           cmd->data.stop_data.size,
                           pdu->events,
-                          pdu->physStat,
-                          pdu->trgEvents,
-                          pdu->statEvents);
+                          pdu->physStat);
+
     *m_log << MSG::INFO << "Confirmed file " << cmd->file_name 
          << "RunNumber: "  << cmd->run_no << " "
          << "Adler32: "    << pdu->adler32_sum << " "
@@ -1035,6 +1124,8 @@ void MDFWriterNet::notifyClose(struct cmd_header *cmd)
          << "BEAMGASEX : " << pdu->statEvents[BEAMGASEX] << " "
          << "LUMIEX : " << pdu->statEvents[LUMIEX] << " "
          << "RANDEX : " << pdu->statEvents[RANDEX] << " "
+         << "LOWLUMI : " << pdu->statEvents[LOWLUMI] << " "
+         << "MIDLUMI : " << pdu->statEvents[MIDLUMI] << " "
          << endmsg;
 
   } catch(std::exception& rte) {

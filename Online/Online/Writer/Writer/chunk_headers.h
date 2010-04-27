@@ -8,7 +8,7 @@
  */
 #define MAX_FILE_NAME 256
 #define MAX_TRIGGER_TYPES 8
-#define MAX_STAT_TYPES 10
+#define MAX_STAT_TYPES 12
 
 #define PHYSIN    0
 #define MBIASIN   1
@@ -20,6 +20,8 @@
 #define LUMIEX    7
 #define BEAMGASEX 8
 #define RANDEX    9
+#define LOWLUMI   10
+#define MIDLUMI   11
  
 
 /**
