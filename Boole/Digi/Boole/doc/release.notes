@@ -11,9 +11,12 @@ Purpose: LHCb Digitization program
  
  - Changes to example options
    . In MC09-Files.py, set L0 TCK for MC09 explicitly, no longer the default
+   . Add 2010-Files.py, example input files for 2010 digitization
+   . In Boole-2010.py, remove explicit setting of TCK 0x1810, now the default
 
  - Changes to tests
    . Add python/Boole/QMTest/BooleExclusions.py and use it in the tests
+   . Add a test for 2010 simulation
 
  - Changes to references to reflect changes in Boole v21r1 output:
    . Cluster cuts can be taken from conditions (STAlgorithms)

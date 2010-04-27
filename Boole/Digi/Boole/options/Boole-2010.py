@@ -11,5 +11,5 @@ importOptions("$APPCONFIGOPTS/Boole/Default.py")
 importOptions("$APPCONFIGOPTS/Boole/DataType-2010.py")
 importOptions("$APPCONFIGOPTS/Boole/IgnoreFlatSpillover.py")
 
-importOptions("$APPCONFIGOPTS/L0/L0TCK-0x1810.py")
 importOptions("$APPCONFIGOPTS/L0/L0Muon-FOI-2009.py")
+ 
