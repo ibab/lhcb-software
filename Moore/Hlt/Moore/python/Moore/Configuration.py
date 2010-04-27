@@ -1,7 +1,7 @@
 """
 High level configuration tool(s) for Moore
 """
-__version__ = "$Id: Configuration.py,v 1.116 2010-04-21 19:02:07 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.117 2010-04-27 14:24:29 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ, path
@@ -444,8 +444,6 @@ class Moore(LHCbConfigurableUser):
             if OnlineEnv.PartitionName == 'FEST' or OnlineEnv.PartitionName == 'LHCb' :
                 self.setProp('InitialTCK',OnlineEnv.InitialTCK)
                 self.setProp('CheckOdin',True)
-            if OnlineEnv.PartitionName == 'FEST' :
-                self.setProp('Simulation',True)
 
 
         from Configurables import MooreInit

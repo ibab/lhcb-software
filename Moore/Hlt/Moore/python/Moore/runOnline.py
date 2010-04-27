@@ -23,10 +23,10 @@ def start() :
     Moore().EnableRunChangeHandler = ( OnlineEnv.HLTType not in ['PA','PassThrough' ] )
 
     if OnlineEnv.PartitionName == 'FEST' :
-       Moore().Simulation = True
-       Moore().DDDBtag   = 'MC09-20090602'
-       Moore().CondDBtag = 'sim-20090402-vc-md100'
        Moore().EnableRunChangeHandler = False
+       # Moore().Simulation = True
+       # Moore().DDDBtag   = 'MC09-20090602'
+       # Moore().CondDBtag = 'sim-20090402-vc-md100'
 
     ### pick up requested DB tag 
     ### use old capitalization
