@@ -4,7 +4,11 @@
 ! Purpose     : Package for track data quality monitoring algorithms
 !-----------------------------------------------------------------------------
 
-! 2010-04-23 Woute Hulsbergen
+! 2010-04-27 Wouter Hulsbergen
+ - fixed compilor warning in TrackVeloOverlapMonitor
+ - added curvature ratio histograms to TrackFitMatchMonitor
+
+! 2010-04-23 Wouter Hulsbergen
  - added TrackVeloOverlapMonitor
 
 ! 2010-04-12 Alexandr Kozlinskiy
