@@ -5,7 +5,7 @@
 from Gaudi.Configuration import *
 from Configurables import DaVinci
 DaVinci().DataType = "MC09"
-
+DaVinci().Simulation = True
 EventSelector().Input   = [
 "   DATAFILE='castor://castorlhcb.cern.ch:9002/?svcClass=lhcbdata&castorVersion=2&path=/castor/cern.ch/grid/lhcb/MC/MC09/DST/00004879/0000/00004879_00000001_1.dst' TYP='POOL_ROOTTREE' OPT='READ'",
 "   DATAFILE='castor://castorlhcb.cern.ch:9002/?svcClass=lhcbdata&castorVersion=2&path=/castor/cern.ch/grid/lhcb/MC/MC09/DST/00004879/0000/00004879_00000002_1.dst' TYP='POOL_ROOTTREE' OPT='READ'",
