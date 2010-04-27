@@ -9,9 +9,9 @@
 <!--  <text>$APPCONFIGOPTS/UseOracle.py</text> -->
   <text>$APPCONFIGOPTS/DaVinci/L0Patch.py</text>
   <text>$APPCONFIGOPTS/DaVinci/DataType-2010.py</text>
-  <text>$APPCONFIGOPTS/DaVinci/InputType-RDST.py</text>
+<!--  <text>$APPCONFIGOPTS/DaVinci/InputType-RDST.py</text>-->
     <text>--option</text>
-    <text>from Configurables import DaVinci; DaVinci().EvtMax=600; EventSelector().Input = ["DATAFILE='PFN:castor:/castor/cern.ch/user/c/cattanem/testFiles/Brunel-v37r1-069857_0000000006-1000ev.sdst' TYP='POOL_ROOTTREE' OPT='READ'"];</text>
+    <text>from Configurables import DaVinci; DaVinci().InputType='SDST'; DaVinci().EvtMax=600; EventSelector().Input = ["DATAFILE='PFN:castor:/castor/cern.ch/user/c/cattanem/testFiles/Brunel-v37r1-069857_0000000006-1000ev.sdst' TYP='POOL_ROOTTREE' OPT='READ'"]; FileCatalog().Catalogs =['xmlcatalog_file:../options/TestSDSTCatalog.xml']</text>
 </set></argument>  <argument name="validator"><text>
 findReferenceBlock("""
 DaVinciInit                                                 SUCCESS 600 events processed
