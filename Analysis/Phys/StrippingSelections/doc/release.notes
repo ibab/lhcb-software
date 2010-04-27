@@ -5,7 +5,10 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
-! 2010-04-27
+! 2010-04-27 Jacopo Nardulli
+ - Fix a problem related to the equal names in the B2DX selections
+
+! 2010-04-27 Jacopo Nardulli
  - Fix a probleam in the Hadron stream created with my previous commit.
 
 ! 2010-04-26 - Jibo He

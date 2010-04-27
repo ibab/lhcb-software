@@ -231,14 +231,14 @@ B2DXSignalStrippingSequenceChi2Loose.Members += [B2DXSignalFilterChi2Loose]
 ########################################################################
 
 # Create the lines for this selection
-line1 = StrippingLine('B2DX'
+line1 = StrippingLine('B2DXChi2Loose'
                , prescale = 1.0
                ,  algos = [ B2DXStrippingNumTracksGECChi2Loose, B2DXStrippingSequenceChi2Loose ]
                #,  algos = [ B2DXStrippingSequence ]
                , postscale = 0.05
                )
 
-line2 = StrippingLine('B2DXSignal'
+line2 = StrippingLine('B2DXChi2SignalLoose'
                , prescale = 1.
                #,  algos = [ B2DXSignalStrippingSequence ]
                ,  algos = [ B2DXStrippingNumTracksGECChi2Loose, B2DXSignalStrippingSequenceChi2Loose ]
