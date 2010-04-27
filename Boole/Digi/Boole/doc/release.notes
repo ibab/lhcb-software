@@ -12,6 +12,9 @@ Purpose: LHCb Digitization program
  - Changes to example options
    . In MC09-Files.py, set L0 TCK for MC09 explicitly, no longer the default
 
+ - Changes to tests
+   . Add python/Boole/QMTest/BooleExclusions.py and use it in the tests
+
  - Changes to references to reflect changes in Boole v21r1 output:
    . Cluster cuts can be taken from conditions (STAlgorithms)
    . Noise taken from conditions (STAlgorithms, STDigiAlgorithms, STTools)
