@@ -1,7 +1,7 @@
 """
 High level configuration tools for DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.100 2010-04-16 13:54:09 jpalac Exp $"
+__version__ = "$Id: Configuration.py,v 1.101 2010-04-27 17:09:52 jpalac Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -36,7 +36,7 @@ class DaVinci(LHCbConfigurableUser) :
        , "MainOptions"        : ""              # Main option file to execute
        , "UserAlgorithms"     : []              # User algorithms to run.
        , "RedoMCLinks"        : False           # On some stripped DST one needs to redo the Track<->MC link table. Set to true if problems with association.
-       , "InputType"          : "DST"           # or "DIGI" or "ETC" or "RDST" or "DST or "MDST". Nothing means the input type is compatible with being a DST. 
+       , "InputType"          : "DST"           # or "DIGI" or "ETC" or "RDST" or "DST or "MDST" of "SDST". Nothing means the input type is compatible with being a DST. 
        , 'EnableUnpack' : None                  # Explicitly enable/disable unpacking for input data (if specified) 
        , "Lumi"               : True            # Run event count and Lumi accounting (should normally be True)
          # Trigger running
@@ -66,7 +66,7 @@ class DaVinci(LHCbConfigurableUser) :
        , "MainOptions"        : """ Main option file to execute """
        , "UserAlgorithms"     : """ User algorithms to run. """
        , "RedoMCLinks"        : """ On some stripped DST one needs to redo the Track<->MC link table. Set to true if problems with association. """
-       , "InputType"          : """ 'DST' or 'DIGI' or 'ETC' or 'RDST' or 'DST' or 'MDST'. Nothing means the input type is compatible with being a DST.  """
+       , "InputType"          : """ 'DST' or 'DIGI' or 'ETC' or 'RDST' or 'DST' or 'MDST' or 'SDST'. Nothing means the input type is compatible with being a DST.  """
        , 'EnableUnpack' : """Explicitly enable/disable unpacking for input data (if specified) """
        , "Lumi"               : """ Run event count and Lumi accounting (should normally be True) """
        , "L0"                 : """ Re-Run L0 """
@@ -111,7 +111,7 @@ class DaVinci(LHCbConfigurableUser) :
         if dataType not in self.__known_datatypes__ :
             raise TypeError( "Invalid DataType '%s'" %dataType )
         inputType = self.getProp( "InputType" ).upper()
-        if inputType not in [ "MDF", "DST", "DIGI", "ETC", "RDST", "MDST" ]:
+        if inputType not in [ "MDF", "DST", "DIGI", "ETC", "RDST", "MDST", "SDST" ]:
             raise TypeError( "Invalid inputType '%s'"%inputType )
         if ( dataType in [ "DC06", "MC09" ] ):
             if not self.getProp("Simulation"):
@@ -192,6 +192,7 @@ class DaVinci(LHCbConfigurableUser) :
             from Configurables import HltDecReportsDecoder, ANNDispatchSvc
             HltDecReportsDecoder().InputRawEventLocation = "pRec/RawEvent"
             ANNDispatchSvc().RawEventLocation = "pRec/RawEvent"
+
 ################################################################################
 # Lumi setup
 #
@@ -356,12 +357,17 @@ class DaVinci(LHCbConfigurableUser) :
         Define Input
         """
         input = self.getProp("Input")
+
         if ( len(input) > 0) :
             EventSelector().Input = input
         inputType = self.getProp( "InputType" ).upper()
-        if ( inputType == "MDF" ):
+        if inputType == "MDF":
+            log.info('Adding LHCb::RawDataCnvSvc to EventPersistencySvc().CnvServices.')
             EventPersistencySvc().CnvServices.append( 'LHCb::RawDataCnvSvc' )
             importOptions("$STDOPTS/DecodeRawEvent.py")
+        if inputType == 'SDST':
+            log.info('Adding LHCb::RawDataCnvSvc to EventPersistencySvc().CnvServices.')
+            EventPersistencySvc().CnvServices.append('LHCb::RawDataCnvSvc')
 
 ################################################################################
 # Tune initialisation
