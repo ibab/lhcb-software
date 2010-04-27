@@ -4,6 +4,11 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+!========================== HltSettings v1r17p1 2010-04-24 ===================
+! 2010-04-27 - Gerhard Raven
+ - update Physics_25Vis_25L0_2Hlt1_2Hlt2_Apr10:
+    o put the lumi low postscales back to 0.004
+    
 !========================== HltSettings v1r17   2010-04-24 ===================
 ! 2010-04-25 - Gerhard Raven
  - add Hlt1 Hadron monitoring lines
