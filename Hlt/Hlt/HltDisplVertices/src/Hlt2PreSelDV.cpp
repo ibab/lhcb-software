@@ -313,7 +313,12 @@ StatusCode Hlt2PreSelDV::initialize() {
   }
 
   //Save Preys from Desktop to the TES.
-  return desktop()->cloneTrees( RecParts );
+  //Note : both solutions work fine in any Hlt2 line sequence.
+  //   Sole difference : OutputStream is not able to write objects containing 
+  //       default pions as daughters saved with the cloneTrees method.
+  //return desktop()->cloneTrees( RecParts );
+  return desktop()->saveDesktop();
+
 }
 
 //=============================================================================
@@ -418,6 +423,7 @@ bool Hlt2PreSelDV::RecVertex2Particle( const RecVertex* rv,
         }
 
         if( it == m_map.end() ) part = DefaultParticle(*iVtx);
+        
         if( part != NULL ){
           tmpVtx.addToOutgoingParticles( part );
           tmpPart.addToDaughters( part );
