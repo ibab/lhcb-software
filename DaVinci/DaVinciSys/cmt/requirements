@@ -11,7 +11,7 @@ use  DaVinci                 	v25r3   Phys
 apply_pattern container_package
 
 # Patches
-use LumiAlgs v3r5 Rec
+use LumiAlgs v3r4p1 Rec
 
 alias DaVinciTests "cmt qmtest_run"
 
