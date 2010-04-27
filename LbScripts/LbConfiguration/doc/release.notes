@@ -1,3 +1,7 @@
+2010-04-27  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* scripts/generateLogin: fix after the change in "fixNative"
+
 2010-04-23  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* scripts/generateLogin: 

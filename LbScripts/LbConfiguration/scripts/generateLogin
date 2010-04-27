@@ -38,7 +38,7 @@ def fixNativeString(data, dotbat=False):
             tobereplaced["CMTOPT"] = getBinaryOpt(cmtconf)
         else :
             tobereplaced["CMTOPT"] = cmtconf + "-opt"
-    if os.environ.has_key("AFSROOT") and filename.endswith(".bat"):
+    if os.environ.has_key("AFSROOT") and dotbat:
         tobereplaced["AFSROOT"] = os.environ["AFSROOT"]
 
     for k in tobereplaced.keys() :
