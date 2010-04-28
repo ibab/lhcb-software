@@ -4,6 +4,7 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+!===================== RichRecBase v3r30p1 2010-04-28 ========================
 ! 2010-04-28 - Chris Jones
  - Fix bug in ProcStatus object accessor caused by caching of a pointer
    without resetting each event. Removed the caching.
