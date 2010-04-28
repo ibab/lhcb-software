@@ -3,6 +3,75 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
+</PRE><H1><A NAME=v37r2>2010-04-29 Brunel v37r2</A></H1><PRE>
+This version uses projects Gaudi v21r9, LHCb v30r2, Lbcom v9r2, Rec v9r2
+ and SQLDDDB v5r26, ParamFiles v8r2, FieldMap v5r3, AppConfig v3r*
+
+This is a production version for processing 2010 data
+
+Output requires DaVinci v25r2p3 or later if saving packed DST, DaVinci v24r5p1
+or later otherwise
+
+- Changes to configuration:
+  . Event processing time watchdog now disabled by defalut. Enable with
+    ApplicationMgr().StalledEventMonitor = True (Gaudi v21r9)
+  . Add support for SDST
+  . Changed default tags for 2009 and 2010 data (DDDB v1r30):
+    o head-20100407         for DDDB
+    o head-20100414         for LHCBCOND
+  . Change to unambiguous names of accessor functions for MagneticFieldSvc
+    (scaleFactor -> signedRelativeCurrent, polarity => is Down) (Magnet v7r0)
+
+- New tuning
+  . Turn on suppression of very high occupancy HPDs (>200 hits). Reduces the # of
+    photon candidates, speeds things up by ~ a factor of 4 (RichRecSys v3r29)
+  . Add protection against hot events (TsaAlgorithms v3r19, TrackMatching v2r28)
+  . Change in parametrisation and some other small changes in PatAddTTCoord 
+    (PatAlgorithms v4r1)
+  . Switch on RZ overlap track finding in backward direction (PatVelo v3r22)
+
+- Persistency changes
+  . ProcStatus object is filled by algorithms that abort processing due to large
+    event protections (task #14958) (RichGlobalPID v3r13, 
+    RichRecTrackTools v1r20, RichRecBase v3r30, STKernel v2r1, VeloDAQ v5r1)
+  . Add support for SDST ("slim" or "stripping" DST). Content is identical to
+    real data DST, minus DAQ/RawEvent (GaudiConf v13r5)
+
+- New functionality
+  . Add support for new RICH background source; Scintillation in the CF4 
+    radiator medium (MCEvent v2r17)
+
+- Bug fixes
+  . Bug fix for LFC plugin library of CORAL (CORAL_2_3_9, LCG_58c)
+  . Bug fix in NeutralProtoP (GlobalReco v6r32p1)
+  . Bug fix for downstream tracks in TrackStateInitTool (TrackTools v3r30)
+
+- Monitoring changes
+  . Fixes to MuonPID Monitoring (MuonPIDChecker v5r1p1)
+  . Many changes to histograms for online and offline monitoring
+    (RichRecQC v2r40)
+  . Various improvements to track monitoring histograms, added 
+    TrackVeloOverlapMonitor (TrackMonitors v1r24)
+  . Bug fix in Velo occupancy monitor (VeloRecMonitors v2r9)
+  . Adapted configurable to deal with missing Velo tracks on RDST.
+    Needed for offline DQ monitoring (VeloRecMonitors v2r9)
+
+- Changes to example options
+  . Use consistent DDDB and SIMCOND tags in 2009-FEST-Data.py, following
+    change in default 2009 DDDB tag
+  . Added example options for 2010 data:
+    COLLISION10-Beam3500GeV-VeloClosed-MagDown.py
+    COLLISION10-Beam3500GeV-VeloClosed-MagOff.py
+    COLLISION10-Beam3500GeV-VeloClosed-MagUp.py
+
+- Changes to tests
+  . Add tests on 2010 data:
+    brunel.brunel2010magdown - tests also MDF SDST output
+    brunel.brunel2010magup   - tests also MDF RDST output
+    brunel.brunel2010magoff  - tests also packed DST output
+  . Add test on selected big events that caused problems in early 2010 data:
+    brunel.brunel-bigevents  - tests also unpacked DST output
+
 
 </PRE><H1><A NAME=v37r1>2010-04-15 Brunel v37r1</A></H1><PRE>
 This version uses projects Gaudi v21r8, LHCb v30r1, Lbcom v9r1, Rec v9r1
