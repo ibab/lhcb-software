@@ -1,8 +1,13 @@
-! $Id: release.notes,v 1.537 2010-04-22 13:47:46 gcowan Exp $
+! $Id: release.notes,v 1.538 2010-04-28 09:44:50 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2010-04028 - Juan Palacios
+ - Add QMTests for configurable and tool instantiation.
+ - Increase to v21r1.
+ - Removed GeomDispCalculator.
 
 ! 2010-04-22 - Greig Cowan
  - Removed P2VVAnglesFun.h. Namespace moved to DaVinciKernel.
