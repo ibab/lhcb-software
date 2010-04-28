@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.183 2010-04-26 20:33:19 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.184 2010-04-28 20:52:14 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -187,7 +187,7 @@ class HltConf(LHCbConfigurableUser):
                       ,  8 : 'L0_DECISION_PHYSICS'
                       ,  9 : "L0_CHANNEL_RE('B?gas')"
                       , 10 : "|".join( [ "L0_CHANNEL('%s')" % chan for chan in [ 'CALO','MUON,minbias','PU','SPD40','PU20' ] ] )
-                      , 11 : "|".join( [ "L0_CHANNEL('%s')" % chan for chan in [ 'Photon','Hadron','Muon','DiMuon','Muon,lowMult','DiMuon,lowMult','LocalPi0','GlobalPi0'] ] )
+                      , 11 : "|".join( [ "L0_CHANNEL('%s')" % chan for chan in [ 'Electron','Photon','Hadron','Muon','DiMuon','Muon,lowMult','DiMuon,lowMult','LocalPi0','GlobalPi0'] ] )
                       , 32 : "HLT_PASS('Hlt1Global')"
                       , 33 : "HLT_PASS_SUBSTR('Hlt1Lumi')" 
                       , 34 : "HLT_PASS_RE('Hlt1(?!Lumi).*Decision')"  # note: we need the 'Decision' at the end to _exclude_ Hlt1Global

@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.451 2010-04-26 20:33:19 graven Exp $ 
+! $Id: release.notes,v 1.452 2010-04-28 20:52:13 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
@@ -6,6 +6,9 @@
 ! -----------------------------------------------------------------------------
 
 !========================== HltConf v7r2p2  2010-04-26 ===================
+! 2010-04-28 Gerhard Raven
+ - add Electron to routingbit 11
+
 ! 2010-04-26 Gerhard Raven
  - always invoke Hlt2 configuration
 
