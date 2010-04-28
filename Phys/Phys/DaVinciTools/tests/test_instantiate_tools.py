@@ -28,10 +28,11 @@ if __name__ == '__main__' :
 
     from GaudiPython.Bindings import AppMgr
     import PartProp.Service
-    from Configurables import ParticlePropertySvc
-    ParticlePropertySvc(ParticlePropertiesFile = '$DAVINCITOOLSROOT/tests/data/ParticleTable.txt', OutputLevel=1)
+    from Configurables import ParticlePropertySvc, LHCb__ParticlePropertySvc
+    ParticlePropertySvc(ParticlePropertiesFile = '$DAVINCITOOLSROOT/tests/data/ParticleTable.txt')
+    LHCb__ParticlePropertySvc(ParticlePropertiesFile = '$DAVINCITOOLSROOT/tests/data/ParticleTable.txt')
     import sys
-    
+
     errors = ['======== Error Summary =========================================']
     successes = ['======== Success Summary =======================================']
     appMgr = AppMgr(outputlevel=5)
