@@ -275,6 +275,10 @@ var FSMItem = function(item_name, logger, is_child)  {
     else {
       this.setState(v[3]);
       this.className = v[2];
+      if ( this.conversion != null )   {
+	this.conversion.target = this;
+	this.conversion(v[0],v[1],v[2]);
+      }
     }
     this.label.innerHTML = v[0];
     this.innerHTML = v[1];

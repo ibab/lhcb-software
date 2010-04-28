@@ -22,6 +22,7 @@ if ( !_lhcb().constants ) {
     this.images = {
       bogus:            this.mkAbsImage('Desktop/images/bogus.png'),
       window:           this.mkAbsImage('Desktop/images/bogus.png'),
+      gears:            this.mkAbsImage('Desktop/images/gears.png'),
       wizard:           this.mkImage('Wizard','gif'),
       options:          this.mkImage('Options','gif'),
       lookfile:         this.mkImage('LookFile','gif'),
@@ -205,6 +206,15 @@ if ( !_lhcb().constants ) {
 	  cls:    'DetStatus16',
 	  iconCls:'DetStatus32',
 	  size:   {width:  950,	height: 500}
+	},
+	operstatus: {
+	  src:    this.lhcb_display_url('oper'),
+	  img:    this.images.options,
+	  title:  'Operations Status',
+	  nick:   'lhcb-oper-win',
+	  cls:    'OperStatus16',
+	  iconCls:'OperStatus32',
+	  size:   {width:  950,	height: 850}
 	},
 	magnet: {
 	  src:    this.lhcb_display_url('magnet'),

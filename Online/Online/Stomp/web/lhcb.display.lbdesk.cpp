@@ -55,6 +55,7 @@ LbDesktop = new Ext.app.App({
          ,new LbDesktop.LHCbStatus()
          ,new LbDesktop.FESTStatus()
          ,new LbDesktop.SDETStatus()
+         ,new LbDesktop.Operator()
          ,new LbDesktop.DetStatus()
          ,new LbDesktop.Collimators()
          ,new LbDesktop.BCM()
@@ -127,6 +128,7 @@ LbDesktop.FESTStatus  = Ext.extend(desktop.URLModule, {init: function(){this._la
 LbDesktop.SDETStatus  = Ext.extend(desktop.URLModule, {init: function(){this._launch(constants.urls.lhcb.sdet_run_status);}});
 LbDesktop.Page1       = Ext.extend(desktop.URLModule, {init: function(){this._launch(constants.urls.lhcb.page1);}});
 LbDesktop.DetStatus   = Ext.extend(desktop.URLModule, {init: function(){this._launch(constants.urls.lhcb.detstatus);}});
+LbDesktop.Operator    = Ext.extend(desktop.URLModule, {init: function(){this._launch(constants.urls.lhcb.operstatus);}});
 LbDesktop.Magnet      = Ext.extend(desktop.URLModule, {init: function(){this._launch(constants.urls.lhcb.magnet);}});
 LbDesktop.Collimators = Ext.extend(desktop.URLModule, {init: function(){this._launch(constants.urls.lhcb.collimators);}});
 LbDesktop.BCM         = Ext.extend(desktop.URLModule, {init: function(){this._launch(constants.urls.lhcb.bcm); }});

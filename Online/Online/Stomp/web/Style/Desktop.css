@@ -53,26 +53,28 @@ html, body {
 .Collimators32{background-image: url( ../Images/LookProd_32x32.gif ) !important; }
 .DetStatus16{  background-image: url( ../Images/Wizard_16x16.gif   ) !important; }
 .DetStatus32{  background-image: url( ../Images/Wizard_32x32.gif   ) !important; }
+.OperStatus16{ background-image: url( ../Desktop/images/gears.gif   ) !important; }
+.OperStatus32{ background-image: url( ../Desktop/images/gears.gif   ) !important; }
 .BCM16    {    background-image: url( ../Images/BCM_16x16.png     ) !important; }
 .BCM32    {    background-image: url( ../Images/BCM_32x32.png     ) !important; }
 .ELOG16   {    background-image: url( ../Images/ELOG_16x16.png     ) !important; }
 .ELOG32   {    background-image: url( ../Images/ELOG_32x32.png     ) !important; }
 .Magnet16 {    background-image: url( ../Images/LHCb/Magnet_Icon_16x16.png ) !important; }
 .Magnet32 {    background-image: url( ../Images/LHCb/Magnet_Icon_32x32.png ) !important; }
-.Beams16  {     background-image: url( ../Images/Beams_16x16.jpg   ) !important; }
-.Beams32  {     background-image: url( ../Images/Beams_32x32.jpg   ) !important; }
-.BeamsDep16  {     background-image: url( ../Images/BeamsDep_16x16.jpg   ) !important; }
-.BeamsDep32  {     background-image: url( ../Images/BeamsDep_32x32.jpg   ) !important; }
-.INDICO16    {     background-image: url( ../Images/indico_16x16.gif     ) !important; }
-.INDICO32    {     background-image: url( ../Images/indico_32x32.gif     ) !important; }
-.LHC16    {     background-image: url( ../Images/LHC_16x16.gif     ) !important; }
-.LHC32    {     background-image: url( ../Images/LHC_32x32.gif     ) !important; }
-.CMS16    {     background-image: url( ../Images/CMS_16x16.gif     ) !important; }
-.CMS32    {     background-image: url( ../Images/CMS_32x32.gif     ) !important; }
-.ALICE16    {     background-image: url( ../Images/ALICE_16x16.gif     ) !important; }
-.ALICE32    {     background-image: url( ../Images/ALICE_32x32.gif     ) !important; }
-.ATLAS16    {     background-image: url( ../Images/ATLAS_16x16.png     ) !important; }
-.ATLAS32    {     background-image: url( ../Images/ATLAS_32x32.png     ) !important; }
+.Beams16  {    background-image: url( ../Images/Beams_16x16.jpg   ) !important; }
+.Beams32  {    background-image: url( ../Images/Beams_32x32.jpg   ) !important; }
+.BeamsDep16 {  background-image: url( ../Images/BeamsDep_16x16.jpg   ) !important; }
+.BeamsDep32 {  background-image: url( ../Images/BeamsDep_32x32.jpg   ) !important; }
+.INDICO16   {  background-image: url( ../Images/indico_16x16.gif     ) !important; }
+.INDICO32   {  background-image: url( ../Images/indico_32x32.gif     ) !important; }
+.LHC16    {    background-image: url( ../Images/LHC_16x16.gif     ) !important; }
+.LHC32    {    background-image: url( ../Images/LHC_32x32.gif     ) !important; }
+.CMS16    {    background-image: url( ../Images/CMS_16x16.gif     ) !important; }
+.CMS32    {    background-image: url( ../Images/CMS_32x32.gif     ) !important; }
+.ALICE16  {    background-image: url( ../Images/ALICE_16x16.gif     ) !important; }
+.ALICE32  {    background-image: url( ../Images/ALICE_32x32.gif     ) !important; }
+.ATLAS16  {    background-image: url( ../Images/ATLAS_16x16.png     ) !important; }
+.ATLAS32  {    background-image: url( ../Images/ATLAS_32x32.png     ) !important; }
 
 
 /*
