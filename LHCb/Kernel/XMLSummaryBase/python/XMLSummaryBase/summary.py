@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: summary.py,v 1.7 2010-04-28 02:35:17 rlambert Exp $
+# $Id: summary.py,v 1.8 2010-04-28 05:03:47 rlambert Exp $
 # =============================================================================
 """
 *******************************************************************************
@@ -97,28 +97,29 @@ class Summary(VTree):
         
         #because it's a reference I can do this:
         if status is not None:
-            if destination.attrib('status')=='fail':
+            if destination.__element__.attrib['status']=='fail':
                 pass
                 #a fail is a fail
             elif status=='fail':
                 #a fail is a fail
-                destination.attrib('status',status)
-            elif destination.attrib('status')=='mult':
+                destination.__element__.attrib['status']=status
+            elif destination.__element__.attrib['status']=='mult':
                 #mult is mult!
                 pass
-            elif destination.attrib('status')=='full':# and status!='full':
+            elif destination.__element__.attrib['status']=='full':# and status!='full':
                 #more than one lot of this file!
-                destination.attrib('status','mult')
+                destination.__element__.attrib['status']='mult'
             elif status=='none':
                 #none is default, don't overwrite anything
                 pass
                 #destination.attrib('status',status)
             else:
-                destination.attrib('status',status)
+                destination.__element__.attrib['status']=status
         #print 'at end of merge for file', filename, 'adding', addevents, 'to', destination.value()
         #destination.value(destination.value()+addevents)
         #print destination.value()
-        return destination.value(destination.value()+addevents)
+        destination.__element__.text=str(int(destination.__element__.text)+addevents)
+        return True
                 
     def __fill_file__(self, filename=None, GUID=None, status=None, addevents=0, isOutput=False):
         '''Internal common method to fill the file processed information
@@ -207,14 +208,14 @@ class Summary(VTree):
     def fill_VTree_file(self, file, isOutput=False):
         '''append or merge a vtree file into the tree'''
 
-        if file.attrib('name')!="":
-            if "LFN:" not in file.attrib('name').upper():
-                if "PFN:" not in file.attrib('name').upper():
-                    file.attrib('name',"PFN:"+file.attrib('name'))
-
-        filename=file.attrib('name')
-        GUID=file.attrib('GUID')
-        open_file=self.__file_exists__(file.attrib('GUID'),file.attrib('name'), isOutput)
+        if file.__element__.attrib['name']!="":
+            if "LFN:" not in file.__element__.attrib['name'].upper():
+                if "PFN:" not in file.__element__.attrib['name'].upper():
+                    file.__element__.attrib['name']="PFN:"+file.__element__.attrib['name']
+        
+        filename=file.__element__.attrib['name']
+        GUID=file.__element__.attrib['GUID']
+        open_file=self.__file_exists__(GUID,filename, isOutput)
         
         
         #if it doesn't exist, just add it
@@ -222,13 +223,13 @@ class Summary(VTree):
                 files=self.children('input')[0]
                 if isOutput: files=self.children('output')[0]
                 
-                files.__append_element__(open_file)
+                files.__append_element__(file.clone())
                 return True
-
+        
         #else merge:
-        return self.__file_merger__(open_file, file.attrib('name'),
-                            file.attrib('GUID'),file.attrib('status'),
-                            file.value(), isOutput)
+        return self.__file_merger__(open_file, filename,
+                            GUID,file.__element__.attrib['status'],
+                            int(file.__element__.text), isOutput)
         
     
     def isFailure(self):
@@ -281,14 +282,14 @@ class Summary(VTree):
         #self.counter_dict(True)
         
         #hard coded, no way around it :S
-        attrib='name'
-        name=counter.attrib(attrib)
+        #attrib='name'
+        name=counter.__element__.attrib['name']
         
         #check if it exists. If not, just add it
         #print self.__count_dict__
         #print self.__count_dict__[mother]
         if name not in self.__count_dict__[mother].keys():
-            counters=self.children(mother)[0]
+            counters=VTree([bt for bt in self.__element__.getchildren() if mother in bt.tag][0],self.__schema__,self,False)
             #counter=counter.clone()
             counters.__append_element__(counter)
             self.__count_dict__[mother][name]=counter
@@ -303,7 +304,7 @@ class Summary(VTree):
         cnt=self.__count_dict__[mother][name]
         #else, merge the two
         if 'statentity' not in counter.tag().lower():
-            cnt.value(cnt.value()+counter.value())
+            cnt.__element__.text=str(int(cnt.__element__.text)+int(counter.__element__.text))
             return True
         #else be clever about the format
         val=cnt.value()
@@ -416,37 +417,51 @@ def Merge(summaries, schema=__default_schema__):
     steps=merged.__schema__.Tag_enumeration(merged.children('step')[0].tag())
     flag=''
     for asummary in sum_objects:
-        if flag==asummary.children('step')[0].value(): continue
+        if flag==asummary.children('step')[0].__element__.text: continue
         for step in steps:
             #retain the lowest possible step
             if flag==step: break
-            if step==asummary.children('step')[0].value(): 
+            if step==asummary.children('step')[0].__element__.text: 
                 flag=step
                 break
-    merged.children('step')[0].value(flag)
+    merged.children('step')[0].__element__.text=flag
     #merge input/output, simple counters, usage
     #print 'merge ip/op simple counters, usage'
     for asummary in sum_objects:
         #print sum_objects.index(asummary)
         #print 'usage'
         for stat in asummary.children('usage')[0].children('stat'):
-            merged.fill_memory(stat.value(),stat.attrib('unit'))
+            merged.fill_memory(stat.value(),stat.__element__.attrib['unit'])
         #print 'input'
         for file in asummary.children('input')[0].children():
-            merged.fill_input(file.attrib('name'), file.attrib('GUID'), file.attrib('status'), file.value())
+            merged.fill_VTree_file(file,False)
+        #    #merged.fill_input(file.__element__.attrib['name'],
+        #    #                  file.__element__.attrib['GUID'],
+        #    #                  file.__element__.attrib['status'],
+        #    #                  int(file.__element__.text))
         #print 'output'
         for file in asummary.children('output')[0].children():
-            merged.fill_output(file.attrib('name'), file.attrib('GUID'), file.attrib('status'), file.value())
+            merged.fill_VTree_file(file,True)
+        #    #merged.fill_output(file.__element__.attrib['name'],
+        #    #                  file.__element__.attrib['GUID'],
+        #    #                  file.__element__.attrib['status'],
+        #    #                  int(file.__element__.text))
         #merge counters
         #print 'counters'
         for cnt in asummary.children('counters')[0].children(__count_tag__):
             #print 'counter'
             #print cnt
-            merged.fill_VTree_counter(cnt.clone())
+            name=cnt.__element__.attrib['name']
+            if name not in merged.__count_dict__['counters'].keys():
+                cnt=cnt.clone()
+            merged.fill_VTree_counter(cnt)
         #merge counters
         #print 'lumiCounters'
         for cnt in asummary.children('lumiCounters')[0].children(__count_tag__):
-            merged.fill_VTree_counter(cnt.clone(),isLumi=True)
+            name=cnt.__element__.attrib['name']
+            if name not in merged.__count_dict__['lumiCounters'].keys():
+                cnt=cnt.clone()
+            merged.fill_VTree_counter(cnt,isLumi=True)
     #merge statCounters
     #print 'merge statCounters'
     for asummary in sum_objects:
