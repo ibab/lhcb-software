@@ -3,16 +3,6 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
- - Changes to references to reflect changes in Boole v21r1 output:
-   . Velo decoding protected against excessive clusters (VeloDAQ v5r1) 
-   . Use of CondDB for L0Muon FOI (L0DU v10r6). Not implemented in SIMCOND
-     for MC09 and before, must be given as options
-   . Default TCK is now 0x1810 for 2010 simulation (L0DU v10r6)
-   . Fixes to STCluster montirong (STMonitors v3r1)
-
-
-
-
 </PRE><H1><A NAME=v21r1>2010-04-28 Boole v21r2</A></H1><PRE>
 This version uses projects Gaudi v21r9, LHCb v31r0, Lbcom v9r2
  and SQLDDDB v5r26, ParamFiles v8r2, FieldMap v5r3, L0TCK v3r1, AppConfig v3r*
@@ -24,7 +14,13 @@ Needs SQLDDDB v5r25 or later with SIMCOND tags from *-20100412*
  - Changes to configuration:
    . Do not select any trigger type by default if "ODIN" is in 
      Boole().FilterSequence, because all events are now LHCb::ODIN::LumiTrigger
-     TriggerType.
+     TriggerType
+   . L0 default TCK now set for 2009 (0x1309) and 2010 (0x1810) data types
+     (L0DU v10r6)
+   . Use of CondDB for L0Muon FOI (L0DU v10r6). Not implemented in SIMCOND
+     for MC09 and before, must be given as options
+   . Event processing time watchdog now disabled by defalut. Enable with
+     ApplicationMgr().StalledEventMonitor = True (Gaudi v21r9)
 
  - Persistency changes
    . BooleInit now always sets TriggerType = LHCb::ODIN::LumiTrigger in ODIN,
@@ -41,6 +37,20 @@ Needs SQLDDDB v5r25 or later with SIMCOND tags from *-20100412*
    . ST cluster cuts and noise now taken from SIMCOND 
      Not usable for MC09 and previous: not implemented in SIMCOND. 
      (STAlgorithms, STDigiAlgorithms, STTools)
+   . Improved handling of return code at exit (Gaudi v21r9)
+
+ - New functionality
+   . Add support for new RICH background source; Scintillation in the CF4 
+     radiator medium (MCEvent v2r17)
+   . Added the capability to use the C3F8  as RICH1Gas in DeRichGasRadiator.cpp
+     (RichDet v14r1)
+
+ - Bug fixes
+   . Bug fix for LFC plugin library of CORAL (CORAL_2_3_9, LCG_58c)
+
+ - Monitoring changes
+   . Velo decoding protected against excessive clusters (VeloDAQ v5r1)
+   . Fixes to STCluster monitoring (STMonitors v3r1)
 
  - Changes to example options
    . In MC09-Files.py, set L0 TCK for MC09 explicitly, no longer the default
