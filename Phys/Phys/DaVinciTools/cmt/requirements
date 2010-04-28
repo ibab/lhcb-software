@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.145 2010-04-16 09:13:28 pkoppenb Exp $
+# $Id: requirements,v 1.146 2010-04-28 08:05:11 jpalac Exp $
 # Created    : 05/02/2002
 # Maintainer : P. Koppenburg, J. Palacios
 #
@@ -6,7 +6,7 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 
 package           DaVinciTools
-version           v21r0p2
+version           v21r1
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -50,4 +50,6 @@ macro_append Boost_linkopts " $(Boost_linkopts_regex)"
 apply_pattern component_library library=DaVinciTools
 #============================================================================
 apply_pattern install_python_modules
+#============================================================================
+apply_pattern QMTest
 #============================================================================
