@@ -5,6 +5,9 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-04-28 Sebastian Schleich
+ - Update InclPhi stripping (configurable DLL)
+
 ! 2010-04-27 Sebastian Schleich
  - Add InclPhi stripping (to Calibration stream)
 

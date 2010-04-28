@@ -1,8 +1,8 @@
-# $Id: StrippingInclPhi.py,v 1.1 2010-04-27 13:42:49 schleich Exp $
+# $Id: StrippingInclPhi.py,v 1.2 2010-04-28 08:07:44 schleich Exp $
 
 __author__ = 'Andrew Powell, Sebastian Schleich'
 __date__ = '2010/04/27'
-__version__ = '$Revision: 1.1 $'
+__version__ = '$Revision: 1.2 $'
 
 '''
 InclPhi stripping selection
@@ -27,6 +27,7 @@ class StrippingInclPhiConf(LHCbConfigurableUser):
     __slots__ = {
                   'KaonPT'              : 600      # MeV
                 , 'KaonP'               : 2000     # MeV
+                , 'KaonDLL'             : 15       # adimensional
                 , 'KaonTRPCHI2'         : 0.0      # adimensional
                 , 'PhiVertexCHI2pDOF'   : 10       # adimensional
                 , 'PhiMassWindow'       : 55       # MeV
@@ -40,7 +41,7 @@ class StrippingInclPhiConf(LHCbConfigurableUser):
 
 
         INRICH_2 = "( 2 == NINTREE ( HASRICH ) )"
-        GOODKAON = "( 0 != NINTREE ( (15 < PPINFO(LHCb.ProtoParticle.RichDLLk,-500,-1000)) ) )"
+        GOODKAON = "( 0 != NINTREE ( (%(KaonDLL)s < PPINFO(LHCb.ProtoParticle.RichDLLk,-500,-1000)) ) )" % self.getProps()
 
         Phi2KK_DC = "(PT > %(KaonPT)s *MeV) & (P > %(KaonP)s *MeV) & (TRPCHI2 > %(KaonTRPCHI2)s)" % self.getProps()
         coarsemasswindow = 45+ self.getProps()['PhiMassWindow']
@@ -90,14 +91,14 @@ class StrippingInclPhiConf(LHCbConfigurableUser):
 
         '''
         Downstream K stripping
-        Differences: DownNoPIDsKaons is added to algorithms and input location adapted. TODO: Possible via cloning??
+        Differences: DownNoPIDsKaons is added to algorithms and input location adapted. TODO: Possible to edit algorithm list via cloning??
         '''
         from StrippingConf.StrippingLine import StrippingLine, StrippingMember, StrippingTool
         from Configurables import FilterDesktop, CombineParticles
         import GaudiKernel.SystemOfUnits as Units
 
         INRICH_2 = "( 2 == NINTREE ( HASRICH ) )"
-        GOODKAON = "( 0 != NINTREE ( (15 < PPINFO(LHCb.ProtoParticle.RichDLLk,-500,-1000)) ) )"
+        GOODKAON = "( 0 != NINTREE ( (%(KaonDLL)s < PPINFO(LHCb.ProtoParticle.RichDLLk,-500,-1000)) ) )" % self.getProps()
 
         Phi2KK_DC = "(PT > %(KaonPT)s *MeV) & (P > %(KaonP)s *MeV) & (TRPCHI2 > %(KaonTRPCHI2)s)" % self.getProps()
         coarsemasswindow = 45+ self.getProps()['PhiMassWindow']
@@ -108,7 +109,7 @@ class StrippingInclPhiConf(LHCbConfigurableUser):
                    "& (ADMASS('phi(1020)') < %(PhiMassWindow)s*MeV)" % self.getProps()
         ps =  self.getProps()['Prescale']
 
-        print "DC, CC and MC for InclPhi stripping line."
+        print "DC, CC and MC for InclPhi DD stripping line."
         print "Prescale: ", ps
         print Phi2KK_DC
         print Phi2KK_CC
