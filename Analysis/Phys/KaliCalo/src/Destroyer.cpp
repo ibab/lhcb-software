@@ -1,4 +1,4 @@
-// $Id: Destroyer.cpp,v 1.4 2010-04-16 15:30:25 jpalac Exp $
+// $Id: Destroyer.cpp,v 1.5 2010-04-28 11:51:25 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -206,7 +206,8 @@ StatusCode Kali::Destroyer::execute ()
   for ( Locations::const_iterator iparticle = m_particles.begin() ; 
         m_particles.end() != iparticle ; ++iparticle ) 
   {
-    if ( exist<LHCb::Particle::Range> ( *iparticle ) ) 
+    // FIX ME: it should be Range - here!!
+    if ( exist<DataObject> ( *iparticle ) ) 
     {
       const LHCb::Particle::Range p = 
         get<LHCb::Particle::Range> ( *iparticle ) ;

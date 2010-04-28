@@ -1,4 +1,4 @@
-// $Id: Pi0.cpp,v 1.15 2010-03-30 15:40:59 ibelyaev Exp $
+// $Id: Pi0.cpp,v 1.16 2010-04-28 11:51:25 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -362,8 +362,8 @@ StatusCode Kali::Pi0::analyse    ()            // the only one essential method
     _p1.SetPy ( -_p1.Py () ) ;
     const Gaudi::LorentzVector fake = ( _p1 + g2->momentum() ) ;
     
-    const bool good    =             ( m12      < 320 * MeV && p12.Pt () > ptCut_Pi0 ) ;
-    bool       goodBkg = m_mirror && ( fake.M() < 320 * MeV && fake.Pt() > ptCut_Pi0 ) ;
+    const bool good    =             ( m12      < 330 * MeV && p12.Pt () > ptCut_Pi0 ) ;
+    bool       goodBkg = m_mirror && ( fake.M() < 330 * MeV && fake.Pt() > ptCut_Pi0 ) ;
     
     if ( (!good)  && (!goodBkg) ) { continue ; }   // CONTINUE!!!
     

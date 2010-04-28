@@ -1,11 +1,18 @@
-! $Id: release.notes,v 1.47 2010-04-26 11:42:38 ibelyaev Exp $ 
+! $Id: release.notes,v 1.48 2010-04-28 11:51:25 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.47 $
+! CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.48 $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/KaliCalo
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@lapp.in2p3.fr
 ! Purpose     : Collection of "physics" algorithms  for Calorimeter calibration
 ! -----------------------------------------------------------------------------
+
+! 2010-04-28 - Vanya Belyaev
+
+ - src/Destroyer.cpp
+
+    temporary patch for backporting ranges...
+
 
 ! 2010-04-26 - Vanya Belyaev
 
