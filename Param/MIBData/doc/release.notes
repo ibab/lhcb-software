@@ -4,6 +4,12 @@
 ! Purpose     : Hold source file of input for LbMIB package 
 !-----------------------------------------------------------------------------
 
+!========================== MIBData v3r2 2010-04-28 ==========================
+
+! 2010-04-28 - Magnus LIENG
+ - Fixed beam direction for Beam2/3500GeV/Fullshield/BeamGasLSS. It was 1 
+   instead of -1.
+
 !========================== MIBData v3r1 2010-02-23 ==========================
 
 ! 2010-02-23 - Magnus LIENG
