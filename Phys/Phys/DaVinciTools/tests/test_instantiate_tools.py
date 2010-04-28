@@ -12,7 +12,6 @@ tools = { 'Bd2KstarMuMuAngleCalculator' : 'IP2VVPartAngleCalculator',
           'DecayFinder' : 'IDecayFinder',
           'DecodeSimpleDecayString' : 'IDecodeSimpleDecayString',
           'FindCloneTool' : 'ICheckOverlap',
-          'GeomDispCalculator' : 'IGeomDispCalculator',
           'NeutralCCChangePIDTool' : 'IChangePIDTool',
           'GenericParticle2PVRelator__p2PVWithIPChi2_OnlineDistanceCalculatorName_' : 'IRelatedPVFinder',
           'GenericParticle2PVRelator__p2PVWithIP_OnlineDistanceCalculatorName_' : 'IRelatedPVFinder',
@@ -29,21 +28,27 @@ if __name__ == '__main__' :
 
     from GaudiPython.Bindings import AppMgr
     import PartProp.Service
+    from Configurables import ParticlePropertySvc
+    ParticlePropertySvc(ParticlePropertiesFile = '$DAVINCITOOLSROOT/tests/data/ParticleTable.txt', OutputLevel=1)
     import sys
     
     errors = ['======== Error Summary =========================================']
     successes = ['======== Success Summary =======================================']
     appMgr = AppMgr(outputlevel=5)
-#    appMgr.config(files = ['$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts'])
+    appMgr.ExtSvc += ['LHCb::ParticlePropertySvc', 'ParticlePropertySvc']
     appMgr.initialize()
-    appMgr.ExtSvc += ['LHCb::ParticlePropertySvc']
     toolSvc = appMgr.toolSvc()
+
+    import atexit
+    atexit.register(appMgr.exit)
+
 
     for impl, iface in tools.iteritems() :
         try :
+            print 'Trying to instantiate', impl+'/'+iface
             tool = toolSvc.create(impl, interface = iface)
             if tool == None :
-                errors.append(impl+'/'+iface)
+                errors.append('ERROR: Failed to instantiate Tool '+ impl+'/'+iface)
             else :
                 successes.append('SUCCESS: Instantiated Tool '+ impl+'/'+iface)
         except :
