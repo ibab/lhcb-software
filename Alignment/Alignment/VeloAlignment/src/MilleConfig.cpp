@@ -881,10 +881,11 @@ StatusCode MilleConfig::correcTrack(VeloTrack& mistrack,
     if (r > 17.2)  
       error_p = (39.3+(96.6-39.3)*(r-17.2)/(41.95-17.2))/3464.;
     //Silvia
-    //double error_x =((mistrack.Coords()[k]).second).x();
-    //double error_y =((mistrack.Coords()[k]).second).y();
-    double error_x = sqrt(pow(x_cor*error_r,2)+pow(y_cor*error_p,2))/r;
-    double error_y = sqrt(pow(y_cor*error_r,2)+pow(x_cor*error_p,2))/r;
+    double error_x =((mistrack.Coords()[k]).second).x();
+    double error_y =((mistrack.Coords()[k]).second).y();
+    //old error
+    //double error_x = sqrt(pow(x_cor*error_r,2)+pow(y_cor*error_p,2))/r;
+    //double error_y = sqrt(pow(y_cor*error_r,2)+pow(x_cor*error_p,2))/r;
 
     // Finally fill the AlignTrack
 
@@ -980,10 +981,11 @@ StatusCode MilleConfig::correcTrack(VeloTrack& mistrack,
       error_p = (39.3+(96.6-39.3)*(r-17.2)/(41.95-17.2))/3464.;
     
     //Silvia
-    //double error_x =((mistrack.Coords()[k]).second).x();
-    //double error_y =((mistrack.Coords()[k]).second).y();
-    double error_x = sqrt(pow(x_cor*error_r,2)+pow(y_cor*error_p,2))/r;
-    double error_y = sqrt(pow(y_cor*error_r,2)+pow(x_cor*error_p,2))/r;
+    double error_x =((mistrack.Coords()[k]).second).x();
+    double error_y =((mistrack.Coords()[k]).second).y();
+    //old error
+    //double error_x = sqrt(pow(x_cor*error_r,2)+pow(y_cor*error_p,2))/r;
+    //double error_y = sqrt(pow(y_cor*error_r,2)+pow(x_cor*error_p,2))/r;
 
     // Finally fill the AlignTrack
 
