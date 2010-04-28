@@ -4,7 +4,7 @@ Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
 </PRE><H1><A NAME=v37r2>2010-04-29 Brunel v37r2</A></H1><PRE>
-This version uses projects Gaudi v21r9, LHCb v30r2, Lbcom v9r2, Rec v9r2
+This version uses projects Gaudi v21r9, LHCb v30r2, Lbcom v9r2, Rec v9r2p1
  and SQLDDDB v5r26, ParamFiles v8r2, FieldMap v5r3, AppConfig v3r*
 
 This is a production version for processing 2010 data
