@@ -1,7 +1,7 @@
 """
 High level configuration tool(s) for Moore
 """
-__version__ = "$Id: Configuration.py,v 1.117 2010-04-27 14:24:29 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.118 2010-04-28 07:14:11 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ, path
@@ -449,6 +449,12 @@ class Moore(LHCbConfigurableUser):
         from Configurables import MooreInit
         ApplicationMgr().TopAlg.append( MooreInit() )
         ApplicationMgr().TopAlg.append( GaudiSequencer('Hlt') )
+
+        from Configurables import EventLoopMgr
+        EventLoopMgr().EventTimeout   = 0
+        EventLoopMgr().HandleSIGINT   = False
+        EventLoopMgr().HandleSIGXCPU  = False
+
         # forward some settings... 
         # WARNING: this triggers setup of /dd -- could be avoided in PA only mode...
         app = LHCbApp()
