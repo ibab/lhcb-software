@@ -1,11 +1,27 @@
-! $Id: release.notes,v 1.48 2010-04-28 11:51:25 ibelyaev Exp $ 
+! $Id: release.notes,v 1.49 2010-04-28 13:39:09 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.48 $
+! CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.49 $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/KaliCalo
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@lapp.in2p3.fr
 ! Purpose     : Collection of "physics" algorithms  for Calorimeter calibration
 ! -----------------------------------------------------------------------------
+
+
+! 2010-04-28 - Vanya Belyaev
+
+ - allow to use calibration data-base:
+
+         KaliDB = {
+	        'name' : 'name-of-data-base' ,
+		      'ecal' : 'the key for ecal coefficients in DB' ,
+		      'prs'  : 'the key for prs  coefficients in DB' 
+	       }
+
+		the 'ecal' & 'Coefficients'    are exclusive, 
+		the 'prs'  & 'PrsCoefficients' are exclusive
+	  
+ - put the patch for the picking behaviour..
 
 ! 2010-04-28 - Vanya Belyaev
 

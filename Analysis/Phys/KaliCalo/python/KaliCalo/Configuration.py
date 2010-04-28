@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Configuration.py,v 1.16 2010-03-30 15:40:58 ibelyaev Exp $
+# $Id: Configuration.py,v 1.17 2010-04-28 13:39:09 ibelyaev Exp $
 # =============================================================================
 # @file  KaliCalo/Configuration.py
 #
@@ -85,7 +85,7 @@ Or one can rely on helper functions:
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
 __date__    = " 2009-09-28 "
-__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.16 $ "
+__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.17 $ "
 # =============================================================================
 # the only one  "vizible" symbol 
 __all__  = (
@@ -174,12 +174,14 @@ class  KaliPi0Conf(LHCbConfigurableUser):
         'FirstPass'             : False ## The first (specific) pass on (x)DST ?
         , 'DestroyTES'          : True  ## Destroy TES containers : List of Input Partcle Containers
         , 'DestroyList'         : ['KaliPi0' ]  ## The list of input TES-location for Destroyer
-        , 'Coefficients'        : {}    ## The map of (mis)calibration coefficients
-        , 'PrsCoefficients'     : {}    ## The map of (mis)calibration coefficients for Prs 
         , 'OtherAlgs'           : []    ## List of "other" algorithms to be run, e.g. electorn calibration
         , 'Mirror'              : False ## Use Albert's trick for combinatorial background evaluation
         , 'Histograms'          : False ## Create monitoring histograms
         , 'RecoAll'             : False ## Global Recontruction ?
+        ## mis/re-calibration
+        , 'KaliDB'              : {}    ## the map of { 'dbase' : 'bbase_name' , 'ecal' : 'key for Ecal' , 'prs' : 'key for Prs'}
+        , 'Coefficients'        : {}    ## The map of (mis)calibration coefficients
+        , 'PrsCoefficients'     : {}    ## The map of (mis)calibration coefficients for Prs 
         ## ``Physics''
         , 'PtGamma'             : 300 * MeV ## Pt-cut for photons 
         , 'PtPi0'               : 800 * MeV ## Pt-cut for pi0  
@@ -207,12 +209,14 @@ class  KaliPi0Conf(LHCbConfigurableUser):
         'FirstPass'             : """ The first (specific) pass on (x)DST ?"""
         , 'DestroyTES'          : """ Destroy TES containers """
         , 'DestroyList'         : """ The list of input TES-locations for Destroyer """
-        , 'Coefficients'        : """ The map of (mis)calibration coefficients """
-        , 'PrsCoefficients'     : """ The map of (mis)calibration coefficients for Prs """
         , 'OtherAlgs'           : """ The list of 'other' algorithm to run, e.g. electron calibration """
         , 'Mirror'              : """ Use Albert's trick for combinatorial background evaluation """ 
         , 'Histograms'          : """ Activate monitoring histograms creation """
-        , 'RecoAll'             : """ Global Reconstruction? """ 
+        , 'RecoAll'             : """ Global Reconstruction? """
+        ## mis/re-calibration        
+        , 'KaliDB'              : """ The map of { 'name' : 'bbase_name' , 'ecal' : 'key for Ecal' , 'prs' : 'key for Prs'} """
+        , 'Coefficients'        : """ The map of (mis)calibration coefficients """
+        , 'PrsCoefficients'     : """ The map of (mis)calibration coefficients for Prs """
         ## ``Physics''
         , 'PtGamma'             : """ Pt-cut for photons """
         , 'PtPi0'               : """ Pt-cut for pi0 """ 
@@ -283,18 +287,54 @@ class  KaliPi0Conf(LHCbConfigurableUser):
         """
         lst = []
         ##
-        if self.getProp ( 'Coefficients' ) :
-            from Configurables import Kali__MisCalibrateCalo
-            alg = Kali__MisCalibrateCalo (
-                "KaliEcal" ,
-                Coefficients = self.getProp('Coefficients' ) )
-            lst += [ alg ]
+        
+        import KaliCalo.Kali      as Kali
+        import KaliCalo.ZipShelve as ZipShelve
+        
+        ecal  = {}
+        prs   = {}
+
+        ## DBASE has been specified 
+        if self.getProp('KaliDB') :
+            kali_db = self.getProp('KaliDB')
+            if not kali_db.has_key('name') :
+                raise AttributeError, "KaliDB property has no 'name' atribute "
+            # open data base 
+            dbase = ZipShelve.open ( kali_db['name'] , 'r' )
+            if kali_db.has_key ( 'ecal') : ecal = dbase[ kali_db [ 'ecal'] ]
+            if kali_db.has_key ( 'prs' ) : prs  = dbase[ kali_db [ 'prs' ] ]
+            dbase.close()
+            
         ##
+        if ecal and self.getProp ( 'Coefficients' ) :
+            raise ArrtibuteError, 'Ecal coefficients & data base key are exclusive ' 
+        if self.getProp ( 'Coefficients' ) :
+            ecal = self.getProp ( 'Coefficients' )
+        ##
+        if prs and self.getProp ( 'PrsCoefficients' ) :
+            raise ArrtibuteError, 'Prs coefficients & data base key are exclusive ' 
         if self.getProp ( 'PrsCoefficients' ) :
+            prs = self.getProp ( 'PrsCoefficients' )
+
+        if ecal :
+            ## fix to allow 'pickable' configuration 
+            _ecal = {}
+            for key in ecal :
+                newkey = ( 'Ecal' , key.areaName () , int(key.row()) , int(key.col ()) ) 
+                _ecal [ newkey ] = ecal [ key ]
             from Configurables import Kali__MisCalibrateCalo
-            alg = Kali__MisCalibrateCalo (
-                "KaliPrs" ,
-                Coefficients = self.getProp( 'PrsCoefficients' ) )
+            alg = Kali__MisCalibrateCalo ( "KaliEcal" , Coefficients = _ecal )
+            lst += [ alg ]
+            
+        ##
+        if prs :
+            ## fix to allow 'pickable' configuration 
+            _prs = {}
+            for key in prs :
+                newkey = ( 'Prs' , key.areaName () , int(key.row()) , int(key.col ()) ) 
+                _prs [ newkey ] = prs [ key ] 
+            from Configurables import Kali__MisCalibrateCalo
+            alg = Kali__MisCalibrateCalo ( "KaliPrs" , Coefficients = _prs )
             lst += [ alg ]
         #
         return lst 
