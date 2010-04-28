@@ -3,6 +3,7 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+</PRE><H1><A NAME=v37r2>2010-04-29 Brunel v37r2</A></H1><PRE>
 - Changes to configurable
   . Add support for SDST
 
@@ -23,22 +24,24 @@ Purpose: LHCb reconstruction program
     brunel.brunel-bigevents  - tests also unpacked DST output
 
 - Changes to references to reflect changes in Brunel v37r2 output:
-  . New OTTrackMonitor histogram
-  . Bug fix in NeutralProtoP (GlobalReco)
+  . New OTTrackMonitor histogram (TrackMonitors v1r24)
+  . Bug fix in NeutralProtoP (GlobalReco v6r32p1)
   . Change in parametrisation and some other small changes in PatAddTTCoord 
-    (PatAlgorithms)
+    (PatAlgorithms v4r1)
   . Turn on suppression of very high occupancy HPDs (>200 hits)
-    (RichRecSys)
-  . bug fix for downstream tracks in TrackStateInitTool (TrackTools)
+    (RichRecSys v3r29)
+  . bug fix for downstream tracks in TrackStateInitTool (TrackTools v3r30)
   . New default database tags (DDDB)
   . Change to MagneticFieldSvc options and printout (Magnet)
-  . Add CK theta pull plots (RichRecQC)
+  . Add CK theta pull plots (RichRecQC v2r40)
   . Add protection against hot events (TsaAlgorithms)
   . Switch on RZ overlap track finding in backward direction (PatVelo)
-  . Fixes to MuonPID Monitoring (MuonPIDChecker)
-  . Disable booking of Rich Root Ntuple by default. (RichRecQC)
-  . Convert histos to profiles, add monitoring of decoding errors (RichRecQC)
-  . Improve Aerogel monitoring (RichRecQC)
+  . Fixes to MuonPID Monitoring (MuonPIDChecker v5r1p1)
+  . Disable booking of Rich Root Ntuple by default. (RichRecQC v2r40)
+  . Convert histos to profiles, add monitoring of decoding errors (RichRecQC v2r40)
+  . Improve Aerogel monitoring (RichRecQC v2r40)
+  . Add TrackVeloOverlapMonitor (TrackMonitors v1r24)
+  . Add 4 histos, 2 profile plots to TrackFitMatchMonitor (TrackMonitors v1r24)
 
 </PRE><H1><A NAME=v37r1>2010-04-15 Brunel v37r1</A></H1><PRE>
 - Changes to Configurable
