@@ -1,4 +1,4 @@
-// $Id: TupleToolEventInfo.h,v 1.3 2010-01-26 15:39:26 rlambert Exp $
+// $Id: TupleToolEventInfo.h,v 1.4 2010-04-28 15:24:27 pkoppenb Exp $
 #ifndef JBOREL_TUPLETOOLEVENTINFO_H
 #define JBOREL_TUPLETOOLEVENTINFO_H 1
 
@@ -16,6 +16,11 @@ class ITupleTool;
  * Tuple columns:
  * - runNumber: well, the run number
  * - eventNumber: 
+ * - BCID and BC type
+ * - Odin, L0 and Hlt TCKs
+ * - GPS time
+ * - if Verbose is on, also gps time in year,month,day,hour,min,second
+ *   Note that months are numbered [0-11]. That's a convention. Sorry.
  *
  * \sa DecayTreeTuple
  *  @author Jeremie Borel

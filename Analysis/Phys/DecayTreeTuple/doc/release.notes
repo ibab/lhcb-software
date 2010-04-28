@@ -4,6 +4,9 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2010-04-28 - Patrick Koppenburg
+ - TupleToolEventInfo : add BX type and GPS time
+
 ! 2010-04-26 - Patrick Koppenburg
  - New tool TupleToolStripping that reads the stripping decisions from
    DecReports.
