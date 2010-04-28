@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: summary.py,v 1.8 2010-04-28 05:03:47 rlambert Exp $
+# $Id: summary.py,v 1.9 2010-04-28 05:07:47 rlambert Exp $
 # =============================================================================
 """
 *******************************************************************************
@@ -434,18 +434,18 @@ def Merge(summaries, schema=__default_schema__):
             merged.fill_memory(stat.value(),stat.__element__.attrib['unit'])
         #print 'input'
         for file in asummary.children('input')[0].children():
-            merged.fill_VTree_file(file,False)
-        #    #merged.fill_input(file.__element__.attrib['name'],
-        #    #                  file.__element__.attrib['GUID'],
-        #    #                  file.__element__.attrib['status'],
-        #    #                  int(file.__element__.text))
+            #merged.fill_VTree_file(file,False)
+            merged.fill_input(file.__element__.attrib['name'],
+                              file.__element__.attrib['GUID'],
+                              file.__element__.attrib['status'],
+                              int(file.__element__.text))
         #print 'output'
         for file in asummary.children('output')[0].children():
-            merged.fill_VTree_file(file,True)
-        #    #merged.fill_output(file.__element__.attrib['name'],
-        #    #                  file.__element__.attrib['GUID'],
-        #    #                  file.__element__.attrib['status'],
-        #    #                  int(file.__element__.text))
+            #merged.fill_VTree_file(file,True)
+            merged.fill_output(file.__element__.attrib['name'],
+                              file.__element__.attrib['GUID'],
+                              file.__element__.attrib['status'],
+                              int(file.__element__.text))
         #merge counters
         #print 'counters'
         for cnt in asummary.children('counters')[0].children(__count_tag__):
