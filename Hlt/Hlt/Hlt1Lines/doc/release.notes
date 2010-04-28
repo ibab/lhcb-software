@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.173 2010-04-25 10:27:00 graven Exp $
+! $Id: release.notes,v 1.174 2010-04-28 07:02:23 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
+
+!========================== Hlt1Lines v3r3p1 2010-04-26 ===================
+! 2010-04-26 - V. Gligorov
+ - fix typo 
 
 !========================== Hlt1Lines v3r3 2010-04-25 ===================
 ! 2010-04-25 - Gerhard Raven
