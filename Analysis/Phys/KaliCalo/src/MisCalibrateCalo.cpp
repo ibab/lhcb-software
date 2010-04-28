@@ -1,4 +1,4 @@
-// $Id: MisCalibrateCalo.cpp,v 1.8 2010-03-18 11:14:23 ibelyaev Exp $
+// $Id: MisCalibrateCalo.cpp,v 1.9 2010-04-28 16:09:32 ibelyaev Exp $
 // =============================================================================
 // Include files 
 // =============================================================================
@@ -209,8 +209,9 @@ StatusCode Kali::MisCalibrateCalo::execute   ()                     // execution
   // get digits 
   LHCb::CaloDigit::Container* digits = 
     get<LHCb::CaloDigit::Container>( m_location ) ;
-  //
-  StatEntity& cnt = counter("#scaled") ;
+  //  
+  StatEntity* cnt = 0 ;
+  if ( msgLevel ( MSG::DEBUG ) ) { cnt = &counter("#scaled") ; }
   // loop over container
   for ( LHCb::CaloDigit::Container::iterator idigit = digits->begin() ; 
         digits->end() != idigit ; ++idigit ) 
@@ -224,7 +225,7 @@ StatusCode Kali::MisCalibrateCalo::execute   ()                     // execution
     //
     digit->setE ( digit->e() * scale ) ;
     //
-    if ( msgLevel ( MSG::DEBUG ) ) { cnt += ( scale - 1 ) ; }
+    if ( 0 != cnt ) { (*cnt) += ( scale - 1 ) ; }
   }
   //
   return StatusCode::SUCCESS ;
@@ -270,7 +271,7 @@ StatusCode Kali::MisCalibrateCalo::updateTable
     const double scale = item->second ;
     //
     m_table[ cellID ] = scale ;
-    counter ( "cells" ) += ( scale - 1 ) ;
+    counter ( "cells" ) += scale;
   }
   //
   info () << "Calibration coefficients are defined" << m_table.size() << endmsg ;

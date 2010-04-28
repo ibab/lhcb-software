@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Pi0HistoFit.py,v 1.10 2010-04-14 11:28:07 ibelyaev Exp $ 
+# $Id: Pi0HistoFit.py,v 1.11 2010-04-28 16:09:32 ibelyaev Exp $ 
 # =============================================================================
 """
 A module for fitting the histograms with pi0-mass
@@ -9,7 +9,7 @@ A module for fitting the histograms with pi0-mass
 # =============================================================================
 __author__  = " ??? "
 __date__    = " 2009-12-?? "
-__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.10 $ "
+__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.11 $ "
 # =============================================================================
 from ROOT  import TH1F, TF1
 from math  import sqrt, pi,exp
@@ -608,20 +608,20 @@ def _preFitSignal ( func              ,
         st = histo.Fit ( func, opts ,'', _low , _high )
         nFit += 1 
         
-    if 0 != st.Status () :
-        if background :
-            b = getPi0Params( background )
-            if not b :
-                ok, nfitsb = fitBkg ( func , background )
-                nFit += nfitsb 
-                if ok  :
-                    ok , nfits2 = _preFitSignal ( func       ,
-                                                  histo      ,
-                                                  background ,
-                                                  signal     ,
-                                                  options    )
-                    nFits += nfits2
-                    if ok : return ok , nFits 
+##     if 0 != st.Status () :
+##         if background :
+##             b = getPi0Params( background )
+##             if not b :
+##                 ok, nfitsb = fitBkg ( func , background )
+##                 nFit += nfitsb 
+##                 if ok  :
+##                     ok , nfits2 = _preFitSignal ( func       ,
+##                                                   histo      ,
+##                                                   background ,
+##                                                   signal     ,
+##                                                   options    )
+##                     nFits += nfits2
+##                     if ok : return ok , nFits 
 
     ## the last adjustment: sigma and width
     goodSigma = 7.0 <= func.GetParameter(2) <= 20.0 

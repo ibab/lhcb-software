@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 # ======================================================================
-## @file KaliCalo.Kali.py
+## @file KaliCalo/Kali.py
 #  Set of useful utilities & classes
 #       for ``iterative pi0'' Ecal calibration
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
-#  @date 210-03-17
+#  @date 2010-03-17
 # ======================================================================
 """
 Set of useful utilities & classes
@@ -13,7 +13,7 @@ for ``iterative pi0'' Ecal calibration
 # ======================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@itep.ru "
 __date__    = " 2010-03-17 "
-__version__ = " CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.11 $ "
+__version__ = " CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.12 $ "
 # ======================================================================
 import ROOT
 from GaudiPython.Bindings import gbl as cpp
@@ -22,6 +22,9 @@ LHCb         = cpp.LHCb
 import CaloUtils.CellID
 
 CellID     = LHCb.CaloCellID
+
+## the same cell 
+from KaliCalo.FakeCells import SameCell
 
 ## the whole Ecal 
 EcalZone   = CellID ( 'Ecal' , 'PinArea', 31 , 31 ) ## the whole Ecal 
@@ -36,12 +39,7 @@ Zones      = (
     OuterZone  ,
     MiddleZone , 
     InnerZone  ,
-    EcalZone   ,
-    CellID ( 'Ecal' , 'PinArea' , 0 , 0 ) ,
-    CellID ( 'Ecal' , 'PinArea' , 1 , 1 ) ,
-    CellID ( 'Ecal' , 'Inner'   , 0 , 0 ) ,
-    CellID ( 'Ecal' , 'Middle'  , 0 , 0 ) ,
-    CellID ( 'Ecal' , 'Outer'   , 0 , 0 ) 
+    EcalZone   
     )
 
 Counter    = cpp.StatEntity
@@ -57,13 +55,6 @@ VE.__str__  = _ve_str_
 VE.__repr__ = _ve_str_
 VE.__abs__  = _ve_abs_
 
-# =============================================================================
-## the simplest 'cell-func'
-class SameCell(object) :
-    """
-    The simplest 'cell-func'
-    """
-    def __call__ ( self , cell ) : return CellID ( cell ) 
     
 # =============================================================================
 ## Helper class to hold the histogams associated with the given CellID
@@ -593,16 +584,6 @@ class LambdaMap(object) :
             _d.flagMax  () )
         for v in values :
             print ' > %3g%% : %d ' % ( v*100 , len ( self.large  ( v ) ) )    
-
-class FakeCell(object) :
-    
-    def __call__ ( self , cell ) :
-        
-        return CellID ( cell.calo ()         ,
-                        cell.area ()         ,
-                        cell.row  () % 4 + 1 ,
-                        cell.col  () % 4 + 1 ) 
-                                
 
 # =============================================================================
 if '__main__' == __name__ :
