@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: summary.py,v 1.6 2009-09-24 09:28:48 rlambert Exp $
+# $Id: summary.py,v 1.7 2010-04-28 02:35:17 rlambert Exp $
 # =============================================================================
 """
 *******************************************************************************
@@ -276,8 +276,9 @@ class Summary(VTree):
         mother=self.__schema__.Tag_mothers(counter.tag())[0]
         if isLumi:
             mother=self.__schema__.Tag_mothers(counter.tag())[1]
-        
-        self.counter_dict(True)
+
+        #this takes a lot of time, why is it needed??
+        #self.counter_dict(True)
         
         #hard coded, no way around it :S
         attrib='name'
@@ -290,7 +291,7 @@ class Summary(VTree):
             counters=self.children(mother)[0]
             #counter=counter.clone()
             counters.__append_element__(counter)
-            self.__count_dict__[name]=counter
+            self.__count_dict__[mother][name]=counter
             return True
         
         #counters=self.children(mother)[0]
@@ -400,7 +401,9 @@ def Merge(summaries, schema=__default_schema__):
         raise TypeError, 'you should send strings or Summaries into the merger, I got a ' + str(type(summaries[0])) + ' object instead'
     #make default object
     merged=Summary(schema)
+    #print 'made default object'
     #merge success
+    #print 'merge success'
     flag = True
     for asummary in sum_objects:
         if asummary.isFailure():
@@ -408,6 +411,7 @@ def Merge(summaries, schema=__default_schema__):
             break
     merged.children('success')[0].value(flag)
     #merge step
+    #print 'merge step'
     #enum will be in order
     steps=merged.__schema__.Tag_enumeration(merged.children('step')[0].tag())
     flag=''
@@ -421,21 +425,32 @@ def Merge(summaries, schema=__default_schema__):
                 break
     merged.children('step')[0].value(flag)
     #merge input/output, simple counters, usage
+    #print 'merge ip/op simple counters, usage'
     for asummary in sum_objects:
+        #print sum_objects.index(asummary)
+        #print 'usage'
         for stat in asummary.children('usage')[0].children('stat'):
             merged.fill_memory(stat.value(),stat.attrib('unit'))
+        #print 'input'
         for file in asummary.children('input')[0].children():
             merged.fill_input(file.attrib('name'), file.attrib('GUID'), file.attrib('status'), file.value())
+        #print 'output'
         for file in asummary.children('output')[0].children():
             merged.fill_output(file.attrib('name'), file.attrib('GUID'), file.attrib('status'), file.value())
         #merge counters
+        #print 'counters'
         for cnt in asummary.children('counters')[0].children(__count_tag__):
+            #print 'counter'
+            #print cnt
             merged.fill_VTree_counter(cnt.clone())
         #merge counters
+        #print 'lumiCounters'
         for cnt in asummary.children('lumiCounters')[0].children(__count_tag__):
             merged.fill_VTree_counter(cnt.clone(),isLumi=True)
     #merge statCounters
+    #print 'merge statCounters'
     for asummary in sum_objects:
+        #print sum_objects.index(asummary)
         #merge statCounters
         for cnt in asummary.children('counters')[0].children('statEntity'):
             merged.fill_VTree_counter(cnt.clone())
