@@ -30,8 +30,7 @@ Rich::Rec::CommonBase<PBASE>::CommonBase( PBASE * base )
     m_pixelCrName   ( "RichPixelCreator"   ),
     m_segmentCrName ( "RichSegmentCreator" ),
     m_photonCrName  ( "RichPhotonCreator"  ),
-    m_statusCrName  ( "RichStatusCreator"  ),
-    m_procStat      ( NULL )
+    m_statusCrName  ( "RichStatusCreator"  )
 {
   base->declareProperty( "ProcStatusLocation",
                          m_procStatLocation = LHCb::ProcStatusLocation::Default );

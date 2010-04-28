@@ -70,7 +70,7 @@ namespace Rich
           : minP  (   2 * Gaudi::Units::GeV ),
             maxP  ( 100 * Gaudi::Units::GeV ),
             minPt (   0 * Gaudi::Units::GeV ),
-            maxPt ( 100 * Gaudi::Units::GeV ) { }
+            maxPt (  10 * Gaudi::Units::GeV ) { }
       public:
         double minP;  ///< The minimum track momentum (MeV/c)
         double maxP;  ///< The maximum track momentum (MeV/c)

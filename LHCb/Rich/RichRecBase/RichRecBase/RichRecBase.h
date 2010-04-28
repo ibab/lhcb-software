@@ -298,13 +298,9 @@ namespace Rich
       /// Access the ProcStatus object
       inline LHCb::ProcStatus * procStatus() const
       {
-        if ( !m_procStat )
-        {
-          m_procStat =
-            base() -> template getOrCreate<LHCb::ProcStatus,LHCb::ProcStatus>( base()->evtSvc(),
-                                                                      m_procStatLocation );
-        }
-        return m_procStat;
+        return base() -> 
+          template getOrCreate<LHCb::ProcStatus,LHCb::ProcStatus>( base()->evtSvc(),
+                                                                   m_procStatLocation );
       }
 
     private:
@@ -327,9 +323,6 @@ namespace Rich
 
       /// Location of processing status object in TES
       std::string m_procStatLocation;
-
-      /// Pointer to the ProcStatus object
-      mutable LHCb::ProcStatus * m_procStat;
 
     };
 
