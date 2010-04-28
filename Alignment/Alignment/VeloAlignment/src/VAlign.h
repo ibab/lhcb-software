@@ -6,22 +6,21 @@
 #include "math.h"
 
 //from DetDesc
-#include "VeloDet/DeVelo.h"
 #include "DetDesc/AlignmentCondition.h"
 #include "DetDesc/ParamValidDataObject.h"
 
 // Event
 #include "Event/Track.h"
+#include "Event/State.h"
+#include "Event/FitNode.h"
 #include "Event/RecVertex.h"
 #include "Event/ODIN.h"
+#include "Event/VeloCluster.h"
+#include "Event/TrackTypes.h"
 
-#include "TrackKernel/TrackStateVertex.h"
+//#include "Event/TrackStateVertex.h"
 #include "TrackInterfaces/ITrackVertexer.h"
 #include "TrackInterfaces/IPVOfflineTool.h"
-
-// from Gaudi
-#include "GaudiAlg/GaudiTupleAlg.h"
-#include "GaudiAlg/GaudiHistoAlg.h"
 
 // from VeloAlignment
 #include "ITrackStore.h"
@@ -34,6 +33,9 @@
 #include "TrackInterfaces/IVeloExpectation.h"
 #include "TrackInterfaces/IMeasurementProvider.h"
 
+using namespace Gaudi::Units;
+using namespace LHCb;
+using namespace Gaudi;
 
 
 /** @class VAlign VAlign.h VAlign/VAlign.h
@@ -64,9 +66,11 @@ public:
 
 
   StatusCode fill_params(VeloTrack& my_track, int my_step);
-  StatusCode fill_params2(VeloTrack& my_track, int my_step);
+  StatusCode fill_params2(VeloTrack& my_track, int my_step,
+                          int nVeloHits,float adcpertrack);
   StatusCode fill_params3(VeloTrack& my_track, int my_step, 
-                          int nExpectedHits, int nVeloHits);
+                          int nExpectedHits, int nVeloHits,
+                          float adcpertrack);
   StatusCode fill_overlaps(VeloTrack& my_track, int my_step);
   StatusCode fill_trackmoni(VeloTrack& my_track, int my_step);
   StatusCode fill_misalignments(std::vector<double> constants, 
@@ -74,15 +78,22 @@ public:
                                 std::vector<double> pulls, int my_step);
   StatusCode fill_infoevent(int event, int tracknumperev,int hitnumperevent,
                             int tralignnumperevent, int troverlapnumperevent);
- StatusCode fill_officialPV_Lin(int nt_ev,int nt_pvn, 
- //                                int nt_trn, double nt_pvx,double nt_pvy,double nt_pvz,
-//                                 int nt_trnl, double nt_pvxl,double nt_pvyl,double nt_pvzl,
-//                                 int nt_trnr, double nt_pvxr,double nt_pvyr,double nt_pvzr,
-                                int nt_trn_lin, double nt_pvx_lin,double nt_pvy_lin,double nt_pvz_lin,
-                                int nt_trnl_lin, double nt_pvxl_lin,double nt_pvyl_lin,double nt_pvzl_lin,
-                                int nt_trnr_lin, double nt_pvxr_lin,double nt_pvyr_lin,double nt_pvzr_lin,
-                                double loc_pvxl, double loc_pvyl, double loc_pvzl,
-                                double loc_pvxr, double loc_pvyr, double loc_pvzr);
+  StatusCode fill_officialPV_Lin(int nt_ev,int nt_pvn, 
+                                 int nt_trn, double nt_pvx,double nt_pvy,double nt_pvz
+                                 ,double nt_chi2,
+                                 int nt_trnl, double nt_pvxl,double nt_pvyl,double nt_pvzl,
+                                 double nt_chi2l,
+                                 int nt_trnr, double nt_pvxr,double nt_pvyr,double nt_pvzr,
+                                 double nt_chi2r,
+                                 int nt_trn_lin, double nt_pvx_lin,double nt_pvy_lin,double nt_pvz_lin,double nt_chi2_lin,
+                                 int nt_trnl_lin, double nt_pvxl_lin,double nt_pvyl_lin,double nt_pvzl_lin,
+                                 double nt_chi2l_lin,
+                                 int nt_trnr_lin, double nt_pvxr_lin,double nt_pvyr_lin,double nt_pvzr_lin,
+                                 double nt_chi2r_lin,
+                                 double loc_pvxl, double loc_pvyl, double loc_pvzl,
+                                 double loc_pvxr, double loc_pvyr, double loc_pvzr);
+  
+
 
   inline std::string itos(int i)	// convert int to string
   {
@@ -113,6 +124,7 @@ private:
   
   int m_runodin;
   int m_eventodin;
+  int m_bunchid;
   
   VeloTracks    selected_tracks;   // Used for step one
   VeloTracks    control_tracks;    // Used for the control sample
@@ -152,7 +164,9 @@ private:
   std::vector<double> misal_init_box;
 
   std::string m_trackContainerName;
-
+  float  m_minadcpertrack;
+  double m_maxtheta;
+  
   bool                m_step1;
   std::vector<bool>   m_VELOmap_l;
   std::vector<bool>   m_VELOmap_r;

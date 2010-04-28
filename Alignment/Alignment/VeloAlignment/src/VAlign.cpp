@@ -2,13 +2,28 @@
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
+#include "GaudiAlg/GaudiHistoAlg.h"
+#include "GaudiAlg/GaudiTupleAlg.h"
 #include "GaudiKernel/ToolHandle.h"
 #include "GaudiKernel/PhysicalConstants.h"
+
+#include <boost/assign/list_of.hpp> // for 'vector_list_of()'
+// from Boost
+#include <boost/lambda/bind.hpp>
+
+// from VeloDet
+#include "VeloDet/DeVeloSensor.h"
+#include "VeloDet/DeVelo.h"
+#include "Event/FitNode.h"
 
 #include "DetDesc/3DTransformationFunctions.h"
 #include "DetDesc/GlobalToLocalDelta.h"
 
-#include <boost/assign/list_of.hpp> // for 'vector_list_of()'
+
+using namespace Gaudi::Units;
+using namespace boost::lambda;
+using namespace LHCb;
+using namespace Gaudi;
 
 
 // local
@@ -73,6 +88,8 @@ VAlign::VAlign( const std::string& name,
   declareProperty("TrackStoreTool"            , my_TrackStore = "TrackStore");
   declareProperty("MillepedeTool"             , my_Millepede  = "Millepede");
   declareProperty( "TrackContainer"           , m_trackContainerName = LHCb::TrackLocation::Velo );  
+  declareProperty( "MinAdcPerTrack"           , m_minadcpertrack = 0. );
+  declareProperty( "MaxTheta"                 ,m_maxtheta=4.);
 
 }
 //=============================================================================
@@ -186,14 +203,22 @@ StatusCode VAlign::execute() {
            << ", Event " << odin->eventNumber() << endmsg;
     m_runodin=odin->runNumber();
     m_eventodin= odin->eventNumber();
+    m_bunchid= odin->bunchId();
     
   } else {
     Warning("No ODIN Header").ignore();
     m_runodin=0;
     m_eventodin=0;
+    m_bunchid= 0;
   }
   
   int tracknumperev=tracks->size();
+  LHCb::VeloClusters* m_rawClusters;
+  if(!exist<LHCb::VeloClusters>(LHCb::VeloClusterLocation::Default)){
+    return Error( " ==> There is no VeloClusters in TES " );
+  }else{
+    m_rawClusters=get<LHCb::VeloClusters>(LHCb::VeloClusterLocation::Default);
+  }
 //   LHCb::VeloClusters* m_veloClusters;
 //   m_veloClusters = get<LHCb::VeloClusters>( "Raw/Velo/Clusters" );
 //   int hitnumperevent=m_veloClusters->size();
@@ -217,8 +242,68 @@ StatusCode VAlign::execute() {
     ++nTracks;
     debug() <<nTracks<<" track"<<endmsg;
     LHCb::Track* my_fitted_track = *iTrack ;          // retrieve track
-    int nExpectedHits = m_expectTool->nExpected(*my_fitted_track);
-    int nVeloHits =0;
+    if (my_fitted_track->firstState().slopes().theta()>m_maxtheta) continue;
+    
+    //int nExpectedHits = m_expectTool->nExpected(*my_fitted_track);
+    //int nVeloHits = my_fitted_track->measurements().size();
+    const std::vector<LHCbID>& vids = my_fitted_track->lhcbIDs();
+    int nVeloHits = std::count_if(vids.begin(), vids.end(),bind(&LHCbID::isVelo,_1));
+    double zmin= +800.;
+    double zmax= -350.;
+    unsigned int sensnrmin=105;
+    unsigned int sensnrmax=0;
+    unsigned int sensnpmin=105;
+    unsigned int sensnpmax=0;
+    float adcpertrack=0.;
+
+    for (std::vector<LHCbID>::const_iterator iter = vids.begin() ; iter != vids.end() ; ++iter){
+      LHCb::VeloCluster *cluster;
+      cluster = (LHCb::VeloCluster*)m_rawClusters->containedObject( (iter)->channelID() ); 
+      adcpertrack+=cluster->totalCharge();
+
+      if (iter->isVelo()){
+        //evaluation of the z of first (zmin) and last (zmax) hit
+        VeloChannelID chan = iter->veloID(); 
+        const DeVeloSensor* sensor = m_velo->sensor(chan);
+        if (sensor->z() <zmin)
+          zmin = sensor->z();
+        if ((chan.sensor()<sensnrmin) && (chan.sensor()<64))
+          sensnrmin=chan.sensor();
+        if ( (chan.sensor()<sensnpmin) && (chan.sensor()>=64))
+          sensnpmin = chan.sensor();
+        if (sensor->z() > zmax)
+          zmax = sensor->z();
+        if ((chan.sensor()>sensnrmax) && (chan.sensor()<64))
+          sensnrmax=chan.sensor();
+        if ( (chan.sensor()>sensnpmax) && (chan.sensor()>=64))
+          sensnpmax = chan.sensor();
+      }
+    }  // loop ids  
+    unsigned int sensnmin=105, sensnmax=0;
+    sensnmax= ((sensnpmax-64)>sensnrmax) ? (sensnpmax-64) : sensnrmax ;
+    sensnmin= ((sensnpmin-64)<sensnrmin) ? (sensnpmin-64) : sensnrmin ;
+    debug()<<" zmin=" <<zmin <<" zmax="<<zmax<<" sensnmin="<<sensnmin<<" sensnmax="<<sensnmax<<endmsg;
+    //Evaluation of expected hit per sensor
+    //Loop over sensors
+    int nExpectedHits =0;
+    for(unsigned int j=(sensnmin); j<=sensnmax; j++){
+      debug()<<"sensor number "<<j<<endmsg;
+      if (j!=6){
+        bool nExpectedHits_sensorR = m_expectTool -> isInside(*my_fitted_track, j);
+        if ( nExpectedHits_sensorR)
+          nExpectedHits+=1;
+      }
+      if (((j+64)!=65) && ((j+64)!=91) && ((j+64)!=93)){
+        bool nExpectedHits_sensorP = m_expectTool -> isInside(*my_fitted_track, j+64);
+        if ( nExpectedHits_sensorP)
+          nExpectedHits+=1;
+      }
+    }//end of loop over sensors
+    adcpertrack = adcpertrack/nVeloHits;
+    if (adcpertrack < m_minadcpertrack)
+      continue;
+    
+
     debug() <<"Number of expected hits "<< nExpectedHits <<endmsg;
 
     /////trackvector.push_back(*iTrack);
@@ -247,8 +332,8 @@ StatusCode VAlign::execute() {
 
     if (m_moni_tracks){
       VAlign::fill_trackmoni(my_align_track,0);
-      VAlign::fill_params2(my_align_track,0);
-      VAlign::fill_params3(my_align_track,0,nExpectedHits,nVeloHits);
+      VAlign::fill_params2(my_align_track,0, nVeloHits,adcpertrack);
+      VAlign::fill_params3(my_align_track,0,nExpectedHits,nVeloHits,adcpertrack);
       ntotaleTracks2 +=1;
     }
       
@@ -732,7 +817,8 @@ StatusCode VAlign::finalize() {
   VAlign::updateConditions( misal_left, misal_right, misal_box, error_left, error_right );
   
   info() << "Total Number of retrieved tracks " << ntotaleTracks <<endmsg;
-  info() << "Total Number of ALIGN GOOD tracks " << ntotaleTracks2 <<endmsg;
+  info() << "Total Number of monitored tracks " << ntotaleTracks2 <<endmsg;
+  info() << "Total Number of alignment tracks " << (nRight_tracks + nLeft_tracks  + overlap_tracks.size()) <<endmsg;
   
   info() << " Num. of R tracks= " << nRight_tracks <<" Num. of L tracks= " << nLeft_tracks << endmsg;
   info() << " Num. of overlap tracks= " << overlap_tracks.size() << endmsg;
@@ -967,30 +1053,36 @@ StatusCode VAlign::FindAlignment(MilleConfig *my_config)
         
 
         VAlign::fill_officialPV_Lin(nEvents,npv,
-//                                     vector_PV_tracks[npv-1].size(),
-//                                     (vector_PV_tracks[npv-1].begin())->nPV_x(),
-//                                     (vector_PV_tracks[npv-1].begin())->nPV_y(),
-//                                     (vector_PV_tracks[npv-1].begin())->nPV_z(),
-//                                     vector_PV_tracksL[npv-1].size(),
-//                                     (vector_PV_tracksL[npv-1].begin())->nPV_x(),
-//                                     (vector_PV_tracksL[npv-1].begin())->nPV_y(),
-//                                     (vector_PV_tracksL[npv-1].begin())->nPV_z(),
-//                                     vector_PV_tracksR[npv-1].size(),
-//                                     (vector_PV_tracksR[npv-1].begin())->nPV_x(),
-//                                     (vector_PV_tracksR[npv-1].begin())->nPV_y(),
-//                                     (vector_PV_tracksR[npv-1].begin())->nPV_z(),
+                                    vector_PV_tracks[npv-1].size(),
+                                    (vector_PV_tracks[npv-1].begin())->nPV_x(),
+                                    (vector_PV_tracks[npv-1].begin())->nPV_y(),
+                                    (vector_PV_tracks[npv-1].begin())->nPV_z(),
+                                      (vector_PV_tracks[npv-1].begin())->nPV_chi(),
+                                    vector_PV_tracksL[npv-1].size(),
+                                    (vector_PV_tracksL[npv-1].begin())->nPV_x(),
+                                    (vector_PV_tracksL[npv-1].begin())->nPV_y(),
+                                    (vector_PV_tracksL[npv-1].begin())->nPV_z(),
+                                      (vector_PV_tracksL[npv-1].begin())->nPV_chi(),
+                                    vector_PV_tracksR[npv-1].size(),
+                                    (vector_PV_tracksR[npv-1].begin())->nPV_x(),
+                                    (vector_PV_tracksR[npv-1].begin())->nPV_y(),
+                                    (vector_PV_tracksR[npv-1].begin())->nPV_z(),
+                                      (vector_PV_tracksR[npv-1].begin())->nPV_chi(),
                                     PV_tracks_linfit.size(), 
                                     (*PV_tracks_linfit.begin()).nPV_x(), 
                                     (*PV_tracks_linfit.begin()).nPV_y(), 
                                     (*PV_tracks_linfit.begin()).nPV_z(),
+                                    (*PV_tracks_linfit.begin()).nPV_chi(),
                                     PV_tracksL_linfit.size(), 
                                     (*PV_tracksL_linfit.begin()).nPV_x(), 
                                     (*PV_tracksL_linfit.begin()).nPV_y(), 
                                     (*PV_tracksL_linfit.begin()).nPV_z(),
+                                    (*PV_tracksL_linfit.begin()).nPV_chi(),
                                     PV_tracksR_linfit.size(), 
                                     (*PV_tracksR_linfit.begin()).nPV_x(), 
                                     (*PV_tracksR_linfit.begin()).nPV_y(), 
                                     (*PV_tracksR_linfit.begin()).nPV_z(),
+                                    (*PV_tracksR_linfit.begin()).nPV_chi(),
                                     globalLeftPoint.x(),globalLeftPoint.y(),globalLeftPoint.z(),
                                     globalRightPoint.x(),globalRightPoint.y(),globalRightPoint.z());
       }
@@ -1250,6 +1342,7 @@ StatusCode VAlign::fill_params(VeloTrack& my_track, int my_step)
     double n_resY = n_Y-(sly*n_stationB+y0);
     tuple->column( "run",m_runodin);
     tuple->column( "evt",m_eventodin);
+    tuple->column( "bunchid",m_bunchid);
     tuple->column( "step",    my_step);
     tuple->column( "side",    n_side);
     tuple->column( "vx",      slx*(-(slx*x0+sly*y0)/(slx*slx+sly*sly))+x0);
@@ -1267,7 +1360,8 @@ StatusCode VAlign::fill_params(VeloTrack& my_track, int my_step)
 }
 /////////////////////////////////////////////////////
 
-StatusCode VAlign::fill_params2(VeloTrack& my_track, int my_step) 
+StatusCode VAlign::fill_params2(VeloTrack& my_track, int my_step,
+                                int nVeloHits,float adcpertrack) 
 {
 
   debug() << my_step << " Track Cluster Moni on event : " << my_track.nEvent() << endmsg;
@@ -1310,8 +1404,11 @@ StatusCode VAlign::fill_params2(VeloTrack& my_track, int my_step)
     
     tuple->column( "run",m_runodin);
     tuple->column( "evt",m_eventodin);
+    tuple->column( "bunchid",m_bunchid);
     tuple->column( "step",    my_step);
     tuple->column( "side",    n_side);
+    tuple->column( "nhits", nVeloHits);
+    tuple->column( "adcpertrack", adcpertrack);
     tuple->column( "slx",     slx);
     tuple->column( "sly",     sly);
     tuple->column( "x0",      x0);
@@ -1341,7 +1438,8 @@ StatusCode VAlign::fill_params2(VeloTrack& my_track, int my_step)
 /////////////////////////////////////////////////////
 
 StatusCode VAlign::fill_params3(VeloTrack& my_track, int my_step, 
-                                int nExpectedHits,int nVeloHits) 
+                                int nExpectedHits,int nVeloHits,
+                                float adcpertrack) 
 {
 
   debug() << my_step <<" Track Moni on event : " << my_track.nEvent() << endmsg;
@@ -1364,9 +1462,11 @@ StatusCode VAlign::fill_params3(VeloTrack& my_track, int my_step,
   Tuple tuple=nTuple("Trackmoni", "Full sample");
   tuple->column( "run",m_runodin);
   tuple->column( "evt",m_eventodin);
+  tuple->column( "bunchid",m_bunchid);
   tuple->column( "ncoord", Ncoords);
   tuple->column( "nexpecthits", nExpectedHits);
   tuple->column( "nhits", nVeloHits);
+  tuple->column( "adcpertrack", adcpertrack);
   tuple->column( "step",    my_step);
   tuple->column( "side",    n_side);
   tuple->column( "slx",     slx);
@@ -1392,6 +1492,7 @@ StatusCode VAlign::fill_infoevent(int event, int tracknumperev,int hitnumpereven
   tuple->column( "event",   event);
   tuple->column( "run",m_runodin);
   tuple->column( "evt",m_eventodin);
+  tuple->column( "bunchid",m_bunchid);
   tuple->column( "trnum",  tracknumperev);
   tuple->column( "aligntrnum",tralignnumperevent );
   tuple->column( "overlaptrnum",  troverlapnumperevent );   
@@ -1413,6 +1514,7 @@ StatusCode VAlign::fill_overlaps(VeloTrack& my_track, int my_step)
   {
     tuple->column( "run",m_runodin);
     tuple->column( "evt",m_eventodin);
+    tuple->column( "bunchid",m_bunchid);
     tuple->column( "event",   my_track.nEvent());
     tuple->column( "track",   my_track.nTrack());
     tuple->column( "type",    my_track.nType()+my_step);
@@ -1429,14 +1531,20 @@ StatusCode VAlign::fill_overlaps(VeloTrack& my_track, int my_step)
 /////////////////////////////////////////////////////
 
 StatusCode VAlign::fill_officialPV_Lin(int nt_ev,int nt_pvn, 
-//                                        int nt_trn, double nt_pvx,double nt_pvy,double nt_pvz,
-//                                        int nt_trnl, double nt_pvxl,double nt_pvyl,double nt_pvzl,
-//                                        int nt_trnr, double nt_pvxr,double nt_pvyr,double nt_pvzr,
-                                       int nt_trn_lin, double nt_pvx_lin,double nt_pvy_lin,double nt_pvz_lin,
+                                        int nt_trn, double nt_pvx,double nt_pvy,double nt_pvz
+                                       ,double nt_chi2,
+                                        int nt_trnl, double nt_pvxl,double nt_pvyl,double nt_pvzl,
+                                       double nt_chi2l,
+                                        int nt_trnr, double nt_pvxr,double nt_pvyr,double nt_pvzr,
+                                       double nt_chi2r,
+                                       int nt_trn_lin, double nt_pvx_lin,double nt_pvy_lin,double nt_pvz_lin,double nt_chi2_lin,
                                        int nt_trnl_lin, double nt_pvxl_lin,double nt_pvyl_lin,double nt_pvzl_lin,
+                                       double nt_chi2l_lin,
                                        int nt_trnr_lin, double nt_pvxr_lin,double nt_pvyr_lin,double nt_pvzr_lin,
+                                       double nt_chi2r_lin,
                                        double loc_pvxl, double loc_pvyl, double loc_pvzl,
                                        double loc_pvxr, double loc_pvyr, double loc_pvzr)
+
 {
 
   debug() << "Official and Linear PV on event : " << nt_ev << endmsg;
@@ -1444,32 +1552,39 @@ StatusCode VAlign::fill_officialPV_Lin(int nt_ev,int nt_pvn,
   Tuple tuple=nTuple("OfficialPVLin", "Official and Linear PV info");
   tuple->column( "run",m_runodin);
   tuple->column( "evt",m_eventodin);
+  tuple->column( "bunchid",m_bunchid);
   tuple->column( "event", nt_ev);
   tuple->column( "pvn", nt_pvn);
-//   tuple->column( "trn", nt_trn);
-//   tuple->column( "pvx", nt_pvx);
-//   tuple->column( "pvy", nt_pvy);
-//   tuple->column( "pvz", nt_pvz);
-//   tuple->column( "trnl", nt_trnl);
-//   tuple->column( "pvxl", nt_pvxl);
-//   tuple->column( "pvyl", nt_pvyl);
-//   tuple->column( "pvzl", nt_pvzl);
-//   tuple->column( "trnr", nt_trnr);
-//   tuple->column( "pvxr", nt_pvxr);
-//   tuple->column( "pvyr", nt_pvyr);
-//   tuple->column( "pvzr", nt_pvzr);
+  tuple->column( "trn", nt_trn);
+  tuple->column( "pvx", nt_pvx);
+  tuple->column( "pvy", nt_pvy);
+  tuple->column( "pvz", nt_pvz);
+  tuple->column( "chi2dof", nt_chi2);
+  tuple->column( "trnl", nt_trnl);
+  tuple->column( "pvxl", nt_pvxl);
+  tuple->column( "pvyl", nt_pvyl);
+  tuple->column( "pvzl", nt_pvzl);
+  tuple->column( "chi2dofl", nt_chi2l);
+  tuple->column( "trnr", nt_trnr);
+  tuple->column( "pvxr", nt_pvxr);
+  tuple->column( "pvyr", nt_pvyr);
+  tuple->column( "pvzr", nt_pvzr);
+  tuple->column( "chi2dofr", nt_chi2r);
   tuple->column( "trn_lin", nt_trn_lin);
   tuple->column( "pvx_lin", nt_pvx_lin);
   tuple->column( "pvy_lin", nt_pvy_lin);
   tuple->column( "pvz_lin", nt_pvz_lin);
+  tuple->column( "chi2dof_lin", nt_chi2_lin);
   tuple->column( "trnl_lin", nt_trnl_lin);
   tuple->column( "pvxl_lin", nt_pvxl_lin);
   tuple->column( "pvyl_lin", nt_pvyl_lin);
   tuple->column( "pvzl_lin", nt_pvzl_lin);
+  tuple->column( "chi2dofl_lin", nt_chi2l_lin);
   tuple->column( "trnr_lin", nt_trnr_lin);
   tuple->column( "pvxr_lin", nt_pvxr_lin);
   tuple->column( "pvyr_lin", nt_pvyr_lin);
   tuple->column( "pvzr_lin", nt_pvzr_lin);
+  tuple->column( "chi2dofr_lin", nt_chi2r_lin);
   tuple->column( "pvxl_loc", loc_pvxl);
   tuple->column( "pvyl_loc", loc_pvyl);
   tuple->column( "pvzl_loc", loc_pvzl);
@@ -1493,6 +1608,7 @@ StatusCode VAlign::fill_trackmoni(VeloTrack& my_track, int my_step)
   {
     tuple->column( "run",m_runodin);
     tuple->column( "evt",m_eventodin);
+    tuple->column( "bunchid",m_bunchid);
     tuple->column( "event",   my_track.nEvent());
     tuple->column( "track",   my_track.nTrack());
     tuple->column( "type",    my_track.nType()+my_step);
