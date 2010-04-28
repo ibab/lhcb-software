@@ -5,6 +5,16 @@
 ! Purpose     : LHCb base classes and event model
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v31r0p1>2010-04-29 LHCbSys v31r0p1</A></H1><PRE>
+This version uses Gaudi v21r9 and LCG_58c
+
+- Packages modified: RichRecBase v3r30p1
+
+- In RichRecBase v3r30p1
+  . Fix bug in ProcStatus object accessor caused by caching of a pointer
+    without resetting each event. Removed the caching.
+  . Change Max Pt in PID Tool interface to 10 GeV (was 100 GeV)
+
 </PRE><H1><A NAME=v31r0>2010-04-26 LHCbSys v31r0</A></H1><PRE>
 This version uses Gaudi v21r9 and LCG_58c
 

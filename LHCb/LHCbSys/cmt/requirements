@@ -108,7 +108,7 @@ use MDF_ROOT              v1r2   DAQ     # Markus Frank
 use PatKernel             v2r3p1  Tf      # Stephanie Hansmann-Menzemer
 use RecInterfaces         v1r0p1  Kernel  # Marco Cattaneo et al.
 use RichKernel            v7r34   Rich    # In SVN. Chris Jones
-use RichRecBase           v3r30   Rich    # In SVN. Chris Jones
+use RichRecBase           v3r30p1 Rich    # In SVN. Chris Jones
 use SimComponents         v2r20   Sim     # Gloria Corti, Marco Cattaneo
 use STKernel              v2r1    ST      # Matt Needham
 use STTELL1Event          v1r9    ST      # Matt Needham
