@@ -242,8 +242,8 @@ class FillPi0( Kali.TPySelectorFix  ):
         hc2  = self._histos  [ ic2 ].counters()        
 
         ## get 'per-area' histos
-        iz1 = CellID ( ic1.calo() , area1 , 0 , 0 )
-        iz2 = CellID ( ic2.calo() , area2 , 0 , 0 )
+        iz1 = CellID ( ic1.calo() , area1 , 31 , 31 )
+        iz2 = CellID ( ic2.calo() , area2 , 31 , 31 )
         hz1  = self._histos  [ iz1 ].histos   () ## global 'per-zone' histos
         hz2  = self._histos  [ iz2 ].histos   () ## global 'per-zone' histos
         cz1  = self._histos  [ iz1 ].counters () ## global 'per-zone' histos
