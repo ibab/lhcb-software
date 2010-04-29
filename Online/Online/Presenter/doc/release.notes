@@ -4,6 +4,14 @@
 ! Purpose     : GUI to allow the visualization of all data quality histograms
 !-----------------------------------------------------------------------------
 
+! 2010-04-29 - Patrick Robbe
+ - cmt/requirements: add dependancy on GuiHtlm (ROOT)
+ - PageDecriptionTextView.h/.cpp: now inherits from THtml to show text in 
+   nicer format. Also add possibility to open "firefox" on links in the 
+   decription text.
+ - PresenterMainFrame.h/.cpp: display first the description text of the page
+
+!============ Presenter v1r1 2010-04-26 =============
 ! 2010-04-25 - Patrick Robbe
  - ProblemDB.cpp/.h: retrieve problems per subsystem (add an argument to the
    function, if argument is "", returns all problems)
