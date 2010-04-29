@@ -11,7 +11,7 @@
 # ======================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@itep.ru "
 __date__    = " 2010-04-28 "
-__version__ = " CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.1 $ "
+__version__ = " CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.2 $ "
 # ======================================================================
 import ROOT, math 
 from GaudiPython.Bindings import gbl as cpp
@@ -68,18 +68,26 @@ class RectRings( object ) :
         k3 = 0
         i  = cell.row()
         j  = cell.col()
+
+        
         if 32 <= i :
             i -= 32
             k1 =  1
+        else : i = 32 - i
+        
         if 32 <= j :
             j -= 32
-            k2 =  2
-        if i < j :
+            k2 =  2 
+        else : j = 32 - i 
+            
+        newrow = max ( i , j )
+        
+        if i < j and newrow > 15 :
             k3 =  4
 
         return LHCb.CaloCellID ( cell.calo() ,
                                  cell.area() ,
-                                 1 + max ( i , j ) ,
+                                 1 + newrow  ,
                                  1 + k1 + k2 + k3 ) 
     
         
