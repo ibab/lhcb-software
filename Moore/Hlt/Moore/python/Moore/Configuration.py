@@ -1,7 +1,7 @@
 """
 High level configuration tool(s) for Moore
 """
-__version__ = "$Id: Configuration.py,v 1.118 2010-04-28 07:14:11 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.119 2010-04-29 12:02:46 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ, path
@@ -454,6 +454,11 @@ class Moore(LHCbConfigurableUser):
         EventLoopMgr().EventTimeout   = 0
         EventLoopMgr().HandleSIGINT   = False
         EventLoopMgr().HandleSIGXCPU  = False
+
+        from Configurables import MonitorSvc
+        MonitorSvc().disableDimPropServer      = 1
+        MonitorSvc().disableDimCmdServer       = 1
+
 
         # forward some settings... 
         # WARNING: this triggers setup of /dd -- could be avoided in PA only mode...
