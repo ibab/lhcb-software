@@ -1,4 +1,4 @@
-// $Id: Bd2KstarMuMuAngleCalculator.h,v 1.2 2008-06-04 16:18:14 pkoppenb Exp $
+// $Id: Bd2KstarMuMuAngleCalculator.h,v 1.3 2010-04-29 16:38:37 tblake Exp $
 #ifndef BD2KSTARMUMUANGLECALCULATOR_H 
 #define BD2KSTARMUMUANGLECALCULATOR_H 1
 
@@ -10,8 +10,26 @@
 
 /** @class Bd2KstarMuMuAngleCalculator Bd2KstarMuMuAngleCalculator.h
  *  
- *  Calculates the three angles in a B->llKPi decay, eg B->MuMuK*
+ *  Calculates the three angles in a B->mu mu K Pi decay, eg B->MuMuK*
  *  Angles given in both the helicity and transversity bases.
+ *
+ *
+ *  The Helicity Basis for \f$ B_{d} \rightarrow K^{*}(892)0 \mu^{+} \mu^{-} \f$
+ *  is defined by three angles \f$ \theta_{L} \f$, \f$ \theta_{K} \f$ and \f$ \phi \f$.
+ * 
+ *  These angles are defined as:
+ * 
+ *  \f$ \theta_{L} \f$ as the angle between the \f${\mu_{+}}(\mu_{-})\f$ and the direction 
+ *  opposite the \f${B_{d}}(\bar{B_{d}})\f$ in the rest frame of the \f${\mu_{+}\mu_{-}}\f. 
+ *  Equivalently this is the angle between the \f${\mu_{+}}$\f in the \f${\mu_{+}\mu_{-}}\f rest 
+ *  frame and the direction of the \f${\mu_{+}\mu_{-}}\f in the B rest-frame.
+ *
+ *  \f$ \theta_{K} \f$ as the angle between the \f${K+}\f$ in the \f${K*}$\f frame and the \f${K*}$\f 
+ *  in the B rest-frame.
+ *  
+ *  \f$ \phi \f$ is defined in the B rest-frame as the angle between the planes defined by the 
+ *  \f${\mu_{+}}(\mu_{-})\f$ and the \f${K\pi}\f$.
+ *
  *
  *  @author Thomas Blake
  *  @date   2007-08-02
@@ -48,14 +66,19 @@ public:
   
 
 protected:
+  
+  /// Get daughters from B0 
+  StatusCode daughters( const LHCb::Particle* mother );  
+  
+  
+private:  
 
-private:
-  
-  
   IParticleDescendants* m_descendants ;
-  IP2VVAngleCalculator* m_angle;
   
-  
+  const LHCb::Particle* m_pMuMinus;
+  const LHCb::Particle* m_pMuPlus;
+  const LHCb::Particle* m_pPi;
+  const LHCb::Particle* m_pK;
   
 };
 #endif // BD2KSTARMUMUANGLECALCULATOR_H

@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.538 2010-04-28 09:44:50 jpalac Exp $
+! $Id: release.notes,v 1.539 2010-04-29 16:38:37 tblake Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2010-04-29 - Thomas Blake
+ - Updated Bd2KstarMuMuAngleCalculator to use DaVinciP2VVAngles
+   Angular def. updated to be consistent with B-Factories
 
 ! 2010-04028 - Juan Palacios
  - Add QMTests for configurable and tool instantiation.
