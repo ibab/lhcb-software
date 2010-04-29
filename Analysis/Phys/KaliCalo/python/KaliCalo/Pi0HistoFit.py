@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Pi0HistoFit.py,v 1.12 2010-04-29 09:00:48 ibelyaev Exp $ 
+# $Id: Pi0HistoFit.py,v 1.13 2010-04-29 12:51:28 ibelyaev Exp $ 
 # =============================================================================
 """
 A module for fitting the histograms with pi0-mass
@@ -9,7 +9,7 @@ A module for fitting the histograms with pi0-mass
 # =============================================================================
 __author__  = " ??? "
 __date__    = " 2009-12-?? "
-__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.12 $ "
+__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.13 $ "
 # =============================================================================
 from ROOT  import TH1F, TF1
 from math  import sqrt, pi,exp
@@ -170,8 +170,8 @@ _good_r   = 150
 _weight_s = 0.4
 _weight_b = 1.0 - _weight_s
 
-_low_sigma  =  6.0
-_high_sigma = 20.0
+_low_sigma  =   5.2
+_high_sigma =  20.0
 _low_mass   = 120.0 
 _high_mass  = 150.0 
 
@@ -230,9 +230,6 @@ def adjust12 ( func , mass , sigma , fixMass = False , fixSigma = False ) :
     par1  = func.GetParameter( 1 )
     par1  = abs  ( par1  )
 
-    ##par1  = min  ( par1  , mass + 2 * sigma  )
-    ##par1  = max  ( par1  , mass - 2 * sigma )
-    
     par1  = min  ( par1  , _high_mass )
     par1  = max  ( par1  , _low_mass  )
 

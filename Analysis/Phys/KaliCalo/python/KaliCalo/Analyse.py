@@ -11,7 +11,7 @@ The main ``analyse'' for Kali
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyev@itep.ru "
 __date__    = " 2010-03-20 "
-__version__ = " CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.9 $ "
+__version__ = " CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.10 $ "
 # =============================================================================
 __all__     = (
     "analyse" ,
@@ -223,7 +223,8 @@ def  analyse ( histomap          ,
     return (badCells,lowCells,notFitCells)  
 
 
-    
+
+
 # =============================================================================
 # The END 
 # =============================================================================

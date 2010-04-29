@@ -103,7 +103,21 @@ class ZipShelf(shelve.Shelf):
         Destructor 
         """
         if self.__opened : self.close()  
-    
+
+    ## list the avilable keys 
+    def __dir ( self ) :
+        """
+        List the avilable keys
+        """
+        for key in self : print key
+
+    ## list the avilable keys 
+    def ls    ( self ) :
+        """
+        List the avilable keys
+        """
+        return self.__dir()
+        
     ## cloze and gzip (if needed)
     def close ( self ) :
         """

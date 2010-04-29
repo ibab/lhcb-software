@@ -9,13 +9,13 @@
 # =============================================================================
 """
 
-Helper script to extract list of cellIDs
+Helper script to extract list of Ecal cell IDs
 
 """
 # =============================================================================
 __author__   = " Vanya BELYAEV Ivan.Belyaev@itep.ru   "
 __date__     = " 2010-03-18 "
-__version__  = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $ "
+__version__  = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $ "
 # =============================================================================
 from   GaudiPython.Bindings import gbl as cpp
 import CaloUtils.CellID
@@ -25,7 +25,7 @@ DeCalorimeter = cpp.DeCalorimeter
 # =============================================================================
 ## get DeCalorimeter
 def getCalo ( calo = '/dd/Structure/LHCb/DownstreamRegion/Ecal' ,
-              DataType = '2009' ,  **args ) :
+              DataType = '2010' ,  **args ) :
     """
     Get DeCalorimeter by name
 
@@ -69,13 +69,14 @@ if '__main__' == __name__ :
     for p in cp :
         cell = p.cellID()
         if ecal.valid ( cell ) and not cell.isPin() :
-            cells.append( cell )
+            cells.append ( cell )
 
-
-    import shelve
-    dbase = shelve.open( 'cells_db' )
-    dbase ['AllCells'] = cells
-
+    cells.sort()
+    
+    import KaliCalo.ZipShelve as ZipShelve
+    dbase = ZipShelve.open( 'ecal_db.gz' )
+    dbase ['AllEcalCells'] = cells
+    dbase.close()
 
     
     
