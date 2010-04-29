@@ -1,4 +1,4 @@
-// $Id: MCBd2KstarMuMuAngleCalculator.h,v 1.2 2008-06-04 16:17:29 pkoppenb Exp $
+// $Id: MCBd2KstarMuMuAngleCalculator.h,v 1.3 2010-04-29 17:38:54 tblake Exp $
 #ifndef MCANGLECALCULATOR_H 
 #define MCANGLECALCULATOR_H 1
 
@@ -6,16 +6,35 @@
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
 #include "Kernel/IP2VVMCPartAngleCalculator.h"            // Interface
+#include "MCInterfaces/IMCDecayFinder.h"
 
 
 /** @class MCBd2KstarMuMuAngleCalculator MCBd2KstarMuMuAngleCalculator.h v1r3/MCBd2KstarMuMuAngleCalculator.h
  *  
- *  Calculates angles for a true B->mumuK* decay
+ *  Calculates angles for a true B->mumuK* decay in Helicity and Transversity basis, using DaVinciP2VVAngles
  *
+ *  The Helicity Basis for \f$ B_{d} \rightarrow K^{*}(892)0 \mu^{+} \mu^{-} \f$
+ *  is defined by three angles \f$ \theta_{L} \f$, \f$ \theta_{K} \f$ and \f$ \phi \f$.
+ * 
+ *  These angles are defined as:
+ * 
+ *  \f$ \theta_{L} \f$ as the angle between the \f${\mu_{+}}(\mu_{-})\f$ and the direction 
+ *  opposite the \f${B_{d}}(\bar{B_{d}})\f$ in the rest frame of the \f${\mu_{+}\mu_{-}}\f. 
+ *  Equivalently this is the angle between the \f${\mu_{+}}$\f in the \f${\mu_{+}\mu_{-}}\f rest 
+ *  frame and the direction of the \f${\mu_{+}\mu_{-}}\f in the B rest-frame.
+ *
+ *  \f$ \theta_{K} \f$ as the angle between the \f${K+}\f$ in the \f${K*}$\f frame and the \f${K*}$\f 
+ *  in the B rest-frame.
+ *  
+ *  \f$ \phi \f$ is defined in the B rest-frame as the angle between the planes defined by the 
+ *  \f${\mu_{+}}(\mu_{-})\f$ and the \f${K\pi}\f$.  
+ * 
  *  @author Thomas Blake, Greig Cowan
  *  @date   2007-08-13
  */
+
 class MCBd2KstarMuMuAngleCalculator : public GaudiTool, virtual public IP2VVMCPartAngleCalculator {
+
 public: 
    /// Standard constructor
    MCBd2KstarMuMuAngleCalculator( const std::string& type, 
@@ -26,6 +45,7 @@ public:
    
    StatusCode calculateAngles( const LHCb::MCParticle* particle , 
                                double& thetal, double &thetak, double &phi );
+  
    double calculateThetaL( const LHCb::MCParticle* particle  );
    double calculateThetaK( const LHCb::MCParticle* particle  );
    double calculatePhi( const LHCb::MCParticle* particle  );
@@ -35,23 +55,27 @@ public:
                                            double &Phi_tr, 
                                            double &Theta_phi_tr );
    
-   double calculateTransThetaTr( const LHCb::MCParticle* particle  );
-   double calculateTransPhiTr( const LHCb::MCParticle* particle  );
-   double calculateTransThetaV( const LHCb::MCParticle* particle  );
-   
-   double calculateMass( const LHCb::MCParticle* particle );
-   
-   StatusCode initialize() ;
+  double calculateTransThetaTr( const LHCb::MCParticle* particle  );
+  double calculateTransPhiTr( const LHCb::MCParticle* particle  );
+  double calculateTransThetaV( const LHCb::MCParticle* particle  );
+  
+  double calculateMass( const LHCb::MCParticle* particle );
+
+  StatusCode initialize() ;
    
 protected:
   
-   void fillDescendants( const LHCb::MCParticle*, 
-                         LHCb::MCParticle::ConstVector& , int);
-   IP2VVAngleCalculator* m_angle;
+  StatusCode daughters( const LHCb::MCParticle* mother );
   
     
 private:
-  int m_depth ;
+  
+  const LHCb::MCParticle* m_pMuPlus;
+  const LHCb::MCParticle* m_pMuMinus;
+  const LHCb::MCParticle* m_pK;
+  const LHCb::MCParticle* m_pPi;
+  
+  IMCDecayFinder* m_mcDecayFinder;
   
 };
 #endif // MCANGLECALCULATOR_H
