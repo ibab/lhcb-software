@@ -4,6 +4,10 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2010-04-29 J Luisier
+ - Changed ITIsolatedTrackSelector : now uses ITHitExpectation tool and cuts
+   on difference between number of found and expected hits.
+
 !======================== TrackTools v3r30 2010-04-26 ======================
 ! 2010-04-22 - Stephanie Hansmann-Menzemer
  - addapt to changes in interfaces of magnetic field service
