@@ -56,6 +56,7 @@ private:
 
   std::map<std::string, bool, std::less<std::string> > m_serverMap;
   std::set<std::string> m_serviceSet;
+  bool m_saved;
   
   
 protected:

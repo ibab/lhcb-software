@@ -22,17 +22,17 @@ void DimInfoRunNb::infoHandler()
   m_data = getInt();
   if (m_data !=0) {
      if ((m_data!=m_runNumber)&&(m_data!=-1)) {
-        std::cout << "DimInfoRun new runnumber " << m_data << std::endl;
+       // std::cout << "DimInfoRun new runnumber " << m_data << std::endl;
         std::string saversvc=m_slice+"_Saver_1/";
         if (m_runNumber !=0) {
-          std::cout << "run change old runNumber= " << m_runNumber << std::endl;  
+        //  std::cout << "run change old runNumber= " << m_runNumber << std::endl;  
           //need to check that these savesets are complete
           //for fast run changes
           // DimClient::sendCommand(saversvc.c_str(),"save_histos");
         }     
      }
-     else std::cout << "DimInfoRun runnumber " << m_data << std::endl;  
-     std::cout << "setting runNumber to m_data =" << m_data << std::endl;  	
+   //  else std::cout << "DimInfoRun runnumber " << m_data << std::endl;  
+   //  std::cout << "setting runNumber to m_data =" << m_data << std::endl;  	
      m_runNumber=m_data;
   }    
   if ((m_data!=0)&&(m_data!=-1)) setRunNb();
@@ -44,12 +44,12 @@ int DimInfoRunNb::getRunNb() {
   if (m_data==0) m_data=m_runNumber;
   while (ntries<25) {
      if (m_hasData==true) {
-     	   std::cout << "DimInfoRun sending data. " << m_data << std::endl;
+     	  // std::cout << "DimInfoRun sending data. " << m_data << std::endl;
 	   return m_data;
 	}
 	else { 
 	//   dim_wait();
-	   std::cout << "DimInfoRunNb waiting for data. " << std::endl;
+	//   std::cout << "DimInfoRunNb waiting for data. " << std::endl;
 	   lib_rtl_sleep(1000);
 	   ntries++;
 	}   

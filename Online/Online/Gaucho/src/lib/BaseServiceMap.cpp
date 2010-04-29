@@ -23,6 +23,7 @@ BaseServiceMap::BaseServiceMap(ProcessMgr *processMgr):
   m_name("BaseServiceMap"),
   m_processMgr(processMgr)
 {
+m_saved=false;
 }
 
 BaseServiceMap::~BaseServiceMap() {
@@ -495,7 +496,9 @@ bool BaseServiceMap::write(std::string saveDir, std::string &fileName, int runNu
   mins=timeInfo->tm_min;
   int secs;
   secs=timeInfo->tm_sec;
-  if (((mins==0)||(mins==15)||(mins==30)||(mins==45))&& (secs<20))save=true;
+  if
+ 
+(((mins==0)||(mins==15)||(mins==30)||(mins==45))&& (secs<25))save=true;
   bool endofrun=false;
   
   for (m_dimInfoIt=m_dimInfo.begin(); m_dimInfoIt!=m_dimInfo.end(); ++m_dimInfoIt) 
@@ -508,19 +511,22 @@ bool BaseServiceMap::write(std::string saveDir, std::string &fileName, int runNu
        taskName = "RecBrunel";
      }  
     
-    if (m_dimInfoIt->second.size()>0) endofrun=true;
-    else endofrun=false;
+ //   if (m_dimInfoIt->second.size()>0) endofrun=true;
+ //   else endofrun=false;
     for (it=m_dimInfoIt->second.begin(); it!=m_dimInfoIt->second.end(); ++it) {
       //check if all contributions have the end of run flag
+      it->second->loadMonObject();
       endofrun = it->second->monObject()->endOfRun(); 
     }
     std::string eorstring="";
     if (endofrun) {
        eorstring="-EOR";
        save=true;
-    }   
-       
-    if (save==true) {
+    }
+    else m_saved=false;   
+    
+        
+    if ((save==true)&&(m_saved==false)) {
     std::string tmpfile = saveDir + taskName + "/" + month +"/" +day + "/"+ taskName + "-" + runNumberstr +"-"+ timestr + eorstring + ".root";
     fileName.replace(0, fileName.length(), tmpfile);
     std::string dirName = saveDir + taskName + "/" + month +"/" +day ;  
@@ -581,6 +587,7 @@ bool BaseServiceMap::write(std::string saveDir, std::string &fileName, int runNu
   
     f->Close();
     delete f;f=0;
+    if (endofrun) m_saved=true;
   }
   }
   return endofrun;
@@ -630,6 +637,13 @@ bool BaseServiceMap::add() {
 
      int eors=0;
      for (it=m_dimInfoIt->second.begin(); it!=m_dimInfoIt->second.end(); ++it) {
+        if (!m_processMgr->dimInfoServers()->isActive(it->first)) continue;
+        if(0 == it->second->monObject()) continue;
+        bool isLoaded = it->second->loadMonObject();
+          if (!isLoaded){
+        continue;
+        }
+               
         bool tmpendofrun=false;
         tmpendofrun= it->second->monObject()->endOfRun();  
          //if we find an endof run, only set the endofrun flag if we have them all
@@ -650,11 +664,11 @@ bool BaseServiceMap::add() {
       //loop over servers
       if (!m_processMgr->dimInfoServers()->isActive(it->first)) continue;
 
-      if(0 == it->second->monObject()) continue;
-      bool isLoaded = it->second->loadMonObject();
-      if (!isLoaded){
+        if(0 == it->second->monObject()) continue;
+        bool isLoaded = it->second->loadMonObject();
+          if (!isLoaded){
         continue;
-      }
+        }
 
   
       if (m_dimSrv[m_dimInfoIt->first].second->typeName().compare(s_monRate) == 0){
@@ -669,12 +683,12 @@ bool BaseServiceMap::add() {
     }
     //update after adding
     m_dimSrv[m_dimInfoIt->first].first->updateService(endofrun);
- 
     if (m_dimSrv[m_dimInfoIt->first].second->typeName().compare(s_monRate) == 0){
       if (m_processMgr->publishRates()) m_monRateDecoder->update((MonRate*)(m_dimSrv[m_dimInfoIt->first].second));
     }
   }
   if ((endofrun)&(!toteor)) {
+    toteor=endofrun;
      msg << MSG::DEBUG <<  " Waiting for all eor contributions endofrun=" << endofrun << " toteor="<< toteor<< endreq;
   }
 

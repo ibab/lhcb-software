@@ -35,7 +35,6 @@ SaverSvc::SaverSvc(const std::string& name, ISvcLocator* ploc) : Service(name, p
   m_monitoringFarm = true;
   m_enablePostEvents = true;
   m_runNb=0;
-  m_firstsave = true;
   m_firststart = true;
 }
 
@@ -87,16 +86,11 @@ void SaverSvc::handle(const Event&  ev) {
    ProcessMgr* processMgr = (ProcessMgr*) ev.data;    
     save(processMgr).ignore();    
     //stop the timer after saving (at end of run)
-    processMgr->dimTimerProcess()->stop();   
+   // processMgr->dimTimerProcess()->stop();   
   }
   if(s_startTimer == ev.type) { 
     ProcessMgr* processMgr = (ProcessMgr*) ev.data;
-    if (m_firstsave == true) {
-       processMgr->dimTimerProcess()->start(120);
-      // processMgr->dimTimerProcess()->start(m_refreshTime);
-       }
-    else {
-       processMgr->dimTimerProcess()->start(m_refreshTime);}   
+    processMgr->dimTimerProcess()->start(m_refreshTime);   
   }
   else if(s_stopTimer == ev.type) {
    ProcessMgr* processMgr = (ProcessMgr*) ev.data;
@@ -148,8 +142,7 @@ void SaverSvc::handle(const Incident& inc) {
 
 StatusCode SaverSvc::start() {
   MsgStream msg(msgSvc(), name());
-  msg << MSG::INFO  << "SaverSvc is starting." << endreq;
-  m_firstsave = true;
+  msg << MSG::DEBUG  << "SaverSvc is starting." << endreq;
   m_utgid = RTL::processName();  
   std::vector<std::string> utgidParts = Misc::splitString(m_utgid, "_");
 
@@ -206,7 +199,7 @@ StatusCode SaverSvc::start() {
         processMgr->setSaveDiff(m_saveDiff);
         processMgr->createInfoServers();
         processMgr->createTimerProcess();
-  
+        processMgr->dimTimerProcess()->start(m_refreshTime);   
         processMgr->setMonitorSvc(m_pGauchoMonitorSvc);
 	m_processMgr.push_back(processMgr);	  
         std::string serviceName="";
@@ -224,6 +217,7 @@ StatusCode SaverSvc::start() {
         name=*fileName;    
         std::string infoName = m_tmpPart+"/SaverSvc/SAVESETLOCATION";
         m_dimSvcSaveSetLoc = new DimService(infoName.c_str(),(char *) name.c_str());
+
      }  
   }
   m_firststart=false; 
@@ -233,7 +227,7 @@ StatusCode SaverSvc::start() {
   int i=0;
   for (itpmgr = m_processMgr.begin(); itpmgr < m_processMgr.end(); itpmgr++){
     // Save histos
-    IocSensor::instance().send(this, s_startTimer, *itpmgr); //start Timer*/
+  //  IocSensor::instance().send(this, s_startTimer, *itpmgr); //start Timer*/
     i++;
   }   
   return StatusCode::SUCCESS;
@@ -243,7 +237,7 @@ StatusCode SaverSvc::start() {
 StatusCode SaverSvc::stop() {
 //------------------------------------------------------------------------------
  MsgStream msg(msgSvc(), name());
-  msg << MSG::INFO<< "SaverSvc is stopping." << endmsg;
+  msg << MSG::DEBUG<< "SaverSvc is stopping." << endmsg;
   return Service::SUCCESS;
 }
 
@@ -251,7 +245,7 @@ StatusCode SaverSvc::stop() {
 StatusCode SaverSvc::finalize() {
 //------------------------------------------------------------------------------
   MsgStream msg(msgSvc(), name());
-  msg << MSG::INFO<< "SaverSvc is finalizing." << endmsg;
+  msg << MSG::DEBUG<< "SaverSvc is finalizing." << endmsg;
   return Service::SUCCESS;
 }
 

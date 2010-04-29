@@ -169,7 +169,7 @@ void AdderSvc::handle(const Incident& inc) {
 
 StatusCode AdderSvc::start() {
   MsgStream msg(msgSvc(), name());
-  msg << MSG::INFO  << "Adder."<< endreq;
+  msg << MSG::DEBUG  << "Adder starting."<< endreq;
   if (m_firststart) {
      lib_rtl_sleep(5000);    
      m_utgid = RTL::processName();
@@ -209,8 +209,8 @@ StatusCode AdderSvc::start() {
      m_firststart = false;
   }
   else {
-    shutDown();
-    startUp();
+   // shutDown();
+   // startUp();
   }
 
  return StatusCode::SUCCESS;
@@ -218,14 +218,14 @@ StatusCode AdderSvc::start() {
 
 StatusCode AdderSvc::stop() {
   MsgStream msg(msgSvc(), name());
-  msg << MSG::INFO << "Adder stopping." << endreq;
+  msg << MSG::DEBUG << "Adder stopping." << endreq;
  return StatusCode::SUCCESS;
  }
 
 
 StatusCode AdderSvc::finalize() {
   MsgStream msg(msgSvc(), name());
-  msg << MSG::INFO << "Finalize Adder." << endreq; 
+  msg << MSG::DEBUG << "Finalize Adder." << endreq; 
   return Service::SUCCESS;
 }
 

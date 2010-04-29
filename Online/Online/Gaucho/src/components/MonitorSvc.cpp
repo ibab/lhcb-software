@@ -142,6 +142,7 @@ StatusCode MonitorSvc::initialize() {
 StatusCode MonitorSvc::start() {
     MsgStream msg(msgSvc(),"MonitorSvc");
     m_stopping=false;
+    updateAll(false,this);
     msg << MSG::DEBUG << "Starting MonitorSvc " << endreq;
     return StatusCode::SUCCESS;
 }
@@ -162,12 +163,10 @@ StatusCode MonitorSvc::finalize() {
   MsgStream msg(msgSvc(),"MonitorSvc");
   msg << MSG::DEBUG << "MonitorSvc Destructor" << endreq;
 //  m_InfoNamesMap.clear();
-/*  if ( 0 == m_disableDimRcpGaucho){
+ /* if ( 0 == m_disableDimRcpGaucho){
     msg << MSG::DEBUG << "delete m_dimRcpGaucho" << endreq;
     if (m_dimRpcGaucho) delete m_dimRpcGaucho;  m_dimRpcGaucho = 0;
   }*/
- /*
- comment this - we keep the dimcmdsvr alive when stopping
   if ( 0 == m_disableDimCmdServer){
     msg << MSG::DEBUG << "delete m_dimcmdsvr" << endreq;
     if (m_dimcmdsvr) delete m_dimcmdsvr;  m_dimcmdsvr = 0;
@@ -181,7 +180,6 @@ StatusCode MonitorSvc::finalize() {
     msg << MSG::DEBUG << "delete m_monRate" << endreq;
     //if (m_monRate) delete m_monRate; m_monRate = 0;
   }
-  */
   //dim_unlock();
   msg << MSG::DEBUG << "finalized successfully" << endreq;
   

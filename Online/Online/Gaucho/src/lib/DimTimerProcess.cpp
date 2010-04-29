@@ -26,7 +26,8 @@ void DimTimerProcess::timerHandler() {
   bool endofrun=false;
   endofrun=m_processMgr->timerHandler();
   // don't restart the timer at the end of the run
-  if (!endofrun) start(m_refreshTime);
+ // if (!endofrun) start(m_refreshTime);
+ start(m_refreshTime);
 }
 
 // bool DimTimerProcess::statusDiscrepancy() {

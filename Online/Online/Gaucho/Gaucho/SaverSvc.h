@@ -59,7 +59,6 @@ private:
   std::string m_utgid;
   std::string m_nodeName;
   bool m_monitoringFarm;
-  bool m_firstsave;
   bool m_firststart;
   
   std::string m_tmpPart;
