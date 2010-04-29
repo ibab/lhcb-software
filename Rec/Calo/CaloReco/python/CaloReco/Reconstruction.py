@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Reconstruction.py,v 1.10 2010-03-09 18:16:43 odescham Exp $
+# $Id: Reconstruction.py,v 1.11 2010-04-29 21:13:59 odescham Exp $
 # =============================================================================
 ## The major building blocks of Calorimeter Reconstruction
 #  @author Vanya BELYAEV Ivan.Belyaev@nikhe.nl
@@ -11,7 +11,7 @@ The major building blocks of Calorimeter Reconstruction
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.10 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.11 $"
 # =============================================================================
 __all__ = (
     'clustersReco'   , 
@@ -327,13 +327,15 @@ def mergedPi0Reco ( context , enableRecoOnDemand , clusterOnly = False , neutral
                                 CaloLCorrection ) 
 
 
-    # build the sequence
+    # build the sequences
     seq = getAlgo ( GaudiSequencer , 'MergedPi0Reco' , context )
+    sseq = getAlgo ( GaudiSequencer , 'SplitClusterReco' , context )
         
     ## Merged Pi0
     if clusterOnly :
         pi0 = getAlgo ( CaloMergedPi0Alg , 'SplitClustersRec', context )
         pi0.CreateSplitClustersOnly = True
+        addAlgs ( sseq , pi0 ) 
     else :
         pi0 = getAlgo ( CaloMergedPi0Alg , 'MergedPi0Rec', context )        
 
@@ -364,12 +366,13 @@ def mergedPi0Reco ( context , enableRecoOnDemand , clusterOnly = False , neutral
     pi0.EtCut    = 2. * GeV;
 
 
-    addAlgs ( seq , pi0 ) 
 
     if clusterOnly :
-        setTheProperty ( seq , 'Context' , context )
-        return seq
+        setTheProperty ( sseq , 'Context' , context )
+        return sseq
 
+    ## MergedPi0 sequence
+    addAlgs ( seq , pi0 ) 
 
     ## 2/ SplitPhotons
     splitg = getAlgo ( CaloHypoAlg , 'PhotonFromMergedRec' , context )    

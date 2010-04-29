@@ -1,6 +1,6 @@
-// $Id: Brunel.opts,v 1.28 2010-03-08 01:19:39 odescham Exp $ 
+// $Id: Brunel.opts,v 1.29 2010-04-29 21:13:59 odescham Exp $ 
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.28 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.29 $ 
 // ============================================================================
 
 /** @file
@@ -77,9 +77,12 @@ CaloPIDs.Members +=
 
 NeutralPIDs.Members += {
   "CaloPhotonIdAlg/PhotonID",
-  "CaloPhotonIdAlg/MergedID",
-  "CaloPhotonIdAlg/SplitPhotonID"
-}
+    "CaloPhotonIdAlg/MergedID",
+    "CaloPhotonIdAlg/SplitPhotonID"
+    };
+
+MergedID.Type = "MergedID";
+SplitPhotonID.Type= "PhotonFromMergedID";
 
 CaloMatch.Members +=
   {
