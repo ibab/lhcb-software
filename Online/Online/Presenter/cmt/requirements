@@ -33,8 +33,8 @@ document rootcint cintBootstrap cintBootstrap.h
 macro_append includes " -I$(PRESENTERROOT)/inc -I$(PRESENTERROOT)/src" \
   WIN32               " -I$(PRESENTERROOT)/inc -I$(PRESENTERROOT)/src"
 
-macro_append ROOT_linkopts " -lThread -lGui -lGraf3d -lGed" \
-  WIN32 " libThread.lib libGui.lib libGpad.lib libHist.lib libGraf.lib \
+macro_append ROOT_linkopts " -lThread -lGui -lGraf3d -lGed -lGuiHtml" \
+  WIN32 " libThread.lib libGui.lib libGpad.lib libGuiHtml.lib libHist.lib libGraf.lib \
                libGraf3d.lib libGed.lib libRIO.lib"
 
 #apply_tag ROOT_GE_5_17
