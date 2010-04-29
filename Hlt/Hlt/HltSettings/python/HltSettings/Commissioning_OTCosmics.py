@@ -22,6 +22,10 @@ class Commissioning_OTCosmics :
     def HltType(self) :  
         self.verifyType( Commissioning_OTCosmics )
         return          'Commissioning_OTCosmics'
+    
+    def __init__(self) :
+        self.StripEndSequence = ['']
+
 
     def L0TCK(self) :
         return '0x1409'#None

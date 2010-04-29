@@ -4,6 +4,11 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2010-04-27 - Gerhard Raven
+ - replace the lumi low postscales by equivalent prescales
+ - strip the Commissioning_OTCosmics configurations a bit more
+
+
 !========================== HltSettings v1r17p1 2010-04-24 ===================
 ! 2010-04-27 - Gerhard Raven
  - update Physics_25Vis_25L0_2Hlt1_2Hlt2_Apr10:
