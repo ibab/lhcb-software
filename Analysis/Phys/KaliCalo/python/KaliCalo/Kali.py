@@ -13,15 +13,14 @@ for ``iterative pi0'' Ecal calibration
 # ======================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@itep.ru "
 __date__    = " 2010-03-17 "
-__version__ = " CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.15 $ "
+__version__ = " CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.16 $ "
 # ======================================================================
 import ROOT
 from GaudiPython.Bindings import gbl as cpp
-LHCb         = cpp.LHCb
 
 ## the same cell 
 from KaliCalo.Cells     import  ( CellID    , GlobalRow  , GlobalCol ,
-                                  Inenrzone , MiddleZone , OuterZone ,
+                                  InnerZone , MiddleZone , OuterZone ,
                                   EcalZone  , Zones     ) 
 from KaliCalo.FakeCells import SameCell
 
