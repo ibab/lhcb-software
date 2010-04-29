@@ -1,12 +1,18 @@
-// $Id: PageDescriptionTextView.cpp,v 1.1 2010-04-25 18:10:27 robbep Exp $
+// $Id: PageDescriptionTextView.cpp,v 1.2 2010-04-29 14:24:08 robbep Exp $
 // Include files
 
 // local
 #include "PageDescriptionTextView.h"
 
+// ROOT
+#include "TGHtmlBrowser.h"
+
 // boost
 #include <boost/xpressive/xpressive.hpp>
 #include <boost/algorithm/string.hpp>
+
+// STL
+#include <iostream>
 
 // from Presenter
 #include "ProblemDB.h"
@@ -24,7 +30,7 @@ PageDescriptionTextView::PageDescriptionTextView( const TGWindow * p ,
 						  UInt_t w , 
 						  UInt_t h ,
 						  const std::string & address ) : 
-  TGTextView( p , w , h ) ,
+  TGHtml( p , w , h ) ,
   m_problemDbServerAddress( address ) { }
 
 //=============================================================================
@@ -63,18 +69,30 @@ bool PageDescriptionTextView::retrieveListOfProblems( const std::string& pageNam
   std::ostringstream theStr ;
 
   theStr << "Problems reported in the problem database for the " << systemName
-	 << " subsystem: " << std::endl ;
+	 << " subsystem: <br />" << std::endl ;
+  theStr << "<table border=0 cellspacing=0 width=100%>" << std::endl ;
   for ( std::vector< std::vector< std::string > >::iterator it = problems.begin() ;
 	it != problems.end() ; ++it ) {
     std::vector< std::string > vec = (*it) ;
     id = atoi( vec[ 3 ].c_str() ) ;
-    theStr << ( ( vec[ 0 ] + ": " + vec[ 4 ] ).c_str() ) << std::endl ;
-  }
-  
-  theStr << "------------------------------------------------" << std::endl ;
 
-  fText -> LoadBuffer( theStr.str().c_str() ) ;
-  Update() ;
+    std::string cellColor ;
+    if ( vec[ 1 ] == "Ok") 
+      cellColor = "green" ;
+    else if ( vec[ 1 ] == "Minor" ) 
+      cellColor = "orange" ;
+    else if ( vec[ 1 ] == "Severe" ) 
+      cellColor = "red" ;
+    else 
+      cellColor = "white" ;
+    
+    theStr << "<tr><td bgcolor=\"" << cellColor << "\">" << ( ( vec[ 0 ] + ": " + vec[ 4 ] ).c_str() ) 
+	   << "</td></tr>" << std::endl ;
+  }
+  theStr << "</table>" << std::endl ;
+  theStr << "<hr>" << std::endl ;
+
+  ParseText( const_cast< char * >( theStr.str().c_str() ) ) ;
 
   return true ;
 }
@@ -82,19 +100,76 @@ bool PageDescriptionTextView::retrieveListOfProblems( const std::string& pageNam
 //=============================================================================
 // Load buffer in text display without clearing it first
 //=============================================================================
-Bool_t PageDescriptionTextView::AddToBuffer(const char *txtbuf) {
+Bool_t PageDescriptionTextView::LoadBuffer(const char *txtbuf) {
   // Load text from a text buffer. Return false in case of failure.
   if (!txtbuf || !strlen(txtbuf)) {
     return kFALSE;
   }
 
-  TString currentBuffer = fText -> AsString() ;
-  TString newBuffer( txtbuf ) ;
+  std::string theBuffer( txtbuf ) ;
+  boost::algorithm::replace_all( theBuffer , "\n" , "<br />\n" ) ;
+  theBuffer += "\n" ;
 
-  currentBuffer += newBuffer ;
+  // Replace html links with corresponding HTML code
+  boost::xpressive::mark_tag link( 1 ) ;
+  boost::xpressive::sregex html = "http://" >> ( link = *~boost::xpressive::_s ) ;
+  boost::xpressive::smatch what ;
+  std::string linkName ;
+  if ( boost::xpressive::regex_search( theBuffer , what , html ) ) {
+    linkName = "http://" + what[ link ] ;
+  }
 
-  Clear() ;
-  fText -> LoadBuffer( currentBuffer.Data() );
-  Update() ;
+  std::string newLink = "<a href=\"" + linkName + "\">" + linkName + "</a>" ; 
+  boost::algorithm::replace_all( theBuffer , linkName , newLink ) ;
+
+  ParseText( const_cast< char * >( theBuffer.c_str() ) ) ;
+
+  return kTRUE ;
+}
+
+//=============================================================================
+// Compute Virtual size
+//=============================================================================
+void TGHtml::ComputeVirtualSize() {
+  fVirtualSize = TGDimension(0, 500);
+}
+
+//=============================================================================
+// Click on text
+//=============================================================================
+Bool_t PageDescriptionTextView::HandleButton( Event_t * event ) {
+  if ( ( event -> fType == kButtonPress ) && ( event -> fCode == 1 ) ) {
+    const char * link ;
+    link = GetHref( event -> fX , event -> fY ) ;
+    if ( 0 != link ) {
+      //      if ( 0 == fork() ) {
+      // Check if firefox is already running:
+      bool running = false ;
+      FILE * fp ;
+      fp = popen( "pgrep firefox" , "r" ) ;
+      if ( fp == NULL ) 
+	std::cerr << "Could not launch firefox" << std::endl ;
+      else {
+	char line[256] ;
+	while ( fgets( line , sizeof(line) , fp ) ) { 
+	  running = true ;
+	}
+      }
+      pclose( fp ) ;
+      
+      if ( ! running ) {
+	if ( 0 == fork() ) {
+	  execlp( "firefox" , "firefox" , link , NULL ) ;
+	}
+      }
+      else
+	if ( 0 == fork() ) {
+	  std::string foxargs( link ) ;
+	  foxargs = "openURL(" + foxargs + ")" ;
+	  execlp( "firefox" , "firefox" , "-remote" , foxargs.c_str()  
+		  , NULL ) ;
+	}
+    }
+  }
   return kTRUE ;
 }
