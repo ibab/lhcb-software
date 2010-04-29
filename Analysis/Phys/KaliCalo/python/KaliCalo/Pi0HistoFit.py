@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Pi0HistoFit.py,v 1.13 2010-04-29 12:51:28 ibelyaev Exp $ 
+# $Id: Pi0HistoFit.py,v 1.14 2010-04-29 13:48:05 ibelyaev Exp $ 
 # =============================================================================
 """
 A module for fitting the histograms with pi0-mass
@@ -9,7 +9,7 @@ A module for fitting the histograms with pi0-mass
 # =============================================================================
 __author__  = " ??? "
 __date__    = " 2009-12-?? "
-__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.13 $ "
+__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.14 $ "
 # =============================================================================
 from ROOT  import TH1F, TF1
 from math  import sqrt, pi,exp
@@ -142,12 +142,20 @@ class Pi0Fit:
 
 pi0Func = TF1('Pi0Fit', Pi0Fit() , 0.0 , 250.0 , 6 )
     
+## pi0Func.SetParNames  (
+##     "Signal"     ,
+##     "Mass"       ,
+##     "Sigma"      ,
+##     "Background" ,
+##     "Slope"      ,
+##     "Curvature"  
+##     )  
 pi0Func.SetParNames  (
-    "Signal"     ,
-    "Mass"       ,
-    "Sigma"      ,
-    "Background" ,
-    "Slope"      ,
+    "N_{#pi^0}"      ,
+    "m_{#pi^0}"      ,
+    "#sigma_{#pi^0}" ,
+    "Background"     ,
+    "Slope"          ,
     "Curvature"  
     )  
 

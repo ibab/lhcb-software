@@ -11,11 +11,17 @@ Utilities for cells
 # ======================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@itep.ru "
 __date__    = " 2010-04-29 "
-__version__ = " CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.1 $ "
+__version__ = " CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.2 $ "
 __all__     = (
-    'CellID'    , 
-    'GlobalRow' ,
-    'GlobalCol'    
+    'CellID'     , 
+    'GlobalRow'  ,
+    'GlobalCol'  ,
+    #
+    'EcalZone'   ,
+    'InnerZone'  ,
+    'MiddleZone' ,
+    'OuterZone'  ,
+    'Zones'
     )
 # ======================================================================
 import ROOT
@@ -28,6 +34,22 @@ GlobalRow = 31
 GlobalCol = 31 
 
 CellID = LHCb.CaloCellID 
+
+EcalZone   = CellID ( 'Ecal' , 'PinArea', GlobalRow , GlobalCol ) ## the whole Ecal 
+## inner  zone only 
+InnerZone  = CellID ( 'Ecal' , 'Inner'  , GlobalRow , GlobalCol ) ## inner  zone only 
+## middle zone only 
+MiddleZone = CellID ( 'Ecal' , 'Middle' , GlobalRow , GlobalCol ) ## middle zone only 
+## Outer  zone only 
+OuterZone  = CellID ( 'Ecal' , 'Outer'  , GlobalRow , GlobalCol ) ## Outer  zone only 
+
+Zones      = (
+    OuterZone  ,
+    MiddleZone , 
+    InnerZone  ,
+    EcalZone   
+    )
+
 
 # =============================================================================
 if '__main__' == __name__ :
