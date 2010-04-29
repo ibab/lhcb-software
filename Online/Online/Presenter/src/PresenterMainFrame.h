@@ -57,6 +57,7 @@ class stringstream;
 class TBenchmark;
 
 class KnownProblemList ;
+class OnlineHistPage ;
 
 class PresenterMainFrame : public TGMainFrame {
 public:
@@ -626,6 +627,10 @@ private:
   TList*  m_knownHistoryPartitionList;
   TList*  m_knownMonitoringNodeList;
   TList*  m_knownInstanceNumberList;
+
+  /// Display page name in status bar and load comments
+  void displayStatusAndComments( const std::string & pageName , 
+				 OnlineHistPage * page ) ;
 
   ClassDef(PresenterMainFrame, 0) // main editor window
     };

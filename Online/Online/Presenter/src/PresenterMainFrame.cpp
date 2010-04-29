@@ -4116,10 +4116,10 @@ void PresenterMainFrame::loadSelectedPageFromDB(const std::string & pageName,
       }
 
       if (0 != page) {
-        if (Batch != m_presenterMode) {
-          m_statusBarTop->SetText( pageName.c_str(), 1);  // UPdate the page name in the status bar.
-        }
+	// Display status bar and comments
+	displayStatusAndComments( pageName , page ) ;
 
+	// now load histograms
         page->getHistogramList(&m_onlineHistosOnPage);
         ParallelWait parallelWait(this);
         parallelWait.loadHistograms(&m_onlineHistosOnPage, &dbHistosOnPage);
@@ -4193,16 +4193,6 @@ void PresenterMainFrame::loadSelectedPageFromDB(const std::string & pageName,
           //          m_onlineHistosOnPageIt++;
         }
 
-        m_pageDescriptionView->Clear();
-        m_pageDescription = page->doc();
-
-	// If this is a Shift page, prepend to the page description
-	// the related list of problems from the ProblemDB
-	if ( "/Shift" == page -> folder() )
-	  m_pageDescriptionView -> retrieveListOfProblems( page -> name() ) ;
-	
-        m_pageDescriptionView->AddToBuffer(m_pageDescription.c_str());
-        m_pageDescriptionView->DataChanged();
         // workaround attempt for ROOT painter objects:
         // reliable random crashes when below invoked... via TH painter (timing dependent?)
         editorCanvas->Update();
@@ -4217,7 +4207,8 @@ void PresenterMainFrame::loadSelectedPageFromDB(const std::string & pageName,
           }
           if ( (s_CNT == (*drawOpt_dbHistosOnPageIt)->histogramType()) &&
                (true == currentTCK_service.empty()) ) {
-            HistogramIdentifier histogramIdentifier = HistogramIdentifier((*drawOpt_dbHistosOnPageIt)->identifier());
+            HistogramIdentifier histogramIdentifier = 
+	      HistogramIdentifier((*drawOpt_dbHistosOnPageIt)->identifier());
             if (histogramIdentifier.isPlausible()) {
               currentTCK_service = s_adder + histogramIdentifier.taskName() + s_slash +
                 histogramIdentifier.algorithmName() + s_slash +
@@ -4231,7 +4222,6 @@ void PresenterMainFrame::loadSelectedPageFromDB(const std::string & pageName,
           addHistoToPage(currentTCK_service, invisible);
         }
         editorCanvas->Update();
-
       }
 
     } catch (std::string sqlException) {
@@ -4884,4 +4874,27 @@ void PresenterMainFrame::about() {
                  Form("%s", config.str().c_str()),
                  kMBIconAsterisk, kMBOk, &m_msgBoxReturnCode);
   }
+}
+
+//===========================================================================
+// Display status and comment of the loaded page
+//===========================================================================
+void PresenterMainFrame::displayStatusAndComments( const std::string & pageName , 
+						   OnlineHistPage * page ) {
+  if (Batch != m_presenterMode) {
+    // UPdate the page name in the status bar.
+    m_statusBarTop -> SetText( pageName.c_str(), 1 ) ;
+  }
+  
+  // Load first description
+  m_pageDescriptionView->Clear();
+  m_pageDescription = page->doc();
+  
+  // If this is a Shift page, prepend to the page description
+  // the related list of problems from the ProblemDB
+  if ( "/Shift" == page -> folder() )
+    m_pageDescriptionView -> retrieveListOfProblems( page -> name() ) ;
+  
+  m_pageDescriptionView->LoadBuffer(m_pageDescription.c_str());
+  m_pageDescriptionView->DataChanged() ;
 }
