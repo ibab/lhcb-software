@@ -65,8 +65,10 @@ private:
   Condition *m_lumipars;
   std::string m_location;
   double            m_rate ;
-  ulonglong         m_first,m_last;
+  mutable ulonglong m_first,m_last;
   mutable size_t    m_tick ;
+  mutable size_t    m_lastReportedTick;
+  bool              m_useCondDB;
 };
 
 /************************************************************************/
@@ -108,10 +110,12 @@ HltReferenceRateSvc::HltReferenceRateSvc( const std::string& name,
   , m_first( ~ulonglong(0) )
   , m_last(0)
   , m_tick(0)
+  , m_lastReportedTick(0)
 {
     // by default, we assume 50(beam-beam)+10(beam1)+10(beam2)+10(empty) Hz of lumi triggers
   declareProperty("ReferenceRate", m_rate = 80/*Gaudi::Units::Hz*/ ) ;
   declareProperty("ODINLocation", m_location = LHCb::ODINLocation::Default);
+  declareProperty("UseCondDB", m_useCondDB = true );
 }
 
 MsgStream& HltReferenceRateSvc::msg(MSG::Level level) const {
@@ -124,11 +128,8 @@ StatusCode
 HltReferenceRateSvc::i_updateConditions()
 {
     report();
-    // reset counters...
-    m_first =  ~ulonglong(0);
-    m_last = 0 ; 
     // and update settings
-    debug() << "updating lumipars" << endmsg;
+    info() << "updating lumipars" << endmsg;
     if (m_lumipars==0) { 
         warning() << "Could not obtain Condition for lumi parameters from conditions DB" << endmsg;
         return StatusCode::FAILURE;
@@ -138,9 +139,9 @@ HltReferenceRateSvc::i_updateConditions()
         return StatusCode::FAILURE;
     }
     std::vector<double> lumipars = m_lumipars->param<std::vector<double> >("LumiPars");
-    debug() << "updated lumipars: " << lumipars << endmsg;
+    info() << "got lumipars: " << lumipars << endmsg;
     m_rate = 1000*std::accumulate(lumipars.begin(),lumipars.end(),double(0));
-    debug() << "updated lumi rate: " << m_rate << endmsg;
+    info() << "updated assumed lumi rate to : " << m_rate << " Hz" << endmsg;
     return StatusCode::SUCCESS;
 }
 
@@ -155,13 +156,15 @@ HltReferenceRateSvc::initialize()
   if( !sc.isSuccess() ) return sc;
   sc = m_decodeOdin.retrieve();
   if( !sc.isSuccess()) return sc;
-  sc = service("UpdateManagerSvc",m_updMgrSvc);
-  if( !sc.isSuccess()) return sc;
-  m_updMgrSvc->registerCondition( this, "Conditions/Online/LHCb/Lumi/LumiSettings",
-                                       &HltReferenceRateSvc::i_updateConditions,m_lumipars );
-  sc = m_updMgrSvc->update(this);
-  if( !sc.isSuccess()) return sc;
 
+  if (m_useCondDB) {
+      sc = service("UpdateManagerSvc",m_updMgrSvc);
+      if( !sc.isSuccess()) return sc;
+      m_updMgrSvc->registerCondition( this, "Conditions/Online/LHCb/Lumi/LumiSettings",
+                                           &HltReferenceRateSvc::i_updateConditions,m_lumipars );
+      sc = m_updMgrSvc->update(this);
+      if( !sc.isSuccess()) return sc;
+  }
 
   sc = service( "IncidentSvc", m_incidentSvc);
   if( !sc.isSuccess() ) return sc;
@@ -180,23 +183,29 @@ HltReferenceRateSvc::report() const
       Gaudi::Time first( m_first*1000);
       Gaudi::Time last (  m_last*1000);
       Gaudi::TimeSpan interval( last-first) ;
-      info() << "Got " << m_tick << " ticks " 
+      info() << "Got " << m_tick - m_lastReportedTick << " ticks " 
              << " in "<<  interval.seconds() << " s."
              << " during [ " << first.format(true,"%F %T") << ", " << last.format(true,"%F %T")  << " ]" << endmsg;
       if (interval.seconds()>0) {
-          info() << "This corresponds to an average rate of " << m_tick/interval.seconds() << " Hz."
-                 << ", compared to an assumed 'set' rate of " << m_rate << endmsg;
+          info() << "This corresponds to an average observed rate of " << (m_tick-m_lastReportedTick)/interval.seconds() << " Hz."
+                 << ", compared to an assumed 'set' total rate of " << m_rate << endmsg;
       }
+      // reset counters...
+      m_first =  ~ulonglong(0);
+      m_last = 0 ; 
+      m_lastReportedTick = m_tick;
   } 
 }
 
 StatusCode
 HltReferenceRateSvc::finalize()
 {
+  report();
   StatusCode sc = Service::finalize() ;
   m_toolSvc->release();
   m_evtSvc->release();
   m_incidentSvc->release();
+  if (m_updMgrSvc!=0) m_updMgrSvc->release();
   return sc;
 }
 

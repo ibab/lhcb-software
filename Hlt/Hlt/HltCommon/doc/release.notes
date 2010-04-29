@@ -4,6 +4,11 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+!========================== HltCommon v5r24p1 2010-04-29 ===================
+! 2010-04-21 - Gerhard Raven
+ - provide a switch in HltReferenceSvc to not use the conditions DB, but
+   a property instead...
+
 !========================== HltCommon v5r24 2010-04-22 ===================
 ! 2010-04-21 - V. Gligorov
  - For the  new vertex filter to cut on the number of matching LHCbIDs
