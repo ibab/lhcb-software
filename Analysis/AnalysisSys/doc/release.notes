@@ -3,6 +3,12 @@ Package     : AnalysisSys
 Package Coordinator : Juan Palacios
 Purpose     : LHCb analysis packages
 
+</PRE><H1><A NAME=v4r4>2010-04-30 Analysis v4r4 </A></H1><PRE>
+
+ - Based on Phys v9r5 and LHCb v31r0p1
+ - New stripping limes, DecayTreeTuple tools for 2010 stripping, 
+   fixes to Mu monitoring, various fixes for 2010 data.
+
 </PRE><H1><A NAME=v4r3>2010-04-09 Analysis v4r3 </A></H1><PRE>
 
  - Highlights:
