@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.422 2010-04-18 10:33:21 jpalac Exp $
+! $Id: release.notes,v 1.423 2010-04-30 16:25:14 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -8,6 +8,12 @@
 ! Do not forget to update requirements and job/DaVinci_Ganga.py before tagging
 !
 !-----------------------------------------------------------------------------
+
+!========================== DaVinci v25r4 2010-04-30 =======================
+
+! 2010-04-27
+ - python/DaVinci/Configuration.py
+  . Fix to understand InputType == 'SDST'
 
 !========================== DaVinci v25r3 2010-04-18 =======================
 

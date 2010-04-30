@@ -3,6 +3,12 @@ Package             : DaVinciSys
 Package Coordinator : Juan Palacios
 Purpose             : LHCb physics analysis application
 
+</PRE><H1><A NAME=v25r4>2010-04-30 DaVinci v25r4. First version on LHCb v31 series</A></H1><PRE>
+
+ Based on PHYS v9r5, ANALYSIS v4r4, HLT v10r?, and LHCb v31r0p1 stack.
+
+ * Various fixes, new stripping lines.
+
 </PRE><H1><A NAME=v25r3>2010-04-18 DaVinci v25r3. First version on LHCb v30 series</A></H1><PRE>
 
  Based on PHYS v9r3p1, ANALYSIS v4r3, HLT v10r1, and LHCb v30r0 stack.
