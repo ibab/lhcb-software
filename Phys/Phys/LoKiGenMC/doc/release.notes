@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.39 2010-04-06 20:15:58 ibelyaev Exp $ 
+! $Id: release.notes,v 1.40 2010-04-30 13:15:36 jpalac Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiGenMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -14,6 +14,8 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! 
 ! -----------------------------------------------------------------------------
+
+!========================== LoKiGenMC v9r0 2010-04-30 =========================
 
 ! 2010-04-06 - Vanya Belyaev
 
