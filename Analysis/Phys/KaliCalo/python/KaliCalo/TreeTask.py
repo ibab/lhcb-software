@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: TreeTask.py,v 1.4 2010-04-06 19:11:47 ibelyaev Exp $
+# $Id: TreeTask.py,v 1.5 2010-04-30 13:00:14 ibelyaev Exp $
 # =============================================================================
 ## @file KaliKalo/TreeTask.py
 #  The helper class for parallel filling of histograms  using GaudiPython.Parallel
@@ -14,7 +14,7 @@ The helper class for parallel filling of historgams using GaudiPython.Parallel
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@itep.ru "
 __date__    = " 2010-03-28 "
-__version__ = " CVS Tag $Name: not supported by cvs2svn $ , version $Revision: 1.4 $ "
+__version__ = " CVS Tag $Name: not supported by cvs2svn $ , version $Revision: 1.5 $ "
 __all__     = (
     "TreeTask"   ,
     "fillHistos"
@@ -102,14 +102,18 @@ class TreeTask ( Parallel.Task ) :
         if hasattr ( self , 'histos' ) :
             print 'I have HISTOS attribute!!!' , len ( self.histos ) , self.histos.entries()
             
-        print 'FillTask: End   processing at ', host
+        print 'FillTask: End   processing at ', host, histos.entries() 
             
     ## finalization of the task 
     def finalize ( self ) :
         """
         Finalization of the task
         """
-        print 'FillTask.finalize TOTAL: '
+        if hasattr ( self , 'histos' )  : 
+            print 'FillTask.finalize TOTAL: ' , self.histos.entries()
+        else :
+            print 'FillTask.finalize'
+    
 
     ## merge the result form the different processes 
     def _mergeResults ( self, result ) :
@@ -120,8 +124,10 @@ class TreeTask ( Parallel.Task ) :
         if not hasattr ( self , 'histos' ) :
             self.histos = Kali.HistoMap()        
         if os.path.exists ( result[0] ) :
-            self.histos.read( result[0] )
+            ## self.histos.read( result[0] )
+            self.histos.updateFromDB ( result[0] )
             os.remove ( result[0] )
+            print 'MERGE : ', result[0], self.histos.entries()
         else :
             print 'NON_EXISTING PATH', result[0] 
         for f in result[1] : self.output[1].add ( f ) 

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: FitTask.py,v 1.4 2010-04-06 19:11:46 ibelyaev Exp $
+# $Id: FitTask.py,v 1.5 2010-04-30 13:00:14 ibelyaev Exp $
 # =============================================================================
 ## @file KaliKalo/FitTask.py
 #  The helper class for parallel fitting using GaudiPython.Parallel
@@ -14,7 +14,7 @@ The helper class for parallel fitting using GaudiPython.Parallel
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@itep.ru "
 __date__    = " 2010-03-27 "
-__version__ = " CVS Tag $Name: not supported by cvs2svn $ , version $Revision: 1.4 $ "
+__version__ = " CVS Tag $Name: not supported by cvs2svn $ , version $Revision: 1.5 $ "
 __all__     = (
     "FitTask"   ,
     "fitHistos"
@@ -126,8 +126,9 @@ class FitTask ( Parallel.Task ) :
     def _mergeResults ( self, result ) :
         """
         merge the result form the different processes
-        """ 
+        """
         self.output.update ( result ) 
+        print 'FIT-MERGE: ', len ( self.output ) 
 
 # ==============================================================================
 ## perform the fit for the histograms 
