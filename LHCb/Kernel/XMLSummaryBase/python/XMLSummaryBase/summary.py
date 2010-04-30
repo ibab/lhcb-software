@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: summary.py,v 1.10 2010-04-30 08:11:03 rlambert Exp $
+# $Id: summary.py,v 1.11 2010-04-30 13:50:50 rlambert Exp $
 # =============================================================================
 """
 *******************************************************************************
@@ -55,7 +55,12 @@ class Summary(VTree):
     #__file_dict__={}
     def __init__ ( self, schemafile=__default_schema__ ) :
         """ Constructor. Variables in schemafile are expanded """
-        self.__schema__=Schema(schemafile)
+        if 'Schema' not in str(type(schemafile)):
+            #print str(type(schemafile))
+            #print "I think it's a string"
+            self.__schema__=Schema(schemafile)
+        else:
+            self.__schema__=schemafile
         self.__element__=self.__schema__.create_default(self.__schema__.root()).__element__
         self.__count_dict__={}
         for mother in self.__schema__.Tag_mothers(__count_tag__):
@@ -77,7 +82,7 @@ class Summary(VTree):
             return self.__file_dict__[mother][GUID]
         elif (filename is not None) and (filename in self.__file_dict__[mother].keys()):
             return self.__file_dict__[mother][filename]
-
+        
         return None
     
     def __file_merger__(self, destination, filename=None, GUID=None, status=None, addevents=0, isOutput=False):
@@ -208,6 +213,10 @@ class Summary(VTree):
     def fill_VTree_file(self, file, isOutput=False):
         '''append or merge a vtree file into the tree'''
 
+        mothers=self.__schema__.Tag_mothers(__file_tag__)
+        mother=mothers[0]
+        if isOutput: mother=mothers[1]
+        
         if file.__element__.attrib['name']!="":
             if "LFN:" not in file.__element__.attrib['name'].upper():
                 if "PFN:" not in file.__element__.attrib['name'].upper():
@@ -220,10 +229,11 @@ class Summary(VTree):
         
         #if it doesn't exist, just add it
         if open_file is None:
-                files=self.children('input')[0]
-                if isOutput: files=self.children('output')[0]
-                
-                files.__append_element__(file.clone())
+                files=self.children(mother)[0]
+                a=file.clone()
+                files.__append_element__(a)
+                self.__file_dict__[mother][filename]=a
+                self.__file_dict__[mother][GUID]=a
                 return True
         
         #else merge:
@@ -401,7 +411,7 @@ def Merge(summaries, schema=__default_schema__):
     else:
         raise TypeError, 'you should send strings or Summaries into the merger, I got a ' + str(type(summaries[0])) + ' object instead'
     #make default object
-    merged=Summary(schema)
+    merged=Summary(sum_objects[0].__schema__)
     #print 'made default object'
     #merge success
     #print 'merge success'
@@ -427,6 +437,8 @@ def Merge(summaries, schema=__default_schema__):
     merged.children('step')[0].__element__.text=flag
     #merge input/output, simple counters, usage
     #print 'merge ip/op simple counters, usage'
+    counters={}
+    #lumiCounters={}
     for asummary in sum_objects:
         #print sum_objects.index(asummary)
         #print 'usage'
@@ -434,27 +446,31 @@ def Merge(summaries, schema=__default_schema__):
             merged.fill_memory(stat.value(),stat.__element__.attrib['unit'])
         #print 'input'
         for file in asummary.children('input')[0].children():
-            #merged.fill_VTree_file(file,False)
-            merged.fill_input(file.__element__.attrib['name'],
-                              file.__element__.attrib['GUID'],
-                              file.__element__.attrib['status'],
-                              int(file.__element__.text))
+            merged.fill_VTree_file(file,False)
+            #merged.fill_input(file.__element__.attrib['name'],
+            #                  file.__element__.attrib['GUID'],
+            #                  file.__element__.attrib['status'],
+            #                  int(file.__element__.text))
         #print 'output'
         for file in asummary.children('output')[0].children():
-            #merged.fill_VTree_file(file,True)
-            merged.fill_output(file.__element__.attrib['name'],
-                              file.__element__.attrib['GUID'],
-                              file.__element__.attrib['status'],
-                              int(file.__element__.text))
+            merged.fill_VTree_file(file,True)
+            #merged.fill_output(file.__element__.attrib['name'],
+            #                  file.__element__.attrib['GUID'],
+            #                  file.__element__.attrib['status'],
+            #                  int(file.__element__.text))
         #merge counters
         #print 'counters'
         for cnt in asummary.children('counters')[0].children(__count_tag__):
             #print 'counter'
             #print cnt
             name=cnt.__element__.attrib['name']
-            if name not in merged.__count_dict__['counters'].keys():
-                cnt=cnt.clone()
-            merged.fill_VTree_counter(cnt)
+            if name not in counters.keys():
+                counters[name]=int(cnt.__element__.text)
+            else:
+                counters[name]=(counters[name]+int(cnt.__element__.text))
+            #if name not in merged.__count_dict__['counters'].keys():
+            #    cnt=cnt.clone()
+            #merged.fill_VTree_counter(cnt)
         #merge counters
         #print 'lumiCounters'
         for cnt in asummary.children('lumiCounters')[0].children(__count_tag__):
@@ -462,7 +478,9 @@ def Merge(summaries, schema=__default_schema__):
             if name not in merged.__count_dict__['lumiCounters'].keys():
                 cnt=cnt.clone()
             merged.fill_VTree_counter(cnt,isLumi=True)
-    #merge statCounters
+    #merge collected counters
+    for c in counters.keys():
+        merged.fill_counter(c,counters[c])
     #print 'merge statCounters'
     for asummary in sum_objects:
         #print sum_objects.index(asummary)
