@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.192 2010-04-26 06:38:16 cattanem Exp $ 
+! $Id: release.notes,v 1.193 2010-04-30 09:54:55 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiCore
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -42,7 +42,7 @@
    + new shifters (streamers) 
   
 
-! =========================== LoKiCore v9r13 2010-04-18 =======================
+! =========================== LoKiCore v9r13p1 2010-04-30 =======================
 ! 2010-04-17 - Gerhard Raven
  - Listeners: specify priority
  - Scalers: do not assume reference rate is constant
@@ -52,7 +52,7 @@
   Listener + Scalers:
     fix compilation warnings for slc4-platform 
 
-
+! =========================== LoKiCore v9r13 2010-04-07 =======================
 ! 2010-04-04 - Vanya Belyaev
 
  - few fixes into LoKi::Listener  
