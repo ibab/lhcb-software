@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: summary.py,v 1.9 2010-04-28 05:07:47 rlambert Exp $
+# $Id: summary.py,v 1.10 2010-04-30 08:11:03 rlambert Exp $
 # =============================================================================
 """
 *******************************************************************************
@@ -118,7 +118,7 @@ class Summary(VTree):
         #print 'at end of merge for file', filename, 'adding', addevents, 'to', destination.value()
         #destination.value(destination.value()+addevents)
         #print destination.value()
-        destination.__element__.text=str(int(destination.__element__.text)+addevents)
+        destination.__element__.text=str(int(float(destination.__element__.text))+int(addevents))
         return True
                 
     def __fill_file__(self, filename=None, GUID=None, status=None, addevents=0, isOutput=False):

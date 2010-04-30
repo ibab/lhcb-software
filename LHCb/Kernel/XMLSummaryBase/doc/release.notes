@@ -4,6 +4,9 @@
 ! Purpose     : Holds the bare minumum code for manipulating XML
 !-----------------------------------------------------------------------------
 
+! 2010-04-30 - Rob Lambert
+ - Fixed bug from last commit, event count made a double
+
 ! 2010-04-28 - Rob Lambert
  - Discovered the Merger takes a very long time, 
    sped up by several orders of magnitude
