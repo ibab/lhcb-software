@@ -1,5 +1,7 @@
 2010-04-30  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
+	* python/LbLegacy/install_project.py: readded the setup_script part which was 
+	removed by mistake.
 	* scripts/mkproject: removed obsolete actions "h" and "w".
 
 2010-04-22  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>

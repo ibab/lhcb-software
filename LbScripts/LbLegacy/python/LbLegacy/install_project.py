@@ -1664,7 +1664,9 @@ def runInstall(pname, pversion, binary=None):
 
     getProjectTar(project_list)
 
-
+    if setup_script :
+        os.chdir(os.environ["MYSITEROOT"].split(os.pathsep)[0])
+        genSetupScript(pname, pversion, cmtconfig, setup_script)
 
 
 
