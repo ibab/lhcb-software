@@ -73,7 +73,7 @@ def help() :
                                            x<build doxygen documentation>
                                            h<tml web page>
                                            w<eb html page>
-                                           default => --action=ngucdirtxhw
+                                           default => --action=ngucdirstx
 
       --not-parallel                      - disable the parallel build
     Examples:
@@ -99,8 +99,8 @@ def release_project(pname, pversion, action=None, yes_mode=False, parallel_mode=
     tar     = True
     doxygen = True
     glimpse = True
-    html    = True
-    web     = True
+    html    = False
+    web     = False
     release = True
 
     if action :
@@ -113,8 +113,6 @@ def release_project(pname, pversion, action=None, yes_mode=False, parallel_mode=
         tar     = ( action.find('t') != -1 )
         doxygen = ( action.find('x') != -1 )
         glimpse = ( action.find('s') != -1 )
-        html    = ( action.find('h') != -1 )
-        web     = ( action.find('w') != -1 )
         release = ( action.find('r') != -1 )
 
 

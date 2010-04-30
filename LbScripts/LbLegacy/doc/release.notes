@@ -1,3 +1,7 @@
+2010-04-30  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* scripts/mkproject: removed obsolete actions "h" and "w".
+
 2010-04-22  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbLegacy/install_project.py: fixed wrong post install command for the wrapper scripts generation. Now
