@@ -1,4 +1,4 @@
- )!$Id: release.notes,v 1.176 2010-04-22 14:45:49 jpalac Exp $
+ )!$Id: release.notes,v 1.177 2010-04-30 15:11:35 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/CommonParticles
 ! Responsible : P. Koppenburg, Juan Palacios
@@ -7,6 +7,8 @@
 ! When adding a Particle make sure it is appended to one of the Standard* files
 !
 !-----------------------------------------------------------------------------
+
+!========================== CommonParticles v7r1 2010-04-30 ===================
 
 ! 2010-04-22 - Juan Palacios
  - Add py.tests and QMTests. These will fail as at the moment nothing can
