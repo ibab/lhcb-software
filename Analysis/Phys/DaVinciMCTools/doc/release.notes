@@ -1,8 +1,10 @@
-! $Id: release.notes,v 1.295 2010-04-29 17:38:53 tblake Exp $
+! $Id: release.notes,v 1.296 2010-04-30 14:27:43 jpalac Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
 !=============================================================================
+
+!========================== DaVinciMCTools v9r25p2 2010-04-30 ================
 
 ! 2010-04-29 - Thomas Blake
  - Updated MCBd2KstarMuMuAngleCalculator to use DaVinciP2VVAngles.h
