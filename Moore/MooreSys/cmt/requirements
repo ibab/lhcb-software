@@ -1,5 +1,5 @@
 package MooreSys
-version v9r1
+version v9r2
 
 branches doc cmt
 
@@ -7,21 +7,7 @@ branches doc cmt
 # Don't forget the applications
 #=======================================================
 
-use  Moore              v9r1     Hlt
-
-use Magnet              v6r0    Det
-use LumiEvent           v2r6    Event ## needs HltLuminosity to be recompiled!
-use HltLuminosity       v2r16   Hlt
-use Hlt1Lines           v3r3p1  Hlt
-use HltConf             v7r2p2  Hlt
-use HltTracking         v5r2    Hlt
-use HltSettings         v1r17p2 Hlt
-use PatPV               v3r15   Tr
-use LoKiFitters         v2r4p3  Phys
-use LoKiPhys            v8r14p2 Phys
-use LoKiCore            v9r13p1 Phys
-use LoKiNumbers		v8r6 	Phys
-
+use  Moore              v9r2     Hlt
 
 
 # Declare this as a container package
