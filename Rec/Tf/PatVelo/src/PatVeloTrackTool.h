@@ -1,4 +1,4 @@
-// $Id: PatVeloTrackTool.h,v 1.6 2009-06-24 18:04:35 dhcroft Exp $
+// $Id: PatVeloTrackTool.h,v 1.6 2009/06/24 18:04:35 dhcroft Exp $
 #ifndef TF_PATVELOTRACKTOOL_H 
 #define TF_PATVELOTRACKTOOL_H 1
 
@@ -9,9 +9,8 @@
 #include "PatVeloPhiHitManager.h"
 #include "CircularRangeUtils.h"
 
-namespace LHCb {
-  class Track;
-}
+#include "Event/Track.h"
+#include "Event/State.h"
 
 namespace Tf {
   class PatVeloSpaceTrack;
@@ -72,6 +71,11 @@ namespace Tf {
 
 
   private:
+
+    /// add a state to the track and correct for half box position (if required)
+    void addStateToTrack(PatVeloSpaceTrack * patTrack, LHCb::Track *newTrack,
+			 LHCb::State::Location location, 
+			 const Gaudi::TrackSymMatrix& covariance) const;
 
     /// the specialized r hit manager
     PatVeloRHitManager* m_rHitManager;

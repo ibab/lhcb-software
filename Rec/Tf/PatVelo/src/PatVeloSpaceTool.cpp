@@ -1,4 +1,4 @@
-// $Id: PatVeloSpaceTool.cpp,v 1.22 2010-02-18 14:12:06 dhcroft Exp $
+// $Id: PatVeloSpaceTool.cpp,v 1.22 2010/02/18 14:12:06 dhcroft Exp $
 // Include files
 
 // from Gaudi
@@ -104,6 +104,8 @@ namespace Tf {
 
       if(!(*iTr)->valid()) continue; // if fails skip to next track
 
+      // set R on phi hits
+      m_trackTool->setPhiCoords(*iTr);
       // fit the track trajectory
       (*iTr)->fitSpaceTrack( m_stepError, true, true, m_fullErrorPoints );
 

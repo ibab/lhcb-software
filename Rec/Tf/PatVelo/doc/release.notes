@@ -4,6 +4,10 @@
 ! Purpose     : Velo pattern recognition
 !-----------------------------------------------------------------------------
 
+! 2010-05-01 - David Hutchcroft
+ - Changes to PatVeloSpaceTool and PatVeloTrackTool to improve internal fit
+   in the case of half box misalignments
+
 !========================== PatVelo v3r22 2010-04-26 =========================
 ! 2010-04-22 - David Hutchcroft
  - PatVeloRTracking now does the same missing sensor and 

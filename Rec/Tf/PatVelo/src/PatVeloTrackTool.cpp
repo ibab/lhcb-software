@@ -1,4 +1,4 @@
-// $Id: PatVeloTrackTool.cpp,v 1.13 2010-02-18 14:12:07 dhcroft Exp $
+// $Id: PatVeloTrackTool.cpp,v 1.13 2010/02/18 14:12:07 dhcroft Exp $
 // Include files 
 
 // from Gaudi
@@ -9,7 +9,6 @@
 #include "PatVeloSpaceTrack.h"
 #include "PatVeloRHitManager.h"
 #include "PatVeloPhiHitManager.h"
-#include "Event/Track.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : PatVeloTrackTool
@@ -126,12 +125,9 @@ namespace Tf {
     std::vector<PatVeloPhiHit*>* phiCoords = track->phiCoords();
     std::vector<PatVeloPhiHit*>::iterator iP;
     for( iP = phiCoords->begin() ; iP != phiCoords->end() ; ++iP ){
-      double z = (*iP)->z();
-      double r = track->rInterpolated( z );      
-      double phi = (*iP)->coordHalfBox();
-      if( r > (*iP)->sensor()->innerRadius() ){ // check track is still in sensor...
-	phi = m_angleUtils.add(phi,(*iP)->sensor()->halfboxPhiOffset((*iP)->zone(),r));
-      }
+      double r = track->rInterpolated( (*iP)->z() );      
+      double phi = (*iP)->sensor()->halfboxPhi((*iP)->hit()->strip(),
+					       (*iP)->hit()->interStripFraction(),r);
       (*iP)->setRadiusAndPhi(r,phi);
     }
     return;
@@ -196,6 +192,49 @@ namespace Tf {
       return newTrack;
     }
 
+  void  PatVeloTrackTool::addStateToTrack(PatVeloSpaceTrack * patTrack, LHCb::Track *newTrack,
+					  LHCb::State::Location location, 
+					  const Gaudi::TrackSymMatrix& covariance) const{
+    LHCb::State state;
+    state.setLocation(location);
+    if( !m_tracksInHalfBoxFrame ) { // default to tracks in global frame
+      // set box offset here
+      const DeVeloSensor *lastSens = (*(patTrack->rCoords()->begin()))->sensor();
+      Gaudi::XYZPoint localPoint1(patTrack->point().x(),patTrack->point().y(),
+                                  patTrack->point().z());
+      Gaudi::XYZPoint global1 = lastSens->veloHalfBoxToGlobal(localPoint1);
+      // to do slopes make a point 1 unit in dx and dy offset from default
+      Gaudi::XYZPoint localPoint2(patTrack->point().x()+patTrack->slopeX(),
+                                 patTrack->point().y()+patTrack->slopeY(),
+                                 patTrack->point().z()+1);
+      Gaudi::XYZPoint global2 = lastSens->veloHalfBoxToGlobal(localPoint2);
+
+      double globalTx = (global2.x()-global1.x())/(global2.z()-global1.z());
+      double globalTy = (global2.y()-global1.y())/(global2.z()-global1.z());
+
+      state.setState( global1.x(),global1.y(),global1.z(), globalTx, globalTy, 
+                      0.); // q/p unknown from the VELO
+      if ( msgLevel( MSG::VERBOSE ) ){
+	verbose() << "Offset track from " 
+                  <<format("xyz (%6.3f,%6.3f,%8.3f) (tx,ty)*10^3 (%6.1f,%6.1f)",
+                           patTrack->point().x(),patTrack->point().y(),
+                           patTrack->point().z(),
+                           1.e3*patTrack->slopeX(),1.e3*patTrack->slopeY())
+                  << " to "
+                  <<format("xyz (%6.3f,%6.3f,%8.3f) (tx,ty)*10^3 (%6.1f,%6.1f)",
+                           state.x(),state.y(),state.z(),1e3*state.tx(),1e3*state.ty())
+                  << endreq;    
+      }
+    }else{
+      state.setState(patTrack->point().x(),patTrack->point().y(),patTrack->point().z(),
+		     patTrack->slopeX(),patTrack->slopeY(),0.); // q/p unknown from the VELO
+      if (msgLevel( MSG::VERBOSE )) verbose() << "Ignore box offset" << endreq;
+    }
+    state.setCovariance( covariance );
+    newTrack->addToStates( state );
+    return;
+  }    
+
   StatusCode 
   PatVeloTrackTool::makeTrackFromPatVeloSpace(PatVeloSpaceTrack * patTrack,
 					      LHCb::Track *newTrack, 
@@ -212,14 +251,12 @@ namespace Tf {
     if( ances ) {
       newTrack->setLhcbIDs( ances->lhcbIDs() );
       newTrack->addToAncestors( ances );
-      newTrack->addToStates( ances->firstState() );
     }else{
       std::vector<PatVeloRHit*>::iterator itC;
       for ( itC = patTrack->rCoords()->begin(); 
           patTrack->rCoords()->end() != itC; ++itC ) {
         newTrack->addToLhcbIDs( (*itC)->hit()->lhcbID() );
       }
-      newTrack->addToStates(LHCb::State());
     }
 
     newTrack->setFlag( LHCb::Track::Backward, patTrack->backward() );
@@ -230,36 +267,12 @@ namespace Tf {
       newTrack->addInfo(LHCb::Track::nPRVelo3DExpect,patTrack->nVeloExpected());
     }
 
-    Gaudi::XYZVector boxOffset(0.,0.,0.);
-    
-    if( !m_tracksInHalfBoxFrame ) { // default to tracks in global frame
-      // set box offset here
-      Gaudi::XYZPoint localZero(0.,0.,0.);
-      Gaudi::XYZPoint global = (*(patTrack->rCoords()->begin()))->sensor()->veloHalfBoxToGlobal(localZero);
-      boxOffset = global-localZero;
-      if ( msgLevel( MSG::VERBOSE ) ){
-	verbose() << "Offset track by " << boxOffset << endreq;
-      }
-    }else{
-      if ( msgLevel( MSG::VERBOSE ) ) {
-	verbose() << "Ignore box offset: set to " << boxOffset << endreq;
-      }
-    }
-
-    newTrack->firstState().setState( patTrack->point().x() + boxOffset.x(),
-        patTrack->point().y() + boxOffset.y(),
-        patTrack->point().z() + boxOffset.z(),
-        patTrack->slopeX(),
-        patTrack->slopeY(),
-        0.); // q/p unknown from the VELO
-
-
     if(beamState){
-      newTrack->firstState().setLocation( LHCb::State::ClosestToBeam );
+      addStateToTrack(patTrack,newTrack,LHCb::State::ClosestToBeam,patTrack->covariance());
     }else{
-      newTrack->firstState().setLocation( LHCb::State::FirstMeasurement );
+      addStateToTrack(patTrack,newTrack,LHCb::State::FirstMeasurement,patTrack->covariance());
     }
-    newTrack->firstState().setCovariance( patTrack->covariance() );
+
     newTrack->setChi2PerDoF( patTrack->chi2Dof( ) );
     newTrack->setNDoF( patTrack->rCoords()->size() + 
         patTrack->phiCoords()->size() - 4 );
@@ -269,16 +282,7 @@ namespace Tf {
     this->setPhiCoords(patTrack);
     patTrack->fitSpaceTrack( forwardStepError, false );
 
-    LHCb::State lastVeloState;
-    lastVeloState.setState( patTrack->point().x() + boxOffset.x(),
-        patTrack->point().y() + boxOffset.y(),
-        patTrack->point().z() + boxOffset.z(),
-        patTrack->slopeX(),
-        patTrack->slopeY(),
-        0.); // q/p unknown from the VELO
-    lastVeloState.setLocation( LHCb::State::EndVelo );
-    lastVeloState.setCovariance( patTrack->covariance() );
-    newTrack->addToStates( lastVeloState );
+    addStateToTrack(patTrack,newTrack,LHCb::State::EndVelo,patTrack->covariance());
 
     std::vector<PatVeloPhiHit*>::iterator itC;
     for ( itC = patTrack->phiCoords()->begin(); 
