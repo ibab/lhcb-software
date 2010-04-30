@@ -1,8 +1,10 @@
-! $Id: release.notes,v 1.539 2010-04-29 16:38:37 tblake Exp $
+! $Id: release.notes,v 1.540 2010-04-30 13:09:49 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+!========================== DaVinciTools v21r1 2010-04-30 ===================
 
 ! 2010-04-29 - Thomas Blake
  - Updated Bd2KstarMuMuAngleCalculator to use DaVinciP2VVAngles
