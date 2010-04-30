@@ -3,6 +3,10 @@
 ! Responsible : Johannes Albrecht
 ! Purpose     : L0-T-track Confirmation algorithms
 !-----------------------------------------------------------------------------
+
+! 2010-04-30 - Johannes Albrecht
+ - follow changes in magnetic field service 
+
 !========================== HltL0Conf v2r13p2 2010-03-28 ===================
 ! 2010-02-12 - Gerhard Raven
  - add warning about track fit failute before returning FAILURE
