@@ -1,5 +1,5 @@
 #============================================================================
-# $Id: requirements,v 1.122 2010-04-28 07:00:14 graven Exp $
+# $Id: requirements,v 1.123 2010-04-30 09:56:48 graven Exp $
 # Created    : 03/06/2005 by P. Koppenburg
 # Maintainer : G. Raven
 #============================================================================
@@ -38,6 +38,7 @@ use HltSettings         v1r17p1 Hlt
 use PatPV               v3r15   Tr
 use LoKiFitters         v2r4p3  Phys
 use LoKiPhys            v8r14p2 Phys
+use LoKiCore            v9r13p1 Phys
 
 
 # The rest are needed only to set up environment variables for job options
