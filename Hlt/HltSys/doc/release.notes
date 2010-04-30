@@ -6,7 +6,10 @@ Purpose: LHCb High Level Trigger packages.
          LHCb High Level Trigger 
 
 
-</PRE><H1><A NAME=v10r1>2010-04-21 HltSys v10r1</A></H1><PRE>
+</PRE><H1><A NAME=v10r2>2010-04-21 HltSys v10r2</A></H1><PRE>
+ - incremental changes on top of Phys v9r5
+
+</PRE><H1><A NAME=v10r2>2010-04-21 HltSys v10r2</A></H1><PRE>
  - few more fixes compared to v10r1, build on top of Phys v9r4, LHCb v30r1 stack.
 
 </PRE><H1><A NAME=v10r1>2010-04-21 HltSys v10r1</A></H1><PRE>
