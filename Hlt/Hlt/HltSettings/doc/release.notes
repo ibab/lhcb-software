@@ -4,6 +4,11 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+!========================== HltSettings v1r17p2 2010-04-30 ===================
+! 2010-04-29 - Gerhard Raven
+ - prescale lumi mid lines
+ - increase beamgas forces RZ tracking input rate to 10kHz
+
 ! 2010-04-27 - Gerhard Raven
  - replace the lumi low postscales by equivalent prescales
  - strip the Commissioning_OTCosmics configurations a bit more
