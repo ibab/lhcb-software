@@ -59,9 +59,11 @@ StatusCode PixelQC::prebookHistograms()
   {
     richHisto1D( Rich::HistogramID("nTotalPixsPerHPD",*rich),
                  "Average overall HPD occupancy (nHits>0)",
-                 0, 150, 75 );
+                 0.5, 150.5, 150 );
     richHisto1D( Rich::HistogramID("nTotalPixs",*rich), 
                  "Overall occupancy (nHits>0)", 0, 5000, 100 );
+    richHisto1D( Rich::HistogramID("nActiveHPDs",*rich), 
+                 "# Active HPDs (nHits>0)", -0.5, 300.5, 301 );
   }
 
   return StatusCode::SUCCESS;
@@ -89,8 +91,10 @@ StatusCode PixelQC::execute()
   // Histogramming
   const Rich::HistoID hid;
 
+  // Count pixels, signal pixels and active HPDs per RICH
   std::vector<unsigned int> pixels ( Rich::NRiches, 0 );
   std::vector<unsigned int> signal ( Rich::NRiches, 0 );
+  std::vector<unsigned int> hpds   ( Rich::NRiches, 0 );
 
   // Obtain data from raw decoding
   const DAQ::L1Map & data = m_decoder->allRichSmartIDs();
@@ -117,6 +121,9 @@ StatusCode PixelQC::execute()
           const LHCb::RichSmartID::Vector & rawIDs = (*iHPD).second.smartIDs();
           // RICH
           const Rich::DetectorType rich = hpd.rich();
+
+          // Count active HPDs (at least 1 hit)
+          if ( !rawIDs.empty() ) { ++hpds[rich]; }
 
           // Loop over raw RichSmartIDs
           for ( LHCb::RichSmartID::Vector::const_iterator iR = rawIDs.begin();
@@ -193,6 +200,9 @@ StatusCode PixelQC::execute()
     } // ingresses
   } // L1 boards
 
+  richHisto1D( Rich::HistogramID("nActiveHPDs",Rich::Rich1) )->fill( hpds[Rich::Rich1] );
+  richHisto1D( Rich::HistogramID("nActiveHPDs",Rich::Rich2) )->fill( hpds[Rich::Rich2] );
+
   if ( pixels[Rich::Rich1] > 0 )
     richHisto1D(Rich::HistogramID("nTotalPixs",Rich::Rich1)) -> fill ( pixels[Rich::Rich1] );
   if ( pixels[Rich::Rich2] > 0 )
@@ -225,15 +235,15 @@ PixelQC::MCFlags PixelQC::getHistories( const LHCb::RichSmartID id ) const
     if ( !(*iS)->history().isSignal() )
     {
       flags.isBkg = true;
-      if ( (*iS)->history().hpdQuartzCK()      ) { flags.isHPDQCK = true; }
-      if ( (*iS)->history().gasQuartzCK()      ) { flags.isGasCK  = true; }
-      if ( (*iS)->history().nitrogenCK()       ) { flags.isN2CK   = true; }
-      if ( (*iS)->history().chargedTrack()     ) { flags.isChargedTk   = true; }
-      if ( (*iS)->history().chargeShareHit()   ) { flags.isChargeShare = true; }
-      if ( (*iS)->history().aeroFilterCK()     ) { flags.isAeroFiltCK  = true; }
+      if ( (*iS)->history().hpdQuartzCK()      ) { flags.isHPDQCK        = true; }
+      if ( (*iS)->history().gasQuartzCK()      ) { flags.isGasCK         = true; }
+      if ( (*iS)->history().nitrogenCK()       ) { flags.isN2CK          = true; }
+      if ( (*iS)->history().chargedTrack()     ) { flags.isChargedTk     = true; }
+      if ( (*iS)->history().chargeShareHit()   ) { flags.isChargeShare   = true; }
+      if ( (*iS)->history().aeroFilterCK()     ) { flags.isAeroFiltCK    = true; }
       if ( (*iS)->history().hpdSiBackscatter() ) { flags.isSiBackScatter = true; }
       if ( (*iS)->history().hpdReflection()    ) { flags.isHPDIntReflect = true; }
-      if ( (*iS)->history().radScintillation() ) { flags.isRadScint =true;       }
+      if ( (*iS)->history().radScintillation() ) { flags.isRadScint      = true; }
     }
     else
     {

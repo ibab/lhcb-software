@@ -19,7 +19,7 @@
 #include <sstream>
 
 // GaudiUtils
-//#include "GaudiUtils/HistoLabels.h"
+#include "GaudiUtils/HistoLabels.h"
 
 // base class
 #include "RichKernel/RichHistoAlgBase.h"
