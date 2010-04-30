@@ -4,6 +4,8 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+!========================== DecayTreeTuple v3r4 2010-04-30 ================
+
 ! 2010-04-28 - Patrick Koppenburg
  - TupleToolEventInfo : add BX type and GPS time
 
