@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.180 2010-04-30 14:54:13 jpalac Exp $
+# $Id: requirements,v 1.181 2010-04-30 15:31:42 jpalac Exp $
 package AnalysisSys
 version v4r4
 
@@ -12,7 +12,7 @@ use  DSTWriters                 v1r4p2   Phys   # Juan Palacios
 #===================================================================
 #use  AnalysisDict               v1r0     Phys   # TEMPORARY!
 #===================================================================
-use  CommonParticles            v7r0     Phys   # Patrick Koppenburg, WGs
+use  CommonParticles            v7r1     Phys   # Patrick Koppenburg, WGs
 use  FlavourTagging             v11r2    Phys   # Marco Musy
 
 use  DaVinciMonitors            v1r10    Phys   # Patrick Koppenburg
@@ -33,7 +33,7 @@ use  DisplVertices              v6r6     Phys   # Neal Gueissaz
 use  HighPtJets                 v1r0     Phys   # Marcin Kucharczyk
 ####################################################################
 #
-use PhysSelPython               v5r1     PhysSel
+use PhysSelPython               v5r2     PhysSel
 use AnalysisPython              v1r6     Phys
 use PyAna                       v1r0     Analysis
 #
@@ -51,7 +51,7 @@ use  MicroDSTAlgorithm   	v3r10   MicroDST          # Juan Palacios
 use  MicroDSTConf               v2r9    MicroDST          # Juan Palacios
 
 ####################################################################
-use Analysis            	v8r3p2  Tutorial          # P. Koppenburg
+use Analysis            	v8r4    Tutorial          # P. Koppenburg
 use LoKiExample         	v8r5p1  Ex                # Vanya Belyaev
 use MicroDSTExample             v2r12   Ex                # Juan Palacios
 
