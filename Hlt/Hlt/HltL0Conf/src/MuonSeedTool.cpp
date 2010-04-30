@@ -1,4 +1,4 @@
-// $Id: MuonSeedTool.cpp,v 1.18 2010-02-12 20:30:39 graven Exp $
+// $Id: MuonSeedTool.cpp,v 1.19 2010-04-30 12:00:30 albrecht Exp $
 // Include files 
 
 // from Gaudi
@@ -106,10 +106,10 @@ StatusCode MuonSeedTool::initialize()
 StatusCode MuonSeedTool::updateField()
 {
   if(msgLevel(MSG::DEBUG)) 
-    debug()<<"magnetic field is: "<<m_magFieldSvc->scaleFactor()<<endmsg;
+    debug()<<"magnetic field is: "<<m_magFieldSvc->signedRelativeCurrent()<<endmsg;
   
   m_fieldOff=false;
-  if( fabs(m_magFieldSvc->scaleFactor()) < 0.1 ) {
+  if( fabs(m_magFieldSvc->signedRelativeCurrent()) < 0.1 ) {
     m_fieldOff=true;
     if(msgLevel(MSG::INFO)) {
       info()<<" magnetic field is below 10% of nominal field! \n Use options for no field!"<<endmsg;

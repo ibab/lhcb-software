@@ -1,4 +1,4 @@
-// $Id: L0ConfExtrapolator.cpp,v 1.13 2010-02-12 20:30:39 graven Exp $
+// $Id: L0ConfExtrapolator.cpp,v 1.14 2010-04-30 12:01:18 albrecht Exp $
 // Include files 
 
 #include <cmath>
@@ -91,11 +91,11 @@ StatusCode L0ConfExtrapolator::initialize()
 StatusCode L0ConfExtrapolator::updateField()
 {
   if(msgLevel(MSG::DEBUG)) 
-    debug()<<"magnetic field is: "<<m_magFieldSvc->scaleFactor()<<endmsg;
+    debug()<<"magnetic field is: "<<m_magFieldSvc->signedRelativeCurrent()<<endmsg;
 
-  m_BscaleFactor = m_magFieldSvc->scaleFactor();
+  m_BscaleFactor = m_magFieldSvc->signedRelativeCurrent();
   m_fieldOff=false;
-  if( fabs(m_magFieldSvc->scaleFactor()) < 0.1 ) {
+  if( fabs(m_magFieldSvc->signedRelativeCurrent() ) < 0.1 ) {
     m_fieldOff=true;
     if(msgLevel(MSG::INFO)) {
       info()<<" magnetic field is below 10% of nominal field! \n Use options for no field!"<<endmsg;
