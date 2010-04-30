@@ -52,17 +52,17 @@ StatusCode DataDecodingErrorMoni::initialize()
 StatusCode DataDecodingErrorMoni::prebookHistograms()
 {
   // CRJ : Disable histogram label setting until available via Gaudi
-  using namespace boost::assign;
-  using namespace Gaudi::Utils::Histos;
-  const Gaudi::Utils::Histos::Labels labels = list_of
-    ("HPDs Suppressed")("ODIN/Ingress BXID MisMatch")
-    ("HPD Inhibit")("HPD DB Lookup")("Ingress/HPD EventID MisMatch")
-    ("Extended HPD Header");
-  AIDA::IProfile1D * h = 
-    richProfile1D( HID("decodingErrors"), "DAQ Decoding Error Rates (%)", 0.5, 6.5, 6 );
-  bool ok = setBinLabels( h, labels );
-  return ok ? StatusCode::SUCCESS : StatusCode::FAILURE ;
-  //return StatusCode::SUCCESS;
+  //using namespace boost::assign;
+  //using namespace Gaudi::Utils::Histos;
+  //const Gaudi::Utils::Histos::Labels labels = list_of
+  //  ("HPDs Suppressed")("ODIN/Ingress BXID MisMatch")
+  //  ("HPD Inhibit")("HPD DB Lookup")("Ingress/HPD EventID MisMatch")
+  //  ("Extended HPD Header");
+  //AIDA::IProfile1D * h = 
+  richProfile1D( HID("decodingErrors"), "DAQ Decoding Error Rates (%)", 0.5, 6.5, 6 );
+  //bool ok = setBinLabels( h, labels );
+  //return ok ? StatusCode::SUCCESS : StatusCode::FAILURE ;
+  return StatusCode::SUCCESS;
 }
 
 // Main execution
