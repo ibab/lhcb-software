@@ -16,7 +16,7 @@ from StrippingSelections import StrippingZ02ee
 from StrippingSelections import StrippingWe
 from StrippingSelections import StrippingDY2ee
 from StrippingSelections import StrippingDisplVertices
-
+from StrippingSelections import StrippingHighPtJets
 
 stream = StrippingStream("EW")
 stream.appendLines( [ 
@@ -33,5 +33,6 @@ stream.appendLines( [
 		        StrippingDY2ee.line3,
 		        StrippingDY2ee.line4, 
                         StrippingDisplVertices.line1,  
-                        StrippingDisplVertices.line2,  
+                        StrippingDisplVertices.line2,
+                        StrippingHighPtJets.line1
 		    ] )
