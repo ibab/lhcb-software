@@ -16,6 +16,7 @@ Purpose     : LHCb analysis packages
 </PRE><H1><A NAME=v4r1>2010-02-22 Analysis v4r1 </A></H1><PRE>
 
  - Highlights:
+   * Added package Phys/HighPtJets (M. Kucharczyk)
    * BTaggingTool deals with Refitted PVs (M. Musy)
    * Add Phys/DisplVertices package (N. Gauvin)
    * DecayTreeTuple:  add L0, HLT, ODIN TCK information to TISTOS. Get PVs from DVAlgorithm for Primaries. (V. Gligorov, P Koppenburg)

@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.178 2010-04-20 13:14:12 jpalac Exp $
+# $Id: requirements,v 1.179 2010-04-30 09:43:05 marcin Exp $
 package AnalysisSys
 version v4r3
 
@@ -29,7 +29,8 @@ use  FlavourTaggingChecker      v5r2     Phys   # Marco Musy
 use  ParticleMakerChecker       v1r3p2   Phys   # Chris Jones
 use  DecayTreeTuple             v3r3     Phys   # Rob Lambert
 use  LoKiJets                   v5r1     Phys   # Victor Coco
-use  DisplVertices              v6r6     Phys    # Neal Gueissaz
+use  DisplVertices              v6r6     Phys   # Neal Gueissaz
+use  HighPtJets                 v1r0     Phys   # Marcin Kucharczyk
 ####################################################################
 #
 use PhysSelPython               v5r1     PhysSel
