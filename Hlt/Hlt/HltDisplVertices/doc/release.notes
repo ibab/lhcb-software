@@ -4,6 +4,7 @@
 ! Purpose     : Apply some cuts on reconstructed vertices
 !-----------------------------------------------------------------------------
 
+!========================== HltDisplVertices v2r2 2010-04-30 ===================
 ! 2010-April-27 - Neal Gauvin
  - Hlt2PreSelDV uses now saveDesktop instead of cloneTrees. 
      No incidence on physics results.
