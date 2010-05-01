@@ -20,6 +20,7 @@
 #include "STDet/DeITDetector.h"
 #include "VeloDet/DeVelo.h"
 #include "Event/FitNode.h"
+#include "Event/RecVertex.h"
 
 // gsl
 #include "gsl/gsl_math.h"
@@ -360,6 +361,40 @@ void TrackMonitor::fillHistograms(const LHCb::Track& track,
         plot(iterInfo->second,type+"/info/"+range.fid, title,range.fxMin ,range.fxMax , 100);
       }
     } // iterInfo
+
+    
+    if (exist<LHCb::RecVertices>(LHCb::RecVertexLocation::Primary)) {
+   
+      const LHCb::RecVertices* pvcontainer = 
+	get<LHCb::RecVertices>(LHCb::RecVertexLocation::Primary) ;
+      
+      for( LHCb::RecVertices::const_iterator ipv = pvcontainer->begin() ;
+	   ipv != pvcontainer->end(); ++ipv ) {
+	
+	LHCb::State aState;
+	StatusCode sc = extrapolator()->propagate(track,(*ipv)->position().z(),aState );
+	
+	double dx  = aState.x() - (*ipv)->position().x();
+	double dy  = aState.y() - (*ipv)->position().y();
+	
+	double n = (1+aState.tx()*aState.tx()+
+		    aState.ty()*aState.ty());
+	double c = (-dx*aState.tx()-dy*aState.ty())/n;
+	double IPx = dx + c*aState.tx();
+	double IPy = dy + c*aState.ty();	
+	
+	double invpt = 1.0/track.pt();
+	
+	plot( IPx,type+"/IPx","IPx", -1.0, 1.0, 100);
+	plot( IPy,type+"/IPy","IPy", -1.0, 1.0, 100);
+	
+      }
+    }
+
+
+
+
+
   }
    
   LHCb::HitPattern hitpattern( track.lhcbIDs()) ;
