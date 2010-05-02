@@ -1,10 +1,24 @@
-! $Id: release.notes,v 1.47 2010-04-23 15:07:47 ibelyaev Exp $
+! $Id: release.notes,v 1.48 2010-05-02 13:12:16 ibelyaev Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Ex/BenderExample
 ! Responsible : Vanya  BELYAEV ibelyaev@physics.syr.edu
 ! Purpose     : collection of examples to run Bender - 
 !             :                    -Python based physic sanalysis 
 ! -----------------------------------------------------------------------------
+
+! 2010-05-02 - Vanya Belyaev
+
+ - BenderExample/Track2MC.py
+
+    add example  hot to access to MC-truth for tracks in Bender 
+    using relation tables 
+      
+    see https://cern.ch/twiki/bin/view/LHCb/GaudiPython#How_to_access_LHCb_Track_MC_trut
+
+ - cmt/requirements 
+
+   version increment to v14r2p1
+ 
 
 ! ====================== Ex/BenderExample v14r2 2010-03-18 ====================
 
