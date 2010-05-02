@@ -1,11 +1,22 @@
-! $Id: release.notes,v 1.52 2010-04-30 14:39:09 jpalac Exp $ 
+! $Id: release.notes,v 1.53 2010-05-02 11:52:39 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.52 $
+! CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.53 $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/KaliCalo
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@lapp.in2p3.fr
 ! Purpose     : Collection of "physics" algorithms  for Calorimeter calibration
 ! -----------------------------------------------------------------------------
+
+
+! 2010-05-02 - Vanya Belyaev
+
+ - one default fill only 3 hstograms
+
+  to work with 'mirror' bakcground one needs to create 
+     HistoMap as HistoMap ( background = True ) 
+
+  After bug fix with statistics, backgrodun is nto needed anymore, 
+  and can be easily removed to speed up the program 
 
 !========================== KaliCalo v4r2 2010-04-30 ==========================
 

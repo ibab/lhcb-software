@@ -13,7 +13,7 @@ for ``iterative pi0'' Ecal calibration
 # ======================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@itep.ru "
 __date__    = " 2010-03-17 "
-__version__ = " CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.16 $ "
+__version__ = " CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.17 $ "
 # ======================================================================
 import ROOT
 from GaudiPython.Bindings import gbl as cpp
@@ -46,9 +46,11 @@ class Histos(object):
     Helper class to hold the histogams associated with the given CellID
     
     """
-    def __init__ ( self , cellID ) :
-        self._cellID   = cellID 
-        self._histos   = self._make_histos_ ( cellID )
+    def __init__ ( self , cellID , background = False ) :
+        self._cellID     = cellID
+        self._background = background 
+        self._histos     = self._make_histos_ ( cellID )
+        
         self._counters = [
             Counter () , ## beta*Eprs/Egamma for LG case 
             Counter ()   ## beta*Eprs/Egamma for GG case 
@@ -114,14 +116,12 @@ class Histos(object):
         if self.cellID().index() != other.cellID().index() :
             print self.cellID() , other.cellID()
             raise TypeError(" *= Mismatch in CellID"   )
-        if len ( self.histos   () ) != len ( other.histos   () ) :
-            raise TypeError(" *= Mismatch in Histos"   )
-        if len ( self.counters () ) != len ( other.counters () ) :
-            raise TypeError(" *= Mismatch in Counters" )
+        len_h = min ( len( self.histos   () ) , len ( other.histos   () ) ) 
+        len_c = min ( len( self.counters () ) , len ( other.counters () ) ) 
         ## add histograms
-        for i in range ( 0 , len ( self.histos() ) ) :
+        for i in range ( 0 , len_h ) :
             self._histos[ i ].Add ( other._histos[ i ] )
-        for i in range ( 0 , len ( self.counters() ) ) :
+        for i in range ( 0 , len_c ) :
             self._counters[ i ] += ( other._counters [ i ] )
 
         return self 
@@ -143,12 +143,19 @@ class Histos(object):
         lst += [ self._make_histo_ ( cellID , '_LL'    ) ] ## max(eprs1,eprs2)<...
         lst += [ self._make_histo_ ( cellID , '_LG'    ) ] ## eprs1<...,eprs2 >...
         lst += [ self._make_histo_ ( cellID , '_GG'    ) ] ## min(eprs1,eprs2)>...
+        
         ## Background
+        if not self._background : return lst
+        
         lst += [ self._make_histo_ ( cellID , '_LL_BG' ) ] ## max(eprs1,eprs2)<...
         lst += [ self._make_histo_ ( cellID , '_LG_BG' ) ] ## eprs1<...,eprs2 >...
         lst += [ self._make_histo_ ( cellID , '_GG_BG' ) ] ## min(eprs1,eprs2)>...
+        
         return lst
 
+    ## get the number of histograms 
+    def __len__  (self ) : return len( self._histos )
+        
     ## Book one histogram
     def _make_histo_  ( self , cellID , suffix ) :
         """
@@ -182,12 +189,13 @@ class HistoMap(object) :
     """
 
     ## constructor 
-    def __init__ ( self , *args ) :
+    def __init__ ( self , background = False , *args ) :
         """
         Constructor, empty histogram map 
         """
-        self._histos = {}
-
+        self._histos     = {}
+        self._background = background 
+        
     ## Get item from the map. Create the entry for missing key.
     def __getitem__ ( self , cellID ) :
         """
@@ -199,7 +207,7 @@ class HistoMap(object) :
         """        
         _hs = self._histos.get( cellID , None )
         if not _hs :
-            self._histos [ cellID ] = Histos ( cellID )
+            self._histos [ cellID ] = Histos ( cellID , self._background )
             _hs = self._histos[ cellID ]
         return _hs
 

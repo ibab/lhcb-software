@@ -156,14 +156,15 @@ class FillPi0( Kali.TPySelectorFix  ):
         self._histos  = histos  ## the histogram map
         self._lambdas = lambdas ## the map of coefficients
 
-        self._global    = self._histos [ Kali.EcalZone   ]
-        self._inner     = self._histos [ Kali.InnerZone  ]
-        self._middle    = self._histos [ Kali.MiddleZone ]
-        self._outer     = self._histos [ Kali.OuterZone  ]
-        self._cellFunc  = cellFunc
-        self._betas     = copy.deepcopy ( betas )
-        self._Unit      = Unit
-        self._frequency = 0 
+        self._global     = self._histos [ Kali.EcalZone   ]
+        self._inner      = self._histos [ Kali.InnerZone  ]
+        self._middle     = self._histos [ Kali.MiddleZone ]
+        self._outer      = self._histos [ Kali.OuterZone  ]
+        self._cellFunc   = cellFunc
+        self._betas      = copy.deepcopy ( betas )
+        self._Unit       = Unit
+        self._frequency  = 0
+        self._background = histos._background 
         self._print('__init__')
         
         self._gRow      = Kali.GlobalRow
@@ -221,7 +222,11 @@ class FillPi0( Kali.TPySelectorFix  ):
 
         area1 = ic1.area()
         area2 = ic2.area()
-        
+
+        background = 1 == bamboo.bkg
+
+        if background and not self._background : return 1 
+
         #
         # "massage" cell-ID, e.g. group them
         # 
@@ -243,6 +248,7 @@ class FillPi0( Kali.TPySelectorFix  ):
         
         hc1  = self._histos  [ ic1 ].counters()        
         hc2  = self._histos  [ ic2 ].counters()        
+
 
         ## get 'per-area' histos
         iz1 = CellID ( ic1.calo() , area1 , self._gRow , self._gCol )
@@ -266,7 +272,6 @@ class FillPi0( Kali.TPySelectorFix  ):
         else:
             ok2 = True 
 
-        background = 1 == bamboo.bkg
         
         if ok2 :
             corrMass  = bamboo.m12 * self._Unit

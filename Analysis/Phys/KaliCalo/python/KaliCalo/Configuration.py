@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Configuration.py,v 1.17 2010-04-28 13:39:09 ibelyaev Exp $
+# $Id: Configuration.py,v 1.18 2010-05-02 11:52:39 ibelyaev Exp $
 # =============================================================================
 # @file  KaliCalo/Configuration.py
 #
@@ -85,7 +85,7 @@ Or one can rely on helper functions:
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
 __date__    = " 2009-09-28 "
-__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.17 $ "
+__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.18 $ "
 # =============================================================================
 # the only one  "vizible" symbol 
 __all__  = (
@@ -276,6 +276,7 @@ class  KaliPi0Conf(LHCbConfigurableUser):
             EnablePIDsOnDemand = True                         ,
             MeasureTime        = self.getProp ( 'MeasureTime' ) ,
             OutputLevel        = self.getProp ( 'OutputLevel' ) )
+
 
         
     ## 2. (Optional) CaloDigit (mis)calibration
@@ -491,7 +492,6 @@ class  KaliPi0Conf(LHCbConfigurableUser):
         ## 6. The general configuration of DaVinci
         from Configurables import GaudiSequencer,DaVinciInit
 
-
         kaliSeq = GaudiSequencer ( 'KaliSeq' )
         
         kaliSeq.MeasureTime = self.getProp ( 'MeasureTime' )
@@ -659,9 +659,7 @@ def secondPass ( **args ) :
         )
     
     return kali
-    
-
-    
+        
 
 # =============================================================================
 ## Reset DV-init sequence. IMPORTANT: It saves a lot of CPU time!!!
@@ -674,6 +672,12 @@ def  action ( ) :
         
     _log.warning ( 'KaliPi0Conf: DaVinciInitSeq is cleared!')
     
+    gammaRec = getConfigurable('SinglePhotonRec')
+    for component in ( gammaRec             ,
+                       gammaRec.ECorrection ,
+                       gammaRec.SCorrection ,
+                       gammaRec.LCorrection ) : 
+        component.PropertiesPrint = True
     
 # =============================================================================
 ## Important: use Post Config action! 

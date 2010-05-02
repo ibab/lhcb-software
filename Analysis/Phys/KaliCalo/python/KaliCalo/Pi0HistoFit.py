@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Pi0HistoFit.py,v 1.15 2010-04-30 13:10:29 ibelyaev Exp $ 
+# $Id: Pi0HistoFit.py,v 1.16 2010-05-02 11:52:39 ibelyaev Exp $ 
 # =============================================================================
 """
 A module for fitting the histograms with pi0-mass
@@ -9,7 +9,7 @@ A module for fitting the histograms with pi0-mass
 # =============================================================================
 __author__  = " ??? "
 __date__    = " 2009-12-?? "
-__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.15 $ "
+__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.16 $ "
 # =============================================================================
 from ROOT  import TH1F, TF1
 from math  import sqrt, pi,exp
@@ -761,18 +761,24 @@ def preFitHistoSet ( histoset ) :
     _func.SetParameter ( 5 ,   0 )
     
     # start form background historgam
-    h3 = histoset [3]
-    h4 = histoset [4]
-    h5 = histoset [5]
+    h3 = None
+    h4 = None
+    h5 = None
     
     nFits = 0
-    
-    #st , nFit1 = _preFitBkg ( _func , h3 )
-    #st , nFit2 = _preFitBkg ( _func , h4 )
-    #st , nFit3 = _preFitBkg ( _func , h5 )
-    #nFits += nFit1 
-    #nFits += nFit2 
-    #nFits += nFit3
+
+    if len( histoset ) >= 6 :
+        
+        h3 = histoset [3]
+        h4 = histoset [4]
+        h5 = histoset [5]
+
+        st , nFit1 = _preFitBkg ( _func , h3 )
+        st , nFit2 = _preFitBkg ( _func , h4 )
+        st , nFit3 = _preFitBkg ( _func , h5 )
+        nFits += nFit1 
+        nFits += nFit2 
+        nFits += nFit3
     
     # go to signal :
     h2 = histoset[2]
@@ -814,30 +820,44 @@ def fitHistoSet ( histoset , set0 , force = False ) :
     histoset.result = None 
     
     _func = pi0Func
-    
+
+    nFits = 0 
+
     h0 = histoset  [0]
     h1 = histoset  [1]
-    h2 = histoset  [2]    
-    h3 = histoset  [3]
-    h4 = histoset  [4]
-    h5 = histoset  [5]
+    h2 = histoset  [2]
+
+    h3 = None
+    h4 = None
+    h5 = None
+    if len ( histoset ) >= 6 : 
+        h3 = histoset  [3]
+        h4 = histoset  [4]
+        h5 = histoset  [5]
+
     
     r0 =      set0 [0]
     r1 =      set0 [1]
     r2 =      set0 [2]
-    r3 =      set0 [3]
-    r4 =      set0 [4]
-    r5 =      set0 [5]
 
-    nFits = 0 
+    r3 = None
+    r4 = None
+    r5 = None
+    if len ( set0 ) >= 6 : 
+        r3 =      set0 [3]
+        r4 =      set0 [4]
+        r5 =      set0 [5]
+
     ## start for background:
-    st , nFit1 = fitBkg ( _func , h5 , background = r5 )
-    st , nFit2 = fitBkg ( _func , h4 , background = r4 )
-    st , nFit3 = fitBkg ( _func , h3 , background = r3 )
-
-    nFits += nFit1
-    nFits += nFit2
-    nFits += nFit3
+    if h5 :
+        st , nFit1 = fitBkg ( _func , h5 , background = r5 )
+        nFits += nFit1
+    if h4 :
+        st , nFit2 = fitBkg ( _func , h4 , background = r4 )
+        nFits += nFit2
+    if h3 : 
+        st , nFit3 = fitBkg ( _func , h3 , background = r3 )
+        nFits += nFit3
 
     ok0 = 0 
     ## play with signal:
@@ -847,7 +867,7 @@ def fitHistoSet ( histoset , set0 , force = False ) :
     ## use "own" background + reference signal
     res0, nFit = fitSignal     ( _func , h2 , background = h5 , signal = r2 )
     nFits += nFit 
-    if not res0 or not checkHisto ( h2 ) : 
+    if ( not res0 or not checkHisto ( h2 ) ) and r5 : 
         ok0  = 1 
         ## use "reference signal & background
         res0, nFit = fitSignal ( _func , h2 , background = r5 , signal = r2 )    
@@ -870,7 +890,7 @@ def fitHistoSet ( histoset , set0 , force = False ) :
         ## use "own" background & reference signal 
         res1 , nFit = fitSignal ( _func , h1 , background = h4 , signal = r1 )
         nFits += nFit 
-    if not res1 or not checkHisto ( h1 ) :
+    if ( not res1 or not checkHisto ( h1 ) ) and r4 :
         ok1  = 2 
         ## use "reference" background & signal 
         res1 , nFit = fitSignal ( _func , h1 , background = r4 , signal = r1 )
@@ -880,7 +900,7 @@ def fitHistoSet ( histoset , set0 , force = False ) :
         ## use "own" background & reference signal Prs+Prs 
         res1, nFit = fitSignal ( _func , h1 , background = h4 , signal = r2 )
         nFits += nFit 
-    if not res1 or not checkHisto ( h1 ) :
+    if ( not res1 or not checkHisto ( h1 ) ) and r4 :
         ok1  = 4 
         ## use reference background & signal Prs+Prs 
         res1 , nFit = fitSignal ( _func , h1 , background = r4 , signal = r2 )
@@ -897,7 +917,7 @@ def fitHistoSet ( histoset , set0 , force = False ) :
     ## use own background and signal (Prs+no-Prs)
     res2 , nFit =  fitSignal    ( _func , h0 , background = h3 , signal = h1 )
     nFits += nFit
-    if not res2 or not checkHisto ( h0 ) :
+    if ( not res2 or not checkHisto ( h0 ) ) and r3 :
         ok2 = 1 
         ## use reference background and own signal (Prs+Prs)
         res2 , nFit = fitSignal ( _func , h0 , background = r3 , signal = h2 )
@@ -907,7 +927,7 @@ def fitHistoSet ( histoset , set0 , force = False ) :
         ## use own background and reference signal (Prs+no-Prs)
         res2 , nFit = fitSignal ( _func , h0 , background = h3 , signal = r1 )
         nFits += nFit
-    if not res2 or not checkHisto ( h0 ) :
+    if ( not res2 or not checkHisto ( h0 ) ) and r3 :
         ok2 = 3 
         ## use reference background and reference signal (Prs+no-Prs)
         res2 , nFit = fitSignal ( _func , h0 , background = r3 , signal = r1 )
@@ -917,7 +937,7 @@ def fitHistoSet ( histoset , set0 , force = False ) :
         ## use own background and reference signal (Prs+Prs)
         res2 , nFit = fitSignal ( _func , h0 , background = h3 , signal = r2 )
         nFits += nFit
-    if not res2 or not checkHisto ( h0 ) :
+    if ( not res2 or not checkHisto ( h0 ) ) and r3 :
         ok2 = 5 
         ## use reference background and reference signal (Prs+Prs)
         res2 , nFit = fitSignal ( _func , h0 , background = r3 , signal = r2 )
@@ -934,7 +954,6 @@ def fitHistoSet ( histoset , set0 , force = False ) :
     return result 
     
 # =============================================================================
-
 
 
 # =============================================================================
