@@ -1,4 +1,4 @@
-// $Id: AlResiduals.h,v 1.6 2009-04-22 09:35:21 wouter Exp $
+// $Id: AlResiduals.h,v 1.7 2010-05-03 12:43:38 wouter Exp $
 #ifndef TRACKTOOLS_TrackResiduals_H 
 #define TRACKTOOLS_TrackResiduals_H 1
 
@@ -99,11 +99,13 @@ namespace Al
     typedef std::vector< Gaudi::TrackProjectionMatrix > ProjectionMatrix ;
     
     /// Standard constructor
-    TrackResiduals(const LHCb::Track& track) : Residuals(track.chi2(), track.nDoF()) {}
+    TrackResiduals(const LHCb::Track& track) : Residuals(track.chi2(), track.nDoF()), m_track(&track) {}
     const LHCb::State& state() const { return m_state ; }
+    const LHCb::Track& track() const { return *m_track ; }
   private:
     friend class TrackResidualTool ;
     LHCb::State m_state ;                  // most upstream state
+    const LHCb::Track* m_track ;
   };
   
   class MultiTrackResiduals : public Residuals
