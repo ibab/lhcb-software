@@ -1,8 +1,13 @@
 <PRE>
 Package : Escher
-Package Coordinator : Johan Blouw
+Package Coordinator : Johan Blouw and Rob Lambert
 Purpose : Gaudi application used to perform 
           alignment of the LHCb detector components
+
+</PRE><H1><A NAME=v4r7>2010-04-03 Escher v4r7</A></H1><PRE>
+! 2010-02-22 Johan Blouw:
+ - added the line "use processing v* LCG_Interfaces" to the requirements file
+   for multi-core processing
 
 ! 2010-04-19 Johan Blouw
  - if the pattern reco is not being run, the dst is unpacked autimatically. 
