@@ -347,8 +347,14 @@ namespace Al
   {
     // always take the last one:
     const Gaudi::Vector6* rc=0 ;
+    const NamedXmlUncertainty* foundentry(0) ;
     BOOST_FOREACH( const NamedXmlUncertainty& entry, m_xmlUncertaintyMap ) {
-      if( match( name, entry.first) ) rc = &entry.second ;
+      if( match( name, entry.first) ) foundentry = &entry ;
+    }
+    if(foundentry) {
+      rc = &(foundentry->second) ;
+      debug() << "Matched " << name << " to "
+	      << foundentry->first << " " << foundentry->second << endreq ;
     }
     return rc ;
   }
@@ -385,15 +391,15 @@ namespace Al
 	// patterns. Let's first look for that pattern.
 	
 	// for the error pattern we have the following rule:
-	// - if there is only a single element, we first try to match the name of the condition
+	// - first we match the name of the alignable
+	// - if there is only a single element, we then try to match the name of the condition
 	// - if there is a single element, we then try to match the name of the element
-	// - finally we match the name of the alignable
 	// extract the condition name, but only if this alignable has only one detector element
 	
 	const IGeometryInfo* geom(0) ;
 	const AlignmentCondition* cond(0) ;
-	const Gaudi::Vector6* errors = 0 ;
-	if( element.detelements().size()==1 ) {
+	const Gaudi::Vector6* errors = findXmlUncertainty(element.name()) ;
+	if(errors==0 && element.detelements().size()==1 ) {
 	  if((geom=element.detelements().front()->geometry()) &&
 	     (cond=geom->alignmentCondition() ) ) {
 	    // need to remove a leading slash
@@ -404,9 +410,7 @@ namespace Al
 	  if (!errors) 
 	    errors = findXmlUncertainty(element.detelements().front()->name()) ;
 	}
-	if (!errors) 
-	  errors = findXmlUncertainty(element.name()) ;
-	
+
 	if(!errors) {
 	  error() << "Cannot find XML uncertainties for alignable: "
 		  << element.name() << endreq ;
