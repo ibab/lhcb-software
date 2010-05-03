@@ -34,11 +34,11 @@ class VLoosePV(object):
     
     def configureTool(self, PVTool):
         '''pass in a tool method to configure'''
-        PVTool.addTool(PVSeedTool, "PVSeedTool")
-        PVTool.PVSeedTool.minClusterMult = 2
-        PVTool.PVSeedTool.minCloseTracksInCluster = 2
-        PVTool.PVSeedTool.ratioSig2HighMult = 1
-        PVTool.PVSeedTool.ratioSig2LowMult =1
+        PVTool.RequireVelo = False
+        PVTool.PVFitterName = "LSAdaptPVFitter"
+        PVTool.PVSeedingName = "PVSeed3DOfflineTool"
+        
+        PVTool.addTool(PVSeed3DOfflineTool,"PVSeed3DOfflineTool")
         
         PVTool.addTool(LSAdaptPVFitter,'LSAdaptPVFitter')
         PVTool.LSAdaptPVFitter.MinTracks = 2
