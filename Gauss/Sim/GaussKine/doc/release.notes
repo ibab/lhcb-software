@@ -4,6 +4,15 @@
 ! Purpose     : Code to exchange kinematic information with Geant4
 !-----------------------------------------------------------------------------
 
+! 2010-05-03 - Gloria CORTI
+ - Remove obsolete algorithms that were used in DC06 to pass the generator
+   event to G4 and to retrieve the G4 truth and put it in MCParticle/MCVertex.
+   . GeneratorToG4.{h,cpp}
+   . G4HepMCToMCTruth.{h,cpp}
+ - Remove also the explicit loading of the factories, no longer needed
+   by Gaudi and also a leftover of DC06
+   . GaussKine_dll.cpp 
+
 !========================= GaussKine v3r5 2010-02-05 ========================= 
 ! 2010-01-26 - Silvia Miglioranzi
  - Fix error in compilation for Sim/GaussKine due to incompatibility with
