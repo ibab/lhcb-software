@@ -1,4 +1,4 @@
-// $Id: DiagSolvTool.cpp,v 1.20 2010-03-02 16:01:38 wouter Exp $
+// $Id: DiagSolvTool.cpp,v 1.21 2010-05-03 14:30:37 wouter Exp $
 // Include files 
 
 #include <stdio.h>
@@ -160,11 +160,6 @@ int DiagSolvTool::SolvDiag(AlSymMat& m_bigmatrix, AlVec& m_bigvector) {
     info() << logmessage.str() << endmsg ;
   }
   
-  // Issue a warning for each negative eigenvalue
-  for(size_t ipar = 0; ipar<N; ++ipar) 
-    if( w[ipar] < - DBL_MIN ) 
-      error() << "Second derivative has negative eigenvalue: " << w[ipar] << endmsg ;
-  
   if (infjob==0) {
 
     //   Compute bigvector in diagonal basis
@@ -174,7 +169,13 @@ int DiagSolvTool::SolvDiag(AlSymMat& m_bigmatrix, AlVec& m_bigvector) {
     //Warning: with GSL, the definition of z is transposed:
     //D = z.T()*m_bigvector; 
 
-
+  // Issue a warning for each negative eigenvalue
+    for(size_t ipar = 0; ipar<N; ++ipar) 
+      if( w[ipar] < - DBL_MIN ) 
+	warning() << "Negative eigenvalue (i,val,chi2)= " << ipar << " " 
+		  << w[ipar] << " "
+		  << D[ipar]*D[ipar]/w[ipar] << endmsg ;
+    
     //compute alignment corrections and their variance. first flag modes that we cut away by eigenvalue
     std::vector<bool> keepEigenValue(N,true) ;
     // cut away a fixed number of modes (still need to pass the constraints!)
