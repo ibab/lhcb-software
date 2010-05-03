@@ -1,4 +1,3 @@
-
 #include <map>
 #include "GaudiKernel/IIncidentListener.h"
 #include "GaudiKernel/ToolHandle.h"
@@ -39,6 +38,7 @@ namespace Al
   private:
     typedef std::map<const LHCb::Track*, const Al::TrackResiduals*> ResidualMap ;
     mutable ResidualMap m_residuals ;
+    bool m_testPosDef ;
     ToolHandle<IGetElementsToBeAligned> m_elementTool ;
     ToolHandle<ITrackKalmanFilter> m_kalmanFilter ;
   } ;
@@ -70,6 +70,7 @@ namespace Al
     // interfaces
     declareInterface<ITrackResidualTool>(this);
     declareProperty("KalmanFilter",m_kalmanFilter) ;
+    declareProperty("TestPosDef",m_testposDef = false) ;
   }
   
   StatusCode TrackResidualTool::initialize()
@@ -85,6 +86,7 @@ namespace Al
   StatusCode TrackResidualTool::finalize()
   {
     m_elementTool.release().ignore() ;
+    m_kalmanFilter.release().ignore() ;
     return GaudiTool::finalize();
   }
 
@@ -111,6 +113,43 @@ namespace Al
     return rc ;
   }
 
+  template<class Matrix> 
+  Matrix correlationMatrix( const Matrix& M )
+  {
+    Matrix N ;
+    for(int i=0; i<Matrix::kCols; ++i) {
+      N(i,i) = 1 ;
+      for(int j=0; j<i; ++j) 
+	N(i,j) = M(i,j) / std::sqrt( M(i,i) * M(j,j)) ;
+    }
+    return N ;
+  }
+
+  template<class Matrix>
+  bool testPosDef( const Matrix& M ) {
+    Matrix N = correlationMatrix(M) ;
+    double det ;
+    /*bool success =*/ N.Det( det ) ;
+    const double tolerance = 1e-9 ;
+    return /*success &&*/ det+tolerance>0 ;
+  }
+
+  template<int N>
+  ROOT::Math::SMatrix<double, 2*N, 2*N, ROOT::Math::MatRepSym<double,2*N> >
+  constructNxN(const Gaudi::SymMatrix5x5& MAA, const Gaudi::SymMatrix5x5& MBB, const Gaudi::Matrix5x5& MAB  ) {
+    ROOT::Math::SMatrix<double, 2*N, 2*N, ROOT::Math::MatRepSym<double,2*N> > M ;
+    for(int i=0; i<N; ++i) {
+      for(int j=0; j<=i; ++j) {
+	M(i,j) = MAA(i,j) ;
+	M(i+N,j+N) =  MBB(i,j) ;
+      }
+      for(int j=0; j<N; ++j) {
+	M(i,j+N) = MAB(i,j) ;
+      }
+    }
+    return M ;
+  }
+  
   Al::TrackResiduals* TrackResidualTool::create( const LHCb::Track& track, 
 						 const std::vector<const LHCb::Node*>& nodes,
 						 std::vector<size_t>& residualnodeindices,
@@ -212,10 +251,18 @@ namespace Al
     size_t numnodes = nodes.size() ;
     
     // These are the diagonal elements. At first we just copy these
+    bool error = false ;
     std::vector< const Gaudi::TrackSymMatrix* > diagcov(numnodes,0) ;
-    for( size_t irow = 0; irow<numnodes; ++irow)
+    for( size_t irow = 0; irow<numnodes; ++irow) {
       diagcov[irow] = &(nodes[irow]->state().covariance()) ;
+      if( m_testPosDef && ! testPosDef( *(diagcov[irow]) ) ) {
+	warning() << "Found non pos def matrix on track of type: " << track.type() << " "
+		  << *(diagcov[irow]) << endreq ;
+	error = true ;
+      }
+    }
     
+      
     // These are the off-diagonal elements, which are not symmetric. We
     // need to choose whether we store lower or upper triangle. We are
     // going to define now that row >= col (lower triangle), which means
@@ -232,7 +279,6 @@ namespace Al
     // last) node. Once we have the gain matrices, the rest is
     // trivial, though still CPU intensive.
 
-    bool error = false ;
     std::vector< Gaudi::TrackMatrix > smoothergainmatrix(numnodes-1) ;
     for(size_t k=numnodes-1; k>0 && !error; --k) {
       //std::cout << "k, size: " << k << " " << offdiagcov[k].size() << std::endl ;
@@ -241,20 +287,16 @@ namespace Al
       // do these _really_ correspond to 'prevnode'? how do we find out?
       assert( node && prevnode ) ;
 
-      if( track.fitHistory() == LHCb::Track::StdKalman ) {
-	// we have run the smoother. that makes things really easy.
-	Warning("StdKalman trackfit: Using smoother gain matrix from track fit",StatusCode::SUCCESS,1) ;
-	smoothergainmatrix[k-1] = prevnode->smootherGainMatrix() ;
-	Gaudi::TrackMatrix C_km1_k = smoothergainmatrix[k-1] * node->state().covariance() ;
-	offdiagcov[k][k-1] = new Gaudi::TrackMatrix(Transpose(C_km1_k)) ;
-      } else {
-	// we have run the bi-directional fit. that basically means we have to rerun the smoother
-	Warning("BiDirectional trackfit: track not correctly fitted for TrackResidualTool.",
-		StatusCode::FAILURE,100) ;
-	return 0 ;
+      smoothergainmatrix[k-1] = prevnode->smootherGainMatrix() ;
+      Gaudi::TrackMatrix C_km1_k = smoothergainmatrix[k-1] * node->state().covariance() ;
+      offdiagcov[k][k-1] = new Gaudi::TrackMatrix(Transpose(C_km1_k)) ;
+      
+      if( m_testPosDef && !testPosDef(constructNxN<4>( *(diagcov[k-1]),*(diagcov[k]),C_km1_k) ) ) {
+	warning() << "Found non pos def 10x10 matrix on track of type: " << track.type() << endreq ;
+	error = true ;
       }
     }
-
+    
     // calculate the remaining elements in the covariance matrix. We
     // need to do this off-diagonal by off-diagonal. The easiest is
     // probably to do it on demand, but the following should also work. Note that
@@ -326,7 +368,10 @@ namespace Al
       if(!error) {
 	std::string message ;
 	error = residuals->testHCH(message) ;
-	if(error) warning() << message << endreq ;
+	if(error) {
+	  warning() << message << endreq ;
+	  warning() << "Track type = " << track.type() << " " << track.history() << " " << track.flag() << endreq ;
+	}
       }
       if(error) { delete residuals ; residuals = 0 ; }
     }
@@ -337,7 +382,7 @@ namespace Al
 	delete offdiagcov[irow][icol] ;
     
     debug() << "End of TrackResidualTool::Compute " << residuals << endreq ;
-
+    counter("Fraction of failures")+= bool(residuals==0) ;
     return residuals ;
   }
 
