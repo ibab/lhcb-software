@@ -4,6 +4,11 @@ Package Coordinator : Johan Blouw and Rob Lambert
 Purpose : Gaudi application used to perform 
           alignment of the LHCb detector components
 
+
+! 2010-05-03 Wouter Hulsbergen
+ - small change in gaudipariter.py
+ - added scripts/DBDiff.py (Albert)
+
 </PRE><H1><A NAME=v4r7>2010-04-03 Escher v4r7</A></H1><PRE>
 ! 2010-02-22 Johan Blouw:
  - added the line "use processing v* LCG_Interfaces" to the requirements file
