@@ -4,6 +4,9 @@
 ! Purpose     : Compute primary vertices
 !-----------------------------------------------------------------------------
 
+! 2010-05-03 - Rob Lambert
+ - Added PVConf.py, to replace PVLoose.py and PVVeryLoose.py options
+
 !============================= PatPV v3r15 2010-04-18 ======================
 ! 2010-04-17 - Gerhard Raven
  - PatPV2DFit3D:
