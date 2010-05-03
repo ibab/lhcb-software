@@ -1,10 +1,13 @@
-package DaVinciSys
+cm	package DaVinciSys
 version v25r4
 
 branches doc cmt
 
 #=======================================================
 use  DaVinci                 	v25r4   Phys
+
+# Patches
+use  RichRecTools               v4r11p1 Rich
 
 #  
 # Declare this as a container package
