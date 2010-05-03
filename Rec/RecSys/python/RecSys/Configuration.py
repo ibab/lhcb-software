@@ -4,7 +4,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.32 2010-03-29 21:50:46 dgolubko Exp $"
+__version__ = "$Id: Configuration.py,v 1.33 2010-05-03 09:27:11 rlambert Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
             
 from LHCbKernel.Configuration import *
@@ -81,9 +81,13 @@ class RecSysConf(LHCbConfigurableUser):
             pvAlg = PatPVOffline()
             if "earlyData" in self.getProp("SpecialData"):
                 if "2009" == self.getProp("DataType"):
-                    importOptions("$PATPVROOT/options/PVVeryLoose.py")
+                    from PatPV import PVConf 
+                    PVConf.VLoosePV().configureAlg() 
+                    #importOptions("$PATPVROOT/options/PVVeryLoose.py")
                 else:
-                    importOptions("$PATPVROOT/options/PVLoose.py")
+                    from PatPV import PVConf 
+                    PVConf.LoosePV().configureAlg() 
+                    #importOptions("$PATPVROOT/options/PVLoose.py")
             GaudiSequencer("RecoVertexSeq").Members += [ pvAlg ];
             if self.getProp( "OutputType" ).upper() == "RDST":
                 # Velo tracks not copied to Rec/Track/Best for RDST 
