@@ -83,7 +83,13 @@ class TrackSys(LHCbConfigurableUser):
     ## @brief Apply the configuration
     def __apply_configuration__(self):
         self.defineOptions()
-        importOptions( "$TRACKSYSROOT/options/RecoTracking.py" )
+        from TrackSys import RecoTracking
+        RecoTracking.RecoTracking()
+        
+        #importOptions( "$TRACKSYSROOT/options/RecoTracking.py" )
         if self.getProp( "WithMC" ):
-            importOptions("$TRACKSYSROOT/options/PatChecking.py")
+            from TrackSys import PatChecking
+            PatChecking.PatChecking()
+            
+            #importOptions("$TRACKSYSROOT/options/PatChecking.py")
    
