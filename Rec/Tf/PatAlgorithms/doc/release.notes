@@ -4,6 +4,9 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+! 2010-05-03 - Rob Lambert
+ - Copy configuration options files into a set of python classes PatAlgConf.py
+
 !========================= PatAlgorithms v4r1 2010-04-26 ====================
 ! 2010-04-22 - Stephanie Hansmann-Menzemer
  - addapt to changes in interface to magnetic field service

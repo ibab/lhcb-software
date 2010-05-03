@@ -8,7 +8,7 @@ version           v4r1
 #============================================================================
 # Structure, i.e. directories to process. 
 #============================================================================
-branches          cmt doc src options
+branches          cmt doc src options python
 include_path      none
 
 #============================================================================
@@ -28,4 +28,5 @@ library          PatAlgorithms    ../src/*.cpp
 #============================================================================
 # define component library link options
 #============================================================================
+apply_pattern    install_python_modules
 apply_pattern    component_library library=PatAlgorithms
