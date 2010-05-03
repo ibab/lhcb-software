@@ -4,6 +4,9 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+! 2010-05-03 - Rob Lambert
+ - Copy RecoTracking.py to a python function instead of an options file
+
 !============================ TrackSys v4r32 2010-03-19 ======================
 ! 2010-04-23 - Marco Cattaneo
  - In RecoTracking.py, follow change in names of MagneticFieldSvc options
