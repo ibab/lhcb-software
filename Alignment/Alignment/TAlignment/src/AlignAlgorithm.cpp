@@ -1,4 +1,4 @@
-// $Id: AlignAlgorithm.cpp,v 1.62 2010-04-17 16:21:39 wouter Exp $
+// $Id: AlignAlgorithm.cpp,v 1.63 2010-05-03 14:17:24 wouter Exp $
 // Include files
 // from std
 // #include <utility>
@@ -349,8 +349,8 @@ StatusCode AlignAlgorithm::execute() {
 bool AlignAlgorithm::accumulate( const Al::Residuals& residuals )
 {
   bool accept = false ;
-  if( residuals.size() > 0 /* &&
-			      (residuals.nAlignables() > 1 || residuals.nExternalHits()>0 )*/ ) {
+  if( residuals.size() > 0 &&
+      (residuals.nAlignables() > 1 || residuals.nExternalHits()>0 ) ) {
     accept = true ;
     
     // let's first get the derivatives
@@ -692,15 +692,18 @@ bool AlignAlgorithm::testNodes( const LHCb::Track& track ) const
 	warning() << "Found node with zero error on residual: " << track.type() << " "
 		  << node->measurement().type() << " " << node->errResidual2() << endreq ;
 	success = false ;
-      } else if( !(node->errResidual2() < node->errMeasure2() ) ) {
+      } 
+      if( !(node->errResidual2() < node->errMeasure2() ) ) {
 	warning() << "Found node with R2 > V2: " << track.type() << " "
 		  << node->measurement().type() << " " << node->errResidual2() << " " << node->errMeasure2() << endreq ;
 	success = false ;
-      } else if( !( node->errMeasure2() > 1e-6 ) ) {
+      } 
+      if( !( node->errMeasure2() > 1e-6 ) ) {
 	warning() << "Found node with very small error on measurement: " << track.type() << " "
 		  << node->measurement().type() << " " << node->errMeasure2() << endreq ;
 	success = false ;
-      } else if( node->errResidual2() < 1e-2 * node->errMeasure2() ) {
+      } 
+      if( node->errResidual2() < 1e-3 * node->errMeasure2() ) {
 	std::stringstream str ;
 	str << "Found node with negligible weight: " << track.type() << " " << node->measurement().type() ;
 	Warning(str.str(),StatusCode::FAILURE,1).ignore() ;
