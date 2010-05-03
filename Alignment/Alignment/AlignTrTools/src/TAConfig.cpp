@@ -4,7 +4,7 @@
  *  Implementation file for Millepede configuration tool : TAConfig
  *
  *  CVS Log :-
- *  $Id: TAConfig.cpp,v 1.35 2010-04-20 12:42:30 jblouw Exp $
+ *  $Id: TAConfig.cpp,v 1.36 2010-05-03 15:03:35 wouter Exp $
  *
  *  @author J. Blouw (johan.blouw@mpi-hd.mpg.de)
  *  @date   12/04/2007
@@ -2877,7 +2877,7 @@ void TAConfig::MakeTrackParVec() {
 // **************************************************************************** 
 
 
-StatusCode TAConfig::PrintParameters( std::vector<double> &ali_par , int iteration) {
+StatusCode TAConfig::PrintParameters( std::vector<double> &ali_par , int /*iteration*/ ) {
   // Alternative:
   debug() << " --->  alipar.size = " << ali_par.size() << endreq;
   
