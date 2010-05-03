@@ -36,6 +36,7 @@ DaVinci().PrintFreq = 1
 DaVinci().SkipEvents = 0
 DaVinci().DataType = "MC09" 
 DaVinci().Simulation   = True
+DaVinci().CondDBtag = 'MC09-20100430-vc-md100'
 DaVinci().TupleFile = "DecayTreeTuple_TisTos.root"  # Ntuple
 DaVinci().MoniSequence = [ tuple ]
 DaVinci().ReplaceL0BanksWithEmulated = True
