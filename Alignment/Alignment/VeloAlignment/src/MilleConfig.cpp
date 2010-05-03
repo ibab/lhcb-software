@@ -873,7 +873,7 @@ StatusCode MilleConfig::correcTrack(VeloTrack& mistrack,
 
     // Errors are calculated as (pitch/sqrt(12)) for the moment (SV 08/07/05)
     
-    double error_r = (40+(101.6-40.0)*(r-8.19)/(41.95-8.19))/3464.;
+    //double error_r = (40+(101.6-40.0)*(r-8.19)/(41.95-8.19))/3464.;
     double error_p = 0.;
 
     if (r <= 17.2) 
@@ -972,7 +972,7 @@ StatusCode MilleConfig::correcTrack(VeloTrack& mistrack,
 
     // Errors are calculated as (pitch/sqrt(12)) for the moment (SV 08/07/05)
     
-    double error_r = (40+(101.6-40.0)*(r-8.19)/(41.95-8.19))/3464.;
+    //double error_r = (40+(101.6-40.0)*(r-8.19)/(41.95-8.19))/3464.;
     double error_p = 0.;
 
     if (r <= 17.2) 

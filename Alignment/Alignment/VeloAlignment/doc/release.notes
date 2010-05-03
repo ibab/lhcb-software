@@ -2,6 +2,9 @@
 ! Responsible : Silvia Borghi, Marco Gersabeck
 !=============================================================================
 
+! 03/05/2010 - Wouter Hulsbergen
+  - resolved compilor warning
+
 !========================== VeloAlign v4r9 2010-04-03 ========================
 ! 28/04/2010 - Silvia Borghi  
   - VAlign.cpp, VAlign.h: add cuts on track selection
