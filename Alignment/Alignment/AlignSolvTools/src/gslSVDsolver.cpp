@@ -1,4 +1,4 @@
-// $Id: gslSVDsolver.cpp,v 1.10 2009-08-16 14:16:24 wouter Exp $
+// $Id: gslSVDsolver.cpp,v 1.11 2010-05-03 14:31:03 wouter Exp $
 // Include files 
 
 #include <cmath>
@@ -136,6 +136,14 @@ bool gslSVDsolver::compute(AlSymMat& symMatrix, AlVec& vector,
     }
   }
   
+  for (unsigned i = 0u; i < size; ++i) {
+    double* s = gsl_vector_ptr(vectorS, i);
+    if( *s < 0) {
+      warning() << "Negative eigenvalue: " << i << " " << *s << endreq ;
+    }
+  }
+
+
   info() << "Number of removed eigenvalues = " << numremoved << endreq ;
   debug() << "==> Regularised Vector S  = " << (*vectorS) << endmsg;
   
