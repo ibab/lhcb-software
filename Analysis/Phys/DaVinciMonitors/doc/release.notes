@@ -4,6 +4,9 @@
 ! Purpose     : Monitoring algorithms after reconstruction
 !-----------------------------------------------------------------------------
 
+! 2010-05-03 - Juan Palacios
+ - Switch on MuonAlignmentMonitor for SDSTs.
+
 !========================== DaVinciMonitors v1r10 2010-04-30 =================
 
 ! 2010-04-26 - Chris Jones
