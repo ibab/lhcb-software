@@ -2,6 +2,9 @@
 ! Responsible : Adlene Hicheur (Adlene.Hicheur@cern.ch)
 !-----------------------------------------------------------------------------
 
+! 2010-05-03 - Wouter Hulsbergen
+ - report chi2 of negative eigenvalues in DiagSolvTool
+
 !=========================== AlignSolvTools v3r1 2010-03-03 ==================
 ! 2010-02-22 - Wouter Hulsbergen
  - fixed v3r0 after migration of files to another package
