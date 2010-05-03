@@ -4,6 +4,7 @@
 from optparse import OptionParser
 parser = OptionParser(usage = "%prog [options] <opts_file> ...")
 parser.add_option("-n","--numiter",type="int", dest="numiter",help="number of iterations", default=3)
+parser.add_option("-f","--firstiter",type="int", dest="firstiter",help="first iterations", default=0)
 parser.add_option("-e","--numevents",type="int", dest="numevents",help="number of events", default=1000)
 parser.add_option("-p","--numprocesses",type="int", dest="numprocs",help="number of processes", default=8)
 parser.add_option("-d", "--aligndb", action = 'append', dest="aligndb",help="path to file with alignment database layer for first iteration")
@@ -12,7 +13,7 @@ parser.add_option("-d", "--aligndb", action = 'append', dest="aligndb",help="pat
 import os
 rundir = os.getcwd()
 
-for i in range( opts.numiter ) :
+for i in range(opts.firstiter,opts.numiter) :
     print "Iteration nr: ", i, "\n"
     # make the directory from where to run the job
     iterdir = 'Iter' + str( i )
