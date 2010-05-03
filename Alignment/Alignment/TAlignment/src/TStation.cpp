@@ -4,7 +4,7 @@
  *  Implementation file for RICH reconstruction tool : TStation
  *
  *  CVS Log :-
- *  $Id: TStation.cpp,v 1.9 2010-04-19 13:12:12 jblouw Exp $
+ *  $Id: TStation.cpp,v 1.10 2010-05-03 14:50:04 wouter Exp $
  *
  *  @author M.Needham Matt.Needham@cern.ch
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
@@ -127,8 +127,7 @@ StatusCode TStation::execute() {
   debug() << "Number of usable tracks = " << num_tracks << endreq;
   m_total += num_tracks;
   //  info() << "Size of Tracks container = " << OTTracks->size() << endreq;
-  if ( OTTracks->size() >= 0 ) 
-    put ( OTTracks, m_OTTrackLocation  );
+  put ( OTTracks, m_OTTrackLocation  );
   
   return StatusCode::SUCCESS;
 }
