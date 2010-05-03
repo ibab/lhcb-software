@@ -70,7 +70,7 @@ namespace Al
     // interfaces
     declareInterface<ITrackResidualTool>(this);
     declareProperty("KalmanFilter",m_kalmanFilter) ;
-    declareProperty("TestPosDef",m_testposDef = false) ;
+    declareProperty("TestPosDef",m_testPosDef = false) ;
   }
   
   StatusCode TrackResidualTool::initialize()
