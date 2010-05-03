@@ -4,6 +4,9 @@
 ! Purpose     : Package for the track matching algorithms
 !-----------------------------------------------------------------------------
 
+! 2010-05-03 - Rob Lambert
+ - Addid TrackMatchConf.py to hold configuration, replacement for options file
+
 !======================= TrackMatching v2r28 2010-04-26======================
 ! 2010-04-22 M Needham
  - Fix compilation warnings
