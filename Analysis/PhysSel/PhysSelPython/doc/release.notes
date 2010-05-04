@@ -1,9 +1,15 @@
-!$Id: release.notes,v 1.52 2010-04-30 15:17:20 jpalac Exp $
+!$Id: release.notes,v 1.53 2010-05-04 13:56:05 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : PhysSel/PhysSelPython
 ! Responsible : Juan Palacios
 ! Purpose     : Helper python classes for writing offline selections
 !-----------------------------------------------------------------------------
+
+! 2010-05-04 - Juan Palacios
+ - add tests/test_multi_selection_sequence.py
+  . Test for MultiSelectionSequencer.
+ - cmt/requirements
+  . Increase to v5r3
 
 !==================== PhysSel/PhysSelPython v5r2 2010-04-30 ================
 
