@@ -84,8 +84,20 @@ class DummyAlgorithm(object) :
         return setattr(self.__instance[self._name], attr)
 
 class DummySequencer(object) :
-    def __init__(self, name, Members = []) :
+    def __init__(self,
+                 name,
+                 Members = [],
+                 ModeOR = False,
+                 IgnoreFilterPassed = False,
+                 MeasureTime = False,
+                 ReturnOK = False,
+                 ShortCircuit = True) :
         self.Members = copy(Members)
+        self.ModeOR = ModeOR
+        self.IgnoreFilterPassed = IgnoreFilterPassed
+        self.MeasureTime = MeasureTime
+        self.ReturnOK = ReturnOK,
+        self.ShortCircuit = ShortCircuit
         self._name = name
     def name(self) :
         return self._name
