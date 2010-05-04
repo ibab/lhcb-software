@@ -9,6 +9,10 @@
 !               reconstruction algorithm for beam tracks
 !-----------------------------------------------------------------------------
 
+! 2010-05-04 - Stefania Vecchi
+- add tighter cuts to NN neurons in physics case
+- add skipstation option to the recovery of Xtalk hits
+
 !======================== MuonTrackRec v3r2 2010-04-09 ======================
 ! 2010-03-25 - GG
 - add MuonHitDecode::fakehits() method

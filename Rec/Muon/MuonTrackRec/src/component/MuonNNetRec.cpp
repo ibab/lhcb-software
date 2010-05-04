@@ -1,4 +1,4 @@
-// $Id: MuonNNetRec.cpp,v 1.28 2010-03-17 11:06:57 ggiacomo Exp $
+// $Id: MuonNNetRec.cpp,v 1.29 2010-05-04 14:36:32 ggiacomo Exp $
 
 #include <list>
 
@@ -264,7 +264,7 @@ StatusCode MuonNNetRec::muonNNetMon(){
   // 
   // if holes are allowed (default) max neuron length is 2 else 1
   int neuronLength = m_allowHoles ? 2 : 1;
-  debug()<<"MAX NEURON LENGTH FOR THIS JOB IS: "<<neuronLength<<endmsg;
+  debug()<<"MAX NEURON LENGTH FOR THIS JOB IS: "<<neuronLength<<" Skipping Station "<<m_skipStation<<endmsg;
   
   std::list< MuonNeuron* > neurons;
   int Nneurons = 0;
@@ -300,6 +300,88 @@ StatusCode MuonNNetRec::muonNNetMon(){
       int reg = tail->region()  + 1;
       int hID = head->hitID(); // head ID
       
+
+      if(m_assumePhysics) { // tighter cuts on neurons
+        double sf1, sf2, sf3, sf4;
+        bool neuron_OK=true;
+        
+        double tT = atan2((*ihT)->Y(),(*ihT)->Z());
+        double tH = atan2((*ihH)->Y(),(*ihH)->Z());
+        double pT = atan2((*ihT)->X(),(*ihT)->Z());
+        double pH = atan2((*ihH)->X(),(*ihH)->Z());
+        double dth = fabs(tT-tH);
+        double dph = fabs(pT-pH);
+        
+        switch( sta ){
+        case 1:
+          sf1=2.0;       sf2=1.5;       sf3=2.0;       sf4=2.0;
+          switch( reg ){
+          case 1:
+            if(dth > sf1*0.002) neuron_OK = false;
+            if(dph > sf1*0.0015) neuron_OK = false;
+            break;
+          case 2:
+            if(dth > sf2*0.004) neuron_OK = false;
+            if(dph > sf2*0.003) neuron_OK = false;
+            break;
+          case 3:
+            if(dth > sf3*0.008) neuron_OK = false;
+            if(dph > sf3*0.0065) neuron_OK = false;
+            break;
+          case 4:
+            if(dth > sf4*0.016) neuron_OK = false;
+            if(dph > sf4*0.013) neuron_OK = false;
+            break;
+          }
+          break;
+        case 2:
+          sf1=3.0;       sf2=3.0;       sf3=6.0;       sf4=3.0;
+          switch( reg ){
+          case 1:
+            if(dth > sf1*0.002) neuron_OK = false;
+            if(dph > sf1*0.0015) neuron_OK = false;
+            break;
+          case 2:
+            if(dth > sf2*0.004) neuron_OK = false;
+            if(dph > sf2*0.003) neuron_OK = false;
+            break;
+          case 3:
+            if(dth > sf3*0.008) neuron_OK = false;
+            if(dph > sf3*0.0065) neuron_OK = false;
+            break;
+          case 4:
+            if(dth > sf4*0.016) neuron_OK = false;
+            if(dph > sf4*0.013) neuron_OK = false;
+            break;
+          }
+          break;
+        default:
+          sf1=5.0;       sf2=3.0;       sf3=2.0;       sf4=2.0;
+          switch( reg ){
+          case 1:
+            if(dth > sf1*0.002) neuron_OK = false;
+            if(dph > sf1*0.0015) neuron_OK = false;
+            break;
+          case 2:
+            if(dth > sf2*0.004) neuron_OK = false;
+            if(dph > sf2*0.003) neuron_OK = false;
+            break;
+          case 3:
+            if(dth > sf3*0.008) neuron_OK = false;
+            if(dph > sf3*0.0065) neuron_OK = false;
+            break;
+          case 4:
+            if(dth > sf4*0.016) neuron_OK = false;
+            if(dph > sf4*0.013) neuron_OK = false;
+            break;
+          }
+          break;
+        }
+
+        if(! neuron_OK) continue;
+      }
+
+
       // here if everything OK. Now build the neurons.
       
       Nneurons++;
@@ -534,11 +616,11 @@ StatusCode MuonNNetRec::muonNNetMon(){
     // are firing
     if( span >= m_span_cut && firstat > m_firing_cut) {
       if(m_XTalk) {
-        //	info()<< " before "<<muonTrack->getHits().size() <<" hits to the track"<<endmsg;
+        debug()<< " before Xtalk "<<muonTrack->getHits().size() <<" hits to the track"<<endmsg;
         
-        StatusCode sct = muonTrack->AddXTalk( trackhits, m_XtalkRadius);
+        StatusCode sct = muonTrack->AddXTalk( trackhits, m_XtalkRadius, m_skipStation);
         
-        //	info()<< " After "<<muonTrack->getHits().size() <<" hits to the track"<<endmsg;
+        debug()<< " After Xtalk "<<muonTrack->getHits().size() <<" hits to the track"<<endmsg;
         
         if(!sct)  warning()<<"WARNING: problem adding XTalk pads"<<endmsg;
       }
