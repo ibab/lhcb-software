@@ -12,9 +12,9 @@ use AlignmentInterfaces	v3r2	Alignment # Johan Blouw
 use AlignmentTools      v3r1    Alignment # Sebastien Viret
 use AlignEvent		v1r1    Alignment # Wouter Hulsbergen
 use AlignKernel		v3r3    Alignment # Adlene Hicheur, Wouter Hulsbergen
-use AlignSolvTools	v3r1	Alignment # A. Hicheur, W. Hulsbergen
-use AlignTrTools	v4r6p1	Alignment # Johan Blouw, Adlene Hicheur, Louis Nicolas
-use TAlignment		v4r8	Alignment # Jan Amoraal, Johan Blouw, Marc Deissenroth, Florin Maciuc
+use AlignSolvTools	v3r2    Alignment # A. Hicheur, W. Hulsbergen
+use AlignTrTools	v4r7	Alignment # Johan Blouw, Adlene Hicheur, Louis Nicolas
+use TAlignment		v5r0	Alignment # Jan Amoraal, Johan Blouw, Marc Deissenroth, Florin Maciuc
 #AlignT2Velo Removed, 03.03.2010
 #use AlignT2Velo         v1r1    Alignment # Steve Blusk
 use VeloAlignment	v4r9	Alignment # Marco Gersabeck
