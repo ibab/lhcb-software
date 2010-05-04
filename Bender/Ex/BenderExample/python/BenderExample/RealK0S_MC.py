@@ -235,7 +235,7 @@ def configure ( datafiles     ,
         RedoMCLinks   = True   , 
         ## from Thomas 
         DDDBtag       = "head-20100119" ,
-        CondDBtag     = "MC-20100205-vc15mm-md100" , 
+        CondDBtag     = "MC-20100429-vc15mm-md100" ,     
         ## 
         PrintFreq     = 1000   ,
         EvtMax        = -1     , 

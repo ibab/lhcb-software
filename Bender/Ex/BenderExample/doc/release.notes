@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.49 2010-05-04 16:39:40 ibelyaev Exp $
+! $Id: release.notes,v 1.50 2010-05-04 18:06:48 ibelyaev Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Ex/BenderExample
 ! Responsible : Vanya  BELYAEV ibelyaev@physics.syr.edu
@@ -13,7 +13,7 @@
 
  - small update for RealK0S/RealLam0
      to take into account the crossing angle
- 
+	and new "lumi"-condition for HLT 
 
 ! 2010-05-02 - Vanya Belyaev
 
