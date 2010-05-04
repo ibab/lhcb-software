@@ -3,6 +3,7 @@ Package	:	Alignment/TAlignment
 Package Coordinator	:	Jan Amoraal, Johan Blouw
 Purpose	: collection of alignment algorithms
 
+</PRE><H1><A NAME=v5r0>2010-05-04 TAlignment v5r0</A></H1><PRE> 
 ! 2010-05-04 Johan Blouw
  - small changes to TStation algorithm
 
