@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # ==========================================================================================
-# $Id: RealK0S.py,v 1.5 2010-03-14 17:05:03 ibelyaev Exp $ 
+# $Id: RealK0S.py,v 1.6 2010-05-04 16:39:40 ibelyaev Exp $ 
 # ==========================================================================================
 ## @file BenderExample/RealK0S.py
 #
@@ -117,7 +117,6 @@ class Ks(Lam0) :
             rcnt += 1 
         
         goodTrack = ( P > 2.0 * GeV ) & ( TRCHI2DOF < 25 ) 
-        ## goodTrack = goodTrack & self.trueKs 
         
         pips = self.select ( 'pi+' , ( 'pi+' == ID ) & goodTrack & self.truePi1 )
         if pips.empty() : return SUCCESS
@@ -145,7 +144,7 @@ class Ks(Lam0) :
             chi2 = VCHI2(ks)
             if not 0 <= chi2 < 100 : continue
 
-            self.plot ( m12 , 'pi pi mass, chi2(vx)<25', 0.4 , 0.6 ) 
+            self.plot ( m12 , 'pi pi mass, chi2(vx)<100', 0.4 , 0.6 ) 
             
             m = M(ks) / GeV;
             if not 0.4 < m < 0.6 : continue
@@ -192,7 +191,6 @@ class Ks(Lam0) :
                 self.plot ( min(chi2,199)             , 'chi2    (MC)' , 0 , 200 , 200 )
                 self.plot ( min(min(mips1,mips2),199) , 'mips    (MC)' , 0 , 200 , 200 )
           
-
             if  down1 and down2 and ltime < 10 * mm : continue
             elif                    ltime <  1 * mm : continue 
 
@@ -247,7 +245,7 @@ class Ks(Lam0) :
             tup.column ( 'yKs'    , Y   ( ks  ) )
             tup.column ( 'yPi1'   , Y   ( pi1 ) )
             tup.column ( 'yPi2'   , Y   ( pi2 ) )
-            
+
             tup.column ( 'y0Ks'   , Y0  ( ks  ) )
             tup.column ( 'y0Pi1'  , Y0  ( pi1 ) )
             tup.column ( 'y0Pi2'  , Y0  ( pi2 ) )
@@ -286,6 +284,11 @@ class Ks(Lam0) :
             tup.column ( 'diffr' , self.diffr )
             
             tup.column ( 'data' , int ( self.DATA ) )
+            
+            ## convert momentum into CMS system:
+            np = self.toCMS ( ks.momentum ( 0 )  ) / GeV 
+            tup.column ( 'yCMS'  , np.Rapidity () )
+            tup.column ( 'ptCMS' , np.Pt       () )
          
             tup.write  ( )
           

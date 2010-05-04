@@ -319,8 +319,12 @@ class Lam0(AlgoMC) :
             
             tup.column ( 'data' , int ( self.DATA ) )
             
+            ## convert momentum into CMS system:
+            np = self.toCMS ( lam.momentum ( 0 )  ) / GeV 
+            tup.column ( 'yCMS'  , np.Rapidity () )
+            tup.column ( 'ptCMS' , np.Pt       () )
+           
             tup.write  ( )
-
 
             if   long1 and long2 :
                 self.plot ( m , 'Lambda0 mass, LL' , 1.08 , 1.18 , 200 )    
@@ -479,6 +483,24 @@ class Lam0(AlgoMC) :
         tup.column ( 'spd1'           , num1       )
 
         return SUCCESS
+
+    ## convert 4-vector to center of mass-system
+    def toCMS    ( self , vct ) :
+        """
+        Return 4-momentum converetd into center-of-mass systems
+        """
+        if   hasattr ( vct , 'momentum' ) :
+            return self.toCMS ( vct.momentum() )
+
+        newE = vct.E  () - 0.0021 * vct.Pz()   
+        newX = vct.Px () - 0.0021 * vct.E ()
+        
+        newM = Gaudi.LorentzVector ( vct )
+        newM .SetE  ( newE )
+        newM .SetPx ( newX )
+        
+        return newM 
+
     
     ## finalize & print histos 
     def finalize ( self ) :

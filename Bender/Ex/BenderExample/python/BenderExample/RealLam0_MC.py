@@ -64,17 +64,6 @@ import PartProp.decorators
 
 from   BenderExample.RealLam0 import Lam0
 
-def newP ( momentum ) :
-
-    newE = momentum.E  () - 0.0021 * momentum.Pz()   
-    newX = momentum.Px () - 0.0021  *momentum.E ()
-
-    newM = Gaudi.LorentzVector ( momentum )
-    newM .SetE  ( newE )
-    newM .SetPx ( newX )
-
-    return newM 
-    
     
 # =============================================================================
 ## @class Lam0MC
@@ -129,10 +118,10 @@ class Lam0MC ( Lam0 ) :
             'mclam' ,
             ( 'Lambda0'  == MCABSID ) &
             ( 0    < MCPZ ) &
-            ( 200 * MeV < MCPT ) &
-            (   2 * GeV > MCPT ) & 
-            ( 2.5  < MCY  ) &
-            ( 4.0  > MCY  ) &
+            ## ( 200 * MeV < MCPT ) &
+            ## (   2 * GeV > MCPT ) & 
+            ## ( 2.5  < MCY  ) &
+            ## ( 4.0  > MCY  ) &
             MCOVALID        & 
             ( abs ( MCVFASPF ( MCVZ ) ) < 300 ) &
             ( abs ( MCVFASPF ( MCVX ) ) <   4 ) &
@@ -172,9 +161,7 @@ class Lam0MC ( Lam0 ) :
         l0calo  = int ( l0.channelDecisionByName('CALO')  ) 
 
         for p in mclams : 
-            
-            np = newP ( p.momentum() ) / GeV 
-            
+
             tMC.column ( 'pid1'    , MCID    ( p )         )
             tMC.column ( 'pid2'    , p.particleID().pid()  ) 
             tMC.column ( 'lam0'    , lam0    ( p )         )
@@ -203,9 +190,11 @@ class Lam0MC ( Lam0 ) :
             tMC.column ( 'l0calo'  , l0calo     ) 
             tMC.column ( 'diffr'   , self.diffr ) 
             #
-            # new PT
-            tMC.column ( 'npt'     , np.Pt() )
-            # 
+            ## 4-vector in center-of-mass system:
+            np = self.toCMS ( p ) / GeV 
+            tMC.column ( 'yCMS'    , np.Rapidity () )
+            tMC.column ( 'ptCMS'   , np.Pt       () )
+            ##
             tMC.write()
             
             self.plot  ( MCPT ( p ) / GeV , 'MCpt for Lambda ' , 0 , 5 , 500 )
@@ -215,10 +204,24 @@ class Lam0MC ( Lam0 ) :
             'mclamdec' ,
             mclams     ,
             decay & fromDecays & ~fromLong & ~fromXs ) 
-            
+
         if mclams.empty() : return self.Warning('No MC-lambdas (2)', SUCCESS ) 
 
-        self.trueLam0 = MCTRUTH ( self.mcTruth() , mclams ) 
+        mclams_ = std.vector('const LHCb::MCParticle*')()
+        for l in mclams : 
+            
+            ## 4-vector in center-of-mass system:
+            np = self.toCMS ( p )
+            
+            y  = np.Rapidity ()
+            if not 2.5        <= y  <= 4.0       : continue 
+            pt = np.Pt       ()
+            if not 200 * MeV  <= pt <= 2.0 * GeV : continue 
+            mclams_.push_back ( l )
+            
+        if mclams_.empty() : return self.Warning('No MC-lambdas (3)', SUCCESS ) 
+
+        self.trueLam0 = MCTRUTH ( self.mcTruth() , mclams_ ) 
 
         return Lam0.analyse ( self )
 
@@ -311,39 +314,26 @@ if '__main__' == __name__ :
     print '*'*120
 
 
-    ## 'regular' Monte Carlo 
-    ## import BenderExample.MC2009_9
-    ## files = EventSelector().Input 
+    ## 
+    ## ``Hit-Efficiency-Massaged'' MC by Manuel
+    ## 
+    prefix = '/castor/cern.ch/grid'
+    files  = [
+        '/lhcb/user/m/mschille/2010_05/8044/8044272/Brunel.dst' ,
+        '/lhcb/user/m/mschille/2010_05/8044/8044274/Brunel.dst' ,
+        '/lhcb/user/m/mschille/2010_05/8044/8044276/Brunel.dst' , 
+        '/lhcb/user/m/mschille/2010_05/8044/8044278/Brunel.dst' , 
+        '/lhcb/user/m/mschille/2010_05/8044/8044282/Brunel.dst'
+        ]
     
-    ## 
-    ## Manuel's hit-massaged Monte-Carlo  
-    ## 
-    pattern = '/castor/cern.ch/user/m/mschille/%d/%d/outputdata/Brunel.dst'
-    files = []    
-    ##for job in ( 179 , ) :  ## STD 
-    ##for job in ( 180 , ) :  ## STD - 1*RMS       
-    for job in ( 181 , ) :    ## STD + 1*RMS 
-        for subjob in range ( 0 , 75 ) :
-            if subjob in ( 47 , 48 , 49 ) : continue 
-            f = pattern % ( job , subjob )
-            files.append ( f )
-
-    for f in files :
-        print ' INPUT', f
-        
     ## configure 
     configure (
-        files   ,
-        catalogs = [
-        'xmlcatalog_file:local.xml'            ,
-        'xmlcatalog_file:$BENDEREXAMPLEROOT/options/Sim04Reco03-XDST.xml' ,
-        'xmlcatalog_file:$BENDEREXAMPLEROOT/options/Sim04Reco03-DST.xml' 
-        ] 
+        ## input data files :
+        [ prefix + f for f in files ]
         )
             
     run ( 1000 )
-
-
+    
     
 # =============================================================================
 # The END 
