@@ -4,6 +4,9 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+! 2010-05-04 - Rob Lambert
+ - Adapt RecoTracking.py to new python modules
+
 ! 2010-05-03 - Rob Lambert
  - Copy RecoTracking.py to a python function instead of an options file
  - Copy PatChecking.py to a python function instead of an options file

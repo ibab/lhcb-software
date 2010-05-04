@@ -119,7 +119,10 @@ def RecoTracking():
    if "Forward" in trackAlgs :
       track.DetectorList += [ "ForwardPat" ]
       GaudiSequencer("TrackForwardPatSeq").Members +=  [ PatForward("PatForward") ]
-      importOptions("$PATALGORITHMSROOT/options/PatForward.py")
+      #importOptions("$PATALGORITHMSROOT/options/PatForward.py")
+      from PatAlgorithms import PatAlgConf
+      PatAlgConf.ForwardConf().configureAlg()
+      
       cloneKiller.TracksInContainers += ["Rec/Track/Forward"]
       if stdSeq :
          # Fit now
@@ -136,13 +139,22 @@ def RecoTracking():
       track.DetectorList += [ "SeedPat" ]
       GaudiSequencer("TrackSeedPatSeq").Members += [Tf__Tsa__Seed("TsaSeed"),
                                                     Tf__Tsa__SeedTrackCnv( "TsaSeedTrackCnv" )]
-      importOptions("$TSAALGORITHMSROOT/options/TsaSeeding.py")
+      #importOptions("$TSAALGORITHMSROOT/options/TsaSeeding.py")
+      from TsaAlgorithms import TsaAlgConf
+      TsaAlgConf.TsaSeedConf().configureAlg()
+      
    if "PatSeed" in trackAlgs :
       track.DetectorList += [ "SeedPat" ]
       GaudiSequencer("TrackSeedPatSeq").Members += [PatSeeding("PatSeeding")]
-      importOptions("$PATALGORITHMSROOT/options/PatSeeding.py")
+      #importOptions("$PATALGORITHMSROOT/options/PatSeeding.py")
+      from PatAlgorithms import PatAlgConf
+      PatAlgConf.SeedingConf().configureAlg()
+      
       if TrackSys().cosmics() :
-         importOptions("$PATALGORITHMSROOT/options/PatSeedingTool-Cosmics.opts")
+         #importOptions("$PATALGORITHMSROOT/options/PatSeedingTool-Cosmics.opts")
+         from PatAlgorithms import PatAlgConf
+         PatAlgConf.CosmicConf().configureAlg()
+         
    if "TsaSeed" in trackAlgs or "PatSeed" in trackAlgs :
       cloneKiller.TracksInContainers += ["Rec/Track/Seed"]
       if stdSeq or "Match" in trackAlgs :
@@ -165,7 +177,10 @@ def RecoTracking():
    if "Match" in trackAlgs :
       track.DetectorList += [ "MatchPat" ]
       GaudiSequencer("TrackMatchPatSeq").Members += [ TrackMatchVeloSeed("TrackMatch") ]
-      importOptions("$TRACKMATCHINGROOT/options/TrackMatch.py")
+      #importOptions("$TRACKMATCHINGROOT/options/TrackMatch.py")
+      from TrackMatching import TrackMatchConf
+      TrackMatchConf.MatchingConf().configureAlg()
+      
       TrackMatchVeloSeed("TrackMatch").LikCut = -99999.
    if "PatMatch" in trackAlgs :
       track.DetectorList += [ "MatchPat" ]
@@ -185,7 +200,10 @@ def RecoTracking():
       track.DetectorList += [ "DownstreamPat" ]
       GaudiSequencer("TrackDownstreamPatSeq").Members += [ PatDownstream() ];
       cloneKiller.TracksInContainers += ["Rec/Track/Downstream"]
-      importOptions("$PATALGORITHMSROOT/options/PatDownstream.py")
+      #importOptions("$PATALGORITHMSROOT/options/PatDownstream.py")
+      from PatAlgorithms import PatAlgConf
+      PatAlgConf.DownstreamConf().configureAlg()
+      
       if stdSeq :
          track.DetectorList += [ "DownstreamFit" ]
          GaudiSequencer("TrackDownstreamFitSeq").Members += [TrackStateInitAlg("InitDownstreamFit")]
@@ -197,7 +215,10 @@ def RecoTracking():
    if "VeloTT" in trackAlgs :
       track.DetectorList += ["VeloTTPat"]
       GaudiSequencer("TrackVeloTTPatSeq").Members += [ PatVeloTT("PatVeloTT")] 
-      importOptions ("$PATVELOTTROOT/options/PatVeloTT.py")
+      #importOptions ("$PATVELOTTROOT/options/PatVeloTT.py")
+      from PatVeloTT import PatVeloConf
+      PatVeloConf.PatVeloTTConf().configureAlg()
+      
       cloneKiller.TracksInContainers += ["Rec/Track/VeloTT"]
       if stdSeq :
          track.DetectorList += ["VeloTTFit"]
