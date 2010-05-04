@@ -7,7 +7,7 @@ class LoosePV(object):
     def configureAlg(self, PVAlg = PatPVOffline("PatPVOffline")):
         '''pass in an alg to configure'''
         
-        self.PVAlg.addTool(PVOfflineTool, "PVOfflineTool")
+        PVAlg.addTool(PVOfflineTool, "PVOfflineTool")
         
         self.configureTool(self.PVAlg.PVOfflineTool)
     
@@ -28,7 +28,7 @@ class VLoosePV(object):
     def configureAlg(self, PVAlg = PatPVOffline("PatPVOffline")):
         '''pass in an alg to configure'''
         
-        self.PVAlg.addTool(PVOfflineTool, "PVOfflineTool")
+        PVAlg.addTool(PVOfflineTool, "PVOfflineTool")
         
         self.configureTool(self.PVAlg.PVOfflineTool)
     
