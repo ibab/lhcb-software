@@ -5,6 +5,12 @@
 ! Purpose     : Pure python core components for Selection "Framework".
 !-----------------------------------------------------------------------------
 
+! 2010-05-04 - Juan Palacios
+ - python/Configurables.py
+  . Add missing GaudiSequencer properties to DummySequencer.
+ - cmt/requirements
+  . Increase to v1r1p2
+
 !======================== SelPy v1r1p1 2010-04-26 ============================
 
 ! 2010-04-26 - Juan Palacios
