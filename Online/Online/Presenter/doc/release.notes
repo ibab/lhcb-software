@@ -4,6 +4,10 @@
 ! Purpose     : GUI to allow the visualization of all data quality histograms
 !-----------------------------------------------------------------------------
 
+! 2010-05-05 - Patrick Robbe
+ - src/PageDescriptionTextView.cpp: fix for Exceed problem with "FreeColor" 
+   call from PageDescriptionTextView
+
 ! 2010-04-29 - Patrick Robbe
  - cmt/requirements: add dependancy on GuiHtlm (ROOT)
  - PageDecriptionTextView.h/.cpp: now inherits from THtml to show text in 

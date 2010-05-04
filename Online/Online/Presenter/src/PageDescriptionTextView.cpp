@@ -1,11 +1,8 @@
-// $Id: PageDescriptionTextView.cpp,v 1.2 2010-04-29 14:24:08 robbep Exp $
+// $Id: PageDescriptionTextView.cpp,v 1.3 2010-05-04 22:43:42 robbep Exp $
 // Include files
 
 // local
 #include "PageDescriptionTextView.h"
-
-// ROOT
-#include "TGHtmlBrowser.h"
 
 // boost
 #include <boost/xpressive/xpressive.hpp>
@@ -172,4 +169,11 @@ Bool_t PageDescriptionTextView::HandleButton( Event_t * event ) {
     }
   }
   return kTRUE ;
+}
+
+// Workaroud for Exceed problem with FreeColor / AllocColor
+void TGHtml::FreeColor(ColorStruct_t *color)
+{
+  //  gVirtualX->FreeColor(gClient->GetDefaultColormap(), color->fPixel);
+  delete color;
 }
