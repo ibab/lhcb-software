@@ -1,13 +1,19 @@
 <PRE>
 ! -----------------------------------------------------------------------------
-! $Id: release.notes,v 1.52 2010-04-23 11:16:34 ibelyaev Exp $
+! $Id: release.notes,v 1.53 2010-05-04 18:07:47 ibelyaev Exp $
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.52 $
+! CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.53 $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/Bender
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 ! Purpose     : Python-based environment for Physics Analysis 
 ! -----------------------------------------------------------------------------
+
+! ==================== Phys/Bender v14r1 2010-05-04 ===========================
+
+! 2010-05-04 - Vanya Belyaev
+
+ - few fixed for LoKi::Range<-->Gaudi::Range problem
 
 ! ==================== Phys/Bender v14r0p3 2010-04-23 =========================
 

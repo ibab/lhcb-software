@@ -40,7 +40,7 @@ with the campain of Dr.O.Callot et al.:
 # =============================================================================
 __author__  = 'Vanya BELYAEV ibelyaev@physics.syr.edu'
 __date__    = "2004-07-11"
-__version__ = ' CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.9 $' 
+__version__ = ' CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.10 $' 
 # =============================================================================
 
 import os 
@@ -63,25 +63,8 @@ try:
 except:
     pass
 
-## massive imports of everything 
-from LoKiCore.decorators          import *
-from LoKiPhys.decorators          import *
-from LoKiArrayFunctors.decorators import *
-from LoKiTrigger.decorators       import *
-from LoKiAlgo.decorators          import *
-
-from LoKiCore.functions           import *
-
-## Get the application manager 
-def appMgr( *varg , **kwarg ) :
-    """
-    Get the application manager 
-    """
-    import GaudiPython.Bindings
-    _g = GaudiPython.Bindings._gaudi
-    if not _g : _g = GaudiPython.Bindings.AppMgr( *varg , **kwarg )
-    if not 'LoKiSvc' in _g.ExtSvc : _g.ExtSvc += [ 'LoKiSvc']
-    return _g
+from GaudiPython.Bindings import gbl as cpp 
+cpp.Gaudi.createApplicationMgr
 
 ## ============================================================================
 ## post action 
@@ -149,6 +132,7 @@ def run ( nEvents     =   -1 ,
         
     return st 
 
+
 # ==============================================================================
 ## define the input data for Bender job
 def setData ( files , catalogs = [] ) :
@@ -206,13 +190,34 @@ def setData ( files , catalogs = [] ) :
 ## ditto...
 setInputData = setData
 
+## ============================================================================
+## Get the application manager 
+def appMgr( *varg , **kwarg ) :
+    """
+    Get the application manager 
+    """
+    import GaudiPython.Bindings
+    _g = GaudiPython.Bindings._gaudi
+    ## if not _g : _g = GaudiPython.Bindings.AppMgr( *varg , **kwarg )
+    if not _g : _g = GaudiPython.Bindings.AppMgr()
+    if not 'LoKiSvc' in _g.ExtSvc : _g.ExtSvc += [ 'LoKiSvc']
+    return _g
+
+
+## massive imports of everything 
+from LoKiCore.decorators          import *
+from LoKiPhys.decorators          import *
+from LoKiArrayFunctors.decorators import *
+from LoKiTrigger.decorators       import *
+from LoKiAlgo.decorators          import *
+from LoKiCore.functions           import *
+
 # =============================================================================
 from Gaudi.Configuration import importOptions
 
 # =============================================================================
 ## apply some last-minutes fixes
 import Bender.Fixes
-
 
 ## @var LoKi   : define namespace LoKi 
 LoKi   = cpp.LoKi
@@ -222,6 +227,7 @@ Bender = cpp.Bender
 LHCb   = cpp.LHCb
 ## @var Gaudi  : define namespace Gaudi
 Gaudi  = cpp.Gaudi
+
 
 _SC=cpp.StatusCode
 SUCCESS = _SC(_SC.SUCCESS,True)
@@ -233,7 +239,6 @@ def _iadd_new_ (s,v) :
     return _iadd_old_(s,float(v))
 _SE.__iadd__ = _iadd_new_
 _SE.__str__  = _SE.toString 
-
 
 
 # =============================================================================

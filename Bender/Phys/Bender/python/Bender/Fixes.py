@@ -41,10 +41,14 @@ with the campain of Dr.O.Callot et al.:
 # =============================================================================
 __author__  = 'Vanya BELYAEV ibelyaev@physics.syr.edu'
 __date__    = "2004-07-11"
-__version__ = ' CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $'
+__version__ = ' CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.8 $'
 __all__     = ()
 # =============================================================================
-    
+
+## some straneglines... Refles feature ?
+from GaudiPython.Bindings import gbl as cpp
+
+# =============================================================================
 ## "at-exit action 
 def _bender_at_exit_ () :
     """
@@ -149,10 +153,19 @@ if not hasattr ( _EvtSel , '_openNew_') :
 ## Decorate iDataSvc with proper dir/ls methods '
 import AnalysisPython.Dir 
 
+# =============================================================================
+## decorate the ranges
+# =============================================================================
+import LoKiCore.decorators
+cpp.Gaudi.RangeBase_ .__iter__     = LoKiCore.decorators._iter_1_ 
+cpp.Gaudi.RangeBase_ .__getslice__ = LoKiCore.decorators._slice_ 
+
+
 print '*'*120
 print 'Bender.Fixes: 1. add custom "atexit" handler'
 print 'Bender.Fixes: 2. decorate iEventSelector to open RAW/MDF & CASTOR -files'
 print 'Bender.Fixes: 3. decorate iDataSvc with proper "dir/ls" methods '
+print 'Bender.Fixes: 4. Fix the problem with Gaudi.RangeBase_ '
 print '*'*120
 
 # =============================================================================
