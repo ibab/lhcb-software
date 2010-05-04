@@ -1,4 +1,4 @@
-// $Id: Bd2KstarMuMuAngleCalculator.h,v 1.3 2010-04-29 16:38:37 tblake Exp $
+// $Id: Bd2KstarMuMuAngleCalculator.h,v 1.4 2010-05-04 21:30:17 tblake Exp $
 #ifndef BD2KSTARMUMUANGLECALCULATOR_H 
 #define BD2KSTARMUMUANGLECALCULATOR_H 1
 
@@ -10,8 +10,8 @@
 
 /** @class Bd2KstarMuMuAngleCalculator Bd2KstarMuMuAngleCalculator.h
  *  
- *  Calculates the three angles in a B->mu mu K Pi decay, eg B->MuMuK*
- *  Angles given in both the helicity and transversity bases.
+ *  Calculates the three angles in a \f$ B_{d} \rightarrow K^{+} \pi^{-} \mu^{+} \mu^{-} \f$ decay.
+ *  Angles are given in both the helicity and transversity bases.
  *
  *
  *  The Helicity Basis for \f$ B_{d} \rightarrow K^{*}(892)0 \mu^{+} \mu^{-} \f$
@@ -19,20 +19,20 @@
  * 
  *  These angles are defined as:
  * 
- *  \f$ \theta_{L} \f$ as the angle between the \f${\mu_{+}}(\mu_{-})\f$ and the direction 
- *  opposite the \f${B_{d}}(\bar{B_{d}})\f$ in the rest frame of the \f${\mu_{+}\mu_{-}}\f. 
- *  Equivalently this is the angle between the \f${\mu_{+}}$\f in the \f${\mu_{+}\mu_{-}}\f rest 
- *  frame and the direction of the \f${\mu_{+}\mu_{-}}\f in the B rest-frame.
+ *  \f$ \theta_{L} \f$ as the angle between the \f$ {\mu^{+}}(\mu^{-}) \f$ and the direction 
+ *  opposite the \f$ {B_{d}}(\bar{B_{d}}) \f$ in the rest frame of the \f$ {\mu^{+}\mu^{-}} \f$. 
+ *  Equivalently this is the angle between the \f$ {\mu^{+}} \f$ in the \f$ {\mu^{+}\mu^{-}} \f$ rest 
+ *  frame and the direction of the \f$ {\mu^{+}\mu^{-}} \f$ in the B rest-frame.
  *
- *  \f$ \theta_{K} \f$ as the angle between the \f${K+}\f$ in the \f${K*}$\f frame and the \f${K*}$\f 
- *  in the B rest-frame.
+ *  \f$ \theta_{K} \f$ as the angle between the \f$ K \f$ in the \f$ {K^{*}} \f$ frame and 
+ *  the \f$ K^{*} \f$ in the B rest-frame.
  *  
  *  \f$ \phi \f$ is defined in the B rest-frame as the angle between the planes defined by the 
- *  \f${\mu_{+}}(\mu_{-})\f$ and the \f${K\pi}\f$.
+ *  \f$ {\mu_{+}}(\mu_{-}) \f$ and the \f$ K \pi \f$.
  *
  *
  *  @author Thomas Blake
- *  @date   2007-08-02
+ *  @date   2010-05-04
  */
 
 class Bd2KstarMuMuAngleCalculator : public GaudiTool, virtual public IP2VVPartAngleCalculator {
