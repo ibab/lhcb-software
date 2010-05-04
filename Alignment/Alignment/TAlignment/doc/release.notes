@@ -3,6 +3,9 @@ Package	:	Alignment/TAlignment
 Package Coordinator	:	Jan Amoraal, Johan Blouw
 Purpose	: collection of alignment algorithms
 
+! 2010-05-04 Johan Blouw
+ - small changes to TStation algorithm
+
 ! 2010-04-21 - Wouter Hulsbergen
  - make alignmentelement aware of velo motion-system-transform
 
