@@ -7,7 +7,7 @@ version           v3r19
 #============================================================================
 # Structure
 #============================================================================
-branches          cmt doc src
+branches          cmt doc src python
 
 #============================================================================
 # Used packages. Specify the version, * at the end specifies 'any revision'
@@ -29,6 +29,7 @@ library          TsaAlgorithms    ../src/*.cpp
 #============================================================================
 # define component library link options
 #============================================================================
+apply_pattern    install_python_modules
 apply_pattern    component_library library=TsaAlgorithms
 
 #macro_append cppflags ' -g '

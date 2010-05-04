@@ -4,6 +4,9 @@
 ! Purpose     : Tsa algorithms
 !----------------------------------------------------------------------------
 
+! 2010-05-04 - Rob Lambert
+ - Added TsaAlgConf.py to replace the options file TsaSeeding.py
+
 !======================= TsaAlgorithms v3r19 2010-04-26====================
 ! 2010-04-22 M Needham
  - Abort in case of hot events [this + previous commit] 
