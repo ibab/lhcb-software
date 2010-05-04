@@ -1,9 +1,15 @@
-!$Id: release.notes,v 1.21 2010-04-26 14:25:27 jpalac Exp $
+!$Id: release.notes,v 1.22 2010-05-04 15:36:10 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DSTWriters
 ! Responsible : Juan PALACIOS
 ! Purpose     : Python code for DST writers.
 !-----------------------------------------------------------------------------
+
+! 2010-05-04 - Juan Palacios
+ - python/DSTWriters/dstwriterutils.py
+  . Fix ConfigurableList to return 'algos' attribute by default.
+ - cmt/requirements
+  . Increase to v1r4p3
 
 ! ======================== DSTWriters v1r4p2 2010-04-26 ======================
 
