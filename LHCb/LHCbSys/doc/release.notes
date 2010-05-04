@@ -5,8 +5,6 @@
 ! Purpose     : LHCb base classes and event model
 !-----------------------------------------------------------------------------
 
-- Packages removed: RichRecBase - moved to RecSys
-
 </PRE><H1><A NAME=v31r0p1>2010-04-29 LHCbSys v31r0p1</A></H1><PRE>
 This version uses Gaudi v21r9 and LCG_58c
 
