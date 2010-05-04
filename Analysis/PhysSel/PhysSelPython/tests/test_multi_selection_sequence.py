@@ -1,7 +1,7 @@
 #!/usr/bin/env python
-#$Id: test_multi_selection_sequence.py,v 1.3 2010-05-04 14:25:37 jpalac Exp $
+#$Id: test_multi_selection_sequence.py,v 1.4 2010-05-04 14:29:58 jpalac Exp $
 '''
-Test suite for SelectionSequence class.
+Test suite for MultiSelectionSequence class.
 '''
 
 __author__ = "Juan PALACIOS juan.palacios@nikhef.nl"
@@ -25,7 +25,7 @@ def test_instantiate_dataondemand_multi_sequencer() :
     seq = MultiSelectionSequence('Seq00', Sequences = [seq00, seq01])
     assert seq.outputLocations() == ['Phys/Sel00', 'Phys/Sel01']
 
-def test_instantiate_sequencer() :
+def test_instantiate_multi_sequencer() :
     sel00 = AutomaticData('Sel00', Location = 'Phys/Sel00')
     sel01 = AutomaticData('Sel01', Location = 'Phys/Sel01')
     alg00 = DummyAlgorithm('Alg000')
