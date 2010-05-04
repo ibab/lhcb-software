@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# $Id: copy_files_to_db.py,v 1.1 2009-10-27 16:12:44 wouter Exp $
+# $Id: copy_files_to_db.py,v 1.2 2010-05-04 09:43:31 jblouw Exp $
 import sys
 
 import CondDBUI
@@ -19,6 +19,14 @@ import os, re
 ################################################################################
 def main():
     parser = OptionParser()
+    parser.add_option( "-P", "--parent-tag",
+                      dest="ptag", type="string",
+                      help="parent tag from which the new tag should be linked",
+                      default="HEAD")
+    parser.add_option( "-T", "--tag-name",
+                      dest="tagname", type="string",
+                      help="tag under which name data will be stored & tagged",
+                      default="HEAD")
     parser.add_option("-c", "--connect-string",
                       dest="connectString", type="string",
                       help="cool::DatabaseId to use for the connection [default: %default]",
@@ -70,11 +78,21 @@ def main():
     if options.includeFile:
         includes = [ l.strip() for l in open(options.includeFile).xreadlines() ]
         
+    print "includes = ", includes
     CondDBUI.Admin.MakeDBFromFiles(options.source, db,
                                    includes = includes, excludes = [],
                                    verbose = True,
                                    since = options.since, until = options.until
                                    )
-    
+   
+    print "Connecting with ", options.connectString
+    print "Using default tag ", options.tagname
+    db.setDefaultTag( options.tagname )
+    print "Tagging folder ", options.dest, " with tag ", options.tagname
+    db.recursiveTag( "/", options.tagname, "testing 1.. 2.. 3..")
+    print "Relating new tag to the node..."
+#    db.createTagRelation( '/Conditions', options.ptag, options.ptag )
+    taglist = db.getTagList( options.dest )
+
 if __name__ == '__main__':
     main()

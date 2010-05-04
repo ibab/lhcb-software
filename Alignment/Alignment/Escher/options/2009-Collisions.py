@@ -39,7 +39,7 @@ ATrackSelector().UseWeights = True
 
 # add 2009 collision data files
 EventSelector().Input = [
-    "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/data/2009/DST/00005843/0000/00005843_00000001_1.dst' TYP='POOL_ROOTTREE' OPT='READ'"
+    "DATAFILE='file:/lhcb/data/2009/DST/00005843/0000/00005843_00000001_1.dst' TYP='POOL_ROOTTREE' OPT='READ'"
 #    "DATAFILE='file:/data/data/2009/DST/00005714/0000/00005714_00000001_1.dst' SVC='LHCb::MDFSelector'",
 #    "DATAFILE='file:/media/disk-2/data/2009/DST/00005738/0000/00005738_00000001_1.dst' SVC='LHCb::MDFSelector'"
     ]

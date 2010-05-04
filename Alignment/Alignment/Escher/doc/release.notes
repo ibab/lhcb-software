@@ -4,6 +4,9 @@ Package Coordinator : Johan Blouw and Rob Lambert
 Purpose : Gaudi application used to perform 
           alignment of the LHCb detector components
 
+! 2010-05-04 Johan Blouw
+ - small change to gaudiiter, so that the IncidentSvc knows about
+   the incidents depending on which alignment algorith is used.
 
 ! 2010-05-03 Wouter Hulsbergen
  - small change in gaudipariter.py

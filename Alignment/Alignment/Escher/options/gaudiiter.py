@@ -80,9 +80,17 @@ for i in range( opts.numiter ) :
 
     # fire incident for update
     from GaudiPython import gbl
+    from Configurables import Escher
     incSvc = appMgr.service( 'IncidentSvc', 'IIncidentSvc' )
     updateConstants = gbl.Incident( 'Alignment', 'UpdateConstants' )
+    if Escher().getProp("Incident") == "GlobalMPedeFit":
+       updateConstants = gbl.Incident( 'Alignment', 'GlobalMPedeFit' )
+       printUniformity = gbl.Incident( 'Alignment', 'PrintUniformTD')
+       updateTrackSelector = gbl.Incident( 'Alignment', 'ResetUniformity' )
+       incSvc.fireIncident( printUniformity )
+       incSvc.fireIncident( updateTrackSelector )
     incSvc.fireIncident( updateConstants )
+
 
 #exit the appmgr for finalize
 appMgr.exit()
