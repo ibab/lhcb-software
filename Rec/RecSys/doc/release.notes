@@ -8,8 +8,6 @@ Purpose: LHCb reconstruction packages.
 ! 2010-05-03 - Rob Lambert
  - eliminated importOptions from the configurable
 
-! 2010-05-03 - Rob Lambert
- - Added package RichRecBase, repackaged out of LHCb
 
 </PRE><H1><A NAME=v9r2p1>2010-04-28 RecSys v9r2p1</A></H1><PRE>
 This version uses Gaudi v21r9 and LHCb v31r0p1
