@@ -1,6 +1,13 @@
+2010-05-04  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* scripts/mkLCGCMTtar: fixed problem when creating the LCGGrid tarball with LHCbDirac
+	has base.
+	* python/LbLegacy/install_project.py: changed the name of the latest data soft link
+	into "v999r0" instead of "v99r9"
+
 2010-04-30  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* python/LbLegacy/install_project.py: readded the setup_script part which was 
+	* python/LbLegacy/install_project.py: readded the setup_script part which was
 	removed by mistake.
 	* scripts/mkproject: removed obsolete actions "h" and "w".
 

@@ -102,16 +102,16 @@ def get_base_project(native_version):
     NAME = native_version.split('_')[0]
     version = native_version.split('_')[1]
     Name = NAME.lower().capitalize()
-    if Name == "Lhcbdirac" :
-        Name == "LHCbDirac"
-    if NAME == 'LCGCMT': 
+    if NAME == "LHCBDIRAC" :
+        Name = "LHCbDirac"
+    if NAME == 'LCGCMT':
         Name = 'LCG'
-    if NAME == 'LHCBGRID' : 
+    if NAME == 'LHCBGRID' :
         Name = 'LHCbGrid'
     NameSys = Name+'Sys'
-    if Name == 'Gaudi': 
+    if Name == 'Gaudi':
         NameSys = Name+'Release'
-    if Name == 'LCG' : 
+    if Name == 'LCG' :
         NameSys = Name+'_Release'
     release_area = Name+'_release_area'
     if os.path.isdir(os.path.join(os.environ[release_area],Name+'Env',version)):
@@ -163,7 +163,8 @@ def get_runtime_cmtpath(native_version):
 def get_cmtpath(native_version):
     os.environ['CMTPATH'] = get_runtime_cmtpath(native_version)
     status,CMTPATH = commands.getstatusoutput('cmt show set_value CMTPATH')
-    if CMTPATH[0] == ':' : CMTPATH = CMTPATH[1:]
+    if CMTPATH[0] == ':' :
+        CMTPATH = CMTPATH[1:]
     os.environ['CMTPATH'] = CMTPATH
     print 'CMTPATH=%s' % CMTPATH
     return CMTPATH
@@ -230,12 +231,12 @@ def get_native_versions(native_version, binary):
             packages_versions[pack] = vers
 
     os.system(rmcmd+natives)
-    
+
     for pak in packages_versions.keys() :
         if not packages_versions[pak] :
             print "%s has no version. Removing it from the list" % pak
             del packages_versions[pak]
-    
+
     return packages_versions
 
 #
@@ -334,15 +335,18 @@ def get_tar_files(native_version, packages_versions,binary_dir, output_file):
         tarfile = os.path.join(lhcbtar,main_dir+'_'+binary_dir+'.tar.gz')
 
     if tarfile.endswith(".tar.gz") :
-        md5file = tarfile.replace(".tar.gz",".md5")        
+        md5file = tarfile.replace(".tar.gz",".md5")
     else :
         md5file = None
 
-    if not os.path.exists(main_dir): os.mkdir(main_dir)
+    if not os.path.exists(main_dir):
+        os.mkdir(main_dir)
     os.chdir(main_dir)
-    if not os.path.exists(binary_dir): os.mkdir(binary_dir)
+    if not os.path.exists(binary_dir):
+        os.mkdir(binary_dir)
     os.chdir(binary_dir)
-    if  os.path.exists('external'): os.system(rmcmd+' external')
+    if  os.path.exists('external'):
+        os.system(rmcmd+' external')
     os.mkdir('external')
     os.chdir('external')
 
@@ -544,8 +548,6 @@ if __name__ == "__main__":
             output_file = value
         if key in ('-e', '--exclude'):
             exclusion_pattern = value
-            print exclusion_pattern
-#      sys.exit()
         if key in ('-p', '--plugins'):
             plugins_flag = 1
             native_version = 'PLUGINS'

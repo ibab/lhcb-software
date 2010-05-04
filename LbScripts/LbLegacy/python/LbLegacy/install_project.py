@@ -1003,7 +1003,7 @@ def getProjectTar(tar_list, already_present_list=None):
                         if extradir == "TOOLS" :
                             ltg = os.path.join(tdir, "pro")
                         else :
-                            ltg = os.path.join(tdir, "v99r9")
+                            ltg = os.path.join(tdir, "v999r0")
                         if os.path.islink(ltg) or os.path.isfile(ltg):
                             os.remove(ltg)
                         elif os.path.isdir(ltg) :
@@ -1821,7 +1821,7 @@ def untarFile(fname):
                             tar.extract(tarinfo)
                 except tarfile.ExtractError:
                     os.remove(filename)
-                    log.warning('extract error %s %s %s ' % (filename, tarinfo.name))
+                    log.warning('extract error %s %s ' % (filename, tarinfo.name))
                     if os.path.exists(md5filename):
                         os.remove(md5filename)
                         log.info('%s removed' % md5filename)
