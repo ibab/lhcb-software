@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-#$Id: test_multi_selection_sequence.py,v 1.2 2010-05-04 14:16:54 jpalac Exp $
+#$Id: test_multi_selection_sequence.py,v 1.3 2010-05-04 14:25:37 jpalac Exp $
 '''
 Test suite for SelectionSequence class.
 '''
@@ -20,8 +20,8 @@ from SelPy.configurabloids import ( DummyAlgorithm,
 def test_instantiate_dataondemand_multi_sequencer() :
     sel00 = AutomaticData('Sel00', Location = 'Phys/Sel00')
     sel01 = AutomaticData('Sel01', Location = 'Phys/Sel01')
-    seq00 = SelectionSequence('Seq00', TopSelection = sel00)
-    seq01 = SelectionSequence('Seq01', TopSelection = sel01)
+    seq00 = SelectionSequence('Seq00x', TopSelection = sel00)
+    seq01 = SelectionSequence('Seq01x', TopSelection = sel01)
     seq = MultiSelectionSequence('Seq00', Sequences = [seq00, seq01])
     assert seq.outputLocations() == ['Phys/Sel00', 'Phys/Sel01']
 
@@ -48,13 +48,13 @@ def test_multi_sequencer_sequences() :
     _sel06 = AutomaticData(Location = 'Phys/Sel06')
     _sel07 = AutomaticData(Location = 'Phys/Sel07')
 
-    sel00_01 = Selection('000110', Algorithm = DummyAlgorithm('Alg00_01'),
+    sel00_01 = Selection('0000110', Algorithm = DummyAlgorithm('Alg00_01'),
                          RequiredSelections = [_sel00, _sel01])
-    sel02_03 = Selection('000111', Algorithm = DummyAlgorithm('Alg02_03'),
+    sel02_03 = Selection('0000111', Algorithm = DummyAlgorithm('Alg02_03'),
                          RequiredSelections = [_sel02, _sel03])
-    sel04_05 = Selection('000112', Algorithm = DummyAlgorithm('Alg04_05'),
+    sel04_05 = Selection('0000112', Algorithm = DummyAlgorithm('Alg04_05'),
                          RequiredSelections = [_sel04, _sel05])
-    sel06_07 = Selection('000113', Algorithm = DummyAlgorithm('Alg06_07'),
+    sel06_07 = Selection('0000113', Algorithm = DummyAlgorithm('Alg06_07'),
                          RequiredSelections = [_sel06, _sel07])
 
     selA = Selection('000112A', Algorithm = DummyAlgorithm('Alg001A'),
@@ -121,11 +121,14 @@ def test_multi_sequencer_sequences() :
 
     assert preselsA == seqAlgosA[:len(preselsA)]
     assert preselsB == seqAlgosB[:len(preselsB)]
-#    assert selA.algorithm() == ref_algosB[len(ref_algosA)-len(preselsA)-1]
+    # selA must be just before postsels
+    assert selA.algorithm() == ref_algosA[len(ref_algosA)-(len(postselsA)+1)]
     assert postselsA == seqAlgosA[len(ref_algosA)-len(postselsA):]
     assert postselsB == seqAlgosB[len(ref_algosB)-len(postselsB):]
+    # selB must be just before postsels
+    assert selB.algorithm() == ref_algosB[len(ref_algosB)-(len(postselsB)+1)]
 
-    
+    # order doesn't matter
     for sel in [sel04_05, sel06_07]:
         assert sel.algorithm() in ref_algosB[len(preselsB):len(ref_algosB)-len(postselsB)]
     for sel in [sel00_01, sel02_03]:

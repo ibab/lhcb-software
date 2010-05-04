@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-#$Id: test_selection_sequence.py,v 1.18 2010-05-04 14:16:54 jpalac Exp $
+#$Id: test_selection_sequence.py,v 1.19 2010-05-04 14:25:37 jpalac Exp $
 '''
 Test suite for SelectionSequence class.
 '''
@@ -159,8 +159,10 @@ def test_clone_sequence() :
     assert len(seqAlgos) == 7
     assert presels == seqAlgos[:len(presels)]
     assert postsels == seqAlgos[len(ref_algos)-len(postsels):]
-
-    for sel in [sel01, sel02, sel03]:
+    # sel03 must come just before the post selection algos.
+    assert sel03.algorithm() == ref_algos[len(ref_algos)-(len(presels)+1)]
+    # order of sel01 and sel02 doesn't matter.
+    for sel in [sel01, sel02]:
         assert sel.algorithm() in ref_algos[len(presels):len(ref_algos)-len(postsels)]
 
     seqAlgos = seq.algos
