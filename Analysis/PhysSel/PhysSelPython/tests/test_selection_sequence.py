@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-#$Id: test_selection_sequence.py,v 1.17 2010-04-26 13:13:43 jpalac Exp $
+#$Id: test_selection_sequence.py,v 1.18 2010-05-04 14:16:54 jpalac Exp $
 '''
 Test suite for SelectionSequence class.
 '''
@@ -157,8 +157,8 @@ def test_clone_sequence() :
                  postsel1]
 
     assert len(seqAlgos) == 7
-    assert presels == ref_algos[:len(presels)]
-    assert postsels == ref_algos[len(ref_algos)-len(postsels):]
+    assert presels == seqAlgos[:len(presels)]
+    assert postsels == seqAlgos[len(ref_algos)-len(postsels):]
 
     for sel in [sel01, sel02, sel03]:
         assert sel.algorithm() in ref_algos[len(presels):len(ref_algos)-len(postsels)]
@@ -166,8 +166,8 @@ def test_clone_sequence() :
     seqAlgos = seq.algos
 
     assert len(seqAlgos) == 7
-    assert presels == ref_algos[:len(presels)]
-    assert postsels == ref_algos[len(ref_algos)-len(postsels):]
+    assert presels == seqAlgos[:len(presels)]
+    assert postsels == seqAlgos[len(ref_algos)-len(postsels):]
 
     for sel in [sel01, sel02, sel03]:
         assert sel.algorithm() in ref_algos[len(presels):len(ref_algos)-len(postsels)]

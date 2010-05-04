@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-#$Id: test_multi_selection_sequence.py,v 1.1 2010-05-04 13:55:00 jpalac Exp $
+#$Id: test_multi_selection_sequence.py,v 1.2 2010-05-04 14:16:54 jpalac Exp $
 '''
 Test suite for SelectionSequence class.
 '''
@@ -72,16 +72,19 @@ def test_multi_sequencer_sequences() :
     postsel2 = DummyAlgorithm('Postsel2')
     postsel3 = DummyAlgorithm('Postsel3')
 
-    presels =  [presel0, presel1]
-    postsels = [postsel0, postsel1]
+    preselsA =  [presel0, presel1]
+    postselsA = [postsel0, postsel1]
+    preselsB =  [presel2, presel3]
+    postselsB = [postsel2, postsel3]
+
     seqA = SelectionSequence('Seq0002A',
                              TopSelection = selA,
-                             EventPreSelector = [presel0,presel1],
-                             PostSelectionAlgs =[postsel0, postsel1])
+                             EventPreSelector = preselsA,
+                             PostSelectionAlgs =postselsA)
     seqB = SelectionSequence('Seq0002B',
                              TopSelection = selB,
-                             EventPreSelector = [presel0,presel1],
-                             PostSelectionAlgs =[postsel2, postsel3])
+                             EventPreSelector = preselsB,
+                             PostSelectionAlgs =postselsB)
 
     multiSeq = MultiSelectionSequence('MultiSeqAB', Sequences = [seqA, seqB])
 
@@ -92,26 +95,42 @@ def test_multi_sequencer_sequences() :
     print 'algos in seqB', len(seqB.algos)
     
     seqAlgos = multiSeq.sequence(sequencerType=DummySequencer).Members
+    seqAlgosA = seqAlgos[0].Members
+    seqAlgosB = seqAlgos[1].Members
     assert len(seqAlgos) == len(multiSeq.sequences)
 
-    '''
-    ref_algos = [presel0,
-                 presel1,
-                 sel02.algorithm(),
-                 sel01.algorithm(),
-                 sel03.algorithm(),
-                 postsel0,
-                 postsel1]
+    
+    ref_algosA = [presel0,
+                  presel1,
+                  sel02_03.algorithm(),
+                  sel00_01.algorithm(),
+                  selA.algorithm(),
+                  postsel0,
+                  postsel1]
 
-    assert len(seqAlgos) == 7
+    ref_algosB = [presel2,
+                  presel3,
+                  sel06_07.algorithm(),
+                  sel04_05.algorithm(),
+                  selB.algorithm(),
+                  postsel2,
+                  postsel3]
 
-    assert presels == ref_algos[:len(presels)]
 
-    assert postsels == ref_algos[len(ref_algos)-len(postsels):]
+    assert len(seqAlgos) == 2
 
-    for sel in [sel01, sel02, sel03]:
-        assert sel.algorithm() in ref_algos[len(presels):len(ref_algos)-len(postsels)]
-    '''
+    assert preselsA == seqAlgosA[:len(preselsA)]
+    assert preselsB == seqAlgosB[:len(preselsB)]
+#    assert selA.algorithm() == ref_algosB[len(ref_algosA)-len(preselsA)-1]
+    assert postselsA == seqAlgosA[len(ref_algosA)-len(postselsA):]
+    assert postselsB == seqAlgosB[len(ref_algosB)-len(postselsB):]
+
+    
+    for sel in [sel04_05, sel06_07]:
+        assert sel.algorithm() in ref_algosB[len(preselsB):len(ref_algosB)-len(postselsB)]
+    for sel in [sel00_01, sel02_03]:
+        assert sel.algorithm() in ref_algosA[len(preselsA):len(ref_algosA)-len(postselsA)]
+
 
 if '__main__' == __name__ :
 
