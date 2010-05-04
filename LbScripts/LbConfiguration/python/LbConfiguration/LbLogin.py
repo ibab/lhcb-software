@@ -51,9 +51,11 @@ from LbConfiguration.Platform import getBinaryDbg, getBinaryOpt
 from LbConfiguration.Platform import getCompiler, getPlatformType, getArchitecture
 from LbConfiguration.Platform import isBinaryDbg, NativeMachine
 from LbConfiguration.External import CMT_version
+from LbConfiguration.Version import sortStrings
 from LbUtils.Script import SourceScript
 from LbUtils.CVS import CVS2Version
 from LbUtils.Path import multiPathGet, multiPathGetFirst, multiPathJoin
+from LbUtils.Path import envPathPrepend
 import logging
 import shutil
 
@@ -170,7 +172,20 @@ class LbLoginScript(SourceScript):
         parser.add_option("--no-compat",
                           dest="no_compat",
                           action="store_true",
-                          help="prevent the usage detection of the compat libraries [default: %default]")
+                          help="prevent the usage of the Compat project in SetupProject[default: %default]")
+        parser.add_option("--use-compat",
+                          dest="no_compat",
+                          action="store_false",
+                          help="add the usage of the Compat project in SetupProject")
+        parser.set_defaults(compat_prepend=None)
+        parser.add_option("--compat-prepend",
+                          dest="compat_prepend",
+                          action="store_true",
+                          help="(internal) Prepend the Compat env to the script env[default: %default]")
+        parser.add_option("--no-compat-prepend",
+                          dest="compat_prepend",
+                          action="store_false",
+                          help="(internal) prevent the usage of the Compat env in the script")
         parser.set_defaults(compat_version="v*")
         parser.add_option("--compat-version",
                           dest="compat_version",
@@ -713,8 +728,33 @@ class LbLoginScript(SourceScript):
                     ev["CMTPATH"] = ev["User_release_area"]
                     log.debug("CMTPATH is set to %s" % ev["CMTPATH"])
 
+    def setupCompat(self):
+        """ preset the compat entries before the call to SetupProject """
+        log = logging.getLogger()
+        ev = self.Environment()
+        opts = self.options
+        log.debug("Trying to prepend the Compat project")
+
+        compat_dir = multiPathGetFirst(ev["LHCBRELEASES"], "COMPAT")
+
+        if compat_dir :
+            lastver = None
+            if (not opts.compat_version) or opts.compat_version == "v*" :
+                compat_lst = [x for x in os.listdir(compat_dir) if x.startswith("COMPAT_") ]
+                if compat_lst :
+                    lastver = sortStrings(compat_lst, safe=True)[-1]
+            else :
+                lastver = "COMPAT_%s" % opts.compat_version
+            if lastver :
+                compat_rel = os.path.join(compat_dir, lastver)
+                compat_lib = os.path.join(compat_rel, "CompatSys", ev["CMTOPT"], "lib")
+                compat_bin = os.path.join(compat_rel, "CompatSys", ev["CMTOPT"], "bin")
+                envPathPrepend("PATH", compat_bin)
+                envPathPrepend("LD_LIBRARY_PATH", compat_lib)
+
 
     def setupLbScripts(self):
+        """ Call to SetupProject with LbScripts and python """
         log = logging.getLogger()
         opts = self.options
         ev = self.Environment()
@@ -772,9 +812,17 @@ class LbLoginScript(SourceScript):
             if not opts.use_cmtextratags :
                 if os.environ.has_key("CMTEXTRATAGS") :
                     del os.environ["CMTEXTRATAGS"]
-
-            SetupProject().main(setupprojargs)
-
+            if opts.compat_prepend is None :
+                try :
+                    SetupProject().main(setupprojargs)
+                except ImportError:
+                    log.debug("SetupProject failed. Retrying with Compat prepended")
+                    self.setupCompat()
+                    SetupProject().main(setupprojargs)
+            else :
+                if opts.compat_prepend :
+                    self.setupCompat()
+                SetupProject().main(setupprojargs)
 
     def copyEnv(self):
         ev = self.Environment()
@@ -796,6 +844,7 @@ class LbLoginScript(SourceScript):
 
         self.setCMTConfig(debug)
         self.setCMTPath()
+        self.setupCompat()
 
         # return a copy otherwise the environment gets restored
         # at the destruction of the instance

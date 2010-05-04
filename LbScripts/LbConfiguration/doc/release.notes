@@ -1,3 +1,13 @@
+2010-05-04  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbConfiguration/LbLogin.py: added the internal setup of Compat.
+	- the default behavior: if SetupProject fails then the Compat entries are prepended to the
+	PATH and LD_LIBRARY_PATH and SetupProject is called again.
+	- if --compat-prepend is used: The Compat entries are prepended anyway
+	- if --no-compat-prepend is used : No Compat prepending is done.
+	This modification only modifies the script internal environment. It doesn't modify the
+	generated environment.
+
 2010-04-27  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* scripts/generateLogin: factored out the file testing in the generation of the wrapper shells group_login,

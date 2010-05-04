@@ -44,17 +44,17 @@ class LibPath(Path):
     def __init__(self):
         if sys.platform != "win32" :
             varname = "LD_LIBRARY_PATH"
-        else : 
+        else :
             varname = "PATH"
         super(LibPath, self).__init__(varname)
-        
+
 
 class PyPath(Path):
     def __init__(self, varname):
         super(PyPath, self).__init__("PYTHONPATH")
         self.addPatSep(".")
         self.enableSubLevel()
-        
+
 class OptSearchPath(PyPath):
     def __init__(self):
         super(OptSearchPath, self).__init__("JOBOPTSEARCHPATH")
@@ -64,15 +64,34 @@ class OptSearchPath(PyPath):
 class HelpPath(Path):
     def __init__(self, varname):
         super(HelpPath, self).__init__("HPATH")
-        
+
 class CMTPath(Path):
     def __init__(self):
         super(CMTPath, self).__init__("CMTPATH")
-        
+
 class CMTProjectPath(Path):
     def __init__(self):
         super(CMTProjectPath, self).__init__("CMTPROJECTPATH")
 
+def pathPrepend(path, dir):
+    path_list = path.split(os.pathsep)
+    path_list.insert(0, dir)
+    return os.pathsep.join(path_list)
+
+def pathAppend(path, dir):
+    path_list = path.split(os.pathsep)
+    path_list.append(dir)
+    return os.pathsep.join(path_list)
+
+def envPathPrepend(pathname, dir, env_dict=None):
+    if not env_dict :
+        env_dict = os.environ
+    env_dict[pathname] = pathPrepend(env_dict[pathname], dir)
+
+def envPathAppend(pathname, dir, env_dict=None):
+    if not env_dict :
+        env_dict = os.environ
+    env_dict[pathname] = pathAppend(env_dict[pathname], dir)
 
 def multiPathJoin(path, subdir):
     pathlist = []

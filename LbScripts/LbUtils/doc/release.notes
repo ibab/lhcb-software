@@ -1,3 +1,7 @@
+2010-05-04  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbUtils/Path.py: added path append and path prepend functions.
+
 2010-03-29  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/requirements: release of version v2r1
@@ -28,7 +32,7 @@
 	to be tarred.
 	* python/LbUtils/Lock.py: flush and sync before closing the
 	lock file.
-	* python/LbUtils/File.py: 
+	* python/LbUtils/File.py:
 	- added md5 sum computation and check.
 	- flush and sync the md5 files before closing them.
 	- added optional buffer size for the md5 sum computation.
@@ -41,7 +45,7 @@
 
 2010-03-08  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* python/LbUtils/Lock.py: added new lock functions 
+	* python/LbUtils/Lock.py: added new lock functions
 	* python/LbUtils/Tar.py: added locking at tarball creation.
 
 2010-02-26  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
@@ -64,7 +68,7 @@
 
 2010-02-09  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* python/LbUtils/Script.py: implemented the SourceScript file which is a factored out code 
+	* python/LbUtils/Script.py: implemented the SourceScript file which is a factored out code
 	used by AllProjectsSetup and LbLogin. This is the default script to be used for python scripts
 	that modify the environment.
 	* python/LbUtils/Env.py: fixed the keys usage in the Environment class. The problem was that
@@ -72,7 +76,7 @@
 
 2010-02-05  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* python/LbUtils/File.py: 
+	* python/LbUtils/File.py:
 	- added checkEmptyFiles function. This will be used to validate a build.
 	- factored out the search of the empty files in a generator function getEmptyFiles.
 
@@ -83,7 +87,7 @@
 2010-01-13  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* python/LbUtils/Path.py: removed method decorator to be compatible with Python 2.3
-	* python/LbUtils/_helpers/subprocess.py: fixed compatibility with Python 2.3 
+	* python/LbUtils/_helpers/subprocess.py: fixed compatibility with Python 2.3
 
 2009-12-17  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
@@ -93,7 +97,7 @@
 
 	* python/LbUtils/__init__.py: protected the imports which do not work in version of python
 	prior to 2.4.
-	* python/LbUtils/Processes.py: added the function getNumberOfCores. It detects on 
+	* python/LbUtils/Processes.py: added the function getNumberOfCores. It detects on
 	windows, OSX and Linux the number of cores available at the running machine.
 
 2009-11-23  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
@@ -106,7 +110,7 @@
 
 2009-11-11  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* python/LbUtils/Script.py: store the config has a data member of the Script class. Delay the 
+	* python/LbUtils/Script.py: store the config has a data member of the Script class. Delay the
 	setting of the parser defaults.
 	* python/LbUtils/Log.py: added the --log-level option. This will take "DEBUG", "INFO",
 	etc values.
@@ -121,7 +125,7 @@
 2009-11-06  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbUtils/ConfigFile.py: implementation detail of the config file reading.
-	* python/LbUtils/Script.py: implemented the Script class with a config file reading. 
+	* python/LbUtils/Script.py: implemented the Script class with a config file reading.
 	The name of the settings of the config file are extracted from the command line parser.
 	the values of the config file are fed back into the defaults of the command line parser.
 
@@ -132,12 +136,12 @@
 
 2009-10-19  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* python/LbUtils/Log.py: removed the -v for the verbose option and -q for 
+	* python/LbUtils/Log.py: removed the -v for the verbose option and -q for
 	the quiet options. These are too common switches.
 
 2009-10-15  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* python/LbUtils/Match.py: 
+	* python/LbUtils/Match.py:
 	* tests/MatchTest.py: factored out the tests from Match.py
 
 2009-10-15  Marco Clemencic  <Marco.Clemencic@cern.ch>
@@ -162,7 +166,7 @@
 
 	* python/LbUtils/File.py: added a few tuned utilities
 	* python/LbUtils/Tar.py: implementation of the tar utilies
-	* scripts/createTarBall: script to create tarball according to a list 
+	* scripts/createTarBall: script to create tarball according to a list
 	of binaries
 
 2009-08-19  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
