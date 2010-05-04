@@ -4,6 +4,9 @@
 ! Purpose     : VELO monitoring algorithms for reconstruction data (ZS data)
 !-----------------------------------------------------------------------------
 
+! 2010-05-04 - Marco Gersabeck
+ - Added PVResolution algorithm which produces NTuples to measure PV resolutions.
+
 !======================= VeloRecMonitors v2r9 2010-04-26 ====================
 ! 2010-04-21 - Marco Gersabeck
  - small fix to the configurable to avoid a warning
