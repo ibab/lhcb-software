@@ -1,4 +1,4 @@
-#$Id: Wrappers.py,v 1.33 2010-02-25 16:59:39 jpalac Exp $
+#$Id: Wrappers.py,v 1.34 2010-05-04 13:41:32 jpalac Exp $
 """
 Wrapper classes for a DaVinci offline physics selection. The following classes
 are available:
@@ -15,12 +15,14 @@ __all__ = ('DataOnDemand',
            'AutomaticData',
            'Selection',
            'SelectionSequence',
+           'MultiSelectionSequence',
            'SelSequence'
            'NameError',
            'NonEmptyInputLocations',
            'IncompatibleInputLocations'
            )
 
+from copy import copy
 
 _sequencerType = None
 
@@ -96,3 +98,30 @@ class SelectionSequence(SelSequence) :
     def clone(self, name, **args) :
         new_dict = update_overlap(self.__ctor_dict__, args)
         return SelectionSequence(name, **new_dict)
+
+class MultiSelectionSequence(object) :
+    """
+    Wrapper class for offline multiple selection sequence creation.
+    Takes a list of SelectionSequence objects and produces on demand a
+    sequence with an OR of the list of sequences. 
+    Uses SelectionSequence:
+    help(SelSequence)
+    """
+    __author__ = "Juan Palacios juan.palacios@nikhef.nl"
+
+    def __init__(self, name, Sequences = []) :
+        self.sequences = copy(Sequences)
+        self.gaudiseq = None
+        self._name = name
+
+    def name(self) :
+        return self._name
+        
+    def outputLocations(self) :
+        return [seq.outputLocation() for seq in self.sequences]
+
+    def sequence(self, sequencerType = _sequencerType) :
+        if self.gaudiseq == None :
+            self.gaudiseq = sequencerType(self.name(),
+                                          Members = [seq.sequence() for seq in self.sequences])
+        return self.gaudiseq
