@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-#$Id: test_multi_selection_sequence.py,v 1.4 2010-05-04 14:29:58 jpalac Exp $
+#$Id: test_multi_selection_sequence.py,v 1.5 2010-05-04 15:18:36 jpalac Exp $
 '''
 Test suite for MultiSelectionSequence class.
 '''
@@ -23,8 +23,17 @@ def test_instantiate_dataondemand_multi_sequencer() :
     seq00 = SelectionSequence('Seq00x', TopSelection = sel00)
     seq01 = SelectionSequence('Seq01x', TopSelection = sel01)
     seq = MultiSelectionSequence('Seq00', Sequences = [seq00, seq01])
-    assert seq.outputLocations() == ['Phys/Sel00', 'Phys/Sel01']
 
+def test_call_important_methods() :
+    sel00 = AutomaticData('Sel00', Location = 'Phys/Sel00')
+    sel01 = AutomaticData('Sel01', Location = 'Phys/Sel01')
+    seq00 = SelectionSequence('Seq00y', TopSelection = sel00)
+    seq01 = SelectionSequence('Seq01y', TopSelection = sel01)
+    seq = MultiSelectionSequence('Seq00', Sequences = [seq00, seq01])
+    assert seq.outputLocations() == ['Phys/Sel00', 'Phys/Sel01']
+    algs = seq.algos
+    seq = seq.sequence()
+    
 def test_instantiate_multi_sequencer() :
     sel00 = AutomaticData('Sel00', Location = 'Phys/Sel00')
     sel01 = AutomaticData('Sel01', Location = 'Phys/Sel01')
@@ -98,7 +107,7 @@ def test_multi_sequencer_sequences() :
     seqAlgosA = seqAlgos[0].Members
     seqAlgosB = seqAlgos[1].Members
     assert len(seqAlgos) == len(multiSeq.sequences)
-
+    assert len(multiSeq.algos) == len(seqAlgosA)+len(seqAlgosB)
     
     ref_algosA = [presel0,
                   presel1,
