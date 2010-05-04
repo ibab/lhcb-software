@@ -1,4 +1,4 @@
-// $Id: MCBd2KstarMuMuAngleCalculator.h,v 1.3 2010-04-29 17:38:54 tblake Exp $
+// $Id: MCBd2KstarMuMuAngleCalculator.h,v 1.4 2010-05-04 21:51:54 tblake Exp $
 #ifndef MCANGLECALCULATOR_H 
 #define MCANGLECALCULATOR_H 1
 
@@ -11,26 +11,28 @@
 
 /** @class MCBd2KstarMuMuAngleCalculator MCBd2KstarMuMuAngleCalculator.h v1r3/MCBd2KstarMuMuAngleCalculator.h
  *  
- *  Calculates angles for a true B->mumuK* decay in Helicity and Transversity basis, using DaVinciP2VVAngles
+ *  Calculates the three true angles in a \f$ B_{d} \rightarrow K^{+} \pi^{-} \mu^{+} \mu^{-} \f$ decay.
+ *  Angles are given in both the helicity and transversity bases.
+ *
  *
  *  The Helicity Basis for \f$ B_{d} \rightarrow K^{*}(892)0 \mu^{+} \mu^{-} \f$
  *  is defined by three angles \f$ \theta_{L} \f$, \f$ \theta_{K} \f$ and \f$ \phi \f$.
  * 
  *  These angles are defined as:
  * 
- *  \f$ \theta_{L} \f$ as the angle between the \f${\mu_{+}}(\mu_{-})\f$ and the direction 
- *  opposite the \f${B_{d}}(\bar{B_{d}})\f$ in the rest frame of the \f${\mu_{+}\mu_{-}}\f. 
- *  Equivalently this is the angle between the \f${\mu_{+}}$\f in the \f${\mu_{+}\mu_{-}}\f rest 
- *  frame and the direction of the \f${\mu_{+}\mu_{-}}\f in the B rest-frame.
+ *  \f$ \theta_{L} \f$ as the angle between the \f$ {\mu^{+}}(\mu^{-}) \f$ and the direction 
+ *  opposite the \f$ {B_{d}}(\bar{B_{d}}) \f$ in the rest frame of the \f$ {\mu^{+}\mu^{-}} \f$. 
+ *  Equivalently this is the angle between the \f$ {\mu^{+}} \f$ in the \f$ {\mu^{+}\mu^{-}} \f$ rest 
+ *  frame and the direction of the \f$ {\mu^{+}\mu^{-}} \f$ in the B rest-frame.
  *
- *  \f$ \theta_{K} \f$ as the angle between the \f${K+}\f$ in the \f${K*}$\f frame and the \f${K*}$\f 
- *  in the B rest-frame.
+ *  \f$ \theta_{K} \f$ as the angle between the \f$ K \f$ in the \f$ {K^{*}} \f$ frame and 
+ *  the \f$ K^{*} \f$ in the B rest-frame.
  *  
  *  \f$ \phi \f$ is defined in the B rest-frame as the angle between the planes defined by the 
- *  \f${\mu_{+}}(\mu_{-})\f$ and the \f${K\pi}\f$.  
+ *  \f$ {\mu^{+}}(\mu^{-}) \f$ and the \f$ K \pi \f$.
  * 
  *  @author Thomas Blake, Greig Cowan
- *  @date   2007-08-13
+ *  @date   2010-05-04
  */
 
 class MCBd2KstarMuMuAngleCalculator : public GaudiTool, virtual public IP2VVMCPartAngleCalculator {

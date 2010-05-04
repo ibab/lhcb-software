@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.296 2010-04-30 14:27:43 jpalac Exp $
+! $Id: release.notes,v 1.297 2010-05-04 21:51:54 tblake Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
 !=============================================================================
+
+! 2010-04-29 - Thomas Blake
+ - Updated doxygen documentation for MCBd2KstarMuMuAngleCalculator
 
 !========================== DaVinciMCTools v9r25p2 2010-04-30 ================
 
