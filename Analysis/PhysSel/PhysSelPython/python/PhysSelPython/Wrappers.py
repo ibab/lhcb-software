@@ -1,4 +1,4 @@
-#$Id: Wrappers.py,v 1.34 2010-05-04 13:41:32 jpalac Exp $
+#$Id: Wrappers.py,v 1.35 2010-05-04 13:43:12 jpalac Exp $
 """
 Wrapper classes for a DaVinci offline physics selection. The following classes
 are available:
@@ -123,5 +123,7 @@ class MultiSelectionSequence(object) :
     def sequence(self, sequencerType = _sequencerType) :
         if self.gaudiseq == None :
             self.gaudiseq = sequencerType(self.name(),
+                                          ModeOR = True,
+                                          ShortCircuit = False,
                                           Members = [seq.sequence() for seq in self.sequences])
         return self.gaudiseq
