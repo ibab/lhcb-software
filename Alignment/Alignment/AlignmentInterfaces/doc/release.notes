@@ -3,6 +3,7 @@ Package : AlignmentInterfaces
 Package Coordinator : Johan Blouw
 Purpose :  Collection of interfaces needed for the T-station alignment
 
+</PRE><H1><A NAME=v3r2>2010-05-04 AlignmentInterfaces v3r2 </A></H1><PRE>
 ! 2010/04/19 Johan Blouw
 - Updated interface to the ATrackSelector
 
