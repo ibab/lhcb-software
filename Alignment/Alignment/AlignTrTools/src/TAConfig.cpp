@@ -4,7 +4,7 @@
  *  Implementation file for Millepede configuration tool : TAConfig
  *
  *  CVS Log :-
- *  $Id: TAConfig.cpp,v 1.36 2010-05-03 15:03:35 wouter Exp $
+ *  $Id: TAConfig.cpp,v 1.37 2010-05-04 09:47:19 jblouw Exp $
  *
  *  @author J. Blouw (johan.blouw@mpi-hd.mpg.de)
  *  @date   12/04/2007
@@ -65,6 +65,22 @@ using namespace Gaudi;
 #include "Event/MCHit.h"
 
 DECLARE_TOOL_FACTORY( TAConfig );
+
+// function object to check the value of a map element
+template <class K, class V> class value_equals {
+private:
+  V value;
+public:
+  // constructor (initialize value to compare with)
+  value_equals (const V& v)
+    : value(v) {
+  }
+  // comparison
+  bool operator() (std::pair<const K, V> elem) {
+    return elem.second == value;
+  }
+};
+
 
 //-----------------------------------------------------------------------------
 
@@ -317,87 +333,17 @@ StatusCode TAConfig::ConstrainLagrangeMultOT(){
   // 1st we have to get the sigma of the z positions;
   // with that we can calculate the shearing terms
   
-  double meanRight = 0;
-  double meanLeft  = 0;;
-  double meanRightZ[24];
-  double meanLeftZ[24];
-  double mstereo[24];
-  for(int i=0;i<24;i++){
-    meanRightZ[i] = 0.; 
-    meanLeftZ[i] = 0.; 
-    mstereo[i] =0.;
-  }
-  
-  
   //  calculate mean z position
-  if(m_otHalfLayer) {
-    double rightZ = 0.; //right detector half
-    double leftZ  = 0.; //left detector half
-    std::map<int, std::pair<double,double> >::iterator iter = m_RnkZAngle.begin();
-    for(; iter != m_RnkZAngle.end(); iter++){
-      info() << "rank " << iter->first << " stereo " <<(iter->second).second << endreq;
-      mstereo[iter->first] = (iter->second).second;
-      //get the right half of the detector
-      if((iter->first)%2 == 0){
-        rightZ += (iter->second).first; 
-        meanRightZ[iter->first] += (iter->second).first/18;	
-        info() << "LM right obj = " << iter->first << " zpos = " << (iter->second).first 
-               << " LM meanrightz = "  << " " << meanRightZ[iter->first]  << endreq; 
-      }
-      //get the left half of the detector
-      if((iter->first)%2 != 0) {
-        leftZ += (iter->second).first;
-        meanLeftZ[iter->first] += (iter->second).first/18;
-        info() << "LM left obj = " << iter->first << " zpos = " << (iter->second).first 
-	       << " LM meanleft = "  << " " << meanLeftZ[iter->first]  << endreq; 
-	
-      }
-    }
-    //divide by 18 = nof modules per halflayer and nof alignable objects per HALF=12!!
-    meanRight = rightZ/(9*m_nAlignObj);
-    meanLeft  = leftZ/(9*m_nAlignObj);
-    info() << "m_nAlignObj " << m_nAlignObj << endreq;
-    info() << "LM sums: right side = " << meanRight << " left side " << meanLeft << endreq;
-    // get the sigma 
-    for(int rnk =0 ; rnk < m_nAlignObj; rnk++){ 
-      if(rnk%2 == 0){ 
-        m_Sigzmean_ot += (meanRightZ[rnk]-meanRight)*(meanRightZ[rnk]-meanRight);
-        m_layerZ.push_back(meanRightZ[rnk]);
-      }
-      if(rnk%2 != 0) {
-        m_Sigzmean_ot += (meanLeftZ[rnk]-meanLeft)*(meanLeftZ[rnk]-meanLeft);
-        m_layerZ.push_back(meanLeftZ[rnk]);
-      }
-    }
-    m_misalDetEl_Z = m_layerZ ;
-    m_misalDetEl_meanZ = meanLeft;//because a layer was shifted...Aside=Cside...
-    
-  }
-  
-  //get the mean for 
-  //all other Objects
-  //(station,layer etc...)
-  if(!m_otHalfLayer){  
-    m_zmean_ot = 0; 
-    std::multimap<int, std::pair<double,double> >::iterator iter = m_RnkZAngle.begin();
-    for(; iter != m_RnkZAngle.end(); iter++){
-      m_zmean_ot += ((iter->second).first)/m_nAlignObj; 
-      info() << " LM rank = " << iter->first << " zpos = " << (iter->second).first  << " mean z = " << m_zmean_ot<<endreq; 
-    }
-    info() << " LM ===> " << " m_zmean_ot = " << m_zmean_ot<<endreq; 
-    
-    iter  = m_RnkZAngle.begin();
-    for(; iter != m_RnkZAngle.end(); iter++){
-      m_Sigzmean_ot += ( (iter->second).first-m_zmean_ot)* ( (iter->second).first-m_zmean_ot); 
-      m_layerZ.push_back((iter->second).first);
-    }
-    m_misalDetEl_Z = m_layerZ ;
-    m_misalDetEl_meanZ = m_zmean_ot;
-  }
+  if(m_otHalfLayer) 
+    MeanZHL();
+  //get the mean for all other Objects (station,layer etc...)
+  if(!m_otHalfLayer)
+    MeanZ();
+
   m_Sigzmean_ot /= m_nAlignObj; // nominator of shearing term
   info()<<" LM ===> m_Sigzmean_ot " << m_Sigzmean_ot << endreq;
   
-  for(int a =0; a< m_n_dof*m_nAlignObj;a++){
+  for(int a =0; a < m_n_dof*m_nAlignObj; a++){
     m_consTX.push_back(0.);
     m_consTU.push_back(0.);
     m_consTV.push_back(0.);
@@ -407,49 +353,11 @@ StatusCode TAConfig::ConstrainLagrangeMultOT(){
     m_shearXV.push_back(0.);
     m_scaleZ.push_back(0.);
   }
-  int cnt;
-  for(int rnk =0; rnk< m_nAlignObj;rnk++){
-    cnt = 0;
-    if(m_dof[0]) {
-      
-      if(m_otHalfLayer){
-        //Cside
-        if(rnk%2==0){
-          m_consTX.at(rnk)  = cos(m_stereoAngle[rnk]);
-          m_shearXZ.at(rnk) = ((m_layerZ.at(rnk)-m_zmean_ot) / m_Sigzmean_ot)*cos(m_stereoAngle[rnk]);
-          m_consTU.at(rnk)  = sin(m_stereoAngle[rnk]); // y
-          m_shearXU.at(rnk) = ((m_layerZ.at(rnk)-m_zmean_ot) / m_Sigzmean_ot)*sin(m_stereoAngle[rnk]);// y          
-        }
-        //Cside
-        if(rnk%2!=0){
-          m_consTV.at(rnk)  = cos(m_stereoAngle[rnk]);
-          m_shearXV.at(rnk) = ((m_layerZ.at(rnk)-m_zmean_ot) / m_Sigzmean_ot)*cos(m_stereoAngle[rnk]);
-          m_consTZ.at(rnk)  = sin(m_stereoAngle[rnk]); // y
-          m_scaleZ.at(rnk) = ((m_layerZ.at(rnk)-m_zmean_ot) / m_Sigzmean_ot)*sin(m_stereoAngle[rnk]);
-        }
-      }
-      else{
-        //  if(m_stereoAngle[rnk]==0.){
-        m_consTX.at(rnk)  = cos(m_stereoAngle[rnk]);
-        m_shearXZ.at(rnk) = ((m_layerZ.at(rnk)-m_zmean_ot) / m_Sigzmean_ot)*cos(m_stereoAngle[rnk]);
-        //}
-        if(m_stereoAngle[rnk]!=0.){
-	  m_consTU.at(rnk)  = cos(m_stereoAngle[rnk])+sin(m_stereoAngle[rnk]); // y;
-	  m_shearXU.at(rnk) = ((m_layerZ.at(rnk)-m_zmean_ot) / m_Sigzmean_ot)*cos(m_stereoAngle[rnk])
-	    +((m_layerZ.at(rnk)-m_zmean_ot) / m_Sigzmean_ot)*sin(m_stereoAngle[rnk]);// y          ;
-        }
-      }
-      
-      info() << "---> LM " << rnk << " z " <<m_layerZ[rnk] <<" m_consTX = " << m_consTX[rnk] << " m_shearXZ = " << m_shearXZ[rnk] 
-             << " stereo = " << m_stereoAngle[rnk] << endreq;
-      cnt++;
-    }
-    if(m_dof[2]){
-      m_consTZ.at(rnk+cnt*m_nAlignObj) = 1.;
-      m_scaleZ.at(rnk+cnt*m_nAlignObj) = (m_layerZ.at(rnk)-m_zmean_ot) / m_Sigzmean_ot;
-      cnt++;
-    }
-  }
+  if(m_otHalfLayer){
+    CalcHLLC();
+  } else 
+    CalcLC();
+
   //call Centipede
   if(m_dof[0]){
     if(m_otHalfLayer){
@@ -487,6 +395,159 @@ StatusCode TAConfig::ConstrainLagrangeMultOT(){
   }
   return StatusCode::SUCCESS;
 }
+
+
+void TAConfig::MeanZHL() {
+  double rightZ = 0.; //right detector half
+  double leftZ  = 0.; //left detector half
+  double meanRight = 0;
+  double meanLeft  = 0;;
+  double meanRightZ[24];
+  double meanLeftZ[24];
+  for(int i=0;i<24;i++){
+    meanRightZ[i] = 0.; 
+    meanLeftZ[i] = 0.; 
+  }
+  std::map<int, std::pair<double,double> >::iterator iter = m_RnkZAngle.begin();
+  for(; iter != m_RnkZAngle.end(); iter++){
+    info() << "rank " << iter->first << " stereo " <<(iter->second).second << endreq;
+    //get the right half of the detector
+    if((iter->first)%2 == 0){
+      rightZ += (iter->second).first; 
+      meanRightZ[iter->first] += (iter->second).first/18;	
+      info() << "LM right obj = " << iter->first << " zpos = " << (iter->second).first 
+	     << " LM meanrightz = "  << " " << meanRightZ[iter->first]  << endreq; 
+    }
+    //get the left half of the detector
+    if((iter->first)%2 != 0) {
+      leftZ += (iter->second).first;
+      meanLeftZ[iter->first] += (iter->second).first/18;
+      info() << "LM left obj = " << iter->first << " zpos = " << (iter->second).first 
+	     << " LM meanleft = "  << " " << meanLeftZ[iter->first]  << endreq; 
+      
+    }
+  }
+  //divide by 18 = nof modules per halflayer and nof alignable objects per HALF=12!!
+  meanRight = rightZ/(9*m_nAlignObj);
+  meanLeft  = leftZ/(9*m_nAlignObj);
+  info() << "m_nAlignObj " << m_nAlignObj << endreq;
+  info() << "LM sums: right side = " << meanRight << " left side " << meanLeft << endreq;
+  // get the sigma 
+  for(int rnk =0 ; rnk < m_nAlignObj; rnk++){ 
+    if(rnk%2 == 0){ 
+      m_Sigzmean_ot += (meanRightZ[rnk]-meanRight)*(meanRightZ[rnk]-meanRight);
+      m_layerZ.push_back(meanRightZ[rnk]);
+    }
+    if(rnk%2 != 0) {
+      m_Sigzmean_ot += (meanLeftZ[rnk]-meanLeft)*(meanLeftZ[rnk]-meanLeft);
+      m_layerZ.push_back(meanLeftZ[rnk]);
+    }
+  }
+  m_misalDetEl_Z = m_layerZ ;
+  m_misalDetEl_meanZ = meanLeft;//because a layer was shifted...Aside=Cside...
+}
+
+void TAConfig::MeanZ() {
+  m_zmean_ot = 0; 
+  std::multimap<int, std::pair<double,double> >::iterator iter = m_RnkZAngle.begin();
+  for(; iter != m_RnkZAngle.end(); iter++){
+    m_zmean_ot += ((iter->second).first)/m_nAlignObj; 
+    info() << " LM rank = " << iter->first << " zpos = " << (iter->second).first  << " mean z = " << m_zmean_ot<<endreq; 
+  }
+  info() << " LM ===> " << " m_zmean_ot = " << m_zmean_ot<<endreq; 
+  
+  iter  = m_RnkZAngle.begin();
+  for(; iter != m_RnkZAngle.end(); iter++){
+    m_Sigzmean_ot += ( (iter->second).first-m_zmean_ot)* ( (iter->second).first-m_zmean_ot); 
+    m_layerZ.push_back((iter->second).first);
+  }
+  m_misalDetEl_Z = m_layerZ ;
+  m_misalDetEl_meanZ = m_zmean_ot;
+}
+
+void TAConfig::CalcHLLC() {
+  int cnt;
+  for(int rnk =0; rnk< m_nAlignObj;rnk++){
+    cnt = 0;
+    if ( m_dof[0] ) {
+      //Cside
+      if(rnk%2==0){
+	m_consTX.at(rnk)  = cos(m_stereoAngle[rnk]);
+	m_shearXZ.at(rnk) = ((m_layerZ.at(rnk)-m_zmean_ot) / m_Sigzmean_ot)*cos(m_stereoAngle[rnk]);
+	m_consTU.at(rnk)  = sin(m_stereoAngle[rnk]); // y
+	m_shearXU.at(rnk) = ((m_layerZ.at(rnk)-m_zmean_ot) / m_Sigzmean_ot)*sin(m_stereoAngle[rnk]);// y          
+      }
+      //Cside
+      if(rnk%2!=0){
+	m_consTV.at(rnk)  = cos(m_stereoAngle[rnk]);
+	m_shearXV.at(rnk) = ((m_layerZ.at(rnk)-m_zmean_ot) / m_Sigzmean_ot)*cos(m_stereoAngle[rnk]);
+	m_consTZ.at(rnk)  = sin(m_stereoAngle[rnk]); // y
+	m_scaleZ.at(rnk) = ((m_layerZ.at(rnk)-m_zmean_ot) / m_Sigzmean_ot)*sin(m_stereoAngle[rnk]);
+      }
+      cnt++;
+    }
+    if ( m_dof[2] ) {
+      m_consTZ.at(rnk+cnt*m_nAlignObj) = 1.;
+      m_scaleZ.at(rnk+cnt*m_nAlignObj) = (m_layerZ.at(rnk)-m_zmean_ot) / m_Sigzmean_ot;
+      cnt++;
+    }
+    if ( m_dof[3] ) {
+      m_consRa.at(rnk+cnt*m_nAlignObj) = 1.;
+      cnt++;
+    }
+    if ( m_dof[4] ) {
+      m_consRb.at(rnk+cnt*m_nAlignObj) = 1.;
+      cnt++;
+    }
+    if ( m_dof[5] ) {
+      m_consRc.at(rnk+cnt*m_nAlignObj) = 1.;
+      cnt++;
+    }
+  }
+}
+void TAConfig::CalcLC() {
+  int cnt;
+  for(int rnk =0; rnk< m_nAlignObj;rnk++){
+    cnt = 0;
+    if ( m_dof[0] ) {
+      m_consTX.at(rnk)  = cos(m_stereoAngle[rnk]);
+      m_shearXZ.at(rnk) = ((m_layerZ.at(rnk)-m_zmean_ot) / m_Sigzmean_ot)*cos(m_stereoAngle[rnk]);
+      if(m_stereoAngle[rnk]!=0.){
+	m_consTU.at(rnk)  = cos(m_stereoAngle[rnk])+sin(m_stereoAngle[rnk]); // y;
+	m_shearXU.at(rnk) = ((m_layerZ.at(rnk)-m_zmean_ot) / m_Sigzmean_ot)*cos(m_stereoAngle[rnk])
+	  +((m_layerZ.at(rnk)-m_zmean_ot) / m_Sigzmean_ot)*sin(m_stereoAngle[rnk]);// y          ;
+      }
+      // search an element with value rnk
+      std::map<std::string, int>::iterator pos;
+      pos = find_if(m_C_pos.begin(),m_C_pos.end(),    // linear complexity
+		    value_equals<std::string,int>(rnk));
+      if (pos != m_C_pos.end()) {
+	info() << "---> LM " << rnk << " " << pos->first << " " << pos->second << " z " <<m_layerZ[rnk] <<" m_consTX = " << m_consTX[rnk] << " m_shearXZ = " << m_shearXZ[rnk] 
+	       << " stereo = " << m_stereoAngle[rnk] << endreq;
+      }
+      cnt++;
+    }
+    if ( m_dof[2] ) {
+      m_consTZ.at(rnk+cnt*m_nAlignObj) = 1.;
+      m_scaleZ.at(rnk+cnt*m_nAlignObj) = (m_layerZ.at(rnk)-m_zmean_ot) / m_Sigzmean_ot;
+      cnt++;
+    }
+    if ( m_dof[3] ) {
+      m_consRa.at(rnk+cnt*m_nAlignObj) = 1.;
+      cnt++;
+    }
+    if ( m_dof[4] ) {
+      m_consRb.at(rnk+cnt*m_nAlignObj) = 1.;
+      cnt++;
+    }
+    if ( m_dof[5] ) {
+      m_consRc.at(rnk+cnt*m_nAlignObj) = 1.;
+      cnt++;
+    }
+  }
+}
+
+
 // StatusCode TAConfig::ConstrainPositions( std::map<std::string,int> &map ) {
 //   std::string name;
 //   int rank;
@@ -1044,7 +1105,7 @@ void TAConfig::CreateHalflayerReferenceMap( int r,  Gaudi::XYZPoint ref) {
 void TAConfig::CreateMap( int & r,  IDetectorElement* id, double &m_zmoy ) {
   Gaudi::Rotation3D R;
   Gaudi::XYZVector T;
-  debug() << "Name of object = " << id->name() << " has rank = " << r << endreq;
+  info() << "Name of object = " << id->name() << " has rank = " << r << endreq;
   m_C_pos.insert(std::make_pair(id->name(),r ));
   m_rank.push_back( r );
   //info() << " fill alimap "<<endreq;

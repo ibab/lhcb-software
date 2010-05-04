@@ -6,7 +6,7 @@
  *  Header file for Tstation alignment : ATrackSelector
  *
  *  CVS Log :-
- *  $Id: ATrackSelector.h,v 1.9 2010-04-22 09:47:25 jblouw Exp $
+ *  $Id: ATrackSelector.h,v 1.10 2010-05-04 09:47:19 jblouw Exp $
  *
  *  @author J. Blouw johan.blouw@cern.ch
  *  @date   31/09/2006
@@ -117,7 +117,7 @@ class ATrackSelector : public GaudiTool,
    typedef GaudiUtils::HashMap < const LHCb::Track::Types, bool > SelTypes;
    SelTypes m_selTypes;  // Mapping linking track types to selection boolean
    int m_uniform[3][4][4][9];
-   int m_HitMatrix[9][9];
+   int m_HitMatrix[4][9][9];
 };
 
 #endif // TRACKTOOLS_JBSelector_H

@@ -4,7 +4,7 @@
  *  Implementation file for T-station alignment tool : TrackSelector
  *
  *  CVS Log :-
- *  $Id: ATrackSelector.cpp,v 1.10 2010-04-22 09:47:24 jblouw Exp $
+ *  $Id: ATrackSelector.cpp,v 1.11 2010-05-04 09:47:19 jblouw Exp $
  *
  *  @author J. Blouw  Johan.Blouw@cern.ch
  *  @date   31/09/2006
@@ -94,9 +94,10 @@ StatusCode ATrackSelector::Reset() {
 	for ( unsigned int l = 0; l < 9; l++ )
 	  m_uniform[i][j][k][l] = 0;  
   
-  for ( unsigned int i = 0; i < 9; i++ )
-    for ( unsigned int j = 0; j < 9; j++ )
-      m_HitMatrix[i][j] = 0;
+  for ( unsigned int q = 0; q < 4; q++ )
+    for ( unsigned int i = 0; i < 9; i++ )
+      for ( unsigned int j = 0; j < 9; j++ )
+	m_HitMatrix[q][i][j] = 0;
   debug() << "Reset the uniform distribution!!!!" << endreq;
   m_total = m_bad_chi2 = m_bad_p = m_bad_pt = m_few_hits = 0;
   m_bad_energy = m_not_uniform = 0;
@@ -205,6 +206,9 @@ bool ATrackSelector::accept ( const LHCb::Track& aTrack ) {
 
 
 bool ATrackSelector::Unify( const LHCb::Track& aTrack ) {
+  // check status of the fit:
+  if( aTrack.fitStatus() != LHCb::Track::Fitted || aTrack.nDoF() < 2 ) 
+    return false;
   LHCb::Track::ConstNodeRange::const_iterator node;
   if ( m_extrapolator && ! yCut( aTrack ) ) {
     debug() << "No track extrapolator or does not fit yCut..." << endreq;
@@ -227,6 +231,12 @@ bool ATrackSelector::Unify( const LHCb::Track& aTrack ) {
       const LHCb::OTMeasurement* otm = 
 	dynamic_cast<const LHCb::OTMeasurement*>(&aNode->measurement());
       const LHCb::OTChannelID channel = otm->channel();
+      double residualScaleFactor = std::sqrt(aNode->errMeasure() / aNode->errUnbiasedResidual());
+      debug() << "Unbiased Residual = " << aNode->unbiasedResidual() << " " 
+	     << " Uniased Error = " << aNode->errResidual() << " " 
+	     << " ScaleFactor = " <<  residualScaleFactor << " "
+	     << " Resid * ScaleFactor = " << aNode->errResidual() * residualScaleFactor
+	     << endreq;
       bool res = uniformTD( channel );
       if ( ! res ) {
 	debug() << "unformTD = " << res << " channelID = " << channel.channelID() << endreq;
@@ -291,6 +301,8 @@ bool ATrackSelector::countTHits(const LHCb::Track& aTrack, int& nOThits, int& nI
   }
   int module_a = -1;
   int module_b = -1;
+  int quadrant_a = -9;
+  int quadrant_b = -99;
   for ( node = aTrack.nodes().begin(); aTrack.nodes().end() != node; node++ ) {
     const LHCb::FitNode *aNode = dynamic_cast<const LHCb::FitNode*>(*node);
     if ( ( aNode->type() != LHCb::Node::HitOnTrack 
@@ -313,17 +325,20 @@ bool ATrackSelector::countTHits(const LHCb::Track& aTrack, int& nOThits, int& nI
 	  dynamic_cast<const LHCb::OTMeasurement*>(&aNode->measurement());
 	const LHCb::OTChannelID channel = otm->channel();
 	int station = channel.station() -1;
+	int quarter = channel.quarter();
 	int layer = channel.layer();
 	if ( station == 0 && layer == 0 ) {
 	  module_a = channel.module() - 1;
+	  quadrant_a = quarter;
 	}
 	if ( station == 2 && layer == 3 ) {
 	  module_b = channel.module() - 1;
+	  quadrant_b = quarter;
 	}
 	//	if (module_b > -1 && module_a > -1 )
 	//	  info() << "module a = " << module_a << " module_b = " << module_b << endreq;
-	if (module_b > -1 && module_a > -1 ) 
-	  m_HitMatrix[module_a][module_b]++;
+	if (module_b > -1 && module_a > -1 && quadrant_a == quadrant_b ) 
+	  m_HitMatrix[quadrant_a][module_a][module_b]++;
         otSum++;
       }
       else if ( id.stID().isTT() ) {
@@ -399,12 +414,15 @@ void ATrackSelector::PrintSummary() {
 }
 
 void ATrackSelector::PrintUniformTD() {
-  int tot = -1;
   this->PrintSummary();
+  int HitMatrix[9][9];
   for ( unsigned int i = 0; i < 9; i++ ) 
     for ( unsigned int j = 0; j < 9; j++ ) 
-      if ( tot < m_HitMatrix[j][i] )
-	tot = m_HitMatrix[j][i];
+      HitMatrix[i][j] = 0;
+  for ( unsigned int q = 0; q < 4; q++ )
+    for ( unsigned int i = 0; i < 9; i++ ) 
+      for ( unsigned int j = 0; j < 9; j++ ) 
+	HitMatrix[i][j] += m_HitMatrix[q][i][j];
   /*
   info() << "Total nr. of hits: " << tot << endreq;
   info() << "Hit Correlation Matrix between modules in first and last layer in OT" << endreq;
@@ -424,10 +442,26 @@ void ATrackSelector::PrintUniformTD() {
   for ( unsigned int i = 0; i < 9; i++ ) {
     info() << "   " << std::setw(5) << i << " | ";
     for ( unsigned int j = 0; j < 9; j++ ) {
-      info() << " " << std::setw(5) << m_HitMatrix[j][i];
+      info() << " " << std::setw(5) << HitMatrix[j][i];
     }
     info() << endreq;
   }
+
+  for ( unsigned int q = 0; q < 4; q++ ) {
+    info() << "Quadrant: " << q << endreq;
+    info() << "Hit Correlation Matrix between modules in first and last layer in OT" << endreq;
+    info() << "Module nr:      0     1     2     3     4     5     6     7     8" << endreq;
+    info() <<   "         |-------------------------------------------------------|" << endreq;
+    for ( unsigned int i = 0; i < 9; i++ ) {
+      info() << "   " << std::setw(5) << i << " | ";
+      for ( unsigned int j = 0; j < 9; j++ ) {
+	info() << " " << std::setw(5) << m_HitMatrix[q][j][i];
+    }
+      info() << endreq;
+    }
+    
+  }
+
   if ( m_weights ) {
     unsigned int prev[4][9];
     for ( unsigned int i = 0; i < 3; i++ )  // stations
