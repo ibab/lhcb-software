@@ -1,4 +1,4 @@
-// $Id: MuonTrack.h,v 1.1 2010-02-10 19:07:50 ggiacomo Exp $
+// $Id: MuonTrack.h,v 1.2 2010-05-04 14:35:18 ggiacomo Exp $
 #ifndef MUONTRACKRECMUONTRACK_H 
 #define MUONTRACKRECMUONTRACK_H 1
 
@@ -65,7 +65,7 @@ public:
   // linear chi2 fit. Track is fitted separately in XZ, YZ, TZ (assuming speed of light)
   StatusCode linFit();
   // add XTalk tracks
-  StatusCode AddXTalk(const std::vector< MuonHit* >* trackhits, float cut=1.5);
+  StatusCode AddXTalk(const std::vector< MuonHit* >* trackhits, float cut=1.5, int m_skipStation=-1);
   // linear fit to get particle speed
   StatusCode speedFit();
   inline double chi2x() const {return m_chi2x;}  /// chi2/dof XZ

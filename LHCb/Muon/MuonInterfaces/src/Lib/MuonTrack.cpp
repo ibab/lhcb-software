@@ -1,4 +1,4 @@
-// $Id: MuonTrack.cpp,v 1.2 2010-03-17 10:31:07 ggiacomo Exp $
+// $Id: MuonTrack.cpp,v 1.3 2010-05-04 14:35:18 ggiacomo Exp $
 #define MUONTRACKRECNMSPC
 #include "MuonInterfaces/MuonTrack.h"
 #include "MuonInterfaces/MuonLogPad.h"
@@ -290,7 +290,7 @@ double MuonTrack::sz() const {return ( MuonTrackRec::IsPhysics ? 1. :
                                        (m_speed>0 ? 1.: -1.) ) );}
 
 // attach Xtalk hits (by Silvia Pozzi)
-StatusCode MuonTrack::AddXTalk(const std::vector< MuonHit* >* trackhits, float cut)
+StatusCode MuonTrack::AddXTalk(const std::vector< MuonHit* >* trackhits, float cut, int m_skipStation)
 {
   int nXTalk = 0;
   
@@ -300,35 +300,55 @@ StatusCode MuonTrack::AddXTalk(const std::vector< MuonHit* >* trackhits, float c
   
   // first extract the hits 
   MuonTkIt tk;
-  std::vector< MuonHit* > tt_hits ;
+  std::vector< MuonHit* > tt_hits ; // vector containing the added MuonHits
 
   std::vector<MuonHit*>::const_iterator ihT,ihH,ihK; 
   for (ihT = trackhits->begin(); ihT != trackhits->end() ; ihT++){ // loop on all the hits
-    
-    for (tk = m_muonTrack.begin(); tk != m_muonTrack.end(); tk++){ // loop on the track hits
-      MuonHit* hit= tk->second;
-      if ( hit->station() == (*ihT)->station() && 
-           hit->hitID()   != (*ihT)->hitID() ) {
-        
-        double deltaX;
-        double deltaY;
-          
-        deltaX = fabs( (*ihT)->X() - ( m_bx + m_sx *(*ihT)->Z() ) ) / ((*ihT)->hitTile_dX()) ;
-        deltaY = fabs( (*ihT)->Y() - ( m_by + m_sy *(*ihT)->Z() ) ) / ((*ihT)->hitTile_dY()) ;
 
-        if (deltaX<cut && deltaY<cut ) {
-          bool trovato = true;
-          for (ihK=tt_hits.begin(); ihK!=tt_hits.end(); ihK++) 
-            if ((*ihT)==(*ihK) ) trovato = false;
-          if (trovato){
-            tt_hits.push_back(*ihT);  
-            nXTalk++;
-          }  
-        } //if (deltaX < ... && deltaY<...)
-      } // if hit->... == (*ihT)...
-      
-    } // loop on m_trackhits
-  } // loop on t_hits
+    double z =(*ihT)->Z();    
+    double dx2_fit = pow(m_errsx*z,2) + pow(m_errbx,2) + 2*m_covbsx*z ;
+    double dy2_fit = pow(m_errsy*z,2) + pow(m_errby,2) + 2*m_covbsy*z ;
+
+    double x_fit = ( m_bx + m_sx *(*ihT)->Z() );
+    double y_fit = ( m_by + m_sy *(*ihT)->Z() );
+
+    double deltaX = fabs( (*ihT)->X() - x_fit ) / sqrt(pow((*ihT)->hitTile_dX(),2)+dx2_fit ) ;
+    double deltaY = fabs( (*ihT)->Y() - y_fit ) / sqrt(pow((*ihT)->hitTile_dY(),2)+dy2_fit ) ;
+
+    double dist = sqrt(pow((*ihT)->X() - x_fit,2) + pow((*ihT)->Y() - y_fit ,2));
+
+    if( (*ihT)->station() == m_skipStation ) {
+      if (deltaX<cut && deltaY<cut || dist < 50.) {
+        /*
+        std::cout<< " Found a hit in station M"<< (*ihT)->station()+1<<"R"<<(*ihT)->region()+1<<" "<<(*ihT)->hitID()<<" "<<
+        (*ihT)->X()<<" +/- "<<(*ihT)->hitTile_dX()<<" "<< (*ihT)->Y()<<" +/- "<<(*ihT)->hitTile_dY()<<" "<<(*ihT)->Z()<<
+          "   delta: "<<deltaX<<" "<<deltaY<<"    dist "<<dist<<std::endl;
+        */
+        bool trovato = true;      
+        for (ihK=tt_hits.begin(); ihK!=tt_hits.end(); ihK++) 
+          if ((*ihT)==(*ihK) ) trovato = false; // avoid to fill double
+        if (trovato){
+          tt_hits.push_back(*ihT);  
+          nXTalk++;
+        }
+      }      
+    }else{      
+      if (deltaX<cut && deltaY<cut ) {
+        for (tk = m_muonTrack.begin(); tk != m_muonTrack.end(); tk++){ // loop on the track hits
+          MuonHit* hit= tk->second;
+          if (  hit->station() == (*ihT)->station() && hit->hitID() != (*ihT)->hitID() ) {
+            bool trovato = true;
+            for (ihK=tt_hits.begin(); ihK!=tt_hits.end(); ihK++) 
+              if ((*ihT)==(*ihK) ) trovato = false; //avoid to fill double
+            if (trovato){
+              tt_hits.push_back(*ihT);  
+              nXTalk++;
+            }
+          } 
+        } //end loop over the track hits
+      } //if (deltaX < ... && deltaY<...)
+    }//end if is not the skip station        
+  } // loop on trackhits
   
   int idhit=100;
   std::vector<MuonHit* >::iterator tj;
