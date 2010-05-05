@@ -1,4 +1,4 @@
-// $Id: BooleInit.h,v 1.13 2009-02-23 17:07:08 cattanem Exp $
+// $Id: BooleInit.h,v 1.14 2010-05-05 09:33:14 albrecht Exp $
 #ifndef BOOLEINIT_H 
 #define BOOLEINIT_H 1
 
@@ -29,6 +29,7 @@ public:
 
 protected:
   virtual  void modifyOdin(LHCb::ODIN* odin);     ///< fills some Odin fields
+  virtual  void simpleOdin(LHCb::ODIN* odin);     ///< sets reasonable defaults for some Odin fields
   
 private:
   IGenericTool* m_memoryTool; ///< Pointer to (private) memory histogram tool

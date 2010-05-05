@@ -1,4 +1,4 @@
-// $Id: BooleInit.cpp,v 1.32 2010-04-26 15:30:37 cattanem Exp $
+// $Id: BooleInit.cpp,v 1.33 2010-05-05 09:33:07 albrecht Exp $
 // Include files 
 
 // from Gaudi
@@ -52,7 +52,7 @@ BooleInit::BooleInit( const std::string& name,
   m_thresElastic.push_back( 0.5  );
   m_thresElastic.push_back( 0.75 );
 
-  declareProperty ( "ModifyOdin",  m_modifyOdin = true );
+  declareProperty ( "ModifyOdin",  m_modifyOdin = false );
   declareProperty ( "GenCollisionLocation", m_genCollisionLocation = LHCb::GenCollisionLocation::Default ) ;
   declareProperty ( "ThresInteraction", m_thresInteraction );
   declareProperty ( "ThresDiffractive",  m_thresDiffractive );
@@ -152,6 +152,10 @@ StatusCode BooleInit::execute() {
   if ( m_modifyOdin ) {
     modifyOdin(odin);
   }
+  else{
+    //put some reasonable defaults
+    simpleOdin(odin);
+  }
   
   // Create the Raw Bank
   m_odinTool->execute();
@@ -163,6 +167,24 @@ StatusCode BooleInit::execute() {
 //=============================================================================
 // modify ODIN bank
 //=============================================================================
+void BooleInit::simpleOdin(LHCb::ODIN* odin) {
+
+ // set the types
+  LHCb::ODIN::TriggerType TriggerType  = LHCb::ODIN::LumiTrigger;
+  LHCb::ODIN::BXTypes     BXType       = LHCb::ODIN::BeamCrossing;
+  unsigned int            BunchCurrent = 8 + (8<<4);
+  
+  if(msgLevel(MSG::DEBUG)) debug() <<"Bunch crossing type: " << BXType 
+                                   << " TriggerType " << TriggerType 
+                                   << " BunchCurrent  "  << BunchCurrent
+                                   << endmsg;
+
+  odin->setBunchCrossingType( BXType );
+  odin->setTriggerType( TriggerType );
+  odin->setBunchCurrent( BunchCurrent );
+  
+}
+
 void BooleInit::modifyOdin(LHCb::ODIN* odin) {
   
   //Get info from Gen
