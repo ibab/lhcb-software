@@ -1,4 +1,4 @@
-// $Id: IPropertyConfigSvc.h,v 1.1 2010-05-05 13:20:12 graven Exp $
+// $Id: IPropertyConfigSvc.h,v 1.2 2010-05-05 14:04:43 graven Exp $
 #ifndef IPROPERTYCONFIGSVC_H 
 #define IPROPERTYCONFIGSVC_H 1
 
@@ -6,9 +6,9 @@
 #include <vector>
 #include <list>
 #include "GaudiKernel/INamedInterface.h"
-#include "HltBase/ConfigTreeNode.h"
-#include "HltBase/ConfigTreeNodeAlias.h"
-#include "HltBase/PropertyConfig.h"
+#include "Kernel/ConfigTreeNode.h"
+#include "Kernel/ConfigTreeNodeAlias.h"
+#include "Kernel/PropertyConfig.h"
 
 
 /** @class IPropertyConfigSvc IPropertyConfigSvc.h
