@@ -43,7 +43,7 @@ class TsaSeedConf(object):
         tsaSeed.addTool(Tf__Tsa__StubFind, "stubFinder")
         
         if TrackSys().fieldOff():
-            tsaConv.addTool( Tf__Tsa__SeedTrackCnvTool("SeedTrackCnvTool"))
+            tsaConv.addTool( Tf__Tsa__SeedTrackCnvTool, name="SeedTrackCnvTool")
             tsaConv.SeedTrackCnvTool.pFromCurvature = True
             
             tsaSeed.addTool(Tf__Tsa__StubFind, "stubFind")
@@ -74,7 +74,7 @@ class TsaSeedConf(object):
             tsaSeed.stubFinder.yCut = 5
             tsaSeed.stubFinder.yTol = 10
             tsaSeed.stubFinder.dAngle = 0.35
-            tsaSeed.addTool(Tf__Tsa__Likelihood(), name = "likelihood")
+            tsaSeed.addTool(Tf__Tsa__Likelihood, name = "likelihood")
             tsaSeed.likelihood.LikCut = -40
             tsaSeed.likelihood.outlierCut = 6.0
             tsaSeed.likelihood.OTEff = 0.85
