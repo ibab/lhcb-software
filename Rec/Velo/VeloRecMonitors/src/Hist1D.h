@@ -1,4 +1,4 @@
-// $Id: Hist1D.h,v 1.3 2010-04-08 13:45:11 krinnert Exp $
+// $Id: Hist1D.h,v 1.4 2010-05-05 13:17:00 krinnert Exp $
 #ifndef INCLUDE_HIST1D_H
 #define INCLUDE_HIST1D_H 1
 #include <numeric>
@@ -29,14 +29,14 @@ class Hist1D {
 		/// slow fill method. under/overflow is handled properly
 		inline void fill(const double& x)
 		{
-			++m_array[( x < m_min ? 0 : ( x > m_max ? m_nBins+1 : static_cast<unsigned int>(x/m_binWidth)+1 ))];
+			++m_array[( x < m_min ? 0 : ( x > m_max ? m_nBins+1 : static_cast<unsigned int>((x-m_min)/m_binWidth)+1 ))];
 			++m_entries;
 		}
 
 		/// fast fill method. clients must guarantee there is no under/overflow
 		inline void fillFast(const double& x)
 		{
-			++m_array[static_cast<unsigned int>(x/m_binWidth)+1];
+			++m_array[static_cast<unsigned int>((x-m_min)/m_binWidth)+1];
 			++m_entries;
 		}
 

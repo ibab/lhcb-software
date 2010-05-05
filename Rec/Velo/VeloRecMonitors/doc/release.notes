@@ -4,6 +4,9 @@
 ! Purpose     : VELO monitoring algorithms for reconstruction data (ZS data)
 !-----------------------------------------------------------------------------
 
+! 2010-05-05 - Kurt Rinnert
+ - bug fix in histogramming for occupancy spectra
+
 ! 2010-05-04 - Marco Gersabeck
  - Added PVResolution algorithm which produces NTuples to measure PV resolutions.
 
