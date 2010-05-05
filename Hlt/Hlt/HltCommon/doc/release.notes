@@ -3,6 +3,8 @@
 ! Responsible : Gerhard Raven
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
+! 2010-05-05 - Gerhard Raven
+ - migrate configuration code into HltDAQ
 
 !========================== HltCommon v5r24p1 2010-04-29 ===================
 ! 2010-04-21 - Gerhard Raven

@@ -3,7 +3,7 @@
 # Maintainer : Gerhard raven 
 #============================================================================
 package           HltCommon
-version           v5r24p1
+version           v6r0
 
 # Structure
 #============================================================================
@@ -28,10 +28,6 @@ use TrackInterfaces     v*    Tr
 use Boost        v*   LCG_Interfaces
 
 use LoKi                v*    Phys
-
-#### for CORAL access
-use           DetCond             v*      Det
-
 
 #============================================================================
 # Component library building rule

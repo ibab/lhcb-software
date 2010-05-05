@@ -1,4 +1,4 @@
-// $Id: MooreInit.cpp,v 1.2 2010-04-11 15:23:34 graven Exp $
+// $Id: MooreInit.cpp,v 1.3 2010-05-05 13:57:26 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -40,6 +40,8 @@ StatusCode MooreInit::initialize() {
   //StatusCode sc = LbAppInit::initialize(); // must be executed first
   StatusCode sc = GaudiAlgorithm::initialize(); // very dirty, to avoid printing...
   if ( sc.isFailure() ) return sc;  // error printed already by LbAppInit
+
+  // TODO:  use taskname as seed for random numbers...
 
   debug() << "==> Initialize" << endmsg;
 
