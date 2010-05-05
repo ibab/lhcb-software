@@ -1,11 +1,18 @@
-!$Id: release.notes,v 1.53 2010-05-04 13:56:05 jpalac Exp $
+!$Id: release.notes,v 1.54 2010-05-05 12:20:16 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : PhysSel/PhysSelPython
 ! Responsible : Juan Palacios
 ! Purpose     : Helper python classes for writing offline selections
 !-----------------------------------------------------------------------------
 
+! 2010-05-05 - Juan Palacios
+ - python/PhysSelPython/Wrappers.py
+  . Fix typo in __all__ definition.
+
 ! 2010-05-04 - Juan Palacios
+ - python/PhysSelPython/Wrappers.py
+  . Add MultiSelectionSequence class, a SelectionSequence-like class that
+    makes an OR of different SelectionSequences.
  - add tests/test_multi_selection_sequence.py
   . Test for MultiSelectionSequencer.
  - cmt/requirements
