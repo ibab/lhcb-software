@@ -1,13 +1,12 @@
-#$Id: requirements,v 1.228 2010-04-30 13:33:02 jpalac Exp $
+#$Id: requirements,v 1.229 2010-05-05 15:12:02 cattanem Exp $
 package PhysSys
-version v9r5
+version v9r6
 
 branches doc cmt
 
 ####################################################################
 use  DaVinciKernel              v8r6p1   Phys    # Juan Palacios
 use  DaVinciMCKernel            v4r2     Phys    # Juan Palacios
-use  HltInterfaces              v3r2     Kernel  # Gerhard Raven
 use  SelectionLine              v1r0p1   Kernel  # Gerhard Raven
 use  SelPy                      v1r1p1   Phys    # Juan Palacios
 

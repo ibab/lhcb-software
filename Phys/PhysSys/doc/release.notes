@@ -3,6 +3,9 @@ Package             : PhysSys
 Package Coordinator : Juan Palacios
 Purpose             : LHCb physics packages
 
+! 2010-05-05 - Marco Cattaneo
+ - Removed HltInterfaces, duplicate of package already in LHCb
+
 </PRE><H1><A NAME=v9r5>2010-04-30 Phys v9r5 </A></H1><PRE>
 
 ###############################################################################
