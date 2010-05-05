@@ -10,6 +10,7 @@ from Configurables import ( Tf__Tsa__Seed, Tf__Tsa__SeedTrackCnv,
 
 class TsaSeedConf(object):
     '''Apply configuration to a TsaSeed algorithm'''
+    OnlyUnusedHits = False
     def configureAlg(self, tsaSeed = Tf__Tsa__Seed("TsaSeed"), tsaConv=Tf__Tsa__SeedTrackCnv( "TsaSeedTrackCnv")):
         
         tsaConv.outputLocation = "Rec/Track/Seed"
@@ -29,14 +30,14 @@ class TsaSeedConf(object):
         tsaSeed.addTool(Tf__Tsa__ITStereoSearch, name="stereoS2")
         tsaSeed.addTool(Tf__Tsa__OTStereoSearch, name="stereoS3")
         tsaSeed.addTool(Tf__Tsa__OTStereoSearch, name="stereoS4")       
-
+        
         self.configureTools([tsaSeed.xSearchS0,tsaSeed.xSearchS1,
                              tsaSeed.xSearchS2,tsaSeed.xSearchS3,tsaSeed.xSearchS4],
                             [tsaSeed.stereoS0, tsaSeed.stereoS1, tsaSeed.stereoS2,
                              tsaSeed.stereoS3, tsaSeed.stereoS4])
         
         tsaSeed.addTool(Tf__Tsa__SeedAddHits, name="SeedAddHits")
-        tsaSeed.SeedAddHits.OnlyUnusedHits = OnlyUnusedHits
+        tsaSeed.SeedAddHits.OnlyUnusedHits = self.OnlyUnusedHits
         tsaSeed.addTool(Tf__Tsa__StubLinker, name = "stubLinker")
         tsaSeed.addTool(Tf__Tsa__StubExtender, "stubExtender")
         tsaSeed.addTool(Tf__Tsa__StubFind, "stubFinder")
@@ -55,7 +56,7 @@ class TsaSeedConf(object):
             
         if TrackSys().noDrifttimes():
             tsaSeed.calcLikelihood = False
-
+            
         
         if  TrackSys().earlyData():
             tsaSeed.SeedAddHits.dCut = 0.7
@@ -80,21 +81,20 @@ class TsaSeedConf(object):
             
             tsaConv.LikCut = -40
         
-            
+        
     def configureTools(self, xTools, stereoTools):
-
+        
         if len(xTools)<5 or len(stereoTools)<5:
             raise ValueError, "TsaAlgTools, you must provide 5 xTools and 5 stereoTools to configure"
         
-        OnlyUnusedHits = False
         
         for xtool in xTools:
             xtool.sector = xTools.index(xtool)
-            xtool.OnlyUnusedHits = OnlyUnusedHits
+            xtool.OnlyUnusedHits = self.OnlyUnusedHits
                 
         for stool in stereoTools:
             stool.sector = stereoTools.index(stool)
-            stool.OnlyUnusedHits = OnlyUnusedHits
+            stool.OnlyUnusedHits = self.OnlyUnusedHits
         
         
         
@@ -172,12 +172,3 @@ class TsaSeedConf(object):
             stereoTools[4].maxDriftRadius = 3.
             xTools[4].maxDriftRadius = 3.
 
-
-
-    
-
-
-    
-
-    
-    
