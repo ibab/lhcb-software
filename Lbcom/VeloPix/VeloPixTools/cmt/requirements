@@ -2,7 +2,7 @@
 # Maintainer : Victor Coco
 #
 package           VeloPixTools
-version           v1r0
+version           v1r0p1
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -13,12 +13,12 @@ include_path none
 # Used packages. Specify the version, * at the end specifies 'any revision'
 #============================================================================
 
-use  TrackInterfaces  HEAD  Tr
-use  DigiEvent  HEAD  Event
-use  VeloPixDet  HEAD  Det
+use  TrackInterfaces v*  Tr
+use  DigiEvent       v*  Event
+use  VeloPixDet      v*  Det
 use  GaudiAlg  v*  
 use  GaudiGSL  v*   
-use  TrackEvent  HEAD  Event
+use  TrackEvent      v*  Event
 
 # Component library building rule
 #============================================================================
