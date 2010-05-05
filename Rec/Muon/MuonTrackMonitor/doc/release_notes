@@ -4,12 +4,21 @@
 ! Purpose     : High level Muon Monitoring after reconstruction
 !-----------------------------------------------------------------------------
 
+! 2010-05-05 G. Graziani
+ - MuonAlignmentMonitor renamed MuonTrackAligMonitor (avoid conflicts with DaVinci)
+ - added Configurable
+ - reduce number of histograms for Online mode
+ - some style improvements
+
+! 2010-03-18 G. Graziani
+ - remove efficiency monitor (must go to DaVinciMonitors)
+
 ! 2009-10-06 S. Vecchi
  - update of MuonAlignmentMonitor for latest TrackMasterFitter version
 
 ! 2009-04-28 Antonio Petrella and Stefania Vecchi
  - first release of MuonAlignmentMonitor
 
-! 2009-02-25 - Giacomo GRAZIANI
+! 2009-02-25 - Giacomo GRAZIANI v0r0
  - package skeleton for starting development
 

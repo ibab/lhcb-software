@@ -1,4 +1,4 @@
-// $Id: MuonTrackMonitor.cpp,v 1.1.1.1 2009-02-26 09:29:59 ggiacomo Exp $
+// $Id: MuonTrackMonitor.cpp,v 1.2 2010-05-05 07:57:02 ggiacomo Exp $
 // Include files 
 
 // from Gaudi
@@ -22,7 +22,7 @@ MuonTrackMonitor::MuonTrackMonitor( const std::string& name,
                                     ISvcLocator* pSvcLocator)
   : GaudiHistoAlg ( name , pSvcLocator )
 {
-
+  declareProperty( "HistoLevel",   m_histoLevel="OfflineFull");
 }
 
 MuonTrackMonitor::~MuonTrackMonitor() {} 

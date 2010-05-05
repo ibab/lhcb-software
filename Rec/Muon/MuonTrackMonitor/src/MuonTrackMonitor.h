@@ -1,4 +1,4 @@
-// $Id: MuonTrackMonitor.h,v 1.1.1.1 2009-02-26 09:29:59 ggiacomo Exp $
+// $Id: MuonTrackMonitor.h,v 1.2 2010-05-05 07:57:02 ggiacomo Exp $
 #ifndef MUONTRACKMONITOR_H 
 #define MUONTRACKMONITOR_H 1
 
@@ -21,9 +21,8 @@ public:
   virtual StatusCode execute   ();    ///< Algorithm execution
   virtual StatusCode finalize  ();    ///< Algorithm finalization
 
-protected:
 
 private:
-
+  std::string m_histoLevel;
 };
 #endif // MUONTRACKMONITOR_H
