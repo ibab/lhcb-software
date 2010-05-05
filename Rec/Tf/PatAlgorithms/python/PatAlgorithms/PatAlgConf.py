@@ -11,7 +11,7 @@ class ForwardConf(object):
     PFAlg.addTool( PatForwardTool,"PatForwardTool" )
     self.configureTool(PFAlg.PatForwardTool)
     
-  def configureTool(self, PFtool):
+  def configureTool(self, PFTool):
     PFTool.AddTTClusterName = "PatAddTTCoord"
     PFTool.addTool( PatFwdTool("PatFwdTool"))
     

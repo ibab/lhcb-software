@@ -4,6 +4,9 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+! 2010-05-05 - Rob Lambert
+ - fixed bug in capitalization of PatAlgConf.py
+
 ! 2010-05-03 - Rob Lambert
  - Copy configuration options files into a set of python classes PatAlgConf.py
 
