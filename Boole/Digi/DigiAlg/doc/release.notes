@@ -4,6 +4,10 @@
 ! Purpose     : Holds generic digitization algorithms
 !-----------------------------------------------------------------------------
 
+! 2010-05-05 - Johannes Albrecht
+ - Set simple odin configuration as default: TriggerType = LHCb::ODIN::LumiTrigger,
+   BXType = LHCb::ODIN::BeamCrossing and BunchCurrent = 8 + (8<<4)
+
 !========================== DigiAlg v4r19 2010-04-26 =========================
 ! 2010-04-26 - Marco Cattaneo
  - BooleInit now always sets TriggerType = LHCb::ODIN::LumiTrigger in ODIN,
