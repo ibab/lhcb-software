@@ -1,4 +1,4 @@
-#include "HltBase/ANNSvc.h"
+#include "ANNSvc.h"
 #include <string>
 #include "boost/assign/list_of.hpp"
 #include <boost/functional/hash.hpp>

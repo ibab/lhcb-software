@@ -1,4 +1,4 @@
-#include "HltBase/ANNSvc.h"
+#include "ANNSvc.h"
 #include <vector>
 #include <map>
 #include <utility>
