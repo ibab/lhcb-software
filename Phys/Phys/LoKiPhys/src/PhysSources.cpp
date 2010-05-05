@@ -1,4 +1,4 @@
-// $Id: PhysSources.cpp,v 1.5 2009-05-09 19:24:13 ibelyaev Exp $
+// $Id: PhysSources.cpp,v 1.6 2010-05-05 15:45:03 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -17,6 +17,10 @@
 #include "Kernel/IPhysDesktop.h"
 #include "Kernel/DVAlgorithm.h"
 #include "Kernel/GetDVAlgorithm.h"
+// ============================================================================
+// GaudiAlg
+// ============================================================================
+#include "GaudiAlg/GetAlgs.h"
 // ============================================================================
 // LoKi
 // ============================================================================
@@ -166,32 +170,43 @@ LoKi::Particles::SourceTES::operator() () const
 // ============================================================================
 // get the particles from the certain  TES location 
 // ============================================================================
+namespace 
+{
+  // ==========================================================================
+  template <class CONTAINER, class OUTPUT, class PREDICATE>
+  inline std::size_t _fill_ 
+  ( CONTAINER& cnt , 
+    OUTPUT&    out , 
+    const PREDICATE& cut ) 
+  {
+    const std::size_t n = out.size() ;
+    out.reserve ( n + cnt->size() ) ;
+    LoKi::select ( cnt->begin () , 
+                   cnt->end   () , 
+                   std::back_inserter ( out ) , cut ) ;
+    return out.size() - n ;
+  } 
+  // ==========================================================================
+}
+// ============================================================================
 std::size_t LoKi::Particles::SourceTES::get 
 ( const std::string&           location , 
   LHCb::Particle::ConstVector& output   ) const 
 {
-  static const std::string s_particles = "/Particles" ;
   //
-  SmartDataPtr<LHCb::Particle::Container> parts ( m_dataSvc , location ) ;
-  //
+  SmartDataPtr<LHCb::Particle::Selection> parts1 ( m_dataSvc , location ) ;
+  if ( !(!parts1) ) { return _fill_ ( parts1 , output , m_cut.func() ) ; }
+  SmartDataPtr<LHCb::Particle::Container> parts2 ( m_dataSvc , location ) ;
+  if ( !(!parts2) ) { return _fill_ ( parts2 , output , m_cut.func() ) ; }
+  
   // check the suffix of type "/Particles" and add if needed
-  if ( !parts &&
-       location.size() != location.rfind ( s_particles ) + s_particles.size() ) 
+  static const std::string s_particles = "/Particles" ;
+  if ( location.size() != location.rfind ( s_particles ) + s_particles.size() ) 
   { return get ( location + s_particles , output ) ; }
   //
-  const LHCb::Particle::Container* particles = parts ;
-  Assert ( 0 != particles , 
-           "No valid data is found at location '" + location + "'") ;
+  Assert ( false , "No valid data is found at location '" + location + "'") ;
   //
-  const size_t n = output.size() ;
-  output.reserve ( n + particles -> size() ) ;
-  /// select the particles 
-  LoKi::select 
-    ( particles -> begin () , 
-      particles -> end   () , 
-      std::back_inserter ( output ) , m_cut.func() ) ;
-  //
-  return output.size() - n ;
+  return 0 ;
 }
 // ============================================================================
 // OPTIONAL: the nice printout
@@ -458,68 +473,28 @@ std::size_t LoKi::Vertices::SourceTES::get
 ( const std::string&           location , 
   LHCb::VertexBase::ConstVector& output   ) const 
 {
-  static const std::string s_vertices = "/Vertices" ;
   //
-  const size_t n = output.size() ;
+  SmartDataPtr<LHCb::RecVertex::Container>  v1 ( m_dataSvc , location ) ;
+  if (  !(!v1) ) { return _fill_ ( v1 , output , m_cut.func() ) ; }
+  SmartDataPtr<LHCb::RecVertex::Selection>  v2 ( m_dataSvc , location ) ;
+  if (  !(!v2) ) { return _fill_ ( v2 , output , m_cut.func() ) ; }
   //
-  { /// try to get reconstructed(primary) vertices 
-    SmartDataPtr<LHCb::RecVertex::Container>  v ( m_dataSvc , location ) ;
-    if ( !v ) {}
-    else
-    {
-      output.reserve ( n + v -> size() ) ;    
-      //
-      LoKi::select 
-        ( v -> begin () , 
-          v -> end   () , 
-          std::back_inserter ( output ) , m_cut.func () ) ;
-      //
-      return output.size() - n ;                                     // RETURN 
-      //    
-    } 
-  }
+  SmartDataPtr<LHCb::Vertex::Selection>     v3 ( m_dataSvc , location ) ;
+  if (  !(!v3) ) { return _fill_ ( v3 , output , m_cut.func() ) ; }
+  SmartDataPtr<LHCb::Vertex::Container>     v4 ( m_dataSvc , location ) ;
+  if (  !(!v4) ) { return _fill_ ( v4 , output , m_cut.func() ) ; }
   //
-  { /// try to get physics(secondary) vertices 
-    SmartDataPtr<LHCb::Vertex::Container>  v ( m_dataSvc , location ) ;
-    if ( !v ) {}
-    else
-    {
-      output.reserve ( n + v -> size() ) ;    
-      //
-      LoKi::select 
-        ( v -> begin () , 
-          v -> end   () , 
-          std::back_inserter ( output ) , m_cut.func () ) ;
-      //
-      return output.size() - n ;                                     // RETURN
-      //    
-    } 
-  }
-  //
-  { /// try to get physics(secondary) vertices 
-    SmartDataPtr<LHCb::VertexBase::Container>  v ( m_dataSvc , location ) ;
-    if ( !v ) {}
-    else 
-    {
-      output.reserve ( n + v -> size() ) ;    
-      //
-      LoKi::select 
-        ( v -> begin () , 
-          v -> end   () , 
-          std::back_inserter ( output ) , m_cut.func () ) ;
-      //
-      return output.size() - n ;                                    // RETURN 
-      //    
-    } 
-  }
+  SmartDataPtr<LHCb::VertexBase::Container> v5 ( m_dataSvc , location ) ;
+  if (  !(!v5) ) { return _fill_ ( v5 , output , m_cut.func() ) ; }
+  
   // check the suffix of type "/Vertices" and add if needed
+  static const std::string s_vertices = "/Vertices" ;
   if ( location.size() != location.rfind ( s_vertices ) + s_vertices.size() ) 
   { return get ( location + s_vertices , output ) ; }
   //
-  Assert ( false , 
-           "No valid data is found at location '" + location + "'") ;
+  Assert ( false , "No valid data is found at location '" + location + "'") ;
   //
-  return 0 ;
+  return 0 ; 
 }
 // ============================================================================
 // OPTIONAL: the nice printout

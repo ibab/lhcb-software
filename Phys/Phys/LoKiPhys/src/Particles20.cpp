@@ -1,4 +1,4 @@
-// $Id: Particles20.cpp,v 1.11 2010-02-19 16:40:18 ibelyaev Exp $
+// $Id: Particles20.cpp,v 1.12 2010-05-05 15:45:02 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -12,8 +12,6 @@
 #include "Kernel/IPhysDesktop.h"
 #include "Kernel/ILifetimeFitter.h"
 #include "Kernel/IDistanceCalculator.h"
-#include "Kernel/GetDVAlgorithm.h"
-#include "Kernel/DVAlgorithm.h"
 // ============================================================================
 // LoKi
 // ============================================================================
@@ -23,6 +21,8 @@
 #include "LoKi/Particles16.h"
 #include "LoKi/Particles20.h"
 #include "LoKi/PhysSources.h"
+// ============================================================================
+#include  "LoKi/GetTools.h"
 // ============================================================================
 /** @file 
  *  The implementation file for functions form the file LoKi/Particles20.h
@@ -59,19 +59,15 @@ namespace
   const IDistanceCalculator* 
   loadTool 
   ( const LoKi::Vertices::ImpactParamTool& tool      ,
-    LoKi::ILoKiSvc*                        loki      ,
+    const LoKi::ILoKiSvc*                  loki      ,
     const std::string&                     name = "" ) 
   {
     if ( 0 == loki ) { return 0 ; }                            // RETURN
-    // get DVAlgorithm form the context 
-    DVAlgorithm* alg = 
-      Gaudi::Utils::getDVAlgorithm ( SmartIF<IAlgContextSvc>( loki ) ) ;
-    if ( 0 == alg  ) { return 0 ; }                            // RETURN 
-    // get the tool form the algorithm
-    const IDistanceCalculator* geo = alg -> distanceCalculator ( name ) ;
+    const IDistanceCalculator* geo = 
+      LoKi::GetTools::distanceCalculator ( loki , name ) ;
     // set the tool 
     tool.setTool ( geo ) ;
-    return geo ;                                               // RETURN
+    return geo ;                           // RETURN
   }
   // ==========================================================================
   /** get ILifetimeFitter tool from DVAlgorithm
@@ -85,18 +81,15 @@ namespace
   inline 
   const ILifetimeFitter*
   loadFitter  
-  ( const TYPE&        func , 
-    LoKi::ILoKiSvc*    loki ,
-    const std::string& name )
+  ( const TYPE&           func , 
+    const LoKi::ILoKiSvc* loki ,
+    const std::string&    name )
   {
     if ( 0 == loki ) { return  0 ; }                           // RETURN 
-    // get DVAlgorithm form the context 
-    DVAlgorithm* alg = 
-      Gaudi::Utils::getDVAlgorithm ( SmartIF<IAlgContextSvc>( loki ) ) ;
-    if ( 0 == alg  ) { return 0 ; }                            // RETURN 
-    // get the tool from DValgorithm
-    const ILifetimeFitter* fitter = alg -> lifetimeFitter ( name ) ;
-    // set the functor 
+    //
+    const ILifetimeFitter* fitter = 
+      LoKi::GetTools::lifetimeFitter ( loki , name ) ;
+    //
     func.setTool ( fitter ) ;
     return fitter ;                                            // RETURN 
   }

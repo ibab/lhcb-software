@@ -1,4 +1,4 @@
-// $Id: PhysSources.h,v 1.4 2009-03-11 17:24:13 ibelyaev Exp $
+// $Id: PhysSources.h,v 1.5 2010-05-05 15:45:01 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PHYSSOURCES_H 
 #define LOKI_PHYSSOURCES_H 1
@@ -27,6 +27,7 @@ class DVAlgorithm ;
 // ============================================================================
 namespace LoKi
 {
+  // ==========================================================================
   namespace Particles 
   {
     // ========================================================================
@@ -125,7 +126,7 @@ namespace LoKi
       void setDataSvc ( const LoKi::Interface<IDataProviderSvc>& value ) 
       { m_dataSvc = value ; }
       // ======================================================================
-    private:
+    protected:
       // ======================================================================
       /// get the particles from the certain  TES location 
       std::size_t get ( const std::string&           location , 
@@ -135,7 +136,7 @@ namespace LoKi
       // ======================================================================
       /// TES locations of Particles 
       std::vector<std::string>  m_path ; // TES locations of Particles 
-      /// data provder service 
+      /// data provider service 
       mutable LoKi::Interface<IDataProviderSvc>  m_dataSvc ;
       /// 'on-flight' filter
       LoKi::PhysTypes::Cut m_cut ;

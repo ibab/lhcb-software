@@ -1,9 +1,18 @@
-! $Id: release.notes,v 1.136 2010-04-30 13:21:18 jpalac Exp $ 
+! $Id: release.notes,v 1.137 2010-05-05 15:45:02 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhys
 ! Responsible : Vanya Belyaev
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
+
+! 2010-05-05 - Vanya Belyaev
+
+ - fix bug #63474 
+ - improve treatment of tools 
+ - cmt/requirements 
+  
+      version increment to v9r1 
+ 
 
 ! ========================== LoKiPhys v9r0 2010-04-30 =========================
 

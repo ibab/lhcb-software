@@ -1,11 +1,6 @@
-// $Id: Particles26.cpp,v 1.3 2009-11-18 17:01:58 ibelyaev Exp $
+// $Id: Particles26.cpp,v 1.4 2010-05-05 15:45:03 ibelyaev Exp $
 // ============================================================================
 // Include files 
-// ============================================================================
-// DaVinciKernel
-// ============================================================================
-#include "Kernel/GetDVAlgorithm.h"
-#include "Kernel/DVAlgorithm.h"
 // ============================================================================
 // DaVinci Interfaces
 // ============================================================================
@@ -18,6 +13,8 @@
 #include "LoKi/Interface.h"
 #include "LoKi/Child.h"
 #include "LoKi/Particles26.h"
+// ============================================================================
+#include  "LoKi/GetTools.h"
 // ============================================================================
 /** @file 
  *  Implementation file for functions form file LoKi/Particles26
@@ -40,20 +37,7 @@ namespace
   inline const IDistanceCalculator* getDC
   ( const std::string&      nick ,
     const LoKi::AuxFunBase& base )
-  {
-    // get LoKi service
-    // const LoKi::Interface<LoKi::ILoKiSvc>& svc = base.lokiSvc() ;
-    LoKi::ILoKiSvc* svc = base.lokiSvc() ;
-    base.Assert( !(!svc) , "LoKi Service is not available!" ) ;
-    // get DVAlgorithm
-    DVAlgorithm* alg = Gaudi::Utils::getDVAlgorithm
-      ( SmartIF<IAlgContextSvc>( svc ) ) ;
-    base.Assert ( 0 != alg , "DVAlgorithm is not available" ) ;
-    const IDistanceCalculator* dc = alg->distanceCalculator( nick ) ;
-    if ( 0 == dc )
-    { base.Error("IDistanceCalculator('"+nick+"') is not available") ; }
-    return dc ;
-  }
+  { return LoKi::GetTools::distanceCalculator ( base , nick ) ; }
   // ==========================================================================
   /// the the valid tool name
   inline std::string toolName
