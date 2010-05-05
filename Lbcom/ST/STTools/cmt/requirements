@@ -8,7 +8,7 @@ package           STTools
 version           v4r0
 
 
-branches          cmt doc src options
+branches          cmt doc src options python
 include_path      none
 
 use STKernel    v* ST
@@ -27,4 +27,5 @@ use STTELL1Event     v* ST
 # Component library building rule
 #============================================================================
 library          STTools    ../src/*.cpp -import=AIDA
+apply_pattern    install_python_modules
 apply_pattern    component_library library=STTools
