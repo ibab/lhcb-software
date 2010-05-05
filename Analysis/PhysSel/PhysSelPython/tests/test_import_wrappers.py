@@ -6,11 +6,12 @@ Test loading of modules
 import sys
 sys.path.append('../python')
 
-def test_import_wrappers_star() :
-    from PhysSelPython.Wrappers import *
-
 def test_import_physselpython_wrappers() :
     import PhysSelPython.Wrappers
+
+def test_import_physselpython_selection() :
+    import PhysSelPython.selection
+
 
 if '__main__' == __name__ :
 
