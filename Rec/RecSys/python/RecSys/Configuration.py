@@ -4,7 +4,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.33 2010-05-03 09:27:11 rlambert Exp $"
+__version__ = "$Id: Configuration.py,v 1.34 2010-05-05 09:58:07 ggiacomo Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
             
 from LHCbKernel.Configuration import *
@@ -15,7 +15,7 @@ from GlobalReco.Configuration import *
 from CaloReco.Configuration   import OffLineCaloRecoConf 
 from CaloPIDs.Configuration   import OffLineCaloPIDsConf
 
-from Configurables import ProcessPhase, CaloMoniDstConf, RichRecQCConf, VeloRecMonitors
+from Configurables import ProcessPhase, CaloMoniDstConf, RichRecQCConf, VeloRecMonitors, MuonTrackMonitorConf
 
 ## @class RecSysConf
 #  Configurable for LHCb reconstruction
@@ -180,7 +180,8 @@ class RecMoniConf(LHCbConfigurableUser):
     ## Possible used Configurables
     __used_configurables__ = [ CaloMoniDstConf,
                                (RichRecQCConf,richMoniConfName),
-                               VeloRecMonitors ]
+                               VeloRecMonitors,
+                               MuonTrackMonitorConf ]
 
     ## Configurables that must be configured before us
     __queried_configurables__ = [ RecSysConf, TrackSys ]
@@ -260,6 +261,10 @@ class RecMoniConf(LHCbConfigurableUser):
             mydata =  self.getProp("DataType")
             mymonitconf = mmuon.ConfigureMuonPIDChecker(data = mydata)
             mymonitconf.configure(UseMC = False, HistosLevel = self.getProp("Histograms")) 
+
+            mymtmconf = MuonTrackMonitorConf()
+            self.setOtherProps(mymtmconf,["Histograms","OutputLevel","DataType"])
+            mymtmconf.setProp("Sequencer", GaudiSequencer("MoniMUONSeq"))
 
         if "ST" in moniSeq :
             from Configurables import ST__STClusterMonitor, GaudiSequencer
