@@ -3,7 +3,7 @@
 # Maintainer : Gerhard Raven
 #============================================================================
 package           HltInterfaces
-version           v3r2
+version           v4r0
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -15,6 +15,7 @@ branches          cmt doc dict Kernel src
 use GaudiKernel         v*
 use Boost               v*   LCG_Interfaces
 use DAQEvent            v* Event
+use LHCbMath            v*    Kernel
 
 # include directory
 #=========================================================================

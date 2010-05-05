@@ -1,11 +1,18 @@
-! $Id: release.notes,v 1.17 2010-03-17 17:05:00 cattanem Exp $
+! $Id: release.notes,v 1.18 2010-05-05 13:20:12 graven Exp $
 ! Package     : HltInterfaces
 ! Responsible : Gerhard Raven
 !------------------------------------------------------------------------------
 
+! 2010-05-05 - Gerhard Raven
+ - move interface code used to configure Hlt from a TCK, and to decode Hlt 
+   raw date, out of Hlt/HltBase in the HLT project, so that it can be used
+   elsewhere, i.e. add:
+      Kernel/ANNSvc.h Kernel/ConfigTreeNode.h Kernel/ConfigTreeNodeAlias.h
+      Kernel/IPropertyConfigSvc.h Kernel/PropertyConfig.h Kernel/TCK.h
+
 !============ Kernel/HltInterfaces v3r2 2010-03-17 ============================
 ! 2010-03-08 - Patrick Koppenburg
- - Remove cout statement that sneked into cvs
+ - Remove cout statement that sneaked into cvs
 
 ! 2010-03-05 - Patrick Koppenburg
  - ReadRoutingBits : Throw an exception when there is not exactly 1 bank (#63745)
