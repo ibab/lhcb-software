@@ -1,11 +1,10 @@
-// $Id: EvtGenDecay.cpp,v 1.22 2010-03-20 23:39:01 robbep Exp $
+// $Id: EvtGenDecay.cpp,v 1.23 2010-05-05 19:38:36 robbep Exp $
 // Header file
 #include "EvtGenDecay.h"
 
 // Include files
 #include <iostream>
 #include <fstream>
-#include <memory>
 
 // from boost
 #include "boost/filesystem.hpp"
@@ -138,7 +137,7 @@ StatusCode EvtGenDecay::initialize( ) {
     return Error( "The specified generic decay table does not exist" ) ;
 
   // create temporary evt.pdl file filled with Gaudi ParticlePropertySvc
-  boost::filesystem::path evtPdlFile( "tempPdlFile.txt" );
+  boost::filesystem::path evtPdlFile( std::tmpnam(NULL) ) ;
   if ( boost::filesystem::exists( evtPdlFile ) ) 
     boost::filesystem::remove( evtPdlFile ) ;
   sc = createTemporaryEvtFile( evtPdlFile ) ;
@@ -175,6 +174,7 @@ StatusCode EvtGenDecay::initialize( ) {
     m_gen -> readUDecay( m_userDecay.c_str() ) ; 
   }
 
+  m_photosTempFilename = std::string( std::tmpnam( NULL ) ) ;
   if ( boost::filesystem::exists( m_photosTempFilename ) ) 
     boost::filesystem::remove( m_photosTempFilename ) ;
   

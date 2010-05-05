@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.163 2010-03-22 18:50:15 gcorti Exp $
+! $Id: release.notes,v 1.164 2010-05-05 19:38:36 robbep Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Gen/Generators
 ! Responsible : Patrick ROBBE
 ! Purpose     : Common algorithms and tools for all production engines
 !-----------------------------------------------------------------------------
+
+! 2010-05-05 - Patrick Robbe
+ - EvtGenDecay.cpp: use tmpnam to have unique files when creating the
+   temporary files for photos and EvtGen particle table
 
 !====================== Generators v10r7 2010-03-22 ==========================
 ! 2010-03-21 - Patrick Robbe
