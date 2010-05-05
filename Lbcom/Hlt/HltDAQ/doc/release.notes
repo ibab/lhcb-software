@@ -4,6 +4,11 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !-----------------------------------------------------------------------------
 
+! 2010-05-05 - Gerhard Raven
+ - move HLT configuration implementation from HltCommon to here so it can
+   be used during readback without having a runtime dependency on the HLT
+   project
+
 !========================== HltDAQ v1r7 2010-04-08 ===========================
 
 ! 2010-04-07 - Juan Palacios
