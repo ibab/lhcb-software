@@ -30,6 +30,8 @@ use LoKiHlt             v*    Phys
 #### for CORAL access
 use           DetCond             v*      Det
 
+### for access to the config.tar file with configurations
+use HltTCK              v1r*    TCK         -no_auto_imports
 
 # include_path      none
 #============================================================================
