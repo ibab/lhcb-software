@@ -1329,7 +1329,7 @@ void EvtPythia::pythiaInit(int /*dummy*/){
 
     char fname[200];
     
-    strcpy( fname , "EvtGenPythia.newdata" ) ;
+    strcpy( fname , std::tmpnam( NULL ) ) ;
     
     MakePythiaFile(fname);
 #ifdef WIN32

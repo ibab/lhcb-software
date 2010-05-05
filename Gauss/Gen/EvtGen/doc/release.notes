@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2010-05-05 - Patrick Robbe
+ - EvtPythia.cpp: use temporary file name to store Pythia new decay table
+
 !========================== EvtGen v11r8 2010-01-26 ==========================
 ! 2010-01-26 - Patrick Robbe
  - EvtModelReg.cpp: reactivates Direct CPV
