@@ -1,4 +1,4 @@
-// $Id: HltGenConfig.h,v 1.11 2009-08-10 14:42:58 graven Exp $
+// $Id: HltGenConfig.h,v 1.12 2010-05-05 21:07:43 graven Exp $
 #ifndef HLTGENCONFIG_H 
 #define HLTGENCONFIG_H 1
 
@@ -7,8 +7,8 @@
 #include <vector>
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
-#include "HltBase/IConfigAccessSvc.h"
-#include "HltBase/IPropertyConfigSvc.h"
+#include "Kernel/IConfigAccessSvc.h"
+#include "Kernel/IPropertyConfigSvc.h"
 
 /** @class HltGenConfig HltGenConfig.h
  *  

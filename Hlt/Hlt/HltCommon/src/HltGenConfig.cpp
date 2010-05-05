@@ -1,4 +1,4 @@
-// $Id: HltGenConfig.cpp,v 1.17 2010-01-31 13:08:51 graven Exp $
+// $Id: HltGenConfig.cpp,v 1.18 2010-05-05 21:07:43 graven Exp $
 // Include files 
 #include <algorithm>
 #include "boost/assign/list_of.hpp"
@@ -23,7 +23,7 @@
 
 // local
 #include "HltGenConfig.h"
-#include "HltBase/PropertyConfig.h"
+#include "Kernel/PropertyConfig.h"
 
 
 using namespace std;
