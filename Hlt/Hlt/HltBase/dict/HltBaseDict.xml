@@ -8,14 +8,5 @@
   <class name = "Hlt::TrackSelection" />
   <class name = "Hlt::VertexSelection" />
   <class name = "ISequencerTimerTool" />
-  <class name = "IConfigAccessSvc" />
   <class name = "IConfigTreeEditor" />
-  <class name = "IPropertyConfigSvc" />
-  <class name = "PropertyConfig" />
-  <class name = "ConfigTreeNode" />
-  <class name = "ConfigTreeNodeAlias" />
-  <class name = "std::vector<ConfigTreeNodeAlias>" />
-  <class name = "boost::optional<ConfigTreeNode>" />
-  <class name = "boost::optional<PropertyConfig>" />
-  <class name = "ConfigTreeNodeAlias::alias_type" />
 </lcgdict>

@@ -10,11 +10,6 @@
 #include "HltBase/IFunctionFactory.h"
 #include "HltBase/IBiFunctionFactory.h"
 #include "HltBase/IConfigTreeEditor.h"
-#include "HltBase/ConfigTreeNodeAlias.h"
-#include "HltBase/ConfigTreeNode.h"
-#include "HltBase/PropertyConfig.h"
-#include "HltBase/IPropertyConfigSvc.h"
-#include "HltBase/IConfigAccessSvc.h"
 #include "HltBase/IHltRegister.h"
 #include "HltBase/IHltData.h"
 #include "HltBase/IHltInspector.h"
@@ -22,16 +17,6 @@
 
 #include "GaudiAlg/ISequencerTimerTool.h"
 
-namespace {
-  
-  struct _hltbase_instantiations  
-  {
-    std::vector<ConfigTreeNodeAlias> py_hlt_07;
-    boost::optional<ConfigTreeNode> py_hlt_08;
-    boost::optional<PropertyConfig> py_hlt_09;
-    _hltbase_instantiations(){}
-  };  
-}
 
 #endif // DICT_HLTBASEDICT_H
 
