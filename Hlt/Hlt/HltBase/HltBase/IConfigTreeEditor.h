@@ -1,4 +1,4 @@
-// $Id: IConfigTreeEditor.h,v 1.3 2009-06-30 14:36:53 graven Exp $
+// $Id: IConfigTreeEditor.h,v 1.4 2010-05-05 20:35:27 graven Exp $
 #ifndef ICONFIGTREEEDITOR_H 
 #define ICONFIGTREEEDITOR_H 1
 
@@ -7,7 +7,7 @@
 #include <utility>
 #include <map>
 #include "GaudiKernel/INamedInterface.h"
-#include "HltBase/ConfigTreeNode.h"
+#include "Kernel/ConfigTreeNode.h"
 
 
 /** @class IConfigTreeEditor IConfigTreeEditor.h
