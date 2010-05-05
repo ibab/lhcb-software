@@ -54,9 +54,16 @@ class LumiAlgsConf(LHCbConfigurableUser):
     
     ## Helper functions
     def fillFSR(self):
-        '''fill the original FSR, return a sequence'''
+        '''
+        fill the original FSR, return a sequence
+        requires LumiTrigger
+        and requires Method counter == RandomMethod
+        - WARNING -
+        - the Method selection is valid for Moore as of v9 -
+        - to keep code clean it is better to use for earlier versions of Moore only the other FSR -
+        '''
         from Configurables import ( LumiAccounting,
-                                    HltLumiSummaryDecoder, GaudiSequencer )
+                                    HltLumiSummaryDecoder, FilterOnLumiSummary, GaudiSequencer )
         from Configurables import LoKi__ODINFilter  as ODINFilter
         # Create sub-sequences according to BXTypes
         crossings = self.getProp("BXTypes")
@@ -67,6 +74,12 @@ class LumiAlgsConf(LHCbConfigurableUser):
                                             Code = ' ( ODIN_TRGTYP == LHCb.ODIN.LumiTrigger ) & ( ODIN_BXTYP == LHCb.ODIN.'+i+' ) ' ))
             decoder = HltLumiSummaryDecoder('LumiDecode'+i)
             seqMembers.append( decoder )
+            methodfilter = FilterOnLumiSummary('LumiFilter'+i,
+                                               CounterName = "Random",
+                                               ValueName = "RandomMethod",
+                                               OutputLevel = self.getProp("OutputLevel") )
+            seqMembers.append( methodfilter )
+
             accounting = LumiAccounting('LumiCount'+i,
                                         OutputDataContainer = "/FileRecords/LumiFSR"+i,
                                         OutputLevel = self.getProp("OutputLevel") )
@@ -87,8 +100,9 @@ class LumiAlgsConf(LHCbConfigurableUser):
     def fillLowLumiFSR(self):
         '''
         fill the low lumi FSR, return a sequence
-        similar to the fillFSR method, but accepts more trigger type and
-        applies the method filter
+        similar to the fillFSR method, but accepts more trigger types and
+        applies the method filter Method:L0RateMethod
+        this is valid for all versions om Moore 
         '''
         from Configurables import ( LumiAccounting,
                                     HltLumiSummaryDecoder, FilterOnLumiSummary, GaudiSequencer )
@@ -127,7 +141,10 @@ class LumiAlgsConf(LHCbConfigurableUser):
         return BXMembers
     
     def fillTimeSpanFSR(self):
-        '''fill the time span FSR, return a sequence'''
+        '''
+        fill the time span FSR, return a sequence
+        it looks at the time stamp of events with the LumiTrigger
+        '''
         from Configurables import ( TimeAccounting,
                                     GaudiSequencer )
         from Configurables import LoKi__ODINFilter  as ODINFilter

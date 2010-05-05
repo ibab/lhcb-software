@@ -4,6 +4,12 @@
 ! Purpose     : Accounting of LumiSummaries (offline code)
 !-----------------------------------------------------------------------------
 
+! 2010-05-05 - Jaap Panman
+ - Added check on "Method" to select random Lumi events
+   . breaks treatment of data taken with Moore < v9 where the rate was 
+     anyway too low to use the random method (except for one fill)
+ - Updated test suite using a 2010 raw file written with Moore v9r1
+
 ! 2010-04-27 - Rob Lambert
  - Added PropagateFSRs algorithm
    . Collects all filename->GUID releations

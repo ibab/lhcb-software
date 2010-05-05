@@ -19,7 +19,7 @@ FileCatalog().Catalogs = [ "xmlcatalog_file:MyCatalog.xml",
                             ]
 
 files = [
-  "   DATAFILE='LFN:/lhcb/data/2009/RAW/FULL/LHCb/COLLISION09/63688/063688_0000000001.raw' SVC='LHCb::MDFSelector'"
+  "   DATAFILE='LFN:/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/71185/071185_0000000029.raw' SVC='LHCb::MDFSelector'"
   ]
 
 ofilename='testout.mdf'

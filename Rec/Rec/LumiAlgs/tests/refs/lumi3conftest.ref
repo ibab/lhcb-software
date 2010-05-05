@@ -1,5 +1,5 @@
-# --> Including file '/afs/cern.ch/user/p/panmanj/cmtuser/Rec_HEAD/Rec/LumiAlgs/job/LumiAlgsConfTest.py'
-# <-- End of file '/afs/cern.ch/user/p/panmanj/cmtuser/Rec_HEAD/Rec/LumiAlgs/job/LumiAlgsConfTest.py'
+# --> Including file '/afs/cern.ch/user/p/panmanj/cmtuser/Brunel_v37r2/Rec/LumiAlgs/job/LumiAlgsConfTest.py'
+# <-- End of file '/afs/cern.ch/user/p/panmanj/cmtuser/Brunel_v37r2/Rec/LumiAlgs/job/LumiAlgsConfTest.py'
 # applying configuration of LHCbApp
 # /***** User LHCbApp/LHCbApp ************************************************************************
 # |-DataType    = '2009'
@@ -22,22 +22,22 @@
 # |-BXTypes           = ['NoBeam', 'BeamCrossing', 'Beam1', 'Beam2']
 # |                   (default: ['NoBeam', 'BeamCrossing', 'Beam1', 'Beam2'])
 # |-Context           = 'Offline'
-# |-LumiSequencer     = <GaudiSequencer/LumiSequence at 0x771360>  (default: None)
+# |-LumiSequencer     = <GaudiSequencer/LumiSequence at 0x9a3df0>  (default: None)
 # |-InputType         = 'MDF'
 # \----- (End of User LumiAlgsConf/LumiAlgsConf) -----------------------------------------------------
 # skipping configuration of XMLSummary
 # applying configuration of DDDBConf
-# WARNING: Using default tag head-20100119 for partition DDDB
-# WARNING: Using default tag head-20100202 for partition LHCBCOND
-# WARNING: Using default tag sim-20100119-vc-md100 for partition SIMCOND
+# WARNING: Using default tag head-20100407 for partition DDDB
+# WARNING: Using default tag head-20100414 for partition LHCBCOND
+# WARNING: Using default tag MC-20100412-vc15mm-md100 for partition SIMCOND
 # /***** User DDDBConf/DDDBConf **********************************************************************
 # |-DataType   = '2009'
 # |-DbRoot     = 'conddb:/lhcb.xml'
 # |-Simulation = False
 # \----- (End of User DDDBConf/DDDBConf) -------------------------------------------------------------
 # applying configuration of CondDB
-# --> Including file '/afs/cern.ch/lhcb/software/DEV/DBASE/Det/SQLDDDB/options/SQLDDDB.py'
-# <-- End of file '/afs/cern.ch/lhcb/software/DEV/DBASE/Det/SQLDDDB/options/SQLDDDB.py'
+# --> Including file '/afs/cern.ch/lhcb/software/releases/DBASE/Det/SQLDDDB/v5r27/options/SQLDDDB.py'
+# <-- End of file '/afs/cern.ch/lhcb/software/releases/DBASE/Det/SQLDDDB/v5r27/options/SQLDDDB.py'
 # /***** User CondDB/CondDB **************************************************************************
 # |-PartitionConnectionString = {}  (default: {})
 # |-LocalTags                 = {}  (default: {})
@@ -47,15 +47,17 @@
 # |-DisableLFC                = False
 # |-Simulation                = False
 # |-SQLiteLocalCopiesDir      = ''
+# |-HeartBeatCondition        = '/Conditions/Online/LHCb/Tick'
 # |-Online                    = False
 # |-UseOracle                 = False
 # |-LogFile                   = ''
+# |-UseLatestTags             = []  (default: [])
 # |-OverwriteSQLiteLocalCopy  = False
 # \----- (End of User CondDB/CondDB) -----------------------------------------------------------------
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
-                                                   Welcome to ApplicationMgr $Revision: 1.5 $
-                                          running on lxplus204.cern.ch on Sun Feb 14 12:13:19 2010
+                                                   Welcome to Brunel version v37r2
+                                          running on lxplus255.cern.ch on Wed May  5 15:39:52 2010
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 DetectorPersist...   INFO  'CnvServices':[ 'XmlCnvSvc/XmlCnvSvc' ]
@@ -67,8 +69,8 @@ LumiSequence         INFO OR Member list: GaudiSequencer/LumiNoBeamSeq, GaudiSeq
 RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
 RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-ToolSvc.Sequenc...   INFO This machine has a speed about   1.72 times the speed of a 2.8 GHz Xeon.
-LumiNoBeamSeq        INFO Member list: LoKi::ODINFilter/FilterNoBeam, HltLumiSummaryDecoder/LumiDecodeNoBeam, LumiAccounting/LumiCountNoBeam
+ToolSvc.Sequenc...   INFO This machine has a speed about   1.62 times the speed of a 2.8 GHz Xeon.
+LumiNoBeamSeq        INFO Member list: LoKi::ODINFilter/FilterNoBeam, HltLumiSummaryDecoder/LumiDecodeNoBeam, FilterOnLumiSummary/LumiFilterNoBeam, LumiAccounting/LumiCountNoBeam
 LoKiSvc           SUCCESS
 
 
@@ -93,6 +95,51 @@ Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome 
 
 
 FilterNoBeam         INFO Requested code: ' ( ODIN_TRGTYP == LHCb.ODIN.LumiTrigger ) & ( ODIN_BXTYP == LHCb.ODIN.NoBeam ) ' -> Decoded functor :'(( ODIN_TRGTYP == 2 )&( ODIN_BXTYP == 0 ))'
+LumiFilterNoBeam    DEBUG Property update for OutputLevel : new value = 1
+LumiFilterNoBeam    DEBUG Property update for OutputLevel : new value = 1
+LumiFilterNoBeam  VERBOSE ServiceLocatorHelper::service: found service AlgContextSvc
+LumiFilterNoBeam    DEBUG Initialize base class GaudiCommon<Algorithm>
+LumiFilterNoBeam    DEBUG could not locate CounterSummarySvc, no counter summary will be made
+LumiFilterNoBeam    DEBUG List of ALL properties of FilterOnLumiSummary/LumiFilterNoBeam  #properties = 35
+LumiFilterNoBeam    DEBUG Property ['Name': Value] =  'ValueName':RandomMethod
+LumiFilterNoBeam    DEBUG Property ['Name': Value] =  'CounterName':Random
+LumiFilterNoBeam    DEBUG Property ['Name': Value] =  'InputDataContainer':Hlt/LumiSummary
+LumiFilterNoBeam    DEBUG Property ['Name': Value] =  'RequireObjects':[  ]
+LumiFilterNoBeam    DEBUG Property ['Name': Value] =  'VetoObjects':[  ]
+LumiFilterNoBeam    DEBUG Property ['Name': Value] =  'StatEntityList':[  ]
+LumiFilterNoBeam    DEBUG Property ['Name': Value] =  'CounterList':[ '.*' ]
+LumiFilterNoBeam    DEBUG Property ['Name': Value] =  'UseEfficiencyRowFormat':True
+LumiFilterNoBeam    DEBUG Property ['Name': Value] =  'EfficiencyRowFormat': |*%|-48.48s|%|50t||%|10d| |%|11.5g| |(%|#9.6g| +- %|-#9.6g|)%%|   -------   |   -------   |
+LumiFilterNoBeam    DEBUG Property ['Name': Value] =  'RegularRowFormat': | %|-48.48s|%|50t||%|10d| |%|11.7g| |%|#11.5g| |%|#11.5g| |%|#12.5g| |%|#12.5g| |
+LumiFilterNoBeam    DEBUG Property ['Name': Value] =  'StatTableHeader': |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
+LumiFilterNoBeam    DEBUG Property ['Name': Value] =  'GlobalTimeOffset':0
+LumiFilterNoBeam    DEBUG Property ['Name': Value] =  'RootOnTES':
+LumiFilterNoBeam    DEBUG Property ['Name': Value] =  'RootInTES':
+LumiFilterNoBeam    DEBUG Property ['Name': Value] =  'Context':
+LumiFilterNoBeam    DEBUG Property ['Name': Value] =  'TypePrint':True
+LumiFilterNoBeam    DEBUG Property ['Name': Value] =  'StatPrint':True
+LumiFilterNoBeam    DEBUG Property ['Name': Value] =  'PropertiesPrint':False
+LumiFilterNoBeam    DEBUG Property ['Name': Value] =  'ErrorsPrint':True
+LumiFilterNoBeam    DEBUG Property ['Name': Value] =  'RegisterForContextService':True
+LumiFilterNoBeam    DEBUG Property ['Name': Value] =  'MonitorService':MonitorSvc
+LumiFilterNoBeam    DEBUG Property ['Name': Value] =  'AuditStop':False
+LumiFilterNoBeam    DEBUG Property ['Name': Value] =  'AuditStart':False
+LumiFilterNoBeam    DEBUG Property ['Name': Value] =  'AuditEndRun':False
+LumiFilterNoBeam    DEBUG Property ['Name': Value] =  'AuditBeginRun':False
+LumiFilterNoBeam    DEBUG Property ['Name': Value] =  'AuditFinalize':False
+LumiFilterNoBeam    DEBUG Property ['Name': Value] =  'AuditExecute':False
+LumiFilterNoBeam    DEBUG Property ['Name': Value] =  'AuditRestart':False
+LumiFilterNoBeam    DEBUG Property ['Name': Value] =  'AuditReinitialize':False
+LumiFilterNoBeam    DEBUG Property ['Name': Value] =  'AuditInitialize':False
+LumiFilterNoBeam    DEBUG Property ['Name': Value] =  'AuditAlgorithms':False
+LumiFilterNoBeam    DEBUG Property ['Name': Value] =  'ErrorCount':0
+LumiFilterNoBeam    DEBUG Property ['Name': Value] =  'ErrorMax':1
+LumiFilterNoBeam    DEBUG Property ['Name': Value] =  'Enable':True
+LumiFilterNoBeam    DEBUG Property ['Name': Value] =  'OutputLevel':1
+LumiFilterNoBeam    DEBUG ==> Initialize
+LumiFilterNoBeam    DEBUG CounterName:       Random ValueName:         RandomMethod
+LumiFilterNoBeam    DEBUG ExtraInfo key value: 21
+LumiFilterNoBeam    DEBUG ExtraInfo method key value: 2
 LumiCountNoBeam     DEBUG Property update for OutputLevel : new value = 1
 LumiCountNoBeam     DEBUG Property update for OutputLevel : new value = 1
 LumiCountNoBeam   VERBOSE ServiceLocatorHelper::service: found service AlgContextSvc
@@ -136,8 +183,53 @@ LumiCountNoBeam     DEBUG Property ['Name': Value] =  'Enable':True
 LumiCountNoBeam     DEBUG Property ['Name': Value] =  'OutputLevel':1
 LumiCountNoBeam     DEBUG ==> Initialize
 LumiCountNoBeam     DEBUG LumiAccounting:: The object of type 'KeyedContainer<LHCb::LumiFSR,Containers::KeyedObjectManager<Containers::hashmap> >' is registered in TS at address '/FileRecords/LumiFSRNoBeam'
-LumiBeamCrossin...   INFO Member list: LoKi::ODINFilter/FilterBeamCrossing, HltLumiSummaryDecoder/LumiDecodeBeamCrossing, LumiAccounting/LumiCountBeamCrossing
+LumiBeamCrossin...   INFO Member list: LoKi::ODINFilter/FilterBeamCrossing, HltLumiSummaryDecoder/LumiDecodeBeamCrossing, FilterOnLumiSummary/LumiFilterBeamCrossing, LumiAccounting/LumiCountBeamCrossing
 FilterBeamCrossing   INFO Requested code: ' ( ODIN_TRGTYP == LHCb.ODIN.LumiTrigger ) & ( ODIN_BXTYP == LHCb.ODIN.BeamCrossing ) ' -> Decoded functor :'(( ODIN_TRGTYP == 2 )&( ODIN_BXTYP == 3 ))'
+LumiFilterBeamC...  DEBUG Property update for OutputLevel : new value = 1
+LumiFilterBeamC...  DEBUG Property update for OutputLevel : new value = 1
+LumiFilterBeamC...VERBOSE ServiceLocatorHelper::service: found service AlgContextSvc
+LumiFilterBeamC...  DEBUG Initialize base class GaudiCommon<Algorithm>
+LumiFilterBeamC...  DEBUG could not locate CounterSummarySvc, no counter summary will be made
+LumiFilterBeamC...  DEBUG List of ALL properties of FilterOnLumiSummary/LumiFilterBeamCrossing  #properties = 35
+LumiFilterBeamC...  DEBUG Property ['Name': Value] =  'ValueName':RandomMethod
+LumiFilterBeamC...  DEBUG Property ['Name': Value] =  'CounterName':Random
+LumiFilterBeamC...  DEBUG Property ['Name': Value] =  'InputDataContainer':Hlt/LumiSummary
+LumiFilterBeamC...  DEBUG Property ['Name': Value] =  'RequireObjects':[  ]
+LumiFilterBeamC...  DEBUG Property ['Name': Value] =  'VetoObjects':[  ]
+LumiFilterBeamC...  DEBUG Property ['Name': Value] =  'StatEntityList':[  ]
+LumiFilterBeamC...  DEBUG Property ['Name': Value] =  'CounterList':[ '.*' ]
+LumiFilterBeamC...  DEBUG Property ['Name': Value] =  'UseEfficiencyRowFormat':True
+LumiFilterBeamC...  DEBUG Property ['Name': Value] =  'EfficiencyRowFormat': |*%|-48.48s|%|50t||%|10d| |%|11.5g| |(%|#9.6g| +- %|-#9.6g|)%%|   -------   |   -------   |
+LumiFilterBeamC...  DEBUG Property ['Name': Value] =  'RegularRowFormat': | %|-48.48s|%|50t||%|10d| |%|11.7g| |%|#11.5g| |%|#11.5g| |%|#12.5g| |%|#12.5g| |
+LumiFilterBeamC...  DEBUG Property ['Name': Value] =  'StatTableHeader': |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
+LumiFilterBeamC...  DEBUG Property ['Name': Value] =  'GlobalTimeOffset':0
+LumiFilterBeamC...  DEBUG Property ['Name': Value] =  'RootOnTES':
+LumiFilterBeamC...  DEBUG Property ['Name': Value] =  'RootInTES':
+LumiFilterBeamC...  DEBUG Property ['Name': Value] =  'Context':
+LumiFilterBeamC...  DEBUG Property ['Name': Value] =  'TypePrint':True
+LumiFilterBeamC...  DEBUG Property ['Name': Value] =  'StatPrint':True
+LumiFilterBeamC...  DEBUG Property ['Name': Value] =  'PropertiesPrint':False
+LumiFilterBeamC...  DEBUG Property ['Name': Value] =  'ErrorsPrint':True
+LumiFilterBeamC...  DEBUG Property ['Name': Value] =  'RegisterForContextService':True
+LumiFilterBeamC...  DEBUG Property ['Name': Value] =  'MonitorService':MonitorSvc
+LumiFilterBeamC...  DEBUG Property ['Name': Value] =  'AuditStop':False
+LumiFilterBeamC...  DEBUG Property ['Name': Value] =  'AuditStart':False
+LumiFilterBeamC...  DEBUG Property ['Name': Value] =  'AuditEndRun':False
+LumiFilterBeamC...  DEBUG Property ['Name': Value] =  'AuditBeginRun':False
+LumiFilterBeamC...  DEBUG Property ['Name': Value] =  'AuditFinalize':False
+LumiFilterBeamC...  DEBUG Property ['Name': Value] =  'AuditExecute':False
+LumiFilterBeamC...  DEBUG Property ['Name': Value] =  'AuditRestart':False
+LumiFilterBeamC...  DEBUG Property ['Name': Value] =  'AuditReinitialize':False
+LumiFilterBeamC...  DEBUG Property ['Name': Value] =  'AuditInitialize':False
+LumiFilterBeamC...  DEBUG Property ['Name': Value] =  'AuditAlgorithms':False
+LumiFilterBeamC...  DEBUG Property ['Name': Value] =  'ErrorCount':0
+LumiFilterBeamC...  DEBUG Property ['Name': Value] =  'ErrorMax':1
+LumiFilterBeamC...  DEBUG Property ['Name': Value] =  'Enable':True
+LumiFilterBeamC...  DEBUG Property ['Name': Value] =  'OutputLevel':1
+LumiFilterBeamC...  DEBUG ==> Initialize
+LumiFilterBeamC...  DEBUG CounterName:       Random ValueName:         RandomMethod
+LumiFilterBeamC...  DEBUG ExtraInfo key value: 21
+LumiFilterBeamC...  DEBUG ExtraInfo method key value: 2
 LumiCountBeamCr...  DEBUG Property update for OutputLevel : new value = 1
 LumiCountBeamCr...  DEBUG Property update for OutputLevel : new value = 1
 LumiCountBeamCr...VERBOSE ServiceLocatorHelper::service: found service AlgContextSvc
@@ -181,8 +273,53 @@ LumiCountBeamCr...  DEBUG Property ['Name': Value] =  'Enable':True
 LumiCountBeamCr...  DEBUG Property ['Name': Value] =  'OutputLevel':1
 LumiCountBeamCr...  DEBUG ==> Initialize
 LumiCountBeamCr...  DEBUG LumiAccounting:: The object of type 'KeyedContainer<LHCb::LumiFSR,Containers::KeyedObjectManager<Containers::hashmap> >' is registered in TS at address '/FileRecords/LumiFSRBeamCrossing'
-LumiBeam1Seq         INFO Member list: LoKi::ODINFilter/FilterBeam1, HltLumiSummaryDecoder/LumiDecodeBeam1, LumiAccounting/LumiCountBeam1
+LumiBeam1Seq         INFO Member list: LoKi::ODINFilter/FilterBeam1, HltLumiSummaryDecoder/LumiDecodeBeam1, FilterOnLumiSummary/LumiFilterBeam1, LumiAccounting/LumiCountBeam1
 FilterBeam1          INFO Requested code: ' ( ODIN_TRGTYP == LHCb.ODIN.LumiTrigger ) & ( ODIN_BXTYP == LHCb.ODIN.Beam1 ) ' -> Decoded functor :'(( ODIN_TRGTYP == 2 )&( ODIN_BXTYP == 1 ))'
+LumiFilterBeam1     DEBUG Property update for OutputLevel : new value = 1
+LumiFilterBeam1     DEBUG Property update for OutputLevel : new value = 1
+LumiFilterBeam1   VERBOSE ServiceLocatorHelper::service: found service AlgContextSvc
+LumiFilterBeam1     DEBUG Initialize base class GaudiCommon<Algorithm>
+LumiFilterBeam1     DEBUG could not locate CounterSummarySvc, no counter summary will be made
+LumiFilterBeam1     DEBUG List of ALL properties of FilterOnLumiSummary/LumiFilterBeam1  #properties = 35
+LumiFilterBeam1     DEBUG Property ['Name': Value] =  'ValueName':RandomMethod
+LumiFilterBeam1     DEBUG Property ['Name': Value] =  'CounterName':Random
+LumiFilterBeam1     DEBUG Property ['Name': Value] =  'InputDataContainer':Hlt/LumiSummary
+LumiFilterBeam1     DEBUG Property ['Name': Value] =  'RequireObjects':[  ]
+LumiFilterBeam1     DEBUG Property ['Name': Value] =  'VetoObjects':[  ]
+LumiFilterBeam1     DEBUG Property ['Name': Value] =  'StatEntityList':[  ]
+LumiFilterBeam1     DEBUG Property ['Name': Value] =  'CounterList':[ '.*' ]
+LumiFilterBeam1     DEBUG Property ['Name': Value] =  'UseEfficiencyRowFormat':True
+LumiFilterBeam1     DEBUG Property ['Name': Value] =  'EfficiencyRowFormat': |*%|-48.48s|%|50t||%|10d| |%|11.5g| |(%|#9.6g| +- %|-#9.6g|)%%|   -------   |   -------   |
+LumiFilterBeam1     DEBUG Property ['Name': Value] =  'RegularRowFormat': | %|-48.48s|%|50t||%|10d| |%|11.7g| |%|#11.5g| |%|#11.5g| |%|#12.5g| |%|#12.5g| |
+LumiFilterBeam1     DEBUG Property ['Name': Value] =  'StatTableHeader': |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
+LumiFilterBeam1     DEBUG Property ['Name': Value] =  'GlobalTimeOffset':0
+LumiFilterBeam1     DEBUG Property ['Name': Value] =  'RootOnTES':
+LumiFilterBeam1     DEBUG Property ['Name': Value] =  'RootInTES':
+LumiFilterBeam1     DEBUG Property ['Name': Value] =  'Context':
+LumiFilterBeam1     DEBUG Property ['Name': Value] =  'TypePrint':True
+LumiFilterBeam1     DEBUG Property ['Name': Value] =  'StatPrint':True
+LumiFilterBeam1     DEBUG Property ['Name': Value] =  'PropertiesPrint':False
+LumiFilterBeam1     DEBUG Property ['Name': Value] =  'ErrorsPrint':True
+LumiFilterBeam1     DEBUG Property ['Name': Value] =  'RegisterForContextService':True
+LumiFilterBeam1     DEBUG Property ['Name': Value] =  'MonitorService':MonitorSvc
+LumiFilterBeam1     DEBUG Property ['Name': Value] =  'AuditStop':False
+LumiFilterBeam1     DEBUG Property ['Name': Value] =  'AuditStart':False
+LumiFilterBeam1     DEBUG Property ['Name': Value] =  'AuditEndRun':False
+LumiFilterBeam1     DEBUG Property ['Name': Value] =  'AuditBeginRun':False
+LumiFilterBeam1     DEBUG Property ['Name': Value] =  'AuditFinalize':False
+LumiFilterBeam1     DEBUG Property ['Name': Value] =  'AuditExecute':False
+LumiFilterBeam1     DEBUG Property ['Name': Value] =  'AuditRestart':False
+LumiFilterBeam1     DEBUG Property ['Name': Value] =  'AuditReinitialize':False
+LumiFilterBeam1     DEBUG Property ['Name': Value] =  'AuditInitialize':False
+LumiFilterBeam1     DEBUG Property ['Name': Value] =  'AuditAlgorithms':False
+LumiFilterBeam1     DEBUG Property ['Name': Value] =  'ErrorCount':0
+LumiFilterBeam1     DEBUG Property ['Name': Value] =  'ErrorMax':1
+LumiFilterBeam1     DEBUG Property ['Name': Value] =  'Enable':True
+LumiFilterBeam1     DEBUG Property ['Name': Value] =  'OutputLevel':1
+LumiFilterBeam1     DEBUG ==> Initialize
+LumiFilterBeam1     DEBUG CounterName:       Random ValueName:         RandomMethod
+LumiFilterBeam1     DEBUG ExtraInfo key value: 21
+LumiFilterBeam1     DEBUG ExtraInfo method key value: 2
 LumiCountBeam1      DEBUG Property update for OutputLevel : new value = 1
 LumiCountBeam1      DEBUG Property update for OutputLevel : new value = 1
 LumiCountBeam1    VERBOSE ServiceLocatorHelper::service: found service AlgContextSvc
@@ -226,8 +363,53 @@ LumiCountBeam1      DEBUG Property ['Name': Value] =  'Enable':True
 LumiCountBeam1      DEBUG Property ['Name': Value] =  'OutputLevel':1
 LumiCountBeam1      DEBUG ==> Initialize
 LumiCountBeam1      DEBUG LumiAccounting:: The object of type 'KeyedContainer<LHCb::LumiFSR,Containers::KeyedObjectManager<Containers::hashmap> >' is registered in TS at address '/FileRecords/LumiFSRBeam1'
-LumiBeam2Seq         INFO Member list: LoKi::ODINFilter/FilterBeam2, HltLumiSummaryDecoder/LumiDecodeBeam2, LumiAccounting/LumiCountBeam2
+LumiBeam2Seq         INFO Member list: LoKi::ODINFilter/FilterBeam2, HltLumiSummaryDecoder/LumiDecodeBeam2, FilterOnLumiSummary/LumiFilterBeam2, LumiAccounting/LumiCountBeam2
 FilterBeam2          INFO Requested code: ' ( ODIN_TRGTYP == LHCb.ODIN.LumiTrigger ) & ( ODIN_BXTYP == LHCb.ODIN.Beam2 ) ' -> Decoded functor :'(( ODIN_TRGTYP == 2 )&( ODIN_BXTYP == 2 ))'
+LumiFilterBeam2     DEBUG Property update for OutputLevel : new value = 1
+LumiFilterBeam2     DEBUG Property update for OutputLevel : new value = 1
+LumiFilterBeam2   VERBOSE ServiceLocatorHelper::service: found service AlgContextSvc
+LumiFilterBeam2     DEBUG Initialize base class GaudiCommon<Algorithm>
+LumiFilterBeam2     DEBUG could not locate CounterSummarySvc, no counter summary will be made
+LumiFilterBeam2     DEBUG List of ALL properties of FilterOnLumiSummary/LumiFilterBeam2  #properties = 35
+LumiFilterBeam2     DEBUG Property ['Name': Value] =  'ValueName':RandomMethod
+LumiFilterBeam2     DEBUG Property ['Name': Value] =  'CounterName':Random
+LumiFilterBeam2     DEBUG Property ['Name': Value] =  'InputDataContainer':Hlt/LumiSummary
+LumiFilterBeam2     DEBUG Property ['Name': Value] =  'RequireObjects':[  ]
+LumiFilterBeam2     DEBUG Property ['Name': Value] =  'VetoObjects':[  ]
+LumiFilterBeam2     DEBUG Property ['Name': Value] =  'StatEntityList':[  ]
+LumiFilterBeam2     DEBUG Property ['Name': Value] =  'CounterList':[ '.*' ]
+LumiFilterBeam2     DEBUG Property ['Name': Value] =  'UseEfficiencyRowFormat':True
+LumiFilterBeam2     DEBUG Property ['Name': Value] =  'EfficiencyRowFormat': |*%|-48.48s|%|50t||%|10d| |%|11.5g| |(%|#9.6g| +- %|-#9.6g|)%%|   -------   |   -------   |
+LumiFilterBeam2     DEBUG Property ['Name': Value] =  'RegularRowFormat': | %|-48.48s|%|50t||%|10d| |%|11.7g| |%|#11.5g| |%|#11.5g| |%|#12.5g| |%|#12.5g| |
+LumiFilterBeam2     DEBUG Property ['Name': Value] =  'StatTableHeader': |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
+LumiFilterBeam2     DEBUG Property ['Name': Value] =  'GlobalTimeOffset':0
+LumiFilterBeam2     DEBUG Property ['Name': Value] =  'RootOnTES':
+LumiFilterBeam2     DEBUG Property ['Name': Value] =  'RootInTES':
+LumiFilterBeam2     DEBUG Property ['Name': Value] =  'Context':
+LumiFilterBeam2     DEBUG Property ['Name': Value] =  'TypePrint':True
+LumiFilterBeam2     DEBUG Property ['Name': Value] =  'StatPrint':True
+LumiFilterBeam2     DEBUG Property ['Name': Value] =  'PropertiesPrint':False
+LumiFilterBeam2     DEBUG Property ['Name': Value] =  'ErrorsPrint':True
+LumiFilterBeam2     DEBUG Property ['Name': Value] =  'RegisterForContextService':True
+LumiFilterBeam2     DEBUG Property ['Name': Value] =  'MonitorService':MonitorSvc
+LumiFilterBeam2     DEBUG Property ['Name': Value] =  'AuditStop':False
+LumiFilterBeam2     DEBUG Property ['Name': Value] =  'AuditStart':False
+LumiFilterBeam2     DEBUG Property ['Name': Value] =  'AuditEndRun':False
+LumiFilterBeam2     DEBUG Property ['Name': Value] =  'AuditBeginRun':False
+LumiFilterBeam2     DEBUG Property ['Name': Value] =  'AuditFinalize':False
+LumiFilterBeam2     DEBUG Property ['Name': Value] =  'AuditExecute':False
+LumiFilterBeam2     DEBUG Property ['Name': Value] =  'AuditRestart':False
+LumiFilterBeam2     DEBUG Property ['Name': Value] =  'AuditReinitialize':False
+LumiFilterBeam2     DEBUG Property ['Name': Value] =  'AuditInitialize':False
+LumiFilterBeam2     DEBUG Property ['Name': Value] =  'AuditAlgorithms':False
+LumiFilterBeam2     DEBUG Property ['Name': Value] =  'ErrorCount':0
+LumiFilterBeam2     DEBUG Property ['Name': Value] =  'ErrorMax':1
+LumiFilterBeam2     DEBUG Property ['Name': Value] =  'Enable':True
+LumiFilterBeam2     DEBUG Property ['Name': Value] =  'OutputLevel':1
+LumiFilterBeam2     DEBUG ==> Initialize
+LumiFilterBeam2     DEBUG CounterName:       Random ValueName:         RandomMethod
+LumiFilterBeam2     DEBUG ExtraInfo key value: 21
+LumiFilterBeam2     DEBUG ExtraInfo method key value: 2
 LumiCountBeam2      DEBUG Property update for OutputLevel : new value = 1
 LumiCountBeam2      DEBUG Property update for OutputLevel : new value = 1
 LumiCountBeam2    VERBOSE ServiceLocatorHelper::service: found service AlgContextSvc
@@ -724,9 +906,13 @@ HistogramPersis...   INFO  'CnvServices':[ 'HbookHistSvc' , 'RootHistSvc' ]
 HistogramPersis...WARNING Histograms saving not required.
 ApplicationMgr       INFO Application Manager Initialized successfully
 ApplicationMgr       INFO Application Manager Started successfully
+LumiFilterNoBeam    DEBUG Property update for OutputLevel : new value = 1
 LumiCountNoBeam     DEBUG Property update for OutputLevel : new value = 1
+LumiFilterBeamC...  DEBUG Property update for OutputLevel : new value = 1
 LumiCountBeamCr...  DEBUG Property update for OutputLevel : new value = 1
+LumiFilterBeam1     DEBUG Property update for OutputLevel : new value = 1
 LumiCountBeam1      DEBUG Property update for OutputLevel : new value = 1
+LumiFilterBeam2     DEBUG Property update for OutputLevel : new value = 1
 LumiCountBeam2      DEBUG Property update for OutputLevel : new value = 1
 LumiLowFilterNo...  DEBUG Property update for OutputLevel : new value = 1
 LumiLowCountNoBeam  DEBUG Property update for OutputLevel : new value = 1
@@ -740,9 +926,13 @@ TimeSpanAccounting  DEBUG Property update for OutputLevel : new value = 1
 EventAccount        DEBUG Property update for OutputLevel : new value = 1
 EventSelector        INFO End of event input reached.
 EventLoopMgr         INFO No more events in event selection
+LumiFilterNoBeam    DEBUG Property update for OutputLevel : new value = 1
 LumiCountNoBeam     DEBUG Property update for OutputLevel : new value = 1
+LumiFilterBeamC...  DEBUG Property update for OutputLevel : new value = 1
 LumiCountBeamCr...  DEBUG Property update for OutputLevel : new value = 1
+LumiFilterBeam1     DEBUG Property update for OutputLevel : new value = 1
 LumiCountBeam1      DEBUG Property update for OutputLevel : new value = 1
+LumiFilterBeam2     DEBUG Property update for OutputLevel : new value = 1
 LumiCountBeam2      DEBUG Property update for OutputLevel : new value = 1
 LumiLowFilterNo...  DEBUG Property update for OutputLevel : new value = 1
 LumiLowCountNoBeam  DEBUG Property update for OutputLevel : new value = 1
@@ -755,6 +945,10 @@ LumiLowCountBeam2   DEBUG Property update for OutputLevel : new value = 1
 TimeSpanAccounting  DEBUG Property update for OutputLevel : new value = 1
 EventAccount        DEBUG Property update for OutputLevel : new value = 1
 ApplicationMgr       INFO Application Manager Stopped successfully
+LumiFilterNoBeam    DEBUG ==> Finalize
+LumiFilterNoBeam    DEBUG Finalize base class GaudiAlgorithm
+LumiFilterNoBeam    DEBUG Tools to release :
+LumiFilterNoBeam    DEBUG Services to release :
 LumiCountNoBeam     DEBUG ==> Finalize
 LumiCountNoBeam      INFO number of files seen: 0
 LumiCountNoBeam      INFO INTEGRAL: {  runs :  files :  info (key/incr/integral) :  }
@@ -763,6 +957,10 @@ LumiCountNoBeam     DEBUG Finalize base class GaudiAlgorithm
 LumiCountNoBeam     DEBUG Tools to release :
 LumiCountNoBeam     DEBUG Services to release : FileRecordDataSvc
 LumiCountNoBeam     DEBUG Releasing service 'FileRecordDataSvc'
+LumiFilterBeamC...  DEBUG ==> Finalize
+LumiFilterBeamC...  DEBUG Finalize base class GaudiAlgorithm
+LumiFilterBeamC...  DEBUG Tools to release :
+LumiFilterBeamC...  DEBUG Services to release :
 LumiCountBeamCr...  DEBUG ==> Finalize
 LumiCountBeamCr...   INFO number of files seen: 0
 LumiCountBeamCr...   INFO INTEGRAL: {  runs :  files :  info (key/incr/integral) :  }
@@ -771,6 +969,10 @@ LumiCountBeamCr...  DEBUG Finalize base class GaudiAlgorithm
 LumiCountBeamCr...  DEBUG Tools to release :
 LumiCountBeamCr...  DEBUG Services to release : FileRecordDataSvc
 LumiCountBeamCr...  DEBUG Releasing service 'FileRecordDataSvc'
+LumiFilterBeam1     DEBUG ==> Finalize
+LumiFilterBeam1     DEBUG Finalize base class GaudiAlgorithm
+LumiFilterBeam1     DEBUG Tools to release :
+LumiFilterBeam1     DEBUG Services to release :
 LumiCountBeam1      DEBUG ==> Finalize
 LumiCountBeam1       INFO number of files seen: 0
 LumiCountBeam1       INFO INTEGRAL: {  runs :  files :  info (key/incr/integral) :  }
@@ -779,6 +981,10 @@ LumiCountBeam1      DEBUG Finalize base class GaudiAlgorithm
 LumiCountBeam1      DEBUG Tools to release :
 LumiCountBeam1      DEBUG Services to release : FileRecordDataSvc
 LumiCountBeam1      DEBUG Releasing service 'FileRecordDataSvc'
+LumiFilterBeam2     DEBUG ==> Finalize
+LumiFilterBeam2     DEBUG Finalize base class GaudiAlgorithm
+LumiFilterBeam2     DEBUG Tools to release :
+LumiFilterBeam2     DEBUG Services to release :
 LumiCountBeam2      DEBUG ==> Finalize
 LumiCountBeam2       INFO number of files seen: 0
 LumiCountBeam2       INFO INTEGRAL: {  runs :  files :  info (key/incr/integral) :  }
@@ -878,25 +1084,29 @@ Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye
 
 ToolSvc              INFO Removing all tools created by ToolSvc
 ToolSvc.Sequenc...   INFO ------------------------------------------------------------------------------------------------
-ToolSvc.Sequenc...   INFO This machine has a speed about   1.72 times the speed of a 2.8 GHz Xeon.
+ToolSvc.Sequenc...   INFO This machine has a speed about   1.62 times the speed of a 2.8 GHz Xeon.
 ToolSvc.Sequenc...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 ToolSvc.Sequenc...   INFO ------------------------------------------------------------------------------------------------
 ToolSvc.Sequenc...   INFO LumiSequence                  |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 ToolSvc.Sequenc...   INFO   LumiNoBeamSeq               |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 ToolSvc.Sequenc...   INFO     FilterNoBeam              |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 ToolSvc.Sequenc...   INFO     LumiDecodeNoBeam          |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+ToolSvc.Sequenc...   INFO     LumiFilterNoBeam          |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 ToolSvc.Sequenc...   INFO     LumiCountNoBeam           |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 ToolSvc.Sequenc...   INFO   LumiBeamCrossingSeq         |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 ToolSvc.Sequenc...   INFO     FilterBeamCrossing        |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 ToolSvc.Sequenc...   INFO     LumiDecodeBeamCrossing    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+ToolSvc.Sequenc...   INFO     LumiFilterBeamCrossing    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 ToolSvc.Sequenc...   INFO     LumiCountBeamCrossing     |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 ToolSvc.Sequenc...   INFO   LumiBeam1Seq                |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 ToolSvc.Sequenc...   INFO     FilterBeam1               |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 ToolSvc.Sequenc...   INFO     LumiDecodeBeam1           |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+ToolSvc.Sequenc...   INFO     LumiFilterBeam1           |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 ToolSvc.Sequenc...   INFO     LumiCountBeam1            |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 ToolSvc.Sequenc...   INFO   LumiBeam2Seq                |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 ToolSvc.Sequenc...   INFO     FilterBeam2               |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 ToolSvc.Sequenc...   INFO     LumiDecodeBeam2           |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+ToolSvc.Sequenc...   INFO     LumiFilterBeam2           |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 ToolSvc.Sequenc...   INFO     LumiCountBeam2            |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 ToolSvc.Sequenc...   INFO   LumiLowNoBeamSeq            |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 ToolSvc.Sequenc...   INFO     FilterLowNoBeam           |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
