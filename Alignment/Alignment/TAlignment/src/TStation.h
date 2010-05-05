@@ -6,7 +6,7 @@
  *  Header file for Tstation alignment algorithm: TAlignment
  *
  *  CVS Log :-
- *  $Id: TStation.h,v 1.5 2010-04-19 09:08:43 jblouw Exp $
+ *  $Id: TStation.h,v 1.6 2010-05-05 14:59:16 jblouw Exp $
  *
  *  @author J. Blouw  Johan.Blouw@cern.ch
  *  @author M.Needham Matt.Needham@cern.ch
@@ -80,9 +80,6 @@ public:
   
   AIDA::IHistogram1D* CaloEnergy;
 
-  LHCb::Tracks* ITTracks;
-  LHCb::Tracks* OTTracks;
-  LHCb::Tracks* XTracks;
   double m_minITHitCut;  ///< Min hit cut
   double m_minOTHitCut;  ///< Min hit cut
   double m_minTTHitCut;  ///< Min hit cut

@@ -4,7 +4,7 @@
  *  Implementation file for RICH reconstruction tool : GAlign
  *
  *  CVS Log :-
- *  $Id: GAlign.cpp,v 1.27 2010-05-04 09:45:23 jblouw Exp $
+ *  $Id: GAlign.cpp,v 1.28 2010-05-05 14:59:16 jblouw Exp $
  *
  *  @author J.Blouw Johan.Blouw@cern.ch
  *  @date   30/12/2005
@@ -909,6 +909,7 @@ StatusCode GAlign::execute() {
        unsigned n_trError  = trError.size();
        unsigned n_tzpos    = tzpos.size();
        unsigned n_zref     = zref.size();
+ 	/*
        t_resids->farray("TrackParameter",trParV,"n_TrackParameter",n_trParV);
        t_resids->farray("TrackParError",trError,"n_TrackParError",n_trError);
        t_resids->farray("Z",tzpos,"n_Z",n_tzpos);
@@ -929,6 +930,7 @@ StatusCode GAlign::execute() {
        t_resids->column("Chi2Rejection", (!chiOK));
        t_resids->column("nTracksPerEvent", inCont->size());
        t_resids->write();
+	*/
 
        if(m_out || (!chiOK) || m_locrank ==-1 || m_badXval || m_fitconv){
            tres.clear();
@@ -1148,7 +1150,7 @@ StatusCode GAlign::GloFit() {
   std::vector<bool> dofs                  = m_taConfig->NumDOF();
   std::map<std::string, int> cap          = m_taConfig->GetCMap();
   std::map<std::string,int>::iterator maI = cap.begin();
-
+  /*
   Tuple t_global = nTuple("globalPar","global_Parameter");
   t_global->farray("globalParam",m_new_par,"n_globalParam",alipar);
   t_global->farray("globalParam_err",m_align_err,"n_globalParam_err",alipar);
@@ -1165,6 +1167,7 @@ StatusCode GAlign::GloFit() {
   t_global->farray("misalInput_C",misalInput_C,"n_misalInput_C",n_misalInput);
 
   t_global->write();
+  */
   if(m_newScale != -1){  
     if(sqrt(m_newScale) > m_taConfig->GetMinChi2() )  m_newScale=sqrt(m_newScale);
     else m_newScale = m_taConfig->GetMinChi2();
