@@ -774,9 +774,18 @@ StatusCode MDFWriterNet::writeBuffer(void *const /*fd*/, const void *data, size_
         *m_log << MSG::ERROR << WHERE << "Error getting the routed event statistics" << endmsg;
       }
 
-      m_rpcObj->updateFile((char *)m_currFile->getFileName()->c_str(),
+     try {
+         m_rpcObj->updateFile((char *)m_currFile->getFileName()->c_str(),
                           trgEvents,
                           statEvents);
+     } catch(std::exception& e) {
+        *m_log << MSG::ERROR
+           << " Exception: "
+           << e.what() << endmsg;
+        *m_log << MSG::ERROR << " Could not update Run Database Record. Check the RunDB XML_RPC logfile /clusterlogs/services/xmlrpc.log";
+        *m_log << " Record is: FileName=" << m_currFile->getFileName();
+        *m_log << " Run Number=" << m_currentRunNumber << endmsg;
+      }
       m_prevUpdate.tv_sec = tv.tv_sec;
       m_prevUpdate.tv_usec = tv.tv_usec;
   }
