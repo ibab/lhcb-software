@@ -1,4 +1,4 @@
-#include "HltBase/IConfigAccessSvc.h"
+#include "Kernel/IConfigAccessSvc.h"
 
 /// Return the interface ID
 const InterfaceID& IConfigAccessSvc::interfaceID() { 
