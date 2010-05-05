@@ -3,6 +3,8 @@
 ! Responsible : Jaap Panman
 ! Purpose     : collect luminosity data and fill output bank and histos
 !-----------------------------------------------------------------------------
+! 2010-05-05 - Gerhard Raven
+ - remove obsolete LumiANNSvc
 
 !========================== HltLuminosity v2r16 2010-03-28 ===================
 ! 2010-03-28 - Gerhard Raven
