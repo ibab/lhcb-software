@@ -66,14 +66,14 @@ class CosmicConf(object):
     self.configureTool(SeedAlg.PatSeedingTool)
     
     #switch off drift times for the pattern recognition
-    OTHitCreator("ToolSvc.OTHitCreator").NoDriftTimes = true;
+    OTHitCreator("ToolSvc.OTHitCreator").NoDriftTimes = True;
     
   def configureTool(self, SeedTool):
     #no magnetic field
     #options to tune PatSeeding for tracking with B field off
     SeedTool.xMagTol = 4e2
     SeedTool.zMagnet = 0.
-    SeedTool.FieldOff = true
+    SeedTool.FieldOff = True
     SeedTool.MinMomentum = 5e4
     #relax requirements on number of hits/planes
     #(this may need tweaking if some C frames are in "open" position)
@@ -87,7 +87,7 @@ class CosmicConf(object):
     SeedTool.xMagTol = 4e5
     SeedTool.MinMomentum = 1e-4 #pointing requirement in disguise!
     #cosmic reconstruction
-    SeedTool.Cosmics = true
+    SeedTool.Cosmics = True
     #detector not yet aligned - chi^2 should not contribute to track quality
     SeedTool.QualityWeights        = [ 1.0, 0.0 ]
     
@@ -97,4 +97,4 @@ class CosmicConf(object):
     #look)
     
     #switch off drift times for the pattern recognition
-    OTHitCreator("ToolSvc.OTHitCreator").NoDriftTimes = true
+    OTHitCreator("ToolSvc.OTHitCreator").NoDriftTimes = True
