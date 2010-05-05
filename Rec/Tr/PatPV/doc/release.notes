@@ -4,7 +4,7 @@
 ! Purpose     : Compute primary vertices
 !-----------------------------------------------------------------------------
 
-! 2010-05-04 - Rob Lambert
+! 2010-05-05 - Rob Lambert
  - bugfix, added one too many "self" in PVConf
 
 ! 2010-05-03 - Rob Lambert

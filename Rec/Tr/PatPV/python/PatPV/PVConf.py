@@ -9,7 +9,7 @@ class LoosePV(object):
         
         PVAlg.addTool(PVOfflineTool, "PVOfflineTool")
         
-        self.configureTool(self.PVAlg.PVOfflineTool)
+        self.configureTool(PVAlg.PVOfflineTool)
     
     def configureTool(self, PVTool):
         '''pass in a tool method to configure'''
@@ -30,7 +30,7 @@ class VLoosePV(object):
         
         PVAlg.addTool(PVOfflineTool, "PVOfflineTool")
         
-        self.configureTool(self.PVAlg.PVOfflineTool)
+        self.configureTool(PVAlg.PVOfflineTool)
     
     def configureTool(self, PVTool):
         '''pass in a tool method to configure'''
