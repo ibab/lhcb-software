@@ -52,10 +52,14 @@ def RecoTracking():
    
    GaudiSequencer("RecoDecodingSeq").Members += [ createITClusters, createITLiteClusters ]
    
-   if TrackSys().earlyData():  
-      importOptions( "$STTOOLSROOT/options/Brunel_EarlyData.opts" )
+   if TrackSys().earlyData():
+      from STTools import STOfflineConf
+      STOfflineConf.EarlyDataConf().configureTools()
+      #importOptions( "$STTOOLSROOT/options/Brunel_EarlyData.opts" )
    else:
-      importOptions( "$STTOOLSROOT/options/Brunel.opts" )
+      from STTools import STOfflineConf
+      STOfflineConf.DefaultConf().configureTools()
+      #importOptions( "$STTOOLSROOT/options/Brunel.opts" )
       
    ## Velo tracking
    if "Velo" in trackAlgs :
