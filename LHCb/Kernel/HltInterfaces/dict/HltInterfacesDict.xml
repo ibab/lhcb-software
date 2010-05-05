@@ -2,7 +2,6 @@
   <class name = "IANNSvc"       />
   <class name = "IANSvc"        />
   <class name = "IConfigAccessSvc" />
-  <class name = "IConfigTreeEditor" />
   <class name = "IPropertyConfigSvc" />
   <class name = "PropertyConfig" />
   <class name = "ConfigTreeNode" />
