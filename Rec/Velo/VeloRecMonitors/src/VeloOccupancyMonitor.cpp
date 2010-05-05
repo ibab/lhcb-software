@@ -1,4 +1,4 @@
-// $Id: VeloOccupancyMonitor.cpp,v 1.19 2010-05-05 13:17:00 krinnert Exp $
+// $Id: VeloOccupancyMonitor.cpp,v 1.20 2010-05-05 14:09:23 krinnert Exp $
 // Include files 
 // -------------
 
@@ -180,6 +180,8 @@ StatusCode Velo::VeloOccupancyMonitor::execute() {
       m_occupancies[s]->reset();  
       m_occupanciesCh[s]->reset();  
     }
+    m_histOccSpectAll->Reset();
+    m_histOccSpectLow->Reset();
   } else {
     ++m_occupancyDenom;
     double scale = (m_occupancyDenom-1.0)/m_occupancyDenom;
@@ -369,8 +371,6 @@ void Velo::VeloOccupancyMonitor::monitorOccupancy() {
 
   // Produce occupancy spectra
   // -------------------------
-  m_histOccSpectAll->Reset();
-  m_histOccSpectLow->Reset();
   for ( std::vector<DeVeloSensor*>::const_iterator si = m_veloDet->sensorsBegin();
       si != m_veloDet->sensorsEnd();
       ++si ) {
