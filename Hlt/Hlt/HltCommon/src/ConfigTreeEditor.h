@@ -1,10 +1,10 @@
-// $Id: ConfigTreeEditor.h,v 1.6 2009-08-10 14:42:58 graven Exp $
+// $Id: ConfigTreeEditor.h,v 1.7 2010-05-05 21:05:05 graven Exp $
 #ifndef CONFIGTREEEDITOR_H 
 #define CONFIGTREEEDITOR_H 1
 #include "GaudiAlg/GaudiTool.h"
 #include "HltBase/IConfigTreeEditor.h"
-#include "HltBase/IPropertyConfigSvc.h" 
-#include "HltBase/IConfigAccessSvc.h" 
+#include "Kernel/IPropertyConfigSvc.h" 
+#include "Kernel/IConfigAccessSvc.h" 
 #include <vector>
 #include <map>
 #include <string>

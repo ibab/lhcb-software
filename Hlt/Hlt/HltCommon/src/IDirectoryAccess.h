@@ -1,4 +1,4 @@
-// $Id: IDirectoryAccess.h,v 1.1 2010-02-14 10:49:22 graven Exp $
+// $Id: IDirectoryAccess.h,v 1.2 2010-05-05 21:05:05 graven Exp $
 #ifndef GaudiKernel_IDirectoryAccess_H
 #define GaudiKernel_IDirectoryAccess_H
 
@@ -7,7 +7,7 @@
 #include <string>
 #include <vector>
 
-/** @class IFileAccess IFileAccess.h GaudiKernel/IFileAccess.h
+/** @class IDirectoryAccess IDirectoryAccess.h GaudiKernel/IDirectoryAccess.h
  *
  * Abstract interface for a service or tool implementing lookup
  * access to directories. Modelled after IFileAccess by Marco Clemencic,
@@ -32,5 +32,5 @@ public:
 
 };
 
-#endif // GaudiKernel_IFileAccess_H
+#endif // GaudiKernel_IDirectoryAccess_H
 

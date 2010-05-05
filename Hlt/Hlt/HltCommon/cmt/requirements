@@ -24,6 +24,7 @@ use LoKiTrigger         v*    Phys
 use LoKiHlt         v*    Phys
 
 use TrackInterfaces     v*    Tr
+use HltInterfaces     v*    Kernel
 
 use Boost        v*   LCG_Interfaces
 
