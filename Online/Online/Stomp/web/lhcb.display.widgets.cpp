@@ -17,6 +17,18 @@ if ( !lhcb.widgets ) {
     document.location =  "http://op-webtools.web.cern.ch/op-webtools/vistar/vistars.php?usr=LHC3";
   }
 
+  lhcb.widgets.mkFSMitem1 = function(item,label) {
+    var tr = document.createElement('tr');
+    if ( label )
+      tr.appendChild(Cell(label,1,'FSMLabel'));
+    else
+      tr.appendChild(item.label);
+    tr.appendChild(item);
+    tr.appendChild(item.lock);
+    item.lock.className = null;
+    return tr;
+  }
+
 
   /** Build table with summary of the LHC
    *   
@@ -574,6 +586,227 @@ if ( !lhcb.widgets ) {
     }
     return item;
   }
+
+  lhcb.widgets.CoolingSummary = function(header_style, logger) {
+    var c, tb, td, tr, tab = document.createElement('table');
+    tb = document.createElement('tbody');
+    tab.className = tb.className   = 'MonitorPage';
+
+    tooltips.set(tab,'Cooling information summary<br>for various subdetectors');    
+    // Velo position
+    tab.itCoolingAlarms    = StyledItem('lbWeb.CaV/ItPlant.Actual.alarm', null, null);
+    tab.otCoolingAlarms    = StyledItem('lbWeb.CaV/OtPlant.Actual.alarm', null, null);
+    tab.ttCoolingAlarms    = StyledItem('lbWeb.CaV/TtPlant.Actual.alarm', null, null);
+    tab.richCoolingAlarms  = StyledItem('lbWeb.CaV/RichPlant.Actual.alarm', null, null);
+
+    tab.itCoolingFaults    = StyledItem('lbWeb.CaV/ItPlant.Actual.fault', null, null);
+    tab.otCoolingFaults    = StyledItem('lbWeb.CaV/OtPlant.Actual.fault', null, null);
+    tab.ttCoolingFaults    = StyledItem('lbWeb.CaV/TtPlant.Actual.fault', null, null);
+    tab.richCoolingFaults  = StyledItem('lbWeb.CaV/RichPlant.Actual.fault', null, null);
+    /*
+    tab.itCoolingStatus    = StyledItem('lbWeb.CaV/ItPlant.Actual.status', null, null);
+    tab.otCoolingStatus    = StyledItem('lbWeb.CaV/OtPlant.Actual.status', null, null);
+    tab.ttCoolingStatus    = StyledItem('lbWeb.CaV/TtPlant.Actual.status', null, null);
+    tab.richCoolingStatus  = StyledItem('lbWeb.CaV/RichPlant.Actual.status', null, null);
+    */
+    if ( header_style ) {
+      tr = document.createElement('tr');
+      tr.appendChild(Cell('Cooling Status',5,header_style));
+      tb.appendChild(tr);
+    }
+    tr = document.createElement('tr');
+    tb.appendChild(tr);
+    tr.appendChild(c=Cell('Cooling',1,'MonitorDataHeader'));
+    c.style.width = '25%';
+    tr.appendChild(Cell('IT',1,'MonitorDataHeader'));
+    tr.appendChild(Cell('TT',1,'MonitorDataHeader'));
+    tr.appendChild(Cell('OT',1,'MonitorDataHeader'));
+    tr.appendChild(Cell('Rich',1,'MonitorDataHeader'));
+
+    tr = document.createElement('tr');
+    tb.appendChild(tr);
+    tr.appendChild(Cell('Alarms',1,'MonitorDataHeader'));
+
+    tr.appendChild(tab.itCoolingAlarms);
+    tr.appendChild(tab.ttCoolingAlarms);
+    tr.appendChild(tab.otCoolingAlarms);
+    tr.appendChild(tab.richCoolingAlarms);
+
+    tr = document.createElement('tr');
+    tb.appendChild(tr);
+    tr.appendChild(Cell('Faults',1,'MonitorDataHeader'));
+
+    tr.appendChild(tab.itCoolingFaults);
+    tr.appendChild(tab.ttCoolingFaults);
+    tr.appendChild(tab.otCoolingFaults);
+    tr.appendChild(tab.richCoolingFaults);
+
+    /*
+    tr = document.createElement('tr');
+    tb.appendChild(tr);
+    tr.appendChild(Cell('Status',1,'MonitorDataHeader'));
+
+    tr.appendChild(tab.itCoolingStatus);
+    tr.appendChild(tab.ttCoolingStatus);
+    tr.appendChild(tab.otCoolingStatus);
+    tr.appendChild(tab.richCoolingStatus);
+    */
+    tab.appendChild(tb);
+
+    tab.subscribe = function(provider) {
+      provider.subscribeItem(this.itCoolingAlarms);
+      provider.subscribeItem(this.ttCoolingAlarms);
+      provider.subscribeItem(this.otCoolingAlarms);
+      provider.subscribeItem(this.richCoolingAlarms);
+      provider.subscribeItem(this.itCoolingFaults);
+      provider.subscribeItem(this.ttCoolingFaults);
+      provider.subscribeItem(this.otCoolingFaults);
+      provider.subscribeItem(this.richCoolingFaults);
+      //provider.subscribeItem(this.itCoolingStatus);
+      //provider.subscribeItem(this.ttCoolingStatus);
+      //provider.subscribeItem(this.otCoolingStatus);
+      //provider.subscribeItem(this.richCoolingStatus);
+    };
+    return tab;
+  };
+
+  lhcb.widgets.BackgroundSummary = function(header_style, logger) {
+    var c, tr;
+    var tab = document.createElement('table');
+    var tb  = document.createElement('tbody');
+
+    tooltips.set(tab,'Background summary<br>Click to access BCM information');
+    tab.onclick = function() { document.location = "lhcb.display.htm?type=bcm&sensors=1";};
+    tab.className = tb.className = 'MonitorPage';
+
+    if ( header_style ) {
+      tr = document.createElement('tr');
+      tr.appendChild(c=Cell('Background Status and Beam Permits:',7,header_style));
+      c.style.width='100%';
+      tb.appendChild(tr);
+    }
+
+    tab.bcmBeamPermit1 = StyledItem('lbWeb.BCM_Interface.BeamPermit.getStatus',null,null);
+    tab.bcmBeamPermit2 = StyledItem('lbWeb.BCM_Interface.InjPermit1.getStatus',null,null);
+    tab.bcmBeamPermit3 = StyledItem('lbWeb.BCM_Interface.InjPermit2.getStatus',null,null);
+    tr = document.createElement('tr');
+    tr.appendChild(c=Cell('Permits',1,'MonitorDataHeader'));
+    c.style.width = '25%';
+    tr.appendChild(tab.bcmBeamPermit1);
+    tab.bcmBeamPermit1.colSpan = 2;
+    tr.appendChild(tab.bcmBeamPermit2);
+    tab.bcmBeamPermit2.colSpan = 2;
+    tr.appendChild(tab.bcmBeamPermit3);
+    tab.bcmBeamPermit3.colSpan = 2;
+    tb.appendChild(tr);
+
+    tab.figureOfMerit1 = StyledItem('lbWeb.BCM_DP_S0.RS2_REL',             null, '%7.3f');
+    tab.figureOfMerit2 = StyledItem('lbWeb.BCM_DP_S0.RS32_REL',            null, '%7.3f');
+    tab.figureOfMerit3 = StyledItem('lbWeb.BCM_DP_S1.RS2_REL',             null, '%7.3f');
+    tab.figureOfMerit4 = StyledItem('lbWeb.BCM_DP_S1.RS32_REL',            null, '%7.3f');
+    tr = document.createElement('tr');
+    tr.appendChild(Cell('FoM',null,'MonitorDataHeader'));
+    tr.appendChild(Cell('S0.RS2/32:',1,'MonitorDataHeader'));
+    tr.appendChild(tab.figureOfMerit1);
+    tr.appendChild(tab.figureOfMerit2);
+    tr.appendChild(Cell('S1.RS2/32:',1,'MonitorDataHeader'));
+    tr.appendChild(tab.figureOfMerit3);
+    tr.appendChild(tab.figureOfMerit4);
+    tb.appendChild(tr);
+    tab.appendChild(tb);
+
+    tab.subscribe = function(provider) {
+      provider.subscribeItem(this.bcmBeamPermit1);
+      provider.subscribeItem(this.bcmBeamPermit2);
+      provider.subscribeItem(this.bcmBeamPermit3);
+      
+      provider.subscribeItem(this.figureOfMerit1);
+      provider.subscribeItem(this.figureOfMerit2);
+      provider.subscribeItem(this.figureOfMerit3);
+      provider.subscribeItem(this.figureOfMerit4);
+    };
+    return tab;
+  };
+
+  lhcb.widgets.SafetySummary = function(header_style,logger) {
+    var tb, tr, cell, tab = document.createElement('table');
+    tab.className  = 'MonitorPage';
+    tb = document.createElement('tbody');
+    tooltips.set(tb,'Safety status of the subdetectors');
+    tb.className  = 'MonitorPage';
+    if ( header_style ) {
+      tr = document.createElement('tr');
+      tr.appendChild(Cell('Safety',3,header_style));
+      tb.appendChild(tr);
+    }
+    tr = document.createElement('tr');
+    tr.appendChild(Cell('Subdetector',1,'MonitorDataHeader'));
+    tr.appendChild(Cell('State',1,'MonitorDataHeader'));
+    tr.appendChild(Cell('',1,null));
+    tb.appendChild(tr);
+    tab.richSafety = FSMItem('lbWeb.RICH_SAFETY',logger,true);
+    tab.muonSafety = FSMItem('lbWeb.MUON_Safety',logger,true);
+    tab.ttSafety   = FSMItem('lbWeb.TT_Safety',logger,true);
+    tab.itSafety   = FSMItem('lbWeb.IT_Safety',logger,true);
+    tb.appendChild(lhcb.widgets.mkFSMitem1(tab.ttSafety,'TT'));
+    tb.appendChild(lhcb.widgets.mkFSMitem1(tab.itSafety,'IT'));
+    tb.appendChild(lhcb.widgets.mkFSMitem1(tab.richSafety,'RICH'));
+    tb.appendChild(lhcb.widgets.mkFSMitem1(tab.muonSafety,'MUON'));
+    tab.appendChild(tb);
+
+    tab.subscribe = function(provider) {
+      provider.subscribeItem(this.ttSafety);
+      provider.subscribeItem(this.itSafety);
+      provider.subscribeItem(this.richSafety);
+      provider.subscribeItem(this.muonSafety);
+    };
+
+    return tab;
+  };
+
+  lhcb.widgets.RICHPressures = function(header_style, logger) {
+    var tb, tr, cell, tab = document.createElement('table');
+    tab.className  = 'MonitorPage';
+    tb = document.createElement('tbody');
+    tooltips.set(tb,'Rich parameters');
+    tb.className  = 'MonitorPage';
+    tb.height    = '120px';
+
+    if ( header_style ) {
+      tr = document.createElement('tr');
+      tr.appendChild(Cell('Rich1 Gas',2,header_style));
+      tr.appendChild(Cell('Rich2 Gas',2,header_style));
+      tb.appendChild(tr);
+    }
+    tr = document.createElement('tr');
+    tr.appendChild(Cell('Pressure:',1,'MonitorDataHeader'));
+    tr.appendChild(Cell('Temperatur',1,'MonitorDataHeader'));
+    tr.appendChild(Cell('Pressure:',1,'MonitorDataHeader'));
+    tr.appendChild(Cell('Temperatur',1,'MonitorDataHeader'));
+    tb.appendChild(tr);
+    tab.rich1Pressure = StyledItem('lbWeb.LHCb_RunInfoCond.RICH1.R1HltGasParameters.Pressure',null,'%7.1f hPa');
+    tab.rich1Temp     = StyledItem('lbWeb.LHCb_RunInfoCond.RICH1.R1HltGasParameters.Temperature',null,'%7.1f K');
+    tab.rich2Pressure = StyledItem('lbWeb.LHCb_RunInfoCond.RICH2.R2HltGasParameters.Pressure',null,'%7.2f hPa');
+    tab.rich2Temp     = StyledItem('lbWeb.LHCb_RunInfoCond.RICH2.R2HltGasParameters.Temperature',null,'%7.1f K');
+
+    tr = document.createElement('tr');
+    tr.appendChild(tab.rich1Pressure);
+    tr.appendChild(tab.rich1Temp);
+    tr.appendChild(tab.rich2Pressure);
+    tr.appendChild(tab.rich2Temp);
+    tb.appendChild(tr);
+    tab.appendChild(tb);
+
+    tab.subscribe = function(provider) {
+      provider.subscribeItem(this.rich1Pressure);
+      provider.subscribeItem(this.rich1Temp);
+      provider.subscribeItem(this.rich2Pressure);
+      provider.subscribeItem(this.rich2Temp);
+    }
+    return tab;
+  };
+
+
   if ( _debugLoading ) alert('Script lhcb.display.widgets.cpp loaded successfully');
   //alert('Script lhcb.display.widgets.cpp loaded successfully');
 }

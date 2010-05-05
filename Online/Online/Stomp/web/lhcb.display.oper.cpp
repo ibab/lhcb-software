@@ -1,5 +1,6 @@
 _loadScript('lhcb.display.tooltips.cpp');
 _loadScript('lhcb.display.items.cpp');
+_loadScript('lhcb.display.constants.cpp');
 _loadScript('lhcb.display.widgets.cpp');
 
 _loadFile('lhcb.display.general','css');
@@ -69,20 +70,9 @@ var OperationsStatus = function(msg)   {
     return this.addState(nam,split,'hv','HV','HV');
   }
   table.addLTState = function(nam,split) {
-    return this.addState(nam,split,'lv','LV','DCS_LV');
+    return this.addState(nam,split,'lv','LV','DCS_Local');
   }
-
-  table.appendFSMItem = function(item,label) {
-    var tr = document.createElement('tr');
-    if ( label )
-      tr.appendChild(Cell(label,1,'FSMLabel'));
-    else
-      tr.appendChild(item.label);
-    tr.appendChild(item);
-    tr.appendChild(item.lock);
-    item.lock.className = null;
-    return tr;
-  }
+  table.appendFSMItem = lhcb.widgets.mkFSMitem1;
 
   table.subscribeItem2 = function(item) {
     if ( item ) {
@@ -113,7 +103,7 @@ var OperationsStatus = function(msg)   {
     tb = document.createElement('tbody');
     tb.className  = 'MonitorPage';
     tooltips.set(tb,'Operation state of LHCb');
-    tb.appendChild(this.appendFSMItem(this.operState = FSMItem('lbWeb.LHCb_LHC',this.logger,true),'LHC'));
+    tb.appendChild(lhcb.widgets.mkFSMitem1(this.operState = FSMItem('lbWeb.LHCb_LHC',this.logger,true),'LHCb state'));
     tab.appendChild(tb);
     return tab;
   }
@@ -125,7 +115,9 @@ var OperationsStatus = function(msg)   {
 
     tb = document.createElement('tbody');
     tb.className  = 'MonitorPage';
-    tooltips.set(tb,'Main system summary');
+    tooltips.set(tb,'Main system summary<br>Click to move to LHC info page.');
+    tb.onclick = function() { document.location = lhcb.constants.urls.lhcb.lhc_status.src;};
+
     tr = document.createElement('tr');
     tr.appendChild(Cell('Subsystem',1,null));
     tr.appendChild(td=Cell('State',1,null));
@@ -135,6 +127,7 @@ var OperationsStatus = function(msg)   {
     tb.appendChild(this.appendFSMItem(this.lhcState = FSMItem('lbWeb.LHC_STATE/LHC',this.logger,true),'LHC'));
     tb.appendChild(this.appendFSMItem(this.bcmState = FSMItem('lbWeb.BCM',this.logger,true),'BCM'));
     tb.appendChild(this.appendFSMItem(this.magState = FSMItem('lbWeb.INF_MAG',this.logger,true),'Magnet'));
+    tb.appendChild(this.appendFSMItem(this.clockState = FSMItem('lbWeb.LHCb_CLOCK/LHCb',this.logger,true),'Clock'));
     tab.appendChild(tb);
     return tab;
   }
@@ -243,38 +236,11 @@ var OperationsStatus = function(msg)   {
     tr.appendChild(cell=Cell('Request',1,'MonitorDataHeader'));
     tr.appendChild(Cell('LV State Side A / Side C',2,'MonitorDataHeader'));
     tb.appendChild(tr);
-    tb.appendChild(this.addState('VELO',true,'lv','LV','DCS_LV'));
-    tb.appendChild(this.addState('TT',false, 'lv','LV','DCS_LV'));
-    tb.appendChild(this.addState('IT',false, 'lv','LV','DCS_LV'));
-    tb.appendChild(this.addState('RICH1',false, 'lv','LV','DCS'));
-    tb.appendChild(this.addState('RICH2',false, 'lv','LV','DCS'));
-    tab.appendChild(tb);
-    return tab;
-  }
-
-  table.Safety_Summary = function() {
-    var tb, tr, cell, tab = document.createElement('table');
-    tab.className  = 'MonitorPage';
-    tb = document.createElement('tbody');
-    tooltips.set(tb,'Safety status of the subdetectors');
-    tb.className  = 'MonitorPage';
-    tb.height    = '120px';
-    tr = document.createElement('tr');
-    tr.appendChild(Cell('Safety',3,'Arial12pt'));
-    tb.appendChild(tr);
-    tr = document.createElement('tr');
-    tr.appendChild(Cell('Subdetector',1,'MonitorDataHeader'));
-    tr.appendChild(Cell('State',1,'MonitorDataHeader'));
-    tr.appendChild(Cell('',1,null));
-    tb.appendChild(tr);
-    this.muonSafety = FSMItem('lbWeb.MUON_Safety',this.logger,true);
-    this.richSafety = FSMItem('lbWeb.RICH_SAFETY',this.logger,true);
-    this.ttSafety = FSMItem('lbWeb.TT_Safety',this.logger,true);
-    this.itSafety = FSMItem('lbWeb.IT_Safety',this.logger,true);
-    tb.appendChild(this.appendFSMItem(this.ttSafety,'TT'));
-    tb.appendChild(this.appendFSMItem(this.itSafety,'IT'));
-    tb.appendChild(this.appendFSMItem(this.richSafety,'RICH'));
-    tb.appendChild(this.appendFSMItem(this.muonSafety,'MUON'));
+    tb.appendChild(this.addState('VELO',true,'lv','LV','DCS_Local'));
+    tb.appendChild(this.addState('TT',false, 'lv','LV','DCS_Local'));
+    tb.appendChild(this.addState('IT',false, 'lv','LV','DCS_Local'));
+    tb.appendChild(this.addState('RICH1',false, 'lv','LV','DCS_Local'));
+    tb.appendChild(this.addState('RICH2',false, 'lv','LV','DCS_Local'));
     tab.appendChild(tb);
     return tab;
   }
@@ -282,6 +248,7 @@ var OperationsStatus = function(msg)   {
   table.LHC_Summary = function() {
     var tb, tr, cell, tab = document.createElement('table');
     tab.className  = 'MonitorPage';
+
     tb = document.createElement('tbody');
     tooltips.set(tb,'LHC state summary');
     tb.className  = 'MonitorPage';
@@ -310,9 +277,10 @@ var OperationsStatus = function(msg)   {
   table.Magnet_Summary = function() {
     var tb, tr, cell, tab = document.createElement('table');
     tab.className  = 'MonitorPage';
-
+    
     tb = document.createElement('tbody');
-    tooltips.set(tb,'Magnet summary');
+    tooltips.set(tb,'Magnet summary<br>Click to move to magnet page');
+    tb.onclick = function() { document.location = "lhcb.display.htm?type=magnet";};
     tb.className  = 'MonitorPage';
     tb.height    = '120px';
     tr = document.createElement('tr');
@@ -363,38 +331,6 @@ var OperationsStatus = function(msg)   {
     return tab;
   }
 
-  table.RICH_Summary = function() {
-    var tb, tr, cell, tab = document.createElement('table');
-    tab.className  = 'MonitorPage';
-    tb = document.createElement('tbody');
-    tooltips.set(tb,'Rich parameters');
-    tb.className  = 'MonitorPage';
-    tb.height    = '120px';
-    tr = document.createElement('tr');
-    tr.appendChild(Cell('Rich1 Gas',2,'Arial12pt'));
-    tr.appendChild(Cell('Rich2 Gas',2,'Arial12pt'));
-    tb.appendChild(tr);
-    tr = document.createElement('tr');
-    tr.appendChild(Cell('Pressure:',1,'MonitorDataHeader'));
-    tr.appendChild(Cell('Temperatur',1,'MonitorDataHeader'));
-    tr.appendChild(Cell('Pressure:',1,'MonitorDataHeader'));
-    tr.appendChild(Cell('Temperatur',1,'MonitorDataHeader'));
-    tb.appendChild(tr);
-    this.rich1Pressure = StyledItem('lbWeb.LHCb_RunInfoCond.RICH1.R1HltGasParameters.Pressure',null,'%7.1f hPa');
-    this.rich1Temp     = StyledItem('lbWeb.LHCb_RunInfoCond.RICH1.R1HltGasParameters.Temperature',null,'%7.1f K');
-    this.rich2Pressure = StyledItem('lbWeb.LHCb_RunInfoCond.RICH2.R2HltGasParameters.Pressure',null,'%7.2f hPa');
-    this.rich2Temp     = StyledItem('lbWeb.LHCb_RunInfoCond.RICH2.R2HltGasParameters.Temperature',null,'%7.1f K');
-
-    tr = document.createElement('tr');
-    tr.appendChild(this.rich1Pressure);
-    tr.appendChild(this.rich1Temp);
-    tr.appendChild(this.rich2Pressure);
-    tr.appendChild(this.rich2Temp);
-    tb.appendChild(tr);
-    tab.appendChild(tb);
-    return tab;
-  };
-
 
   table.Database_Summary = function() {
     var tb, tr, cell, tab = document.createElement('table');
@@ -432,6 +368,8 @@ var OperationsStatus = function(msg)   {
     return tab;
   };
 
+  /**
+  */
   table.Panel_Summary = function() {
     var cell, tab = document.createElement('table');
     var tb = document.createElement('tbody');
@@ -480,11 +418,7 @@ var OperationsStatus = function(msg)   {
     this.subscribeItem2(this.lhcState);
     this.subscribeItem2(this.bcmState);
     this.subscribeItem2(this.magState);
-
-    this.subscribeItem2(this.ttSafety);
-    this.subscribeItem2(this.itSafety);
-    this.subscribeItem2(this.richSafety);
-    this.subscribeItem2(this.muonSafety);
+    this.subscribeItem2(this.clockState);
 
     this.subscribeItem2(this.lhcMode);
     this.subscribeItem2(this.lhcFillNumber);
@@ -502,10 +436,10 @@ var OperationsStatus = function(msg)   {
     this.subscribeItem2(this.dbCond);
     this.subscribeItem2(this.dbArchive);
 
-    this.subscribeItem2(this.rich1Pressure);
-    this.subscribeItem2(this.rich1Temp);
-    this.subscribeItem2(this.rich2Pressure);
-    this.subscribeItem2(this.rich2Temp);
+    this.bkg.subscribe(this.provider);
+    this.safety.subscribe(this.provider);
+    this.cooling.subscribe(this.provider);
+    this.pressures.subscribe(this.provider);
   }
 
   table.build = function() {
@@ -532,13 +466,13 @@ var OperationsStatus = function(msg)   {
     this.head_date.id = 'current_time';
     this.head_date.textAlign = 'right';
 
-    cell = Cell('LHCb Operation Status&nbsp;'+lhcb_online_picture(),1,'MonitorBigHeader');
+    cell = Cell('LHCb Operation State&nbsp;'+lhcb_online_picture(),1,'MonitorBigHeader');
     cell.style.textAlign = 'right';
     cell.onclick = function() { document.location = "http://lhcb.cern.ch";};
     tr1.appendChild(cell);
 
 
-    tooltips.set(this.heading,'LHCb status summary:<br>-- High voltage status<br>-- Magnet status<br>-- TTC status<br>-- Background status<br>-- Velo and cooling status<br>Click to go to LHCb home page');
+    tooltips.set(this.heading,'LHCb operations status:<br>-- High/Low voltage status<br>-- Magnet, BCM and TTC status<br>-- TTC status<br>-- Velo, Rich measurements<br>-- Cooling plant status<br>-- Safety status');
 
 
     tb.appendChild(this.heading);
@@ -608,19 +542,27 @@ var OperationsStatus = function(msg)   {
 
     tb1.appendChild(tr1=document.createElement('tr'));
     tr1.appendChild(td1=document.createElement('td'));
-    td1.appendChild(cell=this.RICH_Summary());
+    td1.appendChild(this.pressures=lhcb.widgets.RICHPressures('Arial12pt',this.logger));
 
     tb1.appendChild(tr1=document.createElement('tr'));
     tr1.appendChild(td1=document.createElement('td'));
     td1.appendChild(cell=this.Database_Summary());
 
     tb1.appendChild(tr1=document.createElement('tr'));
-    tr1.appendChild(cell=Cell('',1,null));
-    cell.height = '220px';
+    tr1.appendChild(td1=document.createElement('td'));
+    td1.appendChild(this.cooling = lhcb.widgets.CoolingSummary('Arial12pt',this.logger));
 
     tb1.appendChild(tr1=document.createElement('tr'));
     tr1.appendChild(td1=document.createElement('td'));
-    td1.appendChild(cell=this.Safety_Summary());
+    td1.appendChild(this.bkg = lhcb.widgets.BackgroundSummary('Arial12pt',this.logger));
+
+    tb1.appendChild(tr1=document.createElement('tr'));
+    tr1.appendChild(cell=Cell('',1,null));
+    cell.height = '40px';
+
+    tb1.appendChild(tr1=document.createElement('tr'));
+    tr1.appendChild(td1=document.createElement('td'));
+    td1.appendChild(this.safety=lhcb.widgets.SafetySummary('Arial12pt',this.logger));
 
 
     tb.appendChild(tr);

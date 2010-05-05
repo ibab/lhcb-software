@@ -167,12 +167,17 @@ LbDesktop.LHCbMenuModule = Ext.extend(desktop.URLMenuModule, {
   init: function(){
     var items = 
     [ this.menuURL(constants.urls.lhcb.home_page).makeIcon(constants.images.lhcb)
-     ,this.menuURL(constants.urls.lhcb.twiki).makeIcon(constants.images.twiki)
-     ,this.menuURL(constants.urls.lhcb.online_home_page)
-     ,this.menuURL(constants.urls.lhcb.computing_home_page)
-     ,this.menuURL(constants.urls.lhcb.weekly_meetings)
-     ,this.menuURL(constants.urls.lhcb.offline_databases_status).makeIcon(constants.images.database)
-     ,this.menuURL(constants.urls.lhcb.online_databases_status).makeIcon(constants.images.database)
+      ,this.menuItem('Run News (requires login)', 'https://groups.cern.ch/group/lhcb-run-news/default.aspx',1000,800)
+      ,this.menuItem('Run DB',                    'https://lbrundb.cern.ch/rundb?destination=rundb',1000,800)
+      ,this.menuItem('Problem DB',                'http://lbproblems.cern.ch',1000,800)
+      ,this.menuItem('Pit Webcam',                'http://lhcb.web.cern.ch/lhcb/web-cam.htm',1000,800)
+      ,this.menuItem('Shifts',                    'http://lbshiftdb.cern.ch/index.py/login',1000,800)
+      ,this.menuURL(constants.urls.lhcb.twiki).makeIcon(constants.images.twiki)
+      ,this.menuURL(constants.urls.lhcb.online_home_page)
+      ,this.menuURL(constants.urls.lhcb.computing_home_page)
+      ,this.menuURL(constants.urls.lhcb.weekly_meetings)
+      ,this.menuURL(constants.urls.lhcb.offline_databases_status).makeIcon(constants.images.database)
+      ,this.menuURL(constants.urls.lhcb.online_databases_status).makeIcon(constants.images.database)
      ];
     this._launch('LHCb Experiment',constants.images.lhcb,items);
   }

@@ -194,50 +194,6 @@ var DetStatus = function(msg)   {
     return tab;
   }
 
-  table.Background_summary = function() {
-    var c, tb, tr, tab = document.createElement('table');
-    tb = document.createElement('tbody');
-
-    tooltips.set(tab,'Background summary<br>Click to access BCM information');
-    tab.onclick = function() { document.location = "lhcb.display.htm?type=bcm&sensors=1";};
-    tab.className = tb.className   = 'MonitorPage';
-    tr = document.createElement('tr');
-    tr.appendChild(c=Cell('Background Status:',7,'MonitorDataHeader'));
-    c.style.width='100%';
-    tb.appendChild(tr);
-
-    this.bcmBeamPermit1 = StyledItem('lbWeb.BCM_Interface.BeamPermit.getStatus', null, null);
-    this.bcmBeamPermit2 = StyledItem('lbWeb.BCM_Interface.InjPermit1.getStatus', null, null);
-    this.bcmBeamPermit3 = StyledItem('lbWeb.BCM_Interface.InjPermit2.getStatus', null, null);
-    tr = document.createElement('tr');
-    tr.appendChild(c=Cell('Beam permits',1,'MonitorDataHeader'));
-    c.style.width = '25%';
-    tr.appendChild(this.bcmBeamPermit1);
-    this.bcmBeamPermit1.colSpan = 2;
-    tr.appendChild(this.bcmBeamPermit2);
-    this.bcmBeamPermit2.colSpan = 2;
-    tr.appendChild(this.bcmBeamPermit3);
-    this.bcmBeamPermit3.colSpan = 2;
-    tb.appendChild(tr);
-
-    this.figureOfMerit1 = StyledItem('lbWeb.BCM_DP_S0.RS2_REL',                           null, '%7.3f');
-    this.figureOfMerit2 = StyledItem('lbWeb.BCM_DP_S0.RS32_REL',                          null, '%7.3f');
-    this.figureOfMerit3 = StyledItem('lbWeb.BCM_DP_S1.RS2_REL',                           null, '%7.3f');
-    this.figureOfMerit4 = StyledItem('lbWeb.BCM_DP_S1.RS32_REL',                          null, '%7.3f');
-    tr = document.createElement('tr');
-    tr.appendChild(Cell('Figure of Merit',null,'MonitorDataHeader'));
-    tr.appendChild(Cell('S0.RS2/32:',1,'MonitorDataHeader'));
-    tr.appendChild(this.figureOfMerit1);
-    tr.appendChild(this.figureOfMerit2);
-    tr.appendChild(Cell('S1.RS2/32:',1,'MonitorDataHeader'));
-    tr.appendChild(this.figureOfMerit3);
-    tr.appendChild(this.figureOfMerit4);
-    tb.appendChild(tr);
-    
-    tab.appendChild(tb);
-    return tab;
-  }
-
   table.Clock_summary = function() {
     var tab = document.createElement('table');
     var tb = document.createElement('tbody');
@@ -291,55 +247,6 @@ var DetStatus = function(msg)   {
     return tab;
   }
 
-  /**
-  */
-  table.Cooling_summary = function() {
-    var c, tb, td, tr, tab = document.createElement('table');
-    tb = document.createElement('tbody');
-    tab.className = tb.className   = 'MonitorPage';
-
-    tooltips.set(tab,'Cooling information summary<br>for various subdetectors');    
-    // Velo position
-    this.itCoolingAlarms  = StyledItem('lbWeb.CaV/ItPlant.Actual.alarm', null, null);
-    this.otCoolingAlarms  = StyledItem('lbWeb.CaV/OtPlant.Actual.alarm', null, null);
-    this.ttCoolingAlarms  = StyledItem('lbWeb.CaV/TtPlant.Actual.alarm', null, null);
-    this.richCoolingAlarms  = StyledItem('lbWeb.CaV/RichPlant.Actual.alarm', null, null);
-
-    this.itCoolingFaults  = StyledItem('lbWeb.CaV/ItPlant.Actual.fault', null, null);
-    this.otCoolingFaults  = StyledItem('lbWeb.CaV/OtPlant.Actual.fault', null, null);
-    this.ttCoolingFaults  = StyledItem('lbWeb.CaV/TtPlant.Actual.fault', null, null);
-    this.richCoolingFaults  = StyledItem('lbWeb.CaV/RichPlant.Actual.fault', null, null);
-
-    tr = document.createElement('tr');
-    tb.appendChild(tr);
-    tr.appendChild(c=Cell('Cooling',1,'MonitorDataHeader'));
-    c.style.width = '25%';
-    tr.appendChild(Cell('IT',1,'MonitorDataHeader'));
-    tr.appendChild(Cell('TT',1,'MonitorDataHeader'));
-    tr.appendChild(Cell('OT',1,'MonitorDataHeader'));
-    tr.appendChild(Cell('Rich',1,'MonitorDataHeader'));
-
-    tr = document.createElement('tr');
-    tb.appendChild(tr);
-    tr.appendChild(Cell('Alarms',1,'MonitorDataHeader'));
-
-    tr.appendChild(this.itCoolingAlarms);
-    tr.appendChild(this.ttCoolingAlarms);
-    tr.appendChild(this.otCoolingAlarms);
-    tr.appendChild(this.richCoolingAlarms);
-
-    tr = document.createElement('tr');
-    tb.appendChild(tr);
-    tr.appendChild(Cell('Faults',1,'MonitorDataHeader'));
-
-    tr.appendChild(this.itCoolingFaults);
-    tr.appendChild(this.ttCoolingFaults);
-    tr.appendChild(this.otCoolingFaults);
-    tr.appendChild(this.richCoolingFaults);
-
-    tab.appendChild(tb);
-    return tab;
-  }
 
   table.subscribeItem = function(item) {
     this.provider.subscribe(item.name,item);
@@ -394,25 +301,10 @@ var DetStatus = function(msg)   {
     this.subscribeItem(this.magnetTemp2);
     this.subscribeItem(this.magnetTemp3);
 
-    this.subscribeItem(this.bcmBeamPermit1);
-    this.subscribeItem(this.bcmBeamPermit2);
-    this.subscribeItem(this.bcmBeamPermit3);
-
-    this.subscribeItem(this.figureOfMerit1);
-    this.subscribeItem(this.figureOfMerit2);
-    this.subscribeItem(this.figureOfMerit3);
-    this.subscribeItem(this.figureOfMerit4);
-
     this.subscribeItem(this.veloPosition);
 
-    this.subscribeItem(this.itCoolingAlarms);
-    this.subscribeItem(this.itCoolingFaults);
-    this.subscribeItem(this.otCoolingAlarms);
-    this.subscribeItem(this.otCoolingFaults);
-    this.subscribeItem(this.ttCoolingAlarms);
-    this.subscribeItem(this.ttCoolingFaults);
-    this.subscribeItem(this.richCoolingAlarms);
-    this.subscribeItem(this.richCoolingFaults);
+    this.background_summary.subscribe(this.provider);
+    this.cooling_summary.subscribe(this.provider);
   }
 
   table.build = function() {
@@ -475,7 +367,7 @@ var DetStatus = function(msg)   {
 
     tb1.appendChild(tr1=document.createElement('tr'));
     tr1.appendChild(td1=document.createElement('td'));
-    td1.appendChild(this.Background_summary());
+    td1.appendChild(this.background_summary=lhcb.widgets.BackgroundSummary('MonitorDataHeader'));
 
     tb1.appendChild(tr1=document.createElement('tr'));
     tr1.appendChild(td1=document.createElement('td'));
@@ -483,7 +375,7 @@ var DetStatus = function(msg)   {
 
     tb1.appendChild(tr1=document.createElement('tr'));
     tr1.appendChild(td1=document.createElement('td'));
-    td1.appendChild(this.Cooling_summary());
+    td1.appendChild(this.cooling_summary = lhcb.widgets.CoolingSummary(null));
 
     tb.appendChild(tr);
 

@@ -179,6 +179,7 @@ var navbar_body = function()  {
   navBar.addURL('Show subdetector run status display',lhcb.constants.urls.lhcb.sdet_run_status);
   navBar.addURL('Show collimator settings around Point 8',lhcb.constants.urls.lhcb.collimators);
   navBar.addURL('Show LHCb HV status',lhcb.constants.urls.lhcb.detstatus);
+  navBar.addURL('Show Operations status',lhcb.constants.urls.lhcb.operstatus);
   lhcb.constants.urls.lhcb.bcm.src += '&charts=1';
   navBar.addURL('Show BCM status',lhcb.constants.urls.lhcb.bcm);
   navBar.addURL('Show Magnet status',lhcb.constants.urls.lhcb.magnet);
