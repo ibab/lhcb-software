@@ -73,6 +73,12 @@ class TsaSeedConf(object):
             tsaSeed.stubFinder.yCut = 5
             tsaSeed.stubFinder.yTol = 10
             tsaSeed.stubFinder.dAngle = 0.35
+            tsaSeed.addTool(Tf__Tsa__Likelihood(), name = "likelihood")
+            tsaSeed.likelihood.LikCut = -40
+            tsaSeed.likelihood.outlierCut = 6.0
+            tsaSeed.likelihood.OTEff = 0.85
+            
+            tsaConv.LikCut = -40
         
             
     def configureTools(self, xTools, stereoTools):
@@ -95,12 +101,12 @@ class TsaSeedConf(object):
         
         if TrackSys().fieldOff():
             
-            xtool[3].sxCut = 0.40;
-            xtool[4].sxCut = 0.40;
-            xtool[3].collectPolicy = "Linear";
-            xtool[4].collectPolicy = "Linear";
-            xtool[3].sx2Cut = 0.330;
-            xtool[4].sx2Cut = 0.330;
+            xTools[3].sxCut = 0.40;
+            xTools[4].sxCut = 0.40;
+            xTools[3].collectPolicy = "Linear";
+            xTools[4].collectPolicy = "Linear";
+            xTools[3].sx2Cut = 0.330;
+            xTools[4].sx2Cut = 0.330;
             
             for xtool in xTools:
                 xtool.dthCut = 0.08;
@@ -126,11 +132,6 @@ class TsaSeedConf(object):
             stereoTools[4].yTol2 = 20
             
         if  TrackSys().earlyData():
-            tsaSeed.addTool(Tf__Tsa__Likelihood(), name = "likelihood")
-            tsaSeed.likelihood.LikCut = -40
-            tsaSeed.likelihood.outlierCut = 6.0
-            tsaSeed.likelihood.OTEff = 0.85
-            Tf__Tsa__SeedTrackCnv("TsaSeedTrackCnv").LikCut = -40
             xTools[0].outlierCut = 6.0
             xTools[1].outlierCut = 6.0
             xTools[2].outlierCut = 6.0

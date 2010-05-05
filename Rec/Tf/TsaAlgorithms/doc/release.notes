@@ -4,6 +4,9 @@
 ! Purpose     : Tsa algorithms
 !----------------------------------------------------------------------------
 
+! 2010-05-05 - Rob Lambert
+ - Fixed bug in nightlies, some minor coding errors
+
 ! 2010-05-04 - Rob Lambert
  - Added TsaAlgConf.py to replace the options file TsaSeeding.py
 
