@@ -14,6 +14,7 @@ Purpose: LHCb Alignment packages.
 	Alignment/AlignTrTools  v4r7  
 	Alignment/AlignmentInterfaces  v3r2  
   Alignment/Escher  v4r7  
+  Alignment/MisAligner v1r3
 	Alignment/TAlignment  v5r0  
   Alignment/VeloAlignment  v4r9  
 
@@ -32,6 +33,10 @@ Purpose: LHCb Alignment packages.
 
 - In Alignment/AlignmentInterfaces  v3r2:
   . Changes to IATrackSelector interface 
+
+- In Alignment/MisAligner  v1r3:
+  . remove dependencies on Sys packages which crept in 
+    - causing configuration errors
 
 - In Alignment/TAlignment  v5r0:
   . Minor changes to GAlign 
