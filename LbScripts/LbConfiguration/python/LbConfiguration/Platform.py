@@ -122,7 +122,7 @@ def getConfig(architecture, platformtype, compiler, debug=False):
             elif architecture == "x86_64" :
                 architecture = "amd64"
             cmtconfig = "_".join([platformtype, architecture, compiler])
-                
+
     if debug :
         cmtconfig = getBinaryDbg(cmtconfig)
 
@@ -149,7 +149,7 @@ extra_binary_list = extra_binary_opt_list + extra_binary_dbg_list
 def pathBinaryMatch(path, cmtconfig):
     """ returns True if the path belong to the cmtconfig distribution
     @param path: file/path to be tested
-    @param cmtconfig: target cmtconfig   
+    @param cmtconfig: target cmtconfig
     """
     selected = False
     log = logging.getLogger()
@@ -185,7 +185,7 @@ def pathMatch(path, cmtconfig, shared=False):
         selected = pathBinaryMatch(path, cmtconfig)
     else :
         selected = pathSharedMatch(path, cmtconfig)
-    return selected 
+    return selected
 
 def pathFilter(pathlist, cmtconfig, shared=False):
     return [ p for p in pathlist if pathMatch(p, cmtconfig, shared) ]
@@ -212,6 +212,13 @@ linux_flavour_aliases = {
                          "deb"  : ["Debian"],
                          "ub"   : ["Ubuntu"],
                          "ml"   : ["Mandriva Linux"]
+                        }
+
+lsb_flavour_aliases   = {
+                         "sl"   : ["ScientificSL"],
+                         "slc"  : ["ScientificCERNSLC"],
+                         "fc"   : ["Fedora"],
+                         "co"   : ["CentOS"]
                         }
 
 flavor_runtime_compatibility = {
@@ -376,7 +383,7 @@ class NativeMachine:
 
         osver = self._osversion
 
-        # returns at most the number of position specified. 
+        # returns at most the number of position specified.
         if position :
             osver = ".".join(self._osversion.split(".")[:position])
 
@@ -398,7 +405,7 @@ class NativeMachine:
             ncv = ".".join(self._compversion.split(".")[:position])
 
         return ncv
-    
+
     def nativeCompiler(self):
         if not self._compiler :
             if self._ostype == "Windows" :
@@ -407,9 +414,9 @@ class NativeMachine:
                 cvers = [int(c) for c in self.nativeCompilerVersion(position=2).split(".")]
                 self._compiler = "gcc%d%d" % (cvers[0], cvers[1])
                 if cvers[0] == 3 and cvers[1] < 4 :
-                    self._compiler = "gcc%s" %self.nativeCompilerVersion(position=3).replace(".","") 
+                    self._compiler = "gcc%s" %self.nativeCompilerVersion(position=3).replace(".","")
                 if self._ostype == "Darwin" and self.OSVersion(position=2) == "10.5" :
-                    self._compiler = "gcc%s" %self.nativeCompilerVersion(position=3).replace(".","")                     
+                    self._compiler = "gcc%s" %self.nativeCompilerVersion(position=3).replace(".","")
         return self._compiler
     # CMT derived informations
     def CMTArchitecture(self):
@@ -497,14 +504,14 @@ class NativeMachine:
                 supported.append(c)
         return supported
     def CMTNativeConfig(self, debug=False):
-        """ 
+        """
         Returns the native configuration if possible. Guess also the compiler
-        on linux platforms 
+        on linux platforms
         """
         comp = self.nativeCompiler()
         mach = self.machine()
         osflav = self.CMTOSFlavour()
-        natconf = getConfig(architecture=mach, platformtype=osflav, 
+        natconf = getConfig(architecture=mach, platformtype=osflav,
                             compiler=comp, debug=debug)
         return natconf
     def DiracPlatform(self):
@@ -517,7 +524,7 @@ class NativeMachine:
                 lib = '/lib'
             libs = []
             for l in os.listdir( lib ):
-                if l.find('libc-') == 0 or l.find('libc.so') == 0 : 
+                if l.find('libc-') == 0 or l.find('libc.so') == 0 :
                     libs.append( os.path.join(lib, l) )
             libs.sort()
             platformlist.append( '-'.join( platform.libc_ver(libs[-1])) )
@@ -527,7 +534,7 @@ class NativeMachine:
             platformlist.append(platform.win32_ver()[0])
         else :
             platformlist.append( platform.release() )
-            
-            
+
+
         platformstr = "_".join(platformlist)
         return platformstr

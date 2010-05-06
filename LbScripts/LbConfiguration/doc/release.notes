@@ -1,3 +1,7 @@
+2010-05-06  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbConfiguration/Platform.py: added the list of known LSB identifiers.
+
 2010-05-04  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbConfiguration/LbLogin.py: added the internal setup of Compat.
