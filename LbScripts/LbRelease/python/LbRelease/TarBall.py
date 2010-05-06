@@ -128,6 +128,60 @@ def generateDataMD5(project, version, input_dir=None):
         log.warning("The file %s doesn't exist. Skipping md5 creation." % filename)
 
 
+def getHTMLLink(project, version, cmtconfig=None, with_name=False):
+    link_str = None
+    prj_conf = Project.getProject(project)
+    link_href = "/".join([prj_conf.DistPrefix(), prj_conf.tarBallName(version, cmtconfig, full=True)])
+    link_cont = prj_conf.tarBallName(version, cmtconfig)
+    if with_name :
+        link_name = link_cont
+        link_str  = "<A NAME=%s HREF=%s>%s</A>" % (link_name, link_href, link_cont)
+    else :
+        link_str  = "<A HREF=%s>%s</A>" % (link_href, link_cont)
+    return link_str
+
+def getHTMLDataLink(project, version, with_name=False):
+    link_str = None
+    pkg_conf = Package.getPackage(project)
+    link_href = "/".join([pkg_conf.DistPrefix(), pkg_conf.tarBallName(version, full=True)])
+    link_cont = pkg_conf.tarBallName(version)
+    if with_name :
+        link_name = pkg_conf.releasePrefix(version)
+        link_cont = "<A NAME=%s HREF=%s>%s</A>" % (link_name, link_href, link_cont)
+    else :
+        link_str = "<A HREF=%s>%s</A>" % (link_href, link_cont)
+    return link_str
+
+def getLCGHTMLLink(project, version, lcg_version, cmtconfig):
+    prj_conf = Project.getProject(project)
+    ver = version
+    if prj_conf.LCGTarBallName() == "LCGCMT" :
+        ver = lcg_version
+    link_href = prj_conf.LCGTarBallName(ver, cmtconfig, full=True)
+    link_cont = prj_conf.LCGTarBallName(ver, cmtconfig, full=False)
+    link = "<A HREF=source/%s>%s</A>" % (link_href, link_cont)
+    return link
+
+def getLCGHTMLLinks(project, version, dep_list, cmtconfig):
+    link_list = []
+    lcg_version = dep_list["LCGCMT"]
+    prj_conf = Project.getProject(project)
+    if not cmtconfig :
+        cmtconf = Platform.binary_opt_list[0]
+    else :
+        cmtconf = cmtconfig
+    # append the main LCG tarball name
+    if prj_conf.LCGTarBallName() :
+        link_list.append(getLCGHTMLLink(project, version, lcg_version, cmtconf))
+    # append the LCG tarball of the dependent projects
+    for p in dep_list.keys() :
+        if Project.isProject(p) :
+            p_conf = Project.getProject(p)
+            if p_conf.LCGTarBallName() :
+                link_list.append(getLCGHTMLLink(p, dep_list[p], lcg_version, cmtconf))
+    return link_list
+
+
 def generateHTML(project, version, cmtconfig=None, top_dir=None, output_dir=None):
     log = logging.getLogger()
     prj_conf = Project.getProject(project)
@@ -148,6 +202,28 @@ def generateHTML(project, version, cmtconfig=None, top_dir=None, output_dir=None
         print getTarDependencies(project, version, 
                                  cmtconfig, top_dir, 
                                  project_only=False, full=True)
+        title = "Project %s version %s" % (prj_conf.Name(), version)
+        if cmtconfig :
+            depcont = "<H3>%s (%s binary files) </H3>\n" % (title, cmtconfig)
+        else :
+            depcont = "<H3>%s (source files) </H3>\n" % title    
+        
+        depcont += "%s\n" % getHTMLLink(project, version, cmtconfig, with_name=True)
+        dep_list = getTarDependencies(project, version, cmtconfig, top_dir, project_only=False, full=True)
+        tobeadded = []
+        if "LCGCMT" in dep_list.keys() :
+            tobeadded += [ "[%s]\n" % x for x in getLCGHTMLLinks(project, version, dep_list, cmtconfig) ]                
+        for p in dep_list.keys() :
+            if Project.isProject(p) :
+                tobeadded.append( "[%s]\n" % getHTMLLink(p, dep_list[p], cmtconfig, with_name=False))
+        for p in dep_list.keys() :
+            if Package.isPackage(p) :
+                tobeadded.append("[%s]\n" % getHTMLDataLink(p, dep_list[p], with_name=False))
+        if tobeadded :
+            depcont += "<MENU><LI>\n"
+            depcont += "".join(tobeadded)
+            depcont += "</MENU>\n" 
+        print depcont
 #    prefix = prj_conf.releasePrefix(version)
 #    prj_path = os.path.join(top_dir, prefix)
 #    prj = CMT.Project(prj_path)
@@ -341,6 +417,10 @@ def getTarDependencies(project, version=None, cmtconfig=None, top_dir=None,
             version = str(Version.getVersionsFromDir(maindir, pattern=None, reverse=True)[0])
             log.debug("Guessed version for %s is %s" % (pcfg.Name(), version))
             prefix = pcfg.releasePrefix(version)
+    # filter out items without version
+    for k in prj_dict.keys() :
+        if not prj_dict[k] :
+            del prj_dict[k]
     return prj_dict
 
 def buildTar(project, version=None, cmtconfig=None, 
