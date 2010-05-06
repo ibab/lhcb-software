@@ -1,4 +1,4 @@
-#$Id: Wrappers.py,v 1.38 2010-05-06 15:18:43 jpalac Exp $
+#$Id: Wrappers.py,v 1.39 2010-05-06 16:08:16 jpalac Exp $
 """
 Wrapper classes for a DaVinci offline physics selection. The following classes
 are available:
@@ -48,9 +48,39 @@ from Configurables import LoKi__VoidFilter as VoidFilter
 
 
 class AutomaticData(autodata) :
+    """
+    Simple wrapper for a data location. To be used for locations
+    that are guaranteed to be populated. This could be a location
+    on a DST or a location registered to the DataOnDemandSvc.
+    Returns output location via outputLocation() method.
+    Can be used as a Selection in RequiredSelections field of other
+    Selections.
+
+    Example: wrap StdLoosePions
+
+    >>> SelStdLoosePions = AutomaticData('SelStdLoosePions',
+                                         Location = 'Phys/StdLoosePions')
+    >>> SelStdLoosePions.outputLocation()
+    'Phys/StdLoosePions'
+    >>> SelStdLoosePions.name()
+    'SelStdLoosePions'
+    >>> SelStdLoosePions.outputLocation()
+    'Phys/StdLoosePions'
+    The first argument is used for the name, but can be omitted:
+
+    >>> SelStdLoosePions = AutomaticData(Location = 'Phys/StdLoosePions')
+    >>> SelStdLoosePions.name()
+    'StdLoosePions'
+    """
+
+    def __init__(self, Location, name='', DataType = 'Particles') :
+        autodata.__init__(self,
+                          name=name,
+                          Location=Location)
+        self._dataType = DataType
     def algorithm(self) :
         return VoidFilter('SelFilter'+self._name,
-                          Code = "CONTAINS('"+self.outputLocation()+"')>0")
+                          Code = "CONTAINS('"+self.outputLocation()+"/"+self._dataType+"')>0")
 
 DataOnDemand = AutomaticData
 
