@@ -1,4 +1,4 @@
-// $Id: MuonTrack.cpp,v 1.3 2010-05-04 14:35:18 ggiacomo Exp $
+// $Id: MuonTrack.cpp,v 1.4 2010-05-06 07:59:14 ggiacomo Exp $
 #define MUONTRACKRECNMSPC
 #include "MuonInterfaces/MuonTrack.h"
 #include "MuonInterfaces/MuonLogPad.h"
@@ -318,7 +318,7 @@ StatusCode MuonTrack::AddXTalk(const std::vector< MuonHit* >* trackhits, float c
     double dist = sqrt(pow((*ihT)->X() - x_fit,2) + pow((*ihT)->Y() - y_fit ,2));
 
     if( (*ihT)->station() == m_skipStation ) {
-      if (deltaX<cut && deltaY<cut || dist < 50.) {
+      if ( (deltaX<cut && deltaY<cut) || dist < 50.) {
         /*
         std::cout<< " Found a hit in station M"<< (*ihT)->station()+1<<"R"<<(*ihT)->region()+1<<" "<<(*ihT)->hitID()<<" "<<
         (*ihT)->X()<<" +/- "<<(*ihT)->hitTile_dX()<<" "<< (*ihT)->Y()<<" +/- "<<(*ihT)->hitTile_dY()<<" "<<(*ihT)->Z()<<

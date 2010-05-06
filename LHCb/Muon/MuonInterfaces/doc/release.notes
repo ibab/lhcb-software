@@ -3,6 +3,9 @@
 ! Responsible : Alessia Satta Alessia.Sattaft@cern.ch
 ! =============================================================================
 
+! 2010-05-06 - G.Graziani
+- fix compilation warning
+
 ! 2010-05-04 - Stefania Vecchi
 - improve MuonTrack::AddXTalk method
 
