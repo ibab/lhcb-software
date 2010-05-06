@@ -47,7 +47,7 @@ StatusCode SaverSvc::initialize() {
     msg << MSG::ERROR << "Cannot initialize service base class." << endreq;
     return StatusCode::FAILURE;
   }
-   dim_set_write_timeout(20);
+     dim_set_write_timeout(20);
    sc = service("IncidentSvc",m_incidentSvc,true);
   if ( !sc.isSuccess() )  {
     msg << MSG::ERROR << "Cannot access incident service." << endmsg;

@@ -616,7 +616,7 @@ bool BaseServiceMap::add() {
         m_dimSrvStatus[m_dimInfoIt->first].first = true;
       }
       else {
-        msg << MSG::INFO << "Adder MonObject still unloaded for " << m_dimInfoIt->first << endreq;
+        msg << MSG::DEBUG << "Adder MonObject still unloaded for " << m_dimInfoIt->first << endreq;
         continue;
       }
     }
@@ -688,7 +688,7 @@ bool BaseServiceMap::add() {
        //update after adding
        m_dimSrv[m_dimInfoIt->first].first->updateService(m_dimSrv[m_dimInfoIt->first].second->endOfRun());
        if (m_dimSrv[m_dimInfoIt->first].second->typeName().compare(s_monRate) == 0){
-         if (m_processMgr->publishRates()) m_monRateDecoder->update((MonRate*)(m_dimSrv[m_dimInfoIt->first].second));
+          if (m_processMgr->publishRates()) m_monRateDecoder->update((MonRate*)(m_dimSrv[m_dimInfoIt->first].second));
        }  
     }
     catch (const std::exception &ex){

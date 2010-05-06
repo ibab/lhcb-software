@@ -32,6 +32,7 @@ AdderSvc::AdderSvc(const std::string& name, ISvcLocator* ploc) : Service(name, p
   declareProperty("refreshTime",  m_refreshTime=20);
   declareProperty("dimclientdns",m_dimClientDns);
   declareProperty("publishRates",m_publishRates=0);
+  declareProperty("maxNbOfServers",m_maxNbOfServers=999);
 
   //declareProperty("savedir", m_saveDir);
   m_enablePostEvents = true;
@@ -106,7 +107,7 @@ void AdderSvc::startUp(){
 
 
   MsgStream msg(msgSvc(), name());
-  m_processMgr->createInfoServers();
+  m_processMgr->createInfoServers(m_maxNbOfServers);
   m_processMgr->createTimerProcess();
   IocSensor::instance().send(this, s_startTimer, this); //start Timer*/
 }

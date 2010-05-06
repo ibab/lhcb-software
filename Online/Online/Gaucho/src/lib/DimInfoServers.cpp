@@ -4,12 +4,13 @@
 #include "CPP/IocSensor.h"
 
 
-DimInfoServers::DimInfoServers(ProcessMgr *processMgr):
+DimInfoServers::DimInfoServers(ProcessMgr *processMgr, int maxNbOfServers):
   DimInfo("DIS_DNS/SERVER_LIST", -1),
   m_name("DimInfoServers"),
   m_processMgr(processMgr)
 {
   m_serverChoosed = "";
+  m_maxNbOfServers = maxNbOfServers;
 }
 
 DimInfoServers::~DimInfoServers() {
@@ -23,7 +24,7 @@ void DimInfoServers::infoHandler() {
 
   std::string value = getString();
 
-  m_processMgr->updateServerMap(value, m_serverMap);
+  m_processMgr->updateServerMap(value, m_serverMap, m_maxNbOfServers);
 
   if ("" == m_serverChoosed) {
     if (0 != m_serverMap.size()){

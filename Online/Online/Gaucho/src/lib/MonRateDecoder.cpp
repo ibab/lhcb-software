@@ -268,6 +268,7 @@ void MonRateDecoder::update(MonRate *monRate) {
 std::string MonRateDecoder::makeServiceName(std::string nameHeader, int counterId, std::string comment)
 {
   bool finished=false;
+  std::string countertype="";
   while (!finished) {
      std::size_t starpos = comment.find("*");
      if (starpos != std::string::npos) {
@@ -303,11 +304,29 @@ std::string MonRateDecoder::makeServiceName(std::string nameHeader, int counterI
   while (!finished) {     
      std::size_t exclpos = comment.find("!");
      if (exclpos != std::string::npos) {
-        comment=comment.substr(0,exclpos)+"excl"+comment.substr(exclpos+1);
+        comment=comment.substr(0,exclpos)+"ex"+comment.substr(exclpos+1);
      }  
      else finished=true;
-  }    
-    
+  }  
+  while (!finished) {     
+     std::size_t exclpos = comment.find("=");
+     if (exclpos != std::string::npos) {
+        comment=comment.substr(0,exclpos)+"eq"+comment.substr(exclpos+1);
+     }  
+     else finished=true;
+  } 
+   
+  std::size_t typepos = comment.find("flag");
+  if (typepos != std::string::npos) {
+     countertype="-flag";
+  }  
+  else {
+     typepos = comment.find("nEntries");
+     if (typepos != std::string::npos) {
+        countertype="-nEntries";
+    } 
+  }   
+           
   char * c = new char[comment.length()+1];
   strcpy(c, comment.c_str());
 
@@ -330,6 +349,14 @@ std::string MonRateDecoder::makeServiceName(std::string nameHeader, int counterI
   }else{
     name = nameHeader + "/" + name;
   }
+
+  if (name.length()> 120) {
+     MsgStream msg(m_msgSvc, "MonRateDecoder");
+     msg << MSG::INFO << "Name "<< name << "too long "<< name.length() << endreq;
+     name=name.substr(0,120)+countertype; 
+     msg << MSG::INFO << "New name "<< name <<  endreq;
+  }
+
 
   return name;
 }

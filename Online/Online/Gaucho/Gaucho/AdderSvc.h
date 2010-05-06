@@ -99,6 +99,7 @@ private:
   std::string m_partitionName;
   std::string m_farm;
   int m_adderType;
+  int m_maxNbOfServers;
   
   
   std::string m_dimClientDns;

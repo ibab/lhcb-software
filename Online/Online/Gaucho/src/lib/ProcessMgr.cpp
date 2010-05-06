@@ -35,12 +35,12 @@ void ProcessMgr::updateMap(){
   m_serviceMap->updateMap(m_dimInfoServers->serverMap());
 }
 
-void ProcessMgr::createInfoServers() {
+void ProcessMgr::createInfoServers(int maxNbOfServers) {
   MsgStream msg(msgSvc(), name());
   m_serviceMap = new BaseServiceMap(this);
 
 //  msg << MSG::DEBUG << "Creating Server Status"<< endreq;
-  m_dimInfoServers = new DimInfoServers(this);
+  m_dimInfoServers = new DimInfoServers(this,maxNbOfServers);
 }
 
 void ProcessMgr::destroyInfoServers() {
@@ -310,7 +310,7 @@ void ProcessMgr::updateServiceSet(std::string &dimString, std::set<std::string> 
 
 }
 
-void ProcessMgr::updateServerMap(std::string &dimString, std::map<std::string, bool, std::less<std::string> > &serverMap) {
+void ProcessMgr::updateServerMap(std::string &dimString, std::map<std::string, bool, std::less<std::string> > &serverMap,  int maxNbOfServers) {
 
   MsgStream msg(msgSvc(), name());
  // msg << MSG::DEBUG << "*************************************************************************"<< endreq;
@@ -326,7 +326,7 @@ void ProcessMgr::updateServerMap(std::string &dimString, std::map<std::string, b
   if (oper.compare("-") == 0) activeStatus = false;
 
  // msg << MSG::DEBUG << "Verifying Server List"<< endreq;
-  std::set<std::string> server = decodeServerList(value);
+  std::set<std::string> server = decodeServerList(value, maxNbOfServers);
   std::set<std::string>::iterator it;
   
   if (server.size() > 0) {}
@@ -346,7 +346,7 @@ void ProcessMgr::updateServerMap(std::string &dimString, std::map<std::string, b
   
 }
 
-std::set<std::string> ProcessMgr::decodeServerList(const std::string &serverListS)
+std::set<std::string> ProcessMgr::decodeServerList(const std::string &serverListS, int maxNbOfServers)
 {
   MsgStream msg(msgSvc(), name());
   std::set<std::string> serverList;
@@ -516,7 +516,7 @@ std::set<std::string> ProcessMgr::decodeServerList(const std::string &serverList
 
     std::string serverName = (*serverListTotIt).substr(0, (*serverListTotIt).find("@"));
    // msg << MSG::DEBUG << "We will consider -----------> Server = "<<serverName << endreq;
-    serverList.insert(serverName);
+    if ((int)serverList.size()<maxNbOfServers) serverList.insert(serverName);
 
   }  
 

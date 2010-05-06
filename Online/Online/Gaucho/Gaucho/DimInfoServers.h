@@ -22,9 +22,10 @@ private:
 
   std::map<std::string, bool, std::less<std::string> > m_serverMap;
   std::map<std::string, bool, std::less<std::string> >::iterator m_it;
+  int m_maxNbOfServers;
 
 public:
-  DimInfoServers(ProcessMgr *processMgr);
+  DimInfoServers(ProcessMgr *processMgr, int maxNbOfServers=999);
 
   ~DimInfoServers();
 

@@ -61,9 +61,9 @@ public:
   IMessageSvc* msgSvc() {return m_msgSvc;};  
       
   void updateServiceSet(std::string &dimString, std::set<std::string> &serviceSet);
-  void updateServerMap(std::string &dimString, std::map<std::string, bool, std::less<std::string> > &serverMap);
+  void updateServerMap(std::string &dimString,  std::map<std::string, bool, std::less<std::string> > &serverMap, int maxNbOfServers=999);
   
-  void createInfoServers();
+  void createInfoServers(int maxNbOfServers=999);
   void createInfoServices(std::string serverName);
   void createTimerProcess();
 
@@ -105,7 +105,7 @@ public:
   std::string serviceOwner() {return m_serviceOwner;}
   
 private:
-  std::set<std::string> decodeServerList(const std::string &serverListS);
+  std::set<std::string> decodeServerList(const std::string &serverListS, const int maxNbOfServers=999);
 
 protected:
   std::string m_serviceOwner;
