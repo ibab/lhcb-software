@@ -73,25 +73,25 @@ class CMTProjectPath(Path):
     def __init__(self):
         super(CMTProjectPath, self).__init__("CMTPROJECTPATH")
 
-def pathPrepend(path, dir):
+def pathPrepend(path, dirname):
     path_list = path.split(os.pathsep)
-    path_list.insert(0, dir)
+    path_list.insert(0, dirname)
     return os.pathsep.join(path_list)
 
-def pathAppend(path, dir):
+def pathAppend(path, dirname):
     path_list = path.split(os.pathsep)
-    path_list.append(dir)
+    path_list.append(dirname)
     return os.pathsep.join(path_list)
 
-def envPathPrepend(pathname, dir, env_dict=None):
+def envPathPrepend(pathname, dirname, env_dict=None):
     if not env_dict :
         env_dict = os.environ
-    env_dict[pathname] = pathPrepend(env_dict[pathname], dir)
+    env_dict[pathname] = pathPrepend(env_dict[pathname], dirname)
 
-def envPathAppend(pathname, dir, env_dict=None):
+def envPathAppend(pathname, dirname, env_dict=None):
     if not env_dict :
         env_dict = os.environ
-    env_dict[pathname] = pathAppend(env_dict[pathname], dir)
+    env_dict[pathname] = pathAppend(env_dict[pathname], dirname)
 
 def multiPathJoin(path, subdir):
     pathlist = []
