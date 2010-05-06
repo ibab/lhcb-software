@@ -12,6 +12,10 @@ use LinkerEvent        v* Event
 use MuonDet            v* Det
 use AIDA               v* LCG_Interfaces
 
+use TrackFitter 	v* Tr
+use TrackSys 		v* Tf
+use TrackTools 		v* Tr
+
 apply_pattern install_python_modules
 
 # build a component library

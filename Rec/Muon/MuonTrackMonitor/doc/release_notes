@@ -4,6 +4,9 @@
 ! Purpose     : High level Muon Monitoring after reconstruction
 !-----------------------------------------------------------------------------
 
+! 2010-05-06 - Rob Lambert
+ - Added use statements to requirements file
+
 ! 2010-05-05 G. Graziani
  - MuonAlignmentMonitor renamed MuonTrackAligMonitor (avoid conflicts with DaVinci)
  - added Configurable
