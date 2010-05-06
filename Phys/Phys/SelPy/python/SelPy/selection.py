@@ -49,8 +49,8 @@ class AutoData(object) :
     __author__ = "Juan Palacios juan.palacios@nikhef.nl"
     
     def __init__ (self,
-                  name='',
-                  Location = "") :
+                  Location,
+                  name=''  ) :
         if name == '' :
             self._name = Location[Location.rfind('/')+1:]
             print 'setting name to ', self._name
