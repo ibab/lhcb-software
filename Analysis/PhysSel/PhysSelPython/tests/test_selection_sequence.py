@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-#$Id: test_selection_sequence.py,v 1.19 2010-05-04 14:25:37 jpalac Exp $
+#$Id: test_selection_sequence.py,v 1.20 2010-05-06 15:22:50 jpalac Exp $
 '''
 Test suite for SelectionSequence class.
 '''
@@ -70,7 +70,7 @@ def test_sequencer_algos() :
 
     seqAlgos = seq.algos
 
-    assert len(seqAlgos) == 3
+    assert len(seqAlgos) == 7
     for sel in [sel01, sel02, sel03] :
         assert sel.algorithm() in seqAlgos
 
@@ -103,13 +103,17 @@ def test_sequencer_sequence() :
 
     ref_algos = [presel0,
                  presel1,
+                 _sel00.algorithm(),
+                 _sel01.algorithm(),
+                 _sel02.algorithm(),
+                 _sel03.algorithm(),
                  sel02.algorithm(),
                  sel01.algorithm(),
                  sel03.algorithm(),
                  postsel0,
                  postsel1]
 
-    assert len(seqAlgos) == 7
+    assert len(seqAlgos) == 11
 
     assert presels == ref_algos[:len(presels)]
 
@@ -150,13 +154,17 @@ def test_clone_sequence() :
 
     ref_algos = [presel0,
                  presel1,
+                 _sel00.algorithm(),
+                 _sel01.algorithm(),
+                 _sel02.algorithm(),
+                 _sel03.algorithm(),
                  sel02.algorithm(),
                  sel01.algorithm(),
                  sel03.algorithm(),
                  postsel0,
                  postsel1]
 
-    assert len(seqAlgos) == 7
+    assert len(seqAlgos) == len(ref_algos)
     assert presels == seqAlgos[:len(presels)]
     assert postsels == seqAlgos[len(ref_algos)-len(postsels):]
     # sel03 must come just before the post selection algos.
@@ -167,7 +175,7 @@ def test_clone_sequence() :
 
     seqAlgos = seq.algos
 
-    assert len(seqAlgos) == 7
+    assert len(seqAlgos) == len(ref_algos)
     assert presels == seqAlgos[:len(presels)]
     assert postsels == seqAlgos[len(ref_algos)-len(postsels):]
 

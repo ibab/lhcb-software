@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-#$Id: test_multi_selection_sequence.py,v 1.5 2010-05-04 15:18:36 jpalac Exp $
+#$Id: test_multi_selection_sequence.py,v 1.6 2010-05-06 15:22:50 jpalac Exp $
 '''
 Test suite for MultiSelectionSequence class.
 '''
@@ -52,22 +52,22 @@ def test_multi_sequencer_sequences() :
     _sel01 = AutomaticData(Location = 'Phys/Sel01')
     _sel02 = AutomaticData(Location = 'Phys/Sel02')
     _sel03 = AutomaticData(Location = 'Phys/Sel03')
-    _sel04 = AutomaticData(Location = 'Phys/Sel04')
-    _sel05 = AutomaticData(Location = 'Phys/Sel05')
-    _sel06 = AutomaticData(Location = 'Phys/Sel06')
-    _sel07 = AutomaticData(Location = 'Phys/Sel07')
 
     sel00_01 = Selection('0000110', Algorithm = DummyAlgorithm('Alg00_01'),
                          RequiredSelections = [_sel00, _sel01])
     sel02_03 = Selection('0000111', Algorithm = DummyAlgorithm('Alg02_03'),
                          RequiredSelections = [_sel02, _sel03])
+    selA = Selection('000112A', Algorithm = DummyAlgorithm('Alg001A'),
+                     RequiredSelections = [ sel00_01, sel02_03])
+
+    _sel04 = AutomaticData(Location = 'Phys/Sel04')
+    _sel05 = AutomaticData(Location = 'Phys/Sel05')
+    _sel06 = AutomaticData(Location = 'Phys/Sel06')
+    _sel07 = AutomaticData(Location = 'Phys/Sel07')    
     sel04_05 = Selection('0000112', Algorithm = DummyAlgorithm('Alg04_05'),
                          RequiredSelections = [_sel04, _sel05])
     sel06_07 = Selection('0000113', Algorithm = DummyAlgorithm('Alg06_07'),
                          RequiredSelections = [_sel06, _sel07])
-
-    selA = Selection('000112A', Algorithm = DummyAlgorithm('Alg001A'),
-                     RequiredSelections = [ sel00_01, sel02_03])
     selB = Selection('000112B', Algorithm = DummyAlgorithm('Alg001B'),
                      RequiredSelections = [ sel04_05, sel06_07])
 
@@ -111,6 +111,10 @@ def test_multi_sequencer_sequences() :
     
     ref_algosA = [presel0,
                   presel1,
+                  _sel00.algorithm(),
+                  _sel01.algorithm(),
+                  _sel02.algorithm(),
+                  _sel03.algorithm(),
                   sel02_03.algorithm(),
                   sel00_01.algorithm(),
                   selA.algorithm(),
@@ -119,6 +123,10 @@ def test_multi_sequencer_sequences() :
 
     ref_algosB = [presel2,
                   presel3,
+                  _sel04.algorithm(),
+                  _sel05.algorithm(),
+                  _sel06.algorithm(),
+                  _sel07.algorithm(),
                   sel06_07.algorithm(),
                   sel04_05.algorithm(),
                   selB.algorithm(),
