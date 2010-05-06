@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.222 2010-02-12 17:02:17 cattanem Exp $
+! $Id: release.notes,v 1.223 2010-05-06 13:03:41 krinnert Exp $
 ! package VeloDet
 ! package manager : Velo Group
 !-----------------------------------------------------------------------------
+
+! 2010-05-06 - Kurt Rinnert
+ - bug fix in DeVeloRtype: the trajectories for the fit sometimes had the
+   wrong direction, depending on alignment constants.
 
 !======================== VeloDet v13r9 2010-02-12 ===========================
 ! 2010-02-12 - Marco Cattaneo

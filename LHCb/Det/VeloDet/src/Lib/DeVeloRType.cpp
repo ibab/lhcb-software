@@ -1,4 +1,4 @@
-// $Id: DeVeloRType.cpp,v 1.50 2009-07-27 10:36:15 jonrob Exp $
+// $Id: DeVeloRType.cpp,v 1.51 2010-05-06 13:03:41 krinnert Exp $
 //==============================================================================
 #define VELODET_DEVELORTYPE_CPP 1
 //==============================================================================
@@ -680,12 +680,13 @@ std::auto_ptr<LHCb::Trajectory> DeVeloRType::trajectory(const LHCb::VeloChannelI
   Gaudi::XYZPoint gOrigin = localToGlobal(lOrigin);
   Gaudi::XYZPoint gBegin = localToGlobal(lBegin);
   Gaudi::XYZPoint gEnd = localToGlobal(lEnd);
-  /* Covert phi range to 0-360 to make sure trajectories run in right direction
-     and protect against crossing boundaries */
+  // Convert phi range to [0,2pi] on the right (C) side only 
+  // to make sure trajectories run in right direction
+  // and protect against crossing the -pi/pi boundary 
   double phiBeginTmp=gBegin.phi();
-  if(phiBeginTmp < 0) phiBeginTmp += 2*Gaudi::Units::pi;
+  if( isRight() && phiBeginTmp < 0) phiBeginTmp += 2*Gaudi::Units::pi;
   double phiEndTmp=gEnd.phi();
-  if(phiEndTmp < 0) phiEndTmp += 2*Gaudi::Units::pi;
+  if( isRight() && phiEndTmp < 0) phiEndTmp += 2*Gaudi::Units::pi;
   if(phiBeginTmp > phiEndTmp){
     Gaudi::XYZPoint gTmp=gBegin;
     gBegin=gEnd;
