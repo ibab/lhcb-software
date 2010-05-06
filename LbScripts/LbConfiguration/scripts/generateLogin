@@ -22,6 +22,18 @@ from LbConfiguration.Platform import binary_list, binary_opt_list, getBinaryOpt
 from LbConfiguration.Tools import genProjectSetup
 from optparse import OptionParser
 
+def fixNativeStringWithVar(data, varname, varcont=None, dotbat=False):
+    if not varcont :
+        varcont = os.environ[varname]
+    if not dotbat :
+        data = data.replace(varcont, "${%s}" % varname)
+    else :
+        data = data.replace("/","\\")
+        data = data.replace(varcont.replace("/","\\"), "%%%s%%" % varname )
+        if sys.platform != "win32" :
+            data = data.replace(":",";")
+    return data
+
 def fixNativeString(data, dotbat=False):
     tobereplaced = {}
     if os.environ.has_key("HOME") and not dotbat :
@@ -42,14 +54,32 @@ def fixNativeString(data, dotbat=False):
         tobereplaced["AFSROOT"] = os.environ["AFSROOT"]
 
     for k in tobereplaced.keys() :
-        if not dotbat :
-            data = data.replace(tobereplaced[k], "${%s}" % k)
-        else :
-            data = data.replace("/","\\")
-            data = data.replace(tobereplaced[k].replace("/","\\"), "%%%s%%" % k )
-            if sys.platform != "win32" :
-                data = data.replace(":",";")
+        data = fixNativeStringWithVar(data, k, tobereplaced[k], dotbat)
     return data
+
+def ShellFileNativeSnippet(base, shell, targetlocation, args = "", postargs="", prodlocation=None, offset=0):
+    content = ""
+    indent = 2
+    if os.environ.has_key("VO_LHCB_SW_DIR") :
+        native_tarloc = fixNativeStringWithVar(targetlocation, "VO_LHCB_SW_DIR", varcont=None, dotbat=dotbat)
+        native_prodloc = fixNativeStringWithVar(prodlocation, "VO_LHCB_SW_DIR", varcont=None, dotbat=dotbat)
+        if (native_tarloc != targetlocation) or (native_prodloc != prodlocation) :
+            if shell == "sh" :
+                pass
+            elif shell == "csh" :
+                pass
+            elif shell == "bat" :
+                pass
+        else :
+            content = ShellFileSnippet(base, shell, targetlocation, args, postargs, prodlocation, offset)
+    else :
+        content = ShellFileSnippet(base, shell, targetlocation, args, postargs, prodlocation, offset)
+
+
+    if offset :
+        content = content.replace("\n", "\n" + " "*offset*indent)
+
+    return content
 
 def ShellFileSnippet(base, shell, targetlocation, args = "", postargs="", prodlocation=None, offset=0):
     content = ""
