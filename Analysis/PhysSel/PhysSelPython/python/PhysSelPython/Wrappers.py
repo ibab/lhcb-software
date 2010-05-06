@@ -1,4 +1,4 @@
-#$Id: Wrappers.py,v 1.37 2010-05-05 12:19:02 jpalac Exp $
+#$Id: Wrappers.py,v 1.38 2010-05-06 15:18:43 jpalac Exp $
 """
 Wrapper classes for a DaVinci offline physics selection. The following classes
 are available:
@@ -35,7 +35,6 @@ except :
 
 from SelPy.selection import ( Selection,
                               FlatSelectionListBuilder,
-                              DataOnDemand,
                               AutomaticData,
                               NameError,
                               NonEmptyInputLocations,
@@ -43,6 +42,17 @@ from SelPy.selection import ( Selection,
                               update_overlap,
                               SelSequence                )
 
+from SelPy.selection import AutomaticData as autodata
+
+from Configurables import LoKi__VoidFilter as VoidFilter
+
+
+class AutomaticData(autodata) :
+    def algorithm(self) :
+        return VoidFilter('SelFilter'+self._name,
+                          Code = "CONTAINS('"+self.outputLocation()+"')>0")
+
+DataOnDemand = AutomaticData
 
 class SelectionSequence(SelSequence) :
     """
