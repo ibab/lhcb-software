@@ -1,11 +1,17 @@
-! $Id: release.notes,v 1.57 2009-10-28 14:29:19 jpalac Exp $ 
+! $Id: release.notes,v 1.58 2010-05-06 11:14:48 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.57 $
+! CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.58 $
 ! -----------------------------------------------------------------------------
 ! Package     :  LoKiExamples
 ! Responsible :  Vanya BELYAEV  ibelyaev@physics.syr.edu
 ! Purpose     :  Collection of examples for LoKi package 
 ! -----------------------------------------------------------------------------
+
+! 2010-05-06 - Vanya Belyaev
+
+ - add new exampel for usgae of relation tabels Track <--> MCParticle
+ - cmt/requirements 
+    version increment to v8r5p2 
 
 !========================== LoKiExample v8r5p1 2009-10-28 =================
 

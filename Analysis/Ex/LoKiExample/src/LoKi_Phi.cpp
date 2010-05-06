@@ -1,4 +1,4 @@
-// $Id: LoKi_Phi.cpp,v 1.6 2008-07-09 17:00:48 ibelyaev Exp $
+// $Id: LoKi_Phi.cpp,v 1.7 2010-05-06 11:14:48 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -9,7 +9,7 @@
 #include "LoKi/VertexCuts.h"
 // ============================================================================
 /** @file 
- *  Simple algorithm to polot dikaon invarinat mass 
+ *  Simple algorithm to plot dikaon invariant mass 
  *
  *  This file is a part of LoKi project - 
  *    "C++ ToolKit  for Smart and Friendly Physics Analysis"

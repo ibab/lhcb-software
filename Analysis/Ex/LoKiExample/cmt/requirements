@@ -1,7 +1,7 @@
-# $Id: requirements,v 1.51 2009-10-15 09:28:59 pkoppenb Exp $ 
+# $Id: requirements,v 1.52 2010-05-06 11:14:48 ibelyaev Exp $ 
 # =============================================================================
 package         LoKiExample
-version         v8r5p1
+version         v8r5p2
 
 # ============= structure =====================================================
 branches        cmt doc src python
