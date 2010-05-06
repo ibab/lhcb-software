@@ -5,6 +5,12 @@
 ! Purpose     : Pure python core components for Selection "Framework".
 !-----------------------------------------------------------------------------
 
+! 2010-05-06 - Juan Palacios
+ - python/SelPy/selection.py
+  . DataOnDemand -> AutoData. Export AutomaticData for backwards compatibility.
+ - cmt/requirements
+  . Increase to v1r2
+
 ! 2010-05-04 - Juan Palacios
  - python/Configurables.py
   . Add missing GaudiSequencer properties to DummySequencer.
