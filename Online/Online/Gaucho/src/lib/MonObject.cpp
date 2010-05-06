@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Gaucho/src/lib/MonObject.cpp,v 1.18 2010-04-29 13:28:45 evh Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Gaucho/src/lib/MonObject.cpp,v 1.19 2010-05-06 07:53:36 evh Exp $
 
 // Include files
 #include "Gaucho/MonObject.h"
@@ -69,3 +69,4 @@ MsgStream MonObject::createMsgStream(){
   MsgStream msg(m_msgSvc, m_source + ":" + m_typeName);
   return msg;
 }
+BOOST_CLASS_VERSION(MonObject, 1)

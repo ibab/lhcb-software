@@ -44,6 +44,7 @@ AdderSvc::~AdderSvc() {}
 StatusCode AdderSvc::initialize() {
   StatusCode sc = Service::initialize(); // must be executed first
   MsgStream msg(msgSvc(), name());
+  dim_set_write_timeout(20);
   if ( !sc.isSuccess() )  {
     msg << MSG::ERROR << "Cannot initialize service base class." << endreq;
     return StatusCode::FAILURE;

@@ -22,7 +22,7 @@ public:
 
   BOOST_SERIALIZATION_SPLIT_MEMBER()
 
-  MonH1D(IMessageSvc* msgSvc, const std::string& source, int version=0);
+  MonH1D(IMessageSvc* msgSvc, const std::string& source, int version=1);
   virtual ~MonH1D();
 
   virtual void save(boost::archive::binary_oarchive & ar, const unsigned int version);

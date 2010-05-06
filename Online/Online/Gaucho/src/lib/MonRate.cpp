@@ -130,6 +130,7 @@ void MonRate::load(boost::archive::binary_iarchive  & ar, const unsigned int ver
 
 void MonRate::combine(MonObject * monObject) {
   MsgStream msg = createMsgStream();
+  if (monObject==0) return;
   if (monObject->typeName() != this->typeName()){
     msg <<MSG::ERROR<<"Trying to combine "<<this->typeName() <<" and "<< monObject->typeName() << " failed." << endreq;
     return;
@@ -184,3 +185,4 @@ void MonRate::print(){
    msgStream << MSG::INFO << "*************************************"<<endreq;
 }
 
+BOOST_CLASS_VERSION(MonRate, 1)

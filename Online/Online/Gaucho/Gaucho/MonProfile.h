@@ -21,7 +21,7 @@ protected:
 public:
   BOOST_SERIALIZATION_SPLIT_MEMBER()
 
-  MonProfile(IMessageSvc* msgSvc, const std::string& source, int version=0);
+  MonProfile(IMessageSvc* msgSvc, const std::string& source, int version=1);
   virtual ~MonProfile();
 
   virtual void save(boost::archive::binary_oarchive & ar, const unsigned int version);

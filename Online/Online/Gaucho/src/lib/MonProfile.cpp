@@ -327,6 +327,7 @@ void MonProfile::splitObject(){
 }
 
 void MonProfile::combine(MonObject * H){
+  if (H==0) return;
   MsgStream msg = createMsgStream();
   if (H->typeName() != this->typeName()){
     msg <<MSG::ERROR<<"Trying to combine "<<this->typeName() <<" and "<<H->typeName() << " failed." << endreq;
@@ -602,3 +603,5 @@ double MonProfile::binError(int bin){
   //return eprim; //kERRORSPREAD option
   return eprim/sqrt(sum); //kERRORMEAN option
 }
+
+BOOST_CLASS_VERSION(MonProfile, 1)

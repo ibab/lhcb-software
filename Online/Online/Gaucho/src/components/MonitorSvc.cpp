@@ -98,6 +98,8 @@ StatusCode MonitorSvc::queryInterface(const InterfaceID& riid, void** ppvIF) {
 StatusCode MonitorSvc::initialize() {
   MsgStream msg(msgSvc(),"MonitorSvc");
   StatusCode sc = Service::initialize();
+  //to reduce Write timeout messages which create havoc in the Adders
+  dim_set_write_timeout(20);
  // msg << MSG::DEBUG << "Initialize=====>m_disableDeclareInfoHistos : " << m_disableDeclareInfoHistos << endreq;
   msg << MSG::INFO << "Initialize=====>m_uniqueServiceNames : " << m_uniqueServiceNames << endreq;
 
@@ -142,6 +144,7 @@ StatusCode MonitorSvc::initialize() {
 StatusCode MonitorSvc::start() {
     MsgStream msg(msgSvc(),"MonitorSvc");
     m_stopping=false;
+    msg << MSG::INFO << "updating all histograms at start of run" << endreq;
     updateAll(false,this);
     msg << MSG::DEBUG << "Starting MonitorSvc " << endreq;
     return StatusCode::SUCCESS;
@@ -773,6 +776,7 @@ void MonitorSvc::updateAll( bool endOfRun, const IInterface* owner)
 {
   MsgStream msg(msgSvc(),"MonitorSvc");
   if (m_stopping) endOfRun=true;
+ // if ((!m_stopping)&&(endofRun==true)) msg << MSG::INFO << "updateAll: eor=" << endOfRun  << endreq;
   if( 0!=owner ){
     std::string ownerName = infoOwnerName( owner );
     std::set<std::string> * infoNamesSet = getInfos( owner );
@@ -781,7 +785,7 @@ void MonitorSvc::updateAll( bool endOfRun, const IInterface* owner)
       return;
     }
     std::set<std::string>::iterator infoNamesIt;
-    msg << MSG::DEBUG << "updateAll: List of services published by " << ownerName << endreq;
+    msg << MSG::DEBUG << "updateAll: eor=" << endOfRun << " List of services published by " << ownerName << endreq;
     for( infoNamesIt = (*infoNamesSet).begin(); 
          infoNamesIt!=(*infoNamesSet).end();++infoNamesIt) {
       msg << MSG::DEBUG << (*infoNamesIt) << " ";

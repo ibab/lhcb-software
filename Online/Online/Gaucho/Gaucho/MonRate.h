@@ -4,6 +4,7 @@
 #include "Gaucho/MonProfile.h"
 #include "GaudiKernel/StatEntity.h"
 #include <map>
+#include <boost/serialization/list.hpp>
 
 class MonRate: public MonProfile {
 
@@ -29,7 +30,7 @@ protected:
 public:
   BOOST_SERIALIZATION_SPLIT_MEMBER()
 
-  MonRate(IMessageSvc* msgSvc, const std::string& source, int version=0);
+  MonRate(IMessageSvc* msgSvc, const std::string& source, int version=1);
   virtual ~MonRate();
   virtual void save(boost::archive::binary_oarchive & ar, const unsigned int version);
   virtual void load(boost::archive::binary_iarchive  & ar, const unsigned int version);

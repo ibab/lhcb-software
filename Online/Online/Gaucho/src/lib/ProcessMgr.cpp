@@ -80,7 +80,7 @@ bool ProcessMgr::timerHandler(){
   MsgStream msg(msgSvc(), name());
   bool endofrun=false;  
   if (m_serviceOwner.compare(s_Adder) == 0){
-    endofrun=m_serviceMap->add();
+     endofrun=m_serviceMap->add();
     //endofrun=false;
   }
   else if (m_serviceOwner.compare(s_Saver) == 0) { 

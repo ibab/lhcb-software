@@ -50,7 +50,7 @@
 #include "UpdateAndReset.h"
 #include "MonitorSvc.h"
 #include "RTL/rtl.h"
-
+#include <sstream>
 
 // Static Factory declaration
 DECLARE_ALGORITHM_FACTORY(UpdateAndReset)
@@ -61,7 +61,7 @@ UpdateAndReset::UpdateAndReset(const std::string& name, ISvcLocator* ploc)
   : GaudiAlgorithm(name, ploc)
 {
   declareProperty("disableMonRate", m_disableMonRate = 0);
-  declareProperty("desiredDeltaTCycle", m_desiredDeltaTCycle = 20);
+  declareProperty("desiredDeltaTCycle", m_desiredDeltaTCycle = 30);
   declareProperty("disableReadOdin", m_disableReadOdin = 0);
   declareProperty("disableChekInTimer", m_disableChekInTimer = 0);
   declareProperty("disableChekInExecute", m_disableChekInExecute = 0);
@@ -89,6 +89,7 @@ UpdateAndReset::UpdateAndReset(const std::string& name, ISvcLocator* ploc)
   m_offsetTimeLastEvInCycle=0;
   m_gpsTimeLastEvInCycle=0;
   m_offsetGpsTimeLastEvInCycle=0;
+ // m_desiredDeltaTCycle = 30;
 }
 
 
@@ -102,7 +103,8 @@ StatusCode UpdateAndReset::initialize() {
     msg << MSG::FATAL << "GaudiAlgorithm not Initialized" << endreq;
     return StatusCode::FAILURE;
   }
-
+  msg << MSG::INFO << "Initializing..." << endreq;
+  
   //const std::string& utgid = RTL::processName();
   m_utgid = RTL::processName();
     
@@ -148,7 +150,7 @@ StatusCode UpdateAndReset::initialize() {
   
   if (0 == m_desiredDeltaTCycle){
 //    msg << MSG::WARNING << "Your algorithm is using the UpdateAndReset algrithm which update and reset data every desiredDeltaTCycle seconds. You didn't fill the desiredDeltaTCycle option in your options file, then we will consider 10 seconds as default." << endreq;
-    m_desiredDeltaTCycle = 20;
+    m_desiredDeltaTCycle = 30;
   }
     
   if (1 == m_saveHistograms){
@@ -217,23 +219,26 @@ StatusCode UpdateAndReset::execute() {
   MsgStream msg( msgSvc(), name() );
 
   m_countExecutes++;
-
+ // msg << MSG::INFO << "m_countExecutes " << m_countExecutes << endreq;
+ 
   if (0 == m_disableChekInExecute){
     m_triggerConfigurationKey = currentTCK();
     verifyAndProcessCycleChange(false);
     verifyAndProcessRunChange();
+   // msg << MSG::INFO << "Run number " << m_runNumber << endreq;
   }
 
   // Because the plot method we start the timer after the first execute...
   // This is because of plot method declareinfo in the execute method...
   if (m_firstExecute){
+    //lib_rtl_sleep(1000*instancenumber);
     m_firstExecute = false;
     DimTimer::start(m_timerCycle);
     m_firstCycleNumber = currentCycleNumber(GauchoTimer::currentTime()).first;
     //only do this for the first event, so we have a runnumber
     m_runNumber = currentRunNumber().first.first;
    // if (0==m_disableMonRate)  m_pGauchoMonitorSvc->declareMonRateComplement(m_runNumber, m_triggerConfigurationKey, m_cycleNumber, m_deltaTCycle, m_offsetTimeFirstEvInRun, m_offsetTimeLastEvInCycle, m_offsetGpsTimeLastEvInCycle);
-   // msg << MSG::INFO << "Trigger Configuration Key " << m_triggerConfigurationKey << endreq;
+   // msg << MSG::INFO << "Fisrst execute Run number " << m_runNumber << endreq;
   }
   return StatusCode::SUCCESS;
 }
@@ -256,14 +261,15 @@ void UpdateAndReset::verifyAndProcessCycleChange(bool isFromTimerHandler) {
 void UpdateAndReset::verifyAndProcessRunChange() { // this method can not be called from TimerHandler
   std::pair<std::pair<int, ulonglong>, bool> runNumber = currentRunNumber(); // if this is too late, we can not avoid two process calling it.
   MsgStream msg(msgSvc(), name());
- // msg << MSG::INFO<< " runnumber " << runNumber.first.first << " gps time " << runNumber.first.second << " runNumber.second " << runNumber.second << endreq;
   if (!runNumber.second) return;// false means that the runNumber wasn't changed
   if (s_statusNoUpdated != m_runStatus) return; // We update if the runStatus is different of ProcessingUpdate and Updated
   //stop the dimtimer
   DimTimer::stop();
   //msg << MSG::INFO << " The Run Number has changed then we UpdateAll and reset Histograms " << runNumber.first.first << endreq;
+ //  msg << MSG::INFO<< " runnumber changed " << runNumber.first.first << " gps time " << runNumber.first.second << " runNumber.second " << runNumber.second << endreq;
   m_runStatus = s_statusProcessingUpdate;
   //don't update the first time
+  //check if it is a fast run change (saveset of previous run already saved?)
   if (runNumber.first.first!=0) updateData(true, false); //1er param true means that the update was called because the runNumber changed and 2d false means no TimerHandler
   m_runStatus = s_statusUpdated;
   retrieveRunNumber(runNumber.first.first, runNumber.first.second);
@@ -276,7 +282,7 @@ void UpdateAndReset::verifyAndProcessRunChange() { // this method can not be cal
 StatusCode UpdateAndReset::finalize() {
 //------------------------------------------------------------------------------
   MsgStream msg(msgSvc(), name());
-//  msg << MSG::DEBUG << "finalizing...." << endreq;
+  msg << MSG::INFO << "finalizing...." << endreq;
   if ( 1 == m_saveHistograms ) {
      //calling finalize - don't need to reset, they probably don't exist anymore
      //reset, as jobs in EFF are kept alive
@@ -466,8 +472,29 @@ void UpdateAndReset::updateData(bool isRunNumberChanged, bool isFromTimerHandler
  
   if (isRunNumberChanged) {
     if (0 == m_disableUpdateData) {
-        // msg << MSG::INFO << "updating dim services (runnumber changed)" << endreq;    
-       m_pGauchoMonitorSvc->updateAll(true); //the first parameter is the endOfRun flag
+        msg << MSG::INFO << "updating dim services (runnumber changed) m_eorNumber " << m_eorNumber << endreq;  
+        char timestr[64];
+        char year[5];
+        char month[3];
+        char day[3];
+        time_t rawTime=time(NULL);
+        struct tm* timeInfo = localtime(&rawTime);
+        ::strftime(timestr, sizeof(timestr),"%Y%m%dT%H%M%S", timeInfo);
+        ::strftime(year, sizeof(year),"%Y", timeInfo);
+        ::strftime(month, sizeof(month),"%m", timeInfo);  
+        ::strftime(day, sizeof(day),"%d", timeInfo);  	
+	std::stringstream endofrunnumber;
+	endofrunnumber  << m_eorNumber;
+	std::string endofrunnumberstr = endofrunnumber.str();
+	std::string command="/bin/ls ";
+	std::string commandstr = command+m_saveSetDir+"/"+year+ "/"+partName + "/" + taskName +"/"+month+"/"+day+"/*"+endofrunnumberstr+"*-EOR.root > /tmp/null";
+	std::stringstream outputstream;
+	outputstream << system(commandstr.c_str());
+	std::string outputstring;
+	outputstring = outputstream.str();
+      //  msg << MSG::INFO << "output from ls command " << commandstr << " is " << outputstring << endreq;  	
+        std::size_t no_file = outputstring.find("No such file of directory");
+        if (no_file !=std::string::npos) m_pGauchoMonitorSvc->updateAll(true); //fast run change!
     }
  //   else msg << MSG::DEBUG << "===============> Data was not updated because the UpdateData process is disabled." << endreq;
     if (0 == m_disableResetHistos) {

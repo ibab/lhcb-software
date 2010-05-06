@@ -387,6 +387,7 @@ void MonH2D::splitObject(){
 }
 
 void MonH2D::combine(MonObject * H){
+  if (H==0) return;
   MsgStream msg = createMsgStream();
   if (H->typeName() != this->typeName()){
     msg <<MSG::ERROR<<"Trying to combine "<<this->typeName() <<" and "<<H->typeName() << " failed." << endreq;

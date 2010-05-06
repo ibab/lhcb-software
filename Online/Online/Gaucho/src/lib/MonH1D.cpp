@@ -47,8 +47,7 @@ void MonH1D::load(boost::archive::binary_iarchive  & ar, const unsigned int vers
   load2(ar,version);
 }
   
-void MonH1D::load2(boost::archive::binary_iarchive  & ar, const unsigned int
-version){
+void MonH1D::load2(boost::archive::binary_iarchive  & ar, const unsigned int version){
   ar & nbinsx;
   ar & Xmin;
   ar & Xmax;
@@ -311,7 +310,12 @@ void MonH1D::splitObject(){
 }
 
 void MonH1D::combine(MonObject * H){
+
   MsgStream msg = createMsgStream();
+  if (H==0) {
+     msg <<MSG::INFO<<"Combining a null MonH1D object. Returning." << endreq; 
+     return;
+  }
   // msg <<MSG::INFO<<"Combining "<<H->typeName() <<" EOR "<<H->endOfRun() << endreq;
   if (H->typeName() != this->typeName()){
     msg <<MSG::ERROR<<"Trying to combine "<<this->typeName() <<" and "<<H->typeName() << " failed." << endreq;

@@ -97,6 +97,7 @@ void MonStatEntity::load2(boost::archive::binary_iarchive  & ar){
   
 void MonStatEntity::combine(MonObject* S){
   MsgStream msg = createMsgStream();
+  if (S==0) return;
  // msg <<MSG::DEBUG<<"Trying to combine StatEntities "<<this->typeName() <<" and "<<S->typeName()  << endreq;
   if (S->typeName() != this->typeName()){
     msg <<MSG::ERROR<<"Trying to combine "<<this->typeName() <<" and "<<S->typeName() << " failed." << endreq;

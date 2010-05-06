@@ -64,7 +64,7 @@ void DimInfoServers::print() {
  for (m_it = m_serverMap.begin(); m_it != m_serverMap.end(); ++m_it){
    std::string status = "inactive" ;
    if (m_it->second) status = "active" ;
-   msg << MSG::DEBUG << "The server " << m_it->first << " is " << status << endreq;    
+   msg << MSG::INFO << "The server " << m_it->first << " is " << status << endreq;    
   }
 }
 

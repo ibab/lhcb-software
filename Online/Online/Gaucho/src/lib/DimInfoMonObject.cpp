@@ -38,9 +38,8 @@ DimInfoMonObject::DimInfoMonObject(std::string svcName, int refreshTime, std::st
 }
 
 DimInfoMonObject::~DimInfoMonObject() {
-  if (m_monObject) { delete m_monObject; m_monObject = 0;}
+ // if (m_monObject) { delete m_monObject; m_monObject = 0;}
   if (m_dimInfo) { delete m_dimInfo; m_dimInfo = 0; }
-  // if (m_msgSvc) { delete m_msgSvc; m_msgSvc = 0; } //extern pointer ?
 }
 
 void DimInfoMonObject::infoHandler() 
@@ -54,7 +53,7 @@ bool DimInfoMonObject::createMonObject() {
   if (m_monObject) {delete m_monObject; m_monObject = 0;}
   
   if (!m_dimInfo) {
-    msg << MSG::DEBUG << "svcName : " << m_svcName << " has no DimInfo"<< endreq;
+    msg << MSG::INFO << "svcName : " << m_svcName << " has no DimInfo"<< endreq;
     return false;
   }
   int tmpStringSize = m_dimInfo->getSize()/sizeof(char);
@@ -62,7 +61,7 @@ bool DimInfoMonObject::createMonObject() {
     //gSystem->Sleep(m_waitTime);
     usleep(20);
     tmpStringSize = m_dimInfo->getSize()/sizeof(char);
-    //msg << MSG::DEBUG << "size for service "<< m_svcName << " " << tmpStringSize << endreq;
+   // msg << MSG::INFO << "createmonobject size for service "<< m_svcName << " " << tmpStringSize << endreq;
   }
   //msg << MSG::DEBUG << "size for service "<< m_svcName << " " << tmpStringSize << endreq;
   m_StringSize = tmpStringSize;
@@ -83,8 +82,8 @@ bool DimInfoMonObject::createMonObject() {
     is.rdbuf()->pubsetbuf(c, m_StringSize);
     //msg << MSG::DEBUG << "creating iarchive 2" << endreq;  
     boost::archive::binary_iarchive ia(is);
-    //msg << MSG::DEBUG << "before load" << endreq;  
-    monObjectBase->load(ia, 0);
+   // msg << MSG::INFO << "monobjectbase load" << endreq;  
+    monObjectBase->load(ia, 1);
     //msg << MSG::DEBUG << "after MonObject base Load" << endreq;  
     std::string monObjectTypeName  = monObjectBase->typeName();
     //msg << MSG::DEBUG << "creating MonObject" << endreq;
@@ -92,8 +91,8 @@ bool DimInfoMonObject::createMonObject() {
     std::stringstream is2;
     is2.rdbuf()->pubsetbuf(c, m_StringSize);
     boost::archive::binary_iarchive ia2(is2);
-    //msg << MSG::DEBUG << "loading MonObject" << endreq;
-    m_monObject->load(ia2, 0);
+ //   msg << MSG::INFO << "loading MonObject (create monobject)" << endreq;
+    m_monObject->load(ia2, 1);
     //msg << MSG::DEBUG << "deleting " << endreq;
     if (monObjectBase) {delete monObjectBase; monObjectBase = 0;}
   }
@@ -124,17 +123,24 @@ bool DimInfoMonObject::loadMonObject(){
   }
  // m_monObject->reset(); // <================VERIFICAR ISSO AQUI (ACHO QUE E' DESNECESARIO)
 
-  int tmpStringSize = m_dimInfo->getSize()/sizeof(char);
-  while ( tmpStringSize <= 0 ) {
-    //gSystem->Sleep(m_waitTime);
-    usleep(20);
-    tmpStringSize = m_dimInfo->getSize()/sizeof(char);
-  }
+
  // msg << MSG::DEBUG << "size for service "<< m_svcName << " " << tmpStringSize << endreq;
-  m_StringSize = tmpStringSize;
+
   
   char* c;
   try {
+     int tmpStringSize = m_dimInfo->getSize()/sizeof(char);
+    // 
+       //gSystem->Sleep(m_waitTime);
+     while ( tmpStringSize <= 0 ) {
+       usleep(20);
+       tmpStringSize = m_dimInfo->getSize()/sizeof(char);
+   //    msg << MSG::INFO << "loadmonobject: size for service "<< m_svcName << " " << tmpStringSize << endreq;
+     }
+     if (tmpStringSize <=0) return false;
+     m_StringSize = tmpStringSize;
+   
+  
     c = const_cast<char *>((const char*) m_dimInfo->getData());
     if ( 0 == m_noValidMonObject.compare(c)) {
       //msg << MSG::WARNING << "timeout trying to load  service "<< m_svcName << endreq;
@@ -148,8 +154,9 @@ bool DimInfoMonObject::loadMonObject(){
     is.rdbuf()->pubsetbuf(c, m_StringSize);
     //msg << MSG::DEBUG << "binary_iarchive " << endreq;
     boost::archive::binary_iarchive ia(is);
-    //msg << MSG::DEBUG << " loading MonObject "<< endreq;
-    m_monObject->load(ia, 0);
+  //  msg << MSG::INFO << " loading MonObject "<< endreq;
+    if (m_monObject!=0) m_monObject->load(ia, 1);
+    else return false;
     //msg << MSG::DEBUG << " setServiceActive "<< endreq;
     if (!m_monObject->serviceActive ()) m_monObject->setServiceActive (true);
   }

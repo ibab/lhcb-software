@@ -38,7 +38,7 @@ void BaseServiceMap::removeMap() {
   std::map<std::string, bool, std::less<std::string> >::iterator svrMapIt;
   for (svrMapIt=m_serverMap.begin() ; svrMapIt != m_serverMap.end(); ++svrMapIt){
     if (!svrMapIt->second) continue; // is already inactive in local dimInfo
-//    msg << MSG::DEBUG << "   Removing Server : " << svrMapIt->first << "." << endreq;
+  // msg << MSG::DEBUG << "   Removing Server : " << svrMapIt->first << "." <<  endreq;
     excludeServerInMaps(svrMapIt->first);
   }
 }
@@ -75,9 +75,9 @@ void BaseServiceMap::updateMap(std::map<std::string, bool, std::less<std::string
 //  msg << MSG::DEBUG << "***************************************************************" << endreq;
   //printMap();
   for (svrMapIt=m_serverMap.begin() ; svrMapIt != m_serverMap.end(); ++svrMapIt){
+  //  msg << MSG::INFO << "   Server: " << svrMapIt->first << " active " << svrMapIt->second << endreq;
     if (!svrMapIt->second) continue; // is already inactive in local dimInfo
     if (serverMap.find(svrMapIt->first)->second) continue; // Server active, we don't have to exclude
-//    msg << MSG::DEBUG << "   Server: " << svrMapIt->first << endreq;
     excludeServerInMaps(svrMapIt->first);
   }
 //  msg << MSG::DEBUG << "***************************************************************" << endreq;
@@ -398,7 +398,6 @@ std::string BaseServiceMap::createTermServiceName (const std::string &serviceNam
    // for saver the partition is in the utgid position
    // return serviceName;
   }
-
 }    
     
 std::string BaseServiceMap::createAdderName (const std::string &serviceName){
@@ -496,9 +495,7 @@ bool BaseServiceMap::write(std::string saveDir, std::string &fileName, int runNu
   mins=timeInfo->tm_min;
   int secs;
   secs=timeInfo->tm_sec;
-  if
- 
-(((mins==0)||(mins==15)||(mins==30)||(mins==45))&& (secs<25))save=true;
+  if (((mins==0)||(mins==15)||(mins==30)||(mins==45))&& (secs<31))save=true;
   bool endofrun=false;
   
   for (m_dimInfoIt=m_dimInfo.begin(); m_dimInfoIt!=m_dimInfo.end(); ++m_dimInfoIt) 
@@ -508,90 +505,81 @@ bool BaseServiceMap::write(std::string saveDir, std::string &fileName, int runNu
      //Moore breaks Presenter history mode
      std::string taskName="GauchoJob";
      if (farm=="MF") {
-       taskName = "RecBrunel";
+        taskName = "Brunel";
      }  
-    
- //   if (m_dimInfoIt->second.size()>0) endofrun=true;
- //   else endofrun=false;
-    for (it=m_dimInfoIt->second.begin(); it!=m_dimInfoIt->second.end(); ++it) {
-      //check if all contributions have the end of run flag
-      it->second->loadMonObject();
-      endofrun = it->second->monObject()->endOfRun(); 
-    }
-    std::string eorstring="";
-    if (endofrun) {
-       eorstring="-EOR";
-       save=true;
-    }
-    else m_saved=false;   
-    
-        
-    if ((save==true)&&(m_saved==false)) {
-    std::string tmpfile = saveDir + taskName + "/" + month +"/" +day + "/"+ taskName + "-" + runNumberstr +"-"+ timestr + eorstring + ".root";
-    fileName.replace(0, fileName.length(), tmpfile);
-    std::string dirName = saveDir + taskName + "/" + month +"/" +day ;  
-    void *hdir = gSystem->OpenDirectory(dirName.c_str());
-    if (hdir == 0) {
-     gSystem->mkdir(dirName.c_str(),true);
-    }
+     for (it=m_dimInfoIt->second.begin(); it!=m_dimInfoIt->second.end(); ++it) {
+        //check if all contributions have the end of run flag
+        it->second->loadMonObject();
+        endofrun = it->second->monObject()->endOfRun(); 
+     }
+     std::string eorstring="";
+     if (endofrun) {
+        eorstring="-EOR";
+        save=true;
+     }
+     else m_saved=false;   
+     if ((save==true)&&(m_saved==false)) {
+        std::string tmpfile = saveDir + taskName + "/" + month +"/" +day + "/"+ taskName + "-" + runNumberstr +"-"+ timestr + eorstring + ".root";
+        fileName.replace(0, fileName.length(), tmpfile);
+        std::string dirName = saveDir + taskName + "/" + month +"/" +day ;  
+        void *hdir = gSystem->OpenDirectory(dirName.c_str());
+        if (hdir == 0) {
+           gSystem->mkdir(dirName.c_str(),true);
+        }
 
-    f = new TFile(fileName.c_str(),"create");
+        f = new TFile(fileName.c_str(),"create");
 
             
-    for (it=m_dimInfoIt->second.begin(); it!=m_dimInfoIt->second.end(); ++it) {
-      std::string serverName = Misc::splitString(it->first, "/")[1];
-      if(0 == it->second->monObject()) continue;
-
-      std::string type = it->second->monObject()->typeName();
-      std::vector<std::string> HistoFullName = Misc::splitString(it->second->dimInfo()->getName(), "/");       
-      
-      if ((s_monH1F == type)||(s_monH1D == type)||(s_monH2F == type)||(s_monH2D == type)||(s_monProfile == type)) {
-          TDirectory *dir=0; 
-          it->second->loadMonObject();
-          it->second->monObject()->loadObject();
-	  for (int i=3;i<(int)HistoFullName.size()-1;i++) {
-	     //recreate the directory structure inside the root file before saving
-             //HistoDirName keeps track of the directory names, to avoid rewriting them
-	        if (i>3) {   
+        for (it=m_dimInfoIt->second.begin(); it!=m_dimInfoIt->second.end(); ++it) {
+           std::string serverName = Misc::splitString(it->first, "/")[1];
+           if(0 == it->second->monObject()) continue;
+           std::string type = it->second->monObject()->typeName();
+           std::vector<std::string> HistoFullName = Misc::splitString(it->second->dimInfo()->getName(), "/");       
+           if ((s_monH1F == type)||(s_monH1D == type)||(s_monH2F == type)||(s_monH2D == type)||(s_monProfile == type)) {
+              TDirectory *dir=0; 
+              it->second->loadMonObject();
+              it->second->monObject()->loadObject();
+	      for (int i=3;i<(int)HistoFullName.size()-1;i++) {
+	         //recreate the directory structure inside the root file before saving
+                 //HistoDirName keeps track of the directory names, to avoid rewriting them
+	         if (i>3) {   
 		    if (dir->GetDirectory(HistoFullName[i].c_str())) { 
-		          dir->cd(HistoFullName[i].c_str());}
+		       dir->cd(HistoFullName[i].c_str());}
 		    else {
 		       dir=dir->mkdir(HistoFullName[i].c_str(),TString::Format("subsubdir %02d",i)); 
 		       dir->cd();
 		    }   	
-	        }   		    		 
-	        else {
-		  if (dir) {
-		      dir=f->GetDirectory(HistoFullName[i].c_str());
-		      dir->cd(HistoFullName[i].c_str());		       
+	       }   		    		 
+	       else {
+	          if (dir) {
+		     dir=f->GetDirectory(HistoFullName[i].c_str());
+		     dir->cd(HistoFullName[i].c_str());		       
 		  }    
 		  else { 
-		      if (!(dir=f->GetDirectory(HistoFullName[i].c_str()))) {
-		      dir=f->mkdir(HistoFullName[i].c_str(),TString::Format("subdir %02d",i));
-		      }
+		     if (!(dir=f->GetDirectory(HistoFullName[i].c_str()))) {
+		        dir=f->mkdir(HistoFullName[i].c_str(),TString::Format("subdir %02d",i));
+		     }
 		  }   
-	        }
-         }   
-	 if (dir) { 	  
-	     dir->cd();	 
-	 }	
-	 else {	  
-	     f->cd();
-	 }
-          it->second->monObject()->write();
-      }
-      else {
-        msg << MSG::ERROR << "MonObject of type " << type << " can not be written."<< endreq; 
-      }
-    }
-  
-    f->Close();
-    delete f;f=0;
-    if (endofrun) m_saved=true;
-  }
+	       }
+            }   
+	    if (dir) { 	  
+	       dir->cd();	 
+	    }	
+	    else {	  
+	       f->cd();
+	    }
+            it->second->monObject()->write();
+         }
+         else {
+            msg << MSG::ERROR << "MonObject of type " << type << " can not be written."<< endreq; 
+         }
+      } 
+      f->Close();
+      delete f;f=0;
+      if (endofrun) m_saved=true;
+    }  
   }
   return endofrun;
-//  msg << MSG::INFO << "SaverSvc saved histograms in file " << fileName << endreq;
 }
 
 
@@ -612,7 +600,7 @@ bool BaseServiceMap::add() {
     return false;
   }
   bool toteor=true;
-
+ // msg << MSG::INFO << "Adding. "  << endreq;
   for (m_dimInfoIt=m_dimInfo.begin(); m_dimInfoIt!=m_dimInfo.end(); ++m_dimInfoIt) 
   {
     //loop over services
@@ -628,27 +616,34 @@ bool BaseServiceMap::add() {
         m_dimSrvStatus[m_dimInfoIt->first].first = true;
       }
       else {
-        msg << MSG::DEBUG << "Adder MonObject still unloaded for " << m_dimInfoIt->first << endreq;
+        msg << MSG::INFO << "Adder MonObject still unloaded for " << m_dimInfoIt->first << endreq;
         continue;
       }
     }
-       
+ //    msg << MSG::INFO << "Adding: " << m_dimInfoIt->first << endreq;       
      m_dimSrv[m_dimInfoIt->first].second->reset();
 
      int eors=0;
+     int inactive=0;
      for (it=m_dimInfoIt->second.begin(); it!=m_dimInfoIt->second.end(); ++it) {
-        if (!m_processMgr->dimInfoServers()->isActive(it->first)) continue;
-        if(0 == it->second->monObject()) continue;
-        bool isLoaded = it->second->loadMonObject();
-          if (!isLoaded){
-        continue;
-        }
+        if (!m_processMgr->dimInfoServers()->isActive(it->first)) {
+	  inactive++;
+	  continue;
+	}
+        if(0 == it->second->monObject()) {
+           bool isLoaded = it->second->loadMonObject();
+           if (!isLoaded){
+	      inactive++;
+              continue;
+           }  
+	}  
                
         bool tmpendofrun=false;
         tmpendofrun= it->second->monObject()->endOfRun();  
          //if we find an endof run, only set the endofrun flag if we have them all
        if (tmpendofrun) eors++;
      }
+  //   msg << MSG::INFO  << "number of servers "<< m_serverMap.size() << " eors " << eors <<std::endl;
      //we are at the end of the run, so set the recipient to end of run
      if (eors == (int)m_serverMap.size()) {
         m_dimSrv[m_dimInfoIt->first].second->setEndOfRun(true);
@@ -656,43 +651,63 @@ bool BaseServiceMap::add() {
      } 
      else {
        toteor=false;
-       if (eors>0) msg << MSG::DEBUG << eors << " EOR contributions received. Total should be: " << m_serverMap.size() << endreq;
+       // we need to set it to false; it may be true from a previous end of run
+       m_dimSrv[m_dimInfoIt->first].second->setEndOfRun(false);
+
+   //    if (eors>0) msg << MSG::DEBUG << eors << " EOR contributions received. Total should be: " << m_serverMap.size() << endreq;
+    //   if (eors>0) std::cout << eors << " EOR contributions received. Total should be: " << m_serverMap.size() << std::endl;
      }      
        
+   // msg << MSG::INFO  << "number of servers "<< m_serverMap.size() << " eors " << eors << " endofrun " << endofrun << " toteor " << toteor <<std::endl;
+    try {
+       int cntr=0;
+       for (it=m_dimInfoIt->second.begin(); it!=m_dimInfoIt->second.end(); ++it) {
+          //loop over servers
+          if (!m_processMgr->dimInfoServers()->isActive(it->first)) continue;
 
-    for (it=m_dimInfoIt->second.begin(); it!=m_dimInfoIt->second.end(); ++it) {
-      //loop over servers
-      if (!m_processMgr->dimInfoServers()->isActive(it->first)) continue;
-
-        if(0 == it->second->monObject()) continue;
-        bool isLoaded = it->second->loadMonObject();
+          if (0 == it->second->monObject()) continue;
+          bool isLoaded = it->second->loadMonObject();
           if (!isLoaded){
-        continue;
-        }
+             continue;
+          }
+	  cntr++;
+	//  msg << MSG::INFO  << "Adding service nb "<< cntr << "  " << it->second->dimInfo()->getName() << " total number " << m_serverMap.size()  <<std::endl;
 
-  
-      if (m_dimSrv[m_dimInfoIt->first].second->typeName().compare(s_monRate) == 0){
-        int countersAdder = ((MonRate*) (m_dimSrv[m_dimInfoIt->first].second))->numCounters();
-        int countersTerm = ((MonRate*) it->second->monObject())->numCounters();
-        if ( countersAdder < countersTerm) {
-          ((MonProfile*) (m_dimSrv[m_dimInfoIt->first].second))->synchronizeLabelNames(it->second->monObject());
-          ((MonRate*) (m_dimSrv[m_dimInfoIt->first].second))->setNumCounters(((MonRate*)it->second->monObject())->numCounters());
-        }
-      }
-      m_dimSrv[m_dimInfoIt->first].second->combine(it->second->monObject());
+          if (m_dimSrv[m_dimInfoIt->first].second->typeName().compare(s_monRate) == 0){
+             int countersAdder = ((MonRate*) (m_dimSrv[m_dimInfoIt->first].second))->numCounters();
+	     //if  (it->second->monObject()==0) continue;
+             int countersTerm = ((MonRate*) it->second->monObject())->numCounters();
+             if ( countersAdder < countersTerm) {
+                ((MonProfile*) (m_dimSrv[m_dimInfoIt->first].second))->synchronizeLabelNames(it->second->monObject());
+                ((MonRate*) (m_dimSrv[m_dimInfoIt->first].second))->setNumCounters(((MonRate*)it->second->monObject())->numCounters());
+             }
+          }
+          m_dimSrv[m_dimInfoIt->first].second->combine(it->second->monObject());
+       }
+
+       //update after adding
+       m_dimSrv[m_dimInfoIt->first].first->updateService(m_dimSrv[m_dimInfoIt->first].second->endOfRun());
+       if (m_dimSrv[m_dimInfoIt->first].second->typeName().compare(s_monRate) == 0){
+         if (m_processMgr->publishRates()) m_monRateDecoder->update((MonRate*)(m_dimSrv[m_dimInfoIt->first].second));
+       }  
     }
-    //update after adding
-    m_dimSrv[m_dimInfoIt->first].first->updateService(endofrun);
-    if (m_dimSrv[m_dimInfoIt->first].second->typeName().compare(s_monRate) == 0){
-      if (m_processMgr->publishRates()) m_monRateDecoder->update((MonRate*)(m_dimSrv[m_dimInfoIt->first].second));
-    }
+    catch (const std::exception &ex){
+       msg << MSG::INFO << "std::exception: " << ex.what() << endreq;
+    }  
+    catch (...){
+       msg << MSG::INFO << "unrecognized exception. "<< endreq;
+    } 
   }
   if ((endofrun)&(!toteor)) {
-    toteor=endofrun;
+   // toteor=endofrun;
      msg << MSG::DEBUG <<  " Waiting for all eor contributions endofrun=" << endofrun << " toteor="<< toteor<< endreq;
+    // std::cout <<  " Waiting for all eor contributions endofrun=" << endofrun << " toteor="<< toteor<< std::endl;
   }
-
-   return toteor;
+  if (toteor) {  
+     msg << MSG::DEBUG <<  " All eor contributions received. endofrun=" << endofrun << " toteor="<< toteor<<  endreq;
+  }
+ // msg << MSG::INFO <<  " Finished adding. Results published. endofrun=" << endofrun << " toteor="<< toteor<<  endreq;
+  return toteor;
 
 }
 

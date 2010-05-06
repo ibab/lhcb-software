@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Gaucho/Gaucho/MonObject.h,v 1.16 2009-04-24 13:55:25 niko Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Gaucho/Gaucho/MonObject.h,v 1.17 2010-05-06 07:53:35 evh Exp $
 #ifndef GAUCHO_MONOBJECT_H
 #define GAUCHO_MONOBJECT_H 1
 
@@ -18,7 +18,7 @@
 // #include <boost/serialization/list.hpp>
 #include <boost/serialization/utility.hpp>
 #include <boost/serialization/string.hpp>
-// #include <boost/serialization/version.hpp>
+#include <boost/serialization/version.hpp>
 #include <boost/serialization/split_member.hpp>
 // #include <boost/serialization/list.hpp>
 #include "GaudiKernel/IMessageSvc.h"
@@ -88,7 +88,7 @@ protected:
   bool m_serviceActive;
   
 public:
-  MonObject(IMessageSvc* msgSvc, const std::string& source, int version=0);
+  MonObject(IMessageSvc* msgSvc, const std::string& source, int version=1);
   virtual ~MonObject();
 
   template<class Archive>

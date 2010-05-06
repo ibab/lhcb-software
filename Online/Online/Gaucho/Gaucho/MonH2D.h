@@ -22,7 +22,7 @@ protected:
 public:
   BOOST_SERIALIZATION_SPLIT_MEMBER()
 
-  MonH2D(IMessageSvc* msgSvc, const std::string& source, int version=0);
+  MonH2D(IMessageSvc* msgSvc, const std::string& source, int version=1);
   virtual ~MonH2D();
 
   virtual void save(boost::archive::binary_oarchive & ar, const unsigned int version);
