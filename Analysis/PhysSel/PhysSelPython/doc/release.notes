@@ -1,9 +1,19 @@
-!$Id: release.notes,v 1.54 2010-05-05 12:20:16 jpalac Exp $
+!$Id: release.notes,v 1.55 2010-05-06 15:23:08 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : PhysSel/PhysSelPython
 ! Responsible : Juan Palacios
 ! Purpose     : Helper python classes for writing offline selections
 !-----------------------------------------------------------------------------
+
+! 2010-05-06 - Juan Palacios
+ - python/PhysSelPython/Wrappers.py
+  . Redefine AutomaticData, inheriting from SelPy.selection.AutomaticData and
+    adding a LoKi::VoidFilter as algorithm. This checks that the TES location
+    of the AutomaticData isn't empty and fails the selection otherwise.
+ - tests/test_multi_selection_sequence.py
+ - tests/test_selection_sequence.py
+  . Adapt to changes above. Specifically, DataOnDemand/AutomaticData now results
+    in algorithms placed in sequencers.
 
 ! 2010-05-05 - Juan Palacios
  - python/PhysSelPython/Wrappers.py
