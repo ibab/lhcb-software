@@ -34,12 +34,12 @@ use GaudiAlg		v*			-no_auto_imports
 use DDDB               v*   Det            -no_auto_imports
 use FieldMap           v*                 -no_auto_imports
 
-
+# Not a requirement!
 #-- Lbcom packages (from LBCOM_v5r8)
-use LbcomSys            v*       -no_auto_imports
+#use LbcomSys            v*       -no_auto_imports
 
 #-- LHCb libraries (from LHCB_v21r11)
-use LHCbSys             v*        -no_auto_imports
+#use LHCbSys             v*        -no_auto_imports
 use   STDet           v*     Det
 use   OTDet           v*     Det
 use   VeloDet         v*     Det
@@ -47,7 +47,7 @@ use   MuonDet         v*     Det
 
 
 # The whole REC project
-use RecSys             v*                   -no_auto_imports
+#use RecSys             v*                   -no_auto_imports
 
 # From the Alignment project
 use AlignTrTools	v*	Alignment	-no_auto_imports
