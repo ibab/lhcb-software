@@ -10,7 +10,7 @@ import sys
 sys.path.append('../python')
 
 from SelPy.configurabloids import DummyAlgorithm
-from SelPy.selection import FlatSelectionListBuilder, Selection, AutomaticData
+from SelPy.selection import FlatSelectionListBuilder, Selection
 
 class SelectionTree(object) :
     sel000 = Selection('0.00000', Algorithm = DummyAlgorithm('Alg0.00000'),
