@@ -1,7 +1,7 @@
 """ general configuration for projects """
 #@PydevCodeAnalysisIgnore
 
-from LbConfiguration.Platform import binary_list
+from LbConfiguration.Platform import binary_list, getBinaryOpt
 
 import logging
 import sys
@@ -48,8 +48,10 @@ class ProjectBaseConf(object):
         self._dist_loc = dist_loc
     def DistLocation(self):
         return self._dist_loc
+    def DistPrefix(self):
+        return self.NAME()
     def TarBallDir(self):
-        return os.path.join(self.DistLocation(), self.NAME())
+        return os.path.join(self.DistLocation(), self.DistPrefix())
     def HTMLDir(self):
         return os.path.join(self.DistLocation(), "html")
     def __str__(self):
@@ -79,6 +81,7 @@ class ProjectConf(ProjectBaseConf):
         self._extraexe = {}
         self._basename = ""
         self._tarballname = "_".join([self.NAME(), self.NAME()])
+        self._lcgtarballname = None
         self._hasbinary = True
         self.enableSetenvAlias()
         self.enableSetupAlias()
@@ -168,11 +171,29 @@ class ProjectConf(ProjectBaseConf):
             if cmtconfig :
                 tbname += "_%s" % cmtconfig
                 if cmtconfig not in binary_list :
-                    log.error("the CMTCONFIG value %s is not known" % cmtconfig)
+                    log.error("The CMTCONFIG value %s is not known" % cmtconfig)
             if full :
                 tbname += ".tar.gz"
 
         return tbname
+    def setLCGTarBallName(self, name):
+        self._lcgtarballname = name
+    def LCGTarBallName(self, version=None, cmtconfig=None, full=False):
+        """ returns the name of the LCG tarball dependency """
+        log = logging.getLogger()
+        tbname = self._lcgtarballname
+        if version :
+            tbname += "_%s" % version
+            if cmtconfig :
+                if cmtconfig not in binary_list :
+                    log.error("The CMTCONFIG value %s is not known" % cmtconfig)
+                else :
+                    cmtconfig = getBinaryOpt(cmtconfig)
+                    tbname += "_%s" % cmtconfig
+                if full :
+                    tbname += ".tar.gz"
+        return tbname
+
     def md5FileName(self, version=None, cmtconfig=None):
         mfname = self.tarBallName(version, cmtconfig, full=False)
         mfname += ".md5"
@@ -290,6 +311,7 @@ Dirac.setFullSize(500000)#IGNORE:E0602
 LHCbDirac.disableSetenvAlias()#IGNORE:E0602
 LHCbDirac.setFullSize(500000)#IGNORE:E0602
 LHCbDirac.setAFSVolumeName("LBDIRAC")#IGNORE:E0602
+LHCbDirac.setLCGTarBallName("LCGGrid")#IGNORE:E0602
 
 # Erasmus
 Erasmus.setAFSVolumeName("ERASM")#IGNORE:E0602
@@ -298,6 +320,9 @@ Erasmus.setAFSVolumeName("ERASM")#IGNORE:E0602
 # Euler
 Euler.setApplicationPackage("Trig/Euler")#IGNORE:E0602
 Euler.setFullSize(6000)#IGNORE:E0602
+
+# Ganga
+Ganga.setLCGTarBallName("LCGGanga")#IGNORE:E0602
 
 # Gaudi
 Gaudi.setSteeringPackage("GaudiRelease") #IGNORE:E0602
@@ -308,6 +333,7 @@ Gaudi.setAFSVolumeRoot("Gaudi") #IGNORE:E0602
 Gaudi.setAFSLibrarianGroup("gaudi") #IGNORE:E0602
 Gaudi.setFullSize(3000000)#IGNORE:E0602
 Gaudi.setBaseName("LCGCMT")#IGNORE:E0602
+Gaudi.setLCGTarBallName("LCGCMT")#IGNORE:E0602
 
 #Gauss
 Gauss.setApplicationPackage("Sim/Gauss") #IGNORE:E0602
@@ -347,7 +373,7 @@ LHCb.setBaseName("GAUDI")#IGNORE:E0602
 
 # LHCbGrid
 LHCbGrid.setFullSize(100000)#IGNORE:E0602
-
+LHCbGrid.setLCGTarBallName("LCGGrid")#IGNORE:E0602
 # Moore
 Moore.setApplicationPackage("Hlt/Moore")#IGNORE:E0602
 Moore.setFullSize(700000)#IGNORE:E0602
