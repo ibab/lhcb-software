@@ -10,8 +10,8 @@ are available:
 """
 __author__ = "Juan PALACIOS juan.palacios@nikhef.nl"
 
-__all__ = ('DataOnDemand',
-           'AutomaticData',
+__all__ = ('AutomaticData',
+           'AutoData',
            'Selection',
            'FlatSelectionListBuilder',
            'NameError',
@@ -21,7 +21,7 @@ __all__ = ('DataOnDemand',
 
 from copy import copy
 
-class DataOnDemand(object) :
+class AutoData(object) :
     """
     Simple wrapper for a data location. To be used for locations
     that are guaranteed to be populated. This could be a location
@@ -32,8 +32,8 @@ class DataOnDemand(object) :
 
     Example: wrap StdLoosePions
 
-    >>> SelStdLoosePions = DataOnDemand('SelStdLoosePions',
-                                        Location = 'Phys/StdLoosePions')
+    >>> SelStdLoosePions = AutoData('SelStdLoosePions',
+                                     Location = 'Phys/StdLoosePions')
     >>> SelStdLoosePions.outputLocation()
     'Phys/StdLoosePions'
     >>> SelStdLoosePions.name()
@@ -41,7 +41,7 @@ class DataOnDemand(object) :
 
     The first argument is used for the name, but can be omitted:
 
-    >>> SelStdLoosePions = DataOnDemand(Location = 'Phys/StdLoosePions')
+    >>> SelStdLoosePions = AutoData(Location = 'Phys/StdLoosePions')
     >>> SelStdLoosePions.name()
     'StdLoosePions'
     """
@@ -50,15 +50,14 @@ class DataOnDemand(object) :
     
     def __init__ (self,
                   name='',
-                  Location = "", 
-                  RequiredSelections = [] ) :
+                  Location = "") :
         if name == '' :
             self._name = Location[Location.rfind('/')+1:]
             print 'setting name to ', self._name
         else :
             self._name = name
-        self.requiredSelections = []
         self._location = Location
+        self.requiredSelections = []
 
     def name(self) :
         return self._name
@@ -77,8 +76,8 @@ class DataOnDemand(object) :
         loc = loc[loc.rfind("/")+1:] # grab the last string after the last '/'
         return loc
 
-AutomaticData = DataOnDemand
-    
+AutomaticData = AutoData
+
 class Selection(object) :
     """
     Wrapper class for offline selection. Takes a top selection DVAlgorithm
@@ -269,10 +268,11 @@ class FlatSelectionListBuilder(object) :
             self.selectionList = remove_duplicates(self.selectionList)
     def _buildSelectionList(self, selections) :
         for sel in selections :
-            if type(sel) == DataOnDemand :
-                print "DataOnDemand: do nothing"
+            if type(sel) == AutoData :
+                print "Automatic data: do nothing"
             else :
-                self.selectionList.append(sel.algorithm())
+                if sel.algorithm() != None:
+                    self.selectionList.append(sel.algorithm())
                 self._buildSelectionList( sel.requiredSelections )
 
 
