@@ -2,6 +2,9 @@ Package     : Hlt/Moore
 Package Coordinator : Gerhard Raven
 Purpose     : LHCb HLT application
 
+! 2010-05-06 - Gerhard Raven + Johannes Albrecht
+ - add support for re-running L0 whilst running from a TCK
+
 !========================== Moore v9r1 2009-04-21 ===================
 ! 2010-04-21 - Gerhard Raven
  - version of top of HLT_v10r1
