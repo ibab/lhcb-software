@@ -1,6 +1,6 @@
 from TrackSys.Configuration import *
 from Configurables import ( PatForward, PatForwardTool, PatFwdTool)
-from Configurables import  PatDownstream
+from Configurables import  (PatDownstream, OTHitCreator)
 from Configurables import (PatSeeding, PatSeedingTool)
 
 
@@ -52,10 +52,10 @@ class SeedingConf(object):
     
   def configureTool(self, SeedTool):
     if TrackSys().fieldOff():
-      SeedTool.xMagTol = 4e2;
-      SeedTool.zMagnet = 0.;
-      SeedTool.FieldOff = True;
-      SeedTool.MinMomentum = 5e4;
+      SeedTool.xMagTol = 4e2
+      SeedTool.zMagnet = 0.
+      SeedTool.FieldOff = True
+      SeedTool.MinMomentum = 5e4
 
 
 class CosmicConf(object):
@@ -64,11 +64,8 @@ class CosmicConf(object):
   def configureAlg(self, SeedAlg=PatSeeding("PatSeeding")):
     SeedAlg.addTool(PatSeedingTool, name="PatSeedingTool")
     self.configureTool(SeedAlg.PatSeedingTool)
-    
-    #switch off drift times for the pattern recognition
-    OTHitCreator("ToolSvc.OTHitCreator").NoDriftTimes = True;
-    
-  def configureTool(self, SeedTool):
+        
+  def configureTool(self, SeedTool, hitCreator=OTHitCreator("ToolSvc.OTHitCreator")):
     #no magnetic field
     #options to tune PatSeeding for tracking with B field off
     SeedTool.xMagTol = 4e2
@@ -97,4 +94,4 @@ class CosmicConf(object):
     #look)
     
     #switch off drift times for the pattern recognition
-    OTHitCreator("ToolSvc.OTHitCreator").NoDriftTimes = True
+    hitCreator.NoDriftTimes = True

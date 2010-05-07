@@ -4,6 +4,9 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+! 2010-05-07 - Rob Lambert
+ - forgot to import OTHitCreator in PatAlgConf.py
+
 ! 2010-05-05 - Rob Lambert
  - fixed bug in capitalization of PatAlgConf.py
 
