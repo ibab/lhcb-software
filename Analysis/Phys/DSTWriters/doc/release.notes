@@ -1,9 +1,19 @@
-!$Id: release.notes,v 1.22 2010-05-04 15:36:10 jpalac Exp $
+!$Id: release.notes,v 1.23 2010-05-07 12:17:15 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DSTWriters
 ! Responsible : Juan PALACIOS
 ! Purpose     : Python code for DST writers.
 !-----------------------------------------------------------------------------
+
+! 2010-05-07 - Juan Palacios
+ - python/DSTWriters/MicroDSTWriter.py
+ - python/DSTWriters/BaseDSTWriter.py
+ - python/DSTWriters/SelDSTWriter.py
+  . Set OutputPrefix of each stream to SelectionSequence's name if configurable's
+    OutputPrefix set to 'SequenceName'. Should be used for multi-selection sequences
+    like Stripping Streams and MultiSelectionSequence.
+ - cmt/requirements
+  . Increase to v1r5
 
 ! 2010-05-04 - Juan Palacios
  - python/DSTWriters/dstwriterutils.py
