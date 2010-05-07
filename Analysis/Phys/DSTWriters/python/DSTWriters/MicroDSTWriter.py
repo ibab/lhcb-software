@@ -1,7 +1,7 @@
 """
 
 """
-__version__ = "$Id: MicroDSTWriter.py,v 1.11 2010-04-26 14:24:40 jpalac Exp $"
+__version__ = "$Id: MicroDSTWriter.py,v 1.12 2010-05-07 12:14:44 jpalac Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -33,15 +33,17 @@ class MicroDSTWriter(BaseDSTWriter) :
                           , "CopyHltDecReports"    : """ """
                           , "CopyRelatedPVs"       : """ """
                           , "CopyMCTruth"          : """ """
-                          , "OutputPrefix"         : """ TES location of output. Default: /Event/MicroDST."""
+                          , "OutputPrefix"         : """ TES location of output. Default: /Event/MicroDST. If set to 'SequenceName then it takes the name of the name of each SelectionSequence.'"""
                           }
 
     def outputStreamType(self) :
         from Configurables import OutputStream
         return OutputStream
     
-    def extendStream(self, stream) :
+    def extendStream(self, seq, stream) :
         location = self.getProp("OutputPrefix")
+        if location == 'SequenceName' :
+            location = seq.name().replace('.', '')
         if self.getProp("CopyODIN") :
             stream.OptItemList += ["/Event/DAQ/ODIN#1"]
         if self.getProp("CopyRecHeader") :
@@ -64,20 +66,24 @@ class MicroDSTWriter(BaseDSTWriter) :
             loc += [location]
         return loc
     
-    def setOutputPrefix(self, alg) :
-        alg.OutputPrefix = self.getProp('OutputPrefix')
-    
+    def setOutputPrefix(self, seq, cloner) :
+        prefix = self.getProp('OutputPrefix')
+        if prefix != 'SequenceName' :
+            cloner.OutputPrefix = self.getProp('OutputPrefix')
+        else :
+            cloner.OutputPrefix = seq.name()
+            
     def _copyRecHeader(self, sel):
         from Configurables import CopyRecHeader
         cloner = CopyRecHeader(self._personaliseName(sel,
                                                      "CopyRecHeader"))
-        self.setOutputPrefix(cloner)
+        self.setOutputPrefix(sel, cloner)
         return [cloner]
 
     def _copyODIN(self, sel) :
         from Configurables import CopyODIN
         cloner = CopyODIN(self._personaliseName(sel,"CopyODIN"))
-        self.setOutputPrefix(cloner)
+        self.setOutputPrefix(sel, cloner)
         return [cloner]
         
     def _copyParticleTrees(self, sel) :
@@ -101,7 +107,7 @@ class MicroDSTWriter(BaseDSTWriter) :
         if self.getProp("CopyProtoParticles") == False :
             cloner.addTool(ParticleCloner, name="ParticleCloner")
             cloner.ParticleCloner.ICloneProtoParticle="NONE"
-        self.setOutputPrefix(cloner)
+        self.setOutputPrefix(sel, cloner)
         return [cloner]
 
     def _copyP2PVRelations(self, sel, name, locations) :
@@ -109,7 +115,7 @@ class MicroDSTWriter(BaseDSTWriter) :
         cloner = CopyParticle2PVRelations(self._personaliseName(sel,name))
         cloner.InputLocations = locations
         cloner.OutputLevel=4
-        self.setOutputPrefix(cloner)
+        self.setOutputPrefix(sel, cloner)
         return cloner
 
     def _copyPVs(self, sel) :
@@ -117,7 +123,7 @@ class MicroDSTWriter(BaseDSTWriter) :
         cloner=CopyPrimaryVertices(self._personaliseName(sel,
                                                          'CopyPrimaryVertices'))
         cloner.OutputLevel = 4
-        self.setOutputPrefix(cloner)
+        self.setOutputPrefix(sel, cloner)
         return [cloner]
     
     def _copyMCInfo(self, sel) :
@@ -139,7 +145,7 @@ class MicroDSTWriter(BaseDSTWriter) :
                                              name = 'ICloneMCVertex')
         cloner.InputLocations = self.dataLocations(sel,"P2MCPRelations")
         cloner.OutputLevel = 4
-        self.setOutputPrefix(cloner)
+        self.setOutputPrefix(sel, cloner)
         return [p2mcRelator, cloner]
 
     def _copyBTaggingInfo(self, sel) :
@@ -153,7 +159,7 @@ class MicroDSTWriter(BaseDSTWriter) :
                                                       "CopyFlavourTag"))
         cloner.InputLocations = self.dataLocations(sel,"FlavourTags")
         cloner.OutputLevel=4
-        self.setOutputPrefix(cloner)
+        self.setOutputPrefix(sel, cloner)
         return [BTagAlgo, cloner]
 
     def _copyPVRelations(self, sel) :
@@ -184,13 +190,13 @@ class MicroDSTWriter(BaseDSTWriter) :
     def _copyL0DUReport(self, sel) :
         from Configurables import CopyL0DUReport
         cloner = CopyL0DUReport(self._personaliseName(sel,'CopyL0DUReport'))
-        self.setOutputPrefix(cloner)
+        self.setOutputPrefix(sel, cloner)
         return [cloner]
 
     def _copyHltDecReports(self, sel) :
         from Configurables import CopyHltDecReports
         cloner = CopyHltDecReports(self._personaliseName(sel,'CopyHltDecReports'))
-        self.setOutputPrefix(cloner)
+        self.setOutputPrefix(sel, cloner)
         return [cloner]
 
     def extendSequence(self, sel) :

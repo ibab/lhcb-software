@@ -2,7 +2,7 @@
 Write a DST for a single selection sequence. Writes out the entire
 contents of the input DST
 """
-__version__ = "$Id: BaseDSTWriter.py,v 1.3 2010-02-11 10:33:18 jpalac Exp $"
+__version__ = "$Id: BaseDSTWriter.py,v 1.4 2010-05-07 12:14:44 jpalac Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -45,7 +45,7 @@ class BaseDSTWriter(ConfigurableUser) :
         from Configurables import InputCopyStream
         return InputCopyStream
 
-    def extendStream(self, stream) :
+    def extendStream(self, seq, stream) :
         # do nothing
         return []
 
@@ -64,11 +64,12 @@ class BaseDSTWriter(ConfigurableUser) :
         dstName = self.getProp('OutputFileSuffix')+name+self.fileExtension()
         return "DATAFILE='" + dstName + "' TYP='POOL_ROOTTREE' OPT='REC' "
     
-    def _initOutputStreams(self, name) :
+    def _initOutputStreams(self, seq) :
+        name = seq.name()
         stream = self.outputStreamType()( self.streamName(name) )
         stream.Output = self.outputFileName(name)
         self._extendStream(stream)
-        self.extendStream(stream)
+        self.extendStream(seq, stream)
         
     def outputStream(self, name) :
         return self.outputStreamType()( self.streamName(name) )
@@ -121,7 +122,7 @@ class BaseDSTWriter(ConfigurableUser) :
         for sel in self.selectionSequences() :
             seq = GaudiSequencer("."+sel.name(), Members = [sel.sequence()],
                                  MeasureTime=True)
-            self._initOutputStreams(seq.name())
+            self._initOutputStreams(seq)
             seq.Members += self.extendSequence(sel)
             self.addOutputStream(seq)
             self.sequence().Members += [ seq ]
