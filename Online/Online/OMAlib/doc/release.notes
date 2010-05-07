@@ -1,8 +1,9 @@
-! $Id: release.notes,v 1.41 2010-04-20 12:20:48 ggiacomo Exp $
+! $Id: release.notes,v 1.42 2010-05-07 09:07:42 ggiacomo Exp $
 ! Package     : OMAlib
 ! Responsible : G. Graziani
 ! Purpose     : Online Monitoring Analysis library
 
+! ======== v2r15 ===============
 ! 20100413 Patrick Robbe
  - src/OMAFitFunction.cpp: draw fit function on top of histo in case of fitting
    an overlaid histogram.
