@@ -3,6 +3,19 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
+</PRE><H1><A NAME=v37r2p1>2010-05-10 Brunel v37r2p1</A></H1><PRE>
+This version uses projects Gaudi v21r9, LHCb v31r0p1, Lbcom v9r2p1, Rec v9r2p1
+ and SQLDDDB v5r26, ParamFiles v8r2, FieldMap v5r3, AppConfig v3r*
+
+This is a production version for processing 2010 data
+
+Output requires DaVinci v25r2p3 or later if saving packed DST, DaVinci v24r5p1
+or later otherwise
+
+- bug fixes:
+  . Fix TrackMatchVeloSeed to always make the container before exiting. Fixes
+    bug #67111 (TrackMatching v2r28p1)
+
 </PRE><H1><A NAME=v37r2>2010-04-29 Brunel v37r2</A></H1><PRE>
 This version uses projects Gaudi v21r9, LHCb v31r0p1, Lbcom v9r2p1, Rec v9r2p1
  and SQLDDDB v5r26, ParamFiles v8r2, FieldMap v5r3, AppConfig v3r*
