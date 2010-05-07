@@ -3,8 +3,14 @@
 ! Responsible : Juan Palacios juan.palacios@nikhef.nl
 ! Purpose     : Implementation of cloner MicroDSTTools
 !-----------------------------------------------------------------------------
-! $Id: release.notes,v 1.35 2009-11-19 13:56:39 jpalac Exp $
+! $Id: release.notes,v 1.36 2010-05-07 14:59:57 jpalac Exp $
 !-----------------------------------------------------------------------------
+
+! 2010-05-07 - Juan Palacios
+ - src/ParticleCloner.cpp
+  . Move ICloneProtoParticle="NONE" warning to verbose.
+ - cmt/requirements
+  . Increase to v1r6p1
 
 !======================= MicroDSTTools v1r6 2009-11-19 =======================
 
