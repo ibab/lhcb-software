@@ -117,16 +117,16 @@ class DDDBConf(ConfigurableUser):
         Default configuration for 2010 data (and MonteCarlo for DDDB)
         """
         # Set the tags
-        self.__set_tag__(["DDDB"], "head-20100407")
-        self.__set_tag__(["LHCBCOND"], "head-20100414")
+        self.__set_tag__(["DDDB"], "head-20100504")
+        self.__set_tag__(["LHCBCOND"], "head-20100430")
     
     def __2009_conf__(self):
         """
         Default configuration for 2009 data and corresponding MonteCarlo
         """
         # Set the tags
-        self.__set_tag__(["DDDB"], "head-20100407")
-        self.__set_tag__(["LHCBCOND"], "head-20100414")
+        self.__set_tag__(["DDDB"], "head-20100504")
+        self.__set_tag__(["LHCBCOND"], "head-20100430")
         self.__set_tag__(["SIMCOND"], "MC-20100412-vc15mm-md100")
     
     def __2008_conf__(self):
@@ -144,15 +144,12 @@ class DDDBConf(ConfigurableUser):
         """
         # Set the tags
         self.__set_tag__(["DDDB"], "MC09-20090602")
-        self.__set_tag__(["SIMCOND"], "MC09-20090402-vc-md100")
+        self.__set_tag__(["SIMCOND"], "MC09-20100430-vc-md100")
     
     def __Upgrade_conf__(self):
         """
-        Default configuration for Upgrade MonteCarlo production and analysis
+        Default database for Upgrade MonteCarlo production and analysis
         """
-        # Set the tags
-        self.__set_tag__(["DDDB"], "mul-20090917")
-        self.__set_tag__(["SIMCOND"], "MC09-20090402-vc-md100")
         # Need also to change connection string to DDDB
         CondDB().PartitionConnectionString = { "DDDB":"sqlite_file:$SQLITEDBPATH/DDDB_upgrade.db/DDDB"}
     
