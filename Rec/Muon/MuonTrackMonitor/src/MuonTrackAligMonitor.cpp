@@ -241,12 +241,14 @@ StatusCode MuonTrackAligMonitor::execute() {
       LHCb::ParticleID pid(13);
       StatusCode sc = m_extrapolator->propagate(longState,m_zM1,pid);
       if ( sc.isFailure() ) {
-        info() << "Extrapolating longState to z = " << m_zM1 << " failed " << endmsg;
+        debug() << "Extrapolating longState to z = " << m_zM1 << " failed " << endmsg;
+        Warning("Extrapolating a muon longState to z failed ");
         continue;
       }
       sc = m_extrapolator->propagate(muState,m_zM1,pid);
       if ( sc.isFailure() ) {
-        info() << "Extrapolating muState to z = " << m_zM1 << " failed " << endmsg;
+        debug() << "Extrapolating muState to z = " << m_zM1 << " failed " << endmsg;
+        Warning("Extrapolating a muon muState to z failed ");
         continue;
       }
       
@@ -260,7 +262,8 @@ StatusCode MuonTrackAligMonitor::execute() {
                                             muState.stateVector(), muState.covariance(),
                                             chi2 );
       if ( !sc.isSuccess() ) {
-        info() <<  "Could not invert matrices" << endmsg;
+        Warning("Could not invert matrices");
+        //info() <<  "Could not invert matrices" << endmsg;
         continue;
       }
       
@@ -323,6 +326,11 @@ StatusCode MuonTrackAligMonitor::execute() {
           debug() << "*********************" << tile << endreq;
           
           sc = m_extrapolator->propagate( longState, z, pid );
+          if ( sc.isFailure() ) {
+            Warning("Extrapolating a muon longState to z failed ");
+            debug() << "Extrapolating longState to z = " << z << " failed " << endmsg;
+            continue;
+          }
           LHCb::State fitState = m_IsLongTrackState ? longState : muState;
           double rx= x - fitState.x();
           double ry= y - fitState.y();

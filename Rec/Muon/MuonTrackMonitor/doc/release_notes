@@ -4,6 +4,10 @@
 ! Purpose     : High level Muon Monitoring after reconstruction
 !-----------------------------------------------------------------------------
 
+! 2010-05-07 - Rob Lambert
+ - Fixed missed status code check
+ - Downgraded info messages to supressed warnings or debug
+
 ! 2010-05-06 - Rob Lambert
  - Added use statements to requirements file
 

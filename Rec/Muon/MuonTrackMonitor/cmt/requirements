@@ -16,10 +16,9 @@ use TrackFitter 	v* Tr
 use TrackSys 		v* Tf
 use TrackTools 		v* Tr
 
-apply_pattern install_python_modules
-
 # build a component library
 library MuonTrackMonitor ../src/*.cpp
 
 apply_pattern component_library library=MuonTrackMonitor
 
+apply_pattern install_python_modules
