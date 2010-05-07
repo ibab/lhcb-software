@@ -1,9 +1,15 @@
-!$Id: release.notes,v 1.55 2010-05-06 15:23:08 jpalac Exp $
+!$Id: release.notes,v 1.56 2010-05-07 06:23:31 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : PhysSel/PhysSelPython
 ! Responsible : Juan Palacios
 ! Purpose     : Helper python classes for writing offline selections
 !-----------------------------------------------------------------------------
+
+! 2010-05-06 - Juan Palacios
+ - python/PhysSelPython/Wrappers.py
+  . Fix enforcement of Location for AutomaticData.
+ - tests/test_selection.py
+  . Add test for Locationless AutomaticData
 
 ! 2010-05-06 - Juan Palacios
  - python/PhysSelPython/Wrappers.py
