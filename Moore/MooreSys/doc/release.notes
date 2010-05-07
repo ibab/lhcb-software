@@ -3,6 +3,10 @@ Package     : MooreSys
 Package Coordinator : G.Raven
 Purpose     : LHCb HLT application
 
+</PRE><H1><A NAME=v9r1p1>2010-05-07 Moore v9r1p1</A></H1><PRE>
+change compared to v9r1: allow to re-run L0 when 
+configuring from a TCK
+
 </PRE><H1><A NAME=v9r1>2010-04-21 Moore v9r1</A></H1><PRE>
 Release on top of HLT v10r2
 
