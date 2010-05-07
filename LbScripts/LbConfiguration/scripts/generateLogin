@@ -22,6 +22,13 @@ from LbConfiguration.Platform import binary_list, binary_opt_list, getBinaryOpt
 from LbConfiguration.Tools import genProjectSetup
 from optparse import OptionParser
 
+
+def offSetString(data, offset=0):
+    indent = 2
+    if offset :
+        data = data.replace("\n", "\n" + " "*offset*indent)
+    return data
+
 def fixNativeStringWithVar(data, varname, varcont=None, dotbat=False):
     if not varcont :
         varcont = os.environ[varname]
@@ -57,33 +64,135 @@ def fixNativeString(data, dotbat=False):
         data = fixNativeStringWithVar(data, k, tobereplaced[k], dotbat)
     return data
 
-def ShellFileNativeSnippet(base, shell, targetlocation, args = "", postargs="", prodlocation=None, offset=0):
-    content = ""
-    indent = 2
-    if os.environ.has_key("VO_LHCB_SW_DIR") :
-        native_tarloc = fixNativeStringWithVar(targetlocation, "VO_LHCB_SW_DIR", varcont=None, dotbat=dotbat)
-        native_prodloc = fixNativeStringWithVar(prodlocation, "VO_LHCB_SW_DIR", varcont=None, dotbat=dotbat)
-        if (native_tarloc != targetlocation) or (native_prodloc != prodlocation) :
-            if shell == "sh" :
-                pass
-            elif shell == "csh" :
-                pass
-            elif shell == "bat" :
-                pass
-        else :
-            content = ShellFileSnippet(base, shell, targetlocation, args, postargs, prodlocation, offset)
-    else :
-        content = ShellFileSnippet(base, shell, targetlocation, args, postargs, prodlocation, offset)
+
+def getNativeString(data, varlist, dotbat=False):
+    native_data = data
+    for v in varlist :
+        if os.environ.has_key(v) and native_data :
+            native_data = fixNativeStringWithVar(native_data, v, varcont=None, dotbat=dotbat)
+    
+    return native_data
+
+def getNativeWrap(data, shell, offset=0):
+    content = data
+    native_varlist = ["VO_LHCB_SW_DIR", "HOME", "AFSROOT"]
+    dotbat = False
+    if shell == "bat" :
+        dotbat = True
+    native_data = getNativeString(data, native_varlist, dotbat)
+    if data != native_data :
+        content = ""
+        for v in native_varlist :
+            if native_data.find(v) != -1 :
+                vartotest = v
+                break
+        if shell == "sh" :
+            content += """
+if [[ -n "$%s" ]]; then""" % vartotest
+            content += offSetString(native_data, offset=1)
+            content += """
+else"""
+            content += offSetString(data, offset=1)
+            content += """
+fi"""            
+        elif shell == "csh" :
+            content += """
+if ( $?%s ) then""" % vartotest
+            content += offSetString(native_data, offset=1)
+            content += """
+else"""
+            content += offSetString(data, offset=1)
+            content += """
+endif"""            
+
+        elif shell == "bat" :
+            content += """
+IF DEFINED %s (""" % vartotest
+            content += offSetString(native_data, offset=1)
+            content += """
+) ELSE ("""
+            content += offSetString(data, offset=1)
+            content += """
+)"""            
 
 
-    if offset :
-        content = content.replace("\n", "\n" + " "*offset*indent)
+    content = offSetString(content, offset)
 
     return content
 
+def ShellFileNativeSnippet(base, shell, targetlocation, args = "", postargs="", prodlocation=None, offset=0):
+
+    data = ShellFileSnippet(base, shell,
+                            targetlocation, args, postargs, 
+                            prodlocation, offset=0)
+    wrapped_data = getNativeWrap(data, shell, offset=offset)
+    return wrapped_data
+
+#def ShellFileNativeSnippet(base, shell, targetlocation, args = "", postargs="", prodlocation=None, offset=0):
+#    content = ""
+#    dotbat = False
+#    if shell == "bat" :
+#        dotbat = True
+#
+#    native_tarloc = getNativeString(targetlocation, dotbat)
+#    native_prodloc = getNativeString(prodlocation, dotbat)
+#
+#    if (native_tarloc != targetlocation) or (native_prodloc != prodlocation) :
+#        for v in _native_varlist :
+#            if native_tarloc.find(v) != -1 :
+#                vartotest = v
+#                break
+#        if shell == "sh" :
+#            content += """
+#if [[ -n "$%s" ]]; then""" % vartotest
+#            content += ShellFileSnippet(base, shell, 
+#                                        native_tarloc, args, postargs, 
+#                                        native_prodloc, offset=1)
+#            content += """
+#else"""
+#            content += ShellFileSnippet(base, shell,
+#                                        targetlocation, args, postargs, 
+#                                        prodlocation, offset=1)
+#            content += """
+#fi"""            
+#        elif shell == "csh" :
+#            content += """
+#if ( $?%s ) then""" % vartotest
+#            content += ShellFileSnippet(base, shell, 
+#                                        native_tarloc, args, postargs, 
+#                                        native_prodloc, offset=1)
+#            content += """
+#else"""
+#            content += ShellFileSnippet(base, shell,
+#                                        targetlocation, args, postargs, 
+#                                        prodlocation, offset=1)
+#            content += """
+#endif"""            
+#
+#        elif shell == "bat" :
+#            content += """
+#IF DEFINED %s (""" % vartotest
+#            content += ShellFileSnippet(base, shell, 
+#                                        native_tarloc, args, postargs, 
+#                                        native_prodloc, offset=1)
+#            content += """
+#ELSE ("""
+#            content += ShellFileSnippet(base, shell,
+#                                        targetlocation, args, postargs, 
+#                                        prodlocation, offset=1)
+#            content += """
+#)"""            
+#
+#    else :
+#        content = ShellFileSnippet(base, shell, targetlocation, args, postargs, prodlocation, offset=0)
+#
+#
+#    content = offSetString(content, offset)
+#
+#    return content
+
 def ShellFileSnippet(base, shell, targetlocation, args = "", postargs="", prodlocation=None, offset=0):
     content = ""
-    indent = 2
     if shell == "sh" :
         if prodlocation :
             content += """
@@ -143,8 +252,8 @@ IF EXIST %s\scripts\%s.bat (
 )""" % (targetlocation, base,
          targetlocation, base, args, postargs)
 
-    if offset :
-        content = content.replace("\n", "\n" + " "*offset*indent)
+
+    content = offSetString(content, offset)
 
     return content
 
@@ -349,19 +458,21 @@ def generateLogin(targetlocation, script, version="", mysiteroot=None, building=
     if shell == "sh" or shell == "zsh" :
         if mysiteroot :
             if withoutcache :
-                content = """LbLogin_tmpfile=`%s/python/LbConfiguration/LbLogin.py --shell=sh --mktemp --mysiteroot=%s --scripts-version="%s" --no-cache "$@"`
-""" % (targetlocation, mysiteroot, version)
+                content = """
+LbLogin_tmpfile=`%s/python/LbConfiguration/LbLogin.py --shell=sh --mktemp --mysiteroot=%s --scripts-version="%s" --no-cache "$@"`""" % (targetlocation, mysiteroot, version)
             else :
-                content = """LbLogin_tmpfile=`%s/python/LbConfiguration/LbLogin.py --shell=sh --mktemp --mysiteroot=%s --scripts-version="%s" "$@"`
-""" % (targetlocation, mysiteroot, version)
+                content = """
+LbLogin_tmpfile=`%s/python/LbConfiguration/LbLogin.py --shell=sh --mktemp --mysiteroot=%s --scripts-version="%s" "$@"`""" % (targetlocation, mysiteroot, version)
         else :
             if withoutcache :
-                content = """LbLogin_tmpfile=`%s/python/LbConfiguration/LbLogin.py --shell=sh --mktemp --scripts-version="%s" --no-cache "$@"`
-""" % (targetlocation, version)
+                content = """
+LbLogin_tmpfile=`%s/python/LbConfiguration/LbLogin.py --shell=sh --mktemp --scripts-version="%s" --no-cache "$@"`""" % (targetlocation, version)
             else :
-                content = """LbLogin_tmpfile=`%s/python/LbConfiguration/LbLogin.py --shell=sh --mktemp --scripts-version="%s" "$@"`
-""" % (targetlocation, version)
-        content += """LbLoginStatus="$?"
+                content = """
+LbLogin_tmpfile=`%s/python/LbConfiguration/LbLogin.py --shell=sh --mktemp --scripts-version="%s" "$@"`""" % (targetlocation, version)
+        content = getNativeWrap(content, shell)
+        content += """
+LbLoginStatus="$?"
 if [[ "$LbLoginStatus" = 0 -a -n "$LbLogin_tmpfile" ]]; then
     . $LbLogin_tmpfile
 fi
@@ -372,20 +483,21 @@ unset LbLogin_tmpfile
     elif shell == "csh" or shell == "tcsh" :
         if mysiteroot :
             if withoutcache :
-                content = """set LbLogin_tmpfile = `%s/python/LbConfiguration/LbLogin.py --shell=csh --mktemp --mysiteroot=%s --scripts-version="%s" --no-cache ${*:q}`
-""" % (targetlocation, mysiteroot, version)
+                content = """
+set LbLogin_tmpfile = `%s/python/LbConfiguration/LbLogin.py --shell=csh --mktemp --mysiteroot=%s --scripts-version="%s" --no-cache ${*:q}`""" % (targetlocation, mysiteroot, version)
             else :
-                content = """set LbLogin_tmpfile = `%s/python/LbConfiguration/LbLogin.py --shell=csh --mktemp --mysiteroot=%s --scripts-version="%s" ${*:q}`
-""" % (targetlocation, mysiteroot, version)
+                content = """
+set LbLogin_tmpfile = `%s/python/LbConfiguration/LbLogin.py --shell=csh --mktemp --mysiteroot=%s --scripts-version="%s" ${*:q}`""" % (targetlocation, mysiteroot, version)
         else :
             if withoutcache :
-                content = """set LbLogin_tmpfile = `%s/python/LbConfiguration/LbLogin.py --shell=csh --mktemp --scripts-version="%s" --no-cache ${*:q}`
-""" % (targetlocation, version)
+                content = """
+set LbLogin_tmpfile = `%s/python/LbConfiguration/LbLogin.py --shell=csh --mktemp --scripts-version="%s" --no-cache ${*:q}`""" % (targetlocation, version)
             else :
-                content = """set LbLogin_tmpfile = `%s/python/LbConfiguration/LbLogin.py --shell=csh --mktemp --scripts-version="%s" ${*:q}`
-""" % (targetlocation, version)
-
-        content += """set LbLoginStatus = $?
+                content = """
+set LbLogin_tmpfile = `%s/python/LbConfiguration/LbLogin.py --shell=csh --mktemp --scripts-version="%s" ${*:q}`""" % (targetlocation, version)
+        content = getNativeWrap(content, shell)
+        content += """
+set LbLoginStatus = $?
 if ( ! $LbLoginStatus && "$LbLogin_tmpfile" != "" ) then
     source $LbLogin_tmpfile
 endif
@@ -394,37 +506,28 @@ unset LbLogin_tmpfile
 
 """
     elif shell == "bat" :
+        prefix = """ @echo off
+
+set LbLogin_tmpfile="%%TEMP%%\LbLogin_tmpsetup.bat"
+"""
         if mysiteroot :
             if withoutcache :
-                content = """ @echo off
-
-set LbLogin_tmpfile="%%TEMP%%\LbLogin_tmpsetup.bat"
-
-python %s\python\LbConfiguration\LbLogin.py --shell=bat --output=%%LbLogin_tmpfile%% --mysiteroot=%s --scripts-version="%s" --no-cache %%*
-""" % (targetlocation, mysiteroot, version)
+                content = """ 
+python %s\python\LbConfiguration\LbLogin.py --shell=bat --output=%%LbLogin_tmpfile%% --mysiteroot=%s --scripts-version="%s" --no-cache %%*""" % (targetlocation, mysiteroot, version)
             else :
-                content = """ @echo off
-
-set LbLogin_tmpfile="%%TEMP%%\LbLogin_tmpsetup.bat"
-
-python %s\python\LbConfiguration\LbLogin.py --shell=bat --output=%%LbLogin_tmpfile%% --mysiteroot=%s --scripts-version="%s" %%*
-""" % (targetlocation, mysiteroot, version)
+                content = """
+python %s\python\LbConfiguration\LbLogin.py --shell=bat --output=%%LbLogin_tmpfile%% --mysiteroot=%s --scripts-version="%s" %%*""" % (targetlocation, mysiteroot, version)
         else :
             if withoutcache :
-                content = """@echo off
-
-set LbLogin_tmpfile="%%TEMP%%\LbLogin_tmpsetup.bat"
-
-python %s\python\LbConfiguration\LbLogin.py --shell=bat --output=%%LbLogin_tmpfile%% --scripts-version="%s" --no-cache %%*
-""" % (targetlocation, version)
+                content = """
+python %s\python\LbConfiguration\LbLogin.py --shell=bat --output=%%LbLogin_tmpfile%% --scripts-version="%s" --no-cache %%*""" % (targetlocation, version)
             else :
-                content = """@echo off
-
-set LbLogin_tmpfile="%%TEMP%%\LbLogin_tmpsetup.bat"
-
-python %s\python\LbConfiguration\LbLogin.py --shell=bat --output=%%LbLogin_tmpfile%% --scripts-version="%s" %%*
-""" % (targetlocation, version)
-        content += """set LbLoginStatus=%ERRORLEVEL%
+                content = """
+python %s\python\LbConfiguration\LbLogin.py --shell=bat --output=%%LbLogin_tmpfile%% --scripts-version="%s" %%*""" % (targetlocation, version)
+        content = getNativeWrap(content, shell)
+        content = prefix + content
+        content += """
+set LbLoginStatus=%ERRORLEVEL%
 
 if %LbLoginStatus% EQU 0 (
     call %LbLogin_tmpfile%
@@ -438,7 +541,7 @@ set LbLogin_tmpfile=
     f.write(content)
     f.close()
 
-    fixNative(script)
+#    fixNative(script)
 
     if not withoutcache :
         generateLoginCache(mysiteroot, shell, version, targetlocation, building, withoutpython)
@@ -472,7 +575,7 @@ if [[ ! -e ${HOME}/.noLHCBLoginscript ]]; then
     rm -f ${LB_BANNER}
     unset LB_BANNER
   else"""
-        content += ShellFileSnippet("LbLogin", shell,
+        content += ShellFileNativeSnippet("LbLogin", shell,
                                     targetlocation=targetlocation,
                                     args="--quiet",
                                     prodlocation=prodlocation, offset=2)
@@ -495,7 +598,7 @@ if ( ! -e ${HOME}/.noLHCBLoginscript ) then
     rm -f ${LB_BANNER}
     unsetenv LB_BANNER
   else"""
-        content += ShellFileSnippet("LbLogin", shell,
+        content += ShellFileNativeSnippet("LbLogin", shell,
                                     targetlocation=targetlocation,
                                     args="--quiet",
                                     prodlocation=prodlocation, offset=2)
@@ -514,7 +617,7 @@ IF DEFINED HOME (
     IF EXIST %HOME%\.devLHCBLoginscript (
       set lbvers="dev"
     ) """
-        content += ShellFileSnippet("LbLogin", shell,
+        content += ShellFileNativeSnippet("LbLogin", shell,
                                     targetlocation=targetlocation,
                                     args="--quiet",
                                     prodlocation=prodlocation, offset=2)
@@ -523,7 +626,7 @@ IF DEFINED HOME (
   )
 ) ELSE (
   set lbvers="prod" """
-        content += ShellFileSnippet("LbLogin", shell,
+        content += ShellFileNativeSnippet("LbLogin", shell,
                                     targetlocation=targetlocation,
                                     args="--quiet",
                                     prodlocation=prodlocation, offset=1)
@@ -535,7 +638,7 @@ IF DEFINED HOME (
 
     f.write(content)
     f.close()
-    fixNative(script)
+#    fixNative(script)
 
 def generateGroupShell(targetlocation, shell, version="", mysiteroot=None, building=False):
     script = os.path.join(_scripts_dir,"group_shell.%s" % shell)
@@ -553,7 +656,7 @@ if [[ ! -e ${HOME}/.noLHCBLoginscript ]]; then
     lbvers=dev
   fi
   if [[ -n "$LBLOGIN_DONE" ]]; then"""
-        content += ShellFileSnippet("LbLogin", shell,
+        content += ShellFileNativeSnippet("LbLogin", shell,
                                     targetlocation=targetlocation,
                                     args="--silent",
                                     postargs = ">& /dev/null",
@@ -562,7 +665,7 @@ if [[ ! -e ${HOME}/.noLHCBLoginscript ]]; then
         content += """
   else
     export LB_BANNER=`mktemp`"""
-        content += ShellFileSnippet("LbLogin", shell,
+        content += ShellFileNativeSnippet("LbLogin", shell,
                                     targetlocation=targetlocation,
                                     args="--quiet",
                                     postargs = ">> ${LB_BANNER}",
@@ -583,7 +686,7 @@ if ( ! -e ${HOME}/.noLHCBLoginscript ) then
     set lbvers=dev
   endif
   if ( $?LBLOGIN_DONE ) then"""
-        content += ShellFileSnippet("LbLogin", shell,
+        content += ShellFileNativeSnippet("LbLogin", shell,
                                     targetlocation=targetlocation,
                                     args="--silent",
                                     postargs = ">& /dev/null",
@@ -592,7 +695,7 @@ if ( ! -e ${HOME}/.noLHCBLoginscript ) then
         content += """
   else
     setenv LB_BANNER `mktemp`"""
-        content += ShellFileSnippet("LbLogin", shell,
+        content += ShellFileNativeSnippet("LbLogin", shell,
                                     targetlocation=targetlocation,
                                     args="--quiet",
                                     postargs = ">! ${LB_BANNER}",
@@ -612,7 +715,7 @@ IF DEFINED HOME (
     IF EXIST %HOME%\.devLHCBLoginscript (
       set lbvers="dev"
     ) """
-        content += ShellFileSnippet("LbLogin", shell,
+        content += ShellFileNativeSnippet("LbLogin", shell,
                                     targetlocation=targetlocation,
                                     args="--silent",
                                     prodlocation=prodlocation,
@@ -622,7 +725,7 @@ IF DEFINED HOME (
   )
 ) ELSE (
   set lbvers="prod" """
-        content += ShellFileSnippet("LbLogin", shell,
+        content += ShellFileNativeSnippet("LbLogin", shell,
                                     targetlocation=targetlocation,
                                     args="--silent",
                                     prodlocation=prodlocation,
@@ -633,7 +736,7 @@ IF DEFINED HOME (
 """
     f.write(content)
     f.close()
-    fixNative(script)
+#    fixNative(script)
 
 def generateGroupWrappers(targetlocation, shell, version="", mysiteroot=None, building=False):
     generateGroupLogin(targetlocation, shell, version, mysiteroot, building)
@@ -657,14 +760,14 @@ if [[ ! -e ${HOME}/.noLHCBLoginscript ]]; then
   if [[ -e ${HOME}/.devLHCBLoginscript ]]; then
     lbvers=dev
   fi"""
-        content += ShellFileSnippet("group_shell", shell,
+        content += ShellFileNativeSnippet("group_shell", shell,
                                     targetlocation=targetlocation,
                                     args="",
                                     prodlocation=prodlocation,
                                     offset=1)
         content += """
   if [[ -o login || -n "$LB_BANNER" ]]; then"""
-        content += ShellFileSnippet("group_login", shell,
+        content += ShellFileNativeSnippet("group_login", shell,
                                     targetlocation=targetlocation,
                                     args="",
                                     prodlocation=prodlocation,
@@ -682,14 +785,14 @@ if ( ! -e ${HOME}/.noLHCBLoginscript ) then
   if ( -e ${HOME}/.devLHCBLoginscript ) then
     set lbvers=dev
   endif"""
-        content += ShellFileSnippet("group_shell", shell,
+        content += ShellFileNativeSnippet("group_shell", shell,
                                     targetlocation=targetlocation,
                                     args="",
                                     prodlocation=prodlocation,
                                     offset=1)
         content += """
   if ($?loginsh  || $?LB_BANNER) then"""
-        content += ShellFileSnippet("group_login", shell,
+        content += ShellFileNativeSnippet("group_login", shell,
                                     targetlocation=targetlocation,
                                     args="",
                                     prodlocation=prodlocation,
@@ -708,7 +811,7 @@ IF DEFINED HOME (
     IF EXIST %HOME%\.devLHCBLoginscript (
       set lbvers="dev"
     ) """
-        content += ShellFileSnippet("group_login", shell,
+        content += ShellFileNativeSnippet("group_login", shell,
                                     targetlocation=targetlocation,
                                     args="",
                                     prodlocation=prodlocation,
@@ -718,7 +821,7 @@ IF DEFINED HOME (
   )
 ) ELSE (
   set lbvers="prod" """
-        content += ShellFileSnippet("group_login", shell,
+        content += ShellFileNativeSnippet("group_login", shell,
                                     targetlocation=targetlocation,
                                     args="",
                                     prodlocation=prodlocation,
@@ -730,7 +833,7 @@ IF DEFINED HOME (
 
     f.write(content)
     f.close()
-    fixNative(script)
+#    fixNative(script)
 
 
 def generateLogins(version, targetlocation=None, scripts=None,

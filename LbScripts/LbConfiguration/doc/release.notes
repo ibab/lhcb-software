@@ -1,3 +1,8 @@
+2010-05-07  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* scripts/generateLogin: completed the fixing of the wrapper scripts generation.
+	Now they can use the VO_LHCB_SW_DIR variable if it present.
+
 2010-05-06  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbConfiguration/Platform.py: added the list of known LSB identifiers.
