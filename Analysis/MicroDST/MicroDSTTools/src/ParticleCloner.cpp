@@ -1,4 +1,4 @@
-// $Id: ParticleCloner.cpp,v 1.8 2009-08-25 07:03:37 jpalac Exp $
+// $Id: ParticleCloner.cpp,v 1.9 2010-05-07 14:59:47 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -65,7 +65,7 @@ StatusCode ParticleCloner::initialize()
   if (m_ppCloner) {
     verbose() << "Found ICloneProtoParticle " << m_ppClonerName << endmsg;
   } else {
-    warning() << "Did not find ICloneProtoParticle " << m_ppClonerName 
+    verbose() << "Did not find ICloneProtoParticle " << m_ppClonerName 
               <<". ProtoParticle cloning de-activated."<< endmsg;
   }
   return StatusCode::SUCCESS;
