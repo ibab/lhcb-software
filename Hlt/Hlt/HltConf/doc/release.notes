@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.452 2010-04-28 20:52:13 graven Exp $ 
+! $Id: release.notes,v 1.453 2010-05-07 09:43:25 jhe Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2010-05-07 - Jibo He
+ - Hlt2.py
+   + Add Hlt2InclusiveDiElectronLines
 
 !========================== HltConf v7r2p2  2010-04-26 ===================
 ! 2010-04-28 Gerhard Raven
