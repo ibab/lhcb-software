@@ -3,6 +3,12 @@
 ! Responsible : Wouter Hulsbergen, Stephanie Hansmann-Menzemer
 ! Purpose     : Package for track data quality monitoring algorithms
 !-----------------------------------------------------------------------------
+
+! 2010-05-07 - Rob Lambert
+ - fixes to TrackMonitor.cpp
+   . commented out invpt causing warning in the nightlies
+   . fixed whitespace
+
 ! 2010-05-01 Stephhanie Hansmann-Menzemer
  - added IPx and IPy plot to TrackMonitor
 
