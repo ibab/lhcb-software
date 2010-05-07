@@ -1,9 +1,13 @@
-!$Id: release.notes,v 1.118 2010-04-26 20:35:35 graven Exp $
+!$Id: release.notes,v 1.119 2010-05-07 09:46:13 jhe Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/HltTracking
 ! Responsible : Jose A. Hernando
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
+
+! 2010-05-07 - Jibo He
+ - python/HltTracking/Hlt2Tracking.py
+   + Added Hlt2InclusiveDiElectronLines
 
 !========================== HltTracking v5r2   2010-04-26 ===================
 ! 2010-04-26 - V. Gligorov

@@ -11,7 +11,7 @@
 ##
 # =============================================================================
 __author__  = "V. Gligorov vladimir.gligorov@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.12 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.13 $"
 # =============================================================================
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
@@ -51,6 +51,7 @@ from Hlt2Lines.Hlt2ExpressLines           import Hlt2ExpressLinesConf
 from Hlt2Lines.Hlt2diphotonDiMuonLines    import Hlt2diphotonDiMuonLinesConf
 from Hlt2Lines.Hlt2InclusiveDiProtonLines import Hlt2InclusiveDiProtonLinesConf
 from Hlt2Lines.Hlt2Dst2D2XXLines          import Hlt2Dst2D2XXLinesConf
+from Hlt2Lines.Hlt2InclusiveDiElectronLines import Hlt2InclusiveDiElectronLinesConf
 #################################################################################################
 #
 # Hlt2 Tracking
@@ -85,6 +86,7 @@ class Hlt2Tracking(LHCbConfigurableUser):
                              , Hlt2diphotonDiMuonLinesConf
                              , Hlt2InclusiveDiProtonLinesConf
                              , Hlt2Dst2D2XXLinesConf
+                             , Hlt2InclusiveDiElectronLinesConf
                              ]
     __slots__ = { "DataType"                        : '2009' # datatype  2009, MC09, DC06...
                 , "EarlyDataTracking"               : False
