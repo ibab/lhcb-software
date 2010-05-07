@@ -3,6 +3,9 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+ - Changes to references to reflect changes in Boole v21r4 output:
+   . New warning about data integrity checks disabled in MC... (RichDAQ)
+
 </PRE><H1><A NAME=v21r3>2010-05-07 Boole v21r3</A></H1></PRE>
  - Changes to references to reflect changes in Boole v21r3 output:
    . By default, no longer simulate random triggers starting from elastic and
