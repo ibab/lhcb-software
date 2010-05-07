@@ -1,4 +1,4 @@
-// $Id: GetTools.cpp,v 1.1 2010-05-05 15:45:02 ibelyaev Exp $
+// $Id: GetTools.cpp,v 1.2 2010-05-07 11:21:33 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -19,6 +19,7 @@
 #include "Kernel/GetDVAlgorithm.h"
 #include "Kernel/ILifetimeFitter.h"
 #include "Kernel/IDistanceCalculator.h"
+#include "Kernel/IParticleTransporter.h"
 // ============================================================================
 // LoKi
 // ============================================================================
@@ -37,8 +38,9 @@
 // ============================================================================
 namespace 
 {
-  const std::string s_DistanceCalculator = "LoKi::DistanceCalculator" ;
-  const std::string s_LifetimeFitter     = "LoKi::LifetimeFitter"     ;
+  const std::string s_DistanceCalculator  = "LoKi::DistanceCalculator" ;
+  const std::string s_LifetimeFitter      = "LoKi::LifetimeFitter"     ;
+  const std::string s_ParticleTransporter = "ParticleTransporter"      ;
 }
 // ============================================================================
 /*  get the distance calculator 
@@ -221,6 +223,106 @@ LoKi::GetTools::lifetimeFitter
     const ILifetimeFitter* geo = alg -> tool<ILifetimeFitter>
       ( nick.empty() ? s_LifetimeFitter : nick  , alg ) ;
     if ( 0 != geo ) { return geo ; }                                  // RETURN 
+  }
+  //
+  return 0 ;
+}
+// ============================================================================
+/* get the particle transporter 
+ *  1. try to locate DVAlgorithm and rely on DVAlgorithm::tool 
+ *  2. try to locate GaudiAlgorithm and rely on GaudiAlgorithm::tool
+ *  3. use IToollSvc::retrieveTool 
+ *  @param (INPUT) base    the base to be used 
+ *  @param (INPUT) nick tool typename/nick 
+ *  @return the tool 
+ */
+// ============================================================================
+IParticleTransporter* 
+LoKi::GetTools::particleTransporter
+( const LoKi::AuxFunBase& base , 
+  const std::string&      nick ) 
+{
+  if ( nick.empty() ) 
+  { return particleTransporter ( base , s_ParticleTransporter ) ; }
+  //
+  IParticleTransporter* transporter = 
+    particleTransporter ( base.lokiSvc() , nick ) ;
+  //
+  if ( 0 == transporter ) 
+  { base.Error ( "Unable to locate IParticleTranporter'" + nick + "'" ) ; }
+  //
+  return transporter  ;
+}
+// ============================================================================
+/* get the particle transporter 
+ *  1. try to locate DVAlgorithm and rely on DVAlgorithm::tool
+ *  2. try to locate GaudiAlgorithm and rely on GaudiAlgorithm::tool
+ *  3. use IToollSvc::retrieveTool 
+ *  @param (INPUT) base    the base to be used 
+ *  @param (INPUT) nick tool typename/nick 
+ *  @return the tool 
+ */
+// ============================================================================
+IParticleTransporter* 
+LoKi::GetTools::particleTransporter
+( const LoKi::ILoKiSvc*   base , 
+  const std::string&      nick ) 
+{ 
+  if ( nick.empty() ) 
+  { return particleTransporter ( base , s_ParticleTransporter ) ; }
+ //
+  LoKi::ILoKiSvc* svc = const_cast<LoKi::ILoKiSvc*> ( base ) ;
+  // get the context service: 
+  SmartIF<IAlgContextSvc> cntx ( svc ) ;
+  // use it! 
+  IParticleTransporter* dc = particleTransporter ( cntx , nick ) ;
+  if ( 0 != dc ) { return dc ; }                           // RETURN 
+  //
+  // try tool -service 
+  SmartIF<IToolSvc> tsvc ( svc ) ;
+  if  ( !tsvc  ) { return 0 ; }                            // RETURN
+  //
+  IParticleTransporter* transporter = 0 ;
+  StatusCode sc = tsvc->retrieveTool ( nick  , transporter ) ;
+  if ( sc.isSuccess() && 0 != transporter ) { return transporter ; }
+  //
+  return 0 ;
+}
+// ============================================================================
+/* get the particle transporter 
+ *  1. try to locate DVAlgorithm and rely on DVAlgorithm::tool
+ *  2. try to locate GaudiAlgorithm and rely on GaudiAlgorithm::tool
+ *  @param (INPUT) cntx context service 
+ *  @param (INPUT) nick tool typename/nick 
+ *  @return the tool 
+ */
+// ============================================================================
+IParticleTransporter* 
+LoKi::GetTools::particleTransporter
+( const IAlgContextSvc*   cntx ,
+  const std::string&      nick ) 
+{
+  if ( 0 == cntx    ) { return 0 ; }
+  if ( nick.empty() ) 
+  { return particleTransporter ( cntx , s_ParticleTransporter ) ; }
+  // ========================================================================
+  // 1. get DVAlgorithm from the context 
+  DVAlgorithm* dv = Gaudi::Utils::getDVAlgorithm ( cntx ) ;
+  if ( 0 != dv  ) 
+  {
+    IParticleTransporter* transporter = 
+      dv -> tool<IParticleTransporter>( nick  , dv ) ;
+    if ( 0 != transporter ) { return transporter ; }  // RETURN 
+  }
+  // ========================================================================
+  // 2. get 'simple' algorithm from the context:
+  GaudiAlgorithm* alg = Gaudi::Utils::getGaudiAlg ( cntx ) ;
+  if ( 0 != alg  ) 
+  {
+    // get the tool form the algorithm
+    IParticleTransporter* transporter = 
+      alg -> tool<IParticleTransporter>( nick  , alg ) ;
+    if ( 0 != transporter ) { return transporter ; }  // RETURN 
   }
   //
   return 0 ;

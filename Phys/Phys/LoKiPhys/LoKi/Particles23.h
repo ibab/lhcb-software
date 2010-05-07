@@ -1,4 +1,4 @@
-// $Id: Particles23.h,v 1.2 2008-12-03 12:37:55 ibelyaev Exp $
+// $Id: Particles23.h,v 1.3 2010-05-07 11:21:32 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PARTICLES23_H 
 #define LOKI_PARTICLES23_H 1
@@ -14,6 +14,11 @@
 #include "Event/Particle.h"
 #include "LoKi/Objects.h"
 #include "LoKi/WrongMass.h"
+#include "LoKi/Interface.h"
+// ============================================================================
+// DaVinciInterfaces 
+// ============================================================================
+#include "Kernel/IParticleTransporter.h"
 // ============================================================================
 /** @file 
  *  Collection of functors to evaluate "wrong" mass 
@@ -41,40 +46,74 @@ namespace LoKi
     public:
       // ======================================================================
       /// constructor from masses 
-      WrongMass ( const double m1 , 
-                  const double m2 ) ;
-      WrongMass ( const double m1 , 
-                  const double m2 , 
-                  const double m3 ) ;
-      WrongMass ( const double m1 , 
-                  const double m2 , 
-                  const double m3 ,
-                  const double m4 ) ;
-      WrongMass ( const std::vector<double>& masses ) ;
+      WrongMass ( const double                m1                        , 
+                  const double                m2                        , 
+                  const IParticleTransporter* t  = 0                    , 
+                  const double                dz = 5 * Gaudi::Units::mm ) ;
+      //
+      WrongMass ( const double                m1                        , 
+                  const double                m2                        , 
+                  const double                m3                        , 
+                  const IParticleTransporter* t  = 0                    , 
+                  const double                dz = 5 * Gaudi::Units::mm ) ;
+      //
+      WrongMass ( const double                m1                        , 
+                  const double                m2                        , 
+                  const double                m3                        ,
+                  const double                m4                        , 
+                  const IParticleTransporter* t  = 0                    , 
+                  const double                dz = 5 * Gaudi::Units::mm ) ;
+      //
+      WrongMass ( const std::vector<double>& masses                     , 
+                  const IParticleTransporter* t  = 0                    , 
+                  const double                dz = 5 * Gaudi::Units::mm ) ;
       // ======================================================================
       /// constructor from pids 
-      WrongMass ( const LHCb::ParticleID& p1 , 
-                  const LHCb::ParticleID& p2 ) ;
-      WrongMass ( const LHCb::ParticleID& p1 , 
-                  const LHCb::ParticleID& p2 ,
-                  const LHCb::ParticleID& p3 ) ;
-      WrongMass ( const LHCb::ParticleID& p1 , 
-                  const LHCb::ParticleID& p2 ,
-                  const LHCb::ParticleID& p3 ,
-                  const LHCb::ParticleID& p4 ) ;
-      WrongMass ( const std::vector<LHCb::ParticleID>& pids ) ;
+      WrongMass ( const LHCb::ParticleID&     p1                        , 
+                  const LHCb::ParticleID&     p2                        , 
+                  const double                dz = 5 * Gaudi::Units::mm ,
+                  const IParticleTransporter* t  = 0                    ) ;
+      //
+      WrongMass ( const LHCb::ParticleID&     p1                        , 
+                  const LHCb::ParticleID&     p2                        ,
+                  const LHCb::ParticleID&     p3                        , 
+                  const double                dz = 5 * Gaudi::Units::mm ,
+                  const IParticleTransporter* t  = 0                    ) ;
+      //
+      WrongMass ( const LHCb::ParticleID&     p1                        , 
+                  const LHCb::ParticleID&     p2                        ,
+                  const LHCb::ParticleID&     p3                        ,
+                  const LHCb::ParticleID&     p4                        , 
+                  const double                dz = 5 * Gaudi::Units::mm ,
+                  const IParticleTransporter* t  = 0                    ) ;
+      //
+      WrongMass ( const std::vector<LHCb::ParticleID>& pids             , 
+                  const double                dz = 5 * Gaudi::Units::mm ,
+                  const IParticleTransporter* t  = 0                    ) ;
       // ======================================================================
-      /// constructor form names 
-      WrongMass ( const std::string& m1 , 
-                  const std::string& m2 ) ;
-      WrongMass ( const std::string& m1 , 
-                  const std::string& m2 ,
-                  const std::string& m3 ) ;
-      WrongMass ( const std::string& m1 , 
-                  const std::string& m2 ,
-                  const std::string& m3 ,
-                  const std::string& m4 ) ;
-      WrongMass ( const std::vector<std::string>& names );  
+      /// constructor from names 
+      WrongMass ( const std::string&          m1                        , 
+                  const std::string&          m2                        , 
+                  const double                dz = 5 * Gaudi::Units::mm ,
+                  const IParticleTransporter* t  = 0                    ) ;
+      //
+      WrongMass ( const std::string&          m1                        , 
+                  const std::string&          m2                        ,
+                  const std::string&          m3                        ,
+                  const double                dz = 5 * Gaudi::Units::mm ,
+                  const IParticleTransporter* t  = 0                    ) ;
+      //
+      WrongMass ( const std::string&          m1                        , 
+                  const std::string&          m2                        ,
+                  const std::string&          m3                        ,
+                  const std::string&          m4                        , 
+                  const double                dz = 5 * Gaudi::Units::mm ,
+                  const IParticleTransporter* t  = 0                    ) ;
+      //
+      WrongMass ( const std::vector<std::string>& names , 
+                  const double                dz = 5 * Gaudi::Units::mm ,
+                  const IParticleTransporter* t  = 0                    ) ;
+      //
       // ======================================================================
       /// MANDATORY : virtual destructor 
       virtual ~WrongMass() {}
@@ -102,6 +141,25 @@ namespace LoKi
       double wmass ( const SmartRefVector<LHCb::Particle>& p ) const 
       { return wmass ( p.begin() , p.end() ) ; }
       // ======================================================================
+    public:
+      // ======================================================================
+      /// set new tolerance 
+      void setTolerance   ( const double value ) { m_dz = value ; }
+      /// set the transporter 
+      void setTransporter ( const IParticleTransporter* tr ) const 
+      { m_transporter = tr ; }
+      /// set the transporter 
+      void setTransporter ( const LoKi::Interface<IParticleTransporter>& tr ) const 
+      { m_transporter = tr ; }
+      // ======================================================================      
+    public:
+      // ======================================================================      
+      /// get the tolerance 
+      double tolerance () const { return m_dz ; }
+      // get the tarnsporter 
+      const LoKi::Interface<IParticleTransporter>& transporter() const 
+      { return m_transporter ; }
+      // ======================================================================      
     public:
       // ======================================================================
       template <class DAUGHTER>
@@ -162,6 +220,10 @@ namespace LoKi
       std::vector<LHCb::ParticleID> m_pids   ; // the list of PIDs 
       /// the list of names 
       std::vector<std::string>      m_names  ; // the list of names 
+      /// the particle transporter 
+      mutable LoKi::Interface<IParticleTransporter> m_transporter ;
+      /// the delta-z tolerance 
+      double                        m_dz      ; // the delta-z tolerance 
       // ======================================================================
     } ;
     // ========================================================================

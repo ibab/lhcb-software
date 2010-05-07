@@ -1,4 +1,4 @@
-// $Id: Particles23.cpp,v 1.3 2008-12-05 09:09:21 ibelyaev Exp $
+// $Id: Particles23.cpp,v 1.4 2010-05-07 11:21:33 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -14,6 +14,11 @@
 // ============================================================================
 #include "LoKi/Particles23.h"
 #include "LoKi/ParticleProperties.h"
+#include "LoKi/GetTools.h"
+// ============================================================================
+// DaVinciInterfaces
+// ============================================================================
+#include "Kernel/IParticleTransporter.h"
 // ============================================================================
 // Boost
 // ============================================================================
@@ -27,11 +32,17 @@
 // ============================================================================
 LoKi::Particles::WrongMass::WrongMass
 ( const double m1 ,
-  const double m2 ) 
+  const double m2 , 
+  const IParticleTransporter* t  , 
+  const double                dz ) 
   : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
   , m_masses () 
   , m_pids   () 
   , m_names  () 
+//
+  , m_transporter ( t  ) 
+  , m_dz          ( dz )
+//
 {
   m_masses.push_back ( m1 ) ; 
   m_masses.push_back ( m2 ) ;
@@ -40,11 +51,17 @@ LoKi::Particles::WrongMass::WrongMass
 LoKi::Particles::WrongMass::WrongMass
 ( const double m1 ,
   const double m2 ,
-  const double m3 ) 
+  const double m3 ,
+  const IParticleTransporter* t  , 
+  const double                dz ) 
   : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
   , m_masses () 
   , m_pids   () 
   , m_names  () 
+//
+  , m_transporter ( t  ) 
+  , m_dz          ( dz )
+//
 {
   m_masses.push_back ( m1 ) ; 
   m_masses.push_back ( m2 ) ;
@@ -55,11 +72,17 @@ LoKi::Particles::WrongMass::WrongMass
 ( const double m1 ,
   const double m2 ,
   const double m3 ,
-  const double m4 ) 
+  const double m4 ,
+  const IParticleTransporter* t  , 
+  const double                dz ) 
   : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
   , m_masses () 
   , m_pids   () 
   , m_names  () 
+//
+  , m_transporter ( t  ) 
+  , m_dz          ( dz )
+//
 {
   m_masses.push_back ( m1 ) ; 
   m_masses.push_back ( m2 ) ;
@@ -68,20 +91,32 @@ LoKi::Particles::WrongMass::WrongMass
 }
 // ============================================================================
 LoKi::Particles::WrongMass::WrongMass
-( const std::vector<double>& masses ) 
+( const std::vector<double>& masses ,
+  const IParticleTransporter* t  , 
+  const double                dz ) 
   : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
   , m_masses ( masses ) 
   , m_pids   () 
   , m_names  () 
+//
+  , m_transporter ( t  ) 
+  , m_dz          ( dz )
+//
 {}
 // ============================================================================
 LoKi::Particles::WrongMass::WrongMass 
 ( const LHCb::ParticleID& p1 , 
-  const LHCb::ParticleID& p2 ) 
+  const LHCb::ParticleID& p2 ,
+  const double                dz ,
+  const IParticleTransporter* t  ) 
   : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
   , m_masses () 
   , m_pids   () 
   , m_names  () 
+//
+  , m_transporter ( t  ) 
+  , m_dz          ( dz )
+//
 {
   m_pids.push_back ( p1 ) ;
   m_pids.push_back ( p2 ) ;  
@@ -91,11 +126,17 @@ LoKi::Particles::WrongMass::WrongMass
 LoKi::Particles::WrongMass::WrongMass 
 ( const LHCb::ParticleID& p1 , 
   const LHCb::ParticleID& p2 ,
-  const LHCb::ParticleID& p3 ) 
+  const LHCb::ParticleID& p3 ,
+  const double                dz ,
+  const IParticleTransporter* t  ) 
   : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
   , m_masses () 
   , m_pids   () 
   , m_names  () 
+//
+  , m_transporter ( t  ) 
+  , m_dz          ( dz )
+//
 {
   m_pids.push_back ( p1 ) ;
   m_pids.push_back ( p2 ) ;  
@@ -107,11 +148,17 @@ LoKi::Particles::WrongMass::WrongMass
 ( const LHCb::ParticleID& p1 , 
   const LHCb::ParticleID& p2 ,
   const LHCb::ParticleID& p3 ,  
-  const LHCb::ParticleID& p4 ) 
+  const LHCb::ParticleID& p4 ,
+  const double                dz ,
+  const IParticleTransporter* t  ) 
   : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
   , m_masses () 
   , m_pids   () 
   , m_names  () 
+//
+  , m_transporter ( t  ) 
+  , m_dz          ( dz )
+//
 {
   m_pids.push_back ( p1 ) ;
   m_pids.push_back ( p2 ) ;  
@@ -121,22 +168,34 @@ LoKi::Particles::WrongMass::WrongMass
 }
 // ============================================================================
 LoKi::Particles::WrongMass::WrongMass 
-( const std::vector<LHCb::ParticleID>& pids ) 
+( const std::vector<LHCb::ParticleID>& pids ,
+  const double                dz ,
+  const IParticleTransporter* t  ) 
   : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
   , m_masses () 
   , m_pids   ( pids ) 
   , m_names  () 
+//
+  , m_transporter ( t  ) 
+  , m_dz          ( dz )
+//
 {
   decode().ignore () ;
 }
 // ============================================================================
 LoKi::Particles::WrongMass::WrongMass 
 ( const std::string& p1 , 
-  const std::string& p2 ) 
+  const std::string& p2 ,
+  const double                dz ,
+  const IParticleTransporter* t  )
   : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
   , m_masses () 
   , m_pids   () 
   , m_names  () 
+//
+  , m_transporter ( t  ) 
+  , m_dz          ( dz )
+//
 {
   m_names.push_back ( p1 ) ;
   m_names.push_back ( p2 ) ;  
@@ -146,11 +205,17 @@ LoKi::Particles::WrongMass::WrongMass
 LoKi::Particles::WrongMass::WrongMass 
 ( const std::string& p1 , 
   const std::string& p2 ,
-  const std::string& p3 ) 
+  const std::string& p3 ,
+  const double                dz ,
+  const IParticleTransporter* t  ) 
   : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
   , m_masses () 
   , m_pids   () 
   , m_names  () 
+//
+  , m_transporter ( t  ) 
+  , m_dz          ( dz )
+//
 {
   m_names.push_back ( p1 ) ;
   m_names.push_back ( p2 ) ;  
@@ -162,11 +227,17 @@ LoKi::Particles::WrongMass::WrongMass
 ( const std::string& p1 , 
   const std::string& p2 ,
   const std::string& p3 , 
-  const std::string& p4 ) 
+  const std::string& p4 ,
+  const double                dz ,
+  const IParticleTransporter* t  ) 
   : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
   , m_masses () 
   , m_pids   () 
   , m_names  () 
+//
+  , m_transporter ( t  ) 
+  , m_dz          ( dz )
+//
 {
   m_names.push_back ( p1 ) ;
   m_names.push_back ( p2 ) ;  
@@ -176,11 +247,17 @@ LoKi::Particles::WrongMass::WrongMass
 }
 // ============================================================================
 LoKi::Particles::WrongMass::WrongMass 
-( const std::vector<std::string>& names )  
+( const std::vector<std::string>& names ,
+  const double                dz ,
+  const IParticleTransporter* t  ) 
   : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
   , m_masses () 
   , m_pids   () 
   , m_names  ( names ) 
+//
+  , m_transporter ( t  ) 
+  , m_dz          ( dz )
+//
 {
   decode().ignore () ;
 }
@@ -248,7 +325,77 @@ LoKi::Particles::WrongMass::wmass
     Error ( "Error from check(), return InvalidMass" , sc ) ;
     return LoKi::Constants::InvalidMass ;
   }
-  return wmass ( p->daughters () ) ;
+  //
+  typedef SmartRefVector<LHCb::Particle> DAUGS ;
+  const DAUGS&           daughters = p -> daughters()      ;
+  const Gaudi::XYZPoint& refPoint  = p -> referencePoint() ;
+  // check for the tolerance 
+  bool fast = true ;
+  for ( DAUGS::const_iterator id = daughters.begin() ; 
+        daughters.end() != id ; ++id ) 
+  {
+    const LHCb::Particle* dau = *id ;
+    if ( 0 == dau ) 
+    { 
+      Error ("Daughter particle points to NULL, return InvalidMass") ; 
+      return LoKi::Constants::InvalidMass ;                       // RETURN
+    }
+    if ( std::fabs ( dau->referencePoint().Z() - refPoint.Z() ) > m_dz ) 
+    { 
+      fast = false ;   
+      break ;                                                // BREAK 
+    }
+  }
+  // use fast algorithm:
+  if ( fast ) { return wmass ( daughters ) ; }
+  //
+  
+  // use the algorithm with the extrapolation 
+  if ( !m_transporter ) 
+  { m_transporter = LoKi::GetTools::particleTransporter ( *this ) ; }
+  Assert ( !(!m_transporter) , "Unable to locate the Particle Transporter" ) ;
+  //
+  
+  LoKi::LorentzVector sum  = LoKi::LorentzVector() ;
+  //
+  for ( DAUGS::const_iterator id1 = daughters.begin() ; 
+        daughters.end() != id1 ; ++id1 ) 
+  {
+    //
+    const std::size_t index   = id1 - daughters.begin() ;
+    const double      newmass = m_masses[index] ;
+    //
+    const LHCb::Particle* dau = *id1 ;
+    if ( 0 == dau ) 
+    { 
+      Error ("Daughter particle points to NULL") ; 
+      continue ;                                             // CONTINUE 
+    }
+    
+    // no need to be extrapolated? 
+    if ( std::fabs ( dau->referencePoint().Z() - refPoint.Z() ) <= m_dz ) 
+    {
+      sum += LoKi::Kinematics::wrongMass ( dau->momentum() , newmass ) ;
+      continue ;  // CONTINUE 
+    }
+    
+    // extrapolate it! 
+    static LHCb::Particle s_particle ;
+    //
+    StatusCode sc = m_transporter->transport ( dau , refPoint.Z() , s_particle ) ;
+    if ( sc.isSuccess() ) 
+    { 
+      sum += LoKi::Kinematics::wrongMass ( s_particle.momentum() , newmass ) ; 
+    }
+    else 
+    {
+      Error ( "Unable to transport daughter particle, use non-extrapolated" , sc ) ;
+      sum += LoKi::Kinematics::wrongMass ( dau->momentum() , newmass ) ;
+    }
+    
+  } // end of the exlicit loop over daughter particles  
+  
+  return sum.M() ;
 }
 // ============================================================================
 // OPTIONAL  : the nice printout 

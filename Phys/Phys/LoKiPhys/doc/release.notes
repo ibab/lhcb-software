@@ -1,9 +1,18 @@
-! $Id: release.notes,v 1.137 2010-05-05 15:45:02 ibelyaev Exp $ 
+! $Id: release.notes,v 1.138 2010-05-07 11:21:32 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhys
 ! Responsible : Vanya Belyaev
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
+
+! 2010-05-07 - Vanya Belyaev
+  
+ - update "WrongMass" functor to take into account the extrapolation of 
+   daughter particles. Now the resutls are much more precise.
+   It still donot take into acocutn e.g. vertex constrainst, etc. but 
+   now it is OK for e.g. longlived particles,like K0S, Lambda0, etc..
+   
+
 
 ! 2010-05-05 - Vanya Belyaev
 

@@ -1,4 +1,4 @@
-// $Id: GetTools.h,v 1.1 2010-05-05 15:45:01 ibelyaev Exp $
+// $Id: GetTools.h,v 1.2 2010-05-07 11:21:32 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_GETTOOLS_H 
 #define LOKI_GETTOOLS_H 1
@@ -10,9 +10,10 @@
 #include "LoKi/AuxFunBase.h"
 #include "LoKi/ILoKiSvc.h"
 // ============================================================================
-class IAlgContextSvc      ;
-class IDistanceCalculator ;
-class ILifetimeFitter     ;
+class IAlgContextSvc       ;
+class IDistanceCalculator  ;
+class ILifetimeFitter      ;
+class IParticleTransporter ;
 // ============================================================================
 namespace LoKi 
 {
@@ -93,6 +94,44 @@ namespace LoKi
      */
     const ILifetimeFitter* 
     lifetimeFitter
+    ( const IAlgContextSvc*   cntx      ,
+      const std::string&      nick = "" ) ;
+    // ========================================================================
+    /** get the particle transporter 
+     *  1. try to locate DVAlgorithm and rely on DVAlgorithm::tool 
+     *  2. try to locate GaudiAlgorithm and rely on GaudiAlgorithm::tool
+     *  3. use IToollSvc::retrieveTool 
+     *  @param (INPUT) base    the base to be used 
+     *  @param (INPUT) nick tool typename/nick 
+     *  @return the tool 
+     */
+    IParticleTransporter* 
+    particleTransporter
+    ( const LoKi::AuxFunBase& base      , 
+      const std::string&      nick = "" ) ;
+    // ========================================================================
+    /** get the particle transporter 
+     *  1. try to locate DVAlgorithm and rely on DVAlgorithm::tool
+     *  2. try to locate GaudiAlgorithm and rely on GaudiAlgorithm::tool
+     *  3. use IToollSvc::retrieveTool 
+     *  @param (INPUT) base    the base to be used 
+     *  @param (INPUT) nick tool typename/nick 
+     *  @return the tool 
+     */
+    IParticleTransporter* 
+    particleTransporter
+    ( const LoKi::ILoKiSvc*   base      , 
+      const std::string&      nick = "" ) ;
+    // ========================================================================
+    /** get the particle transporter 
+     *  1. try to locate DVAlgorithm and rely on DVAlgorithm::tool
+     *  2. try to locate GaudiAlgorithm and rely on GaudiAlgorithm::tool
+     *  @param (INPUT) cntx context service 
+     *  @param (INPUT) nick tool typename/nick 
+     *  @return the tool 
+     */
+    IParticleTransporter* 
+    particleTransporter
     ( const IAlgContextSvc*   cntx      ,
       const std::string&      nick = "" ) ;
     // ========================================================================
