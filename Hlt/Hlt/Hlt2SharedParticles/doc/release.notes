@@ -1,9 +1,21 @@
-$Id: release.notes,v 1.89 2010-03-28 20:01:58 graven Exp $
+$Id: release.notes,v 1.90 2010-05-07 10:08:30 jhe Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2SharedParticles
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
 ! Purpose     : define the shared particle used in Hlt2
 !-----------------------------------------------------------------------------
+
+! 2010-05-07 - Jibo He
+ - python/Hlt2SharedParticles/TrackFittedDiElectron.py
+	 . Added new DiElectron using fitted tracks.
+     Cuts is the same as in unfitted case.  
+
+! 2010-05-07 - Jibo He
+ - python/Hlt2SharedParticles/DiElectron.py
+   . Electron PT cut loosened to 300 MeV
+   . Combination mass cuts removed 
+   . Vertex chi2 cuts loosened to 100.
+
 
 !========================== Hlt2SharedParticles v4r0 2010-03-28 ===================
 ! 2010-03-26 - V. Gligorov
