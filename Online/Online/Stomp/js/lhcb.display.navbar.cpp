@@ -7,6 +7,7 @@ function setupHTML_HEAD() {
   HTML_HEAD.url_base  = the_displayObject.url_base;
   HTML_HEAD.url_comet = lhcb.constants.lhcb_comet_url();
   HTML_HEAD.img_base  = 'http://cern.ch/frankm/Online';
+  HTML_HEAD.img_base  = _fileBase;
 };
 
 function setupHTML_BASE(url) {
@@ -149,6 +150,10 @@ var NavigationBar = function() {
     this.client.haveSmallIcons = !this.client.haveSmallIcons;
     return this.client.setImages(this.client.haveSmallIcons);
   };
+  table.seeSubdetectors = function() 
+  {   document.location = HTML_HEAD.url_base+'?type=navbar&system=subdetectors';  };
+  table.seeGeneral = function() 
+  {   document.location = HTML_HEAD.url_base+'?type=navbar';  };
 
   return table;
 };
@@ -156,14 +161,8 @@ var NavigationBar = function() {
 
 var navBar = null;
 
-
-var navbar_unload = function()  {};
-
-var navbar_body = function()  {
-  setupHTML_HEAD();
-  setupHTML_BASE(HTML_HEAD.url_base+'/..');
-  navBar = NavigationBar();
-  navBar.icons = navBar.addButton('Small Icons','Change icon layout', 'DisplayButton', navBar.changeImages);
+var navbar_general = function(navBar) {
+  navBar.sdets = navBar.addButton('Subdetectors','See subdetector pages', 'DisplayButton', navBar.seeSubdetectors);
 
   //navBar.addURL('Got to the LHCb Online home page',lhcb.constants.lhcb.online_home_page);
   navBar.add('Help',
@@ -192,6 +191,41 @@ var navbar_body = function()  {
 		  '../Images/LHCb/Ramses_icon.jpg',20,20,
 		  '../Images/LHCb/Ramses_icon.jpg',32,32);
   */
+};
+
+var navbar_subdetectors = function(navBar) {
+  navBar.sdets = navBar.addButton('LHCb general','Go back', 'DisplayButton', navBar.seeGeneral);
+
+  navBar.add('Help',
+	     'Help',
+	     'JavaScript:navBar.open_abs_url("News.htm")',
+	     'NavigationBar',
+	     '../Images/Help_16x16.gif',
+	     '../Images/Help_32x32.gif');
+  navBar.addURL('Show VELO page',lhcb.constants.urls.lhcb.subdetectors.velo);
+  navBar.addURL('Show OT page',lhcb.constants.urls.lhcb.subdetectors.ot);
+  navBar.addURL('Show MUON page',lhcb.constants.urls.lhcb.subdetectors.muon);
+};
+
+
+var navbar_unload = function()  {};
+
+var navbar_body = function()  {
+  setupHTML_HEAD();
+  setupHTML_BASE(HTML_HEAD.url_base+'/..');
+  var sys  = the_displayObject['system'];
+
+
+  navBar = NavigationBar();
+  navBar.icons = navBar.addButton('Small Icons','Change icon layout', 'DisplayButton', navBar.changeImages);
+
+  if ( !sys ) {
+    navbar_general(navBar);
+  }
+  else {
+    navbar_subdetectors(navBar);
+  }
+
   navBar.addSized('LHCb',
 		  'LHCb home page',
 		  'JavaScript:navBar.open_abs_url("'+lhcb.constants.urls.lhcb.home_page.src+'")',

@@ -252,6 +252,35 @@ if ( !_lhcb().constants ) {
 	  iconCls:'Beams32',
 	  size:   {width:  900,	height: 820}
 	},
+	subdetectors: {
+	  velo: {
+	    src:    this.lhcb_display_url('velo'),
+	    img:    this.images.lookprod,
+	    title:  'VELO',
+	    nick:   'lhcb-velo-win',
+	    cls:    'Collimators16',
+	    iconCls:'Collimators32',
+	    size:   {width:  950,	height: 700}
+	  },
+	  ot: {
+	    src:    this.lhcb_display_url('ot'),
+	    img:    this.images.lookprod,
+	    title:  'OT',
+	    nick:   'lhcb-ot-win',
+	    cls:    'Collimators16',
+	    iconCls:'Collimators32',
+	    size:   {width:  950,	height: 700}
+	  },
+	  muon: {
+	    src:    this.lhcb_display_url('muon'),
+	    img:    this.images.lookprod,
+	    title:  'MUON',
+	    nick:   'lhcb-muon-win',
+	    cls:    'Collimators16',
+	    iconCls:'Collimators32',
+	    size:   {width:  950,	height: 700}
+	  }
+	},
 	elog: {
 	  src:    'http://lblogbook.cern.ch/Shift/',
 	  img:    this.images.elog,

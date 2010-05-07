@@ -8,8 +8,10 @@ function detector_run_header(part)
 function detector_header(part)  
 { return '<DIV class="StatusText">'+lhcb_online_picture()+' '+part+' FSM Status</DIV>';  };
 
+function lhcb_logo(url)
+{ return '<IMG SRC="'+url+'" HEIGHT="50"></IMG>';   };
 function lhcb_online_picture() 
-{ return '<IMG SRC="http://lhcb-online.web.cern.ch/lhcb-online/elog/images/lhcb-online-logo.PNG" HEIGHT="50"></IMG>';   };
+{ return lhcb_logo("http://lhcb-online.web.cern.ch/lhcb-online/elog/images/lhcb-online-logo.PNG");   };
 
 function setWindowTitle(title) {
   try {

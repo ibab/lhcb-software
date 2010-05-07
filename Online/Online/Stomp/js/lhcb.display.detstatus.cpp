@@ -194,60 +194,6 @@ var DetStatus = function(msg)   {
     return tab;
   };
 
-  table.Clock_summary = function() {
-    var tab = document.createElement('table');
-    var tb = document.createElement('tbody');
-    var tr = document.createElement('tr');
-    var cell = Cell('LHC clock:',null,'MonitorDataHeader');
-
-    tooltips.set(tab,'TTC clock information<br>Click to see LHC status');
-    tab.onclick = function() { document.location = "lhcb.display.htm?type=lhc";};
-    this.lhcPrepulses   = lhcb.widgets.rf2ttcPrepulses();
-    this.lhcClockState  = lhcb.widgets.rf2ttcState();
-    this.lhcClock       = lhcb.widgets.rf2ttcSource(this.lhcClockState);
-
-    tab.className = tb.className   = 'MonitorPage';
-    tr.appendChild(cell);
-    cell.style.width = '25%';
-    tr.appendChild(this.lhcClock);
-    this.lhcClock.colSpan = 3;
-    tb.appendChild(tr);
-
-    tr = document.createElement('tr');
-    tr.appendChild(cell=Cell('Clock state:',null,'MonitorDataHeader'));
-    tr.appendChild(this.lhcClockState);
-    this.lhcClockState.style.width = '25%';
-    tr.appendChild(cell=Cell('Prepulses:',null,'MonitorDataHeader'));
-    tr.appendChild(this.lhcPrepulses);
-    this.lhcPrepulses.style.width = '25%';
-    tb.appendChild(tr);
-
-    tab.appendChild(tb);
-    return tab;
-  };
-
-  /**
-  */
-  table.Velo_summary = function() {
-    var tab = document.createElement('table');
-    var tb = document.createElement('tbody');
-    var tr = document.createElement('tr');
-    var cell = Cell('Velo position:',1,'MonitorDataHeader');
-
-    tooltips.set(tab,'Velo position summary');    
-    tab.className = tb.className   = 'MonitorPage';
-    cell.style.width = '25%';
-    // Velo position
-    this.veloPosition   = StyledItem('lbWeb.LHCCOM/LHC.LHCb.Specific.VELO.Position', null, null);
-    tb.appendChild(tr);
-    tr.appendChild(cell);
-    tr.appendChild(this.veloPosition);
-
-    tab.appendChild(tb);
-    return tab;
-  };
-
-
   table.subscribeItem = function(item) {
     this.provider.subscribe(item.name,item);
   };
@@ -285,9 +231,6 @@ var DetStatus = function(msg)   {
     this.subscribeItem(this.hvTripsMUONC);
 
     this.subscribeItem(this.lastMagnetReading);
-    this.subscribeItem(this.lhcClock);
-    this.subscribeItem(this.lhcClockState);
-    this.subscribeItem(this.lhcPrepulses);
 
     this.subscribeItem(this.magnetPolarity);
     this.subscribeItem(this.magnetCurrent);
@@ -301,8 +244,8 @@ var DetStatus = function(msg)   {
     this.subscribeItem(this.magnetTemp2);
     this.subscribeItem(this.magnetTemp3);
 
-    this.subscribeItem(this.veloPosition);
-
+    this.clock_summary.subscribe(this.provider);
+    this.veloPosition.subscribe(this.provider);
     this.background_summary.subscribe(this.provider);
     this.cooling_summary.subscribe(this.provider);
   };
@@ -361,21 +304,22 @@ var DetStatus = function(msg)   {
     tr1.appendChild(td1=document.createElement('td'));
     td1.appendChild(this.Magnet_summary());
 
+    var opts = {style:'Arial12pt',legend:true,logger:this.logger};
     tb1.appendChild(tr1=document.createElement('tr'));
     tr1.appendChild(td1=document.createElement('td'));
-    td1.appendChild(this.Clock_summary());
+    td1.appendChild(this.clock_summary=lhcb.widgets.ClockSummary({style:null,legend:true,logger:this.logger}));
 
     tb1.appendChild(tr1=document.createElement('tr'));
     tr1.appendChild(td1=document.createElement('td'));
-    td1.appendChild(this.background_summary=lhcb.widgets.BackgroundSummary('MonitorDataHeader'));
+    td1.appendChild(this.background_summary=lhcb.widgets.BackgroundSummary(opts));
 
     tb1.appendChild(tr1=document.createElement('tr'));
     tr1.appendChild(td1=document.createElement('td'));
-    td1.appendChild(this.Velo_summary());
+    td1.appendChild(this.veloPosition=lhcb.widgets.velo.positionSummary(opts));
 
     tb1.appendChild(tr1=document.createElement('tr'));
     tr1.appendChild(td1=document.createElement('td'));
-    td1.appendChild(this.cooling_summary = lhcb.widgets.CoolingSummary(null));
+    td1.appendChild(this.cooling_summary=lhcb.widgets.CoolingSummary({style:null,legend:true,logger:this.logger}));
 
     tb.appendChild(tr);
 
@@ -395,7 +339,6 @@ var DetStatus = function(msg)   {
 
 var detstatus_unload = function()  {
   dataProviderReset();
-  //alert('Connection reset.\n\nBye, Bye my friend....');
 };
 
 

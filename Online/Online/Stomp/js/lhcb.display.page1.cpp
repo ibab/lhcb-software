@@ -28,7 +28,7 @@ LEP in limbo, awaiting decision ...      | L2 rate Hz    0.000   0.000 Op   0.00
 
 var Page1 = function(msg, sys)   {
   var tr, td, tb, tab;
-  table           = document.createElement('table');
+  var table       = document.createElement('table');
   table.body      = document.createElement('tbody');
   table.messages  = msg;
   table.system    = sys;
@@ -36,8 +36,8 @@ var Page1 = function(msg, sys)   {
   table.logger    = null;
 
   table.add = function() {
-    tr = document.createElement('tr');
-    td = document.createElement('td');
+    var tr = document.createElement('tr');
+    var td = document.createElement('td');
     td.setAttribute('colSpan',2);
     tr.appendChild(td);
     this.body.appendChild(tr);

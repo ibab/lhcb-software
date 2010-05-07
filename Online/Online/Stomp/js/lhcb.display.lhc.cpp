@@ -336,6 +336,7 @@ var LHCStatus = function(msg)   {
     c.style.width = '20%';
     tr.appendChild(this.rf2ttcSource);
 
+    tr.appendChild(c=Cell('/',null,'Text-Center'));
     tr.appendChild(this.lhcClock);
     tr.appendChild(c=Cell('/',null,'Text-Center'));
     tr.appendChild(this.rf2ttcRunState);
