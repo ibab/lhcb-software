@@ -735,22 +735,24 @@ class LbLoginScript(SourceScript):
         opts = self.options
         log.debug("Trying to prepend the Compat project")
 
-        compat_dir = multiPathGetFirst(ev["LHCBRELEASES"], "COMPAT")
+        if ev.has_key("LHCBRELEASES") :
 
-        if compat_dir :
-            lastver = None
-            if (not opts.compat_version) or opts.compat_version == "v*" :
-                compat_lst = [x for x in os.listdir(compat_dir) if x.startswith("COMPAT_") ]
-                if compat_lst :
-                    lastver = sortStrings(compat_lst, safe=True)[-1]
-            else :
-                lastver = "COMPAT_%s" % opts.compat_version
-            if lastver :
-                compat_rel = os.path.join(compat_dir, lastver)
-                compat_lib = os.path.join(compat_rel, "CompatSys", ev["CMTOPT"], "lib")
-                compat_bin = os.path.join(compat_rel, "CompatSys", ev["CMTOPT"], "bin")
-                envPathPrepend("PATH", compat_bin)
-                envPathPrepend("LD_LIBRARY_PATH", compat_lib)
+            compat_dir = multiPathGetFirst(ev["LHCBRELEASES"], "COMPAT")
+    
+            if compat_dir :
+                lastver = None
+                if (not opts.compat_version) or opts.compat_version == "v*" :
+                    compat_lst = [x for x in os.listdir(compat_dir) if x.startswith("COMPAT_") ]
+                    if compat_lst :
+                        lastver = sortStrings(compat_lst, safe=True)[-1]
+                else :
+                    lastver = "COMPAT_%s" % opts.compat_version
+                if lastver :
+                    compat_rel = os.path.join(compat_dir, lastver)
+                    compat_lib = os.path.join(compat_rel, "CompatSys", ev["CMTOPT"], "lib")
+                    compat_bin = os.path.join(compat_rel, "CompatSys", ev["CMTOPT"], "bin")
+                    envPathPrepend("PATH", compat_bin)
+                    envPathPrepend("LD_LIBRARY_PATH", compat_lib)
 
 
     def setupLbScripts(self):
