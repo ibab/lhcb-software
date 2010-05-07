@@ -17,9 +17,9 @@ Hlt2SharedDiElectron = Hlt2Member( CombineParticles
                                  , "DiElectron"
                                  , InputLocations = [ Electrons ]
                                  , DecayDescriptor = "J/psi(1S) -> e+ e-" 
-                                 , DaughtersCuts = {"e+" : "(PT>800*MeV)"}
-                                 , CombinationCut = "(AM<6*GeV)"
-                                 , MotherCut = "(VFASPF(VCHI2/VDOF)<25)"
+                                 , DaughtersCuts = {"e+" : "(PT>300*MeV)"}
+                                 , CombinationCut = "AALL"
+                                 , MotherCut = "(VFASPF(VCHI2/VDOF)<100)"
                                  )
 
 DiElectron = bindMembers( "Shared", [ Electrons, Hlt2SharedDiElectron ] )

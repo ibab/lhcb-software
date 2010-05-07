@@ -1,0 +1,25 @@
+### @file
+#
+#  Standard Track Fitted Di-electron
+#
+#  @author P. Koppenburg Patrick.Koppenburg@cern.ch
+#  @date 2008-07-15
+#
+##
+from Gaudi.Configuration import *
+from Configurables import CombineParticles
+from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedElectrons
+from HltLine.HltLine import bindMembers, Hlt2Member
+
+__all__ = ( 'TrackFittedDiElectron'  )
+
+Hlt2SharedTrackFittedDiElectron = Hlt2Member( CombineParticles
+                                              , "TrackFittedDiElectron"
+                                              , InputLocations = [ BiKalmanFittedElectrons ]
+                                              , DecayDescriptor = "J/psi(1S) -> e+ e-" 
+                                              , DaughtersCuts = {"e+" : "(PT>300*MeV)"}
+                                              , CombinationCut = "AALL"
+                                              , MotherCut = "(VFASPF(VCHI2/VDOF)<100)"
+                                              )
+
+TrackFittedDiElectron = bindMembers( "Shared", [ BiKalmanFittedElectrons, Hlt2SharedTrackFittedDiElectron ] )
