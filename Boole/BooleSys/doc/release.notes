@@ -3,7 +3,25 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
-</PRE><H1><A NAME=v21r1>2010-04-28 Boole v21r2</A></H1><PRE>
+</PRE><H1><A NAME=v21r3>2010-05-10 Boole v21r3</A></H1><PRE>
+This version uses projects Gaudi v21r9, LHCb v31r0, Lbcom v9r2p1
+ and SQLDDDB v5r27, ParamFiles v8r2, FieldMap v5r3, L0TCK v3r1, AppConfig v3r*
+
+Production version for 2010 simulation. 
+Output needs Brunel v35r8 or later, Brunel v36r0 if decoding L0DU bank
+Needs SQLDDDB v5r25 or later with SIMCOND tags from *-20100412*
+
+ - Configuration changes
+   . By default, no longer simulate random triggers starting from elastic and
+     diffractive events (DigiAlg v4r20)
+
+ - Persistency changes
+   . (DigiAlg v4r20) By default all events in ODIN are  
+     o TriggerType = LHCb::ODIN::LumiTrigger,
+     o BXType = LHCb::ODIN::BeamCrossing
+     o BunchCurrent = 8 + (8<<4)
+
+</PRE><H1><A NAME=v21r2>2010-04-28 Boole v21r2</A></H1><PRE>
 This version uses projects Gaudi v21r9, LHCb v31r0, Lbcom v9r2
  and SQLDDDB v5r26, ParamFiles v8r2, FieldMap v5r3, L0TCK v3r1, AppConfig v3r*
 
