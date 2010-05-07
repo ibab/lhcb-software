@@ -7,6 +7,9 @@
 !               Detector Description, Material Budget etc 
 ! ------------------------------------------------------------------------------
 
+! 2010-05-07 - Marco Cattaneo
+ - Add a test for 2010 DataType
+
 !======================= DetDescChecks v5r2 2010-02-12 =========================
 ! 2010-02-05 - Marco Clemencic
  - Modified LoadDDDB tests to check the latest local tags on top of the latest
