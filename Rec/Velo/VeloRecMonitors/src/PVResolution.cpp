@@ -166,8 +166,8 @@ std::vector<const LHCb::Track*> myconvert( const SmartRefVector<LHCb::Track> & t
  * Split track container randomly in two containers of euqal size (or different by 1 track)
  */
 void splitRandomTracks( std::vector<LHCb::Track*> input, std::vector<const LHCb::Track*> *outputA, std::vector<const LHCb::Track*> *outputB, Rndm::Numbers rand ) {
-  int min_size = floor( input.size() / 2. );
-  int max_size = input.size() - min_size;
+  unsigned int min_size = floor( input.size() / 2. );
+  unsigned int max_size = input.size() - min_size;
   std::vector<LHCb::Track*>::iterator it_in = input.begin();
   for( ; it_in != input.end(); it_in++ ) {
     if ( ( outputA->size() < max_size ) && ( outputB->size() < max_size ) ) {
