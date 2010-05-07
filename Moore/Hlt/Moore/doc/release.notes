@@ -2,10 +2,12 @@ Package     : Hlt/Moore
 Package Coordinator : Gerhard Raven
 Purpose     : LHCb HLT application
 
+!========================== Moore v9r1p1 2010-04-21 ===================
 ! 2010-05-06 - Gerhard Raven + Johannes Albrecht
  - add support for re-running L0 whilst running from a TCK
+ - update default conditions DB snapshot
 
-!========================== Moore v9r1 2009-04-21 ===================
+!========================== Moore v9r1 2010-04-21 ===================
 ! 2010-04-21 - Gerhard Raven
  - version of top of HLT_v10r1
  - rename output writers to 'Writer' regardless of their type..
@@ -14,12 +16,12 @@ Purpose     : LHCb HLT application
  - change reference rate setup: settings are now picked up from
    conditions DB & runChangeHandler
 
-!========================== Moore v9r0 2009-04-03 ===================
+!========================== Moore v9r0 2010-04-03 ===================
 ! 2010-04-03 - Gerhard Raven
  - version of top of HLT_v10r0
 
 
-!========================== Moore v8r8p2 2009-04-02 ===================
+!========================== Moore v8r8p2 2010-04-02 ===================
 ! 2010-04-02 - Gerhard Raven
  - add apply_pattern GaudiApp to enable use of Moore in ganga
  - add tags used in MooreSys v8r8p2
@@ -33,11 +35,11 @@ Purpose     : LHCb HLT application
 ! 2010-03-31 - Gerhard Raven
  - remove time out catcher, add MooreInit to seed random numbers
 
-!========================== Moore v8r8p1 2009-03-19 ===================
+!========================== Moore v8r8p1 2010-03-19 ===================
 ! 2010-03-19 - Gerhard Raven
  - include some patches 
 
-!========================== Moore v8r8 2009-03-02 ===================
+!========================== Moore v8r8 2010-03-02 ===================
 ! 2010-03-02 - Gerhard Raven
  - update conditions DB setup
 
@@ -46,7 +48,7 @@ Purpose     : LHCb HLT application
  - replace DC06 qmtest with MC09 
 
 
-!========================== Moore v8r7 2009-02-22 ===================
+!========================== Moore v8r7 2010-02-22 ===================
 
 ! 2010-02-22 - Gerhard Raven
  - update default DB snapshot
@@ -61,13 +63,13 @@ Purpose     : LHCb HLT application
  - added test for independence of Hlt lines
  - removed capital letters from names of tests to make qmtest find them
 
-!========================== Moore v8r6 2009-02-05 ===================
+!========================== Moore v8r6 2010-02-05 ===================
 
 ! 2010-02-04 - Gerhard Raven
  - adapt to updated L0 configuration setup
  - bump version v8r6
 
-!========================== Moore v8r5 2009-01-15 ===================
+!========================== Moore v8r5 2010-01-15 ===================
 ! 2010-01-15 - Gerhard Raven
  - always configure reference rate svc
  - update default DB snapshot
