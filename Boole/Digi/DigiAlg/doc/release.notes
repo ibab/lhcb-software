@@ -4,8 +4,10 @@
 ! Purpose     : Holds generic digitization algorithms
 !-----------------------------------------------------------------------------
 
+!========================== DigiAlg v4r20 2010-05-07 =========================
 ! 2010-05-05 - Johannes Albrecht
- - Set simple odin configuration as default: TriggerType = LHCb::ODIN::LumiTrigger,
+ - Set simple odin configuration as default: 
+   TriggerType = LHCb::ODIN::LumiTrigger,
    BXType = LHCb::ODIN::BeamCrossing and BunchCurrent = 8 + (8<<4)
 
 !========================== DigiAlg v4r19 2010-04-26 =========================
