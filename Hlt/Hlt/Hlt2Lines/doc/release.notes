@@ -8,6 +8,12 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2010-05-07 - Jibo He
+ - Hlt2InclusiveDiElectronLines.py
+   + Added 5 lines for Unbiased (Jpsi, Psi(2S), B->) Dilectrons.
+     Selection cuts not tuned, comitted for Olivier Deschamps to 
+     study the Bremsstrahlung correction problem.
+
 !========================== Hlt2Lines v3r3 2010-04-30 ===================
 ! 2010-Apr-23 - Patrick Spradlin
  - Hlt2CharmLines.py
