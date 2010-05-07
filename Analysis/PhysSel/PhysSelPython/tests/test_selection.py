@@ -16,6 +16,13 @@ def test_automatic_data_with_no_name() :
     sel00 = AutomaticData(Location = 'Phys/Sel00x')
     assert sel00.name() == 'Sel00x'
     assert sel00.outputLocation() == 'Phys/Sel00x'
+
+def test_automatic_data_with_no_location_raises() :
+    try :
+        sel00 = AutomaticData('LocationLess')
+        raise Exception('Locationless AutomaticData should fail')
+    except:
+        pass
     
 def test_instantiate_tree(selID='0000') :
     sel00 = AutomaticData('Sel00', Location = 'Phys/Sel00')
