@@ -154,6 +154,11 @@ StatusCode TrackMatchVeloSeed::execute()
   Tracks* veloTracks = get<Tracks>( m_veloTracks );
   Tracks* seedTracks = get<Tracks>( m_seedTracks );
 
+  // create and register the container for the matched tracks
+  Tracks* matches = new Tracks();
+  matches->reserve(veloTracks->size());
+  put( matches, m_outputLocation);
+  
   //  plot(veloTracks->size(), "v size", 0, 1000, 100);
   // plot(seedTracks->size(), "s size", 0, 1000, 100);
 
@@ -191,10 +196,6 @@ StatusCode TrackMatchVeloSeed::execute()
             << " seed tracks" << endmsg;
   }
   
-  // create and register the container for the matched tracks
-  Tracks* matches = new Tracks();
-  matches->reserve(veloTracks->size());
-  put( matches, m_outputLocation);
   
   // the actual matching of the tracks
   StatusCode sc = matchTracks( selectedVelo, seedTracks, matches );
