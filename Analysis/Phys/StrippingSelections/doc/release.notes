@@ -5,6 +5,12 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-05-08 - Harry Cliff
+ - python/StrippingSelections/StreamCharm.py
+  . Add back a fixed version of StrippingD2KhLoose
+ - python/StrippingSelections/StrippingD2KhLoose.py
+  . Changed the name of the line in StrippingD2KhLoose to avoid problems.
+
 ! 2010-05-08 - Juan Palacios
  - python/StrippingSelections/StreamCharm.py
   . Remove StrippingD2KhLoose, which is breaking the stripping.
