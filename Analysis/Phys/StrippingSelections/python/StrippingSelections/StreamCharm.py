@@ -17,7 +17,7 @@ from StrippingSelections import StrippingDstarD02PipiMuMuPiMuKPiKmu
 from StrippingSelections import StrippingDstar_D2KPiPi0
 from StrippingSelections import StrippingD2hhNoPID
 from StrippingSelections import StrippingD2Kh
-from StrippingSelections import StrippingD2KhLoose
+#from StrippingSelections import StrippingD2KhLoose
 
 from StrippingSelections.StrippingDstarPromptWithD02HH import StrippingDstarPromptWithD02HHConf
 from StrippingSelections.StrippingDstarD2KShh          import StrippingDstarD2KShhConf
@@ -78,7 +78,7 @@ stream.appendLines( [
         , StrippingDstar_D2KPiPi0.lineWS
         , StrippingD2hhNoPID.line
         , StrippingD2Kh.DKhPreselLine
-        , StrippingD2KhLoose.DKhPreselLine
+#        , StrippingD2KhLoose.DKhPreselLine
     ] )
 stream.appendLines( StrippingDstarPromptWithD02HHConf().lines() )
 stream.appendLines( StrippingDstarD2KShhConf().MakeLines() )
