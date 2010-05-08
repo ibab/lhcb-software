@@ -1,10 +1,3 @@
-### @file
-#
-#  Standard Pi0
-#
-#  @author P. Koppenburg Patrick.Koppenburg@cern.ch
-#  @date 2008-07-15
-#
 ##
 from Gaudi.Configuration import *
 from HltLine.HltLine import bindMembers
@@ -48,6 +41,6 @@ SeqHlt2Pi0 = GaudiSequencer('SeqHlt2Pi0 ',  ModeOR=True, ShortCircuit=False,
 
 __all__ = ( 'MergedPi0s', 'ResolvedPi0s', 'AllPi0s' )
 
-MergedPi0s    = bindMembers( None, [ Hlt2MergedPi0s ] )
-ResolvedPi0s  = bindMembers( None, [ Hlt2ResolvedPi0s ] )
+MergedPi0s    = bindMembers( None, [ neutralProtos, Hlt2MergedPi0s ] )
+ResolvedPi0s  = bindMembers( None, [ neutralProtos, Hlt2ResolvedPi0s ] )
 AllPi0s       = bindMembers( None, [ SeqHlt2Pi0 ] ).setOutputSelection( [ Hlt2MergedPi0s.name(), Hlt2ResolvedPi0s.name() ] )

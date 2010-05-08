@@ -1,9 +1,12 @@
-$Id: release.notes,v 1.91 2010-05-07 10:11:42 jhe Exp $
+$Id: release.notes,v 1.92 2010-05-08 22:27:57 odescham Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2SharedParticles
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
 ! Purpose     : define the shared particle used in Hlt2
 !-----------------------------------------------------------------------------
+
+!2010-05-09 - Olivier Deschamps for Régis Lefevre
+ - python/Hl2SharedParticles/Pi0.py : fix  pi0 production
 
 ! 2010-05-07 - Jibo He
  - python/Hlt2SharedParticles/TrackFittedDiElectron.py
