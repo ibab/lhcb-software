@@ -1,6 +1,6 @@
 Generation.MinimumBias.ProductionTool = "Pythia8Production" ;
 
-Generation.MinimumBias.Pythia8Production.Commands = {
+Generation.MinimumBias.Pythia8Production.Commands += {
   "Beam Settings" ,
   "skip" ,
   "PDG id code for the second incoming particle",
