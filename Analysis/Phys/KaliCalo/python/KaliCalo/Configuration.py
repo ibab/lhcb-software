@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Configuration.py,v 1.19 2010-05-09 15:21:03 ibelyaev Exp $
+# $Id: Configuration.py,v 1.20 2010-05-09 16:12:35 apuignav Exp $
 # =============================================================================
 # @file  KaliCalo/Configuration.py
 #
@@ -85,7 +85,7 @@ Or one can rely on helper functions:
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
 __date__    = " 2009-09-28 "
-__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.19 $ "
+__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.20 $ "
 # =============================================================================
 # the only one  "vizible" symbol 
 __all__  = (
@@ -627,11 +627,11 @@ def firstPass ( **args ) :
     
     kali = KaliPi0Conf (
         FirstPass  =  True ,
-        UseTracks  = _args.pop ( 'UseTracks'  , True  ) ,
-        UseSpd     = _args.pop ( 'UseSpd'     , True  ) ,
-        UsePrs     = _args.pop ( 'UsePrs'     , False ) ,
-        Mirror     = _args.pop ( 'Mirror'     , True  ) , 
-        Histograms = _args.pop ( 'Histograms' , True  ) ,
+        UseTracks  = args.pop ( 'UseTracks'  , True  ) ,
+        UseSpd     = args.pop ( 'UseSpd'     , True  ) ,
+        UsePrs     = args.pop ( 'UsePrs'     , False ) ,
+        Mirror     = args.pop ( 'Mirror'     , True  ) , 
+        Histograms = args.pop ( 'Histograms' , True  ) ,
         **args
         )
     
