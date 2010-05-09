@@ -82,6 +82,8 @@ namespace Tf {
     /// Number of measurements to take with a full error
     unsigned int m_fullErrorPoints; 
 
+    /// velo detector element
+    DeVelo *m_velo;
   };
 }
 #endif // TF_PATVELOFITLHCBIDS_H

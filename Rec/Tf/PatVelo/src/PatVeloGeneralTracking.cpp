@@ -98,12 +98,6 @@ StatusCode Tf::PatVeloGeneralTracking::initialize() {
 
   m_NSensorSingle = 2*m_NStationSingle;
 
-  sc = registerConditionCallBacks();
-  if (sc.isFailure()) {
-    return Error("Failure to register condition update call backs.",
-                 StatusCode::FAILURE);
-  }
-
   return StatusCode::SUCCESS;
 };
 
@@ -219,15 +213,14 @@ build3DClusters(int zone,
       // see if phi is in the range
       if(!m_angleUtils.contains(range,phi)) continue;      
 
-      double offsetX = m_XOffsetTop[(*iRHit)->sensorNumber()];
-      double offsetY = m_YOffsetTop[(*iRHit)->sensorNumber()];
-      range = std::pair<double,double>(0.,Gaudi::Units::halfpi);
-      if( ! m_angleUtils.contains(range,phi) ){
-        // bottom of the detector
-        offsetX = m_XOffsetBottom[(*iRHit)->sensorNumber()];
-        offsetY = m_YOffsetBottom[(*iRHit)->sensorNumber()];
+      double offsetX,offsetY;
+      if( m_OverlapCorrection ) {
+        offsetX = m_PatVeloTrackTool->xOffsetGlobal((*iRHit)->sensorNumber(),phi);
+        offsetY = m_PatVeloTrackTool->yOffsetGlobal((*iRHit)->sensorNumber(),phi);
+      }else{
+        offsetX = 0.;
+        offsetY = 0.;
       }
-
       createdPoints[(*iRHit)->sensorNumber()].
         push_back(PatVeloLocalPoint(*iRHit,*iPhiHit,phi,
                                     offsetX,offsetY));
@@ -297,7 +290,9 @@ findTracks(PointsContainer &points,
     for( std::vector<PointsList>::iterator iT = triplets.begin();
          iT != triplets.end(); ++iT ){      
       if(!iT->vaild()) continue; // skip killed triplets
-      PatVeloSpaceTrack * newTrack = new PatVeloSpaceTrack();
+      PatVeloSpaceTrack * newTrack = new PatVeloSpaceTrack(m_PatVeloTrackTool);
+      newTrack->setSide( m_isLeftRSens[iS1->first] ? PatVeloHitSide::Left :
+                             PatVeloHitSide::Right ); 
       bool goodTrack = extendTrack(*iT,points,newTrack);
       if( goodTrack ) {
         tracks.push_back(newTrack);
@@ -760,61 +755,3 @@ StatusCode Tf::PatVeloGeneralTracking::finalize() {
   return GaudiAlgorithm::finalize();
 }
 
-
-StatusCode Tf::PatVeloGeneralTracking::registerConditionCallBacks() {
-
-  updMgrSvc()->
-    registerCondition(this,(*(m_velo->leftSensorsBegin()))->geometry(),
-                      &Tf::PatVeloGeneralTracking::updateBoxOffset);
-  updMgrSvc()->
-    registerCondition(this,(*(m_velo->rightSensorsBegin()))->geometry(),
-                      &Tf::PatVeloGeneralTracking::updateBoxOffset);
-  StatusCode sc = updMgrSvc()->update(this);
-  if(!sc.isSuccess()) 
-    return Error("Failed to update conditions!",StatusCode::FAILURE);
-
-  return StatusCode::SUCCESS;
-}
-
-StatusCode Tf::PatVeloGeneralTracking::updateBoxOffset(){
-  // need to calculate the expected shift of the box to the global frame
-  // Lets be unsubtle and make a table of each possible offset
-  unsigned int nRSens = m_velo->numberRSensors();
-  m_XOffsetTop.resize(nRSens,0.);
-  m_XOffsetBottom.resize(nRSens,0.);
-  m_YOffsetTop.resize(nRSens,0.);
-  m_YOffsetBottom.resize(nRSens,0.);
-  if( ! m_OverlapCorrection ) {
-    return Warning("Overlap correction is off",StatusCode::SUCCESS);
-  }
-  for ( std::vector<DeVeloRType*>::const_iterator iR = 
-          m_velo->rSensorsBegin() ; 
-        iR !=  m_velo->rSensorsEnd() ; ++iR ){
-    
-    const DeVeloSensor *thisSensor = *iR;
-    unsigned int sNum = thisSensor->sensorNumber(); 
-    // point half way up sensitive overlap region, top side of detector
-    Gaudi::XYZPoint localTop(0.,25.,thisSensor->z());
-    // and at bottom of detector
-    Gaudi::XYZPoint localBottom(0.,-25.,thisSensor->z());
-    // other HB -> global -> this HB to get offsets
-    Gaudi::XYZPoint globalTop = thisSensor->veloHalfBoxToGlobal(localTop);
-    Gaudi::XYZPoint globalBottom = 
-      thisSensor->veloHalfBoxToGlobal(localBottom);
-    // convert the two local frame points to delta r between the frames
-    m_XOffsetTop[sNum] = globalTop.x() - localTop.x() ; 
-    m_YOffsetTop[sNum] = globalTop.y() - localTop.y() ; 
-    m_XOffsetBottom[sNum] = globalBottom.x() - localBottom.x() ; 
-    m_YOffsetBottom[sNum] = globalBottom.y() - localBottom.y() ; 
-    
-    if(m_isVerbose) {
-      verbose() << "Sensor " << sNum 
-                << " deltaX,Y top to global " << m_XOffsetTop[sNum] 
-                << ", " <<m_YOffsetTop[sNum]
-                << " deltaX,Y bottom to global " << m_XOffsetBottom[sNum] 
-                <<", "<<m_YOffsetBottom[sNum]
-                << endmsg;
-    }
-  }
-  return StatusCode::SUCCESS;
-}

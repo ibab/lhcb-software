@@ -9,6 +9,10 @@
 #include "PatVeloPhiHitManager.h"
 #include "CircularRangeUtils.h"
 
+// from VeloDet
+#include "VeloDet/DeVelo.h"
+
+// Track Event:
 #include "Event/Track.h"
 #include "Event/State.h"
 
@@ -69,13 +73,67 @@ namespace Tf {
 		   unsigned int phiZone,
 		   std::pair<double,double>& phiOverlap);
 
+    /// given the sensor number and local phi get the x offset to global frame
+    inline double xOffsetGlobal(unsigned int sensorNumber,double phi) const{      
+      return m_XOffsetGlobal[sensorNumber][topPhi(phi)];
+    }
 
-  private:
+    /// given the sensor number and local phi get the y offset to global frame
+    inline double yOffsetGlobal(unsigned int sensorNumber,double phi) const{
+      return m_YOffsetGlobal[sensorNumber][topPhi(phi)];
+    }
+
+    /// given the sensor number and local phi get the x offset to other 
+    /// halfbox frame
+    inline double xOffsetOtherHB(unsigned int sensorNumber,double phi) const{
+      return m_XOffsetOtherHB[sensorNumber][topPhi(phi)];
+    }
+
+    /// given the sensor number and local phi get the y offset to other 
+    /// halfbox frame
+    inline double yOffsetOtherHB(unsigned int sensorNumber,double phi) const{
+      return m_YOffsetOtherHB[sensorNumber][topPhi(phi)];
+    }
+
+    /// given the sensor number and local phi get the x offset to other 
+    /// halfbox frame
+    inline double rOffsetOtherHB(unsigned int sensorNumber,double phi) const{
+      return m_ROffsetOtherHB[sensorNumber][topPhi(phi)];
+    }
+
+    /// given the sensor number and local phi get the y offset to other 
+    /// halfbox frame
+    inline double phiOffsetOtherHB(unsigned int sensorNumber,
+				   double phi,double r) const{
+      return atan2(r*sin(phi)+yOffsetOtherHB(sensorNumber,phi),
+		   r*cos(phi)+xOffsetOtherHB(sensorNumber,phi)) - phi;
+    }
+		   
 
     /// add a state to the track and correct for half box position (if required)
     void addStateToTrack(PatVeloSpaceTrack * patTrack, LHCb::Track *newTrack,
 			 LHCb::State::Location location, 
 			 const Gaudi::TrackSymMatrix& covariance) const;
+
+    /// average halfbox phi of global R zone [use global 0->7 range]
+    /// (-pi/2 -> 3pi/2 for historical reasons)
+    double phiGlobalRZone(unsigned int zone) const{ 
+      return m_phiOfRZone[zone]; 
+    }
+
+  private:
+    /// is phi in top half of detector: map to -pi -> pi range and 
+    /// if +ve then top half=0, bottom=1
+    inline unsigned int topPhi( double phi ) const {
+      if(phi <  -1.*Gaudi::Units::pi)  phi+= Gaudi::Units::twopi;
+      if(phi > Gaudi::Units::pi) phi -= Gaudi::Units::twopi;
+      return (phi>0 ? 0 : 1);
+    }
+
+    /// setup the cached alignment conditions
+    StatusCode registerConditionCallBacks();
+    /// load the box offsets
+    StatusCode updateBoxOffset();
 
     /// the specialized r hit manager
     PatVeloRHitManager* m_rHitManager;
@@ -93,8 +151,29 @@ namespace Tf {
     std::string m_rHitManagerName;   ///< the name of the R hit manager instance
     std::string m_phiHitManagerName; ///< the name of the Phi hit manager instance
 
+    DeVelo* m_velo;                        ///< pointer to DeVelo
+    
     /// utilities for dealing with angles
     CircularRangeUtils<double> m_angleUtils;
+
+    ///< X left/right box offset -> global 
+    std::vector<std::vector<double> > m_XOffsetGlobal; 
+    ///< Y left/right box offset -> global
+    std::vector<std::vector<double> > m_YOffsetGlobal; 
+
+    ///< X left/right box offset -> other HB
+    std::vector<std::vector<double> > m_XOffsetOtherHB; 
+    ///< Y left/right box offset -> other HB
+    std::vector<std::vector<double> > m_YOffsetOtherHB; 
+
+     ///< X left/right box offset -> other HB
+    std::vector<std::vector<double> > m_ROffsetOtherHB; 
+
+    /// Use correction for half boxes when looking for overlaps
+    bool m_OverlapCorrection;
+
+    /// average halfbox phi of global R zone
+    std::vector<double> m_phiOfRZone;
   };
 }
 #endif // TF_PATVELOTRACKTOOL_H

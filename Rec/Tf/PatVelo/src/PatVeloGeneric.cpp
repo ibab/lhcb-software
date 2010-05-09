@@ -44,7 +44,7 @@ namespace Tf {
       declareProperty( "Output",      m_outputTracksLocation = LHCb::TrackLocation::Velo);
       declareProperty( "RHitManagerName", m_rHitManagerName="PatVeloRHitManager" );
       declareProperty( "PhiHitManagerName", m_phiHitManagerName="PatVeloPhiHitManager" );
-
+      declareProperty( "TrackToolName",          m_trackToolName = "PatVeloTrackTool" );
       declareProperty( "ErrorX2",  m_errorX2  = 40.0 );
       declareProperty( "ErrorY2",  m_errorY2  = 40.0 );
       declareProperty( "ErrorTx2", m_errorTx2 = 6.e-5 );
@@ -81,7 +81,7 @@ namespace Tf {
 
     m_rHitManager   = tool<PatVeloRHitManager>  ( "Tf::PatVeloRHitManager", m_rHitManagerName );
     m_phiHitManager = tool<PatVeloPhiHitManager>( "Tf::PatVeloPhiHitManager", m_phiHitManagerName );
-
+    m_PatVeloTrackTool = tool<PatVeloTrackTool>("Tf::PatVeloTrackTool",m_trackToolName);
     m_velo = getDet<DeVelo>( DeVeloLocation::Default );
     m_nEvt = 0;
 
@@ -433,7 +433,7 @@ namespace Tf {
             if ( 1 == m_kalmanState ) {        
 
               LHCb::State temp;
-              PatVeloSpaceTrack tr;
+              PatVeloSpaceTrack tr(m_PatVeloTrackTool);
 
               std::vector<PatVeloRHit*>::iterator itR;
               for ( itR = fitter->rCoords().begin(); fitter->rCoords().end() != itR;
@@ -459,20 +459,12 @@ namespace Tf {
                 tr.addPhi(coord);        
               }
 
-              tr.fitSpaceTrack(0.002);
+              tr.fitSpaceTrack(0.002, m_PatVeloTrackTool);
+	      
+	      m_PatVeloTrackTool->addStateToTrack(&tr,track,
+						  LHCb::State::EndVelo,
+						  tr.covariance());
 
-              boxPoint = tr.point();        
-              globalPoint = lastSensor->veloHalfBoxToGlobal(boxPoint);
-
-              temp.setState( globalPoint.x(), globalPoint.y(), globalPoint.z(),
-                  tr.slopeX(),
-                  tr.slopeY(),
-                  m_momentumDefault );        
-
-              temp.setCovariance( tr.covariance() );
-              temp.setLocation( LHCb::State::EndVelo );
-
-              track->addToStates( temp );
               track->setChi2PerDoF( tr.chi2Dof( ) );
               track->setNDoF( tr.rCoords()->size() + tr.phiCoords()->size() );
 

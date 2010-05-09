@@ -45,12 +45,14 @@ namespace Tf {
           LHCb::TrackLocation::RZVelo     );
       declareProperty( "HitManagerName", m_hitManagerName     =
           "PatVeloRHitManager"     );
+      declareProperty( "TrackToolName",          m_trackToolName = "PatVeloTrackTool" );
       declareProperty( "MergeTracks"     , m_mergeTracks      = false     );
       declareProperty( "NCommonToMerge"  , m_nCommonToMerge   = 2         );
       declareProperty( "AdjacentSectors" , m_adjacentSectors  = false     );
       declareProperty( "OnlyForward"     , m_onlyForward      = false     );
       declareProperty( "OnlyBackward"    , m_onlyBackward     = false     );
       declareProperty( "OverlapCorrection" , m_OverlapCorrection = true   );
+      declareProperty( "BackwardOverlapSearch" , m_backWardOverlap = true );
       declareProperty( "BackwardOverlapSearch" , m_backWardOverlap = true );
     }
   //=============================================================================
@@ -72,6 +74,7 @@ namespace Tf {
     if(m_isDebug){debug() << "==> Initialize" << endmsg;}
 
     m_hitManager = tool<PatVeloRHitManager>( "Tf::PatVeloRHitManager", m_hitManagerName );
+      m_trackTool = tool<PatVeloTrackTool>("Tf::PatVeloTrackTool",m_trackToolName);
 
     //== Get detector element
     m_velo = getDet<DeVelo>( DeVeloLocation::Default );
@@ -302,8 +305,7 @@ namespace Tf {
         state[0] = tr->rPred(z);
         state[2] = tr->rSlope();
         // JAH: set the phi of the 2nd coordenate
-        // TODO: take the phi from a geometrical position tool...
-        state[1] = (tr->zone()*Gaudi::Units::pi/4.)-(3.*Gaudi::Units::pi/8.);
+        state[1] = m_trackTool->phiGlobalRZone(tr->zone());
 
         LHCb::State temp;
         temp.setZ( z );

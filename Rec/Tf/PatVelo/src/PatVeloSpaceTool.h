@@ -55,10 +55,12 @@ namespace Tf {
 
 
       /// Take a new sector and add to (or create) consistent phi cluster lists
-      void findBestPhiClusInSect(PatVeloPhiHitManager::Station* station, unsigned int zone,
-          int nbTried,
-          double r,
-          const std::pair<double,double>& phiRange );
+      void findBestPhiClusInSect(PatVeloPhiHitManager::Station* station, 
+				 unsigned int zone,
+				 unsigned int RZone,
+				 int nbTried,
+				 double r,
+				 const std::pair<double,double>& phiRange );
 
       /// choose between phi cluster lists: best list added to track
       bool getBestPhiList(PatVeloSpaceTrack & track,

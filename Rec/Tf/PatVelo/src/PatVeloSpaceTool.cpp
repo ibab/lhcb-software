@@ -41,7 +41,7 @@ namespace Tf {
       declareProperty( "FractionFound"   , m_fractionFound    = 0.35      );
       declareProperty( "PhiAngularTol"   , m_phiAngularTol    = 0.005     );
       declareProperty( "PhiMatchTol"     , m_phiMatchTol      = 0.11      );
-      declareProperty( "PhiFirstTol"     , m_phiFirstTol      = 0.09       );
+      declareProperty( "PhiFirstTol"     , m_phiFirstTol      = 0.09      );
       declareProperty( "AdjacentSectors" , m_adjacentSectors = false      );
       declareProperty( "FractionPhiMerge", m_fractionPhiMerge = 0.5       );
       declareProperty( "stepError"       , m_stepError        = 0.002     );
@@ -51,7 +51,7 @@ namespace Tf {
       declareProperty( "NMissedFirst"    , m_NMissedFirst     = 4         );
       declareProperty( "RHitManagerName" , m_rHitManagerName  = "PatVeloRHitManager" );
       declareProperty( "PhiHitManagerName" , m_phiHitManagerName  = "PatVeloPhiHitManager" );
-      declareProperty( "TrackToolName",          m_trackToolName = "PatVeloTrackTool" );
+      declareProperty( "TrackToolName", m_trackToolName = "PatVeloTrackTool" );
       declareProperty( "FullErrorPoints" , m_fullErrorPoints = 5         );
 
 
@@ -73,14 +73,15 @@ namespace Tf {
     // get some constants for later use
     m_numberRSensors = m_velo->numberRSensors();
 
-    m_trackTool = tool<PatVeloTrackTool>("Tf::PatVeloTrackTool", m_trackToolName );
+    m_trackTool = tool<PatVeloTrackTool>("Tf::PatVeloTrackTool",
+                                         m_trackToolName );
 
-    if(msgLevel(MSG::DEBUG)) 
+    if(msgLevel(MSG::DEBUG))
       debug() << "========== Tool " << name() << "====== "<< endreq;
     return StatusCode::SUCCESS;
   }
 
-  StatusCode PatVeloSpaceTool::tracksFromTrack( const LHCb::Track& seed, 
+  StatusCode PatVeloSpaceTool::tracksFromTrack( const LHCb::Track& seed,
       std::vector<LHCb::Track*>& tracks ){
     bool isVerbose = msgLevel(MSG::VERBOSE);
     bool isDebug   = msgLevel(MSG::DEBUG);
@@ -118,33 +119,33 @@ namespace Tf {
       if( m_cleanOverlaps ){
         // if the track has R hits on both sides but phi hits out of the
         // overlap region delete the R hits
-        bool cleaned = 
-	  m_trackTool->cleanNonOverlapTracks(*iTr, m_stepError, 
+        bool cleaned =
+	  m_trackTool->cleanNonOverlapTracks(*iTr, m_stepError,
 					     m_fullErrorPoints);
         if(!(*iTr)->valid()) {
           if (isVerbose) verbose()
-            << "Non-overlap track has overlap R clusters removed" 
+            << "Non-overlap track has overlap R clusters removed"
               << endmsg;
           continue; // if fails skip to next track
         }
         if(cleaned && isVerbose) verbose()
           << "Cleaned R clusters from non-overlap track" << endmsg;
-      }      
+      }
       //  clean the worst fitted examples
       if ( (*iTr)->chi2Dof( ) > m_chiSqDofMax ) {
-        if (isVerbose) verbose() << "Skip track with chi^2/ndf " 
-          << (*iTr)->chi2Dof( ) 
+        if (isVerbose) verbose() << "Skip track with chi^2/ndf "
+          << (*iTr)->chi2Dof( )
             << endmsg;
         continue;
       }
 
-      if (isDebug) debug() << "Found track with chi^2/ndf " 
+      if (isDebug) debug() << "Found track with chi^2/ndf "
         << (*iTr)->chi2Dof( ) << endmsg;
 
       // make the found PatVeloSpaceTrack back into an LHCb::Track
       LHCb::Track *newTrack = new LHCb::Track();
       newTrack->setHistory(LHCb::Track::PatVelo);
-      StatusCode sc = 
+      StatusCode sc =
         m_trackTool->makeTrackFromPatVeloSpace((*iTr),newTrack,
             m_forwardStepError);
       if (!sc) {
@@ -214,13 +215,13 @@ namespace Tf {
     unsigned int lastStationTried =0;
 
     // loop over Phi sensors in station range of R hits on track
-    PatVeloPhiHitManager::StationIterator firstPhiStationIter 
+    PatVeloPhiHitManager::StationIterator firstPhiStationIter
       = m_phiHitManager->stationIterAllNoPrep((*firstRStationIter)->sensor()->associatedPhiSensor()->sensorNumber());
-    PatVeloPhiHitManager::StationIterator lastPhiStationIter  
+    PatVeloPhiHitManager::StationIterator lastPhiStationIter
       = m_phiHitManager->stationIterAllNoPrep((*lastRStationIter)->sensor()->associatedPhiSensor()->sensorNumber());
 
     PatVeloPhiHitManager::StationIterator phiStationIter = firstPhiStationIter;
-    for ( ; lastPhiStationIter != phiStationIter; std::advance(phiStationIter,step) ) {    
+    for ( ; lastPhiStationIter != phiStationIter; std::advance(phiStationIter,step) ) {
       // try inner sector of phi sensor
       PatVeloPhiHitManager::Station* station = *phiStationIter;
       if ( !station->sensor()->isReadOut() ) continue; // jump sensors not in readout
@@ -292,7 +293,7 @@ namespace Tf {
           << " PhiPt size " << m_phiPt.size()
           << " nStations " << nStationsTried
           << endreq;
-      
+
       //== Match to the list of existing PhiList candidates.
       //== One stores only the best per list, and create a new list
       //== at beginning of the track (first two pairs) only.
@@ -300,44 +301,51 @@ namespace Tf {
       PatVeloPhiLists::iterator iPhiList;
       for ( iPhiList = m_phiPt.begin(); m_phiPt.end() != iPhiList; ++iPhiList ) {
         // once candidate phi hits have been found
-        iPhiList->setExtrapolation( z, r, m_phiMatchTol, m_phiFirstTol );
+        iPhiList->setExtrapolation( z, r, m_phiMatchTol, m_phiFirstTol);
 
       }
       //loop over all phi clusters in the phi sensor sector
       // note phi list can grow in this operation
-      findBestPhiClusInSect(station, phiZone, nStationsTried, r, range);
+      findBestPhiClusInSect(station, phiZone, zone, nStationsTried, r, range);
 
       for ( iPhiList = m_phiPt.begin(); m_phiPt.end() != iPhiList; ++iPhiList ) {
         // save the candidate phi clusters if it survived
         iPhiList->saveCandidate( );
         if(isVerbose)verbose()<<format(" sensor %3d list #%2d phi%7.4f size %2d",
-            station->sensor()->sensorNumber(), iPhiList-m_phiPt.begin(), 
+            station->sensor()->sensorNumber(), iPhiList-m_phiPt.begin(),
             iPhiList->phi(), iPhiList->size() )
             << endreq;
       }
     } // end of loop over phi sensors for this RZ track
 
     if( getBestPhiList(track,nStationsTried, accepted) ){
-      if ( isDebug ) debug() << "Good track, nAccepted =" 
+      if ( isDebug ) debug() << "Good track, nAccepted ="
         << accepted.size() << endreq;
     }
 
     return;
   }
 
-  void PatVeloSpaceTool::findBestPhiClusInSect(PatVeloPhiHitManager::Station* station, unsigned int zone,
-      int nStationsTried,
-      double r,
-      const std::pair<double,double>& phiRange) {
-    int side = 0;
-    double dxBox = m_velo->halfBoxOffset(side).x();
-    if ( station->sensor()->isRight() ) {
-      side  = 1;
-      dxBox = -m_velo->halfBoxOffset(side).x();
-    }
+  void PatVeloSpaceTool::
+  findBestPhiClusInSect(PatVeloPhiHitManager::Station* station,
+			unsigned int zone,
+			unsigned int RZone,
+			int nStationsTried,
+			double r,
+			const std::pair<double,double>& phiRange) {
+    // set the same side offset in phi for this radius
     double offset = station->sensor()->halfboxPhiOffset(zone,r);
+    // if other side from RZ track add a correction to phi
+    if ((station->sensor()->isLeft() && RZone > 3) ||
+	(station->sensor()->isRight() && RZone < 4)) {
+      offset +=m_trackTool-> phiOffsetOtherHB(station->sensor()->sensorNumber(),
+					     m_trackTool->phiGlobalRZone(RZone),r);
+      r += m_trackTool->rOffsetOtherHB(station->sensor()->sensorNumber(),
+					  m_trackTool->phiGlobalRZone(RZone));
+    }
     std::vector<PatVeloPhiHit*>::const_iterator itP;
-    for ( itP = station->hits(zone).begin(); station->hits(zone).end() != itP; ++itP ) {
+    for ( itP = station->hits(zone).begin();
+	  station->hits(zone).end() != itP; ++itP ) {
 
       // check if co-ord is compatible with the min and max for the sector.
       double phi = m_angleUtils.add((*itP)->coordHalfBox(),offset);
@@ -345,7 +353,6 @@ namespace Tf {
 
       // set a possible `point' (incorporating R info) corresponding to
       // this co-ord
-      phi = phi + sin(phi) * dxBox / r;
       (*itP)->setRadiusAndPhi( r, phi );
 
       //=== First sensors. Create a list only.
@@ -391,7 +398,7 @@ namespace Tf {
   }
 
   bool PatVeloSpaceTool::getBestPhiList(PatVeloSpaceTrack & track,
-      double nStationsTried, 
+      double nStationsTried,
       std::vector<PatVeloSpaceTrack*>& accepted ){
 
     // if no phi clusters found this is not a good track
@@ -432,33 +439,33 @@ namespace Tf {
       if ( 3 > nbFound ) continue;
       if ( msgLevel(MSG::DEBUG) ) {
         debug() << format( "Philist #%2d phi= %7.4f n%3d minExp%3d unused%3d chisq%7.3f",
-            iPhiList -m_phiPt.begin(), iPhiList->phi(), nbFound, minExpected, 
+            iPhiList -m_phiPt.begin(), iPhiList->phi(), nbFound, minExpected,
             iPhiList->nbUnused(), iPhiList->chiSq() ) << endreq;
       }
       if ( iPhiList->size() < 5 && 0 ==  iPhiList->nbUnused()  ) continue;
       if ( minExpected > nbFound       ) continue;
       if ( minChi2 < iPhiList->qFactor() ) continue;
-      good = true; 
+      good = true;
       std::vector<PatVeloPhiHit*>::iterator itP;
       PatVeloSpaceTrack* phiCan = new PatVeloSpaceTrack( track );
       for ( itP = iPhiList->coords().begin();
           iPhiList->coords().end() != itP; ++itP ) {
         phiCan->addPhi( *itP );
       }
-      if ( m_markClustersUsed ) 
+      if ( m_markClustersUsed )
 	phiCan->tagClustersAsUsed( HitBase::UsedByVeloSpace );
-      
+
       phiCan->setChiSqDof( iPhiList->chiSq() );
       accepted.push_back( phiCan );
     }
 
-    if ( msgLevel( MSG::DEBUG ) &&  
+    if ( msgLevel( MSG::DEBUG ) &&
         accepted.size() > 1 ) {
       debug() << "Multiple solutions for same R" << endreq;
-      for ( std::vector<PatVeloSpaceTrack*>::iterator itT = accepted.begin(); 
+      for ( std::vector<PatVeloSpaceTrack*>::iterator itT = accepted.begin();
 	    accepted.end() != itT; ++itT ) {
         int indx =  itT - accepted.begin();
-        debug() << "... track " << indx << " Chisq/dof " << (*itT)->chi2Dof() 
+        debug() << "... track " << indx << " Chisq/dof " << (*itT)->chi2Dof()
 		<< endreq;
       }
     }
@@ -503,7 +510,7 @@ namespace Tf {
         int nCommon = 0;
         std::vector<PatVeloPhiHit*>::const_iterator itHLong, itHShort;
         // count clusters in common
-        for ( itHLong = (*iLong).coords().begin(); 
+        for ( itHLong = (*iLong).coords().begin();
             (*iLong).coords().end() != itHLong; ++itHLong  ) {
           if ( std::find((*iShort).coords().begin(),
                 (*iShort).coords().end(),*itHLong)
@@ -514,18 +521,18 @@ namespace Tf {
         // check found enough hits in common to start merge
         if ( nCommon > m_fractionPhiMerge * GSL_MIN(n1,n2) ) {
           if ( msgLevel(MSG::DEBUG) ) {
-            debug() << "For list " << iLong-m_phiPt.begin() << " size " 
+            debug() << "For list " << iLong-m_phiPt.begin() << " size "
               << GSL_MAX(n1,n2)
-              << " and list " << iShort-m_phiPt.begin() << " size " 
+              << " and list " << iShort-m_phiPt.begin() << " size "
               << GSL_MIN(n1,n2)
               << " " << nCommon << " shared hits." << endreq;
-          }        
-          for ( itHShort = (*iShort).coords().begin(); 
+          }
+          for ( itHShort = (*iShort).coords().begin();
               (*iShort).coords().end() != itHShort; ++itHShort  ) {
             bool foundSensor = false;
-            for ( itHLong = (*iLong).coords().begin(); 
+            for ( itHLong = (*iLong).coords().begin();
                 (*iLong).coords().end() != itHLong; ++itHLong  ) {
-              if ( (*itHLong)->sensor()->sensorNumber() == 
+              if ( (*itHLong)->sensor()->sensorNumber() ==
                   (*itHShort)->sensor()->sensorNumber() ) {
                 foundSensor = true;
                 break;
@@ -538,12 +545,12 @@ namespace Tf {
           }
           if ( added ) {
             if ( backward ) {
-              std::sort( (*iLong).coords().rbegin(),  
-                  (*iLong).coords().rend(), 
+              std::sort( (*iLong).coords().rbegin(),
+                  (*iLong).coords().rend(),
                   PatVeloPhiHit::DecreasingByZ() );
             } else {
-              std::sort( (*iLong).coords().begin(),  
-                  (*iLong).coords().end(), 
+              std::sort( (*iLong).coords().begin(),
+                  (*iLong).coords().end(),
                   PatVeloPhiHit::DecreasingByZ() );
             }
           }

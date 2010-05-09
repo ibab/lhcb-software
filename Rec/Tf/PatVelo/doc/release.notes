@@ -4,6 +4,10 @@
 ! Purpose     : Velo pattern recognition
 !-----------------------------------------------------------------------------
 
+! 2010-05-09 - David Hutchcroft
+ - More improvements to fit and better PatVeloSpaceTool behviour for overlap 
+   tracks
+
 ! 2010-05-01 - David Hutchcroft
  - Changes to PatVeloSpaceTool and PatVeloTrackTool to improve internal fit
    in the case of half box misalignments

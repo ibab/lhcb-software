@@ -1,5 +1,5 @@
 // $Id: PatVeloSpaceTrack.cpp,v 1.15 2010-02-18 14:12:06 dhcroft Exp $
-// Include files 
+// Include files
 
 // local
 #include "PatVeloSpaceTrack.h"
@@ -14,7 +14,7 @@ namespace Tf {
   //========================================================================
   // Standard constructor, initializes variables
   //========================================================================
-  PatVeloSpaceTrack::PatVeloSpaceTrack(  ) 
+  PatVeloSpaceTrack::PatVeloSpaceTrack( const PatVeloTrackTool * const trackTool )
     : m_s0(0.),
       m_sr(0.),
       m_sz(0.),
@@ -37,7 +37,9 @@ namespace Tf {
       m_minRSensor(65),
       m_nVeloExpected(-1.),
       m_ancestor(0),
-      m_angleUtils(-Gaudi::Units::pi,Gaudi::Units::pi)
+      m_angleUtils(-Gaudi::Units::pi,Gaudi::Units::pi),
+      m_trackTool(trackTool),
+      m_side(PatVeloHitSide::Unknown)
   {
     m_rCoord.clear();
     m_rCoord.reserve( 20 );
@@ -46,7 +48,7 @@ namespace Tf {
   }
 
   /// add and R coordinate: update rz parameters
-  void PatVeloSpaceTrack::addRCoord( PatVeloRHit* coord )  {  
+  void PatVeloSpaceTrack::addRCoord( PatVeloRHit* coord )  {
     m_rCoord.push_back( coord );
     if( static_cast<unsigned int>(coord->sensor()->sensorNumber()) > m_maxRSensor )  {
       m_maxRSensor =  coord->sensor()->sensorNumber();
@@ -54,10 +56,19 @@ namespace Tf {
     if( static_cast<unsigned int>(coord->sensor()->sensorNumber()) < m_minRSensor )  {
       m_minRSensor =  coord->sensor()->sensorNumber();
     }
+    // if the side was not otherwise set use first R cluster to set
+    if( m_side == PatVeloHitSide::Unknown ) m_side = coord->side();
+
     double z = coord->z();
     double w = coord->weight();
     double r = coord->coordHalfBox();
-
+    if( coord->side() != m_side ){
+      unsigned int zone = coord->zone();
+      if( coord->side() == PatVeloHitSide::Right ) zone+=4 ;
+      // if track is fitted in other HB frame
+      r += m_trackTool->rOffsetOtherHB( coord->sensorNumber(),
+                                        m_trackTool->phiGlobalRZone(zone));
+    }
     m_s0  = m_s0  + w;
     m_sr  = m_sr  + w * r;
     m_sz  = m_sz  + w * z;
@@ -85,29 +96,30 @@ namespace Tf {
   }
 
   /// if this coord is on the track set the effective phi and r of the coord
-  void PatVeloSpaceTrack::setPhiInterpolated( PatVeloRHit* myCoord  ) {
+  void PatVeloSpaceTrack::setPhiInterpolated( PatVeloRHit* myCoord ) {
+    // if the side was not otherwise set use first R cluster to set
+    if( m_side == PatVeloHitSide::Unknown ) m_side = myCoord->side();
     double z = myCoord->z();
-    std::pair<const PatVeloPhiHit*,const PatVeloPhiHit*> coordP = 
+    std::pair<const PatVeloPhiHit*,const PatVeloPhiHit*> coordP =
       surroundZ(m_phiCoord,z);
-    //== weight by the z ratio. 
+    //== weight by the z ratio.
     double phi1 =  coordP.second->referencePhi();
     double phi2 =  coordP.first->referencePhi();
-    double phi;
-    if ( 1.e-5 > fabs( coordP.second->z() - coordP.first->z() ) ) {
-      phi = .5 * phi1 + .5 * phi2;
-    } else {
-      double zRatio = (z - coordP.first->z() ) / 
-        ( coordP.second->z()- coordP.first->z() );
-      phi = m_angleUtils.mean(phi1,zRatio,phi2,(1.-zRatio));
+    double zRatio = (z - coordP.first->z() ) /
+      ( coordP.second->z()- coordP.first->z() );
+    double phi = m_angleUtils.mean(phi1,zRatio,phi2,(1.-zRatio));
+    if( m_side == myCoord->side() ){
+      myCoord->setRadiusAndPhi( myCoord->coordHalfBox() , phi );
+    }else{
+      myCoord->setRadiusAndPhi( myCoord->coordHalfBox() +
+                                m_trackTool->rOffsetOtherHB(myCoord->sensorNumber(),phi), phi);
     }
-    
-    myCoord->setRadiusAndPhi( myCoord->coordHalfBox(), phi );
   }
 
   //========================================================================
   // Fit the track, computes point, direction and covariance matrix.
   //========================================================================
-  void PatVeloSpaceTrack::fitSpaceTrack ( double stepError, 
+  void PatVeloSpaceTrack::fitSpaceTrack ( double stepError,
 					  bool inwardFit, bool beamState,
 					  unsigned int fullErrorPoints) {
     // Note: defaults to inwardFit = true
@@ -146,7 +158,7 @@ namespace Tf {
 
     //== Now process the measurements, in this tilted frame
 
-    // u is roughly radial in RZ plane of track 
+    // u is roughly radial in RZ plane of track
     // and v is 90deg to both u and z axis
     // forward is toward z=0, backward is away from z=0
     PatVeloSpaceTrackLocal::FrameParam u,v;
@@ -174,7 +186,7 @@ namespace Tf {
       w = dCos * dCos / (variance + MSError);
       v.increment(w,lv,z);
 
-      if( fullErrorPoints <=  
+      if( fullErrorPoints <=
 	  static_cast<unsigned int>(itC - m_phiCoord.rbegin()) ){
 	MSError += stepError;
       }
@@ -219,7 +231,7 @@ namespace Tf {
     if( inwardFit ) {
       if( beamState ){
 	// want point of closest approach to z axis
-	zUse = - ( u.x0 * u.dxdz + v.x0 * v.dxdz ) / 
+	zUse = - ( u.x0 * u.dxdz + v.x0 * v.dxdz ) /
 	  (u.dxdz * u.dxdz + v.dxdz * v.dxdz );
       }else{
 	if( !m_backward ){
@@ -301,7 +313,7 @@ namespace Tf {
       chi2 += w * dSin * dSin * du * du ;
       chi2 += w * dCos * dCos * dv * dv ;
 
-      if( fullErrorPoints <= 
+      if( fullErrorPoints <=
 	  static_cast<unsigned int>(itC - m_phiCoord.rbegin()) ) {
 	MSError += stepError;
       }
@@ -342,12 +354,12 @@ namespace Tf {
   }
 
   void PatVeloSpaceTrack::tagClustersAsUsed( HitBase::EStatus status){
-    
+
     for ( std::vector<PatVeloRHit*>::iterator iR = m_rCoord.begin();
 	  iR != m_rCoord.end() ; ++iR ){
       (*iR)->hit()->setStatus(status,true);
     }
-    
+
     for ( std::vector<PatVeloPhiHit*>::iterator iPhi = m_phiCoord.begin();
 	  iPhi != m_phiCoord.end() ; ++iPhi ){
       (*iPhi)->hit()->setStatus(status,true);
@@ -357,7 +369,7 @@ namespace Tf {
 	  iR != m_rCoordNoFit.end() ; ++iR ){
       (*iR)->hit()->setStatus(status,true);
     }
-    
+
     for ( std::vector<PatVeloPhiHit*>::iterator iPhi = m_phiCoordNoFit.begin();
 	  iPhi != m_phiCoordNoFit.end() ; ++iPhi ){
       (*iPhi)->hit()->setStatus(status,true);
@@ -366,4 +378,4 @@ namespace Tf {
 
 }
 
-  
+

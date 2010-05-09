@@ -13,6 +13,15 @@
 #include "TfKernel/VeloHitExtension.h"
 
 namespace Tf {
+  // want a namsepace outside of the templated main class
+  namespace PatVeloHitSide{
+        enum Side{
+          Unknown = 0,
+          Left = 1,
+          Right = 2
+        };
+  }
+
   /** @class PatVeloHit PatVeloHit.h
    *  A hit extension specialised for the space tracking
    *
@@ -44,6 +53,8 @@ namespace Tf {
           , m_sinPhi(0.0)
           , m_cosPhi(1.0)
           , m_zone(hit->sensor()->globalZoneOfStrip(hit->strip()))
+          , m_side( (hit->sensor()->isLeft() ) ? PatVeloHitSide::Left : 
+                                                 PatVeloHitSide::Right )
           {;}
 
         ~PatVeloHit() {;} ///< Destructor
@@ -63,6 +74,9 @@ namespace Tf {
         unsigned int stripNumber() const { 
           return this->hit()->channelID().strip(); 
         } 
+
+        /// get the side of the detector for this hit
+        PatVeloHitSide::Side side() const { return m_side; }
 
         /// shortcut access to the global zone
         unsigned int zone() const { return m_zone; }
@@ -104,7 +118,7 @@ namespace Tf {
         double m_sinPhi;
         double m_cosPhi;
         unsigned int m_zone;
-
+        PatVeloHitSide::Side m_side;
     };
 
   typedef PatVeloHit<DeVeloRType,Tf::VeloRHit>     PatVeloRHit;

@@ -59,6 +59,8 @@ StatusCode Tf::PatVeloFitLHCbIDs::initialize(){
   m_phiHitManager = tool<PatVeloPhiHitManager>( "Tf::PatVeloPhiHitManager" , m_phiHitManagerName );
   m_PatVeloTrackTool = 
     tool<PatVeloTrackTool>("Tf::PatVeloTrackTool", m_trackToolName ); 
+  m_velo = getDet<DeVelo>( DeVeloLocation::Default );
+
   return StatusCode::SUCCESS;
 }
 
@@ -67,8 +69,27 @@ StatusCode Tf::PatVeloFitLHCbIDs::fit( LHCb::Track & track, LHCb::ParticleID){
   // place to store the LHCbIDs ignored in the PatSpaceTrack fit
   std::vector<LHCb::LHCbID> nonVELOIDs;
    
-  PatVeloSpaceTrack * patVeloTrack = new  PatVeloSpaceTrack();
+  PatVeloSpaceTrack * patVeloTrack = new PatVeloSpaceTrack(m_PatVeloTrackTool);
+  // take a majority vote of the side of the velo clusters to determine side 
+  // to do fit in
+  unsigned int nLeft(0),nRight(0);
   std::vector<LHCb::LHCbID>::const_iterator iID;
+  for( iID = track.lhcbIDs().begin() ; iID != track.lhcbIDs().end() ; ++iID){
+    if( iID->isVelo() ){
+      if ( m_velo->sensor(iID->veloID().sensor())->isRight() ) {
+	++nRight;
+      }else{
+	++nLeft;
+      }
+    }
+  }    
+  if( nRight > nLeft ){
+    patVeloTrack->setSide( PatVeloHitSide::Right );
+  }else {
+    // use left in the case of a tie for no good reason
+    patVeloTrack->setSide( PatVeloHitSide::Left );    
+  }    
+
   for( iID = track.lhcbIDs().begin() ; iID != track.lhcbIDs().end() ; ++iID){
     if( ! iID->isVelo() ) {
       nonVELOIDs.push_back(*iID);

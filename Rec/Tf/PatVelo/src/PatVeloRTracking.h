@@ -7,6 +7,7 @@
 #include "GaudiAlg/GaudiAlgorithm.h"
 
 #include "PatVeloRHitManager.h"
+#include "PatVeloTrackTool.h"
 
 // Local
 #include "PatRZTrack.h"
@@ -100,8 +101,11 @@ namespace Tf {
     private:
       PatVeloRHitManager*   m_hitManager;
 
+      PatVeloTrackTool * m_trackTool; ///< PatVeloTrackTool pointer
+
       std::string  m_outputLocation;    ///< Location of track container on the TES
       std::string  m_hitManagerName;    ///< Name of the hit manager instance 
+      std::string m_trackToolName; ///< name of the track tool instance 
       bool m_mergeTracks;               ///< If true, merge tracks sharung hits
       int  m_nCommonToMerge;            ///< Num of shared hits to merge the tracks
 

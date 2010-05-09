@@ -18,6 +18,7 @@
 // Local
 #include "PatVeloRHitManager.h"
 #include "PatVeloPhiHitManager.h"
+#include "PatVeloTrackTool.h"
 #include "PatGenericFitter.h"
 
 namespace Tf {
@@ -43,12 +44,14 @@ namespace Tf {
       CircularRangeUtils<double> m_angleUtils;
       PatVeloRHitManager*   m_rHitManager;
       PatVeloPhiHitManager* m_phiHitManager;
+      PatVeloTrackTool * m_PatVeloTrackTool; ///< tool to handle PatVeloSpaceTracks
       DeVelo* m_velo;
       LHCb::Tracks* m_outputTracks;  ///< Container for output Space tracks
 
       std::string m_outputTracksLocation;
       std::string m_rHitManagerName;
       std::string m_phiHitManagerName;
+      std::string m_trackToolName; /// name of the track tool instance used here
 
       bool m_cleanSeeds;  ///< Cleaning track seeds flag
       bool m_privateBest; ///< Best candidate cluster selection flag

@@ -19,6 +19,7 @@
 #include "Event/Track.h"
 #include "PatVeloHit.h"
 #include "CircularRangeUtils.h"
+#include "PatVeloTrackTool.h"
 
 namespace Tf {
   /** @class PatVeloSpaceTrack PatVeloSpaceTrack.h
@@ -29,11 +30,18 @@ namespace Tf {
    */
   class PatVeloSpaceTrack {
   public:
-    PatVeloSpaceTrack( );   ///< Standard constructor
+    ///< constructor taking a PatVeloTrackTool (only one allowed now)
+    PatVeloSpaceTrack( const PatVeloTrackTool * const trackTool ); 
 
     ~PatVeloSpaceTrack( ) {}; ///< Destructor
 
-    /// add and R coordinate: update rz parameters
+    /// defined the "side" of the track for halfbox fitting purposes
+    void setSide( PatVeloHitSide::Side side ){ m_side = side; }
+
+    /// get the "side" of the track for halfbox fitting purposes
+    PatVeloHitSide::Side side() { return m_side; }
+
+    /// add an R coordinate and update rz parameters 
     void addRCoord( PatVeloRHit* coord );
 
     /// fit the RZ part of the track
@@ -58,7 +66,8 @@ namespace Tf {
     void setPhiInterpolated( PatVeloRHit* myCoord );
 
     /// fit the track, computes point, direction and covariance matrix.
-    void fitSpaceTrack ( double stepError, bool inwardFit = true, 
+    void fitSpaceTrack ( double stepError, 
+			 bool inwardFit = true, 
 			 bool beamState = true, 
 			 unsigned int fullErrorPoints = 0 );
 
@@ -166,6 +175,10 @@ namespace Tf {
     std::pair<const HIT*,const HIT*> surroundZ(const std::vector<HIT*>& cont,double z) const;
 
   private:
+    /// make no argument constructor inaccessible 
+    PatVeloSpaceTrack( ) :
+      m_angleUtils(-Gaudi::Units::pi,Gaudi::Units::pi),m_trackTool(0){}; 
+
     double m_s0;     ///< sum of weight of R clusters
     double m_sr;     ///< sum of ( weight of R clusters * r )
     double m_sz;     ///< sum of ( weight of R clusters * z )
@@ -203,6 +216,12 @@ namespace Tf {
 
     /// tool to do angle conversions to -pi -> pi
     const CircularRangeUtils<double> m_angleUtils; 
+
+    /// TrackTool for calculating box offsets
+    const PatVeloTrackTool * const m_trackTool;
+    
+    /// side of detector: which halfbox frame to do fit in
+    PatVeloHitSide::Side m_side;
   };
 
 
