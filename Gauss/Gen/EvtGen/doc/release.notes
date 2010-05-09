@@ -4,6 +4,7 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+!========================= EvtGen v11r8p1 2010-05-09 =========================
 ! 2010-05-05 - Patrick Robbe
  - EvtPythia.cpp: use temporary file name to store Pythia new decay table
 
