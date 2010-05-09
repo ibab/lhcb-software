@@ -5,6 +5,9 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-05-09 - Plamen Hopchev
+ - Created StrippingBeamGas.py and inluded it in the lines of StreamMiniBias
+
 ! 2010-05-08 - Harry Cliff
  - python/StrippingSelections/StreamCharm.py
   . Add back a fixed version of StrippingD2KhLoose
