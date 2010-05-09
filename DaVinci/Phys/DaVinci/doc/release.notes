@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.423 2010-04-30 16:25:14 jpalac Exp $
+! $Id: release.notes,v 1.424 2010-05-09 10:02:58 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -8,6 +8,8 @@
 ! Do not forget to update requirements and job/DaVinci_Ganga.py before tagging
 !
 !-----------------------------------------------------------------------------
+
+!========================== DaVinci v25r4p1 2010-05-09 =====================
 
 !========================== DaVinci v25r4 2010-04-30 =======================
 
