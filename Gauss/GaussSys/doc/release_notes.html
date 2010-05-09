@@ -3,6 +3,109 @@ Package : GaussSys
 Package manager : Gloria Corti
 Purpose: LHCb Simulation program
 
+!=============================================================================
+</PRE><H1><A NAME="v38r5">2010-05-09 - GaussSys v38r5</A></H1><PRE>
+<H2><A NAME="Note">post MC09 version. 
+   </A></H2>
+<H3><A NAME="Use">This version uses:
+   <b>LHCb v31r0p1 (and Gaudi v21r9)</b>
+   AppConfig v3r*,
+   DecFiles v21r* , 
+   ParamFiles v8r2, 
+   SQLDDDB v5r*, FieldMap v5r*,
+   <b>pythia6 421.2, photos 215.5, lhapdf 5.7.1 
+   (via LCG_GeneratorsInterfaces)
+   HepMC 2.03.11 (via LCG_Interfaces)
+   Geant4 v92r3p1 (based on geant4.9.2.p03) and Geant4Files v92r0</b>
+   XmlVis v1r12,
+   <b>herwig 6.510.3, jimmy 4.31.3 (via LCG_GeneratorsInterfaces)</b>
+   hijing 1.383bs.2 (via LCG_GeneratorsInterfaces),
+   pythia8 130,
+   bcvegpy (LHCb build)
+</A></H3>
+
+!========================= Gauss v38r5 2010-05-09 ============================
+! 2010-05-09 - Gloria CORTI
+ - Introduce new options for setting mean value of interaction (x,y,z). X and
+   Y are also used for beam position for beam gas:
+   Gauss().InteractionPosition = [ <x-value>, <y-value>, <z-value> ]
+   Default is set to zero.
+   . python/Gauss/Configuration.py
+ - Now crossing angle is also taken into account for beam gas (needs
+   Gen/Generators v10r8)
+   . python/Gauss/Configuration.py
+ - Use latest SIMCOND tags for MC09, set up to replace existing one because
+   of an additional conditions (not used in gauss...)
+   . options/Gauss-MC09.py
+ - Use latest SIMCOND tags for 2009 data and for DEV for 2010 data.
+   . options/Gauss-DEV.py
+   . options/Gauss-MC-2009.py
+ - Use Beam3500GeV-md100-nu1.py in DEV for 2010 data.
+   . options/Gauss-DEV.py
+
+!========================= EvtGen v11r8p1 2010-05-09 =========================
+! 2010-05-05 - Patrick Robbe
+ - EvtPythia.cpp: use temporary file name to store Pythia new decay table
+
+!====================== Generators v10r8 2010-05-09 ==========================
+! 2010-05-06 - Gloria CORTI
+ - Introduce possibility to have beam spot centered in a given value in the
+   x and y axis. The same for interactions for beam-gas vertex smearing.
+   Values given in options. Default set to zero.
+   . BeamSpotSmearVertex.{h,cpp}
+   . FlatZSmearVertex.{h,cpp}
+ - Introduce possibility to have crossing angle included in smearing of
+   interaction, togheter with beam direction, for tools used in beam-gas
+   vertex smearing. The value of the crossing angle can be set by options.
+   Default set to zero.
+   . FlatZSmearVertex.{h,cpp}
+
+! 2010-05-05 - Patrick Robbe
+ - EvtGenDecay.cpp: use tmpnam to have unique files when creating the
+   temporary files for photos and EvtGen particle table
+
+!======================== LbPythia8 v2r1p1 2010-05-09 ========================
+! 2010-05-09 - Gloria CORTI
+ - Fix problem for setting options in event types for Pythia8. As the options
+   Pythia8.py is called afterward to set the event type the options must be
+   passed as "+=" and not as "=". The same for Pythia8.opts.
+
+!========================= GaussKine v4r0 2010-05-09 =========================
+! 2010-05-03 - Gloria CORTI
+ - Remove obsolete algorithms that were used in DC06 to pass the generator
+   event to G4 and to retrieve the G4 truth and put it in MCParticle/MCVertex.
+   . GeneratorToG4.{h,cpp}
+   . G4HepMCToMCTruth.{h,cpp}
+ - Remove also the explicit loading of the factories, no longer needed
+   by Gaudi and also a leftover of DC06
+   . GaussKine_dll.cpp
+
+!========================= GaussRICH v11r0 2010-05-09 ========================
+! 2010-04-19  Sajan Easo
+  - In Rich.opts the CF4 scintillation is activated as default by commenting
+    out
+     GiGa.ModularPL.GiGaPhysConstructorOp.RichActivateCF4Scintillation=false
+  - Minor addition to RichG4Scintillation so that it can technically run even 
+    with old versions of the dddb database, although without creating any 
+    scintillation photons.
+    The recent database (dddb rich-20100419 onwards) is needed to create these
+     type of photons.
+! 2010-04-14  Sajan Easo
+  - minor fixes in RichG4Scintillation.cc to avoid compilation warnings and
+    avoid creating too many photons well above the expectations causing 
+    excessive cpu time.
+! 2010-04-12  Sajan Easo
+  - Added the CF4 scintillation proces, with the name RichG4scintillation.
+  - This can be switched off for backward compatibility as described in  
+    options/Rich.opts.
+    Temporarily this is switched off in Rich.opts until the corresponding DDDB 
+    inputs are available in the LHCb release area. Once these inputs are 
+    available this process is expected to be switched on by default.
+  - The monitoring histograms set2 are updated to show the hits with
+    and without the CF4 scintillation hits in RICH2.
+  - The output into the MCRichHit in GetMCRichHitsAlg.cpp is modified
+    so that an extra flag is added to MCRichHit to tag the Scintillation hits.
+
 
 !=============================================================================
 </PRE><H1><A NAME="v38r4">2010-03-25 - GaussSys v38r4</A></H1><PRE>
