@@ -1,10 +1,17 @@
-! $Id: release.notes,v 1.174 2010-04-28 07:02:23 graven Exp $
+! $Id: release.notes,v 1.175 2010-05-09 21:43:35 gligorov Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+! 2010-04-26 - V. Gligorov
+ - First addition of lifetime unbiased hadron lines; this is a skeleton for
+   now and will be updated using helicity angle and invariant mass cuts added
+   by U. Kerzel to HltFunctions. Note that these lines are explicitly for selecting
+   two body hadronic signals only for now.
+ - Update Hlt1Hadron lines with lines which do the 3D Velo reconstruction upfront.  
+ 
 !========================== Hlt1Lines v3r3p1 2010-04-26 ===================
 ! 2010-04-26 - V. Gligorov
  - fix typo 
