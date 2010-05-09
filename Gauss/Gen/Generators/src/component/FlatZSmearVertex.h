@@ -1,4 +1,4 @@
-// $Id: FlatZSmearVertex.h,v 1.4 2008-05-06 08:20:52 gcorti Exp $
+// $Id: FlatZSmearVertex.h,v 1.5 2010-05-09 17:05:30 gcorti Exp $
 #ifndef GENERATORS_FLATZSMEARVERTEX_H 
 #define GENERATORS_FLATZSMEARVERTEX_H 1
 
@@ -43,6 +43,9 @@ class FlatZSmearVertex : public GaudiTool, virtual public IVertexSmearingTool {
   /// Width of the smearing along the y-axis (set by job options).
   double m_sigmaY ;
 
+  /// Mean x and y position of beam for z=0 
+  double m_meanX, m_meanY;
+
   /// Number of sigma above which to cut for x-axis smearing (set by options)
   double m_xcut   ;
 
@@ -54,6 +57,9 @@ class FlatZSmearVertex : public GaudiTool, virtual public IVertexSmearingTool {
   
   /// Maximum value for the z coordinate of the vertex (set by options)
   double m_zmax   ;
+
+  /// Horizontal and vertical crossing angle of beam at z = 0
+  double m_hXAngle, m_vXAngle ;
 
   /// Direction of the beam to take into account TOF vs nominal IP8, can have
   /// only values -1 or 1, or 0 to switch off the TOF and set time of 
