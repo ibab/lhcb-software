@@ -4,6 +4,25 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+!========================= Gauss v38r5 2010-05-09 ============================
+! 2010-05-09 - Gloria CORTI
+ - Introduce new options for setting mean value of interaction (x,y,z). X and
+   Y are also used for beam position for beam gas:
+   Gauss().InteractionPosition = [ <x-value>, <y-value>, <z-value> ]
+   Default is set to zero. 
+   . python/Gauss/Configuration.py
+ - Now crossing angle is also taken into account for beam gas (needs
+   Gen/Generators v10r8)
+   . python/Gauss/Configuration.py
+ - Use latest SIMCOND tags for MC09, set up to replace existing one because
+   of an additional conditions (not used in gauss...)
+   . options/Gauss-MC09.py
+ - Use latest SIMCOND tags for 2009 data and for DEV for 2010 data.
+   . options/Gauss-DEV.py
+   . options/Gauss-MC-2009.py
+ - Use Beam3500GeV-md100-nu1.py in DEV for 2010 data.
+   . options/Gauss-DEV.py
+
 !========================= Gauss v38r4 2010-03-25 ============================
 ! 2010-03-25 - Gloria CORTI
  - Set beam parameters of EvtGenDecay for Pythia as set in Configurable. 

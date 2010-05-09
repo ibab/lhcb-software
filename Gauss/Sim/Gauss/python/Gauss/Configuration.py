@@ -1,7 +1,7 @@
 """
 High level configuration tools for Gauss
 """
-__version__ = "$Id: Configuration.py,v 1.29 2010-03-25 18:20:05 gcorti Exp $"
+__version__ = "$Id: Configuration.py,v 1.30 2010-05-09 18:14:28 gcorti Exp $"
 __author__  = "Gloria Corti <Gloria.Corti@cern.ch>"
 
 from Gaudi.Configuration import *
@@ -75,6 +75,8 @@ class Gauss(LHCbConfigurableUser):
        ,"BeamCrossingAngle" : 0.329*SystemOfUnits.mrad
        ,"BeamEmittance"     : 0.704*(10**(-9))*SystemOfUnits.rad*SystemOfUnits.m
        ,"BeamBetaStar"      : 2.0*SystemOfUnits.m
+       ,"InteractionPosition" : [ 0.0*SystemOfUnits.mm, 0.0*SystemOfUnits.mm,
+                                  0.0*SystemOfUnits.mm ]
        ,"InteractionSize"   : [ 0.027*SystemOfUnits.mm, 0.027*SystemOfUnits.mm,
                                 3.82*SystemOfUnits.cm ]
        ,"BeamSize"          : [ 0.038*SystemOfUnits.mm, 0.038*SystemOfUnits.mm ]
@@ -938,11 +940,15 @@ class Gauss(LHCbConfigurableUser):
 
         from Configurables import ( BeamSpotSmearVertex )
 
+        meanX, meanY, meanZ = self.getProp("InteractionPosition")
         sigmaX, sigmaY, sigmaZ = self.getProp("InteractionSize")
 
         for slot in CrossingSlots:
             gen = Generation("Generation"+slot)
             gen.addTool(BeamSpotSmearVertex,name="BeamSpotSmearVertex")
+            gen.BeamSpotSmearVertex.MeanX = meanX
+            gen.BeamSpotSmearVertex.MeanY = meanY
+            gen.BeamSpotSmearVertex.MeanZ = meanZ
             gen.BeamSpotSmearVertex.SigmaX = sigmaX
             gen.BeamSpotSmearVertex.SigmaY = sigmaY
             gen.BeamSpotSmearVertex.SigmaZ = sigmaZ
@@ -953,12 +959,18 @@ class Gauss(LHCbConfigurableUser):
         from Configurables import ( FlatZSmearVertex )
 
         sigmaX, sigmaY = self.getProp("BeamSize")
+        meanX, meanY, meanZ = self.getProp("InteractionPosition")
+        hCrossAngle = self.getProp("BeamCrossingAngle")
+        
         for slot in CrossingSlots:
             gen = Generation("Generation"+slot)
             gen.addTool(FlatZSmearVertex,name="FlatZSmearVertex")
             gen.FlatZSmearVertex.SigmaX = sigmaX
             gen.FlatZSmearVertex.SigmaY = sigmaY
-        
+            gen.FlatZSmearVertex.MeanXat0 = meanX
+            gen.FlatZSmearVertex.MeanYat0 = meanY
+            gen.FlatZSmearVertex.HorizontalCrossingAngle = hCrossAngle
+             
     
     #--Set the energy of the beam,
     #--the half effective crossing angle (in LHCb coordinate system),

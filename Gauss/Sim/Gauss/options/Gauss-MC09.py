@@ -12,4 +12,6 @@ importOptions("$APPCONFIGOPTS/Gauss/MC09-b5TeV-md100.py")
 ##############################################################################
 # Database tags must be set and are defined in a separate file
 ##############################################################################
-importOptions('$APPCONFIGOPTS/Conditions/MC09-20090602-vc-md100.py')
+from Configurables import LHCbApp
+LHCbApp().DDDBtag   = "MC09-20090602"
+LHCbApp().CondDBtag = "MC09-20100430-vc-md100"

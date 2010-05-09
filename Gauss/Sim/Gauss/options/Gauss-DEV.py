@@ -7,12 +7,12 @@
 ##############################################################################
 
 from Gaudi.Configuration import *
-importOptions("$APPCONFIGOPTS/Gauss/MC09-b3,5TeV-md100-nu1.py")
+importOptions("$APPCONFIGOPTS/Gauss/Beam3500GeV-md100-nu1.py")
 
 ##############################################################################
 # latest database tags 
 ##############################################################################
 from Configurables import LHCbApp
-LHCbApp().DDDBtag   = "head-20100119"
-LHCbApp().CondDBtag = "sim-20100321-vc-md100"
+LHCbApp().DDDBtag   = "head-20100504"
+LHCbApp().CondDBtag = "sim-20100429-vc-md100"
 
