@@ -9,7 +9,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.1 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.2 $"
 # =============================================================================
 
 import Gaudi.Configuration 
@@ -28,7 +28,6 @@ class Hlt1HadronLifetimeUnbiasedLinesConf(HltLinesConfigurableUser) :
     __slots__ = { 'L0Channel'               : "Hadron" 
                 , 'HadMain_TrackFitChi2Cut' : 10.
                 , 'HadVertex_DOCACut'    : 0.2
-                , 'HadVertex_DZCut'      : 1.5
                 , 'HadVertex_PTCut'      : 1000.
                 , 'HadVertex_PointingCut': 0.4
                 , 'LTUnbHadETCut_Hard'       : 2500. 
@@ -99,11 +98,6 @@ class Hlt1HadronLifetimeUnbiasedLinesConf(HltLinesConfigurableUser) :
                          , InputSelection2 = '%s' %OutputOfConfirmationSoft
                          , FilterDescriptor = [ 'DOCA,<,'+str(self.getProp('HadVertex_DOCACut'))]
                          , HistoDescriptor  = histosfilter('DOCA_'+type,0.,1.,200)
-                           )
-                , Member ( 'VF', '1UVelo'
-                           , FilterDescriptor = [ 'VertexDz_PV2D,>,%s'%self.getProp('HadVertex_DZCut')]
-                           , HistogramUpdatePeriod = 1
-                           , HistoDescriptor  = histosfilter('VertexDx_PV2D_'+type,1.,12.,200)                       
                            )
                 , DecodeIT
                 , Member ( 'VU', 'GuidedForward'
