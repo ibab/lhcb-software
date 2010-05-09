@@ -1,4 +1,4 @@
-// $Id: BeamSpotSmearVertex.cpp,v 1.11 2008-07-24 22:05:38 robbep Exp $
+// $Id: BeamSpotSmearVertex.cpp,v 1.12 2010-05-09 17:05:42 gcorti Exp $
 // Include files 
 
 // local
@@ -40,6 +40,8 @@ BeamSpotSmearVertex::BeamSpotSmearVertex( const std::string& type,
     declareProperty( "Ycut" , m_ycut = 4. ) ; // times SigmaY
     declareProperty( "Zcut" , m_zcut = 4. ) ; // times SigmaZ    
 
+    declareProperty( "MeanX" , m_meanX = 0. * Gaudi::Units::mm ) ;
+    declareProperty( "MeanY" , m_meanY = 0. * Gaudi::Units::mm ) ;
     declareProperty( "MeanZ" , m_meanZ = 0. * Gaudi::Units::mm ) ;
     declareProperty( "SignOfTimeVsT0", m_timeSignVsT0 = 0 ) ;
     
@@ -66,7 +68,9 @@ StatusCode BeamSpotSmearVertex::initialize( ) {
     
   info() << "Smearing of interaction point with Gaussian distribution "
          << endmsg;
-  info() << " Z primary = " << m_meanZ / Gaudi::Units::mm << " mm " << endmsg;
+  info() << " X,Y,Z primary = " << m_meanX / Gaudi::Units::mm << " mm, "
+         << m_meanY / Gaudi::Units::mm << " mm, "
+         << m_meanZ / Gaudi::Units::mm << " mm " << endmsg;
   info() << " time of interaction vs T0 of IP is " << m_meanT/Gaudi::Units::ns
          << " ns" << endmsg;
   if( msgLevel(MSG::DEBUG) ) {
@@ -96,9 +100,9 @@ StatusCode BeamSpotSmearVertex::smearVertex( LHCb::HepMCEvent * theEvent ) {
   double dx , dy , dz;
   
   do { dx = m_gaussDist( ) ; } while ( fabs( dx ) > m_xcut ) ;
-  dx = dx * m_sigmaX ;
+  dx = dx * m_sigmaX + m_meanX;
   do { dy = m_gaussDist( ) ; } while ( fabs( dy ) > m_ycut ) ;
-  dy = dy * m_sigmaY ;
+  dy = dy * m_sigmaY + m_meanY;
   do { dz = m_gaussDist( ) ; } while ( fabs( dz ) > m_zcut ) ;
   dz = dz * m_sigmaZ + m_meanZ;
 

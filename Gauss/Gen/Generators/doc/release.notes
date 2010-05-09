@@ -1,9 +1,22 @@
-! $Id: release.notes,v 1.164 2010-05-05 19:38:36 robbep Exp $
+! $Id: release.notes,v 1.165 2010-05-09 17:05:42 gcorti Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Gen/Generators
 ! Responsible : Patrick ROBBE
 ! Purpose     : Common algorithms and tools for all production engines
 !-----------------------------------------------------------------------------
+
+!====================== Generators v10r8 2010-05-09 ==========================
+! 2010-05-06 - Gloria CORTI
+ - Introduce possibility to have beam spot centered in a given value in the
+   x and y axis. The same for interactions for beam-gas vertex smearing. 
+   Values given in options. Default set to zero. 
+   . BeamSpotSmearVertex.{h,cpp}
+   . FlatZSmearVertex.{h,cpp}
+ - Introduce possibility to have crossing angle included in smearing of
+   interaction, togheter with beam direction, for tools used in beam-gas 
+   vertex smearing. The value of the crossing angle can be set by options.
+   Default set to zero.
+   . FlatZSmearVertex.{h,cpp}
 
 ! 2010-05-05 - Patrick Robbe
  - EvtGenDecay.cpp: use tmpnam to have unique files when creating the

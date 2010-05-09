@@ -1,4 +1,4 @@
-// $Id: BeamSpotSmearVertex.h,v 1.6 2008-05-06 08:27:02 gcorti Exp $
+// $Id: BeamSpotSmearVertex.h,v 1.7 2010-05-09 17:05:43 gcorti Exp $
 #ifndef GENERATORS_BEAMSPOTSMEARVERTEX_H 
 #define GENERATORS_BEAMSPOTSMEARVERTEX_H 1
 
@@ -54,8 +54,8 @@ public:
   /// Number of sigma above which to cut for z-axis smearing (set by options)
   double m_zcut   ;
 
-  /// Mean position of the interaction on the z-axis
-  double m_meanZ  ;
+  /// Mean position of the interaction on the x, y and z-axis
+  double m_meanX, m_meanY, m_meanZ  ;
 
   /// Sign of time of interaction as given from position with respect to 
   /// origin
