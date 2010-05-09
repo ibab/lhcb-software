@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Configuration.py,v 1.18 2010-05-02 11:52:39 ibelyaev Exp $
+# $Id: Configuration.py,v 1.19 2010-05-09 15:21:03 ibelyaev Exp $
 # =============================================================================
 # @file  KaliCalo/Configuration.py
 #
@@ -85,7 +85,7 @@ Or one can rely on helper functions:
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
 __date__    = " 2009-09-28 "
-__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.18 $ "
+__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.19 $ "
 # =============================================================================
 # the only one  "vizible" symbol 
 __all__  = (
@@ -267,7 +267,7 @@ class  KaliPi0Conf(LHCbConfigurableUser):
                 EnableRecoOnDemand = True  ,
                 UseTracks          = False ,         ## do not use tracks!
                 UseSpd             = self.getProp ( 'UseSpd'      ) ,
-                ##UsePrs             = self.getProp ( 'UsePrs'      ) ,
+                ## UsePrs             = self.getProp ( 'UsePrs'      ) ,
                 ForceDigits        = self.getProp ( 'ForceDigits' ) ,
                 MeasureTime        = self.getProp ( 'MeasureTime' ) ,
                 OutputLevel        = self.getProp ( 'OutputLevel' ) )
@@ -501,7 +501,7 @@ class  KaliPi0Conf(LHCbConfigurableUser):
         
         if not not misKali : kaliSeq.Members += misKali 
             
-        if self.getProp ( 'RecoAll' ) :
+        if self.getProp ( 'RecoAll' ) : 
             from Configurables import GlobalRecoConf
             kaliReco = GaudiSequencer("KaliReco")
             kaliSeq.Members += [ kaliReco ] 
@@ -624,14 +624,15 @@ def firstPass ( **args ) :
     >>> kali = firstPass ( ..... )
     
     """
+    
     kali = KaliPi0Conf (
-        FirstPass  = True ,
-        UseTracks  = args.get ( 'UseTracks'  , True  ) ,
-        UseSpd     = args.get ( 'UseSpd'     , True  ) ,
-        UsePrs     = args.get ( 'UsePrs'     , False ) ,
-        Mirror     = args.get ( 'Mirror'     , True  ) , 
-        Histograms = args.get ( 'Histograms' , True  ) ,
-        **args 
+        FirstPass  =  True ,
+        UseTracks  = _args.pop ( 'UseTracks'  , True  ) ,
+        UseSpd     = _args.pop ( 'UseSpd'     , True  ) ,
+        UsePrs     = _args.pop ( 'UsePrs'     , False ) ,
+        Mirror     = _args.pop ( 'Mirror'     , True  ) , 
+        Histograms = _args.pop ( 'Histograms' , True  ) ,
+        **args
         )
     
     return kali
@@ -647,14 +648,13 @@ def secondPass ( **args ) :
     >>> kali = firstPass ( ..... )
     
     """
-    
     kali = KaliPi0Conf (
         FirstPass  = False ,
-        UseTracks  = args.get ( 'UseTracks'  , False ) ,
-        UseSpd     = args.get ( 'UseSpd'     , False ) ,
-        UsePrs     = args.get ( 'UsePrs'     , False ) ,
-        Mirror     = args.get ( 'Mirror'     , True  ) , 
-        Histograms = args.get ( 'Histograms' , True  ) ,
+        UseTracks  = args.pop ( 'UseTracks'  , False ) ,
+        UseSpd     = args.pop ( 'UseSpd'     , False ) ,
+        UsePrs     = args.pop ( 'UsePrs'     , False ) ,
+        Mirror     = args.pop ( 'Mirror'     , True  ) , 
+        Histograms = args.pop ( 'Histograms' , True  ) ,
         **args 
         )
     
@@ -672,12 +672,12 @@ def  action ( ) :
         
     _log.warning ( 'KaliPi0Conf: DaVinciInitSeq is cleared!')
     
-    gammaRec = getConfigurable('SinglePhotonRec')
-    for component in ( gammaRec             ,
-                       gammaRec.ECorrection ,
-                       gammaRec.SCorrection ,
-                       gammaRec.LCorrection ) : 
-        component.PropertiesPrint = True
+##     gammaRec = getConfigurable('SinglePhotonRec')
+##     for component in ( gammaRec             ,
+##                        gammaRec.ECorrection ,
+##                        gammaRec.SCorrection ,
+##                        gammaRec.LCorrection ) : 
+##         component.PropertiesPrint = True
     
 # =============================================================================
 ## Important: use Post Config action! 
