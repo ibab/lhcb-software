@@ -1,4 +1,4 @@
-// $Id: TupleToolTriggerRecoStats.cpp,v 1.2 2010-01-26 15:39:27 rlambert Exp $
+// $Id: TupleToolTriggerRecoStats.cpp,v 1.3 2010-05-09 11:33:18 gligorov Exp $
 // Include files 
 
 // from Gaudi
@@ -33,7 +33,7 @@ TupleToolTriggerRecoStats::TupleToolTriggerRecoStats( const std::string& type,
   m_locations.push_back("Hlt2Muons");
   m_locations.push_back("Hlt2Electrons");
   m_locations.push_back("Hlt2Photons");
-  m_locations.push_back("Hlt2RichPIDsKaons");
+  m_locations.push_back("Hlt2BiKalmanFittedRichKaons");
   declareProperty("InputLocations",m_locations,"Locations to look at");
 }
 //=============================================================================
@@ -51,7 +51,7 @@ StatusCode TupleToolTriggerRecoStats::fill( Tuples::Tuple& tup)
   bool test = true;
   for ( std::vector<std::string>::const_iterator l = m_locations.begin() ; l != m_locations.end() ; ++l)
   {
-    test &= tup->column(prefix+"NumberOf"+*l,number<LHCb::Particles>("/Event/HLT/"+*l+"/Particles"));
+    test &= tup->column(prefix+"NumberOf"+*l,number<LHCb::Particles>("/Event/Hlt2/"+*l+"/Particles"));
   }
   return StatusCode(test) ;
 } 

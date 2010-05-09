@@ -4,6 +4,9 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2010-05-09 - V. Gligorov
+ - TupleToolTriggerRecoStats - update for new HLT2 reconstruction. 
+
 !========================== DecayTreeTuple v3r4 2010-04-30 ================
 
 ! 2010-04-28 - Patrick Koppenburg
