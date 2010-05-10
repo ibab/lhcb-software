@@ -459,7 +459,7 @@ namespace Tf {
                 tr.addPhi(coord);        
               }
 
-              tr.fitSpaceTrack(0.002, m_PatVeloTrackTool);
+              tr.fitSpaceTrack(0.002);
 	      
 	      m_PatVeloTrackTool->addStateToTrack(&tr,track,
 						  LHCb::State::EndVelo,

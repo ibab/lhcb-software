@@ -4,6 +4,9 @@
 ! Purpose     : Velo pattern recognition
 !-----------------------------------------------------------------------------
 
+! 2010-05-10 - David Hutchcroft
+ - Fixed Windows compliation warning in PatVeloGeneric
+
 ! 2010-05-09 - David Hutchcroft
  - More improvements to fit and better PatVeloSpaceTool behaviour for overlap 
    tracks
