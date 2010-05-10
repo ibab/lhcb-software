@@ -1,7 +1,7 @@
 """
 High level configuration tools for DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.101 2010-04-27 17:09:52 jpalac Exp $"
+__version__ = "$Id: Configuration.py,v 1.102 2010-05-10 07:27:08 jpalac Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -11,6 +11,13 @@ from Configurables import ( LHCbConfigurableUser, LHCbApp, PhysConf, AnalysisCon
                             HltConf, DstConf, CaloDstUnPackConf, L0Conf, LumiAlgsConf )
 from LumiAlgs.LumiIntegratorConf import LumiIntegratorConf
 import GaudiKernel.ProcessJobOptions
+
+
+def isNewCondDBTag(tag, reference_date = '20100414') :
+    date_start = tag.find('20')
+    date_end = date_start + 8
+    date = tag[date_start : date_end]
+    return date > reference_date
 
 class DaVinci(LHCbConfigurableUser) :
     
