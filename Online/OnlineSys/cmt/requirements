@@ -1,5 +1,5 @@
 package OnlineSys
-version v4r39
+version v4r40
 
 branches cmt doc
  
@@ -24,7 +24,7 @@ use DIM               v19r8p3  Online
 use ExampleGaucho     v3r3     Online
 # Does not work on WIN32
 # use FarmMonitor     v1r0     Online
-use Gaucho            v6r25    Online
+use Gaucho            v6r26    Online
 use GaudiOnline       v2r42    Online
 use GaudiSerialize    v0r7     Online
 use GaudiUPI          v1r12    Online
@@ -39,8 +39,8 @@ use OnlineHistDB      v6r4     Online
 use OnlineBase        v1r3     Online
 use OnlineKernel      v2r3     Online
 use OnlineTools       v1r2     Online
-use OnlineTasks       v1r32    Online
-use Presenter         v1r1     Online
+use OnlineTasks       v1r33    Online
+use Presenter         v1r2     Online
 use PyDIM             v2r9     Online
 use RawBankSizes      v2r7     Online
 use ROMon             v1r23    Online
@@ -48,7 +48,7 @@ use ROLogger          v0r19    Online
 use UPI               v1r18    Online
 use UPIR              v1r2     Online
 #Obsolete: use Viewer            v1r5     Online
-use Writer            v1r26    Online
+use Writer            v1r27    Online
 
 # Declare this as a container package
 apply_pattern container_package
