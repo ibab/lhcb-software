@@ -9,7 +9,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.19 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.20 $"
 # =============================================================================
 
 import Gaudi.Configuration 
@@ -118,6 +118,7 @@ class Hlt1HadronLinesConf(HltLinesConfigurableUser) :
                                         ]
             else :
                 conf +=                 [Velo,PV2D().ignoreOutputSelection()]
+                return bindMembers(prefix, conf).setOutputSelection("Hlt1/Track/Velo")
 
             return bindMembers(prefix, conf)
 
@@ -228,8 +229,8 @@ class Hlt1HadronLinesConf(HltLinesConfigurableUser) :
         #---------------------
         def dihadron(type=""):
             prefix = "HadDi"
-            if type.find('Soft') : prefix += 'Soft'  
-            if type.find('3D')   : prefix += '3D'
+            if type.find('Soft') > -1 : prefix += 'Soft'  
+            if type.find('3D') > -1   : prefix += '3D'
             
             OutputOfConfirmation = confirmationpostip(type).outputSelection()
             OutputOfCompanion    = companion(type).outputSelection() 
@@ -346,8 +347,8 @@ class Hlt1HadronLinesConf(HltLinesConfigurableUser) :
                  , prescale = self.prescale
                  , postscale = self.postscale
                  , L0DU  = "L0_CHANNEL('%(L0Channel)s')"%self.getProps()
-                 , algos =  [confirmationl0part()]+\
-                            [confirmationpreip()]+\
+                 , algos =  [confirmationl0part('Single')]+\
+                            [confirmationpreip('Single')]+\
                             [veloipcut('Single')]+\
                             [confirmationpostip('Single')]+\
                             singlehadron()+\
@@ -360,7 +361,7 @@ class Hlt1HadronLinesConf(HltLinesConfigurableUser) :
                  , prescale = self.prescale
                  , postscale = self.postscale
                  , L0DU  = "L0_CHANNEL('%(L0Channel)s')"%self.getProps()
-                 , algos =  [confirmationl0part()]+\
+                 , algos =  [confirmationl0part('Single3D')]+\
                             [confirmationpreip('Single3D')]+\
                             [veloipcut('Single3D')]+\
                             [confirmationpostip('Single3D')]+\
@@ -374,8 +375,8 @@ class Hlt1HadronLinesConf(HltLinesConfigurableUser) :
                  , prescale = self.prescale
                  , postscale = self.postscale
                  , L0DU  = "L0_CHANNEL('%(L0Channel)s')"%self.getProps()
-                 , algos =  [confirmationl0part()]+\
-                            [confirmationpreip()]+\
+                 , algos =  [confirmationl0part('Di')]+\
+                            [confirmationpreip('Di')]+\
                             [veloipcut('Di')]+\
                             [confirmationpostip('Di')]+\
                             [companion('Di')]+\
@@ -390,8 +391,8 @@ class Hlt1HadronLinesConf(HltLinesConfigurableUser) :
                  , prescale = self.prescale
                  , postscale = self.postscale
                  , L0DU  = "L0_CHANNEL('%(L0Channel)s')"%self.getProps()
-                 , algos =  [confirmationl0part()]+\
-                            [confirmationpreip()]+\
+                 , algos =  [confirmationl0part('Di3D')]+\
+                            [confirmationpreip('Di3D')]+\
                             [veloipcut('Di3D')]+\
                             [confirmationpostip('Di3D')]+\
                             [companion('Di3D')]+\
@@ -405,8 +406,8 @@ class Hlt1HadronLinesConf(HltLinesConfigurableUser) :
                  , prescale = self.prescale
                  , postscale = self.postscale
                  , L0DU = "L0_CHANNEL('%(L0Channel)s')"%self.getProps()
-                 , algos = [confirmationl0part()]+\
-                           [confirmationpreip()]+\
+                 , algos = [confirmationl0part('Single')]+\
+                           [confirmationpreip('Single')]+\
                            mondecision('Conf') 
                  )
             
@@ -416,8 +417,8 @@ class Hlt1HadronLinesConf(HltLinesConfigurableUser) :
                  , prescale = self.prescale
                  , postscale = self.postscale
                  , L0DU = "L0_CHANNEL('%(L0Channel)s')"%self.getProps()
-                 , algos = [confirmationl0part()]+\
-                           [confirmationpreip()]+\
+                 , algos = [confirmationl0part('Single')]+\
+                           [confirmationpreip('Single')]+\
                            [confirmationpostip('SingleMon')]+\
                            mondecision('Conf')
                  )
