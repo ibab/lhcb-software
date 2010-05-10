@@ -14,12 +14,14 @@ from Configurables import EventTuple, TupleToolGeneration, TupleToolTrigger, L0F
 # add event-info tuple
 tuple = EventTuple("TriggerTuple")
 tuple.ToolList = [ "TupleToolEventInfo",   #  "TupleToolGeneration",
-                   "TupleToolTrigger", "MCTupleToolEventType",
+                   "TupleToolTrigger",
                    "TupleToolTriggerRecoStats",
-                   "TupleToolPrimaries", "MCTupleToolPrimaries"]
+                   "TupleToolPrimaries" ]
 tuple.addTool( TupleToolTrigger )
-tuple.TupleToolTrigger.VerboseHlt1 = True
-tuple.TupleToolTrigger.VerboseHlt2 = True
+tuple.addTool(TupleToolTrigger)
+tuple.TupleToolTrigger.VerboseL0=True
+tuple.TupleToolTrigger.VerboseHlt1=True
+tuple.TupleToolTrigger.UseAutomaticTriggerList = True
 
 moni = GaudiSequencer("Hlt2MonitorSeq")
 moni.Members += [ tuple ] 

@@ -1,4 +1,4 @@
-### $Id: DVTestHlt2.py,v 1.7 2009-12-03 12:23:23 pkoppenb Exp $
+### $Id: DVTestHlt2.py,v 1.8 2010-05-10 12:49:36 pkoppenb Exp $
 #
 #   Hlt 2 selections test job
 #
@@ -37,18 +37,16 @@ importOptions( "$HLTSELCHECKERROOT/options/Hlt2EventTuple.py")
 # DaVinci
 #
 from Configurables import DaVinci, HltConf
-DaVinci().EvtMax = 400                   # Number of events  # 400000
-DaVinci().PrintFreq = 1000
+DaVinci().EvtMax = 10000                   # Number of events  # 400000
+DaVinci().PrintFreq = 100
 DaVinci().SkipEvents = 0
-DaVinci().DataType = "MC09"                    # Default is "DC06"
-DaVinci().Simulation   = True                  # It is MC
+DaVinci().DataType = "2010"                    # Default is "DC06"
 DaVinci().MoniSequence = [ moni ]              # Declare moni sequence
 DaVinci().Hlt = True                # Both Hlt levels
-DaVinci().HltThresholdSettings = 'Physics_320Vis_300L0_10Hlt1_Hlt2_Oct09'
-# DaVinci().Hlt2Requires = 'L0'                  # Ignore Hlt1 in 2
+DaVinci().HltThresholdSettings = 'Physics_25Vis_25L0_2Hlt1_2Hlt2_Apr10'
 DaVinci().HistogramFile = "DVTestHlt.root"     # Histogram file
 DaVinci().TupleFile = "HLT-MB.root"     # Histogram file
-# DaVinci().ReplaceL0BanksWithEmulated = True 
+DaVinci().ReplaceL0BanksWithEmulated = True 
 
 MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"
 
@@ -62,3 +60,4 @@ def noInit():
     HltCorrelations("Hlt2SelectionsCorrs").Algorithms += [ "Hlt1GlobalPass" ]
 appendPostConfigAction(noInit)
 
+DaVinci().Input = [ "   DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/data/2010/DST/00006335/0000/00006335_00003897_4.MiniBias.dst' TYP='POOL_ROOTTREE' OPT='READ'" ]
