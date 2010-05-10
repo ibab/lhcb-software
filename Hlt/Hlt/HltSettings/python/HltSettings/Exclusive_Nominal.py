@@ -18,54 +18,44 @@ class Exclusive_Nominal :
 
         lines = [
 
-            # Hlt2B2DXLines.py
-#            'Hlt2B2D2hhBachelorReq3BodyWithKsSignal',
-#            'Hlt2B2D2hhBachelorReq4BodyWithKsSignal',
-#            'Hlt2B2D2hhBachelorReq3BodyWithoutKsSignal',
-#            'Hlt2B2D2hhBachelorReq4BodyWithoutKsSignal',
-#            'Hlt2B2D2hhhBachelorReq3BodyWithKsSignal',
-#            'Hlt2B2D2hhhBachelorReq4BodyWithKsSignal',
-#            'Hlt2B2D2hhhBachelorReq3BodyWithoutKsSignal',
-#            'Hlt2B2D2hhhBachelorReq4BodyWithoutKsSignal',
-#            'Hlt2B2D2hhKstarReq3BodyWithKsSignal',
-#            'Hlt2B2D2hhKstarReq3BodyWithoutKsSignal',
-#            'Hlt2B2D2hhKstarReq4BodyWithKsSignal',
-#            'Hlt2B2D2hhKstarReq4BodyWithoutKsSignal',
-#            'Hlt2B2D2hhBachelorReq3BodyWithKsBroadMW',
-#            'Hlt2B2D2hhBachelorReq4BodyWithKsBroadMW',
-#            'Hlt2B2D2hhBachelorReq3BodyWithoutKsBroadMW',
-#            'Hlt2B2D2hhBachelorReq4BodyWithoutKsBroadMW',
-#            'Hlt2B2D2hhhBachelorReq3BodyWithKsBroadMW',
-#            'Hlt2B2D2hhhBachelorReq4BodyWithKsBroadMW',
-#            'Hlt2B2D2hhhBachelorReq3BodyWithoutKsBroadMW',
-#            'Hlt2B2D2hhhBachelorReq4BodyWithoutKsBroadMW',
-#            'Hlt2B2D2hhKstarReq3BodyWithKsBroadMW',
-#            'Hlt2B2D2hhKstarReq3BodyWithoutKsBroadMW',
-#            'Hlt2B2D2hhKstarReq4BodyWithKsBroadMW',
-#            'Hlt2B2D2hhKstarReq4BodyWithoutKsBroadMW'            
         # Hlt2B2JpsiXLines.py
-#              'Bs2JpsiPhiPrescaled'
-#            , 'Bs2JpsiPhi'
-#            , 'Bd2JpsiKstar'
-#            , 'Bu2JpsiK'
-#            , 'Bd2JpsiMuMuKsLLBiased'
-#            , 'Bd2JpsiMuMuKsLLUnbiased'
-#            , 'Bd2JpsiMuMuKsDDBiased'
-#            , 'Bd2JpsiMuMuKsDDUnbiased'
-#            , 'B2JpsiX_MuMu'
-        # Hlt2B2LLXLines.py
-#            , 'Hlt2Bu2eeK'
-#            , 'Hlt2Bu2eeKSignal'
-#            , 'Hlt2Bu2eeKJpsi'
-#            , 'Hlt2Bu2eeKHighMass'
-#            , 'Hlt2Bu2MuMuK'
-#            , 'Hlt2Bu2MuMuKSignal'
-#            , 'Hlt2Bu2MuMuKJpsi'
-#            , 'Hlt2Bu2MuMuKHighMass'
-        # Hlt2DisplVerticesLines.py
-#               'Hlt2DisplVerticesSingle'
-#             , 'Hlt2DisplVerticesDouble'
-        # Hlt2B2XGammaLines.py
+            'Hlt2B2JpsiX_MuMu', 
+            'Hlt2Bc2JpsiH', 
+            'Hlt2Bc2JpsiHDetached', 
+            'Hlt2Bc2JpsiHPrescaled', 
+            'Hlt2Bc2JpsiMuX', 
+            'Hlt2Bc2JpsiMuXSignal', 
+            'Hlt2Bd2JpsiKstarSignal', 
+            'Hlt2Bd2JpsiKstarWide', 
+            'Hlt2Bd2JpsiMuMuKsDDBiased', 
+            'Hlt2Bd2JpsiMuMuKsDDUnbiased', 
+            'Hlt2Bd2JpsiMuMuKsLLBiased', 
+            'Hlt2Bd2JpsiMuMuKsLLUnbiased', 
+            'Hlt2Bs2JpsiPhiDetached', 
+            'Hlt2Bs2JpsiPhiPrescaled', 
+            'Hlt2Bs2JpsiPhiSignal', 
+            'Hlt2Bs2JpsiPhiWide', 
+            'Hlt2TFBc2JpsiH', 
+            'Hlt2TFBc2JpsiHDetached', 
+            'Hlt2TFBc2JpsiHPrescaled', 
+            'Hlt2TFBc2JpsiMuX', 
+            'Hlt2TFBc2JpsiMuXSignal', 
+            # Hlt2B2LLXLines.py
+            'Hlt2Bu2eeK', 
+            'Hlt2Bu2eeKHighMass', 
+            'Hlt2Bu2eeKJpsi', 
+            'Hlt2Bu2eeKSignal', 
+            'Hlt2Bu2JpsiKSignal', 
+            'Hlt2Bu2JpsiKWide', 
+            'Hlt2Bu2MuMuK', 
+            'Hlt2Bu2MuMuKHighMass', 
+            'Hlt2Bu2MuMuKJpsi', 
+            'Hlt2Bu2MuMuKSignal', 
+            # Hlt2DisplVerticesLines.py
+            'Hlt2diphotonDiMuon', 
+            'Hlt2DisplVerticesDouble', 
+            'Hlt2DisplVerticesSingle', 
+            # Hlt2B2XGammaLines.py
                 'Hlt2Bs2PhiGamma'
               , 'Hlt2Bs2PhiGammaNoCutsK'
               , 'Hlt2Bs2PhiGammaWideBMass'
@@ -78,10 +68,29 @@ class Exclusive_Nominal :
         # Hlt2B2HHLines
             , 'Hlt2B2HH'
         # Hlt2B2PhiXLines
-            , 'Hlt2Bs2PhiPhi'
+            , 'Hlt2Bs2PhiPhi',
         # Hlt2InclusiveDiMuonLines
 #            , 'UnbiasedZmm'
-#            , 'Hlt2diphotonDiMuon' 
+#            , 'Hlt2diphotonDiMuon'
+            # Dstar
+            'Hlt2Dst2PiD02KMu', 
+            'Hlt2Dst2PiD02KPi', 
+            'Hlt2Dst2PiD02KPiD0SB', 
+            'Hlt2Dst2PiD02KPiDMSB', 
+            'Hlt2Dst2PiD02KPiSignal', 
+            'Hlt2Dst2PiD02MuMu', 
+            'Hlt2Dst2PiD02MuMuD0SB', 
+            'Hlt2Dst2PiD02MuMuDMSB', 
+            'Hlt2Dst2PiD02MuMuSignal', 
+            'Hlt2Dst2PiD02PiMu', 
+            'Hlt2Dst2PiD02PiPi', 
+            'Hlt2Dst2PiD02PiPiD0SB', 
+            'Hlt2Dst2PiD02PiPiDMSB', 
+            'Hlt2Dst2PiD02PiPiSignal',
+# Di-Proton
+            'Hlt2IncDiProton', 
+            'Hlt2IncDiProtonPresel', 
+            'Hlt2IncDiProtonTrackFitted', 
              ]
         
         return lines

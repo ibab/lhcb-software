@@ -4,6 +4,14 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2010-05-10 - Patrick Koppenburg
+ - Add Hlt2 lines in various classes. 
+   . New files : CharmLines.py, DiMuonLines.py, TopoLines.py
+   . Exclusive_Nominal.py : uncomment most lines. Move some to the files
+     above.
+   . Added Hlt2Lines to Physics_25Vis_25L0_2Hlt1_2Hlt2_Apr10.py 
+   See Task #14763
+
 !========================== HltSettings v1r17p2 2010-04-30 ===================
 ! 2010-04-29 - Gerhard Raven
  - prescale lumi mid lines

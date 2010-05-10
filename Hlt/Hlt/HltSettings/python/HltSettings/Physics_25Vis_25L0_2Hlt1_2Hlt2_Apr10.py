@@ -9,7 +9,7 @@ class Physics_25Vis_25L0_2Hlt1_2Hlt2_Apr10 ( Physics_MinBiasL0_PassThroughHlt1_E
     @date 2009-08-26
     """
     
-    __all__ = ( 'ActiveHlt1Lines', 'Thresholds' )
+    __all__ = ( 'ActiveHlt1Lines', 'ActiveHlt2Lines', 'Thresholds' )
 
     def HltType(self) :
         self.verifyType( Physics_25Vis_25L0_2Hlt1_2Hlt2_Apr10 )
@@ -51,6 +51,11 @@ class Physics_25Vis_25L0_2Hlt1_2Hlt2_Apr10 ( Physics_MinBiasL0_PassThroughHlt1_E
         from Hlt1Lines.Hlt1BeamGasLines         import Hlt1BeamGasLinesConf
         if Hlt1BeamGasLinesConf not in thresholds : thresholds[Hlt1BeamGasLinesConf] = dict()
         thresholds[Hlt1BeamGasLinesConf].update( { 'ForcedInputRateLimit'  : 10000 } )
+
+        # Hlt2
+        from DefaultHlt2Lines import DefaultHlt2Lines         
+        thresholds.update( DefaultHlt2Lines().Thresholds() )
+        
         return thresholds
     
     def ActiveHlt1Lines(self) :
@@ -63,3 +68,16 @@ class Physics_25Vis_25L0_2Hlt1_2Hlt2_Apr10 ( Physics_MinBiasL0_PassThroughHlt1_E
                                      #or i.startswith('Hlt1LumiLow') # do not use rate limited lumi lines to avoid confusing the lumi bookkeeping
                                      or i.startswith('Hlt1L0Any') ]
         return lines
+
+    def ActiveHlt2Lines(self) :
+        """
+        Returns a list of active lines
+        """
+        # return [ 'Hlt2PassThrough', 'Hlt2Transparent','Hlt2Forward','Hlt2DebugEvent']
+        list = Physics_MinBiasL0_PassThroughHlt1_ExpressHlt2_Apr10.ActiveHlt2Lines(self)
+        if 'Hlt2Forward' not in list : list.extend('Hlt2Forward')   ## does what ?
+        from DefaultHlt2Lines import DefaultHlt2Lines 
+        list.extend( DefaultHlt2Lines().ActiveHlt2Lines() )
+        return list
+        
+    
