@@ -4,6 +4,9 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+! 2010-05-10 - Rob Lambert
+ - Add dependency on Tr/TrackTools
+
 ! 2010-05-07 - Rob Lambert
  - forgot to import OTHitCreator in PatAlgConf.py
 
