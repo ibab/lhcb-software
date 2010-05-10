@@ -1,8 +1,8 @@
-# $Id: StrippingDstarPromptWithD02HH.py,v 1.2 2010-02-18 14:14:20 pkoppenb Exp $
+# $Id: StrippingDstarPromptWithD02HH.py,v 1.3 2010-05-10 09:11:47 poluekt Exp $
 
 __author__ = ['Philip Xing', 'Patrick Spradlin']
 __date__ = '04 January 2010'
-__version__ = '$Revision: 1.2 $'
+__version__ = '$Revision: 1.3 $'
 
 '''
 Configurable for the analysis selections for D*+ -> pi+ D0(h h'').
@@ -40,7 +40,11 @@ class StrippingDstarPromptWithD02HHConf(LHCbConfigurableUser) : # {
                   , 'DstarVtxChi2Ndof' : 13             ## unitless
                   , 'LinePrefix'       : 'StripDstarPrompt'
                 }
-
+                
+    _rsLine = None
+    _wsLine = None
+    _kkLine = None
+    _pipiLine = None
 
     def lines(self) : # {
         """
@@ -62,14 +66,17 @@ class StrippingDstarPromptWithD02HHConf(LHCbConfigurableUser) : # {
         """
         Returns a stripping line for the D0 -> K- pi+ (right sign).
         """
-        from StrippingConf.StrippingLine import StrippingLine
+        
+        if StrippingDstarPromptWithD02HHConf._rsLine == None : 
+        
+    	    from StrippingConf.StrippingLine import StrippingLine
 
-        lineName = "%(LinePrefix)sWithD02RSKPiLine" % self.getProps()
-        lineSeq = self.seqWithD02RSKPi()
+    	    lineName = "%(LinePrefix)sWithD02RSKPiLine" % self.getProps()
+    	    lineSeq = self.seqWithD02RSKPi()
 
-        line = StrippingLine(lineName, algos = [ lineSeq ])
-
-        return line
+    	    StrippingDstarPromptWithD02HHConf._rsLine = StrippingLine(lineName, algos = [ lineSeq ])
+    	
+        return StrippingDstarPromptWithD02HHConf._rsLine
     # }
 
 
@@ -77,14 +84,16 @@ class StrippingDstarPromptWithD02HHConf(LHCbConfigurableUser) : # {
         """
         Returns a stripping line for the D0 -> K- pi+ (right sign).
         """
-        from StrippingConf.StrippingLine import StrippingLine
+        
+        if StrippingDstarPromptWithD02HHConf._wsLine == None : 
+    	    from StrippingConf.StrippingLine import StrippingLine
 
-        lineName = "%(LinePrefix)sWithD02WSKPiLine" % self.getProps()
-        lineSeq = self.seqWithD02WSKPi()
+    	    lineName = "%(LinePrefix)sWithD02WSKPiLine" % self.getProps()
+    	    lineSeq = self.seqWithD02WSKPi()
 
-        line = StrippingLine(lineName, algos = [ lineSeq ])
+    	    StrippingDstarPromptWithD02HHConf._wsLine = StrippingLine(lineName, algos = [ lineSeq ])
 
-        return line
+        return StrippingDstarPromptWithD02HHConf._wsLine
     # }
 
 
@@ -92,14 +101,17 @@ class StrippingDstarPromptWithD02HHConf(LHCbConfigurableUser) : # {
         """
         Returns a stripping line for the D0 -> K- pi+ (right sign).
         """
-        from StrippingConf.StrippingLine import StrippingLine
+        
+        if StrippingDstarPromptWithD02HHConf._kkLine == None : 
+        
+    	    from StrippingConf.StrippingLine import StrippingLine
 
-        lineName = "%(LinePrefix)sWithD02KKLine" % self.getProps()
-        lineSeq = self.seqWithD02KK()
+    	    lineName = "%(LinePrefix)sWithD02KKLine" % self.getProps()
+    	    lineSeq = self.seqWithD02KK()
 
-        line = StrippingLine(lineName, algos = [ lineSeq ])
+    	    StrippingDstarPromptWithD02HHConf._kkLine = StrippingLine(lineName, algos = [ lineSeq ])
 
-        return line
+        return StrippingDstarPromptWithD02HHConf._kkLine
     # }
 
 
@@ -107,14 +119,17 @@ class StrippingDstarPromptWithD02HHConf(LHCbConfigurableUser) : # {
         """
         Returns a stripping line for the D0 -> K- pi+ (right sign).
         """
-        from StrippingConf.StrippingLine import StrippingLine
+        
+        if StrippingDstarPromptWithD02HHConf._pipiLine == None : 
+        
+    	    from StrippingConf.StrippingLine import StrippingLine
 
-        lineName = "%(LinePrefix)sWithD02PiPiLine" % self.getProps()
-        lineSeq = self.seqWithD02PiPi()
+    	    lineName = "%(LinePrefix)sWithD02PiPiLine" % self.getProps()
+    	    lineSeq = self.seqWithD02PiPi()
 
-        line = StrippingLine(lineName, algos = [ lineSeq ])
+    	    StrippingDstarPromptWithD02HHConf._pipiLine = StrippingLine(lineName, algos = [ lineSeq ])
 
-        return line
+        return StrippingDstarPromptWithD02HHConf._pipiLine
     # }
 
 

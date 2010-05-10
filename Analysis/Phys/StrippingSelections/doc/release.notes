@@ -5,6 +5,11 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-05-10 - Anton Poluektov 
+ - python/StrippingSelections/StrippingDstarPromptWithD02HH.py
+ - python/StrippingSelections/StrippingDstarD02xx.py
+     Fixed selections create multiple lines with the same name. 
+
 ! 2010-05-09 - Plamen Hopchev
  - Created StrippingBeamGas.py and inluded it in the lines of StreamMiniBias
 

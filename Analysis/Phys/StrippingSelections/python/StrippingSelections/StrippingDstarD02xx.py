@@ -1,7 +1,7 @@
 #
 __author__ = ['Francesco Dettori', 'Walter Bonivento']
 __date__ = '2010/04/23'
-__version__ = '$Revision: 1.1 $'
+__version__ = '$Revision: 1.2 $'
 
 '''
   Stripping for D*(2010)+ -> pi+ (D0->xx) selection:
@@ -145,8 +145,8 @@ class StrippingDstarD02xxConf(LHCbConfigurableUser):
         return lines
     
 
-    def __apply_configuration__(self) :
-        self.lines()
+#    def __apply_configuration__(self) :
+#        self.lines()
 
 
 
