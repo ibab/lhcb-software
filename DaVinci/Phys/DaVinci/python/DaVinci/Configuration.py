@@ -1,7 +1,7 @@
 """
 High level configuration tools for DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.102 2010-05-10 07:27:08 jpalac Exp $"
+__version__ = "$Id: Configuration.py,v 1.103 2010-05-10 07:35:43 jpalac Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -404,7 +404,12 @@ class DaVinci(LHCbConfigurableUser) :
             if self.getProp("Simulation") :
                 DstConf().setProp("SimType","Full")
         return inputType
-    
+
+    def _hltCondDBHack() :
+        cb = self.getProp("CondDBtag")
+        if not isNewCondDBTag(cd) :
+            from Configurables import HltReferenceRateSvc
+            HltReferenceRateSvc().UseCondDB = False 
 ################################################################################
 # Ntuple files
 #
@@ -553,6 +558,7 @@ class DaVinci(LHCbConfigurableUser) :
             self.l0()
             self.hlt()
             self.decReports()
+            self._hltCondDBHack()
         self.defineMonitors()
         self.defineEvents()
         self.defineInput()
