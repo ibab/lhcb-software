@@ -1,4 +1,4 @@
-// $Id: PageDescriptionTextView.cpp,v 1.3 2010-05-04 22:43:42 robbep Exp $
+// $Id: PageDescriptionTextView.cpp,v 1.4 2010-05-10 14:47:03 robbep Exp $
 // Include files
 
 // local
@@ -135,6 +135,8 @@ void TGHtml::ComputeVirtualSize() {
 // Click on text
 //=============================================================================
 Bool_t PageDescriptionTextView::HandleButton( Event_t * event ) {
+  // Only on Linux for the moment
+#ifndef WIN32
   if ( ( event -> fType == kButtonPress ) && ( event -> fCode == 1 ) ) {
     const char * link ;
     link = GetHref( event -> fX , event -> fY ) ;
@@ -168,6 +170,7 @@ Bool_t PageDescriptionTextView::HandleButton( Event_t * event ) {
 	}
     }
   }
+#endif
   return kTRUE ;
 }
 
