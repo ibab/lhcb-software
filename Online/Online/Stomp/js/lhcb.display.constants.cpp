@@ -253,6 +253,15 @@ if ( !_lhcb().constants ) {
 	  size:   {width:  900,	height: 820}
 	},
 	subdetectors: {
+	  lumi: {
+	    src:    this.lhcb_display_url('lumi'),
+	    img:    this.images.lookprod,
+	    title:  'DAQ/LUMI',
+	    nick:   'lhcb-lumi-win',
+	    cls:    'Collimators16',
+	    iconCls:'Collimators32',
+	    size:   {width:  950,	height: 700}
+	  },
 	  velo: {
 	    src:    this.lhcb_display_url('velo'),
 	    img:    this.images.lookprod,

@@ -143,8 +143,8 @@ var Page1 = function(msg, sys)   {
     tr = document.createElement('tr');
     td = document.createElement('td');
     td.appendChild(this.LHC_operator=lhcb.widgets.LHC_operator_comments());    
-    td.onclick     = function() { document.location = "lhcb.display.htm?type=lhc";};
-    tooltips.set(td,'Comment from the LHC operator<br>Click to move to LHC info page.');
+    td.onclick     = function() { document.location = "http://op-webtools.web.cern.ch/op-webtools/vistar/vistars.php?usr=LHCCOORD"; };
+    tooltips.set(td,'Comment from the LHC operator<br>Click to move to LHC coodination planning page.');
     tr.appendChild(td);
     tb.appendChild(tr);
     // Shift crew comments

@@ -202,6 +202,7 @@ var navbar_subdetectors = function(navBar) {
 	     'NavigationBar',
 	     '../Images/Help_16x16.gif',
 	     '../Images/Help_32x32.gif');
+  navBar.addURL('LUMI/DAQ page',lhcb.constants.urls.lhcb.subdetectors.lumi);
   navBar.addURL('Show VELO page',lhcb.constants.urls.lhcb.subdetectors.velo);
   navBar.addURL('Show OT page',lhcb.constants.urls.lhcb.subdetectors.ot);
   navBar.addURL('Show MUON page',lhcb.constants.urls.lhcb.subdetectors.muon);
