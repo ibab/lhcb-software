@@ -1,6 +1,6 @@
 ########################################################################
 #
-# $Id: DVTestHlt12-MC09.py,v 1.13 2010-05-10 09:33:31 jpalac Exp $
+# $Id: DVTestHlt12-MC09.py,v 1.14 2010-05-10 11:32:57 jpalac Exp $
 #
 # Test for Hlt1&2. This should be identical to Hlt1 except for the Hlt settings
 #
@@ -22,7 +22,7 @@ DaVinci().EvtMax = 1000                      # Number of events
 DaVinci().PrintFreq  = 1                       # Print frequency
 DaVinci().DataType = "MC09"                    # Pretend it's real data
 DaVinci().Simulation   = True
-#DaVinci().CondDBtag = 'MC09-20100430-vc-md100'
+DaVinci().CondDBtag = 'MC09-20100430-vc-md100'
 from Configurables import HltCorrelations
 DaVinci().MoniSequence = [ HltCorrelations() ]
 # DaVinci().MoniSequence += [ ReadHltSummary() ]
