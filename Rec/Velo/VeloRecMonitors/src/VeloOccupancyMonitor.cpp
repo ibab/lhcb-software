@@ -1,4 +1,4 @@
-// $Id: VeloOccupancyMonitor.cpp,v 1.22 2010-05-06 09:53:27 krinnert Exp $
+// $Id: VeloOccupancyMonitor.cpp,v 1.23 2010-05-10 15:01:18 krinnert Exp $
 // Include files 
 // -------------
 
@@ -153,8 +153,8 @@ StatusCode Velo::VeloOccupancyMonitor::initialize() {
     m_channelOccupancyHistPerSensor[s] = Gaudi::Utils::Aida2ROOT::aida2root(book1D(fmtNameCh.str(), titleCh, -0.5, 2047.5, 2048)); 
     m_occupanciesCh[s] = new Velo::Hist1D(m_channelOccupancyHistPerSensor[s]);
   }
-  m_histOccSpectAll = Gaudi::Utils::Aida2ROOT::aida2root(book1D("OccSpectAll", "Occupancy Spectrum", -0.25, 100.25, 201)); 
-  m_histOccSpectLow = Gaudi::Utils::Aida2ROOT::aida2root(book1D("OccSpectMaxLow", "Occupancy Spectrum", -0.05, 20.05, 201));
+  m_histOccSpectAll = Gaudi::Utils::Aida2ROOT::aida2root(book1D("OccSpectAll", "Occupancy Spectrum", -0.0025, 100.0025, 20001)); 
+  m_histOccSpectLow = Gaudi::Utils::Aida2ROOT::aida2root(book1D("OccSpectMaxLow", "Occupancy Spectrum", -0.0005, 20.0005, 20001));
   m_fastHistOccSpectAll = new Velo::Hist1D(m_histOccSpectAll);
   m_fastHistOccSpectLow = new Velo::Hist1D(m_histOccSpectLow);
   m_histAvrgSensor  = Gaudi::Utils::Aida2ROOT::aida2root(book1D("OccAvrgSens", "Avrg. Occupancy vs. Sensor", -0.5, 131.5, 132));
