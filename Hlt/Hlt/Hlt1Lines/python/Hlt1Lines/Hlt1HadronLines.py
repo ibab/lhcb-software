@@ -9,7 +9,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.20 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.21 $"
 # =============================================================================
 
 import Gaudi.Configuration 
@@ -118,7 +118,7 @@ class Hlt1HadronLinesConf(HltLinesConfigurableUser) :
                                         ]
             else :
                 conf +=                 [Velo,PV2D().ignoreOutputSelection()]
-                return bindMembers(prefix, conf).setOutputSelection("Hlt1/Track/Velo")
+                return bindMembers(prefix, conf)
 
             return bindMembers(prefix, conf)
 
