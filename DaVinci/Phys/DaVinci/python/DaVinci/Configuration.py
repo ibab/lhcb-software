@@ -1,7 +1,7 @@
 """
 High level configuration tools for DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.105 2010-05-10 09:35:42 jpalac Exp $"
+__version__ = "$Id: Configuration.py,v 1.106 2010-05-10 11:29:33 jpalac Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -14,6 +14,8 @@ import GaudiKernel.ProcessJobOptions
 
 
 def isNewCondDBTag(tag, reference_date = '20100414') :
+    tag = tag.upper()
+    if tag == 'DEFAULT' or tag == '' : return True
     date_start = tag.find('20')
     if date_start == -1 : return False
     date_end = date_start + 8
