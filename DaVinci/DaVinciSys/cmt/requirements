@@ -11,7 +11,6 @@ use  DaVinciMonitors            v1r10p1 Phys
 use  RichRecTools               v4r11p1 Rich
 use  HltCommon                  v5r24p1 Hlt
 use  KaliCalo                   v4r2p1  Phys
-use  PhysSelPython              v5r3    PhysSel
 use  DSTWriters                 v1r5    Phys
 #  
 # Declare this as a container package
