@@ -1,7 +1,7 @@
 
 __author__ = ['Liming Zhang']
 __date__ = '24/03/2010'
-__version__ = '$Revision: 1.4 $'
+__version__ = '$Revision: 1.5 $'
 
 '''
 Bs0->Jpsif0 + JpsiKstbar lifetime biased stripping selection using LoKi::Hybrid and
@@ -74,7 +74,7 @@ class StrippingBs2Jpsif0Conf(LHCbConfigurableUser):
 
             
     def _Jpsi2MuMuLoose( self ):
-	StdVeryLooseJpsi2MuMu = DataOnDemand("StdVeryLooseJpsi2MuMu", "StdVeryLooseJpsi2MuMu")
+	StdVeryLooseJpsi2MuMu = DataOnDemand(Location = "Phys/StdVeryLooseJpsi2MuMu")
 	_JpsiFilter = FilterDesktop("JpsiFilterForBs2Jpsif0Loose")
 	_JpsiFilter.Code = "  (MAXTREE('mu+'==ABSID, TRCHI2DOF) < %(MuonTRCHI2Loose)s)" \
         	           "& (ADMASS('J/psi(1S)') < %(JpsiMassWinLoose)s *MeV)" \
@@ -87,7 +87,7 @@ class StrippingBs2Jpsif0Conf(LHCbConfigurableUser):
     
     def _Jpsi2MuMu( self ):
 	if (StrippingBs2Jpsif0Conf._Jpsi2MuMuSelection == None) : 
-	    StdLooseJpsi2MuMu = DataOnDemand("StdLooseJpsi2MuMu", "StdLooseJpsi2MuMu")
+	    StdLooseJpsi2MuMu = DataOnDemand(Location = "Phys/StdLooseJpsi2MuMu")
 	    _JpsiFilter = FilterDesktop("JpsiFilterForBs2Jpsif0")
 	    _JpsiFilter.Code = "  (MAXTREE('mu+'==ABSID, TRCHI2DOF) < %(MuonTRCHI2)s)" \
                            "& (MINTREE('mu+'==ABSID, PIDmu) > %(MuonPIDmu)s)" \
@@ -101,7 +101,7 @@ class StrippingBs2Jpsif0Conf(LHCbConfigurableUser):
 
  
     def _f02PiPiLoose( self ):
-        StdNoPIDsPions = DataOnDemand("StdNoPIDsPions", "StdNoPIDsPions")
+        StdNoPIDsPions = DataOnDemand(Location = "Phys/StdNoPIDsPions")
         _f0 = CombineParticles("f02PiPiLoose")
         _f0.DecayDescriptors = ["f_0(980) -> pi+ pi-", "f_0(980) -> pi- pi-", "f_0(980) -> pi+ pi+"]
         _f0.CombinationCut = "ADAMASS('f_0(980)') < %(f0MassWin)s *MeV" % self.getProps()
@@ -115,7 +115,7 @@ class StrippingBs2Jpsif0Conf(LHCbConfigurableUser):
 	return f0	
 
     def _f02PiPi( self ):
-        StdLoosePions = DataOnDemand("StdLoosePions", "StdLoosePions")
+        StdLoosePions = DataOnDemand(Location = "Phys/StdLoosePions")
         _f0 = CombineParticles("f02PiPi")
         _f0.DecayDescriptors = ["f_0(980) -> pi+ pi-", "f_0(980) -> pi- pi-", "f_0(980) -> pi+ pi+"]
         _f0.CombinationCut = "ADAMASS('f_0(980)') < %(f0MassWin)s *MeV" % self.getProps()
@@ -171,7 +171,7 @@ class StrippingBs2Jpsif0Conf(LHCbConfigurableUser):
 	return Bs
 
     def _Kst2Kpi( self ):
-        StdVeryLooseDetachedKst2Kpi = DataOnDemand("StdVeryLooseDetachedKst2Kpi", "StdVeryLooseDetachedKst2Kpi")
+        StdVeryLooseDetachedKst2Kpi = DataOnDemand(Location = "Phys/StdVeryLooseDetachedKst2Kpi")
 	_KstFilter = FilterDesktop("KstFilterForBs2JpsiKst")
 	_KstFilter.Code = "  (INTREE( ('K+'==ABSID) &  (TRCHI2DOF < %(PionTRCHI2)s)))" \
                             "& (INTREE( ('pi+'==ABSID) & (TRCHI2DOF < %(PionTRCHI2)s) & (PIDK< %(PionPIDK)s)))" \

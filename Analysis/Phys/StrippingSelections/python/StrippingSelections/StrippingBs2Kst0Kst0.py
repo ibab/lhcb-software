@@ -1,6 +1,6 @@
 __author__ = ['Celestino Rodriguez']
 __date__ = '26/04/2010'
-__version__ = '$Revision: 1.5 $'
+__version__ = '$Revision: 1.6 $'
 
 '''
 Bs->Kst0Kst0 selection
@@ -61,8 +61,8 @@ class StrippingBs2KstKstConf(LHCbConfigurableUser):
 	Bs2KstKstSeq = SelectionSequence("SeqBs2KstKstLoose", TopSelection = Bs2KstKstSel)
 	return StrippingLine('Bs2Kst0Kst0LooseLine', prescale = 1, algos = [Bs2KstKstSeq])   
     def Kstar2Kpi( self ):
-        StdNoPIDsKaons = DataOnDemand("StdNoPIDsKaons", "StdNoPIDsKaons")
-        StdNoPIDsPions = DataOnDemand("StdNoPIDsPions", "StdNoPIDsPions")
+        StdNoPIDsKaons = DataOnDemand(Location = "Phys/StdNoPIDsKaons")
+        StdNoPIDsPions = DataOnDemand(Location = "Phys/StdNoPIDsPions")
         _Kstar = CombineParticles("Kstar2KPiForBs2KstKst")
         _Kstar.DecayDescriptor = "[K*(892)0 -> K+ pi-]cc"
         _Kstar.DaughtersCuts = {  "K+" :"(PT > %(KaonPT)s *MeV) & (MIPCHI2DV(PRIMARY)  > %(KaonIPCHI2)s)& (P > %(KaonP)s *MeV) & (PIDK > %(KaonPIDK)s)" % self.getProps()
@@ -79,8 +79,8 @@ class StrippingBs2KstKstConf(LHCbConfigurableUser):
 
     def Kstar2KpiLoose( self ):
         from Configurables import  OnOfflineTool
-        StdNoPIDsKaons = DataOnDemand("StdNoPIDsKaons", "StdNoPIDsKaons")
-        StdNoPIDsPions = DataOnDemand("StdNoPIDsPions", "StdNoPIDsPions")
+        StdNoPIDsKaons = DataOnDemand(Location = "Phys/StdNoPIDsKaons")
+        StdNoPIDsPions = DataOnDemand(Location = "Phys/StdNoPIDsPions")
 	_Kstar = CombineParticles("Kstar2KPiForBs2KstKstLoose")
 	_Kstar.DecayDescriptor = "[K*(892)0 -> K+ pi-]cc"
 	_Kstar.addTool(OnOfflineTool())

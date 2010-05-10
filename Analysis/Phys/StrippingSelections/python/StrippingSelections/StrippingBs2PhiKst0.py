@@ -1,6 +1,6 @@
 __author__ = ['Celestino Rodriguez']
 __date__ = '26/04/2010'
-__version__ = '$Revision: 1.1 $'
+__version__ = '$Revision: 1.2 $'
 
 '''
 Bs->PhiKst0~ selection
@@ -70,7 +70,7 @@ class StrippingBs2PhiKstConf(LHCbConfigurableUser):
 	return StrippingLine('Bs2PhiKst0bLooseLine', prescale = 1, algos = [Bs2PhiKstSeq])   
     def Phi2KKLoose( self ):
         from Configurables import  OnOfflineTool
-        StdNoPIDsKaons = DataOnDemand("StdNoPIDsKaons", "StdNoPIDsKaons")
+        StdNoPIDsKaons = DataOnDemand(Location = "Phys/StdNoPIDsKaons")
         _Phi = CombineParticles("Kstar2KPiForBs2PhiKst")
         _Phi.DecayDescriptor = "phi(1020) -> K+ K-"
         _Phi.addTool(OnOfflineTool())
@@ -86,7 +86,7 @@ class StrippingBs2PhiKstConf(LHCbConfigurableUser):
         return Phi
 
     def Phi2KK( self ):
-        StdNoPIDsKaons = DataOnDemand("StdNoPIDsKaons", "StdNoPIDsKaons")
+        StdNoPIDsKaons = DataOnDemand(Location = "Phys/StdNoPIDsKaons")
         _Phi = CombineParticles("Phi2KPiForBs2PhiKst")
         _Phi.DecayDescriptor = "phi(1020) -> K+ K-"
         _Phi.DaughtersCuts = {  "K+" :"(PT > %(KaonPT)s *MeV) & (MIPCHI2DV(PRIMARY)  > %(KaonIPCHI2)s )& (P > %(KaonP)s *MeV) &(PIDK> %(KaonPIDK)s)" % self.getProps()}
@@ -100,8 +100,8 @@ class StrippingBs2PhiKstConf(LHCbConfigurableUser):
         return Phi
 
     def Kstar2Kpi( self ):
-        StdNoPIDsKaons = DataOnDemand("StdNoPIDsKaons", "StdNoPIDsKaons")
-        StdNoPIDsPions = DataOnDemand("StdNoPIDsPions", "StdNoPIDsPions")
+        StdNoPIDsKaons = DataOnDemand(Location = "Phys/StdNoPIDsKaons")
+        StdNoPIDsPions = DataOnDemand(Location = "Phys/StdNoPIDsPions")
         _Kstar = CombineParticles("Kstar2KPiForBs2PhiKst")
         _Kstar.DecayDescriptor = "[K*(892)0 -> K+ pi-]cc"
         _Kstar.DaughtersCuts = {  "K+" :"(PT > %(KaonPT)s *MeV) & (MIPCHI2DV(PRIMARY)  > %(KaonIPCHI2)s)& (P > %(KaonP)s *MeV) & (PIDK > %(KaonPIDK)s)" % self.getProps()
@@ -118,8 +118,8 @@ class StrippingBs2PhiKstConf(LHCbConfigurableUser):
 
     def Kstar2KpiLoose( self ):
         from Configurables import  OnOfflineTool
-        StdNoPIDsKaons = DataOnDemand("StdNoPIDsKaons", "StdNoPIDsKaons")
-        StdNoPIDsPions = DataOnDemand("StdNoPIDsPions", "StdNoPIDsPions")
+        StdNoPIDsKaons = DataOnDemand(Location = "Phys/StdNoPIDsKaons")
+        StdNoPIDsPions = DataOnDemand(Location = "Phys/StdNoPIDsPions")
 	_Kstar = CombineParticles("Kstar2KPiForBs2PhiKstLoose")
 	_Kstar.DecayDescriptor = "[K*(892)0 -> K+ pi-]cc"
 	_Kstar.addTool(OnOfflineTool())

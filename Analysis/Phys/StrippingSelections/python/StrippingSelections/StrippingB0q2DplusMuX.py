@@ -1,8 +1,8 @@
-# $Id: StrippingB0q2DplusMuX.py,v 1.2 2010-04-23 14:46:47 rlambert Exp $
+# $Id: StrippingB0q2DplusMuX.py,v 1.3 2010-05-10 12:12:05 jpalac Exp $
 
 __author__ = [ 'Rob LAmbert' ]
 __date__ = '2010-04-20'
-__version = '$Revision: 1.2 $'
+__version = '$Revision: 1.3 $'
 
 # Many selections are put in here,
 # A) MC09:   the full MC09 offline selection,
@@ -52,7 +52,7 @@ class StrippingB0q2DplusMuXClass(object) :
         ###################   Create selection  ###################################
         MuForB0q = FilterDesktop(self.SelType+"MuForB0q")
         MuForB0q.Code = MuCut
-        MyStdMuons = DataOnDemand('DODStdLooseMuons', Location = 'StdLooseMuons')
+        MyStdMuons = DataOnDemand(Location = 'Phys/StdLooseMuons')
         SelMuForB0q = Selection("SelMuForB0q2DplusMuX"+self.SelType, Algorithm=MuForB0q, RequiredSelections = [MyStdMuons])
         
         return SelMuForB0q
@@ -117,10 +117,8 @@ class StrippingB0q2DplusMuXClass(object) :
         Dplus2KKpiForB0q.CombinationCut = DCombCut
         Dplus2KKpiForB0q.MotherCut = DMothCut
         
-        MyStdLooseKaons = DataOnDemand('DODStdLooseDs2KKpi',
-                                    Location = 'StdLooseKaons')
-        MyStdLoosePions = DataOnDemand('DODStdLooseDs2KKpi',
-                                    Location = 'StdLoosePions')
+        MyStdLooseKaons = DataOnDemand(Location = 'Phys/StdLooseKaons')
+        MyStdLoosePions = DataOnDemand(Location = 'Phys/StdLoosePions')
         
         SelDplus2KKpiForB0q = Selection("SelDplus2KKpiForB0q"+self.SelType, Algorithm=Dplus2KKpiForB0q, RequiredSelections = [MyStdLooseKaons,MyStdLoosePions])
         

@@ -1,8 +1,8 @@
-# $Id: StrippingBs2EtacPhi.py,v 1.1 2010-04-08 14:23:11 ksendero Exp $
+# $Id: StrippingBs2EtacPhi.py,v 1.2 2010-05-10 12:12:05 jpalac Exp $
 
 __author__ = ['Katarzyna Senderowska']
 __date__ = '08/04/2010'
-__version__ = '$Revision: 1.1 $'
+__version__ = '$Revision: 1.2 $'
 
 '''
 Bs->EtacPhi lifetime unbiased stripping selection using LoKi::Hybrid and
@@ -20,8 +20,8 @@ from StrippingConf.StrippingLine import StrippingLine, StrippingMember
 #############################################################################################
 # eta_c selection
 #
-_Kaons = DataOnDemand("Kaons", Location = "Phys/StdLooseKaons")
-_Pions = DataOnDemand("Pions", Location = "Phys/StdLoosePions")
+_Kaons = DataOnDemand(Location = "Phys/StdLooseKaons")
+_Pions = DataOnDemand(Location = "Phys/StdLoosePions")
 
 ### eta_c loose
 
@@ -89,7 +89,7 @@ Etac = Selection("EtacForBs2EtacPhi", Algorithm=_Etac, RequiredSelections=[RhoFo
 #############################################################################################
 # phi selection
 #
-StdLoosePhi2KK = DataOnDemand("StdLoosePhi2KK", "StdLoosePhi2KK")
+StdLoosePhi2KK = DataOnDemand(Location = "Phys/StdLoosePhi2KK")
 
 ### phi loose
 _PhiFilter = FilterDesktop("PhiFilterForBs2EtacPhiLoose")
