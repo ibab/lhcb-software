@@ -11,7 +11,7 @@
 ##
 # =============================================================================
 __author__  = "V. Gligorov vladimir.gligorov@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.13 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.14 $"
 # =============================================================================
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
@@ -1192,14 +1192,14 @@ class Hlt2Tracking(LHCbConfigurableUser):
         #
         # Check if we are making neutrals or not
         #
-        myCALOProcessor.SkipNeutrals    = True
+        myCALOProcessor.SkipNeutrals    = False
         myCALOProcessor.SkipCharged     = False
         if (self.getProp("MakeNeutrals") == True): 
             myCALOProcessor.SkipNeutrals    = False
             myCALOProcessor.SkipCharged     = True
 
         # The sequences are given the track and protoparticle locations when initializing 
-        myPIDSeq     = myCALOProcessor.caloSequence(        [tracks.outputSelection()]                    )
+        myPIDSeq         = myCALOProcessor.caloSequence(        [tracks.outputSelection()]                    )
         myChargedSeq     = myCALOProcessor.chargedProtoSequence(    [tracks.outputSelection()],    chargedProtosOutputLocation    )
         myNeutralSeq     = myCALOProcessor.neutralProtoSequence(    [tracks.outputSelection()],    neutralProtosOutputLocation    )
 

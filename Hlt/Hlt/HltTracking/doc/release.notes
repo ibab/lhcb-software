@@ -1,9 +1,13 @@
-!$Id: release.notes,v 1.119 2010-05-07 09:46:13 jhe Exp $
+!$Id: release.notes,v 1.120 2010-05-10 12:59:14 gligorov Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/HltTracking
 ! Responsible : Jose A. Hernando
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
+
+! 2010-05-10 - V. Gligorov
+ - Enable neutral reco. when making electron protoparticles in order
+   to have the brems correction in. 
 
 ! 2010-05-07 - Jibo He
  - python/HltTracking/Hlt2Tracking.py
