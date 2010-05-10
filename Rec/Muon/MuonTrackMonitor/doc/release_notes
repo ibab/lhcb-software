@@ -4,6 +4,9 @@
 ! Purpose     : High level Muon Monitoring after reconstruction
 !-----------------------------------------------------------------------------
 
+! 2010-05-10 - Rob Lambert
+ - Added explicit dependency of GenConfUser on pyhon compilation
+
 ! 2010-05-07 - Rob Lambert
  - Fixed missed status code check
  - Downgraded info messages to supressed warnings or debug

@@ -22,3 +22,5 @@ library MuonTrackMonitor ../src/*.cpp
 apply_pattern component_library library=MuonTrackMonitor
 
 apply_pattern install_python_modules
+
+macro_append MuonTrackMonitorGenConfUser_dependencies MuonTrackMonitorConfDbMerge
