@@ -1,6 +1,6 @@
 from TrackSys.Configuration import *
 from Configurables import ( PatForward, PatForwardTool, PatFwdTool)
-from Configurables import  (PatDownstream, OTHitCreator)
+from Configurables import  (PatDownstream, Tf__OTHitCreator)
 from Configurables import (PatSeeding, PatSeedingTool)
 
 
@@ -65,7 +65,7 @@ class CosmicConf(object):
     SeedAlg.addTool(PatSeedingTool, name="PatSeedingTool")
     self.configureTool(SeedAlg.PatSeedingTool)
         
-  def configureTool(self, SeedTool, hitCreator=OTHitCreator("ToolSvc.OTHitCreator")):
+  def configureTool(self, SeedTool, hitCreator=Tf__OTHitCreator("ToolSvc.OTHitCreator")):
     #no magnetic field
     #options to tune PatSeeding for tracking with B field off
     SeedTool.xMagTol = 4e2

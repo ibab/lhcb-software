@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2010-05-10 - Rob Lambert
+ - corrected OTHitCreator to Tf__OTHitCreator
+
+! 2010-05-10 - Rob Lambert
  - Add dependency on Tr/TrackTools
 
 ! 2010-05-07 - Rob Lambert
