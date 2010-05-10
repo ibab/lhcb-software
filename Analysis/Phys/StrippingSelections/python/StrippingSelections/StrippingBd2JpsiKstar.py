@@ -1,8 +1,8 @@
-# $Id: StrippingBd2JpsiKstar.py,v 1.4 2010-02-02 21:24:47 gcowan Exp $
+# $Id: StrippingBd2JpsiKstar.py,v 1.5 2010-05-10 11:58:49 jpalac Exp $
 
 __author__ = ['Greig Cowan']
 __date__ = '24/01/2010'
-__version__ = '$Revision: 1.4 $'
+__version__ = '$Revision: 1.5 $'
 
 '''
 Bd->JpsiKstar lifetime unbiased stripping selection using LoKi::Hybrid and
@@ -56,7 +56,7 @@ class StrippingBd2JpsiKstarConf(LHCbConfigurableUser):
 	return StrippingLine('Bd2JpsiKstarLooseLine', prescale = 1, algos = [Bd2JpsiKstarSeq])   
      
     def Jpsi2MuMuLoose( self ):
-        StdVeryLooseJpsi2MuMu = DataOnDemand("StdVeryLooseJpsi2MuMu", "StdVeryLooseJpsi2MuMu")
+        StdVeryLooseJpsi2MuMu = DataOnDemand(Location = "Phys/StdVeryLooseJpsi2MuMu")
 	_JpsiFilter = FilterDesktop("JpsiFilterForBd2JpsiKstarLoose")
 	_JpsiFilter.Code = "  (MAXTREE('mu+'==ABSID, TRCHI2DOF) < %(MuonTRCHI2Loose)s)" \
         	           "& (PT > %(JpsiPTLoose)s *MeV)" \
@@ -69,7 +69,7 @@ class StrippingBd2JpsiKstarConf(LHCbConfigurableUser):
 	return Jpsi
 
     def Kstar2Kpi( self ):
-        StdLooseKstar2Kpi = DataOnDemand("StdLooseKstar2Kpi", "StdLooseKstar2Kpi")
+        StdLooseKstar2Kpi = DataOnDemand(Location="Phys/StdLooseKstar2Kpi")
 	_kstarFilter = FilterDesktop("KstarFilterForBd2JpsiKstar")
 	_kstarFilter.Code = "  (MINTREE('K+'==ABSID, (PIDK - PIDp)) > %(KaonPIDKMinusPIDp)s)" \
         	            "& (MINTREE('K+'==ABSID, PIDK) > %(KaonPIDK)s)"\
@@ -83,8 +83,8 @@ class StrippingBd2JpsiKstarConf(LHCbConfigurableUser):
 	return Kstar	
 
     def Kstar2KpiLoose( self ):
-        StdNoPIDsKaons = DataOnDemand("StdNoPIDsKaons", "StdNoPIDsKaons")
-        StdNoPIDsPions = DataOnDemand("StdNoPIDsPions", "StdNoPIDsPions")
+        StdNoPIDsKaons = DataOnDemand(Location = "Phys/StdNoPIDsKaons")
+        StdNoPIDsPions = DataOnDemand(Location  = "Phys/StdNoPIDsPions")
 	_Kstar = CombineParticles("Kstar2KPiForBd2JpsiKstarLoose")
 	_Kstar.DecayDescriptor = "[K*(892)0 -> K+ pi-]cc"
 	_Kstar.DaughtersCuts = {  "K+" :"(TRCHI2DOF < %(KaonTRCHI2Loose)s)" % self.getProps()
@@ -99,7 +99,7 @@ class StrippingBd2JpsiKstarConf(LHCbConfigurableUser):
 	return Kstar
 
     def Bd2JpsiKstar( self ):
-        Jpsi = DataOnDemand("StdLTUnbiasedJpsi2MuMu", "StdLTUnbiasedJpsi2MuMu")
+        Jpsi = DataOnDemand(Location = "Phys/StdLTUnbiasedJpsi2MuMu")
 	Kstar = self.Kstar2Kpi()
 	_Bd = CombineParticles("Bd2JpsiKstar")
       	_Bd.DecayDescriptor = "[B0 -> J/psi(1S) K*(892)0]cc"

@@ -1,8 +1,8 @@
-# $Id: StrippingBu2JpsiK.py,v 1.4 2010-02-02 21:24:47 gcowan Exp $
+# $Id: StrippingBu2JpsiK.py,v 1.5 2010-05-10 11:58:49 jpalac Exp $
 
 __author__ = ['Greig Cowan']
 __date__ = '24/01/2010'
-__version__ = '$Revision: 1.4 $'
+__version__ = '$Revision: 1.5 $'
 
 '''
 Bu->JpsiK lifetime unbiased stripping selection using LoKi::Hybrid and
@@ -51,7 +51,7 @@ class StrippingBu2JpsiKConf(LHCbConfigurableUser):
 	return StrippingLine('Bu2JpsiKLooseLine', prescale = 1, algos = [Bu2JpsiKSeq])   
      	
     def Jpsi2MuMuLoose( self ):
-        StdVeryLooseJpsi2MuMu = DataOnDemand("StdVeryLooseJpsi2MuMu", "StdVeryLooseJpsi2MuMu")
+        StdVeryLooseJpsi2MuMu = DataOnDemand(Location = "Phys/StdVeryLooseJpsi2MuMu")
 	_JpsiFilter = FilterDesktop("JpsiFilterForBu2JpsiKLoose")
 	_JpsiFilter.Code = "  (MAXTREE('mu+'==ABSID, TRCHI2DOF) < %(MuonTRCHI2Loose)s)" \
         	           "& (PT > %(JpsiPTLoose)s *MeV)" \
@@ -64,8 +64,8 @@ class StrippingBu2JpsiKConf(LHCbConfigurableUser):
 	return Jpsi
 
     def Bu2JpsiK( self ):
-	Jpsi = DataOnDemand("StdLTUnbiasedJpsi2MuMu", "StdLTUnbiasedJpsi2MuMu")
-	StdLooseKaons = DataOnDemand("StdLooseKaons", "StdLooseKaons")
+	Jpsi = DataOnDemand(Location = "Phys/StdLTUnbiasedJpsi2MuMu")
+	StdLooseKaons = DataOnDemand(Location = "Phys/StdLooseKaons")
 	_Bu = CombineParticles("Bu2JpsiK")
       	_Bu.DecayDescriptor = "[B+ -> J/psi(1S) K+]cc"
 	_Bu.DaughtersCuts = {"K+": "  ((PIDK - PIDp) > %(KaonPIDKMinusPIDp)s)"\
@@ -87,7 +87,7 @@ class StrippingBu2JpsiKConf(LHCbConfigurableUser):
 
     def Bu2JpsiKLoose( self ):
 	Jpsi = self.Jpsi2MuMuLoose()
-	StdNoPIDsKaons = DataOnDemand("StdNoPIDsKaons", "StdNoPIDsKaons")
+	StdNoPIDsKaons = DataOnDemand(Location = "Phys/StdNoPIDsKaons")
 	_Bu = CombineParticles("Bu2JpsiKLoose",
         	               DecayDescriptor = "[B+ -> J/psi(1S) K+]cc",
 			       DaughtersCuts = {"K+": "(PT > %(KaonPTLoose)s *MeV) & (TRCHI2DOF < %(KaonTRCHI2Loose)s)" % self.getProps()},

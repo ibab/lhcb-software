@@ -1,8 +1,8 @@
-# $Id: StrippingBd2DstarMuNuLoose.py,v 1.4 2010-04-23 16:56:24 gcowan Exp $
+# $Id: StrippingBd2DstarMuNuLoose.py,v 1.5 2010-05-10 11:58:49 jpalac Exp $
 
 __author__ = 'Greig Cowan, Marta Calvi'
 __date__ = '10/12/2009'
-__version__ = '$Revision: 1.4 $'
+__version__ = '$Revision: 1.5 $'
 
 '''
 Bd->Dstar mu nu loose stripping selection using LoKi::Hybrid and python
@@ -38,9 +38,9 @@ class StrippingBd2DstarMuNuLooseConf(LHCbConfigurableUser):
 	return StrippingLine('Bd2DstarMuNuLooseLine', prescale = 1, algos = [Bd2DstarMuNuSeq])
      	
     def Bd2DstarMuNu( self ):
-	stdVeryLooseMuons = DataOnDemand("stdVeryLooseMuons", Location = "StdVeryLooseMuons")
-	stdVeryLooseDstar = DataOnDemand("stdVeryLooseDstarWithD02KPi", Location = "StdVeryLooseDstarWithD02KPi")
-	stdVeryLooseDstarDCS = DataOnDemand("stdVeryLooseDstarWithD02KPiDCS", Location = "StdVeryLooseDstarWithD02KPiDCS")
+	stdVeryLooseMuons = DataOnDemand(Location = "Phys/StdVeryLooseMuons")
+	stdVeryLooseDstar = DataOnDemand(Location = "Phys/StdVeryLooseDstarWithD02KPi")
+	stdVeryLooseDstarDCS = DataOnDemand(Location = "Phys/StdVeryLooseDstarWithD02KPiDCS")
 	
 	Bd2DstarMu = CombineParticles("Bd2DstarMuNuLoose")
 	Bd2DstarMu.DecayDescriptors = ["[B0 -> D*(2010)- mu+]cc", "[B0 -> D*(2010)+ mu+]cc"] # includes wrong sign

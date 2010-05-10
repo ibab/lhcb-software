@@ -1,4 +1,4 @@
-# $Id: StrippingDiMuon.py,v 1.4 2010-02-18 14:14:20 pkoppenb Exp $
+# $Id: StrippingDiMuon.py,v 1.5 2010-05-10 11:58:49 jpalac Exp $
 ## #####################################################################
 # A stripping selection for inclusive J/psi(1S) -> mu+ mu- decays
 #
@@ -41,7 +41,7 @@ class StrippingDiMuonConf(LHCbConfigurableUser):
 	return StrippingLine('DiMuonIncLooseLine', prescale = 1, algos = [JpsiSeq])   
 
     def Jpsi( self ):
-	_muons =  DataOnDemand('stdLooseMuons', Location = 'StdLooseMuons')
+	_muons =  DataOnDemand(Location = 'Phys/StdLooseMuons')
 	mucut = '(PT > %(MuonPT)s *MeV) & (TRCHI2DOF < %(MuonTRCHI2)s) & (ISLONG)' % self.getProps()
 	_Jpsi = CombineParticles("DiMuonIncCombine",
                          DecayDescriptor = 'J/psi(1S) -> mu+ mu-',
@@ -57,7 +57,7 @@ class StrippingDiMuonConf(LHCbConfigurableUser):
 	return Jpsi
 	
     def JpsiLoose( self ):
-	_muons =  DataOnDemand('stdVeryLooseMuons', Location = 'Phys/StdVeryLooseMuons')
+	_muons =  DataOnDemand(Location = 'Phys/StdVeryLooseMuons')
 	mucut = '(PT > %(MuonPTLoose)s *MeV) & (TRCHI2DOF < %(MuonTRCHI2Loose)s) & (ISLONG)' % self.getProps()
 	_Jpsi = CombineParticles("DiMuonIncCombineLoose",
                          DecayDescriptor = 'J/psi(1S) -> mu+ mu-',
@@ -85,7 +85,7 @@ class StrippingDiMuonConf(LHCbConfigurableUser):
         @date 17/2/2010
         """
         from StrippingConf.StrippingLine import StrippingLine
-	_muons =  DataOnDemand('stdVeryLooseDiMuon', Location = 'Phys/StdVeryLooseDiMuon')
+	_muons =  DataOnDemand(Location = 'Phys/StdVeryLooseDiMuon')
         _diMu = FilterDesktop("FilterForB2DiMuon")
         _diMu.Code = "(MAXTREE('mu+'==ABSID,PT)>1*GeV) & (VFASPF(VCHI2/VDOF)<20) & (BPVVDCHI2> %(DiMuonFDCHI2)s )" % self.getProps()
 

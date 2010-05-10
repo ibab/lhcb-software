@@ -1,8 +1,8 @@
-# $Id: StrippingBs2JpsiPhi.py,v 1.5 2010-02-02 21:24:47 gcowan Exp $
+# $Id: StrippingBs2JpsiPhi.py,v 1.6 2010-05-10 11:58:49 jpalac Exp $
 
 __author__ = ['Greig Cowan']
 __date__ = '24/01/2010'
-__version__ = '$Revision: 1.5 $'
+__version__ = '$Revision: 1.6 $'
 
 '''
 Bs->JpsiPhi lifetime unbiased stripping selection using LoKi::Hybrid and
@@ -50,7 +50,7 @@ class StrippingBs2JpsiPhiConf(LHCbConfigurableUser):
 	return StrippingLine('Bs2JpsiPhiLooseLine', prescale = 1, algos = [Bs2JpsiPhiSeq])   
      
     def Jpsi2MuMuLoose( self ):
-	StdVeryLooseJpsi2MuMu = DataOnDemand("StdVeryLooseJpsi2MuMu", "StdVeryLooseJpsi2MuMu")
+	StdVeryLooseJpsi2MuMu = DataOnDemand(Location = "Phys/StdVeryLooseJpsi2MuMu")
 	_JpsiFilter = FilterDesktop("JpsiFilterForBs2JpsiPhiLoose")
 	_JpsiFilter.Code = "  (MAXTREE('mu+'==ABSID, TRCHI2DOF) < %(MuonTRCHI2Loose)s)" \
         	           "& (ADMASS('J/psi(1S)') < %(JpsiMassWinLoose)s *MeV)" \
@@ -62,7 +62,7 @@ class StrippingBs2JpsiPhiConf(LHCbConfigurableUser):
 	return Jpsi
 
     def Phi2KKLoose( self ):
-	StdLoosePhi2KK = DataOnDemand("StdLoosePhi2KK", "StdLoosePhi2KK")
+	StdLoosePhi2KK = DataOnDemand(Location = "Phys/StdLoosePhi2KK")
 	_phiFilter = FilterDesktop("PhiFilterForBs2JpsiPhiLoose")
 	_phiFilter.Code = "  (MAXTREE('K+'==ABSID, TRCHI2DOF) < %(KaonTRCHI2Loose)s)" \
                 	  "& (ADMASS('phi(1020)') < %(PhiMassWinLoose)s *MeV)" \
@@ -75,7 +75,7 @@ class StrippingBs2JpsiPhiConf(LHCbConfigurableUser):
 	return Phi	
 
     def Phi2KK( self ):
-	StdLoosePhi2KK = DataOnDemand("StdLoosePhi2KK", "StdLoosePhi2KK")
+	StdLoosePhi2KK = DataOnDemand(Location = "Phys/StdLoosePhi2KK")
 	_phiFilter = FilterDesktop("PhiFilterForBs2JpsiPhi")
 	_phiFilter.Code = "  (MINTREE('K+'==ABSID, PIDK) > %(KaonPIDK)s)" \
                 	  "& (ADMASS('phi(1020)') < %(PhiMassWin)s *MeV)" \
@@ -106,7 +106,7 @@ class StrippingBs2JpsiPhiConf(LHCbConfigurableUser):
 	return Bs
 
     def Bs2JpsiPhi( self ):
-        Jpsi = DataOnDemand("StdLTUnbiasedJpsi2MuMu", "StdLTUnbiasedJpsi2MuMu")
+        Jpsi = DataOnDemand(Location = "Phys/StdLTUnbiasedJpsi2MuMu")
 	Phi = self.Phi2KK()
 	_Bs = CombineParticles("Bs2JpsiPhi")
      	_Bs.DecayDescriptor = "B_s0 -> J/psi(1S) phi(1020)"
