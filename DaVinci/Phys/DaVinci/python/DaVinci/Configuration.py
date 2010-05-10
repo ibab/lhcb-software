@@ -1,7 +1,7 @@
 """
 High level configuration tools for DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.104 2010-05-10 07:39:19 jpalac Exp $"
+__version__ = "$Id: Configuration.py,v 1.105 2010-05-10 09:35:42 jpalac Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -15,6 +15,7 @@ import GaudiKernel.ProcessJobOptions
 
 def isNewCondDBTag(tag, reference_date = '20100414') :
     date_start = tag.find('20')
+    if date_start == -1 : return False
     date_end = date_start + 8
     date = tag[date_start : date_end]
     return date > reference_date
@@ -157,6 +158,8 @@ class DaVinci(LHCbConfigurableUser) :
             log.info("Changed DB tags to "+cb+" and "+db)         
         LHCbApp().CondDBtag = cb
         LHCbApp().DDDBtag   = db
+        self.setProp('CondDBtag', cb)
+        self.setProp('DDDBtag', cb)
         self.setOtherProps(PhysConf(),["DataType","Simulation","InputType"])
         self.setOtherProps(AnalysisConf(),["DataType","Simulation"])
 
@@ -405,10 +408,10 @@ class DaVinci(LHCbConfigurableUser) :
                 DstConf().setProp("SimType","Full")
         return inputType
 
-    def _hltCondDBHack() :
-        cb = self.getProp("CondDBtag")
-        if not isNewCondDBTag(cd) :
-            log.Warning('CondDB tag '+cb+' considered old. Setting HltReferenceRateSvc().UseCondDB = False')
+    def _hltCondDBHack(self) :
+        cdb = self.getProp("CondDBtag")
+        if not isNewCondDBTag(cdb) :
+            log.warning('CondDB tag '+cdb+' considered old. Setting HltReferenceRateSvc().UseCondDB = False')
             from Configurables import HltReferenceRateSvc
             HltReferenceRateSvc().UseCondDB = False 
 ################################################################################
