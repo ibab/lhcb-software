@@ -19,11 +19,11 @@ from StrippingConf.StrippingLine import StrippingLine
 
 PatPV = PatPV3D("PatPV")
 JetFinder = HighPtJetFinder("JetFinder")
-JetFinder.MinWeight = 7
-JetFinder.MaxDeltaPhi = 8.0
-JetFinder.MaxDeltaEta = 0.12
-JetFinder.JetMult = 2
-JetFinder.Min1stJetPt = 0.0
+JetFinder.MinWeight = 6
+JetFinder.MaxDeltaPhi = 8.5
+JetFinder.MaxDeltaEta = 0.16
+JetFinder.JetMult = 1
+JetFinder.Min1stJetPt = 3.0
 JetFinder.Min2ndJetPt = 0.0
 
 # Create line for high-pt jets selection
