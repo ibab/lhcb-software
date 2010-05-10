@@ -11,13 +11,16 @@ from Configurables import ( Tf__Tsa__Seed, Tf__Tsa__SeedTrackCnv,
 class TsaSeedConf(object):
     '''Apply configuration to a TsaSeed algorithm'''
     OnlyUnusedHits = False
-    def configureAlg(self, tsaSeed = Tf__Tsa__Seed("TsaSeed"), tsaConv=Tf__Tsa__SeedTrackCnv( "TsaSeedTrackCnv")):
+    def configureAlg(self, tsaSeed = Tf__Tsa__Seed("TsaSeed"), tsaConv=Tf__Tsa__SeedTrackCnv( "TsaSeedTrackCnv"), tsaDataMan=Tf__Tsa__TStationHitManager("ToolSvc.TsaDataManager")):
         
         tsaConv.outputLocation = "Rec/Track/Seed"
         ## Hit cleaning options
-        tsaSeed.addTool( Tf__Tsa__TStationHitManager,"TsaDataManager" )
-        tsaSeed.TsaDataManager.CleanITHits = True
-        tsaSeed.TsaDataManager.CleanOTHits = True
+        #This is a public tool so doesn't need to be added to anything
+        #tsaSeed.addTool( Tf__Tsa__TStationHitManager,"TsaDataManager" )
+        #tsaSeed.TsaDataManager.CleanITHits = True
+        #tsaSeed.TsaDataManager.CleanOTHits = True
+        tsaDataMan.CleanITHits = True
+        tsaDataMan.CleanOTHits = True
         
         tsaSeed.addTool(Tf__Tsa__ITXSearch, name="xSearchS0")
         tsaSeed.addTool(Tf__Tsa__ITXSearch, name="xSearchS1")
