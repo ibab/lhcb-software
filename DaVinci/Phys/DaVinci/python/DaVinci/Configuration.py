@@ -1,7 +1,7 @@
 """
 High level configuration tools for DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.103 2010-05-10 07:35:43 jpalac Exp $"
+__version__ = "$Id: Configuration.py,v 1.104 2010-05-10 07:39:19 jpalac Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -408,6 +408,7 @@ class DaVinci(LHCbConfigurableUser) :
     def _hltCondDBHack() :
         cb = self.getProp("CondDBtag")
         if not isNewCondDBTag(cd) :
+            log.Warning('CondDB tag '+cb+' considered old. Setting HltReferenceRateSvc().UseCondDB = False')
             from Configurables import HltReferenceRateSvc
             HltReferenceRateSvc().UseCondDB = False 
 ################################################################################
