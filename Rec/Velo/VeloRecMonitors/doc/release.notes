@@ -4,6 +4,9 @@
 ! Purpose     : VELO monitoring algorithms for reconstruction data (ZS data)
 !-----------------------------------------------------------------------------
 
+! 2010-05-10 - Rob Lambert
+ - Fixed nightly warning by casting correctly to unsigned ints
+
 ! 2010-05-07 - Rob Lambert
  - Fixed nightly warning, max_size and min_size should be unsigned
 

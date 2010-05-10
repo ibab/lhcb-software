@@ -75,8 +75,14 @@ private:
   bool printDebug()   const {return msgLevel(MSG::DEBUG);};
   bool printVerbose() const {return msgLevel(MSG::VERBOSE);};
   void fill_ntuplePV(std::vector<LHCb::RecVertex> outvec, std::string name);       ///< Fill vertex information
-  void fill_ntuplePVMC(std::vector<LHCb::RecVertex> outvec, std::vector<LHCb::MCVertex* > mcp, std::string name);       ///< Fill vertex positions with MC truth comparison
-  void fill_ntupleDiffPV(std::vector<LHCb::RecVertex> outvec1, std::vector<LHCb::RecVertex> outvec2, std::string name);       ///< Fill vertex position differences
+  
+  void fill_ntuplePVMC(std::vector<LHCb::RecVertex> outvec, 
+                       std::vector<LHCb::MCVertex* > mcp, 
+                       std::string name);       ///< Fill vertex positions with MC truth comparison
+  
+  void fill_ntupleDiffPV(std::vector<LHCb::RecVertex> outvec1, 
+                         std::vector<LHCb::RecVertex> outvec2, 
+                         std::string name);       ///< Fill vertex position differences
 
 
 private:
@@ -165,9 +171,12 @@ std::vector<const LHCb::Track*> myconvert( const SmartRefVector<LHCb::Track> & t
 /**
  * Split track container randomly in two containers of euqal size (or different by 1 track)
  */
-void splitRandomTracks( std::vector<LHCb::Track*> input, std::vector<const LHCb::Track*> *outputA, std::vector<const LHCb::Track*> *outputB, Rndm::Numbers rand ) {
-  unsigned int min_size = floor( input.size() / 2. );
-  unsigned int max_size = input.size() - min_size;
+void splitRandomTracks( std::vector<LHCb::Track*> input, 
+                        std::vector<const LHCb::Track*> *outputA, 
+                        std::vector<const LHCb::Track*> *outputB, 
+                        Rndm::Numbers rand ) {
+  unsigned int min_size = (unsigned int) floor( input.size() / 2. );
+  unsigned int max_size = (unsigned int) input.size() - min_size;
   std::vector<LHCb::Track*>::iterator it_in = input.begin();
   for( ; it_in != input.end(); it_in++ ) {
     if ( ( outputA->size() < max_size ) && ( outputB->size() < max_size ) ) {
@@ -256,7 +265,7 @@ StatusCode PVResolution::execute()
     m_eventodin= odin->eventNumber();
     m_bunchid= odin->bunchId();
     m_bxtype= odin->bunchCrossingType();
-    m_odinEvtTime = odin->eventTime().ns() / 1e9;
+    m_odinEvtTime = (long unsigned int) (odin->eventTime().ns() / 1e9);
     m_odinEvtTime -= 1259622000; // time in seconds since 01-Dec-09 00:00 CET
     if ( m_firstOdin ) {
       m_firstOdin = false;
