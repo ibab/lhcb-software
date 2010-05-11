@@ -1,13 +1,16 @@
-# $Id: StrippingInclPhi.py,v 1.2 2010-04-28 08:07:44 schleich Exp $
+# $Id: StrippingInclPhi.py,v 1.3 2010-05-11 17:25:44 schleich Exp $
 
 __author__ = 'Andrew Powell, Sebastian Schleich'
 __date__ = '2010/04/27'
-__version__ = '$Revision: 1.2 $'
+__version__ = '$Revision: 1.3 $'
 
 '''
 InclPhi stripping selection
 Two lines: Phi->(Long K, Long K) and Phi->(Down K, Down K)
 see: http://indico.cern.ch/conferenceDisplay.py?confId=82203
+- since then:
+  tag&probe for pt as well (adaption done for trigger studies)
+  phi mass window 55 -> 35 MeV/cc
 '''
 
 from Gaudi.Configuration   import *
@@ -25,12 +28,12 @@ for i in [ 'LoKiTrigger.decorators' ] :
 
 class StrippingInclPhiConf(LHCbConfigurableUser):
     __slots__ = {
-                  'KaonPT'              : 600      # MeV
-                , 'KaonP'               : 2000     # MeV
+                  'KaonPT'              : 500      # MeV
+                , 'KaonP'               : 0        # MeV (formerly 2000 => eff100%)
                 , 'KaonDLL'             : 15       # adimensional
                 , 'KaonTRPCHI2'         : 0.0      # adimensional
                 , 'PhiVertexCHI2pDOF'   : 10       # adimensional
-                , 'PhiMassWindow'       : 55       # MeV
+                , 'PhiMassWindow'       : 35       # MeV
                 , 'Prescale'            : 1        # adimensional
                 }
 
@@ -40,14 +43,16 @@ class StrippingInclPhiConf(LHCbConfigurableUser):
         import GaudiKernel.SystemOfUnits as Units
 
 
-        INRICH_2 = "( 2 == NINTREE ( HASRICH ) )"
-        GOODKAON = "( 0 != NINTREE ( (%(KaonDLL)s < PPINFO(LHCb.ProtoParticle.RichDLLk,-500,-1000)) ) )" % self.getProps()
+        INRICH_2 =   "( 2 == NINTREE ( HASRICH ) )"
+        GOODKAON =   "( 0 != NINTREE ( (%(KaonDLL)s < PPINFO(LHCb.ProtoParticle.RichDLLk,-500,-1000)) ) )" % self.getProps()
+        HIGHPTKAON = "( 0 != NINTREE ( (PT > %(KaonPT)s *MeV) ) )" % self.getProps()
 
-        Phi2KK_DC = "(PT > %(KaonPT)s *MeV) & (P > %(KaonP)s *MeV) & (TRPCHI2 > %(KaonTRPCHI2)s)" % self.getProps()
+        Phi2KK_DC = "(P > %(KaonP)s *MeV) & (TRPCHI2 > %(KaonTRPCHI2)s)" % self.getProps()
         coarsemasswindow = 45+ self.getProps()['PhiMassWindow']
         Phi2KK_CC = "(ADAMASS('phi(1020)') < %s*MeV)" % coarsemasswindow
         Phi2KK_MC = INRICH_2 +\
                    "& " + GOODKAON +\
+                   "& " + HIGHPTKAON +\
                    "& (VFASPF(VCHI2/VDOF) < %(PhiVertexCHI2pDOF)s)"\
                    "& (ADMASS('phi(1020)') < %(PhiMassWindow)s*MeV)" % self.getProps()
         ps =  self.getProps()['Prescale']
@@ -99,12 +104,14 @@ class StrippingInclPhiConf(LHCbConfigurableUser):
 
         INRICH_2 = "( 2 == NINTREE ( HASRICH ) )"
         GOODKAON = "( 0 != NINTREE ( (%(KaonDLL)s < PPINFO(LHCb.ProtoParticle.RichDLLk,-500,-1000)) ) )" % self.getProps()
+        HIGHPTKAON = "( 0 != NINTREE ( (PT > %(KaonPT)s *MeV) ) )" % self.getProps()
 
-        Phi2KK_DC = "(PT > %(KaonPT)s *MeV) & (P > %(KaonP)s *MeV) & (TRPCHI2 > %(KaonTRPCHI2)s)" % self.getProps()
+        Phi2KK_DC = "(P > %(KaonP)s *MeV) & (TRPCHI2 > %(KaonTRPCHI2)s)" % self.getProps()
         coarsemasswindow = 45+ self.getProps()['PhiMassWindow']
         Phi2KK_CC = "(ADAMASS('phi(1020)') < %s*MeV)" % coarsemasswindow
         Phi2KK_MC = INRICH_2 +\
                    "& " + GOODKAON +\
+                   "& " + HIGHPTKAON +\
                    "& (VFASPF(VCHI2/VDOF) < %(PhiVertexCHI2pDOF)s)"\
                    "& (ADMASS('phi(1020)') < %(PhiMassWindow)s*MeV)" % self.getProps()
         ps =  self.getProps()['Prescale']

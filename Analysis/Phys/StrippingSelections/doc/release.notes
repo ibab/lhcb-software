@@ -5,6 +5,9 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-05-11 - Sebastian Schleich
+ - adapt InclPhi Stripping: Tag&probe for pt. Smaller mass range
+
 ! 2010-05-11 - James Keaveney
  - bug fixes to muon and electron Drell-Yan lines
  - W->e line included. 
