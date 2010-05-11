@@ -6,7 +6,7 @@
  *  Header file for Tstation alignment algorithm: TAlignment
  *
  *  CVS Log :-
- *  $Id: TStation.h,v 1.6 2010-05-05 14:59:16 jblouw Exp $
+ *  $Id: TStation.h,v 1.7 2010-05-11 22:23:29 jblouw Exp $
  *
  *  @author J. Blouw  Johan.Blouw@cern.ch
  *  @author M.Needham Matt.Needham@cern.ch
@@ -85,6 +85,7 @@ public:
   double m_minTTHitCut;  ///< Min hit cut
   double m_minVeloHitCut;  ///< Min hit cut
     int m_total; 
+  bool m_refit;
 };
 
 #endif // TRACKTOOLS_JBSelector_H

@@ -4,7 +4,7 @@
  *  Implementation file for RICH reconstruction tool : TStation
  *
  *  CVS Log :-
- *  $Id: TStation.cpp,v 1.11 2010-05-05 14:59:16 jblouw Exp $
+ *  $Id: TStation.cpp,v 1.12 2010-05-11 22:23:29 jblouw Exp $
  *
  *  @author M.Needham Matt.Needham@cern.ch
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
@@ -15,8 +15,10 @@
 #include "GaudiKernel/AlgFactory.h"
 
 #include "GaudiKernel/SystemOfUnits.h"
+#include "Event/ODIN.h"
 
 #include "TStation.h"
+
 
 using namespace LHCb;
 
@@ -40,7 +42,7 @@ TStation::TStation( const std::string& name,
   declareProperty( "MinOTHitCut",  m_minOTHitCut   = 0.0 );
   declareProperty( "MinTTHitCut",  m_minTTHitCut   = 0.0 );
   declareProperty( "MinVeloHitCut",  m_minVeloHitCut   = 0.0 );
-
+  declareProperty( "Refit", m_refit = false );
   
 }
 
@@ -65,7 +67,8 @@ StatusCode TStation::initialize() {
   CaloEnergy = book( "CaloEnergy", "Calorimeter energy on track", 0.0, 12000.0 );
 
 
-  m_tfit = tool<ITrackFitter>("TrackInitFit");
+  if ( m_refit )
+     m_tfit = tool<ITrackFitter>("TrackInitFit");
 
   m_total = 0;
   IIncidentSvc* incSvc = svc<IIncidentSvc>("IncidentSvc");
@@ -88,13 +91,28 @@ StatusCode TStation::execute() {
     error() << "Container " << m_inputcontainer << " does not exist!" << endreq;
     return StatusCode::FAILURE;
   }
-  LHCb::Tracks* inCont = get<LHCb::Tracks>(m_inputcontainer);
+  int run = -1;
+  int ev = -1;
+  LHCb::ODIN* odin(0);
+  if( exist<ODIN>( LHCb::ODINLocation::Default ) ){
+    odin = get<ODIN>( LHCb::ODINLocation::Default );
+    run = odin->runNumber();
+    ev = odin->eventNumber();
+  } else {
+    Error("Can't get LHCb::ODINLocation::Default (" +
+          LHCb::ODINLocation::Default + ")" );
+  }
 
+  LHCb::Tracks* inCont = get<LHCb::Tracks>(m_inputcontainer);
   int num_tracks = 0;
+  if ( inCont->size() > 0 )
+    info() << "Found " << inCont->size() << " tracks in event : " << run << " " << ev << endreq;
   for ( LHCb::Tracks::iterator iterT = inCont->begin();
  	iterT != inCont->end(); iterT++) {
     LHCb::Track* aTrack = *iterT;
-    m_tfit->fit( *aTrack );
+    if ( m_refit )
+       m_tfit->fit( *aTrack );
+    info() << "Track chi2/ndof = " << aTrack->chi2PerDoF() << " Fitted: " << aTrack->fitStatus() << endreq;
     if ( m_trackselection->accept( *aTrack ) ) {
       num_tracks++;
       /*

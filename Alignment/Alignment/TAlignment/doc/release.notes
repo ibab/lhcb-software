@@ -4,6 +4,9 @@ Package Coordinator	:	Jan Amoraal, Johan Blouw
 Purpose	: collection of alignment algorithms
 
 
+! 2010-05-12 Johan Blouw
+ - Tracks in TStation are now only fitted upon request (of a configurable).
+
 ! 2010-05-05 Johan Blouw
  - fixed memory leak in TStation class
 
