@@ -71,8 +71,13 @@ namespace Tf {
       for( unsigned int zone = 0 ; zone < 4 ; ++zone ){
         double val = ((*iR)->halfboxPhiRange(zone).first+
                       (*iR)->halfboxPhiRange(zone).second)/2.;
+	if( fabs((*iR)->halfboxPhiRange(zone).first - 
+		 (*iR)->halfboxPhiRange(zone).second) > Gaudi::Units::pi ){
+	  // OK tripped over 2pi boundary : add pi to the average 
+	  val += Gaudi::Units::pi;
+	}	    
         // range to match how RZ tracks have used the zone previously
-        if( val < Gaudi::Units::halfpi ) val += Gaudi::Units::twopi;
+        if( val < -1.*Gaudi::Units::halfpi ) val += Gaudi::Units::twopi;
         if( val > 3.*Gaudi::Units::halfpi ) val -= Gaudi::Units::twopi;
         if( (*iR)->isLeft() ) {
           m_phiOfRZone[zone] += val;	  
