@@ -4,7 +4,7 @@
  *  Implementation file for RICH reconstruction tool : TStation
  *
  *  CVS Log :-
- *  $Id: TStation.cpp,v 1.12 2010-05-11 22:23:29 jblouw Exp $
+ *  $Id: TStation.cpp,v 1.13 2010-05-11 22:47:32 jblouw Exp $
  *
  *  @author M.Needham Matt.Needham@cern.ch
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
@@ -105,14 +105,14 @@ StatusCode TStation::execute() {
 
   LHCb::Tracks* inCont = get<LHCb::Tracks>(m_inputcontainer);
   int num_tracks = 0;
-  if ( inCont->size() > 0 )
-    info() << "Found " << inCont->size() << " tracks in event : " << run << " " << ev << endreq;
+//  if ( inCont->size() > 0 )
+//    info() << "Found " << inCont->size() << " tracks in event : " << run << " " << ev << endreq;
   for ( LHCb::Tracks::iterator iterT = inCont->begin();
  	iterT != inCont->end(); iterT++) {
     LHCb::Track* aTrack = *iterT;
     if ( m_refit )
        m_tfit->fit( *aTrack );
-    info() << "Track chi2/ndof = " << aTrack->chi2PerDoF() << " Fitted: " << aTrack->fitStatus() << endreq;
+    // debug() << "Track chi2/ndof = " << aTrack->chi2PerDoF() << " Fitted: " << aTrack->fitStatus() << endreq;
     if ( m_trackselection->accept( *aTrack ) ) {
       num_tracks++;
       /*
