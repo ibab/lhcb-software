@@ -1,11 +1,14 @@
-! $Id: release.notes,v 1.175 2010-05-09 21:43:35 gligorov Exp $
+! $Id: release.notes,v 1.176 2010-05-11 17:29:59 gligorov Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
-! 2010-04-26 - V. Gligorov
+! 2010-05-11 - V. Gligorov
+ - Switch to new strategy of doing the 3D reco upfront in the hadron lines.
+
+! 2010-05-09 - V. Gligorov
  - First addition of lifetime unbiased hadron lines; this is a skeleton for
    now and will be updated using helicity angle and invariant mass cuts added
    by U. Kerzel to HltFunctions. Note that these lines are explicitly for selecting

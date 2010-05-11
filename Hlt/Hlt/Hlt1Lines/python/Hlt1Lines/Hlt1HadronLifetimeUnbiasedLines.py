@@ -9,7 +9,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.2 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.3 $"
 # =============================================================================
 
 import Gaudi.Configuration 
@@ -75,7 +75,7 @@ class Hlt1HadronLifetimeUnbiasedLinesConf(HltLinesConfigurableUser) :
             conf =                  [ Velo,
                                       PV2D().ignoreOutputSelection(),
                                       Member ( 'TM' , 'VeloCalo'
-                                             , InputSelection1 = "Hlt/Track/Velo"   
+                                             , InputSelection1 = "Velo"   
                                              , InputSelection2 = '%s' %OutputOfL0
                                              , MatchName = 'VeloCalo' , MaxQuality = 4.
                                              )

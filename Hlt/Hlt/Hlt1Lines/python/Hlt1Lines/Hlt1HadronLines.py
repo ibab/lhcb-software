@@ -9,7 +9,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.21 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.22 $"
 # =============================================================================
 
 import Gaudi.Configuration 
@@ -30,8 +30,18 @@ class Hlt1HadronLinesConf(HltLinesConfigurableUser) :
     # (J.A. Hernando 17/12/08)
     # External selection to be provided
     #    1) AllL0Hadrons (L0 Candidates above a given threshold i.e 2000 MeV)
-    #    2) RZVelo, PV2D, Velo tracks
+    #    2) Velo, PV3D, Velo tracks
     # Replace opts-file to set the opts for the fast fit by configurables
+
+    # Note: the 3D reconstruction is now done upfront by adding
+    #
+    # [Velo,PV3D().ignoreOutputSelection()]
+    #
+    # to the line. This replaces the old
+    #
+    # [RZVelo,PV2D().ignoreOutputSelection()]
+    #     
+    # It requires the import of Velo,PV3D instead of RZVelo,PV2D.    
 
     # steering variables
     #------------------------
@@ -53,11 +63,6 @@ class Hlt1HadronLinesConf(HltLinesConfigurableUser) :
                 , 'HadCompanion_PTCut'      : 1000.
                 , 'HadCompanion_PointingCut': 0.4
                 , 'SingleHadron_PTCut'      : 5000.
-                , 'SoftHadMain_ETCut'       : 2500. 
-                , 'SoftHadMain_PTCut'       : 1500.
-                , 'SoftHadDi_IPCut'         : 0.1
-                , 'Prescale'                : { 'Hlt1DiHadronSoft'   : 0,
-                                              }
                 , 'Postscale'               : { 'Hlt1HadronMonConf1' : 0.000001,
                                                 'Hlt1HadronMonConf2' : 0.000001,
                                                 'Hlt1HadronMonComp'  : 0.000001
@@ -71,8 +76,8 @@ class Hlt1HadronLinesConf(HltLinesConfigurableUser) :
         from HltLine.HltLine import Hlt1Tool   as Tool
         from HltLine.HltLine import hlt1Lines  
         from Hlt1Lines.HltFastTrackFit import setupHltFastTrackFit
-        from HltTracking.HltReco import RZVelo,Velo
-        from HltTracking.HltPVs  import PV2D
+        from HltTracking.HltReco import Velo
+        from HltTracking.HltPVs  import PV3D
         from Configurables import HltTrackUpgradeTool, PatForwardTool, HltGuidedForward
         from Hlt1Lines.HltConfigurePR import ConfiguredPR
         
@@ -83,42 +88,13 @@ class Hlt1HadronLinesConf(HltLinesConfigurableUser) :
             from Hlt1Lines.HltL0Candidates import convertL0Candidates
             L0Channel = self.getProp("L0Channel")
             # get the L0 candidates (all or L0)
-            if (type.find("Soft") < 0):
-                l0 = bindMembers(prefix, [ convertL0Candidates(L0Channel)] )
-            else :  
-                l0 = bindMembers(prefix, [ convertL0Candidates('All'+L0Channel)
-                                         , Member('TF','L0Hadron'
-                                                 , FilterDescriptor = ["L0ET,>,%s"%self.getProp("SoftHadMain_ETCut")]
-                                                 , HistogramUpdatePeriod = 1
-                                                 , HistoDescriptor  = histosfilter('L0ET',1500.,5100.,200)
-                                                 )       
-                                         ] )
+            l0 = bindMembers(prefix, [ convertL0Candidates(L0Channel)] )
             return l0
 
         def confirmationpreip(type=""):
             prefix = 'HadronConfPreIP'+type
             OutputOfL0 = confirmationl0part(type).outputSelection()
-            conf = []
-            if type.find('3D') < 0 :
-                conf +=                 [ RZVelo
-                                        , PV2D().ignoreOutputSelection()
-                                        , Member ( 'TF' ,'RZVelo'
-                                                 , FilterDescriptor = ['Calo2DChi2_%s,<,4'%OutputOfL0 ]
-                                                 , HistogramUpdatePeriod = 1
-                                                 , HistoDescriptor  = histosfilter('Calo2DChi2_'+OutputOfL0,0.,10.,200)
-                                                 )
-                                        , Member ( 'TU', 'Velo',  RecoName = 'Velo')
-                                        ]
-            
-                conf +=                 [ Member ( 'TF', '1Velo'
-                                             , FilterDescriptor = [ 'Calo3DChi2_%s,<,4'%OutputOfL0 ]
-                                             , HistogramUpdatePeriod = 1
-                                             , HistoDescriptor  = histosfilter('Calo3DChi2_'+OutputOfL0,0.,10.,200)
-                                             )
-                                        ]
-            else :
-                conf +=                 [Velo,PV2D().ignoreOutputSelection()]
-                return bindMembers(prefix, conf)
+            conf = [Velo,PV3D().ignoreOutputSelection()]
 
             return bindMembers(prefix, conf)
 
@@ -126,9 +102,7 @@ class Hlt1HadronLinesConf(HltLinesConfigurableUser) :
             prefix = "HadronConfVeloIPCut"+type
             OutputOfConf = confirmationpreip(type).outputSelection()
             
-            if   type.find('Soft') > -1   : 
-                 cutvalue = self.getProp("SoftHadDi_IPCut")
-            elif type.find('Di') > -1     : 
+            if   type.find('Di') > -1     : 
                  cutvalue = self.getProp("HadDi_IPCut")
             elif type.find('Single') > -1 : 
                  cutvalue = self.getProp("HadSingle_IPCut")
@@ -136,9 +110,9 @@ class Hlt1HadronLinesConf(HltLinesConfigurableUser) :
                  return None # Not an allowed value!
 
             conf = [Member ( 'TF', '2Velo', InputSelection = '%s' %OutputOfConf
-                           , FilterDescriptor = [ 'IP_PV2D,||>,%s' %cutvalue ]
+                           , FilterDescriptor = [ 'IP_PV3D,||>,%s' %cutvalue ]
                            , HistogramUpdatePeriod = 1
-                           , HistoDescriptor = histosfilter('IP_PV2D_'+type,-0.3,3.,2000))]
+                           , HistoDescriptor = histosfilter('IP_PV3D_'+type,-0.3,3.,2000))]
 
             return bindMembers(prefix,conf)
 
@@ -167,8 +141,7 @@ class Hlt1HadronLinesConf(HltLinesConfigurableUser) :
                                              )         
                                     ]
             if type.find('Single') < 0 :
-                if   type.find("Soft") > -1   : cutvalue = self.getProp("SoftHadMain_PTCut")
-                elif type.find("Di") > -1     : cutvalue = self.getProp("HadMain_PTCut")
+                if   type.find("Di") > -1     : cutvalue = self.getProp("HadMain_PTCut")
                 else                          : return None # Not an allowed value!
                 conf += [Member ( 'TF' , 'DiHadronPT1' 
                                        , FilterDescriptor = ['PT,>,%s'%cutvalue]
@@ -181,7 +154,7 @@ class Hlt1HadronLinesConf(HltLinesConfigurableUser) :
         #---------------
         def singlehadron():
             OutputOfConfirmation = confirmationpostip('Single').outputSelection()
-            sh = [ PV2D().ignoreOutputSelection(),
+            sh = [ PV3D().ignoreOutputSelection(),
                    Member ( 'TF' , 'SingleHadronPT' ,
                             InputSelection = '%s' %OutputOfConfirmation,
                             FilterDescriptor = ['PT,>,%(SingleHadron_PTCut)s'%self.getProps()],
@@ -197,14 +170,12 @@ class Hlt1HadronLinesConf(HltLinesConfigurableUser) :
         def companion(type=""):
             prefix = "HadCompanion"+type
 
-            comp = [ RZVelo , PV2D().ignoreOutputSelection()
-                , Member ( 'TU', 'UVelo' , RecoName = 'Velo')]
+            comp = [ Velo , PV3D().ignoreOutputSelection()]
 
             if (type.find('Mon') > -1) :
                 return bindMembers(prefix,comp)
 
-            if   type.find("Soft") > -1   : cutvalue = self.getProp("SoftHadDi_IPCut")
-            elif type.find("Di") > -1     : cutvalue = self.getProp("HadDi_IPCut")
+            if type.find("Di") > -1       : cutvalue = self.getProp("HadDi_IPCut")
             else                          : return None # Not an allowed value!
        
             OutputOfConfirmation = confirmationpostip(type).outputSelection()
@@ -217,9 +188,9 @@ class Hlt1HadronLinesConf(HltLinesConfigurableUser) :
                     ]
 
             comp += [ Member ( 'TF', 'Companion'
-                           , FilterDescriptor = [ 'IP_PV2D,||>,%s'%cutvalue]
+                           , FilterDescriptor = [ 'IP_PV3D,||>,%s'%cutvalue]
                            , HistogramUpdatePeriod = 1
-                           , HistoDescriptor  = histosfilter('IP_PV2D_'+type,-0.3,30.,200)
+                           , HistoDescriptor  = histosfilter('IP_PV3D_'+type,-0.3,30.,200)
                            )
                     ]
             return bindMembers(prefix,comp)
@@ -229,33 +200,25 @@ class Hlt1HadronLinesConf(HltLinesConfigurableUser) :
         #---------------------
         def dihadron(type=""):
             prefix = "HadDi"
-            if type.find('Soft') > -1 : prefix += 'Soft'  
-            if type.find('3D') > -1   : prefix += '3D'
             
             OutputOfConfirmation = confirmationpostip(type).outputSelection()
             OutputOfCompanion    = companion(type).outputSelection() 
             
-            if   type.find("Soft") > -1   : cutvalue = self.getProp("SoftHadMain_PTCut")
-            elif type.find("Di") > -1     : cutvalue = self.getProp("HadMain_PTCut")
+            if type.find("Di") > -1       : cutvalue = self.getProp("HadMain_PTCut")
             else                          : return None # Not an allowed value!
             
             from HltLine.HltDecodeRaw import DecodeIT
-            dih = [ PV2D().ignoreOutputSelection()
+            dih = [ PV3D().ignoreOutputSelection()
                 , Member ( 'VM2', 'UVelo'
-                         , InputSelection1 = '%s' %OutputOfConfirmation #TFDiHadronPT1'
+                         , InputSelection1 = '%s' %OutputOfConfirmation 
                          , InputSelection2 = '%s' %OutputOfCompanion
                          , FilterDescriptor = [ 'DOCA,<,'+str(self.getProp('HadCompanion_DOCACut'))]
                          , HistoDescriptor  = histosfilter('DOCA_'+type,0.,1.,200)
                            )
-                #, Member ( 'VF', '1UVelo'
-                #           , FilterDescriptor = ['VertexTracksMatchIDsFraction,<,0.9']
-                #           , HistogramUpdatePeriod = 1
-                #           , HistoDescriptor  = histosfilter('VertexTracksMatchIDsFraction',0.,1.,100)
-                #           )
                 , Member ( 'VF', '1UVelo'
-                           , FilterDescriptor = [ 'VertexDz_PV2D,>,%s'%self.getProp('HadCompanion_DZCut')]
+                           , FilterDescriptor = [ 'VertexDz_PV3D,>,%s'%self.getProp('HadCompanion_DZCut')]
                            , HistogramUpdatePeriod = 1
-                           , HistoDescriptor  = histosfilter('VertexDx_PV2D_'+type,1.,12.,200)                       
+                           , HistoDescriptor  = histosfilter('VertexDx_PV3D_'+type,1.,12.,200)                       
                            )
                 , DecodeIT
                 , Member ( 'VU', 'Forward'
@@ -269,9 +232,9 @@ class Hlt1HadronLinesConf(HltLinesConfigurableUser) :
                            HistoDescriptor  = histosfilter('VertexMinPT_'+type,0.,5000.,200)                       
                            )
                 , Member ( 'VF', 'DiHadron',
-                           FilterDescriptor = [ 'VertexPointing_PV2D,<,%s'%self.getProp("HadCompanion_PointingCut")],
+                           FilterDescriptor = [ 'VertexPointing_PV3D,<,%s'%self.getProp("HadCompanion_PointingCut")],
                            HistogramUpdatePeriod = 1,
-                           HistoDescriptor  = histosfilter('VertexPointing_PV2D_'+type,0.1,1.1,200)                       
+                           HistoDescriptor  = histosfilter('VertexPointing_PV3D_'+type,0.1,1.1,200)                       
                            )
                 ]
             return bindMembers(prefix,dih)
@@ -279,12 +242,12 @@ class Hlt1HadronLinesConf(HltLinesConfigurableUser) :
         # afterburn of a line with tracks
         #--------------------------------
         def afterburn():
-            after = [ PV2D().ignoreOutputSelection()
+            after = [ PV3D().ignoreOutputSelection()
                 , Member ( 'TU' , 'FitTrack' , RecoName = "FitTrack", callback = setupHltFastTrackFit )
                 , Member ( 'TF' , '1FitTrack' ,
-                           FilterDescriptor = ["FitIP_PV2D,||>,%s"%self.getProp('HadSingle_IPCut')],
+                           FilterDescriptor = ["FitIP_PV3D,||>,%s"%self.getProp('HadSingle_IPCut')],
                            HistogramUpdatePeriod = 1,
-                           HistoDescriptor  = histosfilter('FitIP_PV2D',-.3,3.,200)
+                           HistoDescriptor  = histosfilter('FitIP_PV3D',-.3,3.,200)
                            )
                 , Member ( 'TF' , '2FitTrack'
                            , OutputSelection = '%Decision'
@@ -300,17 +263,16 @@ class Hlt1HadronLinesConf(HltLinesConfigurableUser) :
         def vafterburn(type=""):
             OutputOfDiHadron = dihadron(type).outputSelection()
 
-            if   type.find("Soft") > -1   : cutvalue = self.getProp("SoftHadDi_IPCut")
-            elif type.find("Di") > -1     : cutvalue = self.getProp("HadDi_IPCut")
+            if type.find("Di") > -1       : cutvalue = self.getProp("HadDi_IPCut")
             else                          : return None # Not an allowed value!
 
-            vafter =  [ PV2D().ignoreOutputSelection()
+            vafter =  [ PV3D().ignoreOutputSelection()
                 , Member ( 'VU', 'FitTrack', InputSelection='%s' %OutputOfDiHadron
                            , RecoName = 'FitTrack', callback = setupHltFastTrackFit )
                 , Member ( 'VF', '1FitTrack',
-                           FilterDescriptor = [ 'FitVertexMinIP_PV2D,||>,%s'%cutvalue],
+                           FilterDescriptor = [ 'FitVertexMinIP_PV3D,||>,%s'%cutvalue],
                            HistogramUpdatePeriod = 1,
-                           HistoDescriptor  = histosfilter('FitVertexMinIP_PV2D_'+type,-0.3,3.,200)                       
+                           HistoDescriptor  = histosfilter('FitVertexMinIP_PV3D_'+type,-0.3,3.,200)                       
                            )
                 , Member ( 'VF', '2FitTrack'
                            , OutputSelection = "%Decision"
@@ -341,7 +303,7 @@ class Hlt1HadronLinesConf(HltLinesConfigurableUser) :
  
         from Hlt1Lines.HltL0Candidates import L0Channels
         if self.getProp('L0Channel') in L0Channels() :
-            # Single Hadron Line
+            # Single Hadron Line with 3D reco upfront
             #-----------------------------------
             Line ( 'SingleHadron'
                  , prescale = self.prescale
@@ -355,21 +317,7 @@ class Hlt1HadronLinesConf(HltLinesConfigurableUser) :
                             afterburn()
                  )
 
-            # Single Hadron Line with 3D reco upfront
-            #-----------------------------------
-            Line ( 'SingleHadron3D'
-                 , prescale = self.prescale
-                 , postscale = self.postscale
-                 , L0DU  = "L0_CHANNEL('%(L0Channel)s')"%self.getProps()
-                 , algos =  [confirmationl0part('Single3D')]+\
-                            [confirmationpreip('Single3D')]+\
-                            [veloipcut('Single3D')]+\
-                            [confirmationpostip('Single3D')]+\
-                            singlehadron()+\
-                            afterburn()
-                 )
-
-            # DiHadron Line
+            # DiHadron Line with 3D upfront
             #-----------------------------------
             Line ( 'DiHadron'
                  , prescale = self.prescale
@@ -382,22 +330,6 @@ class Hlt1HadronLinesConf(HltLinesConfigurableUser) :
                             [companion('Di')]+\
                             [dihadron('Di')]+\
                             vafterburn('Di')
-                 )
-
-            
-            # DiHadron Line
-            #-----------------------------------
-            Line ( 'DiHadron3D'
-                 , prescale = self.prescale
-                 , postscale = self.postscale
-                 , L0DU  = "L0_CHANNEL('%(L0Channel)s')"%self.getProps()
-                 , algos =  [confirmationl0part('Di3D')]+\
-                            [confirmationpreip('Di3D')]+\
-                            [veloipcut('Di3D')]+\
-                            [confirmationpostip('Di3D')]+\
-                            [companion('Di3D')]+\
-                            [dihadron('Di3D')]+\
-                            vafterburn('Di3D')
                  )
 
             # Monitoring line : pre-confirmation reconstruction
@@ -433,17 +365,3 @@ class Hlt1HadronLinesConf(HltLinesConfigurableUser) :
                            mondecision('Comp')
                  )
 
-        # Soft DiHadron Line
-        #-----------------------------------
-        Line('DiHadronSoft'
-             , prescale = self.prescale
-             , postscale = self.postscale
-             , L0DU = "L0_DECISION_PHYSICS"
-             , algos =  [confirmationl0part('Soft')]+\
-                        [confirmationpreip('Soft')]+\
-                        [veloipcut('Soft')]+\
-                        [confirmationpostip('Soft')]+\
-                        [companion('Soft')]+\
-                        [dihadron('Soft')]+\
-                        vafterburn('Soft')
-             )
