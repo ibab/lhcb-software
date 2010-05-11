@@ -4,6 +4,10 @@
 ! Purpose     : High level Muon Monitoring after reconstruction
 !-----------------------------------------------------------------------------
 
+! 2010-05-11 - G. Graziani
+- test output of Tile2XYZ
+- remove obsolete files MuonTrackMonitor_load.cpp and MuonTrackMonitor_dll.cpp
+
 ! 2010-05-10 - Rob Lambert
  - Added explicit dependency of GenConfUser on pyhon compilation
 
