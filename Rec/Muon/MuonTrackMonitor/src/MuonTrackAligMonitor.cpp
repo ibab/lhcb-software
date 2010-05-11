@@ -317,7 +317,11 @@ StatusCode MuonTrackAligMonitor::execute() {
           
           LHCb::MuonTileID tile = itTile->muonID();
           std::vector<DeMuonChamber*> vchambers;
-          m_muonDet->Tile2XYZ( tile, x, dummy, y, dummy, z, dummy );
+          sc = m_muonDet->Tile2XYZ( tile, x, dummy, y, dummy, z, dummy );
+          if ( !sc.isSuccess() ) {
+            warning() << "Could not get tile coordinates, skipping tile "<<tile<<endmsg;
+            continue;
+          }
           vchambers = m_muonDet->Tile2Chamber( tile );
           
           debug() << "*** tile position ***" << tile << endreq;
