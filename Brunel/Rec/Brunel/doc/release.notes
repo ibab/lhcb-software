@@ -9,6 +9,10 @@ Purpose: LHCb reconstruction program
      the case of half box misalignments (PatVelo)
    . Add a couple new plots to show number of active HPDs per event (RichRecQC)
    . Latest Rich calibration from head-20100430 LHCBCOND tag
+   . Latest OT T0 calibration from head-20100509 LHCBCOND tag
+   . Added MuonTrackMonitor
+   . Added PropagateFSRs (LumiAlgs)
+   . Add IP plots to TrackMonitor expert options
 
 - Changes to tests
   . brunel.brunel-bigevents: add a big event from run 70122, tests bug #67111
