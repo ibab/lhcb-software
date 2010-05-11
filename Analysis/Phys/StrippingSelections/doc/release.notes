@@ -5,6 +5,10 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-05-11 - James Keaveney
+ - bug fixes to muon and electron Drell-Yan lines
+ - W->e line included. 
+
 ! 2010-05-10 - Juan Palacios
  - StrippingBd2DstarMuNuLoose.py
  - StrippingBd2JpsiKstar.py
@@ -42,6 +46,7 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 
 !========================== StrippingSelections v1r20 2010-04-30 ==============
 
+=======
 ! 2010-05-10 - Marcin Kucharczyk
 - Tunning of the StrippingHighPtJets line wrt 2010 data
 
