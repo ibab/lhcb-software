@@ -6,7 +6,7 @@
 # 
 ## #####################################################################
 
-name = "DY2ee"
+name = "dy2ee"
 
 __all__ = ('name', 'DY', 'sequence')
 
@@ -21,7 +21,7 @@ _electrons =  DataOnDemand('stdLooseElectrons', Location = 'Phys/StdLooseElectro
 
 ecut = '(PT>1*GeV)'
 
-_DY1 = CombineParticles(name,
+_DY1 = CombineParticles(name+"1",
                          DecayDescriptor = 'Z0 -> e+ e-',
                          DaughtersCuts = { 'e+' : ecut , 
                                            'e-' : ecut },
@@ -29,7 +29,7 @@ _DY1 = CombineParticles(name,
                          WriteP2PVRelations = False
                          )
 
-_DY2 = CombineParticles(name,
+_DY2 = CombineParticles(name+"2",
                          DecayDescriptor = 'Z0 -> e+ e-',
                         DaughtersCuts = {  'e+'  : ecut , 
                                            'e-'  : ecut },
@@ -37,7 +37,7 @@ _DY2 = CombineParticles(name,
                          WriteP2PVRelations = False
                          )
 
-_DY3 = CombineParticles(name,
+_DY3 = CombineParticles(name+"3",
                          DecayDescriptor = 'Z0 -> e+ e-',
                          DaughtersCuts = { 'e+' : ecut , 
                                            'e-' : ecut },
@@ -45,7 +45,7 @@ _DY3 = CombineParticles(name,
                          WriteP2PVRelations = False
                          )
 
-_DY4 = CombineParticles(name,
+_DY4 = CombineParticles(name+"4",
                          DecayDescriptor = 'Z0 -> e+ e-',
                          DaughtersCuts = { 'e+' : ecut , 
                                            'e-' : ecut },
