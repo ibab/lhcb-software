@@ -28,18 +28,18 @@ DECLARE_ALGORITHM_FACTORY( MuonPIDChecker );
 // Standard constructor, initializes variables
 //=============================================================================
 MuonPIDChecker::MuonPIDChecker( const std::string& name,
-                                    ISvcLocator* pSvcLocator)
+                                ISvcLocator* pSvcLocator)
   : GaudiHistoAlg ( name , pSvcLocator )
 {
   // Source of track to ID
   declareProperty("TrackLocation",
-      m_TracksPath = LHCb::TrackLocation::Default);
+                  m_TracksPath = LHCb::TrackLocation::Default);
   // Source of MuonPID
   declareProperty("MuonIDLocation",
-      m_MuonPIDsPath = LHCb::MuonPIDLocation::Default);
+                  m_MuonPIDsPath = LHCb::MuonPIDLocation::Default);
   // Source of MuonTracks 
   declareProperty("MuonTrackLocation",
-      m_MuonTracksPath = LHCb::TrackLocation::Muon);
+                  m_MuonTracksPath = LHCb::TrackLocation::Muon);
   // Look at Long,Downstream or Both types of tracks
   declareProperty("TrackType", m_TrackType = 0 ); // Long
   // OutputLevel for Histograms  
@@ -69,12 +69,12 @@ StatusCode MuonPIDChecker::initialize() {
   StatusCode sc = GaudiHistoAlg::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiHistoAlg
 
-    // Get Geometry parameters
+  // Get Geometry parameters
   MuonBasicGeometry basegeometry( detSvc(),msgSvc());
   m_NStation= basegeometry.getStations();
   m_NRegion = basegeometry.getRegions();
   if ( msgLevel(MSG::DEBUG) ) debug()   <<"initialize:: Nstations, NRegions "<<
-      m_NStation<< ", " << m_NRegion << endmsg;
+                                m_NStation<< ", " << m_NRegion << endmsg;
 
   unsigned int i=0;
   while(i<m_NStation){
@@ -93,8 +93,8 @@ StatusCode MuonPIDChecker::initialize() {
   if (m_nMonitorCuts ==0 ) Warning ("initialize: no cuts to monitore, finalize will give no info");
   if ( msgLevel(MSG::DEBUG) ) debug() << "initialize:: #of cuts = "<<m_nMonitorCuts<< endmsg;
   for (int j=0;j<m_nMonitorCuts+2;j++) {
-      m_ntotTr.push_back(0);
-      if ( m_nMonitorCuts>j && msgLevel(MSG::DEBUG) ) debug() <<"initialize:: cut "<<i<<""<<m_monitCutValues[j]<<endmsg;
+    m_ntotTr.push_back(0);
+    if ( m_nMonitorCuts>j && msgLevel(MSG::DEBUG) ) debug() <<"initialize:: cut "<<i<<""<<m_monitCutValues[j]<<endmsg;
   }
   if ( msgLevel(MSG::DEBUG) ) debug() <<"initialize:: TrackType "<< m_TrackType <<endmsg;
   if ( msgLevel(MSG::DEBUG) ) debug() <<"initialize:: HistosOutput "<<m_HistosOutput <<endmsg;
@@ -114,19 +114,19 @@ StatusCode MuonPIDChecker::execute() {
   // Get tracks to loop over
   LHCb::Tracks* trTracks = get<LHCb::Tracks>(m_TracksPath);
   if (!trTracks){
-    Warning("execute:: Failed to get Track container", StatusCode::SUCCESS);
+    Warning("execute:: Failed to get Track container", StatusCode::SUCCESS).ignore();
   }
 
   // get  MuonPID objects 
   LHCb::MuonPIDs* pMuids=get<LHCb::MuonPIDs>(m_MuonPIDsPath);
   if (!pMuids){
-    Warning("execute:: Failed to get MuonPID container", StatusCode::SUCCESS);
+    Warning("execute:: Failed to get MuonPID container", StatusCode::SUCCESS).ignore();
   }
 
   // Get muon tracks to loop over
   LHCb::Tracks* muTracks = get<LHCb::Tracks>(m_MuonTracksPath);
   if (!muTracks){
-    Warning("execute:: Failed to get MuonTrack container", StatusCode::SUCCESS);
+    Warning("execute:: Failed to get MuonTrack container", StatusCode::SUCCESS).ignore();
   }
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "execute:: Start loop over tracks" << endmsg;
@@ -154,8 +154,8 @@ StatusCode MuonPIDChecker::execute() {
       if ( msgLevel(MSG::DEBUG) ) debug() << "execute:: track info retrieved" << endmsg;
 
       if (scget.isFailure()) {
-	Warning("execute:: Failed to get track Info ");
-	continue;
+        Warning("execute:: Failed to get track Info ", StatusCode::SUCCESS,0).ignore();
+        continue;
       }
 
       getMuonPIDInfo(pTrack, pMuids);
@@ -164,29 +164,29 @@ StatusCode MuonPIDChecker::execute() {
       getMuonTrackInfo(pTrack, muTracks);
       if ( msgLevel(MSG::DEBUG) ) debug() << "execute:: MuonTrack info retrieved for track "<< m_nTr << endmsg;
 
-     if (m_TrIsPreSel>0) {
-       m_nTrPreSel++;
-       if ( msgLevel(MSG::DEBUG) ) debug() << "execute:: Track is PreSelected " << m_nTr<<endmsg;
-       // Find region hit by the track 
-       m_TrRegionM2 = findTrackRegion(1)+1;
-       if ( msgLevel(MSG::DEBUG) ) debug() << "execute:: Region was retrieved =  R"<< m_TrRegionM2<<endmsg;
-       fillPreSelPlots(m_HistosOutput);
-       if ( msgLevel(MSG::DEBUG) ) debug() << "execute:: PreSel Histos filled" << endmsg; 
-       fillHitMultPlots(m_HistosOutput);
-       if ( msgLevel(MSG::DEBUG) ) debug() << "execute:: Hit Mult Histos filled" << endmsg; 
-       if (m_TrIsMuonLoose>0){
-	 m_nTrIsMuonLoose++;
-         fillIMLPlots(m_HistosOutput);
-	 if ( msgLevel(MSG::DEBUG) ) debug() << "execute:: IsMuonLoose Histos filled" << endmsg; 
-	 if (m_TrIsMuon>0) {
+      if (m_TrIsPreSel>0) {
+        m_nTrPreSel++;
+        if ( msgLevel(MSG::DEBUG) ) debug() << "execute:: Track is PreSelected " << m_nTr<<endmsg;
+        // Find region hit by the track 
+        m_TrRegionM2 = findTrackRegion(1)+1;
+        if ( msgLevel(MSG::DEBUG) ) debug() << "execute:: Region was retrieved =  R"<< m_TrRegionM2<<endmsg;
+        fillPreSelPlots(m_HistosOutput);
+        if ( msgLevel(MSG::DEBUG) ) debug() << "execute:: PreSel Histos filled" << endmsg; 
+        fillHitMultPlots(m_HistosOutput);
+        if ( msgLevel(MSG::DEBUG) ) debug() << "execute:: Hit Mult Histos filled" << endmsg; 
+        if (m_TrIsMuonLoose>0){
+          m_nTrIsMuonLoose++;
+          fillIMLPlots(m_HistosOutput);
+          if ( msgLevel(MSG::DEBUG) ) debug() << "execute:: IsMuonLoose Histos filled" << endmsg; 
+          if (m_TrIsMuon>0) {
             m_nTrIsMuon++;
-	    fillIMPlots(m_HistosOutput);
-	    if ( msgLevel(MSG::DEBUG) ) debug() << "execute:: IsMuon Histos filled" << endmsg; 
-         }
+            fillIMPlots(m_HistosOutput);
+            if ( msgLevel(MSG::DEBUG) ) debug() << "execute:: IsMuon Histos filled" << endmsg; 
+          }
 	   
-       }
+        }
 
-     } // track is preselected
+      } // track is preselected
 
     }// track type is satisfied                 
   }// loop over tracks
@@ -196,8 +196,8 @@ StatusCode MuonPIDChecker::execute() {
   m_ntotTr[0] += m_nTr;
   m_ntotTr[1] += m_nTrPreSel;
   
- if(m_nMonitorCuts>0)  m_ntotTr[2] += m_nTrIsMuonLoose;
- if(m_nMonitorCuts>1)  m_ntotTr[3] += m_nTrIsMuon;
+  if(m_nMonitorCuts>0)  m_ntotTr[2] += m_nTrIsMuonLoose;
+  if(m_nMonitorCuts>1)  m_ntotTr[3] += m_nTrIsMuon;
   if ( msgLevel(MSG::DEBUG) ) for (int i=0;i<m_nMonitorCuts+2;i++)
 	  debug() << "execute:: "<<i<<"-> m_ntotTr[i]"<<m_ntotTr[i]<< endmsg;
   return StatusCode::SUCCESS;
@@ -221,9 +221,11 @@ StatusCode MuonPIDChecker::finalize() {
     CutName.push_back("IsMuonLoose NShared < "); 
     CutName.push_back("IsMuon     NShared  < "); 
     for (int i=2;i<m_nMonitorCuts+2;i++) {
-        rate[i-2]= 100.* (double)m_ntotTr[i]/(double)m_ntotTr[1];
-	rateError[i-2]= getRateError( rate[i-2]/100., m_ntotTr[1]);
-	if ( msgLevel(MSG::DEBUG) ) debug() << "finalize:: "<<i<<" "<<CutName[i-2] <<m_monitCutValues[i]<<":"<< m_ntotTr[i] <<endmsg;
+      rate[i-2]= 100.* (double)m_ntotTr[i]/(double)m_ntotTr[1];
+      rateError[i-2]= getRateError( rate[i-2]/100., m_ntotTr[1]);
+      if ( msgLevel(MSG::DEBUG) ) debug() << "finalize:: "<<i<<" "
+                                          <<CutName[i-2] <<m_monitCutValues[i]
+                                          <<":"<< m_ntotTr[i] <<endmsg;
     }
     
     info()<< "----------------------------------------------------------------"<< endmsg;
@@ -235,7 +237,7 @@ StatusCode MuonPIDChecker::finalize() {
     info()<< "----------------------------------------------------------------"<< endmsg;
     for (int i=0;i<m_nMonitorCuts;i=i+2){ 
       info()<< CutName[i] << format( "%3.1f      :", m_monitCutValues[i])<< format("  %7.3f +-%7.3f ", 
-	  rate[i], rateError[i])  << endmsg;
+                                                                                   rate[i], rateError[i])  << endmsg;
       if ( msgLevel(MSG::DEBUG) ) debug() << "finalize:: i="<<i<< " cutname"<<CutName[i] <<":"<< m_ntotTr[i+2] <<endmsg;
     }
                        
@@ -244,7 +246,7 @@ StatusCode MuonPIDChecker::finalize() {
     info()<< "----------------------------------------------------------------"<< endmsg;
     for (int i=1;i<m_nMonitorCuts;i=i+2){ 
       info()<< CutName[i] << format( "%3.1f      :", m_monitCutValues[i])<< format("  %7.3f +-%7.3f ", 
-	  rate[i], rateError[i])  << endmsg;
+                                                                                   rate[i], rateError[i])  << endmsg;
       if ( msgLevel(MSG::DEBUG) ) debug() << "finalize:: i="<<i<< " cutname"<<CutName[i] <<":"<< m_ntotTr[i+2] <<endmsg;
     }
                        
@@ -266,41 +268,41 @@ StatusCode MuonPIDChecker::finalize() {
 //======================================================================
 StatusCode MuonPIDChecker::trackExtrapolate(const LHCb::Track *pTrack){
 
-    // get state closest to M1 for extrapolation
-    const LHCb::State * state = &(pTrack->closestState(9450));
+  // get state closest to M1 for extrapolation
+  const LHCb::State * state = &(pTrack->closestState(9450));
 
 
-    if(!state){
-      err() << " Failed to get state from track " << endmsg;
-      return StatusCode::FAILURE;
-    }
+  if(!state){
+    err() << " Failed to get state from track " << endmsg;
+    return StatusCode::FAILURE;
+  }
 
-   //Project the state into the muon stations
-   unsigned int station;
-   for(station = 0; station < m_NStation ; station++){
-      // x(z') = x(z) + (dx/dz * (z' - z))
-      m_trackX.push_back(state->x() + ( state->tx() *
-                                        (m_stationZ[station] - state->z()) ));
+  //Project the state into the muon stations
+  unsigned int station;
+  for(station = 0; station < m_NStation ; station++){
+    // x(z') = x(z) + (dx/dz * (z' - z))
+    m_trackX.push_back(state->x() + ( state->tx() *
+                                      (m_stationZ[station] - state->z()) ));
 
-      m_trackY.push_back(state->y() + ( state->ty() *
-                                        (m_stationZ[station] - state->z()) ));
-      if ( msgLevel(MSG::DEBUG) ) debug() << "trackExtrapolate:: M"<<station << 
-	      "  x= "<< m_trackX[station]<< " and y = "<<m_trackY[station]<<endmsg;
-   }
-   return StatusCode::SUCCESS;
+    m_trackY.push_back(state->y() + ( state->ty() *
+                                      (m_stationZ[station] - state->z()) ));
+    if ( msgLevel(MSG::DEBUG) ) debug() << "trackExtrapolate:: M"<<station << 
+                                  "  x= "<< m_trackX[station]<< " and y = "<<m_trackY[station]<<endmsg;
+  }
+  return StatusCode::SUCCESS;
 }
 
 //=====================================================================
 int MuonPIDChecker::findTrackRegion(const int sta){
-//=====================================================================
-// comment: Returns the muon detector region of the extrapolated track;
-// authors: G. Lanfranchi & S. Furcas, 
-// date:    10/5/09
-//=====================================================================
+  //=====================================================================
+  // comment: Returns the muon detector region of the extrapolated track;
+  // authors: G. Lanfranchi & S. Furcas, 
+  // date:    10/5/09
+  //=====================================================================
   int chnum = -1; 
   int regnum = -1;
   if ( msgLevel(MSG::DEBUG) ) debug() << "findTrackRegion:: M"<<sta << 
-      "  x= "<< m_trackX[sta]<< " and y = "<<m_trackY[sta]<<endmsg;
+                                "  x= "<< m_trackX[sta]<< " and y = "<<m_trackY[sta]<<endmsg;
   m_mudet->Pos2StChamberNumber(m_trackX[sta],m_trackY[sta],sta,chnum,regnum).ignore();
   return regnum;
     
@@ -310,67 +312,67 @@ int MuonPIDChecker::findTrackRegion(const int sta){
 //  Reset Track Variables  
 //====================================================================
 void MuonPIDChecker::resetTrInfo() {
-    // reset info about tracks
-    m_Trp0 = -10000.;
-    m_TrpT = -10000.;
-    m_trackX.clear();
-    m_trackY.clear();
-    // MuonPID Info
-    m_TrIsPreSel=0;
-    m_TrIsMuon = 1000;
-    m_TrIsMuonLoose = 1000;
-    m_TrMuonLhd= -1000.;
-    m_TrNMuonLhd = -1000.;
-    m_TrNShared=1000;
-    // Muon Track Info
-    m_TrChi2 =-1000;
-    m_TrDist2 =-1000;
-    m_TrCLquality =-1000;
-    m_TrCLarrival =-1000;
-    m_Trquality =-1000;
-    for (unsigned int i=0;i<20;i++) m_Trnhitsfoi[i] = 0;
-    // MC info
-    m_TrMCp0 = -1000;
-    m_TrnLinks = 0;
-    m_TrzDecay = -1000.;
-    m_TrType = 1000;
+  // reset info about tracks
+  m_Trp0 = -10000.;
+  m_TrpT = -10000.;
+  m_trackX.clear();
+  m_trackY.clear();
+  // MuonPID Info
+  m_TrIsPreSel=0;
+  m_TrIsMuon = 1000;
+  m_TrIsMuonLoose = 1000;
+  m_TrMuonLhd= -1000.;
+  m_TrNMuonLhd = -1000.;
+  m_TrNShared=1000;
+  // Muon Track Info
+  m_TrChi2 =-1000;
+  m_TrDist2 =-1000;
+  m_TrCLquality =-1000;
+  m_TrCLarrival =-1000;
+  m_Trquality =-1000;
+  for (unsigned int i=0;i<20;i++) m_Trnhitsfoi[i] = 0;
+  // MC info
+  m_TrMCp0 = -1000;
+  m_TrnLinks = 0;
+  m_TrzDecay = -1000.;
+  m_TrType = 1000;
 
-    return;
+  return;
 }
 //=====================================================================
 //  Fill MuonPID Info      
 //====================================================================
 void MuonPIDChecker::getMuonPIDInfo(const LHCb::Track *pTrack, LHCb::MuonPIDs* pMuids) {
 
-      int nMuonPIDs=0; //number of MuonPIDs associated to track
-      // link between track and MuonPID 
-      LHCb::MuonPIDs::const_iterator imuid;
-      for (imuid = pMuids->begin() ; imuid != pMuids->end() ; imuid++){
-        if ((*imuid)->idTrack() == pTrack){  // found Associated MuonPID
-          nMuonPIDs++;
-          // Preselection
-          if ((*imuid)->PreSelMomentum() && (*imuid)->InAcceptance() ){
-            m_TrIsPreSel=1;
-            m_TrIsMuon = (*imuid)->IsMuon();
-            m_TrIsMuonLoose = (*imuid)->IsMuonLoose();
-            if (m_TrIsMuonLoose< m_TrIsMuon){ // Sanity Check  
-              Warning("getMuonPIDInfo:: Muon Track IsMuon < IsMuonLoose"); 
-	      if ( msgLevel(MSG::DEBUG) ) debug() << "getMuonPIDInfo::Muon Track" << m_nTr
-		<<"  IsMuon ="<< m_TrIsMuon <<
-		  "< IsMuonLoose= "<< m_TrIsMuonLoose << endmsg;
+  int nMuonPIDs=0; //number of MuonPIDs associated to track
+  // link between track and MuonPID 
+  LHCb::MuonPIDs::const_iterator imuid;
+  for (imuid = pMuids->begin() ; imuid != pMuids->end() ; imuid++){
+    if ((*imuid)->idTrack() == pTrack){  // found Associated MuonPID
+      nMuonPIDs++;
+      // Preselection
+      if ((*imuid)->PreSelMomentum() && (*imuid)->InAcceptance() ){
+        m_TrIsPreSel=1;
+        m_TrIsMuon = (*imuid)->IsMuon();
+        m_TrIsMuonLoose = (*imuid)->IsMuonLoose();
+        if (m_TrIsMuonLoose< m_TrIsMuon){ // Sanity Check  
+          Warning("getMuonPIDInfo:: Muon Track IsMuon < IsMuonLoose").ignore(); 
+          if ( msgLevel(MSG::DEBUG) ) debug() << "getMuonPIDInfo::Muon Track" << m_nTr
+                                              <<"  IsMuon ="<< m_TrIsMuon <<
+                                        "< IsMuonLoose= "<< m_TrIsMuonLoose << endmsg;
             
-	    }
-	    m_TrMuonLhd= (*imuid)->MuonLLMu();
-	    m_TrNMuonLhd = (*imuid)->MuonLLBg();
-	    m_TrNShared = (*imuid)->nShared();
-	    if ( msgLevel(MSG::DEBUG) ) debug() << "getMuonPIDInfo::Muon Track" << m_nTr
-		<<"  TrMuonLhd ="<< m_TrMuonLhd << " TrNMuonLhd= "<< m_TrNMuonLhd<< endmsg;
+        }
+        m_TrMuonLhd= (*imuid)->MuonLLMu();
+        m_TrNMuonLhd = (*imuid)->MuonLLBg();
+        m_TrNShared = (*imuid)->nShared();
+        if ( msgLevel(MSG::DEBUG) ) debug() << "getMuonPIDInfo::Muon Track" << m_nTr
+                                            <<"  TrMuonLhd ="<< m_TrMuonLhd << " TrNMuonLhd= "<< m_TrNMuonLhd<< endmsg;
 	    
-          } // Pre-selection
-        }  // Association to Track
-      } // loop over MuonPIDs
-      if (nMuonPIDs>1) Warning("getMuonPIDInfo:: nMuonPIDs associated to track >1");
-      return;
+      } // Pre-selection
+    }  // Association to Track
+  } // loop over MuonPIDs
+  if (nMuonPIDs>1) Warning("getMuonPIDInfo:: nMuonPIDs associated to track >1").ignore();
+  return;
 }
 //=====================================================================
 //  Fill Muon Track Info      
@@ -386,12 +388,12 @@ void MuonPIDChecker::getMuonTrackInfo(const LHCb::Track *pTrack, LHCb::Tracks* m
     int nmothers=0;
     const SmartRefVector<LHCb::Track> Trmothers=(*imuTrack)->ancestors();
     for (SmartRefVector<LHCb::Track>::const_iterator imother=Trmothers.begin();
-	imother!=Trmothers.end();imother++){
-        trParent = *imother;
-	nmothers++;
+         imother!=Trmothers.end();imother++){
+      trParent = *imother;
+      nmothers++;
     }
     if (trParent == NULL){ 
-      Warning( "getMuonTrackInfo:: failed to get Muon Track ancestor") ; 
+      Warning( "getMuonTrackInfo:: failed to get Muon Track ancestor", StatusCode::SUCCESS,0).ignore() ; 
       continue;
     }
     // if muon track ancestor is the current track get info 
@@ -401,13 +403,13 @@ void MuonPIDChecker::getMuonTrackInfo(const LHCb::Track *pTrack, LHCb::Tracks* m
       unsigned int muTrPS=0;
       if ( (*imuTrack)->info(301,0) && (*imuTrack)->info(302,0)) muTrPS=1;
       if (muTrPS != m_TrIsPreSel) 
-        Warning("getMuonTrackInfo:: PS flag is different for Muon Track and MuonPID");
+        Warning("getMuonTrackInfo:: PS flag is different for Muon Track and MuonPID").ignore();
       unsigned int TrIsMuonLoose = (unsigned int)(*imuTrack)->info(303,0);
       if (TrIsMuonLoose != m_TrIsMuonLoose) 
-        Warning("getMuonTrackInfo:: IML flag is different for Muon Track and MuonPID");
+        Warning("getMuonTrackInfo:: IML flag is different for Muon Track and MuonPID").ignore();
       unsigned int TrIsMuon = (unsigned int)(*imuTrack)->info(304,0);
       if (TrIsMuon != m_TrIsMuon) 
-      	Warning("getMuonTrackInfo:: IM flag is different for Muon Track and MuonPID");
+      	Warning("getMuonTrackInfo:: IM flag is different for Muon Track and MuonPID").ignore();
  
       // Get Info
       m_Trquality = (*imuTrack)->info(300,0);
@@ -416,26 +418,26 @@ void MuonPIDChecker::getMuonTrackInfo(const LHCb::Track *pTrack, LHCb::Tracks* m
       m_TrCLquality = (*imuTrack)->info(308,0);
       m_TrCLarrival = (*imuTrack)->info(309,0);
       if ( msgLevel(MSG::DEBUG) ) {
-	debug() << "getMuonTrackInfo::Muon Track" << m_nTr
-	  <<"  Trquality ="<< m_Trquality << " TrChi2 = "<< m_TrChi2 << endmsg;
-	debug() << "getMuonTrackInfo::Muon Track" << m_nTr
-	  <<"  TrDist2   ="<< m_TrDist2 << " TrCLquality="<< m_TrCLquality << endmsg;
-	debug() << "getMuonTrackInfo::Muon Track" << m_nTr
-	  <<"  TrCLArrival   ="<< m_TrCLarrival << endmsg;
+        debug() << "getMuonTrackInfo::Muon Track" << m_nTr
+                <<"  Trquality ="<< m_Trquality << " TrChi2 = "<< m_TrChi2 << endmsg;
+        debug() << "getMuonTrackInfo::Muon Track" << m_nTr
+                <<"  TrDist2   ="<< m_TrDist2 << " TrCLquality="<< m_TrCLquality << endmsg;
+        debug() << "getMuonTrackInfo::Muon Track" << m_nTr
+                <<"  TrCLArrival   ="<< m_TrCLarrival << endmsg;
       }
       // Look at coords
       std::vector<LHCb::LHCbID> mucoords = (*imuTrack) -> lhcbIDs();
       std::vector<LHCb::LHCbID>::iterator iID;
       for (iID = mucoords.begin(); iID != mucoords.end(); iID++) {
-	if (!(iID->isMuon())) continue;
+        if (!(iID->isMuon())) continue;
 
-	LHCb::MuonTileID mutile = iID->muonID();
-	int region = mutile.region();
-	int station = mutile.station();
-	int nStatReg = station*m_NRegion+region;
-	m_Trnhitsfoi[nStatReg]++;
-	if ( msgLevel(MSG::DEBUG) ) debug() << "getMuonTrackInfo:: " << 
-	  "nHits in FOI in MR"<<nStatReg << " = "<<m_Trnhitsfoi[nStatReg]<<endmsg;
+        LHCb::MuonTileID mutile = iID->muonID();
+        int region = mutile.region();
+        int station = mutile.station();
+        int nStatReg = station*m_NRegion+region;
+        m_Trnhitsfoi[nStatReg]++;
+        if ( msgLevel(MSG::DEBUG) ) debug() << "getMuonTrackInfo:: " << 
+                                      "nHits in FOI in MR"<<nStatReg << " = "<<m_Trnhitsfoi[nStatReg]<<endmsg;
       } //end of loop over lhcbIDs 
 
     }
@@ -493,8 +495,8 @@ void MuonPIDChecker::fillIMLPlots(int level) {
   if (4<m_nMonitorCuts && (m_TrMuonLhd-m_TrNMuonLhd)>m_monitCutValues[4]) m_ntotTr[6]++;
   if (6<m_nMonitorCuts && m_TrNShared<m_monitCutValues[6]) m_ntotTr[8]++;
   if ( msgLevel(MSG::DEBUG) ) debug() << "fillIMLPlots:: MuProb="<<exp(m_TrMuonLhd)<< 
-          " DLL="<<(m_TrMuonLhd-m_TrNMuonLhd) << " IM="<< m_TrIsMuon 
-	  <<" nShared=" << m_TrNShared<< endmsg;
+                                " DLL="<<(m_TrMuonLhd-m_TrNMuonLhd) << " IM="<< m_TrIsMuon 
+                                      <<" nShared=" << m_TrNShared<< endmsg;
   if ( msgLevel(MSG::DEBUG) ) for (int i=0;i<m_nMonitorCuts+2;i++)
 	  debug() << "IMLPlots:: "<<i<<"-> m_ntotTr[i]"<<m_ntotTr[i]<< endmsg;
 
@@ -603,7 +605,7 @@ void MuonPIDChecker::fillHitMultPlots(int level) {
     unsigned int NhitsFOI=0;
     for (unsigned int i=0; i<m_NStation; i++){
       for (unsigned int j=0; j<m_NRegion;j++){
-	  nhitsfoiS[i]+=m_Trnhitsfoi[i*m_NRegion+j];
+        nhitsfoiS[i]+=m_Trnhitsfoi[i*m_NRegion+j];
       }
       NhitsFOI += nhitsfoiS[i];
       sprintf (hname, "hNHhitsFOIvsR_M%d",i+1); 
@@ -614,18 +616,18 @@ void MuonPIDChecker::fillHitMultPlots(int level) {
       profile1D( m_TrRegionM2, nhitsfoiS[i],hname ,htitle , 0.5, 4.5, 4);
 
       if (level > 3){
-	sprintf ( hname, "hNhitsFOIvsX_M%d", i+1);
-	sprintf (htitle, "Number of hits in FOI for M%d vs MS X pos.",i+1); 
-	plot2D(m_trackX[i], nhitsfoiS[i], hname, htitle, -0.5,10.5, -5000, 5000, 200); 
-	sprintf ( hname, "hNhitsFOIvsY_M%d", i+1);
-	sprintf (htitle, "Number of hits in FOI for M%d vs MS Y pos.",i+1); 
-	plot2D(m_trackY[i], nhitsfoiS[i], hname, htitle, -0.5,10.5, -5000, 5000, 200); 
-	sprintf ( hname, "hAvNhitsFOIvsX_M%d", i+1);
-	sprintf (htitle, "Mean Number of hits in FOI for M%d vs MS X pos.",i+1); 
-	profile1D(m_trackX[i], nhitsfoiS[i], hname, htitle, -5000, 5000, 200); 
-	sprintf ( hname, "hAvNhitsFOIvsY_M%d", i+1);
-	sprintf (htitle, "Mean Number of hits in FOI for M%d vs MS Y pos.",i+1); 
-	profile1D(m_trackY[i], nhitsfoiS[i], hname, htitle, -5000, 5000, 200); 
+        sprintf ( hname, "hNhitsFOIvsX_M%d", i+1);
+        sprintf (htitle, "Number of hits in FOI for M%d vs MS X pos.",i+1); 
+        plot2D(m_trackX[i], nhitsfoiS[i], hname, htitle, -0.5,10.5, -5000, 5000, 200); 
+        sprintf ( hname, "hNhitsFOIvsY_M%d", i+1);
+        sprintf (htitle, "Number of hits in FOI for M%d vs MS Y pos.",i+1); 
+        plot2D(m_trackY[i], nhitsfoiS[i], hname, htitle, -0.5,10.5, -5000, 5000, 200); 
+        sprintf ( hname, "hAvNhitsFOIvsX_M%d", i+1);
+        sprintf (htitle, "Mean Number of hits in FOI for M%d vs MS X pos.",i+1); 
+        profile1D(m_trackX[i], nhitsfoiS[i], hname, htitle, -5000, 5000, 200); 
+        sprintf ( hname, "hAvNhitsFOIvsY_M%d", i+1);
+        sprintf (htitle, "Mean Number of hits in FOI for M%d vs MS Y pos.",i+1); 
+        profile1D(m_trackY[i], nhitsfoiS[i], hname, htitle, -5000, 5000, 200); 
       }
     }
     sprintf ( hname, "hAvTotNhitsFOIvsR");
@@ -644,12 +646,12 @@ void MuonPIDChecker::fillHitMultPlots(int level) {
 //  Fill MuonPID Info      
 //====================================================================
 StatusCode MuonPIDChecker::getTrackInfo(const LHCb::Track* pTrack) {
-   // get momentum
-   // get state in zero position 
+  // get momentum
+  // get state in zero position 
   const LHCb::State * stateP0 = &(pTrack->firstState());
   if (!stateP0){
     if ( msgLevel(MSG::DEBUG) ) debug() << "getTrackInfo:: Failed to get stateP0 for track "<< m_nTr<< endmsg;
-    Warning("getTrackInfo:: Failed to get stateP0 for track ",StatusCode::FAILURE); 
+    return Warning("getTrackInfo:: Failed to get stateP0 for track ",StatusCode::FAILURE); 
   }
   if( std::abs( stateP0->qOverP() ) > 0.001 / Gaudi::Units::GeV ) {
     m_Trp0 = (1./stateP0->qOverP())/Gaudi::Units::GeV;
@@ -664,7 +666,7 @@ StatusCode MuonPIDChecker::getTrackInfo(const LHCb::Track* pTrack) {
   if ( msgLevel(MSG::DEBUG) ) debug() << "getTrackInfo:: TrP0=" << m_Trp0 << " TrPT= "<< m_TrpT << endmsg;
 
   StatusCode sc = trackExtrapolate(pTrack);
-  if (sc.isFailure()) Warning("getTrackInfo:: Failed to extrapolate track ", StatusCode::FAILURE);
+  if (sc.isFailure()) Warning("getTrackInfo:: Failed to extrapolate track ", StatusCode::FAILURE,0).ignore();
 
   if ( msgLevel(MSG::DEBUG) ){
 
