@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2010-05-11 - Rob Lambert
+ - Adapted RecoTracking for upgrade purposes
+
+! 2010-05-11 - Rob Lambert
  - fixed cut-and-paste error in PatChecking.py
 
 ! 2010-05-05 - Rob Lambert

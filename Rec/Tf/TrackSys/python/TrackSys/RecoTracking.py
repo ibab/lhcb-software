@@ -23,7 +23,7 @@ from Configurables import ( ProcessPhase, MagneticFieldSvc,
                             TrackEraseExtraInfo, PatMatch
                            )
 
-def RecoTracking():
+def RecoTracking(exclude=[]):
    '''What used to be in the options file, moved here'''
    ## Start TransportSvc, needed by track fit
    ApplicationMgr().ExtSvc.append("TransportSvc")
@@ -93,7 +93,7 @@ def RecoTracking():
       
       
    ## Make sure the default extrapolator and interpolator use simplified material
-   if TrackSys().simplifiedGeometry():
+   if TrackSys().simplifiedGeometry() and ('SimpleGeom' not in exclude):
       from Configurables import TrackMasterExtrapolator, TrackInterpolator
       TrackMasterExtrapolator().MaterialLocator = 'SimplifiedMaterialLocator'
       TrackInterpolator().addTool( TrackMasterExtrapolator( MaterialLocator = 'SimplifiedMaterialLocator' ), name='Extrapolator')
@@ -289,7 +289,7 @@ def RecoTracking():
       #   GaudiSequencer("TrackAddExtraInfoSeq").Members += [ TrackComputeExpectedHits() ]
       
       ## Add the likelihood information
-      if "TrackLikelihood" in extraInfos :
+      if "TrackLikelihood" in extraInfos and ('TrackLikelihood' not in exclude):
          trackAddLikelihood = TrackAddLikelihood()
          trackAddLikelihood.addTool( TrackLikelihood, name = "TrackMatching_likTool" )
          trackAddLikelihood.TrackMatching_likTool.otEff = 0.9
