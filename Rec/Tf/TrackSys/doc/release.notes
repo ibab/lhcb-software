@@ -4,6 +4,9 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+! 2010-05-11 - Rob Lambert
+ - fixed cut-and-paste error in PatChecking.py
+
 ! 2010-05-05 - Rob Lambert
  - Adapt to changes in STTools for new python modules
 

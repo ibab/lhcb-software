@@ -30,10 +30,8 @@ def PatChecking():
    
    
    GaudiSequencer("CheckPatSeq").Members  += [ TrackResChecker("TrackResChecker")];
-   
-   
    TrackResChecker("TrackResChecker").SplitByType = True;
-   ConfigureEffCheckTools(TrackEffChecker("TrackResChecker"))
+   ConfigureEffCheckTools(TrackResChecker("TrackResChecker"))
    
    if not TrackSys().veloOpen():
      GaudiSequencer("CheckPatSeq").Members += [ TrackEffChecker("VeloRZ") ]
@@ -93,3 +91,4 @@ def ConfigureEffCheckTools(EffCheck):
    EffCheck.HistoPrint = False
    EffCheck.StatPrint = False
    EffCheck.FullDetail = False
+
