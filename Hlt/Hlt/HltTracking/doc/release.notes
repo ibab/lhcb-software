@@ -1,9 +1,13 @@
-!$Id: release.notes,v 1.120 2010-05-10 12:59:14 gligorov Exp $
+!$Id: release.notes,v 1.121 2010-05-11 17:31:21 gligorov Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/HltTracking
 ! Responsible : Jose A. Hernando
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
+
+! 2010-05-11 - V. Gligorov
+ - Switch to doing 3D reco upfront for Hlt1; use same 3D primary vertex between 
+   Hlt1 and Hlt2.
 
 ! 2010-05-10 - V. Gligorov
  - Enable neutral reco. when making electron protoparticles in order

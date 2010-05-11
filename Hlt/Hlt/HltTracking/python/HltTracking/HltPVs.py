@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltPVs.py,v 1.7 2010-04-26 20:35:35 graven Exp $
+# $Id: HltPVs.py,v 1.8 2010-05-11 17:30:31 gligorov Exp $
 # =============================================================================
 ## @file HltTracking/HltPVs.py
 #  Define the 2D and 3D primary vertex making algorithms for the Hlt
@@ -159,13 +159,15 @@ def PV3D() :
     from Hlt2TrackingConfigurations import Hlt2UnfittedForwardTracking
     from Hlt2TrackingConfigurations import Hlt2BiKalmanFittedLongTracking
     from Configurables import PVOfflineTool,PVSeedTool,LSAdaptPVFitter 
+    from HltReco import MinimalVelo
 
     output3DVertices = _vertexLocation(HltSharedVerticesPrefix,HltGlobalVertexLocation,Hlt3DPrimaryVerticesName)
 
     recoPV3D =  PatPV3D('HltPVsPV3D' )
     recoPV3D.addTool(PVOfflineTool,"PVOfflineTool")
     recoPV3D.OutputVerticesName = output3DVertices
-    recoPV3D.PVOfflineTool.InputTracks = [ForcedRecoVeloForPVs().outputSelection()] 
+    recoPV3D.PVOfflineTool.InputTracks = [MinimalVelo.outputSelection()]
+    #recoPV3D.PVOfflineTool.InputTracks = [ForcedRecoVeloForPVs().outputSelection()] 
     #recoPV3D.PVOfflineTool.InputTracks = [ (Hlt2UnfittedForwardTracking().hlt2VeloTracking()).outputSelection() ]
     #recoPV3D.PVOfflineTool.InputTracks = [ (Hlt2BiKalmanFittedLongTracking().hlt2PrepareTracks()).outputSelection() ]   
 
@@ -179,7 +181,21 @@ def PV3D() :
         recoPV3D.PVOfflineTool.PVSeedTool.ratioSig2HighMult = 1
         recoPV3D.PVOfflineTool.PVSeedTool.ratioSig2LowMult =1
         recoPV3D.PVOfflineTool.LSAdaptPVFitter.MinTracks = 2 
-     
-    return bindMembers( "HltPVsPV3D", [ ForcedRecoVeloForPVs(), recoPV3D ] )   
+
+    from Configurables import HltVertexFilter   
+ 
+    preparePV3D = HltVertexFilter( 'Hlt1PreparePV3D'
+                             , InputSelection = "TES:" + recoPV3D.OutputVerticesName
+                             , RequirePositiveInputs = False
+                             , FilterDescriptor = ["VertexZPosition,>,-5000","VertexTransversePosition,>,-1"]
+                             , HistoDescriptor = {'VertexZPosition': ( 'PV3D: VertexZPosition',-200.,200.,200),
+                                                  'VertexZPositionBest': ( 'PV3D: Highest VertexZPosition',-200,200.,100),
+                                                  'VertexTransversePosition': ( 'PV3D: VertexTransversePosition',0,1,50),
+                                                  'VertexTransversePositionBest': ( 'PV3D: Highest VertexTransversePosition',0,1,50)
+                                                    }
+                             , OutputSelection   = "PV3D" )
+
+    return bindMembers( "HltPVsPV3D", [ MinimalVelo, recoPV3D, preparePV3D]) 
+    #return bindMembers( "HltPVsPV3D", [ ForcedRecoVeloForPVs(), recoPV3D ] )   
     #return bindMembers( "HltPVsPV3D", [ Hlt2BiKalmanFittedLongTracking().hlt2PrepareTracks(), recoPV3D ] )
     #return bindMembers( "HltPVsPV3D", [ Hlt2UnfittedForwardTracking().hlt2VeloTracking(), recoPV3D ] )

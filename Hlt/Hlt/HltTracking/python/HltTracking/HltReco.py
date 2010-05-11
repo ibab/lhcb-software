@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltReco.py,v 1.2 2010-04-19 08:03:57 albrecht Exp $
+# $Id: HltReco.py,v 1.3 2010-05-11 17:30:31 gligorov Exp $
 # =============================================================================
 ## @file HltTracking/HltReco.py
 #  Collection of predefined algorithms to perform reconstruction
@@ -32,6 +32,7 @@
 
 __all__ = ('MinimalRZVelo'   # bindMembers instance with algorithms needed to get 'MinimalRZVelo' 
           , 'RZVelo'          # bindMembers instance with algorithms needed to get 'RZVelo'
+          , 'MinimalVelo'
           , 'Velo'            # bindMembers instance with algorithms needed to get 'Velo'
 	  , 'Hlt1Seeding'
           )
@@ -81,23 +82,17 @@ STOfflinePosition().APE = 0.197
 #shared between Hlt1 and Hlt2
 from HltTrackNames import HltSharedRZVeloTracksName, HltSharedTracksPrefix 
 from HltTrackNames import Hlt1TracksPrefix, _baseTrackLocation, Hlt1SeedingTracksName  
+from Configurables import Tf__PatVeloSpaceTracking, Tf__PatVeloSpaceTool
 
 #### Velo Tracking
 patVeloR = Tf__PatVeloRTracking('HltRecoRZVelo', OutputTracksName = _baseTrackLocation(HltSharedTracksPrefix,HltSharedRZVeloTracksName) ) 
 
-#We have a choice of which 3D Velo tracking (sans upgrading of 2D tracks) to use...
-#recoVeloOpen = Tf__PatVeloGeneric("PatVeloGeneric", Output = "Hlt/Track/VeloOpen")
-#recoVeloOpenOutput = recoVeloOpen.Output
-#recoVeloOpen = Tf__PatVeloGeneralTracking('HltRecoVeloGeneral', OutputTracksLocation = "Hlt/Track/VeloOpen" )
-#recoVeloOpenOutput = recoVeloOpen.OutputTracksLocation 
-
-#### Primary vertex algorithms...
-
-#recoPV3DOpen =  PatPV3D('HltRecoPV3DOpen' )
-#PV3DOpenTool = PVOfflineTool('PVOfflineTool') 
-#PV3DOpenTool.InputTracks = [recoVeloOpenOutput  ]
-#recoPV3DOpen.addTool( PV3DOpenTool )
-#recoPV3DOpen.OutputVerticesName = "Hlt/Vertex/PV3DOpen"
+recoVelo         = Tf__PatVeloSpaceTracking('Hlt1And2RecoVelo'
+                                   , InputTracksName  = "Hlt/Track/RZVelo" 
+                                   , OutputTracksName = "Hlt/Track/Velo" )
+    
+recoVelo.addTool( Tf__PatVeloSpaceTool(), name="PatVeloSpaceTool" )
+recoVelo.PatVeloSpaceTool.MarkClustersUsed=True
 
 ##### Hlt selections
 
@@ -109,28 +104,14 @@ prepareRZVelo = HltTrackFilter( 'Hlt1PrepareRZVelo'
                               , FilterDescriptor = ["IsBackward,<,0.5"]
                               , OutputSelection     = "RZVelo" )
 
-#prepareVeloOpen = HltTrackFilter( 'Hlt1PrepareVeloOpen'
-#                                , InputSelection = "TES:" + recoVeloOpenOutput
-#                                , RequirePositiveInputs = False
-#                                , AddInfo = False
-#                                , OutputSelection = "VeloOpen") 
 
-reco1Velo = HltTrackUpgrade( 'Hlt1RecoVelo'
-                           , InputSelection = prepareRZVelo.OutputSelection
-                           , OutputSelection = "Velo"
-                           , RecoName = "Velo"
-                           , HistogramUpdatePeriod = 0 )
+prepare3DVelo = HltTrackFilter( 'Hlt1Prepare3DVelo'
+                              , InputSelection   = "TES:" + recoVelo.OutputTracksName
+                              , RequirePositiveInputs = False
+                              , AddInfo = False
+                              , FilterDescriptor = ["IsBackward,<,0.5"]
+                              , OutputSelection     = "Velo" )
 
-#recoFwd = HltTrackUpgrade( 'Hlt1RecoForward'
-#                         , InputSelection = reco1Velo.OutputSelection
-#                         , OutputSelection = "Forward"
-#                         , RecoName = "Forward"
-#                         , HistogramUpdatePeriod = 0 )
-
-#preparePV3DOpen = HltVertexFilter( 'Hlt1PreparePV3DOpen'
-#                                 , InputSelection = "TES:" + recoPV3DOpen.OutputVerticesName
-#                                 , RequirePositiveInputs = False
-#                                 , OutputSelection = "PV3DOpen" )
 #############################################################################################
 # Define the reconstruction sequence 
 #############################################################################################
@@ -141,9 +122,10 @@ from Configurables import DecodeVeloRawBuffer
 ### define exported symbols (i.e. these are externally visible, the rest is NOT)
 #This is the part which is shared between Hlt1 and Hlt2
 MinimalRZVelo   = bindMembers( None, [DecodeVELO, patVeloR ] )
-#The Hlt1 parts
 RZVelo   = bindMembers( None, [ MinimalRZVelo, prepareRZVelo ] )
-Velo     = bindMembers( None, [                  RZVelo , reco1Velo ] )
+
+MinimalVelo = bindMembers( None, [                  MinimalRZVelo , recoVelo ] )
+Velo     = bindMembers( None, [                  MinimalVelo, prepare3DVelo ] )
 
 from Configurables import PatSeeding
 from HltLine.HltDecodeRaw import DecodeIT
@@ -151,7 +133,3 @@ Hlt1Seeding = bindMembers( None, [ DecodeIT,
                                    PatSeeding('Hlt1MBSeeding'
                                               ,OutputTracksName = _baseTrackLocation(Hlt1TracksPrefix,Hlt1SeedingTracksName))
                                    ] )
-
-# Debug things for an open VELO
-#VeloOpen = bindMembers( None, [ DecodeVeloRawBuffer(), recoVeloOpen, prepareVeloOpen ] )
-#PV3DOpen = bindMembers( None, [ DecodeVeloRawBuffer(), recoVeloOpen, prepareVeloOpen, recoPV3DOpen, preparePV3DOpen ] )

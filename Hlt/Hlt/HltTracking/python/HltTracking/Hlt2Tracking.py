@@ -11,7 +11,7 @@
 ##
 # =============================================================================
 __author__  = "V. Gligorov vladimir.gligorov@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.14 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.15 $"
 # =============================================================================
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
@@ -962,18 +962,11 @@ class Hlt2Tracking(LHCbConfigurableUser):
         from Configurables      import Tf__PatVeloGeneralTracking
         from Configurables      import Tf__PatVeloSpaceTool
         #From HltReco we just get the shared stuff between Hlt1 and Hlt2
-        from HltReco        import MinimalRZVelo
+        from HltReco        import MinimalVelo
         from HltLine.HltLine    import bindMembers 
-    
+            
         veloTracksOutputLocation = _baseTrackLocation(self.getProp("Prefix"),Hlt2VeloTracksName) 
        
-        recoVelo         = Tf__PatVeloSpaceTracking(self.getProp("Prefix")+'RecoVelo'
-                                           , InputTracksName  = MinimalRZVelo.outputSelection() 
-                                           , OutputTracksName = veloTracksOutputLocation )
-    
-        recoVelo.addTool( Tf__PatVeloSpaceTool(), name="PatVeloSpaceTool" )
-        recoVelo.PatVeloSpaceTool.MarkClustersUsed=True
-    
         recoVeloGeneral         = Tf__PatVeloGeneralTracking(self.getProp("Prefix")+'RecoVeloGeneral'
                                            , OutputTracksLocation = veloTracksOutputLocation )
 
@@ -984,7 +977,7 @@ class Hlt2Tracking(LHCbConfigurableUser):
    
         # Build the bindMembers        
         bm_name         = self.getProp("Prefix")+"VeloTracking"
-        bm_members      = MinimalRZVelo.members() + [recoVelo,recoVeloGeneral]
+        bm_members      = MinimalVelo.members() + [recoVeloGeneral]
         bm_output       = veloTracksOutputLocation
     
         return bindMembers(bm_name, bm_members).setOutputSelection(bm_output)
