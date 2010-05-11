@@ -803,7 +803,8 @@ StatusCode MuonIDAlg::execute() {
       // do the track extrapolations
       StatusCode sc = trackExtrapolate(*iTrack);
       if ( sc.isFailure() ){
-        warning() << " trackExtrapolate failed for track " << *iTrack << endmsg;
+        Warning(" trackExtrapolate failed for track ",StatusCode::SUCCESS,0).ignore();
+        if (msgLevel(MSG::DEBUG) ) debug()<< " trackExtrapolate failed for track " << *iTrack << endmsg;
         continue;
       }
       
@@ -812,7 +813,8 @@ StatusCode MuonIDAlg::execute() {
       pMuid->setIDTrack(*iTrack);
       sc = doID(pMuid);
       if(sc.isFailure()){
-        warning() << " doID failed for track " << *iTrack << endmsg;
+        Warning(" doID failed for track ",StatusCode::SUCCESS,0).ignore();
+        if (msgLevel(MSG::DEBUG) ) debug()<< " doID failed for track " << *iTrack << endmsg;
       }
       
       pMuids->insert( pMuid, (*iTrack)->key() );
@@ -835,7 +837,8 @@ StatusCode MuonIDAlg::execute() {
       
       sc = calcSharedHits(pMuid, pMuids);
       if (sc.isFailure()){
-        warning() << " calcSharedHits failed for track " << *iTrack << endmsg;
+        Warning(" calcSharedHits failed for track ",StatusCode::SUCCESS,0).ignore();
+        if (msgLevel(MSG::DEBUG) ) debug()<<" calcSharedHits failed for track " << << *iTrack << endmsg;
       }
       
     } // long tracks
@@ -900,7 +903,8 @@ StatusCode MuonIDAlg::fillCoordVectors(){
     LHCb::MuonTileID tile=(*iCoord)->key();
     StatusCode sc = m_mudet->Tile2XYZ(tile,x,dx,y,dy,z,dz);
     if (sc.isFailure()){
-      warning() << "Failed to get x,y,z of tile " << tile << endmsg;
+      Warning(" Failed to get x,y,z of tile ",StatusCode::SUCCESS).ignore();
+      if (msgLevel(MSG::DEBUG) ) debug()<< "Failed to get x,y,z of tile " << tile << endmsg;
       continue;
     }
     m_coordPos[station*m_NRegion+region].
@@ -981,7 +985,8 @@ StatusCode MuonIDAlg::doID(LHCb::MuonPID *pMuid){
    bool passed = true;
    StatusCode sc = preSelection( pMuid,passed );
    if(sc.isFailure()){
-     warning() <<" preSelection failed to MuonPID object" << pMuid << endmsg;
+     Warning(" preSelection failed to MuonPID object ",sc).ignore();
+     if (msgLevel(MSG::DEBUG) ) debug()<<" preSelection failed to MuonPID object" << pMuid << endmsg;
      return sc;
    }
    
@@ -994,7 +999,8 @@ StatusCode MuonIDAlg::doID(LHCb::MuonPID *pMuid){
    // find the coordinates in the fields of interest
    sc = setCoords( pMuid );
    if(sc.isFailure()){
-     warning() <<" setCoords failed to MuonPID object" << pMuid << endmsg;
+     Warning(" setCoords failed to MuonPID object ",sc).ignore();
+     if (msgLevel(MSG::DEBUG) ) debug()<<" setCoords failed to MuonPID object" << pMuid << endmsg;
      return sc;
    }
    
@@ -1399,7 +1405,7 @@ StatusCode MuonIDAlg::calcMuonLL_tanhdist(LHCb::MuonPID * pMuid, const double& p
   // Determine the momentum bin for this region
   int pBin=GetPbin(p, region);
   double tanhdist;
-    // Calculate tanh(dist). The effetive scale factor is after dividing by tanh^¯1(0.5)
+    // Calculate tanh(dist). The effetive scale factor is after dividing by tanh^¯1(0.5)
     tanhdist = tanh(myDist/(*(m_tanhScaleFactors[region]))[pBin]*gsl_atanh(0.5));
   
   // Calculate Prob(mu) and Prob(non-mu) for a given track;
@@ -1437,7 +1443,8 @@ StatusCode MuonIDAlg::calcMuonLL(LHCb::MuonPID * muonid){
   // do the track extrapolations
   StatusCode sc = trackExtrapolate(pTrack);
   if (!sc){
-    warning() << "trackExtrapolate fails for track" << pTrack << endmsg;
+    Warning(" trackExtrapolate fails for track ",sc,0).ignore();
+    if (msgLevel(MSG::DEBUG) ) debug()<< "trackExtrapolate fails for track" << pTrack << endmsg;
     muonid->setMuonLLMu(-10000.);
     muonid->setMuonLLBg(-10000.);
     return StatusCode::FAILURE;
@@ -1454,7 +1461,8 @@ StatusCode MuonIDAlg::calcMuonLL(LHCb::MuonPID * muonid){
     StatusCode sc =
       m_mudet->Tile2XYZ(tile,x,dx,y,dy,z,dz);
     if (sc.isFailure()){
-      warning() << "Failed to get x,y,z of tile " << tile << endmsg;
+      Warning(" Failed to get x,y,z of tile ",StatusCode::SUCCESS,0).ignore();
+      if (msgLevel(MSG::DEBUG) ) debug()<< "Failed to get x,y,z of tile " << tile << endmsg;
       continue;
     }
 
@@ -1516,7 +1524,7 @@ StatusCode MuonIDAlg::calcSharedHits( LHCb::MuonPID* muonid, LHCb::MuonPIDs * pM
       // get dist for this muonID
       StatusCode sc = calcDist(*iMuon);
       if( sc.isFailure() ) {
-        warning() << " calcDist 2 failure" << endmsg;
+        Warning(" calcDist 2 failure",StatusCode::SUCCESS,0).ignore();
         continue;
       }
 
@@ -1576,7 +1584,8 @@ StatusCode MuonIDAlg::calcDist( LHCb::MuonPID* muonid ){
   // do the track extrapolations
   StatusCode sc = trackExtrapolate(pTrack);
   if(!sc){
-    warning() << " trackExtrapolate fails for track " <<  pTrack << endmsg;
+    Warning(" trackExtrapolate fails for track ",sc,0).ignore();
+    if (msgLevel(MSG::DEBUG) ) debug()<< " trackExtrapolate fails for track " <<  pTrack << endmsg;
     return StatusCode::FAILURE;
   }
 
@@ -1592,7 +1601,8 @@ StatusCode MuonIDAlg::calcDist( LHCb::MuonPID* muonid ){
     StatusCode sc =
       m_mudet->Tile2XYZ(tile,x,dx,y,dy,z,dz);
     if(sc.isFailure()){
-      warning()<< "Failed to get x,y,z of tile " << tile << endmsg;
+      Warning(" Failed to get x,y,z of tile ",sc).ignore();
+      if (msgLevel(MSG::DEBUG) ) debug()<< "Failed to get x,y,z of tile " << tile << endmsg;
       continue;
     }
     int station = (*iCoord)->key().station();
@@ -1781,7 +1791,8 @@ StatusCode MuonIDAlg::get_closest(LHCb::MuonPID *pMuid, double *closest_x, doubl
     StatusCode sc =
       m_mudet->Tile2XYZ(tile,x,dx,y,dy,z,dz);
     if (sc.isFailure()){
-      warning() << "Failed to get x,y,z of tile " << tile << endmsg;
+      Warning(" Failed to get x,y,z of tile ",sc).ignore();
+      if (msgLevel(MSG::DEBUG) ) debug()<< "Failed to get x,y,z of tile " << tile << endmsg;
       continue;
     }
     
@@ -1845,7 +1856,7 @@ double MuonIDAlg::calc_closestDist(LHCb::MuonPID *pMuid, const double& p, double
   StatusCode sc = get_closest(pMuid,closest_x,closest_y,closest_region);
   
   if ( sc.isFailure() ){
-    warning() << " Closest_hit failed " << endmsg;
+    Warning(" Closest_hit failed ",sc).ignore();
     return -1;
   }  
 
@@ -1932,7 +1943,8 @@ int MuonIDAlg::GetPbin(double p, int region){
     case 4:{ pBins = &m_MupBinsR4; break;}
   }
   debug() << "GetPbin: region+1 " << region+1 << " p " <<  p << " pBins address: " << pBins << endmsg;
-  if(0 == pBins) warning() << "GetPbin: No match to a pBins vector. Null pBins pointer" << endmsg;
+  if(0 == pBins) 
+      Warning("GetPbin: No match to a pBins vector. Null pBins pointer",sc).ignore();
   for(unsigned int iBin=0; iBin<pBins->size();++iBin){
     debug() << "GetPbin:\tiBin " <<  iBin << " pBins[iBin] " << (*pBins)[iBin] << endmsg;
     if(p < (*pBins)[iBin]) return iBin;
@@ -1974,7 +1986,7 @@ double MuonIDAlg::calc_ProbMu(const double& dist0, const double *parMu){
   if(parMu[5]>0){
     return ProbMu = ProbMu/parMu[5];  
   }else{
-    warning() << "normalization out of control " << endmsg;
+    Warning(" normalization out of control ",StatusCode::FAILURE).ignore();
     return -1;
   }
   
@@ -1997,7 +2009,7 @@ double MuonIDAlg::calc_ProbNonMu(const double& dist0, const double *parNonMu){
     if (msgLevel(MSG::DEBUG) ) debug() << "probnmu, parNonMu[2] : "<< Prob <<","<< parNonMu[2] << endmsg;
     return Prob = Prob/parNonMu[2];  
   }else{
-    warning() << "ProbNonMu: normalization out of control " << endmsg;
+    Warning("ProbNonMu: normalization out of control ",StatusCode::FAILURE).ignore();
     return -1;
   }
   return -1;  

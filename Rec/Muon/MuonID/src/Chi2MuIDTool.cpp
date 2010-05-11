@@ -191,7 +191,8 @@ StatusCode Chi2MuIDTool::muonCandidate(const LHCb::Track& seed,
   {
     if (msgLevel(MSG::DEBUG) ) debug()<< "No new track built"<<endmsg;
     if (sc.getCode()==203) isMuonCandidate=false;
-    else if ((sc.getCode()!=204) && (m_applyIsMuon))  warning()<< "No available info about IsMuon"<<endmsg;
+    else if ((sc.getCode()!=204) && (m_applyIsMuon))  
+      Warning( "No available info about IsMuon",StatusCode::SUCCESS).ignore();
     if (del_muonprov) delete m_muonProvider;
     return sc;
   }
@@ -213,7 +214,7 @@ StatusCode Chi2MuIDTool::muonQuality(LHCb::Track& muTrack, double& Quality)
   StatusCode sc = StatusCode::SUCCESS;
   
   if (muTrack.states().size()>1) 
-    warning()<<"muonQuality:: MUTRACK WITH MORE THAN ONE SEED STATE ON IT"<<endmsg;
+    Warning("muonQuality:: MUTRACK WITH MORE THAN ONE SEED STATE ON IT",StatusCode::SUCCESS).ignore();
   else if (muTrack.states().size()<1) 
   {
     sc.setCode(301);
@@ -306,7 +307,7 @@ StatusCode Chi2MuIDTool::muonDLL(LHCb::Track& muTrack, const double& Quality, do
   if (sc.isFailure())
   {
     CLArrival=0.0;
-    Warning("WRONG CLARRIVAL VALUE");
+    Warning("WRONG CLARRIVAL VALUE").ignore();
   }
   if (CLArrival==0.0) CLArrival=1e-6;
   
