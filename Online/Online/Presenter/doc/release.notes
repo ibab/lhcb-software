@@ -4,6 +4,10 @@
 ! Purpose     : GUI to allow the visualization of all data quality histograms
 !-----------------------------------------------------------------------------
 
+
+! 2010-05-11 - G.Graziani
+ - only use end of run savesets for EFF histograms (not reset during run) in history mode
+
 ! 2010-05-05 - Patrick Robbe
  - src/PageDescriptionTextView.cpp: fix for Exceed problem with "FreeColor" 
    call from PageDescriptionTextView

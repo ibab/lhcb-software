@@ -262,7 +262,7 @@ std::vector<path> Archive::listAvailableRootFiles(const path & dirPath,
   std::vector<path> foundRootFiles;
   std::string partition(m_mainFrame->currentPartition());
   for (day_iterator dateIterator(datePeriod.begin());
-      dateIterator <= datePeriod.end(); ++dateIterator) {
+       dateIterator <= datePeriod.end(); ++dateIterator) {
     if (m_verbosity >= Verbose) {
       std::cout << "Date: " << to_simple_string(*dateIterator) << std::endl;
     }
@@ -271,14 +271,14 @@ std::vector<path> Archive::listAvailableRootFiles(const path & dirPath,
     year = d_tm.tm_year + 1900;
     month = d_tm.tm_mon + 1; // http://xkcd.com/163/
     day = d_tm.tm_mday; // + 0 (!?);
-
+    
     std::stringstream  dayLocation;
     dayLocation << dirPath.string() << s_slash <<
-               std::setfill('0') << std::setw(4) << year << s_slash <<
-               partition << s_slash << taskName << s_slash <<
-               std::setfill('0') << std::setw(2) << month << s_slash <<
-               std::setfill('0') << std::setw(2) << day   << s_slash;
-
+      std::setfill('0') << std::setw(4) << year << s_slash <<
+      partition << s_slash << taskName << s_slash <<
+      std::setfill('0') << std::setw(2) << month << s_slash <<
+      std::setfill('0') << std::setw(2) << day   << s_slash;
+    
     path pathOfTheDay(dayLocation.str());
     if (m_verbosity >= Verbose) {
       std::cout << "Seeking in: " << pathOfTheDay << std::endl;
@@ -292,28 +292,28 @@ std::vector<path> Archive::listAvailableRootFiles(const path & dirPath,
         }
       }
     }
-   }
+  }
 
 // legacy: year overlapping intervals with old format not supported.
-  if (foundRootFiles.empty()) {
-    tm d_tm = to_tm(datePeriod.end());
-    int endYear = d_tm.tm_year + 1900;
-    std::stringstream  year;
-    year << std::setfill('0') << std::setw(4) << endYear;
-    path oldDirPath = m_savesetPath/path(year.str())/path(partition)/path(taskName);
-    if (m_verbosity >= Verbose) {
-      std::cout << "Legacy mode, seeking in: " << oldDirPath << std::endl;
-    }
-    if (exists(oldDirPath)) {
-      directory_iterator end_itr;
-      for (directory_iterator itr(oldDirPath); itr != end_itr; ++itr) {
-        if (is_regular(itr->path()) &&
-            s_rootFileExtension == extension(itr->path()) ) {
-          foundRootFiles.push_back(itr->path());
-        }
-      }
-    }
-  }
+//   if (foundRootFiles.empty()) {
+//     tm d_tm = to_tm(datePeriod.end());
+//     int endYear = d_tm.tm_year + 1900;
+//     std::stringstream  year;
+//     year << std::setfill('0') << std::setw(4) << endYear;
+//     path oldDirPath = m_savesetPath/path(year.str())/path(partition)/path(taskName);
+//     if (m_verbosity >= Verbose) {
+//       std::cout << "Legacy mode, seeking in: " << oldDirPath << std::endl;
+//     }
+//     if (exists(oldDirPath)) {
+//       directory_iterator end_itr;
+//       for (directory_iterator itr(oldDirPath); itr != end_itr; ++itr) {
+//         if (is_regular(itr->path()) &&
+//             s_rootFileExtension == extension(itr->path()) ) {
+//           foundRootFiles.push_back(itr->path());
+//         }
+//       }
+//     }
+//   }
 
   sort(foundRootFiles.begin(), foundRootFiles.end());
   if (m_verbosity >= Debug &&
@@ -464,6 +464,8 @@ std::vector<path> Archive::findSavesets(const std::string & taskname,
 {
   std::vector<path> foundRootFiles;
   ptime endTime;
+  bool isEFF = (taskname == s_efftask);
+
   if ("Now" == endTimeIsoString) {
     endTime = ptime(second_clock::local_time());
   } else {
@@ -494,11 +496,23 @@ std::vector<path> Archive::findSavesets(const std::string & taskname,
     while (m_foundSavesetsIt >= m_foundSavesets.begin()) {
       TObjArray* fileDateMatchGroup = 0;
       fileDateMatchGroup = s_fileDateRegexp.MatchS((*m_foundSavesetsIt).leaf());
-      if (!fileDateMatchGroup->IsEmpty()) {
+      if (fileDateMatchGroup->GetEntriesFast() >4 ) { // the array contains the matched strings +2 
         taskNameFound = (((TObjString *)fileDateMatchGroup->At(1))->GetString()).Data();
         fileTimeFound = (((TObjString *)fileDateMatchGroup->At(3))->GetString()).Data();
         fileTime = from_iso_string(fileTimeFound);
-        if (taskNameFound == taskname && !fileTime.is_not_a_date_time()) {
+        
+        bool acceptSvs = (taskNameFound == taskname && (!fileTime.is_not_a_date_time()));
+        // for EFF tasks, require also the end of run flag (histograms not reset during run)
+        if (isEFF) {
+          if (fileDateMatchGroup->GetEntriesFast() >5 ) {
+            acceptSvs &= ( (((TObjString *)fileDateMatchGroup->At(4))->GetString()) == s_eor );
+          }
+          else {
+            acceptSvs = false;
+          }
+        }
+        
+        if (acceptSvs) {
           if (fileTime <= endTime &&
               fileTime >= startTime) {
             if (m_verbosity >= Verbose) {

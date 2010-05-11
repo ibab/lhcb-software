@@ -155,6 +155,9 @@ namespace pres
   static const std::string s_eff_TCK("TCK");
   static const std::string s_eff_init("Initialising...");
   static const std::string s_default_tck("default");
+  static const std::string s_eor("-EOR");
+  static const std::string s_efftask("GauchoJob");
+
   // boost::filesystem::slash
 
 // ^(H1D|H2D|P1D|HPD|P2D|CNT)?/?([^/_]+_)?([^/_]*)(_[^/]*)?/([^/]*)/(([^_]*)(_\\$)?(.*))$
@@ -200,7 +203,7 @@ namespace pres
   // MuonDAQMon-20091010T113224.root
   // MuonDAQMon-345-20091010T113224.root
 //  static TPRegexp s_fileDateRegexp("^(.*)-(\\d{8}T\\d{6})(-EOR)?\\.root$");
-  static TPRegexp s_fileDateRegexp("^([^-]+)(-\\d+)?-(\\d{8}T\\d{6})(-EOR)?\\.root$");
+  static TPRegexp s_fileDateRegexp("^([^-]+)(-\\d+)?-(\\d{8}T\\d{6})((-EOR)?)\\.root$");
   static TPRegexp s_fileRunRegexp("^(.+)-run(\\d+)\\.root$");
  
 //  Brunel_45044_00004599_00000034_1_Hist.root
