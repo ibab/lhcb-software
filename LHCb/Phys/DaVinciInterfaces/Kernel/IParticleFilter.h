@@ -1,4 +1,4 @@
-// $Id: IParticleFilter.h,v 1.4 2010-05-12 10:37:21 jpalac Exp $
+// $Id: IParticleFilter.h,v 1.5 2010-05-12 13:32:24 jpalac Exp $
 #ifndef DAVINCIKERNEL_IPARTICLEFILTER_H 
 #define DAVINCIKERNEL_IPARTICLEFILTER_H 1
 
@@ -29,10 +29,6 @@ public:
 
   /// Filter. Return false if particle does not pass filter.
   virtual bool operator()( const LHCb::Particle* ) const = 0;
-
-  /// Filter. Return false if particle does not pass filter.
-  virtual bool operator()( const LHCb::Particle* ) = 0;
-
                     
 };
 #endif // DAVINCIKERNEL_IPARTICLEFILTER_H
