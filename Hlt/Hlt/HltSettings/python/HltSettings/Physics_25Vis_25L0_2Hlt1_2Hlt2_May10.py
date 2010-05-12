@@ -23,6 +23,7 @@ class Physics_25Vis_25L0_2Hlt1_2Hlt2_May10       ( Physics_25Vis_25L0_2Hlt1_2Hlt
         # Hlt2
         from DefaultHlt2Lines import DefaultHlt2Lines         
         thresholds.update( DefaultHlt2Lines().Thresholds() )
+
         return thresholds
     
     def ActiveHlt2Lines(self) :

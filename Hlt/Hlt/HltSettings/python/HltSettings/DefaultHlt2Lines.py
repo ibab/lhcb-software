@@ -63,4 +63,7 @@ class DefaultHlt2Lines :
         from TopoLines import TopoLines
         thresholds.update( TopoLines().Thresholds())
 
+        from DiMuonLines import DiMuonLines
+        thresholds.update( DiMuonLines().Thresholds())
+
         return thresholds
