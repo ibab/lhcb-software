@@ -4,6 +4,14 @@
 ! Purpose     : Tool interfaces and dictionaries for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2010-05-12 - Juan Palacios
+ - Kernel/IParticleFilter
+  . New, clean interface with single method
+    virtual bool operator()( const LHCb::Particle* ) const = 0;
+    plus non-const version.
+ - cmt/requirements
+  . Increase version to v2r3.
+
 !===================== DaVinciInterfaces v2r2 2010-03-18 =====================
 ! 2010-03-18 - Juan Palacios
  - Add dictionaries for ITrackIsolation
