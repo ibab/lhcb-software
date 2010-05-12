@@ -1,4 +1,4 @@
-// $Id: IParticleFilter.h,v 1.3 2010-05-12 10:36:53 jpalac Exp $
+// $Id: IParticleFilter.h,v 1.4 2010-05-12 10:37:21 jpalac Exp $
 #ifndef DAVINCIKERNEL_IPARTICLEFILTER_H 
 #define DAVINCIKERNEL_IPARTICLEFILTER_H 1
 
@@ -14,7 +14,7 @@ namespace LHCb {
 
 /** @class IParticleFilter IParticleFilter.h Kernel/IParticleFilter.h
  *  Interface Class for Particle Filters. 
- *  Given an LHCb::Particle, return true if selected.
+ *  Given an LHCb::Particle, return true if it passes the filter.
  *
  *  @author Juan Palacios
  *  @date   12/05/2010
