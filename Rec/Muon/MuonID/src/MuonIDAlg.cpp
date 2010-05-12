@@ -775,14 +775,14 @@ StatusCode MuonIDAlg::execute() {
   {
     pMuids->clear();
     Warning( "MuonPIDs already exist at '" + m_MuonPIDsPath + "' -> Will Replace", 
-             StatusCode::SUCCESS ).ignore();
+             StatusCode::SUCCESS,1 ).ignore();
   }
   LHCb::Tracks * mutracks = getOrCreate<LHCb::Tracks,LHCb::Tracks>(m_MuonTracksPath);
   if ( !mutracks->empty() )
   {
     mutracks->clear();
     Warning( "Muon Tracks already exist at '" + m_MuonTracksPath + "' -> Will Replace", 
-             StatusCode::SUCCESS ).ignore();
+             StatusCode::SUCCESS,1 ).ignore();
   }
   
   // CRJ : Set Muon PID data version
