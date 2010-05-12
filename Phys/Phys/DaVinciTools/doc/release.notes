@@ -1,10 +1,12 @@
-! $Id: release.notes,v 1.543 2010-05-12 12:01:59 jpalac Exp $
+! $Id: release.notes,v 1.544 2010-05-12 14:17:22 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
 
 ! 2010-05-12 - Juan Palacios
+ - src/PhysDesktop.cpp
+  . Disable primaryVertices() method.
  - src/CombineParticles.cpp
   . Print some warnings only at the end of the job.
  - Removed ParticleFilter.
