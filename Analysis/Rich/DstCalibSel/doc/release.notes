@@ -5,6 +5,12 @@
 ! Purpose     : RICH D* -> D0(Kpi) pi PID calbration
 !-----------------------------------------------------------------------------
 
+! 2010-05012 0 Juan Palacios
+ - src/D02KPiNoPID.cpp
+  . Adapt to new DVAlgorithm::primaryVertices() signature.
+ - cmt/requirements
+  . Increase version to v1r3.
+
 !========================== DstCalibSel v1r2p1 2009-11-17 ====================
 
 ! 2009-11-12 - Juan Palacios
