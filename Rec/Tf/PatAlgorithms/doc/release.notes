@@ -4,6 +4,13 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+! 2010-05-12 - Rob Lambert
+ - Remove obsolete options files:
+   . PatForward.py
+   . PatDownstream.py
+   . PatSeeding.py
+   . PatSeedingTool-Cosmics.opts
+
 ! 2010-05-10 - Rob Lambert
  - corrected OTHitCreator to Tf__OTHitCreator
  - Add dependency on Tr/TrackTools
