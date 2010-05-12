@@ -96,18 +96,18 @@ StatusCode PIDQC::initialize()
   }
 
   // Warn if ignoring threshold information
-  if ( m_ignoreRecoThres ) Warning( "Ignoring reco threshold information", StatusCode::SUCCESS );
-  if ( m_ignoreMCThres )   Warning( "Ignoring MC threshold information", StatusCode::SUCCESS );
+  if ( m_ignoreRecoThres ) Warning( "Ignoring reco threshold information", StatusCode::SUCCESS ).ignore();
+  if ( m_ignoreMCThres )   Warning( "Ignoring MC threshold information", StatusCode::SUCCESS ).ignore();
 
   // Warn if using kaon DLL cut
   if ( m_dllKaonCut < 9999991 ) Warning( "Applying kaon selection dll(kaon) < " +
                                          boost::lexical_cast<std::string>(m_dllKaonCut),
-                                         StatusCode::SUCCESS );
+                                         StatusCode::SUCCESS ).ignore();
 
   // Warn if using pion DLL cut
   if ( m_dllPionCut < 9999991 ) Warning( "Applying pion selection dll(pion) < " +
                                          boost::lexical_cast<std::string>(m_dllPionCut),
-                                         StatusCode::SUCCESS );
+                                         StatusCode::SUCCESS ).ignore();
 
   return sc;
 }
@@ -154,7 +154,7 @@ StatusCode PIDQC::execute()
     } // track OK
     else
     {
-      Warning( "RichPID has null Track SmartRef" );
+      Warning( "RichPID has null Track SmartRef", StatusCode::SUCCESS ).ignore();
     }
 
   }

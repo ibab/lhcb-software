@@ -4,6 +4,9 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2010-05-12 - Rob Lambert
+ - Review of warnings
+
 ! 2010-04-30 - Chris Jones
  - Add a couple new plots (as requested by L1 expert) to show the number of 
    active HPDs in RICH1 and RICH2 (have at least 1 hit in them).
