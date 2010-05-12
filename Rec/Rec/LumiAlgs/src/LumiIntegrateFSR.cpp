@@ -1,6 +1,6 @@
-// $Id: LumiIntegrateFSR.cpp,v 1.6 2010-03-22 12:17:43 panmanj Exp $
+// $Id: LumiIntegrateFSR.cpp,v 1.7 2010-05-12 08:11:08 panmanj Exp $
 // Include files 
-
+ 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
 #include "GaudiKernel/IRegistry.h"
@@ -35,7 +35,8 @@ DECLARE_ALGORITHM_FACTORY( LumiIntegrateFSR );
 //=============================================================================
 LumiIntegrateFSR::LumiIntegrateFSR( const std::string& name,
                                     ISvcLocator* pSvcLocator)
-  : GaudiAlgorithm ( name , pSvcLocator )
+  : GaudiAlgorithm ( name , pSvcLocator ),
+    m_incSvc(0)
 {
   // need to get the registry
   declareProperty( "RawEventLocation"   , m_rawEventLocation = LHCb::RawEventLocation::Default );
@@ -86,17 +87,24 @@ StatusCode LumiIntegrateFSR::initialize() {
     if ( (*bx) != "None" ) m_BXTypes.push_back(*bx);
   }
 
-  // get FileRecordDataSvc Stream
-  sc = service("FileRecordDataSvc", m_fileRecordSvc, true);
-  if( sc.isFailure() ) {
-    if ( msgLevel(MSG::ERROR) ) error() << "Unable to retrieve run records service" << endreq;
-    return sc;
-  }
+  // get the File Records service
+  m_fileRecordSvc = svc<IDataProviderSvc>("FileRecordDataSvc", true);
+  // incident service
+  m_incSvc = svc<IIncidentSvc> ( "IncidentSvc" , true );
+  
+  //check extended file incidents are defined
+#ifdef GAUDI_FILE_INCIDENTS
+  m_incSvc->addListener( this, IncidentType::BeginInputFile);
+  if ( msgLevel(MSG::DEBUG) ) debug() << "registered with incSvc" << endmsg;
+  //if not then the counting is not reliable
+#else
+  warn() << "cannot register with incSvc" << endmsg;
+#endif //GAUDI_FILE_INCIDENTS
 
   // counting 
   m_current_fname = "";
-  m_count_files = 0;
   m_count_events = 0;
+  m_events_in_file = 0;
 
   // prepare integrator tool
   m_integratorTool = tool<ILumiIntegrator>( "LumiIntegrator" , m_ToolName );
@@ -114,18 +122,8 @@ StatusCode LumiIntegrateFSR::execute() {
   // use tool to count events for this file
   m_integratorTool->countEvents( );
 
-  // check if the file ID is new
-  std::string fname = fileID();
   // use tool to count events for this file
   m_integratorTool->events( );
-
-  // check if this is a new file
-  if ( fname != m_current_fname ) {
-    m_count_files++;
-    m_current_fname = fname;
-    // and add contents to the integral
-    add_file();
-  }
 
   return StatusCode::SUCCESS;
 }
@@ -143,6 +141,10 @@ StatusCode LumiIntegrateFSR::finalize() {
   // use tool to count events for this file
   info() << "number of events seen: " << m_integratorTool->events( ) << endmsg;
 
+  // integrate all FSRs in one go
+  info() << "integrating normalization: " << endmsg;
+  add_file();
+
   // use tool to get summary for this file
   info() << "integrated normalization: " << m_integratorTool->integral( ) << endmsg;
 
@@ -151,6 +153,26 @@ StatusCode LumiIntegrateFSR::finalize() {
 
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
+
+// ==========================================================================
+// IIncindentListener interface
+// ==========================================================================
+void LumiIntegrateFSR::handle( const Incident& incident )
+{
+  //check extended file incidents are defined
+#ifdef GAUDI_FILE_INCIDENTS
+  if(incident.type()==IncidentType::BeginInputFile)
+  {
+    m_current_fname = incident.source();
+    if ( msgLevel(MSG::DEBUG) ) debug() << "==>from handle " << m_current_fname << endmsg;
+    m_count_files++;
+    m_events_in_file = 0;
+
+  }
+#endif
+
+}
+
 
 //=============================================================================
 void LumiIntegrateFSR::add_to_xml() {
@@ -176,14 +198,14 @@ void LumiIntegrateFSR::add_to_xml() {
 
 //=============================================================================
 void LumiIntegrateFSR::add_file() {
-  // add the FSRs of one input file
+  // add the FSRs of all input files at the same time
 
   // make an inventory of the FileRecord store
-  std::string fileRecordRoot = m_FileRecordName + "/" + m_current_fname;
+  std::string fileRecordRoot = m_FileRecordName; 
   std::vector< std::string > addresses = navigate(fileRecordRoot, m_FSRName);
   for(std::vector< std::string >::iterator iAddr = addresses.begin() ; 
   	  iAddr != addresses.end() ; ++iAddr ){
-  	if ( msgLevel(MSG::VERBOSE) ) verbose() << "address: " << (*iAddr) << endmsg;
+  	if ( msgLevel(MSG::DEBUG) ) debug() << "address: " << (*iAddr) << endmsg;
   }  
 
   // a file can contain multiple sets of LumiFSRs - typically after reprocessing multiple input files
@@ -245,55 +267,6 @@ void LumiIntegrateFSR::add_file() {
   }  
 }
 
-//=============================================================================
-std::string LumiIntegrateFSR::fileID() {
-  // get the fileID from the event store
-  std::string event_fname("");
-
-  // get ODIN
-  LHCb::ODIN* odin;
-  if( exist<LHCb::ODIN>(LHCb::ODINLocation::Default) ){
-    odin = get<LHCb::ODIN> (LHCb::ODINLocation::Default);
-  }else{
-    // should remain flagged as an error and stop the run
-    error() << "ODIN cannot be loaded" << endmsg;
-    return event_fname;
-  }
-  // obtain the run number from ODIN
-  unsigned int run = odin->runNumber();  
-  if ( msgLevel(MSG::VERBOSE) ) verbose() << "ODIN RunNumber: " << run << endmsg;
-
-  // registry from raw data - only correct if file catalogue used 
-  IOpaqueAddress* eAddr = 0;
-  if( !exist<LHCb::RawEvent>(m_rawEventLocation) ){
-    if ( msgLevel(MSG::VERBOSE) ) verbose() << m_rawEventLocation << " not found" << endmsg ;
-    // then try from other bank
-    if ( !exist<DataObject>("/Event") ){
-      if ( msgLevel(MSG::VERBOSE) ) verbose() << "/Event" << " not found" << endmsg ;
-      eAddr = odin->registry()->address();
-    } else {
-      // get the container
-      DataObject* event = get<DataObject>("/Event");
-      eAddr = event->registry()->address();
-      }
-  } else {
-    LHCb::RawEvent* event = get<LHCb::RawEvent>(m_rawEventLocation);
-    eAddr = event->registry()->address();
-  }
-
-  // obtain the fileID
-  if ( eAddr ) {
-    event_fname = eAddr->par()[0];
-    if ( msgLevel(MSG::VERBOSE) ) verbose() << "RunInfo record from Event: " << event_fname << endmsg;
-  } else {
-    error() << "Registry cannot be loaded from Event" << endmsg;
-    return event_fname;
-  }
-  if ( msgLevel(MSG::VERBOSE) ) verbose() << "ODIN RunNumber: " << run 
-					  << " with RunInfo record: " << event_fname << endmsg;
-
-  return event_fname;
-}
 
 //=============================================================================
 void LumiIntegrateFSR::add_fsr(LHCb::LumiIntegral* result, 

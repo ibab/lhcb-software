@@ -1,4 +1,4 @@
-// $Id: DumpFSR.h,v 1.2 2010-02-12 16:56:42 panmanj Exp $
+// $Id: DumpFSR.h,v 1.3 2010-05-12 08:11:08 panmanj Exp $
 #ifndef DUMPFSR_H 
 #define DUMPFSR_H 1
 
@@ -8,6 +8,10 @@
 
 #include "GaudiKernel/IRegistry.h"
 #include "GaudiKernel/IDataManagerSvc.h"
+
+// for incidents listener
+#include "GaudiKernel/IIncidentListener.h"
+#include "GaudiKernel/IIncidentSvc.h"
 
 // event model
 #include "Event/LumiFSR.h"
@@ -20,7 +24,8 @@
  *  @author Jaap Panman
  *  @date   2009-02-27
  */
-class DumpFSR : public GaudiAlgorithm {
+class DumpFSR : public GaudiAlgorithm 
+  , public virtual IIncidentListener {
 public: 
   /// Standard constructor
   DumpFSR( const std::string& name, ISvcLocator* pSvcLocator );
@@ -31,8 +36,14 @@ public:
   virtual StatusCode execute   ();    ///< Algorithm execution
   virtual StatusCode finalize  ();    ///< Algorithm finalization
 
+  // ==========================================================================
+  // IIncindentListener interface
+  // ==========================================================================
+  virtual void handle ( const Incident& ) ;
+  // ==========================================================================
+
 protected:
-  virtual void dump_file();            ///< print the FSRs of one input file
+  virtual void dump_file( std::string txt = "" ); ///< print the FSRs of one input file
   virtual std::string fileID();       ///< get the fileID
   virtual std::vector< std::string > navigate(std::string rootname, std::string tag); 
   virtual void explore(IRegistry* pObj, std::string tag, std::vector< std::string >& a);
@@ -50,8 +61,10 @@ protected:
   std::string m_current_fname;                  // current file ID string 
   int         m_count_files;                    // number of files read
   int         m_count_events;                   // number of events read
+  int         m_events_in_file;                 // events after OpenFileIncident
 
 private:
+  mutable IIncidentSvc* m_incSvc ;                      /// the incident service 
 
 };
 #endif // DUMPFSR_H

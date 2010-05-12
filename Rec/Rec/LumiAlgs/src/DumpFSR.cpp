@@ -1,4 +1,4 @@
-// $Id: DumpFSR.cpp,v 1.2 2010-02-12 16:56:42 panmanj Exp $
+// $Id: DumpFSR.cpp,v 1.3 2010-05-12 08:11:08 panmanj Exp $
 // Include files 
 
 // from Gaudi
@@ -32,7 +32,8 @@ DECLARE_ALGORITHM_FACTORY( DumpFSR );
 //=============================================================================
 DumpFSR::DumpFSR( const std::string& name,
                                     ISvcLocator* pSvcLocator)
-  : GaudiAlgorithm ( name , pSvcLocator )
+  : GaudiAlgorithm ( name , pSvcLocator ),
+    m_incSvc(0)
 {
   // need to get the registry
   declareProperty( "RawEventLocation"   , m_rawEventLocation = LHCb::RawEventLocation::Default );
@@ -56,17 +57,26 @@ StatusCode DumpFSR::initialize() {
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
 
-  // get FileRecordDataSvc Stream
-  sc = service("FileRecordDataSvc", m_fileRecordSvc, true);
-  if( sc.isFailure() ) {
-    if ( msgLevel(MSG::ERROR) ) error() << "Unable to retrieve run records service" << endreq;
-    return sc;
-  }
+  // get the File Records service
+  m_fileRecordSvc = svc<IDataProviderSvc>("FileRecordDataSvc", true);
+  // incident service
+  m_incSvc = svc<IIncidentSvc> ( "IncidentSvc" , true );
+  
+  //check extended file incidents are defined
+#ifdef GAUDI_FILE_INCIDENTS
+  m_incSvc->addListener( this, IncidentType::BeginInputFile);
+  m_incSvc->addListener( this, IncidentType::EndInputFile);
+  if ( msgLevel(MSG::DEBUG) ) debug() << "registered with incSvc" << endmsg;
+  //if not then the counting is not reliable
+#else
+  warn() << "cannot register with incSvc" << endmsg;
+#endif //GAUDI_FILE_INCIDENTS
 
   // counting 
   m_current_fname = "";
   m_count_files = 0;
   m_count_events = 0;
+  m_events_in_file = 0;
 
   return StatusCode::SUCCESS;
 }
@@ -78,15 +88,11 @@ StatusCode DumpFSR::execute() {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
   m_count_events++;
+  m_events_in_file++;
 
-  // check if the file ID is new
-  std::string fname = fileID();
-  // check if this is a new file
-  if ( fname != m_current_fname ) {
-    m_count_files++;
-    m_current_fname = fname;
-    // and add contents to the integral
-    dump_file();
+  // wait after exactly one event on a file
+  if ( m_events_in_file == 1 ) {
+    dump_file( "After First Event" );
   }
 
   return StatusCode::SUCCESS;
@@ -100,14 +106,47 @@ StatusCode DumpFSR::finalize() {
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
   info() << "number of files seen: " << m_count_files << endmsg;
   info() << "number of events seen: " << m_count_events << endmsg;
+
+  dump_file("Finalize");
+
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
 
+// ==========================================================================
+// IIncindentListener interface
+// ==========================================================================
+void DumpFSR::handle( const Incident& incident )
+{
+  //check extended file incidents are defined
+#ifdef GAUDI_FILE_INCIDENTS
+  if(incident.type()==IncidentType::BeginInputFile)
+  {
+    m_current_fname = incident.source();
+    if ( msgLevel(MSG::DEBUG) ) debug() << "==>from handle " << m_current_fname << endmsg;
+    m_count_files++;
+    m_events_in_file = 0;
+    dump_file( "BeginInputFile" );
+
+  }
+  if(incident.type()==IncidentType::EndInputFile)
+  {
+    m_current_fname = incident.source();
+    if ( msgLevel(MSG::DEBUG) ) debug() << "==>from handle " << m_current_fname << endmsg;
+    dump_file( "EndInputFile" );
+
+  }
+#endif
+
+}
+
 //=============================================================================
-void DumpFSR::dump_file() {
+void DumpFSR::dump_file( std::string txt ) {
+
+  if ( msgLevel(MSG::DEBUG) ) debug() << "==>" << txt << " " << m_current_fname << endmsg;
+
 
   // make an inventory of the FileRecord store
-  std::string fileRecordRoot = m_FileRecordName + "/" + m_current_fname;
+  std::string fileRecordRoot = m_FileRecordName;
   std::vector< std::string > addresses = navigate(fileRecordRoot, m_FSRName);
   for(std::vector< std::string >::iterator iAddr = addresses.begin() ; 
       iAddr != addresses.end() ; ++iAddr ){

@@ -4,6 +4,18 @@
 ! Purpose     : Accounting of LumiSummaries (offline code)
 !-----------------------------------------------------------------------------
 
+! 2010-05-12 - Jaap Panman
+ - DumpFSR: 
+   . now dumps the FSRs at FileOpen, after first event, finalize
+   . no longer needs the raw data banks
+ - LumiIntegrateFSR: 
+   . no longer needs access to rawdata
+   . assumes FSRs are instantiated on the TS by Gaudi
+   . does the integral at finalize(), no longer at each file
+ - Configuration:
+   . correct omission of LumiLowFSRs for integration
+   . small bug fixes
+
 ! 2010-05-05 - Jaap Panman
  - Added check on "Method" to select random Lumi events
    . breaks treatment of data taken with Moore < v9 where the rate was 

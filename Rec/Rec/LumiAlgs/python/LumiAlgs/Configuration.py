@@ -180,10 +180,10 @@ class LumiAlgsConf(LHCbConfigurableUser):
         readingFSR=LumiIntegrateFSR("TouchLumiFSR", OutputLevel = self.getProp("OutputLevel") )
         # this also touches the LumiLow FSRs
         readingLumiLowFSR=LumiIntegrateFSR("TouchLumiLowFSR",
-                                           FSRName = "LumiLowFSR",
+                                           FSRName = "/LumiLowFSR",
                                            IntegratorToolName = "LumiLowIntegrator", 
                                            OutputLevel = self.getProp("OutputLevel") )
-        return [ odin, readingFSR]
+        return [ odin, readingFSR, readingLumiLowFSR ]
     
     ## Apply the configuration to the given sequence
     def __apply_configuration__(self):
