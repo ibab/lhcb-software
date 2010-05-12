@@ -130,7 +130,7 @@ TabulatedSignalDetectionEff::ckRing( LHCb::RichRecSegment * segment,
     const StatusCode sc = m_coneTrace->rayTrace( newRing, m_nPoints[rad], m_traceModeRad[rad] );
     if ( sc.isFailure() )
     {
-      Warning( "Some problem occured during CK cone ray-tracing" );
+      Warning( "Some problem occured during CK cone ray-tracing" ).ignore();
       delete newRing;
       newRing = NULL;
     }
