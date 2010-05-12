@@ -1,4 +1,4 @@
-// $Id: ParticleMakerBase.cpp,v 1.5 2009-11-12 10:10:00 jpalac Exp $
+// $Id: ParticleMakerBase.cpp,v 1.6 2010-05-12 18:54:31 jpalac Exp $
 // Include files
 
 #include "GaudiKernel/DeclareFactoryEntries.h"
@@ -67,10 +67,10 @@ StatusCode ParticleMakerBase::execute()
     // Log number of vertices and particles
     debug() << "Number of particles in desktop = " 
             << desktop()->particles().size() << endmsg;
-    if ( 0 !=  this->primaryVertices() ) 
+    if ( ! this->primaryVertices().empty() ) 
     {
       debug() << "Number of primary vertices in desktop = " 
-              << this->primaryVertices()->size() << endmsg;
+              << this->primaryVertices().size() << endmsg;
     }
     else { debug() << "No primary vertices in desktop " << endmsg; }
     
