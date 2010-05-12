@@ -22,9 +22,12 @@ def veloNZSKiller() :
 # Redoing the PV
 #
 def redoPV() : 
-
-    importOptions("$PATPVROOT/options/PVLoose.py")
-
+    try:
+        from PatPV import PVConf 
+        PVConf.LoosePV().configureAlg() 
+    except ImportError:
+        importOptions("$PATPVROOT/options/PVLoose.py")
+    
     from Configurables import TESCheck, EventNodeKiller
     from Configurables import PatPVOffline
 
