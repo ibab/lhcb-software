@@ -14,5 +14,5 @@ importOptions("$APPCONFIGOPTS/Gauss/Beam3500GeV-md100-nu1.py")
 ##############################################################################
 from Configurables import LHCbApp
 LHCbApp().DDDBtag   = "head-20100504"
-LHCbApp().CondDBtag = "sim-20100429-vc-md100"
+LHCbApp().CondDBtag = "sim-20100510-vc-md100"
 
