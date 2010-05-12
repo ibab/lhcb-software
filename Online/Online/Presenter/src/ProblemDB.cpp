@@ -1,15 +1,15 @@
-// $Id: ProblemDB.cpp,v 1.3 2010-04-25 17:56:01 robbep Exp $
+// $Id: ProblemDB.cpp,v 1.4 2010-05-12 12:04:53 robbep Exp $
 // Include files 
 #include <iostream>
 #include <boost/asio.hpp>
 #include <boost/date_time/posix_time/posix_time_types.hpp>
 #include <boost/date_time/gregorian/formatters.hpp>
-#include <boost/xpressive/xpressive.hpp>
 #include <boost/algorithm/string.hpp>
+#include <boost/property_tree/json_parser.hpp>
+#include <boost/foreach.hpp>
+
 // local
 #include "ProblemDB.h"
-
-using namespace boost::xpressive ;
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : ProblemDB
@@ -128,8 +128,10 @@ void ProblemDB::getListOfOpenedProblems( std::vector< std::vector< std::string >
 
 
   // Send HTTP request to web server
-  webStream << "GET /api/search/?_inline=True&system_visible=True"
-	    << "&open_or_closed_gte=" << boost::gregorian::to_iso_extended_string( day )
+  webStream << "GET /api/search/?_inline=True&system_visible=True" ;
+  //  if ( system_name != "" ) webStream << "&system_name=" << systemName ;
+  //  webStream << "&sort_field=started_at" ;
+  webStream << "&open_or_closed_gte=" << boost::gregorian::to_iso_extended_string( day )
 	    << " HTTP/1.0\r\n"
 	    << "Host:" << m_address << "\r\n"
 	    << "\r\n" << std::flush ;
@@ -151,41 +153,36 @@ void ProblemDB::getListOfOpenedProblems( std::vector< std::vector< std::string >
   
   const boost::regex e( pattern ) ;
 
-  // retrieve individual fields
-  boost::xpressive::mark_tag system(1) , severity(2) , started_at(3) , id(4) , 
-    title(5) ;
-
-  boost::xpressive::sregex pb = "{\"system\": \"" >> (system=*~(set= '\"'))
-						  >> "\", \"severity\": \""
-						  >> (severity=*~(set= '\"'))
-						  >> "\", \"started_at\": \""
-						  >> (started_at=*~(set= '\"')) 
-						  >> "\", \"id\": \""
-						  >> (id=*~(set= '\"')) 
-						  >> "\", \"title\": \""
-						  >> (title=*~(set= '\"')) 
-						  >> "\"}" ;
-
   std::vector< std::string > single_line ;
+  boost::property_tree::ptree problem_tree ;
 
   while ( std::getline( webStream , line ) ) {
+    // Check that the answer has the correct format (JSON format)
     if ( boost::regex_match( line , e ) ) {
-      boost::xpressive::sregex_iterator cur( line.begin() , line.end() , pb ) ;
-      boost::xpressive::sregex_iterator end ;
-      for ( ; cur != end ; ++cur ) {
-	single_line.clear() ;
-	boost::xpressive::smatch const &what = *cur ;
-	std::string systn = what[ system ] ;
-	if ( "" != systemName ) 
-	  if ( systemName != systn ) 
-	    continue ;
-	single_line.push_back( systn ) ;
-	single_line.push_back( what[severity] ) ;
-	single_line.push_back( what[started_at] ) ;
-	single_line.push_back( what[id] ) ;
-	single_line.push_back( what[title] ) ;
+      // Now parse each line (there should be actually only one line
+      // in the server answer, otherwise it is over-written
+      std::istringstream is( "{\"problem\":" + line + "}" ) ;
+
+      try {
+	boost::property_tree::json_parser::read_json( is , problem_tree ) ;
 	
-	problems.push_back( single_line ) ;
+	BOOST_FOREACH( boost::property_tree::ptree::value_type &v,
+		       problem_tree.get_child("problem")) {
+	  single_line.clear() ;
+	  std::string systn = v.second.get< std::string >( "system" ) ;
+	  if ( "" != systemName ) 
+	    if ( systemName != systn ) 
+	      continue ;
+	  single_line.push_back( systn ) ;
+	  single_line.push_back( v.second.get< std::string >( "severity" ) ) ;
+	  single_line.push_back( v.second.get< std::string >( "started_at" ) ) ;
+	  single_line.push_back( v.second.get< std::string >( "id" ) ) ;
+	  single_line.push_back( v.second.get< std::string >( "title" ) ) ;
+	  problems.push_back( single_line ) ;
+	}
+      } 
+      catch (...) {
+	std::cerr << "Error in the problem db server response" << std::endl ;
       }
     }
   }
