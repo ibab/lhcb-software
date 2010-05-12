@@ -4,6 +4,11 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2010-05-12 - Gerhard RAven
+ - Removed the Hlt2Lines introduced below from Physics_25Vis_25L0_2Hlt1_2Hlt2_Apr10
+   as it has been deployed in the pit _without_ those lines.
+ - Create Physics_25Vis_25L0_2Hlt1_2Hlt2_May10 which does include them
+
 ! 2010-05-10 - Patrick Koppenburg
  - Add Hlt2 lines in various classes. 
    . New files : CharmLines.py, DiMuonLines.py, TopoLines.py
