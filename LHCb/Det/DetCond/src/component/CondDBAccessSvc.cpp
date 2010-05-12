@@ -868,8 +868,12 @@ StatusCode CondDBAccessSvc::i_getObject(const std::string &path, const Gaudi::Ti
   // is correctly set even when using the cache.
   if (vk_when >= i_latestHeartBeat()) {
     MsgStream log(msgSvc(), name());
+    const Gaudi::Time hb = valKeyToTime(i_latestHeartBeat());
     log << MSG::ERROR << "Database not up-to-date. Latest known update is at "
-        << valKeyToTime(i_latestHeartBeat()) << ", event time is " << when << endmsg;
+        << hb.format(false, "%Y-%m-%d %H:%M:%S") << "." << hb.nanoformat()
+        << " UTC, event time is "
+        << when.format(false, "%Y-%m-%d %H:%M:%S") << "." << when.nanoformat()
+        << " UTC" << endmsg;
     return StatusCode::FAILURE;
   }
 

@@ -4,6 +4,10 @@
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
 
+! 2010-05-12 - Marco Clemencic
+ - Modified the message printed in case of a failure of the heart-beat check to
+   show the time in human-readable format (UTC).
+
 !===================== Det/DetCond v12r12 2010-04-09 =========================
 ! 2010-03-27 - Illya Shapoval
  - CondDB configurable is tuned to override all default and user tags settings 

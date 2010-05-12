@@ -60,7 +60,7 @@ expected = [
     '--- /dd/Conditions/Online/HeartBeatTest/Condition2',
     'Validity: 1262306400.0 -> 1262307600.0',
     '(int) Data = 40',
-    'HBTEST              ERROR Database not up-to-date. Latest known update is at 1262307600.0, event time is 1262308200.0',
+    'HBTEST              ERROR Database not up-to-date. Latest known update is at 2010-01-01 01:00:00.0 UTC, event time is 2010-01-01 01:10:00.0 UTC'
     ]
 
 regexp = r"^---|^Validity|^\(int\) Data|.*Requested Conditions|.*Conditions loaded at initialize|HBTEST.*ERROR"
