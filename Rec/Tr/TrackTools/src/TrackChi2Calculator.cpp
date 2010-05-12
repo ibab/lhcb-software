@@ -163,8 +163,7 @@ StatusCode TrackChi2Calculator::invertMatrix( Gaudi::TrackSymMatrix& invC ) cons
   for ( unsigned int i = 0; i < 4; ++i ) {
     for ( unsigned int j = 0; j < 4; ++j ) {
       if ( invC(i,j) > 1e20 ) {
-        warning() << "old covariance errors too big to invert" << endmsg;
-        return StatusCode::FAILURE;
+        return Warning("old covariance errors too big to invert", StatusCode::FAILURE);
       }
     }
   }
@@ -200,8 +199,7 @@ StatusCode TrackChi2Calculator::invertMatrix( Gaudi::SymMatrix4x4& invC ) const
   for ( unsigned int i = 0; i < 4; ++i ) {
     for ( unsigned int j = 0; j < 4; ++j ) {
       if ( invC(i,j) > 1e20 ) {
-        warning() << "old covariance errors too big to invert" << endmsg;
-        return StatusCode::FAILURE;
+        return Warning("old covariance errors too big to invert", StatusCode::FAILURE);
       }
     }
   }

@@ -117,7 +117,8 @@ LHCb::Measurement* MuonMeasurementProvider::measurement( const LHCb::LHCbID& id,
     double x,y,z,dx,dy,dz;
     StatusCode sc = m_det->Tile2XYZ(muid,x,dx,y,dy,z,dz);
     if (sc.isFailure()){
-      warning() << "Failed to get x,y,z of tile " << muid << endreq;
+      Warning("Failed to get x,y,z of tile ",sc).ignore();
+      if(msgLevel(MSG::DEBUG)) debug() << "Failed to get x,y,z of tile " << muid << endreq;
     } else {
       LHCb::MuonMeasurement::MuonMeasurementType dir = localY ? 
         LHCb::MuonMeasurement::Y : LHCb::MuonMeasurement::X ;
@@ -155,7 +156,8 @@ LHCb::Measurement* MuonMeasurementProvider::measurement( const std::vector< LHCb
       LHCb::MuonTileID muid = id->muonID();
       StatusCode sc = m_det->Tile2XYZ(muid,x,dx,y,dy,z,dz);
       if (sc.isFailure()){
-        warning() << "Failed to get x,y,z of tile " << muid << endreq;
+        Warning("Failed to get x,y,z of tile ",sc).ignore();
+        if(msgLevel(MSG::DEBUG)) debug() << "Failed to get x,y,z of tile " << muid << endreq;
       } else {
         m_padx.push_back(x);
         m_pady.push_back(y);

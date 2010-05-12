@@ -173,7 +173,7 @@ StatusCode MeasurementProvider::load( Track& track ) const
     // First look if the Measurement corresponding to this LHCbID
     // is already in the Track, i.e. whether it has already been loaded!
     if ( track.fitResult()->measurement( id ) ) {
-      Warning("Found measurements already loaded on track!",StatusCode::SUCCESS,0) ;
+      Warning("Found measurements already loaded on track!",StatusCode::SUCCESS,0).ignore() ;
       if( msgLevel( MSG::DEBUG ) || msgLevel( MSG::VERBOSE ) )
         debug() << "Measurement had already been loaded for the LHCbID"
                 << " channelID, detectorType = "
@@ -196,7 +196,9 @@ StatusCode MeasurementProvider::load( Track& track ) const
     = std::remove_if(newmeasurements.begin(),newmeasurements.end(),
                      std::bind2nd(std::equal_to<LHCb::Measurement*>(),static_cast<LHCb::Measurement*>(0))) ;
   if(newend != newmeasurements.end()) {
-    warning() << "Some measurement pointers are zero: " << int(newmeasurements.end() - newend) << endreq ;
+    Warning("Some measurement pointers are zero: ",StatusCode::SUCCESS,0).ignore() ;
+    if( msgLevel( MSG::DEBUG ) )
+      debug() << "Some measurement pointers are zero: " << int(newmeasurements.end() - newend) << endmsg ;
     newmeasurements.erase(newend,newmeasurements.end()) ;
   }
   

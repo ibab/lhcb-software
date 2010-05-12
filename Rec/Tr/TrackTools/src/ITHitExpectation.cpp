@@ -122,7 +122,7 @@ IHitExpectation::Info ITHitExpectation::expectation(const LHCb::Track& aTrack) c
 
     StatusCode sc = m_expectedITHits->collect(aParab,aLine,chan,output,sect);   
     if (sc.isFailure()){
-      Warning("Failed to calculate expected hits",StatusCode::SUCCESS,1);
+      Warning("Failed to calculate expected hits",StatusCode::SUCCESS,1).ignore();
     }
     int old = -1;
     for (ITPairs::iterator iter = output.begin(); iter != output.end(); ++iter ){ 
@@ -166,7 +166,7 @@ void ITHitExpectation::collect(const LHCb::Track& aTrack ,std::vector<LHCb::LHCb
 
     StatusCode sc = m_expectedITHits->collect(aParab,aLine,chan,output,sect);   
     if (sc.isFailure()){
-      Warning("Failed to calculate expected hits",StatusCode::SUCCESS,1);
+      Warning("Failed to calculate expected hits",StatusCode::SUCCESS,1).ignore();
     }
     int old = -1;
     ids.reserve(output.size());

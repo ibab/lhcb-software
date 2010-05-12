@@ -112,7 +112,7 @@ IHitExpectation::Info OTHitExpectation::expectation(const LHCb::Track& aTrack) c
     for (unsigned int iSector = 3; iSector <=4; ++iSector){
       StatusCode sc = m_expectedOTHits->collect(aParab,aLine,testChan,output, iSector); 
       if (sc.isFailure()){
-        Warning("Failed to calculate expected hits",StatusCode::SUCCESS,1);
+        Warning("Failed to calculate expected hits",StatusCode::SUCCESS,1).ignore();
       }  
     }  // sectors
 
@@ -160,7 +160,7 @@ void OTHitExpectation::collect(const LHCb::Track& aTrack ,std::vector<LHCb::LHCb
     for (unsigned int iSector = 3; iSector <=4; ++iSector){
       StatusCode sc = m_expectedOTHits->collect(aParab,aLine,testChan,output, iSector); 
       if (sc.isFailure()){
-        Warning("Failed to calculate expected hits",StatusCode::SUCCESS,1);
+        Warning("Failed to calculate expected hits",StatusCode::SUCCESS,1).ignore();
       }  
     }  // sectors
 
