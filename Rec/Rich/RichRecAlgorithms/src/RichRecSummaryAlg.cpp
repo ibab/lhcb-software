@@ -92,7 +92,7 @@ StatusCode SummaryAlg::execute()
     const LHCb::Track * trtrack = dynamic_cast<const LHCb::Track *>((*track)->parentTrack());
     if ( !trtrack )
     {
-      Warning( "Input track type is not Track -> RichRecTrack skipped" );
+      Warning( "Input track type is not Track -> RichRecTrack skipped" ).ignore();
       continue;
     }
 
