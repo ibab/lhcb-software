@@ -276,8 +276,7 @@ StatusCode TrackKalmanFilter::fit( Track& track ) const
          inode != nodes.rend() && sc.isSuccess() ; ++inode) {
       FitNode* node = dynamic_cast<FitNode*>(*inode);
       sc = predictReverseFit( *prevNode, *node, state );
-      if(!sc.isSuccess()) warning() << "Unable to predict reverse fit node" 
-                                    << endmsg ;
+      if(!sc.isSuccess()) Warning("Unable to predict reverse fit node", StatusCode::SUCCESS,1).ignore();
       node->setState(state) ;
       node->setPredictedStateForward( LHCb::State() );
       node->setPredictedStateBackward( LHCb::State() );
@@ -293,8 +292,7 @@ StatusCode TrackKalmanFilter::fit( Track& track ) const
          inode != nodes.end() && sc.isSuccess() ; ++inode) {
       FitNode* node = dynamic_cast<FitNode*>(*inode);
       sc = predict( *node, state );
-      if(!sc.isSuccess()) warning() << "Unable to predict reverse fit node" 
-                                    << endmsg ;
+      if(!sc.isSuccess()) Warning("Unable to predict reverse fit node", StatusCode::SUCCESS,1).ignore();
       node->setState(state) ;
       node->setPredictedStateForward( LHCb::State() );
       node->setPredictedStateBackward( LHCb::State() );

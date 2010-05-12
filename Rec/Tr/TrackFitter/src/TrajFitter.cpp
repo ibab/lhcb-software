@@ -160,7 +160,7 @@ TrajFitter::fit(TRAJ* traj,
          resids->push_back( i->project(*traj) );
   }
   return converged ? StatusCode::SUCCESS 
-                   : Warning("Minimization did not converge");
+                   : Warning("Minimization did not converge",StatusCode::FAILURE,1);
 }
 
 StatusCode TrajFitter::Nfit(ITrajFitter::NDifTraj traj, 
