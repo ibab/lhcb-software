@@ -4,6 +4,9 @@
 ! Purpose     : Package for the track matching algorithms
 !-----------------------------------------------------------------------------
 
+! 2010-05-12 - Rob Lambert
+ - removed obsolete options file TrackMatch.py
+
 !======================= TrackMatching v2r28p1 2010-05-07=====================
 ! 2010-05-07 - Rob Lambert
  - Fix TrackMatchVeloSeed to always make the container before exiting
