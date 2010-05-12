@@ -161,26 +161,26 @@ StatusCode TrackMasterExtrapolator::propagate( LHCb::State& state,
       if( m_debugLevel )
 	debug() << "Protect against absurd tracks: x=" << start.x() 
 		<< " (max " << m_maxTransverse << " allowed)." << endreq;
-      return Warning( "Protect against absurd tracks. See debug for details" );
+      return Warning( "Protect against absurd tracks. See debug for details", StatusCode::FAILURE,1 );
     }
     if ( fabs(start.y()) > m_maxTransverse ) {
                //          StatusCode::FAILURE, 1 );
       if( m_debugLevel )
 	debug() << "Protect against absurd tracks: y=" << start.y() 
 		<< " (max " << m_maxTransverse << " allowed)." << endreq;
-      return Warning( "Protect against absurd tracks. See debug for details" );
+      return Warning( "Protect against absurd tracks. See debug for details", StatusCode::FAILURE,1 );
     }
     if (fabs(state.tx()) > m_maxSlope) {
       if( m_debugLevel )
 	debug() << "Protect against looping tracks: tx=" << state.tx() 
 		<< " (max " << m_maxSlope << " allowed)." << endreq;
-      return Warning( "Protect against looping tracks. See debug for details" );
+      return Warning( "Protect against looping tracks. See debug for details", StatusCode::FAILURE,1 );
     }    
     if (fabs(state.ty()) > m_maxSlope) {
       if( m_debugLevel )
 	debug() << "Protect against looping tracks: ty=" << state.ty() 
 		<< " (max " << m_maxSlope << " allowed). " << endreq;
-      return Warning( "Protect against looping tracks. See debug for details" );
+      return Warning( "Protect against looping tracks. See debug for details", StatusCode::FAILURE,1 );
     }
     
     // process walls
@@ -204,7 +204,7 @@ StatusCode TrackMasterExtrapolator::propagate( LHCb::State& state,
 	  if( m_debugLevel )
 	    debug() << "Transport to " << zWall
 		    << "using "+thisExtrapolator->name() << " FAILED" << endreq;
-	  return Warning( "Transport to wall using "+thisExtrapolator->name()+ "FAILED", sc );
+	  return Warning( "Transport to wall using "+thisExtrapolator->name()+ "FAILED", sc,1 );
 	}
 	
 	//update f
@@ -246,7 +246,7 @@ StatusCode TrackMasterExtrapolator::propagate( LHCb::State& state,
       if ( sc.isFailure() ) {
         if ( m_debugLevel ) debug() << "Transport to " << ztarget
 				    << "using "+thisExtrapolator->name() << " FAILED" << endreq;
-        return Warning( "Transport to wall using "+thisExtrapolator->name()+ "FAILED", sc );
+        return Warning( "Transport to wall using "+thisExtrapolator->name()+ "FAILED", sc,1 );
       }
       
       //update f

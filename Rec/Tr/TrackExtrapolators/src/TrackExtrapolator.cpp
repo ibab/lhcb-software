@@ -138,7 +138,7 @@ StatusCode TrackExtrapolator::propagate( State& state,
   StatusCode sc = StatusCode::FAILURE;
 
   Warning( "Cannot propagate state to Z at given point. See debug for details",
-           StatusCode::SUCCESS, 1 ).ignore();
+           StatusCode::SUCCESS, 0 ).ignore();
   
   debug() << " can not propagate state at " << state.z()
           << " to point at z " << point.z()
@@ -195,7 +195,7 @@ StatusCode TrackExtrapolator::propagate( State& state,
       double ztarget = state.z() + dz ;
       sc = propagate( state, ztarget, pid );
       if( sc.isFailure() ) {
-        Warning( "Failed to propagate to given z. See debug for details" ).ignore();
+        Warning( "Failed to propagate to given z. See debug for details",StatusCode::SUCCESS,0 ).ignore();
         
         debug() << "Failed to propagate to z = " << ztarget << endmsg;
         break ;

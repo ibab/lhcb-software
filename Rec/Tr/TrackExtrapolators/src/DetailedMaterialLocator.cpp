@@ -62,10 +62,13 @@ size_t DetailedMaterialLocator::intersect( const Gaudi::XYZPoint& start, const G
       fabs(start.x()+vect.x()) > m_25m ||
       fabs(start.y()+vect.y()) > m_25m ||
       fabs(start.z()+vect.z()) > m_25m ) {
-    warning() << "No transport between z= " << start.z() << " and " 
-	      << start.z() + vect.z() 
-	      << ", since it reaches outside LHCb" << endreq;
-    debug() << "start = " << start << " vect= " << vect << endreq ;
+    Warning("No transport possible since destination is outside LHCb ").ignore();
+    
+    if(msgLevel(MSG::DEBUG)) debug() << "No transport between z= " << start.z()
+                                     << " and " << start.z() + vect.z() 
+                                     << ", since it reaches outside LHCb" 
+                                     << "start = " << start 
+                                     << " vect= " << vect << endreq ;
   } else {
     try {
       const char chronotag[] = "DetailedMaterialLocator" ;

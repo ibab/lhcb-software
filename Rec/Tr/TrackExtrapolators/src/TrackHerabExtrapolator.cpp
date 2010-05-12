@@ -141,7 +141,7 @@ void TrackHerabExtrapolator::extrapolate(double& zIn,double pIn[5],
 
   default:
     Warning( "Incorrect Extrapolator name - taking rk5order !!!!",
-             StatusCode::SUCCESS, 1 );
+             StatusCode::SUCCESS, 1 ).ignore();
     rk5order(zIn,pIn,m_error,zNew,pOut,fQp,istat);
     break;
   }

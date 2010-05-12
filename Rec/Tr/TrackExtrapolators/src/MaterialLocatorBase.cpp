@@ -174,7 +174,7 @@ size_t MaterialLocatorBase::intersect( const LHCb::ZTrajectory& traj,
     
     // issue a warning if we didn't make it
     if( nodes.size()==maxnumnodes )
-      warning() << "Trajectory approximation did not reach desired accuracy. " << endreq ;
+      Warning("Trajectory approximation did not reach desired accuracy. ", StatusCode::SUCCESS,0).ignore();
     
     // debug output
     if(msgLevel( MSG::VERBOSE ) ||
