@@ -103,9 +103,10 @@ StatusCode Tf::PatVeloFitLHCbIDs::fit( LHCb::Track & track, LHCb::ParticleID){
       int zone =phiStation->sensor()->globalZoneOfStrip(iID->veloID().strip());
       PatVeloPhiHit* phiHit = phiStation->hitByLHCbID(zone,*iID);
       if(!phiHit){
-	warning() << "Did not find phi cluster for " << *iID << endmsg;
-	delete(patVeloTrack);
-	return StatusCode::FAILURE;
+        Warning("Did not find phi cluster",StatusCode::SUCCESS,0).ignore();
+        if(msgLevel(MSG::DEBUG)) debug() << "Did not find phi cluster for " << *iID << endmsg;
+        delete(patVeloTrack);
+        return StatusCode::FAILURE;
       }
       patVeloTrack->addPhi(phiHit);
     }
@@ -117,9 +118,10 @@ StatusCode Tf::PatVeloFitLHCbIDs::fit( LHCb::Track & track, LHCb::ParticleID){
       int zone =rStation->sensor()->globalZoneOfStrip(iID->veloID().strip());
       PatVeloRHit* rHit = rStation->hitByLHCbID(zone,*iID);
       if(!rHit){
-	warning() << "Did not find R cluster for " << *iID << endmsg;
-	delete(patVeloTrack);
-	return StatusCode::FAILURE;
+        Warning("Did not find R cluster",StatusCode::SUCCESS,0).ignore();
+        if(msgLevel(MSG::DEBUG)) debug() << "Did not find R cluster for " << *iID << endmsg;
+        delete(patVeloTrack);
+        return StatusCode::FAILURE;
       }
       patVeloTrack->addRCoord(rHit);
     }

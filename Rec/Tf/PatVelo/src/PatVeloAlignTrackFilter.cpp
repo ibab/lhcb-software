@@ -169,7 +169,9 @@ namespace Tf {
                 phi_raw += phi_raw < 0. ? 360. : 0.;
                 int phi_coord = (int)floor( phi_raw * m_nBinsPhi / 360. );
                 if ( ( r_coord < 0 ) || ( r_coord >= m_nBinsR ) || ( phi_coord < 0 ) || ( phi_coord >= m_nBinsPhi ) ) {
-                  warning() << "coordinate(s) out of range: r = " << r_coord << ", phi = " << phi_coord << endreq;
+                  Warning("coordinate(s) out of range",StatusCode::SUCCESS,0).ignore();
+                  if(msgLevel(MSG::DEBUG)) 
+                    debug() << "coordinate(s) out of range: r = " << r_coord << ", phi = " << phi_coord << endreq;
                 }
                 else {
                   m_3Dhits[ r_coord ][ phi_coord ][ (*cR0)->sensor()->sensorNumber() ]++;
@@ -249,7 +251,8 @@ namespace Tf {
         int n_sensors_with_hits = 0;
         for ( int k = 0; k < m_nStations; k++ ) {
           hits = sensorHitsInCell( i, j, k );
-          if ( m_verboseLevel ) verbose() << "Cell cluster " << i << ", " << j << " has " << hits << " at station " << k << endreq;
+          if ( m_verboseLevel ) verbose() << "Cell cluster " << i << ", " << j 
+                                          << " has " << hits << " at station " << k << endreq;
           if ( hits > max_hits ) max_hits = hits;
           if ( hits > 0 ) n_sensors_with_hits++;
         }
@@ -263,7 +266,9 @@ namespace Tf {
         }
 
         // at this point the event should be kept
-        if ( m_debugLevel ) debug() << "Found track with " << m_hits[ i ][ j ] << " cell hits, " << cell_cluster_hits << " cell cluster hits on " << n_sensors_with_hits << " sensors" << endreq;
+        if ( m_debugLevel ) debug() << "Found track with " << m_hits[ i ][ j ] 
+                                    << " cell hits, " << cell_cluster_hits 
+                                    << " cell cluster hits on " << n_sensors_with_hits << " sensors" << endreq;
 
         if ( !m_overlaps ) {
           setFilterPassed(true);
