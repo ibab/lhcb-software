@@ -132,7 +132,7 @@ StatusCode PhotonRecoUsingQuarticSoln::initialize()
 
   if ( !m_useSecMirs )
   {
-    Warning( "Will ignore secondary mirrors", StatusCode::SUCCESS );
+    Warning( "Will ignore secondary mirrors", StatusCode::SUCCESS).ignore();
     // no point doing interations
     m_forceFlatAssumption = true;
   }
@@ -140,7 +140,7 @@ StatusCode PhotonRecoUsingQuarticSoln::initialize()
   {
     if ( m_forceFlatAssumption )
     {
-      Warning( "Assuming perfectly flat secondary mirrors", StatusCode::SUCCESS );
+      Warning( "Assuming perfectly flat secondary mirrors", StatusCode::SUCCESS ).ignore();
     }
     else
     {
