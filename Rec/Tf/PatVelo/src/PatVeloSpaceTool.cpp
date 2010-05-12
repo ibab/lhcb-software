@@ -149,7 +149,7 @@ namespace Tf {
         m_trackTool->makeTrackFromPatVeloSpace((*iTr),newTrack,
             m_forwardStepError);
       if (!sc) {
-        Warning("Failed to convert to LHCb::Track");
+        Warning("Failed to convert to LHCb::Track",StatusCode::SUCCESS,0).ignore();
         delete newTrack;
         continue;
       }

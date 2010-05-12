@@ -559,7 +559,7 @@ StatusCode NewVeloSpaceTool::tracksFromTrack ( const LHCb::Track& in,
     newTrack->setHistory(LHCb::Track::PatVelo);
     StatusCode sc = m_trackTool->makeTrackFromPatVeloSpace( &tempTrack, newTrack, m_forwardStepError);
     if (!sc) {
-      Warning("Failed to convert to LHCb::Track");
+      Warning("Failed to convert to LHCb::Track", StatusCode::SUCCESS).ignore();
       delete newTrack;
       continue;
     }

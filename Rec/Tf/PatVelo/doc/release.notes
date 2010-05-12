@@ -4,6 +4,9 @@
 ! Purpose     : Velo pattern recognition
 !-----------------------------------------------------------------------------
 
+! 2010-05-12 - Rob Lambert
+ - Review of warnings
+
 ! 2010-05-11 - David Hutchcroft
  - Fixed a 2pi range issue in PatVeloTrackTool
 

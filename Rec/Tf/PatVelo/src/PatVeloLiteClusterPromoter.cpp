@@ -78,7 +78,7 @@ promoteClusters(std::vector<LHCb::LHCbID> const & inputIDs ){
   std::vector<LHCb::LHCbID>::const_iterator it;
   for ( it = inputIDs.begin(); inputIDs.end() != it; ++it ){
     if( ! it->isVelo() ) {
-      Warning("Non VeloID");
+      Warning("Non VeloID",StatusCode::SUCCESS,0).ignore();
     }else if( it->isVeloPhi() ){
       int sensor = it->veloID().sensor();
       // add Phi clusters from sensor sensor
@@ -87,7 +87,8 @@ promoteClusters(std::vector<LHCb::LHCbID> const & inputIDs ){
       int zone =phiStation->sensor()->globalZoneOfStrip(it->veloID().strip());
       PatVeloPhiHit* phiHit = phiStation->hitByLHCbID(zone,*it);
       if(!phiHit){
-        warning() << "Did not find phi cluster for " << *it << endmsg;
+        Warning("Did not find phi cluster" ,StatusCode::FAILURE,0).ignore();
+        if(msgLevel(MSG::DEBUG)) debug() << "Did not find phi cluster for " << *it << endmsg;
         return StatusCode::FAILURE;
       }
       // get core VeloLiteCluster from hit 
@@ -101,7 +102,8 @@ promoteClusters(std::vector<LHCb::LHCbID> const & inputIDs ){
       int zone =rStation->sensor()->globalZoneOfStrip(it->veloID().strip());
       PatVeloRHit* rHit = rStation->hitByLHCbID(zone,*it);
       if(!rHit){
-        warning() << "Did not find R cluster for " << *it << endmsg;
+        Warning("Did not find R cluster" ,StatusCode::FAILURE,0).ignore();
+        if(msgLevel(MSG::DEBUG)) debug() << "Did not find R cluster for " << *it << endmsg;
         return StatusCode::FAILURE;
       }
       // get core VeloLiteCluster from hit 
@@ -120,10 +122,20 @@ void Tf::PatVeloLiteClusterPromoter::
   if( liteCluster.pseudoSize() == 1){
     if( liteCluster.highThreshold() ){
       fakeClus = 
-	new LHCb::VeloCluster(liteCluster,LHCb::VeloCluster::ADCVector(1,std::pair<int,unsigned int>(liteCluster.channelID().strip(),64)));
+        new LHCb::VeloCluster(
+                              liteCluster,
+                              LHCb::VeloCluster::ADCVector(1,
+                                                           std::pair<int,unsigned int>(
+                                                                                       liteCluster.channelID().strip(),
+                                                                                       64)));
     }else{
       fakeClus = 
-	new LHCb::VeloCluster(liteCluster,LHCb::VeloCluster::ADCVector(1,std::pair<int,unsigned int>(liteCluster.channelID().strip(),21)));
+        new LHCb::VeloCluster(
+                              liteCluster,
+                              LHCb::VeloCluster::ADCVector(1,
+                                                           std::pair<int,unsigned int>(
+                                                                                       liteCluster.channelID().strip(),
+                                                                                       21)));
     }
   }else{
     // always fake two strip clusters for two or more strip clusters 
