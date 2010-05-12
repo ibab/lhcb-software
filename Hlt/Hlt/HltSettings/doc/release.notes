@@ -3,6 +3,8 @@
 ! Responsible : Patrick Koppenburg, Gerhard Raven
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
+! 2010-05-12 - Johannes Albrecht
+ - adapt default HLT2 muon lines
 
 ! 2010-05-12 - Gerhard RAven
  - Removed the Hlt2Lines introduced below from Physics_25Vis_25L0_2Hlt1_2Hlt2_Apr10

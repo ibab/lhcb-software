@@ -8,6 +8,10 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2010-05-12 - Johannes Albrecht
+ - add some preliminary monitoring to Hlt2InclusivediMuonLines
+   add same sign dimuon selection
+
 ! 2010-05-07 - Jibo He
  - Hlt2InclusiveDiElectronLines.py
    + Added 5 lines for Unbiased (Jpsi, Psi(2S), B->) Dilectrons.
