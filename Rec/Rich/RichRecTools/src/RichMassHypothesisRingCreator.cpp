@@ -174,7 +174,7 @@ MassHypothesisRingCreator::buildRing( LHCb::RichRecSegment * segment,
     }
     else
     {
-      Warning( "Some problem occured during CK cone ray-tracing" );
+      Warning( "Some problem occured during CK cone ray-tracing" ).ignore();
       delete newRing;
       newRing = NULL;
     }

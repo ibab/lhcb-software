@@ -4,6 +4,9 @@
 ! Purpose     : Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+! 2010-05-12 - Rob Lambert
+ - Review of warnings
+
 !===================== RichRecTools v4r11p1 2010-04-30 =========================
 ! 2010-04-26 - Chris Jones
  - Fix stupid bug where the inclusion of a '/' in some histogram IDs screwed
