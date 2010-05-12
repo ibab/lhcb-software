@@ -84,7 +84,7 @@ StatusCode D02KPiNoPID::execute() {
 StatusCode D02KPiNoPID::MakeD02KPi(const LHCb::Particle::ConstVector& daughters ) 
 {
   // Obtain Primary Vertices:
-  const LHCb::RecVertex::Container* vPrimaryVertices =
+  const LHCb::RecVertex::Range vPrimaryVertices =
     this->primaryVertices();
 
   // Event Number Now Processing
@@ -96,7 +96,7 @@ StatusCode D02KPiNoPID::MakeD02KPi(const LHCb::Particle::ConstVector& daughters 
     debug()<< "Particle vector size = "
            << daughters.size() << endmsg;
     debug()<< "PV vector size = "
-           << vPrimaryVertices->size() << endmsg;
+           << vPrimaryVertices.size() << endmsg;
   }
 
   // Veto Event if Insufficient Tracks Present
@@ -108,7 +108,7 @@ StatusCode D02KPiNoPID::MakeD02KPi(const LHCb::Particle::ConstVector& daughters 
 
   // Isolate Kaons and Pions
   LHCb::Particle::ConstVector vPions, vKaons;
-  LHCb::RecVertex::Container::const_iterator ivert;
+  LHCb::RecVertex::Range::const_iterator ivert;
 
   StatusCode sc = StatusCode::SUCCESS;
   sc = particleFilter()->filterByPID( daughters, vKaons, "K+" );
@@ -121,7 +121,7 @@ StatusCode D02KPiNoPID::MakeD02KPi(const LHCb::Particle::ConstVector& daughters 
   debug()<< "Number of Kaons found = "
          << vKaons.size() << endmsg;
 
-  if (vPrimaryVertices->size() == 0 ) 
+  if (vPrimaryVertices.empty() ) 
   {
     debug() << "No primary vertex: skip event"
             << endmsg;
@@ -256,8 +256,8 @@ StatusCode D02KPiNoPID::MakeD02KPi(const LHCb::Particle::ConstVector& daughters 
               double f, fe;
 
               debug() << "Calculate Impact Parameter D0" <<endmsg;
-              for ( ivert = vPrimaryVertices->begin();
-                    ivert != vPrimaryVertices->end(); ivert++){
+              for ( ivert = vPrimaryVertices.begin();
+                    ivert != vPrimaryVertices.end(); ivert++){
                 distanceCalculator()->distance(  (&candD0),
                                                  (*ivert),
                                                  ipCurrentPart,
