@@ -236,7 +236,8 @@ StatusCode AddTTClusterTool::addTTClusters( Track& track,
       StatusCode msc = m_poca -> minimize( stateTraj, s1, *measTraj, s2,
                                            distance3D, 50*Gaudi::Units::mm );
       if( msc.isFailure() ) {
-        warning() << "TrajPoca minimize failed in addTTClusters" << endreq;
+        Warning("TrajPoca minimize failed in addTTClusters", StatusCode::SUCCESS,0).ignore();
+        if(msgLevel(MSG::DEBUG)) debug() << "TrajPoca minimize failed in addTTClusters" << endmsg;
       }
       int signDist = ( distance3D.x() > 0.0 ) ? 1 : -1 ;
       double distance = signDist * distance3D.R();
@@ -355,8 +356,9 @@ double AddTTClusterTool::distanceToStrip( const Track& track,
   while ( iClusTraj != m_clusterTrajectories.end() && 
           ((*iClusTraj).first)->channelID()!=ttCluster.channelID()) ++iClusTraj;
   if ( iClusTraj == m_clusterTrajectories.end() ) {
-    warning() << "A Trajectory could not be found corresponding to th cluster." 
-              << endmsg;
+    Warning("A Trajectory could not be found corresponding to th cluster.",StatusCode::SUCCESS,0).ignore() ;
+    
+    if(msgLevel(MSG::DEBUG)) debug() << "A Trajectory could not be found corresponding to th cluster." << endmsg;
     return 0.0;    
   }
   Trajectory* measTraj = ((*iClusTraj).second).get();  
@@ -369,7 +371,8 @@ double AddTTClusterTool::distanceToStrip( const Track& track,
   StatusCode asc = m_poca -> minimize( stateTraj, s1, *measTraj, s2,
                                        distance3D, 50*Gaudi::Units::mm );
   if( asc.isFailure() ) {
-    warning() << "TrajPoca minimize failed in distanceToStrip" << endreq;
+    Warning("TrajPoca minimize failed in distanceToStrip",StatusCode::SUCCESS,0).ignore() ;
+    if(msgLevel(MSG::DEBUG)) debug() << "TrajPoca minimize failed in distanceToStrip" << endreq;
   }
   int signDist = ( distance3D.x() > 0.0 ) ? 1 : -1 ;
   return signDist * distance3D.R(); 
