@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2010-05-12 - Rob Lambert
+ - remove obsolete options file PatVeloTT.py
+
 ! 2010-05-04 - Rob Lambert
  - Added PatVeloConf.py a python module to replace the options file
    PatVeloTT.py
