@@ -1,10 +1,12 @@
-! $Id: release.notes,v 1.542 2010-05-12 10:25:14 jpalac Exp $
+! $Id: release.notes,v 1.543 2010-05-12 12:01:59 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
 
 ! 2010-05-12 - Juan Palacios
+ - src/CombineParticles.cpp
+  . Print some warnings only at the end of the job.
  - Removed ParticleFilter.
  - cmt/requirements
   . Increase to v21r2
