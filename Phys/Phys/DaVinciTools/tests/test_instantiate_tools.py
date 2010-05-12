@@ -20,7 +20,6 @@ tools = { 'Bd2KstarMuMuAngleCalculator' : 'IP2VVPartAngleCalculator',
           'GenericParticle2PVRelator__p2PVWithIP_OfflineDistanceCalculatorName_' : 'IRelatedPVFinder',
           'P2VVAngleCalculator' : 'IP2VVAngleCalculator',
           'ParticleDescendants' : 'IParticleDescendants',
-          'ParticleFilter' : 'IParticleFilter',
           'PhysDesktop' : 'IPhysDesktop'
                             }
 
