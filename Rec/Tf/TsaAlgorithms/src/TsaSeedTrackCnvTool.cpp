@@ -165,7 +165,7 @@ void SeedTrackCnvTool::addState(const SeedTrack* aTrack, LHCb::Track* lTrack, co
     double sigmaQOverP = 0;
     StatusCode sc = m_momentumTool->calculate(&aStateT ,qOverP, sigmaQOverP , false );
     if( sc.isFailure() ) {
-      Warning( "MomentumEstimate tool  failed, but still adding State", StatusCode::SUCCESS,0 );
+      Warning( "MomentumEstimate tool  failed, but still adding State", StatusCode::SUCCESS,0 ).ignore();
     }
     //momentum assigned is p at mid T
     aState.setQOverP( qOverP );
