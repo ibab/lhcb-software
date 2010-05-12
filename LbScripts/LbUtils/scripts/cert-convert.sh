@@ -2,7 +2,7 @@
 ##################################################################################
 #
 # $HeadURL: svn+ssh://svn.cern.ch/reps/dirac/DIRAC/trunk/DIRAC/Core/scripts/dirac-cert-convert.sh $
-# $Id: dirac-cert-convert.sh 24306 2010-04-25 15:09:10Z atsareg $
+# $Id: dirac-cert-convert.sh 25163 2010-05-11 14:29:29Z atsareg $
 #
 # dirac-cert-convert.sh script converts the user certificate in the p12 format
 # into a standard .globus usercert.pem and userkey.pem files
@@ -12,6 +12,17 @@
 #
 ##################################################################################
 
+function usage {
+  echo Usage:
+  echo "    " dirac-cert-convert.sh CERT_FILE_NAME.p12
+  exit 1
+}
+
+if [ $# = 0 ]; then
+  echo User Certificate P12 file is not given.
+  usage
+fi
+
 GLOBUS=$HOME/.globus
 USERCERT_P12_ORIG=$1
 USERCERT_P12=$GLOBUS/`basename $USERCERT_P12_ORIG`
@@ -20,11 +31,9 @@ USERKEY_PEM=$GLOBUS/userkey.pem
 OPENSSL=`which openssl`
 DATE=`/bin/date +%F-%k:%M`
 
-if [ -z "$USERCERT_P12_ORIG" ]; then
-  echo User Certificate P12 is not given.
-  echo Usage:
-  echo "    " cert-convert.sh CERT_FILE_NAME.p12
-  exit 1
+if [ ! -f "$USERCERT_P12_ORIG" ]; then
+  echo file $USERCERT_P12_ORIG does not exist
+  usage
 fi
 
 if [ ! -d $GLOBUS ]; then
