@@ -2,7 +2,7 @@
 Write a DST for a single selection sequence. Writes out the entire
 contents of the input DST
 """
-__version__ = "$Id: BaseDSTWriter.py,v 1.4 2010-05-07 12:14:44 jpalac Exp $"
+__version__ = "$Id: BaseDSTWriter.py,v 1.5 2010-05-12 14:44:19 panmanj Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -77,19 +77,11 @@ class BaseDSTWriter(ConfigurableUser) :
     def fsrOutputStream(self, name) :
         """
         write out the FSR
+
+        for this to work the main configurable, e.g. DaVinci must also set WriteFSR to True
         """
         fsrStreamName = self.fsrStreamName(name)
         dstName = self.getProp('OutputFileSuffix')+name+self.fileExtension()
-        # TES setup - no harm to repeat this for each stream
-        FileRecordDataSvc().ForceLeaves         = True
-        FileRecordDataSvc().RootCLID            = 1
-        FileRecordDataSvc().PersistencySvc      = "PersistencySvc/FileRecordPersistencySvc"
-
-        # Persistency service setup -TODO: only once!
-        ApplicationMgr().ExtSvc += [ PoolDbCnvSvc("FileRecordCnvSvc",
-                                                  DbType = "POOL_ROOTTREE",
-                                                  ShareFiles = "YES" )
-                                     ]
         # Output stream to the same file
         FSRWriter = RecordStream( fsrStreamName,
                                   ItemList         = [ "/FileRecords#999" ],
@@ -104,7 +96,7 @@ class BaseDSTWriter(ConfigurableUser) :
         return []
     
     def addOutputStream(self, seq) :
-        # FSR stram first - TODO: fragile: needs an event to write the FSR!
+        # FSR stream first
         if self.getProp('WriteFSR'):
             fsrStream = self.fsrOutputStream(seq.name())
             if fsrStream != None :

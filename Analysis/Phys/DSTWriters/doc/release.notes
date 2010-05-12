@@ -1,9 +1,14 @@
-!$Id: release.notes,v 1.24 2010-05-10 12:36:33 jpalac Exp $
+!$Id: release.notes,v 1.25 2010-05-12 14:44:19 panmanj Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DSTWriters
 ! Responsible : Juan PALACIOS
 ! Purpose     : Python code for DST writers.
 !-----------------------------------------------------------------------------
+
+! 2010-05-12 Jaap Panman
+ - python/DSTWriters/Configuration.py
+  . Fix to instantiate FileRecordCnvSvc only once (in DaVinci Configurable)
+  . DaVinci().WriteFSR = True is now essental also for writing selDSTs
 
 ! ======================== DSTWriters v1r5 2010-05-10 ========================
 
