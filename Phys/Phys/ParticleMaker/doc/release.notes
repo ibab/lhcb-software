@@ -1,7 +1,13 @@
-! $Id: release.notes,v 1.113 2010-04-15 09:18:47 jpalac Exp $ 
+! $Id: release.notes,v 1.114 2010-05-12 18:54:41 jpalac Exp $ 
 ! Package     : ParticleMaker
 ! Responsible : Chris Jones, J. Palacios, Olivier Deschamps
 !==============================================================================
+
+! 2010-05-12 - Juan Palacios
+ - cmt/requirements
+  . Increase to v5r6
+ - src/ParticleMakerBase.cpp
+  . use new DVAlgorithm::primaryVectices() signature.
 
 !========================== ParticleMaker v5r5p1 2010-04-15 ==================
 
