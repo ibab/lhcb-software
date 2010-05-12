@@ -1,4 +1,4 @@
-// $Id: DVAlgorithm.h,v 1.52 2010-05-12 14:09:38 jpalac Exp $ 
+// $Id: DVAlgorithm.h,v 1.53 2010-05-12 21:24:49 jpalac Exp $ 
 // ============================================================================
 #ifndef DAVINCIKERNEL_DVALGORITHM_H
 #define DAVINCIKERNEL_DVALGORITHM_H 1
@@ -22,6 +22,7 @@
 // ============================================================================
 // from DaVinciKernel
 // ============================================================================
+#include "Kernel/IDVAlgorithm.h"
 #include "Kernel/IPhysDesktop.h"
 #include "Kernel/IOnOffline.h"
 #include "Kernel/IVertexFit.h"
@@ -106,13 +107,35 @@
  *  16/07/2004: P. Koppenburg: Make it a GaudiTupleAlg
  *  11/11/2004: P. Koppenburg: Adapt to next get<> and put<>. Merge with PreDV.
  */
-class DVAlgorithm : public GaudiTupleAlg {
+class DVAlgorithm : public GaudiTupleAlg, 
+                    virtual public IDVAlgorithm {
 public:
 
   /// Standard constructor
   DVAlgorithm( const std::string& name, ISvcLocator* pSvcLocator );
 
   virtual ~DVAlgorithm( ){ }; ///< Destructor
+
+  ///
+  virtual const GaudiAlgorithm* gaudiAlg() const 
+  {
+    return this;
+  }
+  
+  ///
+  virtual const LHCb::VertexBase* bestVertex(const LHCb::Particle* particle) const 
+  {
+    return this->bestPV(particle);
+    
+  }
+  ///
+  virtual const LHCb::Particle::Range particles() const 
+  {
+    return LHCb::Particle::Range(desktop()->particles().begin(),
+                                 desktop()->particles().end());
+    
+  }
+  
   
   /// Overridden from Gaudi Algo to produce a warning if not called by user
   virtual void setFilterPassed (bool state);  
@@ -242,7 +265,7 @@ public:
 public:
   
   /// Accessor for Vertex Fitter Tool by nickname 
-  inline IVertexFit* 
+  inline const IVertexFit* 
   vertexFitter ( const std::string& name = "" ) const
   {
     return getTool<IVertexFit> 
@@ -312,7 +335,7 @@ public:
    *  @return pointer to aquired tool 
    */
   inline IMassFit* 
-  massFitter ( const std::string name = "" ) const 
+  massFitter ( const std::string& name = "" ) const 
   {
     return getTool<IMassFit>
       ( name              , 
@@ -325,8 +348,8 @@ public:
    *  @param name the tool name/typename/nickname
    *  @return pointer to aquired tool 
    */
-  inline ILifetimeFitter* 
-  lifetimeFitter ( const std::string name = "" ) const 
+  inline const ILifetimeFitter* 
+  lifetimeFitter ( const std::string& name = "" ) const 
   {
     return getTool<ILifetimeFitter>
       ( name                  , 
@@ -352,7 +375,7 @@ public:
 public:
 
   /// accessor to Distance Calculator tool
-  inline IDistanceCalculator* distanceCalculator 
+  inline const IDistanceCalculator* distanceCalculator 
   ( const std::string& name = "" ) const 
   {
     return getTool<IDistanceCalculator>
