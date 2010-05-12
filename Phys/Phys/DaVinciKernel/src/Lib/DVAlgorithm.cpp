@@ -1,4 +1,4 @@
-// $Id: DVAlgorithm.cpp,v 1.74 2010-04-07 12:59:20 jpalac Exp $
+// $Id: DVAlgorithm.cpp,v 1.75 2010-05-12 11:44:34 jpalac Exp $
 // ============================================================================
 // Include 
 // ============================================================================
@@ -338,11 +338,11 @@ void DVAlgorithm::loadPVs() const {
 
   if ( !exist<LHCb::RecVertices>( m_PVLocation ) ) {
     m_PVs = 0 ;
-    Warning("No PV container at " + m_PVLocation,1).ignore();
+    Warning("No PV container at " + m_PVLocation,0).ignore();
   } else {
     m_PVs = get<LHCb::RecVertices>( m_PVLocation ); 
     if (m_PVs->empty()) {
-      Warning( "Empty PV container at "+m_PVLocation, 1).ignore() ;      
+      Warning( "Empty PV container at "+m_PVLocation, 0).ignore() ;      
     }
   }
 
@@ -446,7 +446,7 @@ const LHCb::VertexBase* DVAlgorithm::calculateRelatedPV(const LHCb::Particle* p)
 
     if (0==vb) {
       Warning("IRelatedPVFinder found no best vertex",
-              StatusCode::FAILURE, 10).ignore();
+              StatusCode::FAILURE, 0).ignore();
       return 0;
     }
     
@@ -454,7 +454,7 @@ const LHCb::VertexBase* DVAlgorithm::calculateRelatedPV(const LHCb::Particle* p)
 
     if (0==pv) {
       Warning("VertexBase -> RecVertex dynamic cast failed",
-              StatusCode::FAILURE, 10).ignore();
+              StatusCode::FAILURE, 0).ignore();
       return 0;
     } else {
       const LHCb::RecVertex* returnPV = desktop()->keep(pv);
@@ -497,7 +497,7 @@ const LHCb::VertexBase* DVAlgorithm::_getRelatedPV(const LHCb::Particle* part) c
       relateWithOverwrite(part, pv);
       return pv;
     } else {
-      Warning("Found no related vertex", StatusCode::FAILURE, 10).ignore();
+      Warning("Found no related vertex", StatusCode::FAILURE, 0).ignore();
       return 0;
     }
   } else {
