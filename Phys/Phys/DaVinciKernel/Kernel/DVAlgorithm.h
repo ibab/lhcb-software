@@ -1,4 +1,4 @@
-// $Id: DVAlgorithm.h,v 1.51 2010-03-18 19:10:54 jpalac Exp $ 
+// $Id: DVAlgorithm.h,v 1.52 2010-05-12 14:09:38 jpalac Exp $ 
 // ============================================================================
 #ifndef DAVINCIKERNEL_DVALGORITHM_H
 #define DAVINCIKERNEL_DVALGORITHM_H 1
@@ -165,10 +165,11 @@ public:
    * 
    * @author Juan Palacios juan.palacios@nikhef.nl
    **/
-  inline const LHCb::RecVertex::Container* primaryVertices() const
+  inline const LHCb::RecVertex::Range primaryVertices() const
   {
-    if (m_PVs==0) loadPVs();
-    return m_PVs;
+    return (exist<LHCb::RecVertex::Range>( m_PVLocation ) ) ? 
+      get<LHCb::RecVertex::Range>( m_PVLocation ) : 
+      LHCb::RecVertex::Range();
   }
 
   /**
@@ -533,9 +534,6 @@ private:
   /// The base class provides an instance of all type of tools
   StatusCode loadTools() ;
 
-  /// Load the primart vertices from 
-  void loadPVs() const;
-
   /// Method to create SelResult container
   StatusCode fillSelResult() ;
 
@@ -645,9 +643,7 @@ private:
 
   inline bool multiPV() const 
   {
-    const LHCb::RecVertices* pvs = this->primaryVertices();
-    return 0!=pvs ? pvs->size() > 1 : false;
-    //return m_multiPV;
+    return this->primaryVertices().size() > 1;
   }
   
   inline bool refitPVs() const 
@@ -703,8 +699,6 @@ private:
   std::vector<std::string> m_inputLocations ;
   /// User-defined Particle->PV relations locations
   std::vector<std::string> m_p2PVInputLocations ;
-  /// Pointer to event's RecVertices
-  mutable LHCb::RecVertex::Container* m_PVs;
   /// TES location of input PVs.
   std::string m_PVLocation;
   /// Don't use PVs

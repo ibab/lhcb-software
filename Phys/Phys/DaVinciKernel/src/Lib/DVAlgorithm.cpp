@@ -1,4 +1,4 @@
-// $Id: DVAlgorithm.cpp,v 1.75 2010-05-12 11:44:34 jpalac Exp $
+// $Id: DVAlgorithm.cpp,v 1.76 2010-05-12 14:09:38 jpalac Exp $
 // ============================================================================
 // Include 
 // ============================================================================
@@ -74,7 +74,6 @@ DVAlgorithm::DVAlgorithm
     , m_multiPV               ( false )
     , m_useP2PV               ( true  )
     , m_writeP2PV             ( true  )
-    , m_PVs                   ( 0 )
     , m_PVLocation            ("")
     , m_noPVs                 ( false )
 {
@@ -319,35 +318,6 @@ StatusCode DVAlgorithm::loadTools()
   return StatusCode::SUCCESS;
 }
 // ============================================================================
-// Load PVs
-// ============================================================================
-void DVAlgorithm::loadPVs() const {
-
-  if (m_noPVs) {
-    m_PVs=0;
-    if (msgLevel(MSG::VERBOSE)) {
-      verbose() << "PV loading disabled. No PVs used in event";
-    }
-    return;
-  }
-  
-
-  if (msgLevel(MSG::VERBOSE)) {
-    verbose() << "Getting PV from " << m_PVLocation << endmsg;
-  }
-
-  if ( !exist<LHCb::RecVertices>( m_PVLocation ) ) {
-    m_PVs = 0 ;
-    Warning("No PV container at " + m_PVLocation,0).ignore();
-  } else {
-    m_PVs = get<LHCb::RecVertices>( m_PVLocation ); 
-    if (m_PVs->empty()) {
-      Warning( "Empty PV container at "+m_PVLocation, 0).ignore() ;      
-    }
-  }
-
-}
-// ============================================================================
 // Execute
 // ============================================================================
 StatusCode DVAlgorithm::sysExecute () 
@@ -360,8 +330,6 @@ StatusCode DVAlgorithm::sysExecute ()
   Gaudi::Utils::AlgContext sentry ( ctx , this ) ;
 
   DaVinci::Guards::CleanDesktopGuard desktopGuard(desktop());
-
-  m_PVs = 0;
 
   StatusCode sc = desktop()->getEventInput();
   if ( sc.isFailure()) 
@@ -412,15 +380,15 @@ const LHCb::VertexBase* DVAlgorithm::calculateRelatedPV(const LHCb::Particle* p)
 
   if (msgLevel(MSG::VERBOSE)) verbose() << "DVAlgorithm::calculateRelatedPV" << endmsg;
   const IRelatedPVFinder* finder = this->relatedPVFinder();
-  const LHCb::RecVertex::Container* PVs = this->primaryVertices();
-  if (0==finder || 0==PVs) {
+  const LHCb::RecVertex::Range PVs = this->primaryVertices();
+  if ( 0==finder || PVs.empty() ) {
     Error("NULL IRelatedPVFinder or primary vertex container", StatusCode::FAILURE, 1 ).ignore() ;
     return 0;
   }
   // re-fit vertices, then look for the best one.
   if ( refitPVs() ) {
     if (msgLevel(MSG::VERBOSE)) verbose() << "Re-fitting " 
-                                          << PVs->size() << " PVs"<< endmsg;
+                                          << PVs.size() << " PVs"<< endmsg;
     const IPVReFitter* fitter = primaryVertexReFitter();
     if (0==fitter) {
       Error("NULL IPVReFitter", StatusCode::FAILURE, 1).ignore();
@@ -428,8 +396,8 @@ const LHCb::VertexBase* DVAlgorithm::calculateRelatedPV(const LHCb::Particle* p)
     }
     LHCb::RecVertex::ConstVector reFittedPVs;
     DaVinci::Guards::PointerContainerGuard<LHCb::RecVertex::ConstVector> guard(reFittedPVs);
-    for (LHCb::RecVertex::Container::const_iterator iPV = PVs->begin();
-         iPV != PVs->end(); ++iPV) {
+    for (LHCb::RecVertex::Range::const_iterator iPV = PVs.begin();
+         iPV != PVs.end(); ++iPV) {
       LHCb::RecVertex* reFittedPV = new LHCb::RecVertex(**iPV);
       if ( (fitter->remove(p, reFittedPV)).isSuccess() ) {
         reFittedPVs.push_back(reFittedPV); 
@@ -462,7 +430,7 @@ const LHCb::VertexBase* DVAlgorithm::calculateRelatedPV(const LHCb::Particle* p)
     }
   } else { // no PV re-fit
     if (msgLevel(MSG::VERBOSE)) verbose() << "Getting related PV from finder" << endmsg;
-    const LHCb::VertexBase* pv  = finder->relatedPV(p, *PVs);
+    const LHCb::VertexBase* pv  = finder->relatedPV(p, LHCb::RecVertex::ConstVector(PVs.begin(), PVs.end()));
 
     if (0!=pv) {
       if (msgLevel(MSG::VERBOSE)) verbose() << "Returning related vertex\n" 
