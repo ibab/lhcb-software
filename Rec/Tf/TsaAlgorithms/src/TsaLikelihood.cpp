@@ -104,7 +104,11 @@ StatusCode Likelihood::execute(std::vector<SeedTrack*>& seeds, std::vector<SeedH
 
   for ( std::vector<SeedTrack*>::iterator it = seeds.begin(); seeds.end() != it; ++it ) {
     SeedTrack* seed = *it;
-    if ( !seed ) { Warning( "Been passed a NULL SeedTrack pointer" ); continue; }
+    if ( !seed ) { 
+      Warning( "Been passed a NULL SeedTrack pointer", StatusCode::SUCCESS,0 ).ignore();
+      if ( msgLevel(MSG::DEBUG) )debug() << "Been passed a NULL SeedTrack pointer" <<endmsg;
+      continue; 
+    }
    
     if ( seed->live() == false ) continue;
    
@@ -152,7 +156,8 @@ StatusCode Likelihood::execute(std::vector<SeedTrack*>& seeds, std::vector<SeedH
       itP->hit()->tfHit()->hit()->isX() ? ++nXHit : ++nYHit; 
     }
     if (nXHit < 4 || nYHit < 3) {
-      warning() << "Invalid track: not enough hits " << endmsg; 
+      Warning("Invalid track: not enough hits ", StatusCode::SUCCESS,0).ignore();
+      if ( msgLevel(MSG::DEBUG) ) debug() << "Invalid track: not enough hits " << endmsg;
       seed->setLive(false); 
       continue;
     }
@@ -248,7 +253,8 @@ void Likelihood::expectationOT(const Line& aLine, const Parabola& aParab,
       OTPairs output;
       StatusCode sc = m_expectedHits->collect(aParab,aLine,testChan,output, sect);
       if (sc.isFailure()){
-        Warning("Failed to calculate expected hits",StatusCode::SUCCESS,1);
+        Warning("Failed to calculate expected hits",StatusCode::SUCCESS,0).ignore();
+        if ( msgLevel(MSG::DEBUG) )debug() << "Failed to calculate expected hits" <<endmsg;
       }
      
       for (OTPairs::iterator iter = output.begin() ;iter != output.end(); ++iter ){
@@ -285,7 +291,8 @@ void Likelihood::expectationIT(const Line& aLine, const Parabola& aParab,
       ITPairs output;
       StatusCode sc = m_expectedITHits->collect(aParab,aLine,testChan,output,sect);
       if (sc.isFailure()){
-        Warning("Failed to calculate expected hits",StatusCode::SUCCESS,1);
+        Warning("Failed to calculate expected hits",StatusCode::SUCCESS,0).ignore();
+        if ( msgLevel(MSG::DEBUG) )debug() << "Failed to calculate expected hits" <<endmsg;
       }
       int old = -1;
      
