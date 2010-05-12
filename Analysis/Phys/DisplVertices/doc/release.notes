@@ -5,6 +5,10 @@
 !               of events with exotic displaced vertices
 !-----------------------------------------------------------------------------
 
+! 2010-05-12 - Juan Palacios
+ - Adapt to new DVAlgorithm::primaryVertices() signature.
+ - Increase to v6r7
+
 !========================== DisplVertices v6r6 2010-04-20 ===================
 
 ! 2010-04-16 - Neal Gauvin
