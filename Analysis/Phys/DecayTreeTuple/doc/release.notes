@@ -4,6 +4,12 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2010-05-12 Juan Palacios
+ - src/TupleToolGeometry.cpp
+  . Adapt to new DVAlgorithm::primaryVertices() signature.
+ - cmt/requirements
+  . Increase version to v3r5.
+
 ! 2010-05-09 - V. Gligorov
  - TupleToolTriggerRecoStats - update for new HLT2 reconstruction. 
 
