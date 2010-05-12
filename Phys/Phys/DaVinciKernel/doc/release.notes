@@ -1,4 +1,4 @@
-!$Id: release.notes,v 1.346 2010-05-12 11:44:45 jpalac Exp $
+!$Id: release.notes,v 1.347 2010-05-12 14:10:24 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciKernel
 ! Responsible : J.P. Palacios
@@ -7,8 +7,9 @@
 ! 2010-05-12 - Juan Palacios
  - src/Lib/DVAlgorithm.cpp
   . Print some warnings only in summary at the end of the job.
+  . DVAlgorithm::primaryVertices() now returns LHCb::RecVertex::Range.
  - cmt/requirements
-  . Increase version to v8r6p2
+  . Increase version to v8r7
 
 !======================== DaVinciKernel v8r6p1 2010-04-09 ===================
 
