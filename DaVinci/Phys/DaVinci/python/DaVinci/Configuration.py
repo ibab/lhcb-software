@@ -1,7 +1,7 @@
 """
 High level configuration tools for DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.106 2010-05-10 11:29:33 jpalac Exp $"
+__version__ = "$Id: Configuration.py,v 1.107 2010-05-12 14:44:59 panmanj Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -434,7 +434,7 @@ class DaVinci(LHCbConfigurableUser) :
             NTupleSvc().OutputLevel = 1 
         if ( self.isPropertySet('ETCFile') and self.getProp("ETCFile") != "" ):
             if ( self.getProp("WriteFSR") ):
-                self.fsr(self.getProp("ETCFile"))
+                self.etcfsr(self.getProp("ETCFile"))
             self.etc(self.getProp("ETCFile"))
 
 ################################################################################
@@ -463,11 +463,34 @@ class DaVinci(LHCbConfigurableUser) :
         ApplicationMgr().OutStream += [ tagW ]
 
 ################################################################################
-# FSR
+# ETC + FSR - write fsr to etc file
 #
-    def fsr(self, fsrFile):
+    def etcfsr(self, fsrFile):
         """
         write out the FSR
+        it is IMPERATIVE to define the FSR outputstream before the etc
+        """
+        # Output stream
+        FSRWriter = RecordStream( "FileRecords",
+                                  ItemList         = [ "/FileRecords#999" ],
+                                  EvtDataSvc       = "FileRecordDataSvc",
+                                  Output           = "DATAFILE='"+fsrFile+"' TYP='POOL_ROOTTREE'",
+                                  )
+
+        # Write the FSRs to the same file as the events
+        ApplicationMgr().OutStream += [ FSRWriter ]
+        
+
+################################################################################
+# FSR (general requirements)
+#
+    def fsr(self):
+        """
+        general facilities to write out the FSR - DO NOT DEFINE OUTPUTSTREAM HERE
+
+        this is also needed if e.g. DSTs, selDSTs and so on are written and defined outside
+        the DaVinci configurable
+        make sure the FileRecordCnvSvc is only instantiated once!
         """
 
         # TES setup
@@ -480,15 +503,6 @@ class DaVinci(LHCbConfigurableUser) :
                                                   DbType = "POOL_ROOTTREE",
                                                   ShareFiles = "YES" )
                                      ]
-        # Output stream
-        FSRWriter = RecordStream( "FileRecords",
-                                  ItemList         = [ "/FileRecords#999" ],
-                                  EvtDataSvc       = "FileRecordDataSvc",
-                                  Output           = "DATAFILE='"+fsrFile+"' TYP='POOL_ROOTTREE'",
-                                  )
-
-        # Write the FSRs to the same file as the events
-        ApplicationMgr().OutStream += [ FSRWriter ]
         
         
 ################################################################################
@@ -568,6 +582,8 @@ class DaVinci(LHCbConfigurableUser) :
         self.defineMonitors()
         self.defineEvents()
         self.defineInput()
+        if ( self.getProp("WriteFSR") ):
+            self.fsr()
         self.rootFiles()
         
         # main sequence
