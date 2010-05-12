@@ -87,7 +87,7 @@ StatusCode TrackCreatorFromRecoTracks::newTracks() const
         std::ostringstream mess;
         mess << "Number of input tracks exceeds maximum of "
              << m_maxInputTracks << " -> Abort";
-        return Warning( mess.str(), StatusCode::SUCCESS, 10 );
+        return Warning( mess.str(), StatusCode::SUCCESS, 1 );
       }
       
       // make rich tracks
