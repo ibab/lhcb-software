@@ -14,6 +14,12 @@
 from Gaudi.Configuration import *
 from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
 
+def __monitor__ ( variable ,  label , center , window, id =None, nbins = 100 ) :
+      return "process ( monitor( %s,  Gaudi.Histo1DDef( '%s', %s , %s, %s), '%s' ) ) >> ~EMPTY " % (variable, label, center-window,center+window, nbins, id if id else variable )
+
+def __monitorMinMax__ ( variable ,  label , min , max, id =None, nbins = 100 ) :
+      return "process ( monitor( %s,  Gaudi.Histo1DDef( '%s', %s , %s, %s), '%s' ) ) >> ~EMPTY " % (variable, label, min,max, nbins, id if id else variable )
+
 class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
     '''
           Put only the most discriminating variables as slots:
@@ -100,9 +106,33 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
           3) mass window around Psi(2S)
           4) mass above 5 GeV
         '''
-        
-        
-        #--------------------------------------------
+
+        from Configurables import CombineParticles
+        from Hlt2SharedParticles.BasicParticles import Muons
+        #--------------------------------------------        
+        '''
+        unbiased same sign dimuon
+        '''
+        SameSignDiMu = Hlt2Member( CombineParticles
+                                   , "SameSignDiMu"
+                                   , DecayDescriptor = "[B0 -> mu+ mu+]cc"
+                                   , DaughtersCuts = { "mu+" : "(PT>%(UnbiasedDiMuonMuPt)s*MeV)"%  self.getProps() }  
+                                   
+                                   , CombinationCut = "(AM>%(UnbiasedDiMuonMinMass)s*MeV)"%  self.getProps()  
+                                   , MotherCut = "(PT>%(UnbiasedDiMuonPt)s*MeV)"\
+                                   "& (VFASPF(VCHI2/VDOF)<%(UnbiasedDiMuonVertexChi2)s )" %  self.getProps()
+                                   , InputPrimaryVertices = "None"
+                                   , UseP2PVRelations = False
+                                   , InputLocations  = [ Muons ]
+                                   )
+        line = Hlt2Line('DiMuonSameSign'
+                        , prescale = self.prescale 
+                        , algos = [Muons,SameSignDiMu]
+                        , postscale = self.postscale
+                        )
+
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2DiMuonSameSignDecision":   50211 } )
+         #--------------------------------------------
 
         filter = Hlt2Member(   FilterDesktop 
                                , "Filter"
@@ -113,6 +143,8 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
                                , InputPrimaryVertices = "None"
                                , UseP2PVRelations = False
                                , InputLocations  = [ DiMuon ]
+#                               , PreMonitor  =  __monitor__( "M","M(#mu#mu)",3097,200,'M_in',nbins=25) 
+ #                              , PostMonitor =  __monitor__( "M","M(#mu#mu)",3097,200,'M_out',nbins=25)
                                )
         
         #--------------------------------------------
@@ -135,12 +167,11 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
                     , Filter = { 'Code': "(MM>%(UnbiasedDiMuonLowMinMass)s*MeV)"\
                                  "& (PT>%(UnbiasedDiMuonLowPt)s*MeV) "\
                                  "& (MINTREE('mu-'==ABSID,PT)>%(UnbiasedDiMuonLowMuPt)s*MeV) "\
-                                 "& (VFASPF(VCHI2/VDOF)<%(UnbiasedDiMuonLowChi2)s )"%  self.getProps() }
+                                 "& (VFASPF(VCHI2/VDOF)<%(UnbiasedDiMuonLowChi2)s )"%  self.getProps()
+                                 }
                     , postscale = self.postscale
                     )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2UnbiasedDiMuonLowMassDecision":  50210 } )
-        
-
         #--------------------------------------------
         '''
         unbiased J/psi
@@ -150,8 +181,18 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
                     , Filter = { 'Code': "(ADMASS('J/psi(1S)')<%(UnbiasedJPsiMassWindow)s*MeV) "\
                                  "& (PT>%(UnbiasedJPsiPt)s*MeV) "\
                                  "& (MINTREE('mu-'==ABSID,PT)>%(UnbiasedJPsiMuPt)s*MeV) "\
-                                 "& (VFASPF(VCHI2/VDOF)<%(UnbiasedJPsiVertexChi2)s )"%  self.getProps() }
+                                 "& (VFASPF(VCHI2/VDOF)<%(UnbiasedJPsiVertexChi2)s )"%  self.getProps()
+                                 , 'PreMonitor' : __monitor__( "M","M(#mu#mu)",3097,200,'M_in',nbins=25) 
+                                 , 'PostMonitor' :  
+                                 __monitor__( "M","M(#mu#mu)",3097,200,'M_out',nbins=25)
+                                 +" & "+__monitorMinMax__( "PT","PT(#mu#mu)",0,10000,'JPsiPT_out',nbins=100)
+                                 +" & "+__monitorMinMax__( "MINTREE('mu-'==ABSID,PT)","MINTREE(mu-==ABSID,PT)",0,10000,'MuPT_out',nbins=100)
+                                 +" & "+__monitorMinMax__( "VFASPF(VCHI2/VDOF)","VFASPF(VCHI2/VDOF)",0,100,'JPsiVeterxChi2_out',nbins=100)                           
+            
+                                 }
                     , postscale = self.postscale
+                  
+            
                     )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2DiMuonUnbiasedJPsiDecision":  50201 } )
         
@@ -308,7 +349,15 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
                                    , "SimpleDiMuon"          
                                    , InputLocations = [ DiMuon ]
                                    , Code = MuPtCut +"&"+ MassCut +"&"+ MuIPCut +"&"+ LTimeCut
-                                 )
+                                   , PreMonitor = __monitor__( "M","M(#mu#mu)",3097,200,'M_in',nbins=25) 
+                                   , PostMonitor =  
+                                   __monitor__( "M","M(#mu#mu)",3097,200,'M_out',nbins=25)
+                                   +" & "+__monitorMinMax__( "PT","PT(#mu#mu)",0,10000,'JPsiPT_out',nbins=100)
+                                   +" & "+__monitorMinMax__( "MINTREE('mu-'==ABSID,PT)","MINTREE(mu-==ABSID,PT)",0,10000,'MuPT_out',nbins=100)
+                                   +" & "+__monitorMinMax__( "VFASPF(VCHI2/VDOF)","VFASPF(VCHI2/VDOF)",0,100,'JPsiVeterxChi2_out',nbins=100)
+                                   +" & "+__monitorMinMax__( "MIPDV(PRIMARY)","VFASPF(VCHI2/VDOF)",0,10,'MIPDV_out',nbins=100)
+                                   
+                                   )
         RefinedDiMuon = Hlt2Member( FilterDesktop
                                     , "RefinedDiMuon"          
                                     , InputLocations = [ SimpleDiMuon ]
@@ -340,7 +389,16 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
         '''
         line.clone( 'BiasedDiMuonMass'
                     , prescale = self.prescale 
-                    , SimpleDiMuon = {"Code" : MuPtCut +"&"+ MassTCut +"&"+ MuIPCut +"&"+ LTimeTCut }
+                    , SimpleDiMuon = {"Code" : MuPtCut +"&"+ MassTCut +"&"+ MuIPCut +"&"+ LTimeTCut
+
+                                   , 'PostMonitor' :  
+                                      __monitor__( "M","M(#mu#mu)",3097,200,'M_out',nbins=25)
+                                      +" & "+__monitorMinMax__( "PT","PT(#mu#mu)",0,10000,'JPsiPT_out',nbins=100)
+                                      +" & "+__monitorMinMax__( "MINTREE('mu-'==ABSID,PT)","MINTREE(mu-==ABSID,PT)",0,10000,'MuPT_out',nbins=100)
+                                      +" & "+__monitorMinMax__( "MIPDV(PRIMARY)","MIPDV(PRIMARY)",0,10,'MIPDV_out',nbins=100)
+                                      +" & "+__monitorMinMax__( "BPVLTIME('PropertimeFitter/properTime:PUBLIC')","BPVLTIME(PropertimeFitter/properTime:PUBLIC)",0,10,'LifeTime_out',nbins=100)
+                                      
+                                      }
                     , postscale = self.postscale
                     )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2BiasedDiMuonMassDecision"    : 50042 } )
