@@ -4,6 +4,9 @@
 ! Purpose      : Reconstruct Cherenkov Rings for Particle Identification
 !-----------------------------------------------------------------------------
 
+! 2010-05-12 - Rob Lambert
+ - Review of warnings
+
 !==================== RichRecTemplateRings v1r4 2010-03-19 =================
 ! 2010-03-05 - Chris Jones
  - Various changes to support the configuration of multiple reconstruction 

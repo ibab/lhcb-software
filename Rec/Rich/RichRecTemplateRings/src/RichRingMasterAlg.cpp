@@ -213,7 +213,8 @@ StatusCode RichRingMasterAlg::SelectBestMassFromRadiators(){
           // get the reco track
           const LHCb::Track * trtrack = dynamic_cast<const LHCb::Track *>((*track)->parentTrack());
           if ( !trtrack ){
-            Warning( "RichRingMasterAlg: SelectMassFromRadiators:Input track type is not Track -> RichRecTrack skipped" );
+            Warning( "RichRingMasterAlg: SelectMassFromRadiators:Input track type is not Track -> RichRecTrack skipped" 
+                     ).ignore();
            continue;
           }
 
