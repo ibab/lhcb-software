@@ -184,8 +184,8 @@ StatusCode BTaggingAnalysis::execute() {
   //----------------------------------------------------------------------
   //PhysDeskTop
   const Particle::ConstVector& parts = desktop()->particles();
-  const RecVertex::Container*  verts = primaryVertices();
-  debug() << "  Nr of rec. Vertices: " << verts->size() 
+  const RecVertex::Range  verts = primaryVertices();
+  debug() << "  Nr of rec. Vertices: " << verts.size() 
           << "  Nr of rec. Particles: " << parts.size() <<endreq;
   desktop()->saveDesktop();
 
@@ -447,7 +447,7 @@ StatusCode BTaggingAnalysis::execute() {
     return StatusCode::SUCCESS;
   }    
 
-  tuple -> column ("krec",  verts->size() );
+  tuple -> column ("krec",  verts.size() );
   tuple -> column ("RVx",   RecVert->position().x()/Gaudi::Units::mm);
   tuple -> column ("RVy",   RecVert->position().y()/Gaudi::Units::mm);
   tuple -> column ("RVz",   RecVert->position().z()/Gaudi::Units::mm);
@@ -716,15 +716,15 @@ const Particle* BTaggingAnalysis::chooseBHypothesis(const Particle::ConstVector&
 const RecVertex::ConstVector 
 BTaggingAnalysis::choosePrimary(const Particle* AXB,
                                 const MCParticle* BS,
-                                const RecVertex::Container* verts,
+                                const RecVertex::Range verts,
                                 const RecVertex*& RecVert,
                                 RecVertex& RefitRecVert) {
 
   RecVertex::ConstVector PileUpVtx(0); //will contain all the other primary vtx's
 
   double kdmin = 1000000;
-  RecVertex::Container::const_iterator iv;
-  for(iv=verts->begin(); iv!=verts->end(); iv++){
+  RecVertex::Range::const_iterator iv;
+  for(iv=verts.begin(); iv!=verts.end(); iv++){
     double var, ip, iperr;
     if(m_ChoosePV == "CheatPV") {
       var = fabs( BS->primaryVertex()->position().z() - (*iv)->position().z() );
@@ -760,7 +760,7 @@ BTaggingAnalysis::choosePrimary(const Particle* AXB,
   }
 
   //build a vector of pileup vertices --------------------------
-  for(iv=verts->begin(); iv!=verts->end(); iv++){
+  for(iv=verts.begin(); iv!=verts.end(); iv++){
     if( (*iv) == RecVert ) continue;
     PileUpVtx.push_back(*iv);
   }

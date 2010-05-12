@@ -1,4 +1,4 @@
-// $Id: BTaggingAnalysis.h,v 1.23 2010-03-03 16:49:13 musy Exp $
+// $Id: BTaggingAnalysis.h,v 1.24 2010-05-12 19:46:29 jpalac Exp $
 #ifndef USER_BTAGGINGANALYSIS_H 
 #define USER_BTAGGINGANALYSIS_H 1
 
@@ -62,7 +62,7 @@ class BTaggingAnalysis : public DVAlgorithm {
   const LHCb::RecVertex::ConstVector 
   choosePrimary(const LHCb::Particle* AXB,
                 const LHCb::MCParticle* BS,
-                const LHCb::RecVertex::Container* verts,
+                const LHCb::RecVertex::Range verts,
                 const LHCb::RecVertex*& RecVert,
                 LHCb::RecVertex& RefitRecVert) ;
   LHCb::FlavourTag* tagevent (const LHCb::Particle* AXBS);
