@@ -995,9 +995,9 @@ void DisplVertices::StudyEoverNbTrk(){
 
   // Retrieve Primary vertices and remove tracks that contributed
   if( false ){
-    const RecVertex::Container * PVs = desktop()->primaryVertices();
-    for ( RecVertex::Container::const_iterator i = PVs->begin(); 
-	  i != PVs->end() ; ++i ){
+    const RecVertex::Range PVs = this->primaryVertices();
+    for ( RecVertex::Range::const_iterator i = PVs.begin(); 
+	  i != PVs.end() ; ++i ){
       //RemoveTracks( tracks, (*i) ); see v4r7 for this function
     }
   }
@@ -2341,12 +2341,12 @@ StatusCode  DisplVertices::SaveGEC( Tuple & tuple,
   }
 
   //Find the upstream PV
-  const RecVertex::Container* primVertices = this->primaryVertices();
-  if((primVertices->size() == 0) && inputTracks.size() == 0)
+  const RecVertex::Range primVertices = this->primaryVertices();
+  if((primVertices.size() == 0) && inputTracks.size() == 0)
     return StatusCode::FAILURE; 
   vector<const RecVertex*> primVrtcs;
-  for( RecVertex::Container::const_iterator 
-        itPV = primVertices->begin(); primVertices->end() != itPV; ++itPV) {
+  for( RecVertex::Range::const_iterator 
+        itPV = primVertices.begin(); primVertices.end() != itPV; ++itPV) {
     const RecVertex* pvtx = *itPV;
     primVrtcs.push_back(pvtx);
   }
@@ -3073,13 +3073,13 @@ double DisplVertices::GetRFromBL( const Gaudi::XYZPoint& p ){
 //============================================================================
 void DisplVertices::GetUpstreamPV(){
 
-  const RecVertex::Container * PVs = desktop()->primaryVertices();
+  const RecVertex::Range PVs = this->primaryVertices();
   PV = NULL;
-  if( PVs == NULL ) return;
+  if( PVs.empty() ) return;
   double tmp = 1000;
 
-  for ( RecVertex::Container::const_iterator i = PVs->begin(); 
-        i != PVs->end() ; ++i ){
+  for ( RecVertex::Range::const_iterator i = PVs.begin(); 
+        i != PVs.end() ; ++i ){
     double z = (*i)->position().z();
     if( z < tmp ){
       tmp = z;
