@@ -1,4 +1,4 @@
-// $Id: PhysDesktop.cpp,v 1.103 2010-03-19 13:54:02 jpalac Exp $
+// $Id: PhysDesktop.cpp,v 1.104 2010-05-12 14:17:06 jpalac Exp $
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h"
 //#include "GaudiKernel/GaudiException.h"
@@ -157,10 +157,9 @@ const LHCb::Particle::ConstVector& PhysDesktop::particles() const{
 //=============================================================================
 const LHCb::RecVertex::Container* PhysDesktop::primaryVertices() const 
 {
-  //
-  //  Warning("IPhysDesktop::primaryVertices() obsolete. Use DVAlgotirhm::primaryVertices() directly. Getting PVs from DVAlgorithm",
-  //          1).ignore();
-  return m_dva->primaryVertices();
+  error() << "IPhysDekstop::primaryVertices() is obsolete! Use DVAlgotirhm::primaryVertices() directly." 
+          << endmsg;
+  return 0;
 }
 //=============================================================================
 // Provides a reference to its internal container of vertices
@@ -469,7 +468,7 @@ void PhysDesktop::saveP2PVRelations(const  LHCb::Particle::ConstVector& pToSave)
   
   // V.B.
   
-  if ( 0 == m_dva->primaryVertices() && "None" == m_primVtxLocn )
+  if ( "None" == m_primVtxLocn &&  !(m_dva->primaryVertices().empty() ) )
   {
     if ( msgLevel ( MSG::DEBUG ) )
     { debug() << " skip saveP2PVRelations: No Primary Vertices" << endmsg ; }
