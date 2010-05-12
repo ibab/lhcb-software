@@ -4,6 +4,9 @@
 ! Purpose     : Tsa algorithms
 !----------------------------------------------------------------------------
 
+! 2010-05-12 - Rob Lambert
+ - Remove obsolete options file TsaSeeding.py
+
 ! 2010-05-10 - Rob Lambert
  - Configure public DataManager tool correctly in new TsaAlgConf.py
 
