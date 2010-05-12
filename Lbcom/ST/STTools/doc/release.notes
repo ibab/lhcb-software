@@ -2,6 +2,9 @@
 ! Package manager : Jeroen van Tilburg
 !------------------------------------------------------------------------------
 
+! 2010-05-12 - Rob Lambert
+ - Added STOffline Conf, which replaces the files Brunel.opts and Brunel_EarlyData.opts
+
 !=========================== STTools v4r0 2010-04-09 ==========================
 !  2010-03-20 M.Needham
  - Remove STSignalToNoiseTool
