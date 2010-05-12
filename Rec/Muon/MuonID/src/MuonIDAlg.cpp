@@ -838,7 +838,7 @@ StatusCode MuonIDAlg::execute() {
       sc = calcSharedHits(pMuid, pMuids);
       if (sc.isFailure()){
         Warning(" calcSharedHits failed for track ",StatusCode::SUCCESS,0).ignore();
-        if (msgLevel(MSG::DEBUG) ) debug()<<" calcSharedHits failed for track " << << *iTrack << endmsg;
+        if (msgLevel(MSG::DEBUG) ) debug()<<" calcSharedHits failed for track " << *iTrack << endmsg;
       }
       
     } // long tracks
@@ -1944,7 +1944,7 @@ int MuonIDAlg::GetPbin(double p, int region){
   }
   debug() << "GetPbin: region+1 " << region+1 << " p " <<  p << " pBins address: " << pBins << endmsg;
   if(0 == pBins) 
-      Warning("GetPbin: No match to a pBins vector. Null pBins pointer",sc).ignore();
+      Warning("GetPbin: No match to a pBins vector. Null pBins pointer",StatusCode::SUCCESS).ignore();
   for(unsigned int iBin=0; iBin<pBins->size();++iBin){
     debug() << "GetPbin:\tiBin " <<  iBin << " pBins[iBin] " << (*pBins)[iBin] << endmsg;
     if(p < (*pBins)[iBin]) return iBin;
