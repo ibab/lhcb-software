@@ -1,4 +1,4 @@
-// $Id: CameraTool.cpp,v 1.15 2010-03-24 17:08:10 nmangiaf Exp $
+// $Id: CameraTool.cpp,v 1.16 2010-05-13 13:56:36 nmangiaf Exp $
 // Include files
 
 // local
@@ -369,6 +369,9 @@ std::string CameraTool::StripMessage(std::string what){
 
 bool CameraTool::MessageRateCheck(MessageLevel l, std::string who, std::string what, 
                                   int messagePeriod, bool IsPVSSMessageFlag){
+  // The following string(s) include the algorithms for which camera must not perform any rate check:
+  std::string SafeAlgo1 = "ToolSvc.RichUKL1Disable";
+  if(who.find(SafeAlgo1) != std::string::npos)return true; 
   time_t currentTime  = time(NULL);
   // Keys setting
   std::string key1;
@@ -546,7 +549,12 @@ int CameraTool::SendAndClear(MessageLevel o_l,const std::string& o_who,const std
       if(l != ICameraTool::CAM_COMMAND)if (m_out.entries()>0) m_out.tostream(s);
       if (m_camc->Connect()>0) {
         char buf[3];
-        while (  m_camc->rd(buf,2)==-2){};
+        // NM: Lines explanation:
+        // NM: m_camc = client that interfaces with the CAMERA server and handles the sending of messages.
+        // NM: int client::rd(char*,int);
+        // NM: Bug Fix: try to read the soket only 10 times, then give up:
+        int max_socket_readings = 0;
+        while (  (m_camc->rd(buf,2)==-2) && (max_socket_readings < 11) ){max_socket_readings++;}
         buf[2] = 0;
         if (strncmp(buf,"GO",2) == 0 ){
           success =true;
@@ -585,7 +593,8 @@ int CameraTool::SendAndClear(MessageLevel o_l,const std::string& o_who,const std
       }
       else if (numErrCN==5) {
         warning() << "Could not connect to any camera server!  -> Aborting message '" << ss.str()<<endmsg;
-        warning() << "Above message repeated 5 times. Aborting further messaging of this type."<<endmsg;
+        warning() << "Above message repeated 5 times. Aborting further messaging of this type. "
+                  << "An issue with the PC hist01 is possible."<<endmsg;
         numErrCN++;
       }
       // No else, just silently not print the message, after the error.

@@ -96,10 +96,100 @@ client::client(const char * host, unsigned short int port){
 int client::Connect(){
  #ifndef _WIN32
   //  printf("to connect\n");
-  if (connect (sock, (struct sockaddr *)&server, sizeof (server)) < 0) {
-    //perror ("connect()"); 
-    return -1;
-  }
+
+  // NM: The following messy code it has been added to overcome the 
+  // absence of any timeout in connect(). If the server is busy or stopped it
+  // hangs for > 10 sec. The way to overcome it is to switch back and for to non-blocking sokets.
+  
+  // The method followed is:
+  //If you are using a non-blocking socket and then call connect, it should return -1 and errno=EINPROGRESS.
+  //Then select the socket for writing with the timeout, and after select() 
+  //indicates it is "writteable",
+  //it has connected (or an error has occurred) so check with getsockopt() 
+  //the SO_ERROR at the SOL_SOCKET level... It should be zero if the connection was successful, 
+  //any other value is what errno should be if it was a blocking connect().
+  //If the timeout period expires, then you should be getting a 0 from select()... 
+  
+  // Set non-blocking 
+  long arg; 
+  fd_set myset; 
+  if( (arg = fcntl(sock, F_GETFL, NULL)) < 0) { 
+    //fprintf(stderr, "NM: Error fcntl(..., F_GETFL) (%s)\n", strerror(errno)); 
+    return 1; 
+  } 
+  arg |= O_NONBLOCK; 
+  if( fcntl(sock, F_SETFL, arg) < 0) { 
+    //fprintf(stderr, "NM: Error fcntl(..., F_SETFL) (%s)\n", strerror(errno)); 
+    return 1; 
+  } 
+  // Trying to connect with timeout 
+  int res = connect (sock, (struct sockaddr *)&server, sizeof (server));
+  if (res < 0) { 
+    if (errno == EINPROGRESS) { 
+      // Connected to a non-blocking soket.
+      //fprintf(stderr, "EINPROGRESS in connect() - selecting\n"); 
+      do { 
+        tv.tv_sec = 0; // Timeout in sec
+        tv.tv_usec = 10000; // Timeout in micro sec.
+        FD_ZERO(&myset); 
+        FD_SET(sock, &myset); 
+        res = select(sock+1, NULL, &myset, NULL, &tv); 
+        if (res < 0 && errno != EINTR) { 
+          // time out exceeded.
+          //fprintf(stderr, "Error connecting %d - %s\n", errno, strerror(errno)); 
+          return -1; 
+        } 
+        else if (res > 0) { 
+          // Socket selected for write 
+          socklen_t lon;
+          int valopt; 
+          lon = sizeof(int); 
+          if (getsockopt(sock, SOL_SOCKET, SO_ERROR, (void*)(&valopt), &lon) < 0) { 
+            // Connection not successful
+            //fprintf(stderr, "Error in getsockopt() %d - %s\n", errno, strerror(errno)); 
+            return -1; 
+          } 
+          // Check the value returned... 
+          if (valopt) { 
+            // Connection not successful
+            //fprintf(stderr, "Error in delayed connection() %d - %s\n", valopt, strerror(valopt) ); 
+            return -1; 
+          } 
+          break; 
+        } 
+        else { 
+          // Socket not ready for write
+          //fprintf(stderr, "Timeout in select() - Cancelling!\n"); 
+          return -1; 
+        } 
+      } while (1); 
+    } 
+    else { 
+      //fprintf(stderr, "Error connecting %d - %s\n", errno, strerror(errno)); 
+      return -1; 
+    } 
+  } 
+  // If it gets at this stage the connection was successful within the timeout
+  // Set to blocking mode again... 
+  if( (arg = fcntl(sock, F_GETFL, NULL)) < 0) { 
+    // failed to get back to blocking.
+    //fprintf(stderr, "Error fcntl(..., F_GETFL) (%s)\n", strerror(errno)); 
+    return -1; 
+  } 
+  arg &= (~O_NONBLOCK); 
+  if( fcntl(sock, F_SETFL, arg) < 0) { 
+    // failed to get back to blocking.
+    //fprintf(stderr, "Error fcntl(..., F_SETFL) (%s)\n", strerror(errno)); 
+    return -1; 
+  } 
+
+
+  // NM: hold peace of code, it hangs forever if the servers are not responding:
+//   if (connect (sock, (struct sockaddr *)&server, sizeof (server)) < 0) {
+//     //perror ("connect()"); 
+//     return -1;
+//   }
+
   //  printf("from connect\n");
   rdyn=0;
   return 1;

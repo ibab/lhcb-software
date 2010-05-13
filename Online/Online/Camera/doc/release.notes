@@ -4,6 +4,18 @@
 ! Purpose     : Package for the CAMERA application and supporting files.
 !-----------------------------------------------------------------------------
 
+! 2010-05-13 - Nicola Mangiafave
+- /src/CameraTool.cpp: fixed bug in dealing with servers up but not
+  responding. The Tool now checks the server availability 10 times for every 
+	message. If the server doesn't respond, it	gives up.
+- /src/client.h: added timeout to the Connect() function. It now uses
+	non-blocking sockets to handle the connection. It keeps trying connecting
+	for 10 ms	before giving up.
+- /src/CameraTool.cpp: added a list of algorithms that do not pass throught the
+	MessageRateChecks. So far the only one algorithm present is
+	ToolSvc.RichUKL1Disable.
+ 
+
 =============== v1r16 ===============
 
 ! 2010-03-24 - Nicola Mangiafave
