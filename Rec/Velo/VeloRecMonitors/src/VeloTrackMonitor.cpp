@@ -1,4 +1,4 @@
-// $Id: VeloTrackMonitor.cpp,v 1.31 2010-04-06 14:04:20 erodrigu Exp $
+// $Id: VeloTrackMonitor.cpp,v 1.32 2010-05-13 12:59:07 rlambert Exp $
 // Include files 
 
 // from Gaudi
@@ -578,7 +578,11 @@ StatusCode Velo::VeloTrackMonitor::monitorTracks ( )
           if ((track->checkType(Track::Long) != true) && m_debugLevel)
             debug()<<"Profiles for biased residual vs momentum are not filled: track is not Long Track"<<endmsg;
         }//end pitch
-        else warning()<< "Pitch is" << pitch << " for sensorID " << sensorID << endmsg;
+        else {
+          Warning("Pitch error",StatusCode::SUCCESS).ignore();
+          debug()<< "Pitch is" << pitch << " for sensorID " << sensorID << endmsg;
+        }
+        
         
       }//if m_biasedResidual
       else{
@@ -866,7 +870,8 @@ StatusCode Velo::VeloTrackMonitor::unbiasedResiduals (LHCb::Track *track )
       
       
       else {
-        warning()<< "Pitch is " << pitch << " for sensorID " << sensorID << endmsg;
+        Warning("Pitch error",StatusCode::SUCCESS).ignore();
+        debug()<< "Pitch is" << pitch << " for sensorID " << sensorID << endmsg;
       }
       
     }//end of fit node
