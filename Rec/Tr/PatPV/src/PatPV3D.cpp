@@ -79,7 +79,7 @@ StatusCode PatPV3D::execute() {
         m_outputVertices->insert(vertex);
       }
   } else {
-      warning() << "reconstructMultiPV failed!" << endmsg;
+    Warning("reconstructMultiPV failed!",scfit).ignore();
   }
   setFilterPassed(!m_outputVertices->empty());
 

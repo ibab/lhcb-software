@@ -4,6 +4,10 @@
 ! Purpose     : Compute primary vertices
 !-----------------------------------------------------------------------------
 
+! 2010-05-13 - Rob Lambert
+ - Review of warnings
+ - Fixed timebomb in PVOfflineTool.cpp
+
 ! 2010-05-05 - Rob Lambert
  - bugfix, added one too many "self" in PVConf
 

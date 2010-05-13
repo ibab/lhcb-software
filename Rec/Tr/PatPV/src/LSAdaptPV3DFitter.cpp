@@ -158,8 +158,7 @@ StatusCode LSAdaptPV3DFitter::fitVertex(const Gaudi::XYZPoint seedPoint,
     int fail;
     hess.Inverse(fail);
     if (0 != fail) {
-      warning() << "Error inverting hessian matrix" << endmsg;
-      return StatusCode::FAILURE;
+      return Warning("Error inverting hessian matrix",StatusCode::FAILURE,0);
     } else {
       hess.InvertFast();
     }
