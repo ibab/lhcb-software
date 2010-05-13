@@ -1,11 +1,11 @@
-#$Id: requirements,v 1.75 2010-03-03 16:34:13 musy Exp $
+#$Id: requirements,v 1.76 2010-05-13 08:41:20 jpalac Exp $
 #============================================================================
 # Created    : 2002-05-22
 # Maintainer : Marco Musy
 #
 #============================================================================
 package           FlavourTagging
-version           v11r2
+version           v11r3
 
 # Structure, i.e. directories to process. 
 #============================================================================
