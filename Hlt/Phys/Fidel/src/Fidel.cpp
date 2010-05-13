@@ -1,4 +1,4 @@
-// $Id: Fidel.cpp,v 1.14 2010-01-14 23:31:06 jpalac Exp $ // Include files
+// $Id: Fidel.cpp,v 1.15 2010-05-13 16:27:22 jpalac Exp $ // Include files
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/ToolFactory.h"
@@ -7,7 +7,7 @@
 #include "LoKi/PhysTypes.h"
 #include "LoKi/ATypes.h"
 #include "LoKi/IHybridFactory.h"
-
+#include "LoKi/LoKiPhys.h"
 #include "gsl/gsl_cdf.h"
 
 using namespace LHCb;
@@ -101,6 +101,8 @@ StatusCode Fidel::initialize() {
 //=============================================================================
 StatusCode Fidel::execute() {
 
+  using namespace LoKi::Cuts;
+
   if (msgLevel(MSG::DEBUG)) debug() << "==> Execute" << endmsg;
 
   setFilterPassed(false);
@@ -111,12 +113,14 @@ StatusCode Fidel::execute() {
   LHCb::Particle::ConstVector::const_iterator ip2;
 
   LHCb::Particle::ConstVector  Candidates;
-  StatusCode sc = particleFilter() -> filter (parts,Candidates);
-  if (!sc) return sc;
+  //  StatusCode sc = particleFilter() -> filter (parts,Candidates);
+  //  if (!sc) return sc;
   
   LHCb::Particle::ConstVector  Muons;
-  StatusCode scMu = particleFilter() -> filterByPID(parts,Muons,13,true);
-  if(!scMu)return scMu;
+  //  StatusCode scMu = particleFilter() -> filterByPID(parts,Muons,13,true);
+  LoKi::select(parts.begin(), parts.end(), std::back_inserter(Muons), "mu+" == ABSID);
+  
+  //  if(!scMu)return scMu;
   
 
   double impCand=0;
