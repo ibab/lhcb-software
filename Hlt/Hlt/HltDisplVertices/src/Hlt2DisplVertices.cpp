@@ -159,14 +159,10 @@ StatusCode Hlt2DisplVertices::execute() {
   RecVertex::ConstVector PVs;
   if( m_RCutMethod=="FromUpstreamPV" ){
     const RecVertex::Range PVc = this-> primaryVertices();
-    int size = PVc.size();
     if(msgLevel(MSG::DEBUG))
-      debug()<<"Retrieved "<< size <<" primary vertices" << endmsg;
+      debug()<<"Retrieved "<< PVc.size() <<" primary vertices" << endmsg;
     if( PVc.empty() ) return StatusCode::SUCCESS;
-    for( RecVertex::Range::const_iterator i = PVc.begin(); 
-         i != PVc.end(); ++i ){
-      PVs.push_back( *i );
-    }
+    PVs.insert(PVs.end(),PVc.begin(),PVc.end());
     //sort them by ascending z position
     sort( PVs.begin(), PVs.end(), SortPVz);
   }
@@ -180,15 +176,14 @@ StatusCode Hlt2DisplVertices::execute() {
   RecVertices::const_iterator iRV = RVs->begin(); 
   Gaudi::XYZPoint UpPV;
   if( m_RCutMethod=="FromUpstreamPV" ){
-    UpPV = (*PVs.begin())->position();
-    if(msgLevel(MSG::DEBUG))
-      debug() <<"Upstream PV position "<< UpPV << endmsg;
+    UpPV = PVs.front()->position();
+    if(msgLevel(MSG::DEBUG)) debug() <<"Upstream PV position "<< UpPV << endmsg;
   } else {
     UpPV = (*iRV)->position();
   }
 
-  iRV++; //Do not consider first one
-  for(; RVs->end() != iRV; iRV++) {
+  ++iRV; //Do not consider first one
+  for(; RVs->end() != iRV; ++iRV) {
     const RecVertex* RV = *iRV;
  
     if(msgLevel(MSG::DEBUG)) 
@@ -243,8 +238,8 @@ StatusCode Hlt2DisplVertices::execute() {
 
     //Criterias
     if( !InDet ){
-      if( R > m_RMin1 && mass >= m_MinMass1 && sumpt >= m_MinSumpt1 ) Sel1++;
-      Sel2++;
+      if( R > m_RMin1 && mass >= m_MinMass1 && sumpt >= m_MinSumpt1 ) ++Sel1;
+      ++Sel2;
     }
   }    
 
@@ -281,7 +276,7 @@ void Hlt2DisplVertices::GetPartsFromRecVtx(const RecVertex* RV,
   SmartRefVector< Track >::const_iterator iVtx = RV->tracks().begin();
     
   //Loop on RecVertex daughter tracks and save corresponding Particles
-  for( ; iVtx != RV->tracks().end(); iVtx++ ){
+  for( ; iVtx != RV->tracks().end(); ++iVtx ){
       
     const int key = (*iVtx)->key();
     GaudiUtils::VectorMap<int, const Particle *>::const_iterator it;
@@ -311,7 +306,7 @@ void Hlt2DisplVertices::CreateMap(){
     
     SmartRefVector< Track > old = tk->ancestors();
     for( SmartRefVector<Track>::const_iterator i = 
-	   old.begin(); i != old.end(); i++ ){
+	   old.begin(); i != old.end(); ++i ){
       
       if( !((*i)->checkType(Track::Velo)) ) continue;
       m_map.insert( (*i)->key(), (*j) );
@@ -349,7 +344,7 @@ void Hlt2DisplVertices::Kinematics( Particle::ConstVector & Parts,
   Gaudi::LorentzVector  mom;
 
   for( Particle::ConstVector::const_iterator i = 
-	 Parts.begin(); i != Parts.end(); i++ ){
+	 Parts.begin(); i != Parts.end(); ++i ){
     const Particle * p = (*i);
 
     // Sum the pT of all tracks of a RecVertex
@@ -368,7 +363,7 @@ void Hlt2DisplVertices::Kinematics( Particle::ConstVector & Parts,
 
 bool Hlt2DisplVertices::HasBackwardTracks( const RecVertex* RV ){
   SmartRefVector< Track >::const_iterator i = RV->tracks().begin();
-  for( ; i != RV->tracks().end(); i++ ){
+  for( ; i != RV->tracks().end(); ++i ){
     if ( (*i)->checkFlag( Track::Backward ) ) return true;
   }
   return false;
