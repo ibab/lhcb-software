@@ -9,6 +9,9 @@
 !               reconstruction algorithm for beam tracks
 !-----------------------------------------------------------------------------
 
+! 2010-05-13 - Rob Lambert
+ - review of warnings
+
 ! 2010-05-04 - Stefania Vecchi
 - add tighter cuts to NN neurons in physics case
 - add skipstation option to the recovery of Xtalk hits

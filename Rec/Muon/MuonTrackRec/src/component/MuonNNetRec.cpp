@@ -176,7 +176,7 @@ StatusCode MuonNNetRec::initialize ()
 void MuonNNetRec::handle ( const Incident& incident )
 { 
   if ( IncidentType::EndEvent == incident.type() ) {
-    verbose() << "End Event: clear everything"<<endmsg;
+    if(msgLevel(MSG::VERBOSE)) verbose() << "End Event: clear everything"<<endmsg;
     clear() ;
   }
 }
@@ -188,7 +188,7 @@ void MuonNNetRec::handle ( const Incident& incident )
 StatusCode MuonNNetRec::finalize ()
 
 {
-  debug()<<" MuonNNetRec::finalize"<<endmsg;
+  if(msgLevel(MSG::DEBUG)) debug()<<" MuonNNetRec::finalize"<<endmsg;
   return   GaudiTool::finalize() ;
 }
 
@@ -498,10 +498,14 @@ StatusCode MuonNNetRec::muonNNetMon(){
   }
   
   if(iterations == m_maxIterations)
-    warning() << "maximum number of iterations "<<m_maxIterations
-              <<" reached"<<endmsg;
+  {
+    
+    Warning("maximum number of iterations reached", StatusCode::SUCCESS,0).ignore();
+    if(msgLevel(MSG::DEBUG)) debug() <<  "maximum number of iterations reached"  <<m_maxIterations
+                                     <<" reached"<<endmsg;
+  }
   else {
-    debug() << "network convergence after "<<iterations<<" iterations"<<endmsg;
+    if(msgLevel(MSG::DEBUG)) debug() << "network convergence after "<<iterations<<" iterations"<<endmsg;
     m_recOK = true;
   }
 
@@ -521,7 +525,7 @@ StatusCode MuonNNetRec::muonNNetMon(){
       nl1++;
     }
   }
-  debug()<<"ON neurons after convergence: "<<neurons.size()<<endmsg;
+  if(msgLevel(MSG::DEBUG)) debug()<<"ON neurons after convergence: "<<neurons.size()<<endmsg;
   
   // timing
   m_timer->stop( m_timeconvNet );
@@ -616,13 +620,13 @@ StatusCode MuonNNetRec::muonNNetMon(){
     // are firing
     if( span >= m_span_cut && firstat > m_firing_cut) {
       if(m_XTalk) {
-        debug()<< " before Xtalk "<<muonTrack->getHits().size() <<" hits to the track"<<endmsg;
+        if(msgLevel(MSG::DEBUG)) debug()<< " before Xtalk "<<muonTrack->getHits().size() <<" hits to the track"<<endmsg;
         
         StatusCode sct = muonTrack->AddXTalk( trackhits, m_XtalkRadius, m_skipStation);
         
-        debug()<< " After Xtalk "<<muonTrack->getHits().size() <<" hits to the track"<<endmsg;
+        if(msgLevel(MSG::DEBUG)) debug()<< " After Xtalk "<<muonTrack->getHits().size() <<" hits to the track"<<endmsg;
         
-        if(!sct)  warning()<<"WARNING: problem adding XTalk pads"<<endmsg;
+        if(!sct)  Warning("problem adding XTalk pads",sct,0).ignore();
       }
       
       m_tracks.push_back(muonTrack);
@@ -635,14 +639,14 @@ StatusCode MuonNNetRec::muonNNetMon(){
   
   // here I have the list of good tracks selected by span cut.
   
-  debug()<<"selected tracks: "<< m_tracks.size()<<endmsg;
+  if(msgLevel(MSG::DEBUG)) debug()<<"selected tracks: "<< m_tracks.size()<<endmsg;
   
   
   // start track fitting
   
   StatusCode scf = trackFit();
   if(!scf) {
-    warning()<<"WARNING: problem in track fitting"<<endmsg;
+    Warning("problem in track fitting",sct,0).ignore();
   }
   
   // timing
@@ -725,7 +729,7 @@ StatusCode MuonNNetRec::copyToLHCbTracks()
     }
     tracks->insert( track );
   }
-  debug()<< " copying container to TES"<<endmsg;
+  if(msgLevel(MSG::DEBUG)) debug()<< " copying container to TES"<<endmsg;
   put( tracks, m_trackOutputLoc );
 
 
