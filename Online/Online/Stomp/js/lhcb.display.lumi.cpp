@@ -12,7 +12,7 @@ _loadFile('lhcb.display.fsm','css');
  *  @author  M.Frank
  */
 var LumiStatus = function(msg)   {
-  var table = lhcb.widgets.SubdetectorPage('Luminosity and Datataking');
+  var table = lhcb.widgets.SubdetectorPage('Luminosity and Datataking State');
 
   table.options = {logo:    '',
         	   logo_url:null,

@@ -12,7 +12,7 @@ _loadFile('lhcb.display.fsm','css');
  *  @author  M.Frank
  */
 var MuonStatus = function(msg)   {
-  var table = lhcb.widgets.SubdetectorPage('MUON');
+  var table = lhcb.widgets.SubdetectorPage('MUON Operation State');
 
   table.options = {logo:    lhcb_logo('http://cern.ch/lhcb-muon/images/lhcbmulogo.gif'),
         	   logo_url:'http://cern.ch/lhcb-public/en/Detector/Muon-en.html',

@@ -12,7 +12,7 @@ _loadFile('lhcb.display.fsm','css');
  *  @author  M.Frank
  */
 var OtStatus = function(msg)   {
-  var table = lhcb.widgets.SubdetectorPage('OT');
+  var table = lhcb.widgets.SubdetectorPage('OT Operation State');
 
   table.options = {logo:    lhcb_logo('http://cern.ch/lhcb-public/Objects/Detector/Tracking-system-diagram-2.jpg'),
         	   logo_url:'http://cern.ch/lhcb-public/en/Detector/Trackers-en.html',

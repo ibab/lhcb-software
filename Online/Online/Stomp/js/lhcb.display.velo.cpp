@@ -12,7 +12,7 @@ _loadFile('lhcb.display.fsm','css');
  *  @author  M.Frank
  */
 var VeloStatus = function(msg)   {
-  var table = lhcb.widgets.SubdetectorPage('VELO');
+  var table = lhcb.widgets.SubdetectorPage('VELO Operation State');
 
   table.options = {logo:     lhcb_logo('http://cern.ch/lhcb-vd/assets/images/Velo.jpg'),
         	   logo_url: 'http://cern.ch/lhcb-public/en/Detector/VELO-en.html',

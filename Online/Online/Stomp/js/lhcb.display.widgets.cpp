@@ -1029,11 +1029,13 @@ if ( !lhcb.widgets ) {
       tr.appendChild(Cell('Safety',3,options.style));
       tb.appendChild(tr);
     }
-    tr = document.createElement('tr');
-    tr.appendChild(Cell('Subdetector',1,'MonitorDataHeader'));
-    tr.appendChild(Cell('State',1,'MonitorDataHeader'));
-    tr.appendChild(Cell('',1,null));
-    tb.appendChild(tr);
+    if ( options.legend ) {
+      tr = document.createElement('tr');
+      tr.appendChild(Cell('Subdetector',1,'MonitorDataHeader'));
+      tr.appendChild(Cell('State',1,'MonitorDataHeader'));
+      tr.appendChild(Cell('',1,null));
+      tb.appendChild(tr);
+    }
     tab.richSafety = FSMItem('lbWeb.RICH_SAFETY',options.logger,true);
     tab.muonSafety = FSMItem('lbWeb.MUON_Safety',options.logger,true);
     tab.ttSafety   = FSMItem('lbWeb.TT_Safety',options.logger,true);
@@ -1439,7 +1441,7 @@ if ( !lhcb.widgets ) {
       tr1.appendChild(this.head_date=Cell(d.toString(),1,'MonitorTinyHeader'));
       this.head_date.id = 'current_time';
       this.head_date.textAlign = 'right';
-      cell = Cell(this.system+' Operation State&nbsp;'+lhcb_online_picture(),1,'MonitorBigHeader');
+      cell = Cell(this.system+'&nbsp;'+lhcb_online_picture(),1,'MonitorBigHeader');
       cell.style.textAlign = 'right';
       cell.onclick = function() { document.location = "http://lhcb.cern.ch";};
       tr1.appendChild(cell);

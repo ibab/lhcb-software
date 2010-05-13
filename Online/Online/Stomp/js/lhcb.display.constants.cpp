@@ -253,11 +253,20 @@ if ( !_lhcb().constants ) {
 	  size:   {width:  900,	height: 820}
 	},
 	subdetectors: {
-	  lumi: {
+	  daq_lumi: {
 	    src:    this.lhcb_display_url('lumi'),
 	    img:    this.images.lookprod,
-	    title:  'DAQ/LUMI',
+	    title:  'DAQ/Lumi',
 	    nick:   'lhcb-lumi-win',
+	    cls:    'Collimators16',
+	    iconCls:'Collimators32',
+	    size:   {width:  950,	height: 700}
+	  },
+	  daq_trigger: {
+	    src:    this.lhcb_display_url('trigger'),
+	    img:    this.images.lookprod,
+	    title:  'DAQ/Trigger',
+	    nick:   'lhcb-trigger-win',
 	    cls:    'Collimators16',
 	    iconCls:'Collimators32',
 	    size:   {width:  950,	height: 700}
