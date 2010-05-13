@@ -108,7 +108,7 @@ namespace Rich
       if ( odin ) {
         counter("RICH_EventTime") += odin->gpsTime() ;
       } else {
-        if ( m_displayWarnings ) warning() << " Unable to retrieve ODIN " << endmsg;
+        if ( m_displayWarnings ) Warning(" Unable to retrieve ODIN ").ignore();
       }
       
       // Standard loop over Rich Smart IDs 
@@ -130,7 +130,7 @@ namespace Rich
             
             if ( !smartID.isValid() ) {
               if ( m_displayWarnings ) {
-                warning() << " Invalid Rich Smart ID " << endmsg;
+                Warning(" Invalid Rich Smart ID ").ignore();
               } 
               continue;
             }
@@ -144,7 +144,7 @@ namespace Rich
             
             if ( NULL == hist ) {
               if ( m_displayWarnings ) {
-                warning() << " Can not retrieve boundary FCN, invalid hardware ID " << endmsg;
+                Warning(" Can not retrieve boundary FCN, invalid hardware ID ").ignore();
               } 
               continue;
             }

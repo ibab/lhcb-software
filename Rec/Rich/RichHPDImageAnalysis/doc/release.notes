@@ -4,6 +4,9 @@
 ! Purpose     : HPD image analysis from accumulated hit maps
 !-----------------------------------------------------------------------------
 
+! 2010-05-13 - Rob Lambert
+ - Review warnings
+
 ! 2010-04-25 - Thomas BLAKE
  - Added histograms of difference to CondDB value
 
