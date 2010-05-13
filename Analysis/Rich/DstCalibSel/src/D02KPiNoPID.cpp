@@ -4,6 +4,9 @@
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
 
+// LoKi
+#include "LoKi/LoKiPhys.h"
+
 // local
 #include "D02KPiNoPID.h"
 
@@ -83,6 +86,9 @@ StatusCode D02KPiNoPID::execute() {
 //=========================================================================
 StatusCode D02KPiNoPID::MakeD02KPi(const LHCb::Particle::ConstVector& daughters ) 
 {
+
+  using namespace LoKi::Cuts;
+
   // Obtain Primary Vertices:
   const LHCb::RecVertex::Range vPrimaryVertices =
     this->primaryVertices();
@@ -111,9 +117,12 @@ StatusCode D02KPiNoPID::MakeD02KPi(const LHCb::Particle::ConstVector& daughters 
   LHCb::RecVertex::Range::const_iterator ivert;
 
   StatusCode sc = StatusCode::SUCCESS;
-  sc = particleFilter()->filterByPID( daughters, vKaons, "K+" );
+  LoKi::select( daughters.begin(), daughters.end(), std::back_inserter(vKaons), "K+"==ABSID);
+  
+  //  sc = particleFilter()->filterByPID( daughters, vKaons, "K+" );
   // CC Done by Default
-  sc = particleFilter()->filterByPID( daughters, vPions, "pi+");
+  LoKi::select( daughters.begin(), daughters.end(), std::back_inserter(vPions), "pi+"==ABSID);
+  //  sc = particleFilter()->filterByPID( daughters, vPions, "pi+");
   // CC Done by Defualt
 
   debug()<< "Number of pions found = "

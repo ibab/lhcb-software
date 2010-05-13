@@ -4,6 +4,9 @@
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
 
+// LoKi
+#include "LoKi/LoKiPhys.h"
+
 // local
 #include "Dstar2D0Pi.h"
 
@@ -86,7 +89,8 @@ StatusCode Dstar2D0Pi::MakeDstar2D0Pi(const LHCb::Particle::ConstVector& daughte
   debug()<< "Processing event number "
          << counter("Events").nEntries()
          << endmsg;
-
+  using namespace LoKi::Cuts;
+  
   // Obtain Primary Vertices:
   //const LHCb::RecVertex::Container* vPrimaryVertices =
   //  this->primaryVertices();
@@ -98,9 +102,11 @@ StatusCode Dstar2D0Pi::MakeDstar2D0Pi(const LHCb::Particle::ConstVector& daughte
   LHCb::RecVertex::ConstVector::const_iterator ivert;
 
   StatusCode sc = StatusCode::SUCCESS;
-  sc = particleFilter()->filterByPID( daughters, vD0s, "D0" );
+  LoKi::select( daughters.begin(), daughters.end(), std::back_inserter(vD0s), "D0"==ABSID);
+  //  sc = particleFilter()->filterByPID( daughters, vD0s, "D0" );
   // CC Done by Default
-  sc = particleFilter()->filterByPID( daughters, vPions, "pi+");
+  LoKi::select( daughters.begin(), daughters.end(), std::back_inserter(vPions), "pi+"==ABSID);
+  //  sc = particleFilter()->filterByPID( daughters, vPions, "pi+");
   // CC Done by Defualt
 
   debug()<< "Number of D0s found = "
@@ -253,7 +259,8 @@ StatusCode Dstar2D0Pi::MakeDstar2D0Pi(const LHCb::Particle::ConstVector& daughte
   const LHCb::Particle::ConstVector parts = desktop()->particles();
   LHCb::Particle::ConstVector vDstar;
   sc = StatusCode::SUCCESS;
-  sc = particleFilter()->filterByPID(parts, vDstar, "D*(2010)+");
+  LoKi::select( daughters.begin(), daughters.end(), std::back_inserter(vDstar), "D*(2010)+"==ABSID);
+  //  sc = particleFilter()->filterByPID(parts, vDstar, "D*(2010)+");
   // CC Done by Default
   LHCb::Particle::ConstVector::const_iterator oit;
   for (oit = vDstar.begin();  oit !=  vDstar.end(); oit++ ) {
