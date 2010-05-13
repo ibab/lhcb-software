@@ -212,7 +212,7 @@ void PatMatchTool::makeTrack( const LHCb::Track& velo,
   StatusCode sc = m_fastMomentumTool->calculate(&vState,&sState, 
                                                 qOverP, sigmaQOverP, true);
 
-  if(sc.isFailure()) warning()<<"momentum determination failed!"<<endmsg;
+  if(sc.isFailure()) Warning("momentum determination failed!",sc).ignore();
   
   Gaudi::TrackSymMatrix& cov = oState.covariance();
   cov(4,4) = sigmaQOverP * sigmaQOverP;

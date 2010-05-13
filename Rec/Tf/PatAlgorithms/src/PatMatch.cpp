@@ -60,7 +60,7 @@ StatusCode PatMatch::execute()
   
   StatusCode sc = m_matchTool->match( *velos , *seeds , *matchs);
   
-  if(sc.isFailure()) warning()<<"PatMatchTool failed"<<endmsg;
+  if(sc.isFailure()) Warning("PatMatchTool failed",sc).ignore();
   
   return sc;
 }

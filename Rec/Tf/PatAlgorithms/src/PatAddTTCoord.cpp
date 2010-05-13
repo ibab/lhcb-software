@@ -98,7 +98,7 @@ StatusCode PatAddTTCoord::addTTClusters( LHCb::Track& track){
   if(!sc){
 
     // ----------------------------------
-    if (  msgLevel( MSG::WARNING ) ) warning() << "--- Received no hits. Will add no hits to long tracks"  << endmsg;
+    if (  msgLevel( MSG::WARNING ) ) Warning("--- Received no hits. Will add no hits to long tracks",sc).ignore();
     // ----------------------------------
     
     return StatusCode::SUCCESS;
