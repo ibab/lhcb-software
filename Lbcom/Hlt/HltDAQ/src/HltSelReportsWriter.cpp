@@ -1,4 +1,4 @@
-// $Id: HltSelReportsWriter.cpp,v 1.1.1.1 2009-06-24 15:38:52 tskwarni Exp $
+// $Id: HltSelReportsWriter.cpp,v 1.2 2010-05-13 14:31:57 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -399,9 +399,7 @@ StatusCode HltSelReportsWriter::execute() {
   }
   if( nBank>1 ){
     std::ostringstream mess;
-    mess << "HltSelReports is huge " 
-	 << hltSelReportsBank.size()*4/1000.0
-	 << " kBytes. Saved in " << nBank << " separate RawBanks ";    
+    mess << "HltSelReports is huge; Saved in " << nBank << " separate RawBanks ";    
     Warning( mess.str(), StatusCode::SUCCESS, 100 );
   }
     
