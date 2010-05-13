@@ -4,6 +4,9 @@
 ! Purpose     : Checker for pattern recognition
 !-----------------------------------------------------------------------------
 
+! 2010-05-13 - Rob Lambert
+ - Review warnings
+
 =========================== PatChecker v3r7 2010-03-19 =======================
 ! 2010-03-01 - Piotr Morawski
 - fixed small bug in PrimaryVertexChecker

@@ -106,8 +106,9 @@ void PatTTCounter::count( const LHCb::MCParticle* part, std::vector<bool> flags,
   if ( !m_validData ) return;
 
   if ( flags.size() > m_name.size() ) {
-    warning() << "... Flag size " << flags.size() << " >  "
-              << m_name.size() << " declared selections" << endreq;
+    Warning("Flag size mismatch").ignore();
+    debug() << "... Flag size " << flags.size() << " >  "
+              << m_name.size() << " declared selections" << endmsg;
     return;
   }
 
