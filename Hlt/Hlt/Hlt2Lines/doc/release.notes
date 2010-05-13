@@ -8,6 +8,10 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2010-05-13 - Jacopo Nardulli
+ - Complete restructuring of the Hlt2B2DX Lines
+   See Talk at Gamma Frm trees WG on 29/4/2010
+
 ! 2010-05-12 - Johannes Albrecht
  - add some preliminary monitoring to Hlt2InclusivediMuonLines
    add same sign dimuon selection
