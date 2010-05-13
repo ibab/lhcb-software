@@ -63,7 +63,7 @@ protected:
 private:
 
   Particle2MCLinker* m_pLinker;
-  IVertexFit *m_vFit;
+  const IVertexFit *m_vFit;
   IMeasurementProvider* m_measProvider;
   ITrackVertexer * m_tFit; //Wouter's tool
   ITrackExtrapolator * m_extra;  //extrapolator

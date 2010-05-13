@@ -41,7 +41,7 @@ protected:
 
 private:
 
-  IVertexFit * m_vFit;
+  const IVertexFit * m_vFit;
   IMeasurementProvider* m_measProvider;
   ITransportSvc * m_transSvc;
   IGeometryInfo* m_lhcbGeo;

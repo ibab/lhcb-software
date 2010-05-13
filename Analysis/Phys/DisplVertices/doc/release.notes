@@ -6,6 +6,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2010-05-12 - Juan Palacios
+ - Adapt to new IDVAlgorithm interface
+
+! 2010-05-12 - Juan Palacios
  - Adapt to new DVAlgorithm::primaryVertices() signature.
  - Increase to v6r7
 
