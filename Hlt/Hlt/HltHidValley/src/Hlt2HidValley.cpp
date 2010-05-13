@@ -70,13 +70,13 @@ StatusCode Hlt2HidValley::execute() {
   LHCb::Tracks* inputTracks = get<LHCb::Tracks>(m_inputTracks);
   LHCb::Particle::ConstVector Pions ;
   const LHCb::Particle::ConstVector& inputParts = desktop()->particles();
-  const LHCb::RecVertex::Container* primVertices = this->primaryVertices();
+  const LHCb::RecVertex::Range primVertices = this->primaryVertices();
   LHCb::RecVertices* displacedVrtcs = 
                      get<LHCb::RecVertices>(m_inputDisplacedVertices);
-  if((primVertices->size() > 0) && inputParts.size() > 0) {
+  if((primVertices.size() > 0) && inputParts.size() > 0) {
     std::vector<const LHCb::RecVertex*> primVrtcs;
-    for(LHCb::RecVertex::Container::const_iterator 
-        itPV = primVertices->begin(); primVertices->end() != itPV; ++itPV) {
+    for(LHCb::RecVertex::Range::const_iterator 
+        itPV = primVertices.begin(); primVertices.end() != itPV; ++itPV) {
       const LHCb::RecVertex* pvtx = *itPV;
       primVrtcs.push_back(pvtx);
     }
