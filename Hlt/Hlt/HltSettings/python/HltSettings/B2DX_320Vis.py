@@ -18,44 +18,23 @@ class B2DX_320Vis :
 
 
         lines = [
-            'Hlt2B2D2hhBachelorReq3BodyWithKsSignal',
-            'Hlt2B2D2hhBachelorReq4BodyWithKsSignal',
-            'Hlt2B2D2hhBachelorReq3BodyWithoutKsSignal',
-            'Hlt2B2D2hhBachelorReq4BodyWithoutKsSignal',
-            'Hlt2B2D2hhhBachelorReq3BodyWithKsSignal',
-            'Hlt2B2D2hhhBachelorReq4BodyWithKsSignal',
-            'Hlt2B2D2hhhBachelorReq3BodyWithoutKsSignal',
-            'Hlt2B2D2hhhBachelorReq4BodyWithoutKsSignal',
-            'Hlt2B2D2hhKstarReq3BodyWithKsSignal',
-            'Hlt2B2D2hhKstarReq3BodyWithoutKsSignal',
-            'Hlt2B2D2hhKstarReq4BodyWithKsSignal',
-            'Hlt2B2D2hhKstarReq4BodyWithoutKsSignal',
-            'Hlt2B2D2hhBachelorReq3BodyWithKsBroadMW',
-            'Hlt2B2D2hhBachelorReq4BodyWithKsBroadMW',
-            'Hlt2B2D2hhBachelorReq3BodyWithoutKsBroadMW',
-            'Hlt2B2D2hhBachelorReq4BodyWithoutKsBroadMW',
-            'Hlt2B2D2hhhBachelorReq3BodyWithKsBroadMW',
-            'Hlt2B2D2hhhBachelorReq4BodyWithKsBroadMW',
-            'Hlt2B2D2hhhBachelorReq3BodyWithoutKsBroadMW',
-            'Hlt2B2D2hhhBachelorReq4BodyWithoutKsBroadMW',
-            'Hlt2B2D2hhKstarReq3BodyWithKsBroadMW',
-            'Hlt2B2D2hhKstarReq3BodyWithoutKsBroadMW',
-            'Hlt2B2D2hhKstarReq4BodyWithKsBroadMW',
-            'Hlt2B2D2hhKstarReq4BodyWithoutKsBroadMW',
-            'Hlt2B2D2XRobust3Body',
-            'Hlt2B2D2XRobust4Body',
-            'Hlt2B2D2hhBachelorWithKsSignal',
-            'Hlt2B2D2hhBachelorWithoutKsSignal',
-            'Hlt2B2D2hhhBachelorWithKsSignal',
-            'Hlt2B2D2hhhBachelorWithoutKsSignal',
-            'Hlt2B2D2hhKstarWithKsSignal',
-            'Hlt2B2D2hhKstarWithoutKsSignal',
-            'Hlt2B2D2hhBachelorWithKsBroadMW',
-            'Hlt2B2D2hhBachelorWithoutKsBroadMW',
-            'Hlt2B2D2hhhBachelorWithKsBroadMW',
-            'Hlt2B2D2hhhBachelorWithoutKsBroadMW',
-            'Hlt2B2D2hhKstarWithKsBroadMW',
-            'Hlt2B2D2hhKstarWithoutKsBroadMW'
+            'Hlt2B2D2hhhBachelorWithKsBroadMW'
+            , 'Hlt2B2D2hhBachelorBroadMW'    
+            , 'Hlt2B2D2hhhBachelorBroadMW'
+            , 'Hlt2B2D2hhKstarBroadMW'
+            , 'Hlt2B2D2hhhBachelorWithKsSignal'
+            , 'Hlt2B2D2hhBachelorSignal'    
+            , 'Hlt2B2D2hhhBachelorSignal'
+            , 'Hlt2B2D2hhKstarSignal'
+            , 'Hlt2B2D2XRobust3BodyMonitor' 
+            , 'Hlt2B2D2hhhBachelorWithKsSignalMonitor'
+            , 'Hlt2B2D2hhBachelorSignalMonitor'       
+            , 'Hlt2B2D2hhhBachelorSignalMonitor'       
+            , 'Hlt2B2D2hhKstarSignalMonitor'           
+            , 'Hlt2B2D2hhhBachelorWithKsBroadMWMonitor'
+            , 'Hlt2B2D2hhBachelorBroadMWMonitor' 
+            , 'Hlt2B2D2hhhBachelorBroadMWMonitor'
+            , 'Hlt2B2D2hhKstarBroadMWMonitor'
             ]
         
         return lines

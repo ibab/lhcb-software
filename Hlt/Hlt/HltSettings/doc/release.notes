@@ -3,6 +3,11 @@
 ! Responsible : Patrick Koppenburg, Gerhard Raven
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
+
+! 2010-05-13 - Jacopo Nardulli
+ - Complete restructuring and renaming of the Hlt2B2DX Lines
+   See Talk at Gamma Frm trees WG on 29/4/2010
+
 ! 2010-05-12 - Johannes Albrecht
  - adapt default HLT2 muon lines
 
