@@ -4,6 +4,9 @@
 ! Purpose     : Accounting of LumiSummaries (offline code)
 !-----------------------------------------------------------------------------
 
+! 2010-05-13 - Rob Lambert
+ - Review of warnings
+
 ! 2010-05-12 - Jaap Panman
  - DumpFSR: 
    . now dumps the FSRs at FileOpen, after first event, finalize

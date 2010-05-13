@@ -1,4 +1,4 @@
-// $Id: LumiIntegrateFSR.cpp,v 1.7 2010-05-12 08:11:08 panmanj Exp $
+// $Id: LumiIntegrateFSR.cpp,v 1.8 2010-05-13 11:57:05 rlambert Exp $
 // Include files 
  
 // from Gaudi
@@ -243,7 +243,7 @@ void LumiIntegrateFSR::add_file() {
 
       // use tool to integrate the background subtracted result for the whole job
       if ( m_integratorTool->integrate( (*result) ) == StatusCode::FAILURE ) {
-      	warning() << "fail to integrate fsr using tool" << endmsg; 
+      	Warning("fail to integrate fsr using tool").ignore(); 
       }
       info() << "Result for this file: " << *result << endmsg;
       delete result;
@@ -289,9 +289,10 @@ void LumiIntegrateFSR::add_fsr(LHCb::LumiIntegral* result,
 
   // read TimeSpanFSR to prepare DB access 
   if ( !exist<LHCb::TimeSpanFSRs>(m_fileRecordSvc, timeSpanRecordAddress) ) {
-    if ( msgLevel(MSG::WARNING) ) warning() << timeSpanRecordAddress << " not found" << endmsg ;
+    Warning("A timeSpan FSR was not found").ignore();
+    if ( msgLevel(MSG::DEBUG) ) debug() << timeSpanRecordAddress << " not found" << endmsg ;
   } else {
-    if ( msgLevel(MSG::DEBUG) ) verbose() << timeSpanRecordAddress << " found" << endmsg ;
+    if ( msgLevel(MSG::VERBOSE) ) verbose() << timeSpanRecordAddress << " found" << endmsg ;
     LHCb::TimeSpanFSRs* timeSpanFSRs = get<LHCb::TimeSpanFSRs>(m_fileRecordSvc, timeSpanRecordAddress);
     // look at all TimeSpanFSRs (normally only one)
     LHCb::TimeSpanFSRs::iterator tsfsr;
@@ -306,9 +307,10 @@ void LumiIntegrateFSR::add_fsr(LHCb::LumiIntegral* result,
 
   // read LumiFSR 
   if ( !exist<LHCb::LumiFSRs>(m_fileRecordSvc, fileRecordAddress) ) {
-    if ( msgLevel(MSG::WARNING) ) warning() << fileRecordAddress << " not found" << endmsg ;
+    Warning("A fileRecord FSR was not found").ignore();
+    if ( msgLevel(MSG::DEBUG) ) debug() << fileRecordAddress << " not found" << endmsg ;
   } else {
-    if ( msgLevel(MSG::DEBUG) ) verbose() << fileRecordAddress << " found" << endmsg ;
+    if ( msgLevel(MSG::VERBOSE) ) verbose() << fileRecordAddress << " found" << endmsg ;
     LHCb::LumiFSRs* lumiFSRs = get<LHCb::LumiFSRs>(m_fileRecordSvc, fileRecordAddress);
 
     // prepare an empty summary for this BXType
