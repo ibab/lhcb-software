@@ -1,6 +1,6 @@
-# $Id: requirements,v 1.181 2010-04-30 15:31:42 jpalac Exp $
+# $Id: requirements,v 1.182 2010-05-13 21:26:16 jpalac Exp $
 package AnalysisSys
-version v4r4
+version v4r5
 
 branches doc cmt
 
@@ -17,7 +17,6 @@ use  FlavourTagging             v11r2    Phys   # Marco Musy
 
 use  DaVinciMonitors            v1r10    Phys   # Patrick Koppenburg
 use  RichPIDQC                  v1r3     Rich   # Chris Jones
-use  DstCalibSel                v1r2p1   Rich   # Andrew Powell
 use  KaliCalo                   v4r2     Phys   # Vanya Belyaev
 ####################################################################
 use  DaVinciMCTools     	v9r25p2  Phys   # Juan Palacios
