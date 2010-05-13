@@ -1,9 +1,16 @@
-!$Id: release.notes,v 1.24 2010-02-01 10:29:52 graven Exp $
+!$Id: release.notes,v 1.25 2010-05-13 16:27:46 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/Fidel
 ! Responsible : Sara Furcas
 ! Purpose     : Fidel
 !-----------------------------------------------------------------------------
+
+! 2010-05-13 - Juan PALACIOS
+ - src/Fidel.cpp
+  . Replace deprecated IParticleFilter::filterByPID by call to LoKi::select.
+  . Comment out deprecated call to IParticleFilter::filter. To-do: Replace this by something!
+ - cmt/requirements
+  . Increase to v1r4.
 
 !========================== Fidel v1r3p4 2010-02-01 ==================
 ! 2010-01-15 - Juan PALACIOS
