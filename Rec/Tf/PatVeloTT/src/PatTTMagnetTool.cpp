@@ -83,7 +83,7 @@ StatusCode PatTTMagnetTool::initialize ( ) {
   if (fabs( m_zCenterTT - zCenterTT ) > 50. ) {
     warning() << "Calculated center of TT station far away from nominal value: " 
               << zCenterTT << " wrt nominal " << m_zCenterTT << endmsg;
-    warning() << " Calculated value taken: " << zCenterTT << endmsg;
+    warning() << " Calculated value taken: " << zCenterTT << endmsg;    
     m_zCenterTT = zCenterTT;
   }
   // warning layers not in order of increasing z

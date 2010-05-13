@@ -202,7 +202,8 @@ void PatVeloTT::removeUsedTracks( std::vector<LHCb::Track*>& veloTracks){
     // Retrieving tracks
     LHCb::Tracks* stracks = get<LHCb::Tracks>(*itTrName);
     if(!stracks) {
-      warning() << "Tracks not found at location: " << *itTrName << endmsg; 
+      Warning("Tracks not found at given location: ",StatusCode::SUCCESS).ignore(); 
+      if(msgLevel(MSG::DEBUG)) debug() <<"Tracks not found at location: " << *itTrName << endmsg; 
       continue;
     }
 
