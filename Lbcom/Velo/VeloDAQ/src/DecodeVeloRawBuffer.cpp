@@ -1,4 +1,4 @@
-// $Id: DecodeVeloRawBuffer.cpp,v 1.26 2010-04-21 14:59:50 dhcroft Exp $
+// $Id: DecodeVeloRawBuffer.cpp,v 1.27 2010-05-13 14:39:24 rlambert Exp $
 
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/IIncidentSvc.h"
@@ -318,5 +318,7 @@ StatusCode DecodeVeloRawBuffer::failEvent(const std::string &ErrorText,
     // Fire the incident in execute()
     incidentSvc->fireIncident(Incident(name(),IncidentType::AbortEvent));
   }
-  return Error(ErrorText,StatusCode::SUCCESS);
+  unsigned int msgCount = 1;
+  if ( msgLevel(MSG::DEBUG) ) msgCount = 10;
+  return Error(ErrorText,StatusCode::SUCCESS,msgCount);
 }
