@@ -953,7 +953,7 @@ StatusCode MuonIDAlg::find_LandauParam(const double& p,const std::vector<int>& t
     if (p>m_MupBinsR4[2]  && p<m_MupBinsR4[3]) {for (int i=0;i<6;i++){parMu[i] = m_MuLanParR4_4[i]; } }
     if (p>m_MupBinsR4[3] ) {for (int i=0;i<6;i++){parMu[i] = m_MuLanParR4_5[i]; } } 
     for (int i=0;i<3;i++){parNonMu[i] = m_NonMuLanParR4[i]; }
-  } else return Error(" Not valid region ");
+  } else return Error(" Not valid region ",StatusCode::FAILURE,1);
   return StatusCode::SUCCESS;
 }
 
@@ -1337,7 +1337,7 @@ StatusCode MuonIDAlg::calcMuonLL_dist(LHCb::MuonPID * pMuid, const double& p){
   // Find Landau's parameters for a given track:
   StatusCode sc = find_LandauParam(p, trackRegion, parMu, parNonMu);
   if (sc.isFailure()) {
-    return Error(" Find Landau Parameters: no valid region",sc);
+    return Error(" Find Landau Parameters: no valid region",sc,1);
   }
   
 
