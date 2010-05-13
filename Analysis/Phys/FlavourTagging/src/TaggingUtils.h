@@ -50,9 +50,9 @@ public:
 private:
 
   std::string m_ChoosePV ;
-  IDistanceCalculator *m_Dist;
+  const IDistanceCalculator *m_Dist;
   DVAlgorithm* m_dva;
-  IPVReFitter* m_pvReFitter;
+  const IPVReFitter* m_pvReFitter;
 
 };
 

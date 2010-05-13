@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.167 2010-03-08 11:23:21 jpalac Exp $
+! $Id: release.notes,v 1.168 2010-05-13 08:41:43 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/FlavourTagging
 ! Responsible : Marco Musy (marco.musy@cern.ch)
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
+
+! 2010-05-13 - Juan Palacios
+ - Adapt to new IDVAlgorithm interface
+ - Increase versiont o v11r3
 
 !========================== FlavourTagging v11r2 2010-03-08 ==================
 
