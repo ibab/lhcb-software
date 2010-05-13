@@ -78,7 +78,8 @@ ITrackProjector* TrackProjectorSelector::projector( const LHCb::Measurement& m )
 {
   Projectors::const_iterator i = m_projectors.find(m.type());
   if ( i == m_projectors.end() || i->second ==0 ) {
-    warning() << "No projector in for measurement of type " << m.type() << "!";
+    Warning("No projector in for measurement type ").ignore();
+    debug() << "No projector in for measurement type " << m.type() << "!";
     return 0;
   }
   return i->second;
