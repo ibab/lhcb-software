@@ -63,7 +63,9 @@ StatusCode BaseTrSegMakerFromRecoTracks::initialize()
 
   if ( !usedRads(Rich::Aerogel) )
   {
-    Warning("Track segments for Aerogel are disabled",StatusCode::SUCCESS).ignore();
+    debug() << "Track segments for Aerogel are disabled" << endmsg;
+    //Warning("Track segments for Aerogel are disabled",StatusCode::SUCCESS).ignore();
+    //made into debug as it is still too verbose as a warning
   }
   if ( !usedRads(Rich::Rich1Gas) )
   {
