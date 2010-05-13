@@ -245,14 +245,14 @@ StatusCode Hlt2DisplVerticesDEV::execute() {
   //Retrieve the RecVertex from PV official reconstruction
   RecVertex::ConstVector PVs;
   if( m_RCutMethod=="FromUpstreamPV" || m_RCutMethod=="CorrFromUpstreamPV" ){
-    const RecVertex::Container * PVc = this->primaryVertices();
-    int size = PVc->size();
+    const RecVertex::Range PVc = this->primaryVertices();
+    int size = PVc.size();
     if(msgLevel(MSG::DEBUG))
       debug()<<"Retrieved "<< size <<" primary vertices" << endmsg;
     plot( size, "NbPV", 0, 6);
-    if( PVc->empty() ) return StatusCode::SUCCESS;
-    for( RecVertex::Container::const_iterator i = PVc->begin(); 
-         i != PVc->end(); ++i ){
+    if( PVc.empty() ) return StatusCode::SUCCESS;
+    for( RecVertex::Range::const_iterator i = PVc.begin(); 
+         i != PVc.end(); ++i ){
       PVs.push_back( *i );
     }
     //sort them by ascending z position
@@ -703,12 +703,12 @@ StatusCode  Hlt2DisplVerticesDEV::SaveHidValSel( Tuple & tuple,  RecVertices* RV
   }
 
   //Find the upstream PV
-  const RecVertex::Container* primVertices = this->primaryVertices();
-  if((primVertices->size() == 0) && inputTracks->size() == 0)
+  const RecVertex::Range primVertices = this->primaryVertices();
+  if((primVertices.size() == 0) && inputTracks->size() == 0)
     return StatusCode::FAILURE; 
   vector<const RecVertex*> primVrtcs;
-  for( RecVertex::Container::const_iterator 
-        itPV = primVertices->begin(); primVertices->end() != itPV; ++itPV) {
+  for( RecVertex::Range::const_iterator 
+        itPV = primVertices.begin(); primVertices.end() != itPV; ++itPV) {
     const RecVertex* pvtx = *itPV;
     primVrtcs.push_back(pvtx);
   }

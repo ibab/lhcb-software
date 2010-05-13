@@ -673,12 +673,12 @@ StatusCode  Hlt2SelDV::SaveGEC( Tuple & tuple,
   }
 
   //Find the upstream PV
-  const RecVertex::Container* primVertices = this->primaryVertices();
-  if((primVertices->size() == 0) && inputTracks.size() == 0)
+  const RecVertex::Range primVertices = this->primaryVertices();
+  if((primVertices.size() == 0) && inputTracks.size() == 0)
     return StatusCode::FAILURE; 
   vector<const RecVertex*> primVrtcs;
-  for( RecVertex::Container::const_iterator 
-        itPV = primVertices->begin(); primVertices->end() != itPV; ++itPV) {
+  for( RecVertex::Range::const_iterator 
+        itPV = primVertices.begin(); primVertices.end() != itPV; ++itPV) {
     const RecVertex* pvtx = *itPV;
     primVrtcs.push_back(pvtx);
   }

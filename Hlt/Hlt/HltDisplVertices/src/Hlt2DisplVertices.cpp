@@ -158,13 +158,13 @@ StatusCode Hlt2DisplVertices::execute() {
   //Retrieve the RecVertex from PV official reconstruction
   RecVertex::ConstVector PVs;
   if( m_RCutMethod=="FromUpstreamPV" ){
-    const RecVertex::Container * PVc = this-> primaryVertices();
-    int size = PVc->size();
+    const RecVertex::Range PVc = this-> primaryVertices();
+    int size = PVc.size();
     if(msgLevel(MSG::DEBUG))
       debug()<<"Retrieved "<< size <<" primary vertices" << endmsg;
-    if( PVc->empty() ) return StatusCode::SUCCESS;
-    for( RecVertex::Container::const_iterator i = PVc->begin(); 
-         i != PVc->end(); ++i ){
+    if( PVc.empty() ) return StatusCode::SUCCESS;
+    for( RecVertex::Range::const_iterator i = PVc.begin(); 
+         i != PVc.end(); ++i ){
       PVs.push_back( *i );
     }
     //sort them by ascending z position
