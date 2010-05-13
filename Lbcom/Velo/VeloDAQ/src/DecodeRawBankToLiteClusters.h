@@ -1,4 +1,4 @@
-// $Id: DecodeRawBankToLiteClusters.h,v 1.2 2006-08-16 17:28:53 krinnert Exp $
+// $Id: DecodeRawBankToLiteClusters.h,v 1.3 2010-05-13 17:20:20 dhcroft Exp $
 #ifndef VELODAQ_DECODERAWBANKTOLITECLUSTERS_H 
 #define VELODAQ_DECODERAWBANKTOLITECLUSTERS_H 1
 
@@ -26,6 +26,7 @@ namespace VeloDAQ {
       const SiDAQ::buffer_word* bank, 
       const DeVeloSensor* sensor,
       const bool assumeChipChannels,
-      LHCb::VeloLiteCluster::FastContainer* clusters); 
+      LHCb::VeloLiteCluster::FastContainer* clusters,
+      int & bytesCount); 
 }
 #endif // VELODAQ_DECODERAWBANKTOLITECLUSTERS_H

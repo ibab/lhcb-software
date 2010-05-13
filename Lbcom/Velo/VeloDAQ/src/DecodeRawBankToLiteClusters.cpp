@@ -1,4 +1,4 @@
-// $Id: DecodeRawBankToLiteClusters.cpp,v 1.6 2010-03-17 18:33:19 krinnert Exp $
+// $Id: DecodeRawBankToLiteClusters.cpp,v 1.7 2010-05-13 17:20:20 dhcroft Exp $
 
 #include "VeloDet/DeVeloSensor.h"
 
@@ -9,7 +9,8 @@ unsigned int VeloDAQ::decodeRawBankToLiteClusters (
     const SiDAQ::buffer_word* bank, 
     const DeVeloSensor* sensor,
     const bool assumeChipChannels,
-    LHCb::VeloLiteCluster::FastContainer* clusters)
+    LHCb::VeloLiteCluster::FastContainer* clusters,
+    int& byteCount )
 {
   // construct new raw decoder, implicitely decodes header
   VeloRawBankDecoder decoder(bank);
@@ -21,17 +22,21 @@ unsigned int VeloDAQ::decodeRawBankToLiteClusters (
   // append them to the container
   unsigned int sensorNumber = sensor->sensorNumber();
   unsigned int stripNumber;
-  for (VeloRawBankDecoder::pos_iterator cpi = decoder.posBegin();
-       cpi != decoder.posEnd(); 
-       ++cpi) {
-    stripNumber = cpi->channelID();
-    if (assumeChipChannels) stripNumber = sensor->ChipChannelToStrip(stripNumber);
+  // only need to read ADCs to check for wrong bank length
+  VeloRawBankDecoder::posadc_iterator cpi = decoder.posAdcBegin();
+  for (;cpi != decoder.posAdcEnd(); ++cpi) {
+    stripNumber = cpi->first.channelID();
+    if (assumeChipChannels) stripNumber = 
+      sensor->ChipChannelToStrip(stripNumber);
     clusters->push_back(LHCb::VeloLiteCluster(
-          cpi->fracStripBits(),
-          cpi->pseudoSizeBits(),
-          cpi->hasHighThreshold(),
+          cpi->first.fracStripBits(),
+          cpi->first.pseudoSizeBits(),
+          cpi->first.hasHighThreshold(),
           LHCb::VeloChannelID(sensorNumber,stripNumber)));
   }
 
+  // fetch number of decoded bytes, including 4 byte header, without
+  // the padding bytes at the end.
+  byteCount = cpi.bytesRead();
   return decoder.nClusters();
 }

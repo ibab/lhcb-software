@@ -3,6 +3,10 @@
 ! Responsible : Kurt Rinnert, Chris Parkes
 !--------------------------------------------------------------------------
 
+! 2010-05-13 - David Hutchcroft
+ - Make lite decoding check full bank length, remove lite and full clusters 
+   from the conatiners for corrupted TELL1 banks then continue normally
+
 ! 2010-05-13 - Rob Lambert
  - Review warnings/errors
 
