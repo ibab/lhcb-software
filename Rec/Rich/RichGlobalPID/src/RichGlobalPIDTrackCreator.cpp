@@ -70,7 +70,7 @@ LHCb::RichGlobalPIDTrack * TrackCreator::createTrack( LHCb::RichRecTrack * track
 
   // Set Track reference
   const LHCb::Track * trtrack = dynamic_cast<const LHCb::Track *>(track->parentTrack());
-  if ( !trtrack ) Warning( "Input track type is not Track -> RichPID has null track reference" );
+  if ( !trtrack ) Warning( "Input track type is not Track -> RichPID has null track reference" ).ignore();
   newPID->setTrack( trtrack );
 
   // Set its SmartRef to RichRecTrack
@@ -108,7 +108,8 @@ void TrackCreator::finaliseTrack( LHCb::RichGlobalPIDTrack * track ) const
   // sanity check on best ID
   if ( deltaLLs[pid->bestParticleID()] > 1e-10 )
   {
-    warning() << "PID " << pid->key() << " best ID " << pid->bestParticleID()
+    Warning("non-zero deltaLL value").ignore();
+    if(msgLevel(MSG::DEBUG)) debug() << "PID " << pid->key() << " best ID " << pid->bestParticleID()
               << " has non-zero deltaLL value! " << deltaLLs[pid->bestParticleID()] << endmsg;
   }
   // Internally, the Global PID normalises the DLL values to the best hypothesis
