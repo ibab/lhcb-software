@@ -1,10 +1,13 @@
-! $Id: release.notes,v 1.83 2010-05-12 19:46:58 jpalac Exp $
+! $Id: release.notes,v 1.84 2010-05-13 08:37:55 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/FlavourTaggingChecker
 ! Responsible : Marco Musy (marco.musy@cern.ch)
 ! Purpose     : Checker package for Phys/FlavourTagging
 ! Twiki page  : https://twiki.cern.ch/twiki/bin/viewauth/LHCb/FlavourTagging
 !-----------------------------------------------------------------------------
+
+! 2010-05-12 - Juan Palacios
+ - Adapt to IDValgorithm interface.
 
 ! 2010-05-12 - Juan Palacios
  - BTaggingAnalysis

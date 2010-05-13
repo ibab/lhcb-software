@@ -54,7 +54,7 @@ private:
   LHCb::MCParticle* associatedofHEP(HepMC::GenParticle* );
 
   IPrintMCDecayTreeTool* m_debug;
-  IDistanceCalculator *m_Dist;
+  const IDistanceCalculator* m_Dist;
   DVAlgorithm* m_dva;
 
 };
