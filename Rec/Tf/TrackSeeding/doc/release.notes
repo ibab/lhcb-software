@@ -4,6 +4,9 @@
 ! Purpose     : Package for the Seeding Pattern Recognition algorithm
 !-----------------------------------------------------------------------------
 
+! 2010-05-13 - Rob Lambert
+ - Review of warnings
+
 !========================= TrackSeeding v1r4p3 2010-03-24 ====================
 ! 2010-03-22 - Rob Lambert
  - Fix some windows warnings savannah 64668
