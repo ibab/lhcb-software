@@ -215,10 +215,9 @@ StatusCode TrackInterpolator::filter(const FitNode& node, State& state)
 
   // check z position
   if ( std::abs(meas.z() - state.z()) > 1e-6) {
-    Warning( "Z positions of State and Measurement are not equal", 0, 1 );
-    debug() << "State at z=" << state.z() 
+    if( msgLevel(MSG::DEBUG) ) debug() << "Warning, State at z=" << state.z() 
             << ", Measurement at z=" << meas.z() << endmsg;
-    return StatusCode::FAILURE ;
+    return Warning( "Z positions of State and Measurement are not equal", StatusCode::FAILURE, 1 );
   }
 
   // get the state vector and cov

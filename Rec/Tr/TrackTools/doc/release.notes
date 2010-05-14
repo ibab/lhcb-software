@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2010-05-14 - Rob Lambert
+ - Fix for an ignore statuscode in TrackInterpolator
+
 ! 2010-05-12 - Rob Lambert
  - Review of warnings
 
