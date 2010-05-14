@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.138 2010-05-07 11:21:32 ibelyaev Exp $ 
+! $Id: release.notes,v 1.139 2010-05-14 07:48:21 jpalac Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhys
 ! Responsible : Vanya Belyaev
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
+
+! 2010-05-14 - Juan Palacios
+ - AuxDesktopBase, Particles25, PhysSources
+  . Adapt to change in IPhysDesktop::primaryVertices() signature.
 
 ! 2010-05-07 - Vanya Belyaev
   
