@@ -1,4 +1,4 @@
-// $Id: Algo.cpp,v 1.25 2010-02-09 18:08:32 ibelyaev Exp $
+// $Id: Algo.cpp,v 1.26 2010-05-14 08:08:37 jpalac Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -162,15 +162,15 @@ LoKi::Algo::vselect
   const LoKi::Types::VCuts&  cut   ) 
 {
   // get all PRIMARY particles from desktop
-  const LHCb::RecVertex::Container* prims = desktop()->primaryVertices();
+  const LHCb::RecVertex::Range prims = this->primaryVertices();
   //
-  if ( 0 == prims ) { Warning("No Primary vertices").ignore() ; }
+  if ( prims.empty() ) { Warning("No Primary vertices").ignore() ; }
   else 
   { /// temporary fix 
     int changed = 0 ;
     /// @todo remove this fix with NEW data
-    for ( LHCb::RecVertex::Container::const_iterator ipv = 
-            prims->begin() ; prims->end() != ipv ; ++ipv ) 
+    for ( LHCb::RecVertex::Range::const_iterator ipv = 
+            prims.begin() ; prims.end() != ipv ; ++ipv ) 
     {
       const LHCb::RecVertex* _rv = *ipv ;
       if ( 0 == _rv         ) { continue ; }
@@ -187,10 +187,10 @@ LoKi::Algo::vselect
     {
       Warning("LHCb::RecVertex::teqchue reset to Primary") ;
       debug() << " Number of modified vertices " 
-              << changed << "/" << prims->size() << endreq ;
+              << changed << "/" << prims.size() << endreq ;
     }
     //
-    vselect ( name , prims->begin() , prims->end() , cut ) ;
+    vselect ( name , prims.begin() , prims.end() , cut ) ;
   }
   // get all SECONDARY  particles from desktop
   const LHCb::Vertex::ConstVector&     secs  = desktop()->secondaryVertices();
