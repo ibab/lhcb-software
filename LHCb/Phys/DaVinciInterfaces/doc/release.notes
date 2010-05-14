@@ -5,6 +5,8 @@
 !-----------------------------------------------------------------------------
 
 ! 2010-05-12 - Juan Palacios
+ - Kernel/IRelatedPVFinder.h
+  . Now understands LHCb::RecVertex::Range.
  - Kernel/IPhysDesktop.h
   . IPhysDesktop::primaryVertices() returns const LHCb::RecVertex::Range,
     matching IDVAlgorithm interface.
