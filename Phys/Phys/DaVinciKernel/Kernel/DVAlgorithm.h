@@ -1,4 +1,4 @@
-// $Id: DVAlgorithm.h,v 1.53 2010-05-12 21:24:49 jpalac Exp $ 
+// $Id: DVAlgorithm.h,v 1.54 2010-05-14 15:07:10 ibelyaev Exp $ 
 // ============================================================================
 #ifndef DAVINCIKERNEL_DVALGORITHM_H
 #define DAVINCIKERNEL_DVALGORITHM_H 1
@@ -107,36 +107,149 @@
  *  16/07/2004: P. Koppenburg: Make it a GaudiTupleAlg
  *  11/11/2004: P. Koppenburg: Adapt to next get<> and put<>. Merge with PreDV.
  */
-class DVAlgorithm : public GaudiTupleAlg, 
-                    virtual public IDVAlgorithm {
+class DVAlgorithm : public extends1<GaudiTupleAlg,IDVAlgorithm>
+{ 
 public:
-
+  // ==========================================================================
   /// Standard constructor
   DVAlgorithm( const std::string& name, ISvcLocator* pSvcLocator );
-
-  virtual ~DVAlgorithm( ){ }; ///< Destructor
-
-  ///
-  virtual const GaudiAlgorithm* gaudiAlg() const 
-  {
-    return this;
-  }
-  
-  ///
+  /// destructor 
+  virtual ~DVAlgorithm( ){ }                                      // Destructor
+  // ==========================================================================
+public: // IDVAlgorithm
+  // ==========================================================================
+  /** Handle to the concrete implementation, or to the parent if
+   *  implementation does not derive from GaudiAlgorithm 
+   */
+  virtual const GaudiAlgorithm* gaudiAlg() const { return this; }
+  /// get the best related primary vertex 
   virtual const LHCb::VertexBase* bestVertex(const LHCb::Particle* particle) const 
   {
     return this->bestPV(particle);
-    
   }
-  ///
+  /// get all loaded particles 
   virtual const LHCb::Particle::Range particles() const 
   {
-    return LHCb::Particle::Range(desktop()->particles().begin(),
-                                 desktop()->particles().end());
+    return LHCb::Particle::Range ( desktop()->particles().begin() ,
+                                   desktop()->particles().end()   ) ;
     
   }
-  
-  
+  /** direct const access to container of input primary vertices.
+   *  @author Juan Palacios juan.palacios@nikhef.nl
+   */
+  inline const LHCb::RecVertex::Range primaryVertices() const
+  {
+    return ( exist<LHCb::RecVertex::Range>( m_PVLocation ) ) ? 
+      get<LHCb::RecVertex::Range>( m_PVLocation ) : 
+      LHCb::RecVertex::Range();
+  }
+  /** Accessor for IDistanceCalculator tools by name/typename/nickname
+   *  @see IDistanceCalculator
+   *  @param name the tool name/typename/nickname
+   *  @return pointer to aquired tool 
+   */
+  const IDistanceCalculator* distanceCalculator 
+  ( const std::string& name = "" ) const 
+  {
+    return getTool<IDistanceCalculator>
+      ( name , 
+        m_distanceCalculatorNames , 
+        m_distanceCalculators     , this ) ;
+  }
+  /** Accessor for ILifetimeFitter tools by name/typename/nickname
+   *  @see ILifetimeFitter
+   *  @param name the tool name/typename/nickname
+   *  @return pointer to aquired tool 
+   */
+  const ILifetimeFitter* 
+  lifetimeFitter ( const std::string& name = "" ) const 
+  {
+    return getTool<ILifetimeFitter>
+      ( name                  , 
+        m_lifetimeFitterNames ,
+        m_lifetimeFitters     , this ) ; 
+  }
+  /** Accessor for IVertexFit tools by name/typename/nickname
+   *  @see IVertexFit
+   *  @param name the tool name/typename/nickname
+   *  @return pointer to aquired tool 
+   */
+  const IVertexFit* 
+  vertexFitter ( const std::string& name = "" ) const
+  {
+    return getTool<IVertexFit> 
+      ( name , 
+        m_vertexFitNames ,
+        m_vertexFits     , this ) ;
+  } 
+  /** Accessor for IParticleReFitter tools by name/typename/nickname
+   *  @see IParticleReFitter
+   *  @param name the tool name/typename/nickname
+   *  @return pointer to aquired tool 
+   */
+  const IParticleReFitter* 
+  particleReFitter ( const std::string& name = "" ) const 
+  {
+    return getTool<IParticleReFitter>
+      ( name , 
+        m_particleReFitterNames ,
+        m_particleReFitters     , this ) ; 
+  }
+  /** Accessor for IParticleCombiner tools by name/typename/nickname
+   *  @see IParticleCombiner
+   *  @param name the tool name/typename/nickname
+   *  @return pointer to aquired tool 
+   */
+  const IParticleCombiner* 
+  particleCombiner ( const std::string& name = "" ) const 
+  {
+    return getTool<IParticleCombiner> 
+      ( name , 
+        m_particleCombinerNames ,
+        m_particleCombiners     , this ) ;
+  }
+  /** Accessor for IMassFit tools by name/typename/nickname
+   *  @see IMassFit
+   *  @param name the tool name/typename/nickname
+   *  @return pointer to aquired tool 
+   */
+  const IMassFit* 
+  massFitter ( const std::string& name = "" ) const 
+  {
+    return getTool<IMassFit>
+      ( name              , 
+        m_massFitterNames ,
+        m_massFitters     , this ) ; 
+  }
+  /** Accessor for IDirectionFit tools by name/typename/nickname
+   *  @see IDirectionFit
+   *  @param name the tool name/typename/nickname
+   *  @return pointer to aquired tool 
+   */
+  const IDirectionFit* 
+  directionFitter ( const std::string& name = "" ) const 
+  {
+    return getTool<IDirectionFit>
+      ( name                   , 
+        m_directionFitterNames ,
+        m_directionFitters     , this ) ; 
+  }
+  /** Accessor for IPVReFitter tools by name/typename/nickname
+   *  @see IPVReFitter
+   *  @param name the tool name/typename/nickname
+   *  @return pointer to aquired tool 
+   */
+  const  IPVReFitter* 
+  primaryVertexReFitter ( const std::string& name = "" ) const 
+  {
+    return getTool<IPVReFitter>
+      ( name , 
+        m_pvReFitterNames ,
+        m_pvReFitters     , this ) ; 
+  }
+  // ==========================================================================
+public:
+  // ==========================================================================
   /// Overridden from Gaudi Algo to produce a warning if not called by user
   virtual void setFilterPassed (bool state);  
 
@@ -182,17 +295,6 @@ public:
     if ( 0!=m_pvRelator ) return m_pvRelator;
     const std::string& pvRelatorName = onOffline()->relatedPVFinderType();
     return getTool<IRelatedPVFinder>(pvRelatorName, m_pvRelator, this) ;      
-  }
-  /**
-   * direct const access to container of input primary vertices.
-   * 
-   * @author Juan Palacios juan.palacios@nikhef.nl
-   **/
-  inline const LHCb::RecVertex::Range primaryVertices() const
-  {
-    return (exist<LHCb::RecVertex::Range>( m_PVLocation ) ) ? 
-      get<LHCb::RecVertex::Range>( m_PVLocation ) : 
-      LHCb::RecVertex::Range();
   }
 
   /**
@@ -259,20 +361,8 @@ public:
     (this->desktop()->Particle2VertexRelations().i_removeFrom(part)).ignore();
     this->desktop()->relate(part, vert);
   }
-  
-  
-
 public:
   
-  /// Accessor for Vertex Fitter Tool by nickname 
-  inline const IVertexFit* 
-  vertexFitter ( const std::string& name = "" ) const
-  {
-    return getTool<IVertexFit> 
-      ( name , 
-        m_vertexFitNames ,
-        m_vertexFits     , this ) ;
-  } ;
   
   /// Accessor for Geometrical Displacement Calculation Tool
   inline IGeomDispCalculator* 
@@ -296,94 +386,7 @@ public:
         m_filters     , this ) ;
   }
 
-  /// Accessor for ParticleCombiner tool
-  inline IParticleCombiner* 
-  particleCombiner ( const std::string name = "" ) const 
-  {
-    return getTool<IParticleCombiner> 
-      ( name , 
-        m_particleCombinerNames ,
-        m_particleCombiners     , this ) ;
-  }
-  
-  /// Accessor for ParticleReFitters tool
-  inline IParticleReFitter* 
-  particleReFitter ( const std::string name = "" ) const 
-  {
-    return getTool<IParticleReFitter>
-      ( name , 
-        m_particleReFitterNames ,
-        m_particleReFitters     , this ) ; 
-  }
 
-  /// Accessor for IPVReFitter tool
-  inline IPVReFitter* 
-  primaryVertexReFitter ( const std::string name = "" ) const 
-  {
-    return getTool<IPVReFitter>
-      ( name , 
-        m_pvReFitterNames ,
-        m_pvReFitters     , this ) ; 
-  }
-
-
-public:
-  // ==========================================================================
-  /** Accessor for IMassFit tools by name/typename/nickname
-   *  @see IMassFit
-   *  @param name the tool name/typename/nickname
-   *  @return pointer to aquired tool 
-   */
-  inline IMassFit* 
-  massFitter ( const std::string& name = "" ) const 
-  {
-    return getTool<IMassFit>
-      ( name              , 
-        m_massFitterNames ,
-        m_massFitters     , this ) ; 
-  }
-  // ==========================================================================
-  /** Accessor for ILifetimeFitter tools by name/typename/nickname
-   *  @see ILifetimeFitter
-   *  @param name the tool name/typename/nickname
-   *  @return pointer to aquired tool 
-   */
-  inline const ILifetimeFitter* 
-  lifetimeFitter ( const std::string& name = "" ) const 
-  {
-    return getTool<ILifetimeFitter>
-      ( name                  , 
-        m_lifetimeFitterNames ,
-        m_lifetimeFitters     , this ) ; 
-  }
-  // ==========================================================================
-  /** Accessor for IDirectionFit tools by name/typename/nickname
-   *  @see IDirectionFit
-   *  @param name the tool name/typename/nickname
-   *  @return pointer to aquired tool 
-   */
-  inline IDirectionFit* 
-  directionFitter ( const std::string name = "" ) const 
-  {
-    return getTool<IDirectionFit>
-      ( name                   , 
-        m_directionFitterNames ,
-        m_directionFitters     , this ) ; 
-  }
-  // ==========================================================================
-  
-public:
-
-  /// accessor to Distance Calculator tool
-  inline const IDistanceCalculator* distanceCalculator 
-  ( const std::string& name = "" ) const 
-  {
-    return getTool<IDistanceCalculator>
-      ( name , 
-        m_distanceCalculatorNames , 
-        m_distanceCalculators     , this ) ;
-  }
-  
 public:
   
   /// Accessor for CheckOverlap Tool
@@ -456,8 +459,8 @@ public:
   inline const LHCb::ParticleProperty* pid ( const LHCb::ParticleID& p ) const ;
   // ==========================================================================  
 protected:
-
-
+  
+  
   template<class T> 
   bool container_exist(const std::string& location) 
   {

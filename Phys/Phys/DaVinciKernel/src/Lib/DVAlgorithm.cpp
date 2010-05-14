@@ -1,4 +1,4 @@
-// $Id: DVAlgorithm.cpp,v 1.76 2010-05-12 14:09:38 jpalac Exp $
+// $Id: DVAlgorithm.cpp,v 1.77 2010-05-14 15:07:10 ibelyaev Exp $
 // ============================================================================
 // Include 
 // ============================================================================
@@ -24,7 +24,7 @@
 DVAlgorithm::DVAlgorithm 
 ( const std::string& name, 
   ISvcLocator* pSvcLocator ) 
-  : GaudiTupleAlg ( name , pSvcLocator )
+  : base_class    ( name , pSvcLocator )
   //
     , m_desktop               ( 0 )
     , m_desktopName           ( "PhysDesktop" )

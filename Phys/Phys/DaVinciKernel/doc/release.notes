@@ -1,8 +1,54 @@
-!$Id: release.notes,v 1.348 2010-05-12 21:25:06 jpalac Exp $
+!$Id: release.notes,v 1.349 2010-05-14 15:07:10 ibelyaev Exp $
 !============================================================================
 ! Package     : DaVinciKernel
 ! Responsible : J.P. Palacios
 !============================================================================
+
+! 2010-05-14 - Vanya Belyaev
+
+ - DVAlgorithm:
+     change a bit the inheritance scheme for DVAlgorithm to enable SmartIF 
+     change a bit the signature of tool-accessors (add reference) 
+
+ - new files Kernel/ParticleFilters.h, src/Lib/ParticleFilters.cpp
+    new functions:   DaVinci::filter
+
+  /** filter the particles according to some criteria
+   *
+   *  As criteria one can use e.g. any LoKi-functor:
+   * 
+   *  @code
+   *
+   *   #include "LoKi/ParticleCuts.h"
+   *  
+   *   ...
+   *
+   *   LHCb::Particle::Range       input = ... ;
+   *   LHCb::Particle::ConstVector negative ;
+   *  
+   *   using namespace LoKi::Cuts ;
+   *   DaVinci::filter ( input , Q < 0 , negative ) ;
+   * 
+   *  @endcode 
+   * 
+   *  Also many boost::lambda idioms can be used:
+   *  
+   *  @code
+   *
+   *   #include "boost/lambda.hpp"
+   *  
+   *   ...
+   *
+   *   LHCb::Particle::Range       input = ... ;
+   *   LHCb::Particle::ConstVector negative ;
+   *  
+   *   using namespace boost::lambda ;
+   *   DaVinci::filter ( input , bind(&LHCb::Particle::charge,_1) < 0 , negative ) ;
+   * 
+   *  @endcode 
+   *
+   *
+ 
 
 ! 2010-05-12 - Juan Palacios
  - DVAlgorithm inherits from IDVAlgorithm.
