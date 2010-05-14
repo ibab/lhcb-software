@@ -1,4 +1,4 @@
-// $Id: GenericParticle2PVRelator.h,v 1.16 2010-03-03 13:06:23 jpalac Exp $
+// $Id: GenericParticle2PVRelator.h,v 1.17 2010-05-14 08:31:36 jpalac Exp $
 #ifndef GENERICPARTICLE2PVRELATOR_H 
 #define GENERICPARTICLE2PVRELATOR_H 1
 
@@ -58,29 +58,35 @@ public:
     return sc;
   }
   
+  const Particle2Vertex::LightWTable relatedPVs(const LHCb::Particle* particle,
+                                                const LHCb::RecVertex::Range& PVs) const
+  {
+    return relatedPVs(particle, PVs.begin(), PVs.end() );
+  }
+
 
   const Particle2Vertex::LightWTable relatedPVs(const LHCb::Particle* particle,
-                                               const LHCb::RecVertex::Container& PVs) const
+                                                const LHCb::RecVertex::Container& PVs) const
   {
     return relatedPVs(particle, PVs.begin(), PVs.end() );
   }
   
 
   const Particle2Vertex::LightWTable relatedPVs(const LHCb::Particle* particle,
-                                               const LHCb::RecVertex::ConstVector& PVs) const
+                                                const LHCb::RecVertex::ConstVector& PVs) const
   {
     return relatedPVs(particle, PVs.begin(), PVs.end() );
   }
 
   const Particle2Vertex::LightWTable relatedPVs(const LHCb::Particle* particle,
-                                               const LHCb::VertexBase::Container& PVs) const
+                                                const LHCb::VertexBase::Container& PVs) const
   {
     return relatedPVs(particle, PVs.begin(), PVs.end() );
   }
   
 
   const Particle2Vertex::LightWTable relatedPVs(const LHCb::Particle* particle,
-                                               const LHCb::VertexBase::ConstVector& PVs) const
+                                                const LHCb::VertexBase::ConstVector& PVs) const
   {
     return relatedPVs(particle, PVs.begin(), PVs.end() );
   }
@@ -93,6 +99,13 @@ public:
     return relatedPVs(particle, PVs.begin(), PVs.end() );
 
   }
+
+  virtual const LHCb::VertexBase* relatedPV(const LHCb::Particle* particle,
+                                            const LHCb::RecVertex::Range& PVs) const 
+  {
+    return relatedPV(particle, PVs.begin(), PVs.end());
+  }
+
 
   virtual const LHCb::VertexBase* relatedPV(const LHCb::Particle* particle,
                                             const LHCb::RecVertex::Container& PVs) const 
@@ -131,8 +144,8 @@ private:
 
   template <typename Iter> 
   inline const Particle2Vertex::LightWTable relatedPVs(const LHCb::Particle* particle,
-                                                      Iter begin,
-                                                      Iter end     ) const
+                                                       Iter begin,
+                                                       Iter end     ) const
   {
     Particle2Vertex::LightWTable table;
     if (0!=particle) {
