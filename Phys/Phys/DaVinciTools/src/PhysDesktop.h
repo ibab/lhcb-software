@@ -1,4 +1,4 @@
-// $Id: PhysDesktop.h,v 1.51 2010-01-15 08:39:48 jpalac Exp $
+// $Id: PhysDesktop.h,v 1.52 2010-05-14 08:31:10 jpalac Exp $
 #ifndef PHYSDESKTOP_H 
 #define PHYSDESKTOP_H 1
 
@@ -73,7 +73,7 @@ public:
 
   virtual const LHCb::Particle::ConstVector& particles() const;
 
-  virtual const LHCb::RecVertex::Container* primaryVertices() const;
+  virtual const LHCb::RecVertex::Range primaryVertices() const;
 
   virtual const LHCb::Vertex::ConstVector& secondaryVertices() const;
 
