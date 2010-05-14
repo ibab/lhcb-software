@@ -1,8 +1,13 @@
-! $Id: release.notes,v 1.544 2010-05-12 14:17:22 jpalac Exp $
+! $Id: release.notes,v 1.545 2010-05-14 08:31:51 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2010-05-14 - Juan Palacios
+ - PhysDesktop
+  . primaryVertices() returns RecVertex::Range, like IDVAlgorithm.
+ - GenericParticle2PVRelator understands RecVertexRange.
 
 ! 2010-05-12 - Juan Palacios
  - src/PhysDesktop.cpp
