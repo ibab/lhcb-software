@@ -646,7 +646,7 @@ StatusCode MuonNNetRec::muonNNetMon(){
   
   StatusCode scf = trackFit();
   if(!scf) {
-    Warning("problem in track fitting",sct,0).ignore();
+    Warning("problem in track fitting",scf,0).ignore();
   }
   
   // timing

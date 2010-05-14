@@ -9,6 +9,9 @@
 !               reconstruction algorithm for beam tracks
 !-----------------------------------------------------------------------------
 
+! 2010-05-14 - Rob Lambert
+ - Fixed typo from yesterday
+
 ! 2010-05-13 - Rob Lambert
  - review of warnings
 
