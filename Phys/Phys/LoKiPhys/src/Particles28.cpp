@@ -1,19 +1,13 @@
-// $Id: Particles28.cpp,v 1.2 2009-05-13 16:30:33 ibelyaev Exp $
+// $Id: Particles28.cpp,v 1.3 2010-05-14 15:28:33 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
 // GaudiuKernel
 // ============================================================================
-#include "GaudiKernel/SmartIF.h"
-// ============================================================================
-// DaVinciKernel
-// ============================================================================
-#include "Kernel/GetDVAlgorithm.h"
-#include "Kernel/DVAlgorithm.h"
-/// ===========================================================================
 // LoKi
 // ============================================================================
 #include "LoKi/Particles28.h"
+#include "LoKi/GetTools.h"
 // ============================================================================
 /** @file
  *  The file with functors for various "refit"
@@ -28,42 +22,6 @@ namespace
   const IParticleReFitter* const s_REFIT   = 0 ;
   /// the invalid tool
   const IMassFit*          const s_MFIT    = 0 ;
-  // ==========================================================================
-  const IParticleReFitter* getRF 
-  ( const std::string&      nick ,
-    const LoKi::AuxFunBase& base )
-  {
-    // get LoKi service
-    // const LoKi::Interface<LoKi::ILoKiSvc>& svc = base.lokiSvc() ;
-    LoKi::ILoKiSvc* svc = base.lokiSvc() ;
-    base.Assert( !(!svc) , "LoKi Service is not available!" ) ;
-    // get DVAlgorithm
-    DVAlgorithm* alg = Gaudi::Utils::getDVAlgorithm
-      ( SmartIF<IAlgContextSvc>( svc ) ) ;
-    base.Assert ( 0 != alg , "DVAlgorithm is not available" ) ;
-    const IParticleReFitter* rf = alg->particleReFitter( nick ) ;
-    if ( 0 == rf )
-    { base.Error("IParticleReFitter('"+nick+"') is not available") ; }
-    return rf ;
-  }
-  // ==========================================================================
-  const IMassFit* getMF 
-  ( const std::string&      nick ,
-    const LoKi::AuxFunBase& base )
-  {
-    // get LoKi service
-    // const LoKi::Interface<LoKi::ILoKiSvc>& svc = base.lokiSvc() ;
-    LoKi::ILoKiSvc* svc = base.lokiSvc() ;
-    base.Assert( !(!svc) , "LoKi Service is not available!" ) ;
-    // get DVAlgorithm
-    DVAlgorithm* alg = Gaudi::Utils::getDVAlgorithm
-      ( SmartIF<IAlgContextSvc>( svc ) ) ;
-    base.Assert ( 0 != alg , "DVAlgorithm is not available" ) ;
-    const IMassFit* mf = alg -> massFitter( nick ) ;
-    if ( 0 == mf )
-    { base.Error("IMassFit('"+nick+"') is not available") ; }
-    return mf ;
-  }
   // ==========================================================================
 } // end of anonymous namespace 
 // ============================================================================
@@ -86,7 +44,8 @@ LoKi::Particles::ReFitter::operator()
     return false ;
   }
   //
-  if ( !fitter() ) { setFitter ( getRF ( m_name , *this )  ) ; }
+  if ( !fitter() ) 
+  { setFitter ( LoKi::GetTools::particleReFitter ( *this , m_name )  ) ; }
   //
   const LHCb::Particle* _p  = p ;
   LHCb::Particle* __p = const_cast<LHCb::Particle*>( _p ) ;
@@ -143,7 +102,8 @@ LoKi::Particles::MassFitter::operator()
     return false ;
   }
   //
-  if ( !fitter() ) { setFitter ( getMF ( m_name , *this )  ) ; }
+  if ( !fitter() ) 
+  { setFitter ( LoKi::GetTools::massFitter ( *this , m_name ) ) ; }
   //
   const LHCb::Particle* _p  = p ;
   LHCb::Particle* __p = const_cast<LHCb::Particle*>( _p ) ;

@@ -1,4 +1,4 @@
-// $Id: PhysSources.h,v 1.5 2010-05-05 15:45:01 ibelyaev Exp $
+// $Id: PhysSources.h,v 1.6 2010-05-14 15:28:33 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PHYSSOURCES_H 
 #define LOKI_PHYSSOURCES_H 1
@@ -13,9 +13,9 @@
 // ============================================================================
 #include "Event/Particle.h"
 // ============================================================================
-// DaVinciKernel
+// DaVinciInterfaces
 // ============================================================================
-#include "Kernel/IPhysDesktop.h"
+#include "Kernel/IDVAlgorithm.h"
 // ============================================================================
 // LoKi
 // ============================================================================
@@ -161,22 +161,13 @@ namespace LoKi
       // ======================================================================
       /// constructor from the desktop and cuts 
       SourceDesktop 
-      ( const IPhysDesktop*          desktop = 0                          , 
+      ( const IDVAlgorithm*          desktop = 0                          , 
         const LoKi::PhysTypes::Cuts& cuts    =  
         LoKi::BasicFunctors<const LHCb::Particle*>::BooleanConstant(true) ) ; 
       /// constructor from the desktop and cuts 
       SourceDesktop 
       ( const LoKi::PhysTypes::Cuts& cuts        , 
-        const IPhysDesktop*          desktop = 0 ) ;
-      /// constructor from DaVinci Algorithm and cuts 
-      SourceDesktop
-      ( const DVAlgorithm*           alg  ,
-        const LoKi::PhysTypes::Cuts& cuts =  
-        LoKi::BasicFunctors<const LHCb::Particle*>::BooleanConstant(true) ) ;
-      /// constructor from DaVinci Algorithm and cuts 
-      SourceDesktop
-      ( const LoKi::PhysTypes::Cuts& cuts  , 
-        const DVAlgorithm*           alg   ) ;
+        const IDVAlgorithm*          desktop = 0 ) ;
       /// copy constructor
       SourceDesktop ( const SourceDesktop& right ) ;
       /// MANDATORY: virtual destructor 
@@ -191,30 +182,28 @@ namespace LoKi
     public:
       // ======================================================================
       /// get the desktop
-      const LoKi::Interface<IPhysDesktop>& desktop() const 
+      const LoKi::Interface<IDVAlgorithm>& desktop() const 
       { return m_desktop ; }      
       // ======================================================================
     public:
       // ======================================================================
       /// set the  desktop
-      void setDesktop ( const                 IPhysDesktop*  value ) 
+      void setDesktop ( const                 IDVAlgorithm*  value ) 
       { m_desktop = value ; }
       /// set the  desktop 
-      void setDesktop ( const LoKi::Interface<IPhysDesktop>& value ) 
+      void setDesktop ( const LoKi::Interface<IDVAlgorithm>& value ) 
       { m_desktop = value ; }
-      /// set the  desktop
-      void setDesktop ( const                 DVAlgorithm*   value ) ;
       // ======================================================================
     private:
       // ======================================================================
       /// data provder service 
-      mutable LoKi::Interface<IPhysDesktop>  m_desktop ;
+      mutable LoKi::Interface<IDVAlgorithm>  m_desktop ;
       /// 'on-flight' filter
       LoKi::PhysTypes::Cut m_cut ;
       // ======================================================================
     } ;    
     // ========================================================================
-  } // end of namespace LoKi::Particles  
+  } //                                         end of namespace LoKi::Particles  
   // ==========================================================================
   namespace Vertices 
   {
@@ -341,26 +330,20 @@ namespace LoKi
     class SourceDesktop
       : public LoKi::BasicFunctors<const LHCb::VertexBase*>::Source 
     { 
+      // ======================================================================
       typedef LoKi::BasicFunctors<const LHCb::VertexBase*>::Source _Source;
     public:
+      // ======================================================================
+      // ======================================================================
       /// constructor from the desktop and cuts 
       SourceDesktop 
-      ( const IPhysDesktop*          desktop = 0                          , 
+      ( const IDVAlgorithm*           desktop = 0                          , 
         const LoKi::PhysTypes::VCuts& cuts    =  
         LoKi::BasicFunctors<const LHCb::VertexBase*>::BooleanConstant(true) ) ; 
       /// constructor from the desktop and cuts 
       SourceDesktop 
       ( const LoKi::PhysTypes::VCuts& cuts        , 
-        const IPhysDesktop*           desktop = 0 ) ;
-      /// constructor from DaVinci Algorithm and cuts 
-      SourceDesktop
-      ( const DVAlgorithm*           alg  ,
-        const LoKi::PhysTypes::VCuts& cuts =  
-        LoKi::BasicFunctors<const LHCb::VertexBase*>::BooleanConstant(true) ) ;
-      /// constructor from DaVinci Algorithm and cuts 
-      SourceDesktop
-      ( const LoKi::PhysTypes::VCuts& cuts  , 
-        const DVAlgorithm*            alg   ) ;
+        const IDVAlgorithm*           desktop = 0 ) ;
       /// copy constructor
       SourceDesktop ( const SourceDesktop& right ) ;
       /// MANDATORY: virtual destructor 
@@ -371,27 +354,32 @@ namespace LoKi
       virtual result_type operator() () const ;
       /// OPTIONAL: the nice printout
       virtual std::ostream& fillStream ( std::ostream& o ) const ;
+      // ======================================================================
     public:
+      // ======================================================================
       /// get the desktop
-      const LoKi::Interface<IPhysDesktop>& desktop() const 
+      const LoKi::Interface<IDVAlgorithm>& desktop() const 
       { return m_desktop ; }      
+      // ======================================================================
     public:
+      // ======================================================================
       /// set the  desktop
-      void setDesktop ( const                 IPhysDesktop*  value ) 
+      void setDesktop ( const                 IDVAlgorithm*  value ) 
       { m_desktop = value ; }
       /// set the  desktop 
-      void setDesktop ( const LoKi::Interface<IPhysDesktop>& value ) 
+      void setDesktop ( const LoKi::Interface<IDVAlgorithm>& value ) 
       { m_desktop = value ; }
-      /// set the  desktop
-      void setDesktop ( const                 DVAlgorithm*   value ) ;
+      // ======================================================================
     private:
+      // ======================================================================
       /// data provder service 
-      mutable LoKi::Interface<IPhysDesktop>  m_desktop ;
+      mutable LoKi::Interface<IDVAlgorithm>  m_desktop ;
       /// 'on-flight' filter
       LoKi::PhysTypes::VCut m_cut ;
+      // ======================================================================
     } ;    
     // ========================================================================
-  } // end of namespace LoKi::Vertices 
+  } //                                         end of namespace LoKi::Vertices 
   // ==========================================================================
   namespace Cuts 
   {

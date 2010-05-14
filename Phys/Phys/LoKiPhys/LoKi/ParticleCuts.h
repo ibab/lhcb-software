@@ -1,4 +1,4 @@
-// $Id: ParticleCuts.h,v 1.41 2010-01-17 16:48:42 ibelyaev Exp $
+// $Id: ParticleCuts.h,v 1.42 2010-05-14 15:28:33 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PHYSPARTICLECUTS_H 
 #define LOKI_PHYSPARTICLECUTS_H 1
@@ -1828,7 +1828,7 @@ namespace LoKi
     const LoKi::Particles::PseudoRapidity                                 ETA ;
     // ========================================================================
     /** @typedef FILTER
-     *  Simple adapter which allows to use the tool IFilterCriterion
+     *  Simple adapter which allows to use the tool IParticleFilter
      *  as LoKi functor/cut
      * 
      *  @code
@@ -1836,7 +1836,7 @@ namespace LoKi
      *  const LHCb::Particle* p = ... ;
      *
      *  // get the tool 
-     *  const IFilterCriterion* filter = ... ;
+     *  const IParticleFilter* filter = ... ;
      *
      *  // construct a predicate 
      *  Cut cut = FILTER( filter ) ;
@@ -1846,7 +1846,7 @@ namespace LoKi
      *
      *  @endcode
      *
-     *  @see IFilterCriterion
+     *  @see IParticleFilter
      *  @see LoKi::Cuts::FILTER
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-03-20

@@ -1,4 +1,4 @@
-// $Id: Particles26.cpp,v 1.4 2010-05-05 15:45:03 ibelyaev Exp $
+// $Id: Particles26.cpp,v 1.5 2010-05-14 15:28:33 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -33,11 +33,6 @@ namespace
   // ==========================================================================
   /// the invalid tool
   const IDistanceCalculator* const s_TOOL     = 0 ;
-  // ==========================================================================
-  inline const IDistanceCalculator* getDC
-  ( const std::string&      nick ,
-    const LoKi::AuxFunBase& base )
-  { return LoKi::GetTools::distanceCalculator ( base , nick ) ; }
   // ==========================================================================
   /// the the valid tool name
   inline std::string toolName
@@ -159,7 +154,8 @@ StatusCode LoKi::Particles::DOCA::loadTool () const
   // tool is valid?
   if ( !tool() )
   {
-    const IDistanceCalculator* dc = getDC ( nickname() , *this ) ;
+    const IDistanceCalculator* dc = 
+      LoKi::GetTools::distanceCalculator ( *this , nickname() ) ;
     /// finally set the tool
     setTool ( dc ) ;
   }
@@ -439,7 +435,8 @@ StatusCode LoKi::Particles::ChildIP::loadTool () const
   // tool is valid?
   if ( !tool() )
   {
-    const IDistanceCalculator* dc = getDC ( m_nick , *this ) ;
+    const IDistanceCalculator* dc = 
+      LoKi::GetTools::distanceCalculator ( *this , m_nick ) ;
     /// finally set the tool
     setTool ( dc ) ;
   }

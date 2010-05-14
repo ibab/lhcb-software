@@ -1,15 +1,16 @@
-// $Id: GetPhysDesktop.cpp,v 1.2 2008-12-05 09:09:21 ibelyaev Exp $
+// $Id: GetPhysDesktop.cpp,v 1.3 2010-05-14 15:28:33 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
 // GaudiKernel
 // ============================================================================
 #include "GaudiKernel/IAlgContextSvc.h"
+#include "GaudiKernel/SmartIF.h"
 // ============================================================================
-// DaVinciKernel
+// DaVinciInterfaces 
 // ============================================================================
-#include "Kernel/DVAlgorithm.h"
-#include "Kernel/GetDVAlgorithm.h"
+#include "Kernel/IDVAlgorithm.h"
+#include "Kernel/GetIDVAlgorithm.h"
 // ============================================================================
 // LoKi
 // ============================================================================
@@ -24,20 +25,6 @@
  *  date 2008-01-16
  */
 // ============================================================================
-/*  get the desktop from DVAlgorithm class
- *  @param alg pointer to DVAlgorithm 
- *  @return the pointer to desktop
- *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
- *  date 2008-01-16
- */
-// ============================================================================
-IPhysDesktop* LoKi::getPhysDesktop ( const DVAlgorithm* alg ) 
-{
-  if ( 0 != alg ) { return alg -> desktop() ; }
-  LoKi::Report::Error("LoKi::getPhysDesktop: DVAlgorithm* points to NULL!") ;
-  return 0 ;
-}
-// ============================================================================
 /*  get the desktop from Algorithm Context Service 
  *  @param  pointer to Algorithm Context Service  
  *  @return the pointer to desktop
@@ -45,14 +32,14 @@ IPhysDesktop* LoKi::getPhysDesktop ( const DVAlgorithm* alg )
  *  date 2008-01-16
  */
 // ============================================================================
-IPhysDesktop* LoKi::getPhysDesktop ( IAlgContextSvc* svc ) 
+IDVAlgorithm* LoKi::getPhysDesktop ( const IAlgContextSvc* svc ) 
 {
   if ( 0 == svc ) 
   {
     LoKi::Report::Error("LoKi::getPhysDesktop: IAlgContextSvc* points to NULL!") ;
     return 0 ;
   }
-  return LoKi::getPhysDesktop ( Gaudi::Utils::getDVAlgorithm ( svc ) ) ;
+  return Gaudi::Utils::getIDVAlgorithm ( svc ) ;
 }
 // ============================================================================
 /** get the desktop from LoKi Service 
@@ -62,26 +49,27 @@ IPhysDesktop* LoKi::getPhysDesktop ( IAlgContextSvc* svc )
  *  date 2008-01-16
  */
 // ============================================================================
-IPhysDesktop* LoKi::getPhysDesktop ( LoKi::ILoKiSvc* svc  ) 
+IDVAlgorithm* LoKi::getPhysDesktop ( const LoKi::ILoKiSvc* svc  ) 
 {
   if ( 0 == svc ) 
   {
     LoKi::Report::Error("LoKi::getPhysDesktop: LoKi::ILoKiSvc* points to NULL!") ;
     return 0 ;
   }
-  return LoKi::getPhysDesktop ( SmartIF<IAlgContextSvc> ( svc ) ) ;
+  LoKi::ILoKiSvc* _svc = const_cast<LoKi::ILoKiSvc*> ( svc ) ;
+  return LoKi::getPhysDesktop ( SmartIF<IAlgContextSvc> ( _svc ) ) ;
 }
 // ==========================================================================
-/** get the desktop using the chain LoKi -> Algorithm Context -> DVAlgorithm
+/** get the desktop using the chain LoKi -> Algorithm Context -> IDVAlgorithm
  *  @return the pointer to desktop
  *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
  *  date 2008-01-16
  */
 // ==========================================================================
-IPhysDesktop* LoKi::getPhysDesktop () 
+IDVAlgorithm* LoKi::getPhysDesktop () 
 {
   const LoKi::Services& instance = LoKi::Services::instance() ;
-  LoKi::ILoKiSvc* svc = instance.lokiSvc() ;
+  const LoKi::ILoKiSvc* svc = instance.lokiSvc() ;
   if ( 0 == svc ) 
   {
     LoKi::Report::Error("LoKi::getPhysDesktop: LoKi::Services::loKiSvc() points to NULL!") ;

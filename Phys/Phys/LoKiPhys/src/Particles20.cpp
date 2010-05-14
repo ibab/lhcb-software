@@ -1,4 +1,4 @@
-// $Id: Particles20.cpp,v 1.12 2010-05-05 15:45:02 ibelyaev Exp $
+// $Id: Particles20.cpp,v 1.13 2010-05-14 15:28:33 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -9,7 +9,6 @@
 // ============================================================================
 // DaVinciKernel
 // ============================================================================
-#include "Kernel/IPhysDesktop.h"
 #include "Kernel/ILifetimeFitter.h"
 #include "Kernel/IDistanceCalculator.h"
 // ============================================================================
@@ -48,7 +47,7 @@ namespace
   /// "invalid" vertex 
   const LHCb::VertexBase* const s_VERTEX = 0 ;
   // ==========================================================================
-  /** get the IDistanceCalculator tool from DValgorith
+  /** get the IDistanceCalculator tool from IDVAlgorith
    *  @param tool to be updated 
    *  @param loki service 
    *  @param name nickname of full type/name of the tool
@@ -70,7 +69,7 @@ namespace
     return geo ;                           // RETURN
   }
   // ==========================================================================
-  /** get ILifetimeFitter tool from DVAlgorithm
+  /** get ILifetimeFitter tool from IDVAlgorithm
    *  @param func functor to be updated 
    *  @param loki service 
    *  @param name full type/name of the tool
@@ -128,7 +127,7 @@ LoKi::Particles::CosineDirectionAngleWithTheBestPV::operator()
     return -1000 ;                                                     // RETURN 
   }
   // get the best vertex from desktop and use it 
-  setVertex ( relatedVertex ( p ) ) ;
+  setVertex ( bestVertex ( p ) ) ;
   //
   return dira ( p ) ;
 }
@@ -164,12 +163,12 @@ LoKi::Particles::ImpParWithTheBestPV::operator()
     Error ( "LHCb::Particle* points to NULL, return -1000" ) ;
     return -1000 ;                                                     // RETURN 
   }
-  // get the IDistanceCalculator from DVAlgorithm 
+  // get the IDistanceCalculator from IDVAlgorithm 
   if ( 0 == tool() ) { loadTool ( *this , lokiSvc() , m_geo )  ; }
   // check it!
   Assert ( 0 != tool() , "No valid IDistanceCalculator is found" ) ;
   // get the best vertex from desktop and use it 
-  setVertex ( relatedVertex ( p ) ) ;
+  setVertex ( bestVertex ( p ) ) ;
   //
   return ip ( p ) ;
 }
@@ -205,12 +204,12 @@ LoKi::Particles::ImpParChi2WithTheBestPV::operator()
     Error ( "LHCb::Particle* points to NULL, return -1000" ) ;
     return -1000 ;                                                     // RETURN 
   }
-  // get the IDistanceCalculator from DVAlgorithm 
+  // get the IDistanceCalculator from IDVAlgorithm 
   if ( 0 == tool() ) { loadTool ( *this , lokiSvc() , m_geo )  ; }
   // check it!
   Assert ( 0 != tool() , "No valid IDistanceCalculator is found" ) ;
   // get the best vertex from desktop and use it 
-  setVertex ( relatedVertex ( p ) ) ;
+  setVertex ( bestVertex ( p ) ) ;
   //
   return chi2 ( p ) ;
 }
@@ -222,7 +221,7 @@ std::ostream& LoKi::Particles::ImpParChi2WithTheBestPV::fillStream
 // ============================================================================
 /*  constructor from the source and nickname or full type/name of 
  *  IDistanceCalculator tool
- *  @see DVAlgorithm::distanceCalculator 
+ *  @see IDVAlgorithm::distanceCalculator 
  *  @param source the source 
  *  @param geo the nickname (or type/name)  of IDistanceCalculator tool
  */
@@ -252,7 +251,7 @@ LoKi::Particles::MinImpParWithSource::operator()
     Error ( "LHCb::Particle* points to NULL, return -1000" ) ;
     return -1000 ;                                                     // RETURN 
   }
-  // get the IDistanceCalculator from DVAlgorithm 
+  // get the IDistanceCalculator from IDVAlgorithm 
   if ( 0 == tool() ) { loadTool ( *this , lokiSvc() , m_geo )  ; }
   // check the event 
   if ( !sameEvent() ) 
@@ -279,9 +278,9 @@ std::ostream& LoKi::Particles::MinImpParWithSource::fillStream
 { return s << "MIPSOURCE ('" <<  m_source << ", " << m_geo << "')"; }
 // ============================================================================
 /* the "default" constructor,
- *  gets the IDistanceCalculator tool from DVAlgorithm by nickname or 
+ *  gets the IDistanceCalculator tool from IDVAlgorithm by nickname or 
  *  by full type/name
- *  @see DVAlgorithm::distanceCalculator 
+ *  @see IDVAlgorithm::distanceCalculator 
  *  @param geo the nickname (or type/name)  of IDistanceCalculator tool
  */
 // ============================================================================
@@ -291,8 +290,8 @@ LoKi::Particles::MinImpParDV::MinImpParDV
 {}
 // ============================================================================
 /*  the constructor form the vertex selection functor and 
- *  the name/nickname of IDistanceCalculator tool from DVAlgorithm
- *  @see DVAlgorithm::distanceCalculator 
+ *  the name/nickname of IDistanceCalculator tool from IDVAlgorithm
+ *  @see IDVAlgorithm::distanceCalculator 
  *  @param 
  *  @param geo the nickname (or type/name)  of IDistanceCalculator tool
  */
@@ -304,8 +303,8 @@ LoKi::Particles::MinImpParDV::MinImpParDV
 {}
 // ============================================================================
 /*  the constructor form the vertex selection functor and 
- *  the name/nickname of IDistanceCalculator tool from DVAlgorithm
- *  @see DVAlgorithm::distanceCalculator 
+ *  the name/nickname of IDistanceCalculator tool from IDVAlgorithm
+ *  @see IDVAlgorithm::distanceCalculator 
  *  @param 
  *  @param geo the nickname (or type/name)  of IDistanceCalculator tool
  */
@@ -329,9 +328,9 @@ std::ostream& LoKi::Particles::MinImpParDV::fillStream
 { return s << "MIPDV('" << geo() << "')"; }
 // ============================================================================
 /* the constructor,
- *  gets the IDistanceCalculator tool from DVAlgorithm by nickname or 
+ *  gets the IDistanceCalculator tool from IDVAlgorithm by nickname or 
  *  by full type/name
- *  @see DVAlgorithm::distanceCalculator 
+ *  @see IDVAlgorithm::distanceCalculator 
  *  @param path the location of vertices in TES 
  *  @param geo the nickname (or type/name)  of IDistanceCalculator tool
  */
@@ -345,9 +344,9 @@ LoKi::Particles::MinImpParTES::MinImpParTES
 {}
 // ============================================================================
 /* the constructor,
- *  gets the IDistanceCalculator tool from DVAlgorithm by nickname or 
+ *  gets the IDistanceCalculator tool from IDVAlgorithm by nickname or 
  *  by full type/name
- *  @see DVAlgorithm::distanceCalculator 
+ *  @see IDVAlgorithm::distanceCalculator 
  *  @param path the locations of vertices in TES 
  *  @param geo the nickname (or type/name)  of IDistanceCalculator tool
  */
@@ -360,9 +359,9 @@ LoKi::Particles::MinImpParTES::MinImpParTES
 {}
 // ============================================================================
 /* the constructor,
- *  gets the IDistanceCalculator tool from DVAlgorithm by nickname or 
+ *  gets the IDistanceCalculator tool from IDVAlgorithm by nickname or 
  *  by full type/name
- *  @see DVAlgorithm::distanceCalculator 
+ *  @see IDVAlgorithm::distanceCalculator 
  *  @param path the locations of vertices in TES 
  *  @param geo the nickname (or type/name)  of IDistanceCalculator tool
  */
@@ -376,9 +375,9 @@ LoKi::Particles::MinImpParTES::MinImpParTES
 {}
 // ============================================================================
 /* the constructor,
- *  gets the IDistanceCalculator tool from DVAlgorithm by nickname or 
+ *  gets the IDistanceCalculator tool from IDVAlgorithm by nickname or 
  *  by full type/name
- *  @see DVAlgorithm::distanceCalculator 
+ *  @see IDVAlgorithm::distanceCalculator 
  *  @param path the location of vertices in TES 
  *  @param geo the nickname (or type/name)  of IDistanceCalculator tool
  */
@@ -392,9 +391,9 @@ LoKi::Particles::MinImpParTES::MinImpParTES
 {}
 // ============================================================================
 /*  the constructor,
- *  gets the IDistanceCalculator tool from DVAlgorithm by nickname or 
+ *  gets the IDistanceCalculator tool from IDVAlgorithm by nickname or 
  *  by full type/name
- *  @see DVAlgorithm::distanceCalculator 
+ *  @see IDVAlgorithm::distanceCalculator 
  *  @param path the locations of vertices in TES 
  *  @param geo the nickname (or type/name)  of IDistanceCalculator tool
  */
@@ -408,9 +407,9 @@ LoKi::Particles::MinImpParTES::MinImpParTES
 {}
 // ============================================================================
 /*  the constructor,
- *  gets the IDistanceCalculator tool from DVAlgorithm by nickname or 
+ *  gets the IDistanceCalculator tool from IDVAlgorithm by nickname or 
  *  by full type/name
- *  @see DVAlgorithm::distanceCalculator 
+ *  @see IDVAlgorithm::distanceCalculator 
  *  @param path the location of vertices in TES 
  *  @param geo the nickname (or type/name)  of IDistanceCalculator tool
  */
@@ -424,9 +423,9 @@ LoKi::Particles::MinImpParTES::MinImpParTES
 {}
 // ============================================================================
 /*  the constructor,
- *  gets the IDistanceCalculator tool from DVAlgorithm by nickname or 
+ *  gets the IDistanceCalculator tool from IDVAlgorithm by nickname or 
  *  by full type/name
- *  @see DVAlgorithm::distanceCalculator 
+ *  @see IDVAlgorithm::distanceCalculator 
  *  @param path the locations of vertices in TES 
  *  @param geo the nickname (or type/name)  of IDistanceCalculator tool
  */
@@ -440,9 +439,9 @@ LoKi::Particles::MinImpParTES::MinImpParTES
 {}
 // ============================================================================
 /** the constructor,
- *  gets the IDistanceCalculator tool from DVAlgorithm by nickname or 
+ *  gets the IDistanceCalculator tool from IDVAlgorithm by nickname or 
  *  by full type/name
- *  @see DVAlgorithm::distanceCalculator 
+ *  @see IDVAlgorithm::distanceCalculator 
  *  @param path the location of vertices in TES 
  *  @param geo the nickname (or type/name)  of IDistanceCalculator tool
  */
@@ -470,7 +469,7 @@ std::ostream& LoKi::Particles::MinImpParTES::fillStream
 // ============================================================================
 /*  constructor from the source and nickname or full type/name of 
  *  IDistanceCalculator tool
- *  @see DVAlgorithm::distanceCalculator 
+ *  @see IDVAlgorithm::distanceCalculator 
  *  @param source the source 
  *  @param geo the nickname (or type/name)  of IDistanceCalculator tool
  */
@@ -500,7 +499,7 @@ LoKi::Particles::MinImpParChi2WithSource::operator()
     Error ( "LHCb::Particle* points to NULL, return -1000" ) ;
     return -1000 ;                                                     // RETURN 
   }
-  // get the IDistanceCalculator from DVAlgorithm 
+  // get the IDistanceCalculator from IDVAlgorithm 
   if ( 0 == tool() ) { loadTool ( *this , lokiSvc() , m_geo )  ; }
   // check the event 
   if ( !sameEvent() ) 
@@ -526,9 +525,9 @@ std::ostream& LoKi::Particles::MinImpParChi2WithSource::fillStream
 { return s << "MIPCHI2SOURCE ('" <<  m_source << ", " << m_geo << "')"; }
 // ============================================================================
 /* the "default" constructor,
- *  gets the IDistanceCalculator tool from DVAlgorithm by nickname or 
+ *  gets the IDistanceCalculator tool from IDVAlgorithm by nickname or 
  *  by full type/name
- *  @see DVAlgorithm::distanceCalculator 
+ *  @see IDVAlgorithm::distanceCalculator 
  *  @param geo the nickname (or type/name)  of IDistanceCalculator tool
  */
 // ============================================================================
@@ -538,9 +537,9 @@ LoKi::Particles::MinImpParChi2DV::MinImpParChi2DV
 {}
 // ============================================================================
 /*  the constructor,
- *  gets the IDistanceCalculator tool from DVAlgorithm by nickname or 
+ *  gets the IDistanceCalculator tool from IDVAlgorithm by nickname or 
  *  by full type/name
- *  @see DVAlgorithm::distanceCalculator 
+ *  @see IDVAlgorithm::distanceCalculator 
  *  @param geo the nickname (or type/name)  of IDistanceCalculator tool
  */
 // ============================================================================
@@ -551,7 +550,7 @@ LoKi::Particles::MinImpParChi2DV::MinImpParChi2DV
 {}
 // ============================================================================
 /*  the  constructor,
- *  gets the IDistanceCalculator tool from DVAlgorithm by nickname or 
+ *  gets the IDistanceCalculator tool from IDVAlgorithm by nickname or 
  *  by full type/name
  *  @see DVAlgorithm::distanceCalculator 
  *  @param geo the nickname (or type/name)  of IDistanceCalculator tool
@@ -576,9 +575,9 @@ std::ostream& LoKi::Particles::MinImpParChi2DV::fillStream
 { return s << "MIPCHI2DV('" << geo() << "')"; }
 // ============================================================================
 /* the constructor,
- *  gets the IDistanceCalculator tool from DVAlgorithm by nickname or 
+ *  gets the IDistanceCalculator tool from IDVAlgorithm by nickname or 
  *  by full type/name
- *  @see DVAlgorithm::distanceCalculator 
+ *  @see IDVAlgorithm::distanceCalculator 
  *  @param path the location of vertices in TES 
  *  @param geo the nickname (or type/name)  of IDistanceCalculator tool
  */
@@ -591,9 +590,9 @@ LoKi::Particles::MinImpParChi2TES::MinImpParChi2TES
 {}
 // ============================================================================
 /* the constructor,
- *  gets the IDistanceCalculator tool from DVAlgorithm by nickname or 
+ *  gets the IDistanceCalculator tool from IDVAlgorithm by nickname or 
  *  by full type/name
- *  @see DVAlgorithm::distanceCalculator 
+ *  @see IDVAlgorithm::distanceCalculator 
  *  @param path the locations of vertices in TES 
  *  @param geo the nickname (or type/name)  of IDistanceCalculator tool
  */
@@ -606,9 +605,9 @@ LoKi::Particles::MinImpParChi2TES::MinImpParChi2TES
 {}
 // ============================================================================
 /*  the constructor,
- *  gets the IDistanceCalculator tool from DVAlgorithm by nickname or 
+ *  gets the IDistanceCalculator tool from IDVAlgorithm by nickname or 
  *  by full type/name
- *  @see DVAlgorithm::distanceCalculator 
+ *  @see IDVAlgorithm::distanceCalculator 
  *  @param path the location of vertices in TES 
  *  @param geo the nickname (or type/name)  of IDistanceCalculator tool
  */
@@ -622,9 +621,9 @@ LoKi::Particles::MinImpParChi2TES::MinImpParChi2TES
 {}
 // ============================================================================
 /*  the constructor,
- *  gets the IDistanceCalculator tool from DVAlgorithm by nickname or 
+ *  gets the IDistanceCalculator tool from IDVAlgorithm by nickname or 
  *  by full type/name
- *  @see DVAlgorithm::distanceCalculator 
+ *  @see IDVAlgorithm::distanceCalculator 
  *  @param path the locations of vertices in TES 
  *  @param geo the nickname (or type/name)  of IDistanceCalculator tool
  */
@@ -738,7 +737,7 @@ LoKi::Particles::VertexDistanceDV::operator()
     return LoKi::Constants::InvalidDistance ;                    // RETURN 
   }
   // get the best vertex from desktop and use it 
-  setVertex ( relatedVertex ( p ) ) ;
+  setVertex ( bestVertex ( p ) ) ;
   //
   return distance ( p ) ;                                           // RETURN 
 }
@@ -773,7 +772,7 @@ LoKi::Particles::VertexSignedDistanceDV::operator()
     return LoKi::Constants::InvalidDistance ;                    // RETURN 
   }
   // get the best vertex from desktop and use it 
-  setVertex ( relatedVertex ( p ) ) ;
+  setVertex ( bestVertex ( p ) ) ;
   //
   return signedDistance ( p ) ;                                      // RETURN 
 }
@@ -808,7 +807,7 @@ LoKi::Particles::VertexDotDistanceDV::operator()
     return LoKi::Constants::InvalidDistance ;                    // RETURN 
   }
   // get the best vertex from desktop and use it 
-  setVertex ( relatedVertex ( p ) ) ;
+  setVertex ( bestVertex ( p ) ) ;
   //
   return distance ( p ) ;                                           // RETURN 
 }
@@ -844,7 +843,7 @@ LoKi::Particles::VertexChi2DistanceDV::operator()
     return LoKi::Constants::InvalidDistance ;                    // RETURN 
   }
   // get the best vertex from desktop and use it 
-  setVertex ( relatedVertex ( p ) ) ;
+  setVertex ( bestVertex ( p ) ) ;
   //
   return chi2 ( p ) ;                                           // RETURN 
 }
@@ -894,7 +893,7 @@ LoKi::Particles::LifeTimeDV::operator()
   Assert ( 0 != tool() , "No Valid ILifetimeFitter is availabe" ) ;
   //
   // get the vertex from desktop
-  const LHCb::VertexBase* vx = relatedVertex ( p ) ;
+  const LHCb::VertexBase* vx = bestVertex ( p ) ;
   if ( 0 == vx ) 
   {
     Error ( "LHCb::VertexBase* points to NULL, return InvalidTime") ;
@@ -946,7 +945,7 @@ LoKi::Particles::LifeTimeChi2DV::operator()
   // check the fitter 
   Assert ( 0 != tool() , "No Valid ILifetimeFitter is availabe" ) ;
   // get the vertex from desktop 
-  const LHCb::VertexBase* vx = relatedVertex ( p ) ;
+  const LHCb::VertexBase* vx = bestVertex ( p ) ;
   if ( 0 == vx ) 
   {
     Error ( "LHCb::VertexBase* points to NULL, return InvalidChi2") ;
@@ -999,7 +998,7 @@ LoKi::Particles::LifeTimeSignedChi2DV::operator()
   // check the fitter 
   Assert ( 0 != tool() , "No Valid ILifetimeFitter is availabe" ) ;
   // get the vertex from desktop 
-  const LHCb::VertexBase* vx = relatedVertex ( p ) ;
+  const LHCb::VertexBase* vx = bestVertex ( p ) ;
   if ( 0 == vx ) 
   {
     Error ( "LHCb::VertexBase* points to NULL, return InvalidChi2") ;
@@ -1052,7 +1051,7 @@ LoKi::Particles::LifeTimeFitChi2DV::operator()
   // check the fitter 
   Assert ( 0 != tool() , "No Valid ILifetimeFitter is availabe" ) ;
   // get the vertex from desktop 
-  const LHCb::VertexBase* vx = relatedVertex ( p ) ;
+  const LHCb::VertexBase* vx = bestVertex ( p ) ;
   if ( 0 == vx ) 
   {
     Error ( "LHCb::VertexBase* points to NULL, return InvalidChi2") ;
@@ -1107,7 +1106,7 @@ LoKi::Particles::LifeTimeErrorDV::operator()
   // check the fitter 
   Assert ( 0 != tool() , "No Valid ILifetimeFitter is availabe" ) ;
   // get the vertex from desktop 
-  const LHCb::VertexBase* vx = relatedVertex ( p ) ;
+  const LHCb::VertexBase* vx = bestVertex ( p ) ;
   if ( 0 == vx ) 
   {
     Error ( "LHCb::VertexBase* points to NULL, return InvalidTime") ;
@@ -1158,7 +1157,7 @@ LoKi::Particles::VertexZDistanceWithTheBestPV::operator()
     return LoKi::Constants::InvalidDistance ;                    // RETURN 
   }
   // get the best vertex from desktop and use it 
-  const LHCb::VertexBase* bpv = relatedVertex ( p ) ; 
+  const LHCb::VertexBase* bpv = bestVertex ( p ) ; 
   if ( 0 == bpv ) 
   {
     Error ( "Related points to NULL, return InvalidDistance" ) ;
@@ -1206,7 +1205,7 @@ LoKi::Particles::VertexRhoDistanceWithTheBestPV::operator()
     return LoKi::Constants::InvalidDistance ;                    // RETURN 
   }
   // get the best vertex from desktop and use it 
-  const LHCb::VertexBase* bpv = relatedVertex ( p ) ; 
+  const LHCb::VertexBase* bpv = bestVertex ( p ) ; 
   if ( 0 == bpv ) 
   {
     Error ( "Related points to NULL, return InvalidDistance" ) ;
@@ -1634,7 +1633,7 @@ LoKi::Particles::TrgPointingScoreWithBestPV::operator()
     return -1000 ;                                                     // RETURN 
   }
   // get the best vertex from desktop and use it 
-  setVertex ( relatedVertex ( p ) ) ;
+  setVertex ( bestVertex ( p ) ) ;
   //
   return pointing ( p ) ;
 }

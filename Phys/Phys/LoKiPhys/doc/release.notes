@@ -1,9 +1,14 @@
-! $Id: release.notes,v 1.139 2010-05-14 07:48:21 jpalac Exp $ 
+! $Id: release.notes,v 1.140 2010-05-14 15:28:33 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhys
 ! Responsible : Vanya Belyaev
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
+
+! 2010-05-14 - Vanya Belyaev
+
+ - changes for IDVAlgorithm
+   
 
 ! 2010-05-14 - Juan Palacios
  - AuxDesktopBase, Particles25, PhysSources

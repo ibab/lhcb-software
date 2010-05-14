@@ -1,4 +1,4 @@
-// $Id: Particles32.cpp,v 1.1 2010-02-19 16:40:18 ibelyaev Exp $
+// $Id: Particles32.cpp,v 1.2 2010-05-14 15:28:33 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -45,7 +45,7 @@ LoKi::Particles::BestPrimaryVertexAdaptor::operator()
     return LoKi::Constants::NegativeInfinity ;
   }
   // get the best vertex from desktop
-  const LHCb::VertexBase* vertex = relatedVertex( p ) ;
+  const LHCb::VertexBase* vertex = bestVertex( p ) ;
   //
   return m_vfun ( vertex ) ;
 }

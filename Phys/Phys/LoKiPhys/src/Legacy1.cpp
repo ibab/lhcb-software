@@ -1,4 +1,4 @@
-// $Id: Legacy1.cpp,v 1.3 2010-02-19 16:40:18 ibelyaev Exp $
+// $Id: Legacy1.cpp,v 1.4 2010-05-14 15:28:33 ibelyaev Exp $
 // =============================================================================
 // Include files 
 // =============================================================================
@@ -67,7 +67,7 @@ LoKi::Legacy::DistanceSignificanceWithBestPV::operator()
     return -1000 ;                                                     // RETURN 
   }
   // get the best related vertex from the desktop and use it 
-  const LHCb::VertexBase* pv = relatedVertex ( p ) ;
+  const LHCb::VertexBase* pv = bestVertex ( p ) ;
   if ( 0 == pv ) 
   {
     Error ( "Related Vertex points to NULL, return -1000" ) ;
@@ -209,7 +209,7 @@ LoKi::Legacy::TrgPointingScoreWithPtWithBestPV::operator()
     return -1000 ;                                                     // RETURN 
   }
   // get the best vertex from desktop and use it 
-  setVertex ( relatedVertex ( p ) ) ;
+  setVertex ( bestVertex ( p ) ) ;
   //
   return pointing ( p ) ;
 }

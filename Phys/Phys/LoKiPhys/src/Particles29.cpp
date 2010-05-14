@@ -1,4 +1,4 @@
-// $Id: Particles29.cpp,v 1.2 2010-02-19 16:40:18 ibelyaev Exp $
+// $Id: Particles29.cpp,v 1.3 2010-05-14 15:28:33 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -52,7 +52,7 @@ LoKi::Particles::DHCoplanarity::operator()
   }
   //
   // get the best primary vertex
-  const LHCb::VertexBase* pv = relatedVertex ( p ) ;
+  const LHCb::VertexBase* pv = bestVertex ( p ) ;
   if ( 0 == pv ) 
   {
     Error ("Best primary Vertex points to NULL, return InvalidDistance") ;

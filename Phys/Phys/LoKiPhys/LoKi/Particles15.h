@@ -1,4 +1,4 @@
-// $Id: Particles15.h,v 1.7 2010-03-31 15:19:56 ibelyaev Exp $
+// $Id: Particles15.h,v 1.8 2010-05-14 15:28:33 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PARTICLES15_H 
 #define LOKI_PARTICLES15_H 1
@@ -13,9 +13,9 @@
 // ============================================================================
 #include "LoKi/PhysTypes.h"
 // ============================================================================
-// DaVinciKernel
+// DaVinciInterfaces 
 // ============================================================================
-#include "Kernel/IFilterCriterion.h"
+#include "Kernel/IParticleFilter.h"
 // ============================================================================
 /** @file
  *
@@ -33,6 +33,7 @@
 // ============================================================================
 namespace LoKi
 {
+  // ==========================================================================
   namespace Particles 
   {
     // ========================================================================
@@ -52,7 +53,7 @@ namespace LoKi
       /// constructor from the filter name 
       Filter ( const std::string&      filter ) ;
       /// constructor from the filter 
-      Filter ( const IFilterCriterion* filter ) ;
+      Filter ( const IParticleFilter*  filter ) ;
       /// MANDATORY: virtual destructor
       virtual ~Filter() ;
       /// MANDATORY: clone method ("virtual constructor")
@@ -70,7 +71,7 @@ namespace LoKi
     private:
       // ======================================================================
       /// the tool itself 
-      LoKi::Interface<IFilterCriterion> m_filter ; // the tool itself 
+      LoKi::Interface<IParticleFilter> m_filter ;            // the tool itself 
       // ======================================================================
     } ;
     // ========================================================================    

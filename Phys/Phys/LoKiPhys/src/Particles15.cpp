@@ -1,4 +1,4 @@
-// $Id: Particles15.cpp,v 1.7 2010-03-31 15:19:56 ibelyaev Exp $
+// $Id: Particles15.cpp,v 1.8 2010-05-14 15:28:33 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -50,14 +50,14 @@ LoKi::Particles::Filter::Filter
   SmartIF<IAlgContextSvc> context ( loki ) ;
   GaudiAlgorithm* alg = Gaudi::Utils::getGaudiAlg ( context ) ;
   if ( 0 != alg ) 
-  { m_filter = alg->tool<IFilterCriterion> ( filter , alg , true ) ; }
+  { m_filter = alg->tool<IParticleFilter> ( filter , alg , true ) ; }
   else 
   { 
     /// 2. use tool service 
     SmartIF<IToolSvc> tsvc ( loki ) ;
     if ( ! ( ! tsvc ) ) 
     {
-      IFilterCriterion* _fltr  = 0 ;
+      IParticleFilter* _fltr  = 0 ;
       const IInterface* parent = 0 ;
       StatusCode sc = tsvc->retrieveTool 
         ( filter , _fltr , parent , true ) ;
@@ -73,7 +73,7 @@ LoKi::Particles::Filter::Filter
 // constructor from the filter 
 // ============================================================================
 LoKi::Particles::Filter::Filter
-( const IFilterCriterion* filter ) 
+( const IParticleFilter* filter ) 
   : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate () 
   , m_filter ( filter )
 {} 
@@ -100,11 +100,11 @@ LoKi::Particles::Filter::operator()
   }
   if ( !m_filter ) 
   {
-    Error ( "Invalid tool: IFilterCriterion* points to NULL, return 'false'");
+    Error ( "Invalid tool: IParticleFilter* points to NULL, return 'false'");
     return false ;                                                 // RETURN 
   }
   // use tool
-  return m_filter->isSatisfied ( p ) ;
+  return m_filter->operator()( p ) ;
 } 
 // ============================================================================
 // OPTIONAL: the specific printout
@@ -112,12 +112,12 @@ LoKi::Particles::Filter::operator()
 std::ostream& 
 LoKi::Particles::Filter::fillStream( std::ostream& s ) const 
 {
-  s << "FILTER(";
+  s << " FILTER( ";
   if ( m_filter.validPointer() ) 
   { s << m_filter->type() << "/" << m_filter->name() ; }
   else 
   { s << "<invalid>" ; }
-  return s << ")" ;
+  return s << " ) " ;
 }
 // ============================================================================
 

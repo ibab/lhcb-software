@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.56 2010-05-05 15:45:02 ibelyaev Exp $ 
+# $Id: requirements,v 1.57 2010-05-14 15:28:33 ibelyaev Exp $ 
 # ============================================================================
 # Created    : 2006-02-06
 # Maintainer : Vanya BELYAEV ibelyaev@physics.syr.edu 
@@ -10,10 +10,10 @@ version           v9r1
 branches          cmt doc src dict python LoKi 
 
 # =============== dependencies ===============================================
-use               PhysEvent     v*    Event 
-use               LoKiCore      v*    Phys 
-use               LoKiNumbers   v*    Phys
-use               DaVinciKernel v*    Phys 
+use               PhysEvent         v* Event 
+use               LoKiCore          v* Phys 
+use               LoKiNumbers       v* Phys
+use               DaVinciInterfaces v* Phys 
 	
 # =============== own includes ===============================================
 apply_pattern install_more_includes  more=LoKi

@@ -1,14 +1,13 @@
-// $Id: AuxDesktopBase.h,v 1.3 2010-05-14 07:48:30 jpalac Exp $
+// $Id: AuxDesktopBase.h,v 1.4 2010-05-14 15:28:33 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_AUXDESKTOPBASE_H 
 #define LOKI_AUXDESKTOPBASE_H 1
 // ============================================================================
 // Include files
 // ============================================================================
-// DaVinciKernel
+// DaVinciInterfaces 
 // ============================================================================
-#include "Kernel/IPhysDesktop.h"
-#include "Kernel/IGeomDispCalculator.h"
+#include "Kernel/IDVAlgorithm.h"
 // ============================================================================
 // LoKi
 // ============================================================================
@@ -18,7 +17,7 @@
 namespace LoKi
 {
   // ==========================================================================
-  /** @class AuxDesktopBase AuxDesktopBase.h LoKi/AuxDesktopBase.h
+  /** @class AuxDesktopBase LoKi/AuxDesktopBase.h
    *  The helper class to implement many "context-dependent" functors   
    *  @author Vanya BELYAEV Ivan.Belyaev@physics.syr.edu
    *  @date   2008-01-16
@@ -30,9 +29,9 @@ namespace LoKi
     /// default constructor (invalid desktop!)
     AuxDesktopBase ( ) ;
     /// constructor form the desktop 
-    AuxDesktopBase ( const IPhysDesktop* desktop  ) ;
+    AuxDesktopBase ( const IDVAlgorithm* desktop  ) ;
     /// constructor from the desktop
-    AuxDesktopBase ( const LoKi::Interface<IPhysDesktop>& desktop ) ;
+    AuxDesktopBase ( const LoKi::Interface<IDVAlgorithm>& desktop ) ;
     /// copy constrictor 
     AuxDesktopBase ( const AuxDesktopBase& right ) ;
     /// destructor
@@ -41,20 +40,20 @@ namespace LoKi
   public:
     // ========================================================================
     /// get the desktop 
-    const LoKi::Interface<IPhysDesktop>& desktop () const 
+    const LoKi::Interface<IDVAlgorithm>& desktop () const 
     {
       if ( !validDesktop() ) { loadDesktop()  ; }
       return m_desktop ;  
     }
     /// get the desktop
-    IPhysDesktop* getDesktop() const {  return desktop() ; }
+    IDVAlgorithm* getDesktop() const {  return desktop() ; }
     // ========================================================================
   public:
     // ========================================================================
     /// set the desktop
-    void setDesktop ( const IPhysDesktop*                  d ) { m_desktop = d ; }
+    void setDesktop ( const IDVAlgorithm*                  d ) { m_desktop = d ; }
     /// set the desktop
-    void setDesktop ( const LoKi::Interface<IPhysDesktop>& d ) { m_desktop = d ; }
+    void setDesktop ( const LoKi::Interface<IDVAlgorithm>& d ) { m_desktop = d ; }
     // ========================================================================
   public:
     // ========================================================================
@@ -69,19 +68,19 @@ namespace LoKi
   public:
     // ========================================================================
     // cast to desktop 
-    operator const LoKi::Interface<IPhysDesktop>& () const { return desktop() ; }
+    operator const LoKi::Interface<IDVAlgorithm>& () const { return desktop() ; }
     // ========================================================================
   public:
     // ========================================================================
     /// get "the best related vertex" 
-    const LHCb::VertexBase* relatedVertex ( const LHCb::Particle* p ) const ;
+    const LHCb::VertexBase* bestVertex ( const LHCb::Particle* p ) const ;
     /// get all primary vertices 
-    const LHCb::RecVertex::Range primaryVertices() const ;
+    LHCb::RecVertex::Range  primaryVertices() const ;
     // ========================================================================
   private:
     // ========================================================================
     /// the desktop itself 
-    mutable LoKi::Interface<IPhysDesktop>    m_desktop ; // the desktop itself 
+    mutable LoKi::Interface<IDVAlgorithm>    m_desktop ; // the desktop itself 
     // ========================================================================
   };
   // ==========================================================================

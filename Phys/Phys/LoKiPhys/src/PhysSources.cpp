@@ -1,4 +1,4 @@
-// $Id: PhysSources.cpp,v 1.7 2010-05-14 07:48:30 jpalac Exp $
+// $Id: PhysSources.cpp,v 1.8 2010-05-14 15:28:33 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -12,15 +12,10 @@
 #include "Event/Vertex.h"
 #include "Event/RecVertex.h"
 // ============================================================================
-// DaVinciKernel
+// DaVinciInterfaces 
 // ============================================================================
-#include "Kernel/IPhysDesktop.h"
-#include "Kernel/DVAlgorithm.h"
-#include "Kernel/GetDVAlgorithm.h"
-// ============================================================================
-// GaudiAlg
-// ============================================================================
-#include "GaudiAlg/GetAlgs.h"
+#include "Kernel/IDVAlgorithm.h"
+#include "Kernel/GetIDVAlgorithm.h"
 // ============================================================================
 // LoKi
 // ============================================================================
@@ -222,7 +217,7 @@ LoKi::Particles::SourceTES::fillStream ( std::ostream& o ) const
 // constructor from the desktop & cuts 
 // ============================================================================
 LoKi::Particles::SourceDesktop::SourceDesktop 
-( const IPhysDesktop*          desktop , 
+( const IDVAlgorithm*          desktop , 
   const LoKi::PhysTypes::Cuts& cuts    ) 
   : LoKi::Particles::SourceDesktop::_Source () 
   , m_desktop ( desktop ) 
@@ -233,35 +228,11 @@ LoKi::Particles::SourceDesktop::SourceDesktop
 // ============================================================================
 LoKi::Particles::SourceDesktop::SourceDesktop 
 ( const LoKi::PhysTypes::Cuts& cuts    ,
-  const IPhysDesktop*          desktop )
+  const IDVAlgorithm*          desktop )
   : LoKi::Particles::SourceDesktop::_Source () 
   , m_desktop ( desktop ) 
   , m_cut     ( cuts    )
 {}
-// ============================================================================
-// constructor from DVAlgorithm & cuts 
-// ============================================================================
-LoKi::Particles::SourceDesktop::SourceDesktop 
-( const DVAlgorithm*           alg  , 
-  const LoKi::PhysTypes::Cuts& cuts ) 
-  : LoKi::Particles::SourceDesktop::_Source () 
-  , m_desktop ( (IPhysDesktop*) 0 ) 
-  , m_cut     ( cuts    )
-{
-  if ( 0 != alg ) { m_desktop = alg->desktop() ; }
-}
-// ============================================================================
-// constructor from DVAlgorithm & cuts 
-// ============================================================================
-LoKi::Particles::SourceDesktop::SourceDesktop 
-( const LoKi::PhysTypes::Cuts& cuts ,
-  const DVAlgorithm*           alg  )
-  : LoKi::Particles::SourceDesktop::_Source () 
-  , m_desktop ( (IPhysDesktop*) 0 ) 
-  , m_cut     ( cuts    )
-{
-  if ( 0 != alg ) { m_desktop = alg->desktop() ; }
-}
 // ============================================================================
 // copy constructor
 // ============================================================================
@@ -285,26 +256,15 @@ LoKi::Particles::SourceDesktop::operator() () const
   if ( !m_desktop ) 
   { 
     const LoKi::Services& svcs = LoKi::Services::instance() ;
-    DVAlgorithm* alg = 
-      Gaudi::Utils::getDVAlgorithm ( svcs.contextSvc() ) ;
-    if ( 0 != alg ) 
-    {
-      if ( alg->msgLevel( MSG::DEBUG) ) 
-      { 
-        alg->debug() 
-          << objType() << "('" << (*this) << "')"
-          << " : Use DVAlgorithm('" 
-          << alg->name() 
-          << "') to access IPhysDesktop"
-          << endreq ;
-      }
-      m_desktop = alg->desktop() ; 
-    }
+    const IDVAlgorithm* alg = Gaudi::Utils::getIDVAlgorithm ( svcs.contextSvc() ) ;
+    if ( 0 != alg ) { m_desktop = alg ; }
+    //
     Assert ( m_desktop.validPointer ( )               ,
-             "Could not locate valid IPhysDesktop" ) ;
+             "Could not locate valid IDVAlgorithm" ) ;
   }
   //
-  const LHCb::Particle::ConstVector& input = m_desktop -> particles() ;
+  LHCb::Particle::Range input = m_desktop -> particles() ;
+  //
   LHCb::Particle::ConstVector output ;
   output.reserve ( input.size() ) ;
   // use cuts:
@@ -322,13 +282,6 @@ LoKi::Particles::SourceDesktop::operator() () const
 std::ostream& 
 LoKi::Particles::SourceDesktop::fillStream ( std::ostream& o ) const 
 { return o << "SOURCEDESKTOP( " << m_cut << ")" ; }
-// ============================================================================
-// set the  desktop
-// ============================================================================
-void 
-LoKi::Particles::SourceDesktop::setDesktop 
-( const                 DVAlgorithm*   value ) 
-{ if ( 0 != value ) { m_desktop = value -> desktop() ; } }
 // ============================================================================
 
 
@@ -509,7 +462,7 @@ LoKi::Vertices::SourceTES::fillStream ( std::ostream& o ) const
 // constructor from the desktop & cuts 
 // ============================================================================
 LoKi::Vertices::SourceDesktop::SourceDesktop 
-( const IPhysDesktop*           desktop , 
+( const IDVAlgorithm*           desktop , 
   const LoKi::PhysTypes::VCuts& cuts    ) 
   : LoKi::Vertices::SourceDesktop::_Source () 
   , m_desktop ( desktop ) 
@@ -520,35 +473,11 @@ LoKi::Vertices::SourceDesktop::SourceDesktop
 // ============================================================================
 LoKi::Vertices::SourceDesktop::SourceDesktop 
 ( const LoKi::PhysTypes::VCuts& cuts    ,
-  const IPhysDesktop*           desktop )
+  const IDVAlgorithm*           desktop )
   : LoKi::Vertices::SourceDesktop::_Source () 
   , m_desktop ( desktop ) 
   , m_cut     ( cuts    )
 {}
-// ============================================================================
-// constructor from DVAlgorithm & cuts 
-// ============================================================================
-LoKi::Vertices::SourceDesktop::SourceDesktop 
-( const DVAlgorithm*            alg  , 
-  const LoKi::PhysTypes::VCuts& cuts ) 
-  : LoKi::Vertices::SourceDesktop::_Source () 
-  , m_desktop ( (IPhysDesktop*) 0 ) 
-  , m_cut     ( cuts    )
-{
-  if ( 0 != alg ) { m_desktop = alg->desktop() ; }
-}
-// ============================================================================
-// constructor from DVAlgorithm & cuts 
-// ============================================================================
-LoKi::Vertices::SourceDesktop::SourceDesktop 
-( const LoKi::PhysTypes::VCuts& cuts ,
-  const DVAlgorithm*            alg  )
-  : LoKi::Vertices::SourceDesktop::_Source () 
-  , m_desktop ( (IPhysDesktop*) 0 ) 
-  , m_cut     ( cuts    )
-{
-  if ( 0 != alg ) { m_desktop = alg->desktop() ; }
-}
 // ============================================================================
 // copy constructor
 // ============================================================================
@@ -572,40 +501,22 @@ LoKi::Vertices::SourceDesktop::operator() () const
   if ( !m_desktop ) 
   { 
     const LoKi::Services& svcs = LoKi::Services::instance() ;
-    DVAlgorithm* alg = 
-      Gaudi::Utils::getDVAlgorithm ( svcs.contextSvc() ) ;
-    if ( 0 != alg ) 
-    {
-      if ( alg->msgLevel( MSG::DEBUG) ) 
-      { 
-        alg->debug() 
-          << objType() << "('" << (*this) << "')"
-          << " : Use DVAlgorithm('" 
-          << alg->name() 
-          << "') to access IPhysDesktop"
-          << endreq ;
-      }
-      m_desktop = alg->desktop() ; 
-    }
+    const IDVAlgorithm* alg = Gaudi::Utils::getIDVAlgorithm ( svcs.contextSvc() ) ;
+    if ( 0 != alg ) { m_desktop = alg ; }
+    //
     Assert ( m_desktop.validPointer ( )               ,
-             "Could not locate valid IPhysDesktop" ) ;
+             "Could not locate valid IDVAlgorithm" ) ;
   }
   //  
-  const LHCb::Vertex::ConstVector&    input1 = 
-    m_desktop -> secondaryVertices () ;
   const LHCb::RecVertex::Range input2 = 
     m_desktop -> primaryVertices   () ;
   //
-  if ( input1.empty() && input2.empty() ) 
-  { Warning ( "No input vertices (secondary&primary) from Desktop" ) ; }
+  if ( input2.empty() ) 
+  { Warning ( "No input primary vertices from IDVAlgorithm" ) ; }
   
   LHCb::VertexBase::ConstVector output ;
-  output.reserve ( input1.size() + input2.size() ) ;
+  output.reserve ( input2.size() ) ;
   // use cuts:
-  LoKi::select ( input1.begin () , 
-                 input1.end   () , 
-                 std::back_inserter ( output ) , 
-                 m_cut.func () ) ;
   LoKi::select ( input2.begin () , 
                  input2.end   () , 
                  std::back_inserter ( output ) , 
@@ -624,11 +535,6 @@ LoKi::Vertices::SourceDesktop::fillStream ( std::ostream& o ) const
 { return o << "VSOURCEDESKTOP( " << m_cut << ")" ; }
 // ============================================================================
 // set the  desktop
-// ============================================================================
-void 
-LoKi::Vertices::SourceDesktop::setDesktop 
-( const                 DVAlgorithm*   value ) 
-{ if ( 0 != value ) { m_desktop = value -> desktop() ; } }
 // ============================================================================
 
 // ============================================================================
