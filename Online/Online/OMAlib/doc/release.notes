@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.42 2010-05-07 09:07:42 ggiacomo Exp $
+! $Id: release.notes,v 1.43 2010-05-14 15:17:35 ggiacomo Exp $
 ! Package     : OMAlib
 ! Responsible : G. Graziani
 ! Purpose     : Online Monitoring Analysis library
+
+
+! 20100514 GG
+ - fix minor issue with analysis of virtual histograms
 
 ! ======== v2r15 ===============
 ! 20100413 Patrick Robbe

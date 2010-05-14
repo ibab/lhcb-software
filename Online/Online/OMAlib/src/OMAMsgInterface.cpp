@@ -1,4 +1,4 @@
-// $Id: OMAMsgInterface.cpp,v 1.32 2010-03-29 14:44:04 ggiacomo Exp $
+// $Id: OMAMsgInterface.cpp,v 1.33 2010-05-14 15:17:35 ggiacomo Exp $
 #include <cstring>
 #include "OnlineHistDB/OnlineHistDB.h"
 #include "OMAlib/OMAMsgInterface.h"
@@ -109,7 +109,8 @@ void OMAMsgInterface::updateMessages() {
 void OMAMsgInterface::resetMessages(std::string& TaskName) {
   std::vector<OMAMessage*>::iterator iM;
   for (iM=m_MessageStore.begin(); iM != m_MessageStore.end(); iM++) {
-    if(TaskName == (*iM)->taskName()  || TaskName == "any")
+    if(TaskName == "any" || 
+       TaskName == (*iM)->taskName()  || VirtualTaskName(TaskName)  == (*iM)->taskName() )
       (*iM)->unconfirm();
   }
 }
@@ -118,7 +119,8 @@ void OMAMsgInterface::refreshMessageList(std::string& TaskName) {
   std::vector<OMAMessage*>::iterator iM = m_MessageStore.begin();
   while( iM != m_MessageStore.end() ) {
     bool kept=true;
-    if(TaskName == (*iM)->taskName() || TaskName == "any") {
+    if(TaskName == "any" || 
+       TaskName == (*iM)->taskName()  || VirtualTaskName(TaskName)  == (*iM)->taskName() ) {
       if( false == (*iM)->confirmed()) {
         kept=false;
         lowerAlarm( (**iM) );
