@@ -4,6 +4,22 @@
 ! Purpose     : Tool interfaces and dictionaries for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2010-05-14 - Vanya Belyaev
+
+ - IDVAlgorithm :
+
+      add various accessors to the tools  
+
+ - IFilterCriterion: 
+
+      add the inheritance from (new,light) IParticleFilter 
+      add "const"-attributes 
+      remove "reference-to-piointer" qualifier 
+      
+ - new files : Kernel/GetIDVAlgorith.h, src/GetIDVAlgorithm.
+     
+       hooks to extract IDVAlgoritm fro the context 
+
 ! 2010-05-12 - Juan Palacios
  - Kernel/IRelatedPVFinder.h
   . Now understands LHCb::RecVertex::Range.

@@ -1,4 +1,4 @@
-// $Id: DaVinciInterfaces.cpp,v 1.7 2010-03-18 18:51:18 simone Exp $
+// $Id: DaVinciInterfaces.cpp,v 1.8 2010-05-14 15:03:46 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -20,6 +20,9 @@
 #include "Kernel/IPrintDecay.h"
 #include "Kernel/ICheckSelResults.h"
 #include "Kernel/ITrackIsolation.h"
+#include "Kernel/IDVAlgorithm.h"
+#include "Kernel/IParticleFilter.h"
+#include "Kernel/IFilterCriterion.h"
 
 // ============================================================================
 /** @file
@@ -43,6 +46,9 @@ IPrintDecay              :: ~IPrintDecay              () {}
 ICheckSelResults         :: ~ICheckSelResults         () {}
 IDecodeSimpleDecayString :: ~IDecodeSimpleDecayString () {}
 ITrackIsolation          :: ~ITrackIsolation          () {}
+IDVAlgorithm             :: ~IDVAlgorithm             () {}
+IFilterCriterion         :: ~IFilterCriterion         () {}
+IParticleFilter          :: ~IParticleFilter          () {}
 
 // ============================================================================
 // The END 

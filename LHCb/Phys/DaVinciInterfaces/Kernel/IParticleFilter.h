@@ -1,17 +1,16 @@
-// $Id: IParticleFilter.h,v 1.5 2010-05-12 13:32:24 jpalac Exp $
+// $Id: IParticleFilter.h,v 1.6 2010-05-14 15:03:45 ibelyaev Exp $
+// ============================================================================
 #ifndef DAVINCIKERNEL_IPARTICLEFILTER_H 
 #define DAVINCIKERNEL_IPARTICLEFILTER_H 1
-
+// ============================================================================
 // Include files
+// ============================================================================
 #include "GaudiKernel/IAlgTool.h"
-
+// ============================================================================
 // Forward declarations
-// from Event
-namespace LHCb {
-  class Particle;
-}
-
-
+// ============================================================================
+namespace LHCb { class Particle ; }
+// ============================================================================
 /** @class IParticleFilter IParticleFilter.h Kernel/IParticleFilter.h
  *  Interface Class for Particle Filters. 
  *  Given an LHCb::Particle, return true if it passes the filter.
@@ -20,17 +19,24 @@ namespace LHCb {
  *  @date   12/05/2010
  *
  */
-
-class GAUDI_API IParticleFilter : virtual public IAlgTool {
-
+class GAUDI_API IParticleFilter : virtual public IAlgTool 
+{
 public:
-
-  DeclareInterfaceID(IParticleFilter, 3, 0);
-
-  /// Filter. Return false if particle does not pass filter.
+  // ==========================================================================
+  DeclareInterfaceID ( IParticleFilter , 4 , 0 ) ;
+  /// Filter: Return false if particle does not pass filter.
   virtual bool operator()( const LHCb::Particle* ) const = 0;
-                    
+  // ==========================================================================
+protected:
+  // ==========================================================================
+  /// virtual and protected destructor
+  virtual ~IParticleFilter() ;              // virtual and protected destructor
+  // ==========================================================================
 };
+// ============================================================================
+// The END 
+// ============================================================================
 #endif // DAVINCIKERNEL_IPARTICLEFILTER_H
+// ============================================================================
 
 
