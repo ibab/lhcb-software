@@ -5,6 +5,9 @@
 !               of events with exotic displaced vertices
 !-----------------------------------------------------------------------------
 
+! 2010-05-14 - Neal Gauvin
+ - Upstream primary vertices are taken within |z|<150mm.
+
 ! 2010-05-12 - Juan Palacios
  - Adapt to new IDVAlgorithm interface
 
