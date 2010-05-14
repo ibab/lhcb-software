@@ -1,4 +1,4 @@
-// $Id: AParticles.cpp,v 1.13 2009-11-30 11:17:38 ibelyaev Exp $
+// $Id: AParticles.cpp,v 1.14 2010-05-14 15:30:36 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ===========================================================================
@@ -1332,13 +1332,11 @@ LoKi::AParticles::AllSameBestPV::operator()
   {
     // Does the desktop issue a warning if no PV is found, or should a
     //   suppressable warning be included here?
-    const LHCb::VertexBase *relPV = desktop()->relatedVertex( *iter );
-    if( relPV )
-      pvkeys.push_back(relPV->key());
-    else
-      havePVs = false;
+    const LHCb::VertexBase *relPV = desktop()->bestVertex( *iter );
+    if ( relPV ) { pvkeys.push_back ( relPV->key() ) ; }
+    else          { havePVs = false ; }
   }
-
+  
   // Using sort and unique are unnecessary overhead here, but might be more
   //   useful in a more general functor that would return the number of
   //   unique best pv, but would that be useful?

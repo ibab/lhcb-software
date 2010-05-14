@@ -1,4 +1,4 @@
-// $Id: HybridFilterCriterion.cpp,v 1.5 2009-12-18 09:42:18 ibelyaev Exp $
+// $Id: HybridFilterCriterion.cpp,v 1.6 2010-05-14 15:30:36 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -53,8 +53,7 @@ namespace LoKi
      */
     // ========================================================================
     class FilterCriterion 
-      :         public GaudiTool  
-      , virtual public IFilterCriterion 
+      : public extends2<GaudiTool,IParticleFilter,IFilterCriterion>
     {
       // ======================================================================
       // friend factory for instantiation 
@@ -88,10 +87,10 @@ namespace LoKi
     protected:
       // ======================================================================
       /// Test if filter is satisfied
-      virtual bool isSatisfied  ( const LHCb::Particle* const & part ) 
+      virtual bool isSatisfied  ( const LHCb::Particle* part ) const 
       { return m_cut ( part ) ; }
       /// Test if filter is satisfied
-      virtual bool operator()   ( const LHCb::Particle* const & part ) 
+      virtual bool operator()   ( const LHCb::Particle* part ) const 
       { return m_cut ( part ) ; }
       // ======================================================================
     public:
@@ -118,14 +117,12 @@ namespace LoKi
       ( const std::string& type, 
         const std::string& name,
         const IInterface* parent)
-        : GaudiTool ( type , name , parent )
+        : base_class ( type , name , parent )
         , m_cut ( LoKi::Constant<const LHCb::Particle*,bool>( false ) ) 
         , m_code    ( "NONE")
         , m_factory ( "LoKi::Hybrid::Tool/HybridFactory:PUBLIC" ) 
         , m_preambulo()
       {
-        //
-        declareInterface<IFilterCriterion> ( this ) ;
         //
         declareProperty 
           ( "Code"    , m_code    ,
@@ -146,9 +143,9 @@ namespace LoKi
           declareUpdateHandler 
           ( &LoKi::Hybrid::FilterCriterion::propHandler , this ) ;
         //
-       } 
+      } 
       /// destructor : virtual and protected
-      virtual ~FilterCriterion( ){}
+      virtual ~FilterCriterion( ){}       // destructor : virtual and protected
       // ======================================================================
     private:
       // ======================================================================
