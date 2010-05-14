@@ -1,17 +1,11 @@
 package DaVinciSys
-version v25r4p1
+version v25r5
 
 branches doc cmt
 
 #=======================================================
-use  DaVinci                 	v25r4p1   Phys
+use  DaVinci                 	v25r5   Phys
 
-# Patches
-use  DaVinciMonitors            v1r10p1 Phys
-use  RichRecTools               v4r11p1 Rich
-use  HltCommon                  v5r24p1 Hlt
-use  KaliCalo                   v4r2p1  Phys
-use  DSTWriters                 v1r5    Phys
 #  
 # Declare this as a container package
 apply_pattern container_package
