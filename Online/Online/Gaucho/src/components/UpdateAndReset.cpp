@@ -61,7 +61,7 @@ UpdateAndReset::UpdateAndReset(const std::string& name, ISvcLocator* ploc)
   : GaudiAlgorithm(name, ploc)
 {
   declareProperty("disableMonRate", m_disableMonRate = 0);
-  declareProperty("desiredDeltaTCycle", m_desiredDeltaTCycle = 30);
+  declareProperty("desiredDeltaTCycle", m_desiredDeltaTCycle = 20);
   declareProperty("disableReadOdin", m_disableReadOdin = 0);
   declareProperty("disableChekInTimer", m_disableChekInTimer = 0);
   declareProperty("disableChekInExecute", m_disableChekInExecute = 0);
@@ -89,7 +89,7 @@ UpdateAndReset::UpdateAndReset(const std::string& name, ISvcLocator* ploc)
   m_offsetTimeLastEvInCycle=0;
   m_gpsTimeLastEvInCycle=0;
   m_offsetGpsTimeLastEvInCycle=0;
- // m_desiredDeltaTCycle = 30;
+  m_desiredDeltaTCycle = 30;
 }
 
 
@@ -472,8 +472,8 @@ void UpdateAndReset::updateData(bool isRunNumberChanged, bool isFromTimerHandler
  
   if (isRunNumberChanged) {
     if (0 == m_disableUpdateData) {
-        msg << MSG::INFO << "updating dim services (runnumber changed) m_eorNumber " << m_eorNumber << endreq;  
-        char timestr[64];
+        msg << MSG::DEBUG << "updating dim services (runnumber changed) m_eorNumber " << m_eorNumber << endreq;  
+         char timestr[64];
         char year[5];
         char month[3];
         char day[3];
@@ -487,15 +487,14 @@ void UpdateAndReset::updateData(bool isRunNumberChanged, bool isFromTimerHandler
 	endofrunnumber  << m_eorNumber;
 	std::string endofrunnumberstr = endofrunnumber.str();
 	std::string command="/bin/ls ";
-	std::string commandstr = command+m_saveSetDir+"/"+year+ "/"+partName + "/" + taskName +"/"+month+"/"+day+"/*"+endofrunnumberstr+"*-EOR.root > /tmp/null";
+	std::string commandstr = command+m_saveSetDir+"/"+year+ "/"+"*"+"/" + taskName +"/"+month+"/"+day+"/"+"*"+endofrunnumberstr+"*-EOR.root > /dev/null 2>&1  ";
 	std::stringstream outputstream;
 	outputstream << system(commandstr.c_str());
 	std::string outputstring;
 	outputstring = outputstream.str();
       //  msg << MSG::INFO << "output from ls command " << commandstr << " is " << outputstring << endreq;  	
-        std::size_t no_file = outputstring.find("No such file of directory");
-        if (no_file !=std::string::npos) m_pGauchoMonitorSvc->updateAll(true); //fast run change!
-    }
+        if (outputstring==0) m_pGauchoMonitorSvc->updateAll(true); //fast run change!    
+      }
  //   else msg << MSG::DEBUG << "===============> Data was not updated because the UpdateData process is disabled." << endreq;
     if (0 == m_disableResetHistos) {
       if ( 1 == m_saveHistograms ) {

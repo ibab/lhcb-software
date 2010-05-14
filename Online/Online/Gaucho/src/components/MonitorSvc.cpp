@@ -772,6 +772,12 @@ void MonitorSvc::undeclareAll( const IInterface* owner)
   undeclareAll(this);
 }
 
+StatusCode MonitorSvc::update(int endOfRun)  
+{
+  updateAll(endOfRun!=0,0);
+  return StatusCode::SUCCESS;
+}
+
 void MonitorSvc::updateAll( bool endOfRun, const IInterface* owner)
 {
   MsgStream msg(msgSvc(),"MonitorSvc");

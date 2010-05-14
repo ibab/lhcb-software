@@ -34,7 +34,10 @@ Algorithm.Property and returns the value of the property.
 @author Juan Otalora Goicochea 2007/11/20: MonObjects
 */
 
-class MonitorSvc : public Service, virtual public IMonitorSvc, virtual public IGauchoMonitorSvc {
+class MonitorSvc : public Service, 
+                   virtual public IMonitorSvc, 
+		   virtual public IGauchoMonitorSvc 
+{
 public:
   MonitorSvc(const std::string& name, ISvcLocator* sl);
   virtual ~MonitorSvc();
@@ -104,7 +107,9 @@ public:
   /** Update all monitoring information
       @param owner Owner identifier of the monitoring information
   */
-  void updateAll( bool endOfRun , const IInterface* owner = 0) ;
+  void updateAll( bool endOfRun , const IInterface* owner = 0) ;  
+  virtual StatusCode update(int endOfRun);
+  
   //void resetHistos( const IInterface* owner = 0 ) ;
   //void resetHistos(bool saveHistos);
 
