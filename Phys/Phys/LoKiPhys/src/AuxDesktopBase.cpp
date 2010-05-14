@@ -1,4 +1,4 @@
-// $Id: AuxDesktopBase.cpp,v 1.2 2010-02-19 16:40:18 ibelyaev Exp $
+// $Id: AuxDesktopBase.cpp,v 1.3 2010-05-14 07:48:30 jpalac Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -85,15 +85,15 @@ const LHCb::VertexBase* LoKi::AuxDesktopBase::relatedVertex
 // =============================================================================
 // get all primary vertices 
 // =============================================================================
-const LHCb::RecVertex::Container* LoKi::AuxDesktopBase::primaryVertices() const 
+const LHCb::RecVertex::Range LoKi::AuxDesktopBase::primaryVertices() const 
 {
   //
   if ( !validDesktop() ) { loadDesktop() ; }
   Assert ( validDesktop() , "Unable to retrieve PhysDekstop!" ) ;
   //
-  const LHCb::RecVertex::Container* pvs = m_desktop->primaryVertices() ;
-  if ( 0 == pvs ) 
-  { Warning ( "primaryVertices: desktop()->primaryVertices() returns NULL!") ; }
+  const LHCb::RecVertex::Range pvs = m_desktop->primaryVertices() ;
+  //  if ( 0 == pvs ) 
+  //  { Warning ( "primaryVertices: desktop()->primaryVertices() returns NULL!") ; }
   //
   return pvs ;
 }

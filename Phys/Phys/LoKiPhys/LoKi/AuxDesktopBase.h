@@ -1,4 +1,4 @@
-// $Id: AuxDesktopBase.h,v 1.2 2010-02-19 16:40:18 ibelyaev Exp $
+// $Id: AuxDesktopBase.h,v 1.3 2010-05-14 07:48:30 jpalac Exp $
 // ============================================================================
 #ifndef LOKI_AUXDESKTOPBASE_H 
 #define LOKI_AUXDESKTOPBASE_H 1
@@ -76,7 +76,7 @@ namespace LoKi
     /// get "the best related vertex" 
     const LHCb::VertexBase* relatedVertex ( const LHCb::Particle* p ) const ;
     /// get all primary vertices 
-    const LHCb::RecVertex::Container* primaryVertices() const ;
+    const LHCb::RecVertex::Range primaryVertices() const ;
     // ========================================================================
   private:
     // ========================================================================

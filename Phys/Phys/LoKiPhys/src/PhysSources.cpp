@@ -1,4 +1,4 @@
-// $Id: PhysSources.cpp,v 1.6 2010-05-05 15:45:03 ibelyaev Exp $
+// $Id: PhysSources.cpp,v 1.7 2010-05-14 07:48:30 jpalac Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -593,21 +593,21 @@ LoKi::Vertices::SourceDesktop::operator() () const
   //  
   const LHCb::Vertex::ConstVector&    input1 = 
     m_desktop -> secondaryVertices () ;
-  const LHCb::RecVertex::Container* input2 = 
+  const LHCb::RecVertex::Range input2 = 
     m_desktop -> primaryVertices   () ;
   //
-  if ( input1.empty() && input2->empty() ) 
+  if ( input1.empty() && input2.empty() ) 
   { Warning ( "No input vertices (secondary&primary) from Desktop" ) ; }
   
   LHCb::VertexBase::ConstVector output ;
-  output.reserve ( input1.size() + input2->size() ) ;
+  output.reserve ( input1.size() + input2.size() ) ;
   // use cuts:
   LoKi::select ( input1.begin () , 
                  input1.end   () , 
                  std::back_inserter ( output ) , 
                  m_cut.func () ) ;
-  LoKi::select ( input2->begin () , 
-                 input2->end   () , 
+  LoKi::select ( input2.begin () , 
+                 input2.end   () , 
                  std::back_inserter ( output ) , 
                  m_cut.func () ) ;
   //

@@ -1,4 +1,4 @@
-// $Id: Particles25.cpp,v 1.2 2010-02-19 16:40:18 ibelyaev Exp $
+// $Id: Particles25.cpp,v 1.3 2010-05-14 07:48:30 jpalac Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -155,17 +155,17 @@ LoKi::Particles::MaxCosineDirectionAngleDV::operator()
     return -1000 ;                                                     // RETURN 
   }
   // get all primary vertices from desktop
-  const LHCb::RecVertex::Container* primaries = primaryVertices() ;
-  if ( 0 == primaries ) 
-  {
-    Error ( "LHCb::RecVertex::Container* points to NULL, return -2000" ) ;
-    return -2000 ;                                                     // RETURN 
-  }
+  const LHCb::RecVertex::Range primaries = primaryVertices() ;
+//   if ( 0 == primaries ) 
+//   {
+//     Error ( "LHCb::RecVertex::Container* points to NULL, return -2000" ) ;
+//     return -2000 ;                                                     // RETURN 
+//   }
   // evaluate the maximum:
   double result = -1 * std::numeric_limits<double>::max() ;  
-  if ( primaries -> end()  == LoKi::Helpers::_Max_vertex 
-       ( primaries -> begin () , 
-         primaries -> end   () ,
+  if ( primaries.end()  == LoKi::Helpers::_Max_vertex 
+       ( primaries.begin () , 
+         primaries.end   () ,
          m_vcut                ,
          LoKi::Helpers::PMFA<LoKi::Particles::CosineDirectionAngle>
          ( this , &LoKi::Particles::CosineDirectionAngle::dira ) , p , result ) ) 
