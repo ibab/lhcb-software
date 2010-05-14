@@ -364,7 +364,11 @@ const RecVertex * Hlt2PreSelDV::GetUpstreamPV(){
   double tmp = 1000;
   for ( RecVertex::Container::const_iterator i = PVs->begin(); 
 	i != PVs->end() ; ++i ){
+    //Do not consider PVs outside some limits.
+    if( abs((*i)->position().x()>1.5*mm) || abs((*i)->position().y()>1.5*mm))
+      continue;
     double z = (*i)->position().z();
+    if( abs(z) > 150*mm ) continue;
     if( z < tmp ){
       tmp = z;
       upPV = (*i);

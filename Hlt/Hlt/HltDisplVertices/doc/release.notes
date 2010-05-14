@@ -4,9 +4,12 @@
 ! Purpose     : Apply some cuts on reconstructed vertices
 !-----------------------------------------------------------------------------
 
+! 2010-05-14 - Neal Gauvin
+ - Upstream primary vertices are taken within |z|<150mm.
+
 ! 2010-05-13 - Juan Palacios
  - Adapt to new DVAlgorithm::primaryVertices() signature.
- - Increase versiont o v2r3.
+ - Increase version to v2r3.
 
 !========================== HltDisplVertices v2r2 2010-04-30 ===================
 ! 2010-April-27 - Neal Gauvin
