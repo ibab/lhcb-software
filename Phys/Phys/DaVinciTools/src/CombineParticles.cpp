@@ -1,4 +1,4 @@
-// $Id: CombineParticles.cpp,v 1.39 2010-05-12 12:01:44 jpalac Exp $
+// $Id: CombineParticles.cpp,v 1.40 2010-05-14 15:31:51 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -242,9 +242,7 @@ namespace
  *  @date 2008-04-01
  */
 class CombineParticles 
-  : public         DVAlgorithm 
-  , public virtual ISetInputParticles 
-  , public virtual IIncidentListener 
+  : public extends2<DVAlgorithm,ISetInputParticles,IIncidentListener>
 {
   // ==========================================================================
   // the friend factory, needed for instantiation
@@ -267,19 +265,6 @@ public:
    *  @see IIncidentListener 
    */
   virtual void handle ( const Incident& ) ;
-  // ==========================================================================
-public:
-  // ==========================================================================
-  // IInterface
-  // ==========================================================================
-  /** Query interfaces of Interface
-   *  @see IInterface 
-   *  @param iid ID of Interface to be retrieved
-   *  @param iif Pointer to Location for interface pointer
-   */
-  virtual StatusCode queryInterface 
-  ( const InterfaceID& iid ,
-    void**             iif ) ;
   // ==========================================================================
 public:
   // ==========================================================================
@@ -511,7 +496,7 @@ using namespace LoKi ;
 CombineParticles::CombineParticles 
 ( const std::string& name ,   // the algorithm instance name 
   ISvcLocator*       pSvc )   // the service locator
-  : DVAlgorithm(  name , pSvc ) 
+  : base_class (  name , pSvc ) 
 //
 // properties
 //
@@ -900,7 +885,7 @@ StatusCode CombineParticles::execute    ()  // standard execution
   /** get the default particle combiner/creator 
    *  @attention Particle Combiner is used for creation of Mother Particle!
    */
-  IParticleCombiner* combiner = particleCombiner() ; // get the particle combiner 
+  const IParticleCombiner* combiner = particleCombiner() ; // get the particle combiner 
   
   // the counter of recontructed/selected decays:
   size_t nTotal = 0 ;
@@ -1059,27 +1044,6 @@ StatusCode CombineParticles::execute    ()  // standard execution
     { incSvc()->fireIncident   ( Incident ( name() , m_stopIncidentName ) ) ; }
   }
 
-  return StatusCode::SUCCESS ;
-}
-// ============================================================================
-/*  Query interfaces of Interface
- *  @param iid ID of Interface to be retrieved
- *  @param iif Pointer to Location for interface pointer
- */
-// ============================================================================
-StatusCode CombineParticles::queryInterface
-(const InterfaceID& iid ,
- void**             iif ) 
-{
-  if ( 0 == iif ) { return StatusCode::FAILURE ; }                   // RETURN
-  //
-  if      ( ISetInputParticles::interfaceID () . versionMatch ( iid ) )
-  { *iif = static_cast<ISetInputParticles*>      ( this ) ; }
-  else if ( IIncidentListener::interfaceID  () . versionMatch ( iid ) )
-  { *iif = static_cast<IIncidentListener*>       ( this ) ; }
-  else { return Algorithm::queryInterface ( iid , iif ) ; }         // RETURN 
-  //
-  addRef() ;
   return StatusCode::SUCCESS ;
 }
 // ============================================================================

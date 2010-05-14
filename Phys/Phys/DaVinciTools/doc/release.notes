@@ -1,8 +1,15 @@
-! $Id: release.notes,v 1.545 2010-05-14 08:31:51 jpalac Exp $
+! $Id: release.notes,v 1.546 2010-05-14 15:31:50 ibelyaev Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2010-05-14 - Vanya Belyaev
+
+ - CommonParticles
+
+    cange a bit inheritance scheme 
+    fix for bew signature of some tool accessors 
 
 ! 2010-05-14 - Juan Palacios
  - PhysDesktop
