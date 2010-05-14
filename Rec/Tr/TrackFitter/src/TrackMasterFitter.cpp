@@ -466,21 +466,21 @@ StatusCode TrackMasterFitter::projectReference( LHCb::Track& track ) const
   BOOST_FOREACH( LHCb::Node* node, track.fitResult()->nodes() ) {
     if( !node->refIsSet() ) {
       sc = Warning( "Node without reference", StatusCode::FAILURE, 0 );
-      debug() << "Node without reference" << endmsg ;
+      if(msgLevel(MSG::DEBUG)) debug() << "Node without reference" << endmsg ;
       break ;
     } else if( node->hasMeasurement() ) {
       // if the reference is not set, issue an error
       ITrackProjector *proj = m_projectorSelector->projector(node->measurement());
       if ( proj==0 ) {
 	sc = Warning( "Could not get projector for measurement", StatusCode::FAILURE, 0 );
-	debug() << "could not get projector for measurement" << endmsg ;
+	if(msgLevel(MSG::DEBUG)) debug() << "could not get projector for measurement" << endmsg ;
 	break ;
       } else {
 	LHCb::FitNode& fitnode = dynamic_cast<LHCb::FitNode&>(*node) ;
 	sc = proj -> projectReference(fitnode) ;
 	if ( sc.isFailure() ) {
 	  Warning( "unable to project statevector", sc, 0 ).ignore();
-	  debug() << "unable to project this statevector: " << node->refVector() 
+	  if(msgLevel(MSG::DEBUG)) debug() << "unable to project this statevector: " << node->refVector() 
 		  << endmsg ;
 	  break ;
 	}
