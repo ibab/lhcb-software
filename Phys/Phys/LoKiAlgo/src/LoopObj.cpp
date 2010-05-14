@@ -1,4 +1,4 @@
-// $Id: LoopObj.cpp,v 1.13 2008-12-05 10:42:17 ibelyaev Exp $
+// $Id: LoopObj.cpp,v 1.14 2010-05-14 15:08:55 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -319,7 +319,7 @@ StatusCode LoKi::LoopObj::make ( const std::string& nick ) const
   //
   if ( m_algo.validPointer() ) 
   {
-    IParticleCombiner* combiner = m_algo->particleCombiner( nick ) ;
+    const IParticleCombiner* combiner = m_algo->particleCombiner( nick ) ;
     return make ( combiner ) ;
   }
   m_status = StatusCode ( StatusCode::FAILURE , true ) ;
@@ -423,7 +423,7 @@ StatusCode LoKi::LoopObj::reFit
 {
   if ( m_algo.validPointer() ) 
   {
-    IParticleReFitter* fitter = m_algo->particleReFitter( nick ) ;
+    const IParticleReFitter* fitter = m_algo->particleReFitter( nick ) ;
     return reFit( fitter  ) ;
   }
   m_status = StatusCode ( StatusCode::FAILURE , true ) ;

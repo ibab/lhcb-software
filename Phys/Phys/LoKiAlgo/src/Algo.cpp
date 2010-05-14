@@ -1,4 +1,4 @@
-// $Id: Algo.cpp,v 1.26 2010-05-14 08:08:37 jpalac Exp $
+// $Id: Algo.cpp,v 1.27 2010-05-14 15:08:54 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -185,7 +185,7 @@ LoKi::Algo::vselect
     }
     if ( 0 < changed ) 
     {
-      Warning("LHCb::RecVertex::teqchue reset to Primary") ;
+      Warning("LHCb::RecVertex::technique reset to Primary") ;
       debug() << " Number of modified vertices " 
               << changed << "/" << prims.size() << endreq ;
     }
