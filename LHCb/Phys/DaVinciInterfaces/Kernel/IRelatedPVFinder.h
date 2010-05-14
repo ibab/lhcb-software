@@ -1,4 +1,4 @@
-// $Id: IRelatedPVFinder.h,v 1.6 2009-08-31 20:33:39 jpalac Exp $
+// $Id: IRelatedPVFinder.h,v 1.7 2010-05-14 08:13:23 jpalac Exp $
 #ifndef KERNEL_IRELATEDPVFINDER_H 
 #define KERNEL_IRELATEDPVFINDER_H 1
 
@@ -29,6 +29,21 @@ class GAUDI_API IRelatedPVFinder : virtual public IAlgTool {
 public: 
 
   DeclareInterfaceID(IRelatedPVFinder, 3, 0);
+
+  /**
+   * Return a range of weighted relations between an LHCb::Particle and a
+   * range of LHCb::RecVertex*
+   * 
+   * @param particle       The LHCb::Particle for which related PVs will be searched
+   * @param PVs            Range of LHCb::RecVertex* to be related to particle
+   *
+   * @return               sorted weighted relations table relating particle and the vertices in PVs. 
+   * Must return empty table if something goes wrong in association.
+   *
+   * @author Juan Palacios juan.palacios@nikhef.nl
+   */
+  virtual const Particle2Vertex::LightWTable relatedPVs(const LHCb::Particle* particle,
+                                                        const LHCb::RecVertex::Range& PVs) const =0;
   
   /**
    * Return a range of weighted relations between an LHCb::Particle and a
@@ -113,7 +128,8 @@ public:
    * @todo document.
    *
    */
-
+  virtual const LHCb::VertexBase* relatedPV(const LHCb::Particle* particle,
+                                            const LHCb::RecVertex::Range& PVs) const =0;
   virtual const LHCb::VertexBase* relatedPV(const LHCb::Particle* particle,
                                             const LHCb::RecVertex::Container& PVs) const =0;
   virtual const LHCb::VertexBase* relatedPV(const LHCb::Particle* particle,
