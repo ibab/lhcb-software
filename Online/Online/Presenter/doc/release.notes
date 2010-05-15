@@ -4,6 +4,12 @@
 ! Purpose     : GUI to allow the visualization of all data quality histograms
 !-----------------------------------------------------------------------------
 
+! 2010-05-15 - Patrick Robbe
+ - cmt/requirements: add -isystem statement for boost includes in order to get
+   rid of the boost libraries warning
+ - RunDB.h/.cpp: interface to run db interface (via web server)
+ - IntervalPicker.h/.cpp: make the interval chooser for history a modal window
+ - PresenterMainFrame.cpp: add possibility to navigate history by runs
 
 ! 2010-05-11 - G.Graziani
  - only use end of run savesets for EFF histograms (not reset during run) in history mode

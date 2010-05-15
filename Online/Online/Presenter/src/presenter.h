@@ -13,7 +13,7 @@
 
 void setSystemEnvironment(const char* environmentVariable, const char* value);
 
-static const std::string s_presenterVersion("v1r2");
+static const std::string s_presenterVersion("v1r3");
 // environment variable for archive mount point (i.e. prefix to paths)
 static const std::string s_configToken(";");
 
@@ -230,7 +230,7 @@ namespace pres
   static const int s_maxWindowHeight = 32767;
   static const int s_maxPageNameLength = 1024;
 
-  static const TString s_lhcbPartionName("LHCb");
+  static const TString s_lhcbPartitionName("LHCb");
 
   static const std::string s_rootFileExtension(".root");
   static const std::string s_savesetToken("-");

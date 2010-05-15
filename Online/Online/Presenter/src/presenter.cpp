@@ -137,12 +137,13 @@ int main(int argc, char* argv[])
       ("database-credentials,DBC", value<std::string>()->default_value(s_histReaderPair),"database credentials")
       ("logbook-settings,L", value<std::string>(), "logbook configuration")
       ("problem-settings,L", value<std::string>(), "Problem Database configuration")
+      ("rundb-settings,L", value<std::string>() , "Run Database configuration" )
       ("hide-alarm-list,A", value<bool>(), "hide alarm list")
       ("hide-problem-list,A", value<bool>(), "hide problem list")
       ("config-file,C", value<std::string>(), "configuration file")
       ("key-file,K", value<std::string>(), "TCK list file")
       ("image-path,I", value<std::string>()->default_value(gSystem->TempDirectory()), "image dump directory")
-      ("partition,P", value<std::string>()->default_value(s_lhcbPartionName.Data()), "partition name")
+      ("partition,P", value<std::string>()->default_value(s_lhcbPartitionName.Data()), "partition name")
       ("dump-format,F", value<std::string>()->default_value("png"), "dump format")
       ;
 
@@ -243,6 +244,10 @@ int main(int argc, char* argv[])
 
     if (startupSettings.count("problem-settings")) {
       presenterMainFrame.setPbdbConfig(startupSettings["problem-settings"].as<std::string>());
+    }
+
+    if ( startupSettings.count( "rundb-settings" ) ) {
+      presenterMainFrame.setRundbConfig( startupSettings["rundb-settings"].as<std::string>() ) ;
     }
 
     if (startupSettings.count("verbosity")) {

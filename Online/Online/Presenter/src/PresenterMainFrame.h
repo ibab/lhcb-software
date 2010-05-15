@@ -40,6 +40,7 @@ class TGListTreeItem;
 class TGVSplitter;
 class TGHSplitter;
 class TObjArray;
+class TGTextView ;
 
 class DbRootHist;
 class TDirectory;
@@ -51,6 +52,7 @@ class OMAlib;
 class Archive;
 class IntervalPicker;
 class TDatime;
+class TGLabel ;
 
 class stringstream;
 
@@ -58,6 +60,8 @@ class TBenchmark;
 
 class KnownProblemList ;
 class OnlineHistPage ;
+class RunDB ;
+class IntervalPickerData ;
 
 class PresenterMainFrame : public TGMainFrame {
 public:
@@ -135,6 +139,7 @@ public:
       M_File_Picker,
       M_Last_Interval,
       M_IntervalPicker,
+      M_IntervalPickerRun ,
       M_UtgidPicker,
       M_PartitionList,
       M_Previous_Interval,
@@ -174,10 +179,17 @@ public:
   //    void setResumeRefreshAfterLoading(bool refreshAfterLoading);
   void setHistoryMode(bool mode) { m_historyMode = mode; }
   pres::DatabaseMode databaseMode() { return m_databaseMode; }
+
+  /// Get name of current partition
   std::string currentPartition() { return m_currentPartition; }
   void setVerbosity(const pres::MsgLevel & verbosity);
   void setLogbookConfig(const std::string & logBookConfig);
   void setPbdbConfig(const std::string & pbdbConfig);
+
+  /// Set name of run database web host
+  void setRundbConfig(const std::string & rundbConfig) { 
+    m_rundbConfig = rundbConfig ; } ;
+
   pres::MsgLevel verbosity() const { return m_verbosity; }
   Archive* archive() const { return m_archive; }
   IntervalPicker* intervalPicker() const { return m_intervalPicker; }
@@ -186,7 +198,11 @@ public:
   void setSavesetPath(const std::string & savesetPath);
   void setImagePath(const std::string & imagePath);
   void setDumpFormat(const std::string & dumpFormat);
-  void setPartition(const std::string & partition);
+
+  /// Set current partition name
+  void setPartition(const std::string & partition) { 
+    m_currentPartition = partition ; }
+
   std::string currentTCK() { return m_currentTCK; }
   void setTCK(std::string TCK) { m_currentTCK = TCK; }
 
@@ -371,6 +387,7 @@ private:
   pres::MsgLevel    m_verbosity;
   std::string       m_logBookConfig;
   std::string       m_pbdbConfig;
+  std::string       m_rundbConfig ;
   bool              m_historyMode;
   bool          m_resumePageRefreshAfterLoading;
   bool              m_loadingPage;
@@ -429,6 +446,8 @@ private:
 
   // File menu
   TGToolBar*    m_toolBar;
+  TGLabel  *    m_toolBarLabel ;
+  TGTextView *  m_textNavigation ;
   TGMenuBar*    m_menuBar;
   TGPopupMenu*  m_fileMenu;
   TGHotString*  m_fileText;
@@ -572,6 +591,8 @@ private:
   int m_deadTasksOnPage;
   std::string m_currentTCK;
 
+  RunDB * m_runDb ; ///< Interface to run database
+
   std::vector<std::string> m_histoTimerName;
 
   std::string convDimToHistoID(const std::string & dimSvcName);
@@ -628,9 +649,14 @@ private:
   TList*  m_knownMonitoringNodeList;
   TList*  m_knownInstanceNumberList;
 
+  IntervalPickerData * m_intervalPickerData ;
+
   /// Display page name in status bar and load comments
   void displayStatusAndComments( const std::string & pageName , 
 				 OnlineHistPage * page ) ;
+
+  /// Change main window for run navigation
+  void switchToRunNavigation( bool on ) ;
 
   ClassDef(PresenterMainFrame, 0) // main editor window
     };

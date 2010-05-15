@@ -54,7 +54,7 @@
 #include <TTimer.h>
 #include <TGFileDialog.h>
 #include <TRootHelpDialog.h>
-#include <TBenchmark.h>
+#include <TBenchmark.h> 
 
 
 #include "dim/dic.hxx"
@@ -81,6 +81,7 @@
 #include "ShiftDB.h"
 #include "KnownProblemList.h"
 #include "ProblemDB.h"
+#include "RunDB.h"
 #include "PageDescriptionTextView.h"
 
 using namespace pres;
@@ -108,17 +109,17 @@ PresenterMainFrame::PresenterMainFrame(const char* name,
   m_verbosity(Silent),
   m_logBookConfig(""),
   m_pbdbConfig(""),
+  m_rundbConfig( "" ) ,
   m_historyMode(s_timeInterval),
   m_resumePageRefreshAfterLoading(false),
   m_loadingPage(false),
-  m_currentPartition(s_lhcbPartionName.Data()),
+  m_currentPartition(s_lhcbPartitionName.Data()),
   m_currentPageName(""),
   m_referencePath(referencePath),
   m_savesetPath(savesetPath),
   m_imagePath(gSystem->TempDirectory()),
   m_savesetFileName(""),
   m_archive(NULL),
-  m_intervalPicker(NULL),
   m_presenterMode(History),
   m_prevPresenterMode(History),
   m_databaseMode(LoggedOut),
@@ -152,7 +153,9 @@ PresenterMainFrame::PresenterMainFrame(const char* name,
   m_folderItem(NULL),
   m_benchmark(NULL),
   m_deadTasksOnPage(0),
-  m_currentTCK("")
+  m_currentTCK(""),
+  m_runDb( 0 ) ,
+  m_intervalPickerData(NULL) 
 {
   m_benchmark = new TBenchmark();
   SetCleanup(kDeepCleanup);
@@ -251,10 +254,8 @@ PresenterMainFrame::~PresenterMainFrame() {
     delete (*dbCreds).second;
   }
 
-  if (0 != m_intervalPicker) {
-    m_intervalPicker->UnmapWindow();
-    m_intervalPicker->CloseWindow();
-    delete m_intervalPicker; m_intervalPicker = NULL;
+  if (0 != m_intervalPickerData) {
+    delete m_intervalPickerData ; m_intervalPickerData = NULL;
   }
   if (0 != m_clockTimer) { delete m_clockTimer; m_clockTimer = NULL; }
   if (0 != m_pageRefreshTimer) {
@@ -604,23 +605,26 @@ void PresenterMainFrame::buildGUI() {
                                 "clearHistos()");
 
     //Partition selector
-    m_partitionSelectorComboBox = new TGComboBox(m_toolBar, -1,kHorizontalFrame | kSunkenFrame | kDoubleBorder | kOwnBackground);
+    m_partitionSelectorComboBox = new TGComboBox(m_toolBar, -1,kHorizontalFrame | 
+						 kSunkenFrame | kDoubleBorder | kOwnBackground);
 
     m_toolBar->AddFrame(new TGLabel(m_toolBar,"Partition: ") ,
                         new TGLayoutHints(kLHintsCenterY, 2,2,2,2));
     m_toolBar->AddFrame(m_partitionSelectorComboBox , new TGLayoutHints(kLHintsCenterY,2,2,2,2));
-    m_partitionSelectorComboBox->AddEntry("refresh list", 0);
-    m_partitionSelectorComboBox->Select(0, false);
-    m_partitionSelectorComboBox->Resize(122,22);
-    m_partitionSelectorComboBox->Connect("Selected(int)", "PresenterMainFrame",
-                                         this, "partitionSelectorComboBoxHandler(int)");
+    m_partitionSelectorComboBox -> AddEntry("refresh list", 1);
+    m_partitionSelectorComboBox -> Select(1, kTRUE ) ;
+    m_partitionSelectorComboBox -> Resize(122,22);
+    m_partitionSelectorComboBox -> Connect("Selected(int)", "PresenterMainFrame",
+					   this, "partitionSelectorComboBoxHandler(int)");
 
     //History mode
+    m_toolBarLabel = new TGLabel( m_toolBar , "Time: " ) ;
 
-    m_toolBar->AddFrame(new TGLabel(m_toolBar,"Time: ") ,
-                        new TGLayoutHints(kLHintsCenterY, 2,2,2,2));
+    m_toolBar->AddFrame( m_toolBarLabel ,
+			 new TGLayoutHints(kLHintsCenterY, 2,2,2,2));
 
-    const TGPicture* arrow_left = picpool->GetPicture("arrow_left.xpm");
+    const TGPicture* arrow_left = picpool->GetPicture("arrow_left.xpm" , 
+						      (UInt_t) 16 , (UInt_t) 16 ) ;
     m_previousIntervalButton = new TGPictureButton(m_toolBar, arrow_left,
                                                    M_Previous_Interval);
     m_previousIntervalButton->SetToolTipText("Previous interval");
@@ -629,7 +633,11 @@ void PresenterMainFrame::buildGUI() {
     m_previousIntervalButton->Connect("Clicked()", "PresenterMainFrame", this,
                                       "previousInterval()");
 
-    const TGPicture* arrow_right = picpool->GetPicture("arrow_right.xpm");
+    m_textNavigation = new TGTextView( m_toolBar , 100 , 25 ) ;
+    m_toolBar -> AddFrame( m_textNavigation ) ;
+
+    const TGPicture* arrow_right = picpool->GetPicture("arrow_right.xpm" , 
+						       (UInt_t) 16 , (UInt_t) 16 );
     m_nextIntervalButton = new TGPictureButton(m_toolBar, arrow_right,
                                                M_Next_Interval);
     m_nextIntervalButton->SetToolTipText("Next interval");
@@ -653,6 +661,9 @@ void PresenterMainFrame::buildGUI() {
                         new TGLayoutHints(kLHintsCenterY, 2,2,2,2));
     m_toolBar->AddFrame(m_historyIntervalComboBox , new TGLayoutHints(kLHintsCenterY,2,2,2,2));
     m_historyIntervalComboBox->SetEnabled(false);
+    // Select history by run
+    m_historyIntervalComboBox -> AddEntry ("set run number" , 
+					   M_IntervalPickerRun ) ;
     m_historyIntervalComboBox->AddEntry("preset file", M_Last_File);
     m_historyIntervalComboBox->AddEntry("set file", M_File_Picker);
     m_historyIntervalComboBox->AddEntry("preset interval", M_Last_Interval);
@@ -1182,7 +1193,8 @@ void PresenterMainFrame::buildGUI() {
     m_dimBrowserDock->MapWindow();
     m_databasePagesDock->MapWindow();
 
-    m_intervalPicker = new IntervalPicker(this);
+    m_runDb = new RunDB( m_rundbConfig ) ;
+    m_intervalPickerData = new IntervalPickerData( ) ;
     partitionSelectorComboBoxHandler(m_partitionSelectorComboBox->GetSelected());
     m_prevPresenterMode = m_presenterMode;
     m_presenterMode = Online;
@@ -1261,8 +1273,13 @@ void PresenterMainFrame::CloseWindow() {
   
   removeHistogramsFromPage();
   if (0 != m_analysisLib) { delete m_analysisLib; m_analysisLib = NULL; }
+  
+  // delete RunDB interface object
+  if ( m_runDb ) delete m_runDb ;
+
   gApplication->Terminate();
 }
+
 void PresenterMainFrame::dockAllFrames() {
   m_pageDock->DockContainer();
   //m_mainCanvasInfoDock->DockContainer();
@@ -1377,7 +1394,7 @@ void PresenterMainFrame::handleCommand(Command cmd) {
     break;
   case M_RefreshHistoSvcListTree:
     refreshHistogramSvcList(s_withTree);
-    partitionSelectorComboBoxHandler(0);
+    partitionSelectorComboBoxHandler( 1 );
     break;
   case M_PartitionList:
     partitionSelectorComboBoxHandler(m_partitionSelectorComboBox->GetSelected());
@@ -1409,12 +1426,34 @@ void PresenterMainFrame::handleCommand(Command cmd) {
     m_histogramDB->refresh();
     break;
   case M_IntervalPicker:
-    m_intervalPicker->MapWindow();
+    m_intervalPickerData -> setMode( IntervalPickerData::TimeInterval ) ; 
+    fClient -> WaitFor( dynamic_cast< TGWindow * > ( new IntervalPicker( this , 
+									 m_runDb , 
+									 m_intervalPickerData ) ) );
+						  
     m_previousIntervalButton->SetState(kButtonEngaged);
     m_previousIntervalButton->SetState(kButtonUp);
     m_nextIntervalButton->SetState(kButtonEngaged);
     m_nextIntervalButton->SetState(kButtonUp);
+    switchToRunNavigation( false ) ;
+    if ( ! m_currentPageName.empty( ) ) 
+      loadSelectedPageFromDB( m_currentPageName , global_timePoint , 
+			      global_pastDuration ) ;
     break;
+  case M_IntervalPickerRun:
+    m_intervalPickerData -> setMode( IntervalPickerData::SingleRun ) ;
+    fClient->WaitFor(dynamic_cast<TGWindow*>( new IntervalPicker( this , 
+								  m_runDb , 
+								  m_intervalPickerData ) ) ) ;
+    m_previousIntervalButton->SetState(kButtonEngaged);
+    m_previousIntervalButton->SetState(kButtonUp);
+    m_nextIntervalButton->SetState(kButtonEngaged);
+    m_nextIntervalButton->SetState(kButtonUp);
+    switchToRunNavigation( true ) ;
+    if ( ! m_currentPageName.empty() ) 
+      loadSelectedPageFromDB( m_currentPageName , global_timePoint , 
+			      global_pastDuration ) ;
+    break ;
   case M_Last_Interval:
     m_previousIntervalButton->SetState(kButtonEngaged);
     m_previousIntervalButton->SetState(kButtonUp);
@@ -1575,9 +1614,6 @@ void PresenterMainFrame::setImagePath(const std::string & imagePath) {
 }
 void PresenterMainFrame::setDumpFormat(const std::string & dumpFormat) {
   m_dumpFormat = dumpFormat;
-}
-void PresenterMainFrame::setPartition(const std::string & partition) {
-  m_currentPartition = partition;
 }
 
 void PresenterMainFrame::setPresenterMode(const PresenterMode & presenterMode) {
@@ -1772,14 +1808,14 @@ void PresenterMainFrame::reportToLog() {
     // Default values.
     std::string logbook  = "Shift";
     std::string username = "Data Manager";
-    std::string system   = m_currentPartition;;
+    std::string system   = currentPartition() ;
     std::string subject  = "";
     std::string message  = "See attached plot.";
     std::string title    = "";
     int         isOK     = 0;
 
     //== In LHCb partition, get the Data Manager name, extract the system from the SHIFTS page and remove subject
-    if ( "LHCb" == m_currentPartition ) {
+    if ( "LHCb" == currentPartition() ) {
       //== get name of Data Manager on shift
       ShiftDB shiftdb ;
       username =  shiftdb.getCurrentDataManager().c_str();
@@ -2824,7 +2860,7 @@ void PresenterMainFrame::reconfigureGUI() {
     // hide refreshHistoDBListTree
     if ((Online == m_prevPresenterMode) &&
         (m_presenterMode != m_prevPresenterMode)) {
-      partitionSelectorComboBoxHandler(0);
+      partitionSelectorComboBoxHandler( 1 ) ;
     }
   } else if (EditorOnline == m_presenterMode) {
     stopPageRefresh();
@@ -2902,7 +2938,7 @@ void PresenterMainFrame::reconfigureGUI() {
          History == m_prevPresenterMode) &&
         m_presenterMode != m_prevPresenterMode ) {
       refreshHistogramSvcList(s_withTree);
-      partitionSelectorComboBoxHandler(0);
+      partitionSelectorComboBoxHandler( 1 );
     }
   }
 
@@ -3221,75 +3257,81 @@ void PresenterMainFrame::refreshHistogramSvcList(bool tree) {
   }
 }
 
+//==============================================================================
+// Selection partition name
+//==============================================================================
 void PresenterMainFrame::partitionSelectorComboBoxHandler(int partitionNumber) {
-  if (0 == partitionNumber) {
-    m_partitionSelectorComboBox->RemoveEntries(1,m_partitionSelectorComboBox->GetNumberOfEntries());
-    bool updateList(false);
-    int foundLHCbPartitionId(0);
-    int id = 1;
-    TIterator* partitionIt = 0;
+  if ( 1 == partitionNumber ) {
+    m_partitionSelectorComboBox -> 
+      RemoveEntries( 2 , m_partitionSelectorComboBox -> GetNumberOfEntries() + 1 ) ;
+    bool updateList( false ) ;
+    int foundLHCbPartitionId( 0 ) ;
+    int id = 2 ;
+    TIterator * partitionIt = 0;
 
-    if (((History == m_presenterMode) ||
-         (EditorOffline == m_presenterMode))
-        && 0 != m_archive) {
+    if ( ( ( History == m_presenterMode) || ( EditorOffline == m_presenterMode ) )
+	 && ( 0 != m_archive ) ) {
       updateList = true;
-      std::vector<std::string> m_historyPartitionList;
-      std::vector<std::string>::const_iterator m_historyPartitionListIt;
-      m_knownHistoryPartitionList->Delete();
+      std::vector< std::string > m_historyPartitionList ;
+      std::vector< std::string >::const_iterator m_historyPartitionListIt ;
+      m_knownHistoryPartitionList -> Delete() ;
 
-      m_historyPartitionList = m_archive->listPartitions();
+      m_historyPartitionList = m_archive -> listPartitions() ;
 
-      m_historyPartitionListIt = m_historyPartitionList.begin();
-      while (m_historyPartitionListIt != m_historyPartitionList.end()) {
+      for ( m_historyPartitionListIt = m_historyPartitionList.begin() ;
+	    m_historyPartitionListIt != m_historyPartitionList.end() ; 
+	    ++m_historyPartitionListIt ) {
         if (!m_knownHistoryPartitionList->FindObject((*m_historyPartitionListIt).c_str())) {
           TObjString* partitionName = new TObjString((*m_historyPartitionListIt).c_str());
-          m_knownHistoryPartitionList->Add(partitionName);
+          m_knownHistoryPartitionList -> Add( partitionName ) ;
         }
-        m_historyPartitionListIt++;
       }
       partitionIt = m_knownHistoryPartitionList->MakeIterator();
 
-    } else if (Online == m_presenterMode ||
-               EditorOnline == m_presenterMode) {
-      updateList = true;
-      refreshHistogramSvcList(s_withoutTree);
-      partitionIt = m_knownOnlinePartitionList->MakeIterator();
+    } else if ( ( Online == m_presenterMode ) || 
+		( EditorOnline == m_presenterMode ) ) {
+      updateList = true ;
+      refreshHistogramSvcList( s_withoutTree ) ;
+      partitionIt = m_knownOnlinePartitionList -> MakeIterator() ;
     }
+
     if (updateList) {
-      int idLimit(550);   // directories to avoid deep nesting troubles
+ 
+      int idLimit( 550 ) ;   // directories to avoid deep nesting troubles
       TObject *obj = 0;
-      while ((obj = partitionIt->Next())) {
+      while ( ( obj = partitionIt->Next() ) ) {
         if (obj) {
-          m_partitionSelectorComboBox->AddEntry(obj->GetName(), id);
-          if (id < idLimit) {
-            if (0 == s_lhcbPartionName.CompareTo(obj->GetName(),
-                                                 TString::kIgnoreCase)) {
-              foundLHCbPartitionId = id;
+          m_partitionSelectorComboBox -> AddEntry( obj->GetName() , id ) ;
+          if ( id < idLimit ) {
+            if ( 0 == s_lhcbPartitionName.CompareTo( obj->GetName() ,
+						     TString::kIgnoreCase ) ) {
+              foundLHCbPartitionId = id ;
             }
             id++;
           }
         }
       }
     }
+    
     m_partitionSelectorComboBox->SortByName();
     if (partitionIt) { delete partitionIt; partitionIt = 0; }
-    if (0 != foundLHCbPartitionId) {
-      m_partitionSelectorComboBox->Select(id, true);
+    if ( 0 != foundLHCbPartitionId ) {
+      m_partitionSelectorComboBox -> Select( foundLHCbPartitionId , kTRUE ) ;
       if (m_verbosity >= Verbose) {
         std::cout << "Found default LHCb partition: " <<
-          m_currentPartition << std::endl;
+          currentPartition() << std::endl;
       }
-    } else if (0 < id) {
-      m_partitionSelectorComboBox->Select(id, true);
-      if (m_verbosity >= Verbose) {
-        std::cout << "Defaulting to partition: " << m_currentPartition <<
+    } else if (1 < id) {
+      m_partitionSelectorComboBox -> Select( id , true ) ;
+      if ( m_verbosity >= Verbose ) {
+        std::cout << "Defaulting to partition: " << currentPartition() <<
           std::endl;
       }
     }
   } else {
     std::string partition_entry( dynamic_cast<TGTextLBEntry*>(m_partitionSelectorComboBox->GetSelectedEntry())
                                  ->GetText()->GetString() );
-    m_currentPartition = partition_entry;
+    setPartition( partition_entry ) ;
   }
   if (isConnectedToHistogramDB() && (false == m_currentPageName.empty()) && (false == m_loadingPage)) {
     loadSelectedPageFromDB(m_currentPageName, s_startupFile, m_savesetFileName);
@@ -3476,7 +3518,7 @@ void PresenterMainFrame::addHistoToPage( const std::string& histogramUrl,
   OnlineHistDB*  histogramDB = NULL;
   OnlineHistogram* onlineHistogram = NULL;
   DimBrowser* dimBrowser = NULL;
-  std::string currentPartition(m_currentPartition);
+  std::string theCurrentPartition( currentPartition() ) ;
   if (isConnectedToHistogramDB() &&
       (invisible != overlapMode) ){
     histogramDB = m_histogramDB;
@@ -3496,12 +3538,12 @@ void PresenterMainFrame::addHistoToPage( const std::string& histogramUrl,
              (Batch == m_presenterMode)) {
     dimBrowser = m_dimBrowser;
     if ( false == isConnectedToHistogramDB() ) {
-      currentPartition = histogramUrl;
+      theCurrentPartition = histogramUrl;
     }
   }
   DbRootHist* dbRootHist = Presenter::getPageHistogram(this,
 						       histogramUrl,
-						       currentPartition,
+						       theCurrentPartition,
 						       2, newHistoInstance,
 						       histogramDB,
 						       analysisLib(),
@@ -4087,14 +4129,20 @@ void PresenterMainFrame::loadSelectedPageFromDB(const std::string & pageName,
         rw_timePoint = global_timePoint;
         rw_pastDuration = global_pastDuration;  
         if (global_historyByRun) {
-          m_message = Form("History from run %d to %d",
-                           m_intervalPicker->startRun(),
-                           m_intervalPicker->endRun());
+	  if ( global_pastDuration == "0" ) 
+	    m_message = Form( "History from run %d, start time: %s, duration: %s" ,
+			      m_intervalPickerData->startRun() ,
+			      m_runDb -> getCurrentStartTime().c_str() , 
+			      m_runDb -> getCurrentRunDuration().c_str() ) ;
+	  else 
+	    m_message = Form("History from run %d to %d",
+			     m_intervalPickerData->startRun(),
+			     m_intervalPickerData->endRun());
         }
         else {
           m_message = Form("History from %s to %s",
-                           m_intervalPicker->startTimeString(),
-                           m_intervalPicker->endTimeString());
+                           m_intervalPickerData->getStartTimeString(),
+                           m_intervalPickerData->getEndTimeString());
         }
       }
       if (m_verbosity >= Verbose) {
@@ -4128,7 +4176,7 @@ void PresenterMainFrame::loadSelectedPageFromDB(const std::string & pageName,
 
         for (drawHist_dbHistosOnPageIt = dbHistosOnPage.begin();
              drawHist_dbHistosOnPageIt != dbHistosOnPage.end();
-             drawHist_dbHistosOnPageIt++) {
+             ++drawHist_dbHistosOnPageIt) {
 
           if ( (m_verbosity >= Verbose) &&
                (*drawHist_dbHistosOnPageIt) &&
@@ -4200,7 +4248,7 @@ void PresenterMainFrame::loadSelectedPageFromDB(const std::string & pageName,
 
         for (drawOpt_dbHistosOnPageIt = dbHistosOnPage.begin();
              drawOpt_dbHistosOnPageIt != dbHistosOnPage.end();
-             drawOpt_dbHistosOnPageIt++) {
+             ++drawOpt_dbHistosOnPageIt) {
           if ( TCKinfo != (*drawOpt_dbHistosOnPageIt)->effServiceType() ) {
             (*drawOpt_dbHistosOnPageIt)->setDrawOptionsFromDB((*drawOpt_dbHistosOnPageIt)->hostingPad);
 
@@ -4592,24 +4640,63 @@ void PresenterMainFrame::previousInterval() {
     if (m_verbosity >= Verbose) {
       std::cout << "after previousInterval global_timePoint " << global_timePoint << std::endl;
     }
+  } else if ( IntervalPickerData::SingleRun == m_intervalPickerData -> getMode() ) {
+    int previousRun = m_runDb -> getPreviousRun( ) ;
+    if ( 0 == previousRun ) 
+      new TGMsgBox( fClient -> GetRoot() , this , "Previous run" , 
+		    "Already at first run" , kMBIconExclamation ) ;  
+    else {
+      std::ostringstream is ;
+      is << previousRun ;
+      global_timePoint = is.str() ;
+      global_pastDuration = "0"  ;
+      m_intervalPickerData -> setStartRun( previousRun ) ;
+      m_intervalPickerData -> setEndRun  ( previousRun ) ;
+      m_textNavigation         -> LoadBuffer    ( Form( "%d" ,
+							m_runDb -> getCurrentRunNumber() ) ) ;
+      if ( ! m_currentPageName.empty() ) 
+	loadSelectedPageFromDB( m_currentPageName , global_timePoint , 
+				global_pastDuration ) ;
+    }
   }
 }
 
 void PresenterMainFrame::nextInterval() {
-  std::string history_entry(dynamic_cast<TGTextLBEntry*>(m_historyIntervalComboBox->GetSelectedEntry())->GetText()->GetString());
-  if((History == m_presenterMode) &&
-     (s_timeInterval == m_historyMode) &&
-     (("preset interval" == history_entry) ||
-      ("set interval" == history_entry))
-     ) {
-    global_timePoint = m_archive->addIsoTimeDate(global_timePoint,
-                                                 global_stepSize);
-    //    m_currentPageName = selectedPageFromDbTree();
-    if (!m_currentPageName.empty()) {
-      loadSelectedPageFromDB(m_currentPageName, global_timePoint, global_pastDuration);
+  if ( History != m_presenterMode ) return ;
+  std::string 
+    history_entry( dynamic_cast< TGTextLBEntry * >(m_historyIntervalComboBox->
+						   GetSelectedEntry())->
+		   GetText()->GetString());
+
+  if( ( s_timeInterval == m_historyMode ) && ( ( "preset interval" == history_entry ) 
+					       || ( "set interval" == history_entry ) ) ) {
+    global_timePoint = m_archive -> addIsoTimeDate( global_timePoint ,
+                                                    global_stepSize ) ;
+    if ( ! m_currentPageName.empty() ) {
+      loadSelectedPageFromDB( m_currentPageName , global_timePoint , 
+			      global_pastDuration ) ;
     }
     if (m_verbosity >= Verbose) {
-      std::cout << "after nextInterval global_timePoint " << global_timePoint << std::endl;
+      std::cout << "after nextInterval global_timePoint " << global_timePoint 
+		<< std::endl;
+    }
+  } else if ( IntervalPickerData::SingleRun == m_intervalPickerData -> getMode() ) {
+    int nextRun = m_runDb -> getNextRun( ) ;
+    if ( 0 == nextRun ) 
+      new TGMsgBox( fClient -> GetRoot() , this , "Next run" , 
+		    "Already at last run" , kMBIconExclamation ) ;  
+    else {
+      std::ostringstream is ;
+      is << nextRun ;
+      global_timePoint = is.str() ;
+      global_pastDuration = "0"  ;
+      m_intervalPickerData -> setStartRun( nextRun ) ;
+      m_intervalPickerData -> setEndRun  ( nextRun ) ;
+      m_textNavigation         -> LoadBuffer    ( Form( "%d" ,
+							m_runDb -> getCurrentRunNumber() ) ) ;
+      if ( ! m_currentPageName.empty() ) 
+	loadSelectedPageFromDB( m_currentPageName , global_timePoint , 
+				global_pastDuration ) ;
     }
   }
 }
@@ -4678,7 +4765,7 @@ void PresenterMainFrame::refreshPage() {
         (*dump_dbHistosOnPageIt)->normalizeReference();
       }
       //    if (true == (*dump_dbHistosOnPageIt)->rateInitialised()) {
-      std::string plotName(m_currentPartition);
+      std::string plotName( currentPartition() ) ;
       plotName.append(" ").append(currentTime->AsSQLString());
       (*dump_dbHistosOnPageIt)->rootHistogram->SetTitle(plotName.c_str());
 
@@ -4748,11 +4835,10 @@ void PresenterMainFrame::enablePageRefresh() {
       editorCanvas->SetEditable(false);
     }
     std::vector<DbRootHist*>::iterator enableRefresh_dbHistosOnPageIt;
-    enableRefresh_dbHistosOnPageIt = dbHistosOnPage.begin();
-    while (enableRefresh_dbHistosOnPageIt != dbHistosOnPage.end()) {
+    for ( enableRefresh_dbHistosOnPageIt = dbHistosOnPage.begin() ;
+	  enableRefresh_dbHistosOnPageIt != dbHistosOnPage.end() ;
+	  ++enableRefresh_dbHistosOnPageIt ) 
       (*enableRefresh_dbHistosOnPageIt)->disableEdit();
-      enableRefresh_dbHistosOnPageIt++;
-    }
   }
 }
 
@@ -4897,4 +4983,24 @@ void PresenterMainFrame::displayStatusAndComments( const std::string & pageName 
   
   m_pageDescriptionView->LoadBuffer(m_pageDescription.c_str());
   m_pageDescriptionView->DataChanged() ;
+}
+
+//===========================================================================
+// Switch between interval navigation and by-run navigation for history mode
+//===========================================================================
+void PresenterMainFrame::switchToRunNavigation( bool ok ) {
+  if ( ok ) {
+    m_previousIntervalButton -> SetToolTipText( "Previous run" ) ;
+    m_nextIntervalButton     -> SetToolTipText( "Next run" ) ;
+    m_toolBarLabel           -> SetText       ( "Run: " ) ;
+    m_textNavigation         -> Clear         ( ) ;
+    m_textNavigation         -> LoadBuffer    ( Form( "%d" ,
+						      m_runDb -> getCurrentRunNumber() ) ) ;
+  } else {
+    m_previousIntervalButton -> SetToolTipText( "Previous interval" ) ;
+    m_nextIntervalButton     -> SetToolTipText( "Next interval" ) ;
+    m_toolBarLabel           -> SetText       ( "Time: " ) ;
+    m_textNavigation         -> Clear         ( ) ;
+    m_textNavigation         -> LoadBuffer    ( "" ) ;
+  }
 }
