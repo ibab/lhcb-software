@@ -1,4 +1,4 @@
-// $Id: DaVinciKernelDict.h,v 1.17 2009-08-19 11:54:04 ibelyaev Exp $
+// $Id: DaVinciKernelDict.h,v 1.18 2010-05-15 14:46:17 ibelyaev Exp $
 // ============================================================================
 #ifndef DICT_DAVINCIKERNELDICT_H 
 #define DICT_DAVINCIKERNELDICT_H 1
@@ -16,6 +16,7 @@
 // ============================================================================
 #include "Kernel/TransporterFunctions.h"
 #include "Kernel/DecayTree.h"
+#include "Kernel/ParticleFilters.h"
 #include "Kernel/DVAlgorithm.h" // Has to be last for compilation on Windows
 // ============================================================================
 // The END 

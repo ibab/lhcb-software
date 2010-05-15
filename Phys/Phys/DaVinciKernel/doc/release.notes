@@ -1,8 +1,15 @@
-!$Id: release.notes,v 1.349 2010-05-14 15:07:10 ibelyaev Exp $
+!$Id: release.notes,v 1.350 2010-05-15 14:46:17 ibelyaev Exp $
 !============================================================================
 ! Package     : DaVinciKernel
 ! Responsible : J.P. Palacios
 !============================================================================
+
+! 2010-05-15 - Vanya Belyaev
+
+ - add the "extends1" into dictionary
+ - move the implementation of transporter functions 
+   into separate file 
+ - remove DaVinci::filter functions with IFilterCriterion argument
 
 ! 2010-05-14 - Vanya Belyaev
 

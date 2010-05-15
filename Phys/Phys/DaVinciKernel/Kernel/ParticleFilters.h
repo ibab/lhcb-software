@@ -1,4 +1,4 @@
-// $Id: ParticleFilters.h,v 1.1 2010-05-14 15:07:10 ibelyaev Exp $
+// $Id: ParticleFilters.h,v 1.2 2010-05-15 14:46:17 ibelyaev Exp $
 // ============================================================================
 #ifndef KERNEL_PARTICLEFILTERS_H 
 #define KERNEL_PARTICLEFILTERS_H 1
@@ -12,7 +12,6 @@
 // DaVinciInterfaces 
 // ============================================================================
 #include "Kernel/IParticleFilter.h"
-#include "Kernel/IFilterCriterion.h"
 // ============================================================================
 namespace DaVinci 
 {
@@ -129,34 +128,6 @@ namespace DaVinci
     return filter 
       ( LHCb::Particle::Range ( input ) , criterion , output ) ;
   }
-  // ==========================================================================
-  /** filter the particles according to some criteria
-   * 
-   *  @param input     (INPUT) the container of input particles 
-   *  @param criterion (INPUT) the selection criteria 
-   *  @param output    (OUPUT) the container of selected particles 
-   *  @reutrn number of added particles    
-   *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
-   *  @date 2010-05-14
-   */
-  std::size_t filter 
-  ( const LHCb::Particle::Range& input     , 
-    const IFilterCriterion*      criterion , 
-    LHCb::Particle::ConstVector& output    ) ;
-  // ==========================================================================
-  /** filter the particles according to some criteria
-   * 
-   *  @param input     (INPUT) the container of input particles 
-   *  @param criterion (INPUT) the selection criteria 
-   *  @param output    (OUPUT) the container of selected particles 
-   *  @reutrn number of added particles    
-   *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
-   *  @date 2010-05-14
-   */
-  std::size_t filter 
-  ( const LHCb::Particle::ConstVector& input     , 
-    const IFilterCriterion*            criterion , 
-    LHCb::Particle::ConstVector&       output    ) ;
   // ==========================================================================
   /** filter the particles according to some criteria
    * 
