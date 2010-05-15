@@ -15,7 +15,9 @@ Purpose: LHCb reconstruction program
    . Add IP plots to TrackMonitor expert options
 
 - Changes to tests
-  . brunel.brunel-bigevents: add a big event from run 70122, tests bug #67111
+  . brunel.brunel-bigevents: 
+    o add a big event from run 70122, tests bug #67111
+    o add an event from run 71491, tests bug #67364
 
 </PRE><H1><A NAME=v37r2p2>2010-05-16 Brunel v37r2p2</A></H1><PRE>
 

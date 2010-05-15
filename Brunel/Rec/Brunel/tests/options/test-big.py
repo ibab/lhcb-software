@@ -10,4 +10,5 @@ Brunel().DataType = "2010"
 EventSelector().Input = [
   "DATAFILE='castor:/castor/cern.ch/user/c/cattanem/testFiles/run_69669_large_2ev.mdf' SVC='LHCb::MDFSelector'"
 , "DATAFILE='castor:/castor/cern.ch/user/c/cattanem/testFiles/run_70122_large_1ev.mdf' SVC='LHCb::MDFSelector'"
+, "DATAFILE='castor:/castor/cern.ch/user/c/cattanem/testFiles/bug67364.mdf' SVC='LHCb::MDFSelector'"
     ]
