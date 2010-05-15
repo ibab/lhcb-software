@@ -1,9 +1,11 @@
-!$Id: release.notes,v 1.56 2010-04-26 13:01:39 poluekt Exp $
+!$Id: release.notes,v 1.57 2010-05-15 16:06:15 jpalac Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/StrippingConf
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
+
+!========================== StrippingConf v3r2 2010-05-15 =================
 
 ! 2010-04-26 - Anton Poluektov
  - Introduced limit on number of candidates created by CombineParticles 
