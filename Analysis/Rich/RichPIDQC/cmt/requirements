@@ -15,7 +15,6 @@ branches          cmt doc src python
 #============================================================================
 use DaVinciKernel v*  Phys
 use RichRecBase   v*  Rich
-use DstCalibSel   v*  Rich
 
 include_path      none
 
