@@ -1,4 +1,4 @@
-// $Id: PageDescriptionTextView.cpp,v 1.4 2010-05-10 14:47:03 robbep Exp $
+// $Id: PageDescriptionTextView.cpp,v 1.5 2010-05-15 18:06:19 robbep Exp $
 // Include files
 
 // local
@@ -145,7 +145,7 @@ Bool_t PageDescriptionTextView::HandleButton( Event_t * event ) {
       // Check if firefox is already running:
       bool running = false ;
       FILE * fp ;
-      fp = popen( "pgrep firefox" , "r" ) ;
+      fp = popen( "pgrep -u `whoami` firefox" , "r" ) ;
       if ( fp == NULL ) 
 	std::cerr << "Could not launch firefox" << std::endl ;
       else {
