@@ -6,26 +6,35 @@
 #include <TGTab.h>
 #include <TGNumberEntry.h>
 #include <TDatime.h>
+#include <TGMsgBox.h>
 
 #include "PresenterMainFrame.h"
 #include "Archive.h"
+#include "RunDB.h"
 
 using namespace pres;
 using namespace std;
 
 ClassImp(IntervalPicker)
-
-IntervalPicker::IntervalPicker(PresenterMainFrame* mainFrame) :
-  TGTransientFrame(gClient->GetRoot(), mainFrame),
-  m_mainFrame(mainFrame),
-  m_archive(mainFrame->archive()),
-  m_verbosity(mainFrame->verbosity()),
-  m_startRun(0), m_endRun(0)
-{
-  Connect("CloseWindow()", "IntervalPicker", this, "DontCallClose()");
+  
+//===========================================================================
+// Constructor
+//===========================================================================
+IntervalPicker::IntervalPicker(PresenterMainFrame* mainFrame , RunDB * runDb ,
+			       IntervalPickerData * intData ) :
+  TGTransientFrame( gClient->GetRoot() , mainFrame ) ,
+  m_mainFrame( mainFrame ) ,
+  m_archive( mainFrame -> archive( ) ) ,
+  m_verbosity( mainFrame -> verbosity( ) ),
+  m_runDb( runDb ) , m_intData( intData )
+{ 
   SetCleanup(kDeepCleanup);
+  Connect("CloseWindow()", "IntervalPicker", this, "DontCallClose()");
+  SetMWMHints( kMWMDecorAll, kMWMFuncAll, kMWMInputSystemModal ) ;
+
   build();
   nowButton();
+
   if (m_mainFrame->currentTime) {
     m_startDateNumberEntry->SetDate(m_mainFrame->currentTime->GetYear(),
                                     m_mainFrame->currentTime->GetMonth(),
@@ -34,15 +43,25 @@ IntervalPicker::IntervalPicker(PresenterMainFrame* mainFrame) :
                                     m_mainFrame->currentTime->GetMinute(),
                                     m_mainFrame->currentTime->GetSecond());
   }                                
+
   lastMinutesRadioButtonToggled(true);
   lastRunRadioButtonToggled(true);
-  CenterOnParent();
+  SelectMode( ) ;
+  MapWindow() ;
 }
+
+//===========================================================================
+// Destructor
+//===========================================================================
 IntervalPicker::~IntervalPicker()
 {
   if (IsZombie()) return;
   Cleanup();
 }
+
+//===========================================================================
+// Construct window
+//===========================================================================
 void IntervalPicker::build()
 {
   SetWindowName("History interval selection");
@@ -589,23 +608,31 @@ void IntervalPicker::build()
               kMWMInputModeless);
   
   MapSubwindows();             
-//  MoveResize(8,16,388,286);
   Resize(GetDefaultSize());
-  
-//  MapWindow();
+
+//  MoveResize(8,16,388,286);
+  MapWindow() ;
+  Resize(GetDefaultSize());
 
 }
+
+//===========================================================================
+// Close Window
+//===========================================================================
 void IntervalPicker::CloseWindow()
 {
   m_okButton->SetState(kButtonDisabled);
   m_cancelButton->SetState(kButtonDisabled);
-  UnmapWindow();
   m_okButton->SetState(kButtonEngaged);
   m_okButton->SetState(kButtonUp);
   m_cancelButton->SetState(kButtonEngaged);
   m_cancelButton->SetState(kButtonUp);
-//  DeleteWindow();
+  DeleteWindow();
 }
+
+//===========================================================================
+// Handler for last minute button
+//===========================================================================
 void IntervalPicker::lastMinutesRadioButtonToggled(bool on)
 {
   if (on) {
@@ -628,6 +655,10 @@ void IntervalPicker::lastMinutesRadioButtonToggled(bool on)
     m_minutesEntry->SetState(true);
   }
 }
+
+//===========================================================================
+// call back function for time interval button
+//===========================================================================
 void IntervalPicker::timeIntervalRadioButtonToggled(bool on)
 {
   if (on) {
@@ -650,6 +681,10 @@ void IntervalPicker::timeIntervalRadioButtonToggled(bool on)
     m_endDateNumberEntry->SetState(true);
   }
 }
+
+//===========================================================================
+// call back function for last run button
+//===========================================================================
 void IntervalPicker::lastRunRadioButtonToggled(bool on)
 {
   if (on) {
@@ -671,12 +706,20 @@ void IntervalPicker::lastRunRadioButtonToggled(bool on)
     //m_lastRunNumberEntry->SetState(false);
   }
 }
+
+//===========================================================================
+// call back for last fill button
+//===========================================================================
 void IntervalPicker::lastFillRadioButtonToggled(bool on)
 {
   if (on) {
     lastRunRadioButtonToggled(true);
   }
 }
+
+//===========================================================================
+// call back for fill interval button
+//===========================================================================
 void IntervalPicker::runFillIntervalRadioButtonToggled(bool on)
 {
   if (on) {
@@ -698,6 +741,10 @@ void IntervalPicker::runFillIntervalRadioButtonToggled(bool on)
     m_runFillIntervalComboBox->SetEnabled(true);
   }
 }
+
+//===========================================================================
+// call back for now button
+//===========================================================================
 void IntervalPicker::nowButton()
 {
   if (m_mainFrame->currentTime) {
@@ -710,10 +757,11 @@ void IntervalPicker::nowButton()
                                   m_mainFrame->currentTime->GetSecond());
   }
 }
-void IntervalPicker::ok()
-{
-  CloseWindow();
-  
+
+//===========================================================================
+// Call back for OK button
+//===========================================================================
+void IntervalPicker::ok() {  
   if (0 == m_mainTab->GetCurrent()) {
     m_mainFrame->setHistoryMode(s_timeInterval);
     m_mainFrame->global_historyByRun = false;
@@ -766,28 +814,91 @@ void IntervalPicker::ok()
                                         m_mainFrame->global_pastDuration);
   } else if (1 == m_mainTab->GetCurrent()) {
     if (m_runFillIntervalRadioButton->IsDown()) {
-      m_mainFrame->global_historyByRun = true;
-      m_endRun = m_runFillIntervalToNumberEntry->GetIntNumber();
-      std::stringstream endRun;
-      endRun << m_endRun;
-      m_mainFrame->global_timePoint = endRun.str();
-      m_startRun = m_runFillIntervalFromNumberEntry->GetIntNumber();
-      std::stringstream runDuration;
-      runDuration << (m_endRun - m_startRun);
-      m_mainFrame->global_pastDuration = runDuration.str();
+      m_mainFrame -> global_historyByRun = true ;
+      if ( IntervalPickerData::SingleRun != m_intData -> getMode() ) {
+	m_intData -> setEndRun( m_runFillIntervalToNumberEntry->GetIntNumber() ) ;
+	std::stringstream endRun;
+	endRun << m_intData -> endRun() ;
+	m_mainFrame->global_timePoint = endRun.str();
+	m_intData -> setStartRun( m_runFillIntervalFromNumberEntry->GetIntNumber() ) ;
+	std::stringstream runDuration;
+	runDuration << (m_intData->endRun() - m_intData -> startRun() );
+	m_mainFrame -> global_pastDuration = runDuration.str() ;
+      } else {
+	// Single run selection
+	int testEndRun = m_runFillIntervalFromNumberEntry->GetIntNumber();
+
+	// Check it is a valid run
+	if ( m_runDb -> checkRun( testEndRun ) ) {
+	  m_intData -> setEndRun( testEndRun ) ;
+	  std::stringstream endRun;
+	  endRun << m_intData -> endRun() ;
+	  m_mainFrame->global_timePoint = endRun.str();
+	  m_intData -> setStartRun( m_runFillIntervalFromNumberEntry->GetIntNumber() ) ;
+	  std::stringstream runDuration;
+	  runDuration << (m_intData -> endRun() - m_intData -> startRun() ) ;
+	  m_mainFrame -> global_pastDuration = runDuration.str() ;
+	} else {
+	  new TGMsgBox( fClient -> GetRoot() , this , "Bad run selection" , 
+			"You selected a non-existing run" , kMBIconExclamation ) ;
+	}
+      }
     }
-  }
+  }  
+
+  Int_t year , month, day, hour, min, sec;
+  m_startDateNumberEntry -> GetDate(year, month, day) ;
+  m_startTimeNumberEntry -> GetTime(hour, min, sec)   ;
+  m_intData -> setStartTime( year , month , day , hour , min , sec ) ;
+
+  m_endDateNumberEntry->GetDate(year, month, day);
+  m_endTimeNumberEntry->GetTime(hour, min, sec);  
+  m_intData -> setEndTime( year , month , day , hour , min , sec ) ;
+
+  CloseWindow();
 }
 
-const char* IntervalPicker::startTimeString() {
-  Int_t year, month, day, hour, min, sec;
-  m_startDateNumberEntry->GetDate(year, month, day);
-  m_startTimeNumberEntry->GetTime(hour, min, sec);       
-  return Form("%d/%d/%d %2d:%2d",day,month,year,hour,min);
+//===========================================================================
+// Get start time as a string
+//===========================================================================
+const char* IntervalPickerData::getStartTimeString() {     
+  return Form("%d/%d/%d %2d:%2d" , m_startDay , m_startMonth , 
+	      m_startYear , m_startHour , m_startMin ) ;
 }
-const char* IntervalPicker::endTimeString() {
-  Int_t year, month, day, hour, min, sec;
-  m_endDateNumberEntry->GetDate(year, month, day);
-  m_endTimeNumberEntry->GetTime(hour, min, sec);       
-  return Form("%d/%d/%d %02d:%02d",day,month,year,hour,min);
+
+//============================================================================
+// Get end time as a string
+//============================================================================
+const char* IntervalPickerData::getEndTimeString() {       
+  return Form("%d/%d/%d %02d:%02d" , m_endDay , m_endMonth , 
+	      m_endYear , m_endHour , m_endMin ) ;
+}
+
+//============================================================================
+// Make change to dialog window before showing it
+//============================================================================
+void IntervalPicker::SelectMode( ) {
+  // Select the interesting tab
+  if ( IntervalPickerData::SingleRun == m_intData -> getMode() ) {
+    int lastrun = m_runDb -> getCurrentRunNumber() ; 
+    if ( 0 == lastrun ) 
+      lastrun = m_runDb -> getLastRun( ) ;
+
+    SetWindowName( "History run selection" ) ;
+    m_mainTab -> GetTabTab( "Time" ) -> SetEnabled( kFALSE ) ; 
+    m_mainTab -> SetTab( "Run" , kFALSE ) ;
+    m_runFillIntervalRadioButton -> SetState( kButtonDown , kTRUE ) ;
+
+    m_runFillIntervalToLabel -> Disable() ;
+    m_runFillIntervalToNumberEntry -> SetState( kFALSE ) ;
+   
+    m_runFillIntervalFromNumberEntry -> SetIntNumber( lastrun ) ;
+  } else {
+    SetWindowName("History interval selection");
+    
+    m_mainTab -> GetTabTab( "Time" ) -> SetEnabled( kTRUE ) ; 
+    m_mainTab -> SetTab( "Time" , kFALSE ) ;
+    m_runFillIntervalToLabel -> Enable() ;
+    m_runFillIntervalToNumberEntry -> SetState( kTRUE ) ;
+  }
 }
