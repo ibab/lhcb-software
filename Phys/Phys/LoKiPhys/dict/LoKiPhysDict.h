@@ -1,4 +1,4 @@
-// $Id: LoKiPhysDict.h,v 1.24 2009-11-28 19:29:45 ibelyaev Exp $
+// $Id: LoKiPhysDict.h,v 1.25 2010-05-15 16:50:37 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_LOKIPHYSDICT_H 
 #define LOKI_LOKIPHYSDICT_H 1
@@ -34,6 +34,7 @@
 #include "LoKi/Particles27.h"
 #include "LoKi/Particles28.h"
 #include "LoKi/Particles29.h"
+#include "LoKi/Particles34.h"
 // ============================================================================
 #include "LoKi/IDecay.h"
 #include "LoKi/FinderDict.h"

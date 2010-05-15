@@ -1,9 +1,15 @@
-! $Id: release.notes,v 1.140 2010-05-14 15:28:33 ibelyaev Exp $ 
+! $Id: release.notes,v 1.141 2010-05-15 16:50:37 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhys
 ! Responsible : Vanya Belyaev
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
+
+! 2010-05-15 - Vanya Belyaev
+ - add symbols DPCTAU, DPCTAUERR, DPCTAUFITCHI2 , DPCTAUSIGINFICANCE for 
+    Kazu Karvalho Akiba 
+
+   ' DPCTAU(2) > 0.1 * mm '       
 
 ! 2010-05-14 - Vanya Belyaev
 

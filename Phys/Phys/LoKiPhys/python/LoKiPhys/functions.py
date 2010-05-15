@@ -644,6 +644,21 @@ MASSFIT       = LoKi.Particles.MassFitter
 ## @see LoKi::Cuts::BPVDVDOCA
 BPVDVDOCA     = LoKi.Particles.DHCoplanarity
 
+
+# =============================================================================
+# Functions for Kazu Karvalho Akiba
+# =============================================================================
+## @see LoKi::Cuts::DPCTAU
+DPCTAU             = LoKi.Particles.DaughterParticleCTau 
+## @see LoKi::Cuts::DPCTAUERR
+DPCTAUERR          = LoKi.Particles.DaughterParticleCTauErr
+## @see LoKi::Cuts::DPCTAUFITCHI2 
+DPCTAUFITCHI2      = LoKi.Particles.DaughterParticleCTauFitChi2 
+## @see LoKi::Cuts::DPCTAUSIGNIFICANCE
+DPCTAUSIGNIFICANCE = LoKi.Particles.DaughterParticleCTauSignificance
+
+
+
 # =============================================================================
 ##
 # =============================================================================
