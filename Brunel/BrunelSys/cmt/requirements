@@ -1,5 +1,5 @@
 package BrunelSys
-version v37r2p1
+version v37r2p2
 
 branches cmt doc tests
  
@@ -8,7 +8,7 @@ branches cmt doc tests
 #=======================================================
 
 # Brunel application
-use Brunel v37r2 Rec
+use Brunel v37r2p2 Rec
 
 # Add here any component libraries to be added as patches
 
@@ -23,3 +23,4 @@ apply_pattern QMTestSummarize
 
 # Packages from other projects updated temporarily in this release
 use TrackMatching v2r28p1 Tf
+use VeloDAQ       v5r2    Velo
