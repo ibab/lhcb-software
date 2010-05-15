@@ -1,8 +1,13 @@
 package Presenter
 version v1r2
 
+# Structure, i.e. directories to process.
+#============================================================================
 branches cmt doc src test
 
+
+# Used packages.
+#============================================================================
 use DIM           v*  Online
 use Gaucho        v*  Online
 
@@ -11,23 +16,21 @@ use OMAlib        v*  Online
 
 use ROOT          v*  LCG_Interfaces
 use Python        v*  LCG_Interfaces
-#use GaudiOnline   v*    Online
-use  Boost        v*  LCG_Interfaces
+use Boost         v*  LCG_Interfaces
 
-# Go for the latest and greatest ROOT
-#macro ROOT_config_version "5.19.04"
-#macro ROOT_config_version "5.21.02"
-#macro ROOT_config_version "5.24.00"
+# Application building rule
+#============================================================================
+application presenter " $(PRESENTERROOT)/$(tag)/dict/*.cpp ParallelWait.cpp \
+                                     DbRootHist.cpp HistogramIdentifier.cpp \
+                                     Elog.cpp ElogDialog.cpp \
+                                     ReferencePicker.cpp IntervalPicker.cpp \
+                                     KnownProblemList.cpp ShiftDB.cpp ProblemDB.cpp \
+                                     PageDescriptionTextView.cpp \
+                                     LoginDialog.cpp HistoPropDialog.cpp Archive.cpp \
+                                     DatabasePagePathDialog.cpp MonRateRace.cpp \
+                                     RunDB.cpp \
+                                     PresenterMainFrame.cpp presenter.cpp "
 
-##macro Boost_config_version "1.39.0"
-
-#path_remove LD_LIBRARY_PATH "$(ROOTSYS)/lib"
-#macro     ROOT_home     "/tmp/root"
-#path_prepend  LD_LIBRARY_PATH "$(ROOTSYS)/lib"
-
-# Build ROOT dictionary - cmt fragment accepts only(?) 1 header file...
-#macro rootcint='"$(ROOT_home)/bin/rootcint"
-#set cintBootstrap_cintflags " -I$(Boost_home)/include/boost-$(Boost_file_version) -p "
 document rootcint cintBootstrap cintBootstrap.h
 
 macro_append includes " -I$(PRESENTERROOT)/inc -I$(PRESENTERROOT)/src" \
@@ -37,7 +40,6 @@ macro_append ROOT_linkopts " -lThread -lGui -lGraf3d -lGed -lGuiHtml" \
   WIN32 " libThread.lib libGui.lib libGpad.lib libGuiHtml.lib libHist.lib libGraf.lib \
                libGraf3d.lib libGed.lib libRIO.lib"
 
-#apply_tag ROOT_GE_5_17
 macro_append Boost_linkopts ' $(Boost_linkopts_filesystem)'
 macro_append Boost_linkopts ' $(Boost_linkopts_date_time)'
 macro_append Boost_linkopts ' $(Boost_linkopts_program_options)'
@@ -46,18 +48,9 @@ macro_append Boost_linkopts ' $(Boost_linkopts_thread) '
 macro_append Boost_linkopts ' $(Boost_linkopts_system) '
 macro_append Boost_linkopts ' $(Boost_linkopts_regex) '
 
-# Setup cppflags
-#macro_append cppflags " -pedantic-errors -Wno-long-long -Weffc++ "
-
-# RegexpFrame.cpp
-
-application presenter " $(PRESENTERROOT)/$(tag)/dict/*.cpp ParallelWait.cpp \
-                                     DbRootHist.cpp HistogramIdentifier.cpp \
-                                     Elog.cpp ElogDialog.cpp \
-                                     ReferencePicker.cpp IntervalPicker.cpp \
-                                     KnownProblemList.cpp ShiftDB.cpp ProblemDB.cpp \
-                                     PageDescriptionTextView.cpp \
-                                     LoginDialog.cpp HistoPropDialog.cpp Archive.cpp \
-                                     DatabasePagePathDialog.cpp MonRateRace.cpp \
-                                     PresenterMainFrame.cpp presenter.cpp "
 macro_append presenter_dependencies " cintBootstrap "
+
+# Remove very annoying boost warnings
+private
+macro_append presenter_cppflags "-isystem $(Boost_home)/include/boost-$(Boost_file_version)" \
+  WIN32 " "   
