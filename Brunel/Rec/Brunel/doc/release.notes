@@ -3,19 +3,7 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
- - Changes to references to reflect changes in Brunel v37r4 output:
-   . New warning about Ingress/ODIN checks disabled (RichDAQ)
-   . Changes to PatVeloSpaceTool and PatVeloTrackTool to improve internal fit in
-     the case of half box misalignments (PatVelo)
-   . Add a couple new plots to show number of active HPDs per event (RichRecQC)
-   . Latest Rich calibration from head-20100430 LHCBCOND tag
-   . Latest OT T0 calibration from head-20100509 LHCBCOND tag
-   . Added MuonTrackMonitor
-   . Added PropagateFSRs (LumiAlgs)
-   . Add IP plots to TrackMonitor expert options
-
-- Changes to tests
-  . brunel.brunel-bigevents: add a big event from run 70122, tests bug #67111
+</PRE><H1><A NAME=v37r2p2>2010-05-16 Brunel v37r2p2</A></H1><PRE>
 
 </PRE><H1><A NAME=v37r2p1>2010-05-10 Brunel v37r2p1</A></H1><PRE>
 
