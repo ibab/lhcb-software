@@ -6,8 +6,8 @@
 <class name = "extends1<GaudiTupleAlg,IDVAlgorithm>" />
 
 <function name    = "DaVinci::Utils::setInput"/>
-<function name    = "DaVinci::filter"        />
-<function pattern = "DaVinci::Transporter::*"/>
+<function name    = "DaVinci::filter"         />
+<function pattern = "DaVinci::Transporter::*" />
 
 <class name = "LHCb::DecayTree">
   <field name="m_head"     transient="true" />
