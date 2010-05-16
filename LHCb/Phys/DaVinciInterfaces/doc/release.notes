@@ -4,6 +4,10 @@
 ! Purpose     : Tool interfaces and dictionaries for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2010-05-16 - Juan Palacios
+ - Kernel/IPhysDesktop.h
+  . Finally remove method primaryVertices().
+
 ! 2010-05-14 - Vanya Belyaev
 
  - IDVAlgorithm :
