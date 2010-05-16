@@ -964,14 +964,14 @@ bool Hlt2DisplVerticesDEV::RemVtxFromDet( const RecVertex* RV ){
 bool Hlt2DisplVerticesDEV::BeamLineCalibration(){
 
   //Get the reconstructed primary vertices
-  const RecVertex::Container * PVc = desktop()-> primaryVertices();
-  int size = PVc->size();
+  const RecVertex::Range PVc = this->primaryVertices();
+  int size = PVc.size();
   if(msgLevel(MSG::DEBUG))
     debug()<<"Retrieved "<< size <<" primary vertices." << endmsg;
 
   //Loop on the reconstructed primary vertices
-  for( RecVertex::Container::const_iterator ipv = PVc->begin() ;
-       ipv != PVc->end(); ++ipv ) {
+  for( RecVertex::Range::const_iterator ipv = PVc.begin() ;
+       ipv != PVc.end(); ++ipv ) {
     const RecVertex* pv = *ipv ;
     int nbtrks = pv->tracks().size();
 
