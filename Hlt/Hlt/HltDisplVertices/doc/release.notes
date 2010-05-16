@@ -4,6 +4,10 @@
 ! Purpose     : Apply some cuts on reconstructed vertices
 !-----------------------------------------------------------------------------
 
+! 2010-05-13 - Juan Palacios
+ - src/Hlt2DisplVerticesDEV.cpp, src/Hlt2PreSelDV.cpp, src/Hlt2SelDV.cpp
+  . Use DVALgorithm::primaryVertices() directly.
+
 ! 2010-05-14 - Neal Gauvin
  - Upstream primary vertices are taken within |z|<150mm.
 
