@@ -8,6 +8,25 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2010-05-16 - Jibo He
+ - Hlt2InclusiveDiProtonLines.py
+   . Set InputPrimaryVertices and UseP2PVRelations to avoid no PV warnings. 
+
+! 2010-05-16 - Jibo He for Stephane TJampens, Artur Ukleja and Adlene Hicheur
+ - Hlt2B2JpsiXLines.py
+   + Added track fitted and unfitted lines for Bs->Jpsi(ee)Phi
+
+! 2010-05-16 - Jibo He
+ - Hlt2InclusiveElectronLines.py
+   . Moved SingleElectron For DY Lines to its class 
+   + Added Single Electron and Electron + Track lines. 
+
+! 2010-05-16 - Jibo He
+ - Hlt2InclusiveDiElectronLines.py
+   . Moved each set of Hlt2 lines to its class
+   . Corrected typo of prescale in slots for DY and Z2ee lines 
+   . Updated selections and prescale factors for Unbiased DiElectrons.
+
 ! 2010-05-13 - Jacopo Nardulli
  - Complete restructuring of the Hlt2B2DX Lines
    See Talk at Gamma Frm trees WG on 29/4/2010
@@ -18,7 +37,7 @@
 
 ! 2010-05-07 - Jibo He
  - Hlt2InclusiveDiElectronLines.py
-   + Added 5 lines for Unbiased (Jpsi, Psi(2S), B->) Dilectrons.
+   + Added 5 lines for Unbiased (Jpsi, Psi(2S), B->) DiElectrons.
      Selection cuts not tuned, comitted for Olivier Deschamps to 
      study the Bremsstrahlung correction problem.
 

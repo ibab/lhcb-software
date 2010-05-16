@@ -1,27 +1,25 @@
-# Hlt2 Inclusive single Electron and Electron+track selections 
-#
-#  @author D.R.Ward
-#  @date 2010-04-20
-#
-
 from Gaudi.Configuration import *
 from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
 
-
 class Hlt2InclusiveElectronLinesConf(HltLinesConfigurableUser) :
     
-    __slots__ = { 'Prescale'             : { 'Hlt2SingleHighPTElectron'    : 1.0
-                                            ,'Hlt2DYeh1'                   : 1.0
-                                            ,'Hlt2DYeh2'                   : 1.0
-                                            ,'Hlt2SingleHighPTUnfittedElectron'    : 1.0
-                                            ,'Hlt2DYUnfittedeh1'           : 1.0
-                                            ,'Hlt2DYUnfittedeh2'           : 1.0
+    __slots__ = { 'Prescale'             : { 'Hlt2SingleHighPTElectron'            : 1.0
+                                            ,'Hlt2DYeh1'                           : 1.0
+                                            ,'Hlt2DYeh2'                           : 1.0
+                                            ,'Hlt2SingleHighPTElectronUnfitted'    : 1.0
+                                            ,'Hlt2DYeh1Unfitted'                   : 1.0
+                                            ,'Hlt2DYeh2Unfitted'                   : 1.0
+
+                                            ,'Hlt2SingleElectron'         :  0.01
+                                            ,'Hlt2ElectronPlusTrack'      :  0.01
+                                            ,'Hlt2SingleTFElectron'       :  1.0
+                                            ,'Hlt2TFElectronPlusTrack'    :  1.0
                                              }
                                              
                  
-                  ,'SingleElectronHighPt'    : 20000      # MeV
-                  ,'SingleElectronIP'        :   0.1      # mm
-                  ,'SingleElectronTkChi2'    :    20     
+                  ,'SingleHighPTElectronPT'        : 20000      # MeV
+                  ,'SingleHighPTElectronIP'        :   0.1      # mm
+                  ,'SingleHighPTElectronTkChi2'    :    20     
                   
                   ,'DYeh1ePt'                 : 4000      # MeV
                   ,'DYeh1trPt'                : 4000      # MeV                  
@@ -30,11 +28,61 @@ class Hlt2InclusiveElectronLinesConf(HltLinesConfigurableUser) :
                   ,'DYeh2trPt'                : 8000      # MeV                  
                   ,'DYeh2MinMass'             :20000      # MeV                  
                   ,'DYehDphiMin'             :     0      # radian                 
-                  ,'DYehVertexChi2'          :    20      #                   
+                  ,'DYehVertexChi2'          :    20      #
+
+                  ,'SingleElectron_PT'      :  3000.    # MeV
+                  ,'SingleElectron_IP'      :     0.2   # mm
+                  ,'SingleElectron_PIDe'    :     4.  
+                  ,'SingleElectron_IPCHI2'  :    -1.    
+
+                  ,'ElectronPlusTrack_ElecPT'       : 1500.   # MeV
+                  ,'ElectronPlusTrack_ElecIP'       :    0.2  # mm
+                  ,'ElectronPlusTrack_ElecPIDe'     :    4. 
+                  ,'ElectronPlusTrack_ElecIPCHI2'   :   -1.
+                  ,'ElectronPlusTrack_TrackPT'      : 1500.   # MeV
+                  ,'ElectronPlusTrack_TrackIP'      :    0.2  # mm
+                  ,'ElectronPlusTrack_TrackIPCHI2'  :   -1.
+                  ,'ElectronPlusTrack_VtxCHI2'      :   25.
+                  
+                  ,'SingleTFElectron_PT'      :  3000.    # MeV
+                  ,'SingleTFElectron_IP'      :     0.2   # mm
+                  ,'SingleTFElectron_PIDe'    :     4.  
+                  ,'SingleTFElectron_IPCHI2'  :    -1.    
+
+                  ,'TFElectronPlusTrack_ElecPT'       : 1500.   # MeV
+                  ,'TFElectronPlusTrack_ElecIP'       :    0.2  # mm
+                  ,'TFElectronPlusTrack_ElecIPCHI2'   :   -1.
+                  ,'TFElectronPlusTrack_ElecPIDe'     :    4.
+                  ,'TFElectronPlusTrack_TrackPT'      : 1500.   # MeV
+                  ,'TFElectronPlusTrack_TrackIP'      :    0.2  # mm
+                  ,'TFElectronPlusTrack_TrackIPCHI2'  :   -1.
+                  ,'TFElectronPlusTrack_VtxCHI2'      :   25.
+                  
+                  ,'HltANNSvcID'  : {
+                                      'SingleElectron'         :  51300
+                                     ,'ElectronPlusTrack'      :  51310
+                                     ,'SingleTFElectron'       :  51350
+                                     ,'TFElectronPlusTrack'    :  51360
+                                     
+                                      }
                   }
     
     
     def __apply_configuration__(self) :
+        self.__makeHlt2SingleElectronForDYLines()
+        self.__makeHlt2SingleElectronLines()
+        self.__makeHlt2ElectronPlusTrackLines()
+        self.__makeHlt2SingleTFElectronLines()
+        self.__makeHlt2TFElectronPlusTrackLines()       
+
+        
+    def __makeHlt2SingleElectronForDYLines(self):
+        # Hlt2 Inclusive single Electron and Electron+track selections 
+        #
+        #  @author D.R.Ward
+        #  @date 2010-04-20
+        #
+        
         from HltLine.HltLine import Hlt2Line
         from HltLine.HltLine import Hlt2Member
         from HltLine.HltLine import bindMembers
@@ -48,8 +96,8 @@ class Hlt2InclusiveElectronLinesConf(HltLinesConfigurableUser) :
         #some string definitions... 
 
 
-#        TKQuality =  " & (MIPDV(PRIMARY)<"+str(self.getProp('SingleElectronIP'))+"*mm) & (TRCHI2DOF<"+str(self.getProp('SingleElectronTkChi2'))+")"                                
-        TKQuality =  " & (TRCHI2DOF<"+str(self.getProp('SingleElectronTkChi2'))+")"                                
+#        TKQuality =  " & (MIPDV(PRIMARY)<"+str(self.getProp('SingleHighPTElectronIP'))+"*mm) & (TRCHI2DOF<"+str(self.getProp('SingleHighPTElectronTkChi2'))+")"                                
+        TKQuality =  " & (TRCHI2DOF<"+str(self.getProp('SingleHighPTElectronTkChi2'))+")"                                
 
         ############################################################################
         #    Selection for a large PT single electron:  
@@ -57,7 +105,7 @@ class Hlt2InclusiveElectronLinesConf(HltLinesConfigurableUser) :
         
         Hlt2SelSingleHighPTElectron = Hlt2Member(   FilterDesktop
                                                     , "Filter"
-                                                    , Code = " (PT>"+str(self.getProp('SingleElectronHighPt'))+"*MeV) " + TKQuality
+                                                    , Code = " (PT>"+str(self.getProp('SingleHighPTElectronPT'))+"*MeV) " + TKQuality
                                                     , InputLocations  = [BiKalmanFittedElectrons]
                                                     )
         line = Hlt2Line( 'SingleHighPTElectron'
@@ -116,10 +164,10 @@ class Hlt2InclusiveElectronLinesConf(HltLinesConfigurableUser) :
         ############################################################################
         
         Hlt2SelSingleHighPTElectronU = Hlt2Member(   FilterDesktop
-                                                    , "Filter"
-                                                    , Code = " (PT>"+str(self.getProp('SingleElectronHighPt'))+"*MeV) " + TKQuality
-                                                    , InputLocations  = [Electrons]
-                                                    )
+                                                     , "Filter"
+                                                     , Code = " (PT>"+str(self.getProp('SingleHighPTElectronPT'))+"*MeV) " + TKQuality
+                                                     , InputLocations  = [Electrons]
+                                                     )
         lineU = Hlt2Line( 'SingleHighPTElectronUnfitted'
                          , prescale = self.prescale 
                          , algos = [ Electrons, Hlt2SelSingleHighPTElectronU]
@@ -168,4 +216,172 @@ class Hlt2InclusiveElectronLinesConf(HltLinesConfigurableUser) :
 
  
 
+    def __makeHlt2SingleElectronLines(self):
 
+        #
+        # Single Electron line with PT, IP, PIDe cuts using unfitted track
+        #
+        # Author: Jibo.He@cern.ch
+        # 12 May 2010
+        # 
+        from HltLine.HltLine import Hlt2Line, Hlt2Member
+        from Configurables import HltANNSvc
+        from Configurables import FilterDesktop
+
+        from Hlt2SharedParticles.BasicParticles import Electrons
+        from HltTracking.HltPVs import PV3D
+
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2SingleElectronDecision" :
+                                              self.getProp('HltANNSvcID')['SingleElectron'] } ) 
+
+
+        FilterSingleElectron = Hlt2Member( FilterDesktop # type
+                                           , "FilterSingleElectron" 
+                                           , Code ="( PT > %(SingleElectron_PT)s *MeV)" \
+                                           " & ( MIPDV(PRIMARY) > %(SingleElectron_IP)s *mm)" \
+                                           " & ( PIDe > %(SingleElectron_PIDe)s )" \
+                                           " & ( MIPCHI2DV(PRIMARY) > %(SingleElectron_IPCHI2)s )" %self.getProps() 
+                                           , InputLocations = [ Electrons ]
+                                           )
+
+        SingleElectronLine = Hlt2Line("SingleElectron"
+                                      , prescale = self.prescale
+                                      , algos = [ PV3D()
+                                                  , Electrons
+                                                  , FilterSingleElectron ]
+                                      , postscale = self.postscale
+                                      )
+
+
+    def __makeHlt2ElectronPlusTrackLines(self):
+
+        #
+        # Electron + Track line with PT, IP, PIDe cuts using unfitted track
+        #
+        # Author: Jibo.He@cern.ch
+        # 12 May 2010
+        #
+        
+        from HltLine.HltLine import Hlt2Line, Hlt2Member
+        from Configurables import HltANNSvc
+        from Configurables import CombineParticles
+
+        from Hlt2SharedParticles.BasicParticles import Electrons, NoCutsKaons
+        from HltTracking.HltPVs import PV3D
+
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2ElectronPlusTrackDecision" :
+                                              self.getProp('HltANNSvcID')['ElectronPlusTrack'] } ) 
+        
+        ElectronCut = "(PT > %(ElectronPlusTrack_ElecPT)s *MeV) & (PIDe > %(ElectronPlusTrack_ElecPIDe)s ) & (MIPDV(PRIMARY) > %(ElectronPlusTrack_ElecIP)s *mm) & (MIPCHI2DV(PRIMARY) > %(ElectronPlusTrack_ElecIPCHI2)s )" %self.getProps()
+        
+        TrackCut = "(PT > %(ElectronPlusTrack_TrackPT)s *MeV) & (MIPDV(PRIMARY) > %(ElectronPlusTrack_TrackIP)s *mm) & (MIPCHI2DV(PRIMARY) > %(ElectronPlusTrack_TrackIPCHI2)s )" %self.getProps()
+
+        CombCut = "AALL"
+        
+        MomCut = "(VFASPF(VCHI2/VDOF)< %(ElectronPlusTrack_VtxCHI2)s )" %self.getProps()
+        
+        CombineElectronTrack = Hlt2Member( CombineParticles # type
+                                           , "CombineElectronTrack"
+                                           , DecayDescriptors = [ "[ J/psi(1S) -> e+ K- ]cc",
+                                                                  "[ J/psi(1S) -> e+ K+ ]cc" ]  
+                                           , DaughtersCuts = { "e+" : ElectronCut  
+                                                               ,"K-": TrackCut  }
+                                           , CombinationCut = CombCut
+                                           , MotherCut = MomCut
+                                           , InputLocations = [ Electrons, NoCutsKaons ]
+                                           )
+
+        ElectronPlusTrackLine = Hlt2Line("ElectronPlusTrack"
+                                         , prescale = self.prescale
+                                         , algos = [ PV3D()
+                                                     , Electrons
+                                                     , NoCutsKaons
+                                                     , CombineElectronTrack ]
+                                         , postscale = self.postscale
+                                         )
+        
+
+    def __makeHlt2SingleTFElectronLines(self):
+
+        #
+        # Single Electron line with PT, IP, PIDe cuts using fitted track
+        #
+        # Author: Jibo.He@cern.ch
+        # 12 May 2010
+        #
+        
+        from HltLine.HltLine import Hlt2Line, Hlt2Member
+        from Configurables import HltANNSvc
+        from Configurables import FilterDesktop
+
+        from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedElectrons
+        from HltTracking.HltPVs import PV3D
+        
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2SingleTFElectronDecision" :
+                                              self.getProp('HltANNSvcID')['SingleTFElectron'] } )
+        
+        FilterSingleTFElectron = Hlt2Member( FilterDesktop # type
+                                             , "FilterSingleTFElectron" 
+                                             , Code ="(PT > %(SingleTFElectron_PT)s *MeV)" \
+                                             " & (PIDe > %(SingleTFElectron_PIDe)s )" \
+                                             " & (MIPDV(PRIMARY) > %(SingleTFElectron_IP)s *mm)" \
+                                             " & (MIPCHI2DV(PRIMARY) > %(SingleTFElectron_IPCHI2)s )" %self.getProps() 
+                                             , InputLocations = [ BiKalmanFittedElectrons ]
+                                             )
+
+        SingleTFElectronLine = Hlt2Line("SingleTFElectron"
+                                        , prescale = self.prescale
+                                        , algos = [ PV3D()
+                                                    , BiKalmanFittedElectrons
+                                                    , FilterSingleTFElectron ]
+                                        , postscale = self.postscale
+                                        )
+        
+
+        
+    def __makeHlt2TFElectronPlusTrackLines(self):
+
+        #
+        # Electron + Track line with PT, IP, PIDe cuts using fitted track
+        #
+        # Author: Jibo.He@cern.ch
+        # 12 May 2010
+        #
+        from HltLine.HltLine import Hlt2Line, Hlt2Member
+        from Configurables import HltANNSvc
+        from Configurables import CombineParticles
+
+        from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedElectrons, BiKalmanFittedKaons
+        from HltTracking.HltPVs import PV3D
+
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2TFElectronPlusTrackDecision" :
+                                              self.getProp('HltANNSvcID')['TFElectronPlusTrack'] } ) 
+
+        ElectronCut = "(PT > %(TFElectronPlusTrack_ElecPT)s *MeV) & (PIDe > %(TFElectronPlusTrack_ElecPIDe)s ) & (MIPDV(PRIMARY) > %(TFElectronPlusTrack_ElecIP)s *mm) & (MIPCHI2DV(PRIMARY) > %(TFElectronPlusTrack_ElecIPCHI2)s )" %self.getProps()
+        
+        TrackCut = "(PT > %(TFElectronPlusTrack_TrackPT)s *MeV) & (MIPDV(PRIMARY) > %(TFElectronPlusTrack_TrackIP)s *mm) & (MIPCHI2DV(PRIMARY) > %(TFElectronPlusTrack_TrackIPCHI2)s )" %self.getProps()
+        
+        CombCut = "AALL"
+        
+        MomCut = "(VFASPF(VCHI2/VDOF)< %(TFElectronPlusTrack_VtxCHI2)s )" %self.getProps()
+        
+        CombineTFElectronTrack = Hlt2Member( CombineParticles # type
+                                             , "CombineTFElectronTrack"
+                                             , DecayDescriptors = [ "[ J/psi(1S) -> e+ K- ]cc",
+                                                                    "[ J/psi(1S) -> e+ K+ ]cc" ]
+                                             , DaughtersCuts = { "e+" : ElectronCut  
+                                                                 ,"K-": TrackCut  }
+                                             , CombinationCut = CombCut
+                                             , MotherCut = MomCut
+                                             , InputLocations = [ BiKalmanFittedElectrons, BiKalmanFittedKaons ]
+                                             )
+        
+        TFElectronPlusTrackLine = Hlt2Line("TFElectronPlusTrack"
+                                           , prescale = self.prescale
+                                           , algos = [ PV3D()
+                                                       , BiKalmanFittedElectrons
+                                                       , BiKalmanFittedKaons
+                                                       , CombineTFElectronTrack ]
+                                           , postscale = self.postscale
+                                           )        
+        

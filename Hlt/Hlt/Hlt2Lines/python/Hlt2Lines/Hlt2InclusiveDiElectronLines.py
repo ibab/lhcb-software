@@ -1,12 +1,3 @@
-## @file
-#
-#  Hlt2 dielectron selections
-#
-#  @author D.R.Ward
-#  @date 2010-04-20
-#
-
-##
 from Gaudi.Configuration import *
 from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
 
@@ -18,27 +9,43 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
     '''
     
     
-    __slots__ = {  'Prescale'                  : {   'HltZee'                :  1.0
+    __slots__ = {  'Prescale'                  : {   'Hlt2Zee'               :  1.0
                                                     ,'Hlt2DYee1'             :  1.0
                                                     ,'Hlt2DYee2'             :  1.0
                                                     ,'Hlt2DYee3'             :  1.0
-                                                    ,'HltZeeUnfitted'        :  1.0
-                                                    ,'Hlt2DYee1eUnfitted'    :  1.0
-                                                    ,'Hlt2DYeeeUnfitted2'    :  1.0
-                                                    ,'Hlt2DYee3eUnfitted'    :  1.0
+                                                    ,'Hlt2ZeeUnfitted'       :  1.0
+                                                    ,'Hlt2DYee1Unfitted'    :  1.0
+                                                    ,'Hlt2DYee2Unfitted'    :  1.0
+                                                    ,'Hlt2DYee3Unfitted'    :  1.0
                                                     # Unbiased Di-Electron
-                                                    ,'Hlt2UnbiasedDiElectron'         :  1.0
-                                                    ,'Hlt2UnbiasedDiElectronLowMass'  :  1.0 
-                                                    ,'Hlt2UnbiasedJpsi2ee'            :  1.0
-                                                    ,'Hlt2UnbiasedPsi2ee'             :  1.0
-                                                    ,'Hlt2UnbiasedB2ee'               :  1.0
+                                                    ,'Hlt2UnbiasedDiElectron'         :  0.01
+                                                    ,'Hlt2UnbiasedDiElectronLowMass'  :  0.01
+                                                    ,'Hlt2UnbiasedDiElectronLowPID'   :  0.001
+                                                    ,'Hlt2UnbiasedJpsi2ee'            :  0.01
+                                                    ,'Hlt2UnbiasedPsi2ee'             :  0.01
+                                                    ,'Hlt2UnbiasedB2ee'               :  0.01
                                                     # Unbiased and Track Fitted (TF)
                                                     ,'Hlt2UnbiasedTFDiElectron'         :  1.0
-                                                    ,'Hlt2UnbiasedTFDiElectronLowMass'  :  1.0 
+                                                    ,'Hlt2UnbiasedTFDiElectronLowMass'  :  1.0
+                                                    ,'Hlt2UnbiasedTFDiElectronLowPID'   :  0.01
                                                     ,'Hlt2UnbiasedTFJpsi2ee'            :  1.0
                                                     ,'Hlt2UnbiasedTFPsi2ee'             :  1.0
                                                     ,'Hlt2UnbiasedTFB2ee'               :  1.0
-                                                     }
+                                                    # Biased 
+                                                    ,'Hlt2BiasedDiElectron'         :  0.01
+                                                    ,'Hlt2BiasedDiElectronLowMass'  :  0.01
+                                                    ,'Hlt2BiasedDiElectronLowPID'   :  0.001 
+                                                    ,'Hlt2BiasedJpsi2ee'            :  0.01
+                                                    ,'Hlt2BiasedPsi2ee'             :  0.01
+                                                    ,'Hlt2BiasedB2ee'               :  0.01
+                                                    # Biased and Track Fitted (TF)
+                                                    ,'Hlt2BiasedTFDiElectron'         :  1.0
+                                                    ,'Hlt2BiasedTFDiElectronLowMass'  :  0.01
+                                                    ,'Hlt2BiasedTFDiElectronLowPID'   :  0.01
+                                                    ,'Hlt2BiasedTFJpsi2ee'            :  1.0
+                                                    ,'Hlt2BiasedTFPsi2ee'             :  1.0
+                                                    ,'Hlt2BiasedTFB2ee'               :  1.0 
+                                                    }
 
                    ,'DiElectronVertexChi2'    :   20
                    ,'DiElectronIP'            :  0.1      # mm 
@@ -58,90 +65,271 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
                    # Track un-fitted 
                    #-----------------
                    # Di-Electron 
-                   ,'UnbiasedDiElectronMinMass'    : 2700      # MeV
-                   ,'UnbiasedDiElectronVtxCHI2'    :   25
-                   ,'UnbiasedDiElectronPT'         : 1000      # MeV
-                   ,'UnbiasedDiElectronElecPT'     :  500      # MeV
+                   ,'UnbiasedDiElectron_MinMass'    : 2000.      # MeV
+                   ,'UnbiasedDiElectron_VtxCHI2'    :   25.
+                   ,'UnbiasedDiElectron_PT'         : -999.      # MeV
+                   ,'UnbiasedDiElectron_ElecPT'     : 1000.      # MeV
+                   ,'UnbiasedDiElectron_ElecPIDe'   :    1.5 
 
                    # Di-Electron Low mass
-                   ,'UnbiasedDiElectronLowMassMinMass'   :  500      # MeV
-                   ,'UnbiasedDiElectronLowMassVtxCHI2'   :   25
-                   ,'UnbiasedDiElectronLowMassPT'        : -999.     # MeV
-                   ,'UnbiasedDiElectronLowMassElecPT'    :  500      # MeV
-
+                   ,'UnbiasedDiElectronLowMass_MinMass'   :    0.      # MeV
+                   ,'UnbiasedDiElectronLowMass_VtxCHI2'   :   25.
+                   ,'UnbiasedDiElectronLowMass_PT'        : -999.      # MeV
+                   ,'UnbiasedDiElectronLowMass_ElecPT'    : 1000.      # MeV
+                   ,'UnbiasedDiElectronLowMass_ElecPIDe'  :    1.5
+                   
+                   # Di-Electron Low PID
+                   ,'UnbiasedDiElectronLowPID_MinMass'   : 2000.      # MeV
+                   ,'UnbiasedDiElectronLowPID_VtxCHI2'   :   25.
+                   ,'UnbiasedDiElectronLowPID_PT'        : -999.      # MeV
+                   ,'UnbiasedDiElectronLowPID_ElecPT'    : 1000.      # MeV
+                   ,'UnbiasedDiElectronLowPID_ElecPIDe'  :   -2.
+                   
                    # Jpsi -> ee 
-                   ,'UnbiasedJpsi2eeMinMass'     : 2700      # MeV
-                   ,'UnbiasedJpsi2eeMaxMass'     : 3200      # MeV
-                   ,'UnbiasedJpsi2eeVtxCHI2'     :   25
-                   ,'UnbiasedJpsi2eePT'          : 1000      # MeV
-                   ,'UnbiasedJpsi2eeElecPT'      :  500      # MeV
+                   ,'UnbiasedJpsi2ee_MinMass'     : 2500.      # MeV
+                   ,'UnbiasedJpsi2ee_MaxMass'     : 3300.      # MeV
+                   ,'UnbiasedJpsi2ee_VtxCHI2'     :   25.
+                   ,'UnbiasedJpsi2ee_PT'          : -999.      # MeV
+                   ,'UnbiasedJpsi2ee_ElecPT'      : 1000.      # MeV
+                   ,'UnbiasedJpsi2ee_ElecPIDe'    :    1.5
                    
                    # Psi(2S) -> ee
-                   ,'UnbiasedPsi2eeMinMass'    : 3300      # MeV
-                   ,'UnbiasedPsi2eeMaxMass'    : 3800      # MeV
-                   ,'UnbiasedPsi2eeVtxCHI2'    :   25
-                   ,'UnbiasedPsi2eePT'         : 1000      # MeV
-                   ,'UnbiasedPsi2eeElecPT'     :  500      # MeV
-
+                   ,'UnbiasedPsi2ee_MinMass'    : 3300.      # MeV
+                   ,'UnbiasedPsi2ee_MaxMass'    : 3900.      # MeV
+                   ,'UnbiasedPsi2ee_VtxCHI2'    :   25.
+                   ,'UnbiasedPsi2ee_PT'         : -999.      # MeV
+                   ,'UnbiasedPsi2ee_ElecPT'     : 1000.      # MeV
+                   ,'UnbiasedPsi2ee_ElecPIDe'   :    1.5
+                   
                    # B, upsilon -> ee
-                   ,'UnbiasedB2eeMinMass'      : 5200      # MeV  
-                   ,'UnbiasedB2eeVtxCHI2'      :   25
-                   ,'UnbiasedB2eePT'           : 1000      # MeV
-                   ,'UnbiasedB2eeElecPT'       : 1500      # MeV
+                   ,'UnbiasedB2ee_MinMass'      : 4800.      # MeV
+                   ,'UnbiasedB2ee_MaxMass'      : 1.0e+10    # MeV
+                   ,'UnbiasedB2ee_VtxCHI2'      :   25.
+                   ,'UnbiasedB2ee_PT'           : -999.      # MeV
+                   ,'UnbiasedB2ee_ElecPT'       : 1000.      # MeV
+                   ,'UnbiasedB2ee_ElecPIDe'     :    1.5 
+                   
 
                    #-----------------
                    # Track fitted 
                    #-----------------
                    # Di-Electron 
-                   ,'UnbiasedTFDiElectronMinMass'    : 2700      # MeV
-                   ,'UnbiasedTFDiElectronVtxCHI2'    :   25
-                   ,'UnbiasedTFDiElectronPT'         : 1000      # MeV
-                   ,'UnbiasedTFDiElectronElecPT'     :  500      # MeV
+                   ,'UnbiasedTFDiElectron_MinMass'    : 2000.      # MeV
+                   ,'UnbiasedTFDiElectron_VtxCHI2'    :   25.
+                   ,'UnbiasedTFDiElectron_PT'         : -999.      # MeV
+                   ,'UnbiasedTFDiElectron_ElecPT'     : 1000.      # MeV
+                   ,'UnbiasedTFDiElectron_ElecPIDe'   :    1.5 
 
                    # Di-Electron Low mass
-                   ,'UnbiasedTFDiElectronLowMassMinMass'   :  500      # MeV
-                   ,'UnbiasedTFDiElectronLowMassVtxCHI2'   :   25
-                   ,'UnbiasedTFDiElectronLowMassPT'        : -999.     # MeV
-                   ,'UnbiasedTFDiElectronLowMassElecPT'    :  500      # MeV
-
+                   ,'UnbiasedTFDiElectronLowMass_MinMass'   :     0.     # MeV
+                   ,'UnbiasedTFDiElectronLowMass_VtxCHI2'   :    25.
+                   ,'UnbiasedTFDiElectronLowMass_PT'        :  -999.     # MeV
+                   ,'UnbiasedTFDiElectronLowMass_ElecPT'    :  1000.     # MeV
+                   ,'UnbiasedTFDiElectronLowMass_ElecPIDe'  :     1.5
+                   
+                   # Di-Electron Low PID
+                   ,'UnbiasedTFDiElectronLowPID_MinMass'   :  2000.     # MeV
+                   ,'UnbiasedTFDiElectronLowPID_VtxCHI2'   :    25.
+                   ,'UnbiasedTFDiElectronLowPID_PT'        :  -999.     # MeV
+                   ,'UnbiasedTFDiElectronLowPID_ElecPT'    :  1000.     # MeV
+                   ,'UnbiasedTFDiElectronLowPID_ElecPIDe'  :    -2.
+                   
                    # Jpsi -> ee 
-                   ,'UnbiasedTFJpsi2eeMinMass'     : 2700      # MeV
-                   ,'UnbiasedTFJpsi2eeMaxMass'     : 3200      # MeV
-                   ,'UnbiasedTFJpsi2eeVtxCHI2'     :   25
-                   ,'UnbiasedTFJpsi2eePT'          : 1000      # MeV
-                   ,'UnbiasedTFJpsi2eeElecPT'      :  500      # MeV
+                   ,'UnbiasedTFJpsi2ee_MinMass'     : 2500.      # MeV
+                   ,'UnbiasedTFJpsi2ee_MaxMass'     : 3300.      # MeV
+                   ,'UnbiasedTFJpsi2ee_VtxCHI2'     :   25.
+                   ,'UnbiasedTFJpsi2ee_PT'          : -999.      # MeV
+                   ,'UnbiasedTFJpsi2ee_ElecPT'      : 1000.      # MeV
+                   ,'UnbiasedTFJpsi2ee_ElecPIDe'    :    1.5      
                    
                    # Psi(2S) -> ee
-                   ,'UnbiasedTFPsi2eeMinMass'    : 3300      # MeV
-                   ,'UnbiasedTFPsi2eeMaxMass'    : 3800      # MeV
-                   ,'UnbiasedTFPsi2eeVtxCHI2'    :   25
-                   ,'UnbiasedTFPsi2eePT'         : 1000      # MeV
-                   ,'UnbiasedTFPsi2eeElecPT'     :  500      # MeV
+                   ,'UnbiasedTFPsi2ee_MinMass'    : 3300.      # MeV
+                   ,'UnbiasedTFPsi2ee_MaxMass'    : 3900.      # MeV
+                   ,'UnbiasedTFPsi2ee_VtxCHI2'    :   25.
+                   ,'UnbiasedTFPsi2ee_PT'         : -999.      # MeV
+                   ,'UnbiasedTFPsi2ee_ElecPT'     : 1000.      # MeV
+                   ,'UnbiasedTFPsi2ee_ElecPIDe'   :    1.5  
 
                    # B, upsilon -> ee
-                   ,'UnbiasedTFB2eeMinMass'      : 5200      # MeV  
-                   ,'UnbiasedTFB2eeVtxCHI2'      :   25
-                   ,'UnbiasedTFB2eePT'           : 1000      # MeV
-                   ,'UnbiasedTFB2eeElecPT'       : 1500      # MeV                   
+                   ,'UnbiasedTFB2ee_MinMass'      : 4800.      # MeV
+                   ,'UnbiasedTFB2ee_MaxMass'      : 1.0e+10    # MeV
+                   ,'UnbiasedTFB2ee_VtxCHI2'      :   25.
+                   ,'UnbiasedTFB2ee_PT'           : -999.      # MeV
+                   ,'UnbiasedTFB2ee_ElecPT'       : 1000.      # MeV
+                   ,'UnbiasedTFB2ee_ElecPIDe'     :    1.5
+
+
+                   #------------------
+                   # Biased
+                   #------------------
+                   ,'BiasedDiElectron_MinMass'     : 2000.      # MeV
+                   ,'BiasedDiElectron_VtxCHI2'     :   25.
+                   ,'BiasedDiElectron_PT'          : -999.      # MeV
+                   ,'BiasedDiElectron_ElecPT'      :  300.      # MeV
+                   ,'BiasedDiElectron_ElecPIDe'    :    1.5
+                   ,'BiasedDiElectron_ElecIP'      :    0.1     # mm
+                   ,'BiasedDiElectron_ElecIPCHI2'  : -999.                   
+                   
+                   # Di-Electron Low mass
+                   ,'BiasedDiElectronLowMass_MinMass'     :    0.      # MeV
+                   ,'BiasedDiElectronLowMass_VtxCHI2'     :   25.
+                   ,'BiasedDiElectronLowMass_PT'          : -999.      # MeV
+                   ,'BiasedDiElectronLowMass_ElecPT'      :  300.      # MeV
+                   ,'BiasedDiElectronLowMass_ElecPIDe'    :    1.5  
+                   ,'BiasedDiElectronLowMass_ElecIP'      :    0.1     # mm
+                   ,'BiasedDiElectronLowMass_ElecIPCHI2'  : -999.           
+                   
+                   # Di-Electron Low PID
+                   ,'BiasedDiElectronLowPID_MinMass'     : 2000.      # MeV
+                   ,'BiasedDiElectronLowPID_VtxCHI2'     :   25.
+                   ,'BiasedDiElectronLowPID_PT'          : -999.      # MeV
+                   ,'BiasedDiElectronLowPID_ElecPT'      :  300.      # MeV
+                   ,'BiasedDiElectronLowPID_ElecPIDe'    :   -2.  
+                   ,'BiasedDiElectronLowPID_ElecIP'      :    0.1     # mm
+                   ,'BiasedDiElectronLowPID_ElecIPCHI2'  : -999.    
+
+                   # Jpsi-> ee
+                   ,'BiasedJpsi2ee_MinMass'     : 2500.      # MeV
+                   ,'BiasedJpsi2ee_MaxMass'     : 3300.      # MeV
+                   ,'BiasedJpsi2ee_VtxCHI2'     :   25.
+                   ,'BiasedJpsi2ee_PT'          : -999.      # MeV
+                   ,'BiasedJpsi2ee_ElecPT'      :  300.      # MeV
+                   ,'BiasedJpsi2ee_ElecPIDe'    :    1.5  
+                   ,'BiasedJpsi2ee_ElecIP'      :    0.1     # mm
+                   ,'BiasedJpsi2ee_ElecIPCHI2'  : -999.
+
+                   # Psi-> ee
+                   ,'BiasedPsi2ee_MinMass'     : 3300.      # MeV
+                   ,'BiasedPsi2ee_MaxMass'     : 3900.      # MeV
+                   ,'BiasedPsi2ee_VtxCHI2'     :   25.
+                   ,'BiasedPsi2ee_PT'          : -999.      # MeV
+                   ,'BiasedPsi2ee_ElecPT'      :  300.      # MeV
+                   ,'BiasedPsi2ee_ElecPIDe'    :    1.5  
+                   ,'BiasedPsi2ee_ElecIP'      :    0.1     # mm
+                   ,'BiasedPsi2ee_ElecIPCHI2'  : -999.
+                   
+                   # B-> ee
+                   ,'BiasedB2ee_MinMass'     : 4800.      # MeV
+                   ,'BiasedB2ee_MaxMass'     : 1.0e+10    # MeV
+                   ,'BiasedB2ee_VtxCHI2'     :   25.
+                   ,'BiasedB2ee_PT'          : -999.      # MeV
+                   ,'BiasedB2ee_ElecPT'      :  300.      # MeV
+                   ,'BiasedB2ee_ElecPIDe'    :    1.5  
+                   ,'BiasedB2ee_ElecIP'      :    0.1     # mm
+                   ,'BiasedB2ee_ElecIPCHI2'  : -999.
+
+                   
+                   #------------------
+                   # Biased, Track fitted 
+                   #------------------
+                   ,'BiasedTFDiElectron_MinMass'     : 2000.      # MeV
+                   ,'BiasedTFDiElectron_VtxCHI2'     :   25.
+                   ,'BiasedTFDiElectron_PT'          : -999.      # MeV
+                   ,'BiasedTFDiElectron_ElecPT'      :  300.      # MeV
+                   ,'BiasedTFDiElectron_ElecPIDe'    :    1.5
+                   ,'BiasedTFDiElectron_ElecIP'      :    0.1     # mm
+                   ,'BiasedTFDiElectron_ElecIPCHI2'  : -999.                          
+                   
+                   # Di-Electron Low mass
+                   ,'BiasedTFDiElectronLowMass_MinMass'     :    0.      # MeV
+                   ,'BiasedTFDiElectronLowMass_VtxCHI2'     :   25.
+                   ,'BiasedTFDiElectronLowMass_PT'          : -999.      # MeV
+                   ,'BiasedTFDiElectronLowMass_ElecPT'      :  300.      # MeV
+                   ,'BiasedTFDiElectronLowMass_ElecPIDe'    :    1.5
+                   ,'BiasedTFDiElectronLowMass_ElecIP'      :    0.1     # mm
+                   ,'BiasedTFDiElectronLowMass_ElecIPCHI2'  : -999.
+                   
+                   # Di-Electron Low PID
+                   ,'BiasedTFDiElectronLowPID_MinMass'     : 2000.      # MeV
+                   ,'BiasedTFDiElectronLowPID_VtxCHI2'     :   25.
+                   ,'BiasedTFDiElectronLowPID_PT'          : -999.      # MeV
+                   ,'BiasedTFDiElectronLowPID_ElecPT'      :  300.      # MeV
+                   ,'BiasedTFDiElectronLowPID_ElecPIDe'    :   -2.
+                   ,'BiasedTFDiElectronLowPID_ElecIP'      :    0.1     # mm
+                   ,'BiasedTFDiElectronLowPID_ElecIPCHI2'  : -999.                   
+                   
+                   # Jpsi-> ee
+                   ,'BiasedTFJpsi2ee_MinMass'     : 2500.      # MeV
+                   ,'BiasedTFJpsi2ee_MaxMass'     : 3300.      # MeV
+                   ,'BiasedTFJpsi2ee_VtxCHI2'     :   25.
+                   ,'BiasedTFJpsi2ee_PT'          : -999.      # MeV
+                   ,'BiasedTFJpsi2ee_ElecPT'      :  300.      # MeV
+                   ,'BiasedTFJpsi2ee_ElecPIDe'    :    1.5  
+                   ,'BiasedTFJpsi2ee_ElecIP'      :    0.1     # mm
+                   ,'BiasedTFJpsi2ee_ElecIPCHI2'  : -999.
+                   
+                   # Psi-> ee
+                   ,'BiasedTFPsi2ee_MinMass'     : 3300.      # MeV
+                   ,'BiasedTFPsi2ee_MaxMass'     : 3900.      # MeV
+                   ,'BiasedTFPsi2ee_VtxCHI2'     :   25.
+                   ,'BiasedTFPsi2ee_PT'          : -999.      # MeV
+                   ,'BiasedTFPsi2ee_ElecPT'      :  300.      # MeV
+                   ,'BiasedTFPsi2ee_ElecPIDe'    :    1.5  
+                   ,'BiasedTFPsi2ee_ElecIP'      :    0.1     # mm
+                   ,'BiasedTFPsi2ee_ElecIPCHI2'  : -999.
+                   
+                   # B-> ee
+                   ,'BiasedTFB2ee_MinMass'     : 4800.      # MeV
+                   ,'BiasedTFB2ee_MaxMass'     : 1.0e+10    # MeV
+                   ,'BiasedTFB2ee_VtxCHI2'     :   25.
+                   ,'BiasedTFB2ee_PT'          : -999.      # MeV
+                   ,'BiasedTFB2ee_ElecPT'      :  300.      # MeV
+                   ,'BiasedTFB2ee_ElecPIDe'    :    1.5  
+                   ,'BiasedTFB2ee_ElecIP'      :    0.1     # mm
+                   ,'BiasedTFB2ee_ElecIPCHI2'  : -999.
+                   
                    
                    ,'HltANNSvcID'  : {
                                       'UnbiasedDiElectron'         :  51200
                                      ,'UnbiasedDiElectronLowMass'  :  51210
+                                     ,'UnbiasedDiElectronLowPID'   :  51220
                                      ,'UnbiasedJpsi2ee'            :  51201
                                      ,'UnbiasedPsi2ee'             :  51202
                                      ,'UnbiasedB2ee'               :  51203
                                      # Track fitted 
                                      ,'UnbiasedTFDiElectron'         :  51250
                                      ,'UnbiasedTFDiElectronLowMass'  :  51260
+                                     ,'UnbiasedTFDiElectronLowPID'   :  51270 
                                      ,'UnbiasedTFJpsi2ee'            :  51251
                                      ,'UnbiasedTFPsi2ee'             :  51252
-                                     ,'UnbiasedTFB2ee'               :  51253                                      
+                                     ,'UnbiasedTFB2ee'               :  51253
+
+                                     ,'BiasedDiElectron'         :  51100
+                                     ,'BiasedDiElectronLowMass'  :  51110
+                                     ,'BiasedDiElectronLowPID'   :  51120
+                                     ,'BiasedJpsi2ee'            :  51101
+                                     ,'BiasedPsi2ee'             :  51102
+                                     ,'BiasedB2ee'               :  51103
+                                     # Track fitted 
+                                     ,'BiasedTFDiElectron'         :  51150
+                                     ,'BiasedTFDiElectronLowMass'  :  51160
+                                     ,'BiasedTFDiElectronLowPID'   :  51170 
+                                     ,'BiasedTFJpsi2ee'            :  51151
+                                     ,'BiasedTFPsi2ee'             :  51152
+                                     ,'BiasedTFB2ee'               :  51153 
                                      }
 
                    }
     
 
     def __apply_configuration__(self) :
+        self.__makeHlt2DYAndZ2eeLines()
+        self.__makeHlt2UnbiasedDiElectronLines()
+        self.__makeHlt2UnbiasedTFDiElectronLines()
+        self.__makeHlt2BiasedDiElectronLines()
+        self.__makeHlt2BiasedTFDiElectronLines()       
+
+
+    def __makeHlt2DYAndZ2eeLines(self):
+        ## @file
+        #
+        #  Hlt2 dielectron selections
+        #
+        #  @author D.R.Ward
+        #  @date 2010-04-20
+        #
+        ##
+        
         from HltLine.HltLine import Hlt2Line, Hlt2Member, bindMembers
         from HltTracking.HltPVs import PV3D
         from Configurables import HltANNSvc
@@ -344,29 +532,44 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2ZeeUnfittedDecision":   50299 } )
 
 
+
+    def __makeHlt2UnbiasedDiElectronLines(self):
+        
         #####################################################################################
-        # 
-        # 1. 'Hlt2UnbiasedDiElectron',          Mass sidebands from 2.7 GeV, pre-scaled
-        # 2. 'Hlt2UnbiasedDiElectronLowMass'    Mass sidebands from 500 GeV, pre-scaled 
-        # 3. 'Hlt2UnbiasedJpsi2ee'              Jpsi -> ee
-        # 4. 'Hlt2UnbiasedPsi2ee'               Psi(2S) -> ee
-        # 5. 'Hlt2UnbiasedB2ee'                 For all with Mass > 5.2 GeV
         #
+        # Unbiased Di-Electron Lines using unfitted tracks 
+        #
+        # 1. 'Hlt2UnbiasedDiElectron',          Mass from 2. GeV
+        # 2. 'Hlt2UnbiasedDiElectronLowMass'    Mass sidebands from 0.5 GeV, pre-scaled
+        # 3. 'Hlt2UnbiasedDiElectronLowPID'     Mass from 2. GeV, PIDe is default (-2.)
+        # 4. 'Hlt2UnbiasedJpsi2ee'              Jpsi -> ee
+        # 5. 'Hlt2UnbiasedPsi2ee'               Psi(2S) -> ee
+        # 6. 'Hlt2UnbiasedB2ee'                 For all with Mass > 5.2 GeV
+        #
+        # Author: Jibo.He@cern.ch
+        # @ 12 May 2010 
+        # 
         #####################################################################################
 
+        from HltLine.HltLine import Hlt2Line, Hlt2Member
+        from Configurables import HltANNSvc
+        from Configurables import FilterDesktop
+        from Hlt2SharedParticles.DiElectron import DiElectron
         
         #--------------------------------------------
         # Filter DiElectron
         #--------------------------------------------
-        from Hlt2SharedParticles.DiElectron import DiElectron
         
         FilterDiElectron = Hlt2Member( FilterDesktop # type
                                        , "FilterDiElectron" 
-                                       , Code ="(MINTREE('e+'==ABSID,PT) > %(UnbiasedDiElectronElecPT)s *MeV)"\
-                                       " & (MM > %(UnbiasedDiElectronMinMass)s *MeV)"\
-                                       " & (VFASPF(VCHI2/VDOF) < %(UnbiasedDiElectronVtxCHI2)s)"\
-                                       " & (PT > %(UnbiasedDiElectronPT)s *MeV)" %self.getProps() 
+                                       , Code ="(MINTREE('e+'==ABSID,PT) > %(UnbiasedDiElectron_ElecPT)s *MeV)"\
+                                       " & (MINTREE('e+'==ABSID,PIDe) > %(UnbiasedDiElectron_ElecPIDe)s)"\
+                                       " & (MM > %(UnbiasedDiElectron_MinMass)s *MeV)"\
+                                       " & (VFASPF(VCHI2/VDOF) < %(UnbiasedDiElectron_VtxCHI2)s)"\
+                                       " & (PT > %(UnbiasedDiElectron_PT)s *MeV)" %self.getProps() 
                                        , InputLocations = [ DiElectron ]
+                                       , InputPrimaryVertices = "None"
+                                       , UseP2PVRelations = False
                                        )
 
 
@@ -379,9 +582,8 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
                                           , postscale = self.postscale
                                           )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2UnbiasedDiElectronDecision" :
-                                              self.getProp('HltANNSvcID')['UnbiasedDiElectron'] } ) 
+                                              self.getProp('HltANNSvcID')['UnbiasedDiElectron'] } )
 
-        
         #--------------------------------------------
         # Unbiased DiElectron, low mass prescaled
         #--------------------------------------------
@@ -389,10 +591,11 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
                                      , prescale = self.prescale
                                      , algos = [ DiElectron, FilterDiElectron ]
                                      , FilterDiElectron =
-                                     {"Code" : "(MINTREE('e+'==ABSID,PT) > %(UnbiasedDiElectronLowMassElecPT)s *MeV)"\
-                                      " & (MM > %(UnbiasedDiElectronLowMassMinMass)s *MeV)"\
-                                      " & (VFASPF(VCHI2/VDOF) < %(UnbiasedDiElectronLowMassVtxCHI2)s)"\
-                                      " & (PT > %(UnbiasedDiElectronLowMassPT)s *MeV)" %self.getProps() 
+                                     {"Code" : "(MINTREE('e+'==ABSID,PT) > %(UnbiasedDiElectronLowMass_ElecPT)s *MeV)"\
+                                      " & (MINTREE('e+'==ABSID,PIDe) > %(UnbiasedDiElectronLowMass_ElecPIDe)s)"\
+                                      " & (MM > %(UnbiasedDiElectronLowMass_MinMass)s *MeV)"\
+                                      " & (VFASPF(VCHI2/VDOF) < %(UnbiasedDiElectronLowMass_VtxCHI2)s)"\
+                                      " & (PT > %(UnbiasedDiElectronLowMass_PT)s *MeV)" %self.getProps() 
                                       }
                                      , postscale = self.postscale
                                      )
@@ -401,17 +604,36 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
 
 
         #--------------------------------------------
+        # Unbiased DiElectron, low PID prescaled
+        #--------------------------------------------
+        UnbiasedDiElectronLine.clone("UnbiasedDiElectronLowPID"
+                                     , prescale = self.prescale
+                                     , algos = [ DiElectron, FilterDiElectron ]
+                                     , FilterDiElectron =
+                                     {"Code" : "(MINTREE('e+'==ABSID,PT) > %(UnbiasedDiElectronLowPID_ElecPT)s *MeV)"\
+                                      " & (MINTREE('e+'==ABSID,PIDe) > %(UnbiasedDiElectronLowPID_ElecPIDe)s)"\
+                                      " & (MM > %(UnbiasedDiElectronLowPID_MinMass)s *MeV)"\
+                                      " & (VFASPF(VCHI2/VDOF) < %(UnbiasedDiElectronLowPID_VtxCHI2)s)"\
+                                      " & (PT > %(UnbiasedDiElectronLowPID_PT)s *MeV)" %self.getProps() 
+                                      }
+                                     , postscale = self.postscale
+                                     )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2UnbiasedDiElectronLowPIDDecision" :
+                                              self.getProp('HltANNSvcID')['UnbiasedDiElectronLowPID'] } )         
+
+        #--------------------------------------------
         # Jpsi -> e+ e-
         #--------------------------------------------
         UnbiasedDiElectronLine.clone("UnbiasedJpsi2ee"
                                      , prescale = self.prescale
                                      , algos = [ DiElectron, FilterDiElectron ]
                                      , FilterDiElectron =
-                                     {"Code" : "(MINTREE('e+'==ABSID,PT) > %(UnbiasedJpsi2eePT)s *MeV)"\
-                                      " & (MM > %(UnbiasedJpsi2eeMinMass)s *MeV)"\
-                                      " & (MM < %(UnbiasedJpsi2eeMaxMass)s *MeV)"\
-                                      " & (VFASPF(VCHI2/VDOF) < %(UnbiasedJpsi2eeVtxCHI2)s)"\
-                                      " & (PT > %(UnbiasedJpsi2eePT)s *MeV)" %self.getProps() 
+                                     {"Code" : "(MINTREE('e+'==ABSID,PT) > %(UnbiasedJpsi2ee_ElecPT)s *MeV)"\
+                                      " & (MINTREE('e+'==ABSID,PIDe) > %(UnbiasedJpsi2ee_ElecPIDe)s)"\
+                                      " & (MM > %(UnbiasedJpsi2ee_MinMass)s *MeV)"\
+                                      " & (MM < %(UnbiasedJpsi2ee_MaxMass)s *MeV)"\
+                                      " & (VFASPF(VCHI2/VDOF) < %(UnbiasedJpsi2ee_VtxCHI2)s)"\
+                                      " & (PT > %(UnbiasedJpsi2ee_PT)s *MeV)" %self.getProps() 
                                       }
                                      , postscale = self.postscale
                                      )
@@ -426,11 +648,12 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
                                      , prescale = self.prescale
                                      , algos = [ DiElectron, FilterDiElectron ]
                                      , FilterDiElectron =
-                                     {"Code" : "(MINTREE('e+'==ABSID,PT) > %(UnbiasedPsi2eePT)s *MeV)"\
-                                      " & (MM > %(UnbiasedPsi2eeMinMass)s *MeV)"\
-                                      " & (MM < %(UnbiasedPsi2eeMaxMass)s *MeV)"\
-                                      " & (VFASPF(VCHI2/VDOF) < %(UnbiasedPsi2eeVtxCHI2)s)"\
-                                      " & (PT > %(UnbiasedPsi2eePT)s *MeV)" %self.getProps() 
+                                     {"Code" : "(MINTREE('e+'==ABSID,PT) > %(UnbiasedPsi2ee_ElecPT)s *MeV)"\
+                                      " & (MINTREE('e+'==ABSID,PIDe) > %(UnbiasedPsi2ee_ElecPIDe)s)"\
+                                      " & (MM > %(UnbiasedPsi2ee_MinMass)s *MeV)"\
+                                      " & (MM < %(UnbiasedPsi2ee_MaxMass)s *MeV)"\
+                                      " & (VFASPF(VCHI2/VDOF) < %(UnbiasedPsi2ee_VtxCHI2)s)"\
+                                      " & (PT > %(UnbiasedPsi2ee_PT)s *MeV)" %self.getProps() 
                                       }
                                      , postscale = self.postscale
                                      )
@@ -446,10 +669,12 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
                                      , prescale = self.prescale
                                      , algos = [ DiElectron, FilterDiElectron ]
                                      , FilterDiElectron =
-                                     {"Code" : "(MINTREE('e+'==ABSID,PT) > %(UnbiasedB2eePT)s *MeV)"\
-                                      " & (MM > %(UnbiasedB2eeMinMass)s *MeV)"\
-                                      " & (VFASPF(VCHI2/VDOF) < %(UnbiasedB2eeVtxCHI2)s)"\
-                                      " & (PT > %(UnbiasedB2eePT)s *MeV)" %self.getProps() 
+                                     {"Code" : "(MINTREE('e+'==ABSID,PT) > %(UnbiasedB2ee_ElecPT)s *MeV)"\
+                                      " & (MINTREE('e+'==ABSID,PIDe) > %(UnbiasedB2ee_ElecPIDe)s)"\
+                                      " & (MM > %(UnbiasedB2ee_MinMass)s *MeV)"\
+                                      " & (MM < %(UnbiasedB2ee_MaxMass)s *MeV)"\
+                                      " & (VFASPF(VCHI2/VDOF) < %(UnbiasedB2ee_VtxCHI2)s)"\
+                                      " & (PT > %(UnbiasedB2ee_PT)s *MeV)" %self.getProps() 
                                       }
                                      , postscale = self.postscale
                                      )
@@ -459,19 +684,45 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
 
 
 
+    def __makeHlt2UnbiasedTFDiElectronLines(self):
+
+        #####################################################################################
+        #
+        # Unbiased Di-Electron Lines using fitted tracks 
+        #
+        # 1. 'Hlt2UnbiasedTFDiElectron',          Mass from 2. GeV
+        # 2. 'Hlt2UnbiasedTFDiElectronLowMass'    Mass sidebands from 0.5 GeV, pre-scaled
+        # 3. 'Hlt2UnbiasedTFDiElectronLowPID'     Mass from 2. GeV, PIDe is default (-2.)
+        # 4. 'Hlt2UnbiasedTFJpsi2ee'              Jpsi -> ee
+        # 5. 'Hlt2UnbiasedTFPsi2ee'               Psi(2S) -> ee
+        # 6. 'Hlt2UnbiasedTFB2ee'                 For all with Mass > 5.2 GeV
+        #
+        # Author: Jibo.He@cern.ch
+        # @ 12 May 2010 
+        # 
+        #####################################################################################
+        
+        from HltLine.HltLine import Hlt2Line, Hlt2Member
+        from Configurables import HltANNSvc
+        from Configurables import FilterDesktop
+        from Hlt2SharedParticles.TrackFittedDiElectron import TrackFittedDiElectron
+
+
         #--------------------------------------------
         # Filter TFDiElectron
         #--------------------------------------------
-        from Hlt2SharedParticles.TrackFittedDiElectron import TrackFittedDiElectron
         
         FilterTFDiElectron = Hlt2Member( FilterDesktop # type
-                                       , "FilterTFDiElectron" 
-                                       , Code ="(MINTREE('e+'==ABSID,PT) > %(UnbiasedTFDiElectronElecPT)s *MeV)"\
-                                       " & (MM > %(UnbiasedTFDiElectronMinMass)s *MeV)"\
-                                       " & (VFASPF(VCHI2/VDOF) < %(UnbiasedTFDiElectronVtxCHI2)s)"\
-                                       " & (PT > %(UnbiasedTFDiElectronPT)s *MeV)" %self.getProps() 
-                                       , InputLocations = [ TrackFittedDiElectron ]
-                                       )
+                                         , "FilterTFDiElectron" 
+                                         , Code ="(MINTREE('e+'==ABSID,PT) > %(UnbiasedTFDiElectron_ElecPT)s *MeV)"\
+                                         " & (MINTREE('e+'==ABSID,PIDe) > %(UnbiasedTFDiElectron_ElecPIDe)s)"\
+                                         " & (MM > %(UnbiasedTFDiElectron_MinMass)s *MeV)"\
+                                         " & (VFASPF(VCHI2/VDOF) < %(UnbiasedTFDiElectron_VtxCHI2)s)"\
+                                         " & (PT > %(UnbiasedTFDiElectron_PT)s *MeV)" %self.getProps() 
+                                         , InputLocations = [ TrackFittedDiElectron ]
+                                         , InputPrimaryVertices = "None"
+                                         , UseP2PVRelations = False
+                                         )
 
 
         #--------------------------------------------
@@ -493,15 +744,35 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
                                      , prescale = self.prescale
                                      , algos = [ TrackFittedDiElectron, FilterTFDiElectron ]
                                      , FilterTFDiElectron =
-                                     {"Code" : "(MINTREE('e+'==ABSID,PT) > %(UnbiasedTFDiElectronLowMassElecPT)s *MeV)"\
-                                      " & (MM > %(UnbiasedTFDiElectronLowMassMinMass)s *MeV)"\
-                                      " & (VFASPF(VCHI2/VDOF) < %(UnbiasedTFDiElectronLowMassVtxCHI2)s)"\
-                                      " & (PT > %(UnbiasedTFDiElectronLowMassPT)s *MeV)" %self.getProps() 
+                                     {"Code" : "(MINTREE('e+'==ABSID,PT) > %(UnbiasedTFDiElectronLowMass_ElecPT)s *MeV)"\
+                                      " & (MINTREE('e+'==ABSID,PIDe) > %(UnbiasedTFDiElectronLowMass_ElecPIDe)s)"\
+                                      " & (MM > %(UnbiasedTFDiElectronLowMass_MinMass)s *MeV)"\
+                                      " & (VFASPF(VCHI2/VDOF) < %(UnbiasedTFDiElectronLowMass_VtxCHI2)s)"\
+                                      " & (PT > %(UnbiasedTFDiElectronLowMass_PT)s *MeV)" %self.getProps() 
                                       }
                                      , postscale = self.postscale
                                      )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2UnbiasedTFDiElectronLowMassDecision" :
                                               self.getProp('HltANNSvcID')['UnbiasedTFDiElectronLowMass'] } ) 
+
+        
+        #--------------------------------------------
+        # UnbiasedTF DiElectron, low PID prescaled
+        #--------------------------------------------
+        UnbiasedTFDiElectronLine.clone("UnbiasedTFDiElectronLowPID"
+                                     , prescale = self.prescale
+                                     , algos = [ TrackFittedDiElectron, FilterTFDiElectron ]
+                                     , FilterTFDiElectron =
+                                     {"Code" : "(MINTREE('e+'==ABSID,PT) > %(UnbiasedTFDiElectronLowPID_ElecPT)s *MeV)"\
+                                      " & (MINTREE('e+'==ABSID,PIDe) > %(UnbiasedTFDiElectronLowPID_ElecPIDe)s)"\
+                                      " & (MM > %(UnbiasedTFDiElectronLowPID_MinMass)s *MeV)"\
+                                      " & (VFASPF(VCHI2/VDOF) < %(UnbiasedTFDiElectronLowPID_VtxCHI2)s)"\
+                                      " & (PT > %(UnbiasedTFDiElectronLowPID_PT)s *MeV)" %self.getProps() 
+                                      }
+                                     , postscale = self.postscale
+                                     )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2UnbiasedTFDiElectronLowPIDDecision" :
+                                              self.getProp('HltANNSvcID')['UnbiasedTFDiElectronLowPID'] } )         
 
 
         #--------------------------------------------
@@ -511,11 +782,12 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
                                      , prescale = self.prescale
                                      , algos = [ TrackFittedDiElectron, FilterTFDiElectron ]
                                      , FilterTFDiElectron =
-                                     {"Code" : "(MINTREE('e+'==ABSID,PT) > %(UnbiasedTFJpsi2eePT)s *MeV)"\
-                                      " & (MM > %(UnbiasedTFJpsi2eeMinMass)s *MeV)"\
-                                      " & (MM < %(UnbiasedTFJpsi2eeMaxMass)s *MeV)"\
-                                      " & (VFASPF(VCHI2/VDOF) < %(UnbiasedTFJpsi2eeVtxCHI2)s)"\
-                                      " & (PT > %(UnbiasedTFJpsi2eePT)s *MeV)" %self.getProps() 
+                                     {"Code" : "(MINTREE('e+'==ABSID,PT) > %(UnbiasedTFJpsi2ee_ElecPT)s *MeV)"\
+                                      " & (MINTREE('e+'==ABSID,PIDe) > %(UnbiasedTFJpsi2ee_ElecPIDe)s)"\
+                                      " & (MM > %(UnbiasedTFJpsi2ee_MinMass)s *MeV)"\
+                                      " & (MM < %(UnbiasedTFJpsi2ee_MaxMass)s *MeV)"\
+                                      " & (VFASPF(VCHI2/VDOF) < %(UnbiasedTFJpsi2ee_VtxCHI2)s)"\
+                                      " & (PT > %(UnbiasedTFJpsi2ee_PT)s *MeV)" %self.getProps() 
                                       }
                                      , postscale = self.postscale
                                      )
@@ -530,11 +802,12 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
                                      , prescale = self.prescale
                                      , algos = [ TrackFittedDiElectron, FilterTFDiElectron ]
                                      , FilterTFDiElectron =
-                                     {"Code" : "(MINTREE('e+'==ABSID,PT) > %(UnbiasedTFPsi2eePT)s *MeV)"\
-                                      " & (MM > %(UnbiasedTFPsi2eeMinMass)s *MeV)"\
-                                      " & (MM < %(UnbiasedTFPsi2eeMaxMass)s *MeV)"\
-                                      " & (VFASPF(VCHI2/VDOF) < %(UnbiasedTFPsi2eeVtxCHI2)s)"\
-                                      " & (PT > %(UnbiasedTFPsi2eePT)s *MeV)" %self.getProps() 
+                                     {"Code" : "(MINTREE('e+'==ABSID,PT) > %(UnbiasedTFPsi2ee_ElecPT)s *MeV)"\
+                                      " & (MINTREE('e+'==ABSID,PIDe) > %(UnbiasedTFPsi2ee_ElecPIDe)s)"\
+                                      " & (MM > %(UnbiasedTFPsi2ee_MinMass)s *MeV)"\
+                                      " & (MM < %(UnbiasedTFPsi2ee_MaxMass)s *MeV)"\
+                                      " & (VFASPF(VCHI2/VDOF) < %(UnbiasedTFPsi2ee_VtxCHI2)s)"\
+                                      " & (PT > %(UnbiasedTFPsi2ee_PT)s *MeV)" %self.getProps() 
                                       }
                                      , postscale = self.postscale
                                      )
@@ -550,13 +823,356 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
                                      , prescale = self.prescale
                                      , algos = [ TrackFittedDiElectron, FilterTFDiElectron ]
                                      , FilterTFDiElectron =
-                                     {"Code" : "(MINTREE('e+'==ABSID,PT) > %(UnbiasedTFB2eePT)s *MeV)"\
-                                      " & (MM > %(UnbiasedTFB2eeMinMass)s *MeV)"\
-                                      " & (VFASPF(VCHI2/VDOF) < %(UnbiasedTFB2eeVtxCHI2)s)"\
-                                      " & (PT > %(UnbiasedTFB2eePT)s *MeV)" %self.getProps() 
+                                     {"Code" : "(MINTREE('e+'==ABSID,PT) > %(UnbiasedTFB2ee_ElecPT)s *MeV)"\
+                                      " & (MINTREE('e+'==ABSID,PIDe) > %(UnbiasedTFB2ee_ElecPIDe)s)"\
+                                      " & (MM > %(UnbiasedTFB2ee_MinMass)s *MeV)"\
+                                      " & (MM < %(UnbiasedTFB2ee_MaxMass)s *MeV)"\
+                                      " & (VFASPF(VCHI2/VDOF) < %(UnbiasedTFB2ee_VtxCHI2)s)"\
+                                      " & (PT > %(UnbiasedTFB2ee_PT)s *MeV)" %self.getProps() 
                                       }
                                      , postscale = self.postscale
                                      )
         
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2UnbiasedTFB2eeDecision" :
                                               self.getProp('HltANNSvcID')['UnbiasedTFB2ee'] } )
+
+
+    def __makeHlt2BiasedDiElectronLines(self):
+
+        #####################################################################################
+        #
+        # Biased Di-Electron Lines using unfitted tracks 
+        #
+        # 1. 'Hlt2BiasedDiElectron',          Mass from 2. GeV
+        # 2. 'Hlt2BiasedDiElectronLowMass'    Mass sidebands from 0.5 GeV, pre-scaled
+        # 3. 'Hlt2BiasedDiElectronLowPID'     Mass from 2. GeV, PIDe is default (-2.)
+        # 4. 'Hlt2BiasedJpsi2ee'              Jpsi -> ee
+        # 5. 'Hlt2BiasedPsi2ee'               Psi(2S) -> ee
+        # 6. 'Hlt2BiasedB2ee'                 For all with Mass > 5.2 GeV
+        #
+        # Author: Jibo.He@cern.ch
+        # @ 12 May 2010 
+        # 
+        #####################################################################################       
+
+        from HltLine.HltLine import Hlt2Line, Hlt2Member
+        from Configurables import HltANNSvc
+        from Configurables import FilterDesktop
+        from Hlt2SharedParticles.DiElectron import DiElectron
+        from HltTracking.HltPVs import PV3D
+        
+        #--------------------------------------------
+        # Filter Baised DiElectron
+        #--------------------------------------------
+        
+        FilterBiasedDiElectron = Hlt2Member( FilterDesktop # type
+                                             , "FilterBiasedDiElectron" 
+                                             , Code ="(MINTREE('e+'==ABSID,PT) > %(BiasedDiElectron_ElecPT)s *MeV)"\
+                                             " & (MINTREE('e+'==ABSID,PIDe) > %(BiasedDiElectron_ElecPIDe)s)"\
+                                             " & (MINTREE('e+'==ABSID, MIPDV(PRIMARY)) > %(BiasedDiElectron_ElecIP)s *mm)"\
+                                             " & (MINTREE('e+'==ABSID, MIPCHI2DV(PRIMARY)) > %(BiasedDiElectron_ElecIPCHI2)s *mm)"\
+                                             " & (MM > %(BiasedDiElectron_MinMass)s *MeV)"\
+                                             " & (VFASPF(VCHI2/VDOF) < %(BiasedDiElectron_VtxCHI2)s)"\
+                                             " & (PT > %(BiasedDiElectron_PT)s *MeV)" %self.getProps() 
+                                             , InputLocations = [ DiElectron ]
+                                             )
+        
+        #--------------------------------------------
+        # Biased DiElectron, prescaled
+        #--------------------------------------------
+        BiasedDiElectronLine = Hlt2Line("BiasedDiElectron"
+                                        , prescale = self.prescale
+                                        , algos = [ PV3D()
+                                                    , DiElectron
+                                                    , FilterBiasedDiElectron ]
+                                        , postscale = self.postscale
+                                        )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2BiasedDiElectronDecision" :
+                                              self.getProp('HltANNSvcID')['BiasedDiElectron'] } ) 
+
+        #--------------------------------------------
+        # Biased DiElectron, low mass prescaled
+        #--------------------------------------------
+        BiasedDiElectronLine.clone("BiasedDiElectronLowMass"
+                                   , prescale = self.prescale
+                                   , algos = [ PV3D()
+                                               , DiElectron
+                                               , FilterBiasedDiElectron ]
+                                   , FilterBiasedDiElectron =
+                                   {"Code" : "(MINTREE('e+'==ABSID,PT) > %(BiasedDiElectronLowMass_ElecPT)s *MeV)"\
+                                    " & (MINTREE('e+'==ABSID,PIDe) > %(BiasedDiElectronLowMass_ElecPIDe)s)"\
+                                    " & (MINTREE('e+'==ABSID, MIPDV(PRIMARY)) > %(BiasedDiElectronLowMass_ElecIP)s *mm)"\
+                                    " & (MINTREE('e+'==ABSID, MIPCHI2DV(PRIMARY)) > %(BiasedDiElectronLowMass_ElecIPCHI2)s *mm)"\
+                                    " & (MM > %(BiasedDiElectronLowMass_MinMass)s *MeV)"\
+                                    " & (VFASPF(VCHI2/VDOF) < %(BiasedDiElectronLowMass_VtxCHI2)s)"\
+                                    " & (PT > %(BiasedDiElectronLowMass_PT)s *MeV)" %self.getProps() 
+                                    }
+                                   , postscale = self.postscale
+                                   )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2BiasedDiElectronLowMassDecision" :
+                                              self.getProp('HltANNSvcID')['BiasedDiElectronLowMass'] } )
+
+        
+        #--------------------------------------------
+        # Biased DiElectron, low PID prescaled
+        #--------------------------------------------        
+        BiasedDiElectronLine.clone("BiasedDiElectronLowPID"
+                                   , prescale = self.prescale
+                                   , algos = [ PV3D()
+                                               , DiElectron
+                                               , FilterBiasedDiElectron ]
+                                   , FilterBiasedDiElectron =
+                                   {"Code" : "(MINTREE('e+'==ABSID,PT) > %(BiasedDiElectronLowPID_ElecPT)s *MeV)"\
+                                    " & (MINTREE('e+'==ABSID,PIDe) > %(BiasedDiElectronLowPID_ElecPIDe)s)"\
+                                    " & (MINTREE('e+'==ABSID, MIPDV(PRIMARY)) > %(BiasedDiElectronLowPID_ElecIP)s *mm)"\
+                                    " & (MINTREE('e+'==ABSID, MIPCHI2DV(PRIMARY)) > %(BiasedDiElectronLowPID_ElecIPCHI2)s *mm)"\
+                                    " & (MM > %(BiasedDiElectronLowPID_MinMass)s *MeV)"\
+                                    " & (VFASPF(VCHI2/VDOF) < %(BiasedDiElectronLowPID_VtxCHI2)s)"\
+                                    " & (PT > %(BiasedDiElectronLowPID_PT)s *MeV)" %self.getProps() 
+                                    }
+                                   , postscale = self.postscale
+                                   )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2BiasedDiElectronLowPIDDecision" :
+                                              self.getProp('HltANNSvcID')['BiasedDiElectronLowPID'] } )
+        
+        #--------------------------------------------
+        # Biased Jpsi->ee
+        #--------------------------------------------
+        BiasedDiElectronLine.clone("BiasedJpsi2ee"
+                                   , prescale = self.prescale
+                                   , algos = [ PV3D()
+                                               , DiElectron
+                                               , FilterBiasedDiElectron ]
+                                   , FilterBiasedDiElectron =
+                                   {"Code" : "(MINTREE('e+'==ABSID,PT) > %(BiasedJpsi2ee_ElecPT)s *MeV)"\
+                                    " & (MINTREE('e+'==ABSID,PIDe) > %(BiasedJpsi2ee_ElecPIDe)s)"\
+                                    " & (MINTREE('e+'==ABSID, MIPDV(PRIMARY)) > %(BiasedJpsi2ee_ElecIP)s *mm)"\
+                                    " & (MINTREE('e+'==ABSID, MIPCHI2DV(PRIMARY)) > %(BiasedJpsi2ee_ElecIPCHI2)s *mm)"\
+                                    " & (MM > %(BiasedJpsi2ee_MinMass)s *MeV)"\
+                                    " & (MM < %(BiasedJpsi2ee_MaxMass)s *MeV)"\
+                                    " & (VFASPF(VCHI2/VDOF) < %(BiasedJpsi2ee_VtxCHI2)s)"\
+                                    " & (PT > %(BiasedJpsi2ee_PT)s *MeV)" %self.getProps() 
+                                    }
+                                   , postscale = self.postscale
+                                   )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2BiasedJpsi2eeDecision" :
+                                              self.getProp('HltANNSvcID')['BiasedJpsi2ee'] } )
+
+        
+        #--------------------------------------------
+        # Biased Psi->ee
+        #--------------------------------------------
+        BiasedDiElectronLine.clone("BiasedPsi2ee"
+                                   , prescale = self.prescale
+                                   , algos = [ PV3D()
+                                               , DiElectron
+                                               , FilterBiasedDiElectron ]
+                                   , FilterBiasedDiElectron =
+                                   {"Code" : "(MINTREE('e+'==ABSID,PT) > %(BiasedPsi2ee_ElecPT)s *MeV)"\
+                                    " & (MINTREE('e+'==ABSID,PIDe) > %(BiasedPsi2ee_ElecPIDe)s)"\
+                                    " & (MINTREE('e+'==ABSID, MIPDV(PRIMARY)) > %(BiasedPsi2ee_ElecIP)s *mm)"\
+                                    " & (MINTREE('e+'==ABSID, MIPCHI2DV(PRIMARY)) > %(BiasedPsi2ee_ElecIPCHI2)s *mm)"\
+                                    " & (MM > %(BiasedPsi2ee_MinMass)s *MeV)"\
+                                    " & (MM < %(BiasedPsi2ee_MaxMass)s *MeV)"\
+                                    " & (VFASPF(VCHI2/VDOF) < %(BiasedPsi2ee_VtxCHI2)s)"\
+                                    " & (PT > %(BiasedPsi2ee_PT)s *MeV)" %self.getProps() 
+                                    }
+                                   , postscale = self.postscale
+                                   )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2BiasedPsi2eeDecision" :
+                                              self.getProp('HltANNSvcID')['BiasedPsi2ee'] } )       
+        
+        
+        #--------------------------------------------
+        # Biased B->ee
+        #--------------------------------------------
+        BiasedDiElectronLine.clone("BiasedB2ee"
+                                   , prescale = self.prescale
+                                   , algos = [ PV3D()
+                                               , DiElectron
+                                               , FilterBiasedDiElectron ]
+                                   , FilterBiasedDiElectron =
+                                   {"Code" : "(MINTREE('e+'==ABSID,PT) > %(BiasedB2ee_ElecPT)s *MeV)"\
+                                    " & (MINTREE('e+'==ABSID,PIDe) > %(BiasedB2ee_ElecPIDe)s)"\
+                                    " & (MINTREE('e+'==ABSID, MIPDV(PRIMARY)) > %(BiasedB2ee_ElecIP)s *mm)"\
+                                    " & (MINTREE('e+'==ABSID, MIPCHI2DV(PRIMARY)) > %(BiasedB2ee_ElecIPCHI2)s *mm)"\
+                                    " & (MM > %(BiasedB2ee_MinMass)s *MeV)"\
+                                    " & (MM < %(BiasedB2ee_MaxMass)s *MeV)"\
+                                    " & (VFASPF(VCHI2/VDOF) < %(BiasedB2ee_VtxCHI2)s)"\
+                                    " & (PT > %(BiasedB2ee_PT)s *MeV)" %self.getProps() 
+                                    }
+                                   , postscale = self.postscale
+                                   )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2BiasedB2eeDecision" :
+                                              self.getProp('HltANNSvcID')['BiasedB2ee'] } )             
+        
+
+    def __makeHlt2BiasedTFDiElectronLines(self):
+
+        #####################################################################################
+        #
+        # Biased Di-Electron Lines using fitted tracks 
+        #
+        # 1. 'Hlt2BiasedTFDiElectron',          Mass from 2. GeV
+        # 2. 'Hlt2BiasedTFDiElectronLowMass'    Mass sidebands from 0.5 GeV, pre-scaled
+        # 3. 'Hlt2BiasedTFDiElectronLowPID'     Mass from 2. GeV, PIDe is default (-2.)
+        # 4. 'Hlt2BiasedTFJpsi2ee'              Jpsi -> ee
+        # 5. 'Hlt2BiasedTFPsi2ee'               Psi(2S) -> ee
+        # 6. 'Hlt2BiasedTFB2ee'                 For all with Mass > 5.2 GeV
+        #
+        # Author: Jibo.He@cern.ch
+        # @ 12 May 2010 
+        # 
+        #####################################################################################      
+        
+        from HltLine.HltLine import Hlt2Line, Hlt2Member
+        from Configurables import HltANNSvc
+        from Configurables import FilterDesktop
+        from Hlt2SharedParticles.TrackFittedDiElectron import TrackFittedDiElectron
+        from HltTracking.HltPVs import PV3D
+
+        #--------------------------------------------
+        # Filter baised track fitted DiElectron
+        #--------------------------------------------
+                
+        FilterBiasedTFDiElectron = Hlt2Member( FilterDesktop # type
+                                               , "FilterBiasedTFDiElectron" 
+                                               , Code ="(MINTREE('e+'==ABSID,PT) > %(BiasedTFDiElectron_ElecPT)s *MeV)"\
+                                               " & (MINTREE('e+'==ABSID,PIDe) > %(BiasedTFDiElectron_ElecPIDe)s)"\
+                                               " & (MINTREE('e+'==ABSID, MIPDV(PRIMARY)) > %(BiasedTFDiElectron_ElecIP)s *mm)"\
+                                               " & (MINTREE('e+'==ABSID, MIPCHI2DV(PRIMARY)) > %(BiasedTFDiElectron_ElecIPCHI2)s *mm)"\
+                                               " & (MM > %(BiasedTFDiElectron_MinMass)s *MeV)"\
+                                               " & (VFASPF(VCHI2/VDOF) < %(BiasedTFDiElectron_VtxCHI2)s)"\
+                                               " & (PT > %(BiasedTFDiElectron_PT)s *MeV)" %self.getProps() 
+                                               , InputLocations = [ TrackFittedDiElectron ]
+                                               )
+        
+        #--------------------------------------------
+        # Biased track fitted DiElectron, prescaled
+        #--------------------------------------------
+        BiasedTFDiElectronLine = Hlt2Line("BiasedTFDiElectron"
+                                          , prescale = self.prescale
+                                          , algos = [ PV3D()
+                                                      , TrackFittedDiElectron
+                                                      , FilterBiasedTFDiElectron ]
+                                          , postscale = self.postscale
+                                          )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2BiasedTFDiElectronDecision" :
+                                              self.getProp('HltANNSvcID')['BiasedTFDiElectron'] } ) 
+
+        #--------------------------------------------
+        # Biased track fitted DiElectron, low mass prescaled
+        #--------------------------------------------
+        BiasedTFDiElectronLine.clone("BiasedTFDiElectronLowMass"
+                                     , prescale = self.prescale
+                                     , algos = [ PV3D()
+                                                 , TrackFittedDiElectron
+                                                 , FilterBiasedTFDiElectron ]
+                                     , FilterBiasedTFDiElectron =
+                                     {"Code" : "(MINTREE('e+'==ABSID,PT) > %(BiasedTFDiElectronLowMass_ElecPT)s *MeV)"\
+                                      " & (MINTREE('e+'==ABSID,PIDe) > %(BiasedTFDiElectronLowMass_ElecPIDe)s)"\
+                                      " & (MINTREE('e+'==ABSID, MIPDV(PRIMARY)) > %(BiasedTFDiElectronLowMass_ElecIP)s *mm)"\
+                                      " & (MINTREE('e+'==ABSID, MIPCHI2DV(PRIMARY)) > %(BiasedTFDiElectronLowMass_ElecIPCHI2)s *mm)"\
+                                      " & (MM > %(BiasedTFDiElectronLowMass_MinMass)s *MeV)"\
+                                      " & (VFASPF(VCHI2/VDOF) < %(BiasedTFDiElectronLowMass_VtxCHI2)s)"\
+                                      " & (PT > %(BiasedTFDiElectronLowMass_PT)s *MeV)" %self.getProps() 
+                                      }
+                                     , postscale = self.postscale
+                                     )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2BiasedTFDiElectronLowMassDecision" :
+                                              self.getProp('HltANNSvcID')['BiasedTFDiElectronLowMass'] } )
+
+        
+        #--------------------------------------------
+        # Biased track fitted DiElectron, low PID prescaled
+        #--------------------------------------------
+        BiasedTFDiElectronLine.clone("BiasedTFDiElectronLowPID"
+                                     , prescale = self.prescale
+                                     , algos = [ PV3D()
+                                                 , TrackFittedDiElectron
+                                                 , FilterBiasedTFDiElectron ]
+                                     , FilterBiasedTFDiElectron =
+                                     {"Code" : "(MINTREE('e+'==ABSID,PT) > %(BiasedTFDiElectronLowPID_ElecPT)s *MeV)"\
+                                      " & (MINTREE('e+'==ABSID,PIDe) > %(BiasedTFDiElectronLowPID_ElecPIDe)s)"\
+                                      " & (MINTREE('e+'==ABSID, MIPDV(PRIMARY)) > %(BiasedTFDiElectronLowPID_ElecIP)s *mm)"\
+                                      " & (MINTREE('e+'==ABSID, MIPCHI2DV(PRIMARY)) > %(BiasedTFDiElectronLowPID_ElecIPCHI2)s *mm)"\
+                                      " & (MM > %(BiasedTFDiElectronLowPID_MinMass)s *MeV)"\
+                                      " & (VFASPF(VCHI2/VDOF) < %(BiasedTFDiElectronLowPID_VtxCHI2)s)"\
+                                      " & (PT > %(BiasedTFDiElectronLowPID_PT)s *MeV)" %self.getProps() 
+                                      }
+                                     , postscale = self.postscale
+                                     )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2BiasedTFDiElectronLowPIDDecision" :
+                                              self.getProp('HltANNSvcID')['BiasedTFDiElectronLowPID'] } )
+
+        
+        #--------------------------------------------
+        # Biased track fitted Jpsi->ee
+        #--------------------------------------------
+        BiasedTFDiElectronLine.clone("BiasedTFJpsi2ee"
+                                     , prescale = self.prescale
+                                     , algos = [ PV3D()
+                                                 , TrackFittedDiElectron
+                                                 , FilterBiasedTFDiElectron ]
+                                     , FilterBiasedTFDiElectron =
+                                     {"Code" : "(MINTREE('e+'==ABSID,PT) > %(BiasedTFJpsi2ee_ElecPT)s *MeV)"\
+                                      " & (MINTREE('e+'==ABSID,PIDe) > %(BiasedTFJpsi2ee_ElecPIDe)s)"\
+                                      " & (MINTREE('e+'==ABSID, MIPDV(PRIMARY)) > %(BiasedTFJpsi2ee_ElecIP)s *mm)"\
+                                      " & (MINTREE('e+'==ABSID, MIPCHI2DV(PRIMARY)) > %(BiasedTFJpsi2ee_ElecIPCHI2)s *mm)"\
+                                      " & (MM > %(BiasedTFJpsi2ee_MinMass)s *MeV)"\
+                                      " & (MM < %(BiasedTFJpsi2ee_MaxMass)s *MeV)"\
+                                      " & (VFASPF(VCHI2/VDOF) < %(BiasedTFJpsi2ee_VtxCHI2)s)"\
+                                      " & (PT > %(BiasedTFJpsi2ee_PT)s *MeV)" %self.getProps() 
+                                      }
+                                     , postscale = self.postscale
+                                     )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2BiasedTFJpsi2eeDecision" :
+                                              self.getProp('HltANNSvcID')['BiasedTFJpsi2ee'] } )
+
+        
+        #--------------------------------------------
+        # Biased Psi->ee track fitted
+        #--------------------------------------------
+        BiasedTFDiElectronLine.clone("BiasedTFPsi2ee"
+                                     , prescale = self.prescale
+                                     , algos = [ PV3D()
+                                                 , TrackFittedDiElectron
+                                                 , FilterBiasedTFDiElectron ]
+                                     , FilterBiasedTFDiElectron =
+                                     {"Code" : "(MINTREE('e+'==ABSID,PT) > %(BiasedTFPsi2ee_ElecPT)s *MeV)"\
+                                      " & (MINTREE('e+'==ABSID,PIDe) > %(BiasedTFPsi2ee_ElecPIDe)s)"\
+                                      " & (MINTREE('e+'==ABSID, MIPDV(PRIMARY)) > %(BiasedTFPsi2ee_ElecIP)s *mm)"\
+                                      " & (MINTREE('e+'==ABSID, MIPCHI2DV(PRIMARY)) > %(BiasedTFPsi2ee_ElecIPCHI2)s *mm)"\
+                                      " & (MM > %(BiasedTFPsi2ee_MinMass)s *MeV)"\
+                                      " & (MM < %(BiasedTFPsi2ee_MaxMass)s *MeV)"\
+                                      " & (VFASPF(VCHI2/VDOF) < %(BiasedTFPsi2ee_VtxCHI2)s)"\
+                                      " & (PT > %(BiasedTFPsi2ee_PT)s *MeV)" %self.getProps() 
+                                      }
+                                     , postscale = self.postscale
+                                     )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2BiasedTFPsi2eeDecision" :
+                                              self.getProp('HltANNSvcID')['BiasedTFPsi2ee'] } )       
+        
+        
+        #--------------------------------------------
+        # Biased B->ee track fitted
+        #--------------------------------------------
+        BiasedTFDiElectronLine.clone("BiasedTFB2ee"
+                                   , prescale = self.prescale
+                                   , algos = [ PV3D()
+                                               , TrackFittedDiElectron
+                                               , FilterBiasedTFDiElectron ]
+                                   , FilterBiasedTFDiElectron =
+                                   {"Code" : "(MINTREE('e+'==ABSID,PT) > %(BiasedTFB2ee_ElecPT)s *MeV)"\
+                                    " & (MINTREE('e+'==ABSID,PIDe) > %(BiasedTFB2ee_ElecPIDe)s)"\
+                                    " & (MINTREE('e+'==ABSID, MIPDV(PRIMARY)) > %(BiasedTFB2ee_ElecIP)s *mm)"\
+                                    " & (MINTREE('e+'==ABSID, MIPCHI2DV(PRIMARY)) > %(BiasedTFB2ee_ElecIPCHI2)s *mm)"\
+                                    " & (MM > %(BiasedTFB2ee_MinMass)s *MeV)"\
+                                    " & (MM < %(BiasedTFB2ee_MaxMass)s *MeV)"\
+                                    " & (VFASPF(VCHI2/VDOF) < %(BiasedTFB2ee_VtxCHI2)s)"\
+                                    " & (PT > %(BiasedTFB2ee_PT)s *MeV)" %self.getProps() 
+                                    }
+                                   , postscale = self.postscale
+                                   )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2BiasedTFB2eeDecision" :
+                                              self.getProp('HltANNSvcID')['BiasedTFB2ee'] } )    

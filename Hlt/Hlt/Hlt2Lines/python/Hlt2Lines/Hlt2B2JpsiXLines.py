@@ -1,4 +1,4 @@
-# $Id: Hlt2B2JpsiXLines.py,v 1.21 2010-03-26 23:03:26 jhe Exp $
+# $Id: Hlt2B2JpsiXLines.py,v 1.22 2010-05-16 20:32:30 jhe Exp $
 
 from Gaudi.Configuration import * 
 from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
@@ -9,6 +9,10 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
                                    ,'Hlt2Bs2JpsiPhiDetached' : 1.
 				   ,'Hlt2Bs2JpsiPhiWide' : 0.05
                                    ,'Hlt2Bs2JpsiPhiSignal' : 1.
+                                   ,'Hlt2Bs2JpsieePhiUnbiasedPT' : 0.01
+                                   ,'Hlt2Bs2JpsieePhiSignal' : 1.
+                                   ,'Hlt2TFBs2JpsieePhiUnbiasedPT' : 0.01
+                                   ,'Hlt2TFBs2JpsieePhiSignal' : 1.
 				   ,'Hlt2Bd2JpsiKstarWide' : 0.05
                                    ,'Hlt2Bd2JpsiKstarSignal' : 1.
        				   ,'Hlt2Bu2JpsiKWide' : 0.05
@@ -33,6 +37,10 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
                                    ,'Hlt2Bs2JpsiPhiDetached' : 1.
                                    ,'Hlt2Bs2JpsiPhiWide' : 1.
                                    ,'Hlt2Bs2JpsiPhiSignal' : 1.
+                                   ,'Hlt2Bs2JpsieePhiUnbiasedPT' : 1.
+                                   ,'Hlt2Bs2JpsieePhiSignal' : 1.
+                                   ,'Hlt2TFBs2JpsieePhiUnbiasedPT' : 1.
+                                   ,'Hlt2TFBs2JpsieePhiSignal' : 1.
 				   ,'Hlt2Bd2JpsiKstarWide' : 1.
                                    ,'Hlt2Bd2JpsiKstarSignal' : 1.
                   		   ,'Hlt2Bu2JpsiKWide' : 1.
@@ -54,7 +62,11 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
                                    ,'Hlt2TFBc2JpsiHPrescaled': 1.  # may be scaled 
                                     }
                  ,'HltANNSvcID'  : {
-                                    'Bc2JpsiMuX'           : 54010
+                                    'Bs2JpsieePhiUnbiasedPT'   : 50390
+                                   ,'Bs2JpsieePhiSignal'       : 50391
+                                   ,'TFBs2JpsieePhiUnbiasedPT' : 50395
+                                   ,'TFBs2JpsieePhiSignal'     : 50396
+                                   ,'Bc2JpsiMuX'           : 54010
                                    ,'Bc2JpsiMuXSignal'     : 54011
                                    ,'Bc2JpsiH'             : 54020
                                    ,'Bc2JpsiHPrescaled'    : 54030
@@ -98,6 +110,22 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
                  , 'Bc2JpsiHPD_JpsiIPCHI2'          :   -1.   # adimentional, choose one  
                  , 'Bc2JpsiHPD_MuonIPCHI2'          :   -1.   # adimentional, choose one 
                  , 'Bc2JpsiHPD_BcIPCHI2'            :   25.   # adimentional
+                 # Bs->Jpsi(ee)Phi
+                 , 'Bs2JpsieePhi_ElectronPT'          : 800      # MeV
+                 , 'Bs2JpsieePhi_ElectronMIPCHI2'     : 4        # adimensional
+                 , 'Bs2JpsieePhi_JpsiVertexCHI2pDOF'  : 25       # adimensional
+                 , 'Bs2JpsieePhi_JpsiMassMin'         : 2500     # MeV
+                 , 'Bs2JpsieePhi_JpsiMassMax'         : 3300     # MeV
+                 , 'Bs2JpsieePhi_KaonMIPCHI2'         : 4        # adimensional
+                 , 'Bs2JpsieePhi_PhiPT'               : 1000     # MeV
+                 , 'Bs2JpsieePhi_PhiVertexCHI2pDOF'   : 25       # adimensional
+                 , 'Bs2JpsieePhi_PhiMassMin'          : 1000     # MeV
+                 , 'Bs2JpsieePhi_PhiMassMax'          : 1040     # MeV
+                 , 'Bs2JpsieePhi_BsDIRA'              : 0.99     # adimensional
+                 , 'Bs2JpsieePhi_BsVertexCHI2pDOF'    : 6        # adimensional
+                 , 'Bs2JpsieePhi_BsPseudoMassMin'     : 4500     # MeV
+                 , 'Bs2JpsieePhi_BsPseudoMassMax'     : 6200     # MeV
+
                  
                  # TrackFitted Bc->Jpsi(MuMu)MuX
                  , 'TFBc2JpsiMuX_BcUpperMass'         : 7000.  # MeV, Upper limit for partial rec.
@@ -129,12 +157,29 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
                  , 'TFBc2JpsiHPD_PionIPCHI2'          :    4.   # adimentional
                  , 'TFBc2JpsiHPD_JpsiIPCHI2'          :   -1.   # adimentional, choose one  
                  , 'TFBc2JpsiHPD_MuonIPCHI2'          :   -1.   # adimentional, choose one 
-                 , 'TFBc2JpsiHPD_BcIPCHI2'            :   25.   # adimentional                 
+                 , 'TFBc2JpsiHPD_BcIPCHI2'            :   25.   # adimentional
+                 # TrackFitted Bs->Jpsi(ee)Phi
+                 , 'TFBs2JpsieePhi_ElectronPT'          : 800      # MeV
+                 , 'TFBs2JpsieePhi_ElectronMIPCHI2'     : 4        # adimensional
+                 , 'TFBs2JpsieePhi_JpsiVertexCHI2pDOF'  : 25       # adimensional
+                 , 'TFBs2JpsieePhi_JpsiMassMin'         : 2500     # MeV
+                 , 'TFBs2JpsieePhi_JpsiMassMax'         : 3300     # MeV
+                 , 'TFBs2JpsieePhi_KaonMIPCHI2'         : 4        # adimensional
+                 , 'TFBs2JpsieePhi_PhiPT'               : 1000     # MeV
+                 , 'TFBs2JpsieePhi_PhiVertexCHI2pDOF'   : 25       # adimensional
+                 , 'TFBs2JpsieePhi_PhiMassMin'          : 1000     # MeV
+                 , 'TFBs2JpsieePhi_PhiMassMax'          : 1040     # MeV
+                 , 'TFBs2JpsieePhi_BsDIRA'              : 0.99     # adimensional
+                 , 'TFBs2JpsieePhi_BsVertexCHI2pDOF'    : 6        # adimensional
+                 , 'TFBs2JpsieePhi_BsPseudoMassMin'     : 4500     # MeV
+                 , 'TFBs2JpsieePhi_BsPseudoMassMax'     : 6200     # MeV                 
                  }
     
     def __apply_configuration__(self) :
 	self.__makeHlt2Bs2JpsiPhiPrescaledAndDetachedLines()
         self.__makeHlt2Bs2JpsiPhiLines()
+        self.__makeHlt2Bs2JpsieePhiLines()
+        self.__makeHlt2TFBs2JpsieePhiLines()
         self.__makeHlt2Bd2JpsiKstarLines()
         self.__makeHlt2Bu2JpsiKLines()
     	self.__makeHlt2Bd2JpsiMuMuKsLLBiasedLines()
@@ -249,6 +294,197 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
                    , BsCombine = {"CombinationCut" :  "(ADAMASS('B_s0')<100*MeV)"}
                    )
         
+
+
+    def __makeHlt2Bs2JpsieePhiLines(self):
+        '''
+        Prescaled Bs -> J/psi(ee) Phi selection
+        
+        @author Jibo HE
+        @author Stephane TJampens
+        @author Artur Ukleja
+        @author Adlene Hicheur
+        @date 2010-05-14
+        '''
+                         
+        from HltLine.HltLine import Hlt2Line, Hlt2Member, bindMembers
+        from Configurables import HltANNSvc
+        from Hlt2SharedParticles.BasicParticles import Electrons
+        from Hlt2SharedParticles.BasicParticles import NoCutsKaons
+        from HltTracking.HltPVs import PV3D
+        from Configurables import CombineParticles, FilterDesktop
+        
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2Bs2JpsieePhiUnbiasedPTDecision" : self.getProp('HltANNSvcID')['Bs2JpsieePhiUnbiasedPT'] } )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2Bs2JpsieePhiSignalDecision" : self.getProp('HltANNSvcID')['Bs2JpsieePhiSignal'] } )
+        
+        # Electron Cuts
+        ElCuts = "(PT > %(Bs2JpsieePhi_ElectronPT)s *MeV)" % self.getProps()
+
+        # Jpsi Cuts
+        JpsiCuts = "(VFASPF(VCHI2/VDOF) < %(Bs2JpsieePhi_JpsiVertexCHI2pDOF)s ) & (MM > %(Bs2JpsieePhi_JpsiMassMin)s *MeV) & (MM < %(Bs2JpsieePhi_JpsiMassMax)s *MeV)" % self.getProps()
+
+        # Make the Jpsiee
+        JpsiCombine = Hlt2Member( CombineParticles
+                                  , "JpsiCombine"
+                                  , DecayDescriptor = "J/psi(1S) -> e+ e-"
+                                  , InputLocations = [Electrons]
+                                  , DaughtersCuts = {"e+" : ElCuts }
+                                  , MotherCut = JpsiCuts
+                                  , InputPrimaryVertices = "None"
+                                  , UseP2PVRelations = False
+                                  )
+        
+        # Phi Cuts
+        PhiCuts = "(VFASPF(VCHI2/VDOF) < %(Bs2JpsieePhi_PhiVertexCHI2pDOF)s ) & (PT > %(Bs2JpsieePhi_PhiPT)s *MeV) & ( MM > %(Bs2JpsieePhi_PhiMassMin)s *MeV) & (MM < %(Bs2JpsieePhi_PhiMassMax)s *MeV)" % self.getProps()
+        
+        # Make the phi
+        PhiCombine = Hlt2Member( CombineParticles
+                                 , "PhiCombine"
+                                 , DecayDescriptor = "phi(1020) -> K+ K-"
+                                 , InputLocations = [NoCutsKaons]
+                                 , MotherCut = PhiCuts
+                                 , InputPrimaryVertices = "None"
+                                 , UseP2PVRelations = False
+                                 )
+        
+        # Bs Cuts
+        BsCuts = "(VFASPF(VCHI2/VDOF) < %(Bs2JpsieePhi_BsVertexCHI2pDOF)s ) & ((M-M1+3096.916*MeV) > %(Bs2JpsieePhi_BsPseudoMassMin)s *MeV) & ((M-M1+3096.916*MeV) < %(Bs2JpsieePhi_BsPseudoMassMax)s *MeV)"  % self.getProps()
+
+        # Make the Bs
+        BsCombine = Hlt2Member( CombineParticles
+                                , "BsCombine"
+                                , DecayDescriptor = "B_s0 -> J/psi(1S) phi(1020)"
+                                , InputLocations  = [JpsiCombine, PhiCombine]
+                                , MotherCut = BsCuts
+                                , InputPrimaryVertices = "None"
+                                , UseP2PVRelations = False                                
+                                )
+        
+        Bs2JpsieePhiUnbiased = bindMembers( "Bs2JpsieePhi", [ Electrons, JpsiCombine, NoCutsKaons, PhiCombine, BsCombine ] )
+        
+        
+        # Final Wide Selection
+        line = Hlt2Line('Bs2JpsieePhiUnbiasedPT'
+                        , prescale = self.prescale
+                        , algos = [Electrons, JpsiCombine, NoCutsKaons, PhiCombine, BsCombine]
+                        , postscale = self.postscale
+                        )
+
+        # Lifetime biased Electron and Kaon Cuts
+        AddElectronCuts = "( MINTREE('e+'==ABSID,MIPCHI2DV(PRIMARY)) > %(Bs2JpsieePhi_ElectronMIPCHI2)s )" % self.getProps()
+        AddKaonCuts     = "( MINTREE('K+'==ABSID,MIPCHI2DV(PRIMARY)) > %(Bs2JpsieePhi_KaonMIPCHI2)s )" % self.getProps()
+        AddBsCuts       = "( BPVDIRA > %(Bs2JpsieePhi_BsDIRA)s )" % self.getProps()
+        
+        # Now do the Signal selection, lifetime biased
+        FilterBs2JpsieePhi  = Hlt2Member( FilterDesktop # type
+                                          , "FilterBs2JpsieePhi" 
+                                          , Code = AddElectronCuts + " & " + AddKaonCuts + " & " + AddBsCuts
+                                          , InputLocations = [ Bs2JpsieePhiUnbiased ]
+                                          )
+
+        line.clone('Bs2JpsieePhiSignal'
+                   , prescale = self.prescale
+                   , algos = [ Bs2JpsieePhiUnbiased, PV3D(), FilterBs2JpsieePhi ]
+                   , postscale = self.postscale
+                   )    
+
+
+
+
+    def __makeHlt2TFBs2JpsieePhiLines(self):
+        '''
+        Prescaled TrackFitted Bs -> J/psi(ee) Phi selection
+        
+        @author Jibo HE
+        @author Stephane TJampens
+        @author Artur Ukleja
+        @author Adlene Hicheur
+        @date 2010-05-14
+        '''
+                         
+        from HltLine.HltLine import Hlt2Line, Hlt2Member, bindMembers
+        from Configurables import HltANNSvc
+        from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedElectrons
+        from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedKaons
+        from HltTracking.HltPVs import PV3D
+        from Configurables import CombineParticles, FilterDesktop
+        
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2TFBs2JpsieePhiUnbiasedPTDecision" : self.getProp('HltANNSvcID')['TFBs2JpsieePhiUnbiasedPT'] } )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2TFBs2JpsieePhiSignalDecision" : self.getProp('HltANNSvcID')['TFBs2JpsieePhiSignal'] } )
+
+        # Electron Cuts
+        ElCuts = "(PT > %(TFBs2JpsieePhi_ElectronPT)s *MeV)" % self.getProps()
+
+        # Jpsi Cuts
+        JpsiCuts = "(VFASPF(VCHI2/VDOF) < %(TFBs2JpsieePhi_JpsiVertexCHI2pDOF)s ) & (MM > %(TFBs2JpsieePhi_JpsiMassMin)s *MeV) & (MM < %(TFBs2JpsieePhi_JpsiMassMax)s *MeV)" % self.getProps()
+
+        # Make the Jpsiee
+        JpsiCombine = Hlt2Member( CombineParticles
+                                  , "JpsiCombine"
+                                  , DecayDescriptor = "J/psi(1S) -> e+ e-"
+                                  , InputLocations = [BiKalmanFittedElectrons]
+                                  , DaughtersCuts = {"e+" : ElCuts }
+                                  , MotherCut = JpsiCuts
+                                  , InputPrimaryVertices = "None"
+                                  , UseP2PVRelations = False
+                                  )
+
+        # Phi Cuts
+        PhiCuts = "(VFASPF(VCHI2/VDOF) < %(TFBs2JpsieePhi_PhiVertexCHI2pDOF)s ) & (PT > %(TFBs2JpsieePhi_PhiPT)s *MeV) & ( MM > %(TFBs2JpsieePhi_PhiMassMin)s *MeV) & (MM < %(TFBs2JpsieePhi_PhiMassMax)s *MeV)" % self.getProps()
+
+        # Make the phi
+        PhiCombine = Hlt2Member( CombineParticles
+                                 , "PhiCombine"
+                                 , DecayDescriptor = "phi(1020) -> K+ K-"
+                                 , InputLocations = [BiKalmanFittedKaons]
+                                 , MotherCut = PhiCuts
+                                 , InputPrimaryVertices = "None"
+                                 , UseP2PVRelations = False
+                                 )
+        # Bs Cuts
+        BsCuts = "(VFASPF(VCHI2/VDOF) < %(TFBs2JpsieePhi_BsVertexCHI2pDOF)s ) & ((M-M1+3096.916*MeV) > %(TFBs2JpsieePhi_BsPseudoMassMin)s *MeV) & ((M-M1+3096.916*MeV) < %(TFBs2JpsieePhi_BsPseudoMassMax)s *MeV)"  % self.getProps()
+        
+        # Make the Bs
+        BsCombine = Hlt2Member( CombineParticles
+                                , "BsCombine"
+                                , DecayDescriptor = "B_s0 -> J/psi(1S) phi(1020)"
+                                , InputLocations  = [JpsiCombine, PhiCombine]
+                                , MotherCut = BsCuts
+                                , InputPrimaryVertices = "None"
+                                , UseP2PVRelations = False
+                                )
+
+        TFBs2JpsieePhiUnbiased = bindMembers( "TFBs2JpsieePhi", [BiKalmanFittedElectrons, JpsiCombine, BiKalmanFittedKaons, PhiCombine, BsCombine] ) 
+        
+        # Final Wide Selection
+        line = Hlt2Line('TFBs2JpsieePhiUnbiasedPT'
+                        , prescale = self.prescale
+                        , algos = [BiKalmanFittedElectrons, JpsiCombine, BiKalmanFittedKaons, PhiCombine, BsCombine]
+                        , postscale = self.postscale
+                        )
+        
+        
+        # Lifetime biased Electron and Kaon Cuts
+        AddElectronCuts = "( MINTREE('e+'==ABSID,MIPCHI2DV(PRIMARY)) > %(TFBs2JpsieePhi_ElectronMIPCHI2)s )" % self.getProps()
+        AddKaonCuts     = "( MINTREE('K+'==ABSID,MIPCHI2DV(PRIMARY)) > %(TFBs2JpsieePhi_KaonMIPCHI2)s )" % self.getProps()
+        AddBsCuts       = "( BPVDIRA > %(TFBs2JpsieePhi_BsDIRA)s )" % self.getProps()        
+        
+        # Now do the Signal selection, lifetime biased
+        FilterTFBs2JpsieePhi  = Hlt2Member( FilterDesktop # type
+                                            , "FilterTFBs2JpsieePhi" 
+                                            , Code = AddElectronCuts + " & " + AddKaonCuts + " & " + AddBsCuts
+                                            , InputLocations = [ TFBs2JpsieePhiUnbiased ]
+                                            )
+        
+        line.clone('TFBs2JpsieePhiSignal'
+                   , prescale = self.prescale
+                   , algos = [ TFBs2JpsieePhiUnbiased, PV3D(), FilterTFBs2JpsieePhi ]
+                   , postscale = self.postscale
+                   )    
+
+
+
+
 
     def __makeHlt2Bd2JpsiKstarLines(self):
         '''
@@ -529,6 +765,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
 		   	, algos = [ DiMuon , filter ]
 			)
 
+        
 
     def __makeHlt2Bc2JpsiMuXLines(self):
         '''
@@ -566,6 +803,8 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
                                             , "FilterJpsi4Bc2JpsiMuX" 
                                             , Code = JpsiCut
                                             , InputLocations = [ DiMuon ]
+                                            , InputPrimaryVertices = "None"
+                                            , UseP2PVRelations = False
                                             )
 
         #---------------------------
@@ -580,6 +819,8 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
                                         , CombinationCut = combCut
                                         , MotherCut = BcCut
                                         , InputLocations = [ FilterJpsi4Bc2JpsiMuX, Muons ]
+                                        , InputPrimaryVertices = "None"
+                                        , UseP2PVRelations = False
                                         )
         
         Bc2JpsiMuXAll = bindMembers( "Bc2JpsiMuX", [ DiMuon, FilterJpsi4Bc2JpsiMuX, Muons, CombineBc2JpsiMuX ] )
@@ -600,6 +841,8 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
                                              , "FilterBc2JpsiMuXSignal" 
                                              , Code = JpsiTightCut
                                              , InputLocations = [ Bc2JpsiMuXAll ]
+                                             , InputPrimaryVertices = "None"
+                                             , UseP2PVRelations = False
                                              )
 
         
@@ -645,6 +888,8 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
                                           , "FilterJpsi4Bc2JpsiH"      # name -- to be bound to the line name: Hlt2LineNameFilter
                                           , Code = JpsiCut
                                           , InputLocations = [ DiMuon ]
+                                          , InputPrimaryVertices = "None"
+                                          , UseP2PVRelations = False
                                           )
         
         #---------------------------
@@ -659,6 +904,8 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
                                       , CombinationCut = combCut
                                       , MotherCut = BcCut
                                       , InputLocations = [ FilterJpsi4Bc2JpsiH, NoCutsPions ]
+                                      , InputPrimaryVertices = "None"
+                                      , UseP2PVRelations = False
                                       )
         
         line = Hlt2Line('Bc2JpsiH'
@@ -711,6 +958,8 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
                                             , "FilterJpsi4Bc2JpsiHPD" 
                                             , Code = JpsiPDCut
                                             , InputLocations = [ DiMuon ]
+                                            , InputPrimaryVertices = "None"
+                                            , UseP2PVRelations = False
                                             )
         
         #---------------------------
@@ -725,8 +974,10 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
                                         , CombinationCut = combPDCut
                                         , MotherCut = BcPDCut
                                         , InputLocations = [ FilterJpsi4Bc2JpsiHPD, NoCutsPions ]
+                                        , InputPrimaryVertices = "None"
+                                        , UseP2PVRelations = False
                                         )
-        
+
         Bc2JpsiHPDLoose = bindMembers( "Bc2JpsiHPrescaledAndDetached", [ DiMuon, FilterJpsi4Bc2JpsiHPD, NoCutsPions, CombineBc2JpsiHPD ] )
         
         line_Prescaled = Hlt2Line('Bc2JpsiHPrescaled'
@@ -795,24 +1046,28 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
         from Hlt2SharedParticles.TrackFittedDiMuon import TrackFittedDiMuon
         
         FilterJpsi4TFBc2JpsiMuX = Hlt2Member( FilterDesktop # type
-                                                       , "FilterJpsi4TFBc2JpsiMuX" 
-                                                       , Code = JpsiCut
-                                                       , InputLocations = [ TrackFittedDiMuon ]
-                                                       )
-
+                                              , "FilterJpsi4TFBc2JpsiMuX" 
+                                              , Code = JpsiCut
+                                              , InputLocations = [ TrackFittedDiMuon ]
+                                              , InputPrimaryVertices = "None"
+                                              , UseP2PVRelations = False                                             
+                                              )
+        
         #---------------------------
         # Bc -> J/psi(MuMu) Mu X
         #---------------------------
         from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedMuons
 
         CombineTFBc2JpsiMuX = Hlt2Member( CombineParticles
-                                                   , "CombineTFBc2JpsiMuX"
-                                                   , DecayDescriptor = "[ B_c+ -> J/psi(1S) mu+ ]cc"
-                                                   , DaughtersCuts = { "mu+" : MuonBcCut }
-                                                   , CombinationCut = combCut
-                                                   , MotherCut = BcCut
-                                                   , InputLocations = [ FilterJpsi4TFBc2JpsiMuX, BiKalmanFittedMuons ]
-                                                   )
+                                          , "CombineTFBc2JpsiMuX"
+                                          , DecayDescriptor = "[ B_c+ -> J/psi(1S) mu+ ]cc"
+                                          , DaughtersCuts = { "mu+" : MuonBcCut }
+                                          , CombinationCut = combCut
+                                          , MotherCut = BcCut
+                                          , InputLocations = [ FilterJpsi4TFBc2JpsiMuX, BiKalmanFittedMuons ]
+                                          , InputPrimaryVertices = "None"
+                                          , UseP2PVRelations = False
+                                          )
         
         TFBc2JpsiMuXAll = bindMembers( "TFBc2JpsiMuX", [ TrackFittedDiMuon, FilterJpsi4TFBc2JpsiMuX, BiKalmanFittedMuons, CombineTFBc2JpsiMuX ] )
 
@@ -829,10 +1084,12 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
         # TFBc2JpsiMuXSignal 
         #---------------------------
         FilterTFBc2JpsiMuXSignal = Hlt2Member( FilterDesktop 
-                                                        , "FilterTFBc2JpsiMuXSignal" 
-                                                        , Code = JpsiTightCut
-                                                        , InputLocations = [ TFBc2JpsiMuXAll ]
-                                                        )
+                                               , "FilterTFBc2JpsiMuXSignal" 
+                                               , Code = JpsiTightCut
+                                               , InputLocations = [ TFBc2JpsiMuXAll ]
+                                               , InputPrimaryVertices = "None"
+                                               , UseP2PVRelations = False
+                                               )
         
         
         line_S = Hlt2Line('TFBc2JpsiMuXSignal'
@@ -874,10 +1131,12 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
         from Hlt2SharedParticles.TrackFittedDiMuon import TrackFittedDiMuon
         
         FilterJpsi4TFBc2JpsiH = Hlt2Member( FilterDesktop # type
-                                                     , "FilterJpsi4TFBc2JpsiH" 
-                                                     , Code = JpsiCut
-                                                     , InputLocations = [ TrackFittedDiMuon ]
-                                                     )
+                                            , "FilterJpsi4TFBc2JpsiH" 
+                                            , Code = JpsiCut
+                                            , InputLocations = [ TrackFittedDiMuon ]
+                                            , InputPrimaryVertices = "None"
+                                            , UseP2PVRelations = False
+                                            )
         
         #---------------------------
         # Bc -> J/psi(MuMu) H
@@ -885,13 +1144,15 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
         from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedPions
         
         CombineTFBc2JpsiH = Hlt2Member( CombineParticles
-                                                 , "CombineTFBc2JpsiH"
-                                                 , DecayDescriptor = "[ B_c+ -> J/psi(1S) pi+ ]cc"
-                                                 , DaughtersCuts = { "pi+" : PionCut }
-                                                 , CombinationCut = combCut
-                                                 , MotherCut = BcCut
-                                                 , InputLocations = [ FilterJpsi4TFBc2JpsiH, BiKalmanFittedPions ]
-                                                 )
+                                        , "CombineTFBc2JpsiH"
+                                        , DecayDescriptor = "[ B_c+ -> J/psi(1S) pi+ ]cc"
+                                        , DaughtersCuts = { "pi+" : PionCut }
+                                        , CombinationCut = combCut
+                                        , MotherCut = BcCut
+                                        , InputLocations = [ FilterJpsi4TFBc2JpsiH, BiKalmanFittedPions ]
+                                        , InputPrimaryVertices = "None"
+                                        , UseP2PVRelations = False
+                                        )
         
         line = Hlt2Line('TFBc2JpsiH'
                         , prescale = self.prescale
@@ -940,10 +1201,12 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
         from Hlt2SharedParticles.TrackFittedDiMuon import TrackFittedDiMuon
 
         FilterJpsi4TFBc2JpsiHPD = Hlt2Member( FilterDesktop # type
-                                                       , "FilterJpsi4TFBc2JpsiHPD" 
-                                                       , Code = JpsiPDCut
-                                                       , InputLocations = [ TrackFittedDiMuon ]
-                                                       )
+                                              , "FilterJpsi4TFBc2JpsiHPD" 
+                                              , Code = JpsiPDCut
+                                              , InputLocations = [ TrackFittedDiMuon ]
+                                              , InputPrimaryVertices = "None"
+                                              , UseP2PVRelations = False
+                                              )
         
         #---------------------------
         # Bc -> J/psi(MuMu) H
@@ -951,13 +1214,15 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
         from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedPions
         
         CombineTFBc2JpsiHPD = Hlt2Member( CombineParticles
-                                                   , "CombineTFBc2JpsiHPD"
-                                                   , DecayDescriptor = "[ B_c+ -> J/psi(1S) pi+ ]cc"
-                                                   , DaughtersCuts = { "pi+" : PionPDCut }
-                                                   , CombinationCut = combPDCut
-                                                   , MotherCut = BcPDCut
-                                                   , InputLocations = [ FilterJpsi4TFBc2JpsiHPD, BiKalmanFittedPions ]
-                                                   )
+                                          , "CombineTFBc2JpsiHPD"
+                                          , DecayDescriptor = "[ B_c+ -> J/psi(1S) pi+ ]cc"
+                                          , DaughtersCuts = { "pi+" : PionPDCut }
+                                          , CombinationCut = combPDCut
+                                          , MotherCut = BcPDCut
+                                          , InputLocations = [ FilterJpsi4TFBc2JpsiHPD, BiKalmanFittedPions ]
+                                          , InputPrimaryVertices = "None"
+                                          , UseP2PVRelations = False
+                                          )
 
         TFBc2JpsiHPDLoose = bindMembers( "TFBc2JpsiHPrescaledAndDetached", [ TrackFittedDiMuon, FilterJpsi4TFBc2JpsiHPD, BiKalmanFittedPions, CombineTFBc2JpsiHPD ] )
         
@@ -976,10 +1241,10 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
         from HltTracking.HltPVs import PV3D
         
         FilterTFBc2JpsiHPD = Hlt2Member( FilterDesktop # type
-                                                  , "FilterTFBc2JpsiHPD" 
-                                                  , Code = LifetimeBiasedCut
-                                                  , InputLocations = [ TFBc2JpsiHPDLoose ]
-                                                  )
+                                         , "FilterTFBc2JpsiHPD" 
+                                         , Code = LifetimeBiasedCut
+                                         , InputLocations = [ TFBc2JpsiHPDLoose ]
+                                         )
         
         
         line_Detached = Hlt2Line('TFBc2JpsiHDetached'

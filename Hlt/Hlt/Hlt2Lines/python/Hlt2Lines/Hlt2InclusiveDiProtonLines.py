@@ -72,6 +72,8 @@ class Hlt2InclusiveDiProtonLinesConf(HltLinesConfigurableUser):
                               , CombinationCut = CombCut
                               , MotherCut = MomCut
                               , InputLocations = [ NoCutsProtons ]
+                              , InputPrimaryVertices = "None"
+                              , UseP2PVRelations = False
                               )
 
         #------------------------------------
@@ -89,6 +91,8 @@ class Hlt2InclusiveDiProtonLinesConf(HltLinesConfigurableUser):
                                 , CombinationCut = TFCombCut
                                 , MotherCut = TFMomCut
                                 , InputLocations = [ BiKalmanFittedProtons ]
+                                , InputPrimaryVertices = "None"
+                                , UseP2PVRelations = False
                                 )
 
         #------------------------------------
@@ -104,7 +108,9 @@ class Hlt2InclusiveDiProtonLinesConf(HltLinesConfigurableUser):
                                     , CombinationCut = TFCombCut
                                     , MotherCut = TFMomCut
                                     , InputLocations = [ BiKalmanFittedRichProtons ]
-                                )
+                                    , InputPrimaryVertices = "None"
+                                    , UseP2PVRelations = False
+                                    )
 
         #------------------------------------
         # Inclusive DiProton complete
