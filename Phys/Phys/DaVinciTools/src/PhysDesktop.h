@@ -1,4 +1,4 @@
-// $Id: PhysDesktop.h,v 1.52 2010-05-14 08:31:10 jpalac Exp $
+// $Id: PhysDesktop.h,v 1.53 2010-05-16 09:47:01 jpalac Exp $
 #ifndef PHYSDESKTOP_H 
 #define PHYSDESKTOP_H 1
 
@@ -73,8 +73,6 @@ public:
 
   virtual const LHCb::Particle::ConstVector& particles() const;
 
-  virtual const LHCb::RecVertex::Range primaryVertices() const;
-
   virtual const LHCb::Vertex::ConstVector& secondaryVertices() const;
 
   virtual const Particle2Vertex::LightTable& Particle2VertexRelations() const;
@@ -113,11 +111,6 @@ public:
                       const LHCb::VertexBase* vert );
 
   virtual Particle2Vertex::Table::Range particle2Vertices(const LHCb::Particle* part ) const;
-
-  virtual const std::string& primaryVertexLocation() const 
-  { 
-    return m_primVtxLocn; 
-  }
 
 private:
   /// Find all particles & vertices in a tree. 
@@ -260,8 +253,6 @@ private: // data
   /// Are we using the Particle -> PV relations table internally?
   bool m_usingP2PV;
 
-  /// TES pathname for Primary Vertices 
-  std::string m_primVtxLocn;
   /// TES pathname for Input Particles & Vertices from previous processing
   std::vector<std::string> m_inputLocations;
   /// TES pathname for Output Particles & Vertices

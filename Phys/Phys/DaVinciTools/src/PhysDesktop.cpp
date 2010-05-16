@@ -1,4 +1,4 @@
-// $Id: PhysDesktop.cpp,v 1.105 2010-05-14 08:31:11 jpalac Exp $
+// $Id: PhysDesktop.cpp,v 1.106 2010-05-16 09:47:01 jpalac Exp $
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h"
 //#include "GaudiKernel/GaudiException.h"
@@ -83,7 +83,6 @@ PhysDesktop::PhysDesktop( const std::string& type,
   : GaudiTool ( type, name , parent )
     , m_writeP2PV            (true)
     , m_usingP2PV            (true)
-    , m_primVtxLocn          ("")
     , m_inputLocations       ()
     , m_outputLocn           ("")
     , m_p2PVDefaultLocations ()
@@ -104,9 +103,6 @@ PhysDesktop::PhysDesktop( const std::string& type,
   //  declareInterface<IIncidentListener>(this);
 
   // Declare properties
-
-  //                    input & output locations
-  declareProperty( "InputPrimaryVertices", m_primVtxLocn );
 
   m_p2PVInputLocations.clear();
   
@@ -131,15 +127,6 @@ StatusCode PhysDesktop::initialize()
     return StatusCode::FAILURE;
   }
 
-  if (m_primVtxLocn!="") {
-    return Error("You have set obsolete property InputPrimaryVertices. Set it in DVAlgorithm.");
-  }
-  
-
-  if (msgLevel(MSG::DEBUG)) {
-    debug() << "Primary vertex location set to " << primaryVertexLocation() << endmsg;
-  }
-
   m_dva = Gaudi::Utils::getDVAlgorithm ( contextSvc() ) ;
   if (0==m_dva) return Error("Couldn't get parent DVAlgorithm", 
                              StatusCode::FAILURE);
@@ -151,15 +138,6 @@ StatusCode PhysDesktop::initialize()
 //=============================================================================
 const LHCb::Particle::ConstVector& PhysDesktop::particles() const{
   return m_parts;
-}
-//=============================================================================
-// Provides a reference to its internal container of vertices
-//=============================================================================
-const LHCb::RecVertex::Range PhysDesktop::primaryVertices() const 
-{
-  error() << "IPhysDekstop::primaryVertices() is obsolete! Use DVAlgotirhm::primaryVertices() directly." 
-          << endmsg;
-  return m_dva->primaryVertices();
 }
 //=============================================================================
 // Provides a reference to its internal container of vertices
@@ -468,7 +446,7 @@ void PhysDesktop::saveP2PVRelations(const  LHCb::Particle::ConstVector& pToSave)
   
   // V.B.
   
-  if ( "None" == m_primVtxLocn &&  !(m_dva->primaryVertices().empty() ) )
+  if ( m_dva->primaryVertices().empty() )
   {
     if ( msgLevel ( MSG::DEBUG ) )
     { debug() << " skip saveP2PVRelations: No Primary Vertices" << endmsg ; }
