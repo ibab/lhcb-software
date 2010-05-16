@@ -27,7 +27,7 @@ class RichRecQCConf(RichConfigurableUser):
     __default_histo_set__ = "OfflineFull"
 
     ## List of all known monitors. For sanity checks
-    __known_monitors__ = [ "L1SizeMonitoring", "DBConsistencyCheck",
+    __known_monitors__ = [ "ODIN", "L1SizeMonitoring", "DBConsistencyCheck",
                            "HotPixelFinder", "PidMonitoring",
                            "PixelMonitoring", "TrackMonitoring",
                            "PhotonMonitoring", "TracklessRingAngles",
@@ -55,7 +55,7 @@ class RichRecQCConf(RichConfigurableUser):
        ,"DataType" : "2008" # Data type, can be ['DC06','2008',2009','2010']
        ,"MoniSequencer" : None # The sequencer to add the RICH monitoring algorithms to
        ,"Monitors" : { "Expert"         : [ "L1SizeMonitoring", "DBConsistencyCheck",
-                                            "DataDecodingErrors",
+                                            "DataDecodingErrors", "ODIN",
                                             "HotPixelFinder", "PidMonitoring",
                                             "PixelMonitoring", "TrackMonitoring",
                                             "PhotonMonitoring", "TracklessRingAngles",
@@ -296,6 +296,10 @@ class RichRecQCConf(RichConfigurableUser):
                 daqErrs = self.createMonitor(Rich__DAQ__DataDecodingErrorMoni,"RichDecodingErrors")
                 rawSeq.Members += [daqErrs]
 
+        # ODIN
+        if "ODIN" in monitors :
+            self.odinMoni(self.newSeq(sequence,"RichODINMoni"))
+
         # RICH data monitoring
         if "PixelMonitoring" in monitors :
             self.pixelPerf(self.newSeq(sequence,"RichPixelMoni"))
@@ -383,6 +387,11 @@ class RichRecQCConf(RichConfigurableUser):
             search = self.createMonitor(Rich__Rec__RingPeakSearch,type+"RingPeakSearch"+ringclass)
             search.RingLocation = "Rec/Rich/"+type+"/Rings"+ringclass
             sequence.Members += [search]
+
+    ## ODIN monitors
+    def odinMoni(self,sequence):
+        from Configurables import Rich__DAQ__ODINMoni
+        sequence.Members += [ self.createMonitor(Rich__DAQ__ODINMoni,"RichODIN") ]
         
     ## Pixel performance monitors
     def pixelPerf(self,sequence):

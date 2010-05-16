@@ -11,12 +11,6 @@
  */
 //-----------------------------------------------------------------------------
 
-// STD
-#include <sstream>
-
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h"
-
 // local
 #include "RichDataDecodingErrorMoni.h"
 

@@ -1,19 +1,19 @@
 
 //-----------------------------------------------------------------------------
-/** @file RichDataDecodingErrorMoni.h
+/** @file RichODINMoni.h
  *
- *  Header file for algorithm class : Rich::DAQ::DataDecodingErrorMoni
+ *  Header file for algorithm class : Rich::DAQ::ODINMoni
  *
  *  CVS Log :-
- *  $Id: RichDataDecodingErrorMoni.h,v 1.6 2009-08-05 23:14:59 jonrob Exp $
+ *  $Id: RichODINMoni.h,v 1.6 2009-08-05 23:14:59 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
  */
 //-----------------------------------------------------------------------------
 
-#ifndef RICHRECQC_RichDataDecodingErrorMoni_H
-#define RICHRECQC_RichDataDecodingErrorMoni_H 1
+#ifndef RICHRECQC_RichODINMoni_H
+#define RICHRECQC_RichODINMoni_H 1
 
 // STD
 #include <sstream>
@@ -21,14 +21,8 @@
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
 
-// GaudiUtils
-//#include "GaudiUtils/HistoLabels.h"
-
 // base class
 #include "RichKernel/RichHistoAlgBase.h"
-
-// Interfaces
-#include "RichKernel/IRichRawBufferToSmartIDsTool.h"
 
 // Event
 #include "Event/ODIN.h"
@@ -41,7 +35,7 @@ namespace Rich
   namespace DAQ
   {
     //-----------------------------------------------------------------------------
-    /** @class DataDecodingErrorMoni RichDataDecodingErrorMoni.h
+    /** @class ODINMoni RichODINMoni.h
      *
      *  Simple monitor for the hits in each HPD
      *
@@ -50,33 +44,29 @@ namespace Rich
      */
     //-----------------------------------------------------------------------------
 
-    class DataDecodingErrorMoni : public HistoAlgBase
+    class ODINMoni : public HistoAlgBase
     {
 
     public:
 
       /// Standard constructor
-      DataDecodingErrorMoni( const std::string& name,
-                             ISvcLocator* pSvcLocator );
+      ODINMoni( const std::string& name,
+                ISvcLocator* pSvcLocator );
 
-      virtual ~DataDecodingErrorMoni( ); ///< Destructor
+      virtual ~ODINMoni( ); ///< Destructor
 
-      virtual StatusCode initialize();    // Algorithm initialization
-      virtual StatusCode execute   ();    // Algorithm execution
+      virtual StatusCode execute(); ///< Algorithm execution
 
     protected:
-      
+
       /// Pre-Book all (non-MC) histograms
       virtual StatusCode prebookHistograms();
-      
-    private: // data
 
-      /// Raw Buffer Decoding tool
-      const Rich::DAQ::IRawBufferToSmartIDsTool * m_decoder;
+    private: // data
 
     };
 
   }
 }
 
-#endif // RICHRECQC_RichDataDecodingErrorMoni_H
+#endif // RICHRECQC_RichODINMoni_H
