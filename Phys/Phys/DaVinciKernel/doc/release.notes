@@ -1,8 +1,12 @@
-!$Id: release.notes,v 1.350 2010-05-15 14:46:17 ibelyaev Exp $
+!$Id: release.notes,v 1.351 2010-05-16 11:21:27 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciKernel
 ! Responsible : J.P. Palacios
 !============================================================================
+
+! 2010-05-16 - Juan Palacios
+ - Kernel/TransporterFunctions.h
+  . DaVinci::Transporter -> DaVinci::Transport.
 
 ! 2010-05-15 - Vanya Belyaev
 
