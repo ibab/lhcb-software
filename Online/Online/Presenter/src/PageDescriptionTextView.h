@@ -1,17 +1,18 @@
 
-// $Id: PageDescriptionTextView.h,v 1.2 2010-04-29 14:24:08 robbep Exp $
+// $Id: PageDescriptionTextView.h,v 1.3 2010-05-16 18:08:41 robbep Exp $
 #ifndef PRESENTER_PAGEDESCRIPTIONTEXTVIEW_H
 #define PRESENTER_PAGEDESCRIPTIONTEXTVIEW_H 1
 
+#ifdef WIN32
+#pragma warning( push )
+#pragma warning( disable : 4800 )
+#endif
 #include <TGHtml.h>
-#include <string>
+#ifdef WIN32
+#pragma warning( pop )
+#endif
 
-class TGVScrollBar ;
-namespace boost {
-  namespace posix_time { 
-    class ptime ;
-  };
-};
+#include <string>
 
 /** @class PageDescriptionTextView PageDescriptionTextView.h
  *
@@ -20,7 +21,6 @@ namespace boost {
  *  @author Patrick Robbe
  *  @date   2010-04-22
  */
-
 class PageDescriptionTextView: public TGHtml {
  public:
   /// Standard constructor

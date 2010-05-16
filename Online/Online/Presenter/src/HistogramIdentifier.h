@@ -1,8 +1,16 @@
+// $Id: HistogramIdentifier.h,v 1.18 2010-05-16 18:09:40 robbep Exp $
+
 #ifndef HISTOGRAMIDENTIFIER_H_
 #define HISTOGRAMIDENTIFIER_H_
 
-class TString;
-//#include <TPRegexp.h>
+#ifdef WIN32
+#pragma warning( push )
+#pragma warning( disable : 4800 )
+#endif
+#include <TString.h>
+#ifdef WIN32
+#pragma warning( pop )
+#endif
 
 // Class to handle histogram identifier parsing / splitting
 class HistogramIdentifier

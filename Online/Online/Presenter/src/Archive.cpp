@@ -1,3 +1,4 @@
+// $Id: Archive.cpp,v 1.78 2010-05-16 18:08:40 robbep Exp $
 #include <iostream>
 #include <sstream>
 #include <algorithm>
@@ -6,16 +7,22 @@
 #include "DbRootHist.h"
 #include "PresenterMainFrame.h"
 
+#ifdef WIN32
+#pragma warning( push )
+#pragma warning( disable : 4800 )
+#endif
 #include <TFile.h>
 #include <TH1.h>
 #include <TList.h>
-
 #include <TString.h>
 #include <TPRegexp.h>
 #include <TObjString.h>
 #include <TObjArray.h>
 #include <TSystem.h>
 #include <TGMsgBox.h>
+#ifdef WIN32
+#pragma warning( pop )
+#endif
 
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include "OnlineHistDB/OnlineHistogram.h"

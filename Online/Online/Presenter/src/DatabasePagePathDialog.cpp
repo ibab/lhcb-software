@@ -1,4 +1,12 @@
+// $Id: DatabasePagePathDialog.cpp,v 1.2 2010-05-16 18:08:40 robbep Exp $
+// STL 
 #include <map>
+
+// ROOT
+#ifdef WIN32
+#pragma warning( push )
+#pragma warning( disable : 4800 )
+#endif
 #include <TSystem.h>
 #include <TGButton.h>
 #include <TGTextEntry.h>
@@ -10,17 +18,20 @@
 #include <TPad.h>
 #include <TCanvas.h>
 #include <TGResourcePool.h>
-
 #include <TPRegexp.h>
 #include <TObjString.h>
 #include <TObjArray.h>
-
 #include <TH1.h>
 #include <TH2.h>
+#ifdef WIN32
+#pragma warning( pop )
+#endif
 
+// Online
 #include "OnlineHistDB/OnlineHistDB.h"
-#include "DbRootHist.h"
 
+// Local
+#include "DbRootHist.h"
 #include "PresenterMainFrame.h"
 #include "DatabasePagePathDialog.h"
 

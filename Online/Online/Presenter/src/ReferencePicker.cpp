@@ -1,4 +1,11 @@
+// $Id: ReferencePicker.cpp,v 1.18 2010-05-16 18:10:09 robbep Exp $
 #include "ReferencePicker.h"
+
+// ROOT
+#ifdef WIN32
+#pragma warning( push )
+#pragma warning( disable : 4800 )
+#endif
 #include <TGButton.h>
 #include <TCanvas.h>
 #include <TGLabel.h>
@@ -7,17 +14,22 @@
 #include <TFile.h>
 #include <TH1.h>
 #include <TList.h>
+#ifdef WIN32
+#pragma warning( pop )
+#endif
 
+// Boost
 #include <boost/filesystem.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
 
-#include "PresenterMainFrame.h"
+// Online
 #include "OnlineHistDB/OnlineHistDB.h"
-#include "Archive.h"
-#include "DbRootHist.h"
 #include "OnlineHistDB/OnlineHistogram.h"
 
-//class boost::mutex;
+// Local
+#include "PresenterMainFrame.h"
+#include "Archive.h"
+#include "DbRootHist.h"
 
 using namespace pres;
 using namespace std;

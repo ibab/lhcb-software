@@ -1,7 +1,16 @@
+// $Id: IntervalPicker.h,v 1.10 2010-05-16 18:09:40 robbep Exp $
 #ifndef INTERVALPICKER_H_
 #define INTERVALPICKER_H_
 
+#ifdef WIN32
+#pragma warning( push )
+#pragma warning( disable : 4800 )
+#endif
 #include <TGFrame.h>
+#ifdef WIN32
+#pragma warning( pop )
+#endif
+
 #include "presenter.h"
 
 class PresenterMainFrame;

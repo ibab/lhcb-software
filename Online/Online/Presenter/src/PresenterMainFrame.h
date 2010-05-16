@@ -1,10 +1,16 @@
 #ifndef PRESENTERMAINFRAME_H_
 #define PRESENTERMAINFRAME_H_
 
+#ifdef WIN32
+#pragma warning( push )
+#pragma warning( disable : 4800 )
+#endif
 #include <TGFrame.h>
 #include <TGListTree.h>
 #include <TColor.h>
-//#include <vector>
+#ifdef WIN32
+#pragma warning( pop )
+#endif
 
 #include <iostream>
 #include <vector>
@@ -661,6 +667,6 @@ private:
   ClassDef(PresenterMainFrame, 0) // main editor window
     };
 
-R__EXTERN PresenterMainFrame* gPresenter;
+extern PresenterMainFrame* gPresenter;
 
 #endif /*PRESENTERMAINFRAME_H_*/

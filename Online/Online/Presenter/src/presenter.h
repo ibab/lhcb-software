@@ -1,10 +1,19 @@
+// $Id: presenter.h,v 1.94 2010-05-16 18:10:09 robbep Exp $
 #ifndef PRESENTER_H_
 #define PRESENTER_H_
 
 #include <string>
+
+#ifdef WIN32
+#pragma warning( push )
+#pragma warning( disable : 4800 )
+#endif
 #include <TPRegexp.h>
 #include <TString.h>
 #include <TROOT.h>
+#ifdef WIN32
+#pragma warning( pop )
+#endif
 
 #ifdef _WIN32
  #define NOMSG

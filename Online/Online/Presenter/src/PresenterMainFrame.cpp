@@ -1,6 +1,13 @@
+// $Id: PresenterMainFrame.cpp,v 1.316 2010-05-16 18:10:09 robbep Exp $
 #include <algorithm>
 #include <iostream>
 #include <vector>
+
+// ROOT include
+#ifdef WIN32
+#pragma warning( push )
+#pragma warning( disable : 4800 )
+#endif
 #include <TApplication.h>
 #include <TError.h>
 #include <TDirectory.h>
@@ -55,14 +62,17 @@
 #include <TGFileDialog.h>
 #include <TRootHelpDialog.h>
 #include <TBenchmark.h> 
+#ifdef WIN32
+#pragma warning( pop )
+#endif
 
-
+// Online
 #include "dim/dic.hxx"
 #include "OnlineHistDB/OnlineHistDB.h"
 #include "OMAlib/OMAlib.h"
-
 #include "Gaucho/MonObject.h"
 
+// Local
 #include "DbRootHist.h"
 #include "PresenterMainFrame.h"
 #include "HistogramIdentifier.h"
@@ -75,7 +85,6 @@
 #include "IntervalPicker.h"
 #include "../icons/presenter32.xpm"
 #include "icons.h"
-
 #include "Elog.h"
 #include "ElogDialog.h"
 #include "ShiftDB.h"
@@ -86,6 +95,7 @@
 
 using namespace pres;
 using namespace std;
+
 PresenterMainFrame* gPresenter = 0;
 
 ClassImp(PresenterMainFrame);

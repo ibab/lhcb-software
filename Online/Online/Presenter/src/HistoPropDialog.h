@@ -1,7 +1,16 @@
+// $Id: HistoPropDialog.h,v 1.11 2010-05-16 18:09:40 robbep Exp $
 #ifndef HISTOPROPDIALOG_H_
 #define HISTOPROPDIALOG_H_
 
+#ifdef WIN32
+#pragma warning( push )
+#pragma warning( disable : 4800 )
+#endif
 #include <TGFrame.h>
+#ifdef WIN32
+#pragma warning( pop )
+#endif
+
 #include "presenter.h"
 
 class PresenterMainFrame;

@@ -1,5 +1,11 @@
+// $Id: IntervalPicker.cpp,v 1.13 2010-05-16 18:08:40 robbep Exp $
 #include "IntervalPicker.h"
 
+// ROOT
+#ifdef WIN32
+#pragma warning( push )
+#pragma warning( disable : 4800 )
+#endif
 #include <TGButton.h>
 #include <TGLabel.h>
 #include <TGComboBox.h>
@@ -7,7 +13,11 @@
 #include <TGNumberEntry.h>
 #include <TDatime.h>
 #include <TGMsgBox.h>
+#ifdef WIN32
+#pragma warning( pop )
+#endif
 
+// Local
 #include "PresenterMainFrame.h"
 #include "Archive.h"
 #include "RunDB.h"

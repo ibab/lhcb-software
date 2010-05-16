@@ -1,8 +1,16 @@
-// $Id: KnownProblemList.h,v 1.2 2010-04-25 18:08:44 robbep Exp $
+// $Id: KnownProblemList.h,v 1.3 2010-05-16 18:09:40 robbep Exp $
 #ifndef PRESENTER_KNOWNPROBLEMLIST_H
 #define PRESENTER_KNOWNPROBLEMLIST_H 1
 
+#ifdef WIN32
+#pragma warning( push )
+#pragma warning( disable : 4800 )
+#endif
 #include <TGListBox.h>
+#ifdef WIN32
+#pragma warning( pop )
+#endif
+
 #include <string>
 
 /** @class KnownProblemList KnownProblemList.h

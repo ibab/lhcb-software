@@ -1,16 +1,23 @@
+// $Id: ParallelWait.cpp,v 1.23 2010-05-16 18:10:09 robbep Exp $
+// STL
 #include <vector>
+
+// Boost
 #include <boost/thread/thread.hpp>
 #include <boost/thread/mutex.hpp>
 #include <boost/thread/condition.hpp>
 #include <boost/bind.hpp>
 
+// Online
 #include "dim/dic.hxx"
+#include "OnlineHistDB/OnlineHistDB.h"
+
+// Local
+#include "DbRootHist.h"
 #include "presenter.h"
 #include "PresenterMainFrame.h"
 #include "Archive.h"
 #include "ParallelWait.h"
-#include "OnlineHistDB/OnlineHistDB.h"
-#include "DbRootHist.h"
 
 using namespace pres;
 using namespace std;

@@ -1,24 +1,37 @@
+// $Id: presenter.cpp,v 1.75 2010-05-16 18:10:09 robbep Exp $
+// STL
 #include <iostream>
 #include <fstream>
 #include <iterator>
-
 #include <malloc.h>
 
+// ROOT
+#ifdef WIN32
+#pragma warning( push )
+#pragma warning( disable : 4800 )
+#endif
 #include <TSystem.h>
 #include <TSysEvtHandler.h>
 #include <TApplication.h>
 #include <TStyle.h>
 #include <TString.h>
 #include <TPRegexp.h>
+#ifdef WIN32
+#pragma warning( pop )
+#endif
 
-#include "PresenterMainFrame.h"
-#include "OnlineHistDB/OnlineHistDBEnv.h"
-#include "OMAlib/OMAlib.h"
-
+// boost
 #include <boost/program_options.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/thread/mutex.hpp>
 #include <boost/thread/recursive_mutex.hpp>
+
+// Online
+#include "OnlineHistDB/OnlineHistDBEnv.h"
+#include "OMAlib/OMAlib.h"
+
+// Local
+#include "PresenterMainFrame.h"
 
 using namespace pres;
 using namespace boost::program_options;

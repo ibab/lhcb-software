@@ -1,7 +1,15 @@
 #ifndef PAGESAVEDIALOG_H_
 #define PAGESAVEDIALOG_H_
 
+#ifdef WIN32
+#pragma warning( push )
+#pragma warning( disable : 4800 )
+#endif
 #include <TGFrame.h>
+#ifdef WIN32
+#pragma warning( pop )
+#endif
+
 #include "presenter.h"
 
 class PresenterMainFrame;

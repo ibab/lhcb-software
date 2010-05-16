@@ -1,4 +1,17 @@
-// $Id: DbRootHist.cpp,v 1.163 2010-04-13 09:08:02 robbep Exp $
+// $Id: DbRootHist.cpp,v 1.164 2010-05-16 18:08:40 robbep Exp $
+#include "DbRootHist.h"
+
+// STL 
+#include <iostream>
+#include <stdlib.h>
+#include <malloc.h>
+#include <math.h>
+
+// ROOT
+#ifdef WIN32
+#  pragma warning( push )
+#  pragma warning( disable : 4800 )
+#endif
 #include <TPad.h>
 #include <TH1F.h>
 #include <TH2F.h>
@@ -10,38 +23,33 @@
 #include <TSystem.h>
 #include <TMath.h>
 #include <TObjArray.h>
-
 #include <TFile.h>
 #include <TPaveStats.h>
 #include <TCanvas.h>
 #include <TKey.h>
-
 #include <TThread.h>
-
 #include <TImage.h>
 #include <TText.h>
+#ifdef WIN32
+#  pragma warning( pop )
+#endif
 
-#include <iostream>
-#include <stdlib.h>
-#include <malloc.h>
-#include <math.h>
+// boost
+#include <boost/thread/recursive_mutex.hpp>
 
-#include "presenter.h"
-#include "PresenterMainFrame.h"
-#include "DbRootHist.h"
-
+// Online
 #include "Gaucho/DimInfoMonObject.h"
-#include "Gaucho/MonObject.h"
 #include "Gaucho/MonProfile.h"
 #include "Gaucho/MonH1D.h"
 #include "Gaucho/MonH2D.h"
-
-#include "MonRateRace.h"
 #include "OnlineHistDB/OnlineHistDB.h"
 #include "OnlineHistDB/OnlineHistogram.h"
 #include "OMAlib/OMAlib.h"
 
-#include <boost/thread/recursive_mutex.hpp>
+// local
+#include "MonRateRace.h"
+#include "presenter.h"
+#include "PresenterMainFrame.h"
 
 using namespace pres;
 
@@ -778,22 +786,22 @@ void DbRootHist::fillHistogram()
 	    sumWTPerBin  = &histoDimData[offsetWT];
 	    sumWT2PerBin  = &histoDimData[offsetWT2];
 
-	    float yvalue = 0; 
-	    float yerr = 0;
+	    double yvalue = 0; 
+	    double yerr = 0;
 	    // bin 0: underflow, nBins+1 overflow ?
 	    for (int i = 0; i <= nBins+2; i++) {
 	      yvalue = 0;    
 	      if (entriesPerBin[i] > 0)
-		yvalue = sumWTPerBin[i]/entriesPerBin[i];
+          yvalue = sumWTPerBin[i]/entriesPerBin[i];
 	      // mean in Y                
 	      rootHistogram->SetBinContent(i, yvalue);    
       
 	      yerr = 0;
 	      if (entriesPerBin[i] > 0)
-		yerr = TMath::Sqrt(sumWT2PerBin[i]/entriesPerBin[i]-yvalue*yvalue);
+          yerr = TMath::Sqrt(sumWT2PerBin[i]/entriesPerBin[i]-yvalue*yvalue);
 	      // RMS = sqrt(E[x**2]-E[x]**2)
 	      rootHistogram->SetBinError(i, yerr);
-          
+        
 	    }
 	    rootHistogram->SetEntries(entries);
 	  }
@@ -1010,8 +1018,8 @@ void DbRootHist::setTH1FromDB()
     if (m_onlineHistogram->getDisplayOption("LABEL_Z", &sopt)) {
       rootHistogram->SetZTitle (sopt.data());
     }
-    float bxmin=rootHistogram->GetXaxis()->GetXmin();
-    float bxmax=rootHistogram->GetXaxis()->GetXmax();
+    double bxmin=rootHistogram->GetXaxis()->GetXmin();
+    double bxmax=rootHistogram->GetXaxis()->GetXmax();
     if (m_onlineHistogram->getDisplayOption("XMIN", &fopt)) { bxmin=fopt; }
     if (m_onlineHistogram->getDisplayOption("XMAX", &fopt)) { bxmax=fopt; }
     rootHistogram->GetXaxis()->SetRangeUser(bxmin,bxmax);
@@ -1024,8 +1032,8 @@ void DbRootHist::setTH1FromDB()
         rootHistogram->SetMaximum(fopt);
       }
     } else {  // 2d histograms
-      float bymin = rootHistogram->GetYaxis()->GetXmin();
-      float bymax=rootHistogram->GetYaxis()->GetXmax();
+      double bymin = rootHistogram->GetYaxis()->GetXmin();
+      double bymax=rootHistogram->GetYaxis()->GetXmax();
       if (m_onlineHistogram->getDisplayOption("YMIN", &fopt)) { bymin=fopt; }
       if (m_onlineHistogram->getDisplayOption("YMAX", &fopt)) { bymax=fopt; }
       rootHistogram->GetYaxis()->SetRangeUser(bymin, bymax);
@@ -1061,7 +1069,7 @@ void DbRootHist::setTH1FromDB()
       rootHistogram->SetLineWidth(iopt);
     }
     if (m_onlineHistogram->getDisplayOption("MARKERSIZE", &iopt)) {
-      rootHistogram->SetMarkerSize(iopt);
+      rootHistogram->SetMarkerSize((Size_t)iopt);
     }
     if (m_onlineHistogram->getDisplayOption("MARKERSTYLE", &iopt)) {
       rootHistogram->SetMarkerStyle(iopt);
@@ -1187,7 +1195,7 @@ void DbRootHist::setDrawOptionsFromDB(TPad* &pad)
 
   if (m_onlineHistogram && rootHistogram) {
     int iopt = 0;
-    float fopt = 0.0;
+    double fopt = 0.0;
     std::string sopt("");
 
     // TPaveStats is obtained after a pad->Draw(), but note that changing OptStat
@@ -1203,7 +1211,7 @@ void DbRootHist::setDrawOptionsFromDB(TPad* &pad)
       pad->SetLogx(0);
       pad->SetLogy(0);
       fopt=.16;
-      pad->SetBottomMargin(fopt);
+      pad->SetBottomMargin( (Float_t) fopt);
       bool histByRun=false;
       if(m_presenterApp) {
         histByRun=m_presenterApp->global_historyByRun;
@@ -1211,12 +1219,12 @@ void DbRootHist::setDrawOptionsFromDB(TPad* &pad)
       if (histByRun) {
         rootHistogram->GetXaxis()->SetTitle("run");
         fopt=1.2;
-        rootHistogram->GetXaxis()->SetTitleOffset(fopt);
+        rootHistogram->GetXaxis()->SetTitleOffset( (Float_t) fopt);
       }
       else {
         rootHistogram->GetXaxis()->SetTitle("time");
         fopt=1.6;
-        rootHistogram->GetXaxis()->SetTitleOffset(fopt);
+        rootHistogram->GetXaxis()->SetTitleOffset( (Float_t) fopt);
       }
       std::string ylab="Average";
       if (m_onlineHistogram->getDisplayOption("LABEL_X", &sopt)) {
@@ -1353,7 +1361,7 @@ bool DbRootHist::saveTH1ToDB(TPad* pad)
   bool out = false;
   if (m_onlineHistogram && rootHistogram) {
     int iopt = 0;
-    float fopt = 0.0;
+    double fopt = 0.0;
     std::string sopt("");
 
     sopt = rootHistogram->GetXaxis()->GetTitle();
@@ -1650,7 +1658,7 @@ void DbRootHist::draw(TCanvas* editorCanvas, double xlow, double ylow, double xu
 void DbRootHist::normalizeReference()
 {
   if (m_reference && (m_histogramType != s_CNT)) {
-    float normFactor = rootHistogram->GetNormFactor();
+    double normFactor = rootHistogram->GetNormFactor();
 
     // if GetNormFactor() >0, histogram is drawn normalized, just use the same normalization
     if (normFactor<0.1) {
@@ -1824,26 +1832,26 @@ void DbRootHist::setOverlapMode(pres::ServicePlotMode overlapMode) {
 std::string DbRootHist::assembleCurrentDimServiceName() {
   std::string dimServiceName("");
   std::string dimServiceNameQueryBegining;
-
+  
   if (0 != m_onlineHistogram) {
     if (0 == m_onlineHistogram->hstype().compare(s_P1D) ||
-	0 == m_onlineHistogram->hstype().compare(s_HPD)) {
+        0 == m_onlineHistogram->hstype().compare(s_HPD)) {
       dimServiceName = findDimServiceName(s_pfixMonProfile);
       if (dimServiceName.empty()) {
-	dimServiceName = findDimServiceName(s_HPD);
+        dimServiceName = findDimServiceName(s_HPD);
       }
       if (dimServiceName.empty()) {
-	dimServiceName = findDimServiceName(s_P1D);
+        dimServiceName = findDimServiceName(s_P1D);
       }        
     } else if (0 == m_onlineHistogram->hstype().compare(s_H2D)) {
       dimServiceName = findDimServiceName(s_pfixMonH2D);
       if (dimServiceName.empty()) {
-	dimServiceName = findDimServiceName(s_H2D);          
+        dimServiceName = findDimServiceName(s_H2D);          
       }              
     } else if (0 == m_onlineHistogram->hstype().compare(s_H1D)) {
       dimServiceName = findDimServiceName(s_pfixMonH1D);
       if (dimServiceName.empty()) {
-	dimServiceName = findDimServiceName(s_H1D);          
+        dimServiceName = findDimServiceName(s_H1D);          
       }
     } else if (0 == m_onlineHistogram->hstype().compare(s_CNT)) {
       dimServiceName = findDimServiceName(s_CNT);
@@ -1851,20 +1859,20 @@ std::string DbRootHist::assembleCurrentDimServiceName() {
       //      dimServiceName = findDimServiceName(s_H1D);          
       //    }
     }
-
+    
     if (!dimServiceName.empty()){
       if (m_verbosity >= Verbose) {
-	std::cout << std::endl << "assembled current Dim service name: "
-		  << dimServiceName << std::endl << std::endl;
+        std::cout << std::endl << "assembled current Dim service name: "
+                  << dimServiceName << std::endl << std::endl;
       }  
       setIdentifiersFromDim(dimServiceName);
-
-
+      
+      
       boost::recursive_mutex::scoped_lock oraLock(*m_oraMutex);  
       if (oraLock && m_onlineHistogram &&  m_session) {
-	m_onlineHistogram->setDimServiceName(dimServiceName);
-	m_onlineHistogram->checkServiceName();
-	m_session->commit();
+        m_onlineHistogram->setDimServiceName(dimServiceName);
+        m_onlineHistogram->checkServiceName();
+        m_session->commit();
       }
     }
   }

@@ -1,3 +1,9 @@
+// $Id: LoginDialog.cpp,v 1.40 2010-05-16 18:09:40 robbep Exp $
+// ROOT
+#ifdef WIN32
+#pragma warning( push )
+#pragma warning( disable : 4800 )
+#endif
 #include <TSystem.h>
 #include <TGComboBox.h>
 #include <TGButton.h>
@@ -5,9 +11,14 @@
 #include <TGTextBuffer.h>
 #include <TGLabel.h>
 #include <TSystem.h>
+#ifdef WIN32
+#pragma warning( pop )
+#endif
 
+// Online
 #include "OnlineHistDB/OnlineHistDB.h"
 
+// Local
 #include "PresenterMainFrame.h"
 #include "LoginDialog.h"
 

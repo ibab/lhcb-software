@@ -1,7 +1,17 @@
+// $Id: ReferencePicker.h,v 1.4 2010-05-16 18:10:09 robbep Exp $
+
 #ifndef REFERENCEPICKER_H_
 #define REFERENCEPICKER_H_
 
+#ifdef WIN32
+#pragma warning( push )
+#pragma warning( disable : 4800 )
+#endif
 #include <TGFrame.h>
+#ifdef WIN32
+#pragma warning( pop )
+#endif
+
 #include "presenter.h"
 
 class PresenterMainFrame;

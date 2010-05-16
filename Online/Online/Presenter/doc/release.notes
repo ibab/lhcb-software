@@ -4,6 +4,12 @@
 ! Purpose     : GUI to allow the visualization of all data quality histograms
 !-----------------------------------------------------------------------------
 
+! 2010-05-16 - Patrick Robbe
+ - cmt/requirements: add windows compilation flags to remove compilation
+   warnings.
+ - various fixes for Windows compilation
+
+!============ Presenter v1r3 2010-05-15 =============
 ! 2010-05-15 - Patrick Robbe
  - cmt/requirements: add -isystem statement for boost includes in order to get
    rid of the boost libraries warning

@@ -1,13 +1,27 @@
+// $Id: HistogramIdentifier.cpp,v 1.37 2010-05-16 18:09:40 robbep Exp $
+// STL
 #include <iostream>
+
+// ROOT
+#ifdef WIN32
+#pragma warning( push )
+#pragma warning( disable : 4800 )
+#endif
 #include <TString.h>
 #include <TPRegexp.h>
 #include <TObjString.h>
 #include <TObjArray.h>
+#ifdef WIN32
+#pragma warning( pop )
+#endif
 
-#include "presenter.h"
-#include "HistogramIdentifier.h"
+// Online
 #include "Gaucho/MonObject.h"
 #include "OnlineHistDB/OnlineHistDBEnv.h"
+
+// Local
+#include "presenter.h"
+#include "HistogramIdentifier.h"
 
 using namespace pres;
 

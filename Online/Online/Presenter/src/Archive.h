@@ -1,12 +1,6 @@
 #ifndef ARCHIVE_H_
 #define ARCHIVE_H_
 
-#ifdef WIN32
-  #undef boolean
-  #undef BOOLEAN
-  #include <Windows4Root.h>
-#endif
-
 #include "presenter.h"
 #include <boost/filesystem.hpp>
 #include <boost/date_time/gregorian/gregorian.hpp>

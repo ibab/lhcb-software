@@ -2,16 +2,24 @@
 #define MONRATERACE_H_
 
 #include <string>
-#include <boost/thread/mutex.hpp>
 
 #include "dic.hxx"
 #include "presenter.h"
 
-class MonRateRace: public DimInfo
-{
+// forward declaration
+namespace boost {
+  class mutex ;
+};
+
+class MonRateRace: public DimInfo {
 public:
-	MonRateRace(const std::string & serviceName, pres::EffServiceType serviceType);
+  /// Constructor
+	MonRateRace( const std::string & serviceName , 
+               pres::EffServiceType serviceType);
+
+  /// Destructor 
 	virtual ~MonRateRace();
+
   void infoHandler();
   double currentValue();
   int currentTCK();
@@ -25,7 +33,6 @@ private:
   boost::mutex* m_infoHandlerMutex;
   bool m_rateIsValid;
   pres::EffServiceType m_serviceType;
-  
 };
 
 #endif /*MONRATERACE_H_*/
