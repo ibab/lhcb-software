@@ -1,4 +1,4 @@
-// $Id: TransporterFunctions.h,v 1.3 2010-05-16 11:21:13 jpalac Exp $
+// $Id: TransporterFunctions.h,v 1.4 2010-05-16 11:41:53 ibelyaev Exp $
 // ============================================================================
 #ifndef TRANSPORTERFUNCTIONS_H 
 #define TRANSPORTERFUNCTIONS_H 1
@@ -13,15 +13,15 @@
 // ============================================================================
 #include "Event/Particle.h"
 // ============================================================================
-/** @namespace DaVinci::Transporter Kernel/TransporterFunctions.h
- *
- *  @author Juan PALACIOS
- *  @date   2006-09-22
- */
 namespace DaVinci 
 {
   // ==========================================================================
-  namespace Transport
+  /** @namespace DaVinci::Transporter Kernel/TransporterFunctions.h
+   *
+   *  @author Juan PALACIOS
+   *  @date   2006-09-22
+   */
+  namespace Transporter
   {
     // ========================================================================
     /** Transport a composite Particle to specified z position, using linear

@@ -1,4 +1,4 @@
-// $Id: TransporterFunctions.cpp,v 1.1 2010-05-15 14:46:18 ibelyaev Exp $
+// $Id: TransporterFunctions.cpp,v 1.2 2010-05-16 11:41:53 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -19,7 +19,7 @@
 #include "Kernel/TransporterFunctions.h"
 // ============================================================================
 /** @file
- *  Impplementatiin fielfor DaVinci::Transporter 
+ *  Impplementation file for function DaVinci::Transporter
  */
 // ============================================================================
 /* Transport a composite Particle to specified z position, using linear
@@ -30,7 +30,7 @@
  *  @date   2008-03-10
  */
 // ============================================================================
-StatusCode DaVinci::Transport::transportAndProjectComposite 
+StatusCode DaVinci::Transporter::transportAndProjectComposite 
 ( const LHCb::Particle* particle      , 
   const double          zNew          ,
   LHCb::Particle&       transParticle ) 
@@ -98,7 +98,7 @@ StatusCode DaVinci::Transport::transportAndProjectComposite
  *  @date   2008-03-10
  */  
 // ============================================================================
-StatusCode DaVinci::Transport::transportComposite 
+StatusCode DaVinci::Transporter::transportComposite 
 ( const LHCb::Particle* particle     , 
   const double          zNew         ,
   LHCb::Particle&       transported  ) 
