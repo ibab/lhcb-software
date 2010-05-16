@@ -1,5 +1,12 @@
+// $Id: ElogDialog.cpp,v 1.8 2010-05-16 18:09:12 robbep Exp $
+// STL
 #include <iostream>
 
+// ROOT
+#ifdef WIN32
+#pragma warning( push )
+#pragma warning( disable : 4800 )
+#endif
 #include <TSystem.h>
 #include <TGButton.h>
 #include <TGTextEntry.h>
@@ -11,13 +18,16 @@
 #include <TPad.h>
 #include <TCanvas.h>
 #include <TColor.h>
-
 #include <TGListBox.h>
 #include <TGButtonGroup.h>
 #include <TGButton.h>
 #include <TGLabel.h>
 #include <TGComboBox.h>
+#ifdef WIN32
+#pragma warning( pop )
+#endif
 
+// Local
 #include "ElogDialog.h"
 #include "PresenterMainFrame.h"
 

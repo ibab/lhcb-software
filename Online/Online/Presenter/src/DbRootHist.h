@@ -6,9 +6,16 @@
 #include "dic.hxx"
 #include "presenter.h"
 
+#ifdef WIN32
+#pragma warning( push )
+#pragma warning( disable : 4800 )
+#endif
 #include <TH1.h>
 #include <TPad.h>
 #include <TDatime.h>
+#ifdef WIN32
+#pragma warning( pop )
+#endif
 
 class TImage;
 class TImagePalette;
