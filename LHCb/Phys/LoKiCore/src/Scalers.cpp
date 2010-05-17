@@ -1,4 +1,4 @@
-// $Id: Scalers.cpp,v 1.7 2010-04-21 12:28:37 ibelyaev Exp $
+// $Id: Scalers.cpp,v 1.8 2010-05-17 13:24:50 graven Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -277,8 +277,8 @@ void LoKi::Scalers::RateLimitV::initialize_ ( const std::string& svc )
   //
   // subscribe the incident:
   //
-  subscribe (              "RunChange", std::numeric_limits<long>::max() ).ignore() ;
-  subscribe ( IncidentType::BeginRun,   std::numeric_limits<long>::max() ).ignore() ;
+  subscribe (              "RunChange", std::numeric_limits<long>::min() ).ignore() ;
+  subscribe ( IncidentType::BeginRun,   std::numeric_limits<long>::min() ).ignore() ;
   //
 }
 // ============================================================================

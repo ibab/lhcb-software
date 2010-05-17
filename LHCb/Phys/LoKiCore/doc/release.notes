@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.193 2010-04-30 09:54:55 graven Exp $ 
+! $Id: release.notes,v 1.194 2010-05-17 13:24:50 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiCore
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -14,6 +14,10 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! 
 ! -----------------------------------------------------------------------------
+
+! 2010-05-17 - Gerhard Raven
+ - Scalers: listen to runchanges with low priority so that random numbers
+   are seeded first..
 
 ! =========================== LoKiCore v10r0 2010-04-26 =======================
 ! 2010-04-21 - Vanya Belyaev
