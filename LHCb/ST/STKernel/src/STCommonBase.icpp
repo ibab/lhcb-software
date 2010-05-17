@@ -4,7 +4,7 @@
  *  Implementation file for RICH base class : ST::CommonBase
  *
  *  CVS Log :-
- *  $Id: STCommonBase.icpp,v 1.13 2010-04-24 11:35:49 mneedham Exp $
+ *  $Id: STCommonBase.icpp,v 1.14 2010-05-17 07:03:23 cattanem Exp $
  *
  *  @author Matthew Needham    Matthew.Needham@cern.ch
  *  @date   2008-11-10
@@ -23,6 +23,13 @@
 #include "GaudiAlg/GaudiHistoTool.h"
 #include "Kernel/STLexicalCaster.h"
 #include "Kernel/LHCbConstants.h"
+
+// ============================================================================
+// Disable warning on windows missing definition for template instantiation
+#ifdef _WIN32
+#pragma warning ( disable:4661 )
+#endif
+// ============================================================================
 
 //=============================================================================
 // Destructor

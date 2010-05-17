@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.92 2010-04-26 07:06:15 cattanem Exp $
+! $Id: release.notes,v 1.93 2010-05-17 07:03:23 cattanem Exp $
 ! Package     : STKernel
 ! Responsible : M. Needham
 !----------------------------------------------------------------------------
+
+! 2010-05-17 M Cattaneo
+ - Disable Windows compiler warning #4661
 
 !====================== STKernel v2r1 2010-04-26 ============================
 ! 2010-04-25 M Needham
