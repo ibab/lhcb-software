@@ -20,6 +20,7 @@ Hlt2SharedDiElectron = Hlt2Member( CombineParticles
                                  , DaughtersCuts = {"e+" : "(PT>300*MeV)"}
                                  , CombinationCut = "AALL"
                                  , MotherCut = "(VFASPF(VCHI2/VDOF)<100)"
+                                 , WriteP2PVRelations = False
                                  )
 
 DiElectron = bindMembers( "Shared", [ Electrons, Hlt2SharedDiElectron ] )

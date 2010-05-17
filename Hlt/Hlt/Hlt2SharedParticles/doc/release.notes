@@ -1,4 +1,4 @@
-$Id: release.notes,v 1.93 2010-05-17 12:27:22 graven Exp $
+$Id: release.notes,v 1.94 2010-05-17 12:38:18 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2SharedParticles
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
@@ -7,6 +7,7 @@ $Id: release.notes,v 1.93 2010-05-17 12:27:22 graven Exp $
 
 !2010-05-17 - Gerhard Raven
  - fix warnings from electrons about missing PV container
+ - fix warnings from DiElectron about missing PV container
 
 !2010-05-09 - Olivier Deschamps for Régis Lefevre
  - python/Hl2SharedParticles/Pi0.py : fix  pi0 production
