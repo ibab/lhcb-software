@@ -38,6 +38,9 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
  - python/StrippingSelections/StrippingDstarD02xx.py
      Fixed selections create multiple lines with the same name. 
 
+! 2010-05-10 - Marcin Kucharczyk
+- Tunning of the StrippingHighPtJets line wrt 2010 data
+
 ! 2010-05-09 - Plamen Hopchev
  - Created StrippingBeamGas.py and inluded it in the lines of StreamMiniBias
 
@@ -54,10 +57,6 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
   . Increase version to v1r21
 
 !========================== StrippingSelections v1r20 2010-04-30 ==============
-
-=======
-! 2010-05-10 - Marcin Kucharczyk
-- Tunning of the StrippingHighPtJets line wrt 2010 data
 
 ! 2010-04-30 - Marcin Kucharczyk
 - Activate StrippingHighPtJets line

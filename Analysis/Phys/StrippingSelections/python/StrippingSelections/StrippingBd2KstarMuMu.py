@@ -1,6 +1,6 @@
 __author__ = 'Patrick Koppenburg, Rob Lambert, Mitesh Patel'
 __date__ = '21/01/2009'
-__version__ = '$Revision: 1.19 $'
+__version__ = '$Revision: 1.20 $'
 
 """
 Bd->K*MuMu selections 
@@ -35,9 +35,9 @@ class StrippingBd2KstarMuMuConf(LHCbConfigurableUser):
                 ,  'IntFlightCHI2'      : 9          # adimentional
                 ,  'TrackChi2'          : 10         # adimentional
 # simple selection
-                ,  'SimpleDiMuonPT'     : 500        # MeV
+                ,  'SimpleDiMuonPT'     : 0          # MeV
                 ,  'SimpleBdFDChi2'     : 100        # adimentional1
-                ,  'SimpleBdLT'         : 0.00001       # unit ?
+                ,  'SimpleBdLT'         : 0.00001    # unit ?
                    }
                    
     _line_for_nominal_high = None
@@ -297,7 +297,7 @@ class StrippingBd2KstarMuMuConf(LHCbConfigurableUser):
 	_muons =  DataOnDemand('stdVeryLooseDiMuon', Location = 'Phys/StdVeryLooseDiMuon')
 
         _diMu = FilterDesktop("FilterForSimpleBd2KstarMuMu")
-        _diMu.Code = "(PT > %(SimpleDiMuonPT)s *GeV)" % self.getProps()
+        _diMu.Code = "(PT > %(SimpleDiMuonPT)s *MeV)" % self.getProps()
         _sd = Selection("SelFilterForSimpleBd2KstarMuMu"+trail,
                        Algorithm = _diMu,
                        RequiredSelections = [ _muons ] )
