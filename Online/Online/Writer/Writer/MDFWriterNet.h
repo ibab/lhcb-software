@@ -329,6 +329,9 @@ namespace LHCb {
     typedef LHCb::Connection Connection;
   protected:
 
+    /// Period between two updates.
+    int m_UpdatePeriod;
+
     /// Time when the Online statistics were updated for the last time in the RunDB. 
     struct timeval m_prevUpdate;    
 

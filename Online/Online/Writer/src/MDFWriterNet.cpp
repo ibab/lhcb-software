@@ -206,6 +206,7 @@ void MDFWriterNet::constructNet()
   declareProperty("RunFileTimeoutSeconds", m_runFileTimeoutSeconds=10);
   declareProperty("MaxQueueSizeBytes",     m_maxQueueSizeBytes=1073741824);
   declareProperty("EnableMD5",             m_enableMD5=false);
+  declareProperty("UpdatePeriod",          m_UpdatePeriod=2);
 
   m_log = new MsgStream(msgSvc(), name());
 
@@ -761,7 +762,7 @@ StatusCode MDFWriterNet::writeBuffer(void *const /*fd*/, const void *data, size_
  
   struct timeval tv;
   gettimeofday(&tv, NULL);
-  if(tv.tv_sec - m_prevUpdate.tv_sec > 2) {
+  if(tv.tv_sec - m_prevUpdate.tv_sec > m_UpdatePeriod) {
       //update rundb stats ...
 
       unsigned int trgEvents[MAX_TRIGGER_TYPES];
@@ -783,7 +784,7 @@ StatusCode MDFWriterNet::writeBuffer(void *const /*fd*/, const void *data, size_
            << " Exception: "
            << e.what() << endmsg;
         *m_log << MSG::ERROR << " Could not update Run Database Record. Check the RunDB XML_RPC logfile /clusterlogs/services/xmlrpc.log";
-        *m_log << " Record is: FileName=" << m_currFile->getFileName();
+        *m_log << " Record is: FileName=" << *(m_currFile->getFileName());
         *m_log << " Run Number=" << m_currentRunNumber << endmsg;
       }
       m_prevUpdate.tv_sec = tv.tv_sec;
