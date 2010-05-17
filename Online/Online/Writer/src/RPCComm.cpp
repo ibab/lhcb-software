@@ -168,14 +168,20 @@ int RPCComm::requestResponse(char *requestHeader, char *requestData, char *respo
   if(sockFd < 0)
     throw std::runtime_error("Could not connect to RPC server.");
   ret = sendBif1.nbSendTimeout();
-  if(ret == BIF::TIMEDOUT || ret == BIF::DISCONNECTED)
+  if(ret == BIF::TIMEDOUT || ret == BIF::DISCONNECTED) {
+    close(sockFd);
     throw std::runtime_error("Could not send request header.");
+  } 
   ret = sendBif2.nbSendTimeout();
-  if(ret == BIF::TIMEDOUT || ret == BIF::DISCONNECTED)
+  if(ret == BIF::TIMEDOUT || ret == BIF::DISCONNECTED) {
+    close(sockFd);
     throw std::runtime_error("Could not send request data.");
+  }
   ret = recvBif.nbRecvTimeout();
-  if(recvBif.getBytesRead() <= 0)
+  if(recvBif.getBytesRead() <= 0) {
+    close(sockFd);
     throw std::runtime_error("Could not read response data.");
+  }
 
   close(sockFd);
   return 0;

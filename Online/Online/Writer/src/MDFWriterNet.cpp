@@ -1100,6 +1100,24 @@ void MDFWriterNet::notifyClose(struct cmd_header *cmd)
     m_rpcObj->updateFile(cmd->file_name,
                           pdu->trgEvents,
                           pdu->statEvents);
+  } catch(std::exception& rte) {
+    char md5buf[33];
+    unsigned char *md5sum = pdu->md5_sum;
+    sprintf(md5buf, "%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X",
+	        md5sum[0],md5sum[1],md5sum[2],md5sum[3],
+	        md5sum[4],md5sum[5],md5sum[6],md5sum[7],
+	        md5sum[8],md5sum[9],md5sum[10],md5sum[11],
+	        md5sum[12],md5sum[13],md5sum[14],md5sum[15]);
+
+    *m_log << MSG::WARNING
+           << " Exception: "
+           << rte.what() << endmsg;
+    *m_log << MSG::WARNING << " Could not update Run Database Record. Check the RunDB XML_RPC logfile /clusterlogs/services/xmlrpc.log";
+    *m_log << " Record is: FileName=" << cmd->file_name;
+    *m_log << " Adler32 Sum=" << pdu->adler32_sum;
+    *m_log << " MD5 Sum=" << md5buf << endmsg;
+  }
+  try { 
     m_rpcObj->confirmFile(cmd->file_name,
 			              pdu->adler32_sum,
 			              pdu->md5_sum,
@@ -1146,10 +1164,10 @@ void MDFWriterNet::notifyClose(struct cmd_header *cmd)
 	        md5sum[8],md5sum[9],md5sum[10],md5sum[11],
 	        md5sum[12],md5sum[13],md5sum[14],md5sum[15]);
 
-    *m_log << MSG::ERROR
+    *m_log << MSG::WARNING
            << " Exception: "
            << rte.what() << endmsg;
-    *m_log << MSG::ERROR << " Could not update Run Database Record. Check the RunDB XML_RPC logfile /clusterlogs/services/xmlrpc.log";
+    *m_log << MSG::WARNING << " Could not update Run Database Record. Check the RunDB XML_RPC logfile /clusterlogs/services/xmlrpc.log";
     *m_log << " Record is: FileName=" << cmd->file_name;
     *m_log << " Adler32 Sum=" << pdu->adler32_sum;
     *m_log << " MD5 Sum=" << md5buf << endmsg;
