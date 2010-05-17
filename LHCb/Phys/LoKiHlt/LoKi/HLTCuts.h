@@ -1,4 +1,4 @@
-// $Id: HLTCuts.h,v 1.5 2009-06-17 12:02:57 ibelyaev Exp $
+// $Id: HLTCuts.h,v 1.6 2010-05-17 16:01:38 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_HLTCUTS_H 
 #define LOKI_HLTCUTS_H 1
@@ -20,6 +20,25 @@ namespace LoKi
   namespace Cuts 
   {
     // ========================================================================
+    /** @typedef HLT_COUNT_ERRORBITS
+     *  simple functor to get the error bits for some lines 
+     *  @code 
+     * 
+     *   const LHCb::HtlDecReports* hlt = ... ;
+     * 
+     *   const HLT_ERRORBITS h1 = HLT_ERRORBITS  ( "some decision" ) ;
+     *
+     *   const bool ok = 0 != h1 ( hlt ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LoKi::HLT::ErrorBits 
+     *  @see LHCb::HltDecReport::errorBits
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2010-05-17
+     */
+    typedef LoKi::HLT::ErrorBits                                HLT_ERRORBITS ;
+    // ========================================================================
     /** @var HLT_DECISION
      *  simple functor which evaluates number of known decisions  
      *  @see LoKi::HLT::Decision
@@ -29,6 +48,44 @@ namespace LoKi
      *  @date 2008-09-21
      */
     const LoKi::HLT::Decision                                    HLT_DECISION ;
+    // ========================================================================
+    /** @typedef HLT_ERRORBITS 
+     *  simple functor to get the error bits for the certain line 
+     *  @code 
+     * 
+     *   const LHCb::HtlDecReports* hlt = ... ;
+     * 
+     *   const HLT_ERRORBITS h1 = HLT_ERRORBITS  ( "some decision" ) ;
+     *
+     *   const bool ok = 0 != h1 ( hlt ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LoKi::HLT::ErrorBits 
+     *  @see LHCb::HltDecReport::errorBits
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2010-05-17
+     */
+    typedef LoKi::HLT::ErrorBits                                HLT_ERRORBITS ;
+    // ========================================================================
+    /** @typedef HLT_EXECUTIONSTAGE
+     *  simple functor to get the error bits for the certain line 
+     *  @code 
+     * 
+     *   const LHCb::HtlDecReports* hlt = ... ;
+     * 
+     *   const HLT_EXECUTIONSTAGE h = HLT_EXECUTIONSTAGE ( "some decision" ) ;
+     *
+     *   const bool ok = 6 <  h ( hlt ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LoKi::HLT::ExcecutionStage
+     *  @see LHCb::HltDecReport::executionStage 
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2010-05-17
+     */
+    typedef LoKi::HLT::ExecutionStage                      HLT_EXECUTIONSTAGE ;
     // ========================================================================
     /** @typedef HLT_HAS 
      *  Simple predicate to check the certain decisions 
@@ -107,6 +164,46 @@ namespace LoKi
      *  @date 2008-09-21
      */
     const LoKi::HLT::NPass                                          HLT_NPASS ;
+    // ========================================================================
+    /** @typedef HLT_NCANDIDATES 
+     *  simple functor to get the number of candidates 
+     *  @code 
+     * 
+     *   const LHCb::HtlDecReports* hlt = ... ;
+     * 
+     *   const HLT_NCANDIDATES h = HLT_CANDIDATES ( "some decision" ) ;
+     *
+     *   const bool ok = 10 >  h ( hlt ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LoKi::HLT::NumberOfCandidated 
+     *  @see LHCb::HltDecReport::numberOfCandidates
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2010-05-17
+     */
+    typedef LoKi::HLT::NumberOfCandidates                     HLT_NCANDIDATES ;
+    // ========================================================================
+    /** @typedef HLT_ROUTINGBITS 
+     *  Simple functor tocheck the routing bits 
+     *  @code
+     * 
+     *   const LHCb::HtlDecReports* hlt = ... ;
+     * 
+     *  const HLT_ROUTINGBITS bits = HLT_ROUTINGBITS ( ROUTINGBITS ( 1, 2, 3  ) ) ;
+     *
+     *  const bool ok = bits ( odin ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LHCb::HLT::HltRoutingBits 
+     *  @see LHCb::HLT::RoutingBits 
+     *  @see LHCb::Cuts::ROUTINGBITS 
+     *
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date   2008-09-17     
+     */
+    typedef LoKi::HLT::HltRoutingBits                         HLT_ROUTINGBITS ;
     // ========================================================================
     /** @typedef HLT_PASS
      *  Simple predicate to check the positive decision forcertain decision
@@ -190,7 +287,8 @@ namespace LoKi
      *   std::vector<std::string>& special = ... ; 
      * 
      *   const HLT_PASSIGNORING p1 = HLT_PASSIGNORING ( "some decision" ) ;
-     *   const HLT_PASSIGNORING p2 = HLT_PASSIGNORING ( "decision1" ,"decision2" ) ; 
+     *   const HLT_PASSIGNORING p2 = HLT_PASSIGNORING ( "decision1" ,
+     *                                                  "decision2" ) ;
      *   const HLT_PASSIGNORING p3 = HLT_PASSIGNORING (  special ) ;              
      *
      *   const bool pass1 = p1 ( hlt ) ;
@@ -205,7 +303,7 @@ namespace LoKi
      *  @date 2008-10-03
      */
     typedef LoKi::HLT::DecisionBut                           HLT_PASSIGNORING ;
-    // ========================================================================        
+    // ========================================================================
     /** @typedef HLT_PASSIGNORING_SUBSTR 
      *  simple predicate which checks the overall decision, 
      *  ignoring "the special" decisions:
@@ -226,7 +324,7 @@ namespace LoKi
      *  @date 2008-10-03
      */
     typedef LoKi::HLT::DecisionButSubString           HLT_PASSIGNORING_SUBSTR ;
-    // ========================================================================        
+    // ========================================================================
     /** @typedef HLT_PASSIGNORING_RE
      *  simple predicate which checks the overall decision, 
      *  ignoring "the special" decisions:
@@ -247,7 +345,27 @@ namespace LoKi
      *  @date 2008-10-03
      */
     typedef LoKi::HLT::DecisionButRegex                   HLT_PASSIGNORING_RE ;
-    // ========================================================================        
+    // ========================================================================
+    /** @typedef HLT_SATURATED
+     *  simple functor to check if number fo candidates is saturated 
+     *  @code 
+     * 
+     *   const LHCb::HtlDecReports* hlt = ... ;
+     * 
+     *   const HLT_SATURATED h = HLT_SATURATED ( "some decision" ) ;
+     *
+     *   const bool ok = h ( hlt ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LoKi::HLT::Saturated
+     *  @see LoKi::HLT::NumberOfCandidated 
+     *  @see LHCb::HltDecReport::numberOfCandidates
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2010-05-17
+     */
+    typedef LoKi::HLT::Saturated                                HLT_SATURATED ;
+    // ========================================================================
     /** @var HLT_SIZE 
      *  simple functor which evaluates number of known decisions  
      *  @see LoKi::HLT::Size

@@ -1,4 +1,4 @@
-// $Id: Odin.cpp,v 1.3 2010-03-08 08:00:36 ibelyaev Exp $
+// $Id: Odin.cpp,v 1.4 2010-05-17 16:01:39 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -531,6 +531,41 @@ std::ostream& LoKi::Odin::RunEvtNumber::fillStream ( std::ostream& s ) const
 }
 // ============================================================================
    
+
+
+// ============================================================================
+// constructor from routing bits 
+// ============================================================================
+LoKi::Odin::RoutingBits::RoutingBits
+( const LoKi::HLT::RoutingBits& bits ) 
+  :  LoKi::BasicFunctors<const LHCb::ODIN*>::Predicate() 
+  , m_bits ( bits ) 
+{}
+// ============================================================================
+// MANDATORY: virtual destructor 
+// ============================================================================
+LoKi::Odin::RoutingBits::~RoutingBits () {}
+// ============================================================================
+// MANDATORY: clone method ("virtual constructor")
+// ============================================================================
+LoKi::Odin::RoutingBits*
+LoKi::Odin::RoutingBits::clone() const 
+{ return new LoKi::Odin::RoutingBits ( *this ) ; }
+// ============================================================================
+// MANDATORY: the only one essential method 
+// ============================================================================
+LoKi::Odin::RoutingBits::result_type 
+LoKi::Odin::RoutingBits::operator() 
+  ( LoKi::Odin::RoutingBits::argument /* a */ ) const 
+{
+  return m_bits() ;
+}
+// ============================================================================
+// OPTIONAL: nice printout 
+// ============================================================================
+std::ostream& LoKi::Odin::RoutingBits::fillStream ( std::ostream& s ) const 
+{ return s << " ODIN_" << m_bits ; }
+// ============================================================================
 
   
 // ============================================================================

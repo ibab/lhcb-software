@@ -1,20 +1,22 @@
-# $Id: requirements,v 1.17 2010-04-06 20:26:34 ibelyaev Exp $ 
+# $Id: requirements,v 1.18 2010-05-17 16:01:39 ibelyaev Exp $ 
 # ============================================================================
 # Created    : 2008-09-16
 # Maintainer : Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 # ============================================================================
 package           LoKiHlt
-version           v3r0
+version           v3r1
         
 # =============== structure ==================================================
 branches          cmt doc src dict python LoKi 
         
 # =============== dependencies ===============================================
 use               LoKiCore          v* Phys 
+use               LoKiNumbers       v* Phys 
 use               DAQEvent          v* Event 
 use               L0Event           v* Event 
 use               HltEvent          v* Event 
 use               DaVinciInterfaces v* Phys 
+use               HltInterfaces     v* Kernel
 
 private
 use               GaudiPython       v*    -no_auto_imports

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: functions.py,v 1.11 2010-03-12 12:23:55 ibelyaev Exp $ 
+# $Id: functions.py,v 1.12 2010-05-17 16:01:39 ibelyaev Exp $ 
 # =============================================================================
 ## @file LoKiHlt/functions.py
 #  The full set of useful objects from LoKiHlt library 
@@ -12,7 +12,7 @@
 The full set of useful objects from LoKiHlt library
 """
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl   "
-__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.11 $  "
+__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.12 $  "
 # =============================================================================
 
 import LoKiCore.decorators as _LoKiCore 
@@ -242,6 +242,10 @@ ODIN_TRUE      = LoKi.Constant( _o1 + ',bool'  ) ( True )
 ## @see LoKi::Cuts::ODIN_ZERO
 ODIN_ZERO      = LoKi.Constant( _o1 + ',double') ( 0 )
 
+## @see LoKi::Cuts::ODIN_ROUTINBITS
+ODIN_ROUTINGBITS    = LoKi.Odin.RoutingBits
+
+
 
 # =============================================================================
 # concrete HLT functions 
@@ -298,6 +302,31 @@ HLT_TRUE     =    LoKi.Constant ( _hlt + ',bool'   ) ( True  )
 ## @see LoKi::Cuts::HLT_ZERO
 HLT_ZERO     =    LoKi.Constant ( _hlt + ',double' ) ( 0 )
 
+
+## @see LoKi::Cuts::HLT_ERRORBITS 
+HLT_ERRORBITS        = LoKi.HLT.ErrorBits
+
+## @see LoKi::Cuts::HLT_EXECUTIONSTAGE
+HLT_EXECUTIONSTAGE   = LoKi.HLT.ExecutionStage
+
+## @see LoKi::Cuts::HLT_NCANDIDATES
+HLT_NCANDIDATES       = LoKi.HLT.NumberOfCandidates
+
+## @see LoKi::Cuts::HLT_SATURATED
+HLT_SATURATED          = LoKi.HLT.Saturated 
+
+## @see LoKi::Cuts::HLT_COUNTERRORBITS 
+HLT_COUNT_ERRORBITS    = LoKi.HLT.CountErrorBits  
+
+## @see LoKi::Cuts::HLT_COUNTERRORBITS_RE 
+HLT_COUNT_ERRORBITS_RE = LoKi.HLT.CountErrorBitsRegex  
+
+## @see LoKi::Cuts::HLT_ROUTINBITS
+HLT_ROUTINGBITS        = LoKi.HLT.HltRoutingBits
+
+
+## @see LoKi::Cuts::ROUTINBITS
+ROUTINGBITS            = LoKi.HLT.RoutingBits
 
 # =========================================================================
 ## helper function to define properly ODIN_EVTNUMBER predicate
@@ -372,7 +401,41 @@ def odin_runevts ( arg1 ) :
         
     return ODIN_RUNEVTNUMBER( rel )
     
+# =============================================================================
+## helper function to define (void)functor  for routing bits 
+#  @see LoKi::Cuts::ROUTINGBITS
+#  @see LoKi::Cuts::ROUTINGBIT
+#  @author Vanya Belyaev Ivan.Belyaev@nikhef.nl
+#  @date 2010-05-17
+def routingBits ( arg1 , *args ) :
+    """
+    Helper function to define (void)functor  for routing bits
+    """
+    from LoKiCore.functions import uints
+    bits = uints ( arg1 , *args )
+    return ROUTINGBITS ( bits )
 
+# =============================================================================
+## helper function to define HLT-functor  for routing bits 
+#  @see LoKi::Cuts::HLT_ROUTINGBITS
+#  @author Vanya Belyaev Ivan.Belyaev@nikhef.nl
+#  @date 2010-05-17
+def HLT_routingBits ( arg1 , *args ) :
+    """
+    Helper function to define HLT-functor  for routing bits
+    """
+    return HLT_ROUTINGBITS ( routingBits ( arg1 , *args ) ) 
+
+# =============================================================================
+## helper function to define ODIN-functor  for routing bits 
+#  @see LoKi::Cuts::ODIN_ROUTINGBITS
+#  @author Vanya Belyaev Ivan.Belyaev@nikhef.nl
+#  @date 2010-05-17
+def ODIN_routingBits ( arg1 , *args ) :
+    """
+    Helper function to define ODIN-functor  for routing bits
+    """
+    return ODIN_ROUTINGBITS ( routingBits ( arg1 , *args ) ) 
 
 # =============================================================================
 if '__main__' == __name__ :

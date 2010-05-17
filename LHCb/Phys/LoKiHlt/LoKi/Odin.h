@@ -1,4 +1,4 @@
-// $Id: Odin.h,v 1.3 2010-03-07 18:06:19 ibelyaev Exp $
+// $Id: Odin.h,v 1.4 2010-05-17 16:01:39 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_ODIN_H 
 #define LOKI_ODIN_H 1
@@ -16,6 +16,7 @@
 // LoKi
 // ============================================================================
 #include "LoKi/BasicFunctors.h"
+#include "LoKi/RoutingBits.h"
 // ============================================================================
 // DAQEvent
 // ============================================================================
@@ -603,6 +604,43 @@ namespace LoKi
       std::vector<unsigned int> m_bxs   ;
       // ======================================================================
     } ;
+    // ========================================================================    
+    /** @class HltRouingBits 
+     *  Simple predicate to check the hlt routing bits 
+     *  @author Vanya BELYAEV Ivan.BElyaev@nikhef.nl
+     *  @date 2010-05-17
+     */
+    class RoutingBits 
+      : public LoKi::BasicFunctors<const LHCb::ODIN*>::Predicate
+    {
+    public:
+      // ======================================================================
+      /// constructor from routing bits 
+      RoutingBits ( const LoKi::HLT::RoutingBits& bits ) ;
+      /// MANDATORY: virtual destructor 
+      virtual ~RoutingBits () ;
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  RoutingBits* clone() const ;
+      /// MANDATORY: the only one essential method 
+      virtual  result_type operator() ( argument /* a */ ) const ;
+      /// OPTIONAL: nice printout 
+      virtual std::ostream& fillStream ( std::ostream& ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      operator const LoKi::HLT::RoutingBits&() const { return m_bits ; }
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the default constructor is disabled 
+      RoutingBits () ;                   // the default constructor is disabled 
+      // ====================================================================== 
+    private:
+      // ====================================================================== 
+      /// the bits 
+      LoKi::HLT::RoutingBits m_bits ;                               // the bits 
+      // ====================================================================== 
+    };
     // ========================================================================
   } //                                              end of namespace LoKi::Odin
   // ==========================================================================

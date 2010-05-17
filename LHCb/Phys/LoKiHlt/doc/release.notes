@@ -1,9 +1,35 @@
-! $Id: release.notes,v 1.40 2010-04-26 06:41:15 cattanem Exp $ 
+! $Id: release.notes,v 1.41 2010-05-17 16:01:39 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiHlt
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 ! Purpose     : collection of functors&factory for HLT 
 ! -----------------------------------------------------------------------------
+
+! 2010-05-17 - Vanya Belyaev
+
+ - new symbols for Plamen&Gerhard
+
+      HLT_ERRORBITS 
+      HLT_EXECUTIONSTAGE 
+      HLT_NCANDIDATES 
+      HLT_SATURATED
+      HLT_COUNT_ERRORBITS 
+      HLT_COUNT_ERRORBITS_RE 
+
+          ROUTINGBITS  (void)
+      HLT_ROUTINGBITS  (HLT-fictive)
+     ODIN_ROUTINGBITS  (ODIN-fictive)
+
+   helper functions:
+
+          routingBits (void)
+      HLT_routingBits (fictive HLT)
+     ODIN_routingBits (ficitve ODIN)
+ 
+   
+ - cmt/requirements
+    version increment tio v3r1 
+
 
 !========================== LoKiHlt v3r0 2010-04-26 ===========================
 ! 2010-04-22 - Vanya Belyaev

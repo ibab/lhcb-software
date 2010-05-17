@@ -1,13 +1,18 @@
-// $Id: HLT.h,v 1.5 2009-06-17 12:02:57 ibelyaev Exp $
+// $Id: HLT.h,v 1.6 2010-05-17 16:01:38 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_HLT_H 
 #define LOKI_HLT_H 1
 // ============================================================================
 // Include files
 // ============================================================================
+// GaudiKernel
+// ============================================================================
+#include "GaudiKernel/StringKey.h"
+// ============================================================================
 // LoKi
 // ============================================================================
 #include "LoKi/BasicFunctors.h"
+#include "LoKi/RoutingBits.h"
 // ============================================================================
 // L0Event
 // ============================================================================
@@ -43,7 +48,7 @@ namespace LoKi
     {
     protected:
       // ======================================================================
-      typedef std::vector<std::string>                                  Names ;
+      typedef std::vector<Gaudi::StringKey>                             Names ;
       // ======================================================================
     public:
       // ======================================================================
@@ -51,16 +56,16 @@ namespace LoKi
       HasDecision ( const std::string& name  ) ;
       /// constructor from the decision names ("OR") 
       HasDecision ( const std::string& name1 , 
-                     const std::string& name2 ) ;
+                    const std::string& name2 ) ;
       /// constructor from the decision names ("OR") 
       HasDecision ( const std::string& name1 , 
-                     const std::string& name2 , 
-                     const std::string& name3 ) ;
+                    const std::string& name2 , 
+                    const std::string& name3 ) ;
       /// constructor from the decision names ("OR") 
       HasDecision ( const std::string& name1 , 
-                     const std::string& name2 , 
-                     const std::string& name3 ,
-                     const std::string& name4 ) ;
+                    const std::string& name2 , 
+                    const std::string& name3 ,
+                    const std::string& name4 ) ;
       /// constructor form the decision names ("OR") 
       HasDecision ( const Names&       names ) ;
       /// MANDATORY: virtual destructor 
@@ -246,7 +251,7 @@ namespace LoKi
     {
     protected:
       // ======================================================================
-      typedef std::vector<std::string>                                  Names ;
+      typedef std::vector<Gaudi::StringKey>                             Names ;
       // ======================================================================
     public:
       // ======================================================================
@@ -266,6 +271,8 @@ namespace LoKi
                     const std::string& name4 ) ;
       /// constructor from vector of "special" decicions
       DecisionBut ( const Names&       names ) ;
+      /// constructor from vector of "special" decicions
+      DecisionBut ( const std::vector<std::string>& names ) ;
       /// MANDATORY: virtual destructor 
       virtual ~DecisionBut() {} ;
       /// MANDATORY: clone method ("virtual constructor")
@@ -481,6 +488,297 @@ namespace LoKi
       /// the default constructor is disabled 
       DecisionButRegex () ;          // the default constructor is disabled 
       // ======================================================================
+    };
+    // ========================================================================
+    /** @class ErrorBits
+     *  Simple functor to extract the error bits from the the given channel
+     *  @see LoKi::Cuts::HLT_ERRORBITS 
+     *  @see LHCb::HltDecReport::errorBits 
+     *  @author Vanya BELYAEV  Ivan.Belyaev@cern.ch
+     *  @date 2010-05-17
+     */
+    class ErrorBits 
+      : public LoKi::BasicFunctors<const LHCb::HltDecReports*>::Function
+    {
+    public:
+      // ======================================================================
+      /// constructor from the channel name 
+      ErrorBits ( const std::string&      name ) ;
+      /// constructor from the channel name 
+      ErrorBits ( const Gaudi::StringKey& name ) ;
+      /// MANDATORY: virtual destructor 
+      virtual ~ErrorBits() ;
+      /// MANDATORY: clone method ( "virtual constructor")
+      virtual  ErrorBits* clone () const ;
+      /// MANDATORY: the only one essential methor 
+      result_type operator() ( argument a ) const ;
+      /// OPTIONAL: nice printout 
+      virtual std::ostream& fillStream ( std::ostream& ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the default constructor is disabled 
+      ErrorBits () ;                     // the default constructor is disabled 
+      // ======================================================================
+    public:
+      // ======================================================================
+      const Gaudi::StringKey& channel( ) const { return m_key ; }
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the channel key 
+      Gaudi::StringKey m_key ; // the channle key
+      // ======================================================================
+    } ;
+    // ========================================================================
+    /** @class ExecutionStage
+     *  Simple functor to extract the execution stage for the given channel 
+     *  @see LoKi::Cuts::HLT_EXECUTIONSTAGE 
+     *  @see LHCb::HltDecReport::executionStage
+     *  @author Vanya BELYAEV  Ivan.Belyaev@cern.ch
+     *  @date 2010-05-17
+     */
+    class ExecutionStage : public ErrorBits 
+    {
+    public:
+      // ======================================================================
+      /// constructor from the channel name 
+      ExecutionStage ( const std::string&      name ) ;
+      /// constructor from the channel name 
+      ExecutionStage ( const Gaudi::StringKey& name ) ;
+      /// MANDATORY: virtual destructor 
+      virtual ~ExecutionStage() ;
+      /// MANDATORY: clone method ( "virtual constructor")
+      virtual  ExecutionStage* clone () const ;
+      /// MANDATORY: the only one essential methor 
+      result_type operator() ( argument a ) const ;
+      /// OPTIONAL: nice printout 
+      virtual std::ostream& fillStream ( std::ostream& ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the default constructor is disabled 
+      ExecutionStage () ;                // the default constructor is disabled 
+      // ======================================================================
+    } ;
+    // ========================================================================
+    /** @class NumberOfCandidates
+     *  Simple functor to extract the execution stage for the given channel 
+     *  @see LoKi::Cuts::HLT_NCANDIDATES
+     *  @see LHCb::HltDecReport::numberOfCandidates
+     *  @author Vanya BELYAEV  Ivan.Belyaev@cern.ch
+     *  @date 2010-05-17
+     */
+    class NumberOfCandidates : public ErrorBits 
+    {
+    public:
+      // ======================================================================
+      /// constructor from the channel name 
+      NumberOfCandidates ( const std::string&      name ) ;
+      /// constructor from the channel name 
+      NumberOfCandidates ( const Gaudi::StringKey& name ) ;
+      /// MANDATORY: virtual destructor 
+      virtual ~NumberOfCandidates() ;
+      /// MANDATORY: clone method ( "virtual constructor")
+      virtual  NumberOfCandidates* clone () const ;
+      /// MANDATORY: the only one essential methor 
+      result_type operator() ( argument a ) const ;
+      /// OPTIONAL: nice printout 
+      virtual std::ostream& fillStream ( std::ostream& ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the default constructor is disabled 
+      NumberOfCandidates () ;  // the default constructor is disabled 
+      // ======================================================================
+    } ;
+    // ========================================================================
+    /** @class Saturated
+     *  Simple functor to extract the execution stage for the given channel 
+     *  @see LoKi::Cuts::HLT_SATURATED
+     *  @see LHCb::HltDecReport::numberOfCandidates
+     *  @see LHCb::HltDecReport::saturatedSaturated
+     *  @author Vanya BELYAEV  Ivan.Belyaev@cern.ch
+     *  @date 2010-05-17
+     */
+    class Saturated 
+      : public LoKi::BasicFunctors<const LHCb::HltDecReports*>::Predicate
+    {
+    public:
+      // ======================================================================
+      /// constructor from the channel name 
+      Saturated ( const std::string&      name ) ;
+      /// constructor from the channel name 
+      Saturated ( const Gaudi::StringKey& name ) ;
+      /// MANDATORY: virtual destructor 
+      virtual ~Saturated() ;
+      /// MANDATORY: clone method ( "virtual constructor")
+      virtual  Saturated* clone () const ;
+      /// MANDATORY: the only one essential methor 
+      result_type operator() ( argument a ) const ;
+      /// OPTIONAL: nice printout 
+      virtual std::ostream& fillStream ( std::ostream& ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the default constructor is disabled 
+      Saturated () ;  // the default constructor is disabled 
+      // ======================================================================
+    public:
+      // ======================================================================
+      const Gaudi::StringKey& channel( ) const { return m_key ; }
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the channel key 
+      Gaudi::StringKey m_key ; // the channle key
+      // ======================================================================
+    } ;
+    // ========================================================================
+    /** @class CountErrorBits 
+     *  @see LoKi::Cuts::HLT_COUNT_ERRORBITS 
+     *  @see LHCb::HltDecReport::errorBits
+     *  @author Vanya BELYAEV  Ivan.Belyaev@cern.ch
+     *  @date 2010-05-17
+     */
+    class CountErrorBits  
+      : public LoKi::BasicFunctors<const LHCb::HltDecReports*>::Function 
+    {
+    public:
+      // =====================================================================
+      /// constructor from the list of lines & mask 
+      CountErrorBits
+      ( const std::vector<std::string>&      lines , 
+        const unsigned int                   mask  ) ;
+      // =====================================================================
+      /// constructor from the list of lines & mask 
+      CountErrorBits
+      ( const std::vector<Gaudi::StringKey>& lines , 
+        const unsigned int                   mask  ) ;
+      // =====================================================================
+      /// constructor from the lines & mask 
+      CountErrorBits
+      ( const std::string& line1 , 
+        const std::string& line2 , 
+        const unsigned int mask  ) ;
+      // =====================================================================
+      /// constructor from the lines & mask 
+      CountErrorBits
+      ( const std::string& line1 , 
+        const std::string& line2 , 
+        const std::string& line3 , 
+        const unsigned int mask  ) ;
+      // =====================================================================
+      /// constructor from the lines & mask 
+      CountErrorBits
+      ( const std::string& line1 , 
+        const std::string& line2 , 
+        const std::string& line3 , 
+        const std::string& line4 , 
+        const unsigned int mask  ) ;
+      // =====================================================================
+      /// MANDATORY: virtual desctructor 
+      virtual ~CountErrorBits() ;
+      /// MANDATORY: clone method ( "virtual constructor")
+      virtual  CountErrorBits* clone () const ;
+      /// MANDATORY: the only one essential methor 
+      result_type operator() ( argument a ) const ;
+      /// OPTIONAL: nice printout 
+      virtual std::ostream& fillStream ( std::ostream& ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the default constructor is disabled 
+      CountErrorBits () ;  // the default constructor is disabled 
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// list of lines 
+      std::vector<Gaudi::StringKey> m_lines ; // list of lines 
+      /// the mask 
+      unsigned int                  m_mask  ; // the mask 
+      // ======================================================================
+    } ;  
+    // ========================================================================
+    /** @class CountErrorBitsRegex 
+     *  @see LoKi::Cuts::HLT_COUNT_ERRORBITS 
+     *  @see LHCb::HltDecReport::errorBits
+     *  @author Vanya BELYAEV  Ivan.Belyaev@cern.ch
+     *  @date 2010-05-17
+     */
+    class CountErrorBitsRegex
+      : public LoKi::BasicFunctors<const LHCb::HltDecReports*>::Function 
+    {
+    public:
+      // =====================================================================
+      /// constructor from the regular expression & mask 
+      CountErrorBitsRegex 
+      ( const std::string&  expression , 
+        const unsigned int  mask       ) ;
+      /// MANDATORY: virtual destructor 
+      virtual ~CountErrorBitsRegex() ;
+      /// MANDATORY: clone method ( "virtual constructor")
+      virtual  CountErrorBitsRegex* clone () const ;
+      /// MANDATORY: the only one essential method
+      result_type operator() ( argument a ) const ;
+      /// OPTIONAL: nice printout 
+      virtual std::ostream& fillStream ( std::ostream& ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the default constructor is disabled 
+      CountErrorBitsRegex () ;          // the default constructor is disabled 
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// regurn the regular expression 
+      const boost::regex& expression () const { return m_expression ; }
+      // ======================================================================
+    private:
+      // ======================================================================
+      std::string   m_pattern    ;
+      /// the regular expression 
+      boost::regex  m_expression ;                    // the regular expression 
+      /// the mask 
+      unsigned int  m_mask       ;                    // the mask 
+      // ======================================================================
+    } ;  
+    // ========================================================================
+    /** @class HltRoutingBits 
+     *  Simple predicate to check the hlt routing bits 
+     *  @author Vanya BELYAEV Ivan.BElyaev@nikhef.nl
+     *  @date 2010-05-17
+     */
+    class HltRoutingBits 
+      : public LoKi::BasicFunctors<const LHCb::HltDecReports*>::Predicate
+    {
+    public:
+      // ======================================================================
+      /// constructor from routing bits 
+      HltRoutingBits ( const LoKi::HLT::RoutingBits& bits ) ;
+      /// MANDATORY: virtual destructor 
+      virtual ~HltRoutingBits () ;
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  HltRoutingBits* clone() const ;
+      /// MANDATORY: the only one essential method 
+      virtual  result_type operator() ( argument /* a */ ) const ;
+      /// OPTIONAL: nice printout 
+      virtual std::ostream& fillStream ( std::ostream& ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      operator const LoKi::HLT::RoutingBits&() const { return m_bits ; }
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the default constructor is disabled 
+      HltRoutingBits () ;          // the default constructor is disabled 
+      // ====================================================================== 
+    private:
+      // ====================================================================== 
+      /// the bits 
+      LoKi::HLT::RoutingBits m_bits ;                               // the bits 
+      // ====================================================================== 
     };
     // ========================================================================
   } //end of namespace LoKi::HLT

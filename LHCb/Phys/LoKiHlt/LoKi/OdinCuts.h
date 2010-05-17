@@ -1,4 +1,4 @@
-// $Id: OdinCuts.h,v 1.2 2010-02-12 14:17:27 ibelyaev Exp $
+// $Id: OdinCuts.h,v 1.3 2010-05-17 16:01:39 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_O1CUTS_H 
 #define LOKI_O1CUTS_H 1
@@ -287,6 +287,28 @@ namespace LoKi
      *  @date   2008-09-17     
      */
     const LoKi::Odin::ReadOutType                                  ODIN_ROTYP ;
+    // ========================================================================
+    /** @typedef ODIN_ROUTINGBITS 
+     *  Simple functor tocheck the routing bits 
+     *  @code
+     * 
+     *  const LHCb::ODIN* odin = ... ;
+     * 
+     *  const ODIN_ROUTINGBITS bits = ODIN_ROUTINGBITS ( ROUTINGBITS ( 1, 2, 3  ) ) ;
+     *
+     *  const bool ok = bits ( odin ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LoKi::Odin::BunchId
+     *  @see LHCb::ODIN
+     *  @see LHCb::ODIN::bunchId
+     *  @see LHCb::Cuts::ROUTINGBITS 
+     *
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date   2008-09-17     
+     */
+    typedef LoKi::Odin::RoutingBits                          ODIN_ROUTINGBITS ;
     // ========================================================================
     /** @var ODIN_RUN
      *  Simple accessor to run number 

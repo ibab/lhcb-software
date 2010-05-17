@@ -26,7 +26,7 @@ A.Golutvin, P.Koppenburg have been used in the design.
 """
 # =============================================================================
 __author__ = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl" 
-__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $  "
+__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $  "
 # =============================================================================
 
 from   LoKiHlt.functions   import *
@@ -92,12 +92,15 @@ def _decorate ( name = _name  ) :
         LoKi.Dicts.CutCalls (hlt)              , ## call-traits
         LoKi.Dicts.CutsOps  (_hlt,_hlt)        ) ## operators&operations
     
-    ## 
+    ##
+    
     return _decorated                            ## RETURN
 
 # =============================================================================
 ## perform the decoration 
-_decorated = _decorate ()                         ## ATTENTION 
+_decorated = _decorate ()                         ## ATTENTION
+from LoKiNumbers.decorators import decorateVoids
+_decorated |= decorateVoids ( __name__ ) 
 # =============================================================================
 
 # =============================================================================
