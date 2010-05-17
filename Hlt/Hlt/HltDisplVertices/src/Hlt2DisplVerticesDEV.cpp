@@ -795,24 +795,6 @@ void Hlt2DisplVerticesDEV::PrintTracksType(){
   }
 
 
-  //Check the tracks from a 2D vertex...
-//   debug()<<"Check the tracks from a 2D vertex"<< endmsg;
-//   RecVertices* RV2Ds = get<RecVertices>("/Event/Hlt/Vertex/PV2D");
-//   if( RV2Ds->empty() ) return;
-//   RecVertices::const_iterator iRV = RV2Ds->begin();
-//   for( SmartRefVector<Track>::const_iterator itr = (*iRV)->tracks().begin();
-//        itr != (*iRV)->tracks().end(); ++itr ){
-//     const Track* trk = *itr;
-//     string s = "False !";
-//     if ( trk->checkFlag( Track::Backward ) ) s = "True !";
-//     debug()<<"Track key "<< trk->key()<<" slope "<< trk->slopes() 
-// 	   <<" type "<<trk->type()<<" Is backward ? "<< s 
-// 	   <<" Looking for ancestors :" <<endmsg;
-//     for( SmartRefVector<Track>::const_iterator j = trk->ancestors().begin();
-// 	 j != trk->ancestors().end(); ++j )
-//       debug()<<"Anc. Track key "<< (*j)->key()<<" slope "<< (*j)->slopes() 
-// 	     <<" type "<<(*j)->type() <<endmsg;
-//  }
 }
 void Hlt2DisplVerticesDEV::PrintParticle(){
   const Particle::ConstVector& InputParts = desktop()->particles();
