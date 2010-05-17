@@ -1,4 +1,4 @@
-// $Id: PresenterMainFrame.cpp,v 1.316 2010-05-16 18:10:09 robbep Exp $
+// $Id: PresenterMainFrame.cpp,v 1.317 2010-05-17 13:56:35 robbep Exp $
 #include <algorithm>
 #include <iostream>
 #include <vector>
@@ -65,6 +65,10 @@
 #ifdef WIN32
 #pragma warning( pop )
 #endif
+
+// BOOST
+#include <boost/algorithm/string/split.hpp>
+#include <boost/algorithm/string/classification.hpp>
 
 // Online
 #include "dim/dic.hxx"
@@ -3032,6 +3036,7 @@ void PresenterMainFrame::refreshHistoDBListTree() {
 void PresenterMainFrame::refreshPagesDBListTree() {
   listHistogramsFromHistogramDB(m_pagesFromHistoDBListTree, FoldersAndPages,
                                 s_withoutHistograms);
+  openHistogramTreeAt( "" ) ;
 }
 
 void PresenterMainFrame::refreshHistogramSvcList(bool tree) {
@@ -4908,24 +4913,44 @@ void PresenterMainFrame::EventInfo(int event, int px, int py, TObject* selected)
 
   switch (event) {
   case kButton1Double:
-    if (NULL != selected && selected->InheritsFrom(TH1::Class())) {
-      std::vector<DbRootHist*>::iterator eventInfo_dbHistosOnPageIt;
-      for (eventInfo_dbHistosOnPageIt = dbHistosOnPage.begin();
-           eventInfo_dbHistosOnPageIt != dbHistosOnPage.end();
-           eventInfo_dbHistosOnPageIt++) {
-        if (0 == std::string((*eventInfo_dbHistosOnPageIt)->rootHistogram->GetName()).compare(selected->GetName())) {
-          if (NULL != (*eventInfo_dbHistosOnPageIt)->onlineHistogram() &&
-              false == (*eventInfo_dbHistosOnPageIt)->onlineHistogram()->page2display().empty()) {
-            if (m_verbosity >= Verbose) {
-              std::cout << "loadPage: " << ((*eventInfo_dbHistosOnPageIt)->onlineHistogram())->page2display() << std::endl;
-            }
-            m_currentPageName = ((*eventInfo_dbHistosOnPageIt)->onlineHistogram())->page2display();
-            if (!m_currentPageName.empty()) {
-              loadSelectedPageFromDB(m_currentPageName, s_startupFile, m_savesetFileName);
-            }
-            break;
-          }
-        }
+    if ( 0 != selected ) { 
+      TPad * thePad = dynamic_cast< TPad *>( editorCanvas -> GetClickSelectedPad() ) ;
+      if ( 0 != thePad ) {
+	TIter next( thePad -> GetListOfPrimitives() ) ;
+	TObject * obj ; TH1 * theHisto( 0 ) ; 
+	while ( ( obj = next( ) ) ) {
+	  if ( obj -> InheritsFrom( TH1::Class() ) ) {
+	    theHisto = dynamic_cast< TH1* >( obj ) ;
+	    break ;
+	  }
+	}
+	
+	if ( 0 != theHisto ) {
+	  std::vector<DbRootHist*>::iterator eventInfo_dbHistosOnPageIt;
+	  for (eventInfo_dbHistosOnPageIt = dbHistosOnPage.begin();
+	       eventInfo_dbHistosOnPageIt != dbHistosOnPage.end(); ++eventInfo_dbHistosOnPageIt) {
+	    if (0 == std::string( ( *eventInfo_dbHistosOnPageIt ) -> 
+				  rootHistogram -> GetName() ).compare( theHisto -> GetName() ) ) {
+	      if ( NULL != (*eventInfo_dbHistosOnPageIt)->onlineHistogram() &&
+		   false == (*eventInfo_dbHistosOnPageIt)->onlineHistogram() -> 
+		   page2display().empty( ) ) {
+		if (m_verbosity >= Verbose) {
+		  std::cout << "loadPage: " 
+			    << ((*eventInfo_dbHistosOnPageIt)->
+				onlineHistogram())->page2display() << std::endl;
+		}
+		if ( ! ((*eventInfo_dbHistosOnPageIt) -> onlineHistogram()) 
+		     -> page2display( ).empty() )  {
+		  m_currentPageName = ((*eventInfo_dbHistosOnPageIt) -> onlineHistogram()) 
+		    -> page2display( ) ;
+		  openHistogramTreeAt( m_currentPageName ) ;
+		  loadSelectedPageFromDB( m_currentPageName , s_startupFile, m_savesetFileName ) ;
+		}
+		break;
+	      }
+	    }
+	  }
+	}
       }
     }
     break;
@@ -5013,4 +5038,43 @@ void PresenterMainFrame::switchToRunNavigation( bool ok ) {
     m_textNavigation         -> Clear         ( ) ;
     m_textNavigation         -> LoadBuffer    ( "" ) ;
   }
+}
+
+//===========================================================================
+// Open this page in histogram tree
+// Format of the page is for example : /L0DU/BCId
+// Name in the tree would be: /HISTDB/L0DU/BCId
+// if pageName is empty, only open first level "HISTDB"
+//===========================================================================
+void PresenterMainFrame::openHistogramTreeAt( const std::string & pageName ) {
+  TGListTreeItem * node = 0 ;
+
+  std::string path = "/HISTDB" ;
+  node = m_pagesFromHistoDBListTree -> FindItemByPathname( path.c_str() ) ;
+  m_pagesFromHistoDBListTree -> OpenItem( node ) ;
+
+  if ( "" != pageName ) {
+    
+    std::vector< std::string > splitVec;
+    boost::algorithm::split( splitVec , pageName , 
+			     boost::algorithm::is_any_of("/") ) ;
+    
+    std::vector< std::string >::iterator it ;
+    for ( it = splitVec.begin() ; it != splitVec.end() ; ++it ) {
+      if ( (*it) == "" ) continue ;
+      path += "/" + (*it) ;
+      if ( path == pageName ) continue ;
+      node = m_pagesFromHistoDBListTree -> FindItemByPathname( path.c_str() ) ;
+      m_pagesFromHistoDBListTree -> OpenItem( node ) ;
+    }
+   
+    m_pagesFromHistoDBListTree -> ClearHighlighted() ;
+ 
+    node = m_pagesFromHistoDBListTree -> 
+      FindItemByPathname( ("/HISTDB" + pageName).c_str() ) ;
+    m_pagesFromHistoDBListTree -> HighlightItem( node ) ;
+  }  
+
+  m_pagesFromHistoDBListTree -> Resize() ;
+  DoRedraw() ;
 }

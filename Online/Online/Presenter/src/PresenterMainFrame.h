@@ -664,6 +664,9 @@ private:
   /// Change main window for run navigation
   void switchToRunNavigation( bool on ) ;
 
+  /// Open and select the given page in the histogram tree
+  void openHistogramTreeAt( const std::string & pageName ) ; 
+
   ClassDef(PresenterMainFrame, 0) // main editor window
     };
 

@@ -4,6 +4,10 @@
 ! Purpose     : GUI to allow the visualization of all data quality histograms
 !-----------------------------------------------------------------------------
 
+! 2010-05-17 - Patrick Robbe
+ - src/PresenterMainFrame.cpp: re-activate possibility to access linked
+   page double-clicking on histograms.
+
 ! 2010-05-16 - Patrick Robbe
  - cmt/requirements: add windows compilation flags to remove compilation
    warnings.
