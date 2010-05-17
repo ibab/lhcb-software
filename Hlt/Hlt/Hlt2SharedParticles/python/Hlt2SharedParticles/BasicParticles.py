@@ -8,7 +8,7 @@
 ##
 # =============================================================================
 __author__  = "P. Koppenburg Patrick.Koppenburg@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.23 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.24 $"
 # =============================================================================
 from Gaudi.Configuration import *
 from HltLine.HltLine import bindMembers
@@ -73,6 +73,7 @@ Hlt2Electrons.Particle =   "electron"
 Hlt2Electrons.Input = caloProtos.outputSelection()  
 Hlt2Electrons.addTool(ProtoParticleCALOFilter('Electron'))
 Hlt2Electrons.Electron.Selection = [ "RequiresDet='CALO' CombDLL(e-pi)>'-2.0'" ]
+Hlt2Electrons.WriteP2PVRelations = False
 ##########################################################################
 # Make the photons
 #
