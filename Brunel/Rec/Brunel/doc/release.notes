@@ -8,11 +8,13 @@ Purpose: LHCb reconstruction program
    . Changes to PatVeloSpaceTool and PatVeloTrackTool to improve internal fit in
      the case of half box misalignments (PatVelo)
    . Add a couple new plots to show number of active HPDs per event (RichRecQC)
+   . In Expert mode, add monitor for ODIN trigger types (RichRecQC)
    . Latest Rich calibration from head-20100430 LHCBCOND tag
    . Latest OT T0 calibration from head-20100509 LHCBCOND tag
    . Added MuonTrackMonitor
    . Added PropagateFSRs (LumiAlgs)
    . Add IP plots to TrackMonitor expert options
+   . Less verbose handling of errors and warnings (TrackExtrapolators etc.)
 
 - Changes to tests
   . brunel.brunel-bigevents: 
