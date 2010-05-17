@@ -1,4 +1,4 @@
-// $Id: HltGlobalMonitor.cpp,v 1.65 2010-04-17 22:54:21 graven Exp $
+// $Id: HltGlobalMonitor.cpp,v 1.66 2010-05-17 14:24:08 graven Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -296,7 +296,6 @@ void HltGlobalMonitor::monitorHLT1(const LHCb::HltDecReports* hlt) {
   if (hlt==0) return;
 
   ///////////////////////////////////////////////////////////////////////////////
-  std::vector<std::pair<Gaudi::StringKey,const LHCb::HltDecReport*> > reps; reps.reserve(m_Hlt1Lines.size());
   unsigned nAcc = 0;
   std::vector<unsigned> nAccAlley(m_hlt1Alleys.size(),unsigned(0));
 
@@ -308,26 +307,18 @@ void HltGlobalMonitor::monitorHLT1(const LHCb::HltDecReports* hlt) {
        continue;
     }
     Gaudi::StringKey key(*i);
-    reps.push_back( std::make_pair( key, report ) );
     if (report && report->decision()){
       ++nAcc;
       std::map<Gaudi::StringKey,std::pair<unsigned,unsigned> >::const_iterator j = m_hlt1Line2AlleyBin.find(key);
       if (j!=m_hlt1Line2AlleyBin.end()) {
           assert(j->second.first<nAccAlley.size());
           ++nAccAlley[ j->second.first ];
+          fill( m_hlt1Alleys[j->second.first], j->second.second, 1.0 ); //avoid double counting if several go off at the same time???
       }
     }
   }
 
-  for (size_t i = 0; i<reps.size();++i) {
-    bool accept = (reps[i].second->decision()!=0);
-    if (!accept) continue;
-
-           //filling the histograms for each alley
-    std::map<Gaudi::StringKey,std::pair<unsigned,unsigned> >::const_iterator k = m_hlt1Line2AlleyBin.find( reps[i].first );
-    if (k!=m_hlt1Line2AlleyBin.end()) fill( m_hlt1Alleys[k->second.first], k->second.second, accept );
-  }
-       //filling the histograms for the alleys instead of the lines
+  //filling the histograms for the alleys instead of the lines
   for (unsigned i=0; i<m_DecToGroup1.size();i++) {
     *m_hlt1AlleyRates[i] += ( nAccAlley[i] > 0 );
     fill(m_hlt1Alley,i,(nAccAlley[i]>0));
@@ -345,7 +336,6 @@ void HltGlobalMonitor::monitorHLT2(const LHCb::HltDecReports* hlt) {
   if (hlt==0) return;
 
   ///////////////////////////////////////////////////////////////////////////////
-  std::vector<std::pair<Gaudi::StringKey,const LHCb::HltDecReport*> > reps; reps.reserve(m_Hlt2Lines.size());
   unsigned nAcc = 0;
   std::vector<unsigned> nAccAlley(m_DecToGroup2.size(),unsigned(0));
 
@@ -356,26 +346,17 @@ void HltGlobalMonitor::monitorHLT2(const LHCb::HltDecReports* hlt) {
        continue;
     }
     Gaudi::StringKey key(*i);
-    reps.push_back( std::make_pair( key, report ) );
     if (report && report->decision()){
       ++nAcc;
       std::map<Gaudi::StringKey,std::pair<unsigned,unsigned> >::const_iterator j = m_hlt2Line2AlleyBin.find(key);
       if (j!=m_hlt2Line2AlleyBin.end()) {
           assert(j->second.first<nAccAlley.size());
           ++nAccAlley[ j->second.first ];
+          if (j!=m_hlt2Line2AlleyBin.end()) fill( m_hlt2Alleys[j->second.first], j->second.second, 1.0 );
       }
     }
   }
 
-  for (size_t i = 0; i<reps.size();++i) {
-    bool accept = reps[i].second->decision();
-    if (!accept) continue;
-    
-    // filling the histograms for each alley
-    std::map<Gaudi::StringKey,std::pair<unsigned,unsigned> >::const_iterator k = m_hlt2Line2AlleyBin.find(reps[i].first);
-    if (k!=m_hlt2Line2AlleyBin.end()) fill( m_hlt2Alleys[k->second.first], k->second.second, accept );
-
-  }
   //filling the histograms for the alleys instead of the lines
 
   for (unsigned i=0; i<m_DecToGroup2.size();i++) {

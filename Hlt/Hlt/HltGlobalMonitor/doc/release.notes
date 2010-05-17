@@ -1,8 +1,11 @@
-!$Id: release.notes,v 1.77 2010-04-19 09:21:59 graven Exp $
+!$Id: release.notes,v 1.78 2010-05-17 14:24:08 graven Exp $
 Package     : Hlt/HltGlobalMonitor
 Package Coordinator : Bruno Souza de Paula 
 Purpose     : LHCb HLT Global Monitoring
 ! -----------------------------------------------------------------------------
+! 2010-05-17 - Gerhard Raven
+ - optimize code a bit
+
 !========================== HltGlobalMonitor v3r4 2010-04-19 ===================
 ! 2010-04-14 - Johannes Albrecht
  - add L0 and ODIN histograms after HLT1 and HLT2 
