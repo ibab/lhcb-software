@@ -45,6 +45,8 @@ class Hlt2diphotonDiMuonLinesConf(HltLinesConfigurableUser) :
                                                 "mu-" : "(PT>400*MeV) "}
                             , CombinationCut = "(AM>1000*MeV)&(APT<900*MeV)&(AMAXDOCA('')<0.15)"    
                             , MotherCut = "ALL"  
+                            , InputPrimaryVertices = "None"
+                            , UseP2PVRelations = False
                             , InputLocations  = [ Muons ]
                             )
         

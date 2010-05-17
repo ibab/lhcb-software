@@ -8,6 +8,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2010-05-17 - Gerhard Raven
+ - fix warnings from Hlt2diphotonDiMuonLines about missing primary vertices
+
 ! 2010-05-16 - Jibo He
  - Hlt2InclusiveDiProtonLines.py
    . Set InputPrimaryVertices and UseP2PVRelations to avoid no PV warnings. 
