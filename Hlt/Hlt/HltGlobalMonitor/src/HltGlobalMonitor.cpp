@@ -1,4 +1,4 @@
-// $Id: HltGlobalMonitor.cpp,v 1.66 2010-05-17 14:24:08 graven Exp $
+// $Id: HltGlobalMonitor.cpp,v 1.67 2010-05-17 20:51:11 graven Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -255,8 +255,7 @@ StatusCode HltGlobalMonitor::execute() {
   LHCb::ODIN*         odin = fetch<LHCb::ODIN>( LHCb::ODINLocation::Default);
  
   monitorODIN(odin,hlt);
-  monitorHLT1(hlt);
-  monitorHLT2(hlt);
+  monitorHLT(hlt);
   monitorMemory();
 
   
@@ -290,81 +289,50 @@ void HltGlobalMonitor::monitorODIN(const LHCb::ODIN* odin,const LHCb::HltDecRepo
 }
 
 //==============================================================================
-void HltGlobalMonitor::monitorHLT1(const LHCb::HltDecReports* hlt) {
-
-
+void HltGlobalMonitor::monitorHLT(const LHCb::HltDecReports* hlt) {
   if (hlt==0) return;
 
   ///////////////////////////////////////////////////////////////////////////////
-  unsigned nAcc = 0;
-  std::vector<unsigned> nAccAlley(m_hlt1Alleys.size(),unsigned(0));
+  std::vector<unsigned> nAcc1Alley(m_hlt1Alleys.size(),unsigned(0));
+  std::vector<unsigned> nAcc2Alley(m_hlt2Alleys.size(),unsigned(0));
 
-  for (std::vector<std::string>::const_iterator i = m_Hlt1Lines.begin(); i!=m_Hlt1Lines.end();i++) {
-    //TODO: augment HltDecReport to avoid doing 'find'
-    const LHCb::HltDecReport*  report = hlt->decReport( *i );
-    if (report == 0 ) {  
-       warning() << "report " << *i << " not found" << endreq;
-       continue;
-    }
-    Gaudi::StringKey key(*i);
-    if (report && report->decision()){
-      ++nAcc;
-      std::map<Gaudi::StringKey,std::pair<unsigned,unsigned> >::const_iterator j = m_hlt1Line2AlleyBin.find(key);
-      if (j!=m_hlt1Line2AlleyBin.end()) {
-          assert(j->second.first<nAccAlley.size());
-          ++nAccAlley[ j->second.first ];
-          fill( m_hlt1Alleys[j->second.first], j->second.second, 1.0 ); //avoid double counting if several go off at the same time???
-      }
+  for (LHCb::HltDecReports::Container::const_iterator i = hlt->begin(); i!=hlt->end();++i) {
+    if (!i->second.decision() ) continue;
+
+    if ( i->first.compare(0,4,"Hlt1" ) == 0 ) {
+        std::map<Gaudi::StringKey,std::pair<unsigned,unsigned> >::const_iterator j = m_hlt1Line2AlleyBin.find(i->first);
+        if (j!=m_hlt1Line2AlleyBin.end()) {
+            assert(j->second.first<nAcc1Alley.size());
+            ++nAcc1Alley[ j->second.first ];
+            fill( m_hlt1Alleys[j->second.first], j->second.second, 1.0 ); //avoid double counting if several go off at the same time???
+        }
+    } else if ( i->first.compare(0,4,"Hlt2") == 0 ) {
+        std::map<Gaudi::StringKey,std::pair<unsigned,unsigned> >::const_iterator j = m_hlt2Line2AlleyBin.find(i->first);
+        if (j!=m_hlt2Line2AlleyBin.end()) {
+            assert(j->second.first<nAcc2Alley.size());
+            ++nAcc2Alley[ j->second.first ];
+            if (j!=m_hlt2Line2AlleyBin.end()) fill( m_hlt2Alleys[j->second.first], j->second.second, 1.0 );
+        }
+    } else {
+        warning() << "got unexpected decision name " << i->first << endmsg;
     }
   }
 
   //filling the histograms for the alleys instead of the lines
   for (unsigned i=0; i<m_DecToGroup1.size();i++) {
-    *m_hlt1AlleyRates[i] += ( nAccAlley[i] > 0 );
-    fill(m_hlt1Alley,i,(nAccAlley[i]>0));
-    if(nAccAlley[i]==0) continue;
+    *m_hlt1AlleyRates[i] += ( nAcc1Alley[i] > 0 );
+    fill(m_hlt1Alley,i,(nAcc1Alley[i]>0));
+    if(nAcc1Alley[i]==0) continue;
     for(unsigned j=0; j<m_DecToGroup1.size();j++){
-      fill(m_hlt1AlleysCorrelations,i,j,(nAccAlley[j]>0));
+      fill(m_hlt1AlleysCorrelations,i,j,(nAcc1Alley[j]>0));
     }
   }
-
-}
-
-//==============================================================================
-
-void HltGlobalMonitor::monitorHLT2(const LHCb::HltDecReports* hlt) {
-  if (hlt==0) return;
-
-  ///////////////////////////////////////////////////////////////////////////////
-  unsigned nAcc = 0;
-  std::vector<unsigned> nAccAlley(m_DecToGroup2.size(),unsigned(0));
-
-  for (std::vector<std::string>::const_iterator i = m_Hlt2Lines.begin(); i!=m_Hlt2Lines.end();++i) {
-    const LHCb::HltDecReport*  report = hlt->decReport( *i );
-    if (report == 0 ) {
-       warning() << "report " << *i << " not found" << endreq;
-       continue;
-    }
-    Gaudi::StringKey key(*i);
-    if (report && report->decision()){
-      ++nAcc;
-      std::map<Gaudi::StringKey,std::pair<unsigned,unsigned> >::const_iterator j = m_hlt2Line2AlleyBin.find(key);
-      if (j!=m_hlt2Line2AlleyBin.end()) {
-          assert(j->second.first<nAccAlley.size());
-          ++nAccAlley[ j->second.first ];
-          if (j!=m_hlt2Line2AlleyBin.end()) fill( m_hlt2Alleys[j->second.first], j->second.second, 1.0 );
-      }
-    }
-  }
-
-  //filling the histograms for the alleys instead of the lines
-
   for (unsigned i=0; i<m_DecToGroup2.size();i++) {
-    *m_hlt2AlleyRates[i] += ( nAccAlley[i] > 0 );
-    fill(m_hlt2Alley,i,(nAccAlley[i]>0));
-    if(nAccAlley[i]==0) continue;
+    *m_hlt2AlleyRates[i] += ( nAcc2Alley[i] > 0 );
+    fill(m_hlt2Alley,i,(nAcc2Alley[i]>0));
+    if(nAcc2Alley[i]==0) continue;
     for(unsigned j=0; j<m_DecToGroup2.size();j++){
-      fill(m_hlt2AlleysCorrelations,i,j,(nAccAlley[j]>0));
+      fill(m_hlt2AlleysCorrelations,i,j,(nAcc2Alley[j]>0));
     }
   }
 

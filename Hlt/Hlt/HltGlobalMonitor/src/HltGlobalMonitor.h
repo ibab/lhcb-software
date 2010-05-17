@@ -34,8 +34,7 @@ public:
 
 private:
   void monitorODIN(const LHCb::ODIN*,const LHCb::HltDecReports*);
-  void monitorHLT1 (const LHCb::HltDecReports*);
-  void monitorHLT2 (const LHCb::HltDecReports*);
+  void monitorHLT (const LHCb::HltDecReports*);
   void monitorMemory();
   void storeTrend(AIDA::IProfile1D*, double);
   template <typename T> T* fetch(const std::string& location) {
