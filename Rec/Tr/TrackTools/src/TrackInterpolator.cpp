@@ -84,11 +84,14 @@ StatusCode TrackInterpolator::interpolate( const Track& track,
                                            double z,
                                            State& state )
 {
+
+  StatusCode sc = StatusCode::SUCCESS ;
   // Check if there are nodes on the track
   typedef LHCb::Track::ConstNodeRange NodeContainer ;
   NodeContainer nodes = track.nodes();
-  if ( nodes.empty() ) return Error("No nodes on track found.");
-
+  if ( nodes.empty() ) 
+    return m_extrapolator->propagate( track, z, state ) ;
+  
   // If we are between the first and last node with a measurement, we
   // interpolate. If not, we extrapolate from the closest 'inside'
   // node. (That's more stable than interpolation.) In the end this
@@ -126,7 +129,13 @@ StatusCode TrackInterpolator::interpolate( const Track& track,
   if( !foundprecedingmeasurement || !foundprocedingmeasurement) {
     const LHCb::Node* extrapolationnode = foundprocedingmeasurement ? *nextnode : *prevnode ;
     state = extrapolationnode->state() ;
-    return m_extrapolator -> propagate( state, z ) ;
+    sc = m_extrapolator -> propagate( state, z ) ;
+    if( !sc.isSuccess() ) {
+      debug() << "Failure with normal extrapolator: z_target = " << z 
+	      << " track type = " << track.type() << std::endl
+	      << "state = " << extrapolationnode->state() << endmsg ;
+      return Warning("Failure extrapolating outside measurement range",StatusCode::FAILURE,0) ;
+    }
   } 
   
   // so, we interpolate. Get the nodes:
@@ -141,11 +150,11 @@ StatusCode TrackInterpolator::interpolate( const Track& track,
   
   
   // bail out if we have actually reached our destination
-  if( fabs(nodeNext->z() - z) < TrackParameters::propagationTolerance ) {
+  if( std::abs(nodeNext->z() - z) < TrackParameters::propagationTolerance ) {
     state = nodeNext->state() ;
     return StatusCode::SUCCESS ;
   }
-  if( fabs(nodePrev->z() - z) < TrackParameters::propagationTolerance ) {
+  if( std::abs(nodePrev->z() - z) < TrackParameters::propagationTolerance ) {
     state = nodePrev->state() ;
     return StatusCode::SUCCESS ;
   }
@@ -153,37 +162,49 @@ StatusCode TrackInterpolator::interpolate( const Track& track,
   // Get the predicted states and filter if necessary
   State stateDown = nodePrev->predictedStateForward();
   if( nodePrev->type() == LHCb::Node::HitOnTrack ) {
-    StatusCode sc = filter( *nodePrev, stateDown ) ;
+    sc = filter( *nodePrev, stateDown ) ;
     if( sc.isFailure() ) return sc ;
   }
 
   State stateUp   = nodeNext->predictedStateBackward();
   if( nodeNext->type() == LHCb::Node::HitOnTrack ) {
-    StatusCode sc = filter( *nodeNext, stateUp ) ;
+    sc = filter( *nodeNext, stateUp ) ;
     if( sc.isFailure() ) return sc ;
   }
   
   // extrapolate the upstream and downstream states
-  m_extrapolator -> propagate( stateDown, z );  
-  m_extrapolator -> propagate( stateUp  , z );
-
+  sc = m_extrapolator -> propagate( stateDown, z );  
+  if( sc.isFailure() ) {
+    debug() << "Error propagating downstream state to z = " << z << std::endl
+	    << "state = " << stateDown << endreq ;
+    return Warning("Failure propagating downstream state",StatusCode::FAILURE,0) ;
+  }
+  
+  sc = m_extrapolator -> propagate( stateUp  , z );
+  if( sc.isFailure() ) {
+    debug() << "Error propagating upstream state to z = " << z 
+	    << " tracktype = " << track.type() << std::endl 
+	    << "state = " << stateUp << endreq ;
+    return Warning("Failure propagating upstream state",StatusCode::FAILURE,0) ;    
+  }
+  
   // Get the predicted downstream state and invert the covariance matrix
   const TrackVector& stateDownX = stateDown.stateVector();
   TrackSymMatrix invStateDownC = stateDown.covariance();
   if ( !Gaudi::Math::invertPosDefSymMatrix( invStateDownC ) )
-    return Error( "inverting matrix in smoother" );
+    return Warning( "Failure inverting matrix in smoother",StatusCode::FAILURE,0 );
 
   // Get the predicted upstream state and invert the covariance matrix
   const TrackVector& stateUpX = stateUp.stateVector();
   TrackSymMatrix invStateUpC = stateUp.covariance();
   if ( !Gaudi::Math::invertPosDefSymMatrix( invStateUpC ) )
-    return Error( "inverting matrix in smoother" );
+    return Warning( "Failure inverting matrix in smoother",StatusCode::FAILURE,0 );
 
   // Add the inverted matrices
   TrackSymMatrix& stateC = state.covariance();
   stateC = invStateDownC + invStateUpC;
   if ( !Gaudi::Math::invertPosDefSymMatrix( stateC ) )
-    return Error( "inverting matrix in smoother" );
+    return Warning( "Failure inverting matrix in smoother",StatusCode::FAILURE,0 );
   
   // Get the state by calculating the weighted mean
   TrackVector& stateX = state.stateVector();
@@ -215,11 +236,11 @@ StatusCode TrackInterpolator::filter(const FitNode& node, State& state)
 
   // check z position
   if ( std::abs(meas.z() - state.z()) > 1e-6) {
-    if( msgLevel(MSG::DEBUG) ) debug() << "Warning, State at z=" << state.z() 
+    debug() << "State at z=" << state.z() 
             << ", Measurement at z=" << meas.z() << endmsg;
-    return Warning( "Z positions of State and Measurement are not equal", StatusCode::FAILURE, 1 );
+    return Warning( "Z positions of State and Measurement are not equal", StatusCode::FAILURE, 0 );
   }
-
+  
   // get the state vector and cov
   TrackVector&    X = state.stateVector();
   TrackSymMatrix& C = state.covariance();
