@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.43 2010-05-14 15:17:35 ggiacomo Exp $
+! $Id: release.notes,v 1.44 2010-05-17 11:05:35 ggiacomo Exp $
 ! Package     : OMAlib
 ! Responsible : G. Graziani
 ! Purpose     : Online Monitoring Analysis library
 
+
+! 20100517 GG
+ - add normalization bin as input parameter in OMAScale
 
 ! 20100514 GG
  - fix minor issue with analysis of virtual histograms

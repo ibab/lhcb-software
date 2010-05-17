@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/OMAlib/OMAalg.h,v 1.13 2010-01-26 14:25:37 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/OMAlib/OMAalg.h,v 1.14 2010-05-17 11:05:35 ggiacomo Exp $
 #ifndef OMALIB_OMAALG_H
 #define OMALIB_OMAALG_H 1
 /** @class  OMAalg OMAalg.h OMAlib/OMAalg.h
@@ -35,6 +35,8 @@ class OMAalg
   inline void setNpars(int N) {m_npars = N;}
   void setNinput(int N) {m_ninput = N;}
   inline void setDoc(std::string Doc) {m_doc = Doc;}
+  inline int intParam(const float &param) 
+    {return (int)(param+ (param>0 ? 0.1 : -0.1));}
   void setParNames(std::vector<std::string> &ParNames);
   void raiseMessage(unsigned int Id,
                     OMAMessage::OMAMsgLevel level,

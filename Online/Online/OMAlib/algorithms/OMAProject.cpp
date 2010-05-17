@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/algorithms/OMAProject.cpp,v 1.1 2010-02-12 14:25:39 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/algorithms/OMAProject.cpp,v 1.2 2010-05-17 11:05:35 ggiacomo Exp $
 #include <TH1F.h>
 #include <TH2F.h>
 #include "OMAlib/OMAAlgorithms.h"
@@ -25,14 +25,14 @@ TH1* OMAProject::exec( const std::vector<TH1*> *sources,
   TH1* out=NULL;
   if (! sourceVerified(sources) ) return out;
   if (sources->size() <1) return out;
-  int axis=(int) (m_parDefValues[0]+0.1);
-  int firstbin = 0;
-  int lastbin = -1;
+  int axis= intParam(m_parDefValues[0]);
+  int firstbin = intParam(m_parDefValues[1]);
+  int lastbin = intParam(m_parDefValues[2]);
   if (params) {
-    if (params->size()>0) axis = (int) (params->at(0) + 0.1);
-    if (params->size()>1) firstbin = (int) (params->at(1) + 0.1);
+    if (params->size()>0) axis = intParam(params->at(0));
+    if (params->size()>1) firstbin = intParam(params->at(1));
     if (params->size()>2) {
-      if (params->at(2) > 0) lastbin = (int) (params->at(2) + 0.1);
+      if (params->at(2) > 0) lastbin = intParam(params->at(2));
     }
   }
   TH2* H = dynamic_cast<TH2*>(sources->at(0));
