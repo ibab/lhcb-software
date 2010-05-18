@@ -254,7 +254,7 @@ void L0Muon::RegisterFactory::tileRegisterFromNode(DOMNode* pNode){
   std::string name = getAttributeStr(di, "name");
   std::string type = getAttributeStr(di, "type");
   int size         = getAttributeInt(di, "size");
-  bool duplicatedTiles = getAttributeInt(di, "duplicatedTiles");
+  bool duplicatedTiles = getAttributeInt(di, "duplicatedTiles") !=0 ;
 
   TileRegister* preg = createTileRegister(name,size);
   preg->setType(type);
@@ -298,8 +298,8 @@ void L0Muon::RegisterFactory::tileFromNode(DOMNode* pNode,
   int istripstag  = getAttributeInt(di, "stripstag");
 
   mids->push_back(LHCb::MuonTileID(id));
-  tilestag->push_back(itilestag);
-  stripstag->push_back(istripstag);
+  tilestag->push_back(itilestag !=0);
+  stripstag->push_back(istripstag !=0);
 
 }
 
