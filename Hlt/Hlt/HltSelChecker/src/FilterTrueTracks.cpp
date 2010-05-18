@@ -1,4 +1,4 @@
-// $Id: FilterTrueTracks.cpp,v 1.8 2009-08-06 09:03:11 pkoppenb Exp $
+// $Id: FilterTrueTracks.cpp,v 1.9 2010-05-18 11:48:45 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -54,7 +54,7 @@ StatusCode FilterTrueTracks::initialize() {
   debug() << "==> Initialize" << endmsg;
 
   if ( m_tracksPath.empty() ){
-    if ( context() == "HLT" ) m_tracksPath.push_back( LHCb::TrackLocation::HltForward) ;
+    if ( context() == "HLT" ) m_tracksPath.push_back( "Hlt2/Track/Forward" ) ;
     else                      m_tracksPath.push_back( LHCb::TrackLocation::Default ) ;
   }
   info() << "Tracks will be taken from " ;

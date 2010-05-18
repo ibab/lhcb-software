@@ -1,4 +1,4 @@
-## @file $Id: CheckerSeq.py,v 1.5 2009-11-13 08:37:41 pkoppenb Exp $
+## @file $Id: CheckerSeq.py,v 1.6 2010-05-18 11:48:45 pkoppenb Exp $
 #
 #  Create Hlt Checking sequence
 #
@@ -8,7 +8,7 @@
 ##
 # =============================================================================
 __author__  = "P. Koppenburg Patrick.Koppenburg@cern.ch"
-__version__ = "CVS Tag $Id: CheckerSeq.py,v 1.5 2009-11-13 08:37:41 pkoppenb Exp $, $Revision: 1.5 $"
+__version__ = "CVS Tag $Id: CheckerSeq.py,v 1.6 2010-05-18 11:48:45 pkoppenb Exp $, $Revision: 1.6 $"
 # =============================================================================
 ###############################################################################
 #
@@ -46,6 +46,9 @@ class CheckerSeq :
         DV.Hlt = True
         DV.Hlt2Requires = 'L0+Hlt1'
         DV.DataType = self._DataType
+        if ( self._DataType == 'MC09' ):
+            DV.CondDBtag = 'MC09-20100430-vc-md100'
+        DV.ReplaceL0BanksWithEmulated = True 
         DV.Simulation = True
         DV.TupleFile = "HLT-"+self._Signal+".root"
         DV.HistogramFile = "DVHlt2-"+self._Signal+".root"
@@ -64,7 +67,9 @@ class CheckerSeq :
         if (self._Decay):
             ftt = self.trueTracks(self._Decay)
             seq.Members.append(ftt)
-            seq.Members.append( self.correlations( ftt.name() ))
+            seq.Members.append( self.correlations( [ ftt.name() ] ))
+        else :
+            seq.Members.append( self.correlations( [  ] ))
         seq.Members.append( self.eventTuple() )
         return seq
     
@@ -90,10 +95,11 @@ class CheckerSeq :
         """
         from Configurables import FilterTrueTracks, MCDecayFinder
         ftt = FilterTrueTracks()
-        ftt.TracksPath = [ "Hlt/Track/Long" ]
-        ftt.OutputPath = "Hlt/Track/Signal"
+        ftt.TracksPath = [ "Hlt2/Track/Unfitted/Forward" ]
+        ftt.OutputPath = "Hlt2/Track/Unfitted/Signal"
         ftt.addTool(MCDecayFinder)
         ftt.MCDecayFinder.Decay = decay
+#        ftt.OutputLevel = 2 
         return ftt
     
 ###############################################################################
@@ -102,7 +108,7 @@ class CheckerSeq :
         Correlations
         """
         from Configurables import HltCorrelations
-        h = HltCorrelations("Hlt2SelectionsCorrs", Algorithms = [ FTT ]) 
+        h = HltCorrelations("Hlt2SelectionsCorrs", Algorithms = FTT ) 
         return h
 
 ###############################################################################

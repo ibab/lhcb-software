@@ -23,6 +23,7 @@ def getStats(f,signal):
       if inTable==0:
         if re.search("Correlation Table",line):
           inTable = 1
+          foundTable = 1
       else:
 #        if (debug): print inTable, line
         if re.search("=======",line):
@@ -34,14 +35,13 @@ def getStats(f,signal):
 #            if (debug): print "L0 line:", line
             L0Eff = float((line.split()[2]).replace("%",""))
  #           if (debug): print "L0", L0Eff
-            foundTable = 1
-          elif (re.search("Hlt1Global",line)): 
+          elif (re.search("Bit46",line)): # Hlt1-Physics
  #           if (debug): print line
             Hlt1Eff   = float((line.split()[2]).replace("%",""))
             Hlt1EffL0 = float((line.split()[4]).replace("%",""))
             Hlt1EffOn2 = float((line.split()[6]).replace("%",""))
  #           if (debug): print "HltDecision", HltEff, HltEffL0
-          elif ( re.search("Hlt2Global",line) and ( Hlt2EffAlone == 0 )): 
+          elif ( re.search("Bit66",line) and ( Hlt2EffAlone == 0 )): # Hlt2-Physics
  #           if (debug): print line
             Hlt2EffAlone = float((line.split()[4]).replace("%",""))
             Hlt2EffOn1   = float((line.split()[5]).replace("%",""))
@@ -52,7 +52,7 @@ def getStats(f,signal):
  #           if (debug): print line
             Track = float((line.split()[4]).replace("%",""))
  #           if (debug): print "Tracking", Track
-          elif ((re.search("Decision",line)) and (re.search("Hlt2",line))):
+          elif ((re.search("Decision",line)) and (re.search("Hlt2",line)) and not (re.search("PassThrough",line))):
             epsilon = epsilon + 0.00001
             if (debug): print line
             sel =  (line.split()[1]).replace("Hlt2","").replace("Decision","")
@@ -62,7 +62,6 @@ def getStats(f,signal):
 #            if (( line.split()[-1]).find('#')<0) :
 #                SelEff = float((line.split()[-1]).replace("%",""))  # track
     if foundTable:
-#        print signal
         s0,v0 = sortedDictValues(BestSelDict,0)
         s1,v1 = sortedDictValues(BestSelDict,1)
         s2,v2 = sortedDictValues(BestSelDict,2)
@@ -88,8 +87,21 @@ mainhead = "<unset>"
 wiki = True
 if ( len(sys.argv) == 2 ):
     mainhead = sys.argv[1]
-#
-print "\n   $ *Signal* : Signal sample as described in =Hlt/HltSelChecker= options.  "
+    head = mainhead
+else :
+    raise Exception("Usage: ''python GetEfficiencies.py <head>'' will run on all files called <head>-* (note the dash)")
+
+files = sorted(glob.glob(head+'-*'))
+print "\n\n---++ Signal efficiencies\n"
+print "| *Signal*  | *Trigger* | *L0* | *Hlt* | *Hlt1* | *Hlt2* | *Hlt2/1* | *Tk* | *Best Sel* | *2nd Sel* | *3rd Sel* | *4th Sel* |"    
+for f in files :
+    s = f.split('-')[1]
+    #        print f, s
+    
+    f  = open(f, 'r')
+    getStats(f,s)
+    
+print "   $ *Signal* : Signal sample as described in =Hlt/HltSelChecker= options.  "
 print "   $ *Trigger* : Overall Trigger efficiency."
 print "   $ *L0* : L0 efficiency."
 print "   $ *Hlt* : Hlt efficiency on L0 events."
@@ -99,20 +111,5 @@ print "   $ *Hlt2/Hlt1* : Hlt2 efficiency given Hlt1."
 print "   $ *Tk* : Hlt2 tracking efficiency on all tracks."
 print "   $ *Sel* : Name and efficiency  (on Hlt1 accepted events) of 4 best Hlt2 selections."
 print " "
-print "All efficiencies after L0 and offline (except L0 of course). Null efficiencies are due to missing or incorrect Hlt2 selections. To know what is exactly done and what offline selection is used see =HltSelChecker=. \n\n"
-#
-#
-if ( mainhead == "<unset>" ):
-    head = "Hlt12"
-else :
-    head = mainhead
-files = sorted(glob.glob(head+'-*'))
-print "\n\n---+++ Signal efficiencies\n"
-print "| *Signal*  | *Trigger* | *L0* | *Hlt* | *Hlt1* | *Hlt2* | *Hlt2/1* | *Tk* | *Best Sel* | *2nd Sel* | *3rd Sel* | *4th Sel* |"    
-for f in files :
-    s = f.split('-')[1]
-    #        print f, s
-    
-    f  = open(f, 'r')
-    getStats(f,s)
-    
+print "All efficiencies after L0 and offline (except L0 of course). Null efficiencies are due to missing or incorrect Hlt2 selections. To know what is exactly done and what data is used see =HltSelChecker=. "
+print " "

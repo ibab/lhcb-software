@@ -6,18 +6,23 @@
 !
 ! To generate efficiencies at https://twiki.cern.ch/twiki/bin/view/LHCb/Hlt2EffsRates
 !
-! setenv dvv 320Vis # Leptonic Hadronic Charming Effective Hlt1Only 320Vis
+! setenv dvv Physics_25Vis_25L0_2Hlt1_2Hlt2_May10 # Leptonic Hadronic Charming Effective Hlt1Only 320Vis Physics_25Vis_25L0_2Hlt1_2Hlt2_May10
 !
 ! foreach a (`ls -1 options/DVTest-B*.py | awk -FTest- '{print $2}' | awk -F. '{print $1}'`)
-!   gaudirun.py options/DVTest-${a}.py options/${dvv}.py >! PV2D_PV3D_${dvv}-$a &
+!   gaudirun.py options/DVTest-${a}.py options/${dvv}.py >! ${dvv}-$a &
 ! end
 ! foreach a (`ls -1 options/DVTest-[C-Z]*.py | awk -FTest- '{print $2}' | awk -F. '{print $1}'`)
-!   gaudirun.py options/DVTest-${a}.py options/${dvv}.py >! PV2D_PV3D_${dvv}-$a &
+!   gaudirun.py options/DVTest-${a}.py options/${dvv}.py >! ${dvv}-$a &
 ! end
 !
 ! python scripts/GetEfficiencies.py ${dvv}
 !
 !-----------------------------------------------------------------------------
+
+! 2010-05-18 - Patrick Koppenburg
+ - New options for K*Gamma, PhiGamm and K*ee
+ - Adapt locations to Hlt2/
+ - v11r0
 
 ! 2010-05-10 - Patrick Koppenburg
  - Change in EventTuple

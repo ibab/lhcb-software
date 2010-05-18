@@ -1,4 +1,4 @@
-### $Id: DVTestHlt2.py,v 1.8 2010-05-10 12:49:36 pkoppenb Exp $
+### $Id: DVTestHlt2.py,v 1.9 2010-05-18 11:48:45 pkoppenb Exp $
 #
 #   Hlt 2 selections test job
 #
@@ -37,13 +37,13 @@ importOptions( "$HLTSELCHECKERROOT/options/Hlt2EventTuple.py")
 # DaVinci
 #
 from Configurables import DaVinci, HltConf
-DaVinci().EvtMax = 10000                   # Number of events  # 400000
+DaVinci().EvtMax = 1000                   # Number of events  # 400000
 DaVinci().PrintFreq = 100
 DaVinci().SkipEvents = 0
 DaVinci().DataType = "2010"                    # Default is "DC06"
 DaVinci().MoniSequence = [ moni ]              # Declare moni sequence
 DaVinci().Hlt = True                # Both Hlt levels
-DaVinci().HltThresholdSettings = 'Physics_25Vis_25L0_2Hlt1_2Hlt2_Apr10'
+DaVinci().HltThresholdSettings = 'Physics_25Vis_25L0_2Hlt1_2Hlt2_May10'
 DaVinci().HistogramFile = "DVTestHlt.root"     # Histogram file
 DaVinci().TupleFile = "HLT-MB.root"     # Histogram file
 DaVinci().ReplaceL0BanksWithEmulated = True 
