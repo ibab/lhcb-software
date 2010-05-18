@@ -5,6 +5,9 @@
 !               processing stage accessing the MC event classes
 !-----------------------------------------------------------------------------
 
+! 2010-05-18 - Marco Cattaneo
+ - Fix Windows warnings
+
 !====================== SimComponents v2r20 2009-11-13 =======================
 ! 2009-10-21 - Patrick Koppenburg
  - MCDecayFinder : Fix compilation warnings

@@ -1,4 +1,4 @@
-// $Id: CheckMCEventTool.h,v 1.2 2008-10-28 15:34:08 cattanem Exp $
+// $Id: CheckMCEventTool.h,v 1.3 2010-05-18 22:04:01 cattanem Exp $
 #ifndef CHECKMCEVENTTOOL_H 
 #define CHECKMCEVENTTOOL_H 1
 
@@ -31,7 +31,7 @@ public:
 protected:
 
 private:
-  int m_event;         ///< last event number
+  longlong m_event;    ///< last event number
   StatusCode m_status; ///< Status of last check
 };
 #endif // CHECKMCEVENTTOOL_H
