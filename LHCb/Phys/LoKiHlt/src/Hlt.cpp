@@ -1,4 +1,4 @@
-// $Id: Hlt.cpp,v 1.6 2010-05-17 16:01:39 ibelyaev Exp $
+// $Id: Hlt.cpp,v 1.7 2010-05-18 07:13:33 cattanem Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -266,8 +266,7 @@ LoKi::HLT::DecisionBut::operator()
   for ( IT it = a -> begin () ; _end != it ; ++it ) 
   {
     // the decision 
-    const bool decision = it->second.decision () ;
-    if ( !decision ) { continue ; }                    // CONTINUE ;
+    if (it->second.decision() == 0) { continue ; }              // CONTINUE
     ++nPositive ;
     if ( nPositive > m_special.size () )     { return true ; }  // RETURN 
     if ( m_special.end() == 
