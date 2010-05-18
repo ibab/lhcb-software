@@ -136,6 +136,7 @@ StatusCode TrackInterpolator::interpolate( const Track& track,
 	      << "state = " << extrapolationnode->state() << endmsg ;
       return Warning("Failure extrapolating outside measurement range",StatusCode::FAILURE,0) ;
     }
+    return sc ;
   } 
   
   // so, we interpolate. Get the nodes:
