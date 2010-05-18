@@ -1,4 +1,4 @@
-// $Id: LHCbMathDict.h,v 1.9 2010-03-18 18:26:00 ibelyaev Exp $
+// $Id: LHCbMathDict.h,v 1.10 2010-05-18 09:08:21 cattanem Exp $
 #ifndef DICT_LHCBMATHDICT_H 
 #define DICT_LHCBMATHDICT_H 1
 
@@ -10,6 +10,10 @@
  *  @author Juan PALACIOS
  *  @date   2008-06-20
  */
+#ifdef _WIN32
+#pragma warning ( disable : 4305 ) // truncation double to Scalar in GenVector
+#pragma warning ( disable : 4244 ) // conversion double to float in GenVector
+#endif
 #include "LHCbMath/GeomFun.h"
 #include "LHCbMath/LineTypes.h"
 #include "GaudiKernel/Plane3DTypes.h"
@@ -20,7 +24,6 @@
 #include "LHCbMath/LorentzVectorWithError.h"
 #include <vector>
 #include <list>
-
 namespace Gaudi
 {
   // ==========================================================================
