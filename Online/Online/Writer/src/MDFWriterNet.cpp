@@ -206,7 +206,7 @@ void MDFWriterNet::constructNet()
   declareProperty("RunFileTimeoutSeconds", m_runFileTimeoutSeconds=10);
   declareProperty("MaxQueueSizeBytes",     m_maxQueueSizeBytes=1073741824);
   declareProperty("EnableMD5",             m_enableMD5=false);
-  declareProperty("UpdatePeriod",          m_UpdatePeriod=2);
+  declareProperty("UpdatePeriod",          m_UpdatePeriod=0); //0 is no update
 
   m_log = new MsgStream(msgSvc(), name());
 
@@ -762,7 +762,7 @@ StatusCode MDFWriterNet::writeBuffer(void *const /*fd*/, const void *data, size_
  
   struct timeval tv;
   gettimeofday(&tv, NULL);
-  if(tv.tv_sec - m_prevUpdate.tv_sec > m_UpdatePeriod) {
+  if(m_UpdatePeriod > 0 && tv.tv_sec - m_prevUpdate.tv_sec > m_UpdatePeriod ) {
       //update rundb stats ...
 
       unsigned int trgEvents[MAX_TRIGGER_TYPES];
