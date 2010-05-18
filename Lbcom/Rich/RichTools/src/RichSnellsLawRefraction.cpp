@@ -31,7 +31,8 @@ SnellsLawRefraction::SnellsLawRefraction( const std::string& type,
   : ToolBase       ( type, name, parent ),
     m_radiatorTool ( NULL ),
     m_refIndex     ( NULL ),
-    m_radiators    ( Rich::NRadiatorTypes )
+    m_radiators    ( Rich::NRadiatorTypes ),
+    m_hltMode      ( false                   )
 {
   // interface
   declareInterface<ISnellsLawRefraction>(this);
@@ -51,6 +52,9 @@ StatusCode SnellsLawRefraction::initialize()
   // Initialise base class
   const StatusCode sc = ToolBase::initialize();
   if ( sc.isFailure() ) return sc;
+
+  // HLT mode or not ?
+  m_hltMode = contextContains("HLT");
 
   // get tools
   acquireTool( "RichRadiatorTool", m_radiatorTool );
@@ -104,10 +108,10 @@ void SnellsLawRefraction::aerogelToGas( Gaudi::XYZPoint & startPoint,
       //                               Rich::Aerogel, intersections );
       //const double refAero     = m_refIndex->refractiveIndex( intersections, photonEnergy );
       // faster method that uses the average tile properties
-      const double refAero     = m_radiators[Rich::Aerogel]->refractiveIndex( photonEnergy );
+      const double refAero     = m_radiators[Rich::Aerogel]->refractiveIndex( photonEnergy,m_hltMode );
 
       // Rich1 gas index
-      const double refrich1Gas = m_radiators[Rich::Rich1Gas]->refractiveIndex( photonEnergy );
+      const double refrich1Gas = m_radiators[Rich::Rich1Gas]->refractiveIndex( photonEnergy,m_hltMode );
 
       const double Rratio      = refAero/refrich1Gas;
 
@@ -136,8 +140,8 @@ void SnellsLawRefraction::gasToAerogel( Gaudi::XYZVector & dir,
   if ( photonEnergy > 0 )
   {
     // get refractive indices for aerogel and Rich1Gas
-    const double refAero     = m_radiators[Rich::Aerogel]->refractiveIndex( photonEnergy );
-    const double refrich1Gas = m_radiators[Rich::Rich1Gas]->refractiveIndex( photonEnergy );
+    const double refAero     = m_radiators[Rich::Aerogel]->refractiveIndex( photonEnergy,m_hltMode );
+    const double refrich1Gas = m_radiators[Rich::Rich1Gas]->refractiveIndex( photonEnergy,m_hltMode );
     const double RratioSq    = (refAero*refAero)/(refrich1Gas*refrich1Gas);
 
     // normalise the direction vector

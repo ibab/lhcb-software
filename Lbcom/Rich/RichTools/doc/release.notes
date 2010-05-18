@@ -4,6 +4,10 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+! 2010-05-18 - Chris Jones
+ - Add missing HLT mode flag to refractiveIndex call in 
+   Rich::TabulatedRefractiveIndex and Rich::SnellsLawRefraction
+
 !=========================== RichTools v2r29p3 2010-04-26 ====================
 ! 2010-04-19 - Chris Jones
  - Fix untested status code in HighOccHPDSuppressionTool

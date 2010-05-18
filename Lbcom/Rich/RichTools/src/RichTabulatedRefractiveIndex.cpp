@@ -117,7 +117,7 @@ Rich::TabulatedRefractiveIndex::updateRefIndex( const Rich::RadiatorType rad )
 double Rich::TabulatedRefractiveIndex::refractiveIndex( const Rich::RadiatorType rad,
                                                         const double energy ) const
 {
-  return m_deRads[rad]->refractiveIndex(energy);
+  return m_deRads[rad]->refractiveIndex(energy,m_hltMode);
 }
 
 double Rich::TabulatedRefractiveIndex::refractiveIndex( const Rich::RadiatorType rad,

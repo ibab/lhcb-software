@@ -91,6 +91,9 @@ namespace Rich
     /// Vector of radiators
     std::vector<const DeRichRadiator*> m_radiators;
 
+    /// Flag to say if we are in HLT mode or not
+    bool m_hltMode;
+
   };
 
 }
