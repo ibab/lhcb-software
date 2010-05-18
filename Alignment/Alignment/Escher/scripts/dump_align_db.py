@@ -19,20 +19,36 @@ def dumpToFile( element, output ) :
     if geometryinfo:
         aligncondition = geometryinfo.alignmentCondition()
         if aligncondition:
-            origin = gbl.Gaudi.XYZPoint()
-            globalcenter = geometryinfo.toGlobal( origin )
-            # compute the total delta 
+            # get the nominal transform
+            globalnominaltransform = geometryinfo.toGlobalMatrixNominal()
+            # get the nominal position in the global frame
+            globalorigin = gbl.Gaudi.XYZPoint()
+            #globalcenter = geometryinfo.toGlobal( origin )
+            globalcenter = globalnominaltransform * globalorigin
+            globalnominaltranslation = gbl.Gaudi.Transform3D(globalnominaltransform.Translation())
+
+            # compute the total delta in the global frame 
             globaltransform        = geometryinfo.toGlobalMatrix()
             globalnominaltransform = geometryinfo.toGlobalMatrixNominal()
             globaltotaldelta = globaltransform * globalnominaltransform.Inverse()
+
+            # now transform it to the local frame
+            localtotaldelta  = globalnominaltranslation.Inverse() * globaltotaldelta * globalnominaltranslation
             totaltranslations = GaudiPython.gbl.vector('double')(3)
             totalrotations = GaudiPython.gbl.vector('double')(3)
-            gbl.DetDesc.getZYXTransformParameters(globaltotaldelta, totaltranslations, totalrotations);
-            # compute the local delta (in the local fraem for now)
+            gbl.DetDesc.getZYXTransformParameters(localtotaldelta, totaltranslations, totalrotations);
+
+            # now the same for the local delta. first transform it to the global frame.
+            # this is the local delta:
             localdelta   = geometryinfo.ownToOffNominalMatrix()
+            # note that toGlobalMatrix includes the local delta:  however, the transform to the global frame is still given by:
+            globallocaldelta = globaltransform * localdelta * globaltransform.Inverse()
+            # now transform it to our new local frame
+            locallocaldelta =  globalnominaltranslation.Inverse() * globallocaldelta * globalnominaltranslation
             localtranslations = GaudiPython.gbl.vector('double')(3)
             localrotations = GaudiPython.gbl.vector('double')(3)
-            gbl.DetDesc.getZYXTransformParameters(localdelta, localtranslations, localrotations);
+            gbl.DetDesc.getZYXTransformParameters(locallocaldelta, localtranslations, localrotations)
+            
             line = element.name() 
             line += " : " + aligncondition.name() + " : "
             line += str( globalcenter.x() ) + " " +  str( globalcenter.y() ) + " " +  str( globalcenter.z() ) + " : "
