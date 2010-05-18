@@ -1,4 +1,4 @@
-// $Id: WritePackedDst.cpp,v 1.6 2009-12-04 16:40:19 jonrob Exp $
+// $Id: WritePackedDst.cpp,v 1.7 2010-05-18 09:03:21 jonrob Exp $
 // Include files
 
 // from Gaudi
@@ -12,6 +12,8 @@
 #include "Event/PackedTwoProngVertex.h"
 #include "Event/PackedRichPID.h"
 #include "Event/PackedMuonPID.h"
+#include "Event/PackedParticle.h"
+#include "Event/PackedVertex.h"
 #include "Event/RecHeader.h"
 #include "Event/ProcStatus.h"
 #include "Event/ODIN.h"
@@ -191,6 +193,20 @@ StatusCode WritePackedDst::execute()
         bank.storeString( in->condDBTags()[kk].first );
         bank.storeString( in->condDBTags()[kk].second );
       }
+      m_dst->addBank( m_bankNb++, LHCb::RawBank::DstBank, in->version(), bank.data() );
+
+    } else if ( LHCb::CLID_PackedParticles        == myClID ) {
+
+      LHCb::PackedParticles* in = get<LHCb::PackedParticles>( *itC );
+      PackedBank bank( in );
+      storeInBlob( bank, &(*in->data().begin()), in->data().size(), sizeof(LHCb::PackedParticle) );
+      m_dst->addBank( m_bankNb++, LHCb::RawBank::DstBank, in->version(), bank.data() );
+
+    } else if ( LHCb::CLID_PackedVertices        == myClID ) {
+
+      LHCb::PackedVertices* in = get<LHCb::PackedVertices>( *itC );
+      PackedBank bank( in );
+      storeInBlob( bank, &(*in->data().begin()), in->data().size(), sizeof(LHCb::PackedVertex) );
       m_dst->addBank( m_bankNb++, LHCb::RawBank::DstBank, in->version(), bank.data() );
 
     } else if ( LHCb::CLID_ProcStatus == myClID ) {

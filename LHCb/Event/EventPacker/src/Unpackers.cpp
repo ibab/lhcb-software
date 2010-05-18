@@ -1,4 +1,4 @@
-// $Id: Unpackers.cpp,v 1.4 2009-11-04 17:13:18 jonrob Exp $
+// $Id: Unpackers.cpp,v 1.5 2010-05-18 09:03:21 jonrob Exp $
 
 #include "UnpackerBaseAlg.icpp"
 
@@ -11,6 +11,8 @@
 #include "Event/PackedMCRichDigitSummary.h"
 #include "Event/PackedMuonPID.h"
 #include "Event/PackedRichPID.h"
+#include "Event/PackedParticle.h"
+#include "Event/PackedVertex.h"
 
 template class DataPacking::Unpack<LHCb::MCRichHitPacker>;
 typedef DataPacking::Unpack<LHCb::MCRichHitPacker> A;
@@ -83,3 +85,11 @@ DECLARE_ALGORITHM_FACTORY( M );
 template class DataPacking::Unpack<LHCb::MuonPIDPacker>;
 typedef DataPacking::Unpack<LHCb::MuonPIDPacker> N;
 DECLARE_ALGORITHM_FACTORY( N );
+
+template class DataPacking::Unpack<LHCb::ParticlePacker>;
+typedef DataPacking::Unpack<LHCb::ParticlePacker> O;
+DECLARE_ALGORITHM_FACTORY( O );
+
+template class DataPacking::Unpack<LHCb::VertexPacker>;
+typedef DataPacking::Unpack<LHCb::VertexPacker> P;
+DECLARE_ALGORITHM_FACTORY( P );

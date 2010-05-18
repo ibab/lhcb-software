@@ -1,4 +1,4 @@
-// $Id: ReadPackedDst.cpp,v 1.12 2009-12-04 16:40:19 jonrob Exp $
+// $Id: ReadPackedDst.cpp,v 1.13 2010-05-18 09:03:21 jonrob Exp $
 // Include files
 
 // from Gaudi
@@ -13,6 +13,8 @@
 #include "Event/PackedTwoProngVertex.h"
 #include "Event/PackedRichPID.h"
 #include "Event/PackedMuonPID.h"
+#include "Event/PackedParticle.h"
+#include "Event/PackedVertex.h"
 #include "Event/RecHeader.h"
 #include "Event/ProcStatus.h"
 #include "Event/ODIN.h"
@@ -234,6 +236,20 @@ StatusCode ReadPackedDst::execute() {
         allPairs.push_back( aPair );
       }
       recHeader->setCondDBTags( allPairs );
+
+    } else if ( LHCb::CLID_PackedParticles        == classID ) {
+
+      LHCb::PackedParticles* pids = new LHCb::PackedParticles();
+      put( pids, name + m_postfix );
+      processLinks( pids, version );
+      getFromBlob<LHCb::PackedParticle> ( pids->data(), blobs );
+
+    } else if ( LHCb::CLID_PackedVertices        == classID ) {
+
+      LHCb::PackedVertices* pids = new LHCb::PackedVertices();
+      put( pids, name + m_postfix );
+      processLinks( pids, version );
+      getFromBlob<LHCb::PackedVertex> ( pids->data(), blobs );
 
     } else if ( LHCb::CLID_ProcStatus == classID ) {
       LHCb::ProcStatus* procStatus = new LHCb::ProcStatus();
