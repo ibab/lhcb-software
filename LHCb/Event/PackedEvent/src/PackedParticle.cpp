@@ -1,4 +1,4 @@
-// $Id: PackedParticle.cpp,v 1.1 2010-05-18 09:04:36 jonrob Exp $
+// $Id: PackedParticle.cpp,v 1.2 2010-05-18 09:51:00 jonrob Exp $
 
 // local
 #include "Event/PackedParticle.h"
@@ -82,9 +82,9 @@ StatusCode ParticlePacker::check( const DataVector & dataA,
     if ( !ok )
     {
       parent.warning() << "Problem with Particle data packing :-" << endmsg
-                       << "  Original PID : " << **iA
+                       << "  Original Particle : " << **iA
                        << endmsg
-                       << "  Unpacked PID : " << **iB
+                       << "  Unpacked Particle : " << **iB
                        << endmsg;
       sc = StatusCode::FAILURE;
     }
