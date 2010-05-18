@@ -1,4 +1,4 @@
-// $Id: OdinTimeDecoder.cpp,v 1.4 2009-04-06 15:54:28 odescham Exp $
+// $Id: OdinTimeDecoder.cpp,v 1.5 2010-05-18 21:48:51 cattanem Exp $
 // Include files
 
 // from Gaudi
@@ -16,6 +16,10 @@
 
 // local
 #include "OdinTimeDecoder.h"
+
+#ifdef _WIN32
+#pragma warning(disable : 4355) // 'this' used in base member initializer list
+#endif
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : OdinTimeDecoder
