@@ -1,4 +1,4 @@
-// $Id: FilterByRunEvent.cpp,v 1.5 2008-10-30 12:27:12 cattanem Exp $
+// $Id: FilterByRunEvent.cpp,v 1.6 2010-05-18 21:33:39 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -53,7 +53,7 @@ StatusCode FilterByRunEvent::execute()
   //       it is updated!), and use a binary search instead...
   bool lcl_sel = ( std::find(m_events.begin(),
                              m_events.end(), 
-                             std::make_pair<int,int>(odin->runNumber(),odin->eventNumber())) 
+                             std::make_pair<int,int>(odin->runNumber(),(int)odin->eventNumber())) 
                              // FIXME: delete the <int,int> part in the above... once m_events is of the right type...
                    != m_events.end() );
 

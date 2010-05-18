@@ -1,4 +1,4 @@
-// $Id: EventCountAlg.cpp,v 1.2 2009-09-14 08:27:12 rlambert Exp $
+// $Id: EventCountAlg.cpp,v 1.3 2010-05-18 21:33:39 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -85,7 +85,7 @@ StatusCode EventCountAlg::finalize() {
   StatEntity anent(
                    m_nHandled, m_nExecuted, 
                    m_nExecuted, int(m_nHandled>m_nExecuted),
-                   int(bool(m_nExecuted)));
+                   int(m_nExecuted!=0));
   counter(m_counterName)= anent;
   
   return GaudiAlgorithm::finalize();
