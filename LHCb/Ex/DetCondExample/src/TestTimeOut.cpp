@@ -6,7 +6,7 @@
 #include "DetDesc/Condition.h"
 #include "DetDesc/DetectorElement.h"
 
-#include "Sleep.h"
+#include "GaudiKernel/Sleep.h"
 
 // local
 #include "TestTimeOut.h"
@@ -54,13 +54,13 @@ StatusCode TestTimeOut::execute() {
 
   debug() << "==> Execute" << endmsg;
   info() << "Sleeping ..." << endmsg;
-  Sleep(m_sleepTime);
+  Gaudi::Sleep(m_sleepTime);
   info() << "Try to access the db..." << endmsg;
   DetectorElement *lhcb = getDet<DetectorElement>( "/dd/Structure/LHCb" );
   
   Condition* alLHCb = lhcb->condition("Temperature");
   if (alLHCb) {
-    info() << "Succesfully retrieved condition '" << lhcb->condition("Temperature").path() << "'" << endmsg;
+    info() << "Successfully retrieved condition '" << lhcb->condition("Temperature").path() << "'" << endmsg;
   }
   else {
     error() << "Cannot retrieve condition '" << lhcb->condition("Temperature").path() << "'" << endmsg;

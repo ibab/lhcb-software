@@ -5,6 +5,9 @@
 ! package manager : Marco Clemencic
 ! =============================================================================
 
+! 2010-05-18 - Marco Clemencic
+ - Fixed few Windows warnings.
+
 !============ Ex/DetCondExample v11r8 2009-06-03 ==============================
 ! 2009-06-03 - Marco Clemencic
  - Fixed link options for Win32 (missing Boost library).

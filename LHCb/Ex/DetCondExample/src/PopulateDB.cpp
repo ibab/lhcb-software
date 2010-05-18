@@ -100,7 +100,7 @@ StatusCode PopulateDB::initialize() {
     
     info() << "Initialization completed" << endmsg;
     
-  } catch (GaudiException &e) {
+  } catch (GaudiException &) {
     return StatusCode::FAILURE;
   }
 

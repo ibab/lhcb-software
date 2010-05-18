@@ -74,7 +74,7 @@ public:
     return get(path,when,0,since,until,descr,payload);
   }
 
-  /// Find the value of the channel id fot the given channel name in a folder
+  /// Find the value of the channel id for the given channel name in a folder
   /// (if present in the cache).
   /// Returns true if the channel name in the folder was found
   bool getChannelId(const std::string &path,const std::string &name,
@@ -100,7 +100,7 @@ public:
   void clean_up();
 
   /// Check if the given path is present in the cache.
-  inline bool hasPath(const std::string &path) const { return m_cache.count(path); }
+  inline bool hasPath(const std::string &path) const { return m_cache.count(path) != 0; }
   
   /// Check if the path is a folderset.
   inline bool isFolderSet(const std::string &path) const {

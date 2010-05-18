@@ -50,7 +50,7 @@ namespace {
   }
 }
 
-#include "Sleep.h"
+#include "GaudiKernel/Sleep.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : CondDBAccessSvc
@@ -290,7 +290,7 @@ StatusCode CondDBAccessSvc::i_validateDefaultTag() {
   while (!sc.isSuccess() && (trials_to_go > 0)){
     log << MSG::INFO << "TAG \"" << tag() << "\" not ready, I try again in " << m_checkTagTimeOut << "s. "
         << trials_to_go << " trials left." << endmsg;
-    Sleep(m_checkTagTimeOut);
+    Gaudi::Sleep(m_checkTagTimeOut);
     sc = i_checkTag();
     --trials_to_go;
   }
@@ -952,11 +952,11 @@ const cool::ValidityKey& CondDBAccessSvc::i_latestHeartBeat()
         cool::IObjectPtr obj = folder->findObject(cool::ValidityKeyMax-1, 0);
         m_latestHeartBeat = obj->since();
       }
-      catch (cool::Exception &e) {
+      catch (cool::Exception &) {
         cannotGetHeartBeatError(this, m_heartBeatCondition);
         m_latestHeartBeat = 1; // not set to 0 to avoid another search in the database
       }
-      catch (coral::Exception &e) {
+      catch (coral::Exception &) {
         cannotGetHeartBeatError(this, m_heartBeatCondition);
         m_latestHeartBeat = 1; // not set to 0 to avoid another search in the database
       }

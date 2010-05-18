@@ -2,7 +2,7 @@
 // Include files 
 
 // needed to sleep between two operations
-#include "Sleep.h"
+#include "GaudiKernel/Sleep.h"
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -121,16 +121,16 @@ StatusCode CondDBReplayAlg::execute() {
       first = false;
     } else {
       // calculate how much we have to sleep
-      double ns_to_sleep = (op->time.ns() - last_optime.ns()) // time between operations
+      Gaudi::Time::ValueType ns_to_sleep = (op->time.ns() - last_optime.ns()) // time between operations
         - (Gaudi::Time::current().ns() - last_time.ns()); // time wasted
 
-      if ( ns_to_sleep > 0 ) NanoSleep(static_cast<long long>(ns_to_sleep));
+      if ( ns_to_sleep > 0 ) Gaudi::NanoSleep(ns_to_sleep);
     }
 
     last_optime = op->time;
     
     // I have to store the current time before the operation otherwise
-    // we to not count the time that the operation takes as already enlapsed.
+    // we to not count the time that the operation takes as already elapsed.
     last_time = Gaudi::Time::current();
     
     // Get the object 
