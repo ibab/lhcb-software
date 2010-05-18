@@ -4,6 +4,9 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2010-05-18 - Rob Lambert
+ - rewrite TupleToolPrimaries to make more sence to me
+
 ! 2010-05-12 Juan Palacios
  - src/TupleToolGeometry.cpp
   . Adapt to new DVAlgorithm::primaryVertices() signature.
