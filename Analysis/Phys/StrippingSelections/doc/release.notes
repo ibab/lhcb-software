@@ -5,6 +5,20 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-05-18 - Vanya Belyaev
+
+ - StrippingV0.py
+
+    - remove (already disabled) "*_noPV" lines 
+    - use tight cuts 
+    - add HLT-selection
+    - use prescaler for "wrong-sign" lines
+
+   with these changes, it selects 10% (instead of 30%) from Mini*.dst ("Geo" is not taken into account!)
+
+   with (untouched)"Geo", it select 23% instead of 50%
+
+
 ! 2010-05-17 - Patrick Koppenburg
  - Fix dimuon PT cut in simple B->MuMuK* line. Spotted by Jeroen van Leerdam
 

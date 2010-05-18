@@ -59,7 +59,7 @@ Get the list of *ALL* configured lines
 # =============================================================================
 __author__  = 'Vanya BELYAEV Ivan.Belyaev@itep.ru'
 __date__    = '2010-01-14'
-__version__ = 'CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $'
+__version__ = 'CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.8 $'
 # =============================================================================
 
 from Gaudi.Configuration       import *
@@ -109,32 +109,35 @@ class StrippingV0Conf(LHCbConfigurableUser):
     
        all_lines =  v0.lines ()
     
-
-    """
+       """
     __slots__ = { 
-        'Use_noPV_V0'            : False              ## Use V0 for 'no-PV'-events ?
-        , 'Use_Geo_K0S'          : True               ## Use 'Geometrical' selection of K0S
+        'Use_Geo_K0S'            : True               ## Use 'Geometrical' selection of K0S
         , 'Use_Geo_Lambda'       : True               ## Use 'Geometrical' selection of Lambda0
-        , 'AddSameSign'          : True               ## Use  same-sign combinations
+        , 'SameSignPrescale'     : 0.10               ## Prescale same-sign combinations
         , 'TrackCutSet'          : "NULL"             ## TrackCutsSet to be used
         , 'TrackQuality'         : " TRCHI2DOF < 25 " ## Track quality selection 
-        , 'VertexChi2'           : 25                 ## Cut on Vertex chi2-quality
-        , 'DeltaMassK0S'         : 100 * MeV          ## Mass-window (half)width for K0S 
-        , 'DeltaMassK0S_noPV'    : 100 * MeV          ## Mass-window (half)width for K0S_noPV 
-        , 'DeltaMassLambda'      :  50 * MeV          ## Mass-window (half)width for Lambda 
-        , 'DeltaMassLambda_noPV' :  50 * MeV          ## Mass-window (half)width for Lambda_noPV
+        , 'VertexChi2'           :  25                ## Cut on Vertex chi2-quality
+        , 'DeltaMassK0S'         :  50 * MeV          ## Mass-window (half)-width for K0S 
+        , 'DeltaMassLambda'      :  25 * MeV          ## Mass-window (half)-width for Lambda 
         , 'MaxZ'                 : 220 * cm           ## Maximal allowed vertex Z-position
-        , 'LTimeFitChi2'         : 100                ## Chi2 from LifeTime Fitter 
-        , 'CTau'                 :  1  * mm           ## Cut on c*tau
-        , 'CTauForDD'            : 10  * mm           ## Cut on c*tau for DD-case
+        , 'DaughtersIPChi2'      :  25                ## minimal IP-chi2 for daughter particles  
+        , 'LTimeFitChi2'         :  49                ## Chi2 from LifeTime Fitter
+        ##
+        , 'CTauK0S'              :   1 * mm           ## Cut on c*tau for K0S 
+        , 'CTauK0S_DD'           :  10 * mm           ## Cut on c*tau for K0S (DD-case)
+        ##
+        , 'CTauLambda0'          :   5 * mm           ## Cut on c*tau for Lambda0
+        , 'CTauLambda0_DD'       :  20 * mm           ## Cut on c*tau for Lambda0 (DD-case)
+        ## 
         , 'Monitor'              : False              ## Activate the monitoring ?
+        ##
+        , "HLT"                  : "HLT_PASS_RE('Hlt1MB.*Decision')" ## HLT-cut
         }
     
     _propertyDocDct = {  
-        'Use_noPV_V0'             : """ Use V0 for 'no-PV'-events ?              """ 
-        , 'Use_Geo_K0S'           : """ Use 'Geometrical' selection of K0S ?     """
+        'Use_Geo_K0S'             : """ Use 'Geometrical' selection of K0S ?       """
         , 'Use_Geo_Lambda'        : """ Use 'Geometrical' selection of Lambda0 ? """ 
-        , 'AddSameSign'           : """ Use  same-sign combinations              """
+        , 'SameSignPrescale'      : """ Prescale same-sign combinations          """
         , 'TrackCutSet'           : """ 'TrackCutsSet' to be used                """
         , 'TrackQuality'          : """ Track quality selection                  """ 
         , 'VertexChi2'            : """ Cut on Vertex chi2-quality               """ 
@@ -147,6 +150,7 @@ class StrippingV0Conf(LHCbConfigurableUser):
         , 'CTau'                  : """ Cut on c*tau                             """
         , 'CTauForDD'             : """ Cut on c*tau cut for DD-case             """
         , 'Monitor'               : """ Activate the monitoring ?                """
+        , 'HLT'                   : """ LoKi functor, acting on HLT-lines        """
         }
     
     
@@ -156,9 +160,7 @@ class StrippingV0Conf(LHCbConfigurableUser):
         """
         Return the list of all configured stripping lines
         
-        """
-
-        
+        """        
         return self.K0S() + self.Lambda0()
 
     ## create the list of stipping lines for K0S
@@ -191,7 +193,6 @@ class StrippingV0Conf(LHCbConfigurableUser):
             StripK0S.HistoPrint    = True
             StripK0S.MotherMonitor = """
             process ( switch ( LL , massLL , switch ( DD , massDD , massLD ) ) )
-            >> process ( switch ( LL & LLcuts , massLLcuts , switch ( DD & DDcuts , massDDcuts , switch ( LD & LDcuts , massLDcuts , M ) ) ) ) 
             >> EMPTY 
             """
             
@@ -202,14 +203,15 @@ class StrippingV0Conf(LHCbConfigurableUser):
             prescale   = 1     ,
             checkPV    = True  , ## attention! PV is required!
             postscale  = 1     ,
+            HLT        = self.getProp('HLT') , 
             algos      = [ StripK0S ]
             )
         
         lines = [ line1 ]
 
         ## use "wrong-sign" combination
-        if self.getProp  ( 'AddSameSign' ) :
-
+        if 0 < self.getProp  ( 'SameSignPrescale' ) :
+            
             
             wrong_sign = StripK0S.clone ( 'StrippingK0S_ws' )
             wrong_sign.DecayDescriptor  = ""
@@ -218,44 +220,14 @@ class StrippingV0Conf(LHCbConfigurableUser):
                 ]
             
             line1ss = line1.clone ( 
-                'K0S_wsLine'  , algos = [ wrong_sign ]
+                'K0S_wsLine'  ,
+                algos    = [ wrong_sign ] ,
+                prescale = self.getProp ('SameSignPrescale') 
+                
                 )
             lines.append ( line1ss ) 
-            
-        if self.getProp ( 'Use_noPV_V0' ) :
-            
-            from Configurables import CheckPV
-            
-            noPV = CheckPV( "noPV" , MinPVs = 0 , MaxPVs = 0 )
-            
-            StripK0S_noPV           = StripK0S.clone ( 'StrippingK0S_noPV' ) 
-            StripK0S_noPV.MotherCut = self._k0s_noPV_motherCut () 
 
-            line2 = StrippingLine (
-                'K0S_noPVLine'      ,
-                prescale   = 1      ,
-                checkPV    = False  , ## attention! PV is *not* required 
-                postscale  = 1      ,
-                algos      = [ noPV , StripK0S_noPV  ]
-                )
-            
-            lines.append ( line2 ) 
-            
-            ## use "wrong-sign" combination
-            if self.getProp ( 'AddSameSign' ) :
-                
-                wrong_sign = StripK0S_noPV.clone ( 'StrippingK0S_noPV_ws' )
-                wrong_sign.DecayDescriptor  = ""
-                wrong_sign.DecayDescriptors = [
-                    "KS0 -> pi+ pi+" , "KS0 -> pi- pi-" 
-                    ]
-                
-                line2ss = line2.clone ( 
-                    'K0S_noPV_wsLine'  , algos = [ noPV , wrong_sign ]
-                    )
-                lines.append ( line2ss ) 
-                            
-        line3 = None 
+        
         if self.getProp ( 'Use_Geo_K0S') :
             
             import StrippingSelections.StrippingV0Geo as V0Geo
@@ -311,7 +283,6 @@ class StrippingV0Conf(LHCbConfigurableUser):
             StripLambda0.HistoPrint    = True
             StripLambda0.MotherMonitor = """
             process ( switch ( LL , massLL , switch ( DD , massDD , massLD ) ) ) 
-            >> process ( switch ( LL & LLcuts , massLLcuts , switch ( DD & DDcuts , massDDcuts , switch ( LD & LDcuts , massLDcuts , M ) ) ) ) 
             >> EMPTY 
             """
 
@@ -322,12 +293,13 @@ class StrippingV0Conf(LHCbConfigurableUser):
             prescale   = 1     ,
             checkPV    = True  , ## attention! PV is required!
             postscale  = 1     ,
+            HLT        = self.getProp('HLT') , 
             algos      = [ StripLambda0 ]
             )
         
         lines = [ line1 ]
 
-        if self.getProp  ( 'AddSameSign' ) :
+        if 0 < self.getProp  ( 'SameSignPrescale' ) :
             
             wrong_sign = StripLambda0.clone ( 'StrippingLambda0_ws' )
             wrong_sign.DecayDescriptor  = ""
@@ -336,44 +308,12 @@ class StrippingV0Conf(LHCbConfigurableUser):
                 ]
             
             line1ss = line1.clone ( 
-                'Lambda0_wsLine'  , algos = [ wrong_sign ]
+                'Lambda0_wsLine'  ,
+                algos    = [ wrong_sign ] ,
+                prescale = self.getProp('SameSignPrescale') 
                 )
             lines.append ( line1ss ) 
             
-
-        if self.getProp ( 'Use_noPV_V0') :
-            
-            from Configurables import CheckPV
-            
-            noPV = CheckPV( "noPV" , MinPVs = 0 , MaxPVs = 0 )
-            
-            StripLambda0_noPV            = StripLambda0.clone ( 'StrippingLambda0_noPV' ) 
-            StripLambda0_noPV.MotherCut  = self._lam0_noPV_motherCut () 
-            
-            line2 = StrippingLine (
-                'Lambda0_noPVLine'      ,
-                prescale   = 1      ,
-                checkPV    = False  , ## attention! PV is *not* required 
-                postscale  = 1      ,
-                algos      = [ noPV , StripLambda0_noPV  ]
-                )
-
-            lines.append ( line2 ) 
-
-            if self.getProp ( 'AddSameSign' ) :
-                
-                wrong_sign = StripLambda0_noPV.clone ( 'StrippingLambda0_noPV_ws' )
-                wrong_sign.DecayDescriptor  = ""
-                wrong_sign.DecayDescriptors = [
-                    "Lambda0 -> p+ pi+" , "Lambda~0 -> p~- pi-" 
-                    ]
-                
-                line2ss = line2.clone ( 
-                    'Lambda0_noPV_wsLine'  , algos = [ noPV , wrong_sign ]
-                    )
-                lines.append ( line2ss ) 
-
-
         if self.getProp ( 'Use_Geo_Lambda') :
             
             import StrippingSelections.StrippingV0Geo as V0Geo
@@ -391,7 +331,6 @@ class StrippingV0Conf(LHCbConfigurableUser):
                 >> EMPTY 
                 """ 
                 
-            
             lines.append ( line3 ) 
             
         return lines   
@@ -402,9 +341,9 @@ class StrippingV0Conf(LHCbConfigurableUser):
         Define 'DaughtersCuts' for K0S
         """
         cuts = {}
-        cuts [''] = " ( 1.5 * GeV < P) & ( ISLONG | ISDOWN ) & ( %(TrackQuality)s ) " % self.getProps()
+        cuts [''] = " ( 2.0 * GeV < P) & ( ISLONG | ISDOWN ) & ( %(TrackQuality)s ) & ( MINIPCHI2WITHDV() > %(DaughtersIPChi2)g ) " % self.getProps()
         return cuts
-
+    
     ## define daughter cuts for Lambda0
     def _lam0_daughtersCuts ( self ) :
         """
@@ -418,50 +357,30 @@ class StrippingV0Conf(LHCbConfigurableUser):
         Define 'MotherCut' for K0S
         """
         cut       = """
-        ( ADMASS ( 'KS0') < %(DeltaMassK0S)g  ) & in_range ( 0 , VFASPF ( VCHI2 ) ,  %(VertexChi2)g   ) &
-        ( VFASPF ( VZ   ) < %(MaxZ)g          ) & in_range ( 0 , BPVLTFITCHI2()   ,  %(LTimeFitChi2)g ) &
-        ( BPVLTIME()*c_light > switch ( DD , %(CTauForDD)g , %(CTau)g ) ) 
+        ( ADMASS ( 'KS0') < %(DeltaMassK0S)g  )
+        & in_range ( 0 , VFASPF ( VCHI2 ) ,  %(VertexChi2)g   )
+        & ( VFASPF ( VZ   ) < %(MaxZ)g          )
+        & in_range ( 0 , BPVLTFITCHI2()   ,  %(LTimeFitChi2)g )
+        & ( BPVLTIME()*c_light > switch ( DD , %(CTauK0S_DD)g , %(CTauK0S)g ) ) 
         """
         cut = cut % self.getProps()
         return cut.replace ( '\n' , ' ' )  
-
+    
     ## define "MotherCut" for Lambda0
     def _lam0_motherCut      ( self ) :
         """
         Define 'MotherCut' for Lambda0
         """
         cut       = """
-        ( ADMASS ( 'Lambda0') < %(DeltaMassLambda)g ) & in_range ( 0 , VFASPF ( VCHI2 ) ,  %(VertexChi2)g   ) &
-        ( VFASPF ( VZ       ) < %(MaxZ)g            ) & in_range ( 0 , BPVLTFITCHI2()   ,  %(LTimeFitChi2)g ) &
-        ( BPVLTIME()*c_light > switch ( DD , %(CTauForDD)g , %(CTau)g ) ) 
+        ( LL | DD ) 
+        & ( ADMASS ( 'Lambda0')   < %(DeltaMassLambda)g )
+        & in_range ( 0 , VFASPF ( VCHI2 ) ,  %(VertexChi2)g   )
+        & ( VFASPF ( VZ       ) < %(MaxZ)g            )
+        & in_range ( 0 , BPVLTFITCHI2()   ,  %(LTimeFitChi2)g )
+        & ( BPVLTIME()*c_light > switch ( DD , %(CTauLambda0_DD)g , %(CTauLambda0)g ) ) 
         """
         cut = cut % self.getProps()
         return cut.replace ( '\n' , ' ' ) 
-
-    ## define "MotherCut" for K0S-noPV 
-    def _k0s_noPV_motherCut    ( self ) :
-        """
-        define 'MotherCut' for K0S-noPV 
-        """
-        cut       = """
-        ( ADMASS ( 'KS0') < %(DeltaMassK0S_noPV)g  ) & in_range ( 0 , VFASPF ( VCHI2 ) ,  %(VertexChi2)g  ) &
-        ( VFASPF ( VZ   ) < %(MaxZ)g )
-        """
-        cut = cut % self.getProps()
-        return cut.replace('\n',' ') 
-
-    ## define "MotherCut" for Lambda-noPV 
-    def _lam0_noPV_motherCut    ( self ) :
-        """
-        define 'MotherCut' for K0S-noPV 
-        """
-        cut       = """
-        ( ADMASS ( 'Lambda0') < %(DeltaMassLambda_noPV)g ) & in_range ( 0 , VFASPF ( VCHI2 ) , %(VertexChi2)g ) &
-        ( VFASPF ( VZ   ) < %(MaxZ)g )
-        """
-        cut = cut % self.getProps()
-        return cut.replace('\n',' ') 
-
 
     ## define the common preambulo 
     def _preambulo ( self ) :
@@ -481,17 +400,6 @@ class StrippingV0Conf(LHCbConfigurableUser):
             "TRCHI2DOF  = monitor ( TRCHI2DOF , 'chi2/nDoF' , LoKi.Monitoring.ContextSvc) " 
             ]
         
-    def final_cuts ( self , **cuts ) :
-        
-        _cuts  = "   ( VFASPF( VCHI2 )                         < %(chi2v)g ) "
-        _cuts += " & ( MINTREE ( ISBASIC , MINIPCHI2WITHDV() ) > %(mips)g  ) "
-        _cuts += " & ( BPVLTFITCHI2 ()                         < %(tchi2)g ) "
-        _cuts += " & ( BPVLTIME     () * c_light               > %(ctau)g  ) "
-
-        print ' CUTS :', cuts
-        
-        return _cuts % cuts
-        
     ## define the list of K0S monitoring histograms 
     def _k0s_histos ( self ) :
         """
@@ -502,51 +410,27 @@ class StrippingV0Conf(LHCbConfigurableUser):
             ## define historam type (shortcut)
             "Histo  = Gaudi.Histo1DDef"  ,
             ## monitor LL-case
-            "massLL     = monitor ( M / GeV , Histo ( 'K0S, LL-case'           , 0.4 , 0.6 , 200 ) , 'LL'     ) " ,
+            "massLL     = monitor ( M / GeV , Histo ( 'K0S, LL-case' , 0.4 , 0.6 , 200 ) , 'LL'     ) " ,
             ## monitor DD-case
-            "massDD     = monitor ( M / GeV , Histo ( 'K0S, DD-case'           , 0.4 , 0.6 , 200 ) , 'DD'     ) " ,
+            "massDD     = monitor ( M / GeV , Histo ( 'K0S, DD-case' , 0.4 , 0.6 , 200 ) , 'DD'     ) " ,
             ## monitor LD-case
-            "massLD     = monitor ( M / GeV , Histo ( 'K0S, LD-case'           , 0.4 , 0.6 , 200 ) , 'LD'     ) " ,
-            ## monitor LL-case
-            "massLLcuts = monitor ( M / GeV , Histo ( 'K0S, LL-case with cuts' , 0.4 , 0.6 , 200 ) , 'LLcuts' ) " ,
-            ## monitor DD-case
-            "massDDcuts = monitor ( M / GeV , Histo ( 'K0S, DD-case with cuts' , 0.4 , 0.6 , 200 ) , 'DDcuts' ) " ,
-            ## monitor LD-case
-            "massLDcuts = monitor ( M / GeV , Histo ( 'K0S, LD-case with cuts' , 0.4 , 0.6 , 200 ) , 'LDcuts' ) " ,
-            ## LL-cuts :
-            "LLcuts = " + self.final_cuts ( chi2v  = 25 , mips   = 25 , tchi2 = 49 , ctau =  1 * mm ) ,
-            ## LD-cuts :
-            "LDcuts = " + self.final_cuts ( chi2v  = 25 , mips   = 25 , tchi2 = 49 , ctau =  1 * mm ) ,
-            ## DD-cuts :
-            "DDcuts = " + self.final_cuts ( chi2v  = 25 , mips   = 25 , tchi2 = 49 , ctau = 10 * mm ) 
+            "massLD     = monitor ( M / GeV , Histo ( 'K0S, LD-case' , 0.4 , 0.6 , 200 ) , 'LD'     ) " 
             ]
 
     ## define the list of Lambda0 monitoring histograms 
     def _lam0_histos ( self ) :
         """
-        Define the list of Lambda0 mionitoring histograms 
+        Define the list of Lambda0 monitoring histograms 
         """
         return  [
             ## define historam type (shortcut)
             "Histo  = Gaudi.Histo1DDef"  ,
             ## monitor LL-case
-            "massLL     = monitor ( M / GeV , Histo ( 'Lambda0, LL-case'           , 1.030 , 1.230 , 200 ) , 'LL'     ) " ,
+            "massLL     = monitor ( M / GeV , Histo ( 'Lambda0, LL-case' , 1.080 , 1.180 , 200 ) , 'LL'     ) " ,
             ## monitor DD-case
-            "massDD     = monitor ( M / GeV , Histo ( 'Lambda0, DD-case'           , 1.030 , 1.230 , 200 ) , 'DD'     ) " ,
+            "massDD     = monitor ( M / GeV , Histo ( 'Lambda0, DD-case' , 1.080 , 1.180 , 200 ) , 'DD'     ) " ,
             ## monitor LD-case
-            "massLD     = monitor ( M / GeV , Histo ( 'Lambda0, LD-case'           , 1.030 , 1.230 , 200 ) , 'LD'     ) " ,
-            ## monitor LL-case
-            "massLLcuts = monitor ( M / GeV , Histo ( 'Lambda0, LL-case with cuts' , 1.030 , 1.230 , 200 ) , 'LLcuts' ) " ,
-            ## monitor DD-case
-            "massDDcuts = monitor ( M / GeV , Histo ( 'Lambda0, DD-case with cuts' , 1.030 , 1.230 , 200 ) , 'DDcuts' ) " ,
-            ## monitor LD-case
-            "massLDcuts = monitor ( M / GeV , Histo ( 'Lambda0, LD-case with cuts' , 1.030 , 1.230 , 200 ) , 'LDcuts' ) " ,
-            ## LL-cuts :
-            "LLcuts = " + self.final_cuts ( chi2v  = 25 , mips   = 25 , tchi2 = 49 , ctau =  5 * mm ) ,
-            ## LD-cuts :
-            "LDcuts = " + self.final_cuts ( chi2v  = 25 , mips   = 25 , tchi2 = 49 , ctau =  5 * mm ) ,
-            ## DD-cuts :
-            "DDcuts = " + self.final_cuts ( chi2v  = 25 , mips   = 25 , tchi2 = 49 , ctau = 20 * mm ) 
+            "massLD     = monitor ( M / GeV , Histo ( 'Lambda0, LD-case' , 1.080 , 1.180 , 200 ) , 'LD'     ) " 
             ]
     
 
@@ -559,7 +443,6 @@ class StrippingV0Conf(LHCbConfigurableUser):
         for (k,v) in self.getDefaultProperties().iteritems() :
             d[k] = getattr(self,k) if hasattr(self,k) else v
         return d
-
 
 
 
@@ -636,3 +519,51 @@ if '__main__' == __name__ :
 # =============================================================================
 # The END 
 # =============================================================================
+
+##    2: Stream                StrippingStreamV0: 2118
+##      3: Line                 StrippingK0SLine: 1165
+##      4: Line              StrippingK0S_wsLine: 936
+##      5: Line            StrippingKSAllGeoLine: 1017
+##      6: Line             StrippingLambda0Line: 1435
+##      7: Line          StrippingLambda0_wsLine: 1305
+##      8: Line        StrippingLambdaAllGeoLine: 690
+## ========================== SUMMARY ================================
+## Global decision:           StrippingGlobal: 2118
+## Stream                   StrippingStreamV0: 2118
+## -------------------------------------------------------------------
+
+## + mips 
+##    2: Stream                StrippingStreamV0: 1442
+##      3: Line                 StrippingK0SLine: 811
+##      4: Line              StrippingK0S_wsLine: 471
+##      5: Line            StrippingKSAllGeoLine: 1017
+##      6: Line             StrippingLambda0Line: 574
+##      7: Line          StrippingLambda0_wsLine: 463
+##      8: Line        StrippingLambdaAllGeoLine: 690
+## ========================== SUMMARY ================================
+## Global decision:           StrippingGlobal: 1442
+## Stream                   StrippingStreamV0: 1442
+
+## -------------------------------------------------------------------
+## -------------------------------------------------------------------
+##    2: Stream                StrippingStreamV0: 1197
+##      3: Line                 StrippingK0SLine: 641
+##      4: Line            StrippingKSAllGeoLine: 1017
+##      5: Line             StrippingLambda0Line: 340
+##      6: Line        StrippingLambdaAllGeoLine: 690
+## ========================== SUMMARY ================================
+## Global decision:           StrippingGlobal: 1197
+## Stream                   StrippingStreamV0: 1197
+## -------------------------------------------------------------------
+
+
+##  1: Global decision           StrippingGlobal: 625
+## -------------------------------------------------------------------
+## -------------------------------------------------------------------
+##    2: Stream                StrippingStreamV0: 625
+##      3: Line                 StrippingK0SLine: 519
+##      4: Line             StrippingLambda0Line: 264
+## ========================== SUMMARY ================================
+## Global decision:           StrippingGlobal: 625
+## Stream                   StrippingStreamV0: 625
+## -------------------------------------------------------------------
