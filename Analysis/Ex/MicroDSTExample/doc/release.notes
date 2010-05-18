@@ -1,9 +1,17 @@
-!$Id: release.notes,v 1.50 2010-03-09 16:02:39 jpalac Exp $
+!$Id: release.notes,v 1.51 2010-05-18 13:17:14 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Ex/MicroDSTExample
 ! Responsible : Juan PALACIOS
 ! Purpose     : MicroDST making and reading examples.
 !-----------------------------------------------------------------------------
+
+! 2010-05-18 - Juan Palacios
+ - options/TestMicroDSTMake.py, options/TestMicroDSTMakeNewConf.py
+  . Use MC09 data. DaVinci().Simulation = True.
+ - scripts/MicroDSTReadingExample.py
+  . Fix default selection location.
+ - cmt/requirements
+  . Increase to v2r13
 
 !======================= Ex/MicroDSTExample v2r12 2010-03-09 =================
 
