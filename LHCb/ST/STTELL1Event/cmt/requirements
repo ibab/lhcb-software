@@ -1,6 +1,6 @@
-# $Id: requirements,v 1.14 2009-07-28 08:26:13 cattanem Exp $
+# $Id: requirements,v 1.15 2010-05-18 22:15:48 cattanem Exp $
 package STTell1Event
-version v1r9
+version v1r9p1
 
 branches Event xml cmt doc src
 

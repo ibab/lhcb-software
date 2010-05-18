@@ -684,7 +684,7 @@
      type = 'bool'
      const = 'TRUE'>
      <code>
- return (BankList()  &amp; 0x8);
+ return (BankList()  &amp; 0x8)!=0;
       </code>
      </method>
 
@@ -694,7 +694,7 @@
      type = 'bool'
      const = 'TRUE'>
      <code>
- return (BankList() &amp; 0x10 );
+ return (BankList() &amp; 0x10 )!=0;
       </code>
      </method>
 
