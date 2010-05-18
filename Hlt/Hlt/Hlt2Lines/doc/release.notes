@@ -8,6 +8,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2010-05-18 - Johannes Albrecht
+ - add new line: Hlt2MuonFromHLT1
+
 ! 2010-05-17 - Gerhard Raven
  - fix warnings from Hlt2diphotonDiMuonLines about missing primary vertices
 

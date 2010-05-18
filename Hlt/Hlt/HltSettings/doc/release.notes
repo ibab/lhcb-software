@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2010-05-18 - Johannes Albrecht
+ - add Hlt2MuonFromHLT1
+
 ! 2010-05-13 - Jacopo Nardulli
  - Complete restructuring and renaming of the Hlt2B2DX Lines
    See Talk at Gamma Frm trees WG on 29/4/2010
