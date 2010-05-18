@@ -30,6 +30,9 @@ class Options:
     self.object = 'OnlineEnv'
     if len(self.value)>0: self.value = self.value+'\n'
   # ===========================================================================
+  def comment(self,name=''):
+    return self.add('// '+name)
+  # ===========================================================================
   def add(self,name,value=None,operator='='):
     "Add a new options item"
     if value is not None:
@@ -53,6 +56,9 @@ class PyOptions:
     "Object constructor"
     self.value = msg
     if len(self.value)>0: self.value = self.value+'\n'
+  # ===========================================================================
+  def comment(self,name=''):
+    return self.add('# '+name)
   # ===========================================================================
   def add(self,name,value=None,operator='='):
     "Add a new options item"
@@ -94,7 +100,7 @@ class OptionsWriter(Control.AllocatorClient):
     "Connect job options writer as a standalone device listening to commands."
     devMgr = self.optionsManager().deviceMgr()
     jo_dev = devMgr.manager().name()+':'+name
-    print 'Dev exists:',str(devMgr.exists(jo_dev)),jo_dev
+    #print 'Dev exists:',str(devMgr.exists(jo_dev)),jo_dev
     if not devMgr.exists(jo_dev):
       typ = devMgr.manager().typeMgr().type('JobOptionsControl')
       if not devMgr.createDevice(jo_dev,typ,1).release():
@@ -165,7 +171,7 @@ class OptionsWriter(Control.AllocatorClient):
       try:
         fd = self.optionsDir+'/'+partition
         fn = fd+'/'+name+'.opts'
-        log('###   Writing options: '+fn,timestamp=1)
+        ####log('###   Writing options: '+fn,timestamp=1)
         try:
           os.stat(fd)
         except:
@@ -181,17 +187,19 @@ class OptionsWriter(Control.AllocatorClient):
     return None
   
   # ===========================================================================
-  def writePythonFile(self, partition, name, opts):
+  def writePythonFile(self, partition, name, subdir, opts):
     import os
     if self.optionsDir is not None:
       try:
         fd = self.optionsDir+'/'+partition
+        if subdir is not None:
+          fd = fd + '/' + str(subdir)
         fn = fd+'/'+name+'.py'
         log('###   Writing options: '+fn,timestamp=1)
         try:
           os.stat(fd)
         except:
-          os.mkdir(fd)
+          os.makedirs(fd)
         desc = open(fn, 'w')
         print >>desc, opts
         desc.close()
@@ -209,6 +217,8 @@ class OptionsWriter(Control.AllocatorClient):
   # ===========================================================================
   def configure(self, rundp_name, partition):
     try:
+      log('Starting job options: Read RunInfo from '+rundp_name+' for '+partition,timestamp=1)
+      self.boards = None
       self.run = self.infoCreator.create(rundp_name,partition).load()
       if self.run:
         return self._configure(partition)
@@ -217,7 +227,6 @@ class OptionsWriter(Control.AllocatorClient):
     error('Run Information for partition '+partition+' does not exist!',
           timestamp=1,type=PVSS.ILLEGAL_VALUE)
     return None
-
 
   # ===========================================================================
   def _makeRunInfo(self,partition):
@@ -251,25 +260,71 @@ class OptionsWriter(Control.AllocatorClient):
     return self.writeOptionsFile(self.run.name, self.run.name+'_RunInfo', opts.value)
   
   # ===========================================================================
-  def _getOnlineEnv(self,partition):
-    run_type = self.run.runType()
-    opts = Options('//  Auto generated options for partition:'+partition+' activity:'+run_type+'  '+time.ctime())
-    opts.add('//\n// ---------------- General partition information:  ')
-    opts.add('PartitionID',    self.run.partitionID())
-    opts.add('PartitionIDName','%04X'%self.run.partitionID())
-    opts.add('PartitionName',  partition)
-    opts.add('Activity',       run_type)
-    opts.add('OutputLevel',    self.run.outputLevel())
-    opts.add('MessageSvc.OutputLevel     = '+str(self.run.outputLevel())+';')
+  def addTriggerInfo(self,opts):
+    import math
+    opts.comment('---------------- Trigger parameters:    ')
     if self.run.acceptRate() is None:
       print 'Rate is None!!!!!'
     opts.add('AcceptRate',     float('%.7f'%(self.run.acceptRate(),)))
     tck = self.run.TCK()
-    if tck is None:
-      opts.add('// No TCK information present!')
-    else:
+    if tck is not None:
       opts.add('InitialTCK',   str(hex(0xFFFFFFFF&int(tck)))[:-1])
+    else:
+      opts.comment('Note: No TCK information present for partition:'+str(partition))
+
+    if self.run.condDBtag is not None:
+      opts.add('CondDBTag',   str(self.run.condDBtag.data))
+      opts.add('condDBTag',   str(self.run.condDBtag.data))
+    else:
+      opts.add('CondDBTag',   '')
+      opts.add('condDBTag',   '')
+
+    if self.run.lumiTrigger is not None:
+      opts.add('LumiTrigger',   self.run.lumiTrigger.data)
+    else: 
+      opts.add('LumiTrigger',   0)
+
+    if self.run.beamgasTrigger is not None:
+      opts.add('BeamGasTrigger',self.run.beamgasTrigger.data)
+    else: 
+      opts.add('BeamGasTrigger',   0)
+
+    pars = []
+    if self.run.lumiPars is not None:
+      num = len(self.run.lumiPars.data)
+      for i in xrange(num):
+        txt = '%7.5e'%(float(self.run.lumiPars.data[i]),)
+        pars.append(float(txt)) # Do proper rounding ....
+    opts.add('LumiPars',   pars)
+      
+    if self.run.L0Type is not None:
+      opts.add('L0Type',   str(self.run.L0Type.data))
+    if self.run.hltType is not None:
+      opts.add('HLTType',   str(self.run.hltType.data))
+    if self.run.gaudiVersion is not None:
+      opts.add('GaudiVersion',   str(self.run.gaudiVersion.data))
+    if self.run.mooreVersion is not None:
+      opts.add('MooreVersion',   str(self.run.mooreVersion.data))
+    if self.run.onlineVersion is not None:
+      opts.add('OnlineVersion',   str(self.run.onlineVersion.data))
+    if self.run.dataflowVersion is not None:
+      opts.add('DataflowVersion',   str(self.run.dataflowVersion.data))
+
     return opts
+
+  # ===========================================================================
+  def _getOnlineEnv(self,partition):
+    run_type = self.run.runType()
+    opts = Options('//  Auto generated options for partition:'+partition+' activity:'+run_type+'  '+time.ctime())
+    opts.comment().comment('---------------- General partition information:  ')
+    opts.add('PartitionID',    self.run.partitionID())
+    opts.add('PartitionIDName','%04X'%self.run.partitionID())
+    opts.add('PartitionName',  partition)
+    opts.add('Activity',       run_type)
+    opts.add('TAE',            self.run.TAE())
+    opts.add('OutputLevel',    self.run.outputLevel())
+    opts.add('MessageSvc.OutputLevel     = '+str(self.run.outputLevel())+';')
+    return self.addTriggerInfo(opts)
 
   # ===========================================================================
   def _writeOnlineEnv(self,partition):
@@ -280,23 +335,41 @@ class OptionsWriter(Control.AllocatorClient):
     return self.run
 
   # ===========================================================================
-  def _writePyOnlineEnv(self,partition,fname='OnlineEnv'):
+  def _writePyOnlineEnv(self,partition,fname='OnlineEnv',subdir=None):
     run_type = self.run.runType()
     opts = PyOptions('#  Auto generated PyOnlineEnv for partition:'+partition+' activity:'+run_type+'  '+time.ctime())
-    opts.add('#\n# ---------------- General partition information:  ')
+    opts.comment().comment('---------------- General partition information:  ')
     opts.add('PartitionID',    self.run.partitionID())
     opts.add('PartitionIDName','%04X'%self.run.partitionID())
     opts.add('PartitionName',  partition)
     opts.add('Activity',       run_type)
+    opts.add('TAE',            self.run.TAE())
     opts.add('OutputLevel',    self.run.outputLevel())
-    opts.add('AcceptRate',     float('%.7f'%(self.run.acceptRate(),)))
-    tck = self.run.TCK()
-    if tck is not None:
-      opts.add('InitialTCK',   str(hex(0xFFFFFFFF&int(tck)))[:-1])
-    opts.add('#\nfrom OnlineConfig import *')
-    if self.writePythonFile(partition, fname, opts.value) is None:
+    self.addTriggerInfo(opts)
+    opts.comment().add('from OnlineConfig import *')
+    if self.writePythonFile(partition, fname, subdir, opts.value) is None:
       return None
     return self.run
+
+  
+  # ===========================================================================
+  def _tell1Boards(self,partition='Unknown'):
+    if ( self.boards is None ):
+      boards = []
+      log('Resolving Tell1 names for partition:'+partition,timestamp=1)
+      for b in self.run.tell1Boards.data:
+        itms = b.split(':')
+        try:
+          board = itms[0]
+          if len(itms)>1: board = itms[1]
+          boards.append((socket.gethostbyname(board+'-d1'),board,));
+        except Exception,X:
+          error('Failed to retrieve TELL1 specs for '+str(b),timestamp=1)
+          error('Error '+str(X),timestamp=1)
+          self.boards = None
+          return self.boards
+      self.boards = boards
+    return self.boards
 
   # ===========================================================================
   def _getTell1Boards(self,partition,hdr=''):
@@ -307,22 +380,16 @@ class OptionsWriter(Control.AllocatorClient):
     opts.add('OnlineEnv.Tell1Boards         = {')
     err = None
     num = 0;
-    for b in self.run.tell1Boards.data:
-      itms = b.split(':')
-      try:
-        board = itms[0]
-        if len(itms)>1: board = itms[1]
-        opts.add('  "%s", "%s", "",'%(socket.gethostbyname(board+'-d1'),board))
+    boards = self._tell1Boards(partition)
+    if boards:
+      for b in boards:
+        opts.add('  "%s", "%s", "",'%b)
         num = num + 1
-      except Exception,X:
-        error('Failed to retrieve TELL1 specs for '+str(b),timestamp=1)
-        error('Error '+str(X),timestamp=1)
-        err = self # None # self
-    if num > 0:
-      opts.value = opts.value[:-2] + '\n};\n'
+      if num > 0:
+        opts.value = opts.value[:-2] + '\n};\n'
+      else:
+        opts.value = opts.value + '\n};\n'
     else:
-      opts.value = opts.value + '\n};\n'
-    if err:
       return None
 
     odin = 'Unknown'
@@ -373,22 +440,22 @@ class OptionsWriter(Control.AllocatorClient):
     b = ''
     try:
       run_type = self.run.runType()
-      opts = Options('// ---------------- Injector information:')
-      #opts.add('//   RUN_Info.Injector.FullPartId:')
+      opts = Options().comment('---------------- Injector information:')
+      #opts.comment('  RUN_Info.Injector.FullPartId:')
       #opts.add('Injector_FullPartId',      self.run.inj_fullPartId.data)
-      opts.add('//   RUN_Info.Injector.MEPRequestAddr:')
+      opts.comment('  RUN_Info.Injector.MEPRequestAddr:')
       b = self.run.inj_mepAddress.data
       opts.add('Injector_odinIF_Name',     b)
       opts.add('Injector_odinIF_IP',       self._gethost(b))
-      opts.add('//   RUN_Info.Injector.DataAddr:')
+      opts.comment('  RUN_Info.Injector.DataAddr:')
       b = self.run.inj_dataAddress.data
       opts.add('Injector_farmIF_Name',     b)
       opts.add('Injector_farmIF_IP',       self._gethost(b))
-      opts.add('//   RUN_Info.Injector.OdinMEPRequest:')
+      opts.comment('  RUN_Info.Injector.OdinMEPRequest:')
       b = self.run.inj_odinRequest.data
       opts.add('Injector_ODIN_REQ_Name',   b)
       opts.add('Injector_ODIN_REQ_IP',     self._gethost(b))
-      opts.add('//   RUN_Info.Injector.OdinData:')
+      opts.comment('  RUN_Info.Injector.OdinData:')
       b = self.run.inj_odinData.data
       opts.add('Injector_ODIN_DATA_Name',  b)
       opts.add('Injector_ODIN_DATA_IP',    self._gethost(b))
@@ -405,6 +472,22 @@ class OptionsWriter(Control.AllocatorClient):
       for f in self.run.inj_fileList.data:
         opts.add('  "DATA=\'PFN:root:file://%s\' IgnoreChecksum=\'YES\' SVC=\'LHCb::MDFSelector\'",'%f)
       opts.value = opts.value[:-2] + '\n};\n'
+
+      opts.add('Injector_LoopFiles',self.run.inj_loopOnFiles.data)
+      opts.add('OnlineEnv.Injector_Readers = {   ')
+      for f in self.run.inj_readerNames.data:
+        opts.add('  "%s",'%f)
+      opts.value = opts.value[:-2] + '\n};\n'
+      for n in self.run.inj_readers.keys():
+        r = self.run.inj_readers[n]
+        opts.add('// ---------------- Data for '+n)
+        opts.add(n+'_Name',r['Name'].data)
+        opts.add(n+'_Directory',r['DataDirectory'].data)
+        opts.add('OnlineEnv.'+n+'_Files = {   ')  # Trailing spaces mandatory!
+        for f in r['FileList'].data:
+          opts.add('  "%s",'%f)
+        opts.value = opts.value[:-2] + '\n};\n'
+
       return opts
 
     except Exception,X:
@@ -431,19 +514,19 @@ class OptionsWriter(Control.AllocatorClient):
           opts.add('TaskType',       task.name)
           oloc = self.run.storageDir.data+'/lhcb/data/'+time.strftime('%Y')+'/RAW/'+partition+'/'+rt
           opts.add('OutputLocation', oloc)
-        else: opts.add('// ---------------- NO partition information')
+        else: opts.comment('---------------- NO partition information')
         addOpts = self.additionalOptions(activity,task)
         if addOpts:
-          opts.add('//\n// ---------------- Additional specific options:')
+          opts.comment().comment('---------------- Additional specific options:')
           for nam,opt in addOpts.items(): opts.add(nam,opt)
-        else: opts.add('// ---------------- NO additional options')
+        else: opts.comment('---------------- NO additional options')
         if task.tell1s.data:
           opts.value = opts.value+self._getTell1Boards(partition).value
-        else: opts.add('// ---------------- NO tell1 board information') 
+        else: opts.comment('---------------- NO tell1 board information') 
         if task.options.data:
-          opts.add('//\n// ---------------- Task specific information:')
+          opts.comment().comment('---------------- Task specific information:')
           opts.add(task.options.data)
-        else: opts.add('// ---------------- NO task specific information')
+        else: opts.comment('---------------- NO task specific information')
         if task.defaults.data:
           opts.add('MessageSvc.OutputLevel     = @OnlineEnv.OutputLevel;')
           opts.add('MessageSvc.fifoPath        = @OnlineEnv.LogFifoName;')
@@ -480,10 +563,17 @@ class HLTOptionsWriter(OptionsWriter):
   # ===========================================================================
   def _configure(self, partition):
     if self.run:
+      log('Starting to write HLT TEXT job options',timestamp=1)
       res = self._writeHLTOpts(partition)
+      log('Finished to write HLT TEXT job options',timestamp=1)
       if res:
-        self._writePyOnlineEnv(partition=partition,fname='OnlineEnv')
+        log('Starting to write HLT PYTHON job options',timestamp=1)
+        self._writePyOnlineEnv(partition=partition,fname='OnlineEnv',subdir='HLT')
+        log('Finished to write HLT PYTHON job environment options',timestamp=1)
         return self._writePyHLTOpts(partition)
+        log('Finished to write HLT PYTHON job options',timestamp=1)
+        return res
+    return None
 
   # ===========================================================================
   def _writeHLTOpts(self,partition):
@@ -516,16 +606,13 @@ class HLTOptionsWriter(OptionsWriter):
         log('      --> Farm:'+farm+' sends to slot:'+slots[i]+', Task:'+name,timestamp=1)
 
       opts = self._getOnlineEnv(partition)
+      opts.comment('---------------- HLT patrameters:   ')
       opts.add('SubFarms',       farm_names)
-
-      fname = partition+'_Info'
-      if self.writeOptionsFile(partition, fname, opts.value) is None:
+      if self.writeOptionsFile(partition, partition+'_Info', opts.value) is None:
         return None
 
       opts = self._getTell1Boards(partition,hdr)
-
-      fname = partition+'_Tell1Boards'
-      if self.writeOptionsFile(partition, fname, opts.value) is None:
+      if self.writeOptionsFile(partition, partition+'_Tell1Boards', opts.value) is None:
         return None
       self._makeRunInfo(partition)
       return self.run
@@ -558,51 +645,42 @@ class HLTOptionsWriter(OptionsWriter):
                'Target1 = [ "'+node+'-d1" ]\n'+\
                'Target2 = [ "'+name+'" ]'
         fname = partition+'_'+farm+'_HLT'
-        if self.writePythonFile(partition, fname, opts) is None:
+        if self.writePythonFile(partition, fname, subdir='HLT', opts=opts) is None:
           return None
         log('      --> Farm:'+farm+' sends to slot:'+slots[i]+', Task:'+name,timestamp=1)
 
       opts = PyOptions('#  Auto generated options for partition:'+partition+' activity:'+run_type+'  '+time.ctime())
-      opts.add('#\n# ---------------- General partition information:  ')
+      opts.comment().comment('---------------- General partition information:  ')
       opts.add('PartitionID',    self.run.partitionID())
       opts.add('PartitionIDName','%04X'%self.run.partitionID())
       opts.add('PartitionName',  partition)
       opts.add('Activity',       run_type)
-      opts.add('SubFarms',       farm_names)
+      opts.add('TAE',            self.run.TAE())
       opts.add('OutputLevel',    self.run.outputLevel())
-      opts.add('MessageSvc.OutputLevel     = '+str(self.run.outputLevel()))
-      opts.add('AcceptRate',     float('%.7f'%(self.run.acceptRate(),)))
-      tck = self.run.TCK()
-      if tck is None:
-        opts.add('# Note: No TCK information present for partition:'+str(partition))
-      else:
-        opts.add('InitialTCK',   str(hex(0xFFFFFFFF&int(tck)))[:-1])
+      opts.comment('---------------- HLT patrameters:   ')
+      opts.add('SubFarms',       farm_names)
 
-      if self.writePythonFile(partition, partition+'_Info', opts.value) is None:
+      self.addTriggerInfo(opts)
+
+      if self.writePythonFile(partition, partition+'_Info', subdir='HLT', opts=opts.value) is None:
         return None
 
       opts = Options('#  Auto generated options for partition:'+partition+' activity:'+run_type+'  '+time.ctime())
-      opts.add('#\n# ---------------- Tell1 board information:')
+      opts.comment().comment('---------------- Tell1 board information:  ')
       opts.add('Tell1Boards         = [')
       err = None
       num = 0;
       print 'New version of HLT options generator....'
-      for b in self.run.tell1Boards.data:
-        itms = b.split(':')
-        try:
-          board = itms[0]
-          if len(itms)>1: board = itms[1]
-          opts.add('  "%s", "%s", "",'%(socket.gethostbyname(board+'-d1'),board))
+      boards = self._tell1Boards(partition)
+      if boards:
+        for b in boards:
+          opts.add('  "%s", "%s", "",'%b)
           num = num + 1
-        except Exception,X:
-          error('Failed to retrieve TELL1 specs for '+str(b),timestamp=1)
-          error('Error '+str(X),timestamp=1)
-          err = self # None # self
-      if num > 0:
-        opts.value = opts.value[:-2] + '\n]\n'
+        if num > 0:
+          opts.value = opts.value[:-2] + '\n]\n'
+        else:
+          opts.value = opts.value + '\n]\n'
       else:
-        opts.value = opts.value + '\n]\n'
-      if err:
         return None
 
       odin = 'Unknown'
@@ -629,7 +707,7 @@ class HLTOptionsWriter(OptionsWriter):
       if err:
         return None
       fname = partition+'_Tell1Boards'
-      if self.writePythonFile(partition, fname, opts.value) is None:
+      if self.writePythonFile(partition, fname, subdir='HLT', opts=opts.value) is None:
         return None
       self._makeRunInfo(partition)
       return self.run
@@ -702,7 +780,7 @@ class StreamingOptionsWriter(OptionsWriter):
     done = 0
     for i in self.taskList:
       it = i.split('/')
-      print 'writeOptions',it
+      ####print 'writeOptions',it
       items = it[:-1]
       
       eval_item = eval(it[-1])
@@ -726,7 +804,7 @@ class StreamingOptionsWriter(OptionsWriter):
           prefix = ''
           tot_len = len(eval_item)
           if tot_len>1: prefix = '\n     '
-          print eval_item,tot_len
+          ##print eval_item,tot_len
           for q in xrange(tot_len):
             val = eval_item[q]
             if isinstance(val,tuple) or isinstance(val,list):
@@ -793,7 +871,6 @@ class StreamingOptionsWriter(OptionsWriter):
         res = OptionsWriter._configure(self,partition)
         if res is None:
           result = None
-      self._writePyOnlineEnv(partition=partition,fname='MonitoringEnv')
       self.taskList = None
       return result
     error('Failed to access the Storage info:'+self.streamMgr.name()+' '+self.name)
@@ -817,6 +894,12 @@ class StorageOptionsWriter(StreamingOptionsWriter):
     elif layer == self.streamingLayers[1]:
       return _addTasks([i.streamReceivers(),i.streamSenders(),i.streamInfrastructure()])
     return []
+  # ===========================================================================
+  def _configure(self, partition):
+    res=StreamingOptionsWriter._configure(self,partition)
+    self._writePyOnlineEnv(partition,fname='StorageEnv')
+    self._writePyOnlineEnv(partition,fname='OnlineEnv',subdir='STORAGE')
+    return res
       
 # =============================================================================
 class MonitoringOptionsWriter(StreamingOptionsWriter):
@@ -836,6 +919,12 @@ class MonitoringOptionsWriter(StreamingOptionsWriter):
     elif layer == self.streamingLayers[1]:
       return _addTasks([i.streamReceivers(),i.streamSenders(),i.streamInfrastructure()])
     return []
+  # ===========================================================================
+  def _configure(self, partition):
+    res=StreamingOptionsWriter._configure(self,partition)
+    self._writePyOnlineEnv(partition,fname='MonitoringEnv')
+    self._writePyOnlineEnv(partition,fname='OnlineEnv',subdir='MONITORING')
+    return res
 
 # =============================================================================
 class RecoOptionsWriter(StreamingOptionsWriter):
@@ -859,5 +948,6 @@ class RecoOptionsWriter(StreamingOptionsWriter):
   def _configure(self, partition):
     res=StreamingOptionsWriter._configure(self,partition)
     self._writeOnlineEnv(partition)
-    self._writePyOnlineEnv(partition)
+    self._writePyOnlineEnv(partition,fname='ReconstructionEnv')
+    self._writePyOnlineEnv(partition,fname='OnlineEnv',subdir='RECONSTRUCTION')
     return res

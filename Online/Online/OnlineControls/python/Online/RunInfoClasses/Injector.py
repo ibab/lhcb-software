@@ -38,6 +38,21 @@ class Info(General):
     self.inj_nodeList    = self.dp('Injector.nodeList')
     self.inj_fileList    = self.dp('Injector.FileList')
     self.inj_fullPartId  = self.dp('Injector.FullPartId')
+    self.inj_loopOnFiles = self.dp('Injector.LoopOnFiles')
+    self.inj_readerNames = self.dp('Injector.ReaderNames')
+    self.inj_fullFileList= self.dp('Injector.FullFileList')
+    self.inj_readers = {}
+    for i in xrange(7):
+      n = 'Reader'+str(i+1)
+      rdr = {}
+      rdr['Name'] = self.dp('Injector.'+n+'.Name')
+      rdr['FileList'] = self.dp('Injector.'+n+'.FileList')
+      rdr['DataDirectory'] = self.dp('Injector.'+n+'.DataDirectory')
+      self.reader.add(rdr['Name'])
+      self.reader.add(rdr['FileList'])
+      self.reader.add(rdr['DataDirectory'])
+      self.inj_readers[n] = rdr
+
     self.reader.add(self.nodes)
     self.reader.add(self.odinData)
     self.reader.add(self.odinRequest)
@@ -49,6 +64,9 @@ class Info(General):
     self.reader.add(self.inj_nodeList)
     self.reader.add(self.inj_fileList)
     self.reader.add(self.inj_fullPartId)
+    self.reader.add(self.inj_loopOnFiles)
+    self.reader.add(self.inj_readerNames)
+    self.reader.add(self.inj_fullFileList)
 
   # ===========================================================================
   def showSubfarms(self):

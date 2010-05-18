@@ -186,7 +186,9 @@ class Control(PVSS.PyDeviceListener):
               traceback.print_exc()
               data.data = err
             self.writer.add(data)
+            Online.Utils.log('The command:"'+cmd+'" finished.',timestamp=1)
             self.writer.execute()
+            Online.Utils.log('---> Wrote answer '+data.data+' to datapoint:'+dp,timestamp=1)
             return self
           elif command == "RECOVER_SLICE":
             dp = itms[5]

@@ -252,6 +252,7 @@ def copyProject():
   execCmd(pvssPMON()+' -config '+cfg+' -stopWait')
   execCmd('rm -rf /localdisk/pvss'+os.sep+nam)
   execCmd('cp -r '+src+' /localdisk/pvss'+os.sep+nam)
+  execCmd('chmod 0777 /localdisk/pvss'+os.sep+nam)
   print '......... --> Patching project configuration file'
   lines = open(cfg,'r').readlines()
   fout  = open(cfg,'w')
@@ -280,6 +281,16 @@ def copyProject():
       pass
     elif content.find('distPort = ')==0:
       pass
+  fout.close()
+  execCmd(pvssPMON()+' -config '+cfg+' -autoreg -stopWait')
+  lines = open(cfg,'r').readlines()
+  fout  = open(cfg,'w')
+  for line in lines:
+    content = line[:-1]
+    if content.find('#proj_path')==0:
+      content = content[1:]
+    print >>fout,content
+  fout.close()
   print '......... --> Patching project name and project number'
   execCmd(pvssTool()+' -config '+cfg+' -report -autoreg -system '+str(sysN)+' '+nam)
   print '......... --> Project',nam,' System number',sysN,' is ready for farm installation'
@@ -300,7 +311,7 @@ def copyProject2():
   execCmd(pvssTool()+' -config '+cfg+' -report -autoreg -system '+str(sysN)+' '+nam)
   time.sleep(5)
   execCmd(pvssPMON()+' -config '+cfg+' -autoreg &')
-  time.sleep(15)
+  time.sleep(25)
   execCmd(pvssConsole())
   time.sleep(15)
   install()

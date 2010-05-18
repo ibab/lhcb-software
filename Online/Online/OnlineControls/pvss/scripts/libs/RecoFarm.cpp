@@ -93,6 +93,8 @@ int RecoFarm_install()  {
   names[15] = makeDynString ("","","streamTypes","");
   names[16] = makeDynString ("","","streamMultiplicity","");
   names[17] = makeDynString ("","","strmStrategy","");
+  names[18] = makeDynString ("","Reprocessing","","");
+  names[19] = makeDynString ("","","nReaders","");
   types[1]  = makeDynInt (DPEL_STRUCT,0,0,0);
   types[2]  = makeDynInt (0,DPEL_STRING,0,0);
   types[3]  = makeDynInt (0,DPEL_STRUCT,0,0);
@@ -110,6 +112,8 @@ int RecoFarm_install()  {
   types[15] = makeDynInt (0,0,DPEL_DYN_STRING,0);
   types[16] = makeDynInt (0,0,DPEL_DYN_INT,0);
   types[17] = makeDynInt (0,0,DPEL_INT,0);
+  types[18] = makeDynInt (0,DPEL_STRUCT,0);
+  types[19] = makeDynInt (0,0,DPEL_INT,0);
   ctrlUtils_installDataType(names,types);
   return 1;
 }

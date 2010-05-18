@@ -1020,6 +1020,33 @@ class Options:
     return self.add(name,value,'+=')
 
 # =============================================================================
+class PyOptions:
+  # ===========================================================================
+  def __init__(self,msg=''):
+    "Object constructor"
+    self.value = msg
+    if len(self.value)>0: self.value = self.value+'\n'
+  # ===========================================================================
+  def comment(self,name=''):
+    return self.add('# '+name)
+  # ===========================================================================
+  def add(self,name,value=None,operator='='):
+    "Add a new options item"
+    if value is not None:
+      v = str(value)
+      if isinstance(value,str): v = '"'+v+'"'
+      v = v.replace("'",'"').replace('{','[').replace('}',']')      
+      s = '%-16s %s %s\n'%(name,operator,v)
+      self.value = self.value + s
+    elif len(name)>0:
+      self.value = self.value + name + '\n'
+    return self
+  # ===========================================================================
+  def append(self,name,value):
+    "Append items to existing options"
+    return self.add(name,value,'+=')
+
+# =============================================================================
 class FarmOptionsWriter:
   """
   OptionsWriter class.
@@ -1072,17 +1099,17 @@ class FarmOptionsWriter:
     return self.writeOptionsFile(partition, task.name, opts.value)
 
   # ===========================================================================
-  def writeOptionsFile(self, partition, name, opts):
+  def writeOptionsFileEx(self, partition, dir, name, ext, opts):
     import os
     if self.optionsDir is not None:
       try:
-        fd = self.optionsDir+os.sep+partition
-        fn = fd+os.sep+name+'.opts'
+        fd = dir
+        fn = fd+os.sep+name+'.'+ext
         log('###   Writing options: '+fn,timestamp=1)
         try:
           os.stat(fd)
         except:
-          os.mkdir(fd)
+          os.makedirs(fd)
         desc = open(fn, 'w')
         print >>desc, opts
         desc.close()
@@ -1092,15 +1119,24 @@ class FarmOptionsWriter:
       return self
     PVSS.error('Failed to write options for task:'+name+' [No Directory]',timestamp=1,type=Online.PVSS.FILEOPEN)
     return None
+  # ===========================================================================
+  def writeOptionsFile(self, partition, name, opts):
+    import os
+    return self.writeOptionsFileEx(partition,self.optionsDir+os.sep+partition,name,"opts",opts);
 
   # ===========================================================================
   def configure(self):
+    import os
     tasks = self.getTasks()
     if tasks is not None:
       partition = self.run.partitionName()
       run_type = self.run.runType()
       opts = self.partitionOptions()
       if not self.writeOptionsFile(partition, "PartitionInfo", opts.value):
+        return None
+      opts = self.partitionPyOptions()
+      dir = self.optionsDir+os.sep+partition+os.sep+'RECONSTRUCTION'
+      if not self.writeOptionsFileEx(partition, dir, "OnlineEnv", "py", opts.value):
         return None
       for task in tasks:
         opts = Options('//  Auto generated options for partition:'+partition+\
@@ -1129,6 +1165,7 @@ class FarmOptionsWriter:
         return None
       farmOpts=self.farmOptions(self.run,self.storage)
       if not farmOpts:
+        log('Error getting farmOpts' , timestamp=1 )
         return None
       for nodeOptions in farmOpts.values():
         opts = Options( '//  Farm options for partition:'+partition+\
@@ -1136,6 +1173,7 @@ class FarmOptionsWriter:
         for o in nodeOptions.keys():
           opts.add(o, nodeOptions[o])
         if not self.writeOptionsFile( partition, nodeOptions['opts'], opts.value ):
+          log('Error writing options: %s' %nodeOptions['opts']) 
           return None
       return self.run
     PVSS.error('Cannot retrieve tasks for activity:'+self.run.runType())
@@ -1189,6 +1227,24 @@ class FarmOptionsWriter:
     #opts.add('OutputLevel',    self.run.outputLevel())
     opts.add('OutputLevel',    4)
     opts.add('LogFifoName' ,  "$LOGFIFO")
+    opts.add('SliceName',      self.run.name)
+    return opts
+    
+  def partitionPyOptions(self):
+    partition = self.run.partitionName()
+    run_type = self.run.runType()
+    opts = PyOptions('#  Auto generated options for partition:'+partition+\
+                           ' activity:'+run_type+' OnlineEnv settings:'+'  '+time.ctime()+'\n')
+    opts.add('PartitionID',    self.run.partitionID())
+    opts.add('PartitionName',  self.run.partitionName())
+    opts.add('PartitionIDName','%04X'%self.run.partitionID())
+    opts.add('Activity',       run_type);
+    #opts.add('OutputLevel',    self.run.outputLevel())
+    opts.add('OutputLevel',    4)
+    opts.add('LogFifoName' ,  "$LOGFIFO")
+    opts.add('ActivityType' , "Reprocessing")
+    opts.add('SliceName',      self.run.name)
+    opts.comment().add('from OnlineConfig import *')
     return opts
     
   def writeIoOptions(self):
@@ -1198,7 +1254,7 @@ class FarmOptionsWriter:
                    ' DimRPCFileReader  '+time.ctime()+'\n' +\
                    '#include "$OPTIONSDIR/PartitionInfo.opts"\n' +\
                    '#include "$ONLINETASKS/options/DimRPCFileReader.opts"\n'+\
-                   '#include "$ONLINETASKS/options/RecMessageSvc.opts"')
+                   '#include "$ONLINETASKS/options/RecMessageSvc.opts"');
     if not self.writeOptionsFile( partition, 'DimRPCFileReader', opts.value ):
       return None
     # RECIOBuffers
@@ -1230,6 +1286,7 @@ class FarmOptionsWriter:
       if not self.writeOptionsFile( partition, 'INPUTSender%02X' %i, opts.value ):
         return None
     # Everything went ok 
+    log('All IO options correctly written' , timestamp=1)
     return True
     
 def writeOptions(run_info,storage_info,farm_info):

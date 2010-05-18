@@ -19,7 +19,14 @@ for i in xrange(numSubFarm):
   subFarms[sf] = (nodes,cpus)
 
 pvss_system = 'RECMON'
-dns = os.environ['DIM_DNS_NODE']
+if os.environ.has_key('DIM_DNS_NODE'):
+  dns = os.environ['DIM_DNS_NODE'].upper()
+else:
+  dns = socket.gethostname().upper()
+  if dns.find('.')>0:
+    dns = dns[:dns.find('.')]
+
+print 'DIM DNS Node:',dns
 pvss_system = 'REC'+dns.upper()
 sf = dns.upper() # socket.gethostname().upper()
 nodes = [sf+'01',sf+'02']
@@ -27,7 +34,7 @@ nodes= []
 lines=os.popen("tmLs -u zzzzzzzzz").readlines()
 for i in lines:
   l=i.replace(' ','').split('"')
-  if l[0]=='Node:' and l[1]!=dns: nodes.append(l[1].upper())
+  if l[0]=='Node:' and l[1].upper()!=dns: nodes.append(l[1].upper())
 
 cpus  = [8 for j in xrange(len(nodes))]
 subFarms = {sf: (nodes,cpus)}

@@ -21,7 +21,7 @@ execOnFarm()
     else
 	for i in A B C D E;
 	  do
-	  for j in 01 02 03 04 05 07 08 09 10 11;
+	  for j in 01 02 03 04 05 06 07 08 09 10 11;
 	    do 
 	    ${1} HLT${i}${j};
 	  done;
@@ -78,7 +78,7 @@ sshSubfarm()
 	then
 	echo "No command name given.";
     else
-	echo "${PVSS_PROJECT_NAME} > Executing: ssh -X ${1} bash ${ONLINECONTROLSROOT}/scripts/utils.sh ${1}";
+	echo "${PVSS_PROJECT_NAME} > Executing: ssh -X ${1} bash ${ONLINECONTROLSROOT}/scripts/utils.sh ${2}";
 	ssh -q -f -Y ${1} "bash ${ONLINECONTROLSROOT}/scripts/utils.sh ${2}" &
 	#ssh -q -f -Y online@${1} "bash ${ONLINECONTROLSROOT}/scripts/utils.sh ${2}" &
     fi;

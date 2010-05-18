@@ -689,7 +689,8 @@ class Allocator(StreamingDescriptor):
     if strm_slots_per_node is None: strm_slots_per_node = self.strm_slots_per_node
 
     start = time.time()
-    if debug: print 'Starting action:',start
+    if debug: print 'Starting action:',start,' recv_slots_per_node:',recv_slots_per_node,' strm_slots_per_node:',strm_slots_per_node
+    print 'Starting action:',start,
     existing = self.getPartition(partition)
     if existing is not None:
       error('[Partition already allocated] Cannot allocate partition for:'+partition)

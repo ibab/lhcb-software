@@ -23,6 +23,10 @@ try:
 except:
   pass
 # =============================================================================
+def load(dict):
+  res = Dictionary.loadDict(lib_prefix+dict)
+  return res
+# =============================================================================
 def timeStamp():
   "Return current time as string"
   return time.ctime(time.time())

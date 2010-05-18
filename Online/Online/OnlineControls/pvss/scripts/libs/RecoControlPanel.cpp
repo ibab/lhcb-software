@@ -30,7 +30,7 @@ void RecoControlPanel_CheckAllocPanel(string dp, string value)  {
   m_sliceNotInUse.visible = 1;
   StreamControl_trace("System:"+sys+" DP:"+dp+" Value:"+value+" Slice:"+slice+" Stream:"+stream);
   setValue("m_sliceNotInUse","foreCol","red");
-  setValue("m_sliceNotInUse","text","The streaming slice\n"+slice+"\nin system "+sys+"\nis currently not used.");
+  setValue("m_sliceNotInUse","text","The streaming slice\n"+slice+"\nin system \n"+sys+"\nis currently not used.");
   LayerOff(2);
 }
 //=============================================================================

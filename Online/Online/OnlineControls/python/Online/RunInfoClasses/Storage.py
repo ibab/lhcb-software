@@ -88,7 +88,7 @@ class StorageInfo(General):
       item = streams[i][0]+('_%02d'%streams[i][1])
       short_name = 'WRT'+item
       task = self.name+'_'+node+'_WRT'+item
-      strmSenders.append(node+'/'+task+'/'+short_name+'/WRT'+streams[i][0]+cl1+'("'+item+'",)')
+      strmSenders.append(node+'/'+task+'/'+short_name+'/WRT'+streams[i][0]+cl2+'("'+item+'",)')
       short_name = 'RCV'+item
       task = self.name+'_'+node+'_RCV'+item
       strmReceivers.append(node+'/'+task+'/'+short_name+'/RCV'+streams[i][0])

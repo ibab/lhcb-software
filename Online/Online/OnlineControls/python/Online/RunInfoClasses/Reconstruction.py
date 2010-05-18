@@ -101,9 +101,12 @@ class Reconstruction(General):
       for i in self.recStreams.data:
         cnt = cnt + 1
         for k in relayNodes:
-          rel_task = self.name+'_'+k+'_RCV_'+j
-          storageTasks.append(j+'/'+self.name+'_'+j+'_SND_'+k+'_'+str(cnt)+'/Send_'+i+'/SND_'+i+stor_opt2+'/(("'+k+'-d1","'+rel_task+'"),)')
-      storageTasks.append(j+'/'+self.name+'_'+j+'_RCV_Rec/Recv_'+j+'/RCV'+stor_opt1+'/("",)')
+          rel_task = self.name+'_'+k+'_RCV'+i+'_'+j
+          # If we have pushing senders:
+          #storageTasks.append(j+'/'+self.name+'_'+j+'_SND_'+k+'_'+str(cnt)+'/Send_'+i+'/SND_'+i+stor_opt2+'/(("'+k+'-d1","'+rel_task+'"),)')
+          # Else if the receiver tasks are polling:
+          storageTasks.append(j+'/'+self.name+'_'+j+'_SND_'+k+'_'+str(cnt)+'/Send_'+i+'/SND_'+i+stor_opt1+'/(("'+k+'-d1","'+rel_task+'"),)')
+      storageTasks.append(j+'/'+self.name+'_'+j+'_RCV_Rec/Recv_'+j+'/RCVRec'+stor_opt1+'/("",)')
     
     # Define the infrastructure, receiver and sender tasks on the relay
     relayInfra=[]
@@ -111,9 +114,19 @@ class Reconstruction(General):
     relayReceivers=[]
     for j in relayNodes:
       for r in recv_nodes:
-        relayReceivers.append(j+'/'+self.name+'_'+j+'_RCV_'+r+'/Receiver_'+r+'/RCV'+cl1)
+        # If we have pushing senders:
+        #relayReceivers.append(j+'/'+self.name+'_'+j+'_RCV_'+r+'/Receiver_'+r+'/RCV'+cl1)
+        # Else if the receiver tasks are polling: next 5 lines!
+        cnt = 0
+        for k in self.recStreams.data:
+          cnt = cnt + 1
+          storage_task = self.name+'_'+r+'_SND_'+j+'_'+str(cnt)
+          relayReceivers.append(j+'/'+self.name+'_'+j+'_RCV'+k+'_'+r+'/'+k+'_'+r+'/RCV_'+k+'/Class2'+opt+'/(("'+r+'-d1","'+storage_task+'"),)')
+      s = 'ALL'
+      if len(self.recStreams.data)>0:
+        s = self.recStreams.data[0]
       for k in monNodes:
-        relaySenders.append(j+'/'+self.name+'_'+j+'_SND_'+k+'/Send_'+k+'/SND'+cl2+'/(("'+k+'-d1","'+self.name+'_'+k+'_RCV'+'"),)')
+        relaySenders.append(j+'/'+self.name+'_'+j+'_SND'+s+'_'+k+'/Send_'+k+'/SND'+cl2+'/(("'+k+'-d1","'+self.name+'_'+k+'_RCV'+'"),)')
       for d in self.recRelayInfra.data:
         i,mul = d.split('/')
         for k in xrange(int(mul)):
@@ -142,9 +155,11 @@ class Reconstruction(General):
     # Define reconstruction tasks: treat them like receivers (they are all class 1 tasks)
     monReceivers = []
     worker = self.monitoringTypes()[0]
+    i = 0
     for s in mon_slots:
       j,k=s.split(':')
-      monReceivers.append(j+'/'+self.name+'_'+j+'_'+worker+'_'+str(k)+'/'+worker+'_'+str(k)+'/'+worker+cl1)
+      monReceivers.append(j+'/'+self.name+'_'+j+'_'+worker+'_'+str(i)+'/'+worker+'_'+str(i)+'/'+worker+cl1)
+      i = i + 1
 
     # Fill all datapoints:
     # First the senders on the storage system

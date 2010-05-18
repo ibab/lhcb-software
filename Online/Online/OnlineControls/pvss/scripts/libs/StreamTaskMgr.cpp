@@ -63,6 +63,10 @@ int StreamTaskMgr_install()  {
   names[8]  = makeDynString ("","State","","");
   names[9]  = makeDynString ("","StreamNodes","","");
   names[10] = makeDynString ("","StreamSlices","","");
+  names[11] = makeDynString ("","RecvNodesGarage","","");
+  names[12] = makeDynString ("","RecvSlicesGarage","","");
+  names[13] = makeDynString ("","StreamNodesGarage","","");
+  names[14] = makeDynString ("","StreamSlicesGarage","","");
   types[1]  = makeDynInt (DPEL_STRUCT,0,0,0);
   types[2]  = makeDynInt (0,DPEL_DYN_STRING,0,0);
   types[3]  = makeDynInt (0,DPEL_STRING,0,0);
@@ -73,6 +77,10 @@ int StreamTaskMgr_install()  {
   types[8]  = makeDynInt (0,DPEL_STRING,0,0);
   types[9]  = makeDynInt (0,DPEL_DYN_STRING,0,0);
   types[10] = makeDynInt (0,DPEL_DYN_STRING,0,0);
+  types[11] = makeDynInt (0,DPEL_DYN_STRING,0,0);
+  types[12] = makeDynInt (0,DPEL_DYN_STRING,0,0);
+  types[13] = makeDynInt (0,DPEL_DYN_STRING,0,0);
+  types[14] = makeDynInt (0,DPEL_DYN_STRING,0,0);
   ctrlUtils_installDataType(names,types);
 
   names[1]  = makeDynString ("StreamConfigurator","","","");
@@ -141,9 +149,9 @@ int StreamTaskMgr_connectTaskManager(string stream)  {
       fwDim_unSubscribeCommandsByDp(cfg,dp_name+"*");
       fwDim_unSubscribeServicesByDp(cfg,dp_name+"*");
       dpSet(dp_name+".Name",name);
-      fwDim_subscribeCommand(cfg,svc_name+"/start",dp_name+".Start");
-      fwDim_subscribeCommand(cfg,svc_name+"/stop",dp_name+".Stop");
-      fwDim_subscribeCommand(cfg,svc_name+"/kill",dp_name+".Kill");
+      fwDim_subscribeCommand(cfg,svc_name+"/start",dp_name+".Start", 1);
+      fwDim_subscribeCommand(cfg,svc_name+"/stop",dp_name+".Stop", 1);
+      fwDim_subscribeCommand(cfg,svc_name+"/kill",dp_name+".Kill", 1);
       DebugN("Connect "+svc_name+" to "+dp_name);
     }
     DebugN("All Done.");

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSManager/src/DatapointIO.cpp,v 1.7 2007-04-20 09:32:44 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSManager/src/DatapointIO.cpp,v 1.8 2010-05-18 09:09:31 frankb Exp $
 //  ====================================================================
 //  DatapointIO.cpp
 //  --------------------------------------------------------------------
@@ -6,7 +6,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: DatapointIO.cpp,v 1.7 2007-04-20 09:32:44 frankb Exp $
+// $Id: DatapointIO.cpp,v 1.8 2010-05-18 09:09:31 frankb Exp $
 #include "DpIdentifierVar.hxx"
 #include "DpIdValueList.hxx"
 #include "DpIdentifier.hxx"
@@ -23,21 +23,22 @@
 
 using namespace PVSS;
 
-template <class T> static void simple_conversion(const Variable* var, T& val)  {
+template <class T> void pvss_simple_conversion(const Variable* var, T& val)  {
   switch(var->isA())  {
   case BIT_VAR:      val = T(((BitVar*)var)->getValue()==PVSS_TRUE ? 1 : 0); return;
   case CHAR_VAR:     val = T(((CharVar*)var)->getValue());                   return;
   case INTEGER_VAR:  val = T(((IntegerVar*)var)->getValue());                return;
   case UINTEGER_VAR: val = T(((UIntegerVar*)var)->getValue());               return;
   case FLOAT_VAR:    val = T(((FloatVar*)var)->getValue());                  return;
+  case TIME_VAR:     val = T(((TimeVar*)var)->getSeconds());                 return;
   default: break;
   }
   throw "Invalid variable type for data conversion";
 }
 
-template <> static void simple_conversion<bool>(const Variable* var, bool& v)  {
+template <> static void pvss_simple_conversion<bool>(const Variable* var, bool& v)  {
   char v0;
-  simple_conversion<char>(var,v0);
+  pvss_simple_conversion<char>(var,v0);
   v = v0 != 0;
 }
 
@@ -47,7 +48,7 @@ vector_conversion(const Variable* var, void (*ldf)(std::vector<T>&,T), std::vect
     T theVal;
     DynVar* theVar = (DynVar*)var;
     for (Variable* v=theVar->getFirst(); v; v=theVar->getNext())  {
-      simple_conversion(v,theVal);
+      pvss_simple_conversion(v,theVal);
       (*ldf)(val,theVal);
     }
     return;
@@ -58,7 +59,7 @@ vector_conversion(const Variable* var, void (*ldf)(std::vector<T>&,T), std::vect
 #define MAKE_CONVERSION(x) \
 void DatapointIO::value(const Variable* var,void (*ldf)(std::vector< x > &,x),std::vector< x > & val) \
 { vector_conversion<x>(var,ldf,val);  } \
-void DatapointIO::value(const Variable* var, x& val) {  simple_conversion(var,val);  }
+void DatapointIO::value(const Variable* var, x& val) {  pvss_simple_conversion(var,val);  }
 
 MAKE_CONVERSION(bool)
 MAKE_CONVERSION(char)

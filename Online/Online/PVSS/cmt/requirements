@@ -18,6 +18,8 @@ set PVSS_SYSTEM_ROOT "$(PVSS_installation)"
 set PROJECT_ROOT     "."
 set PLATFORM         "linux_RHEL4"
 
+path_remove  PATH            "/pvss/"                             WIN32 "\pvss\"
+path_remove  LD_LIBRARY_PATH "/pvss/"                             WIN32 "\pvss\"
 path_prepend PATH            "$(PVSS_installation)/bin"
 path_prepend LD_LIBRARY_PATH "$(PVSS_installation)/api/lib.linux" WIN32 ""
 path_prepend LD_LIBRARY_PATH "$(PVSS_installation)/bin"           WIN32 ""

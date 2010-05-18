@@ -246,6 +246,7 @@ int ProcessorFarm_installDataTypes()  {
   names[5]  = makeDynString ("","InUse","","");
   names[6]  = makeDynString ("","Command","","");
   names[7]  = makeDynString ("","State","","");
+  names[8]  = makeDynString ("","Slices","","");
   types[1]  = makeDynInt (DPEL_STRUCT,0,0,0);
   types[2]  = makeDynInt (0,DPEL_STRING,0,0);
   types[3]  = makeDynInt (0,DPEL_DYN_STRING,0,0);
@@ -253,6 +254,7 @@ int ProcessorFarm_installDataTypes()  {
   types[5]  = makeDynInt (0,DPEL_DYN_STRING,0,0);
   types[6]  = makeDynInt (0,DPEL_STRING,0,0);
   types[7]  = makeDynInt (0,DPEL_STRING,0,0);
+  types[8]  = makeDynInt (0,DPEL_DYN_STRING,0,0);
   ctrlUtils_installDataType(names,types);
   names[1]  = makeDynString ("FarmSlice","","","");
   names[2]  = makeDynString ("","InUse","","");
@@ -323,6 +325,8 @@ int ProcessorFarm_installDataTypes()  {
   names[19] = makeDynString ("","","streamMultiplicity","");
   names[20] = makeDynString ("","","streamTypes","");
   names[21] = makeDynString ("","","storeSlice","");
+  names[22] = makeDynString ("","Reprocessing","","");
+  names[23] = makeDynString ("","","nReaders","");
   types[1]  = makeDynInt (DPEL_STRUCT,0,0,0);
   types[2]  = makeDynInt (0,DPEL_STRUCT,0,0);
   types[3]  = makeDynInt (0,0,DPEL_STRING,0,0);
@@ -344,6 +348,8 @@ int ProcessorFarm_installDataTypes()  {
   types[19] = makeDynInt (0,0,DPEL_DYN_INT,0);
   types[20] = makeDynInt (0,0,DPEL_DYN_STRING,0);
   types[21] = makeDynInt (0,0,DPEL_STRING,0);
+  types[22] = makeDynInt (0,DPEL_STRUCT,0);
+  types[23] = makeDynInt (0,0,DPEL_INT,0);
   ctrlUtils_installDataType(names,types);
   return 1;
 }

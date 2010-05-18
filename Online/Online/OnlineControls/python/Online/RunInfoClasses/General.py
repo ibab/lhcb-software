@@ -95,19 +95,28 @@ class General:
 
         @return reference to initialized object
     """
-    self.manager     = manager
-    self.name        = name
-    self.postfix     = postfix
-    self.devMgr      = self.manager.deviceMgr()
-    self.reader      = self.manager.devReader()
+    self.manager      = manager
+    self.name         = name
+    self.postfix      = postfix
+    self.devMgr       = self.manager.deviceMgr()
+    self.reader       = self.manager.devReader()
 
-    self.outputLvl   = None
-    self.acceptFrac  = None
-    self.tae         = None
-    self.storeSlice  = None
-    self.monSlice    = None
-    self.tck         = None
-    self.L0Type      = None
+    self.outputLvl    = None
+    self.acceptFrac   = None
+    self.tae          = None
+    self.storeSlice   = None
+    self.monSlice     = None
+    self.tck          = None
+    self.L0Type       = None
+    self.hltType      = None
+    self.condDBtag    = None
+    self.gaudiVersion = None
+    self.mooreVersion = None
+    self.onlineVersion = None
+    self.dataflowVersion = None
+    self.lumiTrigger  = None
+    self.lumiPars     = None
+    self.beamgasTrigger = None
 
     dpn = self.manager.name()+':'+self.name+postfix+'.general.outputLevel'
     if self.devMgr.exists(dpn):
@@ -119,7 +128,6 @@ class General:
     if self.devMgr.exists(dpn):
       self.tae = self.dp('general.TAE')
     dpn = self.manager.name()+':'+self.name+postfix+'.Storage.storeSlice'
-    print dpn
     if self.devMgr.exists(dpn):
       self.storeSlice = self.dp('Storage.storeSlice')
     else:
@@ -173,6 +181,43 @@ class General:
     if self.devMgr.exists(dpn):
       self.L0Type = self.dp('Trigger.L0Type')
       self.reader.add(self.L0Type)
+    # Software versions
+    dpn = self.manager.name()+':'+self.name+self.postfix+'.Trigger.HLTType'
+    if self.devMgr.exists(dpn):
+      self.hltType = self.dp('Trigger.HLTType')
+      self.reader.add(self.hltType)
+    dpn = self.manager.name()+':'+self.name+self.postfix+'.Trigger.gaudiVersion'
+    if self.devMgr.exists(dpn):
+      self.gaudiVersion = self.dp('Trigger.gaudiVersion')
+      self.reader.add(self.gaudiVersion)
+    dpn = self.manager.name()+':'+self.name+self.postfix+'.Trigger.mooreVersion'
+    if self.devMgr.exists(dpn):
+      self.mooreVersion = self.dp('Trigger.mooreVersion')
+      self.reader.add(self.mooreVersion)
+    dpn = self.manager.name()+':'+self.name+self.postfix+'.Trigger.onlineVersion'
+    if self.devMgr.exists(dpn):
+      self.onlineVersion = self.dp('Trigger.onlineVersion')
+      self.reader.add(self.onlineVersion)
+    dpn = self.manager.name()+':'+self.name+self.postfix+'.Trigger.dataflowVersion'
+    if self.devMgr.exists(dpn):
+      self.dataflowVersion = self.dp('Trigger.dataflowVersion')
+      self.reader.add(self.dataflowVersion)
+    dpn = self.manager.name()+':'+self.name+self.postfix+'.Trigger.condDBTag'
+    if self.devMgr.exists(dpn):
+      self.condDBtag = self.dp('Trigger.condDBTag')
+      self.reader.add(self.condDBtag)
+    dpn = self.manager.name()+':'+self.name+self.postfix+'.Trigger.LumiTrigger'
+    if self.devMgr.exists(dpn):
+      self.lumiTrigger = self.dp('Trigger.LumiTrigger')
+      self.reader.add(self.lumiTrigger)
+    dpn = self.manager.name()+':'+self.name+self.postfix+'.Trigger.LumiPars'
+    if self.devMgr.exists(dpn):
+      self.lumiPars = self.dp('Trigger.LumiPars')
+      self.reader.add(self.lumiPars)
+    dpn = self.manager.name()+':'+self.name+self.postfix+'.Trigger.BeamGasTrigger'
+    if self.devMgr.exists(dpn):
+      self.beamgasTrigger = self.dp('Trigger.BeamGasTrigger')
+      self.reader.add(self.beamgasTrigger)
     return self
 
   # ===========================================================================

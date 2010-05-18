@@ -1,0 +1,3 @@
+#/bin/bash
+. ./setup.slc4_ia32_gcc34.vars
+PVSS_II="/localdisk/pvss/RECCTRL/config/config"; export PVSS_II

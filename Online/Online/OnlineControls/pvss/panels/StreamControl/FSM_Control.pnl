@@ -1,7 +1,7 @@
-V 10
+V 11
 1
 LANG:1 18 StreamControlPanel
-PANEL,-1 -1 570 298 N "_3DFace" 1
+PANEL,-1 -1 570 432 N "_3DFace" 1
 "$1"
 "#uses \"StreamControlPanel.cpp\"
 main()  {
@@ -40,12 +40,11 @@ LANG:1 0
 1
 "dashclr"N "_Transparent"
 E "main()    {  PanelOff();    }" 0
- 0 1 1 2 1 E U  1 E 13 142 165 289
+ 0 1 1 2 1 E U  1 E 13 142 165 418.0534839174169
 0 2 2 "0s" 0 0 0 64 0 0  13 142 1
 1
-LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
-0 ""
-1
+LANG:1 40 Bitstream Vera Sans,-1,11,5,50,0,0,0,0,0
+0 1
 LANG:1 0 
 2 16
 "m_params"
@@ -62,17 +61,16 @@ LANG:1 0
 1
 "dashclr"N "_Transparent"
 E "main()    {  PanelOff();    }" 0
- 0 1 1 2 1 E U  1 E 168 142 564 291
+ 0 1 1 2 1 E U  1 E 168 142 564 419.1744595274007
 0 2 2 "0s" 0 0 0 64 0 0  168 142 1
 1
-LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
-0 ""
-1
+LANG:1 40 Bitstream Vera Sans,-1,11,5,50,0,0,0,0,0
+0 1
 LANG:1 0 
 13 17
 "m_close"
 ""
-1 516 270 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+1 510 400 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
  E E
 26 0 0 0 0 0
 E E E
@@ -82,9 +80,8 @@ LANG:1 0
 
 0
 1
-LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-*-70-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
-0 ""
- 514 268 567 290
+LANG:1 40 Bitstream Vera Sans,-1,11,5,50,0,0,0,0,0
+0  508 398 561 420
 
 T 
 1
@@ -110,16 +107,15 @@ LANG:1 0
 1
 "dashclr"N "_Transparent"
 E "main()    {  PanelOff();    }" 0
- 0 0 1 0 1 E 0.999999999999999 0 3.020618556701064 -10 -129.8865979381456 0 E 10 43 581 141
+ 0 0 1 0 1 E 0.999999999999999 0 4.432989690721699 -10 -190.6185567010328 0 E 10 43 581 141
 1
-LANG:1 101 -*-MS Shell Dlg-bold-r-normal-*-15-*-100-100-*-*-iso8859-1|-15,0,0,0,758,0,0,0,0,0,0,0,0,MS Shell Dlg
-0 ""
-1
+LANG:1 33 MS Shell Dlg,-1,15,5,75,0,0,0,0,0
+0 1
 LANG:1 16 Input Parameters
 2 11
 "m_allRecvSlotText"
 ""
-1 20 160 E E E 1 E 1 E N "_WindowText" E N "_Transparent" E E
+1 20 297.1322751322751 E E E 1 E 1 E N "_WindowText" E N "_Transparent" E E
  "main()    {  PanelOff();    }" 0
  E
 18 0 0 0 0 0
@@ -131,17 +127,16 @@ LANG:1 0
 1
 "dashclr"N "_Transparent"
 E "main()    {  PanelOff();    }" 0
- 0 1 1 2 1 E U  1 E 10 30 110 40
-0 2 2 "0s" 0 0 0 64 0 0  10 30 1
+ 0 1 1 2 1 E U  1 E 10 22 110 43.16402116402116
+0 2 2 "0s" 0 0 0 64 0 0  10 22 1
 1
-LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,MS Shell Dlg
-0 ""
-1
+LANG:1 33 MS Shell Dlg,-1,11,5,50,0,0,0,0,0
+0 1
 LANG:1 16 Receiving Layer:
 2 12
 "m_allStrmSlotText"
 ""
-1 20 160 E E E 1 E 1 E N "_WindowText" E N "_Transparent" E E
+1 20 226.2857142857143 E E E 1 E 1 E N "_WindowText" E N "_Transparent" E E
  "main()    {  PanelOff();    }" 0
  E
 20 0 0 0 0 0
@@ -153,12 +148,11 @@ LANG:1 0
 1
 "dashclr"N "_Transparent"
 E "main()    {  PanelOff();    }" 0
- 0 1 1 2 1 E U  1 E 290 30 390 40
-0 2 2 "0s" 0 0 0 64 0 0  290 30 1
+ 0 1 1 2 1 E U  1 E 290 22 390 37.71428571428572
+0 2 2 "0s" 0 0 0 64 0 0  290 22 1
 1
-LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,MS Shell Dlg
-0 ""
-1
+LANG:1 33 MS Shell Dlg,-1,11,5,50,0,0,0,0,0
+0 1
 LANG:1 16 Streaming Layer:
 17 9
 "m_strmSlots"
@@ -174,9 +168,8 @@ LANG:1 0
 
 0
 1
-LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
-0 ""
- 288 48 562 142
+LANG:1 40 Bitstream Vera Sans,-1,11,5,50,0,0,0,0,0
+0  288 48 562 142
 0
 
 E
@@ -199,9 +192,8 @@ LANG:1 0
 
 0
 1
-LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
-0 ""
- 8 48 282 142
+LANG:1 40 Bitstream Vera Sans,-1,11,5,50,0,0,0,0,0
+0  8 48 282 142
 0
 
 E

@@ -6,9 +6,13 @@
 #uses "fwTreeDisplay.ctl"
 #uses "fwFsmTreeDisplay.ctl"
 
+int s_ctrlUtil_print_messages = 1;
+
 //=============================================================================
 void ctrlUtils_trace(string msg)  {
-  DebugN(msg);
+  if ( s_ctrlUtil_print_messages > 0 ) {
+    DebugTN(msg);
+  }
 }
 //=============================================================================
 string ctrlUtils_dimMapName() {
@@ -129,10 +133,10 @@ int ctrlUtils_uninstallDataType(string type,bool delete_datapoints=false)  {
 //=============================================================================
 string ctrlUtils_addFsmTreeNode(string parent, string node, string type, int isCU) {
   //if ( 0 == fwFsmTree_isNode(node) ) {
-    DebugN("Create Node:"+parent+"::"+node+" ["+type+"]");
+    DebugTN("Create Node:"+parent+"::"+node+" ["+type+"]");
     return fwFsmTree_addNode(parent, node, type, isCU);
     //}
-//DebugN("Node "+parent+"::"+node+" Exists already....");
+//DebugTN("Node "+parent+"::"+node+" Exists already....");
 //return node;
 }
 //=============================================================================
@@ -167,7 +171,7 @@ int ctrlUtils_createFsmTaskTree(string stream, string slice, dyn_string sets, in
   if ( 0 == fwFsmTree_isNode(node) ) {
     node = ctrlUtils_addFsmTreeNode(slices_node, node, "FSM_Slice", 1);
   }
-  DebugN("Slices:"+slices_node+" Stream:"+node,sets,tasks_per_set);
+  DebugTN("Slices:"+slices_node+" Stream:"+node,sets,tasks_per_set);
   if ( node != "" )   {
     if ( have_config )  {
       string dev = node+"_Config";
@@ -185,29 +189,29 @@ int ctrlUtils_createFsmTaskTree(string stream, string slice, dyn_string sets, in
     }
   }    
   if ( refresh ) fwFsmTree_refreshTree();
-  DebugN("All Done.");
+  DebugTN("All Done.");
   return 1;
 }
 //=============================================================================
 int ctrlUtils_deleteAllTree(string stream)  {
   fwFsmTree_removeNode("FSM",stream+"_Slices",1);
   fwFsmTree_refreshTree();
-  DebugN("All Done.");
+  DebugTN("All Done.");
 }
 //=============================================================================
 int ctrlUtils_genAllFSM(string stream="")  {
   fwFsmTree_generateAll();
-  DebugN("All Done.");
+  DebugTN("All Done.");
 }
 //=============================================================================
 int ctrlUtils_startAllTree(string stream="")  {
   fwFsmTree_startTree();
-  DebugN("All Done.");
+  DebugTN("All Done.");
 }
 //=============================================================================
 int ctrlUtils_stopAllTree(string stream="")  {
   fwFsmTree_stopTree();
-  DebugN("All Done.");
+  DebugTN("All Done.");
 }
 /// Install manager
 int ctrlUtils_installPythonManager(int num, string name, string script)  {

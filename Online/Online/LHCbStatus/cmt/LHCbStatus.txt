@@ -1,0 +1,108 @@
+PVSS> Internal DP length:32 bytes, DpIdentifier size:32 bytes
+
+Detector         HV status    DCS status       DAI status   DAQ status
+----------------------------------------------------------------------------------------------------
+RICH2            NOT_READY    EMERGENCY_OFF    NOT_READY    NOT_READY
+RICH1            DEAD         DEAD             NOT_READY    NOT_READY
+OTC              OFF          OFF              NOT_READY    NOT_READY
+TDET             NOT_READY    NOT_READY        NOT_READY    NOT_READY
+ECAL             READY        READY            READY        RUNNING
+VELOA            READY        READY            READY        RUNNING
+MUONC            STANDBY2     NOT_READY        NOT_READY    NOT_READY
+TT               READY        READY            READY        RUNNING
+MUONA            STANDBY2     NOT_READY        NOT_READY    NOT_READY
+IT               READY        READY            READY        RUNNING
+PRS              READY        READY            READY        RUNNING
+OTA              OFF          READY            OFF          NOT_READY
+HCAL             READY        READY            READY        RUNNING
+VELOC            READY        READY            READY        RUNNING
+----------------------------------------------------------------------------------------------------
+Injector                 NOT_READY        INCOMPLETE       EXCLUDED
+TCALO_DAQ                RUNNING          COMPLETE         INCLUDED
+Reconstruction           NOT_ALLOCATED    COMPLETE         EXCLUDED
+HV                       READY            INCOMPLETEDEV    EXCLUDED
+DAQ                      RUNNING          COMPLETE         INCLUDED
+TT                       RUNNING          INCOMPLETE       INCLUDED
+DCS                      READY            INCOMPLETEDEV    INCLUDED
+PRS                      RUNNING          INCOMPLETE       INCLUDED
+Monitoring               RUNNING          COMPLETE         INCLUDED
+HCAL                     RUNNING          INCOMPLETE       INCLUDED
+DAI                      READY            INCOMPLETEDEV    INCLUDED
+TMU_C                    NOT_READY        COMPLETE         EXCLUDED
+VELOA                    RUNNING          INCOMPLETE       INCLUDED
+MUONC                    NOT_READY        INCOMPLETE       INLOCAL
+VELOC                    RUNNING          INCOMPLETE       INCLUDED
+MUONA                    NOT_READY        INCOMPLETE       INLOCAL
+IT                       RUNNING          INCOMPLETE       INCLUDED
+TMU_A                    NOT_READY        COMPLETE         EXCLUDED
+TPU_DAQ                  READY            COMPLETE         INCLUDED
+TDET                     NOT_ALLOCATED    INCOMPLETE       EXCLUDED
+RICH2                    NOT_ALLOCATED    INCOMPLETE       EXCLUDED
+RICH1                    NOT_READY        INCOMPLETE       EXCLUDED
+L0DU_CU                  RUNNING          COMPLETE         INCLUDED
+Storage                  RUNNING          COMPLETE         INCLUDED
+HLT                      RUNNING          COMPLETE         INCLUDED
+ECAL                     RUNNING          INCOMPLETE       INCLUDED
+OTA                      NOT_ALLOCATED    INCOMPLETE       EXCLUDED
+OTC                      NOT_READY        INCOMPLETE       EXCLUDED
+CALIB                    NOT_READY        INCOMPLETE       EXCLUDED
+TFC                      RUNNING          COMPLETE         INCLUDED
+INF                      NOT_READY        INCOMPLETE       EXCLUDED
+LHC.FillNumber           0
+LHC.Mode                 SHUTDOWN
+LHC.State
+LHC.Energy               65535
+Magnet.Set.Current       5850.0
+Magnet.Set.Polarity      1
+Magnet.Measured.Current  5850.0
+Magnet.Measured.Polarity 1
+VELO.MotionSystem.ResolPosRC -0.019999999553
+VELO.MotionSystem.ResolPosLA 0.0500000007451
+VELO.MotionSystem.ResolPosY -0.0299999993294
+HLTFarm.nSubFarms        1
+HLTFarm.subFarms         <ROOT.vector<string> object at 0x1871c470>
+HLTFarm.nodeList         <ROOT.vector<string> object at 0x188398d0>
+HLTFarm.requestedSubFarms <ROOT.vector<string> object at 0x18839668>
+HLTFarm.hltRate          0.0
+HLTFarm.runHltRate       0.0383494049311
+HLTFarm.hltRateWidget    0.0
+HLTFarm.runHltRateWidget 0.108412131667
+HLTFarm.hltNTriggers     171
+SubDetectors.tell1List   <ROOT.vector<string> object at 0x188398d0>
+SubDetectors.ethMTU      8996
+SubDetectors.recalculate 2 1 VELOC
+SubDetectors.tell1Info   <ROOT.vector<string> object at 0x18838aa0>
+SubDetectors.tell1Domains <ROOT.vector<string> object at 0x18845100>
+TFC.nTriggers            9026
+TFC.triggerRate          2.19730353355
+TFC.runTriggerRate       2.53372454643
+TFC.liveTime             100.0
+TFC.runLiveTime          99.9999771118
+TFC.OdinData             tfcodin04-d2
+TFC.OdinMEPRequest       tfcodin04-d1
+TFC.deadTime             0.0
+TFC.runDeadTime          2.07185476029e-05
+TFC.triggerRateWidget    2.19730353355
+TFC.runTriggerRateWidget 0.135588467121
+TFC.nTriggersU           0
+TFC.lostTriggers         0
+Trigger.TCK              -2142961655
+Trigger.TCKLabel         PA accept=PVSS (0x80450000)
+Trigger.onlineVersion    Online_v4r22
+Trigger.gaudiVersion
+Trigger.mooreVersion     Moore_v7r0
+Trigger.HLTType          PA
+Trigger.swPath           /group/hlt
+Trigger.dataflowVersion
+Trigger.L0Type           COSMICS_SpdGt10_0x0009
+general.TAE              2
+general.L0Gap            0
+general.activePartId     7277
+general.dataType         TED
+general.fillNumber       0
+general.partName         LHCb
+general.runNMinutes      0
+general.runNTriggers     0
+general.runNumber        50424
+general.runType          TED
+status                   2

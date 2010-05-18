@@ -71,6 +71,6 @@ elif test -n "${PVSS_PROJECT_NAME}" -a -n "${FSMTYPE}" -a "${PVSSACTION}" = "EXT
 	-filter DOP -filterDp fwOT_${FSMTYPE}.*;
 elif test -n "${PVSS_PROJECT_NAME}" -a -n "${FSMTYPE}" -a "${PVSSACTION}" = "LOAD";
     then
-    echo Extracting FSM type ${FSMTYPE} for project ${PVSS_PROJECT_NAME};
+    echo Loading FSM type ${FSMTYPE} for project ${PVSS_PROJECT_NAME};
     ${PVSS_II_HOME}/bin/PVSS00ascii -proj ${PVSS_PROJECT_NAME} -in ${ONLINECONTROLSROOT}/pvss/dplist/${FSMTYPE}.dpl;
 fi;

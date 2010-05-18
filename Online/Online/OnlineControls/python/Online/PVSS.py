@@ -69,7 +69,16 @@ DP                = PVSS.DataPoint
 #
 def DataPoint_get(self):
   "Datapoint property function: get"
-  return self.value().data()
+  try:
+    return self.value().data()
+  except Exception,X:
+    print 'Data point: ',self.name()
+    print '     value: ',self.value()
+    if self.value() is not None:
+      print '     type:  ',self.value().type()
+      
+    raise X
+
 def DataPoint_set(self,value):
   "Datapoint property function: set"
   import traceback

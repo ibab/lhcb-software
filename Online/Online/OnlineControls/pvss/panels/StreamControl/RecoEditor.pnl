@@ -1,11 +1,13 @@
-V 10
+V 11
 1
 LANG:1 19 StreamConfiguration
-PANEL,-1 -1 383 430 N "_3DFace" 0
+PANEL,-1 -1 383 430 N "_3DFace" 1
+"$1"
 "#uses \"RecoControlPanel.cpp\"
 main()  {
   string strm = \"Reconstruction\", partition = \"LHCb\";
   string slice = \"Reconstruction_Slice00\";//$1;
+  slice = $1;
   if ( slice != \"\" )  {
     setValue(\"m_Ok\",\"visible\",0);
     setValue(\"m_Cancel\",\"visible\",0);
@@ -57,9 +59,8 @@ LANG:1 0
 "dashclr"N "_Transparent"
 E E 0 0 1 0 1 E 0.6491228070175434 0 0.7113402061855701 0.5087719298245652 23.41237113402048 0 E 10 43 581 141
 1
-LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
-0 ""
-1
+LANG:1 40 Bitstream Vera Sans,-1,11,5,50,0,0,0,0,0
+0 1
 LANG:1 22 Data Source Parameters
 30 54
 "m_workerFrame"
@@ -76,9 +77,8 @@ LANG:1 0
 "dashclr"N "_Transparent"
 E E 0 0 1 0 1 E 0.649122807017543 0 1.257731958762891 0.5087719298245794 209.9175257731957 0 E 10 43 581 141
 1
-LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
-0 ""
-1
+LANG:1 40 Bitstream Vera Sans,-1,11,5,50,0,0,0,0,0
+0 1
 LANG:1 22 Worker Node Parameters
 13 67
 "m_Cancel"
@@ -93,9 +93,8 @@ LANG:1 0
 
 0
 1
-LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,MS Shell Dlg
-0 ""
- 12 396 75 420
+LANG:1 33 MS Shell Dlg,-1,11,5,50,0,0,0,0,0
+0  12 396 75 420
 
 T 
 1
@@ -116,9 +115,8 @@ LANG:1 0
 
 0
 1
-LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,MS Shell Dlg
-0 ""
- 307 396 370 420
+LANG:1 33 MS Shell Dlg,-1,11,5,50,0,0,0,0,0
+0  307 396 370 420
 
 T 
 1
@@ -139,9 +137,8 @@ LANG:1 0
 
 0
 1
-LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,MS Shell Dlg
-0 ""
- 85 396 148 420
+LANG:1 33 MS Shell Dlg,-1,11,5,50,0,0,0,0,0
+0  85 396 148 420
 
 T 
 1
@@ -162,9 +159,8 @@ LANG:1 0
 
 0
 1
-LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,MS Shell Dlg
-0 ""
- 158 396 221 420
+LANG:1 33 MS Shell Dlg,-1,11,5,50,0,0,0,0,0
+0  158 396 221 420
 
 T 
 1
@@ -184,19 +180,11 @@ E E E
 LANG:1 0 
 
 0
- 200 303 370 352.9999999999998
+1
+LANG:1 31 Sans Serif,11,-1,5,50,0,0,0,0,0
+0  200 303 369 352
 15 PVSS.TextEdit.1
-5
-0 "TextChanged" "()"
-""
-0 "ReturnPressed" "()"
-""
-0 "ModificationChanged" "(bool mod)"
-""
-0 "Clicked" "(int para, int pos)"
-""
-0 "CursorPositionChanged" "(int para, int pos)"
-""
+0
 E21 60
 "m_workerStrategy"
 ""
@@ -210,9 +198,8 @@ LANG:1 0
 
 0
 1
-LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
-0 ""
- 198 278 242 302.0000000000001
+LANG:1 40 Bitstream Vera Sans,-1,11,5,50,0,0,0,0,0
+0  198 278 242 302
 0
 
 E
@@ -236,9 +223,8 @@ LANG:1 0
 E E 0 1 1 2 1 E U  1 E 16 281 176 301
 0 2 2 "0s" 0 0 0 64 0 0  16 281 1
 1
-LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
-0 ""
-1
+LANG:1 40 Bitstream Vera Sans,-1,11,5,50,0,0,0,0,0
+0 1
 LANG:1 30 Allocation Strategy Parameter:
 2 58
 "m_workerInfraText"
@@ -256,14 +242,12 @@ LANG:1 0
 E E 0 1 1 2 1 E U  1 E 16 313 176 333
 0 2 2 "0s" 0 0 0 64 0 0  16 313 2
 1
-LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
-0 ""
-1
+LANG:1 40 Bitstream Vera Sans,-1,11,5,50,0,0,0,0,0
+0 1
 LANG:1 26 Infrastructure Task Types:
 1
-LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
-0 ""
-1
+LANG:1 40 Bitstream Vera Sans,-1,11,5,50,0,0,0,0,0
+0 1
 LANG:1 0 
 29 77
 "m_ctrlInfraTypes"
@@ -277,19 +261,11 @@ E E E
 LANG:1 0 
 
 0
- 199 137 369 187
+1
+LANG:1 31 Sans Serif,11,-1,5,50,0,0,0,0,0
+0  199 137 368 186
 15 PVSS.TextEdit.1
-5
-0 "TextChanged" "()"
-""
-0 "ReturnPressed" "()"
-""
-0 "ModificationChanged" "(bool mod)"
-""
-0 "Clicked" "(int para, int pos)"
-""
-0 "CursorPositionChanged" "(int para, int pos)"
-""
+0
 E2 50
 "m_ctrlInfraText"
 ""
@@ -306,19 +282,17 @@ LANG:1 0
 E E 0 1 1 2 1 E U  1 E 16 145 176 165
 0 2 2 "0s" 0 0 0 64 0 0  16 145 2
 1
-LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
-0 ""
-1
+LANG:1 40 Bitstream Vera Sans,-1,11,5,50,0,0,0,0,0
+0 1
 LANG:1 26 Infrastructure Task Types:
 1
-LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
-0 ""
-1
+LANG:1 40 Bitstream Vera Sans,-1,11,5,50,0,0,0,0,0
+0 1
 LANG:1 0 
 2 70
 "m_partition"
 ""
-1 340 58.99999999999999 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+1 340 78.99999999999999 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
  E E
 107 0 0 0 0 0
 E E E
@@ -328,12 +302,11 @@ LANG:1 0
 
 1
 "dashclr"N "_Transparent"
-E E 0 1 1 2 1 E 1 0 0.9999999999999998 5.329070518200751e-15 20 1 E 264 24 374 34
-0 2 2 "0s" 0 0 0 64 0 0  264 24 1
+E E 0 1 1 2 1 E U  1 E 264 43.99999999999999 374 53.99999999999999
+0 2 2 "0s" 0 0 0 64 0 0  264 43.99999999999999 1
 1
-LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
-0 ""
-1
+LANG:1 40 Bitstream Vera Sans,-1,11,5,50,0,0,0,0,0
+0 1
 LANG:1 0 
 2 80
 "m_runInfoDP"
@@ -351,9 +324,8 @@ LANG:1 0
 E E 0 1 1 2 1 E U  1 E 146 44 256 54
 0 2 2 "0s" 0 0 0 64 0 0  146 44 1
 1
-LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
-0 ""
-1
+LANG:1 40 Bitstream Vera Sans,-1,11,5,50,0,0,0,0,0
+0 1
 LANG:1 0 
 2 69
 "m_streamName"
@@ -373,14 +345,13 @@ E "main()    { RecoControlPanel_showStreamControl();  }
  0 1 1 2 1 E U  1 E 263 23 373 33
 0 2 2 "0s" 0 0 0 64 0 0  263 23 1
 1
-LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
-0 ""
-1
+LANG:1 40 Bitstream Vera Sans,-1,11,5,50,0,0,0,0,0
+0 1
 LANG:1 0 
 2 83
 "m_partitionName"
 ""
-1 340 30 E E E 1 E 1 E N "_WindowText" E N "_Transparent" E E
+1 340 40.21428571428572 E E E 1 E 1 E N "_WindowText" E N "_Transparent" E E
  E E
 117 0 0 0 0 0
 E E E
@@ -390,12 +361,11 @@ LANG:1 0
 
 1
 "dashclr"N "_Transparent"
-E E 0 1 1 2 1 E U  1 E 11 17 121 27
+E E 0 1 1 2 1 E U  1 E 11 17 121 34.85714285714286
 0 2 2 "0s" 0 0 0 64 0 0  11 17 1
 1
-LANG:1 115 -*-Bitstream Vera Sans-bold-r-normal-*-13-*-100-100-*-*-iso8859-1|-13,0,0,0,758,0,0,0,0,0,0,0,0,Bitstream Vera Sans
-0 ""
-1
+LANG:1 40 Bitstream Vera Sans,-1,13,5,75,0,0,0,0,0
+0 1
 LANG:1 10 Partition:
 2 84
 "m_runInfoText"
@@ -413,9 +383,8 @@ LANG:1 0
 E E 0 1 1 2 1 E U  1 E 12 38 245 52
 0 2 2 "0s" 0 0 0 64 0 0  12 38 1
 1
-LANG:1 115 -*-Bitstream Vera Sans-bold-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,758,0,0,0,0,0,0,0,0,Bitstream Vera Sans
-0 ""
-1
+LANG:1 40 Bitstream Vera Sans,-1,11,5,75,0,0,0,0,0
+0 1
 LANG:1 9 Run info:
 30 88
 "FRAME2"
@@ -432,9 +401,8 @@ LANG:1 0
 "dashclr"N "_Transparent"
 E E 0 0 1 0 1 E 1.005305039787798 0 1.293577981651376 -1.015915119363356 -63.97247706422009 0 E 3 51 381 379
 1
-LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
-0 ""
-1
+LANG:1 40 Bitstream Vera Sans,-1,11,5,50,0,0,0,0,0
+0 1
 LANG:1 16 Parameter Editor
 13 93
 "m_options"
@@ -449,9 +417,8 @@ LANG:1 0
 
 0
 1
-LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,MS Shell Dlg
-0 ""
- 231 396 294 420
+LANG:1 33 MS Shell Dlg,-1,11,5,50,0,0,0,0,0
+0  231 396 294 420
 
 T 
 1
@@ -472,9 +439,8 @@ LANG:1 0
 
 0
 1
-LANG:1 122 -*-Bitstream Vera Sans Mono-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans Mono
-0 ""
- 198 355 371 379
+LANG:1 45 Bitstream Vera Sans Mono,-1,11,5,50,0,0,0,0,0
+0  198 355 371 379
 3 "0s" 0 0 0 0 0 -1  E E E
 2 95
 "m_workerTypeText"
@@ -492,14 +458,12 @@ LANG:1 0
 E E 0 1 1 2 1 E U  1 E 18 360 178 380
 0 2 2 "0s" 0 0 0 64 0 0  18 360 2
 1
-LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
-0 ""
-1
+LANG:1 40 Bitstream Vera Sans,-1,11,5,50,0,0,0,0,0
+0 1
 LANG:1 17 Worker Task Type:
 1
-LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
-0 ""
-1
+LANG:1 40 Bitstream Vera Sans,-1,11,5,50,0,0,0,0,0
+0 1
 LANG:1 0 
 2 99
 "m_relayInfraText"
@@ -517,14 +481,12 @@ LANG:1 0
 E E 0 1 1 2 1 E U  1 E 16 219 176 239
 0 2 2 "0s" 0 0 0 64 0 0  16 219 2
 1
-LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
-0 ""
-1
+LANG:1 40 Bitstream Vera Sans,-1,11,5,50,0,0,0,0,0
+0 1
 LANG:1 26 Infrastructure Task Types:
 1
-LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
-0 ""
-1
+LANG:1 40 Bitstream Vera Sans,-1,11,5,50,0,0,0,0,0
+0 1
 LANG:1 0 
 29 101
 "m_relayInfraTypes"
@@ -538,19 +500,11 @@ E E E
 LANG:1 0 
 
 0
- 200 207 370 257
+1
+LANG:1 31 Sans Serif,11,-1,5,50,0,0,0,0,0
+0  200 207 369 256
 15 PVSS.TextEdit.1
-5
-0 "TextChanged" "()"
-""
-0 "ReturnPressed" "()"
-""
-0 "ModificationChanged" "(bool mod)"
-""
-0 "Clicked" "(int para, int pos)"
-""
-0 "CursorPositionChanged" "(int para, int pos)"
-""
+0
 E30 97
 "m_relayFrame"
 ""
@@ -566,9 +520,8 @@ LANG:1 0
 "dashclr"N "_Transparent"
 E E 0 0 1 0 1 E 0.6491228070175434 0 0.7010309278350543 0.5087719298245652 163.8556701030927 0 E 10 43 581 141
 1
-LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
-0 ""
-1
+LANG:1 40 Bitstream Vera Sans,-1,11,5,50,0,0,0,0,0
+0 1
 LANG:1 16 Relay Parameters
 2 103
 "m_strmTypesText"
@@ -586,14 +539,12 @@ LANG:1 0
 E E 0 1 1 2 1 E U  1 E 16.00000000000002 78 176 98
 0 2 2 "0s" 0 0 0 64 0 0  16.00000000000002 78 2
 1
-LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
-0 ""
-1
+LANG:1 40 Bitstream Vera Sans,-1,11,5,50,0,0,0,0,0
+0 1
 LANG:1 18 Data Stream Types:
 1
-LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
-0 ""
-1
+LANG:1 40 Bitstream Vera Sans,-1,11,5,50,0,0,0,0,0
+0 1
 LANG:1 0 
 29 102
 "m_strmTypes"
@@ -607,19 +558,11 @@ E E E
 LANG:1 0 
 
 0
- 201 68 371 117.9999999999999
+1
+LANG:1 31 Sans Serif,11,-1,5,50,0,0,0,0,0
+0  201 68 370 117
 15 PVSS.TextEdit.1
-5
-0 "TextChanged" "()"
-""
-0 "ReturnPressed" "()"
-""
-0 "ModificationChanged" "(bool mod)"
-""
-0 "Clicked" "(int para, int pos)"
-""
-0 "CursorPositionChanged" "(int para, int pos)"
-""
+0
 E30 104
 "m_ctrlFrame"
 ""
@@ -635,9 +578,8 @@ LANG:1 0
 "dashclr"N "_Transparent"
 E E 0 0 1 0 1 E 0.6491228070175434 0 0.6902458366375923 0.5087719298245652 95.31942902458353 0 E 10 43 581 141
 1
-LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
-0 ""
-1
+LANG:1 40 Bitstream Vera Sans,-1,11,5,50,0,0,0,0,0
+0 1
 LANG:1 22 Controls PC Parameters
 0
 LAYER, 2 
@@ -659,9 +601,8 @@ LANG:1 0
 E E 0 1 1 2 1 E U  1 E 10 90 369 376
 0 2 2 "0s" 0 0 0 64 0 0  10 90 1
 1
-LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-28-*-100-100-*-*-iso8859-1|-28,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
-0 ""
-1
+LANG:1 40 Bitstream Vera Sans,-1,28,5,50,0,0,0,0,0
+0 1
 LANG:1 8 Not Used
 0
 LAYER, 3 

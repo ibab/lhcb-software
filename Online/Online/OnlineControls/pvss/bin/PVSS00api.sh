@@ -2,7 +2,6 @@
 . /group/online/dataflow/scripts/pvss_preamble.sh $*
 cd $RELEASE_DIR/Online/OnlineControls/cmt
 . setup.slc4_ia32_gcc34.vars
-export LD_PRELOAD=${PYTHONHOME}/lib/libpython2.5.so
 #
 # Clean runtime environment
 #

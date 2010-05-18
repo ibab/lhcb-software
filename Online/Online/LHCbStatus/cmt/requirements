@@ -1,0 +1,21 @@
+package LHCbStatus
+version v1r0
+
+branches  cmt doc
+use GaudiPolicy    v*
+use DIM            v* Online
+use OnlineKernel   v* Online
+use Reflex         v* LCG_Interfaces -no_auto_imports
+use OnlineControls v* Online
+apply_pattern install_more_includes more=LHCbStatus
+
+
+library LHCbStatus *.cpp
+apply_pattern linker_library   library=LHCbStatus
+
+macro_append gccxml_cppflags ' -D__GCCXML '
+apply_pattern reflex_dictionary dictionary=LHCbStatus \
+                                headerfiles=$(LHCBSTATUSROOT)/dict/dictionary.h \
+                                selectionfile=$(LHCBSTATUSROOT)/dict/dictionary.xml
+# Gnerate dictionary rootmap file
+apply_pattern generate_rootmap library=LHCbStatusDict

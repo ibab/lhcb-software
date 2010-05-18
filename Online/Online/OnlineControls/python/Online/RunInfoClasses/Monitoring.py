@@ -51,7 +51,7 @@ class Monitoring(General):
     return sum(self.monMult.data)
   # ===========================================================================
   def numLayer1Slots(self):
-    return 2*len(self.monStreams.data)
+    return len(self.monStreams.data)
   # ===========================================================================
   def monitoringTypes(self):
     return self.monTypes.data
