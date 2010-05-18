@@ -34,20 +34,12 @@ use GaudiAlg		v*			-no_auto_imports
 use DDDB               v*   Det            -no_auto_imports
 use FieldMap           v*                 -no_auto_imports
 
-# Not a requirement!
-#-- Lbcom packages (from LBCOM_v5r8)
-#use LbcomSys            v*       -no_auto_imports
-
 #-- LHCb libraries (from LHCB_v21r11)
-#use LHCbSys             v*        -no_auto_imports
 use   STDet           v*     Det
 use   OTDet           v*     Det
 use   VeloDet         v*     Det
 use   MuonDet         v*     Det
 
-
-# The whole REC project
-#use RecSys             v*                   -no_auto_imports
 
 # From the Alignment project
 use AlignTrTools	v*	Alignment	-no_auto_imports
@@ -66,12 +58,8 @@ library         MisAlignAlg      ../src/*.cpp -import=AIDA
 apply_pattern    component_library      library=MisAlignAlg
 
 
-#===== build Misaligner =========================
-application Misaligner $(GAUDICONFROOT)/src/GaudiMain.cpp
 # ========================= set macros ============================
 macro Misaligner_linkopts	"$(application_linkopts)"
-
-apply_pattern application_path
 
 # Set the default path for Escher options.
 set Misaligner ${MISALIGNERROOT}/options

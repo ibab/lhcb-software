@@ -7,6 +7,10 @@ Purpose: LHCb Alignment packages.
 	 Misalignment paramaters will be stored in xml files which then have to
 	 uploaded to the conditions data base by hand, using the tools in Det/ConddbUI
 
+- 18/05/2010 Johan Blouw
+  - removed the commented lines from the requirements file
+  - tested that it runs fine with gaudirun.py
+
 </PRE><H1><A NAME=v1r3>2010-05-05 MisAligner v1r3</A></H1><PRE>
 - 05/05/2010: 
   - Removed *Sys* requirements from build, 
