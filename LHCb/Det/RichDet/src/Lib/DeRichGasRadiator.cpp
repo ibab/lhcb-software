@@ -68,14 +68,9 @@ StatusCode DeRichGasRadiator::initialize ( )
   bool HltMode( true );
 
   // setup gas conditions
-  if ( hasCondition( "GasParameters" ) )
+  if ( hasCondition( "GasParameters" ) && condition("GasParameters") )
   {
     m_gasParametersCond = condition( "GasParameters" );
-    if ( !m_gasParametersCond ) // protect for database mismatch
-    {
-      msg << MSG::ERROR << "Cannot find GasParameters in LHCBCOND" << endmsg;
-      return StatusCode::FAILURE;
-    }
     msg << MSG::DEBUG << "Using condition <GasParameters>" << endmsg;
     updMgrSvc()->registerCondition( this, m_gasParametersCond.path(),
                                     &DeRichGasRadiator::updateProperties );
@@ -98,14 +93,9 @@ StatusCode DeRichGasRadiator::initialize ( )
   }
 
   // hlt condition
-  if ( hasCondition( "HltGasParameters" ) )
+  if ( hasCondition( "HltGasParameters" ) && condition( "HltGasParameters" ) )
   {
     m_hltGasParametersCond = condition( "HltGasParameters" );
-    if ( !m_hltGasParametersCond )
-    {
-      msg << MSG::ERROR << "Cannot find HltGasParameters in LHCBCOND" << endmsg;
-      return StatusCode::FAILURE;
-    }
     msg << MSG::DEBUG << "Found condition <HltGasParameters>" << endmsg;
     foundGasConditions = true;
   }
@@ -395,7 +385,7 @@ StatusCode DeRichGasRadiator::setupOldGasConditions ( ) {
 
   // configure refractive index updates
   // temperature
-  if ( hasCondition( "GasTemperature" ) )
+  if ( hasCondition( "GasTemperature" ) && condition("GasTemperature") )
   {
     m_temperatureCond = condition( "GasTemperature" );
     updMgrSvc()->registerCondition(this, m_temperatureCond.path(),
@@ -409,7 +399,7 @@ StatusCode DeRichGasRadiator::setupOldGasConditions ( ) {
   }
 
   // pressure
-  if ( hasCondition( "GasPressure" ) )
+  if ( hasCondition( "GasPressure" ) && condition("GasPressure") )
   {
     m_pressureCond = condition( "GasPressure" );
     updMgrSvc()->registerCondition( this, m_pressureCond.path(),
