@@ -41,7 +41,7 @@ class DiMuonLines :
             'Hlt2UnbiasedDiMuon',  
             'Hlt2UnbiasedDiMuonLowMass',
             'Hlt2DiMuonSameSign',
-          
+            'Hlt2MuonFromHLT1',
             ]
             
         return lines
