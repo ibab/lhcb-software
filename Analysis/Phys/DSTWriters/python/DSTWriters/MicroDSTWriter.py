@@ -1,7 +1,7 @@
 """
 
 """
-__version__ = "$Id: MicroDSTWriter.py,v 1.12 2010-05-07 12:14:44 jpalac Exp $"
+__version__ = "$Id: MicroDSTWriter.py,v 1.13 2010-05-18 16:02:08 jpalac Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -41,9 +41,7 @@ class MicroDSTWriter(BaseDSTWriter) :
         return OutputStream
     
     def extendStream(self, seq, stream) :
-        location = self.getProp("OutputPrefix")
-        if location == 'SequenceName' :
-            location = seq.name().replace('.', '')
+        location = self.outputPrefix(seq)
         if self.getProp("CopyODIN") :
             stream.OptItemList += ["/Event/DAQ/ODIN#1"]
         if self.getProp("CopyRecHeader") :
@@ -65,13 +63,16 @@ class MicroDSTWriter(BaseDSTWriter) :
                  location = location[:len(location)-1]
             loc += [location]
         return loc
-    
-    def setOutputPrefix(self, seq, cloner) :
+
+    def outputPrefix(self, seq) :
         prefix = self.getProp('OutputPrefix')
         if prefix != 'SequenceName' :
-            cloner.OutputPrefix = self.getProp('OutputPrefix')
+            return self.getProp('OutputPrefix')
         else :
-            cloner.OutputPrefix = seq.name()
+            return seq.name().replace('.', '')
+    
+    def setOutputPrefix(self, seq, cloner) :
+        cloner.OutputPrefix = self.outputPrefix(seq)
             
     def _copyRecHeader(self, sel):
         from Configurables import CopyRecHeader

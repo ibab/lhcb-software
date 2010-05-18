@@ -2,7 +2,7 @@
 Write a DST for a single selection sequence. Writes out the entire
 contents of the input DST
 """
-__version__ = "$Id: SelDSTWriter.py,v 1.5 2010-05-07 12:14:44 jpalac Exp $"
+__version__ = "$Id: SelDSTWriter.py,v 1.6 2010-05-18 16:02:08 jpalac Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -32,19 +32,39 @@ class SelDSTWriter(MicroDSTWriter) :
                        "CopyBTags" : """ Copy FlavourTags bank into /Event/OutputPrefix. Default: False. """,
                        "OutputPrefix" : """ Prefix of TES location of candidates output: /Event/OutputPrefix/xxxx. Default 'Sel'."""}
 
+    def multiSequences(self) :
+        return len(self.selectionSequences()) > 1
+
     def outputStreamType(self) :
         from Configurables import InputCopyStream
         return InputCopyStream
 
     def extendStream(self, seq, stream) :
+        if self.multiSequences() :
+            self.setProp('OutputPrefix', 'SequenceName')
+            log.info('More than one SelectionSequence. Partition output TES structure.')
         stream.TakeOptionalFromTES = True
         stream.Preload = False          # True makes LoKi crash (why?)
         stream.PreloadOptItems = False  # True makes LoKi crash (why?)
+        stream.OutputLevel = 1
         if self.getProp("SaveCandidates") :
             MicroDSTWriter.extendStream(self, seq, stream)
 
     def fileExtension(self) :
         return ".dst"
+
+    def _nodeKiller(self, seq) :
+        from Configurables import EventNodeKiller
+        loc = '/Event/'+self.outputPrefix(seq)
+        log.info('Add Killer for node '+ loc)
+        print 'Add Killer for node', loc
+        return EventNodeKiller(seq.name()+'NodeKiller',
+                               Nodes = [loc])
+
+    def addOutputStream(self, seq) :
+        MicroDSTWriter.addOutputStream(self, seq)
+        if self.getProp("SaveCandidates") and self.multiSequences() :
+            seq.Members += [self._nodeKiller(seq)]
 
     def extendSequence(self, sel) :
         seqExtension = []
