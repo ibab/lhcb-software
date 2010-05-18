@@ -1,4 +1,4 @@
-// $Id: PackedEventDict.h,v 1.5 2009-11-04 17:13:08 jonrob Exp $
+// $Id: PackedEventDict.h,v 1.6 2010-05-18 09:04:35 jonrob Exp $
 #ifndef DICT_PACKEDEVENTDICT_H 
 #define DICT_PACKEDEVENTDICT_H 1
 
@@ -19,5 +19,7 @@
 #include "Event/PackedMCRichDigitSummary.h"
 #include "Event/PackedRichPID.h"
 #include "Event/PackedMuonPID.h"
+#include "Event/PackedParticle.h"
+#include "Event/PackedVertex.h"
 
 #endif // DICT_PACKEDEVENTDICT_H
