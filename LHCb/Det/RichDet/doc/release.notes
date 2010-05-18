@@ -4,6 +4,12 @@
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
 
+! 2010-05-17 - Antonis Papanestis
+ - Update to allow the detector element to initialize even if the 
+   normal gas conditions are not there. The HLT gas conditions are required
+   in this case. If the normal refarctive index is asked for in the HLT 
+   environment an exception is thrown.
+
 !======================== RichDet v14r2 2010-04-26 ===========================
 ! 2010-04-23 - Antonis Papanestis
  - Added protection for a zero second order demagnification factor. The

@@ -62,6 +62,11 @@ StatusCode DeRichGasRadiator::initialize ( )
   StatusCode sc = DeRichSingleSolidRadiator::initialize();
   if ( sc.isFailure() ) return sc;
 
+  bool foundGasConditions( false );
+
+  // in HLT mode the "normal gas conditions are not available
+  bool HltMode( true );
+
   // setup gas conditions
   if ( hasCondition( "GasParameters" ) )
   {
@@ -74,17 +79,22 @@ StatusCode DeRichGasRadiator::initialize ( )
     msg << MSG::DEBUG << "Using condition <GasParameters>" << endmsg;
     updMgrSvc()->registerCondition( this, m_gasParametersCond.path(),
                                     &DeRichGasRadiator::updateProperties );
+    foundGasConditions = true;
+    HltMode = false;
   }
   else // old parameters setup
   {
     sc = setupOldGasConditions();
-    msg << MSG::DEBUG << "Using conditions <GasTemperature> and <GasPressure>" << endmsg;
     if ( sc.isFailure() )
     {
-      msg <<  MSG::ERROR << "Failed to setup old conditions" << endmsg;
-      return sc;
+      msg <<  MSG::DEBUG << "Did not find non-HLT gas conditions" << endmsg;
     }
-
+    else
+    {
+      msg << MSG::DEBUG << "Using conditions <GasTemperature> and <GasPressure>" << endmsg;
+      foundGasConditions = true;
+      HltMode = false;
+    }
   }
 
   // hlt condition
@@ -97,6 +107,7 @@ StatusCode DeRichGasRadiator::initialize ( )
       return StatusCode::FAILURE;
     }
     msg << MSG::DEBUG << "Found condition <HltGasParameters>" << endmsg;
+    foundGasConditions = true;
   }
   else  // use offline conditions for hlt
   {
@@ -104,27 +115,35 @@ StatusCode DeRichGasRadiator::initialize ( )
     msg << MSG::DEBUG << "Using offline gas condition for HLT" << endmsg;
   }
 
+  if ( !foundGasConditions )
+  {
+    msg << MSG::ERROR << "Could not find any gas conditions" << endmsg;
+    return StatusCode::FAILURE;
+  }
 
   // scale factor
-  if ( hasCondition( "RefractivityScaleFactor" ) )
+  if ( hasCondition( "RefractivityScaleFactor" ) && !HltMode )
   {
     m_scaleFactorCond = condition( "RefractivityScaleFactor" );
     updMgrSvc()->registerCondition( this, m_scaleFactorCond.path(),
                                     &DeRichGasRadiator::updateProperties );
   }
 
-  sc = updMgrSvc()->update(this);
-  if ( sc.isFailure() )
+  if ( !HltMode )
   {
-    msg << MSG::ERROR << "First UMS update failed" << endmsg;
-    return sc;
+    sc = updMgrSvc()->update(this);
+    if ( sc.isFailure() )
+    {
+      msg << MSG::ERROR << "First UMS update failed" << endmsg;
+      return sc;
+    }
   }
 
   msg << MSG::DEBUG << "Initialisation Complete" << endmsg;
   m_firstUpdate = false;
 
   // return
-  return sc;
+  return StatusCode::SUCCESS;
 }
 
 //=========================================================================
@@ -190,7 +209,7 @@ StatusCode DeRichGasRadiator::updateProperties ( )
 //  calcSellmeirRefIndex
 //=========================================================================
 
-StatusCode 
+StatusCode
 DeRichGasRadiator::calcSellmeirRefIndex ( const std::vector<double>& momVect,
                                           const TabulatedProperty* tabProp,
                                           const SmartRef<Condition>& gasParamCond ) const
@@ -235,23 +254,23 @@ DeRichGasRadiator::calcSellmeirRefIndex ( const std::vector<double>& momVect,
   const double GasMolWeight   = param<double>("GasMolWeightParam");
   const bool isC3F8Medium = ( material()->name().find("C3F08") != std::string::npos ) ? true : false;
 
-  
+
   double AParam =0.0;
   double AMultParam=0.0;
   double EphyZSq =0.0;
   double MomConvWave=0.0;
   if(isC3F8Medium ) {
-   AParam = param<double>("C3F8SellMeirAFactor");
-   AMultParam = param<double>("C3F8SellMeirAMultiplicationFactor");
-   MomConvWave = param<double> ("PhotonMomentumWaveLengthConvFact"  );
-   const double aWaveZero= param<double> ("C3F8SellMeirLambdaZeroFactor" );
+    AParam = param<double>("C3F8SellMeirAFactor");
+    AMultParam = param<double>("C3F8SellMeirAMultiplicationFactor");
+    MomConvWave = param<double> ("PhotonMomentumWaveLengthConvFact"  );
+    const double aWaveZero= param<double> ("C3F8SellMeirLambdaZeroFactor" );
 
-   
-   if(aWaveZero != 0.0) {
-     EphyZSq =  ( MomConvWave / aWaveZero ) * ( MomConvWave / aWaveZero );
-   }   
+
+    if(aWaveZero != 0.0) {
+      EphyZSq =  ( MomConvWave / aWaveZero ) * ( MomConvWave / aWaveZero );
+    }
   }
-  
+
   double GasRhoCur( 0.0 );
 
   if ( material()->name().find("C4F10") != std::string::npos ) {
@@ -260,23 +279,23 @@ DeRichGasRadiator::calcSellmeirRefIndex ( const std::vector<double>& momVect,
       ( RefTemperature/curTemp );
   }else if ( isC3F8Medium  ) {
     GasRhoCur = (curPressure/Gaudi::Units::STP_Pressure)*
-                (Gaudi::Units::STP_Temperature/curTemp);    
-    
+      (Gaudi::Units::STP_Temperature/curTemp);
+
   }else {
-    
-  
+
+
     GasRhoCur = RhoEffectiveSellDefault*(curPressure/Gaudi::Units::STP_Pressure)*
       (Gaudi::Units::STP_Temperature/curTemp);
   }
-  
+
   // calculate ref index
   for ( unsigned int ibin = 0; ibin<momVect.size(); ++ibin )
   {
     const double epho = momVect[ibin]/Gaudi::Units::eV;
     double nMinus1=0.0;
-    
+
     if( isC3F8Medium ) {
-      nMinus1 = 
+      nMinus1 =
         scaleFactor * (AParam*AMultParam*MomConvWave*MomConvWave*GasRhoCur)/(EphyZSq-(epho*epho));
     }else {
       const double pfe  = (SellF1/( (SellE1* SellE1) - (epho * epho) ) )+
@@ -284,14 +303,14 @@ DeRichGasRadiator::calcSellmeirRefIndex ( const std::vector<double>& momVect,
       const double cpfe = SellLorGasFac * (GasRhoCur / GasMolWeight ) * pfe;
       nMinus1 = scaleFactor * (std::sqrt((1.0+2*cpfe)/(1.0-cpfe)) - 1.0);
     }
-    
-   
+
+
     const double curRindex = 1.0+nMinus1;
-    
+
     aTable.push_back( TabulatedProperty::Entry(epho*Gaudi::Units::eV,curRindex));
   }
 
-   debug() << "Table in TabulatedProperty " << tabProp->name()
+  debug() << "Table in TabulatedProperty " << tabProp->name()
           << " updated with " << momVect.size() << " bins" << endmsg;
 
   return StatusCode::SUCCESS;
@@ -385,7 +404,7 @@ StatusCode DeRichGasRadiator::setupOldGasConditions ( ) {
   else
   {
     m_temperatureCond = 0;
-    msg << MSG::WARNING << "Cannot load Condition GasTemperature" << endmsg;
+    msg << MSG::DEBUG << "Cannot load Condition GasTemperature" << endmsg;
     return StatusCode::FAILURE;
   }
 
@@ -399,7 +418,7 @@ StatusCode DeRichGasRadiator::setupOldGasConditions ( ) {
   else
   {
     m_pressureCond = 0;
-    msg << MSG::WARNING << "Cannot load Condition GasPressure" << endmsg;
+    msg << MSG::DEBUG << "Cannot load Condition GasPressure" << endmsg;
     return StatusCode::FAILURE;
   }
 
