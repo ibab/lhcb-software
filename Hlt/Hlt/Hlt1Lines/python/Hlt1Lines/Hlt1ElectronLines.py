@@ -18,17 +18,6 @@ class Hlt1ElectronLinesConf(HltLinesConfigurableUser) :
                 , 'DiEle_HighMassCut'      :  3200.    
                 }
 
-#    __slots__ = { 'EleIP_EtCut'            :  2600.    # single electron with IP cut
-#                , 'EleIP_IPCut'            :  0.1     
-#                , 'EleIP_PtCut'            :  3000.    
-#                , 'Ele_EtCut'              :  2600.    # single electron without IP cut
-#                , 'Ele_PtCut'              :  10000.
-#                , 'DiEleIP_IPCut'          :  0.1      # di-electron with IP cut
-#                , 'DiEleIP_PtCut'          :  1000.    
-#                , 'DiEle_PtCut'            :  1000.    # di-electron without IP cut           
-#                , 'DiEle_LowMassCut'       :  2400.
-#                , 'DiEle_HighMassCut'      :  3200.    
-#                }
 #
     def __apply_configuration__(self) :
         from HltLine.HltLine import Hlt1Line   as Line
@@ -39,7 +28,7 @@ class Hlt1ElectronLinesConf(HltLinesConfigurableUser) :
         from Configurables import HltTrackUpgradeTool
         from Configurables import L0ConfirmWithT
         from HltTracking.HltReco import RZVelo, Velo
-        from HltTracking.HltPVs  import PV2D
+        from HltTracking.HltPVs  import PV3D
         from HltLine.HltDecodeRaw import DecodeIT, DecodeTT, DecodeVELO, DecodeECAL
         from Hlt1Lines.HltFastTrackFit import setupHltFastTrackFit
         from Configurables import HltTrackUpgradeTool, PatForwardTool, HltGuidedForward, PatConfirmTool
@@ -61,7 +50,6 @@ class Hlt1ElectronLinesConf(HltLinesConfigurableUser) :
                                   , Member ( 'TU', 'TConf', RecoName = 'TEleConf'
                                              , tools = [ Tool( HltTrackUpgradeTool
                                                , tools = [ Tool( L0ConfirmWithT
-#                                                 , 'L0ConfirmWithT/TEleConf'
                                                  , 'TEleConf'
                                                  , particleType = 2
                                                  , tools = [ Tool( PatConfirmTool
@@ -70,12 +58,10 @@ class Hlt1ElectronLinesConf(HltLinesConfigurableUser) :
                                                                  )]
                                                                )]
                                              )
-                                  , RZVelo, PV2D().ignoreOutputSelection()
-                                  , Member ( 'TF', 'RZVelo', FilterDescriptor = [ 'RZVeloTMatch_%TUTConf,||<,60.' ] )
-                                  , Member ( 'TU', 'Velo', RecoName = 'Velo' )
-                                  , DecodeVELO, DecodeTT
-                                  , Member ( 'TM', 'VeloT', InputSelection1 = '%TUVelo' , InputSelection2 = '%TUTConf' , MatchName = 'VeloT')
-                                  , Member ( 'TF', 'VeloT', FilterDescriptor = [ 'IP_PV2D,||>,'+str(self.getProp('EleIP_IPCut'))]
+                                  , Velo, PV3D().ignoreOutputSelection()
+                                  , DecodeTT
+                                  , Member ( 'TM', 'VeloT', InputSelection1 = 'Velo' , InputSelection2 = '%TUTConf' , MatchName = 'VeloT')
+                                  , Member ( 'TF', 'VeloT', FilterDescriptor = [ 'IP_PV3D,||>,'+str(self.getProp('EleIP_IPCut'))]
                                             , HistogramUpdatePeriod = 0
                                             , HistoDescriptor = { 'IP' : ('IP',-1.,3.,400), 'IPBest' : ('IPBest',-1.,3.,400) }
                                             )
@@ -83,7 +69,7 @@ class Hlt1ElectronLinesConf(HltLinesConfigurableUser) :
 
         companionTrackWithIP  = [ Velo
                                   , Member ( 'TF', 'CompanionVelo',
-                                             FilterDescriptor = [ 'IP_PV2D,||>,'+str(self.getProp('EleIP_IPCut')), 'DOCA_%TFVeloT,<,0.2' ]
+                                             FilterDescriptor = [ 'IP_PV3D,||>,'+str(self.getProp('EleIP_IPCut')), 'DOCA_%TFVeloT,<,0.2' ]
                                             , HistogramUpdatePeriod = 0
                                             , HistoDescriptor = { 'IP' : ('IP',-1.,3.,400), 'IPBest' : ('IPBest',-1.,3.,400) }
                                             )
@@ -117,11 +103,9 @@ class Hlt1ElectronLinesConf(HltLinesConfigurableUser) :
                                                             )]
                                                           )]
                                              )
-                                  , RZVelo, PV2D().ignoreOutputSelection()
-                                  , Member ( 'TF', 'RZVelo', FilterDescriptor = [ 'RZVeloTMatch_%TUTConf,||<,60.' ] )
-                                  , Member ( 'TU', 'Velo', RecoName = 'Velo' )
-                                  , DecodeVELO, DecodeTT
-                                  , Member ( 'TM', 'VeloT', InputSelection1 = '%TUVelo' , InputSelection2 = '%TUTConf' , MatchName = 'VeloT')
+                                  , Velo, PV3D().ignoreOutputSelection()
+                                  , DecodeTT
+                                  , Member ( 'TM', 'VeloT', InputSelection1 = 'Velo' , InputSelection2 = '%TUTConf' , MatchName = 'VeloT')
                                   ]
 
         companionTrackNoIP    = [ Velo
@@ -157,7 +141,7 @@ class Hlt1ElectronLinesConf(HltLinesConfigurableUser) :
                                         )
                                , Member ( 'TU', 'FitTrack', RecoName = 'FitTrack', callback = setupHltFastTrackFit )
                                , Member ( 'TF', 'Decision'
-                                        , FilterDescriptor = ['FitIP_PV2D,||>,'+str(self.getProp('EleIP_IPCut'))]
+                                        , FilterDescriptor = ['FitIP_PV3D,||>,'+str(self.getProp('EleIP_IPCut'))]
                                         , OutputSelection = '%Decision'
                                         )         
                                ]
@@ -184,11 +168,11 @@ class Hlt1ElectronLinesConf(HltLinesConfigurableUser) :
                  , L0DU = "L0_CHANNEL('Electron')"
                  , algos = [ convertL0Candidates('Electron') ] + prepareElectronWithIP + companionTrackWithIP
                          + [ Member ( 'VF', 'VertexCut'
-                                    , FilterDescriptor = [ 'VertexPointing_PV2D,<,0.5', 'VertexDz_PV2D,>,0.' ]
+                                    , FilterDescriptor = [ 'VertexPointing_PV3D,<,0.5', 'VertexDz_PV3D,>,0.' ]
                                     )
                            , Member ( 'VU', 'FitTrack', RecoName = 'FitTrack', callback = setupHltFastTrackFit )
                            , Member ( 'VF', 'FitTrack'
-                                    , FilterDescriptor =  [ 'FitVertexMinIP_PV2D,||>,'+str(self.getProp('EleIP_IPCut'))]
+                                    , FilterDescriptor =  [ 'FitVertexMinIP_PV3D,||>,'+str(self.getProp('EleIP_IPCut'))]
                                     , OutputSelection = '%Decision'
                                     )
                            ]

@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.176 2010-05-11 17:29:59 gligorov Exp $
+! $Id: release.notes,v 1.177 2010-05-18 10:07:33 witekma Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
+
+! 2010-05-18 - M. Witek
+ - Adapt photon and electron lines to new PV3D recontsruction.
 
 ! 2010-05-11 - V. Gligorov
  - Switch to new strategy of doing the 3D reco upfront in the hadron lines.
