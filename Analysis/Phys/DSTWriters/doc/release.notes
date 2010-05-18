@@ -1,9 +1,15 @@
-!$Id: release.notes,v 1.26 2010-05-15 11:13:33 jpalac Exp $
+!$Id: release.notes,v 1.27 2010-05-18 16:02:42 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DSTWriters
 ! Responsible : Juan PALACIOS
 ! Purpose     : Python code for DST writers.
 !-----------------------------------------------------------------------------
+
+! 2010-05-18 - Juan Palacios
+ - python/DSTWriters/*DSTWriter.py
+  . Clear stream's "special" nodes after writing to avoid cross-stream pollution.
+ - cmt/requirements
+  . Increase to v1r6.
 
 ! ======================== DSTWriters v1r5p1 2010-05-15 ======================
 
