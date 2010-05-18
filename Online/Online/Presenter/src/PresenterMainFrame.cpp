@@ -1,4 +1,4 @@
-// $Id: PresenterMainFrame.cpp,v 1.317 2010-05-17 13:56:35 robbep Exp $
+// $Id: PresenterMainFrame.cpp,v 1.318 2010-05-18 17:13:30 robbep Exp $
 #include <algorithm>
 #include <iostream>
 #include <vector>
@@ -2112,15 +2112,19 @@ DimBrowser* PresenterMainFrame::dimBrowser() {
   return m_dimBrowser;
 }
 
+//======================================================================
+// Build list of alarms from the histogram database
+//======================================================================
 void PresenterMainFrame::listAlarmsFromHistogramDB(TGListTree* listView,
                                                    const FilterCriteria & /*filterCriteria*/) {
   if (isConnectedToHistogramDB() && 0 != listView) {
-
     listView->UnmapWindow();
 
-    TGListTreeItem* treeRoot = listView->GetFirstItem();
-    listView->DeleteChildren(treeRoot);
-    listView->RenameItem(treeRoot, TString(m_dbName));
+    // Delete first all alarms in the alarm tree
+    TGListTreeItem* treeRoot = listView -> GetFirstItem();
+    deleteTreeChildrenItemsUserData( treeRoot ) ;
+    listView -> DeleteChildren( treeRoot ) ;
+    listView -> RenameItem( treeRoot , TString( m_dbName ) ) ;
 
     try {
       m_histogramDB->getMessages(m_alarmMessageIDs);
@@ -2163,6 +2167,8 @@ void PresenterMainFrame::listAlarmsFromHistogramDB(TGListTree* listView,
   }
   if (m_verbosity >= Verbose) { std::cout << m_message << std::endl; }
 };
+
+
 
 void PresenterMainFrame::listHistogramsFromHistogramDB(TGListTree* listView,
                                                        const FilterCriteria & filterCriteria, bool histograms) {
@@ -2661,6 +2667,9 @@ void PresenterMainFrame::sortTreeChildrenItemsChildren(TGListTree* treeList,
   }
 }
 
+//==============================================================================
+// Delete the node and all its children
+//==============================================================================
 void PresenterMainFrame::deleteTreeChildrenItemsUserData(TGListTreeItem* node) {
   if (0 != node && 0 != (node->GetUserData())) {
     delete (TObjString*)(node->GetUserData());
@@ -2671,6 +2680,9 @@ void PresenterMainFrame::deleteTreeChildrenItemsUserData(TGListTreeItem* node) {
   }
 }
 
+//===============================================================================
+// Delete recursively all children of this node
+//===============================================================================
 void PresenterMainFrame::deleteTreeChildrenItemsUserDataChildren(TGListTreeItem* node) {
   while (0 != node) {
     if (0 != (node->GetUserData())) {
@@ -4954,6 +4966,33 @@ void PresenterMainFrame::EventInfo(int event, int px, int py, TObject* selected)
       }
     }
     break;
+  case kButton3Down:
+    if ( 0 != selected ) { 
+      TPad * thePad = dynamic_cast< TPad *>( editorCanvas -> GetClickSelectedPad() ) ;
+      if ( 0 != thePad ) {
+	TIter next( thePad -> GetListOfPrimitives() ) ;
+	TObject * obj ; TH1 * theHisto( 0 ) ; 
+	while ( ( obj = next( ) ) ) {
+	  if ( obj -> InheritsFrom( TH1::Class() ) ) {
+	    theHisto = dynamic_cast< TH1* >( obj ) ;
+	    break ;
+	  }
+	}
+	
+	if ( 0 != theHisto ) {
+	  std::vector<DbRootHist*>::iterator eventInfo_dbHistosOnPageIt;
+	  for (eventInfo_dbHistosOnPageIt = dbHistosOnPage.begin();
+	       eventInfo_dbHistosOnPageIt != dbHistosOnPage.end(); ++eventInfo_dbHistosOnPageIt) {
+	    if (0 == std::string( ( *eventInfo_dbHistosOnPageIt ) -> 
+				  rootHistogram -> GetName() ).compare( theHisto -> GetName() ) ) {
+	      // Open a web browser at the documentation link
+	      break;
+	    }
+	  }
+	}
+      }
+    }
+    break ;
   case kMouseMotion:
   case kMouseEnter:
   case kMouseLeave:

@@ -276,8 +276,6 @@ public:
   void sortTreeChildrenItemsChildren(TGListTree* treeList,
                                      TGListTreeItem* node);
 
-  void deleteTreeChildrenItemsUserData(TGListTreeItem* node);
-  void deleteTreeChildrenItemsUserDataChildren(TGListTreeItem* node);
 
 
   void enableAutoCanvasLayoutBtn();
@@ -666,6 +664,12 @@ private:
 
   /// Open and select the given page in the histogram tree
   void openHistogramTreeAt( const std::string & pageName ) ; 
+
+  /// Delete the node and all its children
+  void deleteTreeChildrenItemsUserData(TGListTreeItem* node);
+
+  /// Delete recursively the children of this node
+  void deleteTreeChildrenItemsUserDataChildren(TGListTreeItem* node);
 
   ClassDef(PresenterMainFrame, 0) // main editor window
     };
