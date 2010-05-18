@@ -65,6 +65,14 @@ class Hlt2InclusiveMuonLinesConf(HltLinesConfigurableUser) :
         ############################################################################
         #    Single muon selection
         ############################################################################
+
+        Hlt2Line('MuonFromHLT1'
+                 , prescale = self.prescale
+                 , HLT ="HLT_PASS_RE('Hlt1.*Muon.*Decision')"
+                 , postscale = self.postscale
+                 )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2MuonFromHLT1Decision" : 50189 } )        
+
         
         Hlt2SelSingleMuon = Hlt2Member( FilterDesktop
                                         , "Filter"
