@@ -1,4 +1,4 @@
-// $Id: LbAppInit.cpp,v 1.13 2009-03-05 14:49:59 cattanem Exp $
+// $Id: LbAppInit.cpp,v 1.14 2010-05-18 20:45:55 cattanem Exp $
 // Include files
 #include <string>
 #include <vector>
@@ -202,8 +202,8 @@ std::vector<long int> LbAppInit::getSeeds( unsigned int seed1, ulonglong seed2 )
   int seed1a = seed1 & 0x7FFFFFFF;
 
   // Make two 31 bit seeds out of seed2
-  int seed2a = seed2 & 0x7FFFFFFF;
-  int seed2b = (seed2 >> 32) & 0x7FFFFFFF;
+  int seed2a = (int)(seed2 & 0x7FFFFFFF);
+  int seed2b = (int)((seed2 >> 32) & 0x7FFFFFFF);
 
   if( !m_singleSeed ) {
     if( 0 != seed1a ) seeds.push_back( seed1a );

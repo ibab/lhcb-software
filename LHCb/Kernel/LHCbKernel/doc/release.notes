@@ -4,6 +4,9 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+! 2010-05-18 - Marco Cattaneo
+ - Fix Windows warnings
+
 !===================== LHCbKernel v12r0 2010-04-26 ========================
 ! 2010-04-22 - Stephanie Hansmann-Menzemer
  - Adapt to changes in magnetic field service interface

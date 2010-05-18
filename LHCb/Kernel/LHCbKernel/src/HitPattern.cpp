@@ -107,9 +107,9 @@ namespace LHCb
     {
 	unsigned long pat = layers.to_ulong() ;
 	std::bitset<3> rc ;
-	rc.set(0, pat & 0xF ) ;
-	rc.set(1, pat & 0xF0 ) ;
-	rc.set(2, pat & 0xF00 ) ;
+	rc.set(0, (pat & 0xF)   !=0 ) ;
+	rc.set(1, (pat & 0xF0)  !=0 ) ;
+	rc.set(2, (pat & 0xF00) !=0 ) ;
 	return rc ;
     }
     
