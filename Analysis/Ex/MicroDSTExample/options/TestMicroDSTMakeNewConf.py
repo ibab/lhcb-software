@@ -39,6 +39,7 @@ microDST0Seq = dstWriter.sequence()
 
 dv = DaVinci()
 dv.DataType = 'MC09'
+dv.Simulation = True
 dv.EvtMax = 100
 dv.UserAlgorithms = [microDST0Seq]
 dv.Input =  [
