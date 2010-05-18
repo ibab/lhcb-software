@@ -1,4 +1,4 @@
-// $Id: P2MCRelatorAlg.cpp,v 1.4 2010-04-15 13:06:15 jpalac Exp $
+// $Id: P2MCRelatorAlg.cpp,v 1.5 2010-05-18 13:06:05 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -64,22 +64,21 @@ StatusCode P2MCRelatorAlg::execute() {
   m_mcParticles = get<LHCb::MCParticle::Container>( m_mcpLocation );
   if (0==m_mcParticles) {
     return Warning("Found no MCParticles in "+ m_mcpLocation, 
-                   10, StatusCode::SUCCESS);
+                   0, StatusCode::SUCCESS);
   }
   typedef std::vector<std::string> StringVector;
   StringVector::const_iterator _begin = m_particleLocations.begin();
   StringVector::const_iterator _end = m_particleLocations.end();
   
   for (StringVector::const_iterator iLoc = _begin; iLoc!=_end; ++iLoc) {
-
     const LHCb::Particle::Range particles = get<LHCb::Particle::Range>(*iLoc);
     m_table.clear();
-    if (particles.empty()) {
+    if (!particles.empty()) {
       i_particleLoop( particles.begin(), particles.end() );
       m_table.i_sort();
     } else {
       Warning("Found no Particles in "+ *iLoc,
-              10, StatusCode::SUCCESS).ignore();
+              0, StatusCode::SUCCESS).ignore();
     }
     Particle2MCParticle::Table* table = new Particle2MCParticle::Table(m_table);
     const std::string outputLocation = 
