@@ -28,7 +28,7 @@ def printHelp():
     print "                  Default 'Event/microDST'"
     
 locationRoot = '/Event/MicroDST'
-selection = 'Bs2Jpsi2MuMuPhi2KK'
+selection = 'SelBs2Jpsi2MuMuPhi2KK'
 microDSTFile = ['']
 histoFileName = selection+"_mDST_newSel.root"
 histoFile = HistoFile(histoFileName)
