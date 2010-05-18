@@ -1,4 +1,4 @@
-// $Id: PresenterMainFrame.cpp,v 1.318 2010-05-18 17:13:30 robbep Exp $
+// $Id: PresenterMainFrame.cpp,v 1.319 2010-05-18 17:20:06 robbep Exp $
 #include <algorithm>
 #include <iostream>
 #include <vector>
@@ -2121,10 +2121,9 @@ void PresenterMainFrame::listAlarmsFromHistogramDB(TGListTree* listView,
     listView->UnmapWindow();
 
     // Delete first all alarms in the alarm tree
-    TGListTreeItem* treeRoot = listView -> GetFirstItem();
-    deleteTreeChildrenItemsUserData( treeRoot ) ;
-    listView -> DeleteChildren( treeRoot ) ;
-    listView -> RenameItem( treeRoot , TString( m_dbName ) ) ;
+    TGListTreeItem* treeRoot = listView->GetFirstItem();
+    listView->DeleteChildren(treeRoot);
+    listView->RenameItem(treeRoot, TString(m_dbName));
 
     try {
       m_histogramDB->getMessages(m_alarmMessageIDs);
