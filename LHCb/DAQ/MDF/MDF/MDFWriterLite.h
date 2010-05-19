@@ -1,4 +1,4 @@
-// $Id: MDFWriterLite.h,v 1.10 2010-05-19 06:26:34 kakiba Exp $
+// $Id: MDFWriterLite.h,v 1.11 2010-05-19 06:48:45 kakiba Exp $
 //  ====================================================================
 //  MDFWriterLite.h
 //  --------------------------------------------------------------------
@@ -25,8 +25,8 @@ namespace LHCb    {
     */
   class MDFWriterLite : public MDFWriter   {
   protected:
-    /// Number of bytes written out to the file so far.
-    size_t m_bytesWritten;
+    /// Time stamp of last file open
+    time_t m_lastOpen;
     /// Number of events written out to the file so far. 
     size_t m_eventsWritten;
     /// Maximum size of each file (after which a new file will be written)

@@ -1,4 +1,4 @@
-// $Id: MDFWriterLite.cpp,v 1.2 2010-05-19 06:26:34 kakiba Exp $
+// $Id: MDFWriterLite.cpp,v 1.3 2010-05-19 06:48:45 kakiba Exp $
 //  ====================================================================
 //  MDFWriterLite.cpp
 //  --------------------------------------------------------------------
@@ -35,10 +35,11 @@ MDFWriterLite::~MDFWriterLite()   {}
 std::string MDFWriterLite::getConnection(const std::string& org_conn)  {
   char dateStr[40];
   ::setlocale(LC_ALL, "");
-  time_t ctime = ::time(NULL);
-  struct tm *currtime = ::localtime(&ctime);
+  m_lastOpen = ::time(0);
+  struct tm *currtime = ::localtime(&m_lastOpen);
   ::strftime (dateStr,sizeof(dateStr), "%EY.%0m.%0d-%0H.%0M.%0S.mdf",currtime);
   string con = org_conn+dateStr;
+  
   MsgStream log(msgSvc(), name());
   log << MSG::ALWAYS << "New file name:" << con << endmsg;
   return con;
@@ -46,7 +47,11 @@ std::string MDFWriterLite::getConnection(const std::string& org_conn)  {
 
 /// Execute procedure
 StatusCode MDFWriterLite::execute()    {
-  if (((m_bytesWritten>>10) > m_maxFileSizeKB) || (m_eventsWritten >= m_maxFileEvents)) { 
+  time_t now;
+  now = ::time(0);  
+  bool do_open = (size_t(m_bytesWritten/1024) > m_maxFileSizeKB) || (m_eventsWritten >= m_maxFileEvents);
+  do_open &= (now-m_lastOpen)>1;
+  if ( do_open ) { 
     MsgStream log(msgSvc(), name());
     string con = getConnection(m_connectParams);
     m_ioMgr->disconnect(m_connection).ignore();
@@ -54,6 +59,8 @@ StatusCode MDFWriterLite::execute()    {
     m_connection = new RawDataConnection(this,con);
     StatusCode status = m_ioMgr->connectWrite(m_connection,IDataConnection::RECREATE,"MDF");
     status.ignore();
+    //sleep(1);
+    
     if ( m_connection->isConnected() ) {
       log << MSG::INFO << "Received event request connection." << endmsg;
     }
@@ -63,5 +70,6 @@ StatusCode MDFWriterLite::execute()    {
     }
     m_bytesWritten = m_eventsWritten = 0;
   }
+  m_eventsWritten++;
   return MDFWriter::execute();
 }
