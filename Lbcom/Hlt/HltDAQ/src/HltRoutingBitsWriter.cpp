@@ -1,4 +1,4 @@
-// $Id: HltRoutingBitsWriter.cpp,v 1.6 2010-04-07 14:38:36 graven Exp $
+// $Id: HltRoutingBitsWriter.cpp,v 1.7 2010-05-19 09:47:54 graven Exp $
 // Include files 
 // from Boost
 #include "boost/foreach.hpp"
@@ -11,6 +11,7 @@
 #include "Event/L0DUReport.h" 
 #include "Event/ODIN.h" 
 #include "boost/algorithm/string/join.hpp"
+#include "AIDA/IHistogram1D.h"
 // from LoKi:
 #include "LoKi/IHltFactory.h"
 
@@ -30,6 +31,8 @@ StatusCode HltRoutingBitsWriter::decode() {
     zeroEvaluators();
     LoKi::Hybrid::IHltFactory* factory = tool<LoKi::Hybrid::IHltFactory>( "LoKi::Hybrid::HltFactory" ) ;
 
+    int nBins = int(m_timeSpan/m_binWidth+0.5);
+
     typedef std::map<unsigned int,std::string>::const_iterator iter_t;
     for (iter_t i=m_bits.begin();i!=m_bits.end();++i) {
         if ( i->first>nBits ) return StatusCode::FAILURE;
@@ -43,6 +46,7 @@ StatusCode HltRoutingBitsWriter::decode() {
                 m_odin_evaluators[i->first].counter   = &counter(title);
                 declareInfo(boost::str( boost::format("COUNTER_TO_RATE[%s]")% title ),
                         *m_odin_evaluators[i->first].counter,title);
+                m_odin_evaluators[i->first].hist   = book1D(title,0,nBins*m_binWidth,nBins); //TODO: set AxisLabels
             } else if (i->first<32) {
                 LoKi::Types::L0_Cut cut( LoKi::BasicFunctors<const LHCb::L0DUReport*>::BooleanConstant( false ) );
                 StatusCode sc = factory->get( i->second, cut, m_preambulo );
@@ -51,6 +55,7 @@ StatusCode HltRoutingBitsWriter::decode() {
                 m_l0_evaluators[i->first-8].counter   = &counter(title);
                 declareInfo(boost::str( boost::format("COUNTER_TO_RATE[%s]")% title ),
                         *m_l0_evaluators[i->first-8].counter,title);
+                m_l0_evaluators[i->first-8].hist   = book1D(title,0,nBins*m_binWidth,nBins); //TODO: set AxisLabels
             } else {
                 LoKi::Types::HLT_Cut cut( LoKi::BasicFunctors<const LHCb::HltDecReports*>::BooleanConstant( false ) );
                 StatusCode sc = factory->get( i->second, cut, m_preambulo );
@@ -59,6 +64,7 @@ StatusCode HltRoutingBitsWriter::decode() {
                 m_hlt_evaluators[i->first-32].counter   = &counter(title);
                 declareInfo(boost::str( boost::format("COUNTER_TO_RATE[%s]")% title ),
                         *m_hlt_evaluators[i->first-32].counter,title);
+                m_hlt_evaluators[i->first-32].hist   = book1D(title,0,nBins*m_binWidth,nBins); //TODO: set AxisLabels
             }
 
         }
@@ -75,16 +81,19 @@ void HltRoutingBitsWriter::zeroEvaluators(bool skipDelete)
         if (!skipDelete) { delete eval.predicate; }
         eval.predicate = 0;
         eval.counter = 0;
+        eval.hist = 0;
     }
     BOOST_FOREACH( l0_eval_t& eval , m_l0_evaluators ) {
         if (!skipDelete) { delete eval.predicate; }
         eval.predicate = 0;
         eval.counter = 0;
+        eval.hist = 0;
     }
     BOOST_FOREACH( hlt_eval_t& eval , m_hlt_evaluators ) {
         if (!skipDelete) { delete eval.predicate; }
         eval.predicate = 0;
         eval.counter = 0;
+        eval.hist = 0;
     }
 }
 //=============================================================================
@@ -92,7 +101,11 @@ void HltRoutingBitsWriter::zeroEvaluators(bool skipDelete)
 //=============================================================================
 HltRoutingBitsWriter::HltRoutingBitsWriter( const std::string& name,
                                         ISvcLocator* pSvcLocator)
-  : GaudiAlgorithm ( name , pSvcLocator )
+  : GaudiHistoAlg ( name , pSvcLocator )
+  , m_startOfRun(0)
+  , m_runNumber(0)
+  , m_binWidth(1) // in minutes!!! 
+  , m_timeSpan(125) // in minutes!!!
   , m_bits_updated(false)
   , m_preambulo_updated(false)
 {
@@ -102,6 +115,8 @@ HltRoutingBitsWriter::HltRoutingBitsWriter( const std::string& name,
   declareProperty("ODINLocation", m_odin_location = LHCb::ODINLocation::Default);
   declareProperty("RoutingBits", m_bits) ->declareUpdateHandler( &HltRoutingBitsWriter::updateBits, this );
   declareProperty("Preambulo", m_preambulo_)->declareUpdateHandler(&HltRoutingBitsWriter::updatePreambulo , this);
+  // declareProperty("TrendTimeSpan",m_timeSpan = 125 );
+  // declareProperty("TrendBinWidth",m_binWidth = 1 );
 
 }
 //=============================================================================
@@ -160,17 +175,26 @@ StatusCode HltRoutingBitsWriter::execute() {
     StatusCode sc = decode();
     if ( sc.isFailure() ) return Error(" Unable to Decode ???? ", sc);    
   }
+
   std::vector<unsigned int> bits(3,0); 
 
   unsigned int& w = bits[0]; // ODIN + L0DU
   // bits 0--7 are for ODIN
   LHCb::ODIN* odin = get<LHCb::ODIN>( m_odin_location );
+  if (m_runNumber != odin->runNumber()) {
+        m_startOfRun = odin->gpsTime();
+        m_runNumber  = odin->runNumber();
+  }
+  // go from nanoseconds to minutes...
+  double t = double(odin->gpsTime() - m_startOfRun)/6e10; 
+  double weight = double(1)/(m_binWidth*60); // m_binwidth is in minutes, need rate in Hz
+
   for (unsigned i=0;i<8;++i) {
         LoKi::Types::ODIN_Cut* eval = m_odin_evaluators[ i ].predicate;
         if ( eval == 0 ) continue;
         bool result = (*eval)(odin);
         *(m_odin_evaluators[ i ].counter) += result;
-        //always() << " " << i << " " << *eval << " = " << (result?"pass":"fail") << endmsg;
+        if ( result ) m_odin_evaluators[ i ].hist->fill( t,  weight ); 
         if ( result ) w |= (0x01UL << i); 
     }
 
@@ -184,7 +208,7 @@ StatusCode HltRoutingBitsWriter::execute() {
               if ( eval == 0 ) continue;
               bool result = (*eval)(l0du);
               *(m_l0_evaluators[ i-8 ].counter) += result;
-              //always() << " " << i << " " << *eval << " = " << (result?"pass":"fail") << endmsg;
+              if ( result ) m_l0_evaluators[ i-8 ].hist->fill( t, weight ); 
               if ( result ) w |= (0x01UL << i); 
         }
     }
@@ -199,7 +223,7 @@ StatusCode HltRoutingBitsWriter::execute() {
         if ( eval == 0 ) continue;
         bool result = (*eval)(hdr);
         *(m_hlt_evaluators[ (j-1)*32+i ].counter) += result;
-        //always() << " " << j*32+i << " " << *eval << " = " << (result?"pass":"fail") << endmsg;
+        if ( result ) m_hlt_evaluators[ (j-1)*32+i ].hist->fill( t, weight ); 
         if ( result ) w |= (0x01UL << i); 
     }
   }

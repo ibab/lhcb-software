@@ -1,10 +1,10 @@
-// $Id: HltRoutingBitsWriter.h,v 1.3 2010-04-07 10:55:28 graven Exp $
+// $Id: HltRoutingBitsWriter.h,v 1.4 2010-05-19 09:47:54 graven Exp $
 #ifndef HLTCOMMON_HLTROUTINGBITSWRITER_H 
 #define HLTCOMMON_HLTROUTINGBITSWRITER_H 1
 
 // Include files
 // from Gaudi
-#include "GaudiAlg/GaudiAlgorithm.h"
+#include "GaudiAlg/GaudiHistoAlg.h"
 #include "boost/array.hpp"
 
 #include "LoKi/OdinTypes.h"
@@ -17,7 +17,7 @@
  *  @author Gerhard Raven
  *  @date   2008-07-29
  */
-class HltRoutingBitsWriter : public GaudiAlgorithm {
+class HltRoutingBitsWriter : public GaudiHistoAlg {
 public: 
   /// Standard constructor
   HltRoutingBitsWriter( const std::string& name, ISvcLocator* pSvcLocator );
@@ -33,14 +33,17 @@ private:
   struct hlt_eval_t {
     LoKi::Types::HLT_Cut *predicate;
     StatEntity *counter;
+    AIDA::IHistogram1D* hist;
   } ;
   struct l0_eval_t {
     LoKi::Types::L0_Cut *predicate;
     StatEntity *counter;
+    AIDA::IHistogram1D* hist;
   } ;
   struct odin_eval_t {
     LoKi::Types::ODIN_Cut *predicate;
     StatEntity *counter;
+    AIDA::IHistogram1D* hist;
   } ;
   // 8 ODIN, 24 L0DU, 32 Hlt1, 32 Hlt2
   boost::array<odin_eval_t,8> m_odin_evaluators;
@@ -51,6 +54,11 @@ private:
   std::string m_odin_location;
   std::string m_l0_location;
   std::string m_hlt_location;
+
+  unsigned long long m_startOfRun;
+  unsigned m_runNumber;
+  double m_binWidth; // in _minutes_!
+  double m_timeSpan; // in _minutes_!
 
   bool updateRequired() const { return m_bits_updated || m_preambulo_updated; }
 
