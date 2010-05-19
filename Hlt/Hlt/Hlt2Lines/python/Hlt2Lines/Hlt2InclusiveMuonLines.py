@@ -254,6 +254,8 @@ class Hlt2InclusiveMuonLinesConf(HltLinesConfigurableUser) :
                                     , CombinationCut = "(AMAXDOCA('')<0.1) & (AM>3.000*GeV) & (AM<3.150*GeV)"  
                                     , MotherCut = "(P>20000*MeV) & (PT>1000*MeV)"  
                                     , InputLocations  = [ Muons , NoCutsPions ]
+                                    , InputPrimaryVertices = "None"
+                                    , UseP2PVRelations = False
                                     )
         line = Hlt2Line('IncMuTrack4Jpsi'
                         , prescale = self.prescale 

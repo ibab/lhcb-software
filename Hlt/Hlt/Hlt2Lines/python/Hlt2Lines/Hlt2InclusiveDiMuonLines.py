@@ -90,7 +90,7 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
 
     def __apply_configuration__(self) :
         from HltLine.HltLine import Hlt2Line, Hlt2Member, bindMembers
-        from HltLine.Hlt2Monitoring import *
+        from HltLine.Hlt2Monitoring import Hlt2Monitor, Hlt2MonitorMinMax
         from HltTracking.HltPVs import PV3D
         from Configurables import HltANNSvc
         from Hlt2SharedParticles.DiMuon import DiMuon
