@@ -3,6 +3,11 @@
 ! Responsible : Gerhard Raven
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
+! 2010-05-19 - V. Gligorov
+ - Add two new HltAlgorithms: HltFilterFittedTracks and
+   HltFilterFittedVertices to allow filtering on flight significances and
+   impact parameter significances in Hlt1.
+
 ! 2010-05-05 - Gerhard Raven
  - migrate configuration code into HltDAQ
 
