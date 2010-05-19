@@ -1,8 +1,11 @@
-// $Id: CaloPhotonMatch.cpp,v 1.6 2010-03-08 01:31:34 odescham Exp $
+// $Id: CaloPhotonMatch.cpp,v 1.7 2010-05-19 14:06:22 graven Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2010/03/08 01:31:34  odescham
+// add neutral PID + configurable update
+//
 // Revision 1.5  2008/05/13 12:25:51  odescham
 // restore _setProperty()
 //
@@ -159,7 +162,7 @@ StatusCode CaloPhotonMatch::match
     if ( sc.isFailure() ) 
     {
       m_cBad = caloObj ;
-      return Error ( "match(): Error from fill(2D) -- ") ; 
+      return Error ( "match(): Error from fill(2D) -- ",StatusCode::FAILURE,0) ; 
     }
     // find the proper plane in detector
     const LHCb::CaloPosition::Center& par = caloObj->center() ;
