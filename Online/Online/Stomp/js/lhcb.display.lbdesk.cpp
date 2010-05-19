@@ -167,11 +167,11 @@ LbDesktop.LHCbMenuModule = Ext.extend(desktop.URLMenuModule, {
   init: function(){
     var items = 
     [ this.menuURL(constants.urls.lhcb.home_page).makeIcon(constants.images.lhcb)
-      ,this.menuItem('Run News (requires login)', 'https://groups.cern.ch/group/lhcb-run-news/default.aspx',1000,800)
-      ,this.menuItem('Run DB',                    'https://lbrundb.cern.ch/rundb?destination=rundb',1000,800)
-      ,this.menuItem('Problem DB',                'http://lbproblems.cern.ch',1000,800)
-      ,this.menuItem('Pit Webcam',                'http://lhcb.web.cern.ch/lhcb/web-cam.htm',1000,800)
-      ,this.menuItem('Shifts',                    'http://lbshiftdb.cern.ch/index.py/login',1000,800)
+      ,this.menuItem('Run News (requires login)', 'https://groups.cern.ch/group/lhcb-run-news/default.aspx',900,700)
+      ,this.menuItem('Run DB',                    'https://lbrundb.cern.ch/rundb?destination=rundb',900,700)
+      ,this.menuItem('Problem DB',                'http://lbproblems.cern.ch',1000,700)
+      ,this.menuItem('Pit Webcam',                'http://lhcb.web.cern.ch/lhcb/web-cam.htm',1000,700)
+      ,this.menuItem('Shifts',                    'http://lbshiftdb.cern.ch/index.py/login',1000,700)
       ,this.menuURL(constants.urls.lhcb.twiki).makeIcon(constants.images.twiki)
       ,this.menuURL(constants.urls.lhcb.online_home_page)
       ,this.menuURL(constants.urls.lhcb.computing_home_page)
@@ -196,15 +196,15 @@ LbDesktop.DiracMenuModule = Ext.extend(desktop.URLMenuModule, {
 
 LbDesktop.CERNMenuModule = Ext.extend(desktop.URLMenuModule, {
   init: function(){
-    var items=[//this.menuItem('Home Page',        constants.mmm_url(null),1000,800).makeIcon(constants.images.cern)
-                this.menuItem('MMM',               constants.mmm_url(null),1000,800)
-               ,this.menuItem('Mail',              constants.mmm_url('/exchange'),1000,800).makeIcon(constants.images.mail)
-               ,this.menuItem('Web site stats',    'https://web-statistics.web.cern.ch/web-statistics/cgi-bin/awstats.pl?month=all&year=2010&output=main&config=frankm&framename=index',1000,800).makeIcon(constants.images.webstats)
-               ,this.menuItem('LHCOPN and Tier2s', 'http://network-statistics.web.cern.ch/network-statistics/ext/LHCOPN-Total/?p=sc&q=LHCOPN Total Traffic',1100,800)
-               ,this.menuItem('Databases',         constants.sls_service_url('IT-DM-Group'), 1100,800).makeIcon(constants.images.database)
-               ,this.menuItem('FIO services',      constants.sls_service_url('IT-FIO-Group'),1100,800)
-               ,this.menuItem('DES services',      constants.sls_service_url('IT-DES-Group'),1100,800)
-               ,this.menuItem('IS services',       constants.sls_service_url('IT-IS-Group'), 1100,800)
+    var items=[//this.menuItem('Home Page',        constants.mmm_url(null),1000,700).makeIcon(constants.images.cern)
+                this.menuItem('MMM',               constants.mmm_url(null),1000,700)
+               ,this.menuItem('Mail',              constants.mmm_url('/exchange'),1000,700).makeIcon(constants.images.mail)
+               ,this.menuItem('Web site stats',    'https://web-statistics.web.cern.ch/web-statistics/cgi-bin/awstats.pl?month=all&year=2010&output=main&config=frankm&framename=index',1000,700).makeIcon(constants.images.webstats)
+               ,this.menuItem('LHCOPN and Tier2s', 'http://network-statistics.web.cern.ch/network-statistics/ext/LHCOPN-Total/?p=sc&q=LHCOPN Total Traffic',1100,700)
+               ,this.menuItem('Databases',         constants.sls_service_url('IT-DM-Group'), 1100,700).makeIcon(constants.images.database)
+               ,this.menuItem('FIO services',      constants.sls_service_url('IT-FIO-Group'),1100,700)
+               ,this.menuItem('DES services',      constants.sls_service_url('IT-DES-Group'),1100,700)
+               ,this.menuItem('IS services',       constants.sls_service_url('IT-IS-Group'), 1100,700)
     ];
     this._launch('CERN',constants.images.cern,items);
   }
@@ -212,9 +212,9 @@ LbDesktop.CERNMenuModule = Ext.extend(desktop.URLMenuModule, {
 
 LbDesktop.ALICEMenuModule = Ext.extend(desktop.URLMenuModule, {
   init: function() {
-    var items=[this.menuItem('ALICE Home','http://aliceinfo.cern.ch',900,800).makeIcon(constants.images.alice)
-               ,this.menuItem('ALICE DCS','http://cern.ch/alicedcs',900,800)
-               ,this.menuItem('ALICE DCS Monitoring','http://cern.ch/alicedcs/monitoring',1100,850)
+    var items=[this.menuItem('ALICE Home','http://aliceinfo.cern.ch',900,700).makeIcon(constants.images.alice)
+               ,this.menuItem('ALICE DCS','http://cern.ch/alicedcs',900,700)
+               ,this.menuItem('ALICE DCS Monitoring','http://cern.ch/alicedcs/monitoring',1100,700)
     ];
     this._launch('ALICE Experiment',constants.images.alice,items);
   }
@@ -223,9 +223,9 @@ LbDesktop.ALICEMenuModule = Ext.extend(desktop.URLMenuModule, {
 
 LbDesktop.ATLASMenuModule = Ext.extend(desktop.URLMenuModule, {
   init: function(){
-    var items=[this.menuItem('ATLAS Home','http://atlas.ch',900,800).makeIcon(constants.images.atlas),
-               this.menuItem('ATLAS Computing','https://twiki.cern.ch/twiki/bin/view/Atlas/AtlasComputing',900,800),
-               this.menuItem('ATLAS Live events','http://atlantis.cern.ch/live',900,800)
+    var items=[this.menuItem('ATLAS Home','http://atlas.ch',900,700).makeIcon(constants.images.atlas),
+               this.menuItem('ATLAS Computing','https://twiki.cern.ch/twiki/bin/view/Atlas/AtlasComputing',900,700),
+               this.menuItem('ATLAS Live events','http://atlantis.cern.ch/live',900,700)
     ];
     this._launch('ATLAS Experiment',constants.images.atlas,items);
   }
@@ -234,13 +234,13 @@ LbDesktop.ATLASMenuModule = Ext.extend(desktop.URLMenuModule, {
 LbDesktop.CMSMenuModule = Ext.extend(desktop.URLMenuModule, {
   cmstv: function(channel) { return 'http://cmsdoc.cern.ch/cmscc/cmstv/cmstv.jsp?channel='+channel; },
   init: function()  {
-    var items=[this.menuItem('CMS Home','http://cms.cern.ch',900,800).makeIcon(constants.images.cms)
-              ,this.menuItem('Online Status',     this.cmstv(4),1000,1000)
-              ,this.menuItem('Event Display (2008)', this.cmstv(5),1000,1000)
-              ,this.menuItem('Event Display (2009)', this.cmstv(6),1000,1000)
-              ,this.menuItem('Event Display (2010)', this.cmstv(7),1000,1000)
-              ,this.menuItem('Event Display (Sim)',  this.cmstv(8),1000,1000)
-              ,this.menuItem('Tier 0 Status',    'https://cmsweb.cern.ch/T0Mon',1000,900)
+    var items=[this.menuItem('CMS Home','http://cms.cern.ch',900,700).makeIcon(constants.images.cms)
+              ,this.menuItem('Online Status',     this.cmstv(4),1000,700)
+              ,this.menuItem('Event Display (2008)', this.cmstv(5),1000,700)
+              ,this.menuItem('Event Display (2009)', this.cmstv(6),1000,700)
+              ,this.menuItem('Event Display (2010)', this.cmstv(7),1000,700)
+              ,this.menuItem('Event Display (Sim)',  this.cmstv(8),1000,700)
+              ,this.menuItem('Tier 0 Status',    'https://cmsweb.cern.ch/T0Mon',1000,700)
     ];
     this._launch('CMS Experiment',constants.images.cms,items);
   }

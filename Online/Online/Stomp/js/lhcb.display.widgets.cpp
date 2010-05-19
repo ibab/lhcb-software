@@ -1384,6 +1384,7 @@ if ( !lhcb.widgets ) {
     table.messages  = msg;
     table.provider  = null;
     table.logger    = null;
+    // if ( table.system.indexOf(' ')>0 ) table.system = table.system.substr
     table.add = function() {
       var tr = document.createElement('tr');
       var td = document.createElement('td');
