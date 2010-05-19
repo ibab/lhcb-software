@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.195 2010-05-19 13:14:40 graven Exp $ 
+! $Id: release.notes,v 1.196 2010-05-19 20:55:22 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiCore
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -15,6 +15,9 @@
 ! 
 ! -----------------------------------------------------------------------------
 
+
+  
+! =========================== LoKiCore v9r13p2 2010-05-19 =======================
 ! 2010-05-19 - Gerhard Raven
  - Scalers: make sure that one waits at least one tick to avoid an avalanche
    at the first event when processing in parallel
@@ -23,32 +26,10 @@
  - Scalers: listen to runchanges with low priority so that random numbers
    are seeded first..
 
-! =========================== LoKiCore v10r0 2010-04-26 =======================
 ! 2010-04-21 - Vanya Belyaev
-
  - Scalers.cpp:
 
     fix compilation warnings for slc4-ia32 platform 
-
-! 2010-04-06 - Vanya Belyaev
-
-     remove LoKi::Range, replace it by Gaudi::Range 
-
-   FIXME: remove temporary iteration over ranges 
-    
-      uncomment the lines in LoKiCore.decorator after
-       fix in Gaudi::RangeBase_ 
-
- - cmt/requirements 
-    
-     version increment to v10r0 
-
-! 2010-04-06 - Vanya Belyaev
-
- - new functions for object decorations 
-	 + new operators for particle pids ...
-   + new shifters (streamers) 
-  
 
 ! =========================== LoKiCore v9r13p1 2010-04-30 =======================
 ! 2010-04-17 - Gerhard Raven
