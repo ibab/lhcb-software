@@ -345,7 +345,7 @@ function histo_display($id,$htype,$mode)
   printf("Marker Style <input name='MARKERSTYLE' size=2 value='%s' ${cw_ro}> &nbsp&nbsp ",$_POST["MARKERSTYLE"]);
   printf("Marker Color <input name='MARKERCOLOR' size=2 value='%s' ${cw_ro}>\n",$_POST["MARKERCOLOR"]);
   printf("Marker Size <input name='MARKERSIZE' size=2 value='%s' ${cw_ro}><br>\n",$_POST["MARKERSIZE"]);
-  printf("Pad Color <input name='PADCOLOR' size=2 value='%s' ${cw_ro}><br><br>\n",$_POST["PADCOLOR"]);
+  //printf("Pad Color <input name='PADCOLOR' size=2 value='%s' ${cw_ro}><br><br>\n",$_POST["PADCOLOR"]);
 
   printf("<B>ROOT Draw options</B> <input name='DRAWOPTS' size=20 value='%s' ${cw_ro}><br>\n",$_POST["DRAWOPTS"]);
   // printf("Display Refresh Time (s)  <input name='REFRESH' size=5 value='%s' ${cw_ro}><br>\n",$_POST["REFRESH"]);
