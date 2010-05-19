@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: StdVeryLooseDstarWithD2HH.py,v 1.3 2010-01-18 10:08:49 gcowan Exp $ 
+# $Id: StdVeryLooseDstarWithD2HH.py,v 1.4 2010-05-19 14:20:49 gcowan Exp $ 
 # =============================================================================
 ## @file  CommonParticles/StdVeryLooseDstarWithD02HH.py
 #  configuration file for 'Standard VeryLoose Dstar WithD02HH' 
@@ -12,7 +12,7 @@ Configuration file for 'Standard VeryLoose Dstar WithD02HH'
 """
 __author__  = "Marta Calvi"
 __date__ = '10/12/2009'
-__version__ = "version $Revision: 1.3 $"
+__version__ = "version $Revision: 1.4 $"
 
 # =============================================================================
 __all__ = (
@@ -34,7 +34,7 @@ StdVeryLooseDstarWithD02KPi = CombineParticles ( 'StdVeryLooseDstarWithD02KPi' )
 StdVeryLooseDstarWithD02KPi.InputLocations = [ "StdNoPIDsPions", "StdNoPIDsUpPions", "StdVeryLooseD02KPi" ]
 StdVeryLooseDstarWithD02KPi.DecayDescriptor = "[D*(2010)+ -> D0 pi+]cc" 
 
-StdVeryLooseDstarWithD02KPi.CombinationCut = "(ADAMASS('D*(2010)+')<50*MeV) & (APT>1250*MeV)"
+StdVeryLooseDstarWithD02KPi.CombinationCut = "(ADAMASS('D*(2010)+')<80*MeV) & (APT>1250*MeV)"
 StdVeryLooseDstarWithD02KPi.MotherCut = "(VFASPF(VCHI2/VDOF)<25) & (M-MAXTREE('D0'==ABSID,M)<165.5)"
 StdVeryLooseDstarWithD02KPi.DaughtersCuts = { "pi+" : "(TRCHI2DOF<10) & (PT>110*MeV) & (MIPDV(PRIMARY)>0.04*mm)"}
 
