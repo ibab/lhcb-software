@@ -1,8 +1,8 @@
-# $Id: StrippingDstarD2KShh.py,v 1.3 2010-04-26 07:41:36 mcharles Exp $
+# $Id: StrippingDstarD2KShh.py,v 1.4 2010-05-19 15:11:13 mcharles Exp $
 
 __author__ = [ 'Mat Charles' ]
 __date__ = '2010-02-05'
-__version = '$Revision: 1.3 $'
+__version = '$Revision: 1.4 $'
 
 # Please contact m.charles1@physics.ox.ac.uk before changing anything. Thanks.
 
@@ -204,7 +204,7 @@ class StrippingDstarD2KShhConf(LHCbConfigurableUser) :
         str_cutsSoftPi = '( PIDe-PIDpi < %(SoftPionCutPIDe)s )' % self.getProps()
         str_cutsDstarComb = "ADAMASS('D*(2010)+') < %(preFitDstarMassCut)s *MeV" % self.getProps()
         strDstarMotherCutBasepp = '(PT > ' + str(cutPT) + '*MeV) & (VFASPF(VCHI2/VDOF)<' + str(cutChi2) + ')'
-        str_cutsDstar_DM_wide = '(MM - CHILD(MM,1) - CHILD(MM,2) > %(wideDMCutLower)s *MeV) & (MM - CHILD(MM,1) - CHILD(MM,2) < %(signalDMCutUpper)s *MeV)' % self.getProps()
+        str_cutsDstar_DM_wide = '(MM - CHILD(MM,1) - CHILD(MM,2) > %(wideDMCutLower)s *MeV) & (MM - CHILD(MM,1) - CHILD(MM,2) < %(wideDMCutUpper)s *MeV)' % self.getProps()
         strDstarMothCut = '(' + strDstarMotherCutBasepp + '&' + str_cutsDstar_DM_wide + ')'
         cp = StrippingMember(CombineParticles
                              , "CombineDstar"
