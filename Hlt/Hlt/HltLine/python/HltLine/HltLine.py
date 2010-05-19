@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltLine.py,v 1.36 2010-04-16 01:05:34 gligorov Exp $ 
+# $Id: HltLine.py,v 1.37 2010-05-19 04:16:54 gligorov Exp $ 
 # =============================================================================
 ## @file
 #
@@ -54,7 +54,7 @@ Also few helper symbols are defined:
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.36 $ "
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.37 $ "
 # =============================================================================
 
 __all__ = ( 'Hlt1Line'     ,  ## the Hlt1 line itself 
@@ -91,6 +91,8 @@ from Configurables import HltVertexFilter   as VertexFilter
 from Configurables import HltVertexUpgrade  as VertexUpgrade
 from Configurables import HltMoveVerticesForSwimming as MoveVerticesForSwimming  
 from Configurables import HltSelectTracksForSwimming as SelectTracksForSwimming
+from Configurables import HltFilterFittedVertices
+from Configurables import HltFilterFittedTracks
 from Configurables import HltL0MuonCandidates    as L0MuonCandidates 
 from Configurables import HltL0CaloCandidates    as L0CaloCandidates 
 from Configurables import HltVertexToTracks      as VertexToTracks 
@@ -335,6 +337,8 @@ _types_ = { TrackUpgrade  : 'TU'
           , AddPhotonToVertex : 'AddPhotonToVertex'
           , MoveVerticesForSwimming : 'MoveVerticesForSwimming'
           , SelectTracksForSwimming : 'SelectTracksForSwimming'   
+          , HltFilterFittedVertices : 'HltFilterFittedVertices'
+          , HltFilterFittedTracks : 'HltFilterFittedTracks'
           , Hlt__TrackFilter : 'Hlt::TrackFilter'
           , Hlt__TrackPipe : 'Hlt::TrackPipe'
           , GlobalHcalCut  : 'GlobalHcalCut'
@@ -749,7 +753,7 @@ class Hlt1Member ( object ) :
         
         >>> m1 = Hlt1Member ( 'TU' , 'Velo'   , RecoName = 'Velo' ) ,
         >>> m2 = Hlt1Member ( 'TF' , 'Velo'      ,
-                    FilterDescriptor = [ 'IP_PV2D,||>,0.1',
+                    FilterDescriptor = [ 'IP_PV3D,||>,0.1',
                                          'Calo3DChi2_L0TriggerHadron,<,4' ] ) 
         """
         ## (1) "clone" all agruments
