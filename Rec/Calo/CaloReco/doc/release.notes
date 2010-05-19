@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.181 2010-04-29 21:13:59 odescham Exp $
+! $Id: release.notes,v 1.182 2010-05-19 14:12:42 graven Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Calo/CaloReco
 ! Responsible : Olivier Deschamps odescham@in2p3.fr 
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
 ! -----------------------------------------------------------------------------
+
+! 2010-05-19 - Gerhard Raven
+ - suppress printout of error from CaloClusterCovarianceAlg, but keep
+   summary at the end of the job (see http://savannah.cern.ch/bugs/?67077)
 
 ! 2010-04-29 - Olivier Deschamps
 	  - Reconstruction.py : fix splitCluster onDemand setting

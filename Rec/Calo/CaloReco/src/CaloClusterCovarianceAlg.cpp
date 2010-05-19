@@ -1,4 +1,4 @@
-// $Id: CaloClusterCovarianceAlg.cpp,v 1.13 2010-03-08 01:19:40 odescham Exp $ 
+// $Id: CaloClusterCovarianceAlg.cpp,v 1.14 2010-05-19 14:12:42 graven Exp $ 
 //  ===========================================================================
 #define CALORECO_CALOCLUSTERCOVARIANCEALG_CPP 1 
 /// ===========================================================================
@@ -197,7 +197,7 @@ StatusCode CaloClusterCovarianceAlg::execute()
 
     sc = cov    () -> process( *cluster ) ;    
     if( sc.isFailure() ){ 
-      Error("Error from cov,    skip cluster ", sc ).ignore() ; 
+      Error("Error from cov,    skip cluster ", sc, 0 ).ignore() ; 
       debug() << *cluster << endmsg ;
       continue ; 
     }
