@@ -4,6 +4,14 @@
 ! Purpose     : 
 !------------------------------------------------------------------------------
 
+! 2010-05-19 - Julien Cogan
+ - Fix to match harware behaviour : topology of tile exchange for M2 has been
+   modified. It affects exchanges across different regions (in practise R2->R3).
+   If a metatiles (sum of StripH or sum of StripV) contains a fired tile, it
+   is passed to the neighouring PU. The receiving PU may then make a pad from 
+   these meta-Strips. Originally, only strips which were used to make pads in 
+   the thinner granularity were passed to the neighouring PU. 
+
 !============================ L0MuonKernel v9r1 2010-03-17 ==================== 
 ! 2010-02-24 - Julien Cogan
  - Add 2 bits in the hardware error word of ProcCand and CtrlCand data to

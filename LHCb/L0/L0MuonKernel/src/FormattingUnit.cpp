@@ -20,31 +20,35 @@ void L0Muon::FormattingUnit::preexecute(){
   if (m_debug) std::cout << "*!* Formatting::preexecute IN"  << std::endl;
    
   std::vector<LHCb::MuonTileID> firedPads;
-
+  std::vector<LHCb::MuonTileID> firedTiles;
+  
   std::map<std::string,Register*>::iterator ir;
 
   if (m_debug) std::cout << "*!* Formatting::preexecute: registers in input"  << std::endl;
   for ( ir = m_inputs.begin(); ir != m_inputs.end(); ir++ ) {
     TileRegister* itr = dynamic_cast<TileRegister*>(ir->second);
-    if (m_debug) std::cout << "*!* Formatting::preexecute:    "
-                           << " register is "<<ir->first  
-                   //<< " add: "<< itr
-                           << " size: "<<itr->size()  
-                           << std::endl;
-    //if (m_debug) itr->print_tiles(0);
-    if (m_debug) itr->print_bits(0,0);
-    
-    
-    std::vector<LHCb::MuonTileID> tmp = itr->firedTiles();
 
-    if (m_debug) std::cout <<"*!* Formatting::preexecute:    "<<ir->first<<" "<<tmp.size()<<" fired tiles"<<std::endl;
+    if (m_debug) {
+      std::cout << "*!* Formatting::preexecute:    "
+                << " register is "<<ir->first  
+                << " size: "<<itr->size()  
+                << std::endl;
+
+      itr->print_bits(0,0);
+      std::vector<LHCb::MuonTileID> tmp = itr->firedTiles();
+      std::cout <<"*!* Formatting::preexecute:    "<<ir->first<<" "<<tmp.size()<<" fired tiles"<<std::endl;
+    }
+
     itr->makePads();
-      
-    std::vector<LHCb::MuonTileID> pads = itr->Pads();
-    std::vector<LHCb::MuonTileID>::iterator  ipads ;
-    for (ipads = pads.begin(); ipads != pads.end(); ipads++){
-      firedPads.push_back(*ipads);
-    }    
+
+    std::vector<LHCb::MuonTileID> tiles;
+
+    tiles = itr->Pads();
+    firedPads.insert(firedPads.end(),tiles.begin(),tiles.end());
+
+    tiles= itr->firedTiles();
+    firedTiles.insert(firedTiles.end(),tiles.begin(),tiles.end());
+
   }  
   if (m_debug) std::cout <<"*!* Formatting::preexecute: firedPads contains "<<firedPads.size()<<" tiles"<<std::endl;
 
@@ -78,6 +82,19 @@ void L0Muon::FormattingUnit::preexecute(){
               outtr->setTile(*outit);
             }
           }
+
+          if (outit->station()==1) {
+            // Set ouput tile if it CONTAINS a fired input TILE
+            for ( init = firedTiles.begin(); init != firedTiles.end(); init++) {
+              if (outit->intercept(*init)==(*init)) {
+                if (m_debug) std::cout << "*!* Formatting::preexecute: is contained tiles IN: "<<init->toString()
+                                       <<" - OUT: "<<outit->toString() << std::endl;
+                
+                outtr->setTile(*outit);
+              }
+            }
+          }
+
         }
       }
       if (m_debug) std::cout <<"*!* Formatting::preexecute:   "<<out->first
