@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.184 2010-04-28 20:52:14 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.185 2010-05-19 14:20:26 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -186,7 +186,7 @@ class HltConf(LHCbConfigurableUser):
                       ,  1 : '( ODIN_BXTYP == LHCb.ODIN.Beam2 ) | ( ODIN_BXTYP == LHCb.ODIN.BeamCrossing )'
                       ,  8 : 'L0_DECISION_PHYSICS'
                       ,  9 : "L0_CHANNEL_RE('B?gas')"
-                      , 10 : "|".join( [ "L0_CHANNEL('%s')" % chan for chan in [ 'CALO','MUON,minbias','PU','SPD40','PU20' ] ] )
+                      , 10 : "|".join( [ "L0_CHANNEL('%s')" % chan for chan in [ 'SPD','CALO','MUON,minbias','PU','SPD40','PU20' ] ] )
                       , 11 : "|".join( [ "L0_CHANNEL('%s')" % chan for chan in [ 'Electron','Photon','Hadron','Muon','DiMuon','Muon,lowMult','DiMuon,lowMult','LocalPi0','GlobalPi0'] ] )
                       , 32 : "HLT_PASS('Hlt1Global')"
                       , 33 : "HLT_PASS_SUBSTR('Hlt1Lumi')" 
