@@ -1,4 +1,4 @@
-// $Id: DbRootHist.cpp,v 1.164 2010-05-16 18:08:40 robbep Exp $
+// $Id: DbRootHist.cpp,v 1.165 2010-05-19 17:04:13 robbep Exp $
 #include "DbRootHist.h"
 
 // STL 
@@ -1195,7 +1195,7 @@ void DbRootHist::setDrawOptionsFromDB(TPad* &pad)
 
   if (m_onlineHistogram && rootHistogram) {
     int iopt = 0;
-    double fopt = 0.0;
+    float fopt = 0.0;
     std::string sopt("");
 
     // TPaveStats is obtained after a pad->Draw(), but note that changing OptStat

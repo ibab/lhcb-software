@@ -1,4 +1,4 @@
-// $Id: PageDescriptionTextView.cpp,v 1.6 2010-05-18 17:13:30 robbep Exp $
+// $Id: PageDescriptionTextView.cpp,v 1.7 2010-05-19 17:04:16 robbep Exp $
 // Include files
 
 // local
@@ -83,7 +83,12 @@ bool PageDescriptionTextView::retrieveListOfProblems( const std::string& pageNam
     else 
       cellColor = "white" ;
     
-    theStr << "<tr><td bgcolor=\"" << cellColor << "\">" << ( ( vec[ 0 ] + ": " + vec[ 4 ] ).c_str() ) 
+    theStr << "<tr><td class=\"links\" bgcolor=\"" << cellColor << "\">" 
+	   << "<a href=\"http://problems/problems/" << vec[ 3 ] << "/\" STYLE=\"text-decoration: none\">"
+	   << "<font color=\"#000000\">" 
+	   << ( ( vec[ 0 ] + ": " + vec[ 4 ] ).c_str() ) 
+	   << "</font>"
+	   << "</a>"
 	   << "</td></tr>" << std::endl ;
   }
   theStr << "</table>" << std::endl ;
@@ -141,7 +146,6 @@ Bool_t PageDescriptionTextView::HandleButton( Event_t * event ) {
     const char * link ;
     link = GetHref( event -> fX , event -> fY ) ;
     if ( 0 != link ) {
-      //      if ( 0 == fork() ) {
       // Check if firefox is already running:
       bool running = false ;
       FILE * fp ;

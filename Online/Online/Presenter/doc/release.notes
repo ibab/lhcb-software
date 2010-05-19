@@ -4,6 +4,9 @@
 ! Purpose     : GUI to allow the visualization of all data quality histograms
 !-----------------------------------------------------------------------------
 
+! 2010-05-19 - Patrick Robbe
+ - src/DbHistRoot.cpp: retransform double into float 
+
 !============ Presenter v1r4 2010-05-19 =============
 ! 2010-05-17 - Patrick Robbe
  - src/PresenterMainFrame.cpp: right-click on histogram to open description
