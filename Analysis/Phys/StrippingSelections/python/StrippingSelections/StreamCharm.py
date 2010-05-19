@@ -15,6 +15,7 @@ from StrippingSelections import StrippingDstarD2KShh
 from StrippingSelections import StrippingDstarD2KShhRobust
 from StrippingSelections import StrippingDstarD02PipiMuMuPiMuKPiKmu
 from StrippingSelections import StrippingDstar_D2KPiPi0
+from StrippingSelections import StrippingDstarVeryLooseWithD02HH
 from StrippingSelections import StrippingD2hhNoPID
 from StrippingSelections import StrippingD2Kh
 from StrippingSelections import StrippingD2KhLoose
@@ -76,6 +77,7 @@ stream.appendLines( [
 	, StrippingDstarD02PipiMuMuPiMuKPiKmu.lineDstarWithD0PiPiForDstarWithD02MuMu
         , StrippingDstar_D2KPiPi0.lineRS
         , StrippingDstar_D2KPiPi0.lineWS
+        , StrippingDstarVeryLooseWithD02HH.line
         , StrippingD2hhNoPID.line
         , StrippingD2Kh.DKhPreselLine
         , StrippingD2KhLoose.DKhPreselLooseLine
