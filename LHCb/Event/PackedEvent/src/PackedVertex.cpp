@@ -1,4 +1,4 @@
-// $Id: PackedVertex.cpp,v 1.2 2010-05-18 09:51:00 jonrob Exp $
+// $Id: PackedVertex.cpp,v 1.3 2010-05-19 09:04:09 jonrob Exp $
 
 // local
 #include "Event/PackedVertex.h"
@@ -24,6 +24,7 @@ void VertexPacker::pack( const DataVector & verts,
       pverts.data().push_back( PackedData() );
       PackedData & pvert = pverts.data().back();
       // fill pvert from vert
+      pvert.technique = static_cast<int>(vert.technique());
     }
   }
   else
@@ -48,6 +49,7 @@ void VertexPacker::unpack( const PackedDataVector & pverts,
       Data * vert = new Data();
       verts.add( vert );
       // Fill data from packed object
+      vert->setTechnique( static_cast<Vertex::CreationMethod>(pvert.technique) );
     }
   }
   else
@@ -74,7 +76,8 @@ StatusCode VertexPacker::check( const DataVector & dataA,
     // assume OK from the start
     bool ok = true;
 
-    // need to add checks here
+    // checks here
+    ok &= (*iA)->technique() == (*iB)->technique();
 
     // force printout for tests
     //ok = false;

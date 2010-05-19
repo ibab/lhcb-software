@@ -1,4 +1,4 @@
-// $Id: PackedParticle.cpp,v 1.2 2010-05-18 09:51:00 jonrob Exp $
+// $Id: PackedParticle.cpp,v 1.3 2010-05-19 09:04:08 jonrob Exp $
 
 // local
 #include "Event/PackedParticle.h"
@@ -24,6 +24,7 @@ void ParticlePacker::pack( const DataVector & parts,
       pparts.data().push_back( PackedData() );
       PackedData & ppart = pparts.data().back();
       // fill ppart from part
+      ppart.particleID = part.particleID().pid();
     }
   }
   else
@@ -48,6 +49,7 @@ void ParticlePacker::unpack( const PackedDataVector & pparts,
       Data * part = new Data();
       parts.add( part );
       // Fill data from packed object
+      part->setParticleID( LHCb::ParticleID(ppart.particleID) );
     }
   }
   else
@@ -74,7 +76,8 @@ StatusCode ParticlePacker::check( const DataVector & dataA,
     // assume OK from the start
     bool ok = true;
  
-    // need to add checks here
+    // checks here
+    ok &= (*iA)->particleID() == (*iB)->particleID();
 
     // force printout for tests
     //ok = false;

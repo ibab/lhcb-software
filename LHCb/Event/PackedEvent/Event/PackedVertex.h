@@ -1,4 +1,4 @@
-// $Id: PackedVertex.h,v 1.1 2010-05-18 09:04:35 jonrob Exp $
+// $Id: PackedVertex.h,v 1.2 2010-05-19 09:04:08 jonrob Exp $
 #ifndef EVENT_PACKEDVERTEX_H
 #define EVENT_PACKEDVERTEX_H 1
 
@@ -31,10 +31,11 @@ namespace LHCb
   {
     /// Default constructor
     PackedVertex()
-    //  : // init data members
+      : technique(0)
     {}
-
+    
     // packed data members
+    int technique;
 
   };
 
