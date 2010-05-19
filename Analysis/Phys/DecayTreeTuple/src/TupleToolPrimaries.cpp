@@ -1,4 +1,4 @@
-// $Id: TupleToolPrimaries.cpp,v 1.9 2010-05-18 16:53:20 rlambert Exp $
+// $Id: TupleToolPrimaries.cpp,v 1.10 2010-05-19 06:45:32 pkoppenb Exp $
 // Include files
 
 // from Gaudi
@@ -67,6 +67,9 @@ StatusCode TupleToolPrimaries::initialize(){
 StatusCode TupleToolPrimaries::fill( Tuples::Tuple& tuple ) 
 {
   const std::string prefix=fullName();
+  const unsigned int maxPV = 100 ;
+
+  if (msgLevel(MSG::VERBOSE)) verbose() << "Storing PVs with prefix " << prefix << endmsg ;
   
   std::vector<double>  pvx, pvy, pvz;
   std::vector<double>  epvx, epvy, epvz;
@@ -81,37 +84,41 @@ StatusCode TupleToolPrimaries::fill( Tuples::Tuple& tuple )
   if (0!=PV)
   {
     
-    for(RecVertex::Container::const_iterator i = PV->begin() ; PV->end()!=i ; ++i )
+    if( PV->size() > maxPV )
     {
-      pvx.push_back( (*i)->position().X() );
-      pvy.push_back( (*i)->position().Y() );
-      pvz.push_back( (*i)->position().Z() );
-      epvx.push_back( std::sqrt((*i)->covMatrix()(0,0)) );
-      epvy.push_back( std::sqrt((*i)->covMatrix()(1,1)) );
-      epvz.push_back( std::sqrt((*i)->covMatrix()(2,2)) );
-      pvchi2.push_back((*i)->chi2());
-      pvndof.push_back((*i)->nDoF());
-      pvntracks.push_back((*i)->tracks().size());
+      Warning("More than 100 primaries, no PVs will be stored.");
+    } else {
+      
+      for(RecVertex::Container::const_iterator i = PV->begin() ; PV->end()!=i ; ++i )
+      {
+        if (msgLevel(MSG::VERBOSE)) verbose() << "PV: " <<  (*i)->position() << endmsg ;
+        pvx.push_back( (*i)->position().X() );
+        pvy.push_back( (*i)->position().Y() );
+        pvz.push_back( (*i)->position().Z() );
+        epvx.push_back( std::sqrt((*i)->covMatrix()(0,0)) );
+        epvy.push_back( std::sqrt((*i)->covMatrix()(1,1)) );
+        epvz.push_back( std::sqrt((*i)->covMatrix()(2,2)) );
+        pvchi2.push_back((*i)->chi2());
+        pvndof.push_back((*i)->nDoF());
+        pvntracks.push_back((double)(*i)->tracks().size());
+      }
     }
-  
-    if( PV->size() > 40 )
-    {
-      Warning("More than 40 primaries, some PVs will not be stored.");
-    }
+    
   }
   
   bool test=true;
-  test &= tuple->farray( prefix+"PVX", pvx, prefix+"nPV",  40 );
-  test &= tuple->farray( prefix+"PVY", pvy, prefix+"nPV",  40 );
-  test &= tuple->farray( prefix+"PVZ", pvz, prefix+"nPV",  40 );
-  test &= tuple->farray( prefix+"PVXERR", epvx, prefix+"nPV",  40 );
-  test &= tuple->farray( prefix+"PVYERR", epvy, prefix+"nPV",  40 );
-  test &= tuple->farray( prefix+"PVZERR", epvz, prefix+"nPV",  40 );
+  test &= tuple->farray( prefix+"PVX", pvx, prefix+"nPV",  maxPV );
+  test &= tuple->farray( prefix+"PVY", pvy, prefix+"nPV",  maxPV );
+  test &= tuple->farray( prefix+"PVZ", pvz, prefix+"nPV",  maxPV );
+  test &= tuple->farray( prefix+"PVXERR", epvx, prefix+"nPV",  maxPV );
+  test &= tuple->farray( prefix+"PVYERR", epvy, prefix+"nPV",  maxPV );
+  test &= tuple->farray( prefix+"PVZERR", epvz, prefix+"nPV",  maxPV );
   
-  test &= tuple->farray( prefix+"PVCHI2", pvchi2, prefix+"nPV",  40 );
-  test &= tuple->farray( prefix+"PVNDOF", pvndof, prefix+"nPV",  40 );
-  test &= tuple->farray( prefix+"PVNTRACKS", pvntracks, prefix+"nPV",  40 );
+  test &= tuple->farray( prefix+"PVCHI2", pvchi2, prefix+"nPV",  maxPV );
+  test &= tuple->farray( prefix+"PVNDOF", pvndof, prefix+"nPV",  maxPV );
+  test &= tuple->farray( prefix+"PVNTRACKS", pvntracks, prefix+"nPV",  maxPV );
   
+  if (msgLevel(MSG::DEBUG)) debug() << "Stored " << PV->size() << " PVs " << test << endmsg ;
   return StatusCode(test);
   //  return StatusCode::SUCCESS;
 }

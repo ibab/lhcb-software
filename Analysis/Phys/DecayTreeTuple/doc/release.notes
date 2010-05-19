@@ -4,8 +4,11 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2010-05-19 - Patrick Koppenburg
+ - More printout in TupleToolPrimaries
+
 ! 2010-05-18 - Rob Lambert
- - rewrite TupleToolPrimaries to make more sence to me
+ - rewrite TupleToolPrimaries to make more sense to me
 
 ! 2010-05-12 Juan Palacios
  - src/TupleToolGeometry.cpp
