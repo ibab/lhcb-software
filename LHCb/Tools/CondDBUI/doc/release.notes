@@ -5,6 +5,13 @@
 ! package manager : Marco Clemencic
 ! =============================================================================
 
+! 2010-05-19 - Illya Shapoval
+ - Added CreateDBLookupFile.py script which generates the full set of files with 
+   CondDB Tier-1s connection settings (authentication.xml and dblookup-SITE.xml).
+   Currently these files are located in AppConfig/conddb.
+ - TagsFilter.py script is upgraded. Now it can insert into bookkeeping db the
+   names of global tags marked with 'BK' data type in SQLDDDB release notes file.
+
 !===================== Tools/CondDBUI v3r3 2010-03-24 =========================
 ! 2010-03-24 - Illya Shapoval
  - Removed pyqt_compat dependency which was the reason for CondDBBrowser 

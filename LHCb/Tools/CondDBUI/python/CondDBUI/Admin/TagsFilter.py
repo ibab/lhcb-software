@@ -198,7 +198,7 @@ def main():
     # Configuring the script options and args parser
     ##########################################################################################
     from optparse import OptionParser
-    parser = OptionParser(usage = "%prog [options] PARTITION DATA_TYPE",
+    parser = OptionParser(usage = "%prog [options] PARTITION(S) DATA_TYPE",
                         version = __version__,
                         description = 
 """Script returns for the given partition and data type the most recent global tag and all \
@@ -213,8 +213,13 @@ will be returned, even if local tags were found for the given condition.
     parser.add_option("-r", "--rel-notes", type = "string",
                     help = "XML file containing the release notes to analyze"
                     )
-    parser.add_option("-g","--search_GTs", action="store_true", dest="search_GTs", default = False,
-                    help = "Search for all global tags with the given partition and data type"
+    parser.add_option("-g","--all_GTs", action="store_true", dest="all_GTs", default = False,
+                    help = "Search for all global tags for the given partition and data type"
+                    )
+    parser.add_option("--update_bkk", action="store_true", dest="update_bkk", default = False,
+                    help = "If is set, an update of bookkeeping database with a latest global tag \
+for the given partition and data type will be done. The user will be asked for \
+final confirmation."
                     )
     
     try:
@@ -226,24 +231,90 @@ will be returned, even if local tags were found for the given condition.
         return 1
 
     options, args = parser.parse_args()
-    
     if len(args) != 2:
         parser.error("Not enough or too much of arguments. Try with --help.")
     
-    partitions = ["DDDB", "LHCBCOND", "SIMCOND"]
-    if args[0] not in partitions:
-        parser.error("'%s' is not a valid partition name. Allowed: %s" % \
-                    (args[0], partitions))
-    #########################################################################################
+    datatype = args[1]
+    ################ Processing and validation of the given partitions#######################
+    partitions = []
+    word = ""
+    for i in args[0]:
+        if i != ",":
+            word += i
+        elif i == ",":
+            partitions.append(word)
+            word = ""
+        elif i == " ":
+            parser.error("Partitions coma separated list should be given without spaces.")
+    partitions.append(word)
     
+    standard_partitions = ["DDDB", "LHCBCOND", "SIMCOND"]
+    for partition in partitions:
+        if partition not in standard_partitions and partition != "all":
+            parser.error("'%s' is not a valid partition name. Allowed are: %s and 'all'" % \
+                        (partition, standard_partitions))
+        elif partition == "all":
+            partitions = standard_partitions
+    print "\n###########################################################################################"
+    print "#  Using %s" % options.rel_notes
+    print "#  Partitions to look in: %s" %partitions
+    print "#  Data type to look for is: %s" %datatype
+    print "###########################################################################################"
     
-    # Launch parsing and return the result
-    if not options.search_GTs:
-        print "\nThe most recent global tag and all subsequent local tags are:\n", \
-            last_gt__lts(args[0], args[1], options.rel_notes), "\n"
+    ########### Launch parsing and return the result#####################################
+    if not options.update_bkk:
+        if not options.all_GTs:
+            print "\nThe most recent global tags and all new subsequent local tags for specified partition and datatype are:"
+            for partition in partitions:
+                print "\n\tFor %s:"%partition, last_gt_lts(partition, datatype, options.rel_notes)
+        else:
+            print "\nThe set of all global tags for specified partition and datatype are:"
+            for partition in partitions:
+                print "\n\tFor %s:"%partition, all_gts(partition, datatype, options.rel_notes)
+    elif options.update_bkk and datatype == "BK":
+        BK_tags = {"DDDB":[],"LHCBCOND":[],"SIMCOND":[]}
+        if not options.all_GTs:
+            print "\nThe most recent global tags with the 'bookkeeping' property are:"
+            for partition in partitions:
+                gt_lts = last_gt_lts(partition, datatype, options.rel_notes)
+                if gt_lts:
+                    gt,ltgs = gt_lts
+                    BK_tags[partition].append(gt)
+        else:
+            print "\nAll global tags with the 'bookkeeping' property are:"
+            for partition in partitions:
+                gts = all_gts(partition, datatype, options.rel_notes)
+                if gts:
+                    BK_tags[partition] = gts
+        print "\t", BK_tags
+    
+        ans = None
+        while ans is None:
+            ans = raw_input("\nDo you really want to update the Bookkeeping database (Yes,[No])? ")
+            if not ans: ans = "No"
+            if ans not in [ "Yes", "No" ]:
+                print "You have to type exactly 'Yes' or 'No'"
+                ans = None
+        
+        if ans == "No":
+            print "...\nBookkeeping database update was cancelled by user. No changes were done to the db."
+            return 0
+	    
+        from DIRAC.Core.Base.Script import initialize
+        initialize(enableCommandLine = False)
+    	from LHCbDIRAC.BookkeepingSystem.Client.BookkeepingClient import BookkeepingClient
+    	cl = BookkeepingClient()
+        retVal = cl.insertTag(BK_tags)
+        if retVal['OK']:
+            print "Bookkeeping database was updated."
+            print retVal['Value']
+        else:
+            print retVal['Message']
     else:
-        print "\nGlobal tags, which correspond to the given condition, are:\n", \
-            all_gts(args[0], args[1], options.rel_notes), "\n"
+        print "\nThe Bookkeeping database can only be updated with 'BK' data type global tags.\n\
+The update process wasn't done."
+        return 1
         
 if __name__ == '__main__':
     sys.exit(main())
+
