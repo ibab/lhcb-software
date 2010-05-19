@@ -4,6 +4,13 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2010-05-19 - V. Gligorov
+ - Add new threshold settings 
+    . Physics_MinBiasL0_PassThroughHlt1_ExpressHlt2_May10
+    . Physics_MinBiasL0_PassThroughHlt_May10
+   to take into account the changed slot names in the Hlt1
+   hadron lines following the move to 3D Velo reconstruction.  
+
 ! 2010-05-18 - Johannes Albrecht
  - add Hlt2MuonFromHLT1
 
