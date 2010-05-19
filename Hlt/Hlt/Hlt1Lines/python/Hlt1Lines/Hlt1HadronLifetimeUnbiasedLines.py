@@ -9,7 +9,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.3 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.4 $"
 # =============================================================================
 
 import Gaudi.Configuration 
@@ -25,13 +25,17 @@ def histosfilter(name,xlower=0.,xup=100.,nbins=100):
 
 from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
 class Hlt1HadronLifetimeUnbiasedLinesConf(HltLinesConfigurableUser) :
-    __slots__ = { 'L0Channel'               : "Hadron" 
-                , 'HadMain_TrackFitChi2Cut' : 10.
-                , 'HadVertex_DOCACut'    : 0.2
-                , 'HadVertex_PTCut'      : 1000.
-                , 'HadVertex_PointingCut': 0.4
-                , 'LTUnbHadETCut_Hard'       : 2500. 
-                , 'LTUnbHadETCut_Soft'       : 1000.
+    __slots__ = { 'L0Channel'                 :  "Hadron" 
+                , 'HadMain_TrackFitChi2Cut'   :    10.
+                , 'HadVertex_DOCACut'         :     0.2
+                , 'HadVertex_PCut'            : 10000.  
+                , 'HadVertex_MaxPTCut'        :  2000.
+                , 'HadVertex_MinPTCut'        :  1000.
+                , 'HadVertex_MassMinCut'      :  5000.0
+                , 'HadVertex_MassMaxCut'      :  5800.0
+                , 'HadVertex_CosThetaStarCut' :     0.9  
+                , 'LTUnbHadETCut_Hard'        :  2500. 
+                , 'LTUnbHadETCut_Soft'        :  1000.
                 }
     
     def __apply_configuration__(self) : 
@@ -42,9 +46,13 @@ class Hlt1HadronLifetimeUnbiasedLinesConf(HltLinesConfigurableUser) :
         from HltLine.HltLine import hlt1Lines  
         from Hlt1Lines.HltFastTrackFit import setupHltFastTrackFit
         from HltTracking.HltReco import RZVelo,Velo
-        from HltTracking.HltPVs  import PV2D
+        from HltTracking.HltPVs  import PV3D
         from Configurables import HltTrackUpgradeTool, PatForwardTool, HltGuidedForward
         from Hlt1Lines.HltConfigurePR import ConfiguredPR
+
+        ## alias to get the slot associated to a name
+        _cut = lambda x: str(self.getProp(x))
+
         
         # confirmed track
         #------------------------
@@ -69,16 +77,24 @@ class Hlt1HadronLifetimeUnbiasedLinesConf(HltLinesConfigurableUser) :
 
         def confirmation(type=""):
             OutputOfL0 = confirmationl0part(type).outputSelection()
-            
+
             prefix = 'HadronConf'+type
             from HltLine.HltDecodeRaw import DecodeIT
             conf =                  [ Velo,
-                                      PV2D().ignoreOutputSelection(),
+                                      PV3D().ignoreOutputSelection(),
                                       Member ( 'TM' , 'VeloCalo'
                                              , InputSelection1 = "Velo"   
                                              , InputSelection2 = '%s' %OutputOfL0
                                              , MatchName = 'VeloCalo' , MaxQuality = 4.
-                                             )
+                                             ),
+                                      DecodeIT,
+                                      Member ( 'TU', 'GuidedForward',
+                                               RecoName = 'GuidedForward',
+                                               tools = [ Tool( HltTrackUpgradeTool
+                                                               ,tools = [ConfiguredPR( "Forward" )] 
+                                                             )
+                                                       ]
+                                             ) 
                                     ]
             return bindMembers(prefix, conf)
         
@@ -86,9 +102,13 @@ class Hlt1HadronLifetimeUnbiasedLinesConf(HltLinesConfigurableUser) :
         # dihadron part
         #---------------------
         def dihadron(type=""):
-            prefix = "HadDi"
-            if type.find('LTUnb') : prefix += 'LTUnb'  
-            if type.find('3D')   : prefix += '3D'
+            prefix = "HadDiLTUnbiased"
+
+            DocaCut                = _cut("HadVertex_DOCACut")
+            VertexPCut             = _cut("HadVertex_PCut")
+            MassMinCut             = _cut("HadVertex_MassMinCut")
+            MassMaxCut             = _cut("HadVertex_MassMaxCut")
+            CosThetaStarCut        = _cut("HadVertex_CosThetaStarCut")
             
             OutputOfConfirmationHard = confirmation("Hard").outputSelection()
             OutputOfConfirmationSoft = confirmation("Soft").outputSelection() 
@@ -96,24 +116,26 @@ class Hlt1HadronLifetimeUnbiasedLinesConf(HltLinesConfigurableUser) :
             dih = [ Member ( 'VM2', 'UVelo'
                          , InputSelection1 = '%s' %OutputOfConfirmationHard 
                          , InputSelection2 = '%s' %OutputOfConfirmationSoft
-                         , FilterDescriptor = [ 'DOCA,<,'+str(self.getProp('HadVertex_DOCACut'))]
+                         , FilterDescriptor = [ 'DOCA,<,'           + DocaCut,
+                                                'CosThetaStar,[],0,'+ CosThetaStarCut
+                                                ]
                          , HistoDescriptor  = histosfilter('DOCA_'+type,0.,1.,200)
                            )
-                , DecodeIT
-                , Member ( 'VU', 'GuidedForward'
-                           , RecoName = 'GuidedForward'
-                           , tools = [ Tool( HltTrackUpgradeTool
-                                             ,tools = [ConfiguredPR( "Forward" )] )]
-                           )
+                , Member ( 'VF', 'DiHadronPT1',
+                           FilterDescriptor = [ 'VertexMaxPT,>,%s'%self.getProp("HadVertex_MaxPTCut")],
+                           HistogramUpdatePeriod = 1,
+                           HistoDescriptor  = histosfilter('VertexMaxPT_'+type,0.,5000.,200)
+                         ) 
                 , Member ( 'VF', 'DiHadronPT2',
-                           FilterDescriptor = [ 'VertexMinPT,>,%s'%self.getProp("HadVertex_PTCut")],
+                           FilterDescriptor = [ 'VertexMinPT,>,%s'%self.getProp("HadVertex_MinPTCut")],
                            HistogramUpdatePeriod = 1,
                            HistoDescriptor  = histosfilter('VertexMinPT_'+type,0.,5000.,200)                       
                            )
-                , Member ( 'VF', 'DiHadron',
-                           FilterDescriptor = [ 'VertexPointing_PV2D,<,%s'%self.getProp("HadVertex_PointingCut")],
-                           HistogramUpdatePeriod = 1,
-                           HistoDescriptor  = histosfilter('VertexPointing_PV2D_'+type,0.1,1.1,200)                       
+                , Member ( 'VF', 'VertexMinP',
+                           FilterDescriptor = [ 'VertexMinP,>,'+VertexPCut]
+                           )
+                , Member ( 'VF', 'Mass',
+                            FilterDescriptor = [ 'VertexDikaonMass,[],'+MassMinCut+','+MassMaxCut]
                            )
                 ]
             return bindMembers(prefix,dih)
@@ -123,7 +145,7 @@ class Hlt1HadronLifetimeUnbiasedLinesConf(HltLinesConfigurableUser) :
         def vafterburn(type=""):
             OutputOfDiHadron = dihadron(type).outputSelection()
 
-            vafter =  [ PV2D().ignoreOutputSelection()
+            vafter =  [ PV3D().ignoreOutputSelection()
                 , Member ( 'VU', 'FitTrack', InputSelection='%s' %OutputOfDiHadron
                            , RecoName = 'FitTrack', callback = setupHltFastTrackFit )
                 , Member ( 'VF', '2FitTrack'
@@ -140,14 +162,14 @@ class Hlt1HadronLifetimeUnbiasedLinesConf(HltLinesConfigurableUser) :
             
             # DiHadron Line
             #-----------------------------------
-            Line ( 'DiHadronLTUnb3D'
+            Line ( 'DiHadronLTUnbiased'
                  , prescale = self.prescale
                  , postscale = self.postscale
                  , L0DU  = "L0_CHANNEL('%(L0Channel)s')"%self.getProps()
-                 , algos =  [confirmationl0part('LTUnb3DHard')]+\
-                            [confirmationl0part('LTUnb3DSoft')]+\
-                            [confirmation('LYUnb3DHard')]+\
-                            [confirmation('LYUnb3DSoft')]+\
-                            [dihadron('LTUnb3D')]+\
-                            vafterburn('LTUnb3D')
+                 , algos =  [confirmationl0part('Soft')]+\
+                            [confirmationl0part('Hard')]+\
+                            [confirmation('Soft')]+\
+                            [confirmation('Hard')]+\
+                            [dihadron()]+\
+                            vafterburn()
                  )
