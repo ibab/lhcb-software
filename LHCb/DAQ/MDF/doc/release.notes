@@ -6,6 +6,9 @@
 !               MEP fragments
 !-----------------------------------------------------------------------------
 
+! 2010-05-19  Markus Frank
+ - Bring MDFWriterLite up to date.
+
 !========================= MDF v3r23 2010-03-15 ==============================
 ! 2009-12-13  Markus Frank
  - Fix bug in TAE event decoding, where every 0xFFFF*Packing_factor events
