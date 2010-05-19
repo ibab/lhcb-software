@@ -6,6 +6,7 @@
 
 ! 2010-05-19 - Gerhard Raven
  - add trend plots of rates in HltRoutingBitsWriter
+ - minor speed up in HltSelReportsWriter
 
 ! 2010-05-13 - Gerhard Raven
  - make warning message less variable 

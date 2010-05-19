@@ -1,4 +1,4 @@
-// $Id: HltSelReportsWriter.cpp,v 1.2 2010-05-13 14:31:57 graven Exp $
+// $Id: HltSelReportsWriter.cpp,v 1.3 2010-05-19 21:09:15 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -333,7 +333,6 @@ StatusCode HltSelReportsWriter::execute() {
     } 
       
   } 
-     
   
   // don't forget to clean lhcbidSequences; they own sets they are pointing to
   for( LhcbidSequences::const_iterator iSeq=lhcbidSequences.begin();
@@ -399,8 +398,8 @@ StatusCode HltSelReportsWriter::execute() {
   }
   if( nBank>1 ){
     std::ostringstream mess;
-    mess << "HltSelReports is huge; Saved in " << nBank << " separate RawBanks ";    
-    Warning( mess.str(), StatusCode::SUCCESS, 100 );
+    mess << "HltSelReports is huge. Saved in " << nBank << " separate RawBanks ";    
+    Warning( mess.str(), StatusCode::SUCCESS, 10 );
   }
     
   if ( msgLevel(MSG::VERBOSE) ){
@@ -420,15 +419,10 @@ StatusCode HltSelReportsWriter::execute() {
   // delete the main bank
   hltSelReportsBank.deleteBank();
 
-
-
   return StatusCode::SUCCESS;
 }
 
 //=============================================================================
-
-
-
 void  HltSelReportsWriter::addToLhcbidSequences( LhcbidSequence* set2,
                                                  LhcbidSequences & lhcbidSequences ) const
 {
@@ -474,22 +468,5 @@ void  HltSelReportsWriter::addToLhcbidSequences( LhcbidSequence* set2,
       delete setint;
     }    
   }
-  if( !found ){
-    lhcbidSequences.push_back( set2 );
-  }  
+  if( !found ) lhcbidSequences.push_back( set2 );
 }
-
-
-      
-bool HltSelReportsWriter::sortByCLID::operator()( const LHCb::HltObjectSummary*  elem1,
-                                                  const LHCb::HltObjectSummary*  elem2 ) const 
-{
-  if( (elem1==0) || (elem2==0) )return false;
-  if( elem1==elem2 )return false;
-  int i1=elem1->summarizedObjectCLID();
-  int i2=elem2->summarizedObjectCLID();
-  if( i1 > i2 )return true;
-  return false;
-}
-    
-  

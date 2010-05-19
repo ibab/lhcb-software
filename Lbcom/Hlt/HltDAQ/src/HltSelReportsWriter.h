@@ -1,4 +1,4 @@
-// $Id: HltSelReportsWriter.h,v 1.1.1.1 2009-06-24 15:38:52 tskwarni Exp $
+// $Id: HltSelReportsWriter.h,v 1.2 2010-05-19 21:09:15 graven Exp $
 #ifndef HLTSELREPORTSWRITER_H 
 #define HLTSELREPORTSWRITER_H 1
 
@@ -59,7 +59,11 @@ private:
   class sortByCLID {
    public:
      bool operator() (const LHCb::HltObjectSummary*  elem1,
-                      const LHCb::HltObjectSummary*  elem2 ) const;
+                      const LHCb::HltObjectSummary*  elem2 ) const
+        {
+          if( (elem1==0) || (elem2==0) || elem1==elem2) return false;
+          return  elem1->summarizedObjectCLID() > elem2->summarizedObjectCLID();
+        }
    };
 
 
