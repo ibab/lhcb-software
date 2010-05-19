@@ -1,0 +1,6 @@
+cmt/cleanup.sh
+cmt/cleanup.csh
+cmt/version.cmt
+cmt/setup.sh
+cmt/setup.csh
+cmt/Makefile
