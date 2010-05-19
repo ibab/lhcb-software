@@ -38,6 +38,7 @@ stream = StrippingStream("Dimuon")
 stream.appendLines( [ 
 		        StrippingDiMuonConf().nominal_line(), 
 		        StrippingDiMuonConf().loose_line(), 
+                        StrippingDiMuonConf().likesign_line(), 
 		        StrippingBs2JpsiPhiConf().nominal_line(),  
 		        StrippingBs2JpsiPhiConf().loose_line(),  
 		        StrippingBs2JpsiPhiPrescaled.line,  

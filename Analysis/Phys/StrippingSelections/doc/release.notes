@@ -5,6 +5,16 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-05-19 - Alessio Sarti
+ - StreamDimuon.py
+	Added the same sign line
+ - StrippingDiMuon.py
+	Lowered IM cut (2.5 GeV instead of 2.7 GeV)
+	Added same sign lines (to study comb. background)
+ - StrippingMuIdCalib.py
+	Loosened Jpsi Calibration cuts for this '2010 running' scenario
+	Removed PT cut @ 1.5 on tag mu (waiting to see what cut is placed on HLT1), loosened pT and chi2trk cuts + released probe CALO cuts
+
 ! 2010-05-18 - Vanya Belyaev
 
  - StrippingV0.py

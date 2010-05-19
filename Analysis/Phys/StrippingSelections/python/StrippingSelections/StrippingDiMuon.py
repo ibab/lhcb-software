@@ -1,4 +1,4 @@
-# $Id: StrippingDiMuon.py,v 1.5 2010-05-10 11:58:49 jpalac Exp $
+# $Id: StrippingDiMuon.py,v 1.6 2010-05-19 13:51:24 asarti Exp $
 ## #####################################################################
 # A stripping selection for inclusive J/psi(1S) -> mu+ mu- decays
 #
@@ -21,8 +21,8 @@ class StrippingDiMuonConf(LHCbConfigurableUser):
 		,	"MuonPTLoose":		500.	# MeV
 		,	"MuonTRCHI2":		3.	# adimensional
 		,	"MuonTRCHI2Loose":	10.	# adimensional
-		,	"JpsiAM":		2700.	# MeV
-		,	"JpsiAMLoose":		2700.	# MeV
+		,	"JpsiAM":		2500.	# MeV
+		,	"JpsiAMLoose":		2500.	# MeV
 		,	"JpsiVCHI2":		20.	# adimensional
 		,	"JpsiVCHI2Loose":	20.	# adimensional
                 ,       "DiMuonFDCHI2" :        10.     # adimensional
@@ -39,6 +39,12 @@ class StrippingDiMuonConf(LHCbConfigurableUser):
 	JpsiSel = self.JpsiLoose()
 	JpsiSeq = SelectionSequence("SeqDiMuonIncLoose", TopSelection = JpsiSel)
 	return StrippingLine('DiMuonIncLooseLine', prescale = 1, algos = [JpsiSeq])   
+
+    def likesign_line( self ):
+        from StrippingConf.StrippingLine import StrippingLine
+	JpsiSel = self.JpsiSameSign()
+	JpsiSeq = SelectionSequence("SeqDiMuonSameSign", TopSelection = JpsiSel)
+	return StrippingLine('DiMuonSameSignLine', prescale = 1, algos = [JpsiSeq])   
 
     def Jpsi( self ):
 	_muons =  DataOnDemand(Location = 'Phys/StdLooseMuons')
@@ -67,6 +73,22 @@ class StrippingDiMuonConf(LHCbConfigurableUser):
                          WriteP2PVRelations = False
                          )
 	Jpsi = Selection("SelDiMuonInciLoose",
+                  Algorithm = _Jpsi,
+                  RequiredSelections = [_muons]
+                  )
+	return Jpsi
+
+    def JpsiSameSign( self ):
+	_muons =  DataOnDemand(Location = 'Phys/StdVeryLooseMuons')
+	mucut = '(PT > %(MuonPTLoose)s *MeV) & (TRCHI2DOF < %(MuonTRCHI2Loose)s) & (ISLONG)' % self.getProps()
+	_Jpsi = CombineParticles("DiMuonSameSignLoose",
+                         DecayDescriptor = '[J/psi(1S) -> mu+ mu+]cc',
+                         DaughtersCuts = {'mu+': mucut},
+                         CombinationCut = " (AM > %(JpsiAMLoose)s *MeV)" % self.getProps(),
+                         MotherCut = "(VFASPF(VCHI2/VDOF) < %(JpsiVCHI2Loose)s)" % self.getProps(),
+                         WriteP2PVRelations = False
+                         )
+	Jpsi = Selection("SelDiMuonSameSignLoose",
                   Algorithm = _Jpsi,
                   RequiredSelections = [_muons]
                   )
