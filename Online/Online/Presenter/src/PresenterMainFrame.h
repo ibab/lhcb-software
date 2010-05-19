@@ -384,6 +384,9 @@ public:
 
   std::string rw_timePoint;
   std::string rw_pastDuration;
+  
+  /// Load a web page 
+  void loadWebPage( ) ;
 
 private:
   UInt_t            m_initWidth;
@@ -596,6 +599,8 @@ private:
   std::string m_currentTCK;
 
   RunDB * m_runDb ; ///< Interface to run database
+  
+  std::string m_weblink ; ///< Name of web link to open
 
   std::vector<std::string> m_histoTimerName;
 
@@ -652,6 +657,9 @@ private:
   TList*  m_knownHistoryPartitionList;
   TList*  m_knownMonitoringNodeList;
   TList*  m_knownInstanceNumberList;
+
+  /// Popup menu for right click on histo
+  TGPopupMenu * m_histomenu ;
 
   IntervalPickerData * m_intervalPickerData ;
 

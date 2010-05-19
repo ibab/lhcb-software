@@ -1,4 +1,4 @@
-// $Id: PresenterMainFrame.cpp,v 1.319 2010-05-18 17:20:06 robbep Exp $
+// $Id: PresenterMainFrame.cpp,v 1.320 2010-05-19 10:28:05 robbep Exp $
 #include <algorithm>
 #include <iostream>
 #include <vector>
@@ -980,6 +980,13 @@ void PresenterMainFrame::buildGUI() {
                                                                   kLHintsExpandX |
                                                                   kLHintsExpandY,
                                                                   0, 0, 0, 0));
+
+    // Add popup menu for right-click on histo:
+    m_histomenu = new TGPopupMenu( editorEmbCanvas ) ;
+    m_histomenu -> AddEntry( "NAME" , 10 ) ;
+    m_histomenu -> HideEntry( 10 ) ;
+    m_histomenu -> AddSeparator( ) ;
+    m_histomenu -> AddEntry( "--- no documentation available ---" , 2 ) ;
 
     //== Page comments window (should move with the splitter, should also change size but doesn't.
     int commentSize = 120;
@@ -4920,9 +4927,15 @@ void PresenterMainFrame::removeHistogramsFromPage() {
   editorCanvas->Update();
 }
 
-void PresenterMainFrame::EventInfo(int event, int px, int py, TObject* selected) {
 
+//=============================================================================
+// Mouse actions on pads in the presenter
+//=============================================================================
+void PresenterMainFrame::EventInfo(int event, int px, int py, TObject* selected) {
   switch (event) {
+
+    // Left click goes to linked presenter page
+
   case kButton1Double:
     if ( 0 != selected ) { 
       TPad * thePad = dynamic_cast< TPad *>( editorCanvas -> GetClickSelectedPad() ) ;
@@ -4965,6 +4978,10 @@ void PresenterMainFrame::EventInfo(int event, int px, int py, TObject* selected)
       }
     }
     break;
+
+    // Right click opens a menu where we can select to open the
+    // histogram documentation in a web browser
+
   case kButton3Down:
     if ( 0 != selected ) { 
       TPad * thePad = dynamic_cast< TPad *>( editorCanvas -> GetClickSelectedPad() ) ;
@@ -4984,7 +5001,24 @@ void PresenterMainFrame::EventInfo(int event, int px, int py, TObject* selected)
 	       eventInfo_dbHistosOnPageIt != dbHistosOnPage.end(); ++eventInfo_dbHistosOnPageIt) {
 	    if (0 == std::string( ( *eventInfo_dbHistosOnPageIt ) -> 
 				  rootHistogram -> GetName() ).compare( theHisto -> GetName() ) ) {
-	      // Open a web browser at the documentation link
+	      // Display a pop-up menu 
+	      m_histomenu -> DeleteEntry( 1 ) ;
+	      m_histomenu -> AddEntry( theHisto -> GetName() , 1 , 0 , 0 , 
+				       m_histomenu -> GetEntry( 10 ) ) ;
+	      
+	      m_histomenu -> PlaceMenu( px , py , true , true ) ;
+	      
+	      m_weblink = (*eventInfo_dbHistosOnPageIt)->onlineHistogram()->doc() ;
+	      if ( ! m_weblink.empty() ) {
+		m_histomenu -> DeleteEntry( 2 ) ;
+		m_histomenu -> AddEntry( "Click for documentation" , 2 ) ;
+		m_histomenu -> Connect( m_histomenu , "Activated(Int_t)",
+					"PresenterMainFrame" , this, 
+					"loadWebPage()" );
+	      } else {
+		m_histomenu -> DeleteEntry( 2 ) ;
+		m_histomenu -> AddEntry( "-- no documentation available --" , 2 ) ;
+	      }
 	      break;
 	    }
 	  }
@@ -4992,6 +5026,9 @@ void PresenterMainFrame::EventInfo(int event, int px, int py, TObject* selected)
       }
     }
     break ;
+
+    // Display coordinates 
+
   case kMouseMotion:
   case kMouseEnter:
   case kMouseLeave:
@@ -5115,4 +5152,38 @@ void PresenterMainFrame::openHistogramTreeAt( const std::string & pageName ) {
 
   m_pagesFromHistoDBListTree -> Resize() ;
   DoRedraw() ;
+}
+
+//===========================================================================
+// Open a web browser (firefox) at the given link
+//===========================================================================
+void PresenterMainFrame::loadWebPage( ) {
+  if ( m_weblink.empty() ) return ;
+#ifndef WIN32
+  // check if an instance of firefox is already running
+  bool running = false ;
+  FILE * fp ;
+  fp = popen( "pgrep -u `whoami` firefox" , "r" ) ;
+  if ( fp == NULL ) 
+    std::cerr << "Could not launch firefox" << std::endl ;
+  else {
+    char line[256] ;
+    while ( fgets( line , sizeof(line) , fp ) ) { 
+      running = true ;
+    }
+  }
+  pclose( fp ) ;
+		
+  if ( ! running ) {
+    if ( 0 == fork() ) {
+      execlp( "firefox" , "firefox" , m_weblink.c_str() , NULL ) ;
+    }
+  } else
+    if ( 0 == fork() ) {
+      std::string foxargs( m_weblink ) ;
+      foxargs = "openURL(" + foxargs + ")" ;
+      execlp( "firefox" , "firefox" , "-remote" , foxargs.c_str()  
+	      , NULL ) ;
+    }
+#endif
 }
