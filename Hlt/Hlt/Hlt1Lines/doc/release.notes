@@ -1,9 +1,15 @@
-! $Id: release.notes,v 1.177 2010-05-18 10:07:33 witekma Exp $
+! $Id: release.notes,v 1.178 2010-05-19 04:04:02 gligorov Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
+
+! 2010-05-19 - V. Gligorov
+ - Fix typos in lifetime unbiased hadron lines.
+ - Reoptimize hadron lines for the new 3D paradigm.
+ - Make Hlt1 use the bidirectional Kalman fit in order to match 
+   Hlt2; the time penalty is totally negligable.  
 
 ! 2010-05-18 - M. Witek
  - Adapt photon and electron lines to new PV3D recontsruction.

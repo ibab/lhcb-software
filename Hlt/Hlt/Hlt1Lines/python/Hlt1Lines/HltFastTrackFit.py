@@ -15,4 +15,7 @@ def setupHltFastTrackFit( fit ) :
     from Configurables import TrackMasterFitter
     fit.addTool( TrackMasterFitter, name = 'Fit')
     from TrackFitter.ConfiguredFitters import ConfiguredFastFitter
-    ConfiguredFastFitter( getattr(fit,'Fit') )
+    fitter = ConfiguredFastFitter( getattr(fit,'Fit') )
+    fitter.NodeFitter.BiDirectionalFit    = True
+    fitter.NodeFitter.Smooth        = True
+    fitter.AddDefaultReferenceNodes = True
