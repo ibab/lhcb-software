@@ -75,10 +75,10 @@ function histo_header($id,$htype,$mode)
        ($histo["SUBSYS2"] ? $histo["SUBSYS2"] : "")." ".
        ($histo["SUBSYS3"] ? $histo["SUBSYS3"] : "")) : "none";
     echo "Related detectors: <B>${detectors}</B><br>";
-    if($histo["REFERENCE"])
-      echo "Latest Reference histogram available in ${Reference_home}/".$histo["REFERENCE"]."<br>\n";
-    else
-      echo "No Reference histogram available<br>";
+//    if($histo["REFERENCE"])
+//      echo "Latest Reference histogram available in ${Reference_home}/".$histo["REFERENCE"]."<br>\n";
+//    else
+//      echo "No Reference histogram available<br>";
     echo "Created on <span class=normal>".$histo["CRE_DATE"]."</span><br>\n";
     if($histo["OBSOLETENESS"])
       echo "Obsolete from <span class=normal>".$histo["OBSOLETENESS"]."</span><br>\n";
