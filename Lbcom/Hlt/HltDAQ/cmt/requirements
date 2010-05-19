@@ -3,7 +3,7 @@
 # Maintainer : Tomasz Skwarnicki
 #============================================================================
 package           HltDAQ
-version           v2r0
+version           v1r7p1
 
 #============================================================================
 # Structure, i.e. directories to process. 
@@ -50,6 +50,9 @@ library          HltDAQ    ../src/*.cpp -import=AIDA
 # define component library link options
 #============================================================================
 apply_pattern    component_library library=HltDAQ
+<<<<<<< requirements
+=======
 macro_append Boost_linkopts " $(Boost_linkopts_regex) $(Boost_linkopts_iostreams) "
 
 
+>>>>>>> 1.15

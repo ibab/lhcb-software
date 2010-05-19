@@ -4,17 +4,20 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !-----------------------------------------------------------------------------
 
+
+! 2010-05-05 - Gerhard Raven
+ - move HLT configuration implementation from HltCommon to here so it can
+   be used during readback without having a runtime dependency on the HLT
+   project
+
+!========================== HltDAQ v1r7p1 2010-05-19 ===========================
+
 ! 2010-05-19 - Gerhard Raven
  - add trend plots of rates in HltRoutingBitsWriter
  - minor speed up in HltSelReportsWriter
 
 ! 2010-05-13 - Gerhard Raven
  - make warning message less variable 
-
-! 2010-05-05 - Gerhard Raven
- - move HLT configuration implementation from HltCommon to here so it can
-   be used during readback without having a runtime dependency on the HLT
-   project
 
 !========================== HltDAQ v1r7 2010-04-08 ===========================
 
