@@ -59,7 +59,7 @@ Get the list of *ALL* configured lines
 # =============================================================================
 __author__  = 'Vanya BELYAEV Ivan.Belyaev@itep.ru'
 __date__    = '2010-01-14'
-__version__ = 'CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.8 $'
+__version__ = 'CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.9 $'
 # =============================================================================
 
 from Gaudi.Configuration       import *
@@ -114,6 +114,8 @@ class StrippingV0Conf(LHCbConfigurableUser):
         'Use_Geo_K0S'            : True               ## Use 'Geometrical' selection of K0S
         , 'Use_Geo_Lambda'       : True               ## Use 'Geometrical' selection of Lambda0
         , 'SameSignPrescale'     : 0.10               ## Prescale same-sign combinations
+        , 'K0S_DDPrescale'       : 0.20               ## Prescale K0S DD-combinations
+        , 'Lambda0_DDPrescale'   : 1.00               ## Prescale Lambda0 DD-combinations
         , 'TrackCutSet'          : "NULL"             ## TrackCutsSet to be used
         , 'TrackQuality'         : " TRCHI2DOF < 25 " ## Track quality selection 
         , 'VertexChi2'           :  25                ## Cut on Vertex chi2-quality
@@ -177,7 +179,7 @@ class StrippingV0Conf(LHCbConfigurableUser):
         
         StripK0S = CombineParticles("StrippingK0S")
         
-        StripK0S.InputLocations  = [ "StdNoPIDsPions", "StdNoPIDsDownPions" ]
+        StripK0S.InputLocations  = [ "StdNoPIDsPions" ]
         StripK0S.DecayDescriptor = "KS0 -> pi+ pi-"
         
         StripK0S.DaughtersCuts   = self._k0s_daughtersCuts () 
@@ -197,8 +199,10 @@ class StrippingV0Conf(LHCbConfigurableUser):
             """
             
         from StrippingConf.StrippingLine import StrippingLine
-        
-        line1 = StrippingLine (
+
+        lines = []
+
+        line_K0 = StrippingLine (
             'K0SLine'          ,
             prescale   = 1     ,
             checkPV    = True  , ## attention! PV is required!
@@ -206,27 +210,54 @@ class StrippingV0Conf(LHCbConfigurableUser):
             HLT        = self.getProp('HLT') , 
             algos      = [ StripK0S ]
             )
+        lines.append ( line_K0 ) 
         
-        lines = [ line1 ]
-
+        line_WS = None
+        alg_WS  = None 
         ## use "wrong-sign" combination
         if 0 < self.getProp  ( 'SameSignPrescale' ) :
             
+            alg_WS = StripK0S.clone (
+                'StrippingK0S_ws'     ,
+                DecayDescriptor  = "" , 
+                DecayDescriptors = [ "KS0 -> pi+ pi+" , "KS0 -> pi- pi-" ]
+                )
             
-            wrong_sign = StripK0S.clone ( 'StrippingK0S_ws' )
-            wrong_sign.DecayDescriptor  = ""
-            wrong_sign.DecayDescriptors = [
-                "KS0 -> pi+ pi+" , "KS0 -> pi- pi-" 
-                ]
-            
-            line1ss = line1.clone ( 
+            line_WS = line_K0.clone ( 
                 'K0S_wsLine'  ,
-                algos    = [ wrong_sign ] ,
+                algos    = [ alg_WS ] ,
                 prescale = self.getProp ('SameSignPrescale') 
                 
                 )
-            lines.append ( line1ss ) 
+            lines.append ( line_WS ) 
+        
+        line_DD = None 
+        alg_DD  = None 
+        ## use DD-case 
+        if 0 < self.getProp  ( "K0S_DDPrescale" ) :
+            
+            alg_DD   = StripK0S.clone (
+                "StrippingK0S_DD" ,
+                InputLocations   = [ "StdNoPIDsDownPions" ]
+                ) 
+            line_DD = line_K0.clone (
+                'K0S_DDLine'  ,
+                algos    = [ alg_DD ] ,
+                prescale = self.getProp ('K0S_DDPrescale') 
+                )
+            lines.append ( line_DD ) 
 
+        ## wrong sign DD-case 
+        if line_DD and line_WS :
+            
+            alg_DDws   = alg_WS.clone  ( "StrippingK0S_DDws" , InputLocations = [ "StdNoPIDsDownPions" ] ) 
+            line_DDws  = line_WS.clone (
+                'K0S_DDwsLine'  ,
+                algos    = [ alg_DDws ] ,
+                prescale = self.getProp ('K0S_DDPrescale') * self.getProp("SameSignPrescale" ) 
+                )
+            lines.append ( line_DDws ) 
+            
         
         if self.getProp ( 'Use_Geo_K0S') :
             
@@ -265,9 +296,7 @@ class StrippingV0Conf(LHCbConfigurableUser):
         StripLambda0 = CombineParticles ( "StrippingLambda0" )
         
         StripLambda0.InputLocations  = [ "StdNoPIDsPions"        ,
-                                         "StdNoPIDsDownPions"    ,
-                                         "StdNoPIDsProtons"      ,
-                                         "StdNoPIDsDownProtons"  ]
+                                         "StdNoPIDsProtons"      ]
         StripLambda0.DecayDescriptor = " [ Lambda0 -> p+ pi-]cc"
         
         StripLambda0.DaughtersCuts   = self._lam0_daughtersCuts () 
@@ -287,8 +316,10 @@ class StrippingV0Conf(LHCbConfigurableUser):
             """
 
         from StrippingConf.StrippingLine import StrippingLine
+
+        lines = []
         
-        line1 = StrippingLine (
+        line_L0 = StrippingLine (
             'Lambda0Line'      ,
             prescale   = 1     ,
             checkPV    = True  , ## attention! PV is required!
@@ -297,23 +328,56 @@ class StrippingV0Conf(LHCbConfigurableUser):
             algos      = [ StripLambda0 ]
             )
         
-        lines = [ line1 ]
+        lines = [ line_L0 ]
 
+        alg_WS  = None
+        line_WS = None 
+        ## use wrong sign?
         if 0 < self.getProp  ( 'SameSignPrescale' ) :
             
-            wrong_sign = StripLambda0.clone ( 'StrippingLambda0_ws' )
-            wrong_sign.DecayDescriptor  = ""
-            wrong_sign.DecayDescriptors = [
-                "Lambda0 ->  p+ pi+" , "Lambda~0 -> p~- pi-" 
-                ]
+            alg_WS  = StripLambda0.clone (
+                'StrippingLambda0_ws' ,
+                DecayDescriptor  = "" , 
+                DecayDescriptors = [ "Lambda0 ->  p+ pi+" , "Lambda~0 -> p~- pi-" ]
+                )
             
-            line1ss = line1.clone ( 
+            line_WS = line_L0.clone ( 
                 'Lambda0_wsLine'  ,
-                algos    = [ wrong_sign ] ,
+                algos    = [ alg_WS ] ,
                 prescale = self.getProp('SameSignPrescale') 
                 )
-            lines.append ( line1ss ) 
+            lines.append ( line_WS ) 
+
+        alg_DD  = None
+        line_DD = None
+        ## use DD-combinations
+        if 0 < self.getProp  ( 'Lambda0_DDPrescale' ) :
             
+            alg_DD  = StripLambda0.clone (
+                'StrippingLambda0_DD' ,
+                InputLocations  = [ 'StdNoPIDsDownPions' , 'StdNoPIDsDownProtons'  ]
+                )
+            line_DD = line_L0.clone ( 
+                'Lambda0_DDLine'      ,
+                algos    = [ alg_DD ] ,
+                prescale = self.getProp('Lambda0_DDPrescale') 
+                )
+            lines.append ( line_DD ) 
+
+        ## wrong sign DD-combinations 
+        if line_DD  and line_WS :
+                
+            alg_DDws  = alg_WS.clone (
+                'StrippingLambda0_DDws' ,
+                InputLocations  = [ 'StdNoPIDsDownPions' , 'StdNoPIDsDownProtons'  ]
+                )
+            line_DDws = line_WS.clone ( 
+                'Lambda0_DDwsLine'      ,
+                algos    = [ alg_DDws ] ,
+                prescale = self.getProp('SameSignPrescale') * self.getProp('Lambda0_DDPrescale') 
+                )
+            lines.append ( line_DDws ) 
+                
         if self.getProp ( 'Use_Geo_Lambda') :
             
             import StrippingSelections.StrippingV0Geo as V0Geo
@@ -372,7 +436,6 @@ class StrippingV0Conf(LHCbConfigurableUser):
         Define 'MotherCut' for Lambda0
         """
         cut       = """
-        ( LL | DD ) 
         & ( ADMASS ( 'Lambda0')   < %(DeltaMassLambda)g )
         & in_range ( 0 , VFASPF ( VCHI2 ) ,  %(VertexChi2)g   )
         & ( VFASPF ( VZ       ) < %(MaxZ)g            )

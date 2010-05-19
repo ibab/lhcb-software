@@ -5,6 +5,26 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-05-19 - Vanya Belyaev
+
+ - StrippingV0.py
+
+   prescale K0S-DD-case,the fianl rate for 10k minibias stream is 6%: 
+
+   2: Stream                StrippingStreamV0: 601
+     3: Line                 StrippingK0SLine: 392
+     4: Line              StrippingK0S_wsLine: 5
+     5: Line              StrippingK0S_DDLine: 39
+     6: Line            StrippingK0S_DDwsLine: 1
+     7: Line             StrippingLambda0Line: 237
+     8: Line          StrippingLambda0_wsLine: 5
+     9: Line          StrippingLambda0_DDLine: 150
+    10: Line        StrippingLambda0_DDwsLine: 5
+========================== SUMMARY ================================
+Global decision:           StrippingGlobal: 601
+Stream                   StrippingStreamV0: 601
+-------------------------------------------------------------------
+
 ! 2010-05-19 - Mat Charles
  - Bugfix to StrippingDstarD2KShh.py : was excluding upper DM sideband before by mistake.
 
