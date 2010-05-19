@@ -1,4 +1,4 @@
-// $Id: PresenterMainFrame.cpp,v 1.320 2010-05-19 10:28:05 robbep Exp $
+// $Id: PresenterMainFrame.cpp,v 1.321 2010-05-19 21:01:34 robbep Exp $
 #include <algorithm>
 #include <iostream>
 #include <vector>
@@ -961,7 +961,7 @@ void PresenterMainFrame::buildGUI() {
     m_statusBarTop->SetParts(partsTop, 3);
     m_statusBarTop->Draw3DCorner(false);
     centralPageFrame->AddFrame(m_statusBarTop, new TGLayoutHints(kLHintsTop |
-                                                                 kLHintsExpandX,
+                                                                 kLHintsExpandX ,
                                                                  0, 0, 0, 0));
 
     // embedded canvas
@@ -978,7 +978,7 @@ void PresenterMainFrame::buildGUI() {
     centralPageFrame->AddFrame(editorEmbCanvas, new TGLayoutHints(kLHintsRight |
                                                                   kLHintsTop |
                                                                   kLHintsExpandX |
-                                                                  kLHintsExpandY,
+								  kLHintsExpandY ,
                                                                   0, 0, 0, 0));
 
     // Add popup menu for right-click on histo:
@@ -989,28 +989,30 @@ void PresenterMainFrame::buildGUI() {
     m_histomenu -> AddEntry( "--- no documentation available ---" , 2 ) ;
 
     //== Page comments window (should move with the splitter, should also change size but doesn't.
-    int commentSize = 120;
+    int commentSize = 130;
     TGGroupFrame* mainCanvasInfoGroupFrame = new TGGroupFrame( centralPageFrame,
                                                                TGString("Page Comments"),
-                                                               kVerticalFrame | kFixedWidth );
+                                                               kHorizontalFrame | kFixedWidth |
+							       kFixedHeight );
     mainCanvasInfoGroupFrame->Resize(600, commentSize+10);
     centralPageFrame->AddFrame( mainCanvasInfoGroupFrame,
                                 new TGLayoutHints( kLHintsBottom |
-                                                   kLHintsExpandX,
+                                                   kLHintsExpandX ,
                                                    0, 0, 0, 0) );
 
     //== Page comments view
     m_pageDescriptionView = new PageDescriptionTextView( mainCanvasInfoGroupFrame,
-							 600, commentSize , m_pbdbConfig );
-    mainCanvasInfoGroupFrame->AddFrame(m_pageDescriptionView, new TGLayoutHints( kLHintsLeft | kLHintsTop |
-                                                                                 kLHintsExpandX,
-                                                                                 2,2,2,2));
+    							 600, commentSize , m_pbdbConfig );
+    mainCanvasInfoGroupFrame->AddFrame(m_pageDescriptionView,
+    				       new TGLayoutHints( kLHintsLeft | kLHintsTop |
+    							  kLHintsExpandX | kLHintsExpandY ,
+    							  2,2,2,2));
  
     //== splitter, to adjust the size of the page comment
-    m_horizontalSplitter = new TGHSplitter( centralPageFrame,  4, 4 );
-    m_horizontalSplitter->SetFrame( centralPageFrame, true);
-    centralPageFrame->AddFrame( m_horizontalSplitter,
-                                new TGLayoutHints( kLHintsBottom | kLHintsExpandX));
+    TGHSplitter * horizontalSplitter = new TGHSplitter( centralPageFrame,  4, 4 );
+    horizontalSplitter->SetFrame( mainCanvasInfoGroupFrame , false ) ;
+    centralPageFrame->AddFrame( horizontalSplitter,
+                                new TGLayoutHints( kLHintsBottom | kLHintsExpandX ));
 
     
     //====================
@@ -4082,6 +4084,10 @@ void PresenterMainFrame::loadSelectedAlarmFromDB(int msgId) {
   }
 }
 
+
+//=====================================================================================
+// Load previous page -- handle click on "previous page" button
+//=====================================================================================
 void PresenterMainFrame::loadPreviousPage() {
   if ((false == m_loadingPage) ) {
     if ( (false == m_groupPages.empty()) ) {
@@ -4090,6 +4096,7 @@ void PresenterMainFrame::loadPreviousPage() {
       m_groupPagesIt--;
       if ( false == (*m_groupPagesIt).empty()) {
         m_currentPageName = *m_groupPagesIt;
+	openHistogramTreeAt( m_currentPageName ) ;
         loadSelectedPageFromDB(m_currentPageName, s_startupFile, m_savesetFileName);
       }
     } else if ( (false == m_alarmPages.empty()) ) {
@@ -4100,6 +4107,9 @@ void PresenterMainFrame::loadPreviousPage() {
   }
 }
 
+//=====================================================================================
+// Load next page -- handle click on "next page" button
+//=====================================================================================
 void PresenterMainFrame::loadNextPage() {
   if ( (false == m_loadingPage)) {
     if ( (false == m_groupPages.empty()) ) {
@@ -4107,6 +4117,7 @@ void PresenterMainFrame::loadNextPage() {
       if ( m_groupPagesIt == m_groupPages.end() ) m_groupPagesIt = m_groupPages.begin();
       if ( false == (*m_groupPagesIt).empty() ) {
         m_currentPageName = *m_groupPagesIt;
+	openHistogramTreeAt( m_currentPageName ) ;
         loadSelectedPageFromDB(m_currentPageName, s_startupFile, m_savesetFileName);
       }
     } else if ( (false == m_alarmPages.empty()) ) {

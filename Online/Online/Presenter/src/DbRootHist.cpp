@@ -1,4 +1,4 @@
-// $Id: DbRootHist.cpp,v 1.165 2010-05-19 17:04:13 robbep Exp $
+// $Id: DbRootHist.cpp,v 1.166 2010-05-19 21:01:34 robbep Exp $
 #include "DbRootHist.h"
 
 // STL 
@@ -786,19 +786,19 @@ void DbRootHist::fillHistogram()
 	    sumWTPerBin  = &histoDimData[offsetWT];
 	    sumWT2PerBin  = &histoDimData[offsetWT2];
 
-	    double yvalue = 0; 
-	    double yerr = 0;
+	    double yvalue = 0. ; 
+	    double yerr = 0.;
 	    // bin 0: underflow, nBins+1 overflow ?
 	    for (int i = 0; i <= nBins+2; i++) {
-	      yvalue = 0;    
+	      yvalue = 0. ;    
 	      if (entriesPerBin[i] > 0)
-          yvalue = sumWTPerBin[i]/entriesPerBin[i];
+		yvalue = sumWTPerBin[i]/entriesPerBin[i];
 	      // mean in Y                
 	      rootHistogram->SetBinContent(i, yvalue);    
       
 	      yerr = 0;
 	      if (entriesPerBin[i] > 0)
-          yerr = TMath::Sqrt(sumWT2PerBin[i]/entriesPerBin[i]-yvalue*yvalue);
+		yerr = TMath::Sqrt(sumWT2PerBin[i]/entriesPerBin[i]-yvalue*yvalue);
 	      // RMS = sqrt(E[x**2]-E[x]**2)
 	      rootHistogram->SetBinError(i, yerr);
         
@@ -1361,7 +1361,7 @@ bool DbRootHist::saveTH1ToDB(TPad* pad)
   bool out = false;
   if (m_onlineHistogram && rootHistogram) {
     int iopt = 0;
-    double fopt = 0.0;
+    float fopt = 0.0;
     std::string sopt("");
 
     sopt = rootHistogram->GetXaxis()->GetTitle();

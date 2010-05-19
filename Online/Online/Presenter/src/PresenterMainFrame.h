@@ -561,7 +561,6 @@ private:
   TGVerticalFrame* m_leftMiscFrame;
   TGHorizontalFrame* m_mainHorizontalFrame;
   TGVSplitter* m_rightVerticalSplitter;
-  TGHSplitter* m_horizontalSplitter;
 
   // vector of colours defined for own colour palette
   std::vector<TColor*>          m_RootColourVector;

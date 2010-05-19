@@ -1,4 +1,4 @@
-// $Id: PageDescriptionTextView.cpp,v 1.7 2010-05-19 17:04:16 robbep Exp $
+// $Id: PageDescriptionTextView.cpp,v 1.8 2010-05-19 21:01:34 robbep Exp $
 // Include files
 
 // local
@@ -109,8 +109,6 @@ Bool_t PageDescriptionTextView::LoadBuffer(const char *txtbuf) {
   }
 
   std::string theBuffer( txtbuf ) ;
-  boost::algorithm::replace_all( theBuffer , "\n" , "<br />\n" ) ;
-  theBuffer += "\n" ;
 
   // Replace html links with corresponding HTML code
   boost::xpressive::mark_tag link( 1 ) ;
@@ -121,8 +119,16 @@ Bool_t PageDescriptionTextView::LoadBuffer(const char *txtbuf) {
     linkName = "http://" + what[ link ] ;
   }
 
-  std::string newLink = "<a href=\"" + linkName + "\">" + linkName + "</a>" ; 
+  // Replace offline names by online names
+  std::string linkNameOnline( linkName ) ;
+  boost::algorithm::replace_all( linkNameOnline , "lbtwiki.cern.ch" , 
+				 "twiki.lbdaq.cern.ch" ) ;
+
+  std::string newLink = "<a href=\"" + linkNameOnline + "\">" + linkName + "</a>" ; 
   boost::algorithm::replace_all( theBuffer , linkName , newLink ) ;
+
+  boost::algorithm::replace_all( theBuffer , "\n" , "<br />\n" ) ;
+  theBuffer += "\n" ;
 
   ParseText( const_cast< char * >( theBuffer.c_str() ) ) ;
 
@@ -144,7 +150,7 @@ Bool_t PageDescriptionTextView::HandleButton( Event_t * event ) {
 #ifndef WIN32
   if ( ( event -> fType == kButtonPress ) && ( event -> fCode == 1 ) ) {
     const char * link ;
-    link = GetHref( event -> fX , event -> fY ) ;
+    link = GetHref( event -> fX , event -> fY + fVisible.fY ) ;
     if ( 0 != link ) {
       // Check if firefox is already running:
       bool running = false ;

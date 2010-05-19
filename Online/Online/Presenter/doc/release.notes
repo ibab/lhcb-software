@@ -6,6 +6,9 @@
 
 ! 2010-05-19 - Patrick Robbe
  - src/DbHistRoot.cpp: retransform double into float 
+ - src/PageDescriptionTestView.cpp: fix problem with http links when they
+   are outside the visible part
+ - src/PresenterMainFrame.cpp: make the page comments text field resizable
 
 !============ Presenter v1r4 2010-05-19 =============
 ! 2010-05-17 - Patrick Robbe
