@@ -136,7 +136,6 @@ class Physics_MinBiasL0_PassThroughHlt_Apr10 :
         """
         Returns a list of active lines
         """
-        # return [ 'Hlt2PassThrough', 'Hlt2Transparent','Hlt2Forward','Hlt2DebugEvent']
         return [ 'Hlt2PassThrough', 'Hlt2Transparent','Hlt2DebugEvent']
 
         

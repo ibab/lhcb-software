@@ -21,7 +21,7 @@
 ! 2010-05-12 - Johannes Albrecht
  - adapt default HLT2 muon lines
 
-! 2010-05-12 - Gerhard RAven
+! 2010-05-12 - Gerhard Raven
  - Removed the Hlt2Lines introduced below from Physics_25Vis_25L0_2Hlt1_2Hlt2_Apr10
    as it has been deployed in the pit _without_ those lines.
  - Create Physics_25Vis_25L0_2Hlt1_2Hlt2_May10 which does include them
