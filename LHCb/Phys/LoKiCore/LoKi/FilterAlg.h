@@ -1,4 +1,4 @@
-// $Id: FilterAlg.h,v 1.6 2009-12-17 22:33:41 ibelyaev Exp $
+// $Id: FilterAlg.h,v 1.7 2010-05-19 13:14:40 graven Exp $
 // ============================================================================
 #ifndef LOKI_FILTERALG_H 
 #define LOKI_FILTERALG_H 1
@@ -160,9 +160,7 @@ namespace LoKi
       if ( sc.isFailure() ) 
       { return Error("Unable to decode functor '" + code() + "'" , sc ) ; }
       //
-      MsgStream& log = 
-        ( Gaudi::StateMachine::INITIALIZED > FSMState() ) ? info () : debug () ;
-      log << "Requested code: '" << code () << "' -> Decoded functor :'" << functor << "'" << endmsg ;
+      debug() << "Requested code: '" << code () << "' -> Decoded functor :'" << functor << "'" << endmsg ;
       //
       m_factory_updated   = false ;
       m_code_updated      = false ;
