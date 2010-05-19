@@ -186,7 +186,7 @@ def save(result,outfile):
     for (file,et) in result.iteritems():
         et.write(file)
         name = file.split("/Conditions/")[0]
-        print name
+        #print name
     ExecInLHCbBash("copy_files_to_db.py -s "+name+" -c sqlite_file:"+outfile+"/LHCBCOND\n")
     
 def ExecInLHCbBash(code):
