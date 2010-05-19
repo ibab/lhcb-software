@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.205 2010-04-26 08:12:43 cattanem Exp $
+! $Id: release.notes,v 1.206 2010-05-19 09:15:31 jucogan Exp $
 ! Package		: L0/L0DU
 ! Package Manager : Olivier Deschamps
 !--------------------------------------------------------------------------
+
+! 2010-05-19 - Julien Cogan
+ - ReplayL0DU : new property added to L0Conf to allow the rerunning of the 
+   L0DU alone starting from the L0DU banks (with for example a new L0TCK).
 
 !========================== L0DU v10r6 2010-04-26 =========================
 ! 2010-04-16 - Julien Cogan

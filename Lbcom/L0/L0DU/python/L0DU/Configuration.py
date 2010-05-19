@@ -20,6 +20,7 @@ class L0Conf(LHCbConfigurableUser) :
     __slots__ = {
         # Properties
          "ReplaceL0BanksWithEmulated" : False
+        ,"ReplayL0DU"     : False 
         ,"SimulateL0"     : False
         ,"EmulateL0"      : False
         ,"DecodeL0"       : False
@@ -49,6 +50,7 @@ class L0Conf(LHCbConfigurableUser) :
     _propertyDocDct = {
         # Properties
          "ReplaceL0BanksWithEmulated" : """ If True, run the emulators and replace the existing L0 banks."""
+        ,"ReplayL0DU"     : """ If True, run the L0DU emulation starting from the L0DU banks."""
         ,"SimulateL0"     : """ If True, run the L0 simulation and write L0Banks."""
         ,"EmulateL0"      : """ If True, run the L0 emulators and write on TES at a non default location."""
         ,"DecodeL0"       : """ If True, run the L0 decoding (decode all L0 banks)."""
@@ -85,6 +87,9 @@ class L0Conf(LHCbConfigurableUser) :
             raise L0ConfError("ReplaceL0BanksWithEmulated","EmulateL0")
         if self.getProp("DecodeL0") and self.getProp("DecodeL0DU"):
             raise L0ConfError("DecodeL0","DecodeL0DU")
+        for l0prop in ("DecodeL0","DecodeL0DU","ReplaceL0BanksWithEmulated","SimulateL0","EmulateL0"):
+            if self.getProp("ReplayL0DU") and self.getProp(l0prop):
+                raise L0ConfError("ReplayL0DU",l0prop)
         if self.getProp("FilterL0FromRaw") and self.getProp("FilterL0"):
             raise L0ConfError("FilterL0FromRaw","FilterL0")
         if self.getProp("FilterL0FromRaw") and self.getProp("DecodeL0"):
@@ -222,6 +227,20 @@ class L0Conf(LHCbConfigurableUser) :
                     self.setProp("L0EmulatorContext" , "Emulator")
                 seq.Members+= [ self.l0emulatorSeq( writeBanks=False, writeOnTes=True ) ]
 
+            if self.getProp("ReplayL0DU"):
+                # Decode the l0du to produce the processor data (input to simulation)
+                decoding = decodeL0DU()
+                decoding.WriteProcData = True 
+                decoding.WriteOnTES = False # Do not write the L0DU report 
+                decoding.ProcessorDataLocation  = "Trig/L0/L0DUData"
+                # Emulate the l0du from the processor data
+                emulation = emulateL0DU()        
+                emulation.ProcessorDataLocations = ["Trig/L0/L0DUData"]
+                emulation.WriteBanks = False
+                emulation.WriteOnTES = True # Write the L0DU report
+                # Add decoder and emulator to the main sequence
+                seq.Members+= [decoding, emulation]
+                
             if self.getProp("MonitorL0"):
                 seq.Members+= [ self.l0monitoringSeq( ) ]
                 
