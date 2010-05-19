@@ -4,6 +4,11 @@
 ! Purpose     : GUI to allow the visualization of all data quality histograms
 !-----------------------------------------------------------------------------
 
+!============ Presenter v1r4 2010-05-19 =============
+! 2010-05-17 - Patrick Robbe
+ - src/PresenterMainFrame.cpp: right-click on histogram to open description
+   on web page
+
 ! 2010-05-17 - Patrick Robbe
  - src/PresenterMainFrame.cpp: re-activate possibility to access linked
    page double-clicking on histograms.
