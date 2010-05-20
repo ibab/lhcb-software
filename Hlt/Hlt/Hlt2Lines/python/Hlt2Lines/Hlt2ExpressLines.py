@@ -1,5 +1,5 @@
 # =============================================================================
-# $Id: Hlt2ExpressLines.py,v 1.25 2010-05-19 13:52:57 albrecht Exp $
+# $Id: Hlt2ExpressLines.py,v 1.26 2010-05-20 09:39:26 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of Hlt2 Lines for the express stream
@@ -11,7 +11,7 @@
 """
 # =============================================================================
 __author__  = "Johannes Albrecht albrecht@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.25 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.26 $"
 # =============================================================================
 
 from HltLine.HltLinesConfigurableUser import *
@@ -114,7 +114,7 @@ class Hlt2ExpressLinesConf(HltLinesConfigurableUser):
 
    def __apply_configuration__(self):
       from HltLine.HltLine import Hlt2Line, Hlt2Member, bindMembers
-      from HltLine.Hlt2Monitoring import *
+      from HltLine.Hlt2Monitoring import Hlt2Monitor,Hlt2MonitorMinMax
       from HltTracking.HltPVs import PV3D
       from Configurables import HltANNSvc
       from Hlt2SharedParticles.DiMuon import DiMuon
