@@ -302,17 +302,19 @@ void TrackMonitor::fillHistograms(const LHCb::Track& track,
     }
     
     double mom = track.p()/Gaudi::Units::GeV ;
-    if( kalfit->chi2Velo().nDoF() > 0 ) 
-      profile1D( mom, kalfit->chi2Velo().prob(), type+"/chi2ProbVeloVsMom",
-                 "chi2 prob for velo segment versus momentum",0,30,30) ;
-    if( kalfit->chi2Downstream().nDoF() > 0 ) 
-      profile1D( mom, kalfit->chi2Downstream().prob(), type+"/chi2ProbDownstreamVsMom",
-                 "chi2 prob for T(muon) segment versus momentum",0,30,30) ;
-    if( kalfit->chi2Match().nDoF() > 0 )
-      profile1D(mom, kalfit->chi2Match().prob(),type+"/chi2ProbMatchVsMom",
-                "chi2 prob upstream-downstream match versus momentum",0,30,30) ;
-    if( kalfit->chi2().nDoF() > 0 )
-      profile1D(mom, kalfit->chi2().prob(),type+"/chi2ProbVsMom","chi2 prob versus momentum",0,30,30) ;
+    if (kalfit) {
+      if( kalfit->chi2Velo().nDoF() > 0 ) 
+	profile1D( mom, kalfit->chi2Velo().prob(), type+"/chi2ProbVeloVsMom",
+	    "chi2 prob for velo segment versus momentum",0,30,30) ;
+      if( kalfit->chi2Downstream().nDoF() > 0 ) 
+	profile1D( mom, kalfit->chi2Downstream().prob(), type+"/chi2ProbDownstreamVsMom",
+	    "chi2 prob for T(muon) segment versus momentum",0,30,30) ;
+      if( kalfit->chi2Match().nDoF() > 0 )
+	profile1D(mom, kalfit->chi2Match().prob(),type+"/chi2ProbMatchVsMom",
+	    "chi2 prob upstream-downstream match versus momentum",0,30,30) ;
+      if( kalfit->chi2().nDoF() > 0 )
+	profile1D(mom, kalfit->chi2().prob(),type+"/chi2ProbVsMom","chi2 prob versus momentum",0,30,30) ;
+    }
     
     std::vector<LHCb::LHCbID > ids;
     std::bitset<23> velo[4];
