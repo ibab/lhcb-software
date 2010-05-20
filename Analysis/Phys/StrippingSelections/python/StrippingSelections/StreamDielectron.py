@@ -12,9 +12,11 @@ from StrippingConf.StrippingStream import StrippingStream
 
 from StrippingSelections import StrippingBd2Kstaree
 from StrippingSelections.StrippingBu2LLK  import StrippingBu2LLKConf
+from StrippingSelections.StrippingJpsi2ee  import StrippingDiElectronConf
 
 stream = StrippingStream("Dielectron")
 stream.appendLines( [ 
 		        StrippingBd2Kstaree.line ,
-		        StrippingBu2LLKConf().eeK()
+		        StrippingBu2LLKConf().eeK(),
+                        StrippingDiElectronConf().loose_line()
 		    ] )
