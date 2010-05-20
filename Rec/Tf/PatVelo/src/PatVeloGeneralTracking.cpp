@@ -701,9 +701,7 @@ storeTracks(std::vector<PatVeloSpaceTrack*> & tracks){
 
     // check if probably a backward particle 
     // if closest approach to beam line is at +z from average of measurements
-    // and roughly within VELO
-    if( fabs((*iTr)->point().z()) < 1000*Gaudi::Units::mm && 
-        (*iTr)->point().z() > (*iTr)->meanZ() ) (*iTr)->setBackward(true);
+    if( (*iTr)->point().z() > (*iTr)->meanZ() ) (*iTr)->setBackward(true);
 
     // check if spillover
     if (m_PatVeloTrackTool->isSpilloverTrack(*iTr)) {
