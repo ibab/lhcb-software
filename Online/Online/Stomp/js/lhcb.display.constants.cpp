@@ -8,7 +8,12 @@ if ( !_lhcb().constants ) {
     if ( this._loc.indexOf('/static/RunStatus/')>0 ) this._url = 'http://www.cern.ch/lhcbproject/online/comet/Online';
     this.lhcb_comet_url   = function()     {    return 'http://lbcomet.cern.ch/static/RunStatus';                  };
     this.lhcb_base_url    = function()     {    return this._url;                                                  };
-    this.lhcb_display_url = function(name) {    return this.lhcb_comet_url()+'/lhcb.comet.htm?type='+name;         };
+    if ( this._loc.indexOf('/frankm/')>0 ) {
+      this.lhcb_display_url = function(name) {    return this.lhcb_comet_url()+'/lhcb.display.htm?type='+name;     };
+    }
+    else {
+      this.lhcb_display_url = function(name) {    return this.lhcb_comet_url()+'/lhcb.comet.htm?type='+name;       };
+    }
     this.lhcb_static      = function(name) {    return this.lhcb_base_url()+'/'+name;                              };
     this.operations_url   = function(name) {    return 'http://op-webtools.web.cern.ch/op-webtools/vistar/vistars.php?usr='+name; };
     this.sls_service_url  = function(name) {    return 'http://sls.cern.ch/sls/service.php?id='+name;              };
