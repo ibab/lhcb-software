@@ -3,7 +3,6 @@
 #define STTELL1CORE_H 1
 
 // Include files
-#include <sys/types.h>
 #include <vector>
 #include <map>
 
@@ -16,6 +15,10 @@
 
 namespace STTELL1{
   
+  typedef unsigned int u_int32_t;
+  typedef unsigned short int u_int16_t;
+  typedef unsigned char u_int8_t;
+
   enum totalStrips{
     ALL_HEADERS=384,
     ALL_STRIPS=3072
