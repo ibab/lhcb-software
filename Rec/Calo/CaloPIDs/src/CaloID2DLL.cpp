@@ -1,8 +1,11 @@
-// $Id: CaloID2DLL.cpp,v 1.11 2010-03-12 21:51:40 dgolubko Exp $
+// $Id: CaloID2DLL.cpp,v 1.12 2010-05-20 09:19:36 odescham Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , verison $Revision: 1.11 $
+// CVS tag $Name: not supported by cvs2svn $ , verison $Revision: 1.12 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.11  2010/03/12 21:51:40  dgolubko
+// CaloID2DLL: enable CondDB by default, add protection against missing Conditions
+//
 // Revision 1.10  2010/03/08 01:31:33  odescham
 // add neutral PID + configurable update
 //
@@ -167,7 +170,7 @@ StatusCode CaloID2DLL::initialize()
   return sc;
 } ;
 // ============================================================================
-StatusCode CaloID2DLL::initializeWithCondDB()
+StatusCode CaloID2DLL::initializeWithCondDB()  
 {
   info() << "init with CondDB, m_conditionName = " << m_conditionName << endmsg;
   try {

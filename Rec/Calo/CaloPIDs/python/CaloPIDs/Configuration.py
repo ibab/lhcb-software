@@ -9,7 +9,7 @@ Configurable for Calorimeter PID
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $"
 # =============================================================================
 __all__   = (
     'HltCaloPIDsConf'     ,
@@ -84,7 +84,7 @@ class CaloPIDsConf(LHCbConfigurableUser):
         """
         Check the configuration
         """
-        log.warning('CaloPIDsConf: Configuration is not checked!')
+        log.debug('CaloPIDsConf: Configuration is not checked!')
     
    ## Calorimeter PID Configuration
     def applyConf ( self ) :

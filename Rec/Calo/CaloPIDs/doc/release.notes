@@ -1,13 +1,16 @@
-! $Id: release.notes,v 1.93 2010-05-19 14:06:22 graven Exp $ 
+! $Id: release.notes,v 1.94 2010-05-20 09:19:36 odescham Exp $ 
 !------------------------------------------------------------------------------
 ! Package     : Calo/CaloPIDs
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! Purpose     : Calorimeter PIDs 
 !------------------------------------------------------------------------------
 
+! 2010-05-20 - Olivier Deschamps
+ - python/Configuration.py : reduce verbosity
+
+
 ! 2010-05-19 - Gerhard Raven
  - only summarize 'match' errors, do not print (see https://savannah.cern.ch/bugs/?67077) 
-
 
 !========================== CaloPIDs v5r5 2010-03-19 =========================
 ! 2010-03-12 - Dmitry Golubkov
