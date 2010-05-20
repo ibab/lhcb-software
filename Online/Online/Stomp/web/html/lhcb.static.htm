@@ -1,18 +1,21 @@
-<html>
-<head>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; CHARSET=iso-8859-1">
+<HTML>
+<HEAD>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"></meta>
   <meta name="description" content="Status displays for the LHCb experiment"></meta>
+
   <script language="javascript"> 
   var _stomp_in_use = false;
-  var _fileBase = 'http://www.cern.ch/lhcbproject/online/comet/Online';
+  var _base = ''+document.location;
+  var _fileBase = _base.substr(0,_base.indexOf('/Online/')+7);
   var _lhcbScriptBase = _fileBase;
   var _javascriptType = 'text/javascript';
   </script>
   <script language="JavaScript" src="../lhcb.display.select.cpp"></script>
-</head>
+</HEAD>
 <body onunload="the_displayObject.unload()">
  <script language="javascript"> 
    the_displayObject.body();
  </script>
 </body>
-</html>
+</HTML>
