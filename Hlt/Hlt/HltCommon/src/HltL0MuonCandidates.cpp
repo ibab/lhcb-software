@@ -1,4 +1,4 @@
-// $Id: HltL0MuonCandidates.cpp,v 1.15 2009-12-23 16:12:36 graven Exp $
+// $Id: HltL0MuonCandidates.cpp,v 1.16 2010-05-20 08:39:14 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -123,7 +123,7 @@ StatusCode HltL0MuonCandidates::execute() {
 
   double ptMax = -1.;
   BOOST_FOREACH( L0MuonCandidate* l0muon, *m_selection.input<1>()) {
-    bool pass = ( cuts.empty() || ( l0muon->encodedPt() > cuts[0] ) );
+    bool pass = ( cuts.empty() || ( (l0muon->encodedPt()&0x7F) > cuts[0] ) ); // encodedPt is signed 
     if (!pass)  continue;
 
     debug() << "l0pt " << l0muon->pt() << " l0encodedPt " << l0muon->encodedPt()<< endmsg;
