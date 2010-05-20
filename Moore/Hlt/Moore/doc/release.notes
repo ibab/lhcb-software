@@ -2,6 +2,10 @@ Package     : Hlt/Moore
 Package Coordinator : Gerhard Raven
 Purpose     : LHCb HLT application
 
+! 2010-05-20 - Gerhard Raven
+ - add RICH parameters to runchange handler setup
+ - replace MooreInit with MooreInitSvc
+
 !========================== Moore v9r1p1 2010-04-21 ===================
 ! 2010-05-06 - Gerhard Raven + Johannes Albrecht
  - add support for re-running L0 whilst running from a TCK

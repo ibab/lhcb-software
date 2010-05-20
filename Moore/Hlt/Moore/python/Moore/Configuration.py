@@ -1,7 +1,7 @@
 """
 High level configuration tool(s) for Moore
 """
-__version__ = "$Id: Configuration.py,v 1.120 2010-05-06 13:45:22 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.121 2010-05-20 12:51:17 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ, path
@@ -218,6 +218,8 @@ class Moore(LHCbConfigurableUser):
             rch.Conditions = { "Conditions/Online/LHCb/Magnet/Set"        : online_xml
                              , "Conditions/Online/Velo/MotionSystem"      : online_xml
                              , "Conditions/Online/LHCb/Lumi/LumiSettings" : online_xml
+                             , "Conditions/Online/Rich1/R1HltGasParameters" : online_xml
+                             , "Conditions/Online/Rich2/R2HltGasParameters" : online_xml
                              }
             ApplicationMgr().ExtSvc.append(rch)
 
@@ -454,8 +456,9 @@ class Moore(LHCbConfigurableUser):
                 self.setProp('CheckOdin',True)
 
 
-        from Configurables import MooreInit
-        ApplicationMgr().TopAlg.append( MooreInit() )
+        from Configurables import MooreInitSvc
+        ApplicationMgr().ExtSvc.append( MooreInitSvc() )
+
         ApplicationMgr().TopAlg.append( GaudiSequencer('Hlt') )
 
         from Configurables import EventLoopMgr
