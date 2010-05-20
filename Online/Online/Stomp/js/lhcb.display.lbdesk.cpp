@@ -67,6 +67,7 @@ LbDesktop = new Ext.app.App({
          //,new LbDesktop.CERN()
          ,new LbDesktop.BeamMenuModule()
          ,new LbDesktop.LHCbMenuModule()
+	 ,new LbDesktop.LHCbSDetModule()
          ,new LbDesktop.DiracMenuModule()
          ,new LbDesktop.ALICEMenuModule()
          ,new LbDesktop.ATLASMenuModule()
@@ -180,6 +181,19 @@ LbDesktop.LHCbMenuModule = Ext.extend(desktop.URLMenuModule, {
       ,this.menuURL(constants.urls.lhcb.online_databases_status).makeIcon(constants.images.database)
      ];
     this._launch('LHCb Experiment',constants.images.lhcb,items);
+  }
+});
+
+LbDesktop.LHCbSDetModule = Ext.extend(desktop.URLMenuModule, {
+  init: function(){
+    var items = 
+    [ this.menuURL(constants.urls.lhcb.subdetectors.daq_lumi)
+      ,this.menuURL(constants.urls.lhcb.subdetectors.daq_trigger)
+      ,this.menuURL(constants.urls.lhcb.subdetectors.velo)
+      ,this.menuURL(constants.urls.lhcb.subdetectors.ot)
+      ,this.menuURL(constants.urls.lhcb.subdetectors.muon)
+     ];
+    this._launch('LHCb Subdetectors',constants.images.lhcb,items);
   }
 });
 
