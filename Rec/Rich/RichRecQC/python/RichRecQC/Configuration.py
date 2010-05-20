@@ -134,6 +134,10 @@ class RichRecQCConf(RichConfigurableUser):
        ,"RichPIDLocation" : "Rec/Rich/PIDs" # Location of RichPID data objects to monitor
         }
 
+    ## Access the alignment Configurable
+    def alignmentConf(self):
+        return self.getRichCU(RichAlignmentConf)
+
     ## Get the given option
     def getHistoOptions(self,optionname):
         histoset = self.getProp("Histograms")
@@ -332,7 +336,7 @@ class RichRecQCConf(RichConfigurableUser):
 
         # Alignment monitor
         if "AlignmentMonitoring" in monitors :
-            conf = self.getRichCU(RichAlignmentConf)
+            conf = self.alignmentConf()
             self.setOtherProps(conf,["Histograms","Context","NTupleProduce","WithMC"])
             conf.AlignmentSequencer = self.newSeq(sequence,"RichMirrAlignMoni")
 
