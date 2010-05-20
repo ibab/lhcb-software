@@ -33,10 +33,9 @@ public:
   void handle(const Incident&);
 
 private:
-  void monitorODIN(const LHCb::ODIN*,const LHCb::HltDecReports*);
-  void monitorHLT (const LHCb::HltDecReports*);
-  void monitorMemory();
-  void storeTrend(AIDA::IProfile1D*, double);
+  void monitorODIN(const LHCb::ODIN*, const LHCb::HltDecReports*);
+  void monitorHLT (const LHCb::ODIN*, const LHCb::HltDecReports*);
+  void monitorTrends();
   template <typename T> T* fetch(const std::string& location) {
        T* t =  this->exist<T>( location ) ?  this->get<T>( location ) 
                                           :  (T*)0;
@@ -72,6 +71,7 @@ private:
   AIDA::IProfile1D* m_hltVirtTime;
   AIDA::IHistogram1D* m_hltTime;
   AIDA::IProfile1D* m_hltEventsTime;
+  AIDA::IHistogram1D* m_tasks;
 
   AIDA::IHistogram2D* m_hlt1AlleysCorrelations;
   AIDA::IHistogram2D* m_hlt2AlleysCorrelations;

@@ -1,4 +1,4 @@
-// $Id: HltL0GlobalMonitor.cpp,v 1.9 2010-04-17 22:54:21 graven Exp $
+// $Id: HltL0GlobalMonitor.cpp,v 1.10 2010-05-20 08:08:22 graven Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -165,8 +165,6 @@ void HltL0GlobalMonitor::monitorL0DU(const LHCb::L0DUReport* l0du) {
       return;
   }
 
-
-
   counter("L0Accept") += l0du->decision();
   counter("L0Forced") += l0du->forceBit();
 
@@ -210,7 +208,6 @@ void HltL0GlobalMonitor::monitorL0DU(const LHCb::L0DUReport* l0du) {
   if (hlt!=0){
     const LHCb::HltDecReport*  report = hlt->decReport( m_hlt1Decision );
     if (report != 0 ) hlt1=report->decision();
-    
     report = hlt->decReport( m_hlt2Decision );
     if (report != 0 ) hlt2=report->decision();
   }//end if hlt
@@ -219,53 +216,52 @@ void HltL0GlobalMonitor::monitorL0DU(const LHCb::L0DUReport* l0du) {
   bool l0Physics=false;
   //fill the histogram containing the l0 channels
   for(LHCb::L0DUChannel::Map::iterator i = channels.begin();i!=channels.end();++i){
-      fill( m_L0Input, i->second->id(), l0du->channelDecision( i->second->id() ) );
+      int  id = i->second->id();
+      bool l0chan = l0du->channelDecision( id );
+
+      fill( m_L0Input, id, l0chan );
 
       if( i->second->decisionType() != LHCb::L0DUDecision::Disable ){
-	fill( m_histL0Enabled, i->second->id(), l0du->channelDecision( i->second->id() ) );
-	if(hlt1) fill( m_histL0EnabledHLT1, i->second->id(), l0du->channelDecision( i->second->id() ) );
-	if(hlt2) fill( m_histL0EnabledHLT2, i->second->id(), l0du->channelDecision( i->second->id() ) );
-
-      }
-      else {
-	fill( m_histL0Disabled, i->second->id(), l0du->channelDecision( i->second->id() ) );
+        fill( m_histL0Enabled,     id, l0chan );
+        fill( m_histL0EnabledHLT1, id, l0chan && hlt1 );
+        fill( m_histL0EnabledHLT2, id, l0chan && hlt2 );
+      } else {
+	    fill( m_histL0Disabled,    id, l0chan );
       }
       
 
-      if(i->second->id()==16 
-	 && odin->bunchCrossingType() == LHCb::ODIN::Beam1 ){
-	fill( m_L0Input, 18, l0du->channelDecision( i->second->id() ) );
-	fill( m_histL0Enabled, 18, l0du->channelDecision( i->second->id() ) );
-	if(hlt1) fill( m_histL0EnabledHLT1, 18, l0du->channelDecision( i->second->id() ) );
-	if(hlt2) fill( m_histL0EnabledHLT2, 18, l0du->channelDecision( i->second->id() ) );
-	if(l0du->channelDecision( i->second->id() )) odinBGas=true;
+      if(id==16 && odin->bunchCrossingType() == LHCb::ODIN::Beam1 ){
+        fill( m_L0Input,           18, l0chan );
+        fill( m_histL0Enabled,     18, l0chan );
+        fill( m_histL0EnabledHLT1, 18, l0chan && hlt1 );
+        fill( m_histL0EnabledHLT2, 18, l0chan && hlt2 );
+        if(l0chan) odinBGas=true;
       }
       
 
-      if(i->second->id()==17 
-	 && odin->bunchCrossingType() == LHCb::ODIN::Beam2 ){
-	fill( m_L0Input, 19, l0du->channelDecision( i->second->id() ) );
-	fill( m_histL0Enabled, 19, l0du->channelDecision( i->second->id() ) );
-	if(hlt1) fill( m_histL0EnabledHLT1, 19, l0du->channelDecision( i->second->id() ) );
-	if(hlt2) fill( m_histL0EnabledHLT2, 19, l0du->channelDecision( i->second->id() ) );
-	if(l0du->channelDecision( i->second->id() )) odinBGas=true;
+      if(id==17 && odin->bunchCrossingType() == LHCb::ODIN::Beam2 ){
+        fill( m_L0Input,           19, l0chan );
+        fill( m_histL0Enabled,     19, l0chan );
+        fill( m_histL0EnabledHLT1, 19, l0chan && hlt1 );
+        fill( m_histL0EnabledHLT2, 19, l0chan && hlt2 );
+        if(l0chan) odinBGas=true;
       }
       
       
       //get the global L0 physics decision
       //enabled, non-beam gas channel which fired..
       if( i->second->decisionType() != LHCb::L0DUDecision::Disable 
-	  && i->second->id() < 16 
-	  && l0du->channelDecision( i->second->id() ) ) l0Physics=true;
+	  && id < 16 
+	  && l0chan ) l0Physics=true;
       
 
   }
   //fill the global L0 decision  
   if(odinBGas || l0Physics) {
-    fill( m_L0Input, 20,1);
-    fill( m_histL0Enabled, 20,1);
-    if(hlt1) fill( m_histL0EnabledHLT1, 20,1);
-    if(hlt2) fill( m_histL0EnabledHLT2, 20,1);
+    fill( m_L0Input,           20,1);
+    fill( m_histL0Enabled,     20,1);
+    fill( m_histL0EnabledHLT1, 20,hlt1);
+    fill( m_histL0EnabledHLT2, 20,hlt2);
   }
 
 };

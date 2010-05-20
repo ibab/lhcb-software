@@ -1,8 +1,11 @@
-!$Id: release.notes,v 1.78 2010-05-17 14:24:08 graven Exp $
+!$Id: release.notes,v 1.79 2010-05-20 08:08:22 graven Exp $
 Package     : Hlt/HltGlobalMonitor
 Package Coordinator : Bruno Souza de Paula 
 Purpose     : LHCb HLT Global Monitoring
 ! -----------------------------------------------------------------------------
+! 2010-05-20 - Gerhard Raven
+ - add heartbeat trend histogram
+
 ! 2010-05-17 - Gerhard Raven
  - optimize code a bit
 

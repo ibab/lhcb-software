@@ -1,4 +1,4 @@
-// $Id: HltGlobalMonitor.cpp,v 1.67 2010-05-17 20:51:11 graven Exp $
+// $Id: HltGlobalMonitor.cpp,v 1.68 2010-05-20 08:08:22 graven Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -81,9 +81,9 @@ HltGlobalMonitor::HltGlobalMonitor( const std::string& name,
 {
   declareProperty("ODIN",              m_ODINLocation = LHCb::ODINLocation::Default);
   declareProperty("HltDecReports",     m_HltDecReportsLocation = LHCb::HltDecReportsLocation::Default);
-  declareProperty("Hlt1Decisions",     m_Hlt1Lines );
-  declareProperty("Hlt2Decisions",     m_Hlt2Lines );
-  declareProperty("TotalMemory",       m_totalmem   = 3000 );
+  declareProperty("Hlt1Decisions",     m_Hlt1Lines ); //TODO: remove
+  declareProperty("Hlt2Decisions",     m_Hlt2Lines ); //TODO: remove
+  declareProperty("TotalMemory",       m_totalmem   = 3000 ); //TODO: remove
   declareProperty("TimeSize",          m_timeSize = 120 );   // number of minutes of history (half an hour)
   declareProperty("TimeInterval",      m_timeInterval = 1 ); // binwidth in minutes 
   declareProperty("DecToGroupHlt1",    m_DecToGroup1);
@@ -217,6 +217,9 @@ StatusCode HltGlobalMonitor::initialize() {
   m_hltEventsTime  = bookProfile1D("average time per event", 0,m_timeSize,int(m_timeSize/m_timeInterval+0.5));
   setAxisLabels( m_hltEventsTime, "time since start of run [min]", "average time/event [ms]");
 
+  m_tasks  = book1D("# of tasks", 0,m_timeSize,int(m_timeSize/m_timeInterval+0.5));
+  setAxisLabels( m_hltEventsTime, "time since start of run [min]", "# of tasks");
+
   m_hltTime  = book1D("time per event ", -1, 4 );
   setAxisLabels( m_hltTime, "log10(time/event/ms)", "events");
 
@@ -255,8 +258,8 @@ StatusCode HltGlobalMonitor::execute() {
   LHCb::ODIN*         odin = fetch<LHCb::ODIN>( LHCb::ODINLocation::Default);
  
   monitorODIN(odin,hlt);
-  monitorHLT(hlt);
-  monitorMemory();
+  monitorHLT(odin,hlt);
+  monitorTrends();
 
   
   counter("#events")++;
@@ -289,10 +292,9 @@ void HltGlobalMonitor::monitorODIN(const LHCb::ODIN* odin,const LHCb::HltDecRepo
 }
 
 //==============================================================================
-void HltGlobalMonitor::monitorHLT(const LHCb::HltDecReports* hlt) {
+void HltGlobalMonitor::monitorHLT(const LHCb::ODIN* /*odin*/, const LHCb::HltDecReports* hlt) {
   if (hlt==0) return;
 
-  ///////////////////////////////////////////////////////////////////////////////
   std::vector<unsigned> nAcc1Alley(m_hlt1Alleys.size(),unsigned(0));
   std::vector<unsigned> nAcc2Alley(m_hlt2Alleys.size(),unsigned(0));
 
@@ -304,7 +306,7 @@ void HltGlobalMonitor::monitorHLT(const LHCb::HltDecReports* hlt) {
         if (j!=m_hlt1Line2AlleyBin.end()) {
             assert(j->second.first<nAcc1Alley.size());
             ++nAcc1Alley[ j->second.first ];
-            fill( m_hlt1Alleys[j->second.first], j->second.second, 1.0 ); //avoid double counting if several go off at the same time???
+            fill( m_hlt1Alleys[j->second.first], j->second.second, 1.0 );
         }
     } else if ( i->first.compare(0,4,"Hlt2") == 0 ) {
         std::map<Gaudi::StringKey,std::pair<unsigned,unsigned> >::const_iterator j = m_hlt2Line2AlleyBin.find(i->first);
@@ -322,16 +324,19 @@ void HltGlobalMonitor::monitorHLT(const LHCb::HltDecReports* hlt) {
   for (unsigned i=0; i<m_DecToGroup1.size();i++) {
     *m_hlt1AlleyRates[i] += ( nAcc1Alley[i] > 0 );
     fill(m_hlt1Alley,i,(nAcc1Alley[i]>0));
+    //TODO: add trend plot corresponding to m_hlt1Alley -- pick up ODIN GPS time of the event for this!
+    // odin->
     if(nAcc1Alley[i]==0) continue;
-    for(unsigned j=0; j<m_DecToGroup1.size();j++){
+    for(unsigned j=0; j<m_DecToGroup1.size();++j){
       fill(m_hlt1AlleysCorrelations,i,j,(nAcc1Alley[j]>0));
     }
   }
-  for (unsigned i=0; i<m_DecToGroup2.size();i++) {
+  for (unsigned i=0; i<m_DecToGroup2.size();++i) {
     *m_hlt2AlleyRates[i] += ( nAcc2Alley[i] > 0 );
     fill(m_hlt2Alley,i,(nAcc2Alley[i]>0));
+    //TODO: add trend plot corresponding to m_hlt2Alley
     if(nAcc2Alley[i]==0) continue;
-    for(unsigned j=0; j<m_DecToGroup2.size();j++){
+    for(unsigned j=0; j<m_DecToGroup2.size();++j){
       fill(m_hlt2AlleysCorrelations,i,j,(nAcc2Alley[j]>0));
     }
   }
@@ -340,39 +345,23 @@ void HltGlobalMonitor::monitorHLT(const LHCb::HltDecReports* hlt) {
 
 //==============================================================================
 
-void HltGlobalMonitor::monitorMemory() {
+void HltGlobalMonitor::monitorTrends() {
 
   double elapsedTime = double(System::currentTime( System::microSec ) - m_startEvent);
   double t = log10(elapsedTime)-3; // convert to log(time/ms)
   fill( m_hltTime, t ,1.0); 
-  storeTrend(m_hltEventsTime, elapsedTime/1000 );
+
+  double when = m_currentTime / 60;
+  m_hltEventsTime->fill(when, elapsedTime/1000 );
 
   //TODO: only need to do this once 'per bin'  interval...
-  m_virtmem  = virtualMemory(System::MByte, System::Memory);
-  storeTrend(m_hltVirtTime, double(m_virtmem));
-
+  int i = m_hltVirtTime->axis().coordToIndex( when );
+  if ( m_hltVirtTime->binEntries(i)==0 ) {
+    m_virtmem  = virtualMemory(System::MByte, System::Memory);
+    m_hltVirtTime->fill(when, double(m_virtmem));
+  }
+  // histogram the # of tasks vs. time...
+  i = m_tasks->axis().coordToIndex( when );
+  if ( m_tasks->binEntries(i)==0 ) m_tasks->fill( when, 1 );
  
 }
-
-//=============================================================================
-void HltGlobalMonitor::storeTrend(AIDA::IProfile1D* h, double Value) 
-{
-#ifdef TODO_IMPLEMENT_SHIFT_USING_AIDA2ROOT_ON_A_PROFILE_HISTOGRAM
-  double offset = m_currentTime - m_trendLHSEdge;
-  if ( offset > ... ) {
-      const AIDA::IAxis & axis = h->axis();
-      long bins = axis.bins();
-      for ( long i = 0; i < bins; ++i ) {
-        double binValue = h->binHeight(i);
-        double nextValue = ( i < bins - 1 ) ? h->binHeight(i+1)
-                                            : Value;
-        double x = 0.5*(axis.binUpperEdge(i)+axis.binLowerEdge(i));
-        h->fill(x, nextValue - binValue);
-      }
-       update m_trendLHSEdge
-       shift bins to left
-  }
-#endif
-  h->fill(m_currentTime/60, Value); // go from seconds -> minutes
-}
-
