@@ -1,4 +1,4 @@
- )!$Id: release.notes,v 1.178 2010-05-19 14:20:49 gcowan Exp $
+ )!$Id: release.notes,v 1.179 2010-05-20 13:18:23 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/CommonParticles
 ! Responsible : P. Koppenburg, Juan Palacios
@@ -7,6 +7,9 @@
 ! When adding a Particle make sure it is appended to one of the Standard* files
 !
 !-----------------------------------------------------------------------------
+
+! 2010-05-20 - Patrick Koppenburg
+ - Loosened the mass window of J/psi->ee
 
 ! 2010-05-19 - Greig Cowan
  - Loosened Dstar mass window in StdVeryLooseDstarWithD2HH.py.
