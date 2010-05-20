@@ -3,9 +3,6 @@
 ! Responsible : Gerhard Raven
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
-! 2010-05-20 - Gerhard Raven
- - add MooreInitSvc, which will replace MooreInit
-
 ! 2010-05-19 - V. Gligorov
  - Add two new HltAlgorithms: HltFilterFittedTracks and
    HltFilterFittedVertices to allow filtering on flight significances and
@@ -13,6 +10,12 @@
 
 ! 2010-05-05 - Gerhard Raven
  - migrate configuration code into HltDAQ
+
+!========================== HltCommon v5r24p2 2010-05-20 ===================
+! 2010-05-20 - Gerhard Raven
+ - add MooreInitSvc to replace (eventually) MooreInit
+ - mask sign bit of encodedPt for L0 Muon candidate (thanks for spotting this one,
+   Julien!)
 
 !========================== HltCommon v5r24p1 2010-04-29 ===================
 ! 2010-04-21 - Gerhard Raven
