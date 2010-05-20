@@ -1,4 +1,4 @@
-// $Id: HltGlobalMonitor.cpp,v 1.68 2010-05-20 08:08:22 graven Exp $
+// $Id: HltGlobalMonitor.cpp,v 1.69 2010-05-20 11:46:13 graven Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -77,13 +77,9 @@ HltGlobalMonitor::HltGlobalMonitor( const std::string& name,
   , m_gpstimesec(0)
   , m_time_ref(0)
   , m_totaltime(0)
-  , m_totalmem(0)
 {
   declareProperty("ODIN",              m_ODINLocation = LHCb::ODINLocation::Default);
   declareProperty("HltDecReports",     m_HltDecReportsLocation = LHCb::HltDecReportsLocation::Default);
-  declareProperty("Hlt1Decisions",     m_Hlt1Lines ); //TODO: remove
-  declareProperty("Hlt2Decisions",     m_Hlt2Lines ); //TODO: remove
-  declareProperty("TotalMemory",       m_totalmem   = 3000 ); //TODO: remove
   declareProperty("TimeSize",          m_timeSize = 120 );   // number of minutes of history (half an hour)
   declareProperty("TimeInterval",      m_timeInterval = 1 ); // binwidth in minutes 
   declareProperty("DecToGroupHlt1",    m_DecToGroup1);

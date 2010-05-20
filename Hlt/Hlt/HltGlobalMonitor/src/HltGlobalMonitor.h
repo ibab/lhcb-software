@@ -53,8 +53,6 @@ private:
   std::vector<AIDA::IHistogram1D*> m_hlt2Alleys;
   std::vector<StatEntity*>  m_hlt1AlleyRates;
   std::vector<StatEntity*>  m_hlt2AlleyRates;
-  std::vector<std::string>  m_Hlt1Lines;
-  std::vector<std::string>  m_Hlt2Lines;
 
   std::string m_HltDecReportsLocation;
   std::string m_ODINLocation;
@@ -86,7 +84,6 @@ private:
   int m_time_ref;
   int m_scanevents;
   int m_totaltime;
-  int m_totalmem;
 
 };
 #endif // HLTGLOBALMONITOR_H
