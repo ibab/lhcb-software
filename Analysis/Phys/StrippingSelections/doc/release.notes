@@ -5,6 +5,9 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-05-20 - Greig Cowan
+ - Fixed StreamCharm to include StrippingDstarVeryLooseWithD02HH properly.
+
 ! 2010-05-20 - Juan Palacios
  - python/StrippingSelections/StreamCharm.py
    . Remove StrippingDstarVeryLooseWithD02HH. It is breaking the stripping initialization.

@@ -15,12 +15,12 @@ from StrippingSelections import StrippingDstarD2KShh
 from StrippingSelections import StrippingDstarD2KShhRobust
 from StrippingSelections import StrippingDstarD02PipiMuMuPiMuKPiKmu
 from StrippingSelections import StrippingDstar_D2KPiPi0
-from StrippingSelections import StrippingDstarVeryLooseWithD02HH
 from StrippingSelections import StrippingD2hhNoPID
 from StrippingSelections import StrippingD2Kh
 from StrippingSelections import StrippingD2KhLoose
 
 from StrippingSelections.StrippingDstarPromptWithD02HH import StrippingDstarPromptWithD02HHConf
+from StrippingSelections.StrippingDstarVeryLooseWithD02HH import StrippingDstarVeryLooseWithD02HHConf
 from StrippingSelections.StrippingDstarD2KShh          import StrippingDstarD2KShhConf
 from StrippingSelections.StrippingDstarD02xx import  StrippingDstarD02xxConf
 from StrippingSelections.StrippingCcbar2Ppbar import StrippingCcbar2PpbarConf
@@ -77,7 +77,7 @@ stream.appendLines( [
 	, StrippingDstarD02PipiMuMuPiMuKPiKmu.lineDstarWithD0PiPiForDstarWithD02MuMu
         , StrippingDstar_D2KPiPi0.lineRS
         , StrippingDstar_D2KPiPi0.lineWS
-#        , StrippingDstarVeryLooseWithD02HH.line
+        , StrippingDstarVeryLooseWithD02HHConf().line()
         , StrippingD2hhNoPID.line
         , StrippingD2Kh.DKhPreselLine
         , StrippingD2KhLoose.DKhPreselLooseLine
