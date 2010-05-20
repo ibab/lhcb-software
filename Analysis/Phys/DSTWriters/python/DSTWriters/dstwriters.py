@@ -1,13 +1,14 @@
 ''' '''
-#$Id: dstwriters.py,v 1.2 2010-02-02 17:30:43 jpalac Exp $
+#$Id: dstwriters.py,v 1.3 2010-05-20 17:27:22 marcocle Exp $
 
 
 __author__ = "Juan PALACIOS juan.palacios@nikhef.nl"
 
-__version__ = '$Revision: 1.2 $'
+__version__ = '$Revision: 1.3 $'
 
 
 from Configurables import GaudiSequencer, InputCopyStream, OutputStream
+from Configurables import LHCb__InputCopyStream as InputCopyStream
 
 from streamconf import OutputStreamConf
 
@@ -58,10 +59,6 @@ def outputStream(conf) :
     stream = conf.streamType('OStream'+conf.name,
                              OptItemList = conf.extraItems,
                              Output = _poolFileName(conf.filePrefix + conf.name + conf.extension))
-    try :
-        stream.TakeOptionalFromTES = True
-    except AttributeError :
-        pass
     return stream
 
 def _poolFileName(name) :

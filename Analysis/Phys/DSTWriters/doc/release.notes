@@ -1,9 +1,16 @@
-!$Id: release.notes,v 1.27 2010-05-18 16:02:42 jpalac Exp $
+!$Id: release.notes,v 1.28 2010-05-20 17:27:22 marcocle Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DSTWriters
 ! Responsible : Juan PALACIOS
 ! Purpose     : Python code for DST writers.
 !-----------------------------------------------------------------------------
+
+    *** Requires the package GaudiPatches >= v1r1 ***
+! 2010-05-20 - Marco Clemencic
+ - python/DSTWriters/dstwriters.py
+ - python/DSTWriters/BaseDSTWriter.py
+ - python/DSTWriters/SelDSTWriter.py
+  . Use LHCb__InputCopyStream instead of the normal InputCopyStream
 
 ! 2010-05-18 - Juan Palacios
  - python/DSTWriters/*DSTWriter.py
