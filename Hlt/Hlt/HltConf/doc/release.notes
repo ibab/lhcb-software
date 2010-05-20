@@ -1,12 +1,9 @@
-! $Id: release.notes,v 1.455 2010-05-19 14:20:26 graven Exp $ 
+! $Id: release.notes,v 1.456 2010-05-20 08:52:02 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
-
-! 2010-05-19 Gerhard Raven
- - add SPD to routingbit 10
 
 ! 2010-05-19 - V. Gligorov
  - Add lifetime unbiased hadrons to Hlt1.py 
@@ -15,6 +12,9 @@
  - Hlt2.py
    + Add Hlt2InclusiveDiElectronLines
 
+!========================== HltConf v7r2p3  2010-05-20 ===================
+! 2010-05-19 Gerhard Raven
+ - add SPD to routingbit 10
 !========================== HltConf v7r2p2  2010-04-26 ===================
 ! 2010-04-28 Gerhard Raven
  - add Electron to routingbit 11
