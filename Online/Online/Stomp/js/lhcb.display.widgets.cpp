@@ -6,16 +6,16 @@ if ( !lhcb.widgets ) {
   /// Set document location to LHCb DAQ status page
   lhcb.widgets.goto_lhcb_page = function(name) {
     var item = function() {    document.location = this.url; };
-    item.url =  "lhcb.display.htm?type="+name;
+    item.url =  lhcb.constants.lhcb_display_url(name);
     return item;
   };
   /// Set document location to LHCb DAQ status page
   lhcb.widgets.goto_lhcb_daq_page = function() {
-    document.location =  "lhcb.display.htm?type=status&system=LHCb";
+    document.location =  lhcb.constants.lhcb_display_url("status&system=LHCb");
   };
   /// Set document location to LHC operations page
   lhcb.widgets.goto_lhc_operations_page = function() {
-    document.location =  "http://op-webtools.web.cern.ch/op-webtools/vistar/vistars.php?usr=LHC3";
+    document.location =  lhcb.constants.operations_url("LHC3");
   };
 
   lhcb.widgets.subscribeItem = function(provider,item) {
@@ -644,7 +644,7 @@ if ( !lhcb.widgets ) {
 
     tb = document.createElement('tbody');
     tooltips.set(tb,'LHC state summary<br>Click to move to LHC summary information.');
-    tb.onclick = function() { document.location = "lhcb.display.htm?type=lhc";};
+    tb.onclick = function() { document.location = lhcb.constants.lhcb_display_url("lhc");};
     tb.className  = 'MonitorPage';
     tb.height    = '120px';
     if ( options.style ) {
@@ -686,7 +686,7 @@ if ( !lhcb.widgets ) {
     var cell = Cell('LHC clock:',null,'MonitorDataHeader');
 
     tooltips.set(tab,'TTC clock information<br>Click to see LHC status');
-    tab.onclick = function() { document.location = "lhcb.display.htm?type=lhc";};
+    tab.onclick = function() { document.location = lhcb.constants.lhcb_display_url("lhc");};
     tab.lhcPrepulses   = lhcb.widgets.rf2ttcPrepulses();
     tab.lhcClockState  = lhcb.widgets.rf2ttcState();
     tab.lhcClock       = lhcb.widgets.rf2ttcSource(tab.lhcClockState);
@@ -836,7 +836,7 @@ if ( !lhcb.widgets ) {
     
     tb = document.createElement('tbody');
     tooltips.set(tb,'Magnet summary<br>Click to move to magnet page.');
-    tb.onclick = function() { document.location = "lhcb.display.htm?type=magnet";};
+    tb.onclick = function() { document.location = lhcb.constants.lhcb_display_url("magnet");};
     tb.className  = 'MonitorPage';
     tb.height    = '120px';
     if ( options.style ) {
@@ -961,7 +961,7 @@ if ( !lhcb.widgets ) {
     var tb  = document.createElement('tbody');
 
     tooltips.set(tab,'Background summary<br>Click to access BCM information');
-    tab.onclick = function() { document.location = "lhcb.display.htm?type=bcm&sensors=1";};
+    tab.onclick = function() { document.location = lhcb.constants.lhcb_display_url("bcm&sensors=1");};
     tab.className = tb.className = 'MonitorPage';
 
     if ( options.style ) {

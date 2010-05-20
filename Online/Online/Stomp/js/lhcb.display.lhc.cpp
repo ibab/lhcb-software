@@ -1,4 +1,3 @@
-_loadScript('lhcb.display.tooltips.cpp');
 _loadScript('lhcb.display.items.cpp');
 _loadScript('lhcb.display.widgets.cpp');
 
@@ -506,7 +505,7 @@ var LHCStatus = function(msg)   {
 
     tab.appendChild(tb);
     tooltips.set(tab,'Hardware status<br>Click to go to hardware status page');
-    tab.onclick     = function() { document.location = "lhcb.display.htm?type=detstatus";};
+    tab.onclick     = function() { document.location = lhcb.constants.lhcb_display_url("detstatus");};
     return tab;
   };
 
@@ -650,13 +649,13 @@ var LHCStatus = function(msg)   {
     tr1.appendChild(td1=document.createElement('td'));
     td1.appendChild(this.TED_summary());
     tooltips.set(td1,'LHCb run status<br>Click to see collimator and TED information.');
-    td1.onclick = function() { document.location = "lhcb.display.htm?type=collimators";};
+    td1.onclick = function() { document.location = lhcb.constants.lhcb_display_url("collimators");};
     //-------------------------------------------------
     tb1.appendChild(tr1=document.createElement('tr'));
     tr1.appendChild(td1=document.createElement('td'));
     td1.appendChild(this.Background_summary());
     tooltips.set(td1,'LHCb background status<br>Click to see BCM information.');
-    td1.onclick = function() { document.location = "lhcb.display.htm?type=bcm&sensors=1";};
+    td1.onclick = function() { document.location = lhcb.constants.lhcb_display_url("bcm&sensors=1");};
     //-------------------------------------------------
     tb1.appendChild(tr1=document.createElement('tr'));
     tr1.appendChild(td1=document.createElement('td'));
@@ -687,7 +686,7 @@ var LHCStatus = function(msg)   {
     tr1.appendChild(td1=document.createElement('td'));
     td1.appendChild(this.Magnet_summary());
     tooltips.set(td1,'Brief overview information<br>of the LHCb magnet status<br>Click to see magnet page.');    
-    td1.onclick = function() { document.location = "lhcb.display.htm?type=magnet";};
+    td1.onclick = function() { document.location = lhcb.constants.lhcb_display_url("magnet");};
     //-------------------------------------------------
     tb1.appendChild(tr1=document.createElement('tr'));
     tr1.appendChild(td1=document.createElement('td'));

@@ -1,16 +1,21 @@
 //------------------------------------------------------------------------------------------------------------------------------------------------
 if ( !_lhcb().constants ) {
   lhcb.constants = function() {
-    this.lhcb_comet_url = function() { return 'http://lbcomet.cern.ch/static/RunStatus'; };
-
-    this.lhcb_display_url = function(name) {    return this.lhcb_comet_url()+'/lhcb.display.htm?type='+name; };
-    this.lhcb_static      = function(name) {    return 'http://cern.ch/frankm/Online/'+name; };
+    this._url = 'http://www.cern.ch/lhcbproject/online/comet/Online';
+    this._loc = ''+document.location;
+    if ( this._loc.indexOf('/frankm/')>0 ) this._url = 'http://www.cern.ch/frankm';
+    if ( this._loc.indexOf('/lhcbproject/')>0 ) this._url = 'http://www.cern.ch/lhcbproject/online/comet/Online';
+    if ( this._loc.indexOf('/static/RunStatus/')>0 ) this._url = 'http://www.cern.ch/lhcbproject/online/comet/Online';
+    this.lhcb_comet_url   = function()     {    return 'http://lbcomet.cern.ch/static/RunStatus';                  };
+    this.lhcb_base_url    = function()     {    return this._url;                                                  };
+    this.lhcb_display_url = function(name) {    return this.lhcb_comet_url()+'/lhcb.comet.htm?type='+name;         };
+    this.lhcb_static      = function(name) {    return this.lhcb_base_url()+'/'+name;                              };
     this.operations_url   = function(name) {    return 'http://op-webtools.web.cern.ch/op-webtools/vistar/vistars.php?usr='+name; };
-    this.sls_service_url  = function(name) {    return 'http://sls.cern.ch/sls/service.php?id='+name; };
+    this.sls_service_url  = function(name) {    return 'http://sls.cern.ch/sls/service.php?id='+name;              };
     this.mmm_url          = function(name) {    var n = 'https://mmm.cern.ch'; if ( name ) n = n + name; return n; };
 
-    this.mkAbsImage       = function(name) {    return {src: name, icon: name}; };
-    this.mkStaticImage    = function(name) {    return this.mkAbsImage(this.lhcb_static('Images/'+name)); };
+    this.mkAbsImage       = function(name) {    return {src: name, icon: name};                                    };
+    this.mkStaticImage    = function(name) {    return this.mkAbsImage(this.lhcb_static('Images/'+name));          };
     this.mkImage=function(name,ext) {
       var obj  = new Object();
       var n    = 'Images/'+name;

@@ -1,4 +1,4 @@
-var _fileBase = 'http://cern.ch/frankm/Online';
+var _fileBase = 'http://www.cern.ch/lhcbproject/online/comet/Online';
 var _debugLoading = false;
 
 var _loadScript = function(name) 

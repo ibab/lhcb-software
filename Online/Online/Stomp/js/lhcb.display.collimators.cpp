@@ -1,4 +1,3 @@
-_loadScript('lhcb.display.tooltips.cpp');
 _loadScript('lhcb.display.items.cpp');
 _loadFile('lhcb.display.general','css');
 
@@ -365,7 +364,7 @@ var Collimators = function(msg)   {
     td.colSpan = 2;
     td.appendChild(this.LHC_header());
     tooltips.set(td,'LHC status<br>Click to see summary page.');
-    td.onclick     = function() { document.location = "lhcb.display.htm?type=lhc";};
+    td.onclick     = function() { document.location = lhcb.constants.lhcb_display_url('lhc');};
     tr.appendChild(td);
     
     tr = document.createElement('tr');

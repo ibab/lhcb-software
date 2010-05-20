@@ -1,4 +1,3 @@
-_loadScript('lhcb.display.tooltips.cpp');
 _loadScript('lhcb.display.items.cpp');
 _loadScript('lhcb.display.widgets.cpp');
 
@@ -124,7 +123,7 @@ var DetStatus = function(msg)   {
 
     tab.className = tb.className = 'MonitorPage';
     tooltips.set(tab,'Brief overview information<br>of the LHCb magnet status<br>Click to see magnet page.');    
-    tab.onclick = function() { document.location = "lhcb.display.htm?type=magnet";};
+    tab.onclick = function() { document.location = lhcb.constants.lhcb_display_url("magnet");};
 
     tr = document.createElement('tr');
     tr.appendChild(c=Cell('Magnet Status:',null,'MonitorDataHeader'));

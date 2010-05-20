@@ -1,7 +1,5 @@
-_loadScript('lhcb.display.tooltips.cpp');
 _loadScript('lhcb.display.items.cpp');
 _loadScript('lhcb.display.widgets.cpp');
-_loadScript('lhcb.display.constants.cpp');
 _loadFile('lhcb.display.general','css');
 
 

@@ -43,6 +43,8 @@ if ( _stomp_in_use )  {
   _loadStatic('/static/protocols/stomp/stomp.js');
   _loadScriptAbs(_lhcbScriptBase,'lhcb.display.data.cpp');
 }
+_loadScript('lhcb.display.tooltips.cpp');
+_loadScript('lhcb.display.constants.cpp');
 
 var display_type = function()   {
   this.type = null;

@@ -1,4 +1,3 @@
-_loadScript('lhcb.display.tooltips.cpp');
 _loadScript('lhcb.display.items.cpp');
 _loadScript('wz_jsgraphics.js');
 _loadFile('lhcb.display.general','css');

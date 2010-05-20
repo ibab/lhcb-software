@@ -1,6 +1,4 @@
-_loadScript('lhcb.display.tooltips.cpp');
 _loadScript('lhcb.display.items.cpp');
-_loadScript('lhcb.display.constants.cpp');
 _loadScript('lhcb.display.widgets.cpp');
 
 _loadFile('lhcb.display.general','css');
@@ -129,7 +127,7 @@ var OperationsStatus = function(msg)   {
     
     tb = document.createElement('tbody');
     tooltips.set(tb,'Magnet summary<br>Click to move to magnet page.');
-    tb.onclick = function() { document.location = "lhcb.display.htm?type=magnet";};
+    tb.onclick = function() { document.location = lhcb.constants.lhcb_display_url("magnet");};
     tb.className  = 'MonitorPage';
     tb.height    = '120px';
     tr = document.createElement('tr');

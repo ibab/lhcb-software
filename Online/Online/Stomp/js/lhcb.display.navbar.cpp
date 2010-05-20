@@ -1,4 +1,3 @@
-_loadScript('lhcb.display.constants.cpp');
 _loadFile('lhcb.display.general','css');
 var HTML_HEAD = new Object();
 
@@ -6,7 +5,7 @@ function setupHTML_HEAD() {
   HTML_HEAD.head = document.getElementsByTagName("head")[0];
   HTML_HEAD.url_base  = the_displayObject.url_base;
   HTML_HEAD.url_comet = lhcb.constants.lhcb_comet_url();
-  HTML_HEAD.img_base  = 'http://cern.ch/frankm/Online';
+  HTML_HEAD.img_base  = lhcb.constants.lhcb_base_url();
   HTML_HEAD.img_base  = _fileBase;
 };
 
@@ -186,7 +185,7 @@ var navbar_general = function(navBar) {
   /*
   navBar.addSized('Ramses',
 		  'Radiation Monitoring in LHCb',
-		  'JavaScript:navBar.open_url("lhcb.display.htm?type=ramses")',
+		  'JavaScript:navBar.open_url(lhcb.constants.lhcb_display_url("ramses"))',
 		  'NavigationBar',
 		  '../Images/LHCb/Ramses_icon.jpg',20,20,
 		  '../Images/LHCb/Ramses_icon.jpg',32,32);
