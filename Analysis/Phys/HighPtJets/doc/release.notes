@@ -5,6 +5,9 @@
 
 !==================== Phys/HighPtJets v1r0 2010-04-30 =====================
 
+! 2010-05-20 - Marcin Kucharczyk
+ - Add ConeExtFactor property
+
 ! 2010-04-30 - Marcin Kucharczyk
  - First commit of the package 
 
