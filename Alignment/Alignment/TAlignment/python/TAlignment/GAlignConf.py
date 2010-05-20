@@ -30,7 +30,6 @@ class GAlignConf( LHCbConfigurableUser ):
 	, "CondFilePrefix"		: "xml/"                      	# Prefix for xml file names
         , "OTTopLevelElement"           : "/dd/Structure/LHCb/AfterMagnetRegion/T/OT"
         , "Precision"                   : 16  	                        # Set precision for conditions
-        , "Level"                       : "layers"                      # level of alignment (stations, c-frames, layers, modules, boxes, halves)
         , "DatasetName"                 : "Unknown"
 
 
@@ -47,7 +46,6 @@ class GAlignConf( LHCbConfigurableUser ):
 
         from Configurables import AlignTrTools
         AlignTrTools().Constraints = self.getProp("Constraints")
-	AlignTrTools().AlignmentLevel = self.getProp("Level")
 	AlignTrTools().Tools = ["TAConfig", "Derivatives", "WriteAlignmentConditions" ]
         from Configurables import GAlign
 	GAlign().forceIterations = False

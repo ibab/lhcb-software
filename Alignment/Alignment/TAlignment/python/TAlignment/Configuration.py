@@ -24,7 +24,6 @@ class TAlignment( LHCbConfigurableUser ):
           "Sequencer" : GaudiSequencer("TAlignmentSequencer")          # the sequencer to add algorithms to
         , "Method"                       : 'Millepede'                 # Millepede or Kalman type alignment
         , "TrackLocation"                : "TrackLocation::Default"    # track container to be used for alignment
-        , "Level"                        : "layers"                    # level of alignment (stations, c-frames, layers, modules, boxes, halves)
         , "Detectors"                    : []                          # list of detectors to align
         , "ElementsToAlign"              : []                          # Elements to align
         , "UseLocalFrame"                : True                        # Use local frame?
