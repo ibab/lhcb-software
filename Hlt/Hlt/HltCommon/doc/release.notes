@@ -3,6 +3,9 @@
 ! Responsible : Gerhard Raven
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
+! 2010-05-20 - Gerhard Raven
+ - add MooreInitSvc, which will replace MooreInit
+
 ! 2010-05-19 - V. Gligorov
  - Add two new HltAlgorithms: HltFilterFittedTracks and
    HltFilterFittedVertices to allow filtering on flight significances and
