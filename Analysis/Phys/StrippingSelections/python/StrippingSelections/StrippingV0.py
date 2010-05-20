@@ -59,7 +59,7 @@ Get the list of *ALL* configured lines
 # =============================================================================
 __author__  = 'Vanya BELYAEV Ivan.Belyaev@itep.ru'
 __date__    = '2010-01-14'
-__version__ = 'CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.9 $'
+__version__ = 'CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.10 $'
 # =============================================================================
 
 from Gaudi.Configuration       import *
@@ -436,7 +436,7 @@ class StrippingV0Conf(LHCbConfigurableUser):
         Define 'MotherCut' for Lambda0
         """
         cut       = """
-        & ( ADMASS ( 'Lambda0')   < %(DeltaMassLambda)g )
+        ( ADMASS ( 'Lambda0')   < %(DeltaMassLambda)g )
         & in_range ( 0 , VFASPF ( VCHI2 ) ,  %(VertexChi2)g   )
         & ( VFASPF ( VZ       ) < %(MaxZ)g            )
         & in_range ( 0 , BPVLTFITCHI2()   ,  %(LTimeFitChi2)g )
