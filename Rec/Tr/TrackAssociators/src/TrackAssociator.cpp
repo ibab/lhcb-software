@@ -93,6 +93,7 @@ StatusCode TrackAssociator::execute() {
   // Sorted by decreasing weight, so first retrieved has highest weight
   LinkerWithKey<MCParticle,Track>
     myLinker( evtSvc(), msgSvc(), m_linkerOutTable );
+  myLinker.reset();  //== reset it, in case we work from a DST where associations are already there.
 
   // Get the linker table VeloCluster => MCParticle
   LinkedTo<MCParticle,VeloCluster>

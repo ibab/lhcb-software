@@ -4,6 +4,10 @@
 ! Purpose     : Associators to MC truth for Tracks
 !----------------------------------------------------------------------------
 
+! 2010-05-20 - Olivier Callot
+ - Clear the linker table before associating. Needed when reading a DST, as an
+   associater table already exists.
+
 !===================== TrackAssociators v2r7 2009-10-20 ====================
 ! 2009-10-20 - Marco Cattaneo
  - Remove obsolete file TrackAssociators_dll.cpp
