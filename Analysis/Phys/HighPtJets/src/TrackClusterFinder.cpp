@@ -15,56 +15,58 @@
 // GSL                   
 #include "gsl/gsl_math.h"
 // Local
-#include "HighPtJetFinder.h"
+#include "TrackClusterFinder.h"
 
 using namespace LHCb;
 
 //-----------------------------------------------------------------------------
-// Implementation file for class : HighPtJetFinder
+// Implementation file for class : TrackClusterFinder
 //
 // 2010-04-03 : Marcin Kucharczyk
 //-----------------------------------------------------------------------------
 
-DECLARE_ALGORITHM_FACTORY(HighPtJetFinder);
+DECLARE_ALGORITHM_FACTORY(TrackClusterFinder);
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-HighPtJetFinder::HighPtJetFinder(const std::string& name,
-                                 ISvcLocator* pSvcLocator)
+TrackClusterFinder::TrackClusterFinder(const std::string& name,
+                                       ISvcLocator* pSvcLocator)
   : DVAlgorithm(name,pSvcLocator)
 {
   declareProperty("InputTracks",
                   m_inputTracks = LHCb::TrackLocation::Default);
   declareProperty("InputPVs",
                   m_inputPVs = LHCb::RecVertexLocation::Primary);
-  declareProperty("MinWeight", m_minWeight = 6);
-  declareProperty("MaxDeltaPhi", m_maxDeltaPhi = 7.0);  // [Degree]
-  declareProperty("MaxDeltaEta", m_maxDeltaEta = 0.12);
-  declareProperty("Min1stJetPt", m_min1stJetPt = 0.0);  // [GeV]
-  declareProperty("Min2ndJetPt", m_min2ndJetPt = 0.0);  // [GeV]
-  declareProperty("JetMult", m_jetMult = 2);
+  declareProperty("MinWeightSeed", m_minWeightSeed = 6);
+  declareProperty("ConeExtFactor", m_coneExtFactor = 4.0);
+  declareProperty("MaxDeltaPhi",   m_maxDeltaPhi   = 8.5);  // [Degree]
+  declareProperty("MaxDeltaEta",   m_maxDeltaEta   = 0.16);
+  declareProperty("Min1stJetPt",   m_min1stJetPt   = 3.0);  // [GeV]
+  declareProperty("Min2ndJetPt",   m_min2ndJetPt   = 0.0);  // [GeV]
+  declareProperty("JetMult",       m_jetMult = 1);
 }
 
 //=============================================================================
 // Destructor
 //=============================================================================
-HighPtJetFinder::~HighPtJetFinder() {};
+TrackClusterFinder::~TrackClusterFinder() {};
 
 //=============================================================================
 // Initialisation
 //=============================================================================
-StatusCode HighPtJetFinder::initialize() {
+StatusCode TrackClusterFinder::initialize() {
   StatusCode sc = DVAlgorithm::initialize();
   if (!sc) return sc;
   if(msgLevel(MSG::DEBUG)) debug() << "==> Initialize" << endmsg;
+  m_maxDeltaPhi = m_maxDeltaPhi * (M_PI / 180.0);
   return StatusCode::SUCCESS;
 };
 
 //=============================================================================
 // Execution
 //=============================================================================
-StatusCode HighPtJetFinder::execute() {
+StatusCode TrackClusterFinder::execute() {
   if(msgLevel(MSG::DEBUG)) debug() << "==> Execute" << endmsg;
   setFilterPassed(false);
   if(exist<Tracks>(m_inputTracks) && exist<RecVertices>(m_inputPVs)) {
@@ -75,12 +77,10 @@ StatusCode HighPtJetFinder::execute() {
     for(Track::Container::const_iterator itr = inputTracks->begin();
         inputTracks->end() != itr; itr++) {
       trackIndex++;
-      double phiDeg = (*itr)->phi() * (180 / M_PI);
-      if(phiDeg > 180.0) phiDeg = phiDeg - 360.0;
       tmpTrack track;
       track.index = trackIndex;
       track.weight = 0;
-      track.phi = phiDeg;
+      track.phi = (*itr)->phi();
       track.eta = (*itr)->pseudoRapidity();
       track.pt = (*itr)->pt() / Gaudi::Units::GeV;
       tmpTracks.push_back(track);
@@ -93,7 +93,8 @@ StatusCode HighPtJetFinder::execute() {
           id2 != tmpTracks.end(); id2++) {
         tmpTrack trk2 = *id2;
         double diffEta = fabs(trk2.eta - trk1.eta);
-        double diffPhi = deltaPhi(trk2.phi,trk1.phi);
+        double diffPhi = fabs(trk2.phi - trk1.phi);
+        if(diffPhi > M_PI) diffPhi = 2.0 * M_PI - diffPhi;
         if((diffEta < m_maxDeltaEta) && (diffPhi < m_maxDeltaPhi)) {
           tmpTracks[trk1.index].weight += 1;
           tmpTracks[trk2.index].weight += 1;
@@ -105,15 +106,18 @@ StatusCode HighPtJetFinder::execute() {
     getPeak(tmpTracks,cIndex,multPeak);
     // Assign tracks to jets
     std::vector<tmpJet> tmpJets;
-    while(multPeak >= m_minWeight) {
+    while(multPeak >= m_minWeightSeed) {
       tmpJet jet;
       jet.tracks.push_back(tmpTracks[cIndex]);
       tmpTracks[cIndex].weight = 0;
       for(std::vector<tmpTrack>::iterator id = tmpTracks.begin();
           id != tmpTracks.end(); id++) {
         tmpTrack trk = *id;
-        if((deltaPhi(trk.phi,tmpTracks[cIndex].phi) < 2.0 * m_maxDeltaPhi) &&
-           (fabs(trk.eta - tmpTracks[cIndex].eta) < 2.0 * m_maxDeltaEta)) {
+        double dEta = fabs(trk.eta - tmpTracks[cIndex].eta);
+        double dPhi = fabs(trk.phi - tmpTracks[cIndex].phi);
+        if(dPhi > M_PI) dPhi = 2.0 * M_PI - dPhi;
+        if((dPhi < m_coneExtFactor * m_maxDeltaPhi) &&
+           (dEta < m_coneExtFactor * m_maxDeltaEta)) {
           jet.tracks.push_back(trk);
           tmpTracks[trk.index].weight = 0;
         }
@@ -146,27 +150,10 @@ StatusCode HighPtJetFinder::execute() {
 
 
 //============================================================================
-// Calculate delta phi
-//============================================================================
-double HighPtJetFinder::deltaPhi(double phi1, double phi2)
-{
-  double diff1 = fabs(phi1 - phi2);
-  double diff2 = 99999.;
-  if(phi1 > phi2) {
-    diff2 = fabs(phi1 - (phi2 + 360.0));
-  } else {
-    diff2 = fabs(phi2 - (phi1 + 360.0));      
-  }
-  double diffPhi = GSL_MIN_DBL(diff1,diff2);
-  return diffPhi;
-}
-
-
-//============================================================================
 // Get peak
 //============================================================================
-void HighPtJetFinder::getPeak(std::vector<tmpTrack> tmpTracks, int& index, 
-                              int& multPeak)
+void TrackClusterFinder::getPeak(std::vector<tmpTrack> tmpTracks, int& index, 
+                                 int& multPeak)
 {
   index = -1;
   multPeak = 0;
@@ -184,7 +171,7 @@ void HighPtJetFinder::getPeak(std::vector<tmpTrack> tmpTracks, int& index,
 //=============================================================================
 // Finalization
 //=============================================================================
-StatusCode HighPtJetFinder::finalize() {
+StatusCode TrackClusterFinder::finalize() {
   if (msgLevel(MSG::DEBUG)) debug() << "==> Finalize" << endmsg;
   return DVAlgorithm::finalize();
 }

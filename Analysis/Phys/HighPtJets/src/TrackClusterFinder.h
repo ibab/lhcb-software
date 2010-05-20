@@ -1,5 +1,5 @@
-#ifndef HighPtJetFinder_H
-#define HighPtJetFinder_H 1
+#ifndef TrackClusterFinder_H
+#define TrackClusterFinder_H 1
 // Include files:
 // from Gaudi
 #include "Kernel/DVAlgorithm.h"
@@ -10,18 +10,18 @@
 
 using namespace LHCb;
 
-/** @class HighPtJetFinder HighPtJetFinder.h
+/** @class TrackClusterFinder TrackClusterFinder.h
  *
  *
  *  @author Marcin Kucharczyk
  *  @date   2010-04-03
  */
 
-class HighPtJetFinder : public DVAlgorithm {
+class TrackClusterFinder : public DVAlgorithm {
 public:
-  HighPtJetFinder(const std::string& name, ISvcLocator* pSvcLocator);
+  TrackClusterFinder(const std::string& name, ISvcLocator* pSvcLocator);
   // Destructor
-  virtual ~HighPtJetFinder();
+  virtual ~TrackClusterFinder();
   // Algorithm initialization
   virtual StatusCode initialize();
   // Algorithm execution
@@ -44,11 +44,11 @@ public:
   };
 
 private:
-  double deltaPhi(double phi1, double phi2);
   void getPeak(std::vector<tmpTrack> tmpTracks, int& index, int& multPeak);
   std::string m_inputTracks;
   std::string m_inputPVs;
-  int m_minWeight;
+  int m_minWeightSeed;
+  double m_coneExtFactor;
   double m_maxDeltaPhi;
   double m_maxDeltaEta;
   double m_min1stJetPt;
@@ -56,4 +56,4 @@ private:
   unsigned int m_jetMult;
 
 };
-#endif // HighPtJetFinder_H
+#endif // TrackClusterFinder_H
