@@ -15,9 +15,9 @@ SinglePhotonRec.PhotonClusterSelect.MinEnergy = 0;
 //-------------------------------------------
 ElectronRec.SelectionTools           =  {  
   "CaloSelectCluster/ElectronClusterSelect",
-  "CaloSelectorNOT/ChargedCluster",
   "CaloSelectChargedClusterWithSpd/ClusterWithSpd",
-  "CaloSelectClusterWithPrs/ClusterWithPrs"
+  "CaloSelectClusterWithPrs/ClusterWithPrs",
+  "CaloSelectorNOT/ChargedCluster"
 };
 
 ElectronRec.ChargedCluster.SelectorTools =  { "CaloSelectNeutralClusterWithTracks/NotNeutralCluster"} ;

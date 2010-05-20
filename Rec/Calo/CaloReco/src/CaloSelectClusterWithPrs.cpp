@@ -52,5 +52,8 @@ bool CaloSelectClusterWithPrs::operator()( const LHCb::CaloCluster* cluster   ) 
   int mPrs = m_toPrs->multiplicity();
   if ( msgLevel( MSG::DEBUG) )debug() << "Found " << mPrs << "Prs hits " 
                                       << " for a total energy of " << ePrs <<  endmsg;
-  return (ePrs>m_cut) && (mPrs>m_mult);
+
+  bool sel = (ePrs>m_cut) && (mPrs>m_mult) ;
+  counter("selected clusters") += (int) sel;
+  return sel;
 };

@@ -1,24 +1,24 @@
-// $Id: CaloECorrection.h,v 1.3 2007-03-02 15:31:46 cattanem Exp $
+// $Id: CaloECorrection.h,v 1.4 2010-05-20 09:47:06 odescham Exp $
 // ============================================================================
 #ifndef CALORECO_CALOECORRECTION_H 
 #define CALORECO_CALOECORRECTION_H 1
 // Include files
-// from STL
 #include <string>
-// from CaloInterfaces 
-#include "CaloInterfaces/ICaloHypoTool.h"
-// from GaudiAlg
-#include "GaudiAlg/GaudiTool.h"
-// from Event 
+#include "GaudiKernel/Point3DTypes.h"
 #include "Event/CaloDigit.h"
 #include "Event/CaloHypo.h"
-// from CaloUtils 
 #include "CaloUtils/ClusterFunctors.h"
-// from Kernel
-#include "GaudiKernel/Point3DTypes.h"
+#include "CaloInterfaces/ICaloHypoTool.h"
+#include "CaloCorrectionBase.h"
 
 /** @namespace CaloECorrection_Local
  */
+
+
+
+
+
+
 namespace CaloECorrection_Local
 {
   /** @class DigitFromCalo 
@@ -67,71 +67,37 @@ namespace CaloECorrection_Local
  */
 class CaloECorrection : 
   public virtual ICaloHypoTool ,
-  public              GaudiTool 
-{
+  public              CaloCorrectionBase{
   /// friend factory for instantiation 
   friend class ToolFactory<CaloECorrection>;
   
 public:
   
-  /** The main processing method
-   *  @see ICaloHypoTool
-   *  @param  hypo  pointer to CaloHypo object to be processed
-   *  @return status code 
-   */  
   virtual StatusCode process    ( LHCb::CaloHypo* hypo  ) const ;
-  
-  /** The main processing method (functor interface)
-   *  @see ICaloHypoTool
-   *  @param  hypo  pointer to CaloHypo object to be processed
-   *  @return status code 
-   */  
   virtual StatusCode operator() ( LHCb::CaloHypo* hypo  ) const ;
   
 public:
 
-  /** initialization of the tool 
-   *  @see  GaudiTool 
-   *  @see   AlgTool 
-   *  @see  IAlgTool 
-   *  @return status code 
-   */
   virtual StatusCode initialize () ;
-  
-  /** finalization of the tool 
-   *  @see  GaudiTool 
-   *  @see   AlgTool 
-   *  @see  IAlgTool 
-   *  @return status code 
-   */
   virtual StatusCode finalize   () ;
   
 protected:
-  
-  /** Standard constructor
-   *  @see GaudiTool 
-   *  @see  AlgTool 
-   *  @param type tool type (?)
-   *  @param name tool name 
-   *  @param parent  tool parent 
-   */
   CaloECorrection ( const std::string& type   , 
-                         const std::string& name   ,
-                         const IInterface*  parent ) ;
+                    const std::string& name   ,
+                    const IInterface*  parent ) ;
   
-  /// destructor
   virtual ~CaloECorrection () ;
   
 private:
   
-  /// default constructor is private 
   CaloECorrection () ;
-  /// copy constructor is private 
   CaloECorrection           ( const CaloECorrection& ) ;
-  /// assignement operator is private 
   CaloECorrection& operator=( const CaloECorrection& ) ;
   
 private:
+
+    
+
   
   // internal types 
   typedef std::vector<LHCb::CaloHypo::Hypothesis>   Hypotheses  ;
@@ -143,15 +109,6 @@ private:
   Hypotheses                                        m_hypos     ;
   Hypotheses_                                       m_hypos_    ;
 
-  Parameters                                        A1_a ;
-  Parameters                                        A1_b ;
-  Parameters                                        A2_a ;
-  Parameters                                        A2_b ;
-  Parameters                                        SlopeX ;
-  Parameters                                        SlopeY ;
-  Parameters                                        Beta ;
-  Parameters                                        GlobalFactor ;
-  BoolParameters                                    Level ;
 
   /// evaluator of "cluster area"
   LHCb::ClusterFunctors::ClusterArea                      m_area      ;
@@ -162,9 +119,9 @@ private:
   /// evaluator of calorimeter for digit 
   CaloECorrection_Local::DigitFromCalo         m_prs       ;
   std::string m_detData;
-  const DeCalorimeter* m_det;
-  
-  
+  const DeCalorimeter* m_det;  
+  int m_pFilt;
+  int m_sFilt;
 };
 // ============================================================================
 #endif // CALORECO_CALOECORRECTION_H

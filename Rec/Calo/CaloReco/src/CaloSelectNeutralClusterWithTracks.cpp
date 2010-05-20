@@ -1,4 +1,4 @@
-// $Id: CaloSelectNeutralClusterWithTracks.cpp,v 1.4 2010-03-08 01:19:40 odescham Exp $
+// $Id: CaloSelectNeutralClusterWithTracks.cpp,v 1.5 2010-05-20 09:47:06 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -136,6 +136,9 @@ bool CaloSelectNeutralClusterWithTracks::operator()
   // get all relations with WEIGHT = 'chi2' under the threshold value 
   const LHCb::Calo2Track::IClusTrTable::Range range = m_table -> relations ( cluster , m_chi2cut , false ) ;
 
-  return range.empty() ? true : false ;
+  bool sel = range.empty() ? true : false;
+  counter("selected clusters") += (int) sel;
+
+  return  sel;
 };
 

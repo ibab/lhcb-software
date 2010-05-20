@@ -1,4 +1,4 @@
-// $Id: CaloSelectClusterWithSpd.cpp,v 1.1 2009-08-05 17:38:30 ibelyaev Exp $
+// $Id: CaloSelectClusterWithSpd.cpp,v 1.2 2010-05-20 09:47:06 odescham Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -47,6 +47,3 @@ StatusCode CaloSelectClusterWithSpd::initialize ()
 int CaloSelectClusterWithSpd::n_hits( const LHCb::CaloCluster& cluster ) const
 { return m_toSpd->multiplicity ( cluster, "Spd" ) ; }
 
-// ============================================================================
-// The END 
-// ============================================================================

@@ -1,0 +1,48 @@
+// paramatrisation for CaloECorrection as extracted from first 2010 DATA (2010/05/20)
+// should come via condDB - keep options file for further development
+
+
+
+// Single Photon ===========================
+SinglePhotonRec.ECorrection.Parameters += {
+  //              function   #param     params :    outer | middle | inner
+    "alphaG"     : { 0      ,     1    ,               1.0353          , 1.0553         ,  1.1000           },
+    "alphaB"     : { 0      ,     2    ,               1.9984          , 1.0106         ,  1.0152     ,             
+                                                      -0.6635E-01      ,-0.7772E-01     , -0.8811E-01       },
+    "alphaX"     : { 0      ,     2    ,        1,1,1, 0.     , 0.0171 ,  0.0315   },
+    "alphaY"     : { 0      ,     2    ,        1,1,1, 0.     , 0.0362 ,  0.0479   },
+    "beta"       : { 1      ,     1    ,               8.7    , 9.7    , 11.0      },
+    "globalC"    : { 1      ,     1    ,              1.0762  , 1.0545 ,  1.0390   }
+};
+
+
+// Photon from MergedPi0  ===========================
+PhotonFromMergedRec.ECorrection.Parameters += {
+  //              function   #param     params :    outer | middle | inner
+    "alphaG"     : { 0      ,     1    ,               1.1110          , 1.1356         ,  1.2152           },
+    "alphaB"     : { 0      ,     2    ,               1.9984          , 1.0106         ,  1.0152     ,             
+                                                      -0.6635E-01      ,-0.7772E-01     , -0.8811E-01       },
+    "alphaX"     : { 0      ,     2    ,        1,1,1, 0.     , 0.0171 ,  0.0315   },
+    "alphaY"     : { 0      ,     2    ,        1,1,1, 0.     , 0.0362 ,  0.0479   },
+    "beta"       : { 1      ,     1    ,               8.7    , 9.7    , 11.0      },
+    "globalC"    : { 1      ,     1    ,              1.0762  , 1.0545 ,  1.0390   }
+};
+
+
+// Single Electron ===========================
+ElectronRec.ECorrection.Parameters += {
+  //              function   #param     params :    outer | middle | inner
+    "alphaG"     : { 0      ,     1    ,               1.0353          , 1.0553         ,  1.1000           },
+    "alphaB"     : { 0      ,     2    ,               1.9984          , 1.0106         ,  1.0152     ,             
+                                                      -0.6635E-01      ,-0.7772E-01     , -0.8811E-01       },
+    "alphaX"     : { 0      ,     2    ,        1,1,1, 0.     , 0.0171 ,  0.0315   },
+    "alphaY"     : { 0      ,     2    ,        1,1,1, 0.     , 0.0362 ,  0.0479   },
+    "beta"       : { 1      ,     1    ,               8.7    , 9.7    , 11.0      },
+    "globalC"    : { 1      ,     1    ,              1.08379 , 1.07990 ,  1.07923   }
+};
+
+
+
+
+
+

@@ -9,7 +9,7 @@ Configurable for Calorimeter Reconstruction
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.13 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.14 $"
 # =============================================================================
 __all__ = (
     'HltCaloRecoConf'     ,
@@ -249,7 +249,7 @@ class CaloRecoConf(LHCbConfigurableUser):
         """
         Check the configuration
         """
-        _log.warning('Configuration is not checked!')
+        _log.debug('Configuration is not checked !')
 
         
     ## Calorimeter Reconstruction Configuration

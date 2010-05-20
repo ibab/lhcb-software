@@ -1,4 +1,4 @@
-// $Id: CaloSelectChargedClusterWithSpd.cpp,v 1.2 2009-08-21 16:48:11 odescham Exp $
+// $Id: CaloSelectChargedClusterWithSpd.cpp,v 1.3 2010-05-20 09:47:06 odescham Exp $
 // ============================================================================
 // GaudiKernel
 // ============================================================================
@@ -30,7 +30,9 @@ public:
       return false ;                                                  // RETURN 
     }
     //
-    return cut() < n_hit ( *cluster ) ;
+    bool sel = cut() < n_hit ( *cluster ) ;
+    counter("selected clusters") += (int) sel;
+    return sel;
   }
   // ==========================================================================
 protected:

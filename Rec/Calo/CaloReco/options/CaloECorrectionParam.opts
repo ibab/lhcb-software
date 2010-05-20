@@ -1,55 +1,51 @@
+// MC-based paramatrisation for CaloECorrection (to be re-evaluated for recent MC).
+// to be applied on MC data - Real data correction come with condDB
 
-// ============================================================================
-//                                       Outer         Middle       Inner 
-// ============================================================================
-// Electron
-// --------
-ElectronRec.ECorrection.Corr1_constant={ 0.999      , 0.931      ,  0.858       } ;// Energie dependency
-ElectronRec.ECorrection.Corr1_slope={    0.1143E-03 , 0.3082E-04 , -0.2350E-04 } ;
-ElectronRec.ECorrection.Corr2_constant={ 0.10159E+01 , 0.10210E+01 ,  0.10256E+01 } ;// Barycenter position dependency
-ElectronRec.ECorrection.Corr2_slope={   -0.67599E-01 ,-0.78525E-01 , -0.89801E-01 } ;
-ElectronRec.ECorrection.Corr3_slopeX={   0.00        , 1.71        , 3.15         } ;// Module frame dependency 
-ElectronRec.ECorrection.Corr3_slopeY={   0.00        , 3.62        , 4.79         } ;
-ElectronRec.ECorrection.CorrPrs={        8.3         , 8.8         , 9.5          } ;// Preshower leakage 
-ElectronRec.ECorrection.GlobalFactor={   1.000   , 0.977      , 1.000     ,      0.988} ;// Global rescaling     No Spd   Spd/No Spd    SplitPhotons  Electrons
+// Single Photon ===========================
+SinglePhotonRec.ECorrection.Parameters += {
+  //              function   #param     params :    outer | middle | inner
+    "alphaG"     : { 0      ,     1    ,               1.0          , 1.0         ,  1.0           },
+    "alphaE"     : { 0      ,     2    ,               1.0105       , 1.0208      ,  1.0325   ,              
+                                                       0.11561E-06  , 0.33802E-07 , -0.28272E-07   },
+    "alphaB"     : { 0      ,     2    ,               1.0159       , 1.0210      ,  1.0256    ,             
+                                                      -0.67500E-01  ,-0.78525E-01 , -0.8901E-01    },
+    "alphaX"     : { 0      ,     2    ,        1,1,1, 0.     , 0.0171 ,  0.0315   },
+    "alphaY"     : { 0      ,     2    ,        1,1,1, 0.     , 0.0362 ,  0.0479   },
+    "beta"       : { 1      ,     1    ,               8.3    , 8.8    ,  9.5      },
+    "globalC"    : { 0      ,     1    ,               0.977  , 0.977  ,  0.977    }
+};
 
-// ElectronRec.ECorrection.Corr1_constant={ 1., 1., 1. } ;// Energie dependency
-// ElectronRec.ECorrection.Corr1_slope={    0., 0., 0. } ;
-// ElectronRec.ECorrection.Corr2_constant={ 1., 1., 1. } ;// Barycenter position dependency
-// ElectronRec.ECorrection.Corr2_slope={    0., 0., 0. } ;
-// ElectronRec.ECorrection.Corr3_slopeX={   0.00        , 0.0        , 0.0         } ;// Module frame dependency 
-// ElectronRec.ECorrection.Corr3_slopeY={   0.00        , 0.0        , 0.0         } ;
-// ElectronRec.ECorrection.CorrPrs={        8.3         , 8.8         , 9.5          } ;// Preshower leakage 
-// ElectronRec.ECorrection.GlobalFactor={   1.000   , 1.000      , 1.000     ,      1.00} ;// Global rescaling     No Spd   Spd/No Spd    SplitPhotons  Electrons
 
-// SinglePhoton
-// --------
-SinglePhotonRec.ECorrection.Corr1_constant={ 1.065      , 1.035      ,  0.968       } ;// Energie dependency
-SinglePhotonRec.ECorrection.Corr1_slope={    0.1219E-03 , 0.3427E-04 , -0.2652E-04 } ;
-SinglePhotonRec.ECorrection.Corr2_constant={ 0.10159E+01 , 0.10210E+01 ,  0.10256E+01 } ;// Barycenter position dependency
-SinglePhotonRec.ECorrection.Corr2_slope={   -0.67599E-01 ,-0.78525E-01 , -0.89801E-01 } ;
-SinglePhotonRec.ECorrection.Corr3_slopeX={   0.00        , 1.71        , 3.15         } ;// Module frame dependency 
-SinglePhotonRec.ECorrection.Corr3_slopeY={   0.00        , 3.62        , 4.79         } ;
-SinglePhotonRec.ECorrection.CorrPrs={        8.3         , 8.8         , 9.5          } ;// Preshower leakage 
-SinglePhotonRec.ECorrection.GlobalFactor={   1.000   , 0.977      , 1.000     ,      0.988} ;// Global rescaling     No Spd   Spd/No Spd    SplitPhotons  Electrons
+// Photon from MergedPi0  ===========================
+PhotonFromMergedRec.ECorrection.Parameters += {
+  //              function   #param     params :    outer | middle | inner
+    "alphaG"     : { 0      ,     1    ,               1.0          , 1.0         ,  1.0           },
+    "alphaE"     : { 0      ,     2    ,               1.0105       , 1.0208      ,  1.0325   ,              
+                                                       0.11561E-06  , 0.33802E-07 , -0.28272E-07   },
+    "alphaB"     : { 0      ,     2    ,               1.0159       , 1.0210      ,  1.0256    ,             
+                                                      -0.67500E-01  ,-0.78525E-01 , -0.8901E-01    },
+    "alphaX"     : { 0      ,     2    ,        1,1,1, 0.     , 0.0171 ,  0.0315   },
+    "alphaY"     : { 0      ,     2    ,        1,1,1, 0.     , 0.0362 ,  0.0479   },
+    "beta"       : { 1      ,     1    ,               8.3    , 8.8    ,  9.5      },
+    "globalC"    : { 0      ,     1    ,               0.977  , 0.977  ,  0.977    }
+};
 
-// SinglePhotonRec.ECorrection.Corr1_constant={ 1., 1., 1. } ;// Energie dependency
-// SinglePhotonRec.ECorrection.Corr1_slope={    0., 0., 0. } ;
-// SinglePhotonRec.ECorrection.Corr2_constant={ 1., 1., 1. } ;// Barycenter position dependency
-// SinglePhotonRec.ECorrection.Corr2_slope={    0., 0., 0. } ;
-// SinglePhotonRec.ECorrection.Corr3_slopeX={   0.00        , 0.0        , 0.0         } ;// Module frame dependency 
-// SinglePhotonRec.ECorrection.Corr3_slopeY={   0.00        , 0.0        , 0.0         } ;
-// SinglePhotonRec.ECorrection.CorrPrs={        8.3         , 8.8         , 9.5          } ;// Preshower leakage 
-// SinglePhotonRec.ECorrection.GlobalFactor={   1.000   , 1.000      , 1.000     ,      1.00} ;// Global rescaling     No Spd   Spd/No Spd    SplitPhotons  Electrons
 
-// PhotonFromMerged
-// --------
-PhotonFromMergedRec.ECorrection.Corr1_constant={ 1.0105      , 1.0208      ,  1.0325       } ;// Energie dependency
-PhotonFromMergedRec.ECorrection.Corr1_slope={    0.11561E-03 , 0.33802E-04 , -0.28272E-04 } ;
-PhotonFromMergedRec.ECorrection.Corr2_constant={ 0.10159E+01 , 0.10210E+01 ,  0.10256E+01 } ;// Barycenter position dependency
-PhotonFromMergedRec.ECorrection.Corr2_slope={   -0.67599E-01 ,-0.78525E-01 , -0.89801E-01 } ;
-PhotonFromMergedRec.ECorrection.Corr3_slopeX={   0.00        , 1.71        , 3.15         } ;// Module frame dependency 
-PhotonFromMergedRec.ECorrection.Corr3_slopeY={   0.00        , 3.62        , 4.79         } ;
-PhotonFromMergedRec.ECorrection.CorrPrs={        8.3         , 8.8         , 9.5          } ;// Preshower leakage 
-PhotonFromMergedRec.ECorrection.GlobalFactor={   1.000   , 0.977      , 1.000     ,      0.988} ;// Global rescaling     No Spd   Spd/No Spd    SplitPhotons  Electrons
+// Single Electron ===========================
+ElectronRec.ECorrection.Parameters += {
+  //              function   #param     params :    outer | middle | inner
+    "alphaG"     : { 0      ,     1    ,               0.988        , 0.988       ,  0.988         },
+    "alphaE"     : { 0      ,     2    ,               1.0105       , 1.0208      ,  1.0325   ,             
+                                                       0.11561E-06  , 0.33802E-07 , -0.28272E-07   },
+    "alphaB"     : { 0      ,     2    ,               1.0159       , 1.0210      ,  1.0256    ,             
+                                                      -0.67500E-01  ,-0.78525E-01 , -0.8901E-01    },
+    "alphaX"     : { 0      ,     2    ,        1,1,1, 0.     , 0.0171 ,  0.0315   },
+    "alphaY"     : { 0      ,     2    ,        1,1,1, 0.     , 0.0362 ,  0.0479   },
+    "beta"       : { 1      ,     1    ,               8.3    , 8.8    ,  9.5      }
+};
+
+
+
+
+
 

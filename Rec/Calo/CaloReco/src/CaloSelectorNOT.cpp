@@ -1,4 +1,4 @@
-// $Id: CaloSelectorNOT.cpp,v 1.8 2010-03-08 01:19:40 odescham Exp $
+// $Id: CaloSelectorNOT.cpp,v 1.9 2010-05-20 09:47:06 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
@@ -108,11 +108,11 @@ bool CaloSelectorNOT::operator() ( const LHCb::CaloCluster* cluster ) const
        !select && m_selectors.end() != selector ; ++selector )
     { select = (**selector)( cluster ); }
   ///
+
+  counter("selected clusters") += (int) !select;
+
   return !select ;
 }
-// ============================================================================
-// The END 
-// ============================================================================
 
 
 

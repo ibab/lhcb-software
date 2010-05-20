@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Reconstruction.py,v 1.11 2010-04-29 21:13:59 odescham Exp $
+# $Id: Reconstruction.py,v 1.12 2010-05-20 09:47:06 odescham Exp $
 # =============================================================================
 ## The major building blocks of Calorimeter Reconstruction
 #  @author Vanya BELYAEV Ivan.Belyaev@nikhe.nl
@@ -11,7 +11,7 @@ The major building blocks of Calorimeter Reconstruction
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.11 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.12 $"
 # =============================================================================
 __all__ = (
     'clustersReco'   , 
@@ -269,6 +269,7 @@ def electronReco ( context , enableRecoOnDemand , useTracksE = True , useSpdE = 
         clnot = alg.ChargedCluster
         clnot.addTool ( CaloSelectNeutralClusterWithTracks , "NotNeutralCluster" )
         clnot.NotNeutralCluster.MinChi2 = 25
+        clnot.SelectorTools = [ clnot.NotNeutralCluster ]
         alg.SelectionTools += [ alg.ChargedCluster ]
         _log.info    ('CaloReco/ElectronReco: Configure Charged Cluster Selector with Tracks     : %s' %  alg.ChargedCluster.getFullName() )
 

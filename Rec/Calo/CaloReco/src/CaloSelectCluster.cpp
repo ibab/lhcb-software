@@ -54,5 +54,8 @@ bool CaloSelectCluster::operator()( const LHCb::CaloCluster* cluster   ) const{
   int m = cluster->entries().size();
   if ( msgLevel( MSG::DEBUG) )debug() << "Cluster has " << m << " entries " 
                                       << " for a total energy of " << e <<  "(Et = " << et << ")" << endmsg;
-  return (e>m_cut) && (m<m_mult) && (et>m_etCut);
+
+  bool sel =  (e>m_cut) && (m<m_mult) && (et>m_etCut);
+  counter("selected clusters") += (int) sel;
+  return sel ;
 };

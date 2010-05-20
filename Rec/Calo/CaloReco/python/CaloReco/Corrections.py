@@ -1,7 +1,7 @@
 
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Corrections.py,v 1.3 2010-03-08 01:19:39 odescham Exp $ 
+# $Id: Corrections.py,v 1.4 2010-05-20 09:47:06 odescham Exp $ 
 # =============================================================================
 ## @file CaloReco/Corrections.py
 #  Set of E/S/L-correction parameters
@@ -14,7 +14,7 @@
 Set of Calo E/S/L-correction parameters
 """
 # =============================================================================
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $"
 # =============================================================================
 __all__  = (
     'eCorrection'  , ## E-corretions 
@@ -33,34 +33,20 @@ def eCorrection ( ecorr , version = None ) :
     >>> tool = ...
     >>> eCorrection ( tool )
     """    
-    ecorr.CorrectionLevel = [
-        True,    ## alpha_1 ( E3x3)
-        True,    ## alpha_2 ( barycenter )
-        True,    ## alpha_3 ( Module Frame )
-        True,    ## Preshower leakage
-        True,    ## Global scaling
-        True,    ## Spd / No Spd scaling
-        True     ## SplitPhoton scaling
-        ]
     # ============================================================================
-    #                                    Outer         Middle       Inner 
+    #                      function   #params      Outer         Middle       Inner 
     # ============================================================================
-    ## Energy dependency
-    ecorr.Corr1_constant  =     [      1.0105      , 1.0208      ,  1.0325      ]
-    ecorr.Corr1_slope     =     [      0.11561E-03 , 0.33802E-04 , -0.28272E-04 ]
-    ## Barycenter position dependency
-    ecorr.Corr2_constant  =     [      0.10159E+01 , 0.10210E+01 ,  0.10256E+01 ]
-    ecorr.Corr2_slope     =     [     -0.67599E-01 ,-0.78525E-01 , -0.89801E-01 ]
-    ## Module frame dependency 
-    ecorr.Corr3_slopeX    =     [      0.00        , 1.71        , 3.15         ]
-    ecorr.Corr3_slopeY    =     [      0.00        , 3.62        , 4.79         ]
-    ##  Preshower leakage 
-    ecorr.CorrPrs         =     [      8.3         , 8.8         , 9.5          ]
-    ## Global rescaling            No Spd   Spd/No Spd    SplitPhotons  Electrons
-    ecorr.GlobalFactor    =     [   1.000   , 0.977      , 1.000 ,      0.988   ]
+    ecorr.Parameters[ "alphaG"] = [ 0      ,     1    ,               1.0          , 1.0         ,  1.0           ]
+    ecorr.Parameters["alphaE"]  = [ 0      ,     2    ,               1.0105       , 1.0208      ,  1.0325 ,  0.11561E-06  , 0.33802E-07 , -0.28272E-07   ]
+    ecorr.Parameters["alphaB"]  = [ 0      ,     2    ,               1.0159       , 1.0210      ,  1.0256 , -0.67500E-01  ,-0.78525E-01 , -0.8901E-01    ]
+    ecorr.Parameters["alphaX"]  = [ 0      ,     2    ,        1,1,1, 0.     , 0.0171 ,  0.0315    ]
+    ecorr.Parameters["alphaY"]  = [ 0      ,     2    ,        1,1,1, 0.     , 0.0362 ,  0.0479    ]
+    ecorr.Parameters["beta"]    = [ 1      ,     1    ,               8.3    , 8.8    ,  9.5       ]
+    ecorr.Parameters["globalC"] = [ 0      ,     1    ,               0.977  , 0.977  ,  0.977     ]
+    
     ##
     log.info ('Configure E-Corrections for Ecal hypotheses: %s' % ecorr.name () )
-    
+    #    ecorr.OutputLevel = 2
     return ecorr
 
 # =============================================================================
