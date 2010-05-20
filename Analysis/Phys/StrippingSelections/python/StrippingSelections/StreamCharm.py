@@ -77,7 +77,7 @@ stream.appendLines( [
 	, StrippingDstarD02PipiMuMuPiMuKPiKmu.lineDstarWithD0PiPiForDstarWithD02MuMu
         , StrippingDstar_D2KPiPi0.lineRS
         , StrippingDstar_D2KPiPi0.lineWS
-        , StrippingDstarVeryLooseWithD02HH.line
+#        , StrippingDstarVeryLooseWithD02HH.line
         , StrippingD2hhNoPID.line
         , StrippingD2Kh.DKhPreselLine
         , StrippingD2KhLoose.DKhPreselLooseLine
