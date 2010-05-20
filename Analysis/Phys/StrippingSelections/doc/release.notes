@@ -5,6 +5,11 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-05-20 - Marco Gersabeck
+ - minor modifications to python/StrippingSelections/StrippingD2hhNoPID.py
+ - added python/StrippingSelections/StrippingD2hhNoPIDXsec.py for x-section measurements
+ - added StrippingD2hhNoPIDXsec line to python/StrippingSelections/StreamCharm.py
+
 ! 2010-05-20 - Vanya Belyaev
  - StrippingV0.py
     fix last-minute typo...
