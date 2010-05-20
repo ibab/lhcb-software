@@ -2,6 +2,7 @@ Package     : Hlt/Moore
 Package Coordinator : Gerhard Raven
 Purpose     : LHCb HLT application
 
+!========================== Moore v9r1p2 2010-05-20 ===================
 ! 2010-05-20 - Gerhard Raven
  - add RICH parameters to runchange handler setup
  - replace MooreInit with MooreInitSvc
