@@ -74,14 +74,14 @@ def _add_to_stripping_lines_( line ) :
     """
     Add the line into the local storage of created Hlt1Lines 
     """
-    
+
     for i in _stripping_lines__ : 
 	if i.name() == line.name() : 
-	    log.warning("Created StrippingLine with duplicate name "+line.name())
-	    break
+	    raise ValueError,"Created StrippingLine with duplicate name %s" % line.name()
     
     _stripping_lines__.append ( line ) 
 
+    
 def strippingLines () :
     return tuple(_stripping_lines__)
 
