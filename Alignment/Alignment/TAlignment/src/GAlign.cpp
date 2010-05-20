@@ -4,7 +4,7 @@
  *  Implementation file for RICH reconstruction tool : GAlign
  *
  *  CVS Log :-
- *  $Id: GAlign.cpp,v 1.29 2010-05-20 09:21:01 jblouw Exp $
+ *  $Id: GAlign.cpp,v 1.30 2010-05-20 16:16:56 mdeissen Exp $
  *
  *  @author J.Blouw Johan.Blouw@cern.ch
  *  @date   30/12/2005
@@ -140,7 +140,7 @@ StatusCode GAlign::initialize() {
   info() << " ---> starting chi2-cut scale = " <<  m_newScale 
          << "   outlier rejection if res > "<< m_resMax << endreq;
   info() << " ---> use only 2 hit cluster? 0=no; 1=yes   : " << m_skipBigCluster << endreq;
-  info() << "Using tracks from " <<  m_inputcontainer << endreq;
+  
   sc = m_taConfig->Initialize( m_detectors );
   sc = m_taConfig->CacheDetElements();
   if ( sc.isFailure() ) { 
@@ -179,21 +179,6 @@ StatusCode GAlign::initialize() {
   misalInput_C = m_taConfig->GetMisalInput_C(); 
   info() << " ---> size of misalInput_X = " << misalInput_X.size() << endreq;
   m_taConfig->MakeAlignParVec();
-  
-
-  //   //initialize the derivatives tool
-  //   int n_dofs = 0;
-  //   // Count number of degrees of freedom
-  //   for( unsigned int i = 0; i < dofs.size(); i++ ) {
-  //     if ( dofs[i] ) n_dofs++;
-  //   }
-  //   int trpars =  m_taConfig->NumTrPars();
-  //   int nDet =  m_nGlPars/n_dofs;
-  //   info() << " n_dofs = " << n_dofs 
-  //          << " ndet = " << nDet 
-  //          << " NumTrPars = " <<  trpars  << endreq;
-  //   m_ders->initialize( m_taConfig->NumTrPars() , nDet, dofs );
-  
   std::string s("Velo");
   velo_detector = m_taConfig->AlignDetector( s );
   s = "TT";
@@ -295,11 +280,10 @@ bool GAlign::Converged() {
   
   if(conv_par ==  (params-fixObj) ) {
     m_converged = 1;
-    debug() << "----> Alignment Algorithm converged ! " << endmsg;
+    always() << "----> Alignment Algorithm converged ! " << endmsg;
   }
   return m_converged;
 }
-
 
 StatusCode GAlign::execute() {
   debug() << "Into GAlign execute (1)" << endreq
@@ -308,8 +292,8 @@ StatusCode GAlign::execute() {
           << "***********************" << endreq;
   m_nEvents++;
   if ( ! exist<Tracks>( m_inputcontainer ) ) {
-    warning() << "Error: container " << m_inputcontainer << " does not exist!" << endreq;
-    return StatusCode::SUCCESS;
+    info() << "Error: no tracks in container " << m_inputcontainer << endreq;
+    return StatusCode::FAILURE;
   } else {
     
     //-----------------------------
@@ -320,6 +304,7 @@ StatusCode GAlign::execute() {
     //----------------------------
     Tracks *inCont = get<Tracks>(m_inputcontainer);
     Tracks::const_iterator iterT;
+    bool acceptTr = false;
     const LHCb::Track *atrack = NULL;
     for ( iterT = inCont->begin(); iterT != inCont->end(); iterT++) {
       atrack = *iterT;
@@ -334,66 +319,65 @@ StatusCode GAlign::execute() {
           return StatusCode::FAILURE;
         }
       }
+      acceptTr =  m_trackselection->accept( *atrack );
+      if( !acceptTr){
+        m_RejectbySelector++;
+        debug() << "---> track NOT accepted " << endreq;
+        continue;
+      }
       m_taConfig->MakeTrackParVec(); 
+      debug() << "---> track IS  accepted " << endreq;
       plot(atrack->p(),"accepted track momentum","rejected track momentum",0.,10000.,1000);
       StatusCode sc =  m_taConfig->ResetGlVars();        // Reset MilleTool variables etc.
-       //count multiple clusters per rank
-       int    cluster[m_taConfig->NumAlignPars()];
-       for(int cl=0; cl < m_taConfig->NumAlignPars(); cl++){
-           cluster[cl] = 0;
+      //count multiple clusters per rank
+      int    cluster[m_taConfig->NumAlignPars()];
+      for(int cl=0; cl < m_taConfig->NumAlignPars(); cl++){
+        cluster[cl] = 0;
       }
       double meanZ= 0.;
       double sumZ =0.;
       int    nofZ =0;
       debug() << "Number of hits on track: " << atrack->lhcbIDs().end() - atrack->lhcbIDs().begin() << endreq;
-      LHCb::Track::ConstNodeRange::const_iterator node;
-      for ( node = atrack->nodes().begin(); atrack->nodes().end() != node; node++ ) {
-	const LHCb::FitNode *aNode = dynamic_cast<const LHCb::FitNode*>(*node);
-	if ( ( aNode->type() != LHCb::Node::HitOnTrack 
-	       && aNode->type() 
-	       && aNode->type() != LHCb::Node::Outlier ) 
-	     || ! aNode->measurement().detectorElement() 
-	     || aNode->measurement().type() != LHCb::Measurement::OT ) {
-	  continue;
-	}
-	const LHCb::OTMeasurement* otmeasurement = dynamic_cast<const LHCb::OTMeasurement*>(&aNode->measurement());
-	if(otmeasurement == 0) {
-	  debug() << "No OT measurement on track!" << endreq;
-	  continue;
-	}
-	LHCb::Measurement *measurement = &(aNode->measurement());
-	LHCb::LHCbID id = measurement->lhcbID();
-	debug() << "Unbiased residual: " << aNode->unbiasedResidual() << " error: " << aNode->errUnbiasedResidual() << endreq;
-	debug() << "Err residual: " << sqrt(aNode->errResidual2()) << " Measus error: " << sqrt(aNode->errMeasure2()) << endreq;
-	int rank            = 0; // position in c-matrix for a detector element        
-	double Z_position   = 0.;
-	double stereo_angle = 0.0;
-	double refZ         = 0.;
-	struct Point meas;
-	struct Point localPos;
-	bool flagL=false;//leave it false here!
-	Gaudi::XYZPoint modCenter;
-	 
-	sc =  m_taConfig->Rank( id, rank );
-	if ( sc.isFailure() ){
-	  debug() << "---> Couldn't calculate the rank of the object "<<endreq;
-	  continue;
-	}
-	debug()<<" GET MEANZ GET MEANZ GET MEANZ GET MEANZ "<<endreq;
-	sc=m_taConfig->CalcResidual(id, rank,  meas,
-				    flagL ,Z_position, stereo_angle,refZ,localPos);
-	if ( sc.isFailure() ){
-	  debug() << "Failure to calculate residual... will continue!" << endreq;
-	  continue;
-	}
-	cluster[rank]++;
-	sumZ += Z_position;
-	nofZ++;
-      }
-      if ( nofZ < 1 )  {
-	debug() << "No OT hits found on track!" << endreq;
-	continue;
-      }
+
+      std::vector<LHCb::LHCbID>::const_iterator itID;
+      for ( itID = atrack->lhcbIDs().begin(); atrack->lhcbIDs().end() != itID; ++itID ) {
+        LHCb::LHCbID id = *itID;
+        if ( atrack->isOnTrack( id ) ){//&&  atrack->isMeasurementOnTrack( id )) {
+          if ( ot_detector && id.isOT() ) {
+            if ( sc.isFailure() ) {
+              debug() << "Not processing any data from tracks!" << endreq;
+            }
+            int rank            = 0; // position in c-matrix for a detector element        
+            double Z_position   = 0.;
+            double stereo_angle = 0.0;
+            double refZ         = 0.;
+            struct Point meas;
+            struct Point localPos;
+            bool flagL=false;//leave it false here!
+            Gaudi::XYZPoint modCenter;
+            
+            sc =  m_taConfig->Rank( id, rank );
+            if ( sc.isFailure() ){
+              debug() << "---> Couldn't calculate the rank of the object "<<endreq;
+              continue;
+            }
+            debug()<<" GET MEANZ GET MEANZ GET MEANZ GET MEANZ "<<endreq;
+            sc=m_taConfig->CalcResidual(id, rank,  meas,
+                                        flagL ,Z_position, stereo_angle,refZ,localPos);
+            if ( sc.isFailure() ){
+              debug() << "Failure to calculate residual... will continue!" << endreq;
+              continue;
+            }
+            cluster[rank]++;
+            sumZ += Z_position;
+            nofZ++;
+          }
+          if ( nofZ < 1 )  {
+            debug() << "No OT hits found on track!" << endreq;
+            continue;
+          }
+        }//MD lhcbid
+      }//MD lhcbid
       meanZ = sumZ/nofZ;
       //meanZ = 0.;
       debug() <<" ---> nofZ = " <<nofZ << " meanZ = " <<meanZ << "(sumZ = "<<sumZ <<")"<<endreq;
@@ -405,413 +389,331 @@ StatusCode GAlign::execute() {
       //---------------------------------------
       bool badcluster = false;
       for(int a=0; a<m_taConfig->NumAlignPars(); a++){
-	if(cluster[a] >=3 ) badcluster = true;
+        if(cluster[a] >=3 ) badcluster = true;
       }
       if(badcluster && m_skipBigCluster) {
-	m_badCluster++;
-	continue;
+        m_badCluster++;
+        continue;
       }
       m_acceptedTr++;
        
-       DeOTDetector* deotdet             = getDet<DeOTDetector>(DeOTDetectorLocation::Default);
-       std::vector<DeOTStation*> station = deotdet->stations();
-       double stsum = 0.0;
-       double stmean = 0.0;
-       Gaudi::Rotation3D Rot; Gaudi::XYZVector Tra;
-       for(unsigned i=0;i<station.size();i++){
-         station.at(i)->geometry()->toGlobalMatrixNominal().GetDecomposition( Rot, Tra);    
-         stsum += Tra.z();
-       }
-       stmean = stsum/3.;
-       debug() << "meanZ " << meanZ << " stmean "<< stmean << endreq;
-       // meanZ = stmean;
+      DeOTDetector* deotdet             = getDet<DeOTDetector>(DeOTDetectorLocation::Default);
+      std::vector<DeOTStation*> station = deotdet->stations();
+      double stsum = 0.0;
+      double stmean = 0.0;
+      Gaudi::Rotation3D Rot; Gaudi::XYZVector Tra;
+      for(unsigned i=0;i<station.size();i++){
+        station.at(i)->geometry()->toGlobalMatrixNominal().GetDecomposition( Rot, Tra);    
+        stsum += Tra.z();
+      }
+      stmean = stsum/3.;
+      debug() << "meanZ " << meanZ << " stmean "<< stmean << endreq;
+      // meanZ = stmean;
        
 
 
 
-       int Tparam = m_taConfig->NumTrPars();
-       StatusCode zeroSC;
-       double locTr[Tparam];
-       double locMat[4][4];
-       double locMatP[5][5];
-       std::vector<double> trParV(Tparam,0.);
-       std::vector<double>  zero(Tparam,0.);
-       std::vector<double> m_prevTrack(Tparam,0.);  
+      int Tparam = m_taConfig->NumTrPars();
+      StatusCode zeroSC;
+      double locTr[Tparam];
+      double locMat[4][4];
+      double locMatP[5][5];
+      std::vector<double> trParV(Tparam,0.);
+      std::vector<double>  zero(Tparam,0.);
+      std::vector<double> m_prevTrack(Tparam,0.);  
 
-       m_taConfig->SetTrackPar(zero); // set the local parameters for this track                 
-       if(Tparam==4) zeroSC = m_taConfig->ZeroMatrVec(locMat, &locTr[0]);          
-       if(Tparam==5) zeroSC = m_taConfig->ZeroMatrVecP(locMatP, &locTr[0]);          
+      m_taConfig->SetTrackPar(zero); // set the local parameters for this track                 
+      if(Tparam==4) zeroSC = m_taConfig->ZeroMatrVec(locMat, &locTr[0]);          
+      if(Tparam==5) zeroSC = m_taConfig->ZeroMatrVecP(locMatP, &locTr[0]);          
 
-       debug() << "--> Track = "<<m_tr_cnt<<endreq;
+      debug() << "--> Track = "<<m_tr_cnt<<endreq;
        
-       /*****************************
-        ** track fit (iterative) ***
-        ****************************/
-       bool chiOK = true;
-       m_out      = false;
-       m_badXval  =  false;
-       m_fitconv  =  false;
-       Tuple t_resids = nTuple("residuals","residuals");
-       std::vector<double> tres; // residuals for tuple
-       std::vector<double> trank; // rank for tuple
-       std::vector<int>    tmonoA; // if monoA=true  for tuple
-       std::vector<double> tzpos; 
-       std::vector<double> zref; 
-       std::vector<unsigned int> tstrawunique; // if monoA=true  for tuple
-       std::vector<unsigned int> tstraw; 
-       std::vector<unsigned int> tmodule; 
-       std::vector<unsigned int> tquarter; 
-       std::vector<unsigned int> tlayer; 
-       std::vector<unsigned int> tstation; 
+      /*****************************
+       ** track fit (iterative) ***
+       ****************************/
+      bool chiOK = true;
+      m_out      = false;
+      m_badXval  =  false;
+      m_fitconv  =  false;
+      Tuple t_resids = nTuple("residuals","residuals");
+      std::vector<double> tres; // residuals for tuple
+      std::vector<double> trank; // rank for tuple
+      std::vector<int>    tmonoA; // if monoA=true  for tuple
+      std::vector<double> tzpos; 
+      std::vector<double> zref; 
+      std::vector<unsigned int> tstrawunique; // if monoA=true  for tuple
+      std::vector<unsigned int> tstraw; 
+      std::vector<unsigned int> tmodule; 
+      std::vector<unsigned int> tquarter; 
+      std::vector<unsigned int> tlayer; 
+      std::vector<unsigned int> tstation; 
 
-       for(unsigned int kk=0;kk<10;kk++){
-         unsigned int itTrdelta = 3; // after iteration 'itTrdelta' calculate change of track params
-         unsigned int converged = 0;
-         debug() <<"1: -----------------------------------------------------------"<<endreq;            
-         debug() << "--> Tr="<<m_tr_cnt<<" nIds="<<atrack->nLHCbIDs()<<" type="<<atrack->type() <<endreq
-                 << " kk = "<<kk<<" change to prev parameters: " << endreq;
-         for(int m=0;m<Tparam;m++)
-           debug() << m << " " << locTr[m] <<endreq;
+      for(unsigned int kk=0;kk<10;kk++){
+        unsigned int itTrdelta = 3; // after iteration 'itTrdelta' calculate change of track params
+        unsigned int converged = 0;
+        debug() <<"1: -----------------------------------------------------------"<<endreq;            
+        debug() << "--> Tr="<<m_tr_cnt<<" nIds="<<atrack->nLHCbIDs()<<" type="<<atrack->type() <<endreq
+                << " kk = "<<kk<<" change to prev parameters: " << endreq;
+        for(int m=0;m<Tparam;m++)
+          debug() << m << " " << locTr[m] <<endreq;
          
          
-         if(kk<=itTrdelta){
-           for(int n=0;n<Tparam;n++)
-             trParV[n] = locTr[n];
-         }
+        if(kk<=itTrdelta){
+          for(int n=0;n<Tparam;n++)
+            trParV[n] = locTr[n];
+        }
          
-         if(kk > itTrdelta){
-           for(int n=0;n<Tparam;n++)
-             trParV[n] += locTr[n];
-           //check the change of track parameters
-           if(fabs(locTr[0]) < 1e-3) converged++;
-           if(fabs(locTr[1]) < 1e-5) converged++;
-           if(fabs(locTr[2]) < 1e-3) converged++;
-           if(fabs(locTr[3]) < 1e-5) converged++;
-           if(Tparam==5 && fabs(locTr[4]) < 1e-6) converged++;
-         }
-         if(Tparam == 4  && converged == 4) break;
-         if(Tparam == 5  && converged == 5) break;
-         if(kk==9){ // the track hasn't converged until now
-           m_fitconv = true;
-           m_nNotConv++;
-           break;
-         }
+        if(kk > itTrdelta){
+          for(int n=0;n<Tparam;n++)
+            trParV[n] += locTr[n];
+          //check the change of track parameters
+          if(fabs(locTr[0]) < 1e-3) converged++;
+          if(fabs(locTr[1]) < 1e-5) converged++;
+          if(fabs(locTr[2]) < 1e-3) converged++;
+          if(fabs(locTr[3]) < 1e-5) converged++;
+          if(Tparam==5 && fabs(locTr[4]) < 1e-6) converged++;
+        }
+        if(Tparam == 4  && converged == 4) break;
+        if(Tparam == 5  && converged == 5) break;
+        if(kk==9){ // the track hasn't converged until now
+          m_fitconv = true;
+          m_nNotConv++;
+          break;
+        }
          
-         m_taConfig->SetTrackPar(trParV); // set the local parameters for this track                 
-         if(Tparam==4) zeroSC = m_taConfig->ZeroMatrVec(locMat, &locTr[0]);          
-         if(Tparam==5) zeroSC = m_taConfig->ZeroMatrVecP(locMatP, &locTr[0]);          
-         double x0= trParV[0];
-         double tx= trParV[1];
-         double y0= trParV[2];
-         double ty= trParV[3];
-         double tQ=0.;
-         if(Tparam==5) tQ=trParV[4];
+        m_taConfig->SetTrackPar(trParV); // set the local parameters for this track                 
+        if(Tparam==4) zeroSC = m_taConfig->ZeroMatrVec(locMat, &locTr[0]);          
+        if(Tparam==5) zeroSC = m_taConfig->ZeroMatrVecP(locMatP, &locTr[0]);          
+        double x0= trParV[0];
+        double tx= trParV[1];
+        double y0= trParV[2];
+        double ty= trParV[3];
+        double tQ=0.;
+        if(Tparam==5) tQ=trParV[4];
          
-         debug() << "--> " << kk << " begin: x0=" << trParV[0] << " tx=" << trParV[1] 
-                 << " y0=" << trParV[2] << " ty=" << trParV[3] <<  endreq;
-         debug() <<"2: -----------------------------------------------------------"<<endreq;
+        debug() << "--> " << kk << " begin: x0=" << trParV[0] << " tx=" << trParV[1] 
+                << " y0=" << trParV[2] << " ty=" << trParV[3] <<  endreq;
+        debug() <<"2: -----------------------------------------------------------"<<endreq;
          
-         //---------------------------------------
-         // prepare track parameter for tuple
-         //--------------------------------------          
-         double totChi2 = 0.;
-         double redChi2 = 0.;
-         tres.clear();
-         tzpos.clear();
-         zref.clear();
-         trank.clear();
-         tstraw.clear();
-         tstrawunique.clear();
-         tstation.clear();
-         tlayer.clear();
-         tquarter.clear();
-         tmodule.clear();
+        //---------------------------------------
+        // prepare track parameter for tuple
+        //--------------------------------------          
+        double totChi2 = 0.;
+        double redChi2 = 0.;
+        tres.clear();
+        tzpos.clear();
+        zref.clear();
+        trank.clear();
+        tstraw.clear();
+        tstrawunique.clear();
+        tstation.clear();
+        tlayer.clear();
+        tquarter.clear();
+        tmodule.clear();
 	 
-	 for ( node = atrack->nodes().begin(); atrack->nodes().end() != node; node++ ) {
-	   const LHCb::FitNode *aNode = dynamic_cast<const LHCb::FitNode*>(*node);
-	   if ( ( aNode->type() != LHCb::Node::HitOnTrack 
-		  && aNode->type() 
-		  && aNode->type() != LHCb::Node::Outlier ) 
-		|| ! aNode->measurement().detectorElement() 
-		|| aNode->measurement().type() != LHCb::Measurement::OT )
-	     continue;
-	   LHCb::Measurement *measurement = &(aNode->measurement());
-	   LHCb::LHCbID id = measurement->lhcbID();
-	   const LHCb::OTMeasurement* otmeasurement = dynamic_cast<const LHCb::OTMeasurement*>(&aNode->measurement());
-	   if(otmeasurement == 0) continue;
-	   
-           int rank            = 0; // position in c-matrix for a detector element        
-           double weight       = aNode->errMeasure();
-	   weight = 1.0/weight/weight;
-           double Z_position   = 0.;
-           double stereo_angle = 0.0;
-           double refZ         = 0.;
-           double relaZ        = 0.;
-           double guess        = 0.;
-           struct Point meas; meas.x=0; meas.y=0;
-           struct Point localPos; localPos.x=0; localPos.y = 0;
-           bool flagL =true;
-           Gaudi::XYZPoint modCenter;
-           // check if this LHCbID is really on the track
-           sc =  m_taConfig->Rank( id, rank );
-           if ( sc.isFailure() ){
-             debug() << "---> Couldn't calculate the rank of the object "<<endreq;
-             continue;
-           }
-           m_taConfig->SetMeanZ(meanZ);
 
-           debug() <<"3: -----------------------------------------------------------"<<endreq;            
-           debug() <<"TRACKFIT LOOP TRACKFIT LOOP TRACKFIT LOOP TRACKFIT LOOP "<<endreq;
-           debug() <<"RANK = "<<rank << " Tr="<<m_tr_cnt << "   at track iter "<< kk << " ====>  meas.x = " << meas.x<<endreq;
-           for(unsigned int i=0;i<trParV.size();i++) debug() << "Param " <<i<<" = "<< trParV[i] <<endreq;
+
+        for ( itID = atrack->lhcbIDs().begin(); atrack->lhcbIDs().end() != itID; ++itID ) {
+          //****************************************************************
+          // check if this LHCbID is really on the track
+          LHCb::LHCbID id = *itID;
+          //if ( !atrack->isOnTrack( id ) &&  !atrack->isMeasurementOnTrack( id )) continue;
+          if ( !atrack->isOnTrack( id ) ) continue;
+          if ( !ot_detector || !id.isOT() ) continue;
+          //****************************************************************
+          //varibales for CalcRes
+          int rank     = 0;
+          double weight = (1/1.44)*(1/1.44);
+          double relaZ = 0.;
+          double guess = 0.;
+          double Z_position =0.;
+          double refZ       =0.;
+          double stereo_angle = 0.0;
+          struct Point meas; meas.x=0; meas.y=0;
+          struct Point localPos; localPos.x=0; localPos.y = 0;
+          bool flagL =true;
+          Gaudi::XYZPoint modCenter;
+
+          sc =  m_taConfig->Rank( id, rank );
+          if ( sc.isFailure() )
+            debug() << "Not processing any data from tracks!" << endreq;
+
+          m_taConfig->SetMeanZ(meanZ);
+
+          debug() <<"3: -----------------------------------------------------------"<<endreq;            
+          debug() <<"TRACKFIT LOOP TRACKFIT LOOP TRACKFIT LOOP TRACKFIT LOOP "<<endreq;
+          debug() <<"RANK = "<<rank << " Tr="<<m_tr_cnt << "   at track iter "<< kk << " ====>  meas.x = " << meas.x<<endreq;
+          for(unsigned int i=0;i<trParV.size();i++) debug() << "Param " <<i<<" = "<< trParV[i] <<endreq;
            
            
                        
-           sc=m_taConfig->CalcResidual(id, rank,  meas,
-                                       flagL ,Z_position, stereo_angle,refZ, localPos);
-           if ( sc.isFailure() ){
-             debug() << "Failure in calculating residual!" << endreq;
-             continue;
-           }
-           relaZ = refZ;
-           if(ty != 0.)  plot2D(localPos.x,localPos.y,"X_m_VS_Y_m","X_m_VS_Y_m",-200.,200.,-3000.,3000,200,1000);            
-           /******************
-            * guess position *
-            ******************/
-           Gaudi::XYZPoint predP;
-           Gaudi::XYZVector slRec;
-           double dRatio = -3.81831e-4;
+          sc=m_taConfig->CalcResidual(id, rank,  meas,
+                                      flagL ,Z_position, stereo_angle,refZ, localPos);
+          if ( sc.isFailure() ){
+            debug() << "Failure in calculating residual!" << endreq;
+            continue;
+          }
+          relaZ = refZ;
+          if(ty != 0.)  plot2D(localPos.x,localPos.y,"X_m_VS_Y_m","X_m_VS_Y_m",-200.,200.,-3000.,3000,200,1000);            
+          /******************
+           * guess position *
+           ******************/
+          Gaudi::XYZPoint predP;
+          Gaudi::XYZVector slRec;
+          double dRatio = -3.81831e-4;
            
-           if(Tparam==4 ){
-             debug() << " bef guess used relaZ = " << relaZ << "  localPos.y " << localPos.y << endreq;              
-             guess = (x0+tx*relaZ)*cos(stereo_angle) + (y0+ty*relaZ)*sin(stereo_angle);
-             //from LHCb trackfit
-             //m_extrapolator->position((*atrack),Z_position,predP);
-             //m_extrapolator->slopes((*atrack),Z_position,slRec);
-           }
-           if(Tparam==5){
-             debug() << " bef guess used relaZ = " << relaZ << "  localPos.y " << localPos.y << endreq;              
-             guess = (x0+tx*relaZ)*cos(stereo_angle)+ (y0+ty*relaZ)*sin(stereo_angle)
-               +  tQ*((relaZ * relaZ * cos( stereo_angle )) +  dRatio*relaZ*relaZ*relaZ*cos( stereo_angle ));
-             //+  tQ*((relaZ * relaZ * cos( stereo_angle )));
-           }
+          if(Tparam==4 ){
+            debug() << " bef guess used relaZ = " << relaZ << "  localPos.y " << localPos.y << endreq;              
+            guess = (x0+tx*relaZ)*cos(stereo_angle) + (y0+ty*relaZ)*sin(stereo_angle);
+            //from LHCb trackfit
+            //m_extrapolator->position((*atrack),Z_position,predP);
+            //m_extrapolator->slopes((*atrack),Z_position,slRec);
+          }
+          if(Tparam==5){
+            debug() << " bef guess used relaZ = " << relaZ << "  localPos.y " << localPos.y << endreq;              
+            guess = (x0+tx*relaZ)*cos(stereo_angle)+ (y0+ty*relaZ)*sin(stereo_angle)
+              +  tQ*((relaZ * relaZ * cos( stereo_angle )) +  dRatio*relaZ*relaZ*relaZ*cos( stereo_angle ));
+            //+  tQ*((relaZ * relaZ * cos( stereo_angle )));
+          }
 
-           double mMeas     = -999.; // meas to fill the matrix with
-           /*********************************
-            ****
-            ****        fill matrix      ****
-            ****
-            *********************************/
-           if( kk <  itTrdelta ) mMeas = meas.x ;//- guess;
-           //if( kk >= itTrdelta ) mMeas = meas.x - guess;
-           double mslope = tx + tQ*( 2*relaZ + 3*dRatio*relaZ*relaZ);
-           if( kk >= itTrdelta ) mMeas = (meas.x - guess)/(sqrt(1+mslope*mslope));
-           debug() << "--> before CONFMATRIX :     Tparam = " << Tparam<<endreq
-                   << "                             mMeas = "<< mMeas << endreq
-                   << "                             meanZ = " << meanZ << " Zposition = " << Z_position << endreq;
-           if(Tparam==4) 
-	     StatusCode sc = m_taConfig->ConfMatrix(mMeas,
-						    weight,
-						    rank,
-						    relaZ,
-						    &locTr[0],
-						    locMat, 
-						    stereo_angle);
-           if(Tparam==5) 
-	     StatusCode sc = m_taConfig->ConfMatrixP(mMeas,
-						     weight,
-						     rank,
-						     relaZ,
-						     &locTr[0],
-						     locMatP,
-						     stereo_angle);
-           debug() << "                        used relaZ = " << relaZ << " localPos.y " << localPos.y << endreq;
+          double mMeas     = -999.; // meas to fill the matrix with
+          /*********************************
+           ****
+           ****        fill matrix      ****
+           ****
+           *********************************/
+          if( kk <  itTrdelta ) mMeas = meas.x ;//- guess;
+          //if( kk >= itTrdelta ) mMeas = meas.x - guess;
+          double mslope = tx + tQ*( 2*relaZ + 3*dRatio*relaZ*relaZ);
+          if( kk >= itTrdelta ) mMeas = (meas.x - guess)/(sqrt(1+mslope*mslope));
+          //             if(kk==1 || kk==2) {
+          //               // nur fuer Layer
+          //               //relaZ += dzdy*localPos.y;
+          //               //   relaZ += dzdy*refZ; //refZ == Y_m
+          //               mMeas = meas.x;
+          //             }
+          debug() << "--> before CONFMATRIX :     Tparam = " << Tparam<<endreq
+                  << "                             mMeas = "<< mMeas << endreq
+                  << "                             meanZ = " << meanZ << " Zposition = " << Z_position << endreq;
+          if(Tparam==4) 
+            StatusCode sc = m_taConfig->ConfMatrix(mMeas,weight,rank,relaZ,&locTr[0],locMat, stereo_angle);
+          if(Tparam==5) 
+            StatusCode sc = m_taConfig->ConfMatrixP(mMeas,weight,rank,relaZ,&locTr[0],locMatP,stereo_angle);
+          debug() << "                        used relaZ = " << relaZ << " localPos.y " << localPos.y << endreq;
            
-           //beruecksichtige OTTimes, wenn m_driftT = true (TAConfig)
-           //            meas.x += meas.y;
-           debug() << "--> used meas.x= "<< meas.x << endreq;
-           meas.x -= guess;
-           debug() <<"--> meas.x-guess = " << meas.x << endreq;
-           totChi2 += weight*meas.x*meas.x; 
+          //beruecksichtige OTTimes, wenn m_driftT = true (TAConfig)
+          //            meas.x += meas.y;
+          debug() << "--> used meas.x= "<< meas.x << endreq;
+          meas.x -= guess;
+          debug() <<"--> meas.x-guess = " << meas.x << endreq;
+          totChi2 += weight*meas.x*meas.x; 
 
 
     
-           char meapl[100];
-           sprintf(meapl,"RES_gloIt_%d_fit_%d",m_iterations,kk);
-           plot(meas.x,meapl,meapl,-10.,10.,80); 
-           sprintf(meapl,"glo%d_res%d_/Layer%d",m_iterations,kk,rank);
-           plot(meas.x,meapl,meapl,-10.,10.,80); 
+//           char meapl[100];
+//           sprintf(meapl,"RES_gloIt_%d_fit_%d",m_iterations,kk);
+//           plot(meas.x,meapl,meapl,-10.,10.,80); 
+//           sprintf(meapl,"glo%d_res%d_/Layer%d",m_iterations,kk,rank);
+//           plot(meas.x,meapl,meapl,-10.,10.,80); 
       
     	    
-           DeOTDetector* m_ot       = getDet<DeOTDetector>(DeOTDetectorLocation::Default);
-           DeOTStation* station     = m_ot->findStation( id.otID() );
-           DeOTModule* module       = m_ot->findModule( id.otID() );
-           const OTChannelID  chID  = id.otID();
-           const unsigned int straw = chID.straw();
-           bool mLayA = module->monoLayerA(straw);
-           if (mLayA) sprintf(meapl,"glo%d_res%d_/Layer%d-monoA",m_iterations,kk,rank);
-           if (!mLayA) sprintf(meapl,"glo%d_res%d_/Layer%d-monoB",m_iterations,kk,rank);
-           debug() << "Hit was in module: " << meapl << endreq;
-	   plot(meas.x,meapl,meapl,-4.,4,60); 
-	   sprintf(meapl,"rank_iter%d",m_iterations);
-           plot(rank,meapl,meapl,0.,220.,220);
-           sprintf(meapl,"T_%d--hitMod",station->stationID());
-           plot(module->moduleID(),meapl,meapl,0.,10.,10);
-
-
-           //--------------------
-           // plots zum debuggen
-           //--------------------
-           plot(tQ,"tQ","tQ",-1e-4,1e-4,1000);
-           plot( tQ*((relaZ * relaZ * cos( stereo_angle )) +  dRatio*relaZ*relaZ*relaZ*cos( stereo_angle )),
-                 "tQ_anteil","tQ_anteil",-10,10,250);
+          DeOTDetector* m_ot       = getDet<DeOTDetector>(DeOTDetectorLocation::Default);
+          DeOTModule* module       = m_ot->findModule( id.otID() );
+          const OTChannelID  chID  = id.otID();
+          const unsigned int straw = chID.straw();
            
-           // berechne abstand in x ebene
-           if(kk >= itTrdelta){
-             double myX =  (x0+tx*relaZ) +  tQ*((relaZ * relaZ ) +  dRatio*relaZ*relaZ*relaZ);
-             //                tQ*(relaZ * relaZ );
-             double myY = y0+ty*relaZ;
-             char fitit[100];
-             if(stereo_angle == 0.){
-               sprintf(fitit,"DTX_myfit-otfit_kk=%d_X",kk);
-               plot(mslope-slRec.x(),fitit,fitit,-1,1,1000);
-
-               sprintf(fitit,"TX_myfit_kk=%d_X",kk);
-               plot(mslope,fitit,fitit,-1,1,1000);
-               sprintf(fitit,"TX_otfit_kk=%d_X",kk);
-               plot(slRec.x(),fitit,fitit,-1,1,1000);
-               sprintf(fitit,"DTY_myfit-otfit_kk=%d_X",kk);
-               plot(ty-slRec.y(),fitit,fitit,-1,1,1000);
-
-               sprintf(fitit,"DX_myfit-otfit_kk=%d_X",kk);
-               plot(myX-predP.x(),fitit,fitit,-6,6,400);
-          
-               sprintf(fitit,"DY_myfit-otfit_kk=%d_X",kk);
-               plot(myY-predP.y(),fitit,fitit,-10,10,500);
-             }
-             if(stereo_angle != 0.){
-               sprintf(fitit,"UV_DTX_myfit-otfit_kk=%d_UV",kk);
-               plot(mslope-slRec.x(),fitit,fitit,-1,1,1000);
-               sprintf(fitit,"TX_myfit_kk=%d_UV",kk);
-               plot(mslope,fitit,fitit,-1,1,1000);
-               sprintf(fitit,"TX_otfit_kk=%d_UV",kk);
-               plot(slRec.x(),fitit,fitit,-1,1,1000);
-               sprintf(fitit,"UV_DTY_myfit-otfit_kk=%d_UV",kk);
-               plot(ty-slRec.y(),fitit,fitit,-1,1,1000);
-               sprintf(fitit,"UV_DX_myfit-otfit_kk=%d_UV",kk);
-               plot(myX-predP.x(),fitit,fitit,-6,6,400);
-               sprintf(fitit,"UV_DY_myfit-otfit_kk=%d_UV",kk);
-               plot(myY-predP.y(),fitit,fitit,-10,10,500);
-             }
-
-             sprintf(fitit,"T_%d-Xdiff",station->stationID());
-             plot(myX-predP.x(),fitit,fitit,-6,6,100);
-             sprintf(fitit,"T_%d-Ydiff",station->stationID());
-             plot(myY-predP.y(),fitit,fitit,-6,6,100);
-             
-           }
-
-           
-           m_hitRnk[rank] += 1;
-	   debug() << "Filled debug plots..." << endreq;
-           
+          m_hitRnk[rank] += 1;
                        
-           tres.push_back(meas.x);//for tuple		
-           trank.push_back(rank);
-           tzpos.push_back(relaZ);
-           zref.push_back(meanZ);
-           tstraw.push_back(straw);
-           tmodule.push_back(module->moduleID());
-           tlayer.push_back(module->layerID());
-           tquarter.push_back(module->quarterID());
-           tstation.push_back(module->stationID());
-           debug() << "Pushed back a lot..." << endreq;
-           unsigned int strawID = chID.uniqueStraw();
-           tstrawunique.push_back(strawID);
-           if (mLayA)  tmonoA.push_back(1);
-           if (!mLayA) tmonoA.push_back(0);
-           
-           //info() << " --> stereo = " << stereo_angle << " --> meas.x = " << meas.x << endreq; 
-           /*****************
-            * remove outlier*
-            *****************/
-           debug() << "Removing outliers" << endreq;
-           if (kk > itTrdelta && fabs(meas.x) > m_resMax) {
-             m_outlier++;
-             m_out = true;
-             char nout[100];
-             sprintf(nout,"rank of outlier,Iteration_%d",m_iterations);
-             plot(rank,nout, nout,0.,220.,220);
-             break;
-           }
-         }//IDs
-         debug() << "Left lhcbid loop..." << endreq;
+          tres.push_back(meas.x);//for tuple		
+          trank.push_back(rank);
+          tzpos.push_back(relaZ);
+          zref.push_back(meanZ);
+          tstraw.push_back(straw);
+          tmodule.push_back(module->moduleID());
+          tlayer.push_back(module->layerID());
+          tquarter.push_back(module->quarterID());
+          tstation.push_back(module->stationID());
+          debug() << "Pushed back a lot..." << endreq;
+          /*****************
+           * remove outlier*
+           *****************/
+          debug() << "Removing outliers" << endreq;
+          if (kk > itTrdelta && fabs(meas.x) > m_resMax) {
+            m_outlier++;
+            m_out = true;
+            char nout[100];
+            sprintf(nout,"rank of outlier,Iteration_%d",m_iterations);
+            plot(rank,nout, nout,0.,220.,220);
+            break;
+          }
+        }//IDs
+        debug() << "Left lhcbid loop..." << endreq;
 
-         if(trank.size() <= 12 ){
-           m_badXval = true;
-           debug() << "Problem with too few hits on track!" << endreq;
-           break; //in this case most of the hits of the tracks are rejected
-         }
+        if(trank.size() <= 12 ){
+          m_badXval = true;
+          debug() << "Problem with too few hits on track!" << endreq;
+          break; //in this case most of the hits of the tracks are rejected
+        }
 
-         /************************
-          *   outlier   *
-          *************************/
-         if(m_out) {
-	   debug() << "Found an outlier; breaking out of loop!" << endreq;
-	   break;
-         }
-         char chi2[100];
-         //sprintf(chi2,"totChi2_iter_%d",kk);
-         //plot(totChi2,chi2,chi2,0.,100.,100);
-         double nHits = trank.size();
-         double ndof = nHits-Tparam;
-         //----- reduced chi2 ------------------
-         debug() << "Calculating redChi2: totChi2 = " << totChi2 << " ndof = " << ndof << endreq;
-         redChi2  = totChi2/ndof;
-         debug() << "redChi2_iter = " << redChi2 << endreq;
-         sprintf(chi2,"redChi2_iter_%d",kk);
-         plot(redChi2,chi2,chi2,0.,100.,250);
-         //----- chi2 probability ---------------
-         double chi2max = gsl_cdf_chisq_Qinv (1e-15, ndof);
-         double prob = totChi2 < chi2max ? gsl_cdf_chisq_Q(totChi2,ndof) : 0;
-         sprintf(chi2,"Chi2prob_iter_%d",kk);
-         plot(prob,chi2,chi2,0.,1.,100);
-         m_chi2 = totChi2;
-         if(kk !=0 && redChi2 > m_newScale && m_newScale != -1) {
-             chiOK = false;
-             debug() << "Chi2 bad; breaking out of loop" << endreq;
-             break;
-         }
+        /************************
+         *   outlier   *
+         *************************/
+        if(m_out) {
+          debug() << "Found an outlier; breaking out of loop!" << endreq;
+          break;
+        }
+        char chi2[100];
+        //sprintf(chi2,"totChi2_iter_%d",kk);
+        //plot(totChi2,chi2,chi2,0.,100.,100);
+        double nHits = trank.size();
+        double ndof = nHits-Tparam;
+        //----- reduced chi2 ------------------
+        debug() << "Calculating redChi2: totChi2 = " << totChi2 << " ndof = " << ndof << endreq;
+        redChi2  = totChi2/ndof;
+        debug() << "redChi2_iter = " << redChi2 << endreq;
+        sprintf(chi2,"redChi2_iter_%d",kk);
+        plot(redChi2,chi2,chi2,0.,100.,250);
+        //----- chi2 probability ---------------
+        double chi2max = gsl_cdf_chisq_Qinv (1e-15, ndof);
+        double prob = totChi2 < chi2max ? gsl_cdf_chisq_Q(totChi2,ndof) : 0;
+        sprintf(chi2,"Chi2prob_iter_%d",kk);
+        plot(prob,chi2,chi2,0.,1.,100);
+        m_chi2 = totChi2;
+        if(kk !=0 && redChi2 > m_newScale && m_newScale != -1) {
+          chiOK = false;
+          debug() << "Chi2 bad; breaking out of loop" << endreq;
+          break;
+        }
 
-         if(Tparam==4){
-           m_locrank = m_taConfig->InvMatrix(locMat,&locTr[0],Tparam);
-           if(m_locrank !=4 ){
-             info() << " BAD RANK for LOCAL FIT !! ( rank = " << m_locrank<< " ) " << endreq;
-             m_locrank = -1;
-             break;
-           }
+        if(Tparam==4){
+          m_locrank = m_taConfig->InvMatrix(locMat,&locTr[0],Tparam);
+          if(m_locrank !=4 ){
+            info() << " BAD RANK for LOCAL FIT !! ( rank = " << m_locrank<< " ) " << endreq;
+            m_locrank = -1;
+            break;
+          }
            
-         }
-         debug() << "inverting local matrix.."<< endreq;
-         if(Tparam==5) {
-           m_locrank = m_taConfig->InvMatrixP(locMatP,&locTr[0],Tparam);
-           if(m_locrank !=5 ){
-             debug() << " BAD RANK for LOCAL FIT !! " << endreq;
-             m_locrank = -1;
-             break;
-           }
+        }
+        debug() << "inverting local matrix.."<< endreq;
+        if(Tparam==5) {
+          m_locrank = m_taConfig->InvMatrixP(locMatP,&locTr[0],Tparam);
+          if(m_locrank !=5 ){
+            debug() << " BAD RANK for LOCAL FIT !! " << endreq;
+            m_locrank = -1;
+            break;
+          }
            
-         }
+        }
          
-         //sprintf(chi2,"used totChi2_iter_%d",kk);
-         ///plot(totChi2,chi2,chi2,0.,100.,100);
-         m_chi2 = totChi2;
-         totChi2 = 0.;
-         debug() << "--> Iteration " << kk << " trrack par locTr: x0=" << locTr[0] << " tx=" << locTr[1] 
-                 << " y0=" << locTr[2] << " ty=" << locTr[3] << " tQ = " << locTr[4] 
-                 << endreq;
+        //sprintf(chi2,"used totChi2_iter_%d",kk);
+        ///plot(totChi2,chi2,chi2,0.,100.,100);
+        m_chi2 = totChi2;
+        totChi2 = 0.;
+        debug() << "--> Iteration " << kk << " trrack par locTr: x0=" << locTr[0] << " tx=" << locTr[1] 
+                << " y0=" << locTr[2] << " ty=" << locTr[3] << " tQ = " << locTr[4] 
+                << endreq;
          
-       }//kk
+      }//kk
        //------------------------------
        //
        // cut on the track slope
@@ -819,264 +721,238 @@ StatusCode GAlign::execute() {
        // if track has wrong slope,
        // handle it as outlier
        //-----------------------------
-       if(m_slopeCut == -1  && trParV[3] >0.){
-           m_out = true;
-           // reject upstream tracks
-           m_outlier++;
-       }
-       if(m_slopeCut == +1  && trParV[3] <0.){
-           m_out = true;
-           // reject downstream tracks
-           m_outlier++;
-       }
+      if(m_slopeCut == -1  && trParV[3] >0.){
+        m_out = true;
+        // reject upstream tracks
+        m_outlier++;
+      }
+      if(m_slopeCut == +1  && trParV[3] <0.){
+        m_out = true;
+        // reject downstream tracks
+        m_outlier++;
+      }
 
-       //----- reduced chi2 ------------------
-       char chchi2[100];
-       double redChi2 = -999.;
-       double nHits = trank.size();
-       //info() << "tr " << m_tr_cnt << " "<<" nHits " << nHits << " totchi " << m_chi2 <<endreq;
-       double ndof = nHits-Tparam;
-       if(!m_out){
-         redChi2  = m_chi2/ndof; 
-         sprintf(chchi2,"redChi2_gl%d",m_iterations);
-         plot(redChi2,chchi2,chchi2,0.,10.,100);
-         //----- chi2 probability ---------------
-         double chi2max = gsl_cdf_chisq_Qinv (1e-15, ndof); 
-         double prob = m_chi2 < chi2max ? gsl_cdf_chisq_Q(m_chi2,ndof) : 0; 
-         sprintf(chchi2,"Chi2prob_global_%d",m_iterations);
-         plot(prob,chchi2,chchi2,0.,1.,100);
-       }
+      //----- reduced chi2 ------------------
+      char chchi2[100];
+      double redChi2 = -999.;
+      double nHits = trank.size();
+      //info() << "tr " << m_tr_cnt << " "<<" nHits " << nHits << " totchi " << m_chi2 <<endreq;
+      double ndof = nHits-Tparam;
+      if(!m_out){
+        redChi2  = m_chi2/ndof; 
+        sprintf(chchi2,"redChi2_gl%d",m_iterations);
+        plot(redChi2,chchi2,chchi2,0.,10.,100);
+        //----- chi2 probability ---------------
+        double chi2max = gsl_cdf_chisq_Qinv (1e-15, ndof); 
+        double prob = m_chi2 < chi2max ? gsl_cdf_chisq_Q(m_chi2,ndof) : 0; 
+        sprintf(chchi2,"Chi2prob_global_%d",m_iterations);
+        plot(prob,chchi2,chchi2,0.,1.,100);
+      }
        
        
-       if( !m_out && redChi2 > m_newScale && m_newScale != -1) {
-         chiOK = false;
-       }
+      if( !m_out && redChi2 > m_newScale && m_newScale != -1) {
+        chiOK = false;
+      }
 
 
 
-       // update trpar only if previous track is good
-       // otherwise we store the track which had a bad 
-       // chi2 or bad outlier
-       std::vector<double> trError(Tparam,0);
-       if(!m_out && chiOK){
-         for( int i=0; i< Tparam;i++){
-           trParV[i] += locTr[i];
-           if(Tparam==4) trError[i]= sqrt(locMat[i][i]);
-           if(Tparam==5) trError[i]= sqrt(locMatP[i][i]);
-         }
-       }
-       if(m_out || (!chiOK) || m_locrank ==-1 || m_badXval || m_fitconv){
-         tres.clear();
-         tzpos.clear();
-         zref.clear();
-         trank.clear();
-         tstraw.clear();
-         tstrawunique.clear();
-         tstation.clear();
-         tlayer.clear();
-         tquarter.clear();
-         tmodule.clear();
-         for(int i=0; i<Tparam;i++){
-           trParV[i]= -9999;
-         }
-       }
-
-
-
-
-       tres.resize(50);// take care : additional zero!!! 50 because for cosmics we have sometimes 
-       trank.resize(50);                              // more than 30 LHCbIDs per track
-       tmonoA.resize(50);
-       tstrawunique.resize(50);
-       tstraw.resize(50);
-       tzpos.resize(50);
-       zref.resize(50);
-       tmodule.resize(50);
-       tquarter.resize(50);
-       tlayer.resize(50);
-       tstation.resize(50);
-       trParV.resize(Tparam);
-       unsigned n_tres   = tres.size();
-       unsigned n_trank  = trank.size();
-       unsigned n_tmonoA = tmonoA.size();
-       unsigned n_tstrawunique = tstrawunique.size();
-       unsigned n_tstraw   = tstraw.size();
-       unsigned n_tmodule  = tmodule.size();
-       unsigned n_tquarter = tquarter.size();
-       unsigned n_tlayer   = tlayer.size();
-       unsigned n_tstation = tstation.size();
-       unsigned n_trParV   = trParV.size();
-       unsigned n_trError  = trError.size();
-       unsigned n_tzpos    = tzpos.size();
-       unsigned n_zref     = zref.size();
-
-       t_resids->farray("TrackParameter",trParV,"n_TrackParameter",n_trParV);
-       t_resids->farray("TrackParError",trError,"n_TrackParError",n_trError);
-       t_resids->farray("Z",tzpos,"n_Z",n_tzpos);
-       t_resids->farray("refZ",zref,"n_refZ",n_zref);
-       t_resids->farray("Trresid",tres,"n_tres",n_tres);
-       t_resids->farray("rank",trank,"n_trank",n_trank);
-       t_resids->farray("monoA",tmonoA,"n_tmonoA",n_tmonoA);
-       t_resids->farray("uniquestrawID",tstrawunique,"n_uniquestrawID",n_tstrawunique);
-       t_resids->farray("strawID",tstraw,"n_strawID",n_tstraw);
-       t_resids->farray("moduleID",tmodule,"n_moduleID",n_tmodule);
-       t_resids->farray("quarterID",tquarter,"n_quarterID",n_tquarter);
-       t_resids->farray("layerID",tlayer,"n_layerID",n_tlayer);
-       t_resids->farray("stationID",tstation,"n_stationID",n_tstation);
-       t_resids->column("usedChi2",m_chi2);
-       t_resids->column("NofIter",m_iterations);
-       t_resids->column("trackNo",m_tr_cnt);
-       t_resids->column("OutlierRejection",m_out);
-       t_resids->column("Chi2Rejection", (!chiOK));
-       t_resids->column("nTracksPerEvent", inCont->size());
-       t_resids->write();
-
-
-       if(m_out || (!chiOK) || m_locrank ==-1 || m_badXval || m_fitconv){
-           tres.clear();
-           tzpos.clear();
-           zref.clear();
-           trank.clear();
-           tstraw.clear();
-           tstrawunique.clear();
-           tstation.clear();
-           tlayer.clear();
-           tquarter.clear();
-           tmodule.clear();
-           for(int i=0; i<Tparam;i++){
-               trParV[i]= -9999;
-           }
-       }
-       
-       if(m_out) {
-         debug()<< "--> REJECTED DUE TO OUTLIER" << endreq;
-         plot(2,"# outlier","# outlier",0.,3.,3);
-         continue; //outlier-> next track
-       }
-       if ( !chiOK) {
-         debug()<< "--> REJECTED DUE TO CHISQUARE" << endreq;
-         m_chi2rej++;
-         plot(m_chi2,"# chi2","# chi2",0.,10000.,1000);
-         continue; //next track
-       }        
-       if ( m_locrank ==-1) {
-         debug()<< "--> REJECTED DUE TO BAD RANK" << endreq;
-         continue; //next track
-       }        
-       if ( m_badXval) {
-         debug()<< "--> REJECTED DUE TO BAD MEASURED X VALUE" << endreq;
-         continue; //next track
-       }         
-       if ( m_fitconv) {
-         debug()<< "--> REJECTED DUE TO NOT CONVERGED TRACK FIT" << endreq;
-         continue; //next track
-       }        
-       m_chi2 = 0.; //reset chi2
-
-       m_taConfig->SetTrackPar(trParV); 
-       std::vector< std::vector<double> > locVec;
-       if(Tparam==4){
-         debug() << "--> final params in matrix form"  <<endreq;
-         for(int h=0;h<Tparam;h++)
-           debug() << h <<" "<<  trParV[h] <<" +- "<<sqrt(locMat[h][h]) <<endreq;
-         MatrixToVector(&locMat[0][0],Tparam,Tparam,locVec);
-         debug() << "--> final params in vector form"  <<endreq;
-         for(int h=0;h<Tparam;h++)
-           debug() << h <<" "<<  trParV[h] <<" +- "<<sqrt(locVec[h][h]) <<endreq;
-           
-       }
-       if(Tparam==5){
-         debug() << "--> final params in matrix form"  <<endreq;
-         for(int h=0;h<Tparam;h++)
-           debug() << h <<" "<<  trParV[h] <<" +- "<<sqrt(locMatP[h][h]) <<endreq;
-         MatrixToVector(&locMatP[0][0],Tparam,Tparam,locVec);
-         debug() << "--> final params in vector form"  <<endreq;
-         for(int h=0;h<Tparam;h++)
-           debug() << h <<" "<<  trParV[h] <<" +- "<<sqrt(locVec[h][h]) <<endreq;
-       }
-       
-       
-
-
-       /********************************************
-        **** 3rd loop to fill Matrix in Millepede **
-        ********************************************/
-       m_meas_cnt = 0;
-
-       for ( node = atrack->nodes().begin(); atrack->nodes().end() != node; node++ ) {
-	 const LHCb::FitNode *aNode = dynamic_cast<const LHCb::FitNode*>(*node);
-	 if ( ( aNode->type() != LHCb::Node::HitOnTrack 
-		&& aNode->type() 
-		&& aNode->type() != LHCb::Node::Outlier ) 
-	      || ! aNode->measurement().detectorElement() 
-	      || aNode->measurement().type() != LHCb::Measurement::OT )
-	   continue;
-	 LHCb::Measurement *measurement = &(aNode->measurement());
-	 const LHCb::OTMeasurement* otmeasurement = dynamic_cast<const LHCb::OTMeasurement*>(&aNode->measurement());
-	 if(otmeasurement == 0) continue;
-	 LHCb::LHCbID id = measurement->lhcbID();
-         int rank            = 0; // position in c-matrix for a detector element        
-         double resolution       = aNode->errMeasure();
-         double Z_position   = 0.;
-         double stereo_angle = 0.0;
-         double refZ         = 0.;
-//          double guess        = 0.;
-//          double dzdy         = 0.0036;
-         struct Point meas; meas.x=0; meas.y=0;
-         struct Point localPos; localPos.x=0; localPos.y = 0;
-         bool flagL =true;
-         Gaudi::XYZPoint modCenter;
-         
-         sc =  m_taConfig->Rank( id, rank );
-         if ( sc.isFailure() ){
-           debug() << "---> Couldn't calculate the rank of the object "<<endreq;
-           continue;
-         }
-
-        debug() <<"4: -----------------------------------------------------------"<<endreq;            
-        debug() <<"FILLMATRIX LOOP FILLMATRIX LOOP FILLMATRIX LOOP FILLMATRIX LOOP"<<endreq;
-        debug()  <<"RANK = "<<rank << " Tr="<<m_tr_cnt << endreq
-                 <<"( Tr="<<m_tr_cnt   <<" :  x0= " << trParV[0] << " tx=" << trParV[1] 
-                 <<" y0=" << trParV[2] << " ty= "   << trParV[3] <<  endreq;
-        
-        m_taConfig->SetMeanZ(meanZ);
-
-        sc=m_taConfig->CalcResidual(id, rank,  meas, 
-                                    flagL,Z_position, stereo_angle, refZ,localPos);
-        if ( sc.isFailure() )
-          continue;
-        //plot(meas.x,"3rdloopmeas","measCalcR",-3000,3000,500);
-        //              double relaZ = Z_position-meanZ;
-        double relaZ = refZ;
-        //m_extrapolator->position((*atrack),Z_position,predP);
-        //pred.x = predP.x();
-        //pred.y = predP.y();
-        //if(Tparam==4) localPos.x = trParV[0] + trParV[1] * relaZ;//Z_position;
-        //               if(Tparam==5){
-        //                 pred.x = trParV[0] + trParV[1] * relaZ + trParV[4]
-        //                   *(relaZ * relaZ+  2.2*1.e-3*relaZ*relaZ*relaZ);
-        //               }
-        //localPos.y = trParV[2] + trParV[3] * relaZ;//Z_position;
-        /******************
-         *  get new meas  *
-           ******************/
-        //relaZ += dzdy*localPos.y; // nur fuer layer
-        debug() << " ---> bef FillMatrix used relaZ = " << relaZ << endreq;
-        debug() << " ---> locPos x, y  = " << localPos.x <<" " <<  localPos.y <<endreq;
-        
-        //with OTTimes
-        //meas.x += meas.y; // !!!! TAKE CARE OF ERROR IN 'FillMatrix()' !!!!
-        m_taConfig->FillMatrix( rank, 
-				localPos,
-				meas.x, 
-				stereo_angle,
-				relaZ,
-				resolution);
-        if ( sc.isFailure() ){
-          info() << " FAILED to call FillMatrix(..) " << endmsg;
-          continue;
+      // update trpar only if previous track is good
+      // otherwise we store the track which had a bad 
+      // chi2 or bad outlier
+      std::vector<double> trError(Tparam,0);
+      if(!m_out && chiOK){
+        for( int i=0; i< Tparam;i++){
+          trParV[i] += locTr[i];
+          if(Tparam==4) trError[i]= sqrt(locMat[i][i]);
+          if(Tparam==5) trError[i]= sqrt(locMatP[i][i]);
         }
-      } //lhcb ids 
+      }
+      if(m_out || (!chiOK) || m_locrank ==-1 || m_badXval || m_fitconv){
+        tres.clear();
+        tzpos.clear();
+        zref.clear();
+        trank.clear();
+        tstraw.clear();
+        tstrawunique.clear();
+        tstation.clear();
+        tlayer.clear();
+        tquarter.clear();
+        tmodule.clear();
+        for(int i=0; i<Tparam;i++){
+          trParV[i]= -9999;
+        }
+      }
+
+
+
+
+      tres.resize(50);// take care : additional zero!!! 50 because for cosmics we have sometimes 
+      trank.resize(50);                              // more than 30 LHCbIDs per track
+      tmonoA.resize(50);
+      tstrawunique.resize(50);
+      tstraw.resize(50);
+      tzpos.resize(50);
+      zref.resize(50);
+      tmodule.resize(50);
+      tquarter.resize(50);
+      tlayer.resize(50);
+      tstation.resize(50);
+      trParV.resize(Tparam);
+      unsigned n_tres   = tres.size();
+      unsigned n_trank  = trank.size();
+      unsigned n_tmodule  = tmodule.size();
+      unsigned n_tquarter = tquarter.size();
+      unsigned n_tlayer   = tlayer.size();
+      unsigned n_tstation = tstation.size();
+      unsigned n_trParV   = trParV.size();
+      unsigned n_trError  = trError.size();
+      unsigned n_tzpos    = tzpos.size();
+      unsigned n_zref     = zref.size();
+      t_resids->farray("TrackParameter",trParV,"n_TrackParameter",n_trParV);
+      t_resids->farray("TrackParError",trError,"n_TrackParError",n_trError);
+      t_resids->farray("Z",tzpos,"n_Z",n_tzpos);
+      t_resids->farray("refZ",zref,"n_refZ",n_zref);
+      t_resids->farray("Trresid",tres,"n_tres",n_tres);
+      t_resids->farray("rank",trank,"n_trank",n_trank);
+      //t_resids->farray("monoA",tmonoA,"n_tmonoA",n_tmonoA);
+      //      t_resids->farray("uniquestrawID",tstrawunique,"n_uniquestrawID",n_tstrawunique);
+      //t_resids->farray("strawID",tstraw,"n_strawID",n_tstraw);
+      t_resids->farray("moduleID",tmodule,"n_moduleID",n_tmodule);
+      t_resids->farray("quarterID",tquarter,"n_quarterID",n_tquarter);
+      t_resids->farray("layerID",tlayer,"n_layerID",n_tlayer);
+      t_resids->farray("stationID",tstation,"n_stationID",n_tstation);
+      t_resids->column("usedChi2",m_chi2);
+      t_resids->column("NofIter",m_iterations);
+      t_resids->column("trackNo",m_tr_cnt);
+      t_resids->column("OutlierRejection",m_out);
+      t_resids->column("Chi2Rejection", (!chiOK));
+      t_resids->column("nTracksPerEvent", inCont->size());
+      t_resids->write();
+
+      if(m_out || (!chiOK) || m_locrank ==-1 || m_badXval || m_fitconv){
+        tres.clear();
+        tzpos.clear();
+        zref.clear();
+        trank.clear();
+        tstraw.clear();
+        tstrawunique.clear();
+        tstation.clear();
+        tlayer.clear();
+        tquarter.clear();
+        tmodule.clear();
+        for(int i=0; i<Tparam;i++){
+          trParV[i]= -9999;
+        }
+      }
+       
+      if(m_out) {
+        debug()<< "--> REJECTED DUE TO OUTLIER" << endreq;
+        plot(2,"# outlier","# outlier",0.,3.,3);
+        continue; //outlier-> next track
+      }
+      if ( !chiOK) {
+        debug()<< "--> REJECTED DUE TO CHISQUARE" << endreq;
+        m_chi2rej++;
+        plot(m_chi2,"# chi2","# chi2",0.,10000.,1000);
+        continue; //next track
+      }        
+      if ( m_locrank ==-1) {
+        debug()<< "--> REJECTED DUE TO BAD RANK" << endreq;
+        continue; //next track
+      }        
+      if ( m_badXval) {
+        debug()<< "--> REJECTED DUE TO BAD MEASURED X VALUE" << endreq;
+        continue; //next track
+      }         
+      if ( m_fitconv) {
+        debug()<< "--> REJECTED DUE TO NOT CONVERGED TRACK FIT" << endreq;
+        continue; //next track
+      }        
+      m_chi2 = 0.; //reset chi2
+
+      m_taConfig->SetTrackPar(trParV); 
+      std::vector< std::vector<double> > locVec;
+      if(Tparam==4){
+        debug() << "--> final params in matrix form"  <<endreq;
+        for(int h=0;h<Tparam;h++)
+          debug() << h <<" "<<  trParV[h] <<" +- "<<sqrt(locMat[h][h]) <<endreq;
+        MatrixToVector(&locMat[0][0],Tparam,Tparam,locVec);
+        debug() << "--> final params in vector form"  <<endreq;
+        for(int h=0;h<Tparam;h++)
+          debug() << h <<" "<<  trParV[h] <<" +- "<<sqrt(locVec[h][h]) <<endreq;
+           
+      }
+      if(Tparam==5){
+        debug() << "--> final params in matrix form"  <<endreq;
+        for(int h=0;h<Tparam;h++)
+          debug() << h <<" "<<  trParV[h] <<" +- "<<sqrt(locMatP[h][h]) <<endreq;
+        MatrixToVector(&locMatP[0][0],Tparam,Tparam,locVec);
+        debug() << "--> final params in vector form"  <<endreq;
+        for(int h=0;h<Tparam;h++)
+          debug() << h <<" "<<  trParV[h] <<" +- "<<sqrt(locVec[h][h]) <<endreq;
+      }
+       
+       
+
+
+      /********************************************
+       **** 3rd loop to fill Matrix in Millepede **
+       ********************************************/
+      m_meas_cnt = 0;
+
+
+      for ( itID = atrack->lhcbIDs().begin(); atrack->lhcbIDs().end() != itID; ++itID ) {
+        LHCb::LHCbID id = *itID;
+        //          if ( atrack->isOnTrack( id ) &&  atrack->isMeasurementOnTrack( id )) {
+        if ( atrack->isOnTrack( id )) {
+          double weight       = (1/1.44)*(1/1.44);
+          int rank            = 0;
+          double Z_position   = 0.;
+          double stereo_angle = 0.;
+          double refZ         = 0.;
+          struct Point meas; meas.x = 0; meas.y = 0;
+          struct Point localPos; localPos.x=0; localPos.y = 0;
+          Gaudi::XYZPoint modCenter;
+          sc =  m_taConfig->Rank( id, rank );
+          if ( sc.isFailure() )
+            debug() << "---> Couldn't calculate the rank of the object "<<endreq;
+          if ( sc.isSuccess() ) {
+            //
+            bool flagL=true;//true if local fit already done
+            m_taConfig->SetMeanZ(meanZ);
+            
+            debug() <<"4: -----------------------------------------------------------"<<endreq;            
+            debug() <<"FILLMATRIX LOOP FILLMATRIX LOOP FILLMATRIX LOOP FILLMATRIX LOOP"<<endreq;
+            debug()  <<"RANK = "<<rank << " Tr="<<m_tr_cnt << endreq
+                     <<"( Tr="<<m_tr_cnt   <<" :  x0= " << trParV[0] << " tx=" << trParV[1] 
+                     <<" y0=" << trParV[2] << " ty= "   << trParV[3] <<  endreq;
+            
+            //  m_taConfig->SetMeanZ(meanZ);
+            
+            sc=m_taConfig->CalcResidual(id, rank,  meas, 
+                                        flagL,Z_position, stereo_angle, refZ,localPos);
+            if ( sc.isFailure() )
+              continue;
+            //plot(meas.x,"3rdloopmeas","measCalcR",-3000,3000,500);
+            //              double relaZ = Z_position-meanZ;
+            double relaZ = refZ;
+            /******************
+             *  get new meas  *
+             ******************/
+            //relaZ += dzdy*localPos.y; // nur fuer layer
+            debug() << " ---> bef FillMatrix used relaZ = " << relaZ << endreq;
+            debug() << " ---> locPos x, y  = " << localPos.x <<" " <<  localPos.y <<endreq;
+            
+            //with OTTimes
+            //meas.x += meas.y; // !!!! TAKE CARE OF ERROR IN 'FillMatrix()' !!!!
+            m_taConfig->FillMatrix( rank, localPos,meas.x, stereo_angle,relaZ,1/sqrt(weight));
+            if ( sc.isFailure() ){
+              info() << " FAILED to call FillMatrix(..) " << endmsg;
+              continue;
+            }
+          } 
+        }
+      }//lhcb ids 
       
       m_tr_cnt++;      
       
@@ -1147,9 +1023,11 @@ StatusCode GAlign::GloFit() {
   // and save new geometry information in memory
   m_taConfig->PrintParameters(m_align,m_iterations);
   
+  //  int cnt = 0;
   std::vector<bool> dofs                  = m_taConfig->NumDOF();
   std::map<std::string, int> cap          = m_taConfig->GetCMap();
   std::map<std::string,int>::iterator maI = cap.begin();
+
   Tuple t_global = nTuple("globalPar","global_Parameter");
   t_global->farray("globalParam",m_new_par,"n_globalParam",alipar);
   t_global->farray("globalParam_err",m_align_err,"n_globalParam_err",alipar);
@@ -1208,37 +1086,37 @@ bool GAlign::writeParameters()
   int npar = m_taConfig->nRanks();
   //txt file for study of pulls
   //  if(m_taConfig->NumAlignPars()==m_taConfig->nRanks()){
-    std::ofstream outParams("ParameterForPulls.txt",std::ios::app);
-    if (outParams.fail() ){
-      return Warning("Failed to open matrix output file",StatusCode::FAILURE);
+  std::ofstream outParams("ParameterForPulls.txt",std::ios::app);
+  if (outParams.fail() ){
+    return Warning("Failed to open matrix output file",StatusCode::FAILURE);
+  }
+  int cnt =0;
+  for(int r=0;r<npar;r++){
+    if(dof[0]){ outParams <<"x " << misalInput_X[r] <<" "<< m_new_par[r] <<" "<<misalInput_X[r]-m_new_par[r] 
+                          <<" "<<m_align_err[r]<<std::endl; //fill file row wise
+    cnt++;
     }
-    int cnt =0;
-    for(int r=0;r<npar;r++){
-      if(dof[0]){ outParams <<"x " << misalInput_X[r] <<" "<< m_new_par[r] <<" "<<misalInput_X[r]-m_new_par[r] 
-                            <<" "<<m_align_err[r]<<std::endl; //fill file row wise
-      cnt++;
-      }
-      if(dof[2]){ outParams <<"z "<<  misalInput_Z[r] <<" "<< m_new_par[r+cnt*npar] <<" "<<misalInput_Z[r]-m_new_par[r+cnt*npar] 
-                            <<" "<<m_align_err[r+cnt*npar]<<std::endl; //fill file row wise
-      cnt++;
-      }
-      if(dof[3]){ outParams <<"a "<<  misalInput_A[r] <<" "<< m_new_par[r+cnt*npar] <<" "<<misalInput_A[r]-m_new_par[r+cnt*npar] 
-                            <<" "<<m_align_err[r+cnt*npar]<<std::endl; //fill file row wise
-      cnt++;
-      }
-      if(dof[4]){ outParams <<"b "<<  misalInput_B[r] <<" "<< m_new_par[r+cnt*npar] <<" "<<misalInput_B[r]-m_new_par[r+cnt*npar] 
-                            <<" "<<m_align_err[r+cnt*npar]<<std::endl; //fill file row wise
-      cnt++;
-      }
-      if(dof[5]){ outParams <<"c "<<  misalInput_C[r] <<" "<< m_new_par[r+cnt*npar] <<" "<<misalInput_C[r]-m_new_par[r+cnt*npar] 
-                            <<" "<<m_align_err[r+cnt*npar]<<std::endl; //fill file row wise
-      cnt++;
+    if(dof[2]){ outParams <<"z "<<  misalInput_Z[r] <<" "<< m_new_par[r+cnt*npar] <<" "<<misalInput_Z[r]-m_new_par[r+cnt*npar] 
+                          <<" "<<m_align_err[r+cnt*npar]<<std::endl; //fill file row wise
+    cnt++;
+    }
+    if(dof[3]){ outParams <<"a "<<  misalInput_A[r] <<" "<< m_new_par[r+cnt*npar] <<" "<<misalInput_A[r]-m_new_par[r+cnt*npar] 
+                          <<" "<<m_align_err[r+cnt*npar]<<std::endl; //fill file row wise
+    cnt++;
+    }
+    if(dof[4]){ outParams <<"b "<<  misalInput_B[r] <<" "<< m_new_par[r+cnt*npar] <<" "<<misalInput_B[r]-m_new_par[r+cnt*npar] 
+                          <<" "<<m_align_err[r+cnt*npar]<<std::endl; //fill file row wise
+    cnt++;
+    }
+    if(dof[5]){ outParams <<"c "<<  misalInput_C[r] <<" "<< m_new_par[r+cnt*npar] <<" "<<misalInput_C[r]-m_new_par[r+cnt*npar] 
+                          <<" "<<m_align_err[r+cnt*npar]<<std::endl; //fill file row wise
+    cnt++;
       
-      }
-      cnt =0;
     }
+    cnt =0;
+  }
     
-    //}
+  //}
   return true;
 }
 
