@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Monitor.py,v 1.7 2010-04-12 19:15:51 dgolubko Exp $
+# $Id: Monitor.py,v 1.8 2010-05-20 09:55:38 odescham Exp $
 # =============================================================================
 ## The major building blocks of Calorimeter Monitoring
 #  @author Vanya BELYAEV Ivan.Belyaev@nikhe.nl
@@ -11,7 +11,7 @@ The major building blocks of Calorimeter Monitoring
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.8 $"
 # =============================================================================
 __all__ = (
     'digitsMoni'     , 
@@ -220,7 +220,7 @@ def pi0sMoni ( context ) :
         alg.PhotonPtFilter = 500.*MeV;
 
     if not alg.isPropertySet('histoList') :
-        alg.histoList = [ "1", "2" , "3" , "4" ]
+        alg.histoList = [ "1", "2" , "3" , "4", "5", "6", "7" ]
 
     setTheProperty ( alg , 'Context' , context )
     

@@ -1,4 +1,4 @@
-// $Id: CaloProtoElectronMonitor.cpp,v 1.2 2009-12-13 12:42:11 odescham Exp $
+// $Id: CaloProtoElectronMonitor.cpp,v 1.3 2010-05-20 09:55:38 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -31,7 +31,8 @@ CaloProtoElectronMonitor::CaloProtoElectronMonitor( const std::string& name,
   declareProperty("HistoEoPBin" , m_eOpBin = 100); 
   declareProperty("PrsCut"      , m_prsCut = 50.* Gaudi::Units::MeV);  
   declareProperty("ElectronPairing", m_pairing = false );
-  declareProperty ( "ExtrapolatorType" , m_extrapolatorType = "TrackRungeKuttaExtrapolator" ) ;
+  declareProperty("ExtrapolatorType" , m_extrapolatorType = "TrackRungeKuttaExtrapolator" ) ;
+  
 
   setInputData( LHCb::ProtoParticleLocation::Charged ); 
 

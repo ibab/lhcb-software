@@ -1,4 +1,4 @@
-// $Id: CaloProtoElectronMonitor.h,v 1.2 2009-12-13 12:42:11 odescham Exp $
+// $Id: CaloProtoElectronMonitor.h,v 1.3 2010-05-20 09:55:38 odescham Exp $
 #ifndef CALOPROTOELECTRONMONITOR_H 
 #define CALOPROTOELECTRONMONITOR_H 1
 
@@ -41,6 +41,5 @@ private:
   double m_prsCut;
   bool m_pairing;
   std::string m_extrapolatorType;
-  
 };
 #endif // CALOPROTOELECTRONMONITOR_H

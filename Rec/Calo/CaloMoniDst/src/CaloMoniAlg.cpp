@@ -1,4 +1,4 @@
-// $Id: CaloMoniAlg.cpp,v 1.14 2010-03-08 14:56:15 odescham Exp $
+// $Id: CaloMoniAlg.cpp,v 1.15 2010-05-20 09:55:38 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -47,7 +47,7 @@ CaloMoniAlg::CaloMoniAlg( const std::string& name,
   declareProperty( "HistoYMax"           , m_yMax      = +4 * Gaudi::Units::meter);
   declareProperty( "HistoMultiplicityMax", m_multMax   = 2000.);
   declareProperty( "HistoSizeMax"        , m_sizeMax   = 25. );
-  declareProperty( "HistoMassMax"        , m_massMax = 500.*Gaudi::Units::MeV );
+  declareProperty( "HistoMassMax"        , m_massMax = 250.*Gaudi::Units::MeV );
 
   declareProperty( "HistoEnergyBin"      , m_energyBin = 100);
   declareProperty( "HistoEtBin"          , m_etBin     = 100);

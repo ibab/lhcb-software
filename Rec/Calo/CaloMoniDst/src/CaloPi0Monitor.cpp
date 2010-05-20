@@ -1,6 +1,6 @@
-// $Id: CaloPi0Monitor.cpp,v 1.17 2010-03-31 14:42:53 odescham Exp $
+// $Id: CaloPi0Monitor.cpp,v 1.18 2010-05-20 09:55:38 odescham Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.17 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.18 $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -9,6 +9,8 @@
 #include "CaloUtils/CaloMomentum.h"
 #include "CaloDet/DeCalorimeter.h"
 #include "CaloMoniAlg.h"
+#include "Event/Particle.h"
+#include "CaloUtils/CaloParticle.h"
 #include "CaloInterfaces/ICaloHypo2Calo.h"
 // ============================================================================
 
@@ -120,6 +122,10 @@ StatusCode CaloPi0Monitor::execute()
   }
   if ( photons.empty() )return StatusCode::SUCCESS;  
 
+
+
+
+
 // loop over the first photon
   initCounters();
   for( photon g1 = photons.begin(); photons.end() != g1; ++g1 ){
@@ -130,6 +136,25 @@ StatusCode CaloPi0Monitor::execute()
     if(momentum1.pt() < m_ptPhoton)continue;
     Gaudi::LorentzVector v1( momentum1.momentum() );
     Gaudi::XYZPoint p1( (*g1)->position()->x() , (*g1)->position()->y() , (*g1)->position()->z() );
+
+    /* some temp. check of CaloMomentum/CaloParticle
+    info() << " =========== BEFORE CaloHypo energy : " << (*g1)->e() << endmsg;
+    info() << " =========== BEFORE CaloMomentum " << momentum1.momentum() << " p = " << momentum1.momentum().P() << endmsg;
+    LHCb::Particle* pho = new LHCb::Particle();
+    LHCb::ProtoParticle* pro = new LHCb::ProtoParticle();
+    pro->addToCalo( *g1 );
+    pho->setProto( pro );
+    pho->setMomentum( momentum1.momentum() );
+    info() << " =========== BEFORE Particle " << pho->momentum() << " p = " << pho->momentum().P() << endmsg;
+    Gaudi::XYZPoint po(50.,50.,50.);
+    LHCb::CaloMomentum test( *g1 , po);
+    LHCb::CaloParticle cpho(pho,po );
+    cpho.updateParticle();
+    info() << " =========== AFTER  CaloMomentum " << test.momentum() << " p = " << test.momentum().P() << endmsg;
+    info() << " =========== AFTER Particle " << cpho.momentum() << " p = " << cpho.momentum().P() << endmsg;
+    delete pho;
+    delete pro;
+    */
 
 // loop over the second photon
     for( photon g2 = g1 + 1; photons.end() != g2; ++g2 ){
