@@ -1,5 +1,5 @@
 ## #####################################################################
-# High pt jet finder
+# Track cluster finder
 #
 # @author: Marcin Kucharczyk
 # @date 2010-04-03
@@ -12,20 +12,21 @@ from Configurables import GaudiSequencer
 from GaudiKernel.SystemOfUnits import *
 from CommonParticles.Utils import *
 from Configurables import PatPV3D
-from Configurables import HighPtJetFinder
+from Configurables import TrackClusterFinder
 PatPV = PatPV3D("PatPV")
-JetFinder = HighPtJetFinder("JetFinder")
-JetFinder.MinWeight = 6
-JetFinder.MaxDeltaPhi = 7.5
-JetFinder.MaxDeltaEta = 0.13
-JetFinder.Min1stJetPt = 7.0
-JetFinder.Min2ndJetPt = 0.0
-JetFinder.JetMult = 2
+TrkClusterFinder = TrackClusterFinder("TrkClusterFinder")
+TrkClusterFinder.MinWeight = 6
+TrkClusterFinder.ConeExtFactor = 4.0
+TrkClusterFinder.MaxDeltaPhi = 8.5
+TrkClusterFinder.MaxDeltaEta = 0.16
+TrkClusterFinder.Min1stJetPt = 3.0
+TrkClusterFinder.Min2ndJetPt = 0.0
+TrkClusterFinder.JetMult = 1
 ## #####################################################################
 DVSeq = GaudiSequencer("DVSeq")
 DVSeq.IgnoreFilterPassed = False
 DVSeq.Members += [PatPV]
-DVSeq.Members += [JetFinder]
+DVSeq.Members += [TrkClusterFinder]
 ## #####################################################################
 from Configurables import DaVinci
 DaVinci().EvtMax = -1
