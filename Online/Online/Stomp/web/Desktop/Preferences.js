@@ -421,7 +421,7 @@ Ext.app.Preferences.Appearance = Ext.extend(Ext.app.Panel, {
       },
       fields:    ['id', 'name', 'pathtothumbnail', 'pathtofile'],
       root: 	'images',
-      url: 	'http://frankm.web.cern.ch/frankm/Online/Desktop/config/themes.json'
+      url: 	'http://cern.ch/frankm/Online/Desktop/config/themes.json'
     });
 
     this.store.on('load', function(store, records){
@@ -628,7 +628,7 @@ Ext.app.Preferences.Background = Ext.extend(Ext.app.Panel,  {
       fields: ['id', 'name', 'pathtothumbnail', 'pathtofile'],
       id: 	'id',
       root: 	'images',
-      url: 	'http://frankm.web.cern.ch/frankm/Online/Desktop/config/wallpapers.1280x1024.json'
+      url: 	'http://cern.ch/frankm/Online/Desktop/config/wallpapers.1280x1024.json'
     });
   
     this.store.on('load', function(store, records){
