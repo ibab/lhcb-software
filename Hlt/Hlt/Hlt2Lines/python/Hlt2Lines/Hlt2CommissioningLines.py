@@ -1,5 +1,4 @@
-# =============================================================================
-# $Id: Hlt2CommissioningLines.py,v 1.22 2010-03-31 17:30:37 graven Exp $
+# $Id: Hlt2CommissioningLines.py,v 1.23 2010-05-20 21:03:42 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of Hlt Lines for commissioning 
@@ -11,7 +10,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.22 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.23 $"
 # =============================================================================
 
 from HltLine.HltLinesConfigurableUser import *

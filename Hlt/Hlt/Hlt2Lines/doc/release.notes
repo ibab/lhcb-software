@@ -7,6 +7,9 @@
 !           ALWAYS also edit Hlt/HltSettings
 !
 !-----------------------------------------------------------------------------
+! 2010-05-20 - Gerhard Raven
+ - make Hlt2ExpressJpsi use fitted tracks
+
 !========================== Hlt2Lines v3r4 2010-05-20 ===================
 ! 2010-05-19 - Gerhard Raven
  - fix warnings from IncMuTrack4Jpsi about missing primary vertices
