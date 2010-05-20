@@ -25,7 +25,7 @@ class AlignTrTools( LHCbConfigurableUser ):
           , "Outlier"             	: 4     # max outlier value for MP track fit
           , "Sim"                   	: False
 	  , "OutputLevel"		: 3 # output printing level
-	  , "AlignmentLevel"		: "layers"
+	  , "AlignmentLevel"		: "halflayers"
           }
      
      
@@ -48,18 +48,31 @@ class AlignTrTools( LHCbConfigurableUser ):
 		TAConfig().minChi2 = self.getProp("minChi2")
 		TAConfig().Outlier = self.getProp("Outlier")
 		TAConfig().Sim       = self.getProp("Sim")
-		if self.getProp("AlignmentLevel") == "layers":
-		    TAConfig().OT_halflayer = True
-		    TAConfig().OT_module = False
- 		else:
-		    if self.getProp("AlignmentLevel") == "modules":
-		      TAConfig().OT_halflayer = False
-		      TAConfig().OT_module = True
-		
+		if self.getProp("AlignmentLevel") == "halflayers":
+                     TAConfig().OT_layer = False
+                     TAConfig().OT_halflayer = True
+                     TAConfig().OT_module = False
+                if self.getProp("AlignmentLevel") == "modules":
+                     TAConfig().OT_layer = False
+                     TAConfig().OT_halflayer = False
+                     TAConfig().OT_module = True
+                if self.getProp("AlignmentLevel") == "layers":
+                     TAConfig().OT_layer = True
+                     TAConfig().OT_halflayer = False
+                     TAConfig().OT_module = False
+                print "---- TAConfig Parameters ----"
+                print "--> AlignmentLevel = " , self.getProp("AlignmentLevel")
+                print "--> Sim            = " , self.getProp("Sim")
+                print "--> Chi2Scale      = " , self.getProp("Chi2Scale")
+		print "--> minChi2        = " , self.getProp("minChi2")
+		print "--> Outlier        = " , self.getProp("Outlier")
                 print "TAConfig degrees of freedom = ", TAConfig().getProp("Degrees_of_Freedom")
                 log.info( self.getProperties() )
                 GaudiKernel.ProcessJobOptions.PrintOff()
 
+             if tool == "Derivatives":
+                  from Configurables import ( Derivatives )
+                  Derivatives().MonteCarlo = self.getProp("Sim")
 
              if tool  == "ATrackSelector":
 		self.TrackSelection()

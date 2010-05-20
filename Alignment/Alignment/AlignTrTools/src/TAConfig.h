@@ -6,7 +6,7 @@
  *  Header file for Tstation alignment : TAConfig
  *
  *  CVS Log :-
- *  $Id: TAConfig.h,v 1.25 2010-05-04 09:47:19 jblouw Exp $
+ *  $Id: TAConfig.h,v 1.26 2010-05-20 16:22:57 mdeissen Exp $
  *
  *  @author J. Blouw johan.blouw@cern.ch
  *  @date   12/04/2007
@@ -340,7 +340,9 @@ public:
   int m_nstd;
   double m_zmoy;
   double m_zmoy_velo;
-  double m_zmean_ot,m_Sigzmean_ot;
+  double m_zmean_ot, m_Sigzmean_ot;
+  double m_zmean_ot_a,m_zmean_ot_c;
+  double m_Sigzmean_ot_a, m_Sigzmean_ot_c;
   double m_zmoy_it, s_zmoy_it;
   double m_zmoy_tt, s_zmoy_tt;
   //MD
@@ -348,12 +350,18 @@ public:
   std::vector< double > m_consTU;
   std::vector< double > m_consTV;
   std::vector< double > m_consTZ;
+  std::vector< double > m_consTZA;
+  std::vector< double > m_consTZC;
   std::vector< double > m_shearXZ;
   std::vector< double > m_shearXU;
   std::vector< double > m_shearXV;
   std::vector< double > m_scaleZ;
+  std::vector< double > m_scaleZA;
+  std::vector< double > m_scaleZC;
   std::vector< double > m_layerZ;
   std::vector< double > m_consRa, m_consRb, m_consRc;
+  std::vector< double > m_consRaA, m_consRbA, m_consRcA; // Aside
+  std::vector< double > m_consRaC, m_consRbC, m_consRcC; // Cside
   
 
   std::vector<int> m_rank;
