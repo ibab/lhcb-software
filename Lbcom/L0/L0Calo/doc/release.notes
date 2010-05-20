@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.155 2010-03-18 14:22:45 cattanem Exp $
+! $Id: release.notes,v 1.156 2010-05-20 16:45:13 robbep Exp $
 ! Package	        : L0/L0Calo
 ! Package Manager : Patrick Robbe & M-H. Schune
 !--------------------------------------------------------------------------
+
+! 2010-05-20 - Patrick Robbe
+ - src/L0CaloCompare.cpp/.h: add monitoring histograms to count error rates
 
 !========================= L0Calo v11r1 2010-03-18 ========================
 ! 2010-03-02 - Patrick Robbe

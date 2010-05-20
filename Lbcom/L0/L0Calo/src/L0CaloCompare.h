@@ -1,4 +1,4 @@
-// $Id: L0CaloCompare.h,v 1.6 2010-01-11 11:00:28 robbep Exp $
+// $Id: L0CaloCompare.h,v 1.7 2010-05-20 16:45:14 robbep Exp $
 #ifndef L0CALOCOMPARE_H 
 #define L0CALOCOMPARE_H 1
 
@@ -34,6 +34,12 @@ private:
 
   IHistogram1D*            m_histSpdMult_Comp ; 
   IHistogram1D*            m_histSumEt_Comp ;
+  IHistogram1D*            m_histEleErrorC  ;
+  IHistogram1D*            m_histPhoErrorC  ;
+  IHistogram1D*            m_histHadErrorC  ;
+  IHistogram1D*            m_histPilErrorC  ;
+  IHistogram1D*            m_histPigErrorC  ;
+
 
   std::string              m_referenceDataSuffix ;
   std::string              m_checkDataSuffix ;
@@ -42,6 +48,10 @@ private:
   std::vector< std::string >  m_mapCompareTitle ;
   std::vector< std::string >  m_mapAllName ;
   std::vector< std::string >  m_mapAllTitle ;
+  std::vector< std::string >  m_errorCounterName ;
+  std::vector< std::string >  m_errorCounterTitle ;
+
+  std::vector<IHistogram1D*>  m_errorCounterHisto ;
 
   std::set< unsigned int > m_idles ; ///< List of idle BCIds
   /// Vector of Idles BCIds (to set via job options)

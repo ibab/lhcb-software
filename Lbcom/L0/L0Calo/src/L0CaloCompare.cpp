@@ -1,4 +1,4 @@
-// $Id: L0CaloCompare.cpp,v 1.13 2010-01-11 11:00:28 robbep Exp $
+// $Id: L0CaloCompare.cpp,v 1.14 2010-05-20 16:45:14 robbep Exp $
 
 // local
 #include "L0CaloCompare.h"
@@ -36,35 +36,55 @@ L0CaloCompare::L0CaloCompare( const std::string& name,
   declareProperty( "CheckDataSuffix"     , m_checkDataSuffix = "RAW"  ) ;  
   declareProperty( "IdleBCIdList"        , m_idleBCIdVector ) ;
 
+
+  m_errorCounterHisto.reserve( 5 ) ;
+
   m_mapCompareName.reserve( 5 ) ; m_mapCompareName.resize( 15 , "" ) ;
   m_mapCompareTitle.reserve( 5 ) ; m_mapCompareTitle.resize( 15 , "" ) ;
   m_mapAllName.reserve( 5 ) ; m_mapAllName.resize( 15 , "" ) ;
   m_mapAllTitle.reserve( 5 ) ; m_mapAllTitle.resize( 15 , "" ) ;
 
+  m_errorCounterName.reserve( 5 ) ; m_errorCounterName.resize( 15 , "" ) ;
+  m_errorCounterTitle.reserve( 5 ) ; m_errorCounterTitle.resize( 15 , "" ) ;
+
   m_mapCompareName [ L0DUBase::CaloType::Electron  ] = "EcalMapEleCompare" ;  
   m_mapCompareTitle[ L0DUBase::CaloType::Electron  ] = "Electron Ecal map" ;
   m_mapAllName     [ L0DUBase::CaloType::Electron  ] = "EcalMapEleAll" ;  
   m_mapAllTitle    [ L0DUBase::CaloType::Electron  ] = "Electron Ecal map all" ;
+  m_errorCounterName [ L0DUBase::CaloType::Electron  ] = "EleErrorCounter" ;  
+  m_errorCounterTitle[ L0DUBase::CaloType::Electron  ] = "Electron error counter" ;
 
   m_mapCompareName [ L0DUBase::CaloType::Photon    ] = "EcalMapPhoCompare" ;  
   m_mapCompareTitle[ L0DUBase::CaloType::Photon    ] = "Photon Ecal map" ;
   m_mapAllName     [ L0DUBase::CaloType::Photon    ] = "EcalMapPhoAll" ;  
   m_mapAllTitle    [ L0DUBase::CaloType::Photon    ] = "Photon Ecal map all" ;
+  m_errorCounterName [ L0DUBase::CaloType::Photon  ] = "PhoErrorCounter" ;  
+  m_errorCounterTitle[ L0DUBase::CaloType::Photon  ] = "Photon error counter" ;
+
 
   m_mapCompareName [ L0DUBase::CaloType::Hadron    ] = "HcalMapHadCompare" ;  
   m_mapCompareTitle[ L0DUBase::CaloType::Hadron    ] = "Hadron Hcal map" ;
   m_mapAllName     [ L0DUBase::CaloType::Hadron    ] = "HcalMapHadAll" ;  
-  m_mapAllTitle    [ L0DUBase::CaloType::Hadron    ] = "Hadron Hcal map all" ;
+  m_mapAllTitle    [ L0DUBase::CaloType::Hadron    ] = "Hadron Hcal map all" ;  
+  m_errorCounterName [ L0DUBase::CaloType::Hadron  ] = "HadErrorCounter" ;  
+  m_errorCounterTitle[ L0DUBase::CaloType::Hadron  ] = "Hadron error counter" ;
+
 
   m_mapCompareName [ L0DUBase::CaloType::Pi0Local  ] = "EcalMapPilCompare" ;  
   m_mapCompareTitle[ L0DUBase::CaloType::Pi0Local  ] = "Pi0Local Ecal map" ;
   m_mapAllName     [ L0DUBase::CaloType::Pi0Local  ] = "EcalMapPilAll" ;  
   m_mapAllTitle    [ L0DUBase::CaloType::Pi0Local  ] = "Pi0Local Ecal map all" ;
+  m_errorCounterName [ L0DUBase::CaloType::Pi0Local  ] = "PilErrorCounter" ;  
+  m_errorCounterTitle[ L0DUBase::CaloType::Pi0Local  ] = "Pi0Local error counter" ;
+
 
   m_mapCompareName [ L0DUBase::CaloType::Pi0Global ] = "EcalMapPigCompare" ;  
   m_mapCompareTitle[ L0DUBase::CaloType::Pi0Global ] = "Pi0Global Ecal map" ;
   m_mapAllName     [ L0DUBase::CaloType::Pi0Global ] = "EcalMapPigAll" ;  
   m_mapAllTitle    [ L0DUBase::CaloType::Pi0Global ] = "Pi0Global Ecal map all";
+  m_errorCounterName [ L0DUBase::CaloType::Pi0Global  ] = "PigErrorCounter" ;  
+  m_errorCounterTitle[ L0DUBase::CaloType::Pi0Global  ] = "Pi0Global error counter" ;
+
 }
 
 //=============================================================================
@@ -88,6 +108,8 @@ StatusCode L0CaloCompare::initialize() {
     if ( L0DUBase::CaloType::Hadron == i ) det = "Hcal" ;
     bookCalo2D( m_mapCompareName[ i ] , m_mapCompareTitle[ i ]  , det ) ; 
     bookCalo2D( m_mapAllName[ i ]     , m_mapAllTitle[ i ]      , det ) ;
+    m_errorCounterHisto[i] = GaudiHistoAlg::book(m_errorCounterName[ i ] , m_errorCounterTitle[ i ] ,0.,2.,2) ;
+
   }
 
   m_histSpdMult_Comp  = GaudiHistoAlg::book( "SpdMult_Comp" , 
@@ -96,6 +118,9 @@ StatusCode L0CaloCompare::initialize() {
   m_histSumEt_Comp    = GaudiHistoAlg::book( "SumEt_Comp", 
                                              "SumEt comparison " , 
                                              -101. , 101. , 200 ) ;
+
+
+
 
   m_idles.insert( m_idleBCIdVector.begin() , m_idleBCIdVector.end() ) ;
 
@@ -215,6 +240,7 @@ StatusCode L0CaloCompare::execute() {
               << " rawId= " << rawId << endreq;
       mapRef[type].insert(std::pair<int,LHCb::L0CaloCandidate *>( rawId , 
                                                                   *candRef ) ) ;
+      m_errorCounterHisto[type]->fill(0.5) ; 
       break ;
     case L0DUBase::CaloType::SpdMult:
       // in full monitoring mode, ignore SpdMult candidates which are 
@@ -289,6 +315,9 @@ StatusCode L0CaloCompare::execute() {
                 << " L0cand not found ! " << endreq ; 
         fillCalo2D( m_mapCompareName[ type ] , caloCell , 1. , 
                     m_mapCompareTitle[ type ] ) ;
+	m_errorCounterHisto[type]->fill(1.5) ; 
+
+
       } else {
         //        LHCb::L0CaloCandidate * theCand = (*iterMap).second ; 
         std::pair< l0cmap::iterator , l0cmap::iterator > 
@@ -304,6 +333,7 @@ StatusCode L0CaloCompare::execute() {
                   << " check = " << etCodeCheck << endreq ;
           fillCalo2D( m_mapCompareName[ type ] , caloCell , 1. , 
                       m_mapCompareTitle[ type ] ) ; 
+	  m_errorCounterHisto[type]->fill(1.5) ; 
         }
       }
       
