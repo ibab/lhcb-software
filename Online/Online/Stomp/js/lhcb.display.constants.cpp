@@ -3,7 +3,7 @@ if ( !_lhcb().constants ) {
   lhcb.constants = function() {
     this._url = 'http://www.cern.ch/lhcbproject/online/comet/Online';
     this._loc = ''+document.location;
-    if ( this._loc.indexOf('/frankm/')>0 ) this._url = 'http://www.cern.ch/frankm';
+    if ( this._loc.indexOf('/frankm/')>0 ) this._url = 'http://www.cern.ch/frankm/Online';
     if ( this._loc.indexOf('/lhcbproject/')>0 ) this._url = 'http://www.cern.ch/lhcbproject/online/comet/Online';
     if ( this._loc.indexOf('/static/RunStatus/')>0 ) this._url = 'http://www.cern.ch/lhcbproject/online/comet/Online';
     this.lhcb_comet_url   = function()     {    return 'http://lbcomet.cern.ch/static/RunStatus';                  };

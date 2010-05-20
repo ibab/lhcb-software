@@ -1381,10 +1381,11 @@ if ( !lhcb.widgets ) {
     var table       = document.createElement('table');
     table.body      = document.createElement('tbody');
     table.system    = name;
+    table.title     = name;
     table.messages  = msg;
     table.provider  = null;
     table.logger    = null;
-    // if ( table.system.indexOf(' ')>0 ) table.system = table.system.substr
+    if ( table.system.indexOf(' ')>0 ) table.system = name.substr(0,name.indexOf(' '));
     table.add = function() {
       var tr = document.createElement('tr');
       var td = document.createElement('td');
@@ -1442,7 +1443,7 @@ if ( !lhcb.widgets ) {
       tr1.appendChild(this.head_date=Cell(d.toString(),1,'MonitorTinyHeader'));
       this.head_date.id = 'current_time';
       this.head_date.textAlign = 'right';
-      cell = Cell(this.system+'&nbsp;'+lhcb_online_picture(),1,'MonitorBigHeader');
+      cell = Cell(this.title+'&nbsp;'+lhcb_online_picture(),1,'MonitorBigHeader');
       cell.style.textAlign = 'right';
       cell.onclick = function() { document.location = "http://lhcb.cern.ch";};
       tr1.appendChild(cell);
