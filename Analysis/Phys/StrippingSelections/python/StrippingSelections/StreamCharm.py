@@ -11,6 +11,8 @@ from Gaudi.Configuration import *
 from StrippingConf.StrippingStream import StrippingStream
 
 from StrippingSelections import StrippingD2hhh
+from StrippingSelections import StrippingD2hhhXS
+from StrippingSelections import StrippingD5h
 from StrippingSelections import StrippingDstarD2KShh
 from StrippingSelections import StrippingDstarD2KShhRobust
 from StrippingSelections import StrippingDstarD02PipiMuMuPiMuKPiKmu
@@ -62,6 +64,30 @@ stream.appendLines( [
         , StrippingD2hhh.lineD2KPP_DCS_A_LoosePID_Bkg
         , StrippingD2hhh.lineD2KPP_DCS_B_LoosePID_Bkg
         , StrippingD2hhh.lineD2HHH
+        , StrippingD2hhhXS.lineD2PPP_B_NoPID_BkgXS
+        , StrippingD2hhhXS.lineD2PPP_B_NoPID_SigXS
+        , StrippingD2hhhXS.lineD2KPP_B_NoPID_BkgXS
+        , StrippingD2hhhXS.lineD2KPP_B_LoosePID_BkgXS
+        , StrippingD2hhhXS.lineD2KPP_B_NoPID_SigXS
+        , StrippingD2hhhXS.lineD2KPP_B_LoosePID_SigXS
+        , StrippingD2hhhXS.lineD2KKP_B_NoPID_BkgXS
+        , StrippingD2hhhXS.lineD2KKP_B_LoosePID_BkgXS
+        , StrippingD2hhhXS.lineD2KKP_B_NoPID_SigXS
+        , StrippingD2hhhXS.lineD2KKP_B_LoosePID_SigXS
+        , StrippingD2hhhXS.lineD2KKK_B_LoosePID_BkgXS
+        , StrippingD2hhhXS.lineD2KKK_B_LoosePID_SigXS
+        , StrippingD2hhhXS.lineDs2KPP_B_LoosePID_SigXS
+        , StrippingD2hhhXS.lineDs2KPP_B_LoosePID_BkgXS
+        , StrippingD2hhhXS.lineD2KPP_DCS_B_LoosePID_SigXS
+        , StrippingD2hhhXS.lineD2KPP_DCS_B_LoosePID_BkgXS
+        , StrippingD5h.lineD2KKPPP_B_NoPID_Bkg 
+        , StrippingD5h.lineD2KKPPP_B_LoosePID_Bkg 
+        , StrippingD5h.lineD2KKPPP_B_NoPID_Sig    
+        , StrippingD5h.lineD2KKPPP_B_LoosePID_Sig
+        , StrippingD5h.lineD2KPPPP_B_NoPID_Bkg 
+        , StrippingD5h.lineD2KPPPP_B_LoosePID_Bkg 
+        , StrippingD5h.lineD2KPPPP_B_NoPID_Sig    
+        , StrippingD5h.lineD2KPPPP_B_LoosePID_Sig 
 	, StrippingDstarD2KShhRobust.line1 
 	, StrippingDstarD2KShhRobust.line2 
 	, StrippingDstarD2KShhRobust.line3 

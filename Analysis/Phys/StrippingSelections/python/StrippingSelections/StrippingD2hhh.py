@@ -1,5 +1,5 @@
 # Comments on prescaling and relative importance of lines:
-#
+#  (updated by Alberto and Hamish, 21/05/10)
 # There are a lot of stripping lines in this file:
 #   a) Some are narrow windows where we want to look for interesting physics;
 #   b) Some are wider sideband windows where we want to study the backgrounds
@@ -17,15 +17,19 @@
 #
 #   Mat Charles <m.charles1@physics.ox.ac.uk>
 #   Alberto Correa dos Reis <alberto@cbpf.br>
+#   Hamish Gordon <h.gordon1@physics.ox.ac.uk>
 #
 # As a rough guide, here is our thinking on what is most important (from most
 # to least):
 #
 #  * These are critical signal windows and should never be prescaled:
+#
 #      * lineD2PPP_A_NoPID_Sig
 #      * lineD2PPP_B_NoPID_Sig
-#      * lineD2KKP_A_LoosePID_Sig
+#      * lineD2KPP_A_NoPID_Sig
 #      * lineD2KKP_B_LoosePID_Sig
+#      * lineDs2KPP_B_LoosePID_Sig
+#      * lineD2KKK_B_LoosePID_Sig
 #
 #  * This is an inclusive stripping which takes everything in a wide
 #    mass window, useful for several different physics studies and
@@ -36,50 +40,71 @@
 #  * These are high-statistics control modes for our signals ("standard
 #    candles"). They are useful and are not prescaled by default, but if
 #    the rate needs to be brought they could be (but not to zero!). Note
-#    that the four lines are dominated by the same signal events and so
+#    that the first three lines are dominated by the same signal events and so
 #    are quite correlated -- this means that prescaling just one will have
 #    little effect on the overall rate. It would be better to apply a
 #    common prescale (i.e. run all four lines with probability x and run
 #    no lines with probability 1-x, but nothing inbetween) but I don't
 #    know how to implement that.
-#      * lineD2KPP_A_NoPID_Sig
 #      * lineD2KPP_B_NoPID_Sig
 #      * lineD2KPP_A_LoosePID_Sig
 #      * lineD2KPP_B_LoosePID_Sig
-#
+#      * lineD2KKP_A_LoosePID_Sig
+#      * lineD2KKK_A_LoosePID_Sig
+#      * lineD2KPP_DCS_B_LoosePID_Sig
+#      * lineD2KPP_DCS_A_LoosePID_Sig
+#      * lineDs2KPP_A_LoosePID_Sig
 #  * These are the sidebands to our signals. They can be prescaled (and
 #    are by default) but we need enough events here to study the backgrounds
 #    and test the MC behaviour.
 #      * lineD2PPP_A_NoPID_Bkg
 #      * lineD2PPP_B_NoPID_Bkg
-#      * lineD2KKP_A_LoosePID_Bkg
+#      * lineD2KPP_A_NoPID_Bkg
 #      * lineD2KKP_B_LoosePID_Bkg
-#
+#      * lineDs2KPP_B_LoosePID_Bkg
+#      * lineD2KKK_B_LoosePID_Bkg
 #  * These are the sidebands to our control channels. They are less critical,
 #    but we need enough events to fit the mass spectrum and test out sideband
 #    subtraction methods on the control channels. They are prescaled by default.
-#      * lineD2KPP_A_NoPID_Bkg
+#     
 #      * lineD2KPP_B_NoPID_Bkg
 #      * lineD2KPP_A_LoosePID_Bkg
 #      * lineD2KPP_B_LoosePID_Bkg
 #      * lineD2KKK_A_LoosePID_Bkg
-#      * lineD2KKK_B_LoosePID_Bkg
-#
+#      * lineD2KKP_A_LoosePID_Bkg
+#      * lineD2KPP_DCS_B_LoosePID_Bkg
+#      * lineD2KPP_DCS_A_LoosePID_Bkg
+#      * lineDs2KPP_A_LoosePID_Bkg
 #  * These are calibration/test channels to study PID performance. It would be
 #    nice to have some events here for crosschecks, but they are not vital and
-#    can be prescaled safely (even to zero if bandwidth is tight).
+#    can be prescaled safely (even to zero if bandwidth is tight). The A lines are #    already switched off (they're not included in StreamCharm.py)
 #      * lineD2KKP_B_NoPID_Sig
 #      * lineD2KKP_B_NoPID_Bkg
+#      * lineD2KKP_A_NoPID_Sig
+#      * lineD2KKP_A_NoPID_Bkg
 #
-#  * Note:
-# 8 new stripping lines added 26/04/10 to account for Ds2KPP (SCS) and D2KPP (DCS).
+#  * Update  26/04/10 (Hamish Gordon):
+# 8 new stripping lines added 26/04/10 to account for Ds2KPP (SCS) and D2KPP (DCS)
 # The lines use StdLooseKaons.
 # The signal mass windows are copied from the CF KPP mode so may not be
 # optimal for the retention rate (they are definitely wide enough
 # to accept all or almost all of the signal, but may be so wide that we accept
-# events unnecessarily). Changes are underlined with #############
+# events unnecessarily).
 # 
-# Hamish Gordon, 26/04/10.
+#  * Update  21/05/10 (Hamish and Alberto):
+# Cuts for B lines updated: DIRA cut loosened from 0.99999, FD chi2 cut loosened
+# from 50, Dplus_IPchi2 cut removed. Prescales changed to 1 for all important
+# background lines
+# Cuts for A lines updated: see Alberto's presentation to charm WG of 20/05/09
+# (Indico 77085). Changes are marked "#mod in 9/5"
+# There is a significant change to A mass windows - the SIGNAl windows run
+# from 1800 to 1920 (D->K-pi+pi+) or 1800 to 2040 (all other lines). This is
+# almost equivalent to setting the background prescales to 1. The prescales on the
+# 3H line and background lines (which now overlap heavily with the signal) are
+# retained, and these lines are much less important now, so could be switched off
+# if the rate becomes too high.
+
+#The priority A lines are the PPP signal line, the KPP_NOPID signal line and the HHH line.
 
 from Gaudi.Configuration import *
 from Configurables import GaudiSequencer, CombineParticles, FilterDesktop
@@ -94,57 +119,59 @@ useCutsA = bool(True)
 useCutsB = bool(True)
 
 # 1) Pointing of D+ (applied as MOTHERCUT)
-str_cutOffline1A_asMothCut = '((BPVDIRA > 0.999) & (BPVTRGPOINTINGWPT < 0.05))'
-str_cutOffline1HHH_asMothCut = '((BPVDIRA > 0.999) & (BPVTRGPOINTINGWPT < 0.08))'
-str_cutOffline1B_asMothCut = '(BPVDIRA > 0.99999)'
+str_cutOffline1A_asMothCut = '((BPVDIRA > 0.9999) & (BPVTRGPOINTINGWPT < 0.10))'# mod. in 9/5
+str_cutOffline1HHH_asMothCut = '((BPVDIRA > 0.999) & (BPVTRGPOINTINGWPT < 0.15))'# mod. in 9/5
+str_cutOffline1B_asMothCut = '(BPVDIRA > 0.9999)'
 
 # 2) IP of D+ to PV (applied as MOTHERCUT)
 str_cutOffline2A_asMothCut = '(MIPDV(PRIMARY) < 0.08*mm)'
 str_cutOffline2HHH_asMothCut = '(MIPDV(PRIMARY) < 0.08*mm)'
-str_cutOffline2B_asMothCut = '(MIPCHI2DV(PRIMARY) < 10.0)'
+
 
 # 3) IP of D+ daughters to PV.
 # For selection 'B' this has to be a COMBINATIONCUT.
 # For selection 'A' this is easiest done as a DAUGHTERSCUT but can
 #   also be done as a COMBINATIONCUT. So we implement it both ways
 #   (so that 'A' and 'B' cuts can be OR'd).
-str_cutOffline3A_asCombCut = '(AMINCHILD(MIPDV(PRIMARY)) > 0.03*mm)'
-str_cutOffline3A_asDaugCut = '(MIPDV(PRIMARY) > 0.03*mm)'
-str_cutOffline3HHH_asDaugCut = '(MIPDV(PRIMARY) > 0.025*mm)'
+str_cutOffline3A_asCombCut = '(MIPCHI2DV(PRIMARY) > 4)'# mod. in 9/5
+str_cutOffline3A_asDaugCut = '(MIPCHI2DV(PRIMARY) > 4)'# mod. in 9/5
+str_cutOffline3HHH_asDaugCut = '(MIPCHI2DV(PRIMARY) > 2)'# mod. in 9/5
 str_cutOffline3B_asCombCut = '(AHASCHILD((MIPCHI2DV(PRIMARY)) > 30.0))'
 
 # 4) Flight distance of D+ from PV (applied as MOTHERCUT)
-str_cutOffline4A_asMothCut = '((BPVVD > 5.0*mm) & (VFASPF(VMINVDDV(PRIMARY)) > 5.0*mm))'
-str_cutOffline4HHH_asMothCut = '((BPVVD > 4.0*mm) & (VFASPF(VMINVDDV(PRIMARY)) > 4.0*mm))'
-str_cutOffline4B_asMothCut = '(BPVVDCHI2 > 50.0)'
+str_cutOffline4A_asMothCut = '((BPVVDCHI2 > 150.0) & (VFASPF(VMINVDDV(PRIMARY)) > 3.0*mm))'# mod. in 9/5
+str_cutOffline4HHH_asMothCut = '((BPVVDCHI2 > 100.0) & (VFASPF(VMINVDDV(PRIMARY)) > 2.0*mm))'# mod. in 9/5
+str_cutOffline4B_asMothCut = '(BPVVDCHI2 > 25.0)'
 
 # 5) Vertex quality of D+
 # For 'A' we apply both a chi^2 cut (MOTHERCUT) and a daughter pairwise DOCA cut (COMBINATIONCUT).
 # For 'B' we apply just the chi^2 cut (MOTHERCUT).
+str_cutOffline5AMoth = '(VFASPF(VCHI2)<12.0)' # mod. in 9/5
 str_cutOffline5Moth = '(VFASPF(VCHI2)<8.0)'
-str_cutOffline5HHHMoth = '(VFASPF(VCHI2)<10.0)'
+str_cutOffline5HHHMoth = '(VFASPF(VCHI2)<15.0)'
+str_cutOffline5AComb = "(AMAXDOCA('') < 0.20*mm)" # mod. in 9/5
 str_cutOffline5Comb = "(AMAXDOCA('') < 0.12*mm)"
-str_cutOffline5HHHComb = "(AMAXDOCA('') < 0.14*mm)"
+str_cutOffline5HHHComb = "(AMAXDOCA('') < 0.20*mm)" # mod. in 9/5
 
 # 6) PT cuts
 # There is a daughter cut (applied to every daughter).
 # There are also cuts that apply to the combination or to the mother.
 # For 'A' individually: use A daughter & A combination cut
 # For 'B' individually: use B daughter & B mother cut & B combination cut
-str_cutOffline6DaugA      = '(PT > 250*MeV)'
+str_cutOffline6DaugA      = '(PT > 200*MeV)' # mod. in 9/5
 str_cutOffline6DaugHHH      = '(PT > 200*MeV)'
 str_cutOffline6DaugB      = '((PT > 200*MeV) & (P > 3200*MeV) & (P < 100*GeV))'
-str_cutOffline6A_asCombCut = '((AHASCHILD((PT > 1000*MeV))) & (ACHILD(PT,1)+ACHILD(PT,2)+ACHILD(PT,3) > 1600*MeV))'
-str_cutOffline6HHH_asCombCut = '((AHASCHILD((PT > 800*MeV))) & (ACHILD(PT,1)+ACHILD(PT,2)+ACHILD(PT,3) > 1600*MeV))'
-str_cutOffline6A_asMothCut = '((NINGENERATION((PT>1000*MeV),1) >= 1) & (CHILD(PT,1)+CHILD(PT,2)+CHILD(PT,3) > 1600*MeV))'
+str_cutOffline6A_asCombCut = '((AHASCHILD((PT > 200*MeV))) & (ACHILD(PT,1)+ACHILD(PT,2)+ACHILD(PT,3) > 1400*MeV))' # mod. in 9/5
+str_cutOffline6HHH_asCombCut = '((ACHILD(PT,1)+ACHILD(PT,2)+ACHILD(PT,3) > 1200*MeV))' # mod. in 9/5
+str_cutOffline6A_asMothCut = '((NINGENERATION((PT>200*MeV),1) >= 1) & (CHILD(PT,1)+CHILD(PT,2)+CHILD(PT,3) > 1400*MeV))' # mod. in 9/5
 str_cutOffline6BComb = '((APT > 1500*MeV) & (ANUM(PT > 600.0*MeV) >= 2))' # PT cut is looser than post-fit (mother) cut to allow for modification by fit
 str_cutOffline6BMoth = '(PT >1800*MeV)'
 
 # 7) Track quality of D+ daughters
 # For 'A' individually: use COMBINATIONCUT.
 # For 'B' individually: use DAUGHTERSCUT.
-str_cutOffline7A_asCombCut = '(ACHILD(TRPCHI2,1)*ACHILD(TRPCHI2,2)*ACHILD(TRPCHI2,3) > 1.0E-6)'
-str_cutOffline7HHH_asCombCut = '(ACHILD(TRPCHI2,1)*ACHILD(TRPCHI2,2)*ACHILD(TRPCHI2,3) > 1.0E-9)'
+str_cutOffline7A_asCombCut = '(ACHILD(TRPCHI2,1)*ACHILD(TRPCHI2,2)*ACHILD(TRPCHI2,3) > 1.0E-15)' # mod. in 9/5
+str_cutOffline7HHH_asCombCut = '(ACHILD(TRPCHI2,1)*ACHILD(TRPCHI2,2)*ACHILD(TRPCHI2,3) > 1.0E-15)' # mod. in 9/5
 str_cutOffline7B_asCombCut = '(AMINCHILD(TRPCHI2) > 0.0001)'
 str_cutOffline7B_asDaugCut = '(TRPCHI2 > 0.0001)'
 
@@ -159,9 +186,8 @@ str_cutOfflineMassPostFit = '((M > 1780*MeV) & (M < 2060*MeV))'
 # Other mass windows edited by Alberto:
 str_cutOfflineMassPPP = '((M > 1800*MeV) & (M < 2040*MeV))'
 str_cutOfflineMassKPP = '((M > 1820*MeV) & (M < 1920*MeV))'
-#############################################################
+str_cutOfflineMassKKP = '((M > 1800*MeV) & (M < 2040*MeV))'
 str_cutOfflineMassDsKPP = '((M > 1920*MeV) & (M < 2040*MeV))'
-#############################################################
 str_cutOfflineMassHHH = '((M > 1100*MeV) & (M < 2100*MeV))'
 str_cutOfflineMassHHHPreFit = '((AM > 900*MeV) & (AM < 2300*MeV))'
 
@@ -171,18 +197,16 @@ str_cutOfflineMassHHHPreFit = '((AM > 900*MeV) & (AM < 2300*MeV))'
 str_cutOfflineDaugA      = '(' + str_cutOffline3A_asDaugCut + '&' + str_cutOffline6DaugA + ')'
 str_cutOfflineDaugHHH    = '(' + str_cutOffline3HHH_asDaugCut + '&' + str_cutOffline6DaugHHH + ')'
 str_cutOfflineDaugB      = '(' + str_cutOffline6DaugB + '&' + str_cutOffline7B_asDaugCut + ')'
-str_cutOfflineMothB      = '(' + str_cutOffline1B_asMothCut + '&' + str_cutOffline2B_asMothCut + '&' + str_cutOffline4B_asMothCut + '&' + str_cutOffline5Moth + '&' + str_cutOffline6BMoth + '&' + str_cutOfflineMassPostFit + ')'
-str_cutOfflineCombA      = '(' + str_cutOffline6A_asCombCut + '&' + str_cutOffline7A_asCombCut + '&' + str_cutOfflineMassPreFit + '&' + str_cutOffline5Comb + ')'
+str_cutOfflineMothB      = '(' + str_cutOffline1B_asMothCut + '&'  + str_cutOffline4B_asMothCut + '&' + str_cutOffline5Moth + '&' + str_cutOffline6BMoth + '&' + str_cutOfflineMassPostFit + ')'#'&' + str_cutOffline2B_asMothCut + '&'
+str_cutOfflineCombA      = '(' + str_cutOffline6A_asCombCut + '&' + str_cutOffline7A_asCombCut + '&' + str_cutOfflineMassPreFit + '&' + str_cutOffline5AComb + ')'
 str_cutOfflineCombB      = '(' + str_cutOfflineMassPreFit + '&' + str_cutOffline6BComb + '&' + str_cutOffline3B_asCombCut + ')'
 
 # Make per-mode versions with Alberto's mass windows for the 'A' lines:
 str_cutOfflineMothHHH    = '(' + str_cutOffline1HHH_asMothCut + '&' + str_cutOffline2HHH_asMothCut + '&' + str_cutOffline4HHH_asMothCut + '&' + str_cutOffline5HHHMoth + '&' + str_cutOfflineMassHHH + ')'
-str_cutOfflineMothPPP_A  = '(' + str_cutOffline1A_asMothCut + '&' + str_cutOffline2A_asMothCut + '&' + str_cutOffline4A_asMothCut + '&' + str_cutOffline5Moth + '&' + str_cutOfflineMassPPP + ')'
-str_cutOfflineMothKPP_A  = '(' + str_cutOffline1A_asMothCut + '&' + str_cutOffline2A_asMothCut + '&' + str_cutOffline4A_asMothCut + '&' + str_cutOffline5Moth + '&' + str_cutOfflineMassKPP + ')'
-str_cutOfflineMothKKP_A  = '(' + str_cutOffline1A_asMothCut + '&' + str_cutOffline2A_asMothCut + '&' + str_cutOffline4A_asMothCut + '&' + str_cutOffline5Moth + '&' + str_cutOfflineMassPostFit + ')'
-######################################################################
+str_cutOfflineMothPPP_A  = '(' + str_cutOffline1A_asMothCut + '&' + str_cutOffline2A_asMothCut + '&' + str_cutOffline4A_asMothCut + '&' + str_cutOffline5AMoth + '&' + str_cutOfflineMassPPP + ')' 
+str_cutOfflineMothKPP_A  = '(' + str_cutOffline1A_asMothCut + '&' + str_cutOffline2A_asMothCut + '&' + str_cutOffline4A_asMothCut + '&' + str_cutOffline5AMoth + '&' + str_cutOfflineMassKPP + ')' 
+str_cutOfflineMothKKP_A  = '(' + str_cutOffline1A_asMothCut + '&' + str_cutOffline2A_asMothCut + '&' + str_cutOffline4A_asMothCut + '&' + str_cutOffline5AMoth + '&' + str_cutOfflineMassKKP + ')' 
 str_cutOfflineMothDsKPP_A  = '(' + str_cutOffline1A_asMothCut + '&' + str_cutOffline2A_asMothCut + '&' + str_cutOffline4A_asMothCut + '&' + str_cutOffline5Moth + '&' + str_cutOfflineMassPPP + ')'
-######################################################################
 str_cutOfflineMothKKK_A  = '(' + str_cutOffline1A_asMothCut + '&' + str_cutOffline2A_asMothCut + '&' + str_cutOffline4A_asMothCut + '&' + str_cutOffline5Moth + '&' + str_cutOfflineMassPostFit + ')'
 # Special for inclusive:
 str_cutOfflineCombHHH    = '(' + str_cutOffline6HHH_asCombCut + '&' + str_cutOffline7HHH_asCombCut + '&' + str_cutOfflineMassHHHPreFit + '&' + str_cutOffline5HHHComb + ')'
@@ -243,7 +267,7 @@ combineOfflineD2KPP_A_LoosePID = StrippingMember( CombineParticles
                                                , CombinationCut = str_cutOfflineCombA
                                                , MotherCut = str_cutOfflineMothKPP_A
                                                )
-###############################################################
+
 combineOfflineDs2KPP_A_LoosePID = StrippingMember( CombineParticles
                                                , 'Combine'
                                                , InputLocations = [ str_OfflinePionListNoPID, str_OfflineKaonListLoosePID ]
@@ -252,7 +276,7 @@ combineOfflineDs2KPP_A_LoosePID = StrippingMember( CombineParticles
                                                , CombinationCut = str_cutOfflineCombA
                                                , MotherCut = str_cutOfflineMothDsKPP_A
                                                )
-##############################################################
+
 combineOfflineD2KKP_A_LoosePID = StrippingMember( CombineParticles
                                                , 'Combine'
                                                , InputLocations = [ str_OfflinePionListNoPID, str_OfflineKaonListLoosePID ]
@@ -322,7 +346,6 @@ combineOfflineD2KPP_B_LoosePID = StrippingMember( CombineParticles
                                          , CombinationCut = str_cutOfflineCombB
                                          , MotherCut = str_cutOfflineMothB
                                          )
-################################################################
 combineOfflineDs2KPP_B_LoosePID = StrippingMember( CombineParticles
                                          , 'Combine'
                                          , InputLocations = [ str_OfflinePionListNoPID, str_OfflineKaonListLoosePID ]
@@ -331,7 +354,6 @@ combineOfflineDs2KPP_B_LoosePID = StrippingMember( CombineParticles
                                          , CombinationCut = str_cutOfflineCombB
                                          , MotherCut = str_cutOfflineMothB
                                          )
-###############################################################
 combineOfflineD2KKP_B_LoosePID = StrippingMember( CombineParticles
                                        , 'Combine'
                                        , InputLocations = [ str_OfflinePionListNoPID, str_OfflineKaonListLoosePID ]
@@ -406,11 +428,7 @@ str_cutBothSignals_KKP = '(' + str_cutSignalWindowD_KKP + '|' + str_cutSignalWin
 str_cutBothSignals_KKK = '(' + str_cutSignalWindowD_KKK + '|' + str_cutSignalWindowDs_KKK + ')'
 
 str_cutBigSidebandAndDs_KPP = '(' + str_cutLowerSideband_KPP + '|' + str_cutCentreSideband_KPP + '|' + str_cutUpperSideband_KPP + '|' + str_cutSignalWindowDs_KPP + ')'
-##########################################################
-
 str_cutDsSideband = '(' + str_cutCentreSideband_KPP + '|' + str_cutUpperSideband_KPP + ')'
-
-##########################################################
 
 # We want to bundle the 'A' and 'B' selections together.
 # Ideally we would have a single line which contains candidates selected by
@@ -423,31 +441,29 @@ str_cutDsSideband = '(' + str_cutCentreSideband_KPP + '|' + str_cutUpperSideband
 #              if type(i) is bindMembers : i = i.outputLocation() 
 #              if i[0] == '%' : i = 'Stripping' + line + i[1:]
 
-# Define prescales
+# Define new prescales
 ps_inclusive          = 0.04
 ps_PPP_Bkg_A          = 0.2
-ps_PPP_Bkg_B          = 0.1
+ps_PPP_Bkg_B          = 1.0
 ps_PPP_Sig            = 1.0
 ps_KPP_Bkg_NoPID_A    = 0.1
-ps_KPP_Bkg_NoPID_B    = 0.05
+ps_KPP_Bkg_NoPID_B    = 1.0
 ps_KPP_Bkg_LoosePID_A = 0.1
-ps_KPP_Bkg_LoosePID_B = 0.05
+ps_KPP_Bkg_LoosePID_B = 1.0
 ps_KPP_Sig            = 1.0
 ps_KKP_Bkg_NoPID      = 0.05
 ps_KKP_Sig_NoPID      = 0.1
-ps_KKP_Bkg_LoosePID   = 0.3
+ps_KKP_Bkg_LoosePID   = 1.0
 ps_KKP_Sig_LoosePID   = 1.0
-ps_KKK_Bkg            = 0.3
+ps_KKK_Bkg            = 1.0
 ps_KKK_Sig            = 1.0
-################################
-
 ps_DsKPP_Sig          = 1.0
 ps_KPP_DCS_Sig        = 1.0
 ps_DsKPP_Bkg_LoosePID_A  = 0.1
-ps_DsKPP_Bkg_LoosePID_B  = 0.1
-ps_KPP_DCS_Bkg_LoosePID_B = 0.1
+ps_DsKPP_Bkg_LoosePID_B  = 1.0
+ps_KPP_DCS_Bkg_LoosePID_B = 1.0
 ps_KPP_DCS_Bkg_LoosePID_A = 0.1
-################################
+
 # Inclusive (heavily prescaled)
 lineD2HHH = StrippingLine('StripD2HHH', prescale = ps_inclusive, algos = [ combineOfflineD2HHH_A_NoPID ])
 
@@ -456,10 +472,10 @@ filterD2PPP_A_NoPID_Bkg = StrippingMember(FilterDesktop, "Filter", InputLocation
 filterD2PPP_B_NoPID_Bkg = StrippingMember(FilterDesktop, "Filter", InputLocations = [ "%Combine" ], Code = str_cutBigSideband_PPP)
 lineD2PPP_A_NoPID_Bkg   = StrippingLine('StripD2PPP_A_NoPID_Bkg', prescale = ps_PPP_Bkg_A, algos = [ combineOfflineD2PPP_A_NoPID, filterD2PPP_A_NoPID_Bkg ])
 lineD2PPP_B_NoPID_Bkg   = StrippingLine('StripD2PPP_B_NoPID_Bkg', prescale = ps_PPP_Bkg_B, algos = [ combineOfflineD2PPP_B_NoPID, filterD2PPP_B_NoPID_Bkg ])
-lineD2PPP_A_NoPID_Sig = lineD2PPP_A_NoPID_Bkg.clone('StripD2PPP_A_NoPID_Sig', prescale = ps_PPP_Sig, FilterDesktopFilter = { "Code" : str_cutOfflineMassPPP } )
+lineD2PPP_A_NoPID_Sig = lineD2PPP_A_NoPID_Bkg.clone('StripD2PPP_A_NoPID_Sig', prescale = ps_PPP_Sig, FilterDesktopFilter = { "Code" : str_cutOfflineMassPPP } )  # mod. in 9/5
 lineD2PPP_B_NoPID_Sig = lineD2PPP_B_NoPID_Bkg.clone('StripD2PPP_B_NoPID_Sig', prescale = ps_PPP_Sig, FilterDesktopFilter = { "Code" : str_cutBothSignals_PPP } )
 
-# The (K- pi+ pi+_ final state
+# The (K- pi+ pi+) final state
 filterD2KPP_A_NoPID_Bkg    = StrippingMember(FilterDesktop, "Filter", InputLocations = [ "%Combine" ], Code = str_cutBigSidebandAndDs_KPP)
 filterD2KPP_B_NoPID_Bkg    = StrippingMember(FilterDesktop, "Filter", InputLocations = [ "%Combine" ], Code = str_cutBigSidebandAndDs_KPP)
 filterD2KPP_A_LoosePID_Bkg = StrippingMember(FilterDesktop, "Filter", InputLocations = [ "%Combine" ], Code = str_cutBigSidebandAndDs_KPP)
@@ -468,11 +484,10 @@ lineD2KPP_A_NoPID_Bkg      = StrippingLine('StripD2KPP_A_NoPID_Bkg',    prescale
 lineD2KPP_B_NoPID_Bkg      = StrippingLine('StripD2KPP_B_NoPID_Bkg',    prescale = ps_KPP_Bkg_NoPID_B,    algos = [ combineOfflineD2KPP_B_NoPID,    filterD2KPP_B_NoPID_Bkg    ])
 lineD2KPP_A_LoosePID_Bkg   = StrippingLine('StripD2KPP_A_LoosePID_Bkg', prescale = ps_KPP_Bkg_LoosePID_A, algos = [ combineOfflineD2KPP_A_LoosePID, filterD2KPP_A_LoosePID_Bkg ])
 lineD2KPP_B_LoosePID_Bkg   = StrippingLine('StripD2KPP_B_LoosePID_Bkg', prescale = ps_KPP_Bkg_LoosePID_B, algos = [ combineOfflineD2KPP_B_LoosePID, filterD2KPP_B_LoosePID_Bkg ])
-lineD2KPP_A_NoPID_Sig      = lineD2KPP_A_NoPID_Bkg.clone('StripD2KPP_A_NoPID_Sig',       prescale = ps_KPP_Sig, FilterDesktopFilter = { "Code" : str_cutOfflineMassKPP } )
+lineD2KPP_A_NoPID_Sig      = lineD2KPP_A_NoPID_Bkg.clone('StripD2KPP_A_NoPID_Sig',       prescale = ps_KPP_Sig, FilterDesktopFilter = { "Code" : str_cutOfflineMassKPP } )  # mod. in 9/5
 lineD2KPP_B_NoPID_Sig      = lineD2KPP_B_NoPID_Bkg.clone('StripD2KPP_B_NoPID_Sig',       prescale = ps_KPP_Sig, FilterDesktopFilter = { "Code" : str_cutSignalWindowD_KPP } )
 lineD2KPP_A_LoosePID_Sig   = lineD2KPP_A_LoosePID_Bkg.clone('StripD2KPP_A_LoosePID_Sig', prescale = ps_KPP_Sig, FilterDesktopFilter = { "Code" : str_cutSignalWindowD_KPP } )
 lineD2KPP_B_LoosePID_Sig   = lineD2KPP_B_LoosePID_Bkg.clone('StripD2KPP_B_LoosePID_Sig', prescale = ps_KPP_Sig, FilterDesktopFilter = { "Code" : str_cutSignalWindowD_KPP } )
-###############################################################
 
 # The (K+ pi- pi+_ final state 
 
@@ -490,7 +505,6 @@ lineD2KPP_DCS_B_LoosePID_Sig   = lineD2KPP_DCS_B_LoosePID_Bkg.clone('StripD2KPP_
 lineD2KPP_DCS_A_LoosePID_Sig   = lineD2KPP_DCS_A_LoosePID_Bkg.clone('StripD2KPP_DCS_A_LoosePID_Sig', prescale = ps_KPP_DCS_Sig, FilterDesktopFilter = { "Code" : str_cutSignalWindowD_KPP } ) 
 
 
-###############################################################
 # The (K- K+ pi+) final state
 filterD2KKP_A_NoPID_Bkg    = StrippingMember(FilterDesktop, "Filter", InputLocations = [ "%Combine" ], Code = str_cutBigSideband_KKP)
 filterD2KKP_B_NoPID_Bkg    = StrippingMember(FilterDesktop, "Filter", InputLocations = [ "%Combine" ], Code = str_cutBigSideband_KKP)
@@ -500,7 +514,7 @@ lineD2KKP_A_NoPID_Bkg      = StrippingLine('StripD2KKP_A_NoPID_Bkg',    prescale
 lineD2KKP_B_NoPID_Bkg      = StrippingLine('StripD2KKP_B_NoPID_Bkg',    prescale = ps_KKP_Bkg_NoPID,     algos = [ combineOfflineD2KKP_B_NoPID,    filterD2KKP_B_NoPID_Bkg    ])
 lineD2KKP_A_LoosePID_Bkg   = StrippingLine('StripD2KKP_A_LoosePID_Bkg', prescale = ps_KKP_Bkg_LoosePID,  algos = [ combineOfflineD2KKP_A_LoosePID, filterD2KKP_A_LoosePID_Bkg ])
 lineD2KKP_B_LoosePID_Bkg   = StrippingLine('StripD2KKP_B_LoosePID_Bkg', prescale = ps_KKP_Bkg_LoosePID,  algos = [ combineOfflineD2KKP_B_LoosePID, filterD2KKP_B_LoosePID_Bkg ])
-lineD2KKP_A_NoPID_Sig      = lineD2KKP_A_NoPID_Bkg.clone('StripD2KKP_A_NoPID_Sig',       prescale = ps_KKP_Sig_NoPID,    FilterDesktopFilter = { "Code" : str_cutBothSignals_KKP } )
+lineD2KKP_A_NoPID_Sig      = lineD2KKP_A_NoPID_Bkg.clone('StripD2KKP_A_NoPID_Sig',       prescale = ps_KKP_Sig_NoPID,    FilterDesktopFilter = { "Code" : str_cutOfflineMassKKP } )  # mod in 9/5
 lineD2KKP_B_NoPID_Sig      = lineD2KKP_B_NoPID_Bkg.clone('StripD2KKP_B_NoPID_Sig',       prescale = ps_KKP_Sig_NoPID,    FilterDesktopFilter = { "Code" : str_cutBothSignals_KKP } )
 lineD2KKP_A_LoosePID_Sig   = lineD2KKP_A_LoosePID_Bkg.clone('StripD2KKP_A_LoosePID_Sig', prescale = ps_KKP_Sig_LoosePID, FilterDesktopFilter = { "Code" : str_cutBothSignals_KKP } )
 lineD2KKP_B_LoosePID_Sig   = lineD2KKP_B_LoosePID_Bkg.clone('StripD2KKP_B_LoosePID_Sig', prescale = ps_KKP_Sig_LoosePID, FilterDesktopFilter = { "Code" : str_cutBothSignals_KKP } )

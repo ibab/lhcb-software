@@ -5,6 +5,12 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-05-20 Hamish Gordon
+ - 16 New D2hhh lines for cross-section measurements "StrippingD2hhhXS.py"
+ - 8 New D->hhhhh lines
+ - Updated cuts for D2hhh lines and changed prescales in "StrippingD2hhh.py"
+ - Appropriate update to StreamCharm
+
 ! 2010-05-20 - Patrick Koppenburg
  - New J/psi->ee line
 
