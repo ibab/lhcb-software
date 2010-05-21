@@ -1070,11 +1070,19 @@ if ( !lhcb.widgets ) {
       tr.appendChild(Cell('Rich2 Gas',2,options.style));
       tb.appendChild(tr);
     }
-    tr = document.createElement('tr');
-    tr.appendChild(Cell('Pressure:',1,'MonitorDataHeader'));
-    tr.appendChild(Cell('Temperatur',1,'MonitorDataHeader'));
-    tr.appendChild(Cell('Pressure:',1,'MonitorDataHeader'));
-    tr.appendChild(Cell('Temperatur',1,'MonitorDataHeader'));
+    if ( options.legend ) {
+      tr = document.createElement('tr');
+      tr.appendChild(Cell('Pressure:',1,'MonitorDataHeader'));
+      tr.appendChild(Cell('Temperatur',1,'MonitorDataHeader'));
+      tr.appendChild(Cell('Pressure:',1,'MonitorDataHeader'));
+      tr.appendChild(Cell('Temperatur',1,'MonitorDataHeader'));
+    }
+    if ( options.tips ) {
+      tooltips.set(tb,options.tips);
+    }
+    if ( options.onclick ) {
+      tb.onclick = options.onclick; 
+    }
     tb.appendChild(tr);
     tab.rich1Pressure = StyledItem('lbWeb.LHCb_RunInfoCond.RICH1.R1HltGasParameters.Pressure',null,'%7.1f hPa');
     tab.rich1Temp     = StyledItem('lbWeb.LHCb_RunInfoCond.RICH1.R1HltGasParameters.Temperature',null,'%7.1f K');
@@ -1097,6 +1105,8 @@ if ( !lhcb.widgets ) {
     };
     return tab;
   };
+  lhcb.widgets.rich = new Object();
+  lhcb.widgets.rich.Pressures = lhcb.widgets.RICHPressures;
 
   lhcb.widgets.HVSummary = function(logger) {
     var tb, tr, cell, tab = document.createElement('table');
@@ -1195,7 +1205,12 @@ if ( !lhcb.widgets ) {
 	tr.appendChild(cell=Cell('State',1,'MonitorDataHeader'));
 	tr.appendChild(cell=Cell('Request',1,'MonitorDataHeader'));
 	cell.style.width = '20%';
-	tr.appendChild(cell=Cell('HV State Side A / Side C',2,'MonitorDataHeader'));
+	if ( this.split ) {
+	  tr.appendChild(cell=Cell('HV State Side A / C',2,'MonitorDataHeader'));
+	}
+	else {
+	  tr.appendChild(cell=Cell('HV State',2,'MonitorDataHeader'));
+	}
 	tb.appendChild(tr);
       }
       this.addHV(tb);
@@ -1273,7 +1288,7 @@ if ( !lhcb.widgets ) {
     var sys = options.system;
     var cell;
     tab.className = tb.className   = 'MonitorPage';
-
+    tab.style.height = tb.style.height = '100%';
     if ( options.style ) {
       var tit = options.title;
       if ( !tit ) tit = 'VELO Subsystem State';
@@ -1402,12 +1417,14 @@ if ( !lhcb.widgets ) {
 
     table.hvSummary = function(options) {
       var tab = lhcb.widgets.HVSummary(this.logger);
+      tab.split = true;
+      if ( options.nosplit ) tab.split = false;
       tab.system = this.system;
       tab.addHV = function(tb) {};
-      if ( options.hv ) tab.addHV = function(tb) { tb.appendChild(this.addState(this.system, true, 'HV', 'HV'));};
+      if ( options.hv ) tab.addHV = function(tb) { tb.appendChild(this.addState(this.system, this.split, 'HV', 'HV'));};
 
       tab.addLV = function(tb) {};
-      if ( options.lv ) tab.addLV = function(tb) { tb.appendChild(this.addState(this.system, true, 'LV', 'DCS_Local')); };
+      if ( options.lv ) tab.addLV = function(tb) { tb.appendChild(this.addState(this.system, this.split, 'LV', 'DCS_Local')); };
       return tab.buildTable({style:'Arial12pt',top:false,hv:options.hv,hv_legend:options.hv,lv:options.lv});
     };
 
@@ -1493,12 +1510,14 @@ if ( !lhcb.widgets ) {
 	tr1.appendChild(td1=document.createElement('td'));
 	td1.appendChild(item);
 	this.parent.subscriptions.push(item);
+	return td1;
       };
       this.left.addSpacer = function(height) {
 	var tr1, td1;
 	this.appendChild(tr1=document.createElement('tr'));
 	tr1.appendChild(td1=document.createElement('td'));
-	td1.style.height=height;
+	if ( height ) td1.style.height=height;
+	return td1;
       };
       this.right.addItem = this.left.addItem;
       this.right.addSpacer = this.left.addSpacer;
@@ -1507,6 +1526,16 @@ if ( !lhcb.widgets ) {
       this.attachWidgets();
 
       tb.appendChild(tr);
+      if ( this.beforeComment ) {
+	tr = document.createElement('tr');
+	td = document.createElement('td');
+	td.colSpan = 2;
+	td.style.width = '100%';
+	this.beforeComment.style.width = '100%';
+	td.appendChild(this.beforeComment);
+	tr.appendChild(td);
+	tb.appendChild(tr);
+      }
 
       // Finally add suggestions text
       tr = document.createElement('tr');
@@ -1514,6 +1543,7 @@ if ( !lhcb.widgets ) {
       tr.appendChild(Cell('Comments and suggestions to M.Frank CERN/LHCb',2,'MonitorTinyHeader'));
       tb.appendChild(tr);
 
+      tb.appendChild(tr);
       tab.appendChild(tb);
       this.display.appendChild(tab);
       return this;
@@ -1577,6 +1607,12 @@ if ( !lhcb.widgets ) {
       tr.appendChild(Cell('Y:',1,'MonitorDataHeader'));
       tb.appendChild(tr);
     }
+    if ( options.tips ) {
+      tooltips.set(tb,options.tips);
+    }
+    if ( options.onclick ) {
+      tb.onclick = options.onclick; 
+    }
     tab.veloState   = StyledItem('lbWeb.LHCCOM/LHC.LHCb.Specific.VELO.Position', null, null);
     tab.veloOpening = StyledItem('lbWeb.LHCb_RunInfoCond.VELO.CurrentPosition.Opening',null,'%7.2f mm');
     tab.veloCenter  = StyledItem('lbWeb.LHCb_RunInfoCond.VELO.CurrentPosition.Center',null,'%7.2f mm');
@@ -1623,6 +1659,12 @@ if ( !lhcb.widgets ) {
       tr.appendChild(cell=Cell('Safe Stable Beam',1,'MonitorDataHeader'));
       tb.appendChild(tr);
     }
+    if ( options.tips ) {
+      tooltips.set(tb,options.tips);
+    }
+    if ( options.onclick ) {
+      tb.onclick = options.onclick; 
+    }
     tr = document.createElement('tr');
     tr.appendChild(tab.injectionAllowed );
     tab.injectionAllowed.style.width = '33%';
@@ -1666,6 +1708,12 @@ if ( !lhcb.widgets ) {
       tr.appendChild(Cell('PE421',1,'MonitorDataHeader'));
       tr.appendChild(Cell('PE422',1,'MonitorDataHeader'));
       tb.appendChild(tr);
+    }
+    if ( options.tips ) {
+      tooltips.set(tb,options.tips);
+    }
+    if ( options.onclick ) {
+      tb.onclick = options.onclick; 
     }
     tr = document.createElement('tr');
     tr.appendChild(tab.pe411);
@@ -1716,6 +1764,12 @@ if ( !lhcb.widgets ) {
       tr.appendChild(Cell('Side C',2,'MonitorDataHeader'));
       tb.appendChild(tr);
       tr = document.createElement('tr');
+    }
+    if ( options.tips ) {
+      tooltips.set(tb,options.tips);
+    }
+    if ( options.onclick ) {
+      tb.onclick = options.onclick; 
     }
     tr.appendChild(tab.cool);
     tr.appendChild(tab.cool.lock);

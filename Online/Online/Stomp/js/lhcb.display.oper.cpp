@@ -155,7 +155,8 @@ var OperationsStatus = function(msg)   {
     var tb, tr, cell, tab = document.createElement('table');
     tab.className  = 'MonitorPage';
     tb = document.createElement('tbody');
-    tooltips.set(tb,'Database interface summary');
+    tooltips.set(tb,'Database interface summary<br>Click to see online database server status page.');
+    tb.onclick = function() { document.location = lhcb.constants.urls.lhcb.online_databases_status.src; };
     tb.className   = 'MonitorPage';
     tb.height      = '120px';
     this.dbRun     = StyledItem('lbWeb.LHCb_RunInfoCond.RunDBServer',null,null);
@@ -241,7 +242,7 @@ var OperationsStatus = function(msg)   {
   table.build = function() {
     var tab = document.createElement('table');
     var tb = document.createElement('tbody');
-    var t1, tb1, tr1, td1, cell, d = new Date();
+    var opts, t1, tb1, tr1, td1, cell, d = new Date();
 
     tab.className = tb.className = 'MonitorPage';
     tab.width = tb.width  = '100%';
@@ -326,13 +327,19 @@ var OperationsStatus = function(msg)   {
     tr1.appendChild(td1=document.createElement('td'));
     td1.appendChild(cell=this.Magnet_Summary());
 
-    tb1.appendChild(tr1=document.createElement('tr'));
-    tr1.appendChild(td1=document.createElement('td'));
-    td1.appendChild(this.veloPosition=lhcb.widgets.velo.positionSummary({style:'Arial12pt',legend:true,logger:this.logger}));
+    opts={style:'Arial12pt',legend:true,logger:this.logger};
 
     tb1.appendChild(tr1=document.createElement('tr'));
     tr1.appendChild(td1=document.createElement('td'));
-    td1.appendChild(this.pressures=lhcb.widgets.RICHPressures({style:'Arial12pt',logger:this.logger}));
+    opts.tips = 'Velo position<br>Click to see VELO online page';
+    opts.onclick = function() {document.location=lhcb.constants.urls.lhcb.subdetectors.velo.src;};
+    td1.appendChild(this.veloPosition=lhcb.widgets.velo.positionSummary(opts));
+
+    tb1.appendChild(tr1=document.createElement('tr'));
+    tr1.appendChild(td1=document.createElement('td'));
+    opts.tips = 'RICH gas pressures<br>Click to see RICH online page';
+    opts.onclick = function() {document.location=lhcb.constants.urls.lhcb.subdetectors.rich.src;};
+    td1.appendChild(this.pressures=lhcb.widgets.RICHPressures(opts));
 
     tb1.appendChild(tr1=document.createElement('tr'));
     tr1.appendChild(td1=document.createElement('td'));

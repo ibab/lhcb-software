@@ -205,6 +205,7 @@ var navbar_subdetectors = function(navBar) {
   navBar.addURL('Trigger/DAQ page',lhcb.constants.urls.lhcb.subdetectors.daq_trigger);
   navBar.addURL('Show VELO page',lhcb.constants.urls.lhcb.subdetectors.velo);
   navBar.addURL('Show OT page',lhcb.constants.urls.lhcb.subdetectors.ot);
+  navBar.addURL('Show RICH page',lhcb.constants.urls.lhcb.subdetectors.rich);
   navBar.addURL('Show MUON page',lhcb.constants.urls.lhcb.subdetectors.muon);
 };
 

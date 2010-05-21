@@ -111,13 +111,61 @@ if ( !_lhcb().constants ) {
 	}
       },
       lhcb: {
-	home_page: {
-	  src:    'http://lhcb.cern.ch',
-	  img:    this.images.window,
-	  title:  'Home Page',
-	  nick:   'lhcb-home-page-win',
-	  cls:    'bogus',
-	  size:   {width:  900,	height: 800}
+	subdetectors: {
+	  daq_lumi: {
+	    src:    this.lhcb_display_url('lumi'),
+	    img:    this.images.lookprod,
+	    title:  'DAQ/Lumi',
+	    nick:   'lhcb-lumi-win',
+	    cls:    'Collimators16',
+	    iconCls:'Collimators32',
+	    size:   {width:  950,	height: 700}
+	  },
+	  daq_trigger: {
+	    src:    this.lhcb_display_url('trigger'),
+	    img:    this.images.lookprod,
+	    title:  'DAQ/Trigger',
+	    nick:   'lhcb-trigger-win',
+	    cls:    'Collimators16',
+	    iconCls:'Collimators32',
+	    size:   {width:  950,	height: 700}
+	  },
+	  velo: {
+	    src:    this.lhcb_display_url('velo'),
+	    img:    this.images.lookprod,
+	    title:  'VELO',
+	    nick:   'lhcb-velo-win',
+	    cls:    'Collimators16',
+	    iconCls:'Collimators32',
+	    size:   {width:  950,	height: 700}
+	  },
+	  ot: {
+	    src:    this.lhcb_display_url('ot'),
+	    img:    this.images.lookprod,
+	    title:  'OT',
+	    nick:   'lhcb-ot-win',
+	    cls:    'Collimators16',
+	    iconCls:'Collimators32',
+	    size:   {width:  950,	height: 700}
+	  },
+	  rich: {
+	    src:    this.lhcb_display_url('rich'),
+	    img:    this.images.lookprod,
+	    title:  'RICH',
+	    nick:   'lhcb-rich-win',
+	    cls:    'Collimators16',
+	    iconCls:'Collimators32',
+	    size:   {width:  950,	height: 700}
+	  },
+	  muon: {
+	    src:    this.lhcb_display_url('muon'),
+	    img:    this.images.lookprod,
+	    title:  'MUON',
+	    nick:   'lhcb-muon-win',
+	    cls:    'Collimators16',
+	    iconCls:'Collimators32',
+	    size:   {width:  950,	height: 700}
+	  }
 	},
 	dirac: {
 	  home_page: {
@@ -136,6 +184,14 @@ if ( !_lhcb().constants ) {
 	    cls:    'bogus',
 	    size:   {width:  900,	height: 800}
 	  }
+	},
+	home_page: {
+	  src:    'http://lhcb.cern.ch',
+	  img:    this.images.window,
+	  title:  'Home Page',
+	  nick:   'lhcb-home-page-win',
+	  cls:    'bogus',
+	  size:   {width:  900,	height: 800}
 	},
 	online_home_page: {
 	  src:    'http://lhcb-online.web.cern.ch/lhcb-online',
@@ -261,53 +317,6 @@ if ( !_lhcb().constants ) {
 	  cls:    'Beams16',
 	  iconCls:'Beams32',
 	  size:   {width:  900,	height: 820}
-	},
-	subdetectors: {
-	  daq_lumi: {
-	    src:    this.lhcb_display_url('lumi'),
-	    img:    this.images.lookprod,
-	    title:  'DAQ/Lumi',
-	    nick:   'lhcb-lumi-win',
-	    cls:    'Collimators16',
-	    iconCls:'Collimators32',
-	    size:   {width:  950,	height: 700}
-	  },
-	  daq_trigger: {
-	    src:    this.lhcb_display_url('trigger'),
-	    img:    this.images.lookprod,
-	    title:  'DAQ/Trigger',
-	    nick:   'lhcb-trigger-win',
-	    cls:    'Collimators16',
-	    iconCls:'Collimators32',
-	    size:   {width:  950,	height: 700}
-	  },
-	  velo: {
-	    src:    this.lhcb_display_url('velo'),
-	    img:    this.images.lookprod,
-	    title:  'VELO',
-	    nick:   'lhcb-velo-win',
-	    cls:    'Collimators16',
-	    iconCls:'Collimators32',
-	    size:   {width:  950,	height: 700}
-	  },
-	  ot: {
-	    src:    this.lhcb_display_url('ot'),
-	    img:    this.images.lookprod,
-	    title:  'OT',
-	    nick:   'lhcb-ot-win',
-	    cls:    'Collimators16',
-	    iconCls:'Collimators32',
-	    size:   {width:  950,	height: 700}
-	  },
-	  muon: {
-	    src:    this.lhcb_display_url('muon'),
-	    img:    this.images.lookprod,
-	    title:  'MUON',
-	    nick:   'lhcb-muon-win',
-	    cls:    'Collimators16',
-	    iconCls:'Collimators32',
-	    size:   {width:  950,	height: 700}
-	  }
 	},
 	elog: {
 	  src:    'http://lblogbook.cern.ch/Shift/',
