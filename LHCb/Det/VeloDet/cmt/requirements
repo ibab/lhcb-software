@@ -5,7 +5,7 @@
 #                 David Hutchcroft
 #                 Kurt Rinnert
 package  VeloDet 
-version  v13r9
+version  v13r10
 
 # =============== structure ===============================================	
 branches         src cmt doc VeloDet dict

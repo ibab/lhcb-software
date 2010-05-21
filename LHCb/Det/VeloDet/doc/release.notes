@@ -3,6 +3,7 @@
 ! package manager : Velo Group
 !-----------------------------------------------------------------------------
 
+!======================== VeloDet v13r10 2010-05-21 ==========================
 ! 2010-05-06 - Kurt Rinnert
  - bug fix in DeVeloRtype: the trajectories for the fit sometimes had the
    wrong direction, depending on alignment constants.
