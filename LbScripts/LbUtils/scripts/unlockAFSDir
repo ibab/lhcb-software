@@ -6,6 +6,8 @@ from LbUtils.Script import Script
 from LbUtils.CVS import CVS2Version
 from LbUtils.afs.directory import Directory 
 
+import sys
+
 __version__ = CVS2Version("$Name: $", "$Revision: $")
 
 class UnlockAFSDirScript(Script):
@@ -27,4 +29,4 @@ class UnlockAFSDirScript(Script):
 
 if __name__ == '__main__':
     s = UnlockAFSDirScript(usage="%prog [options] path")
-    return s.run()
+    sys.exit(s.run())
