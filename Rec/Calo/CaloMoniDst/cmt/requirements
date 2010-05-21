@@ -1,10 +1,10 @@
-# $Id: requirements,v 1.36 2010-05-17 09:23:12 odescham Exp $ 
+# $Id: requirements,v 1.37 2010-05-21 14:15:58 rlambert Exp $ 
 # ============================================================================
 # Created    : 2004-10-25
 # Maintainer : Olivier Deschamps odescham@in2p3.fr
 # ============================================================================
 package           CaloMoniDst
-version           v5r1
+version           v5r2
 
 # =============== structure ==================================================
 branches          cmt doc src python
