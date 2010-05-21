@@ -4,6 +4,9 @@
 ! Purpose     : Apply some cuts on reconstructed vertices
 !-----------------------------------------------------------------------------
 
+! 2010-05-21 - Neal Gauvin
+ - Do not take candidates that are upstream the upstream PV.
+
 ! 2010-05-17 - Neal Gauvin
  - Be sure there's no reference to PV2D
 
