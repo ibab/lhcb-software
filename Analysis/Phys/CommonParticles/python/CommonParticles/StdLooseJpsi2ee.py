@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: StdLooseJpsi2ee.py,v 1.5 2010-05-21 07:34:09 pkoppenb Exp $ 
+# $Id: StdLooseJpsi2ee.py,v 1.6 2010-05-21 09:53:29 pkoppenb Exp $ 
 # =============================================================================
 ## @file  CommonParticles/StdLooseJpsi2ee.py
 #  configuration file for 'Standard Loose Jpsi2ee' 
@@ -11,7 +11,7 @@
 Configuration file for 'Standard Loose Jpsi2ee'
 """
 __author__  = "Patrick Koppenburg"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $"
 # =============================================================================
 __all__ = (
     'StdLooseJpsi2ee' ,
@@ -28,7 +28,7 @@ StdLooseJpsi2ee = CombineParticles ( 'StdLooseJpsi2ee' )
 StdLooseJpsi2ee.InputLocations = [ "StdLooseElectrons" ]
 StdLooseJpsi2ee.DecayDescriptor = "J/psi(1S) -> e+ e-" 
 
-StdLooseJpsi2ee.CombinationCut = "(AM>1500*MeV) & (AM<3800*MeV)"
+StdLooseJpsi2ee.CombinationCut = "(AM>2000*MeV) & (AM<3800*MeV)"
 StdLooseJpsi2ee.MotherCut = "(VFASPF(VCHI2/VDOF)<25)"
 
 ## configure Data-On-Demand service 

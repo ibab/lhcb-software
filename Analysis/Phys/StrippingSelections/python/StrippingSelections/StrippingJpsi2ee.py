@@ -1,4 +1,4 @@
-# $Id: StrippingJpsi2ee.py,v 1.1 2010-05-20 13:24:28 pkoppenb Exp $
+# $Id: StrippingJpsi2ee.py,v 1.2 2010-05-21 09:54:06 pkoppenb Exp $
 ## #####################################################################
 # A stripping selection for inclusive J/psi(1S) -> e+ e- decays
 #
@@ -17,7 +17,7 @@ class StrippingDiElectronConf(LHCbConfigurableUser):
     Definition of Jpsi -> e e stripping.
     """
     __slots__ = {
-        "electronPT" : 300 # MeV
+        "electronPT" : 500 # MeV
 		}
 
     def loose_line( self ):
