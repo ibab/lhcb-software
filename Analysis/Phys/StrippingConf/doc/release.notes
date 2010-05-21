@@ -1,9 +1,14 @@
-!$Id: release.notes,v 1.58 2010-05-20 13:07:13 poluekt Exp $
+!$Id: release.notes,v 1.59 2010-05-21 15:25:57 poluekt Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/StrippingConf
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
+
+! 2010-05-21 - Anton Poluektov 
+ - Fixed bug in filterMembers affecting StrippingLines with GaudiSequencers: 
+   FilterDesktops were not configured correctly for them by DSTwriter, 
+   which caused missing candidates on DST. 
 
 ! 2010-05-20 - Anton Poluektov
  - Creating StrippingLine with a duplicate name now causes DaVinci to exit

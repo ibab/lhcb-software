@@ -458,7 +458,7 @@ class StrippingLine(object):
 	    _flattenedMembers = []
 	    for i in _members : 
 		if GaudiSequencer is type(i) : 
-		    _flattenedMembers += [ i.Members ] 
+		    _flattenedMembers += i.Members
 		    _foundSequencer = True
 		else : 
 		    _flattenedMembers += [ i ]
