@@ -5,6 +5,7 @@
 ! package manager : Marco Clemencic
 ! =============================================================================
 
+!===================== Tools/CondDBUI v3r4 2010-05-21 =========================
 ! 2010-05-19 - Illya Shapoval
  - Added CreateDBLookupFile.py script which generates the full set of files with 
    CondDB Tier-1s connection settings (authentication.xml and dblookup-SITE.xml).
