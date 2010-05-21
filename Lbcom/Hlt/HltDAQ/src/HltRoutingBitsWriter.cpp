@@ -1,4 +1,4 @@
-// $Id: HltRoutingBitsWriter.cpp,v 1.9 2010-05-21 11:13:17 graven Exp $
+// $Id: HltRoutingBitsWriter.cpp,v 1.10 2010-05-21 11:13:58 graven Exp $
 // Include files 
 // from Boost
 #include "boost/foreach.hpp"
@@ -116,8 +116,8 @@ HltRoutingBitsWriter::HltRoutingBitsWriter( const std::string& name,
   declareProperty("ODINLocation", m_odin_location = LHCb::ODINLocation::Default);
   declareProperty("RoutingBits", m_bits) ->declareUpdateHandler( &HltRoutingBitsWriter::updateBits, this );
   declareProperty("Preambulo", m_preambulo_)->declareUpdateHandler(&HltRoutingBitsWriter::updatePreambulo , this);
-  // declareProperty("TrendTimeSpan",m_timeSpan = 125 );
-  // declareProperty("TrendBinWidth",m_binWidth = 1 );
+  declareProperty("TrendTimeSpan",m_timeSpan = 125 );
+  declareProperty("TrendBinWidth",m_binWidth = 1 );
 
 }
 //=============================================================================
@@ -183,12 +183,13 @@ StatusCode HltRoutingBitsWriter::execute() {
   // bits 0--7 are for ODIN
   LHCb::ODIN* odin = get<LHCb::ODIN>( m_odin_location );
   if (m_runNumber != odin->runNumber()) {
-        m_startOfRun = odin->gpsTime();
+        m_startOfRun = odin->gpsTime(); // note: this may imply that different nodes use slightly different startOfRun times...
+                                        //       but that should be a negligible effect -- exept if a task dies, and rejoins later...
         m_runNumber  = odin->runNumber();
   }
   // go from nanoseconds to minutes...
   double t = double(odin->gpsTime() - m_startOfRun)/6e10; 
-  double weight = double(1)/(m_binWidth*60); // m_binwidth is in minutes, need rate in Hz
+  double weight = double(1)/(m_binWidth*60); // m_binWidth is in minutes, need rate in Hz
 
   for (unsigned i=0;i<8;++i) {
         LoKi::Types::ODIN_Cut* eval = m_odin_evaluators[ i ].predicate;
