@@ -16,7 +16,7 @@ use CaloKernel            v6r2    Calo    # Olivier Deschamps
 use CaloUtils             v8r12   Calo    # Olivier Deschamps
 
 use DAQUtils              v1r3    DAQ     # In SVN. Marco Cattaneo
-use MDF                   v3r23   DAQ     # Markus Frank
+use MDF                   v3r24   DAQ     # Markus Frank
 use Tell1Kernel           v1r11   DAQ     # Tomasz Szumlak
 
 use MuonKernel            v4r0    Muon    # Andrei Tsaregorodtsev
