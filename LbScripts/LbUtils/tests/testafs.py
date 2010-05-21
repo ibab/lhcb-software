@@ -22,11 +22,6 @@ if __name__ == '__main__':
     print getParentMountPoint(environ["HOME"])
     print getParentMountPoint(sep.join([environ["HOME"], "tmp"] ))
     print getParentMountPoint(sep.join([environ["HOME"], "scratch0"] ))
-    print getParentMountPoint(sep.join([environ["HOME"], 
-                                   "scratch0",
-                                   "GaudiDev"] ))
-    print getParentMountPoint(sep.join([environ["HOME"], 
-                                   "scratch0"] ))
 
     print "============================================="
 #    print isMountPoint("/tmp")
