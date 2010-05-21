@@ -8,7 +8,7 @@ def isIterable(obj) :
     '''
     Test if an object is iterable but not a string type.
     '''
-    return hasattr(el, "__iter__") and not isinstance(obj, basestring) 
+    return hasattr(obj, "__iter__") and not isinstance(obj, basestring) 
 
 def flattenList(sequence) :
     """flattenList(sequence) -> flat list
@@ -19,8 +19,8 @@ def flattenList(sequence) :
         if isIterable(member) :
             flatList.extend(flattenList(member))
         else :
-            flattenList.append(member)
-
+            flatList.append(member)
+    return flatList
 
 class ConfigurableList(object) :
     '''
@@ -38,7 +38,7 @@ class ConfigurableList(object) :
         return type(self._sel).__name__
     def flatList(self) :
         if self.name() in ConfigurableList._algos.keys() :
-            return flattenList(ConfigurableList._algos[self.name()](self._sel))
+            return ConfigurableList._algos[self.name()](self._sel)
         else :
             return ConfigurableList._algos['DEFAULT'](self._sel)
 
