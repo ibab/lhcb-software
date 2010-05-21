@@ -1,7 +1,7 @@
 """
 High level configuration tools for DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.107 2010-05-12 14:44:59 panmanj Exp $"
+__version__ = "$Id: Configuration.py,v 1.108 2010-05-21 09:51:39 jpalac Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -148,7 +148,8 @@ class DaVinci(LHCbConfigurableUser) :
         Define DB and so on
         """
         # Delegate handling to LHCbApp configurable
-#        self.setOtherProps(LHCbApp(),["DataType","CondDBtag","DDDBtag","Simulation"])
+        self.setOtherProps(LHCbApp(),["DataType","CondDBtag","DDDBtag","Simulation"])
+        '''
         self.setOtherProps(LHCbApp(),["DataType","Simulation"])
         # that's a hack. Why does setOtherProps not work?
         type = self.getProp("DataType")
@@ -162,6 +163,7 @@ class DaVinci(LHCbConfigurableUser) :
         LHCbApp().DDDBtag   = db
         self.setProp('CondDBtag', cb)
         self.setProp('DDDBtag', cb)
+        '''
         self.setOtherProps(PhysConf(),["DataType","Simulation","InputType"])
         self.setOtherProps(AnalysisConf(),["DataType","Simulation"])
 
