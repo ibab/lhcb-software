@@ -4,6 +4,7 @@
 ! Purpose     : Holds the bare minumum code for manipulating XML
 !-----------------------------------------------------------------------------
 
+!======================== XmlSummaryBase v1r1 2010-05-21 =====================
 ! 2010-04-30 - Rob Lambert
  - Fixed bug from last commit, event count made a double
  - Sped up by a factor of two by not reparsing the schema a million times
