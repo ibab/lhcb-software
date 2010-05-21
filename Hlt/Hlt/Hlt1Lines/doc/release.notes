@@ -1,9 +1,11 @@
-! $Id: release.notes,v 1.178 2010-05-19 04:04:02 gligorov Exp $
+! $Id: release.notes,v 1.179 2010-05-21 10:33:52 depaula Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
+! 2010-05-21 - L. de Paula
+ - Change Hlt1MuonLines to new PV3D reconstruction
 
 ! 2010-05-19 - V. Gligorov
  - Fix typos in lifetime unbiased hadron lines.
