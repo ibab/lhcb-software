@@ -5,6 +5,9 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-05-21 - Liming Zhang
+ - D0->KPi and K3Pi added for early b & c cross-section measurements "StrippingD0forBXX.py"
+
 ! 2010-05-20 Hamish Gordon
  - 16 New D2hhh lines for cross-section measurements "StrippingD2hhhXS.py"
  - 8 New D->hhhhh lines

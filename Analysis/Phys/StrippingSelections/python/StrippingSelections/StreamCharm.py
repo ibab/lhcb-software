@@ -27,6 +27,7 @@ from StrippingSelections.StrippingDstarVeryLooseWithD02HH import StrippingDstarV
 from StrippingSelections.StrippingDstarD2KShh          import StrippingDstarD2KShhConf
 from StrippingSelections.StrippingDstarD02xx import  StrippingDstarD02xxConf
 from StrippingSelections.StrippingCcbar2Ppbar import StrippingCcbar2PpbarConf
+from StrippingSelections.StrippingD0ForBXX import StrippingD0forBXXConf
 
 stream = StrippingStream("Charm")
 
@@ -109,6 +110,8 @@ stream.appendLines( [
         , StrippingD2hhNoPIDXsec.line
         , StrippingD2Kh.DKhPreselLine
         , StrippingD2KhLoose.DKhPreselLooseLine
+        ,StrippingD0forBXXConf().D02KPiforBXXLine()
+        ,StrippingD0forBXXConf().D02K3PiforBXXLine()
     ] )
 stream.appendLines( StrippingDstarPromptWithD02HHConf().lines() )
 stream.appendLines( StrippingDstarD2KShhConf().MakeLines() )
