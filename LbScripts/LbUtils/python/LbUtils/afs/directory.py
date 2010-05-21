@@ -11,6 +11,12 @@ class NotInAFS(Exception):
     """ Exception for non AFS directories """
     pass
 
+class NoACL(Exception):
+    """ Exception raised when clearing an acl without providing new ones """
+    pass
+
+
+
 class Directory(object):
     def __init__(self, dirpath):
         self._name = os.path.realpath(dirpath)
@@ -46,6 +52,107 @@ class Directory(object):
             if volmatch:
                 return volmatch.group(1)
         raise NotInAFS, "Directory %s is not on an AFS volume"  % self._name
+    def getACL(self) :
+        """ return to list of ACL of the directory as a dictionary """
+        acl_dict = {}
+        p = Popen(["fs","la",self._name], stdout=PIPE, stderr=STDOUT)
+        exp = re.compile("\s+(.+)\s+([rlidwka]+)\n")
+        for line in p.stdout :
+            rightmatch = exp.match(line)
+            if rightmatch :
+                acl_dict[rightmatch.group(1)] = rightmatch.group(2)
+        return acl_dict
+    def _setACL(self, acl_dict) :
+        """ internal function to set ACL. protection against naked -clear """
+        if not acl_dict :
+            raise NoACL("No ACL provided when clearing the original ones")
+        else :
+            cmd_list = ["fs","sa","-clear", "-dir", self._name, "-acl"]
+            acl_list = []
+            for a in acl_dict.keys() :
+                acl_list.append(a)
+                acl_list.append(acl_dict[a])
+            cmd_list += acl_list
+            Popen(cmd_list)
+    def resetACL(self, recursive=False) :
+        default_acl = {}
+        default_acl["system:administrators"] = "rlidwka"
+        default_acl["system:anyuser"] = "rl"
+        default_acl[os.environ["USER"]] = "rlidwka"        
+        self._setACL(default_acl)
+        if recursive :
+            for root, dirs, files in os.walk(self._name, topdown=False) :
+                for d in dirs :
+                    dirpath = os.path.join(root, d)
+                    d_inst = Directory(dirpath)
+                    d_inst.resetACL(recursive=False)
+    def addACL(self, acl_dict, recursive=False) :
+        dir_acl = self.getACL()
+        for g in acl_dict.keys() :
+            if acl_dict[g] :
+                if g not in dir_acl.keys() :
+                    dir_acl[g] = acl_dict[g]
+                else :
+                    for l in acl_dict[g] :
+                        if l not in dir_acl[g] :
+                            dir_acl[g] = dir_acl[g] + l
+            else :
+                raise NoACL("You cannot add an empty list for %s" % g)
+        self._setACL(dir_acl)
+        if recursive :
+            for root, dirs, files in os.walk(self._name, topdown=False) :
+                for d in dirs :
+                    dirpath = os.path.join(root, d)
+                    d_inst = Directory(dirpath)
+                    d_inst.addACL(acl_dict, recursive=False)
+
+    def removeACL(self, acl_dict, recursive=False) :
+        dir_acl = self.getACL()
+        for g in acl_dict.keys() :
+            if acl_dict[g] :
+                if g in dir_acl.keys() :
+                    for l in acl_dict[g] :
+                        if l in dir_acl[g] :
+                            dir_acl[g] = dir_acl[g].replace(l,"")
+            else :
+                raise NoACL("You cannot remove an empty list for %s" % g)
+        self._setACL(dir_acl)
+        if recursive :
+            for root, dirs, files in os.walk(self._name, topdown=False) :
+                for d in dirs :
+                    dirpath = os.path.join(root, d)
+                    d_inst = Directory(dirpath)
+                    d_inst.removeACL(acl_dict, recursive=False)
+    def lockACL(self, recursive=False) :
+        dir_acl = self.getACL()
+        perm_to_remove = "idwk"
+        for g in dir_acl.key() :
+            if g != "system:administrators" :
+                for p in perm_to_remove :
+                    if p in dir_acl[g] :
+                        dir_acl[g] = dir_acl.replace(p, "")
+        self._setACL(dir_acl)
+        if recursive :
+            for root, dirs, files in os.walk(self._name, topdown=False) :
+                for d in dirs :
+                    dirpath = os.path.join(root, d)
+                    d_inst = Directory(dirpath)
+                    d_inst.lockACL(recursive=False)
+    def unlockACL(self, recursive=False):
+        dir_acl = self.getACL()
+        perm_to_add = "idwk"
+        for g in dir_acl.key() :
+            if g != "system:anyuser" :
+                for p in perm_to_remove :
+                    if p not in dir_acl[g] :
+                        dir_acl[g] = dir_acl[g] + p
+        self._setACL(dir_acl)
+        if recursive :
+            for root, dirs, files in os.walk(self._name, topdown=False) :
+                for d in dirs :
+                    dirpath = os.path.join(root, d)
+                    d_inst = Directory(dirpath)
+                    d_inst.unlockACL(recursive=False)
     def isMountPoint(self):
         """ Check if the directory is a mount point """
         exp = re.compile("is\s+a\s+mount\s+point")

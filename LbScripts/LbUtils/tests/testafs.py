@@ -1,10 +1,11 @@
+#!/usr/bin/env python
 # $Id: testafs.py,v 1.4 2008-10-29 17:43:40 hmdegaud Exp $
 """ test file for the AFS module """
 
 from os import environ, sep
 from LbUtils.afs.directory import getDirID, getDirVolumeID, getDirVolumeName
-from LbUtils.afs.directory import getParentMountPoint
-from LbUtils.afs.directory import isMountPoint
+from LbUtils.afs.directory import getParentMountPoint, NotInAFS
+from LbUtils.afs.directory import isMountPoint, Directory
 from LbUtils.CVS import CVS2Version
 
 __version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.4 $")
@@ -32,8 +33,11 @@ if __name__ == '__main__':
     print getDirVolumeName(environ["HOME"])
     print getDirVolumeName(sep.join([environ["HOME"], "tmp"] ))
     print getDirVolumeName(sep.join([environ["HOME"], "scratch0"] ))
-    print getDirVolumeName(sep.join([environ["HOME"], 
-                                   "scratch0",
-                                   "GaudiDev"] ))
-    print getDirVolumeName("/tmp")
-    
+    try :
+    	print getDirVolumeName("/tmp")
+    except NotInAFS :
+ 	pass
+
+    h = Directory(environ["HOME"])
+    h.getACL()
+

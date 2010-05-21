@@ -1,0 +1,30 @@
+#!/usr/bin/env python
+# $Id: $
+""" This script is made for removing the write access of an AFS directory """
+
+from LbUtils.Script import Script
+from LbUtils.CVS import CVS2Version
+from LbUtils.afs.directory import Directory 
+
+__version__ = CVS2Version("$Name: $", "$Revision: $")
+
+class LockAFSDirScript(Script):
+    _version = __version__    
+    _description = __doc__
+    def defineOpts(self):
+        parser = self.parser
+        parser.set_defaults(recursive=False)
+        parser.add_option("-R", "--recursive",
+                          dest="recursive",
+                          action= "store_true",
+                          help="lock recursively")
+    def main(self):
+        opts = self.options
+        for a in self.args :
+            d = Directory(a)
+            d.lockACL(opts.recursive)
+        return 0
+
+if __name__ == '__main__':
+    s = LockAFSDirScript(usage="%prog [options] path")
+    return s.run()
