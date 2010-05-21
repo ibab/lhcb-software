@@ -143,7 +143,7 @@ class Directory(object):
         perm_to_add = "idwk"
         for g in dir_acl.keys() :
             if g != "system:anyuser" :
-                for p in perm_to_remove :
+                for p in perm_to_add :
                     if p not in dir_acl[g] :
                         dir_acl[g] = dir_acl[g] + p
         self._setACL(dir_acl)
