@@ -1,9 +1,12 @@
 !-----------------------------------------------------------------------------
-! $Id: release.notes,v 1.143 2010-05-21 12:22:28 cattanem Exp $
+! $Id: release.notes,v 1.144 2010-05-21 15:40:08 odescham Exp $
 ! Package     : Event/RecEvent
 ! Responsible : Marco Cattaneo
 ! Purpose     : LHCb Event model. Reconstruction classes (Brunel output) 
 !-----------------------------------------------------------------------------
+
+! 2010-05-21 - Olivier Deschamps
+   - ProtoParticle.cpp : fix compilation warning on slc4
 
 !========================= RecEvent v2r28 2010-05-21 =========================
 ! 2010-05-18 - Olivier Deschamps
