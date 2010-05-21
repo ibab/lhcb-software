@@ -9,7 +9,7 @@ Configurable for Calorimeter Reconstruction
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.14 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.15 $"
 # =============================================================================
 __all__ = (
     'HltCaloRecoConf'     ,
@@ -477,7 +477,8 @@ class CaloProcessor( CaloRecoConf ):
                                     ChargedProtoParticleAddHcalInfo,
                                     ChargedProtoParticleAddPrsInfo,
                                     ChargedProtoParticleAddSpdInfo,
-                                    ChargedProtoParticleMaker
+                                    ChargedProtoParticleMaker,
+                                    ChargedProtoCombineDLLsAlg
                                     )
 
         fullSeq     = []
@@ -561,6 +562,8 @@ class CaloProcessor( CaloRecoConf ):
             hcal = getAlgo( ChargedProtoParticleAddHcalInfo,"ChargedProtoPAddHcal", context)
             prs  = getAlgo( ChargedProtoParticleAddPrsInfo ,"ChargedProtoPAddPrs" , context)
             spd  = getAlgo( ChargedProtoParticleAddSpdInfo ,"ChargedProtoPAddSpd" , context)            
+            comb = getAlgo( ChargedProtoCombineDLLsAlg, "ChargedProtoPCombineDLLs", context)
+
             # ChargedProtoP Maker on demand (not in any sequencer)
             maker = getAlgo( ChargedProtoParticleMaker, "ChargedProtoMaker" , context, cloc , dod )
             if cloc != '' :
@@ -586,9 +589,9 @@ class CaloProcessor( CaloRecoConf ):
                 spd.ProtoParticleLocation = cloc            
             # Fill the sequence
             cpSeq = getAlgo( GaudiSequencer , "ChargedProtoPCaloUpdateSeq", context )
-            cpSeq.Members += [ ecal,brem,hcal,prs,spd ]
+            cpSeq.Members += [ ecal,brem,hcal,prs,spd,comb ]
             addAlgs(protoSeq , cpSeq )
-            addAlgs(cProtoSeq, [ecal,brem,hcal,prs,spd] )
+            addAlgs(cProtoSeq, [ecal,brem,hcal,prs,spd,comb] )
 
         # NeutralProtoParticleProtoP components        
         if not self.getProp('SkipNeutrals') :

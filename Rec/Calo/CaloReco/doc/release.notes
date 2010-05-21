@@ -1,10 +1,13 @@
-! $Id: release.notes,v 1.183 2010-05-20 09:47:05 odescham Exp $
+! $Id: release.notes,v 1.184 2010-05-21 11:00:37 odescham Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Calo/CaloReco
 ! Responsible : Olivier Deschamps odescham@in2p3.fr 
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
 
 ! -----------------------------------------------------------------------------
+
+! 2010-05-21 - Olivier Deschamps
+	- python/Configuration.py : full protoP reprocessing (incl. combination) in protoSequence
 
 ! 2010-05-20 - Olivier Deschamps
 
