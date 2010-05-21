@@ -465,8 +465,8 @@ class StrippingLine(object):
 	    _members = _flattenedMembers
 	    if not _foundSequencer : break
 	    
-	print "FilterMembers for line %s : " % self.name()
-	print _members
+#	print "FilterMembers for line %s : " % self.name()
+#	print _members
 	    
 	return _members
 
