@@ -86,62 +86,64 @@ StatusCode TrackClusterFinder::execute() {
       tmpTracks.push_back(track);
     }
     // Allocate weights
-    for(std::vector<tmpTrack>::iterator id1 = tmpTracks.begin(); 
-        id1 != tmpTracks.end() - 1; id1++) {
-      tmpTrack trk1 = *id1;
-      for(std::vector<tmpTrack>::iterator id2 = id1 + 1;
-          id2 != tmpTracks.end(); id2++) {
-        tmpTrack trk2 = *id2;
-        double diffEta = fabs(trk2.eta - trk1.eta);
-        double diffPhi = fabs(trk2.phi - trk1.phi);
-        if(diffPhi > M_PI) diffPhi = 2.0 * M_PI - diffPhi;
-        if((diffEta < m_maxDeltaEta) && (diffPhi < m_maxDeltaPhi)) {
-          tmpTracks[trk1.index].weight += 1;
-          tmpTracks[trk2.index].weight += 1;
+    if(tmpTracks.size() > 0) {   
+      for(std::vector<tmpTrack>::iterator id1 = tmpTracks.begin(); 
+          id1 != tmpTracks.end() - 1; id1++) {
+        tmpTrack trk1 = *id1;
+        for(std::vector<tmpTrack>::iterator id2 = id1 + 1;
+            id2 != tmpTracks.end(); id2++) {
+          tmpTrack trk2 = *id2;
+          double diffEta = fabs(trk2.eta - trk1.eta);
+          double diffPhi = fabs(trk2.phi - trk1.phi);
+          if(diffPhi > M_PI) diffPhi = 2.0 * M_PI - diffPhi;
+          if((diffEta < m_maxDeltaEta) && (diffPhi < m_maxDeltaPhi)) {
+            tmpTracks[trk1.index].weight += 1;
+            tmpTracks[trk2.index].weight += 1;
+          }
         }
       }
-    }    
-    // Find highest multiplicity peak
-    int cIndex, multPeak;
-    getPeak(tmpTracks,cIndex,multPeak);
-    // Assign tracks to jets
-    std::vector<tmpJet> tmpJets;
-    while(multPeak >= m_minWeightSeed) {
-      tmpJet jet;
-      jet.tracks.push_back(tmpTracks[cIndex]);
-      tmpTracks[cIndex].weight = 0;
-      for(std::vector<tmpTrack>::iterator id = tmpTracks.begin();
-          id != tmpTracks.end(); id++) {
-        tmpTrack trk = *id;
-        double dEta = fabs(trk.eta - tmpTracks[cIndex].eta);
-        double dPhi = fabs(trk.phi - tmpTracks[cIndex].phi);
-        if(dPhi > M_PI) dPhi = 2.0 * M_PI - dPhi;
-        if((dPhi < m_coneExtFactor * m_maxDeltaPhi) &&
-           (dEta < m_coneExtFactor * m_maxDeltaEta)) {
-          jet.tracks.push_back(trk);
-          tmpTracks[trk.index].weight = 0;
-        }
-      }
-      tmpJets.push_back(jet);
+      // Find highest multiplicity peak
+      int cIndex, multPeak;
       getPeak(tmpTracks,cIndex,multPeak);
-    }
-    // Criteria to accept the event
-    if(tmpJets.size() >= m_jetMult) {
-      bool highPt = false;
-      unsigned int twoHighPtJets = 0;
-      for(std::vector<tmpJet>::iterator ij = tmpJets.begin(); 
-          ij != tmpJets.end(); ij++) {
-        double sumPt = 0.0;
-        for(std::vector<tmpTrack>::iterator id = (*ij).tracks.begin();
-            id != (*ij).tracks.end(); id++) {
-          sumPt = sumPt + (*id).pt;
+      // Assign tracks to jets
+      std::vector<tmpJet> tmpJets;
+      while(multPeak >= m_minWeightSeed) {
+        tmpJet jet;
+        jet.tracks.push_back(tmpTracks[cIndex]);
+        tmpTracks[cIndex].weight = 0;
+        for(std::vector<tmpTrack>::iterator id = tmpTracks.begin();
+            id != tmpTracks.end(); id++) {
+          tmpTrack trk = *id;
+          double dEta = fabs(trk.eta - tmpTracks[cIndex].eta);
+          double dPhi = fabs(trk.phi - tmpTracks[cIndex].phi);
+          if(dPhi > M_PI) dPhi = 2.0 * M_PI - dPhi;
+          if((dPhi < m_coneExtFactor * m_maxDeltaPhi) &&
+             (dEta < m_coneExtFactor * m_maxDeltaEta)) {
+            jet.tracks.push_back(trk);
+            tmpTracks[trk.index].weight = 0;
+          }
         }
-        if(sumPt > m_min2ndJetPt) {
-          twoHighPtJets++;
-          if(sumPt > m_min1stJetPt) highPt = true;
-        }
+        tmpJets.push_back(jet);
+        getPeak(tmpTracks,cIndex,multPeak);
       }
-      if(highPt && (twoHighPtJets >= m_jetMult)) setFilterPassed(true);
+      // Criteria to accept the event
+      if(tmpJets.size() >= m_jetMult) {
+        bool highPt = false;
+        unsigned int twoHighPtJets = 0;
+        for(std::vector<tmpJet>::iterator ij = tmpJets.begin(); 
+            ij != tmpJets.end(); ij++) {
+          double sumPt = 0.0;
+          for(std::vector<tmpTrack>::iterator id = (*ij).tracks.begin();
+              id != (*ij).tracks.end(); id++) {
+            sumPt = sumPt + (*id).pt;
+          }
+          if(sumPt > m_min2ndJetPt) {
+            twoHighPtJets++;
+            if(sumPt > m_min1stJetPt) highPt = true;
+          }
+        }
+        if(highPt && (twoHighPtJets >= m_jetMult)) setFilterPassed(true);
+      }
     }
   }
 
