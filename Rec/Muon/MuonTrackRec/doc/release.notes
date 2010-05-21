@@ -7,7 +7,9 @@
 !   http://indico.cern.ch/getFile.py/access?subContId=0&contribId=6&resId=1&materialId=slides&confId=26109
 !               implementation of MuonCombRac, combinatorial track 
 !               reconstruction algorithm for beam tracks
-!-----------------------------------------------------------------------------
+!-----------------------------
+
+!======================== MuonTrackRec v3r3 2010-04-09 ======================------------------------------------------------
 
 ! 2010-05-14 - Rob Lambert
  - Fixed typo from yesterday
