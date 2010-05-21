@@ -4,6 +4,8 @@
 !Purpose: Configurables for LHCb reconstruction
 !--------------------------------------------------
 
+!========================== RecSysConf v1r0 2010-05-21 ========================
+
 ! 2010-05-21 - Rob Lambert
  - Creation of package, a copy of RecSys
 
