@@ -126,7 +126,7 @@ class Directory(object):
     def lockACL(self, recursive=False) :
         dir_acl = self.getACL()
         perm_to_remove = "idwk"
-        for g in dir_acl.key() :
+        for g in dir_acl.keys() :
             if g != "system:administrators" :
                 for p in perm_to_remove :
                     if p in dir_acl[g] :
@@ -141,7 +141,7 @@ class Directory(object):
     def unlockACL(self, recursive=False):
         dir_acl = self.getACL()
         perm_to_add = "idwk"
-        for g in dir_acl.key() :
+        for g in dir_acl.keys() :
             if g != "system:anyuser" :
                 for p in perm_to_remove :
                     if p not in dir_acl[g] :
