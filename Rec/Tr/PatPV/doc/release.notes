@@ -4,6 +4,9 @@
 ! Purpose     : Compute primary vertices
 !-----------------------------------------------------------------------------
 
+! 2010-05-21 - Rob Lambert
+ - Removed obsolete options files PVLoose and PVVeryLoose
+
 ! 2010-05-13 - Rob Lambert
  - Review of warnings
  - Fixed timebomb in PVOfflineTool.cpp
