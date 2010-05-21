@@ -70,71 +70,71 @@ namespace DecayTreeFitter
       bool finished = false ;
    
       for(m_niter=0; m_niter<nitermax && !finished; ++m_niter) {
-	HepVector prevpar = m_fitparams->par() ;
-	bool firstpass = m_niter==0 ;
-	m_errCode = m_decaychain->filter(*m_fitparams,firstpass) ;
-	double chisq = m_fitparams->chiSquare() ;
-	double deltachisq = chisq - m_chiSquare ;
-	// if chi2 increases by more than this --> fit failed
-	const double dChisqQuit = std::max(double(2*nDof()),2*m_chiSquare) ;
+        HepVector prevpar = m_fitparams->par() ;
+        bool firstpass = m_niter==0 ;
+        m_errCode = m_decaychain->filter(*m_fitparams,firstpass) ;
+        double chisq = m_fitparams->chiSquare() ;
+        double deltachisq = chisq - m_chiSquare ;
+        // if chi2 increases by more than this --> fit failed
+        const double dChisqQuit = std::max(double(2*nDof()),2*m_chiSquare) ;
 	
-	if(m_errCode.failure()) {
-	  finished = true ;
-	  m_status = FitStatus::Failed ;
-	} else {
-	  if( m_niter>0 ) {
-	    if( fabs( deltachisq ) < dChisqConv ) {
-	      m_chiSquare = chisq ;
-	      m_status = FitStatus::Success ;
-	      finished = true ; 
-	    } else if( m_niter>1 && deltachisq > dChisqQuit ) {
-	      m_fitparams->par() = prevpar ;
-	      m_status  = FitStatus::Failed ;
-	      m_errCode = ErrCode::fastdivergingfit ;
-	      finished = true ;
-	    } else if( deltachisq > 0 && ++ndiverging>=maxndiverging) {
-	      m_fitparams->par() = prevpar ;
-	      m_status = FitStatus::NonConverged ;
-	      m_errCode = ErrCode::slowdivergingfit ;
-	      finished = true ;
-	    } else if( deltachisq > 0 ) {
-	      // make a half step and reduce stepsize
-	      m_fitparams->par()   += prevpar ;
-	      m_fitparams->par()   *= 0.5 ;
-	      //if( m_niter>10) m_fitparams->scale() *= 0.5 ;
-	    } 
-	  }
-	  if ( deltachisq < 0 ) ndiverging=0 ; // start over with counting
-	  if(!finished) m_chiSquare = chisq ;
-	} 
+        if(m_errCode.failure()) {
+          finished = true ;
+          m_status = FitStatus::Failed ;
+        } else {
+          if( m_niter>0 ) {
+            if( fabs( deltachisq ) < dChisqConv ) {
+              m_chiSquare = chisq ;
+              m_status = FitStatus::Success ;
+              finished = true ; 
+            } else if( m_niter>1 && deltachisq > dChisqQuit ) {
+              m_fitparams->par() = prevpar ;
+              m_status  = FitStatus::Failed ;
+              m_errCode = ErrCode::fastdivergingfit ;
+              finished = true ;
+            } else if( deltachisq > 0 && ++ndiverging>=maxndiverging) {
+              m_fitparams->par() = prevpar ;
+              m_status = FitStatus::NonConverged ;
+              m_errCode = ErrCode::slowdivergingfit ;
+              finished = true ;
+            } else if( deltachisq > 0 ) {
+              // make a half step and reduce stepsize
+              m_fitparams->par()   += prevpar ;
+              m_fitparams->par()   *= 0.5 ;
+              //if( m_niter>10) m_fitparams->scale() *= 0.5 ;
+            } 
+          }
+          if ( deltachisq < 0 ) ndiverging=0 ; // start over with counting
+          if(!finished) m_chiSquare = chisq ;
+        } 
     	
-	if(vtxverbose>=1) {
-	  std::cout << "step, chiSquare: "
-		    << std::setw(3) << m_niter 
-		    << std::setw(3) << m_status
-		    << std::setw(3) << nDof()
-		    << std::setprecision(6) 
-		    << std::setw(12) << chisq
-		    << std::setw(12) << deltachisq << std::endl ;
-	}
+        if(vtxverbose>=1) {
+          std::cout << "step, chiSquare: "
+                    << std::setw(3) << m_niter 
+                    << std::setw(3) << m_status
+                    << std::setw(3) << nDof()
+                    << std::setprecision(6) 
+                    << std::setw(12) << chisq
+                    << std::setw(12) << deltachisq << std::endl ;
+        }
 	
-	if(vtxverbose>=4) {
-	  print() ;
-	  std::cout << "press a key ...." << std::endl ;
-	  getchar() ;
-	}
+        if(vtxverbose>=4) {
+          print() ;
+          std::cout << "press a key ...." << std::endl ;
+          getchar() ;
+        }
       }
       
       if( m_niter == nitermax && m_status != FitStatus::Success )
-	m_status = FitStatus::NonConverged ;
+        m_status = FitStatus::NonConverged ;
 
       //m_decaychain->mother()->forceP4Sum(*m_fitparams) ;
 
       if( !(m_fitparams->testCov() ) ) {
-	std::cout << "DecayTreeFitterter::Fitter: Error matrix not positive definite. "
-		  << "Changing status to failed." << std::endl ;
-	m_status = FitStatus::Failed ;
-	//print() ;
+        std::cout << "DecayTreeFitterter::Fitter: Error matrix not positive definite. "
+                  << "Changing status to failed." << std::endl ;
+        m_status = FitStatus::Failed ;
+        //print() ;
       }
     }
   }
@@ -149,16 +149,16 @@ namespace DecayTreeFitter
     if(vtxverbose>=1)
       std::cout << "In VtkFitter::fitOneStep(): " << m_status << " " << firstpass << " " << m_chiSquare << std::endl ;
     m_status = FitStatus::Success ;
- }
+  }
 
   void
   Fitter::print() const
   {
     m_decaychain->mother()->print(m_fitparams) ;
     std::cout << "chisq,ndof,ncontr,niter,status: " 
-	 << chiSquare() << " "
-	 << nDof() << " " << m_fitparams->nConstraints() << " "
-	 << nIter() << " " << status() << " " << m_errCode << std::endl ;
+              << chiSquare() << " "
+              << nDof() << " " << m_fitparams->nConstraints() << " "
+              << nIter() << " " << status() << " " << m_errCode << std::endl ;
   } 
 
   int
@@ -194,8 +194,8 @@ namespace DecayTreeFitter
       double chisq = m_fitparams->chiSquare() ;
       ErrCode status ;
       for( ParticleBase::constraintlist::const_iterator it = constraints.begin() ;
- 	   it != constraints.end(); ++it)
-	status |= it->filter(*m_fitparams) ;
+           it != constraints.end(); ++it)
+        status |= it->filter(*m_fitparams) ;
 
       deltachisq = m_fitparams->chiSquare() - chisq ;
       m_chiSquare = m_fitparams->chiSquare() ;
@@ -206,7 +206,7 @@ namespace DecayTreeFitter
       //    print() ;
     } else {
       std::cout << "cannot add track to this vertex ..." 
-		<< m_decaychain->mother()->type() << std::endl ;
+                << m_decaychain->mother()->type() << std::endl ;
     }
     return deltachisq ;
   }
@@ -222,9 +222,9 @@ namespace DecayTreeFitter
       pb->addToConstraintList(constraints,0) ;
       double chisq = m_fitparams->chiSquare() ;
       for( ParticleBase::constraintlist::iterator it = constraints.begin() ;
-	   it != constraints.end(); ++it) {
-	it->setWeight(-1) ;
-	status |= it->filter(*m_fitparams) ;
+           it != constraints.end(); ++it) {
+        it->setWeight(-1) ;
+        status |= it->filter(*m_fitparams) ;
       }
       dchisq = chisq - m_fitparams->chiSquare() ;
       // remove
@@ -265,8 +265,8 @@ namespace DecayTreeFitter
     int momindex = pb.momIndex() ;
     int lenindex = pb.lenIndex() ;
     Gaudi::XYZPoint pos(m_fitparams->par()(posindex+1),
-			m_fitparams->par()(posindex+2),
-			m_fitparams->par()(posindex+3)) ;
+                        m_fitparams->par()(posindex+2),
+                        m_fitparams->par()(posindex+3)) ;
     Gaudi::LorentzVector p4 ;
     p4.SetPx( m_fitparams->par()(momindex+1) ) ;
     p4.SetPy( m_fitparams->par()(momindex+2) ) ;
@@ -283,8 +283,8 @@ namespace DecayTreeFitter
       parmap[7] = lenindex ;
       int maxrow = lenindex >=0 ? 8 : 7 ;
       for(int row=0; row<maxrow; ++row)
-	for(int col=0; col<=row; ++col)
-	  cov8(row,col) = m_fitparams->cov()(parmap[row]+1,parmap[col]+1) ;
+        for(int col=0; col<=row; ++col)
+          cov8(row,col) = m_fitparams->cov()(parmap[row]+1,parmap[col]+1) ;
     } else {
       // if not, use the pdttable mass
       Gaudi::SymMatrix7x7 cov7 ;
@@ -294,23 +294,23 @@ namespace DecayTreeFitter
       parmap[6] = lenindex ;
       int maxrow = lenindex >=0 ? 7 : 6 ;
       for(int row=0; row<maxrow; ++row)
-	for(int col=0; col<=row; ++col)
-	  cov7(row,col) = m_fitparams->cov()(parmap[row]+1,parmap[col]+1) ;
+        for(int col=0; col<=row; ++col)
+          cov7(row,col) = m_fitparams->cov()(parmap[row]+1,parmap[col]+1) ;
    
       // now fill the jacobian
       double mass = pb.pdtMass() ;
       double energy2 = mass*mass ;
       for(int row=0; row<3; ++row) {
-	double px = m_fitparams->par()(momindex+row+1) ;
-	energy2 += px*px ;
+        double px = m_fitparams->par()(momindex+row+1) ;
+        energy2 += px*px ;
       }
       double energy = std::sqrt(energy2) ;
       
       ROOT::Math::SMatrix<double,8,7> jacobian ;
       for(int col=0; col<7; ++col)
-	jacobian(col,col) = 1;
+        jacobian(col,col) = 1;
       for(int col=3; col<6; ++col)
-	jacobian(6,col) = m_fitparams->par()(parmap[col]+1)/energy ;
+        jacobian(6,col) = m_fitparams->par()(parmap[col]+1)/energy ;
 
       p4.SetE(energy) ;
       cov8 = ROOT::Math::Similarity(jacobian,cov7) ;
@@ -325,8 +325,8 @@ namespace DecayTreeFitter
     const ParticleBase* pb = m_decaychain->locate(cand) ;
     if(pb==0) {
       std::cout << "cann't find candidate in tree: " << cand
-		<< " head of tree = " << m_particle
-		<< std::endl ;
+                << " head of tree = " << m_particle
+                << std::endl ;
       return VtxFitParams() ;
     }
     return fitParams(*pb) ;
@@ -349,14 +349,14 @@ namespace DecayTreeFitter
       int lenindexA = pbA->lenIndex() ;
       int lenindexB = pbB->lenIndex() ;
       if( lenindexA>=0 && lenindexB>=0) {
-	double lenA    = m_fitparams->par()(lenindexA+1) ;
-	double lenB    = m_fitparams->par()(lenindexB+1) ;
-	double cov = 
-	  m_fitparams->cov().fast(lenindexA+1, lenindexA+1) +
-	  m_fitparams->cov().fast(lenindexB+1, lenindexB+1) +
-	  2*m_fitparams->cov().fast(lenindexA+1, lenindexB+1) ;
+        double lenA    = m_fitparams->par()(lenindexA+1) ;
+        double lenB    = m_fitparams->par()(lenindexB+1) ;
+        double cov = 
+          m_fitparams->cov().fast(lenindexA+1, lenindexA+1) +
+          m_fitparams->cov().fast(lenindexB+1, lenindexB+1) +
+          2*m_fitparams->cov().fast(lenindexA+1, lenindexB+1) ;
 	
-	rc = VtxDoubleErr(lenA+lenB,std::sqrt(cov)) ;
+        rc = VtxDoubleErr(lenA+lenB,std::sqrt(cov)) ;
       }
     }
     return rc ;
@@ -373,21 +373,35 @@ namespace DecayTreeFitter
   Fitter::getFitted() const
   {
     LHCb::Particle thecand = *particle() ;
-    updateCand(thecand) ;
+    const ParticleBase* pb = m_decaychain->locate(thecand) ;
+    if( pb ) updateCand(*pb, thecand) ;
+    else std::cout << "Error: cannot find particle in tree" << std::endl ;
     return thecand ;
   }
 
   LHCb::Particle
   Fitter::getFitted(const LHCb::Particle& cand) const
   {
+    // clone the particle
     LHCb::Particle thecand = cand ;
-    updateCand(thecand) ;
+    // find the ParticleBase corresponding to the original particle.
+    const ParticleBase* pb = m_decaychain->locate(cand) ;
+    if( pb ) updateCand(*pb, thecand) ;
+    else std::cout << "Error: cannot find particle in tree" << std::endl ;
     return thecand ;
   }
 
+//   LHCb::Particle
+//   Fitter::getFitted(const LHCb::Particle& cand) const
+//   {
+//     LHCb::Particle thecand = cand ;
+//     updateCand(thecand) ;
+//     return thecand ;
+//   }
+
   LHCb::Particle* 
   Fitter::fittedCand(const LHCb::Particle& /*cand*/, 
-		     LHCb::Particle* /*headOfTree*/) const 
+                     LHCb::Particle* /*headOfTree*/) const 
   {
     std::cout << "Fitter::fittedCand: not yet implemented" << std::endl ;
     return 0 ;
@@ -404,8 +418,8 @@ namespace DecayTreeFitter
     Tree tree(*m_particle) ;
     // update the tree. the easy version will only work once we have a proper 'isCloneOf'.
     // updateTree( *tree.head() ) ;
-    for( Tree::CloneMap::const_iterator it = tree.cloneMap().begin() ;
-	 it != tree.cloneMap().end(); ++it ) {
+    for(Tree::CloneMap::const_iterator it = tree.cloneMap().begin();
+        it != tree.cloneMap().end(); ++it ) {
       const ParticleBase* pb = m_decaychain->locate(*(it->first)) ;
       if(pb!=0) updateCand( *pb, *(it->second) ) ;
     } 
@@ -413,25 +427,25 @@ namespace DecayTreeFitter
   }
 
   /*
-  std::string myvtxprint(const LHCb::Particle & cand,
-			 const ComIOManip & format) {
+    std::string myvtxprint(const LHCb::Particle & cand,
+    const ComIOManip & format) {
     std::ostringstream stream;
     const PdtEntry * pdtEntry = cand.pdtEntry();
     if (0 != pdtEntry){
-      stream << pdtEntry->name();
-      if(!cand.isComposite()) 
-	stream << "(" << cand.uid() << ")" ;
-      stream << std::ends;
+    stream << pdtEntry->name();
+    if(!cand.isComposite()) 
+    stream << "(" << cand.uid() << ")" ;
+    stream << std::ends;
     }
     HepString result(stream.str());
     //delete [] stream.str();           // must take ownership here
     return result;
-  }
+    }
   */
 
   void
   Fitter::updateCand(const ParticleBase& pb,
-		     LHCb::Particle& particle) const
+                     LHCb::Particle& particle) const
   {
     // assigns fitted parameters to a candidate
     VtxFitParams vtxpar = fitParams(pb) ;
@@ -443,19 +457,22 @@ namespace DecayTreeFitter
     particle.setPosCovMatrix( vtxpar.posCovMatrix() ) ;
     particle.setPosMomCovMatrix( vtxpar.momPosCovMatrix() ) ;
     // update the vertex as well, if this is the head of the tree
-    if( &pb == m_decaychain->cand() ) {
+    if( &pb == m_decaychain->cand() )
+    {
       LHCb::Vertex* vertex = particle.endVertex() ;
-      if( !vertex ) {
-	// create a new vertex
-	vertex = new LHCb::Vertex() ;
-	// don't add any daughters. I don't understand why we need them anyway.
-	particle.setEndVertex( vertex ) ;
+      if( !vertex )
+      {
+        // create a new vertex
+        vertex = new LHCb::Vertex() ;
+        // don't add any daughters. I don't understand why we need them anyway.
+        particle.setEndVertex( vertex ) ;
       }
       vertex->setTechnique( LHCb::Vertex::LastGlobal) ;
       vertex->setChi2AndDoF( chiSquare(), nDof() ) ;
       vertex->setPosition( vtxpar.position() ) ;
       vertex->setCovMatrix( vtxpar.posCovMatrix() ) ;
-    } 
+    }
+    
     // 	if( pb ==m_decaychain->cand() ) {
     // 	  vtx = new VtxVertex(chiSquare(),nDof(),vtxpar.pos(),vtxpar.posCov(),vtxpar.xp4Cov()) ;
     // 	  vtx->setStatus(FitStatus::VtxStatus(status())) ;
@@ -497,7 +514,7 @@ namespace DecayTreeFitter
     bool rc ;
     if ( (rc = updateCand(p) ) ) {
       BOOST_FOREACH( const LHCb::Particle* daughter, p.daughters() ) {
-	updateTree( const_cast<LHCb::Particle&>(*daughter) ) ;
+        updateTree( const_cast<LHCb::Particle&>(*daughter) ) ;
       }
     }
     return rc ;

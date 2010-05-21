@@ -153,9 +153,10 @@ namespace DecayTreeFitter
   }
   
   void
-  DecayChain::setMassConstraint( const LHCb::Particle& bc, bool add) {
+  DecayChain::setMassConstraint( const LHCb::Particle& bc, bool add)
+  {
     ParticleBase* part = const_cast<ParticleBase*>(locate(bc)) ;
-    if(part && part->setMassConstraint(add)) 
+    if(part && part->setMassConstraint(add))
       m_constraintlist.clear() ;
   }
 
