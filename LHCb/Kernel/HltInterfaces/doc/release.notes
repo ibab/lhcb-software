@@ -1,8 +1,9 @@
-! $Id: release.notes,v 1.18 2010-05-05 13:20:12 graven Exp $
+! $Id: release.notes,v 1.19 2010-05-21 12:28:22 cattanem Exp $
 ! Package     : HltInterfaces
 ! Responsible : Gerhard Raven
 !------------------------------------------------------------------------------
 
+!============ Kernel/HltInterfaces v4r0 2010-05-21 ============================
 ! 2010-05-05 - Gerhard Raven
  - move interface code used to configure Hlt from a TCK, and to decode Hlt 
    raw date, out of Hlt/HltBase in the HLT project, so that it can be used
