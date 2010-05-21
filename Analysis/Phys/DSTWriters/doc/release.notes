@@ -1,9 +1,13 @@
-!$Id: release.notes,v 1.28 2010-05-20 17:27:22 marcocle Exp $
+!$Id: release.notes,v 1.29 2010-05-21 15:39:08 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DSTWriters
 ! Responsible : Juan PALACIOS
 ! Purpose     : Python code for DST writers.
 !-----------------------------------------------------------------------------
+
+! 2010-05-21 - Juan Palacios
+ - python/DSTWriters/dstutils.py
+  . Add nested list flattening.
 
     *** Requires the package GaudiPatches >= v1r1 ***
 ! 2010-05-20 - Marco Clemencic
