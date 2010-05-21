@@ -4,6 +4,7 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+!======================== LHCbAlgs v2r34p1 2010-05-21 ========================
 ! 2010-05-18 - Marco Cattaneo
  - Fix Windows warnings
 
