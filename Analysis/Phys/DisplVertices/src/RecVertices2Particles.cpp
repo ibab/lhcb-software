@@ -277,7 +277,13 @@ StatusCode RecVertices2Particles::initialize() {
     }
 
     //Do not change the PV into a particle ! (if any !)
-    if( !m_KeepLowestZ && i == RV.begin() ) continue;
+    if( !m_KeepLowestZ ){
+      if( i == RV.begin() ) continue;
+      //Do not keep if before the upPV
+      if( m_RCut=="FromUpstreamPV" && 
+          rv->position().z() < m_BeamLine->referencePoint().z() ) continue;
+    }
+    
 
     //PVs have no backward tracks
     if( HasBackwardTracks(rv) ){ 
