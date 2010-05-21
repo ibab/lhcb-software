@@ -29,6 +29,7 @@ from LbConfiguration.Project import getProject
 from LbConfiguration.Platform import getBinaryDbg, getBinaryOpt, isBinaryOpt
 from LbUtils.Links import fixLinks
 from LbUtils.Processes import getNumberOfCores
+from LbUtils.afs.directory import Directory
 
 import logging
 import sys, os, getopt, time, commands, fnmatch
@@ -73,6 +74,8 @@ def help() :
                                            x<build doxygen documentation>
                                            h<tml web page>
                                            w<eb html page>
+                                           Loc<K> release to read-only mode
+                                           U<nlock release in read-only mode>
                                            default => --action=ngucdirstx
 
       --not-parallel                      - disable the parallel build
@@ -102,6 +105,8 @@ def release_project(pname, pversion, action=None, yes_mode=False, parallel_mode=
     html    = False
     web     = False
     release = True
+    wlock   = False
+    wunlock = False
 
     if action :
         new     = ( action.find('n') != -1 )
@@ -114,6 +119,8 @@ def release_project(pname, pversion, action=None, yes_mode=False, parallel_mode=
         doxygen = ( action.find('x') != -1 )
         glimpse = ( action.find('s') != -1 )
         release = ( action.find('r') != -1 )
+        wlock   = ( action.find('K') != -1 )
+        wunlock = ( action.find('U') != -1 )
 
 
     log.info (' ++++++++++++++++ %s - start mkproject.py version %s ' % (day, script_version))
@@ -604,6 +611,14 @@ def release_project(pname, pversion, action=None, yes_mode=False, parallel_mode=
                 os.remove('requirements')
             os.symlink(os.path.join(PACK + '_' + pversion, 'requirements'), 'requirements')
 
+    if wlock :
+        afs_dir_path = os.path.join(rel_dir, maindir)
+        afs_dir = Directory(afs_dir_path)
+        afs_dir.lockACL(recursive=True)
+    if wunlock :
+        afs_dir_path = os.path.join(rel_dir, maindir)
+        afs_dir = Directory(afs_dir_path)
+        afs_dir.unlockACL(recursive=True)
 
 #-----------------------------------------------------------------------------------
 if __name__ == "__main__":
