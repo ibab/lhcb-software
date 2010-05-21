@@ -4,6 +4,11 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+
+
+! 2010-04-28 - Olivier Deschamps
+ - new tuple tool : TupleToolPhotonInfo : with Spd/Prs/track-matching/ClusterMoment/... info
+
 ! 2010-05-19 - Patrick Koppenburg
  - More printout in TupleToolPrimaries
 
