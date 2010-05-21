@@ -62,13 +62,11 @@ StatusCode StrippingCheck::execute() {
 int StrippingCheck::numberOfCandidates(const std::string& selalgo) const {
   int num = 0;
 
-  const LHCb::Particles* parts = 0 ;
-
-  if (exist<LHCb::Particles>(selalgo)){
-    parts = get<LHCb::Particles>(selalgo);
-    if (msgLevel(MSG::VERBOSE)) verbose() << "Selection " << selalgo << " finds " << parts->size()
+  if (exist<LHCb::Particle::Range>(selalgo)){
+    LHCb::Particle::Range parts = get<LHCb::Particle::Range>(selalgo);
+    if (msgLevel(MSG::VERBOSE)) verbose() << "Selection " << selalgo << " finds " << parts.size()
                                           << " candidates" << endmsg ;
-    num = parts->size();
+    num = parts.size();
   } else if (msgLevel(MSG::VERBOSE)) verbose() <<  "Selection " 
                                                << selalgo << " has no particles" << endmsg ;
 

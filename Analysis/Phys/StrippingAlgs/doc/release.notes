@@ -5,6 +5,11 @@
 ! Purpose     : Stripping framework c++ component algorithms
 ! -----------------------------------------------------------------------------
 
+! 2010-05-21 - Anton Poluektov 
+ - Fixed calculation of the number of candidates in StrippingAlg and StrippingCheck. 
+   Particles in both KeyedContainer and SharedObjectContainer are now counted
+   (previously only KeyedContained worked)
+
 !======================== StrippngAlgs v1r1 2010-04-08 ========================
 
 ! 2010-03-19 - Anton Poluektov

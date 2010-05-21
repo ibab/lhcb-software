@@ -46,15 +46,12 @@ StatusCode StrippingAlg::initialize() {
 unsigned int StrippingAlg::numberOfCandidates() const {
   int num = 0;
 
-  const LHCb::Particles* parts = 0 ;
-
-  if (exist<LHCb::Particles>(m_outputLocation)){
-    parts = get<LHCb::Particles>(m_outputLocation);
-    if (msgLevel(MSG::VERBOSE)) verbose() << "Selection " << m_outputLocation << " finds " << parts->size()
+  if (exist<LHCb::Particle::Range>(m_outputLocation)){
+    LHCb::Particle::Range parts = get<LHCb::Particle::Range>(m_outputLocation);
+    warning() << "Selection " << m_outputLocation << " finds " << parts.size()
                                           << " candidates" << endmsg ;
-    num = parts->size();
-  } else if (msgLevel(MSG::VERBOSE)) verbose() <<  "Selection " 
-                                               << m_outputLocation << " has no particles" << endmsg ;
+    num = parts.size();
+  } else warning() <<  "Selection " << m_outputLocation << " has no particles" << endmsg ;
 
   return num;
 }
