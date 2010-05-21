@@ -4,6 +4,7 @@
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
 
+!===================== Det/DetCond v12r13 2010-05-21 =========================
 ! 2010-05-18 - Marco Clemencic
  - Fixed few Windows warnings.
 
