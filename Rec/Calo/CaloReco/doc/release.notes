@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.184 2010-05-21 11:00:37 odescham Exp $
+! $Id: release.notes,v 1.185 2010-05-21 14:24:01 rlambert Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Calo/CaloReco
 ! Responsible : Olivier Deschamps odescham@in2p3.fr 
@@ -6,6 +6,7 @@
 
 ! -----------------------------------------------------------------------------
 
+!========================== CaloReco v5r5  2010-05-21 ========================
 ! 2010-05-21 - Olivier Deschamps
 	- python/Configuration.py : full protoP reprocessing (incl. combination) in protoSequence
 
