@@ -4,6 +4,9 @@
 ! Purpose     : Monitoring algorithms after reconstruction
 !-----------------------------------------------------------------------------
 
+! 2010-05-21 - Rob Lambert
+ - Updated dependency on RecConf instead of RecSys for configurable
+
 !========================== DaVinciMonitors v1r10p1 2010-05-03 ===============
 
 ! 2010-05-03 - Juan Palacios

@@ -1,5 +1,5 @@
 ##############################################################################
-# $Id: DVMonitorWithBrunel.py,v 1.2 2009-06-23 09:59:39 pkoppenb Exp $
+# $Id: DVMonitorWithBrunel.py,v 1.3 2010-05-21 05:35:16 rlambert Exp $
 #
 # syntax: gaudirun.py $DAVINCIMONITORSROOT/options/DVMonitorDst.py
 #
@@ -12,7 +12,7 @@ from Gaudi.Configuration import *
 #
 # Reconstruction
 #
-from RecSys.Configuration import *
+from RecConf.Configuration import *
 RecSysConf()
 ##############################################################################
 #
