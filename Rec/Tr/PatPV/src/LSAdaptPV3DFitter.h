@@ -31,30 +31,32 @@ public:
 private:
   int    m_minTr;         // Minimum number of tracks to make a vertex
   int    m_Iterations;    // Number of iterations for minimisation
+  int    m_minIter;       // iterate at least m_minIter times
   double m_maxIP2PV;      // Maximum IP of a track to accept track
   double m_maxDeltaZ;     // Fit convergence condition
   double m_minTrackWeight;// Minimum Tukey's weight to accept a track
   double m_TrackErrorScaleFactor;
   double  m_x0MS;         // X0 (tunable) of MS to add for extrapolation of
                           // track parameters to PV
+  double m_trackMaxChi2;  // maximum chi2 track to accept track in PV fit
+  double m_trackChi;      // sqrt of m_trackMaxChi2
+  bool m_AddMultipleScattering;
+  bool m_CalculateMultipleScattering;
   double m_scatCons;      // calculated from m_x0MS
   PVTracks m_pvTracks;
-  //problem on windows for some reason
-  //static const double myzero=1E-12;
-  const double m_myZero; //myzero=1E-12;
-  //work around by just initialising it in constructor...
-  //Annoying, though!
+  double m_myZero; //myzero=1E-12;
+  double m_zVtxShift;
   
   // Add track for PV
   void addTrackForPV(const LHCb::Track* str, PVTracks& pvTracks,
-                           Gaudi::XYZPoint seed);
+                           const Gaudi::XYZPoint& seed);
 
-  double err2d0(const LHCb::Track* track);
+  double err2d0(const LHCb::Track* track, const Gaudi::XYZPoint& seed);
   Gaudi::XYZVector impactParameterVector(const Gaudi::XYZPoint& vertex,
-                                        const Gaudi::XYZPoint& point,
+                                         const Gaudi::XYZPoint& point,
 					 const Gaudi::XYZVector& direction);
   // Get Tukey's weight
   double getTukeyWeight(double trchi2, int iter);
 };
-//const unsigned double LSAdaptPV3DFitter::myzero=1E-12;
+
 #endif // LSADAPTPVFITTER_H

@@ -37,11 +37,17 @@ LSAdaptPV3DFitter::LSAdaptPV3DFitter(const std::string& type,
   // Maximum IP of a track to accept track
   declareProperty("maxIP2PV", m_maxIP2PV = 5.0 * Gaudi::Units::mm);
   // Fit convergence condition
-  declareProperty("maxDeltaZ", m_maxDeltaZ = 0.003 * Gaudi::Units::mm);
+  declareProperty("maxDeltaZ", m_maxDeltaZ = 0.001 * Gaudi::Units::mm);
   // Minimum Tukey's weight to accept a track
   declareProperty("minTrackWeight", m_minTrackWeight = 0.00001);
   declareProperty( "x0MS"            , m_x0MS          =  0.02          );
   declareProperty("TrackErrorScaleFactor", m_TrackErrorScaleFactor = 1.0 );
+  declareProperty("CalculateMultipleScattering", m_CalculateMultipleScattering = true );
+  declareProperty("AddMultipleScattering", m_AddMultipleScattering = true );
+  declareProperty("trackMaxChi2", m_trackMaxChi2 = 9.);
+  // Min number of iterations
+  declareProperty("minIter", m_minIter = 3);
+  declareProperty("zVtxShift", m_zVtxShift = 0.0 );
 }
 
 //=========================================================================
@@ -53,7 +59,9 @@ StatusCode LSAdaptPV3DFitter::initialize()
   if(!sc) return sc;
 
   double X0 = m_x0MS;
-  m_scatCons = (13.6*sqrt(X0)*(1.+0.038*log(X0))) / ( 0.400 * Gaudi::Units::GeV );
+  m_scatCons = (13.6*sqrt(X0)*(1.+0.038*log(X0))) / ( 3.0 * Gaudi::Units::GeV );
+
+  m_trackChi = std::sqrt(m_trackMaxChi2);
 
   return StatusCode::SUCCESS;
 }
@@ -95,7 +103,7 @@ StatusCode LSAdaptPV3DFitter::fitVertex(const Gaudi::XYZPoint seedPoint,
 
   bool converged = false;
   int nbIter = 0;
-  while( (nbIter < 2) || (!converged && nbIter < m_Iterations) )
+  while( (nbIter < m_minIter) || (!converged && nbIter < m_Iterations) )
   {
     ++nbIter;
 
@@ -158,7 +166,8 @@ StatusCode LSAdaptPV3DFitter::fitVertex(const Gaudi::XYZPoint seedPoint,
     int fail;
     hess.Inverse(fail);
     if (0 != fail) {
-      return Warning("Error inverting hessian matrix",StatusCode::FAILURE,0);
+      warning() << "Error inverting hessian matrix" << endmsg;
+      return StatusCode::FAILURE;
     } else {
       hess.InvertFast();
     }
@@ -201,6 +210,7 @@ StatusCode LSAdaptPV3DFitter::fitVertex(const Gaudi::XYZPoint seedPoint,
   vtx.setChi2(chi2);
   vtx.setNDoF(nDoF);
 
+  xyzvtx.SetZ(xyzvtx.z() + m_zVtxShift);
   vtx.setPosition(xyzvtx);
   hess = hess * 2.0;
   vtx.setCovMatrix(hess);
@@ -216,8 +226,10 @@ StatusCode LSAdaptPV3DFitter::fitVertex(const Gaudi::XYZPoint seedPoint,
   if(msgLevel(MSG::DEBUG)) {
     debug() << "Vertex" << endmsg;
     debug() << "===================" << endmsg;
-    debug() << format( "chi2/ndof %7.2f  %7.2f %5d %7.3f %7.3f %7.3f", vtx.chi2()/vtx.nDoF(), vtx.chi2(), vtx.nDoF(),
-            vtx.position().X(), vtx.position().Y(), vtx.position().Z())
+    debug() << format( "chi2/ndof %7.2f  %7.2f / %5d xyz %7.3f %7.3f %7.3f  err xyz: %7.4f %7.4f %7.4f", 
+               vtx.chi2()/vtx.nDoF(), vtx.chi2(), vtx.nDoF(),
+               vtx.position().X(), vtx.position().Y(), vtx.position().Z(),
+	       sqrt(vtx.covMatrix()(0,0)), sqrt(vtx.covMatrix()(1,1)), sqrt(vtx.covMatrix()(2,2)) ) 
             << endmsg << endmsg;
     debug() << "Tracks in this vertex" << endmsg;
     debug() << "---------------------" << endmsg;
@@ -236,7 +248,7 @@ StatusCode LSAdaptPV3DFitter::fitVertex(const Gaudi::XYZPoint seedPoint,
 // Add track for PV
 //=============================================================================
 void LSAdaptPV3DFitter::addTrackForPV(const LHCb::Track* pvtr,
-                                      PVTracks& pvTracks, Gaudi::XYZPoint seed)
+                                      PVTracks& pvTracks, const Gaudi::XYZPoint& seed)
 {
   // Add new PVTrack
   PVTrack pvtrack;
@@ -245,7 +257,7 @@ void LSAdaptPV3DFitter::addTrackForPV(const LHCb::Track* pvtr,
   pvtrack.unitVect = pvtrack.stateG.slopes().Unit();
   pvtrack.d0 = ( (impactParameterVector(seed,  pvtrack.stateG.position(),  pvtrack.unitVect)).Mag2() );
   if(pvtrack.d0 > m_maxIP2PV*m_maxIP2PV) return;
-  pvtrack.err2d0 = err2d0(pvtr);
+  pvtrack.err2d0 = err2d0(pvtr, seed);
   pvtrack.chi2 = 0;
   //does it make sense to add such an error... why is chi2 0 for this case? it should be a very big number
   if(pvtrack.err2d0 > m_myZero) pvtrack.chi2 = (pvtrack.d0)/pvtrack.err2d0;
@@ -263,17 +275,76 @@ void LSAdaptPV3DFitter::addTrackForPV(const LHCb::Track* pvtr,
 //=============================================================================
 //  err2d0
 //=============================================================================
-double LSAdaptPV3DFitter::err2d0(const LHCb::Track* track) {
+double LSAdaptPV3DFitter::err2d0(const LHCb::Track* track, const Gaudi::XYZPoint& seed) {
+
+  // fast parametrization of track parameters
 
   double x     = track->firstState().x();
   double y     = track->firstState().y();
-  double r     = sqrt(x*x + y*y);
-  double corr2 = (m_scatCons*r)*(m_scatCons*r);
+  double z     = track->firstState().z();
+  double tx    = track->firstState().tx();
+  double ty    = track->firstState().ty();
 
-  double ex2 = track->firstState().errX2() + corr2;
+  double ex2 = track->firstState().errX2();
   double ey2 = track->firstState().errY2();
 
-  return (ex2+ey2);
+  double fcos2 = 1.;
+  double tr2   = tx*tx+ty*ty;
+  fcos2 = 1./(1.+tr2);
+  double err2 = (ex2+ey2)*fcos2;
+
+  bool backward = track->checkFlag( LHCb::Track::Backward);
+
+  double z_seed = seed.z();
+  double dz_pv = z - z_seed;
+  if ( backward ) dz_pv *= -1.;
+  double et2 = 0.;
+  if (dz_pv > 0. ) {
+    double etx2 = track->firstState().errTx2(); 
+    double ety2 = track->firstState().errTy2();
+    et2 = dz_pv*dz_pv*(etx2+ety2);
+    err2 += et2; 
+  }
+
+  // add multiple scattering if track errors do not contain it (Hlt case)
+  double corr2 = 0.;
+  double l_scat2 = 0.;
+  if( m_AddMultipleScattering ) {
+    if ( m_CalculateMultipleScattering) {
+      // mutliple scattering from RF foil at r = 10 mm
+      double r_ms = 10.;
+      double a = tx*tx+ty*ty;     
+      double b = 2.*(x*tx+y*ty);
+      double c = x*x+y*y-r_ms*r_ms;
+      double delta2 = b*b-4.*a*c;
+      if ( (delta2 > 0.) && (a != 0.) ) {
+        double z_ms;
+        double delta = std::sqrt(delta2);
+        double z1 = (-b - delta)/(2.*a);
+        double z2 = (-b + delta)/(2.*a);
+        // a>0 => z1 < z2
+        if (backward) { 
+          z_ms = z1;
+        } else {
+          z_ms = z2;
+        }
+        double dz = (z_seed-z_ms);
+        double dx = tx*dz;
+        double dy = ty*dz;
+        l_scat2 = dx*dx+dy*dy+dz*dz;
+        corr2 = m_scatCons*m_scatCons*l_scat2;
+        err2 += corr2;
+      } else {
+        // add standard MS contribution;
+        err2 += 0.05*0.05;
+      }
+    }
+    else {
+      err2 += 0.05*0.05;
+    }
+  }
+
+  return (err2);
 }
 
 
@@ -290,8 +361,10 @@ Gaudi::XYZVector LSAdaptPV3DFitter::impactParameterVector(const Gaudi::XYZPoint&
 //=============================================================================
 double LSAdaptPV3DFitter::getTukeyWeight(double trchi2, int iter)
 {
-  double ctrv = 9. - 3. * iter;
-  if (ctrv < 3.) ctrv = 3.;
+  if (iter<1 ) return 1.;
+
+  double ctrv = m_trackChi * (m_minIter -  iter);
+  if (ctrv < m_trackChi) ctrv = m_trackChi;
   double cT2 = trchi2 / (ctrv*ctrv*m_TrackErrorScaleFactor*m_TrackErrorScaleFactor);
   double weight = 0.;
   if(cT2 < 1.) {
