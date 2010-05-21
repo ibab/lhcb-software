@@ -5,7 +5,7 @@ from LHCbKernel.Configuration import *
 from Gaudi.Configuration import *
 from DetCond.Configuration import *
 from TrackSys.Configuration import TrackSys
-from RecSys.Configuration   import RecSysConf
+from RecConf.Configuration   import RecSysConf
 from Configurables import ( DDDBConf )
 
 class AlConfigurable( LHCbConfigurableUser ) :

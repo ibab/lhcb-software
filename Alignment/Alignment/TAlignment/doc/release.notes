@@ -3,6 +3,9 @@ Package	:	Alignment/TAlignment
 Package Coordinator	:	Jan Amoraal, Johan Blouw
 Purpose	: collection of alignment algorithms
 
+! 2010-05-21 - Rob Lambert
+ - adapt to movement of RecSysConf into RecConf package
+
 
 ! 2010-05-20 Johan Blouw
  - included use of (already defined, but previously unused) ntuple variables.
