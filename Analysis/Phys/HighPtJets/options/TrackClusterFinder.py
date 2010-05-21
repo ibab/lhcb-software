@@ -11,9 +11,7 @@ from Gaudi.Configuration import *
 from Configurables import GaudiSequencer
 from GaudiKernel.SystemOfUnits import *
 from CommonParticles.Utils import *
-from Configurables import PatPV3D
 from Configurables import TrackClusterFinder
-PatPV = PatPV3D("PatPV")
 TrkClusterFinder = TrackClusterFinder("TrkClusterFinder")
 TrkClusterFinder.MinWeight = 6
 TrkClusterFinder.ConeExtFactor = 4.0
@@ -25,7 +23,6 @@ TrkClusterFinder.JetMult = 1
 ## #####################################################################
 DVSeq = GaudiSequencer("DVSeq")
 DVSeq.IgnoreFilterPassed = False
-DVSeq.Members += [PatPV]
 DVSeq.Members += [TrkClusterFinder]
 ## #####################################################################
 from Configurables import DaVinci
