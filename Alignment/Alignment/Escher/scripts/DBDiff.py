@@ -59,7 +59,9 @@ def main():
     if not options.NoCleanup:
         for d in dirs:
             shutil.rmtree(d)
-            
+    else:
+        print str("Keeping XML files for difference DB in "+dirs[0] +
+               " and for DB "+inputfiles[1]+" in "+ dirs[1]) 
 def doCalculations(ETs):
     """
 loops over all files in ETs[0]
@@ -186,8 +188,11 @@ def save(result,outfile):
     for (file,et) in result.iteritems():
         et.write(file)
         name = file.split("/Conditions/")[0]
-        #print name
-    ExecInLHCbBash("copy_files_to_db.py -s "+name+" -c sqlite_file:"+outfile+"/LHCBCOND\n")
+    cmd = """for i in `find flummi -name "*.xml"`; do
+sed -e 's/<DDDB>/<?xml version="1.0" encoding="ISO-8859-1"?><!DOCTYPE DDDB SYSTEM "..\/..\/..\/DTD\/structure.dtd"><DDDB>/' < $i > $i.new && mv $i.new $i; done
+""".replace("flummi",name)+"copy_files_to_db.py -s "+name+" -c sqlite_file:"+outfile+"/LHCBCOND\n"
+#    print cmd
+    ExecInLHCbBash(cmd)
     
 def ExecInLHCbBash(code):
     

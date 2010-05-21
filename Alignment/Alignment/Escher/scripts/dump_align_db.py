@@ -158,7 +158,7 @@ def dumpToFile( element, output ) :
             #print ex.Phi() #prints 0 
             #print mex.Phi() #prints pi
             discr = (geometryinfo.toGlobalMatrixNominal().Rotation()*ex).Phi()/math.pi
-            print [fabs (discr-x)<0.001 for x in [0,1,-0.0277777777778, 0.972222222222,-0.972222401409,-1,0.0277775985909]],discr, element.name()
+            #print [fabs (discr-x)<0.001 for x in [0,1,-0.0277777777778, 0.972222222222,-0.972222401409,-1,0.0277775985909]],discr, element.name()
             #print fabs (discr) <0.3 ,0.7 < discr < 1.3,-0.7 > discr > -1.3,discr, element.name() 
 
             # compute the total delta in the global frame 
@@ -228,6 +228,7 @@ def main():
 
     (opts, args) = parser.parse_args()
     global plots
+    plots =  None
     global verbose
     verbose = opts.verbose
     if opts.plot:
