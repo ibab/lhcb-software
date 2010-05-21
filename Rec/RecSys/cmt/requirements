@@ -1,7 +1,7 @@
 package RecSys
 version v9r2p1
 
-branches cmt doc python tests
+branches cmt doc tests
  
 #=======================================================
 # LHCb reconstruction packages
@@ -26,6 +26,7 @@ use MuonTrackRec         v3r2    Muon # Giacomo Graziani
 use GlobalReco           v6r32p1 Rec  # Chris Jones
 use LumiAlgs             v3r4p1  Rec  # Jaap Panman
 use RecAlgs              v1r8    Rec  # Marco Cattaneo
+use RecConf		 v1r0	 Rec  # Rob Lambert
 use RecUtils             v1r5    Rec  # Juan Palacios, Patrick Koppenburg
 # Non sub-detector specific components upgrade related
 use RecoUpgrade          v1r0    Rec  # Victor Coco
@@ -85,9 +86,6 @@ use MuonTools            v5r2    Muon # Alessia Satta
 
 # Velo
 use VeloRecMonitors      v2r9    Velo # Malcom John, Eduardo Rodrigues
-
-# Setup Python Configurables
-apply_pattern install_python_modules
 
 # Declare this as a container package
 apply_pattern container_package

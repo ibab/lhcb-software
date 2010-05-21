@@ -5,6 +5,9 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
+! 2010-05-21 - Rob Lambert
+ - Move RecSysConf onto RecConf package, update to include this new package
+
 ! 2010-05-05 - Rob Lambert
  - New package, MuonTrackMonitor, for online/offline/DQ Muon histograms
 
