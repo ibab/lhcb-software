@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.197 2010-05-19 20:56:33 graven Exp $ 
+! $Id: release.notes,v 1.198 2010-05-21 12:50:56 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiCore
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -15,6 +15,7 @@
 ! 
 ! -----------------------------------------------------------------------------
 
+! =========================== LoKiCore v10r1 2010-05-21 =======================
 ! 2010-05-19 - Gerhard Raven
  - Scalers: make sure that one waits at least one tick to avoid an avalanche
    at the first event when processing in parallel
