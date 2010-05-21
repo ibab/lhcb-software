@@ -1,11 +1,11 @@
 
-## @package RecSys
+## @package RecConf
 #  High level configuration tools for REC
-#  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
-#  @date   15/08/2008
+#  @author Rob Lambert
+#  @date   21/05/2010
 
 __version__ = "$Id: Configuration.py,v 1.34 2010-05-05 09:58:07 ggiacomo Exp $"
-__author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
+__author__  = "Rob Lambert"
             
 from LHCbKernel.Configuration import *
 from TrackSys.Configuration   import *
