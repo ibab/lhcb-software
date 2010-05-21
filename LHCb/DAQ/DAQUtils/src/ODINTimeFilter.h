@@ -29,18 +29,18 @@ protected:
 
 private:
   void criteriaPrintOut();
-  int val(int v1,int v2,int v3=0);
-  bool check(int val, std::pair<int,int> range);
-  bool def(std::pair<int,int> range);
-  std::pair<int,int> m_yRange;
-  std::pair<int,int> m_mRange;
-  std::pair<int,int> m_dRange;
-  std::pair<int,int> m_hRange;
-  std::pair<int,int> m_mnRange;
-  std::pair<int,int> m_sRange;
-  std::pair<int,int> m_nsRange;
-  std::pair<int,int> m_eRange;
-  std::pair<int,int> m_bRange;
+  ulonglong val(double v1,double v2,double v3=0);
+  bool check(ulonglong  val, std::pair<double,double> range);
+  bool def(std::pair<double,double> range);
+  std::pair<double,double> m_yRange;
+  std::pair<double,double> m_mRange;
+  std::pair<double,double> m_dRange;
+  std::pair<double,double> m_hRange;
+  std::pair<double,double> m_mnRange;
+  std::pair<double,double> m_sRange;
+  std::pair<double,double> m_nsRange;
+  std::pair<double,double> m_eRange;
+  std::pair<double,double> m_bRange;
   bool m_evt;
   bool m_time;
   bool m_bx;

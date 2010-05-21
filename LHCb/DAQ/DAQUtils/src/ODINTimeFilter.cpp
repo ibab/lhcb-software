@@ -90,9 +90,9 @@ StatusCode ODINTimeFilter::execute() {
   }
   // get time & eventID 
   Gaudi::Time time = odin->eventTime();
-  int       event  = odin->eventNumber();
-  int       run  = odin->runNumber();
-  int       bx  = odin->bunchId();
+  ulonglong       event  = odin->eventNumber();
+  ulonglong       run  = odin->runNumber();
+  ulonglong       bx  = odin->bunchId();
   
 
   setFilterPassed( true );
@@ -150,12 +150,12 @@ StatusCode ODINTimeFilter::execute() {
   return StatusCode::SUCCESS;
 }
 
-int ODINTimeFilter::val(int v1,int v2,int v3){
-  if( v1 < 0)return v2;
-  return v1+v3;
+ulonglong ODINTimeFilter::val(double v1,double v2,double v3){
+  if( v1 < 0)return (ulonglong) v2;
+  return ((ulonglong) (v1+v3) );
 }
 
-bool ODINTimeFilter::def(std::pair<int,int> range){
+bool ODINTimeFilter::def(std::pair<double,double> range){
   return (range.first>=0 && range.second>=0);
 }
 
@@ -192,9 +192,9 @@ void ODINTimeFilter::criteriaPrintOut(){
   }
 }
 
-bool ODINTimeFilter::check(int val, std::pair<int,int> range){
+bool ODINTimeFilter::check(ulonglong val, std::pair<double,double> range){
   if( !def(range) )return true;
-  if( val >= range.first && val <= range.second )return true;
+  if( val >= (ulonglong) range.first && val <= (ulonglong) range.second )return true;
   return false;
 }
     
