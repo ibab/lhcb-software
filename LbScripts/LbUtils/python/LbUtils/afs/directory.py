@@ -130,7 +130,7 @@ class Directory(object):
             if g != "system:administrators" :
                 for p in perm_to_remove :
                     if p in dir_acl[g] :
-                        dir_acl[g] = dir_acl.replace(p, "")
+                        dir_acl[g] = dir_acl[g].replace(p, "")
         self._setACL(dir_acl)
         if recursive :
             for root, dirs, files in os.walk(self._name, topdown=False) :
