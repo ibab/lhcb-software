@@ -11,12 +11,10 @@ from Gaudi.Configuration import *
 from Configurables import GaudiSequencer
 from GaudiKernel.SystemOfUnits import *
 from CommonParticles.Utils import *
-from Configurables import PatPV3D
 from Configurables import LoKi__FastJetMaker
 from Configurables import CombineParticles, PhysDesktop
 from Configurables import HighPtJetSelection
 ## Selection
-PatPV = PatPV3D("PatPV")
 jetMaker = LoKi__FastJetMaker()
 jetMaker.RParameter = 1.0
 highPtJetSel = HighPtJetSelection("highPtJetSel")
@@ -31,7 +29,6 @@ highPtJetSel.JetMult = 2
 ## #####################################################################
 DVSeq = GaudiSequencer("DVSeq")
 DVSeq.IgnoreFilterPassed = False
-DVSeq.Members += [PatPV]
 DVSeq.Members += [highPtJetSel]
 ## #####################################################################
 from Configurables import DaVinci
