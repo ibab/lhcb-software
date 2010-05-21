@@ -1,9 +1,12 @@
-!$Id: release.notes,v 1.59 2010-05-21 15:25:57 poluekt Exp $
+!$Id: release.notes,v 1.60 2010-05-21 16:33:32 jpalac Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/StrippingConf
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
+
+! 2010-05-21 - Juan Palacios
+ - Remove some printouts in StrippingLine.filterMembers()
 
 ! 2010-05-21 - Anton Poluektov 
  - Fixed bug in filterMembers affecting StrippingLines with GaudiSequencers: 
