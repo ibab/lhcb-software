@@ -28,3 +28,9 @@ if not cpManifest(manifest,target) :
     if manifest.endswith('p1') :
         manifest = manifest.rstrip('p1')
         cpManifest(manifest,target)
+    if manifest.endswith('p2') :
+        manifest = manifest.rstrip('p2')
+        cpManifest(manifest,target)
+    if manifest.endswith('p3') :
+        manifest = manifest.rstrip('p3')
+        cpManifest(manifest,target)
