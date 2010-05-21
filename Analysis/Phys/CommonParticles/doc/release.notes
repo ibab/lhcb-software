@@ -1,4 +1,4 @@
- )!$Id: release.notes,v 1.180 2010-05-21 07:34:09 pkoppenb Exp $
+ )!$Id: release.notes,v 1.181 2010-05-21 08:41:20 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/CommonParticles
 ! Responsible : P. Koppenburg, Juan Palacios
@@ -9,7 +9,8 @@
 !-----------------------------------------------------------------------------
 
 ! 2010-05-21 - Patrick Koppenburg
- - Typo fix
+ - J/psi -> ee Typo fix
+ - DiElectron mass removed
 
 ! 2010-05-20 - Patrick Koppenburg
  - Loosened the mass window of J/psi->ee

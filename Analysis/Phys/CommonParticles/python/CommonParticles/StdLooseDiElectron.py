@@ -18,7 +18,7 @@ import GaudiKernel.SystemOfUnits as Units
 StdLooseDiElectron = CombineParticles("StdLooseDiElectron")
 StdLooseDiElectron.DecayDescriptor = "J/psi(1S) -> e+ e-"
 StdLooseDiElectron.InputLocations = ["StdLooseElectrons"]
-StdLooseDiElectron.CombinationCut = "(ADAMASS('J/psi(1S)')<3000*MeV)"
+StdLooseDiElectron.CombinationCut = "AM>100*MeV"
 StdLooseDiElectron.MotherCut = "(VFASPF(VCHI2/VDOF)<64)"
 locations = updateDoD(StdLooseDiElectron)
 
