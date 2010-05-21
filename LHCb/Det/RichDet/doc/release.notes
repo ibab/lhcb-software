@@ -4,6 +4,7 @@
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
 
+!======================== RichDet v14r3 2010-05-21 ===========================
 ! 2010-05-17 - Antonis Papanestis
  - Update to allow the detector element to initialize even if the 
    normal gas conditions are not there. The HLT gas conditions are required
