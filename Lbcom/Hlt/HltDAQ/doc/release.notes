@@ -13,6 +13,7 @@
 !========================== HltDAQ v1r7p1 2010-05-21 ===========================
 ! 2010-05-21 - Gerhard Raven
  - DIM does not like histograms with long names...
+ - oops -- ODIN gpstime is in microseconds, not nanoseconds
 
 ! 2010-05-19 - Gerhard Raven
  - add trend plots of rates in HltRoutingBitsWriter

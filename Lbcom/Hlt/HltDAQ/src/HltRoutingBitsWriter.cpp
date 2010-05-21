@@ -1,4 +1,4 @@
-// $Id: HltRoutingBitsWriter.cpp,v 1.10 2010-05-21 11:13:58 graven Exp $
+// $Id: HltRoutingBitsWriter.cpp,v 1.11 2010-05-21 16:40:20 graven Exp $
 // Include files 
 // from Boost
 #include "boost/foreach.hpp"
@@ -187,8 +187,9 @@ StatusCode HltRoutingBitsWriter::execute() {
                                         //       but that should be a negligible effect -- exept if a task dies, and rejoins later...
         m_runNumber  = odin->runNumber();
   }
-  // go from nanoseconds to minutes...
-  double t = double(odin->gpsTime() - m_startOfRun)/6e10; 
+
+  // go from microseconds to minutes...
+  double t = double(odin->gpsTime() - m_startOfRun)/60e6; 
   double weight = double(1)/(m_binWidth*60); // m_binWidth is in minutes, need rate in Hz
 
   for (unsigned i=0;i<8;++i) {
