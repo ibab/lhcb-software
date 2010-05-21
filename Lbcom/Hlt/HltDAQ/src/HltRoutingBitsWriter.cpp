@@ -1,4 +1,4 @@
-// $Id: HltRoutingBitsWriter.cpp,v 1.11 2010-05-21 16:40:20 graven Exp $
+// $Id: HltRoutingBitsWriter.cpp,v 1.12 2010-05-21 16:40:59 graven Exp $
 // Include files 
 // from Boost
 #include "boost/foreach.hpp"
@@ -116,8 +116,8 @@ HltRoutingBitsWriter::HltRoutingBitsWriter( const std::string& name,
   declareProperty("ODINLocation", m_odin_location = LHCb::ODINLocation::Default);
   declareProperty("RoutingBits", m_bits) ->declareUpdateHandler( &HltRoutingBitsWriter::updateBits, this );
   declareProperty("Preambulo", m_preambulo_)->declareUpdateHandler(&HltRoutingBitsWriter::updatePreambulo , this);
-  declareProperty("TrendTimeSpan",m_timeSpan = 125 );
-  declareProperty("TrendBinWidth",m_binWidth = 1 );
+  //declareProperty("TrendTimeSpan",m_timeSpan = 125 );
+  //declareProperty("TrendBinWidth",m_binWidth = 1 );
 
 }
 //=============================================================================
