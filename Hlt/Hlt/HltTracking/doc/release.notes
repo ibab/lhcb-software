@@ -1,9 +1,12 @@
-!$Id: release.notes,v 1.121 2010-05-11 17:31:21 gligorov Exp $
+!$Id: release.notes,v 1.122 2010-05-21 10:36:06 witekma Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/HltTracking
 ! Responsible : Jose A. Hernando
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
+
+! 2010-05-21 - M. Witek
+- Modifications of PV3D configuration to use latest tuning in PatPV for HLT
 
 ! 2010-05-11 - V. Gligorov
  - Switch to doing 3D reco upfront for Hlt1; use same 3D primary vertex between 

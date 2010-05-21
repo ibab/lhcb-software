@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltPVs.py,v 1.8 2010-05-11 17:30:31 gligorov Exp $
+# $Id: HltPVs.py,v 1.9 2010-05-21 10:34:03 witekma Exp $
 # =============================================================================
 ## @file HltTracking/HltPVs.py
 #  Define the 2D and 3D primary vertex making algorithms for the Hlt
@@ -158,13 +158,17 @@ def PV3D() :
     from Configurables import PatPV3D
     from Hlt2TrackingConfigurations import Hlt2UnfittedForwardTracking
     from Hlt2TrackingConfigurations import Hlt2BiKalmanFittedLongTracking
-    from Configurables import PVOfflineTool,PVSeedTool,LSAdaptPVFitter 
+    from Configurables import PVOfflineTool,PVSeedTool,LSAdaptPV3DFitter
     from HltReco import MinimalVelo
 
     output3DVertices = _vertexLocation(HltSharedVerticesPrefix,HltGlobalVertexLocation,Hlt3DPrimaryVerticesName)
 
     recoPV3D =  PatPV3D('HltPVsPV3D' )
     recoPV3D.addTool(PVOfflineTool,"PVOfflineTool")
+    recoPV3D.PVOfflineTool.addTool(LSAdaptPV3DFitter, "LSAdaptPV3DFitter")
+    recoPV3D.PVOfflineTool.PVFitterName = "LSAdaptPV3DFitter"
+    recoPV3D.PVOfflineTool.LSAdaptPV3DFitter.TrackErrorScaleFactor = 2.
+#    recoPV3D.PVOfflineTool.LSAdaptPV3DFitter.zVtxShift = 0.0
     recoPV3D.OutputVerticesName = output3DVertices
     recoPV3D.PVOfflineTool.InputTracks = [MinimalVelo.outputSelection()]
     #recoPV3D.PVOfflineTool.InputTracks = [ForcedRecoVeloForPVs().outputSelection()] 
