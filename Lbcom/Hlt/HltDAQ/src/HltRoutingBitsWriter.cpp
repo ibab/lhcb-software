@@ -1,4 +1,4 @@
-// $Id: HltRoutingBitsWriter.cpp,v 1.8 2010-05-19 13:03:31 graven Exp $
+// $Id: HltRoutingBitsWriter.cpp,v 1.9 2010-05-21 11:13:17 graven Exp $
 // Include files 
 // from Boost
 #include "boost/foreach.hpp"
@@ -38,6 +38,7 @@ StatusCode HltRoutingBitsWriter::decode() {
         if ( i->first>nBits ) return StatusCode::FAILURE;
         if (!i->second.empty()) { 
             std::string title = boost::str(boost::format("%02d:%s") % i->first % i->second) ;
+            std::string htitle = boost::str(boost::format("RoutingBit%02d")%i->first);
             if (i->first<8) { 
                 LoKi::Types::ODIN_Cut cut( LoKi::BasicFunctors<const LHCb::ODIN*>::BooleanConstant( false ) );
                 StatusCode sc = factory->get( i->second, cut, m_preambulo );
@@ -46,7 +47,7 @@ StatusCode HltRoutingBitsWriter::decode() {
                 m_odin_evaluators[i->first].counter   = &counter(title);
                 declareInfo(boost::str( boost::format("COUNTER_TO_RATE[%s]")% title ),
                         *m_odin_evaluators[i->first].counter,title);
-                m_odin_evaluators[i->first].hist   = book1D(title,0,nBins*m_binWidth,nBins); //TODO: set AxisLabels
+                m_odin_evaluators[i->first].hist   = book1D(htitle,0,nBins*m_binWidth,nBins); //TODO: set AxisLabels
             } else if (i->first<32) {
                 LoKi::Types::L0_Cut cut( LoKi::BasicFunctors<const LHCb::L0DUReport*>::BooleanConstant( false ) );
                 StatusCode sc = factory->get( i->second, cut, m_preambulo );
@@ -55,7 +56,7 @@ StatusCode HltRoutingBitsWriter::decode() {
                 m_l0_evaluators[i->first-8].counter   = &counter(title);
                 declareInfo(boost::str( boost::format("COUNTER_TO_RATE[%s]")% title ),
                         *m_l0_evaluators[i->first-8].counter,title);
-                m_l0_evaluators[i->first-8].hist   = book1D(title,0,nBins*m_binWidth,nBins); //TODO: set AxisLabels
+                m_l0_evaluators[i->first-8].hist   = book1D(htitle,0,nBins*m_binWidth,nBins); //TODO: set AxisLabels
             } else {
                 LoKi::Types::HLT_Cut cut( LoKi::BasicFunctors<const LHCb::HltDecReports*>::BooleanConstant( false ) );
                 StatusCode sc = factory->get( i->second, cut, m_preambulo );
@@ -64,7 +65,7 @@ StatusCode HltRoutingBitsWriter::decode() {
                 m_hlt_evaluators[i->first-32].counter   = &counter(title);
                 declareInfo(boost::str( boost::format("COUNTER_TO_RATE[%s]")% title ),
                         *m_hlt_evaluators[i->first-32].counter,title);
-                m_hlt_evaluators[i->first-32].hist   = book1D(title,0,nBins*m_binWidth,nBins); //TODO: set AxisLabels
+                m_hlt_evaluators[i->first-32].hist   = book1D(htitle,0,nBins*m_binWidth,nBins); //TODO: set AxisLabels
             }
 
         }
@@ -115,8 +116,8 @@ HltRoutingBitsWriter::HltRoutingBitsWriter( const std::string& name,
   declareProperty("ODINLocation", m_odin_location = LHCb::ODINLocation::Default);
   declareProperty("RoutingBits", m_bits) ->declareUpdateHandler( &HltRoutingBitsWriter::updateBits, this );
   declareProperty("Preambulo", m_preambulo_)->declareUpdateHandler(&HltRoutingBitsWriter::updatePreambulo , this);
-  declareProperty("TrendTimeSpan",m_timeSpan = 125 );
-  declareProperty("TrendBinWidth",m_binWidth = 1 );
+  // declareProperty("TrendTimeSpan",m_timeSpan = 125 );
+  // declareProperty("TrendBinWidth",m_binWidth = 1 );
 
 }
 //=============================================================================
@@ -182,13 +183,12 @@ StatusCode HltRoutingBitsWriter::execute() {
   // bits 0--7 are for ODIN
   LHCb::ODIN* odin = get<LHCb::ODIN>( m_odin_location );
   if (m_runNumber != odin->runNumber()) {
-        m_startOfRun = odin->gpsTime(); // note: this may imply that different nodes use slightly different startOfRun times...
-                                        //       but that should be a negligible effect -- exept if a task dies, and rejoins later...
+        m_startOfRun = odin->gpsTime();
         m_runNumber  = odin->runNumber();
   }
   // go from nanoseconds to minutes...
   double t = double(odin->gpsTime() - m_startOfRun)/6e10; 
-  double weight = double(1)/(m_binWidth*60); // m_binWidth is in minutes, need rate in Hz
+  double weight = double(1)/(m_binWidth*60); // m_binwidth is in minutes, need rate in Hz
 
   for (unsigned i=0;i<8;++i) {
         LoKi::Types::ODIN_Cut* eval = m_odin_evaluators[ i ].predicate;
