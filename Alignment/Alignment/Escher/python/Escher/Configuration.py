@@ -3,7 +3,7 @@
 #  @author Johan Blouw <Johan.Blouw@physi.uni-heidelberg.de>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.20 2010-04-19 11:35:10 jblouw Exp $"
+__version__ = "$Id: Configuration.py,v 1.21 2010-05-21 10:01:23 rlambert Exp $"
 __author__  = "Johan Blouw <Johan.Blouw@physi.uni-heidelberg.de>"
 
 from Gaudi.Configuration  import *
@@ -11,7 +11,7 @@ import GaudiKernel.ProcessJobOptions
 from Configurables import ( LHCbConfigurableUser, LHCbApp, RecSysConf, TrackSys,
                             ProcessPhase, GaudiSequencer, DstConf, TAlignment, VeloAlignment,
                             CountingPrescaler )
-from RecSys.Configuration import RecMoniConf
+from RecConf.Configuration import RecMoniConf
 
 ## @class Escher
 #  Configurable for Escher application
