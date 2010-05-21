@@ -5,6 +5,9 @@
 
 !==================== Phys/HighPtJets v1r0 2010-04-30 =====================
 
+! 2010-05-21 - Marcin Kucharczyk
+ - Add exceptions
+
 ! 2010-05-20 - Marcin Kucharczyk
  - Add ConeExtFactor property
 
