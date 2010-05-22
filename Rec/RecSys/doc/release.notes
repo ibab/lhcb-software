@@ -5,6 +5,26 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
+</PRE><H1><A NAME=v10r0>2010-05-21 RecSys v10r0</A></H1><PRE>
+This version uses Gaudi v21r9 and LHCb v31r0p1
+
+- New Major version of Rec with several sweeping changes
+  . Review of warnings across Rec task #15441
+  . Splitting of RecSys package into RecSys and RecConf task #14804
+    o RecSys is the container package, and can contain sam tests
+    o RecConf is where the RecSysConf configurable will sit
+  . Eliminate importOptions from Rec task #15141
+
+- Patches for warnings:
+
+- Eliminating importOptions
+
+- New Packages:
+  . RecConf v1r0, holds the RecSysConf configurable
+
+- Other package updates:
+
+
 ! 2010-05-21 - Rob Lambert
  - Move RecSysConf onto RecConf package, update to include this new package
 
