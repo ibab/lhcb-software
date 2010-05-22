@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2010-05-22 - Antonio Perez-Calero
+ - modified some cuts for muon+track lines in Physics_MinBiasL0_PassThroughHlt_May10
+
 ! 2010-05-19 - V. Gligorov
  - Add new threshold settings 
     . Physics_MinBiasL0_PassThroughHlt1_ExpressHlt2_May10

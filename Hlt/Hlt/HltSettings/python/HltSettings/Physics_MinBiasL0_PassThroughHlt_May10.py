@@ -82,15 +82,15 @@ class Physics_MinBiasL0_PassThroughHlt_May10 :
                                           , 'Muon_FitMuChi2Cut' :  999.
                                           , 'MuTrackMuPt' : 800
                                           , 'MuTrackMuIP' : 0.03
-                                          , 'MuTrackTrPt' : 750
-                                          , 'MuTrackTrIP' : 0.01
+                                          , 'MuTrackTrPt' : 600
+                                          , 'MuTrackTrIP' : 0.03
                                           , 'MuTrackDoca' : 0.2
                                           , 'MuTrackDZ' : 1.00
                                           , 'MuTrackDimuMass' : 1000
                                           , 'MuTrackPoint' : 0.4
                                           , 'MuTrackTrChi2' : 999.
                                           , 'MuTrackMuChi2' :  999.
-                                          , 'MuTrackMuPt4JPsi' : 1600
+                                          , 'MuTrackMuPt4JPsi' : 1300
                                           , 'MuTrackTrPt4JPsi' : 400
                                           , 'MuTrackDoca4JPsi' : 0.1
                                           , 'MuTrackAngle4JPsiLow' : 0.02
@@ -145,29 +145,28 @@ class Physics_MinBiasL0_PassThroughHlt_May10 :
         Returns a list of active lines
         """
         return [ 'Hlt1ODINTechnical', 'Hlt1Tell1Error'
-               , 'Hlt1L0Any'
-               , 'Hlt1L0SPD', 'Hlt1L0CALO', 'Hlt1L0MUON,minbias', 'Hlt1L0PU', 'Hlt1L0SPD40', 'Hlt1L0PU20'
-               , 'Hlt1L0Electron', 'Hlt1L0Photon', 'Hlt1L0Hadron'
-               , 'Hlt1L0Muon', 'Hlt1L0DiMuon', 'Hlt1L0Muon,lowMult', 'Hlt1L0DiMuon,lowMult'
-               , 'Hlt1L0B1gas', 'Hlt1L0B2gas'
-               , 'Hlt1VeloASide', 'Hlt1VeloCSide'
-               , 'Hlt1Lumi'
-               , 'Hlt1LumiMidBeamCrossing'
-               , 'Hlt1LumiLowBeam1' , 'Hlt1LumiLowBeam2' , 'Hlt1LumiLowBeamCrossing' , 'Hlt1LumiLowNoBeam'
-               , 'Hlt1BeamGasBeam1', 'Hlt1BeamGasBeam2', 'Hlt1BeamGasCrossing', 'Hlt1BeamGasCrossingForcedRZReco'
-               , 'Hlt1MBNoBias'
-               , 'Hlt1MBMicroBiasRZVelo', 'Hlt1MBMicroBiasTStation'
-               , 'Hlt1SingleHadron',     'Hlt1HadronMonConf1', 'Hlt1HadronMonConf2', 'Hlt1HadronMonComp'
-               , 'Hlt1DiHadron', 'Hlt1DiHadronLTUnbiased'
-               , 'Hlt1SingleMuonNoIPL0', 'Hlt1SingleMuonIPCL0'
-               , 'Hlt1DiMuonNoIPL0Di',  'Hlt1DiMuonNoPVL0Di', 'Hlt1DiMuonIPCL0Di'
-               , 'Hlt1DiMuonNoIP2L0',   'Hlt1DiMuonNoPV2L0',  'Hlt1DiMuonIPC2L0'
-               , 'Hlt1DiMuonNoIPL0Seg' , 'Hlt1DiMuonNoPVL0Seg', 'Hlt1DiMuonIPCL0Seg'
-               , 'Hlt1MuTrack', 'Hlt1MuTrack4JPsi'
-               #'Hlt1MuTrackFitMu',
-               , 'Hlt1SingleElectronNoIP', 'Hlt1SingleElectronWithIP'
-               , 'Hlt1ElectronTrackNoIP', 'Hlt1ElectronTrackWithIP'
-               , 'Hlt1PhotonTrack', 'Hlt1PhotonTrackFromEle'
-               , 'Hlt1PhotonDiTrack', 'Hlt1PhotonDiTrackFromEle'
-               , 'Hlt1Incident'
-               ]
+                 , 'Hlt1L0Any'
+                 , 'Hlt1L0SPD', 'Hlt1L0CALO', 'Hlt1L0MUON,minbias', 'Hlt1L0PU', 'Hlt1L0SPD40', 'Hlt1L0PU20'
+                 , 'Hlt1L0Electron', 'Hlt1L0Photon', 'Hlt1L0Hadron'
+                 , 'Hlt1L0Muon', 'Hlt1L0DiMuon', 'Hlt1L0Muon,lowMult', 'Hlt1L0DiMuon,lowMult'
+                 , 'Hlt1L0B1gas', 'Hlt1L0B2gas'
+                 , 'Hlt1VeloASide', 'Hlt1VeloCSide'
+                 , 'Hlt1Lumi'
+                 , 'Hlt1LumiMidBeamCrossing'
+                 , 'Hlt1LumiLowBeam1' , 'Hlt1LumiLowBeam2' , 'Hlt1LumiLowBeamCrossing' , 'Hlt1LumiLowNoBeam'
+                 , 'Hlt1BeamGasBeam1', 'Hlt1BeamGasBeam2', 'Hlt1BeamGasCrossing', 'Hlt1BeamGasCrossingForcedRZReco'
+                 , 'Hlt1MBNoBias'
+                 , 'Hlt1MBMicroBiasRZVelo', 'Hlt1MBMicroBiasTStation'
+                 , 'Hlt1SingleHadron',     'Hlt1HadronMonConf1', 'Hlt1HadronMonConf2', 'Hlt1HadronMonComp'
+                 , 'Hlt1DiHadron', 'Hlt1DiHadronLTUnbiased'
+                 , 'Hlt1SingleMuonNoIPL0', 'Hlt1SingleMuonIPCL0'
+                 , 'Hlt1DiMuonNoIPL0Di',  'Hlt1DiMuonNoPVL0Di', 'Hlt1DiMuonIPCL0Di'
+                 , 'Hlt1DiMuonNoIP2L0',   'Hlt1DiMuonNoPV2L0',  'Hlt1DiMuonIPC2L0'
+                 , 'Hlt1DiMuonNoIPL0Seg' , 'Hlt1DiMuonNoPVL0Seg', 'Hlt1DiMuonIPCL0Seg'
+                 , 'Hlt1MuTrack', 'Hlt1MuTrack4JPsi'
+                 , 'Hlt1SingleElectronNoIP', 'Hlt1SingleElectronWithIP'
+                 , 'Hlt1ElectronTrackNoIP', 'Hlt1ElectronTrackWithIP'
+                 , 'Hlt1PhotonTrack', 'Hlt1PhotonTrackFromEle'
+                 , 'Hlt1PhotonDiTrack', 'Hlt1PhotonDiTrackFromEle'
+                 , 'Hlt1Incident'
+                 ]
