@@ -15,25 +15,77 @@ This version uses Gaudi v21r9 and LHCb v31r0p1
     o RecConf is where the RecSysConf configurable will sit
   . Eliminate importOptions from Rec task #15141
 
-- Patches for warnings:
+- Patches for warning printout:
+  Muon/MuonID v7r8p1, Muon/MuonPIDChecker v5r1p2, Muon/MuonTrackRec v3r3, Muon/MuonTrackMonitor v1r0,
+  Rec/LumiAlgs v3r5, Rich/RichGlobalPID v3r13p1, Rich/RichHPDImageAnalysis v1r0p1, 
+  Rich/RichRecAlgorithms v2r18p1, Rich/RichRecPhotonTools v1r7p1,
+  Rich/RichRecQC v2r41, Rich/RichRecTemplateRings v1r4p1, Rich/RichRecTools v4r11p2,
+  Tf/PatAlgorithms v4r2, Tf/PatVelo v3r23, Tf/PatVeloTT v3r13, Tf/TrackMatching v2r28p2,
+  Tf/TrackSeeding v1r4p4, Tf/TsaAlgorithms v3r20, Tr/PatChecker v3r7p1,
+  Tr/PatPV v3r16, Tr/TrackExtrapolators v2r27p1, Tr/TrackFitter v2r48,
+  Tr/TrackProjectors v2r28p1, Tr/TrackTools v3r31, Velo/VeloRecMonitors v2r10 
+  
 
-- Eliminating importOptions
+- Eliminating importOptions:
+  Tf/PatAlgorithms v4r2, Tf/PatVeloTT v3r13, Tf/TrackMatching v2r28p2,
+  Tf/TrackSys v4r33, Tf/TsaAlgorithms v3r20, Tr/PatPV v3r16, RecSys
+
+- In RecSys:
+  . Move RecSysConf onto RecConf package
+  . eliminated importOptions from the configurable
 
 - New Packages:
-  . RecConf v1r0, holds the RecSysConf configurable
+  . Rec/RecConf v1r0, holds the RecSysConf configurable
+  . Muon/MuonTrackMonitor v1r0, new package for monitors of muon tracks 
+
+- Minor updates for monitoring:
+  . Calo/CaloMoniDst 	v5r2
+  . Rich/RichRecQC v2r41
+  . Rich/RichRecTools v4r11p2: Fixed histo bug
+  . Tr/TrackMonitors v1r25
+  . Velo/VeloRecMonitors v2r10 
 
 - Other package updates:
+  Calo/CaloReco v5r5, Muon/MuonTrackRec v3r3,
+  Rec/LumiAlgs v3r5, Tf/PatVelo v3r23, Tf/TrackMatching v2r28p2,
+  Tr/PatPV v3r16, Tr/TrackAssociators v2r8, Tr/TrackFitter v2r48,
+  Tr/TrackTools v3r31
+
+- In Calo/CaloReco v5r5:
+  . Fix bug in splitCluster onDemand settings (causing crash when running caloSequence() in DaVinci) 
+  . New framework for CaloCorrections. Parameters come with condDB. 
+  . small fix in CaloProcessor 
+  . suppress printout of 'Error from cov', but keep printout at end of job (see bugs #67077) 
+
+- In Muon/MuonTrackRec v3r3:
+  . add tighter cuts to NN neurons in physics case 
+
+- In Rec/LumiAlgs v3r5:
+  . LumiIntegrateFSR: remove dependence on rawdata, integration at terminate only, now also integrate LumiLowFSR; improved DumpFSR 
+  . Added check on "Method" to select random Lumi events correctly (works for Moore >=v9r0) 
+
+- In Tf/PatVelo v3r23:
+  . Changes to PatVeloSpaceTool and PatVeloTrackTool to improve internal fit in the case of half box misalignments
+  . improvements to fit and better PatVeloSpaceTool behaviour for overlap tracks 
+  . Changed how PatVeloGeneral flags backward tracks for beam gas events 
+
+- In Tf/TrackMatching v2r28p2:
+  . register Match container before aborting events 
+
+- In Tr/PatPV v3r16:
+  . Modification of LSAdaptPV3DFitter for HLT. Tuning of track error parametrization. 
+
+- In Tr/TrackAssociators v2r8:
+  . Clear the linker table before associating 
+
+- In Tr/TrackFitter v2r48:
+  . for HLT: fit velo-backward tracks towards vertex instead of away from it. 
+
+- In Tr/TrackTools v3r31:
+  . fix an untested statuscode in filter method of TrackInterpolator 
 
 
-! 2010-05-21 - Rob Lambert
- - Move RecSysConf onto RecConf package, update to include this new package
-
-! 2010-05-05 - Rob Lambert
- - New package, MuonTrackMonitor, for online/offline/DQ Muon histograms
-
-! 2010-05-03 - Rob Lambert
- - eliminated importOptions from the configurable
-
+  
 
 </PRE><H1><A NAME=v9r2p1>2010-04-28 RecSys v9r2p1</A></H1><PRE>
 This version uses Gaudi v21r9 and LHCb v31r0p1
