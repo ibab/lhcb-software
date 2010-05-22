@@ -4,6 +4,7 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+!======================= RichRecQC v2r41 2010-05-21 ========================
 ! 2010-05-20 - Chris Jones
  - Add event selection algorithm from Tom Hampson
 
