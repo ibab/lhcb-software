@@ -4,6 +4,7 @@
 ! Purpose     : Velo pattern recognition
 !-----------------------------------------------------------------------------
 
+!========================== PatVelo v3r23 2010-05-21 =========================
 ! 2010-05-20 - David Hutchcroft
  - Changed how PatVeloGeneral flags backward tracks for beam gas events
 
