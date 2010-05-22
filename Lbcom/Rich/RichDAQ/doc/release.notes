@@ -4,6 +4,7 @@
 ! Purpose     : Package simulating the RICH DAQ system and data format
 !-----------------------------------------------------------------------------
 
+!========================== RichDAQ v3r27 2010-05-22 =========================
 ! 2010-04-27 - Chris Jones
  - Turn back on the Event ID cross checks within the RICH data (but not with
    the ODIN which does not work).
