@@ -1,4 +1,4 @@
-// $Id: VeloIPResolutionMonitor.h,v 1.9 2010-04-02 16:09:45 malexand Exp $
+// $Id: VeloIPResolutionMonitor.h,v 1.9 2010/04/02 16:09:45 malexand Exp $
 #ifndef VELORECMONITORS_VELOIPRESOLUTIONMONITOR_H 
 #define VELORECMONITORS_VELOIPRESOLUTIONMONITOR_H 1
 
@@ -9,18 +9,19 @@
 
 #include "TrackInterfaces/ITrackExtrapolator.h"
 #include "TrackInterfaces/ITrackVertexer.h"
-#include "TrackInterfaces/ITrackFitter.h"
-#include "TrackInterfaces/IMeasurementProvider.h"
+#include "TrackInterfaces/IPVOfflineTool.h"
 
 #include <Event/RecVertex.h>
 
 #include <TH1D.h>
 #include <TProfile.h>
+#include <TRandom3.h>
+#include <TF1.h>
 
-/*#include "Event/MCHeader.h"
+#include "Event/MCHeader.h"
 #include "Event/MCParticle.h"
 #include "Kernel/Particle2MCLinker.h"
-#include "Kernel/IDaVinciAssociatorsWrapper.h"*/
+
 
 /** @class VeloIPResolutionMonitor VeloIPResolutionMonitor.h
  *  
@@ -49,34 +50,21 @@ namespace Velo
     virtual StatusCode execute   ();    ///< Algorithm execution
     virtual StatusCode finalize  ();    ///< Algorithm finalization
 
-    StatusCode calculateIPs( const LHCb::RecVertex*, const LHCb::Track*, double&, double&, double&, double&, double&, double& );
-    StatusCode distance( const LHCb::RecVertex*, LHCb::State&, double&, double&, int );
-
-    StatusCode fillHistos(double&, double&, double&, double&);
-
-    StatusCode plotInBin(double&, double&, double&, int& );
-
-    StatusCode plotRMS( std::vector< TH1D* >, TH1D* );
-    StatusCode fitGaussAndPlotWidth( std::vector< TH1D* >, TH1D* );
-    StatusCode fitDblGaussAndPlotWidth( std::vector< TH1D* >, TH1D* );
-
-    StatusCode plotMean( std::vector< TH1D* >, TH1D* );
-    StatusCode fit2DGausAndPlotMean( std::vector< TH1D* >, TH1D* );
-    StatusCode fitDbl2DGausAndPlotMean( std::vector< TH1D* >, TH1D* );
-    StatusCode fitLandauAndPlotMPV( std::vector< TH1D* >, TH1D* );
-
-    //StatusCode checkMCAssoc( const LHCb::Track*, const LHCb::RecVertex*, LHCb::MCVertex*&, double&, unsigned int& );
-
   protected:
 
   private:
 
+    std::string m_vertexLocation ;
+    std::string m_trackLocation ;
+
     const LHCb::RecVertex* m_pv;
     const LHCb::Track* m_track;
 
-    bool m_requireL0;
+    bool m_withMC;
 
-    //bool m_withMC;
+    TRandom3* m_randGen ;
+    bool m_scaleInversePT ;
+    TF1* m_inversePTFun ;
 
     bool m_useLogScale;
     bool m_statOverflows;
@@ -118,11 +106,31 @@ namespace Velo
   
     ITrackExtrapolator* m_trackExtrapolator;
     ToolHandle<ITrackVertexer> m_vertexer;
-    IMeasurementProvider* m_measurementProvider;
-    ITrackFitter* m_trackFitter;
+    IPVOfflineTool* m_pvtool;
   
     Tuple m_tuple;
     bool m_writeTuple;
+
+    Gaudi::XYZPoint extrapolateToZ(const LHCb::Track*, double );
+    Gaudi::XYZPoint extrapolateToPOCA(const LHCb::Track*, Gaudi::XYZPoint );    
+
+    StatusCode calculateIPs( const LHCb::RecVertex*, const LHCb::Track*, double&, double&, double&, double&, double&, double& );
+    StatusCode distance( const LHCb::RecVertex*, LHCb::State&, double&, double&, int );
+
+    StatusCode fillHistos(double&, double&, double&, double&);
+
+    StatusCode plotInBin(double&, double&, double&, int& );
+
+    StatusCode plotRMS( std::vector< TH1D* >, TH1D* );
+    StatusCode fitGaussAndPlotWidth( std::vector< TH1D* >, TH1D* );
+    StatusCode fitDblGaussAndPlotWidth( std::vector< TH1D* >, TH1D* );
+
+    StatusCode plotMean( std::vector< TH1D* >, TH1D* );
+    StatusCode fit2DGausAndPlotMean( std::vector< TH1D* >, TH1D* );
+    StatusCode fitDbl2DGausAndPlotMean( std::vector< TH1D* >, TH1D* );
+    StatusCode fitLandauAndPlotMPV( std::vector< TH1D* >, TH1D* );
+
+    StatusCode checkMCAssoc( const LHCb::Track*, const LHCb::RecVertex*, LHCb::MCVertex*&, double&, unsigned int& );
     
   };
 }

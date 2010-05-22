@@ -1,4 +1,4 @@
-// $Id: VeloIPResolutionMonitor.cpp,v 1.18 2010-04-02 16:09:45 malexand Exp $
+// $Id: VeloIPResolutionMonitor.cpp,v 1.18 2010/04/02 16:09:45 malexand Exp $
 // Include files
 #include "VeloIPResolutionMonitor.h"
 
@@ -25,11 +25,10 @@
 #include <VeloDet/DeVeloPhiType.h>
 #include <VeloDet/DeVeloRType.h>
 
-#include <TF1.h>
-
 using namespace LHCb;
 using namespace Gaudi::Utils;
 using namespace Gaudi::Units;
+using namespace std ;
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : VeloIPResolutionMonitor
@@ -47,44 +46,49 @@ namespace Velo
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-Velo::VeloIPResolutionMonitor::VeloIPResolutionMonitor( const std::string& name,
+Velo::VeloIPResolutionMonitor::VeloIPResolutionMonitor( const string& name,
                                                         ISvcLocator* pSvcLocator)
   : GaudiTupleAlg ( name , pSvcLocator ),
     m_vertexer("TrackVertexer"),
-    m_measurementProvider(0),
-    m_trackFitter(0),
     m_tuple(0)
 {
+
+  // set input locations
+  declareProperty("TrackLocation", m_trackLocation = TrackLocation::Default ) ;
+  declareProperty("VertexLocation", m_vertexLocation = RecVertexLocation::Primary );
+
   // set whether to write the ntuple
   declareProperty("WriteTuple",m_writeTuple=false);
 
-  //declareProperty("WithMC",m_withMC=false);
+  // set whether to scale accepted entries with pt frequency
+  declareProperty("ScaleByPTFrequency", m_scaleInversePT=false ) ;
+
+  // set whether to do comparison to MC
+  declareProperty("WithMC",m_withMC=false);
 
   // Set the binning options
   declareProperty("StatOverflows", m_statOverflows = false );
   declareProperty("UseLogScale",m_useLogScale = false );
   declareProperty("InversePTMin",m_InversePTMin = 0.0 );
-  declareProperty("InversePTMax",m_InversePTMax = 4.0 );
+  declareProperty("InversePTMax",m_InversePTMax = 3.0 );
   declareProperty("NBins",m_nBins = 20 );
   declareProperty("MinPVnTracks", m_minPVnTracks = 8 );
 
   // Set whether to save the underlying histograms used to make the plots of fit results
   declareProperty("SaveUnderlyingHistos",m_saveUnderlyingHistos=true);
-  declareProperty("UnderlyingHistosLimitYIntercept1D", m_limitIntercept1D = 6.525937e-03F );
-  declareProperty("UnderlyingHistosLimitGradient1D", m_limitGradient1D = 1.947187e-02F );
-  declareProperty("UnderlyingHistosLimitYIntercept3D", m_limitIntercept3D = 8.524237e-03F );
-  declareProperty("UnderlyingHistosLimitGradient3D", m_limitGradient3D = 2.690075e-02F );
+  // set the values of the linear parametrisation used to determine the limits of the underlying histograms
+  declareProperty("UnderlyingHistosLimitYIntercept1D", m_limitIntercept1D = 16.e-03F );
+  declareProperty("UnderlyingHistosLimitGradient1D", m_limitGradient1D = 26.7e-03F );
+  declareProperty("UnderlyingHistosLimitYIntercept3D", m_limitIntercept3D = 19.5e-03F );
+  declareProperty("UnderlyingHistosLimitGradient3D", m_limitGradient3D = 30.9e-03F );
   declareProperty("UnderlyingHistosLimitFactor", m_limitFactor = 10. );
 
   // Set whether to calculate residuals as a fn. of eta and phi compared to the 1/PT parametrisation
   // and which gradient & y intercept values to use
   declareProperty("CalcResiduals", m_calcResiduals = true );
-  declareProperty("ResidualsYIntercept3D", m_res3DyIntercept = 8.680847e-03F );
-  declareProperty("ResidualsLinear3D", m_res3Dgrad = 2.656325e-02F );
-  declareProperty("ResidualsQuad3D", m_res3Dquad = 1.135474e-04F );
-
-  // Set whether to check if each event has passed L0
-  declareProperty("RequireL0", m_requireL0 = false );
+  declareProperty("ResidualsYIntercept3D", m_res3DyIntercept = 19.5e-03F );
+  declareProperty("ResidualsLinear3D", m_res3Dgrad = 30.9e-03F );
+  declareProperty("ResidualsQuad3D", m_res3Dquad = 0. );
 
   // Set whether to refit PVs without the track for which IP is being calculated
   declareProperty("RefitPVs", m_refitPVs = false );
@@ -115,11 +119,17 @@ StatusCode Velo::VeloIPResolutionMonitor::initialize() {
 
   // Get vertexer if required
   if( m_refitPVs ) sc = m_vertexer.retrieve();
+  m_pvtool =tool<IPVOfflineTool>( "PVOfflineTool" );
 
   // get the track extrapolator used in calculating the IPs
   m_trackExtrapolator = tool<ITrackExtrapolator>("TrackMasterExtrapolator","Extrapolator",this);
-  m_measurementProvider = tool<IMeasurementProvider>("MeasurementProvider","MeasProvider", this );
-  m_trackFitter = tool<ITrackFitter>("TrackMasterFitter","Fitter",this);
+
+  if( m_scaleInversePT ){ 
+    m_randGen = new TRandom3( 0 ) ;
+    m_inversePTFun = new TF1( "InversePTFun", "landaun", 0, 10 ) ;
+    m_inversePTFun->SetParameters( 1, 1.69, 0.648 ) ;
+    m_inversePTFun->SetParameter( 0, 1./m_inversePTFun->GetMaximum() ) ;
+  }  
 
   // if useVariableBins=false (default) and no bin values have been defined in the options file, 
   // m_nBins equal sized bins between m_InversePTMin and m_InversePTMax are used
@@ -138,11 +148,11 @@ StatusCode Velo::VeloIPResolutionMonitor::initialize() {
   for( int i = 0; i<(int)m_bins.size()-1; i++ ){
 
     // make histogram titles and IDs from the bin values
-    std::ostringstream tempID;
+    ostringstream tempID;
     tempID << m_bins[i] << "to" << m_bins[i+1];
     m_histoIDs.push_back( tempID.str() );
     
-    std::ostringstream tempTitle;
+    ostringstream tempTitle;
     if( !m_useLogScale ) tempTitle << m_bins[i] << " < 1/p_{T} (GeV^{-1}) < " << m_bins[i+1] ;
     else tempTitle << m_bins[i] << " < log_{10}( 1/p_{T} (GeV^{-1}) )" << m_bins[i+1] ;
     m_histoTitles.push_back( tempTitle.str() );
@@ -163,32 +173,32 @@ StatusCode Velo::VeloIPResolutionMonitor::initialize() {
     if( m_saveUnderlyingHistos ){
       
       m_IPres_X_histos.push_back( Aida2ROOT::aida2root( book( "IPres_X_"+m_histoIDs[i], 
-                                                              "Resolution of IP_{X} for tracks with "+m_histoTitles[i], 
+                                                              "IP_{X} for tracks with "+m_histoTitles[i], 
                                                               -limit1D*mm, limit1D*mm, 500 ) ) );
       m_IPres_Y_histos.push_back( Aida2ROOT::aida2root( book( "IPres_Y_"+m_histoIDs[i], 
-                                                              "Resolution of IP_{Y} for tracks with "+m_histoTitles[i], 
+                                                              "IP_{Y} for tracks with "+m_histoTitles[i], 
                                                               -limit1D*mm, limit1D*mm, 500 ) ) );
       m_IPres_unsigned3D_histos.push_back( Aida2ROOT::aida2root( book( "IPres_unsigned3D_"+m_histoIDs[i], 
-                                                                       "Resolution of unsigned IP_{3D} for tracks with "
+                                                                       "Unsigned IP_{3D} for tracks with "
                                                                        +m_histoTitles[i],
                                                                        0.0*mm, limit3D*mm, 500 ) ) );
-      m_IPres_X_histos[i]->SetXTitle("IP Resolution (mm)");
-      m_IPres_Y_histos[i]->SetXTitle("IP Resolution (mm)");
-      m_IPres_unsigned3D_histos[i]->SetXTitle("IP Resolution (mm)");
+      m_IPres_X_histos[i]->SetXTitle("IP (mm)");
+      m_IPres_Y_histos[i]->SetXTitle("IP (mm)");
+      m_IPres_unsigned3D_histos[i]->SetXTitle("IP (mm)");
 
     }
     // otherwise the underlying histograms are created as ROOT histograms, and pointers to them stored in member vectors
     else{
-      std::string strID = "IPres_X_"+m_histoIDs[i];
-      std::string strTitle = "Resolution of IP_{X} for tracks with "+m_histoTitles[i];
+      string strID = "IPres_X_"+m_histoIDs[i];
+      string strTitle = "IP_{X} for tracks with "+m_histoTitles[i];
       m_IPres_X_histos.push_back( new TH1D( strID.c_str(), strTitle.c_str(), 500, -limit1D*mm, limit1D*mm ) );
 
       strID = "IPres_Y_"+m_histoIDs[i];
-      strTitle = "Resolution of IP_{Y} for tracks with "+m_histoTitles[i];
+      strTitle = "IP_{Y} for tracks with "+m_histoTitles[i];
       m_IPres_Y_histos.push_back( new TH1D( strID.c_str(), strTitle.c_str(), 500, -limit1D*mm, limit1D*mm ) );
 
       strID = "IPres_unsigned3D_"+m_histoIDs[i];
-      strTitle = "Resolution of unsigned IP_{3D} for tracks with "+m_histoTitles[i];
+      strTitle = "Unsigned IP_{3D} for tracks with "+m_histoTitles[i];
       m_IPres_unsigned3D_histos.push_back( new TH1D( strID.c_str(), strTitle.c_str(), 500, 0.0*mm, limit3D*mm ) );
       
     }
@@ -204,11 +214,11 @@ StatusCode Velo::VeloIPResolutionMonitor::initialize() {
   }
   
   // book the histograms of fit results against 1/PT using the defined bins
-  std::string XaxisTitle;
+  string XaxisTitle;
   if( !m_useLogScale ) XaxisTitle = "1/p_{T} (GeV^{-1})";
   else XaxisTitle = "log_{10}(1/p_{T}) (GeV^{-1})";
 
-  std::string XprofileTitle, YprofileTitle, threeDprofileTitle;
+  string XprofileTitle, YprofileTitle, threeDprofileTitle;
   if( m_fitOption == "FitDouble" ){
     XprofileTitle = "Width of core of double Gaussian fit to IP_{X} resolution Vs 1/p_{T}";
     YprofileTitle = "Width of core of double Gaussian fit to IP_{Y} resolution Vs 1/p_{T}";
@@ -283,30 +293,26 @@ StatusCode Velo::VeloIPResolutionMonitor::execute() {
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
 
   counter( "Events Analysed" )++;
-
-  // get L0DU report to check L0 decision, if required
-  L0DUReport* report = new L0DUReport();
-  if( m_requireL0 && exist<L0DUReport>(L0DUReportLocation::Default) ){
-    report = get<L0DUReport>(L0DUReportLocation::Default);
-  }
-  else if( m_requireL0 ) {
-    if ( msgLevel(MSG::DEBUG) ) debug() << "Could not find L0DU report!" << endmsg;
-    return StatusCode::FAILURE;
-  }
-
-  if( msgLevel(MSG::DEBUG)) info() << "L0 decision: " << report->decision() << endmsg;
-  
-  if( m_requireL0 && !report->decision() ) return StatusCode::SUCCESS;
       
   // Get PVs
-  if( !exist<RecVertices>(RecVertexLocation::Primary) ){
-    counter("No data at 'Rec/Vertex/Primary'")++;
-    debug() << "No data at 'Rec/Vertex/Primary'!" << endmsg;
+  if( !exist<RecVertices>( m_vertexLocation ) ){
+    counter( string("No data at ") + m_vertexLocation )++;
+    debug() << "No data at " << m_vertexLocation << endmsg;
     return StatusCode::SUCCESS;
   }
-  const RecVertices* pvs = get<RecVertices>(RecVertexLocation::Primary);  
+  const RecVertices* pvs = get<RecVertices>( m_vertexLocation );  
 
+  // select only events with 1 reconstructed PV
   if( pvs->size() != 1 ) return StatusCode::SUCCESS;
+
+  // get the tracks
+  if( !exist<Tracks>( m_trackLocation ) )
+  {
+    counter( string("No tracks at ") + m_trackLocation )++;
+    return StatusCode::SUCCESS;
+  }
+  
+  Tracks* tracks = get<Tracks>(m_trackLocation);
   
   counter("Events Selected")++;
     
@@ -337,25 +343,13 @@ StatusCode Velo::VeloIPResolutionMonitor::execute() {
     if( nVeloTracks < m_minPVnTracks && !m_writeTuple ) continue;
     counter("PVs Selected")++;
         
-    m_h_TrackMultiplicity->Fill( PVtracks.size() );
+    m_h_TrackMultiplicity->Fill( PVtracks.size() );    
 
-
-    if( !exist<Tracks>(TrackLocation::Default ) )
-    {
-      counter("No tracks at TrackLocation::Default")++;
-      return StatusCode::SUCCESS;
-    }
-        
-    Tracks* tracks = get<Tracks>(TrackLocation::Default);
-    
-    //for ( SmartRefVector< Track >::const_iterator tr = PVtracks.begin(); 
-    //      tr != PVtracks.end() ; tr++ ){
-
+    // loop over tracks
     for( Tracks::const_iterator tr = tracks->begin(); tr != tracks->end(); ++tr ){
       
-      if( (*tr)->type() != Track::Velo && (*tr)->type() != Track::Upstream && (*tr)->type() != Track::Long ) continue;
-      
-      //m_track = &(**tr);
+      if( (*tr)->type() != Track::Velo && (*tr)->type() != Track::Upstream && (*tr)->type() != Track::Long ) continue;      
+
       m_track = *tr;
       
       double inversePT;
@@ -367,36 +361,35 @@ StatusCode Velo::VeloIPResolutionMonitor::execute() {
       if( (inversePT > *(m_bins.rbegin()) || *(m_bins.begin()) > inversePT || (*tr)->type() != Track::Long ) 
           && !m_writeTuple ) continue;
 
+      // discard tracks according to their 1/pt frequency, if set
+      if( m_scaleInversePT && 
+          (
+           (!m_track->checkType( Track::Velo ) && 
+            m_randGen->Rndm() > m_inversePTFun->Eval( m_bins[1] ) / 0.8 / m_inversePTFun->Eval( inversePT ) )
+           ||
+           ( m_track->checkType( Track::Velo ) && m_randGen->Rndm() > 0.5 )
+           )
+          ) 
+        continue ;
+
       counter("Tracks selected")++;
         
       // refit PV removing current track
-      bool isInPV = false;
-      if( m_refitPVs ){
+      bool isInPV = find( PVtracks.begin(), PVtracks.end(), m_track ) != PVtracks.end() ;
+
+      if( m_refitPVs && isInPV ){
           
-        std::vector< const Track* > newTracks;
-        for ( Track::ConstVector::const_iterator trackIt = PVtracks.begin(); 
-              trackIt != PVtracks.end() ; trackIt++ ){
-          
-          if( *trackIt == m_track ){
-            
-            isInPV = true;
-            continue;
-          }
-          newTracks.push_back( *trackIt );
-          
+        RecVertex* newVertex = new RecVertex( *m_pv ) ;
+        vector< const Track* > trackToRemove( 1, m_track ) ;
+        StatusCode scPVfit = 
+          m_pvtool->reDoSinglePV( Gaudi::XYZPoint( newVertex->position() ), trackToRemove, *newVertex ) ;
+        if( scPVfit.isFailure() ){
+          delete newVertex ;
+          continue ;
         }
-          
-        if( isInPV ){ 
-          RecVertex* newVertex  = m_vertexer->fit( newTracks );
-          if( newVertex ){
-            m_pv = newVertex;
-          }
-          else{
-            counter("PV refit fails")++;
-            continue;
-          }
-        }
-      }
+        else
+          m_pv = newVertex ;
+      }        
       
       double ip3d, ip3dsigma, ipx, ipxsigma, ipy, ipysigma;
       calculateIPs( m_pv, m_track, ip3d, ip3dsigma, ipx, ipxsigma, ipy, ipysigma );
@@ -426,6 +419,7 @@ StatusCode Velo::VeloIPResolutionMonitor::execute() {
         
         m_tuple->column( "isInPV", isInPV );
         m_tuple->column( "TrackType", m_track->type() );
+        m_tuple->column( "IsTrackForward", m_track->flag() != Track::Backward ) ;
         m_tuple->column( "IPRes3D", ip3d );
         m_tuple->column( "IPRes3Dsigma", ip3dsigma );
         m_tuple->column( "IPRes_X", ipx );
@@ -458,12 +452,12 @@ StatusCode Velo::VeloIPResolutionMonitor::execute() {
         m_tuple->column( "PVYerrNoRefit", sqrt( (*ipv)->covMatrix()(1,1) ) );
         m_tuple->column( "PVZerrNoRefit", sqrt( (*ipv)->covMatrix()(2,2) ) );
         
-        std::vector<double> statesX;
-        std::vector<double> statesY;
-        std::vector<double> statesZ;
-        std::vector<unsigned int> stationNos;
-        std::vector<bool> isR;
-        std::vector<unsigned int> sensorNos;
+        vector<double> statesX;
+        vector<double> statesY;
+        vector<double> statesZ;
+        vector<unsigned int> stationNos;
+        vector<bool> isR;
+        vector<unsigned int> sensorNos;
         for( Track::ConstNodeRange::const_iterator inode = m_track->nodes().begin();
              inode != m_track->nodes().end(); ++inode){
             
@@ -493,14 +487,24 @@ StatusCode Velo::VeloIPResolutionMonitor::execute() {
         m_tuple->farray( "MeasSensorNos", sensorNos, "nMeasurements", 42 );
         m_tuple->farray( "MeasIsR", isR, "nMeasurements", 42 );
 
-        /*if( m_withMC ){
+        vector< unsigned int > rSens ;
+        vector< unsigned int > pSens ;
+        
+        for( vector< LHCbID >::const_iterator idit = m_track->lhcbIDs().begin() ; idit != m_track->lhcbIDs().end(); ++idit ){
+          if( idit->isVeloR() ) rSens.push_back( idit->veloID().sensor() ) ;
+          else if( idit->isVeloPhi() ) pSens.push_back( idit->veloID().sensor() ) ;
+        }
+        m_tuple->farray( "rHitSensors", rSens, "nVeloRIDs", 23 ) ;
+        m_tuple->farray( "phiHitSensors", pSens, "nVeloPhiIDs", 21 ) ;
+
+        if( m_withMC ){
           MCVertex* mcpv = new MCVertex();
           mcpv->setPosition( Gaudi::XYZPoint( -999, -999, -999 ) );
           unsigned int mctype;
           double mcInversePT;
           checkMCAssoc( m_track, m_pv, mcpv, mcInversePT, mctype );
           RecVertex dummyPV = RecVertex( mcpv->position() );
-          std::vector<float> matrixValues( 6, 0. );
+          vector<float> matrixValues( 6, 0. );
           dummyPV.setCovMatrix( Gaudi::SymMatrix3x3( matrixValues.begin(), matrixValues.end() ) );
           double mcip3d, mcip3dsigma, mcipx, mcipxsigma, mcipy, mcipysigma;
           calculateIPs( (const RecVertex*)(&dummyPV), m_track, mcip3d, mcip3dsigma, mcipx, mcipxsigma, mcipy, mcipysigma );
@@ -517,7 +521,7 @@ StatusCode Velo::VeloIPResolutionMonitor::execute() {
           m_tuple->column( "MCPVY", mcpv->position().y() );
           m_tuple->column( "MCPVZ", mcpv->position().z() );
           delete mcpv;
-          }*/
+        }
 
         m_tuple->write();
       }
@@ -583,17 +587,19 @@ StatusCode Velo::VeloIPResolutionMonitor::calculateIPs( const RecVertex* pv, con
   // to get the 3D IP
   State POCAtoPVstate;
   isSuccess = m_trackExtrapolator->propagate( *track, pv->position(), POCAtoPVstate );
+  //State POCAtoPVstate( StateVector( extrapolateToPOCA( track, pv->position() ), track->slopes() ) ) ;
   isSuccess = distance( pv, POCAtoPVstate, ip3d, ip3dsigma, 0 );
   
   // extrapolate the current track to the same Z position as the PV to get X & Y IP
   State stateAtPVZ = track->firstState();
   isSuccess = m_trackExtrapolator->propagate( stateAtPVZ, pv->position().z() );
+  //State stateAtPVZ( StateVector( extrapolateToZ( track, pv->position().z() ), track->slopes() ) ) ; 
 
-  //isSuccess = distance( pv, stateAtPVZ, ipx, ipxsigma, 1 );
-  isSuccess = distance( pv, POCAtoPVstate, ipx, ipxsigma, 1 );
+  isSuccess = distance( pv, stateAtPVZ, ipx, ipxsigma, 1 );
+  //isSuccess = distance( pv, POCAtoPVstate, ipx, ipxsigma, 1 );
 
-  //isSuccess = distance( pv, stateAtPVZ, ipy, ipysigma, 2 );
-  isSuccess = distance( pv, POCAtoPVstate, ipy, ipysigma, 2 );
+  isSuccess = distance( pv, stateAtPVZ, ipy, ipysigma, 2 );
+  //isSuccess = distance( pv, POCAtoPVstate, ipy, ipysigma, 2 );
 
   return isSuccess;
 
@@ -670,7 +676,7 @@ StatusCode Velo::VeloIPResolutionMonitor::plotInBin( double& ip3d, double& ipx, 
 //=========================================================================
 //  Take the RMS of each of a set of input histos & plot it in an output histo
 //=========================================================================
-StatusCode Velo::VeloIPResolutionMonitor::plotRMS ( std::vector< TH1D* > sourceHistos, TH1D* outHisto ) {
+StatusCode Velo::VeloIPResolutionMonitor::plotRMS ( vector< TH1D* > sourceHistos, TH1D* outHisto ) {
 
   debug() << "Making RMS histo" << endmsg;
   
@@ -692,7 +698,7 @@ StatusCode Velo::VeloIPResolutionMonitor::plotRMS ( std::vector< TH1D* > sourceH
 //=========================================================================
 //  Fit gaussian to a set of histograms, and plot the fitted gaus width in an output histo
 //=========================================================================
-StatusCode Velo::VeloIPResolutionMonitor::fitGaussAndPlotWidth ( std::vector< TH1D* > sourceHistos, TH1D* outHisto ) {
+StatusCode Velo::VeloIPResolutionMonitor::fitGaussAndPlotWidth ( vector< TH1D* > sourceHistos, TH1D* outHisto ) {
 
   debug() << "Making Gauss fit histo" << endmsg;
   
@@ -725,7 +731,7 @@ StatusCode Velo::VeloIPResolutionMonitor::fitGaussAndPlotWidth ( std::vector< TH
 //=========================================================================
 //  Fit double gaussian to a set of histograms, and plot the fitted core gaus width in an output histo
 //=========================================================================
-StatusCode Velo::VeloIPResolutionMonitor::fitDblGaussAndPlotWidth ( std::vector< TH1D* > sourceHistos, TH1D* outHisto ) {
+StatusCode Velo::VeloIPResolutionMonitor::fitDblGaussAndPlotWidth ( vector< TH1D* > sourceHistos, TH1D* outHisto ) {
 
   debug() << "Making double Gauss fit histo" << endmsg;
   
@@ -765,7 +771,7 @@ StatusCode Velo::VeloIPResolutionMonitor::fitDblGaussAndPlotWidth ( std::vector<
 //=========================================================================
 //  Fit landau to a set of histograms, and plot the fitted MPV in an output histo  
 //=========================================================================
-StatusCode Velo::VeloIPResolutionMonitor::fitLandauAndPlotMPV ( std::vector< TH1D* > sourceHistos, TH1D* outHisto ) {
+StatusCode Velo::VeloIPResolutionMonitor::fitLandauAndPlotMPV ( vector< TH1D* > sourceHistos, TH1D* outHisto ) {
 
   debug() << "Making Landau fit histo" << endmsg;
   
@@ -799,7 +805,7 @@ StatusCode Velo::VeloIPResolutionMonitor::fitLandauAndPlotMPV ( std::vector< TH1
 //=========================================================================
 //  Fit double 2D Gaussian to a set of histograms, and plot the fitted mean of the core in an output histo  
 //=========================================================================
-StatusCode Velo::VeloIPResolutionMonitor::fit2DGausAndPlotMean ( std::vector< TH1D* > sourceHistos, TH1D* outHisto ) {
+StatusCode Velo::VeloIPResolutionMonitor::fit2DGausAndPlotMean ( vector< TH1D* > sourceHistos, TH1D* outHisto ) {
 
   debug() << "Making 2D Gaussian fit histo" << endmsg;
   
@@ -833,7 +839,7 @@ StatusCode Velo::VeloIPResolutionMonitor::fit2DGausAndPlotMean ( std::vector< TH
 //=========================================================================
 //  Fit double 2D Gaussian to a set of histograms, and plot the fitted mean of the core in an output histo  
 //=========================================================================
-StatusCode Velo::VeloIPResolutionMonitor::fitDbl2DGausAndPlotMean ( std::vector< TH1D* > sourceHistos, TH1D* outHisto ) {
+StatusCode Velo::VeloIPResolutionMonitor::fitDbl2DGausAndPlotMean ( vector< TH1D* > sourceHistos, TH1D* outHisto ) {
 
   debug() << "Making double 2D Gaussian fit histo" << endmsg;
   
@@ -874,7 +880,7 @@ StatusCode Velo::VeloIPResolutionMonitor::fitDbl2DGausAndPlotMean ( std::vector<
 //=========================================================================
 //  plot the mean of a set of input histos in an output histo  
 //=========================================================================
-StatusCode Velo::VeloIPResolutionMonitor::plotMean ( std::vector< TH1D* > sourceHistos, TH1D* outHisto ) {
+StatusCode Velo::VeloIPResolutionMonitor::plotMean ( vector< TH1D* > sourceHistos, TH1D* outHisto ) {
 
   debug() << "Making mean histo" << endmsg;
   
@@ -895,7 +901,7 @@ StatusCode Velo::VeloIPResolutionMonitor::plotMean ( std::vector< TH1D* > source
 //=========================================================================
 //  Check MC association of tracks, rejecting non-prompt and/or using MC PV position if selected
 //=========================================================================
-/*StatusCode Velo::VeloIPResolutionMonitor::checkMCAssoc( const Track* track, const RecVertex* pv,
+StatusCode Velo::VeloIPResolutionMonitor::checkMCAssoc( const Track* track, const RecVertex* pv,
                                                         MCVertex*& mcpv, 
                                                         double& inversept, unsigned int& type )
 {
@@ -935,4 +941,33 @@ StatusCode Velo::VeloIPResolutionMonitor::plotMean ( std::vector< TH1D* > source
   }
           
 }
-*/
+
+//========================================================
+// Linear extrapolator from a track to a given z position.
+//========================================================
+Gaudi::XYZPoint Velo::VeloIPResolutionMonitor::extrapolateToZ(const Track *track, double toZ)
+{
+  // get state parameters
+  Gaudi::XYZPoint coord = track->position();
+  Gaudi::XYZVector slope = track->slopes();
+  Gaudi::XYZPoint result;
+  double deltaZ=toZ-coord.z();
+  result.SetXYZ(coord.x()+slope.x()*deltaZ, coord.y()+slope.y()*deltaZ, toZ);
+  
+  return result;
+}
+
+//========================================================
+// Linear extrapolator from a track to its POCA to a given point.
+//========================================================
+Gaudi::XYZPoint Velo::VeloIPResolutionMonitor::extrapolateToPOCA(const Track *track, Gaudi::XYZPoint point )
+{
+  // get state parameters
+  Gaudi::XYZPoint coord = track->position();
+  Gaudi::XYZVector slope = track->slopes();
+  Gaudi::XYZVector delta = coord - point ;
+  Gaudi::XYZPoint result = coord - slope*(delta.Dot( slope )/slope.mag2() ) ;
+  
+  return result;
+}
+
