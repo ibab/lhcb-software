@@ -1,14 +1,14 @@
 !-----------------------------------------------------------------------------
-! $Id: release.notes,v 1.144 2010-05-21 15:40:08 odescham Exp $
+! $Id: release.notes,v 1.145 2010-05-22 09:34:09 cattanem Exp $
 ! Package     : Event/RecEvent
 ! Responsible : Marco Cattaneo
 ! Purpose     : LHCb Event model. Reconstruction classes (Brunel output) 
 !-----------------------------------------------------------------------------
 
+!========================= RecEvent v2r28 2010-05-22 =========================
 ! 2010-05-21 - Olivier Deschamps
    - ProtoParticle.cpp : fix compilation warning on slc4
 
-!========================= RecEvent v2r28 2010-05-21 =========================
 ! 2010-05-18 - Olivier Deschamps
  -  src/ProtoParticle.cpp : add protection against NULL smartref to CaloHypo
     in clearCalo()
