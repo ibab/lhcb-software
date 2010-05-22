@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.179 2010-05-21 10:33:52 depaula Exp $
+! $Id: release.notes,v 1.180 2010-05-22 07:23:31 aperezca Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
+! 2010-05-22 - Antonio Perez-Calero
+ - Change muon+track lines in Hlt1MuonLines to new PV3D reconstruction
+
 ! 2010-05-21 - L. de Paula
  - Change Hlt1MuonLines to new PV3D reconstruction
 
