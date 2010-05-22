@@ -1,5 +1,5 @@
 package		L0Calo
-version 	v11r1
+version 	v11r2
 
 # ================ structure =============================================
 branches	src cmt doc
