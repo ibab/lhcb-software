@@ -3,7 +3,7 @@
 # Maintainer : Henk Jan Bulten
 #============================================================================
 package           TrackSeeding
-version           v1r4p3
+version           v1r4p4
 
 #============================================================================
 # Structure, i.e. directories to process. 
