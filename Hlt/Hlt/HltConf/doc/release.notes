@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.456 2010-05-20 08:52:02 graven Exp $ 
+! $Id: release.notes,v 1.457 2010-05-23 17:37:35 jhe Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2010-05-23 - Jibo He
+ - Hlt2.py 
+   + Added Hlt2B2KstareeLines
 
 ! 2010-05-19 - V. Gligorov
  - Add lifetime unbiased hadrons to Hlt1.py 
