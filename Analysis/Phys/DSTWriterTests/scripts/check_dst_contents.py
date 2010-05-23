@@ -1,33 +1,46 @@
+#!/usr/bin/env python
+'''
+Check some TES locations in a DST and print a summary of the number of events selected by each line.
+Useage:
+./check_dst_contents.py --input <some file name> --location <TES root of selected particles>
+'''
+
+__author__ = "Juan PALACIOS juan.palacios@cern.ch"
+
 from GaudiConf.Configuration import *
 from AnalysisPython import Dir, Functors
 from GaudiPython.Bindings import gbl, AppMgr, Helper
 
-#locationRoot = '/Event/MicroDST/' # MicroDST
-#locationRoot = '/Event/CocktailB/'
-#locationRoot = '/Event/Sel/' # MicroDST
-locationRoot = '/Event/'
-#filename = 'test_pions_killer.dst'
-filename = 'test_kaons_killer.dst'
+import sys, getopt
+
+filename = ''
+locationRoot = ''
+opts, args = getopt.getopt(sys.argv[1:], "l:i", ["input=", "location="])
+
+for o, a in opts:
+    if o in ("-i", "--input"):
+        filename = a
+    elif o in ('-l', '--location') :
+        locationRoot = a
+
+assert(filename != '')
+
+
+locationRoot = '/Event/' + locationRoot + '/'
 
 locations = ['Phys/StdTightPions',
-             'Phys/StdTightKaons']
+             'Phys/StdTightKaons',
+             'Phys/StdTightMuons',
+             'Phys/StdLooseJpsi2MuMu']
 
-#rawEventLocation = '/Event/DAQ/RawEvent'
-rawEventLocation = '/Event/pRec/Vertex/Primary'
+rawEventLocation = '/Event/DAQ/RawEvent'
 
 fullLocations = [locationRoot+loc+'/Particles' for loc in locations]
 
-
-#filename = 'Test.Cocktail.mdst'
-#filename = 'TestJpsi.Cocktail.mdst'
-#filename = 'TestRawEvent.SeqKaons.dst'
-#filename = 'Test.Cocktail.dst'
-#filename='TestRawEventJpsi.SeqJpsi.dst'
 lhcbApp = LHCbApp(DDDBtag = 'default',
                   CondDBtag = 'default',
                   DataType = '2010',
                   Simulation = True)
-
 
 appMgr = AppMgr(outputlevel=4)
 appMgr.config( files = ['$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts'])
@@ -59,16 +72,20 @@ while ( nextEvent() ) :
        if particles :
            nSelEvents[loc] += 1
            nParticles[loc] += particles.size()
-'''
+           
    try :
        rawEvt = evtSvc[rawEventLocation]
        if rawEvt :
            nRawEvt +=1
    except :
        print 'Found no', rawEventLocation
-'''
+
+print '----------------------------------------------------------------------------------'
 print "Analysed ", nEvents, " events"
 
 for loc in fullLocations :
-    print loc, ': ', nParticles[loc], ' Particles in ', nSelEvents[loc],' Selected Events. '
-#print rawEventLocation, 'found in', nRawEvt, 'events'
+    if nParticles[loc] > 0 :
+        print loc, ': ', nParticles[loc], ' Particles in ', nSelEvents[loc],' Selected Events. '
+print rawEventLocation, 'found in', nRawEvt, 'events'
+print '----------------------------------------------------------------------------------'
+
