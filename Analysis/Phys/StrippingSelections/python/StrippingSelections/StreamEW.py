@@ -18,6 +18,8 @@ from StrippingSelections import StrippingDY2ee
 from StrippingSelections import StrippingDisplVertices
 from StrippingSelections import StrippingHighPtJets
 
+from StrippingSelections import StrippingMuMuSS
+
 stream = StrippingStream("EW")
 stream.appendLines( [ 
 		        StrippingZ02MuMu.line, 
@@ -35,4 +37,9 @@ stream.appendLines( [
                         StrippingDisplVertices.line1,  
                         StrippingDisplVertices.line2,
                         StrippingHighPtJets.line1
-		    ] )
+                        # Lines for same sign combinations
+                        , StrippingMuMuSS.line1
+                        , StrippingMuMuSS.line2
+                        , StrippingMuMuSS.line3
+                        , StrippingMuMuSS.line4
+                        ] )

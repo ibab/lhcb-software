@@ -6,6 +6,15 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! -----------------------------------------------------------------------------
 
 ! 2010-05-23 - Thomas BLAKE
+ - Added same sign dimuon line to the EW stream, see StrippingMuMuSS 
+
+! 2010-05-23 - Thomas BLAKE
+ - Added B and D same sign lines to the dimuon stream, see StrippingB2XMuMuSS and StrippingD2XMuMuSS
+
+! 2010-05-23 - Thomas BLAKE
+ - Added semileptonic lines for for Vub (StrippingB2XuMuNu)
+
+! 2010-05-23 - Thomas BLAKE
  - Added D->Kpipipi stripping line for calibration of Bd->K*mumu
 
 

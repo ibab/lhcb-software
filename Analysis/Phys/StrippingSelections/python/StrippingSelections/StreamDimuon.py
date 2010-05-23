@@ -34,6 +34,9 @@ from StrippingSelections.StrippingBc2JpsiH import StrippingBc2JpsiHConf
 from StrippingSelections.StrippingBc2JpsiHDetached import StrippingBc2JpsiHDetachedConf
 from StrippingSelections.StrippingBs2PhiMuMu import StrippingBs2PhiMuMuConf
 
+from StrippingSelections.StrippingB2XMuMuSS import StrippingB2XMuMuSSConf
+from StrippingSelections.StrippingD2XMuMuSS import StrippingD2XMuMuSSConf
+
 stream = StrippingStream("Dimuon")
 stream.appendLines( [ 
 		        StrippingDiMuonConf().nominal_line(), 
@@ -75,4 +78,14 @@ stream.appendLines( [
                         StrippingBc2JpsiHConf().MuMu(),
                         StrippingBc2JpsiHDetachedConf().MuMu(),
                         StrippingDiMuonConf().biasedDiMuon_line()
-		    ] )
+
+                        ## Same sign lines from  P. Urquijo, 23-05-10
+                        , StrippingB2XMuMuSSConf().PiSS_line()
+                        , StrippingB2XMuMuSSConf().PiOS_line()
+                        , StrippingB2XMuMuSSConf().KSS_line()
+                        , StrippingB2XMuMuSSConf().KOS_line()
+                        , StrippingD2XMuMuSSConf().PiSS_line()
+                        , StrippingD2XMuMuSSConf().PiOS_line()
+                        , StrippingD2XMuMuSSConf().KSS_line()
+                        , StrippingD2XMuMuSSConf().KOS_line()
+                        ] )
