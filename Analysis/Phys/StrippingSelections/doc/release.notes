@@ -5,6 +5,9 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-05-23 - Alexandr Kozlinskiy
+ - Add StrippingDstarPromptWithD02HHNoPt (no Pt cuts) and add it to Charm stream
+
 ! 2010-05-23 - Thomas BLAKE
  - Added same sign dimuon line to the EW stream, see StrippingMuMuSS 
 

@@ -21,6 +21,7 @@ from StrippingSelections import StrippingD2hhNoPID
 from StrippingSelections import StrippingD2hhNoPIDXsec
 from StrippingSelections import StrippingD2Kh
 from StrippingSelections import StrippingD2KhLoose
+from StrippingSelections import StrippingDstarPromptWithD02HHNoPt
 
 from StrippingSelections.StrippingDstarPromptWithD02HH import StrippingDstarPromptWithD02HHConf
 from StrippingSelections.StrippingDstarVeryLooseWithD02HH import StrippingDstarVeryLooseWithD02HHConf
@@ -115,6 +116,7 @@ stream.appendLines( [
         ,StrippingD0forBXXConf().D02KPiforBXXLine()
         ,StrippingD0forBXXConf().D02K3PiforBXXLine()
         , StrippingBd2KstarMuMuConf().line_for_DKpipipi()
+        , StrippingDstarPromptWithD02HHNoPt.lineDstarPromptWithD02HHNoPt
     ] )
 stream.appendLines( StrippingDstarPromptWithD02HHConf().lines() )
 stream.appendLines( StrippingDstarD2KShhConf().MakeLines() )
