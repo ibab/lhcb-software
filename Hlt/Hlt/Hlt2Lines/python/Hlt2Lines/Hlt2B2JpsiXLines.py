@@ -1,4 +1,4 @@
-# $Id: Hlt2B2JpsiXLines.py,v 1.22 2010-05-16 20:32:30 jhe Exp $
+# $Id: Hlt2B2JpsiXLines.py,v 1.23 2010-05-23 17:32:09 jhe Exp $
 
 from Gaudi.Configuration import * 
 from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
@@ -111,20 +111,20 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
                  , 'Bc2JpsiHPD_MuonIPCHI2'          :   -1.   # adimentional, choose one 
                  , 'Bc2JpsiHPD_BcIPCHI2'            :   25.   # adimentional
                  # Bs->Jpsi(ee)Phi
-                 , 'Bs2JpsieePhi_ElectronPT'          : 800      # MeV
-                 , 'Bs2JpsieePhi_ElectronMIPCHI2'     : 4        # adimensional
-                 , 'Bs2JpsieePhi_JpsiVertexCHI2pDOF'  : 25       # adimensional
-                 , 'Bs2JpsieePhi_JpsiMassMin'         : 2500     # MeV
-                 , 'Bs2JpsieePhi_JpsiMassMax'         : 3300     # MeV
-                 , 'Bs2JpsieePhi_KaonMIPCHI2'         : 4        # adimensional
-                 , 'Bs2JpsieePhi_PhiPT'               : 1000     # MeV
-                 , 'Bs2JpsieePhi_PhiVertexCHI2pDOF'   : 25       # adimensional
-                 , 'Bs2JpsieePhi_PhiMassMin'          : 1000     # MeV
-                 , 'Bs2JpsieePhi_PhiMassMax'          : 1040     # MeV
-                 , 'Bs2JpsieePhi_BsDIRA'              : 0.99     # adimensional
-                 , 'Bs2JpsieePhi_BsVertexCHI2pDOF'    : 6        # adimensional
-                 , 'Bs2JpsieePhi_BsPseudoMassMin'     : 4500     # MeV
-                 , 'Bs2JpsieePhi_BsPseudoMassMax'     : 6200     # MeV
+                 , 'Bs2JpsieePhi_ElectronPT'          :  500.     # MeV
+                 , 'Bs2JpsieePhi_ElectronMIPCHI2'     :    2.25   # adimensional
+                 , 'Bs2JpsieePhi_JpsiVertexCHI2pDOF'  :   25.     # adimensional
+                 , 'Bs2JpsieePhi_JpsiMassMin'         : 2500.     # MeV
+                 , 'Bs2JpsieePhi_JpsiMassMax'         : 3300.     # MeV
+                 , 'Bs2JpsieePhi_KaonMIPCHI2'         :    2.25   # adimensional
+                 , 'Bs2JpsieePhi_PhiPT'               :  900.     # MeV
+                 , 'Bs2JpsieePhi_PhiVertexCHI2pDOF'   :   25.     # adimensional
+                 , 'Bs2JpsieePhi_PhiMassMin'          :  990.     # MeV
+                 , 'Bs2JpsieePhi_PhiMassMax'          : 1050.     # MeV
+                 , 'Bs2JpsieePhi_BsDIRA'              :    0.99   # adimensional
+                 , 'Bs2JpsieePhi_BsVertexCHI2pDOF'    :   25.     # adimensional
+                 , 'Bs2JpsieePhi_BsPseudoMassMin'     : 3800.     # MeV
+                 , 'Bs2JpsieePhi_BsPseudoMassMax'     : 6800.     # MeV
 
                  
                  # TrackFitted Bc->Jpsi(MuMu)MuX
@@ -159,20 +159,20 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
                  , 'TFBc2JpsiHPD_MuonIPCHI2'          :   -1.   # adimentional, choose one 
                  , 'TFBc2JpsiHPD_BcIPCHI2'            :   25.   # adimentional
                  # TrackFitted Bs->Jpsi(ee)Phi
-                 , 'TFBs2JpsieePhi_ElectronPT'          : 800      # MeV
-                 , 'TFBs2JpsieePhi_ElectronMIPCHI2'     : 4        # adimensional
-                 , 'TFBs2JpsieePhi_JpsiVertexCHI2pDOF'  : 25       # adimensional
-                 , 'TFBs2JpsieePhi_JpsiMassMin'         : 2500     # MeV
-                 , 'TFBs2JpsieePhi_JpsiMassMax'         : 3300     # MeV
-                 , 'TFBs2JpsieePhi_KaonMIPCHI2'         : 4        # adimensional
-                 , 'TFBs2JpsieePhi_PhiPT'               : 1000     # MeV
-                 , 'TFBs2JpsieePhi_PhiVertexCHI2pDOF'   : 25       # adimensional
-                 , 'TFBs2JpsieePhi_PhiMassMin'          : 1000     # MeV
-                 , 'TFBs2JpsieePhi_PhiMassMax'          : 1040     # MeV
-                 , 'TFBs2JpsieePhi_BsDIRA'              : 0.99     # adimensional
-                 , 'TFBs2JpsieePhi_BsVertexCHI2pDOF'    : 6        # adimensional
-                 , 'TFBs2JpsieePhi_BsPseudoMassMin'     : 4500     # MeV
-                 , 'TFBs2JpsieePhi_BsPseudoMassMax'     : 6200     # MeV                 
+                 , 'TFBs2JpsieePhi_ElectronPT'          :  500.      # MeV
+                 , 'TFBs2JpsieePhi_ElectronMIPCHI2'     :    2.25    # adimensional
+                 , 'TFBs2JpsieePhi_JpsiVertexCHI2pDOF'  :   25.      # adimensional
+                 , 'TFBs2JpsieePhi_JpsiMassMin'         : 2500.      # MeV
+                 , 'TFBs2JpsieePhi_JpsiMassMax'         : 3300.      # MeV
+                 , 'TFBs2JpsieePhi_KaonMIPCHI2'         :    2.25    # adimensional
+                 , 'TFBs2JpsieePhi_PhiPT'               :  900.      # MeV
+                 , 'TFBs2JpsieePhi_PhiVertexCHI2pDOF'   :   25.      # adimensional
+                 , 'TFBs2JpsieePhi_PhiMassMin'          :  990.      # MeV
+                 , 'TFBs2JpsieePhi_PhiMassMax'          : 1050.      # MeV
+                 , 'TFBs2JpsieePhi_BsDIRA'              :    0.99    # adimensional
+                 , 'TFBs2JpsieePhi_BsVertexCHI2pDOF'    :   25.      # adimensional
+                 , 'TFBs2JpsieePhi_BsPseudoMassMin'     : 3800.      # MeV
+                 , 'TFBs2JpsieePhi_BsPseudoMassMax'     : 6800.      # MeV                 
                  }
     
     def __apply_configuration__(self) :
