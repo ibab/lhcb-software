@@ -1,4 +1,4 @@
-class Physics_MinBiasL0_PassThroughHlt_Feb10 :
+class Physics_MinBiasL0_PassThroughHlt_Jun10 :
     """
     Threshold settings for Hlt1 for 2010 conditions
     
@@ -25,8 +25,8 @@ class Physics_MinBiasL0_PassThroughHlt_Feb10 :
         return '0x1810'
 
     def HltType(self) :
-        self.verifyType( Physics_MinBiasL0_PassThroughHlt_Feb10 )
-        return          'Physics_MinBiasL0_PassThroughHlt_Feb10'
+        self.verifyType( Physics_MinBiasL0_PassThroughHlt_Jun10 )
+        return          'Physics_MinBiasL0_PassThroughHlt_Jun10'
     
     def Thresholds(self) :
         """
@@ -40,8 +40,9 @@ class Physics_MinBiasL0_PassThroughHlt_Feb10 :
         from Hlt1Lines.Hlt1VeloLines           import Hlt1VeloLinesConf
         from Hlt1Lines.Hlt1MBLines             import Hlt1MBLinesConf
         from Hlt1Lines.Hlt1L0Lines             import Hlt1L0LinesConf
+        from Hlt1Lines.Hlt1BeamGasLines        import Hlt1BeamGasLinesConf
         from Hlt2Lines.Hlt2CommissioningLines  import Hlt2CommissioningLinesConf
-                
+
         return { Hlt1HadronLinesConf : {  'SingleHadron_PTCut' : 2000
                                          , 'HadSingle_IPChi2Cut' : 25.0
                                          , 'HadMain_PTCut' : 1000
@@ -50,7 +51,7 @@ class Physics_MinBiasL0_PassThroughHlt_Feb10 :
                                          , 'HadCompanion_PTCut' : 500
                                          , 'HadCompanion_PointingCut' : 0.5
                                          , 'HadMain_TrackFitChi2Cut' :  10.
-                                        }  
+                                        }
                  , Hlt1PhotonLinesConf : { 'Pho_EtCut'         : 2780.0
                                           , 'Pho_IsPho'        : -0.1
                                           , 'Track_IPCut'      : 0.18
@@ -81,15 +82,15 @@ class Physics_MinBiasL0_PassThroughHlt_Feb10 :
                                           , 'Muon_FitMuChi2Cut' :  999.
                                           , 'MuTrackMuPt' : 800
                                           , 'MuTrackMuIP' : 0.03
-                                          , 'MuTrackTrPt' : 750
-                                          , 'MuTrackTrIP' : 0.01
+                                          , 'MuTrackTrPt' : 600
+                                          , 'MuTrackTrIP' : 0.03
                                           , 'MuTrackDoca' : 0.2
                                           , 'MuTrackDZ' : 1.00
                                           , 'MuTrackDimuMass' : 1000
                                           , 'MuTrackPoint' : 0.4
                                           , 'MuTrackTrChi2' : 999.
                                           , 'MuTrackMuChi2' :  999.
-                                          , 'MuTrackMuPt4JPsi' : 1600
+                                          , 'MuTrackMuPt4JPsi' : 1300
                                           , 'MuTrackTrPt4JPsi' : 400
                                           , 'MuTrackDoca4JPsi' : 0.1
                                           , 'MuTrackAngle4JPsiLow' : 0.02
@@ -104,6 +105,7 @@ class Physics_MinBiasL0_PassThroughHlt_Feb10 :
                                                           , 'Hlt1L0Any' : 1 
                                                           }
                                           }
+
                  , Hlt1MBLinesConf :      { 'Prescale' : { 'Hlt1MBMicroBias.*' : 1. } 
                                           , 'Postscale': { 'Hlt1MBMicroBias.*' : 1. }
                                           } 
@@ -118,8 +120,16 @@ class Physics_MinBiasL0_PassThroughHlt_Feb10 :
                                                 , 'Postscale' : { 'Hlt1Tell1Error' : 'RATE(1)' }
                                                 }
                  , Hlt2CommissioningLinesConf : { 'Prescale' : { 'Hlt2PassThrough'  : 1.
+                                                               , 'Hlt2Forward'      : 0. # first needs a check that /Hlt/Track/Long actually exists..
+                                                               , 'Hlt2DebugEvent'   : 0.0001
                                                                }              }
                  
+                 , Hlt1BeamGasLinesConf : { 'Prescale' :  { 'Hlt1BeamGasBeam1' :                1.0
+                                                          , 'Hlt1BeamGasBeam2' :                1.0
+                                                          , 'Hlt1BeamGasCrossing' :             1.0
+                                                          , 'Hlt1BeamGasCrossingForcedRZReco' : 1.0
+                                                          }
+                                          }
                  }
     
     def ActiveHlt2Lines(self) :
@@ -135,28 +145,28 @@ class Physics_MinBiasL0_PassThroughHlt_Feb10 :
         Returns a list of active lines
         """
         return [ 'Hlt1ODINTechnical', 'Hlt1Tell1Error'
-               , 'Hlt1L0Any'
-               , 'Hlt1L0SPD', 'Hlt1L0CALO', 'Hlt1L0MUON,minbias', 'Hlt1L0PU', 'Hlt1L0SPD40', 'Hlt1L0PU20'
-               , 'Hlt1L0Electron', 'Hlt1L0Photon', 'Hlt1L0Hadron'
-               , 'Hlt1L0Muon', 'Hlt1L0DiMuon', 'Hlt1L0Muon,lowMult', 'Hlt1L0DiMuon,lowMult'
-               , 'Hlt1L0B1gas', 'Hlt1L0B2gas'
-               , 'Hlt1VeloASide', 'Hlt1VeloCSide'
-               , 'Hlt1Lumi'
-               , 'Hlt1LumiLowBeam1' , 'Hlt1LumiLowBeam2' , 'Hlt1LumiLowBeamCrossing' , 'Hlt1LumiLowNoBeam'
-               , 'Hlt1BeamGasBeam1', 'Hlt1BeamGasBeam2', 'Hlt1BeamGasCrossing', 'Hlt1BeamGasCrossingForcedRZReco'
-               , 'Hlt1MBNoBias'
-               , 'Hlt1MBMicroBiasRZVelo', 'Hlt1MBMicroBiasTStation'
-               , 'Hlt1SingleHadron',     'Hlt1SingleHadronViaT'
-               , 'Hlt1DiHadron',         'Hlt1DiHadronViaT',    'Hlt1DiHadronSoft'
-               , 'Hlt1SingleMuonNoIPL0', 'Hlt1SingleMuonIPCL0'
-               , 'Hlt1DiMuonNoIPL0Di',  'Hlt1DiMuonNoPVL0Di', 'Hlt1DiMuonIPCL0Di'
-               , 'Hlt1DiMuonNoIP2L0',   'Hlt1DiMuonNoPV2L0',  'Hlt1DiMuonIPC2L0'
-               , 'Hlt1DiMuonNoIPL0Seg' , 'Hlt1DiMuonNoPVL0Seg', 'Hlt1DiMuonIPCL0Seg'
-               , 'Hlt1MuTrack', 'Hlt1MuTrack4JPsi'
-               #'Hlt1MuTrackFitMu',
-               , 'Hlt1SingleElectronNoIP', 'Hlt1SingleElectronWithIP'
-               , 'Hlt1ElectronTrackNoIP', 'Hlt1ElectronTrackWithIP'
-               , 'Hlt1PhotonTrack', 'Hlt1PhotonTrackFromEle'
-               , 'Hlt1PhotonDiTrack', 'Hlt1PhotonDiTrackFromEle'
-               , 'Hlt1Incident'
-               ]
+                 , 'Hlt1L0Any'
+                 , 'Hlt1L0SPD', 'Hlt1L0CALO', 'Hlt1L0MUON,minbias', 'Hlt1L0PU', 'Hlt1L0SPD40', 'Hlt1L0PU20'
+                 , 'Hlt1L0Electron', 'Hlt1L0Photon', 'Hlt1L0Hadron'
+                 , 'Hlt1L0Muon', 'Hlt1L0DiMuon', 'Hlt1L0Muon,lowMult', 'Hlt1L0DiMuon,lowMult'
+                 , 'Hlt1L0B1gas', 'Hlt1L0B2gas'
+                 , 'Hlt1VeloASide', 'Hlt1VeloCSide'
+                 , 'Hlt1Lumi'
+                 , 'Hlt1LumiMidBeamCrossing'
+                 , 'Hlt1LumiLowBeam1' , 'Hlt1LumiLowBeam2' , 'Hlt1LumiLowBeamCrossing' , 'Hlt1LumiLowNoBeam'
+                 , 'Hlt1BeamGasBeam1', 'Hlt1BeamGasBeam2', 'Hlt1BeamGasCrossing', 'Hlt1BeamGasCrossingForcedRZReco'
+                 , 'Hlt1MBNoBias'
+                 , 'Hlt1MBMicroBiasRZVelo', 'Hlt1MBMicroBiasTStation'
+                 , 'Hlt1SingleHadron',     'Hlt1HadronMonConf1', 'Hlt1HadronMonConf2', 'Hlt1HadronMonComp'
+                 , 'Hlt1DiHadron', 'Hlt1DiHadronLTUnbiased', 'Hlt1HadronMonVeloReco'
+                 , 'Hlt1SingleMuonNoIPL0', 'Hlt1SingleMuonIPCL0'
+                 , 'Hlt1DiMuonNoIPL0Di',  'Hlt1DiMuonNoPVL0Di', 'Hlt1DiMuonIPCL0Di'
+                 , 'Hlt1DiMuonNoIP2L0',   'Hlt1DiMuonNoPV2L0',  'Hlt1DiMuonIPC2L0'
+                 , 'Hlt1DiMuonNoIPL0Seg' , 'Hlt1DiMuonNoPVL0Seg', 'Hlt1DiMuonIPCL0Seg'
+                 , 'Hlt1MuTrack', 'Hlt1MuTrack4JPsi'
+                 , 'Hlt1SingleElectronNoIP', 'Hlt1SingleElectronWithIP'
+                 , 'Hlt1ElectronTrackNoIP', 'Hlt1ElectronTrackWithIP'
+                 , 'Hlt1PhotonTrack', 'Hlt1PhotonTrackFromEle'
+                 , 'Hlt1PhotonDiTrack', 'Hlt1PhotonDiTrackFromEle'
+                 , 'Hlt1Incident'
+                 ]

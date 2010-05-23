@@ -41,13 +41,14 @@ class Debug_320Vis_300L0_NoLines_Hlt1_Aug09 :
         from Hlt2Lines.Hlt2CommissioningLines  import Hlt2CommissioningLinesConf
         
         return { Hlt1HadronLinesConf : {  'SingleHadron_PTCut' : 4800
-                                          , 'HadSingle_IPCut' : 0.06 
-                                          , 'HadMain_PTCut' : 250
-                                          , 'HadCompanion_DZCut' : 1.83
-                                          , 'HadDi_IPCut' : 0.05
-                                          , 'HadCompanion_PTCut' : 750
-                                          , 'HadCompanion_PointingCut' : 0.39
-                                          }
+                                         , 'HadSingle_IPChi2Cut' : 25.0
+                                         , 'HadMain_PTCut' : 250
+                                         , 'HadCompanion_DZCut' : 2.0
+                                         , 'HadDi_VDChi2Cut' : 50.0
+                                         , 'HadCompanion_PTCut' : 750
+                                         , 'HadCompanion_PointingCut' : 0.39
+                                         , 'HadMain_TrackFitChi2Cut' :  10.
+                                        } 
                  , Hlt1PhotonLinesConf : { 'Pho_EtCut'         : 2800.0
                                           , 'Pho_IsPho'        : -0.082 
                                           , 'Track_IPCut'      : 0.15

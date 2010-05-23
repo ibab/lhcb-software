@@ -4,6 +4,11 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2010-05-23 - V. Gligorov
+ - Rename the May10 threshold settings committed on the 19th of May
+   to Jun10. Add lifetime unbiased hadron lines to Hlt1.
+ - Rewrite history to pretend Hlt1 hadron lines always had the current slots.
+
 ! 2010-05-22 - Antonio Perez-Calero
  - modified some cuts for muon+track lines in Physics_MinBiasL0_PassThroughHlt_May10
 

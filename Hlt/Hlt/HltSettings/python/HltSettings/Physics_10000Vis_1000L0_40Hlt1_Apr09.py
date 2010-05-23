@@ -102,14 +102,15 @@ class Physics_10000Vis_1000L0_40Hlt1_Apr09 :
         from Hlt1Lines.Hlt1VeloLines           import Hlt1VeloLinesConf
         from Hlt2Lines.Hlt2CommissioningLines import Hlt2CommissioningLinesConf
     
-        return { Hlt1HadronLinesConf : { 'SingleHadron_PTCut' : 4450
-                                        , 'HadSingle_IPCut'      : 0.09
-                                        , 'HadMain_PTCut'      : 1600
-                                        , 'HadCompanion_DZCut' : 0.05
-                                        , 'HadDi_IPCut' : 0.13
-                                        , 'HadCompanion_PTCut' : 950
-                                        , 'HadCompanion_PointingCut' : 1.0 
-                                        }
+        return { Hlt1HadronLinesConf : {  'SingleHadron_PTCut' : 4450
+                                         , 'HadSingle_IPChi2Cut' : 25.0
+                                         , 'HadMain_PTCut' : 1600
+                                         , 'HadCompanion_DZCut' : 2.0
+                                         , 'HadDi_VDChi2Cut' : 50.0
+                                         , 'HadCompanion_PTCut' : 950
+                                         , 'HadCompanion_PointingCut' : 1.0
+                                         , 'HadMain_TrackFitChi2Cut' :  10.
+                                        } 
                  , Hlt1PhotonLinesConf : { 'Pho_EtCut'         : 2800.0
                                           , 'Pho_IsPho'        : -0.082 
                                           , 'Track_IPCut'      : 0.15

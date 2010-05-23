@@ -41,15 +41,15 @@ class Physics_320Vis_300L0_10Hlt1_Feb10 :
         from Hlt1Lines.Hlt1MBLines             import Hlt1MBLinesConf
         from Hlt2Lines.Hlt2CommissioningLines  import Hlt2CommissioningLinesConf
 
-        return { Hlt1HadronLinesConf : {  'SingleHadron_PTCut' : 1400
-                                         , 'HadSingle_IPCut' : 0.14
-                                         , 'HadMain_PTCut' : 1200
-                                         , 'HadCompanion_DZCut' : 0.80
-                                         , 'HadDi_IPCut' : 0.07
-                                         , 'HadCompanion_PTCut' : 750
+        return { Hlt1HadronLinesConf : {  'SingleHadron_PTCut' : 2000
+                                         , 'HadSingle_IPChi2Cut' : 25.0
+                                         , 'HadMain_PTCut' : 1000
+                                         , 'HadCompanion_DZCut' : 2.0
+                                         , 'HadDi_VDChi2Cut' : 50.0
+                                         , 'HadCompanion_PTCut' : 500
                                          , 'HadCompanion_PointingCut' : 0.5
-                                         , 'HadMain_TrackFitChi2Cut' :  999.
-                                        }
+                                         , 'HadMain_TrackFitChi2Cut' :  10.
+                                        } 
                  , Hlt1PhotonLinesConf : { 'Pho_EtCut'         : 2780.0
                                           , 'Pho_IsPho'        : -0.1
                                           , 'Track_IPCut'      : 0.18
