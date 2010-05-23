@@ -5,6 +5,10 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-05-23 - Thomas BLAKE
+ - Added D->Kpipipi stripping line for calibration of Bd->K*mumu
+
+
 ! 2010-05-23 - Sebastian Schleich
  - Modified python/StrippingSelections/StrippingInclPhi.py and StreamCalibration.py
    added new line for low pt.

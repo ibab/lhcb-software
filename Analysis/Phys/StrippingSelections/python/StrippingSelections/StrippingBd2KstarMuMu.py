@@ -1,6 +1,6 @@
 __author__ = 'Patrick Koppenburg, Rob Lambert, Mitesh Patel'
 __date__ = '21/01/2009'
-__version__ = '$Revision: 1.20 $'
+__version__ = '$Revision: 1.21 $'
 
 """
 Bd->K*MuMu selections 
@@ -35,12 +35,26 @@ class StrippingBd2KstarMuMuConf(LHCbConfigurableUser):
                 ,  'IntFlightCHI2'      : 9          # adimentional
                 ,  'TrackChi2'          : 10         # adimentional
 # simple selection
-                ,  'SimpleDiMuonPT'     : 0          # MeV
-                ,  'SimpleBdFDChi2'     : 100        # adimentional1
-                ,  'SimpleBdLT'         : 0.00001    # unit ?
+                ,  'SimpleDiMuonPT'      : 0         # MeV
+                ,  'SimpleBdFDChi2'      : 100       # adimentional1
+                ,  'SimpleBdLT'          : 0.00001   # unit ?
+# D -> K pi pi pi selection for calibration
+                ,  'DKpipipiTrackCHI2'   : 6         # dimensionless
+                ,  'DKpipipiTrackIPCHI2' : 9         # dimensionless
+                ,  'DKpipipiTrackP'      : 1000.0    # MeV
+                ,  'DKpipipiTrackPT'     : 200.0     # MeV
+                ,  'DKpipipiFDCHI2'      : 81        # dimensionless
+                ,  'DKpipipiDIRA'        : 0.9998    # dimensionless
+                ,  'DKpipipiVertexCHI2'  : 16        # per degree of freedom, dimensionless
+                ,  'DKpipipiIPCHI2'      : 64        # dimensionless
+                ,  'DKpipipiMassHighWin' : 150       # MeV
+                ,  'DKpipipiMassLowWin'  : -50        # MeV
+                ,  'DKpipipiRequiresMB'  : False
                    }
                    
     _line_for_nominal_high = None
+
+
 
 ####################################################################################################
 # Mitesh's selections. Stripping workshop December 2009
@@ -482,6 +496,95 @@ class StrippingBd2KstarMuMuConf(LHCbConfigurableUser):
                                                          self._ForNominal_Bd2KstarMuMu_Low() ]
                                              )
 
+
+####################################################################################################
+#
+# Lines for D -> Kpipipi calibration, added by T.Blake, 23-05-10 
+#
+
+    def _DKpipipi_Kstar(self):
+        """
+        FilterDesktop on StdVeryLooseDetachedKstar for  D0 -> K- pi+ pi- pi+
+        """
+        from PhysSelPython.Wrappers import Selection, DataOnDemand
+        from Configurables import FilterDesktop
+
+        _kstar = DataOnDemand('StdVeryLooseDetachedKstar','Phys/StdVeryLooseDetachedKst2Kpi')
+
+        _filter = FilterDesktop('Kstar_Bd2KstarMuMu_DKpipipi')
+        _filter.Code = "(2 == NINTREE( (ISBASIC) & (P > %(DKpipipiTrackP)s ) & " \
+                       "(PT > %(DKpipipiTrackPT)s ) & " \
+                       "(TRCHI2DOF < %(DKpipipiTrackCHI2)s ) & " \
+                       "(MIPCHI2DV(PRIMARY) > %(DKpipipiTrackIPCHI2)s ))) & "\
+                       "(VFASPF(VCHI2/VDOF) < %(DKpipipiVertexCHI2)s )" % self.getProps() 
+
+        return Selection( 'Sel_Kstar_Bd2KstarMuMu_DKpipipi',
+                          Algorithm=_filter,
+                          RequiredSelections = [_kstar] )
+        
+        
+    def _DKpipipi_Rho(self):
+        """
+        CombineParticles for pi- pi+ pair in  D0 -> K- pi+ pi- pi+
+        """
+        from PhysSelPython.Wrappers import Selection, DataOnDemand
+        from Configurables import CombineParticles
+        
+        _pions = DataOnDemand('StdLoosePions',Location='Phys/StdLoosePions')
+
+        _pionCuts = "(P > %(DKpipipiTrackP)s ) & " \
+                    "(PT > %(DKpipipiTrackPT)s ) & " \
+                    "(TRCHI2DOF < %(DKpipipiTrackCHI2)s ) & " \
+                    "(MIPCHI2DV(PRIMARY) > %(DKpipipiTrackIPCHI2)s )" % self.getProps()
+
+        _rho = CombineParticles('Rho_Bd2KstarMuMu_DKpipipi')
+        _rho.DecayDescriptor =  "[rho(770)0 -> pi+ pi-]cc"              
+        _rho.DaughtersCuts = { "pi+" : _pionCuts }
+        _rho.MotherCut = "(VFASPF(VCHI2/VDOF) < %(DKpipipiVertexCHI2)s )" % self.getProps()
+
+        return Selection( 'Sel_Rho_Bd2KstarMuMu_DKpipipi',
+                          Algorithm=_rho,
+                          RequiredSelections=[_pions] )
+        
+
+    def _DKpipipi_D(self):
+        """
+        CombineParticles for D0 -> K- pi+ pi- pi+
+        """
+        from Configurables import CombineParticles
+        from PhysSelPython.Wrappers import Selection
+    
+        _DKpipipi = CombineParticles('D_Bd2KstarMuMu_DKpipipi')
+        _DKpipipi.DecayDescriptor = '[D0 -> K*(892)~0 rho(770)0]cc'
+        _DKpipipi.MotherCut = "(VFASPF(VCHI2/VDOF) < %(DKpipipiVertexCHI2)s ) & " \
+                              "(BPVVDCHI2 > %(DKpipipiFDCHI2)s ) & " \
+                              "(BPVDIRA > %(DKpipipiDIRA)s ) & " \
+                              "(MIPCHI2DV(PRIMARY) < %(DKpipipiIPCHI2)s ) & " \
+                              "(DMASS('D0') > %(DKpipipiMassLowWin)s *MeV) & " \
+                              "(DMASS('D0') < %(DKpipipiMassHighWin)s *MeV)" % self.getProps()
+        return Selection( 'Sel_D_Bd2KstarMuMu_DKpipipi',
+                          Algorithm=_DKpipipi,
+                          RequiredSelections=[ self._DKpipipi_Kstar(), self._DKpipipi_Rho() ] )
+                         
+        
+
+    def line_for_DKpipipi(self):
+        """
+        Stripping line for D0 -> K- pi+ pi- pi+
+        """
+        from StrippingConf.StrippingLine import StrippingLine, StrippingMember
+        from PhysSelPython.Wrappers import Selection, SelectionSequence
+
+        _seq = SelectionSequence('Seq_Bd2KstarMuMu_DKpipipi',
+                                 TopSelection= self._DKpipipi_D() )
+
+        _line = StrippingLine( 'Line_Bd2KstarMuMu_DKpipipi',
+                              prescale = 1, algos = [ _seq ] )
+
+        if self.getProp('DKpipipiRequiresMB'):
+            _line.HLT = "HLT_PASS_RE('Hlt1MB.*Decision')"
+        return _line
+        
 #
 #
 ####################################################################################################
