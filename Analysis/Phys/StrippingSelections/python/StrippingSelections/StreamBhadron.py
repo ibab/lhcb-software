@@ -32,6 +32,8 @@ from StrippingSelections.StrippingBs2PhiKst0 import StrippingBs2PhiKstConf
 stream = StrippingStream("Bhadron")
 stream.appendLines( [ 
 		        StrippingB2Charged2Body.line,  
+		        StrippingB2Charged2Body.line1,  
+		        StrippingB2Charged2Body.line2,  
 		        StrippingB2DPi.line1,  
 		        StrippingB2DPi.line2,
                         StrippingB2DPiChi2.line1,
