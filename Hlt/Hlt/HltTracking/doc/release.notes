@@ -1,9 +1,13 @@
-!$Id: release.notes,v 1.122 2010-05-21 10:36:06 witekma Exp $
+!$Id: release.notes,v 1.123 2010-05-23 17:40:41 jhe Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/HltTracking
 ! Responsible : Jose A. Hernando
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
+
+! 2010-05-23 - Jibo He
+ - Hlt2Tracking.py
+   + Added Hlt2B2KstareeLines
 
 ! 2010-05-21 - M. Witek
 - Modifications of PV3D configuration to use latest tuning in PatPV for HLT
