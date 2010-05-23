@@ -5,6 +5,13 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-05-23 - Angelo Carbone
+- update StrippingB2Charged2Body with two new lines with looser cuts
+  and larger mass window: >1000 MeV and > 4000 MeV.  
+- add to StreamBhadron.py stream the 2 new lines
+
+!========================== StrippingSelections v1r20p1 2010-05-15 ============
+=======
 ! 2010-05-23 - Alexandr Kozlinskiy
  - Add StrippingDstarPromptWithD02HHNoPt (no Pt cuts) and add it to Charm stream
 
@@ -121,6 +128,7 @@ Stream                   StrippingStreamV0: 601
 ! 2010-05-11 - James Keaveney
  - bug fixes to muon and electron Drell-Yan lines
  - W->e line included. 
+>>>>>>> 1.221
 
 ! 2010-05-10 - Juan Palacios
  - StrippingBd2DstarMuNuLoose.py
