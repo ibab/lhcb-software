@@ -20,6 +20,9 @@ stream.appendLines( [
 		        StrippingMuIDCalib.b_line, 
 		        StrippingLambdaNoPID.line_lambda_dd, 
 		        StrippingLambdaNoPID.line_lambda_ll,
-                        StrippingInclPhiConf().InclPhiLine(),
-                        StrippingInclPhiConf().InclPhiDDLine()
+                        StrippingInclPhiConf().InclPhiHighPtLine(),
+                        StrippingInclPhiConf().InclPhiLowPtLine(),
+                        StrippingInclPhiConf().InclPhiHighPtPhiLine(),
+                        StrippingInclPhiConf().InclPhiLowPtPhiLine(),
+                        StrippingInclPhiConf().InclPhiLDLine()
 		    ] )

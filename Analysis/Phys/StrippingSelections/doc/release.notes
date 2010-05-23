@@ -5,6 +5,11 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-05-23 - Sebastian Schleich
+ - Modified python/StrippingSelections/StrippingInclPhi.py and StreamCalibration.py
+   added new line for low pt.
+   introduced prescale to trim total rate to 4%
+
 ! 2010-05-21 - Liming Zhang
  - D0->KPi and K3Pi added for early b & c cross-section measurements "StrippingD0forBXX.py"
 
