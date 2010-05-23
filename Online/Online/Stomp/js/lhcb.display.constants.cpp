@@ -157,6 +157,15 @@ if ( !_lhcb().constants ) {
 	    iconCls:'Collimators32',
 	    size:   {width:  950,	height: 700}
 	  },
+	  calo: {
+	    src:    this.lhcb_display_url('calo'),
+	    img:    this.images.lookprod,
+	    title:  'CALO',
+	    nick:   'lhcb-calo-win',
+	    cls:    'Collimators16',
+	    iconCls:'Collimators32',
+	    size:   {width:  950,	height: 700}
+	  },
 	  muon: {
 	    src:    this.lhcb_display_url('muon'),
 	    img:    this.images.lookprod,

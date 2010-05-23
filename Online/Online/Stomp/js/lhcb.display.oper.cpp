@@ -359,7 +359,7 @@ var OperationsStatus = function(msg)   {
 
     tb1.appendChild(tr1=document.createElement('tr'));
     tr1.appendChild(td1=document.createElement('td'));
-    td1.appendChild(this.safety=lhcb.widgets.SafetySummary({style:'Arial12pt',logger:this.logger}));
+    td1.appendChild(this.safety=lhcb.widgets.SafetySummary({style:'Arial12pt',all:true,logger:this.logger}));
 
 
     tb.appendChild(tr);

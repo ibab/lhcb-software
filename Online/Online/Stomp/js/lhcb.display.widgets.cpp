@@ -1036,21 +1036,21 @@ if ( !lhcb.widgets ) {
       tr.appendChild(Cell('',1,null));
       tb.appendChild(tr);
     }
-    tab.richSafety = FSMItem('lbWeb.RICH_SAFETY',options.logger,true);
-    tab.muonSafety = FSMItem('lbWeb.MUON_Safety',options.logger,true);
-    tab.ttSafety   = FSMItem('lbWeb.TT_Safety',options.logger,true);
-    tab.itSafety   = FSMItem('lbWeb.IT_Safety',options.logger,true);
-    tb.appendChild(lhcb.widgets.mkFSMitem1(tab.ttSafety,'TT'));
-    tb.appendChild(lhcb.widgets.mkFSMitem1(tab.itSafety,'IT'));
-    tb.appendChild(lhcb.widgets.mkFSMitem1(tab.richSafety,'RICH'));
-    tb.appendChild(lhcb.widgets.mkFSMitem1(tab.muonSafety,'MUON'));
+    if ( options.all || options.rich ) tab.richSafety = FSMItem('lbWeb.RICH_SAFETY',options.logger,true);
+    if ( options.all || options.muon ) tab.muonSafety = FSMItem('lbWeb.MUON_Safety',options.logger,true);
+    if ( options.all || options.tt   ) tab.ttSafety   = FSMItem('lbWeb.TT_Safety',options.logger,true);
+    if ( options.all || options.it   ) tab.itSafety   = FSMItem('lbWeb.IT_Safety',options.logger,true);
+    if ( options.all || options.tt   ) tb.appendChild(lhcb.widgets.mkFSMitem1(tab.ttSafety,'TT'));
+    if ( options.all || options.it   ) tb.appendChild(lhcb.widgets.mkFSMitem1(tab.itSafety,'IT'));
+    if ( options.all || options.rich ) tb.appendChild(lhcb.widgets.mkFSMitem1(tab.richSafety,'RICH'));
+    if ( options.all || options.muon ) tb.appendChild(lhcb.widgets.mkFSMitem1(tab.muonSafety,'MUON'));
     tab.appendChild(tb);
 
     tab.subscribe = function(provider) {
-      provider.subscribeItem(this.ttSafety);
-      provider.subscribeItem(this.itSafety);
-      provider.subscribeItem(this.richSafety);
-      provider.subscribeItem(this.muonSafety);
+      if (this.ttSafety)   provider.subscribeItem(this.ttSafety);
+      if (this.itSafety)   provider.subscribeItem(this.itSafety);
+      if (this.richSafety) provider.subscribeItem(this.richSafety);
+      if (this.muonSafety) provider.subscribeItem(this.muonSafety);
     };
 
     return tab;
@@ -1525,16 +1525,10 @@ if ( !lhcb.widgets ) {
 
       this.attachWidgets();
 
+      this.tbody = tb;
       tb.appendChild(tr);
       if ( this.beforeComment ) {
-	tr = document.createElement('tr');
-	td = document.createElement('td');
-	td.colSpan = 2;
-	td.style.width = '100%';
-	this.beforeComment.style.width = '100%';
-	td.appendChild(this.beforeComment);
-	tr.appendChild(td);
-	tb.appendChild(tr);
+	this.beforeComment();
       }
 
       // Finally add suggestions text
