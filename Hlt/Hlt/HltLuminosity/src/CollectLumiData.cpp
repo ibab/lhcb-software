@@ -1,4 +1,4 @@
-// $Id: CollectLumiData.cpp,v 1.7 2009-02-18 13:11:13 panmanj Exp $
+// $Id: CollectLumiData.cpp,v 1.8 2010-05-23 19:36:57 gligorov Exp $
 // Include files 
 
 // from Gaudi
@@ -32,7 +32,7 @@ CollectLumiData::CollectLumiData( const std::string& name,
   : GaudiAlgorithm ( name , pSvcLocator )
 {
   declareProperty( "RZVeloContainer",      m_RZVeloContainerName =    "Hlt/Track/RZVelo");
-  declareProperty( "PV2DContainer",        m_PV2DContainerName   =    "Hlt/Vertex/PV2D");
+  declareProperty( "PV3DContainer",        m_PV3DContainerName   =    "Hlt/Vertex/PV3D");
 
   declareProperty( "OutputContainer",      m_OutputContainerName = LHCb::HltLumiSummaryLocation::Default );
 
@@ -52,17 +52,17 @@ StatusCode CollectLumiData::initialize() {
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
 
   info() << "RZVeloContainer     " << m_RZVeloContainerName << endmsg;
-  info() << "PV2DContainer       " << m_PV2DContainerName   << endmsg;
+  info() << "PV3DContainer       " << m_PV3DContainerName   << endmsg;
 
   info() << "OutputContainer     " << m_OutputContainerName << endmsg;
 
 
   // ------------------------------------------
-  int m_iPV2D = LHCb::LumiCounters::counterKeyToType("PV2D");
-  if ( m_iPV2D == LHCb::LumiCounters::Unknown ) {
-    info() << "LumiCounters not found: " << "PV2D" <<  endmsg;
+  int m_iPV3D = LHCb::LumiCounters::counterKeyToType("PV3D");
+  if ( m_iPV3D == LHCb::LumiCounters::Unknown ) {
+    info() << "LumiCounters not found: " << "PV3D" <<  endmsg;
   } else {
-    info() << "LumiCounters::PV2D key value: " << m_iPV2D << endmsg;
+    info() << "LumiCounters::PV3D key value: " << m_iPV3D << endmsg;
   }
 
   int m_iRZVelo = LHCb::LumiCounters::counterKeyToType("RZVelo");
@@ -118,23 +118,23 @@ StatusCode CollectLumiData::execute() {
 
   // ------------------------------------------
   // load the vertex objects
-  int n_PV2D =  0;
-  if ( !exist<LHCb::RecVertices>(m_PV2DContainerName)){
+  int n_PV3D =  0;
+  if ( !exist<LHCb::RecVertices>(m_PV3DContainerName)){
     if (m_printing_info) 
-      info() << m_PV2DContainerName << " not found" << endmsg ;
+      info() << m_PV3DContainerName << " not found" << endmsg ;
   } else {  
-    m_PV2D = get<LHCb::RecVertices>(m_PV2DContainerName);
-    if ( !m_PV2D ) { 
+    m_PV3D = get<LHCb::RecVertices>(m_PV3DContainerName);
+    if ( !m_PV3D ) { 
       err() << "Could not find location " 
-            <<  m_PV2DContainerName << endreq;
+            <<  m_PV3DContainerName << endreq;
       return StatusCode::FAILURE ;
     }
-    n_PV2D =  m_PV2D->size() ;
+    n_PV3D =  m_PV3D->size() ;
     if (m_printing_verbose) 
-      verbose() << "found " << n_PV2D << " PV2D vertices." << endreq ;
+      verbose() << "found " << n_PV3D << " PV3D vertices." << endreq ;
   }
-  m_nPV2D = n_PV2D;
-  debug() << "There are " << n_PV2D << " vertices in " << m_PV2DContainerName <<  endreq ;
+  m_nPV3D = n_PV3D;
+  debug() << "There are " << n_PV3D << " vertices in " << m_PV3DContainerName <<  endreq ;
 
   // ------------------------------------------
   // fill the output container
@@ -173,6 +173,6 @@ void CollectLumiData::collect() {
   hltLS->addInfo( m_iRZVelo, m_nRZVelo);
   
   // add vertices
-  hltLS->addInfo( m_iPV2D, m_nPV2D);
+  hltLS->addInfo( m_iPV3D, m_nPV3D);
 
 }

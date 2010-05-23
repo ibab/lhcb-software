@@ -1,4 +1,4 @@
-// $Id: CollectLumiData.h,v 1.5 2009-02-18 13:11:13 panmanj Exp $
+// $Id: CollectLumiData.h,v 1.6 2010-05-23 19:36:57 gligorov Exp $
 #ifndef COLLECTLUMIDATA_H 
 #define COLLECTLUMIDATA_H 1
 
@@ -36,10 +36,10 @@ protected:
   const LHCb::Tracks* m_RZVelo;
   int m_nRZVelo;
   int m_iRZVelo;
-  std::string m_PV2DContainerName;
-  const LHCb::RecVertices* m_PV2D;
-  int m_nPV2D;
-  int m_iPV2D;
+  std::string m_PV3DContainerName;
+  const LHCb::RecVertices* m_PV3D;
+  int m_nPV3D;
+  int m_iPV3D;
 
   std::string m_OutputContainerName;
   LHCb::HltLumiSummary* m_HltLumiSummary;

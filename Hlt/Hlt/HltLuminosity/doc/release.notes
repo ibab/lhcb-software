@@ -3,6 +3,10 @@
 ! Responsible : Jaap Panman
 ! Purpose     : collect luminosity data and fill output bank and histos
 !-----------------------------------------------------------------------------
+
+! 2010-05-23 - V. Gligorov
+ - remove reference to PV2D from CollectLumiData and replace it with PV3D 
+
 ! 2010-05-05 - Gerhard Raven
  - remove obsolete LumiANNSvc
 
