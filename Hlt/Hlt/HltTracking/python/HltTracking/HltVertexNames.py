@@ -17,12 +17,9 @@ HltGlobalVertexLocation			= "Vertex"
 #
 from HltTrackNames import HltSharedTracksPrefix, Hlt1TracksPrefix, Hlt2TracksPrefix
 HltSharedVerticesPrefix 		= HltSharedTracksPrefix
-Hlt1VerticesPrefix 			= Hlt1TracksPrefix
-Hlt2VerticesPrefix 			= Hlt2TracksPrefix
 #
 # names of vertex types (these go into the vertices field of _vertexLocation)
 #
-Hlt2DPrimaryVerticesName		= "PV2D"
 Hlt3DPrimaryVerticesName		= "PV3D"
 #  
 ########################################################################
@@ -39,10 +36,7 @@ __all__ = (
 		HltGlobalVertexLocation,
 		#
 		HltSharedVerticesPrefix, 
-           	Hlt1VerticesPrefix, 
-           	Hlt2VerticesPrefix, 
 		#
-		Hlt2DPrimaryVerticesName,
 		Hlt3DPrimaryVerticesName,
 		#
 		# The functions

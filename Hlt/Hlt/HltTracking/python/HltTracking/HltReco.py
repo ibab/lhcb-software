@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltReco.py,v 1.3 2010-05-11 17:30:31 gligorov Exp $
+# $Id: HltReco.py,v 1.4 2010-05-23 19:38:40 gligorov Exp $
 # =============================================================================
 ## @file HltTracking/HltReco.py
 #  Collection of predefined algorithms to perform reconstruction
@@ -9,25 +9,25 @@
 # =============================================================================
 #
 # the (ordered) list of (configurables corresponding to the) algorithms needed to 
-# obtain the Hlt1 selection 'PV2D' can be obtained by doing 
+# obtain the Hlt1 selection 'Velo' can be obtained by doing 
 #
-#   from HltTracking.HltReco import PV2D
-#   PV2D.members() 
+#   from HltTracking.HltReco import Velo
+#   Velo.members() 
 #
 # in addition, the 'outputselection' of the last member can be 
 # obtained by doing:
 #
-#   PV2D.outputSelection()
+#   Velo.outputSelection()
 #
-# which should return 'PV2D' of course...
+# which should return 'Velo' of course...
 # The returned object can be used in the 'algos' list used by Hlt1Line,
 # and, given that 'outputSelection' is properly set, partakes in the automated
 # daisychaining present in Hlt1Line. In case you do _not_ want this
 # daisychaining, you can do:
 #
-#  PV2D.ignoreOutputSelection()
+#  Velo.ignoreOutputSelection()
 #
-# which 'skips' PV2D for the daisychaining (but will insert the right configurables)
+# which 'skips' Velo for the daisychaining (but will insert the right configurables)
 #
 
 __all__ = ('MinimalRZVelo'   # bindMembers instance with algorithms needed to get 'MinimalRZVelo' 
