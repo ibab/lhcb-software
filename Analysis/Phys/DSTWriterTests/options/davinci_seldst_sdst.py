@@ -31,7 +31,7 @@ selDST0Seq = conf.sequence()
 dv = DaVinci()
 dv.DataType = '2010'
 dv.InputType = 'SDST'
-dv.EvtMax = 100
+dv.EvtMax = -1
 dv.UserAlgorithms = [multiSeqA.sequence(), multiSeqB.sequence(), selDST0Seq]
 EventSelector().Input = ["DATAFILE='PFN:castor:/castor/cern.ch/user/c/cattanem/testFiles/Brunel-v37r1-069857_0000000006-1000ev.sdst' TYP='POOL_ROOTTREE' OPT='READ'"]
 FileCatalog().Catalogs =['xmlcatalog_file:TestSDSTCatalog.xml']
