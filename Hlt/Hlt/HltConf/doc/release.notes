@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.457 2010-05-23 17:37:35 jhe Exp $ 
+! $Id: release.notes,v 1.458 2010-05-23 19:36:00 gligorov Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2010-05-23 - V. Gligorov
+ - Remove most references to PV2D from HltInit and Configuration.py
 
 ! 2010-05-23 - Jibo He
  - Hlt2.py 

@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.185 2010-05-19 14:20:26 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.186 2010-05-23 19:34:46 gligorov Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -237,7 +237,8 @@ class HltConf(LHCbConfigurableUser):
         for i in hlt1Lines() :
                if i.name() in lines : selections.extend( [ j for j in i.outputSelections() if j not in selections ] )
         vertices = [ i for i in selections if i is 'PV2D' or   ( i.startswith('Hlt1Velo') and i.endswith('Decision') ) ]
-        from Configurables import HltVertexReportsMaker        
+        from Configurables import HltVertexReportsMaker
+        print vertices        
         HltVertexReportsMaker().VertexSelections = vertices
         HltVertexReportsMaker().Context = "HLT"
         ## do not write out the candidates for the vertices we store 
@@ -268,7 +269,7 @@ class HltConf(LHCbConfigurableUser):
 
         veto = [ 'TES:Trig/L0/FullCalo' ,   'TES:Trig/L0/MuonCtrl'
                , 'TES:Hlt/Vertex/ASidePV3D','TES:Hlt/Vertex/CSidePV3D' , 'TES:Hlt2/Track/Unfitted/Forward', 'TES:Hlt2/Track/Forward',   'TES:Hlt/Track/RZVelo',    'TES:Hlt2/Track/Velo'
-               , 'TES:Hlt/Vertex/PV2D' 
+               , 'TES:Hlt/Vertex/PV3D' 
                , 'TES:Hlt/Track/MuonSegmentForL0Single'
                , 'RZVeloBW'
                ]
