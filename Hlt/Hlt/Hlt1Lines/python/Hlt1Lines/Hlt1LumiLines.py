@@ -63,8 +63,7 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
                                         , 'Muon'     : [LumiCountTracks   , False   , 'Hlt/Track/Muons' ,   5,  200]
                                         , 'TTIP'     : [LumiCountTracks   , True    , 'Hlt/Track/TTIP'  ,   5,  100]
                                         , 'TTMIB'    : [LumiCountTracks   , False   , 'Hlt/Track/TTMIB' ,   5,  100]
-                                        , 'PV2D'     : [LumiCountVertices , True    , 'Hlt/Vertex/PV2D' ,   1,   20]
-                                        , 'PV3D'     : [LumiCountVertices , False   , 'Hlt/Vertex/PV3D' ,   1,   20]
+                                        , 'PV3D'     : [LumiCountVertices , True    , 'Hlt/Vertex/PV3D' ,   1,   20]
                                         , 'RZVeloBW' : [LumiCountHltTracks, True    , 'RZVeloBW'        ,   5,  200]
                                         , 'SPDMult'  : [LumiFromL0DU      , True    , 'Spd(Mult)'       ,   6,  500]
                                         , 'PUMult'   : [LumiFromL0DU      , True    , 'PUHits(Mult)'    ,   3,  200]
@@ -82,7 +81,7 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
         
         # debugging options
         debugOPL = self.getProp('OutputLevel')
-	from HltTracking.HltPVs  import PV2D
+	from HltTracking.HltPVs  import PV3D
         # define reco scaler
         recoScaler = Scaler( 'LumiRecoScaler' ,  AcceptFraction = 1 if self.getProp('EnableReco') else 0 )  
 
@@ -141,7 +140,7 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
                     print '# DEBUG   : Hlt1LumiLines::HistoMaker:', postfix, key, threshold, bins
                 
         lumiRecoSequence.Members.append( Sequence('LumiTrackRecoSequence' ,
-                                                   Members = [  recoScaler ] + PV2D().members(),
+                                                   Members = [  recoScaler ] + PV3D().members(),
                                                    MeasureTime = True ) ) 
 
         # filter to get backward tracks (make sure it always passes by wrapping inside a sequence)
