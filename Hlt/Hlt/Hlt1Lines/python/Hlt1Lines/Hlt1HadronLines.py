@@ -9,7 +9,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.23 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.24 $"
 # =============================================================================
 
 import Gaudi.Configuration 
@@ -63,10 +63,11 @@ class Hlt1HadronLinesConf(HltLinesConfigurableUser) :
                 , 'HadCompanion_PTCut'      : 1000.
                 , 'HadCompanion_PointingCut': 0.4
                 , 'SingleHadron_PTCut'      : 5000.
-                , 'Prescale'                : { 'Hlt1HadronMonComp'  : 'RATE(10000)'}
-                , 'Postscale'               : { 'Hlt1HadronMonConf1' : 0.000001,
-                                                'Hlt1HadronMonConf2' : 0.000001,
-                                                'Hlt1HadronMonComp'  : 0.000001
+                , 'Prescale'                : { 'Hlt1HadronMonComp'  : 'RATE(1000)'}
+                , 'Postscale'               : { 'Hlt1HadronMonVeloReco' : 0.000001,
+                                                'Hlt1HadronMonConf1'    : 0.000001,
+                                                'Hlt1HadronMonConf2'    : 0.000001,
+                                                'Hlt1HadronMonComp'     : 0.000001
                                               }  
                 }
     
@@ -96,23 +97,24 @@ class Hlt1HadronLinesConf(HltLinesConfigurableUser) :
         def confirmationpretrackmatch(type=""):
             prefix = 'HadronConfPreTrackMatch'+type
             OutputOfL0 = confirmationl0part(type).outputSelection()
-            conf = [Velo,PV3D().ignoreOutputSelection()]
+            conf = [Velo,PV3D().ignoreOutputSelection(),
+                    Member ( 'TM' , 'VeloCalo'
+                            , InputSelection1 = 'Velo'
+                            , InputSelection2 = '%s' %OutputOfL0
+                            , MatchName = 'VeloCalo' , MaxQuality = 4.
+                           )
+                   ]
 
             return bindMembers(prefix, conf)
 
         def confirmationtrackmatch(type=""):
-            OutputOfVeloIP = confirmationpretrackmatch(type).outputSelection()
-            OutputOfL0     = confirmationl0part(type).outputSelection()
+            OutputOfVeloMatch = confirmationpretrackmatch(type).outputSelection()
             
             prefix = 'HadronConfTrackMatch'+type
             from HltLine.HltDecodeRaw import DecodeIT
-            conf =                  [ Member ( 'TM' , 'VeloCalo'
-                                             , InputSelection1 = '%s' %OutputOfVeloIP
-                                             , InputSelection2 = '%s' %OutputOfL0
-                                             , MatchName = 'VeloCalo' , MaxQuality = 4.
-                                             )
-                                    , DecodeIT
+            conf =                  [ DecodeIT
                                     , Member ( 'TU', 'GuidedForward'
+                                             , InputSelection = '%s' %OutputOfVeloMatch
                                              , RecoName = 'GuidedForward'
                                              , tools = [ Tool( HltTrackUpgradeTool
                                                                , tools = [ Tool( HltGuidedForward
@@ -250,8 +252,14 @@ class Hlt1HadronLinesConf(HltLinesConfigurableUser) :
                 ]
             return vafter
            
+        def monveloreco():
+            prefix = 'HadronMonVeloReco'
+            conf = [Velo]
+
+            return conf
+
         def mondecision(type=""):
-            if   type.find('Conf') > -1 :
+            if type.find('Conf') > -1 :
                 return [Member('TF','MonConf',OutputSelection = "%Decision", FilterDescriptor = ['IsBackward,<,0.5'])]
             elif type.find('Comp') > -1 :
                 from HltLine.HltDecodeRaw import DecodeIT
@@ -297,6 +305,17 @@ class Hlt1HadronLinesConf(HltLinesConfigurableUser) :
                             vafterburn()
                  )
 
+            # Monitoring line : velo reconstruction
+            #-----------------------------------
+            Line ( 'HadronMonVeloReco'
+                 , prescale = self.prescale
+                 , postscale = self.postscale
+                 , L0DU = "L0_CHANNEL('%(L0Channel)s')"%self.getProps()
+                 , algos = [confirmationl0part()]+\
+                           monveloreco()+\
+                           mondecision('Conf') 
+                 )
+
             # Monitoring line : pre-confirmation reconstruction
             #-----------------------------------
             Line ( 'HadronMonConf1'
@@ -327,8 +346,8 @@ class Hlt1HadronLinesConf(HltLinesConfigurableUser) :
                  , postscale = self.postscale
                  , L0DU = "L0_CHANNEL('%(L0Channel)s')"%self.getProps()
                  , algos = [confirmationl0part()]+\
-                           [confirmationpretrackmatch()]+\
-                           mondecision('Comp')
+                            monveloreco()+\
+                            mondecision('Comp')
                  )
                  
             

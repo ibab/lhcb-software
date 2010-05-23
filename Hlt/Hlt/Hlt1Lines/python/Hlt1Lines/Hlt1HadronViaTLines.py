@@ -9,7 +9,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.19 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.20 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -51,8 +51,8 @@ class Hlt1HadronViaTLinesConf(HltLinesConfigurableUser) :
         from HltLine.HltLine import Hlt1Tool   as Tool
         from HltLine.HltLine import hlt1Lines  
         from Hlt1Lines.HltFastTrackFit import setupHltFastTrackFit
-        from HltTracking.HltReco import RZVelo
-        from HltTracking.HltPVs  import PV2D
+        from HltTracking.HltReco import Velo
+        from HltTracking.HltPVs  import PV3D
 
         from Configurables import HltTrackUpgradeTool, PatForwardTool
         from Hlt1Lines.HltConfigurePR import ConfiguredPR
@@ -118,12 +118,11 @@ class Hlt1HadronViaTLinesConf(HltLinesConfigurableUser) :
             conf = l0.members()  + [ DecodeIT 
                     , Hlt1HadronViaTTUTConf
                     , Member ( 'TF' , 'TConf' , FilterDescriptor = ['ptAtOrigin,>,'+PTCut])
-		            , RZVelo
-                    , PV2D().ignoreOutputSelection()
+		            , Velo
+                    , PV3D().ignoreOutputSelection()
                     , DecodeTT
-                    , Member ( 'TF' , 'VeloRZTMatch' , FilterDescriptor = ['RZVeloTMatch_%TFTConf,<,'+VTMatchCut]) 
-                    , Member ( 'TU', 'Velo',  RecoName = 'Velo')
-                    , Member ( 'TF', 'Velo3DIP', FilterDescriptor = [ 'IP_PV2D,||>,'+IPCut])
+                    , Member ( 'TF' , 'VeloRZTMatch' , FilterDescriptor = ['VeloTMatch_%TFTConf,<,'+VTMatchCut]) 
+                    , Member ( 'TF' , 'Velo3DIP', FilterDescriptor = [ 'IP_PV3D,||>,'+IPCut])
                     , Member ( 'TM' , 'VeloT'
                                , InputSelection1 = '%TFVelo3DIP'
                                , InputSelection2 = '%TFTConf'
@@ -139,7 +138,7 @@ class Hlt1HadronViaTLinesConf(HltLinesConfigurableUser) :
                             FilterDescriptor = ['ptAtOrigin,>,'+_cut('SingleHadronViaT_PTCut')]
                             )
                    , Member ( 'TF', 'SingleHadronViaTIP', OutputSelection = "%Decision" ,
-                           FilterDescriptor = [ 'IP_PV2D,||>,'+_cut('HadViaTSingle_IPCut')]
+                           FilterDescriptor = [ 'IP_PV3D,||>,'+_cut('HadViaTSingle_IPCut')]
                            ) 
                    ]
             return sh
@@ -150,14 +149,13 @@ class Hlt1HadronViaTLinesConf(HltLinesConfigurableUser) :
         def companion(type=""):
             OutputOfConfirmation = confirmation(type).outputSelection() 
             IP2Cut = _cut(type+"HadViaTDi_IPCut")
-            comp = [ RZVelo 
-                   , PV2D().ignoreOutputSelection()
-                   , Member ( 'TU', 'UVelo' , RecoName = 'Velo')
+            comp = [ Velo 
+                   , PV3D().ignoreOutputSelection()
                    , Member ( 'TF', '1UVelo'
                            , FilterDescriptor = ['MatchIDsFraction_%s,<,0.9' %OutputOfConfirmation]
                            )
                    , Member ( 'TF', 'Companion'
-                           , FilterDescriptor = [ 'IP_PV2D,||>,%s'%IP2Cut]
+                           , FilterDescriptor = [ 'IP_PV3D,||>,%s'%IP2Cut]
                            )
                    ]
             return comp
@@ -169,9 +167,9 @@ class Hlt1HadronViaTLinesConf(HltLinesConfigurableUser) :
             OutputOfConfirmation = confirmation(type).outputSelection()
             PT2Cut = _cut(type+"HadViaTCompanion_PTCut")
             IP3Cut = _cut(type+"HadViaTDi_IPCut")
-            dih = [ PV2D().ignoreOutputSelection()
+            dih = [ PV3D().ignoreOutputSelection()
                 , Member ( 'TF', 'DiHadronViaTIP', InputSelection = '%s' %OutputOfConfirmation
-                           , FilterDescriptor = [ 'IP_PV2D,||>,'+IP3Cut]
+                           , FilterDescriptor = [ 'IP_PV3D,||>,'+IP3Cut]
                            )
                 , Member ( 'VM2', 'UVelo'
                          , InputSelection1 = '%TFDiHadronViaTIP'
@@ -179,7 +177,7 @@ class Hlt1HadronViaTLinesConf(HltLinesConfigurableUser) :
                          , FilterDescriptor = [ 'DOCA,<,%s'%(self.getProp('HadViaTCompanion_DOCACut'))]
                            )
                 , Member ( 'VF', 'UVelo'
-                           , FilterDescriptor = [ 'VertexDz_PV2D,>,'+_cut('HadViaTCompanion_DZCut')]
+                           , FilterDescriptor = [ 'VertexDz_PV3D,>,'+_cut('HadViaTCompanion_DZCut')]
                            )
                 , Member ( 'VU', 'Forward'
                            , RecoName = 'Forward'
@@ -190,7 +188,7 @@ class Hlt1HadronViaTLinesConf(HltLinesConfigurableUser) :
                            FilterDescriptor = [ 'VertexMinPT,>,'+PT2Cut]
                            )
                 , Member ( 'VF', 'DiHadron', OutputSelection = "%Decision", 
-                           FilterDescriptor = [ 'VertexPointing_PV2D,<,'+_cut("HadViaTCompanion_PointingCut")]
+                           FilterDescriptor = [ 'VertexPointing_PV3D,<,'+_cut("HadViaTCompanion_PointingCut")]
                            )
                 ]
             return dih

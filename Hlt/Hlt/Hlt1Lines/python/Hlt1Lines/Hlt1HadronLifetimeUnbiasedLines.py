@@ -9,7 +9,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.4 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.5 $"
 # =============================================================================
 
 import Gaudi.Configuration 
@@ -27,14 +27,14 @@ from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
 class Hlt1HadronLifetimeUnbiasedLinesConf(HltLinesConfigurableUser) :
     __slots__ = { 'L0Channel'                 :  "Hadron" 
                 , 'HadMain_TrackFitChi2Cut'   :    10.
-                , 'HadVertex_DOCACut'         :     0.2
+                , 'HadVertex_DOCACut'         :     0.4
                 , 'HadVertex_PCut'            : 10000.  
-                , 'HadVertex_MaxPTCut'        :  2000.
+                , 'HadVertex_MaxPTCut'        :  1100.
                 , 'HadVertex_MinPTCut'        :  1000.
                 , 'HadVertex_MassMinCut'      :  5000.0
                 , 'HadVertex_MassMaxCut'      :  5800.0
-                , 'HadVertex_CosThetaStarCut' :     0.9  
-                , 'LTUnbHadETCut_Hard'        :  2500. 
+                , 'HadVertex_CosThetaStarCut' :  0.9  
+                , 'LTUnbHadETCut_Hard'        :  1500. 
                 , 'LTUnbHadETCut_Soft'        :  1000.
                 }
     
