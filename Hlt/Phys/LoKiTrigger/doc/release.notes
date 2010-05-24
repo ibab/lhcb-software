@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.70 2010-04-09 18:47:06 graven Exp $
+! $Id: release.notes,v 1.71 2010-05-24 09:11:20 graven Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiTrigger
 ! Responsible : Vanya BELYAEV
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
+
+! 2010-05-24 - Gerhard Raven
+ - mask L0 muon encodedPt when comparing to threshold -- it is an 8 bit signed quantity
 
 !========================== LoKiTrigger v10r0 2010-04-09 ===================
 ! 2010-04-06 - Vanya Belyaev

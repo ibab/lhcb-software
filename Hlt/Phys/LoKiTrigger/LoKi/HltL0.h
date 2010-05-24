@@ -1,4 +1,4 @@
-// $Id: HltL0.h,v 1.3 2009-12-23 10:37:34 graven Exp $
+// $Id: HltL0.h,v 1.4 2010-05-24 09:11:20 graven Exp $
 // ============================================================================
 #ifndef LOKITRIGGER_HLTL0_H 
 #define LOKITRIGGER_HLTL0_H 1
@@ -146,7 +146,7 @@ namespace Hlt
       {
         return 
           ( 0      != muon         ) && 
-          ( !m_hasThreshold || m_threshold < muon->encodedPt() ) ;
+          ( !m_hasThreshold || m_threshold < (muon->encodedPt()&0x7F) ) ;
       }
       // ======================================================================
     public:
