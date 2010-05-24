@@ -1,9 +1,11 @@
-!$Id: release.notes,v 1.60 2010-05-21 16:33:32 jpalac Exp $
+!$Id: release.notes,v 1.61 2010-05-24 21:00:17 jpalac Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/StrippingConf
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
+
+!========================== StrippingConf v3r3 2010-05-24 =================
 
 ! 2010-05-21 - Juan Palacios
  - Remove some printouts in StrippingLine.filterMembers()
