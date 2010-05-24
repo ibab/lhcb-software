@@ -4,6 +4,9 @@
 ! Purpose     : Options to generate selection or Micro DSTs and scripts to test them.
 !-----------------------------------------------------------------------------
 
+! ========================== DstwriterTests v1r0 2010-05-24 ==================
+
+
 ! 2010-05-23 - Juan Palacios
  - scripts/check_dst_contents.py
   . Read input file name and TES root from command line.
