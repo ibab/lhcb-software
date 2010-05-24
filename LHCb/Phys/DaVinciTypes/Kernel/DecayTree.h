@@ -1,4 +1,4 @@
-// $Id: DecayTree.h,v 1.1 2010-05-24 14:38:20 ibelyaev Exp $ 
+// $Id: DecayTree.h,v 1.2 2010-05-24 17:07:38 ibelyaev Exp $ 
 // ============================================================================
 #ifndef DAVINCIKERNEL_DECAYTREE_H
 #define DAVINCIKERNEL_DECAYTREE_H
@@ -48,6 +48,8 @@ namespace LHCb
      *  @param right object to be copied (invalid after copy) 
      */
     DecayTree ( const DecayTree& right ) ;
+    /// default constructor 
+    DecayTree () ;
     /** destructor
      *  @attention the cloned decay tree is deleted!
      */

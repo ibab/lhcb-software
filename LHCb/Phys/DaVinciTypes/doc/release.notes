@@ -1,4 +1,4 @@
-!$Id: release.notes,v 1.6 2010-05-24 14:38:20 ibelyaev Exp $
+!$Id: release.notes,v 1.7 2010-05-24 17:07:38 ibelyaev Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinciTypes
 ! Responsible : Juan Palacios
@@ -7,7 +7,12 @@
 
 ! 2010-05-24 - Vanya Belyaev
 
- - add LHcb::DecayTree from DaVinciKernel to allow the usage of this class 
+ - LHCb::DecayTree
+    add the default constructor (invalid tree) 
+
+! 2010-05-24 - Vanya Belyaev
+
+ - add LHCb::DecayTree from DaVinciKernel to allow the usage of this class 
    in Phys/DaVinciInterfaces 
  - cmt/requirements 
     version increment to v2r0
