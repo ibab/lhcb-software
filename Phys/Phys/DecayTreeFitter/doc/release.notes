@@ -8,6 +8,8 @@
 ! http://www.slac.stanford.edu/spires/find/hep/www?eprint=physics/0503191
 !-----------------------------------------------------------------------------
 
+!======================= DecayTreeFitter v1r7 2010-05-24 =====================
+
 ! 2010-05-21 Johan Luisier
  - Changed the way the getFitted() methods work : now a check is made, so that
    if the particle is not found in the DecayTree, an error is printed.
