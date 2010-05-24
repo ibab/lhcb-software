@@ -4,12 +4,12 @@
 ! Purpose     : VELO monitoring algorithms for reconstruction data (ZS data)
 !-----------------------------------------------------------------------------
 
+!======================= VeloRecMonitors v2r10 2010-05-24 ====================
 ! 2010-05-22 - Michael Alexander
  - VeloIPResolutionMonitor:
 	- Made track and vertex locations configurable properties
  	- Updated PV refitting to use PVOfflineTool
 
-!======================= VeloRecMonitors v2r10 2010-05-21 ====================
 ! 2010-05-10 - Kurt Rinnert
  - finer binning in occupancy spectra
 
