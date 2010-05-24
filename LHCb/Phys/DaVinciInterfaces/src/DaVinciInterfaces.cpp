@@ -1,4 +1,4 @@
-// $Id: DaVinciInterfaces.cpp,v 1.8 2010-05-14 15:03:46 ibelyaev Exp $
+// $Id: DaVinciInterfaces.cpp,v 1.9 2010-05-24 14:45:20 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -23,7 +23,7 @@
 #include "Kernel/IDVAlgorithm.h"
 #include "Kernel/IParticleFilter.h"
 #include "Kernel/IFilterCriterion.h"
-
+#include "Kernel/IDecayTreeFit.h"
 // ============================================================================
 /** @file
  *  Implementation file for class doem interfaces from 
@@ -49,6 +49,7 @@ ITrackIsolation          :: ~ITrackIsolation          () {}
 IDVAlgorithm             :: ~IDVAlgorithm             () {}
 IFilterCriterion         :: ~IFilterCriterion         () {}
 IParticleFilter          :: ~IParticleFilter          () {}
+IDecayTreeFit            :: ~IDecayTreeFit            () {}
 
 // ============================================================================
 // The END 
