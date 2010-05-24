@@ -4,6 +4,9 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
+
+!========================== StrippingSelections v1r21 2010-05-24 ==============
+
 ! 2010-05-24 - Philip Hunt
  - Added standard and robust lines for D*->(D0->K3Pi)pi:
    StrippingDstarPromptWithD02K3Pi.py
