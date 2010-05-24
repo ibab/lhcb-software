@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.186 2010-05-23 19:34:46 gligorov Exp $"
+__version__ = "$Id: Configuration.py,v 1.187 2010-05-24 17:48:58 aperezca Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -365,7 +365,7 @@ class HltConf(LHCbConfigurableUser):
         HltGlobalMonitor().DecToGroupHlt2 = self.groupLines( HltGlobalMonitor().Hlt2Decisions,
                                  [ ("Topo"           , "Hlt2Topo.*Decision"),
                                    ("IncPhi"         , "Hlt2IncPhi.*Decision"),
-                                   ("SingleMuon"     , "Hlt2(Single.*Muon|IncMuTrack).*Decision"),
+                                   ("SingleMuon"     , "Hlt2(Single.*Muon|MuTrack).*Decision"),
                                    ("DiMuon"         , "Hlt2.*DiMuon.*Decision"),
                                    ("B2DX"           , "Hlt2B2D2.*Decision"),
                                    ("B2XGamma"       , "Hlt2.*Gamma.*Decision"),

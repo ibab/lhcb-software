@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.458 2010-05-23 19:36:00 gligorov Exp $ 
+! $Id: release.notes,v 1.459 2010-05-24 17:48:58 aperezca Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2010-05-24 - Antonio Perez-Calero
+ - Rename 'IncMuTrack' to 'MuTrack' following changes in Hlt2Lines
 
 ! 2010-05-23 - V. Gligorov
  - Remove most references to PV2D from HltInit and Configuration.py
