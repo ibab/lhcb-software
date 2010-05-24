@@ -4,6 +4,10 @@
 ! Purpose     : Various utilities for manipulating RawEvent
 !-----------------------------------------------------------------------------
 
+!========================= DAQUtils v1r4 2010-05-24 ==========================
+! 2010-05-22 - Olivier Deschamps
+  - ODINTimeFilter: fix eventNumber format (and Windows warning)
+
 !========================= DAQUtils v1r3 2010-04-26 ==========================
 ! 2010-04-13 - Olivier Deschamps
   - RawBankReadoutStatusFilter : protect against missing status container
