@@ -222,7 +222,7 @@ StatusCode CaloPi0Ntp::execute(){
         sc=ntp->column("r2" , point2);
         sc=ntp->column("prs1", prs1);
         sc=ntp->column("prs2", prs2);
-        int spd = 0.;
+        int spd = 0;
         int spd2 = m_toSpd->multiplicity ( *p2 , "Spd");
         if(  spd2 >0 )spd +=1;
         if(  spd1 >0 )spd +=2;

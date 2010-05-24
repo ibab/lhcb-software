@@ -1,11 +1,15 @@
-! $Id: release.notes,v 1.91 2010-05-21 14:15:58 rlambert Exp $ 
+! $Id: release.notes,v 1.92 2010-05-24 09:37:24 rlambert Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Calo/CaloMoniDst
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! Purpose     : Calo monitoring of Dst tape 
 ! -----------------------------------------------------------------------------
 
-!========================== CaloMoniDst v5r2 2010-05-21 =======================
+!========================== CaloMoniDst v5r2 2010-05-24 =======================
+
+! 2010-05-24 - Rob Lambert
+ - fix for typo in CaloPi0Ntp
+
 
 ! 2010-05-17 - Olivier Deschamps
   - python/Monitor.py : activate missing monitoring histo for ResolvedPi0 monitoring
