@@ -20,12 +20,6 @@ def printTree( filename, outputfilename = 'out.txt'  ) :
             tree = file.Get( treeobj.GetName() )
             if tree :  
                 print treeobj.GetName().replace('_', '/'), ':', tree.GetTotBytes(), 'Bytes', tree.GetEntries(), 'entries'
-                '''
-                outfile << treeobj->GetName() 
-                << " " <<  1.0*tree->GetTotBytes()/(1024.0*tree->GetEntries()) << " " 
-                << 1.0*tree->GetZipBytes()/(1024.0*tree->GetEntries()) <<" " 
-                << tree->GetEntries() << "\n";
-                '''
     else :
         print 'ERROR: Could not open file', filename
             
