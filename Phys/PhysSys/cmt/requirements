@@ -1,33 +1,33 @@
-#$Id: requirements,v 1.229 2010-05-05 15:12:02 cattanem Exp $
+#$Id: requirements,v 1.230 2010-05-24 16:07:49 jpalac Exp $
 package PhysSys
 version v9r6
 
 branches doc cmt
 
 ####################################################################
-use  DaVinciKernel              v8r6p1   Phys    # Juan Palacios
+use  DaVinciKernel              v8r7     Phys    # Juan Palacios
 use  DaVinciMCKernel            v4r2     Phys    # Juan Palacios
 use  SelectionLine              v1r0p1   Kernel  # Gerhard Raven
-use  SelPy                      v1r1p1   Phys    # Juan Palacios
+use  SelPy                      v1r2   Phys    # Juan Palacios
 
 #===================================================================
 use  PhysConf                   v1r6     Phys    # Patrick Koppenburg, Juan Palacios
 use  ProtoParticleFilter        v1r4     Phys    # Chris Jones
-use  DaVinciTools       	v21r1    Phys    # Juan Palacios
+use  DaVinciTools       	v21r2    Phys    # Juan Palacios
 use  DaVinciTransporter 	v3r9p1   Phys    # Juan Palacios
 use  ParticleMaker      	v5r5p1 	 Phys    # Chris Jones
 use  VertexFit			v6r2p2   Phys    # Yuehong Xie
 use  LoKiFitters                v2r4p3   Phys    # Vanya Belyaev
-use  DecayTreeFitter            v1r6     Phys    # Wouter Hulsbergen
+use  DecayTreeFitter            v1r7     Phys    # Wouter Hulsbergen
 use  PhysDict                   v4r2     Phys    # Juan Palacios
 
 #===================================================================
 use LoKi                        v8r1     Phys    # Ivan Belyaev
-use LoKiAlgo                    v9r0     Phys    # Ivan Belyaev
+use LoKiAlgo                    v9r1     Phys    # Ivan Belyaev
 use LoKiAlgoMC                  v9r0     Phys    # Ivan Belyaev
-use LoKiArrayFunctors           v9r0     Phys    # Ivan Belyaev
+use LoKiArrayFunctors           v9r1     Phys    # Ivan Belyaev
 use LoKiGenMC                   v9r0     Phys    # Ivan Belyaev
-use LoKiPhys                    v9r0     Phys    # Ivan Belyaev
+use LoKiPhys                    v9r1     Phys    # Ivan Belyaev
 use LoKiPhysMC                  v9r0     Phys    # Ivan Belyaev
 
 # Declare this as a container package
