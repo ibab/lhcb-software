@@ -11,12 +11,21 @@ from Gaudi.Configuration import *
 from StrippingConf.StrippingStream import StrippingStream
 
 from StrippingSelections import StrippingBd2Kstaree
-from StrippingSelections.StrippingBu2LLK  import StrippingBu2LLKConf
-from StrippingSelections.StrippingJpsi2ee  import StrippingDiElectronConf
+from StrippingSelections.StrippingBu2LLK       import StrippingBu2LLKConf
+from StrippingSelections.StrippingBs2JpsieePhi import StrippingBs2JpsieePhiConf  
+from StrippingSelections.StrippingDiElectron   import StrippingDiElectronConf
+
 
 stream = StrippingStream("Dielectron")
 stream.appendLines( [ 
-		        StrippingBd2Kstaree.line ,
-		        StrippingBu2LLKConf().eeK(),
-                        StrippingDiElectronConf().loose_line()
-		    ] )
+    StrippingBd2Kstaree.line ,
+    StrippingBu2LLKConf().eeK(),
+    StrippingBs2JpsieePhiConf().UnbiasedPT_line(),
+    StrippingBs2JpsieePhiConf().Signalbox_line(),
+    StrippingDiElectronConf().LooseJpsi2ee_line(),
+    StrippingDiElectronConf().Jpsi2ee_line(),
+    StrippingDiElectronConf().IncDiElectron_line(),
+    StrippingDiElectronConf().IncDiElectronLowMass_line(),
+    StrippingDiElectronConf().BiasedIncDiElectron_line(),
+    StrippingDiElectronConf().BiasedIncDiElectronLowMass_line()
+    ] )

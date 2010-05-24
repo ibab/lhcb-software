@@ -5,6 +5,21 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-05-24 - Jibo He
+ - StrippingBs2JpsieePhi.py
+   + Added new stripping line for Bs->Jpsi(ee)Phi
+   to StreamDielectron
+
+! 2010-05-24 - Jibo He
+ - StrippingBd2Kstaree.py
+   Go back to making own Jpsi->ee, no lower mass cuts. 
+
+! 2010-05-24 - Jibo He
+ - StrippingJpsi2ee.py renamed as StrippingDiElectron.py
+   + Added Jpsi2ee, IncDiElectron, IncDiElectronLowMass, 
+   BiasedIncDiElectron, BiasedIncDiElectronLowMass lines
+   to StreamDielectron
+
 ! 2010-05-24 - Thomas BLAKE
  - Added  StrippingB2XuMuNuConf().K_line() to semileptonic stream
 

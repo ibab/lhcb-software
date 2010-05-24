@@ -1,6 +1,7 @@
 ###################################################################
 #
-# Marie-Helene Schune
+# Marie-Helene Schune, schunem@lal.in2p3.fr
+# Jibo.He@cern.ch
 #
 from Gaudi.Configuration import *
 from Configurables import GaudiSequencer, CombineParticles, FilterDesktop
@@ -9,7 +10,7 @@ from GaudiKernel.SystemOfUnits import *
 
 SeqPreselBd2Kstaree = GaudiSequencer("SeqPreselBd2Kstaree")
 
-DiLeptonForBd2LLKstar = FilterDesktop("DiLeptonForBd2LLKstar")
+DiLeptonForBd2LLKstar = CombineParticles("DiLeptonForBd2LLKstar")
 Kstar2KPiForBd2LLKstar = CombineParticles("Kstar2KPiForBd2LLKstar")
 PreselBd2Kstaree = CombineParticles("PreselBd2Kstaree")
 
@@ -18,28 +19,28 @@ SeqPreselBd2Kstaree.Members += [ Kstar2KPiForBd2LLKstar ]
 SeqPreselBd2Kstaree.Members += [ PreselBd2Kstaree ]
 
 # DiLepton (e+e-)
-DiLeptonForBd2LLKstar.InputLocations = ["StdLooseDiElectron"]
-DiLeptonForBd2LLKstar.Code = "(MINTREE(ABSID=='e+',PT)>300*MeV) & (MINTREE(ABSID=='e+',MIPCHI2DV(PRIMARY))>2.25) & (VFASPF(VCHI2/VDOF)<15)" 
+DiLeptonForBd2LLKstar.InputLocations = ["StdLooseElectrons"]
+DiLeptonForBd2LLKstar.DecayDescriptor = "J/psi(1S) -> e+ e-"
+DiLeptonForBd2LLKstar.DaughtersCuts = {"e+": "(PT>300*MeV) & (MIPCHI2DV(PRIMARY)>1)" }
+DiLeptonForBd2LLKstar.CombinationCut = "AM<5500*MeV"
+DiLeptonForBd2LLKstar.MotherCut = "(VFASPF(VCHI2/VDOF)<25)" 
 
 # Kstar
 Kstar2KPiForBd2LLKstar.InputLocations = ["StdTightPions", "StdTightKaons"]
 Kstar2KPiForBd2LLKstar.DecayDescriptor = "[K*(892)0 -> K+ pi-]cc"
-Kstar2KPiForBd2LLKstar.DaughtersCuts = {"K+": "(MINTREE(ABSID=='K+',PT)>400*MeV) & (MINTREE(ABSID=='K+',P)>3000*MeV) & (MIPCHI2DV(PRIMARY)>4)",
-                                        "pi-": "(MINTREE(ABSID=='pi-',PT)>300*MeV) & (MINTREE(ABSID=='pi-',P)>3000*MeV) & (MIPCHI2DV(PRIMARY)>4)"
+Kstar2KPiForBd2LLKstar.DaughtersCuts = {"K+":  "(PT>350*MeV) & (P>3000*MeV) & (MIPCHI2DV(PRIMARY)>3)",
+                                        "pi-": "(PT>300*MeV) & (P>3000*MeV) & (MIPCHI2DV(PRIMARY)>3)"
                                         }
-Kstar2KPiForBd2LLKstar.CombinationCut = "(ADAMASS('K*(892)0')<200*MeV)" # <130 MeV applied later
-Kstar2KPiForBd2LLKstar.MotherCut = "(VFASPF(VCHI2/VDOF)<15)" # (BPVIPCHI2()>1.0) & (BPVVDCHI2>1.0) applied later
+Kstar2KPiForBd2LLKstar.CombinationCut = "(ADAMASS('K*(892)0')<200*MeV)" 
+Kstar2KPiForBd2LLKstar.MotherCut = "(VFASPF(VCHI2/VDOF)<25)" 
 
-# Bd2Kstar
+# Bd-> ee Kstar
 PreselBd2Kstaree.InputLocations = ["DiLeptonForBd2LLKstar", "Kstar2KPiForBd2LLKstar"]
 PreselBd2Kstaree.DecayDescriptor = "[B0 -> K*(892)0 J/psi(1S)]cc"
 PreselBd2Kstaree.DaughtersCuts = {"K*(892)0": "ALL",
                                   "J/psi(1S)": "ALL"}
-PreselBd2Kstaree.CombinationCut = "(ADAMASS('B0')<1000*MeV)" # 300 MeV applied later
-
-PreselBd2Kstaree.MotherCut = "(BPVIPCHI2()<64) & (VFASPF(VCHI2/VDOF)<(15.0/4.0)) & (BPVVDCHI2>16) & (BPVDIRA>0.99969989) " # theta<24.5 rad
-
-#PreselBd2Kstaree.KillOverlap = False 
+PreselBd2Kstaree.CombinationCut = "(ADAMASS('B0')<1200*MeV)" 
+PreselBd2Kstaree.MotherCut = "(BPVIPCHI2()<64) & (VFASPF(VCHI2/VDOF)<(36.0/4.0)) & (BPVVDCHI2>9) & (BPVDIRA>0.999)" 
 
 # final selections
 hardee    = "(INTREE( (ID=='J/psi(1S)') & (BPVVD>1.0*mm) ))"
