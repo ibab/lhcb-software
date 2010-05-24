@@ -48,10 +48,11 @@ unsigned int StrippingAlg::numberOfCandidates() const {
 
   if (exist<LHCb::Particle::Range>(m_outputLocation)){
     LHCb::Particle::Range parts = get<LHCb::Particle::Range>(m_outputLocation);
-    warning() << "Selection " << m_outputLocation << " finds " << parts.size()
+    if (msgLevel(MSG::VERBOSE)) verbose() << "Selection " << m_outputLocation << " finds " << parts.size()
                                           << " candidates" << endmsg ;
     num = parts.size();
-  } else warning() <<  "Selection " << m_outputLocation << " has no particles" << endmsg ;
+  } else if (msgLevel(MSG::VERBOSE)) verbose() <<  "Selection " 
+                                               << m_outputLocation << " has no particles" << endmsg ;
 
   return num;
 }

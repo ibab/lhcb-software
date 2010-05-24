@@ -5,6 +5,10 @@
 ! Purpose     : Stripping framework c++ component algorithms
 ! -----------------------------------------------------------------------------
 
+! 2010-05-24 - Anton Poluektov 
+ - Get rid of warning messages about number of candidates and missing 
+   particles. 
+
 ! 2010-05-21 - Anton Poluektov 
  - Fixed calculation of the number of candidates in StrippingAlg and StrippingCheck. 
    Particles in both KeyedContainer and SharedObjectContainer are now counted
