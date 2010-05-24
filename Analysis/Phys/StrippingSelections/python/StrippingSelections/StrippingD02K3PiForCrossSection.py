@@ -1,6 +1,6 @@
 __author__='Philip Hunt'
 __date__='24/5/2010'
-__version__='$Revision: 1.1 $'
+__version__='$Revision: 1.2 $'
 
 '''
 Tagged and untagged D0(K3Pi) stripping selection for cross-section measurement
@@ -369,7 +369,7 @@ class StrippingD02K3PiForCrossSectionConf(LHCbConfigurableUser):
     algos.append(self._makeD0Sequence(False, True))
     
     return StrippingLine(
-      "UntaggedD02K3PiDCSRobustLine"
+      "UntaggedD02K3PiDCSRobustForCrossSectionLine"
       , prescale = self.getProp("PrescaleUntaggedRobustDCS")
       , algos = algos
       )
