@@ -5,6 +5,8 @@
 ! Purpose     : PID Calbriation and Monitoring on Data
 !-----------------------------------------------------------------------------
 
+!========================== RichPIDQC v1r4 2010-05-24 ========================
+
 ! 2010-05-15 - Juan Palacios
  - cmt/requirements
   . Remove dependency on deprecated Rich/DstCalibSel.
