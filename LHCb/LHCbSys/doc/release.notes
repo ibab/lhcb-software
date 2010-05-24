@@ -5,6 +5,138 @@
 ! Purpose     : LHCb base classes and event model
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v31r1>2010-05-25 LHCbSys v31r1</A></H1><PRE>
+This version uses Gaudi v21r9 and LCG_58c
+
+- Packages added:    GaudiPatches v1r1 - patches to be moved to Gaudi
+- Packages modified: DAQUtils v1r4, MDF v3r24, Tell1Kernel v1r11, DDDB v1r31,
+    DetCond v12r13, DetDescChecks v5r3, RichDet v14r3, VeloDet v13r10,
+    RecEvent v2r28, DetCondExample v11r9, HltInterfaces v4r0, LHCbAlgs v2r34p1,
+    LHCbKernel v12r0p1, LHCbMath v3r17p1, XMLSummaryBase v1r1, L0MuonKernel v9r2,
+    ProcessorKernel v6r0p1, MuonInterfaces v1r2, DaVinciInterfaces v2r3,
+    LoKiCore v10r1, LoKiHlt v3r1, RichKernel v7r35, STKernel v2r1p1,
+    SimComponents v2r20p1, CondDBUI v3r4
+
+- In GaudiPatches v1r1
+  . Fixed bug #67523
+    o Added a tool (DataSvcFileEntries) to retrieve the list of objects in a
+      transient store that belong to the same file as the root node.
+    o Added a modified version of InputCopyStream (in the namespace LHCb) that
+      uses a public instance of DataSvcFileEntries (InputCopyStreamTool) to get
+      the list of objects to copy.
+      This version of the class addresses also the problem of duplicated objects
+      stored in a single event.
+
+- In DAQUtils v1r4
+  . ODINTimeFilter: fix eventNumber format
+
+- In MDF v3r24
+  . Bring MDFWriterLite up to date.
+
+- In Tell1Kernel v1r11
+  . modified STTell1Core.h to compile on windows
+
+- In DDDB v1r31
+  . Changed default tags for 2009 and 2010 data:
+    o head-20100518         for DDDB
+    o head-20100518         for LHCBCOND
+  . Changed default tag for 2009 MC:
+    o head-20100504         for DDDB
+  . Changed default tag for MC09:
+    o MC09-20100430-vc-md100 for SIMCOND
+  . Removed default tags for Upgrade, must be given explicitly
+
+- In DetCond v12r13
+  . Modified the message printed in case of a failure of the heart-beat check to
+    show the time in human-readable format (UTC).
+
+- In DetDescChecks v5r3
+  . Add a test for 2010 DataType
+
+- In RichDet v14r3
+  . Update to allow the detector element to initialize even if the 
+    normal gas conditions are not there. The HLT gas conditions are required
+    in this case. If the normal refarctive index is asked for in the HLT 
+    environment an exception is thrown.
+
+- In VeloDet v13r10
+  . Bug fix in DeVeloRtype: the trajectories for the fit sometimes had the
+    wrong direction, depending on alignment constants.
+
+- In RecEvent v2r28
+  .  src/ProtoParticle.cpp : add protection against NULL smartref to CaloHypo
+     in clearCalo()
+
+- In HltInterfaces v4r0
+  . move interface code used to configure Hlt from a TCK, and to decode Hlt 
+    raw date, out of Hlt/HltBase in the HLT project, so that it can be used
+    elsewhere, i.e. add:
+      Kernel/ANNSvc.h Kernel/ConfigTreeNode.h Kernel/ConfigTreeNodeAlias.h
+      Kernel/IPropertyConfigSvc.h Kernel/PropertyConfig.h Kernel/TCK.h
+
+- In XMLSummaryBase v1r1
+  . Sped up the Merger by several orders of magnitude
+
+- In L0MuonKernel v9r2
+  . Fix to match harware behaviour : topology of tile exchange for M2 has been
+    modified. It affects exchanges across different regions (in practise R2->R3)
+
+- In MuonInterfaces v1r2
+  . improve MuonTrack::AddXTalk method
+
+- In DaVinciInterfaces v2r3
+  . Kernel/IPhysDesktop.h: Finally remove method primaryVertices().
+  . IDVAlgorithm : add various accessors to the tools  
+  . IFilterCriterion: 
+    o add inheritance from (new,light) IParticleFilter 
+    o add "const"-attributes 
+    o remove "reference-to-pointer" qualifier
+  . new files : Kernel/GetIDVAlgorith.h, src/GetIDVAlgorithm.
+                hooks to extract IDVAlgoritm from the context 
+  . Kernel/IRelatedPVFinder.h: Now understands LHCb::RecVertex::Range.
+  . Kernel/IParticleFilter: New, clean interface with single method
+      virtual bool operator()( const LHCb::Particle* ) const = 0;
+      plus non-const version.
+
+- In LoKiCore v10r1
+  . Scalers: 
+    o make sure that one waits at least one tick to avoid an avalanche
+      at the first event when processing in parallel
+    o listen to runchanges with low priority so that random numbers
+      are seeded first..
+
+- In LoKiHlt v3r1
+  . New symbols:
+      HLT_ERRORBITS 
+      HLT_EXECUTIONSTAGE 
+      HLT_NCANDIDATES 
+      HLT_SATURATED
+      HLT_COUNT_ERRORBITS 
+      HLT_COUNT_ERRORBITS_RE 
+          ROUTINGBITS  (void)
+      HLT_ROUTINGBITS  (HLT-fictive)
+     ODIN_ROUTINGBITS  (ODIN-fictive) 
+   helper functions:
+          routingBits (void)
+      HLT_routingBits (fictive HLT)
+     ODIN_routingBits (ficitve ODIN)
+
+- In RichKernel v7r35
+  . HPDdisableTool: add function "ReportHPD" to report HPDs with errors which are
+    not necessarily severe (ie. don't have to lead to disable)
+
+- In CondDBUI v3r4
+  . Add CreateDBLookupFile.py script which generates the full set of files with 
+    CondDB Tier-1s connection settings (authentication.xml and dblookup-SITE.xml)
+    Currently these files are located in AppConfig/conddb.
+  . TagsFilter.py script is upgraded. Now it can insert into bookkeeping db the
+    names of global tags marked with 'BK' data type in SQLDDDB release notes file
+
+- In DAQUtils v1r4, DetCond v12r13, DetCondExample v11r9, LHCbAlgs v2r34p1,
+     LHCbKernel v12r0p1, ProcessorKernel v6r0p1, LoKiHlt v3r1, STKernel v2r1p1,
+     SimComponents v2r20p1
+  . Fixed Windows warnings. LHCbSys project now compiles on VC71 without warnings
+
 </PRE><H1><A NAME=v31r0p1>2010-04-29 LHCbSys v31r0p1</A></H1><PRE>
 This version uses Gaudi v21r9 and LCG_58c
 
