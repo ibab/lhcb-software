@@ -1,9 +1,11 @@
-! $Id: release.notes,v 1.141 2010-05-15 16:50:37 ibelyaev Exp $ 
+! $Id: release.notes,v 1.142 2010-05-24 16:03:12 jpalac Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhys
 ! Responsible : Vanya Belyaev
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
+
+! ========================== LoKiPhys v9r1 2010-05-24 =========================
 
 ! 2010-05-15 - Vanya Belyaev
  - add symbols DPCTAU, DPCTAUERR, DPCTAUFITCHI2 , DPCTAUSIGINFICANCE for 
