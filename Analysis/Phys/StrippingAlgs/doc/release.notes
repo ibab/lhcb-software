@@ -5,6 +5,8 @@
 ! Purpose     : Stripping framework c++ component algorithms
 ! -----------------------------------------------------------------------------
 
+!======================== StrippngAlgs v1r2 2010-05-24 ========================
+
 ! 2010-05-24 - Anton Poluektov 
  - Get rid of warning messages about number of candidates and missing 
    particles. 
