@@ -1,9 +1,15 @@
-!$Id: release.notes,v 1.29 2010-05-21 15:39:08 jpalac Exp $
+!$Id: release.notes,v 1.30 2010-05-24 07:28:57 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DSTWriters
 ! Responsible : Juan PALACIOS
 ! Purpose     : Python code for DST writers.
 !-----------------------------------------------------------------------------
+
+! ======================== DSTWriters v1r6 2010-05-24 ========================
+
+! 2010-05-21 - Juan Palacios
+ - python/DSTWriters/SelDSTWriter.py
+  . Remove EventNodeKiller. New LHCb::InputCopyStream takes care of everything.
 
 ! 2010-05-21 - Juan Palacios
  - python/DSTWriters/dstutils.py
