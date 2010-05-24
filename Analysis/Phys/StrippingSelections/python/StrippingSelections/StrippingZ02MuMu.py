@@ -43,5 +43,72 @@ sequence = SelectionSequence("Seq"+name,
 line = StrippingLine('Z02MuMu'
                            , prescale = 1.
                            , algos = [ sequence ]
+
                            )
+
+
+
+# Create Z0 -> mumu candidates out of std very loose muons
+## ############################################################
+_loosemuons =  DataOnDemand('stdVeryLooseMuons', Location = 'Phys/StdVeryLooseMuons')
+
+
+_Z0loose = CombineParticles(name+"loose",
+                         DecayDescriptor = 'Z0 -> mu+ mu-',
+                         DaughtersCuts = { 'mu+' : mucut , 
+                                           'mu-' : mucut },
+                         MotherCut = "(MM>40*GeV) ",
+                         WriteP2PVRelations = False
+                         )
+                         
+Z0loose = Selection( "Sel"+name+"loose",
+                  Algorithm = _Z0loose,
+                  RequiredSelections = [_loosemuons]
+                  )
+
+# build the SelectionSequence
+sequenceloose = SelectionSequence("Seq"+name+"loose",
+                             TopSelection = Z0loose
+                             )
+# Define the line
+## ############################################################
+lineloose = StrippingLine('Z02MuMuloose'
+                           , prescale = 1.
+                           , algos = [ sequenceloose ]
+
+                           )
+
+
+
+# Create Z0 -> mumu candidates out of NoPIDs  muons
+## ############################################################
+_NoPIDsmuons =  DataOnDemand('stdNoPIDsLooseMuons', Location = 'Phys/StdNoPIDsMuons')
+
+
+_Z0NoPIDs = CombineParticles(name+"NoPIDs",
+                         DecayDescriptor = 'Z0 -> mu+ mu-',
+                         DaughtersCuts = { 'mu+' : mucut , 
+                                           'mu-' : mucut },
+                         MotherCut = "(MM>40*GeV) ",
+                         WriteP2PVRelations = False
+                         )
+                         
+Z0NoPIDs = Selection( "Sel"+name+"NoPIDs",
+                  Algorithm = _Z0NoPIDs,
+                  RequiredSelections = [_NoPIDsmuons]
+                  )
+
+# build the SelectionSequence
+sequenceNoPIDs = SelectionSequence("Seq"+name+"NoPIDs",
+                             TopSelection = Z0NoPIDs
+                             )
+# Define the line
+## ############################################################
+lineNoPIDs = StrippingLine('Z02MuMuNoPIDs'
+                           , prescale = 1.
+                           , algos = [ sequenceNoPIDs ]
+
+                           )
+
+
 

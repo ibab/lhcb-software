@@ -5,6 +5,9 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-05-24 - James Keaveney
+ - added Z and W lines  based on StdVeryLooseMuons and StdNoPIDsMuons.
+
 ! 2010-05-23 - Angelo Carbone
 - update StrippingB2Charged2Body with two new lines with looser cuts
   and larger mass window: >1000 MeV and > 4000 MeV.  

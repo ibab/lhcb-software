@@ -22,8 +22,12 @@ from StrippingSelections import StrippingMuMuSS
 
 stream = StrippingStream("EW")
 stream.appendLines( [ 
-		        StrippingZ02MuMu.line, 
-		        StrippingWMu.line,  
+		        StrippingZ02MuMu.line,
+                        StrippingZ02MuMu.lineloose,
+                        StrippingZ02MuMu.lineNoPIDs,
+		        StrippingWMu.line,
+                        StrippingWMu.lineloose,
+                        StrippingWMu.lineNoPIDs,  
 		        StrippingDY2MuMu.line1,
                         StrippingDY2MuMu.line2,
 		        StrippingDY2MuMu.line3,

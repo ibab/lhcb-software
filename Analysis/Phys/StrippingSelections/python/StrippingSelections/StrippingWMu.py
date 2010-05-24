@@ -41,3 +41,57 @@ line = StrippingLine('W2Mu'
                            , algos = [ sequence ]
                            )
 
+
+# Create W -> mu candidates out of std very loose muons
+## ############################################################
+_loosemuons =  DataOnDemand('stdVeryLooseMuons', Location = 'Phys/StdVeryLooseMuons')
+
+
+_Wloose = FilterDesktop(name+"loose"
+                    , Code = mucut
+                               )
+                         
+Wloose = Selection( "Sel"+name+"loose",
+                  Algorithm = _W,
+                  RequiredSelections = [_loosemuons]
+                  )
+
+# build the SelectionSequence
+sequenceloose = SelectionSequence("Seq"+name+"loose",
+                             TopSelection = Wloose
+                             )
+# Define the line
+## ############################################################
+lineloose = StrippingLine('W2Muloose'
+                           , prescale = 1.
+                           , algos = [ sequenceloose ]
+                           )
+
+
+
+
+
+# Create W -> mu candidates out of std No PIDs muons
+## ############################################################
+_NoPIDsmuons =  DataOnDemand('stdNoPIDsMuons', Location = 'Phys/StdNoPIDsMuons')
+
+
+_WNoPIDs = FilterDesktop(name+"NoPIDs"
+                    , Code = mucut
+                               )
+                         
+WNoPIDs = Selection( "Sel"+name+"NoPIDs",
+                  Algorithm = _WNoPIDs,
+                  RequiredSelections = [_NoPIDsmuons]
+                  )
+
+# build the SelectionSequence
+sequenceNoPIDs = SelectionSequence("Seq"+name+"NoPIDs",
+                             TopSelection = WNoPIDs
+                             )
+# Define the line
+## ############################################################
+lineNoPIDs = StrippingLine('W2MuNoPIDs'
+                           , prescale = 1.
+                           , algos = [ sequenceNoPIDs ]
+                           )
