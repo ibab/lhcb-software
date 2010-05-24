@@ -3,6 +3,10 @@ Package     : AnalysisSys
 Package Coordinator : Juan Palacios
 Purpose     : LHCb analysis packages
 
+</PRE><H1><A NAME=v4r5>2010-05-24 Analysis v4r5 </A></H1><PRE>
+
+ - Based on Phys v9r6 and LHCb v31r1
+
 </PRE><H1><A NAME=v4r4>2010-04-30 Analysis v4r4 </A></H1><PRE>
 
  - Based on Phys v9r5 and LHCb v31r0p1
