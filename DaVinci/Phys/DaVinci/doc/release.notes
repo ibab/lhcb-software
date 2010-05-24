@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.426 2010-05-21 09:51:39 jpalac Exp $
+! $Id: release.notes,v 1.427 2010-05-24 21:31:19 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -8,6 +8,8 @@
 ! Do not forget to update requirements and job/DaVinci_Ganga.py before tagging
 !
 !-----------------------------------------------------------------------------
+
+!========================== DaVinci v25r5 2010-05-24 =======================
 
 ! 2010-05-21 - Juan Palacios
  . Fix DB tag problem.

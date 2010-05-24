@@ -3,6 +3,13 @@ Package             : DaVinciSys
 Package Coordinator : Juan Palacios
 Purpose             : LHCb physics analysis application
 
+</PRE><H1><A NAME=v25r5>2010-05-09 DaVinci v25r5. LHCb v31r1 based version for stripping and re-processing</A></H1><PRE>
+
+  * Fix writingof FSRs
+  * Fix stripping DSTs. No more duplicsted data or cross-stream pollution.
+  * New structure for stripping DST candidates.
+  * New sripping selections.
+
 </PRE><H1><A NAME=v25r4p1>2010-05-09 DaVinci v25r4p1. LHCb v31 based version for stripping and re-processing</A></H1><PRE>
 
   * Patch HltCommon to allow to run new HLT with old DB tags.q
