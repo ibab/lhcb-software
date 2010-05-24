@@ -1,12 +1,12 @@
-# $Id: requirements,v 1.16 2010-05-09 15:21:03 ibelyaev Exp $ 
+# $Id: requirements,v 1.17 2010-05-24 21:34:51 jpalac Exp $ 
 # ============================================================================
-# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.16 $
+# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.17 $
 # ============================================================================
 # Created    : 2005-05-31
 # Maintainer : Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 # ============================================================================
 package            KaliCalo
-version            v4r2p1
+version            v4r2p2
 
 # ================ stucture ==================================================
 branches           cmt doc src python root 
