@@ -5,6 +5,14 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-05-24 - Jibo He for Benoit Viaud
+ - First stripping lines for the D*->D0(K+K-mumu) pi_sl and D*->D0(K+K-pi+pi-) pi_sl
+   and added them in StreamCharm:
+   StrippingDstarD02KKpipiRobust.py
+   StrippingDstarD02KKpipiRegular.py
+   StrippingDstarD02KKmumuRobust.py
+   StrippingDstarD02KKmumuRegular.py
+   
 ! 2010-05-24 - James Keaveney
  - added Z and W lines  based on StdVeryLooseMuons and StdNoPIDsMuons.
 
