@@ -5,6 +5,9 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-05-24 - Thomas BLAKE
+ - Added  StrippingB2XuMuNuConf().K_line() to semileptonic stream
+
 ! 2010-05-24 - Jibo He for Benoit Viaud
  - First stripping lines for the D*->D0(K+K-mumu) pi_sl and D*->D0(K+K-pi+pi-) pi_sl
    and added them in StreamCharm:

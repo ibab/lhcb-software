@@ -28,6 +28,7 @@ stream.appendLines( [
 			Strippingb2DMuX.line, 
 			Strippingb2DMuX.line1
                         # Lines from P. Urquijo, 23-05-10
+                        , StrippingB2XuMuNuConf().K_line()
                         , StrippingB2XuMuNuConf().Pi_line()
                         , StrippingB2XuMuNuConf().PiSS_line()
                         , StrippingB2XuMuNuConf().Rho_line()
