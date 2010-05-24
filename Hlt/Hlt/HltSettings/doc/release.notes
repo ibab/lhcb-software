@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2010-05-24 - V. Gligorov
+ - Remove the soft dihadron lines from all settings. 
+
 ! 2010-05-23 - V. Gligorov
  - Rename the May10 threshold settings committed on the 19th of May
    to Jun10. Add lifetime unbiased hadron lines to Hlt1.

@@ -141,7 +141,7 @@ class Physics_320Vis_300L0_10Hlt1_Feb10 :
                , 'Hlt1MBNoBias'
                , 'Hlt1MBMicroBiasRZVelo', 'Hlt1MBMicroBiasTStation'
                , 'Hlt1SingleHadron',     'Hlt1HadronMonConf1', 'Hlt1HadronMonConf2', 'Hlt1HadronMonComp'
-               , 'Hlt1DiHadron',         'Hlt1DiHadronSoft'
+               , 'Hlt1DiHadron'         
                , 'Hlt1SingleMuonNoIPL0', 'Hlt1SingleMuonIPCL0'
                , 'Hlt1DiMuonNoIPL0Di',  'Hlt1DiMuonNoPVL0Di', 'Hlt1DiMuonIPCL0Di'
                , 'Hlt1DiMuonNoIP2L0',   'Hlt1DiMuonNoPV2L0',  'Hlt1DiMuonIPC2L0'
