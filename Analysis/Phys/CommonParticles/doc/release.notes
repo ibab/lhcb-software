@@ -1,4 +1,4 @@
- )!$Id: release.notes,v 1.181 2010-05-21 08:41:20 pkoppenb Exp $
+ )!$Id: release.notes,v 1.182 2010-05-24 20:27:44 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/CommonParticles
 ! Responsible : P. Koppenburg, Juan Palacios
@@ -7,6 +7,8 @@
 ! When adding a Particle make sure it is appended to one of the Standard* files
 !
 !-----------------------------------------------------------------------------
+
+!========================== CommonParticles v7r2 2010-05-24 ===================
 
 ! 2010-05-21 - Patrick Koppenburg
  - J/psi -> ee Typo fix
