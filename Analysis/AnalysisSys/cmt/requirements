@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.183 2010-05-24 21:16:15 jpalac Exp $
+# $Id: requirements,v 1.184 2010-05-24 21:35:37 jpalac Exp $
 package AnalysisSys
 version v4r5
 
@@ -18,7 +18,7 @@ use  FlavourTagging             v11r3    Phys   # Marco Musy
 
 use  DaVinciMonitors            v1r11    Phys   # Patrick Koppenburg
 use  RichPIDQC                  v1r4     Rich   # Chris Jones
-use  KaliCalo                   v4r2p1   Phys   # Vanya Belyaev
+use  KaliCalo                   v4r2p2   Phys   # Vanya Belyaev
 ####################################################################
 use  DaVinciMCTools     	v9r25p3  Phys   # Juan Palacios
 use  DaVinciAssociators         v9r4p1   Phys   # Vladimir Gligorov
