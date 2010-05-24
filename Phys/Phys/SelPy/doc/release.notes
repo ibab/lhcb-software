@@ -5,6 +5,8 @@
 ! Purpose     : Pure python core components for Selection "Framework".
 !-----------------------------------------------------------------------------
 
+!======================== SelPy v1r2 2010-05-24 ==============================
+
 ! 2010-05-06 - Juan Palacios
  - python/SelPy/selection.py
   . DataOnDemand -> AutoData. Export AutomaticData for backwards compatibility.
