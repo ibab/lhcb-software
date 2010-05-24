@@ -4,6 +4,9 @@
 ! Purpose     : Monitoring algorithms after reconstruction
 !-----------------------------------------------------------------------------
 
+! 2010-05-24 - Giacomo Graziani
+- remove MuonAlignmentMonitor from DaVinci monitoring sequence (moved to Brunel)
+
 ! 2010-05-21 - Rob Lambert
  - Updated dependency on RecConf instead of RecSys for configurable
 
