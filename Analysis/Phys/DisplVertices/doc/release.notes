@@ -5,6 +5,8 @@
 !               of events with exotic displaced vertices
 !-----------------------------------------------------------------------------
 
+!========================== DisplVertices v6r7 2010-05-24 ===================
+
 ! 2010-05-21 - Neal Gauvin
  - Do not take candidates that are upstream the upstream PV.
 
