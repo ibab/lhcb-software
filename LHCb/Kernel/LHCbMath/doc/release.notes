@@ -6,6 +6,25 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2010-05-24 - Vanya Belyaev
+
+ - ParticleParams.h/cpp
+   new object for representation of 4-momentum/reference-point&decay-length  
+   iformation coherent, self-contained way. It is a useful representation 
+   for resuld to variosu fitters.
+   Essetially it is a bit modified verison of 
+     class LHCb::VtxFitParams by wouter Huldbergen 
+     from Phys/DecayTreeFitter package
+
+ - LHCbMath/Types.py
+      fix few typos 
+ - LorentzVectorWithError.h
+      add few useful accessors 
+
+ - cmt/requirements 
+
+     version increment to v3r18 
+
 !========================= LHCbMath v3r17p1 2010-05-21 =======================
 ! 2010-05-18 - Marco Cattaneo
  - LHCbMath/Bit.h, dict/LHCbMathDict.h: Fix Windows compilation warnings

@@ -1,4 +1,4 @@
-// $Id: LHCbMathDict.h,v 1.10 2010-05-18 09:08:21 cattanem Exp $
+// $Id: LHCbMathDict.h,v 1.11 2010-05-24 13:01:38 ibelyaev Exp $
 #ifndef DICT_LHCBMATHDICT_H 
 #define DICT_LHCBMATHDICT_H 1
 
@@ -22,6 +22,7 @@
 #include "LHCbMath/Point3DWithError.h"
 #include "LHCbMath/Vector3DWithError.h"
 #include "LHCbMath/LorentzVectorWithError.h"
+#include "LHCbMath/ParticleParams.h"
 #include <vector>
 #include <list>
 namespace Gaudi
@@ -221,6 +222,8 @@ namespace
     Gaudi::Math::SVectorWithError<3,double> __sv3 ;
     Gaudi::Math::SVectorWithError<4,double> __sv4 ;
     Gaudi::Math::SVectorWithError<5,double> __sv5 ;
+    Gaudi::Math::SVectorWithError<8,double> __sv8 ;
+    Gaudi::Math::SVectorWithError<9,double> __sv9 ;
     //
     std::vector<Gaudi::Math::ValueWithError>  _dver ;
   };

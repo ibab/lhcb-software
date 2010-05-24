@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Types.py,v 1.4 2010-03-22 14:08:19 ibelyaev Exp $
+# $Id: Types.py,v 1.5 2010-05-24 13:01:38 ibelyaev Exp $
 # =============================================================================
 ## @file
 #
@@ -70,7 +70,7 @@ Simple file to provide 'easy' access in python for the basic ROOT::Math classes
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
 __date__    = " 2009-09-12 "
-__version__ = " CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $ "
+__version__ = " CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $ "
 # =============================================================================
 __all__     = ()  ## nothing to be imported !
 # =============================================================================
@@ -114,11 +114,14 @@ if not hasattr ( Gaudi , 'Vector4' )  :
     Gaudi.Vector4      = _RM.SVector( 'double' , 4 )
 if not hasattr ( Gaudi , 'Vector5' )  :
     Gaudi.Vector5      = _RM.SVector( 'double' , 5 )
+if not hasattr ( Gaudi , 'Vector9' )  :
+    Gaudi.Vector9      = _RM.SVector( 'double' , 9 )
 
 if not hasattr ( Gaudi.Math , 'Vector2' ) : Gaudi.Math.Vector2 = Gaudi.Vector2 
 if not hasattr ( Gaudi.Math , 'Vector3' ) : Gaudi.Math.Vector3 = Gaudi.Vector3 
 if not hasattr ( Gaudi.Math , 'Vector4' ) : Gaudi.Math.Vector4 = Gaudi.Vector4 
 if not hasattr ( Gaudi.Math , 'Vector5' ) : Gaudi.Math.Vector5 = Gaudi.Vector5 
+if not hasattr ( Gaudi.Math , 'Vector9' ) : Gaudi.Math.Vector9 = Gaudi.Vector9 
 
 if not hasattr ( Gaudi , 'SymMatrix2x2' ) :
     Gaudi.SymMatrix2x2 = _RM.SMatrix('double,2,2,ROOT::Math::MatRepSym<double,2>')
@@ -133,6 +136,9 @@ if not hasattr ( Gaudi , 'SymMatrix6x6' ) :
 ## LHCb::Particle
 if not hasattr ( Gaudi , 'SymMatrix7x7' ) :
     Gaudi.SymMatrix7x7 = _RM.SMatrix('double,7,7,ROOT::Math::MatRepSym<double,7>')
+## Gaudi::Math::ParticleParams 
+if not hasattr ( Gaudi , 'SymMatrix8x8' ) :
+    Gaudi.SymMatrix8x8 = _RM.SMatrix('double,8,8,ROOT::Math::MatRepSym<double,8>')
 ## LHCb:TwoProngVertex
 if not hasattr ( Gaudi , 'SymMatrix9x9' ) :
     Gaudi.SymMatrix9x9 = _RM.SMatrix('double,9,9,ROOT::Math::MatRepSym<double,9>')
@@ -142,9 +148,10 @@ if not hasattr ( Gaudi.Math , 'SymMatrix2x2' ) : Gaudi.Math.SymMatrix3x3 = Gaudi
 if not hasattr ( Gaudi.Math , 'SymMatrix3x3' ) : Gaudi.Math.SymMatrix3x3 = Gaudi.SymMatrix3x3 
 if not hasattr ( Gaudi.Math , 'SymMatrix4x4' ) : Gaudi.Math.SymMatrix4x4 = Gaudi.SymMatrix4x4
 if not hasattr ( Gaudi.Math , 'SymMatrix5x5' ) : Gaudi.Math.SymMatrix5x5 = Gaudi.SymMatrix5x5 
-if not hasattr ( Gaudi.Math , 'SymMatrix6x6' ) : Gaudi.Math.SymMatrix5x5 = Gaudi.SymMatrix6x6 
-if not hasattr ( Gaudi.Math , 'SymMatrix7x7' ) : Gaudi.Math.SymMatrix5x5 = Gaudi.SymMatrix7x7 
-if not hasattr ( Gaudi.Math , 'SymMatrix9x9' ) : Gaudi.Math.SymMatrix5x5 = Gaudi.SymMatrix9x9 
+if not hasattr ( Gaudi.Math , 'SymMatrix6x6' ) : Gaudi.Math.SymMatrix6x6 = Gaudi.SymMatrix6x6 
+if not hasattr ( Gaudi.Math , 'SymMatrix7x7' ) : Gaudi.Math.SymMatrix7x7 = Gaudi.SymMatrix7x7 
+if not hasattr ( Gaudi.Math , 'SymMatrix8x8' ) : Gaudi.Math.SymMatrix8x8 = Gaudi.SymMatrix8x8 
+if not hasattr ( Gaudi.Math , 'SymMatrix9x9' ) : Gaudi.Math.SymMatrix9x9 = Gaudi.SymMatrix9x9 
 
 #
 # specific matrices for 'tracks'
@@ -181,6 +188,8 @@ if not hasattr ( Gaudi.Math , 'SVector4WithError' ) :
     Gaudi.Math.SVector4WithError = cpp.Gaudi.Math.SVectorWithError(4,'double')
 if not hasattr ( Gaudi.Math , 'SVector5WithError' ) :
     Gaudi.Math.SVector5WithError = cpp.Gaudi.Math.SVectorWithError(5,'double')
+if not hasattr ( Gaudi.Math , 'SVector9WithError' ) :
+    Gaudi.Math.SVector9WithError = cpp.Gaudi.Math.SVectorWithError(9,'double')
 
 if not hasattr ( Gaudi      , 'XYZLine' ) : Gaudi.XYZLine     = Gaudi.Math.XYZLine
 if not hasattr ( Gaudi      , 'Line3D'  ) : Gaudi.Line3D      = Gaudi.Math.XYZLine

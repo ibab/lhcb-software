@@ -22,21 +22,29 @@
   <class name    = "Gaudi::Math::Functions"         />
   <class pattern = "Gaudi::Math::SVectorWithError*" />
   <class name    = "std::vector<Gaudi::Math::ValueWithError>" />
+  
+  <class name    = "Gaudi::Math::ParticleParams"     />
+  <function name = "Gaudi::Math::fitMass"            />
 
-<exclusion>
-  <class name = "ROOT::Math::SVector&lt;double,2&gt;"     />
-  <class name = "ROOT::Math::SVector&lt;double,4&gt;"     />
-  <class name = "ROOT::Math::SVector&lt;double,3&gt;"     />
-  <class name = "ROOT::Math::SVector&lt;double,5&gt;"     />
-  <class name = "Gaudi::Math::SVectorWithError&lt;2,double&gt;::Value"       />
-  <class name = "Gaudi::Math::SVectorWithError&lt;2,double&gt;::Covariance"  />
-  <class name = "Gaudi::Math::SVectorWithError&lt;3,double&gt;::Value"       />
-  <class name = "Gaudi::Math::SVectorWithError&lt;3,double&gt;::Covariance"  />
-  <class name = "Gaudi::Math::SVectorWithError&lt;4,double&gt;::Value"       />
-  <class name = "Gaudi::Math::SVectorWithError&lt;4,double&gt;::Covariance"  />
-  <class name = "Gaudi::Math::SVectorWithError&lt;5,double&gt;::Value"       />
-  <class name = "Gaudi::Math::SVectorWithError&lt;5,double&gt;::Covariance"  />
-</exclusion> 
-
+  <exclusion>
+    <class name = "ROOT::Math::SVector&lt;double,2&gt;"     />
+    <class name = "ROOT::Math::SVector&lt;double,4&gt;"     />
+    <class name = "ROOT::Math::SVector&lt;double,3&gt;"     />
+    <class name = "ROOT::Math::SVector&lt;double,5&gt;"     />
+    <class name = "ROOT::Math::SVector&lt;double,8&gt;"     />
+    <class name = "Gaudi::Math::SVectorWithError&lt;2,double&gt;::Value"       />
+    <class name = "Gaudi::Math::SVectorWithError&lt;2,double&gt;::Covariance"  />
+    <class name = "Gaudi::Math::SVectorWithError&lt;3,double&gt;::Value"       />
+    <class name = "Gaudi::Math::SVectorWithError&lt;3,double&gt;::Covariance"  />
+    <class name = "Gaudi::Math::SVectorWithError&lt;4,double&gt;::Value"       />
+    <class name = "Gaudi::Math::SVectorWithError&lt;4,double&gt;::Covariance"  />
+    <class name = "Gaudi::Math::SVectorWithError&lt;5,double&gt;::Value"       />
+    <class name = "Gaudi::Math::SVectorWithError&lt;5,double&gt;::Covariance"  />
+    <class name = "Gaudi::Math::SVectorWithError&lt;8,double&gt;::Value"       />
+    <class name = "Gaudi::Math::SVectorWithError&lt;8,double&gt;::Covariance"  />
+    <class name = "Gaudi::Math::SVectorWithError&lt;9,double&gt;::Value"       />
+    <class name = "Gaudi::Math::SVectorWithError&lt;9,double&gt;::Covariance"  />
+  </exclusion> 
+  
 
 </lcgdict>

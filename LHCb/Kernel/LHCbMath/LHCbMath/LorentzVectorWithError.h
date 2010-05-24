@@ -1,4 +1,4 @@
-// $Id: LorentzVectorWithError.h,v 1.3 2009-09-12 19:29:26 ibelyaev Exp $
+// $Id: LorentzVectorWithError.h,v 1.4 2010-05-24 13:01:38 ibelyaev Exp $
 // ============================================================================
 #ifndef LHCBMATH_LORENTZVECTORWITHERROR_H 
 #define LHCBMATH_LORENTZVECTORWITHERROR_H 1
@@ -7,6 +7,7 @@
 // ============================================================================
 // GaudiKernel
 // ============================================================================
+#include "GaudiKernel/Kernel.h"
 #include "GaudiKernel/SymmetricMatrixTypes.h"
 #include "GaudiKernel/Vector4DTypes.h"
 #include "GaudiKernel/GenericVectorTypes.h"
@@ -14,6 +15,7 @@
 // LHCbMath
 // ============================================================================
 #include "LHCbMath/SVectorWithError.h"
+#include "LHCbMath/ValueWithError.h"
 // ============================================================================
 /** @file 
  *  Collection of useful objects with associated "covarinaces".
@@ -33,7 +35,7 @@ namespace Gaudi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date   2009-06-12
      */
-    class LorentzVectorWithError : public Gaudi::LorentzVector
+    class GAUDI_API LorentzVectorWithError : public Gaudi::LorentzVector
     {
     public:
       // ======================================================================
@@ -139,11 +141,41 @@ namespace Gaudi
       /** evaluate  sigma mass 
        *  @see Gaudi::Math::sigmamass
        */
-      double sigmaMass() const ;                        // evaluate  sigma mass 
+      double sigmaMass   () const ;                     // evaluate  sigma mass 
+      // ======================================================================
+      /** evaluate  sigma2 mass 
+       *  @see Gaudi::Math::sigma2mass
+       */
+      double sigma2Mass  () const ;                  //   evaluate  sigma2 mass 
+      /** evaluate  sigma2 mass2 
+       *  @see Gaudi::Math::sigma2mass
+       */
+      double sigma2Mass2 () const ;                   // evaluate  sigma2 mass2 
       /** evaluate chi2-mass
        *  @see Gaudi::Math::chi2mass
        */
       double chi2mass ( const double m0 ) const ;         // evaluate chi2-mass
+      // ======================================================================
+    public:
+      // ======================================================================
+      /** evaluate sigma^2(p)
+       *  @see Gaudi::Math::sigma2p
+       */          
+      double sigma2p() const ;                           // evaluate sigma^2(p)
+      // ======================================================================
+      /** evaluate sigma(p)
+       *  @see Gaudi::Math::sigmap
+       */           
+      double sigmap () const ;                           //   evaluate sigma(p)
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// get the mass with error 
+      Gaudi::Math::ValueWithError massWithError     () const ;
+      /// get the energy with error 
+      Gaudi::Math::ValueWithError energyWithError   () const ;
+      /// get the momentum with error 
+      Gaudi::Math::ValueWithError momentumWithError () const ;
       // ======================================================================
     public: // helper operators for Python
       // ======================================================================

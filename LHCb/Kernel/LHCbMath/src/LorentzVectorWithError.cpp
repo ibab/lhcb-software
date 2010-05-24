@@ -1,4 +1,4 @@
-// $Id: LorentzVectorWithError.cpp,v 1.3 2009-09-12 19:29:27 ibelyaev Exp $
+// $Id: LorentzVectorWithError.cpp,v 1.4 2010-05-24 13:01:38 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -300,10 +300,48 @@ double Gaudi::Math::LorentzVectorWithError::chi2
 double Gaudi::Math::LorentzVectorWithError::sigmaMass () const 
 { return Gaudi::Math::sigmamass ( vector4d() , cov2() ) ; }
 // ============================================================================
+// evaluate  sigma2 mass 
+// ============================================================================
+double Gaudi::Math::LorentzVectorWithError::sigma2Mass () const 
+{ return Gaudi::Math::sigma2mass ( vector4d() , cov2() ) ; }
+// ============================================================================
+// evaluate  sigma2 mass2 
+// ============================================================================
+double Gaudi::Math::LorentzVectorWithError::sigma2Mass2 () const 
+{ return Gaudi::Math::sigma2mass2 ( vector4d() , cov2() ) ; }
+// ============================================================================
 // evaluate  chi2-mass
 // ============================================================================
 double Gaudi::Math::LorentzVectorWithError::chi2mass ( const double m0 ) const 
 { return Gaudi::Math::chi2mass( m0 , vector4d() , cov2() ) ; }
+// ============================================================================
+// evaluate  sigma^2 p 
+// ============================================================================
+double Gaudi::Math::LorentzVectorWithError::sigma2p () const 
+{ return Gaudi::Math::sigma2p ( vector4d() , cov2() ) ; }
+// ============================================================================
+// evaluate  sigma p 
+// ============================================================================
+double Gaudi::Math::LorentzVectorWithError::sigmap () const 
+{ return Gaudi::Math::sigmap  ( vector4d() , cov2() ) ; }
+// ============================================================================
+// get the mass with erorr 
+// ============================================================================
+Gaudi::Math::ValueWithError 
+Gaudi::Math::LorentzVectorWithError::massWithError() const 
+{ return Gaudi::Math::ValueWithError ( M() , sigma2Mass() ) ; }
+// ============================================================================
+// get the energy with erorr 
+// ============================================================================
+Gaudi::Math::ValueWithError 
+Gaudi::Math::LorentzVectorWithError::energyWithError() const
+{ return Gaudi::Math::ValueWithError ( E() , cov2()(3,3) ) ; }
+// ============================================================================
+// get the momentum with erorr 
+// ============================================================================
+Gaudi::Math::ValueWithError 
+Gaudi::Math::LorentzVectorWithError::momentumWithError() const
+{ return Gaudi::Math::ValueWithError ( P() , sigma2p() ) ; }
 // ============================================================================
 
 

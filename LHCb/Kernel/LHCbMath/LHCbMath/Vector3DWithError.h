@@ -1,4 +1,4 @@
-// $Id: Vector3DWithError.h,v 1.2 2009-09-12 19:29:26 ibelyaev Exp $
+// $Id: Vector3DWithError.h,v 1.3 2010-05-24 13:01:38 ibelyaev Exp $
 // ============================================================================
 #ifndef LHCBMATH_VECTOR3DWITHERROR_H 
 #define LHCBMATH_VECTOR3DWITHERROR_H 1
@@ -7,6 +7,7 @@
 // ============================================================================
 // GaudiKernel
 // ============================================================================
+#include "GaudiKernel/Kernel.h"
 #include "GaudiKernel/SymmetricMatrixTypes.h"
 #include "GaudiKernel/GenericVectorTypes.h"
 #include "GaudiKernel/Vector3DTypes.h"
@@ -33,7 +34,7 @@ namespace Gaudi
     class Point3DWithError  ;
     class Vector3DWithError ;
     // ========================================================================
-    class Vector3DWithError : public Gaudi::XYZVector 
+    class GAUDI_API Vector3DWithError : public Gaudi::XYZVector 
     {
     public:
       // ======================================================================
