@@ -12,6 +12,7 @@ from StrippingConf.StrippingStream import StrippingStream
 
 from StrippingSelections import StrippingLambdaNoPID
 from StrippingSelections import StrippingMuIDCalib
+from StrippingSelections import StrippingHltErrorBits
 from StrippingSelections.StrippingInclPhi import StrippingInclPhiConf
 
 stream = StrippingStream("Calibration")
@@ -26,3 +27,5 @@ stream.appendLines( [
                         StrippingInclPhiConf().InclPhiLowPtPhiLine(),
                         StrippingInclPhiConf().InclPhiLDLine()
 		    ] )
+
+stream.appendLines (StrippingHltErrorBits.lines)
