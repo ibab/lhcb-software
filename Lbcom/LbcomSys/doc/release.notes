@@ -6,6 +6,45 @@
 !             : project contain components used by all applications except Gauss
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v9r3>2010-05-25 LbcomSys v9r3</A></H1><PRE>
+This version uses Gaudi v21r9 and LHCb v31r1
+
+- Packages modified: HltDAQ v2r0, L0Calo v11r2, L0DU v10r7, RichDAQ v3r27,
+    RichTools v2r29p4, STTools v4r1, VeloDAQ v5r2, VeloPixTools v1r0p1
+
+- In HltDAQ v2r0
+  . move HLT configuration implementation from HltCommon to here so it can
+    be used during readback without having a runtime dependency on the HLT
+    project
+
+- In L0Calo v11r2
+  . src/L0CaloCompare.cpp/.h: add monitoring histograms to count error rates
+
+- In L0DU v10r7
+  . ReplayL0DU : new property added to L0Conf to allow the rerunning of the 
+    L0DU alone starting from the L0DU banks (with for example a new L0TCK).
+
+- In RichDAQ v3r27
+  . Turn back on the Event ID cross checks within the RICH data (but not with
+    the ODIN which does not work).
+  . Turn back on the BXID check between the RICH and the ODIN.
+
+- In RichTools v2r29p4
+  . Add missing HLT mode flag to refractiveIndex call in 
+    Rich::TabulatedRefractiveIndex and Rich::SnellsLawRefraction
+
+- In STTools v4r1
+  . Added STOffline Conf, which replaces the files Brunel.opts and 
+    Brunel_EarlyData.opts
+
+- In VeloDAQ v5r2
+  . Make lite decoding check full bank length, remove lite and full clusters 
+    from the containers for corrupted TELL1 banks then continue normally
+  . Review warnings/errors
+
+- In VeloPixTools v1r0p1
+  . In requirements, replace HEAD by v* in use statements
+
 </PRE><H1><A NAME=v9r2p1>2010-04-29 LbcomSys v9r2p1</A></H1><PRE>
 This version uses Gaudi v21r9 and LHCb v31r0p1
 
