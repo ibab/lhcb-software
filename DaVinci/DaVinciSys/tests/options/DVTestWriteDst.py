@@ -1,6 +1,6 @@
 ########################################################################
 #
-# $Id: DVTestWriteDst.py,v 1.10 2009-11-30 10:47:18 jpalac Exp $
+# $Id: DVTestWriteDst.py,v 1.11 2010-05-25 11:04:28 jpalac Exp $
 #
 # Options for a DaVinci job creating DSTs
 #
@@ -27,8 +27,7 @@ jpsi.Code = "ALL"
 from PhysSelPython.Wrappers import Selection, DataOnDemand, SelectionSequence
 from Configurables import SelDSTWriter
 
-MyLooseJpsi = DataOnDemand('DODStdLooseJpsi2MuMu',
-                           Location = 'Phys/StdLooseJpsi2MuMu')
+MyLooseJpsi = DataOnDemand(Location = 'Phys/StdLooseJpsi2MuMu')
 
 #
 # Loop over three overlapping mass zones

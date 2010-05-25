@@ -7,7 +7,7 @@
 
 __author__ = 'R. Lambert'
 __date__ = 'November 2009'
-__version__ = '$Revision: 1.2 $'
+__version__ = '$Revision: 1.3 $'
 
 import GaudiKernel.SystemOfUnits as Units
 from Gaudi.Configuration import *
@@ -18,7 +18,7 @@ MuForTests = FilterDesktop("_bachelorMu")
 MuForTests.Code = "((ISLONG) & (PT > 250.*MeV))"
 
 from PhysSelPython.Wrappers import Selection, DataOnDemand
-MyStdMuons = DataOnDemand('DODStdLooseMuons', Location = 'StdLooseMuons')
+MyStdMuons = DataOnDemand(Location = 'Phys/StdLooseMuons')
 
 SelMuForTests = Selection("BachelorMuForTests",
                           Algorithm=MuForTests,
