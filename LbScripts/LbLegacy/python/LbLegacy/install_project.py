@@ -72,6 +72,7 @@ fix_perm = True
 show_compatible_configs = False
 install_binary = False
 latest_data_link = False
+dev_install = False
 
 #----------------------------------------------------------------------------------
 
@@ -105,6 +106,7 @@ def usage() :
       -n or -nocheck     : no md5 check of the tar balls
       --retry=<nb>       : nb of retries for the download (default=1)
       -C                 : show compatible CMTCONFIGs for that platform
+      --dev-install      : use the devel location for the self-update
 
     Perequisite:
       requires python version >= 2.3.4 on Win32 and python >=2.3 on Linux
@@ -1085,7 +1087,10 @@ def getMySelf():
     new_install = "latest_%s" % the_install
     if os.path.exists(new_install) :
         os.remove(new_install)
-    getFile(url_dist, the_install)
+    inst_loc = url_dist
+    if dev_install :
+        inst_loc += "devel"
+    getFile(inst_loc, the_install)
     if fix_perm :
         changePermissions(new_install, recursive=False)
     latest_version = os.popen("python %s --version" % new_install).read()[:-1]
@@ -1963,6 +1968,7 @@ def parseArgs():
     global install_binary
     global compat_version
     global latest_data_link
+    global dev_install
 
 
 
@@ -2040,6 +2046,8 @@ def parseArgs():
             fix_perm = False
         if key == '--overwrite':
             overwrite_mode = True
+        if key == "--dev-install" :
+            dev_install = True
 
     if not pname and len(args) > 0 :
         pname = args[0]
