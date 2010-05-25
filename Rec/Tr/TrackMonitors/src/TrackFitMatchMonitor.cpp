@@ -307,8 +307,12 @@ StatusCode TrackFitMatchMonitor::execute()
 
 void TrackFitMatchMonitor::plotCurvatureMatch(const LHCb::Track& track)
 {
-  // inspired by the problems we see in the field. see also TT field study
-  
+  // check input
+  if ((&track == NULL) || (track.fitResult() == NULL)) {
+    return;
+  }
+ 
+  // inspired by the problems we see in the field. see also TT field study 
   if( track.hasT() && track.hasVelo() && track.hasTT() && std::abs(track.firstState().qOverP()) > 0 ) {
     
     // first make sure that we have hits in all 3 T stations
