@@ -8,7 +8,7 @@ Useage:
 __author__ = "Juan PALACIOS juan.palacios@cern.ch"
 
 import sys, getopt
-
+from GaudiConf.Configuration import *
 from ROOT import TFile, TTree, TObject, TList
 
 def printTree( filename, outputfilename = 'out.txt'  ) :
