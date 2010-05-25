@@ -81,7 +81,9 @@ class Directory(object):
         default_acl[os.environ["USER"]] = "rlidwka"        
         self._setACL(default_acl)
         if recursive :
-            for root, dirs, files in os.walk(self._name, topdown=False) :
+            for data in os.walk(self._name, topdown=False) :
+                root = data[0]
+                dirs = data[1]
                 for d in dirs :
                     dirpath = os.path.join(root, d)
                     d_inst = Directory(dirpath)
@@ -100,7 +102,9 @@ class Directory(object):
                 raise NoACL("You cannot add an empty list for %s" % g)
         self._setACL(dir_acl)
         if recursive :
-            for root, dirs, files in os.walk(self._name, topdown=False) :
+            for data in os.walk(self._name, topdown=False) :
+                root = data[0]
+                dirs = data[1]
                 for d in dirs :
                     dirpath = os.path.join(root, d)
                     d_inst = Directory(dirpath)
@@ -118,7 +122,9 @@ class Directory(object):
                 raise NoACL("You cannot remove an empty list for %s" % g)
         self._setACL(dir_acl)
         if recursive :
-            for root, dirs, files in os.walk(self._name, topdown=False) :
+            for data in os.walk(self._name, topdown=False) :
+                root = data[0]
+                dirs = data[1]
                 for d in dirs :
                     dirpath = os.path.join(root, d)
                     d_inst = Directory(dirpath)
@@ -133,7 +139,9 @@ class Directory(object):
                         dir_acl[g] = dir_acl[g].replace(p, "")
         self._setACL(dir_acl)
         if recursive :
-            for root, dirs, files in os.walk(self._name, topdown=False) :
+            for data in os.walk(self._name, topdown=False) :
+                root = data[0]
+                dirs = data[1]
                 for d in dirs :
                     dirpath = os.path.join(root, d)
                     d_inst = Directory(dirpath)
@@ -142,13 +150,15 @@ class Directory(object):
         dir_acl = self.getACL()
         perm_to_add = "idwk"
         for g in dir_acl.keys() :
-            if g != "system:anyuser" :
+            if g != "system:anyuser" and "a" in dir_acl[g]:
                 for p in perm_to_add :
                     if p not in dir_acl[g] :
                         dir_acl[g] = dir_acl[g] + p
         self._setACL(dir_acl)
         if recursive :
-            for root, dirs, files in os.walk(self._name, topdown=False) :
+            for data in os.walk(self._name, topdown=False) :
+                root = data[0]
+                dirs = data[1]
                 for d in dirs :
                     dirpath = os.path.join(root, d)
                     d_inst = Directory(dirpath)

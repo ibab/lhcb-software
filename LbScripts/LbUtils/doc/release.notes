@@ -1,3 +1,8 @@
+2010-05-25  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbUtils/afs/directory.py: updated the behavior of the unlockACL method. Now
+	it only readds "idwk" to the members who have already the "a" (administrate) permission
+
 2010-05-21  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbUtils/afs/directory.py: added the lockAFSDir and unlockAFSDir to
