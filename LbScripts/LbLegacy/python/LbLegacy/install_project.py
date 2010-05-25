@@ -1078,22 +1078,29 @@ def getProjectTar(tar_list, already_present_list=None):
 # Autoupdate myself
 def getMySelf():
     log = logging.getLogger()
-    new_install = 'latest_install_project.py'
-    if os.path.exists("latest_install_project.py") :
-        os.remove("latest_install_project.py")
-    getFile(url_dist, 'install_project.py')
+    here = os.getcwd()
+    mysiteroot = os.environ["MYSITEROOT"].split()[0]
+    os.chdir(mysiteroot)
+    the_install = "install_project.py"
+    new_install = "latest_%s" % the_install
+    if os.path.exists(new_install) :
+        os.remove(new_install)
+    getFile(url_dist, the_install)
     if fix_perm :
-        changePermissions('latest_install_project.py', recursive=False)
+        changePermissions(new_install, recursive=False)
     latest_version = os.popen("python %s --version" % new_install).read()[:-1]
     if script_version < latest_version :
         log.warning("You are running an old version of this script - latest version: %s" % latest_version)
         log.warning("Restarting with the latest one")
-        if os.path.exists("install_project.py.old") :
-            log.debug("Removing install_project.py.old")
-            os.remove("install_project.py.old")
-        shutil.copy("install_project.py", "install_project.py.old")
-        shutil.copy("latest_install_project.py", "install_project.py")
-        os.execv(sys.executable, [sys.executable] + sys.argv)
+        old_install = "%s.old" % the_install
+        if os.path.exists(old_install) :
+            log.debug("Removing %s" % old_install)
+            os.remove(old_install)
+        shutil.copy(the_install, old_install)
+        shutil.copy(new_install, the_install)
+        newscript = os.path.join(mysiteroot, the_install)
+        os.execv(sys.executable, [sys.executable, newscript] + sys.argv[1:])
+    os.chdir(here)
 
 #
 # download necessary scripts ==============================================
@@ -1439,6 +1446,7 @@ def _multiPathJoin(path, subdir):
         pathlist.append(os.path.join(d, subdir))
     return os.pathsep.join(pathlist)
 
+
 def createBaseDirs(pname, pversion):
     global multiple_mysiteroot
     global cmtconfig
@@ -1640,10 +1648,8 @@ def runInstall(pname, pversion, binary=None):
     if full_flag :
         log.info('download debug version and reconfigure it')
         binary_dbg = getBinaryDbg(binary)
-        binary_opt = binary
         if isBinaryDbg(binary) :
             binary_dbg = binary
-            binary_opt = getBinaryOpt(binary)
         full_project_list, full_html_list = getProjectList(pname, pversion, binary_dbg)
         project_list.update(full_project_list)
         html_list += full_html_list
@@ -1910,7 +1916,8 @@ def untarFile(fname):
 
 def checkBinaryName(binary):
     global make_flag
-    import LbConfiguration.Platform
+    
+    from LbConfiguration.Platform import NativeMachine, isBinaryOpt, getBinaryDbg, binary_list
 
     log = logging.getLogger()
 
@@ -1920,7 +1927,7 @@ def checkBinaryName(binary):
             binary = os.environ["CMTCONFIG"]
             log.warning("Extracting CMTCONFIG from the environment: %s" % binary)
         else :
-            m = LbConfiguration.Platform.NativeMachine()
+            m = NativeMachine()
             plist = m.CMTSupportedConfig(debug=True)
             if plist :
                 binary = plist[0]
@@ -1932,13 +1939,13 @@ def checkBinaryName(binary):
 
     os.environ['CMTCONFIG'] = binary
     os.environ['CMTDEB'] = binary
-    if LbConfiguration.Platform.isBinaryOpt(binary) :
-        os.environ['CMTDEB'] = LbConfiguration.Platform.getBinaryDbg(binary)
+    if isBinaryOpt(binary) :
+        os.environ['CMTDEB'] = getBinaryDbg(binary)
     # if a win32 binary is installed from a non win32 platform then do not cmt config
     if sys.platform != 'win32' and binary.find('win32') != -1 :
         make_flag = None
 
-    if binary not in LbConfiguration.Platform.binary_list:
+    if binary not in binary_list:
         print 'BE CAREFUL - your CMTCONFIG %s is not part of the lhcb_binary %s' % (os.getenv('CMTCONFIG'), LbConfiguration.Platform.binary_list)
         print 'do you want to continue? [yes|no]'
         next = sys.stdin.readline()

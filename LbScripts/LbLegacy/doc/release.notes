@@ -1,5 +1,7 @@
 2010-05-25  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
+	* python/LbLegacy/install_project.py: fixed endless loop if the install_project.py script is not in the
+	current directory and needs an update.
 	* scripts/archive_project: use the unlockAFSDir to reenable write permission to the project
 	to be archived.
 
