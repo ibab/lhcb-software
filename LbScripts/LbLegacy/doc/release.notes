@@ -1,3 +1,8 @@
+2010-05-25  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* scripts/archive_project: use the unlockAFSDir to reenable write permission to the project
+	to be archived.
+
 2010-05-21  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* scripts/mkproject: added ACL read-only locking and unlocking.
