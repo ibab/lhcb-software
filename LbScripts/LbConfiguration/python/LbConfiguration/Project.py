@@ -14,7 +14,7 @@ project_names = ["Gaudi", "LHCb", "Lbcom", "Rec", "Boole", "Brunel" ,
                  "Online", "Euler", "Geant4", "DaVinci", "Bender", "Orwell",
                  "Panoramix", "LbScripts", "Dirac", "LHCbGrid", "Panoptes",
                  "Curie", "Vetra", "Compat", "VanDerMeer", "Ganga",
-                 "LHCbDirac", "Integration", "Erasmus" ]
+                 "LHCbDirac", "Integration", "Erasmus", "Feicim" ]
 
 # ------------------------------------------------------------------------------------
 
@@ -320,6 +320,9 @@ Erasmus.setAFSVolumeName("ERASM")#IGNORE:E0602
 # Euler
 Euler.setApplicationPackage("Trig/Euler")#IGNORE:E0602
 Euler.setFullSize(6000)#IGNORE:E0602
+
+#Feicim
+Feicim.setApplicationPackage("Feicim")#IGNORE:E0602
 
 # Ganga
 Ganga.setLCGTarBallName("LCGGanga")#IGNORE:E0602

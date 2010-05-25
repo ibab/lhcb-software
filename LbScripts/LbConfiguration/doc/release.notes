@@ -1,3 +1,7 @@
+2010-05-25  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbConfiguration/Project.py: added the support for the Feicim project.
+
 2010-05-07  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* scripts/generateLogin: completed the fixing of the wrapper scripts generation.
