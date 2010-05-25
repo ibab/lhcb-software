@@ -4,6 +4,9 @@
 ! Purpose     : Package for track data quality monitoring algorithms
 !-----------------------------------------------------------------------------
 
+! 2010-05-25 Nicola Chiapolini
+ - fixed segfault in TrackFitMatchMonitor::plotCurvatureMatch()
+
 !========================== TrackMonitors v1r25 2010-05-21 ==================
 ! 2010-05-20 Nicola Chiapolini
  - fixed segfault in TrackMonitor::fillHistogram when kalfit was missing

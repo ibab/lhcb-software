@@ -341,27 +341,30 @@ void TrackFitMatchMonitor::plotCurvatureMatch(const LHCb::Track& track)
       }
       const LHCb::FitNode *fitNodeAfter = dynamic_cast<const LHCb::FitNode*>(nodeAfter) ;
       const LHCb::FitNode *fitNodeBefore = dynamic_cast<const LHCb::FitNode*>(nodeBefore) ;
-      
-      // NOTE: we dont have the filtered states, so we take the
-      // predicted state at the next node! for q/p this is okay. don't
-      // do this for any of the other parameters!!
-      
-      double qopT      = fitNodeBefore->predictedStateForward().qOverP() ;
-      double qop       = fitNodeBefore->state().qOverP() ;
-      double qopVeloTT = fitNodeAfter->predictedStateBackward().qOverP() ;
-      
-      double qoperrT = std::sqrt(fitNodeBefore->predictedStateForward().covariance()(4,4));
-      double qoperrVeloTT = std::sqrt(fitNodeAfter->predictedStateForward().covariance()(4,4));
-      
-      m_curvatureRatioTToLongH1->fill(qopT / qop ) ;
-      m_curvatureRatioVeloTTToLongH1->fill(qopVeloTT / qop ) ;
-      m_curvatureRatioTToLongPullH1->fill( (qopT - qop) / qoperrT ) ;
-      m_curvatureRatioVeloTTToLongPullH1->fill( (qopVeloTT - qop) / qoperrVeloTT ) ;
-      
-      if( std::abs(qopT / qop - 1 ) < 1 ) 
-        m_curvatureRatioTToLongPr->fill(qop * Gaudi::Units::GeV, qopT / qop ) ;
-      if( std::abs(qopVeloTT / qop - 1 ) < 1 ) 
-	m_curvatureRatioVeloTTToLongPr->fill(qop * Gaudi::Units::GeV, qopVeloTT / qop ) ;
+
+      if ((fitNodeBefore != NULL) && (fitNodeAfter != NULL)) {
+
+	// NOTE: we dont have the filtered states, so we take the
+	// predicted state at the next node! for q/p this is okay. don't
+	// do this for any of the other parameters!!
+
+	double qopT      = fitNodeBefore->predictedStateForward().qOverP() ;
+	double qop       = fitNodeBefore->state().qOverP() ;
+	double qopVeloTT = fitNodeAfter->predictedStateBackward().qOverP() ;
+
+	double qoperrT = std::sqrt(fitNodeBefore->predictedStateForward().covariance()(4,4));
+	double qoperrVeloTT = std::sqrt(fitNodeAfter->predictedStateForward().covariance()(4,4));
+
+	m_curvatureRatioTToLongH1->fill(qopT / qop ) ;
+	m_curvatureRatioVeloTTToLongH1->fill(qopVeloTT / qop ) ;
+	m_curvatureRatioTToLongPullH1->fill( (qopT - qop) / qoperrT ) ;
+	m_curvatureRatioVeloTTToLongPullH1->fill( (qopVeloTT - qop) / qoperrVeloTT ) ;
+
+	if( std::abs(qopT / qop - 1 ) < 1 ) 
+	  m_curvatureRatioTToLongPr->fill(qop * Gaudi::Units::GeV, qopT / qop ) ;
+	if( std::abs(qopVeloTT / qop - 1 ) < 1 ) 
+	  m_curvatureRatioVeloTTToLongPr->fill(qop * Gaudi::Units::GeV, qopVeloTT / qop ) ;
+      }
     }
   }
 }
