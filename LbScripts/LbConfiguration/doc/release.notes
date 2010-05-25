@@ -1,3 +1,7 @@
+2010-05-25  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* python/LbConfiguration/SetupProject.py: use StripPath to clean up PATH etc.
+
 2010-05-25  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbConfiguration/Project.py: added the support for the Feicim project.

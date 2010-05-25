@@ -13,6 +13,12 @@ from LbConfiguration import createProjectMakefile
 from LbUtils.CVS import CVS2Version
 __version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.36 $")
 
+try:
+    from LbScriptsPolicy.PathStripper import StripPath
+except ImportError:
+    # Failover solution
+    StripPath = lambda x: x
+
 # subprocess is available since Python 2.4, but LbUtils guarantees that we can
 # import it also in Python 2.3
 from subprocess import Popen, PIPE, STDOUT
@@ -1405,9 +1411,12 @@ class SetupProject:
             root_dir_local = root_dir_local.replace('/','\\')
         for v in ["PATH", "PYTHONPATH", "LD_LIBRARY_PATH", "HPATH"]:
             if v in new_env:
+                # Keep the entries that do not refer to the local temporary directory,
+                # do exist and are not empty
                 new_env[v] = os.pathsep.join([ d
                                                for d in new_env[v].split(os.pathsep)
                                                if root_dir_local not in d ])
+                new_env[v] = StripPath(new_env[v])
         # FIXME: I should look for all the variables pointing to the temporary directory
 
         # remove the variables that have the temporary directory in the name
