@@ -4,8 +4,13 @@
 ! Purpose     : Options to generate selection or Micro DSTs and scripts to test them.
 !-----------------------------------------------------------------------------
 
-! ========================== DstwriterTests v1r0 2010-05-24 ==================
+! ========================== DstwriterTests v1r1 2010-05-25 ==================
 
+! 2010-05-25 - Juan Palacios
+ - scripts/check_dst_contents.py
+  . Find TES locations automatically.
+
+! ========================== DstwriterTests v1r0 2010-05-24 ==================
 
 ! 2010-05-23 - Juan Palacios
  - scripts/check_dst_contents.py
