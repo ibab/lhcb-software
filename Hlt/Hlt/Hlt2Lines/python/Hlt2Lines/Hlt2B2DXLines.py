@@ -34,7 +34,6 @@ class Hlt2B2DXLinesConf(HltLinesConfigurableUser) :
                   , 'TFAllTrkPVIPChi2LL'   : 4          # unitless
                   , 'TFKsDDPVIPChi2LL'     : 2          # unitless
                   , 'TFAllTrkChi2UL'       : 10         # unitless
-                  , 'TFKsDDTrkChi2UL'      : 30         # unitless
                   , 'TFPairMinDocaUL'      : 0.2        # in mm
                   , 'TFPairMaxDocaUL'      : 1          # in mm
                   , 'TFTrkMaxPtLL'         : 1500       # in MeV
@@ -255,8 +254,7 @@ class Hlt2B2DXLinesConf(HltLinesConfigurableUser) :
         
         incuts = """(PT> %(TFKsDDPtLL)s *MeV)
         & (P> %(TFKsDDPLL)s *MeV)
-        & (MIPCHI2DV(PRIMARY)> %(TFKsDDPVIPChi2LL)s )
-        & (TRCHI2DOF< %(TFKsDDTrkChi2UL)s )""" % self.getProps()
+        & (MIPCHI2DV(PRIMARY)> %(TFKsDDPVIPChi2LL)s ) """ % self.getProps()
         
         filter = Hlt2Member( FilterDesktop
                              , 'Filter'

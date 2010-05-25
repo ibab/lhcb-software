@@ -8,6 +8,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2010-05-25 - Jacopo Nardulli
+ - Follow up on https://savannah.cern.ch/bugs/?67708
+
 ! 2010-05-23 - Jibo He
  - Hlt2B2JpsiXLines.py 
    . Loosened selection cuts for Bs->Jpsi(ee)Phi 
