@@ -3,7 +3,8 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
- - Changes to references to reflect changes in Brunel v37r4 output:
+</PRE><H1><A NAME=v37r3>2010-05-26 Brunel v37r3</A></H1><PRE>
+ - Changes to references to reflect changes in Brunel v37r3 output:
    . New warning about Ingress/ODIN checks disabled (RichDAQ)
    . Changes to PatVeloSpaceTool and PatVeloTrackTool to improve internal fit in
      the case of half box misalignments (PatVelo)
@@ -16,7 +17,13 @@ Purpose: LHCb reconstruction program
    . Added PropagateFSRs (LumiAlgs)
    . Add IP plots to TrackMonitor expert options
    . Less verbose handling of errors and warnings (TrackExtrapolators etc.)
-   . Fix untested StatusCode in TrackInterpolator 
+   . Fix untested StatusCode in TrackInterpolator
+   . Activate monitoring for resolved Pi0 (CaloMoniDst v5r2)
+   . New framework for CaloCorrections, parameters taken from CondDB
+    (CaloReco v5r5)
+   . Improvements to lumi FSR	handling (LumiAlgs v3r5)
+   . Improved error handling in case of corrupt raw bank (VeloDAQ v5r2)
+   . Bug fix in splitCluster on demand settings (CaloReco v5r5) 
 
 - Changes to tests
   . brunel.brunel-bigevents: 
