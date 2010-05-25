@@ -11,9 +11,9 @@
 findReferenceBlock("""
 BachelorMuForTestsSUCCESS Number of counters : 4
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- |*"#accept"                                       |        72 |          5 |(  6.94444 +- 2.99587  )%|   -------   |   -------   |
- | "#input"                                        |        72 |          9 |    0.12500 |    0.33072 |      0.0000 |      1.0000 |
- |*"#passed"                                       |        72 |          5 |(  6.94444 +- 2.99587  )%|   -------   |   -------   |
+ |*"#accept"                                       |         9 |          5 |(  55.5556 +- 16.5635  )%|   -------   |   -------   |
+ | "#input"                                        |         9 |          9 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
+ |*"#passed"                                       |         9 |          5 |(  55.5556 +- 16.5635  )%|   -------   |   -------   |
  |*"efficiency"                                    |         9 |          5 |(  55.5556 +- 16.5635  )%|   -------   |   -------   |
 """, stdout, result, causes, signature_offset = 0)
 </text></argument>
