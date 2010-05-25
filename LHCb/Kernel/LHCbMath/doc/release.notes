@@ -6,6 +6,11 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2010-05-25 - Vanya Belyaev
+
+ - minor fix, hopefully it also fixes the compilation 
+   problem for windows platform
+
 ! 2010-05-24 - Vanya Belyaev
 
  - ParticleParams.h/cpp

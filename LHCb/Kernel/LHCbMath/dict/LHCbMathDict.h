@@ -1,4 +1,4 @@
-// $Id: LHCbMathDict.h,v 1.11 2010-05-24 13:01:38 ibelyaev Exp $
+// $Id: LHCbMathDict.h,v 1.12 2010-05-25 10:12:19 ibelyaev Exp $
 #ifndef DICT_LHCBMATHDICT_H 
 #define DICT_LHCBMATHDICT_H 1
 
@@ -223,7 +223,6 @@ namespace
     Gaudi::Math::SVectorWithError<4,double> __sv4 ;
     Gaudi::Math::SVectorWithError<5,double> __sv5 ;
     Gaudi::Math::SVectorWithError<8,double> __sv8 ;
-    Gaudi::Math::SVectorWithError<9,double> __sv9 ;
     //
     std::vector<Gaudi::Math::ValueWithError>  _dver ;
   };

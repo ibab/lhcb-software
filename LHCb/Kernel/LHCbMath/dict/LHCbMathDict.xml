@@ -40,10 +40,10 @@
     <class name = "Gaudi::Math::SVectorWithError&lt;4,double&gt;::Covariance"  />
     <class name = "Gaudi::Math::SVectorWithError&lt;5,double&gt;::Value"       />
     <class name = "Gaudi::Math::SVectorWithError&lt;5,double&gt;::Covariance"  />
+    <class name = "Gaudi::Math::SVectorWithError&lt;7,double&gt;::Value"       />
+    <class name = "Gaudi::Math::SVectorWithError&lt;7,double&gt;::Covariance"  />
     <class name = "Gaudi::Math::SVectorWithError&lt;8,double&gt;::Value"       />
     <class name = "Gaudi::Math::SVectorWithError&lt;8,double&gt;::Covariance"  />
-    <class name = "Gaudi::Math::SVectorWithError&lt;9,double&gt;::Value"       />
-    <class name = "Gaudi::Math::SVectorWithError&lt;9,double&gt;::Covariance"  />
   </exclusion> 
   
 
