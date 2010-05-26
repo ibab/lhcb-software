@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2010-05-26 - V. Gligorov
+ - Add the lifetime unbiased B2hh lines to exclusive nominal.
+
 ! 2010-05-26 - Antonio Perez-Calero
  - Modified DiMuonLines.py for new hlt2 muon and mu+track lines and cuts
 

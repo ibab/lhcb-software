@@ -67,6 +67,7 @@ class Exclusive_Nominal :
               , 'Hlt2Bd2KstGammaLooseDira'
         # Hlt2B2HHLines
             , 'Hlt2B2HH'
+            , 'Hlt2B2HHLTUnbiased' 
         # Hlt2B2PhiXLines
             , 'Hlt2Bs2PhiPhi',
         # Hlt2InclusiveDiMuonLines
