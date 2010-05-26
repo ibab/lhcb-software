@@ -1,4 +1,4 @@
-// $Id: MagneticFieldSvc.cpp,v 1.54 2010-04-23 17:29:48 smenzeme Exp $
+// $Id: MagneticFieldSvc.cpp,v 1.55 2010-05-26 11:31:47 cattanem Exp $
 
 // Include files
 #include "GaudiKernel/SvcFactory.h"
@@ -276,7 +276,7 @@ StatusCode MagneticFieldSvc::i_updateConditions()
   if (m_forcedToUseUpMap)
     polarity = +1.0;
 
-  if (!m_forcedToUseDownMap || !m_forcedToUseUpMap)
+  if (!m_forcedToUseDownMap && !m_forcedToUseUpMap)
     polarity = m_currentPtr->param<int>("Polarity");
   
   // Update the scale factor
