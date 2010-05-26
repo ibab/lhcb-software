@@ -1352,8 +1352,8 @@ if ( !lhcb.widgets ) {
     tab.className  = 'MonitorPage';
     
     tb = document.createElement('tbody');
-    tooltips.set(tb,'Run efficiency summary normalized to<br>integrated luminosity of datataking during this fill.');
-    tb.className  = 'MonitorPage';
+    tooltips.set(tb,'Run efficiency summary normalized to<br> '+type+' of datataking during this fill.');
+    tb.className = 'MonitorPage';
     tb.height    = '120px';
     if ( options.style ) {
       tr = document.createElement('tr');
@@ -1362,10 +1362,10 @@ if ( !lhcb.widgets ) {
     }
     if ( options.legend ) {
       tr = document.createElement('tr');
-      tr.appendChild(Cell('HV Ready',1,'MonitorDataHeader'));
-      tr.appendChild(Cell('VELO IN',1,'MonitorDataHeader'));
+      tr.appendChild(Cell('HV Ready',   1,'MonitorDataHeader'));
+      tr.appendChild(Cell('VELO IN',    1,'MonitorDataHeader'));
       tr.appendChild(Cell('DAQ stopped',1,'MonitorDataHeader'));
-      tr.appendChild(Cell('dead time',1,'MonitorDataHeader'));
+      tr.appendChild(Cell('dead time',  1,'MonitorDataHeader'));
     }
     tb.appendChild(tr);
     tab.hv      = StyledItem('lbWeb.LHCbEfficiency.Results'+type+'.HV',null,'%7.2f %%');

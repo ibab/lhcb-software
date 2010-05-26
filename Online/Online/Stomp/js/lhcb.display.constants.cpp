@@ -130,6 +130,15 @@ if ( !_lhcb().constants ) {
 	    iconCls:'Collimators32',
 	    size:   {width:  950,	height: 700}
 	  },
+	  trg_l0status: {
+	    src:    this.lhcb_display_url('trgstatus'),
+	    img:    this.images.lookprod,
+	    title:  'TRG/L0 Status',
+	    nick:   'lhcb-trigger-l0status-win',
+	    cls:    'Collimators16',
+	    iconCls:'Collimators32',
+	    size:   {width:  950,	height: 700}
+	  },
 	  velo: {
 	    src:    this.lhcb_display_url('velo'),
 	    img:    this.images.lookprod,

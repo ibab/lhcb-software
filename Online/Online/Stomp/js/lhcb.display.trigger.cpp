@@ -358,25 +358,25 @@ var TriggerStatus = function(msg)   {
 
     tab.BeamGasEx.conversion = tab.update_totals;
     tab.BeamGasIn.conversion = tab.update_totals;
-    tab.LumiEx.conversion = tab.update_totals;
-    tab.LumiIn.conversion = tab.update_totals;
-    tab.MBiasEx.conversion = tab.update_totals;
-    tab.MBiasIn.conversion = tab.update_totals;
-    tab.PhysEx.conversion = tab.update_totals;
-    tab.PhysIn.conversion = tab.update_totals;
-    tab.RandEx.conversion = tab.update_totals;
-    tab.RandIn.conversion = tab.update_totals;
+    tab.LumiEx.conversion    = tab.update_totals;
+    tab.LumiIn.conversion    = tab.update_totals;
+    tab.MBiasEx.conversion   = tab.update_totals;
+    tab.MBiasIn.conversion   = tab.update_totals;
+    tab.PhysEx.conversion    = tab.update_totals;
+    tab.PhysIn.conversion    = tab.update_totals;
+    tab.RandEx.conversion    = tab.update_totals;
+    tab.RandIn.conversion    = tab.update_totals;
 
     tab.BeamGasEx.style.textAlign = 'right';
     tab.BeamGasIn.style.textAlign = 'right';
-    tab.LumiEx.style.textAlign = 'right';
-    tab.LumiIn.style.textAlign = 'right';
-    tab.MBiasEx.style.textAlign = 'right';
-    tab.MBiasIn.style.textAlign = 'right';
-    tab.PhysEx.style.textAlign = 'right';
-    tab.PhysIn.style.textAlign = 'right';
-    tab.RandEx.style.textAlign = 'right';
-    tab.RandIn.style.textAlign = 'right';
+    tab.LumiEx.style.textAlign    = 'right';
+    tab.LumiIn.style.textAlign    = 'right';
+    tab.MBiasEx.style.textAlign   = 'right';
+    tab.MBiasIn.style.textAlign   = 'right';
+    tab.PhysEx.style.textAlign    = 'right';
+    tab.PhysIn.style.textAlign    = 'right';
+    tab.RandEx.style.textAlign    = 'right';
+    tab.RandIn.style.textAlign    = 'right';
 
     tr = document.createElement('tr');
     tr.appendChild(Cell('Physics',1,'MonitorDataHeader'));
@@ -415,15 +415,15 @@ var TriggerStatus = function(msg)   {
     tab.totalHandler = function() {
       var fEx = 0.0, fIn = 0.0;
       if ( tab.BeamGasEx.data ) fEx = fEx + tab.BeamGasEx.data;
-      if ( tab.LumiEx.data ) fEx = fEx + tab.LumiEx.data;
-      if ( tab.MBiasEx.data ) fEx = fEx + tab.MBiasEx.data;
-      if ( tab.PhysEx.data ) fEx = fEx + tab.PhysEx.data;
-      if ( tab.RandEx.data ) fEx = fEx + tab.RandEx.data;
+      if ( tab.LumiEx.data    ) fEx = fEx + tab.LumiEx.data;
+      if ( tab.MBiasEx.data   ) fEx = fEx + tab.MBiasEx.data;
+      if ( tab.PhysEx.data    ) fEx = fEx + tab.PhysEx.data;
+      if ( tab.RandEx.data    ) fEx = fEx + tab.RandEx.data;
       if ( tab.BeamGasIn.data ) fIn = fIn + tab.BeamGasIn.data;
-      if ( tab.LumiIn.data ) fIn = fIn + tab.LumiIn.data;
-      if ( tab.MBiasIn.data ) fIn = fIn + tab.MBiasIn.data;
-      if ( tab.PhysIn.data ) fIn = fIn + tab.PhysIn.data;
-      if ( tab.RandIn.data ) fIn = fIn + tab.RandIn.data;
+      if ( tab.LumiIn.data    ) fIn = fIn + tab.LumiIn.data;
+      if ( tab.MBiasIn.data   ) fIn = fIn + tab.MBiasIn.data;
+      if ( tab.PhysIn.data    ) fIn = fIn + tab.PhysIn.data;
+      if ( tab.RandIn.data    ) fIn = fIn + tab.RandIn.data;
       tab.totalIn.innerHTML = sprintf(tab.RandIn.format,fIn);
       tab.totalEx.innerHTML = sprintf(tab.RandEx.format,fEx);
     };
