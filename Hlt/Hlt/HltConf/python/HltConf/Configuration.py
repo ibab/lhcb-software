@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.187 2010-05-24 17:48:58 aperezca Exp $"
+__version__ = "$Id: Configuration.py,v 1.188 2010-05-26 19:45:00 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -125,6 +125,8 @@ class HltConf(LHCbConfigurableUser):
         #
         #  main HLT sequencer
         # 
+        ## TODO: consider running Hlt in ModeAND, ShortCircuit = True,
+        ##       whilst moving HltEndSequence to TopAlg 
         Hlt = Sequence('Hlt', ModeOR= True, ShortCircuit = False
                        , Members = 
                        [ Sequence('Hlt1') 
@@ -297,8 +299,9 @@ class HltConf(LHCbConfigurableUser):
         updateDict( HltANNSvc().Hlt1SelectionID, 1000, missingDecisions )
         missingSelections = [ i for i in missing if not i.endswith('Decision') ]
         updateDict( HltANNSvc().Hlt1SelectionID, 11000, missingSelections )
-        log.warning( '# added ' + str(len(missingSelections)) + ' selections to HltANNSvc' )
-        log.warning( '# added ' + str(len(missingDecisions))  +  ' decisions to HltANNSvc' )
+        log.warning( '# added %s selections to HltANNSvc' % len(missingSelections) )
+        log.warning( '# added %s decisions to HltANNSvc' % len(missingDecisions)  )
+        # TODO: add Hlt2 to this list, and remove the hardwired numbers from the Hlt2 lines...
 
         if False :
             from HltLine.HltLine     import hlt1Lines
@@ -342,13 +345,10 @@ class HltConf(LHCbConfigurableUser):
         Hlt Monitoring
         """
         ## and tell the monitoring what it should expect..
-        from Configurables import HltGlobalMonitor
-        HltGlobalMonitor().Hlt1Decisions = [ i.decision() for i in lines1 ]
-        HltGlobalMonitor().Hlt2Decisions = [ i.decision() for i in lines2 ]
-       
         # the keys are the Labels for the Histograms in the GUI
         # the values are the Pattern Rules to for the Decisions contributing 
-        HltGlobalMonitor().DecToGroupHlt1  = self.groupLines( HltGlobalMonitor().Hlt1Decisions,
+        from Configurables import HltGlobalMonitor
+        HltGlobalMonitor().DecToGroupHlt1  = self.groupLines( [ i.decision() for i in lines1 ],
                                 [ ("L0"         , "Hlt1L0.*Decision"),
                                   ("LumiBeamGas", "Hlt1(Lumi|BeamGas).*Decision"),
                                   ("Velo"       , "Hlt1Velo.*Decision"),
@@ -356,13 +356,13 @@ class HltConf(LHCbConfigurableUser):
                                   ("SingleMuon" , "Hlt1.*(SingleMuon|MuTrack).*Decision"),
                                   ("DiMuon"     , "Hlt1.*DiMuon.*Decision"),
                                   ("ECAL"       , "Hlt1.*(Electron|Pho).*Decision"),
-                                  ("PA"         , "Hlt1(ODIN.*|Tell1Error|Incident)Decision"),
+                                  ("Commissioning" , "Hlt1(ODIN.*|Tell1Error|Incident)Decision"),
                                   ("MinBias"    , "Hlt1MB.*Decision"),
                                   ("Global"     , ".*Global.*"),
                                   ("Other"      , ".*") # add a 'catch all' term to pick up all remaining decisions...
                                 ]
                                 )
-        HltGlobalMonitor().DecToGroupHlt2 = self.groupLines( HltGlobalMonitor().Hlt2Decisions,
+        HltGlobalMonitor().DecToGroupHlt2 = self.groupLines( [ i.decision() for i in lines2 ],
                                  [ ("Topo"           , "Hlt2Topo.*Decision"),
                                    ("IncPhi"         , "Hlt2IncPhi.*Decision"),
                                    ("SingleMuon"     , "Hlt2(Single.*Muon|MuTrack).*Decision"),
