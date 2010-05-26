@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-#$Id: test_multi_selection_sequence.py,v 1.6 2010-05-06 15:22:50 jpalac Exp $
+#$Id: test_multi_selection_sequence.py,v 1.7 2010-05-26 13:47:18 jpalac Exp $
 '''
 Test suite for MultiSelectionSequence class.
 '''
@@ -18,15 +18,15 @@ from SelPy.configurabloids import ( DummyAlgorithm,
                                     DummySequencer  )
 
 def test_instantiate_dataondemand_multi_sequencer() :
-    sel00 = AutomaticData('Sel00', Location = 'Phys/Sel00')
-    sel01 = AutomaticData('Sel01', Location = 'Phys/Sel01')
+    sel00 = AutomaticData(Location = 'Phys/Sel00')
+    sel01 = AutomaticData(Location = 'Phys/Sel01')
     seq00 = SelectionSequence('Seq00x', TopSelection = sel00)
     seq01 = SelectionSequence('Seq01x', TopSelection = sel01)
     seq = MultiSelectionSequence('Seq00', Sequences = [seq00, seq01])
 
 def test_call_important_methods() :
-    sel00 = AutomaticData('Sel00', Location = 'Phys/Sel00')
-    sel01 = AutomaticData('Sel01', Location = 'Phys/Sel01')
+    sel00 = AutomaticData(Location = 'Phys/Sel00')
+    sel01 = AutomaticData(Location = 'Phys/Sel01')
     seq00 = SelectionSequence('Seq00y', TopSelection = sel00)
     seq01 = SelectionSequence('Seq01y', TopSelection = sel01)
     seq = MultiSelectionSequence('Seq00', Sequences = [seq00, seq01])
@@ -35,8 +35,8 @@ def test_call_important_methods() :
     seq = seq.sequence()
     
 def test_instantiate_multi_sequencer() :
-    sel00 = AutomaticData('Sel00', Location = 'Phys/Sel00')
-    sel01 = AutomaticData('Sel01', Location = 'Phys/Sel01')
+    sel00 = AutomaticData(Location = 'Phys/Sel00')
+    sel01 = AutomaticData(Location = 'Phys/Sel01')
     alg00 = DummyAlgorithm('Alg000')
     alg01 = DummyAlgorithm('Alg001')
     sel00 = Selection('100011', Algorithm = alg00,

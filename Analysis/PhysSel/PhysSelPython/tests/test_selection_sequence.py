@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-#$Id: test_selection_sequence.py,v 1.20 2010-05-06 15:22:50 jpalac Exp $
+#$Id: test_selection_sequence.py,v 1.21 2010-05-26 13:47:18 jpalac Exp $
 '''
 Test suite for SelectionSequence class.
 '''
@@ -41,23 +41,23 @@ class SelectionTree(object) :
     alg_names = [a.name() for a in algs]
 
 def test_instantiate_sequencer() :
-    sel00 = AutomaticData('Sel00', Location = 'Phys/Sel00')
-    sel01 = AutomaticData('Sel01', Location = 'Phys/Sel01')
+    sel00 = AutomaticData(Location = 'Phys/Sel00')
+    sel01 = AutomaticData(Location = 'Phys/Sel01')
     alg0 = DummyAlgorithm('Alg000')
     sel = Selection('00011', Algorithm = alg0,
                     RequiredSelections = [sel00, sel01])
     seq = SelectionSequence('Seq00', TopSelection = sel)
 
 def test_instantiate_dataondemand_sequencer() :
-    sel00 = AutomaticData(Location = 'Phys/Sel00')
+    sel00 = AutomaticData('Phys/Sel00')
     seq = SelectionSequence('Seq00DOD', TopSelection = sel00)
     assert seq.outputLocation() == 'Phys/Sel00'
     
 def test_sequencer_algos() :
-    _sel00 = AutomaticData('Sel00', Location = 'Phys/Sel00')
-    _sel01 = AutomaticData('Sel01', Location = 'Phys/Sel01')
-    _sel02 = AutomaticData('Sel02', Location = 'Phys/Sel02')
-    _sel03 = AutomaticData('Sel03', Location = 'Phys/Sel03')
+    _sel00 = AutomaticData(Location = 'Phys/Sel00')
+    _sel01 = AutomaticData(Location = 'Phys/Sel01')
+    _sel02 = AutomaticData(Location = 'Phys/Sel02')
+    _sel03 = AutomaticData(Location = 'Phys/Sel03')
 
     sel01 = Selection('00100', Algorithm = DummyAlgorithm('Alg000'),
                       RequiredSelections = [_sel00, _sel01])
@@ -75,10 +75,10 @@ def test_sequencer_algos() :
         assert sel.algorithm() in seqAlgos
 
 def test_sequencer_sequence() :
-    _sel00 = AutomaticData('Sel00', Location = 'Phys/Sel00')
-    _sel01 = AutomaticData('Sel01', Location = 'Phys/Sel01')
-    _sel02 = AutomaticData('Sel02', Location = 'Phys/Sel02')
-    _sel03 = AutomaticData('Sel03', Location = 'Phys/Sel03')
+    _sel00 = AutomaticData(Location = 'Phys/Sel00')
+    _sel01 = AutomaticData(Location = 'Phys/Sel01')
+    _sel02 = AutomaticData(Location = 'Phys/Sel02')
+    _sel03 = AutomaticData(Location = 'Phys/Sel03')
 
     sel01 = Selection('000110', Algorithm = DummyAlgorithm('Alg000'),
                       RequiredSelections = [_sel00, _sel01])
@@ -123,10 +123,10 @@ def test_sequencer_sequence() :
         assert sel.algorithm() in ref_algos[len(presels):len(ref_algos)-len(postsels)]
 
 def test_clone_sequence() :
-    _sel00 = AutomaticData('Sel00', Location = 'Phys/Sel00')
-    _sel01 = AutomaticData('Sel01', Location = 'Phys/Sel01')
-    _sel02 = AutomaticData('Sel02', Location = 'Phys/Sel02')
-    _sel03 = AutomaticData('Sel03', Location = 'Phys/Sel03')
+    _sel00 = AutomaticData(Location = 'Phys/Sel00')
+    _sel01 = AutomaticData(Location = 'Phys/Sel01')
+    _sel02 = AutomaticData(Location = 'Phys/Sel02')
+    _sel03 = AutomaticData(Location = 'Phys/Sel03')
 
     sel01 = Selection('00120', Algorithm = DummyAlgorithm('Alg000'),
                       RequiredSelections = [_sel00, _sel01])
