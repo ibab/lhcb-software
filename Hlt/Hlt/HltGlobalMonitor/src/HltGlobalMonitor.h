@@ -48,8 +48,6 @@ private:
   typedef std::map< std::string, std::vector<std::string> >  DecToGroupType;
   DecToGroupType m_DecToGroup1;
   DecToGroupType m_DecToGroup2;
-  std::vector<std::string>  m_Hlt1Lines;  	 
-  std::vector<std::string>  m_Hlt2Lines;
   
   std::map<Gaudi::StringKey,std::pair<unsigned,unsigned> > m_hlt1Line2AlleyBin; // index in m_hlt1Alleys, m_hlt1AlleyRates , followed by binnumber inside alley
   std::map<Gaudi::StringKey,std::pair<unsigned,unsigned> > m_hlt2Line2AlleyBin;

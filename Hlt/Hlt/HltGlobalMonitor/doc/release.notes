@@ -1,4 +1,4 @@
-!$Id: release.notes,v 1.81 2010-05-26 10:35:58 albrecht Exp $
+!$Id: release.notes,v 1.82 2010-05-26 19:44:17 graven Exp $
 Package     : Hlt/HltGlobalMonitor
 Package Coordinator : Bruno Souza de Paula 
 Purpose     : LHCb HLT Global Monitoring
@@ -6,7 +6,6 @@ Purpose     : LHCb HLT Global Monitoring
 
 ! 2010-05-26 - Johannes Albrecht
  - add HltTimeVsEventSize histogram
- - restore obsolete properties for moore v9r1p2
 
 !========================== HltGlobalMonitor v3r5 2010-05-20 ===================
 ! 2010-05-20 - Gerhard Raven

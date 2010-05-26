@@ -1,5 +1,5 @@
 
-// $Id: HltGlobalMonitor.cpp,v 1.70 2010-05-26 10:34:47 albrecht Exp $
+// $Id: HltGlobalMonitor.cpp,v 1.71 2010-05-26 19:44:17 graven Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -92,8 +92,6 @@ HltGlobalMonitor::HltGlobalMonitor( const std::string& name,
   declareProperty("Hlt1DecName", m_hlt1Decision = "Hlt1Global" );
   declareProperty("Hlt2DecName", m_hlt2Decision = "Hlt2Global" );
   declareProperty( "RawEventLocation"   , m_rawEventLocation = LHCb::RawEventLocation::Default );
-  declareProperty("Hlt1Decisions",     m_Hlt1Lines ); //TODO: remove  	 
-  declareProperty("Hlt2Decisions",     m_Hlt2Lines ); //TODO: remove 	 
 }
 //=============================================================================
 // Destructor
