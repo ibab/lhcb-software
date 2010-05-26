@@ -1,4 +1,4 @@
-// $Id: MicroDSTCommon.icpp,v 1.15 2010-03-17 12:53:19 jpalac Exp $
+// $Id: MicroDSTCommon.icpp,v 1.16 2010-05-26 09:56:56 jpalac Exp $
 //-----------------------------------------------------------------------------
 // Implementation file for templated methods of class : MicroDSTCommon
 //
@@ -37,7 +37,7 @@ const T* MicroDSTCommon<PBASE>::copyAndStoreObject( const std::string& from,
 
   if (exist<T>( to ) ) {
     this->Warning("Object "+ to + " already exists. Not cloning.", 
-                  StatusCode::SUCCESS,1).ignore();
+                  StatusCode::SUCCESS,0).ignore();
     return this->get<T>( to );
   }
   if (exist<T>( from ) ) {
@@ -49,7 +49,7 @@ const T* MicroDSTCommon<PBASE>::copyAndStoreObject( const std::string& from,
     return newData;
   } else {
     this->Warning("No data container found at "+ from, 
-                  StatusCode::FAILURE, 1).ignore();
+                  StatusCode::FAILURE, 0).ignore();
     return 0;
   } // if exist
 
@@ -64,7 +64,7 @@ const T* MicroDSTCommon<PBASE>::copyKeyedContainer( const std::string& from,
 
   if (!exist<T>(from)) {
     this->Warning("Container location "+ from+"does not exist",
-                  StatusCode::FAILURE, 1).ignore();
+                  StatusCode::FAILURE, 0).ignore();
     return 0;    
   } else {
     const T* data = this->get<T>( from );
@@ -92,7 +92,7 @@ const T* MicroDSTCommon<PBASE>::copyKeyedContainer( const std::string& from,
   const T* data = this->getInputContainer<T>( from );
   if (!data) {
     this->Warning("copyKeyedContainer found no data at "+from, 
-                  StatusCode::FAILURE, 1).ignore();
+                  StatusCode::FAILURE, 0).ignore();
     
     return 0;
   }
@@ -110,7 +110,7 @@ const T* MicroDSTCommon<PBASE>::copyKeyedContainer( const std::string& from,
                     <<", size " << clones->size() << endmsg;
   } else {
     this->Warning("CopyKeyedContainer failed to clone "+ from,
-                  StatusCode::FAILURE, 1).ignore();
+                  StatusCode::FAILURE, 0).ignore();
   }
 
 
@@ -128,7 +128,7 @@ const typename T::Container* MicroDSTCommon<PBASE>::copyContainer( const std::st
   if ( (!exist<typename T::Container>(from)) && 
        (!exist<typename T::Selection>(from))    )   {
     this->Warning("copyContainer found no data at "+from, 
-                  StatusCode::FAILURE, 1).ignore();
+                  StatusCode::FAILURE, 0).ignore();
     return 0;
   }
   
@@ -136,7 +136,7 @@ const typename T::Container* MicroDSTCommon<PBASE>::copyContainer( const std::st
 
   if (data.empty()) {
     this->Warning("copyContainer found no data at "+from, 
-                  StatusCode::FAILURE, 1).ignore();
+                  StatusCode::FAILURE, 0).ignore();
     return 0;
   }
 
@@ -153,7 +153,7 @@ const typename T::Container* MicroDSTCommon<PBASE>::copyContainer( const std::st
                     <<", size " << clones->size() << endmsg;
   } else {
     this->Warning("copyContainer failed to clone "+ from,
-                  StatusCode::FAILURE, 1).ignore();
+                  StatusCode::FAILURE, 0).ignore();
   }
 
 
@@ -224,7 +224,7 @@ const T* MicroDSTCommon<PBASE>::getInputContainer( const std::string& location )
 {
   if (!exist<T>(location)) {
     this->Warning("Container location "+location+" does not exist",
-                  StatusCode::FAILURE, 1).ignore();
+                  StatusCode::FAILURE, 0).ignore();
     return 0;    
   } else {
     return this->get<T>( location );

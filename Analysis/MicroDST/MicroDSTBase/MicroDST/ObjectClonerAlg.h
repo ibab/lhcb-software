@@ -1,4 +1,4 @@
-// $Id: ObjectClonerAlg.h,v 1.4 2009-08-17 19:13:43 jpalac Exp $
+// $Id: ObjectClonerAlg.h,v 1.5 2010-05-26 09:56:56 jpalac Exp $
 #ifndef MICRODST_MICRODSTOBJECTCLONERALG_H 
 #define MICRODST_MICRODSTOBJECTCLONERALG_H 1
 
@@ -71,7 +71,7 @@ namespace MicroDST
 
         if (0==cont) {
           Warning("Unable clone or get object from "+ inputLocation,
-                  StatusCode::FAILURE, 10).ignore();
+                  StatusCode::FAILURE, 0).ignore();
         }
       }
 

@@ -1,4 +1,4 @@
-// $Id: RelationsClonerAlg.h,v 1.15 2010-02-24 15:27:09 jpalac Exp $
+// $Id: RelationsClonerAlg.h,v 1.16 2010-05-26 09:56:56 jpalac Exp $
 #ifndef MICRODST_RELATIONSCLONERALG_H 
 #define MICRODST_RELATIONSCLONERALG_H 1
 
@@ -105,7 +105,7 @@ namespace MicroDST
       if (exist<TABLE>(outputLocation) )
       {
         return this->Warning("Object "+ outputLocation + " already exists. Not cloning.", 
-                             StatusCode::SUCCESS,10) ;
+                             StatusCode::SUCCESS, 0) ;
       }
           
 

@@ -1,4 +1,4 @@
-// $Id: ContainerClonerAlg.h,v 1.2 2010-03-17 12:51:20 jpalac Exp $
+// $Id: ContainerClonerAlg.h,v 1.3 2010-05-26 09:56:56 jpalac Exp $
 #ifndef MICRODST_CONTAINERCLONERALG_H 
 #define MICRODST_CONTAINERCLONERALG_H 1
 
@@ -91,7 +91,7 @@ public:
 
       if (0==cont) {
         Warning("Unable clone or get container from "+ inputLocation,
-                StatusCode::FAILURE, 10).ignore();
+                StatusCode::FAILURE, 0).ignore();
       } else {
         verbose() <<"Cloned Container " << outputLocation 
                   << " has " << cont->size() 
