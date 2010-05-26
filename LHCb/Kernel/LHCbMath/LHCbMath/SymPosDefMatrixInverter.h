@@ -18,7 +18,7 @@ namespace Gaudi
     namespace SymPosDefMatrixInverter
     {
       // ======================================================================
-      template <class MATRIX, class F, unsigned int N> 
+      template <class MATRIX, class F, int N> 
       struct _inverterForAllN
       {
         bool operator() ( MATRIX& m ) const 
@@ -36,11 +36,11 @@ namespace Gaudi
           
           // cache starting address of rows of L for speed reasons
           F *base1 = &l[0];
-          for (int i = 0; i < N; base1 += ++i) {
+          for ( int i = 0; i < N; base1 += ++i) {
             F tmpdiag = F(0);	// for element on diagonale
             // calculate off-diagonal elements
             F *base2 = &l[0];
-            for (int j = 0; j < i; base2 += ++j) {
+            for ( int j = 0; j < i; base2 += ++j) {
               F tmp = m(i, j);
               for (int k = j; k--; )
                 tmp -= base1[k] * base2[k];
@@ -57,11 +57,11 @@ namespace Gaudi
           
           // ok, next step: invert off-diagonal part of matrix
           base1 = &l[1];
-          for (int i = 1; i < N; base1 += ++i) {
-            for (int j = 0; j < i; ++j) {
+          for ( int i = 1; i < N; base1 += ++i) {
+            for ( int j = 0; j < i; ++j) {
               F tmp = F(0);
               F *base2 = &l[(i * (i - 1)) / 2];
-              for (int k = i; k-- > j; base2 -= k)
+              for ( int k = i; k-- > j; base2 -= k)
                 tmp -= base1[k] * base2[j];
               base1[j] = tmp * base1[i];
             }
@@ -84,7 +84,7 @@ namespace Gaudi
       template<class T> struct inverterForAllN
       {
         typedef typename T::value_type F;
-        inline bool operator()(T& m, const unsigned int N) const
+        inline bool operator()(T& m, const int N) const
         {
           // perform Cholesky decomposition of matrix: M = L L^T
           // only thing that can go wrong: trying to take square root of negative

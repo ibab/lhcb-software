@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Types.py,v 1.6 2010-05-25 10:12:20 ibelyaev Exp $
+# $Id: Types.py,v 1.7 2010-05-26 12:04:26 ibelyaev Exp $
 # =============================================================================
 ## @file
 #
@@ -70,7 +70,7 @@ Simple file to provide 'easy' access in python for the basic ROOT::Math classes
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
 __date__    = " 2009-09-12 "
-__version__ = " CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $ "
+__version__ = " CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $ "
 # =============================================================================
 __all__     = ()  ## nothing to be imported !
 # =============================================================================
@@ -188,6 +188,8 @@ if not hasattr ( Gaudi.Math , 'SVector4WithError' ) :
     Gaudi.Math.SVector4WithError = cpp.Gaudi.Math.SVectorWithError(4,'double')
 if not hasattr ( Gaudi.Math , 'SVector5WithError' ) :
     Gaudi.Math.SVector5WithError = cpp.Gaudi.Math.SVectorWithError(5,'double')
+if not hasattr ( Gaudi.Math , 'SVector8WithError' ) :
+    Gaudi.Math.SVector8WithError = cpp.Gaudi.Math.SVectorWithError(8,'double')
 
 if not hasattr ( Gaudi      , 'XYZLine' ) : Gaudi.XYZLine     = Gaudi.Math.XYZLine
 if not hasattr ( Gaudi      , 'Line3D'  ) : Gaudi.Line3D      = Gaudi.Math.XYZLine
@@ -321,23 +323,32 @@ for t in  ( Gaudi.Vector2 ,
     t.__repr__ = _v_str_
 
 
-Gaudi.Math.ValueWithError.__str__      = Gaudi.Math.ValueWithError.toString 
-Gaudi.Math.ValueWithError.__repr__     = Gaudi.Math.ValueWithError.toString 
+for t in ( Gaudi.Math.ValueWithError         ,
+           Gaudi.Math.Point3DWithError       ,
+           Gaudi.Math.Vector3DWithError      ,
+           Gaudi.Math.LorentzVectorWithError ,
+           Gaudi.Math.SVector3WithError      , 
+           Gaudi.Math.SVector4WithError      , 
+           Gaudi.Math.SVector5WithError      , 
+           Gaudi.Math.SVector8WithError      ) :
+    t.__str__  = t.toString
+    t.__repr__ = t.toString
 
-Gaudi.Math.Point3DWithError.__str__    = Gaudi.Math.Point3DWithError.toString 
-Gaudi.Math.Point3DWithError.__repr__   = Gaudi.Math.Point3DWithError.toString
+# =============================================================================
+## self-printout of Gaudi::Math::ParticleParams  
+#  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+#  @date 2010-05-26
+def _pp_str_ ( self ) :
+    """
+    Self-printout of ParticleParams
+    """
+    pos = self.position    ()
+    mom = self.momentum    ()
+    len = self.decayLength () 
+    return " ( %s/%s/%s ) " % ( pos, mom , len )
 
-Gaudi.Math.Vector3DWithError.__str__   = Gaudi.Math.Vector3DWithError.toString 
-Gaudi.Math.Vector3DWithError.__repr__  = Gaudi.Math.Vector3DWithError.toString 
-
-Gaudi.Math.LorentzVectorWithError.__str__  = Gaudi.Math.LorentzVectorWithError.toString 
-Gaudi.Math.LorentzVectorWithError.__repr__ = Gaudi.Math.LorentzVectorWithError.toString 
-
-Gaudi.Math.SVector3WithError.__str__   = Gaudi.Math.SVector3WithError.toString 
-Gaudi.Math.SVector3WithError.__repr__  = Gaudi.Math.SVector3WithError.toString 
-
-Gaudi.Math.SVector4WithError.__str__   = Gaudi.Math.SVector4WithError.toString 
-Gaudi.Math.SVector4WithError.__repr__  = Gaudi.Math.SVector4WithError.toString 
+Gaudi.Math.ParticleParams.__str__  = _pp_str_
+Gaudi.Math.ParticleParams.__repr__ = _pp_str_
 
 # =============================================================================
 ## various decorators for GeomFun.h

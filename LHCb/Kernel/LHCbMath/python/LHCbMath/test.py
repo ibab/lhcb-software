@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: test.py,v 1.3 2010-03-18 18:26:01 ibelyaev Exp $
+# $Id: test.py,v 1.4 2010-05-26 12:04:26 ibelyaev Exp $
 # =============================================================================
 ## @file
 #  Test-file for various "with error" objects
@@ -95,6 +95,33 @@ print ' line  : parallel           : ', line1.parallel  (line2)
 print ' Binomial eff: 3/4   : ' , Gaudi.Math.binomEff  ( 3 ,   4 ) 
 print ' Binomial eff: 1/100 : ' , Gaudi.Math.binomEff  ( 1 , 100 ) 
 print ' Binomial eff: 1/100 : ' , Gaudi.Math.binomEff  ( 1 , 100 ).toString( "( %.3f +- %.3f )") 
+
+
+mtrx1 = Gaudi.SymMatrix3x3 ()
+mtrx1[0,0] = 0.01
+mtrx1[1,1] = 0.02
+mtrx1[2,2] = 0.03
+
+mtrx2 = Gaudi.SymMatrix4x4 ()
+mtrx2[0,0] = 0.01
+mtrx2[1,1] = 0.02
+mtrx2[2,2] = 0.03
+mtrx2[3,3] = 0.04
+
+pars = Gaudi.Math.ParticleParams(
+    pnt1  ,
+    lv1   ,
+    10    ,
+    mtrx1 ,
+    mtrx2 , 
+    0.25  ,
+    Gaudi.Matrix4x3 ()    ,
+    Gaudi.Vector3   ()    ,
+    Gaudi.Vector4   ()    
+    )
+
+print pars
+
 
 # =============================================================================
 # The  END 
