@@ -8,6 +8,10 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2010-05-26 - V. Gligorov
+ - First commit of Hlt2 lifetime unbiased B2hh lines which process only
+   those events selected by the Hlt1 lifetime unbiased dihadron line.
+
 ! 2010-05-26 - Antonio Perez-Calero
  - Updated Hlt2InclusiveMuonLines.py
 
