@@ -4,6 +4,9 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+! 2010-05-26 - Chris Jones
+ - Fix ifdef logic in FastAllocVector.h for GCC 4.X
+
 !===================== LHCbKernel v12r0p1 2010-05-21 ======================
 ! 2010-05-18 - Marco Cattaneo
  - Fix Windows warnings
