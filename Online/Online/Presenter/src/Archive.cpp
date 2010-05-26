@@ -1,4 +1,4 @@
-// $Id: Archive.cpp,v 1.78 2010-05-16 18:08:40 robbep Exp $
+// $Id: Archive.cpp,v 1.79 2010-05-26 13:15:41 robbep Exp $
 #include <iostream>
 #include <sstream>
 #include <algorithm>
@@ -428,6 +428,10 @@ std::string Archive::substractIsoTimeDate(const std::string & startTimeIsoString
   
   return createIsoTimeString(to_tm(newPTime)); //to_iso_string(newTime);
 }
+
+//=================================================================================
+// Find task name from file
+//=================================================================================
 std::string Archive::taskNameFromFile(const std::string & fileName) {
   TObjArray* fileNameMatchGroup = 0;
   std::string taskNameFound("");   
@@ -465,6 +469,10 @@ std::string Archive::taskNameFromFile(const std::string & fileName) {
   }
   return taskNameFound;
 }        
+
+//==============================================================================
+//
+//==============================================================================
 std::vector<path> Archive::findSavesets(const std::string & taskname,
                                         const std::string & endTimeIsoString,
                                         const std::string & durationTimeString)

@@ -1,4 +1,4 @@
-// $Id: presenter.h,v 1.96 2010-05-19 11:07:48 robbep Exp $
+// $Id: presenter.h,v 1.97 2010-05-26 13:15:41 robbep Exp $
 #ifndef PRESENTER_H_
 #define PRESENTER_H_
 
@@ -229,7 +229,7 @@ namespace pres
 //  Brunel_FULL_45055_00004636_00001229_1_Hist.root
 
 //  static TPRegexp s_offlineJobRegexp("^([^_]+)_(Ex)?_?(\\d+)_(\\d+)_?(\\d+)?_?(\\d+)?_?(Hist)?\\.root$");
-  static TPRegexp s_offlineJobRegexp("^(Brunel|DaVinci|Boole|Gauss)_.+\\.root$"); 
+  static TPRegexp s_offlineJobRegexp("^(Brunel|DaVinci|Boole|Gauss)(_.+|)\\.root$"); 
 
   // Tunables:
   static const int s_estimatedDimServiceCount = 1000;
