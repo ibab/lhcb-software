@@ -1,9 +1,13 @@
-!$Id: release.notes,v 1.124 2010-05-23 19:39:23 gligorov Exp $
+!$Id: release.notes,v 1.125 2010-05-26 08:02:21 gligorov Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/HltTracking
 ! Responsible : Jose A. Hernando
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
+
+! 2010-05-26 - V. Gligorov
+ - Fix bug in how the Velo reconstruction is configured and update VeloCalo
+   matching to match only by the Y position of the Calo cluster.
 
 ! 2010-05-23 - V. Gligorov
  - Remove PV2D from HltReco,HltVertexNames,HltPVs

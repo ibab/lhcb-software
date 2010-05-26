@@ -11,7 +11,7 @@
 ##
 # =============================================================================
 __author__  = "V. Gligorov vladimir.gligorov@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.16 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.17 $"
 # =============================================================================
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
@@ -54,6 +54,8 @@ from Hlt2Lines.Hlt2Dst2D2XXLines          import Hlt2Dst2D2XXLinesConf
 from Hlt2Lines.Hlt2InclusiveDiElectronLines import Hlt2InclusiveDiElectronLinesConf
 from Hlt2Lines.Hlt2InclusiveElectronLines   import Hlt2InclusiveElectronLinesConf
 from Hlt2Lines.Hlt2B2KstareeLines           import Hlt2B2KstareeLinesConf
+from Hlt2Lines.Hlt2B2HHLTUnbiasedLines      import Hlt2B2HHLTUnbiasedLinesConf
+
 
 #################################################################################################
 #
@@ -82,6 +84,7 @@ class Hlt2Tracking(LHCbConfigurableUser):
                              , Hlt2B2PhiXLinesConf
                              , Hlt2B2XGammaLinesConf
                              , Hlt2B2HHLinesConf
+                             , Hlt2B2HHLTUnbiasedLinesConf
                              , Hlt2B2LLXLinesConf                         
                              , Hlt2DisplVerticesLinesConf
                              , Hlt2CommissioningLinesConf
@@ -970,7 +973,7 @@ class Hlt2Tracking(LHCbConfigurableUser):
         from HltReco        import MinimalVelo
         from HltLine.HltLine    import bindMembers 
             
-        veloTracksOutputLocation = _baseTrackLocation(self.getProp("Prefix"),Hlt2VeloTracksName) 
+        veloTracksOutputLocation = _baseTrackLocation(HltSharedTracksPrefix,Hlt2VeloTracksName) 
        
         recoVeloGeneral         = Tf__PatVeloGeneralTracking(self.getProp("Prefix")+'RecoVeloGeneral'
                                            , OutputTracksLocation = veloTracksOutputLocation )
