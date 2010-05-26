@@ -1,5 +1,5 @@
 # --> Including file '/build/cattanem/Brunel_HEAD/Rec/Brunel/tests/options/test-FSR.py'
-# --> Including file '/afs/cern.ch/sw/Gaudi/releases/GAUDI/GAUDI_v21r8/GaudiPoolDb/options/GaudiPoolDbRoot.opts'
+# --> Including file '/afs/cern.ch/sw/Gaudi/releases/GAUDI/GAUDI_v21r9/GaudiPoolDb/options/GaudiPoolDbRoot.opts'
 # ApplicationMgr.ExtSvc    += { "Gaudi::MultiFileCatalog/FileCatalog",                              "Gaudi::IODataManager/IODataManager",                              "PoolDbCacheSvc/PoolDbCacheSvc",                              "PoolDbCnvSvc/PoolRootEvtCnvSvc",                              "PoolDbCnvSvc/PoolRootKeyEvtCnvSvc",                              "PoolDbCnvSvc/PoolRootTreeEvtCnvSvc"                            };
 # EventPersistencySvc.CnvServices += { "PoolRootEvtCnvSvc" };
 # EventPersistencySvc.CnvServices += { "PoolRootTreeEvtCnvSvc" };
@@ -20,7 +20,7 @@
 # PoolRootEvtCnvSvc.EnableIncident      =    1;
 # PoolRootKeyEvtCnvSvc.EnableIncident   =    1;
 # PoolRootTreeEvtCnvSvc.EnableIncident  =    1;
-# <-- End of file '/afs/cern.ch/sw/Gaudi/releases/GAUDI/GAUDI_v21r8/GaudiPoolDb/options/GaudiPoolDbRoot.opts'
+# <-- End of file '/afs/cern.ch/sw/Gaudi/releases/GAUDI/GAUDI_v21r9/GaudiPoolDb/options/GaudiPoolDbRoot.opts'
 # <-- End of file '/build/cattanem/Brunel_HEAD/Rec/Brunel/tests/options/test-FSR.py'
 # applying configuration of LHCbApp
 # /***** User LHCbApp/LHCbApp ************************************************************************
@@ -45,13 +45,13 @@
 # |-BXTypes           = ['NoBeam', 'BeamCrossing', 'Beam1', 'Beam2']
 # |                   (default: ['NoBeam', 'BeamCrossing', 'Beam1', 'Beam2'])
 # |-Context           = 'Offline'
-# |-LumiSequencer     = <GaudiSequencer/LumiSequence at 0xa1f020>  (default: None)
+# |-LumiSequencer     = <GaudiSequencer/LumiSequence at 0x483f9d0>  (default: None)
 # |-InputType         = 'DST'  (default: 'MDF')
 # \----- (End of User LumiAlgsConf/LumiAlgsConf) -----------------------------------------------------
 # applying configuration of DDDBConf
-# WARNING: Using default tag head-20100119 for partition DDDB
-# WARNING: Using default tag head-20100325 for partition LHCBCOND
-# WARNING: Using default tag MC-20100321-vc15mm-md100 for partition SIMCOND
+# WARNING: Using default tag head-20100518 for partition DDDB
+# WARNING: Using default tag head-20100518 for partition LHCBCOND
+# WARNING: Using default tag MC-20100412-vc15mm-md100 for partition SIMCOND
 # /***** User DDDBConf/DDDBConf **********************************************************************
 # |-DataType   = '2009'
 # |-DbRoot     = 'conddb:/lhcb.xml'
@@ -73,13 +73,14 @@
 # |-Online                    = False
 # |-UseOracle                 = False
 # |-LogFile                   = ''
+# |-UseLatestTags             = []  (default: [])
 # |-OverwriteSQLiteLocalCopy  = False
 # \----- (End of User CondDB/CondDB) -----------------------------------------------------------------
 ApplicationMgr      DEBUG Getting my own properties
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
-                                                   Welcome to Brunel version v36r2
-                                          running on lxbuild156.cern.ch on Fri Mar 26 08:50:55 2010
+                                                   Welcome to Brunel version v37r2p2
+                                          running on volhcb27.cern.ch on Wed May 26 08:39:28 2010
 ====================================================================================================================================
 ApplicationMgr    VERBOSE declareMultiSvcType: declared service EvtDataSvc/EventDataSvc
 ApplicationMgr    VERBOSE declareMultiSvcType: declared service DetDataSvc/DetectorDataSvc
@@ -168,7 +169,7 @@ LumiSequence        DEBUG Property ['Name': Value] =  'ReturnOK':False
 LumiSequence        DEBUG Property ['Name': Value] =  'MeasureTime':True
 LumiSequence        DEBUG Property ['Name': Value] =  'IgnoreFilterPassed':True
 LumiSequence        DEBUG Property ['Name': Value] =  'ModeOR':True
-LumiSequence        DEBUG Property ['Name': Value] =  'Members':[ 'EventAccounting/EventAccount' , 'createODIN/createODIN' , 'LumiIntegrateFSR/TouchLumiFSR' ]
+LumiSequence        DEBUG Property ['Name': Value] =  'Members':[ 'EventAccounting/EventAccount' , 'createODIN/createODIN' , 'LumiIntegrateFSR/TouchLumiFSR' , 'LumiIntegrateFSR/TouchLumiLowFSR' ]
 LumiSequence        DEBUG Property ['Name': Value] =  'RequireObjects':[  ]
 LumiSequence        DEBUG Property ['Name': Value] =  'VetoObjects':[  ]
 LumiSequence        DEBUG Property ['Name': Value] =  'StatEntityList':[  ]
@@ -208,9 +209,11 @@ createODIN          DEBUG Releasing service 'JobOptionsSvc'
 LumiSequence        DEBUG Added algorithm createODIN
 TouchLumiFSR        DEBUG Releasing service 'JobOptionsSvc'
 LumiSequence        DEBUG Added algorithm TouchLumiFSR
+TouchLumiLowFSR     DEBUG Releasing service 'JobOptionsSvc'
+LumiSequence        DEBUG Added algorithm TouchLumiLowFSR
 LumiSequence        DEBUG Releasing service 'ApplicationMgr'
 LumiSequence        DEBUG Releasing service 'JobOptionsSvc'
-LumiSequence         INFO OR Member list: EventAccounting/EventAccount, createODIN, LumiIntegrateFSR/TouchLumiFSR
+LumiSequence         INFO OR Member list: EventAccounting/EventAccount, createODIN, LumiIntegrateFSR/TouchLumiFSR, LumiIntegrateFSR/TouchLumiLowFSR
 LumiSequence      VERBOSE ServiceLocatorHelper::service: found service ToolSvc
 ToolSvc.Sequenc...  DEBUG Releasing service 'JobOptionsSvc'
 ToolSvc           VERBOSE Created tool SequencerTimerTool/ToolSvc.SequencerTimerTool
@@ -248,7 +251,7 @@ RndmGenSvc.Engine   DEBUG Service base class initialized successfully
 RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
 RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-ToolSvc.Sequenc...   INFO This machine has a speed about   1.76 times the speed of a 2.8 GHz Xeon.
+ToolSvc.Sequenc...   INFO This machine has a speed about   1.89 times the speed of a 2.8 GHz Xeon.
 LumiSequence        DEBUG The tool of type 'SequencerTimerTool' has been added with the name 'ToolSvc.SequencerTimerTool'
 EventAccount        DEBUG Property update for OutputLevel : new value = 1
 EventAccount        DEBUG Property update for OutputLevel : new value = 1
@@ -297,7 +300,6 @@ FileRecordDataSvc VERBOSE ServiceLocatorHelper::service: found service IncidentS
 FileRecordPersi...   INFO  'CnvServices':[ 'FileRecordCnvSvc' ]
 FileRecordPersi...  DEBUG Service base class initialized successfully
 FileRecordDataSvc VERBOSE ServiceLocatorHelper::service: found service PersistencySvc/FileRecordPersistencySvc
-IncidentSvc         DEBUG Adding [BeginEvent] listener 'FileRecordDataSvc' with priority 0
 IncidentSvc         DEBUG Adding [FILE_OPEN_READ] listener 'FileRecordDataSvc' with priority 0
 IncidentSvc         DEBUG Adding [SAVE_FILE_RECORD] listener 'FileRecordDataSvc' with priority 0
 EventAccount        DEBUG ==> Default status: UNCHECKED
@@ -457,7 +459,8 @@ TouchLumiFSR         INFO Primary  BXType BeamCrossing
 TouchLumiFSR         INFO Add      BXType NoBeam
 TouchLumiFSR         INFO Subtract BXType Beam1
 TouchLumiFSR         INFO Subtract BXType Beam2
-TouchLumiFSR      VERBOSE ServiceLocatorHelper::service: found service FileRecordDataSvc
+IncidentSvc         DEBUG Adding [BeginInputFile] listener 'TouchLumiFSR' with priority 0
+TouchLumiFSR        DEBUG registered with incSvc
 TouchLumiFSR      VERBOSE ServiceLocatorHelper::service: found service ToolSvc
 ToolSvc.LumiInt...  DEBUG Releasing service 'JobOptionsSvc'
 ToolSvc           VERBOSE Created tool LumiIntegrator/ToolSvc.LumiIntegrator
@@ -488,6 +491,90 @@ ToolSvc.LumiInt...  DEBUG Property ['Name': Value] =  'AuditTools':False
 ToolSvc.LumiInt...  DEBUG Property ['Name': Value] =  'OutputLevel':1
 ToolSvc.LumiInt...  DEBUG Property ['Name': Value] =  'MonitorService':MonitorSvc
 TouchLumiFSR        DEBUG The tool of type 'LumiIntegrator' has been added with the name 'ToolSvc.LumiIntegrator'
+TouchLumiLowFSR     DEBUG Property update for OutputLevel : new value = 1
+TouchLumiLowFSR     DEBUG Property update for OutputLevel : new value = 1
+TouchLumiLowFSR   VERBOSE ServiceLocatorHelper::service: found service AlgContextSvc
+TouchLumiLowFSR     DEBUG Initialize base class GaudiCommon<Algorithm>
+TouchLumiLowFSR     DEBUG could not locate CounterSummarySvc, no counter summary will be made
+TouchLumiLowFSR     DEBUG List of ALL properties of LumiIntegrateFSR/TouchLumiLowFSR  #properties = 41
+TouchLumiLowFSR     DEBUG Property ['Name': Value] =  'IntegratorToolName':LumiLowIntegrator
+TouchLumiLowFSR     DEBUG Property ['Name': Value] =  'SubtractBXTypes':[  ]
+TouchLumiLowFSR     DEBUG Property ['Name': Value] =  'AddBXTypes':[  ]
+TouchLumiLowFSR     DEBUG Property ['Name': Value] =  'PrimaryBXType':BeamCrossing
+TouchLumiLowFSR     DEBUG Property ['Name': Value] =  'TimeSpanFSRName':/TimeSpanFSR
+TouchLumiLowFSR     DEBUG Property ['Name': Value] =  'EventCountFSRName':/EventCountFSR
+TouchLumiLowFSR     DEBUG Property ['Name': Value] =  'FSRName':/LumiLowFSR
+TouchLumiLowFSR     DEBUG Property ['Name': Value] =  'FileRecordLocation':/FileRecords
+TouchLumiLowFSR     DEBUG Property ['Name': Value] =  'RawEventLocation':DAQ/RawEvent
+TouchLumiLowFSR     DEBUG Property ['Name': Value] =  'RequireObjects':[  ]
+TouchLumiLowFSR     DEBUG Property ['Name': Value] =  'VetoObjects':[  ]
+TouchLumiLowFSR     DEBUG Property ['Name': Value] =  'StatEntityList':[  ]
+TouchLumiLowFSR     DEBUG Property ['Name': Value] =  'CounterList':[ '.*' ]
+TouchLumiLowFSR     DEBUG Property ['Name': Value] =  'UseEfficiencyRowFormat':True
+TouchLumiLowFSR     DEBUG Property ['Name': Value] =  'EfficiencyRowFormat': |*%|-48.48s|%|50t||%|10d| |%|11.5g| |(%|#9.6g| +- %|-#9.6g|)%%|   -------   |   -------   |
+TouchLumiLowFSR     DEBUG Property ['Name': Value] =  'RegularRowFormat': | %|-48.48s|%|50t||%|10d| |%|11.7g| |%|#11.5g| |%|#11.5g| |%|#12.5g| |%|#12.5g| |
+TouchLumiLowFSR     DEBUG Property ['Name': Value] =  'StatTableHeader': |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
+TouchLumiLowFSR     DEBUG Property ['Name': Value] =  'GlobalTimeOffset':0
+TouchLumiLowFSR     DEBUG Property ['Name': Value] =  'RootOnTES':
+TouchLumiLowFSR     DEBUG Property ['Name': Value] =  'RootInTES':
+TouchLumiLowFSR     DEBUG Property ['Name': Value] =  'Context':
+TouchLumiLowFSR     DEBUG Property ['Name': Value] =  'TypePrint':True
+TouchLumiLowFSR     DEBUG Property ['Name': Value] =  'StatPrint':True
+TouchLumiLowFSR     DEBUG Property ['Name': Value] =  'PropertiesPrint':False
+TouchLumiLowFSR     DEBUG Property ['Name': Value] =  'ErrorsPrint':True
+TouchLumiLowFSR     DEBUG Property ['Name': Value] =  'RegisterForContextService':True
+TouchLumiLowFSR     DEBUG Property ['Name': Value] =  'MonitorService':MonitorSvc
+TouchLumiLowFSR     DEBUG Property ['Name': Value] =  'AuditStop':False
+TouchLumiLowFSR     DEBUG Property ['Name': Value] =  'AuditStart':False
+TouchLumiLowFSR     DEBUG Property ['Name': Value] =  'AuditEndRun':False
+TouchLumiLowFSR     DEBUG Property ['Name': Value] =  'AuditBeginRun':False
+TouchLumiLowFSR     DEBUG Property ['Name': Value] =  'AuditFinalize':False
+TouchLumiLowFSR     DEBUG Property ['Name': Value] =  'AuditExecute':False
+TouchLumiLowFSR     DEBUG Property ['Name': Value] =  'AuditRestart':False
+TouchLumiLowFSR     DEBUG Property ['Name': Value] =  'AuditReinitialize':False
+TouchLumiLowFSR     DEBUG Property ['Name': Value] =  'AuditInitialize':False
+TouchLumiLowFSR     DEBUG Property ['Name': Value] =  'AuditAlgorithms':False
+TouchLumiLowFSR     DEBUG Property ['Name': Value] =  'ErrorCount':0
+TouchLumiLowFSR     DEBUG Property ['Name': Value] =  'ErrorMax':1
+TouchLumiLowFSR     DEBUG Property ['Name': Value] =  'Enable':True
+TouchLumiLowFSR     DEBUG Property ['Name': Value] =  'OutputLevel':1
+TouchLumiLowFSR     DEBUG ==> Initialize
+TouchLumiLowFSR      INFO Primary  BXType BeamCrossing
+TouchLumiLowFSR      INFO Add      BXType NoBeam
+TouchLumiLowFSR      INFO Subtract BXType Beam1
+TouchLumiLowFSR      INFO Subtract BXType Beam2
+IncidentSvc         DEBUG Adding [BeginInputFile] listener 'TouchLumiLowFSR' with priority 0
+TouchLumiLowFSR     DEBUG registered with incSvc
+TouchLumiLowFSR   VERBOSE ServiceLocatorHelper::service: found service ToolSvc
+ToolSvc.LumiLow...  DEBUG Releasing service 'JobOptionsSvc'
+ToolSvc           VERBOSE Created tool LumiIntegrator/ToolSvc.LumiLowIntegrator
+ToolSvc.LumiLow...  DEBUG Property update for OutputLevel : new value = 1
+ToolSvc.LumiLow...  DEBUG Initialize base class GaudiCommon<AlgTool>
+ToolSvc.LumiLow...  DEBUG could not locate CounterSummarySvc, no counter summary will be made
+ToolSvc.LumiLow...  DEBUG List of ALL properties of LumiIntegrator/ToolSvc.LumiLowIntegrator  #properties = 22
+ToolSvc.LumiLow...  DEBUG Property ['Name': Value] =  'ContextService':AlgContextSvc
+ToolSvc.LumiLow...  DEBUG Property ['Name': Value] =  'StatEntityList':[  ]
+ToolSvc.LumiLow...  DEBUG Property ['Name': Value] =  'CounterList':[ '.*' ]
+ToolSvc.LumiLow...  DEBUG Property ['Name': Value] =  'UseEfficiencyRowFormat':True
+ToolSvc.LumiLow...  DEBUG Property ['Name': Value] =  'EfficiencyRowFormat': |*%|-48.48s|%|50t||%|10d| |%|11.5g| |(%|#9.6g| +- %|-#9.6g|)%%|   -------   |   -------   |
+ToolSvc.LumiLow...  DEBUG Property ['Name': Value] =  'RegularRowFormat': | %|-48.48s|%|50t||%|10d| |%|11.7g| |%|#11.5g| |%|#11.5g| |%|#12.5g| |%|#12.5g| |
+ToolSvc.LumiLow...  DEBUG Property ['Name': Value] =  'StatTableHeader': |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
+ToolSvc.LumiLow...  DEBUG Property ['Name': Value] =  'GlobalTimeOffset':0
+ToolSvc.LumiLow...  DEBUG Property ['Name': Value] =  'RootOnTES':
+ToolSvc.LumiLow...  DEBUG Property ['Name': Value] =  'RootInTES':
+ToolSvc.LumiLow...  DEBUG Property ['Name': Value] =  'Context':
+ToolSvc.LumiLow...  DEBUG Property ['Name': Value] =  'TypePrint':True
+ToolSvc.LumiLow...  DEBUG Property ['Name': Value] =  'StatPrint':True
+ToolSvc.LumiLow...  DEBUG Property ['Name': Value] =  'PropertiesPrint':False
+ToolSvc.LumiLow...  DEBUG Property ['Name': Value] =  'ErrorsPrint':True
+ToolSvc.LumiLow...  DEBUG Property ['Name': Value] =  'AuditFinalize':False
+ToolSvc.LumiLow...  DEBUG Property ['Name': Value] =  'AuditStop':False
+ToolSvc.LumiLow...  DEBUG Property ['Name': Value] =  'AuditStart':False
+ToolSvc.LumiLow...  DEBUG Property ['Name': Value] =  'AuditInitialize':False
+ToolSvc.LumiLow...  DEBUG Property ['Name': Value] =  'AuditTools':False
+ToolSvc.LumiLow...  DEBUG Property ['Name': Value] =  'OutputLevel':1
+ToolSvc.LumiLow...  DEBUG Property ['Name': Value] =  'MonitorService':MonitorSvc
+TouchLumiLowFSR     DEBUG The tool of type 'LumiIntegrator' has been added with the name 'ToolSvc.LumiLowIntegrator'
 EventDataSvc        DEBUG Service base class initialized successfully
 EventDataSvc      VERBOSE ServiceLocatorHelper::service: found service IncidentSvc
 EventPersistenc...   INFO  'CnvServices':[ 'PoolRootEvtCnvSvc' , 'PoolRootTreeEvtCnvSvc' , 'PoolRootKeyEvtCnvSvc' ]
@@ -501,6 +588,10 @@ EventPersistenc...   INFO Added successfully Conversion service:PoolRootTreeEvtC
 EventSelector.D...  DEBUG Service base class initialized successfully
 EventSelector.D...  DEBUG Selection root:/Event CLID:1
 EventSelector        INFO Stream:EventSelector.DataStreamTool_1 Def:DATAFILE='PFN:56721-100ev.dst' TYP='POOL_ROOTTREE' OPT='READ'
+IncidentSvc       VERBOSE Calling 'TouchLumiFSR' for incident [BeginInputFile]
+TouchLumiFSR        DEBUG ==>from handle PFN:56721-100ev.dst
+IncidentSvc       VERBOSE Calling 'TouchLumiLowFSR' for incident [BeginInputFile]
+TouchLumiLowFSR     DEBUG ==>from handle PFN:56721-100ev.dst
 HistogramDataSvc    DEBUG Service base class initialized successfully
 HistogramDataSvc  VERBOSE ServiceLocatorHelper::service: found service IncidentSvc
 HistogramPersis...   INFO  'CnvServices':[ 'HbookHistSvc' , 'RootHistSvc' ]
@@ -526,6 +617,7 @@ ToolSvc           VERBOSE ToolSvc.SequencerTimerTool::start()
 ToolSvc           VERBOSE ToolSvc.OdinTimeDecoder::start()
 ToolSvc           VERBOSE ToolSvc.OdinTimeDecoder.ODINDecodeTool::start()
 ToolSvc           VERBOSE ToolSvc.LumiIntegrator::start()
+ToolSvc           VERBOSE ToolSvc.LumiLowIntegrator::start()
 ToolSvc           VERBOSE EventSelector.DataStreamTool::start()
 ServiceManager      DEBUG Starting service XmlParserSvc
 ServiceManager      DEBUG Starting service XmlCnvSvc
@@ -545,75 +637,76 @@ LumiSequence        DEBUG ==> beginRun
 EventAccount        DEBUG Property update for OutputLevel : new value = 1
 createODIN          DEBUG Property update for OutputLevel : new value = 1
 TouchLumiFSR        DEBUG Property update for OutputLevel : new value = 1
+TouchLumiLowFSR     DEBUG Property update for OutputLevel : new value = 1
 RootDBase.open    SUCCESS 56721-100ev.dst File version:52600
-PoolRootTreeEvt...   INFO Records token:[DB=324C6EEC-9EE8-DE11-9355-001E4F3E5979][CNT=/FileRecords][CLID=00000001-0000-0000-0000-000000000000][TECH=00000202][OID=0000001C-00000000]
+PoolRootTreeEvt...   INFO Records token:[DB=30535E4F-D667-DF11-8F38-001E4F3DD7AB][CNT=/FileRecords][CLID=00000001-0000-0000-0000-000000000000][TECH=00000202][OID=0000001C-00000000]
 IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [FILE_OPEN_READ]
-FileRecordDataSvc   DEBUG Request to load record for file 324C6EEC-9EE8-DE11-9355-001E4F3E5979
-FileRecordDataSvc VERBOSE Requested object /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979
+FileRecordDataSvc   DEBUG Request to load record for file 30535E4F-D667-DF11-8F38-001E4F3DD7AB
+FileRecordDataSvc VERBOSE Requested object /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB
 FileRecordPersi...VERBOSE ServiceLocatorHelper::service: found service FileRecordCnvSvc
 FileRecordPersi...   INFO Added successfully Conversion service:FileRecordCnvSvc
 PoolDbBaseCnv       DEBUG Created object shape for class:DataObject
 PoolDbBaseCnv       DEBUG {ID=00000001-0000-0000-0000-000000000000}{CL=DataObject}{NCOL=3}{CNT=0}{COL={{NAME=DataObject}{CLASS=DataObject}{TYP=21}{OPT=0}{OFF=0}{SIZ=0}{CNT=1}}}{COL={{NAME=Links}{CLASS=LinkManager}{TYP=21}{OPT=0}{OFF=0}{SIZ=0}{CNT=1}}}{COL={{NAME=Refs}{CLASS=PoolDbLinkManager}{TYP=21}{OPT=0}{OFF=0}{SIZ=0}{CNT=1}}}
-FileRecordDataSvc VERBOSE Object /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979 created
-FileRecordDataSvc VERBOSE Filling object /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979
-FileRecordDataSvc VERBOSE Object /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979 successfully loaded
-FileRecordDataSvc   DEBUG Loaded records object: /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979
-FileRecordDataSvc VERBOSE Requested object /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiFSRNoBeam
+FileRecordDataSvc VERBOSE Object /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB created
+FileRecordDataSvc VERBOSE Filling object /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB
+FileRecordDataSvc VERBOSE Object /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB successfully loaded
+FileRecordDataSvc   DEBUG Loaded records object: /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB
+FileRecordDataSvc VERBOSE Requested object /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiFSRNoBeam
 PoolDbBaseCnv       DEBUG Created object shape for class:KeyedContainer<LHCb::LumiFSR,Containers::KeyedObjectManager<Containers::hashmap> >
 PoolDbBaseCnv       DEBUG {ID=000634BD-0000-0000-0000-000000000000}{CL=KeyedContainer<LHCb::LumiFSR,Containers::KeyedObjectManager<Containers::hashmap> >}{NCOL=3}{CNT=0}{COL={{NAME=KeyedContainer<LHCb::LumiFSR,Containers::KeyedObjectManager<Containers::hashmap> >}{CLASS=KeyedContainer<LHCb::LumiFSR,Containers::KeyedObjectManager<Containers::hashmap> >}{TYP=21}{OPT=0}{OFF=0}{SIZ=0}{CNT=1}}}{COL={{NAME=Links}{CLASS=LinkManager}{TYP=21}{OPT=0}{OFF=0}{SIZ=0}{CNT=1}}}{COL={{NAME=Refs}{CLASS=PoolDbLinkManager}{TYP=21}{OPT=0}{OFF=0}{SIZ=0}{CNT=1}}}
-FileRecordDataSvc VERBOSE Object /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiFSRNoBeam created
-FileRecordDataSvc VERBOSE Filling object /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiFSRNoBeam
-FileRecordDataSvc VERBOSE Object /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiFSRNoBeam successfully loaded
-FileRecordDataSvc   DEBUG Loaded records object: /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiFSRNoBeam
-FileRecordDataSvc VERBOSE Requested object /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiFSRBeamCrossing
-FileRecordDataSvc VERBOSE Object /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiFSRBeamCrossing created
-FileRecordDataSvc VERBOSE Filling object /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiFSRBeamCrossing
-FileRecordDataSvc VERBOSE Object /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiFSRBeamCrossing successfully loaded
-FileRecordDataSvc   DEBUG Loaded records object: /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiFSRBeamCrossing
-FileRecordDataSvc VERBOSE Requested object /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiFSRBeam1
-FileRecordDataSvc VERBOSE Object /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiFSRBeam1 created
-FileRecordDataSvc VERBOSE Filling object /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiFSRBeam1
-FileRecordDataSvc VERBOSE Object /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiFSRBeam1 successfully loaded
-FileRecordDataSvc   DEBUG Loaded records object: /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiFSRBeam1
-FileRecordDataSvc VERBOSE Requested object /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiFSRBeam2
-FileRecordDataSvc VERBOSE Object /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiFSRBeam2 created
-FileRecordDataSvc VERBOSE Filling object /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiFSRBeam2
-FileRecordDataSvc VERBOSE Object /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiFSRBeam2 successfully loaded
-FileRecordDataSvc   DEBUG Loaded records object: /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiFSRBeam2
-FileRecordDataSvc VERBOSE Requested object /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiLowFSRNoBeam
-FileRecordDataSvc VERBOSE Object /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiLowFSRNoBeam created
-FileRecordDataSvc VERBOSE Filling object /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiLowFSRNoBeam
-FileRecordDataSvc VERBOSE Object /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiLowFSRNoBeam successfully loaded
-FileRecordDataSvc   DEBUG Loaded records object: /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiLowFSRNoBeam
-FileRecordDataSvc VERBOSE Requested object /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiLowFSRBeamCrossing
-FileRecordDataSvc VERBOSE Object /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiLowFSRBeamCrossing created
-FileRecordDataSvc VERBOSE Filling object /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiLowFSRBeamCrossing
-FileRecordDataSvc VERBOSE Object /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiLowFSRBeamCrossing successfully loaded
-FileRecordDataSvc   DEBUG Loaded records object: /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiLowFSRBeamCrossing
-FileRecordDataSvc VERBOSE Requested object /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiLowFSRBeam1
-FileRecordDataSvc VERBOSE Object /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiLowFSRBeam1 created
-FileRecordDataSvc VERBOSE Filling object /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiLowFSRBeam1
-FileRecordDataSvc VERBOSE Object /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiLowFSRBeam1 successfully loaded
-FileRecordDataSvc   DEBUG Loaded records object: /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiLowFSRBeam1
-FileRecordDataSvc VERBOSE Requested object /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiLowFSRBeam2
-FileRecordDataSvc VERBOSE Object /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiLowFSRBeam2 created
-FileRecordDataSvc VERBOSE Filling object /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiLowFSRBeam2
-FileRecordDataSvc VERBOSE Object /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiLowFSRBeam2 successfully loaded
-FileRecordDataSvc   DEBUG Loaded records object: /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiLowFSRBeam2
-FileRecordDataSvc VERBOSE Requested object /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/TimeSpanFSR
+FileRecordDataSvc VERBOSE Object /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiFSRNoBeam created
+FileRecordDataSvc VERBOSE Filling object /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiFSRNoBeam
+FileRecordDataSvc VERBOSE Object /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiFSRNoBeam successfully loaded
+FileRecordDataSvc   DEBUG Loaded records object: /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiFSRNoBeam
+FileRecordDataSvc VERBOSE Requested object /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiFSRBeamCrossing
+FileRecordDataSvc VERBOSE Object /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiFSRBeamCrossing created
+FileRecordDataSvc VERBOSE Filling object /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiFSRBeamCrossing
+FileRecordDataSvc VERBOSE Object /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiFSRBeamCrossing successfully loaded
+FileRecordDataSvc   DEBUG Loaded records object: /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiFSRBeamCrossing
+FileRecordDataSvc VERBOSE Requested object /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiFSRBeam1
+FileRecordDataSvc VERBOSE Object /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiFSRBeam1 created
+FileRecordDataSvc VERBOSE Filling object /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiFSRBeam1
+FileRecordDataSvc VERBOSE Object /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiFSRBeam1 successfully loaded
+FileRecordDataSvc   DEBUG Loaded records object: /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiFSRBeam1
+FileRecordDataSvc VERBOSE Requested object /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiFSRBeam2
+FileRecordDataSvc VERBOSE Object /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiFSRBeam2 created
+FileRecordDataSvc VERBOSE Filling object /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiFSRBeam2
+FileRecordDataSvc VERBOSE Object /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiFSRBeam2 successfully loaded
+FileRecordDataSvc   DEBUG Loaded records object: /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiFSRBeam2
+FileRecordDataSvc VERBOSE Requested object /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiLowFSRNoBeam
+FileRecordDataSvc VERBOSE Object /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiLowFSRNoBeam created
+FileRecordDataSvc VERBOSE Filling object /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiLowFSRNoBeam
+FileRecordDataSvc VERBOSE Object /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiLowFSRNoBeam successfully loaded
+FileRecordDataSvc   DEBUG Loaded records object: /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiLowFSRNoBeam
+FileRecordDataSvc VERBOSE Requested object /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiLowFSRBeamCrossing
+FileRecordDataSvc VERBOSE Object /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiLowFSRBeamCrossing created
+FileRecordDataSvc VERBOSE Filling object /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiLowFSRBeamCrossing
+FileRecordDataSvc VERBOSE Object /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiLowFSRBeamCrossing successfully loaded
+FileRecordDataSvc   DEBUG Loaded records object: /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiLowFSRBeamCrossing
+FileRecordDataSvc VERBOSE Requested object /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiLowFSRBeam1
+FileRecordDataSvc VERBOSE Object /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiLowFSRBeam1 created
+FileRecordDataSvc VERBOSE Filling object /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiLowFSRBeam1
+FileRecordDataSvc VERBOSE Object /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiLowFSRBeam1 successfully loaded
+FileRecordDataSvc   DEBUG Loaded records object: /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiLowFSRBeam1
+FileRecordDataSvc VERBOSE Requested object /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiLowFSRBeam2
+FileRecordDataSvc VERBOSE Object /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiLowFSRBeam2 created
+FileRecordDataSvc VERBOSE Filling object /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiLowFSRBeam2
+FileRecordDataSvc VERBOSE Object /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiLowFSRBeam2 successfully loaded
+FileRecordDataSvc   DEBUG Loaded records object: /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiLowFSRBeam2
+FileRecordDataSvc VERBOSE Requested object /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/TimeSpanFSR
 PoolDbBaseCnv       DEBUG Created object shape for class:KeyedContainer<LHCb::TimeSpanFSR,Containers::KeyedObjectManager<Containers::hashmap> >
 PoolDbBaseCnv       DEBUG {ID=000634C0-0000-0000-0000-000000000000}{CL=KeyedContainer<LHCb::TimeSpanFSR,Containers::KeyedObjectManager<Containers::hashmap> >}{NCOL=3}{CNT=0}{COL={{NAME=KeyedContainer<LHCb::TimeSpanFSR,Containers::KeyedObjectManager<Containers::hashmap> >}{CLASS=KeyedContainer<LHCb::TimeSpanFSR,Containers::KeyedObjectManager<Containers::hashmap> >}{TYP=21}{OPT=0}{OFF=0}{SIZ=0}{CNT=1}}}{COL={{NAME=Links}{CLASS=LinkManager}{TYP=21}{OPT=0}{OFF=0}{SIZ=0}{CNT=1}}}{COL={{NAME=Refs}{CLASS=PoolDbLinkManager}{TYP=21}{OPT=0}{OFF=0}{SIZ=0}{CNT=1}}}
-FileRecordDataSvc VERBOSE Object /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/TimeSpanFSR created
-FileRecordDataSvc VERBOSE Filling object /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/TimeSpanFSR
-FileRecordDataSvc VERBOSE Object /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/TimeSpanFSR successfully loaded
-FileRecordDataSvc   DEBUG Loaded records object: /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/TimeSpanFSR
-FileRecordDataSvc VERBOSE Requested object /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/EventCountFSR
+FileRecordDataSvc VERBOSE Object /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/TimeSpanFSR created
+FileRecordDataSvc VERBOSE Filling object /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/TimeSpanFSR
+FileRecordDataSvc VERBOSE Object /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/TimeSpanFSR successfully loaded
+FileRecordDataSvc   DEBUG Loaded records object: /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/TimeSpanFSR
+FileRecordDataSvc VERBOSE Requested object /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/EventCountFSR
 PoolDbBaseCnv       DEBUG Created object shape for class:LHCb::EventCountFSR
 PoolDbBaseCnv       DEBUG {ID=000034BF-0000-0000-0000-000000000000}{CL=LHCb::EventCountFSR}{NCOL=3}{CNT=0}{COL={{NAME=EventCountFSR}{CLASS=LHCb::EventCountFSR}{TYP=21}{OPT=0}{OFF=0}{SIZ=0}{CNT=1}}}{COL={{NAME=Links}{CLASS=LinkManager}{TYP=21}{OPT=0}{OFF=0}{SIZ=0}{CNT=1}}}{COL={{NAME=Refs}{CLASS=PoolDbLinkManager}{TYP=21}{OPT=0}{OFF=0}{SIZ=0}{CNT=1}}}
-FileRecordDataSvc VERBOSE Object /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/EventCountFSR created
-FileRecordDataSvc VERBOSE Filling object /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/EventCountFSR
-FileRecordDataSvc VERBOSE Object /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/EventCountFSR successfully loaded
-FileRecordDataSvc   DEBUG Loaded records object: /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/EventCountFSR
+FileRecordDataSvc VERBOSE Object /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/EventCountFSR created
+FileRecordDataSvc VERBOSE Filling object /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/EventCountFSR
+FileRecordDataSvc VERBOSE Object /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/EventCountFSR successfully loaded
+FileRecordDataSvc   DEBUG Loaded records object: /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/EventCountFSR
 EventSelector     SUCCESS Reading Event record 1. Record number within stream 1: 1
 EventDataSvc      VERBOSE Requested object /Event
 PoolDbBaseCnv       DEBUG Created object shape for class:DataObject
@@ -622,7 +715,6 @@ EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -646,70 +738,13 @@ ToolSvc.OdinTim...  DEBUG The object of type 'LHCb::ODIN*' has been retrieved fr
 ToolSvc.OdinTim...  DEBUG GPS Time = 1252422464035712
 ToolSvc.OdinTim...  DEBUG Firing RunChange incident. Old run=0, new run=56721
 TouchLumiFSR        DEBUG ==> Execute
-TouchLumiFSR      VERBOSE ServiceLocatorHelper::service: found service EventDataSvc
-TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
-TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
-TouchLumiFSR        DEBUG ==> Explore: /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979 for /LumiFSR
-TouchLumiFSR      VERBOSE address: /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiFSRNoBeam
-TouchLumiFSR      VERBOSE address: /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiFSRBeamCrossing
-TouchLumiFSR      VERBOSE address: /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiFSRBeam1
-TouchLumiFSR      VERBOSE address: /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiFSRBeam2
-TouchLumiFSR      VERBOSE constructed time span address/FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/TimeSpanFSR
-TouchLumiFSR        DEBUG using the container: /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiFSRBeamCrossing
-TouchLumiFSR      VERBOSE retrieveObject: /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiFSRBeamCrossing
-TouchLumiFSR      VERBOSE /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/TimeSpanFSR found
-TouchLumiFSR        DEBUG The object of type 'KeyedContainer<LHCb::TimeSpanFSR,Containers::KeyedObjectManager<Containers::hashmap> >*' has been retrieved from TS at address '/FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/TimeSpanFSR'
-TouchLumiFSR        DEBUG /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/TimeSpanFSRREAD TimeSpanFSR: {  earliest : 1252422464006336 - latest : 1252422464350464 }
-TouchLumiFSR        DEBUG /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/TimeSpanFSRinterval: 1252422464006336-1252422464350464
-TouchLumiFSR      VERBOSE /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiFSRBeamCrossing found
-TouchLumiFSR        DEBUG The object of type 'KeyedContainer<LHCb::LumiFSR,Containers::KeyedObjectManager<Containers::hashmap> >*' has been retrieved from TS at address '/FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiFSRBeamCrossing'
-TouchLumiFSR        DEBUG addPrimary   : {  runs : 56721  files : rfio:/castor/cern.ch/grid/lhcb/data/2009/RAW/FULL/FEST/FEST/56721/056721_0000000001.raw  info (key/incr/integral) :  }
-TouchLumiFSR      VERBOSE constructed address/FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiFSRBeamCrossing
-TouchLumiFSR      VERBOSE constructed address/FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiFSRNoBeam
-TouchLumiFSR        DEBUG using the container: /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiFSRNoBeam
-TouchLumiFSR      VERBOSE retrieveObject: /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiFSRNoBeam
-TouchLumiFSR      VERBOSE /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/TimeSpanFSR found
-TouchLumiFSR        DEBUG The object of type 'KeyedContainer<LHCb::TimeSpanFSR,Containers::KeyedObjectManager<Containers::hashmap> >*' has been retrieved from TS at address '/FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/TimeSpanFSR'
-TouchLumiFSR        DEBUG /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/TimeSpanFSRREAD TimeSpanFSR: {  earliest : 1252422464006336 - latest : 1252422464350464 }
-TouchLumiFSR        DEBUG /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/TimeSpanFSRinterval: 1252422464006336-1252422464350464
-TouchLumiFSR      VERBOSE /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiFSRNoBeam found
-TouchLumiFSR        DEBUG The object of type 'KeyedContainer<LHCb::LumiFSR,Containers::KeyedObjectManager<Containers::hashmap> >*' has been retrieved from TS at address '/FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiFSRNoBeam'
-TouchLumiFSR        DEBUG addNormalized: {  runs : 56721  files : rfio:/castor/cern.ch/grid/lhcb/data/2009/RAW/FULL/FEST/FEST/56721/056721_0000000001.raw  info (key/incr/integral) :  }
-TouchLumiFSR      VERBOSE constructed address/FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiFSRBeam1
-TouchLumiFSR        DEBUG using the container: /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiFSRBeam1
-TouchLumiFSR      VERBOSE retrieveObject: /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiFSRBeam1
-TouchLumiFSR      VERBOSE /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/TimeSpanFSR found
-TouchLumiFSR        DEBUG The object of type 'KeyedContainer<LHCb::TimeSpanFSR,Containers::KeyedObjectManager<Containers::hashmap> >*' has been retrieved from TS at address '/FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/TimeSpanFSR'
-TouchLumiFSR        DEBUG /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/TimeSpanFSRREAD TimeSpanFSR: {  earliest : 1252422464006336 - latest : 1252422464350464 }
-TouchLumiFSR        DEBUG /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/TimeSpanFSRinterval: 1252422464006336-1252422464350464
-TouchLumiFSR      VERBOSE /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiFSRBeam1 found
-TouchLumiFSR        DEBUG The object of type 'KeyedContainer<LHCb::LumiFSR,Containers::KeyedObjectManager<Containers::hashmap> >*' has been retrieved from TS at address '/FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiFSRBeam1'
-TouchLumiFSR        DEBUG addNormalized: {  runs : 56721  files : rfio:/castor/cern.ch/grid/lhcb/data/2009/RAW/FULL/FEST/FEST/56721/056721_0000000001.raw  info (key/incr/integral) :  }
-TouchLumiFSR      VERBOSE constructed address/FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiFSRBeam2
-TouchLumiFSR        DEBUG using the container: /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiFSRBeam2
-TouchLumiFSR      VERBOSE retrieveObject: /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiFSRBeam2
-TouchLumiFSR      VERBOSE /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/TimeSpanFSR found
-TouchLumiFSR        DEBUG The object of type 'KeyedContainer<LHCb::TimeSpanFSR,Containers::KeyedObjectManager<Containers::hashmap> >*' has been retrieved from TS at address '/FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/TimeSpanFSR'
-TouchLumiFSR        DEBUG /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/TimeSpanFSRREAD TimeSpanFSR: {  earliest : 1252422464006336 - latest : 1252422464350464 }
-TouchLumiFSR        DEBUG /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/TimeSpanFSRinterval: 1252422464006336-1252422464350464
-TouchLumiFSR      VERBOSE /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiFSRBeam2 found
-TouchLumiFSR        DEBUG The object of type 'KeyedContainer<LHCb::LumiFSR,Containers::KeyedObjectManager<Containers::hashmap> >*' has been retrieved from TS at address '/FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiFSRBeam2'
-TouchLumiFSR        DEBUG addNormalized: {  runs : 56721  files : rfio:/castor/cern.ch/grid/lhcb/data/2009/RAW/FULL/FEST/FEST/56721/056721_0000000001.raw  info (key/incr/integral) :  }
-TouchLumiFSR         INFO Result for this file: {  runs : 56721  files : rfio:/castor/cern.ch/grid/lhcb/data/2009/RAW/FULL/FEST/FEST/56721/056721_0000000001.raw  info (key/incr/integral) :  }
-TouchLumiFSR        DEBUG ==> Explore: /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979 for /EventCountFSR
-TouchLumiFSR      VERBOSE address: /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/EventCountFSR
-TouchLumiFSR        DEBUG ==> Explore: /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979 for /TimeSpanFSR
-TouchLumiFSR      VERBOSE ts address: /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/TimeSpanFSR
+TouchLumiLowFSR     DEBUG ==> Execute
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -730,18 +765,13 @@ ToolSvc.OdinTim...  DEBUG ODINDecodeTool:: The object of type 'LHCb::ODIN' is re
 ToolSvc.OdinTim...  DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 ToolSvc.OdinTim...  DEBUG GPS Time = 1252422464007232
 TouchLumiFSR        DEBUG ==> Execute
-TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
-TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiLowFSR     DEBUG ==> Execute
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -762,18 +792,13 @@ ToolSvc.OdinTim...  DEBUG ODINDecodeTool:: The object of type 'LHCb::ODIN' is re
 ToolSvc.OdinTim...  DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 ToolSvc.OdinTim...  DEBUG GPS Time = 1252422464036608
 TouchLumiFSR        DEBUG ==> Execute
-TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
-TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiLowFSR     DEBUG ==> Execute
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -794,18 +819,13 @@ ToolSvc.OdinTim...  DEBUG ODINDecodeTool:: The object of type 'LHCb::ODIN' is re
 ToolSvc.OdinTim...  DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 ToolSvc.OdinTim...  DEBUG GPS Time = 1252422464009024
 TouchLumiFSR        DEBUG ==> Execute
-TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
-TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiLowFSR     DEBUG ==> Execute
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -826,18 +846,13 @@ ToolSvc.OdinTim...  DEBUG ODINDecodeTool:: The object of type 'LHCb::ODIN' is re
 ToolSvc.OdinTim...  DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 ToolSvc.OdinTim...  DEBUG GPS Time = 1252422464037504
 TouchLumiFSR        DEBUG ==> Execute
-TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
-TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiLowFSR     DEBUG ==> Execute
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -858,18 +873,13 @@ ToolSvc.OdinTim...  DEBUG ODINDecodeTool:: The object of type 'LHCb::ODIN' is re
 ToolSvc.OdinTim...  DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 ToolSvc.OdinTim...  DEBUG GPS Time = 1252422464013440
 TouchLumiFSR        DEBUG ==> Execute
-TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
-TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiLowFSR     DEBUG ==> Execute
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -890,18 +900,13 @@ ToolSvc.OdinTim...  DEBUG ODINDecodeTool:: The object of type 'LHCb::ODIN' is re
 ToolSvc.OdinTim...  DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 ToolSvc.OdinTim...  DEBUG GPS Time = 1252422464041920
 TouchLumiFSR        DEBUG ==> Execute
-TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
-TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiLowFSR     DEBUG ==> Execute
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -922,18 +927,13 @@ ToolSvc.OdinTim...  DEBUG ODINDecodeTool:: The object of type 'LHCb::ODIN' is re
 ToolSvc.OdinTim...  DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 ToolSvc.OdinTim...  DEBUG GPS Time = 1252422464009920
 TouchLumiFSR        DEBUG ==> Execute
-TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
-TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiLowFSR     DEBUG ==> Execute
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -954,18 +954,13 @@ ToolSvc.OdinTim...  DEBUG ODINDecodeTool:: The object of type 'LHCb::ODIN' is re
 ToolSvc.OdinTim...  DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 ToolSvc.OdinTim...  DEBUG GPS Time = 1252422464033920
 TouchLumiFSR        DEBUG ==> Execute
-TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
-TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiLowFSR     DEBUG ==> Execute
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -986,11 +981,7 @@ ToolSvc.OdinTim...  DEBUG ODINDecodeTool:: The object of type 'LHCb::ODIN' is re
 ToolSvc.OdinTim...  DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 ToolSvc.OdinTim...  DEBUG GPS Time = 1252422464014336
 TouchLumiFSR        DEBUG ==> Execute
-TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
-TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiLowFSR     DEBUG ==> Execute
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventSelector     SUCCESS Reading Event record 11. Record number within stream 1: 11
 EventDataSvc      VERBOSE Requested object /Event
@@ -998,7 +989,6 @@ EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -1019,18 +1009,13 @@ ToolSvc.OdinTim...  DEBUG ODINDecodeTool:: The object of type 'LHCb::ODIN' is re
 ToolSvc.OdinTim...  DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 ToolSvc.OdinTim...  DEBUG GPS Time = 1252422464117504
 TouchLumiFSR        DEBUG ==> Execute
-TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
-TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiLowFSR     DEBUG ==> Execute
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -1051,18 +1036,13 @@ ToolSvc.OdinTim...  DEBUG ODINDecodeTool:: The object of type 'LHCb::ODIN' is re
 ToolSvc.OdinTim...  DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 ToolSvc.OdinTim...  DEBUG GPS Time = 1252422464010816
 TouchLumiFSR        DEBUG ==> Execute
-TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
-TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiLowFSR     DEBUG ==> Execute
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -1083,18 +1063,13 @@ ToolSvc.OdinTim...  DEBUG ODINDecodeTool:: The object of type 'LHCb::ODIN' is re
 ToolSvc.OdinTim...  DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 ToolSvc.OdinTim...  DEBUG GPS Time = 1252422464119296
 TouchLumiFSR        DEBUG ==> Execute
-TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
-TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiLowFSR     DEBUG ==> Execute
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -1115,18 +1090,13 @@ ToolSvc.OdinTim...  DEBUG ODINDecodeTool:: The object of type 'LHCb::ODIN' is re
 ToolSvc.OdinTim...  DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 ToolSvc.OdinTim...  DEBUG GPS Time = 1252422464096192
 TouchLumiFSR        DEBUG ==> Execute
-TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
-TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiLowFSR     DEBUG ==> Execute
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -1147,18 +1117,13 @@ ToolSvc.OdinTim...  DEBUG ODINDecodeTool:: The object of type 'LHCb::ODIN' is re
 ToolSvc.OdinTim...  DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 ToolSvc.OdinTim...  DEBUG GPS Time = 1252422464118400
 TouchLumiFSR        DEBUG ==> Execute
-TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
-TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiLowFSR     DEBUG ==> Execute
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -1179,18 +1144,13 @@ ToolSvc.OdinTim...  DEBUG ODINDecodeTool:: The object of type 'LHCb::ODIN' is re
 ToolSvc.OdinTim...  DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 ToolSvc.OdinTim...  DEBUG GPS Time = 1252422464015232
 TouchLumiFSR        DEBUG ==> Execute
-TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
-TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiLowFSR     DEBUG ==> Execute
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -1211,18 +1171,13 @@ ToolSvc.OdinTim...  DEBUG ODINDecodeTool:: The object of type 'LHCb::ODIN' is re
 ToolSvc.OdinTim...  DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 ToolSvc.OdinTim...  DEBUG GPS Time = 1252422464121088
 TouchLumiFSR        DEBUG ==> Execute
-TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
-TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiLowFSR     DEBUG ==> Execute
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -1243,18 +1198,13 @@ ToolSvc.OdinTim...  DEBUG ODINDecodeTool:: The object of type 'LHCb::ODIN' is re
 ToolSvc.OdinTim...  DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 ToolSvc.OdinTim...  DEBUG GPS Time = 1252422464121984
 TouchLumiFSR        DEBUG ==> Execute
-TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
-TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiLowFSR     DEBUG ==> Execute
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -1275,18 +1225,13 @@ ToolSvc.OdinTim...  DEBUG ODINDecodeTool:: The object of type 'LHCb::ODIN' is re
 ToolSvc.OdinTim...  DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 ToolSvc.OdinTim...  DEBUG GPS Time = 1252422464097024
 TouchLumiFSR        DEBUG ==> Execute
-TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
-TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiLowFSR     DEBUG ==> Execute
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -1307,11 +1252,7 @@ ToolSvc.OdinTim...  DEBUG ODINDecodeTool:: The object of type 'LHCb::ODIN' is re
 ToolSvc.OdinTim...  DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 ToolSvc.OdinTim...  DEBUG GPS Time = 1252422464039232
 TouchLumiFSR        DEBUG ==> Execute
-TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
-TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiLowFSR     DEBUG ==> Execute
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventSelector     SUCCESS Reading Event record 21. Record number within stream 1: 21
 EventDataSvc      VERBOSE Requested object /Event
@@ -1319,7 +1260,6 @@ EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -1340,18 +1280,13 @@ ToolSvc.OdinTim...  DEBUG ODINDecodeTool:: The object of type 'LHCb::ODIN' is re
 ToolSvc.OdinTim...  DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 ToolSvc.OdinTim...  DEBUG GPS Time = 1252422464097920
 TouchLumiFSR        DEBUG ==> Execute
-TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
-TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiLowFSR     DEBUG ==> Execute
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -1372,18 +1307,13 @@ ToolSvc.OdinTim...  DEBUG ODINDecodeTool:: The object of type 'LHCb::ODIN' is re
 ToolSvc.OdinTim...  DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 ToolSvc.OdinTim...  DEBUG GPS Time = 1252422464041024
 TouchLumiFSR        DEBUG ==> Execute
-TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
-TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiLowFSR     DEBUG ==> Execute
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -1404,18 +1334,13 @@ ToolSvc.OdinTim...  DEBUG ODINDecodeTool:: The object of type 'LHCb::ODIN' is re
 ToolSvc.OdinTim...  DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 ToolSvc.OdinTim...  DEBUG GPS Time = 1252422464098816
 TouchLumiFSR        DEBUG ==> Execute
-TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
-TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiLowFSR     DEBUG ==> Execute
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -1436,18 +1361,13 @@ ToolSvc.OdinTim...  DEBUG ODINDecodeTool:: The object of type 'LHCb::ODIN' is re
 ToolSvc.OdinTim...  DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 ToolSvc.OdinTim...  DEBUG GPS Time = 1252422464101504
 TouchLumiFSR        DEBUG ==> Execute
-TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
-TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiLowFSR     DEBUG ==> Execute
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -1468,18 +1388,13 @@ ToolSvc.OdinTim...  DEBUG ODINDecodeTool:: The object of type 'LHCb::ODIN' is re
 ToolSvc.OdinTim...  DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 ToolSvc.OdinTim...  DEBUG GPS Time = 1252422464102400
 TouchLumiFSR        DEBUG ==> Execute
-TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
-TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiLowFSR     DEBUG ==> Execute
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -1500,18 +1415,13 @@ ToolSvc.OdinTim...  DEBUG ODINDecodeTool:: The object of type 'LHCb::ODIN' is re
 ToolSvc.OdinTim...  DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 ToolSvc.OdinTim...  DEBUG GPS Time = 1252422464122816
 TouchLumiFSR        DEBUG ==> Execute
-TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
-TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiLowFSR     DEBUG ==> Execute
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -1532,18 +1442,13 @@ ToolSvc.OdinTim...  DEBUG ODINDecodeTool:: The object of type 'LHCb::ODIN' is re
 ToolSvc.OdinTim...  DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 ToolSvc.OdinTim...  DEBUG GPS Time = 1252422464103296
 TouchLumiFSR        DEBUG ==> Execute
-TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
-TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiLowFSR     DEBUG ==> Execute
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -1564,18 +1469,13 @@ ToolSvc.OdinTim...  DEBUG ODINDecodeTool:: The object of type 'LHCb::ODIN' is re
 ToolSvc.OdinTim...  DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 ToolSvc.OdinTim...  DEBUG GPS Time = 1252422464214464
 TouchLumiFSR        DEBUG ==> Execute
-TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
-TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiLowFSR     DEBUG ==> Execute
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -1596,18 +1496,13 @@ ToolSvc.OdinTim...  DEBUG ODINDecodeTool:: The object of type 'LHCb::ODIN' is re
 ToolSvc.OdinTim...  DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 ToolSvc.OdinTim...  DEBUG GPS Time = 1252422464034816
 TouchLumiFSR        DEBUG ==> Execute
-TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
-TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiLowFSR     DEBUG ==> Execute
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -1628,11 +1523,7 @@ ToolSvc.OdinTim...  DEBUG ODINDecodeTool:: The object of type 'LHCb::ODIN' is re
 ToolSvc.OdinTim...  DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 ToolSvc.OdinTim...  DEBUG GPS Time = 1252422464011712
 TouchLumiFSR        DEBUG ==> Execute
-TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
-TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiLowFSR     DEBUG ==> Execute
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventSelector     SUCCESS Reading Event record 31. Record number within stream 1: 31
 EventDataSvc      VERBOSE Requested object /Event
@@ -1640,7 +1531,6 @@ EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -1661,18 +1551,13 @@ ToolSvc.OdinTim...  DEBUG ODINDecodeTool:: The object of type 'LHCb::ODIN' is re
 ToolSvc.OdinTim...  DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 ToolSvc.OdinTim...  DEBUG GPS Time = 1252422464012544
 TouchLumiFSR        DEBUG ==> Execute
-TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
-TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiLowFSR     DEBUG ==> Execute
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -1693,18 +1578,13 @@ ToolSvc.OdinTim...  DEBUG ODINDecodeTool:: The object of type 'LHCb::ODIN' is re
 ToolSvc.OdinTim...  DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 ToolSvc.OdinTim...  DEBUG GPS Time = 1252422464123712
 TouchLumiFSR        DEBUG ==> Execute
-TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
-TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiLowFSR     DEBUG ==> Execute
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -1725,18 +1605,13 @@ ToolSvc.OdinTim...  DEBUG ODINDecodeTool:: The object of type 'LHCb::ODIN' is re
 ToolSvc.OdinTim...  DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 ToolSvc.OdinTim...  DEBUG GPS Time = 1252422464178880
 TouchLumiFSR        DEBUG ==> Execute
-TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
-TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiLowFSR     DEBUG ==> Execute
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -1757,18 +1632,13 @@ ToolSvc.OdinTim...  DEBUG ODINDecodeTool:: The object of type 'LHCb::ODIN' is re
 ToolSvc.OdinTim...  DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 ToolSvc.OdinTim...  DEBUG GPS Time = 1252422464215296
 TouchLumiFSR        DEBUG ==> Execute
-TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
-TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiLowFSR     DEBUG ==> Execute
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -1789,18 +1659,13 @@ ToolSvc.OdinTim...  DEBUG ODINDecodeTool:: The object of type 'LHCb::ODIN' is re
 ToolSvc.OdinTim...  DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 ToolSvc.OdinTim...  DEBUG GPS Time = 1252422464181504
 TouchLumiFSR        DEBUG ==> Execute
-TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
-TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiLowFSR     DEBUG ==> Execute
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -1821,18 +1686,13 @@ ToolSvc.OdinTim...  DEBUG ODINDecodeTool:: The object of type 'LHCb::ODIN' is re
 ToolSvc.OdinTim...  DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 ToolSvc.OdinTim...  DEBUG GPS Time = 1252422464296256
 TouchLumiFSR        DEBUG ==> Execute
-TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
-TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiLowFSR     DEBUG ==> Execute
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -1853,18 +1713,13 @@ ToolSvc.OdinTim...  DEBUG ODINDecodeTool:: The object of type 'LHCb::ODIN' is re
 ToolSvc.OdinTim...  DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 ToolSvc.OdinTim...  DEBUG GPS Time = 1252422464179776
 TouchLumiFSR        DEBUG ==> Execute
-TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
-TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiLowFSR     DEBUG ==> Execute
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -1885,18 +1740,13 @@ ToolSvc.OdinTim...  DEBUG ODINDecodeTool:: The object of type 'LHCb::ODIN' is re
 ToolSvc.OdinTim...  DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 ToolSvc.OdinTim...  DEBUG GPS Time = 1252422464297152
 TouchLumiFSR        DEBUG ==> Execute
-TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
-TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiLowFSR     DEBUG ==> Execute
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -1917,18 +1767,13 @@ ToolSvc.OdinTim...  DEBUG ODINDecodeTool:: The object of type 'LHCb::ODIN' is re
 ToolSvc.OdinTim...  DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 ToolSvc.OdinTim...  DEBUG GPS Time = 1252422464182400
 TouchLumiFSR        DEBUG ==> Execute
-TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
-TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiLowFSR     DEBUG ==> Execute
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -1949,11 +1794,7 @@ ToolSvc.OdinTim...  DEBUG ODINDecodeTool:: The object of type 'LHCb::ODIN' is re
 ToolSvc.OdinTim...  DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 ToolSvc.OdinTim...  DEBUG GPS Time = 1252422464298048
 TouchLumiFSR        DEBUG ==> Execute
-TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
-TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiLowFSR     DEBUG ==> Execute
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventSelector     SUCCESS Reading Event record 41. Record number within stream 1: 41
 EventDataSvc      VERBOSE Requested object /Event
@@ -1961,7 +1802,6 @@ EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -1982,18 +1822,13 @@ ToolSvc.OdinTim...  DEBUG ODINDecodeTool:: The object of type 'LHCb::ODIN' is re
 ToolSvc.OdinTim...  DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 ToolSvc.OdinTim...  DEBUG GPS Time = 1252422464184192
 TouchLumiFSR        DEBUG ==> Execute
-TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
-TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiLowFSR     DEBUG ==> Execute
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -2014,18 +1849,13 @@ ToolSvc.OdinTim...  DEBUG ODINDecodeTool:: The object of type 'LHCb::ODIN' is re
 ToolSvc.OdinTim...  DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 ToolSvc.OdinTim...  DEBUG GPS Time = 1252422464298944
 TouchLumiFSR        DEBUG ==> Execute
-TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
-TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiLowFSR     DEBUG ==> Execute
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -2046,18 +1876,13 @@ ToolSvc.OdinTim...  DEBUG ODINDecodeTool:: The object of type 'LHCb::ODIN' is re
 ToolSvc.OdinTim...  DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 ToolSvc.OdinTim...  DEBUG GPS Time = 1252422464183296
 TouchLumiFSR        DEBUG ==> Execute
-TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
-TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiLowFSR     DEBUG ==> Execute
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -2078,18 +1903,13 @@ ToolSvc.OdinTim...  DEBUG ODINDecodeTool:: The object of type 'LHCb::ODIN' is re
 ToolSvc.OdinTim...  DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 ToolSvc.OdinTim...  DEBUG GPS Time = 1252422464300672
 TouchLumiFSR        DEBUG ==> Execute
-TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
-TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiLowFSR     DEBUG ==> Execute
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -2110,18 +1930,13 @@ ToolSvc.OdinTim...  DEBUG ODINDecodeTool:: The object of type 'LHCb::ODIN' is re
 ToolSvc.OdinTim...  DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 ToolSvc.OdinTim...  DEBUG GPS Time = 1252422464299776
 TouchLumiFSR        DEBUG ==> Execute
-TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
-TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiLowFSR     DEBUG ==> Execute
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -2142,18 +1957,13 @@ ToolSvc.OdinTim...  DEBUG ODINDecodeTool:: The object of type 'LHCb::ODIN' is re
 ToolSvc.OdinTim...  DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 ToolSvc.OdinTim...  DEBUG GPS Time = 1252422464185088
 TouchLumiFSR        DEBUG ==> Execute
-TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
-TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiLowFSR     DEBUG ==> Execute
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -2174,18 +1984,13 @@ ToolSvc.OdinTim...  DEBUG ODINDecodeTool:: The object of type 'LHCb::ODIN' is re
 ToolSvc.OdinTim...  DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 ToolSvc.OdinTim...  DEBUG GPS Time = 1252422464302464
 TouchLumiFSR        DEBUG ==> Execute
-TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
-TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiLowFSR     DEBUG ==> Execute
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -2206,18 +2011,13 @@ ToolSvc.OdinTim...  DEBUG ODINDecodeTool:: The object of type 'LHCb::ODIN' is re
 ToolSvc.OdinTim...  DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 ToolSvc.OdinTim...  DEBUG GPS Time = 1252422464008128
 TouchLumiFSR        DEBUG ==> Execute
-TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
-TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiLowFSR     DEBUG ==> Execute
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -2238,18 +2038,13 @@ ToolSvc.OdinTim...  DEBUG ODINDecodeTool:: The object of type 'LHCb::ODIN' is re
 ToolSvc.OdinTim...  DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 ToolSvc.OdinTim...  DEBUG GPS Time = 1252422464303360
 TouchLumiFSR        DEBUG ==> Execute
-TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
-TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiLowFSR     DEBUG ==> Execute
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -2270,11 +2065,7 @@ ToolSvc.OdinTim...  DEBUG ODINDecodeTool:: The object of type 'LHCb::ODIN' is re
 ToolSvc.OdinTim...  DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 ToolSvc.OdinTim...  DEBUG GPS Time = 1252422464185984
 TouchLumiFSR        DEBUG ==> Execute
-TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
-TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiLowFSR     DEBUG ==> Execute
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventSelector     SUCCESS Reading Event record 51. Record number within stream 1: 51
 EventDataSvc      VERBOSE Requested object /Event
@@ -2282,7 +2073,6 @@ EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -2303,18 +2093,13 @@ ToolSvc.OdinTim...  DEBUG ODINDecodeTool:: The object of type 'LHCb::ODIN' is re
 ToolSvc.OdinTim...  DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 ToolSvc.OdinTim...  DEBUG GPS Time = 1252422464261568
 TouchLumiFSR        DEBUG ==> Execute
-TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
-TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiLowFSR     DEBUG ==> Execute
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -2335,18 +2120,13 @@ ToolSvc.OdinTim...  DEBUG ODINDecodeTool:: The object of type 'LHCb::ODIN' is re
 ToolSvc.OdinTim...  DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 ToolSvc.OdinTim...  DEBUG GPS Time = 1252422464301568
 TouchLumiFSR        DEBUG ==> Execute
-TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
-TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiLowFSR     DEBUG ==> Execute
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -2367,18 +2147,13 @@ ToolSvc.OdinTim...  DEBUG ODINDecodeTool:: The object of type 'LHCb::ODIN' is re
 ToolSvc.OdinTim...  DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 ToolSvc.OdinTim...  DEBUG GPS Time = 1252422464380736
 TouchLumiFSR        DEBUG ==> Execute
-TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
-TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiLowFSR     DEBUG ==> Execute
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -2399,18 +2174,13 @@ ToolSvc.OdinTim...  DEBUG ODINDecodeTool:: The object of type 'LHCb::ODIN' is re
 ToolSvc.OdinTim...  DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 ToolSvc.OdinTim...  DEBUG GPS Time = 1252422464100608
 TouchLumiFSR        DEBUG ==> Execute
-TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
-TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiLowFSR     DEBUG ==> Execute
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -2431,18 +2201,13 @@ ToolSvc.OdinTim...  DEBUG ODINDecodeTool:: The object of type 'LHCb::ODIN' is re
 ToolSvc.OdinTim...  DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 ToolSvc.OdinTim...  DEBUG GPS Time = 1252422464378944
 TouchLumiFSR        DEBUG ==> Execute
-TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
-TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiLowFSR     DEBUG ==> Execute
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -2463,18 +2228,13 @@ ToolSvc.OdinTim...  DEBUG ODINDecodeTool:: The object of type 'LHCb::ODIN' is re
 ToolSvc.OdinTim...  DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 ToolSvc.OdinTim...  DEBUG GPS Time = 1252422464263360
 TouchLumiFSR        DEBUG ==> Execute
-TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
-TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiLowFSR     DEBUG ==> Execute
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -2495,18 +2255,13 @@ ToolSvc.OdinTim...  DEBUG ODINDecodeTool:: The object of type 'LHCb::ODIN' is re
 ToolSvc.OdinTim...  DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 ToolSvc.OdinTim...  DEBUG GPS Time = 1252422464180672
 TouchLumiFSR        DEBUG ==> Execute
-TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
-TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiLowFSR     DEBUG ==> Execute
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -2527,18 +2282,13 @@ ToolSvc.OdinTim...  DEBUG ODINDecodeTool:: The object of type 'LHCb::ODIN' is re
 ToolSvc.OdinTim...  DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 ToolSvc.OdinTim...  DEBUG GPS Time = 1252422464104192
 TouchLumiFSR        DEBUG ==> Execute
-TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
-TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiLowFSR     DEBUG ==> Execute
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -2559,18 +2309,13 @@ ToolSvc.OdinTim...  DEBUG ODINDecodeTool:: The object of type 'LHCb::ODIN' is re
 ToolSvc.OdinTim...  DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 ToolSvc.OdinTim...  DEBUG GPS Time = 1252422464264256
 TouchLumiFSR        DEBUG ==> Execute
-TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
-TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiLowFSR     DEBUG ==> Execute
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -2591,11 +2336,7 @@ ToolSvc.OdinTim...  DEBUG ODINDecodeTool:: The object of type 'LHCb::ODIN' is re
 ToolSvc.OdinTim...  DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 ToolSvc.OdinTim...  DEBUG GPS Time = 1252422464382528
 TouchLumiFSR        DEBUG ==> Execute
-TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
-TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiLowFSR     DEBUG ==> Execute
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventSelector     SUCCESS Reading Event record 61. Record number within stream 1: 61
 EventDataSvc      VERBOSE Requested object /Event
@@ -2603,7 +2344,6 @@ EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -2624,18 +2364,13 @@ ToolSvc.OdinTim...  DEBUG ODINDecodeTool:: The object of type 'LHCb::ODIN' is re
 ToolSvc.OdinTim...  DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 ToolSvc.OdinTim...  DEBUG GPS Time = 1252422464120192
 TouchLumiFSR        DEBUG ==> Execute
-TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
-TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiLowFSR     DEBUG ==> Execute
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -2656,18 +2391,13 @@ ToolSvc.OdinTim...  DEBUG ODINDecodeTool:: The object of type 'LHCb::ODIN' is re
 ToolSvc.OdinTim...  DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 ToolSvc.OdinTim...  DEBUG GPS Time = 1252422464099712
 TouchLumiFSR        DEBUG ==> Execute
-TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
-TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiLowFSR     DEBUG ==> Execute
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -2688,18 +2418,13 @@ ToolSvc.OdinTim...  DEBUG ODINDecodeTool:: The object of type 'LHCb::ODIN' is re
 ToolSvc.OdinTim...  DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 ToolSvc.OdinTim...  DEBUG GPS Time = 1252422464006336
 TouchLumiFSR        DEBUG ==> Execute
-TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
-TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiLowFSR     DEBUG ==> Execute
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -2720,18 +2445,13 @@ ToolSvc.OdinTim...  DEBUG ODINDecodeTool:: The object of type 'LHCb::ODIN' is re
 ToolSvc.OdinTim...  DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 ToolSvc.OdinTim...  DEBUG GPS Time = 1252422464265152
 TouchLumiFSR        DEBUG ==> Execute
-TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
-TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiLowFSR     DEBUG ==> Execute
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -2752,18 +2472,13 @@ ToolSvc.OdinTim...  DEBUG ODINDecodeTool:: The object of type 'LHCb::ODIN' is re
 ToolSvc.OdinTim...  DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 ToolSvc.OdinTim...  DEBUG GPS Time = 1252422464383424
 TouchLumiFSR        DEBUG ==> Execute
-TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
-TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiLowFSR     DEBUG ==> Execute
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -2784,18 +2499,13 @@ ToolSvc.OdinTim...  DEBUG ODINDecodeTool:: The object of type 'LHCb::ODIN' is re
 ToolSvc.OdinTim...  DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 ToolSvc.OdinTim...  DEBUG GPS Time = 1252422464384256
 TouchLumiFSR        DEBUG ==> Execute
-TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
-TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiLowFSR     DEBUG ==> Execute
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -2816,18 +2526,13 @@ ToolSvc.OdinTim...  DEBUG ODINDecodeTool:: The object of type 'LHCb::ODIN' is re
 ToolSvc.OdinTim...  DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 ToolSvc.OdinTim...  DEBUG GPS Time = 1252422464266880
 TouchLumiFSR        DEBUG ==> Execute
-TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
-TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiLowFSR     DEBUG ==> Execute
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -2848,18 +2553,13 @@ ToolSvc.OdinTim...  DEBUG ODINDecodeTool:: The object of type 'LHCb::ODIN' is re
 ToolSvc.OdinTim...  DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 ToolSvc.OdinTim...  DEBUG GPS Time = 1252422464267776
 TouchLumiFSR        DEBUG ==> Execute
-TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
-TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiLowFSR     DEBUG ==> Execute
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -2880,18 +2580,13 @@ ToolSvc.OdinTim...  DEBUG ODINDecodeTool:: The object of type 'LHCb::ODIN' is re
 ToolSvc.OdinTim...  DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 ToolSvc.OdinTim...  DEBUG GPS Time = 1252422464265984
 TouchLumiFSR        DEBUG ==> Execute
-TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
-TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiLowFSR     DEBUG ==> Execute
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -2912,11 +2607,7 @@ ToolSvc.OdinTim...  DEBUG ODINDecodeTool:: The object of type 'LHCb::ODIN' is re
 ToolSvc.OdinTim...  DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 ToolSvc.OdinTim...  DEBUG GPS Time = 1252422464385152
 TouchLumiFSR        DEBUG ==> Execute
-TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
-TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiLowFSR     DEBUG ==> Execute
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventSelector     SUCCESS Reading Event record 71. Record number within stream 1: 71
 EventDataSvc      VERBOSE Requested object /Event
@@ -2924,7 +2615,6 @@ EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -2945,18 +2635,13 @@ ToolSvc.OdinTim...  DEBUG ODINDecodeTool:: The object of type 'LHCb::ODIN' is re
 ToolSvc.OdinTim...  DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 ToolSvc.OdinTim...  DEBUG GPS Time = 1252422464343360
 TouchLumiFSR        DEBUG ==> Execute
-TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
-TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiLowFSR     DEBUG ==> Execute
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -2977,18 +2662,13 @@ ToolSvc.OdinTim...  DEBUG ODINDecodeTool:: The object of type 'LHCb::ODIN' is re
 ToolSvc.OdinTim...  DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 ToolSvc.OdinTim...  DEBUG GPS Time = 1252422464386944
 TouchLumiFSR        DEBUG ==> Execute
-TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
-TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiLowFSR     DEBUG ==> Execute
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -3009,18 +2689,13 @@ ToolSvc.OdinTim...  DEBUG ODINDecodeTool:: The object of type 'LHCb::ODIN' is re
 ToolSvc.OdinTim...  DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 ToolSvc.OdinTim...  DEBUG GPS Time = 1252422464268672
 TouchLumiFSR        DEBUG ==> Execute
-TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
-TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiLowFSR     DEBUG ==> Execute
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -3041,18 +2716,13 @@ ToolSvc.OdinTim...  DEBUG ODINDecodeTool:: The object of type 'LHCb::ODIN' is re
 ToolSvc.OdinTim...  DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 ToolSvc.OdinTim...  DEBUG GPS Time = 1252422464386048
 TouchLumiFSR        DEBUG ==> Execute
-TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
-TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiLowFSR     DEBUG ==> Execute
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -3073,18 +2743,13 @@ ToolSvc.OdinTim...  DEBUG ODINDecodeTool:: The object of type 'LHCb::ODIN' is re
 ToolSvc.OdinTim...  DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 ToolSvc.OdinTim...  DEBUG GPS Time = 1252422464381632
 TouchLumiFSR        DEBUG ==> Execute
-TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
-TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiLowFSR     DEBUG ==> Execute
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -3105,18 +2770,13 @@ ToolSvc.OdinTim...  DEBUG ODINDecodeTool:: The object of type 'LHCb::ODIN' is re
 ToolSvc.OdinTim...  DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 ToolSvc.OdinTim...  DEBUG GPS Time = 1252422464345152
 TouchLumiFSR        DEBUG ==> Execute
-TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
-TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiLowFSR     DEBUG ==> Execute
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -3137,18 +2797,13 @@ ToolSvc.OdinTim...  DEBUG ODINDecodeTool:: The object of type 'LHCb::ODIN' is re
 ToolSvc.OdinTim...  DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 ToolSvc.OdinTim...  DEBUG GPS Time = 1252422464346048
 TouchLumiFSR        DEBUG ==> Execute
-TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
-TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiLowFSR     DEBUG ==> Execute
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -3169,18 +2824,13 @@ ToolSvc.OdinTim...  DEBUG ODINDecodeTool:: The object of type 'LHCb::ODIN' is re
 ToolSvc.OdinTim...  DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 ToolSvc.OdinTim...  DEBUG GPS Time = 1252422464460736
 TouchLumiFSR        DEBUG ==> Execute
-TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
-TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiLowFSR     DEBUG ==> Execute
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -3201,18 +2851,13 @@ ToolSvc.OdinTim...  DEBUG ODINDecodeTool:: The object of type 'LHCb::ODIN' is re
 ToolSvc.OdinTim...  DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 ToolSvc.OdinTim...  DEBUG GPS Time = 1252422464347840
 TouchLumiFSR        DEBUG ==> Execute
-TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
-TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiLowFSR     DEBUG ==> Execute
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -3233,11 +2878,7 @@ ToolSvc.OdinTim...  DEBUG ODINDecodeTool:: The object of type 'LHCb::ODIN' is re
 ToolSvc.OdinTim...  DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 ToolSvc.OdinTim...  DEBUG GPS Time = 1252422464344256
 TouchLumiFSR        DEBUG ==> Execute
-TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
-TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiLowFSR     DEBUG ==> Execute
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventSelector     SUCCESS Reading Event record 81. Record number within stream 1: 81
 EventDataSvc      VERBOSE Requested object /Event
@@ -3245,7 +2886,6 @@ EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -3266,18 +2906,13 @@ ToolSvc.OdinTim...  DEBUG ODINDecodeTool:: The object of type 'LHCb::ODIN' is re
 ToolSvc.OdinTim...  DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 ToolSvc.OdinTim...  DEBUG GPS Time = 1252422464348736
 TouchLumiFSR        DEBUG ==> Execute
-TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
-TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiLowFSR     DEBUG ==> Execute
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -3298,18 +2933,13 @@ ToolSvc.OdinTim...  DEBUG ODINDecodeTool:: The object of type 'LHCb::ODIN' is re
 ToolSvc.OdinTim...  DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 ToolSvc.OdinTim...  DEBUG GPS Time = 1252422464260672
 TouchLumiFSR        DEBUG ==> Execute
-TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
-TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiLowFSR     DEBUG ==> Execute
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -3330,18 +2960,13 @@ ToolSvc.OdinTim...  DEBUG ODINDecodeTool:: The object of type 'LHCb::ODIN' is re
 ToolSvc.OdinTim...  DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 ToolSvc.OdinTim...  DEBUG GPS Time = 1252422464461632
 TouchLumiFSR        DEBUG ==> Execute
-TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
-TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiLowFSR     DEBUG ==> Execute
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -3362,18 +2987,13 @@ ToolSvc.OdinTim...  DEBUG ODINDecodeTool:: The object of type 'LHCb::ODIN' is re
 ToolSvc.OdinTim...  DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 ToolSvc.OdinTim...  DEBUG GPS Time = 1252422464464320
 TouchLumiFSR        DEBUG ==> Execute
-TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
-TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiLowFSR     DEBUG ==> Execute
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -3394,18 +3014,13 @@ ToolSvc.OdinTim...  DEBUG ODINDecodeTool:: The object of type 'LHCb::ODIN' is re
 ToolSvc.OdinTim...  DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 ToolSvc.OdinTim...  DEBUG GPS Time = 1252422464027712
 TouchLumiFSR        DEBUG ==> Execute
-TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
-TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiLowFSR     DEBUG ==> Execute
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -3426,18 +3041,13 @@ ToolSvc.OdinTim...  DEBUG ODINDecodeTool:: The object of type 'LHCb::ODIN' is re
 ToolSvc.OdinTim...  DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 ToolSvc.OdinTim...  DEBUG GPS Time = 1252422464030336
 TouchLumiFSR        DEBUG ==> Execute
-TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
-TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiLowFSR     DEBUG ==> Execute
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -3458,18 +3068,13 @@ ToolSvc.OdinTim...  DEBUG ODINDecodeTool:: The object of type 'LHCb::ODIN' is re
 ToolSvc.OdinTim...  DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 ToolSvc.OdinTim...  DEBUG GPS Time = 1252422464038336
 TouchLumiFSR        DEBUG ==> Execute
-TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
-TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiLowFSR     DEBUG ==> Execute
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -3490,18 +3095,13 @@ ToolSvc.OdinTim...  DEBUG ODINDecodeTool:: The object of type 'LHCb::ODIN' is re
 ToolSvc.OdinTim...  DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 ToolSvc.OdinTim...  DEBUG GPS Time = 1252422464032128
 TouchLumiFSR        DEBUG ==> Execute
-TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
-TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiLowFSR     DEBUG ==> Execute
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -3522,18 +3122,13 @@ ToolSvc.OdinTim...  DEBUG ODINDecodeTool:: The object of type 'LHCb::ODIN' is re
 ToolSvc.OdinTim...  DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 ToolSvc.OdinTim...  DEBUG GPS Time = 1252422464349632
 TouchLumiFSR        DEBUG ==> Execute
-TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
-TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiLowFSR     DEBUG ==> Execute
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -3554,11 +3149,7 @@ ToolSvc.OdinTim...  DEBUG ODINDecodeTool:: The object of type 'LHCb::ODIN' is re
 ToolSvc.OdinTim...  DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 ToolSvc.OdinTim...  DEBUG GPS Time = 1252422464463424
 TouchLumiFSR        DEBUG ==> Execute
-TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
-TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiLowFSR     DEBUG ==> Execute
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventSelector     SUCCESS Reading Event record 91. Record number within stream 1: 91
 EventDataSvc      VERBOSE Requested object /Event
@@ -3566,7 +3157,6 @@ EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -3587,18 +3177,13 @@ ToolSvc.OdinTim...  DEBUG ODINDecodeTool:: The object of type 'LHCb::ODIN' is re
 ToolSvc.OdinTim...  DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 ToolSvc.OdinTim...  DEBUG GPS Time = 1252422464465216
 TouchLumiFSR        DEBUG ==> Execute
-TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
-TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiLowFSR     DEBUG ==> Execute
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -3619,18 +3204,13 @@ ToolSvc.OdinTim...  DEBUG ODINDecodeTool:: The object of type 'LHCb::ODIN' is re
 ToolSvc.OdinTim...  DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 ToolSvc.OdinTim...  DEBUG GPS Time = 1252422464033024
 TouchLumiFSR        DEBUG ==> Execute
-TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
-TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiLowFSR     DEBUG ==> Execute
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -3651,18 +3231,13 @@ ToolSvc.OdinTim...  DEBUG ODINDecodeTool:: The object of type 'LHCb::ODIN' is re
 ToolSvc.OdinTim...  DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 ToolSvc.OdinTim...  DEBUG GPS Time = 1252422464031232
 TouchLumiFSR        DEBUG ==> Execute
-TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
-TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiLowFSR     DEBUG ==> Execute
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -3683,18 +3258,13 @@ ToolSvc.OdinTim...  DEBUG ODINDecodeTool:: The object of type 'LHCb::ODIN' is re
 ToolSvc.OdinTim...  DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 ToolSvc.OdinTim...  DEBUG GPS Time = 1252422464466112
 TouchLumiFSR        DEBUG ==> Execute
-TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
-TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiLowFSR     DEBUG ==> Execute
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -3715,18 +3285,13 @@ ToolSvc.OdinTim...  DEBUG ODINDecodeTool:: The object of type 'LHCb::ODIN' is re
 ToolSvc.OdinTim...  DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 ToolSvc.OdinTim...  DEBUG GPS Time = 1252422464115840
 TouchLumiFSR        DEBUG ==> Execute
-TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
-TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiLowFSR     DEBUG ==> Execute
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -3747,18 +3312,13 @@ ToolSvc.OdinTim...  DEBUG ODINDecodeTool:: The object of type 'LHCb::ODIN' is re
 ToolSvc.OdinTim...  DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 ToolSvc.OdinTim...  DEBUG GPS Time = 1252422464351360
 TouchLumiFSR        DEBUG ==> Execute
-TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
-TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiLowFSR     DEBUG ==> Execute
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -3779,11 +3339,7 @@ ToolSvc.OdinTim...  DEBUG ODINDecodeTool:: The object of type 'LHCb::ODIN' is re
 ToolSvc.OdinTim...  DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 ToolSvc.OdinTim...  DEBUG GPS Time = 1252422464468736
 TouchLumiFSR        DEBUG ==> Execute
-TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
-TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiLowFSR     DEBUG ==> Execute
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventLoopMgr         INFO No more events in event selection
 LumiSequence        DEBUG Property update for OutputLevel : new value = 1
@@ -3791,6 +3347,7 @@ LumiSequence        DEBUG ==> endRun
 EventAccount        DEBUG Property update for OutputLevel : new value = 1
 createODIN          DEBUG Property update for OutputLevel : new value = 1
 TouchLumiFSR        DEBUG Property update for OutputLevel : new value = 1
+TouchLumiLowFSR     DEBUG Property update for OutputLevel : new value = 1
 ServiceManager      DEBUG Stopping service EventLoopMgr
 ServiceManager      DEBUG Stopping service HistogramDataSvc
 ServiceManager      DEBUG Stopping service HistogramPersistencySvc
@@ -3810,6 +3367,7 @@ ToolSvc           VERBOSE ToolSvc.SequencerTimerTool::stop()
 ToolSvc           VERBOSE ToolSvc.OdinTimeDecoder::stop()
 ToolSvc           VERBOSE ToolSvc.OdinTimeDecoder.ODINDecodeTool::stop()
 ToolSvc           VERBOSE ToolSvc.LumiIntegrator::stop()
+ToolSvc           VERBOSE ToolSvc.LumiLowIntegrator::stop()
 ToolSvc           VERBOSE EventSelector.DataStreamTool::stop()
 ServiceManager      DEBUG Stopping service DetectorPersistencySvc
 ServiceManager      DEBUG Stopping service IncidentSvc
@@ -3842,12 +3400,131 @@ createODIN          DEBUG Services to release :
 TouchLumiFSR        DEBUG ==> Finalize
 TouchLumiFSR         INFO number of files seen: 1
 TouchLumiFSR         INFO number of events seen: 97
-TouchLumiFSR         INFO integrated normalization: {  runs : 56721  files : rfio:/castor/cern.ch/grid/lhcb/data/2009/RAW/FULL/FEST/FEST/56721/056721_0000000001.raw  info (key/incr/integral) :  }
+TouchLumiFSR         INFO integrating normalization:
+TouchLumiFSR        DEBUG ==> Explore: /FileRecords for /LumiFSR
+TouchLumiFSR        DEBUG address: /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiFSRNoBeam
+TouchLumiFSR        DEBUG address: /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiFSRBeamCrossing
+TouchLumiFSR        DEBUG address: /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiFSRBeam1
+TouchLumiFSR        DEBUG address: /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiFSRBeam2
+TouchLumiFSR      VERBOSE constructed time span address/FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/TimeSpanFSR
+TouchLumiFSR        DEBUG using the container: /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiFSRBeamCrossing
+TouchLumiFSR      VERBOSE retrieveObject: /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiFSRBeamCrossing
+TouchLumiFSR      VERBOSE /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/TimeSpanFSR found
+TouchLumiFSR        DEBUG The object of type 'KeyedContainer<LHCb::TimeSpanFSR,Containers::KeyedObjectManager<Containers::hashmap> >*' has been retrieved from TS at address '/FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/TimeSpanFSR'
+TouchLumiFSR        DEBUG /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/TimeSpanFSRREAD TimeSpanFSR: {  earliest : 1252422464006336 - latest : 1252422464350464 }
+TouchLumiFSR        DEBUG /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/TimeSpanFSRinterval: 1252422464006336-1252422464350464
+TouchLumiFSR      VERBOSE /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiFSRBeamCrossing found
+TouchLumiFSR        DEBUG The object of type 'KeyedContainer<LHCb::LumiFSR,Containers::KeyedObjectManager<Containers::hashmap> >*' has been retrieved from TS at address '/FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiFSRBeamCrossing'
+TouchLumiFSR        DEBUG addPrimary   : {  runs :  files :  info (key/incr/integral) :  }
+TouchLumiFSR      VERBOSE constructed address/FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiFSRBeamCrossing
+TouchLumiFSR      VERBOSE constructed address/FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiFSRNoBeam
+TouchLumiFSR        DEBUG using the container: /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiFSRNoBeam
+TouchLumiFSR      VERBOSE retrieveObject: /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiFSRNoBeam
+TouchLumiFSR      VERBOSE /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/TimeSpanFSR found
+TouchLumiFSR        DEBUG The object of type 'KeyedContainer<LHCb::TimeSpanFSR,Containers::KeyedObjectManager<Containers::hashmap> >*' has been retrieved from TS at address '/FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/TimeSpanFSR'
+TouchLumiFSR        DEBUG /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/TimeSpanFSRREAD TimeSpanFSR: {  earliest : 1252422464006336 - latest : 1252422464350464 }
+TouchLumiFSR        DEBUG /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/TimeSpanFSRinterval: 1252422464006336-1252422464350464
+TouchLumiFSR      VERBOSE /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiFSRNoBeam found
+TouchLumiFSR        DEBUG The object of type 'KeyedContainer<LHCb::LumiFSR,Containers::KeyedObjectManager<Containers::hashmap> >*' has been retrieved from TS at address '/FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiFSRNoBeam'
+TouchLumiFSR        DEBUG addNormalized: {  runs :  files :  info (key/incr/integral) :  }
+TouchLumiFSR      VERBOSE constructed address/FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiFSRBeam1
+TouchLumiFSR        DEBUG using the container: /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiFSRBeam1
+TouchLumiFSR      VERBOSE retrieveObject: /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiFSRBeam1
+TouchLumiFSR      VERBOSE /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/TimeSpanFSR found
+TouchLumiFSR        DEBUG The object of type 'KeyedContainer<LHCb::TimeSpanFSR,Containers::KeyedObjectManager<Containers::hashmap> >*' has been retrieved from TS at address '/FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/TimeSpanFSR'
+TouchLumiFSR        DEBUG /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/TimeSpanFSRREAD TimeSpanFSR: {  earliest : 1252422464006336 - latest : 1252422464350464 }
+TouchLumiFSR        DEBUG /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/TimeSpanFSRinterval: 1252422464006336-1252422464350464
+TouchLumiFSR      VERBOSE /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiFSRBeam1 found
+TouchLumiFSR        DEBUG The object of type 'KeyedContainer<LHCb::LumiFSR,Containers::KeyedObjectManager<Containers::hashmap> >*' has been retrieved from TS at address '/FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiFSRBeam1'
+TouchLumiFSR        DEBUG addNormalized: {  runs :  files :  info (key/incr/integral) :  }
+TouchLumiFSR      VERBOSE constructed address/FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiFSRBeam2
+TouchLumiFSR        DEBUG using the container: /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiFSRBeam2
+TouchLumiFSR      VERBOSE retrieveObject: /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiFSRBeam2
+TouchLumiFSR      VERBOSE /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/TimeSpanFSR found
+TouchLumiFSR        DEBUG The object of type 'KeyedContainer<LHCb::TimeSpanFSR,Containers::KeyedObjectManager<Containers::hashmap> >*' has been retrieved from TS at address '/FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/TimeSpanFSR'
+TouchLumiFSR        DEBUG /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/TimeSpanFSRREAD TimeSpanFSR: {  earliest : 1252422464006336 - latest : 1252422464350464 }
+TouchLumiFSR        DEBUG /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/TimeSpanFSRinterval: 1252422464006336-1252422464350464
+TouchLumiFSR      VERBOSE /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiFSRBeam2 found
+TouchLumiFSR        DEBUG The object of type 'KeyedContainer<LHCb::LumiFSR,Containers::KeyedObjectManager<Containers::hashmap> >*' has been retrieved from TS at address '/FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiFSRBeam2'
+TouchLumiFSR        DEBUG addNormalized: {  runs :  files :  info (key/incr/integral) :  }
+TouchLumiFSR         INFO Result for this file: {  runs :  files :  info (key/incr/integral) :  }
+TouchLumiFSR        DEBUG ==> Explore: /FileRecords for /EventCountFSR
+TouchLumiFSR      VERBOSE address: /FileRecords/EventCountFSR
+TouchLumiFSR      VERBOSE address: /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/EventCountFSR
+TouchLumiFSR        DEBUG ==> Explore: /FileRecords for /TimeSpanFSR
+TouchLumiFSR      VERBOSE ts address: /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/TimeSpanFSR
+TouchLumiFSR         INFO integrated normalization: {  runs :  files :  info (key/incr/integral) :  }
 TouchLumiFSR        DEBUG Finalize base class GaudiAlgorithm
 TouchLumiFSR        DEBUG Tools to release : ToolSvc.LumiIntegrator
 TouchLumiFSR        DEBUG Releasing tool 'ToolSvc.LumiIntegrator'
 TouchLumiFSR        DEBUG The tool 'ToolSvc.LumiIntegrator' of type 'LumiIntegrator' is released
-TouchLumiFSR        DEBUG Services to release :
+TouchLumiFSR        DEBUG Services to release : FileRecordDataSvc IncidentSvc
+TouchLumiFSR        DEBUG Releasing service 'FileRecordDataSvc'
+TouchLumiFSR        DEBUG Releasing service 'IncidentSvc'
+TouchLumiLowFSR     DEBUG ==> Finalize
+TouchLumiLowFSR      INFO number of files seen: 1
+TouchLumiLowFSR      INFO number of events seen: 97
+TouchLumiLowFSR      INFO integrating normalization:
+TouchLumiLowFSR     DEBUG ==> Explore: /FileRecords for /LumiLowFSR
+TouchLumiLowFSR     DEBUG address: /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiLowFSRNoBeam
+TouchLumiLowFSR     DEBUG address: /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiLowFSRBeamCrossing
+TouchLumiLowFSR     DEBUG address: /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiLowFSRBeam1
+TouchLumiLowFSR     DEBUG address: /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiLowFSRBeam2
+TouchLumiLowFSR   VERBOSE constructed time span address/FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/TimeSpanFSR
+TouchLumiLowFSR     DEBUG using the container: /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiLowFSRBeamCrossing
+TouchLumiLowFSR   VERBOSE retrieveObject: /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiLowFSRBeamCrossing
+TouchLumiLowFSR   VERBOSE /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/TimeSpanFSR found
+TouchLumiLowFSR     DEBUG The object of type 'KeyedContainer<LHCb::TimeSpanFSR,Containers::KeyedObjectManager<Containers::hashmap> >*' has been retrieved from TS at address '/FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/TimeSpanFSR'
+TouchLumiLowFSR     DEBUG /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/TimeSpanFSRREAD TimeSpanFSR: {  earliest : 1252422464006336 - latest : 1252422464350464 }
+TouchLumiLowFSR     DEBUG /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/TimeSpanFSRinterval: 1252422464006336-1252422464350464
+TouchLumiLowFSR   VERBOSE /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiLowFSRBeamCrossing found
+TouchLumiLowFSR     DEBUG The object of type 'KeyedContainer<LHCb::LumiFSR,Containers::KeyedObjectManager<Containers::hashmap> >*' has been retrieved from TS at address '/FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiLowFSRBeamCrossing'
+TouchLumiLowFSR     DEBUG addPrimary   : {  runs :  files :  info (key/incr/integral) :  }
+TouchLumiLowFSR   VERBOSE constructed address/FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiLowFSRBeamCrossing
+TouchLumiLowFSR   VERBOSE constructed address/FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiLowFSRNoBeam
+TouchLumiLowFSR     DEBUG using the container: /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiLowFSRNoBeam
+TouchLumiLowFSR   VERBOSE retrieveObject: /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiLowFSRNoBeam
+TouchLumiLowFSR   VERBOSE /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/TimeSpanFSR found
+TouchLumiLowFSR     DEBUG The object of type 'KeyedContainer<LHCb::TimeSpanFSR,Containers::KeyedObjectManager<Containers::hashmap> >*' has been retrieved from TS at address '/FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/TimeSpanFSR'
+TouchLumiLowFSR     DEBUG /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/TimeSpanFSRREAD TimeSpanFSR: {  earliest : 1252422464006336 - latest : 1252422464350464 }
+TouchLumiLowFSR     DEBUG /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/TimeSpanFSRinterval: 1252422464006336-1252422464350464
+TouchLumiLowFSR   VERBOSE /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiLowFSRNoBeam found
+TouchLumiLowFSR     DEBUG The object of type 'KeyedContainer<LHCb::LumiFSR,Containers::KeyedObjectManager<Containers::hashmap> >*' has been retrieved from TS at address '/FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiLowFSRNoBeam'
+TouchLumiLowFSR     DEBUG addNormalized: {  runs :  files :  info (key/incr/integral) :  }
+TouchLumiLowFSR   VERBOSE constructed address/FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiLowFSRBeam1
+TouchLumiLowFSR     DEBUG using the container: /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiLowFSRBeam1
+TouchLumiLowFSR   VERBOSE retrieveObject: /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiLowFSRBeam1
+TouchLumiLowFSR   VERBOSE /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/TimeSpanFSR found
+TouchLumiLowFSR     DEBUG The object of type 'KeyedContainer<LHCb::TimeSpanFSR,Containers::KeyedObjectManager<Containers::hashmap> >*' has been retrieved from TS at address '/FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/TimeSpanFSR'
+TouchLumiLowFSR     DEBUG /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/TimeSpanFSRREAD TimeSpanFSR: {  earliest : 1252422464006336 - latest : 1252422464350464 }
+TouchLumiLowFSR     DEBUG /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/TimeSpanFSRinterval: 1252422464006336-1252422464350464
+TouchLumiLowFSR   VERBOSE /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiLowFSRBeam1 found
+TouchLumiLowFSR     DEBUG The object of type 'KeyedContainer<LHCb::LumiFSR,Containers::KeyedObjectManager<Containers::hashmap> >*' has been retrieved from TS at address '/FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiLowFSRBeam1'
+TouchLumiLowFSR     DEBUG addNormalized: {  runs :  files :  info (key/incr/integral) :  }
+TouchLumiLowFSR   VERBOSE constructed address/FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiLowFSRBeam2
+TouchLumiLowFSR     DEBUG using the container: /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiLowFSRBeam2
+TouchLumiLowFSR   VERBOSE retrieveObject: /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiLowFSRBeam2
+TouchLumiLowFSR   VERBOSE /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/TimeSpanFSR found
+TouchLumiLowFSR     DEBUG The object of type 'KeyedContainer<LHCb::TimeSpanFSR,Containers::KeyedObjectManager<Containers::hashmap> >*' has been retrieved from TS at address '/FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/TimeSpanFSR'
+TouchLumiLowFSR     DEBUG /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/TimeSpanFSRREAD TimeSpanFSR: {  earliest : 1252422464006336 - latest : 1252422464350464 }
+TouchLumiLowFSR     DEBUG /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/TimeSpanFSRinterval: 1252422464006336-1252422464350464
+TouchLumiLowFSR   VERBOSE /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiLowFSRBeam2 found
+TouchLumiLowFSR     DEBUG The object of type 'KeyedContainer<LHCb::LumiFSR,Containers::KeyedObjectManager<Containers::hashmap> >*' has been retrieved from TS at address '/FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiLowFSRBeam2'
+TouchLumiLowFSR     DEBUG addNormalized: {  runs :  files :  info (key/incr/integral) :  }
+TouchLumiLowFSR      INFO Result for this file: {  runs :  files :  info (key/incr/integral) :  }
+TouchLumiLowFSR     DEBUG ==> Explore: /FileRecords for /EventCountFSR
+TouchLumiLowFSR   VERBOSE address: /FileRecords/EventCountFSR
+TouchLumiLowFSR   VERBOSE address: /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/EventCountFSR
+TouchLumiLowFSR     DEBUG ==> Explore: /FileRecords for /TimeSpanFSR
+TouchLumiLowFSR   VERBOSE ts address: /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/TimeSpanFSR
+TouchLumiLowFSR      INFO integrated normalization: {  runs :  files :  info (key/incr/integral) :  }
+TouchLumiLowFSR     DEBUG Finalize base class GaudiAlgorithm
+TouchLumiLowFSR     DEBUG Tools to release : ToolSvc.LumiLowIntegrator
+TouchLumiLowFSR     DEBUG Releasing tool 'ToolSvc.LumiLowIntegrator'
+TouchLumiLowFSR     DEBUG The tool 'ToolSvc.LumiLowIntegrator' of type 'LumiIntegrator' is released
+TouchLumiLowFSR     DEBUG Services to release : FileRecordDataSvc IncidentSvc
+TouchLumiLowFSR     DEBUG Releasing service 'FileRecordDataSvc'
+TouchLumiLowFSR     DEBUG Releasing service 'IncidentSvc'
 LumiSequence        DEBUG ==> Finalize
 LumiSequence        DEBUG Finalize base class GaudiAlgorithm
 LumiSequence        DEBUG Tools to release : ToolSvc.SequencerTimerTool
@@ -3861,7 +3538,6 @@ EventSelector       DEBUG finalize()
 ServiceManager      DEBUG Finalizing service EventDataSvc
 ServiceManager      DEBUG Finalizing service EventPersistencySvc
 ServiceManager      DEBUG Finalizing service FileRecordDataSvc
-IncidentSvc         DEBUG Removing [BeginEvent] listener 'FileRecordDataSvc'
 IncidentSvc         DEBUG Removing [SAVE_FILE_RECORD] listener 'FileRecordDataSvc'
 IncidentSvc         DEBUG Removing [FILE_OPEN_READ] listener 'FileRecordDataSvc'
 ServiceManager      DEBUG Finalizing service FileRecordPersistencySvc
@@ -3873,10 +3549,14 @@ ServiceManager      DEBUG Finalizing service XmlCnvSvc
 ServiceManager      DEBUG Finalizing service XmlParserSvc
 ServiceManager      DEBUG Finalizing service ToolSvc
 ToolSvc              INFO Removing all tools created by ToolSvc
-ToolSvc             DEBUG   Tool List : ToolSvc.CondDBEntityResolver:1 ToolSvc.SequencerTimerTool:1 ToolSvc.OdinTimeDecoder:1 ToolSvc.OdinTimeDecoder.ODINDecodeTool:2 ToolSvc.LumiIntegrator:1 EventSelector.DataStreamTool:1
-ToolSvc             DEBUG 6 tools left to finalize. Summed refCounts: 7
+ToolSvc             DEBUG   Tool List : ToolSvc.CondDBEntityResolver:1 ToolSvc.SequencerTimerTool:1 ToolSvc.OdinTimeDecoder:1 ToolSvc.OdinTimeDecoder.ODINDecodeTool:2 ToolSvc.LumiIntegrator:1 ToolSvc.LumiLowIntegrator:1 EventSelector.DataStreamTool:1
+ToolSvc             DEBUG 7 tools left to finalize. Summed refCounts: 8
 ToolSvc             DEBUG Will finalize tools with refCount <= 1
 ToolSvc             DEBUG   Performing finalization of EventSelector.DataStreamTool (refCount 1)
+ToolSvc             DEBUG   Performing finalization of ToolSvc.LumiLowIntegrator (refCount 1)
+ToolSvc.LumiLow...  DEBUG  ==> Finalize the base class GaudiTool
+ToolSvc.LumiLow...  DEBUG Tools to release :
+ToolSvc.LumiLow...  DEBUG Services to release :
 ToolSvc             DEBUG   Performing finalization of ToolSvc.LumiIntegrator (refCount 1)
 ToolSvc.LumiInt...  DEBUG  ==> Finalize the base class GaudiTool
 ToolSvc.LumiInt...  DEBUG Tools to release :
@@ -3890,13 +3570,14 @@ ToolSvc.OdinTim...  DEBUG Releasing service 'EventDataSvc'
 ToolSvc.OdinTim...  DEBUG Releasing service 'IncidentSvc'
 ToolSvc             DEBUG   Performing finalization of ToolSvc.SequencerTimerTool (refCount 1)
 ToolSvc.Sequenc...   INFO ------------------------------------------------------------------------------------------------
-ToolSvc.Sequenc...   INFO This machine has a speed about   1.76 times the speed of a 2.8 GHz Xeon.
+ToolSvc.Sequenc...   INFO This machine has a speed about   1.89 times the speed of a 2.8 GHz Xeon.
 ToolSvc.Sequenc...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 ToolSvc.Sequenc...   INFO ------------------------------------------------------------------------------------------------
-ToolSvc.Sequenc...   INFO LumiSequence                  |     1.670 |    10.323 |    0.750     648.2 |      97 |     1.001 |
-ToolSvc.Sequenc...   INFO   EventAccount                |     0.010 |     0.003 |    0.002       0.0 |      97 |     0.000 |
-ToolSvc.Sequenc...   INFO   createODIN                  |     1.546 |    10.181 |    0.652     643.9 |      97 |     0.988 |
-ToolSvc.Sequenc...   INFO   TouchLumiFSR                |     0.103 |     0.123 |    0.068       4.1 |      97 |     0.012 |
+ToolSvc.Sequenc...   INFO LumiSequence                  |     1.144 |     3.524 |    0.562     206.3 |      97 |     0.342 |
+ToolSvc.Sequenc...   INFO   EventAccount                |     0.000 |     0.003 |    0.002       0.0 |      97 |     0.000 |
+ToolSvc.Sequenc...   INFO   createODIN                  |     1.072 |     3.489 |    0.528     206.2 |      97 |     0.338 |
+ToolSvc.Sequenc...   INFO   TouchLumiFSR                |     0.010 |     0.011 |    0.009       0.0 |      97 |     0.001 |
+ToolSvc.Sequenc...   INFO   TouchLumiLowFSR             |     0.000 |     0.009 |    0.008       0.0 |      97 |     0.001 |
 ToolSvc.Sequenc...   INFO ------------------------------------------------------------------------------------------------
 ToolSvc.Sequenc...  DEBUG  ==> Finalize the base class GaudiTool
 ToolSvc.Sequenc...  DEBUG Tools to release :
@@ -3910,8 +3591,9 @@ ToolSvc.OdinTim...  DEBUG  ==> Finalize the base class GaudiTool
 ToolSvc.OdinTim...  DEBUG Tools to release :
 ToolSvc.OdinTim...  DEBUG Services to release : EventDataSvc
 ToolSvc.OdinTim...  DEBUG Releasing service 'EventDataSvc'
-ToolSvc             DEBUG Deleting 6 finalized tools
+ToolSvc             DEBUG Deleting 7 finalized tools
 ToolSvc             DEBUG   Performing deletion of EventSelector.DataStreamTool
+ToolSvc             DEBUG   Performing deletion of ToolSvc.LumiLowIntegrator
 ToolSvc             DEBUG   Performing deletion of ToolSvc.LumiIntegrator
 ToolSvc             DEBUG   Performing deletion of ToolSvc.OdinTimeDecoder
 ToolSvc             DEBUG   Performing deletion of ToolSvc.SequencerTimerTool
@@ -3920,13 +3602,13 @@ ToolSvc           VERBOSE   Delaying   deletion of ToolSvc.OdinTimeDecoder.ODIND
 ToolSvc             DEBUG   Performing deletion of ToolSvc.OdinTimeDecoder.ODINDecodeTool
 ServiceManager      DEBUG Finalizing service DetectorPersistencySvc
 ServiceManager      DEBUG Finalizing service IncidentSvc
-IncidentSvc         DEBUG Incident  timing: Mean(+-rms)/Min/Max:0.145018(+-2.57109)/0/50.992[ms] Total:0.056992[s]
+IncidentSvc         DEBUG Incident  timing: Mean(+-rms)/Min/Max:0.114486(+-2.01733)/0/39.994[ms] Total:0.044993[s]
 ServiceManager      DEBUG Finalizing service AppMgrRunable
 ServiceManager      DEBUG Finalizing service FileRecordCnvSvc
 FileRecordCnvSvc     INFO File sharing enabled. Do not retire files.
 FileRecordCnvSvc    DEBUG POOL conversion service finalized FileRecordCnvSvc successfully
 ServiceManager      DEBUG Finalizing service PoolRootTreeEvtCnvSvc
-PoolRootTreeEvt...   INFO Disconnected data IO:324C6EEC-9EE8-DE11-9355-001E4F3E5979[56721-100ev.dst]
+PoolRootTreeEvt...   INFO Disconnected data IO:30535E4F-D667-DF11-8F38-001E4F3DD7AB[56721-100ev.dst]
 PoolRootTreeEvt...  DEBUG POOL conversion service finalized PoolRootTreeEvtCnvSvc successfully
 ServiceManager      DEBUG Finalizing service PoolRootKeyEvtCnvSvc
 PoolRootKeyEvtC...  DEBUG POOL conversion service finalized PoolRootKeyEvtCnvSvc successfully
@@ -3962,7 +3644,7 @@ ServiceManager      DEBUG ---- XmlCnvSvc (refCount = 5)
 ServiceManager      DEBUG ---- AlgContextSvc (refCount = 2)
 ServiceManager      DEBUG ---- RndmGenSvc (refCount = 2)
 ServiceManager      DEBUG ---- FileRecordPersistencySvc (refCount = 2)
-ServiceManager      DEBUG ---- FileRecordDataSvc (refCount = 5)
+ServiceManager      DEBUG ---- FileRecordDataSvc (refCount = 4)
 ServiceManager      DEBUG ---- EventPersistencySvc (refCount = 2)
 ServiceManager      DEBUG ---- EventDataSvc (refCount = 5)
 ServiceManager      DEBUG ---- EventSelector (refCount = 2)
