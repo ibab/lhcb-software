@@ -1,7 +1,7 @@
 
 __author__ = ['Phillip Urquijo']
 __date__ = '08/05/2010'
-__version__ = '$Revision: 1.1 $'
+__version__ = '$Revision: 1.2 $'
 
 '''
 B->Xu mu nu exclusive reconstruction in Xu=pi/rho/K/K* channels
@@ -151,8 +151,8 @@ class StrippingB2XuMuNuConf(LHCbConfigurableUser):
 
     
     def _Bd2PiMuNu( self ):
-        StdLoosePions = DataOnDemand("StdLoosePions",Location="Phys/StdLoosePions")
-        StdLooseMuons = DataOnDemand("StdLooseMuons",Location="Phys/StdLooseMuons")
+        StdLoosePions = DataOnDemand(Location="Phys/StdLoosePions")
+        StdLooseMuons = DataOnDemand(Location="Phys/StdLooseMuons")
         
         _PiMu = CombineParticles("PiMu")
         _PiMu.DecayDescriptors = ["[B~0 -> pi+ mu-]cc"]
@@ -168,8 +168,8 @@ class StrippingB2XuMuNuConf(LHCbConfigurableUser):
         return PiMu
 
     def _Bd2PiMuNuSS( self ):
-        StdLoosePions = DataOnDemand("StdLoosePions",Location="Phys/StdLoosePions")
-        StdLooseMuons = DataOnDemand("StdLooseMuons",Location="Phys/StdLooseMuons")
+        StdLoosePions = DataOnDemand(Location="Phys/StdLoosePions")
+        StdLooseMuons = DataOnDemand(Location="Phys/StdLooseMuons")
         
         _PiMu = CombineParticles("PiMu")
         _PiMu.DecayDescriptors = ["[B~0 -> pi- mu-]cc","[B~0 -> pi+ mu+]cc"]
@@ -186,8 +186,8 @@ class StrippingB2XuMuNuConf(LHCbConfigurableUser):
 
     
     def _Bs2KMuNu( self ):
-        StdLooseKaons = DataOnDemand("StdLooseKaons",Location="Phys/StdLooseKaons")
-        StdLooseMuons = DataOnDemand("StdLooseMuons",Location="Phys/StdLooseMuons")
+        StdLooseKaons = DataOnDemand(Location="Phys/StdLooseKaons")
+        StdLooseMuons = DataOnDemand(Location="Phys/StdLooseMuons")
         
         _KMu = CombineParticles("KMu")
         _KMu.DecayDescriptors = ["[B_s~0 -> K+ mu-]cc"]
@@ -203,8 +203,8 @@ class StrippingB2XuMuNuConf(LHCbConfigurableUser):
         return KMu
     
     def _Bs2KMuNuSS( self ):
-        StdLooseKaons = DataOnDemand("StdLooseKaons",Location="Phys/StdLooseKaons")
-        StdLooseMuons = DataOnDemand("StdLooseMuons",Location="Phys/StdLooseMuons")
+        StdLooseKaons = DataOnDemand(Location="Phys/StdLooseKaons")
+        StdLooseMuons = DataOnDemand(Location="Phys/StdLooseMuons")
         
         _KMu = CombineParticles("KMu")
         _KMu.DecayDescriptors = ["[B_s~0 -> K- mu-]cc","[B_s~0 -> K+ mu+]cc"]
@@ -221,7 +221,7 @@ class StrippingB2XuMuNuConf(LHCbConfigurableUser):
     
 
     def _rho02PiPi( self ):
-        StdLoosePions = DataOnDemand("StdLoosePions", Location="Phys/StdLoosePions")
+        StdLoosePions = DataOnDemand(Location="Phys/StdLoosePions")
         _rho770 = CombineParticles("Rho02PiPi")
         _rho770.DecayDescriptors = ["[rho(770)0 -> pi- pi+]cc","[rho(770)0 -> pi+ pi+]cc","[rho(770)0 -> pi- pi-]cc"] 
         _rho770.CombinationCut = "(ADAMASS('rho(770)0')< %(RhoMassWindow)s)" % self.getProps()
@@ -237,7 +237,7 @@ class StrippingB2XuMuNuConf(LHCbConfigurableUser):
         return rho770
 
     def _KS02PiPi( self, trail="" ):
-        StdLoosePions = DataOnDemand("StdLoosePions", Location="Phys/StdLoosePions")
+        StdLoosePions = DataOnDemand(Location="Phys/StdLoosePions")
 
         _KS = CombineParticles("KS02PiPi")
         _KS.DecayDescriptors = ["[KS0 -> pi- pi+]cc","[KS0 -> pi+ pi+]cc","[KS0 -> pi- pi-]cc"] 
@@ -253,7 +253,7 @@ class StrippingB2XuMuNuConf(LHCbConfigurableUser):
         return KS
 
     def _Kstar2KSPi( self, trail="" ):
-        StdLoosePions = DataOnDemand("StdLoosePions", Location="Phys/StdLoosePions")
+        StdLoosePions = DataOnDemand(Location="Phys/StdLoosePions")
         KS = self._KS02PiPi(trail)
         _Kstar = CombineParticles("Kstar2KSPi")
         _Kstar.DecayDescriptors = ["[K*(892)+ -> KS0 pi+]cc"] 
@@ -271,7 +271,7 @@ class StrippingB2XuMuNuConf(LHCbConfigurableUser):
 
         
     def _Bu2RhoMuNu( self ):
-        StdLooseMuons = DataOnDemand("StdLooseMuons",Location="Phys/StdLooseMuons")
+        StdLooseMuons = DataOnDemand(Location="Phys/StdLooseMuons")
         Rho = self._rho02PiPi()
 
         _RhoMu = CombineParticles("RhoMu")
@@ -289,7 +289,7 @@ class StrippingB2XuMuNuConf(LHCbConfigurableUser):
         return RhoMu
 
     def _Bs2KstarMuNu( self ):
-        StdLooseMuons = DataOnDemand("StdLooseMuons",Location="Phys/StdLooseMuons")
+        StdLooseMuons = DataOnDemand(Location="Phys/StdLooseMuons")
         Kstar = self._Kstar2KSPi("OS")
 
         _KstarMu = CombineParticles("KstarMu")
@@ -308,7 +308,7 @@ class StrippingB2XuMuNuConf(LHCbConfigurableUser):
     
 
     def _Bs2KstarMuNuSS( self ):
-        StdLooseMuons = DataOnDemand("StdLooseMuons",Location="Phys/StdLooseMuons")
+        StdLooseMuons = DataOnDemand(Location="Phys/StdLooseMuons")
         Kstar = self._Kstar2KSPi("SS")
 
         _KstarMu = CombineParticles("KstarMuSS")

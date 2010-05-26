@@ -1,8 +1,8 @@
-# $Id: StrippingBd2JpsiKS.py,v 1.3 2009-12-18 16:47:42 poluekt Exp $
+# $Id: StrippingBd2JpsiKS.py,v 1.4 2010-05-26 14:28:59 jpalac Exp $
 
 __author__ = 'Fernando Rodrigues'
 __date__ = '16/12/2009'
-__version__ = '$Revision: 1.3 $'
+__version__ = '$Revision: 1.4 $'
 
 '''
 Bd->JpsiKS stripping selection re-tuned to eh MC09 data,
@@ -24,17 +24,17 @@ name = "Bd2JpsiKS"
 ##################
 # J/Psi -> mu mu #
 ##################
-_stdJPsi2MuMu = DataOnDemand("stdLooseDiMuon", Location = "Phys/StdLooseDiMuon")
+_stdJPsi2MuMu = DataOnDemand(Location = "Phys/StdLooseDiMuon")
 
 ################
 # KS long long #
 ################
-_stdKSLL = DataOnDemand("stdLooseKsLL", Location = "Phys/StdLooseKsLL")
+_stdKSLL = DataOnDemand(Location = "Phys/StdLooseKsLL")
 
 ############################
 # KS downstream downstream #
 ############################
-_stdKSDD = DataOnDemand("stdLooseKsDD", Location = "Phys/StdLooseKsDD")
+_stdKSDD = DataOnDemand(Location = "Phys/StdLooseKsDD")
 
 ##############################
 # Bd -> JpsiKS,KSLL (Biased) #

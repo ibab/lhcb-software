@@ -6,7 +6,7 @@
 
 __author__ = ['Harry Cliff']
 __date__ = '20/04/2010'
-__version__ = '$Revision: 1.2 $'
+__version__ = '$Revision: 1.3 $'
 
 '''
 D0->Kh stripping selection.
@@ -35,7 +35,7 @@ DKhPreselLooseOutput += "DKhPreselLoose"
 # 2) Wrap StdNoPIDsPions and StdNoPIDsKaons
 #------------------------------------------
 
-SelStdNoPIDsKaons = DataOnDemand('SelStdNoPIDsKaons', Location = 'Phys/StdNoPIDsKaons')
+SelStdNoPIDsKaons = DataOnDemand(Location = 'Phys/StdNoPIDsKaons')
 
 #----------------------------------------
 # 3) Make a selection sequence

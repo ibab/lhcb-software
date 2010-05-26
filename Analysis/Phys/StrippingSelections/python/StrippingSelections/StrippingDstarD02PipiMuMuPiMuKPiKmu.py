@@ -1,8 +1,8 @@
-# $Id: StrippingDstarD02PipiMuMuPiMuKPiKmu.py,v 1.2 2010-01-06 13:36:23 pkoppenb Exp $
+# $Id: StrippingDstarD02PipiMuMuPiMuKPiKmu.py,v 1.3 2010-05-26 14:28:59 jpalac Exp $
 
 __author__ = ['Walter Bonivento', 'Francesco Dettori']
 __date__ = '14 December 2010'
-__version__ = '$Revision: 1.2 $'
+__version__ = '$Revision: 1.3 $'
 
 '''
 Analysis selections for D*+ -> pi+ D0(-> mu mu).
@@ -29,12 +29,12 @@ from CommonParticles.StdLoosePions import StdLoosePions
 from CommonParticles.StdLooseD02HH import StdLooseD02KPi, StdLooseD02KK, StdLooseD02PiPi, StdLooseD02KPiDCS
 
 #_stdNoPIDsKaons = DataOnDemand("stdNoPIDsKaons", Location = "Phys/StdNoPIDsKaons")
-_stdNoPIDsPions = DataOnDemand("stdNoPIDsPions", Location = "Phys/StdNoPIDsPions")
-_stdLooseD02RSKPi = DataOnDemand("stdLooseD02RSKPi", Location = "Phys/StdLooseD02KPi")
-_stdLooseD02PiPi = DataOnDemand("stdLooseD02PiPi", Location = "Phys/StdLooseD02PiPi")
-_stdLooseMuons = DataOnDemand("stdLooseMuons", Location = "Phys/StdLooseMuons")
-_stdLoosePions = DataOnDemand("stdLooseMuons", Location = "Phys/StdLoosePions")
-_stdLooseUpPions = DataOnDemand('SelStdLooseUpPions',Location='Phys/StdNoPIDsUpPions')
+_stdNoPIDsPions = DataOnDemand(Location = "Phys/StdNoPIDsPions")
+_stdLooseD02RSKPi = DataOnDemand(Location = "Phys/StdLooseD02KPi")
+_stdLooseD02PiPi = DataOnDemand(Location = "Phys/StdLooseD02PiPi")
+_stdLooseMuons = DataOnDemand(Location = "Phys/StdLooseMuons")
+_stdLoosePions = DataOnDemand(Location = "Phys/StdLoosePions")
+_stdLooseUpPions = DataOnDemand(Location='Phys/StdNoPIDsUpPions')
 
 ## make the D0 out of 2 muons
 _D0MuMu = CombineParticles('D0MuMu')

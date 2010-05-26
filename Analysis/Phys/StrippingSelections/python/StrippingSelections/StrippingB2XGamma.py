@@ -1,6 +1,6 @@
 __author__ = 'Fatima Soomro'
 __date__ = '18/12/2009'
-__version__ = '$Revision: 1.5 $'
+__version__ = '$Revision: 1.6 $'
 
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
@@ -71,7 +71,7 @@ class StrippingB2XGammaConf(LHCbConfigurableUser):
         """
         Define the Bs
         """        
-        _stdPhi4Bs = DataOnDemand("LoosePhi2KK4Bs", Location = "Phys/StdLoosePhi2KK")
+        _stdPhi4Bs = DataOnDemand(Location = "Phys/StdLoosePhi2KK")
         _phi4BsFilter = FilterDesktop ("PhiFilterFor"+name)
         _phi4BsFilter.Code = "(MINTREE(ABSID=='K+', MIPCHI2DV(PRIMARY))> %(TrIPchi2Phi)s) & (ADMASS('phi(1020)') < %(PhiMassWinT)s*MeV) & (VFASPF(VCHI2/VDOF) < %(PhiVCHI2)s)" % self.getProps()
         
@@ -79,7 +79,7 @@ class StrippingB2XGammaConf(LHCbConfigurableUser):
                              ,Algorithm = _phi4BsFilter
                              ,RequiredSelections = [_stdPhi4Bs])
         
-        _stdgamma = DataOnDemand("stdLooseAllPhotons", Location = "Phys/StdLooseAllPhotons")
+        _stdgamma = DataOnDemand(Location = "Phys/StdLooseAllPhotons")
         _gammaFilter = FilterDesktop("GammaFilterFor"+name)
         _gammaFilter.Code =  "(PT> %(photonPT)s*MeV)"  % self.getProps()
         Gamma =  Selection ("GammaFor"+name
@@ -144,8 +144,8 @@ class StrippingB2XGammaConf(LHCbConfigurableUser):
         """
         Define the Bd
         """        
-        _K4Kst  = DataOnDemand("K4Kst",  Location = "Phys/StdLooseKaons")
-        _pi4Kst = DataOnDemand("pi4Kst", Location = "Phys/StdLoosePions")
+        _K4Kst  = DataOnDemand(Location = "Phys/StdLooseKaons")
+        _pi4Kst = DataOnDemand(Location = "Phys/StdLoosePions")
 
         LooseKstar2Kpi = CombineParticles ("LooseKstar2Kpi")
         LooseKstar2Kpi.DecayDescriptor = "[K*(892)0 -> K+ pi-]cc"
@@ -158,7 +158,7 @@ class StrippingB2XGammaConf(LHCbConfigurableUser):
                                ,RequiredSelections = [ _K4Kst, _pi4Kst ]
                                )
         
-        _stdgamma = DataOnDemand("stdLooseAllPhotons", Location = "Phys/StdLooseAllPhotons")
+        _stdgamma = DataOnDemand(Location = "Phys/StdLooseAllPhotons")
         _gammaFilter = FilterDesktop("GammaFilterFor"+name)
         _gammaFilter.Code =  "(PT> %(photonPT)s*MeV)"  % self.getProps()
         Gamma =  Selection ("GammaFor"+name

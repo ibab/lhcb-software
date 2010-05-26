@@ -1,6 +1,6 @@
 __author__ = 'Patrick Koppenburg, Rob Lambert, Mitesh Patel'
 __date__ = '21/01/2009'
-__version__ = '$Revision: 1.21 $'
+__version__ = '$Revision: 1.22 $'
 
 """
 Bd->K*MuMu selections 
@@ -308,7 +308,7 @@ class StrippingBd2KstarMuMuConf(LHCbConfigurableUser):
         from StrippingConf.StrippingLine import StrippingLine
         from Configurables import FilterDesktop, CombineParticles
         
-	_muons =  DataOnDemand('stdVeryLooseDiMuon', Location = 'Phys/StdVeryLooseDiMuon')
+	_muons =  DataOnDemand(Location = 'Phys/StdVeryLooseDiMuon')
 
         _diMu = FilterDesktop("FilterForSimpleBd2KstarMuMu")
         _diMu.Code = "(PT > %(SimpleDiMuonPT)s *MeV)" % self.getProps()
@@ -354,7 +354,7 @@ class StrippingBd2KstarMuMuConf(LHCbConfigurableUser):
         from StrippingConf.StrippingLine import StrippingLine
         from PhysSelPython.Wrappers import Selection, SelectionSequence, DataOnDemand
 
- 	_kstar =  DataOnDemand('stdVeryLooseDetachedKst2Kpi', Location = 'Phys/StdVeryLooseDetachedKst2Kpi')
+ 	_kstar =  DataOnDemand(Location = 'Phys/StdVeryLooseDetachedKst2Kpi')
         _comb = self.simplestCombineFD()
         _sb = Selection("SelSimpleBd2KstarMuMuFD",
                        Algorithm = _comb,
@@ -372,7 +372,7 @@ class StrippingBd2KstarMuMuConf(LHCbConfigurableUser):
         from StrippingConf.StrippingLine import StrippingLine
         from PhysSelPython.Wrappers import Selection, SelectionSequence, DataOnDemand
 
- 	_kstar =  DataOnDemand('stdVeryLooseDetachedKst2Kpi', Location = 'Phys/StdVeryLooseDetachedKst2Kpi')
+ 	_kstar =  DataOnDemand(Location = 'Phys/StdVeryLooseDetachedKst2Kpi')
         _comb = self.simplestCombineLT()
         _sb = Selection("SelSimpleBd2KstarMuMuLT",
                        Algorithm = _comb,
@@ -530,7 +530,7 @@ class StrippingBd2KstarMuMuConf(LHCbConfigurableUser):
         from PhysSelPython.Wrappers import Selection, DataOnDemand
         from Configurables import CombineParticles
         
-        _pions = DataOnDemand('StdLoosePions',Location='Phys/StdLoosePions')
+        _pions = DataOnDemand(Location='Phys/StdLoosePions')
 
         _pionCuts = "(P > %(DKpipipiTrackP)s ) & " \
                     "(PT > %(DKpipipiTrackPT)s ) & " \

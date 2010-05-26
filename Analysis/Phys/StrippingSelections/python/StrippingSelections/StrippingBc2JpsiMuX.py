@@ -58,7 +58,7 @@ class StrippingBc2JpsiMuXConf(LHCbConfigurableUser):
         #---------------------------
         # J/psi -> Mu Mu
         #---------------------------
-        _Jpsi2MuMu = DataOnDemand("_Jpsi2MuMu", Location = "Phys/StdLooseDiMuon")
+        _Jpsi2MuMu = DataOnDemand(Location = "Phys/StdLooseDiMuon")
         
         _JpsiFilter = FilterDesktop("_JpsiFilter")
         _JpsiFilter.Code = JpsiCut
@@ -70,8 +70,8 @@ class StrippingBc2JpsiMuXConf(LHCbConfigurableUser):
         #---------------------------
         # Muon
         #---------------------------        
-        #_StdLooseMuons = DataOnDemand("_StdLooseMuons", Location = "Phys/StdLooseMuons")
-        _StdLooseMuons = DataOnDemand("_StdLooseMuons", Location = "Phys/StdNoPIDsMuons")
+        #_StdLooseMuons = DataOnDemand(Location = "Phys/StdLooseMuons")
+        _StdLooseMuons = DataOnDemand(Location = "Phys/StdNoPIDsMuons")
         
         _MuonBcFilter = FilterDesktop("_MuonBcFilter")
         _MuonBcFilter.Code = MuonBcCut

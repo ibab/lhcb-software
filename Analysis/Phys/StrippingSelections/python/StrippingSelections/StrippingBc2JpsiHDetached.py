@@ -66,8 +66,8 @@ class StrippingBc2JpsiHDetachedConf(LHCbConfigurableUser):
         #---------------------------
         # J/psi -> Mu Mu
         #---------------------------
-        #_Jpsi2MuMu = DataOnDemand("_Jpsi2MuMu", Location = "Phys/StdLooseDiMuon")
-        _Jpsi2MuMu = DataOnDemand("_Jpsi2MuMu", Location = "Phys/StdVeryLooseJpsi2MuMu")
+        #_Jpsi2MuMu = DataOnDemand(Location = "Phys/StdLooseDiMuon")
+        _Jpsi2MuMu = DataOnDemand(Location = "Phys/StdVeryLooseJpsi2MuMu")
         
         _JpsiFilter = FilterDesktop("_JpsiFilter")
         _JpsiFilter.Code = JpsiCut
@@ -79,7 +79,7 @@ class StrippingBc2JpsiHDetachedConf(LHCbConfigurableUser):
         #---------------------------
         # Pion or Kaon
         #---------------------------        
-        _StdLoosePions = DataOnDemand("_StdLoosePions", Location = "Phys/StdNoPIDsPions")
+        _StdLoosePions = DataOnDemand(Location = "Phys/StdNoPIDsPions")
         
         _PionFilter = FilterDesktop("_PionFilter")
         _PionFilter.Code = PionCut

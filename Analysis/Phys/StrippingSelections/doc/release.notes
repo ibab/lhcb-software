@@ -7,6 +7,9 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 
 !========================== StrippingSelections v1r22 2010-05-25 ==============
 
+! 2010-05-26 - Juan Palacios
+ - Remove unnecessary AutomaticData names.
+
 ! 2010-05-25 - Juan Palacios for Plamen Hopchev
  - Add Hlt error bit lines to Calibration stream.
  - cmt/requirements

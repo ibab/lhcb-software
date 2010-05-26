@@ -1,11 +1,11 @@
 
 __author__ = 'Alexandr Kozlinskiy'
 __date__ = '22/05/2010'
-__version__ = '$Revision: 1.1 $'
+__version__ = '$Revision: 1.2 $'
 
 from PhysSelPython.Wrappers import DataOnDemand
-pions = DataOnDemand('pions', Location = 'Phys/StdNoPIDsPions')
-kaons = DataOnDemand('kaons', Location = 'Phys/StdNoPIDsKaons')
+pions = DataOnDemand(Location = 'Phys/StdNoPIDsPions')
+kaons = DataOnDemand(Location = 'Phys/StdNoPIDsKaons')
 
 from Configurables import CombineParticles
 D0Combine = CombineParticles( "D02PiPiKPiKK" )
