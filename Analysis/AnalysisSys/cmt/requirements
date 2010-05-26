@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.187 2010-05-25 12:02:35 jpalac Exp $
+# $Id: requirements,v 1.188 2010-05-26 09:59:54 jpalac Exp $
 package AnalysisSys
 version v4r5
 
@@ -44,7 +44,7 @@ use StrippingConf               v3r3   Phys   # Anton Poluektov
 use StrippingSelections         v1r22  Phys   # Anton Poluektov
 
 ####################################################################
-use  MicroDSTBase        	v1r7p1  MicroDST          # Juan Palacios
+use  MicroDSTBase        	v1r7p2  MicroDST          # Juan Palacios
 use  MicroDSTInterfaces  	v1r4    MicroDST          # Juan Palacios
 use  MicroDSTTools      	v1r6p1  MicroDST          # Juan Palacios
 use  MicroDSTAlgorithm   	v3r10   MicroDST          # Juan Palacios
