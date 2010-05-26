@@ -8,6 +8,18 @@
 ! http://www.slac.stanford.edu/spires/find/hep/www?eprint=physics/0503191
 !-----------------------------------------------------------------------------
 
+! 2010-05-26 - Vanya Belyaev
+
+ - src/Components/DecayTreeFitter.cpp   NOT TESTED YET !!!
+
+   add "tool-based" verison of DecayTreeTuple
+
+ - cmt/requirements 
+
+    version increment to v1r8 
+
+ 
+
 !======================= DecayTreeFitter v1r7 2010-05-24 =====================
 
 ! 2010-05-21 Johan Luisier
