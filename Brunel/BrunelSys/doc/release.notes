@@ -80,6 +80,8 @@ or later otherwise
   . brunel.brunel-bigevents: 
     o add a big event from run 70122, tests bug #67111
     o add an event from run 71491, tests bug #67364
+  . brunel.brunel-mc09-withtruth-invfield.qmt: fix polarity of inverted field, 
+    should be Down (MC09 was simulated with Up polarity)
 
 </PRE><H1><A NAME=v37r2p2>2010-05-16 Brunel v37r2p2</A></H1><PRE>
 This version uses projects Gaudi v21r9, LHCb v31r0p1, Lbcom v9r2p1, Rec v9r2p1
