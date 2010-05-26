@@ -1,8 +1,18 @@
-!$Id: release.notes,v 1.353 2010-05-24 15:53:00 jpalac Exp $
+!$Id: release.notes,v 1.354 2010-05-26 14:21:25 ibelyaev Exp $
 !============================================================================
 ! Package     : DaVinciKernel
 ! Responsible : J.P. Palacios
 !============================================================================
+
+! 2010-05-26 - Vanya Belyaev
+
+ - DecayTree.h,cpp
+   move the class into Phys/DaVinciTypes to allow its usage 
+   in DaVinciInterfaces
+
+ - cmt/requirements
+   versioin increment to v8r8 
+
 
 !======================== DaVinciKernel v8r7 2010-05-24 =====================
 
