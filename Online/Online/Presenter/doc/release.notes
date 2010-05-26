@@ -4,6 +4,9 @@
 ! Purpose     : GUI to allow the visualization of all data quality histograms
 !-----------------------------------------------------------------------------
 
+! 2010-05-26 - Patrick Robbe
+ - src/presenter.h: accept Brunel.root as offline ROOT file
+
 ! 2010-05-19 - Patrick Robbe
  - src/DbHistRoot.cpp: retransform double into float 
  - src/PageDescriptionTestView.cpp: fix problem with http links when they
