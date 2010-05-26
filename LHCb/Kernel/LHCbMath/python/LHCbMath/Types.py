@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Types.py,v 1.7 2010-05-26 12:04:26 ibelyaev Exp $
+# $Id: Types.py,v 1.8 2010-05-26 13:19:16 ibelyaev Exp $
 # =============================================================================
 ## @file
 #
@@ -70,7 +70,7 @@ Simple file to provide 'easy' access in python for the basic ROOT::Math classes
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
 __date__    = " 2009-09-12 "
-__version__ = " CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $ "
+__version__ = " CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.8 $ "
 # =============================================================================
 __all__     = ()  ## nothing to be imported !
 # =============================================================================
@@ -729,7 +729,34 @@ __parallel_lines__ . __doc__ += '\n' + _GeomFun.parallel . __doc__
 
 if not hasattr ( Gaudi.XYZLine , 'parallel' ) :
     Gaudi.XYZLine.parallel = __parallel_lines__
+
+# =============================================================================
+## helper function/wrapper for Gaudi::Math:FitMass
+#  @see Gaudi::Math::FitMass 
+#  @see Gaudi::Math::FitMass::fit 
+#  @see Gaudi::Math::ParticleParams
+#  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+#  @param  particle (INPUT) "particle"
+#  @param  mass     (INPUT) the nominal mass 
+#  @return the tuple (fitter,chi2) 
+#  @date 2009-10-22
+def _fit_mass_ ( particle , mass )  :
+    """
+    Helper function/wrapper for Gaudi::Math::MassFit
+
+    >>> particle  =  ...   ## get Gaudi::Math::ParticleParams object
+    >>> mass = 5.279 * GeV ## get the mass
+    >>> result, chi2 = particle.fitMass ( particle , mass )
+    >>> print 'result/chi2:', result, chi2
     
+    """
+    _fitted = Gaudi.Math.ParticleParams()
+    _chi2   = Gaudi.Math.FitMass.fit ( particle  ,
+                                       mass      ,
+                                       _fitted   )
+    return (_fitted,_chi2)
+
+Gaudi.Math.ParticleParams.fitMass = _fit_mass_
 
 # =============================================================================
 if '__main__' == __name__ :
@@ -750,7 +777,8 @@ if '__main__' == __name__ :
     print ' dir(Gaudi.Math) : '
     _v.sort() 
     for v in _v : print v
-         
+
+
 # =============================================================================
 # The  END 
 # =============================================================================

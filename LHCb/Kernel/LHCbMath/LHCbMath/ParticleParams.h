@@ -1,4 +1,4 @@
-// $Id: ParticleParams.h,v 1.2 2010-05-26 11:34:16 ibelyaev Exp $
+// $Id: ParticleParams.h,v 1.3 2010-05-26 13:19:16 ibelyaev Exp $
 // ============================================================================
 #ifndef LHCBMATH_PARTICLEPARAMS_H 
 #define LHCBMATH_PARTICLEPARAMS_H 1
@@ -141,59 +141,101 @@ namespace Gaudi
       // ======================================================================
     };
     // ========================================================================
-    /** apply mass-constrained fit to the particle 
-     * 
-     *  @code
-     *
-     *     const Gaudi::Math::ParticleParams& params = .... ;
-     *
-     *     Gaudi::Math::ParticleParams fitted ;
-     *
-     *     const double mass_B = 5.279 * GeV ;
-     *
-     *     const double chi2 = Gaudi::Math::fitMass ( params , mass_B , fitted ) ;
-     *  
-     *  @code 
-     *
-     *  @param  input    (INPUT)  the particle to be constrained 
-     *  @param  mass     (INPUT)  the mass 
-     *  @param  output  (OUTPUT) the constrained particle 
-     *  @return the chi2 of mass-constraiend fit 
+    /** @class FitMass 
+     *  helper class to perform amss-constrained fit 
      *  The actual code has been stollen from Wouter Hulsbergen 
      *  @author Vanya Belyaev Ivan.Belyaev@nikhef.nl
      *  @date   2010-05-20
      */
-    GAUDI_API 
-    double fitMass 
-    ( const Gaudi::Math::ParticleParams& input  , 
-      const double                       mass   ,
-      Gaudi::Math::ParticleParams&       output ) ;
-    // ========================================================================
-    /** apply mass-constrained fit to the particle 
-     * 
-     *  @code
-     *
-     *     Gaudi::Math::ParticleParams params = .... ;
-     *  
-     *     const double mass_B = 5.279 * GeV ;
-     *
-     *     const double chi2 = Gaudi::Math::fitMass ( mass_B , params ) ;
-     *  
-     *  @code 
-     *
-     *  @attention the function changes the parameters!
-     * 
-     *  @param  mass     (INPUT)  the mass 
-     *  @param  particle (UPDATE) the particle to be constrained 
-     *  @return the chi2 of mass-constrained fit
-     *  The actual code has been stollen from Wouter Hulsbergen 
-     *  @author Vanya Belyaev Ivan.Belyaev@nikhef.nl
-     *  @date   2010-05-20
-     */
-    GAUDI_API 
-    double fitMass 
-    ( const double                       mass   ,
-      Gaudi::Math::ParticleParams&       output ) ;
+    class GAUDI_API FitMass 
+    {
+    public:
+      // ======================================================================
+      /** apply mass-constrained fit to the particle 
+       * 
+       *  @code
+       *
+       *     const Gaudi::Math::ParticleParams& params = .... ;
+       *
+       *     Gaudi::Math::ParticleParams fitted ;
+       *     const double mass_B = 5.279 * GeV ;
+       *
+       *     Gaudi::Math::FitMass fitter ;
+       *     const double chi2 = fitter.fit( params , mass_B , fitted ) ;
+       *  
+       *  @code 
+       *
+       *  @param  input    (INPUT)  the particle to be constrained 
+       *  @param  mass     (INPUT)  the mass 
+       *  @param  output  (OUTPUT) the constrained particle 
+       *  @return the chi2 of mass-constraiend fit 
+       *  The actual code has been stollen from Wouter Hulsbergen 
+       *  @author Vanya Belyaev Ivan.Belyaev@nikhef.nl
+       *  @date   2010-05-20
+       */
+      static 
+      double fit
+      ( const Gaudi::Math::ParticleParams& input  , 
+        const double                       mass   ,
+        Gaudi::Math::ParticleParams&       output ) ;
+      // ======================================================================
+      /** apply mass-constrained fit to the particle 
+       * 
+       *  @code
+       *
+       *     const Gaudi::Math::ParticleParams& params = .... ;
+       *
+       *
+       *     const double mass_B = 5.279 * GeV ;
+       *     double       chi2 = 0.0 
+       *
+       *     Gaudi::Math::FitMass fitter ;
+       *     Gaudi::Math::ParticleParams fitted  = .... ;
+       *         fitter.fit( params , mass_B , chi2 ) ;
+       *  
+       *  @code 
+       *
+       *  @param  input    (INPUT)  the particle to be constrained 
+       *  @param  mass     (INPUT)  the mass 
+       *  @param  output  (OUTPUT) the constrained particle 
+       *  @return the chi2 of mass-constraiend fit 
+       *  The actual code has been stollen from Wouter Hulsbergen 
+       *  @author Vanya Belyaev Ivan.Belyaev@nikhef.nl
+       *  @date   2010-05-20
+       */
+      static 
+      Gaudi::Math::ParticleParams fit
+      ( const Gaudi::Math::ParticleParams& input , 
+        const double                       mass  , 
+        double&                            chi2  ) ;
+      // ======================================================================
+      /** apply mass-constrained fit to the particle 
+       * 
+       *  @code
+       *
+       *     Gaudi::Math::ParticleParams params = .... ;
+       *  
+       *     const double mass_B = 5.279 * GeV ;
+       *
+       *     Gaudi::Math::FitMass fitter ;
+       *     const double chi2 = fitter.fit ( mass_B , params ) ;
+       *  
+       *  @code 
+       *
+       *  @attention the function changes the parameters!
+       * 
+       *  @param  mass     (INPUT)  the mass 
+       *  @param  particle (UPDATE) the particle to be constrained 
+       *  @return the chi2 of mass-constrained fit
+       *  The actual code has been stollen from Wouter Hulsbergen 
+       *  @author Vanya Belyaev Ivan.Belyaev@nikhef.nl
+       *  @date   2010-05-20
+       */
+      static double fit
+      ( const double                       mass   ,
+        Gaudi::Math::ParticleParams&       output ) ;
+      // ======================================================================
+    } ;  
     // ========================================================================
   } //                                             end of namespace Gaudi::Math
   // ==========================================================================

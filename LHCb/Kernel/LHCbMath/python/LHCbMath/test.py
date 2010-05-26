@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: test.py,v 1.4 2010-05-26 12:04:26 ibelyaev Exp $
+# $Id: test.py,v 1.5 2010-05-26 13:19:16 ibelyaev Exp $
 # =============================================================================
 ## @file
 #  Test-file for various "with error" objects
@@ -103,14 +103,14 @@ mtrx1[1,1] = 0.02
 mtrx1[2,2] = 0.03
 
 mtrx2 = Gaudi.SymMatrix4x4 ()
-mtrx2[0,0] = 0.01
-mtrx2[1,1] = 0.02
-mtrx2[2,2] = 0.03
+mtrx2[0,0] = 0.04
+mtrx2[1,1] = 0.04
+mtrx2[2,2] = 0.04
 mtrx2[3,3] = 0.04
 
 pars = Gaudi.Math.ParticleParams(
-    pnt1  ,
-    lv1   ,
+    Gaudi.XYZPoint      ( 1 , 1 , 2         ) ,
+    Gaudi.LorentzVector ( 10 , 10 , 10 , 20 ) ,
     10    ,
     mtrx1 ,
     mtrx2 , 
@@ -120,8 +120,19 @@ pars = Gaudi.Math.ParticleParams(
     Gaudi.Vector4   ()    
     )
 
-print pars
+print 'Before mass-constrained fit:' , pars
+fitted, chi2 = pars.fitMass ( 5.0 )
+mom = fitted.momentum()
+print 'Mass-constrained fit:' , fitted , chi2, mom.M()
+print ' ', mom.sigma2Mass2() , mom.sigma2Mass() , mom.sigmaMass()  
 
+print mom.cov2(0,0) , mom.cov2(1,1) , mom.cov2(2,2) , mom.cov2(3,3)
+
+
+fitted2, chi2 = fitted.fitMass ( 5.0 )
+mom = fitted2.momentum()
+print 'Mass-constrained fit:' , fitted2 , chi2, mom.M()
+print ' ', mom.sigma2Mass2() , mom.sigma2Mass() , mom.sigmaMass()  
 
 # =============================================================================
 # The  END 

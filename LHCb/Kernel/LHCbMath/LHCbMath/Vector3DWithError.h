@@ -1,4 +1,4 @@
-// $Id: Vector3DWithError.h,v 1.3 2010-05-24 13:01:38 ibelyaev Exp $
+// $Id: Vector3DWithError.h,v 1.4 2010-05-26 13:19:16 ibelyaev Exp $
 // ============================================================================
 #ifndef LHCBMATH_VECTOR3DWITHERROR_H 
 #define LHCBMATH_VECTOR3DWITHERROR_H 1
@@ -103,6 +103,12 @@ namespace Gaudi
       // ======================================================================
       operator const Covariance& () const { return cov2  () ; }        
       operator       Covariance& ()       { return m_cov2   ; }        
+      // ======================================================================
+    public: // useful accessors to covarinace matrix 
+      // ======================================================================
+      /// access to elemens of covariance matrix 
+      double cov2 ( unsigned int i , unsigned int j ) const 
+      { return m_cov2 ( i , j ) ; }
       // ======================================================================
     public: // operators 
       // ======================================================================

@@ -6,6 +6,9 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2010-05-26 - Vanya Belyaev
+ - fix some errors in ParticleParams 
+
 ! 2010-05-26 - Vanya BELYAEV 
 
  - SymPosDefMatrixInverter.h

@@ -1,4 +1,4 @@
-// $Id: ParticleParams.cpp,v 1.2 2010-05-26 11:34:16 ibelyaev Exp $
+// $Id: ParticleParams.cpp,v 1.3 2010-05-26 13:19:16 ibelyaev Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -341,7 +341,7 @@ Gaudi::Math::ValueWithError Gaudi::Math::ParticleParams::ctau() const
  *  @date   2010-05-20
  */
 // ========================================================================
-double Gaudi::Math::fitMass 
+double Gaudi::Math::FitMass::fit
 ( const Gaudi::Math::ParticleParams& input  , 
   const double                       mass   ,
   Gaudi::Math::ParticleParams&       output ) 
@@ -403,13 +403,14 @@ double Gaudi::Math::fitMass
   const double residual    = mass*mass - m2;
   const double residualV   = cov8 ( 6 , 6 ) ;
   const double residualV_i = 1.0/residualV ;
+  const double residual_   = residual*residualV_i ;
   
   chisq = residual* residual/residualV ;
   Gaudi::Vector8  row6 ;
   for ( unsigned int i = 0 ; i < 8 ; ++i ) 
   { 
-    row6 ( i ) = cov8 ( i , 6 ) ;
-    par8 ( i ) = row6(i) * residual * residualV_i ;
+    row6 ( i )  = cov8 ( i , 6 ) ;
+    par8 ( i ) += row6 ( i ) * residual_ ;
   }
   //
   Gaudi::Math::update ( cov8 , row6 , -residualV_i ) ;
@@ -429,13 +430,13 @@ double Gaudi::Math::fitMass
                                                 new_pz*new_pz + new_m2 ) ) ;
   
   ROOT::Math::SMatrix<double,4,4> new_p4jacobian ;
-  new_p4jacobian(0,0) = 1 ; 
-  new_p4jacobian(1,1) = 1 ; 
-  new_p4jacobian(2,2) = 1 ; 
+  new_p4jacobian(0,0) = 1.0 ; 
+  new_p4jacobian(1,1) = 1.0 ; 
+  new_p4jacobian(2,2) = 1.0 ; 
   new_p4jacobian(3,0) = new_px/new_E ;
   new_p4jacobian(3,1) = new_py/new_E ;
   new_p4jacobian(3,2) = new_pz/new_E ;
-  new_p4jacobian(3,3) = 1/(2*new_E) ;
+  new_p4jacobian(3,3) = 1.0/(2*new_E) ;
   
   Gaudi::Vector3 v3 ;
   Gaudi::Vector4 v4 ;
@@ -447,11 +448,11 @@ double Gaudi::Math::fitMass
       Gaudi::LorentzVector ( new_px , new_py , new_pz , new_E ) , 
       new_len                                                         , 
       cov8.Sub<Gaudi::SymMatrix3x3>(0,0)   ,
-      ROOT::Math::Similarity( p4jacobian, cov8.Sub<Gaudi::SymMatrix4x4>(3,3)) ,
+      ROOT::Math::Similarity( new_p4jacobian, cov8.Sub<Gaudi::SymMatrix4x4>(3,3)) ,
       cov8(7,7) ,
-      p4jacobian * cov8.Sub<Gaudi::Matrix4x3>(3,0) ,
+      new_p4jacobian * cov8.Sub<Gaudi::Matrix4x3>(3,0) ,
       v3 , 
-      v4 * ROOT::Math::Transpose( p4jacobian ) ) ;
+      v4 * ROOT::Math::Transpose( new_p4jacobian ) ) ;
   
   return chisq ;
  
@@ -466,10 +467,44 @@ double Gaudi::Math::fitMass
  *  @date   2010-05-20
  */
 // ============================================================================
-double Gaudi::Math::fitMass   
+double Gaudi::Math::FitMass::fit   
 ( const double                 mass     , 
   Gaudi::Math::ParticleParams& particle ) 
-{ return fitMass ( particle , mass , particle ) ; }
+{ return fit ( particle , mass , particle ) ; }
+// ============================================================================
+/* apply mass-constrained fit to the particle 
+ * 
+ *  @code
+ *
+ *     const Gaudi::Math::ParticleParams& params = .... ;
+ *
+ *
+ *     const double mass_B = 5.279 * GeV ;
+ *     double       chi2 = 0.0 
+ *
+ *     Gaudi::Math::ParticleParams fitted  = .... ;
+ *         Gaudi::Math::FitMass::fit( params , mass_B , chi2 ) ;
+ *  
+ *  @code 
+ *
+ *  @param  input    (INPUT)  the particle to be constrained 
+ *  @param  mass     (INPUT)  the mass 
+ *  @param  output  (OUTPUT) the constrained particle 
+ *  @return the chi2 of mass-constraiend fit 
+ *  The actual code has been stollen from Wouter Hulsbergen 
+ *  @author Vanya Belyaev Ivan.Belyaev@nikhef.nl
+ *  @date   2010-05-20
+ */
+// ============================================================================
+Gaudi::Math::ParticleParams Gaudi::Math::FitMass::fit
+( const Gaudi::Math::ParticleParams& input , 
+  const double                       mass  , 
+  double&                            chi2  ) 
+{
+  Gaudi::Math::ParticleParams fitted ;
+  chi2 = fit ( input , mass , fitted ) ;
+  return fitted ;
+}
 // ============================================================================
 // The END 
 // ============================================================================

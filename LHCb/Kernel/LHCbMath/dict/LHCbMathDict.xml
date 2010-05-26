@@ -24,7 +24,7 @@
   <class name    = "std::vector<Gaudi::Math::ValueWithError>" />
   
   <class name    = "Gaudi::Math::ParticleParams"     />
-  <function name = "Gaudi::Math::fitMass"            />
+  <class name    = "Gaudi::Math::FitMass"            />
 
   <exclusion>
     <class name = "ROOT::Math::SVector&lt;double,2&gt;"     />
