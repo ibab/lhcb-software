@@ -1,4 +1,4 @@
-// $Id: PresenterMainFrame.cpp,v 1.321 2010-05-19 21:01:34 robbep Exp $
+// $Id: PresenterMainFrame.cpp,v 1.322 2010-05-26 14:34:39 robbep Exp $
 #include <algorithm>
 #include <iostream>
 #include <vector>
@@ -2479,6 +2479,9 @@ void PresenterMainFrame::printBenchmark(const std::string &timer) {
   m_benchmark->Reset();
 }
 
+//================================================================================
+// List histograms from a ROOT file
+//================================================================================
 void PresenterMainFrame::listRootHistogramsFrom(TDirectory* rootFile,
                                                 std::vector<std::string> & histogramList,
                                                 std::vector<std::string> & histogramTypes,
@@ -2510,17 +2513,25 @@ void PresenterMainFrame::listRootHistogramsFrom(TDirectory* rootFile,
       tmpdir->cd();
       continue;
     }
-    if (std::string(key->GetClassName()) == "TH1D") {
+    if ((std::string(key->GetClassName()) == "TH1D")||
+	(std::string(key->GetClassName()) == "TH1F")) {
       type = s_pfixMonH1D;
       if (pres::OfflineFile == savesetType) {
-        histogramIDStream << ((TH1D*)key->ReadObj())->GetName();
+	if ( std::string(key->GetClassName()) == "TH1D" ) 
+	  histogramIDStream << ((TH1D*)key->ReadObj())->GetName();
+	else 
+	  histogramIDStream << ((TH1F*)key->ReadObj())->GetName();
       } else {
         histogramIDStream << s_pfixMonH1D << s_slash << taskName << s_slash << key->GetName();
       }
-    } else if (std::string(key->GetClassName()) == "TH2D") {
+    } else if ((std::string(key->GetClassName()) == "TH2D")||
+	       (std::string(key->GetClassName()) == "TH2F")) {
       type = s_pfixMonH2D;
       if (pres::OfflineFile == savesetType) {
-        histogramIDStream << ((TH2D*)key->ReadObj())->GetName();
+	if ( std::string(key->GetClassName()) == "TH2D" )
+	  histogramIDStream << ((TH2D*)key->ReadObj())->GetName();
+	else
+	  histogramIDStream << ((TH2F*)key->ReadObj())->GetName();
       } else {
         histogramIDStream << s_pfixMonH1D << s_slash << taskName << s_slash << key->GetName();
       }
@@ -2540,7 +2551,9 @@ void PresenterMainFrame::listRootHistogramsFrom(TDirectory* rootFile,
       }
     }
     if (std::string(key->GetClassName()) == "TH1D" ||
+	std::string(key->GetClassName()) == "TH1F" ||
         std::string(key->GetClassName()) == "TH2D" ||
+	std::string(key->GetClassName()) == "TH2F" ||
         std::string(key->GetClassName()) == "TProfile") {
       if (pres::OfflineFile == savesetType) {
         histogramID = type + s_slash + taskName + s_slash + histogramID;

@@ -6,6 +6,7 @@
 
 ! 2010-05-26 - Patrick Robbe
  - src/presenter.h: accept Brunel.root as offline ROOT file
+ - src/PresenterMainFrame.cpp: also reads TH1F and TH2F from offline files
 
 ! 2010-05-19 - Patrick Robbe
  - src/DbHistRoot.cpp: retransform double into float 

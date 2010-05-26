@@ -1,4 +1,4 @@
-// $Id: DbRootHist.cpp,v 1.166 2010-05-19 21:01:34 robbep Exp $
+// $Id: DbRootHist.cpp,v 1.167 2010-05-26 14:34:39 robbep Exp $
 #include "DbRootHist.h"
 
 // STL 
@@ -1606,12 +1606,9 @@ void DbRootHist::draw(TCanvas* editorCanvas, double xlow, double ylow, double xu
       
 	std::string drawPatternFile = m_analysisLib->refRoot() + "/" + 
 	  m_onlineHistogram->task() + "/" + sopt;
-	// std::cout << "drawPatternFile: "  << drawPatternFile.c_str() << std::endl;
+	
 	TFile rootFile(drawPatternFile.c_str()); 
-
-	//  secondPad->SetFillStyle(4000); //will be transparent
-	// or TImage::Merge(const TImage* , const char* = "alphablend", Int_t = 0, Int_t = 0) 4 pixmap
-      
+     
 	if (rootFile.IsZombie()) {
 	  std::cout << "Error opening Root file" << std::endl;
 	} else {
