@@ -1,4 +1,4 @@
-// $Id: HltVeloTCaloMatch.cpp,v 1.3 2010-03-01 20:28:50 graven Exp $
+// $Id: HltVeloTCaloMatch.cpp,v 1.4 2010-05-26 07:54:50 gligorov Exp $
 // Include files 
 
 // from Gaudi
@@ -137,8 +137,8 @@ double HltVeloTCaloMatch::match(const Track& track)
   debug() << "running confirmation3D()" << endreq;
 
   // get track slopes
-  double trackDxDz = track.firstState().tx();
-  double trackDyDz = track.firstState().ty();
+  /*double trackDxDz = 0.;//(track.states()[2])->tx();
+  double trackDyDz = 0.;//(track.states()[2])->ty();
   
   // Absolute energy uncertainty:
   double de = e*(sqrt( m_eres[0]*m_eres[0] + m_eres[1]*m_eres[1]/e ));
@@ -151,24 +151,28 @@ double HltVeloTCaloMatch::match(const Track& track)
   double edxdz  = sqrt(ex*ex + exkick*exkick)/z;
   double dydz   = y/z;
   double edydz  = ey/z;
-  
+  */
+  double tracky_atcalo = 0;
+  const std::vector<State*> TSV = track.states(); 
+  State* iS = *(TSV.begin());
+  tracky_atcalo = (iS)->y()/Gaudi::Units::cm + (iS)->ty()*(z-(iS)->z()/Gaudi::Units::cm);
   // loop for -1 and +1 charge
-  double q[2]={-1.,1.};
+  /*double q[2]={-1.,1.};
   for (int i= 0; i< 2; ++i) {
     double dxdz = (x + q[i]*xkick)/z;
     
     // calculate chi2 
     double deltaX = q[i]*(dxdz - trackDxDz)/edxdz;
-    double deltaY = (dydz/fabs(dydz))*(dydz - trackDyDz)/edydz;
-    double chi2 = deltaX*deltaX + deltaY*deltaY;
-    
-    if (chi2 < matchChi2) {
+    */double deltaY = (y-tracky_atcalo)/ey;//(dydz/fabs(dydz))*(dydz - trackDyDz)/edydz;
+    double chi2 = /*deltaX*deltaX + */deltaY*deltaY;
+     
+ //   if (chi2 < matchChi2) {
       matchChi2      = chi2;
-      debug() << "Best so far: q = " << q[i] << "\tchi2 = " << matchChi2
+ /*     debug() << "Best so far: q = " << q[i] << "\tchi2 = " << matchChi2
               << " (" << deltaX*deltaX << " + " << deltaY*deltaY << ")" << endreq;
     } // end if chi2 < matchChi2
   } // end loop for -1 and +1 charge
-  
+  */
   debug() << " matchChi2 " << matchChi2 << endreq;
   return matchChi2;
 }
