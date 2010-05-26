@@ -1,4 +1,5 @@
-// $Id: HltGlobalMonitor.cpp,v 1.69 2010-05-20 11:46:13 graven Exp $
+
+// $Id: HltGlobalMonitor.cpp,v 1.70 2010-05-26 10:34:47 albrecht Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -42,6 +43,10 @@
 // ============================================================================
 #include "HltBase/HltHistogramUtilities.h"
 using namespace Hlt::HistogramUtilities;
+
+
+#include "Event/RawBank.h"
+#include "Event/RawEvent.h"
 // ============================================================================
 // local
 // ============================================================================
@@ -86,7 +91,9 @@ HltGlobalMonitor::HltGlobalMonitor( const std::string& name,
   declareProperty("DecToGroupHlt2",    m_DecToGroup2);
   declareProperty("Hlt1DecName", m_hlt1Decision = "Hlt1Global" );
   declareProperty("Hlt2DecName", m_hlt2Decision = "Hlt2Global" );
-
+  declareProperty( "RawEventLocation"   , m_rawEventLocation = LHCb::RawEventLocation::Default );
+  declareProperty("Hlt1Decisions",     m_Hlt1Lines ); //TODO: remove  	 
+  declareProperty("Hlt2Decisions",     m_Hlt2Lines ); //TODO: remove 	 
 }
 //=============================================================================
 // Destructor
@@ -157,6 +164,10 @@ StatusCode HltGlobalMonitor::initialize() {
   if (!setBinLabels( m_hlt2AlleysCorrelations, hlt2AlleyLabels, hlt2AlleyLabels )) {
     error() << "failed to set binlables on Hlt2Alleys Correlation hist" << endmsg;
   }
+
+  m_hltTimeVsEvtSize = bookProfile1D("Hlt CPU time vs raw event size", 0,200000,100);
+  setAxisLabels( m_hltTimeVsEvtSize, "raw event length", "HLT processing time [log(ms)]");
+  
 
                     /*One Histogram for each alley*/
   for(DecToGroupType::const_iterator i=m_DecToGroup1.begin();i!=m_DecToGroup1.end();++i){
@@ -257,7 +268,6 @@ StatusCode HltGlobalMonitor::execute() {
   monitorHLT(odin,hlt);
   monitorTrends();
 
-  
   counter("#events")++;
 
   return StatusCode::SUCCESS;
@@ -336,8 +346,19 @@ void HltGlobalMonitor::monitorHLT(const LHCb::ODIN* /*odin*/, const LHCb::HltDec
       fill(m_hlt2AlleysCorrelations,i,j,(nAcc2Alley[j]>0));
     }
   }
+  
+  //monitor CPU time vs evt size
+  size_t evtSize = 0;
+  if( exist<LHCb::RawEvent>(m_rawEventLocation) ){
+    RawEvent* evt = get<LHCb::RawEvent>(m_rawEventLocation);
+    evtSize = rawEvtLength(evt);
+  }
+  double elapsedTime = double(System::currentTime( System::microSec ) - m_startEvent);
+  double t = log10(elapsedTime)-3; // convert to log(time/ms)
+  m_hltTimeVsEvtSize->fill(evtSize, t );
 
 }
+
 
 //==============================================================================
 
@@ -360,4 +381,21 @@ void HltGlobalMonitor::monitorTrends() {
   i = m_tasks->axis().coordToIndex( when );
   if ( m_tasks->binEntries(i)==0 ) m_tasks->fill( when, 1 );
  
+}
+
+size_t HltGlobalMonitor::rawEvtLength(const LHCb::RawEvent* evt)    {
+  size_t i, len;
+  RawEvent* raw = const_cast<RawEvent*>(evt);
+  for(len=0, i=RawBank::L0Calo; i<RawBank::LastType; ++i)  {
+    len += rawEvtLength(raw->banks(RawBank::BankType(i)));
+  }
+  return len;
+}
+/// Determine length of the sequential buffer from RawEvent object
+size_t HltGlobalMonitor::rawEvtLength(const std::vector<RawBank*>& banks)    {
+  size_t len = 0;
+  for(std::vector<RawBank*>::const_iterator j=banks.begin(); j != banks.end(); ++j)  {
+    len += (*j)->totalSize();
+  }
+  return len;
 }
