@@ -1,9 +1,17 @@
-!$Id: release.notes,v 1.57 2010-05-10 12:35:32 jpalac Exp $
+!$Id: release.notes,v 1.58 2010-05-26 13:48:28 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : PhysSel/PhysSelPython
 ! Responsible : Juan Palacios
 ! Purpose     : Helper python classes for writing offline selections
 !-----------------------------------------------------------------------------
+
+
+
+! 2010-05-26 - Juan Palacios
+ - python/PhysSelPython/Wrappers.py
+  . correct AutomaticData.algName() to return name of the LoKi::VoidFilter.
+ - cmt/requirements
+  . Increase to v5r3p1.
 
 !==================== PhysSel/PhysSelPython v5r3 2010-05-10 ================
 
