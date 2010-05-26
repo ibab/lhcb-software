@@ -5,11 +5,18 @@ from LbUtils.afs.directory import AFSLock
 
 from shutil import copy2
 
-import md5
+
 import logging
 import fnmatch
 import stat
-import os
+import os, sys
+
+if sys.version_info[:3] >= (2,6,0) :
+    from hashlib import md5
+else :
+    from md5 import md5
+
+
 
 try:
     WindowsError
@@ -144,13 +151,13 @@ def computeMD5Sum(fname, buffer_size=2**13):
     lock.lock(force=False)
     f = open(fname, "rb")
     if buffer_size :
-        m = md5.new()
+        m = md5()
         buf = f.read(buffer_size)
         while(buf):
             m.update(buf)
             buf = f.read(buffer_size)
     else :
-        m = md5.new(f.read())
+        m = md5(f.read())
     f.flush()
     os.fsync(f.fileno())
     f.close()

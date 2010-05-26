@@ -3,12 +3,18 @@ Module which implements simple file-based locking mechanism
 
 @author: Karol Kruzelecki
 """
-import os, time, md5
+import os, time, sys
+
+if sys.version_info[:3] >= (2,6,0) :
+    from hashlib import md5
+else :
+    from md5 import md5
+
 
 
 def _hash(value):
     """ returns md5 sum of the given value """
-    return md5.new(value).hexdigest()
+    return md5(value).hexdigest()
 
 class Lock(object):
     """ Lock(command, uniqId[, commonId, [lockfilePath]]) -> (not important)

@@ -611,8 +611,11 @@ def isTarBall(filename):
 # --------------------------------------------------------------------------------------
 
 def calculateMD5(filename):
-    import md5
-    m = md5.new()
+    if python_version >= (2,6,0) :
+        from hashlib import md5
+    else :
+        from md5 import md5
+    m = md5()
     f = open(filename, "rb")
     buf = f.read(2 ** 13)
     while(buf):
