@@ -1322,6 +1322,7 @@ class SetupProject:
                      'XmlConditions':'Det',
                      'DecFiles':'Gen',
                      'SQLDDDB':'Det',
+                     'VeloSQLDDDB':'Det',
                      'HltTCK':'TCK' }
         use_rexp = re.compile("^(?:([^/]*)/)?([^/ .]*)[ .]*([^ ]+)? *$")
         for u in self.use:

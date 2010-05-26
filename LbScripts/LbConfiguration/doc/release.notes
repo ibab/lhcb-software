@@ -1,3 +1,7 @@
+2010-05-26  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* python/LbConfiguration/SetupProject.py: Added VeloSQLDDDB to the known packages
+
 2010-05-25  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* python/LbConfiguration/SetupProject.py: use StripPath to clean up PATH etc.
