@@ -17,14 +17,12 @@ class DiMuonLines :
         """
 
         lines = [
-            'Hlt2SingleMuonLow',
-            'Hlt2IncMuTrack',
-            'Hlt2IncMuTrack4Jpsi', 
-            'Hlt2IncMuTrackLow', 
-            'Hlt2IncMuTrackLowMass', 
-            'Hlt2IncMuTrackLowMassLow', 
-            'Hlt2IncMuTrackLowMassMid', 
-            'Hlt2IncMuTrackMid', 
+
+            'Hlt2MuonFromHLT1',
+            'Hlt2SingleMuon',
+            'Hlt2SingleHighPTMuon',
+            'Hlt2MuTrack',
+            'Hlt2MuTrackNoIP',
             'Hlt2DiMuonUnbiasedJPsi',
             'Hlt2DiMuonUnbiasedPsi2S',
             'Hlt2DiMuonUnbiasedBmm',
@@ -40,8 +38,7 @@ class DiMuonLines :
 #            'Hlt2DiMuonUnbiasedJPsiLow',
             'Hlt2UnbiasedDiMuon',  
             'Hlt2UnbiasedDiMuonLowMass',
-            'Hlt2DiMuonSameSign',
-            'Hlt2MuonFromHLT1',
+            'Hlt2DiMuonSameSign'
             ]
             
         return lines
@@ -55,7 +52,7 @@ class DiMuonLines :
         # keep pass through thresholds
         d = { }
 
-
+        from Hlt2Lines.Hlt2InclusiveMuonLines  import Hlt2InclusiveMuonLinesConf
         from Hlt2Lines.Hlt2InclusiveDiMuonLines  import Hlt2InclusiveDiMuonLinesConf
         d.update( { Hlt2InclusiveDiMuonLinesConf : { 
             ## Cut values
@@ -86,4 +83,30 @@ class DiMuonLines :
             }}
                   )
 
+        d.update( { Hlt2InclusiveMuonLinesConf : {
+            'SingleMuonPt'        : 1000      # MeV
+            ,'SingleMuonIP'        : 0.08     # mm
+            ,'SingleMuonHighPt'    : 10000     # MeV
+            ,'MuTrackMuPt'         : 1000      # MeV
+            ,'MuTrackTrPt'         : 600       # MeV
+            ,'MuTrackMuIP'         : 0.08     # mm
+            ,'MuTrackTrIP'         : 0.08     # mm
+            ,'MuTrackDoca'         : 0.2     # mm
+            ,'MuTrackDz'           : 1.0       # mm
+            ,'MuTrackMass'         : 2000      # MeV
+            ,'MuTrackPoint'        : 0.4       # dimensionless
+            ,'MuTrackNoIPMuPt'    : 1600      # MeV
+            ,'MuTrackNoIPTrPt'    : 400       # MeV
+            ,'MuTrackNoIPDoca'    : 0.100     # mm
+            ,'MuTrackNoIPMass'    : 2900      # MeV
+            ,'Prescale'   : { 'Hlt2MuonFromHLT1'       : 0.01   
+                              ,'Hlt2SingleMuon'        : 0.02
+                              ,'Hlt2SingleHighPTMuon'  : 1.0
+                              ,'Hlt2IncMuTrack'        : 1.0
+                              ,'Hlt2IncMuTrackNoIP'    : 1.0
+                              }
+            }}
+                  )
+        
         return d
+    
