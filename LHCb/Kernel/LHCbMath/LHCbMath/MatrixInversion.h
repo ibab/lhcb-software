@@ -58,7 +58,6 @@ namespace Gaudi
       typedef typename ROOT::Math::SMatrix<F, N, N, R> M;
       return Gaudi::Math::SymPosDefMatrixInverter::inverter<M, F, N>()(matrix);
     }
-
     /** invert symmetric matrices
      *
      *  For matrix dimensions N <= 6, hand-optimized template specializations

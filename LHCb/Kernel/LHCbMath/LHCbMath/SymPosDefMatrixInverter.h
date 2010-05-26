@@ -17,77 +17,141 @@ namespace Gaudi
      */
     namespace SymPosDefMatrixInverter
     {
+      // ======================================================================
+      template <class MATRIX, class F, unsigned int N> 
+      struct _inverterForAllN
+      {
+        bool operator() ( MATRIX& m ) const 
+        {
+          // perform Cholesky decomposition of matrix: M = L L^T
+          // only thing that can go wrong: trying to take square root of negative
+          // number or zero (matrix is ill-conditioned or singular in these cases)
+          
+          // we only need N * (N + 1) / 2 elements to store L
+          // element L(i,j) is at array position (i * (i + 1)) / 2 + j
+          F l[(N * (N + 1)) / 2];
+          
+          // quirk: we need to invert L later anyway, so we can invert elements
+          // on diagonale straight away (we only ever need their reciprocals!)
+          
+          // cache starting address of rows of L for speed reasons
+          F *base1 = &l[0];
+          for (int i = 0; i < N; base1 += ++i) {
+            F tmpdiag = F(0);	// for element on diagonale
+            // calculate off-diagonal elements
+            F *base2 = &l[0];
+            for (int j = 0; j < i; base2 += ++j) {
+              F tmp = m(i, j);
+              for (int k = j; k--; )
+                tmp -= base1[k] * base2[k];
+              base1[j] = tmp *= base2[j];
+              // keep track of contribution to element on diagonale
+              tmpdiag += tmp * tmp;
+            }
+            // keep truncation error small
+            tmpdiag = m(i, i) - tmpdiag;
+            // check if positive definite
+            if (tmpdiag <= F(0)) return false;
+            else base1[i] = std::sqrt(F(1) / tmpdiag);
+          }
+          
+          // ok, next step: invert off-diagonal part of matrix
+          base1 = &l[1];
+          for (int i = 1; i < N; base1 += ++i) {
+            for (int j = 0; j < i; ++j) {
+              F tmp = F(0);
+              F *base2 = &l[(i * (i - 1)) / 2];
+              for (int k = i; k-- > j; base2 -= k)
+                tmp -= base1[k] * base2[j];
+              base1[j] = tmp * base1[i];
+            }
+          }
+          
+          // Li = L^(-1) formed, now calculate M^(-1) = Li^T Li
+          for (int i = N; i--; ) {
+            for (int j = i + 1; j--; ) {
+              F tmp = F(0);
+              base1 = &l[(N * (N - 1)) / 2];
+              for (int k = N; k-- > i; base1 -= k)
+                tmp += base1[i] * base1[j];
+              m(i,j) = tmp;
+            }
+          }          
+          return true;
+        } 
+      } ;
       /// invert symmetric positive definite matrix (dimension n, general, implementation)
       template<class T> struct inverterForAllN
       {
-	typedef typename T::value_type F;
-	inline bool operator()(T& m, int N) const
-	{
-	  // perform Cholesky decomposition of matrix: M = L L^T
-	  // only thing that can go wrong: trying to take square root of negative
-	  // number or zero (matrix is ill-conditioned or singular in these cases)
-
-	  // we only need N * (N + 1) / 2 elements to store L
-	  // element L(i,j) is at array position (i * (i + 1)) / 2 + j
-	  F l[(N * (N + 1)) / 2];
-
-	  // quirk: we need to invert L later anyway, so we can invert elements
-	  // on diagonale straight away (we only ever need their reciprocals!)
-
-	  // cache starting address of rows of L for speed reasons
-	  F *base1 = &l[0];
-	  for (int i = 0; i < N; base1 += ++i) {
-	    F tmpdiag = F(0);	// for element on diagonale
-	    // calculate off-diagonal elements
-	    F *base2 = &l[0];
-	    for (int j = 0; j < i; base2 += ++j) {
-	      F tmp = m(i, j);
-	      for (int k = j; k--; )
-		tmp -= base1[k] * base2[k];
-	      base1[j] = tmp *= base2[j];
-	      // keep track of contribution to element on diagonale
-	      tmpdiag += tmp * tmp;
-	    }
-	    // keep truncation error small
-	    tmpdiag = m(i, i) - tmpdiag;
-	    // check if positive definite
-	    if (tmpdiag <= F(0)) return false;
-	    else base1[i] = std::sqrt(F(1) / tmpdiag);
-	  }
-
-	  // ok, next step: invert off-diagonal part of matrix
-	  base1 = &l[1];
-	  for (int i = 1; i < N; base1 += ++i) {
-	    for (int j = 0; j < i; ++j) {
-	      F tmp = F(0);
-	      F *base2 = &l[(i * (i - 1)) / 2];
-	      for (int k = i; k-- > j; base2 -= k)
-		tmp -= base1[k] * base2[j];
-	      base1[j] = tmp * base1[i];
-	    }
-	  }
-
-	  // Li = L^(-1) formed, now calculate M^(-1) = Li^T Li
-	  for (int i = N; i--; ) {
-	    for (int j = i + 1; j--; ) {
-	      F tmp = F(0);
-	      base1 = &l[(N * (N - 1)) / 2];
-	      for (int k = N; k-- > i; base1 -= k)
-		tmp += base1[i] * base1[j];
-	      m(i,j) = tmp;
-	    }
-	  }
-
-	  return true;
-	}
+        typedef typename T::value_type F;
+        inline bool operator()(T& m, const unsigned int N) const
+        {
+          // perform Cholesky decomposition of matrix: M = L L^T
+          // only thing that can go wrong: trying to take square root of negative
+          // number or zero (matrix is ill-conditioned or singular in these cases)
+          
+          // we only need N * (N + 1) / 2 elements to store L
+          // element L(i,j) is at array position (i * (i + 1)) / 2 + j
+          F l[(N * (N + 1)) / 2];
+          
+          // quirk: we need to invert L later anyway, so we can invert elements
+          // on diagonale straight away (we only ever need their reciprocals!)
+          
+          // cache starting address of rows of L for speed reasons
+          F *base1 = &l[0];
+          for (int i = 0; i < N; base1 += ++i) {
+            F tmpdiag = F(0);	// for element on diagonale
+            // calculate off-diagonal elements
+            F *base2 = &l[0];
+            for (int j = 0; j < i; base2 += ++j) {
+              F tmp = m(i, j);
+              for (int k = j; k--; )
+                tmp -= base1[k] * base2[k];
+              base1[j] = tmp *= base2[j];
+              // keep track of contribution to element on diagonale
+              tmpdiag += tmp * tmp;
+            }
+            // keep truncation error small
+            tmpdiag = m(i, i) - tmpdiag;
+            // check if positive definite
+            if (tmpdiag <= F(0)) return false;
+            else base1[i] = std::sqrt(F(1) / tmpdiag);
+          }
+          
+          // ok, next step: invert off-diagonal part of matrix
+          base1 = &l[1];
+          for (int i = 1; i < N; base1 += ++i) {
+            for (int j = 0; j < i; ++j) {
+              F tmp = F(0);
+              F *base2 = &l[(i * (i - 1)) / 2];
+              for (int k = i; k-- > j; base2 -= k)
+                tmp -= base1[k] * base2[j];
+              base1[j] = tmp * base1[i];
+            }
+          }
+          
+          // Li = L^(-1) formed, now calculate M^(-1) = Li^T Li
+          for (int i = N; i--; ) {
+            for (int j = i + 1; j--; ) {
+              F tmp = F(0);
+              base1 = &l[(N * (N - 1)) / 2];
+              for (int k = N; k-- > i; base1 -= k)
+                tmp += base1[i] * base1[j];
+              m(i,j) = tmp;
+            }
+          }
+          
+          return true;
+        }
       };
-
+      
       /// invert symmertric positive definite matrix (dimension n, general case)
       template<class T, class F, int N> struct inverter
       {
-	/// dispatch to specialised implementation
-	inline bool operator()(T& m) const
-	{ return inverterForAllN<T>()(m, T::kRows); }
+        /// dispatch to specialised implementation
+        inline bool operator()(T& m) const
+        // { return inverterForAllN<T>()(m, T::kRows); }
+        { return _inverterForAllN<T,typename T::value_type,N>()(m); }
       };
 
       /// invert symmetric positive definite matrix (dimension 6)

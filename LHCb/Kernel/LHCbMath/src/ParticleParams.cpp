@@ -1,4 +1,4 @@
-// $Id: ParticleParams.cpp,v 1.1 2010-05-24 13:01:38 ibelyaev Exp $
+// $Id: ParticleParams.cpp,v 1.2 2010-05-26 11:34:16 ibelyaev Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -158,6 +158,61 @@ Gaudi::Math::ParticleParams::ParticleParams
   , m_lenPosCovMatrix ( lenpos   )
   , m_lenMomCovMatrix ( lenmom   )
 {}
+// ============================================================================
+// constructor from a full parameter set
+// ============================================================================
+Gaudi::Math::ParticleParams::ParticleParams 
+( const Gaudi::Math::SVectorWithError<8,double>& params ) 
+  : m_length          ( params.cov2( 7 , 7 )                        )  
+  , m_position        ( params.cov2().Sub<Gaudi::SymMatrix3x3>(0,0) )   
+  , m_momentum        ( params.cov2().Sub<Gaudi::SymMatrix4x4>(4,4) )  
+  , m_momPosCovMatrix ( params.cov2().Sub<Gaudi::Matrix4x3>(3,0)    )
+  , m_lenPosCovMatrix ()
+  , m_lenMomCovMatrix ()
+{
+  // values 
+  m_position . SetX     ( params(0) ) ;
+  m_position . SetY     ( params(1) ) ;
+  m_position . SetZ     ( params(2) ) ;
+  m_momentum . SetPx    ( params(3) ) ;
+  m_momentum . SetPy    ( params(4) ) ;
+  m_momentum . SetPz    ( params(5) ) ;
+  m_momentum . SetE     ( params(6) ) ;
+  m_length   . setValue ( params(7) ) ;
+  //
+  for ( unsigned int i = 0 ; i < 3 ; ++i ) 
+  { m_lenPosCovMatrix ( i ) = params.cov2 ( i     , 7 ) ; }
+  for ( unsigned int i = 0 ; i < 4 ; ++i ) 
+  { m_lenMomCovMatrix ( i ) = params.cov2 ( i + 3 , 7 ) ; }
+}
+// ============================================================================
+// constructor from a full parameter set
+// ============================================================================
+Gaudi::Math::ParticleParams::ParticleParams 
+( const Gaudi::Vector8&      par , 
+  const Gaudi::SymMatrix8x8& cov ) 
+  : m_length          ( cov ( 7 , 7 )                     )  
+  , m_position        ( cov .Sub<Gaudi::SymMatrix3x3>(0,0) )   
+  , m_momentum        ( cov .Sub<Gaudi::SymMatrix4x4>(4,4) )  
+  , m_momPosCovMatrix ( cov .Sub<Gaudi::Matrix4x3>(3,0)    )
+  , m_lenPosCovMatrix ()
+  , m_lenMomCovMatrix ()
+{
+  // values 
+  m_position . SetX     ( par(0) ) ;
+  m_position . SetY     ( par(1) ) ;
+  m_position . SetZ     ( par(2) ) ;
+  m_momentum . SetPx    ( par(3) ) ;
+  m_momentum . SetPy    ( par(4) ) ;
+  m_momentum . SetPz    ( par(5) ) ;
+  m_momentum . SetE     ( par(6) ) ;
+  m_length   . setValue ( par(7) ) ;
+  //
+  for ( unsigned int i = 0 ; i < 3 ; ++i ) 
+  { m_lenPosCovMatrix ( i ) = cov ( i     , 7 ) ; }
+  for ( unsigned int i = 0 ; i < 4 ; ++i ) 
+  { m_lenMomCovMatrix ( i ) = cov ( i + 3 , 7 ) ; }
+}
 // ============================================================================
 // constructor from a full parameter set
 // ============================================================================

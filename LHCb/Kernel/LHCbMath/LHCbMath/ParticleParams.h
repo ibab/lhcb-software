@@ -1,4 +1,4 @@
-// $Id: ParticleParams.h,v 1.1 2010-05-24 13:01:38 ibelyaev Exp $
+// $Id: ParticleParams.h,v 1.2 2010-05-26 11:34:16 ibelyaev Exp $
 // ============================================================================
 #ifndef LHCBMATH_PARTICLEPARAMS_H 
 #define LHCBMATH_PARTICLEPARAMS_H 1
@@ -68,6 +68,12 @@ namespace Gaudi
         const Gaudi::Matrix4x3&                    posmom   , 
         const Gaudi::Vector3&                      lenpos   , 
         const Gaudi::Vector4&                      lenmom   ) ;
+      /// 
+      /// constructor from a full parameter set
+      ParticleParams ( const Gaudi::Math::SVectorWithError<8,double>& params ) ;
+      /// constructor from a full parameter set
+      ParticleParams ( const Gaudi::Vector8&                          params , 
+                       const Gaudi::SymMatrix8x8&                     cov8   ) ;
       /// default constructor 
       ParticleParams () ;
       /// virtual destructor 

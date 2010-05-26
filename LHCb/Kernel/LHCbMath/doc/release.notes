@@ -6,6 +6,18 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2010-05-26 - Vanya BELYAEV 
+
+ - SymPosDefMatrixInverter.h
+   add helper structire _invertForAllN 
+   ( the code is copied from Manuel's class invertForAllN, 
+     the only one difference "N" is compile time constant (template parameter), 
+     and thus it allows the compilation for Win32 platform) .
+   The inverter<> has been update dto use _inverterFroAllN instead of invertrerForAlLN.
+   It is *safe*, since for inverter<>, N is a compile tiem constant.
+   
+
+
 ! 2010-05-25 - Vanya Belyaev
 
  - minor fix, hopefully it also fixes the compilation 
