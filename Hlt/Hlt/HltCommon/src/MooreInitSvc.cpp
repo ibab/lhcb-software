@@ -1,4 +1,4 @@
-// $Id: MooreInitSvc.cpp,v 1.1 2010-05-20 08:03:43 graven Exp $
+// $Id: MooreInitSvc.cpp,v 1.2 2010-05-26 20:38:02 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -122,7 +122,7 @@ StatusCode MooreInitSvc::initRndm( std::vector<long int>& seeds )
   if( 0 == engine ) return StatusCode::FAILURE;
   StatusCode sc = engine->setSeeds( seeds );
   if( sc.isFailure() ) return sc;
-  always() << "using seeds " << seeds << endmsg;
+  debug() << "using seeds " << seeds << endmsg;
   return StatusCode::SUCCESS;
 }
 
