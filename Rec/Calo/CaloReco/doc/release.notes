@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.186 2010-05-26 17:11:04 odescham Exp $
+! $Id: release.notes,v 1.187 2010-05-26 17:11:21 odescham Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Calo/CaloReco
 ! Responsible : Olivier Deschamps odescham@in2p3.fr 
@@ -34,10 +34,6 @@
 	- python/Configuration : fix bug in ElectronRec setting (Chi2(track-cluster) selection was not applied
 				--> size of CaloHypo container for electron should be reduced (factor ~2 ?)
 
-	
-
-
-=======
 ! 2010-05-19 - Gerhard Raven
  - suppress printout of error from CaloClusterCovarianceAlg, but keep
    summary at the end of the job (see http://savannah.cern.ch/bugs/?67077)
