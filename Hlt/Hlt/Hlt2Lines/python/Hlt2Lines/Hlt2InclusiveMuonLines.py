@@ -64,16 +64,16 @@ class Hlt2InclusiveMuonLinesConf(HltLinesConfigurableUser) :
         DocaNoIP = "(AMAXDOCA('')<"+str(self.getProp('MuTrackNoIPDoca'))+"*mm)"
         MassNoIP = "(AM>"+str(self.getProp('MuTrackNoIPMass'))+"*MeV)"
         
-        mutrackNoIP = "HLT_PASS('Hlt1MuTrack4JPsiDecision')"
-        Hlt1UnbMuon = "HLT_PASS_RE('Hlt1(Single|Di)MuonNoIP')" +"|" +mutrackNoIP
-                                
+        Hlt1UnbMuon = "HLT_PASS_RE('Hlt1(SingleMuonNoIPL0|MuTrack4JPsi)Decision')"
+        Hlt1AllMuons = "HLT_PASS_RE('Hlt1.*Mu.*Decision')"
+        
         ############################################################################
         #    Single muon selection lines
         ############################################################################
-
+        
         line = Hlt2Line('MuonFromHLT1'
                         , prescale = self.prescale
-                        , HLT ="HLT_PASS_RE('Hlt1.*Muon.*Decision')"
+                        , HLT =Hlt1AllMuons
                         , postscale = self.postscale
                         )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2MuonFromHLT1Decision" : 50190 } )        
