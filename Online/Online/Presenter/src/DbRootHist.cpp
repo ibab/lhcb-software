@@ -1,4 +1,4 @@
-// $Id: DbRootHist.cpp,v 1.167 2010-05-26 14:34:39 robbep Exp $
+// $Id: DbRootHist.cpp,v 1.168 2010-05-26 15:06:31 robbep Exp $
 #include "DbRootHist.h"
 
 // STL 
@@ -22,6 +22,7 @@
 #include <TStyle.h>
 #include <TSystem.h>
 #include <TMath.h>
+#include <TEllipse.h>
 #include <TObjArray.h>
 #include <TFile.h>
 #include <TPaveStats.h>
@@ -1612,39 +1613,33 @@ void DbRootHist::draw(TCanvas* editorCanvas, double xlow, double ylow, double xu
 	if (rootFile.IsZombie()) {
 	  std::cout << "Error opening Root file" << std::endl;
 	} else {
-	  TIter next1(rootFile.GetListOfKeys());
+	  TIter next1( rootFile.GetListOfKeys() ) ;
 	  TKey* key;    
-	  while ((key = (TKey*)next1())) {
-	    if (key->ReadObj()->InheritsFrom(TCanvas::Class())) {
-	      m_drawPattern = (TCanvas*)key->ReadObj();
-	    }
+	  while ( ( key = (TKey*) next1() ) ) {
+	    if ( key -> ReadObj( ) -> InheritsFrom( TCanvas::Class() ) )
+	      m_drawPattern = (TCanvas*) key -> ReadObj() ;
 	  }
-	  m_drawPattern->SetPad(TMath::Abs(xlow), TMath::Abs(ylow),
-				TMath::Abs(xup), TMath::Abs(yup));
-	  m_drawPattern->SetName(m_identifier.c_str());
+	  m_drawPattern -> SetPad( TMath::Abs( xlow ) , TMath::Abs( ylow ) ,
+				   TMath::Abs( xup  ) , TMath::Abs( yup  ) ) ;
+	  m_drawPattern -> SetName( m_identifier.c_str() ) ;
         
 	  TPad *padsav = (TPad*)gPad;
-	  //   gPad =   editorCanvas->cd();
-	  TObject *obj; //, *clone;
+	  TObject *obj; 
         
-	  // ST: Check for text...   
+	  dynamic_cast< TAttLine* >( m_drawPattern ) -> Copy( (TAttLine&) *pad ) ;
+	  dynamic_cast< TAttFill* >( m_drawPattern ) -> Copy( (TAttFill&) *pad ) ;
+	  dynamic_cast< TAttPad*  >( m_drawPattern ) -> Copy( (TAttPad& ) *pad ) ;
         
-	  dynamic_cast<TAttLine*>(m_drawPattern)->Copy((TAttLine&)*pad);
-	  dynamic_cast<TAttFill*>(m_drawPattern)->Copy((TAttFill&)*pad);
-	  dynamic_cast<TAttPad*>(m_drawPattern)->Copy((TAttPad&)*pad);
-        
-	  TIter next(m_drawPattern->GetListOfPrimitives());
-	  while ((obj=next())) {
+	  TIter next( m_drawPattern -> GetListOfPrimitives() ) ;
+	  while ( ( obj=next() ) ) {
 	    pad->cd();
-	    if (TBox::Class() == obj->IsA() ||
-		TLine::Class() == obj->IsA() ||
-		TText::Class() == obj->IsA()) {
+	    if ( TBox::Class()     == obj->IsA() ||
+		 TLine::Class()    == obj->IsA() ||
+		 TText::Class()    == obj->IsA() || 
+		 TEllipse::Class() == obj->IsA() ) 
 	      obj->Draw();
-	      //      clone = obj->Clone();
-	      //      pad->GetListOfPrimitives()->Add(clone,next.GetOption());
-	    }
 	  }
-	  if (padsav) padsav->cd();
+	  if ( padsav ) padsav->cd();
 	}
 	rootFile.Close();
       }
