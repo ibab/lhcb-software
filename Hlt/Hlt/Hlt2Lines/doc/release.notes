@@ -8,6 +8,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2010-05-26 - Antonio Perez-Calero
+ - Updated Hlt2InclusiveMuonLines.py
+
 ! 2010-05-25 - Jacopo Nardulli
  - Follow up on https://savannah.cern.ch/bugs/?67708
 
