@@ -1,14 +1,15 @@
-!$Id: release.notes,v 1.62 2010-05-26 12:20:06 jpalac Exp $
+!$Id: release.notes,v 1.63 2010-05-26 13:54:11 jpalac Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/StrippingConf
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
 
+!========================== StrippingConf v3r3 2010-05-24 =================
+
 ! 2010-05-26 - Juan Palacios
  - Add tests directory for py.tests and QM tests.
-
-!========================== StrippingConf v3r3 2010-05-24 =================
+ - Add some simple tests for StrippingLine configuration. To be extended.
 
 ! 2010-05-21 - Juan Palacios
  - Remove some printouts in StrippingLine.filterMembers()
