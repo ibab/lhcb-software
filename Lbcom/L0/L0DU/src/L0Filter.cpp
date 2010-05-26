@@ -1,4 +1,4 @@
-// $Id: L0Filter.cpp,v 1.12 2010-02-25 12:37:49 odescham Exp $
+// $Id: L0Filter.cpp,v 1.13 2010-05-26 10:46:21 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -49,7 +49,7 @@
 //
 //    + Revert : revert the filtering (default: event is ACCEPTED according to the filtering criteria )
 //
-// 2007-07-11 : Patrick Koppenburg
+// 2010-05-26 : Olivier Deschamps
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory

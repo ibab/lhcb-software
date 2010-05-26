@@ -1,4 +1,4 @@
-// $Id: L0DURawBankMonitor.cpp,v 1.24 2010-04-07 20:26:30 odescham Exp $
+// $Id: L0DURawBankMonitor.cpp,v 1.25 2010-05-26 10:46:21 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -44,6 +44,7 @@ L0DURawBankMonitor::L0DURawBankMonitor( const std::string& name,
   declareProperty( "genericPath"       , m_generic = true );
   declareProperty( "CaloReadoutTool"   ,  m_caloTool  = "CaloDataProvider" );
   declareProperty( "ErrorFilterMask"   ,  m_mask = 0x0);
+  declareProperty( "BxDecisionDetail"  ,  m_bcidDet =true);
 
   setHistoDir( name );
 }
@@ -207,8 +208,28 @@ StatusCode L0DURawBankMonitor::execute() {
 
   // Status
   if(m_status){     
-    if(report.decision() )fill( histo1D(toHistoID("Status/BCID/1")), m_fromRaw->bcid().first, 1 );
+    LHCb::L0DUConfig* config = report.configuration();
+    int bx = m_fromRaw->bcid().first;
+    if(report.decision() )fill( histo1D(toHistoID("Status/BCID/1")), bx, 1 );
+    if( m_bcidDet && NULL != config){
+      LHCb::L0DUChannel::Map channels = config->channels();
+      for(LHCb::L0DUChannel::Map::const_iterator ic = channels.begin();ic != channels.end();++ic){  
+        std::string channel = ic->first;
+        if( report.channelDecisionByName( channel ))plot1D(bx, "Status/BCID/Channels/"+channel,
+                                                           "BCID for positive decision from channel " + channel,
+                                                           0.,3565.,3565);
+      }
+      LHCb::L0DUTrigger::Map triggers = config->triggers();
+      for(LHCb::L0DUTrigger::Map::const_iterator it = triggers.begin();it != triggers.end();++it){  
+        std::string trigger = it->first;
+        if( report.triggerDecisionByName( trigger ))plot1D(bx, "Status/BCID/SubTriggers/"+trigger,
+                                                           "BCID for positive decision from subTrigger " + trigger,
+                                                           0.,3565.,3565);
+      }
+    }
+    
     // from L0Processor
+    
 
     int k = 1;
     for(int i = 1; i<=4 ; ++i){
@@ -281,7 +302,6 @@ StatusCode L0DURawBankMonitor::execute() {
 
     // L0DU Emulator check
     bool check = true;
-    LHCb::L0DUConfig* config = report.configuration();
     if( NULL == config){
       std::stringstream ttck("");
       ttck << format("0x%04X", report.tck() ) ;

@@ -1,4 +1,4 @@
-// $Id: L0Filter.h,v 1.5 2010-02-25 12:37:49 odescham Exp $
+// $Id: L0Filter.h,v 1.6 2010-05-26 10:46:21 odescham Exp $
 #ifndef L0FILTER_H 
 #define L0FILTER_H 1
 
@@ -8,26 +8,45 @@
 
 /** @class L0Filter L0Filter.h
  *  
- *  Algorithm that checks if L0Filter passed. Useful for conditional sequencing.
- *  
- *  To require any L0-yes, just run the algorithm unconfigured.
- *  
- *  To require a specific L0 channel do for instance
- *   
- *  @code
- *  L0Filter.OrChannels = { "L0electron_High", "L0globalPi0_High" };
- *  @endcode
- *  
- *  This will accept only events which passed L0electron_High or L0globalPi0_High.
- *  Only the or-mode is supported. To accept events that passed two or more given 
- *  channels use two instances of L0Filter.
- *  
- *  Valid channel names are given in $L0DUROOT/options/L0DU_Lumi2Setting.opts 
- *  be very careful about spelling. Misspelled L0 channels will return false
- *  with no warning.
+ * L0 decision(s) Filtering
  *
- *  @author Patrick Koppenburg
- *  @date   2007-07-11
+ *  configuration properties:
+ *
+ *   * FILTERING DECISION : 
+ *      - TriggerBit : the decision bit to be used  L0 / TimingTrigger bit / Force bit [def = L0 ]
+ *
+ *   * IF TriggerBit = "L0"
+ *     - Decision mask : Physics=1 / Beam1=2 / Beam2=4 / Any=7 [ def = Physics ]
+ *
+ *     - orChannels :  select the (TCK-dependent) list of L0channels [ def = {} ]
+ *            syntax :   orChannels += { [TCK] : { [CHANNELS] }
+ *                       TCK = 'ALL'  or 'OTHER' is allowed
+ *                       CHANNEL = 'ANY'  (filter on global decision(mask) ) or 'PASS' (filter anyway) is allowed
+ *                eg : orChannels += { "0x1810" : {"CALO","MUON"},
+ *                                     "0x2009" : {"ANY"},
+ *                                     "OTHER"  : {"PASS} };
+ *
+ *                     orChannels += { "ALL" : {"PASS} }  ==> NO FILTERING
+ *
+ *                     orChannels += { "0x1810" : {"PASS} , "OTHER" : {} }  ==> FILTERING on TCK =0x1810
+ *
+ *
+ *
+ *
+ *     - orSubTriggers : select the list of subTriggers  [ def = {} ]
+ *            TCK-independent predefined subTriggers :    'L0Ecal'/'L0Hcal'/'L0Muon'/'Other'
+ *            syntax :  orSubTrigger += { "L0Ecal" };  
+ *
+ *     - if orChannels and orSubTriggers are EMPTIES : filter on global decision ( ==>  orChannels += {"ALL" : {"ANY"} };
+ *
+ *   
+ *
+ *
+ *    + Revert : revert the filtering (default: event is ACCEPTED according to the filtering criteria )
+ *
+ *
+ *  @author Olivier Deschamps
+ *  @date   2010-05-26
  */
 class L0Filter : public L0AlgBase {
 public: 

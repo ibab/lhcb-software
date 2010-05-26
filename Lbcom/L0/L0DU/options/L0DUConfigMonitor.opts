@@ -20,7 +20,7 @@ ToolSvc.L0DUConfig.context = "Check";
 //OdinFilter.TriggerTypes = {"PhysicsTrigger" };
 
 // TCK to be monitored : 
-L0DUEmu.TCK = "0x1409"; // template config = 0x10000
+L0DUEmu.TCK = "0x10000"; // template config = 0x10000
 
 
 // define a template configuration (if TCK set to  0x10000) : 
@@ -72,5 +72,5 @@ ApplicationMgr.EvtMax = 1500;
 EventSelector.FirstEvent = 1; 
 EventSelector.Input += {
   "DATA='rfio:///castor/cern.ch/grid/lhcb/data/2009/RAW/FULL/LHCb/BEAM1/62556/062556_0000000001.raw'  SVC='LHCb::MDFSelector'"
-  "DATA='rfio:///castor/cern.ch/grid/lhcb/data/2009/RAW/FULL/LHCb/COLLISION09/63994/063994_0000000001.raw'  SVC='LHCb::MDFSelector'"
+    //  "DATA='rfio:///castor/cern.ch/grid/lhcb/data/2009/RAW/FULL/LHCb/COLLISION09/63994/063994_0000000001.raw'  SVC='LHCb::MDFSelector'"
     };
