@@ -5,6 +5,8 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+!========================== StrippingSelections v1r22 2010-05-26 ==============
+
 ! 2010-05-26 - Thomas Blake
  - Pre-scale of BiasedIncDiElectronLowMassDecision has been set to 50%
 
@@ -13,8 +15,6 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 
 ! 2010-05-26 - Thomas Blake
  - Disabled DCS untagged lines in StrippingD02K3PiForCrossSection.py and set default pre-scale to 10%
-
-!========================== StrippingSelections v1r22 2010-05-25 ==============
 
 ! 2010-05-26 - Juan Palacios
  - Remove unnecessary AutomaticData names.
