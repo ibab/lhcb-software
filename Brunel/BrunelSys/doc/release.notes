@@ -3,6 +3,84 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
+</PRE><H1><A NAME=v37r3>2010-05-27 Brunel v37r3</A></H1><PRE>
+This version uses projects Gaudi v21r9, LHCb v31r1, Lbcom v9r3, Rec v10r0
+ and SQLDDDB v5r28, ParamFiles v8r2, FieldMap v5r4, AppConfig v3r*
+
+This is a production version for processing 2010 data
+
+Output requires DaVinci v25r2p3 or later if saving packed DST, DaVinci v24r5p1
+or later otherwise
+
+- Configurable changes
+  . Splitting of RecSys package into RecSys and RecConf task #14804
+    o RecSys is the container package, and can contain sam tests
+    o RecConf is where the RecSysConf configurable will sit
+  . Eliminate importOptions from Rec task #15141
+  . New framework for CaloCorrections. Parameters from condDB (CaloReco v5r5)
+
+- Persistency changes
+  . Added the ProcStatus object if the VELO decoding fails for any reason
+    (VeloDAQ v5r1)
+ 
+- New tuning
+  . Changes available in SQLDDDB v5r28:
+    o Latest Rich calibration from head-20100430 LHCBCOND tag
+    o Latest OT T0 calibration from head-20100509 LHCBCOND tag
+    o New field map from head-20100518 LHCBCOND tag
+  . Changes to default database tags (DDDB v1r31)
+    o default tags for 2009 and 2010 data:
+      head-20100518         for DDDB
+      head-20100518         for LHCBCOND
+    o default tag for 2009 MC:
+      head-20100504         for DDDB
+    o default tag for MC09:
+      MC09-20100430-vc-md100 for SIMCOND
+  . Add tighter cuts to NN neurons in physics case (MuonTrackRec v3r3)
+  . LumiIntegrateFSR: remove dependence on rawdata, integration at terminate
+    only, now also integrate LumiLowFSR (LumiAlgs v3r5)
+  . Changes to PatVeloSpaceTool and PatVeloTrackTool to improve internal fit in
+    the case of half box misalignments (PatVelo v3r23)
+  . Improvements to fit and better PatVeloSpaceTool behaviour for overlap tracks
+    (PatVelo v3r23)
+  . Changed how PatVeloGeneral flags backward tracks for beam gas events
+    (PatVelo v3r23)
+  . Modification of LSAdaptPV3DFitter. Tuning of track error parametrization.
+    (PatPV v3r16)
+  . Fit velo-backward tracks towards vertex instead of away from it.
+    (TrackFitter v2r46)
+  . Fix an untested statuscode in filter method of TrackInterpolator
+    (TrackTools v3r31)
+  . Turn back on the Event ID cross checks within the RICH data (RichDAQ v3r27)
+  . Turn back on the BXID check between the RICH and the ODIN (RichDAQ v3r27)
+
+- Bug fixes
+  . Fix bug in splitCluster onDemand settings (CaloReco v5r5)
+  . small fix in CaloProcessor (CaloReco v5r5)
+  . Fix bug #67077: suppress printout of 'Error from cov', but keep printout at
+    end of job (CaloReco v5r5) 
+  . Added check on "Method" to select random Lumi events correctly
+    (works for Moore >=v9r0) (LumiAlgs v3r5)
+  . Bug fix in DeVeloRtype: the trajectories for the fit sometimes had the
+    wrong direction, depending on alignment constants (VeloDet v13r10)
+
+- Monitoring changes
+  . Task #15441: major cleanup of warnings and errors in event loop (REC v10r0)
+  . Clear the linker table before associating (TrackAssociators v2r8)
+  . Added MuonTrackMonitor (MuonTrackMonitor v1r0)
+  . Activate monitoring for resolved Pi0 (CaloMoniDst v5r2)
+  . Add a couple new plots to show number of active HPDs per event
+    (RichRecQC v2r41)
+  . In Expert mode, add monitor for ODIN trigger types (RichRecQC v2r41)
+  . Turn on summary printout of suppressed high occunpancy HPDs
+    (RichTools v2r29p3)
+  . Various fixes and protections in STMonitors (STMonitors v3r1)
+
+- Changes to tests
+  . brunel.brunel-bigevents: 
+    o add a big event from run 70122, tests bug #67111
+    o add an event from run 71491, tests bug #67364
+
 </PRE><H1><A NAME=v37r2p2>2010-05-16 Brunel v37r2p2</A></H1><PRE>
 This version uses projects Gaudi v21r9, LHCb v31r0p1, Lbcom v9r2p1, Rec v9r2p1
  and SQLDDDB v5r26, ParamFiles v8r2, FieldMap v5r3, AppConfig v3r*
