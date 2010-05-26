@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.188 2010-05-26 09:59:54 jpalac Exp $
+# $Id: requirements,v 1.189 2010-05-26 14:32:50 jpalac Exp $
 package AnalysisSys
 version v4r5
 
@@ -33,7 +33,7 @@ use  DisplVertices              v6r7     Phys   # Neal Gueissaz
 use  HighPtJets                 v1r1     Phys   # Marcin Kucharczyk
 ####################################################################
 #
-use PhysSelPython               v5r3     PhysSel
+use PhysSelPython               v5r3p1   PhysSel
 use AnalysisPython              v1r6     Phys
 use PyAna                       v1r0     Analysis
 #
