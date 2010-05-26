@@ -70,13 +70,13 @@ KsAllCombineGeo = StrippingMember(
 ##########################################################################
 line_lambda_all= StrippingLine(
     'LambdaAllGeoLine'
-    , prescale = 1
+    , prescale = 0.05
     , algos = [  LambdaAllCombineGeo ])
 
 
 line_KS_all= StrippingLine(
     'KSAllGeoLine'
-    , prescale = 1
+    , prescale = 0.05
     , algos = [  KsAllCombineGeo ])
 
 ############################################################################

@@ -1,6 +1,6 @@
 __author__='Philip Hunt'
 __date__='24/5/2010'
-__version__='$Revision: 1.2 $'
+__version__='$Revision: 1.3 $'
 
 '''
 Tagged and untagged D0(K3Pi) stripping selection for cross-section measurement
@@ -65,10 +65,10 @@ class StrippingD02K3PiForCrossSectionConf(LHCbConfigurableUser):
     , "PrescaleTaggedDCS" : 1.
     , "PrescaleTaggedRobustFavoured" : 1.
     , "PrescaleTaggedRobustDCS" : 1.
-    , "PrescaleUntaggedFavoured" : 1.
-    , "PrescaleUntaggedDCS" : 1.
-    , "PrescaleUntaggedRobustFavoured" : 1.
-    , "PrescaleUntaggedRobustDCS" : 1.
+    , "PrescaleUntaggedFavoured" : 0.1
+    , "PrescaleUntaggedDCS" : 0.1
+    , "PrescaleUntaggedRobustFavoured" : 0.1
+    , "PrescaleUntaggedRobustDCS" : 0.1
     }
     
 
@@ -380,8 +380,8 @@ class StrippingD02K3PiForCrossSectionConf(LHCbConfigurableUser):
              ]
 
   def untaggedLines(self):
-    return [ self.makeUntaggedFavouredLine(), self.makeUntaggedDCSLine()
-             ,self.makeUntaggedRobustFavouredLine(), self.makeUntaggedRobustDCSLine()
+    return [ self.makeUntaggedFavouredLine()
+             ,self.makeUntaggedRobustFavouredLine() 
              ]
 
   def lines(self):

@@ -1,4 +1,4 @@
-# $Id: StrippingDiElectron.py,v 1.1 2010-05-24 15:06:59 jhe Exp $
+# $Id: StrippingDiElectron.py,v 1.2 2010-05-26 16:19:58 tblake Exp $
 ## #####################################################################
 # Stripping selections for inclusive di-electron, J/psi(1S) -> e+ e- 
 #
@@ -185,7 +185,7 @@ class StrippingDiElectronConf(LHCbConfigurableUser):
                                                   RequiredSelections = [ _BiasedIncDiElectronLowMass ]                           
                                                   )
 	SeqBiasedIncDiElectronLowMass = SelectionSequence("SeqBiasedIncDiElectronLowMass", TopSelection = SelBiasedIncDiElectronLowMass )
-	return StrippingLine('BiasedIncDiElectronLowMass', prescale = 1, algos = [ SeqBiasedIncDiElectronLowMass ])
+	return StrippingLine('BiasedIncDiElectronLowMass', prescale = 0.5, algos = [ SeqBiasedIncDiElectronLowMass ])
     
 
         
