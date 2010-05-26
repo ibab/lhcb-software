@@ -1,4 +1,4 @@
-// $Id: lcgDict.h,v 1.1 2008-02-15 07:53:23 cattanem Exp $
+// $Id: lcgDict.h,v 1.2 2010-05-26 09:31:28 cattanem Exp $
 #ifndef PHYSEVENT_LCGDICT_H 
 #define PHYSEVENT_LCGDICT_H 1
 
@@ -14,6 +14,7 @@ namespace {
   struct _Instantiations {
     // begin instantiations
     std::vector<const LHCb::Particle*>  _i1;
+    std::vector<const LHCb::Particle*>::iterator  _i2;
     // end instantiations
   };
 }

@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.153 2010-03-17 16:56:58 cattanem Exp $
+! $Id: release.notes,v 1.154 2010-05-26 09:31:28 cattanem Exp $
 ! Package     : PhysEvent 
 ! Responsible : P. Koppenburg, J.P. Palacios
 !----------------------------------------------------------------------------
+
+! 2010-05-26 - Marco Cattaneo
+ - Fix a genreflex warning on windows
 
 !======================== PhysEvent v11r12 2010-03-17 =======================
 ! 2010-03-15 - Vanya Belyaev
