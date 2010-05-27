@@ -1,4 +1,4 @@
-#$Id: requirements,v 1.231 2010-05-24 16:10:53 jpalac Exp $
+#$Id: requirements,v 1.232 2010-05-27 19:36:56 ibelyaev Exp $
 package PhysSys
 version v9r6
 
@@ -22,13 +22,14 @@ use  DecayTreeFitter            v1r7     Phys    # Wouter Hulsbergen
 use  PhysDict                   v4r2     Phys    # Juan Palacios
 
 #===================================================================
-use LoKi                        v8r1     Phys    # Ivan Belyaev
-use LoKiAlgo                    v9r1     Phys    # Ivan Belyaev
-use LoKiAlgoMC                  v9r0     Phys    # Ivan Belyaev
-use LoKiArrayFunctors           v9r1     Phys    # Ivan Belyaev
-use LoKiGenMC                   v9r0     Phys    # Ivan Belyaev
-use LoKiPhys                    v9r1     Phys    # Ivan Belyaev
-use LoKiPhysMC                  v9r0     Phys    # Ivan Belyaev
+use LoKi                        v8r1     Phys    # Vanya Belyaev
+use LoKiAlgo                    v9r1     Phys    # Vanya Belyaev
+use LoKiAlgoMC                  v9r0     Phys    # Vanya Belyaev
+use LoKiArrayFunctors           v9r1     Phys    # Vanya Belyaev
+use LoKiGenMC                   v9r0     Phys    # Vanya Belyaev
+use LoKiPhys                    v9r1     Phys    # Vanya Belyaev
+use LoKiPhysMC                  v9r0     Phys    # Vanya Belyaev
+use LoKiProtoParticles          v1r0     Phys    # Vanya Belyaev
 
 # Declare this as a container package
 apply_pattern container_package
