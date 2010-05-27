@@ -1,4 +1,4 @@
-// $Id: TutorialAlgorithm.h,v 1.4 2008-06-03 09:58:38 pkoppenb Exp $
+// $Id: TutorialAlgorithm.h,v 1.5 2010-05-27 15:02:30 jpalac Exp $
 #ifndef TUTORIALALGORITHM_H 
 #define TUTORIALALGORITHM_H 1 
 
@@ -29,9 +29,9 @@ public:
 protected:
 
 private:
-  StatusCode loopOnDaughters(const LHCb::Particle::ConstVector&)const ;
+  StatusCode loopOnDaughters(const LHCb::Particle::Range&)const ;
   StatusCode plotDaughter(const LHCb::Particle*, const std::string& head)const ;
-  StatusCode makeMother(const LHCb::Particle::ConstVector&) ;
+  StatusCode makeMother(const LHCb::Particle::Range&) ;
 
   double m_motherMassWin ; ///< Mass window
   double m_motherChi2 ;    ///< Max Mother chi^2

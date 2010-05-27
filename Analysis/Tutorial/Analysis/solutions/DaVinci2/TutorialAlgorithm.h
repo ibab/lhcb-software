@@ -1,4 +1,4 @@
-// $Id: TutorialAlgorithm.h,v 1.4 2008-12-22 18:08:36 pkoppenb Exp $
+// $Id: TutorialAlgorithm.h,v 1.5 2010-05-27 15:02:30 jpalac Exp $
 #ifndef TUTORIALALGORITHM_H 
 #define TUTORIALALGORITHM_H 1 
 
@@ -34,11 +34,11 @@ protected:
 
 private:
   /// Make a loop over muons
-  StatusCode loopOnMuons(const LHCb::Particle::ConstVector&)const ;
+  StatusCode loopOnMuons(const LHCb::Particle::Range&)const ;
   /// Plot quantities for muon
   StatusCode plotMuon(const LHCb::Particle*, const std::string& head)const ;
   /// Build J/psi
-  StatusCode makeJpsi(const LHCb::Particle::ConstVector&) ;
+  StatusCode makeJpsi(const LHCb::Particle::Range&) ;
 
   double m_jPsiMassWin ; ///< Mass window
   double m_jPsiChi2 ;    ///< Max J/psi chi^2

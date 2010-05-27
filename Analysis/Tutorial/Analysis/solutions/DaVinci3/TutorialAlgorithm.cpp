@@ -1,14 +1,20 @@
-// $Id: TutorialAlgorithm.cpp,v 1.13 2010-01-05 16:36:42 jdickens Exp $
+// $Id: TutorialAlgorithm.cpp,v 1.14 2010-05-27 15:02:30 jpalac Exp $
 // Include files 
+
+#include <boost/lambda/lambda.hpp>
+#include <boost/lambda/bind.hpp>
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
+
+// from DaVinci
+#include "Kernel/ParticleFilters.h"
 
 // local
 #include "TutorialAlgorithm.h"
 
 using namespace Gaudi::Units ;
-
+using namespace boost::lambda;
 //-----------------------------------------------------------------------------
 // Implementation file for class : TutorialAlgorithm
 //
@@ -71,7 +77,7 @@ StatusCode TutorialAlgorithm::execute() {
   counter("Events")++;
 
   // code goes here  
-  LHCb::Particle::ConstVector daughters = desktop()->particles(); // get particles
+  LHCb::Particle::Range daughters = this->particles(); // get particles
   sc = loopOnDaughters(daughters);
   if (!sc) return sc;
   sc = makeMother(daughters);
@@ -82,15 +88,21 @@ StatusCode TutorialAlgorithm::execute() {
 //=============================================================================
 // makeMother
 //=============================================================================
-StatusCode TutorialAlgorithm::makeMother(const LHCb::Particle::ConstVector& daughters){
+StatusCode TutorialAlgorithm::makeMother(const LHCb::Particle::Range& daughters){
 
   LHCb::Particle::ConstVector DaPlus, DaMinus;
-  StatusCode sc = particleFilter()->filterNegative(daughters,DaMinus);
-  if (sc) sc = particleFilter()->filterPositive(daughters,DaPlus);
-  if (!sc) {
-    err() << "Error while filtering" << endmsg ;
-    return sc ;
+  size_t sc = DaVinci::filter(daughters,
+                              bind(&LHCb::Particle::charge,_1)<0,
+                              DaMinus);
+  if (sc>0) {
+    sc = DaVinci::filter(daughters,
+                         bind(&LHCb::Particle::charge,_1)>0,
+                         DaPlus);
+  } else {
+    warning() << "Filtered no particles" << endmsg ;
+    return StatusCode::FAILURE;
   }
+
   for ( LHCb::Particle::ConstVector::const_iterator imp =  DaPlus.begin() ;
         imp != DaPlus.end() ; ++imp ){
     for ( LHCb::Particle::ConstVector::const_iterator imm =  DaMinus.begin() ;
@@ -132,9 +144,9 @@ StatusCode TutorialAlgorithm::makeMother(const LHCb::Particle::ConstVector& daug
 //=============================================================================
 // loop on daughters
 //=============================================================================
-StatusCode TutorialAlgorithm::loopOnDaughters(const LHCb::Particle::ConstVector& daughters)const {
+StatusCode TutorialAlgorithm::loopOnDaughters(const LHCb::Particle::Range& daughters)const {
 
-  for ( LHCb::Particle::ConstVector::const_iterator im =  daughters.begin() ;
+  for ( LHCb::Particle::Range::const_iterator im =  daughters.begin() ;
         im != daughters.end() ; ++im ){
     StatusCode sc = plotDaughter(*im,"All");
     if (!sc) return sc;
@@ -150,9 +162,9 @@ StatusCode TutorialAlgorithm::plotDaughter(const LHCb::Particle* da, const std::
   plot(da->p(),  head+"P", head+" Daughter P",  0., 50.*GeV);    // momentum
   plot(da->pt(), head+"Pt", head+" Daughter Pt", 0., 5.*GeV );  // Pt
   if (msgLevel(MSG::DEBUG)) debug() << da->momentum() << endmsg ;
-  const LHCb::RecVertex::Container* prims = desktop()->primaryVertices() ;
-  for ( LHCb::RecVertex::Container::const_iterator ipv = prims->begin() ;
-        ipv != prims->end() ; ++ipv ){
+  const LHCb::RecVertex::Range prims = this->primaryVertices() ;
+  for ( LHCb::RecVertex::Range::const_iterator ipv = prims.begin() ;
+        ipv != prims.end() ; ++ipv ){
     double IP, IPE;
     if (msgLevel(MSG::DEBUG)) debug() << (*ipv)->position() << endmsg ;
     StatusCode sc = distanceCalculator()->distance(da, (*ipv), IP, IPE);

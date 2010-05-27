@@ -1,13 +1,19 @@
-// $Id: TutorialAlgorithm.cpp,v 1.13 2010-01-05 16:36:42 jdickens Exp $
+// $Id: TutorialAlgorithm.cpp,v 1.14 2010-05-27 15:02:30 jpalac Exp $
 // Include files 
 
+#include <boost/lambda/lambda.hpp>
+#include <boost/lambda/bind.hpp>
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
+
+// from DaVinci
+#include "Kernel/ParticleFilters.h"
 
 // local
 #include "TutorialAlgorithm.h"
 
 using namespace Gaudi::Units ;
+using namespace boost::lambda;
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : TutorialAlgorithm
@@ -70,7 +76,7 @@ StatusCode TutorialAlgorithm::execute() {
   counter("Events")++;
 
   // code goes here  
-  LHCb::Particle::ConstVector muons = desktop()->particles(); // get particles
+  LHCb::Particle::Range muons = this->particles(); // get particles
   sc = loopOnMuons(muons);
   if (!sc) return sc;
   sc = makeJpsi(muons);
@@ -81,16 +87,21 @@ StatusCode TutorialAlgorithm::execute() {
 //=============================================================================
 // makeJpsi
 //=============================================================================
-StatusCode TutorialAlgorithm::makeJpsi(const LHCb::Particle::ConstVector& muons){
-  StatusCode sc = StatusCode::SUCCESS ;
+StatusCode TutorialAlgorithm::makeJpsi(const LHCb::Particle::Range& muons){
 
   LHCb::Particle::ConstVector MuPlus, MuMinus;
-  sc = particleFilter()->filterNegative(muons,MuMinus);
-  if (sc) sc = particleFilter()->filterPositive(muons,MuPlus);
-  if (!sc) {
-    err() << "Error while filtering" << endmsg ;
-    return sc ;
+  size_t sc = DaVinci::filter(muons, 
+                              bind(&LHCb::Particle::charge,_1)<0,
+                              MuMinus);
+  if (sc>0) {
+    sc = DaVinci::filter(muons,
+                         bind(&LHCb::Particle::charge,_1)>0,
+                         MuPlus);
+  } else {
+    warning() << "Filtered no muons" << endmsg ;
+    return StatusCode::FAILURE ;
   }
+
   for ( LHCb::Particle::ConstVector::const_iterator imp =  MuPlus.begin() ;
         imp != MuPlus.end() ; ++imp ){
     for ( LHCb::Particle::ConstVector::const_iterator imm =  MuMinus.begin() ;
@@ -126,11 +137,11 @@ StatusCode TutorialAlgorithm::makeJpsi(const LHCb::Particle::ConstVector& muons)
 //=============================================================================
 // loop on muons
 //=============================================================================
-StatusCode TutorialAlgorithm::loopOnMuons(const LHCb::Particle::ConstVector& muons)const {
+StatusCode TutorialAlgorithm::loopOnMuons(const LHCb::Particle::Range& muons)const {
 
   StatusCode sc = StatusCode::SUCCESS ;
 
-  for ( LHCb::Particle::ConstVector::const_iterator im =  muons.begin() ;
+  for ( LHCb::Particle::Range::const_iterator im =  muons.begin() ;
         im != muons.end() ; ++im ){
     sc = plotMuon(*im,"All");
     if (!sc) return sc;
@@ -149,10 +160,10 @@ StatusCode TutorialAlgorithm::plotMuon(const LHCb::Particle* mu, const std::stri
   plot(mu->pt(), head+"MuPt", head+" Muon Pt", 0., 5.*GeV );  // Pt
   if (msgLevel(MSG::DEBUG)) debug() << mu->momentum() << endmsg ;
 
-  const LHCb::RecVertex::Container* prims = desktop()->primaryVertices() ;
+  const LHCb::RecVertex::Range prims = this->primaryVertices() ;
   
-  for ( LHCb::RecVertex::Container::const_iterator ipv = prims->begin() ; 
-        ipv != prims->end() ; ++ipv )
+  for ( LHCb::RecVertex::Range::const_iterator ipv = prims.begin() ; 
+        ipv != prims.end() ; ++ipv )
   {
     double IP, IPE;
     if (msgLevel(MSG::DEBUG)) debug() << (*ipv)->position() << endmsg ;
