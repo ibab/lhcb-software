@@ -163,7 +163,7 @@ class SetupProjectTestCase(unittest.TestCase):
                        '--use=abc v1',
                        '--use=abc v2',
                        '--verbose',
-                       '--ignore-missing',
+                       '--force',
                        '--ignore-context',
                        '--list-versions',
                        '--external-only',
@@ -188,7 +188,7 @@ class SetupProjectTestCase(unittest.TestCase):
         sp = SetupProject.SetupProject()
         sp.parse_args([])
         self.assert_(not sp.disable_CASTOR)
-        self.assert_(not sp.ignore_missing)
+        self.assert_(not sp.force)
         self.assert_(not sp.ignore_context)
         self.assert_(not sp.list_versions)
         self.assert_(not sp.external_only)

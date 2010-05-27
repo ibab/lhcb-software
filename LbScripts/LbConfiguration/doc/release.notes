@@ -1,3 +1,7 @@
+2010-05-27  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* python/LbConfiguration/SetupProject.py: changed --ignore-missing to --force
+
 2010-05-26  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* python/LbConfiguration/SetupProject.py: Added VeloSQLDDDB to the known packages

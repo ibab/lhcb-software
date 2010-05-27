@@ -1065,7 +1065,10 @@ class SetupProject:
                           dest="loglevel", const=DEBUG,
                           help="output useful for debugging")
         parser.add_option("--ignore-missing", action="store_true",
-                          help="do not fail if some externals are missing, just complain")
+                          dest = "force",
+                          help="obsolete, equivalent to --force")
+        parser.add_option("--force", action="store_true",
+                          help="ignore warnings and errors from CMT, just complain")
         parser.add_option("--ignore-context", action="store_true",
                           help="do not use CMTUSERCONTEXT even if it should be used")
         parser.add_option("--list-versions", action="store_true",
@@ -1396,7 +1399,7 @@ class SetupProject:
 
         # check if the project works
         out = self.cmt("check", "configuration", cwd = root_dir)
-        if out and not self.ignore_missing: # non empty output means error
+        if out and not self.force: # non empty output means error
             raise SetupProjectError(out)
 
         script = self.cmt("setup", "-" + self.shell, cwd = root_dir)
@@ -1648,8 +1651,8 @@ class SetupProject:
             tmp_dir = self._prepare_tmp_local_project()
             try:
                 (script,err) = self._gen_setup(tmp_dir)
-                if err and self.ignore_missing:
-                    self._always("WARNING - ignoring missing packages:")
+                if err and self.force:
+                    self._always("WARNING - ignoring warnings and errors from CMT:")
                     self._always("\n".join(err))
             except SetupProjectError, x:
                 self._error(str(x))
