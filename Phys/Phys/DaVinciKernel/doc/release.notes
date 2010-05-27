@@ -1,8 +1,12 @@
-!$Id: release.notes,v 1.354 2010-05-26 14:21:25 ibelyaev Exp $
+!$Id: release.notes,v 1.355 2010-05-27 15:29:19 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciKernel
 ! Responsible : J.P. Palacios
 !============================================================================
+
+! 2010-05-27 - Juan Palacios
+ - Kernel/ParticleFilters.h
+  . Fix the doxygen.
 
 ! 2010-05-26 - Vanya Belyaev
 
