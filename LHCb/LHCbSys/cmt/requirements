@@ -105,6 +105,7 @@ use LoKiGen               v9r0    Phys    # Ivan Belyaev
 use LoKiHlt               v3r1    Phys    # Ivan Belyaev
 use LoKiMC                v9r0    Phys    # Ivan Belyaev
 use LoKiNumbers           v9r0    Phys    # Ivan Belyaev
+use LoKiUtils             v1r0    Phys    # Ivan Belyaev
 use MDF_ROOT              v1r2   DAQ     # Markus Frank
 use PatKernel             v2r3p1  Tf      # Stephanie Hansmann-Menzemer
 use RecInterfaces         v1r0p1  Kernel  # Marco Cattaneo et al.
