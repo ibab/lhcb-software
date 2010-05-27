@@ -1,5 +1,5 @@
 ########################################################################
-# $Id: Bs2JpsiPhi.py,v 1.3 2009-10-28 14:27:36 jpalac Exp $
+# $Id: Bs2JpsiPhi.py,v 1.4 2010-05-27 15:19:18 jpalac Exp $
 ########################################################################
 """
  Selection module for exercise 4
@@ -9,7 +9,7 @@
 """
 __author__ = ['Juan Palacios']
 __date__ = '02/10/2009'
-__version__ = '$Revision: 1.3 $'
+__version__ = '$Revision: 1.4 $'
 
 # limit what we get with from Bs2JpsiPhi import *
 __all__ = ('name', 'Phi2KK', 'LooseJpsi2MuMu', 'Jpsi2MuMu', 'Bs2Jpsi', 'SeqBs2JpsiPhi')
@@ -19,8 +19,7 @@ from Configurables import FilterDesktop, CombineParticles, OfflineVertexFitter
 from PhysSelPython.Wrappers import Selection, SelectionSequence, DataOnDemand
 
 # loose muons Selection
-_muons = DataOnDemand('_stdLooseMuons',
-                      Location = 'Phys/StdLooseMuons')
+_muons = DataOnDemand(Location = 'Phys/StdLooseMuons')
 # J/Psi configurable
 _jpsi2mumu = CombineParticles("Jpsi2MuMu")
 _jpsi2mumu.DecayDescriptor = "J/psi(1S) -> mu+ mu-"
@@ -42,7 +41,7 @@ Jpsi2MuMu = Selection("SelJpsi2MuMu",
                       RequiredSelections = [LooseJpsi2MuMu])
 
 # loose kaons
-_stdPhi2KK = DataOnDemand("stdLooseKaons", Location = "Phys/StdLooseKaons")
+_stdPhi2KK = DataOnDemand(Location = "Phys/StdLooseKaons")
 
 # Phi configurable
 _phi2kk = CombineParticles("Phi2KK",
