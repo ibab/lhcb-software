@@ -1,4 +1,4 @@
-#$Id: Wrappers.py,v 1.42 2010-05-26 14:31:29 jpalac Exp $
+#$Id: Wrappers.py,v 1.43 2010-05-27 09:15:00 jpalac Exp $
 """
 Wrapper classes for a DaVinci offline physics selection. The following classes
 are available:
@@ -58,19 +58,13 @@ class AutomaticData(autodata) :
 
     Example: wrap StdLoosePions
 
-    >>> SelStdLoosePions = AutomaticData('SelStdLoosePions',
-                                         Location = 'Phys/StdLoosePions')
+    >>> SelStdLoosePions = AutomaticData(Location = 'Phys/StdLoosePions')
     >>> SelStdLoosePions.outputLocation()
     'Phys/StdLoosePions'
     >>> SelStdLoosePions.name()
     'SelStdLoosePions'
     >>> SelStdLoosePions.outputLocation()
     'Phys/StdLoosePions'
-    The first argument is used for the name, but can be omitted:
-
-    >>> SelStdLoosePions = AutomaticData(Location = 'Phys/StdLoosePions')
-    >>> SelStdLoosePions.name()
-    'StdLoosePions'
     """
 
     def __init__(self,
