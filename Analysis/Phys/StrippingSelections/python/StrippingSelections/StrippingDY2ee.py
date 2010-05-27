@@ -17,7 +17,7 @@ from PhysSelPython.Wrappers import DataOnDemand, Selection, SelectionSequence
 
 # Create DY -> ee candidates out of std loose electrons
 ## ############################################################
-_electrons =  DataOnDemand('stdLooseElectrons', Location = 'Phys/StdLooseElectrons')
+_electrons =  DataOnDemand(Location = 'Phys/StdLooseElectrons')
 
 ecut = '(PT>1*GeV)'
 

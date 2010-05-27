@@ -17,7 +17,7 @@ from PhysSelPython.Wrappers import DataOnDemand, Selection, SelectionSequence
 
 # Create W -> e candidates out of std loose electrons
 ## ############################################################
-_electrons =  DataOnDemand('stdLooseElectrons', Location = 'Phys/StdLooseElectrons')
+_electrons =  DataOnDemand(Location = 'Phys/StdLooseElectrons')
 
 ecut = '(PT>10*GeV)'
 

@@ -17,7 +17,7 @@ from PhysSelPython.Wrappers import DataOnDemand, Selection, SelectionSequence
 
 # Create DY -> mumu candidates out of std loose muons
 ## ############################################################
-_muons =  DataOnDemand('stdLooseMuons', Location = 'Phys/StdLooseMuons')
+_muons =  DataOnDemand(Location = 'Phys/StdLooseMuons')
 
 mucut = '(PT>1*GeV)'
 

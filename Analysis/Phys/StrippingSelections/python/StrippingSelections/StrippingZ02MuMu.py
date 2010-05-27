@@ -17,7 +17,7 @@ from PhysSelPython.Wrappers import DataOnDemand, Selection, SelectionSequence
 
 # Create Z0 -> mumu candidates out of std loose muons
 ## ############################################################
-_muons =  DataOnDemand('stdLooseMuons', Location = 'Phys/StdLooseMuons')
+_muons =  DataOnDemand(Location = 'Phys/StdLooseMuons')
 
 mucut = '(PT>10*GeV) '
 
@@ -50,7 +50,7 @@ line = StrippingLine('Z02MuMu'
 
 # Create Z0 -> mumu candidates out of std very loose muons
 ## ############################################################
-_loosemuons =  DataOnDemand('stdVeryLooseMuons', Location = 'Phys/StdVeryLooseMuons')
+_loosemuons =  DataOnDemand(Location = 'Phys/StdVeryLooseMuons')
 
 
 _Z0loose = CombineParticles(name+"loose",
@@ -82,7 +82,7 @@ lineloose = StrippingLine('Z02MuMuloose'
 
 # Create Z0 -> mumu candidates out of NoPIDs  muons
 ## ############################################################
-_NoPIDsmuons =  DataOnDemand('stdNoPIDsLooseMuons', Location = 'Phys/StdNoPIDsMuons')
+_NoPIDsmuons =  DataOnDemand(Location = 'Phys/StdNoPIDsMuons')
 
 
 _Z0NoPIDs = CombineParticles(name+"NoPIDs",
