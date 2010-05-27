@@ -1,10 +1,22 @@
-$Id: release.notes,v 1.59 2010-05-24 16:02:06 jpalac Exp $ 
+$Id: release.notes,v 1.60 2010-05-27 19:31:12 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiArrayFunctors
 ! Responsible : Vanya BELYAEV
 ! Purpose     : Some special "vector-like" functors to Exclusive "HLT"
 ! -----------------------------------------------------------------------------
 
+! 2010-05-27 - Vanya Belyaev
+
+ - add ProtoParticle-methods for hybrid factory 
+
+ - LoKi::Hybrid::ProtoParticleFilter 
+
+    hybriud implementation of IProtoPArticlefilter 
+
+ - cmt/requirements 
+
+    version increment to v9r2 
+ 
 !========================== LoKiArrayFunctors v9r1 2010-05-24 =================
 
 ! 2010-05-14 - Vanya Belyaev

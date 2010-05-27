@@ -1,4 +1,4 @@
-// $Id: IHybridFactory.cpp,v 1.3 2009-11-17 12:41:41 ibelyaev Exp $
+// $Id: IHybridFactory.cpp,v 1.4 2010-05-27 19:29:55 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -25,16 +25,6 @@
  *  @date 2004-06-29 
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  */
-// ============================================================================
-namespace 
-{
-  const InterfaceID IID_IHybridFactory( "LoKi::IHybridFactory" , 3 , 0 ) ;
-}
-// ============================================================================
-// Return the unique interface ID
-// ============================================================================
-const InterfaceID& 
-LoKi::IHybridFactory::interfaceID() { return  IID_IHybridFactory ; }
 // ============================================================================
 // destructor : virtual and protected 
 // ============================================================================

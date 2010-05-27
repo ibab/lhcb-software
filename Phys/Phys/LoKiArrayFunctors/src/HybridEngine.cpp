@@ -1,4 +1,4 @@
-// $Id: HybridEngine.cpp,v 1.3 2009-11-17 12:41:41 ibelyaev Exp $
+// $Id: HybridEngine.cpp,v 1.4 2010-05-27 19:29:55 ibelyaev Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -63,6 +63,12 @@ StatusCode LoKi::Hybrid::Engine::process
 ( const std::string&          name , 
   const LoKi::Types::ACuts&   cut  ) const { return _process ( name , cut ) ; }
 // ============================================================================
+// add the cut 
+// ============================================================================
+StatusCode LoKi::Hybrid::Engine::process
+( const std::string&          name , 
+  const LoKi::Types::PPCuts&  cut  ) const { return _process ( name , cut ) ; }
+// ============================================================================
 // functions 
 // ============================================================================
 // add the function 
@@ -83,6 +89,12 @@ StatusCode LoKi::Hybrid::Engine::process
 ( const std::string&          name , 
   const LoKi::Types::AFunc&   cut  ) const { return _process ( name , cut ) ; }
 // ============================================================================
+// add the function 
+// ============================================================================
+StatusCode LoKi::Hybrid::Engine::process
+( const std::string&          name , 
+  const LoKi::Types::PPFunc&  cut  ) const { return _process ( name , cut ) ; }
+// ============================================================================
 // Maps 
 // ============================================================================
 // add the map
@@ -96,6 +108,12 @@ StatusCode LoKi::Hybrid::Engine::process
 StatusCode LoKi::Hybrid::Engine::process
 ( const std::string&          name , 
   const LoKi::Types::VMaps&   cut  ) const { return _process ( name , cut ) ; }
+// ============================================================================
+// add the map
+// ============================================================================
+StatusCode LoKi::Hybrid::Engine::process
+( const std::string&          name , 
+  const LoKi::Types::PPMaps&  cut  ) const { return _process ( name , cut ) ; }
 // ============================================================================
 // Pipes
 // ============================================================================
@@ -111,6 +129,12 @@ StatusCode LoKi::Hybrid::Engine::process
 ( const std::string&          name , 
   const LoKi::Types::VPipes&  cut  ) const { return _process ( name , cut ) ; }
 // ============================================================================
+// add the pipe 
+// ============================================================================
+StatusCode LoKi::Hybrid::Engine::process
+( const std::string&          name , 
+  const LoKi::Types::PPPipes& cut  ) const { return _process ( name , cut ) ; }
+// ============================================================================
 // Fun-Vals
 // ============================================================================
 // add the fun-val
@@ -124,6 +148,12 @@ StatusCode LoKi::Hybrid::Engine::process
 StatusCode LoKi::Hybrid::Engine::process
 ( const std::string&           name , 
   const LoKi::Types::VFunVals& cut  ) const { return _process ( name , cut ) ; }
+// ============================================================================
+// add the fun-val
+// ============================================================================
+StatusCode LoKi::Hybrid::Engine::process
+( const std::string&            name , 
+  const LoKi::Types::PPFunVals& cut  ) const { return _process ( name , cut ) ; }
 // ============================================================================
 // cut-Vals
 // ============================================================================
@@ -139,6 +169,12 @@ StatusCode LoKi::Hybrid::Engine::process
 ( const std::string&           name , 
   const LoKi::Types::VCutVals& cut  ) const { return _process ( name , cut ) ; }
 // ============================================================================
+// add the cut-val
+// ============================================================================
+StatusCode LoKi::Hybrid::Engine::process
+( const std::string&            name , 
+  const LoKi::Types::PPCutVals& cut  ) const { return _process ( name , cut ) ; }
+// ============================================================================
 // Elements
 // ============================================================================
 // add the element
@@ -153,6 +189,12 @@ StatusCode LoKi::Hybrid::Engine::process
 ( const std::string&            name , 
   const LoKi::Types::VElements& cut  ) const { return _process ( name , cut ) ; }
 // ============================================================================
+// add the element
+// ============================================================================
+StatusCode LoKi::Hybrid::Engine::process
+( const std::string&             name , 
+  const LoKi::Types::PPElements& cut  ) const { return _process ( name , cut ) ; }
+// ============================================================================
 // Sources
 // ============================================================================
 // add the source
@@ -166,6 +208,12 @@ StatusCode LoKi::Hybrid::Engine::process
 StatusCode LoKi::Hybrid::Engine::process
 ( const std::string&           name , 
   const LoKi::Types::VSources& cut  ) const { return _process ( name , cut ) ; }
+// ============================================================================
+// add the source
+// ============================================================================
+StatusCode LoKi::Hybrid::Engine::process
+( const std::string&            name , 
+  const LoKi::Types::PPSources& cut  ) const { return _process ( name , cut ) ; }
 // ============================================================================
 
 // ============================================================================

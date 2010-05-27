@@ -1,4 +1,4 @@
-// $Id: HybridFilterCriterion.cpp,v 1.7 2010-05-27 19:29:55 ibelyaev Exp $
+// $Id: HybridProtoParticleFilter.cpp,v 1.1 2010-05-27 19:29:55 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -16,7 +16,7 @@
 // ============================================================================
 // DaVinciKernel
 // ============================================================================
-#include "Kernel/IFilterCriterion.h"
+#include "Kernel/IProtoParticleFilter.h"
 // ============================================================================
 // LoKi
 // ============================================================================
@@ -33,11 +33,11 @@ namespace LoKi
   namespace Hybrid 
   {
     // ========================================================================
-    /** @class FilterCriterion HybridFilterCriterion.cpp
+    /** @class ProtoParticelFilter  HybridProtoParticleFilter.cpp
      *  
      *  The first (test) attempt to develop a "hybrid"
      *  solution for LoKi+Hlt
-     *  Simple tool (IFilterCriterion) which is used in C++ analysis 
+     *  Simple tool (IProtoParticleFilter) which is used in C++ analysis 
      *  environment, but the "cuts" are descrived through Python 
      * 
      *  This file is a part of LoKi project - 
@@ -48,16 +48,16 @@ namespace LoKi
      *  contributions and advices from G.Raven, J.van Tilburg, 
      *  A.Golutvin, P.Koppenburg have been used in the design.
      *
-     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-     *  @date   2004-06-29
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date   2010-10-27
      */
     // ========================================================================
-    class FilterCriterion 
-      : public extends2<GaudiTool,IParticleFilter,IFilterCriterion>
+    class ProtoParticleFilter
+      : public extends1<GaudiTool,IProtoParticleFilter>
     {
       // ======================================================================
       // friend factory for instantiation 
-      friend class ToolFactory<LoKi::Hybrid::FilterCriterion> ;
+      friend class ToolFactory<LoKi::Hybrid::ProtoParticleFilter> ;
       // ======================================================================
     public:
       // ======================================================================
@@ -74,7 +74,7 @@ namespace LoKi
       virtual StatusCode finalize () 
       {
         // reset the functor 
-        m_cut = LoKi::Constant<const LHCb::Particle*,bool>( false ) ;
+        m_cut = LoKi::Constant<const LHCb::ProtoParticle*,bool>( false ) ;
         // finalize the base:
         return GaudiTool::finalize () ;
       }
@@ -86,12 +86,11 @@ namespace LoKi
       // ======================================================================
     public:
       // ======================================================================
-      /// Test if filter is satisfied
-      virtual bool isSatisfied  ( const LHCb::Particle* part ) const 
-      { return m_cut ( part ) ; }
-      /// Test if filter is satisfied
-      virtual bool operator()   ( const LHCb::Particle* part ) const 
-      { return m_cut ( part ) ; }
+      /** Test if filter is satisfied
+       *  @see IProtoParticleFilter
+       */
+      virtual bool isSatisfied( const LHCb::ProtoParticle* const & proto ) const 
+      { return m_cut ( proto ) ; }
       // ======================================================================
     public:
       // ======================================================================
@@ -113,13 +112,13 @@ namespace LoKi
     protected:
       // ======================================================================
       /// Standard constructor
-      FilterCriterion 
+      ProtoParticleFilter 
       ( const std::string& type, 
         const std::string& name,
         const IInterface* parent)
         : base_class ( type , name , parent )
-        , m_cut ( LoKi::Constant<const LHCb::Particle*,bool>( false ) ) 
-        , m_code    ( "NONE")
+        , m_cut     ( LoKi::Constant<const LHCb::ProtoParticle*,bool>( false ) ) 
+        , m_code    ( "PP_NONE")
         , m_factory ( "LoKi::Hybrid::Tool/HybridFactory:PUBLIC" ) 
         , m_preambulo()
       {
@@ -128,38 +127,38 @@ namespace LoKi
           ( "Code"    , m_code    ,
             "Python pseudocode for the filter criteria" ) ->
           declareUpdateHandler 
-          ( &LoKi::Hybrid::FilterCriterion::propHandler , this ) ;
+          ( &LoKi::Hybrid::ProtoParticleFilter::propHandler , this ) ;
         //
         declareProperty 
           ( "Factory" , m_factory , 
             "Type/Name for C++/Python Hybrid Factory"   ) ->
           declareUpdateHandler 
-          ( &LoKi::Hybrid::FilterCriterion::propHandler , this ) ;
+          ( &LoKi::Hybrid::ProtoParticleFilter::propHandler , this ) ;
         // the preambulo
         declareProperty 
           ( "Preambulo" , 
             m_preambulo , 
             "The preambulo to be used for Bender/Python script" ) ->
           declareUpdateHandler 
-          ( &LoKi::Hybrid::FilterCriterion::propHandler , this ) ;
+          ( &LoKi::Hybrid::ProtoParticleFilter::propHandler , this ) ;
         //
       } 
       /// destructor : virtual and protected
-      virtual ~FilterCriterion( ){}       // destructor : virtual and protected
+      virtual ~ProtoParticleFilter(){}    // destructor : virtual and protected
       // ======================================================================
     private:
       // ======================================================================
       /// the default constructor is disabled 
-      FilterCriterion () ;
+      ProtoParticleFilter () ;
       /// the copy constructor is disabled 
-      FilterCriterion           ( const FilterCriterion& ) ;
+      ProtoParticleFilter           ( const ProtoParticleFilter& ) ;
       /// the assignement operator is disabled
-      FilterCriterion& operator=( const FilterCriterion& ) ;
+      ProtoParticleFilter& operator=( const ProtoParticleFilter& ) ;
       // ======================================================================
     private:
       // ======================================================================
       /// the selection functor
-      LoKi::Types::Cut  m_cut     ;                    // the selection functor 
+      LoKi::Types::PPCut  m_cut   ;                    // the selection functor 
       /// python pseudo-code
       std::string       m_code    ;                    //    python pseudo-code
       /// factory type/name
@@ -169,17 +168,17 @@ namespace LoKi
       // ======================================================================
     } ;
     // ========================================================================
-  } // end of namespace LoKi::Hybrid 
+  } //                                            end of namespace LoKi::Hybrid 
   // ==========================================================================
-} // end of namespace LoKi 
+} //                                                      end of namespace LoKi 
 // ============================================================================
 // Declaration of the Tool Factory
 // ============================================================================
-DECLARE_NAMESPACE_TOOL_FACTORY(LoKi::Hybrid,FilterCriterion);
+DECLARE_NAMESPACE_TOOL_FACTORY(LoKi::Hybrid,ProtoParticleFilter);
 // ============================================================================
 // initialization of the tool 
 // ============================================================================
-StatusCode LoKi::Hybrid::FilterCriterion::initVar () 
+StatusCode LoKi::Hybrid::ProtoParticleFilter::initVar () 
 {
   // (1) get the factory:
   IHybridFactory* factory = tool<IHybridFactory> ( m_factory , this ) ;
@@ -197,4 +196,3 @@ StatusCode LoKi::Hybrid::FilterCriterion::initVar ()
 // ============================================================================
 // The END 
 // ============================================================================
-

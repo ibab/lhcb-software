@@ -1,4 +1,4 @@
-// $Id: HybridTool.cpp,v 1.5 2009-12-18 09:42:18 ibelyaev Exp $
+// $Id: HybridTool.cpp,v 1.6 2010-05-27 19:29:55 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -48,10 +48,9 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2004-06-29
      */
-    class Tool 
-      : public    LoKi::Hybrid::Base 
-      , public virtual IHybridTool 
-      , public virtual IHybridFactory 
+    class Tool : public extends2< LoKi::Hybrid::Base   ,
+                                  LoKi::IHybridFactory ,
+                                  LoKi::IHybridTool    > 
     {
       // ======================================================================
       // friend factory forn instantiation
@@ -114,6 +113,18 @@ namespace LoKi
         const std::string& context )
       { return _get ( pycode , m_acuts , cuts , context ) ; }
       // ======================================================================
+      /** "Factory": get the the object form python code 
+       *  @param pycode the python pseudo-code of the function
+       *  @param cuts placeholder for the result
+       *  @param context the context lines to be executed 
+       *  @return StatusCode 
+       */
+      virtual StatusCode get
+      ( const std::string&  pycode  , 
+        LoKi::Types::PPCut& cuts    , 
+        const std::string&  context )
+      { return _get ( pycode , m_ppcuts , cuts , context ) ; }
+      // ======================================================================
     public:
       // ======================================================================
       // functions 
@@ -154,6 +165,18 @@ namespace LoKi
         const std::string& context )
       { return _get ( pycode , m_afunc , func , context ) ; }
       // ======================================================================      
+      /** "Factory": get the the object form python code 
+       *  @param pycode the python pseudo-code of the function
+       *  @param func placeholder for the result 
+       *  @param context the context lines to be executed 
+       *  @return StatusCode 
+       */
+      virtual StatusCode get
+      ( const std::string&  pycode  , 
+        LoKi::Types::PPFun& func    , 
+        const std::string&  context )
+      { return _get ( pycode , m_ppfunc , func , context ) ; }
+      // ======================================================================      
     public:
       // ======================================================================      
       // "maps"
@@ -181,6 +204,18 @@ namespace LoKi
         LoKi::Types::VMap& func    ,
         const std::string& context ) 
       { return _get ( pycode , m_vmaps , func , context ) ; }
+      // ======================================================================
+      /** "Factory": get the the object form python code 
+       *  @param pycode the python pseudo-code of the function
+       *  @param func the placeholder for the result 
+       *  @param context the context lines to be executed 
+       *  @return StatusCode 
+       */
+      virtual StatusCode get
+      ( const std::string&  pycode  ,
+        LoKi::Types::PPMap& func    ,
+        const std::string&  context ) 
+      { return _get ( pycode , m_ppmaps , func , context ) ; }
       // ======================================================================
     public:
       // ======================================================================      
@@ -210,6 +245,18 @@ namespace LoKi
         const std::string&  context ) 
       { return _get ( pycode , m_vpipes , func , context ) ; }
       // ======================================================================
+      /** "Factory": get the the object form python code 
+       *  @param pycode the python pseudo-code of the function
+       *  @param func the placeholder for the result 
+       *  @param context the context lines to be executed 
+       *  @return StatusCode 
+       */
+      virtual StatusCode get
+      ( const std::string&   pycode  ,
+        LoKi::Types::PPPipe& func    ,
+        const std::string&   context ) 
+      { return _get ( pycode , m_pppipes , func , context ) ; }
+      // ======================================================================
     public:
       // ======================================================================      
       // "fun-vals"
@@ -237,6 +284,18 @@ namespace LoKi
         LoKi::Types::VFunVal& func    ,
         const std::string&    context ) 
       { return _get ( pycode , m_vfunvals , func , context ) ; }
+      // ======================================================================
+      /** "Factory": get the the object form python code 
+       *  @param pycode the python pseudo-code of the function
+       *  @param func the placeholder for the result 
+       *  @param context the context lines to be executed 
+       *  @return StatusCode 
+       */
+      virtual StatusCode get
+      ( const std::string&     pycode  ,
+        LoKi::Types::PPFunVal& func    ,
+        const std::string&     context ) 
+      { return _get ( pycode , m_ppfunvals , func , context ) ; }
       // ======================================================================
     public:
       // ======================================================================      
@@ -266,6 +325,18 @@ namespace LoKi
         const std::string&    context ) 
       { return _get ( pycode , m_vcutvals , func , context ) ; }
       // ======================================================================
+      /** "Factory": get the the object form python code 
+       *  @param pycode the python pseudo-code of the function
+       *  @param func the placeholder for the result 
+       *  @param context the context lines to be executed 
+       *  @return StatusCode 
+       */
+      virtual StatusCode get
+      ( const std::string&     pycode  ,
+        LoKi::Types::PPCutVal& func    ,
+        const std::string&     context ) 
+      { return _get ( pycode , m_ppcutvals , func , context ) ; }
+      // ======================================================================
     public:
       // ======================================================================      
       // "elements"
@@ -293,6 +364,18 @@ namespace LoKi
         LoKi::Types::VElement& func    ,
         const std::string&     context ) 
       { return _get ( pycode , m_velements , func , context ) ; }
+      // ======================================================================
+      /** "Factory": get the the object form python code 
+       *  @param pycode the python pseudo-code of the function
+       *  @param func the placeholder for the result 
+       *  @param context the context lines to be executed 
+       *  @return StatusCode 
+       */
+      virtual StatusCode get
+      ( const std::string&      pycode  ,
+        LoKi::Types::PPElement& func    ,
+        const std::string&      context ) 
+      { return _get ( pycode , m_ppelements , func , context ) ; }
       // ======================================================================
     public:
       // ======================================================================      
@@ -322,6 +405,18 @@ namespace LoKi
         const std::string&     context ) 
       { return _get ( pycode , m_vsources , func , context ) ; }
       // ======================================================================
+      /** "Factory": get the the object form python code 
+       *  @param pycode the python pseudo-code of the function
+       *  @param func the placeholder for the result 
+       *  @param context the context lines to be executed 
+       *  @return StatusCode 
+       */
+      virtual StatusCode get
+      ( const std::string&     pycode  ,
+        LoKi::Types::PPSource& func    ,
+        const std::string&     context ) 
+      { return _get ( pycode , m_ppsources , func , context ) ; }
+      // ======================================================================
     public:
       // ======================================================================
       // predicates:
@@ -332,9 +427,12 @@ namespace LoKi
       /// set the C++ predicate for LHCb::Vertex 
       virtual void set ( const LoKi::Types::VCuts&   cut ) 
       { LoKi::Hybrid::Base::_set ( m_vcuts , cut ) ; }
-      /// set the C++ predicate for arary of particles 
+      /// set the C++ predicate for array of particles 
       virtual void set ( const LoKi::Types::ACuts&   cut ) 
       { LoKi::Hybrid::Base::_set ( m_acuts , cut ) ; }
+      /// set the C++ predicate for LHCb::ProtoParticle
+      virtual void set ( const LoKi::Types::PPCuts&  cut ) 
+      { LoKi::Hybrid::Base::_set ( m_ppcuts , cut ) ; }
       // ======================================================================
     public:
       // ======================================================================
@@ -349,6 +447,9 @@ namespace LoKi
       /// set the C++ function for arary of particles 
       virtual void set ( const LoKi::Types::AFunc&   cut ) 
       { LoKi::Hybrid::Base::_set ( m_afunc  , cut ) ; }
+      /// set the C++ function for LHCb::ProtoParticle
+      virtual void set ( const LoKi::Types::PPFunc&  cut ) 
+      { LoKi::Hybrid::Base::_set ( m_ppfunc  , cut ) ; }
       // ======================================================================
     public:
       // ======================================================================
@@ -360,6 +461,9 @@ namespace LoKi
       /// set the C++ "map" for LHCb::Vertex 
       virtual void set ( const LoKi::Types::VMaps&   cut ) 
       { LoKi::Hybrid::Base::_set ( m_vmaps  , cut ) ; }
+      /// set the C++ "map" for LHCb::ProtoParticle
+      virtual void set ( const LoKi::Types::PPMaps&  cut ) 
+      { LoKi::Hybrid::Base::_set ( m_ppmaps  , cut ) ; }
       // ======================================================================
     public:
       // ======================================================================
@@ -371,6 +475,9 @@ namespace LoKi
       /// set the C++ "pipe" for LHCb::Vertex 
       virtual void set ( const LoKi::Types::VPipes&   cut ) 
       { LoKi::Hybrid::Base::_set ( m_vpipes  , cut ) ; }
+      /// set the C++ "pipe" for LHCb::ProtoParticle 
+      virtual void set ( const LoKi::Types::PPPipes&  cut ) 
+      { LoKi::Hybrid::Base::_set ( m_pppipes  , cut ) ; }
       // ======================================================================
     public:
       // ======================================================================
@@ -382,6 +489,9 @@ namespace LoKi
       /// set the C++ "fun-val" for LHCb::Vertex 
       virtual void set ( const LoKi::Types::VFunVals&   cut ) 
       { LoKi::Hybrid::Base::_set ( m_vfunvals  , cut ) ; }
+      /// set the C++ "fun-val" for LHCb::ProtoParticle
+      virtual void set ( const LoKi::Types::PPFunVals&  cut ) 
+      { LoKi::Hybrid::Base::_set ( m_ppfunvals  , cut ) ; }
       // ======================================================================
     public:
       // ======================================================================
@@ -393,6 +503,9 @@ namespace LoKi
       /// set the C++ "cut-val" for LHCb::Vertex 
       virtual void set ( const LoKi::Types::VCutVals&   cut ) 
       { LoKi::Hybrid::Base::_set ( m_vcutvals  , cut ) ; }
+      /// set the C++ "cut-val" for LHCb::ProtoParticle 
+      virtual void set ( const LoKi::Types::PPCutVals&   cut ) 
+      { LoKi::Hybrid::Base::_set ( m_ppcutvals  , cut ) ; }
       // ======================================================================
     public:
       // ======================================================================
@@ -404,6 +517,9 @@ namespace LoKi
       /// set the C++ "element" for LHCb::Vertex 
       virtual void set ( const LoKi::Types::VElements&   cut ) 
       { LoKi::Hybrid::Base::_set ( m_velements  , cut ) ; }
+      /// set the C++ "element" for LHCb::ProtoParticle
+      virtual void set ( const LoKi::Types::PPElements&   cut ) 
+      { LoKi::Hybrid::Base::_set ( m_ppelements  , cut ) ; }
       // ======================================================================
     public:
       // ======================================================================
@@ -415,6 +531,9 @@ namespace LoKi
       /// set the C++ "source" for LHCb::Vertex 
       virtual void set ( const LoKi::Types::VSources&   cut ) 
       { LoKi::Hybrid::Base::_set ( m_vsources  , cut ) ; }
+      /// set the C++ "source" for LHCb::ProtoParticle
+      virtual void set ( const LoKi::Types::PPSources&  cut ) 
+      { LoKi::Hybrid::Base::_set ( m_ppsources  , cut ) ; }
       // ======================================================================
     protected:
       // ======================================================================
@@ -449,31 +568,39 @@ namespace LoKi
       // ======================================================================
       // local holder of cuts 
       // predicates:
-      LoKi::Types::Cuts*      m_cuts      ;
-      LoKi::Types::VCuts*     m_vcuts     ;
-      LoKi::Types::ACuts*     m_acuts     ;
+      LoKi::Types::Cuts*       m_cuts       ;
+      LoKi::Types::VCuts*      m_vcuts      ;
+      LoKi::Types::ACuts*      m_acuts      ;
+      LoKi::Types::PPCuts*     m_ppcuts     ;
       // functions:
-      LoKi::Types::Func*      m_func      ;
-      LoKi::Types::VFunc*     m_vfunc     ;
-      LoKi::Types::AFunc*     m_afunc     ;    
+      LoKi::Types::Func*       m_func       ;
+      LoKi::Types::VFunc*      m_vfunc      ;
+      LoKi::Types::AFunc*      m_afunc      ;    
+      LoKi::Types::PPFunc*     m_ppfunc     ;    
       // maps:
-      LoKi::Types::Maps*      m_maps      ;
-      LoKi::Types::VMaps*     m_vmaps     ;       
+      LoKi::Types::Maps*       m_maps       ; 
+      LoKi::Types::VMaps*      m_vmaps      ;       
+      LoKi::Types::PPMaps*     m_ppmaps     ;       
       // pipes:
-      LoKi::Types::Pipes*     m_pipes     ;
-      LoKi::Types::VPipes*    m_vpipes    ;      
+      LoKi::Types::Pipes*      m_pipes      ;
+      LoKi::Types::VPipes*     m_vpipes     ;      
+      LoKi::Types::PPPipes*    m_pppipes    ;      
       // fun-vals:
-      LoKi::Types::FunVals*   m_funvals   ;
-      LoKi::Types::VFunVals*  m_vfunvals  ;      
+      LoKi::Types::FunVals*    m_funvals    ;
+      LoKi::Types::VFunVals*   m_vfunvals   ;      
+      LoKi::Types::PPFunVals*  m_ppfunvals  ;      
       // cut-vals:
-      LoKi::Types::CutVals*   m_cutvals   ;
-      LoKi::Types::VCutVals*  m_vcutvals  ;      
+      LoKi::Types::CutVals*    m_cutvals    ;
+      LoKi::Types::VCutVals*   m_vcutvals   ;      
+      LoKi::Types::PPCutVals*  m_ppcutvals  ;      
       // elements:
-      LoKi::Types::Elements*  m_elements  ;
-      LoKi::Types::VElements* m_velements ;      
+      LoKi::Types::Elements*   m_elements   ;
+      LoKi::Types::VElements*  m_velements  ;      
+      LoKi::Types::PPElements* m_ppelements ;      
       // sources:
-      LoKi::Types::Sources*   m_sources   ;
-      LoKi::Types::VSources*  m_vsources  ;      
+      LoKi::Types::Sources*    m_sources    ;
+      LoKi::Types::VSources*   m_vsources   ;      
+      LoKi::Types::PPSources*  m_ppsources  ;      
       //
       typedef std::vector<std::string> Modules ;
       Modules     m_modules ;
@@ -523,46 +650,52 @@ LoKi::Hybrid::Tool::Tool
 ( const std::string& type   ,
   const std::string& name   ,
   const IInterface*  parent )
-  : LoKi::Hybrid::Base ( type , name , parent )
-  // predicates:
-  , m_cuts      ( 0 )
-  , m_vcuts     ( 0 )
-  , m_acuts     ( 0 )
-  // functions:
-  , m_func      ( 0 )
-  , m_vfunc     ( 0 )
-  , m_afunc     ( 0 )
-  // "maps":
-  , m_maps      ( 0 )
-  , m_vmaps     ( 0 )  
-  // "pipes":
-  , m_pipes     ( 0 )
-  , m_vpipes    ( 0 )  
-  // "fun-vals":
-  , m_funvals   ( 0 )
-  , m_vfunvals  ( 0 )  
-  // "cut-vals":
-  , m_cutvals   ( 0 )
-  , m_vcutvals  ( 0 )  
-  // "elements":
-  , m_elements  ( 0 )
-  , m_velements ( 0 )  
-  // "sources":
-  , m_sources   ( 0 )
-  , m_vsources  ( 0 )  
-  //
-  , m_modules   (   ) 
-  , m_actor     ( "LoKi.Hybrid.Engine()" ) 
-  , m_lines     (   )
+  : base_class ( type , name , parent )
+// predicates:
+  , m_cuts       ( 0 )
+  , m_vcuts      ( 0 )
+  , m_acuts      ( 0 )
+  , m_ppcuts     ( 0 )
+// functions:
+  , m_func       ( 0 )
+  , m_vfunc      ( 0 )
+  , m_afunc      ( 0 )
+  , m_ppfunc     ( 0 )
+// "maps":
+  , m_maps       ( 0 )
+  , m_vmaps      ( 0 )  
+  , m_ppmaps     ( 0 )  
+// "pipes":
+  , m_pipes      ( 0 )
+  , m_vpipes     ( 0 )  
+  , m_pppipes    ( 0 )  
+// "fun-vals":
+  , m_funvals    ( 0 )
+  , m_vfunvals   ( 0 )  
+  , m_ppfunvals  ( 0 )  
+// "cut-vals":
+  , m_cutvals    ( 0 )
+  , m_vcutvals   ( 0 )  
+  , m_ppcutvals  ( 0 )  
+// "elements":
+  , m_elements   ( 0 )
+  , m_velements  ( 0 )  
+  , m_ppelements ( 0 )  
+// "sources":
+  , m_sources    ( 0 )
+  , m_vsources   ( 0 )  
+  , m_ppsources  ( 0 )  
+//
+  , m_modules    (   ) 
+  , m_actor      ( "LoKi.Hybrid.Engine()" ) 
+  , m_lines      (   )
 {
   // 
-  declareInterface<LoKi::IHybridTool>   ( this ) ;
-  declareInterface<LoKi::IHybridFactory>( this ) ;
-  //
-  m_modules.push_back ( "LoKiPhys.decorators"          ) ;
-  m_modules.push_back ( "LoKiArrayFunctors.decorators" ) ;
-  m_modules.push_back ( "LoKiCore.functions"           ) ;
-  m_modules.push_back ( "LoKiCore.math"                ) ;
+  m_modules.push_back ( "LoKiPhys.decorators"           ) ;
+  m_modules.push_back ( "LoKiProtoParticles.decorators" ) ;
+  m_modules.push_back ( "LoKiArrayFunctors.decorators"  ) ;
+  m_modules.push_back ( "LoKiCore.functions"            ) ;
+  m_modules.push_back ( "LoKiCore.math"                 ) ;
   //
   declareProperty 
     ( "Modules" , 
@@ -606,31 +739,39 @@ StatusCode LoKi::Hybrid::Tool::initialize ()
 StatusCode LoKi::Hybrid::Tool::finalize  () 
 {
   // predicates:
-  if ( 0 != m_cuts      ) { delete m_cuts      ; m_cuts      = 0  ; }
-  if ( 0 != m_vcuts     ) { delete m_vcuts     ; m_vcuts     = 0  ; }
-  if ( 0 != m_acuts     ) { delete m_acuts     ; m_acuts     = 0  ; }
+  if ( 0 != m_cuts       ) { delete m_cuts       ; m_cuts       = 0  ; }
+  if ( 0 != m_vcuts      ) { delete m_vcuts      ; m_vcuts      = 0  ; }
+  if ( 0 != m_acuts      ) { delete m_acuts      ; m_acuts      = 0  ; }
+  if ( 0 != m_ppcuts     ) { delete m_ppcuts     ; m_ppcuts     = 0  ; }
   // functions:
-  if ( 0 != m_func      ) { delete m_func      ; m_func      = 0  ; }
-  if ( 0 != m_vfunc     ) { delete m_vfunc     ; m_vfunc     = 0  ; }
-  if ( 0 != m_afunc     ) { delete m_afunc     ; m_afunc     = 0  ; }
+  if ( 0 != m_func       ) { delete m_func       ; m_func       = 0  ; }
+  if ( 0 != m_vfunc      ) { delete m_vfunc      ; m_vfunc      = 0  ; }
+  if ( 0 != m_afunc      ) { delete m_afunc      ; m_afunc      = 0  ; }
+  if ( 0 != m_ppfunc     ) { delete m_ppfunc     ; m_ppfunc     = 0  ; }
   // maps: 
-  if ( 0 != m_maps      ) { delete m_maps      ; m_maps      = 0  ; }
-  if ( 0 != m_vmaps     ) { delete m_vmaps     ; m_vmaps     = 0  ; }
+  if ( 0 != m_maps       ) { delete m_maps       ; m_maps       = 0  ; }
+  if ( 0 != m_vmaps      ) { delete m_vmaps      ; m_vmaps      = 0  ; }
+  if ( 0 != m_ppmaps     ) { delete m_ppmaps     ; m_ppmaps     = 0  ; }
   // pipes:
-  if ( 0 != m_pipes     ) { delete m_pipes     ; m_pipes     = 0  ; }
-  if ( 0 != m_vpipes    ) { delete m_vpipes    ; m_vpipes    = 0  ; }
+  if ( 0 != m_pipes      ) { delete m_pipes      ; m_pipes      = 0  ; }
+  if ( 0 != m_vpipes     ) { delete m_vpipes     ; m_vpipes     = 0  ; }
+  if ( 0 != m_pppipes    ) { delete m_pppipes    ; m_pppipes    = 0  ; }
   // fun-vals:
-  if ( 0 != m_funvals   ) { delete m_funvals   ; m_funvals   = 0  ; }
-  if ( 0 != m_vfunvals  ) { delete m_vfunvals  ; m_vfunvals  = 0  ; }
+  if ( 0 != m_funvals    ) { delete m_funvals    ; m_funvals    = 0  ; }
+  if ( 0 != m_vfunvals   ) { delete m_vfunvals   ; m_vfunvals   = 0  ; }
+  if ( 0 != m_ppfunvals  ) { delete m_ppfunvals  ; m_ppfunvals  = 0  ; }
   // cut-vals:
-  if ( 0 != m_cutvals   ) { delete m_cutvals   ; m_cutvals   = 0  ; }
-  if ( 0 != m_vcutvals  ) { delete m_vcutvals  ; m_vcutvals  = 0  ; }
+  if ( 0 != m_cutvals    ) { delete m_cutvals    ; m_cutvals    = 0  ; }
+  if ( 0 != m_vcutvals   ) { delete m_vcutvals   ; m_vcutvals   = 0  ; }
+  if ( 0 != m_ppcutvals  ) { delete m_ppcutvals  ; m_ppcutvals  = 0  ; }
   // elements:
-  if ( 0 != m_elements  ) { delete m_elements  ; m_elements  = 0  ; }
-  if ( 0 != m_velements ) { delete m_velements ; m_velements = 0  ; }
+  if ( 0 != m_elements   ) { delete m_elements   ; m_elements   = 0  ; }
+  if ( 0 != m_velements  ) { delete m_velements  ; m_velements  = 0  ; }
+  if ( 0 != m_ppelements ) { delete m_ppelements ; m_ppelements = 0  ; }
   // sources:
-  if ( 0 != m_sources   ) { delete m_sources   ; m_sources   = 0  ; }
-  if ( 0 != m_vsources  ) { delete m_vsources  ; m_vsources  = 0  ; }
+  if ( 0 != m_sources    ) { delete m_sources    ; m_sources    = 0  ; }
+  if ( 0 != m_vsources   ) { delete m_vsources   ; m_vsources   = 0  ; }
+  if ( 0 != m_ppsources  ) { delete m_ppsources  ; m_ppsources  = 0  ; }
   //
   // finalize the base 
   return LoKi::Hybrid::Base::finalize() ;

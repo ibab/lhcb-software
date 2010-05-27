@@ -1,15 +1,15 @@
-# $Id: requirements,v 1.26 2010-05-27 19:29:55 ibelyaev Exp $ 
-# ============================================================================
+# $Id: requirements,v 1.27 2010-05-27 19:33:22 ibelyaev Exp $ 
+# =============================================================================
 # Created    : 2007-06-08
 # Maintainer : Vanya BELYAEV
-# ============================================================================
+# =============================================================================
 package           LoKiArrayFunctors
-version           v9r1
+version           v9r2
 
-# ============================================================================
+# =============================================================================
 branches          cmt doc src dict python LoKi 
 
-# =============== dependencies ===============================================
+# =============== dependencies ================================================
 use               LoKiPhys           v* Phys 
 use               LoKiProtoParticles v* Phys 
 
@@ -17,25 +17,28 @@ use               LoKiProtoParticles v* Phys
 apply_pattern install_more_includes  more=LoKi
 apply_pattern install_python_modules
  
-# =============== constituents ===============================================
-library           LoKiArrayFunctorsLib ../src/*.cpp 
-library           LoKiArrayFunctors    ../src/Components/*.cpp 
+# ============== constituents =================================================
+library          LoKiArrayFunctorsLib ../src/*.cpp 
+library          LoKiArrayFunctors    ../src/Components/*.cpp 
 
 
 # ============== Produce LCG dictionary =======================================
- apply_pattern    reflex_dictionary                                                \
+apply_pattern    reflex_dictionary                                                \
                  dictionary=LoKiArrayFunctors                                      \
                  headerfiles=$(LOKIARRAYFUNCTORSROOT)/dict/LoKiArrayFunctorsDict.h \
                  selectionfile=$(LOKIARRAYFUNCTORSROOT)/dict/LoKiArrayFunctors.xml \  
                  options=" -U__MINGW32__ "
 
-# =============== patterns ===================================================
-apply_pattern     linker_library    library=LoKiArrayFunctorsLib
-apply_pattern     component_library library=LoKiArrayFunctors
-apply_pattern     QMTest
+macro_append     LoKiArrayFunctors_dependencies        " LoKiArrayFunctorsLib " 
+macro_append     LoKiArrayFunctorsDict_dependencies    " LoKiArrayFunctorsLib " 
+
+# ============== patterns =====================================================
+apply_pattern    linker_library    library=LoKiArrayFunctorsLib
+apply_pattern    component_library library=LoKiArrayFunctors
+apply_pattern    QMTest
 
 
-# ============================================================================
+# =============================================================================
 # The END 
-# ============================================================================
+# =============================================================================
 

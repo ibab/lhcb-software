@@ -1,4 +1,4 @@
-// $Id: HybridEngineActor.cpp,v 1.3 2009-11-17 12:41:41 ibelyaev Exp $
+// $Id: HybridEngineActor.cpp,v 1.4 2010-05-27 19:29:55 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -123,6 +123,12 @@ StatusCode LoKi::Hybrid::EngineActor::process
 ( const std::string&          name , 
   const LoKi::Types::ACuts&   cut  ) const { return _add ( name , cut ) ; }
 // ============================================================================
+// propagate the cut to the tool 
+// ============================================================================
+StatusCode LoKi::Hybrid::EngineActor::process 
+( const std::string&          name , 
+  const LoKi::Types::PPCuts&  cut  ) const { return _add ( name , cut ) ; }
+// ============================================================================
 // functions 
 // ============================================================================
 // propagate the function to the tool 
@@ -143,6 +149,12 @@ StatusCode LoKi::Hybrid::EngineActor::process
 ( const std::string&          name , 
   const LoKi::Types::AFunc&   cut  ) const { return _add ( name , cut ) ; }
 // ============================================================================
+// propagate the function to the tool 
+// ============================================================================
+StatusCode LoKi::Hybrid::EngineActor::process
+( const std::string&          name , 
+  const LoKi::Types::PPFunc&  cut  ) const { return _add ( name , cut ) ; }
+// ============================================================================
 // maps
 // ============================================================================
 // propagate the map  to the tool 
@@ -156,6 +168,12 @@ StatusCode LoKi::Hybrid::EngineActor::process
 StatusCode LoKi::Hybrid::EngineActor::process
 ( const std::string&          name , 
   const LoKi::Types::VMaps&   cut  ) const { return _add ( name , cut ) ; }
+// ============================================================================
+// propagate the map to the tool 
+// ============================================================================
+StatusCode LoKi::Hybrid::EngineActor::process
+( const std::string&          name , 
+  const LoKi::Types::PPMaps&  cut  ) const { return _add ( name , cut ) ; }
 // ============================================================================
 // pipes
 // ============================================================================
@@ -171,6 +189,12 @@ StatusCode LoKi::Hybrid::EngineActor::process
 ( const std::string&          name , 
   const LoKi::Types::VPipes&  cut  ) const { return _add ( name , cut ) ; }
 // ============================================================================
+// propagate the pipe to the tool 
+// ============================================================================
+StatusCode LoKi::Hybrid::EngineActor::process
+( const std::string&          name , 
+  const LoKi::Types::PPPipes& cut  ) const { return _add ( name , cut ) ; }
+// ============================================================================
 // fun-vals 
 // ============================================================================
 // propagate the fun-val  to the tool 
@@ -184,6 +208,12 @@ StatusCode LoKi::Hybrid::EngineActor::process
 StatusCode LoKi::Hybrid::EngineActor::process
 ( const std::string&           name , 
   const LoKi::Types::VFunVals& cut  ) const { return _add ( name , cut ) ; }
+// ============================================================================
+// propagate the fun-val to the tool 
+// ============================================================================
+StatusCode LoKi::Hybrid::EngineActor::process
+( const std::string&            name , 
+  const LoKi::Types::PPFunVals& cut  ) const { return _add ( name , cut ) ; }
 // ============================================================================
 // cut-vals 
 // ============================================================================
@@ -199,6 +229,12 @@ StatusCode LoKi::Hybrid::EngineActor::process
 ( const std::string&           name , 
   const LoKi::Types::VCutVals& cut  ) const { return _add ( name , cut ) ; }
 // ============================================================================
+// propagate the fun-val to the tool 
+// ============================================================================
+StatusCode LoKi::Hybrid::EngineActor::process
+( const std::string&            name , 
+  const LoKi::Types::PPCutVals& cut  ) const { return _add ( name , cut ) ; }
+// ============================================================================
 // elements
 // ============================================================================
 // propagate the element to the tool 
@@ -213,6 +249,12 @@ StatusCode LoKi::Hybrid::EngineActor::process
 ( const std::string&            name , 
   const LoKi::Types::VElements& cut  ) const { return _add ( name , cut ) ; }
 // ============================================================================
+// propagate the element to the tool 
+// ============================================================================
+StatusCode LoKi::Hybrid::EngineActor::process
+( const std::string&             name , 
+  const LoKi::Types::PPElements& cut  ) const { return _add ( name , cut ) ; }
+// ============================================================================
 // sources
 // ============================================================================
 // propagate the source to the tool 
@@ -226,6 +268,12 @@ StatusCode LoKi::Hybrid::EngineActor::process
 StatusCode LoKi::Hybrid::EngineActor::process
 ( const std::string&           name , 
   const LoKi::Types::VSources& cut  ) const { return _add ( name , cut ) ; }
+// ============================================================================
+// propagate the source to the tool 
+// ============================================================================
+StatusCode LoKi::Hybrid::EngineActor::process
+( const std::string&            name , 
+  const LoKi::Types::PPSources& cut  ) const { return _add ( name , cut ) ; }
 // ============================================================================
 
 
