@@ -11,7 +11,7 @@
 ##
 # =============================================================================
 __author__  = "V. Gligorov vladimir.gligorov@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.17 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.18 $"
 # =============================================================================
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
@@ -278,21 +278,21 @@ class Hlt2Tracking(LHCbConfigurableUser):
     #############################################################################################
     #############################################################################################
     def __apply_configuration__(self) :
-        log.warning('############################################################')
-        log.warning('## INFO You have configured an instance of the Hlt2 tracking')
-        log.warning('## INFO ----------------------------------------------------')
-        log.warning('## INFO The data type is '     + str(self.getProp("DataType"       )))
-        log.warning('## INFO Early data tuning? '   + str(self.getProp("EarlyDataTracking")))
-        log.warning('## INFO Tracks to make are '   + str(self.getProp("Hlt2Tracks"     )))
-        log.warning('## INFO The prefix is '        + str(self.getProp("Prefix"         )))
-        log.warning('## INFO The fit type is '      + str(self.getProp("FastFitType"    )))
-        log.warning('## INFO Fast Fit? = '          + str(self.getProp("DoFastFit"      )))
-        log.warning('## INFO Seeding? = '           + str(self.getProp("DoSeeding"      )))
-        log.warning('## INFO Clone Killing? = '     + str(self.getProp("DoCloneKilling" )))
-        log.warning('## INFO Make Neutrals ? = '    + str(self.getProp("MakeNeutrals"   )))
-        log.warning('## INFO Rich hypos = '         + str(self.getProp("RichHypos"      )))
-        log.warning('## INFO Rich radiators = '     + str(self.getProp("RichRadiators"  )))
-        log.warning('############################################################')
+        log.debug('############################################################')
+        log.debug('## INFO You have configured an instance of the Hlt2 tracking')
+        log.debug('## INFO ----------------------------------------------------')
+        log.debug('## INFO The data type is '     + str(self.getProp("DataType"       )))
+        log.debug('## INFO Early data tuning? '   + str(self.getProp("EarlyDataTracking")))
+        log.debug('## INFO Tracks to make are '   + str(self.getProp("Hlt2Tracks"     )))
+        log.debug('## INFO The prefix is '        + str(self.getProp("Prefix"         )))
+        log.debug('## INFO The fit type is '      + str(self.getProp("FastFitType"    )))
+        log.debug('## INFO Fast Fit? = '          + str(self.getProp("DoFastFit"      )))
+        log.debug('## INFO Seeding? = '           + str(self.getProp("DoSeeding"      )))
+        log.debug('## INFO Clone Killing? = '     + str(self.getProp("DoCloneKilling" )))
+        log.debug('## INFO Make Neutrals ? = '    + str(self.getProp("MakeNeutrals"   )))
+        log.debug('## INFO Rich hypos = '         + str(self.getProp("RichHypos"      )))
+        log.debug('## INFO Rich radiators = '     + str(self.getProp("RichRadiators"  )))
+        log.debug('############################################################')
         #
         # First of all check that I have been called with a sensible set of options
         #
