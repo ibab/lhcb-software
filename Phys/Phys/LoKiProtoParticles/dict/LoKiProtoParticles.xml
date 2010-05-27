@@ -1,0 +1,73 @@
+<!-- 
+     * ========================================================================
+     * $Id: LoKiProtoParticles.xml,v 1.1.1.1 2010-05-27 19:17:38 ibelyaev Exp $ 
+     * ========================================================================
+     * @file
+     * The seleciton file to build Reflex dictionaries for 
+     *  Phys/LoKiProtoParticles package
+     *
+     *  This file is a part of LoKi project - 
+     *    "C++ ToolKit  for Smart and Friendly Physics Analysis"
+     *
+     *  The package has been designed with the kind help from
+     *  Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
+     *  contributions and advices from G.Raven, J.van Tilburg, 
+     *  A.Golutvin, P.Koppenburg have been used in the design.
+     *
+     * @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     * @date 2010-05-26
+     * ========================================================================
+-->
+
+<lcgdict>
+  
+  <class pattern   = "LoKi::Functor<*LHCb::ProtoParticle*>"            />
+  <class pattern   = "LoKi::Constant<*LHCb::ProtoParticle*>"           />
+  <class pattern   = "LoKi::FunctorFromFunctor<*LHCb::ProtoParticle*>" />
+  
+  <class name = "LoKi::Functors::Empty<const LHCb::ProtoParticle*>"    />
+  <class name = "LoKi::Functors::Size<const LHCb::ProtoParticle*>"     />
+  <class name = "LoKi::Valid<const LHCb::ProtoParticle*>"              />
+  
+  <class pattern   = "LoKi::ProtoParticles::*"             />
+  
+  <class pattern   = "LoKi::Dicts::FuncOps<*LHCb::ProtoParticle*>"    />
+  <class pattern   = "LoKi::Dicts::CutsOps<*LHCb::ProtoParticle*>"    />
+  
+  <class pattern   = "LoKi::Dicts::FuncOps_<*LHCb::ProtoParticle*>"   />
+  <class pattern   = "LoKi::Dicts::CutsOps_<*LHCb::ProtoParticle*>"   />
+  <class pattern   = "LoKi::Dicts::MapsOps<*LHCb::ProtoParticle*>"    />
+  <class pattern   = "LoKi::Dicts::PipeOps<*LHCb::ProtoParticle*>"    />
+  <class pattern   = "LoKi::Dicts::FunValOps<*LHCb::ProtoParticle*>"  />
+  <class pattern   = "LoKi::Dicts::CutValOps<*LHCb::ProtoParticle*>"  />
+  <class pattern   = "LoKi::Dicts::ElementOps<*LHCb::ProtoParticle*>" />
+  <class pattern   = "LoKi::Dicts::SourceOps<*LHCb::ProtoParticle*>"  />
+  <class pattern   = "LoKi::Dicts::InfoOps<*LHCb::ProtoParticle*>"    />
+  <class pattern   = "LoKi::Dicts::FunCalls<*LHCb::ProtoParticle*>"   />
+  <class pattern   = "LoKi::Dicts::CutCalls<*LHCb::ProtoParticle*>"   />
+  
+  <exclusion>
+    
+    <class pattern="LoKi::ProtoParticlesParticles::*">
+      <method name="=" />
+    </class>
+    
+    <class pattern="LoKi::Functor&lt;*&gt;">
+      <method name="=" />
+    </class>
+    <class pattern="LoKi::Constant&lt;*&gt;">
+      <method name="=" />
+    </class>
+    <class pattern="LoKi::Valid&lt;*&gt;">
+      <method name="=" />
+    </class>
+    <class pattern="LoKi::TheSame&lt;*&gt;">
+      <method name="=" />
+    </class>
+    <class pattern="LoKi::Identity&lt;*&gt;">
+      <method name="=" />
+    </class>
+   
+  </exclusion>
+  
+</lcgdict>
