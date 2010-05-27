@@ -43,6 +43,10 @@ else:
 
 class SetupProjectTestCase(unittest.TestCase):
     def _check_env(self, output, project, version, withsys=True, main=True):
+        if "SPTESTCASE_DEBUG" in os.environ:
+            print "Checking environment produced for %s %s (withsys=%s, main=%s)" % (project, version, withsys, main)
+            print "--- Output:"
+            print output
         self.assert_(re.compile('PATH=.*%s'%project.upper()).search(output) is not None)
         if withsys:
             self.assert_(re.compile('%sSYSROOT=.*%s'%(project.upper(),version)).search(output) is not None)
@@ -172,7 +176,7 @@ class SetupProjectTestCase(unittest.TestCase):
                        '--keep-CMTPROJECTPATH',
                        ])
         self.assert_(sp.disable_CASTOR)
-        self.assert_(sp.ignore_missing)
+        self.assert_(sp.force)
         self.assert_(sp.ignore_context)
         self.assert_(sp.list_versions)
         self.assert_(sp.external_only)
@@ -229,13 +233,13 @@ class SetupProjectTestCase(unittest.TestCase):
         days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
         # --nightly implies --dev and append to dev_dirs
         sp = SetupProject.SetupProject()
-        sp.parse_args(['--nightly', 'lhcb1'])
-        self.assert_(len(sp.dev_dirs) >= 1 and ("lhcb1/" + days[datetime.date.today().weekday()]) in  sp.dev_dirs[0])
+        sp.parse_args(['--nightly', 'lhcb-patches'])
+        self.assert_(len(sp.dev_dirs) >= 1 and ("lhcb-patches/" + days[datetime.date.today().weekday()]) in  sp.dev_dirs[0])
         
         # --nightly implies --dev and append to dev_dirs
         sp = SetupProject.SetupProject()
-        sp.parse_args(['--nightly', 'lhcb1', 'tUe'])
-        self.assert_(len(sp.dev_dirs) >= 1 and "lhcb1/Tue" in  sp.dev_dirs[0])
+        sp.parse_args(['--nightly', 'lhcb-patches', 'tUe'])
+        self.assert_(len(sp.dev_dirs) >= 1 and "lhcb-patches/Tue" in  sp.dev_dirs[0])
         
         # runtime dependencies on projects
         sp = SetupProject.SetupProject()
@@ -584,11 +588,12 @@ class SetupProjectTestCase(unittest.TestCase):
         tmp_dir = SetupProject.mkdtemp()
         try:
             # prepare fake user release area
-            os.mkdir(os.path.join(tmp_dir,'Brunel_%s'%v))
-            os.mkdir(os.path.join(tmp_dir,'Brunel_%s'%v,"cmt"))
+            os.makedirs(os.path.join(tmp_dir,'Brunel_%s'%v,"cmt"))
+            os.makedirs(os.path.join(tmp_dir,'Brunel_%s'%v,"InstallArea",env["CMTCONFIG"],"lib"))
             open(os.path.join(tmp_dir,'Brunel_%s'%v,"cmt","project.cmt"),"w").\
                 write("project Brunel_%s\n\nuse BRUNEL BRUNEL_%s\n"%(v,v))
-            
+            open(os.path.join(tmp_dir,'Brunel_%s'%v,"InstallArea",env["CMTCONFIG"],"lib","do_not_strip"), "w").\
+                write("nothing")
             env['User_release_area'] = tmp_dir
             x = os.popen4((launcher + " LbConfiguration.SetupProject --shell=%s --no-auto-override Brunel %s")%(_shell,v))
             s = x[1].read().strip()
@@ -603,7 +608,7 @@ class SetupProjectTestCase(unittest.TestCase):
                 pat = re.compile('(?<!SAVED_)LD_LIBRARY_PATH=(.*)')
             m = pat.search(s)
             self.assert_(m is not None)
-            print m.groups()
+            # print m.groups()
             self.assert_(m.group(1).strip('"').split(os.pathsep)[0].find(
                             os.path.join(tmp_dir,'Brunel_%s'%v,"InstallArea"))>=0)
             #self.assert_(proj_not_found(s))

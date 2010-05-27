@@ -1,6 +1,8 @@
 2010-05-27  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* python/LbConfiguration/SetupProject.py: changed --ignore-missing to --force
+	Disable path stripping if the environment variable LB_NO_STRIP_PATH is set.
+	* python/LbConfiguration/tests/SetupProjectTest.py: updated
 
 2010-05-26  Marco Clemencic  <Marco.Clemencic@cern.ch>
 

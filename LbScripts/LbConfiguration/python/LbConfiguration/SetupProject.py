@@ -1420,7 +1420,8 @@ class SetupProject:
                 new_env[v] = os.pathsep.join([ d
                                                for d in new_env[v].split(os.pathsep)
                                                if root_dir_local not in d ])
-                new_env[v] = StripPath(new_env[v])
+                if "LB_NO_STRIP_PATH" not in os.environ:
+                    new_env[v] = StripPath(new_env[v])
         # FIXME: I should look for all the variables pointing to the temporary directory
 
         # remove the variables that have the temporary directory in the name
