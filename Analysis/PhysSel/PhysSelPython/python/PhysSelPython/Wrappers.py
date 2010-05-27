@@ -1,4 +1,4 @@
-#$Id: Wrappers.py,v 1.44 2010-05-27 10:16:18 jpalac Exp $
+#$Id: Wrappers.py,v 1.45 2010-05-27 16:50:01 jpalac Exp $
 """
 Wrapper classes for a DaVinci offline physics selection. The following classes
 are available:
@@ -8,12 +8,14 @@ are available:
    - AutomaticData      Wraps a string TES location to make it look like a Seleciton
    - SelectionSequence  Creates a sequence from a selection such that all the
                         sub-selections required are executed in the right order
+   - EventSelection     Wraps an algorithm that selects an event and produces no output data.
 """
 __author__ = "Juan PALACIOS juan.palacios@nikhef.nl"
 
 __all__ = ('DataOnDemand',
            'AutomaticData',
            'Selection',
+           'EventSelection',
            'SelectionSequence',
            'MultiSelectionSequence',
            'SelSequence',
@@ -84,6 +86,29 @@ class AutomaticData(autodata) :
         return self.algorithm().name()
 
 DataOnDemand = AutomaticData
+
+class EventSelection(object) :
+    """
+    Selection wrapper class for configured event selection algorithm.
+    Algorithm produces no output data and is assumed to be correctly
+    configured. Only action expected from it is that is selects or
+    rejects an event. Can be used just like a Selection object.
+    Example:
+    from PhysSelPython.Wrappers import EventSelection, SelectionSequence
+    from Configurables import SomeEventSelectionAlg
+    evtSel = EventSelection(SomeEventSelectionAlg('MyEvtSel', **params)
+    help(SelectionSequence)
+    selSeq = SelectionSequence('MyEvtSelSeq', TopSelection = evtSel)
+    """
+    def __init__(self, algorithm) :
+        self._alg = algorithm
+        self.requiredSelections = list()
+    def name(self) :
+        return algorithm.name()
+    def algorithm(self) :
+        return self._alg
+    def outputLocation(self) :
+        return ''
 
 class SelectionSequence(SelSequence) :
     """
