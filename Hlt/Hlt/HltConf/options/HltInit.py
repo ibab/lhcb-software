@@ -90,13 +90,12 @@ HltANNSvc().Hlt1SelectionID = {
     # HA Hl1(Single,Di)Hadron.*Decision
     "Hlt1SingleHadronDecision"              :  200,
     "Hlt1DiHadronDecision"                  :  201,
-    "Hlt1DiHadronSoftDecision"              :  202,
+    "Hlt1DiHadronLTUnbiasedDecision"        :  202,
     # HAViaT
     "Hlt1SingleHadronViaTDecision"          :  230,
     "Hlt1DiHadronViaTDecision"              :  231,
     # HAVeloOpen
     "Hlt1SingleHadronOpenDecision"          :  260,
-    "Hlt1DiHadronOpenDecision"              :  261,
     # PH
     "Hlt1PhotonDecision"                    :  300,
     "Hlt1PhoFromEleDecision"                :  301,
@@ -591,16 +590,5 @@ HltANNSvc().InfoID = {
     "Hlt1SingleMuonNoIPL0TFChi2Mu"               : 6284, 
     "Hlt1SingleMuonNoIPL0TFPT"                   : 6285, 
     "Hlt1SingleMuonNoIPL0TUFitTrack"             : 6286, 
-    "Hlt1DiHadronSoftTF1UVelo"                   : 6287, 
-    "Hlt1DiHadronSoftTFCompanion"                : 6288, 
-    "Hlt1DiHadronSoftTFDiHadronIP"               : 6289, 
-    "Hlt1DiHadronSoftTUUVelo"                    : 6290, 
-    "Hlt1DiHadronSoftVF1FitTrack"                : 6291, 
-    "Hlt1DiHadronSoftVF1Forward"                 : 6292, 
-    "Hlt1DiHadronSoftVFDiHadron"                 : 6293, 
-    "Hlt1DiHadronSoftVFUVelo"                    : 6294, 
-    "Hlt1DiHadronSoftVM2UVelo"                   : 6295, 
-    "Hlt1DiHadronSoftVUFitTrack"                 : 6296, 
-    "Hlt1DiHadronSoftVUForward"                  : 6297, 
     "Velo"                                       : 6298,
 }
