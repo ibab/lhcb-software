@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.182 2010-05-27 14:51:07 graven Exp $
+! $Id: release.notes,v 1.183 2010-05-27 21:49:52 gligorov Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
+
+! 2010-05-27 - V. Gligorov
+ - Merge lifetime biased and unbiased lines to share the reconstruction, redo
+   the logic of the unbiased lines a bit.
 
 !========================== Hlt1Lines v4r0 2010-05-27 ===================
 

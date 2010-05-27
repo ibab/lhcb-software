@@ -9,7 +9,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.24 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.25 $"
 # =============================================================================
 
 import Gaudi.Configuration 
@@ -53,16 +53,25 @@ class Hlt1HadronLinesConf(HltLinesConfigurableUser) :
     #     HadCompanion_IPCut
     #     HadCompanion_PtCut
     #
-    __slots__ = { 'L0Channel'               : "Hadron" 
-                , 'HadSingle_IPChi2Cut'     : 25.
-                , 'HadDi_VDChi2Cut'         : 50.
-                , 'HadMain_PTCut'           : 2500.
-                , 'HadMain_TrackFitChi2Cut' : 10.
-                , 'HadCompanion_DOCACut'    : 0.2
-                , 'HadCompanion_DZCut'      : 1.5
-                , 'HadCompanion_PTCut'      : 1000.
-                , 'HadCompanion_PointingCut': 0.4
-                , 'SingleHadron_PTCut'      : 5000.
+    __slots__ = { 'L0Channel'                   	: "Hadron" 
+                , 'HadSingle_IPChi2Cut'         	: 25.
+                , 'HadDi_VDChi2Cut'             	: 50.
+                , 'HadMain_PTCut'               	: 2500.
+                , 'HadMain_TrackFitChi2Cut'     	: 10.
+                , 'HadCompanion_DOCACut'        	: 0.2
+                , 'HadCompanion_DZCut'          	: 1.5
+                , 'HadCompanion_PTCut'          	: 1000.
+                , 'HadCompanion_PointingCut'    	: 0.4
+                , 'SingleHadron_PTCut'          	: 5000.
+                , 'HadDi_IP'                      : -1. #IP cut turned off for now
+                # The lifetime unbiased slots 
+                , 'HadLTUnbVertex_DOCACut'          :   0.4
+                , 'HadLTUnbVertex_PCut'             : 10000.
+                , 'HadLTUnbVertex_MaxPTCut'         :  1100.
+                , 'HadLTUnbVertex_MinPTCut'         :  1000.
+                , 'HadLTUnbVertex_MassMinCut'       :  5000.0
+                , 'HadLTUnbVertex_MassMaxCut'       :  5800.0
+                , 'HadLTUnbVertex_CosThetaStarCut'  :  0.9
                 , 'Prescale'                : { 'Hlt1HadronMonComp'  : 'RATE(1000)'}
                 , 'Postscale'               : { 'Hlt1HadronMonVeloReco' : 0.000001,
                                                 'Hlt1HadronMonConf1'    : 0.000001,
@@ -80,7 +89,7 @@ class Hlt1HadronLinesConf(HltLinesConfigurableUser) :
         from Hlt1Lines.HltFastTrackFit import setupHltFastTrackFit
         from HltTracking.HltReco import Velo
         from HltTracking.HltPVs  import PV3D
-        from Configurables import HltTrackUpgradeTool, PatForwardTool, HltGuidedForward
+        from Configurables import HltTrackUpgradeTool, HltVeloTCaloMatch, PatForwardTool, HltGuidedForward
         from Hlt1Lines.HltConfigurePR import ConfiguredPR
         from Configurables import HltFilterFittedVertices
         
@@ -94,21 +103,21 @@ class Hlt1HadronLinesConf(HltLinesConfigurableUser) :
             l0 = bindMembers(prefix, [ convertL0Candidates(L0Channel)] )
             return l0
 
-        def confirmationpretrackmatch(type=""):
+        def confirmationtrackmatch(type=""):
             prefix = 'HadronConfPreTrackMatch'+type
             OutputOfL0 = confirmationl0part(type).outputSelection()
             conf = [Velo,PV3D().ignoreOutputSelection(),
                     Member ( 'TM' , 'VeloCalo'
                             , InputSelection1 = 'Velo'
                             , InputSelection2 = '%s' %OutputOfL0
-                            , MatchName = 'VeloCalo' , MaxQuality = 4.
+                            , MatchName = 'VeloCalo' , MaxQuality = 9., MaxQuality2 = 9.
                            )
                    ]
 
             return bindMembers(prefix, conf)
 
-        def confirmationtrackmatch(type=""):
-            OutputOfVeloMatch = confirmationpretrackmatch(type).outputSelection()
+        def confirmationguidedforward(type=""):
+            OutputOfVeloMatch = confirmationtrackmatch(type).outputSelection()
             
             prefix = 'HadronConfTrackMatch'+type
             from HltLine.HltDecodeRaw import DecodeIT
@@ -127,8 +136,7 @@ class Hlt1HadronLinesConf(HltLinesConfigurableUser) :
         # simple hadron cut
         #---------------
         def singlehadron(type=""):
-            OutputOfConfirmation = confirmationtrackmatch(type).outputSelection()
-            OutputOfVeloIP = confirmationpretrackmatch(type).outputSelection()
+            OutputOfConfirmation = confirmationguidedforward(type).outputSelection()
             sh = [ Member ( 'TF' , 'SingleHadronPT' ,
                             InputSelection = '%s' %OutputOfConfirmation,
                             FilterDescriptor = ['PT,>,%(SingleHadron_PTCut)s'%self.getProps()],
@@ -149,7 +157,7 @@ class Hlt1HadronLinesConf(HltLinesConfigurableUser) :
             if (type.find('Mon') > -1) :
                 return bindMembers(prefix,comp)
 
-            OutputOfConfirmation = confirmationtrackmatch(type).outputSelection()
+            OutputOfConfirmation = confirmationguidedforward(type).outputSelection()
  
             comp += [ Member ( 'TF', '1UVelo'
                                , FilterDescriptor = ['MatchIDsFraction_%s,<,0.9' %OutputOfConfirmation ]
@@ -166,7 +174,7 @@ class Hlt1HadronLinesConf(HltLinesConfigurableUser) :
         def dihadron(type=""):
             prefix = "HadDi"
             
-            OutputOfConfirmation = confirmationtrackmatch(type).outputSelection()
+            OutputOfConfirmation = confirmationguidedforward(type).outputSelection()
             OutputOfCompanion    = companion(type).outputSelection() 
             
             from HltLine.HltDecodeRaw import DecodeIT
@@ -187,6 +195,11 @@ class Hlt1HadronLinesConf(HltLinesConfigurableUser) :
                            , HistogramUpdatePeriod = 1
                            , HistoDescriptor  = histosfilter('VertexDz_PV3D_'+type,1.,12.,200)                       
                            )
+                , Member ( 'VF', '2UVelo'
+                           , FilterDescriptor = [ 'VertexMinIP_PV3D,||>,%s'%self.getProp('HadDi_IP')] 
+                           , HistogramUpdatePeriod = 1
+                           , HistoDescriptor  = histosfilter('DiVtxIP',0.,400.,100)
+                         )   
                 , DecodeIT
                 , Member ( 'VU', 'Forward'
                            , RecoName = 'Forward'
@@ -275,6 +288,53 @@ class Hlt1HadronLinesConf(HltLinesConfigurableUser) :
                        ]+mondecision('Conf')
             else                :
                 return None # Not an allowed type
+
+        # lifetime unbiased dihadron part
+        #---------------------
+        def LTUnbDiHadron(type=""):
+            prefix = "LTUnbDi"
+
+            DocaCut                = str(self.getProp("HadLTUnbVertex_DOCACut"))
+            VertexPCut             = str(self.getProp("HadLTUnbVertex_PCut"))
+            MassMinCut             = str(self.getProp("HadLTUnbVertex_MassMinCut"))
+            MassMaxCut             = str(self.getProp("HadLTUnbVertex_MassMaxCut"))
+            CosThetaStarCut        = str(self.getProp("HadLTUnbVertex_CosThetaStarCut"))
+            
+            OutputOfConfirmation = confirmationguidedforward(type).outputSelection()
+            from HltLine.HltDecodeRaw import DecodeIT
+            dih = [ Member ( 'VM1', 'UVelo'
+                         , InputSelection = '%s' %OutputOfConfirmation
+                         , FilterDescriptor = [ 'DOCA,<,'           + DocaCut,
+                                                'CosThetaStar,[],0,'+ CosThetaStarCut
+                                                ]
+                         , HistoDescriptor  = histosfilter('DOCA_'+type,0.,1.,200)
+                           )
+                , Member ( 'VF', 'DiHadronPT1',
+                           FilterDescriptor = [ 'VertexMaxPT,>,%s'%self.getProp("HadLTUnbVertex_MaxPTCut")],
+                           HistogramUpdatePeriod = 1,
+                           HistoDescriptor  = histosfilter('VertexMaxPT_'+type,0.,5000.,200)
+                         )                       
+                , Member ( 'VF', 'DiHadronPT2',
+                           FilterDescriptor = [ 'VertexMinPT,>,%s'%self.getProp("HadLTUnbVertex_MinPTCut")],
+                           HistogramUpdatePeriod = 1,
+                           HistoDescriptor  = histosfilter('VertexMinPT_'+type,0.,5000.,200)
+                           )
+                , Member ( 'VF', 'VertexMinP',
+                           FilterDescriptor = [ 'VertexMinP,>,'+VertexPCut]
+                           )
+                , Member ( 'VF', 'Mass',
+                            FilterDescriptor = [ 'VertexDikaonMass,[],'+MassMinCut+','+MassMaxCut]
+                           )          
+                , Member ( 'VU', 'FitTrack' 
+                           , RecoName = 'FitTrack', callback = setupHltFastTrackFit )
+                , Member ( 'VF', '2FitTrack' 
+                           , OutputSelection = "%Decision"
+                           , FilterDescriptor = ['FitVertexMaxChi2OverNdf,<,%s'%self.getProp('HadMain_TrackFitChi2Cut')]
+                           , HistogramUpdatePeriod = 1
+                           , HistoDescriptor  = histosfilter('FitVertexMaxChi2OverNdf_'+type,0,50.,200)
+                           )                   
+                ]                                              
+            return bindMembers(prefix,dih)
  
         from Hlt1Lines.HltL0Candidates import L0Channels
         if self.getProp('L0Channel') in L0Channels() :
@@ -285,8 +345,8 @@ class Hlt1HadronLinesConf(HltLinesConfigurableUser) :
                  , postscale = self.postscale
                  , L0DU  = "L0_CHANNEL('%(L0Channel)s')"%self.getProps()
                  , algos =  [confirmationl0part()]+\
-                            [confirmationpretrackmatch()]+\
                             [confirmationtrackmatch()]+\
+                            [confirmationguidedforward()]+\
                             singlehadron()+\
                             afterburn()
                  )
@@ -298,8 +358,8 @@ class Hlt1HadronLinesConf(HltLinesConfigurableUser) :
                  , postscale = self.postscale
                  , L0DU  = "L0_CHANNEL('%(L0Channel)s')"%self.getProps()
                  , algos =  [confirmationl0part()]+\
-                            [confirmationpretrackmatch()]+\
                             [confirmationtrackmatch()]+\
+                            [confirmationguidedforward()]+\
                             [companion()]+\
                             [dihadron()]+\
                             vafterburn()
@@ -323,7 +383,7 @@ class Hlt1HadronLinesConf(HltLinesConfigurableUser) :
                  , postscale = self.postscale
                  , L0DU = "L0_CHANNEL('%(L0Channel)s')"%self.getProps()
                  , algos = [confirmationl0part()]+\
-                           [confirmationpretrackmatch()]+\
+                           [confirmationtrackmatch()]+\
                            mondecision('Conf') 
                  )
             
@@ -334,8 +394,8 @@ class Hlt1HadronLinesConf(HltLinesConfigurableUser) :
                  , postscale = self.postscale
                  , L0DU = "L0_CHANNEL('%(L0Channel)s')"%self.getProps()
                  , algos = [confirmationl0part()]+\
-                           [confirmationpretrackmatch()]+\
                            [confirmationtrackmatch()]+\
+                           [confirmationguidedforward()]+\
                            mondecision('Conf')
                  )
 
@@ -349,6 +409,14 @@ class Hlt1HadronLinesConf(HltLinesConfigurableUser) :
                             monveloreco()+\
                             mondecision('Comp')
                  )
-                 
+            Line ( 'DiHadronLTUnbiased'
+                 , prescale = self.prescale
+                 , postscale = self.postscale
+                 , L0DU  = "L0_CHANNEL('%(L0Channel)s')"%self.getProps()
+                 , algos = [confirmationl0part()]+\
+                           [confirmationtrackmatch()]+\
+                           [confirmationguidedforward()]+\
+                           [LTUnbDiHadron()]
+                 )     
             
 
