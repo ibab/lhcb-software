@@ -3,6 +3,7 @@
 ! Responsible : Gerhard Raven
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
+!========================== HltCommon v6r0 2010-05-27 ===================
 ! 2010-05-19 - V. Gligorov
  - Add two new HltAlgorithms: HltFilterFittedTracks and
    HltFilterFittedVertices to allow filtering on flight significances and
