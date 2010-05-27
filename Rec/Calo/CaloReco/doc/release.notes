@@ -1,10 +1,14 @@
-! $Id: release.notes,v 1.188 2010-05-26 21:03:04 graven Exp $
+! $Id: release.notes,v 1.189 2010-05-27 07:36:46 odescham Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Calo/CaloReco
 ! Responsible : Olivier Deschamps odescham@in2p3.fr 
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
 
 ! -----------------------------------------------------------------------------
+
+
+! 2010-05-27 - Olivier Deschamps
+	- CaloCorrectionBase : reduce verbosity
 
 !========================== CaloReco v5r5p1  2010-05-26 ========================
 

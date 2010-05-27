@@ -1,4 +1,4 @@
-// $Id: CaloCorrectionBase.cpp,v 1.1 2010-05-20 09:47:06 odescham Exp $
+// $Id: CaloCorrectionBase.cpp,v 1.2 2010-05-27 07:36:46 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -53,13 +53,13 @@ StatusCode CaloCorrectionBase::initialize() {
 
   // get parameters
   if ( !existDet<DataObject>( m_conditionName)  ){
-    warning() << "Initialize :  Condition '" << m_conditionName
-              << "' not found -- use options parameters!" << endmsg; 
+    debug() << "Initialize :  Condition '" << m_conditionName
+              << "' not found -- apply options parameters !" << endmsg; 
     m_useCondDB = false;
   }
 
   for( std::vector<std::string>::iterator it = m_corrections.begin() ; m_corrections.end() != it ; ++it){
-    info() << "Accepted correction : flag = '" << *it <<"'" << endmsg;
+    debug() << "Accepted corrections :  '" << *it <<"'" << endmsg;
   }
   sc = m_useCondDB ? setDBParams() : setOptParams();
   return sc;
@@ -73,6 +73,11 @@ StatusCode CaloCorrectionBase::finalize() {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
 
+    info() << "Condition '" << m_conditionName
+              << "' not found --  options parameters applied !" << endmsg;
+  for( std::vector<std::string>::iterator it = m_corrections.begin() ; m_corrections.end() != it ; ++it){
+    info() << "Accepted corrections :  '" << *it <<"'" << endmsg;
+  }
 
   if( m_cond == NULL )
     info() << " Applied corrections configured via options for : " << endmsg;
@@ -96,13 +101,13 @@ StatusCode CaloCorrectionBase::finalize() {
 
 //=============================================================================©©ﬁ
 StatusCode CaloCorrectionBase::setDBParams(){
-  info() << "Get params from CondDB condition = " << m_conditionName << endmsg;
+  debug() << "Get params from CondDB condition = " << m_conditionName << endmsg;
   registerCondition(m_conditionName, m_cond, &CaloCorrectionBase::updParams);
   return runUpdate();  
 }
 // ============================================================================
 StatusCode CaloCorrectionBase::setOptParams(){
-  info() << "Get params from options - no condition '" << m_conditionName << "'" << endmsg;
+  debug() << "Get params from options - no condition '" << m_conditionName << "'" << endmsg;
   if( m_optParams.empty() )return Warning("No parameters - no correction to be applied",StatusCode::SUCCESS);
 
   for(std::map<std::string, std::vector<double> >::iterator p = m_optParams.begin() ; m_optParams.end() != p ; ++p){
@@ -221,7 +226,7 @@ void CaloCorrectionBase::checkParams(){
       warning() << " o Parameters for correction '"<< type << "' are badly defined : [ " << vec << " ]"<< endmsg;
       m_params[ type ].clear();
     }else{
-      info() << " o Will apply correction '" << type <<"' as a '" << CaloCorrection::funcName[ func ] 
+      debug() << " o Will apply correction '" << type <<"' as a '" << CaloCorrection::funcName[ func ] 
              << "' function of " << dim << " parameters" << endmsg;
     }
   }
