@@ -96,7 +96,7 @@ extern "C" int qmtest_hlt(int argc, char** argv)  {
 
   Process::setDebug(true);  
   pg.add(p[0]=new Process("MEPInit_0",  command(),a1,out.c_str()));
-  pg.add(p[1]=new Process("MEPInit_0",  command(),a2,out.c_str()));
+  pg.add(p[1]=new Process("SNDInit_0",  command(),a2,out.c_str()));
   pg.start();
   ::lib_rtl_sleep(8000);
   pg.add(p[2] =new Process("EvtProd_0", command(),a3,out.c_str()));
