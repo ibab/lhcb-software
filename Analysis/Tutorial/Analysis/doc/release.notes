@@ -1,4 +1,4 @@
-!$Id: release.notes,v 1.93 2010-04-30 15:27:10 jpalac Exp $
+!$Id: release.notes,v 1.94 2010-05-27 15:02:49 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Tutorial/Analysis
 ! Responsible : P. Koppenburg
@@ -8,6 +8,13 @@
 !   See https://twiki.cern.ch/twiki/bin/view/LHCb/DaVinciTutorial
 !
 !-----------------------------------------------------------------------------
+
+! 2010-05-27 - Juan Palacios
+ - solutions/DaVinci2/TutorialAlgorithm
+ - solutions/DaVinci2/TutorialAlgorithm
+  . Use DaVinci::filter instead of IParticleFilter.
+ - cmt/requirements
+  . Increase to v8r5.
 
 !========================== Analysis v8r4 2010-04-30 =================
 
