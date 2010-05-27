@@ -3,6 +3,7 @@
 ! Responsible : Gerhard Raven
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
+!========================== HltBase v9r0 2010-05-27 ===================
 ! 2010-05-05 - Gerhard Raven
  - move configuration interface into Kernel/HltInterfaces
 
