@@ -7,8 +7,10 @@ class Hlt2B2HHLTUnbiasedLinesConf(HltLinesConfigurableUser) :
                    ,'doca'               : 0.1 
                    ,'KaonPTmin'          : 1000       # MeV
                    ,'KaonPTmax'          : 1100      # MeV
+                   ,'KaonPmin'           : 10000
                    ,'PIDK_min'           : 0
-                   ,'PIDK_max'           : 5   
+                   ,'PIDK_max'           : 5  
+                   ,'TrackChi2'          : 10  
                    }
     
 
@@ -25,7 +27,7 @@ class Hlt2B2HHLTUnbiasedLinesConf(HltLinesConfigurableUser) :
                                , "Combine"     
                                , DecayDescriptor = "B0 -> K+ K-"
                                , CombinationCut = "((AM> %(BMassWinLow)s *MeV) & (AM< %(BMassWinHigh)s *MeV) & (AMAXDOCA('LoKi::DistanceCalculator')< %(doca)s ))" % self.getProps()
-                               , DaughtersCuts = { "K+" : "((PT> %(KaonPTmin)s *MeV)&(PIDK > %(PIDK_min)s))" % self.getProps() }
+                               , DaughtersCuts = { "K+" : "((P>%(KaonPmin)s)&(TRCHI2DOF<%(TrackChi2)s)&(PT> %(KaonPTmin)s *MeV)&(PIDK > %(PIDK_min)s))" % self.getProps() }
                                , MotherCut = "(INTREE ( (ABSID=='K+') & (PT> %(KaonPTmax)s *MeV) & (PIDK > %(PIDK_max)s) ))" % self.getProps()
                                , InputLocations = [BiKalmanFittedRichKaons])
         ###########################################################################
