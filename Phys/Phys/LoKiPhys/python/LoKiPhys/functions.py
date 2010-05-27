@@ -829,6 +829,14 @@ PCUTV   = LoKi.Particles.PCutV
 PFUNA   = LoKi.Particles.PCutA
 ## @see LoKi::Cuts::PFUNV
 PFUNV   = LoKi.Particles.PCutV
+## @see LoKi::Cuts::PPFUN
+PPFUN   = LoKi.Particles.ProtoPFun
+## @see LoKi::Cuts::PPCUT
+PPCUT   = LoKi.Particles.ProtoPCut
+## @see LoKi::Cuts::TRFUN
+TRFUN   = LoKi.Particles.TrackFun
+## @see LoKi::Cuts::TRCUT
+TRCUT   = LoKi.Particles.TrackCut
 
 ## Legacy stuff
 BPVVDS_LEGACY = LoKi.Legacy.DistanceSignificanceWithBestPV () 
