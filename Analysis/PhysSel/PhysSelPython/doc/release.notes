@@ -1,12 +1,17 @@
-!$Id: release.notes,v 1.60 2010-05-27 10:16:40 jpalac Exp $
+!$Id: release.notes,v 1.61 2010-05-27 16:51:06 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : PhysSel/PhysSelPython
 ! Responsible : Juan Palacios
 ! Purpose     : Helper python classes for writing offline selections
 !-----------------------------------------------------------------------------
 
+!==================== PhysSel/PhysSelPython v5r4 2010-05-27 ================
+
 ! 2010-05-27 - Juan Palacios
  - python/PhysSelPython/Wrappers.py
+  . Added class EventSelection. Acts as a Selection object but expects no 
+    configuration from the "framework" and produces no output data. Ideal
+    for using CheckPVs, TESChecks, LoKi::VoifFilters as Selection objects.
   . Remove AutomaticData 'name' constructor argument.
  - cmt/requirements
   . Increase to v5r4. 
