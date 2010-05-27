@@ -1,9 +1,17 @@
-!$Id: release.notes,v 1.126 2010-05-27 15:22:07 graven Exp $
+!$Id: release.notes,v 1.127 2010-05-27 22:09:45 gligorov Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/HltTracking
 ! Responsible : Jose A. Hernando
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
+
+! 2010-05-27 - V. Gligorov
+ - Major update to VeloCalo matching. In short:
+  . Parameterize calorimeter E resolution as (10%+70%/sqrt(E))
+  . Remove 2D matching
+  . Return separate chi2 values for X and Y matching
+  . Retune the pt kick constant based on 2010 data;
+    Reduce by a factor of 1.2 from 1263 GeV/c  
 
 !========================== HltTracking v6r0   2010-05-27 ===================
 ! 2010-05-26 - V. Gligorov

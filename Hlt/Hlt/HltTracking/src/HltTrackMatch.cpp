@@ -1,4 +1,4 @@
-// $Id: HltTrackMatch.cpp,v 1.19 2010-04-24 16:24:38 graven Exp $
+// $Id: HltTrackMatch.cpp,v 1.20 2010-05-27 22:06:29 gligorov Exp $
 // Include files 
 
 // from Gaudi
@@ -70,10 +70,10 @@ StatusCode HltTrackMatch::initialize() {
   if ( sc.isFailure() ) return sc;
 
   if (produceHistos()){
-    m_qualityHisto = initializeHisto(m_qualityName,0,10,100);
-    m_quality2Histo = initializeHisto(m_quality2Name,0,10,100);
-    m_qualityHistoBest = initializeHisto(m_qualityName+"Best",0,10,100);
-    m_quality2HistoBest = initializeHisto(m_quality2Name+"Best",0,10,100);
+    m_qualityHisto = initializeHisto(m_qualityName,-50,50,1000);
+    m_quality2Histo = initializeHisto(m_quality2Name,-50,50,1000);
+    m_qualityHistoBest = initializeHisto(m_qualityName+"Best",-50,50,1000);
+    m_quality2HistoBest = initializeHisto(m_quality2Name+"Best",-50,50,1000);
   }
 
   
@@ -89,8 +89,8 @@ void HltTrackMatch::recoConfiguration() {
   m_recoConf.add("VeloCalo/TransferInfo",false);
   m_recoConf.add("VeloCalo/TrackType", (int) LHCb::Track::Velo);
   m_recoConf.add("VeloCalo/TESOutput", std::string("Hlt1/Track/VeloCalo"));
-  m_recoConf.add("VeloCalo/Quality",std::string("VeloCalo3DChi2"));
-  m_recoConf.add("VeloCalo/Quality2",std::string(""));
+  m_recoConf.add("VeloCalo/Quality",std::string("Chi2Y"));
+  m_recoConf.add("VeloCalo/Quality2",std::string("Chi2X"));
   
   m_recoConf.add("VeloTDist/Tool",std::string("HltMatchTVeloTracks"));
   m_recoConf.add("VeloTDist/RecoID", (int) 101); //TODO
@@ -212,11 +212,17 @@ StatusCode HltTrackMatch::execute() {
   if (produceHistos() && otracks->size() > 0){
     std::vector<double> vals; 
     vals.reserve(otracks->size());
-    BOOST_FOREACH( LHCb::Track* cand, *otracks) vals.push_back( cand->info(m_qualityID,1e6));
+    BOOST_FOREACH( LHCb::Track* cand, *otracks) {
+        if (fabs(cand->info(m_qualityID,1e6)) >1e-6) 
+            vals.push_back( fabs(cand->info(m_qualityID,1e6)));
+    }
     double val = *( std::min_element(vals.begin(),vals.end()) );
     fill(m_qualityHistoBest,val,1.); 
     vals.clear();
-    BOOST_FOREACH( LHCb::Track* cand, *otracks) vals.push_back( cand->info(m_quality2ID,1e6));
+    BOOST_FOREACH( LHCb::Track* cand, *otracks) {
+        if (fabs(cand->info(m_quality2ID,1e6)) >1e-6)
+            vals.push_back( fabs(cand->info(m_quality2ID,1e6)));
+    }
     val = *( std::min_element(vals.begin(),vals.end()) );
     fill(m_quality2HistoBest,val,1.); 
   }
