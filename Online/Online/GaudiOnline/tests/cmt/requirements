@@ -20,3 +20,5 @@ use Writer         v* Online
 
 # apply_pattern ld_library_path library=LHCbMath
 apply_pattern ld_library_path
+##apply_pattern QMTest
+##apply_pattern QMTestSummarize
