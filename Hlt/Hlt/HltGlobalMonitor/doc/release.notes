@@ -1,9 +1,10 @@
-!$Id: release.notes,v 1.82 2010-05-26 19:44:17 graven Exp $
+!$Id: release.notes,v 1.83 2010-05-27 15:13:56 graven Exp $
 Package     : Hlt/HltGlobalMonitor
 Package Coordinator : Bruno Souza de Paula 
 Purpose     : LHCb HLT Global Monitoring
 ! -----------------------------------------------------------------------------
 
+!========================== HltGlobalMonitor v3r6 2010-05-27 ===================
 ! 2010-05-26 - Johannes Albrecht
  - add HltTimeVsEventSize histogram
 
