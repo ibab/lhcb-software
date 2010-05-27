@@ -5,8 +5,19 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
+</PRE><H1><A NAME=v10r0p1>2010-05-27 RecSys v10r0p1</A></H1><PRE>
+This version uses Gaudi v21r9 and LHCb v31r1
+
+- Patch release fixing an issue affecting running of HLT in Moore and DaVinci.
+- Packages modified: CaloReco v5r5p1
+
+- In CaloReco v5r5p1:
+	. CaloCorrectionBase : reduce verbosity
+  . python/Configuration.py : set correctly the charged protop location in
+    combinedProtoP algo
+
 </PRE><H1><A NAME=v10r0>2010-05-21 RecSys v10r0</A></H1><PRE>
-This version uses Gaudi v21r9 and LHCb v31r0p1
+This version uses Gaudi v21r9 and LHCb v31r1
 
 - New Major version of Rec with several sweeping changes
   . Review of warnings across Rec task #15441

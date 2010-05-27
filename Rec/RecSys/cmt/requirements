@@ -1,5 +1,5 @@
 package RecSys
-version v10r0
+version v10r0p1
 
 branches cmt doc tests
  
@@ -10,7 +10,7 @@ branches cmt doc tests
 # Calorimeter                         # Maintainer
 use CaloMoniDst          v5r2    Calo # Olivier Deschamps
 use CaloPIDs             v5r6  	 Calo # Victor Egorychev, Vanya Belyaev
-use CaloReco             v5r5    Calo # Olivier Deschamps
+use CaloReco             v5r5p1  Calo # Olivier Deschamps
 
 # Det
 
