@@ -4,6 +4,10 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2010-05-27 - V. Gligorov
+ - First iteration of Hadrons_Minimal, the setting containing the "core" hadronic
+   Hlt2 lines. Fix assorted typos elsewhere.
+
 !========================== HltSettings v2r0  2010-05-27 ===================
 ! 2010-05-26 - V. Gligorov
  - Add the lifetime unbiased B2hh lines to exclusive nominal.
