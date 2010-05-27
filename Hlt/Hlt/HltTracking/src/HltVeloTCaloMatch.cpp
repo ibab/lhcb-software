@@ -1,4 +1,4 @@
-// $Id: HltVeloTCaloMatch.cpp,v 1.4 2010-05-26 07:54:50 gligorov Exp $
+// $Id: HltVeloTCaloMatch.cpp,v 1.5 2010-05-27 22:05:17 gligorov Exp $
 // Include files 
 
 // from Gaudi
@@ -31,16 +31,13 @@ HltVeloTCaloMatch::HltVeloTCaloMatch
   declareInterface<ITrackMatch>(this);
   declareInterface<ITrackBiFunctionTool>(this);
   declareInterface<ITrackL0CaloMatchTool>(this);
-  declareProperty("PtkickConstant", m_ptkickConstant = 1.263*Gaudi::Units::GeV);
+  declareProperty("PtkickConstant", m_ptkickConstant = (1.263/1.2)*Gaudi::Units::GeV);
   declareProperty("zKick", m_zKick   = 525.0);
-  declareProperty("eRes0", m_eres[0] = 0.60 );
+  declareProperty("eRes0", m_eres[0] = 0.10 );
   declareProperty("eRes1", m_eres[1] = 0.70 );
 
-  declareProperty("Rematch2D",m_doRematch2D = true);
-  declareProperty("Max3DChi2",m_max3DChi2 = 10.);
-  declareProperty("Max2DChi2",m_max2DChi2 = 10.);  
-
-  m_rematchTool = 0;
+  declareProperty("Max3DChi2",m_maxYChi2 = 100.);
+  declareProperty("Max2DChi2",m_maxXChi2 = 100.);  
 
 }
 //=============================================================================
@@ -51,11 +48,6 @@ HltVeloTCaloMatch::~HltVeloTCaloMatch() {}
 StatusCode HltVeloTCaloMatch::initialize() {
 
   StatusCode sc = GaudiTool::initialize();
-  
-  if (m_doRematch2D) {
-    m_rematchTool = tool<ITrackBiFunctionTool>("HltRZVeloTCaloMatch");
-    Assert(m_rematchTool!=0," Not able tocreate rematch 2D-TCalo tool");
-  }
   
   return sc;
 }
@@ -71,8 +63,8 @@ double HltVeloTCaloMatch::function(const Track& tvelo, const Track& tcalo) {
   ey     = state.ty()/Gaudi::Units::cm;
   e      = tcalo.pt()/Gaudi::Units::GeV;
   
-  double matchChi2 = match(tvelo);
-  return matchChi2;
+  double chi2 = match(tvelo,1);
+  return chi2;
 }
 
 
@@ -81,24 +73,16 @@ double HltVeloTCaloMatch::function(const Track& tvelo, const Track& tcalo) {
 StatusCode HltVeloTCaloMatch::match(const Track& tvelo, 
                                     const Track& tcalo,
                                     Track& otrack,
-                                    double& matchChi2,
-                                    double& chi2) 
+                                    double& Chi2Y,
+                                    double& Chi2X) 
 {
-  matchChi2 = function(tvelo,tcalo);
+  Chi2Y = function(tvelo,tcalo); //Chi2 in y
+  Chi2X = match(tvelo,2); //Chi2 in x
 
-  double ok = (matchChi2 < m_max3DChi2);
+  bool ok = ((Chi2Y < m_maxYChi2)&&(Chi2X < m_maxXChi2));
   
-  debug() << " match 3D Chi2 "<< matchChi2 << " accepted? " << ok << endreq;
+  debug() << " match Chi2 "<< Chi2Y << " " << Chi2X << " accepted? " << ok << endreq;
   if (!ok) return StatusCode::FAILURE;
-  
-  // check rematch
-  if (m_doRematch2D) {
-    const LHCb::Track& rzvelo = *(tvelo.ancestors()[0]);
-    chi2 = m_rematchTool->function(rzvelo,tcalo);
-    bool ok2 = (chi2 < m_max2DChi2);
-    debug() << " rematch 2D Chi2 " << chi2 << " accepted? " << ok2 << endreq;
-    if (!ok2) return StatusCode::FAILURE;
-  }
   
   // merge tracks
   Hlt::TrackMerge(tvelo,otrack);
@@ -106,7 +90,7 @@ StatusCode HltVeloTCaloMatch::match(const Track& tvelo,
   otrack.setType(tvelo.type());
   
   debug() << " match track slopes " << otrack.slopes() 
-          << " quality " << matchChi2 << ", " << chi2 << endreq;
+          << " quality " << Chi2Y << ", " << Chi2X << endreq;
   
   return StatusCode::SUCCESS;
 }
@@ -126,53 +110,43 @@ double HltVeloTCaloMatch::match(const Track& track,
   
   e      = fabs(et) *( sqrt(x*x + y*y + z*z)/
                        sqrt(x*x + y*y));
-  return match(track);
+  return match(track,1)+match(track,2);
   
 }
 
-double HltVeloTCaloMatch::match(const Track& track) 
+double HltVeloTCaloMatch::match(const Track& track, int matchtype) 
 {
-  double matchChi2 = 999.;
-  
   debug() << "running confirmation3D()" << endreq;
 
-  // get track slopes
-  /*double trackDxDz = 0.;//(track.states()[2])->tx();
-  double trackDyDz = 0.;//(track.states()[2])->ty();
-  
-  // Absolute energy uncertainty:
-  double de = e*(sqrt( m_eres[0]*m_eres[0] + m_eres[1]*m_eres[1]/e ));
-  
-  double deltaZ = z - m_zKick;
-  double xkick  = deltaZ * (m_ptkickConstant/Gaudi::Units::GeV)/e;
-  double exkick = fabs( xkick/e)*de;
-  
-  // Calculate the slopes and their uncertainties:
-  double edxdz  = sqrt(ex*ex + exkick*exkick)/z;
-  double dydz   = y/z;
-  double edydz  = ey/z;
-  */
-  double tracky_atcalo = 0;
-  const std::vector<State*> TSV = track.states(); 
+  //First the y Chi2X 
+  const std::vector<State*> TSV = track.states();
   State* iS = *(TSV.begin());
-  tracky_atcalo = (iS)->y()/Gaudi::Units::cm + (iS)->ty()*(z-(iS)->z()/Gaudi::Units::cm);
-  // loop for -1 and +1 charge
-  /*double q[2]={-1.,1.};
-  for (int i= 0; i< 2; ++i) {
-    double dxdz = (x + q[i]*xkick)/z;
-    
-    // calculate chi2 
-    double deltaX = q[i]*(dxdz - trackDxDz)/edxdz;
-    */double deltaY = (y-tracky_atcalo)/ey;//(dydz/fabs(dydz))*(dydz - trackDyDz)/edydz;
-    double chi2 = /*deltaX*deltaX + */deltaY*deltaY;
-     
- //   if (chi2 < matchChi2) {
-      matchChi2      = chi2;
- /*     debug() << "Best so far: q = " << q[i] << "\tchi2 = " << matchChi2
-              << " (" << deltaX*deltaX << " + " << deltaY*deltaY << ")" << endreq;
-    } // end if chi2 < matchChi2
-  } // end loop for -1 and +1 charge
-  */
-  debug() << " matchChi2 " << matchChi2 << endreq;
-  return matchChi2;
+  if (matchtype == 1 ) {
+    double tracky_atcalo = (iS)->y()/Gaudi::Units::cm + (iS)->ty()*(z-(iS)->z()/Gaudi::Units::cm);
+    double deltaY = (y-tracky_atcalo)/ey;
+    double Chi2Y = deltaY*deltaY;
+    return Chi2Y;
+  } 
+  if (matchtype == 2 ) {
+    double de = e*(sqrt( m_eres[0]*m_eres[0] + m_eres[1]*m_eres[1]/e ));
+    double deltaZ = z - m_zKick;
+    double xkick  = deltaZ * (m_ptkickConstant/Gaudi::Units::GeV)/e;
+    double exkick = fabs( xkick/e)*de;
+    double edxdz  = sqrt(ex*ex + exkick*exkick);
+
+    double q[2]={-1.,1.};
+    double bestChi2 = 9999.;
+    for (int i= 0; i< 2; ++i) {
+      
+      double trackx_atcalo = (iS)->x()/Gaudi::Units::cm + (iS)->tx()*(z-(iS)->z()/Gaudi::Units::cm); 
+      trackx_atcalo += q[i]*xkick; 
+
+      double deltaX = (x - trackx_atcalo)/edxdz;
+
+      double Chi2X = deltaX*deltaX;
+      if (fabs(Chi2X)<fabs(bestChi2)) bestChi2 = Chi2X;
+    }
+    return bestChi2; 
+  }
+  return -99999.;//Won't happen  
 }

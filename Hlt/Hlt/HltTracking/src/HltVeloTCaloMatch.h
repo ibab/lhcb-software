@@ -1,4 +1,4 @@
-// $Id: HltVeloTCaloMatch.h,v 1.1 2009-05-30 12:40:21 graven Exp $
+// $Id: HltVeloTCaloMatch.h,v 1.2 2010-05-27 22:05:17 gligorov Exp $
 #ifndef HLTVELOTCALOMATCH_H 
 #define HLTVELOTCALOMATCH_H 1
 
@@ -47,16 +47,12 @@ public:
 
 protected:
 
-  double match(const LHCb::Track& rzvelo);
+  double match(const LHCb::Track& rzvelo,int matchtype);
   
 protected:
   
-  bool m_doRematch2D;
-  double m_max2DChi2;
-  double m_max3DChi2;
-
-  ITrackBiFunctionTool* m_rematchTool;
-
+  double m_maxXChi2;
+  double m_maxYChi2;
 
 protected:
 
