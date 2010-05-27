@@ -5,11 +5,11 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+!========================== StrippingSelections v1r22 2010-05-27 ==============
+
 ! 2010-05-27 - Greig Cowan
  - Pre-scale of BiasedIncDiElectronLowMassDecision has been temporarily set back to 100% on
    request of Jibo.
-
-!========================== StrippingSelections v1r22 2010-05-26 ==============
 
 ! 2010-05-26 - Thomas Blake
  - Pre-scale of BiasedIncDiElectronLowMassDecision has been set to 50%
