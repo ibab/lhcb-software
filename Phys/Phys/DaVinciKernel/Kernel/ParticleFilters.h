@@ -1,4 +1,4 @@
-// $Id: ParticleFilters.h,v 1.2 2010-05-15 14:46:17 ibelyaev Exp $
+// $Id: ParticleFilters.h,v 1.3 2010-05-27 15:29:10 jpalac Exp $
 // ============================================================================
 #ifndef KERNEL_PARTICLEFILTERS_H 
 #define KERNEL_PARTICLEFILTERS_H 1
@@ -38,7 +38,8 @@ namespace DaVinci
    *  
    *  @code
    *
-   *   #include "boost/lambda.hpp"
+   *   #include <boost/lambda/lambda.hpp>
+   *   #include <boost/lambda/bind.hpp>
    *  
    *   ...
    *
@@ -99,7 +100,8 @@ namespace DaVinci
    *  
    *  @code
    *
-   *   #include "boost/lambda.hpp"
+   *   #include <boost/lambda/lambda.hpp>
+   *   #include <boost/lambda/bind.hpp>
    *  
    *   ...
    *
