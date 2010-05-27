@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.189 2010-05-27 07:36:46 odescham Exp $
+! $Id: release.notes,v 1.190 2010-05-27 09:09:03 cattanem Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Calo/CaloReco
 ! Responsible : Olivier Deschamps odescham@in2p3.fr 
@@ -6,15 +6,12 @@
 
 ! -----------------------------------------------------------------------------
 
-
+!========================== CaloReco v5r5p1  2010-05-27 ========================
 ! 2010-05-27 - Olivier Deschamps
 	- CaloCorrectionBase : reduce verbosity
 
-!========================== CaloReco v5r5p1  2010-05-26 ========================
-
 ! 2010-05-26 - Olivier Deschamps
 	- python/Configuration.py : set correctly the charged protop location in combinedProtoP algo
-
 
 !========================== CaloReco v5r5  2010-05-21 ========================
 ! 2010-05-21 - Olivier Deschamps
