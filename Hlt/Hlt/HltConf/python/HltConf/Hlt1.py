@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: Hlt1.py,v 1.41 2010-05-19 04:10:53 gligorov Exp $
+# $Id: Hlt1.py,v 1.42 2010-05-27 21:59:44 gligorov Exp $
 # =============================================================================
 ## @file
 #  Configuration of HLT1
@@ -14,7 +14,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.41 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.42 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -26,7 +26,6 @@ from Hlt1Lines.Hlt1L0Lines       import Hlt1L0LinesConf
 from Hlt1Lines.Hlt1VeloLines     import Hlt1VeloLinesConf
 from Hlt1Lines.Hlt1MuonLines     import Hlt1MuonLinesConf
 from Hlt1Lines.Hlt1HadronLines   import Hlt1HadronLinesConf
-from Hlt1Lines.Hlt1HadronLifetimeUnbiasedLines   import Hlt1HadronLifetimeUnbiasedLinesConf
 from Hlt1Lines.Hlt1HadronViaTLines   import Hlt1HadronViaTLinesConf
 from Hlt1Lines.Hlt1PhotonLines   import Hlt1PhotonLinesConf
 from Hlt1Lines.Hlt1ElectronLines import Hlt1ElectronLinesConf
@@ -43,7 +42,6 @@ class Hlt1Conf(LHCbConfigurableUser):
                             , Hlt1VeloLinesConf
                             , Hlt1MuonLinesConf
                             , Hlt1HadronLinesConf
-                            , Hlt1HadronLifetimeUnbiasedLinesConf 
                             , Hlt1HadronViaTLinesConf
                             , Hlt1PhotonLinesConf
                             , Hlt1ElectronLinesConf

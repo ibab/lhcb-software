@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.461 2010-05-27 15:11:02 graven Exp $ 
+! $Id: release.notes,v 1.462 2010-05-27 22:00:19 gligorov Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2010-05-27 - V. Gligorov
+ - Follow changes to lines in Hlt1/2
 
 !========================== HltConf v8r0 2010-05-27 ===================
 ! 2010-05-26 - Gerhard Raven
