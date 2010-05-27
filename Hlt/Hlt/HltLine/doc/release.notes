@@ -1,10 +1,11 @@
-! $Id: release.notes,v 1.102 2010-05-20 08:10:23 graven Exp $
+! $Id: release.notes,v 1.103 2010-05-27 15:16:21 graven Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltLine
 ! Responsible : Gerhard Raven, Vanya Belyaev
 ! Purpose     : Infrastructure for HLT 'lines'
 ! -----------------------------------------------------------------------------
 
+!========================== HltLine v4r3  2010-05-27 ===================
 ! 2010-05-19 - V. Gligorov
  - Let HltLine know about new filters to cut on impact parameter, vertex
    separation significances.
