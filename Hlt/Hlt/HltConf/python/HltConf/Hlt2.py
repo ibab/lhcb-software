@@ -6,7 +6,7 @@
 """
 # =============================================================================
 __author__  = "P. Koppenburg Patrick.Koppenburg@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.62 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.63 $"
 # =============================================================================
 import types
 from Gaudi.Configuration import *
@@ -21,6 +21,7 @@ from Hlt2Lines.Hlt2InclusivePhiLines      import Hlt2InclusivePhiLinesConf
 from Hlt2Lines.Hlt2TopologicalLines       import Hlt2TopologicalLinesConf
 from Hlt2Lines.Hlt2B2XGammaLines          import Hlt2B2XGammaLinesConf
 from Hlt2Lines.Hlt2B2HHLines              import Hlt2B2HHLinesConf
+from Hlt2Lines.Hlt2B2HHLTUnbiasedLines    import Hlt2B2HHLTUnbiasedLinesConf
 from Hlt2Lines.Hlt2B2LLXLines             import Hlt2B2LLXLinesConf
 from Hlt2Lines.Hlt2CharmLines             import Hlt2CharmLinesConf
 from Hlt2Lines.Hlt2DisplVerticesLines     import Hlt2DisplVerticesLinesConf
@@ -73,6 +74,7 @@ class Hlt2Conf(LHCbConfigurableUser):
                              , Hlt2B2PhiXLinesConf
                              , Hlt2B2XGammaLinesConf
                              , Hlt2B2HHLinesConf
+                             , Hlt2B2HHLTUnbiasedLinesConf
                              , Hlt2B2LLXLinesConf                         
                              , Hlt2DisplVerticesLinesConf
                              , Hlt2CommissioningLinesConf
