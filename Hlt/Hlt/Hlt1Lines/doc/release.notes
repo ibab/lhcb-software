@@ -1,9 +1,11 @@
-! $Id: release.notes,v 1.181 2010-05-23 19:31:10 gligorov Exp $
+! $Id: release.notes,v 1.182 2010-05-27 14:51:07 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
+
+!========================== Hlt1Lines v4r0 2010-05-27 ===================
 
 ! 2010-05-23 - V. Gligorov
  - Update hadron lines (lifetime biased and unbiased) with new default cuts
