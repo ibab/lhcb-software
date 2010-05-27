@@ -1,4 +1,4 @@
-!$Id: release.notes,v 1.94 2010-05-27 15:02:49 jpalac Exp $
+!$Id: release.notes,v 1.95 2010-05-27 15:03:23 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Tutorial/Analysis
 ! Responsible : P. Koppenburg
@@ -8,6 +8,8 @@
 !   See https://twiki.cern.ch/twiki/bin/view/LHCb/DaVinciTutorial
 !
 !-----------------------------------------------------------------------------
+
+!========================== Analysis v8r5 2010-05-27 =================
 
 ! 2010-05-27 - Juan Palacios
  - solutions/DaVinci2/TutorialAlgorithm
