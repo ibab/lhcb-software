@@ -4,6 +4,7 @@
 ! Purpose     : Apply some cuts on reconstructed vertices
 !-----------------------------------------------------------------------------
 
+!========================== HltDisplVertices v2r3 2010-05-27 ===================
 ! 2010-05-21 - Neal Gauvin
  - Do not take candidates that are upstream the upstream PV.
 
