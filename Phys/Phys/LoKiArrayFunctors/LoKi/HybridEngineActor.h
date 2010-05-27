@@ -1,4 +1,4 @@
-// $Id: HybridEngineActor.h,v 1.4 2009-11-17 12:41:41 ibelyaev Exp $
+// $Id: HybridEngineActor.h,v 1.5 2010-05-27 19:29:55 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_HYBRID_ENGINE_ACTOR_H 
 #define LOKI_HYBRID_ENGINE_ACTOR_H 1
@@ -57,13 +57,17 @@ namespace LoKi
       StatusCode process 
       ( const std::string&          name , 
         const LoKi::Types::ACuts&   cut  ) const ;
+      /// propagate the cut to the tool 
+      StatusCode process 
+      ( const std::string&          name , 
+        const LoKi::Types::PPCuts&  cut  ) const ;
+      // ======================================================================
+      // functions 
+      // ======================================================================
       /// propagate the function to the tool 
       StatusCode process 
       ( const std::string&          name , 
         const LoKi::Types::Func&    cut  ) const ;    
-      // ======================================================================
-      // functions 
-      // ======================================================================
       /// propagate the function to the tool 
       StatusCode process
       ( const std::string&          name , 
@@ -72,6 +76,10 @@ namespace LoKi
       StatusCode process
       ( const std::string&          name , 
         const LoKi::Types::AFunc&   cut  ) const ;
+      /// propagate the function to the tool 
+      StatusCode process
+      ( const std::string&          name , 
+        const LoKi::Types::PPFunc&  cut  ) const ;
       // ======================================================================
       // maps 
       // ======================================================================
@@ -83,6 +91,10 @@ namespace LoKi
       StatusCode process
       ( const std::string&          name , 
         const LoKi::Types::VMaps&   cut  ) const ;
+      /// propagate the map to the tool 
+      StatusCode process
+      ( const std::string&          name , 
+        const LoKi::Types::PPMaps&  cut  ) const ;
       // ======================================================================
       // pipes
       // ======================================================================
@@ -94,6 +106,10 @@ namespace LoKi
       StatusCode process
       ( const std::string&          name , 
         const LoKi::Types::VPipes&  cut  ) const ;
+      /// propagate the pipe to the tool 
+      StatusCode process
+      ( const std::string&          name , 
+        const LoKi::Types::PPPipes& cut  ) const ;
       // ======================================================================
       // fun-vals
       // ======================================================================
@@ -105,17 +121,25 @@ namespace LoKi
       StatusCode process
       ( const std::string&           name , 
         const LoKi::Types::VFunVals& cut  ) const ;
+      /// propagate the fun-val to the tool 
+      StatusCode process
+      ( const std::string&            name , 
+        const LoKi::Types::PPFunVals& cut  ) const ;
       // ======================================================================
       // cut-vals
       // ======================================================================
-      /// propagate the fun-val to the tool 
+      /// propagate the cut-val to the tool 
       StatusCode process
       ( const std::string&           name , 
         const LoKi::Types::CutVals&  cut  ) const ;
-      /// propagate the fun-val to the tool 
+      /// propagate the cut-val to the tool 
       StatusCode process
       ( const std::string&           name , 
         const LoKi::Types::VCutVals& cut  ) const ;
+      /// propagate the cut-val to the tool 
+      StatusCode process
+      ( const std::string&            name , 
+        const LoKi::Types::PPCutVals& cut  ) const ;
       // ======================================================================
       // elements:
       // ======================================================================
@@ -127,6 +151,10 @@ namespace LoKi
       StatusCode process
       ( const std::string&            name , 
         const LoKi::Types::VElements& cut  ) const ;
+      /// propagate the element to the tool 
+      StatusCode process
+      ( const std::string&             name , 
+        const LoKi::Types::PPElements& cut  ) const ;
       // ======================================================================
       // sources 
       // ======================================================================
@@ -138,6 +166,10 @@ namespace LoKi
       StatusCode process
       ( const std::string&            name , 
         const LoKi::Types::VSources&  cut  ) const ;
+      /// propagate the source to the tool 
+      StatusCode process
+      ( const std::string&            name , 
+        const LoKi::Types::PPSources& cut  ) const ;
       // ======================================================================
     protected:
       // ======================================================================

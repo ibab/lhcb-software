@@ -1,4 +1,4 @@
-// $Id: IHybridFactory.h,v 1.3 2009-11-17 12:41:41 ibelyaev Exp $
+// $Id: IHybridFactory.h,v 1.4 2010-05-27 19:29:55 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_IHYBRIDFACTORY_H 
 #define LOKI_IHYBRIDFACTORY_H 1
@@ -18,6 +18,7 @@
 // ============================================================================
 #include "LoKi/PhysTypes.h"
 #include "LoKi/ATypes.h"
+#include "LoKi/PPTypes.h"
 // ============================================================================
 namespace LoKi
 {
@@ -27,12 +28,12 @@ namespace LoKi
    *  @author Vanya BELYAEV ibelayev@physics.syr.edu
    *  @date   2007-06-10
    */
-  class IHybridFactory : public virtual IAlgTool
+  class GAUDI_API IHybridFactory : public virtual IAlgTool
   {
   public: 
     // ========================================================================
-    /// Return the unique interface ID
-    static const InterfaceID& interfaceID() ;
+    /// interface machinery 
+    DeclareInterfaceID(LoKi::IHybridFactory, 4, 0);
     // ========================================================================
   public:
     // ========================================================================
@@ -71,6 +72,17 @@ namespace LoKi
       LoKi::Types::ACut& cuts         , 
       const std::string& context = "" ) = 0 ;
     // ========================================================================
+    /** "Factory": get the the object form python code 
+     *  @param pycode the python pseudo-code of the function
+     *  @param cuts the placeholder for the result 
+     *  @param context the context lines to be executed 
+     *  @return StatusCode 
+     */
+    virtual StatusCode get
+    ( const std::string&  pycode       , 
+      LoKi::Types::PPCut& cuts         , 
+      const std::string&  context = "" ) = 0 ;
+    // ========================================================================
     // functions 
     // ========================================================================
     /** "Factory": get the the object form python code 
@@ -106,6 +118,17 @@ namespace LoKi
       LoKi::Types::AFun& func         ,
       const std::string& context = "" ) = 0 ;
     // ========================================================================
+    /** "Factory": get the the object form python code 
+     *  @param pycode the python pseudo-code of the function
+     *  @param func the placeholder for the result 
+     *  @param context the context lines to be executed 
+     *  @return StatusCode 
+     */
+    virtual StatusCode get
+    ( const std::string&  pycode       ,
+      LoKi::Types::PPFun& func         ,
+      const std::string&  context = "" ) = 0 ;
+    // ========================================================================
     // "maps"
     // ========================================================================
     /** "Factory": get the the object form python code 
@@ -129,6 +152,17 @@ namespace LoKi
     ( const std::string& pycode       ,
       LoKi::Types::VMap& func         ,
       const std::string& context = "" ) = 0 ;    
+    // ========================================================================
+    /** "Factory": get the the object form python code 
+     *  @param pycode the python pseudo-code of the function
+     *  @param func the placeholder for the result 
+     *  @param context the context lines to be executed 
+     *  @return StatusCode 
+     */
+    virtual StatusCode get
+    ( const std::string&  pycode       ,
+      LoKi::Types::PPMap& func         ,
+      const std::string&  context = "" ) = 0 ;    
     // ========================================================================
     // "pipes"
     // ========================================================================
@@ -154,6 +188,17 @@ namespace LoKi
       LoKi::Types::VPipe& func         ,
       const std::string&  context = "" ) = 0 ;    
     // ========================================================================
+    /** "Factory": get the the object form python code 
+     *  @param pycode the python pseudo-code of the function
+     *  @param func the placeholder for the result 
+     *  @param context the context lines to be executed 
+     *  @return StatusCode 
+     */
+    virtual StatusCode get
+    ( const std::string&   pycode       ,
+      LoKi::Types::PPPipe& func         ,
+      const std::string&   context = "" ) = 0 ;    
+    // ========================================================================
     // "fun-vals"
     // ========================================================================
     /** "Factory": get the the object form python code 
@@ -177,6 +222,17 @@ namespace LoKi
     ( const std::string&    pycode       ,
       LoKi::Types::VFunVal& func         ,
       const std::string&    context = "" ) = 0 ;    
+    // ========================================================================
+    /** "Factory": get the the object form python code 
+     *  @param pycode the python pseudo-code of the function
+     *  @param func the placeholder for the result 
+     *  @param context the context lines to be executed 
+     *  @return StatusCode 
+     */
+    virtual StatusCode get
+    ( const std::string&     pycode       ,
+      LoKi::Types::PPFunVal& func         ,
+      const std::string&     context = "" ) = 0 ;    
     // ========================================================================
     // "cut-vals"
     // ========================================================================
@@ -202,6 +258,17 @@ namespace LoKi
       LoKi::Types::VCutVal& func         ,
       const std::string&    context = "" ) = 0 ;    
     // ========================================================================
+    /** "Factory": get the the object form python code 
+     *  @param pycode the python pseudo-code of the function
+     *  @param func the placeholder for the result 
+     *  @param context the context lines to be executed 
+     *  @return StatusCode 
+     */
+    virtual StatusCode get
+    ( const std::string&     pycode       ,
+      LoKi::Types::PPCutVal& func         ,
+      const std::string&     context = "" ) = 0 ;    
+    // ========================================================================
     // "elements"
     // ========================================================================
     /** "Factory": get the the object form python code 
@@ -225,6 +292,17 @@ namespace LoKi
     ( const std::string&     pycode       ,
       LoKi::Types::VElement& func         ,
       const std::string&     context = "" ) = 0 ;    
+    // ========================================================================
+    /** "Factory": get the the object form python code 
+     *  @param pycode the python pseudo-code of the function
+     *  @param func the placeholder for the result 
+     *  @param context the context lines to be executed 
+     *  @return StatusCode 
+     */
+    virtual StatusCode get
+    ( const std::string&      pycode       ,
+      LoKi::Types::PPElement& func         ,
+      const std::string&      context = "" ) = 0 ;    
     // ========================================================================
     // "sources"
     // ========================================================================
@@ -250,10 +328,21 @@ namespace LoKi
       LoKi::Types::VSource&  func         ,
       const std::string&     context = "" ) = 0 ;    
     // ========================================================================
+    /** "Factory": get the the object form python code 
+     *  @param pycode the python pseudo-code of the function
+     *  @param func the placeholder for the result 
+     *  @param context the context lines to be executed 
+     *  @return StatusCode 
+     */
+    virtual StatusCode get
+    ( const std::string&      pycode       ,
+      LoKi::Types::PPSource&  func         ,
+      const std::string&      context = "" ) = 0 ;    
+    // ========================================================================
   protected:
     // ========================================================================
     /// virtual & protected desctructor 
-    virtual ~IHybridFactory( );                                   // Destructor
+    virtual ~IHybridFactory () ;                                  // Destructor
     // ========================================================================
   } ;
   // ==========================================================================

@@ -1,4 +1,4 @@
-// $Id: HybridEngine.h,v 1.4 2009-11-17 12:41:41 ibelyaev Exp $
+// $Id: HybridEngine.h,v 1.5 2010-05-27 19:29:55 ibelyaev Exp $
 // ===========================================================================
 #ifndef LOKI_HYBRID_ENGINE_H 
 #define LOKI_HYBRID_ENGINE_H 1
@@ -58,6 +58,10 @@ namespace LoKi
       StatusCode process 
       ( const std::string&          name , 
         const LoKi::Types::ACuts&   cut  ) const ;
+      /// add the cut 
+      StatusCode process 
+      ( const std::string&          name , 
+        const LoKi::Types::PPCuts&  cut  ) const ;
       // ======================================================================
       // functions 
       // ======================================================================      
@@ -73,6 +77,10 @@ namespace LoKi
       StatusCode process 
       ( const std::string&          name , 
         const LoKi::Types::AFunc&   cut  ) const ;
+      /// add the function 
+      StatusCode process 
+      ( const std::string&          name , 
+        const LoKi::Types::PPFunc&  cut  ) const ;
       // ======================================================================
       // maps 
       // ======================================================================      
@@ -84,6 +92,10 @@ namespace LoKi
       StatusCode process 
       ( const std::string&          name , 
         const LoKi::Types::VMaps&   cut  ) const ;
+      /// add the "map"
+      StatusCode process 
+      ( const std::string&          name , 
+        const LoKi::Types::PPMaps&  cut  ) const ;
       // ======================================================================      
       // pipes
       // ======================================================================      
@@ -95,50 +107,70 @@ namespace LoKi
       StatusCode process 
       ( const std::string&          name , 
         const LoKi::Types::VPipes&  cut  ) const ;
+      /// add the "pipe"
+      StatusCode process 
+      ( const std::string&          name , 
+        const LoKi::Types::PPPipes& cut  ) const ;
       // ======================================================================      
       // fun-vals 
       // ======================================================================      
       /// add the "fun-val"
       StatusCode process
-      ( const std::string&          name , 
-        const LoKi::Types::FunVals& cut  ) const ;
+      ( const std::string&           name , 
+        const LoKi::Types::FunVals&  cut  ) const ;
       /// add the "fun-val"
       StatusCode process 
-      ( const std::string&           name , 
-        const LoKi::Types::VFunVals& cut  ) const ;
+      ( const std::string&            name , 
+        const LoKi::Types::VFunVals&  cut  ) const ;
+      /// add the "fun-val"
+      StatusCode process 
+      ( const std::string&            name , 
+        const LoKi::Types::PPFunVals& cut  ) const ;
       // ======================================================================      
       // cut-vals 
       // ======================================================================      
       /// add the "fun-val"
       StatusCode process
-      ( const std::string&          name , 
-        const LoKi::Types::CutVals& cut  ) const ;
+      ( const std::string&           name , 
+        const LoKi::Types::CutVals&  cut  ) const ;
       /// add the "fun-val"
       StatusCode process 
-      ( const std::string&           name , 
-        const LoKi::Types::VCutVals& cut  ) const ;
+      ( const std::string&            name , 
+        const LoKi::Types::VCutVals&  cut  ) const ;
+      /// add the "fun-val"
+      StatusCode process 
+      ( const std::string&            name , 
+        const LoKi::Types::PPCutVals& cut  ) const ;
       // ======================================================================      
       // elements
       // ======================================================================      
       /// add the "element"
       StatusCode process
-      ( const std::string&           name , 
-        const LoKi::Types::Elements& cut  ) const ;
+      ( const std::string&            name , 
+        const LoKi::Types::Elements&  cut  ) const ;
       /// add the "fun-val"
       StatusCode process 
-      ( const std::string&            name , 
-        const LoKi::Types::VElements& cut  ) const ;
+      ( const std::string&             name , 
+        const LoKi::Types::VElements&  cut  ) const ;
+      /// add the "fun-val"
+      StatusCode process 
+      ( const std::string&             name , 
+        const LoKi::Types::PPElements& cut  ) const ;
       // ======================================================================      
       // sources
       // ======================================================================      
       /// add the "source"
       StatusCode process
-      ( const std::string&            name , 
-        const LoKi::Types::Sources&   cut  ) const ;
+      ( const std::string&             name , 
+        const LoKi::Types::Sources&    cut  ) const ;
       /// add the "source"
       StatusCode process 
-      ( const std::string&            name , 
-        const LoKi::Types::VSources&  cut  ) const ;
+      ( const std::string&             name , 
+        const LoKi::Types::VSources&   cut  ) const ;
+      /// add the "source"
+      StatusCode process 
+      ( const std::string&             name , 
+        const LoKi::Types::PPSources&  cut  ) const ;
       // ======================================================================      
     } ;  
     // ========================================================================

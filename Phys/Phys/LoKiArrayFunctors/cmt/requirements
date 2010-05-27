@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.25 2010-05-14 15:30:36 ibelyaev Exp $ 
+# $Id: requirements,v 1.26 2010-05-27 19:29:55 ibelyaev Exp $ 
 # ============================================================================
 # Created    : 2007-06-08
 # Maintainer : Vanya BELYAEV
@@ -10,7 +10,8 @@ version           v9r1
 branches          cmt doc src dict python LoKi 
 
 # =============== dependencies ===============================================
-use               LoKiPhys     v*    Phys 
+use               LoKiPhys           v* Phys 
+use               LoKiProtoParticles v* Phys 
 
 # ================ own includes ===============================================
 apply_pattern install_more_includes  more=LoKi

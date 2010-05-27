@@ -1,4 +1,4 @@
-// $Id: IHybridTool.h,v 1.4 2009-11-17 12:41:41 ibelyaev Exp $
+// $Id: IHybridTool.h,v 1.5 2010-05-27 19:29:55 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_IHYBRIDTOOL_H 
 #define LOKI_IHYBRIDTOOL_H 1
@@ -18,6 +18,7 @@
 // ============================================================================
 #include "LoKi/PhysTypes.h"
 #include "LoKi/ATypes.h"
+#include "LoKi/PPTypes.h"
 // ============================================================================
 namespace LoKi
 { 
@@ -37,12 +38,12 @@ namespace LoKi
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
    *  @date   2004-06-29
    */
-  class IHybridTool : public virtual IAlgTool 
+  class GAUDI_API IHybridTool : public virtual IAlgTool 
   {
   public:
     // ========================================================================
-    /// Return the unique interface ID
-    static const InterfaceID& interfaceID() ;
+    /// interface machinery 
+    DeclareInterfaceID(LoKi::IHybridTool, 4, 0);
     // ========================================================================
   public:
     // ========================================================================
@@ -52,8 +53,10 @@ namespace LoKi
     virtual void set ( const LoKi::Types::Cuts&    cut ) = 0 ;    
     /// set the C++ predicate for LHCb::Vertex 
     virtual void set ( const LoKi::Types::VCuts&   cut ) = 0 ;    
-    /// set the C++ predicate for arary of particles 
+    /// set the C++ predicate for array of particles 
     virtual void set ( const LoKi::Types::ACuts&   cut ) = 0 ;    
+    /// set the C++ predicate for LHCb::ProtoParticle
+    virtual void set ( const LoKi::Types::PPCuts&  cut ) = 0 ;    
     // ========================================================================
     // functions:
     // ========================================================================
@@ -61,8 +64,10 @@ namespace LoKi
     virtual void set ( const LoKi::Types::Func&    cut ) = 0 ;
     /// set the C++ function for LHCb::Vertex 
     virtual void set ( const LoKi::Types::VFunc&   cut ) = 0 ;
-    /// set the C++ function for arary of particles 
+    /// set the C++ function for array of particles 
     virtual void set ( const LoKi::Types::AFunc&   cut ) = 0 ;    
+    /// set the C++ function for LHCb::ProtoParticle
+    virtual void set ( const LoKi::Types::PPFunc&  cut ) = 0 ;    
     // ========================================================================
     // maps:
     // ========================================================================
@@ -70,6 +75,8 @@ namespace LoKi
     virtual void set ( const LoKi::Types::Maps&    cut ) = 0 ;
     /// set the C++ "map" for LHCb::Vertex 
     virtual void set ( const LoKi::Types::VMaps&   cut ) = 0 ;
+    /// set the C++ "map" for LHCb::ProtoParticle
+    virtual void set ( const LoKi::Types::PPMaps&  cut ) = 0 ;
     // ========================================================================
     // pipes: 
     // ========================================================================
@@ -77,34 +84,44 @@ namespace LoKi
     virtual void set ( const LoKi::Types::Pipes&   cut ) = 0 ;
     /// set the C++ "pipe" for LHCb::Vertex 
     virtual void set ( const LoKi::Types::VPipes&  cut ) = 0 ;
+    /// set the C++ "pipe" for LHCb::ProtoParticle
+    virtual void set ( const LoKi::Types::PPPipes& cut ) = 0 ;
     // ========================================================================
     // fun-vals:
     // ========================================================================
     /// set the C++ "fun-val" for LHCb::Particle  
-    virtual void set ( const LoKi::Types::FunVals&  cut ) = 0 ;
+    virtual void set ( const LoKi::Types::FunVals&   cut ) = 0 ;
     /// set the C++ "fun-val" for LHCb::Vertex 
-    virtual void set ( const LoKi::Types::VFunVals& cut ) = 0 ;
+    virtual void set ( const LoKi::Types::VFunVals&  cut ) = 0 ;
+    /// set the C++ "fun-val" for LHCb::ProtoParticle
+    virtual void set ( const LoKi::Types::PPFunVals& cut ) = 0 ;
     // ========================================================================
     // cut-vals:
     // ========================================================================
     /// set the C++ "cut-val" for LHCb::Particle  
-    virtual void set ( const LoKi::Types::CutVals&  cut ) = 0 ;
+    virtual void set ( const LoKi::Types::CutVals&   cut ) = 0 ;
     /// set the C++ "cut-val" for LHCb::Vertex 
-    virtual void set ( const LoKi::Types::VCutVals& cut ) = 0 ;
+    virtual void set ( const LoKi::Types::VCutVals&  cut ) = 0 ;
+    /// set the C++ "cut-val" for LHCb::ProtoParticles 
+    virtual void set ( const LoKi::Types::PPCutVals& cut ) = 0 ;
     // ========================================================================
     // elements:
     // ========================================================================
     /// set the C++ "element" for LHCb::Particle  
-    virtual void set ( const LoKi::Types::Elements&  cut ) = 0 ;
+    virtual void set ( const LoKi::Types::Elements&   cut ) = 0 ;
     /// set the C++ "element" for LHCb::Vertex 
-    virtual void set ( const LoKi::Types::VElements& cut ) = 0 ;
+    virtual void set ( const LoKi::Types::VElements&  cut ) = 0 ;
+    /// set the C++ "element" for LHCb::ProtoParticles
+    virtual void set ( const LoKi::Types::PPElements& cut ) = 0 ;
     // ========================================================================
     // sources:
     // ========================================================================
     /// set the C++ "source" for LHCb::Particle  
-    virtual void set ( const LoKi::Types::Sources&  cut ) = 0 ;
+    virtual void set ( const LoKi::Types::Sources&   cut ) = 0 ;
     /// set the C++ "source" for LHCb::Vertex 
-    virtual void set ( const LoKi::Types::VSources& cut ) = 0 ;
+    virtual void set ( const LoKi::Types::VSources&  cut ) = 0 ;
+    /// set the C++ "source" for LHCb::ProtoParticles
+    virtual void set ( const LoKi::Types::PPSources& cut ) = 0 ;
     // ========================================================================
   protected:
     // ========================================================================
