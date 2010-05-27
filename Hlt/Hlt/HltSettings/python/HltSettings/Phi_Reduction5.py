@@ -6,7 +6,7 @@
 
 __phiLines__ = [ 'Hlt2IncPhi',
                  'Hlt2IncPhiRobust',
-                 'Hlt2IncPhiTF',
+                 'Hlt2IncPhiTrackFit',
                  'Hlt2IncPhiSidebands' ]
 #
 # Low cuts (for charming and leptonic)
