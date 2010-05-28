@@ -1,4 +1,4 @@
-#$Id: requirements,v 1.232 2010-05-27 19:36:56 ibelyaev Exp $
+#$Id: requirements,v 1.233 2010-05-28 10:11:32 ibelyaev Exp $
 package PhysSys
 version v9r6
 
@@ -23,6 +23,7 @@ use  PhysDict                   v4r2     Phys    # Juan Palacios
 
 #===================================================================
 use LoKi                        v8r1     Phys    # Vanya Belyaev
+use LoKiUtils                   v1r0     Phys    # Vanya Belyaev
 use LoKiAlgo                    v9r1     Phys    # Vanya Belyaev
 use LoKiAlgoMC                  v9r0     Phys    # Vanya Belyaev
 use LoKiArrayFunctors           v9r1     Phys    # Vanya Belyaev
