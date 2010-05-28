@@ -1,4 +1,4 @@
-// $Id: RelationsClonerAlg.h,v 1.16 2010-05-26 09:56:56 jpalac Exp $
+// $Id: RelationsClonerAlg.h,v 1.17 2010-05-28 13:40:53 jpalac Exp $
 #ifndef MICRODST_RELATIONSCLONERALG_H 
 #define MICRODST_RELATIONSCLONERALG_H 1
 
@@ -62,7 +62,7 @@ namespace MicroDST
 
       if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
-      if ( inputTESLocation()=="" )  {
+      if ( inputTESLocations().empty() )  {
         verbose() << "Setting input TES location to default: " 
                   << LOCATION::Default << endmsg;
         setInputTESLocation(LOCATION::Default);
@@ -85,37 +85,50 @@ namespace MicroDST
       return sc;
 
     }
-    //===========================================================================
+    //=========================================================================
     StatusCode execute() 
     {
 
       if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
 
+      setFilterPassed(true);
+
+      std::vector<std::string>::const_iterator iBegin = this->inputTESLocations().begin();
+      std::vector<std::string>::const_iterator iEnd = this->inputTESLocations().end();
+      for (std::vector<std::string>::const_iterator inputLoc = iBegin;
+           inputLoc != iEnd;
+           ++inputLoc) {
+        copyTableFromLocation(*inputLoc);
+      }
+      return StatusCode::SUCCESS;
+    }
+    //=========================================================================
+    void copyTableFromLocation(const std::string& inputLocation) 
+    {
+      
       const std::string outputLocation = 
-        this->outputTESLocation( this->inputTESLocation() );
+        this->outputTESLocation( inputLocation );
 
       if ( msgLevel(MSG::VERBOSE) ) {
         verbose() << "Going to clone relations from " 
-                  << inputTESLocation()
+                  << inputLocation
                   << " into " << outputLocation << endmsg;
       }
-      
-      setFilterPassed(true);
 
       if (exist<TABLE>(outputLocation) )
       {
-        return this->Warning("Object "+ outputLocation + " already exists. Not cloning.", 
-                             StatusCode::SUCCESS, 0) ;
-      }
-          
+        this->Warning("Object "+ outputLocation + " already exists. Not cloning.", 
+                      StatusCode::SUCCESS, 0).ignore() ;
+        return;
+      }   
 
-      if (exist<TABLE>(inputTESLocation()) )
+      if (exist<TABLE>(inputLocation) )
       {
         if ( msgLevel(MSG::VERBOSE) ) {
           verbose() << "Retrieving relations table from " 
-                    << inputTESLocation() << endmsg;
+                    << inputLocation << endmsg;
         }
-        const TABLE* table = get<TABLE>(inputTESLocation());
+        const TABLE* table = get<TABLE>(inputLocation);
         if (table) {
           if ( msgLevel(MSG::VERBOSE) ) {
             verbose() << "found table with "<< table->relations().size() 
@@ -124,27 +137,22 @@ namespace MicroDST
           TABLE* cloneTable = m_tableCloner(table);
           if ( msgLevel(MSG::VERBOSE) ) {
             verbose() << "Going to store relations table from " 
-                      << inputTESLocation()
+                      << inputLocation
                       << " into " << outputLocation << endmsg;
             verbose() << "Number of relations in cloned table: "
                       << cloneTable->relations().size() << endmsg;
           }
           put( cloneTable, outputLocation );
-          return StatusCode::SUCCESS;
         }
-        return StatusCode::FAILURE;
       } else {
         if ( msgLevel(MSG::VERBOSE) ) {
-          verbose() << "Found no table at " << inputTESLocation() 
+          verbose() << "Found no table at " << inputLocation 
                     << ". storing empty table"<< endmsg;
         }
         
         TABLE* cloneTable = new TABLE();
         put( cloneTable, outputLocation );
-        return StatusCode::SUCCESS;
       }
-
-      return StatusCode::SUCCESS;
 
     }
     //===========================================================================
