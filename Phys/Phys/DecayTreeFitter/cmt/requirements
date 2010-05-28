@@ -3,7 +3,7 @@
 # Maintainer : Wouter Hulsbergen
 #============================================================================
 package           DecayTreeFitter
-version           v1r8
+version           v2r0
 
 #============================================================================
 # Structure, i.e. directories to process. 
@@ -14,25 +14,32 @@ include_path      none
 #============================================================================
 # Used packages.
 #============================================================================
-use   CLHEP       	v* 	LCG_Interfaces
+use   CLHEP       	v* 	LCG_Interfaces 
 use   LoKiCore          v*      Phys
 use   DaVinciKernel     v*      Phys 
-#use   TrackFitEvent     v*      Tr
+
 
 apply_pattern install_more_includes more=DecayTreeFitter
 
 #============================================================================
 # Linker library building rule
 #============================================================================
-library       DecayTreeFitter   ../src/*.cpp -import=AIDA -import=CLHEP
-apply_pattern linker_library    library=DecayTreeFitter
+library       DecayTreeFitterLib ../src/*.cpp -import=AIDA -import=CLHEP
+library       DecayTreeFitter    ../src/Components/*.cpp
 
 # =============== LCG Dictionaries ============================================
-apply_pattern reflex_dictionary                                       \
-              dictionary=DecayTreeFitter                                   \
+apply_pattern reflex_dictionary                                                 \
+              dictionary=DecayTreeFitter                                        \
               headerfiles=$(DECAYTREEFITTERROOT)/dict/DecayTreeFitterDict.h     \
               selectionfile=$(DECAYTREEFITTERROOT)/dict/DecayTreeFitterDict.xml \
               options="-U__MINGW32__"
+
+apply_pattern linker_library      library=DecayTreeFitterLib
+apply_pattern component_library   library=DecayTreeFitter
+
+macro_append  DecayTreeFitter_dependencies        " DecayTreeFitterLib " 
+macro_append  DecayTreeFitterDict_dependencies    " DecayTreeFitterLib " 
+
 # ================= end =======================================================
 
 # Hack for Gaudi v21r1 to link dictionary on windows
@@ -43,3 +50,5 @@ apply_pattern reflex_dictionary                                       \
 # Temporary hack _not_ to build on Windows
 #
 apply_pattern disable_package_on platform=WIN32
+
+

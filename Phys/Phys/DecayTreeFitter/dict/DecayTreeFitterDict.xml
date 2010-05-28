@@ -1,5 +1,14 @@
+
 <lcgdict>
   <class name = "DecayTreeFitter::Fitter" />
-  <class name = "LHCb::VtxFitParams" />
-  <class name = "LHCb::LorentzVectorErr" />
+  
+  <exclusion>
+    <class name = "DecayTreeFitter::Fitter">
+      <field name = "m_map"        />
+      <field name = "m_decaychain" />
+      <field name = "m_fitparams"  />
+      <field name = "m_fitparams"  />
+    </class>
+  </exclusion>
+  
 </lcgdict>

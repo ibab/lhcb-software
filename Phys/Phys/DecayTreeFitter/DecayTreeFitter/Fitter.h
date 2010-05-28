@@ -1,140 +1,176 @@
+// $Id: Fitter.h,v 1.6 2010-05-28 17:04:42 ibelyaev Exp $
+// ============================================================================
 #ifndef DECAYTREEFITTER_FITTER_HH
 #define DECAYTREEFITTER_FITTER_HH
-
-#include "CLHEP/Matrix/SymMatrix.h"
-#include "CLHEP/Matrix/Vector.h"
+// ============================================================================
+// Include files 
+// ============================================================================
+// STD & STL 
+// ============================================================================
 #include <vector>
-#include "DecayTreeFitter/VtxErrCode.h"
-#include "DecayTreeFitter/VtxFitStatus.h"
-#include "DecayTreeFitter/Tree.h"
-
-class VtxDoubleErr ;
-class VtxLorentzVectorErr ;
-class VtxFitParams ;
-
-namespace LHCb
-{
-  class Particle ;
-  class VertexBase ;
-  class VtxDoubleErr ;
-  class VtxFitParams ;
-}
-
+// ============================================================================
+// LHCbMath 
+// ============================================================================
+#include "LHCbMath/ValueWithError.h"
+#include "LHCbMath/ParticleParams.h"
+// ============================================================================
+// DaVinciTypes 
+// ============================================================================
+#include "Kernel/DecayTree.h"
+// ============================================================================
 namespace DecayTreeFitter
 {
-
   class DecayChain ;
   class FitParams ;
-  class Upsilon ;
   class ParticleBase ;
-  
-  extern int vtxverbose ;
-
-  typedef LHCb::VtxFitStatus FitStatus ;
-  typedef LHCb::VtxDoubleErr VtxDoubleErr ;
-  typedef LHCb::VtxFitParams VtxFitParams ;
-
-  class Fitter
+}
+// ============================================================================
+namespace DecayTreeFitter 
+{
+  // ==========================================================================
+  /** @class Fitter DecayTreeFitter/Fitter.h  
+   *  ``Decay-Tree-Fitter''`
+   *  @author Wouter Hulsbergen  Wouter.Hulsbergen@nikhef.nl
+   */
+  class GAUDI_API Fitter
   {
   public:
-    Fitter() : m_decaychain(0), m_fitparams(0) {} 
-    Fitter(const LHCb::Particle& bc, bool forceFitAll = true) ;
-    Fitter(const LHCb::Particle& bc, const LHCb::VertexBase& pv, bool forceFitAll = true) ;
-    ~Fitter() ;
-
-    // Add or remove a mass constraint
-    void setMassConstraint( const LHCb::Particle& cand, bool add=true ) ;
-    
-    // Add or remove a mass constraintfor a certain ParticleID
-    void setMassConstraint( const LHCb::ParticleID& pid, bool add=true ) ;
-
-    // Fit the decay tree
-    void fit(int maxNumberOfIterations=10, double deltaChisquareConverged=0.01) ;
-    
-    // Fit just one step
+    // ========================================================================
+    enum FitStatus {
+      UnFitted     = -1 , 
+      Success      =  0 , 
+      Failed            ,
+      BadInput          , 
+      NonConverged  
+    } ;
+    // ========================================================================
+  public:
+    // ========================================================================
+    /// constructor form the particle (decay head) 
+    Fitter ( const LHCb::Particle&   bc , 
+             bool forceFitAll = true ) ;
+    /// constructor form the particle (decay head) and primary vertex
+    Fitter ( const LHCb::Particle&   bc , 
+             const LHCb::VertexBase& pv , 
+             bool forceFitAll = true ) ;
+    /// destructor
+    ~Fitter() ;                                                   // destructor
+    // ========================================================================
+  public:
+    // ========================================================================
+    /// Add or remove a mass constraint
+    void setMassConstraint ( const LHCb::Particle&   cand , bool add = true ) ;
+    /// Add or remove a mass constraintfor a certain ParticleID
+    void setMassConstraint ( const LHCb::ParticleID& pid  , bool add = true ) ;
+    /// Fit the decay tree
+    void fit ( int     maxNumberOfIterations  = 10   , 
+               double deltaChisquareConverged = 0.01 ) ;
+    /// Fit just one step
     void fitOneStep() ;
-
-    // Print the result of the fit
-    void print() const ;
-
-    // Print the result of the fit
-    void fillStream() const { print() ; }
-
-    // The top level particle that is fitted
+    /// Print the result of the fit
+    std::string   print() const ;
+    /// Print the result of the fit
+    std::ostream& fillStream ( std::ostream& s ) const ;
+    /// The top level particle that is fitted
     const LHCb::Particle* particle() const { return m_particle ; }
-
-    // Currently the only accessor to the actual fitted data
-    VtxFitParams fitParams(const LHCb::Particle& cand) const ;
-
-    // Currently the only accessor to the actual fitted data
-    VtxFitParams fitParams() const ;
-
-    // Name of a particle in the decay tree
-    std::string name(const LHCb::Particle& cand) const ;
-    
-    // Total chisquare
-    double chiSquare() const { return m_chiSquare ; }
-
-    // Total number of DOFs
-    int nDof()      const ; 
-
-    // Status of vertex fit
-    int status() const { return m_status ; }
-
-    // Number of iterations used by vertex fit
-    int nIter() const { return m_niter ; }
-
-    // Compute the decay length sum of two particles in the decay tree (useful for e.g. B->DD)
-    VtxDoubleErr decayLengthSum(const LHCb::Particle&, const LHCb::Particle&) const ;
-
-    static void setVerbose(int i) { vtxverbose = i ; }
-    
-    // methods to retrieve the result in terms of LHCb::Particles
-    // (note: mother vertex is not updated, and decay length cannot be
-    // stored anywhere. Use fitParams instead)
+    /** Currently the only accessor to the actual fitted data
+     *  @param p (INPUT) the particle
+     *  @retrn the fitted parameters ( 0 for invaild parameters/fits)
+     */
+    const Gaudi::Math::ParticleParams* 
+    fitParams ( const LHCb::Particle* p = 0 ) const ;
+    /// Total chisquare
+    double     chiSquare () const { return m_chiSquare ; }
+    /// Total number of DOFs
+    int        nDof      () const ;
+    /// Status of fit
+    FitStatus  status    () const { return m_status ; }
+    /// Number of iterations used by vertex fit
+    int        nIter     () const { return m_niter  ; }
+    /**  Compute the decay length sum of two particles in 
+     *   the decay tree (useful for e.g. B->DD)
+     */
+    Gaudi::Math::ValueWithError 
+    decayLengthSum ( const LHCb::Particle&, const LHCb::Particle& ) const ;
+    /** return an updated decay tree. 
+     *  this is not a final solution. will
+     *  try to move more info to Particle
+     */
+    LHCb::DecayTree getFittedTree() const ;
+    /** methods to retrieve the result in terms of LHCb::Particles
+     * (note: mother vertex is not updated, and decay length cannot be
+     * stored anywhere. Use fitParams instead
+     */
     LHCb::Particle getFitted() const ;
-    LHCb::Particle getFitted(const LHCb::Particle& cand) const ;
-
-    // reurn an updated decay tree. this is not a final solution. will
-    // try to move more info to Particle
-    Tree getFittedTree() const ;
-    
-    // update a particlular candidate in the tree
-    bool updateCand(LHCb::Particle& cand) const ;
-    bool updateTree(LHCb::Particle& cand) const ;
-    
+    /** methods to retrieve the result in terms of LHCb::Particles
+     * (note: mother vertex is not updated, and decay length cannot be
+     * stored anywhere. Use fitParams instead
+     */
+    LHCb::Particle getFitted(const LHCb::Particle& cand) const ;    
+    /// update a particlular candidate in the tree
+    bool updateCand ( LHCb::Particle& cand ) const ;
+    /// update a particlular candidate in the tree
+    bool updateTree ( LHCb::Particle& cand ) const ;
+    /// error code 
+    int  errCode  () { return m_errCode ; }
+    /// ? 
+    static void setVerbose(int i) ;    
+    // ========================================================================
   protected:
-    
+    // ========================================================================
     // expert interface. not yet for real consumption
-    VtxFitParams fitParams(const ParticleBase& pb) const ;
-    VtxDoubleErr decayLengthSum(const ParticleBase&,const ParticleBase&) const ;
-
-    DecayChain* decaychain() { return m_decaychain ; }
-    FitParams* fitparams() { return m_fitparams ; }
-    const DecayChain* decaychain() const { return m_decaychain ; }
-    const FitParams* fitparams() const { return m_fitparams ; }
-
+    Gaudi::Math::ParticleParams 
+    fitParams(const ParticleBase& pb) const ;
+    /// Name of a particle in the decay tree
+    std::string name ( const LHCb::Particle& cand) const ;
+    // ========================================================================    
+    Gaudi::Math::ValueWithError 
+    decayLengthSum(const ParticleBase&,const ParticleBase&) const ;
+    // ========================================================================    
+    DecayChain*       decaychain ()       { return m_decaychain  ; }
+    FitParams*        fitparams  ()       { return m_fitparams   ; }
+    const DecayChain* decaychain () const { return m_decaychain  ; }
+    const FitParams*  fitparams  () const { return m_fitparams   ; }
+    // ========================================================================
     double globalChiSquare() const ;
-    const ErrCode& errCode() { return m_errCode ; }
-    
+    // ========================================================================
     // must be moved to derived class or so ...
-    double add(const LHCb::Particle& cand) ; 
-    double remove(const LHCb::Particle& cand) ;
-    void updateIndex() ;
-
-    //LHCb::Particle getFittedTree() const ;
-    LHCb::Particle* fittedCand(const LHCb::Particle& cand, LHCb::Particle* headoftree) const ;
-    void updateCand(const ParticleBase& pb, LHCb::Particle& cand) const ;
-    
+    double add     ( const LHCb::Particle& cand ) ; 
+    double remove  ( const LHCb::Particle& cand ) ;
+    void   updateIndex() ;
+    // ========================================================================
+    LHCb::Particle* fittedCand ( const LHCb::Particle& cand       , 
+                                 LHCb::Particle*       headoftree ) const ;
+    void            updateCand ( const ParticleBase&   pb         , 
+                                 LHCb::Particle&       cand       ) const ;
+    // ========================================================================
   private:
-    const LHCb::Particle* m_particle ;
-    DecayChain* m_decaychain ;
-    FitParams* m_fitparams ;
-    int m_status ;
-    double m_chiSquare ;
-    int m_niter ;
-    ErrCode m_errCode ;
+    // ======================================================================== 
+    /// default constructor is disabled 
+    Fitter () ;                             //  default constructor is disabled 
+    /// copy constructor is disabled 
+    Fitter ( const Fitter& ) ;              //     copy constructor is disabled 
+    /// assignement operator is disabled 
+    Fitter& operator=( const Fitter& ) ;    // assignement operator is disabled
+    // ========================================================================
+  private:
+    // ========================================================================
+    const LHCb::Particle* m_particle   ;
+    DecayChain*           m_decaychain ;
+    FitParams*            m_fitparams  ;
+    FitStatus             m_status     ;
+    double                m_chiSquare  ;
+    int                   m_niter      ;
+    int                   m_errCode    ;
+    // ========================================================================
+    typedef std::map<const LHCb::Particle*, Gaudi::Math::ParticleParams> Map ;
+    mutable Map m_map ;
+    // ========================================================================
   } ;
+  // ==========================================================================
 }
-
+// ============================================================================
+// The END 
+// ============================================================================
 #endif
+// ============================================================================

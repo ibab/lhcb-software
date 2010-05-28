@@ -1,4 +1,4 @@
-// $Id: DecayTreeFitter.cpp,v 1.1 2010-05-26 15:46:32 ibelyaev Exp $
+// $Id: DecayTreeFitter.cpp,v 1.2 2010-05-28 17:04:43 ibelyaev Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -10,11 +10,14 @@
 // ============================================================================
 #include "GaudiAlg/GaudiTool.h"
 // ============================================================================
+// TrackInterfaces 
+// ============================================================================
+#include "TrackInterfaces/ITrackExtrapolator.h"
+// ============================================================================
 // DaVinciInterfaces 
 // ============================================================================
 #include "Kernel/IDecayTreeFit.h"
 #include "Kernel/IParticleReFitter.h"
-#include "Kernel/IParticleTransporter.h"
 // ============================================================================
 // LHCbMath
 // ============================================================================
@@ -24,7 +27,6 @@
 // ============================================================================
 #include "DecayTreeFitter/Fitter.h"
 #include "DecayTreeFitter/VtxFitStatus.h"
-#include "DecayTreeFitter/VtxFitParams.h"
 // ============================================================================
 class DecayTreeFit
   : public extends2<GaudiTool,IDecayTreeFit,IParticleReFitter>
@@ -110,7 +112,27 @@ protected:  // constuctors/desctructor
     const std::string& name   , 
     const IInterface*  parent ) 
     : base_class ( type , name , parent )
-  {}
+  //
+    , m_extrapolator ( 0 ) 
+    , m_fitter           ()
+  //
+    , m_global_pids      () 
+    , m_locals_pids      ()
+  //
+    , m_extrapolatorName ()
+    , m_constraints      () 
+  {
+    //
+    declareProperty 
+      ( "TrackExtrapolator"                        , 
+        m_extrapolatorName                         ,
+        "Track Extrapolator to be used"            ) ;
+    //
+    declareProperty
+      ( "MassConstraints"                          , 
+        m_constraints                              , 
+        "List of particles to be mass-constrained" ) ;
+  }
   /// virtual and protected destructor 
   virtual ~DecayTreeFit () {} ;
   // ==========================================================================
@@ -125,27 +147,36 @@ private:
   // ==========================================================================
 protected:
   // ==========================================================================
-  /// get particle transporter 
-  inline IParticleTransporter* transporter() const 
+  /// get track extrapolator 
+  inline ITrackExtrapolator* extrapolator() const 
   {
-    if ( 0 != m_transporter ) { return m_transporter ; }
-    m_transporter = tool<IParticleTransporter> ( "ParticleTransporter" , this ) ;
-    return m_transporter ;
+    if ( 0 != m_extrapolator        ) { return m_extrapolator ; } // RETURN 
+    if ( m_extrapolatorName.empty() ) { return              0 ; } // REUTRN
+    m_extrapolator = tool<ITrackExtrapolator> ( m_extrapolatorName , this ) ;
+    return m_extrapolator ;
   }
   // ==========================================================================
 private:
   // ==========================================================================
-  /// the particle transporter 
-  mutable IParticleTransporter* m_transporter ;    // the particle transporter 
+  /// track extrapolator 
+  mutable ITrackExtrapolator* m_extrapolator ;        // the track extrapolator 
   // ==========================================================================
   // the fitter 
   // ==========================================================================
   mutable std::auto_ptr<DecayTreeFitter::Fitter>  m_fitter ; // the fitter 
   // ==========================================================================
-  /// the actual type for map : particle -> fit parameters 
-  typedef std::map<const LHCb::Particle*,IDecayTreeFit::Fitted>  Map ;
-  /// the map : particle -> fit parameters 
-  mutable Map m_map;  // the map : particle -> fit parameters 
+  typedef std::vector<LHCb::ParticleID>  PIDs ;
+  /// list of mass-constrains (global)
+  PIDs         m_global_pids ;              // list of mass-constrains (global)
+  /// list of mass-constrains (local) 
+  mutable PIDs m_locals_pids ;              //  list of mass-constrains (local) 
+  // ==========================================================================
+  // properties 
+  // ==========================================================================
+  /// the name of extrapolator 
+  std::string               m_extrapolatorName ; //    the name of extrapolator 
+  /// the list of mass-constraints
+  std::vector<std::string>  m_constraints ;     // the list of mass-constraints
   // ==========================================================================
 };  
 // ============================================================================
@@ -158,7 +189,6 @@ StatusCode DecayTreeFit::initialize ()                   // initialize the tool
   StatusCode sc = GaudiTool::initialize () ;             // initialize the base 
   if ( sc.isFailure() ) { return sc ; }                  // RETURN 
   //
-  transporter() ;
   //
   return StatusCode::SUCCESS ;                           // RETURN
 }
@@ -168,9 +198,9 @@ StatusCode DecayTreeFit::initialize ()                   // initialize the tool
 StatusCode DecayTreeFit::finalize ()                   // finalize the tool 
 {
   // reset the status 
-  m_transporter = 0 ;
-  m_fitter.reset()  ;
-  m_map.clear()     ;
+  m_fitter.reset()    ;
+  //
+  m_extrapolator  = 0 ;
   // finalize the base 
   return GaudiTool::finalize () ;                      // RETURN 
 }
@@ -191,22 +221,31 @@ StatusCode DecayTreeFit::fit
   { return Error ( "fit(): invalid argument" , 101 ) ; }      // RETURN
   // reset fitter 
   m_fitter.reset () ;
-  m_map.clear()     ;
   // initialize fitter 
   m_fitter.reset 
     ( 0 == origin ? 
       new DecayTreeFitter::Fitter ( *decay           ) : 
       new DecayTreeFitter::Fitter ( *decay , *origin ) ) ;
   //
+  // apply "global" constraints (if needed)
+  for ( PIDs::const_iterator ipid = m_global_pids.begin() ; m_global_pids.end() != ipid ; ++ipid )
+  { m_fitter->setMassConstraint ( *ipid ) ; }
+  // apply "global" constraints (if needed)
+  for ( PIDs::const_iterator ipid = m_locals_pids.begin()  ; m_locals_pids.end() != ipid ; ++ipid )
+  { m_fitter->setMassConstraint ( *ipid ) ; }
+  //
   // fit!
   m_fitter->fit() ;
+  //
+  { // clear local container of local constraints
+    m_locals_pids.clear () ;
+  }
   // get the status 
-  const int status =  m_fitter->status() ;
-  if ( DecayTreeFitter::FitStatus::Success != status ) 
+  if ( DecayTreeFitter::Fitter::Success != m_fitter->status() ) 
   { 
     m_fitter.reset () ;
-    m_map.clear()     ;
-    return Error ("Error fomr fitter, status" , 110 +  status ) ; 
+    return Error ( "Error from fitter, status" , 
+                   110 +  m_fitter->status() ) ; 
   }
   //
   return StatusCode::SUCCESS ;
@@ -227,40 +266,22 @@ DecayTreeFit::fitted ( const LHCb::Particle* p ) const
     Warning("fitted: fit if not perforemd yet, return NULL") ;
     return 0 ;                                                    // RETURN 
   }
-  const int status = m_fitter->status() ;
-  if ( DecayTreeFitter::FitStatus::Success != status ) 
+  if ( DecayTreeFitter::Fitter::Success != m_fitter->status() ) 
   {
-    Warning("fitted: fit is not perforemd yet, return NULL", 120 + status ) ;
-    m_map.clear()     ;
+    Warning ( "fitted: fit is not perforemd yet, return NULL" , 
+              120 + m_fitter->status() ) ;
     m_fitter.reset() ;
     return 0 ;                                                    // RETURN 
   }
   //
-  // already in the map ?
-  Map::const_iterator ifind = m_map.find ( p ) ;
-  if ( m_map.end() != ifind ) { return &(ifind->second) ; }       // REUTRN
+  const Fitted* fitted = m_fitter->fitParams ( p ) ;
+  if ( 0 == fitted ) 
+  {
+    Warning ("fitted:  Fitted* points to NULL").ignore() ;
+    return fitted ;
+  }
   //
-  // if ( not_from_decay ) 
-  // {
-  //  Warning ("Particle is not from the decay tree, return NULL") ;
-  //  return 0 ;
-  // }
-  //
-  LHCb::VtxFitParams pars = 
-    0 == p ?
-    m_fitter->fitParams(    ) : 
-    m_fitter->fitParams( *p ) ;
-  
-  m_map[p] = Fitted 
-    ( pars.position      () ,
-      pars.p4            () , 
-      pars.decayLength   () ,
-      pars.cov8          () ) ;
-  
-  if ( 0 == p ) 
-  { m_map[ m_fitter->particle() ] = m_map[ p ] ; }
-  //
-  return &m_map[p] ; 
+  return fitted ; 
 }
 // ============================================================================
 /*  get the fit results in form of self-consistent decay tree 
@@ -272,14 +293,13 @@ LHCb::DecayTree DecayTreeFit::fittedTree () const
 {
   if ( 0 == m_fitter.get() ) 
   {
-    Warning("fitted: fit if not perforemd yet, return empty tree ") ;
+    Warning("fitted: fit is not performed yet, return empty tree ") ;
     return LHCb::DecayTree() ;                                      // RETURN 
   }
-  const int status = m_fitter->status() ;
-  if ( DecayTreeFitter::FitStatus::Success != status ) 
+  if ( DecayTreeFitter::Fitter::Success != m_fitter->status() ) 
   {
-    Warning("fitted: fit is not performed yet, return empty tree" , 120 + status ) ;
-    m_map.clear()     ;
+    Warning ( "fitted: fit is not performed yet, return empty tree" , 
+              120 + m_fitter->status() ) ;
     m_fitter.reset() ; 
     return LHCb::DecayTree() ;                                      // RETURN 
   }
@@ -293,8 +313,17 @@ LHCb::DecayTree DecayTreeFit::fittedTree () const
  *  @see IDecayTreeFit::addConstraint
  */
 // ============================================================================
-void DecayTreeFit::addConstraint ( const LHCb::ParticleID& /* pid */ ) 
-{ Warning ( "addConstrainst:not implemented yet" ) ; }
+void DecayTreeFit::addConstraint ( const LHCb::ParticleID& pid ) 
+{
+  //
+  if ( parent() == toolSvc() ) 
+  {
+    Error ("Mass Constraint can't be added to PUBLIC tool! ignore!").ignore() ;
+    return ;
+  }
+  //
+  m_locals_pids.push_back ( LHCb::ParticleID ( pid.abspid() ) ) ;
+}
 // ============================================================================
 /*  The basic method for "refit" of the particle
  *
@@ -318,8 +347,23 @@ void DecayTreeFit::addConstraint ( const LHCb::ParticleID& /* pid */ )
  *  @return status code 
  */  
 // ============================================================================
-StatusCode DecayTreeFit::reFit ( LHCb::Particle& /* particle */ ) const 
-{ return Error ("reFit:not implemented yet") ; }
+StatusCode DecayTreeFit::reFit ( LHCb::Particle& particle ) const 
+{
+  StatusCode sc = fit ( &particle ) ;
+  if ( sc.isFailure() )
+  { return Error ("reFit: error form fit", sc ) ; }
+  //
+  if ( 0 == m_fitter.get() ) { return Warning("reFit: invalid fitter") ; }
+  //
+  if ( DecayTreeFitter::Fitter::Success != m_fitter->status() ) 
+  { return Error ( "reFit: invalid fit status " , 120 + m_fitter->status() ) ; }
+  //
+  // the actual refit 
+  if ( !m_fitter->updateCand ( particle ) ) 
+  { return Error ( "reFit: unable to update the candidate"     ) ; }
+  //
+  return StatusCode::SUCCESS ;
+}
 // ============================================================================
 
 

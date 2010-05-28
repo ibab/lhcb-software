@@ -8,6 +8,23 @@
 ! http://www.slac.stanford.edu/spires/find/hep/www?eprint=physics/0503191
 !-----------------------------------------------------------------------------
 
+! 2010-05-28 - Vanya Belyaev
+
+ - clean DecayTree directory & fitter itself.
+
+   now only one class is vizible 
+
+ - Fitter
+
+    make use of Gaudi::Math:: classes 
+
+    remove Vtx*Err classes 
+
+ - cmt/requirements 
+
+    version increment to v2r0 
+
+
 ! 2010-05-26 - Vanya Belyaev
 
  - src/Components/DecayTreeFitter.cpp   NOT TESTED YET !!!

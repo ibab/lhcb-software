@@ -34,6 +34,7 @@ namespace DecayTreeFitter
     void reset() { _flag = success ; }
     bool failure() const { return _flag!=success ; }
     unsigned int flag() const { return _flag ; }
+    
   private:
     unsigned int _flag ;
   } ;

@@ -1,4 +1,4 @@
-#include "DecayTreeFitter/VtxErrCode.h"
+#include "VtxErrCode.h"
 
 
 namespace DecayTreeFitter
