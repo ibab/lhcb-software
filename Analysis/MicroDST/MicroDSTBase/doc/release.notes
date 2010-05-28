@@ -1,10 +1,17 @@
-!$Id: release.notes,v 1.46 2010-05-26 09:57:20 jpalac Exp $
+!$Id: release.notes,v 1.47 2010-05-28 13:41:16 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : MicroDST/MicroDSTBase
 ! Responsible : Juan Palacios
 ! Purpose     : Base classes for MicroDST algorithms and tools, plus helper
 !               functions and functors.
 !-----------------------------------------------------------------------------
+
+! 2010-05-28 - Juan Palacios
+ - MicroDST/RelationsClonerAlg.h
+ - MicroDST/RelationsFromClonerAlg.h
+  . IMPORTANT BUG FIX: These algorithms were ignoring multiple input locations.
+ - cmt/requirements
+  . Increase to v1r7p3
 
 !====================== MicroDSTBase v1r7p2 2010-05-26 ======================
 
