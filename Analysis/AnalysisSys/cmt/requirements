@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.193 2010-05-28 17:12:51 jpalac Exp $
+# $Id: requirements,v 1.194 2010-05-28 17:33:09 jpalac Exp $
 package AnalysisSys
 version v4r5
 
@@ -9,7 +9,7 @@ branches doc cmt
 
 use  AnalysisConf               v2r0     Phys   # Patrick Koppenburg, Juan Palacios
 use  DSTWriters                 v1r6p1   Phys   # Juan Palacios
-use  DSTWriterTests             v1r1     Phys   # Juan Palacios
+use  DSTWriterTests             v1r2     Phys   # Juan Palacios
 #===================================================================
 #use  AnalysisDict               v1r0     Phys   # TEMPORARY!
 #===================================================================
