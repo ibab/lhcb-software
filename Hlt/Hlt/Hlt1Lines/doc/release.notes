@@ -1,15 +1,14 @@
-! $Id: release.notes,v 1.183 2010-05-27 21:49:52 gligorov Exp $
+! $Id: release.notes,v 1.184 2010-05-28 06:43:01 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+!========================== Hlt1Lines v4r0 2010-05-27 ===================
 ! 2010-05-27 - V. Gligorov
  - Merge lifetime biased and unbiased lines to share the reconstruction, redo
    the logic of the unbiased lines a bit.
-
-!========================== Hlt1Lines v4r0 2010-05-27 ===================
 
 ! 2010-05-23 - V. Gligorov
  - Update hadron lines (lifetime biased and unbiased) with new default cuts

@@ -8,10 +8,10 @@
 !
 !-----------------------------------------------------------------------------
 
+!========================== Hlt2Lines v4r0 2010-05-27 ===================
 ! 2010-05-27 - V. Gligorov
  - Add/tighten cuts in Hlt2 lifetime unbiased B2hh lines.
 
-!========================== Hlt2Lines v4r0 2010-05-27 ===================
 ! 2010-05-26 - Antonio Perez-Calero
  - corrected bug in Hlt2InclusiveMuonLines.py
 
