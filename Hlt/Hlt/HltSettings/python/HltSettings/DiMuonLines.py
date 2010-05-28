@@ -57,6 +57,7 @@ class DiMuonLines :
         d.update( { Hlt2InclusiveDiMuonLinesConf : { 
             ## Cut values
             'UnbiasedDiMuonPt'         : 0.0      # in MeV
+            ,'UnbiasedDiMuonMuPt'      : 0.0      # in MeV
             ,'UnbiasedJPsiPt'          : 0.0      # MeV
             ,'UnbiasedJPsiMassWindow'  : 120      # MeV
             ,'UnbiasedPsi2SPt'         : 0.0      # MeV
