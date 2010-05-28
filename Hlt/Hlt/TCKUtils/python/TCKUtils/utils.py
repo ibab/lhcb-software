@@ -562,7 +562,7 @@ def getHlt1Lines( id , cas = ConfigAccessSvc() ) :
     return eval(_getProperty(id,'Hlt1','Members',cas))
 def getHlt2Lines( id , cas = ConfigAccessSvc() ) :
     # should be a list... so we try to 'eval' it
-    return eval(_getProperty(id,'Hlt2Lines','Members',cas))
+    return eval(_getProperty(id,'Hlt2','Members',cas))
 def getHlt1Decisions( id , cas = ConfigAccessSvc() ) :
     id = tck2id(id,cas)
     table = execInSandbox( _xget, [ id ], cas )[id]
@@ -603,6 +603,8 @@ def listRoutingBits( id, cas = ConfigAccessSvc() ) :
     print getRoutingBits(id,cas)
 def listHlt1Lines( id, cas = ConfigAccessSvc() ) :
     print getHlt1Lines(id,cas)
+def listHlt2Lines( id, cas = ConfigAccessSvc() ) :
+    print getHlt2Lines(id,cas)
 def listHlt1Decisions( id, cas = ConfigAccessSvc() ) :
     print getHlt1Decisions(id,cas)
 
@@ -610,17 +612,4 @@ def listHlt1Decisions( id, cas = ConfigAccessSvc() ) :
 ######  do the actual work...
 
 if __name__ == '__main__' :
-
-#   cas = ConfigDBAccessSvc( ReadOnly = True , OutputLevel=DEBUG )
     listConfigurations()
-#    copy()
-#   createTCKEntries( { 1 : 'ecaf5768575d96fed8b54ed02dbf1496' , 
-#                       2 : '9ffa18d95f9bf05421a5e6276adc8c67' } )
-
-#    id =  'ecaf5768575d96fed8b54ed02dbf1496' 
-#    listAlgorithms( id )
-#    listProperties( id, 'Hlt1MuonDiMuon2L0WithIPDecision' )
-#    updateProperties( id, 'Hlt1MuonDiMuon2L0WithIPDecision' , { 'FilterDescriptor' : '''[ 'VertexDimuonMass,>,1500.' , 'VertexMinIP_PV2D,||>,0.25' ]''' } )
-#   listProperties( id, 'PrescaleHlt2SelB2HH' )
-#   listProperties( id, 'SeqHlt2SharedD02KsPiPi' )
-#   listProperties( id, 'HltPatPV3D' )

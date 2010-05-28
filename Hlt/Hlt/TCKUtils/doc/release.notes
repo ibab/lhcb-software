@@ -5,6 +5,10 @@
 !               and the underlying information
 !-----------------------------------------------------------------------------
 
+!========================== TCKUtils v1r6p5 2010-05-28 ===================
+! 2010-05-27 - Gerhard Raven
+ - fix listHlt2Lines
+
 !========================== TCKUtils v1r6p4 2010-03-28 ===================
 ! 2010-03-01 - Gerhard Raven
  - transmit exceptions out of sandbox, to the parent
