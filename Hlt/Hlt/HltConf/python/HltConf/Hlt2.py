@@ -6,7 +6,7 @@
 """
 # =============================================================================
 __author__  = "P. Koppenburg Patrick.Koppenburg@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.64 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.65 $"
 # =============================================================================
 import types
 from Gaudi.Configuration import *
@@ -176,7 +176,6 @@ class Hlt2Conf(LHCbConfigurableUser):
         Hlt2 configuration
         """
         Hlt2 = Sequence("Hlt2", Context = 'HLT',ModeOR=True,ShortCircuit=False) 
-        if Hlt2 not in Sequence("Hlt").Members : Sequence("Hlt").Members += [ Hlt2 ]
         # set Hlt2 PID
         self.configureReconstruction()
         # lines
