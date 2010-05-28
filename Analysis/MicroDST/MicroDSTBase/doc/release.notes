@@ -1,4 +1,4 @@
-!$Id: release.notes,v 1.47 2010-05-28 13:41:16 jpalac Exp $
+!$Id: release.notes,v 1.48 2010-05-28 16:05:47 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : MicroDST/MicroDSTBase
 ! Responsible : Juan Palacios
@@ -10,6 +10,8 @@
  - MicroDST/RelationsClonerAlg.h
  - MicroDST/RelationsFromClonerAlg.h
   . IMPORTANT BUG FIX: These algorithms were ignoring multiple input locations.
+  . Do not write empty table when no original is found or original is empty.
+
  - cmt/requirements
   . Increase to v1r7p3
 
