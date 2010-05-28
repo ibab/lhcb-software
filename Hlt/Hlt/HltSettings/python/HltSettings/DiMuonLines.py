@@ -58,6 +58,8 @@ class DiMuonLines :
             ## Cut values
             'UnbiasedDiMuonPt'         : 0.0      # in MeV
             ,'UnbiasedDiMuonMuPt'      : 0.0      # in MeV
+            ,'UnbiasedDiMuonLowPt'     : 0.0
+            ,'UnbiasedDiMuonLowMuPt'   : 0.0
             ,'UnbiasedJPsiPt'          : 0.0      # MeV
             ,'UnbiasedJPsiMassWindow'  : 120      # MeV
             ,'UnbiasedPsi2SPt'         : 0.0      # MeV
