@@ -1,4 +1,4 @@
-// $Id: RelationsFromClonerAlg.h,v 1.4 2010-05-28 16:56:24 jpalac Exp $
+// $Id: RelationsFromClonerAlg.h,v 1.5 2010-05-28 19:36:35 jpalac Exp $
 #ifndef MICRODST_RELATIONSFROMCLONERALG_H 
 #define MICRODST_RELATIONSFROMCLONERALG_H 1
 
@@ -165,12 +165,20 @@ namespace MicroDST
         error() << "FROM is NUL!!!!" << endmsg;
         return 0;
       }
+      if (0==from->parent()) {
+        Warning("From is not in TES. Cannot clone!", StatusCode::FAILURE,0).ignore();
+        return 0;
+      }
       return getStoredClone< _From >(from);
 
     }
 
     inline typename TABLE::To cloneTo(const typename TABLE::To to) 
     {
+      if (0==to->parent()) {
+        Warning("To is not in TES. Cannot clone!", StatusCode::FAILURE,0).ignore();
+        return 0;
+      }
       return to;
     }
   
