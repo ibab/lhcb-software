@@ -4,7 +4,7 @@
  *  Implementation file for Millepede configuration tool : TAConfig
  *
  *  CVS Log :-
- *  $Id: TAConfig.cpp,v 1.38 2010-05-20 16:22:49 mdeissen Exp $
+ *  $Id: TAConfig.cpp,v 1.39 2010-05-28 15:42:35 jblouw Exp $
  *
  *  @author J. Blouw (johan.blouw@mpi-hd.mpg.de)
  *  @date   12/04/2007
@@ -89,7 +89,7 @@ TAConfig::TAConfig( const std::string& type,
                     const IInterface* parent ):
   GaudiTupleTool ( type, name  ,parent ),
   m_zmean_ot(0),  
-  m_Sigzmean_ot(0),
+  m_Sigzmean_ot(0.0),
   m_n_dof( 0 ),
   m_tolerance(1e-4),
   velo_detector(false),
@@ -254,6 +254,7 @@ StatusCode TAConfig::CacheDetElements() {
       sc = ConfigOT( m_DETmap , m_ot);
       
       if ( sc.isFailure() ) {
+	error() << "Failure configuring OT alignment..." << endreq;
         return sc;
       }
     }
@@ -372,6 +373,8 @@ StatusCode TAConfig::ConstrainLagrangeMultOT(){
     m_consRc.push_back(0.0);
     m_consRcA.push_back(0.0);
     m_consRcC.push_back(0.0);
+    m_shearRcZx.push_back(0.0);
+    m_shearRcZs.push_back(0.0);
   }
   if(m_otHalfLayer)
     CalcHLLC();
@@ -432,13 +435,17 @@ StatusCode TAConfig::ConstrainLagrangeMultOT(){
       m_Centipede->ConstF( m_consRcA, 0.0 );
       m_Centipede->ConstF( m_consRcC, 0.0 );
     } else {
-      m_Centipede->ConstF( m_consRc, 0.0 );
+      //      m_Centipede->ConstF( m_consRc, 0.0 );
+      m_Centipede->ConstF( m_shearRcZx, 0.0 );
+      //      m_Centipede->ConstF( m_shearRcZs, 0.0 );
     }
   }
+  /*
   for(int i =0; i< m_n_dof*m_nAlignObj;i++){  
     info() <<"LM "<< i << " consTX = " << m_consTX[i] << " || consTU = " << m_consTU[i]  << " || consTZ = " << m_consTZ[i]  
            << "     shearXZ " << m_shearXZ[i] << " || shearXU = " << m_shearXU[i] << " || scaleZ = " << m_scaleZ[i] << endreq;
   }
+  */
   
   return StatusCode::SUCCESS;
 }
@@ -495,7 +502,7 @@ void TAConfig::MeanZHL() {
 }
 
 void TAConfig::MeanZ() {
-  m_zmean_ot_a = m_zmean_ot_c = 0; 
+  m_zmean_ot_a = m_zmean_ot_c = 0.0; 
   std::multimap<int, std::pair<double,double> >::iterator iter = m_RnkZAngle.begin();
   for(; iter != m_RnkZAngle.end(); iter++){
     int rnk = iter->first;
@@ -509,7 +516,7 @@ void TAConfig::MeanZ() {
   
   iter  = m_RnkZAngle.begin();
   for(; iter != m_RnkZAngle.end(); iter++){
-    m_Sigzmean_ot += ( (iter->second).first-m_zmean_ot)* ( (iter->second).first-m_zmean_ot); 
+    m_Sigzmean_ot += ( (iter->second).first-m_zmean_ot) * ( (iter->second).first-m_zmean_ot ); 
     m_layerZ.push_back((iter->second).first);
     int rnk = iter->first;
     if ( rnk%2 == 0 ) {
@@ -637,6 +644,12 @@ void TAConfig::CalcLC() {
     }
     if ( m_dof[5] ) {
       m_consRc.at(rnk+cnt*m_nAlignObj) = 1.;
+      m_shearRcZx.at(rnk+cnt*m_nAlignObj) = (m_layerZ.at(rnk)-m_zmean_ot) 
+					    / m_Sigzmean_ot;
+      //      if ( m_stereoAngle[rnk] != 0.0 ) {
+      //	m_shearRcZs.at(rnk+cnt*m_nAlignObj) = ((m_layerZ.at(rnk)-m_zmean_ot) / m_Sigzmean_ot)*cos(m_stereoAngle[rnk])
+      //	  +((m_layerZ.at(rnk)-m_zmean_ot) / m_Sigzmean_ot)*sin(m_stereoAngle[rnk]);// y
+      //}
       cnt++;
     }
   }
@@ -1647,6 +1660,15 @@ StatusCode TAConfig::CalcResidual( const LHCb::LHCbID &id,
     
     Gaudi::Rotation3D R, Rnom,rModNom,rQuNom,rQuShift;
     Gaudi::XYZVector Lay,Mod,Pnom,sModNom,sQuNom,sQuShift;
+    //MD
+    //     info() << "--------------------------------------------------------------" << endreq;
+    //     debug() << " idtrajDir = " << trajeD << endmsg;
+    //     info() << " idtraj   -->  trajPos = " << idTrajPoint << " idtrajDir = " << trajeD << endmsg;
+    //     info() << " begin point of idtraj   = " << lhcbidTraj->beginPoint()    << endmsg;
+    //     info() << " begin point of meastraj = " << measTraj.beginPoint()    << endmsg;
+    //     info() << " end   point of idtraj   = " << lhcbidTraj->endPoint()    << endmsg;
+    //     info() << " end   point of meastraj = " << measTraj.endPoint()    << endmsg;
+    //     info() << " meastraj.dir = "<< measTraj.direction(0.) << " idtraj = " << lhcbidTraj->direction(0.) << endmsg;
     // Get center of Layer and Rotation matrix in LHCb coordinate frame
     layer->geometry()->toGlobalMatrix().GetDecomposition( R, Lay);
     layer->geometry()->toGlobalMatrixNominal().GetDecomposition( Rnom, Pnom);    

@@ -6,7 +6,7 @@
  *  Header file for Tstation alignment : TAConfig
  *
  *  CVS Log :-
- *  $Id: TAConfig.h,v 1.26 2010-05-20 16:22:57 mdeissen Exp $
+ *  $Id: TAConfig.h,v 1.27 2010-05-28 15:42:35 jblouw Exp $
  *
  *  @author J. Blouw johan.blouw@cern.ch
  *  @date   12/04/2007
@@ -362,6 +362,7 @@ public:
   std::vector< double > m_consRa, m_consRb, m_consRc;
   std::vector< double > m_consRaA, m_consRbA, m_consRcA; // Aside
   std::vector< double > m_consRaC, m_consRbC, m_consRcC; // Cside
+  std::vector< double > m_shearRcZx, m_shearRcZs;
   
 
   std::vector<int> m_rank;
