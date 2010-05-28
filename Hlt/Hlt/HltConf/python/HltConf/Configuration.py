@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.188 2010-05-26 19:45:00 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.189 2010-05-28 13:45:01 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -125,14 +125,20 @@ class HltConf(LHCbConfigurableUser):
         #
         #  main HLT sequencer
         # 
-        ## TODO: consider running Hlt in ModeAND, ShortCircuit = True,
-        ##       whilst moving HltEndSequence to TopAlg 
         Hlt = Sequence('Hlt', ModeOR= True, ShortCircuit = False
-                       , Members = 
-                       [ Sequence('Hlt1') 
-                       , Sequence('Hlt2')
-                       , Sequence('HltEndSequence') 
-                       ] )
+                      , Members = [ Sequence('HltDecisionSequence', Members = [ Sequence('Hlt1') 
+                                                                              , Sequence('Hlt2') 
+                                                                              ] )
+                                  , Sequence('HltEndSequence') 
+                                  ] 
+                      )
+        #Hlt = Sequence('Hlt', ModeOR= True, ShortCircuit = False
+        #              , Members = 
+        #                   [ Sequence('Hlt1') 
+        #                   , Sequence('Hlt2') 
+        #                   , Sequence('HltEndSequence') 
+        #                   ] 
+        #              )
 
         #
         # dispatch Hlt1 configuration

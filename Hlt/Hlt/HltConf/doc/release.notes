@@ -1,11 +1,14 @@
-! $Id: release.notes,v 1.463 2010-05-28 06:41:41 graven Exp $ 
+! $Id: release.notes,v 1.464 2010-05-28 13:45:01 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
 
-!========================== HltConf v8r0 2010-05-27 ===================
+!========================== HltConf v8r0 2010-05-28 ===================
+! 2010-05-28 - Gerhard Raven
+ - put Hlt1 and Hlt2 in a dedicated sequencer 'shortcircuit, and' mode
+
 ! 2010-05-27 - V. Gligorov
  - Follow changes to lines in Hlt1/2
 
