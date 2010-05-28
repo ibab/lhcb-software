@@ -11,7 +11,7 @@
 ##
 # =============================================================================
 __author__  = "V. Gligorov vladimir.gligorov@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.18 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.19 $"
 # =============================================================================
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
@@ -871,11 +871,6 @@ class Hlt2Tracking(LHCbConfigurableUser):
         Hlt2StagedFastFit           = TrackEventFitter(Hlt2StagedFastFit_name)
         Hlt2StagedFastFit.TracksInContainer    = tracks.outputSelection() 
         Hlt2StagedFastFit.TracksOutContainer    = hlt2StagedFastFitOutputLocation  
-        
-        Hlt2StagedFastFitSeq_name               = Hlt2StagedFastFit_name+'Seq'
-        Hlt2StagedFastFitSeq                    = GaudiSequencer(Hlt2StagedFastFitSeq_name)
-        Hlt2StagedFastFitSeq.Members            = [ Hlt2StagedFastFit ]
-      
         Hlt2StagedFastFit.addTool(TrackMasterFitter, name = 'Fitter')
         from TrackFitter.ConfiguredFitters import ConfiguredFastFitter
         fitter = ConfiguredFastFitter( getattr(Hlt2StagedFastFit,'Fitter'))
@@ -891,7 +886,7 @@ class Hlt2Tracking(LHCbConfigurableUser):
         
         # Build the bindMembers        
         bm_name         = self.__trackfitAlgosAndToolsPrefix()+"FastFitSeq"
-        bm_members      = [tracks, Hlt2StagedFastFitSeq]
+        bm_members      = [tracks, Hlt2StagedFastFit]
         bm_output       = hlt2StagedFastFitOutputLocation
 
         return bindMembers(bm_name, bm_members).setOutputSelection(bm_output)
