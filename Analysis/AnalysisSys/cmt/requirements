@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.191 2010-05-27 16:52:02 jpalac Exp $
+# $Id: requirements,v 1.192 2010-05-28 12:37:31 jpalac Exp $
 package AnalysisSys
 version v4r5
 
@@ -22,7 +22,7 @@ use  KaliCalo                   v4r2p2   Phys   # Vanya Belyaev
 ####################################################################
 use  DaVinciMCTools     	v9r25p3  Phys   # Juan Palacios
 use  DaVinciAssociators         v9r4p1   Phys   # Vladimir Gligorov
-use  Particle2MCTruth           v2r3p4   Phys   # Juan Palacios
+use  Particle2MCTruth           v2r3p5   Phys   # Juan Palacios
 use  VertexFitCheck             v1r5     Phys   # Yuehong Xie
 use  MCStandardParticles        v1r3     Phys   # Juan Palacios
 use  FlavourTaggingChecker      v5r4     Phys   # Marco Musy
