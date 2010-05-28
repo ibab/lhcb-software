@@ -1,0 +1,51 @@
+# $Id: Bs_gammamumuMNT.dec,v 1.1 2010-05-28 12:22:20 nnikitin Exp $  
+#
+# This is the decay file for the decay BS0 ->  GAMMA MU+ MU-
+#
+# EventType: 13112100 
+#
+# Descriptor: B_s0 -> gamma mu+ mu- 
+#
+# NickName: Bs_gammamumuMNT
+#
+# Physics: 
+#
+# Input parameters: mu         - the scale parameter (in GeV's);
+#                   Nf         - number of "effective" flavors (for b-quark Nf=5);
+#                   res_swch   - resonant switching parametr:
+#                                 = 0 the resonant contribution switched OFF, 
+#                                 = 1 the resonant contribution switched ON, but
+#                                     without the contribution of J/psi and 
+#                                     psi'-resonances!;
+#                   ias        - switching parametr for \alpha_s(M_Z) value:
+#                                 = 0 PDG 1sigma minimal alpha_s(M_Z), 
+#                                 = 1 PDG average value  alpha_s(M_Z), 
+#                                 = 2 PDG 1sigma maximal alpha_s(M_Z).
+#                   Egamma     - photon energy cut, GeV;
+#                   Wolfenstein parameterization for CKM matrix:
+#                    A 
+#                    lambda 
+#                    barrho
+#                    bareta
+#
+# Tested: Yes
+# By: Nikolai Nikitin (Moscow State Univ.)
+# Date: 01 Oktober 2008
+#
+Define mu 5.0
+Define Nf 5
+Define res_swch 1
+Define ias 1
+Define Egamma 0.02
+Define A 0.88
+Define lambda 0.227
+Define barrho 0.22
+Define bareta 0.34
+#
+Decay B_s0sig
+   1.000    gamma   mu+   mu-   BSTOGLLMNT mu Nf res_swch ias Egamma A lambda barrho bareta;
+Enddecay
+CDecay anti-B_s0sig
+#
+End
+
