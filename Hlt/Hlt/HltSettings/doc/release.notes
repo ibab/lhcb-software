@@ -4,6 +4,10 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2010-05-28 - Johannes Albrecht
+ - first iteration of Muons_minimal.
+   minor changes to DiMuonLines
+
 !========================== HltSettings v2r0  2010-05-27 ===================
 ! 2010-05-27 - V. Gligorov
  - First iteration of Hadrons_Minimal, the setting containing the "core" hadronic
