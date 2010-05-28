@@ -1,4 +1,4 @@
-// $Id: RelationsFromClonerAlg.h,v 1.3 2010-05-28 16:05:18 jpalac Exp $
+// $Id: RelationsFromClonerAlg.h,v 1.4 2010-05-28 16:56:24 jpalac Exp $
 #ifndef MICRODST_RELATIONSFROMCLONERALG_H 
 #define MICRODST_RELATIONSFROMCLONERALG_H 1
 
@@ -125,12 +125,20 @@ namespace MicroDST
             verbose() << "Number of relations in cloned table: "
                       << cloneTable->relations().size() << endmsg;
           }
-          put( cloneTable, outputLocation );
+          if (!cloneTable->relations().empty()) {
+            put( cloneTable, outputLocation );
+          } 
+        } else {
+          if ( msgLevel(MSG::VERBOSE) ) {
+            this->Warning("Found no table at "+inputLocation,
+                        StatusCode::FAILURE).ignore();  
+          }
         }
+        
       } else {
         if ( msgLevel(MSG::VERBOSE) ) {
           this->Warning("Found no table at "+inputLocation,
-                        StatusCode::FAILURE, 0);
+                        StatusCode::FAILURE, 0).ignore();
         }
       }
 
