@@ -8,6 +8,7 @@
 !========================== TCKUtils v1r6p5 2010-05-28 ===================
 ! 2010-05-27 - Gerhard Raven
  - fix listHlt2Lines
+ - implement dump(TCK)
 
 !========================== TCKUtils v1r6p4 2010-03-28 ===================
 ! 2010-03-01 - Gerhard Raven

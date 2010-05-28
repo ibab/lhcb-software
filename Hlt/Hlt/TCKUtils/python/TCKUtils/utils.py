@@ -556,6 +556,29 @@ def getAlgorithms( id, cas = ConfigAccessSvc() ) :
           tempstr = tempstr + s + (80-len(s))*' ' + str(i.leaf.digest) + '\n'
     return tempstr
 
+def dump( id, properties = None,  cas = ConfigAccessSvc() ) :
+    if not properties : 
+        properties = [ 'RoutingBits', 'Accept', 'FilterDescriptor'
+                     , 'Code', 'InputLocations'
+                     , 'DaughtersCuts', 'CombinationCut', 'MotherCut', 'DecayDescriptor'
+                     , 'OutputSelection','Context' ]
+    tree =  execInSandbox( _getConfigTree, id, cas )
+    def len1(line):
+        _i = line.rfind('\n')
+        return len(line) if _i<0 else len(line)-(_i+1)
+
+    for i in tree :
+       if i.leaf and i.leaf.kind =='IAlgorithm':
+            _tab = 50
+            line =  i.depth * '   ' + i.leaf.name
+            if len1(line)>( _tab-1): line +=  '\n'+ _tab*' '
+            else :                   line +=  (_tab-len1(line))*' '
+            line +=  '%-25.25s'%i.leaf.type
+            for k,v in [ (k,v) for k,v in i.leaf.props.iteritems() if k in properties and v ]:
+                if _tab+25 < len1(line) : line+= '\n'+(_tab+25)*' '
+                line += '%-15s : %s' % ( k, v)
+            print line
+
 
 def getHlt1Lines( id , cas = ConfigAccessSvc() ) :
     # should be a list... so we try to 'eval' it
