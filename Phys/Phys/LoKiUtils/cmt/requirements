@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.1.1.1 2010-05-27 19:01:52 ibelyaev Exp $ 
+# $Id: requirements,v 1.2 2010-05-28 09:47:02 ibelyaev Exp $ 
 # =============================================================================
 # Created    : 2010-05-27
 # Maintainer : Vanya BELYAEV Ivan.Belyaev@nikhef.nl
@@ -31,7 +31,6 @@ macro_append       LoKiUtilsDict_dependencies    " LoKiUtils "
 
 # ================ patterns ===================================================
 apply_pattern      linker_library    library=LoKiUtils
-apply_pattern      QMTest
 
 # =============================================================================
 # The END 
