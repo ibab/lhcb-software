@@ -1,4 +1,4 @@
-// $Id: P2MCRelatorAlg.cpp,v 1.5 2010-05-18 13:06:05 jpalac Exp $
+// $Id: P2MCRelatorAlg.cpp,v 1.6 2010-05-28 12:15:07 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -64,27 +64,36 @@ StatusCode P2MCRelatorAlg::execute() {
   m_mcParticles = get<LHCb::MCParticle::Container>( m_mcpLocation );
   if (0==m_mcParticles) {
     return Warning("Found no MCParticles in "+ m_mcpLocation, 
-                   0, StatusCode::SUCCESS);
+                   StatusCode::SUCCESS, 0);
   }
   typedef std::vector<std::string> StringVector;
   StringVector::const_iterator _begin = m_particleLocations.begin();
   StringVector::const_iterator _end = m_particleLocations.end();
   
   for (StringVector::const_iterator iLoc = _begin; iLoc!=_end; ++iLoc) {
-    const LHCb::Particle::Range particles = get<LHCb::Particle::Range>(*iLoc);
+
     m_table.clear();
-    if (!particles.empty()) {
-      i_particleLoop( particles.begin(), particles.end() );
-      m_table.i_sort();
+    if (exist<LHCb::Particle::Range>(*iLoc) ) {
+      const LHCb::Particle::Range particles = get<LHCb::Particle::Range>(*iLoc);
+      if (!particles.empty()) {
+        i_particleLoop( particles.begin(), particles.end() );
+        m_table.i_sort();
+      } else {
+        Warning("Empty Particle::Range in "+ *iLoc,
+                StatusCode::SUCCESS, 0).ignore();
+      }
+
+    
+      Particle2MCParticle::Table* table = new Particle2MCParticle::Table(m_table);
+      const std::string outputLocation = 
+        trunkLocation(*iLoc) + "/P2MCPRelations";
+
+      put(table, outputLocation);
     } else {
       Warning("Found no Particles in "+ *iLoc,
-              0, StatusCode::SUCCESS).ignore();
+              StatusCode::SUCCESS, 0).ignore();
     }
-    Particle2MCParticle::Table* table = new Particle2MCParticle::Table(m_table);
-    const std::string outputLocation = 
-    trunkLocation(*iLoc) + "/P2MCPRelations";
 
-    put(table, outputLocation);
   }
   
   return StatusCode::SUCCESS;
