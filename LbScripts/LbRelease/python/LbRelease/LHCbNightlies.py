@@ -269,7 +269,7 @@ class LHCbProjectBuilder(object):
         for p in self.slot.getProjects():
             if p.getName().upper() == 'LCGCMT': continue
             if p.getName().upper() == self.project.getName().upper(): break
-            pklFile = file(os.path.join(generatePath(slot, p, 'TAG', projectName), 'changesMade-' + os.environ['CMTCONFIG'] + '.pkl'), 'rb')
+            pklFile = file(os.path.join(self.generatePath(slot, p, 'TAG', projectName), 'changesMade-' + os.environ['CMTCONFIG'] + '.pkl'), 'rb')
             tmpChangesMade = pickle.load(pklFile)
             pklFile.close()
             previousChangesMade.update(tmpChangesMade)
