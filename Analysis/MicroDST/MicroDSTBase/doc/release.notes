@@ -1,10 +1,12 @@
-!$Id: release.notes,v 1.48 2010-05-28 16:05:47 jpalac Exp $
+!$Id: release.notes,v 1.49 2010-05-28 16:06:25 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : MicroDST/MicroDSTBase
 ! Responsible : Juan Palacios
 ! Purpose     : Base classes for MicroDST algorithms and tools, plus helper
 !               functions and functors.
 !-----------------------------------------------------------------------------
+
+!====================== MicroDSTBase v1r7p3 2010-05-28 ======================
 
 ! 2010-05-28 - Juan Palacios
  - MicroDST/RelationsClonerAlg.h
