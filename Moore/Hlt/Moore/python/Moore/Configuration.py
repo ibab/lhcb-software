@@ -1,7 +1,7 @@
 """
 High level configuration tool(s) for Moore
 """
-__version__ = "$Id: Configuration.py,v 1.121 2010-05-20 12:51:17 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.122 2010-05-28 08:03:07 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ, path
@@ -187,6 +187,7 @@ class Moore(LHCbConfigurableUser):
         conddb = CondDB()
         # hack to allow us to chance connectionstrings...
         conddb.UseOracle = True
+        conddb.DisableLFC = True
         # Set alternative connection strings and tags
         # if simulation is False, we use DDDB, LHCBCOND and ONLINE
         #                  True          DDDB, SIMCOND
@@ -460,11 +461,6 @@ class Moore(LHCbConfigurableUser):
         ApplicationMgr().ExtSvc.append( MooreInitSvc() )
 
         ApplicationMgr().TopAlg.append( GaudiSequencer('Hlt') )
-
-        from Configurables import EventLoopMgr
-        EventLoopMgr().EventTimeout   = 0
-        EventLoopMgr().HandleSIGINT   = False
-        EventLoopMgr().HandleSIGXCPU  = False
 
         from Configurables import MonitorSvc
         MonitorSvc().disableDimPropServer      = 1

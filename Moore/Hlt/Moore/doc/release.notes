@@ -2,6 +2,9 @@ Package     : Hlt/Moore
 Package Coordinator : Gerhard Raven
 Purpose     : LHCb HLT application
 
+! 2010-05-28 - Gerhard Raven
+ - remove options specific to Online v4r39 
+
 !========================== Moore v9r1p2 2010-05-20 ===================
 ! 2010-05-20 - Gerhard Raven
  - add RICH parameters to runchange handler setup
