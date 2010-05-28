@@ -48,7 +48,7 @@ for o, a in opts:
 EventSelector().PrintFreq=100
 
 # set up some useful paths of locations on the MicroDST
-selectionPath = locationRoot +  '/Phys/' + selection
+selectionPath = selection
 particlePath = selectionPath + '/Particles'
 particle2mcPath = selectionPath + '/P2MCPRelations'
 stdVertexAssocPath = selectionPath + '/Particle2VertexRelations'
@@ -72,6 +72,9 @@ appMgr.config( files = ['$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts'])
 appMgr.initialize()
 appMgr.ExtSvc += ['LHCb::ParticlePropertySvc']
 appMgr.HistogramPersistency = "ROOT"
+
+import atexit
+atexit.register(appMgr.exit)
 
 evtSvc = appMgr.evtSvc()
 toolSvc = appMgr.toolsvc()
@@ -102,7 +105,7 @@ particleNameFunc = Functors.ParticleName(ppSvc)
 
 # List of "interesting" particle PIDs
 # Add PID of anything yo uthink might be interesting!
-interestingParticles = [531,-531, 333, 443, 511, -511, 321, -321, 211, -211, -13, 13, 22]
+interestingParticles = [531,-531, 313, -313, 333, 443, 511, -511, 321, -321, 211, -211, -13, 13, 22]
 
 histoPath = "MicroDST/Histos/"
 massPlots = {}
@@ -243,8 +246,12 @@ while ( nextEvent() ) :
 
         propTimeResLoop(particles)
         refitPropTimeResLoop(particles)
-    
-print "Found MC info in ", nMCEvents, "/", nEvents, " events"
+
+        for particle in particles :
+            bpv = bestVertexFun(particle)
+            if bpv :
+                safeFill( bestVertexZ, bpv.position().z())
+print "Found MC info in ", nMCEvents, "/", nEvents, " events(", mcParticlePath, ")"
 print "Found Reco info in ", nRecEvents, "/", nEvents, "events"
 print "Found ", nPrimaryVertices, " PVs in ", nEvents, "events"
 print "Found ", nParticles, " B candidates in ", nEvents, "events"
