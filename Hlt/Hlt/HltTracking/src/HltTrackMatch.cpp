@@ -1,4 +1,4 @@
-// $Id: HltTrackMatch.cpp,v 1.20 2010-05-27 22:06:29 gligorov Exp $
+// $Id: HltTrackMatch.cpp,v 1.21 2010-05-28 07:34:47 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -71,9 +71,11 @@ StatusCode HltTrackMatch::initialize() {
 
   if (produceHistos()){
     m_qualityHisto = initializeHisto(m_qualityName,-50,50,1000);
-    m_quality2Histo = initializeHisto(m_quality2Name,-50,50,1000);
     m_qualityHistoBest = initializeHisto(m_qualityName+"Best",-50,50,1000);
+    if (!m_quality2Name.empty()) {
+    m_quality2Histo = initializeHisto(m_quality2Name,-50,50,1000);
     m_quality2HistoBest = initializeHisto(m_quality2Name+"Best",-50,50,1000);
+    }
   }
 
   
@@ -117,7 +119,7 @@ void HltTrackMatch::recoConfiguration() {
 StatusCode HltTrackMatch::setReco(const std::string& key) 
 {
   m_matchName = key;
-  debug() << " InitReco " << endreq;
+  debug() << " InitReco " << endmsg;
   bool ok = m_recoConf.has_key(m_matchName+"/Tool");
   Assert(ok," no reconstruction with name "+m_matchName);
   
@@ -140,7 +142,7 @@ StatusCode HltTrackMatch::setReco(const std::string& key)
   
   info() << " Reco: " << m_matchName 
          << " Tool: " << toolName
-         << " Output: " << m_TESOutput << endreq;
+         << " Output: " << m_TESOutput << endmsg;
 
   debug() << " reco ID " << m_recoID
           << " transfers IDs " << m_transferIDs 
@@ -148,7 +150,7 @@ StatusCode HltTrackMatch::setReco(const std::string& key)
           << " track type " << m_trackType 
           << " quality [1] " << m_qualityName << " " << m_qualityID
           << " quality [2] " << m_quality2Name << " " << m_quality2ID
-          << endreq;
+          << endmsg;
   
   m_tool = tool<ITrackMatch>(toolName,this);
 
@@ -184,19 +186,19 @@ StatusCode HltTrackMatch::execute() {
 
       if (produceHistos()) {
 	fill(m_qualityHisto,quality,1.);
-	fill(m_quality2Histo,quality2,1.);
+     if (m_quality2Histo) fill(m_quality2Histo,quality2,1.);
       }
       
       if (msgLevel(MSG::VERBOSE)) {
         verbose() << " track [1+2] quality " 
-                  << quality << ", " << quality2 << endreq;
+                  << quality << ", " << quality2 << endmsg;
         printInfo(" track [1+2] ",otrack);
       }   
         
       if ((quality<m_maxQuality) && (quality2 < m_maxQuality2)) {
-        verbose() << " accepted track [1+2] " << endreq;
+        if (msgLevel(MSG::VERBOSE)) verbose() << " accepted track [1+2] " << endmsg;
         LHCb::Track* track3 = otrack.clone();
-        if (m_qualityID != 0) track3->addInfo(m_qualityID,quality);
+        if (m_qualityID  != 0) track3->addInfo(m_qualityID,quality);
         if (m_quality2ID != 0) track3->addInfo(m_quality2ID,quality2);
         if (m_transferInfo) {
           Hlt::MergeInfo(*track1,*track3);
@@ -227,10 +229,8 @@ StatusCode HltTrackMatch::execute() {
     fill(m_quality2HistoBest,val,1.); 
   }
   
-  
 
   if (msgLevel(MSG::DEBUG)) printInfo(" matched tracks ",*m_selections.output());
-
 
   return StatusCode::SUCCESS;
 }

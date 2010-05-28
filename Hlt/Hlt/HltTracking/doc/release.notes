@@ -1,11 +1,14 @@
-!$Id: release.notes,v 1.128 2010-05-28 06:36:19 graven Exp $
+!$Id: release.notes,v 1.129 2010-05-28 07:34:47 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/HltTracking
 ! Responsible : Jose A. Hernando
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
-!========================== HltTracking v6r0   2010-05-27 ===================
+!========================== HltTracking v6r0   2010-05-28 ===================
+! 2010-05-28 - Gerhard Raven
+ - fix warnings about histograms with empty title 
+
 ! 2010-05-27 - V. Gligorov
  - Major update to VeloCalo matching. In short:
   . Parameterize calorimeter E resolution as (10%+70%/sqrt(E))
