@@ -1,9 +1,16 @@
-!$Id: release.notes,v 1.30 2010-05-24 07:28:57 jpalac Exp $
+!$Id: release.notes,v 1.31 2010-05-28 17:07:21 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DSTWriters
 ! Responsible : Juan PALACIOS
 ! Purpose     : Python code for DST writers.
 !-----------------------------------------------------------------------------
+
+! ======================== DSTWriters v1r6p1 2010-05-28 ======================
+
+! 2010-05-28 - Juan Palacios
+ - python/DSTWriters/SelDSTWriter.py
+  . Copy all PVs in P->PV relations. Nasty, but solves problems when 
+    re-fitting PVs.
 
 ! ======================== DSTWriters v1r6 2010-05-24 ========================
 
