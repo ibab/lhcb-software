@@ -27,7 +27,7 @@ use HltSelChecker       v11r0   Hlt   # Patrick Koppenburg
 use HltSettings         v2r0    Hlt   # Parick Koppenburg, Gerhard Raven
 use HltTracking         v6r0    Hlt   # Jose Angel Hernando-Morata
 use TCKPresenter        v1r1p1  Hlt   # Klaus Neumann / Stephan Nies
-use TCKUtils            v1r6p4  Hlt   # Gerhard Raven
+use TCKUtils            v1r6p5  Hlt   # Gerhard Raven
 use Fidel               v1r4    Phys  # Sara Furcas
 use LoKiTrigger         v10r0p1 Phys  # Vanya Belyaev
 use TisTosTobbing       v4r1    Phys  # Tomasz Skwarnicki
