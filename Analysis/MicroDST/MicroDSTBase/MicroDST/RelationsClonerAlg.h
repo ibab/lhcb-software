@@ -1,4 +1,4 @@
-// $Id: RelationsClonerAlg.h,v 1.17 2010-05-28 13:40:53 jpalac Exp $
+// $Id: RelationsClonerAlg.h,v 1.18 2010-05-28 16:05:18 jpalac Exp $
 #ifndef MICRODST_RELATIONSCLONERALG_H 
 #define MICRODST_RELATIONSCLONERALG_H 1
 
@@ -120,7 +120,7 @@ namespace MicroDST
         this->Warning("Object "+ outputLocation + " already exists. Not cloning.", 
                       StatusCode::SUCCESS, 0).ignore() ;
         return;
-      }   
+      }
 
       if (exist<TABLE>(inputLocation) )
       {
@@ -129,7 +129,8 @@ namespace MicroDST
                     << inputLocation << endmsg;
         }
         const TABLE* table = get<TABLE>(inputLocation);
-        if (table) {
+        if ( table and !table->relations().empty() ) {
+          
           if ( msgLevel(MSG::VERBOSE) ) {
             verbose() << "found table with "<< table->relations().size() 
                       << " entries!" << endmsg;
@@ -146,12 +147,9 @@ namespace MicroDST
         }
       } else {
         if ( msgLevel(MSG::VERBOSE) ) {
-          verbose() << "Found no table at " << inputLocation 
-                    << ". storing empty table"<< endmsg;
+          this->Warning("Found no table at "+inputLocation,
+                        StatusCode::FAILURE, 0);
         }
-        
-        TABLE* cloneTable = new TABLE();
-        put( cloneTable, outputLocation );
       }
 
     }
