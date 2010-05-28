@@ -1,9 +1,16 @@
-! $Id: release.notes,v 1.143 2010-05-27 19:28:01 ibelyaev Exp $ 
+! $Id: release.notes,v 1.144 2010-05-28 10:02:25 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhys
 ! Responsible : Vanya Belyaev
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
+
+! 2010-05-28 - Vanya Belyaev
+
+ - Particles35.h/Particles35.cpp
+
+      add adaptor functions for ProtoParticles and Track 
+
 
 ! 2010-05-27 - Vanya Belyaev
 
