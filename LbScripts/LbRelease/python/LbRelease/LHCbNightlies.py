@@ -5,12 +5,34 @@ import checkLogFiles
 
 #__all__ = ['LHCbProjectBuilder', 'builderMap']
 
+localDirsOnWindows = {}
+localDirsOnWindows['Z:\\cern.ch\\user\\k\\kkruzele\\cmtuser\\LBSCRIPTS\\LBSCRIPTS_v99r0\\InstallArea\\win32_vc71\\lib'] = '' # delete from the path
+localDirsOnWindows['Z:\\LOCALDRIVE\\C\\'] = 'C:\\'
+localDirsOnWindows['Z:\\LOCALDRIVE\\D\\'] = 'D:\\'
+localDirsOnWindows['Z:\\LOCALDRIVE\\E\\'] = 'E:\\'
+localDirsOnWindows['Z:\\LOCALDRIVE\\F\\'] = 'F:\\'
+localDirsOnWindows['Z:\\cern.ch\\sw\\lcg\\external'] = 'C:\\local\\external'
+localDirsOnWindows['Z:\\cern.ch\\sw\\contrib\\CMT\\v1r20p20070208'] = 'C:\\local\\releases\\CMT\\v1r20p20070208'
+localDirsOnWindows['Z:\\cern.ch\\sw\\Gaudi\\releases'] = 'C:\\local\\Gaudi-releases'
+localDirsOnWindows['Z:\\cern.ch\\sw\\lcg\\app\\releases\\LCGCMT'] = 'C:\\local\\LCGCMT'
+localDirsOnWindows['Z:\\cern.ch\\sw\\lcg\\app\\nightlies\\scripts'] = 'C:\\local\\LCG-nightlies'
+
+localDirsOnWindows['Z:\\cern.ch\\sw\\lcg\\external'] = 'C:\\local\\external;D:\\local\\lib\\lcg\\external'
+localDirsOnWindows['Z:\\cern.ch\\lhcb\\scripts'] = 'C:\\local\\LHCb-scripts;D:\\local\\lib\\scripts'
+localDirsOnWindows['Z:\\LOCALCOPY\\releases'] = 'C:\\local\\releases;D:\\local\\lib\\lhcb'
+
+
+
 class LHCbProjectBuilder(object):
 
     def canBuild(cls, project):
         from LbConfiguration.Project import project_names
         return (project in project_names)
     canBuild = classmethod(canBuild)
+
+    def translatePath(self, linuxPath, destPlatform = None):
+        from configuration import translatePath
+        return translatePath(linuxPath, destPlatform)
 
     def __init__(self, slot,thread,load, proj, tag, platIn, conf, thread_counter, tpInstaller, wu, sem, tagOrder, host='', port=''):
         print "[LHCb] __init__\n"
@@ -23,7 +45,6 @@ class LHCbProjectBuilder(object):
         for p in listOfProjectNames:
             self.projectNamesDict[p.upper()] = p
 
-        self.systemType = 'linux' # (~'windows')
         self.slot = slot
         self.slotName = slot.getName()
         self.project = slot.getProject(proj)
@@ -31,6 +52,10 @@ class LHCbProjectBuilder(object):
         self.tagName = tag
         self.config = conf
         self.plat = platIn
+        if self.plat.find('win') != -1:
+            self.systemType = 'windows'
+        else:
+            self.systemType = 'linux'
         #os.environ['CMTCONFIG'] = self.plat #.getName()
         self.day = datetime.date.today().strftime('%a')
         self.configurationHistoryPath = os.sep.join([os.environ['AFSROOT'], 'cern.ch', 'lhcb', 'software', 'nightlies', 'conf', 'history'])
@@ -58,7 +83,14 @@ class LHCbProjectBuilder(object):
         # save configuration.xml taken from the server to "history" directory if environ variable is set
         #os.environ['LCG_NIGHTLIES_XMLCONFIGCOPIES'] = self.configurationHistoryPath
         # make copy of configuration.xml file if LCG_NIGHTLIES_XMLCONFIGCOPIES exists
-        self.makeCopy(datetime.date.today().strftime('%a'))
+        #self.makeCopy(datetime.date.today().strftime('%a'))
+        # must be changed to writing the file from internal variable
+        cfgFile = os.path.sep.join([self.slot.releaseDir(), 'configuration.xml'])
+        if not os.path.exists(cfgFile):
+            file(cfgFile, 'w').write(self.configContents)
+        #TODO: --> should be written to AFS by server, not by client - then clients would do not need AFS access.
+        #TODO: --> reload configuration if it's already in the releaseDir
+        #TODO: --> make a copy to the 'history' dir
         ################################
         self.checkout()
         self.build()
@@ -142,7 +174,8 @@ class LHCbProjectBuilder(object):
         # check if checkout is running, or finished on that machine
         if not os.path.exists(self.generatePath(self.slot, self.project, 'TAG', self.project.getName())):
             os.makedirs(self.generatePath(self.slot, self.project, 'TAG', self.project.getName().upper()))
-            os.symlink(self.project.getName(), self.project.getName().upper())
+            if self.systemType != 'windows':
+                os.symlink(self.project.getName(), self.project.getName().upper())
         os.chdir(self.generatePath(self.slot, self.project, 'TAG', self.project.getName()))
         waitcounter = 0
         while os.path.exists('checkout.working'):
@@ -158,7 +191,7 @@ class LHCbProjectBuilder(object):
         fW.write('\n')
         fW.close()
 
-        os.chdir(self.slot.buildDir())
+        os.chdir(self.translatePath(self.slot.buildDir()))
         self.getpackget(self.project.getName(), self.project.getVersion(), project=True)
         #if os.path.exists(self.project.getName().upper()) and self.project.getName() != self.project.getName().upper():
         #    print "renaming from: %s, to: %s" % (self.project.getName().upper(), self.project.getName())
@@ -196,7 +229,7 @@ class LHCbProjectBuilder(object):
                 if cha in sysPackageRF.keys():
                     sysPackageRF[cha][0] = change[1]
                 changesMade[change[0]] = change[1]
-            self.changeRequirementsFile(os.path.join(self.generatePath(self.slot, self.project, 'SYSPACKAGECMT', self.projName), 'requirements'), self.sysPackageRF, self.project.getAddons(), self.project.getRemoves())
+            self.changeRequirementsFile(os.path.join(self.generatePath(self.slot, self.project, 'SYSPACKAGECMT', self.projName), 'requirements'), sysPackageRF, self.project.getAddons(), self.project.getRemoves())
 
         os.chdir(self.generatePath(self.slot, self.project, 'TAG', self.projName))
 

@@ -1,3 +1,7 @@
+2010-05-28  Karol Kruzelecki  <Karol.Kruzelecki@cern.ch>
+
+	* python/LbRelease/LHCbNightlies.py: fix for Windows
+
 2010-04-14  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* python/LbRelease/LHCbDoc.py: Exclude MainPage.h (of the projects) from
