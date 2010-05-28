@@ -354,11 +354,13 @@ class Brunel(LHCbConfigurableUser):
             InitReprocSeq.Members.append( "EventNodeKiller" )
             EventNodeKiller().Nodes  = [ "pRec", "Rec", "Raw", "Link/Rec" ]
 
+        if inputType in [ "RDST", "SDST", "ETC" ]:
+            # Allow navigation to ancestor file
+            IODataManager().AgeLimit += 1
+
         if inputType == "ETC":
             from Configurables import  TagCollectionSvc
             ApplicationMgr().ExtSvc  += [ TagCollectionSvc("EvtTupleSvc") ]
-            # Read ETC selection results into TES for writing to DST
-            IODataManager().AgeLimit += 1
 
         if inputType in [ "MDF", "RDST", "SDST", "ETC" ]:
             # In case raw data resides in MDF file
