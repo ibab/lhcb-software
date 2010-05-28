@@ -3,18 +3,19 @@ from Configurables import DaVinci, SelDSTWriter
 from StrippingConf.Configuration import StrippingConf
 
 from StrippingSelections.Streams import StreamDimuon, StreamCalibration
-sc = StrippingConf( Streams = [StreamCalibration.stream, StreamDimuon.stream] )
+sc = StrippingConf( Streams = [StreamDimuon.stream] )
 
 dstWriter = SelDSTWriter("MyDSTWriter",
                          SelectionSequences = sc.activeStreams(),
-                         OutputPrefix = 'Strip',
-                         OutputFileSuffix = '000001'
+                         OutputPrefix = 'SequenceName',
+                         OutputFileSuffix = 'TestDiMuon',
+                         CopyPVRelations = {"Particle2VertexRelations":True}
                          )
 
 dv = DaVinci()
 dv.DataType = 'MC09'
 dv.Simulation = True
-dv.EvtMax = 100
+dv.EvtMax = 500
 dv.appendToMainSequence( [ sc.sequence() ] )
 dv.appendToMainSequence( [ dstWriter.sequence() ] )
 #dv.UserAlgorithms = [dstWriter.sequence()]

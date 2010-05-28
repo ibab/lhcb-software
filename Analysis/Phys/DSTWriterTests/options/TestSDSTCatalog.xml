@@ -17,7 +17,9 @@
 
 
 
-  <!--
+  
+
+<!--
 <File ID="F284F5B0-594D-DF11-B7B5-000423D94D30">
 <physical>
 <pfn filetype="ROOT_All" name="etc.root"/>
@@ -119,6 +121,13 @@
   <File ID="A20734A1-1864-DF11-B978-003048D2BF8C">
     <physical>
       <pfn filetype="ROOT_All" name="TestRawEvent.CocktailB.dst"/>
+    </physical>
+    <logical/>
+  </File>
+
+  <File ID="B2ED5E86-AD69-DF11-82BD-001B783C93CF">
+    <physical>
+      <pfn filetype="ROOT_All" name="TestSimpleAlg.SeqPV.dst"/>
     </physical>
     <logical/>
   </File>
