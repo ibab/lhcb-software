@@ -1,13 +1,13 @@
-#$Id: requirements,v 1.17 2010-05-26 09:57:06 jpalac Exp $
+#$Id: requirements,v 1.18 2010-05-28 13:41:06 jpalac Exp $
 #============================================================================
 # Created    : 2007-12-10
 # Maintainer : Juan Palacios   Juan.Palacios@nikhef.nl 
 #==============================================================================
-# $Id: requirements,v 1.17 2010-05-26 09:57:06 jpalac Exp $
+# $Id: requirements,v 1.18 2010-05-28 13:41:06 jpalac Exp $
 #==============================================================================
 
 package MicroDST/MicroDSTBase
-version v1r7p2
+version v1r7p3
 
 # =============== structure ===================================================
 branches MicroDST src cmt doc
