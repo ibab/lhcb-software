@@ -17,6 +17,7 @@ include_path      none
 use   CLHEP       	v* 	LCG_Interfaces 
 use   LoKiCore          v*      Phys
 use   DaVinciKernel     v*      Phys 
+use   TrackInterfaces   v*      Tr
 
 
 apply_pattern install_more_includes more=DecayTreeFitter
@@ -24,8 +25,7 @@ apply_pattern install_more_includes more=DecayTreeFitter
 #============================================================================
 # Linker library building rule
 #============================================================================
-library       DecayTreeFitterLib ../src/*.cpp -import=AIDA -import=CLHEP
-library       DecayTreeFitter    ../src/Components/*.cpp
+library       DecayTreeFitter ../src/*.cpp -import=AIDA -import=CLHEP
 
 # =============== LCG Dictionaries ============================================
 apply_pattern reflex_dictionary                                                 \
@@ -34,11 +34,9 @@ apply_pattern reflex_dictionary                                                 
               selectionfile=$(DECAYTREEFITTERROOT)/dict/DecayTreeFitterDict.xml \
               options="-U__MINGW32__"
 
-apply_pattern linker_library      library=DecayTreeFitterLib
-apply_pattern component_library   library=DecayTreeFitter
+apply_pattern linker_library      library=DecayTreeFitter
 
-macro_append  DecayTreeFitter_dependencies        " DecayTreeFitterLib " 
-macro_append  DecayTreeFitterDict_dependencies    " DecayTreeFitterLib " 
+macro_append  DecayTreeFitterDict_dependencies    " DecayTreeFitter " 
 
 # ================= end =======================================================
 

@@ -1,4 +1,4 @@
-// $Id: Fitter.h,v 1.6 2010-05-28 17:04:42 ibelyaev Exp $
+// $Id: Fitter.h,v 1.7 2010-05-29 13:39:56 ibelyaev Exp $
 // ============================================================================
 #ifndef DECAYTREEFITTER_FITTER_HH
 #define DECAYTREEFITTER_FITTER_HH
@@ -8,6 +8,14 @@
 // STD & STL 
 // ============================================================================
 #include <vector>
+// ============================================================================
+// GaudiKernel
+// ============================================================================
+#include "GaudiKernel/SmartIF.h"
+// ============================================================================
+// Track interfaces 
+// ============================================================================
+#include "TrackInterfaces/ITrackExtrapolator.h"
 // ============================================================================
 // LHCbMath 
 // ============================================================================
@@ -46,13 +54,24 @@ namespace DecayTreeFitter
     // ========================================================================
   public:
     // ========================================================================
-    /// constructor form the particle (decay head) 
-    Fitter ( const LHCb::Particle&   bc , 
-             bool forceFitAll = true ) ;
-    /// constructor form the particle (decay head) and primary vertex
-    Fitter ( const LHCb::Particle&   bc , 
-             const LHCb::VertexBase& pv , 
-             bool forceFitAll = true ) ;
+    /// constructor from the particle (decay head) 
+    Fitter ( const LHCb::Particle&   bc                  , 
+             const bool              forceFitAll  = true , 
+             ITrackExtrapolator*     extrapolator = 0    ) ;
+    /// constructor from the particle (decay head) 
+    Fitter ( const LHCb::Particle&   bc                  , 
+             ITrackExtrapolator*     extrapolator        ,
+             const bool              forceFitAll  = true ) ;
+    /// constructor from the particle (decay head) and primary vertex
+    Fitter ( const LHCb::Particle&   bc                  , 
+             const LHCb::VertexBase& pv                  , 
+             const bool              forceFitAll  = true ,
+             ITrackExtrapolator*     extrapolator = 0    ) ;
+    /// constructor from the particle (decay head) and primary vertex
+    Fitter ( const LHCb::Particle&   bc                  , 
+             const LHCb::VertexBase& pv                  , 
+             ITrackExtrapolator*     extrapolator        ,
+             const bool              forceFitAll  = true ) ;
     /// destructor
     ~Fitter() ;                                                   // destructor
     // ========================================================================
@@ -116,6 +135,13 @@ namespace DecayTreeFitter
     /// ? 
     static void setVerbose(int i) ;    
     // ========================================================================
+  public:
+    // ========================================================================
+    /// get the extrapolator
+    ITrackExtrapolator*  extrapolator() const { return m_extrapolator ; }
+    /// set the track extrapolator 
+    void setExtrapolator ( ITrackExtrapolator* extrapolator ) ;
+    // ========================================================================
   protected:
     // ========================================================================
     // expert interface. not yet for real consumption
@@ -165,6 +191,9 @@ namespace DecayTreeFitter
     // ========================================================================
     typedef std::map<const LHCb::Particle*, Gaudi::Math::ParticleParams> Map ;
     mutable Map m_map ;
+    // ========================================================================
+    /// track extrapolator (if needed) 
+    SmartIF<ITrackExtrapolator> m_extrapolator ; // track extrapolator 
     // ========================================================================
   } ;
   // ==========================================================================

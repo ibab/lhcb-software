@@ -8,6 +8,11 @@
 ! http://www.slac.stanford.edu/spires/find/hep/www?eprint=physics/0503191
 !-----------------------------------------------------------------------------
 
+! 2010-05-29 - Vanya Belyaev
+
+ - move the tool into Phys/LoKiFitters package 
+
+
 ! 2010-05-28 - Vanya Belyaev
 
  - clean DecayTree directory & fitter itself.

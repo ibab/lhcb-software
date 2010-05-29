@@ -1,4 +1,4 @@
-// $Id: Fitter.cpp,v 1.14 2010-05-28 17:04:43 ibelyaev Exp $ 
+// $Id: Fitter.cpp,v 1.15 2010-05-29 13:39:56 ibelyaev Exp $ 
 // ============================================================================
 #include <iomanip>
 #include <stdio.h>
@@ -18,26 +18,97 @@ namespace DecayTreeFitter
 {
   
   extern int vtxverbose ;
-  
-  Fitter::Fitter(const LHCb::Particle& bc, bool forceFitAll) 
-    : m_particle(&bc),m_decaychain(0),m_fitparams(0),
-      m_status(UnFitted),
-      m_chiSquare(-1),m_niter(-1)
+  // ==========================================================================
+  // constructor from the particle (decay head) 
+  // ==========================================================================
+  Fitter::Fitter 
+  ( const LHCb::Particle& bc           , 
+    const bool            forceFitAll  , 
+    ITrackExtrapolator*   extrapolator ) 
+    : m_particle   (&bc)
+    , m_decaychain (0)  
+    , m_fitparams  (0)
+    , m_status     (UnFitted)
+    , m_chiSquare  (-1)
+    , m_niter      (-1)
+  //
+    , m_extrapolator ( extrapolator ) 
+  //
   {
     // build the tree
     m_decaychain = new DecayChain(bc,forceFitAll) ;
     // allocate the fit parameters
     m_fitparams  = new FitParams(m_decaychain->dim()) ;
   }
-
-  Fitter::Fitter(const LHCb::Particle& bc, const LHCb::VertexBase& pv, bool forceFitAll) 
-    : m_particle(&bc),m_decaychain(0),m_fitparams(0),
-      m_status(UnFitted),
-      m_chiSquare(-1),m_niter(-1)
+  // ==========================================================================
+  // constructor from the particle (decay head) 
+  // ==========================================================================  
+  Fitter::Fitter 
+  ( const LHCb::Particle& bc           , 
+    ITrackExtrapolator*   extrapolator ,
+    const bool            forceFitAll  ) 
+    : m_particle   (&bc)
+    , m_decaychain (0)  
+    , m_fitparams  (0)
+    , m_status     (UnFitted)
+    , m_chiSquare  (-1)
+    , m_niter      (-1)
+  //
+    , m_extrapolator ( extrapolator ) 
+  //
+  {
+    // build the tree
+    m_decaychain = new DecayChain(bc,forceFitAll) ;
+    // allocate the fit parameters
+    m_fitparams  = new FitParams(m_decaychain->dim()) ;
+  }
+  // ==========================================================================
+  // constructor from the particle (decay head) and primary vertex
+  // ==========================================================================
+  Fitter::Fitter 
+  ( const LHCb::Particle&   bc           , 
+    const LHCb::VertexBase& pv           , 
+    const bool              forceFitAll  ,
+    ITrackExtrapolator*     extrapolator ) 
+    : m_particle   ( &bc )
+    , m_decaychain ( 0   )
+    , m_fitparams  ( 0   )
+    , m_status     ( UnFitted )
+    , m_chiSquare  ( -1  )
+    , m_niter      ( -1  )
+  //
+    , m_extrapolator ( extrapolator ) 
+  //
   {
     m_decaychain = new DecayChain(bc,pv,forceFitAll) ;
     m_fitparams  = new FitParams(m_decaychain->dim()) ;
   }
+  // ==========================================================================
+  // constructor from the particle (decay head) and primary vertex
+  // ==========================================================================
+  Fitter::Fitter 
+  ( const LHCb::Particle&   bc           , 
+    const LHCb::VertexBase& pv           , 
+    ITrackExtrapolator*     extrapolator ,
+    const bool              forceFitAll  )
+    : m_particle   ( &bc )
+    , m_decaychain ( 0   )
+    , m_fitparams  ( 0   )
+    , m_status     ( UnFitted )
+    , m_chiSquare  ( -1  )
+    , m_niter      ( -1  )
+  //
+    , m_extrapolator ( extrapolator ) 
+  //
+  {
+    m_decaychain = new DecayChain(bc,pv,forceFitAll) ;
+    m_fitparams  = new FitParams(m_decaychain->dim()) ;
+  }
+  // ==========================================================================
+  // set the track extrapolator 
+  // ==========================================================================
+  void Fitter::setExtrapolator ( ITrackExtrapolator* extrapolator ) 
+  { m_extrapolator = extrapolator ; }
   
   
   void Fitter::setVerbose(int i) { vtxverbose = i ; }
@@ -467,6 +538,14 @@ namespace DecayTreeFitter
     particle.setMomCovMatrix    ( vtxpar.momCovMatrix () ) ;
     particle.setPosCovMatrix    ( vtxpar.posCovMatrix () ) ;
     particle.setPosMomCovMatrix ( vtxpar.momPosCov    () ) ;
+    //
+    // update the chi2 of global fit if this is the head of the tree 
+    if( &pb == m_decaychain->cand() )
+    {
+      particle.eraseInfo ( LHCb::Particle::Chi2OfParticleReFitter ) ;
+      particle.addInfo   ( LHCb::Particle::Chi2OfParticleReFitter , 
+                           chiSquare() ) ;
+    }
     // update the vertex as well, if this is the head of the tree
     if( &pb == m_decaychain->cand() )
     {
@@ -478,10 +557,10 @@ namespace DecayTreeFitter
         // don't add any daughters. I don't understand why we need them anyway.
         particle.setEndVertex( vertex ) ;
       }
-      vertex->setTechnique( LHCb::Vertex::LastGlobal) ;
-      vertex->setChi2AndDoF( chiSquare(), nDof() ) ;
-      vertex->setPosition( vtxpar.position() ) ;
-      vertex->setCovMatrix( vtxpar.posCovMatrix() ) ;
+      vertex -> setTechnique  ( LHCb::Vertex::LastGlobal ) ;
+      vertex -> setChi2AndDoF ( chiSquare(), nDof()      ) ;
+      vertex -> setPosition   ( vtxpar.position()        ) ;
+      vertex -> setCovMatrix  ( vtxpar.posCovMatrix()    ) ;
     }
     
     // 	if( pb ==m_decaychain->cand() ) {
