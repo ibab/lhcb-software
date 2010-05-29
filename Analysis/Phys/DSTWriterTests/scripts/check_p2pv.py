@@ -2,16 +2,34 @@
 '''
 Check some TES locations in a DST and print a summary of the number of events selected by each line.
 Useage:
-./check_dst_contents.py --input <some file name> --location <location of trunk - defailt "/Event">
+./check_dst_contents.py --input <some file name> --root <location of trunk - defailt "/Event"> --location <location of selection on top of root>
 '''
+from __future__ import division
 
 __author__ = "Juan PALACIOS juan.palacios@cern.ch"
+
+from AnalysisPython.Helpers import deSmartRef
 
 def addEntry(self, key, value) :
     if self.has_key(key) :
         self[key] += value
     else :
         self[key] = value
+
+def particleLoop(particles, evtSvc, p2pvmap) :
+    if particles :
+        p2pv = evtSvc[location+'/Particle2VertexRelations']
+        for p in particles :
+            p = deSmartRef(p)
+            loc =  p.parent().registry().identifier()
+            nRels = 0
+            if p2pv :
+                rng = p2pv.relations(p)
+                nRels = rng.size()
+            addEntry(p2pvmap,loc, nRels)
+            particleLoop(p.daughters(), evtSvc, p2pvmap)
+
+
 
 if __name__ == '__main__' :
 
@@ -22,14 +40,18 @@ if __name__ == '__main__' :
     import sys, getopt
 
     filename = ''
-    location = '/Event'
-    opts, args = getopt.getopt(sys.argv[1:], "l:i", ["input=", "location="])
+    root = '/Event'
+    opts, args = getopt.getopt(sys.argv[1:], "l:i:r", ["input=", "location=", "root="])
 
     for o, a in opts:
         if o in ("-i", "--input"):
             filename = a
         if o in ("-l", "--location") :
             location = a
+        if o in ("-r", "--root") :
+            root = a
+
+    location = root + '/' + location
             
     assert(filename != '')
 
@@ -52,18 +74,28 @@ if __name__ == '__main__' :
     evtSel.open(filename)
 
     nEvents=0
-    nSelEvents = {}
-    nObjects = {}
-    
+    nCandidates = {}
+    p2pvmap = {}
+    nMoreThanOnePV = 0
+    particleLocation = location+'/Particles'
     while ( nextEvent() ) :
         nEvents+=1
-        particles = evtSvc[location+'/Particles']
+        particles = evtSvc[particleLocation]
         if particles :
-            print 'Found', particles.size(), 'particles in', location
-            p2pv = evtSvc[location+'/Particle2VertexRelations']
-            if not p2pv :
-                print 'Found no P2PV!!!'
-            else :
-                for p in particles :
-                    rng = p2pv.relations(p)
-                    print 'Found', rng.size(), 'P2PV relations'
+            particleLoop(particles, evtSvc, p2pvmap)
+            pvs = evtSvc[root+'/Rec/Vertex/Primary']
+            if pvs and pvs.size() > 1:
+                nMoreThanOnePV += 1
+            for loc in p2pvmap.keys() :
+                addEntry(nCandidates, loc, evtSvc[loc].size()) 
+    length = len(sorted(p2pvmap.keys(), cmp = lambda x,y : cmp(len(y), len(x)))[0])+2
+    print '----------------------------------------------------------------------------------'
+    print "Analysed ", nEvents, " events"
+#    print "Found", nCandidates, "candidates in", particleLocation
+    print "Found", nMoreThanOnePV, "events with more than one PV in events with candidates"
+    for loc in p2pvmap.keys() :
+        message = loc.ljust(length) + str('Particle->PV relations/Candidates: '+ str(p2pvmap[loc])+'/'+ str(nCandidates[loc])).rjust(10)
+        print message
+    print '----------------------------------------------------------------------------------'
+
+ 
