@@ -1,4 +1,4 @@
-// $Id: GetTools.cpp,v 1.1.1.1 2010-05-27 19:01:52 ibelyaev Exp $
+// $Id: GetTools.cpp,v 1.2 2010-05-29 15:15:10 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -27,6 +27,7 @@
 #include "Kernel/IMassFit.h"
 #include "Kernel/IVertexFit.h"
 #include "Kernel/IDirectionFit.h"
+#include "Kernel/IParticleFilter.h"
 #include "Kernel/IProtoParticleFilter.h"
 // ============================================================================
 // LoKi
@@ -47,12 +48,15 @@
 namespace 
 {
   // ===========================================================================
-  const std::string s_DistanceCalculator  = "LoKi::DistanceCalculator" ;
-  const std::string s_LifetimeFitter      = "LoKi::LifetimeFitter"     ;
-  const std::string s_ParticleTransporter = "ParticleTransporter"      ;
-  const std::string s_MassFitter          = "LoKi::MassFitter"         ;
-  const std::string s_VertexFitter        = "OfflineVertexFitter"      ;
-  const std::string s_DirectionFitter     = "LoKi::DirectionFitter"    ;
+  const std::string s_DistanceCalculator  = "LoKi::DistanceCalculator"          ;
+  const std::string s_LifetimeFitter      = "LoKi::LifetimeFitter"              ;
+  const std::string s_ParticleTransporter = "ParticleTransporter"               ;
+  const std::string s_MassFitter          = "LoKi::MassFitter"                  ;
+  const std::string s_VertexFitter        = "OfflineVertexFitter"               ;
+  const std::string s_DirectionFitter     = "LoKi::DirectionFitter"             ;
+  const std::string s_ProtoParticleFilter = "LoKi::Hybrid::ProtoParticleFilter" ;
+  const std::string s_ParticleFilter      = "LoKi::Hybrid::FilterCriterion"     ;
+  const std::string s_DecayTreeFit        = "LoKi::DecayTreeFit"                ;
   // ===========================================================================
 }
 // ============================================================================
@@ -741,6 +745,8 @@ LoKi::GetTools::protoParticleFilter
   const IProtoParticleFilter* dc = protoParticleFilter ( cntx , nick ) ;
   if ( 0 != dc ) { return dc ; }                          // RETURN 
   //
+  if ( nick.empty() ) 
+  { return protoParticleFilter ( cntx , s_ProtoParticleFilter ) ; }
   // try tool -service 
   SmartIF<IToolSvc> tsvc ( svc ) ;
   if ( !tsvc ) { return 0 ; }                             // REUTRN 
@@ -767,6 +773,9 @@ LoKi::GetTools::protoParticleFilter
 {
   if ( 0 == cntx ) { return 0 ; }
   //
+  if ( nick.empty() ) 
+  { return protoParticleFilter ( cntx , s_ProtoParticleFilter ) ; }
+  //
   GaudiAlgorithm* alg = Gaudi::Utils::getGaudiAlg ( cntx ) ;
   if ( 0 != alg  ) 
   {
@@ -780,7 +789,192 @@ LoKi::GetTools::protoParticleFilter
 }
 // ========================================================================
 
-
+// ============================================================================
+/*  get the  particle filter 
+ *  1. try to locate IDVAlgorithm and rely on IDVAlgorithm::particleFilter
+ *  2. try to locate GaudiAlgorithm and rely on GaudiAlgorithm::tool
+ *  3. use IToolSvc::retrieveTool 
+ *  @param (INPUT) base    the base to be used 
+ *  @param (INPUT) nick tool typename/nick 
+ *  @return the tool 
+ */
+// ============================================================================
+const IParticleFilter* 
+LoKi::GetTools::particleFilter
+( const LoKi::AuxFunBase& base , 
+  const std::string&      nick ) 
+{
+  // 
+  const IParticleFilter* dc = particleFilter ( base.lokiSvc() , nick ) ;
+  if ( 0 == dc ) 
+  { base.Error("Unable to locate IParticleFilter '" + nick + "'") ; }
+  //
+  return dc ;
+}
+// ============================================================================
+/*  get the  particle filter 
+ *  1. try to locate IDVAlgorithm and rely on IDVAlgorithm::particleFilter
+ *  2. try to locate GaudiAlgorithm and rely on GaudiAlgorithm::tool
+ *  3. use IToolSvc::retrieveTool 
+ *  @param (INPUT) base    the base to be used 
+ *  @param (INPUT) nick tool typename/nick 
+ *  @return the tool 
+ */
+// ============================================================================
+const IParticleFilter* 
+LoKi::GetTools::particleFilter
+( const LoKi::ILoKiSvc*   base , 
+  const std::string&      nick ) 
+{  
+  LoKi::ILoKiSvc* svc = const_cast<LoKi::ILoKiSvc*> ( base ) ;
+  // get the context service: 
+  SmartIF<IAlgContextSvc> cntx ( svc ) ;
+  // use it! 
+  const IParticleFilter* dc = particleFilter ( cntx , nick ) ;
+  if ( 0 != dc ) { return dc ; }                          // RETURN 
+  //
+  if ( nick.empty() ) { return particleFilter ( cntx , s_ParticleFilter ) ; }
+  // try tool -service 
+  SmartIF<IToolSvc> tsvc ( svc ) ;
+  if ( !tsvc ) { return 0 ; }                             // REUTRN 
+  //
+  IParticleFilter* calc  = 0 ;
+  StatusCode sc = tsvc->retrieveTool ( nick  , calc ) ;
+  if ( sc.isSuccess() && 0 != calc ) { return calc ; }
+  //
+  return 0 ;
+}
+// ============================================================================
+/*  get the  particle filter 
+ *  1. try to locate IDVAlgorithm and rely on IDVAlgorithm::particleFilter
+ *  2. try to locate GaudiAlgorithm and rely on GaudiAlgorithm::tool
+ *  @param (INPUT) base    the base to be used 
+ *  @param (INPUT) nick tool typename/nick 
+ *  @return the tool 
+ */
+// ============================================================================
+const ParticleFilter* 
+LoKi::GetTools::particleFilter
+( const IAlgContextSvc*   cntx ,
+  const std::string&      nick )
+{
+  if ( 0 == cntx ) { return 0 ; }
+  //
+  // 1. get DVAlgorithm from the context 
+  const IDVAlgorithm* dv = Gaudi::Utils::getIDVAlgorithm ( cntx ) ;
+  if ( 0 != dv  ) 
+  {
+    // get the tool from the algorithm
+    const IParticleFilter* geo = dv -> particleFilter ( nick ) ;
+    if ( 0 != geo ) { return geo ; }                                // RETURN 
+  }
+  // ==========================================================================
+  if ( nick.empty() ) { return particleFilter ( cntx , s_ParticleFilter ) ; }
+  // ==========================================================================
+  // 2. get 'simple' algorithm from the context:
+  GaudiAlgorithm* alg = Gaudi::Utils::getGaudiAlg ( cntx ) ;
+  if ( 0 != alg  ) 
+  {
+    // get the tool from the algorithm
+    const IParticleFilter* geo = alg -> tool<IParticleFilter> ( nick  , alg ) ;
+    if ( 0 != geo ) { return geo ; }                                 // RETURN 
+  }
+  //
+  return 0 ;
+}
+// ============================================================================
+/* get the decay tree fitter 
+ *  1. try to locate IDVAlgorithm and rely on IDVAlgorithm::decayTreeFitter
+ *  2. try to locate GaudiAlgorithm and rely on GaudiAlgorithm::tool
+ *  3. use IToolSvc::retrieveTool 
+ *  @param (INPUT) base    the base to be used 
+ *  @param (INPUT) nick tool typename/nick 
+ *  @return the tool 
+ */
+// ============================================================================
+IDecayTreeFit*
+LoKi::GetTools::decayTreeFitter
+( const LoKi::AuxFunBase& base , 
+  const std::string&      nick ) 
+{
+  // 
+  IDecayTreeFit* dc = decayTreeFitter ( base.lokiSvc() , nick ) ;
+  if ( 0 == dc ) 
+  { base.Error ( "Unable to locate IDecayTreeFit '" + nick + "'" ) ; }
+  //
+  return dc ;
+}
+// ============================================================================
+/*  get the decay tree fitter 
+ *  1. try to locate IDVAlgorithm and rely on IDVAlgorithm::decayTreeFitter
+ *  2. try to locate GaudiAlgorithm and rely on GaudiAlgorithm::tool
+ *  3. use IToollSvc::retrieveTool 
+ *  @param (INPUT) base    the base to be used 
+ *  @param (INPUT) nick tool typename/nick 
+ *  @return the tool 
+ */
+// ============================================================================
+IDecayTreeFit*
+LoKi::GetTools::decayTreeFitter
+( const LoKi::ILoKiSvc*   base , 
+  const std::string&      nick ) 
+{  
+  LoKi::ILoKiSvc* svc = const_cast<LoKi::ILoKiSvc*> ( base ) ;
+  // get the context service: 
+  SmartIF<IAlgContextSvc> cntx ( svc ) ;
+  // use it! 
+  IDecayTreeFit* dc = decayTreeFitter ( cntx , nick ) ;
+  if ( 0 != dc ) { return dc ; }                          // RETURN 
+  //
+  if ( nick.empty() ) { return decayTreeFitter ( cntx , s_DecayTreeFitter ) ; }
+  // try tool -service 
+  SmartIF<IToolSvc> tsvc ( svc ) ;
+  if ( !tsvc ) { return 0 ; }                             // REUTRN 
+  //
+  IDecayTreeFit* calc  = 0 ;
+  StatusCode sc = tsvc->retrieveTool ( nick  , calc ) ;
+  if ( sc.isSuccess() && 0 != calc ) { return calc ; }
+  //
+  return 0 ;
+}
+// ============================================================================
+/*  get the decay tree fitter 
+ *  1. try to locate IDVAlgorithm and rely on IDVAlgorithm::decayTreeFitter
+ *  2. try to locate GaudiAlgorithm and rely on GaudiAlgorithm::tool
+ *  @param (INPUT) cntx context service 
+ *  @param (INPUT) nick tool typename/nick 
+ *  @return the tool 
+ */
+// ============================================================================
+IDecayTreeFit*
+LoKi::GetTools::decayTreeFitter
+( const IAlgContextSvc*   cntx ,
+  const std::string&      nick )
+{
+  if ( 0 == cntx ) { return 0 ; }
+  //
+  // 1. get DVAlgorithm from the context 
+  const IDVAlgorithm* dv = Gaudi::Utils::getIDVAlgorithm ( cntx ) ;
+  if ( 0 != dv  ) 
+  {
+    // get the tool from the algorithm
+    const IDecayTreeFit* geo = dv -> decayTreeFitter ( nick ) ;
+    if ( 0 != geo ) { return geo ; }                                // RETURN 
+  }
+  // ==========================================================================
+  if ( nick.empty() ) { return decayTreeFitter ( cntx , s_DecayTreeFitter ) ; }
+  // ==========================================================================
+  // 2. get 'simple' algorithm from the context:
+  GaudiAlgorithm* alg = Gaudi::Utils::getGaudiAlg ( cntx ) ;
+  if ( 0 != alg  ) 
+  {
+    // get the tool from the algorithm
+    const IDecayTreeFit* geo = alg -> tool<IDecayTreeFit> ( nick  , alg ) ;
+    if ( 0 != geo ) { return geo ; }                                 // RETURN 
+  }
+  //
+  return 0 ;
+}
 // ============================================================================
 // The END 
 // ============================================================================

@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.1 2010-05-28 09:47:02 ibelyaev Exp $ 
+! $Id: release.notes,v 1.2 2010-05-29 15:15:10 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiUtils
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 ! Purpose     : colleciton of utils for LoKi
 ! -----------------------------------------------------------------------------
+
+! 2010-05-29 - Vanya Belyaev
+	 - GetTools: 
+      add accessors for Particle Filters & Decay Tree Fitters 
 
 ! 2010-05-28 - Vanya Belyaev
  - new package 
