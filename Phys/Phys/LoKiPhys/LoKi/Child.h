@@ -1,4 +1,4 @@
-// $Id: Child.h,v 1.14 2009-07-09 13:39:13 ibelyaev Exp $
+// $Id: Child.h,v 1.15 2010-05-29 18:29:50 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_CHILD_H 
 #define LOKI_CHILD_H 1
@@ -24,14 +24,15 @@
  */
 namespace LoKi 
 {
-  /** @namespace LoKi::Child Child.h LoKi/Child.h
+  // ===========================================================================
+  /** @namespace LoKi::Child LoKi/Child.h
    *  Namespace with collection of accessr to children  
    *  @see LHCb::Particle
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
    *  @date   2006-02-11
    */
   namespace Child
-  { 
+  {
     // ========================================================================
     /** get the number of children 
      *  @param mother pointer to the mother particle 
@@ -204,8 +205,9 @@ namespace LoKi
     descendants
     ( const LHCb::Particle* particle ) ;
     // ========================================================================
-  } // end of the namespace LoKi:Child 
-} // end of the namespace LoKi
+  } //                                          end of the namespace LoKi:Child 
+  // ==========================================================================
+} //                                                  end of the namespace LoKi
 // ============================================================================
 // The END 
 // ============================================================================

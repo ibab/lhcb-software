@@ -1,4 +1,4 @@
-// $Id: LoKiPhysDict.h,v 1.25 2010-05-15 16:50:37 ibelyaev Exp $
+// $Id: LoKiPhysDict.h,v 1.26 2010-05-29 18:29:50 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_LOKIPHYSDICT_H 
 #define LOKI_LOKIPHYSDICT_H 1
@@ -42,6 +42,7 @@
 #include "LoKi/TreeOps.h"
 // ============================================================================
 #include "LoKi/Photons.h"
+#include "LoKi/ChildSelector.h"
 // ============================================================================
 /** @file
  *  The dictionaries for the package Phys/LoKiPhys
