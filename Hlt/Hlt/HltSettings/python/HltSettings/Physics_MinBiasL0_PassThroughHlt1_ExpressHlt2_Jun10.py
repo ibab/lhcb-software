@@ -1,5 +1,5 @@
 from HltSettings.Physics_MinBiasL0_PassThroughHlt_Jun10  import Physics_MinBiasL0_PassThroughHlt_Jun10 
-class Physics_MinBiasL0_PassThroughHlt1_ExpressHlt2_Jun10 ( Physics_MinBiasL0_PassThroughHlt_Jun10 ) :
+class Physics_MinBiasL0_PassThroughHlt1_ExpressHlt2_Jun10     ( Physics_MinBiasL0_PassThroughHlt_Jun10 ) :
     """
     Threshold settings for Hlt1+Hlt2 for 2010 conditions
     
@@ -13,7 +13,7 @@ class Physics_MinBiasL0_PassThroughHlt1_ExpressHlt2_Jun10 ( Physics_MinBiasL0_Pa
 
     def HltType(self) :
         self.verifyType( Physics_MinBiasL0_PassThroughHlt1_ExpressHlt2_Jun10 )
-        return          'Physics_MinBiasL0_PassThroughHlt_ExpressHlt2_Jun10'
+        return          'Physics_MinBiasL0_PassThroughHlt1_ExpressHlt2_Jun10'
 
     def Thresholds(self) :
         thresholds = Physics_MinBiasL0_PassThroughHlt_Jun10.Thresholds(self)

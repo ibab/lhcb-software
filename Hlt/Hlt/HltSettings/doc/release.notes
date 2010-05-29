@@ -5,6 +5,11 @@
 !-----------------------------------------------------------------------------
 
 !========================== HltSettings v2r0  2010-05-28 ===================
+! 2010-05-28 - V. Gligorov + Gerhard Raven
+ - add Physics_25Vis_25L0_2Hlt1_2Hlt2_Jun10
+   Physics_25Vis_25L0_2Hlt1_ExpressHlt2_Jun10
+   Physics_MinBiasL0_PassThroughHlt1_ExpressHlt2_Jun10
+
 ! 2010-05-28 - V. Gligorov
  - Removal of obsolete settings.
 
