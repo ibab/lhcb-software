@@ -558,10 +558,10 @@ def getAlgorithms( id, cas = ConfigAccessSvc() ) :
 
 def dump( id, properties = None,  cas = ConfigAccessSvc() ) :
     if not properties : 
-        properties = [ 'RoutingBits', 'Accept', 'FilterDescriptor'
+        properties = [ 'RoutingBits', 'AcceptFraction', 'FilterDescriptor'
                      , 'Code', 'InputLocations'
                      , 'DaughtersCuts', 'CombinationCut', 'MotherCut', 'DecayDescriptor'
-                     , 'OutputSelection','Context' ]
+                     , 'OutputSelection' ]
     tree =  execInSandbox( _getConfigTree, id, cas )
     def len1(line):
         _i = line.rfind('\n')
