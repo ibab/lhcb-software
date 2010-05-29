@@ -1,4 +1,4 @@
-// $Id: IDecayTreeFit.h,v 1.1 2010-05-24 14:45:19 ibelyaev Exp $
+// $Id: IDecayTreeFit.h,v 1.2 2010-05-29 13:49:21 ibelyaev Exp $
 // ============================================================================
 #ifndef KERNEL_IDECAYTREEFIT_H 
 #define KERNEL_IDECAYTREEFIT_H 1
@@ -42,6 +42,36 @@ public:
 public: 
   // ==========================================================================
   /** fit the decay tree 
+   *
+   *  @code 
+   * 
+   *   const IDecayTreeFitter* fitter = ...;  // get the fitter 
+   *
+   *
+   *   const LHCb::Particle*   p      = ... ; // get the particle 
+   *  
+   *   // fit it !
+   *   StatusCode sc = fitter -> fit ( p ) ;  // fit it!!  
+   *   if ( sc.isFailure() ) { ... }          
+   *
+   *  @endcode 
+   *
+   *  For the fit one can also use the primary vertex constraint:
+   *
+   *  @code 
+   * 
+   *   const IDecayTreeFitter* fitter = ...;  // get the fitter 
+   *
+   *
+   *   const LHCb::Particle*   B      = ... ; // get the particle 
+   *   const LHCb::VertexBase* pv     = ... ; // get the primary vertex 
+   *  
+   *   // fit it !
+   *   StatusCode sc = fitter -> fit ( B , pv ) ;  // fit it!!  
+   *   if ( sc.isFailure() ) { ... }          
+   *
+   *  @endcode 
+   *
    *  @param decay  (INPUT) the decay tree to fit 
    *  @param origin (INPUT) the origin vertex 
    *  @return status code 
@@ -50,6 +80,63 @@ public:
   ( const LHCb::Particle*   decay      , 
     const LHCb::VertexBase* origin = 0 ) const = 0 ;
   /** get the fitted parameters for the particle 
+   *
+   *  @code 
+   * 
+   *   const IDecayTreeFitter* fitter = ...;  // get the fitter 
+   *   const LHCb::Particle*   p      = ... ; // get the particle 
+   *  
+   *   // fit it !
+   *   StatusCode sc = fitter -> fit ( p ) ;  // fit it!!  
+   *   if ( sc.isFailure() ) { ... }          
+   *
+   *   // get the daughter particle:
+   *   const LHCb::Particle* daughter = ... ; 
+   *  
+   *   const IDecayTreeFitter::Fitted* fitted = 
+   *      fitter ->fitter ( daughter ) ;
+   *  
+   *   if ( 0 == fitted ) { ... }  ;           // error here 
+   *   else 
+   *     {  
+   *        info () << " Fitted 4-momentum of daughter  " << fitted->momenum() 
+   *                << " Fitted decay-legth of daughter " << fitted->decayLength() 
+   *                << endreq 
+   *     }
+   *
+   *  @endcode 
+   *
+   *   The fitted result for mother particle ("decay head") can be extracted 
+   *   using the defautl argument :
+   *
+   *  @code 
+   * 
+   *   const IDecayTreeFitter* fitter = ...;  // get the fitter 
+   *   const LHCb::Particle*   B      = ... ; // get the particle 
+   *   const LHCb::VertexBase* pv     = ... ; // get the primary vertex 
+   *  
+   *   // fit it !
+   *   StatusCode sc = fitter -> fit ( B , pv ) ;  // fit it!!  
+   *   if ( sc.isFailure() ) { ... }          
+   *
+   *   // extract teh fitted results :
+   *   const IDecayTreeFitter::Fitted* fitted = fitter ->fitter () ;
+   *  
+   *   if ( 0 == fitted ) { ... }  ;           // error here 
+   *   else 
+   *     {  
+   *        info () << " Fitted 4-momentum   " << fitted->momenum() 
+   *                << " Fitted decay-length " << fitted->decayLength() 
+   *                << endreq 
+   *     }
+   *
+   *  @endcode 
+   *
+   *  @see IDecayTreeFit::Fitted 
+   *  @see Gaudi::Math::ParticleParams  
+   *  @see Gaudi::Math::ParticleParams::momentum
+   *  @see Gaudi::Math::ParticleParams::decayLength
+   * 
    *  @param particle (INPUT) the particle, NULL corresponds to the decay head  
    *  @return the fitted parameters, NULL for invalid argument/fit failure 
    */
@@ -57,12 +144,56 @@ public:
   // ==========================================================================  
 public:
   // ==========================================================================
-  /// get the fit resuts in form of self-consistent decay tree 
+  /** get the fit resuts in form of self-consistent decay tree 
+   * 
+   *  @code 
+   * 
+   *   const IDecayTreeFitter* fitter = ...;  // get the fitter 
+   *   const LHCb::Particle*   p      = ... ; // get the particle 
+   *  
+   *   // fit it !
+   *   StatusCode sc = fitter -> fit ( p ) ;  // fit it!!  
+   *   if ( sc.isFailure() ) { ... }          
+   *
+   *   // get the daughter particle:
+   *   const LHCb::Particle* daughter = ... ; 
+   *  
+   *   // get the fitted tree:
+   *   LHCb::DecayTree tree = fitter->fittedTree() ;
+   *
+   *   // get the fitted daughter form the tree 
+   *   const LHCb::Particle* fitted = tree.findClone ( *daughter ) ;
+   *
+   *  @endcode 
+   *
+   *  @see LHCb::DecayTree
+   *
+   *  @return the whole fitted tree 
+   */
   virtual LHCb::DecayTree fittedTree () const = 0 ;
   // ==========================================================================  
 public:
   // ==========================================================================
   /** add the constraint 
+   *
+   *  @code 
+   * 
+   *   IDecayTreeFitter*       fitter = ...;  // get the fitter 
+   *   const LHCb::Particle*   p      = ... ; // get the particle 
+   *
+   *   // apply mass-constrainst for charm for the next fit 
+   *   fitter -> addConstraint ( LHCb::ParticleID( 240  )  ) ;  
+   *   fitter -> addConstraint ( LHCb::ParticleID( 140  )  ) ;  
+   *
+   *   // fit it !
+   *   StatusCode sc = fitter -> fit ( p ) ;  // fit it!!  
+   *   if ( sc.isFailure() ) { ... }          
+   *
+   *  @endcode 
+   *
+   * @attention Mass-constraints is active only for the next call 
+   *            of IDecayTreeFit::fit
+   *  
    *  @param pid (INPUT) particle-ID to be constrained
    */
   virtual void addConstraint ( const LHCb::ParticleID& pid ) = 0 ;

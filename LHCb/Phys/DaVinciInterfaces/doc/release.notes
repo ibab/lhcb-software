@@ -4,6 +4,12 @@
 ! Purpose     : Tool interfaces and dictionaries for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2010-05-29 - Vanya Belyaev
+
+ - IDecayTreeFit 
+
+    improve Doxygen comments 
+
 
 ! 2010-05-24 - Vanya Belyaev
 
