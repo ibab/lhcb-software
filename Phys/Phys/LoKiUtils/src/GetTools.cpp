@@ -1,4 +1,4 @@
-// $Id: GetTools.cpp,v 1.2 2010-05-29 15:15:10 ibelyaev Exp $
+// $Id: GetTools.cpp,v 1.3 2010-05-29 15:24:17 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -29,6 +29,7 @@
 #include "Kernel/IDirectionFit.h"
 #include "Kernel/IParticleFilter.h"
 #include "Kernel/IProtoParticleFilter.h"
+#include "Kernel/IDecayTreeFit.h"
 // ============================================================================
 // LoKi
 // ============================================================================
@@ -853,7 +854,7 @@ LoKi::GetTools::particleFilter
  *  @return the tool 
  */
 // ============================================================================
-const ParticleFilter* 
+const IParticleFilter* 
 LoKi::GetTools::particleFilter
 ( const IAlgContextSvc*   cntx ,
   const std::string&      nick )
@@ -926,7 +927,7 @@ LoKi::GetTools::decayTreeFitter
   IDecayTreeFit* dc = decayTreeFitter ( cntx , nick ) ;
   if ( 0 != dc ) { return dc ; }                          // RETURN 
   //
-  if ( nick.empty() ) { return decayTreeFitter ( cntx , s_DecayTreeFitter ) ; }
+  if ( nick.empty() ) { return decayTreeFitter ( cntx , s_DecayTreeFit ) ; }
   // try tool -service 
   SmartIF<IToolSvc> tsvc ( svc ) ;
   if ( !tsvc ) { return 0 ; }                             // REUTRN 
@@ -958,18 +959,18 @@ LoKi::GetTools::decayTreeFitter
   if ( 0 != dv  ) 
   {
     // get the tool from the algorithm
-    const IDecayTreeFit* geo = dv -> decayTreeFitter ( nick ) ;
+    IDecayTreeFit* geo = dv -> decayTreeFitter ( nick ) ;
     if ( 0 != geo ) { return geo ; }                                // RETURN 
   }
   // ==========================================================================
-  if ( nick.empty() ) { return decayTreeFitter ( cntx , s_DecayTreeFitter ) ; }
+  if ( nick.empty() ) { return decayTreeFitter ( cntx , s_DecayTreeFit ) ; }
   // ==========================================================================
   // 2. get 'simple' algorithm from the context:
   GaudiAlgorithm* alg = Gaudi::Utils::getGaudiAlg ( cntx ) ;
   if ( 0 != alg  ) 
   {
     // get the tool from the algorithm
-    const IDecayTreeFit* geo = alg -> tool<IDecayTreeFit> ( nick  , alg ) ;
+    IDecayTreeFit* geo = alg -> tool<IDecayTreeFit> ( nick  , alg ) ;
     if ( 0 != geo ) { return geo ; }                                 // RETURN 
   }
   //
