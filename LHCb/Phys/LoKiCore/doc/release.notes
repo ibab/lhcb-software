@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.198 2010-05-21 12:50:56 cattanem Exp $ 
+! $Id: release.notes,v 1.199 2010-05-29 18:28:19 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiCore
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -14,6 +14,17 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! 
 ! -----------------------------------------------------------------------------
+
+! 2010-05-29 - Vanya Belyaev
+
+   DecayFinder:
+
+     add more methods ...
+
+ - cmt/requirements 
+
+    version inrement to v10r2 
+
 
 ! =========================== LoKiCore v10r1 2010-05-21 =======================
 ! 2010-05-19 - Gerhard Raven

@@ -1,4 +1,4 @@
-// $Id: DecayFinder.h,v 1.3 2009-08-11 18:19:24 ibelyaev Exp $
+// $Id: DecayFinder.h,v 1.4 2010-05-29 18:28:18 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_DECAYFINDER_H 
 #define LOKI_DECAYFINDER_H 
@@ -214,10 +214,19 @@ namespace Decays
     // ========================================================================
   public:
     // ========================================================================
+    /// access to the underlying tree 
+    const iTree_<PARTICLE>&     tree () const { return m_tree.tree() ; }
     /// cast operator to the underlyiong tree 
-    operator const iTree_<PARTICLE>& () const { return m_tree.tree() ; }// cast
+    operator const iTree_<PARTICLE>& () const { return  this->tree() ; }// cast
+    /// valid tree? 
+    bool valid     () const { return this->tree().valid  () ; }
+    /// marked tree? 
+    bool marked    () const { return this->tree().marked () ; }
     /// invalid tree? 
-    bool operator! () const { return !m_tree.valid() ; }       // invalid tree? 
+    bool operator! () const { return !(this->valid()) ; } 
+    /// validate the tree 
+    StatusCode validate ( const LHCb::IParticlePropertySvc* svc ) const 
+    { return m_tree.validate ( svc ) ; }
     // ========================================================================    
   private:
     // ========================================================================
