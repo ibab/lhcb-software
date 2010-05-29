@@ -103,7 +103,7 @@ class DiMuonLines :
             ,'MuTrackNoIPDoca'    : 0.100     # mm
             ,'MuTrackNoIPMass'    : 2900      # MeV
             ,'Prescale'   : { 'Hlt2MuonFromHLT1'       : 0.01   
-                              ,'Hlt2SingleMuon'        : 0.02
+                              ,'Hlt2SingleMuon'        : 1.0
                               ,'Hlt2SingleHighPTMuon'  : 1.0
                               ,'Hlt2IncMuTrack'        : 1.0
                               ,'Hlt2IncMuTrackNoIP'    : 1.0
