@@ -1,4 +1,4 @@
-// $Id: DVAlgorithm.cpp,v 1.77 2010-05-14 15:07:10 ibelyaev Exp $
+// $Id: DVAlgorithm.cpp,v 1.78 2010-05-29 15:13:12 ibelyaev Exp $
 // ============================================================================
 // Include 
 // ============================================================================
@@ -43,6 +43,12 @@ DVAlgorithm::DVAlgorithm
   // 
     , m_particleReFitterNames ()
     , m_particleReFitters     ()
+  //
+    , m_pvReFitterNames       ()
+    , m_pvReFitters           ()
+  //
+    , m_decayTreeFitterNames  ()
+    , m_decayTreeFitters      ()
   //
     , m_massFitterNames       ()
     , m_massFitters           ()
@@ -112,8 +118,12 @@ DVAlgorithm::DVAlgorithm
   //
   declareProperty ( "WriteSelResultTool"  , m_writeSelResultName, "Name of SelResult Writer Tool" ) ;
   //
-  m_filterNames    [ "" ]        = "ParticleFilter" ;
-  declareProperty ( "ParticleFilters"   , m_filterNames, "Names of ParticleFilters"   ) ;
+  m_filterNames    [ ""       ] = "LoKi::Hybrid::FilterCriterion" ;
+  m_filterNames    [ "LoKi"   ] = "LoKi::Hybrid::FilterCriterion" ;
+  m_filterNames    [ "Hybrid" ] = "LoKi::Hybrid::FilterCriterion" ;
+  declareProperty ( "ParticleFilters"            , 
+                    m_filterNames                , 
+                    "Names of ParticleFilters"   ) ;
   // 
   declareProperty ( "ReFitPVs"    , m_refitPVs, "Refit PV"     ) ; 
 
@@ -150,22 +160,33 @@ DVAlgorithm::DVAlgorithm
   m_pvReFitterNames [ "Cheated"    ] = "CheatedPVReFitter"  ;
   declareProperty  ( "PVReFitters" , m_pvReFitterNames, "Names of PV refitters" ) ;
   //
+  
+  m_decayTreeFitterNames [ ""     ] = "LoKi::DecayTreeFit" ;
+  m_decayTreeFitterNames [ "LoKi" ] = "LoKi::DecayTreeFit" ;
+  declareProperty  
+    ( "DecayTreeFitters"       , 
+      m_decayTreeFitterNames   , 
+      "The mapping of nick/name/type for IDecaytreeFitFit tools" ) ;
+  //
   m_massFitterNames [ ""     ] = "LoKi::MassFitter" ;
   m_massFitterNames [ "LoKi" ] = "LoKi::MassFitter" ;
   declareProperty  
-    ( "MassFitters"       , m_massFitterNames       , 
+    ( "MassFitters"            , 
+      m_massFitterNames        , 
       "The mapping of nick/name/type for IMassFit tools"        ) ;
   //
   m_lifetimeFitterNames  [ ""     ] = "PropertimeFitter"     ;
   m_lifetimeFitterNames  [ "LoKi" ] = "LoKi::LifetimeFitter" ;
   declareProperty  
-    ( "LifetimeFitters"    , m_lifetimeFitterNames , 
+    ( "LifetimeFitters"     , 
+      m_lifetimeFitterNames , 
       "The mapping of nick/name/type for ILifetimeFitter tools" ) ;
   //
   m_directionFitterNames [ ""     ] = "DirectionFitter" ;
   m_directionFitterNames [ "LoKi" ] = "LoKi::DirectionFitter" ;
   declareProperty  
-    ( "DirectionFitters"    , m_directionFitterNames , 
+    ( "DirectionFitters"     , 
+      m_directionFitterNames , 
       "The mapping of nick/name/type for IDirectionFit tools"   ) ;
   //
   m_distanceCalculatorNames [ ""        ] = "LoKi::DistanceCalculator"    ;
@@ -174,7 +195,8 @@ DVAlgorithm::DVAlgorithm
   m_distanceCalculatorNames [ "Hlt"     ] = "LoKi::TrgDistanceCalculator" ;
   m_distanceCalculatorNames [ "Trigger" ] = "LoKi::TrgDistanceCalculator" ;
   declareProperty 
-    ( "DistanceCalculators" , m_distanceCalculatorNames , 
+    ( "DistanceCalculators"     , 
+      m_distanceCalculatorNames , 
       "The mapping of nick/name/type for IDistanceCalculator tools"   ) ;
   //
   declareProperty ( "DecayDescriptor"   , m_decayDescriptor   = "", "Describes the decay" ) ;

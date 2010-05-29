@@ -1,10 +1,18 @@
-!$Id: release.notes,v 1.355 2010-05-27 15:29:19 jpalac Exp $
+!$Id: release.notes,v 1.356 2010-05-29 15:13:12 ibelyaev Exp $
 !============================================================================
 ! Package     : DaVinciKernel
 ! Responsible : J.P. Palacios
 !============================================================================
 
+! 2010-05-29 - Vanya Belyaev
+
+ - DVAlgorithm
+
+     1. add accessor to decay tree fitter 
+     2. change default list of particle filters 
+
 ! 2010-05-27 - Juan Palacios
+
  - Kernel/ParticleFilters.h
   . Fix the doxygen.
 

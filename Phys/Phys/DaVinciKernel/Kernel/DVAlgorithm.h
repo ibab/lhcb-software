@@ -1,4 +1,4 @@
-// $Id: DVAlgorithm.h,v 1.54 2010-05-14 15:07:10 ibelyaev Exp $ 
+// $Id: DVAlgorithm.h,v 1.55 2010-05-29 15:13:12 ibelyaev Exp $ 
 // ============================================================================
 #ifndef DAVINCIKERNEL_DVALGORITHM_H
 #define DAVINCIKERNEL_DVALGORITHM_H 1
@@ -32,6 +32,7 @@
 #include "Kernel/ICheckOverlap.h"
 #include "Kernel/IBTaggingTool.h"
 #include "Kernel/IParticleDescendants.h"
+#include "Kernel/IDecayTreeFit.h"
 #include "Kernel/IWriteSelResult.h"
 #include "Kernel/IDistanceCalculator.h"
 #include "Kernel/IPVReFitter.h"
@@ -148,7 +149,8 @@ public: // IDVAlgorithm
    *  @param name the tool name/typename/nickname
    *  @return pointer to aquired tool 
    */
-  const IDistanceCalculator* distanceCalculator 
+  const IDistanceCalculator* 
+  distanceCalculator 
   ( const std::string& name = "" ) const 
   {
     return getTool<IDistanceCalculator>
@@ -194,6 +196,19 @@ public: // IDVAlgorithm
       ( name , 
         m_particleReFitterNames ,
         m_particleReFitters     , this ) ; 
+  }
+  /** Accessor for IDecayTreeFit tools by name/typename/nickname
+   *  @see IDecayTreeFit
+   *  @param name the tool name/typename/nickname
+   *  @return pointer to aquired tool 
+   */
+  IDecayTreeFit*
+  decayTreeFitter ( const std::string& name = "" ) const 
+  {
+    return getTool<IDecayTreeFit>
+      ( name , 
+        m_decayTreeFitterNames ,
+        m_decayTreeFitters     , this ) ; 
   }
   /** Accessor for IParticleCombiner tools by name/typename/nickname
    *  @see IParticleCombiner
@@ -246,6 +261,19 @@ public: // IDVAlgorithm
       ( name , 
         m_pvReFitterNames ,
         m_pvReFitters     , this ) ; 
+  }
+  /** Accessor for Particle Filter Tool
+   *  @see IPArticleFilter
+   *  @param name the tool name/typename/nickname
+   *  @return pointer to aquired tool 
+   */
+  const IParticleFilter* 
+  particleFilter ( const std::string& name = "" ) const
+  {
+    return getTool<IParticleFilter>
+      ( name          , 
+        m_filterNames , 
+        m_filters     , this ) ;
   }
   // ==========================================================================
 public:
@@ -376,16 +404,6 @@ public:
         m_geomTools     , this ) ;
   }
   
-  /// Accessor for Particle Filter Tool
-  inline IParticleFilter* 
-  particleFilter ( const std::string& name = "" ) const
-  {
-    return getTool<IParticleFilter>
-      ( name          , 
-        m_filterNames , 
-        m_filters     , this ) ;
-  }
-
 
 public:
   
@@ -602,7 +620,11 @@ protected:
   /// The actual map of "nickname -> tool" for Particle Refitters 
   mutable GaudiUtils::VectorMap<std::string,IPVReFitter*> m_pvReFitters ;
 
-  
+  /// Mapping of "nickname ->type/name" for Decay Tree Fitters 
+  ToolMap                                                   m_decayTreeFitterNames  ;
+  /// The actual map of "nickname -> tool" for Decay Tree fitters 
+  mutable GaudiUtils::VectorMap<std::string,IDecayTreeFit*> m_decayTreeFitters ;
+
 protected:
   
   /// Mapping of "nickname ->type/name" for mass-constrained fitters 
