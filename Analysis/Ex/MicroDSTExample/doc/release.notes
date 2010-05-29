@@ -1,9 +1,13 @@
-!$Id: release.notes,v 1.52 2010-05-24 20:24:46 jpalac Exp $
+!$Id: release.notes,v 1.53 2010-05-29 11:56:50 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Ex/MicroDSTExample
 ! Responsible : Juan PALACIOS
 ! Purpose     : MicroDST making and reading examples.
 !-----------------------------------------------------------------------------
+
+! 2010-05-29 - Juan Palacios
+ - scripts/MicroDSTReadingExample.py
+  . Add K* plots, re-structure location options.
 
 !======================= Ex/MicroDSTExample v2r13 2010-05-24 =================
 
