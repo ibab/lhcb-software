@@ -6,6 +6,10 @@
 
 ! 2010-05-29 - Vanya Belyaev
 
+ - IDVAlgorithm 
+
+     add accessor to decay tree fitter 
+
  - IDecayTreeFit 
 
     improve Doxygen comments 

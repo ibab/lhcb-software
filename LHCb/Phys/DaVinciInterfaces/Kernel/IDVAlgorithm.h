@@ -1,4 +1,4 @@
-// $Id: IDVAlgorithm.h,v 1.10 2010-05-14 15:03:45 ibelyaev Exp $
+// $Id: IDVAlgorithm.h,v 1.11 2010-05-29 15:11:40 ibelyaev Exp $
 // ============================================================================
 #ifndef KERNEL_IDVALGORITHM_H 
 #define KERNEL_IDVALGORITHM_H 1
@@ -25,6 +25,8 @@ class ILifetimeFitter     ;
 class IVertexFit          ;
 class IMassFit            ;
 class IDirectionFit       ;
+class IDecayTreeFit       ;
+class IParticleFilter     ;
 class IParticleReFitter   ;
 class IParticleCombiner   ;
 class IPVReFitter         ;
@@ -42,7 +44,7 @@ class GAUDI_API IDVAlgorithm : virtual public INamedInterface
 {
 public: 
   // ==========================================================================
-  DeclareInterfaceID(IDVAlgorithm, 2, 0);
+  DeclareInterfaceID(IDVAlgorithm, 3, 0);
   // ==========================================================================
 public: // tools 
   // ==========================================================================
@@ -58,6 +60,12 @@ public: // tools
   /// get particle re-fitter tool
   virtual const IParticleReFitter* 
   particleReFitter      ( const std::string& nickname = "" ) const = 0 ;
+  /// get particle filter tool
+  virtual const IParticleFilter* 
+  particleFilter        ( const std::string& nickname = "" ) const = 0 ;
+  /// Accessor for decay-tree fitter 
+  virtual       IDecayTreeFit*
+  decayTreeFitter       ( const std::string& nickname = "" ) const = 0 ;
   /// Accessor for ParticleCombiner tool
   virtual const IParticleCombiner* 
   particleCombiner      ( const std::string& nickname = "" ) const = 0 ;
@@ -81,11 +89,14 @@ public: // implementation
 public: // data 
   // ==========================================================================
   /// Return a container of local LHCb::Particle*
-  virtual const LHCb::Particle::Range  particles       () const = 0;  
+  virtual const LHCb::Particle::Range  
+  particles       () const = 0 ;  
   /// Return a container of LHCb::RecVertex*, containing primary vertices.
-  virtual const LHCb::RecVertex::Range primaryVertices () const = 0;
+  virtual const LHCb::RecVertex::Range 
+  primaryVertices () const = 0 ;
   /// Return the best primary vertex for a given LHCb::Particle.
-  virtual const LHCb::VertexBase* bestVertex(const LHCb::Particle*) const = 0;
+  virtual const LHCb::VertexBase*      
+  bestVertex      ( const LHCb::Particle* ) const = 0 ;
   // ==========================================================================
 protected: 
   // ==========================================================================
