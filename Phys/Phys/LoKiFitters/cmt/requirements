@@ -1,18 +1,20 @@
-# $Id: requirements,v 1.13 2010-04-25 17:57:00 graven Exp $
+# $Id: requirements,v 1.14 2010-05-29 13:44:43 ibelyaev Exp $
 # =============================================================================
 # Created    : 2008-02-12
 # Maintainer : Vanya BELYAEV Ivan.Belyaev@itep.ru 
 # =============================================================================
 package           LoKiFitters
 author            Vanya Belyaev
-version           v2r4p3
+version           v2r5
 
 # =============== structure ===================================================
 branches          cmt doc src 
  
 # =============== dependencies ================================================
-use               LHCbMath      v* Kernel 
-use               DaVinciKernel v* Phys 
+use               LHCbMath        v* Kernel 
+use               DaVinciKernel   v* Phys       
+use               DecayTreeFitter v* Phys 
+use               LoKiPhys        v* Phys 
 
 
 # =============== constituents ================================================
