@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.144 2010-05-28 10:02:25 ibelyaev Exp $ 
+! $Id: release.notes,v 1.145 2010-05-30 11:04:23 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhys
 ! Responsible : Vanya Belyaev
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
+
+! 2010-05-30 - Vanya Belyaev
+ - Child::Selector: selecltro for child particles  
 
 ! 2010-05-28 - Vanya Belyaev
 
