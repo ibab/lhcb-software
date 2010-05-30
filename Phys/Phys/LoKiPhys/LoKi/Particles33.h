@@ -1,4 +1,4 @@
-// $Id: Particles33.h,v 1.1 2010-02-22 09:55:47 ibelyaev Exp $
+// $Id: Particles33.h,v 1.2 2010-05-30 17:11:01 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PARTICLES33_H 
 #define LOKI_PARTICLES33_H 1
@@ -10,6 +10,7 @@
 #include "LoKi/PhysTypes.h"
 #include "LoKi/iTree.h"
 #include "LoKi/IDecay.h"
+#include "LoKi/ChildSelector.h"
 // ============================================================================
 namespace LoKi 
 {
@@ -41,18 +42,21 @@ namespace LoKi
     {
     public:
       // ======================================================================
+      /// constructor from child selector  
+      PolarizationAngle
+      ( const LoKi::Child::Selector& daughter                  , 
+        const LoKi::Child::Selector& parent                    , 
+        const bool                   mother    = true          ) ;
       /// constructor from two trees 
       PolarizationAngle
       ( const Decays::IDecay::iTree& daughter                  , 
         const Decays::IDecay::iTree& parent                    , 
-        const bool                   mother    = true          , 
-        const bool                   validate  = true          ) ;
+        const bool                   mother    = true          ) ;
       /// constructor from two trees 
       PolarizationAngle
       ( const std::string&           daughter                  , 
         const std::string&           parent                    ,      
         const bool                   mother    = true          , 
-        const bool                   validate  = true          ,
         const std::string&           factory   = "LoKi::Decay" ) ;
       /// MANDATORY: virtual destructor
       virtual ~PolarizationAngle () ;
@@ -70,43 +74,28 @@ namespace LoKi
       // ======================================================================
     protected:
       // ======================================================================
-      /// get the tree from the descriptor 
-      Decays::IDecay::Tree getTree  ( const std::string& decay ) const ;
-      /// validate the tree 
-      void validate ( const Decays::IDecay::iTree& tree ) const ;  
-      /// the decay factory type/name 
-      const std::string& factory() const { return m_factory ; }
-      /// autovalidate ?
-      bool  autovalidate() const { return m_autovalidate ; }
-      // ======================================================================
       /// get the proper decay components  
       StatusCode getComponents12
       ( const LHCb::Particle*                 p   , 
         Decays::IDecay::iTree::Collection&    vct ) const ;
       /// valid trees?
-      bool valid  () const { return tree1().valid  () && tree2().valid  () ; }      
-      /// marked trees ?
-      bool marked () const { return tree1().marked () && tree2().marked () ; }      
+      bool valid  () const { return m_first.valid  () && m_second.valid  () ; }      
       // ======================================================================
     public:      
       // ======================================================================
-      /// the first  tree 
-      const Decays::IDecay::iTree& tree1   () const { return m_first  ; }
+      /// the first child 
+      const LoKi::Child::Selector& child1 () const { return m_first  ; }
       /// the second tree 
-      const Decays::IDecay::iTree& tree2   () const { return m_second ; }
+      const LoKi::Child::Selector& child2 () const { return m_second ; }
       // ======================================================================
     private:
       // ======================================================================
       /// rule to find the first  particle 
-      Decays::IDecay::Tree m_first   ;      //  rule to find the first particle 
+      LoKi::Child::Selector m_first   ;      //  rule to find the first particle 
       /// rule to find the second pa rticle 
-      Decays::IDecay::Tree m_second  ;      // rule to find the second particle 
+      LoKi::Child::Selector m_second  ;      // rule to find the second particle 
       /// use (dauther-parent) or two-daughters rule ?
       bool                 m_mother  ; 
-      /// autovalidate?
-      bool                 m_autovalidate ; // autovalidate?
-      /// the decay factory type/name 
-      std::string          m_factory ;          // the decay factory type/name 
       // ======================================================================
     } ;
     // ========================================================================
@@ -129,18 +118,21 @@ namespace LoKi
     {    
     public:
       // ======================================================================
+      /// constructor from child-selector 
+      SinChi ( const LoKi::Child::Selector& particle1 ,  
+               const LoKi::Child::Selector& particle2 , 
+               const LoKi::Child::Selector& particle3 , 
+               const LoKi::Child::Selector& particle4 ) ;
       /// constructor form the trees 
       SinChi ( const Decays::IDecay::iTree& particle1 ,  
                const Decays::IDecay::iTree& particle2 , 
                const Decays::IDecay::iTree& particle3 , 
-               const Decays::IDecay::iTree& particle4 , 
-               const bool autovalidate = true ) ;
+               const Decays::IDecay::iTree& particle4 ) ;
       /// constructor from the decay descriptors
       SinChi ( const std::string& particle1 ,  
                const std::string& particle2 , 
                const std::string& particle3 , 
                const std::string& particle4 , 
-               const bool         autovalidate = true          , 
                const std::string& factory      = "LoKi::Decay" ) ;
       /// MANDATORY: virtual destructor
       virtual ~SinChi() ;
@@ -172,15 +164,15 @@ namespace LoKi
       // ======================================================================
     public:
       // ======================================================================
-      const Decays::IDecay::iTree& tree3   () const { return m_tree3   ; }
-      const Decays::IDecay::iTree& tree4   () const { return m_tree4   ; }
+      const LoKi::Child::Selector& child3  () const { return m_tree3   ; }
+      const LoKi::Child::Selector& child4  () const { return m_tree4   ; }
       // ======================================================================
     private:
       // ======================================================================
       /// the tree to find the third  particle 
-      Decays::IDecay::Tree m_tree3 ;    // the tree to find the third  particle 
+      LoKi::Child::Selector m_tree3 ;    // the tree to find the third  particle 
       /// the tree to find the fourth particle 
-      Decays::IDecay::Tree m_tree4 ;    // the tree to find the fourth particle 
+      LoKi::Child::Selector m_tree4 ;    // the tree to find the fourth particle 
       // ======================================================================
     } ;
     // ========================================================================
@@ -203,18 +195,21 @@ namespace LoKi
     {    
     public:
       // ======================================================================
+      /// constructor from child-selector 
+      CosChi ( const LoKi::Child::Selector& particle1 ,  
+               const LoKi::Child::Selector& particle2 , 
+               const LoKi::Child::Selector& particle3 , 
+               const LoKi::Child::Selector& particle4 ) ;
       /// constructor form the trees 
       CosChi ( const Decays::IDecay::iTree& particle1 ,  
                const Decays::IDecay::iTree& particle2 , 
                const Decays::IDecay::iTree& particle3 , 
-               const Decays::IDecay::iTree& particle4 , 
-               const bool autovalidate = true ) ;
+               const Decays::IDecay::iTree& particle4 ) ;
       /// constructor from the decay descriptors
       CosChi ( const std::string& particle1 ,  
                const std::string& particle2 , 
                const std::string& particle3 , 
                const std::string& particle4 , 
-               const bool         autovalidate = true          , 
                const std::string& factory      = "LoKi::Decay" ) ;
       /// MANDATORY: virtual destructor
       virtual ~CosChi() ;
@@ -253,18 +248,21 @@ namespace LoKi
     {    
     public:
       // ======================================================================
+      /// constructor from child-selector 
+      AngleChi ( const LoKi::Child::Selector& particle1 ,  
+                 const LoKi::Child::Selector& particle2 , 
+                 const LoKi::Child::Selector& particle3 , 
+                 const LoKi::Child::Selector& particle4 ) ;
       /// constructor form the trees 
       AngleChi ( const Decays::IDecay::iTree& particle1 ,  
                  const Decays::IDecay::iTree& particle2 , 
                  const Decays::IDecay::iTree& particle3 , 
-                 const Decays::IDecay::iTree& particle4 , 
-                 const bool autovalidate = true ) ;
+                 const Decays::IDecay::iTree& particle4 ) ;
       /// constructor from the decay descriptors
       AngleChi ( const std::string& particle1 ,  
                  const std::string& particle2 , 
                  const std::string& particle3 , 
                  const std::string& particle4 , 
-                 const bool         autovalidate = true          , 
                  const std::string& factory      = "LoKi::Decay" ) ;
       /// MANDATORY: virtual destructor
       virtual ~AngleChi() ;
@@ -317,7 +315,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date 2010-02-21
      */
-    typedef LoKi::Particles::PolarizationAngle                                 COSPOL ;
+    typedef LoKi::Particles::PolarizationAngle                         COSPOL ;
     // ========================================================================
     /** @typedef SINCHI
      *  Simple evaluation of (sine) the angle betwen two decay planes.

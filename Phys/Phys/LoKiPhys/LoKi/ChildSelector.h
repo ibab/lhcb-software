@@ -1,4 +1,4 @@
-// $Id: ChildSelector.h,v 1.1 2010-05-30 11:04:22 ibelyaev Exp $
+// $Id: ChildSelector.h,v 1.2 2010-05-30 17:11:01 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_CHILDSELECTOR_H 
 #define LOKI_CHILDSELECTOR_H 1
@@ -27,37 +27,37 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@nikhef.nl
      *  @date   2010-05-29
      */
-    class Selector : public virtual LoKi::AuxFunBase 
+    class GAUDI_API Selector : public virtual LoKi::AuxFunBase 
     {
     public:
       // ======================================================================
       /// constructor from the index
-      Selector ( const unsigned short i  ) ;
+      Selector ( const unsigned int   i  ) ;
       /// constructor from the indices 
-      Selector ( const unsigned short i1 ,
-                 const unsigned short i2 ) ;
+      Selector ( const unsigned int   i1 ,
+                 const unsigned int   i2 ) ;
       /// constructor from the indices 
-      Selector ( const unsigned short i1 ,
-                 const unsigned short i2 ,
-                 const unsigned short i3 ) ;
+      Selector ( const unsigned int   i1 ,
+                 const unsigned int   i2 ,
+                 const unsigned int   i3 ) ;
       /// constructor from the indices 
-      Selector ( const unsigned short i1 ,
-                 const unsigned short i2 ,
-                 const unsigned short i3 ,
-                 const unsigned short i4 ) ;
+      Selector ( const unsigned int   i1 ,
+                 const unsigned int   i2 ,
+                 const unsigned int   i3 ,
+                 const unsigned int   i4 ) ;
       /// constructor from the indices 
-      Selector ( const std::vector<std::size_t>& indices  ) ;
+      Selector ( const std::vector<unsigned int>& indices  ) ;
       /// constructor from decay tree 
-      Selector ( const Decays::IDecay::iTree&    child    ) ;
+      Selector ( const Decays::IDecay::iTree&     child    ) ;
       /// constructor from decay tree 
-      Selector ( const Decays::IDecay::Finder&   child    ) ;
+      Selector ( const Decays::IDecay::Finder&    child    ) ;
       /// constructor from decay desctriptor 
-      Selector ( const std::string&              child    ) ;
+      Selector ( const std::string&               child    ) ;
       /// constructor from decay desctriptor & factory
-      Selector ( const std::string&              child    , 
-                 const std::string&              factory  ) ;
+      Selector ( const std::string&               child    , 
+                 const std::string&               factory  ) ;
       /// constructor from the cut 
-      Selector ( const LoKi::Types::Cuts&        cut      ) ;
+      Selector ( const LoKi::Types::Cuts&         cut      ) ;
       /// desctructor  
       virtual ~Selector() ;
       /// OPTIONAL: nice printout 
@@ -100,23 +100,50 @@ namespace LoKi
     private:
       // ======================================================================
       /// the child selector by index 
-      std::vector<std::size_t> m_indices ;       // the child selector by index 
+      std::vector<unsigned int> m_indices ;       // the child selector by index 
       /// rule to find the child 
-      Decays::IDecay::Finder   m_finder  ;       //      rule to find the child 
+      Decays::IDecay::Finder    m_finder  ;       //      rule to find the child 
       /// cut set 
-      bool                     m_setCut  ;       //                     cut set
+      bool                      m_setCut  ;       //                     cut set
       /// the cut 
-      LoKi::Types::Cut         m_cut     ;       //                     the cut
+      LoKi::Types::Cut          m_cut     ;       //                     the cut
       // ======================================================================
     };
     // ========================================================================
     /** Trivial accessor to the daughter particles for the given particle.
      *  @param  particle (const) pointer to mother particle 
-     *  @param  seelctor the selector 
+     *  @param  selector the selector 
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date   2010-05-29
      */
+    GAUDI_API 
     const LHCb::Particle* child 
+    ( const LHCb::Particle*        particle , 
+      const LoKi::Child::Selector& selector ) ;
+    // ========================================================================
+    /** accessor to certain children particles for the givenm particle 
+     *  @param  particle (INPUT) pointer to mother particle 
+     *  @param  selector (INPUT) the selector 
+     *  @param  result   (OUTPUT) the container of found particles
+     *  @return number of found particles 
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date   2010-05-29
+     */
+    GAUDI_API 
+    std::size_t children 
+    ( const LHCb::Particle*        particle , 
+      const LoKi::Child::Selector& selector , 
+      LHCb::Particle::ConstVector& result   ) ;
+    /** accessor to certain children particles for the givenm particle 
+     *  @param  particle (INPUT) pointer to mother particle 
+     *  @param  selector (INPUT) the selector 
+     *  @return the container of found particles
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date   2010-05-29
+     */
+    GAUDI_API 
+    LHCb::Particle::ConstVector
+    children 
     ( const LHCb::Particle*        particle , 
       const LoKi::Child::Selector& selector ) ;
     // ========================================================================

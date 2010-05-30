@@ -1,4 +1,4 @@
-// $Id: Child.cpp,v 1.9 2009-07-09 13:39:13 ibelyaev Exp $
+// $Id: Child.cpp,v 1.10 2010-05-30 17:11:02 ibelyaev Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -36,7 +36,7 @@
  *  @date   2006-02-11
  */
 // ============================================================================
-std::size_t LoKi::Child::nChildren ( const LHCb::Particle* mother ) 
+unsigned int LoKi::Child::nChildren ( const LHCb::Particle* mother ) 
 {
   if ( 0 == mother ) { return 0 ;}
   return mother->daughters().size() ;
@@ -71,7 +71,7 @@ std::size_t LoKi::Child::nChildren ( const LHCb::Particle* mother )
 // ============================================================================
 LHCb::Particle* LoKi::Child::child
 ( const LHCb::Particle*  particle , 
-  const size_t           index    ) 
+  const unsigned int     index    ) 
 {
   if ( 0 == particle      ) { return  0 ; }           // RETURN 
   // trivial case 
@@ -226,9 +226,9 @@ namespace
 {
   // ==========================================================================
   inline LHCb::Particle* _child 
-  ( const LHCb::Particle*      particle , 
-    const std::vector<size_t>& indices  , 
-    size_t                     last     ) 
+  ( const LHCb::Particle*            particle , 
+    const std::vector<unsigned int>& indices  , 
+    unsigned int                     last     ) 
   {
     if ( 0 == particle   || 
          indices.empty() || 
@@ -269,11 +269,96 @@ namespace
  */
 // ============================================================================
 LHCb::Particle* LoKi::Child::child 
-( const LHCb::Particle*      particle , 
-  const std::vector<size_t>& indices  )
+( const LHCb::Particle*            particle , 
+  const std::vector<unsigned int>& indices  )
 { 
   return _child ( particle , indices , indices.size () ) ; 
 }
+// ============================================================================
+/*  Trivial accessor to the daughter particles for the given particle.
+ *
+ *  @attention index starts with 1 , null index corresponds 
+ *             to the original particle 
+ *
+ *  @param  particle (const) pointer to mother particle 
+ *  @param  index1   the index of the child particle 
+ *  @param  index2   the index of the child particle 
+ *  @return daughter particle with given index 
+ *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+ *  @date   2006-02-11
+ */    
+// ============================================================================
+LHCb::Particle* 
+LoKi::Child::child
+( const LHCb::Particle*  particle , 
+  const unsigned int     index1   , 
+  const unsigned int     index2   )
+{ return child ( child ( particle , index1 ) , index2 ) ; }
+// ============================================================================
+/* Trivial accessor to the daughter particles for the given particle.
+ *
+ *  @attention index starts with 1 , null index corresponds 
+ *             to the original particle 
+ *
+ *  @param  particle (const) pointer to mother particle 
+ *  @param  index1   the index of the child particle 
+ *  @param  index2   the index of the child particle 
+ *  @param  index3   the index of the child particle 
+ *  @return daughter particle with given index 
+ *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+ *  @date   2006-02-11
+ */    
+// ============================================================================
+LHCb::Particle* LoKi::Child::child
+( const LHCb::Particle*  particle , 
+  const unsigned int     index1   , 
+  const unsigned int     index2   ,
+  const unsigned int     index3   )
+{ return child ( child ( particle , index1 ) , index2 , index3 ) ; }
+// ============================================================================
+/*  Trivial accessor to the daughter particles for the given particle.
+ *
+ *  @attention index starts with 1 , null index corresponds 
+ *             to the original particle 
+ *
+ *  @param  particle (const) pointer to mother particle 
+ *  @param  index1   the index of the child particle 
+ *  @param  index2   the index of the child particle 
+ *  @param  index3   the index of the child particle 
+ *  @param  index4   the index of the child particle 
+ *  @return daughter particle with given index 
+ *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+ *  @date   2006-02-11
+ */    
+// ============================================================================
+LHCb::Particle* LoKi::Child::child
+( const LHCb::Particle*  particle , 
+  const unsigned int     index1   , 
+  const unsigned int     index2   ,
+  const unsigned int     index3   ,
+  const unsigned int     index4   )
+{ return child ( child ( particle , index1 ) , index2 , index3 , index4 ) ; }
+// ============================================================================
+/** get all daughters for the given Particle 
+ *  @param particle  particle  
+ *  @param output    the vector of daughetr particles 
+ *  @return the size of daughter vector 
+ *  @author Vanya BELYAEV ibelyaev@phsycis.syr.edu
+ *  @date 2007-06-02
+ */
+// ============================================================================
+unsigned int LoKi::Child::daughters 
+( const LHCb::Particle*        particle , 
+  LHCb::Particle::ConstVector& output   ) 
+{
+  if ( 0 == particle ) { return 0 ; }
+  typedef SmartRefVector<LHCb::Particle> Daughters ;
+  const Daughters& daugs = particle->daughters() ;
+  output.insert ( output.end() , daugs.begin() , daugs.end() ) ;
+  return daugs.size () ;
+}
+
+
 // ============================================================================
 // The END 
 // ============================================================================

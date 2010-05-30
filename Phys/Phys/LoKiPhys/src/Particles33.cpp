@@ -1,4 +1,4 @@
-// $Id: Particles33.cpp,v 1.1 2010-02-22 09:55:48 ibelyaev Exp $
+// $Id: Particles33.cpp,v 1.2 2010-05-30 17:11:02 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -40,17 +40,14 @@ namespace
 LoKi::Particles::PolarizationAngle::PolarizationAngle
 ( const Decays::IDecay::iTree& daughter , 
   const Decays::IDecay::iTree& parent   , 
-  const bool                   mother   , 
-  const bool                   validate ) 
+  const bool                   mother   )
   : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
   , m_first        ( daughter )
   , m_second       ( parent   )
   , m_mother       ( mother   ) 
-  , m_autovalidate ( validate ) 
-  , m_factory () 
 {
-  Assert ( tree1().marked() , "The first  tree is non-marked!" ) ;
-  Assert ( tree2().marked() , "The second tree is non-marked!" ) ;
+  Assert ( m_first  .valid () , "The first  tree is invalid!" ) ;
+  Assert ( m_second .valid () , "The second tree is invalid!" ) ;
 }
 // ============================================================================
 // constructor from two trees 
@@ -59,33 +56,34 @@ LoKi::Particles::PolarizationAngle::PolarizationAngle
 ( const std::string&           daughter     , 
   const std::string&           parent       ,      
   const bool                   mother       , 
-  const bool                   autovalidate ,
   const std::string&           factory      ) 
   : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
-  , m_first        ( s_INVALID    )
-  , m_second       ( s_INVALID    )
+  , m_first        ( daughter , factory )
+  , m_second       ( parent   , factory )
   , m_mother       ( mother       ) 
-  , m_autovalidate ( autovalidate ) 
-  , m_factory      ( factory      ) 
 {
-  //
-  m_first  = getTree ( daughter ) ;
-  if ( !m_first.valid()  ) { validate  ( m_first ) ; }
-  //
-  m_second = getTree ( parent   ) ;
-  if ( !m_second.valid() ) { validate  ( m_second ) ; }
-  //
-  Assert ( tree1().marked() , "The first  tree is non-marked!" ) ;
-  Assert ( tree2().marked() , "The second tree is non-marked!" ) ;
+  Assert ( m_first  .valid () , "The first  tree is invalid!" ) ;
+  Assert ( m_second .valid () , "The second tree is invalid!" ) ;
+}
+// ============================================================================
+// constructor from chisl-selectors 
+// ============================================================================
+LoKi::Particles::PolarizationAngle::PolarizationAngle
+( const LoKi::Child::Selector& daughter     , 
+  const LoKi::Child::Selector& parent       ,      
+  const bool                   mother       )
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
+  , m_first        ( daughter )
+  , m_second       ( parent   )
+  , m_mother       ( mother   ) 
+{
+  Assert ( m_first  .valid () , "The first  tree is invalid!" ) ;
+  Assert ( m_second .valid () , "The second tree is invalid!" ) ;
 }
 // ============================================================================
 // MANDATORY: virtual destructor
 // ============================================================================
-LoKi::Particles::PolarizationAngle::~PolarizationAngle()
-{
-  m_first  . reset () ;
-  m_second . reset () ;
-}
+LoKi::Particles::PolarizationAngle::~PolarizationAngle() {}
 // ============================================================================
 // MANDATORY: clone method ("virtual constructor")
 // ============================================================================
@@ -93,45 +91,7 @@ LoKi::Particles::PolarizationAngle*
 LoKi::Particles::PolarizationAngle::clone() const 
 { return new LoKi::Particles::PolarizationAngle ( *this ) ; }
 // ============================================================================
-// get the tree from the descriptor 
-// ============================================================================
-Decays::IDecay::Tree LoKi::Particles::PolarizationAngle::getTree
-( const std::string& decay ) const 
-{
-  // decode the decay descriptors 
-  LoKi::ILoKiSvc* loki = lokiSvc () ;
-  Assert ( 0 != loki         , "LoKi::ILokiSvc* points to NULL!" ) ;
-  // 
-  // decode the decay descriptions
-  SmartIF<IToolSvc> toolSvc ( loki ) ;
-  Assert ( toolSvc.isValid() , "IToolSvc* points to NULL!"       ) ;
-  // 
-  Decays::IDecay* tool = 0 ;
-  StatusCode sc = toolSvc -> retrieveTool ( m_factory , tool ) ;
-  Assert ( sc.isSuccess() , "Unable to retrieve '" + m_factory + "'" , sc ) ;
-  Assert ( 0 != tool      , "Decays::IDecay* points to NULL" ) ;
-  //
-  Decays::IDecay::Tree _tree = tool -> tree ( decay ) ;
-  //
-  toolSvc -> releaseTool ( tool ) ; // do nto need the tool anymore 
-  //
-  return _tree ;
-}
-// ============================================================================
-// validate the tree 
-// ============================================================================
-void LoKi::Particles::PolarizationAngle::validate 
-( const Decays::IDecay::iTree& tree ) const 
-{
-  LoKi::ILoKiSvc* loki = lokiSvc () ;
-  Assert ( 0 != loki       , "LoKi::ILoKiSvc* points to NULL!" ) ;
-  // 
-  SmartIF<LHCb::IParticlePropertySvc> ppSvc ( loki ) ;
-  Assert ( ppSvc.isValid() , "LHCb::IParticlePropertySvc* points to NULL!" ) ;
-  //
-  StatusCode sc = tree.validate ( ppSvc ) ;
-  Assert ( sc.isSuccess() , "Unable to vaildate the tree" , sc ) ;
-}
+
 // ============================================================================
 // get the proper decay components  
 // ==========================================================================
@@ -146,25 +106,24 @@ StatusCode LoKi::Particles::PolarizationAngle::getComponents12
     return StatusCode::FAILURE ;  //                                 RETURN 
   }
   //
-  if   ( !m_first  . valid () && autovalidate() ) { validate ( m_first ) ; }
-  if   ( !m_second . valid () && autovalidate() ) { validate ( m_first ) ; }
+  Assert ( m_first  .valid () , "The first  tree is invalid!" ) ;
+  Assert ( m_second .valid () , "The second tree is invalid!" ) ;
   //
-  Assert ( valid  () , "The trees are   invalid!"  ) ;
-  Assert ( marked () , "The trees are non-marked!" ) ;
-  //
-  m_first.reset() ;
-  if ( !m_first( p ) || 1 != m_first.collect  ( vct  ) )
+  const LHCb::Particle* c1 = m_first.child ( p ) ;
+  if ( 0 == c1 )
   {
-    Error ( "The particle is not compatible with the first  tree!" ) ; 
+    Error ( "Invalid first  child : '" + m_first.printOut  () + "'") ; 
     return StatusCode::FAILURE ;
   }
+  vct.push_back ( c1 ) ;
   //
-  m_second.reset() ;
-  if ( !m_second ( p ) || 1 != m_second.collect  ( vct  ) )
+  const LHCb::Particle* c2 = m_second.child ( p ) ;
+  if ( 0 == c2 )
   {
-    Error ( "The particle is not compatible with the second tree!" ) ; 
+    Error ( "Invalid second child : '" + m_second.printOut () + "'") ; 
     return StatusCode::FAILURE ;
   }
+  vct.push_back ( c2 ) ;
   //
   return StatusCode::SUCCESS ;  
 }
@@ -184,7 +143,7 @@ LoKi::Particles::PolarizationAngle::operator()
   Decays::IDecay::iTree::Collection vct ;
   vct.reserve ( 2 ) ;
   StatusCode sc = getComponents12 ( p , vct );
-
+  
   if ( sc.isFailure() )
   {
     Error ("Unable to get proper decay components (1), return 'InvalidAngle'" , sc ) ;
@@ -213,30 +172,32 @@ LoKi::Particles::PolarizationAngle::operator()
 std::ostream& LoKi::Particles::PolarizationAngle::fillStream 
 ( std::ostream& s ) const 
 {
-  s << " COSPOL( " 
-    << " '" << tree1() << "'"
-    << ",'" << tree2() << "'" ;    
-  
-  if       ( !factory().empty() ) 
-  {
-    s << " , " ; Gaudi::Utils::toStream ( m_mother       , s ) ; 
-    s << " , " ; Gaudi::Utils::toStream ( m_autovalidate , s ) ; 
-    s << " , " ; Gaudi::Utils::toStream ( m_factory      , s ) ;
-  }
-  else if  ( !m_autovalidate ) 
-  {
-    s << " , " ; Gaudi::Utils::toStream ( m_mother       , s ) ; 
-    s << " , " ; Gaudi::Utils::toStream ( m_autovalidate , s ) ; 
-  }
-  else if  ( !m_mother ) 
-  {
-    s << " , " ; Gaudi::Utils::toStream ( m_mother       , s ) ; 
-  }
+  s << " COSPOL( " << m_first << " , " << m_second ;
+  //
+  if  ( !m_mother ) 
+  { s << " , " ; Gaudi::Utils::toStream ( m_mother , s ) ; }
   //
   return s << " ) " ;
 }
-
-
+// ============================================================================
+// constructor from child-selector 
+// ============================================================================
+LoKi::Particles::SinChi::SinChi
+( const LoKi::Child::Selector& particle1 ,  
+  const LoKi::Child::Selector& particle2 , 
+  const LoKi::Child::Selector& particle3 , 
+  const LoKi::Child::Selector& particle4 ) 
+  : LoKi::Particles::PolarizationAngle ( particle1    , 
+                                         particle2    , 
+                                         true         )
+  , m_tree3   ( particle3 ) 
+  , m_tree4   ( particle4 )
+{
+  //
+  Assert ( m_tree3.valid () , "The third tree is invalid" ) ;
+  Assert ( m_tree4.valid () , "The fourh tree is invalid" ) ;
+  //
+} 
 // ============================================================================
 // constructor from the trees 
 // ============================================================================
@@ -244,18 +205,16 @@ LoKi::Particles::SinChi::SinChi
 ( const Decays::IDecay::iTree& particle1    , 
   const Decays::IDecay::iTree& particle2    , 
   const Decays::IDecay::iTree& particle3    , 
-  const Decays::IDecay::iTree& particle4    , 
-  const bool                   autovalidate ) 
+  const Decays::IDecay::iTree& particle4    )
   : LoKi::Particles::PolarizationAngle ( particle1    , 
                                          particle2    , 
-                                         true         , 
-                                         autovalidate )                                         
+                                         true         )
   , m_tree3   ( particle3 ) 
   , m_tree4   ( particle4 )
 {
   //
-  Assert ( tree3().marked() , "The third tree is non-marked!" ) ;
-  Assert ( tree4().marked() , "The fourh tree is non-marked!" ) ;
+  Assert ( m_tree3.valid () , "The third tree is invalid" ) ;
+  Assert ( m_tree4.valid () , "The fourh tree is invalid" ) ;
   //
 } 
 // ============================================================================
@@ -266,25 +225,17 @@ LoKi::Particles::SinChi::SinChi
   const std::string& particle2    , 
   const std::string& particle3    , 
   const std::string& particle4    , 
-  const bool         autovalidate , 
   const std::string& factory      ) 
   : LoKi::Particles::PolarizationAngle ( particle1    , 
                                          particle2    , 
-                                         true         , 
-                                         autovalidate , 
+                                         true         ,
                                          factory      )
-  , m_tree3   ( s_INVALID ) 
-  , m_tree4   ( s_INVALID )
+  , m_tree3   ( particle3 , factory ) 
+  , m_tree4   ( particle4 , factory )
 {
   //
-  m_tree3  = getTree ( particle3 ) ;
-  if ( !m_tree3.valid()  ) { validate  ( m_tree3 ) ; }
-  //
-  m_tree4  = getTree ( particle4 ) ;
-  if ( !m_tree4.valid()  ) { validate  ( m_tree4 ) ; }
-  //
-  Assert ( tree3().marked() , "The third tree is non-marked!" ) ;
-  Assert ( tree4().marked() , "The fourh tree is non-marked!" ) ;
+  Assert ( m_tree3.valid () , "The third tree is invalid" ) ;
+  Assert ( m_tree4.valid () , "The fourh tree is invalid" ) ;
   //
 }
 // ============================================================================
@@ -301,25 +252,24 @@ StatusCode LoKi::Particles::SinChi::getComponents34
     return StatusCode::FAILURE ;  //                                 RETURN 
   }
   //
-  if   ( !m_tree3 . valid () && autovalidate() ) { validate ( m_tree3 ) ; }
-  if   ( !m_tree4 . valid () && autovalidate() ) { validate ( m_tree4 ) ; }
+  Assert ( m_tree3 . valid () , "The third  tree is invalid!" ) ;
+  Assert ( m_tree4 . valid () , "The fourth tree is invalid!" ) ;
   //
-  Assert ( valid  () , "The trees are   invalid!"  ) ;
-  Assert ( marked () , "The trees are non-marked!" ) ;
-  //
-  m_tree3.reset() ;
-  if ( !m_tree3( p ) || 1 != m_tree3.collect  ( vct  ) )
+  const LHCb::Particle* c1 = m_tree3.child ( p ) ;
+  if ( 0 == c1 )
   {
-    Error ( "The particle is not compatible with the third tree!" ) ; 
+    Error ( "Invalid third  child : '" + m_tree3.printOut () + "'") ; 
     return StatusCode::FAILURE ;
   }
+  vct.push_back ( c1 ) ;
   //
-  m_tree4.reset() ;
-  if ( !m_tree4 ( p ) || 1 != m_tree4.collect  ( vct  ) )
+  const LHCb::Particle* c2 = m_tree4.child ( p ) ;
+  if ( 0 == c2 )
   {
-    Error ( "The particle is not compatible with the fourth tree!" ) ; 
+    Error ( "Invalid fourth child : '" + m_tree4.printOut () + "'") ; 
     return StatusCode::FAILURE ;
   }
+  vct.push_back ( c2 ) ;
   //
   return StatusCode::SUCCESS ;  
 }
@@ -349,7 +299,7 @@ StatusCode LoKi::Particles::SinChi::getComponents
 // ============================================================================
 // MANDATORY: virtual destructor
 // ============================================================================
-LoKi::Particles::SinChi::~SinChi() { m_tree3.reset() ; m_tree4.reset() ; } 
+LoKi::Particles::SinChi::~SinChi() {} 
 // ============================================================================
 // MANDATORY: clone method ("virtual constructor")
 // ============================================================================
@@ -398,14 +348,11 @@ std::ostream&
 LoKi::Particles::SinChi::fillStream  ( std::ostream& s ) const 
 {
   s << " SINCHI( " 
-    <<   "'" << tree1 () 
-    << "','" << tree2 ()  
-    << "','" << tree3 ()  
-    << "','" << tree4 () 
+    <<   "'" << child1 () 
+    << "','" << child2 ()  
+    << "','" << child3 ()  
+    << "','" << child4  () 
     <<   "'" ;
-  //
-  if ( !autovalidate()    ) { s << ", False"                  ; }
-  if ( !factory().empty() ) { s << " , '" << factory() << "'" ; }
   //
   return s << " ) " ;  
 }
@@ -414,21 +361,31 @@ LoKi::Particles::SinChi::fillStream  ( std::ostream& s ) const
 
 
 // ============================================================================
+// constructor from child-selector 
+// ============================================================================
+LoKi::Particles::CosChi::CosChi 
+( const LoKi::Child::Selector& particle1 ,  
+  const LoKi::Child::Selector& particle2 , 
+  const LoKi::Child::Selector& particle3 , 
+  const LoKi::Child::Selector& particle4 ) 
+  : LoKi::Particles::SinChi (  particle1 , 
+                               particle2 , 
+                               particle3 , 
+                               particle4 )
+{}
+// ============================================================================
 // constructor form the trees 
 // ============================================================================
 LoKi::Particles::CosChi::CosChi 
-( const Decays::IDecay::iTree& particle1    ,  
-  const Decays::IDecay::iTree& particle2    , 
-  const Decays::IDecay::iTree& particle3    , 
-  const Decays::IDecay::iTree& particle4    , 
-  const bool                   autovalidate ) 
-  : LoKi::Particles::SinChi ( particle1    , 
-                              particle2    , 
-                              particle3    , 
-                              particle4    , 
-                              autovalidate )
-{
-}
+( const Decays::IDecay::iTree& particle1 ,  
+  const Decays::IDecay::iTree& particle2 , 
+  const Decays::IDecay::iTree& particle3 , 
+  const Decays::IDecay::iTree& particle4 )
+  : LoKi::Particles::SinChi (  particle1 , 
+                               particle2 , 
+                               particle3 , 
+                               particle4 )
+{}
 // ============================================================================
 // constructor from the decay descriptors
 // ============================================================================
@@ -437,13 +394,11 @@ LoKi::Particles::CosChi::CosChi
   const std::string& particle2    , 
   const std::string& particle3    , 
   const std::string& particle4    , 
-  const bool         autovalidate , 
   const std::string& factory      ) 
   : LoKi::Particles::SinChi ( particle1    , 
                               particle2    , 
                               particle3    , 
                               particle4    , 
-                              autovalidate , 
                               factory      )
 {}
 // ============================================================================
@@ -498,14 +453,11 @@ std::ostream&
 LoKi::Particles::CosChi::fillStream  ( std::ostream& s ) const 
 {
   s << " COSCHI( " 
-    <<   "'" << tree1 () 
-    << "','" << tree2 ()  
-    << "','" << tree3 ()  
-    << "','" << tree4 () 
+    <<   "'" << child1 () 
+    << "','" << child2 ()  
+    << "','" << child3 ()  
+    << "','" << child4 () 
     <<   "'" ;
-  //
-  if ( !autovalidate()    ) { s << ", False"                  ; }
-  if ( !factory().empty() ) { s << " , '" << factory() << "'" ; }
   //
   return s << " ) " ;  
 }
@@ -513,23 +465,32 @@ LoKi::Particles::CosChi::fillStream  ( std::ostream& s ) const
 
 
 
-
+// ============================================================================
+// constructor from child-selector 
+// ============================================================================
+LoKi::Particles::AngleChi::AngleChi 
+( const LoKi::Child::Selector& particle1 ,  
+  const LoKi::Child::Selector& particle2 , 
+  const LoKi::Child::Selector& particle3 , 
+  const LoKi::Child::Selector& particle4 ) 
+  : LoKi::Particles::CosChi (  particle1 , 
+                               particle2 , 
+                               particle3 , 
+                               particle4 )
+{}
 // ============================================================================
 // constructor form the trees 
 // ============================================================================
 LoKi::Particles::AngleChi::AngleChi 
-( const Decays::IDecay::iTree& particle1    ,  
-  const Decays::IDecay::iTree& particle2    , 
-  const Decays::IDecay::iTree& particle3    , 
-  const Decays::IDecay::iTree& particle4    , 
-  const bool                   autovalidate ) 
-  : LoKi::Particles::CosChi ( particle1    , 
-                              particle2    , 
-                              particle3    , 
-                              particle4    , 
-                              autovalidate )
-{
-}
+( const Decays::IDecay::iTree& particle1 ,  
+  const Decays::IDecay::iTree& particle2 , 
+  const Decays::IDecay::iTree& particle3 , 
+  const Decays::IDecay::iTree& particle4 )
+  : LoKi::Particles::CosChi (  particle1 , 
+                               particle2 , 
+                               particle3 , 
+                               particle4 )
+{}
 // ============================================================================
 // constructor from the decay descriptors
 // ============================================================================
@@ -538,13 +499,11 @@ LoKi::Particles::AngleChi::AngleChi
   const std::string& particle2    , 
   const std::string& particle3    , 
   const std::string& particle4    , 
-  const bool         autovalidate , 
   const std::string& factory      ) 
   : LoKi::Particles::CosChi ( particle1    , 
                               particle2    , 
                               particle3    , 
                               particle4    , 
-                              autovalidate , 
                               factory      )
 {}
 // ============================================================================
@@ -597,16 +556,13 @@ LoKi::Particles::AngleChi::operator()
 // ============================================================================
 std::ostream& 
 LoKi::Particles::AngleChi::fillStream  ( std::ostream& s ) const 
-{
-  s << " ANGLECHI( " 
-    <<   "'" << tree1 () 
-    << "','" << tree2 ()  
-    << "','" << tree3 ()  
-    << "','" << tree4 () 
+  {
+    s << " ANGLECHI( " 
+      <<   "'" << child1 () 
+      << "','" << child2 ()  
+    << "','" << child3 ()  
+    << "','" << child4 () 
     <<   "'" ;
-  //
-  if ( !autovalidate()    ) { s << ", False"                  ; }
-  if ( !factory().empty() ) { s << " , '" << factory() << "'" ; }
   //
   return s << " ) " ;  
 }

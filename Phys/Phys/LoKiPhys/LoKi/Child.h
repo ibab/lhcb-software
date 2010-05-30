@@ -1,4 +1,4 @@
-// $Id: Child.h,v 1.15 2010-05-29 18:29:50 ibelyaev Exp $
+// $Id: Child.h,v 1.16 2010-05-30 17:11:01 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_CHILD_H 
 #define LOKI_CHILD_H 1
@@ -40,7 +40,8 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2006-02-11
      */
-    std::size_t nChildren ( const LHCb::Particle* mother ) ;
+    GAUDI_API
+    unsigned int nChildren ( const LHCb::Particle* mother ) ;
     // ========================================================================
     /** Trivial accessor to the daughter particles for the given particle.
      *
@@ -53,9 +54,10 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2006-02-11
      */
+    GAUDI_API
     LHCb::Particle* child
     ( const LHCb::Particle*  particle , 
-      const size_t           index    ) ;
+      const unsigned int     index    ) ;
     // ========================================================================
     /** Trivial accessor to the daughter particles for the given particle.
      *
@@ -69,12 +71,11 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2006-02-11
      */    
-    inline 
+    GAUDI_API
     LHCb::Particle* child
     ( const LHCb::Particle*  particle , 
-      const size_t           index1   , 
-      const size_t           index2   )
-    { return child ( child ( particle , index1 ) , index2 ) ; }
+      const unsigned int     index1   , 
+      const unsigned int     index2   ) ;
     // ========================================================================
     /** Trivial accessor to the daughter particles for the given particle.
      *
@@ -89,13 +90,12 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2006-02-11
      */    
-    inline
+    GAUDI_API
     LHCb::Particle* child
     ( const LHCb::Particle*  particle , 
-      const size_t           index1   , 
-      const size_t           index2   ,
-      const size_t           index3   )
-    { return child ( child ( particle , index1 ) , index2 , index3 ) ; }
+      const unsigned int     index1   , 
+      const unsigned int     index2   ,
+      const unsigned int     index3   ) ;
     // ========================================================================
     /** Trivial accessor to the daughter particles for the given particle.
      *
@@ -111,14 +111,13 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2006-02-11
      */    
-    inline 
+    GAUDI_API 
     LHCb::Particle* child
     ( const LHCb::Particle*  particle , 
-      const size_t           index1   , 
-      const size_t           index2   ,
-      const size_t           index3   ,
-      const size_t           index4   )
-    { return child ( child ( particle , index1 ) , index2 , index3 , index4 ) ; }
+      const unsigned int     index1   , 
+      const unsigned int     index2   ,
+      const unsigned int     index3   ,
+      const unsigned int     index4   ) ;
     // ========================================================================
     /** Trivial accessor to the daughter particles for the given particle.
      *
@@ -131,9 +130,10 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date   2009-07-09
      */
+    GAUDI_API
     LHCb::Particle* child 
-    ( const LHCb::Particle*      particle , 
-      const std::vector<size_t>& indices  ) ;
+    ( const LHCb::Particle*            particle , 
+      const std::vector<unsigned int>& indices  ) ;
     // ========================================================================
     /** trivial function to access all children particles 
      *  @see LHCb::Particle::daughters
@@ -142,6 +142,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2007-06-04
      */
+    GAUDI_API
     LHCb::Particle::ConstVector 
     children 
     ( const LHCb::Particle* particle ) ;
@@ -155,7 +156,8 @@ namespace LoKi
      *  @return vector of children at the given level 
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2007-06-04
-     */    
+     */
+    GAUDI_API
     LHCb::Particle::ConstVector 
     children 
     ( const LHCb::Particle* particle , 
@@ -168,16 +170,10 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@phsycis.syr.edu
      *  @date 2007-06-02
      */
-    inline size_t daughters 
+    GAUDI_API
+    unsigned int daughters 
     ( const LHCb::Particle*        particle , 
-      LHCb::Particle::ConstVector& output   ) 
-    {
-      if ( 0 == particle ) { return 0 ; }
-      typedef SmartRefVector<LHCb::Particle> Daughters ;
-      const Daughters& daugs = particle->daughters() ;
-      output.insert ( output.end() , daugs.begin() , daugs.end() ) ;
-      return daugs.size () ;
-    }
+      LHCb::Particle::ConstVector& output   ) ;
     // ========================================================================
     /** trivial function to access all children particles at the given level 
      *  @attention: level 0 corresponds to the particle itself 
@@ -189,7 +185,8 @@ namespace LoKi
      *  @return number of children found 
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2007-06-04
-     */    
+     */
+    GAUDI_API
     unsigned int children 
     ( const LHCb::Particle*        particle , 
       const unsigned int           level    , 
@@ -201,6 +198,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2007-06-04
      */
+    GAUDI_API
     LHCb::Particle::ConstVector 
     descendants
     ( const LHCb::Particle* particle ) ;

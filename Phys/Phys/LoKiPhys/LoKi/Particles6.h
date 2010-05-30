@@ -1,4 +1,4 @@
-// $Id: Particles6.h,v 1.8 2009-07-09 13:39:13 ibelyaev Exp $
+// $Id: Particles6.h,v 1.9 2010-05-30 17:11:02 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PARTICLES6_H 
 #define LOKI_PARTICLES6_H 1
@@ -8,6 +8,8 @@
 // LoKiPhys 
 // ============================================================================
 #include "LoKi/PhysTypes.h"
+#include "LoKi/Child.h"
+#include "LoKi/ChildSelector.h"
 // ============================================================================
 /** @file
  *
@@ -25,6 +27,7 @@
 // ============================================================================
 namespace LoKi
 {
+  // ==========================================================================
   namespace Particles 
   {
     // ========================================================================
@@ -60,43 +63,99 @@ namespace LoKi
        */
       ChildFunction 
       ( const LoKi::PhysTypes::Func& fun   , 
-        const size_t                 index ) ;
+        const unsigned int           index ) ;
       /** constructor from the function and daughter index 
        *  @param fun    the function to be used 
        *  @param index  the index of daughter particle
        */
       ChildFunction 
       ( const LoKi::PhysTypes::Func& fun    , 
-        const size_t                 index1 , 
-        const size_t                 index2 ) ;
+        const unsigned int           index1 , 
+        const unsigned int           index2 ) ;
       /** constructor from the function and daughter index 
        *  @param fun    the function to be used 
        *  @param index  the index of daughter particle
        */
       ChildFunction 
       ( const LoKi::PhysTypes::Func& fun    , 
-        const size_t                 index1 , 
-        const size_t                 index2 ,
-        const size_t                 index3 ) ;
+        const unsigned int           index1 , 
+        const unsigned int           index2 ,
+        const unsigned int           index3 ) ;
       /** constructor from the function and daughter index 
        *  @param fun    the function to be used 
        *  @param index  the index of daughter particle
        */
       ChildFunction 
       ( const LoKi::PhysTypes::Func& fun    , 
-        const size_t                 index1 , 
-        const size_t                 index2 ,
-        const size_t                 index3 ,
-        const size_t                 index4 ) ;
+        const unsigned int           index1 , 
+        const unsigned int           index2 ,
+        const unsigned int           index3 ,
+        const unsigned int           index4 ) ;
+      /** constructor from the function and daughter index 
+       *  @param fun    the function to be used 
+       *  @param index  the index of daughter particle
+       */
+      ChildFunction 
+      ( const LoKi::PhysTypes::Func& fun         , 
+        const std::vector<unsigned int>& indices ) ;
+      /** constructor from the function and child selector 
+       *  @param fun      the function to be used 
+       *  @param selector the child selector 
+       */
+      ChildFunction 
+      ( const LoKi::PhysTypes::Func& fun       , 
+        const LoKi::Child::Selector& selector  ) ;
+      /** constructor from the function and child selector 
+       *  @param fun      the function to be used 
+       *  @param selector the child selector
+       */
+      ChildFunction 
+      ( const LoKi::PhysTypes::Func& fun       , 
+        const std::string&           selector  ) ;
+      /** constructor from the function and child selector 
+       *  @param fun      the function to be used 
+       *  @param selector the child selector
+       */
+      ChildFunction 
+      ( const LoKi::PhysTypes::Func&  fun      , 
+        const Decays::IDecay::iTree&  selector ) ;
+      /** constructor from the function and child selector 
+       *  @param fun      the function to be used 
+       *  @param selector the child selector
+       */
+      ChildFunction 
+      ( const LoKi::PhysTypes::Func& fun      , 
+        const LoKi::PhysTypes::Cuts& selector ) ;
+      // ======================================================================
       /** constructor from the function and daughter index 
        *  @param index  the index of daughter particle
        *  @param fun    the function to be used 
        */
       ChildFunction
-      ( const size_t                 index ,
+      ( const unsigned int           index ,
         const LoKi::PhysTypes::Func& fun   ) ;
-      /// copy 
-      ChildFunction ( const ChildFunction& right ) ;
+      /** constructor from the function and child selector 
+       *  @param selector the child selector
+       *  @param fun      the function to be used 
+       */
+      ChildFunction 
+      ( const LoKi::Child::Selector& selector  , 
+        const LoKi::PhysTypes::Func& fun       ) ;
+      /** constructor from the function and child selector 
+       *  @param selector the child selector
+       *  @param fun      the function to be used 
+       */
+      ChildFunction 
+      ( const Decays::IDecay::iTree& selector  , 
+        const LoKi::PhysTypes::Func& fun       ) ;
+      /** constructor from the function and child selector 
+       *  @param selector the child selector
+       *  @param fun      the function to be used 
+       */
+      ChildFunction 
+      ( const std::string&           selector  , 
+        const LoKi::PhysTypes::Func& fun       ) ;
+      // ======================================================================
       /// MANDATORY: virtual destructor
       virtual ~ChildFunction(){};
       /// MANDATORY: clone method ("virtual constructor")
@@ -110,9 +169,9 @@ namespace LoKi
     private:
       // ======================================================================
       /// the function itself 
-      LoKi::PhysTypes::Fun m_fun ;                       // the function itself 
-      /// indices of daughter particle
-      std::vector<size_t> m_index ;             // indices of daughter particle
+      LoKi::PhysTypes::Fun  m_fun   ;                    // the function itself 
+      /// the child selector 
+      LoKi::Child::Selector m_child ;                     // the child selector 
       // ======================================================================
     };
     // ========================================================================    
@@ -147,43 +206,92 @@ namespace LoKi
        */
       ChildPredicate 
       ( const LoKi::PhysTypes::Cuts& cut   , 
-        const size_t                 index ) ;
+        const unsigned int           index ) ;
       /** constructor from the function and daughter index 
        *  @param cut    the function to be used 
        *  @param index  the index of daughter particle
        */
       ChildPredicate 
       ( const LoKi::PhysTypes::Cuts& cut    , 
-        const size_t                 index1 ,
-        const size_t                 index2 ) ;
+        const unsigned int           index1 ,
+        const unsigned int           index2 ) ;
       /** constructor from the function and daughter index 
        *  @param cut    the function to be used 
        *  @param index  the index of daughter particle
        */
       ChildPredicate 
       ( const LoKi::PhysTypes::Cuts& cut    , 
-        const size_t                 index1 ,
-        const size_t                 index2 ,
-        const size_t                 index3 ) ;
+        const unsigned int           index1 ,
+        const unsigned int           index2 ,
+        const unsigned int           index3 ) ;
       /** constructor from the function and daughter index 
        *  @param cut    the function to be used 
        *  @param index  the index of daughter particle
        */
       ChildPredicate 
       ( const LoKi::PhysTypes::Cuts& cut    , 
-        const size_t                 index1 ,
-        const size_t                 index2 ,
-        const size_t                 index3 ,
-        const size_t                 index4 ) ;
+        const unsigned int           index1 ,
+        const unsigned int           index2 ,
+        const unsigned int           index3 ,
+        const unsigned int           index4 ) ;
+      /** constructor from the function and daughter index 
+       *  @param cut     the function to be used 
+       *  @param indices the index of daughter particle
+       */
+      ChildPredicate 
+      ( const LoKi::PhysTypes::Cuts&     cut     , 
+        const std::vector<unsigned int>& indices ) ;
+      /** constructor from the function and child selector 
+       *  @param cut      the function to be used 
+       *  @param selector the child selector 
+       */
+      ChildPredicate 
+      ( const LoKi::PhysTypes::Cuts& cut      , 
+        const LoKi::Child::Selector& selector ) ;
+      /** constructor from the function and child selector 
+       *  @param cut      the function to be used 
+       *  @param selector the child selector 
+       */
+      ChildPredicate 
+      ( const LoKi::PhysTypes::Cuts& cut      , 
+        const Decays::IDecay::iTree& selector ) ;
+      /** constructor from the function and child selector 
+       *  @param cut      the function to be used 
+       *  @param selector the child selector 
+       */
+      ChildPredicate 
+      ( const LoKi::PhysTypes::Cuts& cut      , 
+        const std::string&           selector ) ;
+      // ======================================================================
       /** constructor from the function and daughter index 
        *  @param index  the index of daughter particle
        *  @param cut    the function to be used 
        */
       ChildPredicate
-      ( const size_t                 index ,
+      ( const unsigned int           index ,
         const LoKi::PhysTypes::Cuts& cut   ) ;
-      /// copy 
-      ChildPredicate ( const ChildPredicate& right ) ;
+      /** constructor from the function and child selector 
+       *  @param cut      the function to be used 
+       *  @param selector the child selector 
+       */
+      ChildPredicate 
+      ( const LoKi::Child::Selector& selector , 
+        const LoKi::PhysTypes::Cuts& cut      ) ;
+      /** constructor from the function and child selector 
+       *  @param cut      the function to be used 
+       *  @param selector the child selector 
+       */
+      ChildPredicate 
+      ( const Decays::IDecay::iTree& selector , 
+        const LoKi::PhysTypes::Cuts& cut      ) ;
+      /** constructor from the function and child selector 
+       *  @param cut      the function to be used 
+       *  @param selector the child selector 
+       */
+      ChildPredicate 
+      ( const std::string&           selector , 
+        const LoKi::PhysTypes::Cuts& cut      ) ;
+      // ======================================================================
       /// MANDATORY: virtual destructor
       virtual ~ChildPredicate(){};
       /// MANDATORY: clone method ("virtual constructor")
@@ -198,8 +306,8 @@ namespace LoKi
       // ======================================================================
       /// the function itself 
       LoKi::PhysTypes::Cut m_cut ;                       // the function itself 
-      /// index of daughter particle 
-      std::vector<size_t> m_index ;               // index of daughter particle 
+      /// the child selector 
+      LoKi::Child::Selector m_child ;                     // the child selector 
       // ======================================================================
     };
     // ========================================================================

@@ -1,4 +1,4 @@
-// $Id: ChildSelector.cpp,v 1.1 2010-05-30 11:04:23 ibelyaev Exp $
+// $Id: ChildSelector.cpp,v 1.2 2010-05-30 17:11:02 ibelyaev Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -20,6 +20,7 @@
 #include "LoKi/Trees.h"
 #include "LoKi/Services.h"
 #include "LoKi/PhysExtract.h"
+#include "LoKi/PhysAlgs.h"
 #include "LoKi/Child.h"
 // ============================================================================
 /** @file 
@@ -41,25 +42,68 @@ namespace
   // ==========================================================================
 }
 // ============================================================================
-/*  Trivial accessor to the daughter particles for the given particle.
- *  @param  particle (const) pointer to mother particle 
- *  @param  seelctor the selector 
+/* accessor to certain children particles for the given particle 
+ *  @param  particle (INPUT) pointer to mother particle 
+ *  @param  selector (INPUT) the selector 
+ *  @param  result   (OUTPUT) the container of found particles
+ *  @return number of found particles 
  *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
  *  @date   2010-05-29
  */
 // ============================================================================
-const LHCb::Particle* LoKi::Child::child 
+std::size_t LoKi::Child::children 
+( const LHCb::Particle*        particle , 
+  const LoKi::Child::Selector& selector , 
+  LHCb::Particle::ConstVector& result   ) 
+{
+  if ( 0 == particle ) { return 0 ; }                               // RETURN 
+  return selector.children ( particle , result ) ;
+}
+// ============================================================================
+/*  accessor to certain children particles for the givenm particle 
+ *  @param  particle (INPUT) pointer to mother particle 
+ *  @param  selector (INPUT) the selector 
+ *  @return the container of found particles
+ *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+ *  @date   2010-05-29
+ */
+// ============================================================================
+LHCb::Particle::ConstVector
+LoKi::Child::children 
 ( const LHCb::Particle*        particle , 
   const LoKi::Child::Selector& selector ) 
 {
-  if ( 0 == particle ) { return 0 ; }
-  return selector.child ( particle ) ;
+  LHCb::Particle::ConstVector result ;
+  if ( 0 == particle ) { return result ; }                           // RETURN
+  //
+  children ( particle , selector , result ) ;
+  return result ;                                                    
 }
+// ============================================================================
+/* Trivial accessor to the daughter particles for the given particle.
+ *  @param  particle (const) pointer to mother particle 
+ *  @param  selector the selector 
+ *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+ *  @date   2010-05-29
+ */
+// ============================================================================
+const LHCb::Particle* 
+LoKi::Child::child 
+( const LHCb::Particle*        particle , 
+  const LoKi::Child::Selector& selector ) 
+{
+  if ( 0 == particle ) { return 0 ; }                                // RETURN 
+  return selector.child ( particle ) ; 
+}
+// ============================================================================
+
+
+
 // ============================================================================
 // constructor from the index
 // ============================================================================
 LoKi::Child::Selector::Selector 
-( const unsigned short i  ) 
+( const unsigned int   i  ) 
   : LoKi::AuxFunBase () 
   , m_indices ( 1 , i      ) 
   , m_finder  ( s_INVALID  )
@@ -70,8 +114,8 @@ LoKi::Child::Selector::Selector
 // constructor from the index
 // ============================================================================
 LoKi::Child::Selector::Selector 
-( const unsigned short i1 , 
-  const unsigned short i2 ) 
+( const unsigned int   i1 , 
+  const unsigned int   i2 ) 
   : LoKi::AuxFunBase () 
   , m_indices (           ) 
   , m_finder  ( s_INVALID )
@@ -85,9 +129,9 @@ LoKi::Child::Selector::Selector
 // constructor from the index
 // ============================================================================
 LoKi::Child::Selector::Selector 
-( const unsigned short i1 , 
-  const unsigned short i2 ,
-  const unsigned short i3 ) 
+( const unsigned int   i1 , 
+  const unsigned int   i2 ,
+  const unsigned int   i3 ) 
   : LoKi::AuxFunBase () 
   , m_indices (           ) 
   , m_finder  ( s_INVALID )
@@ -102,10 +146,10 @@ LoKi::Child::Selector::Selector
 // constructor from the index
 // ============================================================================
 LoKi::Child::Selector::Selector 
-( const unsigned short i1 , 
-  const unsigned short i2 ,
-  const unsigned short i3 , 
-  const unsigned short i4 )  
+( const unsigned int   i1 , 
+  const unsigned int   i2 ,
+  const unsigned int   i3 , 
+  const unsigned int   i4 )  
   : LoKi::AuxFunBase () 
   , m_indices (           ) 
   , m_finder  ( s_INVALID )
@@ -121,7 +165,7 @@ LoKi::Child::Selector::Selector
 // constructor from the index
 // ============================================================================
 LoKi::Child::Selector::Selector 
-( const std::vector<std::size_t>& indices ) 
+( const std::vector<unsigned int>& indices ) 
   : LoKi::AuxFunBase () 
   , m_indices ( indices   ) 
   , m_finder  ( s_INVALID )
@@ -287,7 +331,23 @@ std::ostream& LoKi::Child::Selector::fillStream ( std::ostream& s ) const
 {
   //
   if ( !m_indices.empty() ) 
-  { return s << " " << Gaudi::Utils::toString ( m_indices ) ; }
+  {
+    if      ( 1 == m_indices.size() ) 
+    { return s <<  " " << m_indices[0] << " " ; }
+    else if ( 2 == m_indices.size() ) 
+    { return s <<  " " << m_indices[0] 
+               << ", " << m_indices[1] << " " ; }
+    else if ( 3 == m_indices.size() ) 
+    { return s <<  " " << m_indices[0] 
+               << ", " << m_indices[1]
+               << ", " << m_indices[2] << " " ; }
+    else if ( 4 == m_indices.size() ) 
+    { return s <<  " " << m_indices[0] 
+               << ", " << m_indices[1]
+               << ", " << m_indices[2]
+               << ", " << m_indices[3] << " " ; }
+    return s << " " << Gaudi::Utils::toString ( m_indices ) << " " ; 
+  }
   //
   if ( m_setCut           ) { return s << " " << m_cut  << " " ; }
   //
@@ -306,8 +366,8 @@ std::size_t LoKi::Child::Selector::children
 {
   if ( 0 == head ) 
   {
-    Error ( "children: LHCb::Particle points to NULL" ) ;
-    return 0 ;                                                  // RETURN 
+    Error ( "children: LHCb::Particle* points to NULL" ) ;
+    return 0 ;                                                   // RETURN 
   }
   //
   Assert ( valid () , "Selector is invalid!" ) ;
@@ -315,11 +375,8 @@ std::size_t LoKi::Child::Selector::children
   if      ( !m_indices.empty() ) 
   { 
     const LHCb::Particle* c = LoKi::Child::child ( head , m_indices ) ; 
-    if ( 0 == c ) 
-    { 
-      Warning ("children: no chilndre are selected (1);") ;
-      return 0 ;                                                // RETURN 
-    }
+    if ( 0 == c ) { return 0 ; }                                // RETURN 
+    //
     daughters.push_back ( c ) ;
     return daughters.size() ;                                   // RETURN 
   }
@@ -352,22 +409,26 @@ const LHCb::Particle* LoKi::Child::Selector::child
     return 0 ;
   }
   //
-  LHCb::Particle::ConstVector result ;
-  this->children ( head , result ) ;
+  Assert ( valid () , "Selector is invalid!" ) ;
   //
-  if ( result.empty() )
-  {
-    Error ("child: No valid child is found, retutn NULL" ) ;
-    return 0 ;
-  }
+  if ( !m_indices.empty() ) { return LoKi::Child::child ( head , m_indices ) ; }
   //
-  if ( 1 < result.size() )
-  { Warning ("child: too many children are found, return the first" ) ; }
+  if ( m_setCut ) { return LoKi::PhysAlgs::foundFirst ( head , m_cut ) ; }
   //
-  return result[0] ;
+  LHCb::Particle::ConstVector daughters ;
+  LHCb::Particle::ConstVector input ( 1 , head ) ;
+  //
+  m_finder.findDecay ( input , daughters ) ;
+  //
+  if (     daughters.empty () ) { return 0 ; }             // REUTRN 
+  //
+  if ( 1 < daughters.size  () ) 
+  { Warning ("child: >1 daughter partcles are found, return the first") ; }
+  //
+  return daughters[0] ;
 }
+// ============================================================================
 
- 
 
 // ============================================================================
 // The END 

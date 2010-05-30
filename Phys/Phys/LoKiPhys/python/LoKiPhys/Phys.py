@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 # =============================================================================
+# $Id: 
+# =============================================================================
 ## @file
 #  collection of utilities for useful 'decoration' of Phys-objects
 #
@@ -24,9 +26,12 @@ The package has been designed with the kind help from
 Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
 contributions and advices from G.Raven, J.van Tilburg, 
 A.Golutvin, P.Koppenburg have been used in the design.
+
 """
 # =============================================================================
-__author__ = 'Vanya BELYAEV ibelyaev@physics.syr.edu'
+__author__  = 'Vanya BELYAEV ibelyaev@physics.syr.edu'
+__date__    = '2007-08-11'
+__version__ = 'CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.10 $'
 # =============================================================================
 
 from   LoKiPhys.functions   import LoKi,LHCb,cpp
@@ -344,10 +349,21 @@ for _t in ( LHCb.Particle    ,
     # redefine the iterator 
     _tt.__iter__ = _LCF._iter_SRV_
 
+    
+if not hasattr ( LHCb.Particle , 'ConstVector' ) :
+    LHCb.Particle.ConstVector = cpp.std.vector ('const LHCb::Particle*')
+if not hasattr ( LHCb.Particle , 'Range'       ) :
+    LHCb.Particle.Range       = cpp.Gaudi.NamedRange_ ( LHCb.Particle.ConstVector ) 
 
 # =============================================================================
 if '__main__' == __name__ :
-    print __doc__ , '\n' , __author__
+
+    print 80*'*'
+    print __doc__
+    print ' Author  : ' , __author__
+    print ' Version : ' , __version__
+    print ' Date    : ' , __date__    
+    print 80*'*'
     for i in dir() : print i 
 
 

@@ -1,4 +1,4 @@
-// $Id: PhysAlgs.h,v 1.7 2008-06-12 08:25:27 ibelyaev Exp $
+// $Id: PhysAlgs.h,v 1.8 2010-05-30 17:11:02 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PHYSALGS_H 
 #define LOKI_PHYSALGS_H 1
@@ -87,9 +87,9 @@ namespace LoKi
       const PREDICATE&      cut ) 
     {
       // (1) check itself 
-      if ( cut( p ) ) { return true  ; }                  // RETURN 
+      if ( cut ( p ) ) { return true  ; }                  // RETURN 
       // (2) check the validity
-      if ( 0 == p   ) { return false ; }                  // RETURN 
+      if ( 0 == p    ) { return false ; }                  // RETURN 
       // (3) check daughters 
       typedef SmartRefVector<LHCb::Particle> CHILDREN;
       const CHILDREN&  children = p->daughters() ;
@@ -97,10 +97,44 @@ namespace LoKi
             children.end() != child ; ++child ) 
       { 
         if ( LoKi::PhysAlgs::found ( *child , cut ) )     // RECURSION
-        { return true ; } ;                               // EETURN 
+        { return true ; } ;                               // RETURN 
       }
       //
-      return false ;                                      // RETURN 
+      return false ;                                       // RETURN 
+    }  
+    // =========================================================================
+    /** The trivial algorithm which searches for the  
+     *  first particle in the decay tree, which satisfies 
+     *  the certain critetia 
+     *
+     *  @param p pointer to the particle 
+     *  @param cut the criteria 
+     *  @return the first found particle 
+     *
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date   2010-05-30
+     */
+    template <class PREDICATE>
+    inline const LHCb::Particle* foundFirst
+    ( const LHCb::Particle* p   , 
+      const PREDICATE&      cut ) 
+    {
+      // (1) check the validity
+      if ( 0 == p    ) { return 0  ; }                      // RETURN 
+      // (2) check itself 
+      if ( cut ( p ) ) { return p  ; }                      // RETURN 
+      // (3) check daughters 
+      typedef SmartRefVector<LHCb::Particle> CHILDREN;
+      const CHILDREN&  children = p->daughters() ;
+      for ( CHILDREN::const_iterator child = children.begin() ; 
+            children.end() != child ; ++child ) 
+      { 
+        const LHCb::Particle* _p = 
+          LoKi::PhysAlgs::foundFirst ( *child , cut ) ;     // RECURSION 
+        if ( 0 != _p ) { return _p ; }                      // REUTRN 
+      }
+      //
+      return 0 ;                                            // RETURN 
     }  
     // ========================================================================
     /** The trivial algorithm which scans the decay tree   
