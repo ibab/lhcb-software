@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HepMC.py,v 1.8 2009-07-12 12:34:41 ibelyaev Exp $ 
+# $Id: HepMC.py,v 1.9 2010-05-30 17:09:55 ibelyaev Exp $ 
 # =============================================================================
 ## @file
 #  collection of utilities for useful 'decoration' of HepMC-objects
@@ -29,10 +29,12 @@ A.Golutvin, P.Koppenburg have been used in the design.
 
 """
 # =============================================================================
-__author__ = 'Vanya BELYAEV ibelyaev@physics.syr.edu'
+__author__  = 'Vanya BELYAEV ibelyaev@physics.syr.edu'
+__date__    = "2007-08-11"
+__version__ = "CVS Tag: $Name: not supported by cvs2svn $, version $Revision: 1.9 $ "
 # =============================================================================
 import LoKiCore.decorators as _LoKiCore
-from   LoKiGen.functions   import HepMC,LoKi
+from   LoKiGen.functions   import HepMC,LoKi, Gaudi, std, cpp 
 from   LoKiCore.decorators import LHCb
 
 # =============================================================================
@@ -536,12 +538,27 @@ _LCF.max_element   . __doc__ += "\n" + LoKi.Dicts.GenAlgs.max_element  . __doc__
 _LCF.printDecay    . __doc__ += "\n" + LoKi.PrintHepMC.printDecay      . __doc__ 
 
 
+if not hasattr ( HepMC.GenParticle , 'ConstVector' ) :
+    HepMC.GenParticle.ConstVector = std.vector ('const HepMC::GenParticle*')
+if not hasattr ( HepMC.GenVertex   , 'ConstVector' ) :
+    HepMC.GenVertex.ConstVector   = std.vector ('const HepMC::GenVertex*'  )
+
+if not hasattr ( HepMC.GenParticle , 'Range' ) :
+    HepMC.GenParticle.Range = Gaudi.NamedRange_( HepMC.GenParticle.ConstVector ) 
+if not hasattr ( HepMC.GenVertex   , 'Range' ) :
+    HepMC.GenVertex.Range   = Gaudi.NamedRange_( HepMC.GenVertex.ConstVector   ) 
+    
 # =============================================================================
 if '__main__' == __name__ :
-    print __doc__ , '\n' , __author__
+    
+    print 80*'*'
+    print __doc__
+    print ' Author  : ' , __author__
+    print ' Version : ' , __version__
+    print ' Date    : ' , __date__    
+    print 80*'*'
     for i in dir() : print i 
     
-
 # =============================================================================
 # The END 
 # =============================================================================

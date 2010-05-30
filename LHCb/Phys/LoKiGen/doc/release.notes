@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.85 2010-04-26 06:39:43 cattanem Exp $ 
+! $Id: release.notes,v 1.86 2010-05-30 17:09:55 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiGen
 ! Responsible : Vanya BELYAEV
@@ -13,6 +13,13 @@
 !   contributions and advices from G.Raven, J.van Tilburg, 
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
+
+! 2010-05-30 - Vanya Belyaev
+
+ - polish for various functions 
+
+ - cmt/requirements
+   version incrment to v9r1 
 
 !========================== LoKiGen v9r0 2010-04-26 ===========================
 ! 2010-04-09 - Vanya Belyaev

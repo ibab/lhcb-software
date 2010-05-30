@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 # =============================================================================
+# $Id: MC.py,v 1.11 2010-05-30 17:08:28 ibelyaev Exp $ 
+# =============================================================================
 ## @file LoKiMC/MC.py
 #  collection of utilities for useful 'decoration' of MC-objects
 #   
@@ -26,7 +28,9 @@ contributions and advices from G.Raven, J.van Tilburg,
 A.Golutvin, P.Koppenburg have been used in the design.
 """
 # =============================================================================
-__author__ = 'Vanya BELYAEV ibelyaev@physics.syr.edu'
+__author__  = 'Vanya BELYAEV ibelyaev@physics.syr.edu'
+__date__    = "2007-08-11"
+__version__ = "CVS Tag: $Name: not supported by cvs2svn $, version $Revision: 1.11 $ "
 # =============================================================================
 
 from   LoKiMC.functions    import LoKi,LHCb,cpp
@@ -405,14 +409,31 @@ _LCF.printDecay    . __doc__ += "\n" + LoKi.PrintMC.printDecay        . __doc__
 # decorate SmartRefVectors:
 for _t in ( LHCb.MCParticle ,
             LHCb.MCVertex   ) :
+    
     _tt = cpp.SmartRefVector ( _t )
     # redefine the iterator 
     _tt.__iter__ = _LCF._iter_SRV_
 
+    
+if not hasattr ( LHCb.MCParticle , 'ConstVector' ) :
+    LHCb.MCParticle.ConstVector = cpp.std.vector ('const LHCb::MCParticle*')
+if not hasattr ( LHCb.MCVertex   , 'ConstVector' ) :
+    LHCb.MCVertex.ConstVector   = cpp.std.vector ('const LHCb::MCVertex*'  )
+    
+if not hasattr ( LHCb.MCParticle , 'Range'       ) :
+    LHCb.MCParticle.Range = cpp.Gaudi.NamedRange_ ( LHCb.MCParticle.ConstVector ) 
+if not hasattr ( LHCb.MCVertex   , 'Range'       ) :
+    LHCb.MCVertex.Range   = cpp.Gaudi.NamedRange_ ( LHCb.MCVertex.ConstVector   ) 
 
 # =============================================================================
 if '__main__' == __name__ :
-    print __doc__ , '\n' , __author__
+    
+    print 80*'*'
+    print __doc__
+    print ' Author  : ' , __author__
+    print ' Version : ' , __version__
+    print ' Date    : ' , __date__    
+    print 80*'*'
     for i in dir() : print i 
     
 

@@ -1,12 +1,35 @@
 #!/usr/bin/env python
 # =============================================================================
+# $Id: decorators.py,v 1.31 2010-05-30 17:06:42 ibelyaev Exp $ 
+# =============================================================================
 ## @file decorators.py LoKiCore/decorators.py
 #  The set of basic decorator for objects from LoKiCore library
-#  The file is a part of LoKi and Bender projects
+#
+#        This file is a part of LoKi project - 
+#    "C++ ToolKit  for Smart and Friendly Physics Analysis"
+#
+#  The package has been designed with the kind help from
+#  Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
+#  contributions and advices from G.Raven, J.van Tilburg, 
+#  A.Golutvin, P.Koppenburg have been used in the design.
+#
 #  @author Vanya BELYAEV ibelyaev@physics.syr.edu
 # =============================================================================
-""" The set of basic decorators for obejcts from LoKiCore library """
-_author_ = "Vanya BELYAEV ibelyaev@physics.syr.edu" 
+"""
+The set of basic decorators for objects from LoKiCore library
+
+    This file is a part of LoKi project - 
+``C++ ToolKit  for Smart and Friendly Physics Analysis''
+
+The package has been designed with the kind help from
+Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
+contributions and advices from G.Raven, J.van Tilburg, 
+A.Golutvin, P.Koppenburg have been used in the design.
+
+"""
+__author__ = "Vanya BELYAEV ibelyaev@physics.syr.edu" 
+__date__    = "????-??-??"
+__version__ = "CVS Tag: $Name: not supported by cvs2svn $, version $Revision: 1.31 $ "
 # =============================================================================
 
 import PyCintex
@@ -19,9 +42,8 @@ std  = _global.std
 LoKi = _global.LoKi
 LHCb = _global.LHCb
 
-
 # (auto) load the objects from LoKiCoreDict dictionary 
-## FIXME: LoKi.RangeBase_ = cpp.Gaudi.RangeBase_ 
+LoKi.RangeBase_ = cpp.Gaudi.RangeBase_ 
 LoKi.KeeperBase
 
 from LoKiCore.functions import vct_from_list
@@ -78,8 +100,8 @@ def _slice_ ( self , i , j ) :
 # =============================================================================
 ## decorate the ranges
 # =============================================================================
-## FIXME: LoKi.RangeBase_  .__iter__     = _iter_1_ 
-## FIXME: LoKi.RangeBase_  .__getslice__ = _slice_ 
+LoKi.RangeBase_  .__iter__     = _iter_1_ 
+LoKi.RangeBase_  .__getslice__ = _slice_ 
 # =============================================================================
 ## decorate the functions 
 # =============================================================================
@@ -2032,6 +2054,20 @@ def decorateFinder ( finder , opers ) :
 ## import all dependent functions 
 # =============================================================================
 from LoKiCore.functions import * 
+
+
+
+# =============================================================================
+if '__main__' == __name__ :
+
+    print 80*'*'
+    print __doc__
+    print ' Author  : ' , __author__
+    print ' Version : ' , __version__
+    print ' Date    : ' , __date__    
+    print 80*'*'
+    for i in dir() : print i 
+        
 
 # =============================================================================
 # The END

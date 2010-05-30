@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 # =============================================================================
+# $Id: functions.py,v 1.18 2010-05-30 17:08:28 ibelyaev Exp $ 
+# =============================================================================
 ## @file functions.py LoKiMC/functions.py
 #  The set of basic functions from LoKiMC library
 #  The file is a part of LoKi and Bender projects
@@ -26,7 +28,9 @@ contributions and advices from G.Raven, J.van Tilburg,
 A.Golutvin, P.Koppenburg have been used in the design.
 """ 
 # =============================================================================
-__author__ = "Vanya BELYAEV ibelyaev@physics.syr.edu" 
+__author__  = "Vanya BELYAEV ibelyaev@physics.syr.edu" 
+__date__    = "????-??-??"
+__version__ = "CVS Tag: $Name: not supported by cvs2svn $, version $Revision: 1.18 $ "
 # =============================================================================
 
 import LoKiCore.decorators as _LoKiCore
@@ -335,7 +339,14 @@ MCVSIZE     = LoKi.Functors.Size  ( _MCV ) ()
 
 # =============================================================================
 if '__main__' == __name__ :
-    for o in dir() : print o
+    
+    print 80*'*'
+    print __doc__
+    print ' Author  : ' , __author__
+    print ' Version : ' , __version__
+    print ' Date    : ' , __date__    
+    print 80*'*'
+    for i in dir() : print i 
         
 # =============================================================================
 # The END 

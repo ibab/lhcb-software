@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 # =============================================================================
+# $Id: functions.py,v 1.17 2010-05-30 17:09:55 ibelyaev Exp $
+# =============================================================================
 ## @file LoKiGen/functions.py
 #  The full set of useful objects from LoKiGen library 
 #
@@ -26,7 +28,9 @@ contributions and advices from G.Raven, J.van Tilburg,
 A.Golutvin, P.Koppenburg have been used in the design.
 """
 # =============================================================================
-__author__ = "Vanya BELYAEV ibelyaev@physics.syr.edu" 
+__author__  = "Vanya BELYAEV ibelyaev@physics.syr.edu" 
+__date__    = "2007-12-01"
+__version__ = "CVS Tag: $Name: not supported by cvs2svn $, version $Revision: 1.17 $ "
 # =============================================================================
 
 import LoKiCore.decorators as _LoKiCore 
@@ -288,7 +292,13 @@ GVSIZE      = LoKi.Functors.Size  ( _GV ) ()
 
 # =============================================================================
 if '__main__' == __name__ :
-    for o in dir() : print o
+    print 80*'*'
+    print __doc__
+    print ' Author  : ' , __author__
+    print ' Version : ' , __version__
+    print ' Date    : ' , __date__    
+    print 80*'*'
+    for i in dir() : print i 
         
 # =============================================================================
 # The END

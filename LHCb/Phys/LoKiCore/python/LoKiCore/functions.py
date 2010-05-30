@@ -1,12 +1,36 @@
 #!/usr/bin/env python
 # =============================================================================
+# $Id: functions.py,v 1.25 2010-05-30 17:06:43 ibelyaev Exp $
+# =============================================================================
 ## @file functions.py LoKiCore/function.py
 #  The set of basic functions for from LoKiCore library
-#  The file is a part of LoKi and Bender projects
+#
+#        This file is a part of LoKi project - 
+#    "C++ ToolKit  for Smart and Friendly Physics Analysis"
+#
+#  The package has been designed with the kind help from
+#  Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
+#  contributions and advices from G.Raven, J.van Tilburg, 
+#  A.Golutvin, P.Koppenburg have been used in the design.
+#
 #  @author Vanya BELYAEV ibelyaev@physics.syr.edu
 # =============================================================================
-""" The set of basic functions for from LoKiCore library """
-_author_ = "Vanya BELYAEV ibelyaev@physics.syr.edu" 
+"""
+The set of basic functions for from LoKiCore library
+
+      This file is a part of LoKi project - 
+``C++ ToolKit  for Smart and Friendly Physics Analysis''
+
+The package has been designed with the kind help from
+Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
+contributions and advices from G.Raven, J.van Tilburg, 
+A.Golutvin, P.Koppenburg have been used in the design.
+
+"""
+# =============================================================================
+__author_   = "Vanya BELYAEV ibelyaev@physics.syr.edu"
+__date__    = "????-??-??"
+__version__ = "CVS Tag: $Name: not supported by cvs2svn $, version $Revision: 1.25 $ "
 # =============================================================================
 from LoKiCore.decorators import LoKi
 
@@ -209,6 +233,8 @@ def child ( p , *a )  :
     >>> d1  = child ( p , 1 ) 
     >>> d12 = child ( p , 1 , 2 )
 
+    Also one can use ``child-selector'' here
+    
     ATTTENTION: incides starts from 1.
     Index 0 corresponds to the particle itself.
     
@@ -648,7 +674,7 @@ def strings ( arg1 , *args ) :
     vct = _vt () 
     #
     if issubclass ( type ( arg1 ) , ( list , tuple ) ) :
-        for a in arg1 : vct.push_back ( a    )
+        for a in arg1 : vct.push_back ( str ( a ) )
     else :              vct.push_back ( arg1 ) 
     #
     for a in args : vct.push_back ( a )
@@ -835,11 +861,11 @@ def _has_nega ( arg1 , *args ) :
 ## convert the "list" into C++ vector of primitives 
 def vct_from_list  ( lst , *args ) :
     
-    ## at leats one string?
-    if _has_string ( lst , *args ) : return strings ( lst , *args )
+    ## at least one string?
+    if _has_string  ( lst , *args ) : return strings ( lst , *args )
     
     ## at least one double?
-    if _has_float  ( lst , *args ) : return doubles ( lst , *args )
+    if _has_float   ( lst , *args ) : return doubles ( lst , *args )
     ##
     _hn = _has_nega ( lst , *args )
     ##
@@ -860,6 +886,16 @@ def vct_from_list  ( lst , *args ) :
     ## 
     return doubles ( lst , *args )
     
+# =============================================================================
+if '__main__' == __name__ :
+
+    print 80*'*'
+    print __doc__
+    print ' Author  : ' , __author__
+    print ' Version : ' , __version__
+    print ' Date    : ' , __date__    
+    print 80*'*'
+    for i in dir() : print i 
         
 # =============================================================================
 # The END

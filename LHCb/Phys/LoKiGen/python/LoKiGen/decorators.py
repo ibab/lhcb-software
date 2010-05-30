@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 # =============================================================================
+# $Id: decorators.py,v 1.14 2010-05-30 17:09:55 ibelyaev Exp $ 
+# =============================================================================
 ## @file LoKiGen/decorators.py
 #  The set of basic decorator for objects from LoKiGen library
 #
@@ -25,7 +27,9 @@ contributions and advices from G.Raven, J.van Tilburg,
 A.Golutvin, P.Koppenburg have been used in the design.
 """
 # =============================================================================
-__author__ = "Vanya BELYAEV ibelyaev@physics.syr.edu" 
+__author__  = "Vanya BELYAEV ibelyaev@physics.syr.edu" 
+__date__    = "????-??-??"
+__version__ = "CVS Tag: $Name: not supported by cvs2svn $, version $Revision: 1.14 $ "
 # =============================================================================
 
 from   LoKiGen.functions   import *
@@ -162,9 +166,16 @@ _decorated = _decorate ()                         ## ATTENTION
 
 # =============================================================================
 if '__main__' == __name__ :
-    print 'Number of properly decorated types: %s'%len(_decorated)
-    for o in _decorated : print o
+    print 80*'*'
+    print __doc__
+    print ' Author    :  ' , __author__
+    print ' Version   :  ' , __version__
+    print ' Date      :  ' , __date__    
+    print ' Decorated : #' , len(_decorated)
+    print 80*'*'
+    for i in dir() : print i 
         
+       
 # =============================================================================
 # The END
 # =============================================================================

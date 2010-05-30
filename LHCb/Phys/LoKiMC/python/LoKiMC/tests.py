@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: tests.py,v 1.5 2010-04-06 20:14:39 ibelyaev Exp $
+# $Id: tests.py,v 1.6 2010-05-30 17:08:28 ibelyaev Exp $
 # =============================================================================
 ## @file   LoKiMC/tests.py
 #   
@@ -27,7 +27,9 @@ contributions and advices from G.Raven, J.van Tilburg,
 A.Golutvin, P.Koppenburg have been used in the design.
 """
 # =============================================================================
-__author__ = "Vanya BELYAEV ibelyaev@physics.syr.edu" 
+__author__  = "Vanya BELYAEV ibelyaev@physics.syr.edu" 
+__date__    = "2007-05-29"
+__version__ = "CVS Tag: $Name: not supported by cvs2svn $, version $Revision: 1.6 $ "
 # =============================================================================
 
 import GaudiPython.Pythonizations
@@ -97,6 +99,15 @@ def testAll() :
     
 # =============================================================================
 if '__main__' == __name__ :
+    
+    print 80*'*'
+    print __doc__
+    print ' Author  : ' , __author__
+    print ' Version : ' , __version__
+    print ' Date    : ' , __date__    
+    print 80*'*'
+    for i in dir() : print i 
+
     testAll ()
 # =============================================================================
 
