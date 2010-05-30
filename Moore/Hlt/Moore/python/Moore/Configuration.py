@@ -1,7 +1,7 @@
 """
 High level configuration tool(s) for Moore
 """
-__version__ = "$Id: Configuration.py,v 1.122 2010-05-28 08:03:07 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.123 2010-05-30 20:20:50 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ, path
@@ -72,7 +72,7 @@ class Moore(LHCbConfigurableUser):
         , "EnableTimer" :       True
         , 'EnableRunChangeHandler' : False
         , 'EnableAcceptIfSlow' : True
-        , 'WriterRequires' : [ 'Hlt1Global' ]
+        , 'WriterRequires' : [ 'HltDecisionSequence' ] # this contains Hlt1 & Hlt2
         , "Verbose" :           True # whether or not to print Hlt sequence
         , "ThresholdSettings" : ''
         , 'RequireL0ForEndSequence'     : False
@@ -497,12 +497,10 @@ class Moore(LHCbConfigurableUser):
             if self.getProp("generateConfig") : self._generateConfig()
             self._configureInput()
             self._configureOutput()
+            ## TODO: move into HltConf
             if self.getProp('RequireRoutingBits') or self.getProp('VetoRoutingBits') :
                 from Configurables import HltRoutingBitsFilter
                 filter = HltRoutingBitsFilter( "PhysFilter" )
                 if self.getProp('RequireRoutingBits') : filter.RequireMask = self.getProp('RequireRoutingBits')
-                if self.getProp('VetoRoutingBits') : filter.VetoMask = self.getProp('VetoRoutingBits') 
-                topalgs = ApplicationMgr().TopAlg
-                wrapper = GaudiSequencer('HltWrapper',Members = [ filter ] + topalgs)
-                ApplicationMgr().TopAlg = [ wrapper ]
-
+                if self.getProp('VetoRoutingBits')    : filter.VetoMask    = self.getProp('VetoRoutingBits') 
+                GaudiSequencer("HltDecisionSequence").Members.insert(0,filter)
