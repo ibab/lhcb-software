@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Bs2DsK.py,v 1.6 2010-03-12 16:41:13 ibelyaev Exp $ 
+# $Id: Bs2DsK.py,v 1.7 2010-05-30 17:11:39 ibelyaev Exp $ 
 # =============================================================================
 ## @file BenderExample/Bs2DsK.py
 #  The simple Bender-based example: find recontructed Bs -> BsK candidates 
@@ -43,7 +43,7 @@ with the campain of Dr.O.Callot et al.:
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
 __date__    = "2006-10-12"
-__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $ "
+__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $ "
 # =============================================================================
 ## import everything form bender
 import GaudiKernel.SystemOfUnits as Units 
@@ -85,8 +85,8 @@ class Bs2DsK(AlgoMC) :
         if mcbs.empty() or 1 < mcbs.size() :
             return self.Warning ( 'No mc-trees are found' , SUCCESS )        
 
-        # collect "marked" paricles
-        mcds = std.vector('const LHCb::MCParticle*')()
+        # collect "marked" MC particles
+        mcds = LHCb.MCParticle.ConstVector ()
 
         bs.reset() 
         for b in mcbs :
@@ -98,10 +98,10 @@ class Bs2DsK(AlgoMC) :
         mcDs = MCTRUTH ( self.mcTruth() , mcds )
         
         kaons = self.select ( 'kaons' ,
-                              ( 'K+' == ABSID ) &
-                              ( PIDK > 2      ) & mcDs )
+                              ( 'K+' == ABSID   ) &
+                              ( PIDK > 2        ) & mcDs )
         pions = self.select ( 'pion'   ,
-                              ( 'pi+' == ABSID )  &
+                              ( 'pi+' == ABSID  ) &
                               ( PIDK  < 1       ) &
                               ( PIDe  < 1       ) &
                               ( PIDmu < 1       ) & mcDs )
