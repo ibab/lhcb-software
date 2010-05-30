@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.189 2010-05-28 13:45:01 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.190 2010-05-30 21:01:29 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -37,6 +37,8 @@ class HltConf(LHCbConfigurableUser):
                 , "EnableLumiEventWriting"         : False
                 , "EnableAcceptIfSlow"             : False      # Switch on AcceptIfSlow switch of HltLine
                 , 'RequireL0ForEndSequence'        : True
+                , 'RequireRoutingBits'             : [] # to require not lumi exclusive, set to [ 0x0, 0x4, 0x0 ]
+                , 'VetoRoutingBits'                : []
                 , 'SkipHltRawBankOnRejectedEvents' : False
                 , "LumiBankKillerAcceptFraction"   : 0.9999     # fraction of lumi-only events where raw event is stripped down
                                                                 # (only matters if EnablelumiEventWriting = True)
@@ -132,6 +134,12 @@ class HltConf(LHCbConfigurableUser):
                                   , Sequence('HltEndSequence') 
                                   ] 
                       )
+        if self.getProp('RequireRoutingBits') or self.getProp('VetoRoutingBits') :
+            from Configurables import HltRoutingBitsFilter
+            filter = HltRoutingBitsFilter( "PhysFilter" )
+            if self.getProp('RequireRoutingBits') : filter.RequireMask = self.getProp('RequireRoutingBits')
+            if self.getProp('VetoRoutingBits')    : filter.VetoMask    = self.getProp('VetoRoutingBits') 
+            Sequence("HltDecisionSequence").Members.insert(0,filter)
         #Hlt = Sequence('Hlt', ModeOR= True, ShortCircuit = False
         #              , Members = 
         #                   [ Sequence('Hlt1') 
