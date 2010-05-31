@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.466 2010-05-30 21:01:28 graven Exp $ 
+! $Id: release.notes,v 1.467 2010-05-31 10:48:49 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
@@ -8,6 +8,7 @@
 ! 2010-05-30 - Gerhard Raven
  - add (if requested) add routingbit filter which is configured by
    specifying RequireRoutingBits and VetoRoutingBits 
+ - add routing bit which is just L0 CALO
 
 !========================== HltConf v8r0 2010-05-28 ===================
 ! 2010-05-28 - Gerhard Raven
