@@ -140,12 +140,14 @@ clean: $(packages:=_clean)
 	$(RM) -r InstallArea
 
 # This hack is needed because the stand-alone bash implementation on Windows is very limited (short command line)
-purge: clean $(foreach dep,$(wildcard .*.pack.d),$(dep)_do_purge) $(packages:=/cmt/$(Makefile)_do_purge)
+purge: clean $(foreach dep,$(wildcard .$(CMTCONFIG).d/*.pack.d),$(dep)_do_purge) $(packages:=/cmt/$(Makefile)_do_purge)
+	$(RM) -r .$(CMTCONFIG).d
 %_do_purge: clean
 	$(RM) $*
+
 # This should be the actual implementation
 #purge: clean
-#	$(RM) .*.pack.d $(packages:=/cmt/$(Makefile))
+#	$(RM) .$(CMTCONFIG).d/*.pack.d $(packages:=/cmt/$(Makefile))
 
 # --- Add rules to build packages (e.g. "make MyHat/MyPackage")
 $(foreach pack,$(packages),$(eval $(pack): $(pack)_build))
@@ -202,19 +204,22 @@ endif
 # dependencies between packages.
 ifndef PKG_ONLY
 MKDEPCMD := cmt show uses | sed 's/^\# */\# /' | tr " " "\t" | awk -F"\t" '/^\#\t*use/{if($$5){print $$5"/"$$3}else{print $$3}}'
-.%.pack.d: pack=$(call unescape_slash,$*)
-.%.pack.d:
+.$(CMTCONFIG).d/%.pack.d: pack=$(call unescape_slash,$*)
+.$(CMTCONFIG).d/%.pack.d:
 	@echo Computing dependencies for package $(pack)
+	@mkdir -p .$(CMTCONFIG).d
 	@echo $(pack)_build: $(patsubst %,%_build,$(filter $(packages),$(shell cd $(pack)/cmt; $(MKDEPCMD)))) > $@
 	@echo $@: $(pack)/cmt/requirements >> $@
 
 ifneq ($(MAKECMDGOALS),purge)
--include $(patsubst %,.%.pack.d,$(call escape_slash, $(packages)))
+-include $(patsubst %,.$(CMTCONFIG).d/%.pack.d,$(call escape_slash, $(packages)))
 endif
+deps:
+	@#fake target to force the build of the dependencies (implied by the include)
 endif
 
 # --- List of phony targets
-.PHONY: all clean purge
+.PHONY: all clean purge deps
 # This makes the package targets PHONY (.PHONY does not work with implicit rules)
 $(foreach pack,$(packages),$(eval $(pack)_config $(pack)_build $(pack)_clean: FORCE))
 FORCE:

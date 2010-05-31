@@ -1,3 +1,8 @@
+2010-05-31  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* data/Makefile: Moved the dependency files to a different subdirectory
+	for each CMTCONFIG, to allow concurrent builds.
+
 2010-05-31  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* scripts/tuneAFSVol: New file. Added class and scripts to deal with AFS volumes
