@@ -43,7 +43,7 @@ class TuneAFSVolScript(Script):
     def main(self):
         opts = self.options
         for a in self.args :
-            v = Volume(a)
+            v = Volume(dirname=a)
             if opts.adjust :
                 v.adjustQuota()
             if opts.lock :
