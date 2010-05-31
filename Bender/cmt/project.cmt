@@ -1,6 +1,13 @@
+# $Id: project.cmt,v 1.26 2010-05-31 18:00:12 ibelyaev Exp $ 
+# =============================================================================
 project BENDER
 
-use DAVINCI	DAVINCI_v25r4p3
+use DAVINCI	DAVINCI_v25r5
 
+container       BenderSys
 build_strategy	with_installarea
 setup_strategy	root
+
+# =============================================================================
+# The END 
+# =============================================================================
