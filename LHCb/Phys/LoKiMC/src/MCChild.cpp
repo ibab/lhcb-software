@@ -1,4 +1,4 @@
-// $Id: MCChild.cpp,v 1.4 2008-05-04 15:23:29 ibelyaev Exp $
+// $Id: MCChild.cpp,v 1.5 2010-05-31 20:33:54 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -25,7 +25,7 @@
 // ============================================================================
 // get the number of children
 // ============================================================================
-std::size_t LoKi::MCChild::nChildren
+unsigned int LoKi::MCChild::nChildren
 ( const LHCb::MCParticle*   mother ) 
 {
   if ( 0 == mother       ) { return 0 ; }                           // RETURN 
@@ -51,7 +51,7 @@ std::size_t LoKi::MCChild::nChildren
 // ============================================================================
 const LHCb::MCParticle* LoKi::MCChild::child 
 ( const LHCb::MCParticle* mother , 
-  const size_t            index  ) 
+  const unsigned int      index  ) 
 {
   if ( 0 == mother                    ) { return 0      ; }       // RETURN 
   if ( 0 == index                     ) { return mother ; }       // RETURN 
@@ -76,7 +76,7 @@ const LHCb::MCParticle* LoKi::MCChild::child
  *  @date 2007-06-02
  */
 // ========================================================================
-size_t LoKi::MCChild::daughters
+unsigned int LoKi::MCChild::daughters
 ( const LHCb::MCParticle*        particle  , 
   LHCb::MCParticle::ConstVector& output    , 
   const bool                     decayOnly ) 
@@ -175,6 +175,174 @@ LoKi::MCChild::parents
   return result ;                                               // RETURN 
 }
 // ============================================================================
+/*  get the mother particle  (just for completeness of interface)
+ *  @param particle  MC-particle 
+ *  @return mother particle 
+ *  @author Vanya BELYAEV ibelyaev@phsycis.syr.edu
+ *  @date 2007-06-02
+ */
+// ============================================================================
+const LHCb::MCParticle* 
+LoKi::MCChild::mother 
+( const LHCb::MCParticle* particle  ) 
+{ return 0 == particle ? particle : particle->mother() ; }
+// ============================================================================
+/*  get all daughters for the given MCparticle 
+ *  @param particle  MC-particle 
+ *  @param decayOnly flag to consider only particles from the decay
+ *  @return vector of daughetr particles 
+ *  @author Vanya BELYAEV ibelyaev@phsycis.syr.edu
+ *  @date 2007-06-02
+ */
+// ============================================================================
+LHCb::MCParticle::ConstVector
+LoKi::MCChild::children 
+( const LHCb::MCParticle* particle  , 
+  const bool              decayOnly ) 
+{
+  LHCb::MCParticle::ConstVector result ;
+  daughters ( particle , result , decayOnly ) ;
+  return result ;
+}
+// ============================================================================
+/*  Trivial accessor to the daughter particles for the given MC-particle.
+ *
+ *  @attention index starts with 1 , null index corresponds 
+ *             to the original particle 
+ *  @attention Only the particles from isDecay" end-vertex are considered
+ *
+ *  @see LHCb::MCParticle
+ *  @see LHCb::MCVertex::isDecay
+ *  @param  particle (const) pointer to mother particle 
+ *  @param  index1   index   index of the child particle 
+ *  @param  index2   index   index of the child particle 
+ *  @param  index3   index   index of the child particle 
+ *  @param  index4   index   index of the child particle 
+ *  @return daughter particle with given index 
+ *  @author Vanya BELYAEV ibelyaev@phsycis.syr.edu
+ *  @date 2007-06-02
+ */
+// ============================================================================
+const LHCb::MCParticle* 
+LoKi::MCChild::child
+( const LHCb::MCParticle*  particle , 
+  const unsigned int       index1   , 
+  const unsigned int       index2   ,
+  const unsigned int       index3   ,
+  const unsigned int       index4   )
+{ return child ( child ( particle , index1 ) , index2 , index3 , index4 ) ; }
+// ============================================================================
+/*  Trivial accessor to the daughter "decay" particles for the 
+ *  given MC-particle.
+ *
+ *  @attention index starts with 1 , null index corresponds 
+ *             to the original particle 
+ *  @attention Only the particles from isDecay" end-vertex are considered
+ *
+ *  @see LHCb::MCParticle
+ *  @see LHCb::MCVertex::isDecay
+ *  @param  particle (const) pointer to mother particle 
+ *  @param  index1   index   index of the child particle 
+ *  @param  index2   index   index of the child particle 
+ *  @param  index3   index   index of the child particle 
+ *  @return daughter particle with given index 
+ *  @author Vanya BELYAEV ibelyaev@phsycis.syr.edu
+ *  @date 2007-06-02
+ */    
+// ============================================================================
+const LHCb::MCParticle* 
+LoKi::MCChild::child
+( const LHCb::MCParticle*  particle , 
+  const unsigned int       index1   , 
+  const unsigned int       index2   ,
+  const unsigned int       index3   )
+{ return child ( child ( particle , index1 ) , index2 , index3 ) ; }
+// ============================================================================
+/*  Trivial accessor to the daughter "decay" particles for the given 
+ *  MC-particle.
+ *
+ *  @attention index starts with 1 , null index corresponds 
+ *             to the original particle 
+ *  @attention Only the particles from isDecay" end-vertex are considered
+ *
+ *  @see LHCb::MCParticle
+ *  @see LHCb::MCVertex::isDecay
+ *  @param  particle (const) pointer to mother particle 
+ *  @param  index1   index   index of the child particle 
+ *  @param  index2   index   index of the child particle 
+ *  @return daughter particle with given index 
+ *  @author Vanya BELYAEV ibelyaev@phsycis.syr.edu
+ *  @date 2007-06-02
+ */    
+// ============================================================================
+const LHCb::MCParticle* 
+LoKi::MCChild::child
+( const LHCb::MCParticle*  particle , 
+  const unsigned int       index1   , 
+  const unsigned int       index2   )
+{ return child ( child ( particle , index1 ) , index2 ) ; }
+// ========================================================================
+namespace 
+{
+  // ==========================================================================
+  inline const LHCb::MCParticle* _child 
+  ( const LHCb::MCParticle*          particle , 
+    const std::vector<unsigned int>& indices  ,
+    unsigned int                     last     ) 
+  {
+    if ( 0 == particle   || 
+         indices.empty() || 
+         0 == last       ||
+         indices.size() < last ) { return 0 ; }
+    //
+    switch ( last ) 
+    {
+    case 1 :
+      return LoKi::MCChild::child ( particle , indices[0] ) ; 
+    case 2 :
+      return LoKi::MCChild::child ( particle , indices[0] , indices[1] ) ; 
+    case 3 :
+      return LoKi::MCChild::child ( particle , indices[0] , indices[1] , indices[2] ) ; 
+    case 4 :
+      return LoKi::MCChild::child ( particle , indices[0] , indices[1] , indices[2] , indices [3] ) ; 
+    default:
+      break ;
+    }
+    //
+    const unsigned int next = --last ;
+    //
+    return LoKi::MCChild::child 
+      ( _child ( particle , indices , next ) , indices[ next ] ) ; 
+    // 
+  }
+  // ==========================================================================
+}
+// ============================================================================
+/* Trivial accessor to the daughter "decay" particles for the 
+ *  given MC-particle
+ *
+ *  @attention index starts with 1 , null index corresponds 
+ *             to the original particle 
+ *  @attention Only the particles from isDecay" end-vertex are considered
+ *
+ *  @see LHCb::MCParticle
+ *  @see LHCb::MCVertex::isDecay
+ *  @param  mother  (const) pointer to mother particle 
+ *  @param  indices vector of indices of the child particles
+ *  @return daughter particle with given index 
+ *  @author Vanya BELYAEV ibelyaev@phsycis.syr.edu
+ *  @date 2007-06-02
+ */    
+// ========================================================================
+const LHCb::MCParticle* 
+LoKi::MCChild::child 
+( const LHCb::MCParticle*          mother  , 
+  const std::vector<unsigned int>& indices ) 
+{ return _child ( mother , indices , indices.size () ) ; }
+// ========================================================================
+
+  
+
 
 // ============================================================================
 // The END 

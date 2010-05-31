@@ -1,4 +1,4 @@
-// $Id: MCParticles.h,v 1.25 2010-04-06 20:14:39 ibelyaev Exp $
+// $Id: MCParticles.h,v 1.26 2010-05-31 20:33:53 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_MCPARTICLES_H 
 #define LOKI_MCPARTICLES_H 1
@@ -13,10 +13,6 @@
 // Event 
 // ============================================================================
 #include "Event/MCParticle.h"
-// ============================================================================
-// PartProp
-// ============================================================================
-#include "Kernel/iNode.h"
 // ============================================================================
 // MCInterfaces
 // ============================================================================
@@ -33,7 +29,6 @@
 #include "LoKi/Constants.h"
 #include "LoKi/MCTypes.h"
 #include "LoKi/MCPIDOperators.h"
-#include "LoKi/iTree.h"
 // ============================================================================
 /** @file
  *
@@ -68,12 +63,14 @@ namespace LoKi
     class Momentum : public LoKi::BasicFunctors<const LHCb::MCParticle*>::Function 
     {
     public:
+      // ======================================================================
       /// clone method (mandatory!)
       virtual Momentum* clone() const  ; 
       /// the only one essential method 
       result_type operator() ( argument p ) const ;
       /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;      
+      // ======================================================================
     };
     // ========================================================================    
     /** @class Energy 
@@ -85,12 +82,14 @@ namespace LoKi
     class Energy : public LoKi::BasicFunctors<const LHCb::MCParticle*>::Function
     {
     public:
+      // ======================================================================
       /// clone method (mandatory!)
       virtual Energy* clone() const ;
       /// the only one essential method 
       result_type operator() ( argument p ) const ;
       /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;      
+      // ======================================================================
     };
     // ========================================================================    
     /** @class TransverseMomentum
@@ -103,12 +102,14 @@ namespace LoKi
       : public LoKi::BasicFunctors<const LHCb::MCParticle*>::Function
     {
     public:
+      // ======================================================================
       /// clone method (mandatory!)
       virtual TransverseMomentum* clone() const ;
       /// the only one essential method 
       result_type operator() ( argument p ) const ;
       /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;      
+      // ======================================================================
     };
     // ========================================================================    
     /** @class MomentumX
@@ -120,12 +121,14 @@ namespace LoKi
     class MomentumX : public LoKi::BasicFunctors<const LHCb::MCParticle*>::Function
     { 
     public:
+      // ======================================================================
       /// clone method (mandatory!)
       virtual MomentumX* clone() const ;
       /// the only one essential method 
       result_type operator() ( argument p ) const ;
       /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;      
+      // ======================================================================
     };
     // ========================================================================    
     /** @class MomentumY
@@ -137,12 +140,14 @@ namespace LoKi
     class MomentumY : public LoKi::BasicFunctors<const LHCb::MCParticle*>::Function
     {  
     public:
+      // ======================================================================
       /// clone method (mandatory!)
       virtual MomentumY* clone() const ;
       /// the only one essential method 
       result_type operator() ( argument p ) const ;
       /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;      
+      // ======================================================================
     };
     // ========================================================================    
     /** @class MomentumZ
@@ -154,12 +159,14 @@ namespace LoKi
     class MomentumZ : public LoKi::BasicFunctors<const LHCb::MCParticle*>::Function
     { 
     public:
+      // ======================================================================
       /// clone method (mandatory!)
       virtual MomentumZ* clone() const  ;
       /// the only one essential method 
       result_type operator() ( argument p ) const ;
       /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;      
+      // ======================================================================
     };
     // ========================================================================    
     /** @class Theta
@@ -171,12 +178,14 @@ namespace LoKi
     class Theta : public LoKi::BasicFunctors<const LHCb::MCParticle*>::Function
     {  
     public:
+      // ======================================================================
       /// clone method (mandatory!)
       virtual Theta* clone() const ;
       /// the only one essential method 
       result_type operator() ( argument p ) const ;
       /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;      
+      // ======================================================================
     };
     // ========================================================================    
     /** @class PseudoRapidity
@@ -308,12 +317,14 @@ namespace LoKi
     class Mass : public LoKi::BasicFunctors<const LHCb::MCParticle*>::Function
     { 
     public:
+      // ======================================================================
       /// clone method (mandatory!)
       virtual Mass* clone() const ;
       /// the only one essential method 
       result_type operator() ( argument p ) const ;
       /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;      
+      // ======================================================================
     };
     // ========================================================================    
     /** @class Identifier
@@ -325,12 +336,14 @@ namespace LoKi
     class Identifier : public LoKi::BasicFunctors<const LHCb::MCParticle*>::Function
     {    
     public:
+      // ======================================================================
       /// clone method (mandatory!)
       virtual Identifier* clone() const ;
       /// the only one essential method 
       result_type operator() ( argument p ) const ;
       /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;      
+      // ======================================================================
     };
     // ========================================================================    
     /** @class AbsIdentifier
@@ -343,12 +356,14 @@ namespace LoKi
       : public LoKi::BasicFunctors<const LHCb::MCParticle*>::Function
     {      
     public:
+      // ======================================================================
       /// clone method (mandatory!)
       virtual AbsIdentifier* clone() const ;
       /// the only one essential method 
       result_type operator() ( argument p ) const ;
       /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;      
+      // ======================================================================
     }; 
     // ========================================================================    
     /** @class Oscillated
@@ -362,12 +377,14 @@ namespace LoKi
       : public LoKi::BasicFunctors<const LHCb::MCParticle*>::Predicate
     {      
     public:
+      // ======================================================================
       /// clone method (mandatory!)
       virtual Oscillated* clone() const ;
       /// the only one essential method 
       result_type operator() ( argument p ) const ;
       /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;      
+      // ======================================================================
     };
     // ========================================================================    
     /** @class ThreeCharge
@@ -380,12 +397,14 @@ namespace LoKi
       : public LoKi::BasicFunctors<const LHCb::MCParticle*>::Function
     { 
     public:
+      // ======================================================================
       /// clone method (mandatory!)
       virtual ThreeCharge* clone() const ;
       /// the only one essential method 
       result_type operator() ( argument p ) const ;
       /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;      
+      // ======================================================================
     };
     // ========================================================================    
     /** @class ProperLifeTime 
@@ -1766,6 +1785,7 @@ namespace LoKi
     class NinTree : public LoKi::BasicFunctors<const LHCb::MCParticle*>::Function
     {
     public:
+      // ======================================================================
       /** standard constructor 
        *  @param cut cut to be applied 
        *  @param decayOnly search only within decay products 
@@ -1782,12 +1802,17 @@ namespace LoKi
       virtual  result_type   operator() ( argument p ) const ;
       /// OPTIONAL: the specific printout 
       virtual std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
     private:
-      // the default constructor is disabled 
-      NinTree () ; ///< the default constructor is disabled 
+      // ======================================================================
+      /// the default constructor is disabled 
+      NinTree () ;                       // the default constructor is disabled 
+      // ======================================================================
     private:
+      // ======================================================================
       LoKi::MCTypes::MCCut m_cut       ;
       bool                 m_decayOnly ;
+      // ======================================================================
     };
     // ========================================================================    
     /** @class SumTree
@@ -1810,6 +1835,7 @@ namespace LoKi
     class SumTree : public LoKi::BasicFunctors<const LHCb::MCParticle*>::Function
     {
     public:
+      // ======================================================================
       /** standard constructor 
        *  @param fun the function to be evaluated 
        *  @param cut cut to be applied 
@@ -1842,14 +1868,19 @@ namespace LoKi
       virtual  result_type   operator() ( argument p ) const ;
       /// OPTIONAL: the specific printout 
       virtual std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
     private:
-      // the default constructor is disabled 
-      SumTree() ; // the default constructor is disabled 
+      // ======================================================================
+      /// the default constructor is disabled 
+      SumTree() ;                       // the default constructor is disabled 
+      // ======================================================================
     private:
+      // ======================================================================
       LoKi::MCTypes::MCFun m_fun       ;
       LoKi::MCTypes::MCCut m_cut       ;
       bool                 m_decayOnly ;
       double               m_res       ;
+      // ======================================================================
     };
     // ========================================================================    
     /** @class MultTree
@@ -1872,6 +1903,7 @@ namespace LoKi
     class MultTree : public LoKi::BasicFunctors<const LHCb::MCParticle*>::Function
     {
     public:
+      // ======================================================================
       /** standard constructor 
        *  @param fun the function to be evaluated 
        *  @param cut cut to be applied 
@@ -1904,14 +1936,19 @@ namespace LoKi
       virtual  result_type   operator() ( argument p ) const ;
       /// OPTIONAL: the specific printout 
       virtual std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
     private:
-      // the default constructor is disabled 
-      MultTree() ; ///< the default constructor is disabled 
+      // ======================================================================
+      /// the default constructor is disabled 
+      MultTree () ;                      // the default constructor is disabled 
+      // ======================================================================
     private:
+      // ======================================================================
       LoKi::MCTypes::MCFun m_fun       ;
       LoKi::MCTypes::MCCut m_cut       ;
       bool                 m_decayOnly ;
       double               m_res       ;
+      // ======================================================================
     };
     // ========================================================================    
     /** @class MinTree
@@ -2002,6 +2039,7 @@ namespace LoKi
     class MaxTree : public LoKi::BasicFunctors<const LHCb::MCParticle*>::Function
     {
     public:
+      // ======================================================================
       /** standard constructor 
        *  @param fun the function to be evaluated 
        *  @param cut cut to be applied 
@@ -2036,117 +2074,18 @@ namespace LoKi
       virtual  result_type   operator() ( argument p ) const ;
       /// OPTIONAL: the specific printout 
       virtual std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
     private:
-      // the default constructor is disabled 
-      MaxTree() ; ///< the default constructor is disabled 
+      // ======================================================================
+      /// the default constructor is disabled 
+      MaxTree() ;                        // the default constructor is disabled 
+      // ======================================================================
     private:
       // ======================================================================
       LoKi::MCTypes::MCFun m_fun       ;
       LoKi::MCTypes::MCCut m_cut       ;
       bool                 m_decayOnly ;
       double               m_res       ;
-      // ======================================================================
-    };
-    // ========================================================================
-    /** @class DecNode
-     *  simple predicate, which acts on the particleID fo the particle
-     *  @see LHCb::ParticleID
-     *  @see Decays::iNode
-     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
-     *  @date 2008-12-17
-     */
-    class DecNode
-      : public LoKi::BasicFunctors<const LHCb::MCParticle*>::Predicate
-    {
-    public:
-      // ======================================================================
-      /// constructor from the actual node
-      DecNode ( const Decays::iNode& node ) ;
-      /// MANDATORY: virtual destructor
-      virtual ~DecNode() {}
-      /// MANDATORY: clone method ("virtual constructor")
-      virtual DecNode* clone() const { return new DecNode ( *this ) ; }
-      /// MANDATORY: the only one essential method
-      virtual result_type operator() ( argument p ) const ;
-      /// OPTIONAL: the nice printout
-      virtual std::ostream& fillStream( std::ostream& s ) const ;
-      // ======================================================================
-    private:
-      // ======================================================================
-      /// the default constructor is disabled
-      DecNode () ;                       // the default constructor is disabled
-      // ======================================================================
-    public:
-      // ======================================================================
-      /// get the decay node
-      const Decays::iNode& node() const { return m_node.node () ; }
-      /// valid node ?
-      bool valid() const { return m_node.valid() ; }
-      // validate the node
-      StatusCode validate ( const LHCb::IParticlePropertySvc* svc ) const
-      { return m_node.validate ( svc ) ; }
-      // ======================================================================
-    private:
-      // ======================================================================
-      /// the decay node itself
-      Decays::Node m_node ;                            // the decay node itself
-      // ======================================================================
-    };
-    // ========================================================================    
-    /** @class DecTree
-     *  simple predicate, which acts on the decay structuire/tree for the particle
-     *  @see Decays::iTree
-     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
-     *  @date 2008-12-17
-     */
-    class DecTree
-      : public LoKi::BasicFunctors<const LHCb::MCParticle*>::Predicate
-    {
-    public:
-      // ======================================================================
-      /// the actual type of tree (interface
-      typedef Decays::iTree_<const LHCb::MCParticle*> iTree ; // the tree
-      // ======================================================================
-    private:
-      // ======================================================================
-      /// the actual type of tree (assignable)
-      typedef Decays::Tree_<const LHCb::MCParticle*>   Tree ; // the tree
-      // ======================================================================
-    public:
-      // ======================================================================
-      /// constructor from the actual node
-      DecTree ( const iTree& node ) ;
-      /// MANDATORY: virtual destructor
-      virtual ~DecTree() {}
-      /// MANDATORY: clone method ("virtual constructor")
-      virtual DecTree* clone() const { return new DecTree ( *this ) ; }
-      /// MANDATORY: the only one essential method
-      virtual result_type operator() ( argument p ) const ;
-      /// OPTIONAL: the nice printout
-      virtual std::ostream& fillStream( std::ostream& s ) const ;
-      // ======================================================================
-    private:
-      // ======================================================================
-      /// the default constructor is disabled
-      DecTree () ;                       // the default constructor is disabled
-      // ======================================================================
-    public:
-      // ======================================================================
-      /// get the decay node
-      const iTree& tree() const { return m_tree.tree () ; }
-      // ======================================================================
-      /// valid tree ?
-      bool valid () const { return m_tree.valid() ; }
-      // validate the teh tree
-      StatusCode validate ( const LHCb::IParticlePropertySvc* svc ) const
-      { return m_tree.validate ( svc ) ; }
-      // reset the collection
-      void reset() const { tree().reset() ; }
-      // ======================================================================
-    private:
-      // ======================================================================
-      /// the decay tree itself
-      Tree m_tree ;                                    // the decay tree itself
       // ======================================================================
     };
     // ========================================================================

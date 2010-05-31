@@ -1,4 +1,4 @@
-// $Id: MCAlgs.h,v 1.10 2008-06-12 08:16:49 ibelyaev Exp $
+// $Id: MCAlgs.h,v 1.11 2010-05-31 20:33:53 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_MCALGS_H 
 #define LOKI_MCALGS_H 1
@@ -38,6 +38,7 @@
 // ============================================================================
 namespace LoKi 
 {
+  // ==========================================================================
   namespace MCAlgs 
   { 
     // ========================================================================
@@ -858,8 +859,60 @@ namespace LoKi
       return result ;
     }
     // ======================================================================== 
-  } // end of namespace LoKi::GenAlgs
-} // end of namespace LoKi 
+    /** trivial algorithm seekd fot the 
+     *  first particle in the tree which satisfy 
+     *  the certain criteria
+     *
+     *  @param   particle pointer to MC particle  
+     *  @param   predicate criteria 
+     *  @param   decayOnly search only within decay products 
+     *  @return  the first paticle that satisfy criteria
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date   2006-02-09
+     */
+    template <class PREDICATE>
+    inline 
+    const LHCb::MCParticle* 
+    foundFirst  
+    ( const LHCb::MCParticle* particle          , 
+      const PREDICATE&        predicate         , 
+      const bool              decayOnly = false )
+    {
+      if ( 0 == particle          ) { return        0 ; }            // RETURN 
+      // evaluate the predicate! 
+      if ( predicate ( particle ) ) { return particle ; }            // RETURN 
+      //
+      typedef SmartRefVector<LHCb::MCVertex>   EndVertices ;
+      typedef SmartRefVector<LHCb::MCParticle> Ps          ;
+      const EndVertices& vertices = particle->endVertices() ;
+      //
+      for ( EndVertices::const_iterator ivx = vertices.begin() ; 
+            vertices.end() != ivx ; ++ivx ) 
+      {
+        const LHCb::MCVertex* vx = *ivx ;
+        if ( 0 == vx                     ) { continue ; }      // CONTINUE 
+        if ( decayOnly && !vx->isDecay() ) { continue ; }      // CONTINUE
+        //
+        typedef SmartRefVector<LHCb::MCParticle> Ps          ;
+        const Ps& ps = vx->products() ;
+        for ( Ps::const_iterator  ip = ps.begin() ; ps.end() != ip ; ++ip ) 
+        { 
+          const LHCb::MCParticle* p  = *ip ;
+          if ( 0 == p ) { continue ; }                         // CONTINUE 
+          // start recursion 
+          const LHCb::MCParticle* ff = 
+            foundFirst ( p , predicate , decayOnly ) ;            // RECURSION 
+          // 
+          if ( 0 != ff ) { return ff ; }                             // RETURN
+        }
+      }
+      //
+      return 0 ;                                                     // RETURN 
+    }
+    // ========================================================================
+  } //                                            end of namespace LoKi::MCAlgs
+  // ==========================================================================
+} //                                                      end of namespace LoKi 
 // ============================================================================
 // The END 
 // ============================================================================

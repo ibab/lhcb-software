@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: functions.py,v 1.18 2010-05-30 17:08:28 ibelyaev Exp $ 
+# $Id: functions.py,v 1.19 2010-05-31 20:33:54 ibelyaev Exp $ 
 # =============================================================================
 ## @file functions.py LoKiMC/functions.py
 #  The set of basic functions from LoKiMC library
@@ -30,7 +30,7 @@ A.Golutvin, P.Koppenburg have been used in the design.
 # =============================================================================
 __author__  = "Vanya BELYAEV ibelyaev@physics.syr.edu" 
 __date__    = "????-??-??"
-__version__ = "CVS Tag: $Name: not supported by cvs2svn $, version $Revision: 1.18 $ "
+__version__ = "CVS Tag: $Name: not supported by cvs2svn $, version $Revision: 1.19 $ "
 # =============================================================================
 
 import LoKiCore.decorators as _LoKiCore
@@ -336,6 +336,18 @@ MCEMPTY     = LoKi.Functors.Empty ( _MCP ) ()
 MCVEMPTY    = LoKi.Functors.Empty ( _MCV ) ()
 MCSIZE      = LoKi.Functors.Size  ( _MCP ) ()
 MCVSIZE     = LoKi.Functors.Size  ( _MCV ) ()
+
+
+## angles
+
+## @see LoKi::Cuts::MCCOSPOL 
+MCCOSPOL    = LoKi.MCParticles.PolarizationAngle
+## @see LoKi::Cuts::MCSINCHI
+MCSINCHI    = LoKi.MCParticles.SinChi
+## @see LoKi::Cuts::MCCOSCHI
+MCCOSCHI    = LoKi.MCParticles.CosChi
+## @see LoKi::Cuts::MCANGLECHI
+MCANGLECHI  = LoKi.MCParticles.AngleChi
 
 # =============================================================================
 if '__main__' == __name__ :

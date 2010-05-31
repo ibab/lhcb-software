@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: MC.py,v 1.11 2010-05-30 17:08:28 ibelyaev Exp $ 
+# $Id: MC.py,v 1.12 2010-05-31 20:33:54 ibelyaev Exp $ 
 # =============================================================================
 ## @file LoKiMC/MC.py
 #  collection of utilities for useful 'decoration' of MC-objects
@@ -30,7 +30,7 @@ A.Golutvin, P.Koppenburg have been used in the design.
 # =============================================================================
 __author__  = 'Vanya BELYAEV ibelyaev@physics.syr.edu'
 __date__    = "2007-08-11"
-__version__ = "CVS Tag: $Name: not supported by cvs2svn $, version $Revision: 1.11 $ "
+__version__ = "CVS Tag: $Name: not supported by cvs2svn $, version $Revision: 1.12 $ "
 # =============================================================================
 
 from   LoKiMC.functions    import LoKi,LHCb,cpp
@@ -424,6 +424,13 @@ if not hasattr ( LHCb.MCParticle , 'Range'       ) :
     LHCb.MCParticle.Range = cpp.Gaudi.NamedRange_ ( LHCb.MCParticle.ConstVector ) 
 if not hasattr ( LHCb.MCVertex   , 'Range'       ) :
     LHCb.MCVertex.Range   = cpp.Gaudi.NamedRange_ ( LHCb.MCVertex.ConstVector   ) 
+
+LHCb.MCParticle .Range.__getitem__ = LHCb.MCParticle.Range.__call__
+LHCb.MCVertex   .Range.__getitem__ = LHCb.MCVertex  .Range.__call__
+
+LHCb.MCParticle .Range.__setitem__ = None 
+LHCb.MCVertex   .Range.__setitem__ = None   
+
 
 # =============================================================================
 if '__main__' == __name__ :

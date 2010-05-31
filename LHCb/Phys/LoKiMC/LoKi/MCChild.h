@@ -1,4 +1,4 @@
-// $Id: MCChild.h,v 1.5 2008-06-12 08:16:49 ibelyaev Exp $
+// $Id: MCChild.h,v 1.6 2010-05-31 20:33:53 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_MCCHILD_H 
 #define LOKI_MCCHILD_H 1
@@ -12,6 +12,7 @@
 // ============================================================================
 namespace LoKi 
 {
+  // ==========================================================================
   namespace MCChild 
   {
     // ========================================================================
@@ -24,7 +25,8 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-06-02
      */
-    std::size_t nChildren ( const LHCb::MCParticle*   mother ) ;
+    GAUDI_API
+    unsigned int nChildren ( const LHCb::MCParticle*   mother ) ;
     // ========================================================================
     /** Trivial accessor to the daughter "decay" particles for the 
      *  given MC-particle
@@ -41,9 +43,10 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@phsycis.syr.edu
      *  @date 2007-06-02
      */    
+    GAUDI_API
     const LHCb::MCParticle* child 
     ( const LHCb::MCParticle*   mother , 
-      const size_t             index  ) ;    
+      const unsigned int        index  ) ;    
     // ========================================================================
     /** Trivial accessor to the daughter "decay" particles for the given 
      *  MC-particle.
@@ -61,12 +64,11 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@phsycis.syr.edu
      *  @date 2007-06-02
      */    
-    inline 
+    GAUDI_API
     const LHCb::MCParticle* child
     ( const LHCb::MCParticle*  particle , 
-      const size_t             index1   , 
-      const size_t             index2   )
-    { return child ( child ( particle , index1 ) , index2 ) ; }
+      const unsigned int       index1   , 
+      const unsigned int       index2   ) ;
     // ========================================================================
     /** Trivial accessor to the daughter "decay" particles for the 
      *  given MC-particle.
@@ -85,13 +87,12 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@phsycis.syr.edu
      *  @date 2007-06-02
      */    
-    inline 
+    GAUDI_API
     const LHCb::MCParticle* child
     ( const LHCb::MCParticle*  particle , 
-      const size_t             index1   , 
-      const size_t             index2   ,
-      const size_t             index3   )
-    { return child ( child ( particle , index1 ) , index2 , index3 ) ; }
+      const unsigned int       index1   , 
+      const unsigned int       index2   ,
+      const unsigned int       index3   ) ;
     // ========================================================================
     /** Trivial accessor to the daughter particles for the given MC-particle.
      *
@@ -110,14 +111,33 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@phsycis.syr.edu
      *  @date 2007-06-02
      */
-    inline 
+    GAUDI_API
     const LHCb::MCParticle* child
     ( const LHCb::MCParticle*  particle , 
-      const size_t             index1   , 
-      const size_t             index2   ,
-      const size_t             index3   ,
-      const size_t             index4   )
-    { return child ( child ( particle , index1 ) , index2 , index3 , index4 ) ; }
+      const unsigned int       index1   , 
+      const unsigned int       index2   ,
+      const unsigned int       index3   ,
+      const unsigned int       index4   ) ;
+    // ========================================================================
+    /** Trivial accessor to the daughter "decay" particles for the 
+     *  given MC-particle
+     *
+     *  @attention index starts with 1 , null index corresponds 
+     *             to the original particle 
+     *  @attention Only the particles from isDecay" end-vertex are considered
+     *
+     *  @see LHCb::MCParticle
+     *  @see LHCb::MCVertex::isDecay
+     *  @param  mother  (const) pointer to mother particle 
+     *  @param  indices vector of indices of the child particles
+     *  @return daughter particle with given index 
+     *  @author Vanya BELYAEV ibelyaev@phsycis.syr.edu
+     *  @date 2007-06-02
+     */    
+    GAUDI_API
+    const LHCb::MCParticle* child 
+    ( const LHCb::MCParticle*          mother , 
+      const std::vector<unsigned int>& indices ) ;    
     // ========================================================================
     /** get all daughters for the given MCparticle 
      *  @param particle  MC-particle  
@@ -127,7 +147,8 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@phsycis.syr.edu
      *  @date 2007-06-02
      */
-    size_t daughters 
+    GAUDI_API
+    unsigned int daughters 
     ( const LHCb::MCParticle*        particle          , 
       LHCb::MCParticle::ConstVector& output            , 
       const bool                     decayOnly = false ) ;
@@ -139,15 +160,11 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@phsycis.syr.edu
      *  @date 2007-06-02
      */
-    inline LHCb::MCParticle::ConstVector
+    GAUDI_API 
+    LHCb::MCParticle::ConstVector
     children 
     ( const LHCb::MCParticle* particle          , 
-      const bool              decayOnly = false ) 
-    {
-      LHCb::MCParticle::ConstVector result ;
-      daughters ( particle , result , decayOnly ) ;
-      return result ;
-    }
+      const bool              decayOnly = false ) ;
     // ========================================================================
     /** get all descendants for the given MCparticle 
      *  @param particle  MC-particle 
@@ -156,6 +173,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@phsycis.syr.edu
      *  @date 2007-06-02
      */
+    GAUDI_API
     LHCb::MCParticle::ConstVector
     descendants
     ( const LHCb::MCParticle* particle          , 
@@ -168,6 +186,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@phsycis.syr.edu
      *  @date 2007-06-02
      */
+    GAUDI_API
     LHCb::MCParticle::ConstVector
     ancestors 
     ( const LHCb::MCParticle* particle  ) ;
@@ -178,6 +197,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@phsycis.syr.edu
      *  @date 2007-06-02
      */
+    GAUDI_API
     LHCb::MCParticle::ConstVector
     parents
     ( const LHCb::MCParticle* particle  ) ;
@@ -188,18 +208,28 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@phsycis.syr.edu
      *  @date 2007-06-02
      */
-    inline 
+    GAUDI_API 
     const LHCb::MCParticle* 
     mother 
-    ( const LHCb::MCParticle* particle  ) 
-    { return 0 == particle ? particle : particle->mother() ; }
+    ( const LHCb::MCParticle* particle  ) ;
     // ========================================================================
-  } // end of namespace LoKi::MCChild
+  } //                                           end of namespace LoKi::MCChild
+  // ==========================================================================
   namespace Child
   {
-    using namespace LoKi::MCChild ;    
-  } // end of namespace LoKi::Child
-} // end of namespace LoKi
+    // ========================================================================
+    using LoKi::MCChild::nChildren   ;
+    using LoKi::MCChild::child       ;
+    using LoKi::MCChild::daughters   ;
+    using LoKi::MCChild::children    ;
+    using LoKi::MCChild::descendants ;
+    using LoKi::MCChild::ancestors   ;
+    using LoKi::MCChild::parents     ;
+    using LoKi::MCChild::mother      ;
+    // ========================================================================
+  } //                                             end of namespace LoKi::Child
+  // ==========================================================================
+} //                                                      end of namespace LoKi
 // ============================================================================
 // The END 
 // ============================================================================

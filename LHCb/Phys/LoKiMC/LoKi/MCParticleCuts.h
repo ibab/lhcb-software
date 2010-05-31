@@ -1,4 +1,4 @@
-// $Id: MCParticleCuts.h,v 1.16 2010-02-18 14:18:51 ibelyaev Exp $
+// $Id: MCParticleCuts.h,v 1.17 2010-05-31 20:33:53 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_MCPARTICLECUTS_H 
 #define LOKI_MCPARTICLECUTS_H 1
@@ -10,6 +10,8 @@
 #include "LoKi/Monitoring.h"
 #include "LoKi/MCTypes.h"
 #include "LoKi/MCParticles.h"
+#include "LoKi/MCParticles1.h"
+#include "LoKi/MCParticles2.h"
 #include "LoKi/MCPIDOperators.h"
 // ============================================================================
 /** @file
@@ -425,62 +427,6 @@ namespace LoKi
      *  @date 2005-05-16
      */
     typedef LoKi::MCParticles::MCDecayPattern                         MCDECAY ;
-    // ========================================================================
-    /** @typedef MCDECNODE
-     *  the trivial predicate whcih acts on ParticleID
-     *
-     *
-     *  @code
-     *
-     *  // construct some node:
-     *  Decays::Node node = Decays::Nodes::Lepton() && Decays::Nodes::Positive() ;
-     *
-     *  const LHCb::MCParticle* p = .... ;
-     *
-     *  // create the predicate:
-     *  MCCut good = MCDECNODE( node  ) ;
-     *
-     *  // use the predicate:
-     *  const ok = good ( p ) ;
-     *
-     *  @endcode
-     *
-     *  @see LHCb::ParticleID
-     *  @see LHCb::ParticleID
-     *  @see Decays::iNode
-     *  @see Decays::Node
-     *  @see Decays::Nodes
-     *  @author Vanya BELYAEV Ivane.Belyaev@nikhef.nl
-     *  @date 2008-12-17
-     */
-    typedef LoKi::MCParticles::DecNode                              MCDECNODE ;
-    // ========================================================================
-    /** @typedef MCDECTREE
-     *  the trivial predicate which acts on decay structure
-     *
-     *  @code
-     *
-     *  // construct some tree
-     *  Decays::Tree_<const LHCb::MCParticle*> tree =  ... ;
-     *
-     *  const LHCb::MCParticle* p = .... ;
-     *
-     *  // create the predicate:
-     *  MCCut good = MCDECTREE ( tree  ) ;
-     *
-     *  // use the predicate:
-     *  const ok = good ( p ) ;
-     *
-     *  @endcode
-     *
-     *  @see LHCb::ParticleID
-     *  @see Decays::iTree_
-     *  @see Decays::Tree_
-     *  @see Decays::Trees
-     *  @author Vanya BELYAEV Ivane.Belyaev@nikhef.nl
-     *  @date 2008-12-17
-     */
-    typedef LoKi::MCParticles::DecTree                              MCDECTREE ;
     // ========================================================================
     /** @typedef MCDELTAR2 
      *  simple evaluator of "delta eta" of the particle momenta
