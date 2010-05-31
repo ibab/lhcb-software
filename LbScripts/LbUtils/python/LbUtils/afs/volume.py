@@ -16,32 +16,66 @@ class MountPoint(Directory):
         super(MountPoint, self).__init__(dirpath)
         if not self.isMountPoint():
             raise IsNotaMountPoint, "%s is not a mount point" % self._name
-        
+
+class IsNotaVolume(Exception):
+    pass        
+
+class IsNotaMountPointOfVolume(Exception):
+    pass
 
 
 class Volume(object):
-    def __init__(self, name, dirname=None):
+    def __init__(self, name=None, dirname=None, loose=False):
         self._mtpoints = []
         if dirname:
-            self.addMountPoint(dirname)
-        self._name = name
-        self._quota = 0
-        self._used = 0
-        self._id = 0
-        self.update()
+            d = Directory(dirname)
+            m = d
+            if not loose :
+                self.addMountPoint(d.name())
+            else :
+                if d.isMountPoint() :
+                    self.addMountPoint(d.name())
+                else :
+                    m = Directory(d.getParentMountPoint())
+                    self.addMountPoint(m.name())
+            if name :
+                if m.getVolumeName() == name :
+                    self._name = name
+                else :
+                    raise IsNotaMountPointOfVolume, "%s is not a mount point of %s" % (m.name(), name) 
+            else :
+                self._name = m.getVolumeName()
+        else :
+            if name :
+                self._name = name
+            else :
+                raise IsNotaVolume
     def ID(self):
-        return self._id 
+        if self._mtpoints :
+            self._mtpoints[0].getVolumeID()
+        else :
+            raise HasNoMountPoint, "%s has no mount point" % self._name
+            
     def name(self):
         return self._name 
+    def flush(self):
+        pass
+    def usedSpace(self):
+        pass
+    def quota(self):
+        pass
+    def setQuota(self):
+        pass
+    def increaseQuota(self):
+        pass
+    def decreaseQuota(self):
+        pass
+    def adjustQuota(self):
+        pass
     def mountPoints(self):
         return self._mtpoints
     def addMountPoint(self, dirname):
         self._mtpoints += MountPoint(dirname)
-    def update(self):
-        if len(self._mtpoints) == 0:
-            raise HasNoMountPoint, "Volume %s has no mount point" % self._name
-        else:
-            pass
 
 
 def createVolume(path, volume_name, quota = None, user = None, group = None):
