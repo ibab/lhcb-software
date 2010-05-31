@@ -1,3 +1,8 @@
+2010-05-31  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* scripts/mkproject: use the AFS volume class instead of the AFS directory class. Now
+	the lock option will also adjust the volume quota to the used space.
+
 2010-05-26  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* LbLegacy/python/LbLegacy/install_project.py: fixed usage of md5 with python 2.6

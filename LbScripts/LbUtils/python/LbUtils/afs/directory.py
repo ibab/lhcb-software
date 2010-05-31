@@ -92,6 +92,8 @@ class Directory(object):
         dir_acl = self.getACL()
         for g in acl_dict.keys() :
             if acl_dict[g] :
+                if acl_dict[g] == "all" :
+                    acl_dict[g] = "rlidwka"
                 if g not in dir_acl.keys() :
                     dir_acl[g] = acl_dict[g]
                 else :
@@ -114,6 +116,8 @@ class Directory(object):
         dir_acl = self.getACL()
         for g in acl_dict.keys() :
             if acl_dict[g] :
+                if acl_dict[g] == "all" :
+                    acl_dict[g] = "rlidwka"
                 if g in dir_acl.keys() :
                     for l in acl_dict[g] :
                         if l in dir_acl[g] :

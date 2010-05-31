@@ -1,7 +1,10 @@
 """ module for AFS volume creation """
 
 from LbUtils.afs.directory import Directory
-from subprocess import Popen
+from LbUtils.Storage import Unit
+from subprocess import Popen, PIPE
+import re
+import logging
 
 class HasNoMountPoint(Exception):
     """ Exception for volume without any mount point """
@@ -55,27 +58,86 @@ class Volume(object):
             self._mtpoints[0].getVolumeID()
         else :
             raise HasNoMountPoint, "%s has no mount point" % self._name
-            
     def name(self):
         return self._name 
     def flush(self):
-        pass
-    def usedSpace(self):
-        pass
-    def quota(self):
-        pass
-    def setQuota(self):
-        pass
-    def increaseQuota(self):
-        pass
-    def decreaseQuota(self):
-        pass
+        log = logging.getLogger()
+        for m in self._mtpoints :
+            p = Popen(["fs", "flushvolume", m.name()], stdout=PIPE, stderr=PIPE)
+            for line in p.stdout.xreadlines() :
+                log.debug(line[:-1])
+            for line in p.stderr.xreadlines() :
+                log.error(line[:-1])
+            if p.wait() != 0:
+                raise IOError, "Could not flush volume %s" % self._name
+            
+    def usedSpace(self, display_size=None):
+        log = logging.getLogger()
+        used_size = 0
+        exp = re.compile("%s\s+\d+\s+(\d+)\s+" % self._name)
+        p = Popen(["fs", "listquota", self._mtpoints[0].name()], stdout=PIPE, stderr=PIPE)
+        for line in p.stdout.xreadlines() :
+            m = exp.match(line[:-1])
+            if m :
+                used_size = m.group(1)
+        for line in p.stderr.xreadlines() :
+            log.error(line[:-1])
+        if p.wait() != 0:
+            raise IOError, "Could not get used space of volume %s" % self._name
+        if display_size :
+            used_size = Unit(int(used_size), "KB")
+            used_size.setDisplay(display_size)
+        return used_size
+    def quota(self, display_size=None):
+        log = logging.getLogger()
+        quota_size = 0
+        exp = re.compile("%s\s+(\d+)\s+\d+\s+" % self._name)
+        p = Popen(["fs", "listquota", self._mtpoints[0].name()], stdout=PIPE, stderr=PIPE)
+        for line in p.stdout.xreadlines() :
+            m = exp.match(line[:-1])
+            if m :
+                quota_size = m.group(1)
+        for line in p.stderr.xreadlines() :
+            log.error(line[:-1])
+        if p.wait() != 0:
+            raise IOError, "Could not get quota of volume %s" % self._name
+        if display_size :
+            quota_size = Unit(int(quota_size), "KB")
+            quota_size.setDisplay(display_size)
+        return quota_size
+    def setQuota(self, quota):
+        log = logging.getLogger()
+        p = Popen(["afs_admin", "setquota", self._mtpoints[0].name(), quota], stdout=PIPE, stderr=PIPE)
+        for line in p.stdout.xreadlines() :
+            log.debug(line[:-1])
+        for line in p.stderr.xreadlines() :
+            log.error(line[:-1])
+        if p.wait() != 0:
+            raise IOError, "Could not set quota of volume %s" % self._name
     def adjustQuota(self):
-        pass
+        actual_size = self.usedSpace()
+        self.setQuota(actual_size)
     def mountPoints(self):
         return self._mtpoints
     def addMountPoint(self, dirname):
-        self._mtpoints += MountPoint(dirname)
+        self._mtpoints.append(MountPoint(dirname))
+    def addACL(self, acl_dict):
+        for m in self._mtpoints :
+            m.addACL(acl_dict, recursive=True)
+    def removeACL(self, acl_dict):
+        for m in self._mtpoints :
+            m.removeACL(acl_dict, recursive=True)
+    def lockACL(self):
+        for m in self._mtpoints :
+            m.lockACL(recursive=True)
+    def unlockACL(self):
+        for m in self._mtpoints :
+            m.unlockACL(recursive=True)
+    def lock(self):
+        self.adjustQuota()
+        self.lockACL()
+    def unlock(self):
+        self.unlockACL()
 
 
 def createVolume(path, volume_name, quota = None, user = None, group = None):
@@ -102,7 +164,12 @@ def createVolume(path, volume_name, quota = None, user = None, group = None):
     if proc.wait() != 0:
         raise IOError, "Could not create volume %s in %s" % (volume_name, path)
     
+    volume = Volume(name=volume_name, dirname=path)
+    
     if group:
         # give write access to librarians
-        Popen(["fs", "setacl", path, group + ':librarians', "all"]).wait()
-    return Directory(path)
+        vol_acl = {}
+        vol_acl[group + ':librarians'] = "all"
+        volume.addACL(vol_acl)
+    
+    return volume

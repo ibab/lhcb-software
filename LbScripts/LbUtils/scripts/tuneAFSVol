@@ -1,0 +1,61 @@
+#!/usr/bin/env python
+# $Id: $
+""" This script is made to tune the AFS volume settings """
+
+from LbUtils.Script import Script
+from LbUtils.CVS import CVS2Version
+from LbUtils.afs.volume import Volume
+
+import sys
+
+__version__ = CVS2Version("$Name: $", "$Revision: $")
+
+class TuneAFSVolScript(Script):
+    _version = __version__    
+    _description = __doc__
+    def defineOpts(self):
+        parser = self.parser
+        parser.set_defaults(adjust=False)
+        parser.add_option("-a", "--adjust",
+                          dest="adjust",
+                          action= "store_true",
+                          help="adjust the volume quota to the used size")
+        parser.set_defaults(lock=False)
+        parser.add_option("-K", "--lock",
+                          dest="lock",
+                          action= "store_true",
+                          help="adjust the volume quota to the used size and removed the write access")
+        parser.set_defaults(unlock=False)
+        parser.add_option("-U", "--unlock",
+                          dest="lock",
+                          action= "store_true",
+                          help="readd the write access the write access")
+        parser.set_defaults(lock_acl=False)
+        parser.add_option("--lock-acl",
+                          dest="lock_acl",
+                          action= "store_true",
+                          help="removed the write access")
+        parser.set_defaults(set_quota=None)
+        parser.add_option("-s", "--set-quota",
+                          dest="set_quota",
+                          help="set the volume quota")
+
+    def main(self):
+        opts = self.options
+        for a in self.args :
+            v = Volume(a)
+            if opts.adjust :
+                v.adjustQuota()
+            if opts.lock :
+                v.lock()
+            if opts.unlock: 
+                v.unlock()
+            if opts.lock_acl :
+                v.unlockACL()
+            if opts.set_quota :
+                v.setQuota(opts.set_quota)
+        return 0
+
+if __name__ == '__main__':
+    s = TuneAFSVolScript(usage="%prog [options] path")
+    sys.exit(s.run())

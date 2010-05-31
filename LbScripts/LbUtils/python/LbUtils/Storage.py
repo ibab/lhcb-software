@@ -41,6 +41,15 @@ class Unit(object):
             self._size = convert(size, size_unit ,"B")
     def setDisplay(self, display):
         self._display = display
+    def value(self, display_unit="B"):
+        if display_unit == "human" or display_unit is None :
+            n = getHumanUnit(self._size)
+            nbr = convert(self._size, "B", n)
+        elif self._display == "B" :
+            nbr = self._size
+        else :
+            nbr = convert(self._size, "B", display_unit)
+        return nbr
     def __str__(self):
         if self._display == "human" or self._display is None :
             n = getHumanUnit(self._size)

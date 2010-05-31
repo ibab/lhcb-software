@@ -29,7 +29,7 @@ from LbConfiguration.Project import getProject
 from LbConfiguration.Platform import getBinaryDbg, getBinaryOpt, isBinaryOpt
 from LbUtils.Links import fixLinks
 from LbUtils.Processes import getNumberOfCores
-from LbUtils.afs.directory import Directory
+from LbUtils.afs.volume import Volume
 
 import logging
 import sys, os, getopt, time, commands, fnmatch
@@ -613,12 +613,12 @@ def release_project(pname, pversion, action=None, yes_mode=False, parallel_mode=
 
     if wlock :
         afs_dir_path = os.path.join(rel_dir, maindir)
-        afs_dir = Directory(afs_dir_path)
-        afs_dir.lockACL(recursive=True)
+        afs_vol = Volume(afs_dir_path)
+        afs_vol.lock()
     if wunlock :
         afs_dir_path = os.path.join(rel_dir, maindir)
-        afs_dir = Directory(afs_dir_path)
-        afs_dir.unlockACL(recursive=True)
+        afs_vol = Volume(afs_dir_path)
+        afs_vol.unlock()
 
 #-----------------------------------------------------------------------------------
 if __name__ == "__main__":

@@ -1,7 +1,13 @@
 2010-05-31  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
+	* scripts/tuneAFSVol: New file. Added class and scripts to deal with AFS volumes
+	* cmt/requirements: 
+	* python/LbUtils/afs/directory.py: 
+	* python/LbUtils/Storage.py: 
+	* tests/testafs.py: 
 	* python/LbUtils/afs/volume.py: added placeholder methods for the Volume class. 
 	This class is only meant to be used with an already existing AFS volume.
+	
 
 2010-05-26  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
