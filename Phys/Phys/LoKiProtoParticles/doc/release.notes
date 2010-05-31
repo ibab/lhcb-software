@@ -1,10 +1,14 @@
 ! -----------------------------------------------------------------------------
-! $Id: release.notes,v 1.1.1.1 2010-05-27 19:17:38 ibelyaev Exp $
+! $Id: release.notes,v 1.2 2010-05-31 16:34:10 ibelyaev Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiProtoParticles
 ! Responsible : Vanya Belyaev Ivan.Belyaev@nikhef.nl
 ! Purpose     : New package to deal with ProtoParticles 
 ! -----------------------------------------------------------------------------
+
+! 2010-05-31 - Vanya BELYAEV
+ - fix for win32 platform 
+
 
 ! 2010-05-27 - Vanya Belyaev
  - The first import 

@@ -1,4 +1,4 @@
-// $Id: ProtoParticles.h,v 1.1.1.1 2010-05-27 19:17:38 ibelyaev Exp $
+// $Id: ProtoParticles.h,v 1.2 2010-05-31 16:34:10 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PROTOPARTICLES_H 
 #define LOKI_PROTOPARTICLES_H 1
@@ -736,14 +736,15 @@ namespace LoKi
     template <>
     std::ostream& 
     Size<const LHCb::ProtoParticle*>::fillStream ( std::ostream& s ) const ; 
-    // ========================================================================
+  // ==========================================================================
   } //                                          end of namespace LoKi::Functors
   // ==========================================================================
   // the specific printpout
   // ==========================================================================
   template <>
   std::ostream& 
-  Valid<const LHCb::ProtoParticle*>::fillStream ( std::ostream& s ) const ;
+  Valid<const LHCb::ProtoParticle*>::fillStream ( std::ostream& s ) const 
+  { return s << "PP_VALID " ; }
   // ==========================================================================
   namespace Cuts 
   {

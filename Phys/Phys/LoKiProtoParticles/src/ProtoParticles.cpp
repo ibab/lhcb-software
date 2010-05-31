@@ -1,4 +1,4 @@
-// $Id: ProtoParticles.cpp,v 1.1.1.1 2010-05-27 19:17:38 ibelyaev Exp $
+// $Id: ProtoParticles.cpp,v 1.2 2010-05-31 16:34:10 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -63,13 +63,6 @@ template <>
 std::ostream& 
 LoKi::Functors::Size<const LHCb::ProtoParticle*>::fillStream
 ( std::ostream& s ) const { return s << "PP_SIZE" ; }
-// ============================================================================
-// the specific printpout
-// ============================================================================
-template <>
-std::ostream& 
-LoKi::Valid<const LHCb::ProtoParticle*>::fillStream
-( std::ostream& s ) const { return s << "PP_VALID" ; }
 // ============================================================================
 // constructor from the filter 
 // ============================================================================
