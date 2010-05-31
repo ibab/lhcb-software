@@ -1,8 +1,14 @@
-! $Id: release.notes,v 1.547 2010-05-24 15:57:24 jpalac Exp $
+! $Id: release.notes,v 1.548 2010-05-31 12:44:02 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2010-05-31 - Juan Palacios
+ - src/FilterDesktop.cpp
+  . Move saved decay vertices to .../decayVertices to test if anything gets them explicitly.
+ - cmt/requirements
+  . Increase to v21r3
 
 !========================== DaVinciTools v21r2 2010-05-24 ===================
 
