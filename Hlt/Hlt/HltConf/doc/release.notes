@@ -1,10 +1,11 @@
-! $Id: release.notes,v 1.467 2010-05-31 10:48:49 graven Exp $ 
+! $Id: release.notes,v 1.468 2010-05-31 10:49:26 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
 
+!========================== HltConf v8r0p1 2010-05-31 ===================
 ! 2010-05-30 - Gerhard Raven
  - add (if requested) add routingbit filter which is configured by
    specifying RequireRoutingBits and VetoRoutingBits 
