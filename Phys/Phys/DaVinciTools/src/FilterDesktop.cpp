@@ -1,4 +1,4 @@
-// $Id: FilterDesktop.cpp,v 1.25 2010-04-06 10:27:42 ibelyaev Exp $
+// $Id: FilterDesktop.cpp,v 1.26 2010-05-31 12:43:24 jpalac Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -427,7 +427,7 @@ LHCb::Particle::Range FilterDesktop::_save
   Particle2Vertex::Table* table = new Particle2Vertex::Table    ( p_in.size() ) ;
   //
   put ( p_tes , outputLocation + "/Particles"                ) ;
-  put ( v_tes , outputLocation + "/Vertices"                 ) ;
+  put ( v_tes , outputLocation + "/decayVertices"                 ) ;
   put ( table , outputLocation + "/Particle2VertexRelations" ) ;
   //
   CLONER cloner ;
@@ -502,9 +502,9 @@ void FilterDesktop::writeEmptyKeyedContainers(const std::string& loc) const
     LHCb::Particle::Container* dummy = new LHCb::Particle::Container;
     put(dummy, loc + "/Particles");
   }
-  if (!exist<LHCb::Vertex::Container>(loc+"/Vertices") ) {  
+  if (!exist<LHCb::Vertex::Container>(loc+"/decayVertices") ) {  
     LHCb::Vertex::Container* dummy = new LHCb::Vertex::Container;
-    put(dummy, loc + "/Vertices");
+    put(dummy, loc + "/decayVertices");
   }
 
 }
@@ -515,9 +515,9 @@ void FilterDesktop::writeEmptySharedContainers(const std::string& loc) const
     LHCb::Particle::Selection* dummy = new LHCb::Particle::Selection;
     put(dummy, loc + "/Particles");
   }
-  if (!exist<LHCb::Vertex::Selection>(loc+"/Vertices") ) {  
+  if (!exist<LHCb::Vertex::Selection>(loc+"/decayVertices") ) {  
     LHCb::Vertex::Selection* dummy = new LHCb::Vertex::Selection;
-    put(dummy, loc + "/Vertices");
+    put(dummy, loc + "/decayVertices");
   }
 }
 // ============================================================================
