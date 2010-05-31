@@ -1,4 +1,4 @@
-// $Id: PhysDesktop.cpp,v 1.106 2010-05-16 09:47:01 jpalac Exp $
+// $Id: PhysDesktop.cpp,v 1.107 2010-05-31 13:21:30 jpalac Exp $
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h"
 //#include "GaudiKernel/GaudiException.h"
@@ -389,7 +389,7 @@ void PhysDesktop::saveVertices(const LHCb::Vertex::ConstVector& vToSave) const
 
   LHCb::Vertices* verticesToSave = new LHCb::Vertices();
 
-  const std::string location(m_outputLocn+"/Vertices");
+  const std::string location(m_outputLocn+"/decayVertices");
 
   put(verticesToSave,location);
 
@@ -712,7 +712,7 @@ StatusCode PhysDesktop::writeEmptyContainerIfNeeded(){
     put(dummy, particleLocation);
   }
   
-  const std::string vertexLocation( m_outputLocn+"/Vertices");
+  const std::string vertexLocation( m_outputLocn+"/decayVertices");
   if (! exist<LHCb::Vertex::Container>(vertexLocation) &&
       ! exist<LHCb::Vertex::Selection>(vertexLocation)    )  {  
     if (msgLevel(MSG::DEBUG)) debug() << "Saving empty container at " 
