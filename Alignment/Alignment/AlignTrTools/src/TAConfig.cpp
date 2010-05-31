@@ -4,7 +4,7 @@
  *  Implementation file for Millepede configuration tool : TAConfig
  *
  *  CVS Log :-
- *  $Id: TAConfig.cpp,v 1.39 2010-05-28 15:42:35 jblouw Exp $
+ *  $Id: TAConfig.cpp,v 1.40 2010-05-31 13:17:24 jblouw Exp $
  *
  *  @author J. Blouw (johan.blouw@mpi-hd.mpg.de)
  *  @date   12/04/2007
@@ -410,6 +410,10 @@ StatusCode TAConfig::ConstrainLagrangeMultOT(){
       m_Centipede->ConstF(m_consTZA,0.);  
       m_Centipede->ConstF(m_scaleZA,0.);  
     }
+    else {
+      m_Centipede->ConstF( m_consTZ, 0.0);
+      m_Centipede->ConstF( m_scaleZ, 0.0);
+    }
   }
   if ( m_dof[3] ) {
     if ( m_otHalfLayer ) {
@@ -435,7 +439,7 @@ StatusCode TAConfig::ConstrainLagrangeMultOT(){
       m_Centipede->ConstF( m_consRcA, 0.0 );
       m_Centipede->ConstF( m_consRcC, 0.0 );
     } else {
-      //      m_Centipede->ConstF( m_consRc, 0.0 );
+      m_Centipede->ConstF( m_consRc, 0.0 );
       m_Centipede->ConstF( m_shearRcZx, 0.0 );
       //      m_Centipede->ConstF( m_shearRcZs, 0.0 );
     }
