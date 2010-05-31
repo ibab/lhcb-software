@@ -54,10 +54,10 @@ class Phi_HadronReduction5 :
                                      ,'Hlt2IncPhiRobust'     : 1.0
                                      ,'Hlt2IncPhiTrackFit'   : 1.0
                                      }
-            ,'Postscale'          : {'Hlt2IncPhiSidebands'  : 0.1
+            ,'Postscale'          : {'Hlt2IncPhiSidebands'  : 'RATE(20)'
                                      ,'Hlt2IncPhi'          : 1.0
-                                     ,'Hlt2IncPhiRobust'    : 0.01 # no real cuts applied so conservatively take a 50th
-                                     ,'Hlt2IncPhiTrackFit'  : 0.1
+                                     ,'Hlt2IncPhiRobust'    : 'RATE(1)'
+                                     ,'Hlt2IncPhiTrackFit'  : 'RATE(1)'
                                      }
             } }
     
@@ -110,10 +110,10 @@ class PhiCharmLepton_Reduction5 :
                                      ,'Hlt2IncPhiRobust'     : 1.0
                                      ,'Hlt2IncPhiTrackFit'   : 1.0
                                      }
-            ,'Postscale'          : {'Hlt2IncPhiSidebands'  : 0.1
+            ,'Postscale'          : {'Hlt2IncPhiSidebands'  : 'RATE(10)'
                                      ,'Hlt2IncPhi'          : 1.0
-                                     ,'Hlt2IncPhiRobust'    : 0.01 # no real cuts applied so conservatively take a 50th
-                                     ,'Hlt2IncPhiTrackFit'  : 0.1
+                                     ,'Hlt2IncPhiRobust'    : 'RATE(1)' # no real cuts applied so conservatively take a 50th
+                                     ,'Hlt2IncPhiTrackFit'  : 'RATE(1)'
                                      }
             } }
     
