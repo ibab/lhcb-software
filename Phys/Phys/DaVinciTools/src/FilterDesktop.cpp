@@ -1,4 +1,4 @@
-// $Id: FilterDesktop.cpp,v 1.27 2010-05-31 13:25:26 jpalac Exp $
+// $Id: FilterDesktop.cpp,v 1.28 2010-05-31 13:29:07 jpalac Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -495,7 +495,7 @@ void FilterDesktop::cloneP2PVRelation
   if ( 0!= bestPV ) { table->relate ( clone , bestPV ) ; }
 }
 // ============================================================================
-void FilterDesktop::writeEmptyKeyedContainers(const std::string& loc) const
+void FilterDesktop::writeEmptyKeyedContainers(const std::string& ) const
 {
   
 //   if (!exist<LHCb::Particle::Container>(loc + "/Particles") ) {  
@@ -509,7 +509,7 @@ void FilterDesktop::writeEmptyKeyedContainers(const std::string& loc) const
 
 }
 // ============================================================================
-void FilterDesktop::writeEmptySharedContainers(const std::string& loc) const
+void FilterDesktop::writeEmptySharedContainers(const std::string& ) const
 {
 //   if (!exist<LHCb::Particle::Selection>(loc + "/Particles") ) {  
 //     LHCb::Particle::Selection* dummy = new LHCb::Particle::Selection;
