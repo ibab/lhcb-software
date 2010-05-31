@@ -1,5 +1,5 @@
 from  Physics_25Vis_25L0_2Hlt1_ExpressHlt2_Jun10 import  Physics_25Vis_25L0_2Hlt1_ExpressHlt2_Jun10
-class Physics_25Vis_25L0_2Hlt1_2Hlt2_Jun10             ( Physics_25Vis_25L0_2Hlt1_ExpressHlt2_Jun10 ):
+class Physics_25Vis_25L0_2Hlt1_AllHlt2_Jun10           ( Physics_25Vis_25L0_2Hlt1_ExpressHlt2_Jun10 ):
     """
     Threshold settings for Hlt1 for 2010 conditions
     
@@ -12,8 +12,8 @@ class Physics_25Vis_25L0_2Hlt1_2Hlt2_Jun10             ( Physics_25Vis_25L0_2Hlt
     __all__ = ( 'HltType', 'ActiveHlt2Lines', 'Thresholds' )
 
     def HltType(self) :
-        self.verifyType( Physics_25Vis_25L0_2Hlt1_2Hlt2_Jun10 )
-        return          'Physics_25Vis_25L0_2Hlt1_2Hlt2_Jun10'
+        self.verifyType( Physics_25Vis_25L0_2Hlt1_AllHlt2_Jun10 )
+        return          'Physics_25Vis_25L0_2Hlt1_AllHlt2_Jun10'
     
     def Thresholds(self) :
         """
