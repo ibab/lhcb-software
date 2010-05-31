@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.549 2010-05-31 13:22:28 jpalac Exp $
+! $Id: release.notes,v 1.550 2010-05-31 13:29:42 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
@@ -7,6 +7,7 @@
 ! 2010-05-31 - Juan Palacios
  - src/FilterDesktop.cpp, src/PhysDesktop.cpp
   . Move saved decay vertices to .../decayVertices to test if anything gets them explicitly.
+  . Write no empty Particle::Vertex containers of any type.
  - cmt/requirements
   . Increase to v21r3
 
