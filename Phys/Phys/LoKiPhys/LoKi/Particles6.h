@@ -1,4 +1,4 @@
-// $Id: Particles6.h,v 1.9 2010-05-30 17:11:02 ibelyaev Exp $
+// $Id: Particles6.h,v 1.10 2010-05-31 20:36:13 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PARTICLES6_H 
 #define LOKI_PARTICLES6_H 1
@@ -124,6 +124,13 @@ namespace LoKi
        *  @param selector the child selector
        */
       ChildFunction 
+      ( const LoKi::PhysTypes::Func&  fun      , 
+        const Decays::iNode&          selector ) ;
+      /** constructor from the function and child selector 
+       *  @param fun      the function to be used 
+       *  @param selector the child selector
+       */
+      ChildFunction 
       ( const LoKi::PhysTypes::Func& fun      , 
         const LoKi::PhysTypes::Cuts& selector ) ;
       // ======================================================================
@@ -147,6 +154,13 @@ namespace LoKi
        */
       ChildFunction 
       ( const Decays::IDecay::iTree& selector  , 
+        const LoKi::PhysTypes::Func& fun       ) ;
+      /** constructor from the function and child selector 
+       *  @param selector the child selector
+       *  @param fun      the function to be used 
+       */
+      ChildFunction 
+      ( const Decays::iNode&         selector  , 
         const LoKi::PhysTypes::Func& fun       ) ;
       /** constructor from the function and child selector 
        *  @param selector the child selector
@@ -261,6 +275,13 @@ namespace LoKi
        */
       ChildPredicate 
       ( const LoKi::PhysTypes::Cuts& cut      , 
+        const Decays::iNode&         selector ) ;
+      /** constructor from the function and child selector 
+       *  @param cut      the function to be used 
+       *  @param selector the child selector 
+       */
+      ChildPredicate 
+      ( const LoKi::PhysTypes::Cuts& cut      , 
         const std::string&           selector ) ;
       // ======================================================================
       /** constructor from the function and daughter index 
@@ -283,6 +304,13 @@ namespace LoKi
        */
       ChildPredicate 
       ( const Decays::IDecay::iTree& selector , 
+        const LoKi::PhysTypes::Cuts& cut      ) ;
+      /** constructor from the function and child selector 
+       *  @param cut      the function to be used 
+       *  @param selector the child selector 
+       */
+      ChildPredicate 
+      ( const Decays::iNode&         selector , 
         const LoKi::PhysTypes::Cuts& cut      ) ;
       /** constructor from the function and child selector 
        *  @param cut      the function to be used 

@@ -1,4 +1,4 @@
-// $Id: Particles33.cpp,v 1.2 2010-05-30 17:11:02 ibelyaev Exp $
+// $Id: Particles33.cpp,v 1.3 2010-05-31 20:36:13 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -40,6 +40,36 @@ namespace
 LoKi::Particles::PolarizationAngle::PolarizationAngle
 ( const Decays::IDecay::iTree& daughter , 
   const Decays::IDecay::iTree& parent   , 
+  const bool                   mother   )
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
+  , m_first        ( daughter )
+  , m_second       ( parent   )
+  , m_mother       ( mother   ) 
+{
+  Assert ( m_first  .valid () , "The first  tree is invalid!" ) ;
+  Assert ( m_second .valid () , "The second tree is invalid!" ) ;
+}
+// ============================================================================
+// constructor from two trees 
+// ============================================================================
+LoKi::Particles::PolarizationAngle::PolarizationAngle
+( const Decays::iNode&         daughter , 
+  const Decays::iNode&         parent   , 
+  const bool                   mother   )
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
+  , m_first        ( daughter )
+  , m_second       ( parent   )
+  , m_mother       ( mother   ) 
+{
+  Assert ( m_first  .valid () , "The first  tree is invalid!" ) ;
+  Assert ( m_second .valid () , "The second tree is invalid!" ) ;
+}
+// ============================================================================
+// constructor from two cuts
+// ============================================================================
+LoKi::Particles::PolarizationAngle::PolarizationAngle
+( const LoKi::PhysTypes::Cuts& daughter , 
+  const LoKi::PhysTypes::Cuts& parent   , 
   const bool                   mother   )
   : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
   , m_first        ( daughter )
@@ -206,6 +236,44 @@ LoKi::Particles::SinChi::SinChi
   const Decays::IDecay::iTree& particle2    , 
   const Decays::IDecay::iTree& particle3    , 
   const Decays::IDecay::iTree& particle4    )
+  : LoKi::Particles::PolarizationAngle ( particle1    , 
+                                         particle2    , 
+                                         true         )
+  , m_tree3   ( particle3 ) 
+  , m_tree4   ( particle4 )
+{
+  //
+  Assert ( m_tree3.valid () , "The third tree is invalid" ) ;
+  Assert ( m_tree4.valid () , "The fourh tree is invalid" ) ;
+  //
+} 
+// ============================================================================
+// constructor from the nodes 
+// ============================================================================
+LoKi::Particles::SinChi::SinChi
+( const Decays::iNode& particle1    , 
+  const Decays::iNode& particle2    , 
+  const Decays::iNode& particle3    , 
+  const Decays::iNode& particle4    )
+  : LoKi::Particles::PolarizationAngle ( particle1    , 
+                                         particle2    , 
+                                         true         )
+  , m_tree3   ( particle3 ) 
+  , m_tree4   ( particle4 )
+{
+  //
+  Assert ( m_tree3.valid () , "The third tree is invalid" ) ;
+  Assert ( m_tree4.valid () , "The fourh tree is invalid" ) ;
+  //
+} 
+// ============================================================================
+// constructor from the nodes 
+// ============================================================================
+LoKi::Particles::SinChi::SinChi
+( const LoKi::PhysTypes::Cuts&particle1 , 
+  const LoKi::PhysTypes::Cuts&particle2 , 
+  const LoKi::PhysTypes::Cuts&particle3 , 
+  const LoKi::PhysTypes::Cuts&particle4 ) 
   : LoKi::Particles::PolarizationAngle ( particle1    , 
                                          particle2    , 
                                          true         )
@@ -387,6 +455,32 @@ LoKi::Particles::CosChi::CosChi
                                particle4 )
 {}
 // ============================================================================
+// constructor from the nodes
+// ============================================================================
+LoKi::Particles::CosChi::CosChi 
+( const Decays::iNode& particle1 ,  
+  const Decays::iNode& particle2 , 
+  const Decays::iNode& particle3 , 
+  const Decays::iNode& particle4 )
+  : LoKi::Particles::SinChi (  particle1 , 
+                               particle2 , 
+                               particle3 , 
+                               particle4 )
+{}
+// ============================================================================
+// constructor from the nodes
+// ============================================================================
+LoKi::Particles::CosChi::CosChi
+( const LoKi::PhysTypes::Cuts&particle1 , 
+  const LoKi::PhysTypes::Cuts&particle2 , 
+  const LoKi::PhysTypes::Cuts&particle3 , 
+  const LoKi::PhysTypes::Cuts&particle4 )
+  : LoKi::Particles::SinChi (  particle1 , 
+                               particle2 , 
+                               particle3 , 
+                               particle4 )
+{}
+// ============================================================================
 // constructor from the decay descriptors
 // ============================================================================
 LoKi::Particles::CosChi::CosChi 
@@ -479,13 +573,39 @@ LoKi::Particles::AngleChi::AngleChi
                                particle4 )
 {}
 // ============================================================================
-// constructor form the trees 
+// constructor from the trees 
 // ============================================================================
 LoKi::Particles::AngleChi::AngleChi 
 ( const Decays::IDecay::iTree& particle1 ,  
   const Decays::IDecay::iTree& particle2 , 
   const Decays::IDecay::iTree& particle3 , 
   const Decays::IDecay::iTree& particle4 )
+  : LoKi::Particles::CosChi (  particle1 , 
+                               particle2 , 
+                               particle3 , 
+                               particle4 )
+{}
+// ============================================================================
+// constructor from the nodes
+// ============================================================================
+LoKi::Particles::AngleChi::AngleChi 
+( const Decays::iNode& particle1 ,  
+  const Decays::iNode& particle2 , 
+  const Decays::iNode& particle3 , 
+  const Decays::iNode& particle4 )
+  : LoKi::Particles::CosChi (  particle1 , 
+                               particle2 , 
+                               particle3 , 
+                               particle4 )
+{}
+// ============================================================================
+// constructor from the nodes
+// ============================================================================
+LoKi::Particles::AngleChi::AngleChi 
+( const LoKi::PhysTypes::Cuts& particle1 , 
+  const LoKi::PhysTypes::Cuts& particle2 , 
+  const LoKi::PhysTypes::Cuts& particle3 , 
+  const LoKi::PhysTypes::Cuts& particle4 )
   : LoKi::Particles::CosChi (  particle1 , 
                                particle2 , 
                                particle3 , 

@@ -1,4 +1,4 @@
-// $Id: ChildSelector.h,v 1.2 2010-05-30 17:11:01 ibelyaev Exp $
+// $Id: ChildSelector.h,v 1.3 2010-05-31 20:36:13 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_CHILDSELECTOR_H 
 #define LOKI_CHILDSELECTOR_H 1
@@ -8,6 +8,10 @@
 // Event 
 // ============================================================================
 #include "Event/Particle.h"
+// ============================================================================
+// Kernel/PartProp
+// ============================================================================
+#include "Kernel/iNode.h"
 // ============================================================================
 // LoKi
 // ============================================================================
@@ -47,6 +51,8 @@ namespace LoKi
                  const unsigned int   i4 ) ;
       /// constructor from the indices 
       Selector ( const std::vector<unsigned int>& indices  ) ;
+      /// constructor from decay node 
+      Selector ( const Decays::iNode&             node     ) ;
       /// constructor from decay tree 
       Selector ( const Decays::IDecay::iTree&     child    ) ;
       /// constructor from decay tree 
@@ -75,7 +81,7 @@ namespace LoKi
        *  @param daughters (UPDATE) 
        *  @return number of particles 
        */
-      std::size_t children 
+      unsigned int children 
       ( const LHCb::Particle*         head      , 
         LHCb::Particle::ConstVector&  daughters ) const ;
       // ======================================================================
@@ -121,7 +127,7 @@ namespace LoKi
     ( const LHCb::Particle*        particle , 
       const LoKi::Child::Selector& selector ) ;
     // ========================================================================
-    /** accessor to certain children particles for the givenm particle 
+    /** accessor to certain children particles for the given particle 
      *  @param  particle (INPUT) pointer to mother particle 
      *  @param  selector (INPUT) the selector 
      *  @param  result   (OUTPUT) the container of found particles
@@ -130,11 +136,11 @@ namespace LoKi
      *  @date   2010-05-29
      */
     GAUDI_API 
-    std::size_t children 
+    unsigned int children 
     ( const LHCb::Particle*        particle , 
       const LoKi::Child::Selector& selector , 
       LHCb::Particle::ConstVector& result   ) ;
-    /** accessor to certain children particles for the givenm particle 
+    /** accessor to certain children particles for the given particle 
      *  @param  particle (INPUT) pointer to mother particle 
      *  @param  selector (INPUT) the selector 
      *  @return the container of found particles

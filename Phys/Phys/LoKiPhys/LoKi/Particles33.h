@@ -1,4 +1,4 @@
-// $Id: Particles33.h,v 1.2 2010-05-30 17:11:01 ibelyaev Exp $
+// $Id: Particles33.h,v 1.3 2010-05-31 20:36:13 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PARTICLES33_H 
 #define LOKI_PARTICLES33_H 1
@@ -51,6 +51,16 @@ namespace LoKi
       PolarizationAngle
       ( const Decays::IDecay::iTree& daughter                  , 
         const Decays::IDecay::iTree& parent                    , 
+        const bool                   mother    = true          ) ;
+      /// constructor from two nodes
+      PolarizationAngle
+      ( const Decays::iNode&         daughter                  , 
+        const Decays::iNode&         parent                    , 
+        const bool                   mother    = true          ) ;
+      /// constructor from two cuts 
+      PolarizationAngle
+      ( const LoKi::PhysTypes::Cuts& daughter                  , 
+        const LoKi::PhysTypes::Cuts& parent                    , 
         const bool                   mother    = true          ) ;
       /// constructor from two trees 
       PolarizationAngle
@@ -128,12 +138,22 @@ namespace LoKi
                const Decays::IDecay::iTree& particle2 , 
                const Decays::IDecay::iTree& particle3 , 
                const Decays::IDecay::iTree& particle4 ) ;
+      /// constructor form the nodes 
+      SinChi ( const Decays::iNode& particle1 ,  
+               const Decays::iNode& particle2 , 
+               const Decays::iNode& particle3 , 
+               const Decays::iNode& particle4 ) ;
+      /// constructor from the cuts 
+      SinChi ( const LoKi::PhysTypes::Cuts& particle1 , 
+               const LoKi::PhysTypes::Cuts& particle2 , 
+               const LoKi::PhysTypes::Cuts& particle3 , 
+               const LoKi::PhysTypes::Cuts& particle4 ) ;
       /// constructor from the decay descriptors
       SinChi ( const std::string& particle1 ,  
                const std::string& particle2 , 
                const std::string& particle3 , 
                const std::string& particle4 , 
-               const std::string& factory      = "LoKi::Decay" ) ;
+               const std::string& factory   = "LoKi::Decay" ) ;
       /// MANDATORY: virtual destructor
       virtual ~SinChi() ;
       /// MANDATORY: clone method ("virtual constructor")
@@ -205,12 +225,22 @@ namespace LoKi
                const Decays::IDecay::iTree& particle2 , 
                const Decays::IDecay::iTree& particle3 , 
                const Decays::IDecay::iTree& particle4 ) ;
+      /// constructor form the noeds
+      CosChi ( const Decays::iNode& particle1 ,  
+               const Decays::iNode& particle2 , 
+               const Decays::iNode& particle3 , 
+               const Decays::iNode& particle4 ) ;
+      /// constructor from the cuts 
+      CosChi ( const LoKi::PhysTypes::Cuts& particle1 , 
+               const LoKi::PhysTypes::Cuts& particle2 , 
+               const LoKi::PhysTypes::Cuts& particle3 , 
+               const LoKi::PhysTypes::Cuts& particle4 ) ;
       /// constructor from the decay descriptors
-      CosChi ( const std::string& particle1 ,  
-               const std::string& particle2 , 
-               const std::string& particle3 , 
-               const std::string& particle4 , 
-               const std::string& factory      = "LoKi::Decay" ) ;
+      CosChi ( const std::string&   particle1 ,  
+               const std::string&   particle2 , 
+               const std::string&   particle3 , 
+               const std::string&   particle4 , 
+               const std::string&   factory      = "LoKi::Decay" ) ;
       /// MANDATORY: virtual destructor
       virtual ~CosChi() ;
       /// MANDATORY: clone method ("virtual constructor")
@@ -253,11 +283,21 @@ namespace LoKi
                  const LoKi::Child::Selector& particle2 , 
                  const LoKi::Child::Selector& particle3 , 
                  const LoKi::Child::Selector& particle4 ) ;
-      /// constructor form the trees 
+      /// constructor from the trees 
       AngleChi ( const Decays::IDecay::iTree& particle1 ,  
                  const Decays::IDecay::iTree& particle2 , 
                  const Decays::IDecay::iTree& particle3 , 
                  const Decays::IDecay::iTree& particle4 ) ;
+      /// constructor from the nodes 
+      AngleChi ( const Decays::iNode& particle1 ,  
+                 const Decays::iNode& particle2 , 
+                 const Decays::iNode& particle3 , 
+                 const Decays::iNode& particle4 ) ;
+      /// constructor from the cuts 
+      AngleChi ( const LoKi::PhysTypes::Cuts& particle1 , 
+                 const LoKi::PhysTypes::Cuts& particle2 , 
+                 const LoKi::PhysTypes::Cuts& particle3 , 
+                 const LoKi::PhysTypes::Cuts& particle4 ) ;
       /// constructor from the decay descriptors
       AngleChi ( const std::string& particle1 ,  
                  const std::string& particle2 , 

@@ -1,4 +1,4 @@
-// $Id: Particles6.cpp,v 1.7 2010-05-30 17:11:02 ibelyaev Exp $
+// $Id: Particles6.cpp,v 1.8 2010-05-31 20:36:13 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -158,6 +158,21 @@ LoKi::Particles::ChildFunction::ChildFunction
 // ============================================================================
 LoKi::Particles::ChildFunction::ChildFunction 
 ( const LoKi::PhysTypes::Func& fun       , 
+  const Decays::iNode&         selector  ) 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
+  , m_fun   ( fun      ) 
+  , m_child ( selector ) 
+{
+  Assert ( m_child.valid() , "Child selector is invalid!" ) ;
+} 
+// ============================================================================
+/*  constructor from the function and child selector 
+ *  @param fun      the function to be used 
+ *  @param selector the child selector 
+ */
+// ============================================================================
+LoKi::Particles::ChildFunction::ChildFunction 
+( const LoKi::PhysTypes::Func& fun       , 
   const LoKi::PhysTypes::Cuts& selector  ) 
   : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
   , m_fun   ( fun      ) 
@@ -201,6 +216,21 @@ LoKi::Particles::ChildFunction::ChildFunction
 // ============================================================================
 LoKi::Particles::ChildFunction::ChildFunction 
 ( const Decays::IDecay::iTree& selector  , 
+  const LoKi::PhysTypes::Func& fun       ) 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
+  , m_fun   ( fun      ) 
+  , m_child ( selector ) 
+{
+  Assert ( m_child.valid() , "Child selector is invalid:!" ) ;
+}
+// ============================================================================
+/*  constructor from the function and child selector 
+ *  @param selector the child selector
+ *  @param fun      the function to be used  
+ */
+// ============================================================================
+LoKi::Particles::ChildFunction::ChildFunction 
+( const Decays::iNode&         selector  , 
   const LoKi::PhysTypes::Func& fun       ) 
   : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
   , m_fun   ( fun      ) 
@@ -363,6 +393,21 @@ LoKi::Particles::ChildPredicate::ChildPredicate
 // ============================================================================
 LoKi::Particles::ChildPredicate::ChildPredicate
 ( const LoKi::PhysTypes::Cuts& cut      , 
+  const Decays::iNode&         selector ) 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate () 
+  , m_cut   ( cut      ) 
+  , m_child ( selector ) 
+{
+  Assert ( m_child.valid() , "Child selector is invalid!" );
+}
+// ============================================================================
+/*  constructor from the function and child selector 
+ *  @param cut      the function to be used 
+ *  @param selector the child selector 
+ */
+// ============================================================================
+LoKi::Particles::ChildPredicate::ChildPredicate
+( const LoKi::PhysTypes::Cuts& cut      , 
   const std::string&           selector ) 
   : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate () 
   , m_cut   ( cut      ) 
@@ -406,6 +451,21 @@ LoKi::Particles::ChildPredicate::ChildPredicate
 // ============================================================================
 LoKi::Particles::ChildPredicate::ChildPredicate
 ( const Decays::IDecay::iTree& selector , 
+  const LoKi::PhysTypes::Cuts& cut      ) 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate () 
+  , m_cut   ( cut      ) 
+  , m_child ( selector ) 
+{
+  Assert ( m_child.valid() , "Child selector is invalid!" );
+}
+// ============================================================================
+/*  constructor from the function and child selector 
+ *  @param cut      the function to be used 
+ *  @param selector the child selector 
+ */
+// ============================================================================
+LoKi::Particles::ChildPredicate::ChildPredicate
+( const Decays::iNode&         selector , 
   const LoKi::PhysTypes::Cuts& cut      ) 
   : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate () 
   , m_cut   ( cut      ) 

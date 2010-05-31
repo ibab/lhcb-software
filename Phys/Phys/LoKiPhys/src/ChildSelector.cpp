@@ -1,4 +1,4 @@
-// $Id: ChildSelector.cpp,v 1.2 2010-05-30 17:11:02 ibelyaev Exp $
+// $Id: ChildSelector.cpp,v 1.3 2010-05-31 20:36:13 ibelyaev Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -22,10 +22,11 @@
 #include "LoKi/PhysExtract.h"
 #include "LoKi/PhysAlgs.h"
 #include "LoKi/Child.h"
+#include "LoKi/Particles24.h"
 // ============================================================================
 /** @file 
- *  implementation file for class LoKi::ChildSelector 
- *  @see LoKi::ChidlSelector 
+ *  implementation file for class LoKi::Child::Selector 
+ *  @see LoKi::Child::Selector 
  *  @date 2010-05-29 
  *  @author Vanya Belyaev Ivan.Belyaev@nikhef.nl
  */
@@ -51,7 +52,7 @@ namespace
  *  @date   2010-05-29
  */
 // ============================================================================
-std::size_t LoKi::Child::children 
+unsigned int LoKi::Child::children 
 ( const LHCb::Particle*        particle , 
   const LoKi::Child::Selector& selector , 
   LHCb::Particle::ConstVector& result   ) 
@@ -201,6 +202,22 @@ LoKi::Child::Selector::Selector
   }
   //
   Assert ( valid()           , "The child selector is invalid"        ) ;
+}
+// ============================================================================
+// constructor from decay node 
+// ============================================================================
+LoKi::Child::Selector::Selector ( const Decays::iNode& node ) 
+  : LoKi::AuxFunBase () 
+  , m_indices (           ) 
+  , m_finder  ( s_INVALID )
+  , m_setCut  ( false     ) 
+  , m_cut     ( s_NONE    ) 
+{
+  //
+  m_cut    = LoKi::Particles::DecNode ( node ) ;
+  m_setCut = true ;
+  //
+  Assert ( valid()       , "The child selector is invalid"        ) ;
 }
 // ============================================================================
 // constructor from decay tree 
@@ -360,7 +377,7 @@ std::ostream& LoKi::Child::Selector::fillStream ( std::ostream& s ) const
  *  @return unmber of particles 
  */
 // ============================================================================
-std::size_t LoKi::Child::Selector::children 
+unsigned int LoKi::Child::Selector::children 
 ( const LHCb::Particle*        head      , 
   LHCb::Particle::ConstVector& daughters ) const 
 {
@@ -420,10 +437,10 @@ const LHCb::Particle* LoKi::Child::Selector::child
   //
   m_finder.findDecay ( input , daughters ) ;
   //
-  if (     daughters.empty () ) { return 0 ; }             // REUTRN 
+  if (     daughters.empty () ) { return 0 ; }             // RETURN 
   //
   if ( 1 < daughters.size  () ) 
-  { Warning ("child: >1 daughter partcles are found, return the first") ; }
+  { Warning ("child: >1 daughter particles are found, return the first") ; }
   //
   return daughters[0] ;
 }

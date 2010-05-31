@@ -1,4 +1,4 @@
-// $Id: Child.cpp,v 1.10 2010-05-30 17:11:02 ibelyaev Exp $
+// $Id: Child.cpp,v 1.11 2010-05-31 20:36:13 ibelyaev Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -249,8 +249,10 @@ namespace
       break ;
     }
     //
+    const unsigned int next = --last ;
+    //
     return LoKi::Child::child 
-      ( _child ( particle , indices , --last ) , indices.back() ) ; 
+      ( _child ( particle , indices , next ) , indices[next] ) ; 
     // 
   }
   // ==========================================================================

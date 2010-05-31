@@ -31,7 +31,7 @@ A.Golutvin, P.Koppenburg have been used in the design.
 # =============================================================================
 __author__  = 'Vanya BELYAEV ibelyaev@physics.syr.edu'
 __date__    = '2007-08-11'
-__version__ = 'CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.10 $'
+__version__ = 'CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.11 $'
 # =============================================================================
 
 from   LoKiPhys.functions   import LoKi,LHCb,cpp
@@ -353,7 +353,11 @@ for _t in ( LHCb.Particle    ,
 if not hasattr ( LHCb.Particle , 'ConstVector' ) :
     LHCb.Particle.ConstVector = cpp.std.vector ('const LHCb::Particle*')
 if not hasattr ( LHCb.Particle , 'Range'       ) :
-    LHCb.Particle.Range       = cpp.Gaudi.NamedRange_ ( LHCb.Particle.ConstVector ) 
+    LHCb.Particle.Range       = cpp.Gaudi.NamedRange_ ( LHCb.Particle.ConstVector )
+
+LHCb.Particle.Range.__getitem__  = LHCb.Particle.Range.__call__
+
+LHCb.Particle.Range.__setitem__  = None 
 
 # =============================================================================
 if '__main__' == __name__ :

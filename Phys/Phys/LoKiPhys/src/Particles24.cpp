@@ -1,4 +1,4 @@
-// $Id: Particles24.cpp,v 1.2 2010-01-14 13:30:16 ibelyaev Exp $
+// $Id: Particles24.cpp,v 1.3 2010-05-31 20:36:13 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -54,8 +54,7 @@ LoKi::Particles::DecNode::operator()
   {
     Error ( "Decays::Node is invalid, return false") ;
     return false ; 
-  }
-  
+  } 
   // use the node for evaluation 
   return m_node.node ( p->particleID() ) ;  
 }
