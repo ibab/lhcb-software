@@ -40,13 +40,5 @@ macro_append  DecayTreeFitterDict_dependencies    " DecayTreeFitter "
 
 # ================= end =======================================================
 
-# Hack for Gaudi v21r1 to link dictionary on windows
-# private
-# set EXPORT_ALL_SYMBOLS "yes" GAUDI_V21 "" GAUDI_V22 "" G21_HIDE_SYMBOLS ""
-
-#
-# Temporary hack _not_ to build on Windows
-#
-apply_pattern disable_package_on platform=WIN32
 
 

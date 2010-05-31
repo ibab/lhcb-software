@@ -8,6 +8,10 @@
 ! http://www.slac.stanford.edu/spires/find/hep/www?eprint=physics/0503191
 !-----------------------------------------------------------------------------
 
+! 2010-05-31 - Vanya BELYAEV 
+
+ - reenable the package for Win32 platform
+
 ! 2010-05-29 - Vanya Belyaev
 
  - move the tool into Phys/LoKiFitters package 
