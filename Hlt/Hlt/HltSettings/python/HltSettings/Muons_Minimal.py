@@ -42,7 +42,7 @@ class Muons_Minimal :
         # keep pass through thresholds
         d = { }
 
-        from Hlt2Lines.Hlt2InclusiveMuonLines  import Hlt2InclusiveMuonLinesConf
+        from Hlt2Lines.Hlt2InclusiveMuonLines    import Hlt2InclusiveMuonLinesConf
         from Hlt2Lines.Hlt2InclusiveDiMuonLines  import Hlt2InclusiveDiMuonLinesConf
         d.update( { Hlt2InclusiveDiMuonLinesConf : { 
             ## Cut values
@@ -64,10 +64,10 @@ class Muons_Minimal :
             'SingleMuonPt'        : 1000      # MeV
             ,'SingleMuonIP'        : 0.08     # mm
             ,'SingleMuonHighPt'    : 10000     # MeV
-            ,'Prescale'   : { 'Hlt2MuonFromHLT1'       : 0.01   
-                              ,'Hlt2SingleMuon'        : 1.0
-                              ,'Hlt2SingleHighPTMuon'  : 1.0
-                              }
+            ,'Prescale'   : { 'Hlt2MuonFromHLT1'     : 1.0 # 0.01   
+                            ,'Hlt2SingleMuon'        : 1.0
+                            ,'Hlt2SingleHighPTMuon'  : 1.0
+                            }
             }
                     }
                   )
