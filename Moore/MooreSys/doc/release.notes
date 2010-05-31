@@ -3,6 +3,9 @@ Package     : MooreSys
 Package Coordinator : G.Raven
 Purpose     : LHCb HLT application
 
+</PRE><H1><A NAME=v9r2>2010-05-31 Moore v9r2</A></H1><PRE>
+Relase of top of Hlt v10r4
+
 </PRE><H1><A NAME=v9r1p2>2010-05-07 Moore v9r1p2</A></H1><PRE>
 Patches on top of v9r1p1 to pick up RICH gas parameters online,
 improve startup behaviour of rate limiters, add some monitoring

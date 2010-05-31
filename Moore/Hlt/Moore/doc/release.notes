@@ -2,8 +2,10 @@ Package     : Hlt/Moore
 Package Coordinator : Gerhard Raven
 Purpose     : LHCb HLT application
 
+!========================== Moore v9r2 2010-05-31 ===================
 ! 2010-05-30 - Gerhard Raven
  - change default filter in SendSequence from Hlt1 to HltDecisionSequence
+ - move routing bits filter to HltConf
 
 ! 2010-05-28 - Gerhard Raven
  - remove options specific to Online v4r39 
