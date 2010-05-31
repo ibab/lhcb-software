@@ -107,7 +107,7 @@ class Volume(object):
         return quota_size
     def setQuota(self, quota):
         log = logging.getLogger()
-        p = Popen(["afs_admin", "setquota", self._mtpoints[0].name(), quota], stdout=PIPE, stderr=PIPE)
+        p = Popen(["afs_admin", "set_quota", self._mtpoints[0].name(), quota], stdout=PIPE, stderr=PIPE)
         for line in p.stdout.xreadlines() :
             log.debug(line[:-1])
         for line in p.stderr.xreadlines() :
