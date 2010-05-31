@@ -27,7 +27,7 @@ class TuneAFSVolScript(Script):
                           help="adjust the volume quota to the used size and removed the write access")
         parser.set_defaults(unlock=False)
         parser.add_option("-U", "--unlock",
-                          dest="lock",
+                          dest="unlock",
                           action= "store_true",
                           help="readd the write access the write access")
         parser.set_defaults(lock_acl=False)
@@ -51,7 +51,7 @@ class TuneAFSVolScript(Script):
             if opts.unlock: 
                 v.unlock()
             if opts.lock_acl :
-                v.unlockACL()
+                v.lockACL()
             if opts.set_quota :
                 v.setQuota(opts.set_quota)
         return 0
