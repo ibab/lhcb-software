@@ -5,10 +5,14 @@ Purpose             : LHCb physics analysis application
 
 </PRE><H1><A NAME=v25r5>2010-05-09 DaVinci v25r5. LHCb v31r1 based version for stripping and re-processing</A></H1><PRE>
 
-  * Fix writingof FSRs
+  * Fix writing of FSRs
   * Fix stripping DSTs. No more duplicsted data or cross-stream pollution.
-  * New structure for stripping DST candidates.
+  * New structure for stripping DST candidates /Event/StreamName/...
   * New sripping selections.
+  * Important bug fixes to Particle->PV and Particle->MC relations in Stripping and multi-seleciton Micro DSTs.
+  * Easy MicroDST writing from Stripping DSTs.
+  * New DaVinci::filter functions replace removed IParticleFilter methods and add extra functionality.
+  * HLT: HltSettings removed.
 
 </PRE><H1><A NAME=v25r4p1>2010-05-09 DaVinci v25r4p1. LHCb v31 based version for stripping and re-processing</A></H1><PRE>
 
