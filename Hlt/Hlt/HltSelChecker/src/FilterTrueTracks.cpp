@@ -1,4 +1,4 @@
-// $Id: FilterTrueTracks.cpp,v 1.9 2010-05-18 11:48:45 pkoppenb Exp $
+// $Id: FilterTrueTracks.cpp,v 1.10 2010-06-01 09:44:18 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -6,7 +6,6 @@
 
 // LHCb
 #include "MCInterfaces/IMCDecayFinder.h"
-#include "Kernel/IWriteSelResult.h"
 #include "GaudiKernel/IParticlePropertySvc.h"
 #include "GaudiKernel/ParticleProperty.h"
 
@@ -30,7 +29,6 @@ FilterTrueTracks::FilterTrueTracks( const std::string& name,
                                     ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
   , m_mcDecFinder(0)
-  , m_selResult(0)
     , m_ppSvc(0)
 {
   
@@ -63,7 +61,6 @@ StatusCode FilterTrueTracks::initialize() {
   info() << endmsg ;
   
   m_mcDecFinder = tool<IMCDecayFinder>("MCDecayFinder", this);
-  m_selResult = tool<IWriteSelResult>("WriteSelResult", this);
 
   if ( "" == m_outputPath ){
     warning() << "Nothing will be written out" << endmsg ;
@@ -101,7 +98,7 @@ StatusCode FilterTrueTracks::execute() {
 
   if ( !m_outputPath.empty() ) save(tracks);
 
-  return m_selResult->write(name(), filterPassed());
+  return StatusCode::SUCCESS ;
 }
 
 

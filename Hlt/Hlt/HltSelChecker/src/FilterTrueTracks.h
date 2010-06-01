@@ -1,4 +1,4 @@
-// $Id: FilterTrueTracks.h,v 1.4 2009-08-06 09:03:11 pkoppenb Exp $
+// $Id: FilterTrueTracks.h,v 1.5 2010-06-01 09:44:18 pkoppenb Exp $
 #ifndef FILTERTRUETRACKS_H 
 #define FILTERTRUETRACKS_H 1
 
@@ -24,7 +24,6 @@ typedef std::vector<std::pair<const LHCb::MCParticle*,bool> > MCParts ;
  *  @date   2007-08-17
  */
 class IMCDecayFinder;
-class IWriteSelResult ;
 #include "Event/Track.h"
 
 class FilterTrueTracks : public GaudiAlgorithm {
@@ -48,7 +47,6 @@ private:
 
 private:
   IMCDecayFinder* m_mcDecFinder ;        ///<  MCDecayFinder
-  IWriteSelResult* m_selResult ;         ///< SelResult writer
   std::string m_mcParticlePath ;         ///< MC truth path
   std::vector< std::string >  m_tracksPath ;  ///< Tracks input paths
   std::string m_outputPath ;  ///< Tracks output paths

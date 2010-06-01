@@ -1,9 +1,8 @@
-// $Id: HltSelectionsBase.cpp,v 1.1 2009-10-15 12:32:16 pkoppenb Exp $
+// $Id: HltSelectionsBase.cpp,v 1.2 2010-06-01 09:44:18 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
-#include "Kernel/IWriteSelResult.h"
 #include "Kernel/IANNSvc.h"
 
 // local
