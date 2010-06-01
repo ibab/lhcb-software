@@ -1,10 +1,13 @@
-! $Id: release.notes,v 1.85 2010-05-24 20:45:01 jpalac Exp $
+! $Id: release.notes,v 1.86 2010-06-01 09:42:34 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/FlavourTaggingChecker
 ! Responsible : Marco Musy (marco.musy@cern.ch)
 ! Purpose     : Checker package for Phys/FlavourTagging
 ! Twiki page  : https://twiki.cern.ch/twiki/bin/viewauth/LHCb/FlavourTagging
 !-----------------------------------------------------------------------------
+
+! 2010-06-01 - Patrick Koppenburg
+ - Removed SelResult which wasn't used anyway
 
 !========================== FlavourTaggingChecker v5r4 2010-05-24 ============
 

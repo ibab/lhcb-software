@@ -1,9 +1,8 @@
-// $Id: CheatedSelection.h,v 1.10 2009-11-30 22:46:24 musy Exp $
+// $Id: CheatedSelection.h,v 1.11 2010-06-01 09:42:34 pkoppenb Exp $
 #ifndef USER_CheatedSelection_H 
 #define USER_CheatedSelection_H 1
 
 // from Event 
-#include "Event/SelResult.h"
 #include "Event/GenHeader.h"
 
 // from Gaudi

@@ -1,4 +1,4 @@
-// $Id: IsBEvent.cpp,v 1.7 2007-09-07 13:42:36 pkoppenb Exp $
+// $Id: IsBEvent.cpp,v 1.8 2010-06-01 09:38:21 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -7,7 +7,6 @@
 #include "GaudiKernel/ParticleProperty.h"
 // local
 #include "IsBEvent.h"
-#include "Event/SelResult.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : IsBEvent
@@ -27,12 +26,10 @@ IsBEvent::IsBEvent( const std::string& name,
                     ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
   , m_particles()
-    , m_writeTool()
 {
   m_required.push_back("b"); // default is to require a b-quark
   declareProperty( "RequiredParticles", m_required );
   declareProperty( "AndMode", m_andMode = false );
-  declareProperty( "AvoidSelResult", m_avoidSelResult = false);
 }
 //=============================================================================
 // Destructor
@@ -73,8 +70,6 @@ StatusCode IsBEvent::initialize() {
   else info() << "Will be looking for events with " << m_particles << endmsg;
   if (m_andMode) info() << "... of which all have to be there!" << endmsg;
 
-  m_writeTool = tool<IWriteSelResult>("WriteSelResult");
-
   return StatusCode::SUCCESS;
 };
 
@@ -95,9 +90,6 @@ StatusCode IsBEvent::execute() {
   if (found) debug() << "Found required particle(s)" << endreq;
   setFilterPassed(found);
   
-  StatusCode sc = StatusCode::SUCCESS;
-  if ( !m_avoidSelResult ) sc = m_writeTool->write(name(),filterPassed()) ;
-
   return StatusCode::SUCCESS;
 };
 

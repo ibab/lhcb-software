@@ -1,4 +1,4 @@
-// $Id: BTaggingAnalysis.h,v 1.24 2010-05-12 19:46:29 jpalac Exp $
+// $Id: BTaggingAnalysis.h,v 1.25 2010-06-01 09:42:34 pkoppenb Exp $
 #ifndef USER_BTAGGINGANALYSIS_H 
 #define USER_BTAGGINGANALYSIS_H 1
 
@@ -6,7 +6,6 @@
 #include "Kernel/DVAlgorithm.h"
 // from Event 
 #include "Event/FlavourTag.h"
-#include "Event/SelResult.h"
 #include "Event/GenHeader.h"
 #include "Event/RecHeader.h"
 #include "Event/L0DUReport.h"

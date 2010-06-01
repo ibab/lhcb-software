@@ -1,4 +1,4 @@
-// $Id: IsBEvent.h,v 1.3 2007-09-07 13:23:48 pkoppenb Exp $
+// $Id: IsBEvent.h,v 1.4 2010-06-01 09:38:21 pkoppenb Exp $
 #ifndef ISBEVENT_H 
 #define ISBEVENT_H 1
 
@@ -7,7 +7,6 @@
 #include "GaudiAlg/GaudiAlgorithm.h"
 // Event
 #include "Event/MCParticle.h"
-#include "Kernel/IWriteSelResult.h"
 
 /** @class IsBEvent IsBEvent.h
  *  
@@ -36,9 +35,7 @@ private:
 private:
   std::vector<std::string> m_required; ///< List of required particles
   bool m_andMode; ///< Require all particles (default: no)
-  bool m_avoidSelResult ; ///< Avoid SelResult
   
   std::vector<int> m_particles ; ///< required particles
-  IWriteSelResult* m_writeTool ;                  ///< SelResultWriter
 };
 #endif // ISBEVENT_H

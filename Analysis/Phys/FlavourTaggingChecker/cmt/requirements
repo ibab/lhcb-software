@@ -5,7 +5,7 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 #============================================================================
 package           FlavourTaggingChecker
-version           v5r4
+version           v5r4p1
 
 # Structure, i.e. directories to process. 
 #============================================================================
