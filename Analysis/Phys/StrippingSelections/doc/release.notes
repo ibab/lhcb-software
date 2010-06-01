@@ -5,6 +5,10 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-06-01 - Juan Palacios
+ - Add python/StrippingSelections/__init__.py file loading Gaudi C++ namespace.
+   Temporary hack.
+
 ! 2010-05-29 - Juan Palacios
  - Add test for getting output locations for every stream in StrippingSelections.Streams.allStreams.
  - Increase to v1r23.
