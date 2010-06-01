@@ -38,6 +38,11 @@
  *  @author Mark Tobin
  *  @date   2010-03-15
  */
+
+namespace LHCb{
+  class STCluster;
+}
+
 namespace ST 
 {
   class STDumpClusters : public TupleAlgBase {
@@ -56,6 +61,10 @@ namespace ST
   private:
     std::string m_clusterLocation; ///< Input location for clusters
     unsigned int m_nClusters; ///< Defines the maximum number of clusters expected
+
+    bool m_dumpMap;///< Build mapping to TELL1 and sectors
+    std::vector<bool> m_sectorTELL1s;///<<< Use to build a map of cluster sector to TELL1
+    void dumpClusterMapping(const LHCb::STCluster* cluster);
   };
 }
 #endif // STDUMPCLUSTERS_H

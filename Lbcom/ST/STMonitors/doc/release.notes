@@ -4,6 +4,13 @@
 ! Purpose     : Standard package for monitoring NZS and ZS data.
 !-----------------------------------------------------------------------------
 
+! 2010-04-13 - Mark Tobin
+ - Use new noise tool interface to only update NZS plots for TELL1s which have
+ sent NZS data.  Hopefully fixes issues running on round robin data.
+ - Added an event counting histogram, plus fraction errors/port/tell1
+ STErrorMonitor.
+ - Added extra histograms to STClusterMonitor.
+
 !======================= STMonitors v3r1 2010-04-26 ==========================
 ! 2010-04-20 M Needham
  - Changes in STDQSummaryAlg (bug fix in date printing, easier switch IT/TT)

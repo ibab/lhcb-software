@@ -73,6 +73,8 @@ private:
   const LHCb::ODIN* m_ODIN;///< Time of the first event in the run
   std::string m_odinEvent;///< String of the time of the first run
 
+  bool m_rawNoise;///< Fill histograms with the RAW noise
+
   /// Map of noise histograms booked in initialize
   std::map<int, AIDA::IProfile1D*> m_noiseHistos;
 

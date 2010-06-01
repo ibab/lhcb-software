@@ -45,6 +45,7 @@ private:
   bool m_verbose; ///< true if message service level is verbose
 
   // Book histrograms for online monitoring
+  AIDA::IHistogram1D* m_1d_evtCounter;
   AIDA::IHistogram1D* m_1d_errorBanks;
   AIDA::IHistogram2D* m_2d_errorTypes;
 
@@ -56,5 +57,14 @@ private:
 
   /// Fraction of ports which send error banks
   AIDA::IHistogram1D* m_1d_fracErrors;
+  /// Fraction of ports which send error banks per TELL1
+  AIDA::IProfile1D* m_prof_fracErrors;
+
+  unsigned int m_nTELL1s; ///< Number of TELL1 boards expected.
+
+  /// Store number of error banks/TELL1 (48 (42) Tell1s, 1->48 (42) for TT (IT))
+  std::vector<unsigned int> m_nErrorBanksPerTELL1;
+
+
 };
 #endif // STERRORMONITOR_H

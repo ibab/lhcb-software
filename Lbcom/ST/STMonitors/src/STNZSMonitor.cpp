@@ -61,6 +61,8 @@ STNZSMonitor::STNZSMonitor( const std::string& name,
   declareProperty("NoiseToolType",m_noiseToolType="ST::STNoiseCalculationTool");
   declareSTConfigProperty("NoiseToolName",m_noiseToolName,"TTNoiseCalculationTool");
 
+  /// Plot RAW noise
+  declareProperty("UseRawNoise", m_rawNoise=false);
 }
 
 StatusCode STNZSMonitor::initialize() {
@@ -144,6 +146,9 @@ StatusCode STNZSMonitor::execute() {
     bool needToUpdate = false;
     
     unsigned int sourceID = (*itT).first;
+
+    // Only interested in tell1s which contained an NZS bank
+    if ( !binary_search(m_noiseTool->tell1WithNZSBegin(), m_noiseTool->tell1WithNZSEnd(), sourceID) ) continue;
     //    int tellID = m_useSourceID ? sourceID : (*itT).second;
 
     // Loop over number of events for FPGA-PP and see if the histograms need to be reset
@@ -199,10 +204,24 @@ void STNZSMonitor::updateNoiseHistogram(unsigned int sourceID, bool updateTitle)
   
     // Loop over strips in tell1
     unsigned int strip=0;
-    std::vector<double>::const_iterator itNoise = m_noiseTool->cmsNoiseBegin(sourceID);
-    std::vector<double>::const_iterator itPed = m_noiseTool->rawMeanBegin(sourceID);
+    std::vector<double>::const_iterator itPed;
+    std::vector<double>::const_iterator itPedEnd;
     
-    for(; itNoise != m_noiseTool->cmsNoiseEnd(sourceID); ++itNoise, ++itPed, ++strip) {
+    std::vector<double>::const_iterator itNoise;
+    std::vector<double>::const_iterator itNoiseEnd;
+    if(m_rawNoise) {
+      itPed = m_noiseTool->rawMeanBegin(sourceID);
+      itPedEnd = m_noiseTool->rawMeanEnd(sourceID);
+      itNoise = m_noiseTool->rawNoiseBegin(sourceID);
+      itNoiseEnd = m_noiseTool->rawNoiseEnd(sourceID);
+    } else {
+      itPed = m_noiseTool->cmsMeanBegin(sourceID);
+      itPedEnd = m_noiseTool->cmsMeanEnd(sourceID);
+      itNoise = m_noiseTool->cmsNoiseBegin(sourceID);
+      itNoiseEnd = m_noiseTool->cmsNoiseEnd(sourceID);
+    }
+
+    for(; itNoise != itNoiseEnd; ++itNoise, ++itPed, ++strip) {
       noiseHist->fill( strip, (*itNoise) );
       pedestalHist->fill( strip, (*itPed) );
     }

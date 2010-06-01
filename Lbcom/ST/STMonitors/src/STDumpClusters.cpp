@@ -8,6 +8,13 @@
 #include "Event/ODIN.h"
 #include "Kernel/ISTReadoutTool.h"
 
+#include "Kernel/TTDetectorPlot.h"
+#include "Kernel/ITDetectorPlot.h"
+#include "STDet/DeSTDetector.h"
+#include "STDet/DeSTSector.h"
+#include "STDet/DeTTSector.h"
+
+
 // local
 #include "STDumpClusters.h"
 
@@ -35,6 +42,9 @@ ST::STDumpClusters::STDumpClusters( const std::string& name,
   /* Set the maximum number of clusters in the event (sets the size of the 
      tuple arrays) */
   declareProperty("MaxNumberClusters", m_nClusters=5000);
+  
+  // Build info map and dump to screen
+  declareProperty("DumpMapping", m_dumpMap=false);
 }
 //=============================================================================
 // Destructor
@@ -50,6 +60,7 @@ StatusCode ST::STDumpClusters::initialize() {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
 
+  m_sectorTELL1s.resize(10000, true);
   return StatusCode::SUCCESS;
 }
 
@@ -115,6 +126,7 @@ StatusCode ST::STDumpClusters::execute() {
           adcs[iStrip][iClus]   = (*iStp).second;
         }
       } 
+      if(m_dumpMap) dumpClusterMapping((*itClus));
     }// End of cluster iterator
     tuple->column( "run",   odin->runNumber() );
     tuple->column( "event", static_cast<unsigned int>(odin->eventNumber()) );
@@ -165,4 +177,39 @@ StatusCode ST::STDumpClusters::finalize() {
   return ST::TupleAlgBase::finalize();  // must be called after all other actions
 }
 
-//=============================================================================
+//==============================================================================
+// Return cluster mapping to TELL1, bins for the hitmap plot
+//==============================================================================
+void ST::STDumpClusters::dumpClusterMapping(const LHCb::STCluster* cluster) {
+  if( m_sectorTELL1s[cluster->channelID().uniqueSector()] ) {
+    const unsigned int sourceID = cluster->sourceID();
+    unsigned int TELL1ID = (this->readoutTool())->SourceIDToTELLNumber(sourceID);
+    int n;
+    std::string idMap = detType()+" cluster map";
+    double x;
+    double yMin, yMax;
+    if(detType()=="IT") {
+      n=384;
+      ST::ITDetectorPlot hitMap(idMap, idMap);
+      ST::ITDetectorPlot::Bins bins = hitMap.toBins(cluster->channelID());
+      x = bins.xBin; yMin = bins.yBin; yMax = bins.yBin;
+    } else {
+      n=512;
+      const DeSTSector* aSector = tracker()->findSector(cluster->channelID());
+      const DeTTSector* ttSector = dynamic_cast<const DeTTSector* >(aSector);
+      ST::TTDetectorPlot hitMap(idMap, idMap);
+      ST::TTDetectorPlot::Bins bins = hitMap.toBins(ttSector);
+      x = bins.xBin;
+      yMin = bins.beginBinY; yMax = bins.endBinY;
+    }      //      v.push_back(new STSectorHistoID::STSectorHistoID(2337, "TTaXRegionCSector1", 7, 2 ,10));
+    std::string svcBox = readoutTool()->serviceBox(cluster->channelID());
+    std::cout << (this->name()) 
+              << " v.push_back(new STSectorHistoID::STSectorHistoID(" << cluster->channelID().uniqueSector()
+              << ", \"" << cluster->sectorName()
+              << "\", " << TELL1ID << ", " << cluster->tell1Channel()/n
+              << ", \"" << svcBox << "\", " 
+              << x << ", " << yMin << ", " << yMax << "));"
+              << std::endl;
+    m_sectorTELL1s[cluster->channelID().uniqueSector()] = false;
+  }
+}
