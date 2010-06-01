@@ -4,6 +4,9 @@
 ! Purpose     : Monitoring algorithms after reconstruction
 !-----------------------------------------------------------------------------
 
+! 2010-06-01 - Patrick Koppenburg
+ - Remove SpotLight
+
 !========================== DaVinciMonitors v1r11 2010-05-24 =================
 
 ! 2010-05-24 - Giacomo Graziani
