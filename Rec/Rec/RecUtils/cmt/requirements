@@ -6,7 +6,7 @@
 
 package RecUtils
 
-version v1r5
+version v1r6
 
 branches src cmt doc options
 
@@ -14,7 +14,6 @@ branches src cmt doc options
 #============================================================================
 use GaudiAlg   v* 
 use RecEvent  v*  Event
-use RecInterfaces v* Kernel
 
 # build a component library
 library RecUtils ../src/*.cpp
