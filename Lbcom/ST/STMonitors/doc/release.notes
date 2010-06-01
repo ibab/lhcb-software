@@ -10,6 +10,7 @@
  - Added an event counting histogram, plus fraction errors/port/tell1
  STErrorMonitor.
  - Added extra histograms to STClusterMonitor.
+ - Plus some extra bug fixes.
 
 !======================= STMonitors v3r1 2010-04-26 ==========================
 ! 2010-04-20 M Needham

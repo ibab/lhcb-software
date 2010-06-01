@@ -190,7 +190,7 @@ void ST::STClusterMonitor::monitorClusters() {
     if(100  < nClusters) {
       m_1d_nClusters_gt_100->fill(nClusters);
     }
-    if(m_overFlowLimit > nClusters) m_1d_nClusters_overflow->fill(m_overFlowLimit);
+    if(m_overFlowLimit < nClusters) m_1d_nClusters_overflow->fill(m_overFlowLimit);
 
     // Loop over clusters
     LHCb::STClusters::const_iterator itClus = clusters->begin();
@@ -296,13 +296,13 @@ void ST::STClusterMonitor::bookHistograms() {
   // filled in monitor clusters
   m_1d_nClusters = book1D("Number of clusters",0.,20000.,2000);
   m_1d_nClusters_gt_100 = book1D("Number of clusters (N > 100)", 0., 20000., 2000);
-  m_1d_nClusters_overflow = book1D("Number of clusters", 0., m_overFlowLimit+1, 1000);
+  m_1d_nClusters_overflow = book1D("Number of clusters (no overflow)", 0., m_overFlowLimit+1, 1000);
   m_2d_nClustersVsTELL1 = book2D("Number of clusters per TELL1", 0.5, 
                                  m_nTELL1s+0.5, m_nTELL1s, 0.,100., 50);
 
   // Number of clusters produced by each TELL1
-  m_1d_nClustersVsTELL1 = book1D("Number of clusters per TELL1", 0.5, m_nTELL1s+0.5, m_nTELL1s);
-  m_prof_nClustersVsTELL1 = bookProfile1D("Number of clusters per TELL1", 0.5, m_nTELL1s+0.5, m_nTELL1s);
+  m_1d_nClustersVsTELL1 = book1D("Number of clusters vs TELL1", 0.5, m_nTELL1s+0.5, m_nTELL1s);
+  m_prof_nClustersVsTELL1 = bookProfile1D("Mean number of clusters vs TELL1", 0.5, m_nTELL1s+0.5, m_nTELL1s);
 
   // filled in fillHistograms
   m_1d_ClusterSize = book1D("Cluster Size", 0.5, 4.5, 4); 
