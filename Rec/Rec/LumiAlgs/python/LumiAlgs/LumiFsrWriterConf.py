@@ -43,7 +43,7 @@ class LumiFsrWriterConf(LHCbConfigurableUser):
   __slots__ = {
     "EvtMax":             -1      # Maximum number of events to process
     , "SkipEvents":        0
-    , "DataType":          '2009' # Data type
+    , "DataType":          '2010' # Data type
     , "outputFile" :       ''     # output filename
     , "inputFiles" :       [ ]    # input
     , "KillBanks" :        True   # whether to kill non-lumi banks
@@ -82,9 +82,11 @@ class LumiFsrWriterConf(LHCbConfigurableUser):
     LumiAlgsConf().LumiSequencer = lumiFsrSeq
     sequence.Members+=[ lumiFsrSeq ]
 
+
   def _configureInput(self):
     files = self.getProp('inputFiles')
-    EventSelector().Input = [ _file(f) for f in files ]
+    if len(files) > 0 :
+        EventSelector().Input = [ _file(f) for f in files ]
 
   def _configureOutput(self):
     # first empty the outstream, because it would write all the time

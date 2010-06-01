@@ -15,6 +15,7 @@ from Configurables import createODIN
 from Configurables import LoKi__ODINFilter  as ODINFilter
 from Configurables import RawEventDump
 from Configurables import HltLumiSummaryDecoder
+from Configurables import FilterOnLumiSummary
 from Configurables import LumiFileReader
 
 import GaudiKernel.ProcessJobOptions
@@ -39,7 +40,7 @@ class LumiReaderConf(LHCbConfigurableUser):
   __slots__ = {
     "EvtMax":             -1      # Maximum number of events to process
     , "SkipEvents":        0
-    , "DataType":          '2009' # Data type
+    , "DataType":          '2010' # Data type
     , "outputFile" :       ''     # output filename
     , "inputFiles" :       [ ]    # input
     , "userAlgorithms":    [ ]    # put here user algorithms to add
@@ -66,8 +67,19 @@ class LumiReaderConf(LHCbConfigurableUser):
     # select only the right Trigger Type
     readLumiSequence( ODINFilter ( 'OdinTriggerTypes',
                                    Code = ' ( ODIN_TRGTYP == LHCb.ODIN.LumiTrigger ) ' ))
+
     # decode lumi
     readLumiSequence( HltLumiSummaryDecoder( 'LumiDecoder' ) ) 
+    # add filter to check if this was L0 triggered
+    filterRan = FilterOnLumiSummary('LumiRandomFilter', CounterName = "Random", ValueName = "RandomMethod")
+    filterLow = FilterOnLumiSummary('LumiLowFilter', CounterName = "Method", ValueName = "L0RateMethod")
+    readLumiSequence( Sequence('filterLumi',
+                               Members = [filterRan, filterLow],
+                               ModeOR = True,
+                               ShortCircuit = True,
+                               IgnoreFilterPassed = False,
+                               MeasureTime = True )
+                      )
     # read and decode input file ---
     readLumiSequence( LumiFileReader( OutputLevel = debugOPL ) ) 
     # verbose output
@@ -79,7 +91,8 @@ class LumiReaderConf(LHCbConfigurableUser):
  
   def _configureInput(self):
     files = self.getProp('inputFiles')
-    EventSelector().Input = [ _file(f) for f in files ]
+    if len(files) > 0 :
+        EventSelector().Input = [ _file(f) for f in files ]
 
   def _configureOutput(self):
     # first empty the outstream, because it would write all the time

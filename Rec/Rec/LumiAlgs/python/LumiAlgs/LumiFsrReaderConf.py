@@ -36,7 +36,7 @@ class LumiFsrReaderConf(LHCbConfigurableUser):
   __slots__ = {
     "EvtMax":             -1      # Maximum number of events to process
     , "SkipEvents":        0
-    , "DataType":          '2009' # Data type
+    , "DataType":          '2010' # Data type
     , "outputFile" :       ''     # output filename
     , "inputFiles" :       [ ]    # input
     , "userAlgorithms":    [ ]    # put here user algorithms to add
@@ -61,7 +61,8 @@ class LumiFsrReaderConf(LHCbConfigurableUser):
     importOptions("$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts")
 
     files = self.getProp('inputFiles')
-    EventSelector().Input = [ _file(f) for f in files ]
+    if len(files) > 0 :
+        EventSelector().Input = [ _file(f) for f in files ]
 
   def __apply_configuration__(self):
 

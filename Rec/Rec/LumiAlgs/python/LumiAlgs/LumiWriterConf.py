@@ -18,6 +18,8 @@ from Configurables import LoKi__ODINFilter  as ODINFilter
 from Configurables import RawEventDump
 from Configurables import bankKiller 
 from Configurables import FileIdBankWriter
+from Configurables import HltLumiSummaryDecoder
+from Configurables import FilterOnLumiSummary
 
 
 import GaudiKernel.ProcessJobOptions
@@ -42,7 +44,7 @@ class LumiWriterConf(LHCbConfigurableUser):
   __slots__ = {
     "EvtMax":             -1      # Maximum number of events to process
     , "SkipEvents":        0
-    , "DataType":          '2009' # Data type
+    , "DataType":          '2010' # Data type
     , "outputFile" :       ''     # output filename
     , "inputFiles" :       [ ]    # input
     , "KillBanks" :        True   # whether to kill non-lumi banks
@@ -75,10 +77,24 @@ class LumiWriterConf(LHCbConfigurableUser):
     # select only the right Trigger Type
     writeLumiSequence( ODINFilter ( 'OdinTriggerTypes',
                                     Code = ' ( ODIN_TRGTYP == LHCb.ODIN.LumiTrigger ) ' ))
+
+    ## Lumi only triggers 
+    # decode summary data
+    writeLumiSequence( HltLumiSummaryDecoder( OutputLevel = debugOPL ))
+    # add filter to check if this was L0 triggered
+    filterRan = FilterOnLumiSummary('LumiRandomFilter', CounterName = "Random", ValueName = "RandomMethod")
+    filterLow = FilterOnLumiSummary('LumiLowFilter', CounterName = "Method", ValueName = "L0RateMethod")
+    writeLumiSequence( Sequence('filterLumi', 
+                                Members = [filterRan, filterLow],  
+                                ModeOR = True,
+                                ShortCircuit = True,
+                                IgnoreFilterPassed = False,
+                                MeasureTime = True )
+                       )
     # kill non-lumi banks
     if self.getProp('KillBanks') :
       writeLumiSequence(
-        bankKiller( 'KillAll', BankTypes=[ 'ODIN','HltLumiSummary','DAQ' ],  DefaultIsKill=True )
+        bankKiller( 'KillAll', BankTypes=[ 'ODIN','HltLumiSummary','HltRoutingBits','DAQ' ],  DefaultIsKill=True )
         )
     # tag input file ---
     writeLumiSequence( FileIdBankWriter( OutputLevel = debugOPL ) ) 
@@ -93,7 +109,8 @@ class LumiWriterConf(LHCbConfigurableUser):
 
   def _configureInput(self):
     files = self.getProp('inputFiles')
-    EventSelector().Input = [ _file(f) for f in files ]
+    if len(files) > 0 :
+        EventSelector().Input = [ _file(f) for f in files ]
 
   def _configureOutput(self):
     # first empty the outstream, because it would write all the time

@@ -4,6 +4,13 @@
 ! Purpose     : Accounting of LumiSummaries (offline code)
 !-----------------------------------------------------------------------------
 
+! 2010-06-01 - Jaap Panman
+ - all Configurations:
+   . update to be compatible with Moore >= v9r1 
+     (check Method counter to select Lumi events, backward incompatible)
+   . default set al DataType = '2010'
+   . allow separate .py files for input files
+
 !========================== LumiAlgs v3r5 2010-05-24 ========================
 ! 2010-05-24 - Rob Lambert
  - update test references

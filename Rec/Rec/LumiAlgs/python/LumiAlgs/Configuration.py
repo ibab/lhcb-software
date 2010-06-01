@@ -32,7 +32,7 @@ class LumiAlgsConf(LHCbConfigurableUser):
     ## Steering options
     __slots__ = {
         "Context"       : "Offline"  # The context within which to run
-       ,"DataType"      : "2009"     # Data type, can be ['DC06','2008','MC09','2009']
+       ,"DataType"      : "2010"     # Data type, can be ['DC06','2008','MC09','2009','2010']
        ,"InputType"     : "MDF"      # Data type, can be ['MDF','DST','RDST', 'SDST', 'MDST','ETC','DIGI']. Different sequencer made.
        ,"ForceFullSequence" : False  # re-write the FSR independent of the InputType
        ,"SetFSRStatus"  : ""         # overwrite the event FSR status to something ['UNRELIABLE', 'ERROR','VERIFIED']
@@ -43,7 +43,7 @@ class LumiAlgsConf(LHCbConfigurableUser):
 
     _propertyDocDct = {
         "Context"       : """ The context within which to run """
-       ,"DataType"      : "Data type, can be ['DC06','2008','MC09','2009']"
+       ,"DataType"      : "Data type, can be ['DC06','2008','MC09','2009','2010']"
        ,"InputType"     : "Input Data type, can be ['MDF','DST','RDST', 'SDST', 'MDST','ETC','DIGI']"
        ,"ForceFullSequence" : "False, re-write the FSR independent of the InputType"
        ,"SetFSRStatus"  : "overwrite the event FSR status to something ['UNRELIABLE', 'ERROR','VERIFIED']"
