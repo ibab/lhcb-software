@@ -107,7 +107,6 @@ use LoKiMC                v9r0    Phys    # Ivan Belyaev
 use LoKiNumbers           v9r0    Phys    # Ivan Belyaev
 use MDF_ROOT              v1r2   DAQ     # Markus Frank
 use PatKernel             v2r3p1  Tf      # Stephanie Hansmann-Menzemer
-use RecInterfaces         v1r0p1  Kernel  # Marco Cattaneo et al.
 use RichKernel            v7r35   Rich    # In SVN. Chris Jones
 use RichRecBase           v3r30p1 Rich    # In SVN. Chris Jones
 use STKernel              v2r1p1  ST      # In SVN. Matt Needham
