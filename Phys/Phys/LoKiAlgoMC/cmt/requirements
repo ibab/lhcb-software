@@ -1,10 +1,10 @@
-# $Id: requirements,v 1.22 2010-04-06 20:22:13 ibelyaev Exp $ 
+# $Id: requirements,v 1.23 2010-06-01 17:07:30 ibelyaev Exp $ 
 # ============================================================================
 # Created    : 2006-01-17
 # Maintainer : Vanya BELYAEV ibelyaev@physics.syr.edu 
 # ============================================================================
 package           LoKiAlgoMC
-version           v9r0
+version           v9r1
 	
 # =============== structure ==================================================
 branches          cmt doc src dict python LoKi         
@@ -45,6 +45,9 @@ apply_pattern    component_library library=LoKiAlgoMC
 apply_pattern    QMTest 
 
 macro LoKiAlgoMCDict_use_linkopts $(use_linkopts)
+
+macro_append     LoKiAlgoMC_dependencies        " LoKiAlgoMCLib " 
+macro_append     LoKiAlgoMCDict_dependencies    " LoKiAlgoMCLib " 
 
 # ============================================================================
 # The END

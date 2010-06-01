@@ -1,4 +1,4 @@
-// $Id: AlgoMC.h,v 1.10 2008-06-26 14:31:01 ibelyaev Exp $
+// $Id: AlgoMC.h,v 1.11 2010-06-01 17:07:30 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_ALGOMC_H 
 #define LOKI_ALGOMC_H 1
@@ -24,6 +24,7 @@
 // LoKiGen
 // ============================================================================
 #include "LoKi/GenTypes.h"
+#include "LoKi/IMCDecay.h"
 // ============================================================================
 // LoKiGenMC
 // ============================================================================
@@ -51,14 +52,12 @@
 namespace LoKi 
 {
   // ==========================================================================
-  /** @class AlgoMC AlgoMC.h LoKi/AlgoMC.h
-   *
-   *  @todo uncomment usage of  MCVertex::Vector and MCVertex::ConstVector 
+  /** @class AlgoMC LoKi/AlgoMC.h
    *
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu 
    *  @date   2006-03-31
    */
-  class AlgoMC : public LoKi::Algo
+  class GAUDI_API AlgoMC : public LoKi::Algo
   {
   public:
     // ========================================================================
@@ -130,32 +129,6 @@ namespace LoKi
     {
       return mcselect ( tag , range.begin() , range.end() , cut ) ;
     } 
-    // ========================================================================
-    /** 'Select' the MC particles to be used in local storage
-     *  
-     *  @code
-     *
-     *  LHCb::MCParticle::Vector kaons = ... ;
-     *  MCRange kPlus = mcselect( "K+" , kaons , MC3Q > 0 ) ;
-     *
-     *  @endcode
-     *
-     *  @see LHCb::MCParticle 
-     *  @see LoKi::Types::MCRange
-     *  @see LoKi::Cuts::MC3Q
-     *  @param tag   name/tag assigned to the selected particles
-     *  @param range input MC-particles 
-     *  @param cut   cut to be applied
-     *  @return selected range of particles
-     */
-     LoKi::Types::MCRange 
-     mcselect 
-     ( const std::string&              tag   , 
-       const LHCb::MCParticle::Vector& range ,
-       const LoKi::Types::MCCuts&      cut   ) 
-     {
-       return mcselect ( tag , range.begin() , range.end() , cut ) ;
-     } 
     // ========================================================================    
     /** 'Select' the MC particles to be used in local storage
      *  
@@ -203,7 +176,7 @@ namespace LoKi
     LoKi::Types::MCRange 
     mcselect 
     ( const std::string&                   tag   , 
-      const LHCb::MCParticles*             range ,
+      const LHCb::MCParticle::Container*   range ,
       const LoKi::Types::MCCuts&           cut   ) 
     {
       if ( 0 == range ) 
@@ -244,6 +217,272 @@ namespace LoKi
     {
       return m_mcselected.add ( name , first , last , cut ) ;
     } 
+    // ========================================================================    
+  private:
+    // ========================================================================
+    /// select (mc)particles according to decay-finder and cuts
+    template <class MCPARTICLE, class MCCUT>
+    LoKi::Types::MCRange 
+    mcselect 
+    ( const std::string&              tag    ,
+      MCPARTICLE                      first  , 
+      MCPARTICLE                      last   ,
+      const Decays::IMCDecay::Finder& finder ,
+      const MCCUT&                    cut    ) ;
+    // ========================================================================    
+  public: // use decay finders
+    // ========================================================================
+    /** 'Select' the MC particles to be used in local storage 
+     *  
+     *  - The MC Particles are selected from the TES location
+     *
+     *  @code
+     *
+     *  const Decays:::IMCDecay::Finder& finder = ... ; 
+     *  MCRange good = mcselect( "Good" , finder ) ;
+     *
+     *  @endcode
+     *
+     *  @see LHCb::MCParticle 
+     *  @see Decays::IMCDecay
+     *  @see Decays::IMCDecay::Finder 
+     *
+     *  @param tag      name/tag assigned to the selected particles
+     *  @param finder   the decay finder to be used 
+     *  @param location TES location of MC-particles
+     *  @return selected range of particles
+     */
+    LoKi::Types::MCRange 
+    mcselect 
+    ( const std::string&              tag                                          , 
+      const Decays::IMCDecay::Finder& finder                                       ,
+      const std::string&              location = LHCb::MCParticleLocation::Default ) ;
+    // ========================================================================    
+    /** 'Select' the MC particles to be used in local storage 
+     *  
+     *  - The MC Particles are selected from the TES location
+     *
+     *  @code
+     *
+     *  const Decays:::IMCDecay::iTree& tree = ... ; 
+     *  MCRange good = mcselect( "Good" , tree ) ;
+     *
+     *  @endcode
+     *
+     *  @see LHCb::MCParticle 
+     *  @see Decays::IMCDecay
+     *  @see Decays::IMCDecay::iTree
+     *
+     *  @param tag      name/tag assigned to the selected particles
+     *  @param finder   the decay finder to be used 
+     *  @param location TES location of MC-particles
+     *  @return selected range of particles
+     */
+    LoKi::Types::MCRange 
+    mcselect 
+    ( const std::string&              tag                                          , 
+      const Decays::IMCDecay::iTree&  finder                                       ,
+      const std::string&              location = LHCb::MCParticleLocation::Default ) ;
+    // ========================================================================    
+    /** 'Select' the MC particles to be used in local storage 
+     *  
+     *  - The MC Particles are selected from the TES location
+     *
+     *  @code
+     *
+     *  const std::string& descriptor  = ... ; 
+     *  MCRange good = mcselect( "Good" , descriptor ) ;
+     *
+     *  @endcode
+     *
+     *  @see LHCb::MCParticle 
+     *
+     *  @param tag         name/tag assigned to the selected particles
+     *  @param descriptor  the decay descriptor 
+     *  @param location TES location of MC-particles
+     *  @return selected range of particles
+     */
+    LoKi::Types::MCRange 
+    mcselect 
+    ( const std::string& tag                                          , 
+      const std::string& descriptor                                   ,
+      const std::string& location = LHCb::MCParticleLocation::Default ) ;
+    // ========================================================================    
+  public: // use decay finders
+    // ========================================================================
+    /** 'Select' the MC particles to be used in local storage 
+     *  
+     *  - The MC Particles are selected from the TES location
+     *
+     *  @code
+     *
+     *  const Decays:::IMCDecay::Finder& finder = ... ; 
+     *  const MCRange input = ...; 
+     *
+     *  MCRange good = mcselect( "Good" , input , finder ) ;
+     *
+     *  @endcode
+     *
+     *  @see LHCb::MCParticle 
+     *  @see Decays::IMCDecay
+     *  @see Decays::IMCDecay::Finder 
+     *
+     *  @param tag      name/tag assigned to the selected particles
+     *  @param input    the inptu range 
+     *  @param finder   the decay finder to be used 
+     *  @param location TES location of MC-particles
+     *  @return selected range of particles
+     */
+    LoKi::Types::MCRange 
+    mcselect 
+    ( const std::string&              tag    , 
+      const LoKi::Types::MCRange&     input  , 
+      const Decays::IMCDecay::Finder& finder ) ;
+    // ========================================================================    
+    /** 'Select' the MC particles to be used in local storage 
+     *  
+     *  - The MC Particles are selected from the TES location
+     *
+     *  @code
+     *
+     *  const Decays:::IMCDecay::Finder& finder = ... ; 
+     *  const LHCb::MCParticle::ConstVector input = ...; 
+     *
+     *  MCRange good = mcselect( "Good" , input , finder ) ;
+     *
+     *  @endcode
+     *
+     *  @see LHCb::MCParticle 
+     *  @see Decays::IMCDecay
+     *  @see Decays::IMCDecay::Finder 
+     *
+     *  @param tag      name/tag assigned to the selected particles
+     *  @param input    the inptu range 
+     *  @param finder   the decay finder to be used 
+     *  @param location TES location of MC-particles
+     *  @return selected range of particles
+     */
+    LoKi::Types::MCRange 
+    mcselect 
+    ( const std::string&                   tag    , 
+      const LHCb::MCParticle::ConstVector& input  , 
+      const Decays::IMCDecay::Finder&      finder ) ;
+    // ========================================================================    
+    /** 'Select' the MC particles to be used in local storage 
+     *  
+     *  - The MC Particles are selected from the TES location
+     *
+     *  @code
+     *
+     *  const Decays:::IMCDecay::iTree& tree = ... ; 
+     *  const MCRange input = ...; 
+     *
+     *  MCRange good = mcselect( "Good" , input , tree ) ;
+     *
+     *  @endcode
+     *
+     *  @see LHCb::MCParticle 
+     *  @see Decays::IMCDecay
+     *  @see Decays::IMCDecay::Finder 
+     *
+     *  @param tag      name/tag assigned to the selected particles
+     *  @param input    the input range 
+     *  @param yree    the decay tree 
+     *  @param location TES location of MC-particles
+     *  @return selected range of particles
+     */
+    LoKi::Types::MCRange 
+    mcselect 
+    ( const std::string&              tag    , 
+      const LoKi::Types::MCRange&     input  , 
+      const Decays::IMCDecay::iTree&  tree   ) ;
+    // ========================================================================    
+    /** 'Select' the MC particles to be used in local storage 
+     *  
+     *  - The MC Particles are selected from the TES location
+     *
+     *  @code
+     *
+     *  const Decays:::IMCDecay::iTree& tree = ... ; 
+     *  const LHCb::MCParticle::ConstVector input = ...; 
+     *
+     *  MCRange good = mcselect( "Good" , input , tree ) ;
+     *
+     *  @endcode
+     *
+     *  @see LHCb::MCParticle 
+     *  @see Decays::IMCDecay
+     *  @see Decays::IMCDecay::Finder 
+     *
+     *  @param tag      name/tag assigned to the selected particles
+     *  @param input    the input range 
+     *  @param tree    the decay tree 
+     *  @param location TES location of MC-particles
+     *  @return selected range of particles
+     */
+    LoKi::Types::MCRange 
+    mcselect 
+    ( const std::string&                   tag    , 
+      const LHCb::MCParticle::ConstVector& input  , 
+      const Decays::IMCDecay::iTree&       tree   ) ;
+    // ========================================================================    
+    /** 'Select' the MC particles to be used in local storage 
+     *  
+     *  - The MC Particles are selected from the TES location
+     *
+     *  @code
+     *
+     *  const std::string& descriptor = ... ; 
+     *  const MCRange input = ...; 
+     *
+     *  MCRange good = mcselect( "Good" , input , descriptor ) ;
+     *
+     *  @endcode
+     *
+     *  @see LHCb::MCParticle 
+     *  @see Decays::IMCDecay
+     *  @see Decays::IMCDecay::Finder 
+     *
+     *  @param tag      name/tag assigned to the selected particles
+     *  @param input    the input range 
+     *  @param descriptor the decay descriptor
+     *  @param location TES location of MC-particles
+     *  @return selected range of particles
+     */
+    LoKi::Types::MCRange 
+    mcselect 
+    ( const std::string&          tag        , 
+      const LoKi::Types::MCRange& input      , 
+      const std::string&          descriptor ) ;
+    // ========================================================================    
+    /** 'Select' the MC particles to be used in local storage 
+     *  
+     *  - The MC Particles are selected from the TES location
+     *
+     *  @code
+     *
+     *  const std::string& descriptor = ... ; 
+     *  const LHCb::MCParticle::ConstVector input = ...; 
+     *
+     *  MCRange good = mcselect( "Good" , input , descriptor ) ;
+     *
+     *  @endcode
+     *
+     *  @see LHCb::MCParticle 
+     *  @see Decays::IMCDecay
+     *  @see Decays::IMCDecay::Finder 
+     *
+     *  @param tag      name/tag assigned to the selected particles
+     *  @param input    the input range 
+     *  @param descriptor the decay descriptor
+     *  @param location TES location of MC-particles
+     *  @return selected range of particles
+     */
+    LoKi::Types::MCRange 
+    mcselect 
+    ( const std::string&                   tag        , 
+      const LHCb::MCParticle::ConstVector& input      , 
+      const std::string&                   descriptor ) ;
     // ========================================================================    
   public:
     // ========================================================================    
@@ -296,32 +535,6 @@ namespace LoKi
     {
       return mcvselect ( tag , range.begin() , range.end()  , cut ) ;
     } 
-    // ========================================================================
-    /** 'Select' the MC vertices to be used in local storage
-     *  
-     *  @code
-     *
-     *  LHCb::MCVertex::Vector all = ... ;  
-     *  MCVRange primary = mcvselect( "MCPVs" , all , MCISPRIMARY );
-     *
-     *  @endcode
-     *
-     *  @see LHCb::MCVertex
-     *  @see LoKi::Types::MCVRange
-     *  @see LoKi::Cuts::MCISPRIMARY 
-     *  @param tag   name/tag assigned to the selected particles
-     *  @param range input MC-vertices
-     *  @param cut   cut to be applied
-     *  @return selected range of particles
-     */
-    LoKi::Types::MCVRange 
-    mcvselect 
-    ( const std::string&              tag   ,
-      const LHCb::MCVertex::Vector&   range ,
-      const LoKi::Types::MCVCuts&     cut   )
-    {
-      return mcvselect ( tag , range.begin() , range.end()  , cut ) ;
-    } 
     // ========================================================================    
     /** 'Select' the MC vertices to be used in local storage
      *  
@@ -369,7 +582,7 @@ namespace LoKi
     LoKi::Types::MCVRange 
     mcvselect 
     ( const std::string&                   tag   ,
-      const LHCb::MCVertices*              range ,
+      const LHCb::MCVertex::Container*     range ,
       const LoKi::Types::MCVCuts&          cut   )
     {
       if ( 0 == range ) 
@@ -788,8 +1001,13 @@ namespace LoKi
     mutable const IPV2MC*        m_pv2mc            ;
     // ========================================================================    
     bool                         m_disableMCMatch   ;
+    // ========================================================================
+    /// teh factory to create the decay trees 
+    LoKi::Interface<Decays::IMCDecay>  m_mcdecay ;           // the decay trees 
+    // ========================================================================
   } ;
-} // end of namespace LoKi ;
+  // ==========================================================================
+} //                                                      end of namespace LoKi
 // ============================================================================
 // helper fuction to feed LoKi::MCMatchObj object with the data 
 // ============================================================================
@@ -816,6 +1034,37 @@ LoKi::AlgoMC::_feedIt
     object -> addMatchInfo ( table ) ;
   } ;
   return StatusCode::SUCCESS ;
+}
+// ============================================================================
+// select (mc)particles according to decay-finder and cuts
+// ============================================================================
+template <class MCPARTICLE, class MCCUT>
+LoKi::Types::MCRange 
+LoKi::AlgoMC::mcselect 
+( const std::string&              tag    ,
+  MCPARTICLE                      first  , 
+  MCPARTICLE                      last   ,
+  const Decays::IMCDecay::Finder& finder ,
+  const MCCUT&                    cut    ) 
+{
+  // check the validity of finder 
+  if ( !finder ) 
+  {
+    StatusCode sc = finder.validate ( ppSvc() ) ;
+    if ( sc.isFailure() ) 
+    {
+      Error ( "Invalid decay finder: '" + finder.tree().toString() + "'") ;
+      return LoKi::Types::MCRange () ;
+    }
+  }
+  //
+  LHCb::MCParticle::ConstVector results ;
+  results.reserve ( 100 ) ;
+  finder.findDecay ( first , last , results ) ;
+  //
+  return this->mcselect ( tag              , 
+                          results.begin () , 
+                          results.end   () , cut ) ;
 }
 // ============================================================================
 /** @def LOKI_MCALGORITHM_BODY 
@@ -987,12 +1236,8 @@ LoKi::ALGNAME ::~ALGNAME () {};
 // ============================================================================
 
 
-
-
-
-
 // ============================================================================
-/// The END 
+//                                                                      The END 
 // ============================================================================
 #endif // LOKI_ALGOMC_H
 // ============================================================================
