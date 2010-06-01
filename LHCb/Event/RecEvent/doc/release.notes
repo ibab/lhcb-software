@@ -1,9 +1,12 @@
 !-----------------------------------------------------------------------------
-! $Id: release.notes,v 1.145 2010-05-22 09:34:09 cattanem Exp $
+! $Id: release.notes,v 1.146 2010-06-01 09:25:12 pkoppenb Exp $
 ! Package     : Event/RecEvent
 ! Responsible : Marco Cattaneo
 ! Purpose     : LHCb Event model. Reconstruction classes (Brunel output) 
 !-----------------------------------------------------------------------------
+
+! 2010-06-01 - Patrick Koppenburg
+ - Removed SelResult class
 
 !========================= RecEvent v2r28 2010-05-22 =========================
 ! 2010-05-21 - Olivier Deschamps
