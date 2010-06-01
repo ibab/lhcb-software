@@ -214,13 +214,13 @@ function _loadWidgets() {
     tr = document.createElement('tr');
     tr.appendChild(Cell('Fill from start',null,'MonitorDataHeader'));
     tr.appendChild(tab.lumiDEL);
-    tr.appendChild(Cell('&mu;b<sup>-1</sup>/s',null,'Text-Right'));
+    tr.appendChild(Cell('&mu;b<sup>-1</sup>',null,'Text-Right'));
     tb.appendChild(tr);
 
     tr = document.createElement('tr');
     tr.appendChild(Cell('Fill recorded',null,'MonitorDataHeader'));
     tr.appendChild(tab.lumiREC);
-    tr.appendChild(Cell('&mu;b<sup>-1</sup>/s',null,'Text-Right'));
+    tr.appendChild(Cell('&mu;b<sup>-1</sup>',null,'Text-Right'));
     tb.appendChild(tr);
 
     tr = document.createElement('tr');
@@ -534,9 +534,9 @@ function _loadWidgets() {
       tr = document.createElement('tr');
       tr.appendChild(Cell('Luminosity and performace status of recent fills',4,options.style));
       tr.appendChild(cell=Cell('Cumulative Efficiencies',4,'MonitorDataHeaderRED'));
-      cell.style.textAlign = 'center'
+      cell.style.textAlign = 'center';
       tr.appendChild(cell=Cell('Infficiencies',2,'MonitorDataHeaderRED'));
-      cell.style.textAlign = 'center'
+      cell.style.textAlign = 'center';
       tb.appendChild(tr);
     }
 
@@ -592,7 +592,7 @@ function _loadWidgets() {
     tab.current.display = function(data) {
       var t = this.parent;
       t.setLine(t.currRow,data[1]);
-    }
+    };
 
     tab.hist = StyledItem('lbWeb.LHCbPerformance.History',null,null);
     tab.lines = new Array();
@@ -600,10 +600,7 @@ function _loadWidgets() {
     tab.hist.parent = tab;
     tab.hist.display = function(data) {
       //alert(data);
-      var tr;
-      var t = this.parent;
-      var b = this.tbody;
-      var v = data[1].split(' | ',20);
+      var tr, rm = [], t = this.parent, b = this.tbody, v = data[1].split(' | ',20);
       for(var i=0; i<v.length; ++i) {
 	if ( i < t.lines.length )
 	  t.setLine(t.lines[i], v[i]);
@@ -612,14 +609,12 @@ function _loadWidgets() {
 	  t.lines.push(tr);
 	}
       }
-      var rm = [];
       for(var j=v.length; j<t.lines.length; ++j) {
 	rm.push(t.lines[j]);
       }
-      for(var k=0; k<rm.length; ++k)  {
+      for(var k=0; k<rm.length; ++k)
 	b.removeChild(rm[k]);
-      }
-    }
+    };
 
     tab.appendChild(tb);
     
@@ -644,7 +639,7 @@ var BigBrother = function(msg)   {
   table.options = {logo:    '',
         	   logo_url:null,
 		   title:   'Fill and Performance Status',
-		   tips:    'LHCb Fill and Performance status<br>'
+		   tips_no:    'LHCb Fill and Performance status<br>'
   };
 
 
