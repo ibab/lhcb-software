@@ -26,6 +26,7 @@ class StrippingStream ( object ) :
         self.algs = []
         self.seq = None
         self._name = name
+        self.streamLine = None
 
     def name(self) :
         return self._name
@@ -53,12 +54,26 @@ class StrippingStream ( object ) :
                 print "ADDING not TES", line.configurable(), "name ", line.configurable().name(), "to StrippingStream.lines" 
                 self.algs.append(line.configurable())
 
+# Make the line for stream decision (OR of all stream lines)
+
+	linesSeq = GaudiSequencer("StrippingStreamSeq"+self.name(),
+                                      ModeOR = True,
+#                                      ShortCircuit = False,
+                                      Members = self.algs)
+
+	from StrippingLine import StrippingLine
+
+	self.streamLine = StrippingLine("Stream"+self.name(), checkPV = False, algos = [ linesSeq ] )
+	self.streamLine.createConfigurable( TESPrefix + "/" + HDRLocation )
+
     def sequence ( self ) :
         if self.seq == None :
-            self.seq = GaudiSequencer("StrippingStream"+self.name(),
+#    	    members = self.algs
+#    	    members.append(self.streamLine.configurable())
+            self.seq = GaudiSequencer("StrippingSequenceStream"+self.name(),
                                       ModeOR = True,
                                       ShortCircuit = False,
-                                      Members = self.algs)
+                                      Members = self.algs + [ self.streamLine.configurable() ] )
         return self.seq
 
     def outputLocations (self) : 

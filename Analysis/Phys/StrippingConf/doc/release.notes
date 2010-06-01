@@ -1,9 +1,12 @@
-!$Id: release.notes,v 1.64 2010-05-26 13:59:10 jpalac Exp $
+!$Id: release.notes,v 1.65 2010-06-01 09:40:07 poluekt Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/StrippingConf
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
+
+! 2010-06-01 - Anton Poluektov 
+ - Added stream decisions (OR of all stream lines) to stripping DecReports
 
 !========================== StrippingConf v3r3 2010-05-26 =================
 
