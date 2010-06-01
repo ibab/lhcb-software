@@ -1,13 +1,31 @@
-// $Id: HltVertexReportsMaker.cpp,v 1.12 2009-12-25 19:22:14 graven Exp $
+// $Id: HltVertexReportsMaker.cpp,v 1.13 2010-06-01 14:29:21 graven Exp $
 // Include files 
 #include <vector>
 #include <utility>
 #include "boost/foreach.hpp"
 
-
 // from Gaudi
 #include "GaudiKernel/StatusCode.h"
 #include "GaudiKernel/StringKey.h"
+
+namespace Gaudi { 
+    class StringKey;
+    namespace Utils {
+        std::ostream& toStream ( const std::vector<Gaudi::StringKey>& key , 
+                                 std::ostream&             s   ) 
+        {
+              s << "[ " ;
+              for (std::vector<Gaudi::StringKey>::const_iterator i=key.begin();i!=key.end();++i)  {
+                  if (i!=key.begin()) s << ", ";
+                  toStream(*i,s); 
+              }
+              s << " ]";
+              return s;
+        }
+}; };
+
+
+
 #include "GaudiKernel/AlgFactory.h" 
 
 #include "Event/RecVertex.h"
@@ -48,7 +66,6 @@ HltVertexReportsMaker::HltVertexReportsMaker( const std::string& name,
 
   declareProperty("VertexSelections", m_vertexSelections);
 
-
 }
 //=============================================================================
 // Destructor
@@ -85,18 +102,19 @@ StatusCode HltVertexReportsMaker::initialize() {
 
   // loop over selections given in the input list
   Hlt::IRegister::Lock lock(m_regSvc,this);
-  for( std::vector<Gaudi::StringKey>::const_iterator is=m_vertexSelections.begin();
+  for( std::vector<std::string>::const_iterator is=m_vertexSelections.begin();
        is!=m_vertexSelections.end();++is){
+     Gaudi::StringKey key(*is);
      // find int selection id (to make sure it is saveable)
-     map_t::const_iterator im = selectionNameToIntMap.find( *is );
+     map_t::const_iterator im = selectionNameToIntMap.find( key );
      if (im == selectionNameToIntMap.end() ) {
-       Warning( " selectionName="+is->str()+ " not found in HltANNSvc. Skipped. ",StatusCode::SUCCESS, 20 );
+       Warning( " selectionName="+key.str()+ " not found in HltANNSvc. Skipped. ",StatusCode::SUCCESS, 20 );
        continue;
      } 
-     lock->registerInput(*is,this);
-     const Hlt::Selection *s = m_hltSvc->selection(*is,this);
+     lock->registerInput(key,this);
+     const Hlt::Selection *s = m_hltSvc->selection(key,this);
      if (s==0) {
-       Warning( " selectionName="+is->str()+ " not present in Hlt::IDataSvc. Skipped. ",StatusCode::SUCCESS, 20 );
+       Warning( " selectionName="+key.str()+ " not present in Hlt::IDataSvc. Skipped. ",StatusCode::SUCCESS, 20 );
        continue;
      }
      m_selections.push_back(s);

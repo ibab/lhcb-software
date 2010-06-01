@@ -1,4 +1,4 @@
-// $Id: HltVertexReportsMaker.h,v 1.7 2009-12-28 10:38:27 graven Exp $
+// $Id: HltVertexReportsMaker.h,v 1.8 2010-06-01 14:29:21 graven Exp $
 #ifndef HLTVERTEXREPORTSMAKER_H 
 #define HLTVERTEXREPORTSMAKER_H 1
 
@@ -45,7 +45,7 @@ private:
   std::string  m_outputHltVertexReportsLocation;
 
   /// location of output Hlt Summary
-  std::vector<Gaudi::StringKey>  m_vertexSelections;
+  std::vector<std::string>  m_vertexSelections;
 
   /// HltANNSvc for making selection names to int selection ID
   IANNSvc* m_hltANNSvc;  

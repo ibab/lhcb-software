@@ -1,9 +1,14 @@
-!$Id: release.notes,v 1.64 2010-03-28 20:22:35 graven Exp $
+!$Id: release.notes,v 1.65 2010-06-01 14:29:21 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/HltRawData
 ! Responsible : Tomasz Skwarnicki
 ! Purpose     : Hlt Raw Data Makers of persisted TES info
 !-----------------------------------------------------------------------------
+
+!========================== HltRawData v2r6 2010-06-01 ===================
+! 2010-06-01 - Gerhard Raven
+ - replace (temporarily I hope) a vector<StringKey> property by vector<string>
+   to avoid an incompatible toStream/fromStream combination...
 
 !========================== HltRawData v2r5 2010-03-28 ===================
 ! 2010-03-23 - V. Gligorov
