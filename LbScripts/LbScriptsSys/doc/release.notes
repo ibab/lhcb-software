@@ -1,3 +1,47 @@
+2010-06-01  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* cmt/requirements: release of version v5r2
+
+	- python/LbConfiguration/LbLogin.py: added support for EMACSDIR and LHCBSTYLE for local installation.
+	- python/LbConfiguration/Package.py: added support for the TOOLS unversioned project and the
+	Tools/Emacs standalone package.
+	- python/LbConfiguration/LbLogin.py: fixed the creation of the missing User_release_area. Now creates the
+	intermediate directories.
+	- scripts/generateLogin: fixed the main usage of the wrapper: now the convention is that 
+	the .noLHCBLoginscript file must not exist in the $HOME directory. Completed the windows part.
+	- python/LbConfiguration/Project.py: added the support for the Feicim project.
+	- python/LbConfiguration/SetupProject.py: changed --ignore-missing to --force
+	Disable path stripping if the environment variable LB_NO_STRIP_PATH is set. (Marco Cl.)
+	- python/LbConfiguration/SetupProject.py: Added VeloSQLDDDB to the known packages (Marco Cl.)
+	- python/LbConfiguration/SetupProject.py: use StripPath to clean up PATH etc (Marco Cl).
+	- scripts/mkLHCbtar: added support for the TOOLS unversioned project.
+	- python/LbLegacy/install_project.py: added support for the TOOLS unversioned project.
+	- scripts/mkproject: prevent the creation of the debug binary tarball if the "d" action has not
+	been requested
+	- python/LbLegacy/install_project.py: changed the name of the latest data soft link
+	into "v999r0" instead of "v99r9"
+	- scripts/mkproject: use the AFS volume class instead of the AFS directory class. Now
+	the lock option will also adjust the volume quota to the used space.
+	- LbLegacy/python/LbLegacy/install_project.py: fixed usage of md5 with python 2.6
+    - python/LbLegacy/install_project.py: fixed endless loop if the install_project.py script is not in the
+	  current directory and needs an update. Added the --dev-install. getMySelf use the devel location instead of the regular one. 
+	- scripts/archive_project: use the unlockAFSDir to reenable write permission to the project
+	to be archived.
+    - scripts/mkproject: added ACL read-only locking and unlocking.
+    - python/LbRelease/LHCbNightlies.py: fix for Windows (Karol)
+    - python/LbRelease/LHCbDoc.py: Exclude MainPage.h (of the projects) from the documentation. Added 
+    symlinks to the latest version of a project in the docs directory (Marco Cl.).   
+    - data/Makefile: Moved the dependency files to a different subdirectory
+	for each CMTCONFIG, to allow concurrent builds (Marco Cl.).
+	- scripts/tuneAFSVol: New file. Added class and scripts to deal with AFS volumes
+	- LbUtils/python/LbUtils/File.py: fixed the usage of md5 with python 2.6
+	- LbUtils/python/LbUtils/Lock.py: idem
+	- python/LbUtils/afs/directory.py: updated the behavior of the unlockACL method. Now
+	it only readds "idwk" to the members who have already the "a" (administrate) permission
+	- python/LbUtils/afs/directory.py: added the lockAFSDir and unlockAFSDir to
+	remove and readd the write permissions to an AFS directory
+	- python/LbUtils/Path.py: added path append and path prepend functions.
+
 2010-01-18  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* release of version v5r1:

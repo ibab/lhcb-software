@@ -1,3 +1,7 @@
+2010-06-01  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* cmt/requirements: release of version v3r2
+
 2010-05-31  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* scripts/mkproject: use the AFS volume class instead of the AFS directory class. Now
