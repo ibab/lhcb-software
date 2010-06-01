@@ -4,6 +4,12 @@
 ! Purpose     : GUI to allow the visualization of all data quality histograms
 !-----------------------------------------------------------------------------
 
+!============ Presenter v1r5 2010-06-01 =============
+! 2010-06-01 - Patrick Robbe
+ - src/PresenterMainFrame.cpp: fix the delete histogram button
+ - src.DbRootHist.h: add a function to access the name of the root
+   histogram as string directly
+
 ! 2010-05-26 - Patrick Robbe
  - src/presenter.h: accept Brunel.root as offline ROOT file
  - src/PresenterMainFrame.cpp: also reads TH1F and TH2F from offline files

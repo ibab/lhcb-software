@@ -148,6 +148,9 @@ class DbRootHist : public HistogramIdentifier
     
     pres::EffServiceType effServiceType() { return m_effServiceType; }
 
+    /// Get the name of the associated root histogram
+    std::string getName( ) { return std::string( rootHistogram -> GetName() ) ; }
+
   private:
     TPad* m_drawPattern;
     DimInfo*  m_gauchocommentDimInfo;

@@ -1,4 +1,4 @@
-// $Id: PresenterMainFrame.cpp,v 1.322 2010-05-26 14:34:39 robbep Exp $
+// $Id: PresenterMainFrame.cpp,v 1.323 2010-06-01 16:44:39 robbep Exp $
 #include <algorithm>
 #include <iostream>
 #include <vector>
@@ -4586,6 +4586,9 @@ void PresenterMainFrame::autoCanvasLayout() {
   editorCanvas->Update();
 }
 
+//============================================================================
+// Remove the selected histogram from the page
+//============================================================================
 void PresenterMainFrame::deleteSelectedHistoFromCanvas() {
   if (m_refreshingPage) {
     stopPageRefresh();
@@ -4599,41 +4602,40 @@ void PresenterMainFrame::deleteSelectedHistoFromCanvas() {
   if (m_clearedHistos) { clearHistos(); }
 
   DbRootHist* histogram = selectedDbRootHistogram();
-  bool foundSelectedHisto(false);
+  DbRootHist * histoToDelete( 0 ) ;
   if (0 != histogram) {
-    std::vector<DbRootHist*>::iterator del_dbHistosOnPageIt;
-    del_dbHistosOnPageIt = dbHistosOnPage.begin();
-    while (del_dbHistosOnPageIt != dbHistosOnPage.end()) {
-      if (0 == ((*del_dbHistosOnPageIt)->histoRootName()).
-          compare(histogram->histoRootName())) {
-        foundSelectedHisto = true;
+    std::vector<DbRootHist*>::iterator del_dbHistosOnPageIt ;
+    for ( del_dbHistosOnPageIt = dbHistosOnPage.begin() ;
+	  del_dbHistosOnPageIt != dbHistosOnPage.end()  ;
+	  ++del_dbHistosOnPageIt ) {
+      if (0 == ( (*del_dbHistosOnPageIt) -> getName() ).
+          compare( histogram -> getName() ) ) {
+        histoToDelete = ( *del_dbHistosOnPageIt ) ;
         break;
       }
-      if (false == foundSelectedHisto) { del_dbHistosOnPageIt++; }
     }
-    if (foundSelectedHisto &&
-        (Batch != m_presenterMode) ) {
-      new TGMsgBox(fClient->GetRoot(), this, "Remove Histogram",
-                   "Are you sure to remove selected histogram from the page?",
-                   kMBIconQuestion, kMBYes|kMBNo, &m_msgBoxReturnCode);
+    if ( ( 0 != histoToDelete ) && ( Batch != m_presenterMode ) ) {
+      new TGMsgBox( fClient->GetRoot() , this , "Remove Histogram" ,
+		    "Are you sure to remove selected histogram from the page?",
+		    kMBIconQuestion, kMBYes|kMBNo , &m_msgBoxReturnCode ) ;
       switch (m_msgBoxReturnCode) {
       case kMBYes:
-        delete (*del_dbHistosOnPageIt);
-        (*del_dbHistosOnPageIt) = NULL;
-        dbHistosOnPage.erase(del_dbHistosOnPageIt);
-        // find all overlaps too!           hostingPad::Find(isA(TH))...
+        dbHistosOnPage.erase( del_dbHistosOnPageIt ) ;
+	delete histoToDelete ;
         editorCanvas->Update();
-        //          return;
         break;
       default:
         break;
       }
     }
   }
-  if (m_resumePageRefreshAfterLoading) { startPageRefresh(); }
-  if (referenceOverlay) { enableReferenceOverlay(); }
+  if ( m_resumePageRefreshAfterLoading ) startPageRefresh() ; 
+  if ( referenceOverlay ) enableReferenceOverlay() ; 
 }
 
+//================================================================
+// Retrieve the histogram selected on the page
+//================================================================
 DbRootHist* PresenterMainFrame::selectedDbRootHistogram() {
   DbRootHist* dbRootHist = 0;
 
@@ -4643,30 +4645,36 @@ DbRootHist* PresenterMainFrame::selectedDbRootHistogram() {
     referenceOverlay = true;
   }
 
-  if (0 != gPad) {
-    TIter nextPadElem(gPad->GetListOfPrimitives());
-    TObject* histoCandidate;
-    while (0 != (histoCandidate = nextPadElem())) {
-      if (histoCandidate->InheritsFrom(TH1::Class())) {
-        std::vector<DbRootHist*>::iterator selected_dbHistosOnPageIt;
-        for (selected_dbHistosOnPageIt = dbHistosOnPage.begin();
-             selected_dbHistosOnPageIt != dbHistosOnPage.end();
-             selected_dbHistosOnPageIt++) {
-          if (0 == std::string((*selected_dbHistosOnPageIt)->rootHistogram->GetName()).compare(histoCandidate->GetName())) {
-            dbRootHist = *selected_dbHistosOnPageIt;
-            break;
-          }
-        }
-        if (NULL != dbRootHist) {break;}
+  TPad * thePad = 
+    dynamic_cast< TPad * >( editorCanvas -> Pad( ) ) ;
+  if ( 0 != thePad ) {
+    TIter nextPadElem( thePad -> GetListOfPrimitives() ) ;
+    TObject * histoCandidate ( 0 ) ;
+    TH1 * theHisto( 0 ) ;
+    while ( ( histoCandidate = nextPadElem() ) ) {
+      if ( histoCandidate -> InheritsFrom( TH1::Class() ) ) {
+	theHisto = dynamic_cast< TH1 * >( histoCandidate ) ;
+	break ;
       }
     }
 
-    if (0 == dbRootHist &&
-        (Batch != m_presenterMode)) {
-      new TGMsgBox(fClient->GetRoot(), this, "Histogram Selection",
-                   "Please select a histogram with the middle mouse button",
-                   kMBIconStop, kMBOk, &m_msgBoxReturnCode);
+    if ( 0 != theHisto ) {
+      std::vector<DbRootHist*>::iterator selected_dbHistosOnPageIt;
+      for ( selected_dbHistosOnPageIt = dbHistosOnPage.begin() ;
+	    selected_dbHistosOnPageIt != dbHistosOnPage.end()  ;
+	    ++selected_dbHistosOnPageIt) {
+	if ( 0 == std::string( (*selected_dbHistosOnPageIt) -> rootHistogram -> GetName() ).compare( theHisto -> GetName() ) ) {
+	  dbRootHist = *selected_dbHistosOnPageIt;
+	  break;
+	}
+      }
     }
+  }
+  
+  if ( 0 == dbRootHist && ( Batch != m_presenterMode ) ) {
+    new TGMsgBox(fClient->GetRoot(), this, "Histogram Selection",
+		 "Please select a histogram with the middle mouse button",
+		 kMBIconStop, kMBOk, &m_msgBoxReturnCode);
   }
   if (referenceOverlay) { enableReferenceOverlay(); }
   return dbRootHist;
