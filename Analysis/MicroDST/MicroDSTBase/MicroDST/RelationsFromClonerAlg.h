@@ -1,4 +1,4 @@
-// $Id: RelationsFromClonerAlg.h,v 1.6 2010-05-28 19:39:17 jpalac Exp $
+// $Id: RelationsFromClonerAlg.h,v 1.7 2010-06-01 08:52:27 jpalac Exp $
 #ifndef MICRODST_RELATIONSFROMCLONERALG_H 
 #define MICRODST_RELATIONSFROMCLONERALG_H 1
 
@@ -112,7 +112,7 @@ namespace MicroDST
                     << inputLocation << endmsg;
         }
         const TABLE* table = get<TABLE>(inputLocation);
-        if (table and  !table->relations().empty() ) {
+        if (table && !table->relations().empty() ) {
           if ( msgLevel(MSG::VERBOSE) ) {
             verbose() << "found table with "<< table->relations().size() 
                       << " entries!" << endmsg;
