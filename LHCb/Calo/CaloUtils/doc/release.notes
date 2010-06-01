@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.154 2010-03-19 22:27:38 cattanem Exp $
+! $Id: release.notes,v 1.155 2010-06-01 08:05:05 graven Exp $
 ! Package     : CaloUtils
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 !------------------------------------------------------------------------------
+
+!========================== CaloUtils v8r12p1 2010-06-01 ========================
+! 2010-06-01 - Gerhard Raven
+ - suppress printout of warning in case 2D inversion fails, but keep the statistics
 
 !========================== CaloUtils v8r12 2010-03-19 ========================
 ! 2010-03-18 - Vanya Belyaev

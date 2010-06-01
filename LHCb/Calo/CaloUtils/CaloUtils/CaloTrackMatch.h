@@ -1,4 +1,4 @@
-// $Id: CaloTrackMatch.h,v 1.10 2010-03-12 23:54:19 odescham Exp $
+// $Id: CaloTrackMatch.h,v 1.11 2010-06-01 08:05:04 graven Exp $
 // ============================================================================
 #ifndef CALOUTILS_CALOTRACKMATCH_H 
 #define CALOUTILS_CALOTRACKMATCH_H 1
@@ -152,10 +152,9 @@ protected:
     match.setOK       ( true  ) ;    
     if ( !match.invert() ) 
     {
-      Warning ( "match(): Could not invert '2D-calo' matrix, see debug") ;
       if ( msgLevel ( MSG::DEBUG ) ) 
       { debug() << "CaloPosition:" << c << endreq ; }
-      return StatusCode::FAILURE ;
+      return Warning ( "match(): Could not invert '2D-calo' matrix, see debug",StatusCode::FAILURE,0) ;
     }
     return StatusCode::SUCCESS ;
   } ;
