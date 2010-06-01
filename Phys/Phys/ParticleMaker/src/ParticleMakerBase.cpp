@@ -1,4 +1,4 @@
-// $Id: ParticleMakerBase.cpp,v 1.6 2010-05-12 18:54:31 jpalac Exp $
+// $Id: ParticleMakerBase.cpp,v 1.7 2010-06-01 09:52:04 pkoppenb Exp $
 // Include files
 
 #include "GaudiKernel/DeclareFactoryEntries.h"
@@ -27,7 +27,6 @@ ParticleMakerBase::ParticleMakerBase( const std::string& name,
   , m_app    ( 0 )
 {
   declareProperty ( "Input"   , m_input = LHCb::ProtoParticleLocation::Charged ) ; 
-  setProperty( "AvoidSelResult", "true").ignore();
   declareProperty ( "Particle" , m_pid = "UNDEFINED" , "Particle to create : pion, kaon, muon..."   ) ;
 }
 //=========================================================================
