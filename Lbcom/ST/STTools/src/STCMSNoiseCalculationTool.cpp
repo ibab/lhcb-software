@@ -66,6 +66,7 @@ ST::STCMSNoiseCalculationTool::STCMSNoiseCalculationTool( const std::string& typ
   // Read pedestal values from conditions database
   declareProperty("PedestalsFromDB", m_readPedestals = true);
   declareProperty("CondPath",m_condPath = "CondDB");
+
   // Use integer algebra in calculations
   declareProperty("UseIntegers", m_useInts=false );
 
@@ -331,6 +332,9 @@ StatusCode ST::STCMSNoiseCalculationTool::calculateNoise() {
     }
     const LHCb::STTELL1Data::Data& dataValues = (*iterBoard)->data();
 
+    // Store TELL1s with an NZS bank
+    m_tell1WithNZS.push_back(tellID);
+
     // Local vectors for given TELL1: output is CMS noise
     std::vector<double>* cmsMean = &m_cmsMeanMap[tellID];
     std::vector<double>* cmsMeanSq = &m_cmsMeanSqMap[tellID];
@@ -433,7 +437,6 @@ StatusCode ST::STCMSNoiseCalculationTool::calculateNoise() {
           // Get the ADC value
           double valueRaw  = *dataStrip;
           double valueCMS  = tmpStrip->first;
-          
           if ( m_rawOutliers & tmpStrip->second ) {
             valueRaw = *rawMeanStrip;
             if ( m_rawOutliersCMS ) {

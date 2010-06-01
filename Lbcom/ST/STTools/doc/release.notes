@@ -2,6 +2,10 @@
 ! Package manager : Jeroen van Tilburg
 !------------------------------------------------------------------------------
 
+! 2010-06-01 Mark Tobin
+ - Implementation of new methods in noise calculation tools.  Now returns a list
+ of TELL1 source ID which had an NZS bank.
+
 !=========================== STTools v4r1 2010-05-21 ==========================
 ! 2010-05-12 - Rob Lambert
  - Added STOffline Conf, which replaces the files Brunel.opts and Brunel_EarlyData.opts

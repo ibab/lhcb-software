@@ -68,6 +68,7 @@ StatusCode ST::STNoiseCalculationToolBase::initialize() {
   m_firstEvent = true;
   m_eventNumber = 0;
   m_runNumber = 0;
+  m_tell1WithNZS.clear();
   if(m_countRoundRobin) {
     unsigned int m_nTELL1s = readoutTool()->nBoard();
     m_2d_nEventsPerPP = book2D("Number of NZS banks sent per PP", 0.5, m_nTELL1s+0.5, m_nTELL1s,-0.5, 3.5, 4);
@@ -112,6 +113,7 @@ StatusCode ST::STNoiseCalculationToolBase::updateNoise() {
     if(newRun) {
       // TO DO: reset counters at the start of a run
     }
+    m_tell1WithNZS.clear();
     this->calculateNoise();
   } else {
     return Warning( "You should only call updateNoise once per event" , StatusCode::SUCCESS , 0);
@@ -186,3 +188,14 @@ std::vector<unsigned int>::const_iterator ST::STNoiseCalculationToolBase::rawNEv
   }
   return m_rawNEvents.find(TELL1SourceID)->second.end();
 }
+
+/// Return an iterator corresponding to the source ID of the first TELL1 in the event containing an NZS bank
+std::vector<unsigned int>::const_iterator ST::STNoiseCalculationToolBase::tell1WithNZSBegin( ) const {
+  return m_tell1WithNZS.end();
+}
+
+/// Return an iterator corresponding to the source ID of the last TELL1 in the event containing an NZS bank
+std::vector<unsigned int>::const_iterator ST::STNoiseCalculationToolBase::tell1WithNZSEnd( ) const {
+  return m_tell1WithNZS.end();
+}
+

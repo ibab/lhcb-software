@@ -90,6 +90,12 @@ namespace ST {
         common-mode-subtracted data where the pedestals have not been calculated. **/
     virtual int skipEvents() const {return m_skipEvents;};
 
+    /// Return an iterator corresponding to the source ID of the first TELL1 in the event containing an NZS bank
+    virtual std::vector<unsigned int>::const_iterator tell1WithNZSBegin( ) const;
+    
+    /// Return an iterator corresponding to the source ID of the last TELL1 in the event containing an NZS bank
+    virtual std::vector<unsigned int>::const_iterator tell1WithNZSEnd( ) const;
+
   public:
 
     virtual std::vector<double> rawMean(const unsigned int TELL) const = 0;//{return m_meanMap->find(TELL);} ;
@@ -131,6 +137,9 @@ namespace ST {
     /// Number of events to be skipped. Useful when running over
     /// common-mode-subtracted data where the pedestals have not been calculated. 
     int m_skipEvents;
+
+    /// List of tell1s in the event which contain an NZS bank
+    std::vector<unsigned int> m_tell1WithNZS;
 
     std::vector< unsigned int > m_limitToTell;/// List of TELL1s to look at
     bool   m_selectedTells;///< Use only selected TELL1s

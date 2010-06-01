@@ -88,6 +88,8 @@ StatusCode ST::STNoiseCalculationTool::calculateNoise() {
     unsigned int tellID = (*iterBoard)->TELL1ID();
     const LHCb::STTELL1Data::Data& dataValues = (*iterBoard)->data();
 
+    // Store tell1s with an NZS bank
+    m_tell1WithNZS.push_back(tellID);
     // Local vectors for given TELL1
     std::vector<double>* meanTELL = &m_rawMeanMap[tellID];
     std::vector<double>* meanSqTELL = &m_rawMeanSqMap[tellID];
