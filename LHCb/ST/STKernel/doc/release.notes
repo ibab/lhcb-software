@@ -3,6 +3,9 @@
 ! Responsible : M. Needham
 !----------------------------------------------------------------------------
 
+! 2010-06-01 - Mark Tobin
+ - Added methods to interface for noise calculation tool.
+
 !====================== STKernel v2r1p1 2010-05-21 ==========================
 ! 2010-05-17 M Cattaneo
  - Disable Windows compiler warning #4661
