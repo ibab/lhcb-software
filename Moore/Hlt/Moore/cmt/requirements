@@ -1,5 +1,5 @@
 #============================================================================
-# $Id: requirements,v 1.131 2010-05-31 10:53:40 graven Exp $
+# $Id: requirements,v 1.132 2010-06-01 08:13:02 graven Exp $
 # Created    : 03/06/2005 by P. Koppenburg
 # Maintainer : G. Raven
 #============================================================================
@@ -29,6 +29,9 @@ use AppConfig           v3r*                -no_auto_imports
 #### patches
 use HltSettings         v2r0p1 Hlt
 use HltConf             v8r0p1 Hlt
+use CaloUtils           v8r12p1 Calo
+use CaloReco            v5r5p2  Calo
+use CaloPIDs            v5r6    Calo
 
 
 # The rest are needed only to set up environment variables for job options
