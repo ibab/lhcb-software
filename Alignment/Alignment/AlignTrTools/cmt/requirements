@@ -42,8 +42,6 @@ use   STDet           v*     Det
 use   OTDet           v*     Det
 use   VeloDet         v*     Det
 use   MuonDet	      v*     Det
-# ========================= Install configurable ============================
-apply_pattern install_python_modules
 #============================================================================
 # Component library building rule
 #============================================================================
@@ -52,3 +50,5 @@ library          AlignTrTools    ../src/*.cpp -import=AIDA
 # define component library link options
 #============================================================================
 apply_pattern    component_library library=AlignTrTools
+# ========================= Install configurable ============================
+apply_pattern install_python_modules

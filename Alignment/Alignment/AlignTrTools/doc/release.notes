@@ -4,6 +4,10 @@ Package Coordinator : Johan Blouw
 Responsibles : J. Amoraal, J. Blouw, A. Hicheur, L. Nicolas
 Purpose: LHCb Alignment Tools
 
+! 2010-06-01 - Johan Blouw
+ - modified cmt/requirements file so that python modules are done last.
+   (Should accomodate a compilation warning from the nighly builds)
+
 ! 2010-05-31 - Johan Blouw
  - added constraints for z-shift alignment on layer level
 
