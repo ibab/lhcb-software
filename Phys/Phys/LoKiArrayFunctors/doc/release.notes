@@ -1,9 +1,13 @@
-$Id: release.notes,v 1.60 2010-05-27 19:31:12 ibelyaev Exp $ 
+$Id: release.notes,v 1.61 2010-06-01 13:25:36 marcocle Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiArrayFunctors
 ! Responsible : Vanya BELYAEV
 ! Purpose     : Some special "vector-like" functors to Exclusive "HLT"
 ! -----------------------------------------------------------------------------
+
+! 2010-06-01 - Marco Clemencic
+ - Commented out the import of LoKiCore.decorators in
+   LoKiArrayFunctors/__init__.py
 
 ! 2010-05-27 - Vanya Belyaev
 
