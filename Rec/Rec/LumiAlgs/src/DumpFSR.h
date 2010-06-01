@@ -44,6 +44,7 @@ public:
 
 protected:
   virtual void dump_file( std::string txt = "" ); ///< print the FSRs of one input file
+  virtual void write_file();                      ///< write the FSRs as ascii to a file
   virtual std::string fileID();       ///< get the fileID
   virtual std::vector< std::string > navigate(std::string rootname, std::string tag); 
   virtual void explore(IRegistry* pObj, std::string tag, std::vector< std::string >& a);
@@ -59,6 +60,7 @@ protected:
   std::string m_EventCountFSRName;              // specific tag of event summary data in FSR
   std::string m_TimeSpanFSRName;                // specific tag of event summary data in FSR
   std::string m_current_fname;                  // current file ID string 
+  std::string m_ascii_fname;                    // name of ascii file to write FSR data to
   int         m_count_files;                    // number of files read
   int         m_count_events;                   // number of events read
   int         m_events_in_file;                 // events after OpenFileIncident

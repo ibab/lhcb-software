@@ -1,13 +1,12 @@
-# --> Including file '/afs/cern.ch/user/p/panmanj/cmtuser/DaVinci_v25r4/Rec/LumiAlgs/job/LumiFsrReader.py'
-# <-- End of file '/afs/cern.ch/user/p/panmanj/cmtuser/DaVinci_v25r4/Rec/LumiAlgs/job/LumiFsrReader.py'
+# --> Including file '/afs/cern.ch/user/p/panmanj/cmtuser/Rec_v10r0p1/Rec/LumiAlgs/job/LumiFsrReader.py'
+# <-- End of file '/afs/cern.ch/user/p/panmanj/cmtuser/Rec_v10r0p1/Rec/LumiAlgs/job/LumiFsrReader.py'
 # applying configuration of LumiFsrReaderConf
-# WARNING: Using default tag head-20100407 for partition DDDB
-# WARNING: Using default tag head-20100414 for partition LHCBCOND
-# WARNING: Using default tag MC-20100412-vc15mm-md100 for partition SIMCOND
+# WARNING: Using default tag head-20100518 for partition DDDB
+# WARNING: Using default tag head-20100518 for partition LHCBCOND
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
-                                                   Welcome to DaVinci version v25r4
-                                          running on lxplus204.cern.ch on Wed May 12 10:07:10 2010
+                                                   Welcome to ApplicationMgr $Revision: 1.77 $
+                                          running on lxplus237.cern.ch on Tue Jun  1 15:52:51 2010
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 DetectorPersist...   INFO  'CnvServices':[ 'XmlCnvSvc/XmlCnvSvc' ]
@@ -20,10 +19,9 @@ LumiSeq              INFO Member list: createODIN, DumpFSR/dumpFSR
 RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
 RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-ToolSvc.Sequenc...   INFO This machine has a speed about   1.57 times the speed of a 2.8 GHz Xeon.
+ToolSvc.Sequenc...   INFO This machine has a speed about   2.34 times the speed of a 2.8 GHz Xeon.
 FileRecordPersi...   INFO  'CnvServices':[ 'FileRecordCnvSvc' ]
-EventPersistenc...   INFO  'CnvServices':[ 'LHCb::RawDataCnvSvc' , 'PoolRootEvtCnvSvc' , 'PoolRootTreeEvtCnvSvc' , 'PoolRootKeyEvtCnvSvc' ]
-EventPersistenc...   INFO Added successfully Conversion service:LHCb::RawDataCnvSvc
+EventPersistenc...   INFO  'CnvServices':[ 'PoolRootEvtCnvSvc' , 'PoolRootTreeEvtCnvSvc' , 'PoolRootKeyEvtCnvSvc' ]
 EventPersistenc...   INFO Added successfully Conversion service:PoolRootEvtCnvSvc
 EventPersistenc...   INFO Added successfully Conversion service:PoolRootTreeEvtCnvSvc
 EventSelector        INFO Stream:EventSelector.DataStreamTool_1 Def:DATAFILE='PFN:testFSRout.dst' TYP='POOL_ROOTTREE'
@@ -77,7 +75,7 @@ dumpFSR              INFO /FileRecords/AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517/Time
 EventLoopMgr         INFO Histograms converted successfully according to request.
 ToolSvc              INFO Removing all tools created by ToolSvc
 ToolSvc.Sequenc...   INFO ------------------------------------------------------------------------------------------------
-ToolSvc.Sequenc...   INFO This machine has a speed about   1.57 times the speed of a 2.8 GHz Xeon.
+ToolSvc.Sequenc...   INFO This machine has a speed about   2.34 times the speed of a 2.8 GHz Xeon.
 ToolSvc.Sequenc...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 ToolSvc.Sequenc...   INFO ------------------------------------------------------------------------------------------------
 ToolSvc.Sequenc...   INFO ------------------------------------------------------------------------------------------------

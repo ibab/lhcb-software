@@ -39,6 +39,7 @@ class LumiFsrReaderConf(LHCbConfigurableUser):
     , "DataType":          '2010' # Data type
     , "outputFile" :       ''     # output filename
     , "inputFiles" :       [ ]    # input
+    , "asciiFile"  :       ''     # ascii output filename for FSR dump
     , "userAlgorithms":    [ ]    # put here user algorithms to add
     , "OutputLevel" :      ERROR  #
     }   
@@ -53,7 +54,8 @@ class LumiFsrReaderConf(LHCbConfigurableUser):
     sequence.Members+=[ odin ]
 
     # dump FSR
-    dump =  DumpFSR ('dumpFSR', OutputLevel = self.getProp("OutputLevel") )
+    dump =  DumpFSR ('dumpFSR', AsciiFileName = self.getProp('asciiFile'),
+                     OutputLevel = self.getProp("OutputLevel") )
     sequence.Members+=[ dump ]
 
   def _configureInput(self):
@@ -67,7 +69,7 @@ class LumiFsrReaderConf(LHCbConfigurableUser):
   def __apply_configuration__(self):
 
     GaudiKernel.ProcessJobOptions.PrintOff()
-    EventPersistencySvc().CnvServices.append( 'LHCb::RawDataCnvSvc' )
+    # EventPersistencySvc().CnvServices.append( 'LHCb::RawDataCnvSvc' )
 
     # forward some settings...
     self.setOtherProps( LHCbApp(), ['EvtMax','SkipEvents','DataType'] )

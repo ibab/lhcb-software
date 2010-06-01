@@ -17,6 +17,12 @@
 // local
 #include "DumpFSR.h"
 
+// to write a file
+#include <string>
+#include <iostream>
+#include <fstream>
+#include <cstdlib>
+
 //-----------------------------------------------------------------------------
 // Implementation file for class : DumpFSR
 // 
@@ -43,6 +49,8 @@ DumpFSR::DumpFSR( const std::string& name,
   declareProperty( "LowFSRName"         , m_LowFSRName        = "/LumiLowFSR"     );
   declareProperty( "EventCountFSRName"  , m_EventCountFSRName = "/EventCountFSR");
   declareProperty( "TimeSpanFSRName"    , m_TimeSpanFSRName   = "/TimeSpanFSR");
+  declareProperty( "AsciiFileName"      , m_ascii_fname       = "");
+
 }
 //=============================================================================
 // Destructor
@@ -109,6 +117,10 @@ StatusCode DumpFSR::finalize() {
 
   dump_file("Finalize");
 
+  if ( m_ascii_fname != "" ) {
+    write_file();
+  }
+
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
 
@@ -143,7 +155,6 @@ void DumpFSR::handle( const Incident& incident )
 void DumpFSR::dump_file( std::string txt ) {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==>" << txt << " " << m_current_fname << endmsg;
-
 
   // make an inventory of the FileRecord store
   std::string fileRecordRoot = m_FileRecordName;
@@ -236,8 +247,104 @@ void DumpFSR::dump_file( std::string txt ) {
         }
       }
     }
-  }  
+  }
 }
+
+
+//=============================================================================
+void DumpFSR::write_file( ) {
+
+  if ( msgLevel(MSG::DEBUG) ) debug() << "write to file: " << m_ascii_fname << endmsg;
+
+  if ( m_ascii_fname != "" ) {
+    std::ofstream outfile( m_ascii_fname.c_str() );
+    if (outfile) {
+      always() << "asciifile: " << m_ascii_fname << " - opened" << endmsg;
+
+
+      // root of store
+      std::string fileRecordRoot = m_FileRecordName;
+      // make an inventory of the FileRecord store
+      std::vector< std::string > addresses = navigate(fileRecordRoot, m_FSRName);
+      for(std::vector< std::string >::iterator iAddr = addresses.begin() ; 
+          iAddr != addresses.end() ; ++iAddr ){
+	std::string lumiRecordAddress = *iAddr;
+	// read LumiFSR 
+	if ( !exist<LHCb::LumiFSRs>(m_fileRecordSvc, lumiRecordAddress) ) {
+	  Warning("A lumi record was not found").ignore();
+	  if ( msgLevel(MSG::DEBUG) ) debug() << lumiRecordAddress << " not found" << endmsg ;
+	} else {
+	  LHCb::LumiFSRs* lumiFSRs = get<LHCb::LumiFSRs>(m_fileRecordSvc, lumiRecordAddress);
+	  LHCb::LumiFSRs::iterator lufsr;
+	  for ( lufsr = lumiFSRs->begin(); lufsr != lumiFSRs->end(); lufsr++ ) {
+	    outfile << lumiRecordAddress << ": LumiFSR: " << *(*lufsr) << std::endl;
+	  }
+	}
+      }
+
+      // make an inventory of the FileRecord store (LowLumi)
+      addresses = navigate(fileRecordRoot, m_LowFSRName);
+      for(std::vector< std::string >::iterator iAddr = addresses.begin() ; 
+          iAddr != addresses.end() ; ++iAddr ){
+	std::string lumiRecordAddress = *iAddr;
+	// read LumiFSR 
+	if ( !exist<LHCb::LumiFSRs>(m_fileRecordSvc, lumiRecordAddress) ) {
+	  Warning("A lumi record was not found").ignore();
+	  if ( msgLevel(MSG::DEBUG) ) debug() << lumiRecordAddress << " not found" << endmsg ;
+	} else {
+	  LHCb::LumiFSRs* lumiFSRs = get<LHCb::LumiFSRs>(m_fileRecordSvc, lumiRecordAddress);
+	  LHCb::LumiFSRs::iterator lufsr;
+	  for ( lufsr = lumiFSRs->begin(); lufsr != lumiFSRs->end(); lufsr++ ) {
+	    outfile << lumiRecordAddress << ": LumiLowFSR: " << *(*lufsr) << std::endl;
+	  }
+	}
+      }
+  
+      // EventCountFSRs
+      std::vector< std::string > evAddresses = navigate(fileRecordRoot, m_EventCountFSRName);
+      for(std::vector< std::string >::iterator iAddr = evAddresses.begin() ; 
+          iAddr != evAddresses.end() ; ++iAddr ){
+	std::string eventCountRecordAddress = *iAddr;
+	// read EventCountFSR 
+	if ( !exist<LHCb::EventCountFSR>(m_fileRecordSvc, eventCountRecordAddress) ) {
+	  Warning("An EventCount Record was not found").ignore();
+	  if ( msgLevel(MSG::DEBUG) ) debug() << eventCountRecordAddress << " not found" << endmsg ;
+	} else {
+	  LHCb::EventCountFSR* eventCountFSR = get<LHCb::EventCountFSR>(m_fileRecordSvc, eventCountRecordAddress);
+	  // look at the EventCountFSR
+          outfile << eventCountRecordAddress << ": EventCountFSR: " << *eventCountFSR << std::endl;
+	}
+      }  
+  
+      // TimeSpanFSRs
+      std::vector< std::string > tsAddresses = navigate(fileRecordRoot, m_TimeSpanFSRName);
+      for(std::vector< std::string >::iterator iAddr = tsAddresses.begin() ; 
+          iAddr != tsAddresses.end() ; ++iAddr ){
+	std::string timeSpanRecordAddress = *iAddr;
+	// read TimeSpanFSR 
+	if ( !exist<LHCb::TimeSpanFSRs>(m_fileRecordSvc, timeSpanRecordAddress) ) {
+	  Warning("A TimeSpan Record was not found").ignore();
+	  if ( msgLevel(MSG::DEBUG) ) debug() << timeSpanRecordAddress << " not found" << endmsg ;
+	} else {
+	  LHCb::TimeSpanFSRs* timeSpanFSRs = get<LHCb::TimeSpanFSRs>(m_fileRecordSvc, timeSpanRecordAddress);
+	  // look at all TimeSpanFSRs (normally only one)
+	  LHCb::TimeSpanFSRs::iterator tsfsr;
+	  for ( tsfsr = timeSpanFSRs->begin(); tsfsr != timeSpanFSRs->end(); tsfsr++ ) {
+	    outfile << timeSpanRecordAddress << ": TimeSpanFSR: " << *(*tsfsr) << std::endl;
+	  }
+	}
+      }
+  
+      // close output file
+      outfile.close();
+      always() << "asciifile: " << m_ascii_fname << " - closed" << endmsg;
+      
+    } else {
+      always() << "asciifile: " << m_ascii_fname << " - not opened" << endmsg;
+    }
+  }
+}
+
 
 //=============================================================================
 std::string DumpFSR::fileID() {

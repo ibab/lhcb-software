@@ -4,6 +4,13 @@
 ! Purpose     : Accounting of LumiSummaries (offline code)
 !-----------------------------------------------------------------------------
 
+! 2010-06-01a - Jaap Panman
+ - add ascii file writer for FSRs (job/LumiFsrToFile.py) uses 
+   LumiFsrReaderConf.py.  Using these options all FSR contents are dumped
+   into a file for further analysis.
+ - add options to DumpFSR to write an ascii file
+ - added qmtest for the file writer
+
 ! 2010-06-01 - Jaap Panman
  - all Configurations:
    . update to be compatible with Moore >= v9r1 
