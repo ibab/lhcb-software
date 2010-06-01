@@ -52,3 +52,6 @@ library          AlignTrTools    ../src/*.cpp -import=AIDA
 apply_pattern    component_library library=AlignTrTools
 # ========================= Install configurable ============================
 apply_pattern install_python_modules
+
+macro_append AlignTrToolsGenConfUser_dependencies AlignTrToolsConfDbMerge
+
