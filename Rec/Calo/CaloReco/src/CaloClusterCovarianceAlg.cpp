@@ -1,4 +1,4 @@
-// $Id: CaloClusterCovarianceAlg.cpp,v 1.14 2010-05-19 14:12:42 graven Exp $ 
+// $Id: CaloClusterCovarianceAlg.cpp,v 1.15 2010-06-01 08:09:48 graven Exp $ 
 //  ===========================================================================
 #define CALORECO_CALOCLUSTERCOVARIANCEALG_CPP 1 
 /// ===========================================================================
@@ -204,7 +204,7 @@ StatusCode CaloClusterCovarianceAlg::execute()
 
     sc = spread () -> process( *cluster ) ;
     if( sc.isFailure() ){ 
-      Error("Error from spread, skip cluster ", sc ).ignore() ; 
+      Error("Error from spread, skip cluster ", sc, 0 ).ignore() ; 
       debug() << *cluster << endmsg ;
       continue ; 
     }
