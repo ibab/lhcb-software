@@ -1,4 +1,4 @@
-// $Id: DecayFinder.h,v 1.4 2010-05-29 18:28:18 ibelyaev Exp $
+// $Id: DecayFinder.h,v 1.5 2010-06-01 17:05:03 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_DECAYFINDER_H 
 #define LOKI_DECAYFINDER_H 
@@ -8,6 +8,11 @@
 // STD & STL 
 // ============================================================================
 #include <algorithm>
+// ============================================================================
+// GauduiKernel
+// ============================================================================
+#include "GaudiKernel/Range.h"
+#include "GaudiKernel/NamedRange.h"
 // ============================================================================
 // LoKi
 // ============================================================================
@@ -76,6 +81,16 @@ namespace Decays
     {
       return this->hasDecay ( particles.begin() , particles.end() ) ; 
     }
+    // ======================================================================== 
+    bool hasDecay ( const Gaudi::Range_<std::vector<PARTICLE> >& particles ) const 
+    {
+      return this->hasDecay ( particles.begin() , particles.end() ) ; 
+    }
+    // ======================================================================== 
+    bool hasDecay ( const Gaudi::NamedRange_<std::vector<PARTICLE> >& particles ) const 
+    {
+      return this->hasDecay ( particles.begin() , particles.end() ) ; 
+    }
     // ========================================================================
   public:
     // ======================================================================== 
@@ -103,19 +118,33 @@ namespace Decays
      *  @return number of found particles 
      */
     template <class ITERATOR, class OUTPUT> 
-    size_t findDecay 
+    unsigned int  findDecay 
     ( ITERATOR             first  , 
       ITERATOR             last   , 
       std::vector<OUTPUT>& output ) const 
     {
-      const size_t old_size = output.size() ;
+      const unsigned int old_size = output.size() ;
       (*this)( first , last , std::back_inserter( output ) ) ;
       return output.size() - old_size ;
     }
     // ========================================================================
-    size_t findDecay 
+    unsigned int findDecay 
     ( const std::vector<PARTICLE>& input , 
       std::vector<PARTICLE>&       output ) const 
+    { 
+      return this->findDecay ( input.begin() , input.end() , output ) ; 
+    }
+    // ========================================================================
+    unsigned int findDecay 
+    ( const Gaudi::Range_<std::vector<PARTICLE> >& input , 
+      std::vector<PARTICLE>&                       output ) const 
+    { 
+      return this->findDecay ( input.begin() , input.end() , output ) ; 
+    }
+    // ========================================================================
+    unsigned int findDecay 
+    ( const Gaudi::NamedRange_<std::vector<PARTICLE> >& input  , 
+      std::vector<PARTICLE>&                            output ) const 
     { 
       return this->findDecay ( input.begin() , input.end() , output ) ; 
     }
@@ -203,10 +232,10 @@ namespace Decays
      *  @return number of added elements 
      */
     template <class INPUT,class OUTPUT> 
-    size_t operator()  ( const INPUT&         input  , 
-                         std::vector<OUTPUT>& output ) const
+    unsigned int  operator()  ( const INPUT&         input  , 
+                                std::vector<OUTPUT>& output ) const
     {
-      const size_t old_size = output.size() ;
+      const unsigned int old_size = output.size() ;
       // regirect to another method 
       (*this) ( input.begin() , input.end() , std::back_inserter ( output ) ) ;
       return output.size() - old_size ;

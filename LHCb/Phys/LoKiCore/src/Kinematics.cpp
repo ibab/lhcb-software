@@ -1,4 +1,4 @@
-// $Id: Kinematics.cpp,v 1.14 2008-09-23 15:55:36 ibelyaev Exp $
+// $Id: Kinematics.cpp,v 1.15 2010-06-01 17:05:04 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -310,7 +310,7 @@ double LoKi::Kinematics::restEnergy
  *  @param v1 the first vector 
  *  @param v2 the last vector 
  *  @param M  the defintion of rest-system
- *  @author Vanya BELYAEV Ivan.BElyaev@nikhef.nl
+ *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
  *  @date 2008-07-27
  */
 // ============================================================================
@@ -521,7 +521,29 @@ double LoKi::Kinematics::chi2mass
   // evaluate chi2 
   return dmass2*dmass2*v_D ;
 }
-
+// // ============================================================================
+// /** @evaluate the (cosine) of transversity angle 
+//  */
+// double LoKi::Kinematics::cosThetaTr 
+// ( const LoKi::LorentzVector& d1 , 
+//   const LoKi::LorentzVector& d2 , 
+//   const LoKi::LorentzVector& h1 , 
+//   const LoKi::LorentzVector& h2 ) 
+// {
+  
+//   // get the intermediate particles D & H 
+//   const LoKi::LorentzVector D ( d1 + d2 ) ;
+//   const LoKi::LorentzVector H ( h1 + h2 ) ;
+  
+//   // Evaluator of various tensor expressions:
+//   LoKi::Tensors::Epsilon e ;
+  
+//   // evaluate the length of normales :
+//   const double l2 = e.mag2 ( h1 , h2 , D ) ; // == | [h1,h2,M] | 
+  
+//   return  e.epsilon ( d1 , h1 , h2 , d2  ) /
+//     restMomentum ( d1 , H ) / sqrt ( -l2 ) ;
+// }
 
 // ============================================================================
 // The END 

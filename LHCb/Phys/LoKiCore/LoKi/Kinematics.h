@@ -1,4 +1,4 @@
-// $Id: Kinematics.h,v 1.19 2008-09-23 15:55:36 ibelyaev Exp $
+// $Id: Kinematics.h,v 1.20 2010-06-01 17:05:03 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_KINEMATICS_H 
 #define LOKI_KINEMATICS_H 1
@@ -7,6 +7,7 @@
 // ============================================================================
 // GaudiKernel
 // ============================================================================
+#include "GaudiKernel/Kernel.h"
 #include "GaudiKernel/SymmetricMatrixTypes.h"
 // ============================================================================
 // LoKi
@@ -56,6 +57,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-01-17
      */
+    GAUDI_API
     double euclidianNorm2 ( const LoKi::LorentzVector& vct ) ;
     // ========================================================================
     /** simple function for evaluation of the euclidiam norm
@@ -71,6 +73,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-01-17
      */
+    GAUDI_API
     double euclidianNorm
     ( const LoKi::LorentzVector& vct ) ;
     // ========================================================================
@@ -91,6 +94,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-01-17
      */
+    GAUDI_API
     double delta2euclidian 
     ( const LoKi::LorentzVector& vct1 , 
       const LoKi::LorentzVector& vct2 ) ;
@@ -111,6 +115,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-01-17
      */
+    GAUDI_API
     double transverseMomentumDir 
     ( const LoKi::ThreeVector& mom , 
       const LoKi::ThreeVector& dir ) ;
@@ -386,6 +391,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date 2004-12-03
      */
+    GAUDI_API
     double decayAngle
     ( const LoKi::LorentzVector& P , 
       const LoKi::LorentzVector& Q ,
@@ -560,6 +566,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-07-27
      */
+    GAUDI_API
     double restMomentum 
     ( const LoKi::LorentzVector& v , 
       const LoKi::LorentzVector& M ) ;
@@ -579,6 +586,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-07-27
      */
+    GAUDI_API
     double restEnergy 
     ( const LoKi::LorentzVector& v , 
       const LoKi::LorentzVector& M ) ;
@@ -615,6 +623,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-07-27
      */
+    GAUDI_API
     double cosThetaRest 
     ( const LoKi::LorentzVector& v1 ,
       const LoKi::LorentzVector& v2 , 
@@ -641,6 +650,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-07-27
      */
+    GAUDI_API
     double decayAngleChi 
     ( const LoKi::LorentzVector& d1 , 
       const LoKi::LorentzVector& d2 , 
@@ -658,10 +668,13 @@ namespace LoKi
      *  Lorenzt-invariant expressions
      *
      *  \f$ 
-     *  \cos \chi = 
+     *  \cos \chi =      
+     *   - \frac{ L_D^{\mu} L_H^{\mu} }
+     *     { \sqrt{ \left[ -L_D^2 \right]\left[ -L_H^2 \right] }},
+     &   =
      *   - \frac{ 
 	   *     \epsilon_{ijkl}d_1^{j}d_2^{k}\left(h_1+h_2\right)^l
-     *     \epsilon_{imnp}h_1^{m}h_2^{p}\left(d_1+d_2\right)^p }
+     *     \epsilon_{imnp}h_1^{m}h_2^{n}\left(d_1+d_2\right)^p }
      *     { \sqrt{ \left[ -L_D^2 \right]\left[ -L_H^2 \right] }},
      *  \f$ 
      *  where "4-normales" are defined as:
@@ -683,6 +696,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-07-27
      */
+    GAUDI_API
      double cosDecayAngleChi 
      ( const LoKi::LorentzVector& d1 , 
        const LoKi::LorentzVector& d2 , 
@@ -741,6 +755,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-07-27
      */ 
+    GAUDI_API
     double sinDecayAngleChi 
     ( const LoKi::LorentzVector& d1 , 
       const LoKi::LorentzVector& d2 , 
@@ -782,6 +797,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-09-21 
      */
+    GAUDI_API
     double armenterosPodolanskiX 
     ( const LoKi::ThreeVector& d1 , 
       const LoKi::ThreeVector& d2 ) ;
@@ -845,14 +861,24 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-09-23 
      */
+    GAUDI_API
     double chi2mass 
     ( const double               mass , 
       const LoKi::LorentzVector& mom  , 
       const Gaudi::SymMatrix4x4& cov  ) ;
-      // ========================================================================
-  }  // end of namespace Kinematics  
+    // ========================================================================
+//     /** @evaluate the (cosine) of tansversity angle 
+//      */
+//     GAUDI_API
+//     double cosThetaTr 
+//     ( const LoKi::LorentzVector& d1 , 
+//       const LoKi::LorentzVector& d2 , 
+//       const LoKi::LorentzVector& h1 , 
+//       const LoKi::LorentzVector& h2 ) ;
+    // ========================================================================
+  } //                                        end of namespace LoKi::Kinematics  
   // ==========================================================================
-} // end of namespace LoKi
+} //                                                      end of namespace LoKi
 // ============================================================================
 // The END 
 // ============================================================================

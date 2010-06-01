@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.200 2010-05-30 17:06:42 ibelyaev Exp $ 
+! $Id: release.notes,v 1.201 2010-06-01 17:05:03 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiCore
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -14,6 +14,10 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! 
 ! -----------------------------------------------------------------------------
+
+! 2010-06-01 - Vanya Belyaev
+
+ - add more functions for decay finders 
 
 ! 2010-05-30 - Vanya Belyaev
 
