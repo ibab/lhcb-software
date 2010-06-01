@@ -1,0 +1,173 @@
+!-----------------------------------------------------------------------------
+! Package     : Rec/LumiAlgs
+! Responsible : Jaap Panman
+! Purpose     : Accounting of LumiSummaries (offline code)
+!-----------------------------------------------------------------------------
+
+! 2010-06-01 - Jaap Panman
+ - all Configurations:
+   . update to be compatible with Moore >= v9r1 
+     (check Method counter to select Lumi events, backward incompatible)
+   . default set al DataType = '2010'
+   . allow separate .py files for input files
+
+!========================== LumiAlgs v3r5 2010-05-24 ========================
+! 2010-05-24 - Rob Lambert
+ - update test references
+
+! 2010-05-13 - Rob Lambert
+ - Review of warnings
+
+! 2010-05-12 - Jaap Panman
+ - DumpFSR: 
+   . now dumps the FSRs at FileOpen, after first event, finalize
+   . no longer needs the raw data banks
+ - LumiIntegrateFSR: 
+   . no longer needs access to rawdata
+   . assumes FSRs are instantiated on the TS by Gaudi
+   . does the integral at finalize(), no longer at each file
+ - Configuration:
+   . correct omission of LumiLowFSRs for integration
+   . small bug fixes
+
+! 2010-05-05 - Jaap Panman
+ - Added check on "Method" to select random Lumi events
+   . breaks treatment of data taken with Moore < v9 where the rate was 
+     anyway too low to use the random method (except for one fill)
+ - Updated test suite using a 2010 raw file written with Moore v9r1
+
+! 2010-04-27 - Rob Lambert
+ - Added PropagateFSRs algorithm
+   . Collects all filename->GUID releations
+   . Should also collect all FSRs and then write tree in Finalize
+
+!========================== LumiAlgs v3r4p1 2010-04-26 ========================
+! 2010-04-26 - Juan Palacios
+ - Configurable does not stop job if InputType == 'SDST'.
+   To-do: decide on and implement correct behaviour for SDSTs.
+ - Increase version to v3r5.
+
+!========================== LumiAlgs v3r4 2010-03-24 =========================
+! 2010-03-22 - Jaap Panman
+ - LumiIntegrateFSR: add counters to xml summary at finalize()
+ - add QMtests for xml summary
+
+! 2010-03-18 - Jaap Panman
+ - replace reference stdout for unittest 2 (minor change)
+
+!========================== LumiAlgs v3r3 2010-02-15 =========================
+! 2010-02-14 - Jaap Panman
+ - replace reference stdout for unittests 3, 4, 5 (LumiLow FSRs)
+
+! 2010-02-12 - Jaap Panman
+ - add treatment of LumiLow FSRs:
+   DumpFSR, Configuration updated
+   FilterOnLumiSummary added
+
+!========================== LumiAlgs v3r2 2010-01-21 =========================
+! 2010-01-13 - Jaap Panman
+ - qmtests: add test 4 and 5: write and read FSR (still a warning message)
+            update requirements file
+
+! 2010-01-12 - Jaap Panman
+ - qmtests: add MyCatalog to qmtest directory (caused tests to fail)
+            update expected output refs to reflect changes in dependencies
+
+! 2010-01-08 - Jaap Panman
+ - LumiAlgsConf: fix list of input types
+ - qmtests: make 1 and 2 more strict (compare output)
+            update expected output of 3
+
+! 2009-12-29 - Jaap Panman
+ - Configuration: added support for TimeSpanFSR
+   LumiIntegrateFSR: add usage of TimeSpanFSR
+   TimeAccounting: new, creates TimeSpanFSR
+   DumpFSR: new: wlaks the FSR tree for each new input file and print content
+
+!========================== LumiAlgs v3r1 2009-11-20 =========================
+! 2009-11-18 - Jaap Panman
+ - fix to LumiWriterConf, LumiReaderConf to make unit test work in Rec environment
+
+!========================== LumiAlgs v3r0 2009-11-16 =========================
+! 2009-11-14 - Jaap Panman
+ - Added explicit createODIN in Configuration.touchFSR()
+   Temporary solution until incidentSvc reliable for FSR
+   Present setup fails for files without events 
+
+! 2009-11-13 - Rob Lambert
+ - Added GaudiConf to configuration, to pick up stdopts at run time
+
+! 2009-11-12 - Rob Lambert
+ - Fixed configurable to propagate OutputLevel
+ - Fixed a logic error in EventAccounting, and the configurable
+
+
+! 2009-11-12 - Jaap Panman
+ - Added LumiIntegratorConf: does a lumi integral for analysis jobs 
+   (not yet using eventFSR)
+
+! 2009-11-11 - Jaap Panman
+ - Added protection in navigate method of LumiIntegrateFSR not to attempt 
+   reading not-existing FSR tree, and prevent the configurable to attempt 
+   it for MDF files
+ - remove RandomTrigger in configurables (now LumiTrigger)
+
+! 2009-11-11 - Rob Lambert
+ - Added EventAccounting, to fill the EventCountFSR
+   There are no tests in this package, they REALLY should be added
+   Documentation is also very lax :((
+ - Modified configurable, so that now it is actually doing what's required
+   i.e. adding LumiAccounting and EventAccounting to a sequence
+ - Added navigation of EventCountFSRs into the integrator
+   This ensures they are all touched on each file and will be copied
+ - Added simple tests to try LumiWriter.py, LumiReader.py and test the configurable
+
+
+! 2009-11-06 - Jaap Panman
+ - move to new odin TriggerType definitions
+
+!========================== LumiAlgs v2r3 2009-10-20 =========================
+! 2009-10-20 - Jaap Panman
+ - remove small memory leak in LumiAccounting::finalize()
+
+! 2009-10-14 - Jaap Panman
+ - remove EOR from FileRecords path
+
+! 2009-10-09 - Jaap Panman
+ - add functionality to write/read MDF files with only lumi events:
+   Add LumiWriter[Conf].py, LumiReader[Conf].py,LumiFileReader.cpp/h
+
+!========================== LumiAlgs v2r2 2009-07-14 =========================
+! 2009-07-10 - Jaap Panman
+ - LumiIntegrateFSR.cpp: adapt to changed BXType names in ODIN
+
+! 2009-07-10 - Marco Cattaneo
+ - Configuration.py: adapt to changed BXType names in ODIN
+ - Remove obsolete file LumiAlgs_dll.cpp
+
+!========================== LumiAlgs v2r1 2009-06-17 =========================
+! 2009-06-12 - Jaap Panman
+ - Configuration.py:  when running on DST different location to pass on LumiSummary
+ - LumiReadBackFSR:   new algorithm to test integrator tool
+ - ILumiIntegrator.h: interface for integrator tool
+ - LumiIntegrator:    integrator tool, holds integrated lumi info
+   this tool is meant to be able to apply calibration constants and give
+   an integrated luminosity at the end of a job
+ - LumiIntegrateFSR:  Algorithm to work with the tool.  Picks up all FSRs at 
+	 change of run, navigates FileRecords to find all FSRs, and counts all events
+   on input.  
+ - LumiAccounting:   Follow change to FileRecords
+
+!========================== LumiAlgs v2r0 2009-05-08 =========================
+! 2009-04-15 - Marco Cattaneo
+ - Change input and output FSR locations to be under /FileRecords instead of
+   /RunRecords, following reimplementation of FileRecordSvc in Gaudi v21
+
+!========================== LumiAlgs v1r0 2009-02-20 =========================
+! 2009-02-19 - Marco Cattaneo
+ - Clean up configurable to remove unneccessary imports and fix dependency
+   problem during make
+
+! 2009-02-16 - Jaap Panman
+ - Package created to do the basic offline accounting of LumiSummary data
+ - LumiAccounting:  read LumiSummaries and create LumiFSR
