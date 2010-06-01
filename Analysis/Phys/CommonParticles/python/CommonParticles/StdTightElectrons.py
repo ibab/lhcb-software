@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: StdTightElectrons.py,v 1.4 2009-07-01 18:42:29 jonrob Exp $ 
+# $Id: StdTightElectrons.py,v 1.5 2010-06-01 09:41:12 odescham Exp $ 
 # =============================================================================
 ## @file  CommonParticles/StdTightElectrons.py
 #  configuration file for 'Standard Loose Electrons' 
@@ -11,7 +11,7 @@
 Configuration file for 'Standard Tight Electrons'
 """
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $"
 # =============================================================================
 __all__ = (
     'StdTightElectrons' ,
@@ -43,9 +43,9 @@ locations = updateDoD ( algorithm )
 StdTightElectrons = algorithm 
 
 ## temporary:
-algorithm.addTool ( BremAdder )
-brem = algorithm.BremAdder 
-brem.BremCor = 1.06
+#algorithm.addTool ( BremAdder )
+#brem = algorithm.BremAdder 
+#brem.BremCor = 1.0
 
 ## ============================================================================
 if '__main__' == __name__ :

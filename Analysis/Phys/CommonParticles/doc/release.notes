@@ -1,4 +1,4 @@
- )!$Id: release.notes,v 1.182 2010-05-24 20:27:44 jpalac Exp $
+ )!$Id: release.notes,v 1.183 2010-06-01 09:41:12 odescham Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/CommonParticles
 ! Responsible : P. Koppenburg, Juan Palacios
@@ -7,6 +7,11 @@
 ! When adding a Particle make sure it is appended to one of the Standard* files
 !
 !-----------------------------------------------------------------------------
+
+
+! 2010-05-21 - Olivier Deschamps
+ - StdTight/LooseElectrons : remove obsolete BremCor setting.
+
 
 !========================== CommonParticles v7r2 2010-05-24 ===================
 
