@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.79 2010-05-26 14:21:24 ibelyaev Exp $
+# $Id: requirements,v 1.80 2010-06-01 09:36:10 pkoppenb Exp $
 # Created    : 05/02/2002
 # Maintainer : P. Koppenburg, J. Palcios
 #============================================================================
@@ -16,7 +16,6 @@ use PhysEvent         v* Event
 use PartProp          v* Kernel
 use GaudiAlg          v* 
 use Relations         v* Kernel
-use RecInterfaces     v* Kernel
 use DaVinciInterfaces v* Phys
 # Exported header files
 #============================================================================

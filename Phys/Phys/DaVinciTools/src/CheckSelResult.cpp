@@ -1,9 +1,8 @@
-// $Id: CheckSelResult.cpp,v 1.10 2008-11-03 18:38:45 jpalac Exp $
+// $Id: CheckSelResult.cpp,v 1.11 2010-06-01 09:40:25 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h" 
-#include "Event/SelResult.h"
 #include "GaudiKernel/SmartDataPtr.h"
 #include "Event/RecHeader.h"
 
@@ -30,12 +29,10 @@ CheckSelResult::CheckSelResult( const std::string& name,
   : GaudiAlgorithm ( name , pSvcLocator )
   , m_algorithms ()
   , m_ANDmode(false)
-  , m_avoidSelResult(true) // As in DVAlgorithm baseclass, Dummy. 
 {
   m_algorithms.clear();
   declareProperty( "Algorithms", m_algorithms );
   declareProperty( "Andmode", m_ANDmode );
-  declareProperty( "AvoidSelResult", m_avoidSelResult); 
 }
 //=============================================================================
 // Destructor
@@ -57,10 +54,7 @@ StatusCode CheckSelResult::initialize() {
     warning() << "You have selected the 'AND' mode: "
               << "ALL algorithms are required to pass!" << endmsg;
   } else if (msgLevel(MSG::DEBUG)) debug() << "You have selected the default 'OR' mode." << endmsg;
-  if ((!m_avoidSelResult) && msgLevel(MSG::DEBUG)) debug() 
-    << "You have set AvoidSelResult to false -> will write out to TES" << endmsg; 
 
-  m_writeTool = tool<IWriteSelResult>("WriteSelResult");
   m_readTool = tool<ICheckSelResults>("CheckSelResultsTool",this);
 
   return StatusCode::SUCCESS;
@@ -75,7 +69,6 @@ StatusCode CheckSelResult::execute() {
   StatusCode sc = StatusCode::SUCCESS ;
   const bool pass = m_readTool->isSelected(m_algorithms, m_ANDmode) ;
   if (msgLevel(MSG::DEBUG)) debug() << "Result is " << pass << endmsg ;
-  if ( !m_avoidSelResult ) sc = m_writeTool->write(name(),pass) ; // write out
   if (!sc) return sc;
   
   setFilterPassed(pass);

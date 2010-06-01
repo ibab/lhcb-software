@@ -1,4 +1,4 @@
-// $Id: CheckSelResultsTool.cpp,v 1.6 2009-11-11 19:22:04 pkoppenb Exp $
+// $Id: CheckSelResultsTool.cpp,v 1.7 2010-06-01 09:40:25 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -8,7 +8,6 @@
 #include "GaudiKernel/ToolFactory.h" 
 
 #include "LoKi/AlgFunctors.h"
-#include "Event/SelResult.h"
 
 // local
 #include "CheckSelResultsTool.h"
@@ -29,11 +28,8 @@ CheckSelResultsTool::CheckSelResultsTool( const std::string& type,
                                           const std::string& name,
                                           const IInterface* parent )
   : GaudiTool( type, name , parent )
-  , m_selResults(LHCb::SelResultLocation::Default)
 {
   declareInterface<ICheckSelResults>(this);  
-  declareProperty( "UseSelResults", m_useSelResults = true, 
-                   "Check also in SelResults if algorithm passed" );
 }
 //=============================================================================
 /** check if the event has been (pre)selected by a certain selection
@@ -59,32 +55,10 @@ bool CheckSelResultsTool::isSelected ( const Selection  & selection) const {
     if (msgLevel(MSG::DEBUG)) debug() << selection << " ran during this processing. Result is " 
                                       << pass() << endmsg ;
     return pass() ;
-  } else if ( m_useSelResults ){
- 
-    if (!exist<LHCb::SelResults>(m_selResults)){
-      Warning("SelResult container not found at "+m_selResults) ;
-      return false ;   
-    }
-    LHCb::SelResults* SelResCtr = get<LHCb::SelResults>(m_selResults);
-
-    for ( LHCb::SelResults::const_iterator iselRes  = SelResCtr->begin() ;
-          iselRes != SelResCtr->end(); ++iselRes ) {
-      if (msgLevel(MSG::VERBOSE)) verbose() << "Looping on " << (*iselRes)->location() 
-                                            << " " << (*iselRes)->found() << endmsg ;
-      unsigned int pos = (*iselRes)->location().find_last_of('/');
-      if (pos==(*iselRes)->location().size()) Exception("No / in "+(*iselRes)->location());
-      if (  (*iselRes)->location().substr(pos+1, (*iselRes)->location().size())==selection ){
-        if (msgLevel(MSG::DEBUG)) debug() << selection << " ran during a previous processing. SelResult is " 
-                                          << (*iselRes)->found() << endmsg ;
-        return (*iselRes)->found() ;
-      }
-    }
   } 
   
   if (msgLevel(MSG::DEBUG)) {
-    debug() << selection << " has not been run" ;
-    if (m_useSelResults) debug() << " or found in SelResults" ;
-    debug() << "." << endmsg ;
+    debug() << selection << " has not been run." << endmsg ;
   }
   return false ;
 }

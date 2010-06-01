@@ -1,4 +1,4 @@
-// $Id: CheckSelResultsTool.h,v 1.2 2008-11-03 17:01:14 jpalac Exp $
+// $Id: CheckSelResultsTool.h,v 1.3 2010-06-01 09:40:25 pkoppenb Exp $
 #ifndef CHECKSELRESULTSTOOL_H 
 #define CHECKSELRESULTSTOOL_H 1
 
@@ -12,11 +12,6 @@
  *  Implementation of ICheckSelResults interface.
  *
  *  Checks if an algorithm has passed.
- *
- *  <b>Configuration properties:</b>
- *
- *  UseSelResults: bool controlling whether SelResults from
- *  LHCb::SelResultLocation::Default are used to determine if algorithm passed.
  *
  *  @author Patrick Koppenburg
  *  @date   2008-10-31
@@ -40,8 +35,5 @@ public:
   bool isSelected ( const Selections & selections, 
                     const bool ANDMode = false ) const  ;
 
-private : 
-  bool m_useSelResults ; ///< Check also in SelResults if algorithm passed
-  std::string m_selResults;        ///< Location of selresults container
 };
 #endif // CHECKSELRESULTSTOOL_H

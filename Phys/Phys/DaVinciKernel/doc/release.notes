@@ -1,8 +1,12 @@
-!$Id: release.notes,v 1.356 2010-05-29 15:13:12 ibelyaev Exp $
+!$Id: release.notes,v 1.357 2010-06-01 09:36:10 pkoppenb Exp $
 !============================================================================
 ! Package     : DaVinciKernel
 ! Responsible : J.P. Palacios
 !============================================================================
+
+! 2010-06-01 - Patrick Koppenburg
+ - Remove SelResult functionality
+   https://savannah.cern.ch/task/?15178
 
 ! 2010-05-29 - Vanya Belyaev
 

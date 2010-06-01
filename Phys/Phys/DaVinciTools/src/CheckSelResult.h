@@ -1,4 +1,4 @@
-// $Id: CheckSelResult.h,v 1.4 2008-10-31 18:41:40 pkoppenb Exp $
+// $Id: CheckSelResult.h,v 1.5 2010-06-01 09:40:25 pkoppenb Exp $
 #ifndef CHECKSELRESULT_H 
 #define CHECKSELRESULT_H 1
 
@@ -6,7 +6,6 @@
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
 
-#include "Kernel/IWriteSelResult.h"
 #include "Kernel/ICheckSelResults.h"
 
 
@@ -34,9 +33,7 @@ private:
 
   std::vector<std::string> m_algorithms ;          ///< Algorithms to check
   bool m_ANDmode ;
-  bool m_avoidSelResult ;                          ///< avoid selresult writing? default: yes.
 
-  IWriteSelResult* m_writeTool ;                  ///< SelResultWriter
   ICheckSelResults* m_readTool ;                  ///< Selresults Reader
 
 };

@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.550 2010-05-31 13:29:42 jpalac Exp $
+! $Id: release.notes,v 1.551 2010-06-01 09:40:25 pkoppenb Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2010-06-01 - Patrick Koppenburg
+ - Remove access to SelResult from CheckSelResult and CheckSelResultTool 
+	(they are still useful!)
 
 ! 2010-05-31 - Juan Palacios
  - src/FilterDesktop.cpp, src/PhysDesktop.cpp

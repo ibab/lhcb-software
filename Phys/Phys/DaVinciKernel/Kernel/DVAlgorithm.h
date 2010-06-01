@@ -1,4 +1,4 @@
-// $Id: DVAlgorithm.h,v 1.55 2010-05-29 15:13:12 ibelyaev Exp $ 
+// $Id: DVAlgorithm.h,v 1.56 2010-06-01 09:36:10 pkoppenb Exp $ 
 // ============================================================================
 #ifndef DAVINCIKERNEL_DVALGORITHM_H
 #define DAVINCIKERNEL_DVALGORITHM_H 1
@@ -18,7 +18,6 @@
 // ============================================================================
 #include "Event/Particle.h"
 #include "Event/Vertex.h"
-#include "Event/SelResult.h"
 // ============================================================================
 // from DaVinciKernel
 // ============================================================================
@@ -33,7 +32,6 @@
 #include "Kernel/IBTaggingTool.h"
 #include "Kernel/IParticleDescendants.h"
 #include "Kernel/IDecayTreeFit.h"
-#include "Kernel/IWriteSelResult.h"
 #include "Kernel/IDistanceCalculator.h"
 #include "Kernel/IPVReFitter.h"
 #include "Kernel/IRelatedPVFinder.h"
@@ -87,12 +85,6 @@
  *  - <b>DecayDescriptor</b>  : the decay descriptor ofthe algorithm 
  *               in the spirit of (MC)DecayFinder tool by Olivier Dormond.
  *   
- *
- *  - <b>AvoidSelResult</b>    : the boolean flag (default value id <c>false</c>)
- *    to avoid the publishing of selection results in TES 
- * 
- *  - <b>PrintSelResults</b> : the boolean flag (default value is <c>false</c>)
- *    to print the selection resulst 
  *
  *  - <b>AvoidForcedOutput</b> : the boolean flag (default value is <c>false</c>)
  *    to avoid the wrinting of empty containers if no output data are required.
@@ -420,12 +412,6 @@ public:
   }
   */
 
-  /// Accessor for WriteSelResult Tool
-  inline IWriteSelResult* writeSelResult()const
-  {
-    return getTool<IWriteSelResult>(m_writeSelResultName,
-                                    m_writeSelResult);
-  }
   /// Tagging Tool
   inline IBTaggingTool* flavourTagging()const{
     return getTool<IBTaggingTool>(m_taggingToolName, 
@@ -578,9 +564,6 @@ private:
   /// The base class provides an instance of all type of tools
   StatusCode loadTools() ;
 
-  /// Method to create SelResult container
-  StatusCode fillSelResult() ;
-
   /// Reference to desktop tool
   mutable IPhysDesktop* m_desktop;
   /// Concrete type desktop
@@ -664,11 +647,6 @@ protected:
   /// Concrete Type of ParticleDescendants  tool
   std::string m_descendantsName;
 
-  /// Concrete type of CheckOverlap tool
-  std::string m_writeSelResultName;
-  /// Reference to CheckOverlap
-  mutable IWriteSelResult* m_writeSelResult;
-
   /// 
   mutable IOnOffline* m_onOffline;
 
@@ -709,11 +687,6 @@ public:
 private:
   /// Decay description (Property)
   std::string m_decayDescriptor;
-  /// Avoid writing SelResult object in TES (Property)
-  bool m_avoidSelResult;
-  /// Avoid printing SelResult statistics 
-  /// (cannot be switched off by OutputLevel)
-  bool m_printSelResult;
   /// avoid the writeup of empty containers 
   bool m_avoidEmptyOutput ;
 

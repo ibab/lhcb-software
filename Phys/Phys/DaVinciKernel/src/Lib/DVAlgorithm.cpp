@@ -1,4 +1,4 @@
-// $Id: DVAlgorithm.cpp,v 1.78 2010-05-29 15:13:12 ibelyaev Exp $
+// $Id: DVAlgorithm.cpp,v 1.79 2010-06-01 09:36:10 pkoppenb Exp $
 // ============================================================================
 // Include 
 // ============================================================================
@@ -68,8 +68,6 @@ DVAlgorithm::DVAlgorithm
     , m_taggingTool           ( 0 )
     , m_descendants           ( 0 )
     , m_descendantsName       ("ParticleDescendants")
-    , m_writeSelResultName    ( "WriteSelResult" )
-    , m_writeSelResult        ( 0 )
     , m_onOffline             ( 0 )
     , m_pvRelator             ( 0 )
     , m_ppSvc                 ( 0 )
@@ -115,8 +113,6 @@ DVAlgorithm::DVAlgorithm
   declareProperty ( "GeomTools"         , m_geomToolNames, "Names of geomery tools" ) ;
   //
   declareProperty ( "CheckOverlapTool"  , m_checkOverlapName, "Name of Overlap Tool"  ) ;
-  //
-  declareProperty ( "WriteSelResultTool"  , m_writeSelResultName, "Name of SelResult Writer Tool" ) ;
   //
   m_filterNames    [ ""       ] = "LoKi::Hybrid::FilterCriterion" ;
   m_filterNames    [ "LoKi"   ] = "LoKi::Hybrid::FilterCriterion" ;
@@ -200,8 +196,6 @@ DVAlgorithm::DVAlgorithm
       "The mapping of nick/name/type for IDistanceCalculator tools"   ) ;
   //
   declareProperty ( "DecayDescriptor"   , m_decayDescriptor   = "", "Describes the decay" ) ;
-  declareProperty ( "AvoidSelResult"    , m_avoidSelResult    = false, "If true so Selresult is written" ) ;
-  declareProperty ( "PrintSelResult"    , m_printSelResult    = false , "If true SelResult is printed" ) ;
   declareProperty ( "AvoidForcedOutput" , m_avoidEmptyOutput  = false , "If true TES location is written" ) ;
   declareProperty ( "PreloadTools"      , m_preloadTools      = true, "If true all tools are pre-loaded in initialize" ) ;
   //
@@ -230,11 +224,6 @@ StatusCode DVAlgorithm::initialize ()
     std::string mgs = "Registration for Algorithm Context Service is disabled." ;
     Warning( mgs +  "Some tools/utilities could have the problems." );
   }
-  
-  if ( m_avoidSelResult ) { 
-    if (msgLevel(MSG::DEBUG)) debug() << "Avoiding SelResult" << endmsg; 
-  }
-  
   
   // Load tools very
   sc = loadTools() ;
@@ -328,11 +317,6 @@ StatusCode DVAlgorithm::loadTools()
   { debug() << ">>> Preloading CheckOverlap Tool" << endmsg; }
   checkOverlap();
   
-  if (msgLevel(MSG::DEBUG))
-  { debug() << ">>> Preloading WriteSelResults Tool" << endmsg; }
-  
-  writeSelResult();
-  
   if (msgLevel(MSG::DEBUG)) 
   { debug() << ">>> Preloading LHCb::ParticlePropertySvc" << endmsg; }
   ppSvc() ;
@@ -366,11 +350,6 @@ StatusCode DVAlgorithm::sysExecute ()
   
   /// count number of "effective filters"  
   counter("#accept") += filterPassed() ;
-
-  if (!m_avoidSelResult) 
-  { sc = fillSelResult () ; }
-  else 
-  { verbose() << "Avoiding selresult" << endmsg ; }
   
   // Reset for next event
   m_setFilterCalled = false;
@@ -515,29 +494,6 @@ bool DVAlgorithm::hasStoredRelatedPV(const LHCb::Particle* particle) const
   return !p2pvRange.empty();
 }
 // ============================================================================
-StatusCode DVAlgorithm::fillSelResult () {
-
-  // Create and fill selection result object
-  LHCb::SelResult myResult;
-  myResult.setFound(filterPassed());
-  myResult.setLocation( ("/Event/Phys/"+name()));
-  if (msgLevel(MSG::VERBOSE)) verbose() << "SelResult location set to " << "/Event/Phys/"+name() 
-                                        << endmsg;
-  myResult.setDecay(getDecayDescriptor());
-
-  StatusCode sc = writeSelResult()->write(myResult);
-    
-  if (filterPassed()) m_countFilterPassed++;
-  m_countFilterWrite++;
-  if (msgLevel(MSG::VERBOSE)) verbose() << "wrote " << filterPassed() 
-                                        << " -> " << m_countFilterWrite 
-                                        << " & " 
-                                        << m_countFilterPassed << endmsg ;
-
-  return sc ;
-
-}
-// ============================================================================
 // Finalize the algorithm + post-actions
 // ============================================================================
 StatusCode DVAlgorithm::finalize () 
@@ -548,35 +504,6 @@ StatusCode DVAlgorithm::finalize ()
   if ( registerContext() ) { ctx = contextSvc() ; }
   // setup sentry/guard
   Gaudi::Utils::AlgContext sentry ( ctx , this ) ;
-
-
-  if ((m_printSelResult) && (!m_avoidSelResult)){
-    
-    if (m_countFilterWrite < m_countFilterPassed ){
-      warning() << "Executed " << m_countFilterWrite << 
-        " times and flagged as passed " << m_countFilterPassed <<
-        " times" << endmsg;      
-    } else if (m_countFilterWrite <= 0 ){      
-      warning() << "Executed " << m_countFilterWrite << " times" 
-                << endmsg;
-    } else if (m_countFilterPassed <= 0 ){
-      always() << "No events selected in " << 
-        m_countFilterWrite << " calls." << endmsg;
-    } else if (m_countFilterPassed == m_countFilterWrite ){
-      always() << "All events selected in " << 
-        m_countFilterWrite << " calls." << endmsg;
-    } else {
-      double eta = (double)m_countFilterPassed/(double)m_countFilterWrite ;
-      double delta = sqrt( eta*((double)1.-eta)/(double)m_countFilterWrite );
-      double r = (double)1./eta ;
-      double re = r*(delta/eta) ;
-      
-      always() << "Passed " << m_countFilterPassed << 
-        " times in " << m_countFilterWrite << " calls -> (" <<
-        100.0*eta << "+/-" << 100.0*delta <<  ")%, rejection= " << 
-        r << "+/-" << re << endmsg;
-    }
-  }
   
   // finalize GaudiTupleAlg base class
   return GaudiTupleAlg::finalize();
