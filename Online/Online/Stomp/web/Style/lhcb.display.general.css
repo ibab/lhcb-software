@@ -148,6 +148,15 @@
     border-width:     1px;
     border-color:     #000000;
 }
+.MonitorSmallHeader  {
+    background-color: #DDDDDD;
+    color:            #000000;
+    text-align:       right;
+    font-size:        80%;
+    border:           solid;
+    border-width:     1px;
+    border-color:     #000000;
+}
 
 .MonitorDataHeaderRED  {
     background-color: #FFBBBB;
