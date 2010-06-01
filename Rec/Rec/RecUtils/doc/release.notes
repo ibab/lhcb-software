@@ -4,6 +4,12 @@
 ! Purpose     : Collection of simple utilities tied to REC
 !-----------------------------------------------------------------------------
 
+! 2010-06-01 - Patrick Koppenburg
+ - Removed src/ReadStripETC.h src/WriteSelResult.h src/CopyStripETC.cpp 
+	src/ReadStripETC.cpp src/CopyStripETC.h src/WriteSelResult.cpp 
+	options/TestReadETC.opts which are obsolete and require SelResult.
+  . This package is now empty and can be retired.
+
 !============================ RecUtils v1r5 2008-02-01 =======================
 ! 2008-02-01 - Marco Cattaneo
  - In CopyStripETC.cpp book output ETC with explicit numeric ID
