@@ -14,10 +14,10 @@ import socket
 from urllib import urlretrieve, urlopen, urlcleanup
 from shutil import rmtree
 
-script_version = '100330'
+script_version = '100601'
 python_version = sys.version_info[:3]
 txt_python_version = ".".join([str(k) for k in python_version])
-lbscripts_version = "v5r1"
+lbscripts_version = "v5r2"
 compat_version = None
 #-----------------------------------------------------------------------------------
 
@@ -658,6 +658,11 @@ def checkMD5(url, filenm, dest):
     if refmd5 == compmd5 :
         isok = True
     return isok
+
+def isMD5Valid(url, filename):
+    """ This function checks the validity of the md5 sum file that was 
+        installed from a previous installation """
+    pass
 
 def getMD5FileName(filename):
     fc = filename.split(".")
