@@ -2,6 +2,9 @@
 ! Package manager : Matt Needham
 !-----------------------------------------------------------------------------
 
+! 2010-06-02 M. Needham
+ - STClusterKiller prints out fraction of clusters killed
+
 !======================= STAlgorithms v4r0 2010-04-09 ========================
 ! 2010-04-08 M. Needham
  - Remove a stray header inc of ISTSignalToNoiseTool

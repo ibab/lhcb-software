@@ -32,6 +32,7 @@ public:
   // IAlgorithm members
   virtual StatusCode initialize();
   virtual StatusCode execute();
+  virtual StatusCode finalize();
 
 private:
   

@@ -71,8 +71,25 @@ void STClusterKiller::removedClusters(const LHCb::STClusters* clusterCont,
     const bool select = (*m_clusterSelector)(*iterC);
     if (select == true){;
       deadClusters.push_back((*iterC)->key());
+      ++counter("Dead");
     }
+      ++counter("Processed");
   } // iterC
+}
+
+StatusCode STClusterKiller::finalize() {
+
+  const double dead = counter("Dead").flag();
+  const double processed = counter("Processed").flag();
+
+  double killed = 0.0; 
+  if (!LHCb::Math::Equal_To<double>()(processed, 0.0)){ 
+     killed = dead/processed; 
+  }
+  info() << "Fraction of clusters killed " << 100* killed << " %"  << endmsg;
+    
+
+  return ST::AlgBase::finalize();
 }
 
 
