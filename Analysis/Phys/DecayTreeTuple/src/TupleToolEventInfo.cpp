@@ -1,4 +1,4 @@
-// $Id: TupleToolEventInfo.cpp,v 1.7 2010-04-28 15:24:27 pkoppenb Exp $
+// $Id: TupleToolEventInfo.cpp,v 1.8 2010-06-02 12:01:44 pkoppenb Exp $
 // Include files
 
 // from Gaudi
@@ -13,6 +13,10 @@
 
 #include "GaudiAlg/Tuple.h"
 #include "GaudiAlg/ITupleTool.h"
+#include "Kernel/IOnOffline.h"
+#include "Event/RecVertex.h"
+#include "Event/VertexBase.h"
+#include "Event/Track.h"
 
 
 //#include "GaudiAlg/TupleObj.h"
@@ -42,16 +46,14 @@ TupleToolEventInfo::TupleToolEventInfo( const std::string& type,
   : TupleToolBase ( type, name , parent )
 {
   declareInterface<IEventTupleTool>(this);
-
+  declareProperty("InputLocation", m_pvLocation = "" , 
+                  "PV location to be used. If empty, take default");
 }
-
 //=============================================================================
 
 StatusCode TupleToolEventInfo::fill( Tuples::Tuple& tuple ) 
 {
   const std::string prefix=fullName();
-  
- 
   int run = -1;
   int ev = -1;
   int bcid = -1;
@@ -61,6 +63,13 @@ StatusCode TupleToolEventInfo::fill( Tuples::Tuple& tuple )
   unsigned int hlttck = 0;
   ulonglong gpstime = 0;
   Gaudi::Time gtime ;
+  unsigned int nPVs = 0 ;
+  if ( "" == m_pvLocation){
+    const IOnOffline* oo = tool<IOnOffline>("OnOfflineTool",this);
+    m_pvLocation = oo->primaryVertexLocation();
+    if (msgLevel(MSG::DEBUG)) debug() << "Will be looking for PVs at " << m_pvLocation << endmsg ;
+  }
+  if (exist<RecVertex::Container>(m_pvLocation)) nPVs = (get<RecVertex::Container>(m_pvLocation))->size();
 
   LHCb::ODIN* odin(0);
 
@@ -114,6 +123,7 @@ StatusCode TupleToolEventInfo::fill( Tuples::Tuple& tuple )
     test &= tuple->column( prefix+"GpsMinute", gtime.minute(false) );
     test &= tuple->column( prefix+"GpsSecond", gtime.second(false)+gtime.nsecond()/1000000000. );
   }
+  test &= tuple->column( prefix+"Primaries", nPVs );
   if( msgLevel( MSG::VERBOSE ) )
     verbose() << "Returns " << test << endreq;
   return StatusCode(test);

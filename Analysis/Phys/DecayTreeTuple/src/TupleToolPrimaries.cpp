@@ -1,4 +1,4 @@
-// $Id: TupleToolPrimaries.cpp,v 1.10 2010-05-19 06:45:32 pkoppenb Exp $
+// $Id: TupleToolPrimaries.cpp,v 1.11 2010-06-02 12:01:44 pkoppenb Exp $
 // Include files
 
 // from Gaudi
@@ -9,11 +9,10 @@
 
 #include "GaudiAlg/Tuple.h"
 #include "GaudiAlg/TupleObj.h"
-#include "Kernel/DVAlgorithm.h"
-
-#include <Kernel/GetDVAlgorithm.h>
-#include <Kernel/DVAlgorithm.h>
-#include <Event/RecVertex.h>
+#include "Event/RecVertex.h"
+#include "Event/VertexBase.h"
+#include "Event/Track.h"
+#include "Kernel/IOnOffline.h"
 
 //#include <functional>
 
@@ -69,7 +68,7 @@ StatusCode TupleToolPrimaries::fill( Tuples::Tuple& tuple )
   const std::string prefix=fullName();
   const unsigned int maxPV = 100 ;
 
-  if (msgLevel(MSG::VERBOSE)) verbose() << "Storing PVs with prefix " << prefix << endmsg ;
+  if (msgLevel(MSG::VERBOSE)) verbose() << "Storing PVs with prefix ``" << prefix << "''" << endmsg ;
   
   std::vector<double>  pvx, pvy, pvz;
   std::vector<double>  epvx, epvy, epvz;
@@ -95,16 +94,22 @@ StatusCode TupleToolPrimaries::fill( Tuples::Tuple& tuple )
         pvx.push_back( (*i)->position().X() );
         pvy.push_back( (*i)->position().Y() );
         pvz.push_back( (*i)->position().Z() );
+        if (msgLevel(MSG::VERBOSE)) verbose() << "PV matrix: " << (*i)->covMatrix()(0,0) << " " 
+                                              << (*i)->covMatrix()(1,1)  << " " 
+                                              << (*i)->covMatrix()(2,2)  << endmsg ;
         epvx.push_back( std::sqrt((*i)->covMatrix()(0,0)) );
         epvy.push_back( std::sqrt((*i)->covMatrix()(1,1)) );
         epvz.push_back( std::sqrt((*i)->covMatrix()(2,2)) );
         pvchi2.push_back((*i)->chi2());
-        pvndof.push_back((*i)->nDoF());
+        pvndof.push_back((double)(*i)->nDoF());
         pvntracks.push_back((double)(*i)->tracks().size());
+        if (msgLevel(MSG::VERBOSE)) verbose() << "Tracks: "  << (*i)->tracks().size() << endmsg ;
+        
       }
-    }
-    
-  }
+    } 
+    if (msgLevel(MSG::DEBUG)) debug() << "There are " << PV->size() << " PVs at " <<  pvz << endmsg ;
+  } else if (msgLevel(MSG::DEBUG)) debug() << "PV container is empty" << endmsg ;
+  
   
   bool test=true;
   test &= tuple->farray( prefix+"PVX", pvx, prefix+"nPV",  maxPV );
@@ -118,7 +123,6 @@ StatusCode TupleToolPrimaries::fill( Tuples::Tuple& tuple )
   test &= tuple->farray( prefix+"PVNDOF", pvndof, prefix+"nPV",  maxPV );
   test &= tuple->farray( prefix+"PVNTRACKS", pvntracks, prefix+"nPV",  maxPV );
   
-  if (msgLevel(MSG::DEBUG)) debug() << "Stored " << PV->size() << " PVs " << test << endmsg ;
   return StatusCode(test);
   //  return StatusCode::SUCCESS;
 }

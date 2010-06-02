@@ -1,8 +1,13 @@
-!-----------------------------------------------------------------------------
+-----------------------------------------------------------------------------
 ! Package     : Phys/DecayTreeTuple
 ! Responsible : Rob Lambert, Patrick Koppenburg & The WGs
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
+
+! 2010-06-02 - Patrick Koppenburg
+ - Remove useless stuff from TupleToolPrimaries
+ - New tool TupleToolDebug for bug #68232
+ - TupleToolEventInfo : store number of PVs
 
 ! 2010-06-02 - Patrick Koppenburg
  - Bug 68234 : Strore origin vertex for stable MC particles as well.

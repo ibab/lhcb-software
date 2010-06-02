@@ -1,4 +1,4 @@
-// $Id: TupleToolEventInfo.h,v 1.4 2010-04-28 15:24:27 pkoppenb Exp $
+// $Id: TupleToolEventInfo.h,v 1.5 2010-06-02 12:01:44 pkoppenb Exp $
 #ifndef JBOREL_TUPLETOOLEVENTINFO_H
 #define JBOREL_TUPLETOOLEVENTINFO_H 1
 
@@ -38,5 +38,6 @@ public:
   StatusCode fill( Tuples::Tuple& );
 
 private :
+  std::string m_pvLocation ;
 };
 #endif // JBOREL_TUPLETOOLEVENTINFO_H
