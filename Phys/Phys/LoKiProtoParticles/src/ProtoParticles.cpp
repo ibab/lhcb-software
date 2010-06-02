@@ -1,4 +1,4 @@
-// $Id: ProtoParticles.cpp,v 1.2 2010-05-31 16:34:10 ibelyaev Exp $
+// $Id: ProtoParticles.cpp,v 1.3 2010-06-02 18:13:11 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -436,7 +436,7 @@ LoKi::ProtoParticles::HasAerogel::operator()
     Error ( "LHCb::ProtoParticle* points to NULL, return 'false'" ) ;
     return false ;                                                    // RETURN
   }
-  const LHCb::RichPID* pid = p->richPID() ;
+  const LHCb::RichPID* pid = rich ( p ) ;
   if ( 0 == pid ) 
   {
     Warning ( "LHCb::RichPID* points to NULL, return 'false'" ) ;
@@ -444,6 +444,25 @@ LoKi::ProtoParticles::HasAerogel::operator()
   }
   //
   return pid->usedAerogel() ;
+}
+// ============================================================================
+// get RICH pid 
+// ============================================================================
+const LHCb::RichPID* 
+LoKi::ProtoParticles::HasAerogel::rich ( const LHCb::ProtoParticle* p ) const 
+{
+  if ( 0 == p   ) { return   0 ; }                           // RETURN 
+  const LHCb::RichPID* pid = p->richPID() ;
+  if ( 0 != pid ) { return pid ; }                           // RETURN 
+  // 
+  LHCb::ProtoParticle::ExtraInfo::const_iterator ifind = 
+    p->extraInfo().find ( LHCb::ProtoParticle::RichPIDStatus ) ;
+  //
+  if ( p->extraInfo().end() == ifind ) { return 0 ; }        // RETURN 
+  //
+  m_rich.setPidResultCode ( static_cast<unsigned int> ( ifind ->second ) ) ;
+  //
+  return &m_rich ;                                           // RETURN
 }
 // ============================================================================
 // OPTIONAL: the nice printtout 
@@ -473,7 +492,7 @@ LoKi::ProtoParticles::HasRich1Gas::operator()
     Error ( "LHCb::ProtoParticle* points to NULL, return 'false'" ) ;
     return false ;                                                    // RETURN
   }
-  const LHCb::RichPID* pid = p->richPID() ;
+  const LHCb::RichPID* pid = rich ( p ) ;
   if ( 0 == pid ) 
   {
     Warning ( "LHCb::RichPID* points to NULL, return 'false'" ) ;
@@ -511,7 +530,7 @@ LoKi::ProtoParticles::HasRich2Gas::operator()
     Error ( "LHCb::ProtoParticle* points to NULL, return 'false'" ) ;
     return false ;                                                    // RETURN
   }
-  const LHCb::RichPID* pid = p->richPID() ;
+  const LHCb::RichPID* pid = rich ( p ) ;
   if ( 0 == pid ) 
   {
     Warning ( "LHCb::RichPID* points to NULL, return 'false'" ) ;
@@ -527,13 +546,12 @@ std::ostream& LoKi::ProtoParticles::HasRich2Gas::fillStream ( std::ostream& s ) 
 { return s << " PP_HASRICH2GAS " ; }
 // ============================================================================
 
-
 // ============================================================================
 // constructor from the detector 
 // ============================================================================
 LoKi::ProtoParticles::HasDetector::HasDetector
 ( const LoKi::ProtoParticles::HasDetector::Detector det ) 
-  : LoKi::PPTypes::PPCuts () 
+  : LoKi::ProtoParticles::HasRich2Gas () 
   , m_det ( det ) 
 {
   switch ( det ) 
@@ -570,7 +588,7 @@ LoKi::ProtoParticles::HasDetector::HasDetector
 // ============================================================================
 LoKi::ProtoParticles::HasDetector::HasDetector
 ( const std::string& det ) 
-  : LoKi::PPTypes::PPCuts () 
+  : LoKi::ProtoParticles::HasRich2Gas () 
   , m_det ( LoKi::ProtoParticles::HasDetector::RICH ) 
 {
   //
@@ -788,15 +806,27 @@ bool LoKi::ProtoParticles::HasDetector::hasCaloInfo
 // ======================================================================
 bool LoKi::ProtoParticles::HasDetector::hasRichAerogel 
 ( const LHCb::ProtoParticle* p ) const 
-{ return ( 0 != p ) && hasRichDLL ( p ) && ( 0 != p->richPID() ) && p->richPID()->usedAerogel() ; }
+{
+  if ( !hasRichDLL  ( p ) ) { return false ; }
+  const LHCb::RichPID* pid = rich ( p ) ;
+  return ( 0 != pid ) && pid->usedAerogel() ; 
+}
 // ======================================================================
 bool LoKi::ProtoParticles::HasDetector::hasRich1Gas
 ( const LHCb::ProtoParticle* p ) const 
-{ return ( 0 != p ) && hasRichDLL ( p ) && ( 0 != p->richPID() ) && p->richPID()->usedRich1Gas() ; }
+{ 
+  if ( !hasRichDLL  ( p ) ) { return false ; }
+  const LHCb::RichPID* pid = rich ( p ) ;
+  return ( 0 != pid ) && pid->usedRich1Gas () ; 
+}
 // ======================================================================
 bool LoKi::ProtoParticles::HasDetector::hasRich2Gas
 ( const LHCb::ProtoParticle* p ) const 
-{ return ( 0 != p ) && hasRichDLL ( p ) && ( 0 != p->richPID() ) && p->richPID()->usedRich2Gas() ; }
+{
+  if ( !hasRichDLL  ( p ) ) { return false ; }
+  const LHCb::RichPID* pid = rich ( p ) ;
+  return ( 0 != pid ) && pid->usedRich2Gas () ; 
+}
 // ======================================================================
 bool LoKi::ProtoParticles::HasDetector::hasRichDLL 
 ( const LHCb::ProtoParticle* p ) const 
@@ -1003,29 +1033,37 @@ LoKi::ProtoParticles::IsMuon::operator()
     Error ( "LHCb::ProtoParticle* points to NULL, return 'false'" ) ;
     return false ;                                                    // RETURN    
   }  
-  // Access the status word
-  LHCb::ProtoParticle::ExtraInfo::const_iterator ifind = 
-    p->extraInfo().find ( LHCb::ProtoParticle::MuonPIDStatus );
   //
-  if ( p->extraInfo().end () == ifind ) 
-  {
-    const LHCb::MuonPID* pid = p->muonPID() ;
-    return ( 0 != pid ) && pid->IsMuon () ;      // REUTRN
-  }
+  const LHCb::MuonPID* pid = muon ( p ) ;
   //
-  // decode the status word
-  LHCb::MuonPID s_pid ;
-  s_pid.setStatus( static_cast<unsigned int>( ifind->second ) );
-  //
-  return s_pid.IsMuon() ;
+  return 0 != pid && pid->IsMuon () ;
 }
 // ============================================================================
 // OPTIONAL: the nice printtout 
 // ============================================================================
 std::ostream& LoKi::ProtoParticles::IsMuon::fillStream ( std::ostream& s ) const 
 { return s << " PP_ISMUON " ; }
- 
-
+// ============================================================================
+// get muon-pid object
+// ============================================================================
+const LHCb::MuonPID* 
+LoKi::ProtoParticles::IsMuon::muon ( const LHCb::ProtoParticle* p  ) const 
+{
+  if ( 0 == p   ) { return   0 ; }                           // RETURN 
+  //
+  const LHCb::MuonPID* pid = p->muonPID () ;
+  if ( 0 != pid ) { return pid ; }                           // RETURN 
+  //
+  // Access the status word
+  LHCb::ProtoParticle::ExtraInfo::const_iterator ifind = 
+    p->extraInfo().find ( LHCb::ProtoParticle::MuonPIDStatus );
+  //
+  if ( p->extraInfo().end () == ifind ) { return 0 ; }       // RETURN
+  //
+  m_muon.setStatus ( static_cast<unsigned int> ( ifind->second ) ) ;
+  //
+  return &m_muon ;
+}
 // ======================================================================
 // MANDATORY: virtual destructor 
 // ======================================================================
@@ -1048,21 +1086,10 @@ LoKi::ProtoParticles::IsLooseMuon::operator()
     Error ( "LHCb::ProtoParticle* points to NULL, return 'false'" ) ;
     return false ;                                                    // RETURN    
   }  
-  // Access the status word
-  LHCb::ProtoParticle::ExtraInfo::const_iterator ifind = 
-    p->extraInfo().find ( LHCb::ProtoParticle::MuonPIDStatus );
   //
-  if ( p->extraInfo().end () == ifind ) 
-  {
-    const LHCb::MuonPID* pid = p->muonPID() ;
-    return ( 0 != pid ) && pid->IsMuonLoose () ;      // REUTRN
-  }
+  const LHCb::MuonPID* pid = muon ( p ) ;
   //
-  // decode the status word
-  LHCb::MuonPID s_pid ;
-  s_pid.setStatus( static_cast<unsigned int>( ifind->second ) );
-  //
-  return s_pid.IsMuonLoose() ;
+  return 0 != pid && pid->IsMuonLoose () ;
 }
 // ============================================================================
 // OPTIONAL: the nice printtout 
@@ -1070,7 +1097,6 @@ LoKi::ProtoParticles::IsLooseMuon::operator()
 std::ostream& LoKi::ProtoParticles::IsLooseMuon::fillStream ( std::ostream& s ) const 
 { return s << " PP_ISLOOSEMUON " ; }
 // ============================================================================
-
 
 // ============================================================================
 // constructor from the service, TES location and cuts 
@@ -1356,8 +1382,84 @@ LoKi::ProtoParticles::TrackFun::fillStream ( std::ostream& o ) const
   return o << " ) " ;  
 }
 // ============================================================================
-  
 
+// ============================================================================
+// constructor form the particle type 
+// ============================================================================
+LoKi::ProtoParticles::RichAboveThres::RichAboveThres 
+( Rich::ParticleIDType particle ) 
+  : LoKi::ProtoParticles::HasRich2Gas () 
+  , m_particle ( particle ) 
+{}
+// ============================================================================
+// MANDATORY: virtual destructor 
+// ============================================================================
+LoKi::ProtoParticles::RichAboveThres::~RichAboveThres(){}
+// ============================================================================
+// MANDATORY: clone mehtod ("virtual constructor")
+// ============================================================================
+LoKi::ProtoParticles::RichAboveThres*
+LoKi::ProtoParticles::RichAboveThres::clone() const 
+{ return new LoKi::ProtoParticles::RichAboveThres ( *this ) ; }
+// ============================================================================
+// OPTIONAL: the nice printout 
+// ============================================================================
+LoKi::ProtoParticles::RichAboveThres::result_type 
+LoKi::ProtoParticles::RichAboveThres::operator() 
+  ( LoKi::ProtoParticles::RichAboveThres::argument p ) const 
+{
+  if ( 0 == p ) 
+  {
+    Error ( "LHCb::ProtoParticle* points to NULL, return 'false'" ) ;
+    return false ;                                                   // RETURN    
+  }
+  //
+  const LHCb::RichPID* pid = rich ( p ) ;
+  if ( 0 == pid ) 
+  {
+    Error ("Can't access the RichPID information, return false") ;
+    return false ;
+  }
+  //
+  switch ( m_particle ) 
+  {
+  case Rich::Electron : return pid -> electronHypoAboveThres () ;  // RETURN
+  case Rich::Muon     : return pid ->     muonHypoAboveThres () ;  // RETURN
+  case Rich::Pion     : return pid ->     pionHypoAboveThres () ;  // RETURN
+  case Rich::Kaon     : return pid ->     kaonHypoAboveThres () ;  // RETURN
+  case Rich::Proton   : return pid ->   protonHypoAboveThres () ;  // RETURN
+  default: break ;
+  }
+  //
+  Error ( "testRichPID: Unknown RichPrticleID type, return false ") ;
+  return false ;
+}
+// ============================================================================
+// OPTIONAL: the nice printout 
+// ============================================================================
+std::ostream& 
+LoKi::ProtoParticles::RichAboveThres::fillStream ( std::ostream& s ) const 
+{
+  switch ( m_particle ) 
+  {
+  case Rich::Electron : return s << " PP_RICHTHRES_E "  ;
+  case Rich::Muon     : return s << " PP_RICHTHRES_MU " ;
+  case Rich::Pion     : return s << " PP_RICHTHRES_PI " ;
+  case Rich::Kaon     : return s << " PP_RICHTHRES_K "  ;
+  case Rich::Proton   : return s << " PP_RICHTHRES_P "  ;
+  default: break ;
+  }
+  //
+  return s << " PP_RICHTHRES( " << m_particle << " ) " ;
+  //
+}
+
+
+
+
+
+  
+  
 
 // ============================================================================
 // The END 

@@ -1,4 +1,4 @@
-// $Id: ProtoParticles.h,v 1.2 2010-05-31 16:34:10 ibelyaev Exp $
+// $Id: ProtoParticles.h,v 1.3 2010-06-02 18:13:11 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PROTOPARTICLES_H 
 #define LOKI_PROTOPARTICLES_H 1
@@ -310,6 +310,16 @@ namespace LoKi
       /// OPTIONAL: the nice printtout 
       virtual  std::ostream& fillStream ( std::ostream& s ) const ;
       // ======================================================================
+    protected:
+      // ======================================================================
+      /// get RICH pid 
+      const LHCb::RichPID* rich ( const LHCb::ProtoParticle* p ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the local object
+      mutable LHCb::RichPID  m_rich ;                       // the local object
+      // ======================================================================
     } ;
     // ========================================================================
     /** @class HasRich1Gas
@@ -320,7 +330,7 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.BElyaev@nikhef.nl
      *  @date   2010-05-26
      */
-    class HasRich1Gas : public LoKi::PPTypes::PPCuts 
+    class HasRich1Gas : public HasAerogel
     {
     public:
       // ======================================================================
@@ -343,7 +353,7 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.BElyaev@nikhef.nl
      *  @date   2010-05-26
      */
-    class HasRich2Gas : public LoKi::PPTypes::PPCuts 
+    class HasRich2Gas : public HasRich1Gas 
     {
     public:
       // ======================================================================
@@ -363,7 +373,7 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.BElyaev@nikhef.nl
      *  @date   2010-05-26
      */
-    class HasDetector : public LoKi::PPTypes::PPCuts 
+    class HasDetector : public HasRich2Gas 
     {
     public  :
       // ======================================================================
@@ -516,6 +526,16 @@ namespace LoKi
       virtual  result_type operator() ( argument p ) const ;
       /// OPTIONAL: the nice printtout 
       virtual  std::ostream& fillStream ( std::ostream& s ) const ;
+      // ======================================================================
+    protected:
+      // ======================================================================
+      /// get muon-pid object
+      const LHCb::MuonPID* muon ( const LHCb::ProtoParticle* p  ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// local muon pid obejcts 
+      mutable LHCb::MuonPID m_muon ;                  // local muon pid obejcts 
       // ======================================================================
     } ;
     // ========================================================================
@@ -719,7 +739,53 @@ namespace LoKi
       double m_bad ; // "bad"-value 
       // ======================================================================
     } ;
-    // ======================================================================
+    // ========================================================================
+    /** @class RichAboveThres
+     *  simple class to evaluate ``rish-above-threshold''
+     *  @see LHCb::RichPID::electronHypoAboveThres
+     *  @see LHCb::RichPID::muonHypoAboveThres
+     *  @see LHCb::RichPID::pionHypoAboveThres
+     *  @see LHCb::RichPID::kaonHypoAboveThres
+     *  @see LHCb::RichPID::protonHypoAboveThres
+     *  
+     *  @see LoKi::Cuts::PP_RICHTHRES
+     *  @see LoKi::Cuts::PP_RICHTHRES_E 
+     *  @see LoKi::Cuts::PP_RICHTHRES_MU
+     *  @see LoKi::Cuts::PP_RICHTHRES_PI
+     *  @see LoKi::Cuts::PP_RICHTHRES_K
+     *  @see LoKi::Cuts::PP_RICHTHRES_P
+     *
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2010-06-02
+     */
+    class RichAboveThres : public HasRich2Gas 
+    {
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// constructor form the particle type 
+      RichAboveThres ( Rich::ParticleIDType particle ) ;
+      /// MANDATORY: virtual destructor 
+      virtual ~RichAboveThres() ;
+      /// MANDATORY: clone mehtod ("virtual constructor")
+      virtual  RichAboveThres* clone () const ;
+      /// MANDATORY: the only one essential method
+      virtual  result_type operator() ( argument p ) const ;
+      /// OPTIONAL: the nice printout 
+      virtual  std::ostream& fillStream ( std::ostream& s ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the default constructor is disabled 
+      RichAboveThres () ;                // the default constructor is disabled 
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the particle to be tested 
+      Rich::ParticleIDType m_particle ;            // the particle to be tested 
+      // ======================================================================
+    } ;
+    // ========================================================================
   } //                                    end of namespace LoKi::ProtoParticles
   // ==========================================================================
   namespace Functors 
@@ -1259,6 +1325,112 @@ namespace LoKi
      *  @date 2010-05-27
      */
     typedef LoKi::ProtoParticles::TrackFun                           PP_TRFUN ;
+    // ========================================================================
+    /** @typedef PP_RICHTHRES 
+     *  simple checker for "above-threshold"
+     *  
+     *  @see LHCb::RichPID::electronHypoAboveThres
+     *  @see LHCb::RichPID::muonHypoAboveThres
+     *  @see LHCb::RichPID::pionHypoAboveThres
+     *  @see LHCb::RichPID::kaonHypoAboveThres
+     *  @see LHCb::RichPID::protonHypoAboveThres
+     *  
+     *  @see LoKi:ProtoParticles::RichAboveThres
+     *  @see LoKi::Cuts::PP_RICHTHRES_E 
+     *  @see LoKi::Cuts::PP_RICHTHRES_MU
+     *  @see LoKi::Cuts::PP_RICHTHRES_PI
+     *  @see LoKi::Cuts::PP_RICHTHRES_K
+     *  @see LoKi::Cuts::PP_RICHTHRES_P
+     *
+     *  @author Vanya BELYAEV Ivan.BElyaev@nikhef.nl
+     *  @date 2010-06-02
+     */
+    typedef LoKi::ProtoParticles::RichAboveThres                 PP_RICHTHRES ;
+    // ========================================================================
+    /** @var PP_RICHTHRES_E
+     *  simple checker for "above-threshold"
+     *  
+     *  @see LHCb::RichPID::electronHypoAboveThres
+     *  
+     *  @see LoKi:ProtoParticles::RichAboveThres
+     *  @see LoKi::Cuts::PP_RICHTHRES
+     *  @see LoKi::Cuts::PP_RICHTHRES_MU
+     *  @see LoKi::Cuts::PP_RICHTHRES_PI
+     *  @see LoKi::Cuts::PP_RICHTHRES_K
+     *  @see LoKi::Cuts::PP_RICHTHRES_P
+     *
+     *  @author Vanya BELYAEV Ivan.BElyaev@nikhef.nl
+     *  @date 2010-06-02
+     */
+    const LoKi::ProtoParticles::RichAboveThres PP_RICHTHRES_E ( Rich::Electron );
+    // ========================================================================
+    /** @var PP_RICHTHRES_MU
+     *  simple checker for "above-threshold"
+     *  
+     *  @see LHCb::RichPID::muonHypoAboveThres
+     *  
+     *  @see LoKi:ProtoParticles::RichAboveThres
+     *  @see LoKi::Cuts::PP_RICHTHRES
+     *  @see LoKi::Cuts::PP_RICHTHRES_E
+     *  @see LoKi::Cuts::PP_RICHTHRES_PI
+     *  @see LoKi::Cuts::PP_RICHTHRES_K
+     *  @see LoKi::Cuts::PP_RICHTHRES_P
+     *
+     *  @author Vanya BELYAEV Ivan.BElyaev@nikhef.nl
+     *  @date 2010-06-02
+     */
+    const LoKi::ProtoParticles::RichAboveThres PP_RICHTHRES_MU ( Rich::Muon );
+    // ========================================================================
+    /** @var PP_RICHTHRES_PI
+     *  simple checker for "above-threshold"
+     *  
+     *  @see LHCb::RichPID::pionHypoAboveThres
+     *  
+     *  @see LoKi:ProtoParticles::RichAboveThres
+     *  @see LoKi::Cuts::PP_RICHTHRES
+     *  @see LoKi::Cuts::PP_RICHTHRES_MU
+     *  @see LoKi::Cuts::PP_RICHTHRES_E
+     *  @see LoKi::Cuts::PP_RICHTHRES_K
+     *  @see LoKi::Cuts::PP_RICHTHRES_P
+     *
+     *  @author Vanya BELYAEV Ivan.BElyaev@nikhef.nl
+     *  @date 2010-06-02
+     */
+    const LoKi::ProtoParticles::RichAboveThres PP_RICHTHRES_PI ( Rich::Pion ) ;
+    // ========================================================================
+    /** @var PP_RICHTHRES_K
+     *  simple checker for "above-threshold"
+     *  
+     *  @see LHCb::RichPID::kaonHypoAboveThres
+     *  
+     *  @see LoKi:ProtoParticles::RichAboveThres
+     *  @see LoKi::Cuts::PP_RICHTHRES
+     *  @see LoKi::Cuts::PP_RICHTHRES_MU
+     *  @see LoKi::Cuts::PP_RICHTHRES_E
+     *  @see LoKi::Cuts::PP_RICHTHRES_PI
+     *  @see LoKi::Cuts::PP_RICHTHRES_P
+     *
+     *  @author Vanya BELYAEV Ivan.BElyaev@nikhef.nl
+     *  @date 2010-06-02
+     */
+    const LoKi::ProtoParticles::RichAboveThres PP_RICHTHRES_K ( Rich::Kaon ) ;
+    // ========================================================================
+    /** @var PP_RICHTHRES_P
+     *  simple checker for "above-threshold"
+     *  
+     *  @see LHCb::RichPID::protonHypoAboveThres
+     *  
+     *  @see LoKi:ProtoParticles::RichAboveThres
+     *  @see LoKi::Cuts::PP_RICHTHRES
+     *  @see LoKi::Cuts::PP_RICHTHRES_MU
+     *  @see LoKi::Cuts::PP_RICHTHRES_E
+     *  @see LoKi::Cuts::PP_RICHTHRES_PI
+     *  @see LoKi::Cuts::PP_RICHTHRES_K
+     *
+     *  @author Vanya BELYAEV Ivan.BElyaev@nikhef.nl
+     *  @date 2010-06-02
+     */
+    const LoKi::ProtoParticles::RichAboveThres PP_RICHTHRES_P ( Rich::Proton ) ;
     // ========================================================================
   } //                                              end of namespace LoKi::Cuts 
   // ==========================================================================

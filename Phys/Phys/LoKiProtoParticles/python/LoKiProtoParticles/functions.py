@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: functions.py,v 1.1.1.1 2010-05-27 19:17:38 ibelyaev Exp $ 
+# $Id: functions.py,v 1.2 2010-06-02 18:13:11 ibelyaev Exp $ 
 # =============================================================================
 ## @file LoKiProtoParticles/functions.py
 #  The set of basic decorator for objects from Phys/LoKiProtoPaticles library
@@ -31,7 +31,7 @@ A.Golutvin, P.Koppenburg have been used in the design.
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.BElyaev@nikhef.nl"
 __date__    = "2010-05-26"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.1.1.1 $ "
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $ "
 # =============================================================================
 
 import LoKiCore.decorators    as      _LoKiCore
@@ -299,6 +299,20 @@ PP_ISMUONLOOSE     = LoKi.ProtoParticles.IsLooseMuon ()
 PP_TRCUT  = LoKi.ProtoParticles.TrackCut
 ## @see LoKi::Cuts::PP_TRFUN
 PP_TRFUN  = LoKi.ProtoParticles.TrackFun
+
+
+## @see LoKi::Cuts::PP_RICHTHRES 
+PP_RICHTHRES    = LoKi.ProtoParticles.RichAboveThres
+## @see LoKi::Cuts::PP_RICHTHRES_E  
+PP_RICHTHRES_E  = LoKi.ProtoParticles.RichAboveThres ( 0 ) ## cpp.Rich.Electron ) 
+## @see LoKi::Cuts::PP_RICHTHRES_MU
+PP_RICHTHRES_MU = LoKi.ProtoParticles.RichAboveThres ( 1 ) ## cpp.Rich.Muon     ) 
+## @see LoKi::Cuts::PP_RICHTHRES_PI
+PP_RICHTHRES_PI = LoKi.ProtoParticles.RichAboveThres ( 2 ) ## cpp.Rich.Pion     ) 
+## @see LoKi::Cuts::PP_RICHTHRES_K
+PP_RICHTHRES_K  = LoKi.ProtoParticles.RichAboveThres ( 3 ) ## cpp.Rich.Kaon     ) 
+## @see LoKi::Cuts::PP_RICHTHRES_P
+PP_RICHTHRES_P  = LoKi.ProtoParticles.RichAboveThres ( 4 ) ## cpp.Rich.Proton   ) 
 
 # =============================================================================
 # vector-functions & streamers 
