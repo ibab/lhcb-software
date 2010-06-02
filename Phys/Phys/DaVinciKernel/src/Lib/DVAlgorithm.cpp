@@ -1,4 +1,4 @@
-// $Id: DVAlgorithm.cpp,v 1.79 2010-06-01 09:36:10 pkoppenb Exp $
+// $Id: DVAlgorithm.cpp,v 1.80 2010-06-02 11:22:21 jpalac Exp $
 // ============================================================================
 // Include 
 // ============================================================================
@@ -31,9 +31,6 @@ DVAlgorithm::DVAlgorithm
   // 
     , m_vertexFitNames        () 
     , m_vertexFits            () 
-  //
-    , m_geomToolNames         () 
-    , m_geomTools             () 
   //
     , m_filterNames           () 
     , m_filters               () 
@@ -107,10 +104,6 @@ DVAlgorithm::DVAlgorithm
   m_vertexFitNames [ "Kalman"        ] = "LoKi::VertexFitter"  ;
   m_vertexFitNames [ "ParticleAdder" ] = "ParticleAdder"       ;
   declareProperty ( "VertexFitters"     , m_vertexFitNames, "Names of vertex fitters" ) ;
-  //
-  m_geomToolNames  [ "" ] = "GeomDispCalculator" ;
-  m_geomToolNames  [ "Offline" ] = "GeomDispCalculator" ;
-  declareProperty ( "GeomTools"         , m_geomToolNames, "Names of geomery tools" ) ;
   //
   declareProperty ( "CheckOverlapTool"  , m_checkOverlapName, "Name of Overlap Tool"  ) ;
   //
