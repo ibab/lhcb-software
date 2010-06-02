@@ -157,7 +157,7 @@ class Project(object):
                                 self._baselist.add(self.__class__(m.group(1)))
             for line in p.stderr:
                 log.debug(line[:-1])
-            retcode = os.waitpid(p.pid, 0)[1]
+            os.waitpid(p.pid, 0)[1]
         return self._baselist
     
     def overrideBaseProject(self, other, cmtpath=None, cmtprojectpath=None):

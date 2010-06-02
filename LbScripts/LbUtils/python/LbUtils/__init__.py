@@ -19,12 +19,12 @@ import Storage
 import Script
 try :
     import SelfExtract
-except :
+except ImportError:
     pass
 import Temporary
 try:
     import Tar
-except :
+except ImportError:
     pass
 
 ## Write the generic Makefile for CMT projects.

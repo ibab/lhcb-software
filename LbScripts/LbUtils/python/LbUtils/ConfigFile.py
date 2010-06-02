@@ -1,15 +1,14 @@
 # $Id: ConfigFile.py,v 1.3 2009-11-11 10:11:00 hmdegaud Exp $
-from optparse import OptionValueError
 from ConfigParser import SafeConfigParser
 
 import os
 
-def _configFileCb(option, opt_str, value, parser):
+def cb_configFile(option, opt_str, value, parser):
     setattr(parser.values, option.dest, value)
     setattr(parser.values, "config_dir", None)
     setattr(parser.values, "config_name", None)
 
-def _configDirCb(option, opt_str, value, parser):
+def cb_configDir(option, opt_str, value, parser):
     if not parser.values.config_dir is None:
         parser.values.config_dir = []
     if opt_str == "--config-dir" :
@@ -23,11 +22,11 @@ def _configDirCb(option, opt_str, value, parser):
     parser.values.config_dir.append(value)
     parser.values.config_file = None
 
-def _configNameCb(option, opt_str, value, parser):
+def cb_configName(option, opt_str, value, parser):
     parser.values.config_name = value
     parser.values.config_file = None
     
-def _configExtCb(option, opt_str, value, parser):
+def cb_configExt(option, opt_str, value, parser):
     parser.values.config_name = value
     parser.values.config_file = None
 
@@ -46,37 +45,37 @@ def addConfigFileOptions(parser, config_file, config_dir,
     setConfigFileDefaultValues(parser, config_file, config_dir, config_name, config_ext)
     grp.add_option("--config-file",
                    action="callback",
-                   callback=_configFileCb,
+                   callback=cb_configFile,
                    nargs=1,
                    dest="config_file",
                    help="Path to the config file [default %default]")
     grp.add_option("--config-dir",
                    action="callback",
-                   callback=_configDirCb,
+                   callback=cb_configDir,
                    nargs=1,
                    dest="config_dir",
                    help="Set configuration directory [default %default]")
     grp.add_option("--config-dir-prepend",
                    action="callback",
-                   callback=_configDirCb,
+                   callback=cb_configDir,
                    nargs=1,
                    dest="config_dir",
                    help="Append configuration directory")
     grp.add_option("--config-dir-append",
                    action="callback",
-                   callback=_configDirCb,
+                   callback=cb_configDir,
                    nargs=1,
                    dest="config_dir",
                    help="Set configuration directory")
     grp.add_option("--config-name",
                    action="callback",
-                   callback=_configNameCb,
+                   callback=cb_configName,
                    nargs=1,
                    dest="config_name",
                    help="Name for the configuration file [default %default]")
     grp.add_option("--config-ext",
                    action="callback",
-                   callback=_configExtCb,
+                   callback=cb_configExt,
                    nargs=1,
                    dest="config_ext",
                    help="Name for the configuration file extension [default %default]")

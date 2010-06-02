@@ -167,8 +167,8 @@ def fixVisitor(data, dirnm, filesindir):
             fixLink(data, filename)
     
 def fixLinks(treebase, show=False, absolute=False, dryrun=False ):
-    log = logging.getLogger()
     """ recursively displays the links of a tree """
+    log = logging.getLogger()
     data = dict()
     data["treebase"] = treebase
     visitor = fixVisitor
