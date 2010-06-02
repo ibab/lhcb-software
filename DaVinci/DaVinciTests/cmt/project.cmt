@@ -1,6 +1,0 @@
-project DaVinci_v25r5
-
-use DAVINCI DAVINCI_v25r5 
-
-build_strategy with_installarea
-structure_strategy without_version_directory
