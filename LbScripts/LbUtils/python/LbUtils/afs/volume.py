@@ -36,19 +36,23 @@ class Volume(object):
             if not loose :
                 self.addMountPoint(d.name())
             else :
+                # loose method: use any mountpoint that contains the directory
                 if d.isMountPoint() :
                     self.addMountPoint(d.name())
                 else :
                     m = Directory(d.getParentMountPoint())
                     self.addMountPoint(m.name())
             if name :
+                # checks if the provided volume name is consitent with the one the mount point
                 if m.getVolumeName() == name :
                     self._name = name
                 else :
                     raise IsNotaMountPointOfVolume, "%s is not a mount point of %s" % (m.name(), name) 
             else :
+                # deduce the volume name from the mountpoint
                 self._name = m.getVolumeName()
         else :
+            # if no directory has been provided only use the name
             if name :
                 self._name = name
             else :
@@ -74,12 +78,13 @@ class Volume(object):
     def usedSpace(self, display_size=None):
         log = logging.getLogger()
         used_size = 0
-        exp = re.compile("%s\s+\d+\s+(\d+)\s+" % self._name)
+        exp = re.compile("%s\s+\d+\s+(\d+)\s+" % self._name.replace(".","\."))
         p = Popen(["fs", "listquota", self._mtpoints[0].name()], stdout=PIPE, stderr=PIPE)
         for line in p.stdout.xreadlines() :
             m = exp.match(line[:-1])
             if m :
                 used_size = m.group(1)
+                break
         for line in p.stderr.xreadlines() :
             log.error(line[:-1])
         if p.wait() != 0:
@@ -91,12 +96,13 @@ class Volume(object):
     def quota(self, display_size=None):
         log = logging.getLogger()
         quota_size = 0
-        exp = re.compile("%s\s+(\d+)\s+\d+\s+" % self._name)
+        exp = re.compile("%s\s+(\d+)\s+\d+\s+" % self._name.replace(".","\."))
         p = Popen(["fs", "listquota", self._mtpoints[0].name()], stdout=PIPE, stderr=PIPE)
         for line in p.stdout.xreadlines() :
             m = exp.match(line[:-1])
             if m :
                 quota_size = m.group(1)
+                break
         for line in p.stderr.xreadlines() :
             log.error(line[:-1])
         if p.wait() != 0:
@@ -116,7 +122,9 @@ class Volume(object):
             raise IOError, "Could not set quota of volume %s" % self._name
     def adjustQuota(self):
         actual_size = self.usedSpace()
-        self.setQuota(actual_size)
+        quota_size = self.quota()
+        if actual_size != quota_size :
+            self.setQuota(actual_size)
     def mountPoints(self):
         return self._mtpoints
     def addMountPoint(self, dirname):

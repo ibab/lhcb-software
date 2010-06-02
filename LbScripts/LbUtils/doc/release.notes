@@ -1,3 +1,9 @@
+2010-06-02  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbUtils/afs/volume.py: 
+	- inserted speed up for quota adjustment.
+	- fixed the matching of the volume names that contain ".". Now this is escaped.
+
 2010-06-01  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/requirements: release of version v2r2
