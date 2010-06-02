@@ -27,6 +27,8 @@ class Physics_25Vis_25L0_2Hlt1_ExpressHlt2_Jun10              ( Physics_MinBiasL
         thresholds[Hlt1MBLinesConf].update( { 'Postscale': { 'Hlt1MBMicroBias.*(?<!RateLimited)$' : 0.001        # must veto 'RateLimited' at the end...
                                                            , 'Hlt1MBMicroBias.*RateLimited$'      : 'RATE(500)'  # must have 'RateLimited' at the end... # clone with a RATE(50)
                                                            }
+                                            , 'Prescale' : { 'Hlt1MBMicroBias.*'                  : 0.1          # assume 10 kHz of ODIN lumi 
+                                                           }
                                             } 
                                           )
         from Hlt1Lines.Hlt1L0Lines             import Hlt1L0LinesConf

@@ -5,12 +5,17 @@
 !-----------------------------------------------------------------------------
 
 !========================== HltSettings v2r0p1 2010-05-31 ===================
+! 2010-06-02 - Gerhard Raven
+ - Lower photon ET cut to 2400 MeV
+ - prescale micro bias with 0.1 in the Jun10 configurations
+
 ! 2010-05-31 - Kim Vervink
  - Add rate limiters to the monitoring and sidebands lines of the Inclusive Phi trigger in the Phi_Reduction5.py settings.
 
-
 ! 2010-05-31 - Gerhard Raven
  - rename Physics_25Vis_25L0_2Hlt1_2Hlt2_Jun10 into Physics_25Vis_25L0_2Hlt1_FullHlt2_Jun10
+ - remove unused and superseeded Physics_25Vis_25L0_2Hlt1_2Hlt2_May10
+ 
 
 !========================== HltSettings v2r0  2010-05-28 ===================
 ! 2010-05-28 - V. Gligorov + Gerhard Raven

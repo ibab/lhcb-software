@@ -28,7 +28,7 @@ class Commissioning_OTCosmics :
 
 
     def L0TCK(self) :
-        return '0x1409'#None
+        return None
 
     def ActiveHlt2Lines(self) :
         """
