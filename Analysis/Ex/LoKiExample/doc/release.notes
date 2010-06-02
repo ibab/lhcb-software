@@ -1,11 +1,17 @@
-! $Id: release.notes,v 1.59 2010-05-24 20:23:40 jpalac Exp $ 
+! $Id: release.notes,v 1.60 2010-06-02 11:13:27 jpalac Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.59 $
+! CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.60 $
 ! -----------------------------------------------------------------------------
 ! Package     :  LoKiExamples
 ! Responsible :  Vanya BELYAEV  ibelyaev@physics.syr.edu
 ! Purpose     :  Collection of examples for LoKi package 
 ! -----------------------------------------------------------------------------
+
+! 2010-06-02 - Juan Palacios
+ - src/LoKi_Hybrid.cpp
+  . Use IParticleFilter instead of IFilterCriterion.
+ - cmt/requirements
+  . Increase to v8r6.
 
 !========================== LoKiExample v8r5p2 2010-05-24 =================
 
