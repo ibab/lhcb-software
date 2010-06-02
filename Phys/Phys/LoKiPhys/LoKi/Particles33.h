@@ -1,4 +1,4 @@
-// $Id: Particles33.h,v 1.3 2010-05-31 20:36:13 ibelyaev Exp $
+// $Id: Particles33.h,v 1.4 2010-06-02 15:52:39 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PARTICLES33_H 
 #define LOKI_PARTICLES33_H 1
@@ -32,6 +32,25 @@ namespace LoKi
      *  @see IP2VVAngleCalculator
      *  @see IP2VVPartAngleCalculator
      *  @see LoKi::Cuts::COSPOL
+     *
+     *  The decay angle calculated  is that between 
+     *  the flight direction of the daughter neson, "D",
+     *  in the rest frame of "Q" (the parent of "D"), 
+     *  with respect to "Q"'s flight direction in "P"'s
+     *  (the parent of "Q") rest frame
+     * 
+     *  \f[ 
+     *  \cos \theta = \frac
+     *  { \left(P \cdot D\right)Q^2 - 
+     *    \left(P \cdot Q\right)\left(D \cdot Q \right) }
+     *  {\sqrt{ \left[ \left( P \cdot Q \right)^2 - Q^2 P^2 \right] 
+     *          \left[ \left( D \cdot Q \right)^2 - Q^2 D^2 \right] } } 
+     *  \f] 
+     *  
+     *  Note that the expression has the symmetry: \f$ P \leftrightarrow D \f$ 
+     *  
+     *  Essentially it is a rewritten <c>EvtDecayAngle(P,Q,D)</c> 
+     *  routine from EvtGen package
      *
      * 
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
@@ -117,6 +136,43 @@ namespace LoKi
      *  @see IP2VVAngleCalculator
      *  @see IP2VVPartAngleCalculator
      *  @see LoKi::Cuts::SINCHI
+     *
+     *  The angle is  calculated using the explicit 
+     *   Lorentz-invariant expression:
+     *  \f[ 
+     *   \sin \chi = 
+     *   \frac  { 
+     *   \epsilon_{\mu\nu\lambda\delta}
+     *   L_D^{\mu}L_H^{\nu}H^{\lambda}M^{\delta} }
+     *   { \sqrt{ 
+	   *   \left[ -L_D^2 \right]\left[ -L_H^2 \right] 
+     *   \left[ \left( H\ cdot M\right)^2-H^2M^2 \right] 
+     *   }} = \frac { 
+     *   \epsilon_{\mu\nu\lambda\delta}
+     *   d_1^{\mu}d_2^{\nu}h_1^{\lambda}h_2^{\delta}
+     *   \left( \left( D \cdot H \right)^2 - D^2H^2 \right) }
+     *   { \sqrt{ 
+	   *   \left[ -L_D^2 \right]\left[ -L_H^2    \right] 
+     *   \left[ \left(H\cdot M\right)^2-H^2M^2 \right] 
+	   *   }},
+     *  \f] 
+     *  where "4-normales" are defined as:
+     *  \f$
+     *  L_D^{\mu} = \epsilon_{\mu\nu\lambda\kappa}
+     *                d_1^{\nu}d_2^{\lambda}\left(h_1+h_2\right)^{\kappa} 
+     *  \f$, 
+     *  \f$ 
+     *  L_H^{\mu} = \epsilon_{\mu\lambda\delta\rho}
+     *  h_1^{\lambda}h_2^{\delta}\left(d_1+d_2\right)^{\rho} 
+     *  \f$
+     *  and   \f$ D = d_1 + d_2 \f$, 
+     *        \f$ H = h_1 + h_2 \f$, 
+     *        \f$ M = D + H = d_1 + d_2 + h_1+h_2 \f$. 
+     *
+     *  The sign for <c>sin</c> is set according to 
+     *  Thomas Blake's code from
+     *  P2VVAngleCalculator tool
+     *  @see P2VVAngleCalculator 
      *
      *  @attention It is very important to know the structure 
      *             of the decay for proper use of this functor
@@ -204,6 +260,31 @@ namespace LoKi
      *  @see IP2VVAngleCalculator
      *  @see IP2VVPartAngleCalculator
      *  @see LoKi::Cuts::SINCHI
+     *
+     *  The angle is evaluated using the explicit 
+     *  Lorenzt-invariant expression:
+     *  \f[
+     *  \cos \chi =      
+     *   - \frac{ L_D^{\mu} L_H^{\mu} }
+     *     { \sqrt{ \left[ -L_D^2 \right]\left[ -L_H^2 \right] }},
+     &   =
+     *   - \frac{ 
+	   *     \epsilon_{ijkl}d_1^{j}d_2^{k}\left(h_1+h_2\right)^l
+     *     \epsilon_{imnp}h_1^{m}h_2^{n}\left(d_1+d_2\right)^p }
+     *     { \sqrt{ \left[ -L_D^2 \right]\left[ -L_H^2 \right] }},
+     *  \f] 
+     *  where "4-normales" are defined as:
+     *  \f$ 
+     *   L_D^{\mu} = \epsilon_{\mu\nu\lambda\kappa}
+     *                d_1^{\nu}d_2^{\lambda}\left(h_1+h_2\right)^{\kappa} 
+     *  \f$ 
+     *   and 
+     *  \f$ 
+     *   L_H^{\mu} = \epsilon_{\mu\lambda\delta\rho}
+     *                h_1^{\lambda}h_2^{\delta}\left(d_1+d_2\right)^{\rho} 
+     *   \f$.
+     *
+     *
      *
      *  @attention It is very important to know the structure 
      *             of the decay for proper use of this functor
@@ -317,6 +398,303 @@ namespace LoKi
       // ======================================================================
       /// the default constructor is disabled 
       AngleChi () ;                      // the default constructor is disabled 
+      // ======================================================================
+    } ;
+    // ========================================================================
+    /** @class CosThetaTr
+     *
+     *  Simple functor that evaluates the cosine of 
+     *  transversity angle \f$\cos \theta_{\mathrm{tr}} \f$
+     *
+     *  @see LoKi::Kinematics::cosThetaTr
+     *  @see IP2VVAngleCalculator
+     *  @see IP2VVPartAngleCalculator
+     *  @see LoKi::Cuts::COSTHETATR
+     *
+     *  The evaluation is performed using the explicit Lorentz-invariant 
+     *  expression:
+     *  \f[
+     *   \cos \theta_{\mathrm{tr}} = 
+     *    \frac{ \epsilon_{\mu\nu\lambda\kappa}
+     *          d_1^{\mu}h_1^{\nu}h_2^{\lambda}L_H^{\kappa} }
+     *    {
+     *     \sqrt{  \left( d_1 \cdot D  \right) / D^2 - d_1^2 } 
+     *     \sqrt{  - L_H^2 }      
+     *    },     
+     *  \f]
+     * where 4-normal \f$ L_H^{\mu}\f$ is defined as  
+     *  \f$ 
+     *  L_H^{\mu} = \epsilon_{\mu\lambda\delta\rho}
+     *  h_1^{\lambda}h_2^{\delta}\left(d_1+d_2\right)^{\rho} 
+     *  \f$, and \f$ D = d_1 + d_2 \f$. 
+     *
+     *  @attention It is very important to know the structure 
+     *             of the decay for proper use of this functor
+     * 
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2010-06-02
+     */
+    class CosThetaTr : public AngleChi
+    {    
+    public:
+      // ======================================================================
+      /// constructor from child-selector 
+      CosThetaTr ( const LoKi::Child::Selector& particle1 ,  
+                   const LoKi::Child::Selector& particle2 , 
+                   const LoKi::Child::Selector& particle3 , 
+                   const LoKi::Child::Selector& particle4 ) ;
+      /// constructor from the trees 
+      CosThetaTr ( const Decays::IDecay::iTree& particle1 ,  
+                   const Decays::IDecay::iTree& particle2 , 
+                   const Decays::IDecay::iTree& particle3 , 
+                   const Decays::IDecay::iTree& particle4 ) ;
+      /// constructor from the nodes 
+      CosThetaTr ( const Decays::iNode& particle1 ,  
+                   const Decays::iNode& particle2 , 
+                   const Decays::iNode& particle3 , 
+                   const Decays::iNode& particle4 ) ;
+      /// constructor from the cuts 
+      CosThetaTr ( const LoKi::PhysTypes::Cuts& particle1 , 
+                   const LoKi::PhysTypes::Cuts& particle2 , 
+                   const LoKi::PhysTypes::Cuts& particle3 , 
+                   const LoKi::PhysTypes::Cuts& particle4 ) ;
+      /// constructor from the decay descriptors
+      CosThetaTr ( const std::string& particle1 ,  
+                   const std::string& particle2 , 
+                   const std::string& particle3 , 
+                   const std::string& particle4 , 
+                   const std::string& factory      = "LoKi::Decay" ) ;
+      /// MANDATORY: virtual destructor
+      virtual ~CosThetaTr() ;
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  CosThetaTr* clone() const ;
+      /// MANDATORY: the only one essential method
+      virtual result_type operator() ( argument p ) const ;
+      /// OPTIONAL: the nice printout 
+      virtual std::ostream& fillStream ( std::ostream& s ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the default constructor is disabled 
+      CosThetaTr () ;                    // the default constructor is disabled 
+      // ======================================================================
+    } ;
+    // ========================================================================
+    /** @class SinPhiTr
+     *
+     *  Simple functor that evaluates the sine of 
+     *  transversity angle phi \f$\sin \phi_{\mathrm{tr}} \f$
+     *
+     *  @see LoKi::Kinematics::sinPhiTr
+     *  @see IP2VVAngleCalculator
+     *  @see IP2VVPartAngleCalculator
+     *  @see LoKi::Cuts::SINPHITR
+     *
+     *  The evaluation is performed using the explicit Lorentz-invariant 
+     *  expression:
+     *  \f[
+     *   \sin \phi_{\mathrm{tr}} = 
+     *    - frac { 
+     *      \epsilon_{\mu\nu\lambda\kappa}
+     *       d_1^{\mu}L_H^{\mu}D^{\lambda}H^{\kappa}
+     *     }{
+     *     \sqrt{ -L^2 }
+     *     \sqrt{  D^2 }
+     *     \sqrt{ \left( q \cdot D  \right) / D^2 - q^2 } 
+     *     \sqrt{ \left( M \cdot D  \right) / D^2 - M^2 } 
+     *     }
+     *  \f] 
+     * where 4-normal \f$ L_H^{\mu}\f$ is defined as  
+     *  \f$ 
+     *  L_H^{\mu} = \epsilon_{\mu\lambda\delta\rho}
+     *  h_1^{\lambda}h_2^{\delta}\left(d_1+d_2\right)^{\rho} 
+     *  \f$,
+     * \f$ D = d_1 + d_2 \f$,  
+     * \f$ H = h_1 + h_2 \f$,  
+     * \f$ M = D+ H \f$ and ``in-plane'' 4-vector \f$q\f$ is defined as 
+     *  \f$  q = d_1 - \frac{ d_1 \cdot L_H}{L_H^2}L_H \f$.
+     *
+     *
+     *
+     *  @attention It is very important to know the structure 
+     *             of the decay for proper use of this functor
+     * 
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2010-06-02
+     */
+    class SinPhiTr : public CosThetaTr
+    {    
+    public:
+      // ======================================================================
+      /// constructor from child-selector 
+      SinPhiTr ( const LoKi::Child::Selector& particle1 ,  
+                 const LoKi::Child::Selector& particle2 , 
+                 const LoKi::Child::Selector& particle3 , 
+                 const LoKi::Child::Selector& particle4 ) ;
+      /// constructor from the trees 
+      SinPhiTr ( const Decays::IDecay::iTree& particle1 ,  
+                 const Decays::IDecay::iTree& particle2 , 
+                 const Decays::IDecay::iTree& particle3 , 
+                 const Decays::IDecay::iTree& particle4 ) ;
+      /// constructor from the nodes 
+      SinPhiTr ( const Decays::iNode& particle1 ,  
+                 const Decays::iNode& particle2 , 
+                 const Decays::iNode& particle3 , 
+                 const Decays::iNode& particle4 ) ;
+      /// constructor from the cuts 
+      SinPhiTr ( const LoKi::PhysTypes::Cuts& particle1 , 
+                 const LoKi::PhysTypes::Cuts& particle2 , 
+                 const LoKi::PhysTypes::Cuts& particle3 , 
+                 const LoKi::PhysTypes::Cuts& particle4 ) ;
+      /// constructor from the decay descriptors
+      SinPhiTr ( const std::string& particle1 ,  
+                 const std::string& particle2 , 
+                 const std::string& particle3 , 
+                 const std::string& particle4 , 
+                 const std::string& factory      = "LoKi::Decay" ) ;
+      /// MANDATORY: virtual destructor
+      virtual ~SinPhiTr() ;
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  SinPhiTr* clone() const ;
+      /// MANDATORY: the only one essential method
+      virtual result_type operator() ( argument p ) const ;
+      /// OPTIONAL: the nice printout 
+      virtual std::ostream& fillStream ( std::ostream& s ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the default constructor is disabled 
+      SinPhiTr () ;                    // the default constructor is disabled 
+      // ======================================================================
+    } ;
+    // ========================================================================
+    /** @class CosPhiTr
+     *
+     *  Simple functor that evaluates the cosine of 
+     *  transversity angle phi \f$\cos \phi_{\mathrm{tr}} \f$
+     *
+     *  @see LoKi::Kinematics::cosPhiTr
+     *  @see IP2VVAngleCalculator
+     *  @see IP2VVPartAngleCalculator
+     *  @see LoKi::Cuts::COSPHITR
+     *
+     *  The evaluation is performed using the explicit Lorentz-invariant 
+     *  expressions
+     *
+     *  @attention It is very important to know the structure 
+     *             of the decay for proper use of this functor
+     * 
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2010-06-02
+     */
+    class CosPhiTr : public SinPhiTr
+    {    
+    public:
+      // ======================================================================
+      /// constructor from child-selector 
+      CosPhiTr ( const LoKi::Child::Selector& particle1 ,  
+                 const LoKi::Child::Selector& particle2 , 
+                 const LoKi::Child::Selector& particle3 , 
+                 const LoKi::Child::Selector& particle4 ) ;
+      /// constructor from the trees 
+      CosPhiTr ( const Decays::IDecay::iTree& particle1 ,  
+                 const Decays::IDecay::iTree& particle2 , 
+                 const Decays::IDecay::iTree& particle3 , 
+                 const Decays::IDecay::iTree& particle4 ) ;
+      /// constructor from the nodes 
+      CosPhiTr ( const Decays::iNode& particle1 ,  
+                 const Decays::iNode& particle2 , 
+                 const Decays::iNode& particle3 , 
+                 const Decays::iNode& particle4 ) ;
+      /// constructor from the cuts 
+      CosPhiTr ( const LoKi::PhysTypes::Cuts& particle1 , 
+                 const LoKi::PhysTypes::Cuts& particle2 , 
+                 const LoKi::PhysTypes::Cuts& particle3 , 
+                 const LoKi::PhysTypes::Cuts& particle4 ) ;
+      /// constructor from the decay descriptors
+      CosPhiTr ( const std::string& particle1 ,  
+                 const std::string& particle2 , 
+                 const std::string& particle3 , 
+                 const std::string& particle4 , 
+                 const std::string& factory      = "LoKi::Decay" ) ;
+      /// MANDATORY: virtual destructor
+      virtual ~CosPhiTr() ;
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  CosPhiTr* clone() const ;
+      /// MANDATORY: the only one essential method
+      virtual result_type operator() ( argument p ) const ;
+      /// OPTIONAL: the nice printout 
+      virtual std::ostream& fillStream ( std::ostream& s ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the default constructor is disabled 
+      CosPhiTr () ;                      // the default constructor is disabled 
+      // ======================================================================
+    } ;
+    // ========================================================================
+    /** @class AnglePhiTr
+     *
+     *  Simple functor that evaluates the 
+     *  transversity angle phi \f$\phi_{\mathrm{tr}} \f$
+     *
+     *  @see LoKi::Kinematics::anglePhiTr
+     *  @see IP2VVAngleCalculator
+     *  @see IP2VVPartAngleCalculator
+     *  @see LoKi::Cuts::ANGLEPHITR
+     *
+     *  The evaluation is performed using the explicit Lorentz-invariant 
+     *  expressions
+     *
+     *  @attention It is very important to know the structure 
+     *             of the decay for proper use of this functor
+     * 
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2010-06-02
+     */
+    class AnglePhiTr : public CosPhiTr
+    {    
+    public:
+      // ======================================================================
+      /// constructor from child-selector 
+      AnglePhiTr ( const LoKi::Child::Selector& particle1 ,  
+                   const LoKi::Child::Selector& particle2 , 
+                   const LoKi::Child::Selector& particle3 , 
+                   const LoKi::Child::Selector& particle4 ) ;
+      /// constructor from the trees 
+      AnglePhiTr ( const Decays::IDecay::iTree& particle1 ,  
+                   const Decays::IDecay::iTree& particle2 , 
+                   const Decays::IDecay::iTree& particle3 , 
+                   const Decays::IDecay::iTree& particle4 ) ;
+      /// constructor from the nodes 
+      AnglePhiTr ( const Decays::iNode& particle1 ,  
+                   const Decays::iNode& particle2 , 
+                   const Decays::iNode& particle3 , 
+                   const Decays::iNode& particle4 ) ;
+      /// constructor from the cuts 
+      AnglePhiTr ( const LoKi::PhysTypes::Cuts& particle1 , 
+                   const LoKi::PhysTypes::Cuts& particle2 , 
+                   const LoKi::PhysTypes::Cuts& particle3 , 
+                   const LoKi::PhysTypes::Cuts& particle4 ) ;
+      /// constructor from the decay descriptors
+      AnglePhiTr ( const std::string& particle1 ,  
+                   const std::string& particle2 , 
+                   const std::string& particle3 , 
+                   const std::string& particle4 , 
+                   const std::string& factory      = "LoKi::Decay" ) ;
+      /// MANDATORY: virtual destructor
+      virtual ~AnglePhiTr() ;
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  AnglePhiTr* clone() const ;
+      /// MANDATORY: the only one essential method
+      virtual result_type operator() ( argument p ) const ;
+      /// OPTIONAL: the nice printout 
+      virtual std::ostream& fillStream ( std::ostream& s ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the default constructor is disabled 
+      AnglePhiTr () ;                    // the default constructor is disabled 
       // ======================================================================
     } ;
     // ========================================================================
@@ -439,6 +817,152 @@ namespace LoKi
      *  @date 2010-02-21
      */
     typedef LoKi::Particles::AngleChi                                ANGLECHI ;
+    // ========================================================================
+    /** @typedef COSTHETATR 
+     *  Simple evaluator of \f$ \cos \theta_{\mathrm{tr}}\f$
+     *
+     *   @code
+     * 
+     *   const COSTHETATR cosThetaTr = COSTHETATR ( 
+     *             "Xb -> ( J/psi(1S) -> ^mu+  mu- ) ( phi(1020) ->  K+  K- ) " , 
+     *             "Xb -> ( J/psi(1S) ->  mu+ ^mu- ) ( phi(1020) ->  K+  K- ) " , 
+     *             "Xb -> ( J/psi(1S) ->  mu+  mu- ) ( phi(1020) -> ^K+  K- ) " , 
+     *             "Xb -> ( J/psi(1S) ->  mu+  mu- ) ( phi(1020) ->  K+ ^K- ) " ) ;
+     *   
+     *   const LHCb::Particle* mcp = ... ;
+     *  
+     *   const double value = cosThetaTr ( mcp ) ;
+     *
+     *   @endcode 
+     *
+     *  The evaluation is performed using the explicit Lorentz-invariant 
+     *  expression:
+     *  \f[
+     *   \cos \theta_{\mathrm{tr}} = 
+     *    \frac{ \epsilon_{\mu\nu\lambda\kappa}
+     *          d_1^{\mu}h_1^{\nu}h_2^{\lambda}L_H^{\kappa} }
+     *    {
+     *     \sqrt{  \left( d_1 \cdot D  \right) / D^2 - d_1^2 } 
+     *     \sqrt{  - L_H^2 }      
+     *    },     
+     *  \f]
+     * where 4-normal \f$ L_H^{\mu}\f$ is defined as  
+     *  \f$ 
+     *  L_H^{\mu} = \epsilon_{\mu\lambda\delta\rho}
+     *  h_1^{\lambda}h_2^{\delta}\left(d_1+d_2\right)^{\rho} 
+     *  \f$, and \f$ D = d_1 + d_2 \f$. 
+     *
+     *  @see LoKi::Particles::CosThetaTr
+     *  @see LoKi::Kinematics::cosThetaTr 
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2010-06-02
+     */
+    typedef LoKi::Particles::CosThetaTr                            COSTHETATR ;
+    // ========================================================================
+    /** @typedef SINPHITR 
+     *  Simple evaluator of \f$ \sin \phi_{\mathrm{tr}}\f$
+     *
+     *   @code
+     * 
+     *   const SINPHITR sinPhiTr = SINPHITR ( 
+     *             "Xb -> ( J/psi(1S) -> ^mu+  mu- ) ( phi(1020) ->  K+  K- ) " , 
+     *             "Xb -> ( J/psi(1S) ->  mu+ ^mu- ) ( phi(1020) ->  K+  K- ) " , 
+     *             "Xb -> ( J/psi(1S) ->  mu+  mu- ) ( phi(1020) -> ^K+  K- ) " , 
+     *             "Xb -> ( J/psi(1S) ->  mu+  mu- ) ( phi(1020) ->  K+ ^K- ) " ) ;
+     *   
+     *   const LHCb::Particle* mcp = ... ;
+     *  
+     *   const double value = sinPhiTr ( mcp ) ;
+     *
+     *   @endcode 
+     *
+     *  The evaluation is performed using the explicit Lorentz-invariant 
+     *  expression:
+     *  \f[
+     *   \sin \phi_{\mathrm{tr}} = 
+     *    - frac { 
+     *      \epsilon_{\mu\nu\lambda\kappa}
+     *       d_1^{\mu}L_H^{\mu}D^{\lambda}H^{\kappa}
+     *     }{
+     *     \sqrt{ -L^2 }
+     *     \sqrt{  D^2 }
+     *     \sqrt{ \left( q \cdot D  \right) / D^2 - q^2 } 
+     *     \sqrt{ \left( M \cdot D  \right) / D^2 - M^2 } 
+     *     }
+     *  \f] 
+     * where 4-normal \f$ L_H^{\mu}\f$ is defined as  
+     *  \f$ 
+     *  L_H^{\mu} = \epsilon_{\mu\lambda\delta\rho}
+     *  h_1^{\lambda}h_2^{\delta}\left(d_1+d_2\right)^{\rho} 
+     *  \f$,
+     * \f$ D = d_1 + d_2 \f$,  
+     * \f$ H = h_1 + h_2 \f$,  
+     * \f$ M = D+ H \f$ and ``in-plane'' 4-vector \f$q\f$ is defined as 
+     *  \f$  q = d_1 - \frac{ d_1 \cdot L_H}{L_H^2}L_H \f$.
+     *
+     *  @see LoKi::Particles::SinPhiTr
+     *  @see LoKi::Kinematics::sinPhiTr 
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2010-06-02
+     */
+    typedef LoKi::Particles::SinPhiTr                                SINPHITR ;
+    // ========================================================================
+    /** @typedef COSPHITR 
+     *  Simple evaluator of \f$ \cos \phi_{\mathrm{tr}}\f$
+     *
+     *   @code
+     * 
+     *   const COSPHITR cosPhiTr = COSPHITR ( 
+     *             "Xb -> ( J/psi(1S) -> ^mu+  mu- ) ( phi(1020) ->  K+  K- ) " , 
+     *             "Xb -> ( J/psi(1S) ->  mu+ ^mu- ) ( phi(1020) ->  K+  K- ) " , 
+     *             "Xb -> ( J/psi(1S) ->  mu+  mu- ) ( phi(1020) -> ^K+  K- ) " , 
+     *             "Xb -> ( J/psi(1S) ->  mu+  mu- ) ( phi(1020) ->  K+ ^K- ) " ) ;
+     *   
+     *   const LHCb::Particle* mcp = ... ;
+     *  
+     *   const double value = cosPhiTr ( mcp ) ;
+     *
+     *   @endcode 
+     *
+     *  The evaluation is performed using the explicit Lorentz-invariant 
+     *  expression as angle between the ``in-plane'' vector \f$q\f$, and 
+     *  vector \f$H\f$ in rest frame of \f$D\f$, where 
+     *  \f$  q = d_1 - \frac{ d_1 \cdot L_H}{L_H^2}L_H \f$, 
+     *  the ``4-normal'' is defiend as 
+     *  \f$  L_H^{\mu} = \epsilon_{\mu\lambda\delta\rho}
+     *  h_1^{\lambda}h_2^{\delta}\left(d_1+d_2\right)^{\rho} 
+     *  \f$, \f$ D = d_1 + d_2 \f$, \f$ H = h_1 + h_2 \f$.
+     *
+     *  @see LoKi::Particles::CosPhiTr
+     *  @see LoKi::Kinematics::cosPhiTr 
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2010-06-02
+     */
+    typedef LoKi::Particles::CosPhiTr                                COSPHITR ;
+    // ========================================================================
+    /** @typedef ANGLEPHITR 
+     *  Simple evaluator of \f$ \phi_{\mathrm{tr}}\f$
+     *
+     *   @code
+     * 
+     *   const ANGLEPHITR phiTr = ANGLEPHITR ( 
+     *             "Xb -> ( J/psi(1S) -> ^mu+  mu- ) ( phi(1020) ->  K+  K- ) " , 
+     *             "Xb -> ( J/psi(1S) ->  mu+ ^mu- ) ( phi(1020) ->  K+  K- ) " , 
+     *             "Xb -> ( J/psi(1S) ->  mu+  mu- ) ( phi(1020) -> ^K+  K- ) " , 
+     *             "Xb -> ( J/psi(1S) ->  mu+  mu- ) ( phi(1020) ->  K+ ^K- ) " ) ;
+     *   
+     *   const LHCb::Particle* mcp = ... ;
+     *  
+     *   const double value = phiTr ( mcp ) ;
+     *
+     *   @endcode 
+     *
+     *  @see LoKi::Particles::AnglePhiTr
+     *  @see LoKi::Kinematics::anglePhiTr 
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2010-06-02
+     */
+    typedef LoKi::Particles::AnglePhiTr                            ANGLEPHITR ;
     // ========================================================================
   } //                                              end of namespace LoKi::Cuts 
   // ==========================================================================

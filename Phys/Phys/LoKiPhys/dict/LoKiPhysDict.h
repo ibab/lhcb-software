@@ -1,4 +1,4 @@
-// $Id: LoKiPhysDict.h,v 1.26 2010-05-29 18:29:50 ibelyaev Exp $
+// $Id: LoKiPhysDict.h,v 1.27 2010-06-02 15:52:39 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_LOKIPHYSDICT_H 
 #define LOKI_LOKIPHYSDICT_H 1
@@ -43,6 +43,8 @@
 // ============================================================================
 #include "LoKi/Photons.h"
 #include "LoKi/ChildSelector.h"
+// ============================================================================
+#include "Kernel/DecayTree.h"
 // ============================================================================
 /** @file
  *  The dictionaries for the package Phys/LoKiPhys
@@ -101,6 +103,83 @@ namespace LoKi
   // ==========================================================================
   namespace Dicts
   {
+    // ========================================================================   
+    template <>
+    class FunCalls<LHCb::Particle> 
+    {
+    private:
+      // ======================================================================
+      typedef LHCb::Particle                             Type ;
+      typedef LoKi::BasicFunctors<const Type*>::Function Fun  ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      static Fun::result_type __call__ 
+      ( const Fun& fun  , const Type*            o ) { return fun ( o ) ; }
+      static Fun::result_type __call__ 
+      ( const Fun& fun  , const LHCb::DecayTree& o ) { return fun ( o ) ; }
+      static Fun::result_type __call__ 
+      ( const Fun& fun  , const SmartRef<Type>&  o ) { return fun ( o ) ; }
+      // ======================================================================
+    public:
+      // ======================================================================
+      // __rrshift__ 
+      static std::vector<Fun::result_type> __rrshift__ 
+      ( const Fun& fun  , const Type::ConstVector& o ) 
+      { return o >> fun  ; }
+      // __rrshift__ 
+      static Fun::result_type              __rrshift__ 
+      ( const Fun& fun  , const Type*            o ) { return fun ( o ) ; }
+      // __rrshift__ 
+      static Fun::result_type              __rrshift__ 
+      ( const Fun& fun  , const LHCb::DecayTree& o ) { return fun ( o ) ; }
+      // __rrshift__ 
+      static Fun::result_type              __rrshift__ 
+      ( const Fun& fun  , const SmartRef<Type>&  o ) { return fun ( o ) ; }
+      // ======================================================================
+    public:
+      // ======================================================================
+      // __rshift__
+      static LoKi::FunctorFromFunctor<const Type*,double> __rshift__            
+      ( const Fun&                          fun  , 
+        const LoKi::Functor<double,double>& o    ) { return fun >> o  ; }
+      // __rshift__
+      static LoKi::FunctorFromFunctor<const Type*,bool>   __rshift__            
+      ( const Fun&                          fun  , 
+        const LoKi::Functor<double,bool>&   o    ) { return fun >> o  ; }
+      // ======================================================================
+    } ;
+    // ========================================================================
+    template <>
+    class CutCalls<LHCb::Particle>
+    {
+    private:
+      // ======================================================================
+      typedef LHCb::Particle                              Type ;
+      typedef LoKi::BasicFunctors<const Type*>::Predicate Fun  ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      static Fun::result_type __call__ 
+      ( const Fun& fun  , const Type*                       o ) { return fun ( o ) ; }
+      static Fun::result_type __call__ 
+      ( const Fun& fun  , const LHCb::DecayTree&            o ) { return fun ( o ) ; }
+      static Fun::result_type __call__ 
+      ( const Fun& fun  , const SmartRef<Type>&             o ) { return fun ( o ) ; }
+      // ======================================================================
+      static Type::ConstVector __rrshift__ 
+      ( const Fun& fun  , const Type::ConstVector& o ) { return o >> fun  ; }
+      static Fun::result_type  __rrshift__ 
+      ( const Fun& fun  , const Type*                       o ) { return fun ( o ) ; }
+      static Fun::result_type  __rrshift__ 
+      ( const Fun& fun  , const LHCb::DecayTree&            o ) { return fun ( o ) ; }
+      static Fun::result_type  __rrshift__ 
+      ( const Fun& fun  , const SmartRef<Type>&             o ) { return fun ( o ) ; }
+      // ======================================================================
+      static LoKi::FunctorFromFunctor<const Type*,bool> __rshift__            
+      ( const Fun& fun  , const Fun&                        o ) { return fun >> o  ; }
+      // ======================================================================
+    } ;
     // ========================================================================
     template <>
     class FunCalls<LHCb::VertexBase> 

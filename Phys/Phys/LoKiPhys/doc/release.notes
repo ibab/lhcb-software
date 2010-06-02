@@ -1,9 +1,16 @@
-! $Id: release.notes,v 1.147 2010-06-02 08:07:42 jpalac Exp $ 
+! $Id: release.notes,v 1.148 2010-06-02 15:52:40 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhys
 ! Responsible : Vanya Belyaev
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
+
+! 2010-06-02 - Vanya Belyaev
+ -  add new symbols for calculaitons 
+   cos(theta_tr)
+   sin(phi_tr) 
+   cos(phi_tr)
+   phi_tr 
 
 ! 2010-06-02 - Juan Palacios
  - Particles15, LoKiPhys, Particles

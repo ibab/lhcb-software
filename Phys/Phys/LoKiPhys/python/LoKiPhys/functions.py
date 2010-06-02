@@ -682,13 +682,21 @@ PCHARM  = DECNODE ( PartProp.Nodes.Charm  , True )
 # P->VV angles 
 # =============================================================================
 ## @see LoKi::Cuts::COSPOL
-COSPOL   = LoKi.Particles.PolarizationAngle
+COSPOL     = LoKi.Particles.PolarizationAngle
 ## @see LoKi::Cuts::SINCHI
-SINCHI   = LoKi.Particles.SinChi
+SINCHI     = LoKi.Particles.SinChi
 ## @see LoKi::Cuts::COSCHI
-COSCHI   = LoKi.Particles.CosChi
+COSCHI     = LoKi.Particles.CosChi
 ## @see LoKi::Cuts::ANGLECHI
-ANGLECHI = LoKi.Particles.AngleChi
+ANGLECHI   = LoKi.Particles.AngleChi
+## @see LoKi::Cuts::COSTHETATR
+COSTHETATR = LoKi.Particles.CosThetaTr
+## @see LoKi::Cuts::SINPHITR
+SINPHITR   = LoKi.Particles.SinPhiTr 
+## @see LoKi::Cuts::COSPHITR
+COSPHITR   = LoKi.Particles.CosPhiTr 
+## @see LoKi::Cuts::ANGLEPHITR
+ANGLEPHITR = LoKi.Particles.AnglePhiTr 
 
 
 # vertex separation (for particles) with respect to *all* vertices
