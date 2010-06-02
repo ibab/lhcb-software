@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-06-02 - Anton Poluektov 
+  - Removed puthon/ 
+
 ! 2010-06-02 - Anton Poluektov
 
   - Default.py and tests/ modified to conform the current state of StrippingConf. 
