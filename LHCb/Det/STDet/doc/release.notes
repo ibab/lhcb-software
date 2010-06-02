@@ -3,6 +3,9 @@
 !Package manager : M. Needham
 !-------------------------------------------------------------------------
 
+! 2010-06-02 M Needham
+ - Add measuredEff method
+
 !======================== STDet v4r19 2010-04-09 =========================
 ! 2010-04-05 M Needham
  - Add isInvertedX() methods to sensor + sector class

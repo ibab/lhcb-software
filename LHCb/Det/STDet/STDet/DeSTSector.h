@@ -307,6 +307,14 @@ public:
   */
   unsigned int nBeetle() const;
 
+  /** measured efficiency
+   * @ return double measured Eff
+   */
+  double measEff() const;
+
+  /** set measured Eff of sector  */
+  void setMeasEff(const double measEff) ; 
+
   /** Status of sector
    @return Status of readout sector
   */
@@ -476,6 +484,7 @@ private:
   double m_angle ;
   double m_cosAngle ;
   double m_sinAngle ;
+  mutable double m_measEff;
 
   // status info
   Status m_status;
@@ -733,6 +742,9 @@ inline const Condition* DeSTSector::noiseCondition() const{
   return condition(m_noiseString);
 }
 
+inline double DeSTSector::measEff() const {
+  return m_measEff;
+}
 
 #include "STDet/StatusMap.h"
  

@@ -709,7 +709,7 @@ StatusCode DeSTSector::registerConditionsCallbacks(){
 
 StatusCode DeSTSector::updateStatusCondition(){
 
-  const Condition* aCon = statusCondition();
+  Condition* aCon = const_cast<Condition*>(statusCondition());
   if (aCon == 0){
     MsgStream msg(msgSvc(), name());
     msg << "failed to find status condition" << endmsg;
@@ -725,6 +725,14 @@ StatusCode DeSTSector::updateStatusCondition(){
   std::map<int,int> stripMap = aCon->param<std::map<int,int> >("StripStatus");
   toEnumMap(stripMap,m_stripStatus);
  
+  if (aCon->exists("measuredEff") == true){
+    m_measEff = aCon-> param<double >("measuredEff");     
+  }
+  else {
+    m_measEff = 1.0;
+    aCon->addParam("measuredEff", m_measEff, "Measured sector Eff"); 
+  }
+
   return StatusCode::SUCCESS;
 }
 
@@ -827,6 +835,18 @@ double DeSTSector::fractionActive() const {
   }
 
   return nActive/double(nStrip());
+}
+
+void DeSTSector::setMeasEff(const double value){
+  m_measEff = value;
+  Condition* aCon = condition(m_statusString);
+  if (aCon == 0){
+    MsgStream msg(msgSvc(), name());
+    msg << MSG::ERROR << "Failed to find status condition" << endmsg;
+  } else {
+    double& tvalue = aCon->param<double>("measuredEff");
+    tvalue = double(value);
+  }
 }
 
 void DeSTSector::setSectorStatus(const DeSTSector::Status& newStatus)
