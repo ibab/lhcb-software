@@ -1,5 +1,5 @@
 package RecConf
-version v1r0
+version v1r0p1
 
 branches cmt doc python
 
@@ -29,7 +29,6 @@ use MuonTrackRec         v*    Muon # Giacomo Graziani
 use GlobalReco           v* Rec  # Chris Jones
 use LumiAlgs             v*  Rec  # Jaap Panman
 use RecAlgs              v*    Rec  # Marco Cattaneo
-use RecUtils             v*    Rec  # Juan Palacios, Patrick Koppenburg
 # Non sub-detector specific components upgrade related
 use RecoUpgrade          v*    Rec  # Victor Coco
 use RecoUpgradeMC        v*    Rec  # Victor Coco

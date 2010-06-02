@@ -4,6 +4,9 @@
 !Purpose: Configurables for LHCb reconstruction
 !--------------------------------------------------
 
+! 2010-06-02 - Patrick Koppenburg
+ - Remove useless dependency on RecUtils
+
 !========================== RecSysConf v1r0 2010-05-21 ========================
 
 ! 2010-05-21 - Rob Lambert
