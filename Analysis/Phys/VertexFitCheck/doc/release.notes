@@ -1,9 +1,15 @@
-!$Id: release.notes,v 1.26 2010-02-03 10:54:08 jpalac Exp $
+!$Id: release.notes,v 1.27 2010-06-02 10:04:55 jpalac Exp $
 !===========================================================================
 ! Package     : VertexFitCheck
 ! Responsible : Yuehong Xie
 ! Puspose     : A set of tests for components in the Phys/VertexFit package.
 !===========================================================================
+
+! 2010-06-02 - Juan Palacios
+ - options/examples
+  . Remove DoPreselBs2PhiGamma.opts, DoPreselBs2PhiPhi.opts, bs2phiphicheck.opts. They use obsolete Phys/DaVinciFilters.
+ - cmt/requirements
+  . Increase version to v1r6.
 
 !===================== VertexFitCheck v1r5 2010-02-02 ====================
 
