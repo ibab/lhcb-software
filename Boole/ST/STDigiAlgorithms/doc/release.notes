@@ -4,6 +4,8 @@
 ! Purpose     : Algorithms for ST Digitization
 !-----------------------------------------------------------------------------
 
+! 2010-6-02 Add option to configure the ITKiller
+
 !========================= STDigiAlgorithms v2r0 2010-04-26 ==================
 ! 2010-04-24 M Needham
  - New tuning of capacitive coupling
