@@ -1,4 +1,4 @@
-// $Id: MCParticles2.cpp,v 1.1 2010-05-31 20:33:54 ibelyaev Exp $
+// $Id: MCParticles2.cpp,v 1.2 2010-06-02 15:44:18 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -688,6 +688,551 @@ LoKi::MCParticles::AngleChi::fillStream  ( std::ostream& s ) const
   return s << " ) " ;  
 }
 // ============================================================================
+
+
+// ============================================================================
+// constructor from child-selector 
+// ============================================================================
+LoKi::MCParticles::CosThetaTr::CosThetaTr 
+( const LoKi::MCChild::Selector& particle1 ,  
+  const LoKi::MCChild::Selector& particle2 , 
+  const LoKi::MCChild::Selector& particle3 , 
+  const LoKi::MCChild::Selector& particle4 ) 
+  : LoKi::MCParticles::AngleChi (  particle1 , 
+                                   particle2 , 
+                                   particle3 , 
+                                   particle4 )
+{}
+// ============================================================================
+// constructor from the trees 
+// ============================================================================
+LoKi::MCParticles::CosThetaTr::CosThetaTr 
+( const Decays::IMCDecay::iTree& particle1 ,  
+  const Decays::IMCDecay::iTree& particle2 , 
+  const Decays::IMCDecay::iTree& particle3 , 
+  const Decays::IMCDecay::iTree& particle4 )
+  : LoKi::MCParticles::AngleChi (  particle1 , 
+                                   particle2 , 
+                                   particle3 , 
+                                   particle4 )
+{}
+// ============================================================================
+// constructor from the nodes
+// ============================================================================
+LoKi::MCParticles::CosThetaTr::CosThetaTr 
+( const Decays::iNode& particle1 ,  
+  const Decays::iNode& particle2 , 
+  const Decays::iNode& particle3 , 
+  const Decays::iNode& particle4 , 
+  const bool           decayOnly )
+  : LoKi::MCParticles::AngleChi (  particle1 , 
+                                   particle2 , 
+                                   particle3 , 
+                                   particle4 , 
+                                   decayOnly )
+{}
+// ============================================================================
+// constructor form the cuts 
+// ============================================================================
+LoKi::MCParticles::CosThetaTr::CosThetaTr 
+( const LoKi::MCTypes::MCCuts&   particle1 ,  
+  const LoKi::MCTypes::MCCuts&   particle2 , 
+  const LoKi::MCTypes::MCCuts&   particle3 , 
+  const LoKi::MCTypes::MCCuts&   particle4 , 
+  const bool                     decayOnly ) 
+  : LoKi::MCParticles::AngleChi (  particle1 , 
+                                   particle2 , 
+                                   particle3 , 
+                                   particle4 , 
+                                   decayOnly ) 
+{}
+// ============================================================================
+// constructor from the decay descriptors
+// ============================================================================
+LoKi::MCParticles::CosThetaTr::CosThetaTr 
+( const std::string& particle1    ,   
+  const std::string& particle2    , 
+  const std::string& particle3    , 
+  const std::string& particle4    , 
+  const std::string& factory      ) 
+  : LoKi::MCParticles::AngleChi ( particle1    , 
+                                  particle2    , 
+                                  particle3    , 
+                                  particle4    , 
+                                  factory      )
+{}
+// ============================================================================
+// MANDATORY: virtual destructor
+// ============================================================================
+LoKi::MCParticles::CosThetaTr::~CosThetaTr() {} 
+// ============================================================================
+// MANDATORY: clone method ("virtual constructor")
+// ============================================================================
+LoKi::MCParticles::CosThetaTr*
+LoKi::MCParticles::CosThetaTr::clone() const 
+{ return new LoKi::MCParticles::CosThetaTr ( *this ) ; }
+// ============================================================================
+// MANDATORY: the only one essential method
+// ============================================================================
+LoKi::MCParticles::CosThetaTr::result_type 
+LoKi::MCParticles::CosThetaTr::operator() 
+  ( LoKi::MCParticles::CosThetaTr:: argument p ) const 
+{
+  if ( 0 == p ) 
+  {
+    Error ( "LHCb::MCParticle* points to NULL, return 'Invaild Angle'") ;
+    return LoKi::Constants::InvalidAngle ;
+  }
+  //
+  Decays::IMCDecay::iTree::Collection daughters ;
+  daughters.reserve ( 4 ) ;
+  //
+  StatusCode sc = getComponents ( p , daughters ) ; 
+  //
+  if ( sc.isFailure() ) 
+  {
+    Error ("Unable to get proper decay components (1), return 'InvalidAngle'") ;
+    return LoKi::Constants::InvalidAngle ;
+  }
+  if ( 4 != daughters.size() ) 
+  {
+    Error ("Unable to get proper decay components (2) , return 'InvalidAngle'") ;
+    return LoKi::Constants::InvalidAngle ;
+  }
+  // finally evaluate the angle chi: 
+  return LoKi::Kinematics::cosThetaTr 
+    ( daughters [0] -> momentum () , 
+      daughters [1] -> momentum () , 
+      daughters [2] -> momentum () , 
+      daughters [3] -> momentum () ) ;
+}
+// ============================================================================
+// OPTIONAL: the nice printout 
+// ============================================================================
+std::ostream& 
+LoKi::MCParticles::CosThetaTr::fillStream  ( std::ostream& s ) const 
+{
+  s << " MCCOSTHETATR( " 
+    <<   "'" << child1 () 
+    << "','" << child2 ()  
+    << "','" << child3 ()  
+    << "','" << child4 () 
+    <<   "'" ;
+  //
+  return s << " ) " ;  
+}
+// ============================================================================
+
+
+
+
+// ============================================================================
+// constructor from child-selector 
+// ============================================================================
+LoKi::MCParticles::SinPhiTr::SinPhiTr 
+( const LoKi::MCChild::Selector& particle1 ,  
+  const LoKi::MCChild::Selector& particle2 , 
+  const LoKi::MCChild::Selector& particle3 , 
+  const LoKi::MCChild::Selector& particle4 ) 
+  : LoKi::MCParticles::CosThetaTr (  particle1 , 
+                                     particle2 , 
+                                     particle3 , 
+                                     particle4 )
+{}
+// ============================================================================
+// constructor from the trees 
+// ============================================================================
+LoKi::MCParticles::SinPhiTr::SinPhiTr 
+( const Decays::IMCDecay::iTree& particle1 ,  
+  const Decays::IMCDecay::iTree& particle2 , 
+  const Decays::IMCDecay::iTree& particle3 , 
+  const Decays::IMCDecay::iTree& particle4 )
+  : LoKi::MCParticles::CosThetaTr (  particle1 , 
+                                     particle2 , 
+                                     particle3 , 
+                                     particle4 )
+{}
+// ============================================================================
+// constructor from the nodes
+// ============================================================================
+LoKi::MCParticles::SinPhiTr::SinPhiTr 
+( const Decays::iNode& particle1 ,  
+  const Decays::iNode& particle2 , 
+  const Decays::iNode& particle3 , 
+  const Decays::iNode& particle4 , 
+  const bool           decayOnly )
+  : LoKi::MCParticles::CosThetaTr (  particle1 , 
+                                     particle2 , 
+                                     particle3 , 
+                                     particle4 , 
+                                     decayOnly )
+{}
+// ============================================================================
+// constructor form the cuts 
+// ============================================================================
+LoKi::MCParticles::SinPhiTr::SinPhiTr 
+( const LoKi::MCTypes::MCCuts&   particle1 ,  
+  const LoKi::MCTypes::MCCuts&   particle2 , 
+  const LoKi::MCTypes::MCCuts&   particle3 , 
+  const LoKi::MCTypes::MCCuts&   particle4 , 
+  const bool                     decayOnly ) 
+  : LoKi::MCParticles::CosThetaTr (  particle1 , 
+                                     particle2 , 
+                                     particle3 , 
+                                     particle4 , 
+                                     decayOnly ) 
+{}
+// ============================================================================
+// constructor from the decay descriptors
+// ============================================================================
+LoKi::MCParticles::SinPhiTr::SinPhiTr 
+( const std::string& particle1    ,   
+  const std::string& particle2    , 
+  const std::string& particle3    , 
+  const std::string& particle4    , 
+  const std::string& factory      ) 
+  : LoKi::MCParticles::CosThetaTr ( particle1    , 
+                                    particle2    , 
+                                    particle3    , 
+                                    particle4    , 
+                                    factory      )
+{}
+// ============================================================================
+// MANDATORY: virtual destructor
+// ============================================================================
+LoKi::MCParticles::SinPhiTr::~SinPhiTr() {} 
+// ============================================================================
+// MANDATORY: clone method ("virtual constructor")
+// ============================================================================
+LoKi::MCParticles::SinPhiTr*
+LoKi::MCParticles::SinPhiTr::clone() const 
+{ return new LoKi::MCParticles::SinPhiTr ( *this ) ; }
+// ============================================================================
+// MANDATORY: the only one essential method
+// ============================================================================
+LoKi::MCParticles::SinPhiTr::result_type 
+LoKi::MCParticles::SinPhiTr::operator() 
+  ( LoKi::MCParticles::SinPhiTr:: argument p ) const 
+{
+  if ( 0 == p ) 
+  {
+    Error ( "LHCb::MCParticle* points to NULL, return 'Invaild Angle'") ;
+    return LoKi::Constants::InvalidAngle ;
+  }
+  //
+  Decays::IMCDecay::iTree::Collection daughters ;
+  daughters.reserve ( 4 ) ;
+  //
+  StatusCode sc = getComponents ( p , daughters ) ; 
+  //
+  if ( sc.isFailure() ) 
+  {
+    Error ("Unable to get proper decay components (1), return 'InvalidAngle'") ;
+    return LoKi::Constants::InvalidAngle ;
+  }
+  if ( 4 != daughters.size() ) 
+  {
+    Error ("Unable to get proper decay components (2) , return 'InvalidAngle'") ;
+    return LoKi::Constants::InvalidAngle ;
+  }
+  // finally evaluate the angle chi: 
+  return LoKi::Kinematics::sinPhiTr 
+    ( daughters [0] -> momentum () , 
+      daughters [1] -> momentum () , 
+      daughters [2] -> momentum () , 
+      daughters [3] -> momentum () ) ;
+}
+// ============================================================================
+// OPTIONAL: the nice printout 
+// ============================================================================
+std::ostream& 
+LoKi::MCParticles::SinPhiTr::fillStream  ( std::ostream& s ) const 
+{
+  s << " MCSINPHITR( " 
+    <<   "'" << child1 () 
+    << "','" << child2 ()  
+    << "','" << child3 ()  
+    << "','" << child4 () 
+    <<   "'" ;
+  //
+  return s << " ) " ;  
+}
+// ============================================================================
+
+// ============================================================================
+// constructor from child-selector 
+// ============================================================================
+LoKi::MCParticles::CosPhiTr::CosPhiTr 
+( const LoKi::MCChild::Selector& particle1 ,  
+  const LoKi::MCChild::Selector& particle2 , 
+  const LoKi::MCChild::Selector& particle3 , 
+  const LoKi::MCChild::Selector& particle4 ) 
+  : LoKi::MCParticles::SinPhiTr (  particle1 , 
+                                   particle2 , 
+                                   particle3 , 
+                                   particle4 )
+{}
+// ============================================================================
+// constructor from the trees 
+// ============================================================================
+LoKi::MCParticles::CosPhiTr::CosPhiTr 
+( const Decays::IMCDecay::iTree& particle1 ,  
+  const Decays::IMCDecay::iTree& particle2 , 
+  const Decays::IMCDecay::iTree& particle3 , 
+  const Decays::IMCDecay::iTree& particle4 )
+  : LoKi::MCParticles::SinPhiTr (  particle1 , 
+                                   particle2 , 
+                                   particle3 , 
+                                   particle4 )
+{}
+// ============================================================================
+// constructor from the nodes
+// ============================================================================
+LoKi::MCParticles::CosPhiTr::CosPhiTr 
+( const Decays::iNode& particle1 ,  
+  const Decays::iNode& particle2 , 
+  const Decays::iNode& particle3 , 
+  const Decays::iNode& particle4 , 
+  const bool           decayOnly )
+  : LoKi::MCParticles::SinPhiTr (  particle1 , 
+                                   particle2 , 
+                                   particle3 , 
+                                   particle4 , 
+                                   decayOnly )
+{}
+// ============================================================================
+// constructor form the cuts 
+// ============================================================================
+LoKi::MCParticles::CosPhiTr::CosPhiTr 
+( const LoKi::MCTypes::MCCuts&   particle1 ,  
+  const LoKi::MCTypes::MCCuts&   particle2 , 
+  const LoKi::MCTypes::MCCuts&   particle3 , 
+  const LoKi::MCTypes::MCCuts&   particle4 , 
+  const bool                     decayOnly ) 
+  : LoKi::MCParticles::SinPhiTr (  particle1 , 
+                                   particle2 , 
+                                   particle3 , 
+                                   particle4 , 
+                                   decayOnly ) 
+{}
+// ============================================================================
+// constructor from the decay descriptors
+// ============================================================================
+LoKi::MCParticles::CosPhiTr::CosPhiTr 
+( const std::string& particle1    ,   
+  const std::string& particle2    , 
+  const std::string& particle3    , 
+  const std::string& particle4    , 
+  const std::string& factory      ) 
+  : LoKi::MCParticles::SinPhiTr ( particle1    , 
+                                  particle2    , 
+                                  particle3    , 
+                                  particle4    , 
+                                  factory      )
+{}
+// ============================================================================
+// MANDATORY: virtual destructor
+// ============================================================================
+LoKi::MCParticles::CosPhiTr::~CosPhiTr() {} 
+// ============================================================================
+// MANDATORY: clone method ("virtual constructor")
+// ============================================================================
+LoKi::MCParticles::CosPhiTr*
+LoKi::MCParticles::CosPhiTr::clone() const 
+{ return new LoKi::MCParticles::CosPhiTr ( *this ) ; }
+// ============================================================================
+// MANDATORY: the only one essential method
+// ============================================================================
+LoKi::MCParticles::CosPhiTr::result_type 
+LoKi::MCParticles::CosPhiTr::operator() 
+  ( LoKi::MCParticles::CosPhiTr:: argument p ) const 
+{
+  if ( 0 == p ) 
+  {
+    Error ( "LHCb::MCParticle* points to NULL, return 'Invaild Angle'") ;
+    return LoKi::Constants::InvalidAngle ;
+  }
+  //
+  Decays::IMCDecay::iTree::Collection daughters ;
+  daughters.reserve ( 4 ) ;
+  //
+  StatusCode sc = getComponents ( p , daughters ) ; 
+  //
+  if ( sc.isFailure() ) 
+  {
+    Error ("Unable to get proper decay components (1), return 'InvalidAngle'") ;
+    return LoKi::Constants::InvalidAngle ;
+  }
+  if ( 4 != daughters.size() ) 
+  {
+    Error ("Unable to get proper decay components (2) , return 'InvalidAngle'") ;
+    return LoKi::Constants::InvalidAngle ;
+  }
+  // finally evaluate the cos(phi_tr)
+  return LoKi::Kinematics::cosPhiTr 
+    ( daughters [0] -> momentum () , 
+      daughters [1] -> momentum () , 
+      daughters [2] -> momentum () , 
+      daughters [3] -> momentum () ) ;
+}
+// ============================================================================
+// OPTIONAL: the nice printout 
+// ============================================================================
+std::ostream& 
+LoKi::MCParticles::CosPhiTr::fillStream  ( std::ostream& s ) const 
+{
+  s << " MCCOSPHITR( " 
+    <<   "'" << child1 () 
+    << "','" << child2 ()  
+    << "','" << child3 ()  
+    << "','" << child4 () 
+    <<   "'" ;
+  //
+  return s << " ) " ;  
+}
+// ============================================================================
+
+
+
+
+
+
+
+// ============================================================================
+// constructor from child-selector 
+// ============================================================================
+LoKi::MCParticles::AnglePhiTr::AnglePhiTr 
+( const LoKi::MCChild::Selector& particle1 ,  
+  const LoKi::MCChild::Selector& particle2 , 
+  const LoKi::MCChild::Selector& particle3 , 
+  const LoKi::MCChild::Selector& particle4 ) 
+  : LoKi::MCParticles::CosPhiTr (  particle1 , 
+                                   particle2 , 
+                                   particle3 , 
+                                   particle4 )
+{}
+// ============================================================================
+// constructor from the trees 
+// ============================================================================
+LoKi::MCParticles::AnglePhiTr::AnglePhiTr 
+( const Decays::IMCDecay::iTree& particle1 ,  
+  const Decays::IMCDecay::iTree& particle2 , 
+  const Decays::IMCDecay::iTree& particle3 , 
+  const Decays::IMCDecay::iTree& particle4 )
+  : LoKi::MCParticles::CosPhiTr (  particle1 , 
+                                   particle2 , 
+                                   particle3 , 
+                                   particle4 )
+{}
+// ============================================================================
+// constructor from the nodes
+// ============================================================================
+LoKi::MCParticles::AnglePhiTr::AnglePhiTr 
+( const Decays::iNode& particle1 ,  
+  const Decays::iNode& particle2 , 
+  const Decays::iNode& particle3 , 
+  const Decays::iNode& particle4 , 
+  const bool           decayOnly )
+  : LoKi::MCParticles::CosPhiTr (  particle1 , 
+                                   particle2 , 
+                                   particle3 , 
+                                   particle4 , 
+                                   decayOnly )
+{}
+// ============================================================================
+// constructor form the cuts 
+// ============================================================================
+LoKi::MCParticles::AnglePhiTr::AnglePhiTr 
+( const LoKi::MCTypes::MCCuts&   particle1 ,  
+  const LoKi::MCTypes::MCCuts&   particle2 , 
+  const LoKi::MCTypes::MCCuts&   particle3 , 
+  const LoKi::MCTypes::MCCuts&   particle4 , 
+  const bool                     decayOnly ) 
+  : LoKi::MCParticles::CosPhiTr (  particle1 , 
+                                   particle2 , 
+                                   particle3 , 
+                                   particle4 , 
+                                   decayOnly ) 
+{}
+// ============================================================================
+// constructor from the decay descriptors
+// ============================================================================
+LoKi::MCParticles::AnglePhiTr::AnglePhiTr 
+( const std::string& particle1    ,   
+  const std::string& particle2    , 
+  const std::string& particle3    , 
+  const std::string& particle4    , 
+  const std::string& factory      ) 
+  : LoKi::MCParticles::CosPhiTr ( particle1    , 
+                                  particle2    , 
+                                  particle3    , 
+                                  particle4    , 
+                                  factory      )
+{}
+// ============================================================================
+// MANDATORY: virtual destructor
+// ============================================================================
+LoKi::MCParticles::AnglePhiTr::~AnglePhiTr() {} 
+// ============================================================================
+// MANDATORY: clone method ("virtual constructor")
+// ============================================================================
+LoKi::MCParticles::AnglePhiTr*
+LoKi::MCParticles::AnglePhiTr::clone() const 
+{ return new LoKi::MCParticles::AnglePhiTr ( *this ) ; }
+// ============================================================================
+// MANDATORY: the only one essential method
+// ============================================================================
+LoKi::MCParticles::AnglePhiTr::result_type 
+LoKi::MCParticles::AnglePhiTr::operator() 
+  ( LoKi::MCParticles::AnglePhiTr:: argument p ) const 
+{
+  if ( 0 == p ) 
+  {
+    Error ( "LHCb::MCParticle* points to NULL, return 'Invaild Angle'") ;
+    return LoKi::Constants::InvalidAngle ;
+  }
+  //
+  Decays::IMCDecay::iTree::Collection daughters ;
+  daughters.reserve ( 4 ) ;
+  //
+  StatusCode sc = getComponents ( p , daughters ) ; 
+  //
+  if ( sc.isFailure() ) 
+  {
+    Error ("Unable to get proper decay components (1), return 'InvalidAngle'") ;
+    return LoKi::Constants::InvalidAngle ;
+  }
+  if ( 4 != daughters.size() ) 
+  {
+    Error ("Unable to get proper decay components (2) , return 'InvalidAngle'") ;
+    return LoKi::Constants::InvalidAngle ;
+  }
+  // finally evaluate the phi_tr
+  return LoKi::Kinematics::anglePhiTr 
+    ( daughters [0] -> momentum () , 
+      daughters [1] -> momentum () , 
+      daughters [2] -> momentum () , 
+      daughters [3] -> momentum () ) ;
+}
+// ============================================================================
+// OPTIONAL: the nice printout 
+// ============================================================================
+std::ostream& 
+LoKi::MCParticles::AnglePhiTr::fillStream  ( std::ostream& s ) const 
+{
+  s << " MCANGLEPHITR( " 
+    <<   "'" << child1 () 
+    << "','" << child2 ()  
+    << "','" << child3 ()  
+    << "','" << child4 () 
+    <<   "'" ;
+  //
+  return s << " ) " ;  
+}
+// ============================================================================
+
+
+
 
 
 // ============================================================================
