@@ -4,6 +4,13 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-06-02 - Anton Poluektov
+
+  - Default.py and tests/ modified to conform the current state of StrippingConf. 
+    Options moved from python/ to options/. 
+    Default.py includes prescale configuration for one StrippingDstarD02xxConf line
+    as an example. 
+
 ! 2010-02-13  Anton Poluektov
 
   - Initial release. Only one Default set of settings that configures StrippingPass lines.

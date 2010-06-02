@@ -10,20 +10,11 @@ MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"
 # Stripping job configuration
 #
 
-streams = allStreams
-
-from StrippingSelections import StreamMiniBias, StreamV0 
-
-#streams.remove( StreamV0.stream )
-#streams.remove( StreamMiniBias.stream )
-
-#streams = [ StreamV0.stream ] 
-
-sc = StrippingConf( Streams = streams )
+sc = StrippingConf( Streams = allStreams )
 
 dstWriter = SelDSTWriter("MyDSTWriter",
 	SelectionSequences = sc.activeStreams(),
-        OutputPrefix = 'Strip',
+	ExtraItems = [ '/Event/Strip/Phys/DecReports#1' ], 
 	OutputFileSuffix = '000000'
         )
 
@@ -33,8 +24,7 @@ dstWriter = SelDSTWriter("MyDSTWriter",
 #dvinit.Members.insert(0, veloNZSKiller() )
 
 DaVinci().EvtMax = 10                         # Number of events
-DaVinci().appendToMainSequence( [ sc.sequence() ] )
 DaVinci().appendToMainSequence( [ dstWriter.sequence() ] )
+DaVinci().DataType = "MC09"
 
-importOptions("$STRIPPINGSELECTIONSROOT/tests/MC09_Bincl.py")     # Data file
-
+DaVinci().HistogramFile = "hist.root"
