@@ -3,6 +3,7 @@ Package	:	Alignment/TAlignment
 Package Coordinator	:	Jan Amoraal, Johan Blouw
 Purpose	: collection of alignment algorithms
 
+</PRE><H1><A NAME=v5r1>2010-06-02 TAlignment v5r01/A></H1><PRE> 
 ! 2010-05-21 - Rob Lambert
  - adapt to movement of RecSysConf into RecConf package
 
