@@ -1,4 +1,4 @@
-// $Id: HybridFilterCriterion.cpp,v 1.7 2010-05-27 19:29:55 ibelyaev Exp $
+// $Id: HybridFilterCriterion.cpp,v 1.8 2010-06-02 08:42:19 jpalac Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -16,7 +16,7 @@
 // ============================================================================
 // DaVinciKernel
 // ============================================================================
-#include "Kernel/IFilterCriterion.h"
+#include "Kernel/IParticleFilter.h"
 // ============================================================================
 // LoKi
 // ============================================================================
@@ -37,7 +37,7 @@ namespace LoKi
      *  
      *  The first (test) attempt to develop a "hybrid"
      *  solution for LoKi+Hlt
-     *  Simple tool (IFilterCriterion) which is used in C++ analysis 
+     *  Simple tool (IParticleFilter) which is used in C++ analysis 
      *  environment, but the "cuts" are descrived through Python 
      * 
      *  This file is a part of LoKi project - 
@@ -53,7 +53,7 @@ namespace LoKi
      */
     // ========================================================================
     class FilterCriterion 
-      : public extends2<GaudiTool,IParticleFilter,IFilterCriterion>
+      : public extends1<GaudiTool,IParticleFilter>
     {
       // ======================================================================
       // friend factory for instantiation 
@@ -86,10 +86,6 @@ namespace LoKi
       // ======================================================================
     public:
       // ======================================================================
-      /// Test if filter is satisfied
-      virtual bool isSatisfied  ( const LHCb::Particle* part ) const 
-      { return m_cut ( part ) ; }
-      /// Test if filter is satisfied
       virtual bool operator()   ( const LHCb::Particle* part ) const 
       { return m_cut ( part ) ; }
       // ======================================================================
