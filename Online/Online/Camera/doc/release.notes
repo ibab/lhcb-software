@@ -4,6 +4,10 @@
 ! Purpose     : Package for the CAMERA application and supporting files.
 !-----------------------------------------------------------------------------
 
+
+! 2010-06-02 - Nicola Mangiafave
+- /cmt/requirements: changed version to v1r17.
+
 ! 2010-05-13 - Nicola Mangiafave
 - /src/CameraTool.cpp: fixed bug in dealing with servers up but not
   responding. The Tool now checks the server availability 10 times for every 
