@@ -1,4 +1,4 @@
-// $Id: Particles15.h,v 1.8 2010-05-14 15:28:33 ibelyaev Exp $
+// $Id: Particles15.h,v 1.9 2010-06-02 08:08:59 jpalac Exp $
 // ============================================================================
 #ifndef LOKI_PARTICLES15_H 
 #define LOKI_PARTICLES15_H 1
@@ -38,9 +38,9 @@ namespace LoKi
   {
     // ========================================================================
     /** @class Filter
-     *  Simple adapter which allos to use the tool IFilterCriterion
+     *  Simple adapter which allos to use the tool IParticleFilter
      *  as LoKi functor
-     *  @see IFilterCriterion
+     *  @see IParticleFilter
      *  @see LoKi::Cuts::FILTER
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-03-20
