@@ -3,6 +3,22 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v21r4>2010-06-03 Boole v21r4</A></H1><PRE>
+This version uses projects Gaudi v21r9, LHCb v31r1, Lbcom v9r3
+ and SQLDDDB v5r30, ParamFiles v8r2, FieldMap v5r4, L0TCK v3r1, AppConfig v3r*
+
+Production version for 2010 simulation. 
+Output needs Brunel v35r8 or later, Brunel v36r0 if decoding L0DU bank
+Needs SQLDDDB v5r25 or later with SIMCOND tags from *-20100412*
+
+- Configuration changes:
+  . New default tag for MC09: MC09-20100430-vc-md100 for SIMCOND (DDDB v1r31)
+
+- New tuning:
+  . Fix to match harware behaviour : topology of tile exchange for M2 has been
+    modified. It affects exchanges across different regions (in practise R2->R3)
+    (L0MuonKernel v9r2)
+
 </PRE><H1><A NAME=v21r3>2010-05-10 Boole v21r3</A></H1><PRE>
 This version uses projects Gaudi v21r9, LHCb v31r0, Lbcom v9r2p1
  and SQLDDDB v5r27, ParamFiles v8r2, FieldMap v5r3, L0TCK v3r1, AppConfig v3r*
