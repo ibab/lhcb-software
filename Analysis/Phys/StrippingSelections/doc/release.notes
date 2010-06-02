@@ -5,6 +5,9 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-06-01 - Greig Cowan on behalf of Dimitry and Osvaldo
+ - Tightened cuts on V0Geo line. Prescale now at 0.5.
+
 ! 2010-06-01 - Juan Palacios
  - De-activate hack. Possibly fixes in Phys/LoKiArrayFunctors.
 

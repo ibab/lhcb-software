@@ -27,25 +27,24 @@ _Preambulo  = [
     ## define nu_0
     "NU_0 = CHILD ( MIPDV ( PRIMARY ) , 1 ) * CHILD ( MIPDV ( PRIMARY ) , 2 ) / MIPDV ( PRIMARY )  " ,
     ## redefine track chi2/nDoF 
-    "TRCHI2DOF  = monitor ( TRCHI2DOF , 'chi2/nDoF' , LoKi.Monitoring.ContextSvc) " 
+    "TRCHI2DOF  = monitor ( TRCHI2DOF , 'chi2/nDoF' , LoKi.Monitoring.ContextSvc) " ,
     ]
 
 LambdaAllCombineGeo = StrippingMember (
     CombineParticles
     , 'Combine'    
-    , InputLocations  = [ "StdNoPIDsDownPions"   ,
-                          "StdNoPIDsDownProtons" ,
-                          "StdNoPIDsPions"       ,
-                          "StdNoPIDsProtons"     ]
+    , InputLocations  = [ "StdNoPIDsPions"   ,
+                          "StdNoPIDsProtons" ]
     , DecayDescriptor = "[Lambda0 -> p+ pi-]cc"
     , Preambulo       = _Preambulo 
-    , DaughtersCuts   = { '' : " TRCHI2DOF < 25 "}
+    , DaughtersCuts   = { '' : " TRCHI2DOF < 15 "}
     , CombinationCut  = "AM < 1.5 * GeV "
     , MotherCut = """
     ( ADMASS ( 'Lambda0' ) < 100*MeV ) & 
     ( VFASPF ( VCHI2     ) < 100     ) &
-    ( NU_0 > switch ( LL , 7.39 * mm , switch ( DD , 90 * mm , 33 * mm ) ) ) &
-    ( BPVDIRA > 0 ) 
+    ( NU_0 > 7.39 * mm ) &
+    ( BPVDIRA > 0 ) &
+    ( BPVLTIME() > 0 )
     """
     )
 
@@ -53,30 +52,32 @@ LambdaAllCombineGeo = StrippingMember (
 KsAllCombineGeo = StrippingMember(
     CombineParticles
     , 'Combine'    
-    , InputLocations  = [ "StdNoPIDsDownPions" ,
-                          "StdNoPIDsPions"     ]
+    , InputLocations  = [ "StdNoPIDsPions" ]
     , DecayDescriptor = " KS0 -> pi+ pi- "
-    , DaughtersCuts   = { '' : " TRCHI2DOF < 25 "}
+    , DaughtersCuts   = { '' : " TRCHI2DOF < 15 "}
     , Preambulo       = _Preambulo 
     , CombinationCut  = " AM < 1*GeV "                                    
     , MotherCut = """
     ( ADMASS ( 'KS0'  ) < 100 * MeV ) & 
     ( VFASPF (  VCHI2 ) < 100       ) & 
-    ( NU_0 > switch ( LL , 7.39 * mm , switch ( DD , 90 * mm , 33 * mm ) ) ) &
-    ( BPVDIRA > 0 ) 
+    ( NU_0 > 7.39 * mm ) &
+    ( BPVDIRA > 0 ) &
+    ( BPVLTIME() > 0 )
     """
     )
 
 ##########################################################################
 line_lambda_all= StrippingLine(
     'LambdaAllGeoLine'
-    , prescale = 0.05
+    , prescale = 0.5
+    , HLT = "HLT_PASS_RE('Hlt1MBMicro.*Decision')"
     , algos = [  LambdaAllCombineGeo ])
 
 
 line_KS_all= StrippingLine(
     'KSAllGeoLine'
-    , prescale = 0.05
+    , prescale = 0.5
+    , HLT = "HLT_PASS_RE('Hlt1MBMicro.*Decision')"
     , algos = [  KsAllCombineGeo ])
 
 ############################################################################
