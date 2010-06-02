@@ -2,7 +2,7 @@
 //ApplicationMgr.TopAlg                = { "StoreExplorerAlg" };
 //ReflexPluginDebugLevel               = 1;
 ApplicationMgr.TopAlg                = {"LHCb::RawBankSizes/RawBankSizes" };
-ApplicationMgr.EvtMax                = 50000;
+ApplicationMgr.EvtMax                = 2000000;
 ApplicationMgr.HistogramPersistency  = "ROOT";
 Dump.CheckData                       = 1;
 Dump.CheckData                       = 0;
@@ -14,7 +14,7 @@ StoreExplorerAlg.PrintFreq           = 0.002;
 EventDataSvc.RootCLID                = 1;
 EventDataSvc.EnableFaultHandler      = true;
 EventPersistencySvc.CnvServices      = {"LHCb::RawDataCnvSvc"};
-EventSelector.PrintFreq              = 1000;
+EventSelector.PrintFreq              = 10000;
 // Check legacy data:
 FileCatalog.Catalogs = { "xmlcatalog_file:Cnew.xml","xmlcatalog_file:C1.xml" };
 StoreExplorerAlg.OutputLevel         = 3;
@@ -24,4 +24,5 @@ RawBankSizes.Bins                    = 200;
 #include "/group/online/dataflow/templates/options/RawSize_Detectors.opts"
 #include "/group/online/dataflow/templates/options/RawSize_HistParams.opts"
 #include "$RAWBANKSIZESROOT/options/InputFiles.opts"
+//#include "/group/online/dataflow/templates/options/Monitoring.opts"
 

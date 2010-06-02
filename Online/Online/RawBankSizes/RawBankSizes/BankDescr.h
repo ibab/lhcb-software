@@ -3,6 +3,16 @@
 #define RAWSIZE_BANKDESCR_H
 namespace LHCb 
 {
+#define HISTPERHIST 3
+std::string titqual[HISTPERHIST]={" (all Triggers)"," (nonLumi)"," (Lumi)"};
+std::string namqual[HISTPERHIST]={"(all)","(nonLumi)","(Lumi)"};
+// titqual[0] = " (all Triggers)";
+// titqual[1] = " (nonLumi)";
+// titqual[2] = " (Lumi)";
+// namqual[0] = "(all)";
+// namqual[1] = "(nonLumi)";
+// namqual[2] = "(Lumi)";
+
   class BankDescr
   {
   public:
@@ -14,10 +24,10 @@ namespace LHCb
     double xmin,xmax,binw;
     int nbin;
     int nentries;
-    IHistogram1D *h;
-    std::string h_name;
-    IProfile1D *p;
-    std::string p_name;
+    IHistogram1D *h[HISTPERHIST];
+    std::string h_name[HISTPERHIST];
+    IProfile1D *p[HISTPERHIST];
+    std::string p_name[HISTPERHIST];
     bool noprofile;
     bool nohist;
 
@@ -29,10 +39,14 @@ namespace LHCb
     }
     void init(std::string &nam, bool noprof)
     {
+      int i;
       name = nam;
       noprofile = noprof;
-      h_name = "h"+name;
-      p_name = "p"+name;
+      for (i=0;i<HISTPERHIST;i++)
+      {
+        h_name[i] = "h"+name+namqual[i];
+        p_name[i] = "p"+name+namqual[i];
+      }
       
     };
     void init(int bn, bool noprof)
@@ -120,8 +134,12 @@ namespace LHCb
         }
       }
       name=LHCb::RawBank::typeName( (LHCb::RawBank::BankType) bn );
-      h_name = "h"+name;
-      p_name = "p"+name;
+      int i;
+      for (i=0;i<HISTPERHIST;i++)
+      {
+        h_name[i] = "h"+name+namqual[i];
+        p_name[i] = "p"+name+namqual[i];
+      }
     }
   };
 }

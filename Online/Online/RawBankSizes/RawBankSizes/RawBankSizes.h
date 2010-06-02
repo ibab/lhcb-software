@@ -1,4 +1,4 @@
-// $Id: RawBankSizes.h,v 1.5 2010-02-15 16:00:56 jost Exp $
+// $Id: RawBankSizes.h,v 1.6 2010-06-02 08:14:47 jost Exp $
 #ifndef COMPONENT_RawBankSizes_H 
 #define COMPONENT_RawBankSizes_H 1
 
@@ -30,6 +30,7 @@ namespace LHCb
 }
 namespace LHCb 
 {
+
   class RawBankSizes : public GaudiHistoAlg 
   {
   public: 
@@ -66,12 +67,15 @@ namespace LHCb
 		HParam::HistParams m_hparams[LHCb::RawBank::LastType];
 
 		HParam::HistParams m_totevpar;
+		HParam::HistParams m_HLTratiopar;
 
     dethmap dethparams;
 
 
-    IHistogram1D *h_totev;
-    IProfile1D *p_banks;
+    IHistogram1D *h_totev[HISTPERHIST];
+    IProfile1D *p_banks[HISTPERHIST];
+    IHistogram1D *h_HLTratio[HISTPERHIST];
+    IProfile1D *p_HLTratio[HISTPERHIST];
     int n_ev;
     bool first_few;
     int m_nRMS;
