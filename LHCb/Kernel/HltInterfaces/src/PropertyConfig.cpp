@@ -1,3 +1,4 @@
+#include <cstdlib>
 #include "Kernel/PropertyConfig.h"
 #include "boost/regex.hpp"
 #include "GaudiKernel/Property.h"
@@ -14,6 +15,15 @@ void PropertyConfig::initProperties(const IProperty& obj) {
     PropertyList items = obj.getProperties();
     for (PropertyList::const_iterator i = items.begin(); i!=items.end();++i) {
         m_properties.push_back(make_pair((*i)->name(),(*i)->toString()));
+        // verify that toString / fromString are each others inverse...
+        Property* clone = (*i)->clone();
+        if ( clone->fromString(m_properties.back().second).isFailure() ) {
+            std::cerr << "Property::fromString fails to parse Property::toString" << std::endl;
+            std::cerr << "component: " << m_kind << " / " << m_name << ", property type: " << (*i)->type()<< " : " << (*i)->name() << " -> " << (*i)->toString() << std::endl;
+            ::abort(); // this is REALLY bad, and we should die, die, die!!!
+                       // as we won't realize this until we read back later, so we
+                       // really have to make sure this is never written in the first place
+        }
     }
     m_digest = digest_type::createInvalid();
 }
@@ -52,6 +62,7 @@ PropertyConfig PropertyConfig::copyAndModify(const std::string& keyAndValue) con
 }
 
 istream& PropertyConfig::read(istream& is) {
+    //TODO: switch to XML
     bool parsing_properties = false;
     static boost::regex name("^Name: (.*)$"),
                         type("^Type: (.*)$"),
@@ -92,6 +103,7 @@ istream& PropertyConfig::read(istream& is) {
 }
 
 ostream& PropertyConfig::print(ostream& os) const {
+    //TODO: switch to XML
     os << "Name: " << m_name << '\n'
        << "Kind: " << m_kind << '\n'
        << "Type: " << m_type << '\n'

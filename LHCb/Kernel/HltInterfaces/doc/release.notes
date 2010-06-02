@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.19 2010-05-21 12:28:22 cattanem Exp $
+! $Id: release.notes,v 1.20 2010-06-02 08:57:01 graven Exp $
 ! Package     : HltInterfaces
 ! Responsible : Gerhard Raven
 !------------------------------------------------------------------------------
+! 2010-06-02 - Gerhard Raven
+ - check that Property::fromString can parse what Property::toString
+   produces...
 
 !============ Kernel/HltInterfaces v4r0 2010-05-21 ============================
 ! 2010-05-05 - Gerhard Raven
