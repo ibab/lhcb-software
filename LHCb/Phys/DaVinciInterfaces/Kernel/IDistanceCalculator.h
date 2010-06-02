@@ -1,4 +1,4 @@
-// $Id: IDistanceCalculator.h,v 1.5 2010-03-16 12:38:29 ibelyaev Exp $
+// $Id: IDistanceCalculator.h,v 1.6 2010-06-02 10:57:04 jpalac Exp $
 // ============================================================================
 #ifndef DAVINCIKERNEL_IDISTANCECALCULATOR_H 
 #define DAVINCIKERNEL_IDISTANCECALCULATOR_H 1
@@ -66,7 +66,7 @@ public:
    *  @code
    *
    *   // get the tool 
-   *   const IGeomDispCalculator* tool = ... ; 
+   *   const IDistanceCalculator* tool = ... ; 
    *
    *   const LHCb::Particle*   particle = ... ;
    *   const LHCb::VertexBase* primary  = ... ;
@@ -104,7 +104,7 @@ public:
    *  @code
    *
    *   // get the tool 
-   *   const IGeomDispCalculator* tool = ... ; 
+   *   const IDistanceCalculator* tool = ... ; 
    *
    *   const LHCb::Particle*   particle = ... ;
    *   const LHCb::VertexBase* primary  = ... ;
@@ -164,7 +164,7 @@ public:
    *  @code
    *
    *   // get the tool 
-   *   const IGeomDispCalculator* tool = ... ; 
+   *   const IDistanceCalculator* tool = ... ; 
    *
    *   const LHCb::Particle*   particle = ... ;
    *   const Gaudi::XYZPoint&  point    = ... ;
@@ -205,7 +205,7 @@ public:
    *  @code
    *
    *   // get the tool 
-   *   const IGeomDispCalculator* tool = ... ; 
+   *   const IDistanceCalculator* tool = ... ; 
    *
    *   const LHCb::Particle*   particle = ... ;
    *   const Gaudi::XYZPoint&  point    = ... ;
@@ -258,7 +258,7 @@ public:
    *  @code 
    *
    *  // get the tool 
-   *  const IGeomDispCalculator* tool = ... ; 
+   *  const IDistanceCalculator* tool = ... ; 
    *
    *  const LHCb::VertexBase* primary   = ... ;
    *  const LHCb::VertexBase* secondary = ... ; 
@@ -293,7 +293,7 @@ public:
    *  @code 
    *
    *  // get the tool 
-   *  const IGeomDispCalculator* tool = ... ; 
+   *  const IDistanceCalculator* tool = ... ; 
    *
    *  const LHCb::VertexBase* primary   = ... ;
    *  const LHCb::VertexBase* secondary = ... ; 
@@ -341,7 +341,7 @@ public:
    *  @code 
    *
    *  // get the tool 
-   *  const IGeomDispCalculator* tool = ... ; 
+   *  const IDistanceCalculator* tool = ... ; 
    *
    *  const LHCb::VertexBase* secondary = ... ; 
    *  const Gaudi::XYZPoint&  primary   = ... ;
@@ -377,7 +377,7 @@ public:
    *  @code 
    *
    *  // get the tool 
-   *  const IGeomDispCalculator* tool = ... ; 
+   *  const IDistanceCalculator* tool = ... ; 
    *
    *  const LHCb::VertexBase* secondary = ... ; 
    *  const Gaudi::XYZPoint&  primary   = ... ;
@@ -422,7 +422,7 @@ public:
    *  @code
    * 
    *  // get the tool 
-   *  const IGeomDispCalculator* tool = ... ; 
+   *  const IDistanceCalculator* tool = ... ; 
    *
    *  const LHCb::Particle* p1 = ... ;
    *  const LHCb::Particle* p2 = ... ;
@@ -455,7 +455,7 @@ public:
    *  @code
    * 
    *  // get the tool 
-   *  const IGeomDispCalculator* tool = ... ; 
+   *  const IDistanceCalculator* tool = ... ; 
    *
    *  const LHCb::Particle* p1 = ... ;
    *  const LHCb::Particle* p2 = ... ;
@@ -506,7 +506,7 @@ public:
    *  @code
    * 
    *  // get the tool 
-   *  const IGeomDispCalculator* tool = ... ; 
+   *  const IDistanceCalculator* tool = ... ; 
    *
    *  const LHCb::Particle*   particle = ... ;
    *  const LHCb::VertexBase* primary  = ... ; 

@@ -4,6 +4,9 @@
 ! Purpose     : Tool interfaces and dictionaries for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2010-06-02 - Juan Palacios
+ - Remove IFilterCriterion and IGeomDispCalculator.
+
 ! 2010-05-29 - Vanya Belyaev
 
  - IDVAlgorithm 

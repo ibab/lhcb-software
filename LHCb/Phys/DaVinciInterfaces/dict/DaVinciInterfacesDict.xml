@@ -14,9 +14,7 @@
   <class name = "IDistanceCalculator"/>
   <class name = "IDVAlgorithm"/>
   <class name = "IEventTupleTool"/>
-  <class name = "IFilterCriterion"/>
   <class name = "IFilterParticles"/>
-  <class name = "IGeomDispCalculator"/>
   <class name = "IJetMaker"/>
   <class name = "ILifetimeFitter"/>
   <class name = "IMassFit"/>
