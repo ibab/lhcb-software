@@ -1,6 +1,10 @@
-// $Id: Tracks.cpp,v 1.6 2009-05-09 19:33:47 ibelyaev Exp $
+// $Id: Tracks.cpp,v 1.7 2010-06-02 16:51:03 ibelyaev Exp $
 // ============================================================================
 // Include files 
+// ============================================================================
+// STD & STL 
+// ============================================================================
+#include <sstream>
 // ============================================================================
 // Event 
 // ============================================================================
@@ -12,6 +16,7 @@
 // ============================================================================
 // LoKi
 // ============================================================================
+#include "LoKi/Constants.h"
 #include "LoKi/Tracks.h"
 // ============================================================================
 /** @file
@@ -178,6 +183,79 @@ std::ostream& LoKi::Tracks::SmartInfo::fillStream( std::ostream& s ) const
   return s << ")" ;  
 }
 // ============================================================================
+// constructor with the state indicator 
+// ============================================================================
+LoKi::Tracks::StateZ::StateZ 
+( const LHCb::State::Location location )
+  : LoKi::BasicFunctors<LHCb::Track>::Function () 
+  , m_state ( location ) 
+  , m_bad   ( LoKi::Constants::InvalidDistance ) 
+{}
+// ============================================================================
+// constructor with the state indicator 
+// ============================================================================
+LoKi::Tracks::StateZ::StateZ 
+( const LHCb::State::Location location , 
+  const double                bad      )
+  : LoKi::BasicFunctors<LHCb::Track>::Function () 
+  , m_state ( location ) 
+  , m_bad   ( bad      ) 
+{}
+// ============================================================================
+// MANDATORY: virtual destructor 
+// ============================================================================
+LoKi::Tracks::StateZ::~StateZ (){}
+// ============================================================================
+// MANDATORY: clone method ("virtual constructor")
+// ============================================================================
+LoKi::Tracks::StateZ*
+LoKi::Tracks::StateZ::clone() const 
+{ return new LoKi::Tracks::StateZ ( *this ) ; }
+// ============================================================================
+// MANDATORY: the only one essential method 
+// ============================================================================
+LoKi::Tracks::StateZ::result_type 
+LoKi::Tracks::StateZ::operator() 
+  ( LoKi::Tracks::StateZ::argument t ) const 
+{
+  /// get the state:
+  const LHCb::State* s = t.stateAt( m_state ) ;
+  if ( 0 == s )  
+  {
+    Error ( "There is no state at " + state() + ", return 'bad' " ) ;
+    return m_bad ;
+  }
+  return s->z () ; 
+}
+// ============================================================================
+// get the string representation of the state 
+// ============================================================================
+const std::string& LoKi::Tracks::StateZ::state() const 
+{
+  if ( !m__state.empty() ) { return m__state ; }
+  std::ostringstream ss ;
+  ss << m_state ;
+  m__state = ss.str() ;
+  return m__state ;
+}
+// ============================================================================
+// OPTIONAL: nice printout 
+// ============================================================================
+std::ostream& LoKi::Tracks::StateZ::fillStream ( std::ostream& s ) const 
+{
+  switch ( m_state ) 
+  {
+  case LHCb::State::FirstMeasurement : 
+    return s << " TrFIRSTHITZ " ;
+  default : 
+    break ;
+  }
+  return s << " TrSTATEZ( LHCb.State." << state() << " ) " ;
+}
+
+
+
+  
 
 // ============================================================================
 // The END 

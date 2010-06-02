@@ -1,9 +1,23 @@
-! $Id: release.notes,v 1.72 2010-05-27 15:24:40 graven Exp $
+! $Id: release.notes,v 1.73 2010-06-02 16:51:02 ibelyaev Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiTrigger
 ! Responsible : Vanya BELYAEV
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
+
+! 2010-06-02 - Vanya Belyaev
+
+ - LoKi/Tracks.h
+
+    new functor StateZ ( for Patrick Koppenburg ) 
+
+ - LoKi/TrackCuts.h
+
+    add symbols: TrSTATEZ & TrFIRSTHITZ 
+
+ - cmt/requirements 
+
+     version increment to v10r1 
 
 !========================== LoKiTrigger v10r0p1 2010-05-27 ===================
 ! 2010-05-24 - Gerhard Raven

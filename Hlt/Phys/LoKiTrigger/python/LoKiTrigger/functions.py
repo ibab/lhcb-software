@@ -209,7 +209,10 @@ TrSTIDC   = LoKi.Tracks.CountSTIDs
 ## @see LoKi::Cuts::TrVELOIDC
 TrVELOIDC = LoKi.Tracks.CountVeloIDs
 
-
+## @see LoKi::Cuts::TrSTATEZ
+TrSTATEZ     = LoKi.Tracks.StateZ
+## @see LoKi::Cuts::TrFIRTSHITZ
+TrFIRSTHITZ  = LoKi.Tracks.StateZ ( LHCb.State.FirstMeasurement ) 
 
 # 
 ## @see LoKi::Cuts::TTrDA

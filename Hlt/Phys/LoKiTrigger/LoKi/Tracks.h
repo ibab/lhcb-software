@@ -1,4 +1,4 @@
-// $Id: Tracks.h,v 1.6 2007-11-28 18:09:38 ibelyaev Exp $
+// $Id: Tracks.h,v 1.7 2010-06-02 16:51:01 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_TRACKS_H 
 #define LOKI_TRACKS_H 1
@@ -39,6 +39,7 @@ namespace LoKi
     class Key : public LoKi::BasicFunctors<LHCb::Track>::Function
     {
     public:
+      // ======================================================================
       /// MANDATORY: virtual destructor  
       virtual ~Key () {}
       /// MANDATORY: clone method ("virtual constructor")  
@@ -48,6 +49,7 @@ namespace LoKi
       /// OPTIONAL: the nice printout 
       virtual std::ostream& fillStream( std::ostream& s ) const 
       { return s << "TrKEY" ; }
+      // ======================================================================
     } ;
     // ========================================================================
     /** @class InTES
@@ -59,6 +61,7 @@ namespace LoKi
     class InTES : public LoKi::BasicFunctors<LHCb::Track>::Predicate
     {
     public:
+      // ======================================================================
       /// MANDATORY: virtual destrcutor  
       virtual ~InTES () {}
       /// MANDATORY: clone method ("virtual constructor")  
@@ -69,6 +72,7 @@ namespace LoKi
       /// OPTIONAL: the nice printout 
       virtual std::ostream& fillStream( std::ostream& s ) const 
       { return s << "TrINTES" ; }
+      // ======================================================================
     } ;
     // ========================================================================
     /** @class Charge
@@ -80,6 +84,7 @@ namespace LoKi
     class Charge : public LoKi::BasicFunctors<LHCb::Track>::Function
     {
     public:
+      // ======================================================================
       /// MANDATORY: virtual destrcutor  
       virtual ~Charge () {}
       /// MANDATORY: clone method ("virtual constructor")  
@@ -89,6 +94,7 @@ namespace LoKi
       /// OPTIONAL: the nice printout 
       virtual std::ostream& fillStream( std::ostream& s ) const 
       { return s << "TrQ" ; }
+      // ======================================================================
     } ;
     // ========================================================================
     /** @class TransverseMomentum 
@@ -100,6 +106,7 @@ namespace LoKi
     class TransverseMomentum : public LoKi::BasicFunctors<LHCb::Track>::Function
     {
     public:
+      // ======================================================================
       /// MANDATORY: virtual destrcutor  
       virtual ~TransverseMomentum() {}
       /// MANDATORY: clone method ("virtual constructor")  
@@ -110,6 +117,7 @@ namespace LoKi
       /// OPTIONAL: the nice printout 
       virtual std::ostream& fillStream( std::ostream& s ) const 
       { return s << "TrPT" ; }
+      // ======================================================================
     } ;
     // ========================================================================
     /** @class Momentum 
@@ -121,6 +129,7 @@ namespace LoKi
     class Momentum : public LoKi::BasicFunctors<LHCb::Track>::Function
     {
     public:
+      // ======================================================================
       /// MANDATORY: virtual destrcutor  
       virtual ~Momentum() {}
       /// MANDATORY: clone method ("virtual constructor")  
@@ -130,6 +139,7 @@ namespace LoKi
       /// OPTIONAL: the nice printout 
       virtual std::ostream& fillStream( std::ostream& s ) const 
       { return s << "TrP" ; }
+      // ======================================================================
     } ;
     // ========================================================================
     /** @class CheckFlag 
@@ -149,6 +159,7 @@ namespace LoKi
     class CheckFlag : public LoKi::BasicFunctors<LHCb::Track>::Predicate 
     {
     public:
+      // ======================================================================
       /// constructor form the flag ; 
       CheckFlag ( LHCb::Track::Flags flag ) ;
       /// copy constructor 
@@ -162,12 +173,17 @@ namespace LoKi
       { return t.checkFlag( m_flag ) ; }
       /// OPTIONAL: the nice printout 
       virtual std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
     private:
+      // ======================================================================
       // the default constructor is disabled
       CheckFlag() ; ///< no default contructor
+      // ======================================================================
     private:
+      // ======================================================================
       // the flag to be checked:
       LHCb::Track::Flags m_flag ; ///< the flag to be checked:
+      // ======================================================================
     } ;    
     // ========================================================================
     /** @class Selector
@@ -181,6 +197,7 @@ namespace LoKi
     class Selector : public LoKi::BasicFunctors<LHCb::Track>::Predicate
     {
     public :
+      // ======================================================================
       /// constructor form the tool 
       Selector (                       ITrackSelector*  tool ) ;
       /// constructor form the tool 
@@ -196,17 +213,24 @@ namespace LoKi
       /// OPTIONAL: the nice printout 
       virtual std::ostream& fillStream( std::ostream& s ) const 
       { return s << "TrSELECTOR" ; }
+      // ======================================================================
     public:
+      // ======================================================================
       /// conversion operator to the tool
       operator const LoKi::Interface<ITrackSelector>&() const { return m_tool ;}    
+      // ======================================================================
     private:
+      // ======================================================================
       // the default constructor is disabled 
       Selector() ; ///< the default constructor is disabled 
+      // ======================================================================
     private:
-      // the tool itself 
-      LoKi::Interface<ITrackSelector> m_tool ; ///< the tool itself 
+      // ======================================================================
+      /// the tool itself 
+      LoKi::Interface<ITrackSelector> m_tool ;            // the tool itself 
+      // ======================================================================
     } ;
-    // =======================================================================
+    // ========================================================================
     /** @class HasInfo
      *  Trivial predicate which evaluates LHCb::Track::hasInfo
      *  function
@@ -224,6 +248,7 @@ namespace LoKi
     class HasInfo : public LoKi::ExtraInfo::CheckInfo<LHCb::Track>
     {
     public:
+      // ======================================================================
       /** constructor from "info"
        *  @param key info index/mark/key
        */
@@ -236,9 +261,12 @@ namespace LoKi
       virtual HasInfo* clone() const { return new HasInfo(*this) ; }
       /// the specific printout 
       virtual std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
     private:
+      // ======================================================================
       // the default constructor is disabled 
       HasInfo();
+      // ======================================================================
     };
     // ========================================================================    
     /** @class Info
@@ -257,6 +285,7 @@ namespace LoKi
     class Info : public LoKi::ExtraInfo::GetInfo<LHCb::Track>
     {
     public:
+      // ======================================================================
       /** constructor from "info"
        *  @param key info index/mark/key
        *  @param def default value for missing key/invalid object 
@@ -270,9 +299,12 @@ namespace LoKi
       virtual Info* clone() const { return new Info(*this); }
       /// the specific printout 
       virtual std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
     private:
+      // ======================================================================
       // the default constructor is disabled 
       Info();
+      // ======================================================================
     };
     // ========================================================================    
     /** @class SmartInfo
@@ -295,6 +327,7 @@ namespace LoKi
     class SmartInfo : public LoKi::ExtraInfo::GetSmartInfo<LHCb::Track>
     {
     public:
+      // ======================================================================
       /** constructor from fuction, key and update-flag
        *  @param index the key in LHCb::Track::extraInfo table 
        *  @param fun functionto be evaluated for missing keys 
@@ -310,9 +343,12 @@ namespace LoKi
       virtual  SmartInfo* clone() const { return new SmartInfo(*this); }
       /// the specific printout 
       virtual std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
     private:
+      // ======================================================================
       // the default constructor is disabled 
       SmartInfo();
+      // ======================================================================
     };
     // ========================================================================
     /** @class Chi2
@@ -324,6 +360,7 @@ namespace LoKi
     class Chi2 : public LoKi::BasicFunctors<LHCb::Track>::Function
     {
     public:
+      // ======================================================================
       /// MANDATORY: virtual destrcutor  
       virtual ~Chi2 () {}
       /// MANDATORY: clone method ("virtual constructor")  
@@ -333,6 +370,7 @@ namespace LoKi
       /// OPTIONAL: the nice printout 
       virtual std::ostream& fillStream( std::ostream& s ) const 
       { return s << "TrCHI2" ; }
+      // ======================================================================
     } ;
     // ========================================================================
     /** @class ProbChi2
@@ -344,6 +382,7 @@ namespace LoKi
     class ProbChi2 : public LoKi::BasicFunctors<LHCb::Track>::Function
     {
     public:
+      // ======================================================================
       /// MANDATORY: virtual destrcutor  
       virtual ~ProbChi2 () {}
       /// MANDATORY: clone method ("virtual constructor")  
@@ -353,6 +392,7 @@ namespace LoKi
       /// OPTIONAL: the nice printout 
       virtual std::ostream& fillStream( std::ostream& s ) const 
       { return s << "TrPROBCHI2" ; }
+      // ======================================================================
     } ;
     // ========================================================================
     /** @class HasStateAt 
@@ -364,6 +404,7 @@ namespace LoKi
     class HasStateAt : public LoKi::BasicFunctors<LHCb::Track>::Predicate
     {
     public:
+      // ======================================================================
       HasStateAt ( const LHCb::State::Location& loc )
         : LoKi::BasicFunctors<LHCb::Track>::Predicate () 
         , m_loc ( loc ) {}
@@ -377,15 +418,22 @@ namespace LoKi
       /// OPTIONAL: the nice printout 
       virtual std::ostream& fillStream( std::ostream& s ) const 
       { return s << "TrHASSTATE(" << loc () << ")" ; }
+      // ======================================================================
     public:
+      // ======================================================================
       /// get the location 
       int loc () const { return m_loc ; }
+      // ======================================================================
     private:
+      // ======================================================================
       // defautl constructor is disabled 
       HasStateAt() ; ///< no default constructor 
+      // ======================================================================
     private:
-      // the location 
-      LHCb::State::Location m_loc ; ///< the location 
+      // ======================================================================
+      /// the location 
+      LHCb::State::Location m_loc ;                             // the location 
+      // ======================================================================
     } ;  
     // ========================================================================
     /** @class IsOnTrack
@@ -397,6 +445,7 @@ namespace LoKi
     class IsOnTrack : public LoKi::BasicFunctors<LHCb::Track>::Predicate
     {
     public:
+      // ======================================================================
       IsOnTrack ( const LHCb::LHCbID& id ) 
         : LoKi::BasicFunctors<LHCb::Track>::Predicate () 
         , m_id ( id ) {}
@@ -410,11 +459,16 @@ namespace LoKi
       /// OPTIONAL: the nice printout 
       virtual std::ostream& fillStream( std::ostream& s ) const 
       { return s << "TrIsOnTRACK(LHCb.LHCbID(" << m_id.lhcbID() << "))" ; }
+      // ======================================================================
     private:
+      // ======================================================================
       // the default constructor is disabled 
       IsOnTrack() ; ///< no default consructor 
+      // ======================================================================
     private:
+      // ======================================================================
       LHCb::LHCbID m_id ;
+      // ======================================================================
     } ;
     // ========================================================================
     /** @class Type
@@ -428,6 +482,7 @@ namespace LoKi
     class Type : public LoKi::BasicFunctors<LHCb::Track>::Function
     {
     public:
+      // ======================================================================
       /// MANDATORY: virtual destrcutor  
       virtual ~Type() {} 
       /// MANDATORY: clone method ("virtual constructor")  
@@ -437,9 +492,54 @@ namespace LoKi
       /// OPTIONAL: the nice printout 
       virtual std::ostream& fillStream( std::ostream& s ) const 
       { return s << "TrTYPE" ; }
+      // ======================================================================
     } ;
-  } // end of namespace LoKi::Tracks
-} // end of namespace LoKi 
+    // ========================================================================
+    /** @class StateZ 
+     *  check Z-positon for the given state 
+     *  @see LoKi::Cuts::TrSTATEZ 
+     *  @see LoKi::Cuts::TrFIRSTHITZ
+     *  @see LHCb::State::Location
+     *  @author Vanya Belyaev@nikhef.nl
+     *  @date 2010-06-02
+     */
+    class StateZ : public LoKi::BasicFunctors<LHCb::Track>::Function
+    {
+    public:
+      // ======================================================================
+      /// constructor with the state indicator 
+      StateZ ( const LHCb::State::Location location = LHCb::State::FirstMeasurement ) ;
+      /// constructor with the state indicator & bad value  
+      StateZ ( const LHCb::State::Location location , 
+               const double       bad      ) ;
+      /// MANDATORY: virtual destructor 
+      virtual ~StateZ() ;
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  StateZ* clone () const ;
+      /// MANDATORY: the only one essential method 
+      virtual result_type operator() ( argument t ) const ;
+      /// OPTIONAL: nice printout 
+      virtual std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// get the string representation of the state 
+      const std::string& state() const ; // the string representation 
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the state itself 
+      LHCb::State::Location m_state ;                       // the state itself 
+      /// the bad value 
+      double       m_bad   ;                                //    the bad value
+      /// the state 
+      mutable std::string m__state ;                        //        the state 
+      // ======================================================================
+    } ;
+    // ========================================================================
+  } //                                            end of namespace LoKi::Tracks
+  // ==========================================================================
+} //                                                      end of namespace LoKi 
 // ============================================================================
 // The END 
 // ============================================================================

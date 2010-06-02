@@ -1,4 +1,4 @@
-// $Id: TrackCuts.h,v 1.5 2008-02-22 08:40:29 graven Exp $
+// $Id: TrackCuts.h,v 1.6 2010-06-02 16:51:01 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_TRACKCUTS_H
 #define LOKI_TRACKCUTS_H 1
@@ -978,9 +978,47 @@ namespace LoKi
      */
     const LoKi::BasicFunctors<LHCb::Track>::Constant TrZERO ( 0 ) ;
     // ========================================================================
-  } // end of namespace LoKi::Tracks
-} // end of namespace LoKi 
-// =============================================================================
+    /** @typedef TrSTATEZ 
+     *  simple evaluator for Z-position of the certain state 
+     *  @code
+     * 
+     *  const TrSTATEZ fun = TrSTATEZ ( LHCb::State::FirstMeasurement ) ;
+     *  const LHCb::Track&t = ... ;
+     *
+     *  const double value =  fun ( t ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LoKi::Tracks::StateZ
+     *  @see LoKi::Cuts::TsFIRSTHITZ
+     *
+     *  @author Vanya Belyaev Ivan.Belyaev@nikhef.nl
+     *  @date 2010-06-02
+     */
+    typedef LoKi::Tracks::StateZ                                     TrSTATEZ ;
+    // ========================================================================
+    /** @var TrFIRSTHITZ 
+     *  simple evaluator for Z-position of the firts measuremnet 
+     *  @code
+     * 
+     *  const LHCb::Track&t = ... ;
+     *
+     *  const double value =  TrFIRSTHITZ ( t ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LoKi::Tracks::StateZ
+     *  @see LoKi::Cuts::TsSTATEZ 
+     *
+     *  @author Vanya Belyaev Ivan.Belyaev@nikhef.nl
+     *  @date 2010-06-02
+     */
+    const LoKi::Tracks::StateZ TrFIRSTHITZ ( LHCb::State::FirstMeasurement ) ;
+    // ========================================================================
+  } //                                            end of namespace LoKi::Tracks
+  // ==========================================================================
+} //                                                      end of namespace LoKi 
+// ============================================================================
 // The END 
 // ============================================================================
 #endif // LOKI_TRACKCUTS_H
