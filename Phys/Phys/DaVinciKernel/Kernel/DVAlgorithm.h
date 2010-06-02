@@ -1,4 +1,4 @@
-// $Id: DVAlgorithm.h,v 1.56 2010-06-01 09:36:10 pkoppenb Exp $ 
+// $Id: DVAlgorithm.h,v 1.57 2010-06-02 10:18:45 jpalac Exp $ 
 // ============================================================================
 #ifndef DAVINCIKERNEL_DVALGORITHM_H
 #define DAVINCIKERNEL_DVALGORITHM_H 1
@@ -27,7 +27,6 @@
 #include "Kernel/IVertexFit.h"
 #include "Kernel/IGeomDispCalculator.h"
 #include "Kernel/IParticleFilter.h"
-#include "Kernel/IFilterCriterion.h"
 #include "Kernel/ICheckOverlap.h"
 #include "Kernel/IBTaggingTool.h"
 #include "Kernel/IParticleDescendants.h"

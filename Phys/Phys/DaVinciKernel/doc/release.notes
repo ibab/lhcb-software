@@ -1,8 +1,12 @@
-!$Id: release.notes,v 1.357 2010-06-01 09:36:10 pkoppenb Exp $
+!$Id: release.notes,v 1.358 2010-06-02 10:18:46 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciKernel
 ! Responsible : J.P. Palacios
 !============================================================================
+
+! 2010-06-02 - Juan Palacios
+ - Kernel/DVAlgorithm
+  . Remove IFilterCriterion dependency.
 
 ! 2010-06-01 - Patrick Koppenburg
  - Remove SelResult functionality
