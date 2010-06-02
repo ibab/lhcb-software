@@ -1,4 +1,4 @@
-// $Id: DVAlgorithm.h,v 1.57 2010-06-02 10:18:45 jpalac Exp $ 
+// $Id: DVAlgorithm.h,v 1.58 2010-06-02 10:59:12 jpalac Exp $ 
 // ============================================================================
 #ifndef DAVINCIKERNEL_DVALGORITHM_H
 #define DAVINCIKERNEL_DVALGORITHM_H 1
@@ -25,7 +25,6 @@
 #include "Kernel/IPhysDesktop.h"
 #include "Kernel/IOnOffline.h"
 #include "Kernel/IVertexFit.h"
-#include "Kernel/IGeomDispCalculator.h"
 #include "Kernel/IParticleFilter.h"
 #include "Kernel/ICheckOverlap.h"
 #include "Kernel/IBTaggingTool.h"
@@ -380,21 +379,6 @@ public:
     (this->desktop()->Particle2VertexRelations().i_removeFrom(part)).ignore();
     this->desktop()->relate(part, vert);
   }
-public:
-  
-  
-  /// Accessor for Geometrical Displacement Calculation Tool
-  inline IGeomDispCalculator* 
-  obsoleteGeomDispCalculator ( const std::string& name = "" ) const
-  {
-    Warning("You are using the obsolete IGeomDispCalculator interface. Use IDistanceCalculator instead.",
-            1,StatusCode::SUCCESS).ignore();
-    return getTool<IGeomDispCalculator>
-      ( name , 
-        m_geomToolNames , 
-        m_geomTools     , this ) ;
-  }
-  
 
 public:
   
@@ -579,8 +563,6 @@ protected:
 
   /// Mapping of "nickname ->type/name" for Geometry Tools
   ToolMap                                                     m_geomToolNames ;
-  /// The actual map of "nickname -> tool" for Geometry Tools 
-  mutable GaudiUtils::VectorMap<std::string,IGeomDispCalculator*> m_geomTools ;
   
   /// Mapping of "nickname ->type/name" for Particle Filters
   ToolMap                                                       m_filterNames ;
