@@ -8,6 +8,7 @@
 #-----------------------------------------------------------------------------
 
 from LbConfiguration.Project import getProject
+from LbUtils.afs.volume import createVolume
 import logging
 import sys, os, commands
 
@@ -45,12 +46,6 @@ def create_volume(pname,pversion,size=0):
 
 
 # create the new volume
-    strcmd = 'afs_admin create -u %s -q %d %s %s' % (MYNAME, size, PPATH, vol_name)
-    log.info(strcmd)
-    os.system(strcmd)
-
-# give write access to librarians
-    if os.path.exists(PPATH):
-        os.system('fs sa '+PPATH+' '+group+':librarians all')
+    createVolume(PPATH, vol_name, size, MYNAME, group)
 
     return
