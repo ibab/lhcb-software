@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.146 2010-05-30 17:11:02 ibelyaev Exp $ 
+! $Id: release.notes,v 1.147 2010-06-02 08:07:42 jpalac Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhys
 ! Responsible : Vanya Belyaev
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
+
+! 2010-06-02 - Juan Palacios
+ - Particles15, LoKiPhys, Particles
+  . IFilterCriterion -> IParticleFilter.
 
 ! 2010-05-30 - Vanya Belyaev
 
