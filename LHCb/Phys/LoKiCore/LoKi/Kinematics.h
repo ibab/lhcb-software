@@ -1,4 +1,4 @@
-// $Id: Kinematics.h,v 1.20 2010-06-01 17:05:03 ibelyaev Exp $
+// $Id: Kinematics.h,v 1.21 2010-06-02 15:40:31 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_KINEMATICS_H 
 #define LOKI_KINEMATICS_H 1
@@ -614,7 +614,7 @@ namespace LoKi
      *      \left( \frac{\left(v_2\cdot M\right)^2}{M^2}-v_2^2 \right) }
      * \f$ 
      *
-     *  Note that the expressions are clear Lorentz invarinats.
+     *  Note that the expressions are clear Lorentz invariant
      * 
      *  @attention the particle M must be time-like particle: M^2 > 0 ! 
      *  @param v1 the first vector 
@@ -665,9 +665,8 @@ namespace LoKi
      *  of "mother" particles (defined as d1+d2+h1+h2) 
      *
      *  The angle is evaluated using the explicit 
-     *  Lorenzt-invariant expressions
-     *
-     *  \f$ 
+     *  Lorenzt-invariant expression:
+     *  \f[
      *  \cos \chi =      
      *   - \frac{ L_D^{\mu} L_H^{\mu} }
      *     { \sqrt{ \left[ -L_D^2 \right]\left[ -L_H^2 \right] }},
@@ -676,7 +675,7 @@ namespace LoKi
 	   *     \epsilon_{ijkl}d_1^{j}d_2^{k}\left(h_1+h_2\right)^l
      *     \epsilon_{imnp}h_1^{m}h_2^{n}\left(d_1+d_2\right)^p }
      *     { \sqrt{ \left[ -L_D^2 \right]\left[ -L_H^2 \right] }},
-     *  \f$ 
+     *  \f] 
      *  where "4-normales" are defined as:
      *  \f$ 
      *   L_D^{\mu} = \epsilon_{\mu\nu\lambda\kappa}
@@ -711,8 +710,7 @@ namespace LoKi
      *      
      *  The angle is  calculated using the explicit 
      *   Lorentz-invariant expression:
-     *  
-     * \f$ 
+     *  \f[ 
      *   \sin \chi = 
      *   \frac  { 
      *   \epsilon_{\mu\nu\lambda\delta}
@@ -728,7 +726,7 @@ namespace LoKi
 	   *   \left[ -L_D^2 \right]\left[ -L_H^2    \right] 
      *   \left[ \left(H\cdot M\right)^2-H^2M^2 \right] 
 	   *   }},
-     * \f$ 
+     *  \f] 
      *  where "4-normales" are defined as:
      *  \f$
      *  L_D^{\mu} = \epsilon_{\mu\nu\lambda\kappa}
@@ -867,14 +865,148 @@ namespace LoKi
       const LoKi::LorentzVector& mom  , 
       const Gaudi::SymMatrix4x4& cov  ) ;
     // ========================================================================
-//     /** @evaluate the (cosine) of tansversity angle 
-//      */
-//     GAUDI_API
-//     double cosThetaTr 
-//     ( const LoKi::LorentzVector& d1 , 
-//       const LoKi::LorentzVector& d2 , 
-//       const LoKi::LorentzVector& h1 , 
-//       const LoKi::LorentzVector& h2 ) ;
+    /** @evaluate the (cosine) of tansversity angle,
+     *  \f$ \cos \theta_{\mathrm{tr}}\f$, 
+     *  e.g. for decay  
+     *  \f$ \mathrm{B}^0_{\mathrm{s}} \to 
+     *       \left( \mathrm{J}/\psi \to \mu^+ \mu^-               \right)
+     *       \left( \phi            \to \mathrm{K}^+ \mathrm{K}^- \right) \$
+     * 
+     *  The evaluation is performed using the explicit Lorentz-invariant 
+     *  expression:
+     *  \f[
+     *   \cos \theta_{\mathrm{tr}} = 
+     *    \frac{ \epsilon_{\mu\nu\lambda\kappa}
+     *          d_1^{\mu}h_1^{\nu}h_2^{\lambda}L_H^{\kappa} }
+     *    {
+     *     \sqrt{  \left( d_1 \cdot D  \right) / D^2 - d_1^2 } 
+     *     \sqrt{  - L_H^2 }      
+     *    },     
+     *  \f]
+     * where 4-normal \f$ L_H^{\mu}\f$ is defined as  
+     *  \f$ 
+     *  L_H^{\mu} = \epsilon_{\mu\lambda\delta\rho}
+     *  h_1^{\lambda}h_2^{\delta}\left(d_1+d_2\right)^{\rho} 
+     *  \f$, and \f$ D = d_1 + d_2 \f$. 
+     *
+     *  @param d1 (INPUT) the 4-momentum of positive lepton 
+     *  @param d2 (INPUT) the 4-momentum of negative lepton 
+     *  @param h1 (INPUT) the 4-momentum of positive kaon 
+     *  @param h2 (INPUT) the 4-momentum of negative kaon  
+     *  @return the cosine of the transversity angle theta 
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2010-06-02
+     */
+    GAUDI_API
+    double cosThetaTr 
+    ( const LoKi::LorentzVector& d1 , 
+      const LoKi::LorentzVector& d2 , 
+      const LoKi::LorentzVector& h1 , 
+      const LoKi::LorentzVector& h2 ) ;
+    // ========================================================================
+    /** evaluate the cosine of transverse angle phi, 
+     *  \f$ \cos \phi_{\mathrm{tr}}\f$, e.g. for decay  
+     *  \f$ \mathrm{B}^0_{\mathrm{s}} \to 
+     *       \left( \mathrm{J}/\psi \to \mu^+ \mu^-               \right)
+     *       \left( \phi            \to \mathrm{K}^+ \mathrm{K}^- \right) \$
+     *    
+     *  The evaluation is performed using the explicit Lorentz-invariant 
+     *  expression as angle between the ``in-plane'' vector \f$q\f$, and 
+     *  vector \f$H\f$ in rest frame of \f$D\f$, where 
+     *  \f$  q = d_1 - \frac{ d_1 \cdot L_H}{L_H^2}L_H \f$, 
+     *  the ``4-normal'' is defiend as 
+     *  \f$  L_H^{\mu} = \epsilon_{\mu\lambda\delta\rho}
+     *  h_1^{\lambda}h_2^{\delta}\left(d_1+d_2\right)^{\rho} 
+     *  \f$, \f$ D = d_1 + d_2 \f$, \f$ H = h_1 + h_2 \f$.
+     *
+     *  @see LoKi::Kinematics::cosThetaRest 
+     *  @param d1 (INPUT) the 4-momentum of positive lepton 
+     *  @param d2 (INPUT) the 4-momentum of negative lepton 
+     *  @param h1 (INPUT) the 4-momentum of positive kaon 
+     *  @param h2 (INPUT) the 4-momentum of negative kaon  
+     *  @return the cosine of the transversity angle theta 
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2010-06-02
+     */
+    GAUDI_API
+    double cosPhiTr 
+    ( const LoKi::LorentzVector& d1 , 
+      const LoKi::LorentzVector& d2 , 
+      const LoKi::LorentzVector& h1 , 
+      const LoKi::LorentzVector& h2 ) ;
+    // ========================================================================
+    /** evaluate the sine of transverse angle phi, \f$ \sin \phi_{\mathrm{tr}}\f$, 
+     *  e.g. for decay  
+     *  \f$ \mathrm{B}^0_{\mathrm{s}} \to 
+     *       \left( \mathrm{J}/\psi \to \mu^+ \mu^-               \right)
+     *       \left( \phi            \to \mathrm{K}^+ \mathrm{K}^- \right) \$
+     *    
+     *  The evaluation is performed using the explicit Lorentz-invariant 
+     *  expression:
+     *  \f[
+     *   \sin \phi_{\mathrm{tr}} = 
+     *    - frac { 
+     *      \epsilon_{\mu\nu\lambda\kappa}
+     *       d_1^{\mu}L_H^{\mu}D^{\lambda}H^{\kappa}
+     *     }{
+     *     \sqrt{ -L^2 }
+     *     \sqrt{  D^2 }
+     *     \sqrt{ \left( q \cdot D  \right) / D^2 - q^2 } 
+     *     \sqrt{ \left( M \cdot D  \right) / D^2 - M^2 } 
+     *     }
+     *  \f] 
+     * where 4-normal \f$ L_H^{\mu}\f$ is defined as  
+     *  \f$ 
+     *  L_H^{\mu} = \epsilon_{\mu\lambda\delta\rho}
+     *  h_1^{\lambda}h_2^{\delta}\left(d_1+d_2\right)^{\rho} 
+     *  \f$,
+     * \f$ D = d_1 + d_2 \f$,  
+     * \f$ H = h_1 + h_2 \f$,  
+     * \f$ M = D+ H \f$ and ``in-plane'' 4-vector \f$q\f$ is defined as 
+     *  \f$  q = d_1 - \frac{ d_1 \cdot L_H}{L_H^2}L_H \f$.
+     *
+     *  @param d1 (INPUT) the 4-momentum of positive lepton 
+     *  @param d2 (INPUT) the 4-momentum of negative lepton 
+     *  @param h1 (INPUT) the 4-momentum of positive kaon 
+     *  @param h2 (INPUT) the 4-momentum of negative kaon  
+     *  @return the cosine of the transversity angle theta 
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2010-06-02
+     */
+    GAUDI_API
+    double sinPhiTr 
+    ( const LoKi::LorentzVector& d1 , 
+      const LoKi::LorentzVector& d2 , 
+      const LoKi::LorentzVector& h1 , 
+      const LoKi::LorentzVector& h2 ) ;
+    // ========================================================================
+    /** evaluate the transverse angle phi, \f$ \phi_{\mathrm{tr}}\f$, 
+     *  e.g. for decay  
+     *  \f$ \mathrm{B}^0_{\mathrm{s}} \to 
+     *       \left( \mathrm{J}/\psi \to \mu^+ \mu^-               \right)
+     *       \left( \phi            \to \mathrm{K}^+ \mathrm{K}^- \right) \$
+     *    
+     *  The evaluation is performed using the explicit Lorentz-invariant 
+     *  expression for \f$ \sin \phi_{\mathrm{tr}} \f$ and 
+     *   \f$ \cos \phi_{\mathrm{tr}} \f$ and 
+     * 
+     *  @see LoKi::Kinematics::cosPhiTr 
+     *  @see LoKi::Kinematics::sinPhiTr 
+     *
+     *  @param d1 (INPUT) the 4-momentum of positive lepton 
+     *  @param d2 (INPUT) the 4-momentum of negative lepton 
+     *  @param h1 (INPUT) the 4-momentum of positive kaon 
+     *  @param h2 (INPUT) the 4-momentum of negative kaon  
+     *  @return the cosine of the transversity angle theta 
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2010-06-02
+     */
+    GAUDI_API
+    double anglePhiTr 
+    ( const LoKi::LorentzVector& d1 , 
+      const LoKi::LorentzVector& d2 , 
+      const LoKi::LorentzVector& h1 , 
+      const LoKi::LorentzVector& h2 ) ;
     // ========================================================================
   } //                                        end of namespace LoKi::Kinematics  
   // ==========================================================================

@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.201 2010-06-01 17:05:03 ibelyaev Exp $ 
+! $Id: release.notes,v 1.202 2010-06-02 15:40:31 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiCore
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -14,6 +14,13 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! 
 ! -----------------------------------------------------------------------------
+
+! 2010-06-02 - Vanya Belyaev
+ 
+ - LoKi/Kinematics.h 
+
+    add functions for evaluation of ``transversity-angles''
+
 
 ! 2010-06-01 - Vanya Belyaev
 

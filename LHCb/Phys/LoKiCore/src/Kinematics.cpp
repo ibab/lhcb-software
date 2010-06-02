@@ -1,4 +1,4 @@
-// $Id: Kinematics.cpp,v 1.15 2010-06-01 17:05:04 ibelyaev Exp $
+// $Id: Kinematics.cpp,v 1.16 2010-06-02 15:40:31 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -159,85 +159,24 @@ double LoKi::Kinematics::decayAngle
   const LoKi::LorentzVector& Q ,
   const LoKi::LorentzVector& D ) 
 {
-  const double pd  = P.Dot  ( D ) ;    // P * D 
-  const double pq  = P.Dot  ( Q ) ;    // P * Q 
-  const double qd  = Q.Dot  ( D ) ;    // D * Q 
-  const double mq2 = Q.M2   () ;       // Q^2
-  const double mp2 = P.M2   () ;       // P^2
-  const double md2 = D.M2   () ;       // D^2
+  const double pd  = P.Dot  ( D ) ;       // P * D 
+  const double pq  = P.Dot  ( Q ) ;       // P * Q 
+  const double qd  = Q.Dot  ( D ) ;       // D * Q 
+  const double mq2 = Q.M2   (   ) ;       // Q^2
+  const double mp2 = P.M2   (   ) ;       // P^2
+  const double md2 = D.M2   (   ) ;       // D^2
   
   const double value = 
     ( pq * pq - mq2 * mp2 ) * ( qd * qd - mq2 * md2 ) ;
-  
   if ( 0 > value ) 
   {
     LoKi::Report::Error 
-      ( "LoKi::Kinematics::decayAngle(P,Q,D):: invalid 4-momenta " );
+      ( "LoKi::Kinematics::decayAngle(P,Q,D):: invalid 4-momenta, return InvalidAngle" );
     return LoKi::Constants::InvalidAngle ;
   }
   //
-  return ( pd * mq2 - pq * qd ) / sqrt( value ) ;
+  return ( pd * mq2 - pq * qd ) / ::sqrt ( value ) ;
 }
-// // ============================================================================
-// /** This routine evaluates the cosine of "transversity angle", 
-//  *  useful e.g. to disantangle the different partiasl vaves in 
-//  *  0 -> 1 + 1 decay (e.g. Bs -> J/psi Phi 
-//  *  
-//  *  The code is kindly provided by Gerhard Raven 
-//  * 
-//  *  @param l1 4-vector of the first  particle, e.g. mu+
-//  *  @param l2 4-vector of the second particle, e.g. mu- 
-//  *  @param p1 4-vector of the third  particle, e.g. K+
-//  *  @param p2 4-vector of the fourth particle, e.g. K- 
-//  *  @return the cosine of transversity angle 
-//  * 
-//  *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
-//  *  @date 2004-12-03
-//  */ 
-// // ============================================================================
-// double LoKi::Kinematics::transversityAngle 
-// ( const LoKi::LorentzVector& l1 , 
-//   const LoKi::LorentzVector& l2 , 
-//   const LoKi::LorentzVector& p1 , 
-//   const LoKi::LorentzVector& p2 ) 
-// {
-//   const LoKi::LorentzRotation 
-//     bst ( - ( l1 + l2 ).boostVector() ) ;
-//   return ( ( bst * p1 ).vect() ).cross( ( bst * p2 ).vect() ).cosTheta( ( bst * l1 ).vect() ) ;
-// };
-// // ============================================================================
-
-// // ============================================================================
-// /** This routine evaluated the angle theta_FB
-//  *  used e.g. for evaluation of forward-backward 
-//  *  asymmetry for decay B -> K* mu+ mu- 
-//  *  The angle calculated is that 
-//  *  between between the mu+ and K^*0 momenta 
-//  *  in the di-muon rest frame
-//  *  
-//  *  The code is kindly provided by Helder Lopes 
-//  *
-//  *  @param  K  4-momenutm of   "K*"
-//  *  @param  l1 4-momentum of the first  lepton
-//  *  @param  l2 4-momentum of the second lepton
-//  *  @return the cosine of theta_FB 
-//  * 
-//  *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
-//  *  @date 2004-12-03
-//  */
-// // ============================================================================
-// double LoKi::Kinematics::forwardBackwardAngle
-// ( const LoKi::LorentzVector& K  , 
-//   const LoKi::LorentzVector& l1 , 
-//   const LoKi::LorentzVector& l2 )
-// {
-//   // 
-//   const LoKi::LorentzRotation bst( - ( l1 + l2 ).boostVector() ) ;
-  
-//   return ( ( bst * K ).vect() ).cosTheta( ( bst * l1 ).vect() ) ;
-// };
-// // ============================================================================
-
 // ============================================================================
 /** simple function which evaluates the magnitude of 3-momentum 
  *  of particle "v" in the rest system of particle "M" 
@@ -249,7 +188,7 @@ double LoKi::Kinematics::decayAngle
  *  @param v the vector to be checked 
  *  @param M the defintion of "rest"-system
  *  @return the magnitude of 3D-momentum of v in rest-frame of M 
- *  @author Vanya BELYAEV Ivan.BElyaev@nikhef.nl
+ *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
  *  @date 2008-07-27
  */
 // ============================================================================
@@ -261,7 +200,7 @@ double LoKi::Kinematics::restMomentum
   if ( 0 >= M2 ) 
   {
     LoKi::Report::Error 
-      ( "LoKi::Kinematics::restMomentum():: rest-system is not time-like" );
+      ( "LoKi::Kinematics::restMomentum():: rest-system is not time-like, reuturn InvalidMomentum" );
     return LoKi::Constants::InvalidMomentum ; 
   }
   const double vM = v.Dot(M) ;
@@ -269,7 +208,7 @@ double LoKi::Kinematics::restMomentum
   if ( 0 >  P2 ) 
   { 
     LoKi::Report::Error 
-      ( "LoKi::Kinematics::restMomentum():: P2 < 0 " );
+      ( "LoKi::Kinematics::restMomentum():: P2 < 0, return InvalidMomentum" );
     return LoKi::Constants::InvalidMomentum ; 
   }
   return ::sqrt ( P2 ) ;
@@ -296,7 +235,7 @@ double LoKi::Kinematics::restEnergy
   if ( 0 >= M2 ) 
   {
     LoKi::Report::Error 
-      ( "LoKi::Kinematics::restEnergy():: rest-system is not time-like" );
+      ( "LoKi::Kinematics::restEnergy():: rest-system is not time-like, return InvaildEnergy" );
     return LoKi::Constants::InvalidEnergy ; 
   }
   // evaluate the energy 
@@ -323,7 +262,7 @@ double LoKi::Kinematics::cosThetaRest
   if ( 0 >= M2 ) 
   {
     LoKi::Report::Error 
-      ( "LoKi::Kinematics::cosThetaRest():: rest-system is not time-like" );
+      ( "LoKi::Kinematics::cosThetaRest():: rest-system is not time-like, return InvalidAngle" );
     return LoKi::Constants::InvalidAngle ; 
   }
   /// 
@@ -340,10 +279,10 @@ double LoKi::Kinematics::cosThetaRest
     ( ( v1M * v1M ) / M2 - m1_2 ) *
     ( ( v2M * v2M ) / M2 - m2_2 ) ; // calculate (|p1|*|p2|)^2
   //
-  if ( 0 > p1p2_ ) 
+  if ( 0 >= p1p2_ ) 
   {
     LoKi::Report::Error 
-      ( "LoKi::Kinematics::cosThetaRest():: (|p1|*|p2|)^2 < 0 " );
+      ( "LoKi::Kinematics::cosThetaRest():: (|p1|*|p2|)^2 < 0, return InvalidAngle" );
     return LoKi::Constants::InvalidAngle ; 
   }
   //
@@ -377,13 +316,13 @@ double LoKi::Kinematics::cosDecayAngleChi
   if ( 0 <= l1 )
   {
     LoKi::Report::Error 
-      ( "LoKi::Kinematics::cosDecayAngleChi () : L1^2 >= 0 " );
+      ( "LoKi::Kinematics::cosDecayAngleChi () : L1^2 >= 0, return InvalidAngle" );
     return LoKi::Constants::InvalidAngle ;
   }
   if ( 0 <= l2 )
   {
     LoKi::Report::Error 
-      ( "LoKi::Kinematics::cosDecayAngleChi () : L2^2 >= 0 " );
+      ( "LoKi::Kinematics::cosDecayAngleChi () : L2^2 >= 0, return InvaildAngle" );
     return LoKi::Constants::InvalidAngle ;
   }
   
@@ -411,7 +350,20 @@ double LoKi::Kinematics::decayAngleChi
 {
   //
   const double cosChi = cosDecayAngleChi ( d1 , d2 , h1 , h2 ) ;
+  if ( LoKi::Constants::InvalidAngle == cosChi )
+  {
+    LoKi::Report::Error 
+      ( "LoKi::Kinematics::decayAngleChi () : invalid cosine, return InvalidAngle" );
+    return LoKi::Constants::InvalidAngle ;
+  }
+  //
   const double sinChi = sinDecayAngleChi ( d1 , d2 , h1 , h2 ) ;  
+  if ( LoKi::Constants::InvalidAngle == sinChi )
+  {
+    LoKi::Report::Error 
+      ( "LoKi::Kinematics::decayAngleChi () : invalid   sine, return InvalidAngle" );
+    return LoKi::Constants::InvalidAngle ;
+  }
   //
   return ::atan2 ( sinChi , cosChi ) ;
 }
@@ -433,7 +385,7 @@ double LoKi::Kinematics::sinDecayAngleChi
   if ( 0 >= M2 ) 
   {
     LoKi::Report::Error 
-      ( "LoKi::Kinematics::sinDecayAngleChi():: rest-system is not time-like" ) ;
+      ( "LoKi::Kinematics::sinDecayAngleChi():: rest-system is not time-like, return InvalidAngle" ) ;
     return LoKi::Constants::InvalidAngle ;
   }
   // ========================================================================
@@ -447,13 +399,13 @@ double LoKi::Kinematics::sinDecayAngleChi
   if ( 0 <= l1 )
   {
     LoKi::Report::Error 
-      ( "LoKi::Kinematics::sinDecayAngleChi () : L1^2 >= 0 " );
+      ( "LoKi::Kinematics::sinDecayAngleChi () : L1^2 >= 0, return InvalidAngle" );
     return LoKi::Constants::InvalidAngle ;
   }
   if ( 0 <= l2 )
   {
     LoKi::Report::Error 
-      ( "LoKi::Kinematics::sinDecayAngleChi () : L2^2 >= 0 " );
+      ( "LoKi::Kinematics::sinDecayAngleChi () : L2^2 >= 0, return InvaildAngle" );
     return LoKi::Constants::InvalidAngle ;
   }
   
@@ -468,7 +420,7 @@ double LoKi::Kinematics::sinDecayAngleChi
   if ( 0 >= p_H ) 
   {
     LoKi::Report::Error 
-      ( "LoKi::Kinematics::sinDecayAngleChi () : |H| < 0 " );
+      ( "LoKi::Kinematics::sinDecayAngleChi () : |H| < 0, return InvaildAngle" );
     return LoKi::Constants::InvalidAngle ;
   }
   //
@@ -521,30 +473,217 @@ double LoKi::Kinematics::chi2mass
   // evaluate chi2 
   return dmass2*dmass2*v_D ;
 }
-// // ============================================================================
-// /** @evaluate the (cosine) of transversity angle 
-//  */
-// double LoKi::Kinematics::cosThetaTr 
-// ( const LoKi::LorentzVector& d1 , 
-//   const LoKi::LorentzVector& d2 , 
-//   const LoKi::LorentzVector& h1 , 
-//   const LoKi::LorentzVector& h2 ) 
-// {
+// ============================================================================
+/*  @evaluate the (cosine) of tansversity angle, e.g. for decay  
+ *  \f$ \mathrm{B}^0_{\mathrm{s}} \to 
+ *       \left( \mathrm{J}/\psi \to \mu^+ \mu^-               \right)
+ *       \left( \phi            \to \mathrm{K}^+ \mathrm{K}^- \right) \$
+ * 
+ *  
+ *  The evaluation is performed using the explicit Lorentz-invariant 
+ *  expression:
+ *  \f[
+ *   \cos \theta_{\mathrm{tr}} = 
+ *    \frac{ \epsilon_{\mu\nu\lambda\kappa}
+ *          d_1^{\mu}h_1^{\nu}h_2^{\lambda}L_H^{\kappa} }
+ *    {
+ *     \sqrt{  \left( d_1 \cdot D  \right) / D^2 - d_1^2 } 
+ *     \sqrt{  - L_H^2 }      
+ *    },     
+ *  \f]
+ * where 4-normal \f$ L_H^{\mu}\f$ is defined as  
+ *  \f$ 
+ *  L_H^{\mu} = \epsilon_{\mu\lambda\delta\rho}
+ *  h_1^{\lambda}h_2^{\delta}\left(d_1+d_2\right)^{\rho} 
+ *  \f$, and \f$ D = d_1 + d_2 \f$. 
+ *
+ *  @param d1 (INPUT) the 4-momentum of positive lepton 
+ *  @param d2 (INPUT) the 4-momentum of negative lepton 
+ *  @param h1 (INPUT) the 4-momentum of positive kaon 
+ *  @param h2 (INPUT) the 4-momentum of negative kaon  
+ *  @return the cosine od the transversity angle    
+ *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+ *  @date 2010-06-02
+ */
+// ============================================================================
+double LoKi::Kinematics::cosThetaTr 
+( const LoKi::LorentzVector& d1 , 
+  const LoKi::LorentzVector& d2 , 
+  const LoKi::LorentzVector& h1 , 
+  const LoKi::LorentzVector& h2 ) 
+{
   
-//   // get the intermediate particles D & H 
-//   const LoKi::LorentzVector D ( d1 + d2 ) ;
-//   const LoKi::LorentzVector H ( h1 + h2 ) ;
+  // get the intermediate compound particles D 
+  const LoKi::LorentzVector D ( d1 + d2 ) ;
   
-//   // Evaluator of various tensor expressions:
-//   LoKi::Tensors::Epsilon e ;
+  // Evaluator of various tensor expressions:
+  LoKi::Tensors::Epsilon e ;
   
-//   // evaluate the length of normales :
-//   const double l2 = e.mag2 ( h1 , h2 , D ) ; // == | [h1,h2,M] | 
+  // evaluate the length of normales :
+  const double l2 = e.mag2 ( h1 , h2 , D ) ; // == | [h1,h2,D] | 
+  if ( 0 <= l2 )
+  {
+    LoKi::Report::Error 
+      ( "LoKi::Kinematics::cosThetaTh () : L^2 >= 0, return InvalidAngle" );
+    return LoKi::Constants::InvalidAngle ;
+  }
+  //
+  return  e.epsilon ( d1 , h1 , h2 , D ) /
+    restMomentum ( d1 , D ) / ::sqrt ( -l2 ) ;
+}
+// ============================================================================
+/** evaluate the sine of transverse angle phi, e.g. for decay  
+ *  \f$ \mathrm{B}^0_{\mathrm{s}} \to 
+ *       \left( \mathrm{J}/\psi \to \mu^+ \mu^-               \right)
+ *       \left( \phi            \to \mathrm{K}^+ \mathrm{K}^- \right) \$
+ *    
+ *  The evaluation is performed using the explicit Lorentz-invariant 
+ *  expression as angle between the ``in-plane'' vector \f$q\f$, and 
+ *  vector \f$H\f$ in rest frame of \f$D\f$, where 
+ *  \f$  q = d_1 - \frac{ d_1 \cdot L_H}{L_H^2}L_H \f$, 
+ *  the ``4-normal'' is defiend as 
+ *  \f$  L_H^{\mu} = \epsilon_{\mu\lambda\delta\rho}
+ *  h_1^{\lambda}h_2^{\delta}\left(d_1+d_2\right)^{\rho} 
+ *  \f$, \f$ D = d_1 + d_2 \f$, \f$ H = h_1 + h_2 \f$.
+ *
+ *  @see LoKi::Kinematics::cosThetaRest 
+ *  @param d1 (INPUT) the 4-momentum of positive lepton 
+ *  @param d2 (INPUT) the 4-momentum of negative lepton 
+ *  @param h1 (INPUT) the 4-momentum of positive kaon 
+ *  @param h2 (INPUT) the 4-momentum of negative kaon  
+ *  @return the cosine of the transversity angle theta 
+ *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+ *  @date 2010-06-02
+ */
+// ===========================================================================
+double LoKi::Kinematics::cosPhiTr 
+( const LoKi::LorentzVector& d1 , 
+  const LoKi::LorentzVector& d2 , 
+  const LoKi::LorentzVector& h1 , 
+  const LoKi::LorentzVector& h2 ) 
+{
   
-//   return  e.epsilon ( d1 , h1 , h2 , d2  ) /
-//     restMomentum ( d1 , H ) / sqrt ( -l2 ) ;
-// }
-
+  // get the intermediate compound particles D & H
+  const LoKi::LorentzVector D ( d1 + d2 ) ;
+  const LoKi::LorentzVector H ( h1 + h2 ) ;
+  
+  // Evaluator of various tensor expressions:
+  LoKi::Tensors::Epsilon e ;
+  
+  // get "4-normal", that is z-axis here 
+  LoKi::LorentzVector l  = e ( h1 , h2 , D ) ;
+  const double        l2 = l.M2() ;
+  if ( l2 >= 0 ) 
+  {
+    LoKi::Report::Error 
+      ( "LoKi::Kinematics::cosPhiTr () : L^2 >= 0, return InvalidAngle" );
+    return LoKi::Constants::InvalidAngle ;
+  }
+  //
+  return cosThetaRest ( d1 - d1.Dot(l)/l2*l  , H  , D ) ;
+}
+// ============================================================================
+/** evaluate the sine of transverse angle phi, e.g. for decay  
+ *  \f$ \mathrm{B}^0_{\mathrm{s}} \to 
+ *       \left( \mathrm{J}/\psi \to \mu^+ \mu^-               \right)
+ *       \left( \phi            \to \mathrm{K}^+ \mathrm{K}^- \right) \$
+ *    
+ *  The evaluation is performed using the explicit Lorentz-invariant 
+ *  expression:
+ *  \f[
+ *   \sin \phi_{\mathrm{tr}} = 
+ *    - frac { 
+ *      \epsilon_{\mu\nu\lambda\kappa}
+ *       d_1^{\mu}L_H^{\mu}D^{\lambda}H^{\kappa}
+ *     }{
+ *     \sqrt{ -L^2 }
+ *     \sqrt{  D^2 }
+ *     \sqrt{ \left( q \cdot D  \right) / D^2 - q^2 } 
+ *     \sqrt{ \left( M \cdot D  \right) / D^2 - M^2 } 
+ *     }
+ *  \f] 
+ * where 4-normal \f$ L_H^{\mu}\f$ is defined as  
+ *  \f$ 
+ *  L_H^{\mu} = \epsilon_{\mu\lambda\delta\rho}
+ *  h_1^{\lambda}h_2^{\delta}\left(d_1+d_2\right)^{\rho} 
+ *  \f$,
+ * \f$ D = d_1 + d_2 \f$,  
+ * \f$ H = h_1 + h_2 \f$,  
+ * \f$ M = D+ H \f$ and ``in-plane'' 4-vector \f$q\f$ is defined as 
+ *  \f$  q = d_1 - \frac{ d_1 \cdot L_H}{L_H^2}L_H \f$.
+ *
+ *  @param d1 (INPUT) the 4-momentum of positive lepton 
+ *  @param d2 (INPUT) the 4-momentum of negative lepton 
+ *  @param h1 (INPUT) the 4-momentum of positive kaon 
+ *  @param h2 (INPUT) the 4-momentum of negative kaon  
+ *  @return the cosine of the transversity angle theta 
+ *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+ *  @date 2010-06-02
+ */
+// ============================================================================
+double LoKi::Kinematics::sinPhiTr 
+( const LoKi::LorentzVector& d1 , 
+  const LoKi::LorentzVector& d2 , 
+  const LoKi::LorentzVector& h1 , 
+  const LoKi::LorentzVector& h2 ) 
+{
+  // get the intermediate compound particles D & H
+  const LoKi::LorentzVector D ( d1 + d2 ) ;
+  const LoKi::LorentzVector H ( h1 + h2 ) ;
+  
+  // Evaluator of various tensor expressions:
+  LoKi::Tensors::Epsilon e ;
+  
+  // get "4-normal", that is z-axis here 
+  LoKi::LorentzVector l  = e ( h1 , h2 , D ) ;
+  const double        l2 = l.M2() ;
+  if ( l2 >= 0 ) 
+  {
+    LoKi::Report::Error 
+      ( "LoKi::Kinematics::sinPhiTr () : L^2 >= 0, return InvalidAngle" );
+    return LoKi::Constants::InvalidAngle ;
+  }
+  //
+  return - e ( d1 , l , D , H  ) 
+    / ::sqrt         ( -l2     )
+    / ::sqrt         (  D.M2() )
+    / restMomentum   ( d1 - d1.Dot(l)/l2*l , D ) 
+    / restMomentum   ( H + D  , D ) ; 
+}
+// ============================================================================
+/** evaluate the transverse angle phi, \f$ \phi_{\mathrm{tr}}\f$, 
+ *  e.g. for decay  
+ *  \f$ \mathrm{B}^0_{\mathrm{s}} \to 
+ *       \left( \mathrm{J}/\psi \to \mu^+ \mu^-               \right)
+ *       \left( \phi            \to \mathrm{K}^+ \mathrm{K}^- \right) \$
+ *    
+ *  The evaluation is performed using the explicit Lorentz-invariant 
+ *  expression for \f$ \sin \phi_{\mathrm{tr}} \f$ and 
+ *   \f$ \cos \phi_{\mathrm{tr}} \f$ and 
+ * 
+ *  @see LoKi::Kinematics::cosPhiTr 
+ *  @see LoKi::Kinematics::sinPhiTr 
+ *
+ *  @param d1 (INPUT) the 4-momentum of positive lepton 
+ *  @param d2 (INPUT) the 4-momentum of negative lepton 
+ *  @param h1 (INPUT) the 4-momentum of positive kaon 
+ *  @param h2 (INPUT) the 4-momentum of negative kaon  
+ *  @return the cosine of the transversity angle theta 
+ *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+ *  @date 2010-06-02
+ */
+// ============================================================================
+double LoKi::Kinematics::anglePhiTr 
+( const LoKi::LorentzVector& d1 , 
+  const LoKi::LorentzVector& d2 , 
+  const LoKi::LorentzVector& h1 , 
+  const LoKi::LorentzVector& h2 ) 
+{
+  const double cosChi = cosPhiTr ( d1 , d2 , h1 , h2 ) ;
+  const double sinChi = sinPhiTr ( d1 , d2 , h1 , h2 ) ;  
+  //
+  return ::atan2 ( sinChi , cosChi ) ;
+}
 // ============================================================================
 // The END 
 // ============================================================================
