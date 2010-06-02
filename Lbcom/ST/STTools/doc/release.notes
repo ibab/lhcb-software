@@ -2,6 +2,9 @@
 ! Package manager : Jeroen van Tilburg
 !------------------------------------------------------------------------------
 
+! 2010-06-02 M Needham
+ - Add new selector tool STRndmEffSelector (used by default by cluster selector from channel)
+
 ! 2010-06-01 Mark Tobin
  - Implementation of new methods in noise calculation tools.  Now returns a list
  of TELL1 source ID which had an NZS bank.

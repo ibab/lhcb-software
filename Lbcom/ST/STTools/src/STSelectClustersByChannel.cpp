@@ -18,7 +18,7 @@ STSelectClustersByChannel::STSelectClustersByChannel( const std::string& type,
                                     const IInterface* parent ) :
   ST::ToolBase(type, name, parent)
 {
-  declareProperty("SelectorType", m_selectorType = "STRndmChannelIDSelector");
+  declareProperty("SelectorType", m_selectorType = "STRndmEffSelector");
   declareProperty("SelectorName", m_selectorName = "Selector");
   declareInterface<ISTClusterSelector>(this);
 }
