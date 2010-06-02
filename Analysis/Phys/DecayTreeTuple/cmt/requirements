@@ -3,7 +3,7 @@
 # Maintainer : Patrick Koppenburg
 #============================================================================
 package           DecayTreeTuple
-version           v3r5
+version           v3r5p1
 
 #============================================================================
 # Structure, i.e. directories to process. 

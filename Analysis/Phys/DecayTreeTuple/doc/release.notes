@@ -4,6 +4,9 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2010-06-02 - Patrick Koppenburg
+ - Bug 68234 : Strore origin vertex for stable MC particles as well.
+
 !========================== DecayTreeTuple v3r5 2010-05-24 ================
 
 ! 2010-04-28 - Olivier Deschamps

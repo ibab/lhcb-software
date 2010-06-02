@@ -1,4 +1,4 @@
-// $Id: MCTupleToolKinematic.cpp,v 1.4 2010-04-23 11:09:28 pkoppenb Exp $
+// $Id: MCTupleToolKinematic.cpp,v 1.5 2010-06-02 07:25:30 pkoppenb Exp $
 // Include files 
 #include "gsl/gsl_sys.h"
 
@@ -92,14 +92,14 @@ StatusCode MCTupleToolKinematic::fill( const LHCb::MCParticle*
     mcPT= mcp->pt();
     mcM=sqrt(trueP.M2());
     if (msgLevel(MSG::VERBOSE)) verbose() << "      " << trueP << endmsg ;
+    originVertex = mcp->originVertex()->position();
+    if (msgLevel(MSG::VERBOSE)) verbose() << "     origin vertex position " << originVertex << endmsg ;
     if (!isStable(mcp))
     {
       const SmartRefVector< LHCb::MCVertex > & endVertices = mcp->endVertices();
       if (msgLevel(MSG::VERBOSE)) verbose() << "     vertices " << mcp->endVertices().size() << endmsg ;
       endVertex = endVertices.front()->position(); // the first item, the other are discarded.
       if (msgLevel(MSG::VERBOSE)) verbose() << "     origin vertex " << mcp->originVertex() << endmsg ;
-      originVertex = mcp->originVertex()->position();
-      if (msgLevel(MSG::VERBOSE)) verbose() << "     origin vertex position " << originVertex << endmsg ;
       
       // lifetime
       if( m_storePT )
