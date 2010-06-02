@@ -1,9 +1,17 @@
-! $Id: release.notes,v 1.60 2010-05-24 16:01:02 jpalac Exp $ 
+! $Id: release.notes,v 1.61 2010-06-02 15:47:46 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiAlgo
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
 ! Purpose     : LoKi-algorithm related stuff 
 ! -----------------------------------------------------------------------------
+
+! 2010-06-02 - Vanya Belyaev
+
+ - allow LHCb::DecayTree as argument for functors 
+
+ - cmt/requirements 
+
+    version increment to v9r2 
 
 !========================== LoKiAlgo v9r1 2010-05-25 ==========================
 

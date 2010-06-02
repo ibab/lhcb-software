@@ -1,4 +1,4 @@
-// $Id: ExtCalls.h,v 1.5 2008-04-30 11:11:45 ibelyaev Exp $
+// $Id: ExtCalls.h,v 1.6 2010-06-02 15:47:46 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_EXTCALLS_H 
 #define LOKI_EXTCALLS_H 1
@@ -14,6 +14,10 @@
 #include "Event/Particle.h"
 #include "Event/Vertex.h"
 #include "Event/RecVertex.h"
+// ============================================================================
+// DaVinciTypes 
+// ============================================================================
+#include "Kernel/DecayTree.h"
 // ============================================================================
 // LoKi
 // ============================================================================
@@ -57,6 +61,9 @@ namespace LoKi
       ( const Fun& fun , const LoKi::Loop&               p ) { return fun ( p ) ; }
       // ======================================================================
       static Fun::result_type __call__ 
+      ( const Fun& fun , const LHCb::DecayTree&          p ) { return fun ( p ) ; }
+      // ======================================================================
+      static Fun::result_type __call__ 
       ( const Fun& fun , const SmartRef<LHCb::Particle>& p ) { return fun ( p ) ; }
       // ======================================================================
     public:
@@ -71,17 +78,12 @@ namespace LoKi
       { return fun ( o )   ; }
       // __rrshift__ 
       static Fun::result_type              __rrshift__ 
-      ( const Fun& fun  , const LoKi::Loop&        o ) 
+      ( const Fun& fun  , const LHCb::DecayTree&   o ) 
       { return fun ( o ) ; }
       // __rrshift__ 
-      static std::vector<Fun::result_type> __rrshift__ 
-      ( const Fun& fun  , const Type::Container& o ) 
-      {
-        std::vector<Fun::result_type> res  ;
-        res.reserve ( o.size () ) ;
-        LoKi::apply ( o.begin() , o.end() , fun , std::back_inserter ( res ) ) ;
-        return res ; 
-      }
+      static Fun::result_type              __rrshift__ 
+      ( const Fun& fun  , const LoKi::Loop&        o ) 
+      { return fun ( o ) ; }
       // __rrshift__ 
       static std::vector<Fun::result_type> __rrshift__ 
       ( const Fun& fun  , const SmartRefVector<Type>& o ) 
@@ -122,6 +124,9 @@ namespace LoKi
       ( const Fun& fun , const LHCb::Particle*           p ) { return fun ( p ) ; }
       // ======================================================================
       static Fun::result_type __call__ 
+      ( const Fun& fun , const LHCb::DecayTree&          p ) { return fun ( p ) ; }
+      // ======================================================================
+      static Fun::result_type __call__ 
       ( const Fun& fun , const LoKi::Loop&               p ) { return fun ( p ) ; }
       // ======================================================================
       static Fun::result_type __call__ 
@@ -132,16 +137,6 @@ namespace LoKi
       // __rrshift__
       static Type::ConstVector __rrshift__ 
       ( const Fun& fun  , const Type::ConstVector&          o ) { return o >> fun  ; }
-      // __rrshift__
-      static Type::ConstVector __rrshift__ 
-      ( const Fun& fun  , const Type::Container&            o ) 
-      { 
-        Type::ConstVector res  ;
-        res.reserve ( o.size () ) ;
-        LoKi::apply_filter 
-          ( o.begin() , o.end() , fun , std::back_inserter ( res ) ) ;
-        return res ; 
-      }   
       // __rrshift__
       static Type::ConstVector __rrshift__ 
       ( const Fun& fun  , const SmartRefVector<Type>&       o ) 
@@ -155,6 +150,9 @@ namespace LoKi
       // __rrshift__
       static Fun::result_type  __rrshift__ 
       ( const Fun& fun  , const Type*                       o ) { return fun ( o ) ; }
+      // __rrshift__
+      static Fun::result_type  __rrshift__ 
+      ( const Fun& fun  , const LHCb::DecayTree&            o ) { return fun ( o ) ; }
       // __rrshift__
       static Fun::result_type  __rrshift__ 
       ( const Fun& fun  , const LoKi::Loop&                 o ) { return fun ( o ) ; }
@@ -203,15 +201,6 @@ namespace LoKi
       { return o >> fun  ; }
       // __rrshift__ 
       static std::vector<Fun::result_type> __rrshift__ 
-      ( const Fun& fun  , const Type::Container& o ) 
-      {
-        std::vector<Fun::result_type> res  ;
-        res.reserve ( o.size () ) ;
-        LoKi::apply ( o.begin() , o.end() , fun , std::back_inserter ( res ) ) ;
-        return res ; 
-      }
-      // __rrshift__ 
-      static std::vector<Fun::result_type> __rrshift__ 
       ( const Fun& fun  , const SmartRefVector<Type>& o ) 
       {
         std::vector<Fun::result_type> res  ;
@@ -221,25 +210,7 @@ namespace LoKi
       }
       // __rrshift__ 
       static std::vector<Fun::result_type> __rrshift__ 
-      ( const Fun& fun  , const LHCb::Vertex::Container& o ) 
-      {
-        std::vector<Fun::result_type> res  ;
-        res.reserve ( o.size () ) ;
-        LoKi::apply ( o.begin() , o.end() , fun , std::back_inserter ( res ) ) ;
-        return res ; 
-      }
-      // __rrshift__ 
-      static std::vector<Fun::result_type> __rrshift__ 
       ( const Fun& fun  , const SmartRefVector<LHCb::Vertex>& o ) 
-      {
-        std::vector<Fun::result_type> res  ;
-        res.reserve ( o.size () ) ;
-        LoKi::apply ( o.begin() , o.end() , fun , std::back_inserter ( res ) ) ;
-        return res ; 
-      }
-      // __rrshift__ 
-      static std::vector<Fun::result_type> __rrshift__ 
-      ( const Fun& fun  , const LHCb::RecVertex::Container& o ) 
       {
         std::vector<Fun::result_type> res  ;
         res.reserve ( o.size () ) ;
@@ -316,16 +287,6 @@ namespace LoKi
       ( const Fun& fun  , const Type::ConstVector& o ) { return o >> fun  ; }
       // __rrshift__
       static Type::ConstVector __rrshift__ 
-      ( const Fun& fun  , const Type::Container&            o ) 
-      { 
-        Type::ConstVector res  ;
-        res.reserve ( o.size () ) ;
-        LoKi::apply_filter 
-          ( o.begin() , o.end() , fun , std::back_inserter ( res ) ) ;
-        return res ; 
-      }   
-      // __rrshift__
-      static Type::ConstVector __rrshift__ 
       ( const Fun& fun  , const SmartRefVector<Type>&       o ) 
       { 
         Type::ConstVector res  ;
@@ -336,39 +297,9 @@ namespace LoKi
       }
       // __rrshift__
       static LHCb::Vertex::ConstVector __rrshift__ 
-      ( const Fun& fun  , const LHCb::Vertex::Container&            o ) 
-      { 
-        LHCb::Vertex::ConstVector res  ;
-        res.reserve ( o.size () ) ;
-        LoKi::apply_filter 
-          ( o.begin() , o.end() , fun , std::back_inserter ( res ) ) ;
-        return res ; 
-      }   
-      // __rrshift__
-      static LHCb::Vertex::ConstVector __rrshift__ 
       ( const Fun& fun  , const SmartRefVector<LHCb::Vertex>&       o ) 
       { 
         LHCb::Vertex::ConstVector res  ;
-        res.reserve ( o.size () ) ;
-        LoKi::apply_filter 
-          ( o.begin() , o.end() , fun , std::back_inserter ( res ) ) ;
-        return res ; 
-      }
-      // __rrshift__
-      static LHCb::RecVertex::ConstVector __rrshift__ 
-      ( const Fun& fun  , const LHCb::RecVertex::Container&            o ) 
-      { 
-        LHCb::RecVertex::ConstVector res  ;
-        res.reserve ( o.size () ) ;
-        LoKi::apply_filter 
-          ( o.begin() , o.end() , fun , std::back_inserter ( res ) ) ;
-        return res ; 
-      }   
-      // __rrshift__
-      static LHCb::RecVertex::ConstVector __rrshift__ 
-      ( const Fun& fun  , const SmartRefVector<LHCb::RecVertex>&       o ) 
-      { 
-        LHCb::RecVertex::ConstVector res  ;
         res.reserve ( o.size () ) ;
         LoKi::apply_filter 
           ( o.begin() , o.end() , fun , std::back_inserter ( res ) ) ;
@@ -398,8 +329,9 @@ namespace LoKi
       // ======================================================================
     } ;
     // ========================================================================    
-  } // end of namespace LoKi::Dicts
-} // end of namespace LoKi
+  } //                                             end of namespace LoKi::Dicts
+  // ==========================================================================
+} //                                                      end of namespace LoKi
 // ============================================================================
 // The END 
 // ============================================================================
