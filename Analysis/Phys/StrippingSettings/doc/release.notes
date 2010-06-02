@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-06-02 - Greig Cowan
+  - Added options for running the RecoStripping-04 stripping.
+
 ! 2010-06-02 - Anton Poluektov 
   - Removed puthon/ 
 
