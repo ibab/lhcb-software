@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: StandardKaons.py,v 1.1 2009-01-15 14:22:14 ibelyaev Exp $ 
+# $Id: StandardKaons.py,v 1.2 2010-06-03 10:31:18 yamhis Exp $ 
 # =============================================================================
 ## @file  CommonParticles/StandardKaons.py
 #  configuration file for 'Standard Kaons' 
@@ -11,7 +11,7 @@
 Configuration file for 'Standard Kaons'
 """
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $"
 # =============================================================================
 
 _locations = {} 
@@ -20,6 +20,9 @@ from CommonParticles.StdNoPIDsKaons import *
 _locations.update ( locations )
 
 from CommonParticles.StdLooseKaons import *
+_locations.update ( locations )
+
+from CommonParticles.StdLooseDownKaons import *
 _locations.update ( locations )
 
 from CommonParticles.StdTightKaons import *
