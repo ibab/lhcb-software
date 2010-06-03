@@ -1,9 +1,13 @@
-!$Id: release.notes,v 1.27 2010-06-02 10:04:55 jpalac Exp $
+!$Id: release.notes,v 1.28 2010-06-03 07:23:28 jpalac Exp $
 !===========================================================================
 ! Package     : VertexFitCheck
 ! Responsible : Yuehong Xie
 ! Puspose     : A set of tests for components in the Phys/VertexFit package.
 !===========================================================================
+
+! 2010-06-03 - Juan Palacios
+ - src/PropertimeChecker.cpp
+  . Remove unnecessary include of Kernel/IGeomDispCalculator.h
 
 ! 2010-06-02 - Juan Palacios
  - options/examples
