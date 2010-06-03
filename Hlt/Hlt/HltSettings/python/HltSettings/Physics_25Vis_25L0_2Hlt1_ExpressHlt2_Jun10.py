@@ -42,8 +42,8 @@ class Physics_25Vis_25L0_2Hlt1_ExpressHlt2_Jun10              ( Physics_MinBiasL
                                           )
         from Hlt1Lines.Hlt1LumiLines           import Hlt1LumiLinesConf
         if Hlt1LumiLinesConf not in thresholds : thresholds[Hlt1LumiLinesConf] = dict()
-        thresholds[Hlt1LumiLinesConf].update( { 'Prescale'  : { 'Hlt1LumiLow.*(?<!RateLimited)$'    : 0.004 
-                                                              , 'Hlt1LumiMid.*(?<!RateLimited)$'    : 0.04
+        thresholds[Hlt1LumiLinesConf].update( { 'Prescale'  : { 'Hlt1LumiLow.*(?<!RateLimited)$'    : 0.001 
+                                                              , 'Hlt1LumiMid.*(?<!RateLimited)$'    : 0.02
                                                               }
                                               , 'Postscale' : { 'Hlt1LumiLowNoBeamRateLimited'      : 'RATE(5)' 
                                                               , 'Hlt1LumiLowBeam2RateLimited'       : 'RATE(10)' 
