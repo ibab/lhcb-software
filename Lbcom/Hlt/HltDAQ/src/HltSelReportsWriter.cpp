@@ -1,4 +1,4 @@
-// $Id: HltSelReportsWriter.cpp,v 1.4 2010-06-03 13:50:54 graven Exp $
+// $Id: HltSelReportsWriter.cpp,v 1.5 2010-06-03 18:59:27 graven Exp $
 // Include files 
 
 #include <memory>
@@ -424,6 +424,8 @@ StatusCode HltSelReportsWriter::execute() {
 }
 
 //=============================================================================
+// this function effectively transfers ownership of set2 into lhcbidSequences
+
 void  HltSelReportsWriter::addToLhcbidSequences( LhcbidSequence* set2,
                                                  LhcbidSequences & lhcbidSequences ) const
 {
@@ -434,17 +436,19 @@ void  HltSelReportsWriter::addToLhcbidSequences( LhcbidSequence* set2,
   }
   for(LhcbidSequences::iterator iSet1= lhcbidSequences.begin();
       iSet1!=lhcbidSequences.end();++iSet1){
-    assert(set2!=0);
-    assert(*iSet1!=0);
+    // first check full overlap -- no need to store, just skip
+    // is this needed as a special case? Is always checking == faster then set_intersection??
     if( (**iSet1) == (*set2) ){
       delete set2; set2 = 0;
       break;
     }
+    // check  for overlap
     std::auto_ptr<LhcbidSequence> setint(new LhcbidSequence());
     set_intersection( (*iSet1)->begin(),(*iSet1)->end(),
                       set2->begin(),set2->end(),
                       inserter(*setint,setint->begin()) );
     if( !setint->empty() ){
+      // if any overlap, we replace the original with its subset not in the input
       std::auto_ptr<LhcbidSequence> set1p(new LhcbidSequence());
       set_difference(  (*iSet1)->begin(),(*iSet1)->end(),
                        setint->begin(),setint->end(),
@@ -452,15 +456,22 @@ void  HltSelReportsWriter::addToLhcbidSequences( LhcbidSequence* set2,
       delete *iSet1;                  // given that erase invalidates iSet1, we first delete
       lhcbidSequences.erase( iSet1 ); // and then erase...
       if( !set1p->empty() ) lhcbidSequences.push_back( set1p.release() );
+
+      // and then we split the input into the overlap and unique parts
       std::auto_ptr<LhcbidSequence> set2p(new LhcbidSequence());
       set_difference(  set2->begin(),set2->end(),
                        setint->begin(),setint->end(),
                        inserter(*set2p,set2p->begin()) );
+      // add the overlap
       lhcbidSequences.push_back( setint.release() );
+      // don't need the original input anymore
       delete set2; set2 = 0;
+      // and add the unique part of the input, if any
       if(!set2p->empty() ) addToLhcbidSequences( set2p.release(), lhcbidSequences );
-      break;      
-    }    
+      // Done!
+      break;
+    }
   }
+  // and if no overlap, we just add everything in one shot...
   if( set2!=0 ) lhcbidSequences.push_back( set2 );
 }
