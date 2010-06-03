@@ -22,7 +22,7 @@ class Physics_MinBiasL0_PassThroughHlt_Jun10 :
 
     
     def L0TCK(self) :
-        return '0x1810'
+        return '0x2810'
 
     def HltType(self) :
         self.verifyType( Physics_MinBiasL0_PassThroughHlt_Jun10 )

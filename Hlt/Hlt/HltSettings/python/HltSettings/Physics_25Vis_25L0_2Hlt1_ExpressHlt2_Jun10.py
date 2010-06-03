@@ -24,18 +24,20 @@ class Physics_25Vis_25L0_2Hlt1_ExpressHlt2_Jun10              ( Physics_MinBiasL
 
         from Hlt1Lines.Hlt1MBLines             import Hlt1MBLinesConf
         if Hlt1MBLinesConf not in thresholds : thresholds[Hlt1MBLinesConf] = dict()
-        thresholds[Hlt1MBLinesConf].update( { 'Postscale': { 'Hlt1MBMicroBias.*(?<!RateLimited)$' : 0.001        # must veto 'RateLimited' at the end...
-                                                           , 'Hlt1MBMicroBias.*RateLimited$'      : 'RATE(500)'  # must have 'RateLimited' at the end... # clone with a RATE(50)
+        thresholds[Hlt1MBLinesConf].update( { 'Postscale': { 'Hlt1MBMicroBias.*(?<!RateLimited)$' : 1            # must veto 'RateLimited' at the end...
+                                                           , 'Hlt1MBMicroBias.*RateLimited'       : 'RATE(50)'   # key MUST match the one in Hlt1MBLinesConf...
                                                            }
-                                            , 'Prescale' : { 'Hlt1MBMicroBias.*'                  : 0.1          # assume 10 kHz of ODIN lumi 
+                                            , 'Prescale' : { 'Hlt1MBMicroBias.*(?<!RateLimited)$' : 0.0001 
+                                                           , 'Hlt1MBMicroBias.*RateLimited'       : 0.1
                                                            }
                                             } 
                                           )
         from Hlt1Lines.Hlt1L0Lines             import Hlt1L0LinesConf
         if Hlt1L0LinesConf not in thresholds : thresholds[Hlt1L0LinesConf] = dict()
-        thresholds[Hlt1L0LinesConf].update( { 'Postscale' : { 'Hlt1L0Any$'           : 0.001
-                                                            , 'Hlt1L0AnyRateLimited' : 'RATE(100)'   # clone with a RATE(10)
-                                                            }
+        thresholds[Hlt1L0LinesConf].update( { 'Postscale' : { 'Hlt1L0Any'            :  1
+                                                            , 'Hlt1L0.*RateLimited' : 'RATE(10)' } # WARNING: key MUST match the one in Hlt1L0LinesConf
+                                            , 'Prescale'  : { 'Hlt1L0Any'            : 0.0001 
+                                                            , 'Hlt1L0AnyRateLimited' : 1  }
                                             }
                                           )
         from Hlt1Lines.Hlt1LumiLines           import Hlt1LumiLinesConf

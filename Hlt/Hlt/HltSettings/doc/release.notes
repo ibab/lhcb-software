@@ -4,7 +4,15 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
-!========================== HltSettings v2r0p1 2010-05-31 ===================
+!========================== HltSettings v2r0p2 2010-06-03 ===================
+! 2010-06-03 - Gerhard Raven
+ - more changes to Jun10 configurations, according to https://savannah.cern.ch/task/index.php?15819
+  o update L0TCK to 2x10
+  o tweak pre/post/rates of MicroBias and L0Any
+  (needs Hlt/Hlt1Lines v4r0p1 to get the clones right!)
+
+!========================== HltSettings v2r0p1 2010-06-02 ===================
+
 ! 2010-06-02 - Gerhard Raven
  - Lower photon ET cut to 2400 MeV
  - prescale micro bias with 0.1 in the Jun10 configurations
