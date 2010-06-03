@@ -1,4 +1,4 @@
-// $Id: IPhysDesktop.h,v 1.15 2010-05-16 09:30:14 jpalac Exp $
+// $Id: IPhysDesktop.h,v 1.16 2010-06-03 16:43:48 jpalac Exp $
 #ifndef DAVINCIKERNEL_IPHYSDESKTOP_H 
 #define DAVINCIKERNEL_IPHYSDESKTOP_H 1
 
@@ -17,19 +17,20 @@ class StatusCode;
  *  This tool hides all the I/O from the user and takes care of all ownership.
  *  The user should never have to type new in a DVAlgorithm using the PhysDesktop.
  *
- *  The PhysDesktop is interfaced by desktop() in DVAlgorithm
+ *  The IPhysDesktop is interfaced by desktop() in DVAlgorithm. It's is totally
+ *  coupled to its parent DVAlgorithm, so it is a nonsense interface, but a good
+ *  way to abuse the Gaudi framework to use the pImpl idiom.
  *
- *  Example of use
+ *  Example of use within a  DVAlgorithm.
  *
  *  @code
  * 
  *  StatusCode TutorialAlgorithm::execute() {
- *    LHCb::Particle::ConstVector muons = desktop()->particles(); // get particles
- *    sc = particleFilter()->filterNegative(muons,MuMinus);
- *    if (sc) sc = particleFilter()->filterPositive(muons,MuPlus);
- *    if (!sc) { 
- *      err() << "Error while filtering" << endmsg ;
- *      return sc ;
+ *    LHCb::Particle::ConstVector muons = this->particles(); // get particles
+ *    size_t nMuons = DaVinci::filter(muons, bind(&LHCb::Particle::charge,_1)<0, MuMinus);
+ *    if (nMuons>0) nMuons += DaVinci::filter(muons,bind(&LHCb::Particle::charge,_1)>0, MuPlus);
+ *    if (nMuons<=0) { 
+ *      return Warning() ("Found no filtered muons", StatusCode::SUCCESS, 1);
  *    }
  *    for ( LHCb::Particle::ConstVector::const_iterator imp =  MuPlus.begin() ;
  *          imp != MuPlus.end() ; ++imp ){
