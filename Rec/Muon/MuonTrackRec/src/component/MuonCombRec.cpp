@@ -2,6 +2,10 @@
 // Include files 
 #include <fstream>
 
+#ifdef _WIN32
+#pragma warning ( disable : 4244 ) // conversion double to float in boost
+#endif
+
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h" 
 #include "GaudiKernel/IIncidentSvc.h" 

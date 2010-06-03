@@ -42,5 +42,6 @@ private:
   }
 
   void clear();
+  
 };
 #endif // COMPONENT_MUONCLUSTERREC_H

@@ -9,6 +9,10 @@
 !               reconstruction algorithm for beam tracks
 !-----------------------------
 
+! 2010-06-04 - Rob Lambert
+ - Fixes for some windows warnings savannah 15808
+ - Still have a strange linker warning
+
 !======================== MuonTrackRec v3r3 2010-04-09 ======================------------------------------------------------
 
 ! 2010-05-14 - Rob Lambert
