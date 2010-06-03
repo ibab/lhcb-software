@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.551 2010-06-01 09:40:25 pkoppenb Exp $
+! $Id: release.notes,v 1.552 2010-06-03 12:07:06 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2010-06-03 - Juan Palacios
+ - src/FilterDesktop.cpp, src/PhysDesktop.cpp
+  . Check for Particle::Range, as it has been fixed in Gaudi.
 
 ! 2010-06-01 - Patrick Koppenburg
  - Remove access to SelResult from CheckSelResult and CheckSelResultTool 
