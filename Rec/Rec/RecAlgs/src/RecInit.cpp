@@ -73,7 +73,7 @@ StatusCode RecInit::execute() {
   StatusCode sc = LbAppInit::execute(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by LbAppInit
 
-  debug() << "==> Execute" << endmsg;
+  if(msgLevel(MSG::DEBUG)) debug() << "==> Execute" << endmsg;
   // Plot the memory usage
   m_memoryTool->execute();
 
@@ -82,9 +82,12 @@ StatusCode RecInit::execute() {
   try {
     odin = get<LHCb::ODIN> ( LHCb::ODINLocation::Default );
   }
+  
   catch( const GaudiException& Exception ) {
     m_incidentSvc->fireIncident(Incident(name(),IncidentType::AbortEvent));
     this->setFilterPassed( false );    
+    //dummy printout to remove warning in windows..
+    if(msgLevel(MSG::DEBUG)) debug() << Exception.message() << endmsg;
     return Error( "ODIN missing, skipping event", StatusCode::SUCCESS );
   }
   

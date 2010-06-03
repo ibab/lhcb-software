@@ -4,6 +4,9 @@
 ! Purpose     : Holds generic reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+! 2010-06-04 - Rob Lambert
+ - Fixes for some windows warnings savannah 15808
+
 !========================== RecAlgs v1r8 2009-03-10 ==========================
 ! 2009-03-05 - Marco Cattaneo
  - RecInit prints also event time if PrintEventTime option is set
