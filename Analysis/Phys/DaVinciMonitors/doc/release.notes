@@ -4,6 +4,9 @@
 ! Purpose     : Monitoring algorithms after reconstruction
 !-----------------------------------------------------------------------------
 
+! 2010-06-03 - Alessio Sarti
+ - MuIDMonitor.cpp minor fixes (histo titles, ranges)
+
 ! 2010-06-01 - Patrick Koppenburg
  - Remove SpotLight
 

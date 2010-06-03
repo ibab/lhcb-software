@@ -264,7 +264,7 @@ StatusCode MuIDMonitor::execute() {
   int my_pid[2] = {0,0}; double pt_pid[2] = {0.,0.};
   int my_chg[2] = {0,0}; double pl_pid[2] = {0.,0.};
   int idTag[2] = {0,0}; double PMass; 
-  std::string name, nameD; bool profFl;
+  std::string name, nameD, tit; bool profFl;
 
   double eEcal(0), eHcal(0);
   for (Particle::ConstVector::const_iterator iP = selParts.begin(); iP != selParts.end(); ++iP) {
@@ -386,67 +386,67 @@ StatusCode MuIDMonitor::execute() {
 	// idTag = 1 : Pion / Tag
 	if(plotFlag) {
 	  if(m_JPAna ) {
-	    if(!idTag[id_jp]) { nameD = "probe/"; name = "probe";	}
-	    else { nameD = "tag/"; name = "tag"; }
+	    if(!idTag[id_jp]) { nameD = "probe/"; name = "probe"; tit = "probe #mu "; }
+	    else { nameD = "tag/"; name = "tag"; tit = "tag #mu "; }
 	  } 
 
 	  if(m_LMAna ) {
-	    if(!idTag[id_jp]) {nameD = "proton/"; name = "proton/";}
-	    else { nameD = "pion/"; name = "pion/"; }
+	    if(!idTag[id_jp]) {nameD = "proton/"; name = "proton/"; tit ="proton "; }
+	    else { nameD = "pion/"; name = "pion/"; tit = "#pi ";  }
 	  } 
 
 
-	  plot1D ( (track)->p(), nameD+"P"," P distribution",0., 100000., 100 );
-	  plot1D ( (track)->pt(), nameD+"Pt", " Pt distribution",0., 20000., 100 );
-	  plot1D ( (track)->charge(), nameD+"Chg"," Charge distribution",-1., 2., 3 );
+	  plot1D ( (track)->p(), nameD+"P",tit+" P distribution",0., 100000., 100 );
+	  plot1D ( (track)->pt(), nameD+"Pt",tit+" Pt distribution",0., 20000., 100 );
+	  plot1D ( (track)->charge(), nameD+"Chg",tit+" charge distribution",-1.5, 1.5, 3 );
 
 	  if(pMuid){
 	    dllMu = TMath::Exp(pMuid->MuonLLMu());
 	    dllBg = TMath::Exp(pMuid->MuonLLBg());
 
-	    plot1D ( dllMu, nameD+"MuProb"," Mu likelihood",0., 1., 100 );
-	    plot1D ( dllBg, nameD+"BkgProb"," Bkg likelihood",0., 1., 100 );
-	    plot1D ( pMuid->MuonLLMu()-pMuid->MuonLLBg(), nameD+"Dll"," Delta Log likelihood",
+	    plot1D ( dllMu, nameD+"MuProb",tit+" Mu likelihood",0., 1., 100 );
+	    plot1D ( dllBg, nameD+"BkgProb",tit+" Bkg likelihood",0., 1., 100 );
+	    plot1D ( pMuid->MuonLLMu()-pMuid->MuonLLBg(), nameD+"Dll",tit+" Delta Log likelihood",
 		     -10., 10., 100 );
 	    
 	    // calculate the distance from the hit to the extrapolated position
 	    m_dist = calc_closestDist(pMuid,m_MomM1,closest_region);
  
 	    if(m_dist) {
-	      plot1D ( m_dist, nameD+"Dist","Squared Distance",0., 500., 100 );
-	      plot1D ( m_dist, nameD+"ZmDist","Squared Distance (zoom)",0., 20., 100 );
+	      plot1D ( m_dist, nameD+"Dist",tit+" Squared Distance",0., 500., 100 );
+	      plot1D ( m_dist, nameD+"ZmDist",tit+" Squared Distance (zoom)",0., 20., 100 );
 	      if(m_region == 0) {
-		plot1D ( m_dist, nameD+"R1Dist","R1 Squared Distance ",0., 500., 100 );
-		plot1D ( m_dist, nameD+"ZmR1Dist","R1 Squared Distance (zoom)",0., 20., 100 );
+		plot1D ( m_dist, nameD+"R1Dist",tit+" R1 Squared Distance ",0., 500., 100 );
+		plot1D ( m_dist, nameD+"ZmR1Dist",tit+" R1 Squared Distance (zoom)",0., 20., 100 );
 	      } else if(m_region == 1) {
-		plot1D ( m_dist, nameD+"R2Dist","R2 Squared Distance ",0., 500., 100 );
-		plot1D ( m_dist, nameD+"ZmR2Dist","R2 Squared Distance (zoom)",0., 20., 100 );
+		plot1D ( m_dist, nameD+"R2Dist",tit+" R2 Squared Distance ",0., 500., 100 );
+		plot1D ( m_dist, nameD+"ZmR2Dist",tit+" R2 Squared Distance (zoom)",0., 20., 100 );
 	      } else if(m_region == 2) {
-		plot1D ( m_dist, nameD+"R3Dist","R3 Squared Distance ",0., 500., 100 );
-		plot1D ( m_dist, nameD+"ZmR3Dist","R3 Squared Distance (zoom)",0., 20., 100 );
+		plot1D ( m_dist, nameD+"R3Dist",tit+" R3 Squared Distance ",0., 500., 100 );
+		plot1D ( m_dist, nameD+"ZmR3Dist",tit+" R3 Squared Distance (zoom)",0., 20., 100 );
 	      } else if(m_region == 3) {
-		plot1D ( m_dist, nameD+"R4Dist","R4 Squared Distance ",0., 500., 100 );
-		plot1D ( m_dist, nameD+"ZmR4Dist","R4 Squared Distance (zoom)",0., 20., 100 );
+		plot1D ( m_dist, nameD+"R4Dist",tit+" R4 Squared Distance ",0., 500., 100 );
+		plot1D ( m_dist, nameD+"ZmR4Dist",tit+" R4 Squared Distance (zoom)",0., 20., 100 );
 	      } 
 	    }
 	  }//If pmuid
 	  
-	  plot1D ( m_region, nameD+"R_illu","Region illumination",0., 4., 4 );
+	  plot1D ( m_region, nameD+"R_illu",tit+" Region illumination",0.5, 4.5, 4 );
 	  
 	  eEcal =  protop->info( LHCb::ProtoParticle::CaloEcalE , -1 * Gaudi::Units::GeV  );
 	  eHcal =  protop->info( LHCb::ProtoParticle::CaloHcalE , -1 * Gaudi::Units::GeV  );
 	  
-	  plot1D ( eEcal, nameD+"ecal","Ecal Energy deposit",0., 3000., 200 );
-	  plot1D ( eHcal, nameD+"hcal","Hcal Energy deposit",0., 10000., 200 );
+	  plot1D ( eEcal, nameD+"ecal",tit+" Ecal Energy deposit",0., 3000., 200 );
+	  plot1D ( eHcal, nameD+"hcal",tit+" Hcal Energy deposit",0., 10000., 200 );
 	  
 	  if(m_region == 0) {
-	    plot2D( m_trackX[1], m_trackY[1], nameD+"R1Illu", "Probe Illumination R1",-5000.,5000.,-5000.,5000.,100,100);
-	  } else if(m_region == 1) {										    
-	    plot2D( m_trackX[1], m_trackY[1], nameD+"R2Illu", "Probe Illumination R2",-5000.,5000.,-5000.,5000.,100,100);
-	  } else if(m_region == 2) {										    
-	    plot2D( m_trackX[1], m_trackY[1], nameD+"R3Illu", "Probe Illumination R3",-5000.,5000.,-5000.,5000.,100,100);
-	  } else if(m_region == 3) {										    
-	    plot2D( m_trackX[1], m_trackY[1], nameD+"R4Illu", "Probe Illumination R4",-5000.,5000.,-5000.,5000.,100,100);
+	    plot2D( m_trackX[1], m_trackY[1], nameD+"R1Illu",tit+" Illumination R1",-5000.,5000.,-5000.,5000.,100,100);
+	  } else if(m_region == 1) {				   					    
+	    plot2D( m_trackX[1], m_trackY[1], nameD+"R2Illu",tit+" Illumination R2",-5000.,5000.,-5000.,5000.,100,100);
+	  } else if(m_region == 2) {				   					    
+	    plot2D( m_trackX[1], m_trackY[1], nameD+"R3Illu",tit+" Illumination R3",-5000.,5000.,-5000.,5000.,100,100);
+	  } else if(m_region == 3) {				   					    
+	    plot2D( m_trackX[1], m_trackY[1], nameD+"R4Illu",tit+" Illumination R4",-5000.,5000.,-5000.,5000.,100,100);
 	  }
 	  
 	  /*
@@ -458,14 +458,14 @@ StatusCode MuIDMonitor::execute() {
 	      plot1D (PMass, "IM_"+name,"Mass: tag + probe with hit in 2 foi",m_MassMean-m_MassWin, m_MassMean+m_MassWin, 100 );
 
 	      if(fabs(PMass-m_MassMean)<m_EffWin) {
-		plot1D ( (track)->p(), nameD+"P_effDeno","P distribution",m_edgesJPX);
+		plot1D ( (track)->p(), nameD+"P_effDeno",tit+" P distribution",m_edgesJPX);
 		profFl = kFALSE;
 		if(pMuid) {
 		  if(pMuid->IsMuonLoose()) {
 		    profFl = kTRUE;
 		  }
 		}
-		profile1D ( (track)->p(), profFl, nameD+"Prof_eff","Efficiency (sig+bkg) vs momentum",m_edgesJPX);
+		profile1D ( (track)->p(), profFl, nameD+"Prof_eff",tit+" Efficiency (sig+bkg) vs momentum",m_edgesJPX);
 	      } 
 	      
 	      if(pMuid) {
@@ -473,7 +473,7 @@ StatusCode MuIDMonitor::execute() {
 		  plot1D (PMass, "IM_ism_"+name,"Mass: tag + probe after IsMuonLoose",
               m_MassMean-m_MassWin, m_MassMean+m_MassWin, 100 );
 		  if(fabs(PMass-m_MassMean)<m_EffWin) {
-		    plot1D ( (track)->p(), nameD+"P_effNume","P distribution (after ismuon)",
+		    plot1D ( (track)->p(), nameD+"P_effNume",tit+" P distribution (after ismuon)",
                  m_edgesJPX);
 		  } 
 		}//Requires IsMuonloose
@@ -489,15 +489,15 @@ StatusCode MuIDMonitor::execute() {
 	  if(m_LMAna) {
 
 	    //For both pions and protons
-	    if(idTag[id_jp]) { plot1D (PMass, "IM_"+name,"Mass Lambda Candidates",
+	    if(idTag[id_jp]) { plot1D (PMass, "IM_"+name,tit+" Mass Lambda Candidates",
                                  m_MassMean-m_MassWin, m_MassMean+m_MassWin, 100 ); }
-	    else  { plot1D (PMass, "IM_"+name,"Mass Lambda Candidates",
+	    else  { plot1D (PMass, "IM_"+name,tit+" Mass Lambda Candidates",
                       m_MassMean-m_MassWin, m_MassMean+m_MassWin, 100 ); }
 
 	    if(fabs(PMass-m_MassMean)<m_EffWin) {
 
-	      if(idTag[id_jp]) { plot1D ( (track)->p(), nameD+"P_effDeno","P distribution",m_edgesLMX);}
-	      else { plot1D ( (track)->p(), nameD+"P_effDeno","P distribution",m_edgesLMX);}
+	      if(idTag[id_jp]) { plot1D ( (track)->p(), nameD+"P_effDeno",tit+" P distribution",m_edgesLMX);}
+	      else { plot1D ( (track)->p(), nameD+"P_effDeno",tit+" P distribution",m_edgesLMX);}
 
 	      profFl = kFALSE;
 	      if(pMuid) {
@@ -505,8 +505,8 @@ StatusCode MuIDMonitor::execute() {
 		  profFl = kTRUE;
 		}
 	      }
-	      if(idTag[id_jp]) {profile1D ( (track)->p(), profFl, nameD+"Prof_eff","Efficiency (sig+bkg) vs momentum",m_edgesLMX);}
-	      else {profile1D ( (track)->p(), profFl, nameD+"Prof_eff","Efficiency (sig+bkg) vs momentum",m_edgesLMX);}
+	      if(idTag[id_jp]) {profile1D ( (track)->p(), profFl, nameD+"Prof_eff",tit+" Efficiency (sig+bkg) vs momentum",m_edgesLMX);}
+	      else {profile1D ( (track)->p(), profFl, nameD+"Prof_eff",tit+" Efficiency (sig+bkg) vs momentum",m_edgesLMX);}
 
 	    } 
 	    
@@ -520,8 +520,8 @@ StatusCode MuIDMonitor::execute() {
                    m_MassMean-m_MassWin, m_MassMean+m_MassWin, 100 );}
 
 		if(fabs(PMass-m_MassMean)<m_EffWin) {
-		  if(idTag[id_jp]) { plot1D ( (track)->p(), nameD+"P_effNume","P distribution (after ismuon)",m_edgesLMX);}
-		  else { plot1D ( (track)->p(), nameD+"P_effNume","P distribution (after ismuon)",m_edgesLMX);}
+		  if(idTag[id_jp]) { plot1D ( (track)->p(), nameD+"P_effNume",tit+" P distribution (after ismuon)",m_edgesLMX);}
+		  else { plot1D ( (track)->p(), nameD+"P_effNume",tit+" P distribution (after ismuon)",m_edgesLMX);}
 		} 
 	      }//Requires IsMuonloose
 	    }//Requires pMuid for ismuon loose check
