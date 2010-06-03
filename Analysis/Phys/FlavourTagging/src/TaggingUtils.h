@@ -5,11 +5,10 @@
 #include "GaudiAlg/GaudiTool.h"
 #include "GaudiKernel/ToolFactory.h"
 // from Event
-//#include "Kernel/IGeomDispCalculator.h"
-#include <Kernel/DVAlgorithm.h>
-#include <Kernel/GetDVAlgorithm.h>
-#include <Kernel/IDistanceCalculator.h>
-#include "Kernel/IPVReFitter.h"
+
+class IDistanceCalculator;
+class IPVReFitter;
+class DVAlgorithm;
 
 #include "ITaggingUtils.h"
 

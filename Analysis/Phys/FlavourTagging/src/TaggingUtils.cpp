@@ -1,5 +1,9 @@
 // Include files 
 #include "TaggingUtils.h"
+#include <Kernel/DVAlgorithm.h>
+#include <Kernel/GetDVAlgorithm.h>
+#include <Kernel/IDistanceCalculator.h>
+#include "Kernel/IPVReFitter.h"
 
 //--------------------------------------------------------------------
 // Implementation file for class : TaggingUtils
