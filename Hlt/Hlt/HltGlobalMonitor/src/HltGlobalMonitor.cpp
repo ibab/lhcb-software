@@ -1,5 +1,5 @@
 
-// $Id: HltGlobalMonitor.cpp,v 1.71 2010-05-26 19:44:17 graven Exp $
+// $Id: HltGlobalMonitor.cpp,v 1.72 2010-06-03 08:47:56 graven Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -223,7 +223,7 @@ StatusCode HltGlobalMonitor::initialize() {
   setAxisLabels( m_hltEventsTime, "time since start of run [min]", "average time/event [ms]");
 
   m_tasks  = book1D("# of tasks", 0,m_timeSize,int(m_timeSize/m_timeInterval+0.5));
-  setAxisLabels( m_hltEventsTime, "time since start of run [min]", "# of tasks");
+  setAxisLabels( m_tasks, "time since start of run [min]", "# of tasks");
 
   m_hltTime  = book1D("time per event ", -1, 4 );
   setAxisLabels( m_hltTime, "log10(time/event/ms)", "events");
