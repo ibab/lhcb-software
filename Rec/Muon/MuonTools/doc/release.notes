@@ -4,6 +4,9 @@
 ! Responsible : Alessia Satta Alessia.Sattaft@cern.ch
 ! =============================================================================
 
+! 2010-06-04 - Rob Lambert
+ - Fixes for windows warnings savannah 15808
+
 ! 2010-03-22 - Rob Lambert
  - Fixes for windows warnings savannah 64668
 

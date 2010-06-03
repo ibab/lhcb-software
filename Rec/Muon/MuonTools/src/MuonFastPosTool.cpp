@@ -77,8 +77,8 @@ StatusCode MuonFastPosTool::initialize() {
             StatusCode sc =  m_muonDetector->Tile2XYZ(tile,xp,dx,yp,dy,zp,dz);
             if (!sc) return sc;
             (m_pos[station])[index++]=Gaudi::XYZPoint(xp,yp,zp);
-            m_padSizeX[station*4+region]=dx;
-            m_padSizeY[station*4+region]=dy;
+            m_padSizeX[station*4+region]=(float) dx;
+            m_padSizeY[station*4+region]=(float) dy;
           }          
         }
         for(unsigned y=m_padGridY[station];y<2*m_padGridY[station];y++){         
