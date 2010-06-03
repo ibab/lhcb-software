@@ -474,7 +474,7 @@ LbLogin_tmpfile=`%s/python/LbConfiguration/LbLogin.py --shell=sh --mktemp --scri
         content = getNativeWrap(content, shell)
         content += """
 LbLoginStatus="$?"
-if [[ "$LbLoginStatus" = 0 -a -n "$LbLogin_tmpfile" ]]; then
+if [[ "$LbLoginStatus" = 0 && -n "$LbLogin_tmpfile" ]]; then
     . $LbLogin_tmpfile
 fi
 rm -f $LbLogin_tmpfile
