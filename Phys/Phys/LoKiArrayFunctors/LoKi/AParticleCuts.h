@@ -1,4 +1,4 @@
-// $Id: AParticleCuts.h,v 1.7 2009-11-16 11:52:14 ibelyaev Exp $
+// $Id: AParticleCuts.h,v 1.8 2010-06-03 06:06:12 jpalac Exp $
 // ============================================================================
 #ifndef LOKI_APARTICLECUTS_H 
 #define LOKI_APARTICLECUTS_H 1
@@ -21,7 +21,7 @@ namespace LoKi
      *  
      *  @code
      * 
-     *  IGeomDispCalculator* doca = ... ;
+     *  IDistanceCalculator* doca = ... ;
      *  AFun chi2MAX = ACHI2DOCA ( doca ) ;
      *
      *  const LHCb::Particle::ConstVector& combination = ... ;
@@ -30,7 +30,7 @@ namespace LoKi
      *
      *  @endcode
      *  
-     *  @see IGeomDispCalculator
+     *  @see IDistanceCalculator
      *  @see LoKi::AParticles::MaxDOCAChi2
      *  @see LoKi::Cuts::ADOCACHI2
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -258,7 +258,7 @@ namespace LoKi
      *  
      *  @code
      * 
-     *  IGeomDispCalculator* doca = ... ;
+     *  IDistanceCalculator* doca = ... ;
      *  ACut cut = ACUTDOCA ( doca , 0.2 * mm ) ;
      *
      *  const LHCb::Particle::ConstVector& combination = ... ;
@@ -270,7 +270,7 @@ namespace LoKi
      *  It should be more efficient than a combination of 
      *   LoKi::AParticles::MaxDOCA and comparison.
      *
-     *  @see IGeomDispCalculator
+     *  @see IDistanceCalculator
      *  @see LoKi::AParticles::MaxDOCACut
      *  @see LoKi::Cuts::ADOCACUT
      *  @see LoKi::AParticles::MaxDOCA
@@ -285,7 +285,7 @@ namespace LoKi
      *  
      *  @code
      * 
-     *  IGeomDispCalculator* doca = ... ;
+     *  IDistanceCalculator* doca = ... ;
      *  ACut cut = ACUTDOCACHI2 ( doca , 3*3 ) ;
      *
      *  const LHCb::Particle::ConstVector& combination = ... ;
@@ -297,7 +297,7 @@ namespace LoKi
      *  It should be more efficient than a combination of 
      *   LoKi::AParticles::MaxDOCAChi2 and comparison.
      *
-     *  @see IGeomDispCalculator
+     *  @see IDistanceCalculator
      *  @see LoKi::AParticles::MaxDOCAChi2Cut
      *  @see LoKi::Cuts::ADOCACHI2CUT
      *  @see LoKi::AParticles::MaxDOCAChi
@@ -335,7 +335,7 @@ namespace LoKi
      *  
      *  @code
      * 
-     *  IGeomDispCalculator* doca = ... ;
+     *  IDistanceCalculator* doca = ... ;
      *  AFun chi2MAX = ADOCACHI2 ( doca ) ;
      *
      *  const LHCb::Particle::ConstVector& combination = ... ;
@@ -344,7 +344,7 @@ namespace LoKi
      *
      *  @endcode
      *  
-     *  @see IGeomDispCalculator
+     *  @see IDistanceCalculator
      *  @see LoKi::AParticles::MaxDOCAChi2
      *  @see LoKi::Cuts::ACHI2DOCA
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -358,7 +358,7 @@ namespace LoKi
      *  
      *  @code
      * 
-     *  IGeomDispCalculator* doca = ... ;
+     *  IDistanceCalculator* doca = ... ;
      *  ACut cut = ADOCACHI2CUT ( doca , 3*3 ) ;
      *
      *  const LHCb::Particle::ConstVector& combination = ... ;
@@ -370,7 +370,7 @@ namespace LoKi
      *  It should be more efficient than a combination of 
      *   LoKi::AParticles::MaxDOCAChi2 and comparison.
      *
-     *  @see IGeomDispCalculator
+     *  @see IDistanceCalculator
      *  @see LoKi::AParticles::MaxDOCAChi2Cut
      *  @see LoKi::Cuts::ACUTDOCACHI2
      *  @see LoKi::AParticles::MaxDOCAChi
@@ -385,7 +385,7 @@ namespace LoKi
      *  
      *  @code
      * 
-     *  IGeomDispCalculator* doca = ... ;
+     *  IDistanceCalculator* doca = ... ;
      *  ACut cut = ADOCACUT ( doca , 0.2 * mm ) ;
      *
      *  const LHCb::Particle::ConstVector& combination = ... ;
@@ -397,7 +397,7 @@ namespace LoKi
      *  It should be more efficient than a combination of 
      *   LoKi::AParticles::MaxDOCA and comparison.
      *
-     *  @see IGeomDispCalculator
+     *  @see IDistanceCalculator
      *  @see LoKi::AParticles::MaxDOCACut
      *  @see LoKi::Cuts::ACUTDOCA
      *  @see LoKi::AParticles::MaxDOCA
@@ -412,7 +412,7 @@ namespace LoKi
      *  
      *  @code
      * 
-     *  IGeomDispCalculator* doca = ... ;
+     *  IDistanceCalculator* doca = ... ;
      *  AFun docaMAX = ADOCAMAX ( doca ) ;
      *
      *  const LHCb::Particle::ConstVector& combination = ... ;
@@ -421,7 +421,7 @@ namespace LoKi
      *
      *  @endcode
      *  
-     *  @see IGeomDispCalculator
+     *  @see IDistanceCalculator
      *  @see LoKi::AParticles::MaxDOCA
      *  @see LoKi::Cuts::AMAXDOCA
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -962,7 +962,7 @@ namespace LoKi
      *  
      *  @code
      * 
-     *  IGeomDispCalculator* doca = ... ;
+     *  IDistanceCalculator* doca = ... ;
      *  AFun docaMAX = AMAXDOCA ( doca ) ;
      *
      *  const LHCb::Particle::ConstVector& combination = ... ;
@@ -971,7 +971,7 @@ namespace LoKi
      *
      *  @endcode
      *  
-     *  @see IGeomDispCalculator
+     *  @see IDistanceCalculator
      *  @see LoKi::AParticles::MaxDOCA
      *  @see LoKi::Cuts::ADOCAMAX
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -1655,7 +1655,7 @@ namespace LoKi
      *  
      *  @code
      * 
-     *  IGeomDispCalculator* doca = ... ;
+     *  IDistanceCalculator* doca = ... ;
      *  AFun docaMIN = ADOCAMIN ( doca ) ;
      *
      *  const LHCb::Particle::ConstVector& combination = ... ;
@@ -1664,7 +1664,7 @@ namespace LoKi
      *
      *  @endcode
      *  
-     *  @see IGeomDispCalculator
+     *  @see IDistanceCalculator
      *  @see LoKi::AParticles::MinDOCA
      *  @see LoKi::Cuts::AMINDOCA
      *  @author
@@ -1678,7 +1678,7 @@ namespace LoKi
      *  
      *  @code
      * 
-     *  IGeomDispCalculator* doca = ... ;
+     *  IDistanceCalculator* doca = ... ;
      *  AFun docaMIN = AMINDOCA ( doca ) ;
      *
      *  const LHCb::Particle::ConstVector& combination = ... ;
@@ -1687,7 +1687,7 @@ namespace LoKi
      *
      *  @endcode
      *  
-     *  @see IGeomDispCalculator
+     *  @see IDistanceCalculator
      *  @see LoKi::AParticles::MinDOCA
      *  @see LoKi::Cuts::ADOCAMIN
      *  @author Patrick SPRADLIN 

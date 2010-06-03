@@ -1,9 +1,12 @@
-$Id: release.notes,v 1.62 2010-06-02 08:42:02 jpalac Exp $ 
+$Id: release.notes,v 1.63 2010-06-03 06:06:12 jpalac Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiArrayFunctors
 ! Responsible : Vanya BELYAEV
 ! Purpose     : Some special "vector-like" functors to Exclusive "HLT"
 ! -----------------------------------------------------------------------------
+
+! 2010-06-03 Juan Palacios
+ - Remove remaining references to IGeomDispCalculator.
 
 ! 2010-06-01 - Juan Palacios
  - LoKi::Hybrid::FilterCriterion is now only an IParticleFilter. isSatisfied method removed.

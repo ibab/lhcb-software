@@ -1,4 +1,4 @@
-// $Id: AParticles.h,v 1.15 2009-11-30 11:17:38 ibelyaev Exp $
+// $Id: AParticles.h,v 1.16 2010-06-03 06:06:12 jpalac Exp $
 // ============================================================================
 #ifndef LOKI_APARTICLES_H 
 #define LOKI_APARTICLES_H 1
@@ -894,9 +894,9 @@ namespace LoKi
     /** @class MaxDOCAChi2
      *  Simple function which evaluates the maximal 
      *  value of the chi2-distance of the closest approach for all two-particle 
-     *  subcombinations using IGeomDispCalculator tool
+     *  subcombinations using IDistanceCalculator tool
      *  @see LoKi::Cuts::ADOCACHI2
-     *  @see IGeomDispCalculator
+     *  @see IDistanceCalculator
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 20007-07-09
      */
@@ -933,7 +933,7 @@ namespace LoKi
      *  It should be more efficient than the 
      *   combination of MaxDOCA and Less
      *  @see LoKi::Cuts::ACUTDOCA
-     *  @see IGeomDispCalculator
+     *  @see IDistanceCalculator
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 20007-07-09
      */
@@ -995,7 +995,7 @@ namespace LoKi
      *  It should be more efficient than the 
      *  combination of MaxDOCAChi2 and Less
      *  @see LoKi::Cuts::ACUTDOCACHI2
-     *  @see IGeomDispCalculator
+     *  @see IDistanceCalculator
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 20007-07-09
      */
