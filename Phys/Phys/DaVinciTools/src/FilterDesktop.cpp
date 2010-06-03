@@ -1,4 +1,4 @@
-// $Id: FilterDesktop.cpp,v 1.28 2010-05-31 13:29:07 jpalac Exp $
+// $Id: FilterDesktop.cpp,v 1.29 2010-06-03 12:06:54 jpalac Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -497,28 +497,12 @@ void FilterDesktop::cloneP2PVRelation
 // ============================================================================
 void FilterDesktop::writeEmptyKeyedContainers(const std::string& ) const
 {
-  
-//   if (!exist<LHCb::Particle::Container>(loc + "/Particles") ) {  
-//     LHCb::Particle::Container* dummy = new LHCb::Particle::Container;
-//     put(dummy, loc + "/Particles");
-//   }
-//   if (!exist<LHCb::Vertex::Container>(loc+"/decayVertices") ) {  
-//     LHCb::Vertex::Container* dummy = new LHCb::Vertex::Container;
-//     put(dummy, loc + "/decayVertices");
-//   }
-
+  return;
 }
 // ============================================================================
 void FilterDesktop::writeEmptySharedContainers(const std::string& ) const
 {
-//   if (!exist<LHCb::Particle::Selection>(loc + "/Particles") ) {  
-//     LHCb::Particle::Selection* dummy = new LHCb::Particle::Selection;
-//     put(dummy, loc + "/Particles");
-//   }
-//   if (!exist<LHCb::Vertex::Selection>(loc+"/decayVertices") ) {  
-//     LHCb::Vertex::Selection* dummy = new LHCb::Vertex::Selection;
-//     put(dummy, loc + "/decayVertices");
-//   }
+  return;
 }
 // ============================================================================
 /// the factory 

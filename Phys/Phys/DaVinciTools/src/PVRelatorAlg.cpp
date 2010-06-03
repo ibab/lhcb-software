@@ -1,4 +1,4 @@
-// $Id: PVRelatorAlg.cpp,v 1.12 2010-03-02 14:56:25 jpalac Exp $
+// $Id: PVRelatorAlg.cpp,v 1.13 2010-06-03 12:06:54 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -118,8 +118,8 @@ Particle2Vertex::WTable* PVRelatorAlg::table() const
 
   Particle2Vertex::WTable* table = new Particle2Vertex::WTable();
 
-  if ( !i_exist_range< LHCb::Particle>(m_particleInputLocation) || 
-       !i_exist_range< LHCb::RecVertex>(m_PVInputLocation) ) return table;
+  if ( !exist< LHCb::Particle::Range>(m_particleInputLocation) || 
+       !exist< LHCb::RecVertex::Range>(m_PVInputLocation) ) return table;
 
   Particles particles = get<Particles>(m_particleInputLocation);
   Vertices vertices = get<Vertices>(m_PVInputLocation);

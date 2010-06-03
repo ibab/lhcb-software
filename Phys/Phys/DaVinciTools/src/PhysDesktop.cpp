@@ -1,4 +1,4 @@
-// $Id: PhysDesktop.cpp,v 1.108 2010-05-31 13:25:26 jpalac Exp $
+// $Id: PhysDesktop.cpp,v 1.109 2010-06-03 12:06:54 jpalac Exp $
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h"
 //#include "GaudiKernel/GaudiException.h"
@@ -622,8 +622,7 @@ StatusCode PhysDesktop::getParticles(){
        iloc != m_inputLocations.end(); iloc++ ) {
     // Retrieve the particles:
     const std::string location = (*iloc)+"/Particles";
-    if ( ! exist<LHCb::Particle::Selection>( location ) &&
-         ! exist<LHCb::Particle::Container>( location )    ) { 
+    if ( ! exist<LHCb::Particle::Range>( location ) ) { 
       Info("No particles at location "+location
               +((rootInTES().size()>0)?(" under "+rootInTES()):"") );
       continue ;
@@ -703,23 +702,13 @@ StatusCode PhysDesktop::getInputRelations(std::vector<std::string>::const_iterat
 StatusCode PhysDesktop::writeEmptyContainerIfNeeded(){
 
   const std::string particleLocation( m_outputLocn+"/Particles");
-  if (! exist<LHCb::Particle::Container>(particleLocation) &&
-      ! exist<LHCb::Particle::Selection>(particleLocation)    ) {  
+  if (! exist<LHCb::Particle::Range>(particleLocation) ) {  
     if (msgLevel(MSG::DEBUG)) debug() << "Saving empty container at " 
                                       << particleLocation << endmsg ;
     
     LHCb::Particle::Container* dummy = new LHCb::Particle::Container();
     put(dummy, particleLocation);
   }
-  
-//   const std::string vertexLocation( m_outputLocn+"/decayVertices");
-//   if (! exist<LHCb::Vertex::Container>(vertexLocation) &&
-//       ! exist<LHCb::Vertex::Selection>(vertexLocation)    )  {  
-//     if (msgLevel(MSG::DEBUG)) debug() << "Saving empty container at " 
-//                                       << vertexLocation << endmsg ;
-//     LHCb::Vertex::Container* dummy = new LHCb::Vertex::Container();
-//     put(dummy, vertexLocation);
-//   }
   
   return StatusCode::SUCCESS;
 }

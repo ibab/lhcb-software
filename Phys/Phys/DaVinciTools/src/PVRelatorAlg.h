@@ -1,4 +1,4 @@
-// $Id: PVRelatorAlg.h,v 1.10 2010-03-02 14:55:55 jpalac Exp $
+// $Id: PVRelatorAlg.h,v 1.11 2010-06-03 12:06:54 jpalac Exp $
 #ifndef PVRELATORALG_H 
 #define PVRELATORALG_H 1
 
@@ -87,15 +87,6 @@ private:
   i_get(const std::string& location) const
   {
     return exist<T>(location) ? get<T>( location ) : 0 ;
-  }
-
-  template <typename T>
-  bool
-  i_exist_range(const std::string& location) const
-  {
-    return ( exist<typename T::Range>(location) ||
-             exist<typename T::Container>(location) ||
-             exist<typename T::Selection>(location) )   ;
   }
 
   Particle2Vertex::WTable* table() const;
