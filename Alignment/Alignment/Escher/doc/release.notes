@@ -4,6 +4,11 @@ Package Coordinator : Johan Blouw and Rob Lambert
 Purpose : Gaudi application used to perform 
           alignment of the LHCb detector components
 
+</PRE><H1><A NAME=v4r8>2010-06-03 Escher v4r8</A></H1><PRE>
+! 2010-06-03 - Rob Lambert
+ - Albert made the following changes:
+   . bugfix in DBDiff.py and dump_align_db.py
+
 ! 2010-05-21 - Rob Lambert
  - Adapt to move of RecSysConf to RecConf package
 
