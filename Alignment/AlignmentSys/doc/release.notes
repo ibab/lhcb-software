@@ -13,9 +13,13 @@ Based on Rec v10r0p1
 - updated packages:
   Alignment/AlignTrTools  v4r8
   Alignment/TAlignment  v5r1
+  Alignment/Escher v4r8
 
 - In Alignment/AlignTrTools  v4r8:
   . added explicit dependency between python compilations
+
+- In Alignment/Escher  v4r8:
+  . bugfix in DBDiff.py and dump_align_db.py
 
 - In  Alignment/TAlignment  v5r1:
   . Adapt to movement of RecSysConf to RecConf package
