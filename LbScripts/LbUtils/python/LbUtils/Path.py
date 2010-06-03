@@ -99,9 +99,9 @@ def multiPathJoin(path, subdir):
         pathlist.append(os.path.join(d,subdir))
     return os.pathsep.join(pathlist)
 
-def multiPathGetFirst(path, subdir):
+def multiPathGetFirst(path, subdir, default=None):
     """ Quick way to find a file or dir in a series of paths """
-    result = None
+    result = default
     for d in path.split(os.pathsep) :
         sd = os.path.join(d, subdir)
         if os.path.exists(sd) :
@@ -113,7 +113,9 @@ def multiPathGet(path, subdir, alloccurences=False):
     """ Find all occurences of a file or dir in a series of paths """
     result = []
     if not alloccurences :
-        result.append(multiPathGetFirst(path, subdir))
+        item = multiPathGetFirst(path, subdir)
+        if item :
+            result.append(item)
     else :
         for d in path.split(os.pathsep) :
             sd = os.path.join(d, subdir)

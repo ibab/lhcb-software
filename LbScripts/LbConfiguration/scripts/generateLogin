@@ -82,6 +82,7 @@ def getNativeWrap(data, shell, offset=0):
     native_data = getNativeString(data, native_varlist, dotbat)
     if data != native_data :
         content = ""
+        vartotest = ""
         for v in native_varlist :
             if native_data.find(v) != -1 :
                 vartotest = v

@@ -484,8 +484,14 @@ class LbLoginScript(SourceScript):
                 ev["LHCBRELEASES"] = multiPathJoin(opts.mysiteroot, "lhcb")
                 ev["GAUDISOFT"] = ev["LHCBRELEASES"]
                 ev["LHCBPROJECTPATH"] = os.pathsep.join([ev["LHCBRELEASES"], ev["LCG_release_area"]])
-                ev["EMACSDIR"] = multiPathGetFirst(ev["LHCBRELEASES"], os.path.join("TOOLS", "Tools", "Emacs", "pro"))
-                ev["LHCBSTYLE"] = multiPathGetFirst(ev["LHCBRELEASES"], os.path.join("TOOLS", "Tools", "Styles", "pro"))
+                emacsdir = multiPathGetFirst(ev["LHCBRELEASES"], 
+                                             os.path.join("TOOLS", "Tools", "Emacs", "pro"))
+                if emacsdir :
+                    ev["EMACSDIR"] = emacsdir
+                lhcbstyle = multiPathGetFirst(ev["LHCBRELEASES"], 
+                                              os.path.join("TOOLS", "Tools", "Styles", "pro"))
+                if lhcbstyle :
+                    ev["LHCBSTYLE"] = lhcbstyle
                 if opts.nightlies_dir :
                     ev["LHCBNIGHTLIES"] = opts.nightlies_dir
             else :
