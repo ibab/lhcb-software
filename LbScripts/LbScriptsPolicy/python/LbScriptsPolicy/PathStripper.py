@@ -5,14 +5,16 @@ from os import pathsep, listdir, environ, fdopen
 from os.path import exists, isdir, realpath
 from optparse import OptionParser, OptionValueError
 from tempfile import mkstemp
+from zipfile import is_zipfile
 
 def StripPath(path):
     collected = []
     for p in path.split(pathsep):
         rp = realpath(p)
-        if exists(rp) and isdir(rp):
-            if len(listdir(rp)) != 0 and p not in collected :
-                collected.append(p)     
+        # We keep the entry if it is a directory not empty or a zipfile
+        if exists(rp) and ((isdir(rp) and listdir(rp))
+                           or is_zipfile(rp)) and p not in collected:
+            collected.append(p)
     return pathsep.join(collected)
 
 def CleanVariable(varname, shell, out):
