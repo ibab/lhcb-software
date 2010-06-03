@@ -9,7 +9,7 @@
 #include <Kernel/GetDVAlgorithm.h>
 #include <Kernel/DVAlgorithm.h>
 #include <Kernel/IDistanceCalculator.h>
-
+#include <Kernel/IVertexFit.h>
 #include "GaudiAlg/Tuple.h"
 #include "GaudiAlg/TupleObj.h"
 

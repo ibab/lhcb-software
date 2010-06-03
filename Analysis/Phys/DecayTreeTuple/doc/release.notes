@@ -4,6 +4,11 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2010-06-03 - Juan Palacios
+ - TupleToolVtxIsoln
+  . Remove useless include of deprecated Kernel/IGeomDispCalculator.h.
+  . Move IVertexFit include to .cpp.
+
 ! 2010-06-02 - Patrick Koppenburg
  - Remove useless stuff from TupleToolPrimaries
  - New tool TupleToolDebug for bug #68232
