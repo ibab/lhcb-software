@@ -1,3 +1,7 @@
+2010-06-03  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* doc/release.notes: fixed tabulations.
+
 2010-06-01  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/requirements: release of version v5r2
@@ -23,15 +27,15 @@
 	- scripts/mkproject: use the AFS volume class instead of the AFS directory class. Now
 	the lock option will also adjust the volume quota to the used space.
 	- LbLegacy/python/LbLegacy/install_project.py: fixed usage of md5 with python 2.6
-    - python/LbLegacy/install_project.py: fixed endless loop if the install_project.py script is not in the
+	- python/LbLegacy/install_project.py: fixed endless loop if the install_project.py script is not in the
 	  current directory and needs an update. Added the --dev-install. getMySelf use the devel location instead of the regular one. 
 	- scripts/archive_project: use the unlockAFSDir to reenable write permission to the project
 	to be archived.
-    - scripts/mkproject: added ACL read-only locking and unlocking.
-    - python/LbRelease/LHCbNightlies.py: fix for Windows (Karol)
-    - python/LbRelease/LHCbDoc.py: Exclude MainPage.h (of the projects) from the documentation. Added 
-    symlinks to the latest version of a project in the docs directory (Marco Cl.).   
-    - data/Makefile: Moved the dependency files to a different subdirectory
+	- scripts/mkproject: added ACL read-only locking and unlocking.
+	- python/LbRelease/LHCbNightlies.py: fix for Windows (Karol)
+	- python/LbRelease/LHCbDoc.py: Exclude MainPage.h (of the projects) from the documentation. Added 
+	symlinks to the latest version of a project in the docs directory (Marco Cl.).   
+	- data/Makefile: Moved the dependency files to a different subdirectory
 	for each CMTCONFIG, to allow concurrent builds (Marco Cl.).
 	- scripts/tuneAFSVol: New file. Added class and scripts to deal with AFS volumes
 	- LbUtils/python/LbUtils/File.py: fixed the usage of md5 with python 2.6
