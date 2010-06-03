@@ -1,5 +1,5 @@
 #============================================================================
-# $Id: requirements,v 1.135 2010-06-03 21:29:36 graven Exp $
+# $Id: requirements,v 1.136 2010-06-03 21:52:22 graven Exp $
 # Created    : 03/06/2005 by P. Koppenburg
 # Maintainer : G. Raven
 #============================================================================
@@ -27,7 +27,7 @@ use L0TCK               v*      TCK         -no_auto_imports
 use AppConfig           v3r*                -no_auto_imports
 
 #### patches
-use HltSettings         v2r0p1  Hlt
+use HltSettings         v2r0p2  Hlt
 use HltConf             v8r0p1  Hlt
 use HltRawData          v2r6    Hlt
 use HltDAQ              v2r0p1  Hlt
