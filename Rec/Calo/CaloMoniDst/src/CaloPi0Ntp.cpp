@@ -78,7 +78,7 @@ StatusCode CaloPi0Ntp::execute(){
 
   // GET ODIN INFO
   int run = 0;
-  long evt = 0;
+  unsigned long long int evt = 0;
   int tty = 0;
   m_odin->getTime();
   if( exist<LHCb::ODIN>(LHCb::ODINLocation::Default) ){
@@ -395,8 +395,13 @@ void CaloPi0Ntp::hTuning(std::string base, int spd,double prs1, double prs2,
 
   
   std::string uuu = base +"/" + sarea +"/"+ sspd +"/" + sprs +"/Theta/all";
-  std::string uuu1 = base +"/" + sarea +"/"+ sspd +"/" + sprs +"/Theta/b"+Gaudi::Utils::toString( (double) bth1 * m_thBin*pow(2,2-id1.area()));
-  std::string uuu2 = base +"/" + sarea +"/"+ sspd +"/" + sprs +"/Theta/b"+Gaudi::Utils::toString( (double) bth2 * m_thBin*pow(2,2-id2.area()));
+  std::string uuu1 = base +"/" + 
+    sarea +"/"+ sspd +"/" + sprs +
+    "/Theta/b"+Gaudi::Utils::toString( (double) bth1 * m_thBin*pow(2,2-id1.area()));
+  std::string uuu2 = base +"/" + 
+    sarea +"/"+ sspd +"/" + sprs +
+    "/Theta/b"+Gaudi::Utils::toString( (double) bth2 * m_thBin*pow(2,2-id2.area()));
+  
   plot1D( di.mass(), uuu1 , uuu1 , m_hMin, m_hMax, m_hBin);
   if( uu2 != uu1) plot1D( di.mass(), uuu2,uuu2,m_hMin, m_hMax, m_hBin);
   plot1D( di.mass(), uuu , uuu , m_hMin, m_hMax, m_hBin);

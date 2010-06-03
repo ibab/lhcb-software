@@ -122,7 +122,7 @@ StatusCode CaloEMuPIDMon::execute()
     do {
       if ( !inecal )                                                   break; // ----
 
-      float rdlle = proto->info( LHCb::ProtoParticle::RichDLLe, -9999.);
+      float rdlle = (float) proto->info( LHCb::ProtoParticle::RichDLLe, -9999.);
       if ( rdlle < m_RichDLLe && !m_uncut )                            break; // ----
       if ( inhcal && hcale > m_maxEHcalE && !m_uncut)                  break; // ----
 

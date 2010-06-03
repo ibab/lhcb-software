@@ -1,4 +1,4 @@
-// $Id: CaloElectronNtp.cpp,v 1.1 2010-05-20 09:55:38 odescham Exp $
+// $Id: CaloElectronNtp.cpp,v 1.2 2010-06-03 22:21:46 rlambert Exp $
 // Include files 
 
 // from Gaudi
@@ -83,7 +83,7 @@ StatusCode CaloElectronNtp::execute() {
 
   // GET ODIN INFO
   int run = 0;
-  long evt = 0;
+  unsigned long long int evt = 0;
   int tty = 0;
   m_odin->getTime();
   if( exist<LHCb::ODIN>(LHCb::ODINLocation::Default) ){
