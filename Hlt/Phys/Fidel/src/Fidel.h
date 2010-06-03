@@ -1,13 +1,11 @@
-// $Id: Fidel.h,v 1.9 2008-08-19 11:47:35 pkoppenb Exp $
-// $Id: Fidel.h,v 1.9 2008-08-19 11:47:35 pkoppenb Exp $
+// $Id: Fidel.h,v 1.10 2010-06-03 07:36:21 jpalac Exp $
+// $Id: Fidel.h,v 1.10 2010-06-03 07:36:21 jpalac Exp $
 #ifndef FIDEL_H 
 #define FIDEL_H 1
 
 // Include files
 // from DaVinci, this is a specialized GaudiAlgorithm
 #include "Kernel/DVAlgorithm.h"
-
-//class IGeomDispCalculator ;
 
 /** @class Fidel Fidel.h
  *  

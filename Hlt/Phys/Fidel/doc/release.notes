@@ -1,9 +1,15 @@
-!$Id: release.notes,v 1.26 2010-05-27 15:23:47 graven Exp $
+!$Id: release.notes,v 1.27 2010-06-03 07:36:21 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/Fidel
 ! Responsible : Sara Furcas
 ! Purpose     : Fidel
 !-----------------------------------------------------------------------------
+
+! 2010-06-03 - Juan PALACIOS
+ - src/Fidel.h
+  . Remove reference to IGeomDispCalculator.
+ - cmt/requirements
+  . Increase to v1r4p1
 
 !========================== Fidel v1r4   2010-02-27 ==================
 ! 2010-05-13 - Juan PALACIOS
