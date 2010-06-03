@@ -1,4 +1,4 @@
-// $Id: ProperTimeChecker.cpp,v 1.9 2010-01-18 08:43:10 pkoppenb Exp $
+// $Id: ProperTimeChecker.cpp,v 1.10 2010-06-03 07:23:20 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -13,7 +13,6 @@
 #include "Event/MCHeader.h"
 
 #include "Kernel/ILifetimeFitter.h"
-#include "Kernel/IGeomDispCalculator.h"
 #include "Kernel/IPVReFitter.h"   
 
 // local
