@@ -60,7 +60,7 @@ class Hlt1MBLinesConf(HltLinesConfigurableUser) :
 
         from HltTracking.HltReco import MinimalRZVelo, Hlt1Seeding
         rz = self.__create_microbias_line__('RZVelo',MinimalRZVelo)
-        rz.clone( rz.name().lstrip('Hlt1') + 'RateLimited',  postscale = self.postscale )
+        rz.clone( rz.name().lstrip('Hlt1') + 'RateLimited',  postscale = self.postscale, prescale = self.prescale )
         ts = self.__create_microbias_line__('TStation',Hlt1Seeding)
-        ts.clone( ts.name().lstrip('Hlt1') + 'RateLimited', postscale = self.postscale )
+        ts.clone( ts.name().lstrip('Hlt1') + 'RateLimited', postscale = self.postscale, prescale = self.prescale )
 

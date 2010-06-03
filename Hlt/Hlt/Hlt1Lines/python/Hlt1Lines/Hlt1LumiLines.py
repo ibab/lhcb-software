@@ -275,6 +275,7 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
             i.clone( i.name().lstrip('Hlt1')+'RateLimited'
                    , L0DU = 'scale( %s , %s)' % ( i._L0DU , self.getProp('LumiLowRateLimits')[i.name().lstrip('Hlt1LumiLow')] ) 
                    , postscale = self.postscale
+                   , prescale = self.prescale
                    )
         # PhysicsTrigger lines for higher rates
         lines = map( self.__create_lumi_mid_line__, ['BeamCrossing'] )

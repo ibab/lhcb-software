@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.184 2010-05-28 06:43:01 graven Exp $
+! $Id: release.notes,v 1.185 2010-06-03 21:28:36 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
+!========================== Hlt1Lines v4r0p1 2010-06-03 ===================
+! 2010-06-03 - Gerhard Raven
+ - explicitly specify post- and prescale on clone to avoid grabbing the
+   accept fractions of the original
 
 !========================== Hlt1Lines v4r0 2010-05-27 ===================
 ! 2010-05-27 - V. Gligorov
