@@ -1,4 +1,4 @@
-// $Id: ImpactParamTool.h,v 1.9 2008-06-03 15:47:08 cattanem Exp $
+// $Id: ImpactParamTool.h,v 1.10 2010-06-03 11:41:36 jpalac Exp $
 // ============================================================================
 #ifndef LOKI_IMPACTPARAMTOOL_H 
 #define LOKI_IMPACTPARAMTOOL_H 1
@@ -43,7 +43,7 @@ namespace LoKi
     // ========================================================================
     /** @class ImpactParamTool 
      *  Helper class which allows safe manipulations with 
-     *  IGeomDispCalculator tool 
+     *  IDistanceCalculator tool 
      *  Essentially it is some kind of "smart" reference to 
      *  IDistanceCalculatro interface 
      *  @see IDistanceCalculator

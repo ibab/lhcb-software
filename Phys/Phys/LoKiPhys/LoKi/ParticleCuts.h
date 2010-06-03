@@ -1,4 +1,4 @@
-// $Id: ParticleCuts.h,v 1.43 2010-05-15 16:50:36 ibelyaev Exp $
+// $Id: ParticleCuts.h,v 1.44 2010-06-03 11:41:36 jpalac Exp $
 // ============================================================================
 #ifndef LOKI_PHYSPARTICLECUTS_H 
 #define LOKI_PHYSPARTICLECUTS_H 1
@@ -400,7 +400,7 @@ namespace LoKi
      *  Evaluator of the closest approach chi2 
      *  distance between 2 particles 
      *  
-     *  The tool IGeomDispCalculator is used 
+     *  The tool IDistanceCalculator is used 
      *  for evaluation
      *
      *  @code 
@@ -417,7 +417,7 @@ namespace LoKi
      *  @see LoKi::Particles::ClosestApproachChi2 
      *  @see LHCb::Particle
      *  @see LoKi::Cuts::CLAPPCHI2
-     *  @see IGeomDispCalculator
+     *  @see IDistanceCalculator
      * 
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
@@ -428,7 +428,7 @@ namespace LoKi
      *  Evaluator of chi2 for the impact parameter of 
      *  the particle with respect to vertex/point 
      *
-     *  The tool IGeomDispCalculator is used 
+     *  The tool IDistanceCalculator is used 
      *
      *  @code 
      *  
@@ -441,7 +441,7 @@ namespace LoKi
      *  
      *  @endcode 
      *  
-     *  @see IGeomDispCalculator
+     *  @see IDistanceCalculator
      *  @see LoKi::Vertices::ImpParBase
      *  @see LoKi::Vertices::ImpactParamTool
      *  @see LHCb::Particle
@@ -684,7 +684,7 @@ namespace LoKi
      *  Evaluation of minimal value of chi2 for the impact parameter of 
      *  particle with respect to several vertices 
      *
-     *  The tool IGeomDispCalculator is used 
+     *  The tool IDistanceCalculator is used 
      *
      *  @code 
      *  
@@ -698,7 +698,7 @@ namespace LoKi
      *  @endcode 
      *
      *  @see LoKi::Particles::MinImpParChi2
-     *  @see IGeomDispCalculator
+     *  @see IDistanceCalculator
      *  @see LoKi::Vertices::ImpParBase
      *  @see LoKi::Vertices::ImpactParamTool
      *  @see LoKi::Vertices::ImpPar 
@@ -870,7 +870,7 @@ namespace LoKi
      *  Evaluator of the closest approach 
      *  distance between 2 particles 
      *  
-     *  The tool IGeomDispCalculator is used 
+     *  The tool IDistanceCalculator is used 
      *  for evaluation
      *
      *  @code 
@@ -887,7 +887,7 @@ namespace LoKi
      *  @see LoKi::Cuts::CLOSESTAPPROACH
      *  @see LoKi::Particles::ClosestApproach
      *  @see LHCb::Particle
-     *  @see IGeomDispCalculator
+     *  @see IDistanceCalculator
      * 
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
@@ -898,7 +898,7 @@ namespace LoKi
      *  Evaluator of the closest approach chi2 
      *  distance between 2 particles 
      *  
-     *  The tool IGeomDispCalculator is used 
+     *  The tool IDistanceCalculator is used 
      *  for evaluation
      *
      *  @code 
@@ -914,7 +914,7 @@ namespace LoKi
      *
      *  @see LoKi::Particles::ClosestApproachChi2 
      *  @see LHCb::Particle
-     *  @see IGeomDispCalculator
+     *  @see IDistanceCalculator
      * 
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
@@ -925,7 +925,7 @@ namespace LoKi
      *  Evaluator of the closest approach 
      *  distance between 2 particles 
      *  
-     *  The tool IGeomDispCalculator is used 
+     *  The tool IDistanceCalculator is used 
      *  for evaluation
      *
      *  @code 
@@ -944,7 +944,7 @@ namespace LoKi
      *  @see LoKi::Cuts::CLAPP
      *  @see LoKi::Particles::ClosestApproach
      *  @see LHCb::Particle
-     *  @see IGeomDispCalculator
+     *  @see IDistanceCalculator
      * 
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
@@ -955,7 +955,7 @@ namespace LoKi
      *  Evaluator of the closest approach chi2 
      *  distance between 2 particles 
      *  
-     *  The tool IGeomDispCalculator is used 
+     *  The tool IDistanceCalculator is used 
      *  for evaluation
      *
      *  @code 
@@ -973,7 +973,7 @@ namespace LoKi
      *
      *  @see LoKi::Particles::ClosestApproachChi2 
      *  @see LHCb::Particle
-     *  @see IGeomDispCalculator
+     *  @see IDistanceCalculator
      * 
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
@@ -2506,7 +2506,7 @@ namespace LoKi
      *  Evaluator of impact parameter of 
      *  the particle with respect to vertex/point 
      *
-     *  The tool IGeomDispCalculator is used 
+     *  The tool IDistanceCalculator is used 
      *
      *  @code 
      *  
@@ -2519,7 +2519,7 @@ namespace LoKi
      *  
      *  @endcode 
      *  
-     *  @see IGeomDispCalculator
+     *  @see IDistanceCalculator
      *  @see LoKi::Vertices::ImpParBase
      *  @see LoKi::Vertices::ImpactParamTool
      *  @see LHCb::Particle
@@ -2535,7 +2535,7 @@ namespace LoKi
      *  Evaluator of chi2 for the impact parameter of 
      *  the particle with respect to vertex/point 
      *
-     *  The tool IGeomDispCalculator is used 
+     *  The tool IDistanceCalculator is used 
      *
      *  @code 
      *  
@@ -2548,7 +2548,7 @@ namespace LoKi
      *  
      *  @endcode 
      *  
-     *  @see IGeomDispCalculator
+     *  @see IDistanceCalculator
      *  @see LoKi::Vertices::ImpParBase
      *  @see LoKi::Vertices::ImpactParamTool
      *  @see LHCb::Particle
@@ -2565,7 +2565,7 @@ namespace LoKi
      *  Evaluation of minimal value of the impact parameter of 
      *  particle with respect to several vertices 
      *
-     *  The tool IGeomDispCalculator is used 
+     *  The tool IDistanceCalculator is used 
      *
      *  @code 
      *  
@@ -2579,7 +2579,7 @@ namespace LoKi
      *  @endcode 
      *
      *  @see LoKi::Particles::MinImpPar
-     *  @see IGeomDispCalculator
+     *  @see IDistanceCalculator
      *  @see LoKi::Vertices::ImpParBase
      *  @see LoKi::Vertices::ImpactParamTool
      *  @see LoKi::Vertices::ImpPar 
@@ -3607,7 +3607,7 @@ namespace LoKi
      *  Evaluator of the minimal closest approach 
      *  distance between the particle and sequence of other particles  
      *  
-     *  The tool IGeomDispCalculator is used 
+     *  The tool IDistanceCalculator is used 
      *  for evaluation
      *
      *  @code 
@@ -3624,7 +3624,7 @@ namespace LoKi
      *
      *  @see LoKi::Particles::MinClosestApproach
      *  @see LHCb::Particle
-     *  @see IGeomDispCalculator
+     *  @see IDistanceCalculator
      * 
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
@@ -3635,7 +3635,7 @@ namespace LoKi
      *  Evaluator of the minimal closest approach chi2  
      *  distance between the particle and sequence of other particles  
      *  
-     *  The tool IGeomDispCalculator is used 
+     *  The tool IDistanceCalculator is used 
      *  for evaluation
      *
      *  @code 
@@ -3653,7 +3653,7 @@ namespace LoKi
      *  @see LoKi::Particles::MinClosestApproachChi2
      *  @see LHCb::Particle
      *  @see LoKi::Cuts::MINDOCACHI2
-     *  @see IGeomDispCalculator
+     *  @see IDistanceCalculator
      * 
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
@@ -3664,7 +3664,7 @@ namespace LoKi
      *  Evaluation of minimal value of the impact parameter of 
      *  particle with respect to several vertices 
      *
-     *  The tool IGeomDispCalculator is used 
+     *  The tool IDistanceCalculator is used 
      *
      *  @code 
      *  
@@ -3678,7 +3678,7 @@ namespace LoKi
      *  @endcode 
      *
      *  @see LoKi::Particles::MinImpPar
-     *  @see IGeomDispCalculator
+     *  @see IDistanceCalculator
      *  @see LoKi::Vertices::ImpParBase
      *  @see LoKi::Vertices::ImpactParamTool
      *  @see LoKi::Vertices::ImpPar 
@@ -3776,7 +3776,7 @@ namespace LoKi
      *  Evaluation of minimal value of the impact parameter of 
      *  particle with respect to several vertices 
      *
-     *  The tool IGeomDispCalculator is used 
+     *  The tool IDistanceCalculator is used 
      *
      *  @code 
      *  
@@ -3790,7 +3790,7 @@ namespace LoKi
      *  @endcode 
      *
      *  @see LoKi::Particles::MinImpPar
-     *  @see IGeomDispCalculator
+     *  @see IDistanceCalculator
      *  @see LoKi::Vertices::ImpParBase
      *  @see LoKi::Vertices::ImpactParamTool
      *  @see LoKi::Vertices::ImpPar 
@@ -3808,7 +3808,7 @@ namespace LoKi
      *  Evaluation of minimal value of chi2 for the impact parameter of 
      *  particle with respect to several vertices 
      *
-     *  The tool IGeomDispCalculator is used 
+     *  The tool IDistanceCalculator is used 
      *
      *  @code 
      *  
@@ -3822,7 +3822,7 @@ namespace LoKi
      *  @endcode 
      *
      *  @see LoKi::Particles::MinImpParChi2
-     *  @see IGeomDispCalculator
+     *  @see IDistanceCalculator
      *  @see LoKi::Vertices::ImpParBase
      *  @see LoKi::Vertices::ImpactParamTool
      *  @see LoKi::Vertices::ImpPar 

@@ -1,4 +1,4 @@
-// $Id: ParticleContextCuts.h,v 1.6 2010-02-19 16:40:18 ibelyaev Exp $
+// $Id: ParticleContextCuts.h,v 1.7 2010-06-03 11:41:36 jpalac Exp $
 // ============================================================================
 #ifndef LOKI_PARTICLECONTEXTCUTS_H 
 #define LOKI_PARTICLECONTEXTCUTS_H 1
@@ -117,7 +117,7 @@ namespace LoKi
      *  @see LoKi::Cuts::BESTPVIP
      *  @see LoKi::Particles::ImpParWithTheBestPV
      *  @see LoKi::Particles::ImpPar
-     *  @see IGeomDispCalculator
+     *  @see IDistanceCalculator
      *
      *  @attention There are no direct needs to use this "Context" 
      *             functor inside the native LoKi-based C++ code, 
@@ -149,7 +149,7 @@ namespace LoKi
      *  @see LoKi::Cuts::BPVIP
      *  @see LoKi::Particles::ImpParWithTheBestPV
      *  @see LoKi::Particles::ImpPar
-     *  @see IGeomDispCalculator
+     *  @see IDistanceCalculator
      *
      *  The name comes from Vava GLIGOROV v.gligorov@physics.gla.ac.uk
      *
@@ -183,7 +183,7 @@ namespace LoKi
      *  @see LoKi::Cuts::BESTPVIPCHI2 
      *  @see LoKi::Particles::ImpParChi2WithTheBestPV
      *  @see LoKi::Particles::ImpParChi2
-     *  @see IGeomDispCalculator
+     *  @see IDistanceCalculator
      *
      *  @attention There are no direct needs to use this "Context" 
      *             functor inside the native LoKi-based C++ code, 
@@ -215,7 +215,7 @@ namespace LoKi
      *  @see LoKi::Cuts::BPVIPCHI2 
      *  @see LoKi::Particles::ImpParChi2WithTheBestPV
      *  @see LoKi::Particles::ImpParChi2
-     *  @see IGeomDispCalculator
+     *  @see IDistanceCalculator
      *
      *  The name comes from Vava GLIGOROV v.gligorov@physics.gla.ac.uk
      *

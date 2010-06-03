@@ -1,4 +1,4 @@
-// $Id: Particles4.h,v 1.13 2010-01-03 08:55:09 ibelyaev Exp $
+// $Id: Particles4.h,v 1.14 2010-06-03 11:41:36 jpalac Exp $
 // ============================================================================
 #ifndef LOKI_PARTICLES4_H 
 #define LOKI_PARTICLES4_H 1
@@ -44,9 +44,9 @@ namespace LoKi
     /** @class ImpPar
      *  class for evaluation of impact parameter of 
      *  particle with respect to vertex
-     *  The tool IGeomDispCalculator is used 
+     *  The tool IDistanceCalculator is used 
      *
-     *  @see IGeomDispCalculator
+     *  @see IDistanceCalculator
      *  @see LoKi::Vertices::ImpParBase
      *  @see LoKi::Vertices::ImpactParamTool
      *  @see LHCb::Particle
@@ -111,9 +111,9 @@ namespace LoKi
     /** @class ImpParChi2
      *  class for evaluation of impact parameter chi2 
      *  of particle with respect to vertex
-     *  The tool IGeomDispCalculator is used 
+     *  The tool IDistanceCalculator is used 
      *
-     *  @see IGeomDispCalculator
+     *  @see IDistanceCalculator
      *  @see LoKi::Vertices::ImpParBase
      *  @see LoKi::Vertices::ImpactParamTool
      *  @see LHCb::Particle
@@ -184,9 +184,9 @@ namespace LoKi
      *  impact parameter of 
      *  particle with respect to seevral vertices 
      *
-     *  The tool IGeomDispCalculator is used 
+     *  The tool IDistanceCalculator is used 
      *
-     *  @see IGeomDispCalculator
+     *  @see IDistanceCalculator
      *  @see LoKi::Vertices::ImpParBase
      *  @see LoKi::Vertices::ImpactParamTool
      *  @see LoKi::Vertices::ImpPar 
@@ -402,9 +402,9 @@ namespace LoKi
      *  chi2 of impact parameter of 
      *  particle with respect to seevral vertices 
      *
-     *  The tool IGeomDispCalculator is used 
+     *  The tool IDistanceCalculator is used 
      *
-     *  @see IGeomDispCalculator
+     *  @see IDistanceCalculator
      *  @see LoKi::Vertices::ImpParBase
      *  @see LoKi::Vertices::ImpactParamTool
      *  @see LoKi::Vertices::ImpParChi2 
