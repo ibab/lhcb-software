@@ -1,9 +1,14 @@
-! $Id: release.notes,v 1.169 2010-05-24 20:43:54 jpalac Exp $
+! $Id: release.notes,v 1.170 2010-06-03 07:16:40 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/FlavourTagging
 ! Responsible : Marco Musy (marco.musy@cern.ch)
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
+
+! 2010-06-03 - Juan Palacios
+ - TaggingUtils
+  . Remove commented out IGeomDispCalculator to stop avoid Lbglimplse confusion.
+  . Move some headers to .cpp.
 
 !========================== FlavourTagging v11r3 2010-05-24 ==================
 
