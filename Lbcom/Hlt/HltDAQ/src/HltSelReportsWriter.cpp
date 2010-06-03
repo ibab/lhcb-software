@@ -1,6 +1,7 @@
-// $Id: HltSelReportsWriter.cpp,v 1.3 2010-05-19 21:09:15 graven Exp $
+// $Id: HltSelReportsWriter.cpp,v 1.4 2010-06-03 13:50:54 graven Exp $
 // Include files 
 
+#include <memory>
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
 
@@ -426,47 +427,40 @@ StatusCode HltSelReportsWriter::execute() {
 void  HltSelReportsWriter::addToLhcbidSequences( LhcbidSequence* set2,
                                                  LhcbidSequences & lhcbidSequences ) const
 {
-  if( set2->empty() )return;
-  bool found=false;
+  if ( set2==0 ) return;
+  if ( set2->empty() ) {
+      delete set2; set2 = 0;
+      return;
+  }
   for(LhcbidSequences::iterator iSet1= lhcbidSequences.begin();
       iSet1!=lhcbidSequences.end();++iSet1){
-    LhcbidSequence* set1 = *iSet1;
-    if( (*set1) == (*set2) ){
-      found=true;
+    assert(set2!=0);
+    assert(*iSet1!=0);
+    if( (**iSet1) == (*set2) ){
+      delete set2; set2 = 0;
       break;
     }
-    LhcbidSequence* setint=new LhcbidSequence();
-    set_intersection( set1->begin(),set1->end(),
+    std::auto_ptr<LhcbidSequence> setint(new LhcbidSequence());
+    set_intersection( (*iSet1)->begin(),(*iSet1)->end(),
                       set2->begin(),set2->end(),
                       inserter(*setint,setint->begin()) );
-    if( setint->size() ){
-      found=true;
-      LhcbidSequence* set1p=new LhcbidSequence();
-      set_difference(  set1->begin(),set1->end(),
+    if( !setint->empty() ){
+      std::auto_ptr<LhcbidSequence> set1p(new LhcbidSequence());
+      set_difference(  (*iSet1)->begin(),(*iSet1)->end(),
                        setint->begin(),setint->end(),
                        inserter(*set1p,set1p->begin()) );
-      lhcbidSequences.erase( iSet1 );
-      delete set1;      
-      if( set1p->size() ){
-        lhcbidSequences.push_back( set1p );
-      } else {
-        delete set1p;
-      }      
-      lhcbidSequences.push_back( setint );
-      LhcbidSequence* set2p=new LhcbidSequence();
+      delete *iSet1;                  // given that erase invalidates iSet1, we first delete
+      lhcbidSequences.erase( iSet1 ); // and then erase...
+      if( !set1p->empty() ) lhcbidSequences.push_back( set1p.release() );
+      std::auto_ptr<LhcbidSequence> set2p(new LhcbidSequence());
       set_difference(  set2->begin(),set2->end(),
                        setint->begin(),setint->end(),
                        inserter(*set2p,set2p->begin()) );
-      delete set2;      
-      if( set2p->size() ){
-        addToLhcbidSequences( set2p, lhcbidSequences );
-      } else {
-        delete set2p;
-      }      
+      lhcbidSequences.push_back( setint.release() );
+      delete set2; set2 = 0;
+      if(!set2p->empty() ) addToLhcbidSequences( set2p.release(), lhcbidSequences );
       break;      
-    } else {
-      delete setint;
     }    
   }
-  if( !found ) lhcbidSequences.push_back( set2 );
+  if( set2!=0 ) lhcbidSequences.push_back( set2 );
 }
