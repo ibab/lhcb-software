@@ -1,5 +1,5 @@
 #============================================================================
-# $Id: requirements,v 1.133 2010-06-02 07:05:22 graven Exp $
+# $Id: requirements,v 1.134 2010-06-03 19:04:11 graven Exp $
 # Created    : 03/06/2005 by P. Koppenburg
 # Maintainer : G. Raven
 #============================================================================
@@ -30,6 +30,7 @@ use AppConfig           v3r*                -no_auto_imports
 use HltSettings         v2r0p1  Hlt
 use HltConf             v8r0p1  Hlt
 use HltRawData          v2r6    Hlt
+use HltDAQ              v2r0p1  Hlt
 use CaloUtils           v8r12p1 Calo
 use CaloReco            v5r5p2  Calo
 use CaloPIDs            v5r6    Calo
