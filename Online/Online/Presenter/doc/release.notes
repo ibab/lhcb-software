@@ -4,6 +4,13 @@
 ! Purpose     : GUI to allow the visualization of all data quality histograms
 !-----------------------------------------------------------------------------
 
+! 2010-06-03 - Patrick Robbe
+ - src/DbRootHist.h/.cpp: move rootHistogram and hostingPad to private 
+   members and use accessors to deal with it.
+ - src/Archive.cpp, src/DatabasePagePathDialog.cpp, src/HistogramIdentifier.h,
+   src/ParallelWait.cpp, src/PresenterMainFrame.cpp, src/ReferencePicker.cpp:
+   adapt to the above modification.
+
 !============ Presenter v1r5 2010-06-01 =============
 ! 2010-06-01 - Patrick Robbe
  - src/PresenterMainFrame.cpp: fix the delete histogram button

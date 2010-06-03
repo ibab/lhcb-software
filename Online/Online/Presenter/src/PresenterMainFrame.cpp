@@ -1,4 +1,4 @@
-// $Id: PresenterMainFrame.cpp,v 1.323 2010-06-01 16:44:39 robbep Exp $
+// $Id: PresenterMainFrame.cpp,v 1.324 2010-06-03 21:27:40 robbep Exp $
 #include <algorithm>
 #include <iostream>
 #include <vector>
@@ -2471,7 +2471,7 @@ void PresenterMainFrame::printBenchmark(const std::string &timer) {
   std::vector<DbRootHist*>::iterator timer_dbHistosOnPageIt = dbHistosOnPage.begin();
   while( timer_dbHistosOnPageIt !=  dbHistosOnPage.end() ) {
     std::cout << (*timer_dbHistosOnPageIt)->identifier() << ","
-              << int(((*timer_dbHistosOnPageIt)->rootHistogram)->GetEntries()) << ","
+              << int(((*timer_dbHistosOnPageIt)->getRootHistogram())->GetEntries()) << ","
               << m_benchmark->GetRealTime((*timer_dbHistosOnPageIt)->identifier().c_str()) << ",";
     timer_dbHistosOnPageIt++;
   }
@@ -2732,7 +2732,7 @@ void PresenterMainFrame::editHistogramProperties() {
   DbRootHist* selectedDbHisto = selectedDbRootHistogram();
   if (0 != selectedDbHisto) {
     if (0 != selectedDbHisto) {
-      TH1* selectedHisto = selectedDbHisto->rootHistogram;
+      TH1* selectedHisto = selectedDbHisto->getRootHistogram();
       if (0 != selectedHisto) {
         selectedHisto->DrawPanel();
       }
@@ -2751,13 +2751,13 @@ void PresenterMainFrame::inspectHistogram() {
   DbRootHist* selectedDbHisto = selectedDbRootHistogram();
   if (0 != selectedDbHisto) {
     if (0 != selectedDbHisto) {
-      TH1* selectedHisto = selectedDbHisto->rootHistogram;
+      TH1* selectedHisto = selectedDbHisto->getRootHistogram();
       if (0 != selectedHisto) {
         TCanvas* zoomCanvas =  new TCanvas();
         if (zoomCanvas) {
           zoomCanvas->cd();
           //    zoomCanvas->SetTitle(selectedHisto->GetTitle());
-          selectedDbHisto->rootHistogram->DrawCopy();
+          selectedDbHisto->getRootHistogram()->DrawCopy();
           zoomCanvas->ToggleEventStatus();
           zoomCanvas->ToggleAutoExec();
           zoomCanvas->ToggleToolBar();
@@ -3617,15 +3617,15 @@ void PresenterMainFrame::addHistoToPage( const std::string& histogramUrl,
     int paintLineStyle = bulkHistoOptions.m_lineStyle;
     int paintLineColour = bulkHistoOptions.m_lineColour;
     int paintStats = bulkHistoOptions.m_statsOption;
-    if (dbRootHist && dbRootHist->rootHistogram) {
-      dbRootHist->rootHistogram->SetXTitle(paintDrawXLabel.Data());
-      dbRootHist->rootHistogram->SetYTitle(paintDrawYLabel.Data());
-      dbRootHist->rootHistogram->SetLineWidth(paintLineWidth);
-      dbRootHist->rootHistogram->SetFillColor(paintFillColour);
-      dbRootHist->rootHistogram->SetFillStyle(paintFillStyle);
-      dbRootHist->rootHistogram->SetLineStyle(paintLineStyle);
-      dbRootHist->rootHistogram->SetLineColor(paintLineColour);
-      dbRootHist->rootHistogram->SetStats(paintStats);
+    if (dbRootHist && dbRootHist->hasRootHistogram()) {
+      dbRootHist->getRootHistogram()->SetXTitle(paintDrawXLabel.Data());
+      dbRootHist->getRootHistogram()->SetYTitle(paintDrawYLabel.Data());
+      dbRootHist->getRootHistogram()->SetLineWidth(paintLineWidth);
+      dbRootHist->getRootHistogram()->SetFillColor(paintFillColour);
+      dbRootHist->getRootHistogram()->SetFillStyle(paintFillStyle);
+      dbRootHist->getRootHistogram()->SetLineStyle(paintLineStyle);
+      dbRootHist->getRootHistogram()->SetLineColor(paintLineColour);
+      dbRootHist->getRootHistogram()->SetStats(paintStats);
 
       TString paintDrawOption;
       if (s_H1D == dbRootHist->histogramType()) {
@@ -3642,7 +3642,7 @@ void PresenterMainFrame::addHistoToPage( const std::string& histogramUrl,
         paintDrawOption = TString(m_drawOption + TString(" ") +
                                   bulkHistoOptions.m_genericRootDrawOption).Data();
       }
-      dbRootHist->rootHistogram->SetOption(paintDrawOption.Data());
+      dbRootHist->getRootHistogram()->SetOption(paintDrawOption.Data());
     }
   }
   TPad* targetPad = NULL;
@@ -3655,9 +3655,9 @@ void PresenterMainFrame::addHistoToPage( const std::string& histogramUrl,
     pad_dbHistosOnPageIt--;
     prevDbRootHist = *pad_dbHistosOnPageIt;
     if ( (NULL != prevDbRootHist) &&
-         (NULL != prevDbRootHist->hostingPad) ) { // && (pres::MonRate != prevDbRootHist->effServiceType())
-      targetPad = prevDbRootHist->hostingPad;
-      dbRootHist->hostingPad = targetPad;
+         (NULL != prevDbRootHist->getHostingPad()) ) { // && (pres::MonRate != prevDbRootHist->effServiceType())
+      targetPad = prevDbRootHist->getHostingPad();
+      dbRootHist->setHostingPad( targetPad ) ;
     }
   }
   dbHistosOnPage.push_back(dbRootHist);
@@ -3666,8 +3666,8 @@ void PresenterMainFrame::addHistoToPage( const std::string& histogramUrl,
     paintHist(dbRootHist, targetPad);
   } else if ( (invisible != overlapMode) &&
               (Batch == m_presenterMode) ){
-    dbRootHist->rootHistogram->SetLineStyle(1);
-    dbRootHist->rootHistogram->SetLineWidth(1);
+    dbRootHist->getRootHistogram()->SetLineStyle(1);
+    dbRootHist->getRootHistogram()->SetLineWidth(1);
   }
 }
 
@@ -4276,7 +4276,7 @@ void PresenterMainFrame::loadSelectedPageFromDB(const std::string & pageName,
               DbRootHist* dbRootHist = NULL;
               for (prevh=dbHistosOnPage.begin() ; (*prevh) != dbRootHist ; prevh++) {
                 if ( (*prevh)->onlineHistogram() == mother->histo) {
-                  overlayOnPad = (*prevh)->hostingPad;
+                  overlayOnPad = (*prevh)->getHostingPad();
                   break;
                 }
               }
@@ -4307,7 +4307,7 @@ void PresenterMainFrame::loadSelectedPageFromDB(const std::string & pageName,
              drawOpt_dbHistosOnPageIt != dbHistosOnPage.end();
              ++drawOpt_dbHistosOnPageIt) {
           if ( TCKinfo != (*drawOpt_dbHistosOnPageIt)->effServiceType() ) {
-            (*drawOpt_dbHistosOnPageIt)->setDrawOptionsFromDB((*drawOpt_dbHistosOnPageIt)->hostingPad);
+            (*drawOpt_dbHistosOnPageIt)->setDrawOptionsFromDB((*drawOpt_dbHistosOnPageIt)->getHostingPad());
 
           }
           if ( (s_CNT == (*drawOpt_dbHistosOnPageIt)->histogramType()) &&
@@ -4574,9 +4574,9 @@ void PresenterMainFrame::autoCanvasLayout() {
           x2 = x1 + dx - 2*xmargin;
           if (x1 > x2) { continue; }
           if (0 != (*layout_dbHistosOnPageIt2) &&
-              0 != ((*layout_dbHistosOnPageIt2)->hostingPad)) {
-            ((*layout_dbHistosOnPageIt2)->hostingPad)->SetPad(x1, y1, x2, y2);
-            ((*layout_dbHistosOnPageIt2)->hostingPad)->Modified();
+              0 != ((*layout_dbHistosOnPageIt2)->getHostingPad())) {
+            ((*layout_dbHistosOnPageIt2)->getHostingPad())->SetPad(x1, y1, x2, y2);
+            ((*layout_dbHistosOnPageIt2)->getHostingPad())->Modified();
           }
           layout_dbHistosOnPageIt2++;
         }
@@ -4663,7 +4663,7 @@ DbRootHist* PresenterMainFrame::selectedDbRootHistogram() {
       for ( selected_dbHistosOnPageIt = dbHistosOnPage.begin() ;
 	    selected_dbHistosOnPageIt != dbHistosOnPage.end()  ;
 	    ++selected_dbHistosOnPageIt) {
-	if ( 0 == std::string( (*selected_dbHistosOnPageIt) -> rootHistogram -> GetName() ).compare( theHisto -> GetName() ) ) {
+	if ( 0 == std::string( (*selected_dbHistosOnPageIt) -> getName() ).compare( theHisto -> GetName() ) ) {
 	  dbRootHist = *selected_dbHistosOnPageIt;
 	  break;
 	}
@@ -4832,9 +4832,9 @@ void PresenterMainFrame::refreshPage() {
       //    if (true == (*dump_dbHistosOnPageIt)->rateInitialised()) {
       std::string plotName( currentPartition() ) ;
       plotName.append(" ").append(currentTime->AsSQLString());
-      (*dump_dbHistosOnPageIt)->rootHistogram->SetTitle(plotName.c_str());
+      (*dump_dbHistosOnPageIt)->getRootHistogram()->SetTitle(plotName.c_str());
 
-      (*dump_dbHistosOnPageIt)->rootHistogram->Draw();
+      (*dump_dbHistosOnPageIt)->getRootHistogram()->Draw();
       (*dump_dbHistosOnPageIt)->fit();
 
       gPad->Modified();
@@ -4878,7 +4878,7 @@ void PresenterMainFrame::enableReferenceOverlay() {
   std::vector<DbRootHist*>::iterator enableRef_dbHistosOnPageIt;
   for (enableRef_dbHistosOnPageIt = dbHistosOnPage.begin() ; 
        enableRef_dbHistosOnPageIt != dbHistosOnPage.end() ; ++enableRef_dbHistosOnPageIt ) {
-    (*enableRef_dbHistosOnPageIt)->referenceHistogram(Show);
+    (*enableRef_dbHistosOnPageIt)->referenceHistogram( DbRootHist::Show );
   }
   editorCanvas->Update();
   if (stopped) { startPageRefresh(); }
@@ -4888,7 +4888,7 @@ void PresenterMainFrame::disableReferenceOverlay() {
   std::vector<DbRootHist*>::iterator disableRef_dbHistosOnPageIt;
   disableRef_dbHistosOnPageIt = dbHistosOnPage.begin();
   while (disableRef_dbHistosOnPageIt != dbHistosOnPage.end()) {
-    (*disableRef_dbHistosOnPageIt)->referenceHistogram(Hide);
+    (*disableRef_dbHistosOnPageIt)->referenceHistogram( DbRootHist::Hide );
     disableRef_dbHistosOnPageIt++;
   }
   editorCanvas->Update();
@@ -4985,8 +4985,7 @@ void PresenterMainFrame::EventInfo(int event, int px, int py, TObject* selected)
 	  std::vector<DbRootHist*>::iterator eventInfo_dbHistosOnPageIt;
 	  for (eventInfo_dbHistosOnPageIt = dbHistosOnPage.begin();
 	       eventInfo_dbHistosOnPageIt != dbHistosOnPage.end(); ++eventInfo_dbHistosOnPageIt) {
-	    if (0 == std::string( ( *eventInfo_dbHistosOnPageIt ) -> 
-				  rootHistogram -> GetName() ).compare( theHisto -> GetName() ) ) {
+	    if (0 == ( *eventInfo_dbHistosOnPageIt ) -> getName().compare( theHisto -> GetName() ) ) {
 	      if ( NULL != (*eventInfo_dbHistosOnPageIt)->onlineHistogram() &&
 		   false == (*eventInfo_dbHistosOnPageIt)->onlineHistogram() -> 
 		   page2display().empty( ) ) {
@@ -5031,8 +5030,7 @@ void PresenterMainFrame::EventInfo(int event, int px, int py, TObject* selected)
 	  std::vector<DbRootHist*>::iterator eventInfo_dbHistosOnPageIt;
 	  for (eventInfo_dbHistosOnPageIt = dbHistosOnPage.begin();
 	       eventInfo_dbHistosOnPageIt != dbHistosOnPage.end(); ++eventInfo_dbHistosOnPageIt) {
-	    if (0 == std::string( ( *eventInfo_dbHistosOnPageIt ) -> 
-				  rootHistogram -> GetName() ).compare( theHisto -> GetName() ) ) {
+	    if (0 == ( *eventInfo_dbHistosOnPageIt ) -> getName().compare( theHisto -> GetName() ) ) {
 	      // Display a pop-up menu 
 	      m_histomenu -> DeleteEntry( 1 ) ;
 	      m_histomenu -> AddEntry( theHisto -> GetName() , 1 , 0 , 0 , 

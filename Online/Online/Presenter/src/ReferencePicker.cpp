@@ -1,4 +1,4 @@
-// $Id: ReferencePicker.cpp,v 1.18 2010-05-16 18:10:09 robbep Exp $
+// $Id: ReferencePicker.cpp,v 1.19 2010-06-03 21:27:53 robbep Exp $
 #include "ReferencePicker.h"
 
 // ROOT
@@ -109,13 +109,12 @@ void ReferencePicker::setSelectedAsRef()
 {
   DbRootHist* selectedDbHisto = m_mainFrame->selectedDbRootHistogram();
   if (0 != selectedDbHisto) {
-    TH1* selectedHisto = selectedDbHisto->rootHistogram;
     try {
       if (0 != m_histogram->dbSession() &&
           0 != selectedDbHisto &&
           0 != m_histogram->onlineHistogram()->getTask() &&
           ReadWrite == m_mainFrame->databaseMode()) {
-        std::string referenceEntry(selectedHisto->GetName());
+        std::string referenceEntry( selectedDbHisto -> getName() ) ;
         m_histogram->onlineHistogram()->getTask()->setReference(referenceEntry);
   
         std::string referenceOption(dynamic_cast<TGTextLBEntry*>(m_normalizationSelector->GetSelectedEntry())->
@@ -127,7 +126,7 @@ void ReferencePicker::setSelectedAsRef()
     } catch (std::string sqlException) {
       if (m_verbosity >= Verbose) {
         std::cout << "Could not set reference histogram: " <<
-        selectedHisto->GetName() << std::endl <<
+        selectedDbHisto->getName() << std::endl <<
         sqlException << std::endl;
       }
     }

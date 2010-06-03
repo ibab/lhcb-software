@@ -1,4 +1,4 @@
-// $Id: Archive.cpp,v 1.79 2010-05-26 13:15:41 robbep Exp $
+// $Id: Archive.cpp,v 1.80 2010-06-03 21:27:39 robbep Exp $
 #include <iostream>
 #include <sstream>
 #include <algorithm>
@@ -152,10 +152,9 @@ void Archive::fillHistogram(DbRootHist* histogram,
       }
       std::vector<path>::const_iterator foundRootFilesIt;
       foundRootFilesIt = foundRootFiles.begin();
-      if (histogram->rootHistogram) {
-        delete (histogram->rootHistogram);
-        histogram->rootHistogram = NULL;
-      }
+      
+      histogram -> deleteRootHistogram( ) ;
+
       TList* list = new TList;
       while (foundRootFilesIt != foundRootFiles.end()) {
         TFile rootFile((*foundRootFilesIt).file_string().c_str());
@@ -173,23 +172,24 @@ void Archive::fillHistogram(DbRootHist* histogram,
           if (archiveHisto) {
             list->Add(archiveHisto);
             goodRootFiles.push_back(*foundRootFilesIt);
-            if (! histogram->rootHistogram) {
-              histogram->rootHistogram = (TH1*) (archiveHisto->Clone());
-              histogram->rootHistogram->Reset();
+	    
+            if ( ! histogram -> hasRootHistogram( ) ) {
+	      histogram -> setRootHistogram( (TH1*) (archiveHisto->Clone() ) ) ;
+              histogram -> rootHistogramReset( ) ; 
             }
           }
         }
         ++foundRootFilesIt;
       }
-      if (histogram->rootHistogram) { // at least one source is available
+      if ( histogram -> hasRootHistogram() ) { // at least one source is available
         if (false == m_mainFrame->isHistoryTrendPlotMode() || 
-            histogram->rootHistogram->GetDimension()>1 ||
+            histogram->getRootHistogram()->GetDimension()>1 ||
             singleSaveset) {
-          (histogram->rootHistogram)->Merge(list);
+          histogram->getRootHistogram()->Merge(list);
         } else {
           // do a trend plot of mean and rms
           std::string histogramTitle("History plot for ");
-          histogramTitle += histogram->rootHistogram->GetTitle();
+          histogramTitle += histogram -> getTitle();
           TH1* newh = new TH1F(histogramTitle.c_str(), histogramTitle.c_str(),
                                list->GetSize(), 0.5,  list->GetSize() +0.5);
           newh->Sumw2();
@@ -198,8 +198,8 @@ void Archive::fillHistogram(DbRootHist* histogram,
             newh->SetBinError(i+1, ((TH1*)list->At(i))->GetMeanError() );
           }
           setHistoryLabels(newh, goodRootFiles);
-          delete (histogram->rootHistogram);
-          histogram->rootHistogram = newh;
+	  histogram -> deleteRootHistogram( ) ;
+	  histogram -> setRootHistogram( newh ) ;
           histogram->setHistoryTrendPlotMode(true);
         }
       }
@@ -214,7 +214,7 @@ void Archive::fillHistogram(DbRootHist* histogram,
         delete histo;
       }
       delete list;
-      if (! histogram->rootHistogram) {
+      if (histogram->hasRootHistogram() ) {
         histogram->beEmptyHisto();
       }
     } else {
@@ -229,22 +229,22 @@ void Archive::fillHistogram(DbRootHist* histogram,
         fillHistogram((histogram->anaSources())->at(i),
                       timePoint,
                       pastDuration);
-        sources[i]= ((histogram->anaSources())->at(i))->rootHistogram;
+        sources[i]= ((histogram->anaSources())->at(i))->getRootHistogram();
         if ( ((histogram->anaSources())->at(i))->isEmptyHisto() ||
              NULL == sources[i]) {
           sourcesOk = false;
         }
       }
       OMAHcreatorAlg* creator = dynamic_cast<OMAHcreatorAlg*>
-                     (m_analysisLib->getAlg(histogram->creationAlgorithm()));
+	(m_analysisLib->getAlg(histogram->creationAlgorithm()));
       if (creator && sourcesOk) {
-
+	
         std::string htitle(histogram->onlineHistogram()->htitle());
-        histogram->rootHistogram = creator->exec(&sources,
-                                                 histogram->anaParameters(),
-                                                 histogram->onlineHistogram()->identifier(),
-                                                 htitle,
-                                                 histogram->isEmptyHisto() ? NULL : histogram->rootHistogram);
+        histogram->setRootHistogram( creator->exec(&sources,
+						   histogram->anaParameters(),
+						   histogram->onlineHistogram()->identifier(),
+						   htitle,
+						   histogram->isEmptyHisto() ? NULL : histogram->getRootHistogram()) ) ;
         histogram->beRegularHisto();
         if (m_mainFrame->isHistoryTrendPlotMode()) {
           histogram->setHistoryTrendPlotMode(true);
@@ -254,9 +254,7 @@ void Archive::fillHistogram(DbRootHist* histogram,
         histogram->beEmptyHisto(); 
       }      
     }
-    if (! (histogram->rootHistogram) ) {
-      histogram->beEmptyHisto();
-    }
+    if ( ! histogram->hasRootHistogram() ) histogram->beEmptyHisto();
   }
   histogram->setTH1FromDB();
 }
@@ -644,10 +642,14 @@ void Archive::saveAsReferenceHistogram(DbRootHist* histogram)
 
     std::stringstream refFile;
     refFile << referenceFilePath.file_string() << s_slash
-            << histogram->dataType() << s_savesetToken
-            << histogram->startRun() << s_rootFileExtension;
+      // dataType is always default  
+      //  << histogram->dataType() << s_savesetToken
+	    << "default" << s_savesetToken
+            << "1" << s_rootFileExtension;
+    // startRun is always 1... << histogram->startRun() << s_rootFileExtension;
 
-    TH1* m_reference = (TH1*) (histogram->rootHistogram)->Clone(histogram->onlineHistogram()->hname().c_str());
+    TH1* m_reference = 
+      (TH1*) (histogram->getRootHistogram())->Clone(histogram->onlineHistogram()->hname().c_str());
     TFile* f = new TFile(refFile.str().c_str(), "UPDATE");
     if (f) {
       if (false == f->IsZombie() ) {

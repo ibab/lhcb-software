@@ -1,4 +1,4 @@
-// $Id: DatabasePagePathDialog.cpp,v 1.2 2010-05-16 18:08:40 robbep Exp $
+// $Id: DatabasePagePathDialog.cpp,v 1.3 2010-06-03 21:27:39 robbep Exp $
 // STL 
 #include <map>
 
@@ -204,15 +204,15 @@ void DatabasePagePathDialog::ok()
             thereAreOverlaps = true;
           }
           else {
-            if ((*m_DbHistosOnPageIt)->hostingPad) {
-              ((*m_DbHistosOnPageIt)->hostingPad)->GetPadPar(xlow, ylow, xup, yup);
+            if ((*m_DbHistosOnPageIt)->getHostingPad()) {
+              ((*m_DbHistosOnPageIt)->getHostingPad())->GetPadPar(xlow, ylow, xup, yup);
               OnlineHistogram* onlineHistogram =  
                 page->addHistogram((*m_DbHistosOnPageIt)->onlineHistogram(),
                                    (float)xlow , (float)ylow, (float)xup, (float)yup);
               if (0 != onlineHistogram) {
                 (*m_DbHistosOnPageIt)->setOnlineHistogram(onlineHistogram);
               }
-              padOwner[(*m_DbHistosOnPageIt)->hostingPad] = (*m_DbHistosOnPageIt)->onlineHistogram();          
+              padOwner[(*m_DbHistosOnPageIt)->getHostingPad()] = (*m_DbHistosOnPageIt)->onlineHistogram();          
             }
           }
         }
@@ -230,8 +230,8 @@ void DatabasePagePathDialog::ok()
                 (TCKinfo != (*m_DbHistosOnPageIt)->effServiceType()) ) {
               OnlineHistogram* onlineHistogram =
                 page->addOverlapHistogram((*m_DbHistosOnPageIt)->onlineHistogram(),
-                                          padOwner[(*m_DbHistosOnPageIt)->hostingPad],
-                                          (padOwner[(*m_DbHistosOnPageIt)->hostingPad])->instance(),
+                                          padOwner[(*m_DbHistosOnPageIt)->getHostingPad()],
+                                          (padOwner[(*m_DbHistosOnPageIt)->getHostingPad()])->instance(),
                                           iov++);
               if (0 != onlineHistogram) 
                 (*m_DbHistosOnPageIt)->setOnlineHistogram(onlineHistogram);
@@ -248,8 +248,8 @@ void DatabasePagePathDialog::ok()
           if( (*m_DbHistosOnPageIt)->onlineHistogram()->page() == page->name() &&
               (TCKinfo != (*m_DbHistosOnPageIt)->effServiceType()) ) {
 
-            (*m_DbHistosOnPageIt)->hostingPad->cd();
-            (*m_DbHistosOnPageIt)->saveTH1ToDB((*m_DbHistosOnPageIt)->hostingPad);
+            (*m_DbHistosOnPageIt)->getHostingPad()->cd();
+            (*m_DbHistosOnPageIt)->saveTH1ToDB((*m_DbHistosOnPageIt)->getHostingPad());
           }
         }
       }

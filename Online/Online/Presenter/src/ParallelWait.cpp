@@ -1,4 +1,4 @@
-// $Id: ParallelWait.cpp,v 1.23 2010-05-16 18:10:09 robbep Exp $
+// $Id: ParallelWait.cpp,v 1.24 2010-06-03 21:27:40 robbep Exp $
 // STL
 #include <vector>
 
@@ -204,9 +204,9 @@ void ParallelWait::refreshHistograms(std::vector<DbRootHist*>* dbHistosOnPage)
 	++refresh_dbHistosOnPageIt ) {
     if ( (pres::TCKinfo == (*refresh_dbHistosOnPageIt)->effServiceType()) &&
          (Batch != m_presenterApp->presenterMode()) ) {
-      m_presenterApp->setTCK(((*refresh_dbHistosOnPageIt)->rootHistogram)->GetTitle());
+      m_presenterApp -> setTCK( (*refresh_dbHistosOnPageIt) -> getTitle() ) ;
       std::string message("Current TCK: ");
-      message = message + ((*refresh_dbHistosOnPageIt)->rootHistogram)->GetTitle();
+      message = message + (*refresh_dbHistosOnPageIt) -> getTitle();
       m_presenterApp->setStatusBarText(message.c_str(), 2);
     }
     thrds.create_thread(boost::bind(&Presenter::refreshHisto,
