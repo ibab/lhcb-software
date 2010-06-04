@@ -779,6 +779,21 @@ D2DVVDSIGN      = LoKi.Particles.DaughterVertexSignedDistance
 ## @see LoKi::Cuts::BPVTRGPOINTING
 BPVTRGPOINTING     = LoKi.Particles.TrgPointingScoreWithBestPV()
 
+
+# DecayTreeFitter:
+
+## @see LoKi::Cuts::DTF_FUN 
+DTF_FUN              = LoKi.Particles.DecayTreeFitterFun
+## @see LoKi::Cuts::DTF_CUT
+DTF_CUT              = LoKi.Particles.DecayTreeFitterCut
+## @see LoKi::Cuts::DTF_CTAU
+DTF_CTAU             = LoKi.Particles.ChildCTau
+## @see LoKi::Cuts::DTF_CTAUERR
+DTF_CTAUERR          = LoKi.Particles.ChildCTauErr
+## @see LoKi::Cuts::DTF_CTAUSIGNIFICANCE 
+DTF_CTAUSIGNIFICANCE = LoKi.Particles.ChildCTauSignificance 
+
+
 # =============================================================================
 # Functional part: 
 # =============================================================================
