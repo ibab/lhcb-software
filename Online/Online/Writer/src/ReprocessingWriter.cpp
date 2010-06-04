@@ -130,6 +130,7 @@ void ReprocessingWriter::closeFiles(bool force) {
       closeFile(tmp);
       // removeFile() returns the next element after the removed one.
       tmp = m_openFiles.removeFile(tmp);
+      if ( toDelete == m_currFile ) m_currFile = 0;
       delete toDelete;
       continue;
     }
@@ -201,7 +202,7 @@ File* ReprocessingWriter::createAndOpenFile(unsigned int runNumber)    {
   // The RunDb generates file names now
   string fname = m_rpcObj->createNewFile(runNumber);
   struct cmd_header header;
-  *m_log << MSG::INFO << "RUN:" << runNumber << ": new file " << fname << endmsg;
+  *m_log << MSG::INFO << "RUN:" << std::dec << runNumber << ": new file " << fname << endmsg;
   File* currFile = new File(fname, runNumber);
 
   ::memset(&header, 0, sizeof(struct cmd_header));
@@ -223,7 +224,7 @@ void ReprocessingWriter::closeFile(File *f)   {
   struct cmd_stop_pdu pdu;
   ::memset(&header, 0, sizeof(struct cmd_header));
   ::memset(&pdu, 0, sizeof(struct cmd_stop_pdu));
-  *m_log << MSG::INFO << "RUN:" << f->getRunNumber()
+  *m_log << MSG::INFO << "RUN:" << std::dec << f->getRunNumber()
 	 << " ...closing file:" << *(f->getFileName()) << endmsg;
 
   unsigned int trgEvents[MAX_TRIGGER_TYPES];
@@ -241,17 +242,16 @@ void ReprocessingWriter::closeFile(File *f)   {
                      f->getFileName()->c_str(),
                      f->getSeqNum(),
                      f->getRunNumber(),
-             f->getBytesWritten());
+		     f->getBytesWritten());
   
   INIT_CLOSE_PDU(&pdu,
-                     f->getAdlerChecksum(),
-                     f->getMD5Checksum(),
-             f->getEvents(),
-             f->getPhysStat(),
-             trgEvents,
-             statEvents);
-
-
+		 f->getAdlerChecksum(),
+		 f->getMD5Checksum(),
+		 f->getEvents(),
+		 f->getPhysStat(),
+		 trgEvents,
+		 statEvents);
+  
   m_srvConnection->sendCommand(&header, &pdu);
 }
 
@@ -275,7 +275,7 @@ StatusCode ReprocessingWriter::writeBuffer(void *const /*fd*/, const void *data,
     RTL::Lock file_list_lock(m_flLock);
     m_currFile = m_openFiles.getFile(runNumber);
     if(!m_currFile) {
-      *m_log << MSG::INFO << "RUN:" << runNumber
+      *m_log << MSG::INFO << "RUN:" << std::dec << runNumber
 	     << ": No file exists. Creating a new one." << endmsg;
       m_currFile = createAndOpenFile(runNumber);
       m_openFiles.addFile(m_currFile);
@@ -320,7 +320,7 @@ void ReprocessingWriter::notifyOpen(struct cmd_header *cmd)   {
   catch(exception& e) {
     *m_log << MSG::ERROR << "Could not create Run Database Record:" << e.what() << endmsg;
   }
-  *m_log << "File:" << cmd->file_name << " Run:" << cmd->run_no << endmsg;
+  *m_log << "File:" << cmd->file_name << " Run:" << std::dec << cmd->run_no << endmsg;
 }
 
 /// A notify listener callback, which is executed  when a close command is acked.
