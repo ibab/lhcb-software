@@ -10,6 +10,7 @@
   o update L0TCK to 2x10
   o tweak pre/post/rates of MicroBias and L0Any
   (needs Hlt/Hlt1Lines v4r0p1 to get the clones right!)
+  o change track chisq cut in hadron lines from 10 to 999
 
 !========================== HltSettings v2r0p1 2010-06-02 ===================
 

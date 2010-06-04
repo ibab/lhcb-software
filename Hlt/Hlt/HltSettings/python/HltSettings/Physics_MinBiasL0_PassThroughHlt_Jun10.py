@@ -50,7 +50,7 @@ class Physics_MinBiasL0_PassThroughHlt_Jun10 :
                                          , 'HadDi_VDChi2Cut' : 50.0
                                          , 'HadCompanion_PTCut' : 500
                                          , 'HadCompanion_PointingCut' : 0.5
-                                         , 'HadMain_TrackFitChi2Cut' :  10.
+                                         , 'HadMain_TrackFitChi2Cut' :  999.
                                         }
                  , Hlt1PhotonLinesConf : { 'Pho_EtCut'         : 2400.0
                                           , 'Pho_IsPho'        : -0.1
