@@ -1,4 +1,4 @@
-!$Id: release.notes,v 1.62 2010-06-04 15:02:21 jpalac Exp $
+!$Id: release.notes,v 1.63 2010-06-04 16:11:14 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : PhysSel/PhysSelPython
 ! Responsible : Juan Palacios
@@ -6,6 +6,8 @@
 !-----------------------------------------------------------------------------
 
 ! 2010-06-04 Juan Palacios
+ - tests/test_selection.py
+  . Use py.test.raises to check for conditions that should raise exception.
  - python/PhysSelPython/Wrappers.py
   . AutomaticData: disallow more than one constructor argument.
  - cmt/requirements

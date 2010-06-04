@@ -3,6 +3,7 @@
 # test Selection-like classes
 #
 import sys
+from py.test import raises
 sys.path.append('../python')
 from PhysSelPython.Wrappers import Selection, AutomaticData, NameError, NonEmptyInputLocations, IncompatibleInputLocations
 from SelPy.configurabloids import DummyAlgorithm, DummySequencer
@@ -14,19 +15,10 @@ def test_automatic_data() :
     assert sel00.outputLocation() == 'Phys/Sel00x'
 
 def test_automatic_data_does_not_accept_more_than_one_ctor_argument() :
-    try :
-        sel00 = AutomaticData('name', Location = 'Phys/Sel00x')
-        assert(False)
-    except TypeError:
-        pass
-
+    raises(TypeError, AutomaticData, 'name', Location = 'Phys/Sel00')
 
 def test_automatic_data_with_no_location_raises() :
-    try :
-        sel00 = AutomaticData()
-        assert(False)
-    except Exception:
-        pass
+     raises(Exception, AutomaticData)
     
 def test_instantiate_tree(selID='0000') :
     sel00 = AutomaticData(Location = 'Phys/Sel00')
@@ -77,30 +69,26 @@ def test_selection_with_existing_selection_name_raises() :
     sel02 = AutomaticData(Location = 'Phys/Sel02')
     sel03 = AutomaticData(Location = 'Phys/Sel03')
     alg0 = DummyAlgorithm('Alg003')
-    try :
-        sel0 = Selection('Sel003', Algorithm = alg0,
+
+    sel0 = Selection('Sel003', Algorithm = alg0,
+                     RequiredSelections = [sel02, sel03])
+    raises(NameError, Selection, 'Sel003', Algorithm = alg0,
                          RequiredSelections = [sel02, sel03])
-        sel1 = Selection('Sel003', Algorithm = alg0,
-                         RequiredSelections = [sel02, sel03])
-        assert sel0.alg.InputLocations == ['Phys/Sel00', 'Phys/Sel01']
-        assert sel1.alg.InputLocations == ['Phys/Sel02', 'Phys/Sel03']
-    except NameError :
-        print "NameError caught"
+
+    assert sel0.alg.InputLocations == ['Phys/Sel02', 'Phys/Sel03']
 
 def test_clone_selection_with_existing_selection_name_raises() :
     
     sel02 = AutomaticData(Location = 'Phys/Sel02')
     sel03 = AutomaticData(Location = 'Phys/Sel03')
     alg0 = DummyAlgorithm('Alg004')
-    try :
-        sel0 = Selection('Sel004', Algorithm = alg0,
-                         RequiredSelections = [sel02, sel03])
-        sel1 = sel0.clone('Sel004', Algorithm = alg0,
-                          RequiredSelections = [sel02, sel03])
-        assert sel0.alg.InputLocations == ['Phys/Sel00', 'Phys/Sel01']
-        assert sel1.alg.InputLocations == ['Phys/Sel02', 'Phys/Sel03']
-    except NameError :
-        print "NameError caught"
+    sel0 = Selection('Sel004', Algorithm = alg0,
+                     RequiredSelections = [sel02, sel03])
+    
+
+    raises( NameError, sel0.clone, name = 'Sel004', Algorithm = alg0,
+            RequiredSelections = [sel02, sel03])
+    assert sel0.alg.InputLocations == ['Phys/Sel02', 'Phys/Sel03']
         
 def test_clone_selection_with_new_alg() :
     sel0 = test_instantiate_tree('0001')
@@ -137,12 +125,8 @@ def test_selection_with_different_InputLocations_set_in_algo_raises() :
     sel03 = AutomaticData(Location = 'Phys/Sel03')
     alg0 = DummyAlgorithm('Alg006',
                           InputLocations = ['Phys/Sel00', 'Phys/Sel01'])
-    try :
-        sel0 = Selection('Sel006', Algorithm = alg0,
-                         RequiredSelections = [sel02, sel03])
-        assert True == False
-    except IncompatibleInputLocations :
-        print 'Caught IncompatibleInputLocations'
+    raises(IncompatibleInputLocations, Selection, 'Sel006', Algorithm = alg0,
+           RequiredSelections = [sel02, sel03])
 
 def test_selection_with_same_InputLocations_set_in_algo() :
     sel02 = AutomaticData(Location = 'Phys/Sel02')
