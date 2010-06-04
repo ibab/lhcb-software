@@ -6,6 +6,10 @@ Purpose: LHCb High Level Trigger packages.
          LHCb High Level Trigger 
 
 
+</PRE><H1><A NAME=v10r4>2010-06-04 HltSys v10r4p1</A></H1><PRE>
+ - small changes to Jun10 settings, now corresponds to the  
+   TCKs in TCK/HltTCK v1r16
+
 </PRE><H1><A NAME=v10r4>2010-05-27 HltSys v10r4</A></H1><PRE>
  - update Hlt1 lines to avoid cutting on RZ tracking,
    move to Phys v9r6
