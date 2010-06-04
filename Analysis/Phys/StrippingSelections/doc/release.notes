@@ -5,6 +5,11 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-06-04 - Juan Palacios
+ - python/StrippingSelections/StrippingB2XMuMuSS.py
+ - python/StrippingSelections/StrippingD2XMuMuSS.py
+  . Fix DataOnDemand instantiaitons.
+
 ! 2010-06-04 - Ulrich Kerzel
  - added lines for lifetime unbiased B->hh (both regular and loose)
 
