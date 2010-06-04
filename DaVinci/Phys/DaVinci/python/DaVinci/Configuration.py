@@ -1,7 +1,7 @@
 """
 High level configuration tools for DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.108 2010-05-21 09:51:39 jpalac Exp $"
+__version__ = "$Id: Configuration.py,v 1.109 2010-06-04 11:07:12 jpalac Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -15,7 +15,7 @@ import GaudiKernel.ProcessJobOptions
 
 def isNewCondDBTag(tag, reference_date = '20100414') :
     tag = tag.upper()
-    if tag == 'DEFAULT' or tag == '' : return True
+    if tag == 'DEFAULT' or tag == '' : return False
     date_start = tag.find('20')
     if date_start == -1 : return False
     date_end = date_start + 8
@@ -149,20 +149,19 @@ class DaVinci(LHCbConfigurableUser) :
         """
         # Delegate handling to LHCbApp configurable
         self.setOtherProps(LHCbApp(),["DataType","CondDBtag","DDDBtag","Simulation"])
-        '''
-        self.setOtherProps(LHCbApp(),["DataType","Simulation"])
-        # that's a hack. Why does setOtherProps not work?
+        
         type = self.getProp("DataType")
         cb = self.getProp("CondDBtag")
         db = self.getProp("DDDBtag")
-        if (( type.upper() == "DC06") or ( type.upper() == "MC09" )):
-            if ( cb == ""): cb = "default"
-            if ( db == ""): db = "default"
-            log.info("Changed DB tags to "+cb+" and "+db)         
-        LHCbApp().CondDBtag = cb
-        LHCbApp().DDDBtag   = db
-        self.setProp('CondDBtag', cb)
-        self.setProp('DDDBtag', cb)
+        '''
+        if ( cb == ""):
+            log.info("Changed CondDBtag to "+cb)         
+            cb = LHCbApp().getProp('CondDBtag')
+            self.setProp('CondDBtag', cb)
+        if ( db == ""):
+            db = LHCbApp().getProp("DDDBtag")
+            log.info("Changed DDDBtag to "+db)         
+            self.setProp('DDDBtag', db)
         '''
         self.setOtherProps(PhysConf(),["DataType","Simulation","InputType"])
         self.setOtherProps(AnalysisConf(),["DataType","Simulation"])
@@ -417,7 +416,9 @@ class DaVinci(LHCbConfigurableUser) :
         if not isNewCondDBTag(cdb) :
             log.warning('CondDB tag '+cdb+' considered old. Setting HltReferenceRateSvc().UseCondDB = False')
             from Configurables import HltReferenceRateSvc
-            HltReferenceRateSvc().UseCondDB = False 
+            HltReferenceRateSvc().UseCondDB = False
+        else :
+            log.info('CondDB tag '+cdb+' considered NEW.')
 ################################################################################
 # Ntuple files
 #
