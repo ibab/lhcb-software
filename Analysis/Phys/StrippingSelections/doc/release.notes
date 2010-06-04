@@ -5,6 +5,15 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-06-04 - Jacopo Nardulli
+ - Added files: 
+    python/StrippingSelections/StrippingB2DPiChi2LifeT.py
+    python/StrippingSelections/StrippingB2DPiChi2NOMWPres.py
+    python/StrippingSelections/StrippingB2DPiChi2NOMWPresLoose.py
+  I also modified the B-Hadron stream file  
+  The LifeTime selection is not added in the B-hadron stream
+  For details see my talk at the GWT CP meeting on the 3rd of June
+
 ! 2010-06-01 - Greig Cowan on behalf of Dimitry and Osvaldo
  - Tightened cuts on V0Geo line. Prescale now at 0.5.
 

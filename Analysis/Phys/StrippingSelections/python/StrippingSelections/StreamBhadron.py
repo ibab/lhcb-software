@@ -15,6 +15,8 @@ from StrippingConf.StrippingStream import StrippingStream
 from StrippingSelections import StrippingB2Charged2Body
 from StrippingSelections import StrippingB2DPi
 from StrippingSelections import StrippingB2DPiChi2
+from StrippingSelections import StrippingB2DPiChi2NOMWPres
+from StrippingSelections import StrippingB2DPiChi2NOMWPresLoose
 from StrippingSelections import StrippingB2DPiChi2Loose
 from StrippingSelections import StrippingB2DPiLoose
 from StrippingSelections import StrippingB2D3Pi
@@ -34,14 +36,12 @@ stream.appendLines( [
 		        StrippingB2Charged2Body.line,  
 		        StrippingB2Charged2Body.line1,  
 		        StrippingB2Charged2Body.line2,  
-		        StrippingB2DPi.line1,  
-		        StrippingB2DPi.line2,
                         StrippingB2DPiChi2.line1,
                         StrippingB2DPiChi2.line2,
-                        StrippingB2DPiLoose.line1,  
-		        StrippingB2DPiLoose.line2,  
                         StrippingB2DPiChi2Loose.line1,
                         StrippingB2DPiChi2Loose.line2,
+                        StrippingB2DPiChi2NOMWPres.line1,
+                        StrippingB2DPiChi2NOMWPresLoose.line1,
                         StrippingB2D3Pi.line1,
                         StrippingB2D3Pi.line2,
 			StrippingBs2PhiPhiConf().normal(),  #StrippingBs2PhiPhi.line1, 
