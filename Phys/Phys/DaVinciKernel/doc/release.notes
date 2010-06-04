@@ -1,8 +1,27 @@
-!$Id: release.notes,v 1.359 2010-06-02 10:59:12 jpalac Exp $
+!$Id: release.notes,v 1.360 2010-06-04 12:35:23 ibelyaev Exp $
 !============================================================================
 ! Package     : DaVinciKernel
 ! Responsible : J.P. Palacios
 !============================================================================
+
+! 2010-06-04 - Vanya Belyaev
+
+ - Kernel/ParticleFilters.h
+  
+    add trivial fuctions to split the container according soem criteria:
+
+    e.g.
+
+   *   using namespace LoKi::Cuts ;
+   *
+   *   const LHCb::Particle::Range input = ...;
+   *
+   *   // split into negative & positive 
+   *   LHCb::Particle::ConstVector negative ;
+   *   LHCb::Particle::ConstVector positive ;
+   *   DaVinci::filter ( input , Q < 0 , negative , positive ) ;
+   *
+    
 
 ! 2010-06-02 - Juan Palacios
  - Kernel/DVAlgorithm
