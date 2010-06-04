@@ -28,7 +28,8 @@ using namespace LHCb;
 
 /// Standard constructor
 RawDataSelector::LoopContext::LoopContext(const RawDataSelector* pSelector)
-: m_sel(pSelector), m_fileOffset(0), m_ioMgr(m_sel->fileMgr()), m_connection(0)
+  : m_sel(pSelector), m_fileOffset(0), m_ioMgr(m_sel->fileMgr()), m_connection(0),
+    m_trgMask(0), m_vetoMask(0)
 {
 }
 
@@ -38,7 +39,9 @@ StatusCode RawDataSelector::LoopContext::connect(const std::string& specs)  {
   m_connection = new RawDataConnection(m_sel,specs);
   StatusCode sc = m_ioMgr->connectRead(true,m_connection);
   if ( sc.isSuccess() )  {
-    m_conSpec = m_connection->fid();
+    m_conSpec  = m_connection->fid();
+    m_vetoMask = (m_sel->vetoMask().empty()) ? 0 : &(m_sel->vetoMask());
+    m_trgMask  = (m_sel->triggerMask().empty()) ? 0 : &(m_sel->triggerMask());
     return sc;
   }
   close();
@@ -58,6 +61,7 @@ RawDataSelector::RawDataSelector(const std::string& nam, ISvcLocator* svcloc)
   : Service( nam, svcloc), m_rootCLID(CLID_NULL), m_evtCount(0)
 {
   declareProperty("DataManager", m_ioMgrName="Gaudi::IODataManager/IODataManager");
+  declareProperty("TriggerMask", m_trgMask);
   declareProperty("NSkip",       m_skipEvents=0);
   declareProperty("PrintFreq",   m_printFreq=-1);
   declareProperty("AddSpace",    m_addSpace=1);

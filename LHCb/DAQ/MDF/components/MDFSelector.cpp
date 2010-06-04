@@ -13,6 +13,7 @@
 #include "MDF/MDFHeader.h"
 #include "MDF/RawEventHelpers.h"
 #include "MDF/RawDataSelector.h"
+#include "Event/RawBank.h"
 #include "GaudiUtils/IIODataManager.h"
 
 // C++ include files
@@ -49,10 +50,26 @@ namespace LHCb  {
     }
     /// Receive event and update communication structure
     virtual StatusCode receiveData(IMessageSvc* msg)  {
+    Next:
       m_fileOffset = m_ioMgr->seek(m_connection,0,SEEK_CUR);
       setupMDFIO(msg,0);
       m_data = readBanks(m_connection, 0 == m_fileOffset);
       if ( m_data.second > 0 )  {
+	/// Check if trigger and/or veto masks should be processed
+	if ( m_trgMask || m_vetoMask ) {
+	  RawBank* b = (RawBank*)m_data.first;
+	  MDFHeader* h = b->begin<MDFHeader>();
+	  const unsigned int* msk = h->subHeader().H1->triggerMask();
+	  if ( m_vetoMask ) {
+	    for(size_t i=0; i<4 && i<m_vetoMask->size(); ++i)
+	      if ( (m_vetoMask->at(i)&msk[i]) != 0 ) goto Next;
+	  }
+	  if ( m_trgMask ) {
+	    for(size_t i=0; i<4 && i<m_trgMask->size(); ++i)
+	      if ( (m_trgMask->at(i)&msk[i]) != 0 ) return StatusCode::SUCCESS;
+	  }
+	  goto Next;
+	}
         return StatusCode::SUCCESS;
       }
       return StatusCode::FAILURE;

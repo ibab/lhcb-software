@@ -36,17 +36,22 @@ namespace LHCb  {
     class LoopContext : public IEvtSelector::Context {
     protected:
       /// Owning event selector
-      const RawDataSelector*     m_sel;
+      const RawDataSelector*           m_sel;
       /// Connection specs of current file
-      std::string                m_conSpec;
+      std::string                      m_conSpec;
       /// Data holder
-      std::pair<char*,int>       m_data;
+      std::pair<char*,int>             m_data;
       /// Current file offset
-      long long                  m_fileOffset;
+      long long                        m_fileOffset;
       /// Pointer to file manager service
-      Gaudi::IIODataManager*        m_ioMgr;
+      Gaudi::IIODataManager*           m_ioMgr;
       /// Pointer to file connection
-      Gaudi::IDataConnection*    m_connection;
+      Gaudi::IDataConnection*          m_connection;
+      /// Cached pointer to trigger mask of the event selector
+      const std::vector<unsigned int>* m_trgMask;
+      /// Cached pointer to veto mask of the event selector
+      const std::vector<unsigned int>* m_vetoMask;
+
     public:
       /// Standard constructor
       LoopContext(const RawDataSelector* pSelector);
@@ -160,6 +165,12 @@ namespace LHCb  {
     /// Additional dataspace in buffer [BYTES]
     int additionalSpace() const {   return m_addSpace*1024; }
 
+    /// Access to required trigger mask
+    const std::vector<unsigned int>& triggerMask()  const  {   return m_trgMask; }
+
+    /// Access to required veto mask
+    const std::vector<unsigned int>& vetoMask()     const  {   return m_vetoMask; }
+
     /// Service Constructor
     RawDataSelector( const std::string& name, ISvcLocator* svcloc );
 
@@ -185,6 +196,10 @@ namespace LHCb  {
     int                 m_printFreq;
     /// Property: additional dataspace to be used to add data [KBYTES]. Default=0
     int                 m_addSpace;
+    /// Property: required trigger mask from MDF header (only 128 bits significant)
+    std::vector<unsigned int>    m_trgMask;
+    /// Property: veto mask from MDF header (only 128 bits significant)
+    std::vector<unsigned int>    m_vetoMask;
     /// Event record count
     mutable int         m_evtCount;
   };
