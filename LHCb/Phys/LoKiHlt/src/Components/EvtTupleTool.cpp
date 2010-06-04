@@ -1,4 +1,4 @@
-// $Id: EvtTupleTool.cpp,v 1.6 2010-04-22 12:18:09 ibelyaev Exp $
+// $Id: EvtTupleTool.cpp,v 1.7 2010-06-04 13:44:37 ibelyaev Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -225,6 +225,15 @@ namespace LoKi
       /// the items: void
       VOID_Items m_void ;                                    // the items: void
       // ======================================================================      
+    private:
+      // ======================================================================      
+      /// the TES-location of ODIN
+      std::string  m_ODINLocation ;        //          the TES-location of ODIN
+      /// the TES-location of L0DUReports  
+      std::string  m_L0DULocation ;        //   the TES-location of L0DUReports
+      /// the TES-location of HltDecReports 
+      std::string  m_HDRLocation  ;        // the TES-location of HltDecReports
+      // ======================================================================      
     } ;
     // ========================================================================
   } //                                            end of namespace LoKi::Hybrid 
@@ -256,6 +265,10 @@ LoKi::Hybrid::EvtTupleTool::EvtTupleTool
   , m_l0        ( ) 
   , m_hdr       ( ) 
   , m_void      ( ) 
+// TES-locations 
+  , m_ODINLocation ( LHCb::ODINLocation          :: Default )
+  , m_L0DULocation ( LHCb::L0DUReportLocation    :: Default )
+  , m_HDRLocation  ( LHCb::HltDecReportsLocation :: Default ) 
 {
   // interface
   declareInterface<IEventTupleTool> ( this ) ;
@@ -301,9 +314,27 @@ LoKi::Hybrid::EvtTupleTool::EvtTupleTool
       m_map_void       , 
       "The map { 'name' : 'functor'} of variables: void -> double "     ) 
     -> declareUpdateHandler ( &LoKi::Hybrid::EvtTupleTool::handleVOID , this ) ;
+  // 
+  // TES-locations 
+  //
+  declareProperty 
+    ( "ODIN_Location" , 
+      m_ODINLocation  , 
+      "TES-location of LHCb::ODIN object"          ) ;
+  //
+  declareProperty 
+    ( "L0DU_Location" , 
+      m_L0DULocation  , 
+      "TES-location of LHCb::L0DUReport object"    ) ;
+  //
+  declareProperty 
+    ( "HLT_Location"  , 
+      m_HDRLocation   , 
+      "TES-location of LHCb::HltDecReports object" ) ;
+  //
 }
 // ============================================================================
-// vitual & protected destructor 
+// virtual & protected destructor 
 // ============================================================================
 LoKi::Hybrid::EvtTupleTool::~EvtTupleTool()
 {
@@ -369,13 +400,13 @@ void LoKi::Hybrid::EvtTupleTool::handlePreambulo ( Property& /* p */ )
   Warning ( "Reintialization of Preambulo" ).ignore() ;
   //
   StatusCode sc = updateODIN () ;
-  Assert ( sc.isSuccess() , "Unable to set 'ODIN_Variables'"   , sc ) ;
+  Assert ( sc.isSuccess () , "Unable to set 'ODIN_Variables'"   , sc ) ;
   sc = updateL0DU () ;
-  Assert ( sc.isSuccess() , "Unable to set 'L0DU_Variables'"   , sc ) ;
+  Assert ( sc.isSuccess () , "Unable to set 'L0DU_Variables'"   , sc ) ;
   sc = updateHLT  () ;
-  Assert ( sc.isSuccess() , "Unable to set  'HLT_Variables'"   , sc ) ;
+  Assert ( sc.isSuccess () , "Unable to set  'HLT_Variables'"   , sc ) ;
   sc = updateVOID () ;
-  Assert ( sc.isSuccess() , "Unable to set 'VOID_Variables'"   , sc ) ;
+  Assert ( sc.isSuccess () , "Unable to set 'VOID_Variables'"   , sc ) ;
 }    
 // ============================================================================
 // the update handler for HltFactory
@@ -591,7 +622,7 @@ StatusCode LoKi::Hybrid::EvtTupleTool::fill( Tuples::Tuple& t )
   // ODIN
   if ( !m_odin.empty() ) 
   {
-    const LHCb::ODIN* odin = get<LHCb::ODIN> ( LHCb::ODINLocation::Default ) ;
+    const LHCb::ODIN* odin = get<LHCb::ODIN> ( m_ODINLocation ) ;
     //
     for ( ODIN_Items::const_iterator item = m_odin.begin() ; 
           m_odin.end() != item ; ++item ) 
@@ -608,8 +639,7 @@ StatusCode LoKi::Hybrid::EvtTupleTool::fill( Tuples::Tuple& t )
   // L0 
   if ( !m_l0.empty() ) 
   {
-    const LHCb::L0DUReport* l0 = get<LHCb::L0DUReport> 
-      ( LHCb::L0DUReportLocation::Default ) ;
+    const LHCb::L0DUReport* l0 = get<LHCb::L0DUReport> ( m_L0DULocation ) ;
     //
     for ( L0_Items::const_iterator item = m_l0.begin() ; 
           m_l0.end() != item ; ++item ) 
