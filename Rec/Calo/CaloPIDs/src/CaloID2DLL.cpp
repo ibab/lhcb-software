@@ -1,8 +1,11 @@
-// $Id: CaloID2DLL.cpp,v 1.12 2010-05-20 09:19:36 odescham Exp $
+// $Id: CaloID2DLL.cpp,v 1.13 2010-06-04 00:16:01 rlambert Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , verison $Revision: 1.12 $
+// CVS tag $Name: not supported by cvs2svn $ , verison $Revision: 1.13 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.12  2010/05/20 09:19:36  odescham
+// reduce verbosity
+//
 // Revision 1.11  2010/03/12 21:51:40  dgolubko
 // CaloID2DLL: enable CondDB by default, add protection against missing Conditions
 //
@@ -261,7 +264,7 @@ StatusCode CaloID2DLL::execute()
     const double DLL = dLL ( track->p() , value , track->type() ) ;
 
     // fill the relation table 
-    table->i_push ( track , DLL ) ;                        // NB!: i_push
+    table->i_push ( track , (float) DLL ) ;                        // NB!: i_push
   } ;
   /// MANDATORY: i_sort after i_push 
   table->i_sort() ;
