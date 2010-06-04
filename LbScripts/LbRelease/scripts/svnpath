@@ -1,0 +1,114 @@
+#!/usr/bin/env python
+
+from LbUtils.Script import Script
+
+from LbRelease import rcs
+from LbConfiguration.Repository import repositories
+
+from urllib import splittype, splituser, splithost
+from LbConfiguration.Repository import SVNReposInfo
+
+import sys
+
+class SubversionPath(Script):
+    """
+    Return the URL to a package in the Subversion repositories.
+    """
+    __usage__ = "%prog [options] package [tags...]"
+    def defineOpts(self):
+        self.parser.add_option("-r", "--repository", action = "append",
+                               metavar = "REPOSITORY",
+                               dest = "repositories",
+                               help = "Repository to use, by default look in all the known ones")
+        self.parser.add_option("-p", "--protocol",
+                               help = "preferred access method to revision system [ssh|anonymous]")
+        self.parser.add_option("-P", "--project", action = "store_true",
+                               help = "Return the URL of the project instead of the package")
+        self.parser.set_defaults(repositories = [],
+                                 protocol = "default")
+    def main(self):
+        """
+        Main function.
+        """
+        # package name is the first mandatory argument
+        if not self.args:
+            self.args_error("I need at least the name of the package")
+        self.package = self.args[0]
+        # tag/versions are the following optional arguments
+        if len(self.args) > 1:
+            self.tags = []
+            for t in self.args[1:]:
+                if t.lower() == "head":
+                    self.tags.append("trunk")
+                else:
+                    self.tags.append(t)
+        else:
+            # if no version is specified look only for trunk
+            self.tags = ["trunk"]
+        
+        # use the repository specified or all of the known ones
+        if self.options.repositories:
+            self.repositories = self.options.repositories
+        else: # use all repositories
+            self.repositories = repositories.keys()
+        
+        # find the (first) repository containing the package
+        repos = self.packageRepos()
+        if not repos:
+            self.log.error("Cannot find package '%s'", self.package)
+            return 1
+        
+        project = self.options.project
+        module = self.package
+        # loop over all requested tags and collect the paths
+        paths = []
+        for tag in self.tags:
+            if repos.hasVersion(module, tag, project):
+                p = repos.url(module, tag, project)
+                if project and p.endswith("/cmt"): # special case for projects
+                    p = p[:-4]
+                paths.append(p)
+            else:
+                self.log.warning("Cannot find tag '%s' for package '%s'", tag, module)
+        print " ".join(paths)
+        
+    def packageRepos(self):
+        """
+        Find the repository that contains the requested package.
+        """
+        for name in self.repositories:
+            url = None
+            # Try to understand if the repository name is known or not and map it
+            # to a repository URL
+            if name in repositories:
+                # we need to be sure that we know about the protocol
+                if self.options.protocol in repositories[name]:
+                    url = str(repositories[name][self.options.protocol])
+                    self.log.info("Looking for package '%s' in '%s' (%s)", self.package, name, url)
+                else:
+                    self.log.warning("Cannot use protocol '%s' for repository '%s', ignored", self.options.protocol, name)
+            else:
+                # try to use it as a user defined SVN repository
+                try:
+                    protocol, rest = splittype(name)
+                    rest, path = splithost(rest)
+                    user, host = splituser(rest)
+                    url = str(SVNReposInfo(protocol, host, path, user))
+                    self.log.info("Looking for package '%s' in '%s'", self.package, url)
+                except:
+                    self.log.warning("Cannot understand repository '%s', ignored", name)
+            # If we managed to get a URL check if the package/project belongs to the
+            # repository and return it if true.
+            if url:
+                repos = rcs.connect(url)
+                if self.options.project:
+                    if self.package in repos.projects:
+                        return repos
+                else:
+                    if self.package in repos.packages:
+                        return repos
+        # No valid repository found
+        return None
+
+if __name__ == '__main__':
+    sys.exit(SubversionPath().run())

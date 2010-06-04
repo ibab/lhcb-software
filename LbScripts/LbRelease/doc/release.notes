@@ -1,3 +1,10 @@
+2010-06-04  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* python/LbRelease/rcs.py: added a function to the Subversion back-end
+	to get the URL to a module
+	* scripts/svnpath: script to print the Subversion URL to a package or a
+	project (trunk or tags)
+
 2010-06-01  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/requirements: release of version v3r2

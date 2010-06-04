@@ -845,6 +845,12 @@ class SubversionCmd(RevisionControlSystem):
                 dst = os.path.join(dst, "cmt")
         return src, dst
 
+    def url(self, module, version = "trunk", isProject = False):
+        """
+        Return the full URL to the module in the repository. 
+        """
+        return self._computePaths(module, version, isProject)[0]
+
     def checkout(self, module, version = "head", dest = None, vers_dir = False, project = False):
         """
         Extract a module in the directory specified with "dest".
@@ -886,8 +892,8 @@ class SubversionCmd(RevisionControlSystem):
             raise RCSError("tag not implemented for Subversion repositories with "
                            "version < 2.0 (current version %s)" % self.repositoryVersion)
         self._assertModule(module, isProject)
-        trunkUrl, _ = self._computePaths(module, "trunk", isProject)
-        versionUrl, _ = self._computePaths(module, version, isProject)
+        trunkUrl = self.url(module, "trunk", isProject)
+        versionUrl = self.url(module, version, isProject)
         _, _, retcode = _svn("copy",
                              "-m", "Tagging %s %s as %s" % ({True: "project",
                                                              False: "package"}[isProject],
@@ -902,7 +908,7 @@ class SubversionCmd(RevisionControlSystem):
         file of the module for the requested version (in the repository). 
         """
         self._assertModule(module, isProject = False)
-        url, _ = self._computePaths(module, version, isProject = False)
+        url = self.url(module, version, isProject = False)
         url += "/cmt/requirements"
         out, _, _ = _svn("cat", url, stderr = None)
         return out

@@ -20,9 +20,19 @@ class PlainScript:
         """ constructor of the Script. provides default options parser 
         and logger """
         if version is None:
-            version = self._version 
+            if hasattr(self, "__version__"):
+                version = self.__version__
+            else:
+                version = self._version
+            
         if description is None :
-            description = self._description
+            if self._description:
+                description = self._description
+            else:
+                description = self.__doc__
+        if usage is None :
+            if hasattr(self, "__usage__"):
+                usage = self.__usage__
         self.parser = parser(usage=usage, version=version, 
                              help_output=help_output, description=description)
         self.env = getDefaultEnv()
