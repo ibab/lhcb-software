@@ -1,4 +1,4 @@
-#$Id: Wrappers.py,v 1.45 2010-05-27 16:50:01 jpalac Exp $
+#$Id: Wrappers.py,v 1.46 2010-06-04 15:01:50 jpalac Exp $
 """
 Wrapper classes for a DaVinci offline physics selection. The following classes
 are available:
@@ -70,14 +70,13 @@ class AutomaticData(autodata) :
     """
 
     def __init__(self,
-                 Location = '',
-                 DataType = 'Particles') :
+                 Location = '') :
         if Location == '' :
             raise Exception('Empty AutomaticData Location')
         autodata.__init__(self,
                           name='',
                           Location=Location)
-        self._dataType = DataType
+        self._dataType = 'Particles'
     def algorithm(self) :
         return VoidFilter('SelFilter'+self._name,
                           Code = "CONTAINS('"+self.outputLocation()+"/"+self._dataType+"')>0")
