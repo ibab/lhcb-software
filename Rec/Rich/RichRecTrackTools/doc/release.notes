@@ -4,6 +4,9 @@
 ! Purpose     : Utility tracks tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+! 2010-06-04 - Rob Lambert
+ - Fixes for some windows warnings savannah 15808
+
 !======================== RichRecTrackTools v1r20p1 2010-05-21 ================
 ! 2010-05-12 - Rob Lambert
  - Review of warnings

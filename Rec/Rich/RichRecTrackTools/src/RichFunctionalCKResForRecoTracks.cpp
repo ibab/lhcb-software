@@ -9,6 +9,10 @@
  */
 //----------------------------------------------------------------------------------------
 
+#ifdef _WIN32
+#pragma warning ( disable : 4244 ) // conversion double to float in boost
+#endif
+
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/SystemOfUnits.h"
