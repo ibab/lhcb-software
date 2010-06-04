@@ -4,6 +4,7 @@
 __author__ = "Marco Clemencic"
 
 import os, re
+from datetime import datetime
 from subprocess import Popen, PIPE
 from stat import ST_SIZE
 from LbUtils.afs.directory import isAFSDir, isMountPoint
@@ -205,6 +206,7 @@ class Doc(object):
     _namePattern = "DOC_%06d"
     _docSubdir = "doxygen"
     _docCollDir = "docs"
+    _docLockFile = ".locked"
 
     @classmethod
     def _root(cls, root = None):
@@ -255,6 +257,9 @@ class Doc(object):
         # full path to the doxygen destination directory
         self.output = os.path.join(self.path, self._docSubdir)
         
+        # Number of broken links in the directory 
+        self.broken = 0
+        
         # projects in the directory
         self.projects = {}
         if not os.path.isdir(self.path):
@@ -266,12 +271,19 @@ class Doc(object):
                 if os.path.islink(os.path.join(self.path, l)):
                     p, v = l.split("_")
                     self.projects[p.upper()] = v # ensure that we use upper case names
+                    # Update broken links count
+                    if not os.path.exists(os.path.join(self.path, l)):
+                        self.broken += 1
             self._log.debug("Found %d projects: %s", len(self.projects),
                             " ,".join(map(str, self.projects.items())))
             self.isAfsVolume = _has_AFS and isAFSDir(self.path) and isMountPoint(self.path)
         
         # flag saying if the directory has already been built or not
         self.toBeBuilt = not os.path.isdir(self.output)
+        
+        # flag to tell if the DOC dir is locked or not
+        self._lockFile = os.path.join(self.path, self._docLockFile)
+        self.locked = os.path.exists(self._lockFile)
     
     def _allDocNames(self):
         """
@@ -298,6 +310,9 @@ class Doc(object):
         Helper function to tell if a project with its dependencies can be
         included in this directory.
         """
+        # Note: if the directory is locked, we can assume we could still host the
+        #       file, but it will not be actually added 
+        
         # The project must not be included
         if self.getVersion(project) is not None:
             return False
@@ -307,7 +322,6 @@ class Doc(object):
             if not self.getVersion(p) in [v, None]:
                 return False
         return True
-        
     def add(self, project, version):
         """
         Add a project to the list of contained ones.
@@ -315,6 +329,10 @@ class Doc(object):
         Raise and exception if the project is already there with a different
         version or it doesn't exist.
         """
+        # do not add projects if the directory is locked
+        if self.locked:
+            self._log.warning("Trying to add project %s %s to a locked directory", project, version)
+            return
         project = project.upper() # ensure upper case
         # check if the project is already there
         if project in self.projects:
@@ -329,23 +347,6 @@ class Doc(object):
             self.projects[project] = version
             os.symlink(root, os.path.join(self.path,
                                           "%s_%s" % (project, version)))
-            ## @todo: the creation of the link to the documentation should be done once the documentation has been built
-            # make the link to the doc directory in the common one
-            doclinkdir = os.path.join(self.root, self._docCollDir)
-            if not os.path.isdir(doclinkdir):
-                self._log.debug("Creating directory %s", doclinkdir)
-                os.makedirs(doclinkdir)
-            doclink = os.path.join(doclinkdir,
-                                   "%s_%s" % (project, version))
-            if os.path.exists(doclink):
-                old = os.path.basename(os.readlink(doclink))
-                if old < self.name:
-                    self._log.info("Moving link %s from %s to %s", doclink, old, self.name)
-                    os.remove(doclink)
-                    os.symlink(os.path.join("..", self.name), doclink)
-            else:
-                self._log.info("Creating link %s to %s", doclink, self.name)
-                os.symlink(os.path.join("..", self.name), doclink)
             #self._log.debug("Mark the directory as to be built")
             self.toBeBuilt = True
     
@@ -353,6 +354,9 @@ class Doc(object):
         """
         Generate the doxygen configuration file for the current doc directory.
         """
+        if self.locked:
+            self._log.warning("Cannot generate Doxygen configuration in a locked directory")
+            return
         self._log.info("Generate DoxyFile.cfg")
         doxycfg = DoxyFileCfg([("PROJECT_NAME", "LHCb Software"),
                                ('OUTPUT_DIRECTORY', self.output),
@@ -492,65 +496,92 @@ class Doc(object):
         """
         Build the actual doxygen documentation.
         """
-        self._generateDoxyFile()
-        self._log.info("Running doxygen")
-        # @todo: build the documentation in a temporary directory
-        # modify the doxygen file to use a temporary directory
-        import getpass, tempfile, shutil
-        username = getpass.getuser()
-        tempdirs = filter(os.path.isdir,
-                          [os.path.join(os.path.sep, "build", "tmp"),
-                           os.path.join(os.path.sep, "build", username, "tmp"),
-                           os.path.join(os.path.sep, "build", username)])
-        if tempdirs:
-            tempdir = tempfile.mkdtemp("doxygen", dir = tempdirs[0])
-        else:
-            tempdir = tempfile.mkdtemp("doxygen")
-        # use a temporary configuration file to generate the output in a temporary directory
-        shutil.copyfile(os.path.join(self.path, "conf", "DoxyFile.cfg"),
-                        os.path.join(self.path, "conf", "DoxyFileTmp.cfg"))
-        open(os.path.join(self.path, "conf", "DoxyFileTmp.cfg"), "a").write("OUTPUT_DIRECTORY = %s\n" % tempdir)
-        proc = Popen(["doxygen", os.path.join("conf", "DoxyFileTmp.cfg")],
-                     cwd = self.path, stdin = PIPE)
-        proc.stdin.write("r\n") # make latex enter \nonstopmode on the first error
-        retcode = proc.wait()
-        if retcode != 0:
-            raise RuntimeError("Doxygen failed with error %d in %s" % (retcode, tempdir))
-        if os.path.exists(self.output + ".bk"):
-            # Remove old backups before copying the new documentation
-            shutil.rmtree(self.output + ".bk")
-        if self.isAfsVolume:
-            usage = _diskUsage(tempdir) / 1024
-            output = Popen(["fs", "lq", self.path], stdout = PIPE).communicate()[0].splitlines()[-1].split()
-            quota = int(output[1])
-            used = int(output[2])
-            reqsize = int(1.1 * (used + usage))
-            if quota < reqsize:
-                self._log.info("Increasing AFS volume size to %d", reqsize)
-                output = Popen(["afs_admin", "sq", self.path, str(reqsize)], stdout = PIPE).wait()
-        # copy the documentation from the temporary directory to the final place with a temporary name
-        self._log.info("Copy generated files from temporary directory")
-        shutil.copytree(tempdir, self.output + ".new")
-        if self.isAfsVolume:
-            # Give read access to everybody
-            self._log.debug("Give read access (recursively) to %s", self.path)
-            for dirpath, _, _ in os.walk(self.path):
-                Popen(["fs", "setacl", "-dir", dirpath, "-acl", "system:anyuser", "rl"]).wait()
-        # Swap the old and the new documentation (avoid that the users see an incomplete doc)
-        # @todo: it should be done for the tag file too
-        # Move away the old documentation
-        if os.path.isdir(self.output):
-            old = self.output + ".bk"
-            self._log.warning("Old documentation moved to %s", old)
-            os.rename(self.output, old)
-        # rename the new documentation
-        os.rename(self.output + ".new", self.output)
-        shutil.rmtree(tempdir)
-        os.remove(os.path.join(self.path, "conf", "DoxyFileTmp.cfg"))
-        # Mark as built
-        self.toBeBuilt = False
-        self._log.debug("Documentation ready")
-        
+        if self.locked:
+            self._log.warning("Cannot build in a locked directory")
+            return
+        # create lockfile
+        self._log.info("Creating lock file '%s'", self._lockFile)
+        open(self._lockFile, "w").write("%s - %s\n" % (os.getpid(), datetime.now()))
+        try:
+            self._generateDoxyFile()
+            self._log.info("Running doxygen")
+            # @todo: build the documentation in a temporary directory
+            # modify the doxygen file to use a temporary directory
+            import getpass, tempfile, shutil
+            username = getpass.getuser()
+            tempdirs = filter(os.path.isdir,
+                              [os.path.join(os.path.sep, "build", "tmp"),
+                               os.path.join(os.path.sep, "build", username, "tmp"),
+                               os.path.join(os.path.sep, "build", username)])
+            if tempdirs:
+                tempdir = tempfile.mkdtemp("doxygen", dir = tempdirs[0])
+            else:
+                tempdir = tempfile.mkdtemp("doxygen")
+            # use a temporary configuration file to generate the output in a temporary directory
+            shutil.copyfile(os.path.join(self.path, "conf", "DoxyFile.cfg"),
+                            os.path.join(self.path, "conf", "DoxyFileTmp.cfg"))
+            open(os.path.join(self.path, "conf", "DoxyFileTmp.cfg"), "a").write("OUTPUT_DIRECTORY = %s\n" % tempdir)
+            proc = Popen(["doxygen", os.path.join("conf", "DoxyFileTmp.cfg")],
+                         cwd = self.path, stdin = PIPE)
+            proc.stdin.write("r\n") # make latex enter \nonstopmode on the first error
+            retcode = proc.wait()
+            if retcode != 0:
+                raise RuntimeError("Doxygen failed with error %d in %s" % (retcode, tempdir))
+            if os.path.exists(self.output + ".bk"):
+                # Remove old backups before copying the new documentation
+                shutil.rmtree(self.output + ".bk")
+            if self.isAfsVolume:
+                usage = _diskUsage(tempdir) / 1024
+                output = Popen(["fs", "lq", self.path], stdout = PIPE).communicate()[0].splitlines()[-1].split()
+                quota = int(output[1])
+                used = int(output[2])
+                reqsize = int(1.1 * (used + usage))
+                if quota < reqsize:
+                    self._log.info("Increasing AFS volume size to %d", reqsize)
+                    output = Popen(["afs_admin", "sq", self.path, str(reqsize)], stdout = PIPE).wait()
+            # copy the documentation from the temporary directory to the final place with a temporary name
+            self._log.info("Copy generated files from temporary directory")
+            shutil.copytree(tempdir, self.output + ".new")
+            if self.isAfsVolume:
+                # Give read access to everybody
+                self._log.debug("Give read access (recursively) to %s", self.path)
+                for dirpath, _, _ in os.walk(self.path):
+                    Popen(["fs", "setacl", "-dir", dirpath, "-acl", "system:anyuser", "rl"]).wait()
+            # Swap the old and the new documentation (avoid that the users see an incomplete doc)
+            # @todo: it should be done for the tag file too
+            # Move away the old documentation
+            if os.path.isdir(self.output):
+                old = self.output + ".bk"
+                self._log.warning("Old documentation moved to %s", old)
+                os.rename(self.output, old)
+            # rename the new documentation
+            os.rename(self.output + ".new", self.output)
+            shutil.rmtree(tempdir)
+            os.remove(os.path.join(self.path, "conf", "DoxyFileTmp.cfg"))
+            # update links in the common directory
+            doclinkdir = os.path.join(self.root, self._docCollDir)
+            if not os.path.isdir(doclinkdir):
+                self._log.debug("Creating directory %s", doclinkdir)
+                os.makedirs(doclinkdir)
+            for project in self.projects:
+                version = self.getVersion(project)
+                doclink = os.path.join(doclinkdir,
+                                       "%s_%s" % (project, version))
+                if os.path.exists(doclink):
+                    old = os.path.basename(os.readlink(doclink))
+                    if old < self.name:
+                        self._log.info("Moving link %s from %s to %s", doclink, old, self.name)
+                        os.remove(doclink)
+                        os.symlink(os.path.join("..", self.name), doclink)
+                else:
+                    self._log.info("Creating link %s to %s", doclink, self.name)
+                    os.symlink(os.path.join("..", self.name), doclink)
+            # Mark as built
+            self.toBeBuilt = False
+            self._log.debug("Documentation ready")
+        finally:
+            # clean up the lock
+            os.remove(self._lockFile)
     def __len__(self):
         """
         Returns the number of projects hosted.
@@ -684,6 +715,46 @@ def getLatestVersions(versions):
         projects[p] = projects[p].pop()
     return [ "%s_%s" % t for t in projects.items() ]        
 
+def findProjects(exclude = None):
+    """
+    Find all the available (project, version) pairs available in the release area.
+    """
+    releases = os.environ["LHCBRELEASES"]
+    logging.debug("Looking for projects in '%s'", releases)
+    if exclude is None: # default exclusion
+        exclude = set([ "GANGA", "DIRAC", "LHCBDIRAC", "LHCBGRID", "CURIE", "GEANT4" ])
+    projects = []
+    for project in os.listdir(releases):
+        projdir = os.path.join(releases, project)
+        if project not in exclude and os.path.isdir(projdir):
+            version_re = re.compile(r"^%s_(v\d+r\d+(p\d+)?)$" % project)
+            for versdir, version in [ (m.group(0), m.group(1))
+                                      for m in map(version_re.match, os.listdir(projdir))
+                                      if m ]:
+                if os.path.exists(os.path.join(projdir, versdir, "cmt", "project.cmt")):
+                    projects.append((project, version))
+    projects.sort()
+    logging.debug("Found %s", projects)
+    return projects
+
+def findBrokenDocs(root = None):
+    """
+    Find all broken doc directories.
+    A doc directory is broken if it contains (those containing broken symlinks, i.e.
+    """
+    return [d for d in allDocs(root) if d.broken == len(d)]
+
+def findUnusedDocs(root = None):
+    """
+    Find all doc directories that are not referenced from the common directory.
+    """
+    doclinkdir = os.path.join(Doc._root(root), Doc._docCollDir)
+    referenced = set()
+    for path in [os.path.join(doclinkdir, p) for p in os.listdir(doclinkdir)]:
+        if os.path.islink(path):
+            referenced.add(os.readlink(path).split(os.path.sep)[-1])
+    return [d for d in allDocs(root) if d.name not in referenced]
+
 def main():
     from optparse import OptionParser
     parser = OptionParser(usage = "%prog [options] project version [project version ...]")
@@ -697,11 +768,6 @@ def main():
                       help = "Do not run doxygen")
     
     opts, args = parser.parse_args()
-    if not args or (len(args)%2 != 0):
-        parser.error("Wrong number of arguments")
-    projects = set()
-    for i in range(0, len(args), 2):
-        projects.add((args[i].upper(), args[i + 1]))
     
     log_level = logging.WARNING
     if opts.verbose:
@@ -709,6 +775,15 @@ def main():
     if opts.debug:
         log_level = logging.DEBUG
     logging.basicConfig(level = log_level)
+
+    if not args:
+        projects = findProjects()
+    elif (len(args)%2 == 0): # we accept only pairs 
+        projects = set()
+        for i in range(0, len(args), 2):
+            projects.add((args[i].upper(), args[i + 1]))
+    else:
+        parser.error("Wrong number of arguments")
     
     # Main function
     makeDocs(projects, opts.root, opts.no_build)

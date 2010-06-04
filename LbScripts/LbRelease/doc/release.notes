@@ -1,5 +1,14 @@
 2010-06-04  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
+	* python/LbRelease/LHCbDoc.py: Added a simple (weak) locking of the doc
+	directories.
+	Moved the generation of the symlinks of the general directory to the end
+	of the build step (was in 'add').
+	Added a function to locate all the projects in the release area (instead
+	of having to pass them on the command line).
+	Added functions to get the list of doc directories broken (all contained
+	projects archived) and of those not referenced by any link in the common
+	directory.
 	* python/LbRelease/rcs.py: added a function to the Subversion back-end
 	to get the URL to a module
 	* scripts/svnpath: script to print the Subversion URL to a package or a
