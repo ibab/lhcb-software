@@ -1,4 +1,4 @@
-// $Id: TrackFilterAlg.h,v 1.8 2009-12-16 15:21:25 svecchi Exp $
+// $Id: TrackFilterAlg.h,v 1.9 2010-06-04 13:02:57 svecchi Exp $
 #ifndef TALIGNMENT_TRACKFILTERALG_H 
 #define TALIGNMENT_TRACKFILTERALG_H 1
 
@@ -84,6 +84,7 @@ private:
   double                                    m_pcut; 
   double                                    m_muonChisquareCut;
   int                                       m_nStation;
+  int                                       m_theR;
   
 
 };

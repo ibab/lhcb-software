@@ -3,6 +3,15 @@ Package	:	Alignment/TAlignment
 Package Coordinator	:	Jan Amoraal, Johan Blouw
 Purpose	: collection of alignment algorithms
 
+! 2010-06-04 - Stefania Vecchi
+ - added some code to run the Muon Alignment:
+   src/MakeMuonTracks.cpp(h) make a Muon stand alone track 
+   src/TrackMuonMatching.cpp(h) make a matching Long+Muon track
+   src/TrackFilterAlg updated with new functionalities 
+ - python/TAlignment/Alignables.py 
+ - python/TAlignment/Configuration.py to write HalfStation correction in the xml
+ - python/TAlignment/SurveyConstraints.py updated with survey constraints for Muon Half stations
+
 </PRE><H1><A NAME=v5r1>2010-06-02 TAlignment v5r01/A></H1><PRE> 
 ! 2010-05-21 - Rob Lambert
  - adapt to movement of RecSysConf into RecConf package

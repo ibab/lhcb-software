@@ -172,7 +172,8 @@ class TAlignment( LHCbConfigurableUser ):
         if 'OT' in listOfCondToWrite:
             writeSequencer.Members.append ( self.writeAlg( 'OT','Elements', [] ) )
         if 'Muon' in listOfCondToWrite:
-            writeSequencer.Members.append ( self.writeAlg( 'Muon','Detectors', [] ) )
+            #writeSequencer.Members.append ( self.writeAlg( 'Muon','Detectors', [] ) )
+            writeSequencer.Members.append ( self.writeAlg( 'Muon','Global', [0,1,2] ) )
         return writeSequencer
 
     def alignmentSeq( self, outputLevel = INFO ) :

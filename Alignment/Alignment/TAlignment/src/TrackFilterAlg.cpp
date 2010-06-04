@@ -1,4 +1,4 @@
-// $Id: TrackFilterAlg.cpp,v 1.17 2009-12-30 22:04:45 wouter Exp $
+// $Id: TrackFilterAlg.cpp,v 1.18 2010-06-04 13:02:57 svecchi Exp $
 // Include files
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -79,7 +79,8 @@ TrackFilterAlg::TrackFilterAlg( const std::string& name,
   declareProperty("noOverlap"                , m_noOverlap             = false                     );
   declareProperty("minHitStation"            , m_nStation              = 2                         );
   declareProperty("MuonChisquareCut"         , m_muonChisquareCut      = 0.                        );
-
+  declareProperty("TheRegion"                , m_theR                 = -1                        );
+ 
 
 }
 
@@ -197,20 +198,54 @@ void TrackFilterAlg::filterMuonTrack(LHCb::Track* track, LHCb::Tracks* outputCon
   bool CSide = false;
   int MA[5] = {0,0,0,0,0}; 
   int MC[5] = {0,0,0,0,0};
+  int MR[4] = {0,0,0,0};
+  
   
   const std::vector<LHCb::LHCbID>& lhcbids = track->lhcbIDs();
   for( std::vector<LHCb::LHCbID>::const_iterator id = lhcbids.begin() ;
        id != lhcbids.end(); ++id) {
     if( id->isMuon() ) {
       int iS = id->muonID().station();
+      int iR = id->muonID().region();
       int iQ = id->muonID().quarter();
       if ( iQ < 2 ) MA[iS]=1;   // A-side
       else MC[iS]=1;
+      MR[iR]++;
     }
   }    
   
   int MAside = MA[0]+MA[1]+MA[2]+MA[3]+MA[4];
   int MCside = MC[0]+MC[1]+MC[2]+MC[3]+MC[4];      
+
+  if(m_theR>-1 && m_theR<4){
+    for(int iR=0; iR<4; iR++){
+      if(iR!=m_theR && MR[iR]!=0) {
+        debug()<<" Descard the track since it hits unwanted Region"<<iR<<endmsg;
+        select = false;
+      }    
+    }
+    if(MR[m_theR]==0) {
+      debug()<<" Descard the track since it doesn't hit Region"<<m_theR<<endmsg;
+      select = false;
+    }
+  }else if(m_theR>9 && m_theR<40){
+    for(int iR=0; iR<4; iR++){
+      if(iR>int(m_theR/10) && MR[iR]!=0) {
+        debug()<<" Descard the track since it hits unwanted Region"<<iR<<endmsg;
+        select = false;
+      }
+    }
+  }else if(m_theR==10) {
+    int iMR=0;
+    for(int iR=0; iR<4; iR++){
+      if( MR[iR]!=0) iMR++;
+    }
+    if(iMR>1) {
+      debug()<<" Descard the track since it hits more than one region"<<iMR<<endmsg;
+      select = false;
+    }
+  }
+  
   
   if ( MAside != 0 && MCside == 0) ASide = true;
   else if ( MAside == 0 && MCside != 0 ) CSide = true;
@@ -224,14 +259,16 @@ void TrackFilterAlg::filterMuonTrack(LHCb::Track* track, LHCb::Tracks* outputCon
      !(( ASide || CSide) && (MAside > m_nStation ||  MCside > m_nStation)) ) {
     debug()<< " Discard the track since overlaps hit station Cside "<< MCside<<" Aside "<<MAside<<endmsg;    
     select = false;
+  }else{
+    debug()<< " Track hit station Cside "<< MCside<<" Aside "<<MAside<<endmsg;    
   }
   
   if(m_calo){      
-    State refState = track->closestState(13000);
-    StatusCode sc = m_extrapolator->propagate( refState , 12750 );      
-    if ( fabs( refState.x() ) > 3900 && fabs( refState.y() ) > 3150 ) {
+    State stateAtCALO ;  
+    StatusCode sc = m_extrapolator->propagate( *track, 12750, stateAtCALO ) ;
+    if ( fabs( stateAtCALO.x() ) > 3900 && fabs( stateAtCALO.y() ) > 3150 ) {
       debug()<< " Discard the track since falls off the CALO acceptance x"<< 
-        fabs( refState.x() )<<" y "<< refState.y()<<endmsg;
+        fabs( stateAtCALO.x() )<<" y "<< stateAtCALO.y()<<endmsg;
       select = false; //out the calo acceptance
     }
     

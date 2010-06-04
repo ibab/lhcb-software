@@ -27,7 +27,9 @@ class Alignables( list ):
         
         self.m_muon            = "/dd/Structure/LHCb/DownstreamRegion/Muon"
         self.m_mustations      = ["/M1","/M2","/M3","/M4","/M5"] ###cosmici
-        self.m_muhalfstations  = ["/M.ASide", "/M.CSide"] 
+        self.m_muhalfstationsAC= ["/M.ASide", "/M.CSide"] 
+        self.m_muhalfstations  = ["/M.{1,2}Side"]
+        self.m_muchambers      = ["/R.{1,2}Side/Cham.{1,3}"] 
 
         if elements and self.__validElements( elements ) :    
             self.__append( elements, dofs )
@@ -399,20 +401,46 @@ class Alignables( list ):
                 elements.append( "Group : " + station + j + "/Q(0|2|1|3)" + "/M." )
         self.__append( elements, dofs )
 
+    ## MUON  ##############################################################################
+    def MuonStations( self, dofs = "" ) :
+        elements = []
+        for i in self.m_mustations :
+            elements.append( self.m_muon + i )
+        self.__append( elements, dofs )
+            
+    def MuonHalfStations( self, dofs = "" ) :
+        elements = []
+        for i in self.m_mustations :
+            for j in self.m_muhalfstations :
+                    elements.append( self.m_muon +  i + j )
+        self.__append( elements, dofs )            
+
+    def MuonChambers( self, dofs = "" ) :
+        elements = []
+        ## 5 Stations numbered from 1 to 5
+        for i in self.m_mustations :
+            ## There are 2 halves in each station
+            for j in self.m_muhalfstations :
+                ## Chambers
+                for l in self.m_muchambers :
+                    elements.append( self.m_muon + i + j + l )
+        self.__append( elements, dofs )
+
+    def MuonHalfStationsCside( self, dofs = "" ) :
+        elements = []
+        for i in self.m_mustations :
+            elements.append( self.m_muon +  i + self.m_muhalfstationsAC[1] )
+        self.__append( elements, dofs )
+
+    def MuonHalfStationsAside( self, dofs = "" ) :
+        elements = []
+        for i in self.m_mustations :
+            elements.append( self.m_muon +  i + self.m_muhalfstationsAC[0] )
+        self.__append( elements, dofs ) 
+
+      
     ## OTHER ##############################################################################
     def ITLaddersOTModules( self, dofs = "" ) :
         self.ITLadders( dofs )
         self.OTModules( dofs )
         
-
-    def MuonHalfStationsC( self, dofs = "" ) :
-        elements = []
-        for i in self.m_mustations :
-            elements.append( self.m_muon +  i + self.m_muhalfstations[1] )
-        self.__append( elements, dofs )
-
-    def MuonHalfStationsA( self, dofs = "" ) :
-        elements = []
-        for i in self.m_mustations :
-            elements.append( self.m_muon +  i + self.m_muhalfstations[0] )
-        self.__append( elements, dofs ) 

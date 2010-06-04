@@ -90,8 +90,22 @@ class SurveyConstraints( list ):
                                                          "ITT.*?Layer.{1,2}          : 0.05 0.05 0.05 0.0001 0.0001 0.0001",
                                                          "ITT.*?Layer.{1,2}Ladder.*? : 0.02 0.02 0.02 0.0001 0.0001 0.0001" ] 
 
+    def MUON( self ) :
+
+        self.append("Muon/M1/M1ASide : 0 0 0 0 0 0 : 1 1 3 0.001 0.005 0.001")
+        self.append("Muon/M1/M1CSide : 0 0 0 0 0 0 : 1 1 3 0.001 0.005 0.001")
+        self.append("Muon/M2/M2ASide : 0 0 0 0 0 0 : 1 1 3 0.001 0.005 0.001")
+        self.append("Muon/M2/M2CSide : 0 0 0 0 0 0 : 1 1 3 0.001 0.005 0.001")
+        self.append("Muon/M3/M3ASide : 0 0 0 0 0 0 : 1 1 3 0.001 0.005 0.001")
+        self.append("Muon/M3/M3CSide : 0 0 0 0 0 0 : 1 1 3 0.001 0.005 0.001")
+        self.append("Muon/M4/M4ASide : 0 0 0 0 0 0 : 1 1 3 0.001 0.005 0.001")
+        self.append("Muon/M4/M4CSide : 0 0 0 0 0 0 : 1 1 3 0.001 0.005 0.001")
+        self.append("Muon/M5/M5ASide : 0 0 0 0 0 0 : 1 1 3 0.001 0.005 0.001")
+        self.append("Muon/M5/M5CSide : 0 0 0 0 0 0 : 1 1 3 0.001 0.005 0.001")
+
     def All( self ) :
         self.Velo()
         self.TT()
         self.IT()
         self.OT()
+        self.MUON()
