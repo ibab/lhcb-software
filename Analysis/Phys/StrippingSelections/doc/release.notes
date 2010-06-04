@@ -5,6 +5,9 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-06-04 - Thomas Blake
+ - Bug fix for StrippingBd2KstarMuMu DK3pi line  
+
 ! 2010-06-04 - Jacopo Nardulli
  - Added files: 
     python/StrippingSelections/StrippingB2DPiChi2LifeT.py

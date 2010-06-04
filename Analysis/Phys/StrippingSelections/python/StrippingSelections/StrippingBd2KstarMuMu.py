@@ -1,6 +1,6 @@
 __author__ = 'Patrick Koppenburg, Rob Lambert, Mitesh Patel'
 __date__ = '21/01/2009'
-__version__ = '$Revision: 1.22 $'
+__version__ = '$Revision: 1.23 $'
 
 """
 Bd->K*MuMu selections 
@@ -509,7 +509,7 @@ class StrippingBd2KstarMuMuConf(LHCbConfigurableUser):
         from PhysSelPython.Wrappers import Selection, DataOnDemand
         from Configurables import FilterDesktop
 
-        _kstar = DataOnDemand('StdVeryLooseDetachedKstar','Phys/StdVeryLooseDetachedKst2Kpi')
+        _kstar = DataOnDemand(Location='Phys/StdVeryLooseDetachedKst2Kpi')
 
         _filter = FilterDesktop('Kstar_Bd2KstarMuMu_DKpipipi')
         _filter.Code = "(2 == NINTREE( (ISBASIC) & (P > %(DKpipipiTrackP)s ) & " \
