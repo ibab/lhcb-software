@@ -6,6 +6,9 @@ Purpose: LHCb reconstruction program
 - Changes to configurable
   . Fix AgeLimit when reprocessing from RDST or SDST
 
+- Changes to example options
+  . All castor data accesses are now down through root: (xrootd) protocol
+
 - Changes to tests
   . remove brunelmdfrst test, as all functionality is already tested elsewhere
   . ignore BrunelInit warnings count in comparisons (due to fluctuations in

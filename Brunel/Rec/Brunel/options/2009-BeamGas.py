@@ -19,7 +19,7 @@ FileCatalog().Catalogs = [ "xmlcatalog_file:MyCatalog.xml" ]
 Brunel().DataType = "2009"
 
 datasetName = "062509_0000000001"
-EventSelector().Input = ["DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/data/2009/RAW/FULL/LHCb/BEAM1/62509/" + datasetName + ".raw'  SVC='LHCb::MDFSelector'"]
+EventSelector().Input = ["DATAFILE='PFN:root:/castor/cern.ch/grid/lhcb/data/2009/RAW/FULL/LHCb/BEAM1/62509/" + datasetName + ".raw'  SVC='LHCb::MDFSelector'"]
 
 # Default output files names are set up using value Brunel().DatasetName property
 Brunel().DatasetName = datasetName

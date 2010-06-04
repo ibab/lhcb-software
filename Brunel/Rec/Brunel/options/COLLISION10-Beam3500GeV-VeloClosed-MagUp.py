@@ -17,5 +17,5 @@ FileCatalog().Catalogs = [ "xmlcatalog_file:MyCatalog.xml" ]
 Brunel().DataType = "2010"
 
 EventSelector().Input = [
-  "DATAFILE='castor:/castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/69623/069623_0000000003.raw' SVC='LHCb::MDFSelector'"
+  "DATAFILE='root:/castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/69623/069623_0000000003.raw' SVC='LHCb::MDFSelector'"
     ]

@@ -20,10 +20,10 @@ Brunel().DataType = "2009"
 # First collisions with magnet off
 #importOptions("$APPCONFIGOPTS/Brunel/moff.py")
 #EventSelector().Input = [
-#     "DATAFILE='castor:/castor/cern.ch/grid/lhcb/data/2009/RAW/FULL/LHCb/BEAM1/62558/062558_0000000001.raw' SVC='LHCb::MDFSelector'"
+#     "DATAFILE='root:/castor/cern.ch/grid/lhcb/data/2009/RAW/FULL/LHCb/BEAM1/62558/062558_0000000001.raw' SVC='LHCb::MDFSelector'"
 #    ]
 
 # Collisions on 6th December with magnet on and all detectors in readout
 EventSelector().Input = [
-    "DATAFILE='castor:/castor/cern.ch/grid/lhcb/data/2009/RAW/FULL/LHCb/COLLISION09/63497/063497_0000000001.raw' SVC='LHCb::MDFSelector'"
+    "DATAFILE='root:/castor/cern.ch/grid/lhcb/data/2009/RAW/FULL/LHCb/COLLISION09/63497/063497_0000000001.raw' SVC='LHCb::MDFSelector'"
     ]
