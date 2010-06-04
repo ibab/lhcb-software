@@ -1,7 +1,7 @@
 
 __author__ = ['Phillip Urquijo']
 __date__ = '21/05/2010'
-__version__ = '$Revision: 1.1 $'
+__version__ = '$Revision: 1.2 $'
 
 '''
 B->Xu mu mu , Xu=pi/K channels
@@ -97,8 +97,8 @@ class StrippingB2XMuMuSSConf(LHCbConfigurableUser):
                "& (MIPCHI2DV(PRIMARY)> %(KaonMINIPCHI2)s )"
     
     def _B2PiMuMuSS( self ):
-        StdLoosePions = DataOnDemand("StdLoosePions","StdLoosePions")
-        StdLooseMuons = DataOnDemand("StdLooseMuons","StdLooseMuons")
+        StdLoosePions = DataOnDemand(Location = "Phys/StdLoosePions")
+        StdLooseMuons = DataOnDemand(Location = "Phys/StdLooseMuons")
         
         _PiMuMu = CombineParticles("PiMuMuSS")
         _PiMuMu.DecayDescriptors = ["[B- -> pi+ mu- mu-]cc"]
@@ -117,8 +117,8 @@ class StrippingB2XMuMuSSConf(LHCbConfigurableUser):
     
 
     def _B2PiMuMuOS( self ):
-        StdLoosePions = DataOnDemand("StdLoosePions","StdLoosePions")
-        StdLooseMuons = DataOnDemand("StdLooseMuons","StdLooseMuons")
+        StdLoosePions = DataOnDemand(Location = "Phys/StdLoosePions")
+        StdLooseMuons = DataOnDemand(Location = "Phys/StdLooseMuons")
         
         _PiMuMu = CombineParticles("PiMuMuOS")
         _PiMuMu.DecayDescriptors = ["[B+ -> pi+ mu+ mu-]cc"]
@@ -135,8 +135,8 @@ class StrippingB2XMuMuSSConf(LHCbConfigurableUser):
         return PiMuMu
     
     def _B2KMuMuSS( self ):
-        StdLooseKaons = DataOnDemand("StdLooseKaons","StdLooseKaons")
-        StdLooseMuons = DataOnDemand("StdLooseMuons","StdLooseMuons")
+        StdLooseKaons = DataOnDemand(Location = "Phys/StdLooseKaons")
+        StdLooseMuons = DataOnDemand(Location = "Phys/StdLooseMuons")
         
         _KMuMu = CombineParticles("KMuMuSS")
         _KMuMu.DecayDescriptors = ["[B- -> K+ mu- mu-]cc"]
@@ -155,8 +155,8 @@ class StrippingB2XMuMuSSConf(LHCbConfigurableUser):
     
 
     def _B2KMuMuOS( self ):
-        StdLooseKaons = DataOnDemand("StdLooseKaons","StdLooseKaons")
-        StdLooseMuons = DataOnDemand("StdLooseMuons","StdLooseMuons")
+        StdLooseKaons = DataOnDemand(Location = "Phys/StdLooseKaons")
+        StdLooseMuons = DataOnDemand(Location = "Phys/StdLooseMuons")
         
         _KMuMu = CombineParticles("KMuMuOS")
         _KMuMu.DecayDescriptors = ["[B+ -> K+ mu+ mu-]cc"]
