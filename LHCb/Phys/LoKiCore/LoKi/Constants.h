@@ -1,4 +1,4 @@
-// $Id: Constants.h,v 1.11 2008-03-30 13:31:28 ibelyaev Exp $
+// $Id: Constants.h,v 1.12 2010-06-04 12:20:32 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_CONSTANTS_H 
 #define LOKI_CONSTANTS_H 1
@@ -39,16 +39,17 @@ namespace LoKi
    */
   namespace Constants
   {
+    // ========================================================================
     /// representation of invalid time 
-    const double InvalidTime         =  -1000 * Gaudi::Units::ns ;
+    const double InvalidTime         = -1.e+10 * Gaudi::Units::ns ;
     /// representation of invalid/infinite time 
-    const double InfiniteTime        = 1.e+10 * Gaudi::Units::ns ;
+    const double InfiniteTime        =  1.e+10 * Gaudi::Units::ns ;
     /// representation of invalid distance 
-    const double InvalidDistance     =  -1000 * Gaudi::Units::km ;
+    const double InvalidDistance     = -1.e+10 * Gaudi::Units::km ;
     /// representation of invalid chi2 
-    const double InvalidChi2         =  -1000      ;
+    const double InvalidChi2         = -1.e+10     ;
     /// representation of invalid particle ID 
-    const double InvalidID           =   0         ;
+    const double InvalidID           =      0      ;
     /// representation of invalid particle charge  
     const double InvalidCharge       =  -1000      ;
     /// representation of invalid PID 
@@ -56,24 +57,25 @@ namespace LoKi
     /// representation of invalid confedence level   
     const double InvalidConfLevel    =  -1000      ;
     /// representation of invalid energy
-    const double InvalidEnergy       =  -100 * Gaudi::Units::TeV ;
+    const double InvalidEnergy       =  -1.e+10 * Gaudi::Units::TeV ;
     /// representation of invalid momentum
-    const double InvalidMomentum     =  -100 * Gaudi::Units::TeV ;
+    const double InvalidMomentum     =  -1.e+10 * Gaudi::Units::TeV ;
     /// representation of invalid mass 
-    const double InvalidMass         =  -100 * Gaudi::Units::TeV ;    
+    const double InvalidMass         =  -1.e+10 * Gaudi::Units::TeV ;    
     /// representation of invalid sine/cosine/angle, etc 
-    const double InvalidAngle        =  -1000      ;
+    const double InvalidAngle        =  -1.e+10    ;
     /// representation of HUGE distance 
-    const double HugeDistance        =   1000 * Gaudi::Units::km ;
+    const double HugeDistance        =   1.e+10 * Gaudi::Units::km  ;
     /// representation of HUGE chi2 
-    const double HugeChi2            = 1.e+10      ;
+    const double HugeChi2            =   1.e+10    ;
     /// representation of positive INFINITY 
-    const double PositiveInfinity    =  
-    std::numeric_limits<double>::max() ;
-    /// represetnation of positive INFINITY 
+    const double PositiveInfinity    = std::numeric_limits<float>::max() ;
+    /// represetnation of Negative INFINITY 
     const double NegativeInfinity    = -PositiveInfinity ;
-  } // end of namespace Constants
-} // end of namespace LoKi
+    // ========================================================================
+  } //                                         end of namespace LoKi::Constants
+  // ==========================================================================
+} //                                                      end of namespace LoKi
 // ============================================================================
 // The END
 // ============================================================================
