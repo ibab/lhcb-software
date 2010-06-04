@@ -3,6 +3,9 @@ Package : Escher
 Package Coordinator : Johan Blouw and Rob Lambert
 Purpose : Gaudi application used to perform 
           alignment of the LHCb detector components
+! 2010-06-04 - Stefania Vecchi
+-  added 2010-Collisions-Muon.py as an example script to run Muon Global
+alignment of HalfStations respect the tracking
 
 </PRE><H1><A NAME=v4r8>2010-06-03 Escher v4r8</A></H1><PRE>
 ! 2010-06-03 - Rob Lambert
