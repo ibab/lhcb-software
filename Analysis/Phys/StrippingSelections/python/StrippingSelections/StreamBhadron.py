@@ -30,6 +30,7 @@ from StrippingSelections import StrippingTopo
 #from StrippingSelections import StrippingBs2Kst0Kst0
 from StrippingSelections.StrippingBs2Kst0Kst0 import StrippingBs2KstKstConf
 from StrippingSelections.StrippingBs2PhiKst0 import StrippingBs2PhiKstConf
+from StrippingSelections.StrippingB2hhLTUnbiased import StrippingB2hhLTUnbiasedConf
 
 stream = StrippingStream("Bhadron")
 stream.appendLines( [ 
@@ -63,5 +64,7 @@ stream.appendLines( [
                         StrippingBs2KstKstConf().nominall(),
                         StrippingBs2KstKstConf().loosel(),
                         StrippingBs2PhiKstConf().nominall(),
-                        StrippingBs2PhiKstConf().loosel()
+                        StrippingBs2PhiKstConf().loosel(),
+                        StrippingB2hhLTUnbiasedConf().StripB2hhLTUnbiased(),
+                        StrippingB2hhLTUnbiasedConf().StripB2hhLTUnbiasedLoose()
 		    ] )

@@ -5,6 +5,9 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-06-04 - Ulrich Kerzel
+ - added lines for lifetime unbiased B->hh (both regular and loose)
+
 ! 2010-06-04 - Thomas Blake
  - Bug fix for StrippingBd2KstarMuMu DK3pi line  
 
