@@ -32,7 +32,7 @@ class SubversionPath(Script):
         """
         # package name is the first mandatory argument
         if not self.args:
-            self.args_error("I need at least the name of the package")
+            self.parser.error("I need at least the name of the package")
         self.package = self.args[0]
         # tag/versions are the following optional arguments
         if len(self.args) > 1:
