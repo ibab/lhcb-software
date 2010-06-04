@@ -9,6 +9,8 @@
 	Added functions to get the list of doc directories broken (all contained
 	projects archived) and of those not referenced by any link in the common
 	directory.
+	Removed the usage of doxypy (not needed with Doxygen 1.5.9).
+	Added a simple main page with links to the project pages.
 	* python/LbRelease/rcs.py: added a function to the Subversion back-end
 	to get the URL to a module
 	* scripts/svnpath: script to print the Subversion URL to a package or a

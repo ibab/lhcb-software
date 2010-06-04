@@ -12,6 +12,31 @@ from LbUtils.afs.directory import isAFSDir, isMountPoint
 import logging
 _log = logging.getLogger(__name__)
 
+#--- Configuration information utils
+
+# Prepare a dictionary mapping the project name in upper case to the actual case
+from LbConfiguration.Project import project_names
+project_names = dict([(p.upper(), p) for p in project_names])
+
+def projectURL(project, version = None):
+    """
+    Return the URL to the web page of the project.
+    """
+    result = None
+    project = project.lower()
+    if project == "lcgcmt":
+        result = "http://lcgsoft.cern.ch"
+        if version:
+            result += "/index.py?page=cfg_overview&cfg=" + version
+    else:
+        if project == "gaudi":
+            result = "http://cern.ch/gaudi"
+        else:
+            result = "http://cern.ch/LHCb-release-area/DOC/%s" % project
+        if version:
+            result += "/releases/" + version
+    return result
+
 #--- Filesystem utils
 def _diskUsage(root):
     """
@@ -350,6 +375,39 @@ class Doc(object):
             #self._log.debug("Mark the directory as to be built")
             self.toBeBuilt = True
     
+    def _generateDoxygenMainPage(self):
+        """
+        Generate the main page file for the documentation directory and return
+        it as a string.
+        """
+        page = "/** \\mainpage LHCb Software Documentation\n" + \
+            "Documentation for the projects:\n<ul>\n"
+        projects = self.projects.keys()
+        projects.sort()
+                    
+        item = '<a href="%(homeurl)s">%(project)s</a> <a href="%(versurl)s">%(version)s</a>'
+        for p in projects:
+            if p == "LCGCMT":
+                continue
+            page += "<li>%s</li>\n" % (
+                    item % {'project': project_names.get(p.upper(), p), # get actual case of the project
+                            'homeurl': projectURL(p), # url to the project web page
+                            'version': self.getVersion(p), # version of the project
+                            'versurl': projectURL(p, self.getVersion(p)), # url to the version of the project
+                            }
+                    )
+        page += "</ul>\n"
+        if "LCGCMT" in self.projects:
+            page += "Based on %s.\n" % (
+                    item % {'project': "LCGCMT",
+                            'homeurl': projectURL("LCGCMT"),
+                            'version': self.getVersion("LCGCMT"),
+                            'versurl': projectURL("LCGCMT", self.getVersion("LCGCMT"))
+                            }
+                    )
+        page += "*/\n"
+        return page
+    
     def _generateDoxyFile(self):
         """
         Generate the doxygen configuration file for the current doc directory.
@@ -410,9 +468,10 @@ class Doc(object):
             "*/.svn/*",
             # Exclude some generated files
             "*/html/*",
-            "*/genConf/*",
+            #"*/genConf/*",
             # Exclude problematic files
             "*/doc/MainPage.h",
+            "*/Panoramix/doc/doxygen/*",
             ]
         doxycfg["EXCLUDE_PATTERNS"] = excludes
         
@@ -423,14 +482,15 @@ class Doc(object):
                        if (d.endswith("Sys") and d != "GaudiSys") or d.endswith("Release")]:
                 files.append("*%s*requirements" % d)
         # FILE_PATTERNS   += *LHCbSys*requirements
-    
+        doxycfg['INPUT'].append("conf/MainPage.doxygen")
+
         doxycfg["FILE_PATTERNS"] = files
         
         extra_packages = [ "times", "amsmath" ]
         doxycfg["EXTRA_PACKAGES"] = extra_packages
     
-        doxycfg["INPUT_FILTER"] = "doxypy"
-        doxycfg["FILTER_SOURCE_FILES"] = True
+        #doxycfg["INPUT_FILTER"] = "doxypy"
+        #doxycfg["FILTER_SOURCE_FILES"] = True
     
         # append the commands to use dot tool
         doxycfg["HAVE_DOT"]              = True
@@ -491,6 +551,7 @@ class Doc(object):
             self._log.debug("Creating directory %s", confdir)
             os.makedirs(confdir) 
         open(os.path.join(confdir, "DoxyFile.cfg"), "w").write(str(doxycfg))
+        open(os.path.join(confdir, "MainPage.doxygen"), "w").write(self._generateDoxygenMainPage())
 
     def build(self):
         """
@@ -563,10 +624,8 @@ class Doc(object):
             if not os.path.isdir(doclinkdir):
                 self._log.debug("Creating directory %s", doclinkdir)
                 os.makedirs(doclinkdir)
-            for project in self.projects:
-                version = self.getVersion(project)
-                doclink = os.path.join(doclinkdir,
-                                       "%s_%s" % (project, version))
+            for project, version in self.projects.items():
+                doclink = os.path.join(doclinkdir, "%s_%s" % (project, version))
                 if os.path.exists(doclink):
                     old = os.path.basename(os.readlink(doclink))
                     if old < self.name:
