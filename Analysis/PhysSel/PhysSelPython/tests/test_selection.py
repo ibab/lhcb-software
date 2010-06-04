@@ -13,11 +13,19 @@ def test_automatic_data() :
     assert sel00.algName() == 'SelFilterSel00x'
     assert sel00.outputLocation() == 'Phys/Sel00x'
 
+def test_automatic_data_does_not_accept_more_than_one_ctor_argument() :
+    try :
+        sel00 = AutomaticData('name', Location = 'Phys/Sel00x')
+        assert(False)
+    except TypeError:
+        pass
+
+
 def test_automatic_data_with_no_location_raises() :
     try :
         sel00 = AutomaticData()
-        raise Exception('Locationless AutomaticData should fail')
-    except:
+        assert(False)
+    except Exception:
         pass
     
 def test_instantiate_tree(selID='0000') :
