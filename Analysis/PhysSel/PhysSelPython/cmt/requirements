@@ -1,10 +1,10 @@
-#$Id: requirements,v 1.26 2010-05-27 10:16:32 jpalac Exp $
+#$Id: requirements,v 1.27 2010-06-04 15:01:25 jpalac Exp $
 #============================================================================
 # Created    : 2009-07-13
 # Maintainer : Juan PALACIOS
 #============================================================================
 package           PhysSelPython
-version           v5r4
+version           v5r4p1
 
 #============================================================================
 # Structure, i.e. directories to process. 
