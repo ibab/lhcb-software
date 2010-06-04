@@ -62,6 +62,7 @@ RawDataSelector::RawDataSelector(const std::string& nam, ISvcLocator* svcloc)
 {
   declareProperty("DataManager", m_ioMgrName="Gaudi::IODataManager/IODataManager");
   declareProperty("TriggerMask", m_trgMask);
+  declareProperty("VetoMask",    m_vetoMask);
   declareProperty("NSkip",       m_skipEvents=0);
   declareProperty("PrintFreq",   m_printFreq=-1);
   declareProperty("AddSpace",    m_addSpace=1);

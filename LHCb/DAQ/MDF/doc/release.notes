@@ -6,6 +6,11 @@
 !               MEP fragments
 !-----------------------------------------------------------------------------
 
+!========================= MDF v3r25 2010-06-05 ==============================
+! 2010-06-05  Markus Frank
+ - Allow to specify trigger/veto masks to the MDF selector.
+   The default is to have empty masks, which are ignored.
+
 !========================= MDF v3r24 2010-05-21 ==============================
 ! 2010-05-19  Markus Frank
  - Bring MDFWriterLite up to date.
