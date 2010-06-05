@@ -255,7 +255,7 @@ StatusCode CaloPi0Ntp::execute(){
 
         // odin info
         sc=ntp->column("run"   , run         );
-        sc=ntp->column("event" , evt );
+        sc=ntp->column("event" , (unsigned long int) evt );
         sc=ntp->column("triggertype" , tty );
         
           

@@ -1,4 +1,4 @@
-// $Id: CaloElectronNtp.cpp,v 1.2 2010-06-03 22:21:46 rlambert Exp $
+// $Id: CaloElectronNtp.cpp,v 1.3 2010-06-05 18:18:10 rlambert Exp $
 // Include files 
 
 // from Gaudi
@@ -182,7 +182,7 @@ StatusCode CaloElectronNtp::execute() {
 
     // odin info
     sc=ntp->column("run"   , run         );
-    sc=ntp->column("event" , evt );
+    sc=ntp->column("event" , (unsigned long int) evt );
     sc=ntp->column("triggertype" , tty );
       
 
