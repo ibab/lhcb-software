@@ -1,4 +1,4 @@
-// $Id: MCParticles1.cpp,v 1.1 2010-05-31 20:33:54 ibelyaev Exp $
+// $Id: MCParticles1.cpp,v 1.2 2010-06-05 20:15:58 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -50,7 +50,7 @@ LoKi::MCParticles::DecNode::operator()
   {
     const LoKi::Services& svcs = LoKi::Services::instance () ;
     const LHCb::IParticlePropertySvc* ppsvc  = svcs.ppSvc() ;
-    Assert ( 0 != ppsvc , "LHCb::ParticlePropertySvc* poinst to NULL!") ;
+    Assert ( 0 != ppsvc , "LHCb::IParticlePropertySvc* points to NULL!") ;
     StatusCode sc = m_node.validate ( ppsvc ) ;
     Assert ( sc.isSuccess() , "Unable to validate Decays::Node" , sc ) ;
   }
@@ -93,17 +93,19 @@ LoKi::MCParticles::DecTree::operator()
   {
     const LoKi::Services& svcs = LoKi::Services::instance () ;
     const LHCb::IParticlePropertySvc* ppsvc  = svcs.ppSvc() ;
-    Assert ( 0 != ppsvc , "LHCb::ParticlePropertySvc* poinst to NULL!") ;
+    Assert ( 0 != ppsvc , "LHCb::IParticlePropertySvc* points to NULL!") ;
     StatusCode sc = m_tree.validate ( ppsvc ) ;
-    Assert ( sc.isSuccess() , "Unable to validate Decays::Node" , sc ) ;
+    Assert ( sc.isSuccess() , "Unable to validate iTree" , sc ) ;
   }
+  //
+  const bool marked_ = m_tree.marked() ;
   //
   // evaluate the tree 
   const bool OK = m_tree.tree ( p ) ;
-  if ( OK               ) { return true  ; }                          // RETURN
-
+  if ( OK && !marked_  ) { return true  ; }                          // RETURN
+  
   // for no-marked trees, the search is completed 
-  if ( !m_tree.marked() ) { return false ; }                          // RETURN  
+  if ( !marked_        ) { return false ; }                          // RETURN  
   
   // check for "marked" elements 
   iTree::Collection marked ;

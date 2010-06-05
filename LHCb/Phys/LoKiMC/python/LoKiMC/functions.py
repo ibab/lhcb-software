@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: functions.py,v 1.20 2010-06-02 15:44:18 ibelyaev Exp $ 
+# $Id: functions.py,v 1.21 2010-06-05 20:15:57 ibelyaev Exp $ 
 # =============================================================================
 ## @file functions.py LoKiMC/functions.py
 #  The set of basic functions from LoKiMC library
@@ -30,7 +30,7 @@ A.Golutvin, P.Koppenburg have been used in the design.
 # =============================================================================
 __author__  = "Vanya BELYAEV ibelyaev@physics.syr.edu" 
 __date__    = "????-??-??"
-__version__ = "CVS Tag: $Name: not supported by cvs2svn $, version $Revision: 1.20 $ "
+__version__ = "CVS Tag: $Name: not supported by cvs2svn $, version $Revision: 1.21 $ "
 # =============================================================================
 
 import LoKiCore.decorators as _LoKiCore
@@ -330,7 +330,8 @@ MCVSources  = LoKi.Functor             ('void', _vv     )
 MCVSource   = LoKi.FunctorFromFunctor  ('void', _vv     )
 
 
-MCSOURCE    = LoKi.MCParticles.SourceTES
+MCSOURCE    = LoKi.MCParticles . SourceTES
+MCVSOURCE   = LoKi.MCVertiecs  . SourceTES
 
 MCEMPTY     = LoKi.Functors.Empty ( _MCP ) ()
 MCVEMPTY    = LoKi.Functors.Empty ( _MCV ) ()
