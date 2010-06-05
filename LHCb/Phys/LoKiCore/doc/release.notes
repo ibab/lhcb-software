@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.203 2010-06-04 12:20:32 ibelyaev Exp $ 
+! $Id: release.notes,v 1.204 2010-06-05 20:13:30 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiCore
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -14,6 +14,18 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! 
 ! -----------------------------------------------------------------------------
+
+! 2010-06-05 - Vanya Belyaev
+
+ - add more operations with streamers :
+
+     union
+     intersection 
+     difference
+     sym_difference 
+     incldues 
+
+ - reshuffle many lines in decorators 
 
 ! 2010-06-04 - Vanya Belyaev
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: decorators.py,v 1.31 2010-05-30 17:06:42 ibelyaev Exp $ 
+# $Id: decorators.py,v 1.32 2010-06-05 20:13:30 ibelyaev Exp $ 
 # =============================================================================
 ## @file decorators.py LoKiCore/decorators.py
 #  The set of basic decorator for objects from LoKiCore library
@@ -29,7 +29,7 @@ A.Golutvin, P.Koppenburg have been used in the design.
 """
 __author__ = "Vanya BELYAEV ibelyaev@physics.syr.edu" 
 __date__    = "????-??-??"
-__version__ = "CVS Tag: $Name: not supported by cvs2svn $, version $Revision: 1.31 $ "
+__version__ = "CVS Tag: $Name: not supported by cvs2svn $, version $Revision: 1.32 $ "
 # =============================================================================
 
 import PyCintex
@@ -349,17 +349,11 @@ def decorateCallsMap ( funcs , calls ) :
     """
     return decorateCallsFun ( funcs , calls ) 
         
-## Decorate the functions using the proper adapters 
-def decorateCallsMap ( funcs , calls ) :
-    """
-    Decorate the functions calls 
-    """
-    return decorateCallsFun ( funcs , calls ) 
-
+# =============================================================================
 ## Decorate the predicate using the proper adapters 
 def decorateCallsCut ( funcs , calls ) :
     """
-    Decorate the functions calls 
+    Decorate the predicate calls 
     """
     
     _call_      = None
@@ -368,16 +362,16 @@ def decorateCallsCut ( funcs , calls ) :
     if hasattr ( calls , '__call__' ) :
         def _call_ (s,*a) :
             """
-            Invoke the functional operator: fun(arg)
-            
+            Invoke the functional operator for predicate : cut(arg)
+
             >>> arg = ...
-            >>> result = fun(arg)
-            >>> result = fun(arg1,arg2) # for 2-argument functions 
+            >>> result = cut(arg)
+            >>> result = cut(arg1,arg2) # for 2-argument predicate 
             
             Uses:\n
             """
-            result = True if calls.__call__ (s,*a) else False 
-            return result
+            if not calls.__call__ (s,*a) : return False 
+            return True  
         
         _call_ . __doc__  += calls.__call__ . __doc__
 
@@ -451,7 +445,6 @@ def decorateFunctionOps ( funcs , opers ) :
     _min_abs_element_ = None
     _max_abs_element_ = None
     
-        
     # comparisons: operator <
     if hasattr ( opers , '__lt__' ) :
         def _lt_   (s,a) :
@@ -1332,6 +1325,7 @@ def decoratePredicateOps ( cuts , opers ) :
 
     _or_      = None
     _and_     = None
+    
     _invert_  = None
     _monitor_ = None
     _switch_  = None
@@ -1340,6 +1334,12 @@ def decoratePredicateOps ( cuts , opers ) :
     _count_   = None
     _has_     = None
     _scale_   = None
+
+    _union_           = None
+    _intersection_    = None
+    _difference_      = None
+    _sym_difference_  = None
+    _includes_        = None
     
     # boolean operations: OR 
     if hasattr ( opers , '__or__' ) :
@@ -1501,11 +1501,82 @@ def decoratePredicateOps ( cuts , opers ) :
         _has_ . __doc__  += opers.__has__  . __doc__
 
 
+    if hasattr ( opers , '_union_' ) :
+        def _union_ ( s , s2 ) :
+            """
+            Union of two streamers
+
+            >>> fun1 = ...   # the first  streamer 
+            >>> fun2 = ...   # the second streamer 
+            >>> u = union ( fun1 , fun2 ) 
+            
+            """
+            return opers._union_ ( s , s2 )
+        _union_ .__doc__ += opers ._union_ . __doc__ 
+
+    if hasattr ( opers , '_intersection_' ) :
+        def _intersection_ ( s , s2 ) :
+            """
+            Intersection of two streamers
+
+            >>> fun1 = ...   # the first  streamer 
+            >>> fun2 = ...   # the second streamer 
+            >>> u = intersection ( fun1 , fun2 ) 
+            
+            """
+            return opers._intersection_ ( s , s2 )
+        _intersection_ .__doc__ += opers ._intersection_ . __doc__ 
+
+    if hasattr ( opers , '_difference_' ) :
+        def _difference_ ( s , s2 ) :
+            """
+            Difference of two streamers
+
+            >>> fun1 = ...   # the first  streamer 
+            >>> fun2 = ...   # the second streamer 
+            >>> u = difference ( fun1 , fun2 ) 
+            
+            """
+            return opers._difference_ ( s , s2 )
+        _difference_ .__doc__ += opers ._difference_ . __doc__ 
+
+    if hasattr ( opers , '_sym_difference_' ) :
+        def _sym_difference_ ( s , s2 ) :
+            """
+            Symmetric difference of two streamers
+
+            >>> fun1 = ...   # the first  streamer 
+            >>> fun2 = ...   # the second streamer 
+            >>> u = sym_difference ( fun1 , fun2 ) 
+            
+            """
+            return opers._sym_difference_ ( s , s2 )
+        _sym_difference_ .__doc__ += opers ._sym_difference_ . __doc__ 
+
+    if hasattr ( opers , '_includes_' ) :
+        def _includes_ ( s , s2 ) :
+            """
+            ``Includes'' of two streamers
+
+            >>> fun1 = ...   # the first  streamer 
+            >>> fun2 = ...   # the second streamer 
+            >>> u = includes ( fun1 , fun2 ) 
+            
+            """
+            return opers._includes_ ( s , s2 )
+        _includes_ .__doc__ += opers ._includes_ . __doc__ 
+
     # perform the actual decoration 
     for cut in cuts : 
 
-        if _or_      : cut .__or__       = _or_        # operator||
-        if _and_     : cut .__and__      = _and_       # operator&&
+        if _or_      :
+            cut .__or__       = _or_        # operator||
+            cut .__ror__      = _or_        # operator||
+
+        if _and_     :
+            cut .__and__      = _and_       # operator&&
+            cut .__rand__     = _and_       # operator&&
+            
         if _invert_  : cut .__invert__   = _invert_    # operator!
         if _monitor_ : cut . __monitor__ = _monitor_   # monitoring 
         if _switch_  : cut . __switch__  = _switch_    # switch 
@@ -1514,6 +1585,22 @@ def decoratePredicateOps ( cuts , opers ) :
         if _process_ : cut . __process__ = _process_   # process 
         if _count_   : cut . __count__   = _count_     # process 
         if _has_     : cut . __has__     = _has_       # process 
+
+        if _union_         :
+            cut . _union_         =  _union_
+            
+        if _intersection_  :
+            cut . _intersection_  =  _intersection_
+            
+        if _difference_  :
+            cut . _difference_  =  _difference_
+            if not hasattr ( cut , '__sub__'  ) : cut .__sub__  = _difference_
+
+        if _sym_difference_    :
+            cut . _sym_difference_  =  _sym_difference_
+        
+        if _includes_          : cut . _includes_  =  _includes_
+
         
         for attr in ( '__eq__' , '__ne__' ,
                       '__lt__' , '__lt__' ,
@@ -1663,9 +1750,15 @@ def decorateMaps ( funcs , opers ) :
     Decorate all mapping functions
     """
     
-    _tee_     = None
-    _rshift_  = None
-    _rrshift_ = None
+    _tee_             = None
+    _rshift_          = None
+    _rrshift_         = None
+    
+    _union_           = None
+    _intersection_    = None
+    _difference_      = None
+    _sym_difference_  = None
+    _includes_        = None
     
     ## Use the vector function as streamer
     if hasattr ( opers , '__rshift__' ) : 
@@ -1713,14 +1806,103 @@ def decorateMaps ( funcs , opers ) :
         # documentation        
         _tee_ .__doc__  += opers . __tee__     . __doc__
         
+    if hasattr ( opers , '_union_' ) :
+        def _union_ ( s , s2 ) :
+            """
+            Union of two streamers
+
+            >>> fun1 = ...   # the first  streamer 
+            >>> fun2 = ...   # the second streamer 
+            >>> u = union ( fun1 , fun2 ) 
+            
+            """
+            return opers._union_ ( s , s2 )
+        _union_ .__doc__ += opers ._union_ . __doc__ 
+
+    if hasattr ( opers , '_intersection_' ) :
+        def _intersection_ ( s , s2 ) :
+            """
+            Intersection of two streamers
+
+            >>> fun1 = ...   # the first  streamer 
+            >>> fun2 = ...   # the second streamer 
+            >>> u = intersection ( fun1 , fun2 ) 
+            
+            """
+            return opers._intersection_ ( s , s2 )
+        _intersection_ .__doc__ += opers ._intersection_ . __doc__ 
+
+    if hasattr ( opers , '_difference_' ) :
+        def _difference_ ( s , s2 ) :
+            """
+            Difference of two streamers
+
+            >>> fun1 = ...   # the first  streamer 
+            >>> fun2 = ...   # the second streamer 
+            >>> u = difference ( fun1 , fun2 ) 
+            
+            """
+            return opers._difference_ ( s , s2 )
+        _difference_ .__doc__ += opers ._difference_ . __doc__ 
+
+    if hasattr ( opers , '_sym_difference_' ) :
+        def _sym_difference_ ( s , s2 ) :
+            """
+            Symmetric difference of two streamers
+
+            >>> fun1 = ...   # the first  streamer 
+            >>> fun2 = ...   # the second streamer 
+            >>> u = sym_difference ( fun1 , fun2 ) 
+            
+            """
+            return opers._sym_difference_ ( s , s2 )
+        _sym_difference_ .__doc__ += opers ._sym_difference_ . __doc__ 
+
+    if hasattr ( opers , '_includes_' ) :
+        def _includes_ ( s , s2 ) :
+            """
+            ``Includes'' of two streamers
+
+            >>> fun1 = ...   # the first  streamer 
+            >>> fun2 = ...   # the second streamer 
+            >>> u = includes ( fun1 , fun2 ) 
+            
+            """
+            return opers._includes_ ( s , s2 )
+        _includes_ .__doc__ += opers ._includes_ . __doc__ 
+
     # finally redefine the functions:
     for fun in funcs :
         
         if _rrshift_ : fun . __rrshift__  =  _rrshift_
         if _rshift_  : fun . __rshift__   =  _rshift_
         if _tee_     : fun . __tee__      =  _tee_
-        
+
+        if _union_         :
+            fun . _union_         =  _union_
+            if not hasattr ( fun , '__or__'   ) : fun .__or__   = _union_
+            if not hasattr ( fun , '__add__'  ) : fun .__add__  = _union_
+            if not hasattr ( fun , '__ror__'  ) : fun .__ror__  = _union_
+            if not hasattr ( fun , '__radd__' ) : fun .__radd__ = _union_
             
+        if _intersection_  :
+            fun . _intersection_  =  _intersection_
+            if not hasattr ( fun , '__and__'  ) : fun .__and__  = _intersection_
+            if not hasattr ( fun , '__mul__'  ) : fun .__mul__  = _intersection_
+            if not hasattr ( fun , '__rand__' ) : fun .__rand__ = _intersection_
+            if not hasattr ( fun , '__rmul__' ) : fun .__rmul__ = _intersection_
+            
+        if _difference_  :
+            fun . _difference_  =  _difference_
+            if not hasattr ( fun , '__sub__'  ) : fun .__sub__  = _difference_
+
+        if _sym_difference_    :
+            fun . _sym_difference_  =  _sym_difference_
+            if not hasattr ( fun , '__xor__'  ) : fun .__xor__  = _sym_difference_
+            if not hasattr ( fun , '__rxor__' ) : fun .__rxor__ = _sym_difference_
+        
+        if _includes_          : fun . _includes_  =  _includes_
+
     return funcs                                 ## RETURN
 
 # =============================================================================
@@ -1729,7 +1911,7 @@ def getAndDecorateMaps   ( name , base , opers ) :
     """
     get all ``maps''  and decorate them
     """
-    funcs = getInherited     ( name , base   )
+    funcs = getInherited     ( name  , base  )
     funcs = decorateCallsMap ( funcs , opers )
     return decorateMaps      ( funcs , opers )  ## RETURN
 
@@ -1738,7 +1920,7 @@ def getAndDecoratePipes ( name , base , opers ) :
     """
     get all ``pipes'' and decorate them
     """
-    funcs = getInherited     ( name , base   )
+    funcs = getInherited     ( name  , base  )
     funcs = decorateCallsMap ( funcs , opers ) 
     return decorateMaps      ( funcs , opers )  ## RETURN
 
@@ -1747,7 +1929,7 @@ def getAndDecorateFunVals ( name , base , opers ) :
     """
     get all ``fun-vals''  and decorate them
     """
-    funcs = getInherited        ( name , base   )
+    funcs = getInherited        ( name  , base  )
     funcs = decorateCallsFun    ( funcs , opers )
     funcs = decorateFunctionOps ( funcs , opers )
     return decorateMaps         ( funcs , opers )  ## RETURN
@@ -1757,10 +1939,11 @@ def getAndDecorateCutVals ( name , base , opers ) :
     """
     get all ``cut-vals''  and decorate them
     """
-    funcs = getInherited         ( name , base   )
+    funcs = getInherited         ( name  , base  )
     funcs = decorateCallsCut     ( funcs , opers )
     funcs = decoratePredicateOps ( funcs , opers )
-    return decorateMaps          ( funcs , opers )  ## RETURN
+    funcs = decorateMaps         ( funcs , opers )  ## RETURN
+    return decorateCallsCut      ( funcs , opers )
 
 ## get all Element functors and decorate them 
 def getAndDecorateElements ( name , base , opers ) :

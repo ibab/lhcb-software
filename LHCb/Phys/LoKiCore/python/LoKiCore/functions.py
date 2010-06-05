@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: functions.py,v 1.25 2010-05-30 17:06:43 ibelyaev Exp $
+# $Id: functions.py,v 1.26 2010-06-05 20:13:30 ibelyaev Exp $
 # =============================================================================
 ## @file functions.py LoKiCore/function.py
 #  The set of basic functions for from LoKiCore library
@@ -30,7 +30,7 @@ A.Golutvin, P.Koppenburg have been used in the design.
 # =============================================================================
 __author_   = "Vanya BELYAEV ibelyaev@physics.syr.edu"
 __date__    = "????-??-??"
-__version__ = "CVS Tag: $Name: not supported by cvs2svn $, version $Revision: 1.25 $ "
+__version__ = "CVS Tag: $Name: not supported by cvs2svn $, version $Revision: 1.26 $ "
 # =============================================================================
 from LoKiCore.decorators import LoKi
 
@@ -644,6 +644,141 @@ def count ( cut ) :
     """
     return cut.__count__ ()
 
+
+# =============================================================================
+##  create the 'union' for two streamers
+#
+#  @code
+#
+#    >>> fun1 = ...  # the first streamer
+#    >>> fun2 = ...  # the first streamer
+#    
+#    >>> result = union ( fun1 , fun2 )
+#
+#  @endcode     
+#
+#  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+#  @date 2010-06-06
+def union ( fun1 , fun2 ) :
+    """
+    Create ``union'' for two streamers
+
+    >>> fun1 = ...  # the first streamer
+    >>> fun2 = ...  # the first streamer
+    
+    >>> result = union ( fun1 , fun2 ) 
+    
+    """
+    if hasattr ( fun1 , '_union_' ) : return fun1._union_ ( fun2 )
+    return fun2._union_ ( fun1 )
+
+# =============================================================================
+##  create the 'intersection' for two streamers
+#
+#  @code
+#
+#    >>> fun1 = ...  # the first streamer
+#    >>> fun2 = ...  # the first streamer
+#    
+#    >>> result = intersection( fun1 , fun2 )
+#
+#  @endcode     
+#
+#  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+#  @date 2010-06-06
+def intersection ( fun1 , fun2 ) :
+    """
+    Create ``intersection'' for two streamers
+
+    >>> fun1 = ...  # the first streamer
+    >>> fun2 = ...  # the first streamer
+    
+    >>> result = intersection ( fun1 , fun2 ) 
+    
+    """
+    if hasattr ( fun1 , '_intersection_' ) : return fun1._intersection_ ( fun2 )
+    return fun2._intersection_ ( fun1 )
+
+
+# =============================================================================
+##  create the 'difference' for two streamers
+#
+#  @code
+#
+#    >>> fun1 = ...  # the first streamer
+#    >>> fun2 = ...  # the first streamer
+#    
+#    >>> result = difference ( fun1 , fun2 )
+#
+#  @endcode     
+#
+#  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+#  @date 2010-06-06
+def difference ( fun1 , fun2 ) :
+    """
+    Create ``difference'' for two streamers
+
+    >>> fun1 = ...  # the first streamer
+    >>> fun2 = ...  # the first streamer
+    
+    >>> result = difference ( fun1 , fun2 ) 
+    
+    """
+    return fun1._difference_ ( fun2 )
+
+# =============================================================================
+##  create the 'symmetric-difference' for two streamers
+#
+#  @code
+#
+#    >>> fun1 = ...  # the first streamer
+#    >>> fun2 = ...  # the first streamer
+#    
+#    >>> result = sym_difference ( fun1 , fun2 )
+#
+#  @endcode     
+#
+#  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+#  @date 2010-06-06
+def sym_difference ( fun1 , fun2 ) :
+    """
+    Create ``symmetric difference'' for two streamers
+
+    >>> fun1 = ...  # the first streamer
+    >>> fun2 = ...  # the first streamer
+    
+    >>> result = sym_difference ( fun1 , fun2 ) 
+    
+    """
+    if hasattr ( fun1 , '_sym_difference_' ) : return fun1._sym_difference_ ( fun2 )
+    return fun2._sym_difference_ ( fun1 )
+
+
+# =============================================================================
+##  create the 'includes' for two streamers
+#
+#  @code
+#
+#    >>> fun1 = ...  # the first streamer
+#    >>> fun2 = ...  # the first streamer
+#    
+#    >>> result = includes ( fun1 , fun2 )
+#
+#  @endcode     
+#
+#  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+#  @date 2010-06-06
+def includes ( fun1 , fun2 ) :
+    """
+    Create ``includes'' for two streamers
+
+    >>> fun1 = ...  # the first streamer
+    >>> fun2 = ...  # the first streamer
+    
+    >>> result = includes ( fun1 , fun2 ) 
+    
+    """
+    return fun1._includes_ ( fun2 )
 
 
 # =============================================================================

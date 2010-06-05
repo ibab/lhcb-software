@@ -1,4 +1,4 @@
-// $Id: Filters.h,v 1.8 2009-05-09 19:15:53 ibelyaev Exp $
+// $Id: Filters.h,v 1.9 2010-06-05 20:13:30 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_FILTERS_H 
 #define LOKI_FILTERS_H 1
@@ -20,6 +20,7 @@
 #include "LoKi/Functions.h"
 #include "LoKi/select.h"
 #include "LoKi/Algs.h"
+#include "LoKi/Primitives.h"
 // ============================================================================
 // Boost 
 // ============================================================================
@@ -28,6 +29,7 @@
 // ============================================================================
 namespace LoKi 
 {
+  // ==========================================================================
   /** @namespace LoKi::Functors
    *  helper namespace for implementation of Gerhard's ideas
    *
@@ -368,9 +370,8 @@ namespace LoKi
     public:
       // ======================================================================
       /// constructor 
-      Max ( const LoKi::Functor<TYPE2,TYPE1>& fun  , 
-            const TYPE1                       val = 
-            -std::numeric_limits<TYPE1>::max() )
+      Max ( const LoKi::Functor<TYPE2,TYPE1>& fun                                      , 
+            const TYPE1                       val = -std::numeric_limits<TYPE1>::max() )
         : uBase     (     ) 
         , m_functor ( fun )
         , m_value   ( val )
@@ -386,10 +387,10 @@ namespace LoKi
         ( typename uBase::argument a ) const
       {
         // return the value 
-        if ( a.empty() ) { return m_value ; } // RETURN 
+        if ( a.empty() ) { return this->val() ; } // RETURN 
         //
         typedef typename std::vector<TYPE>::const_iterator     _I ;
-        LoKi::Apply<TYPE2,TYPE1> app ( &m_functor.func() ) ;
+        LoKi::Apply<TYPE2,TYPE1> app ( &this->func() ) ;
         std::pair<_I,typename uFunctor::result_type> res = 
           LoKi::Algs::extremum ( a.begin () , 
                                  a.end   () , 
@@ -401,17 +402,24 @@ namespace LoKi
       /// OPTIONAL: the basic printout method 
       virtual std::ostream& fillStream( std::ostream& s ) const 
       { 
-        s << "max_value (" << m_functor ; 
+        s << " max_value(" << this->func()  ; 
         BOOST_STATIC_ASSERT( std::numeric_limits<TYPE1>::is_specialized ) ;
         if ( -std::numeric_limits<TYPE1>::max() != m_value ) 
-        { s << "," << m_value ; }
-        return s << ")" ;
+        { s << "," << this->val()  ; }
+        return s << ") " ;
       }  
       // ======================================================================
     private:
       // ======================================================================
       /// the default construct is private:
       Max () ;                                         // no default contructor
+      // ======================================================================
+    protected:
+      // ======================================================================
+      /// get the functor 
+      const LoKi::Functor<TYPE2,TYPE1>& func() const { return m_functor.func() ; }
+      /// get the value 
+      const TYPE1&                      val () const { return m_value ; }
       // ======================================================================
     private:
       // ======================================================================
@@ -428,7 +436,7 @@ namespace LoKi
      *  @date 2007-11-26
      */
     template <class TYPE,class TYPE2=TYPE,class TYPE1=double>
-    class AbsMax : public LoKi::Functor<std::vector<TYPE>,TYPE1> 
+    class AbsMax : public LoKi::Functors::Max<TYPE,TYPE2,TYPE1>
     {
       // ======================================================================
     protected:
@@ -444,9 +452,7 @@ namespace LoKi
       AbsMax 
       ( const LoKi::Functor<TYPE2,TYPE1>& fun     , 
         const TYPE1                       val = 0 )
-        : uBase     (     ) 
-        , m_functor ( fun ) 
-        , m_value   ( val )
+        : LoKi::Functors::Max<TYPE,TYPE2,TYPE1>  ( fun , val ) 
       {}
       /// MANDATORY: virtual destructor 
       virtual ~AbsMax() {}
@@ -457,10 +463,10 @@ namespace LoKi
         ( typename uBase::argument a ) const
       {
         // 
-        if ( a.empty() ) { return m_value ; }
+        if ( a.empty() ) { return this->val() ; } // REUTRN 
         //
         typedef typename std::vector<TYPE>::const_iterator     _I ;
-        LoKi::Apply<TYPE2,TYPE1> app ( &m_functor.func () ) ;
+        LoKi::Apply<TYPE2,TYPE1> app ( &this->func () ) ;
         std::pair<_I,typename uFunctor::result_type> res = 
           LoKi::Algs::extremum ( a.begin () , 
                                  a.end   () , 
@@ -472,22 +478,15 @@ namespace LoKi
       /// OPTIONAL: the basic printout method 
       virtual std::ostream& fillStream( std::ostream& s ) const 
       {
-        s << "max_abs_value (" << m_functor ; 
-        if ( 0 != m_value ) { s << "," << m_value ; }
-        return s << ")" ;
+        s << " max_abs_value(" << this->func()  ; 
+        if ( 0 != this->val() ) { s << "," << this->val() ; }
+        return s << ") " ;
       }
       // ======================================================================
     private:
       // ======================================================================
       /// the default construct is private:
       AbsMax () ;                                      // no default contructor
-      // ======================================================================
-    private:
-      // ======================================================================
-      // the basic functor itself 
-      LoKi::FunctorFromFunctor<TYPE2,TYPE1> m_functor ;         // the functor
-      /// the value 
-      TYPE1                                 m_value    ;        //    the value 
       // ======================================================================
     } ;
     // ========================================================================
@@ -497,7 +496,7 @@ namespace LoKi
      *  @date 2007-11-26
      */
     template <class TYPE,class TYPE2=TYPE,class TYPE1=double>
-    class Min : public LoKi::Functor<std::vector<TYPE>,TYPE1> 
+    class Min : public LoKi::Functors::AbsMax<TYPE,TYPE2,TYPE1>
     {
     protected:
       // ======================================================================
@@ -509,12 +508,9 @@ namespace LoKi
     public:
       // ======================================================================
       /// constructor 
-      Min ( const LoKi::Functor<TYPE2,TYPE1>& fun , 
-            const TYPE1                       val = 
-            std::numeric_limits<TYPE1>::max() )
-        : uBase     (     ) 
-          , m_functor ( fun ) 
-        , m_value   ( val )
+      Min ( const LoKi::Functor<TYPE2,TYPE1>& fun                                     , 
+            const TYPE1                       val = std::numeric_limits<TYPE1>::max() )
+        : LoKi::Functors::AbsMax<TYPE,TYPE2,TYPE1> ( fun , val )  
       {
         BOOST_STATIC_ASSERT( std::numeric_limits<TYPE1>::is_specialized ) ;
       }
@@ -527,10 +523,10 @@ namespace LoKi
         ( typename uBase::argument a ) const
       {
         // return the value 
-        if ( a.empty() ) { return m_value ; }
+        if ( a.empty() ) { return this->val() ; }
         //
         typedef typename std::vector<TYPE>::const_iterator     _I ;
-        LoKi::Apply<TYPE2,TYPE1> app ( &m_functor.func() ) ;
+        LoKi::Apply<TYPE2,TYPE1> app ( &this->func() ) ;
         std::pair<_I,typename uFunctor::result_type> res = 
           LoKi::Algs::extremum ( a.begin () , 
                                  a.end   () , 
@@ -542,24 +538,17 @@ namespace LoKi
       /// OPTIONAL: the basic printout method 
       virtual std::ostream& fillStream( std::ostream& s ) const 
       { 
-        s << "min_value (" << m_functor ; 
+        s << " min_value(" << this->func() ; 
         BOOST_STATIC_ASSERT( std::numeric_limits<TYPE1>::is_specialized ) ;
-        if ( std::numeric_limits<TYPE1>::max() != m_value ) 
-        { s << "," << m_value ; }
-        return s << ")" ;
+        if ( std::numeric_limits<TYPE1>::max() != this->val() ) 
+        { s << "," << this->val() ; }
+        return s << ") " ;
       }  
       // ======================================================================
     private:
       // ======================================================================
       /// the default construct is private:
       Min () ;                                         // no default contructor
-      // ======================================================================
-    private:
-      // ======================================================================
-      /// the basic functor itself 
-      LoKi::FunctorFromFunctor<TYPE2,TYPE1> m_functor  ;        //  the functor
-      /// the value 
-      TYPE1                                 m_value    ;        //    the value 
       // ======================================================================
     } ;
     // ========================================================================
@@ -569,7 +558,7 @@ namespace LoKi
      *  @date 2007-11-26
      */
     template <class TYPE,class TYPE2=TYPE,class TYPE1=double>
-    class AbsMin : public LoKi::Functor<std::vector<TYPE>,TYPE1> 
+    class AbsMin : public LoKi::Functors::Min<TYPE,TYPE2,TYPE1>
     {
     protected:
       // ======================================================================
@@ -583,11 +572,8 @@ namespace LoKi
       /// constructor 
       AbsMin
       ( const LoKi::Functor<TYPE2,TYPE1>& fun ,
-        const TYPE1                       val = 
-        std::numeric_limits<TYPE1>::max() )
-        : uBase     (     ) 
-        , m_functor ( fun ) 
-        , m_value ( val )
+        const TYPE1                       val = std::numeric_limits<TYPE1>::max() )
+        : LoKi::Functors::Min<TYPE,TYPE2,TYPE1> ( fun , val ) 
       {
         BOOST_STATIC_ASSERT( std::numeric_limits<TYPE1>::is_specialized ) ;
       }
@@ -600,10 +586,10 @@ namespace LoKi
         ( typename uBase::argument a ) const
       {
         //
-        if  ( a.empty() ) { return m_value ; }
+        if  ( a.empty() ) { return this->val() ; }
         //
         typedef typename std::vector<TYPE>::const_iterator     _I ;
-        LoKi::Apply<TYPE2,TYPE1> app ( &m_functor.func() ) ;
+        LoKi::Apply<TYPE2,TYPE1> app ( &this->func() ) ;
         std::pair<_I,typename uFunctor::result_type> res = 
           LoKi::Algs::extremum 
           ( a.begin () , 
@@ -616,24 +602,17 @@ namespace LoKi
       /// OPTIONAL: the basic printout method 
       virtual std::ostream& fillStream( std::ostream& s ) const 
       {
-        s << "min_abs_value (" << m_functor ; 
+        s << " min_abs_value(" << this->func() ; 
         BOOST_STATIC_ASSERT( std::numeric_limits<TYPE1>::is_specialized ) ;
-        if (  std::numeric_limits<TYPE1>::max() != m_value ) 
-        { s << "," << m_value ; }
-        return s << ")" ;
+        if (  std::numeric_limits<TYPE1>::max() != this->val() ) 
+        { s << "," << this->val() ; }
+        return s << ") " ;
       }
       // ======================================================================
     private:
       // ======================================================================
       /// the default construct is private:
       AbsMin () ;                                      // no default contructor
-      // ======================================================================
-    private:
-      // ======================================================================
-      /// the basic functor itself 
-      LoKi::FunctorFromFunctor<TYPE2,TYPE1> m_functor ;          // the functor
-      /// the value 
-      TYPE1                                 m_value   ;          //   the value 
       // ======================================================================
     } ;
     // ========================================================================
@@ -687,6 +666,10 @@ namespace LoKi
       /// the default construct is private:
       MaxElement() ;                                   // no default contructor
       // ======================================================================
+    protected:
+      // ======================================================================
+      const LoKi::Functor<TYPE2,TYPE1>& func() const { return m_functor.func() ; }
+      // ======================================================================
     private:
       // ======================================================================
       /// the basic functor itself 
@@ -724,7 +707,7 @@ namespace LoKi
         if ( a.empty() ) { return 0 ; } // return 0 
         //
         typedef typename std::vector<TYPE*>::const_iterator     _I ;
-        const LoKi::Apply<TYPE2,TYPE1> app ( &m_functor.func () ) ;
+        const LoKi::Apply<TYPE2,TYPE1> app ( &this->func () ) ;
         std::pair<_I,typename uFunctor::result_type> res = 
           LoKi::Algs::extremum 
           ( a.begin () , 
@@ -736,12 +719,16 @@ namespace LoKi
       }
       /// OPTIONAL: the basic printout method 
       virtual std::ostream& fillStream( std::ostream& s ) const 
-      { return  s << "max_element(" << m_functor << ")"; } ;
+      { return  s << " max_element( " << this->func() << ") "; } ;
       // ======================================================================
     private:
       // ======================================================================
       /// the default construct is private:
       MaxElement() ;                                   // no default contructor
+      // ======================================================================
+    protected:
+      // ======================================================================
+      const LoKi::Functor<TYPE2,TYPE1>& func() const { return m_functor.func() ; }
       // ======================================================================
     private:
       // ======================================================================
@@ -756,7 +743,7 @@ namespace LoKi
      *  @date 2007-11-26
      */
     template <class TYPE,class TYPE2=TYPE,class TYPE1=double>
-    class MinElement : public LoKi::Functor<std::vector<TYPE>,TYPE> 
+    class MinElement : public LoKi::Functors::MaxElement<TYPE,TYPE2,TYPE1>
     {
     public:
       // ======================================================================
@@ -768,8 +755,7 @@ namespace LoKi
       // ======================================================================
       /// constructor 
       MinElement ( const LoKi::Functor<TYPE2,TYPE1>& fun ) 
-        : uBase     (     ) 
-        , m_functor ( fun ) 
+        : LoKi::Functors::MaxElement<TYPE,TYPE2,TYPE1> ( fun ) 
       {}
       /// MANDATORY: virtual destructor 
       virtual ~MinElement() {}
@@ -780,7 +766,7 @@ namespace LoKi
         ( typename uBase::argument a ) const
       {
         typedef typename std::vector<TYPE>::const_iterator     _I ;
-        const LoKi::Apply<TYPE2,TYPE1> app ( &m_functor.func() ) ;
+        const LoKi::Apply<TYPE2,TYPE1> app ( &this->func() ) ;
         std::pair<_I,typename uFunctor::result_type> res = 
           LoKi::Algs::extremum ( a.begin () , 
                                  a.end   () , 
@@ -791,23 +777,18 @@ namespace LoKi
       }
       /// OPTIONAL: the basic printout method 
       virtual std::ostream& fillStream( std::ostream& s ) const 
-      { return  s << "min_element(" << m_functor << ")"; } ;
+      { return  s << " min_element(" << this->func() << ") "; } ;
       // ======================================================================
     private:
       // ======================================================================
       /// the default construct is private:
       MinElement() ;                                   // no default contructor
       // ======================================================================
-    private:
-      // ======================================================================
-      /// the basic functor itself 
-      LoKi::FunctorFromFunctor<TYPE2,TYPE1> m_functor ; //          the functor
-      // ======================================================================
     } ;
     // ========================================================================
     template <class TYPE,class TYPE2,class TYPE1>
     class MinElement<TYPE*,TYPE2,TYPE1> 
-      : public LoKi::Functor<std::vector<TYPE*>,TYPE*> 
+      : public LoKi::Functors::MaxElement<TYPE*,TYPE2,TYPE1> 
     {
     public:
       // ======================================================================
@@ -819,8 +800,7 @@ namespace LoKi
       // ======================================================================
       /// constructor 
       MinElement ( const LoKi::Functor<TYPE2,TYPE1>& fun ) 
-        : uBase     (     ) 
-        , m_functor ( fun ) 
+        : MaxElement<TYPE*,TYPE2,TYPE1>   ( fun ) 
       {}
       /// MANDATORY: virtual destructor 
       virtual ~MinElement() {}
@@ -834,7 +814,7 @@ namespace LoKi
         if ( a.empty() ) { return 0 ; } // RETURN 
         //
         typedef typename std::vector<TYPE*>::const_iterator     _I ;
-        const LoKi::Apply<TYPE2,TYPE1> app ( &m_functor.func () ) ;
+        const LoKi::Apply<TYPE2,TYPE1> app ( &this->func () ) ;
         std::pair<_I,typename uFunctor::result_type> res = 
           LoKi::Algs::extremum ( a.begin () , 
                                  a.end   () , 
@@ -845,17 +825,12 @@ namespace LoKi
       }
       /// OPTIONAL: the basic printout method 
       virtual std::ostream& fillStream( std::ostream& s ) const 
-      { return  s << "min_element(" << m_functor << ")"; } ;
+      { return  s << " min_element(" << this->func() << ") "; } ;
       // ======================================================================
     private:
       // ======================================================================
       /// the default construct is private:
       MinElement() ;                                   // no default contructor
-      // ======================================================================
-    private:
-      // ======================================================================
-      /// the basic functor itself 
-      LoKi::FunctorFromFunctor<TYPE2,TYPE1> m_functor ; //          the functor
       // ======================================================================
     } ;
     // ========================================================================
@@ -865,7 +840,7 @@ namespace LoKi
      *  @date 2007-11-26
      */
     template <class TYPE,class TYPE2=TYPE,class TYPE1=double>
-    class AbsMaxElement : public LoKi::Functor<std::vector<TYPE>,TYPE> 
+    class AbsMaxElement : public LoKi::Functors::MinElement<TYPE,TYPE2,TYPE1>
     {
     public:
       // ======================================================================
@@ -877,15 +852,8 @@ namespace LoKi
     public:
       // ======================================================================
       /// constructor 
-      AbsMaxElement ( const LoKi::Functor<TYPE2,TYPE1>& fun ) 
-        : uBase     (     ) 
-        , m_functor ( fun ) 
-      {}
-      /// copy constructor 
-      AbsMaxElement ( const AbsMaxElement& right  ) 
-        : LoKi::AuxFunBase ( right ) 
-        , uBase            ( right ) 
-        , m_functor        ( right.m_functor ) 
+      AbsMaxElement ( const LoKi::Functor<TYPE2,TYPE1>& fun )
+        : LoKi::Functors::MinElement<TYPE,TYPE2,TYPE1> ( fun ) 
       {}
       /// MANDATORY: virtual destructor 
       virtual ~AbsMaxElement() {}
@@ -897,7 +865,7 @@ namespace LoKi
         ( typename uBase::argument a ) const
       {
         typedef typename std::vector<TYPE>::const_iterator     _I ;
-        const LoKi::Apply<TYPE2,TYPE1> app ( &m_functor.func () ) ;
+        const LoKi::Apply<TYPE2,TYPE1> app ( &this->func () ) ;
         std::pair<_I,typename uFunctor::result_type> res = 
           LoKi::Algs::extremum 
           ( a.begin () , 
@@ -909,23 +877,18 @@ namespace LoKi
       }
       /// OPTIONAL: the basic printout method 
       virtual std::ostream& fillStream( std::ostream& s ) const 
-      { return  s << "max_abs_element(" << m_functor << ")"; } ;
+      { return  s << " max_abs_element( " << this->func() << ") "; } ;
       // ======================================================================
     private:
       // ======================================================================
       /// the default construct is private:
       AbsMaxElement() ;                                // no default contructor
       // ======================================================================
-    private:
-      // ======================================================================
-      /// the basic functor itself 
-      LoKi::FunctorFromFunctor<TYPE2,TYPE1> m_functor ;          // the functor
-      // ======================================================================
     } ;
     // ========================================================================
     template <class TYPE,class TYPE2,class TYPE1>
     class AbsMaxElement<TYPE*,TYPE2,TYPE1> 
-      : public LoKi::Functor<std::vector<TYPE*>,TYPE*> 
+      : public LoKi::Functors::MinElement<TYPE*,TYPE2,TYPE1>
     {
     public:
       // ======================================================================
@@ -937,15 +900,8 @@ namespace LoKi
     public:
       // ======================================================================
       /// constructor 
-      AbsMaxElement ( const LoKi::Functor<TYPE2,TYPE1>& fun ) 
-        : uBase     (     ) 
-        , m_functor ( fun ) 
-      {}
-      /// copy constructor 
-      AbsMaxElement ( const AbsMaxElement& right  ) 
-        : LoKi::AuxFunBase ( right ) 
-        , uBase            ( right ) 
-        , m_functor        ( right.m_functor ) 
+      AbsMaxElement ( const LoKi::Functor<TYPE2,TYPE1>& fun )
+        : LoKi::Functors::MinElement<TYPE*,TYPE2,TYPE1>( fun ) 
       {}
       /// MANDATORY: virtual destructor 
       virtual ~AbsMaxElement() {}
@@ -960,7 +916,7 @@ namespace LoKi
         if ( a.empty() ) { return 0 ; }                            // RETURN 
         // 
         typedef typename std::vector<TYPE*>::const_iterator     _I ;
-        const LoKi::Apply<TYPE2,TYPE1> app ( &m_functor.func () ) ;
+        const LoKi::Apply<TYPE2,TYPE1> app ( &this->func () ) ;
         std::pair<_I,typename uFunctor::result_type> res = 
           LoKi::Algs::extremum 
           ( a.begin () , 
@@ -972,17 +928,12 @@ namespace LoKi
       }
       /// OPTIONAL: the basic printout method 
       virtual std::ostream& fillStream( std::ostream& s ) const 
-      { return  s << "max_abs_element(" << m_functor << ")"; } ;
+      { return  s << " max_abs_element(" << this->func() << ") "; } ;
       // ======================================================================
     private:
       // ======================================================================
       /// the default construct is private:
       AbsMaxElement() ;                                // no default contructor
-      // ======================================================================
-    private:
-      // ======================================================================
-      /// the basic functor itself 
-      LoKi::FunctorFromFunctor<TYPE2,TYPE1> m_functor ;          // the functor
       // ======================================================================
     } ;
     // ========================================================================
@@ -992,7 +943,8 @@ namespace LoKi
      *  @date 2007-11-26
      */
     template <class TYPE,class TYPE2=TYPE,class TYPE1=double>
-    class AbsMinElement : public LoKi::Functor<std::vector<TYPE>,TYPE> 
+    class AbsMinElement 
+      : public LoKi::Functors::AbsMaxElement<TYPE,TYPE2,TYPE1>
     {
     public:
       // ======================================================================
@@ -1005,8 +957,7 @@ namespace LoKi
       // ======================================================================
       /// constructor 
       AbsMinElement ( const LoKi::Functor<TYPE2,TYPE1>& fun ) 
-        : uBase     (     ) 
-        , m_functor ( fun ) 
+        : LoKi::Functors::AbsMaxElement<TYPE,TYPE2,TYPE1> ( fun ) 
       {}
       /// MANDATORY: virtual destructor 
       virtual ~AbsMinElement() {}
@@ -1018,7 +969,7 @@ namespace LoKi
         ( typename uBase::argument a ) const
       {
         typedef typename std::vector<TYPE>::const_iterator     _I ;
-        const LoKi::Apply<TYPE2,TYPE1> app ( &m_functor.func() ) ;
+        const LoKi::Apply<TYPE2,TYPE1> app ( &this->func() ) ;
         std::pair<_I,typename uFunctor::result_type> res = 
           LoKi::Algs::extremum 
           ( a.begin () , 
@@ -1030,23 +981,18 @@ namespace LoKi
       }
       /// OPTIONAL: the basic printout method 
       virtual std::ostream& fillStream( std::ostream& s ) const 
-      { return  s << "min_abs_element(" << m_functor << ")"; } ;
+      { return  s << " min_abs_element(" << this->func() << ") "; } ;
       // ======================================================================
     private:
       // ======================================================================
       /// the default construct is private:
       AbsMinElement() ;                                // no default contructor
       // ======================================================================
-    private:
-      // ======================================================================
-      /// the basic functor itself 
-      LoKi::FunctorFromFunctor<TYPE2,TYPE1> m_functor ; //          the functor
-      // ======================================================================
     } ;
     // ========================================================================
     template <class TYPE,class TYPE2,class TYPE1>
     class AbsMinElement<TYPE*,TYPE2,TYPE1> 
-      : public LoKi::Functor<std::vector<TYPE*>,TYPE*> 
+      : public LoKi::Functors::AbsMaxElement<TYPE*,TYPE2,TYPE1>
     {
     public:
       // ======================================================================
@@ -1059,8 +1005,7 @@ namespace LoKi
       // ======================================================================
       /// constructor 
       AbsMinElement ( const LoKi::Functor<TYPE2,TYPE1>& fun ) 
-        : uBase     (     ) 
-        , m_functor ( fun ) 
+        : LoKi::Functors::AbsMaxElement<TYPE*,TYPE2,TYPE1> ( fun ) 
       {}
       /// MANDATORY: virtual destructor 
       virtual ~AbsMinElement() {}
@@ -1075,7 +1020,7 @@ namespace LoKi
         if ( a.empty() ) { return 0 ; }
         //
         typedef typename std::vector<TYPE*>::const_iterator     _I ;
-        const LoKi::Apply<TYPE2,TYPE1> app ( &m_functor.func() ) ;
+        const LoKi::Apply<TYPE2,TYPE1> app ( &this->func() ) ;
         std::pair<_I,typename uFunctor::result_type> res = 
           LoKi::Algs::extremum 
           ( a.begin () , 
@@ -1087,17 +1032,12 @@ namespace LoKi
       }
       /// OPTIONAL: the basic printout method 
       virtual std::ostream& fillStream( std::ostream& s ) const 
-      { return  s << "min_abs_element(" << m_functor << ")"; } ;
+      { return  s << " min_abs_element(" << this->func() << ") "; } ;
       // ======================================================================
     private:
       // ======================================================================
       /// the default construct is private:
       AbsMinElement() ;                                // no default contructor
-      // ======================================================================
-    private:
-      // ======================================================================
-      /// the basic functor itself 
-      LoKi::FunctorFromFunctor<TYPE2,TYPE1> m_functor ; //          the functor
       // ======================================================================
     } ;
     // ========================================================================
@@ -1250,7 +1190,473 @@ namespace LoKi
       // ======================================================================
     };
     // ========================================================================
-  } // end of namespace LoKi::Filters 
+    /** @class Union 
+     *  simle functor to represent the "union" for two vector-functors
+     *  @see LoKi::Operations::Union 
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2010-06-06
+     */
+    template <class TYPE, class TYPE2> 
+    class Union : public LoKi::Functor<TYPE,std::vector<TYPE2> >
+    {
+    public:
+      // ======================================================================
+      /// constructor from two streamers 
+      Union 
+      ( const LoKi::Functor <TYPE,std::vector<TYPE2> >& fun1 , 
+        const LoKi::Functor <TYPE,std::vector<TYPE2> >& fun2 ) 
+        : LoKi::Functor     <TYPE,std::vector<TYPE2> > () 
+        , m_two ( fun1 , fun2 )  
+      {}
+      /// MANDATORY: virtual destructor 
+      virtual ~Union() {}
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  Union* clone() const { return new Union ( *this ) ; }
+      /// MANDATORY: the only one essential method 
+      virtual 
+      typename LoKi::Functor<TYPE,std::vector<TYPE2> >::result_type operator() 
+        ( typename LoKi::Functor<TYPE,std::vector<TYPE2> >::argument a ) const 
+      {
+        LoKi::Operations::Union<TYPE2> _union ;
+        return _union ( this->fun1 ( a ) , this->fun2 ( a ) ) ;
+      }
+      /// OPTIONAL: nice printout 
+      virtual std::ostream& fillStream ( std::ostream& s ) const 
+      { return s << " union( " << this->func1() 
+                 << ","        << this->func2() << ") " ; }
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the default constructor is disabled 
+      Union () ;                         // the default constructor is disabled 
+      // ======================================================================
+    protected:
+      // ======================================================================
+      typedef  LoKi::Functor     <TYPE,std::vector<TYPE2> > functor ;
+      // ======================================================================
+      /// evaluate the first functor 
+      typename functor::result_type fun1 
+      ( typename functor::argument a ) const { return m_two.fun1 ( a ) ; }
+      /// evaluate the first functor 
+      typename functor::result_type fun2 
+      ( typename functor::argument a ) const { return m_two.fun2 ( a ) ; }
+      // ======================================================================
+      /// get the first functor 
+      const functor& func1 ()           const { return m_two.func1 () ; }
+      /// get the second functor 
+      const functor& func2 ()           const { return m_two.func2 () ; }
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the holder for two functors
+      LoKi::TwoFunctors <TYPE,std::vector<TYPE2> > m_two ;      // two functors 
+      // ======================================================================
+    } ;
+    // ========================================================================
+    template <class TYPE2> 
+    class Union<void,TYPE2> : public LoKi::Functor<void,std::vector<TYPE2> >
+    {
+    public:
+      // ======================================================================
+      /// constructor from two streamers 
+      Union 
+      ( const LoKi::Functor <void,std::vector<TYPE2> >& fun1 , 
+        const LoKi::Functor <void,std::vector<TYPE2> >& fun2 ) 
+        : LoKi::Functor     <void,std::vector<TYPE2> > () 
+        , m_two ( fun1 , fun2 )  
+      {}
+      /// MANDATORY: virtual destructor 
+      virtual ~Union() {}
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  Union* clone() const { return new Union ( *this ) ; }
+      /// MANDATORY: the only one essential method 
+      virtual 
+      typename LoKi::Functor<void,std::vector<TYPE2> >::result_type operator() 
+        ( /* typename LoKi::Functor<void,std::vector<TYPE2> >::argument a */ ) const 
+      {
+        LoKi::Operations::Union<TYPE2> _union ;
+        return _union ( this->fun1 ( /* a */ ) , this->fun2 ( /* a */ ) ) ;
+      }
+      /// OPTIONAL: nice printout 
+      virtual std::ostream& fillStream ( std::ostream& s ) const 
+      { return s << " union(" << this->func1() 
+                 << ","       << this->func2() << ") " ; }
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the default constructor is disabled 
+      Union () ;                         // the default constructor is disabled 
+      // ======================================================================
+    protected:
+      // ======================================================================
+      typedef  LoKi::Functor     <void,std::vector<TYPE2> > functor ;
+      // ======================================================================
+      /// evaluate the first functor 
+      typename functor::result_type fun1 
+      ( /* typename functor::argument a */ ) const { return m_two.fun1 ( /* a */ ) ; }
+      /// evaluate the first functor 
+      typename functor::result_type fun2 
+      ( /* typename functor::argument a */ ) const { return m_two.fun2 ( /* a */ ) ; }
+      // ======================================================================
+      /// get the first functor 
+      const functor& func1 ()           const { return m_two.func1 () ; }
+      /// get the second functor 
+      const functor& func2 ()           const { return m_two.func2 () ; }
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the holder for two functors
+      LoKi::TwoFunctors <void,std::vector<TYPE2> > m_two ;      // two functors 
+      // ======================================================================
+    } ;  
+    // ========================================================================
+    /** @class Difference
+     *  simle functor to represent the "difference" for two vector-functors
+     *  @see LoKi::Operations::Difference 
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2010-06-06
+     */
+    template <class TYPE, class TYPE2> 
+    class Difference : public LoKi::Functors::Union <TYPE,TYPE2>
+    {
+    public:
+      // ======================================================================
+      /// constructor two streamers 
+      Difference
+      ( const LoKi::Functor <TYPE,std::vector<TYPE2> >& fun1 , 
+        const LoKi::Functor <TYPE,std::vector<TYPE2> >& fun2 ) 
+        : LoKi::Functors::Union <TYPE,TYPE2> ( fun1 , fun2 ) 
+      {}
+      /// MANDATORY: virtual destructor 
+      virtual ~Difference() {}
+      /// MANDATORY: clone method ("virtual consturctor")
+      virtual  Difference* clone() const { return new Difference ( *this ) ; }
+      /// MANDATORY: the only one essential method 
+      virtual 
+      typename LoKi::Functors::Union<TYPE,TYPE2>::result_type operator() 
+        ( typename LoKi::Functors::Union<TYPE,TYPE2>::argument a ) const 
+      {
+        LoKi::Operations::Difference<TYPE2> _diff ;
+        return _diff ( this->fun1 ( a ) , this->fun2 ( a ) ) ;
+      }
+      /// OPTIONAL: nice printout 
+      virtual std::ostream& fillStream ( std::ostream& s ) const 
+      { return s << " difference(" << this->func1() 
+                 << ","            << this->func2() << ") " ; }
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the default constructor is disabled 
+      Difference () ;                    // the default constructor is disabled 
+      // ======================================================================
+    };
+    // ========================================================================
+    template <class TYPE2> 
+    class Difference<void,TYPE2> : public LoKi::Functors::Union <void,TYPE2>
+    {
+    public:
+      // ======================================================================
+      /// constructor from two streamers 
+      Difference
+      ( const LoKi::Functor <void,std::vector<TYPE2> >& fun1 , 
+        const LoKi::Functor <void,std::vector<TYPE2> >& fun2 ) 
+        : LoKi::Functors::Union <void,TYPE2> ( fun1 , fun2 ) 
+      {}
+      /// MANDATORY: virtual destructor 
+      virtual ~Difference() {}
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  Difference* clone() const { return new Difference ( *this ) ; }
+      /// MANDATORY: the only one essential method 
+      virtual 
+      typename LoKi::Functors::Union<void,TYPE2>::result_type operator() 
+        ( /* typename LoKi::Functors::Union<TYPE,TYPE2>::argument a */ ) const 
+      {
+        LoKi::Operations::Difference<TYPE2> _diff ;
+        return _diff ( this->fun1 ( /* a */ ) , this->fun2 ( /* a */ ) ) ;
+      }
+      /// OPTIONAL: nice printout 
+      virtual std::ostream& fillStream ( std::ostream& s ) const 
+      { return s << " difference(" << this->func1() 
+                 << ","            << this->func2() << ") " ; }
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the default constructor is disabled 
+      Difference () ;                   // the default constructor is disabled 
+      // ======================================================================
+    };
+    // ========================================================================
+    /** @class Intersection
+     *  simle functor to represent the "intersection" for two vector-functors
+     *  @see LoKi::Operations::Intersection
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2010-06-06
+     */
+    template <class TYPE, class TYPE2> 
+    class Intersection : public LoKi::Functors::Difference <TYPE,TYPE2>
+    {
+    public:
+      // ======================================================================
+      /// constructor from two streamers 
+      Intersection
+      ( const LoKi::Functor <TYPE,std::vector<TYPE2> >& fun1 , 
+        const LoKi::Functor <TYPE,std::vector<TYPE2> >& fun2 ) 
+        : LoKi::Functors::Difference <TYPE,TYPE2> ( fun1 , fun2 ) 
+      {}
+      /// MANDATORY: virtual destructor 
+      virtual ~Intersection () {}
+      /// MANDATORY: clone method ("virtual consturctor")
+      virtual  Intersection* clone() const { return new Intersection ( *this ) ; }
+      /// MANDATORY: the only one essential method 
+      virtual 
+      typename LoKi::Functors::Union<TYPE,TYPE2>::result_type operator() 
+        ( typename LoKi::Functors::Union<TYPE,TYPE2>::argument a ) const 
+      {
+        LoKi::Operations::Intersection<TYPE2> _intersection ;
+        return _intersection ( this->fun1 ( a ) , this->fun2 ( a ) ) ;
+      }
+      /// OPTIONAL: nice printout 
+      virtual std::ostream& fillStream ( std::ostream& s ) const 
+      { return s << " intersection(" << this->func1() 
+                 << ","              << this->func2() << ") " ; }
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the default constructor is disabled 
+      Intersection () ;                  // the default constructor is disabled 
+      // ======================================================================
+    };
+    // ========================================================================
+    template <class TYPE2> 
+    class Intersection<void,TYPE2> : public LoKi::Functors::Difference <void,TYPE2>
+    {
+    public:
+      // ======================================================================
+      /// constructor from two streamers 
+      Intersection
+      ( const LoKi::Functor <void,std::vector<TYPE2> >& fun1 , 
+        const LoKi::Functor <void,std::vector<TYPE2> >& fun2 ) 
+        : LoKi::Functors::Difference  <void,TYPE2> ( fun1 , fun2 ) 
+      {}
+      /// MANDATORY: virtual destructor 
+      virtual ~Intersection () {}
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  Intersection* clone() const { return new Intersection ( *this ) ; }
+      /// MANDATORY: the only one essential method 
+      virtual 
+      typename LoKi::Functors::Union<void,TYPE2>::result_type operator() 
+        ( /* typename LoKi::Functors::Union<void,TYPE2>::argument a */ ) const 
+      {
+        LoKi::Operations::Intersection<TYPE2> _intersection ;
+        return _intersection ( this->fun1 ( /* a */ ) , this->fun2 ( /* a */ ) ) ;
+      }
+      /// OPTIONAL: nice printout 
+      virtual std::ostream& fillStream ( std::ostream& s ) const 
+      { return s << " intersection(" << this->func1() 
+                 << ","              << this->func2() << ") " ; }
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the default constructor is disabled 
+      Intersection () ;                 // the default constructor is disabled 
+      // ======================================================================
+    } ;
+    // ========================================================================
+    /** @class SymDifference
+     *  simle functor to represent the "symmetric-difference" for two vector-functors
+     *  @see LoKi::Operations::SymDifference
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2010-06-06
+     */
+    template <class TYPE, class TYPE2> 
+    class SymDifference : public LoKi::Functors::Intersection <TYPE,TYPE2>
+    {
+    public:
+      // ======================================================================
+      /// constructor from two streamers 
+      SymDifference
+      ( const LoKi::Functor <TYPE,std::vector<TYPE2> >& fun1 , 
+        const LoKi::Functor <TYPE,std::vector<TYPE2> >& fun2 ) 
+        : LoKi::Functors::Intersection <TYPE,TYPE2> ( fun1 , fun2 ) 
+      {}
+      /// MANDATORY: virtual destructor 
+      virtual ~SymDifference () {}
+      /// MANDATORY: clone method ("virtual consturctor")
+      virtual  SymDifference* clone() const { return new SymDifference ( *this ) ; }
+      /// MANDATORY: the only one essential method 
+      virtual 
+      typename LoKi::Functors::Union<TYPE,TYPE2>::result_type operator() 
+        ( typename LoKi::Functors::Union<TYPE,TYPE2>::argument a ) const 
+      {
+        LoKi::Operations::SymDifference<TYPE2> _symdiff ;
+        return _symdiff ( this->fun1 ( a ) , this->fun2 ( a ) ) ;
+      }
+      /// OPTIONAL: nice printout 
+      virtual std::ostream& fillStream ( std::ostream& s ) const 
+      { return s << " sym_difference(" << this->func1() 
+                 << ","                << this->func2() << ") " ; }
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the default constructor is disabled 
+      SymDifference () ;                 // the default constructor is disabled 
+      // ======================================================================
+    };
+    // ========================================================================
+    template <class TYPE2> 
+    class SymDifference<void,TYPE2> : public LoKi::Functors::Intersection <void,TYPE2>
+    {
+    public:
+      // ======================================================================
+      /// constructor from two streamers 
+      SymDifference
+      ( const LoKi::Functor  <void,std::vector<TYPE2> >& fun1 , 
+        const LoKi::Functor  <void,std::vector<TYPE2> >& fun2 ) 
+        : LoKi::Functors::Intersection <void,TYPE2> ( fun1 , fun2 ) 
+      {}
+      /// MANDATORY: virtual destructor 
+      virtual ~SymDifference () {}
+      /// MANDATORY: clone method ("virtual consturctor")
+      virtual  SymDifference* clone() const { return new SymDifference ( *this ) ; }
+      /// MANDATORY: the only one essential method 
+      virtual 
+      typename LoKi::Functors::Union<void,TYPE2>::result_type operator() 
+        ( /* typename LoKi::Functors::Union<void,TYPE2>::argument a */ ) const 
+      {
+        LoKi::Operations::SymDifference<TYPE2> _symdiff ;
+        return _symdiff ( this->fun1 ( /* a */ ) , this->fun2 ( /* a */ ) ) ;
+      }
+      /// OPTIONAL: nice printout 
+      virtual std::ostream& fillStream ( std::ostream& s ) const 
+      { return s << " sym_difference(" << this->func1() 
+                 << ","                << this->func2() << ") " ; }
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the default constructor is disabled 
+      SymDifference () ;                 // the default constructor is disabled 
+      // ======================================================================
+    };    
+    // ========================================================================
+    /** @class Includes
+     *  simle functor to represent the "includes" for two vector-functors
+     *  @see LoKi::Operations::Includes
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2010-06-06
+     */
+    template <class TYPE, class TYPE2> 
+    class Includes : public LoKi::Functor<TYPE,bool>
+    {
+    public:
+      // ======================================================================
+      /// constructor from two streamers 
+      Includes 
+      ( const LoKi::Functor <TYPE,std::vector<TYPE2> >& fun1 , 
+        const LoKi::Functor <TYPE,std::vector<TYPE2> >& fun2 ) 
+        : LoKi::Functor<TYPE,bool> () 
+        , m_two  ( fun1 , fun2 )  
+      {}
+      /// MANDATORY: virtual destructor 
+      virtual ~Includes () {}
+      /// MANDATORY: clone method ("virtual consturctor")
+      virtual  Includes* clone() const { return new Includes ( *this ) ; }
+      /// MANDATORY: the only one essential method 
+      virtual 
+      typename LoKi::Functor<TYPE,bool>::result_type operator() 
+        ( typename LoKi::Functor<TYPE,bool>::argument a ) const 
+      {
+        LoKi::Operations::Includes<TYPE2> _includes ;
+        return _includes( m_two.fun1 ( a ) , m_two.fun2 ( a ) ) ;
+      }
+      /// OPTIONAL: nice printout 
+      virtual std::ostream& fillStream ( std::ostream& s ) const 
+      { return s << " includes(" << m_two.func1() 
+                 << ","          << m_two.func2() << ") " ; }
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the default constructor is disabled 
+      Includes () ;                      // the default constructor is disabled 
+      // ======================================================================
+    private:                                 
+      // ======================================================================
+      /// storage of two functors 
+      LoKi::TwoFunctors <TYPE,std::vector<TYPE2> > m_two ;      // two functors 
+      // ======================================================================
+    };
+    // ========================================================================
+    template <class TYPE2> 
+    class Includes<void,TYPE2> : public LoKi::Functor<void,bool>
+    {
+    public:
+      // ======================================================================
+      /// constructor from two streamers 
+      Includes 
+      ( const LoKi::Functor <void,std::vector<TYPE2> >& fun1 , 
+        const LoKi::Functor <void,std::vector<TYPE2> >& fun2 ) 
+        : LoKi::Functor     <void,bool> () 
+        , m_two  ( fun1 , fun2 )  
+      {}
+      /// MANDATORY: virtual destructor 
+      virtual ~Includes () {}
+      /// MANDATORY: clone method ("virtual consturctor")
+      virtual  Includes* clone() const { return new Includes ( *this ) ; }
+      /// MANDATORY: the only one essential method 
+      virtual 
+      typename LoKi::Functor<void,bool>::result_type operator() 
+        ( /* typename LoKi::Functor<void,bool>::argument a */ ) const 
+      {
+        LoKi::Operations::Includes<TYPE2> _includes ;
+        return _includes( m_two.fun1 ( /* a */ ) , m_two.fun2 ( /* a */ ) ) ;
+      }
+      /// OPTIONAL: nice printout 
+      virtual std::ostream& fillStream ( std::ostream& s ) const 
+      { return s << " includes(" << m_two.func1() 
+                 << ","          << m_two.func2() << ") " ; }
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the default constructor is disabled 
+      Includes () ;                      // the default constructor is disabled 
+      // ======================================================================
+    private:                                 
+      // ======================================================================
+      /// storage of two functors 
+      LoKi::TwoFunctors <void,std::vector<TYPE2> > m_two ;      // two functors 
+      // ======================================================================
+    };
+    // ========================================================================
+    /** @class Unique 
+     *  simple function to remove duplicated elemens from the stream 
+     *  @author Vanya BELYAEV Ivan.BElyaev@nikhef.nl
+     *  @date 2010-06-05
+     */
+    template <class TYPE> 
+    class Unique : public LoKi::Functor< std::vector<TYPE>, 
+                                         std::vector<TYPE> >  
+    {
+    public :
+      // ======================================================================
+      /// MANDATORY: virtual destructor 
+      virtual ~Unique() {}
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  Unique* clone() const { return new Unique ( *this ) ; }
+      /// MANDATORY: the only one essential method 
+      virtual 
+      typename LoKi::Functor< std::vector<TYPE>,std::vector<TYPE> >::result_type 
+      operator() 
+        ( typename LoKi::Functor< std::vector<TYPE>,std::vector<TYPE> >::argument a ) const 
+      {
+        LoKi::Operations::Unique<TYPE> _unique ;
+        return _unique ( a ) ;
+      }
+      // ======================================================================
+      /// OPTIONAL: nice printout 
+      virtual std::ostream& fillStream ( std::ostream& s ) const ;
+      // ======================================================================
+    } ;
+    // ========================================================================
+  } //                                          end of namespace LoKi::Functors  
   // ==========================================================================
   /** simple "filter" function
    *
@@ -1727,6 +2133,52 @@ namespace LoKi
     return LoKi::Functors::Has<TYPE,TYPE1,TYPE2>( cut ) ;
   }
   // ==========================================================================
+  /** simple function to produce the "union" for two streamers 
+   *
+   *
+   *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+   *  @date 2010-06-05   
+   */      
+  template <class TYPE, class TYPE2>
+  inline 
+  LoKi::Functors::Union<TYPE,TYPE2>
+  union_ ( const LoKi::Functor<TYPE,std::vector<TYPE2> >& fun1 , 
+           const LoKi::Functor<TYPE,std::vector<TYPE2> >& fun2 ) 
+  {
+    return LoKi::Functors::Union<TYPE,TYPE2> ( fun1 , fun2 ) ;
+  }
+  // ==========================================================================
+  template <class TYPE>
+  inline 
+  LoKi::Functors::Union< std::vector<TYPE>,TYPE>
+  union_ ( const LoKi::Functor<TYPE,bool>&                            fun1 , 
+           const LoKi::Functor<std::vector<TYPE>,std::vector<TYPE> >& fun2 ) 
+  {
+    return LoKi::Functors::Union< std::vector<TYPE>,TYPE>
+      ( LoKi::Functors::Select<TYPE,TYPE> ( fun1 ) , fun2 ) ;
+  }
+  // ==========================================================================
+  template <class TYPE>
+  inline 
+  LoKi::Functors::Union< std::vector<TYPE>,TYPE>
+  union_ ( const LoKi::Functor<std::vector<TYPE>,std::vector<TYPE> >& fun1 ,
+           const LoKi::Functor<TYPE,bool>&                            fun2 ) 
+  {
+    return LoKi::Functors::Union< std::vector<TYPE>,TYPE>
+      ( fun1 , LoKi::Functors::Select<TYPE,TYPE> ( fun2 ) ) ;
+  }
+  // ==========================================================================
+  template <class TYPE>
+  inline 
+  LoKi::Functors::Union< std::vector<TYPE>,TYPE>
+  union_ ( const LoKi::Functor<TYPE,bool>& fun1 ,
+           const LoKi::Functor<TYPE,bool>& fun2 ) 
+  {
+    return LoKi::Functors::Union< std::vector<TYPE>,TYPE>
+      ( LoKi::Functors::Select<TYPE,TYPE> ( fun1 ) , 
+        LoKi::Functors::Select<TYPE,TYPE> ( fun2 ) ) ;
+  }
+  // ==========================================================================
 } // end of namespace LoKi 
 // ============================================================================     
 // the specific printpout
@@ -1740,6 +2192,12 @@ std::ostream& LoKi::Functors::Empty<TYPE>::fillStream
 template <class TYPE>
 std::ostream& LoKi::Functors::Size<TYPE>::fillStream
 ( std::ostream& s ) const { return s << "size_" ; }
+// ============================================================================     
+// the specific printpout
+// ============================================================================     
+template <class TYPE>
+std::ostream& LoKi::Functors::Unique<TYPE>::fillStream
+( std::ostream& s ) const { return s << "unique_" ; }
 // ============================================================================     
 
 // ============================================================================     

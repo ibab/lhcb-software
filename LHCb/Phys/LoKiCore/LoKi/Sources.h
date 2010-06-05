@@ -1,4 +1,4 @@
-// $Id: Sources.h,v 1.2 2007-12-03 12:03:23 ibelyaev Exp $
+// $Id: Sources.h,v 1.3 2010-06-05 20:13:30 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_SOURCES_H 
 #define LOKI_SOURCES_H 1
@@ -11,28 +11,38 @@
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/DataObject.h"
 // ============================================================================
+// GaudiAlg
+// ============================================================================
+#include "GaudiAlg/GetData.h"
+// ============================================================================
 // LoKi
 // ============================================================================
 #include "LoKi/Services.h"
 // ============================================================================
 namespace LoKi 
 {
+  // ==========================================================================
   namespace Functors
   {
-    /** @class Sources Sources.h LoKi/Sources.h
+    // ========================================================================
+    /** @class Sources LoKi/Sources.h
      *
      *  The concept belongs to the Gerhard "The Great" Raven.
      *
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2007-11-28
      */
-    template <class TYPE,class TYPE2=std::vector<TYPE*> >
+    template <class TYPE                            , 
+              class TYPE2=std::vector<TYPE*>        , 
+              class TYPE3= typename TYPE::Container >
     class Source: public LoKi::Functor<void,TYPE2>
     {
     private:
+      // ======================================================================
       typedef  LoKi::Functor<void,TYPE2> Self      ;
-      typedef typename TYPE::Container   Container ;
+      // ======================================================================
     public:
+      // ======================================================================
       /// constructor from the service and path in TES 
       Source 
       ( IDataProviderSvc*  svc   , 
@@ -64,7 +74,7 @@ namespace LoKi
       virtual typename Self::result_type operator() 
         ( /* typename Self::argument */ ) const 
       {
-        // locate the service if needed:
+        /// locate the service if needed:
         if ( !m_svc ) 
         {
           const LoKi::Services::Services& svcs = LoKi::Services::instance() ;
@@ -72,23 +82,29 @@ namespace LoKi
           Assert ( 0 != evtSvc , "Could not extract EventDataService!" ) ;
           m_svc = evtSvc ;
         }
-        // get the data from TES:
-        SmartDataPtr<Container> data ( m_svc , m_path ) ;
-        // check the validity:
+        /// get the data from TES:
+        SmartDataPtr<TYPE3> data ( m_svc , m_path ) ;
+        /// check the validity:
         Assert ( !(!data) , "No valid data is found at '" + m_path + "'" ) ;
-        // return the valid data 
-        return typename Self::result_type( data->begin() , data->end() ) ;
+        /// return the valid data 
+        return typename Self::result_type ( data->begin() , data->end() ) ;
       }
+      // ======================================================================
     public:
+      // ======================================================================
       /// get the service
       const LoKi::Interface<IDataProviderSvc>& evtSvc() const { return m_svc ; }
+      // ======================================================================
     private:
-      // the data provider service 
-      mutable LoKi::Interface<IDataProviderSvc> m_svc ; ///< data provider service
-      // TES location of the data 
-      std::string                       m_path ; ///< TES location of data 
+      // ======================================================================
+      /// the data provider service 
+      mutable LoKi::Interface<IDataProviderSvc> m_svc ; // data service 
+      /// TES location of the data 
+      std::string                               m_path ; // TES location of data 
+      // ======================================================================
     } ;
-  } // end of namespace LoKi::Functors
+    // ========================================================================
+  } //                                          end of namespace LoKi::Functors
   // ==========================================================================
   /** simple "source" function
    *
@@ -118,9 +134,8 @@ namespace LoKi
   {
     return LoKi::Functors::Source<TYPE>( path , svc ) ;
   }
-  // ==========================================================================
-  
-} // end of namespace LoKi
+  // ==========================================================================  
+} //                                                      end of namespace LoKi
 // ============================================================================
 // The END 
 // ============================================================================
