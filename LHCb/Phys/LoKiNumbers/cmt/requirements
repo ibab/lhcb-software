@@ -1,10 +1,10 @@
-# $Id: requirements,v 1.18 2010-04-06 20:08:15 ibelyaev Exp $ 
+# $Id: requirements,v 1.19 2010-06-05 20:18:06 ibelyaev Exp $ 
 # =============================================================================
 # Created    : 2007-12-01
 # Maintainer : Vanya BELYAEV ibelyaev@physics.syr.edu 
 # =============================================================================
 package            LoKiNumbers
-version            v9r0
+version            v9r1
 
 # ================ structure ==================================================
 branches           cmt doc dict python 

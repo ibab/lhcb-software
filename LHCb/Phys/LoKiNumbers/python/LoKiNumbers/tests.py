@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: tests.py,v 1.10 2010-03-07 18:12:16 ibelyaev Exp $
+# $Id: tests.py,v 1.11 2010-06-05 20:18:06 ibelyaev Exp $
 # =============================================================================
 ## @file
 #  @author Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -58,6 +58,16 @@ print 'inp >>  ( X != [ 1 , 2, 3 ] ) :%s' % ( inp >> ( X != [ 1 , 2, 3 ] ) )
 
 print 'inp >>  in_list ( X ,   1 , 2, 3   ) ) :%s' % ( inp >>  in_list ( X ,   1 , 2, 3 ) )
 print 'inp >> ~in_list ( X , [ 1 , 2, 3 ] ) ) :%s' % ( inp >> ~in_list ( X , [ 1 , 2, 3 ] ) )
+
+
+inp2  = doubles ( -10 , 1 , -9 , 10 , 0 , 1 , 1 , 1 ,  -1  )
+print ' inp2 >> ( X > -5 )                         :%s ' % ( inp2 >> ( X > -5 ) )
+print ' inp2 >> ( X <  5 )                         :%s ' % ( inp2 >> ( X <  5 ) )
+print ' inp2 >> union          ( X > -5 , X < 5 )  :%s ' % ( inp2 >> union           ( X > -5 , X < 5 ) )
+print ' inp2 >> intersection   ( X > -5 , X < 5 )  :%s ' % ( inp2 >> intersection    ( X > -5 , X < 5 ) )
+print ' inp2 >> difference     ( X > -5 , X < 5 )  :%s ' % ( inp2 >> difference      ( X > -5 , X < 5 ) )
+print ' inp2 >> sym_difference ( X > -5 , X < 5 )  :%s ' % ( inp2 >> sym_difference  ( X > -5 , X < 5 ) )
+print ' inp2 >> includes       ( X > -5 , X > 0 )  :%s ' % ( inp2 >> includes        ( X > -5 , X > 0 ) )
 
 
 # =============================================================================

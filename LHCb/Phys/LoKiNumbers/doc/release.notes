@@ -4,6 +4,14 @@
 ! Purpose     : Set of dictionaries for LoKi functions 
 ! -----------------------------------------------------------------------------
 
+! 2010-06-05 - Vanya Belyaev
+
+ - add examples/tests  for new streamers 
+
+ - cmt/requirmeents 
+
+     version incement to v9r1 
+
 !========================== LoKiNumbers v9r0 2010-04-26 =======================
 ! 2010-04-06 - Vanya Belyaev
  - use Gaudi::Raneg instead of LoKi::Range 
