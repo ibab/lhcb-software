@@ -1,3 +1,34 @@
+############################### Emergency Fixup  #########
+def _fixit() :
+    def _recurse(c,fun) :
+       if c.getType() == 'Hlt::Line' :  print ' ----> HltLine %s ' % c.getName()
+       fun(c)
+       for p in [ 'Members','Filter0','Filter1' ] :
+           if not hasattr(c,p) : continue
+           x = getattr(c,p)
+           if list is not type(x) : x = [ x ]
+           for i in x : _recurse(i,fun)
+
+    def _fixit1( c ) :
+       if  not hasattr( c, 'FilterDescriptor' ) : return
+       input = getattr( c, 'FilterDescriptor' )
+       output = []
+       for f in input :
+           x = f.split(',')
+           if ( x[0] == 'IP_PV2D' )       : x[2] = '-%s' % x[2]
+           if ( x[0].startswith('DOCA') ) : x[2] = '2.0'
+           if ( x[0] == 'VertexDz_PV2D' ) : x[2] = '-999.9'
+           if ( x[0] == 'VertexPointing_PV2D' ) : x[2] = '999.9'
+           output  += [ ','.join(x) ]
+       if input != output :
+           setattr( c, 'FilterDescriptor', output )
+           print '%s: replaced %s with %s' % ( c.getName(), input, output )
+
+    from Configurables import GaudiSequencer
+    _recurse( GaudiSequencer('Hlt1'), _fixit1 )
+    
+############################### Emergency Fixup  #########
+
 class Physics_MinBiasL0_PassThroughHlt_Apr10 :
     """
     Threshold settings for Hlt1 for 2010 conditions
@@ -9,6 +40,11 @@ class Physics_MinBiasL0_PassThroughHlt_Apr10 :
     """
     
     __all__ = ( 'ActiveHlt1Lines', 'ActiveHlt2Lines', 'Thresholds','L0TCK' )
+
+
+    from GaudiKernel.Configurable import appendPostConfigAction
+    appendPostConfigAction( _fixit )
+
 
     def verifyType(self,ref) :
         # verify self.ActiveLines is still consistent with
