@@ -1,9 +1,11 @@
-// $Id: OTExpectedHits.cpp,v 1.2 2007-08-28 10:46:35 jonrob Exp $
+// $Id: OTExpectedHits.cpp,v 1.2 2007/08/28 10:46:35 jonrob Exp $
 
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/SystemOfUnits.h"
 #include "GaudiKernel/Plane3DTypes.h"
+
+#include <boost/foreach.hpp>
 
 // Tsa
 #include "OTExpectedHits.h"
@@ -44,10 +46,7 @@ StatusCode OTExpectedHits::collect(const Parabola& parab,
                                    std::vector<IOTExpectedHits::OTPair>& hits,
                                    const unsigned int iSector) const{
 
-  std::vector<LHCb::OTChannelID> channels; channels.reserve(4);
-  std::vector<double> distances; distances.reserve(4);
-
-
+  // hint to aid search
   DeOTModule* aModule = 0;
   if (aChan.module()  == 0){
     aModule = findModule(parab,line,aChan, iSector);
@@ -57,11 +56,18 @@ StatusCode OTExpectedHits::collect(const Parabola& parab,
   }
 
   if (aModule != 0){
-    Line tanLine = parab.tangent(aModule->z());
-    Line3D aLine3D = createLine3D(tanLine,line,aModule->z());
-    Gaudi::XYZPoint globalEntry = intersection(aLine3D,aModule->entryPlane());
-    Gaudi::XYZPoint globalExit = intersection(aLine3D,aModule->exitPlane());
-    aModule->calculateHits(globalEntry,globalExit,hits);
+    const Line tanLine = parab.tangent(aModule->z());
+    const Line3D aLine3D = createLine3D(tanLine,line,aModule->z());
+    const Gaudi::XYZPoint globalEntry = intersection(aLine3D,aModule->entryPlane());
+    const Gaudi::XYZPoint globalExit = intersection(aLine3D,aModule->exitPlane());
+    std::vector<IOTExpectedHits::OTPair> tmpHits; tmpHits.reserve(4);
+    aModule->calculateHits(globalEntry,globalExit,tmpHits);
+
+    // check for dead channels
+    BOOST_FOREACH(IOTExpectedHits::OTPair info, tmpHits){
+      if (aModule->strawStatus(info.first.straw()) == DeOTModule::Good ) hits.push_back(info);
+    }
+
   }
 
   return StatusCode::SUCCESS;

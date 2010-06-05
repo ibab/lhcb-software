@@ -4,6 +4,9 @@
 ! Purpose     : Tsa algorithms
 !----------------------------------------------------------------------------
 
+! 2010-06-04 M Needham
+ - Use OT dead strip list to calcuate # expected hits
+
 !======================= TsaAlgorithms v3r20 2010-05-21====================
 ! 2010-05-12 - Rob Lambert
  - Review of warnings
