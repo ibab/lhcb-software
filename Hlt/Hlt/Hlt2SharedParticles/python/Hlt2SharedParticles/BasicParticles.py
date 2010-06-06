@@ -8,7 +8,7 @@
 ##
 # =============================================================================
 __author__  = "P. Koppenburg Patrick.Koppenburg@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.24 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.25 $"
 # =============================================================================
 from Gaudi.Configuration import *
 from HltLine.HltLine import bindMembers
@@ -24,9 +24,6 @@ from GaudiKernel.SystemOfUnits import MeV
 #
 from HltTracking.Hlt2TrackingConfigurations import Hlt2UnfittedForwardTracking
 Hlt2UnfittedForwardTracking = Hlt2UnfittedForwardTracking()
-#
-from HltTracking.Hlt2TrackingConfigurations import Hlt2UnfittedForwardTrackingForNeutrals
-Hlt2UnfittedForwardTrackingForNeutrals = Hlt2UnfittedForwardTrackingForNeutrals()
 ##########################################################################
 #
 # Charged protoparticles -> pulls all the pid
@@ -38,7 +35,7 @@ hadronProtos 	= Hlt2UnfittedForwardTracking.hlt2ChargedNoPIDsProtos( )
 #
 # Neutral protoparticles
 #
-neutralProtos 	= Hlt2UnfittedForwardTrackingForNeutrals.hlt2NeutralProtos()
+neutralProtos 	= Hlt2UnfittedForwardTracking.hlt2NeutralProtos()
 ##########################################################################
 # Make the pions
 #

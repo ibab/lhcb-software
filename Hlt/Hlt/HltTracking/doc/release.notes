@@ -1,9 +1,12 @@
-!$Id: release.notes,v 1.130 2010-05-28 11:14:07 graven Exp $
+!$Id: release.notes,v 1.131 2010-06-06 22:25:58 gligorov Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/HltTracking
 ! Responsible : Jose A. Hernando
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
+
+! 2010-06-07 - V. Gligorov
+ - Remove an obsolete Hlt2 tracking configuration.
 
 !========================== HltTracking v6r0   2010-05-28 ===================
 ! 2010-05-28 - Gerhard Raven
