@@ -9,7 +9,7 @@
 #
 ########################################################################
 from Gaudi.Configuration import *
-importOptions( "$DAVINCISYSROOT/tests/options/DVTestHlt-DC06-None.py")
+importOptions( "$DAVINCITESTSROOT/tests/options/DVTestHlt-DC06-None.py")
 #
 # now overwrite threshold setting
 #

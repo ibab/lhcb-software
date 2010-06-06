@@ -43,7 +43,7 @@ DaVinci().SkipEvents = 0                           # Events to skip
 DaVinci().PrintFreq  = 1
 DaVinci().DataType = "MC09"
 DaVinci().Simulation    = True
-# DaVinci().MainOptions = "$DAVINCISYSROOT/tests/options/Do09selBu2LLK.py"
+# DaVinci().MainOptions = "$DAVINCITESTSROOT/tests/options/Do09selBu2LLK.py"
 from Configurables import StoreExplorerAlg, PrintDecayTree
 PrintDecayTree().InputLocations = [ location ] 
 DaVinci().MoniSequence = [   PrintDecayTree()

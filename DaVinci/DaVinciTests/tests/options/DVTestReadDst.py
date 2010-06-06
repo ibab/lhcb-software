@@ -38,9 +38,9 @@ for i in MassRanges :
 DaVinci().EvtMax = -1
 DaVinci().PrintFreq = 1 
 DaVinci().DataType = "MC09"
-DaVinci().Input = [ "DATAFILE='PFN:$DAVINCISYSROOT/tests/qmtest/Sel.SeqJpsi_3050_3150.dst' TYP='POOL_ROOTTREE' OPT='READ'"
-                 ,  "DATAFILE='PFN:$DAVINCISYSROOT/tests/qmtest/Sel.SeqJpsi_2600_3200.dst' TYP='POOL_ROOTTREE' OPT='READ'"
-                 ,  "DATAFILE='PFN:$DAVINCISYSROOT/tests/qmtest/Sel.SeqJpsi_3000_3500.dst' TYP='POOL_ROOTTREE' OPT='READ'" 
+DaVinci().Input = [ "DATAFILE='PFN:$DAVINCITESTSROOT/tests/qmtest/Sel.SeqJpsi_3050_3150.dst' TYP='POOL_ROOTTREE' OPT='READ'"
+                 ,  "DATAFILE='PFN:$DAVINCITESTSROOT/tests/qmtest/Sel.SeqJpsi_2600_3200.dst' TYP='POOL_ROOTTREE' OPT='READ'"
+                 ,  "DATAFILE='PFN:$DAVINCITESTSROOT/tests/qmtest/Sel.SeqJpsi_3000_3500.dst' TYP='POOL_ROOTTREE' OPT='READ'" 
                     ]
 ########################################################################
 MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"

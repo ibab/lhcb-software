@@ -9,7 +9,7 @@
 #
 ########################################################################
 from Gaudi.Configuration import *
-importOptions("$DAVINCISYSROOT/tests/options/DVTestHlt12-MC09.py")
+importOptions("$DAVINCITESTSROOT/tests/options/DVTestHlt12-MC09.py")
 ########################################################################
 #
 # HLT

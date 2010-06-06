@@ -6,6 +6,6 @@ set tempfile=`${CMTROOT}/mgr/cmt -quiet build temporary_name`
 if $status != 0 then
   set tempfile=/tmp/cmt.$$
 endif
-${CMTROOT}/mgr/cmt cleanup -csh -pack=DaVinciTests -version=v1r0 -path=/afs/cern.ch/lhcb/group/davinci/vol1/jpalac/DaVinci_v25r5 $* >${tempfile}; source ${tempfile}
+${CMTROOT}/mgr/cmt cleanup -csh -pack=DaVinciTests -version=v1r0 -path=/home/jpalac/cmtdev/DaVinci_v25r5 $* >${tempfile}; source ${tempfile}
 /bin/rm -f ${tempfile}
 

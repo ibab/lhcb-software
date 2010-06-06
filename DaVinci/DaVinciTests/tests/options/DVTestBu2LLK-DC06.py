@@ -32,7 +32,7 @@ TestCorrelations.Algorithms = [ "StdLooseElectrons",
 # Selection
 ###
 from Configurables import DaVinci
-DaVinci().MainOptions = "$DAVINCISYSROOT/tests/options/Do09selBu2LLK.py"
+DaVinci().MainOptions = "$DAVINCITESTSROOT/tests/options/Do09selBu2LLK.py"
 DaVinci().MoniSequence = [ TestCorrelations ]
 
 ##-- GAUDI data cards generated on 11/19/07 2:55 PM
