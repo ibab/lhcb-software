@@ -8,6 +8,11 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2010-06-07 - V. Gligorov
+ - Change the mass hypothesis in the topological 3 and 4 body to KKK/KKKK
+   from KKPi/KKPiPi. This is in order to have the same mass window efficiency
+   on all of our "core" 4 body and lower decay modes. 
+
 !========================== Hlt2Lines v4r0 2010-05-27 ===================
 ! 2010-05-27 - V. Gligorov
  - Add/tighten cuts in Hlt2 lifetime unbiased B2hh lines.

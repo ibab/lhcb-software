@@ -1,7 +1,7 @@
-## $Id: Hlt2TopologicalLines.py,v 1.41 2010-04-23 21:25:38 spradlin Exp $
+## $Id: Hlt2TopologicalLines.py,v 1.42 2010-06-06 22:21:20 gligorov Exp $
 __author__  = 'Patrick Spradlin'
-__date__    = '$Date: 2010-04-23 21:25:38 $'
-__version__ = '$Revision: 1.41 $'
+__date__    = '$Date: 2010-06-06 22:21:20 $'
+__version__ = '$Revision: 1.42 $'
 
 ###
 #
@@ -506,8 +506,8 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         ## CombineParticles for the robust 3-body combinations.
         ###################################################################
         topo3Body = self.__robustCombine(  name = 'Topo3Body'
-                                  , inputSeq = [ lclRobInputPions, topo2Body ]
-                                  , decayDesc = ["D*(2010)+ -> K*(892)0 pi+", "D*(2010)+ -> K*(892)0 pi-"])
+                                  , inputSeq = [ lclRobInputKaons, topo2Body ]
+                                  , decayDesc = ["D*(2010)+ -> K*(892)0 K+", "D*(2010)+ -> K*(892)0 K-"])
 
         ## CombineParticles for the robust 4-body combinations.
         ## Unlike the 3-body and 4-body, apply a mass lower limit.
@@ -515,8 +515,8 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         ## There seems to be a lot of CPUT consumed in managing the large number
         ##   of 4-body candidates.  The list needs to be as small as possible.
         topo4Body = self.__robustCombine(  name = 'Topo4Body'
-                                  , inputSeq = [lclRobInputPions, topo3Body ]
-                                  , decayDesc = ["B0 -> D*(2010)+ pi-","B0 -> D*(2010)+ pi+"]
+                                  , inputSeq = [lclRobInputKaons, topo3Body ]
+                                  , decayDesc = ["B0 -> D*(2010)+ K-","B0 -> D*(2010)+ K+"]
                                   , extracuts = { 'CombinationCut' : '(AM>4*GeV)'
                                                 , 'MotherCut'      : "(BPVTRGPOINTINGWPT< %(RobustPointingUL)s )" % self.getProps() }
                                   )
@@ -560,16 +560,16 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         # post-track-fit 3-body combinations
         ###################################################################
         topoTF3Body = self.__tfCombine(  name = 'TopoTF3Body'
-                                , inputSeq = [ lclTFInputPions, topoTF2Body ]
-                                , decayDesc = ["D*(2010)+ -> K*(892)0 pi+", "D*(2010)+ -> K*(892)0 pi-"]
+                                , inputSeq = [ lclTFInputKaons, topoTF2Body ]
+                                , decayDesc = ["D*(2010)+ -> K*(892)0 K+", "D*(2010)+ -> K*(892)0 K-"]
                                )
 
         # post-track-fit 4-body combinations
         # Unlike the 3-body and 4-body, apply a mass lower limit.
         ###################################################################
         topoTF4Body = self.__tfCombine(  name = 'TopoTF4Body'
-                                , inputSeq = [ lclTFInputPions, topoTF3Body ]
-                                , decayDesc = ["B0 -> D*(2010)+ pi-","B0 -> D*(2010)+ pi+"]
+                                , inputSeq = [ lclTFInputKaons, topoTF3Body ]
+                                , decayDesc = ["B0 -> D*(2010)+ K-","B0 -> D*(2010)+ K+"]
                                 , extracuts = { 'CombinationCut' : '(AM>4*GeV)'
                                               , 'MotherCut'      : "(BPVTRGPOINTINGWPT< %(TFPointUL)s)" % self.getProps()
                                               }
@@ -662,16 +662,16 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         # one stage 3-body combinations
         ###################################################################
         topoOSTF3Body = self.__ostfCombine(  name = 'TopoOSTF3Body'
-                                , inputSeq = [ lclOSTFInputPions, topoOSTF2Body ]
-                                , decayDesc = ["D*(2010)+ -> K*(892)0 pi+", "D*(2010)+ -> K*(892)0 pi-"]
+                                , inputSeq = [ lclOSTFInputKaons, topoOSTF2Body ]
+                                , decayDesc = ["D*(2010)+ -> K*(892)0 K+", "D*(2010)+ -> K*(892)0 K-"]
                                )
 
         # one stage 4-body combinations
         # Unlike the 3-body and 4-body, apply a mass lower limit.
         ###################################################################
         topoOSTF4Body = self.__ostfCombine(  name = 'TopoOSTF4Body'
-                                , inputSeq = [ lclOSTFInputPions, topoOSTF3Body ]
-                                , decayDesc = ["B0 -> D*(2010)+ pi-","B0 -> D*(2010)+ pi+"]
+                                , inputSeq = [ lclOSTFInputKaons, topoOSTF3Body ]
+                                , decayDesc = ["B0 -> D*(2010)+ K-","B0 -> D*(2010)+ K+"]
                                 , extracuts = { 'CombinationCut' : '(AM>4*GeV)'
                                               , 'MotherCut'      : "(BPVTRGPOINTINGWPT< %(OSTFPointUL)s)" % self.getProps()
                                               }
@@ -719,16 +719,16 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         # one stage 3-body combinations
         ###################################################################
         topoRobTF3Body = self.__robustCombine(  name = 'TopoRobTF3Body'
-                                , inputSeq = [ lclRobTFInputPions, topoRobTF2Body ]
-                                , decayDesc = ["D*(2010)+ -> K*(892)0 pi+", "D*(2010)+ -> K*(892)0 pi-"]
+                                , inputSeq = [ lclRobTFInputKaons, topoRobTF2Body ]
+                                , decayDesc = ["D*(2010)+ -> K*(892)0 K+", "D*(2010)+ -> K*(892)0 K-"]
                                )
 
         # one stage 4-body combinations
         # Unlike the 3-body and 4-body, apply a mass lower limit.
         ###################################################################
         topoRobTF4Body = self.__robustCombine(  name = 'TopoRobTF4Body'
-                                , inputSeq = [ lclRobTFInputPions, topoRobTF3Body ]
-                                , decayDesc = ["B0 -> D*(2010)+ pi-","B0 -> D*(2010)+ pi+"]
+                                , inputSeq = [ lclRobTFInputKaons, topoRobTF3Body ]
+                                , decayDesc = ["B0 -> D*(2010)+ K-","B0 -> D*(2010)+ K+"]
                                 , extracuts = { 'CombinationCut' : '(AM>4*GeV)'
                                               , 'MotherCut'      : "(BPVTRGPOINTINGWPT< %(RobustPointingUL)s)" % self.getProps()
                                               }
