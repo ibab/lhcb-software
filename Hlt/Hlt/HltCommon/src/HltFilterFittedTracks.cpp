@@ -1,11 +1,11 @@
-// $Id: HltFilterFittedTracks.cpp,v 1.2 2010-06-06 15:57:10 graven Exp $
+// $Id: HltFilterFittedTracks.cpp,v 1.3 2010-06-06 19:17:47 graven Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h" 
 #include "boost/foreach.hpp"
 
-// #include "HltBase/HltUtils.h"
+#include "HltBase/HltUtils.h"
 #include "HltFilterFittedTracks.h"
 
 using namespace LHCb;
@@ -97,8 +97,8 @@ StatusCode HltFilterFittedTracks::execute() {
     BOOST_FOREACH( LHCb::RecVertex* iV, *m_selections.input<2>()) {
       double ip = 0; double chi2 = 0;
       sc = m_dist->distance( &daughter1, iV, ip, chi2 ); 
-      //double ips =  HltUtils::impactParameterSignificance(*iV,*iT) ;
-      //always() << ip << " : " << chi2 << " : " << ips*ips << endmsg;
+      double ips =  HltUtils::impactParameterSignificance(*iV,*iT) ;
+      always() << ip << " : " << chi2 << " : " << ips*ips << endmsg;
       if (chi2 < bestchi2) {
         bestchi2 = chi2;
         bestip   = ip  ;
