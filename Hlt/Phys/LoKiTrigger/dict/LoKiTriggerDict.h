@@ -1,4 +1,4 @@
-// $Id: LoKiTriggerDict.h,v 1.20 2009-12-27 19:10:25 graven Exp $
+// $Id: LoKiTriggerDict.h,v 1.21 2010-06-06 08:33:35 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_LOKICOREDICT_H 
 #define LOKI_LOKICOREDICT_H 1
@@ -641,10 +641,73 @@ namespace LoKi
       { return fun >> o  ; }      
       // =====================================================================
     } ;
+
+
+
     // ========================================================================
-  } // end of namespace LoKi::Dicts
+    template <>
+    class CutsOps<LoKi::TrackTypes::TrackPair> 
+      : public CutsOps_<LoKi::TrackTypes::TrackPair> 
+    {
+    private:
+      // ======================================================================
+      typedef LoKi::TrackTypes::TrackPair TYPE  ;
+      typedef LoKi::TrackTypes::TrackPair TYPE2 ;
+      //
+      typedef LoKi::BasicFunctors<TYPE>::Function               Func ;
+      typedef LoKi::BasicFunctors<TYPE>::Predicate              Cuts ;
+      typedef LoKi::BasicFunctors<TYPE>::FunctionFromFunction   Fun  ;
+      typedef LoKi::BasicFunctors<TYPE>::PredicateFromPredicate Cut  ;
+      // ======================================================================
+    public:   
+      // ======================================================================
+      // functional part 
+      // ======================================================================
+      };
+    // ========================================================================
+    template <>
+    class CutsOps<LoKi::TrackTypes::TrackVertexPair> 
+      : public CutsOps_<LoKi::TrackTypes::TrackVertexPair> 
+    {
+    private:
+      // ======================================================================
+      typedef LoKi::TrackTypes::TrackVertexPair  TYPE  ;
+      typedef LoKi::TrackTypes::TrackVertexPair  TYPE2 ;
+      // 
+      typedef LoKi::BasicFunctors<TYPE>::Function               Func ;
+      typedef LoKi::BasicFunctors<TYPE>::Predicate              Cuts ;
+      typedef LoKi::BasicFunctors<TYPE>::FunctionFromFunction   Fun  ;
+      typedef LoKi::BasicFunctors<TYPE>::PredicateFromPredicate Cut  ;
+      // ======================================================================
+    public:   
+      // ======================================================================
+    };
+    // ========================================================================
+    template <>
+    class CutsOps<LoKi::TrackTypes::VertexPair> 
+      : public CutsOps_<LoKi::TrackTypes::VertexPair> 
+    {
+    private:
+      // ======================================================================
+      typedef LoKi::TrackTypes::VertexPair TYPE  ;
+      typedef LoKi::TrackTypes::VertexPair TYPE2 ;
+      // 
+      typedef LoKi::BasicFunctors<TYPE>::Function               Func ;
+      typedef LoKi::BasicFunctors<TYPE>::Predicate              Cuts ;
+      typedef LoKi::BasicFunctors<TYPE>::FunctionFromFunction   Fun  ;
+      typedef LoKi::BasicFunctors<TYPE>::PredicateFromPredicate Cut  ;
+      // ======================================================================
+    public:   
+      // ======================================================================
+      // functional part 
+      // ======================================================================
+    };
+    // ========================================================================
+
+    // ========================================================================
+  } //                                             end of namespace LoKi::Dicts
   // ==========================================================================
-} //end of namespace LoKi
+} //                                                      end of namespace LoKi
 // ============================================================================
 namespace
 {
@@ -716,9 +779,9 @@ namespace
     // ========================================================================
   } ;  
   // ==========================================================================
-} // end of anonymous namespace 
+} //                                                 end of anonymous namespace 
 // ============================================================================
-// The END 
+//                                                                      The END 
 // ============================================================================
 #endif // LOKI_LOKICOREDICT_H
 // ============================================================================

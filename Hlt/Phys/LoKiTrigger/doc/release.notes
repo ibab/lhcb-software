@@ -1,9 +1,14 @@
-! $Id: release.notes,v 1.73 2010-06-02 16:51:02 ibelyaev Exp $
+! $Id: release.notes,v 1.74 2010-06-06 08:33:35 ibelyaev Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiTrigger
 ! Responsible : Vanya BELYAEV
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
+
+! 2010-06-06 - Vanya Belyaev
+
+ - fix for new, enhanced streamers
+
 
 ! 2010-06-02 - Vanya Belyaev
 
