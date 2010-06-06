@@ -1,4 +1,4 @@
-// $Id: HltFunctions.h,v 1.33 2010-04-21 14:10:49 gligorov Exp $
+// $Id: HltFunctions.h,v 1.34 2010-06-06 15:57:10 graven Exp $
 #ifndef HLTBASE_HLTFUNCTIONS_H 
 #define HLTBASE_HLTFUNCTIONS_H 1
 
@@ -372,6 +372,17 @@ namespace Hlt {
     {return HltUtils::impactParameter(vertex, track);}
     IP* clone() const {return new IP();}
   };
+  /* IPS:
+   *   return the impact parameter significance between a track and a vertex
+   */
+  class IPS : public Hlt::TrackVertexBiFunction {
+  public:
+    explicit IPS(){}
+    double operator() (const LHCb::Track& track, 
+                       const LHCb::RecVertex& vertex) const
+    {return HltUtils::impactParameterSignificance(vertex, track);}
+    IPS* clone() const {return new IPS();}
+  };
 
   /* DZ:
    *  computes the distance in z between 2 vertices: v1-v2
@@ -381,11 +392,21 @@ namespace Hlt {
     explicit DZ() {}
     double operator() (const LHCb::RecVertex& vertex1, 
                        const LHCb::RecVertex& vertex2) const {
-      double dz = vertex1.position().z() - vertex2.position().z();
-      return dz;
+      return vertex1.position().z() - vertex2.position().z();
     }
     DZ* clone() const {return new DZ();}
   };
+
+  class D : public Hlt::VertexBiFunction {
+  public:
+    explicit D() {}
+    double operator() (const LHCb::RecVertex& vertex1, 
+                       const LHCb::RecVertex& vertex2) const {
+      return (vertex1.position() - vertex2.position()).R();
+    }
+    D* clone() const {return new D();}
+  };
+  
   
   /* FC:
    *  computes the poiting of the vertex1 with respect vertex2 (primary)

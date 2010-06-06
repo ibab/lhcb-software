@@ -1,4 +1,4 @@
-// $Id: HltFunctionFactories.cpp,v 1.36 2010-04-20 08:23:23 gligorov Exp $
+// $Id: HltFunctionFactories.cpp,v 1.37 2010-06-06 15:57:10 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -47,6 +47,8 @@ StatusCode HltTrackFunctionFactory::initialize() {
   declare<Hlt::NumberOfCSideVeloHits>("NumberOfCSideVeloHits");
 
   declare<Hlt::rIP,zen::abs_min,const Hlt::VertexSelection>("rIP");
+  declare<Hlt::IPS,zen::abs_min,const Hlt::VertexSelection>("IPS");
+  declare<Hlt::IPS,zen::abs_min,const Hlt::VertexSelection>("FitIPS");
   declare<Hlt::IP,zen::abs_min,const Hlt::VertexSelection>("IP");
   declare<Hlt::IP,zen::abs_min,const Hlt::VertexSelection>("FitIP");
 
@@ -96,6 +98,8 @@ StatusCode HltVertexFunctionFactory::initialize() {
   declare<Hlt::VertexZPosition>("VertexZPosition");
   declare<Hlt::VertexTransversePosition>("VertexTransversePosition");
 
+  declare<Hlt::D,zen::abs_min,const Hlt::VertexSelection>("VertexDistance");
+  declare<Hlt::D,zen::abs_min,const Hlt::VertexSelection>("FitVertexDistance");
   declare<Hlt::DZ,zen::abs_min,const Hlt::VertexSelection>("VertexDz");
   declare<Hlt::DZ,zen::abs_min,const Hlt::VertexSelection>("FitVertexDz");
   declare<Hlt::FC,zen::abs_min,const Hlt::VertexSelection>("VertexPointing");
