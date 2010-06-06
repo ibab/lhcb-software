@@ -2,8 +2,8 @@
 
 #include <cassert>
 #include <numeric>
-#include "LHCbMath/GeomFun.h"
-#include "LHCbMath/Line.h"
+#include "LHCbMath/MatrixTransforms.h"
+#include "Math/MatrixFunctions.h"
 
 using namespace Gaudi;
 using namespace LHCb;
@@ -74,6 +74,34 @@ XYZPoint HltUtils::closestPoint(const Track& track1,
                   0.5*(pos1.y()+pos2.y()),
                   0.5*(pos1.z()+pos2.z()));
 }
+
+  //! return the impact parameter significance
+double HltUtils::impactParameterSignificance(const LHCb::RecVertex& vertex,
+                                            const LHCb::Track& track) {
+
+      const LHCb::State& state = track.firstState();
+      Gaudi::XYZVector delta( state.position() - vertex.position() ); // vertex to ref point
+      Gaudi::XYZVector dir  ( state.slopes().unit() ); // note: if backward, reverse direction???
+
+      double  dot = delta.Dot(dir);
+      double  ip2 = delta.Mag2()-dot*dot;
+
+      bool positive = ( delta.z() > dot*dir.z() );
+
+      Gaudi::XYZVector v = 2*(delta-dot*dir);
+      double err2 = Gaudi::Math::Similarity(v, vertex.covMatrix());
+
+      delta *= -2*dot*dir.z();
+      err2 += ROOT::Math::Similarity( Gaudi::Vector5( -v.x()
+                                                    , -v.y()
+                                                    , delta.Dot(XYZVector(1-dir.x()*dir.x(), -dir.x()*dir.y(),-dir.x()*dir.z()))
+                                                    , delta.Dot(XYZVector( -dir.y()*dir.x(),1-dir.y()*dir.y(),-dir.y()*dir.z()))
+                                                    , 0.0)
+                                   , state.covariance() );
+      err2 = sqrt(err2);
+      double ips = 2*ip2/err2;
+      return positive ? ips : -ips ;
+  }
 
 
 

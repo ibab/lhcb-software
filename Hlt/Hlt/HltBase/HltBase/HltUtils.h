@@ -3,6 +3,7 @@
 
 #include "GaudiKernel/Point3DTypes.h"
 #include "GaudiKernel/Vector3DTypes.h"
+#include "GaudiKernel/GenericVectorTypes.h"
 #include "LHCbMath/GeomFun.h"
 #include "LHCbMath/Line.h"
 
@@ -48,19 +49,38 @@ namespace Hlt {
 namespace HltUtils
 {
 
+  //! compute the impact parameter vector
+  inline Gaudi::XYZVector impactParameterVector(const Gaudi::XYZPoint& vertex,
+                                const Gaudi::XYZPoint& point,
+                                const Gaudi::XYZVector& direction) {
+      Gaudi::XYZVector d = direction.unit();
+      return d.Cross((point-vertex).Cross(d));
+  }
+
+  //! return the modules of the impact parameter (signed)
+  inline double impactParameter(const Gaudi::XYZPoint& vertex,
+                         const Gaudi::XYZPoint& point,
+                         const Gaudi::XYZVector& direction)
+    {
+      Gaudi::XYZVector ip = impactParameterVector(vertex,point,direction);
+      return (ip.z() < 0) ? -ip.R() : ip.R();
+    }
+  
+
   //! return the impact parameter vector
   double rImpactParameter(const LHCb::RecVertex& vertex,
                           const LHCb::Track& track);
   
   //! return the impact parameter vector
   inline double impactParameter(const LHCb::RecVertex& vertex,
-                         const LHCb::Track& track) {
-      const Gaudi::XYZPoint& vtx = vertex.position();
+                                const LHCb::Track& track) {
       const LHCb::State& state = track.firstState();
-
-      Gaudi::XYZVector vec =Gaudi::Math::closestPoint( vtx, Gaudi::Math::Line<Gaudi::XYZPoint,Gaudi::XYZVector>( state.position(), state.slopes() ) ) - vtx;
-      return vec.Z() < 0 ? -vec.R() : vec.R() ;
+      return HltUtils::impactParameter( vertex.position(), state.position(), state.slopes() );
   }
+  
+  //! return the impact parameter significance
+  double impactParameterSignificance(const LHCb::RecVertex& vertex,
+                                     const LHCb::Track& track) ;
 
   inline double invariantMass(const LHCb::Track& track1, const LHCb::Track& track2,
                       double mass1, double mass2) {
@@ -145,24 +165,6 @@ namespace HltUtils
                                 const LHCb::RecVertex& vertex);
   
   //------------------------------------------------------------
-
-  //! compute the impact parameter vector
-  inline Gaudi::XYZVector impactParameterVector(const Gaudi::XYZPoint& vertex,
-                                const Gaudi::XYZPoint& point,
-                                const Gaudi::XYZVector& direction) {
-      Gaudi::XYZVector d = direction.unit();
-      return d.Cross((point-vertex).Cross(d));
-  }
-
-  //! return the modules of the impact parameter (signed)
-  inline double impactParameter(const Gaudi::XYZPoint& vertex,
-                         const Gaudi::XYZPoint& point,
-                         const Gaudi::XYZVector& direction)
-    {
-      Gaudi::XYZVector ip = impactParameterVector(vertex,point,direction);
-      return (ip.z() < 0) ? -ip.R() : ip.R();
-    }
-  
   //------------------------------------------------------------
   
   bool doShareM3(const LHCb::Track& track0, const LHCb::Track& track1);
