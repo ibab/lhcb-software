@@ -67,7 +67,7 @@ StatusCode TrajOTCosmicsProjector::project( const LHCb::StateVector& statevector
     // qop-entry of the statevector to store the phase.
     double eventt0 = statevector.parameters()[4] ;
     // ugly const-cast to update the measurement's time-of-flight
-    (const_cast< LHCb::OTMeasurement&>(meas)).setDeltaTimeOfFlight( tof + eventt0 ) ;
+    (const_cast< LHCb::OTMeasurement&>(meas)).setDeltaTimeOfFlight( (float) (tof + eventt0) ) ;
     
     // need to test ambiguity before calling projector!-(
     // call the standard projector (which uses the time-of-flight)
