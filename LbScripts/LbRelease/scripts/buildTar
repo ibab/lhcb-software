@@ -85,6 +85,8 @@ class BuildTarScript(Script):
             project   = args[0]
             if len(args) > 1 :
                 version   = args[1]
+        if opts.output_dir :
+            opts.output_dir = os.path.realpath(opts.output_dir)
 
         status = buildTar(project, version, opts.cmtconfig, 
                           opts.top_dir, opts.output_dir, 
