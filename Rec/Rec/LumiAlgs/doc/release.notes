@@ -4,6 +4,11 @@
 ! Purpose     : Accounting of LumiSummaries (offline code)
 !-----------------------------------------------------------------------------
 
+! 2010-06-07 - Yasmine Amhis 
+ - Add new algorithm : GetLumiIntegratedLuminosity.cpp/h 	
+   . For the time being the value of the returned integrated luminosity is -16. 
+   . Set WriteCountersDetails to true to store all the counters. 
+
 ! 2010-06-01a - Jaap Panman
  - add ascii file writer for FSRs (job/LumiFsrToFile.py) uses 
    LumiFsrReaderConf.py.  Using these options all FSR contents are dumped
