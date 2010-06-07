@@ -1,5 +1,11 @@
 // $Id: ITGenericTracking.cpp,v 1.13 2009-08-06 18:12:29 smenzeme Exp $
 
+
+#ifdef _WIN32
+#pragma warning ( disable : 4244 ) // conversion double to float in root
+#endif
+
+
 #include <algorithm>
 
 // Gaudi

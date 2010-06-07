@@ -1,5 +1,9 @@
 // $Id: TsaSeedAddHits.cpp,v 1.10 2010-04-21 09:35:41 mneedham Exp $
 
+#ifdef _WIN32
+#pragma warning ( disable : 4244 ) // conversion double to float in root
+#endif
+
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/SystemOfUnits.h"

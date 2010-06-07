@@ -4,6 +4,9 @@
 ! Purpose     : Tsa algorithms
 !----------------------------------------------------------------------------
 
+! 2010-06-07 - Rob Lambert
+ - Fixes for windows warnings savannah task #15808
+
 ! 2010-06-04 M Needham
  - Use OT dead strip list to calcuate # expected hits
 
