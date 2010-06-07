@@ -218,8 +218,8 @@ StatusCode TrackITOverlapMonitor::execute()
 		Tf::STHitRange thesehits = m_ithitcreator->hitsLocalXRange( istation, ilayer, iregion, 
 									    localx -  tolx,
 									    localx +  tolx) ;
-		Gaudi::XYZPointF trkpoint(refstate.x(),refstate.y(),refstate.z()) ;
-		Gaudi::XYZVectorF trkdir(refstate.tx(),refstate.ty(),1) ;
+		Gaudi::XYZPointF trkpoint((float) refstate.x(),(float) refstate.y(),(float) refstate.z()) ;
+		Gaudi::XYZVectorF trkdir((float) refstate.tx(),(float) refstate.ty(),1) ;
 	    
 		// now loop over all hits
 		BOOST_FOREACH( const Tf::STHit* hit, thesehits ) {

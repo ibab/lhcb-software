@@ -12,6 +12,12 @@
 #include "AIDA/IProfile1D.h"
 #include "AIDA/IHistogram1D.h"
 
+
+#ifdef _WIN32
+#pragma warning ( disable : 4355 ) // This used in initializer list, needed for ToolHandles
+#endif
+
+
 class TrackCaloMatchMonitor : public GaudiHistoAlg 
 {
 public:
