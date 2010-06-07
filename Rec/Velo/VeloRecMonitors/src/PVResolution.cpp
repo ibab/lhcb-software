@@ -98,12 +98,12 @@ private:
   unsigned long m_maxiteration;
 
   int m_runodin;
-  int m_eventodin;
+  unsigned long long int m_eventodin;
   int m_bunchid;
   int m_bxtype; 
   double m_odinTime;
-  unsigned long m_odinTime0;
-  unsigned long m_odinEvtTime;
+  unsigned long long m_odinTime0;
+  unsigned long long m_odinEvtTime;
   bool m_firstOdin;
   bool m_MC;
   bool m_fillIndividualSplits;
@@ -437,11 +437,11 @@ void PVResolution::fill_ntuplePV(std::vector<LHCb::RecVertex> outvec, std::strin
     tuple->farray( "trEta", eta, "nTrEta", 100 );
     tuple->farray( "trPhi", phi, "nTrPhi", 100 );
     tuple->column( "run",m_runodin);
-    tuple->column( "evt",m_eventodin);
+    tuple->column( "evt",(unsigned long int) m_eventodin);
     tuple->column( "bunchid",m_bunchid);
     tuple->column( "bxtype",m_bxtype);
-    tuple->column( "time",m_odinTime);
-    tuple->column( "gpsTime",m_odinEvtTime);
+    tuple->column( "time",(unsigned long int) m_odinTime);
+    tuple->column( "gpsTime",(unsigned long int) m_odinEvtTime);
     tuple->column( "trNum",pvtracks.size() );
     tuple->column( "trNumLong",nLong );
     tuple->column( "trNumForw",forwtracks.size() );
@@ -517,11 +517,11 @@ void PVResolution::fill_ntuplePVMC(std::vector<LHCb::RecVertex> outvec, std::vec
     tuple->farray( "trEta", eta, "nTrEta", 100 );
     tuple->farray( "trPhi", phi, "nTrPhi", 100 );
     tuple->column( "run",m_runodin);
-    tuple->column( "evt",m_eventodin);
+    tuple->column( "evt",(unsigned long int) m_eventodin);
     tuple->column( "bunchid",m_bunchid);
     tuple->column( "bxtype",m_bxtype);
     tuple->column( "time",m_odinTime);
-    tuple->column( "gpsTime",m_odinEvtTime);
+    tuple->column( "gpsTime",(unsigned long int) m_odinEvtTime);
     tuple->column( "trNum",pvtracks.size() );
     tuple->column( "trNumLong",nLong );
     tuple->column( "trNumForw",forwtracks.size() );
@@ -554,11 +554,11 @@ void PVResolution::fill_ntupleDiffPV(std::vector<LHCb::RecVertex> outvec1, std::
   Tuple tuple=nTuple(name, "PV diff info");
 
   tuple->column( "run",m_runodin);
-  tuple->column( "evt",m_eventodin);
+  tuple->column( "evt",(unsigned long int) m_eventodin);
   tuple->column( "bunchid",m_bunchid);
   tuple->column( "bxtype",m_bxtype);
   tuple->column( "time",m_odinTime);
-  tuple->column( "gpsTime",m_odinEvtTime);
+  tuple->column( "gpsTime",(unsigned long int) m_odinEvtTime);
   tuple->column( "nPV_1",outvec1.size());
   tuple->column( "nPV_2",outvec2.size());
   std::vector<LHCb::RecVertex>::const_iterator ipv1;
