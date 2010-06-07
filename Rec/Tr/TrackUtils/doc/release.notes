@@ -4,6 +4,9 @@
 ! Purpose     : Package for general utility algorithms
 !-----------------------------------------------------------------------------
 
+! 2010-06-07 - Rob Lambert
+ - Fixes for windows warnings savannah task #15808
+
 !========================== TrackUtils v1r36 2010-04-26 ======================
 ! 2010-04-15 Wouter Hulsbergen
  - Added VertexListRefiner and VertexListFilter for use in Alignment

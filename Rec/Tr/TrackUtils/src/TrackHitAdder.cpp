@@ -167,8 +167,8 @@ namespace {
 	    typename TYPE::HitRangeType thesehits = hitcreator.hitsLocalXRange( istation, ilayer, iregion, 
 										localx -  tolx,
 										localx +  tolx) ;
-	    Gaudi::XYZPointF trkpoint(state.x(),state.y(),state.z()) ;
-	    Gaudi::XYZVectorF trkdir(state.tx(),state.ty(),1) ;
+	    Gaudi::XYZPointF trkpoint((float) state.x(),(float) state.y(),(float) state.z()) ;
+	    Gaudi::XYZVectorF trkdir((float) state.tx(),(float) state.ty(),1) ;
 	    // if there is more than one hit, choose the closest?
 	    lhcbids.reserve( lhcbids.size() + thesehits.size() ) ;
 	    BOOST_FOREACH( const typename TYPE::HitType* hit, thesehits ) 

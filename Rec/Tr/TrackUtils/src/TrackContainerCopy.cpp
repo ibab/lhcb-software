@@ -1,5 +1,9 @@
 // $Id: TrackContainerCopy.cpp,v 1.6 2010-01-05 11:43:41 wouter Exp $
 
+#ifdef _WIN32
+#pragma warning ( disable : 4355 ) // This used in initializer list, needed for ToolHandles
+#endif
+
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
 
