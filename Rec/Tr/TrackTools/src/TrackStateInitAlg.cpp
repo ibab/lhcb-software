@@ -6,6 +6,10 @@
 // 2009-03-02 : Pavel Krokovny
 //-----------------------------------------------------------------------------
 
+#ifdef _WIN32
+#pragma warning ( disable : 4355 ) // This used in initializer list, needed for ToolHandles
+#endif
+
 DECLARE_ALGORITHM_FACTORY( TrackStateInitAlg ) ;
 
 TrackStateInitAlg::TrackStateInitAlg( const std::string& name,
