@@ -1234,10 +1234,10 @@ StatusCode TrackCheckerNT::fillMCGeneralInfo(
     // we may want to place a cut on particle momentum, so we save that as well
     momentum[nPart] = (float) (mcPart->p() / GeV);
     // fourmomentum in GeV
-    _4momentum[nPart][0] = mcPart->momentum().E() / GeV;
-    _4momentum[nPart][1] = mcPart->momentum().Px() / GeV;
-    _4momentum[nPart][2] = mcPart->momentum().Py() / GeV;
-    _4momentum[nPart][3] = mcPart->momentum().Pz() / GeV;
+    _4momentum[nPart][0] = (float) (mcPart->momentum().E() / GeV);
+    _4momentum[nPart][1] = (float) (mcPart->momentum().Px() / GeV);
+    _4momentum[nPart][2] = (float) (mcPart->momentum().Py() / GeV);
+    _4momentum[nPart][3] = (float) (mcPart->momentum().Pz() / GeV);
     // get origin vertex
     const MCVertex *mcvtx = mcPart->originVertex();
     if (mcvtx) {
@@ -1351,12 +1351,12 @@ StatusCode TrackCheckerNT::fillMCHitStatistics(
 		 (1 << ((veloCluster->channelID().sensor() - 64) / 2)));
 	}
       }
-      nVeloRHits[nPart] = nR;
-      nVeloPhiHits[nPart] = nPhi;
-      nVeloHits[nPart] = nR + nPhi;
-      nVeloRStations[nPart] = rStations.size();
-      nVeloPhiStations[nPart] = phiStations.size();
-      nVeloStations[nPart] = rStations.size() + phiStations.size();
+      nVeloRHits[nPart] = (float) nR;
+      nVeloPhiHits[nPart] = (float) nPhi;
+      nVeloHits[nPart] = (float) (nR + nPhi);
+      nVeloRStations[nPart] = (float) (rStations.size());
+      nVeloPhiStations[nPart] = (float) phiStations.size();
+      nVeloStations[nPart] = (float) (rStations.size() + phiStations.size());
     }
     
     // ok, now it's the TT clusters' turn...
@@ -1389,15 +1389,15 @@ StatusCode TrackCheckerNT::fillMCHitStatistics(
 		 (1 << (2 * (TTCluster->channelID().station() - 1) +
 			(TTCluster->channelID().layer() - 1))));
       }
-      nTTXHits[nPart] = nX;
-      nTTUHits[nPart] = nU;
-      nTTVHits[nPart] = nV;
-      nTTHits[nPart] = nX + nU + nV;
-      nTTXStations[nPart] = xStations.size();
-      nTTUStations[nPart] = uStations.size();
-      nTTVStations[nPart] = vStations.size();
-      nTTStStations[nPart] = StStations.size();
-      nTTStations[nPart] = Stations.size();
+      nTTXHits[nPart] = (float) nX;
+      nTTUHits[nPart] = (float) nU;
+      nTTVHits[nPart] = (float) nV;
+      nTTHits[nPart] =(float) ( nX + nU + nV);
+      nTTXStations[nPart] = (float) xStations.size();
+      nTTUStations[nPart] = (float) uStations.size();
+      nTTVStations[nPart] = (float) vStations.size();
+      nTTStStations[nPart] = (float) StStations.size();
+      nTTStations[nPart] = (float) Stations.size();
     }
 
     // ok, now it's the IT clusters' turn...
@@ -1430,15 +1430,15 @@ StatusCode TrackCheckerNT::fillMCHitStatistics(
 		 (1 << (4 * (ITCluster->channelID().station() - 1) +
 			(ITCluster->channelID().layer() - 1))));
       }
-      nITXHits[nPart] = nX;
-      nITUHits[nPart] = nU;
-      nITVHits[nPart] = nV;
-      nITHits[nPart] = nX + nU + nV;
-      nITXStations[nPart] = xStations.size();
-      nITUStations[nPart] = uStations.size();
-      nITVStations[nPart] = vStations.size();
-      nITStStations[nPart] = StStations.size();
-      nITStations[nPart] = Stations.size();
+      nITXHits[nPart] = (float) nX;
+      nITUHits[nPart] = (float) nU;
+      nITVHits[nPart] = (float) nV;
+      nITHits[nPart] = (float) (nX + nU + nV);
+      nITXStations[nPart] = (float) xStations.size();
+      nITUStations[nPart] = (float) uStations.size();
+      nITVStations[nPart] = (float) vStations.size();
+      nITStStations[nPart] = (float) StStations.size();
+      nITStations[nPart] = (float) Stations.size();
     }
     
     // ok, now it's the OT times' turn...
@@ -1482,15 +1482,15 @@ StatusCode TrackCheckerNT::fillMCHitStatistics(
 	// ok, convert back to float...
 	HitMaskOT[nPart] = (float) mask;
       }
-      nOTXHits[nPart] = nX;
-      nOTUHits[nPart] = nU;
-      nOTVHits[nPart] = nV;
-      nOTHits[nPart] = nX + nU + nV;
-      nOTXStations[nPart] = xStations.size();
-      nOTUStations[nPart] = uStations.size();
-      nOTVStations[nPart] = vStations.size();
-      nOTStStations[nPart] = StStations.size();
-      nOTStations[nPart] = Stations.size();
+      nOTXHits[nPart] = (float) nX;
+      nOTUHits[nPart] = (float) nU;
+      nOTVHits[nPart] = (float) nV;
+      nOTHits[nPart] = (float) (nX + nU + nV);
+      nOTXStations[nPart] = (float) xStations.size();
+      nOTUStations[nPart] = (float) uStations.size();
+      nOTVStations[nPart] = (float) vStations.size();
+      nOTStStations[nPart] = (float) StStations.size();
+      nOTStations[nPart] = (float) Stations.size();
     }
 
     // now, we treat IT and OT as a unit (for stations only, hits are
@@ -1535,11 +1535,11 @@ StatusCode TrackCheckerNT::fillMCHitStatistics(
 	}
       }
       
-      nTXStations[nPart] = xStations.size();
-      nTUStations[nPart] = uStations.size();
-      nTVStations[nPart] = vStations.size();
-      nTStStations[nPart] = StStations.size();
-      nTStations[nPart] = Stations.size();
+      nTXStations[nPart] = (float) xStations.size();
+      nTUStations[nPart] = (float) uStations.size();
+      nTVStations[nPart] = (float) vStations.size();
+      nTStStations[nPart] = (float) StStations.size();
+      nTStations[nPart] =(float)  Stations.size();
     }
   } // end loop over MCParticles
 
