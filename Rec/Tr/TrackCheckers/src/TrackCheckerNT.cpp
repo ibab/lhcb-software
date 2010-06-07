@@ -307,28 +307,28 @@ void TrackCheckerNT::fillTrackState(
 {
   // base units used to save data are mm and GeV, respectively
   // ok, save track state
-  statevec[ 0] = st.z() / mm;
-  statevec[ 1] = st.x() / mm;
-  statevec[ 2] = st.y() / mm;
-  statevec[ 3] = st.tx();
-  statevec[ 4] = st.ty();
-  statevec[ 5] = st.qOverP() * GeV;
+  statevec[ 0] = (float) (st.z() / mm);
+  statevec[ 1] = (float) (st.x() / mm);
+  statevec[ 2] = (float) (st.y() / mm);
+  statevec[ 3] = (float) (st.tx());
+  statevec[ 4] = (float) (st.ty());
+  statevec[ 5] = (float) (st.qOverP() * GeV);
   // now comes the covariance matrix
-  statevec[ 6] = st.covariance()(0,0) / mm / mm;
-  statevec[ 7] = st.covariance()(0,1) / mm / mm;
-  statevec[ 8] = st.covariance()(0,2) / mm;
-  statevec[ 9] = st.covariance()(0,3) / mm;
-  statevec[10] = st.covariance()(0,4) / mm * GeV;
-  statevec[11] = st.covariance()(1,1) / mm / mm;
-  statevec[12] = st.covariance()(1,2) / mm;
-  statevec[13] = st.covariance()(1,3) / mm;
-  statevec[14] = st.covariance()(1,4) / mm * GeV;
-  statevec[15] = st.covariance()(2,2);
-  statevec[16] = st.covariance()(2,3);
-  statevec[17] = st.covariance()(2,4) * GeV;
-  statevec[18] = st.covariance()(3,3);
-  statevec[19] = st.covariance()(3,4) * GeV;
-  statevec[20] = st.covariance()(4,4) * GeV * GeV;
+  statevec[ 6] = (float) (st.covariance()(0,0) / mm / mm);
+  statevec[ 7] = (float) (st.covariance()(0,1) / mm / mm);
+  statevec[ 8] = (float) (st.covariance()(0,2) / mm);
+  statevec[ 9] = (float) (st.covariance()(0,3) / mm);
+  statevec[10] = (float) (st.covariance()(0,4) / mm * GeV);
+  statevec[11] = (float) (st.covariance()(1,1) / mm / mm);
+  statevec[12] = (float) (st.covariance()(1,2) / mm);
+  statevec[13] = (float) (st.covariance()(1,3) / mm);
+  statevec[14] = (float) (st.covariance()(1,4) / mm * GeV);
+  statevec[15] = (float) (st.covariance()(2,2));
+  statevec[16] = (float) (st.covariance()(2,3));
+  statevec[17] = (float) (st.covariance()(2,4) * GeV);
+  statevec[18] = (float) (st.covariance()(3,3));
+  statevec[19] = (float) (st.covariance()(3,4) * GeV);
+  statevec[20] = (float) (st.covariance()(4,4) * GeV * GeV);
 }
 
 // get MCParticle associated with a Measurement

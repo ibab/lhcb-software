@@ -4,6 +4,9 @@
 ! Purpose     : Package for track checking algorithms (with MC truth)
 !-----------------------------------------------------------------------------
 
+! 2010-06-07 - Rob Lambert
+ - Fixes for windows warnings savannah task #15808
+
 !======================= TrackCheckers v4r10p1 2010-03-25 =====================
 ! 2010-03-25 - Rob Lambert
  - Bug in TrackEffChecker, savannah 64727
