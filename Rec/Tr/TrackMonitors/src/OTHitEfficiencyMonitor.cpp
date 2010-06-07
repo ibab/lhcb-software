@@ -12,6 +12,7 @@
 #include "DetDesc/StaticArray.h"
 #include "OTDAQ/IOTRawBankDecoder.h"
 #include "AIDA/IProfile1D.h"
+#include "AIDA/IProfile2D.h"
 #include "AIDA/IHistogram2D.h"
 #include "AIDA/IHistogram1D.h"
 
@@ -19,6 +20,8 @@
 #include <boost/foreach.hpp>
 
 namespace {
+  AIDA::IProfile2D* m_2DHitEfficiency ;
+  AIDA::IProfile2D* m_2DHotEfficiency ;
   struct ModuleEfficiencyHistograms
   {
     AIDA::IProfile1D* m_effvsmonocoord ;
@@ -170,6 +173,8 @@ StatusCode OTHitEfficiencyMonitor::initialize()
   m_efficiencyPerOtisPr = bookProfile1D( "efficiencyVsOtis","efficiency per otis",
 					 -0.5,NumUniqueOtis-0.5,NumUniqueOtis) ;
   m_moduleHistograms.reserve(9) ;
+  m_2DHitEfficiency = bookProfile2D( "2DHitEfficiency", "2DHitEfficiency", -3200,3200,100,-2800,2800,100) ;
+  m_2DHotEfficiency = bookProfile2D( "2DHotEfficiency", "2DHotEfficiency", -3200,3200,100,-2800,2800,100) ;
   for(int i=0; i<9; ++i)
     m_moduleHistograms.push_back( new ModuleEfficiencyHistograms(*this,i+1) ) ;
   
@@ -268,7 +273,9 @@ void OTHitEfficiencyMonitor::fillEfficiency( const LHCb::Track& track,
 	modulehist->m_effvsyfrac->fill(yfrac[imono],foundhit) ;
 	modulehist->m_receffvsyfrac->fill(yfrac[imono],foundhot) ;
 	m_efficiencyPerModulePr->fill( uniquemodule, foundhit ) ;	
-	m_efficiencyPerOtisPr->fill( uniquemodule*4 + (istraw+monooffset-1)/32, foundhit ) ;	
+	m_efficiencyPerOtisPr->fill( uniquemodule*4 + (istraw+monooffset-1)/32, foundhit ) ;
+  m_2DHitEfficiency->fill(refstate.x(),refstate.y(),foundhit);
+  m_2DHotEfficiency->fill(refstate.x(),refstate.y(),foundhot);
       }
     }
     // monitor 'cluster size'. cluster size is zero if there is no hit in 'closest straw'.
