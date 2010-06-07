@@ -1,6 +1,13 @@
 // $Id: TrackEventFitter.cpp,v 1.24 2010-03-24 12:50:15 rlambert Exp $
+
+#ifdef _WIN32
+#pragma warning ( disable : 4355 ) // This used in initializer list, needed for ToolHandles
+#endif
+
+
 // Include files
 // -------------
+
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
 

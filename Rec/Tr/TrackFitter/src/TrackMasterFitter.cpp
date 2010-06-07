@@ -1,4 +1,9 @@
 // $Id: TrackMasterFitter.cpp,v 1.89 2010-04-26 21:13:18 wouter Exp $
+
+#ifdef _WIN32
+#pragma warning ( disable : 4355 ) // This used in initializer list, needed for ToolHandles
+#endif
+
 // Include files 
 // -------------
 // from Gaudi
