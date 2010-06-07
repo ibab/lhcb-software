@@ -15,7 +15,7 @@ LHCbApp().DDDBtag   = "head-20100119"
 LHCbApp().CondDBtag = "sim-20100321-vc-mu100"
 
 # Minimum bias, Beam3500GeV-VeloClosed-MagDown-Nu1, 2010-Sim02
-EventSelector().Input = ["DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/MC/2010/SIM/00006196/0000/00006196_00000143_1.sim' TYP='POOL_ROOTTREE' OPT='READ'"]
+EventSelector().Input = ["DATAFILE='PFN:root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/MC/2010/SIM/00006196/0000/00006196_00000143_1.sim?svcClass=default' TYP='POOL_ROOTTREE' OPT='READ'"]
 
 # Default output files names are set up using value Boole().DatasetName property
 Boole().DatasetName = "00006196_00000143_2"

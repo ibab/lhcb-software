@@ -18,7 +18,7 @@ LHCbApp().CondDBtag = "sim-20090508-vc-mu100"
 # Signal events from Gauss v37r3
 datasetName = '11144103-100ev-25ns-20090715'
 
-EventSelector().Input = ["DATAFILE='PFN:castor:/castor/cern.ch/user/g/gcorti/Gauss/2009/v37r3/" + datasetName + ".sim' TYP='POOL_ROOTTREE' OPT='READ'"]
+EventSelector().Input = ["DATAFILE='PFN:root://castorlhcb.cern.ch//castor/cern.ch/user/g/gcorti/Gauss/2009/v37r3/" + datasetName + ".sim?svcClass=default' TYP='POOL_ROOTTREE' OPT='READ'"]
 
 # Default output files names are set up using value Boole().DatasetName property
 Boole().DatasetName = datasetName

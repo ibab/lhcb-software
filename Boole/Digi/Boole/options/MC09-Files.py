@@ -31,7 +31,7 @@ LHCbApp().CondDBtag = "sim-20090508-vc-mu100"
 # Minimum bias events from Gauss v37r0, default MC09 settings
 datasetName = '30000000-100ev-20090407-MC09'
 
-EventSelector().Input = ["DATAFILE='PFN:castor:/castor/cern.ch/user/g/gcorti/Gauss/2009/v37r0/" + datasetName + ".sim' TYP='POOL_ROOTTREE' OPT='READ'"]
+EventSelector().Input = ["DATAFILE='PFN:root://castorlhcb.cern.ch//castor/cern.ch/user/g/gcorti/Gauss/2009/v37r0/" + datasetName + ".sim?svcClass=default' TYP='POOL_ROOTTREE' OPT='READ'"]
 
 # Default output files names are set up using value Boole().DatasetName property
 Boole().DatasetName = datasetName
