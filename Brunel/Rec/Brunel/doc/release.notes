@@ -19,6 +19,8 @@ Purpose: LHCb reconstruction program
     DC06 reco was using wrong polarity, since Brunel v37r2 (Det/Magnet)
   . New STClusterMonitor histograms (STMonitors)
   . Latest Calo calibration from head-20100531 LHCBCOND tag
+  . Use OT dead strip list in expected hit calculation (TsaAlgorithms)
+  . Added LumiLowCount FSR (LumiAlgs)
 
 </PRE><H1><A NAME=v37r3>2010-05-26 Brunel v37r3</A></H1><PRE>
  - Changes to references to reflect changes in Brunel v37r3 output:
