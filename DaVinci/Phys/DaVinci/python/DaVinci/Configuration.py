@@ -1,7 +1,7 @@
 """
 High level configuration tools for DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.109 2010-06-04 11:07:12 jpalac Exp $"
+__version__ = "$Id: Configuration.py,v 1.110 2010-06-07 08:51:02 jpalac Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -494,19 +494,20 @@ class DaVinci(LHCbConfigurableUser) :
         this is also needed if e.g. DSTs, selDSTs and so on are written and defined outside
         the DaVinci configurable
         make sure the FileRecordCnvSvc is only instantiated once!
+        07-06-2010: Commented out. These lines are already in $GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts, and adding FileRecordCnvSvc to ExtSvc breaks FST writing.
         """
 
-        # TES setup
+
+        '''
         FileRecordDataSvc().ForceLeaves         = True
         FileRecordDataSvc().RootCLID            = 1
         FileRecordDataSvc().PersistencySvc      = "PersistencySvc/FileRecordPersistencySvc"
 
-        # Persistency service setup
         ApplicationMgr().ExtSvc += [ PoolDbCnvSvc("FileRecordCnvSvc",
                                                   DbType = "POOL_ROOTTREE",
                                                   ShareFiles = "YES" )
                                      ]
-        
+        '''
         
 ################################################################################
 # Main sequence
