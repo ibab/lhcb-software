@@ -46,6 +46,8 @@ class LHCbProjectBuilder(object):
             self.projectNamesDict[p.upper()] = p
 
         self.slot = slot
+        self.minusj = thread
+        self.minusl = load
         self.slotName = slot.getName()
         self.project = slot.getProject(proj)
         self.projName = self.projectNamesDict[proj.upper()]
@@ -269,7 +271,7 @@ class LHCbProjectBuilder(object):
         for p in self.slot.getProjects():
             if p.getName().upper() == 'LCGCMT': continue
             if p.getName().upper() == self.project.getName().upper(): break
-            pklFile = file(os.path.join(self.generatePath(slot, p, 'TAG', projectName), 'changesMade-' + os.environ['CMTCONFIG'] + '.pkl'), 'rb')
+            pklFile = file(os.path.join(self.generatePath(self.slot, p, 'TAG', self.projName), 'changesMade-' + os.environ['CMTCONFIG'] + '.pkl'), 'rb')
             tmpChangesMade = pickle.load(pklFile)
             pklFile.close()
             previousChangesMade.update(tmpChangesMade)
@@ -366,7 +368,7 @@ class LHCbProjectBuilder(object):
                 os.environ['CMTEXTRATAGS'] = 'no-pyzip,'+os.environ.get('CMTEXTRATAGS', '')
             else:
                 os.environ['CMTEXTRATAGS'] = 'no-pyzip'
-            self.system('make -k Package_failure_policy=ignore logging=enabled | tee make.%s.log' % (os.environ['CMTCONFIG']) )
+            self.system('make -k -j%d -l%d Package_failure_policy=ignore logging=enabled | tee make.%s.log' % (self.minusj, self.minusl, os.environ['CMTCONFIG'],) )
             os.chdir(self.generatePath(self.slot, self.project, 'TAG', self.projName))
             logFiles = []
             for r, d, f in os.walk("."):

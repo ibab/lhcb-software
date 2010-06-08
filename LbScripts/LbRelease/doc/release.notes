@@ -1,3 +1,8 @@
+2010-06-08  Karol Kruzelecki  <Karol.Kruzelecki@cern.ch>
+
+	* python/LbRelease/LHCbNightlies.py: -j, -l parameters added to the build
+	procedure
+
 2010-06-07  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* scripts/buildTar: fixed the output directory location. Now it works with relative paths.
