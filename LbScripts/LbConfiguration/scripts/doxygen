@@ -1,0 +1,24 @@
+#!/bin/bash
+
+LCGCMT_VERSION=
+#DOXYGEN_VERSION="-v 1.6.2"
+DOXYGEN_VERSION=$(getExtVersion doxygen)
+
+while [ $# -ne 0 ] ; do
+	case $1 in
+		--lcgcmt-version)   shift
+                            LCGCMT_VERSION=$1
+                            shift
+                            ;;
+        --doxygen-version)  shift
+                            DOXYGEN_VERSION="-v $1"
+                            shift
+                            ;;
+        *) break ;;
+    esac
+done
+
+args=( "$@" )
+shift $#
+. SetupProject.sh --silent LCGCMT $LCGCMT_VERSION doxygen $DOXYGEN_VERSION
+doxygen "${args[@]}"

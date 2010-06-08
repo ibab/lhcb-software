@@ -1,3 +1,15 @@
+2010-06-08  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* scripts/doxygen: New file. Wrapper script to call the version of doxygen specified 
+	in the LbConfiguration.External module. The wrapper takes 2 options
+	  --lcgcmt-version : specifiy the interface version (ex 58c)
+	  --doxygen-version : override the default version
+	* scripts/getExtVersion: New file. Script to extract the external version from the 
+	LbConfiguration.External module
+	* python/LbConfiguration/External.py:
+	- added the getExternalVersion function.
+	- added the doxygen_version.
+
 2010-06-01  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/requirements: release of version v5r2
