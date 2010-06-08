@@ -1,4 +1,4 @@
-// $Id: DecayTreeFit.cpp,v 1.1 2010-05-29 13:44:43 ibelyaev Exp $
+// $Id: DecayTreeFit.cpp,v 1.2 2010-06-08 17:56:57 ibelyaev Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -42,6 +42,7 @@
 // ============================================================================
 #include "LoKi/ILoKiSvc.h"
 #include "LoKi/PhysAlgs.h"
+#include "LoKi/Constants.h"
 // ============================================================================
 namespace LoKi 
 {
@@ -61,6 +62,7 @@ namespace LoKi
    */
   class DecayTreeFit 
     : public extends2<GaudiTool,IDecayTreeFit,IParticleReFitter>
+      // : public extends1<GaudiTool,IDecayTreeFit>
   {
     // ========================================================================
     // the friend factory, needed for instantiation
@@ -208,6 +210,50 @@ namespace LoKi
      *  @see IDecayTreeFit::fittedTree
      */
     virtual LHCb::DecayTree fittedTree () const ;
+    // ======================================================================== 
+  public:
+    // ========================================================================
+    /** the chi2 of the global fit 
+     *
+     *  @code 
+     * 
+     *   IDecayTreeFitter*       fitter = ...;  // get the fitter 
+     *   const LHCb::Particle*   p      = ... ; // get the particle 
+     *
+     *   // fit it !
+     *   StatusCode sc = fitter -> fit ( p ) ;  // fit it!!  
+     *   if ( sc.isFailure() ) { ... }          
+     *
+     *   // get chi2 
+     *   const double chi2 = fitter->chi2() ;
+     *
+     *  @endcode 
+     *
+     *  @return chi2 of global fit procedure 
+     */
+    virtual double chi2 ( ) const  ;
+    // ========================================================================
+    /** number degress of freeedom for the global fit 
+     *
+     *  @code 
+     * 
+     *   IDecayTreeFitter*       fitter = ...;  // get the fitter 
+     *   const LHCb::Particle*   p      = ... ; // get the particle 
+     *
+     *   // fit it !
+     *   StatusCode sc = fitter -> fit ( p ) ;  // fit it!!  
+     *   if ( sc.isFailure() ) { ... }          
+     *
+     *   // get degrees-of-freedom 
+     *   const unsigned int ndoF = fitter->nDoF () ;
+     *
+     *  @endcode 
+     *
+     *  @return number of degrees of freedom 
+     */
+    virtual unsigned int nDoF ( ) const ;
+    // ======================================================================== 
+  public:
     // ========================================================================
     /** add the constraint 
      *
@@ -304,6 +350,7 @@ namespace LoKi
           "List of particles to be mass-constrained" ) 
         -> declareUpdateHandler 
         ( &LoKi::DecayTreeFit::updateConstraints   , this ) ;  
+      //
     }
     /// virtual and protected destructor 
     virtual ~DecayTreeFit () {} ;
@@ -392,15 +439,14 @@ StatusCode LoKi::DecayTreeFit::initialize ()          // initialize the tool
   //
   { //
     MsgStream& log = info() ;
-    log << "New Track extrapolator to be used '" << m_extrapolatorName <<  "'" ;
+    log << "Track extrapolator to be used '" << m_extrapolatorName << "'" ;
     const IAlgTool* e = extrapolator() ;
     if ( 0 != e ) { log  << " : " << e->type() << "/" << e->name() ;} 
     log << endreq ;  
   } // 
   //
   sc = decodeConstraints () ;
-  if ( sc.isFailure() ) 
-  { return Error ( "Unable to decode Constaints" , sc ) ; }
+  if ( sc.isFailure() ) { return Error ( "Unable to decode Constaints" , sc ) ; }
   //
   svc<LoKi::ILoKiSvc> ("LoKiSvc" , true ) ;
   //
@@ -490,7 +536,8 @@ LoKi::DecayTreeFit::fitted ( const LHCb::Particle* p ) const
     m_fitter.reset() ;
     return 0 ;                                                    // RETURN 
   }
-  // check if the particle form the decay tree 
+  // check if the particle comes from the decay tree 
+  if ( 0 != p && p != m_fitter->particle() ) 
   {
     // find the particle by scanning of the decay tree of the decay head 
     const bool found = LoKi::PhysAlgs::found 
@@ -521,20 +568,100 @@ LoKi::DecayTreeFit::fitted ( const LHCb::Particle* p ) const
 LHCb::DecayTree 
 LoKi::DecayTreeFit::fittedTree () const 
 {
+  //
   if ( 0 == m_fitter.get() ) 
   {
     Warning("fitted: fit is not performed yet, return empty tree ") ;
     return LHCb::DecayTree() ;                                      // RETURN 
   }
+  //
   if ( Fitter::Success != m_fitter->status() ) 
   {
-    Warning ( "fitted: fit is not performed yet, return empty tree" , 
+    Warning ( "fitted: fit is not successful, return empty tree" , 
               120 + m_fitter->status() ) ;
     m_fitter.reset() ; 
     return LHCb::DecayTree() ;                                      // RETURN 
   }
-  // ==========================================================================
+  //
   return m_fitter->getFittedTree() ;
+}
+// ============================================================================
+/*  the chi2 of the global fit 
+ *
+ *  @code 
+ * 
+ *   IDecayTreeFitter*       fitter = ...;  // get the fitter 
+ *   const LHCb::Particle*   p      = ... ; // get the particle 
+ *
+ *   // fit it !
+ *   StatusCode sc = fitter -> fit ( p ) ;  // fit it!!  
+ *   if ( sc.isFailure() ) { ... }          
+ *
+ *   // get chi2 
+ *   const double chi2 = fitter->chi2() ;
+ *
+ *  @endcode 
+ *
+ *  @return chi2 of global fit procedure 
+ */
+// ============================================================================
+double LoKi::DecayTreeFit::chi2 ( ) const  
+{
+  //
+  if ( 0 == m_fitter.get() ) 
+  {
+    Warning ( "chi2: fit is not performed yet, return InvalidChi2" ) ;
+    return LoKi::Constants::InvalidChi2 ;                             // RETURN 
+  }
+  //
+  if ( Fitter::Success != m_fitter->status() ) 
+  {
+    Warning ( "chi2: fit is not successfull, return InvalidChi2" , 
+              120 + m_fitter->status() ) ;
+    m_fitter.reset() ; 
+    return LoKi::Constants::InvalidChi2 ;                             // RETURN 
+  }
+  //
+  return m_fitter->chiSquare () ;
+}
+// ============================================================================
+/*  number degress of freeedom for the global fit 
+ *
+ *  @code 
+ * 
+ *   IDecayTreeFitter*       fitter = ...;  // get the fitter 
+ *   const LHCb::Particle*   p      = ... ; // get the particle 
+ *
+ *   // fit it !
+ *   StatusCode sc = fitter -> fit ( p ) ;  // fit it!!  
+ *   if ( sc.isFailure() ) { ... }          
+ *
+ *   // get degrees-of-freedom 
+ *   const unsigned int ndoF = fitter->nDoF () ;
+ *
+ *  @endcode 
+ *
+ *  @return number of degrees of freedom 
+ */
+// ============================================================================
+unsigned int LoKi::DecayTreeFit::nDoF ( ) const
+{
+  //
+  if ( 0 == m_fitter.get() ) 
+  {
+    Warning ( "nDoF: fit is not performed yet, return 0" ) ;
+    return 0 ;                                                       // RETURN 
+  }
+  //
+  if ( Fitter::Success != m_fitter->status() ) 
+  {
+    Warning ( "nDoF: fit is notsucessfull, return 0 " , 
+              120 + m_fitter->status() ) ;
+    m_fitter.reset() ; 
+    return 0 ;                                                        // RETURN 
+  }
+  //
+  return m_fitter->nDof () ;
 }
 // ============================================================================
 /*  add the constraint 

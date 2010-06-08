@@ -1,9 +1,16 @@
-! $Id: release.notes,v 1.34 2010-05-29 13:44:43 ibelyaev Exp $ 
+! $Id: release.notes,v 1.35 2010-06-08 17:56:57 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiFitters
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@itep.ru
 ! Purpose     : collection of various kinematical LoKi-based fitters 
 ! -----------------------------------------------------------------------------
+
+! 2010-06-08 - Vanya Belyaev
+
+ - LoKi::DecayTreeFit:
+   
+     implement chi2 & nDoF methods 
+
 
 ! 2010-05-29 - Vanya Belyaev
 
