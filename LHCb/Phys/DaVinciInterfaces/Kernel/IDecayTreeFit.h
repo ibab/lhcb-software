@@ -1,4 +1,4 @@
-// $Id: IDecayTreeFit.h,v 1.2 2010-05-29 13:49:21 ibelyaev Exp $
+// $Id: IDecayTreeFit.h,v 1.3 2010-06-08 17:54:45 ibelyaev Exp $
 // ============================================================================
 #ifndef KERNEL_IDECAYTREEFIT_H 
 #define KERNEL_IDECAYTREEFIT_H 1
@@ -23,7 +23,11 @@ namespace LHCb  { class DecayTree  ; }                     // Phys/DaVinciTypes
 // ============================================================================
 /** @class IDecayTreeFit Kernel/IDecayTreeFit.h
  *  
+ *  The abstract interface for wrapping of "Decay-Tree-Fitter", 
+ *  the nice utility for globl fits of decay trees, 
+ *  coded by Wouter Hulsbergen
  *
+ *  @see DEcayTreeFitter::Fitter
  *  @author Vanya Belyaev
  *  @date   2010-05-24
  */
@@ -32,7 +36,7 @@ class GAUDI_API IDecayTreeFit : public virtual IAlgTool
 public: 
   // ==========================================================================
   /// interface machinery 
-  DeclareInterfaceID ( IDecayTreeFit , 1 , 0 ) ;
+  DeclareInterfaceID ( IDecayTreeFit , 2 , 0 ) ;
   // ==========================================================================
 public: 
   // ==========================================================================
@@ -171,6 +175,48 @@ public:
    *  @return the whole fitted tree 
    */
   virtual LHCb::DecayTree fittedTree () const = 0 ;
+  // ==========================================================================  
+public:
+  // ==========================================================================
+  /** the chi2 of the global fit 
+   *
+   *  @code 
+   * 
+   *   IDecayTreeFitter*       fitter = ...;  // get the fitter 
+   *   const LHCb::Particle*   p      = ... ; // get the particle 
+   *
+   *   // fit it !
+   *   StatusCode sc = fitter -> fit ( p ) ;  // fit it!!  
+   *   if ( sc.isFailure() ) { ... }          
+   *
+   *   // get chi2 
+   *   const double chi2 = fitter->chi2() ;
+   *
+   *  @endcode 
+   *
+   *  @return chi2 of global fit procedure 
+   */
+  virtual double chi2 ( ) const = 0 ;
+  // ==========================================================================
+  /** number degress of freeedom for the global fit 
+   *
+   *  @code 
+   * 
+   *   IDecayTreeFitter*       fitter = ...;  // get the fitter 
+   *   const LHCb::Particle*   p      = ... ; // get the particle 
+   *
+   *   // fit it !
+   *   StatusCode sc = fitter -> fit ( p ) ;  // fit it!!  
+   *   if ( sc.isFailure() ) { ... }          
+   *
+   *   // get degrees-of-freedom 
+   *   const unsigned int ndoF = fitter->nDoF () ;
+   *
+   *  @endcode 
+   *
+   *  @return number of degrees of freedom 
+   */
+  virtual unsigned int nDoF ( ) const = 0 ;
   // ==========================================================================  
 public:
   // ==========================================================================

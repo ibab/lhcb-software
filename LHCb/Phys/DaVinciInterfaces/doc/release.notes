@@ -4,6 +4,13 @@
 ! Purpose     : Tool interfaces and dictionaries for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2010-06-08 - Vanya Belyaev
+
+ - IDecayTreeFit:
+
+     add methods to extract chi2 and nDoF 
+
+
 ! 2010-06-03 - Juan Palacios
  - Kernel/IPhysDesktop.h
   . Update doxygen.
