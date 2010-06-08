@@ -1,4 +1,4 @@
-// $Id: AuxDTFBase.h,v 1.1 2010-06-04 12:23:59 ibelyaev Exp $
+// $Id: AuxDTFBase.h,v 1.2 2010-06-08 17:59:03 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_AUXDTFBASE_H 
 #define LOKI_AUXDTFBASE_H 1
@@ -94,7 +94,12 @@ namespace LoKi
     unsigned int setConstraint ( const             LHCb::ParticleID&  pids ) ;
     // apply mass-constraints  
     void applyConstraints () const ;
-    // ======================================================================
+    // ========================================================================    
+  protected :
+    // ========================================================================
+    /// print constraints 
+    std::ostream& printConstraints ( std::ostream& s ) const ;
+    // ========================================================================
   private:
     // ========================================================================
     /// the fitter name 

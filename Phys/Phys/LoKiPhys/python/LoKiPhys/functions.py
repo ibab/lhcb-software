@@ -786,12 +786,24 @@ BPVTRGPOINTING     = LoKi.Particles.TrgPointingScoreWithBestPV()
 DTF_FUN              = LoKi.Particles.DecayTreeFitterFun
 ## @see LoKi::Cuts::DTF_CUT
 DTF_CUT              = LoKi.Particles.DecayTreeFitterCut
+
+## @see LoKi::Cuts::DTF_CHI2 
+DTF_CHI2             = LoKi.Particles.DecayTreeFitChi2
+## @see LoKi::Cuts::DTF_NDOF
+DTF_NDOF             = LoKi.Particles.DecayTreeFitNDoF
+## @see LoKi::Cuts::DTF_CHI2NDOF
+DTF_CHI2NDOF         = LoKi.Particles.DecayTreeFitChi2NDoF
+## @see LoKi::Cuts::DTF_PROB
+DTF_PROB             = LoKi.Particles.DecayTreeFitProb
+
 ## @see LoKi::Cuts::DTF_CTAU
 DTF_CTAU             = LoKi.Particles.ChildCTau
 ## @see LoKi::Cuts::DTF_CTAUERR
 DTF_CTAUERR          = LoKi.Particles.ChildCTauErr
 ## @see LoKi::Cuts::DTF_CTAUSIGNIFICANCE 
 DTF_CTAUSIGNIFICANCE = LoKi.Particles.ChildCTauSignificance 
+
+
 
 
 # =============================================================================

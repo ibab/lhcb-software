@@ -1,10 +1,14 @@
-// $Id: Particles36.cpp,v 1.1 2010-06-04 12:23:59 ibelyaev Exp $
-// ========================================================================
+// $Id: Particles36.cpp,v 1.2 2010-06-08 17:59:03 ibelyaev Exp $
+// ============================================================================
 // Include files 
 // ============================================================================
 // STD & STL 
 // ============================================================================
 #include <set>
+// ============================================================================
+// GSL 
+// ============================================================================
+#include "gsl/gsl_cdf.h"
 // ============================================================================
 // LHCbMath
 // ============================================================================
@@ -21,6 +25,7 @@
 // LoKi
 // ============================================================================
 #include "LoKi/Constants.h"
+#include "LoKi/BasicFunctors.h"
 #include "LoKi/Particles36.h"
 // ============================================================================
 /** @file  Particles36.cpp
@@ -142,17 +147,9 @@ LoKi::Particles::DecayTreeFitterFun::fillStream ( std::ostream& s ) const
   //
   s << " DTF_FUN(" ;
   //
-  s << " " << m_fun << " ," 
-    << ( m_usePV ? " True " : " False " ) ; 
+  s << " " << m_fun << " ," << ( m_usePV ? " True " : " False " ) ; 
   //
-  std::vector<std::string> ss = constraints() ;
-  if      ( ss.empty()       ) {}
-  else if ( 1 == ss.size  () ) { s << ", '" << ss[0] ; }
-  else 
-  { 
-    s << ", " ;
-    Gaudi::Utils::toStream ( ss ,s  ) ;
-  }
+  printConstraints ( s ) ;
   //
   return s << " ) " ;
 }
@@ -261,20 +258,11 @@ std::ostream&
 LoKi::Particles::DecayTreeFitterCut::fillStream ( std::ostream& s ) const 
 {
   //
+  s << " DTF_CUT(" ;
   //
-  s << " DTF_FUN(" ;
+  s << " " << m_fun << " ," << ( usePV() ? " True " : " False " ) ; 
   //
-  s << " " << m_fun << " ," 
-    << ( m_usePV ? " True " : " False " ) ; 
-  //
-  std::vector<std::string> ss = constraints() ;
-  if      ( ss.empty()       ) {}
-  else if ( 1 == ss.size  () ) { s << ", '" << ss[0] ; }
-  else 
-  { 
-    s << ", " ;
-    Gaudi::Utils::toStream ( ss ,s  ) ;
-  }
+  printConstraints ( s ) ;
   //
   return s << " ) " ;
 }
@@ -397,14 +385,14 @@ LoKi::Particles::ChildCTau::operator()
 {
   if ( 0 == p ) 
   {
-    Error ( "LHCb::Particle* points to NULL, retrn InvalidDistance" );
+    Error ( "LHCb::Particle* points to NULL, return InvalidDistance" );
     return LoKi::Constants::InvalidDistance ; 
   }
   //
   const IDecayTreeFit::Fitted* fitted  = params ( p ) ;
   if ( 0 == fitted ) 
   {
-    Error ( "Gaudi::Math::ParticleParams points to NULL, retrn InvalidDistance" );
+    Error ( "Gaudi::Math::ParticleParams points to NULL, return InvalidDistance" );
     return LoKi::Constants::InvalidDistance ; 
   }
   //
@@ -421,7 +409,7 @@ LoKi::Particles::ChildCTau::params ( const LHCb::Particle* p ) const
   const LHCb::Particle* c = child( p ) ;
   if ( c == 0 ) 
   {
-    Error ( "Unable to select he proper child particle ") ;
+    Error ( "Unable to select the proper child particle ") ;
     return 0 ;                                                       // RETURN 
   }
   //
@@ -432,7 +420,7 @@ LoKi::Particles::ChildCTau::params ( const LHCb::Particle* p ) const
   {
     vertex = bestVertex ( p ) ;
     if ( 0 == vertex ) 
-    { Warning ( "``Best vertex'' points zero, constraits will be disabled!" ) ; } 
+    { Warning ( "``Best vertex'' points zero, constraints will be disabled!" ) ; } 
   }
   //
   // apply local mass constrains
@@ -453,10 +441,13 @@ LoKi::Particles::ChildCTau::params ( const LHCb::Particle* p ) const
 std::ostream& 
 LoKi::Particles::ChildCTau::fillStream ( std::ostream& s ) const 
 {
-  return 
-    s << " DTF_CTAU( " 
-      << child ()
-      << " , " <<  ( usePV() ? " True " : " False " ) << " ) " ;
+  s << " DTF_CTAU( " 
+    << child ()
+    << " , " <<  ( usePV() ? " True " : " False " ) ;
+  //
+  printConstraints ( s ) ;
+  //
+  return s << " ) " ;
 }
 
 
@@ -553,7 +544,7 @@ LoKi::Particles::ChildCTauErr::operator()
 {
   if ( 0 == p ) 
   {
-    Error ( "LHCb::Particle* points to NULL, retrn InvalidDistance" );
+    Error ( "LHCb::Particle* points to NULL, return InvalidDistance" );
     return LoKi::Constants::InvalidDistance ; 
   }
   //
@@ -572,21 +563,15 @@ LoKi::Particles::ChildCTauErr::operator()
 std::ostream& 
 LoKi::Particles::ChildCTauErr::fillStream ( std::ostream& s ) const 
 {
-  return 
-    s << " DTF_CTAUERR( " 
-      << child () 
-      << " , " <<  ( usePV() ? " True " : " False " ) << " ) " ;
+  s << " DTF_CTAUERR( " 
+    << child () 
+    << " , " <<  ( usePV() ? " True " : " False " ) ;
+  //
+  printConstraints ( s ) ;
+  //
+  return s << " ) " ;
 }
-
-  
-
-
-
-
-
-
-
-
+// =============================================================================
 
 
 // ============================================================================
@@ -680,7 +665,7 @@ LoKi::Particles::ChildCTauSignificance::operator()
 {
   if ( 0 == p ) 
   {
-    Error ( "LHCb::Particle* points to NULL, returnNegativeInfinity" );
+    Error ( "LHCb::Particle* points to NULL, return NegativeInfinity" );
     return LoKi::Constants::NegativeInfinity ;                     // RETURN 
   }
   //
@@ -707,18 +692,383 @@ LoKi::Particles::ChildCTauSignificance::operator()
 std::ostream& 
 LoKi::Particles::ChildCTauSignificance::fillStream ( std::ostream& s ) const 
 {
-  return 
-    s << " DTF_CTAUSIGNIFICANCE ( " 
-      << child () 
-      << " , " <<  ( usePV() ? " True " : " False " ) << " ) " ;
+  s << " DTF_CTAUSIGNIFICANCE ( " 
+    << child () 
+    << " , " <<  ( usePV() ? " True " : " False " ) ;
+  //
+  printConstraints ( s ) ;
+  //
+  return s << " ) " ;
+}
+// ============================================================================
+
+
+
+// ============================================================================
+// constructor from PV-flag
+// ============================================================================
+LoKi::Particles::DecayTreeFitChi2::DecayTreeFitChi2 
+( const bool                      usePV       , 
+  const std::vector<std::string>& constraints ) 
+  : LoKi::Particles::DecayTreeFitterFun
+( LoKi::BasicFunctors<const LHCb::Particle*>::Constant( 1.0 ) , 
+  usePV       ,
+  constraints )
+{}
+// ============================================================================
+// constructor from PV-flag
+// ============================================================================
+LoKi::Particles::DecayTreeFitChi2::DecayTreeFitChi2 
+( const bool         usePV      , 
+  const std::string& constraint ) 
+  : LoKi::Particles::DecayTreeFitterFun 
+( LoKi::BasicFunctors<const LHCb::Particle*>::Constant( 1.0 ) , 
+  usePV       ,
+  constraint  )
+{}
+// ============================================================================
+// MANDATORY: virtual destructor
+// ============================================================================
+LoKi::Particles::DecayTreeFitChi2::~DecayTreeFitChi2 (){}
+// ============================================================================
+// MANDATORY: clone method ("virtual constructor")
+// ============================================================================
+LoKi::Particles::DecayTreeFitChi2*
+LoKi::Particles::DecayTreeFitChi2::clone() const 
+{ return new LoKi::Particles::DecayTreeFitChi2 ( *this ) ; }
+// ============================================================================
+// MANDATORY: the only one essential method 
+// ============================================================================
+LoKi::Particles::DecayTreeFitChi2::result_type 
+LoKi::Particles::DecayTreeFitChi2::operator() 
+  ( LoKi::Particles::DecayTreeFitChi2::argument p ) const { return chi2 ( p ) ; }
+// ============================================================================
+// OPTIONAL: nice printout 
+// ============================================================================
+std::ostream& 
+LoKi::Particles::DecayTreeFitChi2::fillStream ( std::ostream& s ) const 
+{
+  s << " DTF_CHI2(" << ( usePV() ? " True " : " False " )  ;
+  //
+  printConstraints ( s ) ;
+  //
+  return s << ") " ;
+}
+// ============================================================================
+// get chi2 of decay tree fit 
+// ============================================================================
+double LoKi::Particles::DecayTreeFitChi2::chi2 ( const LHCb::Particle* p ) const 
+{
+  // 1. check argument
+  if ( 0 == p ) 
+  {
+    Error ( "LHCb::Particle* points to NULL, return InvalidChi2" );
+    return LoKi::Constants::InvalidChi2 ;                          // RETURN 
+  }
+  // 2. get primary vertex (if required) 
+  const LHCb::VertexBase* vertex = 0 ;
+  if ( usePV() ) 
+  {
+    vertex = bestVertex ( p ) ;
+    if ( 0 == vertex ) 
+    { Warning ( "``Best vertex'' points zero, constraits will be disabled!" ) ; } 
+  }
+  //
+  // 3. apply local mass constrains (if required) 
+  applyConstraints () ;
+  //
+  // 4. get fitter 
+  IDecayTreeFit* _fitter = fitter() ;
+  //
+  StatusCode sc = _fitter->fit ( p , vertex ) ;
+  if ( sc.isFailure() ) 
+  {
+    Error ( "Error from IDecayTreeFit, return InvalidChi2" , sc ) ;
+    return LoKi::Constants::InvalidChi2 ;
+  }
+  // get chi2 
+  return _fitter->chi2 () ;
+}
+// ============================================================================
+// get nDoF of decay tree fit 
+// ============================================================================
+unsigned int LoKi::Particles::DecayTreeFitChi2::nDoF 
+( const LHCb::Particle* p ) const 
+{
+  // 1. check argument
+  if ( 0 == p ) 
+  {
+    Error ( "LHCb::Particle* points to NULL, return 0" );
+    return 0 ;                                                        // RETURN 
+  }
+  // 2. get primary vertex (if required) 
+  const LHCb::VertexBase* vertex = 0 ;
+  if ( usePV() ) 
+  {
+    vertex = bestVertex ( p ) ;
+    if ( 0 == vertex ) 
+    { Warning ( "``Best vertex'' points zero, constraits will be disabled!" ) ; } 
+  }
+  //
+  // 3. apply local mass constrains (if required) 
+  applyConstraints () ;
+  //
+  // 4. get fitter 
+  IDecayTreeFit* _fitter = fitter() ;
+  //
+  StatusCode sc = _fitter->fit ( p , vertex ) ;
+  if ( sc.isFailure() ) 
+  {
+    Error ( "Error from IDecayTreeFit, return 0 " , sc ) ;
+    return 0  ;
+  }
+  // get nDoF 
+  return _fitter->nDoF () ;
+}
+// ============================================================================
+// get chi2/DoF of decay tree fit 
+// ============================================================================
+double LoKi::Particles::DecayTreeFitChi2::chi2PerDoF 
+( const LHCb::Particle* p ) const 
+{
+  // 1. check argument
+  if ( 0 == p ) 
+  {
+    Error ( "LHCb::Particle* points to NULL, return InvalidChi2" );
+    return LoKi::Constants::InvalidChi2 ;                          // RETURN 
+  }
+  // 2. get primary vertex (if required) 
+  const LHCb::VertexBase* vertex = 0 ;
+  if ( usePV() ) 
+  {
+    vertex = bestVertex ( p ) ;
+    if ( 0 == vertex ) 
+    { Warning ( "``Best vertex'' points zero, constraits will be disabled!" ) ; } 
+  }
+  //
+  // 3. apply local mass constrains (if required) 
+  applyConstraints () ;
+  //
+  // 4. get fitter 
+  IDecayTreeFit* _fitter = fitter() ;
+  //
+  StatusCode sc = _fitter->fit ( p , vertex ) ;
+  if ( sc.isFailure() ) 
+  {
+    Error ( "Error from IDecayTreeFit, return InvalidChi2" , sc ) ;
+    return LoKi::Constants::InvalidChi2 ;
+  }
+  /// get chi2 
+  const double       _chi2 = _fitter->chi2 () ;
+  /// get nDof 
+  const unsigned int _nDoF = _fitter->nDoF () ;
+  ///
+  if ( 0 == _nDoF ) 
+  { 
+    Warning ("chi2PerDoF: invalid nDoF, rerurn InvalidChi2") ;
+    return LoKi::Constants::InvalidChi2 ;                         // RETURN 
+  }
+  if ( 0  > _chi2 ) 
+  { 
+    Warning ("chi2PerDoF: invalid chi2, rerurn InvalidChi2") ;
+    return LoKi::Constants::InvalidChi2 ;                         // RETURN 
+  }
+  //
+  return _chi2/_nDoF ;
+}
+// ============================================================================
+// get probablity of decay tree fit 
+// ============================================================================
+double LoKi::Particles::DecayTreeFitChi2::prob
+( const LHCb::Particle* p ) const 
+{
+  // 1. check argument
+  if ( 0 == p ) 
+  {
+    Error ( "LHCb::Particle* points to NULL, return NegativeInfinity" );
+    return LoKi::Constants::NegativeInfinity ;                        // RETURN 
+  }
+  // 2. get primary vertex (if required) 
+  const LHCb::VertexBase* vertex = 0 ;
+  if ( usePV() ) 
+  {
+    vertex = bestVertex ( p ) ;
+    if ( 0 == vertex ) 
+    { Warning ( "``Best vertex'' points zero, constraits will be disabled!" ) ; } 
+  }
+  //
+  // 3. apply local mass constrains (if required) 
+  applyConstraints () ;
+  //
+  // 4. get fitter 
+  IDecayTreeFit* _fitter = fitter() ;
+  //
+  StatusCode sc = _fitter->fit ( p , vertex ) ;
+  if ( sc.isFailure() ) 
+  {
+    Error ( "prob: Error from IDecayTreeFit, return NegativeInfinity" , sc ) ;
+    return LoKi::Constants::NegativeInfinity ;                        // RETURN 
+  }
+  /// get chi2 
+  const double       _chi2 = _fitter->chi2 () ;
+  /// get nDof 
+  const unsigned int _nDoF = _fitter->nDoF () ;
+  ///
+  if ( 0 == _nDoF ) 
+  { 
+    Error ( "prob: invalid nDoF, return NegativeInfinity") ;
+    return LoKi::Constants::NegativeInfinity ;                        // RETURN 
+  }
+  if ( 0  > _chi2 ) 
+  { 
+    Error ( "prob: invalid chi2, return NegativeInfiinty") ;
+    return LoKi::Constants::NegativeInfinity ;                        // RETURN 
+  }
+  // use GSL
+  return gsl_cdf_chisq_Q ( _chi2 , _nDoF ) ;
+}
+// ============================================================================
+
+
+
+// ============================================================================
+// constructor from PV-flag
+// ============================================================================
+LoKi::Particles::DecayTreeFitNDoF::DecayTreeFitNDoF
+( const bool                      usePV       , 
+  const std::vector<std::string>& constraints ) 
+  : LoKi::Particles::DecayTreeFitChi2 ( usePV , constraints ) 
+{}
+// ============================================================================
+// constructor from PV-flag
+// ============================================================================
+LoKi::Particles::DecayTreeFitNDoF::DecayTreeFitNDoF
+( const bool         usePV      , 
+  const std::string& constraint ) 
+  : LoKi::Particles::DecayTreeFitChi2 ( usePV , constraint ) 
+{}
+// ============================================================================
+// MANDATORY: virtual destructor
+// ============================================================================
+LoKi::Particles::DecayTreeFitNDoF::~DecayTreeFitNDoF (){}
+// ============================================================================
+// MANDATORY: clone method ("virtual constructor")
+// ============================================================================
+LoKi::Particles::DecayTreeFitNDoF*
+LoKi::Particles::DecayTreeFitNDoF::clone() const 
+{ return new LoKi::Particles::DecayTreeFitNDoF ( *this ) ; }
+// ============================================================================
+// MANDATORY: the only one essential method 
+// ============================================================================
+LoKi::Particles::DecayTreeFitNDoF::result_type 
+LoKi::Particles::DecayTreeFitNDoF::operator() 
+  ( LoKi::Particles::DecayTreeFitNDoF::argument p ) const { return nDoF ( p ) ; }
+// ============================================================================
+// OPTIONAL: nice printout 
+// ============================================================================
+std::ostream& 
+LoKi::Particles::DecayTreeFitNDoF::fillStream ( std::ostream& s ) const 
+{
+  s << " DTF_NDOF(" << ( usePV() ? " True " : " False " )  ;
+  //
+  printConstraints ( s ) ;
+  //
+  return s << ") " ;
 }
 
-  
 
 
+// ============================================================================
+// constructor from PV-flag
+// ============================================================================
+LoKi::Particles::DecayTreeFitChi2NDoF::DecayTreeFitChi2NDoF
+( const bool                      usePV       , 
+  const std::vector<std::string>& constraints ) 
+  : LoKi::Particles::DecayTreeFitNDoF ( usePV , constraints ) 
+{}
+// ============================================================================
+// constructor from PV-flag
+// ============================================================================
+LoKi::Particles::DecayTreeFitChi2NDoF::DecayTreeFitChi2NDoF
+( const bool         usePV      , 
+  const std::string& constraint ) 
+  : LoKi::Particles::DecayTreeFitNDoF ( usePV , constraint ) 
+{}
+// ============================================================================
+// MANDATORY: virtual destructor
+// ============================================================================
+LoKi::Particles::DecayTreeFitChi2NDoF::~DecayTreeFitChi2NDoF (){}
+// ============================================================================
+// MANDATORY: clone method ("virtual constructor")
+// ============================================================================
+LoKi::Particles::DecayTreeFitChi2NDoF*
+LoKi::Particles::DecayTreeFitChi2NDoF::clone() const 
+{ return new LoKi::Particles::DecayTreeFitChi2NDoF ( *this ) ; }
+// ============================================================================
+// MANDATORY: the only one essential method 
+// ============================================================================
+LoKi::Particles::DecayTreeFitChi2NDoF::result_type 
+LoKi::Particles::DecayTreeFitChi2NDoF::operator() 
+  ( LoKi::Particles::DecayTreeFitChi2NDoF::argument p ) const 
+{ return chi2PerDoF ( p ) ; }
+// ============================================================================
+// OPTIONAL: nice printout 
+// ============================================================================
+std::ostream& 
+LoKi::Particles::DecayTreeFitChi2NDoF::fillStream ( std::ostream& s ) const 
+{
+  s << " DTF_CHI2NDOF(" << ( usePV() ? " True " : " False " )  ;
+  //
+  printConstraints ( s ) ;
+  //
+  return s << ") " ;
+}
 
-
-
+// ============================================================================
+// constructor from PV-flag
+// ============================================================================
+LoKi::Particles::DecayTreeFitProb::DecayTreeFitProb
+( const bool                      usePV       , 
+  const std::vector<std::string>& constraints ) 
+  : LoKi::Particles::DecayTreeFitChi2NDoF ( usePV , constraints ) 
+{}
+// ============================================================================
+// constructor from PV-flag
+// ============================================================================
+LoKi::Particles::DecayTreeFitProb::DecayTreeFitProb
+( const bool         usePV      , 
+  const std::string& constraint ) 
+  : LoKi::Particles::DecayTreeFitChi2NDoF ( usePV , constraint ) 
+{}
+// ============================================================================
+// MANDATORY: virtual destructor
+// ============================================================================
+LoKi::Particles::DecayTreeFitProb::~DecayTreeFitProb (){}
+// ============================================================================
+// MANDATORY: clone method ("virtual constructor")
+// ============================================================================
+LoKi::Particles::DecayTreeFitProb*
+LoKi::Particles::DecayTreeFitProb::clone() const 
+{ return new LoKi::Particles::DecayTreeFitProb ( *this ) ; }
+// ============================================================================
+// MANDATORY: the only one essential method 
+// ============================================================================
+LoKi::Particles::DecayTreeFitProb::result_type 
+LoKi::Particles::DecayTreeFitProb::operator() 
+  ( LoKi::Particles::DecayTreeFitProb::argument p ) const 
+{ return prob ( p ) ; }
+// ============================================================================
+// OPTIONAL: nice printout 
+// ============================================================================
+std::ostream& 
+LoKi::Particles::DecayTreeFitProb::fillStream ( std::ostream& s ) const 
+{
+  s << " DTF_PROB(" << ( usePV() ? " True " : " False " )  ;
+  //
+  printConstraints ( s ) ;
+  //
+  return s << ") " ;
+}
 
 
 // ============================================================================

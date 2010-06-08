@@ -1,4 +1,4 @@
-// $Id: Particles36.h,v 1.1 2010-06-04 12:23:59 ibelyaev Exp $
+// $Id: Particles36.h,v 1.2 2010-06-08 17:59:03 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PARTICLES36_H
 #define LOKI_PARTICLES36_H 1
@@ -91,6 +91,11 @@ namespace LoKi
       /// the default constructor is disabled
       DecayTreeFitterFun () ;             // the default constrctor is disabled
       // ======================================================================
+    protected:
+      // ======================================================================
+      /// use related primary vertex in the fit ?
+      bool usePV () const { return m_usePV ; }     // use primary vertex in fit 
+      // ======================================================================
     private:
       // ======================================================================
       /// the functor to be used
@@ -153,6 +158,11 @@ namespace LoKi
       // ======================================================================
       /// the default constructor is disabled
       DecayTreeFitterCut () ;             // the default constrctor is disabled
+      // ======================================================================
+    protected:
+      // ======================================================================
+      /// use related primary vertex in the fit ?
+      bool usePV () const { return m_usePV ; }     // use primary vertex in fit 
       // ======================================================================
     private:
       // ======================================================================
@@ -426,6 +436,169 @@ namespace LoKi
       // ======================================================================
       /// the default constructor is disabled
       ChildCTauSignificance () ;         // the default constructor is disabled
+      // ======================================================================
+    } ;
+    // ========================================================================
+    /** @class DecayTreeFitChi2
+     *  Simple evaluation of \f$c\chi^2\f$ for the global fit 
+     *  @see LoKi::Cuts::DTF_CHI2
+     *  @see IDecayTreeFit 
+     *  @see  DecayTreeFitter::Fitter 
+     *  @author Vanya BELYAEV Ivan.BElyaev@nikhef.nl
+     *  @date 2010-06-08
+     */     
+    class DecayTreeFitChi2 : public DecayTreeFitterFun 
+    {
+    public: 
+      // ======================================================================
+      /// constructor from PV-flag & vector of constraints  
+      DecayTreeFitChi2 
+      ( const bool                      usePV      , 
+        const std::vector<std::string>& constraint = 
+        std::vector<std::string>()                 ) ;
+      /// constructor from PV-flag & constraints  
+      DecayTreeFitChi2 
+      ( const bool                      usePV      , 
+        const std::string&              constraint ) ;
+      /// MANDATORY: virtual destructor
+      virtual ~DecayTreeFitChi2 ();
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  DecayTreeFitChi2* clone() const ;
+      /// MANDATORY: the only one essential method 
+      virtual  result_type operator() ( argument p ) const ;
+      /// OPTIONAL: nice printout 
+      virtual  std::ostream& fillStream ( std::ostream& s ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the default constructor is disabled 
+      DecayTreeFitChi2 () ;              // the default constructor is disabled 
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// get chi2 of decay tree fit 
+      double       chi2       ( const LHCb::Particle* p ) const ;
+      /// get nDoF of decay tree fit 
+      unsigned int nDoF       ( const LHCb::Particle* p ) const ;
+      /// get chi2/DoF of decay tree fit 
+      double       chi2PerDoF ( const LHCb::Particle* p ) const ;
+      /** get probaility of decay tree fit 
+       *  @see gsl_cdf_chisq_Q
+       *  return probaility of decay tree fit 
+       */
+      double       prob       ( const LHCb::Particle* p ) const ;
+      // ======================================================================
+    } ;
+    // ========================================================================
+    /** @class DecayTreeFitNDoF
+     *  Simple evaluation of number degress of freedom for the global fit 
+     *  @see LoKi::Cuts::DTF_NDOF 
+     *  @see IDecayTreeFit 
+     *  @see  DecayTreeFitter::Fitter 
+     *  @author Vanya BELYAEV Ivan.BElyaev@nikhef.nl
+     *  @date 2010-06-08
+     */     
+    class DecayTreeFitNDoF : public DecayTreeFitChi2
+    {
+    public: 
+      // ======================================================================
+      /// constructor from PV-flag & vector of constraints  
+      DecayTreeFitNDoF
+      ( const bool                      usePV      , 
+        const std::vector<std::string>& constraint = 
+        std::vector<std::string>()                 ) ;
+      /// constructor from PV-flag & constraints  
+      DecayTreeFitNDoF
+      ( const bool                      usePV      , 
+        const std::string&              constraint ) ;
+      /// MANDATORY: virtual destructor
+      virtual ~DecayTreeFitNDoF ();
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  DecayTreeFitNDoF* clone() const ;
+      /// MANDATORY: the only one essential method 
+      virtual  result_type operator() ( argument p ) const ;
+      /// OPTIONAL: nice printout 
+      virtual  std::ostream& fillStream ( std::ostream& s ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the default constructor is disabled 
+      DecayTreeFitNDoF () ;              // the default constructor is disabled 
+      // ======================================================================
+    } ;
+    // ========================================================================
+    /** @class DecayTreeFitChi2PerNDoF
+     *  Simple evaluation of \f$\chi^2\f$ per degree 
+     *  of freedom for the global fit 
+     *  @see LoKi::Cuts::DTF_CHI2NDOF 
+     *  @see IDecayTreeFit 
+     *  @see  DecayTreeFitter::Fitter 
+     *  @author Vanya BELYAEV Ivan.BElyaev@nikhef.nl
+     *  @date 2010-06-08
+     */     
+    class DecayTreeFitChi2NDoF : public DecayTreeFitNDoF
+    {
+    public: 
+      // ======================================================================
+      /// constructor from PV-flag & vector of constraints  
+      DecayTreeFitChi2NDoF
+      ( const bool                      usePV      , 
+        const std::vector<std::string>& constraint = 
+        std::vector<std::string>()                 ) ;
+      /// constructor from PV-flag & constraints  
+      DecayTreeFitChi2NDoF
+      ( const bool                      usePV      , 
+        const std::string&              constraint ) ;
+      /// MANDATORY: virtual destructor
+      virtual ~DecayTreeFitChi2NDoF ();
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  DecayTreeFitChi2NDoF* clone() const ;
+      /// MANDATORY: the only one essential method 
+      virtual  result_type operator() ( argument p ) const ;
+      /// OPTIONAL: nice printout 
+      virtual  std::ostream& fillStream ( std::ostream& s ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the default constructor is disabled 
+      DecayTreeFitChi2NDoF () ;          // the default constructor is disabled 
+      // ======================================================================
+    } ;
+    // ========================================================================
+    /** @class DecayTreeFitProb
+     *  Simple evaluation of \f$\chi^2\f$-probability for the global fit 
+     *  @see LoKi::Cuts::DTF_PROB
+     *  @see IDecayTreeFit 
+     *  @see  DecayTreeFitter::Fitter 
+     *  @author Vanya BELYAEV Ivan.BElyaev@nikhef.nl
+     *  @date 2010-06-08
+     */     
+    class DecayTreeFitProb : public DecayTreeFitChi2NDoF
+    {
+    public: 
+      // ======================================================================
+      /// constructor from PV-flag & vector of constraints  
+      DecayTreeFitProb
+      ( const bool                      usePV      , 
+        const std::vector<std::string>& constraint = 
+        std::vector<std::string>()                 ) ;
+      /// constructor from PV-flag & constraints  
+      DecayTreeFitProb
+      ( const bool                      usePV      , 
+        const std::string&              constraint ) ;
+      /// MANDATORY: virtual destructor
+      virtual ~DecayTreeFitProb ();
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  DecayTreeFitProb* clone() const ;
+      /// MANDATORY: the only one essential method 
+      virtual  result_type operator() ( argument p ) const ;
+      /// OPTIONAL: nice printout 
+      virtual  std::ostream& fillStream ( std::ostream& s ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the default constructor is disabled 
+      DecayTreeFitProb () ;              // the default constructor is disabled 
       // ======================================================================
     } ;
     // ========================================================================
@@ -748,6 +921,138 @@ namespace LoKi
      *  @date 2010-06-03
      */
     typedef LoKi::Particles::ChildCTauSignificance       DTF_CTAUSIGNIFICANCE ;
+    // ========================================================================
+    /** @typedef DTF_CHI2
+     *  Simple evaluator of \f$\chi^2\f$ for the decay tree fit
+     * 
+     *  @code 
+     *
+     *    // get the chi2 of gobal fit 
+     *    const DFT_CHI2 chi2_1 = DTF_CHI2 ( false ) ;
+     *
+     *    // get the chi2 of global fit 
+     *    // with PV-constraint for the decay head  
+     *    const DFT_CHI2 chi2_2 = DTF_CHI2 ( true  ) ;
+     *
+     *    // get the chi2 of global fit,
+     *    // using mass-constraint for daughter  D0
+     *    const DFT_CHI2 chi2_3 = DTF_CHI2 ( false , "D0") ;
+     *
+     *    // get the chi2 of global fit 
+     *    // with PV-constraint for the decay head  
+     *    // using mass-constraint for daughter  D0
+     *    const DFT_CHI2 chi2_4 = DTF_CHI2 ( true  , "D0" ) ;
+     *
+     *    const LHCb::Particle*B = ... ;
+     *
+     *    const double val1 = chi2_1 ( B ) ;
+     *    const double val2 = chi2_2 ( B ) ;
+     *    const double val3 = chi2_3 ( B ) ;
+     *    const double val4 = chi3_4 ( B ) ;
+     *
+     *  @endcode 
+     *
+     *  @see IDecayTreeFit 
+     *  @see  DecayTreeFitter::Fitter 
+     *  @see IDecayTreeFit::chi2  
+     *  @see  DecayTreeFitter::Fitter::chiSquare 
+     *  
+     *  @see LoKi::Particles::DecayTreeFitChi2 
+     *  @author Vanya BELYAEV Ivan.BElyaev@nikhef.nl
+     *  @date 2010-06-08
+     */
+    typedef LoKi::Particles::DecayTreeFitChi2                        DTF_CHI2 ;
+    // ========================================================================
+    /** @typedef DTF_NDOF
+     *  Simple evaluator of number of degrees of frreedom for the decay tree fit
+     * 
+     *  @see IDecayTreeFit 
+     *  @see  DecayTreeFitter::Fitter 
+     *  
+     *  @see LoKi::Particles::DecayTreeFitNDoF
+     *  @author Vanya BELYAEV Ivan.BElyaev@nikhef.nl
+     *  @date 2010-06-08
+     */
+    typedef LoKi::Particles::DecayTreeFitNDoF                        DTF_NDOF ;
+    // ========================================================================
+    /** @typedef DTF_CHI2NDOF
+     *  Simple evaluator of \f$\chi^2\f$ per degree of freedom for the decay tree fit
+     * 
+     *  @code 
+     *
+     *    // get the chi2/DoF of gobal fit 
+     *    const DFT_CHI2NDOF chi2_1 = DTF_CHI2NDOF ( false ) ;
+     *
+     *    // get the chi2/DoF of global fit 
+     *    // with PV-constraint for the decay head  
+     *    const DFT_CHI2NDOF chi2_2 = DTF_CHI2NDOF ( true  ) ;
+     *
+     *    // get the chi2/DoF of global fit,
+     *    // using mass-constraint for daughter  D0
+     *    const DFT_CHI2NDOF chi2_3 = DTF_CHI2NDOF ( false , "D0") ;
+     *
+     *    // get the chi2/DoF of global fit 
+     *    // with PV-constraint for the decay head  
+     *    // using mass-constraint for daughter  D0
+     *    const DFT_CHI2NDOF chi2_4 = DTF_CHI2NDOF ( true  , "D0" ) ;
+     *
+     *    const LHCb::Particle*B = ... ;
+     *
+     *    const double val1 = chi2_1 ( B ) ;
+     *    const double val2 = chi2_2 ( B ) ;
+     *    const double val3 = chi2_3 ( B ) ;
+     *    const double val4 = chi3_4 ( B ) ;
+     *
+     *  @endcode 
+     *
+     *  @see IDecayTreeFit 
+     *  @see  DecayTreeFitter::Fitter 
+     *
+     *  @see LoKi::Particles::DecayTreeFitChi2NDoF
+     *  @author Vanya BELYAEV Ivan.BElyaev@nikhef.nl
+     *  @date 2010-06-08
+     */
+    typedef LoKi::Particles::DecayTreeFitChi2NDoF                DTF_CHI2NDOF ;
+    // ========================================================================
+    /** @typedef DTF_PROB
+     *  Simple evaluator of the decay tree fit probability
+     * 
+     *  @code 
+     *
+     *    // get the probablity of gobal fit 
+     *    const DFT_PROP prob_1 = DTF_PROB ( false ) ;
+     *
+     *    // get the probability of global fit 
+     *    // with PV-constraint for the decay head  
+     *    const DFT_PROB prob_2 = DTF_PROB ( true  ) ;
+     *
+     *    // get the probability of global fit,
+     *    // using mass-constraint for daughter  D0
+     *    const DFT_PROB prob_3 = DTF_PROB ( false , "D0") ;
+     *
+     *    // get the probability of global fit 
+     *    // with PV-constraint for the decay head  
+     *    // using mass-constraint for daughter  D0
+     *    const DFT_PROB prob_4 = DTF_PROB ( true  , "D0" ) ;
+     *
+     *    const LHCb::Particle*B = ... ;
+     *
+     *    const double val1 = prob_1 ( B ) ;
+     *    const double val2 = prob_2 ( B ) ;
+     *    const double val3 = prob_3 ( B ) ;
+     *    const double val4 = prob_4 ( B ) ;
+     *
+     *  @endcode 
+     *
+     *  @see IDecayTreeFit 
+     *  @see  DecayTreeFitter::Fitter 
+     *  @see gsl_cdf_chisq_Q
+     *
+     *  @see LoKi::Particles::DecayTreeFitProb
+     *  @author Vanya BELYAEV Ivan.BElyaev@nikhef.nl
+     *  @date 2010-06-08
+     */
+    typedef LoKi::Particles::DecayTreeFitProb                        DTF_PROB ;
     // ========================================================================
   } //                                              end of namesapce LoKi::Cuts   
   // ==========================================================================

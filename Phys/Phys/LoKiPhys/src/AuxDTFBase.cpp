@@ -1,10 +1,14 @@
-// $Id: AuxDTFBase.cpp,v 1.1 2010-06-04 12:23:59 ibelyaev Exp $
+// $Id: AuxDTFBase.cpp,v 1.2 2010-06-08 17:59:03 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
 // STD & STL 
 // ============================================================================
 #include <set>
+// ============================================================================
+// GaudiKernel
+// ============================================================================
+#include "GaudiKernel/ToStream.h"
 // ============================================================================
 // DaVinciInterface 
 // ============================================================================
@@ -230,6 +234,23 @@ IDecayTreeFit* LoKi::AuxDTFBase::fitter() const
   if  (!m_fitter) { loadFitter ( fitterName() ) ; }
   return m_fitter ; 
 }
+// =============================================================================
+// print constraints 
+// =============================================================================
+std::ostream& LoKi::AuxDTFBase::printConstraints ( std::ostream& s ) const 
+{
+  if ( m_constraints.empty() ) { return s ; }                          // RETURN
+  //
+  std::vector<std::string> ss = constraints () ;
+  if ( ss.empty ()         ) { return s ; }                            // RETURN 
+  //
+  if ( 1 == ss.size()      ) { return s << ", '"  << ss[0] << "' " ; } // RETURN
+  //
+  s << ", " ;
+  Gaudi::Utils::toStream ( ss , s ) ;  
+  return s ;                                                           // RETURN 
+}
+
 
 
  
