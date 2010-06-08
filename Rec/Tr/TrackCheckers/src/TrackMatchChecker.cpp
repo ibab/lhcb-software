@@ -542,8 +542,8 @@ StatusCode TrackMatchChecker::monitor( )
       m_eMomentumVelo.push_back( 0.0 );
     }
     else {
-      m_momentumVelo.push_back( 1.0/fabs(veloVector[4]) );
-      m_eMomentumVelo.push_back( sqrt(veloCov(4,4)) / pow(veloVector[4],2) );
+      m_momentumVelo.push_back( (float) (1.0/fabs(veloVector[4])) );
+      m_eMomentumVelo.push_back( (float) (sqrt(veloCov(4,4)) / pow(veloVector[4],2)) );
     }
 
     m_xSeed.push_back( (float) seedVector[0] );

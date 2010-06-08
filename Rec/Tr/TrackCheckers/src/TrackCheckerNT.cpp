@@ -1251,8 +1251,8 @@ StatusCode TrackCheckerNT::fillMCGeneralInfo(
     // fill up to maxAssocTracks into our array
     for (int j = 0; (0 != track) && (j < maxAssocTracks);
 	track = revLink.next(), ++j) {
-      _assocTracks[nPart][j] = trackIdx[track];
-      _assocTrackWeights[nPart][j] = revLink.weight();
+      _assocTracks[nPart][j] = (float) trackIdx[track];
+      _assocTrackWeights[nPart][j] = (float) revLink.weight();
     }
   } // End loop over MCParticles
   
