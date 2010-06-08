@@ -6,6 +6,12 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2010-06-08 - Vanya Belyaev
+
+ - LorentzVectorWithError: 
+
+      add few useful methods 
+
 ! 2010-05-26 - Vanya Belyaev
  - fix some errors in ParticleParams 
 

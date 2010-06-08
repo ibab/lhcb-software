@@ -60,7 +60,9 @@ apply_pattern reflex_dictionary                               \
               options="-U__MINGW32__"
 #============================================================================
 
-macro LHCbMath_use_linkopts $(use_linkopts)
+macro_append LHCbMathDict_dependencies   " LHCbMathLib "
+
+macro        LHCbMath_use_linkopts $(use_linkopts)
 
 #============================================================================
 private
@@ -68,7 +70,7 @@ private
 macro_prepend GSL_linkopts " -Wl,--no-as-needed " \
                     Darwin "" \
                      WIN32 ""
-macro_append GSL_linkopts " -Wl,--as-needed " \
+macro_append  GSL_linkopts " -Wl,--as-needed " \
                     Darwin "" \
                      WIN32 ""
 end_private

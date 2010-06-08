@@ -1,4 +1,4 @@
-// $Id: LorentzVectorWithError.h,v 1.5 2010-05-26 13:19:16 ibelyaev Exp $
+// $Id: LorentzVectorWithError.h,v 1.6 2010-06-08 17:51:53 ibelyaev Exp $
 // ============================================================================
 #ifndef LHCBMATH_LORENTZVECTORWITHERROR_H 
 #define LHCBMATH_LORENTZVECTORWITHERROR_H 1
@@ -144,6 +144,30 @@ namespace Gaudi
       // ======================================================================
     public:
       // ======================================================================
+      /// get the mass with error 
+      Gaudi::Math::ValueWithError mass () const { return massWithError     () ; }
+      /// get the mass with error 
+      Gaudi::Math::ValueWithError m    () const { return massWithError     () ; }
+      /// get the energy with error 
+      Gaudi::Math::ValueWithError e    () const { return energyWithError   () ; }
+      /// get the momentum with error 
+      Gaudi::Math::ValueWithError p    () const { return momentumWithError () ; }
+      /// get the transverse momentum with error
+      Gaudi::Math::ValueWithError pt   () const { return ptWithError       () ; }
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// get the mass with error 
+      Gaudi::Math::ValueWithError massWithError     () const ;
+      /// get the energy with error 
+      Gaudi::Math::ValueWithError energyWithError   () const ;
+      /// get the momentum with error 
+      Gaudi::Math::ValueWithError momentumWithError () const ;
+      /// get the transverse momentum with error 
+      Gaudi::Math::ValueWithError ptWithError       () const ;
+      // ======================================================================
+    public:
+      // ======================================================================
       /** evaluate  sigma mass 
        *  @see Gaudi::Math::sigmamass
        */
@@ -176,12 +200,15 @@ namespace Gaudi
       // ======================================================================
     public:
       // ======================================================================
-      /// get the mass with error 
-      Gaudi::Math::ValueWithError massWithError     () const ;
-      /// get the energy with error 
-      Gaudi::Math::ValueWithError energyWithError   () const ;
-      /// get the momentum with error 
-      Gaudi::Math::ValueWithError momentumWithError () const ;
+      /** evaluate sigma^2(pt)
+       *  @see Gaudi::Math::sigma2pt
+       */          
+      double sigma2pt () const ;                       // evaluate sigma^2(pt)
+      // ======================================================================
+      /** evaluate sigma(p)
+       *  @see Gaudi::Math::sigmap
+       */           
+      double sigmapt  () const ;                       //   evaluate sigma(pt)
       // ======================================================================
     public: // helper operators for Python
       // ======================================================================

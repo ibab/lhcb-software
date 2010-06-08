@@ -1,4 +1,4 @@
-// $Id: LorentzVectorWithError.cpp,v 1.4 2010-05-24 13:01:38 ibelyaev Exp $
+// $Id: LorentzVectorWithError.cpp,v 1.5 2010-06-08 17:51:53 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -325,6 +325,16 @@ double Gaudi::Math::LorentzVectorWithError::sigma2p () const
 double Gaudi::Math::LorentzVectorWithError::sigmap () const 
 { return Gaudi::Math::sigmap  ( vector4d() , cov2() ) ; }
 // ============================================================================
+// evaluate  sigma^2 pt 
+// ============================================================================
+double Gaudi::Math::LorentzVectorWithError::sigma2pt () const 
+{ return Gaudi::Math::sigma2pt ( vector4d() , cov2() ) ; }
+// ============================================================================
+// evaluate  sigma pt 
+// ============================================================================
+double Gaudi::Math::LorentzVectorWithError::sigmapt  () const 
+{ return Gaudi::Math::sigmapt ( vector4d() , cov2() ) ; }
+// ============================================================================
 // get the mass with erorr 
 // ============================================================================
 Gaudi::Math::ValueWithError 
@@ -343,8 +353,11 @@ Gaudi::Math::ValueWithError
 Gaudi::Math::LorentzVectorWithError::momentumWithError() const
 { return Gaudi::Math::ValueWithError ( P() , sigma2p() ) ; }
 // ============================================================================
-
-
+// get the transverse momentum with error 
+// ============================================================================
+Gaudi::Math::ValueWithError 
+Gaudi::Math::LorentzVectorWithError::ptWithError       () const 
+{ return Gaudi::Math::ValueWithError ( Pt() , sigma2pt() ) ; }
 // ============================================================================
 void Gaudi::Math::LorentzVectorWithError::asVector 
 ( Gaudi::Math::LorentzVectorWithError::Vector& data ) const 
@@ -402,6 +415,7 @@ Gaudi::Math::LorentzVectorWithError::__div__ ( const double v ) const
   return ( tmp /= v ) ;
 }
 // ============================================================================
+
 
 
 // ============================================================================
