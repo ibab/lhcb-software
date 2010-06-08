@@ -1242,9 +1242,9 @@ StatusCode TrackCheckerNT::fillMCGeneralInfo(
     const MCVertex *mcvtx = mcPart->originVertex();
     if (mcvtx) {
       const Gaudi::XYZPoint &point = mcvtx->position();
-      _origVtxPos[nPart][0] = point.X() / mm;
-      _origVtxPos[nPart][1] = point.Y() / mm;
-      _origVtxPos[nPart][2] = point.Z() / mm;
+      _origVtxPos[nPart][0] = (float) (point.X() / mm);
+      _origVtxPos[nPart][1] = (float) (point.Y() / mm);
+      _origVtxPos[nPart][2] = (float) (point.Z() / mm);
     }
     // ok, write up to maxAssocTracks associated Tracks
     Track* track = revLink.first(mcPart);
