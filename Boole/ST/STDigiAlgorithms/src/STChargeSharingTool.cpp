@@ -2,12 +2,17 @@
 
 // Gaudi
 #include "GaudiKernel/ToolFactory.h"
+#include "GaudiKernel/SystemOfUnits.h"
+
+// GSL
+#include "gsl/gsl_sf_erf.h"
 
 // local
 #include "STChargeSharingTool.h"
 
 using namespace GaudiMath;
 using namespace GaudiMath::Interpolation;
+using namespace Gaudi::Units;
 
 DECLARE_TOOL_FACTORY( STChargeSharingTool );
 
@@ -19,6 +24,9 @@ STChargeSharingTool::STChargeSharingTool( const std::string& type,
 {
   // constructer
   declareProperty("SharingFunction", m_sharingFunction );
+  declareProperty("UseAnalyticErf",  m_useAnalyticErf = false    );
+  declareProperty("ErfWidth",        m_erfWidth       = 0.02     );
+  declareProperty("Thickness",       m_thickness      = 0.500*mm );
   declareInterface<ISTChargeSharingTool>(this);
 }
 
@@ -55,5 +63,12 @@ StatusCode STChargeSharingTool::initialize()
 
 double STChargeSharingTool::sharing(const double relDist) const
 {
-  return ((relDist>0.) && (relDist<1.0) ? m_responseSpline->eval(relDist) : 0);
+  if( relDist < 0.0 || relDist > 1.0 ) return 0.0;
+  return (!m_useAnalyticErf) ? m_responseSpline->eval(relDist) :
+    0.5*gsl_sf_erfc(sqrt(0.5)*(relDist-0.5)/m_erfWidth) + 0.5 ;
+}
+
+double STChargeSharingTool::thickness() const
+{
+  return m_thickness;
 }

@@ -4,7 +4,18 @@
 ! Purpose     : Algorithms for ST Digitization
 !-----------------------------------------------------------------------------
 
-! 2010-6-02 Add option to configure the ITKiller
+! 2010-05-21 - Jeroen VAN TILBURG
+ - Updated tuning of the capacitive coupling.
+ - Added possibility to have different capacitive coupling values for left/right
+   neighbours and odd/even tell1 channels.
+ - Changed the calculation of the Lorentz angle.
+ - Added the possibility to use the error function (Erf) to calculate charge
+   sharing.
+ - Added possibility to have different charge sharing parameterizations in a
+   detector.
+
+! 2010-6-02 M Needham
+ - Add option to configure the ITKiller
 
 !========================= STDigiAlgorithms v2r0 2010-04-26 ==================
 ! 2010-04-24 M Needham

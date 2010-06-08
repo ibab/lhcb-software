@@ -22,8 +22,11 @@ public:
    /// Static access to interface id
   static const InterfaceID& interfaceID() { return IID_ISTChargeSharingTool; }
    
-   /// calc sharinh
+   /// calc sharing
   virtual double sharing(const double relDist) const=0;
+
+  /// return thickness of the corresponding sensor
+  virtual double thickness() const=0;
 
 };
 

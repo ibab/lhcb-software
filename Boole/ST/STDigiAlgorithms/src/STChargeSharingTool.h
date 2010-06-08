@@ -34,14 +34,20 @@ public:
   /// calculate charge fraction as function of the relative distance
   double sharing(const double relDist) const;
 
+  /// return thickness of the corresponding sensor
+  double thickness() const;
+
 private:
 
   /// Spline function to fit to the charge sharing function
   GaudiMath::SimpleSpline* m_responseSpline;
 
-  // Job option:
+  // Job options:
   /// Fraction of charge on strip as funtion of the relative distance
   std::vector<double> m_sharingFunction; 
+  bool m_useAnalyticErf; ///< Flag to switch to using the analytic error functn 
+  double m_erfWidth;     ///< Width of the charge sharing (in terms of pitch).
+  double m_thickness;    ///< Sensor thickness corresponding to the parameters
 
 };
 

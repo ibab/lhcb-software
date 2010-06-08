@@ -21,6 +21,7 @@ class ISiDepositedCharge;
  *  are simulated:
  *  - For each available spill the MCHits are digitized (spill-over).
  *  - The total charge is calculated using the deposited charge tool.
+ *  - The entry or exit point is tilted due to Lorentz force.
  *  - The charge is distributed in space (bins) between the strips.
  *  - Charge sharing between the strips is applied by looping over these bins.
  *  - Capacitive coupling between the strips is applied using the xTalkParams.
@@ -63,19 +64,22 @@ private:
 
   void chargeSharing(const std::vector<double>& sites, 
                      const DeSTSensor* aSensor,
-                     std::map<unsigned int,double>& stripMap, double& possibleCollectedCharge) const;
+                     std::map<unsigned int,double>& stripMap, 
+                     double& possibleCollectedCharge) ;
 
 
   double beetleResponse(const double time, const double capacitance,
                         const std::string& type);
 
-
-  void lorentzShift(Gaudi::XYZPoint& entry,  
-                    Gaudi::XYZPoint& exit, 
-                    const Gaudi::XYZPoint& midPoint) const;
+  void lorentzShift(const DeSTSensor* sensor,
+                    const Gaudi::XYZPoint& midPoint,
+                    Gaudi::XYZPoint& entry,  
+                    Gaudi::XYZPoint& exit ) const ;
 
   // Tools
-  ISTChargeSharingTool* m_chargeSharer;  ///< Charge sharing tool 
+
+  /// List of tools for the different charge sharing parameters
+  std::vector<ISTChargeSharingTool*> m_chargeSharer; 
   ISiDepositedCharge* m_depositedCharge; ///< Tool calculates accumulated charge
 
   std::string m_inputLocation;           ///< Input: MCHits
@@ -85,7 +89,7 @@ private:
  
   /// List of tools for different beetle responses
   std::vector<ISiAmplifierResponse*> m_amplifierResponse;
- 
+
   // job options
   std::vector<double> m_tofVector;       ///< Time offsets for the stations
   std::vector<std::string> m_spillNames; ///< Names of spills (e.g. Next, Prev)
@@ -97,10 +101,16 @@ private:
   std::string  m_depChargeToolName;      ///< Name of tool to calculate charge
   double m_siteSize;                     ///< Binning for charge sharing
   int m_maxNumSites;                     ///< Max number of charge sharing bins
-  std::vector<double> m_xTalkParams;     ///< Cross talk parameters
+  std::vector<double> m_xTalkParamsRightEven;///< Cross talk parameters
+  std::vector<double> m_xTalkParamsLeftEven; ///< Cross talk parameters
+  std::vector<double> m_xTalkParamsRightOdd; ///< Cross talk parameters
+  std::vector<double> m_xTalkParamsLeftOdd;  ///< Cross talk parameters
 
+  /// Defines tool names for the different charge sharing tools
+  std::vector<std::string> m_chargeSharerTypes;
 
   double m_scaling;                      ///< Scale the deposited charge
+  bool m_applyScaling;                   ///< Flag to apply the scaling
   /// Define tool names for different response types
   std::vector<std::string> m_beetleResponseTypes;
   bool m_useStatusConditions; ///< use dead strip info

@@ -32,6 +32,7 @@
 #include "Kernel/ILHCbMagnetSvc.h"
 
 using namespace LHCb;
+using namespace Gaudi::Units;
 
 DECLARE_ALGORITHM_FACTORY( MCSTDepositCreator );
 
@@ -51,21 +52,28 @@ MCSTDepositCreator::MCSTDepositCreator( const std::string& name,
   declareProperty("MinDist", m_minDistance = 5.0e-3*Gaudi::Units::mm);
 
   declareProperty("ChargeSharerName",m_chargeSharerName ="STChargeSharingTool");
+  declareProperty("ChargeSharerTypes",m_chargeSharerTypes );
+
   declareProperty("DepChargeTool", m_depChargeToolName = "SiDepositedCharge");
 
   declareProperty("SiteSize", m_siteSize = 0.02*Gaudi::Units::mm);
   declareProperty("MaxNumSites", m_maxNumSites = 150);
 
-  declareProperty("XTalkParams", m_xTalkParams);
-
-  m_xTalkParams.push_back(0.05);
-  m_xTalkParams.push_back(0.098/(55*Gaudi::Units::picofarad));
-
-
-  //  m_xTalkParams.push_back(0.08);
-  //m_xTalkParams.push_back(0.092/(55*Gaudi::Units::picofarad));
+  declareProperty("XTalkParamsRightEven", m_xTalkParamsRightEven = 
+                  boost::assign::list_of(0.0356)(0.0908/(55*picofarad)));
+  //                  boost::assign::list_of(0.0503)(0.001754/picofarad));
+  declareProperty("XTalkParamsLeftEven", m_xTalkParamsLeftEven = 
+                  boost::assign::list_of(0.0356)(0.0908/(55*picofarad)));
+  //                  boost::assign::list_of(0.0185)(0.001625/picofarad));
+  declareProperty("XTalkParamsRightOdd", m_xTalkParamsRightOdd = 
+                  boost::assign::list_of(0.0356)(0.0908/(55*picofarad)));
+  //                  boost::assign::list_of(0.0215)(0.001824/picofarad));
+  declareProperty("XTalkParamsLeftOdd", m_xTalkParamsLeftOdd = 
+                  boost::assign::list_of(0.0356)(0.0908/(55*picofarad)));
+  //                  boost::assign::list_of(0.0494)(0.001416/picofarad));
 
   declareProperty("Scaling", m_scaling = 1.0);
+  declareProperty("ApplyScaling", m_applyScaling = true );
   declareProperty("ResponseTypes", m_beetleResponseTypes);
   declareProperty("useStatusConditions", m_useStatusConditions = true);
   declareProperty("useSensDetID", m_useSensDetID = false);
@@ -73,8 +81,8 @@ MCSTDepositCreator::MCSTDepositCreator( const std::string& name,
   declareProperty("pMin", m_pMin = 1e-4 *Gaudi::Units::MeV);
 
 
-  declareProperty("applyLorentzCorrection", m_applyLorentzCorrection = false);
-  declareProperty("lorentzFactor", m_lorentzFactor = 0.025/Gaudi::Units::tesla);
+  declareProperty("ApplyLorentzCorrection", m_applyLorentzCorrection = false);
+  declareProperty("LorentzFactor", m_lorentzFactor = 0.025/Gaudi::Units::tesla);
 
   m_inputLocation = MCHitLocation::TT; 
   m_outputLocation = MCSTDepositLocation::TTDeposits;
@@ -96,11 +104,16 @@ StatusCode MCSTDepositCreator::initialize()
   StatusCode sc = ST::AlgBase::initialize();
   if (sc.isFailure()) return Error("Failed to initialize", sc);
 
-
   // charge sharing tool
-  m_chargeSharer = tool<ISTChargeSharingTool>(m_chargeSharerName, 
-                                              m_chargeSharerName,this);
-
+  std::vector<std::string>::const_iterator iterCSType = 
+    m_chargeSharerTypes.begin();
+  for( ; iterCSType != m_chargeSharerTypes.end(); ++iterCSType ) {
+    std::string chargeSharerName = m_chargeSharerName + (*iterCSType);
+    ISTChargeSharingTool* chargeSharer = 
+      tool<ISTChargeSharingTool>(m_chargeSharerName, chargeSharerName, this );
+    m_chargeSharer.push_back( chargeSharer );
+  }
+  
   // deposited charge 
   m_depositedCharge = tool<ISiDepositedCharge>(m_depChargeToolName,
                                                "DepCharge",this);
@@ -130,14 +143,14 @@ StatusCode MCSTDepositCreator::initialize()
     ++iSampleName;
   }
 
-  if (m_applyLorentzCorrection == true) m_fieldSvc = svc<ILHCbMagnetSvc>("MagneticFieldSvc", true);
+  if (m_applyLorentzCorrection == true) 
+    m_fieldSvc = svc<ILHCbMagnetSvc>("MagneticFieldSvc", true);
 
   return StatusCode::SUCCESS;
 }
 
 StatusCode MCSTDepositCreator::execute() 
 {
- 
   // make output containers and put them in the store  
   std::vector<MCSTDeposits*> depositsVec;
   BOOST_FOREACH(std::string path, m_outPaths) {
@@ -171,9 +184,9 @@ StatusCode MCSTDepositCreator::execute()
 }
  
 
-void MCSTDepositCreator::createDeposits( const MCHits* mcHitsCont, 
-                                         const double spillTime, 
-                                         std::vector<MCSTDeposits*>& depositCont )
+void MCSTDepositCreator::createDeposits(const MCHits* mcHitsCont,
+                                        const double spillTime, 
+                                        std::vector<MCSTDeposits*>& depositCont)
 {
   // loop over MChits
   MCHits::const_iterator iterHit = mcHitsCont->begin();
@@ -189,7 +202,8 @@ void MCSTDepositCreator::createDeposits( const MCHits* mcHitsCont,
 
     if (hitToDigitize(aHit) == true){           
       
-      if (m_useStatusConditions && aSector->sectorStatus() == DeSTSector::Dead ) continue;
+      if (m_useStatusConditions && aSector->sectorStatus() == DeSTSector::Dead )
+        continue;
 
       // find the sensor
       const Gaudi::XYZPoint globalMidPoint = aHit->midPoint();
@@ -199,16 +213,13 @@ void MCSTDepositCreator::createDeposits( const MCHits* mcHitsCont,
         continue;
       } 
 
-      Gaudi::XYZPoint globalEntry = aHit->entry();
-      Gaudi::XYZPoint globalExit = aHit->exit();
-
-      if (m_applyLorentzCorrection == true) lorentzShift(globalEntry,globalExit, 
-                                                         globalMidPoint);
-
       // from now on work in local sensor frame
-      const Gaudi::XYZPoint entryPoint = aSensor->toLocal(globalEntry);
-      const Gaudi::XYZPoint exitPoint = aSensor->toLocal(globalExit);
+      Gaudi::XYZPoint entryPoint = aSensor->toLocal( aHit->entry() );
+      Gaudi::XYZPoint exitPoint = aSensor->toLocal( aHit->exit() );
       const Gaudi::XYZPoint midPoint = aSensor->toLocal(globalMidPoint);
+
+      if (m_applyLorentzCorrection == true) lorentzShift(aSensor,globalMidPoint,
+                                                         entryPoint, exitPoint);
     
       if (aSensor->localInActive(midPoint) == true) {
 
@@ -226,14 +237,6 @@ void MCSTDepositCreator::createDeposits( const MCHits* mcHitsCont,
       
         if (totWeightedCharge > 1e-3 ){
 
-          // Determine cross talk level for this readout sector
-	   const double xTalkLevel = m_xTalkParams[0] + 
-             m_xTalkParams[1]*aSector->capacitance();
-	  //  const double xTalkLevel = m_xTalkParams[0] + 
-          //  m_xTalkParams[1]*aSector->sensorCapacitance();
- 
-
-          const double scaling = m_scaling * (1.0+(2.0*xTalkLevel));
           STChannelID elemChan = aSector->elementID();
 
           // loop over strips and simulate capacitive coupling
@@ -242,46 +245,71 @@ void MCSTDepositCreator::createDeposits( const MCHits* mcHitsCont,
           unsigned int iStrip = firstStrip;
           for ( ; iStrip <= lastStrip; ++iStrip ) {
 
+            // Determine whether Tell1 neighbour(!) channel is even or odd
+            bool tell1ChanEven = ((iStrip%2 == 1) == aSensor->xInverted());
+
+            // Determine cross talk level for this readout sector
+            double xTalkRight = 0.0;
+            double xTalkLeft  = 0.0;
+            if( tell1ChanEven ) {
+              xTalkRight = m_xTalkParamsRightEven[0] + 
+                m_xTalkParamsRightEven[1]*aSector->capacitance();
+              xTalkLeft = m_xTalkParamsLeftEven[0] + 
+                m_xTalkParamsLeftEven[1]*aSector->capacitance();
+            } else {
+              xTalkRight = m_xTalkParamsRightOdd[0] + 
+                m_xTalkParamsRightOdd[1]*aSector->capacitance();
+              xTalkLeft = m_xTalkParamsLeftOdd[0] + 
+                m_xTalkParamsLeftOdd[1]*aSector->capacitance();
+            }
+
             // Get the charge of the previous and next strips
             double prevCharge = 0.0;
             if (iStrip != firstStrip) prevCharge = stripMap[iStrip-1];
             double nextCharge = 0.0;
             if (iStrip != lastStrip) nextCharge = stripMap[iStrip+1];
-           
+            double leftCharge  = aSensor->xInverted() ? nextCharge : prevCharge;
+            double rightCharge = aSensor->xInverted() ? prevCharge : nextCharge;
+
             // Capacitive coupling
-            double weightedCharge = (1.- 2.0*xTalkLevel)*stripMap[iStrip]
-              + xTalkLevel*(nextCharge+prevCharge); 
+            double weightedCharge = (1.-xTalkLeft -xTalkRight)*stripMap[iStrip]
+              + xTalkRight*leftCharge + xTalkLeft*rightCharge ; 
+
+            // Scaling for the number of electrons (JvT: do we need this?)
+            const double scaling = m_applyScaling ?
+              m_scaling * (1.0 + xTalkLeft + xTalkRight ) : 1.0;
             
             // amplifier response - fraction of charge it sees
             for (unsigned int iTime = 0; iTime < m_outPaths.size(); ++iTime) {
-              double beetleFraction;          
+              double beetleFrac;          
               double samplingTime = m_sampleTimes[iTime];
               if (iStrip != firstStrip && iStrip != lastStrip){
-                beetleFraction = beetleResponse(m_tofVector[elemChan.station()-1]
-                                              -aHit->time()-spillTime + samplingTime,
-                                              aSector->capacitance(),
-                                              SiAmpliferResponseType::signal);
+                beetleFrac =beetleResponse(m_tofVector[elemChan.station()-1]
+                                           - aHit->time() - spillTime 
+                                           + samplingTime, 
+                                           aSector->capacitance(),
+                                           SiAmpliferResponseType::signal);
               }
               else {
-                beetleFraction = beetleResponse(m_tofVector[elemChan.station()-1]
-                                              -aHit->time()-spillTime + samplingTime,
-                                              aSector->capacitance(),
+                beetleFrac =beetleResponse(m_tofVector[elemChan.station()-1]
+                                           - aHit->time() - spillTime 
+                                           + samplingTime,
+                                           aSector->capacitance(),
                                            SiAmpliferResponseType::capCoupling);
               }
 
               STChannelID aChan = aSector->stripToChan(iStrip);
 
-              if ( m_useStatusConditions == false || aSector->isOKStrip(aChan) == true){
-            
-                const double electrons = ionization*beetleFraction*scaling*weightedCharge
-                                   /totWeightedCharge;
-
-                const double adcCounts = aSector->toADC(electrons, aChan);            
-
-                MCSTDeposit* newDeposit = new MCSTDeposit(adcCounts,aChan,aHit); 
+              if ( m_useStatusConditions == false || 
+                   aSector->isOKStrip(aChan) == true) {
+                const double electrons = ionization * beetleFrac * scaling
+                  * weightedCharge / totWeightedCharge;
+                
+                const double adcCounts = aSector->toADC(electrons, aChan);
+                MCSTDeposit* newDeposit = new MCSTDeposit(adcCounts,aChan,aHit);
                 depositCont[iTime]->insert(newDeposit);
-	      } // ok strip
-	    } // loop sampling times
+              } // ok strip
+            } // loop sampling times
           } // loop strip
         } // if has some charge
       }  // in active area
@@ -300,13 +328,14 @@ bool MCSTDepositCreator::hitToDigitize(const MCHit* aHit) const
 
   // some hits have a zero p...
   if (aHit->p() < m_pMin){
-    Warning( "Hit with zero p - not digitized", StatusCode::SUCCESS, 1 ).ignore();
+    Warning( "Hit with zero p - not digitized", StatusCode::SUCCESS,1).ignore();
     return false;
   }
 
   // check if entry and exit point are at the same z-position
   if (fabs(aHit->entry().z() - aHit->exit().z()) < LHCb::Math::lowTolerance) { 
-    Warning("Entry and exit at same z - not digitized", StatusCode::SUCCESS, 1).ignore();
+    Warning("Entry and exit at same z - not digitized", 
+            StatusCode::SUCCESS, 1).ignore();
     return false;
   }
 
@@ -344,9 +373,8 @@ void MCSTDepositCreator::distributeCharge(const double entryU,
 
 void MCSTDepositCreator::chargeSharing(const std::vector<double>& sites,
                                        const DeSTSensor* aSensor,
-                                       std::map<unsigned int,
-                                       double>& stripMap, 
-                                       double& possibleCollectedCharge) const 
+                                       std::map<unsigned int, double>& stripMap,
+                                       double& possibleCollectedCharge) 
 {
   // init
   const double chargeOnSite = 1.0/((double)sites.size());
@@ -354,6 +382,17 @@ void MCSTDepositCreator::chargeSharing(const std::vector<double>& sites,
   double frac = 0.0;
   unsigned int firstStrip;
   unsigned int secondStrip;
+
+  // Find the appropriate charge sharing tool
+  ISTChargeSharingTool* chargeSharer = 0;
+  double deltaT = 1E10*m;
+  std::vector<ISTChargeSharingTool*>::iterator iter = m_chargeSharer.begin();
+  for( ; iter != m_chargeSharer.end(); ++iter ) {
+    if( fabs((*iter)->thickness() - aSensor->thickness() ) < deltaT ) {
+      deltaT = fabs((*iter)->thickness() - aSensor->thickness()) ;
+      chargeSharer = *iter;
+    }
+  }
 
   // loop on sites
   while (iterSite != sites.end()){
@@ -364,16 +403,16 @@ void MCSTDepositCreator::chargeSharing(const std::vector<double>& sites,
   
     // do the sharing: first Strip!
     if (aSensor->isStrip(firstStrip)){
-      frac = m_chargeSharer->sharing(fabs(*iterSite-aSensor->localU(firstStrip))
-                                     /aSensor->pitch());
+      frac = chargeSharer->sharing(fabs(*iterSite-aSensor->localU(firstStrip))
+                                   /aSensor->pitch());
       stripMap[firstStrip] += frac*chargeOnSite;
       possibleCollectedCharge += frac*chargeOnSite;
     }
 
     // second strip - if there is one
     if (aSensor->isStrip(secondStrip)){
-      frac =m_chargeSharer->sharing(fabs(*iterSite-aSensor->localU(secondStrip))
-                                    /aSensor->pitch());
+      frac = chargeSharer->sharing(fabs(*iterSite-aSensor->localU(secondStrip))
+                                   /aSensor->pitch());
       stripMap[secondStrip] += frac*chargeOnSite;
       possibleCollectedCharge += frac*chargeOnSite;
     }
@@ -419,13 +458,27 @@ double MCSTDepositCreator::beetleResponse(const double time,
   return (bResponse !=0 ? bResponse->response(time): 0);
 }
 
-void MCSTDepositCreator::lorentzShift(Gaudi::XYZPoint& entry,  
-                                      Gaudi::XYZPoint& exit, const Gaudi::XYZPoint& midPoint) const {
-  
-  Gaudi::XYZVector field = m_fieldSvc->fieldVector(midPoint) ;  
-  const double dz = (fabs)(entry.z() - exit.z());
-  double dx = dz * field.y() * m_lorentzFactor;
-  entry.SetX(entry.x() + dx);
-  exit.SetX(exit.x() + dx);
+void MCSTDepositCreator::lorentzShift(const DeSTSensor* sensor,
+                                      const Gaudi::XYZPoint& midPoint,
+                                      Gaudi::XYZPoint& entry,  
+                                      Gaudi::XYZPoint& exit ) const 
+{
+  // Get the local By
+  Gaudi::XYZVector field = m_fieldSvc->fieldVector( midPoint ) ;
+  Gaudi::XYZVector normalY( sensor->globalPoint(0,1,0) - 
+                            sensor->globalPoint(0,0,0) );
+  double localBy = field.Dot( normalY.Unit() );
 
+  // Calculate the Lorentz shift in local x.
+  const double dz = exit.z() - entry.z();
+  double dx = fabs(dz) * localBy * m_lorentzFactor;
+
+  // Apply a small tilt to particle trajectory by shifting either the entry or
+  // exit point
+  if( dz > 0 ) {
+    exit.SetX(exit.x() + dx);
+  } else {
+    entry.SetX(entry.x() + dx);
+  }
+  
 }
