@@ -203,6 +203,7 @@ var navbar_subdetectors = function(navBar) {
 	     '../Images/Help_32x32.gif');
   navBar.addURL('Lumi/DAQ page',lhcb.constants.urls.lhcb.subdetectors.daq_lumi);
   navBar.addURL('Trigger/DAQ page',lhcb.constants.urls.lhcb.subdetectors.daq_trigger);
+  navBar.addURL('Big Brother/DAQ page',lhcb.constants.urls.lhcb.subdetectors.daq_bigbrother);
   navBar.addURL('TRG/L0 status page',lhcb.constants.urls.lhcb.subdetectors.trg_l0status);
   navBar.addURL('Show VELO page',lhcb.constants.urls.lhcb.subdetectors.velo);
   navBar.addURL('Show OT page',lhcb.constants.urls.lhcb.subdetectors.ot);

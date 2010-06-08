@@ -76,8 +76,8 @@ var red_led    = function(c) {
 };
 var blue_led   = function(c) { 
   //if ( _isInternetExplorer() ) { c.style.backgroundColor = 'blue'; return 'Unknown'; }
-  return '<IMG src="'+lhcb.constants.mkStaticImage('smileys/free-rolleye-smileys-323.gif').src+'" height="15"></IMG>'; 
-  //return '<IMG src="'+lhcb.constants.mkStaticImage('smileys/smiley153.gif').src+'" height="15"></IMG>';   
+  //return '<IMG src="'+lhcb.constants.mkStaticImage('smileys/free-rolleye-smileys-323.gif').src+'" height="15"></IMG>'; 
+  return '<IMG src="'+lhcb.constants.mkStaticImage('smileys/smiley153.gif').src+'" height="15"></IMG>';   
 };
 
 
@@ -353,6 +353,24 @@ var TrgStatus = function(msg)   {
     return tab;
   };
 
+  var Legend = function() {
+    var c, tb, td, tr, tab = document.createElement('table');
+    tb = document.createElement('tbody');  
+    tab.width     = '100%';
+    tab.className = 'MonitorPage';
+    tb.className  = 'MonitorPage';
+
+    tb.appendChild(tr = document.createElement('tr'));
+    tr.appendChild(Cell('Legend: ',1,'MonitorDataHeader'));
+    tr.appendChild(Cell(green_led()+':  Status OK',1,null));
+    tr.appendChild(Cell(yellow_led()+':  Warning',1,null));
+    tr.appendChild(Cell(red_led()+':  ERROR',1,null));
+    tr.appendChild(Cell(blue_led()+':  Status UNKNOWN',1,null));
+
+    tab.appendChild(tb);
+    return tab;
+  };
+  
   var table = lhcb.widgets.SubdetectorPage('L0 Trigger status');
 
   table.options = {logo:    null,
@@ -363,15 +381,25 @@ var TrgStatus = function(msg)   {
 
   table.beforeComment = function() {
     var td, tr, opts = {style:'Arial12pt',legend:true,logger:this.logger};
-    this.leds = lhcb.widgets.L0TriggerSummary(opts);
+    var leds = lhcb.widgets.L0TriggerSummary(opts);
+    
     tr = document.createElement('tr');
     td = document.createElement('td');
     this.tbody.appendChild(tr);
-    td.appendChild(this.leds);
+    td.appendChild(leds);
     td.colSpan = 2;
     tr.appendChild(td);
-    this.subscriptions.push(this.leds);
+
+    tr = document.createElement('tr');
+    td = document.createElement('td');
+    this.tbody.appendChild(tr);
+    td.appendChild(Legend());
+    td.colSpan = 2;
+    tr.appendChild(td);
+
+    this.subscriptions.push(leds);
   };
+
   return table;
 };
 
