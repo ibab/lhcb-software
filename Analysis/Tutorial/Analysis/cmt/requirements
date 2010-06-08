@@ -1,12 +1,12 @@
-# $Id: requirements,v 1.58 2010-05-27 15:02:41 jpalac Exp $ 
+# $Id: requirements,v 1.59 2010-06-08 13:29:59 pkoppenb Exp $ 
 # ============================================================================
-# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.58 $
+# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.59 $
 # ============================================================================
 # Created    : 2004-11-04
 # Maintainer : P. Koppenburg
 # ============================================================================
 package           Analysis
-version           v8r5
+version           v8r6
 
 # ============================================================================
 # Structure, i.e. directories to process. 
