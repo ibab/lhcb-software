@@ -9,6 +9,7 @@
 namespace LHCb{
   class STCluster;
 }
+class DeSTSector;
 
 
 // Boost accumulator classes to store MPVs of sectors
@@ -71,7 +72,7 @@ namespace ST
     void fillHitMaps(const LHCb::STCluster* cluster);
 
     /// Fill the cluster mpv map per sector
-    void fillMPVMap();
+    void fillMPVMap(const DeSTSector* sector, double charge);
 
     std::string m_clusterLocation; ///< Input location for clusters
 
@@ -109,6 +110,9 @@ namespace ST
     AIDA::IProfile1D* m_prof_nClustersVsTELL1;///< Number of clusters per TELL1
     AIDA::IHistogram2D* m_2d_nClustersVsTELL1;///< Number of clusters per TELL1
 
+    AIDA::IHistogram1D* m_1d_nClustersVsTELL1Links;///< Number of clusters per TELL1 (split into links)
+    AIDA::IHistogram1D* m_1d_nClustersVsTELL1Sectors;///< Number of clusters per TELL1 (split into sectors)
+
     unsigned int m_overFlowLimit;
     AIDA::IHistogram1D* m_1d_nClusters_overflow;///< Number of clusters where last bin contains overflow info
 
@@ -129,6 +133,9 @@ namespace ST
     /// Hitmaps
     AIDA::IHistogram2D* m_2d_hitmap;///< Cluster hitmap
     AIDA::IProfile1D* m_prof_sectorMPVs;///< Sector MPV vs arbitrary sector number 
+    AIDA::IProfile1D* m_prof_sectorTruncMean1;///< Sector MPV calculated using truncated mean losing first and last 15%
+    AIDA::IProfile1D* m_prof_sectorTruncMean2;///< Sector MPV calculated using truncated mean 1st 70% of ADC distribution
+    AIDA::IProfile1D* m_prof_sectorBinnedMPV;///< Sector MPV vs arbitrary sector number 
     AIDA::IHistogram2D* m_2d_sectorMPVs;///< Sector MPV maps
     AIDA::IHistogram2D* m_2d_sectorMPVsNorm;///< Use to normalize the MPV distribution in the history mode of the presenter
 
@@ -136,27 +143,19 @@ namespace ST
     unsigned int m_nBeetlePortsPerSector; ///< Number of beetle ports per sector
     static const unsigned int m_nBeetlePortsPerTTSector=16u;///< Number of bins per TT sector in the hitmap (beetle ports)
     static const unsigned int m_nBeetlePortsPerITSector=12u;///< Number of bins in each IT sector (beetle ports)
-
+    unsigned int m_nSectorsPerTELL1;
     /// Accumulation of statistics for the MPV per sector
-    std::map<const unsigned int,ST::MedianAccumulator> m_sectorMPVs;
-    std::map<const unsigned int,ST::MeanAccumulator> m_sectorMeans;
     std::map<const unsigned int,TH1D*> m_1ds_chargeBySector;
+    std::map<const unsigned int, std::vector<double> > m_chargeBySector;
 
     /// Contains the bin corresponding to a given sectors in the 1d representation of the hitmap
     std::map<const unsigned int, unsigned int> m_sectorBins1D;
     AIDA::IHistogram1D* m_1d_nClustersVsSector; ///< Number of clusters in each sector
     AIDA::IHistogram1D* m_1d_nClustersVsBeetlePort; ///< Number of clusters in each beetle port
 
-    /// Resets the boost accumlators after a change of run number
-    void resetAccumulators();
-
-    /// Reset the MPV counters (histograms and boost accumulators) with a frequency given by the resetRate.
-    void resetMPVCounters();
-
-    /// Reset rate for accumulators/MPV histograms
+    /// Reset rate for MPV calculation
     unsigned int m_resetRate;
-    /// Store run number so that accumulators can be reset at end of each run
-    unsigned int m_runNumber;
+
   };
 } // End of ST namespace
 #endif // STCLUSTERMONITOR_H

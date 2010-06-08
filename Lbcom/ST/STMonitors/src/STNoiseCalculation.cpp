@@ -24,11 +24,11 @@ namespace ST{
 //=============================================================================
 ST::STNoiseCalculation::STNoiseCalculation( const std::string& name,
                         ISvcLocator* pSvcLocator)
-  : ST::AlgBase ( name , pSvcLocator )
+  : GaudiAlgorithm ( name , pSvcLocator )
 {
   /// Noise calculation tool
   declareProperty("NoiseToolType",m_noiseToolType="ST::STNoiseCalculationTool");
-  declareSTConfigProperty("NoiseToolName",m_noiseToolName,"TTNoiseCalculationTool");
+  declareProperty("NoiseToolName",m_noiseToolName,"TTNoiseCalculationTool");
 }
 
 //=============================================================================

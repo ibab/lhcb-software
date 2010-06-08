@@ -137,19 +137,13 @@ StatusCode STNZSMonitor::execute() {
     return StatusCode::SUCCESS;
   }
 
-  // Get the tell1 mapping from source ID to tell1 number
-  std::map<unsigned int, unsigned int>::const_iterator itT = (this->readoutTool())->SourceIDToTELLNumberMap().begin();
-
-  // loop over the boards
-  for(; itT != (this->readoutTool())->SourceIDToTELLNumberMap().end(); ++itT) {
+  // loop over the boards which contained an NZS bank
+  std::vector<unsigned int>::const_iterator itT = m_noiseTool->tell1WithNZSBegin();
+  for(; itT != m_noiseTool->tell1WithNZSEnd(); ++itT) {
     // Flag to check if histogram needs to be updated
     bool needToUpdate = false;
     
-    unsigned int sourceID = (*itT).first;
-
-    // Only interested in tell1s which contained an NZS bank
-    if ( !binary_search(m_noiseTool->tell1WithNZSBegin(), m_noiseTool->tell1WithNZSEnd(), sourceID) ) continue;
-    //    int tellID = m_useSourceID ? sourceID : (*itT).second;
+    unsigned int sourceID = (*itT);
 
     // Loop over number of events for FPGA-PP and see if the histograms need to be reset
     std::vector<unsigned int>::const_iterator itEvts = m_noiseTool->cmsNEventsBegin(sourceID);
@@ -160,13 +154,12 @@ StatusCode STNZSMonitor::execute() {
       int nEvt = (*itEvts);
       if( m_followingPeriod > 0 && nEvt > m_followingPeriod ) 
         nEvt = m_followingPeriod;
-    
+
       // Check if at least one of the PPs requires to update the histogram
       if( m_updateRate > 0 && nEvt%m_updateRate == 0 && nEvt != 0 ) {
         needToUpdate = true;
       }
     } // FPGA-PP
-    
     // Update the noise histogram
     if( needToUpdate ) updateNoiseHistogram( sourceID );
     
@@ -210,8 +203,8 @@ void STNZSMonitor::updateNoiseHistogram(unsigned int sourceID, bool updateTitle)
     std::vector<double>::const_iterator itNoise;
     std::vector<double>::const_iterator itNoiseEnd;
     if(m_rawNoise) {
-      itPed = m_noiseTool->rawMeanBegin(sourceID);
-      itPedEnd = m_noiseTool->rawMeanEnd(sourceID);
+      itPed = m_noiseTool->pedestalBegin(sourceID);
+      itPedEnd = m_noiseTool->pedestalEnd(sourceID);
       itNoise = m_noiseTool->rawNoiseBegin(sourceID);
       itNoiseEnd = m_noiseTool->rawNoiseEnd(sourceID);
     } else {
@@ -220,7 +213,6 @@ void STNZSMonitor::updateNoiseHistogram(unsigned int sourceID, bool updateTitle)
       itNoise = m_noiseTool->cmsNoiseBegin(sourceID);
       itNoiseEnd = m_noiseTool->cmsNoiseEnd(sourceID);
     }
-
     for(; itNoise != itNoiseEnd; ++itNoise, ++itPed, ++strip) {
       noiseHist->fill( strip, (*itNoise) );
       pedestalHist->fill( strip, (*itPed) );
