@@ -273,7 +273,7 @@ StatusCode PVResolution::execute()
       m_odinTime0 = odin->gpsTime();
     }
     else {
-      unsigned long itime = odin->gpsTime() - m_odinTime0;
+      unsigned long itime = (unsigned long) (odin->gpsTime() - m_odinTime0);
       m_odinTime = 1e-6 * itime;
     }
 
