@@ -12,7 +12,7 @@ MCTTDepositCreator.XTalkParamsRightEven = {0.0503, 0.001754/picofarad};
 MCTTDepositCreator.XTalkParamsLeftEven  = {0.0185, 0.001625/picofarad};
 MCTTDepositCreator.XTalkParamsRightOdd  = {0.0215, 0.001824/picofarad};
 MCTTDepositCreator.XTalkParamsLeftOdd   = {0.0494, 0.001416/picofarad};
-MCTTDepositCreator.SiteSize = 0.02*mm;
+MCTTDepositCreator.SiteSize = 0.002*mm;
 
 // 2010 options: charge sharing function  for TT
 MCTTDepositCreator.ChargeSharerTypes = { "500" };
