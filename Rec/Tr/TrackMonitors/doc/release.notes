@@ -4,6 +4,9 @@
 ! Purpose     : Package for track data quality monitoring algorithms
 !-----------------------------------------------------------------------------
 
+! 2010-06-08 - Daan Van Eijk
+ - Added 2D histgrams in OTHitEfficiencyMonitor, to see hit/hot efficiency as function of x-y
+
 ! 2010-06-07 - Rob Lambert
  - Fixes for windows warnings savannah task #15808
 
