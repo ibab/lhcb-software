@@ -1,7 +1,7 @@
 """
 High level configuration tools for DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.111 2010-06-08 08:42:30 jpalac Exp $"
+__version__ = "$Id: Configuration.py,v 1.112 2010-06-08 12:05:07 jpalac Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -501,10 +501,7 @@ class DaVinci(LHCbConfigurableUser) :
         '''
         FileRecordDataSvc().ForceLeaves         = True
         FileRecordDataSvc().RootCLID            = 1
-        '''
         FileRecordDataSvc().PersistencySvc      = "PersistencySvc/FileRecordPersistencySvc"
-
-        '''
         ApplicationMgr().ExtSvc += [ PoolDbCnvSvc("FileRecordCnvSvc",
                                                   DbType = "POOL_ROOTTREE",
                                                   ShareFiles = "YES" )
