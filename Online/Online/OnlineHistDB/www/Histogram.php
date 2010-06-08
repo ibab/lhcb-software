@@ -51,6 +51,7 @@ if(isset($htype) ) {
       if( $canwrite) {
 	echo "<br><form method='post' action='write/histo_display.php'>";
 	printf("<input type='hidden' name='id' value='%s'>\n",$id);
+	printf("<input type='hidden' name='NAME' value='%s'>\n",$histo["NAME"]);
 	printf("<input type='hidden' name='htype' value='%s'>\n",$htype);
 	printf("<input type='hidden' name='NHS' value='%s'>\n",$histo["NHS"]);
 	printf("<input type='hidden' name='HSTYPE' value='%s'>\n",$histo["HSTYPE"]);
@@ -70,6 +71,7 @@ if(isset($htype) ) {
       if( $canwrite) {
 	echo "<br><form method='post' action='write/histo_labels.php'>";
 	printf("<input type='hidden' name='id' value='%s'>\n",$id);
+	printf("<input type='hidden' name='NAME' value='%s'>\n",$histo["NAME"]);
 	printf("<input type='hidden' name='htype' value='%s'>\n",$htype);
 	printf("<input type='hidden' name='NHS' value='%s'>\n",$histo["NHS"]);
 	echo "<table align=right><tr><td><input type='submit' name='New' value='Specify Custom Bin Labels'></tr></table>";
@@ -87,6 +89,7 @@ if(isset($htype) ) {
     if( $canwrite && $htype=='HSID') {
       echo "<br><form method='post' action='write/histo_analysis.php'>";
       printf("<input type='hidden' name='id' value='%s'>\n",$id);
+      printf("<input type='hidden' name='NAME' value='%s'>\n",$histo["NAME"]);
       printf("<input type='hidden' name='htype' value='%s'>\n",$htype);
       printf("<input type='hidden' name='NHS' value='%s'>\n",$histo["NHS"]);
       echo "<table align=right><tr><td><input type='submit' name='New' value='Add Automatic Analysis'></tr></table>";

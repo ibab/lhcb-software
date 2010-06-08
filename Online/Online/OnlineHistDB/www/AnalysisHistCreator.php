@@ -49,7 +49,7 @@ else {
   }
   else {
     echo " You can define here a virtual Histogram that is produced automatically by the Presenter or at Analysis time from the normal Monitoring Histograms<br> <br> <br>  ";
-    echo "<form action=$_SERVER[PHP_SELF] method='POST'>\n"; 
+    echo "<form action=".$_SERVER["PHP_SELF"]." method='POST'>\n"; 
     echo "Title &nbsp <input type='text' name=hctitle size=60><br>\n";
     echo "Choose Algorithm <select name='Alg'>\n";
     $stid = OCIParse($conn,"SELECT ALGNAME,ALGDOC,NINPUT,NPARS,GETSET from ALGORITHM WHERE ALGTYPE='HCREATOR'");

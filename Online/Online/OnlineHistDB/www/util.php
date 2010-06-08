@@ -1,9 +1,13 @@
 <? 
 $canwrite=0;
 $debug=0;
-// for the moment, web server must know the DB password to allow read/write or 
-// read-only access. This won't be needed when the DB will be in production
-// on the LHCB oracle server 
+
+
+// constants
+$kintsize = 38;
+$kfloatsize = 126;
+$kvparsize = 16;
+
 
 // ----------------------------------------------------
 // functions for connecting to DB

@@ -1,6 +1,8 @@
 <?php 
 include '../util.php'; include '../dbforms.php'; 
 $conn=HistDBconnect(1);
+$id=$_POST["id"];
+$name=$_POST["NAME"];
 ?>
 <HTML>
  <HEAD>
@@ -83,9 +85,9 @@ function fitok() {
   return 0;
 }
 
-$id=$_POST["id"];
 ?>
 <H2 ALIGN="CENTER">Update Default Display Options for histogram <?php echo $id ?></H2>
+<H3 ALIGN="CENTER"><?php echo $name ?></H3>
 
 <?php
 $page= array_key_exists("PAGE",$_POST) ? $_POST["PAGE"] : 0;
@@ -99,14 +101,14 @@ if (array_key_exists("Remove_DO",$_POST)) {
     echo "<br><font color='red'> for the whole histogram set (".$_POST["NHS"]." histograms)<br></font>";
   }
   echo "</B><br>\n";
-  echo "<form action='$_SERVER[PHP_SELF]' method='post'>\n";
+  echo "<form action='".$_SERVER["PHP_SELF"]."' method='post'>\n";
   echo "<input type='hidden' name='id' value='${id}'>\n";
   echo "<input type='hidden' name='htype' value='".$_POST["htype"],"'>\n";    
   echo "<input type='hidden' name='doid' value='".$_POST["doid"],"'>\n";
   echo "<input type='submit' name='Really_Remove_DO' value='Confirm Removal of Display Options'>\n";
  }
  else if (array_key_exists("Really_Remove_DO",$_POST)) {
-   if (remove_histo_display($doid)) 
+   if (remove_histo_display($_POST["doid"])) 
      echo "Histogram Display options  deleted successfully<br><br>\n";
    else
      echo "<font color=red> <B>Got errors from remove_histo_display() </B></font><br><br>\n";

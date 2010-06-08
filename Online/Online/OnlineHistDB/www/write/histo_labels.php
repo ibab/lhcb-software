@@ -1,6 +1,8 @@
 <?php 
 include '../util.php'; include '../dbforms.php'; 
 $conn=HistDBconnect();
+$id=$_POST["id"];
+$name=$_POST["NAME"];
 ?>
 <HTML>
  <HEAD>
@@ -14,9 +16,9 @@ if (!$conn) {
   exit;
 }
 
-$id=$_POST["id"];
 ?>
-<H2 ALIGN="CENTER">Add/Update Custom Bin Labels for histogram <?php echo $id ?></H2><hr>
+<H2 ALIGN="CENTER">Add/Update Custom Bin Labels for histogram <?php echo $id ?></H2>
+<H3 ALIGN="CENTER"><?php echo $name ?></H3><hr>
 
 <?php
 

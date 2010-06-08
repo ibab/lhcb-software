@@ -26,7 +26,7 @@ $conn=HistDBconnect(1);
  }
  else {
    echo "Please confirm you want to delete page ".$_POST["PAGETODELETE"]."\n";
-   echo "<hr><form method='post' action='$_SYSTEM[PHP_SELF]'>\n";
+   echo "<hr><form method='post' action='".$_SERVER["PHP_SELF"]."'>\n";
    echo "<input type='hidden' name=PAGETODELETE value='".$_POST["PAGETODELETE"]."'>\n";
    echo "<input type='submit' class=bad name='Confirm' value='Confirm'>\n";
  }

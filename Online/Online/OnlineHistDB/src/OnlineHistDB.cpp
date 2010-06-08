@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistDB.cpp,v 1.43 2010-01-26 18:12:38 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistDB.cpp,v 1.44 2010-06-08 17:18:06 ggiacomo Exp $
 /*
    C++ interface to the Online Monitoring Histogram DB
    G. Graziani (INFN Firenze)
@@ -165,15 +165,14 @@ OnlineHistogram* OnlineHistDB::declareAnalysisHistogram
     command << ")";
     command <<",:name); END;";
     
-    
     m_StmtMethod = "OnlineHistDB::declareAnalysisHistogram";
     OCIStmt *stmt=NULL;
     if ( OCI_SUCCESS == prepareOCIStatement(stmt, command.str().c_str()) ) {
       text name[VSIZE_SN]="";
       myOCIBindString(stmt,":name", name, VSIZE_SN);
       if ( OCI_SUCCESS == myOCIStmtExecute(stmt) ) {
-	std::string Name= std::string((const char *) name);
-	outh=getHistogram(Name);
+        std::string Name= std::string((const char *) name);
+        outh=getHistogram(Name);
       }
       releaseOCIStatement(stmt);
     }

@@ -59,7 +59,16 @@ $DispOpt = array("LABEL_X",
 "MARGIN_BOTTOM",
 "MARGIN_LEFT",
 "MARGIN_RIGHT",
-"PADCOLOR");
+"PADCOLOR",
+"STATTRANSP",
+"REFDRAWOPTS",
+"SPAREI1",
+"SPAREI2",
+"SPAREF1",
+"SPAREF2",
+"SPARES",
+"NOTITLE",
+"SHOWTITLE");
 function get_displayoptions($disp) {
   global $conn;
   $query="BEGIN ONLINEHISTDB.GET_DISPLAYOPTIONS($disp";
@@ -185,6 +194,24 @@ function get_displayoptions($disp) {
   $_POST["MARGIN_RIGHT"] = 9999999999.;
   $query .= ",:PADCOLOR";
   $_POST["PADCOLOR"] = 9999999999.;
+  $query .= ",:STATTRANSP";
+  $_POST["STATTRANSP"] = 9999999999.;
+  $query .= ",:REFDRAWOPTS";
+  $_POST["REFDRAWOPTS"] = str_repeat(" ",50);
+  $query .= ",:SPAREI1";
+  $_POST["SPAREI1"] = 9999999999.;
+  $query .= ",:SPAREI2";
+  $_POST["SPAREI2"] = 9999999999.;
+  $query .= ",:SPAREF1";
+  $_POST["SPAREF1"] = 9999999999.;
+  $query .= ",:SPAREF2";
+  $_POST["SPAREF2"] = 9999999999.;
+  $query .= ",:SPARES";
+  $_POST["SPARES"] = str_repeat(" ",50);
+  $query .= ",:NOTITLE";
+  $_POST["NOTITLE"] = 9999999999.;
+  $query .= ",:SHOWTITLE";
+  $_POST["SHOWTITLE"] = str_repeat(" ",80);
   $query .= "); END;";
   $dstid = OCIParse($conn,$query);
   ocibindbyname($dstid,":LABEL_X",$_POST["LABEL_X"],50);
@@ -248,6 +275,15 @@ function get_displayoptions($disp) {
   ocibindbyname($dstid,":MARGIN_LEFT",$_POST["MARGIN_LEFT"]);
   ocibindbyname($dstid,":MARGIN_RIGHT",$_POST["MARGIN_RIGHT"]);
   ocibindbyname($dstid,":PADCOLOR",$_POST["PADCOLOR"]);
+  ocibindbyname($dstid,":STATTRANSP",$_POST["STATTRANSP"]);
+  ocibindbyname($dstid,":REFDRAWOPTS",$_POST["REFDRAWOPTS"],50);
+  ocibindbyname($dstid,":SPAREI1",$_POST["SPAREI1"]);
+  ocibindbyname($dstid,":SPAREI2",$_POST["SPAREI2"]);
+  ocibindbyname($dstid,":SPAREF1",$_POST["SPAREF1"]);
+  ocibindbyname($dstid,":SPAREF2",$_POST["SPAREF2"]);
+  ocibindbyname($dstid,":SPARES",$_POST["SPARES"],50);
+  ocibindbyname($dstid,":NOTITLE",$_POST["NOTITLE"]);
+  ocibindbyname($dstid,":SHOWTITLE",$_POST["SHOWTITLE"],80);
   OCIExecute($dstid);
   ocifreestatement($dstid);
 }

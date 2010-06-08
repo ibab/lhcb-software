@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistogram.h,v 1.33 2009-06-22 09:17:27 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistogram.h,v 1.34 2010-06-08 17:18:05 ggiacomo Exp $
 #ifndef ONLINEHISTOGRAM_H
 #define ONLINEHISTOGRAM_H 1
 /** @class  OnlineHistogram OnlineHistogram.h OnlineHistDB/OnlineHistogram.h
@@ -251,7 +251,10 @@ class  OnlineHistogram : public OnlineHistDBEnv
                       std::vector<float>* warn, 
                       std::vector<float>* alarm,
                       std::vector<float>* inputs,
-                      bool &mask); 
+                      bool &mask,
+                      int &statusbits,
+                      float &minstat,
+                      float &minstatfrac); 
   /// masks analysis with ID AnaID. Use Mask=false to unmask. Returns true on success
   bool maskAnalysis(int AnaID,
                     bool Mask=true); 

@@ -1,6 +1,9 @@
 <?php 
 include '../util.php'; include '../dbforms.php'; 
 $conn=HistDBconnect();
+$id=$_POST["id"];
+$ia=$_POST["Iana"];
+$name=$_POST["NAME"];
 ?>
 <HTML>
  <HEAD>
@@ -46,13 +49,29 @@ function update_histo_analysis() {
     $Docs .= ",Message => '".sqlstring($_POST["a${ia}_mes"])."'";
   }
 
+  $statusBits=0;
+  for ($b=0;$b<32;$b++) {
+    if ($_POST["a${ia}_stb_${b}"]) {
+      $statusBits += pow(2,$b);
+    }
+  }
+  $statCond=$upCond="";
+  if ($_POST["a${ia}_mst"]) {
+    $statCond .= ",theMinStat => ".$_POST["a${ia}_mst"];
+    $upCond .= ",MINBINSTAT=".$_POST["a${ia}_mst"];
+  }
+  if ($_POST["a${ia}_msf"]) {
+    $statCond .= ",theMinStatFrac => ".$_POST["a${ia}_msf"];
+    $upCond .= ",MINBINSTATFRAC=".$_POST["a${ia}_msf"];
+  }
 
   if ( $_POST["htype"] == "HSID") {
-    $command="begin :out := OnlineHistDB.DeclareAnalysisWithID(".$_POST["id"].",'".$_POST["a${ia}_alg"]."',$warnings,$alarms,$aid,$inputs$Docs); end;";
+    $command="begin :out := OnlineHistDB.DeclareAnalysisWithID(".$_POST["id"].",'".$_POST["a${ia}_alg"]."',$warnings,$alarms,$aid,$inputs$Docs,theBits => $statusBits $statCond); end;";
     $gAna=1;
   }
   else { // just update settings for this single histogram
-    $command= "update ANASETTINGS set WARNINGS=$warnings,ALARMS=$alarms,INPUTPARS=$inputs where ANA=$aid and HISTO='$id'";
+    $command= "update ANASETTINGS set WARNINGS=$warnings,ALARMS=$alarms,INPUTPARS=$inputs,STATUSBITS=${statusBits}${upCond} ".
+      "where ANA=$aid and HISTO='$id'";
     $gAna=0; $out=1;
   }  
 
@@ -98,10 +117,9 @@ function remove_histo_analysis($aid,$hset) {
   return 1;  
 }
 
-$id=$_POST["id"];
-$ia=$_POST["Iana"];
 ?>
-<H2 ALIGN="CENTER">Add/Update Automatic Analysis for histogram <?php echo $id ?></H2><hr>
+<H2 ALIGN="CENTER">Add/Update Automatic Analysis for histogram <?php echo $id ?></H2>
+<H3 ALIGN="CENTER"><?php echo $name ?></H3><hr>
 
 <?php
 
@@ -119,7 +137,7 @@ else if (array_key_exists("Remove_Analysis",$_POST)) {
     echo "If you confirm, Analysis ".$_POST["a${ia}_alg"]." will be removed and settings of parameters will be lost<br>\n";
     if($_POST["NHS"]>1)
       echo "<B> for all the ".$_POST["NHS"]." histograms of set<br>\n";
-    echo "<form action='$_SERVER[PHP_SELF]' method='post'>\n";
+    echo "<form action='".$_SERVER["PHP_SELF"]."' method='post'>\n";
     echo "<input type='hidden' name='id' value='${id}'>\n";
     echo "<input type='hidden' name='htype' value='".$_POST["htype"],"'>\n";    
     echo "<input type='hidden' name='algo' value='".$_POST["a${ia}_alg"],"'>\n";

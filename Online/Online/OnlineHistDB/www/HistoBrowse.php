@@ -19,7 +19,7 @@ if (isset($_GET["bypage"])) {
   echo "Select Page Name<br>";
   $parameter="page";
   $ncol=1;
-  $query="select PageFolderName from PAGEFOLDER";
+  $query="select PageFolderName from PAGEFOLDER order by PageFolderName";
 }
 if (isset($_GET["byalpha"])) {
   echo "List histograms with titles beginning with letter<br><br>";
@@ -30,7 +30,7 @@ if (isset($_GET["byalpha"])) {
   $ncol=7;
 }
 if (isset($_GET["byfeature"])) {
-  $items=array('Show Histograms produced by Analysis task','Show Histograms with automatic analysis');
+  $items=array('Show Virtual Histograms','Show Histograms with automatic analysis');
   $parameter="feature";
   $ncol=1;
 }

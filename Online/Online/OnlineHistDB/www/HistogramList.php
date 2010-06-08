@@ -151,14 +151,14 @@ else {
     $prev=$first-$maxresults;
     // to navigate the histogram list, I call myself with the 'first' argument
     if($first>1) {
-      echo "<form action='$_SERVER[PHP_SELF]?first=${prev}' METHOD='POST'>";
+      echo "<form action='".$_SERVER['PHP_SELF']."?first=${prev}' METHOD='POST'>";
       echo "<input type='hidden' name='query' value=\"$query\">\n";
       echo "<input type='hidden' name='ncount' value='$ncount'>\n";
       echo "<input class='asalink' type='submit'  name='prev' value='previous $maxresults'>";
       echo "</form>";
     }
     if($next<$ncount) {
-      echo "<form action='$_SERVER[PHP_SELF]?first=${next}' METHOD='POST'>";
+      echo "<form action='".$_SERVER['PHP_SELF']."?first=${next}' METHOD='POST'>";
       echo "<input type='hidden' name='query' value=\"$query\">\n";
       echo "<input type='hidden' name='ncount' value='$ncount'>\n";
       echo "<input class='asalink' type='submit'   name='next' value='next $maxresults'>";

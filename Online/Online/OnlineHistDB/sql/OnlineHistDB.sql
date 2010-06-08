@@ -63,7 +63,7 @@ create or replace package OnlineHistDB AUTHID CURRENT_USER as
  procedure GetFitFunInputParname(fcode IN int, Ipar IN integer, name OUT varchar2, defVal OUT float );
  procedure GetFitFunName(fcode IN int, theName OUT varchar2);
     -- access function for php4 (produced automatically by  autodispopt.pl)
- procedure GET_DISPLAYOPTIONS(theDOID IN int
+procedure GET_DISPLAYOPTIONS(theDOID IN int
   ,LABEL_X OUT VARCHAR2,LABEL_Y OUT VARCHAR2,LABEL_Z OUT VARCHAR2,YMIN OUT FLOAT,YMAX OUT FLOAT,STATS OUT INT
   ,FILLSTYLE OUT INT,FILLCOLOR OUT INT,LINESTYLE OUT INT,LINECOLOR OUT INT,LINEWIDTH OUT INT,DRAWOPTS OUT VARCHAR2
   ,XMIN OUT FLOAT,XMAX OUT FLOAT,ZMIN OUT FLOAT,ZMAX OUT FLOAT,LOGX OUT INT,LOGY OUT INT
@@ -72,26 +72,31 @@ create or replace package OnlineHistDB AUTHID CURRENT_USER as
   ,LAB_Y_SIZE OUT FLOAT,LAB_Y_OFFS OUT FLOAT,LAB_Z_SIZE OUT FLOAT,LAB_Z_OFFS OUT FLOAT,GRIDX OUT INT,GRIDY OUT INT
   ,THETA OUT FLOAT,PHI OUT FLOAT,CNTPLOT OUT VARCHAR2,DRAWPATTERN OUT VARCHAR2,STAT_X_SIZE OUT FLOAT,STAT_X_OFFS OUT FLOAT
   ,STAT_Y_SIZE OUT FLOAT,STAT_Y_OFFS OUT FLOAT,HTIT_X_SIZE OUT FLOAT,HTIT_X_OFFS OUT FLOAT,HTIT_Y_SIZE OUT FLOAT,HTIT_Y_OFFS OUT FLOAT
-  ,NDIVX OUT INT,NDIVY OUT INT,MARKERSIZE OUT INT,MARKERCOLOR OUT INT,MARKERSTYLE OUT INT,NORM OUT FLOAT
+  ,NDIVX OUT INT,NDIVY OUT INT,MARKERSIZE OUT FLOAT,MARKERCOLOR OUT INT,MARKERSTYLE OUT INT,NORM OUT FLOAT
   ,TICK_X OUT INT,TICK_Y OUT INT,MARGIN_TOP OUT FLOAT,MARGIN_BOTTOM OUT FLOAT,MARGIN_LEFT OUT FLOAT,MARGIN_RIGHT OUT FLOAT
-  ,PADCOLOR OUT INT);
-
+  ,PADCOLOR OUT INT,STATTRANSP OUT INT,REFDRAWOPTS OUT VARCHAR2,SPAREI1 OUT INT,SPAREI2 OUT INT,SPAREF1 OUT FLOAT
+  ,SPAREF2 OUT FLOAT,SPARES OUT VARCHAR2,NOTITLE OUT INT,SHOWTITLE OUT VARCHAR2);
 
  -- analysis
  function DeclareAnalysis(theSet IN HISTOGRAMSET.HSID%TYPE, Algo IN varchar2, warn IN vthresholds, alr IN vthresholds, 
-	instance IN integer:=1, inputs IN vthresholds:=vthresholds(), Doc IN varchar2 := NULL, Message IN varchar2 := NULL) return number;
+	instance IN integer:=1, inputs IN vthresholds:=vthresholds(), Doc IN varchar2 := NULL, Message IN varchar2 := NULL,
+                         theBits IN integer := NULL, theMinStat IN float := NULL, theMinStatFrac IN float := NULL) return number;
  function DeclareAnalysisWithID(theSet IN HISTOGRAMSET.HSID%TYPE, Algo IN varchar2, warn IN vthresholds, alr IN vthresholds, 
-	anaID IN integer :=0, inputs IN vthresholds:=vthresholds(), Doc IN varchar2 := NULL, Message IN varchar2 := NULL) return number;
+	anaID IN integer :=0, inputs IN vthresholds:=vthresholds(), Doc IN varchar2 := NULL, Message IN varchar2 := NULL,
+                         theBits IN integer := NULL, theMinStat IN float := NULL, theMinStatFrac IN float := NULL) return number;
  procedure SetSpecialAnalysis(theAna IN integer, theHisto IN varchar2,  warn IN vthresholds, alr IN vthresholds,
-	inputs IN vthresholds:=vthresholds());
+	inputs IN vthresholds:=vthresholds(), theBits IN integer := NULL, theMinStat IN float := NULL, theMinStatFrac IN float := NULL);
+          -- functions without objects for php4
  procedure GetAlgoNpar(theAlg IN varchar2, Npar OUT integer, Ninp OUT integer);
  procedure GetAlgoParname(theAlg IN varchar2, Ipar IN integer, name OUT varchar2, defVal OUT float);
  procedure GetFitAlgNpar(fcode IN int, Npar OUT integer, Ninp OUT integer);
  procedure GetFitAlgParname(fcode IN int, Ipar IN integer, name OUT varchar2, defVal OUT float);
  procedure GetAnaSettings(theAna IN integer, theHisto IN varchar2, Ipar IN integer, warn OUT float, alr OUT float);
  procedure GetAnaInput(theAna IN integer, theHisto IN varchar2, Ipar IN integer, input OUT float);
+ procedure GetAnaConditionals(theAna IN integer, theHisto IN varchar2, stBits OUT smallint, minstat OUT FLOAT, minstatfrac OUT FLOAT);
+          -- access functions for C++
  procedure GetAnaSettings(theAna IN integer, theHisto IN varchar2, warn OUT vthresholds, alr OUT vthresholds,
-	mask OUT int, inputs OUT vthresholds);
+	mask OUT int, inputs OUT vthresholds, stBits OUT smallint, minstat OUT FLOAT, minstatfrac OUT FLOAT);
  function GetHistoAnalysis(theHistoSet IN int, anaids OUT intlist, ananames OUT analist) return number;
 
  -- "analysis" (virtual) histograms
@@ -118,12 +123,17 @@ create or replace package OnlineHistDB AUTHID CURRENT_USER as
  function StoreMessage(theHName IN HISTOGRAM.NAME%TYPE := NULL, theSaveSet IN varchar2, 
                 theTask IN varchar2 := NULL, theAnalysisTask IN varchar2 := NULL, theLevel IN ANAMESSAGE.ALEVEL%TYPE,
                 theMessage IN varchar2, theAID IN ANALYSIS.AID%TYPE := NULL, theAName IN varchar2 := NULL, 
-                theID IN ANAMESSAGE.ID%TYPE := NULL,  outTime OUT int, outAname OUT varchar2) return number;
+                theID IN ANAMESSAGE.ID%TYPE := NULL,  theActive IN ANAMESSAGE.ACTIVE%TYPE := 1,
+                outTime OUT int, outAname OUT varchar2, lastTime  OUT int, 
+                Noccur OUT int, Nsolv OUT int, Nretrig OUT int) return number;
  procedure GetMessages(msgids OUT inttlist, theAnaysisTask IN varchar2 := NULL);
  procedure GetMessage(MsgID IN ANAMESSAGE.ID%TYPE, theHName OUT HISTOGRAM.NAME%TYPE, theSaveSet OUT varchar2, 
                 theTask OUT varchar2, theAnalysisTask OUT varchar2,
                 theLevel OUT varchar2, theMessage OUT varchar2, theAName OUT varchar2, 
-	       	theAid OUT int, theUXTime OUT int);
+	       	theAid OUT int, theUXTime OUT int, theUXLastTime OUT int,
+                theNoccur OUT int, theNsolv OUT int, theNretrig OUT int,
+                theActive OUT ANAMESSAGE.ACTIVE%TYPE);
+ procedure CleanPadColors;
  procedure DeleteAllMessages;
  procedure DeleteOldMessages(expTime IN int, anaTask IN varchar2);
         
@@ -435,7 +445,8 @@ function DeclareHistByAttributes(tk IN varchar2,algo IN  varchar2, title IN  var
  mynhs HISTOGRAMSET.NHS%TYPE;
  mynana HISTOGRAMSET.NANALYSIS%TYPE;
  myihs HISTOGRAM.IHS%TYPE;
- cursor myans(Xhisto HISTOGRAM.HID%TYPE) is select ANA,VWARNINGS,VALARMS from ANASETTINGS where HISTO=Xhisto;
+ cursor myans(Xhisto HISTOGRAM.HID%TYPE) is select ANA,VWARNINGS,VALARMS,VINPUTPARS,STATUSBITS,MINBINSTAT,MINBINSTATFRAC 
+       from ANASETTINGS where HISTO=Xhisto;
  myana ANASETTINGS.ANA%TYPE;
  mywn vthresholds;
  myal vthresholds;
@@ -498,7 +509,9 @@ function DeclareHistByAttributes(tk IN varchar2,algo IN  varchar2, title IN  var
     -- if analysis exists for set, create it for this histogram, masked by default, with same parameters than first histogram in set
     if (mynana >0) then
       for aset in myans(myhsid||'/1') LOOP
-       INSERT INTO ANASETTINGS(ANA,HISTO,MASK,VWARNINGS,VALARMS) VALUES(aset.ANA,myhid,1,aset.VWARNINGS,aset.VALARMS);
+       INSERT INTO ANASETTINGS(ANA,HISTO,MASK,VWARNINGS,VALARMS,VINPUTPARS,STATUSBITS,MINBINSTAT,MINBINSTATFRAC) 
+            VALUES(aset.ANA,myhid,1,aset.VWARNINGS,aset.VALARMS,aset.VINPUTPARS,
+                   aset.STATUSBITS,aset.MINBINSTAT,aset.MINBINSTATFRAC);
       end LOOP;     
     end if;
     close myhinset;
@@ -697,7 +710,8 @@ end DeclareFitFunction;
 
 
 function DeclareAnalysis(theSet IN HISTOGRAMSET.HSID%TYPE, Algo IN varchar2, warn IN vthresholds, alr IN vthresholds, 
-                         instance IN integer :=1, inputs IN vthresholds:=vthresholds(), Doc IN varchar2 := NULL, Message IN varchar2 := NULL) 
+                         instance IN integer :=1, inputs IN vthresholds:=vthresholds(), Doc IN varchar2 := NULL, Message IN varchar2 := NULL,
+                         theBits IN integer := NULL, theMinStat IN float := NULL, theMinStatFrac IN float := NULL) 
 	return number is
  cursor ana is select AID from ANALYSIS where HSET=theSet and ALGORITHM=Algo order by AID;
  myid ANALYSIS.AID%TYPE := 0;
@@ -715,12 +729,13 @@ begin
  if (ana%NOTFOUND) then 
   myid := 0;
  end if;
- return DeclareAnalysisWithID(theSet, Algo, warn, alr, myid, inputs, Doc, Message);
+ return DeclareAnalysisWithID(theSet, Algo, warn, alr, myid, inputs, Doc, Message,theBits,theMinStat,theMinStatFrac);
 end DeclareAnalysis;
 -----------------------
 
 function DeclareAnalysisWithID(theSet IN HISTOGRAMSET.HSID%TYPE, Algo IN varchar2, warn IN vthresholds, alr IN vthresholds, 
-                         anaID IN integer :=0, inputs IN vthresholds:=vthresholds(), Doc IN varchar2 := NULL, Message IN varchar2 := NULL) 
+                         anaID IN integer :=0, inputs IN vthresholds:=vthresholds(), Doc IN varchar2 := NULL, Message IN varchar2 := NULL,
+                         theBits IN integer := NULL, theMinStat IN float := NULL, theMinStatFrac IN float := NULL) 
         return number is cursor hs is  select NHS from HISTOGRAMSET where HSID=theSet;
  mynh HISTOGRAMSET.NHS%TYPE :=0;
  cursor al is  select ALGTYPE,NPARS,NINPUT from ALGORITHM where ALGNAME=Algo;	
@@ -761,13 +776,15 @@ begin
     UPDATE  HISTOGRAMSET set NANALYSIS=NANALYSIS+1 where HSID=theSet;
     for i IN 1..mynh LOOP
      hid := theSet||'/'||i;
-      INSERT INTO ANASETTINGS(ANA,HISTO,VWARNINGS,VALARMS,VINPUTPARS) VALUES(Analysis_ID.CURRVAL,hid,warn,alr,inputs);
+      INSERT INTO ANASETTINGS(ANA,HISTO,VWARNINGS,VALARMS,VINPUTPARS,STATUSBITS,MINBINSTAT,MINBINSTATFRAC) 
+             VALUES(Analysis_ID.CURRVAL,hid,warn,alr,inputs,theBits,theMinStat,theMinStatFrac);
     end LOOP;
    end if;
  else
   -- analysis already exists: update parameters
    UPDATE ANALYSIS SET ANADOC=Doc, ANAMESSAGE=Message where AID=anaID;
-   UPDATE ANASETTINGS SET VWARNINGS=warn,VALARMS=alr,VINPUTPARS=inputs where ANA=anaID and REGEXP_REPLACE(HISTO,'^(.*)/.*$','\1')=theSet;
+   UPDATE ANASETTINGS SET VWARNINGS=warn,VALARMS=alr,VINPUTPARS=inputs,STATUSBITS=theBits,MINBINSTAT=theMinStat,MINBINSTATFRAC=theMinStatFrac
+     where ANA=anaID and REGEXP_REPLACE(HISTO,'^(.*)/.*$','\1')=theSet;
    myid := anaID;
  end if;
  return myid;
@@ -779,7 +796,7 @@ end DeclareAnalysisWithID;
 
 -----------------------
 procedure SetSpecialAnalysis(theAna IN integer, theHisto IN varchar2,  warn IN vthresholds, alr IN vthresholds,
-	inputs IN vthresholds:=vthresholds()) is
+	inputs IN vthresholds:=vthresholds(), theBits IN integer := NULL, theMinStat IN float := NULL, theMinStatFrac IN float := NULL) is
  cursor anaset(Xh HISTOGRAM.HID%TYPE) is select MASK from ANASETTINGS where ANA=theAna and HISTO=Xh;
  mk ANASETTINGS.MASK%TYPE;
 begin
@@ -793,10 +810,12 @@ begin
      raise_application_error(-20005,'Cannot find Analysis '||theAna||' for histogram'|| theHisto);
     else
      -- histogram has been added to set after analysis declaration: create new ANASETTINGS entry
-     INSERT INTO ANASETTINGS(ANA,HISTO,VWARNINGS,VALARMS,VINPUTPARS) VALUES(theAna,theHisto,warn,alr,inputs);
+     INSERT INTO ANASETTINGS(ANA,HISTO,VWARNINGS,VALARMS,VINPUTPARS,STATUSBITS,MINBINSTAT,MINBINSTATFRAC) 
+         VALUES(theAna,theHisto,warn,alr,inputs,theBits,theMinStat,theMinStatFrac);
     end if;
  else
-  UPDATE ANASETTINGS SET VWARNINGS=warn,VALARMS=alr,VINPUTPARS=inputs WHERE ANA=theAna and HISTO=theHisto;
+  UPDATE ANASETTINGS SET VWARNINGS=warn,VALARMS=alr,VINPUTPARS=inputs,STATUSBITS=theBits,MINBINSTAT=theMinStat,MINBINSTATFRAC=theMinStatFrac
+    WHERE ANA=theAna and HISTO=theHisto;
  end if;
  close anaset;
 EXCEPTION
@@ -919,43 +938,49 @@ begin
 end GetFitOptions;
 
 function GetFitParam(theDOID IN int, iPar IN int) return number is
- theFitPars vthresholds;
+ theFitPars vthresholds := vthresholds();
 begin
  select VFITPARS into theFitPars from DISPLAYOPTIONS where DOID=theDOID;
- if ( iPar >0 and iPar <= theFitPars.COUNT ) then
-  return theFitPars(iPar);
- else 
+ if (theFitPars is not null) then
+  if ( iPar >0 and iPar <= theFitPars.COUNT ) then
+   return theFitPars(iPar);
+  else 
+   return NULL;
+  end if;
+ else
   return NULL;
  end if;
 end GetFitParam;
 
 procedure GetFitFunParname(fcode IN int, Ipar IN integer, name OUT varchar2, defVal OUT float ) is
- theFitPars vparameters;
- theDefVal vthresholds;
+ theFitPars vparameters := vparameters();
+ theDefVal vthresholds := vthresholds();
  nmaxopar int;
  mymu int;
 begin 
  name := NULL;
  defVal := NULL;
  select NP,VPARNAMES,VFIPARDEFVAL,MUSTINIT into nmaxopar,theFitPars,theDefVal,mymu from FITFUNCTION where CODE=fcode;
- if ( Ipar >0 and Ipar <= nmaxopar ) then
+ if ( Ipar >0 and Ipar <= nmaxopar and theFitPars is not NULL ) then
   name := theFitPars(Ipar);
   if (mymu = 1) then 
-   defVal := theDefVal(Ipar);
+   if (theDefVal is not NULL) then
+     defVal := theDefVal(Ipar);
+   end if;
   end if;
  end if;
 end GetFitFunParname;
 -----------------------
 procedure GetFitFunInputParname(fcode IN int, Ipar IN integer, name OUT varchar2, defVal OUT float ) is
- theFitPars vparameters;
- theDefVal vthresholds;
+ theFitPars vparameters := vparameters();
+ theDefVal vthresholds := vthresholds();
  nmaxipar int;
  mynp int;
 begin 
  name := NULL;
  defVal := NULL;
  select NP,NINPUT,VPARNAMES,VFIPARDEFVAL into mynp,nmaxipar,theFitPars,theDefVal from FITFUNCTION where CODE=fcode;
- if ( Ipar >0 and Ipar <= nmaxipar ) then
+ if ( Ipar >0 and Ipar <= nmaxipar and theFitPars is not NULL and theDefVal is not NULL ) then
   name := theFitPars(mynp+Ipar);
   defVal := theDefVal(mynp+Ipar);
  end if;
@@ -970,6 +995,7 @@ end GetFitFunName;
 -----------------------
 
 -- procedure GET_DISPLAYOPTIONS is produced automatically by  autodispopt.pl
+
 procedure GET_DISPLAYOPTIONS(theDOID IN int
   ,LABEL_X OUT VARCHAR2,LABEL_Y OUT VARCHAR2,LABEL_Z OUT VARCHAR2,YMIN OUT FLOAT,YMAX OUT FLOAT,STATS OUT INT
   ,FILLSTYLE OUT INT,FILLCOLOR OUT INT,LINESTYLE OUT INT,LINECOLOR OUT INT,LINEWIDTH OUT INT,DRAWOPTS OUT VARCHAR2
@@ -979,9 +1005,10 @@ procedure GET_DISPLAYOPTIONS(theDOID IN int
   ,LAB_Y_SIZE OUT FLOAT,LAB_Y_OFFS OUT FLOAT,LAB_Z_SIZE OUT FLOAT,LAB_Z_OFFS OUT FLOAT,GRIDX OUT INT,GRIDY OUT INT
   ,THETA OUT FLOAT,PHI OUT FLOAT,CNTPLOT OUT VARCHAR2,DRAWPATTERN OUT VARCHAR2,STAT_X_SIZE OUT FLOAT,STAT_X_OFFS OUT FLOAT
   ,STAT_Y_SIZE OUT FLOAT,STAT_Y_OFFS OUT FLOAT,HTIT_X_SIZE OUT FLOAT,HTIT_X_OFFS OUT FLOAT,HTIT_Y_SIZE OUT FLOAT,HTIT_Y_OFFS OUT FLOAT
-  ,NDIVX OUT INT,NDIVY OUT INT,MARKERSIZE OUT INT,MARKERCOLOR OUT INT,MARKERSTYLE OUT INT,NORM OUT FLOAT
+  ,NDIVX OUT INT,NDIVY OUT INT,MARKERSIZE OUT FLOAT,MARKERCOLOR OUT INT,MARKERSTYLE OUT INT,NORM OUT FLOAT
   ,TICK_X OUT INT,TICK_Y OUT INT,MARGIN_TOP OUT FLOAT,MARGIN_BOTTOM OUT FLOAT,MARGIN_LEFT OUT FLOAT,MARGIN_RIGHT OUT FLOAT
-  ,PADCOLOR OUT INT) is
+  ,PADCOLOR OUT INT,STATTRANSP OUT INT,REFDRAWOPTS OUT VARCHAR2,SPAREI1 OUT INT,SPAREI2 OUT INT,SPAREF1 OUT FLOAT
+  ,SPAREF2 OUT FLOAT,SPARES OUT VARCHAR2,NOTITLE OUT INT,SHOWTITLE OUT VARCHAR2) is
  mydo dispopt; 
 begin
  SELECT OPT INTO mydo FROM DISPLAYOPTIONS WHERE DOID = theDOID;
@@ -1046,7 +1073,17 @@ begin
  MARGIN_LEFT := mydo.MARGIN_LEFT;
  MARGIN_RIGHT := mydo.MARGIN_RIGHT;
  PADCOLOR := mydo.PADCOLOR;
+ STATTRANSP := mydo.STATTRANSP;
+ REFDRAWOPTS := mydo.REFDRAWOPTS;
+ SPAREI1 := mydo.SPAREI1;
+ SPAREI2 := mydo.SPAREI2;
+ SPAREF1 := mydo.SPAREF1;
+ SPAREF2 := mydo.SPAREF2;
+ SPARES := mydo.SPARES;
+ NOTITLE := mydo.NOTITLE;
+ SHOWTITLE := mydo.SHOWTITLE;
 end GET_DISPLAYOPTIONS;
+
 
 -------------------------------
 
@@ -1106,8 +1143,8 @@ procedure GetAlgoParname(theAlg IN varchar2, Ipar IN integer, name OUT varchar2,
 -- for check functions Ipar from 1 to NPARS gives output parameter
 -- Ipar from NPARS+1 to NPARS+NINPUT gives input parameter
  cursor np is select VALGPARS,VPARDEFVAL from ALGORITHM where ALGNAME=theAlg;
- mypars vparameters;
- mydefval vthresholds;
+ mypars vparameters :=vparameters();
+ mydefval vthresholds :=vthresholds();
 begin
  name := 'Unknown';
  defVal := NULL;
@@ -1164,13 +1201,13 @@ procedure GetFitAlgParname(fcode IN int, Ipar IN integer, name OUT varchar2, def
  nin int;
  noutfa int;
  ninfa int;
- fapars vparameters;
+ fapars vparameters :=vparameters();
  noutff int;
  ninff int;
- ffpars vparameters;
+ ffpars vparameters :=vparameters();
  isinput int;
- defvalfa vthresholds;
- defvalff vthresholds;
+ defvalfa vthresholds :=vthresholds();
+ defvalff vthresholds :=vthresholds();
  ffix int :=0;
  mymu FITFUNCTION.MUSTINIT%TYPE;
  cursor np is select NPARS,NINPUT,VALGPARS,VPARDEFVAL from ALGORITHM where ALGNAME='Fit';
@@ -1281,18 +1318,26 @@ end GetHistoAnalysis;
 -----------------------
 procedure GetAnaSettings(theAna IN integer, theHisto IN varchar2, Ipar IN integer, warn OUT float, alr OUT float) is
  cursor anaset is  select VWARNINGS,VALARMS FROM ANASETTINGS WHERE ANA=theAna and HISTO=theHisto;
- myw vthresholds;
- mya vthresholds;
+ myw vthresholds := vthresholds();
+ mya vthresholds := vthresholds();
 begin
+ warn := -999;
+ alr := -999;
  open anaset;
  fetch anaset into myw,mya;
  if(anaset%NOTFOUND) then
-     warn := -999;
-     alr := -999;
      raise_application_error(-20005,'Cannot find Analysis '||theAna||' for histogram'|| theHisto);
  end if;
- warn := myw(Ipar);
- alr := mya(Ipar);
+ if (myw is not NULL) then
+  if (Ipar <= myw.COUNT) then
+   warn := myw(Ipar);
+  end if;
+ end if;
+ if (mya is not NULL) then
+  if (Ipar <= mya.COUNT) then   
+   alr := mya(Ipar);
+  end if;
+ end if;
  close anaset;
 EXCEPTION
  when others then
@@ -1323,16 +1368,38 @@ end GetAnaInput;
 
 ------------------------------------------------------------------------------------------------------------
 
-procedure GetAnaSettings(theAna IN integer, theHisto IN varchar2, warn OUT vthresholds, alr OUT vthresholds,
-	mask OUT int , inputs OUT vthresholds) is
- cursor anaset is  select VWARNINGS,VALARMS,MASK,VINPUTPARS FROM ANASETTINGS WHERE ANA=theAna and HISTO=theHisto;
+procedure GetAnaConditionals(theAna IN integer, theHisto IN varchar2, stBits OUT smallint, minstat OUT FLOAT, minstatfrac OUT FLOAT) is
+ cursor anaset is  select STATUSBITS,MINBINSTAT,MINBINSTATFRAC FROM ANASETTINGS WHERE ANA=theAna and HISTO=theHisto;
 begin
  open anaset;
- fetch anaset into warn,alr,mask,inputs;
+ fetch anaset into stBits,minstat,minstatfrac;
+ if(anaset%NOTFOUND) then
+     stBits :=0;
+     minstat:=0;
+     minstatfrac:=0;
+     raise_application_error(-20005,'Cannot find Analysis '||theAna||' for histogram'|| theHisto);
+ end if;
+ close anaset;
+ EXCEPTION
+ when others then
+  raise_application_error(-20050,SQLERRM);
+end GetAnaConditionals;
+
+
+procedure GetAnaSettings(theAna IN integer, theHisto IN varchar2, warn OUT vthresholds, alr OUT vthresholds,
+	mask OUT int , inputs OUT vthresholds, stBits OUT smallint, minstat OUT FLOAT, minstatfrac OUT FLOAT) is
+ cursor anaset is  select VWARNINGS,VALARMS,MASK,VINPUTPARS,STATUSBITS,MINBINSTAT,MINBINSTATFRAC
+                   FROM ANASETTINGS WHERE ANA=theAna and HISTO=theHisto;
+begin
+ open anaset;
+ fetch anaset into warn,alr,mask,inputs,stBits,minstat,minstatfrac;
  if(anaset%NOTFOUND) then
      warn := vthresholds();
      alr := vthresholds();
      mask := 0;
+     stBits := 0;
+     minstat := 0;
+     minstatfrac := 0;
      raise_application_error(-20005,'Cannot find Analysis '||theAna||' for histogram'|| theHisto);
  end if;
  close anaset;
@@ -1858,6 +1925,7 @@ begin
  if (seep%FOUND) then
   update HISTOGRAM set REFPAGE=thePage where HID=theHID;
  end if;
+ close seep;
  return out;
 end SetPageToDisplay;
 -----------------------
@@ -1865,20 +1933,42 @@ end SetPageToDisplay;
 function StoreMessage(theHName IN HISTOGRAM.NAME%TYPE := NULL, theSaveSet IN varchar2, 
                 theTask IN varchar2 := NULL, theAnalysisTask IN varchar2 := NULL, theLevel IN ANAMESSAGE.ALEVEL%TYPE,
                 theMessage IN varchar2, theAID IN ANALYSIS.AID%TYPE := NULL, theAName IN varchar2 := NULL, 
-                theID IN ANAMESSAGE.ID%TYPE := NULL, outTime OUT int, outAname OUT varchar2)  return number is
+                theID IN ANAMESSAGE.ID%TYPE := NULL,  theActive IN ANAMESSAGE.ACTIVE%TYPE := 1,
+                outTime OUT int, outAname OUT varchar2, lastTime  OUT int, 
+                Noccur OUT int, Nsolv OUT int, Nretrig OUT int)  return number is
+ cursor status is select ACTIVE,NOCCUR,NSOLV,NRETRIG from anamessage where ID=theID;
  myID ANAMESSAGE.ID%TYPE;
  myName ANAMESSAGE.ANANAME%TYPE;
+ stAct ANAMESSAGE.ACTIVE%TYPE;
+ stNoc smallint;
+ stNso smallint;
+ stNre smallint;
 begin
  savepoint beforeMSGwrite;
  if (theID is not NULL) then
-  update ANAMESSAGE set SAVESET = theSaveSet, ALEVEL=theLevel where ID=theID;
+  open status;
+  fetch status into stAct,stNoc,stNso,stNre;
+  if (theActive = 1) then
+   stNoc := stNoc + 1;
+   if (stAct = 0) then -- retriggered
+     stNre := stNre + 1;
+   end if;
+  else 
+   if (stAct = 1) then -- solved
+     stNso := stNso + 1;
+   end if;
+  end if;
+  update ANAMESSAGE set SAVESET= theSaveSet, ALEVEL=theLevel, ACTIVE=theActive, 
+         NOCCUR=stNoc, NSOLV=stNso, NRETRIG=stNre where ID=theID;
   myID := theID;
+  close status;
  else 
   -- new message
-  insert into ANAMESSAGE(ID,SAVESET,ALEVEL) VALUES(ANAMESSAGE_ID.NEXTVAL,theSaveSet,theLevel);
+  insert into ANAMESSAGE(ID,SAVESET,ALEVEL,MSGTIME,ACTIVE,NOCCUR,NSOLV,NRETRIG) 
+       VALUES(ANAMESSAGE_ID.NEXTVAL,theSaveSet,theLevel,SYSTIMESTAMP,theActive,1,0,0);
   select ANAMESSAGE_ID.CURRVAL into myID  from ERGOSUM;
  end if;
- update ANAMESSAGE set MSGTEXT=theMessage,MSGTIME=SYSTIMESTAMP,
+ update ANAMESSAGE set MSGTEXT=theMessage,MSGLASTTIME=SYSTIMESTAMP,
              TASK=theTask,ANALYSISTASK=theAnalysisTask where ID=myID;
  if (theHName is not NULL) then
   update ANAMESSAGE set HISTO=(select HID from HISTOGRAM where NAME=theHName) where ID=myID;
@@ -1893,6 +1983,7 @@ begin
   outAname := theAName;
  end if;
  select TIMEST2UXT(MSGTIME) into outTime from ANAMESSAGE where ID=myID;
+ select TIMEST2UXT(MSGLASTTIME) into lastTime from ANAMESSAGE where ID=myID;
  return myID;
 exception
  when OTHERS then 
@@ -1920,16 +2011,20 @@ end GetMessages;
 -----------------------
 
 procedure GetMessage(MsgID IN ANAMESSAGE.ID%TYPE, theHName OUT HISTOGRAM.NAME%TYPE, theSaveSet OUT varchar2, 
-                theTask OUT varchar2, theAnalysisTask OUT varchar2, 
+                theTask OUT varchar2, theAnalysisTask OUT varchar2,
                 theLevel OUT varchar2, theMessage OUT varchar2, theAName OUT varchar2, 
-	       	theAid OUT int, theUXTime OUT int) is
- cursor mes is select HISTO,SAVESET,ALEVEL,MSGTEXT,ANANAME,TIMEST2UXT(MSGTIME),TASK,ANALYSISTASK,ANAID
+	       	theAid OUT int, theUXTime OUT int, theUXLastTime OUT int,
+                theNoccur OUT int, theNsolv OUT int, theNretrig OUT int,
+                theActive OUT ANAMESSAGE.ACTIVE%TYPE) is
+ cursor mes is select HISTO,SAVESET,ALEVEL,MSGTEXT,ANANAME,TIMEST2UXT(MSGTIME),TASK,ANALYSISTASK,ANAID,
+        TIMEST2UXT(MSGLASTTIME),NOCCUR,NSOLV,NRETRIG,ACTIVE
 	from ANAMESSAGE WHERE ID=MsgID;
  myH ANAMESSAGE.HISTO%TYPE;
 begin
  open mes;
  fetch mes into myH,theSaveSet,theLevel,theMessage,theAName,
-		theUXTime,theTask,theAnalysisTask,theAid;
+		theUXTime,theTask,theAnalysisTask,theAid,theUXLastTime,
+                theNoccur,theNsolv,theNretrig,theActive;
  if (mes%NOTFOUND) then
      theAid := -999;
  else
@@ -1943,9 +2038,60 @@ begin
 end GetMessage;
 -----------------------
 
+procedure CleanPadColors is
+ cursor dop is select OPT,DOID from displayoptions;
+ cursor msg is select histo from anamessage;
+ cursor cdo(xh HISTOGRAM.HID%TYPE) is select DISPLAY,HSDISPLAY from histogram h,
+ histogramset hs where
+         h.hid = xh and h.hset = hs.hsid;
+ myh VARCHAR2(12);
+ theh VARCHAR2(12);
+ myopt DISPOPT;
+ mypadc NUMBER(38);
+ ismsg int;
+ mydoid NUMBER(38);
+ hdoid NUMBER(38);
+ hsdoid NUMBER(38);
+begin
+  open dop;
+  LOOP
+   fetch dop into myopt,mydoid;
+   EXIT WHEN dop%NOTFOUND;
+   if (myopt is not NULL) then
+    mypadc := myopt.PADCOLOR;
+    if (mypadc is not NULL) then
+     ismsg := 0;
+     open msg;
+     LOOP
+       fetch msg into myh;
+       EXIT WHEN msg%NOTFOUND;
+       open cdo(myh);
+       fetch cdo into hdoid,hsdoid;
+       if (hdoid = mydoid or hsdoid = mydoid) then
+         ismsg := 1;
+         theh := myh;
+       end if;
+       close cdo;
+     end LOOP;
+     close  msg;
+     if (ismsg = 0) then
+      -- DBMS_OUTPUT.PUT_LINE('Clearing padcolor '||mypadc||' for doid '||mydoid);
+      myopt.PADCOLOR := NULL;
+      update displayoptions set OPT=myopt where DOID=mydoid;
+     -- else
+      -- DBMS_OUTPUT.PUT_LINE('Keeping padcolor '||mypadc||' for histo '||theh);
+     end if;
+    end if;
+   end if;
+  end LOOP;
+  close dop;
+end CleanPadColors;
+-----------------------
+
 procedure DeleteAllMessages is
 begin
  delete from ANAMESSAGE;
+ CleanPadColors();
 end DeleteAllMessages;
 -----------------------
 

@@ -33,7 +33,7 @@ else {
   echo "<font size=+1> You requested to Delete Special display options for histogram <br>\n";
   echo "<font color=red>".fromGet($_GET["name"])." </font> <br> \n";
   echo "on Page <font color=red >${page} </font></font><br>\n";
-  echo "<form action=".$_SERVER[PHP_SELF]." method='post'>";
+  echo "<form action=".$_SERVER["PHP_SELF"]." method='post'>";
   echo "<input type='hidden' name='doid' value='".$_GET["doid"]."'>\n";
   echo "<input type='hidden' name='page' value='${page}'>\n";
   echo "<input type='submit' name='Confirm' value='Confirm'>\n";

@@ -1,6 +1,8 @@
 <?php 
 include '../util.php'; include '../dbforms.php'; 
 $conn=HistDBconnect(1);
+$id=$_POST["id"];
+$name=$_POST["NAME"];
 ?>
 <HTML>
  <HEAD>
@@ -33,7 +35,8 @@ function update_histo_header() {
 }
 
 ?>
-<H2 ALIGN="CENTER">Update header for histogram set <?php echo $id ?></H2><hr>
+<H2 ALIGN="CENTER">Update header for histogram <?php echo $id ?></H2>
+<H3 ALIGN="CENTER"><?php echo $name ?></H3><hr>
 
 <?php
 
@@ -49,7 +52,7 @@ else {
 }
 
 ocilogoff($conn);
-echo "<br> <a href='../Histogram.php?".strtolower($_POST["htype"])."=${id}> Back to Histogram Set $id </a><br>";
+echo "<br> <a href='../Histogram.php?".strtolower($_POST["htype"])."=${id}> Back to Histogram $id </a><br>";
 ?>
 
 </body>

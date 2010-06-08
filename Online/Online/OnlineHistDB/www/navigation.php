@@ -8,7 +8,7 @@ if (isset($_COOKIE["login"])) {
 ?>
 <HEAD>
 <meta http-equiv="no-cache">
-<meta http-equiv="refresh" content="500; URL=<?php echo "$_SERVER[PHP_SELF]"; ?>">
+<meta http-equiv="refresh" content="500; URL=<?php echo $_SERVER['PHP_SELF']; ?>">
   <LINK REL=STYLESHEET TYPE="text/css" HREF="styles_screen.css">
 </HEAD>
 <BODY>

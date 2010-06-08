@@ -45,7 +45,7 @@ function page_form($page,$mode) {
   global $canwrite;
   global $conn;
   if ($mode == "display") {
-    $action="${PHP_SELF}?page=${page}";
+    $action=$_SERVER["PHP_SELF"]."?page=${page}";
     $submit= ($page=='new__' ? "Insert new page" : "Modify Page");
   }
   else {
@@ -179,7 +179,7 @@ function show_pagefolder($sel='') {
     while (OCIFetchInto($pstid, $page, OCI_ASSOC )) {
       $getp=toGet($page["PAGENAME"]);
       $p=PageSimpleName($page["PAGENAME"]);
-      echo "<a class=normal href=$_SERVER[PHP_SELF]?page=${getp}> $p</a><br>\n";
+      echo "<a class=normal href='".$_SERVER["PHP_SELF"]."?page=${getp}'> $p</a><br>\n";
     }  
     ocifreestatement($pstid);
     show_pagefolder("WHERE PARENT='".$pagef["PAGEFOLDERNAME"]."'");
