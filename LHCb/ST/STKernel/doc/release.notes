@@ -3,6 +3,11 @@
 ! Responsible : M. Needham
 !----------------------------------------------------------------------------
 
+
+
+! 2010-06-08 - Mark Tobin
+ - Added method to return pedestal for the noise calculation tool.
+
 ! 2010-06-01 - Mark Tobin
  - Added methods to interface for noise calculation tool.
 
