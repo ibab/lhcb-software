@@ -2,6 +2,9 @@
 ! Package manager : Jeroen van Tilburg
 !------------------------------------------------------------------------------
 
+! 2010-05-21 - Jeroen VAN TILBURG
+ - Changed the calculation of the effect of the Lorentz angle.
+
 ! 2010-06-01 Mark Tobin
  - Implementation of pedestal method in noise calculation tools.
  - The method is needed as the methods which return the mean raw ADCs etc.. do

@@ -257,15 +257,21 @@ double STOfflinePosition::chargeSharingCorr(const double origDist) const
   
 }
 
-void STOfflinePosition::lorentzShift(const STChannelID& chan , double& fracPosition) const{
-
-  // calculate the lorentz shift, 
-
-  const DeSTSector* sector = findSector(chan);  
-  const Gaudi::XYZVector field = m_fieldSvc->fieldVector(sector->globalCentre()) ; 
-
-  // note fracPosition local frame (pitch units), lorentz shift global frame (mm)
-  double dx = sector->thickness() * field.y() * m_lorentzFactor/sector->pitch();
-  if (sector->xInverted() == true) dx *= -1.0; 
+void STOfflinePosition::lorentzShift( const STChannelID& chan , 
+                                      double& fracPosition ) const
+{
+  // Get the local By
+  const DeSTSector* sector = findSector(chan);
+  Gaudi::XYZVector field = m_fieldSvc->fieldVector(sector->globalCentre()) ;
+  Gaudi::XYZVector normalY( sector->globalPoint(0,1,0) - 
+                            sector->globalPoint(0,0,0) );
+  double localBy = field.Dot( normalY.Unit() );
+ 
+  // note fracPosition is in "global" frame (pitch units),
+  // while lorentz shift is in local frame (mm)
+  double dx = 0.5 * sector->thickness() * localBy * m_lorentzFactor
+    / sector->pitch();
+  if( !sector->xInverted() ) dx *= -1.0; 
   fracPosition += dx ;
+
 }
