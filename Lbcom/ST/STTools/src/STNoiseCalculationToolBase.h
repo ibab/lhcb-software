@@ -32,6 +32,12 @@ namespace ST {
 
     virtual StatusCode updateNoise();///< Update the noise calculation
 
+    /// Return an iterator corresponding to the pedestal value of the first channel for a given TELL1 source ID
+    virtual std::vector<double>::const_iterator pedestalBegin( const unsigned int TELL1SourceID ) const;
+
+    /// Return an iterator corresponding to the pedestal value of the last channel for a given TELL1 source ID
+    virtual std::vector<double>::const_iterator pedestalEnd( const unsigned int TELL1SourceID ) const;
+
     /// Return an iterator corresponding to the RAW RMS noise on the first channel for a given TELL1 source ID
     virtual std::vector<double>::const_iterator rawNoiseBegin(const unsigned int TELL1SourceID ) const;
 
@@ -114,6 +120,7 @@ namespace ST {
 
     /// Store the RAW values of the mean, mean squared and the noise for each strip
     typedef std::map<unsigned int, std::vector<double> > DataMap;  
+    DataMap m_rawPedestalMap;        ///< Internal map for the ADC values before pedestal substraction
     DataMap m_rawMeanMap;            ///< Internal map for the pedestals
     DataMap m_rawMeanSqMap;          ///< Internal map of the pedestal^2
     DataMap m_rawNoiseMap;           ///< Internal map of the current noise

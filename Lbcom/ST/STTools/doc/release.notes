@@ -2,6 +2,12 @@
 ! Package manager : Jeroen van Tilburg
 !------------------------------------------------------------------------------
 
+! 2010-06-01 Mark Tobin
+ - Implementation of pedestal method in noise calculation tools.
+ - The method is needed as the methods which return the mean raw ADCs etc.. do
+ so for values after the pedestal substraction in the CMS code.  The pedestal
+ method return the average ADC before any processing.
+
 ! 2010-06-02 M Needham
  - Add new selector tool STRndmEffSelector (used by default by cluster selector from channel)
 

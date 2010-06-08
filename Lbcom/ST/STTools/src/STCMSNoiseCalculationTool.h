@@ -91,19 +91,19 @@ namespace ST {
     /// Return an iterator corresponding to the CMS RMS noise on the first channel for a given TELL1 source ID
     virtual std::vector<double>::const_iterator cmsNoiseBegin(const unsigned int TELL1SourceID ) const;
 
-    /// Return an iterator corresponding to the CMS RMS noise on the first channel for a given TELL1 source ID
+    /// Return an iterator corresponding to the CMS RMS noise on the last channel for a given TELL1 source ID
     virtual std::vector<double>::const_iterator cmsNoiseEnd(const unsigned int TELL1SourceID ) const;
 
     /// Return an iterator corresponding to the CMS mean ADC value for the first channel for a given TELL1 source ID
     virtual std::vector<double>::const_iterator cmsMeanBegin( const unsigned int TELL1SourceID ) const;
 
-    /// Return an iterator corresponding to the CMS mean ADC value for the first channel for a given TELL1 source ID
+    /// Return an iterator corresponding to the CMS mean ADC value for the last channel for a given TELL1 source ID
     virtual std::vector<double>::const_iterator cmsMeanEnd( const unsigned int TELL1SourceID ) const;
 
     /// Return an iterator corresponding to the CMS mean squared ADC value for the first channel for a given TELL1 source ID
     virtual std::vector<double>::const_iterator cmsMeanSquaredBegin( const unsigned int TELL1SourceID ) const;
 
-    /// Return an iterator corresponding to the CMS mean squared ADC value for the first channel for a given TELL1 source ID
+    /// Return an iterator corresponding to the CMS mean squared ADC value for the last channel for a given TELL1 source ID
     virtual std::vector<double>::const_iterator cmsMeanSquaredEnd( const unsigned int TELL1SourceID ) const;
 
     /// Return an iterator corresponding to the number of events containing data in the first PP for a given TELL1 source ID
@@ -120,8 +120,9 @@ namespace ST {
                            std::vector<std::pair <double, bool> >& pedSubADC,
                            std::vector<double>& BeetleMeans);
     
-    /// Remove PCN/Header corrected pedestals
-    void substractPCNPedestals( std::vector<signed int>& BeetleADCs, int tellID, signed int beetle );
+    /// Remove PCN/Header corrected pedestals from raw adcs
+    void substractPCNPedestals( std::vector<signed int>& RawADCs, int tellID, signed int beetle,
+				std::vector<signed int>& PedSubADCs);
 
     /// Calculate the CM suppressed values for the strips given
     void cmsSimple(std::vector<std::pair <double, bool> >& BeetleTmpADCs, std::vector<double>& BeetleMeans);

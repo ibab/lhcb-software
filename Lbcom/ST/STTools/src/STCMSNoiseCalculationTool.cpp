@@ -41,8 +41,8 @@ namespace ST {
 // Standard constructor, initializes variables
 //=============================================================================
 ST::STCMSNoiseCalculationTool::STCMSNoiseCalculationTool( const std::string& type,
-                                                    const std::string& name,
-                                                    const IInterface* parent )
+                                                          const std::string& name,
+                                                          const IInterface* parent )
   : ST::STNoiseCalculationToolBase ( type, name , parent )
 {
   declareInterface<ST::ISTNoiseCalculationTool>(this);
@@ -334,7 +334,6 @@ StatusCode ST::STCMSNoiseCalculationTool::calculateNoise() {
 
     // Store TELL1s with an NZS bank
     m_tell1WithNZS.push_back(tellID);
-
     // Local vectors for given TELL1: output is CMS noise
     std::vector<double>* cmsMean = &m_cmsMeanMap[tellID];
     std::vector<double>* cmsMeanSq = &m_cmsMeanSqMap[tellID];
@@ -347,6 +346,8 @@ StatusCode ST::STCMSNoiseCalculationTool::calculateNoise() {
     std::vector<double>* rawNoise = &m_rawNoiseMap[tellID];
     std::vector<unsigned int>* rawNEvents = &m_rawNEvents[tellID];
     
+    std::vector<double>* rawPedestal = &m_rawPedestalMap[tellID];
+
     // Loop over the PPs that have sent data
     std::vector<unsigned int> sentPPs = (*iterBoard)->sentPPs();
     std::vector<unsigned int>::const_iterator iPP = sentPPs.begin();
@@ -382,23 +383,24 @@ StatusCode ST::STCMSNoiseCalculationTool::calculateNoise() {
         // Raw ADC values for Beetle
         std::vector<signed int> rawADC(LHCbConstants::nStripsInBeetle, 0);
         std::vector<std::pair <double, bool> > tmpADC(LHCbConstants::nStripsInBeetle, 
-                          std::make_pair( 0.0, false ) );
+                                                      std::make_pair( 0.0, false ) );
         std::vector<double> meanPerPort(4, 0.0);
 
         dumpBeetleADCs( dataValues[beetle], "raw: " );
         
         // TO DO: MC OCCUPANCY?
-//         if (!m_skipCMS && ( m_addMcOccupancy > 0) ) {
-//           mcHitsInTell += addMcOccupancy(dataValues[beetle], rawADC);
-//         } else {
+        //         if (!m_skipCMS && ( m_addMcOccupancy > 0) ) {
+        //           mcHitsInTell += addMcOccupancy(dataValues[beetle], rawADC);
+        //         } else {
         copy(dataValues[beetle].begin(), dataValues[beetle].end(), rawADC.begin());
-//         }
+        //         }
+        std::vector<signed int> pedSubADCs;
         if ( m_pedestalBuildup == 0 ) {
-          substractPCNPedestals(rawADC, tellID, beetle);
+          substractPCNPedestals(rawADC, tellID, beetle, pedSubADCs);
         }
 	    
         if (!m_skipCMS) {
-          substractPedestals(rawADC, tellID, beetle, 
+          substractPedestals(pedSubADCs, tellID, beetle, 
                              tmpADC, meanPerPort );
           
           if (beetle == m_printCMSSteps) {
@@ -413,8 +415,8 @@ StatusCode ST::STCMSNoiseCalculationTool::calculateNoise() {
             break;
           case 5:  cmsVelo(tmpADC, meanPerPort);
             break;
-           case 6:  cmsAchim( tmpADC );
-             break;
+          case 6:  cmsAchim( tmpADC );
+            break;
           default: 
             if ( m_printAlgError ) {
               error() << "no CMS Algorithm selected" << endmsg;
@@ -424,9 +426,11 @@ StatusCode ST::STCMSNoiseCalculationTool::calculateNoise() {
         } // End of CMS calculation
         // Loop over the strips in this link
         unsigned int iStrip = 0;
-        std::vector<signed int>::const_iterator dataStrip = rawADC.begin();
+        std::vector<signed int>::const_iterator rawADCStrip = rawADC.begin();
+        std::vector<signed int>::const_iterator dataStrip = pedSubADCs.begin();
         std::vector<std::pair <double, bool> >::iterator tmpStrip  = tmpADC.begin();
         const int strip_offset = beetle * LHCbConstants::nStripsInBeetle;
+        std::vector<double>::iterator rawPedStrip   = rawPedestal->begin()   + strip_offset;
         std::vector<double>::iterator rawMeanStrip   = rawMean->begin()   + strip_offset;
         std::vector<double>::iterator rawMeanSqStrip = rawMeanSq->begin() + strip_offset;
         std::vector<double>::iterator rawNoiseStrip  = rawNoise->begin() + strip_offset;
@@ -437,6 +441,7 @@ StatusCode ST::STCMSNoiseCalculationTool::calculateNoise() {
           // Get the ADC value
           double valueRaw  = *dataStrip;
           double valueCMS  = tmpStrip->first;
+          double valuePed = *rawADCStrip;
           if ( m_rawOutliers & tmpStrip->second ) {
             valueRaw = *rawMeanStrip;
             if ( m_rawOutliersCMS ) {
@@ -446,10 +451,11 @@ StatusCode ST::STCMSNoiseCalculationTool::calculateNoise() {
           }
           
           // Calculate the pedestal and the pedestal squared
+          *rawPedStrip = ( *rawPedStrip * (nEvt-1) + valuePed ) / nEvt;
           *rawMeanStrip   = (*rawMeanStrip   *(nEvt-1) + valueRaw )           / nEvt;
           *rawMeanSqStrip = (*rawMeanSqStrip *(nEvt-1) + gsl_pow_2(valueRaw)) / nEvt;
           *rawNoiseStrip = sqrt( *rawMeanSqStrip - gsl_pow_2( *rawMeanStrip ) );
-          
+
           // Calculate the mean(adc) and mean(adc^2) on cms values
           if (!m_skipCMS) {
             *cmsMeanStrip   = (*cmsMeanStrip   *(nCMS-1) + valueCMS )            / nCMS;
@@ -457,10 +463,11 @@ StatusCode ST::STCMSNoiseCalculationTool::calculateNoise() {
             *cmsNoiseStrip = sqrt( *cmsMeanSqStrip - gsl_pow_2( *cmsMeanStrip ) );
           }	    
           // move to next strip
-          dataStrip++; tmpStrip++;
+          dataStrip++; tmpStrip++; 
+          rawADCStrip++; rawPedStrip++;
           rawMeanStrip++; rawMeanSqStrip++; rawNoiseStrip++;
           cmsMeanStrip++; cmsMeanSqStrip++; cmsNoiseStrip++;
-          
+	  
         } // strip
       }  // beetle
         
@@ -649,12 +656,13 @@ void ST::STCMSNoiseCalculationTool::substractPedestals(const std::vector<signed 
 //==============================================================================
 // Substract the PCN dependent pedestals
 //==============================================================================
-void ST::STCMSNoiseCalculationTool::substractPCNPedestals( std::vector<signed int>& BeetleADCs,
-                                                           int tellID, signed int beetle ) {
+void ST::STCMSNoiseCalculationTool::substractPCNPedestals( std::vector<signed int>& RawADCs,
+                                                           int tellID, signed int beetle, 
+                                                           std::vector<signed int>& PedSubADCs ) {
 
   int stripOffset = beetle * LHCbConstants::nStripsInBeetle;  
-
-  std::vector<signed int>::iterator adcIt    = BeetleADCs.begin();
+  
+  std::vector<signed int>::iterator adcIt    = RawADCs.begin();
   
   int iPort;
   std::vector< std::vector<std::pair<double, int> > >* pedMap = &m_pedestalMaps[tellID];
@@ -664,7 +672,7 @@ void ST::STCMSNoiseCalculationTool::substractPCNPedestals( std::vector<signed in
     
     unsigned int iStrip;
     for ( iStrip = 0; iStrip < LHCbConstants::nStripsInPort; iStrip++) {
-      *adcIt = *adcIt - (int)floor(pedIt->first+0.5);
+      PedSubADCs.push_back(*adcIt - (int)floor(pedIt->first+0.5));
 
       adcIt++; pedIt++; 
     }
@@ -1123,7 +1131,7 @@ void ST::STCMSNoiseCalculationTool::veloHitDetection2( std::vector<std::pair <do
 }
 
 double ST::STCMSNoiseCalculationTool::calcThreshold( std::vector<std::pair <double, bool> >::iterator& itBeetleTmpADCs, 
-                                                  double nSigma) {
+                                                     double nSigma) {
   double threshold = 0;
   for (unsigned int i = 0 ; i < LHCbConstants::nStripsInPort ; i++ ) { 
     threshold   += gsl_pow_2(itBeetleTmpADCs->first);

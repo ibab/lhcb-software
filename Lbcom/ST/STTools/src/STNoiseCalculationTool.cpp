@@ -91,6 +91,7 @@ StatusCode ST::STNoiseCalculationTool::calculateNoise() {
     // Store tell1s with an NZS bank
     m_tell1WithNZS.push_back(tellID);
     // Local vectors for given TELL1
+    std::vector<double>* pedestalTELL = &m_rawPedestalMap[tellID];
     std::vector<double>* meanTELL = &m_rawMeanMap[tellID];
     std::vector<double>* meanSqTELL = &m_rawMeanSqMap[tellID];
     std::vector<double>* noiseTELL = &m_rawNoiseMap[tellID];
@@ -127,6 +128,7 @@ StatusCode ST::STNoiseCalculationTool::calculateNoise() {
           // Calculate the pedestal and the pedestal squared
           int strip = iStrip + beetle * LHCbConstants::nStripsInBeetle;
           (*meanTELL)[strip] = ((*meanTELL)[strip]*(nEvt-1) + value ) / nEvt;
+          (*pedestalTELL)[strip] = (*meanTELL)[strip];
           (*meanSqTELL)[strip] = ((*meanSqTELL)[strip]*(nEvt-1) + gsl_pow_2(value) ) / nEvt;
           (*noiseTELL)[strip] = sqrt( (*meanSqTELL)[strip] - gsl_pow_2((*meanTELL)[strip]) );
         } // strip

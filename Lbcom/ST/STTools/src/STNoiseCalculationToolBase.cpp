@@ -60,6 +60,7 @@ StatusCode ST::STNoiseCalculationToolBase::initialize() {
   std::map<unsigned int, unsigned int>::const_iterator itT = (this->readoutTool())->SourceIDToTELLNumberMap().begin();
   for(; itT != (this->readoutTool())->SourceIDToTELLNumberMap().end(); ++itT) {
     unsigned int TELL1SourceID = (*itT).first;
+    m_rawPedestalMap[TELL1SourceID].resize(3072, 0.0);
     m_rawMeanMap[TELL1SourceID].resize(3072, 0.0);
     m_rawMeanSqMap[TELL1SourceID].resize(3072, 0.0);
     m_rawNoiseMap[TELL1SourceID].resize(3072, 0.0);
@@ -81,13 +82,6 @@ StatusCode ST::STNoiseCalculationToolBase::initialize() {
 //=============================================================================
 ST::STNoiseCalculationToolBase::~STNoiseCalculationToolBase() {} 
 
-/// Return an iterator corresponding to the RAW RMS noise on the first channel for a given TELL1 source ID
-std::vector<double>::const_iterator ST::STNoiseCalculationToolBase::rawNoiseBegin( const unsigned int TELL1SourceID ) const {
-  if(m_rawNoiseMap.find(TELL1SourceID) == m_rawNoiseMap.end()) {
-    error() << "This should never happen! Did you pass TELLID rather than source ID? " << TELL1SourceID << endmsg;
-  }
-  return m_rawNoiseMap.find(TELL1SourceID)->second.begin();
-}
 //======================================================================================================================
 //
 // Noise calculation
@@ -133,7 +127,31 @@ void ST::STNoiseCalculationToolBase::countRoundRobin(unsigned int TELL1SourceID,
 // Data Accessors
 //
 //======================================================================================================================
+/// Return an iterator corresponding to the pedestal value of the first channel for a given TELL1 source ID
+std::vector<double>::const_iterator ST::STNoiseCalculationToolBase::pedestalBegin( const unsigned int TELL1SourceID ) const {
+  if(m_rawPedestalMap.find(TELL1SourceID) == m_rawPedestalMap.end()) {
+    error() << "This should never happen! Did you pass TELLID rather than source ID? " << TELL1SourceID << endmsg;
+  }
+  return m_rawPedestalMap.find(TELL1SourceID)->second.begin();
+}
+
 /// Return an iterator corresponding to the RAW RMS noise on the first channel for a given TELL1 source ID
+std::vector<double>::const_iterator ST::STNoiseCalculationToolBase::pedestalEnd( const unsigned int TELL1SourceID ) const {
+  if(m_rawPedestalMap.find(TELL1SourceID) == m_rawPedestalMap.end()) {
+    error() << "This should never happen! Did you pass TELLID rather than source ID? " << TELL1SourceID << endmsg;
+  }
+  return m_rawPedestalMap.find(TELL1SourceID)->second.end();
+}
+
+/// Return an iterator corresponding to the pedestal value of the first channel for a given TELL1 source ID
+std::vector<double>::const_iterator ST::STNoiseCalculationToolBase::rawNoiseBegin( const unsigned int TELL1SourceID ) const {
+  if(m_rawNoiseMap.find(TELL1SourceID) == m_rawNoiseMap.end()) {
+    error() << "This should never happen! Did you pass TELLID rather than source ID? " << TELL1SourceID << endmsg;
+  }
+  return m_rawNoiseMap.find(TELL1SourceID)->second.begin();
+}
+
+/// Return an iterator corresponding to the RAW RMS noise on the last channel for a given TELL1 source ID
 std::vector<double>::const_iterator ST::STNoiseCalculationToolBase::rawNoiseEnd( const unsigned int TELL1SourceID ) const {
   if(m_rawNoiseMap.find(TELL1SourceID) == m_rawNoiseMap.end()) {
     error() << "This should never happen! Did you pass TELLID rather than source ID? " << TELL1SourceID << endmsg;
@@ -149,7 +167,7 @@ std::vector<double>::const_iterator ST::STNoiseCalculationToolBase::rawMeanBegin
   return m_rawMeanMap.find(TELL1SourceID)->second.begin();
 }
 
-/// Return an iterator corresponding to the RAW mean ADC value for the first channel for a given TELL1 source ID
+/// Return an iterator corresponding to the RAW mean ADC value for the last channel for a given TELL1 source ID
 std::vector<double>::const_iterator ST::STNoiseCalculationToolBase::rawMeanEnd( const unsigned int TELL1SourceID ) const {
   if(m_rawMeanMap.find(TELL1SourceID) == m_rawMeanMap.end()) {
     error() << "This should never happen! Did you pass TELLID rather than source ID? " << TELL1SourceID << endmsg;
@@ -165,7 +183,7 @@ std::vector<double>::const_iterator ST::STNoiseCalculationToolBase::rawMeanSquar
   return m_rawMeanSqMap.find(TELL1SourceID)->second.begin();
 }
 
-/// Return an iterator corresponding to the RAW mean squared ADC value for the first channel for a given TELL1 source ID
+/// Return an iterator corresponding to the RAW mean squared ADC value for the last channel for a given TELL1 source ID
 std::vector<double>::const_iterator ST::STNoiseCalculationToolBase::rawMeanSquaredEnd( const unsigned int TELL1SourceID ) const {
   if(m_rawMeanSqMap.find(TELL1SourceID) == m_rawMeanSqMap.end()) {
     error() << "This should never happen! Did you pass TELLID rather than source ID? " << TELL1SourceID << endmsg;
@@ -191,7 +209,7 @@ std::vector<unsigned int>::const_iterator ST::STNoiseCalculationToolBase::rawNEv
 
 /// Return an iterator corresponding to the source ID of the first TELL1 in the event containing an NZS bank
 std::vector<unsigned int>::const_iterator ST::STNoiseCalculationToolBase::tell1WithNZSBegin( ) const {
-  return m_tell1WithNZS.end();
+  return m_tell1WithNZS.begin();
 }
 
 /// Return an iterator corresponding to the source ID of the last TELL1 in the event containing an NZS bank
