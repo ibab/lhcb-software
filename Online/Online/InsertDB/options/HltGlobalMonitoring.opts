@@ -1,0 +1,36 @@
+InsertDB.GlobalPages = {
+   "HLT: page 1: Trigger overview" :
+	{"HltGlobalMonitor/ODIN trigger type",
+	"HltL0GlobalMonitor/L0 channel",
+	"HltGlobalMonitor/Hlt1 Alleys",
+	"HltGlobalMonitor/Hlt2 Alleys" },
+   "HLT: page 2: timing and memory" :
+	{"HltGlobalMonitor/Virtual memory",
+	"HltGlobalMonitor/average time per event",
+	"HltGlobalMonitor/time per event " },
+   "HLT: page 3: HLT1 alleys" :
+	{"HltGlobalMonitor/Hlt1 L0 Lines",
+	"HltGlobalMonitor/Hlt1 PA Lines",
+	"HltGlobalMonitor/Hlt1 LumiBeamGas Lines",
+	"HltGlobalMonitor/Hlt1 MinBias Lines",
+	"HltGlobalMonitor/Hlt1 Velo Lines",
+	"HltGlobalMonitor/Hlt1 ECAL Lines",
+	"HltGlobalMonitor/Hlt1 SingleMuon Lines",
+	"HltGlobalMonitor/Hlt1 DiMuon Lines",
+	"HltGlobalMonitor/Hlt1 Hadron Lines"},
+    "HLT: page 4: HLT2 alleys" :	
+	{"HltGlobalMonitor/Hlt2 Commissioning Lines",
+	"HltGlobalMonitor/Hlt2 Express Lines",
+	"HltGlobalMonitor/Hlt2 IncPhi Lines",
+	"HltGlobalMonitor/Hlt2 SingleMuon Lines",
+	"HltGlobalMonitor/Hlt2 DiMuon Lines",
+	"HltGlobalMonitor/Hlt2 Charm Lines",
+	"HltGlobalMonitor/Hlt2 Topo Lines",
+	"HltGlobalMonitor/Hlt2 B2DX Lines"}
+	};
+
+InsertDB.GlobalDocu = {	
+    " ----  Histograms are expected to be empty in Pass through mode ----\ntop left: number of accepted events by ODIN per ODIN trigger type.\ntop right: number of accepted events by L0 per L0 trigger alley.\nbottom-left: number of accepted events by Hlt1 per Hlt1 trigger alley.\nbottom-right: number of accepted events by Hlt2 per Hlt2 trigger alley.",
+    " ----  Histograms are expected to be empty in Pass through mode ---- \n top-left: trend plot of virtual memory per event (time axis cover the first 120 minutes of run). \n top right: trend plot of the average CPU time cpend by the complete trigger per event. \n bottom-left: logarithm of CPU time for complete trigger per event.",
+    " ----  Histograms are expected to be empty in Pass through mode ---- \n  ----  Dependent on the TCK some histograms are expected to be empty  ---- \n top-left: Number of accepted events in lines of Hlt1 L0 alley.\ntop-middle: Number of accepted events in lines of Hlt1 PA alley.\ntop-right: Number of accepted events in lines of Hlt1 LumiBeamGas alley.\nmiddle-left: Number of accepted events in lines of Hlt1 MinBias alley.\nmiddle-middle: Number of accepted events in lines of Hlt1 Velo alley.\nmiddle-right: Number of accepted events in lines of Hlt1 ECAL alley.\nbottom-left: Number of accepted events in lines of Hlt1 SingleMuon alley.\nbottom-middle: Number of accepted events in lines of Hlt1 DiMuon alley.\nbottom-right: Number of accepted events in lines of Hlt1 Hadron alley",
+    " ----  Histograms are expected to be empty in Pass through mode ---- \n  ----  Dependent on the TCK some histograms are expected to be empty  ---- \n top-left: Number of accepted events in lines of Hlt2 Commissioning alley.\ntop-middle: Number of accepted events in lines of Hlt2 Express alley.\ntop-right: Number of accepted events in lines of Hlt2 InclusivePhi alley.\nmiddle-left: Number of accepted events in lines of Hlt2 SingleMuon alley.\nmiddle-middle: Number of accepted events in lines of Hlt2 DiMuon alley.\nmiddle-right: Number of accepted events in lines of Hlt2 Charm alley.\nbottom-left: Number of accepted events in lines of Hlt2 Topological alley.\nbottom-middle: Number of accepted events in lines of Hlt2 B2DX alley.\nbottom-right: "};

@@ -1,0 +1,29 @@
+InsertDB.hlt1AlgMuPrepPages = {
+"page 1: cuts":{
+	"Hlt1L0HadronDecision/Et",
+	"Hlt1HadronConfPreTrackMatchTMVeloCalo/Chi2X",	
+	"Hlt1HadronConfPreTrackMatchTMVeloCalo/Chi2Y",	
+
+
+	"HadronConfirmationTFConfirmed/PT"
+
+	},
+"page 2: matching of confirmation + di hadron cuts":{
+        "HadronConfirmationTFRZVelo/Calo2DChi2_Hlt1L0HadronDecision",
+        "HadronConfirmationTF1Velo/Calo3DChi2_Hlt1L0HadronDecision",
+        "HadronConfirmationTMVeloCalo/VeloCalo",
+        "Hlt1DiHadronTFDiHadronIP/IP_PV2D",
+        "Hlt1DiHadronVM2UVelo/DOCA",
+        "Hlt1DiHadronVFUVelo/VetexMinPT",
+        "Hlt1DiHadronVFUVelo/VertexDx_PV2D"
+        },
+"page 3: page3":{
+	"" 
+	},
+"page 4: page4":{
+	""
+	}
+};
+
+InsertDB.hlt1AlgMuPrepDocu = {"p1: none", "p2: none","p3: none","p4: none" };
+

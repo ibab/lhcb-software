@@ -1,0 +1,43 @@
+InsertDB.hlt1AlgMuPrepPages = {
+"page 1: L0-T confirmation" :{
+	"Hlt1L0AllMuonCandidates/Pt",
+	"Hlt1L0AllMuonCandidates/PtMax",
+	"Hlt1MuonPrepTUTConf/Hlt1L0AllMuonCandidates",
+	"Hlt1MuonPrepTUTConf/Hlt1MuonPrepTUTConf",
+	"Hlt1MuonPrepTUTConf/Seed track chi2",
+	"Hlt1MuonPrepTUTConf/Seed track chi2 Best",
+	"Hlt1MuonPrepTFDeltaP/Hlt1MuonPrepTFDeltaP"
+	},
+"page2: L0T - Velo confirmation":{
+	"Hlt1PrepareRZVelo/RZVelo",
+	"Hlt1MuonPrepTFRZVelo/Hlt1MuonPrepTFRZVelo",
+	"Hlt1MuonPrepTFRZVelo/Hlt1MuonPrepTFDeltaP",
+	"Hlt1MuonPrepTFRZVelo/RZVeloTMatch_Hlt1MuonPrepTFDeltaP",
+	"Hlt1MuonPrepTFRZVelo/RZVeloTMatch_Hlt1MuonPrepTFDeltaPBest",
+ 	"Hlt1MuonPrepTUVelo/Hlt1MuonPrepTUVelo",
+	"Hlt1MuonPrepTUVelo/Velo track chi2",
+	"Hlt1MuonPrepTUVelo/Velo track chi2 Best",
+ 	"Hlt1MuonPrepTMVeloT/Hlt1MuonPrepTMVeloT",
+	"Hlt1MuonPrepTMVeloT/Hlt1MuonPrepTUVelo",
+	"Hlt1MuonPrepTMVeloT/Hlt1MuonPrepTMVeloT",
+	"Hlt1MuonPrepTMVeloT/Hlt1MuonPrepTFDeltaP",
+	"Hlt1MuonPrepTMVeloT/Match 3dVelo-T (PatMatch)",
+	"Hlt1MuonPrepTMVeloT/Match 3dVelo-T (PatMatch) Best"
+	}
+//,
+// "page 3: PV2D":{
+//	"Hlt1PreparePV2D/PV2D",
+//	"Hlt1PreparePV2D/PV2D: VertexZPosition",
+//	"Hlt1PreparePV2D/PV2D: Highest VertexZPosition",
+//	"Hlt1PreparePV2D/PV2D: VertexTransversePosition",
+//	"Hlt1PreparePV2D/PV2D: Highest VertexTransversePosition"
+//	}
+//,
+//"page 4: fast fit and IP":{
+//	""
+//	}
+};
+
+InsertDB.hlt1AlgMuPrepDocu = {"p1: none", "p2: none","p3: none"//,"p4: none"
+	 };
+

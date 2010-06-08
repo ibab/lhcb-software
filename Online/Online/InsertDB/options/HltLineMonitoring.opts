@@ -1,0 +1,72 @@
+InsertDB.LinePages = {
+	"HLT1 L0":{
+	"Hlt1L0"
+	},
+	"HLT1 LumiBeamGas":{
+	"Hlt1Lumi",
+	"Hlt1BeamGas"},
+	"HLT1 Velo":{
+	"Hlt1Velo"},
+	"HLT1 Hadron":{
+	"Hlt1Hadron",
+	"Hlt1DiHadron",
+	"Hlt1SingleHadron",
+	"Hlt1SoftDiHadron"	
+	},
+	"HLT1 SingleMuon":{
+	"Hlt1SingleMuon",
+	"Hlt1Muon",	
+	"Hlt1MuTrack"
+	},
+	"HLT1 DiMuon":{
+	"Hlt1DiMuon"
+	},
+	"HLT1 ECal":{
+	"Hlt1SingleElectron",
+	"Hlt1Electron",
+	"Hlt1Photon"
+	},
+	"MinBias":{
+	"Hlt1MB"},
+	"HLT1 Technical":{
+	"Hlt1Global",
+	"Hlt1ODINTechnical",
+	"Hlt1ODINPhysics",
+	"Hlt1Tell1Error",
+	"Hlt1AlignVelo",
+	"Hlt1Incident",
+	"Hlt1Velo",
+	"Hlt1AlignVelo"
+	},			
+	"HLT2 Technical":{
+	"Hlt2Debug",
+	"Hlt2Pass",
+	"Hlt2Transparent"
+	}, 
+	"HLT2 Topological":{
+	"Hlt2Topo"
+	},
+	"HLT2 inclusive Phi":{
+	"Hlt2IncPhi"
+	},
+	"HLT2 single Muon":{
+	"Hlt2Single",
+	"Hlt2IncMuTrack"
+	},
+	"HLT2 dimuon":{
+	"Hlt2DiMuon",
+	"Hlt2BiasedDiMuon"
+	},
+	"HLT2 Express lines":{
+	"Hlt2Express"
+	},
+	"HLT2 Charm Lines":{
+	"Hlt2Charm"
+	},
+	"HLT2 B2DX":{
+	"Hlt2B2D2"
+	}
+	};
+
+InsertDB.LineDocu = {
+	"top left: Number of candidates passing the algorithm.\n top right: Error types occured. \n bottom left: Rejection of events per algorithm. \n bottom right: log of the total CPU time consumption of the alley."};
