@@ -65,7 +65,7 @@ double STChargeSharingTool::sharing(const double relDist) const
 {
   if( relDist < 0.0 || relDist > 1.0 ) return 0.0;
   return (!m_useAnalyticErf) ? m_responseSpline->eval(relDist) :
-    0.5*gsl_sf_erfc(sqrt(0.5)*(relDist-0.5)/m_erfWidth) + 0.5 ;
+    0.5*gsl_sf_erfc(sqrt(0.5)*(relDist-0.5)/m_erfWidth) ;
 }
 
 double STChargeSharingTool::thickness() const
