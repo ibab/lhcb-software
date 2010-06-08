@@ -3,6 +3,17 @@
 
 #include "GaudiAlg/GaudiHistoAlg.h"
 
+namespace HistoComp
+{
+
+  bool isLess2(OnlineHistogram* h1,OnlineHistogram* h2)
+  {
+    //    const char* h1name = h1->identifier();
+    //const char* h2name = h2->identifier();
+    return (std::strcmp(h1->identifier().c_str(),h2->identifier().c_str()) <0);
+  };
+};
+
 class InsertDB : public GaudiHistoAlg {
 public:
    InsertDB(const std::string& name, ISvcLocator* pSvcLocator);
@@ -15,8 +26,33 @@ public:
   void doEFFHltExperts();
   void doMF(std::string monitoringtask);
   void HistogramDisplayOptions(OnlineHistogram* h);
+  void doMFNew(std::string monitoringtask);
 
-  
+  void fillPages(std::string pageNamePrefix,
+		 std::map <std::string, std::vector<std::string> > pages,
+		 std::vector<std::string> documentation, 
+		 bool fromEFF,
+		 std::string taskName = "GauchoJob" );
+
+ void fillLinePages(std::string pageNamePrefix,
+		 std::map <std::string, std::vector<std::string> > pages,
+		 std::vector<std::string> documentation );
+
+
+  void placeHistograms(OnlineHistPage* page, 
+		       std::vector<OnlineHistogram*>& histos, 
+		       std::string doc );
+  void doEFFNew();
+
+  void getHistsFromDB(OnlineHistDB *HistDB,
+		      std::map <std::string, std::vector<std::string> >& lines,
+		      bool fromEFF,
+		      std::string monitoringtask = "");
+
+  std::string ReplaceString(const std::string &stringSearchString, 
+			    const std::string &stringReplaceString, 
+			    std::string stringStringToReplace);
+    
 private: 
    char *service;
    char *Dimformat;
@@ -50,8 +86,29 @@ private:
    std::vector<std::string> m_DMalleys;   
    std::vector<std::string> m_DMalleysearchstring; 
    std::vector<std::vector<std::string> > m_subfolders;
+
+   std::map <std::string, std::vector<std::string> > m_globalPages;
+   std::vector<std::string> m_globalDocu;
+   std::map <std::string, std::vector<std::string> > m_linePages;
+   std::vector<std::string> m_lineDocu;
+   std::map <std::string, std::vector<std::string> > m_hlt1AlgMuPrepPages;
+   std::vector<std::string> m_hlt1AlgMuPrepDocu;
+   std::string m_hlt1AlgMonName;
+
+   std::map <std::string, std::vector<std::string> > m_lumiPages;
+   std::vector<std::string> m_lumiDocu;
+   std::map <std::string, std::vector<std::string> > m_lumiLowPages;
+   std::vector<std::string> m_lumiLowDocu;
+   
+  
    bool m_mfonly;
    bool m_effonly;
+
+   bool m_doGlobalPages;
+   bool m_doLinePages;
+   bool m_doAlgorithmPages;
+   bool m_doLumiPages;
+   bool m_doExpertPages;
    
 };
 
