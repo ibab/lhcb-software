@@ -121,10 +121,11 @@ StatusCode TupleToolTriggerBase::finalize( )
   {
     std::string printTriggers="";
     printTriggers+="-----------------L0 HLT1 Triggers Seen------------------\n[\n";
+    std::string prev = "";
     for(std::vector<std::string>::const_iterator s=m_hlt1_all.begin(); s!=m_hlt1_all.end(); s++)
     {
-      printTriggers+=*s;
-      printTriggers+=",\n";
+      if (*s != prev ) printTriggers+=(*s+", ");
+      prev = *s ;
     }
     printTriggers+="]\n";
     info() << printTriggers << endmsg;
@@ -133,8 +134,8 @@ StatusCode TupleToolTriggerBase::finalize( )
     info() << "------------------- HLT2 Triggers Seen------------------\n[\n";
     for(std::vector<std::string>::const_iterator s=m_hlt2_all.begin(); s!=m_hlt2_all.end(); s++)
     {
-      printTriggers+=*s;
-      printTriggers+=",\n";
+      if (*s != prev ) printTriggers+=(*s+", ");
+      prev = *s ;
     }
     printTriggers+="]\n";
     info() << printTriggers << endmsg;
@@ -204,9 +205,9 @@ StatusCode TupleToolTriggerBase::autoListMode()
   if( !(m_l0.size()+m_hlt1.size()+m_hlt2.size()) ) compileAutoList();
   else if(!checkAutoList())
   {
-    warning() << "The trigger has changed, your automatic list won't work. " 
-              << "Please fix the list manually to the triggers you are looking for" 
-              << "Set the list property TriggerList" << endmsg;
+    std::string s = "The trigger has changed, your automatic list won't work.";
+    s+="Please fix the list manually to the triggers you are look for. Set the list property TriggerList" ;
+    Warning( s );
   }
   
   return StatusCode::SUCCESS;

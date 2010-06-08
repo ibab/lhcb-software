@@ -4,6 +4,9 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2010-06-08 - Patrick Koppenburg
+ - TupleToolTriggerBase : reduce printout
+
 ! 2010-06-03 - Juan Palacios
  - TupleToolVtxIsoln
   . Remove useless include of deprecated Kernel/IGeomDispCalculator.h.
