@@ -1,0 +1,98 @@
+InsertDB.LumiPages = {
+   "page 1: Calo ET":
+       	{"LumiAnalyser/In_CaloEt_Beam1",
+	 "LumiAnalyser/In_CaloEt_Beam2",
+	 "LumiAnalyser/In_CaloEt_BeamCrossing",	
+	 "LumiAnalyser/In_CaloEt_NoBeam"	
+	 },
+	"page 2: PUMult":
+	{"LumiAnalyser/In_PUMult_Beam1",
+	 "LumiAnalyser/In_PUMult_Beam2",
+	 "LumiAnalyser/In_PUMult_BeamCrossing",
+	 "LumiAnalyser/In_PUMult_NoBeam"	
+	},
+	"page 3: Calo PV2D":
+       	{"LumiAnalyser/In_PV2D_Beam1",
+	 "LumiAnalyser/In_PV2D_Beam2",
+	 "LumiAnalyser/In_PV2D_BeamCrossing",	
+	 "LumiAnalyser/In_PV2D_NoBeam"	
+	 },
+	"page 4: RZVelo BW":
+	{"LumiAnalyser/In_RZVeloBW_Beam1",
+	 "LumiAnalyser/In_RZVeloBW_Beam2",
+	 "LumiAnalyser/In_RZVeloBW_BeamCrossing",
+	 "LumiAnalyser/In_RZVeloBW_NoBeam"	
+	},
+	"page 5: RZ Velo":
+       	{"LumiAnalyser/In_RZVelo_Beam1",
+	 "LumiAnalyser/In_RZVelo_Beam2",
+	 "LumiAnalyser/In_RZVelo_BeamCrossing",	
+	 "LumiAnalyser/In_RZVelo_NoBeam"	
+	 },
+	"page 6: SPD Mult":
+	{"LumiAnalyser/In_SPDMult_Beam1",
+	 "LumiAnalyser/In_SPDMult_Beam2",
+	 "LumiAnalyser/In_SPDMult_BeamCrossing",
+	 "LumiAnalyser/In_SPDMult_NoBeam"	
+	}
+	};
+
+ 
+InsertDB.LumiDocu = {  
+   "CaloEt value taken from L0DU bank.\nNegative value: not present\nNon-negative: ADC sum\nSeparate for four BXTypes\nExpect a spike at zero especially at low luminosity",
+   "PUMult value taken from L0DU bank (sum of hits in one plane).\nNegative value: not present\nNon-negative: ADC sum\nSeparate for four BXTypes\nExpect a spike at or near zero especially at low luminosity",
+   "Number of 2D vertices in VELO.\nNegative value: not present (e.g. if bank not created)\nNon-negative: ADC sum\nSeparate for four BXTypes\nExpect a spike at zero especially at low luminosity or when VELO not yet in",
+   "Number backward 2D tracks in VELO.\nNegative value: not present (e.g. if bank not created)\nNon-negative: ADC sum\nSeparate for four BXTypes\nExpect a spike at zero especially at low luminosity or when VELO not yet in",
+   "Number 2D tracks in VELO.\nNegative value: not present (e.g. if bank not created)\nNon-negative: ADC sum\nSeparate for four BXTypes\nExpect a spike at zero especially at low luminosity or when VELO not yet in",
+   "SPDMult value taken from L0DU bank (sum of hits).\nNegative value: not present\nNon-negative: ADC sum\nSeparate for four BXTypes\nExpect a spike at zero especially at low luminosity"
+   };
+
+InsertDB.LumiLowPages = {
+   "page 1: Calo ET":
+       	{"LumiLowAnalyser/In_CaloEt_Beam1",
+	 "LumiLowAnalyser/In_CaloEt_Beam2",
+	 "LumiLowAnalyser/In_CaloEt_BeamCrossing",	
+	 "LumiLowAnalyser/In_CaloEt_NoBeam"	
+	 },
+	"page 2: PUMult":
+	{"LumiLowAnalyser/In_PUMult_Beam1",
+	 "LumiLowAnalyser/In_PUMult_Beam2",
+	 "LumiLowAnalyser/In_PUMult_BeamCrossing",
+	 "LumiLowAnalyser/In_PUMult_NoBeam"	
+	},
+	"page 3: Calo PV2D":
+       	{"LumiLowAnalyser/In_PV2D_Beam1",
+	 "LumiLowAnalyser/In_PV2D_Beam2",
+	 "LumiLowAnalyser/In_PV2D_BeamCrossing",	
+	 "LumiLowAnalyser/In_PV2D_NoBeam"	
+	 },
+	"page 4: RZVelo BW":
+	{"LumiLowAnalyser/In_RZVeloBW_Beam1",
+	 "LumiLowAnalyser/In_RZVeloBW_Beam2",
+	 "LumiLowAnalyser/In_RZVeloBW_BeamCrossing",
+	 "LumiLowAnalyser/In_RZVeloBW_NoBeam"	
+	},
+	"page 5: RZ Velo":
+       	{"LumiLowAnalyser/In_RZVelo_Beam1",
+	 "LumiLowAnalyser/In_RZVelo_Beam2",
+	 "LumiLowAnalyser/In_RZVelo_BeamCrossing",	
+	 "LumiLowAnalyser/In_RZVelo_NoBeam"	
+	 },
+	"page 6: SPD Mult":
+	{"LumiLowAnalyser/In_SPDMult_Beam1",
+	 "LumiLowAnalyser/In_SPDMult_Beam2",
+	 "LumiLowAnalyser/In_SPDMult_BeamCrossing",
+	 "LumiLowAnalyser/In_SPDMult_NoBeam"	
+	}
+	};
+
+ 
+InsertDB.LumiLowDocu = {  
+   "CaloEt value taken from L0DU bank.\nNegative value: not present\nNon-negative: ADC sum\nSeparate for four BXTypes\nExpect a spike at zero especially at low luminosity",
+   "PUMult value taken from L0DU bank (sum of hits in one plane).\nNegative value: not present\nNon-negative: ADC sum\nSeparate for four BXTypes\nExpect a spike at or near zero especially at low luminosity",
+   "Number of 2D vertices in VELO.\nNegative value: not present (e.g. if bank not created)\nNon-negative: ADC sum\nSeparate for four BXTypes\nExpect a spike at zero especially at low luminosity or when VELO not yet in",
+   "Number backward 2D tracks in VELO.\nNegative value: not present (e.g. if bank not created)\nNon-negative: ADC sum\nSeparate for four BXTypes\nExpect a spike at zero especially at low luminosity or when VELO not yet in",
+   "Number 2D tracks in VELO.\nNegative value: not present (e.g. if bank not created)\nNon-negative: ADC sum\nSeparate for four BXTypes\nExpect a spike at zero especially at low luminosity or when VELO not yet in",
+   "SPDMult value taken from L0DU bank (sum of hits).\nNegative value: not present\nNon-negative: ADC sum\nSeparate for four BXTypes\nExpect a spike at zero especially at low luminosity"
+   };
+
