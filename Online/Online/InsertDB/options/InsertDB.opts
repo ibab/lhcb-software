@@ -5,7 +5,7 @@ ApplicationMgr.TopAlg = {"InsertDB"};
 ApplicationMgr.DLLs = {"GaudiAlg", "GaudiAud"};
 ApplicationMgr.EvtMax = -1;
 ApplicationMgr.OutputLevel = 10;
-MessageSvc.OutputLevel=3;
+
 
 ApplicationMgr.Runable               = "LHCb::OnlineRunable/Runable";
 ApplicationMgr.HistogramPersistency  = "NONE";
@@ -19,13 +19,41 @@ AuditorSvc.Auditors +=  [ "ChronoAuditor" ] ;
 
 InsertDB.PartitionName = @OnlineEnv.PartitionName;  // in seconds
 InsertDB.DNS = "$DIM_DNS_NODE";
-InsertDB.HLTDBFolder = "/test2";
+
+
 InsertDB.HLTType = @OnlineEnv.HLTType;
-//InsertDB.MonitoringTasks = { "LumiDAQMon"};
-//InsertDB.Pages = {{ "RawR_RZVeloBW" ,"RawR_RZVelo_" , "RawR_CaloEt", "RawRPUMult" , "RawR_PV2D", "RawR_SPDMult", "In_SPDMult", "In_RZVeloBW", "In_RZVelo_", "In_CaloEt","In_PV2D", "In_PUMult", "BXTypes", "Trend"}};
-//InsertDB.MonitoringTasks = { "HltExpertMon" };
+
+InsertDB.MonitoringTasks = { "HltExpertMon" };
 
 //InsertDB.MFOnly = true;
-InsertDB.EFFOnly = true;
+//InsertDB.EFFOnly = true;
 // Modify Message Format to print algorithm name with 20 characters
 MessageSvc.Format = "% F%20W%S%7W%R%T %0W%M";
+
+////////////////////////////////////////////////////////////////////////
+//
+// JA specific options
+//
+//
+MessageSvc.OutputLevel=3;
+InsertDB.HLTDBFolder = "test_JA";
+//InsertDB.HLTDBFolder = "";
+
+InsertDB.doGlobalPages = false;
+//#include "HltGlobalMonitoring.opts"
+//#include "HltGl2.opts"
+
+
+InsertDB.doLinePages = false; 	
+#include "HltLineMonitoring.opts"
+
+InsertDB.doAlgorithmPages = true;
+//#include "HltAlgorithmMonitoring.opts"
+InsertDB.hlt1AlgMonName = "HadronLinesTest2";
+#include "HltAlgMonHadronLines.opts"
+
+InsertDB.doLumiPages = false;
+#include "LumiMonitoring.opts"
+
+//InsertDB.doExpertPages = true;
+//#include "HltAlgorithmMonitoring.opts"
