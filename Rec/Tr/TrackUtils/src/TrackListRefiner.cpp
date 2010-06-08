@@ -9,6 +9,10 @@
  *  @date   05/01/2010
  */
 
+#ifdef _WIN32
+#pragma warning ( disable : 4355 ) // This used in initializer list, needed for ToolHandles
+#endif
+
 #include "GaudiAlg/GaudiAlgorithm.h"
 #include "GaudiKernel/ToolHandle.h"
 #include "TrackInterfaces/ITrackSelector.h"
