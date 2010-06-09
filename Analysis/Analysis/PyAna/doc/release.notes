@@ -2,7 +2,16 @@
 ! Package     : Analysis/PyAna
 ! Responsible : Juan Palacios
 ! Purpose     : Pure python ntuple and histogram classes and helper code.
+!
+! The package is subject to the Lesser GPL, see doc/COPYING and doc/COPYING.LESSER.
 !-----------------------------------------------------------------------------
+
+! 2010-06-09 - Juan Palacios
+ - Added python/PyAna/pyhistoplots.py
+  . Simple helper functions for plotting histograms, ntuple slices and 
+    histograms.
+ - cmt/requirements
+  . Increase version to v1r1.
 
 !======================= AnalysisPyAna v1r0 2010-04-08 =======================
 
