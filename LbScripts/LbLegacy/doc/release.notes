@@ -1,3 +1,6 @@
+2010-06-09  Joel Closier
+    * scripts/archive_project: add the tools to remove the package on the grid
+
 2010-06-02  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbLegacy/vol_for_releases.py: used the generic createVolume function from LbUtils.afs
@@ -17,10 +20,10 @@
 
 2010-05-25  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* python/LbLegacy/install_project.py: 
+	* python/LbLegacy/install_project.py:
 	- fixed endless loop if the install_project.py script is not in the
 	  current directory and needs an update.
-	- added the --dev-install. getMySelf use the devel location instead of the regular one. 
+	- added the --dev-install. getMySelf use the devel location instead of the regular one.
 	* scripts/archive_project: use the unlockAFSDir to reenable write permission to the project
 	to be archived.
 
