@@ -184,7 +184,7 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
                                  Hlt2Monitor( "M","M(#mu#mu)",3097,200,'M_out',nbins=25)
                                  +" & "+Hlt2MonitorMinMax( "PT","PT(#mu#mu)",0,10000,'JPsiPT_out',nbins=100)
                                  +" & "+Hlt2MonitorMinMax( "MINTREE('mu-'==ABSID,PT)","MINTREE(mu-==ABSID,PT)",0,10000,'MuPT_out',nbins=100)
-                                 +" & "+Hlt2MonitorMinMax( "VFASPF(VCHI2/VDOF)","VFASPF(VCHI2/VDOF)",0,100,'JPsiVeterxChi2_out',nbins=100)                           
+                                 +" & "+Hlt2MonitorMinMax( "VFASPF(VCHI2/VDOF)","VFASPF(VCHI2/VDOF)",0,25,'JPsiVeterxChi2_out',nbins=100)                           
             
                                  }
                     , postscale = self.postscale
@@ -346,19 +346,33 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
                                    , "SimpleDiMuon"          
                                    , InputLocations = [ DiMuon ]
                                    , Code = MuPtCut +"&"+ MassCut +"&"+ MuIPCut +"&"+ LTimeCut
-                                   , PreMonitor = Hlt2Monitor( "M","M(#mu#mu)",3097,200,'M_in',nbins=25) 
+                                   , PreMonitor = 
+                                   Hlt2MonitorMinMax( "M","M(#mu#mu)",0,6000,'M_in',nbins=25) 
+                                   +" & "+Hlt2MonitorMinMax( "MINTREE('mu-'==ABSID,PT)","Pt(#mu)Min",0,10000,'MuPT_in',nbins=100)
+                                   +" & "+Hlt2MonitorMinMax( "PT","PT(#mu#mu)",0,10000,'JPsiPT_in',nbins=100)
+                                   +" & "+Hlt2MonitorMinMax( "MIPDV(PRIMARY)","IP(#mu)",0,.5,'MuIP_in',nbins=100)
+                                   +" & "+Hlt2MonitorMinMax( "BPVLTIME('PropertimeFitter/properTime:PUBLIC')","Lifetime",0,.002,'LifeTime_in',nbins=40)
                                    , PostMonitor =  
-                                   Hlt2Monitor( "M","M(#mu#mu)",3097,200,'M_out',nbins=25)
+                                   Hlt2MonitorMinMax( "M","M(#mu#mu)",0,6000,'M_out',nbins=25) 
+                                   +" & "+Hlt2MonitorMinMax( "MINTREE('mu-'==ABSID,PT)","Pt(#mu)Min",0,10000,'MuPT_out',nbins=100)
                                    +" & "+Hlt2MonitorMinMax( "PT","PT(#mu#mu)",0,10000,'JPsiPT_out',nbins=100)
-                                   +" & "+Hlt2MonitorMinMax( "MINTREE('mu-'==ABSID,PT)","MINTREE(mu-==ABSID,PT)",0,10000,'MuPT_out',nbins=100)
-                                   +" & "+Hlt2MonitorMinMax( "VFASPF(VCHI2/VDOF)","VFASPF(VCHI2/VDOF)",0,100,'JPsiVeterxChi2_out',nbins=100)
-                                   +" & "+Hlt2MonitorMinMax( "MIPDV(PRIMARY)","VFASPF(VCHI2/VDOF)",0,10,'MIPDV_out',nbins=100)
-                                   
+                                   +" & "+Hlt2MonitorMinMax( "MIPDV(PRIMARY)","IP(#mu)",0,.5,'MuIP_out',nbins=100)
+                                   +" & "+Hlt2MonitorMinMax( "BPVLTIME('PropertimeFitter/properTime:PUBLIC')","Lifetime",0,.002,'LifeTime_out',nbins=40)
                                    )
         RefinedDiMuon = Hlt2Member( FilterDesktop
                                     , "RefinedDiMuon"          
                                     , InputLocations = [ SimpleDiMuon ]
                                     , Code = IPChi2Cut +"&"+ VertexChi2Cut +"&"+ PVDistChi2Cut
+                                    , PreMonitor = 
+                                    Hlt2MonitorMinMax( "MAXTREE(ABSID=='mu+',MIPCHI2DV(PRIMARY))","#chi^{2}(IP#mu)",0,200,'IP_Chi2_in',nbins=100)
+                                    +" & "+Hlt2MonitorMinMax( "VFASPF(VCHI2/VDOF)","#chi^{2}/DoF(Vertex)",0,25,'Veter_Chi2_in',nbins=100)
+                                    +" & "+Hlt2MonitorMinMax( "BPVVDCHI2","#chi^{2}(Dist)",0,500,'Flight_DistanceChi2_in',nbins=100)
+                                    , PostMonitor =  
+                                    Hlt2MonitorMinMax( "M","M(#mu#mu)",0,6000,'M_out',nbins=25) 
+                                    +" & "+Hlt2MonitorMinMax( "MAXTREE(ABSID=='mu+',MIPCHI2DV(PRIMARY))","#chi^{2}(#muIP)",0,200,'IP_Chi2_out',nbins=100)
+                                    +" & "+Hlt2MonitorMinMax( "VFASPF(VCHI2/VDOF)","#chi^{2}/DoF(Vertex)",0,25,'Veter_Chi2_out',nbins=100)
+                                    +" & "+Hlt2MonitorMinMax( "BPVVDCHI2","#chi^{2}(Dist)",0,500,'Flight_DistanceChi2_out',nbins=100)
+
                                   )
         #--------------------------------------------
         '''
@@ -387,14 +401,6 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
         line.clone( 'BiasedDiMuonMass'
                     , prescale = self.prescale 
                     , SimpleDiMuon = {"Code" : MuPtCut +"&"+ MassTCut +"&"+ MuIPCut +"&"+ LTimeTCut
-
-                                   , 'PostMonitor' :  
-                                      Hlt2Monitor( "M","M(#mu#mu)",3097,200,'M_out',nbins=25)
-                                      +" & "+Hlt2MonitorMinMax( "PT","PT(#mu#mu)",0,10000,'JPsiPT_out',nbins=100)
-                                      +" & "+Hlt2MonitorMinMax( "MINTREE('mu-'==ABSID,PT)","MINTREE(mu-==ABSID,PT)",0,10000,'MuPT_out',nbins=100)
-                                      +" & "+Hlt2MonitorMinMax( "MIPDV(PRIMARY)","MIPDV(PRIMARY)",0,10,'MIPDV_out',nbins=100)
-                                      +" & "+Hlt2MonitorMinMax( "BPVLTIME('PropertimeFitter/properTime:PUBLIC')","BPVLTIME(PropertimeFitter/properTime:PUBLIC)",0,10,'LifeTime_out',nbins=100)
-                                      
                                       }
                     , postscale = self.postscale
                     )
