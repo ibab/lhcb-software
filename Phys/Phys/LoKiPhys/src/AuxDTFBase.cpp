@@ -1,4 +1,4 @@
-// $Id: AuxDTFBase.cpp,v 1.2 2010-06-08 17:59:03 ibelyaev Exp $
+// $Id: AuxDTFBase.cpp,v 1.3 2010-06-09 17:54:27 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -43,9 +43,7 @@ LoKi::AuxDTFBase::AuxDTFBase ( const IDecayTreeFit* fitter )
   , m_fitterName  (        ) 
   , m_fitter      ( fitter ) 
   , m_constraints (        )
-{
-  std::cout << "constructor 1 " << std::endl ;
-}
+{}
 // ============================================================================
 // constructor from the fitter 
 // ============================================================================
@@ -54,9 +52,7 @@ LoKi::AuxDTFBase::AuxDTFBase ( const std::string& fitter )
   , m_fitterName  ( fitter ) 
   , m_fitter      () 
   , m_constraints ()
-{
-  std::cout << "constructor 2 " << std::endl ;
-}
+{}
 // ============================================================================
 // constructor from the fitter 
 // ============================================================================
@@ -68,7 +64,6 @@ LoKi::AuxDTFBase::AuxDTFBase
   , m_fitter      ( fitter ) 
   , m_constraints (        )
 {
-  std::cout << "constructor 3 " << std::endl ;
   setConstraint ( constraints  ) ;
 }
 // ============================================================================
@@ -82,7 +77,6 @@ LoKi::AuxDTFBase::AuxDTFBase
   , m_fitter      ( fitter ) 
   , m_constraints (        )
 {
-  std::cout << "constructor 4 " << std::endl ;
   setConstraint ( constraints  ) ;
 }
 // ============================================================================
@@ -96,7 +90,6 @@ LoKi::AuxDTFBase::AuxDTFBase
   , m_fitter      (        ) 
   , m_constraints (        )
 {
-  std::cout << "constructor 5 " << std::endl ;
   setConstraint ( constraints  ) ;
 }
 // ============================================================================
@@ -110,7 +103,6 @@ LoKi::AuxDTFBase::AuxDTFBase
   , m_fitter      (        ) 
   , m_constraints (        )
 {
-  std::cout << "constructor 6 " << std::endl ;
   setConstraint ( constraints  ) ;
 }
 // ============================================================================
@@ -123,9 +115,7 @@ LoKi::AuxDTFBase::AuxDTFBase
   , m_fitterName  ( right.m_fitterName  ) 
   , m_fitter      ( right.m_fitter      ) 
   , m_constraints ( right.m_constraints ) 
-{
-  std::cout << "constructor 7 " << std::endl ;
-}
+{}
 // ============================================================================
 // set vector of constraints 
 // ============================================================================
@@ -219,11 +209,12 @@ std::vector<std::string> LoKi::AuxDTFBase::constraints ()  const
 // ============================================================================
 void LoKi::AuxDTFBase::applyConstraints () const 
 {
-  Assert ( !(!m_fitter) , "applyConstraints: Invaild Fitter!" ) ;
+  IDecayTreeFit* _fitter = fitter() ;
+  Assert ( !(!_fitter) , "applyConstraints: Invalid Fitter!" ) ;
   //
   for ( std::vector<LHCb::ParticleID>::const_iterator ipid = 
           m_constraints.begin() ; m_constraints.end() != ipid ; ++ipid ) 
-  { m_fitter->addConstraint ( *ipid ) ; }  
+  { _fitter->addConstraint ( *ipid ) ; }  
   //
 }
 // ============================================================================

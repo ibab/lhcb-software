@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.150 2010-06-08 17:59:03 ibelyaev Exp $ 
+! $Id: release.notes,v 1.151 2010-06-09 17:54:27 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhys
 ! Responsible : Vanya Belyaev
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
+
+! 2010-06-09 - Vanya Belyaev
+ - fix in AuxDTFBase 
 
 ! 2010-06-08 - Vanya Belyaev
  - new symbols
