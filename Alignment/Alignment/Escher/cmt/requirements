@@ -1,7 +1,7 @@
 package Escher
 version v4r8
 
-branches doc cmt job options
+branches doc cmt job options tests
 
 # Packages needed to compile and link the application
 use GaudiConf          v*                   -no_auto_imports
@@ -61,3 +61,6 @@ apply_pattern install_python_modules
 
 # ==========  Export application name and version to gaudirun.py ============
 apply_pattern GaudiApp
+
+# ==========  Allow tests ============
+apply_pattern QMTest
