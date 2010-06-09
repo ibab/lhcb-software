@@ -1,4 +1,4 @@
-// $Id: DecayTreeFit.cpp,v 1.2 2010-06-08 17:56:57 ibelyaev Exp $
+// $Id: DecayTreeFit.cpp,v 1.3 2010-06-09 17:53:16 ibelyaev Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -486,7 +486,6 @@ StatusCode LoKi::DecayTreeFit::fit                     // fit the decay tree
     ( 0 == origin ? 
       new Fitter ( *decay           ) : 
       new Fitter ( *decay , *origin ) ) ;
-  //
   // apply "global" constraints (if needed)
   for ( PIDs::const_iterator ipid = m_global_pids.begin() ; 
         m_global_pids.end() != ipid ; ++ipid ) 
@@ -495,7 +494,6 @@ StatusCode LoKi::DecayTreeFit::fit                     // fit the decay tree
   for ( PIDs::const_iterator ipid = m_locals_pids.begin() ; 
         m_locals_pids.end() != ipid ; ++ipid )
   { m_fitter -> setMassConstraint ( *ipid ) ; }
-  //
   // fit!
   m_fitter->fit() ;
   //
@@ -511,6 +509,7 @@ StatusCode LoKi::DecayTreeFit::fit                     // fit the decay tree
   //
   return StatusCode::SUCCESS ;
 }
+
 // ============================================================================
 /** get the fitted parameters for the particle 
  *  @param particle (INPUT) the particle, NULL corresponds to the decay head  
