@@ -149,9 +149,27 @@ if ( -d  ${LHCBDOC}/${project}/releases/${version} ) then
 endif
 
 #remove the GRID entry if necessary
-echo "If you want to remove the GRID entry, please do :"
-echo "dirac-lhcb-remove-software $PACKAGE $VERSION"
+echo "Check if the package should be remove from the GRID"
 echo " "
+
+if ! $?LHCBDIRACSYSROOT then
+  unsetenv User_release_area
+  source `which SetupProject.csh` LHCbDirac >&! /dev/null
+  if $SetupProjectStatus != 0 then
+    echo Problem to set the LHCbDirac environment
+  endif
+endif
+
+`which lhcb-proxy-init` -g diracAdmin
+set rc_dirac = $status
+if ($rc_dirac != 0 ) then
+   echo problem to generate the Proxy
+endif
+
+`which dirac-lhcb-check-software` $PACKAGE $version
+if ( $status == 0 ) then
+   `which dirac-lhcb-remove-software` $PACKAGE $version
+endif
 
 # send a mail
 echo " ${rel_dir}/$PACKAGE/$VERSION is ${action}d and ${rel_dir}/${package}Env/${version} is removed" > /tmp/$$
