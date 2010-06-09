@@ -1,9 +1,20 @@
-!$Id: release.notes,v 1.7 2010-05-24 17:07:38 ibelyaev Exp $
+!$Id: release.notes,v 1.8 2010-06-09 17:49:13 ibelyaev Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinciTypes
 ! Responsible : Juan Palacios
 ! Purpose     : Package containing useful typedefs for Phys
 !-----------------------------------------------------------------------------
+
+! 2010-06-09 - Vanya Belyaev
+
+ - TreeClonetrs.h 
+     add functiion to clone/delete trees 
+
+! 2010-06-09 - Vanya Belyaev
+
+ - DecayTree::cloneMap
+    fix in cloneTree method 
+    add the counter for the proper clone/delete     
 
 ! 2010-05-24 - Vanya Belyaev
 

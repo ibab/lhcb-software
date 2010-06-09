@@ -1,4 +1,4 @@
-// $Id: DecayTree.h,v 1.2 2010-05-24 17:07:38 ibelyaev Exp $ 
+// $Id: DecayTree.h,v 1.3 2010-06-09 17:49:13 ibelyaev Exp $ 
 // ============================================================================
 #ifndef DAVINCIKERNEL_DECAYTREE_H
 #define DAVINCIKERNEL_DECAYTREE_H
@@ -10,6 +10,10 @@
 #include <map>
 #include <vector>
 #include <memory>
+// ============================================================================
+// GaudiKernel
+// ============================================================================
+#include "GaudiKernel/Kernel.h"
 // ============================================================================
 // Event 
 // ============================================================================
@@ -27,7 +31,7 @@ namespace LHCb
    *  @see LHCb::Particle
    *  @author Wouter Hulsbergen 
    */
-  class DecayTree
+  class GAUDI_API DecayTree
   {
     // ========================================================================
   public:
@@ -86,11 +90,7 @@ namespace LHCb
   public:
     // ========================================================================
     /// take ownership of all particles in decay tree
-    LHCb::Particle* release ()
-    {
-      m_clonemap.clear() ;                               //     clear the links 
-      return m_head.release() ;                          // invalidate the head 
-    } 
+    LHCb::Particle* release () ;
     // ========================================================================
   public:
     // ========================================================================
@@ -102,29 +102,18 @@ namespace LHCb
   public:
     // ========================================================================
     /// find a particle in a decay tree based on PID
-    static const LHCb::Particle* findFirstInTree
-    (const LHCb::Particle&   particle ,
-     const LHCb::ParticleID& pid      ) ;
+    static const LHCb::Particle* 
+    findFirstInTree
+    ( const LHCb::Particle*        particle ,
+      const LHCb::ParticleID&      pid      ) ;
     /// find a particle in a decay tree based on PID
     static void findInTree
-    ( const LHCb::Particle&        particle ,
+    ( const LHCb::Particle*        particle ,
       const LHCb::ParticleID&      pid      ,
       LHCb::Particle::ConstVector& result   ) ;
     /// get access to the map for finding the clone of a particle 
     const CloneMap& cloneMap() const { return m_clonemap ; }
     // ========================================================================
-  private:
-    // ========================================================================
-    /** the actual cloning of the decay tree 
-     *  @param original the original particle
-     *  @param cloneMap the helper map to keep the links netween original and clone
-     *  @return the cloned tree
-     */
-    static LHCb::Particle* cloneTree 
-    ( const LHCb::Particle& original , CloneMap& clonemap ) ;
-    /// delete the tree 
-    static void deleteTree ( LHCb::Particle& particle ) ;
-    // ========================================================================    
   private:
     // ========================================================================
     /// the head of decay tree 
@@ -134,9 +123,9 @@ namespace LHCb
     // ========================================================================
   } ;  
   // ==========================================================================
-} // end of namespace LHCb
+} //                                                      end of namespace LHCb
 // ============================================================================
-// The END 
+//                                                                      The END 
 // ============================================================================
 #endif // DAVINCIKERNEL_DECAYTREE_H
 // ============================================================================
