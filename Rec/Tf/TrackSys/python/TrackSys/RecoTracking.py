@@ -105,6 +105,7 @@ def RecoTracking(exclude=[]):
    if TrackSys().fieldOff() : MagneticFieldSvc().ForcedSignedCurrentScaling = 0.
    
    if "noDrifttimes" in TrackSys().getProp("ExpertTracking"):
+      from Configurables import (Tf__OTHitCreator)
       Tf__OTHitCreator("OTHitCreator").NoDriftTimes = True
       
    # Get the fitters

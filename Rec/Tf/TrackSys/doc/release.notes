@@ -4,6 +4,9 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+! 2010-06-09 - Rob Lambert
+ - fix savannah bug #bug 68610, missing import statement in RecoTracking.py
+
 !============================ TrackSys v4r33 2010-05-21 ======================
 ! 2010-05-12 - Rob Lambert
  - Removed obsolete options RecoTracking.py and PatChecking.py
