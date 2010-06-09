@@ -78,10 +78,8 @@ if ( !lhcb.widgets ) {
     var c, tb, td, tr, tab = document.createElement('table');
     tb = document.createElement('tbody');
 
-    tab.className = 'MonitorData';
-    tb.className  = 'MonitorData';
-    tab.width     = '100%';
-    tab.height    = '60px';
+    tab.className = tb.className  = 'MonitorPage';
+    //tab.height    = '60px';
     tab.bcms      = lhcb.widgets.BCM_rel_datapoints();
     tab.bcms_sum   = lhcb.widgets.BCM_sum_datapoints();
 
@@ -148,13 +146,11 @@ if ( !lhcb.widgets ) {
    * @version 1.0
    */
   lhcb.widgets.BCM_sensors = function() {
-
     var c, tb, td, tr, tab = document.createElement('table');
     tb = document.createElement('tbody');
 
-    tab.className = 'MonitorData';
-    tb.className  = 'MonitorData';
-    tab.width     = '100%';
+    tab.className = 'MonitorPage';
+    tb.className  = 'MonitorPage';
 
     tr = document.createElement('tr');
     tr.appendChild(c=Cell('Flux readings of individual stations',8,'MonitorDataHeader'));
@@ -207,14 +203,8 @@ if ( !lhcb.widgets ) {
     var j;
     tb = document.createElement('tbody');
 
-    tab.className         = 'MonitorData';
-    tb.className          = 'MonitorData';
-    tab.cellSpacing       = 3;
-    tab.cellPadding       = 3;
-    tab.style.border      = 'solid';
-    tab.style.borderWidth = '1px';    
-    tab.width             = '100%';
-    tab.height            = '100%';
+    tab.className         = 'MonitorPage';
+    tb.className          = 'MonitorPage';
     tab.bcms              = lhcb.widgets.BCM_rel_datapoints();
 
     tab.handle_data = function(data) {
@@ -276,8 +266,7 @@ var BcmStatus = function(msg,chart,sensors)   {
     return td;
   };
 
-  table.className      = 'MonitorPage';
-  table.body.className = 'MonitorPage';
+  table.className = table.body.className = 'MonitorOuterFrame';
   table.body.cellpadding = 0;
   table.body.cellspacing = 0;
   table.display    = table.add();
@@ -366,9 +355,7 @@ var BcmStatus = function(msg,chart,sensors)   {
     var tb = document.createElement('tbody');
     var tr, td, c, d = new Date();
 
-    tab.className = tb.className = 'MonitorPage';
-    tab.width = tb.width = '100%';
-    tab.style.fontSize = '90%';
+    tab.className = tb.className = 'MonitorInnerFrame';
 
     this.heading = document.createElement('tr');
     var cell = Cell(lhcb_online_picture()+'&nbsp;LHCb BCM Status',2,'MonitorBigHeader');

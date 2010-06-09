@@ -55,66 +55,52 @@ var LEDItem = function(item_name, class_name, conversion)  {
   return element;
 };
 
+var red_led    = null;
+var green_led  = null;
+var yellow_led = null;
+var blue_led   = null;
+
 /** TRGSTATUS web widgets
  *
  *  @author  M.Frank
  */
-
-var green_led  = function(c) { 
-  //if ( _isInternetExplorer() )  { c.style.backgroundColor = 'lightgreen'; return 'OK' }
-  //return '<IMG src="'+lhcb.constants.mkStaticImage('smileys/free-happy-smileys-513.gif').src+'" height="20"></IMG>';   
-  return '<IMG src="'+lhcb.constants.mkStaticImage('smileys/smiley4162.gif').src+'" height="25"></IMG>';   
-};
-var yellow_led = function(c) {
-  //if ( _isInternetExplorer() )  { c.style.backgroundColor = 'yellow'; return 'Warning'; }
-  //return '<IMG src="'+lhcb.constants.mkStaticImage('smileys/free-scared-smileys-696.gif').src+'" height="15"></IMG>';
-  return '<IMG src="'+lhcb.constants.mkStaticImage('smileys/smiley1807.gif').src+'" height="25"></IMG>';   
-};
-var red_led    = function(c) {
-  //if ( _isInternetExplorer() )  { c.style.backgroundColor = 'red'; return 'Error'; }
-  return '<IMG src="'+lhcb.constants.mkStaticImage('smileys/free-mad-smileys-120.gif').src+'" height="25"></IMG>';
-};
-var blue_led   = function(c) { 
-  //if ( _isInternetExplorer() ) { c.style.backgroundColor = 'blue'; return 'Unknown'; }
-  //return '<IMG src="'+lhcb.constants.mkStaticImage('smileys/free-rolleye-smileys-323.gif').src+'" height="15"></IMG>'; 
-  return '<IMG src="'+lhcb.constants.mkStaticImage('smileys/smiley153.gif').src+'" height="15"></IMG>';   
-};
-
-
 var TrgStatus = function(msg)   {
   lhcb.widgets.L0TriggerSummary = function(options) {
     var c, tb, td, tr, tab = document.createElement('table');
+    red_led    = lhcb.widgets.red_smiley;
+    green_led  = lhcb.widgets.green_smiley;
+    yellow_led = lhcb.widgets.yellow_smiley;
+    blue_led   = lhcb.widgets.blue_smiley;
+
     tb = document.createElement('tbody');  
-    tab.width     = '100%';
-    tab.className = 'MonitorPage';
-    tb.className  = 'MonitorPage';
+    tab.className = tb.className  = 'MonitorPage';
     tab.logger    = options.logger;
 
     tab.led_conversion = function(data) {
-      if ( data == 0 )      return green_led(this);
-      else if ( data == 1 ) return yellow_led(this);
-      else if ( data == 3 ) return blue_led(this);
-      return red_led(this);
+      if ( data == 0 )      return green_led();
+      else if ( data == 1 ) return yellow_led();
+      else if ( data == 3 ) return blue_led();
+      return red_led();
     };
     tab.led_conversion_yesno = function(data) {
       //this.style.backgroundColor = ( data == 1 ) ? 'green' : 'red';      return '';
-      return (data==1 ? green_led(this) : red_led(this));
+      return (data==1 ? green_led() : red_led());
     };
     tab.led_conversion_noyes = function(data) {
       //this.style.backgroundColor = ( data != 1 ) ? 'green' : 'red';      return '';
-      return ( data!=1 ) ? green_led(this) : red_led(this);
+      return ( data!=1 ) ? green_led() : red_led();
     };
     tab.led_conversion_temp = function(data) {
       //this.style.backgroundColor = ( data != 1 ) ? 'green' : 'red';      return 'Temp';
-      return 'Temp:'+(data!=1 ? green_led(this) : red_led(this));
+      return 'Temp:'+(data!=1 ? green_led() : red_led());
     };
     tab.led_conversion_l0du = function(data) {
       //this.style.backgroundColor = ( data != 1 ) ? 'green' : 'red';      return 'L0DU';
-      return 'L0DU:'+(data!=1 ? green_led(this) : red_led(this));
+      return 'L0DU:'+(data!=1 ? green_led() : red_led());
     };
     tab.led_conversion_tell1 = function(data) {
       //this.style.backgroundColor = ( data != 1 ) ? 'green' : 'red';      return 'TELL1';
-      return 'TELL1:'+(data!=1 ? green_led(this) : red_led(this));
+      return 'TELL1:'+(data!=1 ? green_led() : red_led());
     };
 
     tab.connect = function() {

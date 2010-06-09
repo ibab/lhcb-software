@@ -19,7 +19,7 @@ var Collimators = function(msg)   {
     return td;
   };
 
-  table.className = table.body.className = 'MonitorPage';
+  table.className = table.body.className = 'MonitorOuterFrame';
   table.display = table.add();
   table.logDisplay = table.add();
   table.appendChild(table.body);
@@ -28,20 +28,16 @@ var Collimators = function(msg)   {
     var tab = document.createElement('table');
     var tb  = document.createElement('tbody');
     var tr  = document.createElement('tr');
+    tab.className = tb.className  = 'MonitorBigHeaderBLUE';
 
     this.lhcFillNumber = StyledItem('lbWeb.LHCCOM/LHC.LHC.RunControl.FillNumber',null,null);
     this.lhcBeamMode = StyledItem('lbWeb.LHCCOM/LHC.LHC.RunControl.BeamMode','Text-Left',null);
-
-    tab.style.width = tb.style.width = '100%';
-    tab.className = tb.className  = 'MonitorBigHeaderBLUE';
-
     tb.appendChild(tr);
     tr.appendChild(Cell('LHC Fill',null,null));    
     tr.appendChild(this.lhcFillNumber);
     tr.appendChild(Cell('Beam status:',null,'Text-Right'));    
     tr.appendChild(this.lhcBeamMode);
     tr.appendChild(Cell('',null,null));
-
     tab.appendChild(tb);
     return tab;
   };
@@ -53,8 +49,7 @@ var Collimators = function(msg)   {
     var base, cell, td, tr, tab = document.createElement('table');
     var tb = document.createElement('tbody');
 
-    tab.className   = tb.className = 'MonitorData';
-    tab.style.width = tb.style.width = '100%';
+    tab.className = tb.className = 'MonitorPage';
     base = 'lbWeb.LHCCOM/LHC.LHC.Machine.CollimatorPositions.';
     this.TCLIB_6L8_B2 = new Object();
     this.TCLIB_6L8_B2.lvdt_gap_downstream   = StyledItem(base+'TCLIB_6L8_B2.lvdt_gap_downstream',  'MonitorTableDataLeft', '%8.2f mm');
@@ -127,12 +122,11 @@ var Collimators = function(msg)   {
     
 
     tr = document.createElement('tr');
-    tb.appendChild(tr);
     tr.appendChild(Cell('&nbsp;&nbsp;&#151;&#151;&#62; LHC collimators positions around LHCb at Point 8',2,'MonitorDataHeaderRED'));
+    tb.appendChild(tr);
 
     tr = document.createElement('tr');
-    td = document.createElement('td');
-    tr.appendChild(td);
+    tr.appendChild(td=document.createElement('td'));
     tb.appendChild(tr);
     this.colltab = document.createElement('table');
     this.collbody = document.createElement('tbody');
@@ -241,7 +235,6 @@ var Collimators = function(msg)   {
     tb.appendChild(tr);
     this.tedtab = document.createElement('table');
     this.tedbody = document.createElement('tbody');
-    this.tedtab.width = this.tedbody.width = '100%';
     this.tedtab.className = this.tedbody.className = 'MonitorPage';
 
     tr = document.createElement('tr');    
@@ -338,8 +331,7 @@ var Collimators = function(msg)   {
     var tb = document.createElement('tbody');
     var d = new Date();
 
-    tab.className = tb.className = 'MonitorPage';
-    tab.style.fontSize = '90%';
+    tab.className = tb.className = 'MonitorInnerFrame';
 
     this.heading = document.createElement('tr');
     var cell = Cell(lhcb_online_picture()+'&nbsp;LHCb Collimator Monitor',1,'MonitorBigHeader');

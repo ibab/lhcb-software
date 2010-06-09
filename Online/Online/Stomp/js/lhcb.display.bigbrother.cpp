@@ -67,7 +67,7 @@ function _loadWidgets() {
       else {
 	var fillNo = parseInt(v[0]);
 	t.rampedTime.colSpan = 3;
-	t.rampedTime.innerHTML = ' Fill '+fillNo+' was never ramped';
+	t.rampedTime.innerHTML = ' Fill '+t.currFill.fillNo+' was never ramped';
       }
     };
     tab.currFillStable.parent = tab;
@@ -83,7 +83,7 @@ function _loadWidgets() {
       else {
 	var fillNo = parseInt(v[0]);
 	t.stableTime.colSpan = 3;
-	t.stableTime.innerHTML = ' Fill '+fillNo+' was never stable';
+	t.stableTime.innerHTML = ' Fill '+t.currFill.fillNo+' was never stable';
 	t.stableIntB1.innerHTML= '';
       }
     };
@@ -102,11 +102,11 @@ function _loadWidgets() {
 	var fillNo = parseInt(v[0]);
 	t.endedTime.colSpan = 3;
 	if ( fillNo < t.currFill.fillNo )
-  	  t.endedTime.innerHTML = ' Fill '+fillNo+' in preparation';
+  	  t.endedTime.innerHTML = ' Fill '+t.currFill.fillNo+' in preparation';
 	else if ( t.stableIntB1.innerHTML=='' )
-  	  t.endedTime.innerHTML = ' Fill '+fillNo+' in preparation';
+  	  t.endedTime.innerHTML = ' Fill '+t.currFill.fillNo+' in preparation';
 	else
-	  t.endedTime.innerHTML = ' Fill '+fillNo+' still running';
+	  t.endedTime.innerHTML = ' Fill '+t.currFill.fillNo+' still running';
       }
     };
     tr.appendChild(Cell('Start', null,'MonitorDataHeader'));
@@ -120,9 +120,6 @@ function _loadWidgets() {
     tr.appendChild(tab.rampedTime=Cell('', null,null));
     tr.appendChild(tab.rampedIntB1=Cell('', null,null));
     tr.appendChild(tab.rampedIntB2=Cell('', null,null));
-    //tab.rampedTime.style.width='35%';
-    //tab.rampedIntB1.style.width='20%';
-    //tab.rampedIntB2.style.width='20%';
     tb.appendChild(tr);
 
     tr = document.createElement('tr');
@@ -182,7 +179,6 @@ function _loadWidgets() {
 
     tooltips.set(tab,'Current Luminosity statistics<br>Click to see LHC status');
     tab.onclick = function() { document.location = lhcb.constants.lhcb_display_url("lhc");};
-
     tab.className = tb.className   = 'MonitorPage';
     tb.style.width = tb.style.height = '100%';
     if ( options.fontSize ) {
@@ -211,38 +207,39 @@ function _loadWidgets() {
 
     tr.appendChild(Cell('Lumi NOW', null,'MonitorDataHeader'));
     tr.appendChild(tab.lumiNOW);
-    tab.lumiNOW.style.width='40%';
-    tr.appendChild(Cell('&mu;b<sup>-1</sup>/s',null,'Text-Right'));
+    //tab.lumiNOW.style.width='40%';
+    tr.appendChild(cell=Cell('&mu;b<sup>-1</sup>/s',null,'Text-Left'));
+    cell.style.width='25%';
     tb.appendChild(tr);
     /*
     tr = document.createElement('tr');
     tr.appendChild(Cell('Last 30 min.',null,'MonitorDataHeader'));
     tr.appendChild(tab.lumi30min=Cell('', null,null));
-    tr.appendChild(Cell('&mu;b<sup>-1</sup>/s',null,'Text-Right'));
+    tr.appendChild(Cell('&mu;b<sup>-1</sup>/s',null,'Text-Left'));
     tb.appendChild(tr);
     */
     tr = document.createElement('tr');
     tr.appendChild(Cell('Fill from start',null,'MonitorDataHeader'));
     tr.appendChild(tab.lumiDEL);
-    tr.appendChild(Cell('&mu;b<sup>-1</sup>',null,'Text-Right'));
+    tr.appendChild(Cell('&mu;b<sup>-1</sup>',null,'Text-Left'));
     tb.appendChild(tr);
 
     tr = document.createElement('tr');
     tr.appendChild(Cell('Fill recorded',null,'MonitorDataHeader'));
     tr.appendChild(tab.lumiREC);
-    tr.appendChild(Cell('&mu;b<sup>-1</sup>',null,'Text-Right'));
+    tr.appendChild(Cell('&mu;b<sup>-1</sup>',null,'Text-Left'));
     tb.appendChild(tr);
 
     tr = document.createElement('tr');
     tr.appendChild(Cell('No. L&Oslash; events',null,'MonitorDataHeader'));
     tr.appendChild(tab.neventsIn);
-    tr.appendChild(Cell('',null,'Text-Right'));
+    tr.appendChild(Cell('',null,'Text-Left'));
     tb.appendChild(tr);
 
     tr = document.createElement('tr');
-    tr.appendChild(Cell('Events recorded',null,'MonitorDataHeader'));
+    tr.appendChild(Cell('Evts.recorded',null,'MonitorDataHeader'));
     tr.appendChild(tab.neventsRec);
-    tr.appendChild(Cell('',null,'Text-Right'));
+    tr.appendChild(Cell('',null,'Text-Left'));
     tb.appendChild(tr);
 
     tab.appendChild(tb);
@@ -573,7 +570,8 @@ function _loadWidgets() {
 	this.parent.hist.display(this.parent.hist.data);
       };
       cell.style.borderStyle = 'outset';
-      cell.style.borderColor = '#666666';
+      cell.style.borderColor = '#999999';
+      cell.style.borderWidth='thick';
       tr.appendChild(tab.eff_header=Cell('',4,'MonitorDataHeaderRED'));
       cell.style.textAlign = 'center';
       tr.appendChild(cell=Cell('Infficiencies',2,'MonitorDataHeaderRED'));
@@ -734,7 +732,7 @@ var BigBrother = function(msg)   {
 
   table.beforeComment = function() {
     var tab, tb, td, tr = document.createElement('tr');
-    var opts        = {system:'LHCb',style:'Arial12pt',legend:true,logger:this.logger,fontSize:'90%'};
+    var opts        = {system:'LHCb',style:'Arial12pt',legend:true,logger:this.logger};
     var fillTimes   = lhcb.widgets.fillTimes(opts);
     var fillLumi    = lhcb.widgets.fillLuminosity(opts);
     var interactionRates = lhcb.widgets.interactionRates(opts);

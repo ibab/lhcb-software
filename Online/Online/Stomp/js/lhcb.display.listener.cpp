@@ -105,10 +105,13 @@ var DetectorListener = function(logger,provider,parent,msg) {
 
   this.close_child = function(sys) {
     this.provider.reset();
-    var e = window.parent.document.getElementById("fsm_iframe_"+sys);
-    this.logger.debug('this.close_child() system:'+sys+'  element:'+e);
-    if ( e != null ) {
-      e.parentNode.removeChild(e);
+    try {
+      var e = window.parent.document.getElementById("fsm_iframe_"+sys);
+      this.logger.debug('this.close_child() system:'+sys+'  element:'+e);
+      if ( e != null ) {
+	e.parentNode.removeChild(e);
+      }
+    } catch(err) {
     }
   };
 

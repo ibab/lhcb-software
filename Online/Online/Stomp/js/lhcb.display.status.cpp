@@ -51,8 +51,7 @@ var PartitionSelector = function(msg) {
     return td;
   };
 
-  table.className = 'RunStatus';
-  table.body.className = 'RunStatus';
+  table.className = table.body.className = 'RunStatus';
   table.body.cellpadding = 0;
 
   table.heading = table.add();
@@ -77,10 +76,10 @@ var PartitionSelector = function(msg) {
   table.row.appendChild(table.change);
 
   table.update = document.createElement('td');
-  table.update.handler   = table;
-  table.update.innerHTML = 'Update';
-  table.update.className = 'DisplayButton';
-  table.update.onclick   = function() { _dataProvider.update();  };
+  table.update.handler     = table;
+  table.update.innerHTML   = 'Update';
+  table.update.className   = 'DisplayButton';
+  table.update.onclick     = function() { _dataProvider.update();  };
   tooltips.set(table.update,'Click to update display');
   table.row.appendChild(table.update);
 
@@ -98,7 +97,6 @@ var PartitionSelector = function(msg) {
 
   table.hideInput = function() {
     this.row.removeChild(this.update);
-    //this.row.removeChild(this.change);
     this.change.innerHTML = 'Reload';
     this.change.width = '10%';
     this.row.removeChild(this.select);
@@ -158,7 +156,6 @@ var PartitionSelector = function(msg) {
 
 var status_unload = function()  {
   dataProviderReset();
-  //alert('Connection reset.\n\nBye, Bye my friend....');
 };
 
 var status_body = function()  {
@@ -172,8 +169,6 @@ var status_body = function()  {
   body.appendChild(selector);
   body.className = 'MainBody';
 
-  //alert('status_body: system:'+sys+' msg:'+msg);
-  //alert('XMLHTTP:'+window.XMLHttpRequest);
   if ( msg > 0 )
     selector.logger = new OutputLogger(selector.logDisplay, 200, LOG_INFO, 'RunStatusLogger');
   else
@@ -190,7 +185,6 @@ var status_body = function()  {
     selector.selectBox.add(sys,sys,true);
     selector.createDisplay(); 
     selector.hideInput();
-    //selector.removeChild(selector.select);
   }
   selector.provider.start();
 };

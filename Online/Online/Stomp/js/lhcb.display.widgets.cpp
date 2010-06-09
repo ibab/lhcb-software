@@ -1,7 +1,6 @@
 if ( !lhcb.widgets ) {
 
   lhcb.widgets = new Object();
-  lhcb.widgets.velo = new Object();
   
   /// Set document location to LHCb DAQ status page
   lhcb.widgets.goto_lhcb_page = function(name) {
@@ -17,6 +16,20 @@ if ( !lhcb.widgets ) {
   lhcb.widgets.goto_lhc_operations_page = function() {
     document.location =  lhcb.constants.operations_url("LHC3");
   };
+
+  lhcb.widgets.green_smiley  = function() { 
+    return '<IMG src="'+lhcb.constants.mkStaticImage('smileys/smiley4162.gif').src+'" height="25"></IMG>';   
+  };
+  lhcb.widgets.yellow_smiley = function() {
+    return '<IMG src="'+lhcb.constants.mkStaticImage('smileys/smiley1807.gif').src+'" height="25"></IMG>';   
+  };
+  lhcb.widgets.red_smiley    = function() {
+    return '<IMG src="'+lhcb.constants.mkStaticImage('smileys/free-mad-smileys-120.gif').src+'" height="25"></IMG>';
+  };
+  lhcb.widgets.blue_smiley   = function() { 
+    return '<IMG src="'+lhcb.constants.mkStaticImage('smileys/smiley153.gif').src+'" height="15"></IMG>';   
+  };
+
 
   lhcb.widgets.subscribeItem = function(provider,item) {
     if ( item ) {
@@ -1409,7 +1422,7 @@ if ( !lhcb.widgets ) {
       this.body.appendChild(tr);
       return td;
     };
-    table.className = table.body.className = 'MonitorPage';
+    table.className = table.body.className = 'MonitorOuterFrame';
     table.display = table.add();
     table.logDisplay = table.add();
     table.appendChild(table.body);
@@ -1436,9 +1449,7 @@ if ( !lhcb.widgets ) {
       var tb = document.createElement('tbody');
       var t1, tb1, tr1, td1, cell, d = new Date();
 
-      tab.className = tb.className = 'MonitorPage';
-      tab.width = tb.width  = '100%';
-      tab.style.fontSize = '90%';
+      tab.className = tb.className = 'MonitorInnerFrame';
 
       this.heading = document.createElement('tr');
       this.heading.appendChild(td=document.createElement('td'));
@@ -1576,6 +1587,13 @@ if ( !lhcb.widgets ) {
   lhcb.widgets.SubdetectorPage.stop = function(creator) {
     dataProviderReset();
   };
+
+  ///=====================================================================================
+  ///
+  ///  VELO Widgets
+  ///
+  ///=====================================================================================
+  lhcb.widgets.velo = new Object();
 
   /** VELO web widgets
    *
@@ -1889,6 +1907,162 @@ if ( !lhcb.widgets ) {
     return tab;
   };
 
+  ///=====================================================================================
+  ///
+  ///  DSS Widgets
+  ///
+  ///=====================================================================================
+  lhcb.widgets.DSS = new Object();
+
+  /** DSS web widgets
+   *
+   *  @author  M.Frank
+   */
+  lhcb.widgets.DSS.MixedWaterStatus = function(options) {
+    var tab = document.createElement('table');
+    var tb = document.createElement('tbody');
+    var tr, cell;
+
+    tab.logger = options.logger;
+    tab.subscriptions=[];
+    tab.className = 'MonitorPage';
+    tb.className   = 'MonitorPage';
+    if ( options.style ) {
+      tr = document.createElement('tr');
+      tr.appendChild(Cell('DSS Mixed water temperature',6,options.style));
+      tb.appendChild(tr);
+    }
+    tab.d1d2 = StyledItem('lbWeb.dip/LHCb/DSS/PT_TE_BARRACK_Mixed_Water_D1D2_In.__DIP_DEFAULT__',null,'%7.2f <sup>o</sup>C');
+    tab.d3A = StyledItem('lbWeb.dip/LHCb/DSS/PT_TE_BARRACK_Mixed_Water_D3A_In.__DIP_DEFAULT__',null,'%7.2f <sup>o</sup>C');
+    tab.d3B = StyledItem('lbWeb.dip/LHCb/DSS/PT_TE_BARRACK_Mixed_Water_D3B_In.__DIP_DEFAULT__',null,'%7.2f <sup>o</sup>C');
+
+    tab.bunker = StyledItem('lbWeb.dip/LHCb/DSS/PT_TE_BUNKER_Mixed_Water_Cooling.__DIP_DEFAULT__',null,'%7.2f <sup>o</sup>C');
+    tab.caloA = StyledItem('lbWeb.dip/LHCb/DSS/PT_TE_CALO_Mixed_Water_Aside.__DIP_DEFAULT__',null,'%7.2f <sup>o</sup>C');
+    tab.caloC = StyledItem('lbWeb.dip/LHCb/DSS/PT_TE_CALO_Mixed_Water_Cside.__DIP_DEFAULT__',null,'%7.2f <sup>o</sup>C');
+
+    tab.uxaA = StyledItem('lbWeb.dip/LHCb/DSS/PT_TE_UXA~A_Mixed_Water_Cooling.__DIP_DEFAULT__',null,'%7.2f <sup>o</sup>C');
+    tab.uxaB1 = StyledItem('lbWeb.dip/LHCb/DSS/PT_TE_UXA~B1_Mixed_Water_Cooling.__DIP_DEFAULT__',null,'%7.2f <sup>o</sup>C');
+    tab.uxaC = StyledItem('lbWeb.dip/LHCb/DSS/PT_TE_UXA~C_Mixed_Water_Cooling.__DIP_DEFAULT__',null,'%7.2f <sup>o</sup>C');
+
+    tab.subscriptions.push(tab.d1d2);
+    tab.subscriptions.push(tab.d3A);
+    tab.subscriptions.push(tab.d3B);
+    tab.subscriptions.push(tab.bunker);
+    tab.subscriptions.push(tab.caloA);
+    tab.subscriptions.push(tab.caloC);
+    tab.subscriptions.push(tab.uxaA);
+    tab.subscriptions.push(tab.uxaB1);
+    tab.subscriptions.push(tab.uxaC);
+    
+    tr = document.createElement('tr');
+    tr.appendChild(Cell('D1/D2:',1,null));
+    tr.appendChild(tab.d1d2);
+    tr.appendChild(Cell('D3-A:',1,null));
+    tr.appendChild(tab.d3A);
+    tr.appendChild(Cell('D3-B:',1,null));
+    tr.appendChild(tab.d3B);
+    tb.appendChild(tr);
+
+    tr = document.createElement('tr');
+    tr.appendChild(Cell('Bunker:',1,null));
+    tr.appendChild(tab.bunker);
+    tr.appendChild(Cell('Calo-A:',1,null));
+    tr.appendChild(tab.caloA);
+    tr.appendChild(Cell('Calo-C:',1,null));
+    tr.appendChild(tab.caloC);
+    tb.appendChild(tr);
+
+    tr = document.createElement('tr');
+    tr.appendChild(Cell('UXA-A:',1,null));
+    tr.appendChild(tab.uxaA);
+    tr.appendChild(Cell('UXA-B1:',1,null));
+    tr.appendChild(tab.uxaB1);
+    tr.appendChild(Cell('UXA-C:',1,null));
+    tr.appendChild(tab.uxaC);
+    tb.appendChild(tr);
+
+    tab.appendChild(tb);
+
+    tab.subscribe = function(provider) {
+      for(var i=0; i<this.subscriptions.length;++i) {
+	provider.subscribeItem(this.subscriptions[i]);
+      }
+    };
+    return tab;
+  };
+
+  /** DSS web widgets
+   *
+   *  @author  M.Frank
+   */
+  lhcb.widgets.DSS.OTCaVPlantStatus = function(options) {
+    var tab = document.createElement('table');
+    var tb = document.createElement('tbody');
+    var tr, cell;
+
+    tab.logger = options.logger;
+    tab.subscriptions=[];
+    tab.className = 'MonitorPage';
+    tb.className   = 'MonitorPage';
+    if ( options.style ) {
+      tr = document.createElement('tr');
+      tr.appendChild(Cell('OT Cooling plant status',4,options.style));
+      tb.appendChild(tr);
+    }
+    tab.outletPressure = StyledItem('lbWeb.CaV/OtPlant.Actual.Parameters.param03',null,'%7.2f bar');
+    tab.outletTemperature = StyledItem('lbWeb.CaV/OtPlant.Actual.Parameters.param04',null,'%7.2f <sup>o</sup>C');
+
+    tab.mixedWaterIn  = StyledItem('lbWeb.CaV/OtPlant.Actual.Measurements.param13',null,'%7.2f <sup>o</sup>C');
+    tab.mixedWaterOut = StyledItem('lbWeb.CaV/OtPlant.Actual.Measurements.param14',null,'%7.2f <sup>o</sup>C');
+    tab.runState = StyledItem('lbWeb.CaV/OtPlant.Actual.Parameters.param13xxx',null,null);
+    tab.fault    = StyledItem('lbWeb.CaV/OtPlant.Actual.fault',null,null);
+    tab.alarm    = StyledItem('lbWeb.CaV/OtPlant.Actual.alarm',null,null);
+    tab.fault.conversion = tab.alarm.conversion = function(data) 
+    { return data=="FALSE" ? lhcb.widgets.green_smiley() : lhcb.widgets.red_smiley();  };
+
+    tab.subscriptions.push(tab.outletPressure);
+    tab.subscriptions.push(tab.outletTemperature);
+    tab.subscriptions.push(tab.fault);
+    tab.subscriptions.push(tab.alarm);
+    tab.subscriptions.push(tab.runState);
+    tab.subscriptions.push(tab.mixedWaterIn);
+    tab.subscriptions.push(tab.mixedWaterOut);
+    
+    tr = document.createElement('tr');
+    tr.appendChild(cell=Cell('Outlet',2,'MonitorDataHeader'));
+    cell.style.width='30%';
+    tr.appendChild(Cell('Pressure:',1,null));
+    tr.appendChild(tab.outletPressure);
+    tr.appendChild(Cell('Temp:',1,null));
+    tr.appendChild(tab.outletTemperature);
+    tb.appendChild(tr);
+
+    tr = document.createElement('tr');
+    tr.appendChild(Cell('Mixed water',2,'MonitorDataHeader'));
+    tr.appendChild(Cell('In:',1,null));
+    tr.appendChild(tab.mixedWaterIn);
+    tr.appendChild(Cell('Out:',1,null));
+    tr.appendChild(tab.mixedWaterOut);
+    tb.appendChild(tr);
+
+    tr = document.createElement('tr');
+    tr.appendChild(Cell('Run state:',1,null));
+    tr.appendChild(tab.runState);
+    tr.appendChild(Cell('Alarms:',1,null));
+    tr.appendChild(tab.alarm);
+    tr.appendChild(Cell('Faults:',1,null));
+    tr.appendChild(tab.fault);
+    tb.appendChild(tr);
+
+    tab.appendChild(tb);
+    tab.subscribe = function(provider) {
+      for(var i=0; i<this.subscriptions.length;++i) {
+	provider.subscribeItem(this.subscriptions[i]);
+      }
+    };
+    return tab;
+
+  };
 
   if ( _debugLoading ) alert('Script lhcb.display.widgets.cpp loaded successfully');
 }

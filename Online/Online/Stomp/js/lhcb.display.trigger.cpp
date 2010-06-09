@@ -503,7 +503,7 @@ var TriggerStatus = function(msg)   {
     this.trg         = lhcb.widgets.TriggerSetup(opts);
 
     this.left.addItem(this.trg);
-    this.left.addSpacer('50px');
+    //this.left.addSpacer('50px');
     this.left.addItem(this.odin);
 
     this.right.addItem(this.l0du);

@@ -61,14 +61,16 @@ FSMTable = function(partition,msg,state) {
   }
   td.className = 'StatusPlain';
   tr.appendChild(td);
-
+  /*
   table.update = document.createElement('td');
   table.update.cellPadding = 0;
   table.update.className   = 'DisplayButton';
   table.update.innerHTML   = 'Update';
   table.update.onclick     = function()   { _dataProvider.update(); };
   table.update.handler     = table;
+  table.update.visible     = false;
   tr.appendChild(table.update);
+  */
 
   table.close = document.createElement('td');
   table.close.className    = 'DisplayButton';

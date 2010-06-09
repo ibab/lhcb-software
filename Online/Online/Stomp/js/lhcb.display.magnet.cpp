@@ -20,8 +20,7 @@ var MagnetStatus = function(msg)   {
     return td;
   };
 
-  table.className = 'MonitorPage';
-  table.body.className = 'MonitorPage';
+  table.className = table.body.className = 'MonitorOuterFrame';
   table.body.cellpadding = 0;
   table.body.cellspacing = 0;
   table.display = table.add();
@@ -32,12 +31,11 @@ var MagnetStatus = function(msg)   {
     var c, tb, tr, tab = document.createElement('table');
     tb = document.createElement('tbody');
 
-    tab.width = '100%';
     tab.className = tb.className = 'MonitorPage';
     tooltips.set(tab,'Magnet status summary information');
 
     tr = document.createElement('tr');
-    tr.appendChild(c=Cell('Magnet Status:',null,'MonitorDataHeaderRED'));
+    tr.appendChild(c=Cell('<font size="+3">Status</font>',null,'MonitorDataHeaderRED'));
     c.style.width='20%';
     c.style.height='50px';
     this.magnetField = StyledItem('lbWeb.lbHyst.B','Text-Center',null);
@@ -48,7 +46,7 @@ var MagnetStatus = function(msg)   {
     this.magnetField.conversion = function(data) {
       if ( data>0.85 ) {
 	this.style.backgroundColor = 'lightgreen';
-	return '<font size="+2">ON</font>';
+	return '<font size="+3">ON</font>';
       }
       else if ( data<0.15 ) {
 	this.style.backgroundColor = 'yellow';
@@ -89,8 +87,6 @@ var MagnetStatus = function(msg)   {
   table.Magnet_sensors = function() {
     var c, tb, tr, tab = document.createElement('table');
     tb = document.createElement('tbody');
-
-    tab.style.width = tb.style.width = '100%';
     tab.className = tb.className = 'MonitorPage';
     tooltips.set(tab,'Sensor status and values');
 
@@ -119,7 +115,7 @@ var MagnetStatus = function(msg)   {
     this.magnetFieldZ3 = StyledItem('lbWeb.LbMagnet.BSensor3.Bz',  'Text-Center','%7.4f');
 
     tr = document.createElement('tr');
-    tr.appendChild(c=Cell('Sensors:',null,'MonitorDataHeaderRED'));
+    tr.appendChild(c=Cell('Sensors',null,'MonitorDataHeaderRED'));
     c.style.width = '20%';
 
     tr.appendChild(c=Cell('',null,'MonitorDataHeader'));
@@ -318,9 +314,7 @@ var MagnetStatus = function(msg)   {
     var tb = document.createElement('tbody');
     var t1, tb1, tr1, td1, d = new Date();
 
-    tab.className = tb.className = 'MonitorPage';
-    tab.width = tb.width  = '100%';
-    tab.style.fontSize = '90%';
+    tab.className = tb.className = 'MonitorInnerFrame';
 
     this.heading = document.createElement('tr');
     var cell = Cell('<IMG src="'+lhcb.constants.images.magnet_big.src+'" width="100"></IMG>&nbsp;LHCb Magnet Status',1,'MonitorBigHeader');
@@ -410,4 +404,4 @@ var magnet_body = function()  {
   body.style.cursor = 'default';
 };
 
-if ( _debugLoading ) alert('Script lhcb.display.detstatus.cpp loaded successfully');
+if ( _debugLoading ) alert('Script lhcb.display.magnet.cpp loaded successfully');

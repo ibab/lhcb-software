@@ -42,7 +42,7 @@ var Page1 = function(msg, sys)   {
     return td;
   };
 
-  table.className = table.body.className = 'MonitorPage';
+  table.className = table.body.className = 'MonitorOuterFrame';
   table.display = table.add();
   table.logDisplay = table.add();
   table.appendChild(table.body);
@@ -63,9 +63,7 @@ var Page1 = function(msg, sys)   {
     var tb = document.createElement('tbody');
     var tr, d = new Date();
 
-    tab.className = tb.className = 'MonitorPage';
-    tab.style.fontSize = '90%';
-
+    tab.className = tb.className = 'MonitorInnerFrame';
     this.heading = document.createElement('tr');
     var cell = Cell(lhcb_online_picture()+'&nbsp;'+this.system+' Page1',1,'MonitorBigHeader');
     cell.style.textAlign = 'left';

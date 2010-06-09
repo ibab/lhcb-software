@@ -22,10 +22,8 @@ var LHCStatus = function(msg)   {
     return td;
   };
 
-  table.className = 'MonitorPage';
-  table.body.className = 'MonitorPage';
+  table.className = table.body.className = 'MonitorOuterFrame';
   table.body.cellpadding = table.body.cellspacing = 0;
-  table.style.width = table.body.style.width = '100%';
 
   table.display = table.add();
   table.logDisplay = table.add();
@@ -34,8 +32,6 @@ var LHCStatus = function(msg)   {
   table.LHC_Operations_Info = function() {
     var c, tb, tr, tab = document.createElement('table');
     tb = document.createElement('tbody');
-
-    tab.style.width = tb.style.width = '100%';
     tab.className = tb.className = 'MonitorPage';
 
     this.energy        = StyledItem('lbWeb.LHCCOM/LHC.LHC.Beam.Energy',null,'%7.1f GeV');
@@ -601,10 +597,7 @@ var LHCStatus = function(msg)   {
     var tb = document.createElement('tbody');
     var t1, tb1, tr1, td1, t2, tb2, tr2, td2, d = new Date();
 
-    tab.width ='100%';
-    tb.width  = '100%';
-
-    tb.className = tab.className = 'MonitorPage';
+    tb.className = tab.className = 'MonitorInnerFrame';
     this.heading = document.createElement('tr');
     var cell = Cell('<IMG src="http://lhc.web.cern.ch/lhc/images/LHC.gif" height="64"/> LHC machine and beam status',1,'MonitorBigHeader');
     cell.style.textAlign = 'left';
@@ -632,7 +625,6 @@ var LHCStatus = function(msg)   {
     t1.appendChild(tb1=document.createElement('tbody'));
     t1.style.width='100%';
     tb1.style.width='100%';
-    t1.style.fontSize = tb1.style.fontSize = '90%';
     //-------------------------------------------------
     tb1.appendChild(tr1=document.createElement('tr'));
     tr1.appendChild(td1=document.createElement('td'));

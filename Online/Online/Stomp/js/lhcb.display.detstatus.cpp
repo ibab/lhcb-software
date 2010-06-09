@@ -49,7 +49,7 @@ var DetStatus = function(msg)   {
     return td;
   };
 
-  table.className = table.body.className = 'MonitorPage';
+  table.className = table.body.className = 'MonitorOuterFrame';
   table.display = table.add();
   table.logDisplay = table.add();
   table.appendChild(table.body);
@@ -254,10 +254,7 @@ var DetStatus = function(msg)   {
     var tb = document.createElement('tbody');
     var t1, tb1, tr1, td1, d = new Date();
 
-    tab.className = tb.className = 'MonitorPage';
-    tab.width = tb.width  = '100%';
-    tab.style.fontSize = '90%';
-
+    tab.className = tb.className = 'MonitorInnerFrame';
     this.heading = document.createElement('tr');
     var cell = Cell(lhcb_online_picture()+'&nbsp;LHCb Detector Status',1,'MonitorBigHeader');
     cell.style.textAlign = 'left';

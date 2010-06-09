@@ -22,7 +22,7 @@ var OperationsStatus = function(msg)   {
     return td;
   };
 
-  table.className = table.body.className = 'MonitorPage';
+  table.className = table.body.className = 'MonitorOuterFrame';
   table.display = table.add();
   table.logDisplay = table.add();
   table.appendChild(table.body);
@@ -202,7 +202,7 @@ var OperationsStatus = function(msg)   {
     cell.style.textAlign = 'center';
     cell.style.borderWidth = '5';
     cell.style.borderColor = 'black';
-    cell.style.fontSize='400%';
+    cell.style.fontSize='350%';
     this.injState = cell;
     tb.appendChild(tr);
     tab.appendChild(tb);
@@ -213,7 +213,6 @@ var OperationsStatus = function(msg)   {
   table.subscribe = function() {
 
     this.subscribeItem2(this.operState);
-
     this.subscribeItem2(this.lhcHandshake);
     this.subscribeItem2(this.lhcbHandshake);
 
@@ -244,9 +243,7 @@ var OperationsStatus = function(msg)   {
     var tb = document.createElement('tbody');
     var opts, t1, tb1, tr1, td1, cell, d = new Date();
 
-    tab.className = tb.className = 'MonitorPage';
-    tab.width = tb.width  = '100%';
-    tab.style.fontSize = '90%';
+    tab.className = tb.className = 'MonitorInnerFrame';
 
     this.heading = document.createElement('tr');
     this.heading.appendChild(td=document.createElement('td'));
