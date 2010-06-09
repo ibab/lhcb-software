@@ -1,4 +1,4 @@
-// $Id: MCTupleToolAngles.cpp,v 1.3 2010-01-26 15:39:25 rlambert Exp $
+// $Id: MCTupleToolAngles.cpp,v 1.4 2010-06-09 09:37:32 gligorov Exp $
 // Include files 
 #include "gsl/gsl_sys.h"
 
@@ -67,8 +67,9 @@ StatusCode MCTupleToolAngles::fill( const LHCb::MCParticle* mother
   // fill the tuple:
   test &= tuple->column( prefix+"_TRUECosTheta", cosT );
   if(isVerbose()) test &= tuple->column( prefix+"_TRUETheta", acos(cosT) );
-  if ( msgLevel(MSG::DEBUG)) debug() << mother->particleID().pid() << " " << mother->momentum() << " " 
+  if ( msgLevel(MSG::DEBUG) && 0!=mcp && 0!=mother) debug() << mother->particleID().pid() << " " << mother->momentum() << " " 
                                      << mcp->particleID().pid() << " " << mcp->momentum() << endmsg ;
+ 
   return StatusCode(test) ;
   
 }
