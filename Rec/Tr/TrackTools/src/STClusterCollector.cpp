@@ -80,7 +80,7 @@ StatusCode STClusterCollector::initialize() {
 
   incSvc()->addListener(this, IncidentType::BeginEvent);
 
-  m_magFieldSvc  = svc<IMagneticFieldSvc>( "MagneticFieldSvc", this );
+  m_magFieldSvc  = svc<IMagneticFieldSvc>( "MagneticFieldSvc");//, this );
 
   m_extrapolator = tool<ITrackExtrapolator>(m_extrapolatorName, "Extrapolator", this);
   m_trajPoca = tool<ITrajPoca>("TrajPoca");
