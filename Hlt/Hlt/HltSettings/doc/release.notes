@@ -4,6 +4,11 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+!========================== HltSettings v2r0p4 2010-06-09 ===================
+! 2010-06-03 - Gerhard Raven
+ - even more changes to Jun10 configurations, according to https://savannah.cern.ch/task/index.php?15819
+   o unify track chi2 cuts at <16
+
 !========================== HltSettings v2r0p3 2010-06-05 ===================
 ! 2010-06-05 - Gerhard Raven
  - add the postconfig changes applied ad-hoc in Apr10 to the Apr10 settings

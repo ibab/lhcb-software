@@ -50,7 +50,7 @@ class Physics_MinBiasL0_PassThroughHlt_Jun10 :
                                          , 'HadDi_VDChi2Cut' : 50.0
                                          , 'HadCompanion_PTCut' : 500
                                          , 'HadCompanion_PointingCut' : 0.5
-                                         , 'HadMain_TrackFitChi2Cut' :  999.
+                                         , 'HadMain_TrackFitChi2Cut' :  16.
                                         }
                  , Hlt1PhotonLinesConf : { 'Pho_EtCut'         : 2400.0
                                           , 'Pho_IsPho'        : -0.1
@@ -78,7 +78,7 @@ class Physics_MinBiasL0_PassThroughHlt_Jun10 :
                                           , 'DiMuon_MassCut' : 2500
                                           , 'DiMuonIP_MassCut' : 750
                                           , 'DiMuon_IPCut' : 0.0
-                                          , 'Muon_FitChiCut' :  999.
+                                          , 'Muon_FitChiCut' :  16.
                                           , 'Muon_FitMuChi2Cut' :  999.
                                           , 'MuTrackMuPt' : 800
                                           , 'MuTrackMuIP' : 0.03
@@ -88,7 +88,7 @@ class Physics_MinBiasL0_PassThroughHlt_Jun10 :
                                           , 'MuTrackDZ' : 1.00
                                           , 'MuTrackDimuMass' : 1000
                                           , 'MuTrackPoint' : 0.4
-                                          , 'MuTrackTrChi2' : 999.
+                                          , 'MuTrackTrChi2' : 16.
                                           , 'MuTrackMuChi2' :  999.
                                           , 'MuTrackMuPt4JPsi' : 1300
                                           , 'MuTrackTrPt4JPsi' : 400
@@ -98,7 +98,7 @@ class Physics_MinBiasL0_PassThroughHlt_Jun10 :
                                           , 'MuTrackDimuMass4JPsiLow' : 2900
                                           , 'MuTrackDimuMass4JPsiHigh' : -1 # <= 0 implies 'remove cut'
                                           , 'MuTrackMuChi24JPsi' : 999.
-                                          , 'MuTrackTrChi24JPsi' : 999.
+                                          , 'MuTrackTrChi24JPsi' : 16.
                                           }
                  , Hlt1L0LinesConf :      { 'Prescale'  : { 'Hlt1L0Any' : 1 }
                                           , 'Postscale' : { 'Hlt1L0(?!Any).*' : 0.000001
