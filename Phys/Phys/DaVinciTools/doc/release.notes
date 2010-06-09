@@ -1,8 +1,15 @@
-! $Id: release.notes,v 1.552 2010-06-03 12:07:06 jpalac Exp $
+! $Id: release.notes,v 1.553 2010-06-09 17:51:41 ibelyaev Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2010-06-09 - Vanya Belyaev
+
+ - fix the problem with clogings inside "keep"-methods
+  
+      keep ( Vertex ) is disabled: exception..
+ 
 
 ! 2010-06-03 - Juan Palacios
  - src/FilterDesktop.cpp, src/PhysDesktop.cpp

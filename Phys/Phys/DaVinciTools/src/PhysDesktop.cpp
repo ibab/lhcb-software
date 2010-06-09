@@ -1,17 +1,28 @@
-// $Id: PhysDesktop.cpp,v 1.109 2010-06-03 12:06:54 jpalac Exp $
-// from Gaudi
+// $Id: PhysDesktop.cpp,v 1.110 2010-06-09 17:51:41 ibelyaev Exp $
+// ============================================================================
+// GaudiKernel
+// ============================================================================
 #include "GaudiKernel/DeclareFactoryEntries.h"
-//#include "GaudiKernel/GaudiException.h"
-//#include "GaudiKernel/IIncidentSvc.h"
 #include "GaudiKernel/IAlgorithm.h"
 #include "GaudiKernel/IToolSvc.h" 
-
-// local
-#include "PhysDesktop.h"
+// ============================================================================
+// RecEvent 
+// ============================================================================
+#include "Event/RecVertex.h"
+// ============================================================================
+// DaVinciTypes 
+// ============================================================================
+#include "Kernel/TreeCloners.h"
+// ============================================================================
+// DaVinciKErnel
+// ============================================================================
 #include "Kernel/DVAlgorithm.h"
 #include "Kernel/GetDVAlgorithm.h"
-#include "Event/RecVertex.h"
-/*-----------------------------------------------------------------------------
+// local
+// ============================================================================
+#include "PhysDesktop.h"
+// ============================================================================
+/* @file 
  * Implementation file for class : PhysDesktop base class
  *
  * 18/02/2002 : Sandra Amato
@@ -21,8 +32,8 @@
  * 08/02/2005 : Patrick Koppenburg : Split vertices into primaries and secondaries
  * 20/01/2006 : Patrick Koppenburg : Adapt to DC06 event model
  * 16/04/2007 : Patrick Koppenburg : Major revamp
- *-----------------------------------------------------------------------------
  */
+// ============================================================================
 typedef LHCb::Particle::ConstVector::const_iterator p_iter;
 typedef LHCb::RecVertex::ConstVector::const_iterator rv_iter;
 typedef LHCb::Vertex::ConstVector::const_iterator v_iter;
@@ -210,97 +221,46 @@ StatusCode PhysDesktop::cleanDesktop(){
   
   return StatusCode::SUCCESS;
 
-}
 
+}
 //=============================================================================
 // Register a new particle in the Desktop
 //=============================================================================
-const LHCb::Particle* PhysDesktop::keep( const LHCb::Particle* keptP ){
-
-  if ( 0==keptP ){
-    Exception("Attempt to keep NULL Particle") ;
-    return 0;
-  }
-  if (msgLevel(MSG::VERBOSE)) printOut("Put Particle on desktop", keptP);
+const LHCb::Particle* PhysDesktop::keep( const LHCb::Particle* kept )
+{
+  //
+  Assert ( 0 != kept , "keep: Attempt to keep invaild particle" ) ;
+  if ( DaVinci::inTES ( kept ) ) { return kept ; }
   
-  // Input particle is given check if it already exist in the stack
-  if( DaVinci::inTES( keptP ) ) {
-    if (msgLevel(MSG::VERBOSE)) verbose() << "   -> Particle is in desktop" << endmsg ;
-     return keptP;
-  }
-  // Create new particle on the heap
-  LHCb::Particle* newP = new LHCb::Particle(*keptP);
-
-  // Put in the desktop container
-  m_parts.push_back(newP);
-
-  // Check if link to endProducts exist and set it
-  if( 0 != keptP->endVertex() ) {
-    const LHCb::Vertex* newV = keep( keptP->endVertex() );
-    newP->setEndVertex(newV);
-  }
-
+  DaVinci::CloneMap clonemap ;
+  //
+  const LHCb::Particle* newp = 
+    DaVinci::cloneTree ( kept , clonemap , m_parts , m_secVerts ) ;
+  
   // copy relations directly from table to avoid triggering any new P->PV 
   // relations calculation
-  Particle2Vertex::Table::Range range = i_p2PVTable().i_relations(keptP);
-
-  if (msgLevel(MSG::VERBOSE)) {
+  Particle2Vertex::Table::Range range = i_p2PVTable().i_relations(kept);
+  
+  if ( msgLevel(MSG::VERBOSE))
+  {
     verbose() << "keeping " << range.size() << " P->PV relations" << endmsg;
   }
-
+  //
   for ( Particle2Vertex::Table::Range::const_iterator i = range.begin();
-        i != range.end();
-        ++i) {
-    i_p2PVTable().i_relate( newP, i->to() );
-  }
-
-  // Link to outgoing particles is followed through the keep(LHCb::Vertex)
-  // Link to originators will be correct because they are in the heap
-  // so their pointer is valid
-  return newP;
-
+        i != range.end(); ++i ) 
+  { i_p2PVTable().i_relate ( newp , i->to() ); }
+  //
+  return newp ;
 }
 //=============================================================================
 // Create a new vertex
 //=============================================================================
-const LHCb::Vertex* PhysDesktop::keep( const LHCb::Vertex* keptV ){
-
-  if ( 0==keptV ){
-    Exception("Attempt to keep NULL Vertex") ;
-    return 0; 
-  }
-  if (msgLevel(MSG::VERBOSE)) printOut("keep in Desktop", keptV);
-
-  // Input vertex is given check if it already exist in the stack
-  if( DaVinci::inTES( keptV ) ) {
-    if (msgLevel(MSG::VERBOSE)) verbose() << " Vertex is in TES" << endmsg;
-    return keptV;
-  }
-  
-
-  // Create new vertex on the heap
-  LHCb::Vertex* newV = new LHCb::Vertex(*keptV);
-  // Put in the desktop container
-  m_secVerts.push_back(newV);
-
-  if (msgLevel(MSG::VERBOSE)) verbose() << "   -> Create new and keep " << endmsg ;
-
-  newV->clearOutgoingParticles();
-  // Check if link to endProducts exist and set it
-  SmartRefVector<LHCb::Particle> outP = keptV->outgoingParticles();
-  SmartRefVector<LHCb::Particle>::iterator ip;
-  if (msgLevel(MSG::VERBOSE)) verbose() << "Looking for daughters of vertex:" << endmsg ;
-  for( ip = outP.begin(); ip != outP.end(); ip++ ) {
-    if (msgLevel(MSG::VERBOSE)) printOut("    Daughter", (*ip));
-    const LHCb::Particle* newP = keep( *ip );
-    newV->addToOutgoingParticles(newP);
-  }
-
-  if (msgLevel(MSG::VERBOSE)) printOut("New vertex in desktop", newV);
-
-  return newV;
-
+const LHCb::Vertex* PhysDesktop::keep( const LHCb::Vertex* /* keptV */ )
+{
+  Assert ( false , "One can't ``keep'' vertex anymore!!!") ;
+  return 0 ;
 }
+
 //=============================================================================
 // Create a new vertex
 //=============================================================================
@@ -571,14 +531,33 @@ StatusCode PhysDesktop::cloneTrees( const LHCb::Particle::ConstVector& pToSave )
 //=============================================================================
 void PhysDesktop::findAllTree( const LHCb::Particle* part, 
                                LHCb::Particle::ConstVector& parts,
-                               LHCb::Vertex::ConstVector& verts ) const {
-
-  parts.push_back( part ); // save Particle
-  if ( 0 != part->endVertex() ) verts.push_back( part->endVertex() ); // save Vertex
+                               LHCb::Vertex::ConstVector& verts ) const 
+{
+  if ( parts.end() == std::find ( parts.begin() , parts.end() , part ) )
+  { parts.push_back ( part ) ; }
+  //
+  if ( 0 != part->endVertex() 
+       && verts.end() == std::find ( verts.end() , verts.end() , 
+                                     part->endVertex() ) ) 
+  {
+    verts.push_back( part->endVertex() ); // save Vertex
+  }
+  
   // Loop on daughters
   for (SmartRefVector<LHCb::Particle>::const_iterator d = part->daughters().begin();
        d!=part->daughters().end();++d){
     findAllTree( *d, parts, verts );
+  }
+  
+  // loop over outgoing particles 
+  if ( 0 != part->endVertex() )
+  {
+    for (SmartRefVector<LHCb::Particle>::const_iterator d = 
+           part->endVertex()->outgoingParticles().begin();
+         d!=part->endVertex()->outgoingParticles().end();++d){
+      findAllTree( *d, parts, verts );
+    }
+    
   }
   
   return;
