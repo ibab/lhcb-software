@@ -1,4 +1,4 @@
-// $Id: IBackgroundCategory.h,v 1.5 2009-05-10 20:34:03 gligorov Exp $
+// $Id: IBackgroundCategory.h,v 1.6 2010-06-09 12:00:55 gligorov Exp $
 #ifndef DAVINCIMCTOOLS_IBACKGROUNDCATEGORY_H 
 #define DAVINCIMCTOOLS_IBACKGROUNDCATEGORY_H 1
 
@@ -70,31 +70,48 @@ static const InterfaceID IID_IBackgroundCategory ( "IBackgroundCategory", 1, 0 )
  *  -  <b>J:</b> at least one final-state particles used to form the candidate is 
  *  matched to a true decay product of a c-hadron
  *  (following mother-daughter relationships all the way through)
- *  
+ *
+ *  - <b>K:</b> at least two final state daughters are matched to the same MCParticle.
+ *
+ *  - <b>L:</b> at least one final state daughter is matched to an MCParticle which is the
+ *  MCMother of an MCParticle matched to another final state daughter.
+ *
+ *  - <b>M:</b> at least one final state daugher is associated to an MCParticle from the primary vertex
+ *
+ *  - <b>N:</b> every final state daughter is associated to an MCParticle from the same primary vertex 
+ * 
  *
  *<b>Categories:</b>
  *
- *  -  <b>0:   Signal                  </b>  A &amp;&amp; B &amp;&amp; C &amp;&amp; D &amp;&amp; E
+ *  -  <b>0:   Signal                   </b> !G &amp;&amp; !K &amp;&amp; !L &amp;&amp; A &amp;&amp; B &amp;&amp; C &amp;&amp; D &amp;&amp; E
  *
- *  -  <b>1:   Quasi-signal            </b>    A &amp;&amp; B &amp;&amp; C &amp;&amp; D &amp;&amp; !E
+ *  -  <b>10:   Quasi-signal            </b> !G &amp;&amp; !K &amp;&amp; !L &amp;&amp; A &amp;&amp; B &amp;&amp; C &amp;&amp; D &amp;&amp; !E
  *
- *  -  <b>2:   Phys. back. (full rec.) </b>   A &amp;&amp; B &amp;&amp; C &amp;&amp; !D
+ *  -  <b>20:   Phys. back. (full rec.) </b> !G &amp;&amp; !K &amp;&amp; !L &amp;&amp; A &amp;&amp; B &amp;&amp; C &amp;&amp; !D
  *
- *  -  <b>3:   Reflection (mis-ID)     </b>    A &amp;&amp; B &amp;&amp; !C
+ *  -  <b>30:   Reflection (mis-ID)     </b> !G &amp;&amp; !K &amp;&amp; !L &amp;&amp; A &amp;&amp; B &amp;&amp; !C
  *  
- *  -  <b>4:   Phys. back. (part. rec.)</b>    A &amp;&amp; !B &amp;&amp; !(C &amp;&amp; F)
+ *  -  <b>40:   Phys. back. (part. rec.)</b> !G &amp;&amp; !K &amp;&amp; !L &amp;&amp; A &amp;&amp; !B &amp;&amp; !(C &amp;&amp; F)
  *
- *  -  <b>5:   Low-mass background     </b>   A &amp;&amp; !B &amp;&amp; C &amp;&amp; F 
+ *  -  <b>50:   Low-mass background     </b> !G &amp;&amp; !K &amp;&amp; !L &amp;&amp; A &amp;&amp; !B &amp;&amp; C &amp;&amp; F 
  *
- *  -  <b>6:   Ghost                   </b>  !A &amp;&amp; G (= G)
+ *  -  <b>60:   Ghost                   </b>  G 
  *
- *  -  <b>7:   Pileup/FromDifferentPV                  </b>   !A &amp;&amp; !G &amp;&amp; H (= !E &amp;&amp; H)
+ *  -  <b>63:   Clone                   </b> !G &amp;&amp; K
  *
- *  -  <b>8:   bb event                </b>   !A &amp;&amp; !G &amp;&amp; !H &amp;&amp; I
+ *  -  <b>66:   Hierarchy               </b> !G &amp;&amp; !K &amp;&amp; L     
  *
- *  -  <b>9:   cc event                </b>   !A &amp;&amp; !G &amp;&amp; !H &amp;&amp; !I &amp;&amp; J  
+ *  -  <b>70:   FromPV                  </b> !G &amp;&amp; !K &amp;&amp; !L &amp;&amp; M 
+ *
+ *  -  <b>80:   AllFromSamePV           </b> !G &amp;&amp; !K &amp;&amp; !L &amp;&amp; N
+ *
+ *  -  <b>100:   Pileup/FromDifferentPV </b> !G &amp;&amp; !K &amp;&amp; !L &amp;&amp; !A &amp;&amp; H 
+ *
+ *  -  <b>110:   bb event               </b> !G &amp;&amp; !K &amp;&amp; !L &amp;&amp; !A &amp;&amp; !H &amp;&amp; I
+ *
+ *  -  <b>120:   cc event               </b> !G &amp;&amp; !K &amp;&amp; !L &amp;&amp; !A &amp;&amp; !H &amp;&amp; !I &amp;&amp; J  
  *   
- *  -  <b>10:   light-flavour event    </b>   !A &amp;&amp; !G &amp;&amp; !H &amp;&amp; !I &amp;&amp; !J
+ *  -  <b>130:   light-flavour event    </b> !G &amp;&amp; !K &amp;&amp; !L &amp;&amp; !A &amp;&amp; !H &amp;&amp; !I &amp;&amp; !J
  *
  *
  *
