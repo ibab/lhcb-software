@@ -8,6 +8,12 @@
 ! http://www.slac.stanford.edu/spires/find/hep/www?eprint=physics/0503191
 !-----------------------------------------------------------------------------
 
+! 2010-06-09 - Vanya Belyaev
+
+ - ParticleBase.cpp
+
+       fix the invalid call in ParticleBase::locate 
+ 
 ! 2010-05-31 - Vanya BELYAEV 
 
  - reenable the package for Win32 platform

@@ -1,4 +1,4 @@
-// $Id: Fitter.cpp,v 1.15 2010-05-29 13:39:56 ibelyaev Exp $ 
+// $Id: Fitter.cpp,v 1.16 2010-06-09 17:55:46 ibelyaev Exp $ 
 // ============================================================================
 #include <iomanip>
 #include <stdio.h>
@@ -453,7 +453,8 @@ namespace DecayTreeFitter
   Fitter::getFitted() const
   {
     LHCb::Particle thecand = *particle() ;
-    const ParticleBase* pb = m_decaychain->locate(thecand) ;
+    // const ParticleBase* pb = m_decaychain->locate(thecand) ;
+    const ParticleBase* pb = m_decaychain->locate( *particle() ) ;
     if( pb ) updateCand(*pb, thecand) ;
     else std::cout << "Error: cannot find particle in tree" << std::endl ;
     return thecand ;

@@ -301,11 +301,17 @@ namespace DecayTreeFitter
   }
   
   void ParticleBase::locate( const LHCb::ParticleID& pid,
-			     ParticleContainer& result )
-  {
-    if( m_particle && m_particle->particleID()==pid ) result.push_back(this) ;
-    for(daucontainer::iterator it = m_daughters.begin() ; it != m_daughters.end(); ++it)
-      locate( pid, result ) ;
+                             ParticleContainer& result )
+  { 
+    /// @attention Comparison by ABSPID! 
+    if ( m_particle && 
+         m_particle->particleID().abspid() ==pid.abspid() )
+    {  result.push_back(this) ; } ;
+    //
+    for( daucontainer::iterator it = m_daughters.begin() ; 
+         it != m_daughters.end(); ++it) 
+    { (*it)-> locate( pid, result ) ; }
+    //
   }
   
   void ParticleBase::retrieveIndexMap(indexmap& anindexmap) const 
