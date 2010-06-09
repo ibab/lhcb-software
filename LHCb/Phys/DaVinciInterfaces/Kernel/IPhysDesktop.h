@@ -1,4 +1,4 @@
-// $Id: IPhysDesktop.h,v 1.16 2010-06-03 16:43:48 jpalac Exp $
+// $Id: IPhysDesktop.h,v 1.17 2010-06-09 14:57:08 jpalac Exp $
 #ifndef DAVINCIKERNEL_IPHYSDESKTOP_H 
 #define DAVINCIKERNEL_IPHYSDESKTOP_H 1
 
@@ -114,7 +114,7 @@ public:
 
   /// Keep for future use: Register the new vertices in the Desktop, 
   /// pass ownership, return pointer to new vertex
-  virtual const LHCb::Vertex* keep( const LHCb::Vertex* input ) = 0;
+  //  virtual const LHCb::Vertex* keep( const LHCb::Vertex* input ) = 0;
 
   /// Keep for future use: Register re-fitted primary vertices in the Desktop, 
   /// pass ownership, return pointer to new vertex. Vertices will only

@@ -4,6 +4,10 @@
 ! Purpose     : Tool interfaces and dictionaries for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2010-06-09 - Juan Palacios
+ - Kernel/IPhysDesktop.h
+  . Remove keep(const Vertex*) method.
+
 ! 2010-06-08 - Vanya Belyaev
 
  - IDecayTreeFit:
