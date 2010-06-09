@@ -1292,7 +1292,7 @@ StatusCode TrackCheckerNT::fillMCHitStatistics(
 #define DECLTR(det) DECLTR0(det,Hits); DECLTR0(det,Stations); DECL(det,St,Stations)
 #define DECLHM(x) Array HitMask##x(nParts, 0.)
   // declare arrays to hold VeloR, VeloPhi and VeloStatistics
-  DECLVELO(R); DECLVELO(Phi); DECLVELO();
+  DECLVELO(R); DECLVELO(Phi); DECLVELO(Total);
   // arrays for X,U,V-Hits/Stations, St-Stations and total Hits/Stations
   // in TT, IT, OT
   DECLTR(TT); DECLTR(IT); DECLTR(OT);
@@ -1353,10 +1353,10 @@ StatusCode TrackCheckerNT::fillMCHitStatistics(
       }
       nVeloRHits[nPart] = (float) nR;
       nVeloPhiHits[nPart] = (float) nPhi;
-      nVeloHits[nPart] = (float) (nR + nPhi);
+      nVeloTotalHits[nPart] = (float) (nR + nPhi);
       nVeloRStations[nPart] = (float) (rStations.size());
       nVeloPhiStations[nPart] = (float) phiStations.size();
-      nVeloStations[nPart] = (float) (rStations.size() + phiStations.size());
+      nVeloTotalStations[nPart] = (float) (rStations.size() + phiStations.size());
     }
     
     // ok, now it's the TT clusters' turn...
@@ -1548,8 +1548,8 @@ StatusCode TrackCheckerNT::fillMCHitStatistics(
 #define SAVE(x) tuple->farray("MCParticles_"#x, x, \
 		"nMaxSavedMCParticles", m_maxMCParticles)
   // ok, write tuple columns
-  SAVE(nVeloRHits    ); SAVE(nVeloPhiHits    ); SAVE(nVeloHits    );
-  SAVE(nVeloRStations); SAVE(nVeloPhiStations); SAVE(nVeloStations);
+  SAVE(nVeloRHits    ); SAVE(nVeloPhiHits    ); SAVE(nVeloTotalHits    );
+  SAVE(nVeloRStations); SAVE(nVeloPhiStations); SAVE(nVeloTotalStations);
 
   SAVE(nTTXHits    ); SAVE(nTTUHits     ); SAVE(nTTVHits    );
   SAVE(nTTXStations); SAVE(nTTUStations ); SAVE(nTTVStations);

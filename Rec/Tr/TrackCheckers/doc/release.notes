@@ -4,6 +4,9 @@
 ! Purpose     : Package for track checking algorithms (with MC truth)
 !-----------------------------------------------------------------------------
 
+! 2010-06-09 - Rob Lambert
+ - Fix final windows warning
+
 ! 2010-06-08 - Rob Lambert
  - Fixes for more windows warnings
 
