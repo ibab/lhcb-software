@@ -6,7 +6,7 @@
  *  Header file for Tstation alignment : TAConfig
  *
  *  CVS Log :-
- *  $Id: TAConfig.h,v 1.27 2010-05-28 15:42:35 jblouw Exp $
+ *  $Id: TAConfig.h,v 1.28 2010-06-09 14:35:02 jblouw Exp $
  *
  *  @author J. Blouw johan.blouw@cern.ch
  *  @date   12/04/2007
@@ -301,7 +301,7 @@ public:
   StatusCode ConfigTT( std::vector<Gaudi::Transform3D> & );
   StatusCode ConfigOT( std::vector<Gaudi::Transform3D> & ,DeOTDetector*);
   StatusCode ConfigIT( std::vector<Gaudi::Transform3D> & );
-  void CreateMap( int &, IDetectorElement*, double & );
+  void CreateMap( int &, IDetectorElement* );
   void CreateHalflayerReferenceMap( int , Gaudi::XYZPoint);
   StatusCode RetrieveAPars( const std::string & );
   StatusCode ConfigMillepede();
@@ -316,6 +316,21 @@ public:
   StatusCode ConstrainLagrangeMultOT(); //MD
   void CalcHLLC();
   void CalcLC();
+  void CalcLC( int,
+	       int &,
+	       double,
+	       double,
+	       std::vector<double> &,
+	       std::vector<double> &,
+	       std::vector<double> &,
+	       std::vector<double> &,
+	       std::vector<double> &,
+	       std::vector<double> &,
+	       std::vector<double> &,
+	       std::vector<double> &,
+	       std::vector<double> &,
+	       std::vector<double> &
+	      );
   void MeanZ();
   void MeanZHL();
   //make xml
@@ -346,23 +361,34 @@ public:
   double m_zmoy_it, s_zmoy_it;
   double m_zmoy_tt, s_zmoy_tt;
   //MD
+  
   std::vector< double > m_consTX;//constraint via LM for shift in x
-  std::vector< double > m_consTU;
-  std::vector< double > m_consTV;
+  std::vector< double > m_consTXA; // Aside
+  std::vector< double > m_consTXC; // Cside
+  std::vector< double > m_consTU;  // shift along measurement direction
+  std::vector< double > m_consTUA; // Aside
+  std::vector< double > m_consTUC; // Cside
   std::vector< double > m_consTZ;
-  std::vector< double > m_consTZA;
-  std::vector< double > m_consTZC;
+  std::vector< double > m_consTZA; // Aside
+  std::vector< double > m_consTZC; // Cside
   std::vector< double > m_shearXZ;
-  std::vector< double > m_shearXU;
-  std::vector< double > m_shearXV;
-  std::vector< double > m_scaleZ;
-  std::vector< double > m_scaleZA;
-  std::vector< double > m_scaleZC;
+  std::vector< double > m_shearXZA; // x-z shearing, ASide
+  std::vector< double > m_shearXZC; // idem, Cside
+  std::vector< double > m_shearUZ;
+  std::vector< double > m_shearUZA; // u/v-z shearing, ASide
+  std::vector< double > m_shearUZC; // idem, Cside
+  std::vector< double > m_shear_RotCZx; // cork-screw ('tilt') movement
+  std::vector< double > m_shear_RotCZxA; // idem, Aside
+  std::vector< double > m_shear_RotCZxC; // idem, Cside
+  std::vector< double > m_scale_Z;
+  std::vector< double > m_scale_ZA; // z-scale, Aside
+  std::vector< double > m_scale_ZC; // idem, Cside
+  
+
   std::vector< double > m_layerZ;
-  std::vector< double > m_consRa, m_consRb, m_consRc;
-  std::vector< double > m_consRaA, m_consRbA, m_consRcA; // Aside
-  std::vector< double > m_consRaC, m_consRbC, m_consRcC; // Cside
-  std::vector< double > m_shearRcZx, m_shearRcZs;
+  std::vector< double > m_cons_RotX, m_cons_RotXA, m_cons_RotXC;
+  std::vector< double > m_cons_RotY, m_cons_RotYA, m_cons_RotYC;
+  std::vector< double > m_cons_RotZ, m_cons_RotZA, m_cons_RotZC;
   
 
   std::vector<int> m_rank;
