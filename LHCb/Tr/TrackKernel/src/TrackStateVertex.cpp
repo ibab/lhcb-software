@@ -264,19 +264,24 @@ namespace LHCb
       (*itrack)->project( m_pos, halfDChisqDX, halfD2ChisqDX2) ;
     
     // calculate the covariance and the change in the position
-    m_poscov = halfD2ChisqDX2 ;
-    Gaudi::Math::invertPosDefSymMatrix(m_poscov) ;
-    ROOT::Math::SVector<double,3> dpos = - m_poscov * halfDChisqDX ;
-    // update the position
-    m_pos += dpos ;
-    // update the momenta
-    for( VertexTrackContainer::const_iterator itrack = m_tracks.begin() ;
-         itrack != m_tracks.end(); ++itrack ) 
-      (*itrack)->updateSlopes(m_pos) ;
-    // return the delta-chisquare
-    double dchisq = ROOT::Math::Dot(dpos,halfDChisqDX) ;
-    m_fitStatus = FitSuccess ;
+    double dchisq = -1 ;
     m_chi2      = -1 ;
+    m_poscov = halfD2ChisqDX2 ;
+    const bool ok = Gaudi::Math::invertPosDefSymMatrix(m_poscov) ;
+    if( !ok ) {
+      m_fitStatus = FitFailure ;
+    } else {
+      ROOT::Math::SVector<double,3> dpos = - m_poscov * halfDChisqDX ;
+      // update the position
+      m_pos += dpos ;
+      // update the momenta
+      for( VertexTrackContainer::const_iterator itrack = m_tracks.begin() ;
+	   itrack != m_tracks.end(); ++itrack ) 
+	(*itrack)->updateSlopes(m_pos) ;
+      // return the delta-chisquare
+      dchisq = ROOT::Math::Dot(dpos,halfDChisqDX) ;
+      m_fitStatus = FitSuccess ;
+    }
     return dchisq ;
   }
   
@@ -300,11 +305,12 @@ namespace LHCb
   {
     bool converged(false) ;
     size_t iter(0) ;
-    for(; iter<maxnumiter &&!converged; ++iter) {
+    m_fitStatus = FitSuccess ;
+    for(; iter<maxnumiter && !converged && m_fitStatus == FitSuccess; ++iter) {
       double dchisq = fitOneStep() ;
       converged = -dchisq < maxdchisq ;
     }
-    m_fitStatus = converged ? FitSuccess : FitFailure ;
+    if( ! converged ) m_fitStatus = FitFailure ;
     return m_fitStatus ;
   }
 
