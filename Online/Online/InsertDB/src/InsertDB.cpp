@@ -141,38 +141,6 @@ StatusCode InsertDB::execute() {
     always()<<"&&&&&&&&&&&&&&&&&&"<<endmsg;
 
 
-    //     always()<<"(0)"<<endmsg;
-    //     doEFF();
-    //    always()<<"(a)"<<endmsg;
-    //doEFFNew();
-    //    always()<<"(b)"<<endmsg;
-
-    //if(0<m_monitoringtasks.size()) doMFNew(m_monitoringtasks[0]);
-    //else info()<<"nio moni task set .."<<endmsg;
-    //  always()<<"(c)"<<endmsg;
-
-    //    bool m_doEFF = false;
-    //bool m_doMF = false;
-
-    // if(m_doEFF)  doEFF();
-    //      if(m_doMF) {
-    //        for (int i=0;i<(int)m_monitoringtasks.size();i++) {
-    // 	 doMF(m_monitoringtasks[i]);
-    // 	 mtaskcount++;
-    //        }
-    //     }
-     
-    //  if (!m_mfonly) { 
-    //           doEFF();
-    // 	  //doEFFHltExperts();
-    //      }
-    //      if (!m_effonly) {	    
-    //         for (int i=0;i<(int)m_monitoringtasks.size();i++) {
-    //           doMF(m_monitoringtasks[i]);
-    //           mtaskcount++;
-    //         }  
-    //      }
-     
   }  
   else {
     info()<< "Done." << endreq;
@@ -209,7 +177,7 @@ void InsertDB::placeHistograms(OnlineHistPage* page,
 
   double xmargin = 0.03;
   double ymargin = 0.03;
-  int nx = (int) ceil(sqrt(nbofhistosonpage));
+  int nx = (int) ceil(sqrt(float(nbofhistosonpage)));
   int ny = nx;
 
   if (nx <= 0) { nx = 1; }
@@ -223,7 +191,6 @@ void InsertDB::placeHistograms(OnlineHistPage* page,
   dy = 1/double(ny);
   dx = 1/double(nx);
   
-<<<<<<< InsertDB.cpp
   int zy=0;
   int zx=0;
   bool ok=true;
@@ -264,162 +231,6 @@ void InsertDB::placeHistograms(OnlineHistPage* page,
   else abort();
 
   return;
-=======
-         while( (type = dbr.getNextService(service, Dimformat)) )
-         { 
-	      rSvcname=service;   	   
-	      std::string prefix = m_partitionname+m_addername+"/"+m_taskname+"/MonitorSvc/monRate/"; 
-	      std::string rest=rSvcname.substr(prefix.length());
-	      std::string::size_type first_slash=rest.find("/",0);
-	      if (first_slash != std::string::npos ) {
-	      std::string line = rest.substr(0,first_slash);
-	      std::string histoname = rest.substr(first_slash+1);
-	      histograms.clear();
-	      if (lines.find(line)!= lines.end()) {
-	        //map entry exists; retrieve it
-	        histograms=lines[line];
-              }
-              histograms.push_back(histoname);
-	      lines[line]=histograms;		       	 	      	     
-           }
-	   HistDB->declareHistByServiceName(rSvcname);
-         }
-	 */
-	
-	//the following code is very ad-hoc, generalizations welcome
-	//but at least it saves clicking about in the presenter 
-	//now make a page per line and add the histograms & rates to the page 
-	std::string pagename;
-	std::vector<std::string > pagenames;
-	pagenames.push_back("1_Odin-L0-Hlt1");
-	pagenames.push_back("2_Hlt1alley-line");
-	pagenames.push_back("3_Time&Memory");
-	std::vector<int> nbofhistosonpages;
-	nbofhistosonpages.push_back(3);
-	nbofhistosonpages.push_back(3);
-	nbofhistosonpages.push_back(4);
-	std::string alley;
-	std::map <std::string, std::vector<std::string> >::const_iterator j;
- 
-	for (j=lines.begin(); j!=lines.end();j++) {
-           for (int ia=0;ia<(int)m_DMalleys.size();ia++) {
-	      std::string::size_type found_alley=j->first.find(m_DMalleysearchstring[ia],0);
-	      if (found_alley !=std::string::npos) {
-	         alley=m_DMalleys[ia];
-		 break;
-	      }	 
-	   }
-	   //j->first contains the name of the line
-	   //we should only have HltGlobalMonitor
-	   for (int ip=0;ip<(int)pagenames.size();ip++) {
-              pagename=m_hltdbfolder+"/HLT/"+m_nickname+"/DataManager/"+pagenames[ip];
-	      std::string hlt1line=j->first;
-	     // msg << MSG::INFO<< "Page name " <<pagename << endreq; 
-	      OnlineHistPage* evsize = HistDB->getPage(pagename);
-	      evsize->removeAllHistograms();
-              int nbofhistosonpage = nbofhistosonpages[ip];
-
-              //set up the coordinates of the histograms on the page	   
-              double xmargin = 0.03;
-              double ymargin = 0.03;
-              int nx = (int) ceil(sqrt(float(nbofhistosonpage)));
-              int ny = nx;
-
-              if (nx <= 0) { nx = 1; }
-              if (ny <= 0) { ny = 1; }
-              double x1, y1, x2, y2;
-              double dx, dy;
-
-              dy = 1/double(ny);
-              dx = 1/double(nx);
-         	   	 	      	     
-	      int zy=0;
-	      int zx=0;
-	      std::string doc="";
-	      std::vector<std::string>::const_iterator k;
-	      for (k=j->second.begin(); k!=j->second.end(); k++) {	    
-
-	         std::string tname=*k;
-		 std::string::size_type found=0;
-		 int fx=1;
-	         if (ip==0) {
-		       doc= "top left: number of accepted events by ODIN per ODIN trigger type.\ntop right: number of accepted events by L0 per L0 trigger alley.\nbottom: number of accepted events by Hlt1 per Hlt1 trigger alley.";
-		       found=tname.find("ODIN trigger type",0);
-		       if (found ==std::string::npos) {
-		          found=tname.find("L0 channel",0);
-		          if (found ==std::string::npos) {
-		             found=tname.find("Hlt1 Alleys",0);
-		             if (found ==std::string::npos) {
-			     continue;
-			     }
-			     else {zx=0;zy=1;fx=2;}
-			  }
-			  else {zx=1;zy=0;}
-		       }
-		       else {zx=0;zy=0;}	    
-		  }
-		  if (ip==1) {
-		       found=tname.find("HltLines Inclusive",0);
-		       doc="top-left: Number of accepted events in Hlt1 per Hlt1 alley.(same plot as on bottom previous page)\ntop-right: Correlation matrix of accepted events in Hlt1 per Hlt1 line (horizontal and  vertical axis show the different Hlt1 lines, the color represents the number of events accepted by  this line).\nbottom: Number of accepted events by Hlt1 per Hlt1 line (zoom in)";
-		       if (found ==std::string::npos) {
-		          found=tname.find("HltLines Correlations",0);
-		          if (found ==std::string::npos) {
-		            found=tname.find("# positive HltLines",0);
-		            if (found ==std::string::npos) {
-			    continue;
-			    }
-			    else {zx=0;zy=0;}
-			  }
-			  else  {zx=1;zy=0;}
-		       } 
-		       else {zx=0;zy=1;fx=2;}      
-		   }
-		   if (ip==2) {
-		       found=tname.find("Virtual memory",0);
-		       if (found==std::string::npos) {
-		          found=tname.find("Virtual memory",0);
-		          if (found ==std::string::npos) {
-		             found=tname.find("average time per event",0);
-		             if (found ==std::string::npos) {
-			         found=tname.find("time per event",0);
-		                 if (found ==std::string::npos) {
-			            continue;
-			         }
-				 else {zx=1;zy=1;}				 
-			     }
-			     else {zx=0;zy=1;}
-			  }
-			  else  {zx=1;zy=0;}
-		       } 
-		       else  {zx=0;zy=0;}	        
-		    }
-		      
-	            std::string histogramname="GauchoJob/"+hlt1line+"/"+tname;
-	            OnlineHistogram* h=HistDB->getHistogram(histogramname);
-	            //this code is to place the histogram in the right place on the page
-	            ok = true;	          
-		    x1 = zx*dx + xmargin;
-		    x2 = x1 + fx*dx - xmargin;       
-	            y2 = 1 - zy*dy - ymargin; 
-	            y1 = y2 - dy + ymargin;
-	            //add the histogram to the page
-	            ok &= (NULL !=evsize->addHistogram(h,x1,y1,x2,y2));
-                    HistogramDisplayOptions(h);
-	         }	
-	         if (ok) {
-		    //set the comments
-		    evsize->setDoc(doc);
-		    evsize->save(); 
-		 }
-	         else abort();  	
-	   }
-       }	      
-
-     //  msg << MSG::INFO << "doEFF: committing changes to Hist DB" << endreq;
-       HistDB->commit();
-     }
-     delete HistDB;
->>>>>>> 1.9
 }
 
 
@@ -436,15 +247,15 @@ void InsertDB::fillPages(std::string pageNamePrefix,
   //doEFF analyzes histograms published by Moore to the top level Adder
   info()<<"start fillPages, pagen location prefix is: "<<pageNamePrefix <<endmsg;
 
- if( pages.size() != documentation.size() ){
+  if( pages.size() != documentation.size() ){
     warning()<<"# pages: "<<pages.size() 
 	     <<" and # documentations:  "<<documentation.size()
 	     <<" unequal !!!! quit function !"<<endmsg; 
     return;
   }
   
- //  DimClient::setDnsNode(m_dimclientdns.c_str());  
-//   DimBrowser dbr;
+  //  DimClient::setDnsNode(m_dimclientdns.c_str());  
+  //   DimBrowser dbr;
    
   info()<< "Connecting to Online HistDB" <<endreq; 
 
@@ -460,7 +271,6 @@ void InsertDB::fillPages(std::string pageNamePrefix,
   std::map <std::string, std::vector<std::string> > lines;
   
  
-<<<<<<< InsertDB.cpp
   getHistsFromDB(HistDB, lines, fromEFF, taskName);
 
   int nPage=0;
@@ -468,39 +278,7 @@ void InsertDB::fillPages(std::string pageNamePrefix,
   for (mapIter=pages.begin(); mapIter!=pages.end();mapIter++) {
     
     info()<<"iterate over map, process page: "<<mapIter->first<<endmsg;
-
-    // if("all" == mapIter->first ){
-//       info()<<"create 1 page per algorithm containing all histograms"<<endmsg;
-//       verbose()<<"total number of algorithms in DB:" <<lines.size() <<endmsg;
-   
-//       std::map <std::string, std::vector<std::string> >::const_iterator j;
-//       for (j=lines.begin(); j!=lines.end();j++) {
-// 	std::string page=j->first; 
-// 	std::string fullPagename=pageNamePrefix+page;
-// 	info()<<"fullPagename "<<fullPagename<<endmsg;
-// 	OnlineHistPage* onlinePage = HistDB->getPage(fullPagename);
-// 	onlinePage->removeAllHistograms();
-// 	std::vector<OnlineHistogram*> onlineHists;
-// 	std::vector<std::string>::const_iterator k;
-// 	for (k=j->second.begin(); k!=j->second.end(); k++) {
-// 	  std::string algorithm = j->first;
-// 	  std::string hist = *k;
-// 	  std::string fullName = algorithm+"/"+hist;
-// 	  std::string histogramname="GauchoJob/"+fullName;
-// 	  verbose()<<"histogramname"<<histogramname <<endmsg;
-// 	  OnlineHistogram* h=HistDB->getHistogram(histogramname);
-// 	  onlineHists.push_back(h);
-// 	  debug()<<"onlineHists.size() "<<onlineHists.size() <<endmsg;
-// 	}
-// 	info() << "created vector of online histos of size: "<<onlineHists.size()<<endreq;
-// 	placeHistograms(onlinePage,onlineHists,documentation[0]);
-// 	HistDB->commit();
-//       }
-//       info()<<"loop over pages finished."<<endmsg;
-//       delete HistDB; 
-//       return;
-//     }//end if "all"
-
+    
     std::string page=mapIter->first;
     std::string fullPagename=pageNamePrefix+page;
     //std::string fullPagename="/Shift/"+page;
@@ -563,7 +341,7 @@ void InsertDB::fillPages(std::string pageNamePrefix,
     always()<<std::string(documentation[nPage].c_str())<<endmsg;
 
 
-      std::string docc = " ----  Histograms are expected to be empty in Pass through mode ----\ntop left: number of accepted events by ODIN per ODIN trigger type.\ntop right: number of accepted events by L0 per L0 trigger alley.\nbottom-left: number of accepted events by Hlt1 per Hlt1 trigger alley.\nbottom-right: number of accepted events by Hlt2 per Hlt2 trigger alley.";
+    std::string docc = " ----  Histograms are expected to be empty in Pass through mode ----\ntop left: number of accepted events by ODIN per ODIN trigger type.\ntop right: number of accepted events by L0 per L0 trigger alley.\nbottom-left: number of accepted events by Hlt1 per Hlt1 trigger alley.\nbottom-right: number of accepted events by Hlt2 per Hlt2 trigger alley.";
 
 
     
@@ -584,73 +362,6 @@ void InsertDB::fillPages(std::string pageNamePrefix,
   
   
   return;
-=======
-	for (j=lines.begin(); j!=lines.end();j++) {
-           for (int ia=0;ia<(int)m_alleys.size();ia++) {
-	      std::string::size_type found_alley=j->first.find(m_alleysearchstring[ia],0);
-	      if (found_alley !=std::string::npos) {
-	         alley=m_alleys[ia];
-		 break;
-	      }	 
-	   }
-	   //j->first contains the name of the line
-           pagename=m_hltdbfolder+"/HLT/"+m_nickname+"/HltExperts/"+alley+"/"+j->first;
-	   std::string hlt1line=j->first;
-	   OnlineHistPage* evsize = HistDB->getPage(pagename);
-	   evsize->removeAllHistograms();
-           int nbofhistosonpage = j->second.size();
-
-           //set up the coordinates of the histograms on the page	   
-           double xmargin = 0.03;
-           double ymargin = 0.03;
-           int nx = (int) ceil(sqrt(float(nbofhistosonpage)));
-           int ny = nx;
-
-           if (nx <= 0) { nx = 1; }
-           if (ny <= 0) { ny = 1; }
-           double x1, y1, x2, y2;
-           double dx, dy;
-
-           dy = 1/double(ny);
-           dx = 1/double(nx);
-         	   	 	      	     
-	   int zy=0;
-	   int zx=0;
-	   std::vector<std::string>::const_iterator k;
-	   for (k=j->second.begin(); k!=j->second.end(); k++) {	    
-
-	      std::string tname=*k;
-	      std::string histogramname="GauchoJob/"+hlt1line+"/"+tname;
-	      OnlineHistogram* h=HistDB->getHistogram(histogramname);
-	      //this code is to place the histogram in the right place on the page
-	      ok = true;	          
-	      if (zx < nx ) {
-                    x1 = zx*dx + xmargin;
-                    x2 = x1 + dx - xmargin;
-		    zx ++;
-	      }
-	      else {
-	         zy++;
-		 zx=0;
-		 x1 = zx*dx + xmargin;
-                 x2 = x1 + dx - xmargin;
-		 zx ++;
-	      }	      
-	      y2 = 1 - zy*dy - ymargin; 
-	      y1 = y2 - dy + ymargin;
-	      //add the histogram to the page
-	      ok &= (NULL !=evsize->addHistogram(h,x1,y1,x2,y2));
-              HistogramDisplayOptions(h);
-	   }	
-	   if (ok) evsize->save();
-	   else abort();
-	}    	
-
-     //  msg << MSG::INFO << "doEFFHLTExperts: committing changes to Hist DB" << endreq;
-       HistDB->commit();
-     }
-     delete HistDB;
->>>>>>> 1.9
 }
 
 
@@ -913,11 +624,11 @@ void InsertDB::getHistsFromDB(OnlineHistDB *HistDB,
   }//end in fromEFF
   else{
     info()<<"take histos from MF ..."<<endmsg;
-   //  //@@JA!!!!!!!!! 
-//     //@@JA propagate task down to here, not hardcode..
-//     info()<<"before: monitoringtask is: "<<monitoringtask<<endmsg;
-//     std::string monitoringtask = "HltExpertMon";
-//     //    std::string monitoringtask = "LumiDAQMon";
+    //  //@@JA!!!!!!!!! 
+    //     //@@JA propagate task down to here, not hardcode..
+    //     info()<<"before: monitoringtask is: "<<monitoringtask<<endmsg;
+    //     std::string monitoringtask = "HltExpertMon";
+    //     //    std::string monitoringtask = "LumiDAQMon";
 
     info()<<"monitoringtask is: "<<monitoringtask<<endmsg;
 
@@ -1038,131 +749,23 @@ void InsertDB::getHistsFromDB(OnlineHistDB *HistDB,
 	 }
 	 HistDB->declareHistByServiceName(rSvcname);
          }
-<<<<<<< InsertDB.cpp
 */
 
 
 
 std::string InsertDB::ReplaceString(const std::string &stringSearchString, 
-				     const std::string &stringReplaceString, 
-				     std::string stringStringToReplace)
+				    const std::string &stringReplaceString, 
+				    std::string stringStringToReplace)
 {
-        std::string::size_type pos = stringStringToReplace.find(stringSearchString, 0);
-        int intLengthSearch = stringSearchString.length();
-        int intLengthReplacment = stringReplaceString.length();
-=======
-	 */
-	//now make a folder per line and add the histograms & rates to pages 
-	std::string pagename;
-	std::map <std::string, std::vector<std::string> >::const_iterator j;
-        std::vector<OnlineHistogram*> list;
-	int nh=HistDB->getHistogramsByTask(monitoringtask,&list);
-	
-	for (j=lines.begin(); j!=lines.end();j++) {
-	  // std::string subfolder;
-	 //  bool subfolderfound=false;
-	  // for (int si=0;si<(int)m_subfolders[mtaskcount].size();si++) {
-	      //need to organize the histograms in subfolders as there are a priori no alleys
-	    /*  std::vector<std::string> histogramsonthispage;
-	      std::vector<std::string>::const_iterator f;
-	      for (f=j->second.begin(); f!=j->second.end(); f++) { 
-	         std::string fname=*f;
-	         std::string::size_type folderfound=fname.find(m_subfolders[mtaskcount][si],0);
-	         if (folderfound !=std::string::npos) {
-		   subfolder=m_subfolders[mtaskcount][si] ;
-		   subfolderfound=true;
-		   histogramsonthispage.push_back(fname);
-		 }  
-	      }	  */
-            //  pagename=m_hltdbfolder+"/"+monitoringtask+"/"+m_nickname+ "/" +j->first + "/" + subfolder  ;
-	      
-	      pagename=m_hltdbfolder+"/"+monitoringtask+"/"+m_nickname+ "/" +j->first + "/" + j->first  ;
-	    //  msg << MSG::INFO<< "pagename " << pagename << " j->first " << j->first << endreq;
-	      
-	      std::string hlt1line=j->first;
-	    //  msg << MSG::INFO << " j->first " << j->first << endreq;
-	      if (j->first.size()==0) continue;
-	      OnlineHistPage* evsize = HistDB->getPage(pagename);
-	      evsize->removeAllHistograms();
-            //  int nbofhistosonpage = histogramsonthispage.size();
-	      int nbofhistosonpage = j->second.size();
-              double xmargin = 0.03;
-              double ymargin = 0.03;
-              int nx = (int) ceil(sqrt(float(nbofhistosonpage)));
-              int ny = nx;
+  std::string::size_type pos = stringStringToReplace.find(stringSearchString, 0);
+  int intLengthSearch = stringSearchString.length();
+  int intLengthReplacment = stringReplaceString.length();
 
-              if (nx <= 0) { nx = 1; }
-              if (ny <= 0) { ny = 1; }
-              double x1, y1, x2, y2;
-              double dx, dy;
+  while(std::string::npos != pos)
+    {
+      stringStringToReplace.replace(pos, intLengthSearch, stringReplaceString);
+      pos = stringStringToReplace.find(stringSearchString, pos + intLengthReplacment);
+    }
 
-              dy = 1/double(ny);
-              dx = 1/double(nx);
-         	   	 	      	     
-	      int zy=0;
-	      int zx=0;
-	      std::vector<std::string>::const_iterator k;
-	      int cnt=0;
-//	      for (k=histogramsonthispage.begin(); k!=histogramsonthispage.end(); k++) {	  
-	      for (k=j->second.begin(); k!=j->second.end(); k++) {	  
-	         cnt++;	 
-		 //just *k is not enough, need the full identifier  
-	         std::string tname=monitoringtask+"/"+j->first+"/"+*k;
-		// msg << MSG::INFO << " tname " << tname << endreq;
-	         OnlineHistogram* h=NULL;
-		 
-	         bool hfound=false;
-
-	         for (int kn=0;kn<nh;kn++) {
-		   // msg << MSG::INFO << " list[kn]->identifier() " << list[kn]->identifier() << " tname " << tname << endreq;
-	            std::string::size_type histofound=list[kn]->identifier().find(tname,0);
-		    if (histofound !=std::string::npos) {
-		       h=list[kn];
-		       hfound=true;
-		       break;
-	            } 
-	         }
-		 if (!hfound) continue;
-                 
-	         //this code is to place the histogram in the right place on the page
-	         ok = true;	          
-	         if (zx < nx ) {
-                    x1 = zx*dx + xmargin;
-                    x2 = x1 + dx - xmargin;
-		    zx ++;
-	         }
-	         else {
-	            zy++;
-		    zx=0;
-		    x1 = zx*dx + xmargin;
-                    x2 = x1 + dx - xmargin;
-		    zx ++;
-	         }	      
-	         y2 = 1 - zy*dy - ymargin; 
-	         y1 = y2 - dy + ymargin;
-		// msg << MSG::INFO << "doMF: adding histogram " << h->hname() << " to page " << pagename << endreq;
-	         ok &= (NULL !=evsize->addHistogram(h,x1,y1,x2,y2));
-		 HistogramDisplayOptions(h);
-	      }	
-	      if (ok) {
-	         evsize->save();
-	      }
-              else abort();
-	  // }
-	}    	
-
-       msg << MSG::INFO << "doMF: committing changes to Hist DB" << endreq;
-       HistDB->commit();
-     }
-     delete HistDB; 
-}
->>>>>>> 1.9
-
-        while(std::string::npos != pos)
-        {
-                stringStringToReplace.replace(pos, intLengthSearch, stringReplaceString);
-                pos = stringStringToReplace.find(stringSearchString, pos + intLengthReplacment);
-        }
-
-        return stringStringToReplace;
+  return stringStringToReplace;
 }
