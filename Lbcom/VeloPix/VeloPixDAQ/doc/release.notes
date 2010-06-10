@@ -4,6 +4,8 @@
 ! Purpose     : Prepare VeloPix RawBank and decode it
 !--------------------------------------------------------------------------
 
+! 2010-06-10 - Marco Cattaneo
+ - Fix windows compiler warnings
 
 ! 2010-03-30 - Victor Coco
  - Add in VeloPixRawBankToPartialCluster some checks in case of duplicated

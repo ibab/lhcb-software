@@ -1,4 +1,4 @@
-// $Id: VeloPixRawBankDecoder.h,v 1.1.1.1 2010-01-21 13:16:41 marcin Exp $
+// $Id: VeloPixRawBankDecoder.h,v 1.2 2010-06-10 17:06:10 cattanem Exp $
 #ifndef VELOPIXRAWBANKDECODER_H 
 #define VELOPIXRAWBANKDECODER_H 1
 // STL
@@ -10,6 +10,9 @@
 // Local
 #include "VeloPixClusterWord.h"
 
+#ifdef _WIN32
+#pragma warning(disable : 4355) // 'this' used in base member initializer list
+#endif
 
 template<class CLUSTERWORD>
 class VeloPixRawBankDecoder;
