@@ -4,6 +4,9 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+! 2010-06-10 - V. Gligorov
+ - Remove obsolete default HLT track locations. 
+
 !========================== GlobalReco v6r32p1 2010-04-26 =====================
 ! 2010-04-15 - Olivier Deschamps
  - ChargedProtoParticleAddEcalInfo : fix (old) bug in CaloSpd method (same as for neutralProtoP but harmless here)
