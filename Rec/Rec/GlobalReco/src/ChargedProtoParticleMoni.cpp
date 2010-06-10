@@ -37,8 +37,8 @@ ChargedProtoParticleMoni::ChargedProtoParticleMoni( const std::string& name,
   // context specific locations
   if ( context() == "HLT" || context() == "Hlt" )
   {
-    m_tracksPath = LHCb::TrackLocation::HltForward;
-    m_protoPath  = LHCb::ProtoParticleLocation::HltCharged;
+    m_tracksPath = "";
+    m_protoPath  = "";
   }
   else
   {
