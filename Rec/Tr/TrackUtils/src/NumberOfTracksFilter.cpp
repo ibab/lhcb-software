@@ -44,8 +44,7 @@ StatusCode NumberOfTracksFilter::initialize() {
   if (msgLevel(MSG::DEBUG)) debug()  << "==> Initialize" << endmsg;
 
   if ( m_tracksPath.empty() ){
-    if ( context() == "HLT" ) m_tracksPath.push_back( LHCb::TrackLocation::HltForward) ;
-    else                      m_tracksPath.push_back( LHCb::TrackLocation::Default ) ;
+    if ( context() != "HLT" ) m_tracksPath.push_back( LHCb::TrackLocation::Default ) ;
   }
   if (msgLevel(MSG::DEBUG)) {
     debug() << "Tracks will be taken from " ;
