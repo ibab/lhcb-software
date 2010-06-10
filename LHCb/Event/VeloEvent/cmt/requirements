@@ -3,7 +3,7 @@
 #
 package VeloEvent
 
-version v16r8
+version v16r8p1
 
 branches cmt doc xml VeloEvent
 

@@ -3,6 +3,9 @@
 ! package manager: C.Parkes, T.Szumlak
 !========================================================================
 
+! 2010-06-10 - Marco Cattaneo
+ - Fix windows compiler warnings
+
 !====================== VeloEvent v16r8 2010-02-24 ======================
 ! 2010-02-24 - Marco Cattaneo
  - Remove from requirements hack for Gaudi v21r1 to link dictionary on windows

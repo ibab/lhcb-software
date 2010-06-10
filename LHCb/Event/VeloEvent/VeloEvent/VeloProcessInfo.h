@@ -62,9 +62,9 @@ inline bool VeloProcessInfo::isEnable(unsigned int proc)
   if(m_procType==VeloTELL1::REAL_DATA){
     return ( (m_dataProcessInfo>>proc)&1 );
   }else if(m_procType==VeloTELL1::SIM_DATA){
-    return ( *(m_simProcessInfo.begin()+proc) );
+    return ( *(m_simProcessInfo.begin()+proc) )!=0;
   }else if(m_procType==VeloTELL1::DEV_DATA){
-    return ( *(m_devProcessInfo.begin()+proc) );
+    return ( *(m_devProcessInfo.begin()+proc) )!=0;
   }else{
     std::cout<< " ---------------------- " <<std::endl;
     std::cout<< " ==> Unknown data type! " <<std::endl;
