@@ -35,5 +35,9 @@ public:
   virtual LHCb::TwoProngVertex* fit(const LHCb::State& stateA, const LHCb::State& stateB) const = 0 ;
   virtual LHCb::RecVertex* fit(const StateContainer& states) const = 0 ;
   virtual LHCb::RecVertex* fit(const TrackContainer& tracks) const = 0 ;
+  virtual bool computeDecayLength(const LHCb::TwoProngVertex& vertex,
+				  const LHCb::RecVertex& pv,
+				  double& chi2,double& decaylength,double& decaylengtherr) const = 0 ;
+
 };
 #endif // TRACKINTERFACES_ITRACKVERTEXER_H
