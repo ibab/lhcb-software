@@ -1,3 +1,4 @@
+drop table CONDITIONS;
 drop table ANAMESSAGE;
 drop table SHOWHISTO;
 drop table PAGE;
@@ -377,6 +378,13 @@ create table ANAMESSAGE (
 CREATE INDEX ALR_HIIX on ANAMESSAGE(HISTO);
 CREATE INDEX ALR_ANATASK on ANAMESSAGE(ANALYSISTASK);
 
+
+create table CONDITIONS (
+ IBIT smallint constraint COND_pk primary key
+       USING INDEX (create index COND_pk_ix on CONDITIONS(IBIT) ),
+ TEXT varchar2(64),
+ DIMSERVICE varchar2(130)
+);
 
 
 CREATE or replace FUNCTION SET_SEPARATOR RETURN VARCHAR2 AS

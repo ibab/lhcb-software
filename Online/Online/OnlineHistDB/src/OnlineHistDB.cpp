@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistDB.cpp,v 1.44 2010-06-08 17:18:06 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistDB.cpp,v 1.45 2010-06-10 16:57:50 ggiacomo Exp $
 /*
    C++ interface to the Online Monitoring Histogram DB
    G. Graziani (INFN Firenze)
@@ -654,7 +654,46 @@ bool OnlineHistDB::deleteOldMessages(int expTime, std::string &anaTask) {
       out=true;
     }
   }
-  return true;
+  return out;
+}
+
+
+int OnlineHistDB::getConditions(std::vector<int>& bits, 
+                                 std::vector<std::string>& conditions,
+                                 std::vector<std::string>& dimservices) {
+  int nc=0;
+  const int maxNcond=32;
+  m_StmtMethod = "OnlineHistDB::getConditions";
+  OCIStmt *stmt=NULL;
+  bits.clear();
+  conditions.clear();
+  dimservices.clear();
+
+  if (OCI_SUCCESS == 
+      prepareOCIStatement(stmt, "select IBIT, TEXT, DIMSERVICE from CONDITIONS order by IBIT") ) {
+    if (OCI_SUCCESS == myOCISelectExecute(stmt) ) {
+      text Text[maxNcond][VSIZE_CONDTEXT];
+      text Dsn[maxNcond][VSIZE_SN];
+      int Bits[maxNcond];
+      for (int k=0; k<maxNcond; k++) {
+        Text[k][0]='\0';
+        Dsn[k][0]='\0';
+      }
+      myOCIDefineInt   (stmt, 1, Bits[0]);
+      myOCIDefineString(stmt, 2, Text[0]  ,VSIZE_CONDTEXT);
+      myOCIDefineString(stmt, 3, Dsn[0]   ,VSIZE_SN);
+      
+      nc = myOCIFetch(stmt, maxNcond);
+      for (int ic=0; ic<nc; ic++) {
+        bits.push_back(Bits[ic]);
+        conditions.push_back(std::string((const char*) Text[ic]));
+        dimservices.push_back(std::string((const char*) Dsn[ic]));
+      }
+      myOCIFetch(stmt, 0);
+    }
+    releaseOCIStatement(stmt);
+  }
+  return nc;
 }
 
 int OnlineHistDB::genericStringQuery(std::string command, std::vector<string>& list) {

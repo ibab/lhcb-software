@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistDBEnv.cpp,v 1.22 2009-11-05 17:38:30 ggiacomo Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistDBEnv.cpp,v 1.23 2010-06-10 16:57:50 ggiacomo Exp $
 #include <cctype>
 #include <cstring>
 #include <cstdlib>
@@ -332,6 +332,18 @@ sword OnlineHistDBEnv::releaseOCITaggedStatement(OCIStmt* & stmt,
 sword OnlineHistDBEnv::myOCIBindInt(OCIStmt* stmt,
 				    const char *str, 
 				    int &var,
+				    sb2 * ind) {
+  checkCurBind();
+  return
+    checkerr( OCIBindByName(stmt, &(m_bnd[m_curBind++]), m_errhp, (text*) str,
+			    -1, (dvoid *) &var,
+			    (sword) sizeof(var), SQLT_INT,(dvoid *) ind,
+			    (ub2 *) 0, (ub2 *) 0, (ub4) 0, (ub4 *) 0, OCI_DEFAULT));
+}
+
+sword OnlineHistDBEnv::myOCIBindInt(OCIStmt* stmt,
+				    const char *str, 
+				    long  &var,
 				    sb2 * ind) {
   checkCurBind();
   return

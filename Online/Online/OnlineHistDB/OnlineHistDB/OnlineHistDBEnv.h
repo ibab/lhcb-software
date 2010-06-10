@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistDBEnv.h,v 1.48 2010-06-08 17:18:05 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistDBEnv.h,v 1.49 2010-06-10 16:57:50 ggiacomo Exp $
 #ifndef ONLINEHISTDBENV_H
 #define ONLINEHISTDBENV_H 1
 /** @class  OnlineHistDBEnv OnlineHistDBEnv.h OnlineHistDB/OnlineHistDBEnv.h
@@ -58,6 +58,7 @@ namespace OnlineHistDBEnv_constants {
   static const unsigned int VSIZE_ANANAME     = 301;
   static const unsigned int VSIZE_PGPATTERN   = 101;
   static const unsigned int VSIZE_ANAMSG      = 201;
+  static const unsigned int VSIZE_CONDTEXT    =  65;
 
   static std::string unknown = "unknown";
 }
@@ -140,6 +141,10 @@ class OnlineHistDBEnv {
   sword myOCIBindInt(OCIStmt* stmt,
 		     const char *str, 
 		     int &var,
+		     sb2 * ind = NULL);
+  sword myOCIBindInt(OCIStmt* stmt,
+		     const char *str, 
+		     long &var,
 		     sb2 * ind = NULL);
   sword myOCIBindFloat(OCIStmt* stmt,
 		       const char *str, 

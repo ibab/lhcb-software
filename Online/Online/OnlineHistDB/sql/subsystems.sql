@@ -15,5 +15,13 @@ insert into SUBSYSTEM(SSName) VALUES('DAQ');
 insert into SUBSYSTEM(SSName) VALUES('BEAM');
 insert into SUBSYSTEM(SSName) VALUES('RECO');
 
-insert into ERGOSUM(version,apiversion,alglist) VALUES(15,'v6r0',0);
+insert into ERGOSUM(version,apiversion,alglist) VALUES(16,'v7r0',0);
 insert into PAGEFOLDER VALUES('/',NULL);
+
+
+insert into CONDITIONS(IBIT,TEXT,DIMSERVICE) 
+  VALUES(0,'LHC in PHYSICS state','LHCbStatus/LHC');
+insert into CONDITIONS(IBIT,TEXT,DIMSERVICE) 
+  VALUES(1,'VELO closed','LHCbStatus/VELO');
+insert into CONDITIONS(IBIT,TEXT,DIMSERVICE) 
+  VALUES(2,'HV ready (global state)','LHCbStatus/HV');

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistDB.h,v 1.29 2009-06-16 17:39:23 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistDB.h,v 1.30 2010-06-10 16:57:50 ggiacomo Exp $
 #ifndef ONLINEHISTDB_H
 #define ONLINEHISTDB_H 1
 /** @class  OnlineHistDB OnlineHistDB.h OnlineHistDB/OnlineHistDB.h
@@ -177,6 +177,11 @@ class  OnlineHistDB : public OnlineHistDBEnv,
   bool deleteAllMessages();
   // delete messages older than expTime seconds
   bool deleteOldMessages(int expTime, std::string &anaTask);
+
+  /// gets the list of known detector status conditions that can be checked by automatic analysis, returning their number
+  int getConditions(std::vector<int>& bits, 
+                     std::vector<std::string>& conditions,
+                     std::vector<std::string>& dimservices);
 
  private:
   // private dummy copy constructor and assignment operator

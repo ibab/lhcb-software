@@ -1,4 +1,4 @@
-// $Id: OMAMessage.h,v 1.10 2010-06-08 17:18:05 ggiacomo Exp $
+// $Id: OMAMessage.h,v 1.11 2010-06-10 16:57:50 ggiacomo Exp $
 #ifndef OMALIB_OMAMESSAGE_H 
 #define OMALIB_OMAMESSAGE_H 1
 
@@ -97,8 +97,8 @@ public:
 
   inline bool matchsAnalysis(std::string& AnaTaskName, 
                              std::string& AnaName, 
-			     std::string& HistoName,
-			     int anaID=0) {
+                             std::string& HistoName,
+                             int anaID=0) {
     if(AnaTaskName != m_anaTaskName) return false;
     if (anaID) 
       return (anaID == m_anaid &&

@@ -838,10 +838,10 @@ function histo_analysis($id,$htype,$mode) {
     $_POST["a1_id"]=0;
     get_ana_parameters($_POST["a1_alg"],"CHECK",0,1,0,0,1,0,0,$fcode);
     // default values for conditional variables
-    $_POST['a${ia}_stb_0'] =1;
-    $_POST['a${ia}_stb_1'] =1;
-    $_POST['a${ia}_stb_2'] =1;
-    $_POST["a${ia}_mst"] = $_POST["a${ia}_msf"] ="";
+    $_POST["a1_stb_0"] =1;
+    $_POST["a1_stb_1"] =1;
+    $_POST["a1_stb_2"] =1;
+    $_POST["a1_mst"] = $_POST["a1_msf"] ="";
   }
   else if ($mode == "newfit") {
     $action="Set Fit Parameters";
@@ -968,15 +968,19 @@ function histo_analysis($id,$htype,$mode) {
         echo "</table>";
       }
       echo "<br><table align='center'><tr><td><B> Conditions required to perform analysis:</B></td></tr>\n ";
-      printf("<tr><td>LHC in PHYSICS state <td><input $ro type='checkbox' name='a${ia}_stb_0' value='1' %s></td></tr>\n",
-             $_POST["a${ia}_stb_0"]  ? "checked" : "");
-      printf("<tr><td>VELO closed <td><input $ro type='checkbox' name='a${ia}_stb_1' value='1' %s></td></tr>\n",
-             $_POST["a${ia}_stb_1"]  ? "checked" : "");
-      printf("<tr><td>HV ready (global state) <td><input $ro type='checkbox' name='a${ia}_stb_2' value='1' %s></td></tr>\n",
-             $_POST["a${ia}_stb_2"]  ? "checked" : "");
+      $query="select IBIT,TEXT from CONDITIONS order by IBIT";
+      $condstm = OCIParse($conn,$query);
+      OCIExecute($condstm);
+      
+      while (OCIFetchInto($condstm, $cond, OCI_ASSOC)) {
+        $bit = $cond['IBIT'];
+        printf("<tr><td>%s<td><input $ro type='checkbox' name='a${ia}_stb_%d' value='1' %s></td></tr>\n",
+               $cond['TEXT'], $bit, $_POST["a${ia}_stb_${bit}"]  ? "checked" : "");
+      }
       printf("<tr><td> Minimum statistics per bin <td><input type='text' size=5 name='a${ia}_mst' value='%s'></td></tr>\n",$_POST["a${ia}_mst"]);
       printf("<tr><td> Minimum fraction of bins above stat limit <td><input type='text' size=5 name='a${ia}_msf' value='%s'></td></tr>\n",$_POST["a${ia}_msf"]);
       echo "</table>\n";
+      ocifreestatement($condstm);
     }
     else {
       $ip=0;

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistogram.cpp,v 1.48 2010-06-08 17:18:06 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistogram.cpp,v 1.49 2010-06-10 16:57:50 ggiacomo Exp $
 /*
    C++ interface to the Online Monitoring Histogram DB
    G. Graziani (INFN Firenze)
@@ -1377,7 +1377,7 @@ void OnlineHistogram::dump() {
     cout << endl<< m_nanalysis << " automatic Analysis defined:"<<endl;
     std::vector<float> warn,alarm,inputs;
     bool mask;
-    int status;
+    long status;
     float minstat,minstatfrac;
     for (int ia =0; ia< m_nanalysis; ia++) {
       warn.clear();
@@ -1615,15 +1615,17 @@ bool OnlineHistogram::getAnaSettings(int AnaID,
                                      std::vector<float>* alarmTh,
                                      std::vector<float>* inputs,
                                      bool &mask,
-                                     int &statusbits,
+                                     long &statusbits,
                                      float &minstat,
                                      float &minstatfrac)  {
   if(!m_anadirLoaded) loadAnalysisDirections();
   bool out=true;
   
-  int imask=0,stb=0;
+  int imask=0;
+  long stb=0;
   float mst=0.,msf=0.;
   OCIStmt *stmt=NULL;
+  sb2 statusbits_null, minstat_null, minstatfrac_null;
   m_StmtMethod = "OnlineHistogram::getAnaSettings";
   if ( OCI_SUCCESS == prepareOCIStatement
        (stmt, "BEGIN ONLINEHISTDB.GETANASETTINGS(theAna=>:id,theHisto=>:hid,warn=>:w,alr=>:a,mask=>:m,inputs=>:inp,stBits=>:stb,minstat=>:mst,minstatfrac=>:msf); END;" ) ) {
@@ -1643,9 +1645,9 @@ bool OnlineHistogram::getAnaSettings(int AnaID,
     myOCIBindObject(stmt,":a"  , (void **) &alarm, OCIthresholds);
     myOCIBindInt   (stmt,":m"  , imask);
     myOCIBindObject(stmt,":inp", (void **) &inps, OCIthresholds);
-    myOCIBindInt   (stmt,":stb", stb);
-    myOCIBindFloat (stmt,":mst", mst);
-    myOCIBindFloat (stmt,":msf", msf);
+    myOCIBindInt   (stmt,":stb", stb, &statusbits_null);
+    myOCIBindFloat (stmt,":mst", mst, &minstat_null);
+    myOCIBindFloat (stmt,":msf", msf, &minstatfrac_null);
     if (OCI_SUCCESS == myOCIStmtExecute(stmt)) {
       mask = (imask == 1);
       if(warnTh && alarmTh) {
@@ -1655,9 +1657,9 @@ bool OnlineHistogram::getAnaSettings(int AnaID,
       if(inputs) {
         floatVarrayToVector(inps, *inputs);
       }
-      statusbits = stb;
-      minstat = mst;
-      minstatfrac = msf;
+      statusbits = statusbits_null ? -1 : stb;
+      minstat = minstat_null ? -1. : mst;
+      minstatfrac = minstatfrac_null ? -1. : msf;
     }
     else {
       out=false;

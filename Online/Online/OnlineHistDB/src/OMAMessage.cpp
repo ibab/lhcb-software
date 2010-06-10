@@ -1,4 +1,4 @@
-// $Id: OMAMessage.cpp,v 1.19 2010-06-08 17:18:06 ggiacomo Exp $
+// $Id: OMAMessage.cpp,v 1.20 2010-06-10 16:57:50 ggiacomo Exp $
 #include <time.h>
 #include <sstream>
 #include <cstring>
@@ -175,24 +175,24 @@ void OMAMessage::store(bool changePadColor) {
     command << ",theAName => '" << m_ananame <<"'";
   if(m_ID)
     command << ",theID => "<< m_ID;
-  command << ",outTime => :newt, outAname => :newa, lastTime => :nlt";
-  command << ", Noccur => :nno, Nsolv => :nns, theNretrig => :nnr, theActive => :nia";
+  
+  command << ",theActive => :nia, outTime => :newt, outAname => :newa, lastTime => :nlt";
+  command << ", outNoccur => :nno, outNsolv => :nns, outNretrig => :nnr";
   command << "); end;";
 
   if ( OCI_SUCCESS == prepareOCIStatement (stmt, command.str().c_str() ) ) {
     text ANANAME[VSIZE_ANANAME]="";
-    int isactive;
+    int isactive= (int) m_active;
     myOCIBindInt   (stmt,":id", m_ID); 
+    myOCIBindInt   (stmt,":nia", isactive);
     myOCIBindString(stmt,":newa", ANANAME, VSIZE_ANANAME);
     myOCIBindInt   (stmt,":newt", m_time);
     myOCIBindInt   (stmt,":nlt", m_lastTime);
     myOCIBindInt   (stmt,":nno", m_noccur);
     myOCIBindInt   (stmt,":nns", m_nsolved);
     myOCIBindInt   (stmt,":nnr", m_nretrig);
-    myOCIBindInt   (stmt,":nia", isactive);
     if (OCI_SUCCESS == myOCIStmtExecute(stmt) ) {
       m_ananame = std::string((const char *) ANANAME);
-      m_active = (bool) isactive;
       m_dbsync=true;
     }
     releaseOCIStatement(stmt);
@@ -309,13 +309,21 @@ void OMAMessage::enable() {
 
 
 void OMAMessage::dump(std::ostream *out) {
-  *out << "----------------------------------------------------------------------"<<std::endl;
-  *out << "********     "<<humanTime();
-  *out << levelString() <<" from analysis Task "<<m_anaTaskName<<"  in analysis "<< m_ananame <<std::endl;
+  if (m_anaid && m_ID)
+    *out << "----- ANALYSIS ID "<<m_anaid<< "  MESSAGE ID "<<m_ID<<" ---- STATUS="<<
+      (m_active ? "ACTIVE" : "NOT ACTIVE") << std::endl;
+  else
+    *out << "----------------------------------------------------------------------"<<std::endl<<std::endl;
+  *out << "********  created on   "<<humanTime();
+  *out << levelString() <<" from analysis Task "<<m_anaTaskName<< "  in analysis "<< m_ananame <<std::endl;
+  *out << " related to system "<<concernedSystem()<<std::endl;
   if(!m_histo.empty())
     *out << "      on histogram " << m_histo <<std::endl;
   *out <<   "      from saveset "<< m_saveSet<<std::endl;
   *out << m_msgtext<<std::endl;
+  *out << "        --------         "<<std::endl;
+  *out << "Occurred "<<m_noccur<<" times, solved "<<m_nsolved<<" times, retriggered "<<m_nretrig<<" times"<<std::endl;
+  *out << (m_active ? "Last seen on " : "Solved on ") <<humanlastTime();
   *out << "----------------------------------------------------------------------"<<std::endl<<std::endl;
 
 }

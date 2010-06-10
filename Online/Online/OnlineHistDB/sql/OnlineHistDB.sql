@@ -123,9 +123,9 @@ procedure GET_DISPLAYOPTIONS(theDOID IN int
  function StoreMessage(theHName IN HISTOGRAM.NAME%TYPE := NULL, theSaveSet IN varchar2, 
                 theTask IN varchar2 := NULL, theAnalysisTask IN varchar2 := NULL, theLevel IN ANAMESSAGE.ALEVEL%TYPE,
                 theMessage IN varchar2, theAID IN ANALYSIS.AID%TYPE := NULL, theAName IN varchar2 := NULL, 
-                theID IN ANAMESSAGE.ID%TYPE := NULL,  theActive IN ANAMESSAGE.ACTIVE%TYPE := 1,
+                theID IN ANAMESSAGE.ID%TYPE := NULL,  theActive IN int := 1,
                 outTime OUT int, outAname OUT varchar2, lastTime  OUT int, 
-                Noccur OUT int, Nsolv OUT int, Nretrig OUT int) return number;
+                outNoccur OUT int, outNsolv OUT int, outNretrig OUT int) return number;
  procedure GetMessages(msgids OUT inttlist, theAnaysisTask IN varchar2 := NULL);
  procedure GetMessage(MsgID IN ANAMESSAGE.ID%TYPE, theHName OUT HISTOGRAM.NAME%TYPE, theSaveSet OUT varchar2, 
                 theTask OUT varchar2, theAnalysisTask OUT varchar2,
@@ -1933,22 +1933,26 @@ end SetPageToDisplay;
 function StoreMessage(theHName IN HISTOGRAM.NAME%TYPE := NULL, theSaveSet IN varchar2, 
                 theTask IN varchar2 := NULL, theAnalysisTask IN varchar2 := NULL, theLevel IN ANAMESSAGE.ALEVEL%TYPE,
                 theMessage IN varchar2, theAID IN ANALYSIS.AID%TYPE := NULL, theAName IN varchar2 := NULL, 
-                theID IN ANAMESSAGE.ID%TYPE := NULL,  theActive IN ANAMESSAGE.ACTIVE%TYPE := 1,
+                theID IN ANAMESSAGE.ID%TYPE := NULL,  theActive IN int := 1,
                 outTime OUT int, outAname OUT varchar2, lastTime  OUT int, 
-                Noccur OUT int, Nsolv OUT int, Nretrig OUT int)  return number is
+                outNoccur OUT int, outNsolv OUT int, outNretrig OUT int)  return number is
  cursor status is select ACTIVE,NOCCUR,NSOLV,NRETRIG from anamessage where ID=theID;
  myID ANAMESSAGE.ID%TYPE;
  myName ANAMESSAGE.ANANAME%TYPE;
  stAct ANAMESSAGE.ACTIVE%TYPE;
- stNoc smallint;
- stNso smallint;
- stNre smallint;
+ stNoc ANAMESSAGE.NOCCUR%TYPE;
+ stNso ANAMESSAGE.NOCCUR%TYPE;
+ stNre ANAMESSAGE.NOCCUR%TYPE;
+ nowAct ANAMESSAGE.ACTIVE%TYPE := 0;
 begin
+ if (theActive = 1) then
+  nowAct := 1;
+ end if;
  savepoint beforeMSGwrite;
  if (theID is not NULL) then
   open status;
   fetch status into stAct,stNoc,stNso,stNre;
-  if (theActive = 1) then
+  if (nowAct = 1) then
    stNoc := stNoc + 1;
    if (stAct = 0) then -- retriggered
      stNre := stNre + 1;
@@ -1958,14 +1962,17 @@ begin
      stNso := stNso + 1;
    end if;
   end if;
-  update ANAMESSAGE set SAVESET= theSaveSet, ALEVEL=theLevel, ACTIVE=theActive, 
+  update ANAMESSAGE set SAVESET= theSaveSet, ALEVEL=theLevel, ACTIVE=nowAct, 
          NOCCUR=stNoc, NSOLV=stNso, NRETRIG=stNre where ID=theID;
   myID := theID;
   close status;
  else 
   -- new message
+  stNoc :=1;
+  stNso := 0;
+  stNre := 0;
   insert into ANAMESSAGE(ID,SAVESET,ALEVEL,MSGTIME,ACTIVE,NOCCUR,NSOLV,NRETRIG) 
-       VALUES(ANAMESSAGE_ID.NEXTVAL,theSaveSet,theLevel,SYSTIMESTAMP,theActive,1,0,0);
+       VALUES(ANAMESSAGE_ID.NEXTVAL,theSaveSet,theLevel,SYSTIMESTAMP,nowAct,stNoc,stNso,stNre);
   select ANAMESSAGE_ID.CURRVAL into myID  from ERGOSUM;
  end if;
  update ANAMESSAGE set MSGTEXT=theMessage,MSGLASTTIME=SYSTIMESTAMP,
@@ -1984,6 +1991,9 @@ begin
  end if;
  select TIMEST2UXT(MSGTIME) into outTime from ANAMESSAGE where ID=myID;
  select TIMEST2UXT(MSGLASTTIME) into lastTime from ANAMESSAGE where ID=myID;
+ outNoccur := stNoc;
+ outNsolv  := stNso;
+ outNretrig := stNre;
  return myID;
 exception
  when OTHERS then 
@@ -1993,7 +2003,7 @@ end StoreMessage;
 -----------------------
 
 procedure GetMessages(msgids OUT inttlist, theAnaysisTask IN varchar2 := NULL) is
- cursor mym is select ID from ANAMESSAGE where theAnaysisTask is NULL or ANALYSISTASK=theAnaysisTask;
+ cursor mym is select ID from ANAMESSAGE where theAnaysisTask is NULL or ANALYSISTASK=theAnaysisTask order by MSGLASTTIME DESC;
  myid ANAMESSAGE.ID%TYPE := NULL;
  na int := 0;
 begin
