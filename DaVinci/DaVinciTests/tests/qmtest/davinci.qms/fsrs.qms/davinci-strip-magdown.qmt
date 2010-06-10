@@ -1,0 +1,18 @@
+<?xml version="1.0" ?><!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
+<extension class="GaudiTest.GaudiExeTest" kind="test">
+  <argument name="program"><text>gaudirun.py</text></argument>
+  <argument name="args"><set>
+    <text>$DAVINCIROOT/options/DaVinci-Default.py</text>
+    <text>$DAVINCITESTSROOT/tests/options/fsrs/DVStripping-RealData-MagDown.py</text>
+    <text>$APPCONFIGROOT/options/DaVinci/InputType-SDST.py</text>
+    <text>--option</text>
+    <text>from Configurables import DaVinci; DaVinci().DataType = "2010"; EventSelector().Input = ["DATAFILE='PFN:castor:/castor/cern.ch/user/c/cattanem/testFiles/Brunel-v37r3-20ev-FSR1.dst' TYP='POOL_ROOTTREE' OPT='READ'"]; DaVinci().EvtMax=10; </text>
+  </set></argument>
+  <argument name="timeout"><integer>3000</integer></argument>
+  <argument name="use_temp_dir"><enumeral>true</enumeral></argument>
+  <argument name="validator"><text>
+findReferenceBlock("""
+DaVinciInit                                                 SUCCESS 10 events processed
+""", stdout, result, causes, signature_offset = 0, id = "4100")
+</text></argument> 
+</extension>

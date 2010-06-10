@@ -1,0 +1,40 @@
+<?xml version="1.0" ?><!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
+<extension class="GaudiTest.GaudiExeTest" kind="test">
+  <argument name="program"><text>gaudirun.py</text></argument>
+  <argument name="args"><set>
+    <text>$DAVINCIROOT/options/DaVinci-Default.py</text>
+    <text>$DAVINCITESTSROOT/tests/options/fsrs/davinci-dumpfsrs.py</text>
+    <text>--option</text>
+    <text>from Configurables import DaVinci; DaVinci().DataType = "2010"; EventSelector().Input = ["DATAFILE='PFN:castor:/castor/cern.ch/user/c/cattanem/testFiles/Brunel-v37r3-20ev-FSR1.dst' TYP='POOL_ROOTTREE' OPT='READ'", "DATAFILE='PFN:castor:/castor/cern.ch/user/c/cattanem/testFiles/Brunel-v37r3-20ev-FSR2.dst' TYP='POOL_ROOTTREE' OPT='READ'"]; DaVinci().InputType="DST"</text>
+  </set></argument>
+  <argument name="timeout"><integer>3000</integer></argument>
+  <argument name="use_temp_dir"><enumeral>true</enumeral></argument>
+  <argument name="validator"><text>
+import os
+f=open(os.path.expandvars('$DAVINCITESTSROOT/tests/refs/test-FSRs.ref'),'r')
+reflines=f.readlines()
+reflines=[r.strip() for r in reflines]
+stdlines=stdout
+
+#print reflines, 'test'
+
+if '\n' in stdout:
+  stdlines=stdout.split('\n')
+
+foundlines=[line.strip() for line in stdlines if ('DumpFSR'  in line and '/FileRecords' in line and '-' in line)]
+
+#print foundlines
+
+######## Check for consistency #############
+if foundlines!=reflines:
+  t=open(os.path.expandvars('$DAVINCITESTSROOT/tests/refs/test-FSRs.ref.new'),'w')
+  t.write('\n'.join(foundlines))
+  t.close()
+  f.close()
+  causes.append('unexpected FSRs')
+  result['davinci.fsrs.davinci-dumpfsrs-tofile']=result.Quote('\n'.join(['+'+line for line in foundlines if line not in reflines]+['-'+line for line in reflines if line not in foundlines]))
+
+f.close()
+
+</text></argument> 
+</extension>

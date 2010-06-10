@@ -1,0 +1,48 @@
+<?xml version="1.0" ?><!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
+<extension class="GaudiTest.GaudiExeTest" kind="test">
+  <argument name="program"><text>gaudirun.py</text></argument>
+  <argument name="args"><set>
+    <text>$DAVINCIROOT/options/DaVinci-Default.py</text>
+    <text>$DAVINCITESTSROOT/tests/options/fsrs/davinci-dumpfsrs.py</text>
+    <text>--option</text>
+    <text>from Configurables import DaVinci; DaVinci().DataType = "2010"; EventSelector().Input = ["DATAFILE='PFN:DaVinci-Merged-2010.dst' TYP='POOL_ROOTTREE' OPT='READ'"]; DaVinci().InputType="DST"; </text>
+  </set></argument>
+  <argument name="timeout"><integer>3000</integer></argument>
+  <argument name="prerequisites"><set>
+    <tuple><text>davinci.fsrs.davinci-merge</text><enumeral>PASS</enumeral></tuple>
+    <tuple><text>davinci.fsrs.davinci-dumpfsrs-tofile</text><enumeral>PASS</enumeral></tuple>
+  </set></argument>
+  <argument name="use_temp_dir"><enumeral>true</enumeral></argument>
+  <argument name="validator"><text>
+import os
+f=open(os.path.expandvars('$DAVINCITESTSROOT/tests/refs/test-FSRs.ref'),'r')
+reflines=f.readlines()
+
+#split the entry after FileRecords to get the shortes string to match
+reflines=[r.strip().split('/FileRecords')[-1] for r in reflines]
+stdlines=stdout
+
+print reflines, 'test'
+
+if '\n' in stdout:
+  stdlines=stdout.split('\n')
+
+foundlines=[]
+for line in reflines:
+  for stdline in stdlines:
+    if line in stdline:
+      foundlines.append(line)
+      break
+
+print foundlines
+
+######## Check for consistency #############
+
+if foundlines!=reflines:
+  f.close()
+  causes.append('missing FSRs')
+  result['davinci.fsrs.davinci-dumpfsrs']=result.Quote('\n'.join(['-'+line for line in reflines if line not in foundlines]))
+
+f.close()
+</text></argument> 
+</extension>

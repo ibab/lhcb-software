@@ -1,4 +1,4 @@
-# echo "Setting DaVinciTests v1r0 in /home/jpalac/cmtdev/DaVinci_v25r5"
+# echo "Setting DaVinciTests v1r0 in /afs/cern.ch/user/r/rlambert/cmtuser/DaVinci_HEAD"
 
 if ( $?CMTROOT == 0 ) then
   setenv CMTROOT /afs/cern.ch/sw/contrib/CMT/v1r20p20090520
@@ -9,6 +9,6 @@ set tempfile=`${CMTROOT}/mgr/cmt -quiet build temporary_name`
 if $status != 0 then
   set tempfile=/tmp/cmt.$$
 endif
-${CMTROOT}/mgr/cmt setup -csh -pack=DaVinciTests -version=v1r0 -path=/home/jpalac/cmtdev/DaVinci_v25r5  -no_cleanup $* >${tempfile}; source ${tempfile}
+${CMTROOT}/mgr/cmt setup -csh -pack=DaVinciTests -version=v1r0 -path=/afs/cern.ch/user/r/rlambert/cmtuser/DaVinci_HEAD  -no_cleanup $* >${tempfile}; source ${tempfile}
 /bin/rm -f ${tempfile}
 

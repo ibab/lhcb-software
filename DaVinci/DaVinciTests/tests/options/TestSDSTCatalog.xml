@@ -13,7 +13,9 @@
 </File>
 
 
-  <!--
+  
+
+<!--
 <File ID="F284F5B0-594D-DF11-B7B5-000423D94D30">
 <physical>
 <pfn filetype="ROOT_All" name="etc.root"/>
@@ -24,6 +26,83 @@
   <File ID="3CD5F6EA-F251-DF11-8AA8-003048672FAC">
     <physical>
       <pfn filetype="ROOT_All" name="etc.root"/>
+    </physical>
+    <logical/>
+  </File>
+
+  <File ID="06C5C73A-6474-DF11-8B5D-001E4F3E59B1">
+    <physical>
+      <pfn filetype="ROOT_All" name="000000.MiniBias.dst"/>
+    </physical>
+    <logical/>
+  </File>
+
+  <File ID="8841A43C-6474-DF11-8B5D-001E4F3E59B1">
+    <physical>
+      <pfn filetype="ROOT_All" name="000000.Bhadron.dst"/>
+    </physical>
+    <logical/>
+  </File>
+
+  <File ID="90681E3E-6474-DF11-8B5D-001E4F3E59B1">
+    <physical>
+      <pfn filetype="ROOT_All" name="000000.Charm.dst"/>
+    </physical>
+    <logical/>
+  </File>
+
+  <File ID="FCCE323E-6474-DF11-8B5D-001E4F3E59B1">
+    <physical>
+      <pfn filetype="ROOT_All" name="000000.V0.dst"/>
+    </physical>
+    <logical/>
+  </File>
+
+  <File ID="123381A1-6574-DF11-8B5D-001E4F3E59B1">
+    <physical>
+      <pfn filetype="ROOT_All" name="000000.Calibration.dst"/>
+    </physical>
+    <logical/>
+  </File>
+
+  <File ID="C60087A1-6574-DF11-8B5D-001E4F3E59B1">
+    <physical>
+      <pfn filetype="ROOT_All" name="000000.Dielectron.dst"/>
+    </physical>
+    <logical/>
+  </File>
+
+  <File ID="487388A1-6574-DF11-8B5D-001E4F3E59B1">
+    <physical>
+      <pfn filetype="ROOT_All" name="000000.Dimuon.dst"/>
+    </physical>
+    <logical/>
+  </File>
+
+  <File ID="961494A1-6574-DF11-8B5D-001E4F3E59B1">
+    <physical>
+      <pfn filetype="ROOT_All" name="000000.Semileptonic.dst"/>
+    </physical>
+    <logical/>
+  </File>
+
+  <File ID="C072CAA1-6574-DF11-8B5D-001E4F3E59B1">
+    <physical>
+      <pfn filetype="ROOT_All" name="000000.Radiative.dst"/>
+    </physical>
+    <logical/>
+  </File>
+
+  <File ID="A84DCBA1-6574-DF11-8B5D-001E4F3E59B1">
+    <physical>
+      <pfn filetype="ROOT_All" name="000000.EW.dst"/>
+    </physical>
+    <logical/>
+  </File>
+
+  <File ID="3EF3CBA1-6574-DF11-8B5D-001E4F3E59B1">
+    <physical>
+      <pfn filetype="ROOT_All" name="000000.DiPhotonDiMuon.dst"/>
     </physical>
     <logical/>
   </File>

@@ -1,0 +1,144 @@
+DumpFSR              INFO lu address: /FileRecords/26DEC83E-8F74-DF11-AC26-001E4F3DD7AB/LumiFSRNoBeam
+DumpFSR              INFO lu address: /FileRecords/26DEC83E-8F74-DF11-AC26-001E4F3DD7AB/LumiFSRBeamCrossing
+DumpFSR              INFO lu address: /FileRecords/26DEC83E-8F74-DF11-AC26-001E4F3DD7AB/LumiFSRBeam1
+DumpFSR              INFO lu address: /FileRecords/26DEC83E-8F74-DF11-AC26-001E4F3DD7AB/LumiFSRBeam2
+DumpFSR              INFO lo address: /FileRecords/26DEC83E-8F74-DF11-AC26-001E4F3DD7AB/LumiLowFSRNoBeam
+DumpFSR              INFO /FileRecords/26DEC83E-8F74-DF11-AC26-001E4F3DD7AB/LumiLowFSRNoBeam: LumiLowFSR: {  runs : 69857  files : root:/castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/69857/069857_0000000006.raw  info (key/incr/integral) : 0 8 0 / 1 8 259 / 2 8 76 / 6 8 0 / 7 8 0 / 8 8 0 / 10 8 10 / 20 8 8 /  }
+DumpFSR              INFO lo address: /FileRecords/26DEC83E-8F74-DF11-AC26-001E4F3DD7AB/LumiLowFSRBeamCrossing
+DumpFSR              INFO /FileRecords/26DEC83E-8F74-DF11-AC26-001E4F3DD7AB/LumiLowFSRBeamCrossing: LumiLowFSR: {  runs : 69857  files : root:/castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/69857/069857_0000000006.raw  info (key/incr/integral) : 0 8 0 / 1 8 259 / 2 8 76 / 6 8 0 / 7 8 0 / 8 8 0 / 10 8 10 / 20 8 8 /  }
+DumpFSR              INFO lo address: /FileRecords/26DEC83E-8F74-DF11-AC26-001E4F3DD7AB/LumiLowFSRBeam1
+DumpFSR              INFO /FileRecords/26DEC83E-8F74-DF11-AC26-001E4F3DD7AB/LumiLowFSRBeam1: LumiLowFSR: {  runs : 69857  files : root:/castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/69857/069857_0000000006.raw  info (key/incr/integral) : 0 8 0 / 1 8 259 / 2 8 76 / 6 8 0 / 7 8 0 / 8 8 0 / 10 8 10 / 20 8 8 /  }
+DumpFSR              INFO lo address: /FileRecords/26DEC83E-8F74-DF11-AC26-001E4F3DD7AB/LumiLowFSRBeam2
+DumpFSR              INFO /FileRecords/26DEC83E-8F74-DF11-AC26-001E4F3DD7AB/LumiLowFSRBeam2: LumiLowFSR: {  runs : 69857  files : root:/castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/69857/069857_0000000006.raw  info (key/incr/integral) : 0 8 0 / 1 8 259 / 2 8 76 / 6 8 0 / 7 8 0 / 8 8 0 / 10 8 10 / 20 8 8 /  }
+DumpFSR              INFO ev address: /FileRecords/26DEC83E-8F74-DF11-AC26-001E4F3DD7AB/EventCountFSR
+DumpFSR              INFO /FileRecords/26DEC83E-8F74-DF11-AC26-001E4F3DD7AB/EventCountFSR: EventCountFSR: {  input : 100 output : 18 statusFlag : VERIFIED }
+DumpFSR              INFO ts address: /FileRecords/26DEC83E-8F74-DF11-AC26-001E4F3DD7AB/TimeSpanFSR
+DumpFSR              INFO /FileRecords/26DEC83E-8F74-DF11-AC26-001E4F3DD7AB/TimeSpanFSR: TimeSpanFSR: {  earliest : 1270889604475328 - latest : 1270889604573184 }
+DumpFSR              INFO lu address: /FileRecords/26DEC83E-8F74-DF11-AC26-001E4F3DD7AB/LumiFSRNoBeam
+DumpFSR              INFO lu address: /FileRecords/26DEC83E-8F74-DF11-AC26-001E4F3DD7AB/LumiFSRBeamCrossing
+DumpFSR              INFO lu address: /FileRecords/26DEC83E-8F74-DF11-AC26-001E4F3DD7AB/LumiFSRBeam1
+DumpFSR              INFO lu address: /FileRecords/26DEC83E-8F74-DF11-AC26-001E4F3DD7AB/LumiFSRBeam2
+DumpFSR              INFO lo address: /FileRecords/26DEC83E-8F74-DF11-AC26-001E4F3DD7AB/LumiLowFSRNoBeam
+DumpFSR              INFO /FileRecords/26DEC83E-8F74-DF11-AC26-001E4F3DD7AB/LumiLowFSRNoBeam: LumiLowFSR: {  runs : 69857  files : root:/castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/69857/069857_0000000006.raw  info (key/incr/integral) : 0 8 0 / 1 8 259 / 2 8 76 / 6 8 0 / 7 8 0 / 8 8 0 / 10 8 10 / 20 8 8 /  }
+DumpFSR              INFO lo address: /FileRecords/26DEC83E-8F74-DF11-AC26-001E4F3DD7AB/LumiLowFSRBeamCrossing
+DumpFSR              INFO /FileRecords/26DEC83E-8F74-DF11-AC26-001E4F3DD7AB/LumiLowFSRBeamCrossing: LumiLowFSR: {  runs : 69857  files : root:/castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/69857/069857_0000000006.raw  info (key/incr/integral) : 0 8 0 / 1 8 259 / 2 8 76 / 6 8 0 / 7 8 0 / 8 8 0 / 10 8 10 / 20 8 8 /  }
+DumpFSR              INFO lo address: /FileRecords/26DEC83E-8F74-DF11-AC26-001E4F3DD7AB/LumiLowFSRBeam1
+DumpFSR              INFO /FileRecords/26DEC83E-8F74-DF11-AC26-001E4F3DD7AB/LumiLowFSRBeam1: LumiLowFSR: {  runs : 69857  files : root:/castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/69857/069857_0000000006.raw  info (key/incr/integral) : 0 8 0 / 1 8 259 / 2 8 76 / 6 8 0 / 7 8 0 / 8 8 0 / 10 8 10 / 20 8 8 /  }
+DumpFSR              INFO lo address: /FileRecords/26DEC83E-8F74-DF11-AC26-001E4F3DD7AB/LumiLowFSRBeam2
+DumpFSR              INFO /FileRecords/26DEC83E-8F74-DF11-AC26-001E4F3DD7AB/LumiLowFSRBeam2: LumiLowFSR: {  runs : 69857  files : root:/castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/69857/069857_0000000006.raw  info (key/incr/integral) : 0 8 0 / 1 8 259 / 2 8 76 / 6 8 0 / 7 8 0 / 8 8 0 / 10 8 10 / 20 8 8 /  }
+DumpFSR              INFO ev address: /FileRecords/26DEC83E-8F74-DF11-AC26-001E4F3DD7AB/EventCountFSR
+DumpFSR              INFO /FileRecords/26DEC83E-8F74-DF11-AC26-001E4F3DD7AB/EventCountFSR: EventCountFSR: {  input : 100 output : 18 statusFlag : VERIFIED }
+DumpFSR              INFO ts address: /FileRecords/26DEC83E-8F74-DF11-AC26-001E4F3DD7AB/TimeSpanFSR
+DumpFSR              INFO /FileRecords/26DEC83E-8F74-DF11-AC26-001E4F3DD7AB/TimeSpanFSR: TimeSpanFSR: {  earliest : 1270889604475328 - latest : 1270889604573184 }
+DumpFSR              INFO lu address: /FileRecords/26DEC83E-8F74-DF11-AC26-001E4F3DD7AB/LumiFSRNoBeam
+DumpFSR              INFO lu address: /FileRecords/26DEC83E-8F74-DF11-AC26-001E4F3DD7AB/LumiFSRBeamCrossing
+DumpFSR              INFO lu address: /FileRecords/26DEC83E-8F74-DF11-AC26-001E4F3DD7AB/LumiFSRBeam1
+DumpFSR              INFO lu address: /FileRecords/26DEC83E-8F74-DF11-AC26-001E4F3DD7AB/LumiFSRBeam2
+DumpFSR              INFO lo address: /FileRecords/26DEC83E-8F74-DF11-AC26-001E4F3DD7AB/LumiLowFSRNoBeam
+DumpFSR              INFO /FileRecords/26DEC83E-8F74-DF11-AC26-001E4F3DD7AB/LumiLowFSRNoBeam: LumiLowFSR: {  runs : 69857  files : root:/castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/69857/069857_0000000006.raw  info (key/incr/integral) : 0 8 0 / 1 8 259 / 2 8 76 / 6 8 0 / 7 8 0 / 8 8 0 / 10 8 10 / 20 8 8 /  }
+DumpFSR              INFO lo address: /FileRecords/26DEC83E-8F74-DF11-AC26-001E4F3DD7AB/LumiLowFSRBeamCrossing
+DumpFSR              INFO /FileRecords/26DEC83E-8F74-DF11-AC26-001E4F3DD7AB/LumiLowFSRBeamCrossing: LumiLowFSR: {  runs : 69857  files : root:/castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/69857/069857_0000000006.raw  info (key/incr/integral) : 0 8 0 / 1 8 259 / 2 8 76 / 6 8 0 / 7 8 0 / 8 8 0 / 10 8 10 / 20 8 8 /  }
+DumpFSR              INFO lo address: /FileRecords/26DEC83E-8F74-DF11-AC26-001E4F3DD7AB/LumiLowFSRBeam1
+DumpFSR              INFO /FileRecords/26DEC83E-8F74-DF11-AC26-001E4F3DD7AB/LumiLowFSRBeam1: LumiLowFSR: {  runs : 69857  files : root:/castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/69857/069857_0000000006.raw  info (key/incr/integral) : 0 8 0 / 1 8 259 / 2 8 76 / 6 8 0 / 7 8 0 / 8 8 0 / 10 8 10 / 20 8 8 /  }
+DumpFSR              INFO lo address: /FileRecords/26DEC83E-8F74-DF11-AC26-001E4F3DD7AB/LumiLowFSRBeam2
+DumpFSR              INFO /FileRecords/26DEC83E-8F74-DF11-AC26-001E4F3DD7AB/LumiLowFSRBeam2: LumiLowFSR: {  runs : 69857  files : root:/castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/69857/069857_0000000006.raw  info (key/incr/integral) : 0 8 0 / 1 8 259 / 2 8 76 / 6 8 0 / 7 8 0 / 8 8 0 / 10 8 10 / 20 8 8 /  }
+DumpFSR              INFO ev address: /FileRecords/26DEC83E-8F74-DF11-AC26-001E4F3DD7AB/EventCountFSR
+DumpFSR              INFO /FileRecords/26DEC83E-8F74-DF11-AC26-001E4F3DD7AB/EventCountFSR: EventCountFSR: {  input : 100 output : 18 statusFlag : VERIFIED }
+DumpFSR              INFO ts address: /FileRecords/26DEC83E-8F74-DF11-AC26-001E4F3DD7AB/TimeSpanFSR
+DumpFSR              INFO /FileRecords/26DEC83E-8F74-DF11-AC26-001E4F3DD7AB/TimeSpanFSR: TimeSpanFSR: {  earliest : 1270889604475328 - latest : 1270889604573184 }
+DumpFSR              INFO lu address: /FileRecords/26DEC83E-8F74-DF11-AC26-001E4F3DD7AB/LumiFSRNoBeam
+DumpFSR              INFO lu address: /FileRecords/26DEC83E-8F74-DF11-AC26-001E4F3DD7AB/LumiFSRBeamCrossing
+DumpFSR              INFO lu address: /FileRecords/26DEC83E-8F74-DF11-AC26-001E4F3DD7AB/LumiFSRBeam1
+DumpFSR              INFO lu address: /FileRecords/26DEC83E-8F74-DF11-AC26-001E4F3DD7AB/LumiFSRBeam2
+DumpFSR              INFO lu address: /FileRecords/0E12F271-8F74-DF11-9CD4-001E4F3DD7AB/LumiFSRNoBeam
+DumpFSR              INFO lu address: /FileRecords/0E12F271-8F74-DF11-9CD4-001E4F3DD7AB/LumiFSRBeamCrossing
+DumpFSR              INFO lu address: /FileRecords/0E12F271-8F74-DF11-9CD4-001E4F3DD7AB/LumiFSRBeam1
+DumpFSR              INFO lu address: /FileRecords/0E12F271-8F74-DF11-9CD4-001E4F3DD7AB/LumiFSRBeam2
+DumpFSR              INFO lo address: /FileRecords/26DEC83E-8F74-DF11-AC26-001E4F3DD7AB/LumiLowFSRNoBeam
+DumpFSR              INFO /FileRecords/26DEC83E-8F74-DF11-AC26-001E4F3DD7AB/LumiLowFSRNoBeam: LumiLowFSR: {  runs : 69857  files : root:/castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/69857/069857_0000000006.raw  info (key/incr/integral) : 0 8 0 / 1 8 259 / 2 8 76 / 6 8 0 / 7 8 0 / 8 8 0 / 10 8 10 / 20 8 8 /  }
+DumpFSR              INFO lo address: /FileRecords/26DEC83E-8F74-DF11-AC26-001E4F3DD7AB/LumiLowFSRBeamCrossing
+DumpFSR              INFO /FileRecords/26DEC83E-8F74-DF11-AC26-001E4F3DD7AB/LumiLowFSRBeamCrossing: LumiLowFSR: {  runs : 69857  files : root:/castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/69857/069857_0000000006.raw  info (key/incr/integral) : 0 8 0 / 1 8 259 / 2 8 76 / 6 8 0 / 7 8 0 / 8 8 0 / 10 8 10 / 20 8 8 /  }
+DumpFSR              INFO lo address: /FileRecords/26DEC83E-8F74-DF11-AC26-001E4F3DD7AB/LumiLowFSRBeam1
+DumpFSR              INFO /FileRecords/26DEC83E-8F74-DF11-AC26-001E4F3DD7AB/LumiLowFSRBeam1: LumiLowFSR: {  runs : 69857  files : root:/castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/69857/069857_0000000006.raw  info (key/incr/integral) : 0 8 0 / 1 8 259 / 2 8 76 / 6 8 0 / 7 8 0 / 8 8 0 / 10 8 10 / 20 8 8 /  }
+DumpFSR              INFO lo address: /FileRecords/26DEC83E-8F74-DF11-AC26-001E4F3DD7AB/LumiLowFSRBeam2
+DumpFSR              INFO /FileRecords/26DEC83E-8F74-DF11-AC26-001E4F3DD7AB/LumiLowFSRBeam2: LumiLowFSR: {  runs : 69857  files : root:/castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/69857/069857_0000000006.raw  info (key/incr/integral) : 0 8 0 / 1 8 259 / 2 8 76 / 6 8 0 / 7 8 0 / 8 8 0 / 10 8 10 / 20 8 8 /  }
+DumpFSR              INFO lo address: /FileRecords/0E12F271-8F74-DF11-9CD4-001E4F3DD7AB/LumiLowFSRNoBeam
+DumpFSR              INFO /FileRecords/0E12F271-8F74-DF11-9CD4-001E4F3DD7AB/LumiLowFSRNoBeam: LumiLowFSR: {  runs : 69623  files : root:/castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/69623/069623_0000000003.raw  info (key/incr/integral) : 0 5 0 / 1 5 92 / 2 5 33 / 6 5 0 / 7 5 0 / 8 5 0 / 10 5 4 / 20 5 5 /  }
+DumpFSR              INFO lo address: /FileRecords/0E12F271-8F74-DF11-9CD4-001E4F3DD7AB/LumiLowFSRBeamCrossing
+DumpFSR              INFO /FileRecords/0E12F271-8F74-DF11-9CD4-001E4F3DD7AB/LumiLowFSRBeamCrossing: LumiLowFSR: {  runs : 69623  files : root:/castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/69623/069623_0000000003.raw  info (key/incr/integral) : 0 5 0 / 1 5 92 / 2 5 33 / 6 5 0 / 7 5 0 / 8 5 0 / 10 5 4 / 20 5 5 /  }
+DumpFSR              INFO lo address: /FileRecords/0E12F271-8F74-DF11-9CD4-001E4F3DD7AB/LumiLowFSRBeam1
+DumpFSR              INFO /FileRecords/0E12F271-8F74-DF11-9CD4-001E4F3DD7AB/LumiLowFSRBeam1: LumiLowFSR: {  runs : 69623  files : root:/castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/69623/069623_0000000003.raw  info (key/incr/integral) : 0 5 0 / 1 5 92 / 2 5 33 / 6 5 0 / 7 5 0 / 8 5 0 / 10 5 4 / 20 5 5 /  }
+DumpFSR              INFO lo address: /FileRecords/0E12F271-8F74-DF11-9CD4-001E4F3DD7AB/LumiLowFSRBeam2
+DumpFSR              INFO /FileRecords/0E12F271-8F74-DF11-9CD4-001E4F3DD7AB/LumiLowFSRBeam2: LumiLowFSR: {  runs : 69623  files : root:/castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/69623/069623_0000000003.raw  info (key/incr/integral) : 0 5 0 / 1 5 92 / 2 5 33 / 6 5 0 / 7 5 0 / 8 5 0 / 10 5 4 / 20 5 5 /  }
+DumpFSR              INFO ev address: /FileRecords/26DEC83E-8F74-DF11-AC26-001E4F3DD7AB/EventCountFSR
+DumpFSR              INFO /FileRecords/26DEC83E-8F74-DF11-AC26-001E4F3DD7AB/EventCountFSR: EventCountFSR: {  input : 100 output : 18 statusFlag : VERIFIED }
+DumpFSR              INFO ev address: /FileRecords/0E12F271-8F74-DF11-9CD4-001E4F3DD7AB/EventCountFSR
+DumpFSR              INFO /FileRecords/0E12F271-8F74-DF11-9CD4-001E4F3DD7AB/EventCountFSR: EventCountFSR: {  input : 100 output : 100 statusFlag : VERIFIED }
+DumpFSR              INFO ts address: /FileRecords/26DEC83E-8F74-DF11-AC26-001E4F3DD7AB/TimeSpanFSR
+DumpFSR              INFO /FileRecords/26DEC83E-8F74-DF11-AC26-001E4F3DD7AB/TimeSpanFSR: TimeSpanFSR: {  earliest : 1270889604475328 - latest : 1270889604573184 }
+DumpFSR              INFO ts address: /FileRecords/0E12F271-8F74-DF11-9CD4-001E4F3DD7AB/TimeSpanFSR
+DumpFSR              INFO /FileRecords/0E12F271-8F74-DF11-9CD4-001E4F3DD7AB/TimeSpanFSR: TimeSpanFSR: {  earliest : 1270425449804736 - latest : 1270425453690688 }
+DumpFSR              INFO lu address: /FileRecords/26DEC83E-8F74-DF11-AC26-001E4F3DD7AB/LumiFSRNoBeam
+DumpFSR              INFO lu address: /FileRecords/26DEC83E-8F74-DF11-AC26-001E4F3DD7AB/LumiFSRBeamCrossing
+DumpFSR              INFO lu address: /FileRecords/26DEC83E-8F74-DF11-AC26-001E4F3DD7AB/LumiFSRBeam1
+DumpFSR              INFO lu address: /FileRecords/26DEC83E-8F74-DF11-AC26-001E4F3DD7AB/LumiFSRBeam2
+DumpFSR              INFO lu address: /FileRecords/0E12F271-8F74-DF11-9CD4-001E4F3DD7AB/LumiFSRNoBeam
+DumpFSR              INFO lu address: /FileRecords/0E12F271-8F74-DF11-9CD4-001E4F3DD7AB/LumiFSRBeamCrossing
+DumpFSR              INFO lu address: /FileRecords/0E12F271-8F74-DF11-9CD4-001E4F3DD7AB/LumiFSRBeam1
+DumpFSR              INFO lu address: /FileRecords/0E12F271-8F74-DF11-9CD4-001E4F3DD7AB/LumiFSRBeam2
+DumpFSR              INFO lo address: /FileRecords/26DEC83E-8F74-DF11-AC26-001E4F3DD7AB/LumiLowFSRNoBeam
+DumpFSR              INFO /FileRecords/26DEC83E-8F74-DF11-AC26-001E4F3DD7AB/LumiLowFSRNoBeam: LumiLowFSR: {  runs : 69857  files : root:/castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/69857/069857_0000000006.raw  info (key/incr/integral) : 0 8 0 / 1 8 259 / 2 8 76 / 6 8 0 / 7 8 0 / 8 8 0 / 10 8 10 / 20 8 8 /  }
+DumpFSR              INFO lo address: /FileRecords/26DEC83E-8F74-DF11-AC26-001E4F3DD7AB/LumiLowFSRBeamCrossing
+DumpFSR              INFO /FileRecords/26DEC83E-8F74-DF11-AC26-001E4F3DD7AB/LumiLowFSRBeamCrossing: LumiLowFSR: {  runs : 69857  files : root:/castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/69857/069857_0000000006.raw  info (key/incr/integral) : 0 8 0 / 1 8 259 / 2 8 76 / 6 8 0 / 7 8 0 / 8 8 0 / 10 8 10 / 20 8 8 /  }
+DumpFSR              INFO lo address: /FileRecords/26DEC83E-8F74-DF11-AC26-001E4F3DD7AB/LumiLowFSRBeam1
+DumpFSR              INFO /FileRecords/26DEC83E-8F74-DF11-AC26-001E4F3DD7AB/LumiLowFSRBeam1: LumiLowFSR: {  runs : 69857  files : root:/castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/69857/069857_0000000006.raw  info (key/incr/integral) : 0 8 0 / 1 8 259 / 2 8 76 / 6 8 0 / 7 8 0 / 8 8 0 / 10 8 10 / 20 8 8 /  }
+DumpFSR              INFO lo address: /FileRecords/26DEC83E-8F74-DF11-AC26-001E4F3DD7AB/LumiLowFSRBeam2
+DumpFSR              INFO /FileRecords/26DEC83E-8F74-DF11-AC26-001E4F3DD7AB/LumiLowFSRBeam2: LumiLowFSR: {  runs : 69857  files : root:/castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/69857/069857_0000000006.raw  info (key/incr/integral) : 0 8 0 / 1 8 259 / 2 8 76 / 6 8 0 / 7 8 0 / 8 8 0 / 10 8 10 / 20 8 8 /  }
+DumpFSR              INFO lo address: /FileRecords/0E12F271-8F74-DF11-9CD4-001E4F3DD7AB/LumiLowFSRNoBeam
+DumpFSR              INFO /FileRecords/0E12F271-8F74-DF11-9CD4-001E4F3DD7AB/LumiLowFSRNoBeam: LumiLowFSR: {  runs : 69623  files : root:/castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/69623/069623_0000000003.raw  info (key/incr/integral) : 0 5 0 / 1 5 92 / 2 5 33 / 6 5 0 / 7 5 0 / 8 5 0 / 10 5 4 / 20 5 5 /  }
+DumpFSR              INFO lo address: /FileRecords/0E12F271-8F74-DF11-9CD4-001E4F3DD7AB/LumiLowFSRBeamCrossing
+DumpFSR              INFO /FileRecords/0E12F271-8F74-DF11-9CD4-001E4F3DD7AB/LumiLowFSRBeamCrossing: LumiLowFSR: {  runs : 69623  files : root:/castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/69623/069623_0000000003.raw  info (key/incr/integral) : 0 5 0 / 1 5 92 / 2 5 33 / 6 5 0 / 7 5 0 / 8 5 0 / 10 5 4 / 20 5 5 /  }
+DumpFSR              INFO lo address: /FileRecords/0E12F271-8F74-DF11-9CD4-001E4F3DD7AB/LumiLowFSRBeam1
+DumpFSR              INFO /FileRecords/0E12F271-8F74-DF11-9CD4-001E4F3DD7AB/LumiLowFSRBeam1: LumiLowFSR: {  runs : 69623  files : root:/castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/69623/069623_0000000003.raw  info (key/incr/integral) : 0 5 0 / 1 5 92 / 2 5 33 / 6 5 0 / 7 5 0 / 8 5 0 / 10 5 4 / 20 5 5 /  }
+DumpFSR              INFO lo address: /FileRecords/0E12F271-8F74-DF11-9CD4-001E4F3DD7AB/LumiLowFSRBeam2
+DumpFSR              INFO /FileRecords/0E12F271-8F74-DF11-9CD4-001E4F3DD7AB/LumiLowFSRBeam2: LumiLowFSR: {  runs : 69623  files : root:/castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/69623/069623_0000000003.raw  info (key/incr/integral) : 0 5 0 / 1 5 92 / 2 5 33 / 6 5 0 / 7 5 0 / 8 5 0 / 10 5 4 / 20 5 5 /  }
+DumpFSR              INFO ev address: /FileRecords/26DEC83E-8F74-DF11-AC26-001E4F3DD7AB/EventCountFSR
+DumpFSR              INFO /FileRecords/26DEC83E-8F74-DF11-AC26-001E4F3DD7AB/EventCountFSR: EventCountFSR: {  input : 100 output : 18 statusFlag : VERIFIED }
+DumpFSR              INFO ev address: /FileRecords/0E12F271-8F74-DF11-9CD4-001E4F3DD7AB/EventCountFSR
+DumpFSR              INFO /FileRecords/0E12F271-8F74-DF11-9CD4-001E4F3DD7AB/EventCountFSR: EventCountFSR: {  input : 100 output : 100 statusFlag : VERIFIED }
+DumpFSR              INFO ts address: /FileRecords/26DEC83E-8F74-DF11-AC26-001E4F3DD7AB/TimeSpanFSR
+DumpFSR              INFO /FileRecords/26DEC83E-8F74-DF11-AC26-001E4F3DD7AB/TimeSpanFSR: TimeSpanFSR: {  earliest : 1270889604475328 - latest : 1270889604573184 }
+DumpFSR              INFO ts address: /FileRecords/0E12F271-8F74-DF11-9CD4-001E4F3DD7AB/TimeSpanFSR
+DumpFSR              INFO /FileRecords/0E12F271-8F74-DF11-9CD4-001E4F3DD7AB/TimeSpanFSR: TimeSpanFSR: {  earliest : 1270425449804736 - latest : 1270425453690688 }
+DumpFSR              INFO lu address: /FileRecords/26DEC83E-8F74-DF11-AC26-001E4F3DD7AB/LumiFSRNoBeam
+DumpFSR              INFO lu address: /FileRecords/26DEC83E-8F74-DF11-AC26-001E4F3DD7AB/LumiFSRBeamCrossing
+DumpFSR              INFO lu address: /FileRecords/26DEC83E-8F74-DF11-AC26-001E4F3DD7AB/LumiFSRBeam1
+DumpFSR              INFO lu address: /FileRecords/26DEC83E-8F74-DF11-AC26-001E4F3DD7AB/LumiFSRBeam2
+DumpFSR              INFO lu address: /FileRecords/0E12F271-8F74-DF11-9CD4-001E4F3DD7AB/LumiFSRNoBeam
+DumpFSR              INFO lu address: /FileRecords/0E12F271-8F74-DF11-9CD4-001E4F3DD7AB/LumiFSRBeamCrossing
+DumpFSR              INFO lu address: /FileRecords/0E12F271-8F74-DF11-9CD4-001E4F3DD7AB/LumiFSRBeam1
+DumpFSR              INFO lu address: /FileRecords/0E12F271-8F74-DF11-9CD4-001E4F3DD7AB/LumiFSRBeam2
+DumpFSR              INFO lo address: /FileRecords/26DEC83E-8F74-DF11-AC26-001E4F3DD7AB/LumiLowFSRNoBeam
+DumpFSR              INFO /FileRecords/26DEC83E-8F74-DF11-AC26-001E4F3DD7AB/LumiLowFSRNoBeam: LumiLowFSR: {  runs : 69857  files : root:/castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/69857/069857_0000000006.raw  info (key/incr/integral) : 0 8 0 / 1 8 259 / 2 8 76 / 6 8 0 / 7 8 0 / 8 8 0 / 10 8 10 / 20 8 8 /  }
+DumpFSR              INFO lo address: /FileRecords/26DEC83E-8F74-DF11-AC26-001E4F3DD7AB/LumiLowFSRBeamCrossing
+DumpFSR              INFO /FileRecords/26DEC83E-8F74-DF11-AC26-001E4F3DD7AB/LumiLowFSRBeamCrossing: LumiLowFSR: {  runs : 69857  files : root:/castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/69857/069857_0000000006.raw  info (key/incr/integral) : 0 8 0 / 1 8 259 / 2 8 76 / 6 8 0 / 7 8 0 / 8 8 0 / 10 8 10 / 20 8 8 /  }
+DumpFSR              INFO lo address: /FileRecords/26DEC83E-8F74-DF11-AC26-001E4F3DD7AB/LumiLowFSRBeam1
+DumpFSR              INFO /FileRecords/26DEC83E-8F74-DF11-AC26-001E4F3DD7AB/LumiLowFSRBeam1: LumiLowFSR: {  runs : 69857  files : root:/castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/69857/069857_0000000006.raw  info (key/incr/integral) : 0 8 0 / 1 8 259 / 2 8 76 / 6 8 0 / 7 8 0 / 8 8 0 / 10 8 10 / 20 8 8 /  }
+DumpFSR              INFO lo address: /FileRecords/26DEC83E-8F74-DF11-AC26-001E4F3DD7AB/LumiLowFSRBeam2
+DumpFSR              INFO /FileRecords/26DEC83E-8F74-DF11-AC26-001E4F3DD7AB/LumiLowFSRBeam2: LumiLowFSR: {  runs : 69857  files : root:/castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/69857/069857_0000000006.raw  info (key/incr/integral) : 0 8 0 / 1 8 259 / 2 8 76 / 6 8 0 / 7 8 0 / 8 8 0 / 10 8 10 / 20 8 8 /  }
+DumpFSR              INFO lo address: /FileRecords/0E12F271-8F74-DF11-9CD4-001E4F3DD7AB/LumiLowFSRNoBeam
+DumpFSR              INFO /FileRecords/0E12F271-8F74-DF11-9CD4-001E4F3DD7AB/LumiLowFSRNoBeam: LumiLowFSR: {  runs : 69623  files : root:/castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/69623/069623_0000000003.raw  info (key/incr/integral) : 0 5 0 / 1 5 92 / 2 5 33 / 6 5 0 / 7 5 0 / 8 5 0 / 10 5 4 / 20 5 5 /  }
+DumpFSR              INFO lo address: /FileRecords/0E12F271-8F74-DF11-9CD4-001E4F3DD7AB/LumiLowFSRBeamCrossing
+DumpFSR              INFO /FileRecords/0E12F271-8F74-DF11-9CD4-001E4F3DD7AB/LumiLowFSRBeamCrossing: LumiLowFSR: {  runs : 69623  files : root:/castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/69623/069623_0000000003.raw  info (key/incr/integral) : 0 5 0 / 1 5 92 / 2 5 33 / 6 5 0 / 7 5 0 / 8 5 0 / 10 5 4 / 20 5 5 /  }
+DumpFSR              INFO lo address: /FileRecords/0E12F271-8F74-DF11-9CD4-001E4F3DD7AB/LumiLowFSRBeam1
+DumpFSR              INFO /FileRecords/0E12F271-8F74-DF11-9CD4-001E4F3DD7AB/LumiLowFSRBeam1: LumiLowFSR: {  runs : 69623  files : root:/castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/69623/069623_0000000003.raw  info (key/incr/integral) : 0 5 0 / 1 5 92 / 2 5 33 / 6 5 0 / 7 5 0 / 8 5 0 / 10 5 4 / 20 5 5 /  }
+DumpFSR              INFO lo address: /FileRecords/0E12F271-8F74-DF11-9CD4-001E4F3DD7AB/LumiLowFSRBeam2
+DumpFSR              INFO /FileRecords/0E12F271-8F74-DF11-9CD4-001E4F3DD7AB/LumiLowFSRBeam2: LumiLowFSR: {  runs : 69623  files : root:/castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/69623/069623_0000000003.raw  info (key/incr/integral) : 0 5 0 / 1 5 92 / 2 5 33 / 6 5 0 / 7 5 0 / 8 5 0 / 10 5 4 / 20 5 5 /  }
+DumpFSR              INFO ev address: /FileRecords/26DEC83E-8F74-DF11-AC26-001E4F3DD7AB/EventCountFSR
+DumpFSR              INFO /FileRecords/26DEC83E-8F74-DF11-AC26-001E4F3DD7AB/EventCountFSR: EventCountFSR: {  input : 100 output : 18 statusFlag : VERIFIED }
+DumpFSR              INFO ev address: /FileRecords/0E12F271-8F74-DF11-9CD4-001E4F3DD7AB/EventCountFSR
+DumpFSR              INFO /FileRecords/0E12F271-8F74-DF11-9CD4-001E4F3DD7AB/EventCountFSR: EventCountFSR: {  input : 100 output : 100 statusFlag : VERIFIED }
+DumpFSR              INFO ts address: /FileRecords/26DEC83E-8F74-DF11-AC26-001E4F3DD7AB/TimeSpanFSR
+DumpFSR              INFO /FileRecords/26DEC83E-8F74-DF11-AC26-001E4F3DD7AB/TimeSpanFSR: TimeSpanFSR: {  earliest : 1270889604475328 - latest : 1270889604573184 }
+DumpFSR              INFO ts address: /FileRecords/0E12F271-8F74-DF11-9CD4-001E4F3DD7AB/TimeSpanFSR
+DumpFSR              INFO /FileRecords/0E12F271-8F74-DF11-9CD4-001E4F3DD7AB/TimeSpanFSR: TimeSpanFSR: {  earliest : 1270425449804736 - latest : 1270425453690688 }

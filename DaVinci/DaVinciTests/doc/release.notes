@@ -1,0 +1,8 @@
+!-----------------------------------------------------------------------------
+! Package     : DaVinciTests/tests
+! Responsible : Juan Palacios
+! Purpose     : QMTests for DaVinci
+!-----------------------------------------------------------------------------
+
+! 2010-06-10 - Rob Lambert
+ - Added FSR propagation tests
