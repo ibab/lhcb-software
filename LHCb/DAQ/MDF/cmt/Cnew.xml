@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!-- Edited By POOL -->
+<!DOCTYPE POOLFILECATALOG SYSTEM "InMemory">
+<POOLFILECATALOG>
+  <File ID="E88E32CE-AF74-DF11-BA2F-000423D659FE">
+    <physical>
+      <pfn filetype="MDF" name="root:mdfData_3.dat"/>
+    </physical>
+    <logical/>
+  </File>
+
+  <File ID="340B33CE-AF74-DF11-BA2F-000423D659FE">
+    <physical>
+      <pfn filetype="MDF" name="root:mdfData_4.dat"/>
+    </physical>
+    <logical/>
+  </File>
+
+  <File ID="BE4933CE-AF74-DF11-BA2F-000423D659FE">
+    <physical>
+      <pfn filetype="MDF" name="root:file:///afs/cern.ch/user/f/frankb/scratch0/Online_v4r40/DAQ/MDF/cmt/mdfData_5.dat"/>
+    </physical>
+    <logical/>
+  </File>
+
+  <File ID="D48D33CE-AF74-DF11-BA2F-000423D659FE">
+    <physical>
+      <pfn filetype="MDF" name="root:file:/afs/cern.ch/user/f/frankb/scratch0/Online_v4r40/DAQ/MDF/cmt/mdfData_6.dat"/>
+    </physical>
+    <logical/>
+  </File>
+
+  <File ID="E0D133CE-AF74-DF11-BA2F-000423D659FE">
+    <physical>
+      <pfn filetype="MDF" name="/afs/cern.ch/user/f/frankb/scratch0/Online_v4r40/DAQ/MDF/cmt/mdfData_7.dat"/>
+    </physical>
+    <logical/>
+  </File>
+
+  <File ID="720834CE-AF74-DF11-BA2F-000423D659FE">
+    <physical>
+      <pfn filetype="MDF" name="root:file:///afs/cern.ch/user/f/frankb/scratch0/Online_v4r40/DAQ/MDF/cmt/mdfData_8.dat"/>
+    </physical>
+    <logical/>
+  </File>
+
+  <File ID="F24B34CE-AF74-DF11-BA2F-000423D659FE">
+    <physical>
+      <pfn filetype="MDF" name="root:file:/afs/cern.ch/user/f/frankb/scratch0/Online_v4r40/DAQ/MDF/cmt/mdfData_9.dat"/>
+    </physical>
+    <logical/>
+  </File>
+
+  <File ID="509334CE-AF74-DF11-BA2F-000423D659FE">
+    <physical>
+      <pfn filetype="MDF" name="/afs/cern.ch/user/f/frankb/scratch0/Online_v4r40/DAQ/MDF/cmt/mdfData_10.dat"/>
+    </physical>
+    <logical/>
+  </File>
+
+  <File ID="2CCB34CE-AF74-DF11-BA2F-000423D659FE">
+    <physical>
+      <pfn filetype="MDF" name="root:rfio:/castor/cern.ch/user/f/frankb/mdfData_11.dat"/>
+    </physical>
+    <logical/>
+  </File>
+
+  <File ID="100B74CF-AF74-DF11-BA2F-000423D659FE">
+    <physical>
+      <pfn filetype="MDF" name="root:castor:/castor/cern.ch/user/f/frankb/mdfData_12.dat"/>
+    </physical>
+    <logical/>
+  </File>
+
+  <File ID="A21F3AD1-AF74-DF11-BA2F-000423D659FE">
+    <physical>
+      <pfn filetype="MDF" name="castor:/castor/cern.ch/user/f/frankb/mdfData_13.dat"/>
+    </physical>
+    <logical/>
+  </File>
+
+  <File ID="7C5C22D2-AF74-DF11-BA2F-000423D659FE">
+    <physical>
+      <pfn filetype="MDF" name="root:file://mdfData_0.dat"/>
+    </physical>
+    <logical/>
+  </File>
+
+  <File ID="80A10B1D-B074-DF11-90AB-000423D659FE">
+    <physical>
+      <pfn filetype="MDF" name="file://mifData.dat"/>
+    </physical>
+    <logical/>
+  </File>
+
+</POOLFILECATALOG>

@@ -12,8 +12,9 @@ def nextTest(msg):
   print msg
   val = ''
   try:
-    val=str(input('Continue [Y=CR/N]'))
+    val=str(raw_input('Continue [Y=CR/N(to exit)/S(to skip)]'))
   except NameError, X:
+    print X.__class__, str(X)
     val = 'N'
   except SyntaxError, X:
     return 1
@@ -21,7 +22,9 @@ def nextTest(msg):
     print X.__class__, str(X)
     val = 'N'
   if len(val) > 0:
-    sys.exit(0)
+    if val.upper()=='N':
+      print val.upper(),'--->exit'
+      sys.exit(0)
     return 0
   return 1
 
