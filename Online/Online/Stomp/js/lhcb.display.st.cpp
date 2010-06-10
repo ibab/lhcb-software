@@ -24,58 +24,28 @@ var StStatus = function(msg)   {
    *
    *  @author  M.Frank
    */
-  lhcb.widgets.st.STsystems = function(options) {
-    var tab = document.createElement('table');
-    tab.subscriptions=[];
-    tab.logger = options.logger;
-    tab.className = 'MonitorPage';
-
-    tab.addBoard = function(n1,n2,q) {
-      var name1 = 'STA_'+q+n1, name2='STC_'+q+n2;
-      var tr = document.createElement('tr');
-      var cell=Cell('STA/'+n1,1,'MonitorDataHeader');
-      this[name1] = FSMItem('lbWeb.'+name1,this.logger,true);
-      tr.appendChild(cell);
-      tr.appendChild(this[name1]);
-      tr.appendChild(this[name1].lock);
-      this.subscriptions.push(this[name1]);
-      cell=Cell('STC/'+n2,1,'MonitorDataHeader');
-      this[name2] = FSMItem('lbWeb.'+name2,this.logger,true);
-      tr.appendChild(cell);
-      tr.appendChild(this[name2]);
-      tr.appendChild(this[name2].lock);
-      this.subscriptions.push(this[name2]);
-      return tr;
-    };
-
+  lhcb.widgets.st.Systems = function(sys, options) {
+    var tab = lhcb.widgets.SubdetectorSystem(options);
+    tab.sys = sys;
     tab.addStations = function(title,id) {
-      var tb = document.createElement('tbody');
-      tb.className   = 'MonitorPage';
-      if ( options.style ) {
-	var tr = document.createElement('tr');
-	tr.appendChild(Cell(title,6,options.style));
-	tb.appendChild(tr);
+      var tb = this.body(title);
+      if ( this.sys == 'IT' ) {
+	tb.appendChild(tab.addFSMRow(['IT_'+id+'_ST1A', 'IT_'+id+'_ST1C']));
+	tb.appendChild(tab.addFSMRow(['IT_'+id+'_ST2A', 'IT_'+id+'_ST2C']));
+	tb.appendChild(tab.addFSMRow(['IT_'+id+'_ST3A', 'IT_'+id+'_ST3C']));
       }
-      tb.appendChild(tab.addBoard('T1', 'T1', id));
-      tb.appendChild(tab.addBoard('T2', 'T2', id));
-      tb.appendChild(tab.addBoard('T3', 'T3', id));
-      this.appendChild(tb);
+      if ( this.sys == 'TT' ) {
+	tb.appendChild(tab.addFSMRow(['TT_'+id+'_A', 'TT_'+id+'_C']));
+	tb.appendChild(tab.addFSMRow(['TT_'+id+'_C', id=='HV'?null:'TT_'+id+'_MRT']));
+      }
       return this;
     };
-    tab.addHV = function() { return this.addStations('High Voltage per Station','HV_'); };
-    tab.addLV = function() { return this.addStations('Low Voltage per Station', 'DCS_LV_'); };
-    tab.addFE = function() { return this.addStations('Front end (FE) Status per Station','DAQ_FEE_'); };
-    tab.addTell1 = function() { return this.addStations('TELL1 Board Status per Station','DAQ_TELL1_'); };
-
-    tab.subscribe = function(provider) {
-      for(var i=0; i<this.subscriptions.length;++i) {
-	provider.subscribeItem(this.subscriptions[i]);
-      }
-    };
+    tab.addHV = function() { return this.addStations(this.sys+' High Voltage per Station','HV'); };
+    tab.addLV = function() { return this.addStations(this.sys+' Low Voltage per Station', 'DCS_LV'); };
     return tab;
   };
 
-  table.attachWidgets = function() {
+  table.beforeComment = function() {
     var opts = {style:'Arial12pt',legend:true,logger:this.logger};
     var ttDAQ = lhcb.widgets.SystemSummary({style:'Arial12pt',
 						    system: 'TT',
@@ -93,23 +63,17 @@ var StStatus = function(msg)   {
 						    legend:true,
 						    rowing:true,
 						    logger:this.logger});
-    this.system = 'IT';
-    opts.it = true;
-    this.left.addItem(this.hvSummary({hv:true,lv:true,nosplit:true}));
-    this.left.addItem(lhcb.widgets.SafetySummary(opts));
-    this.left.addItem(lhcb.widgets.DSS.CaVPlantStatus('It',opts));
-    this.left.addSpacer('20px');
-    this.left.addItem(itDAQ);
-
-    this.system = 'TT';
-    opts.it = false;
-    opts.tt = true;
-    this.right.addItem(this.hvSummary({hv:true,lv:true,nosplit:true}));
-    this.right.addItem(lhcb.widgets.SafetySummary(opts));
-    this.right.addItem(lhcb.widgets.DSS.CaVPlantStatus('Tt',opts));
-    this.right.addItem(ttDAQ);
-
-    //this.right.addItem(lhcb.widgets.LHCStateSummary(opts));
+    this.addRow([this.hvSummary({system:'IT',hv:true,lv:true,nosplit:true}),
+		 this.hvSummary({system:'TT',hv:true,lv:true,nosplit:true})]);
+    this.addRow([lhcb.widgets.st.Systems('IT',opts).addHV(),
+		 lhcb.widgets.st.Systems('TT',opts).addHV()]);
+    this.addRow([lhcb.widgets.st.Systems('IT',opts).addLV(),
+		 lhcb.widgets.st.Systems('TT',opts).addLV()]);
+    this.addRow([lhcb.widgets.SafetySummary({it:true,logger:this.logger}),
+		 lhcb.widgets.SafetySummary({tt:true,logger:this.logger})]);
+    this.addRow([lhcb.widgets.DSS.CaVPlantStatus('It',opts),
+		 lhcb.widgets.DSS.CaVPlantStatus('Tt',opts)]);
+    this.addRow([itDAQ, ttDAQ]);
   };
   return table;
 };

@@ -1,6 +1,9 @@
 if ( !lhcb.widgets ) {
 
   lhcb.widgets = new Object();
+
+  /// Check initialization
+  lhcb.widgets.check = function() {};
   
   /// Set document location to LHCb DAQ status page
   lhcb.widgets.goto_lhcb_page = function(name) {
@@ -1003,14 +1006,15 @@ if ( !lhcb.widgets ) {
       tr.appendChild(Cell('State',1,'MonitorDataHeader'));
       tr.appendChild(Cell('',1,null));
     }
+    var opt = (!options.legend && !options.style) ? ' Safety Status' : '';
     if ( options.all || options.rich ) tab.richSafety = FSMItem('lbWeb.RICH_SAFETY',options.logger,true);
     if ( options.all || options.muon ) tab.muonSafety = FSMItem('lbWeb.MUON_Safety',options.logger,true);
     if ( options.all || options.tt   ) tab.ttSafety   = FSMItem('lbWeb.TT_Safety',options.logger,true);
     if ( options.all || options.it   ) tab.itSafety   = FSMItem('lbWeb.IT_Safety',options.logger,true);
-    if ( options.all || options.tt   ) tb.appendChild(lhcb.widgets.mkFSMitem1(tab.ttSafety,'TT'));
-    if ( options.all || options.it   ) tb.appendChild(lhcb.widgets.mkFSMitem1(tab.itSafety,'IT'));
-    if ( options.all || options.rich ) tb.appendChild(lhcb.widgets.mkFSMitem1(tab.richSafety,'RICH'));
-    if ( options.all || options.muon ) tb.appendChild(lhcb.widgets.mkFSMitem1(tab.muonSafety,'MUON'));
+    if ( options.all || options.tt   ) tb.appendChild(lhcb.widgets.mkFSMitem1(tab.ttSafety,'TT'+opt));
+    if ( options.all || options.it   ) tb.appendChild(lhcb.widgets.mkFSMitem1(tab.itSafety,'IT'+opt));
+    if ( options.all || options.rich ) tb.appendChild(lhcb.widgets.mkFSMitem1(tab.richSafety,'RICH'+opt));
+    if ( options.all || options.muon ) tb.appendChild(lhcb.widgets.mkFSMitem1(tab.muonSafety,'MUON'+opt));
     tab.appendChild(tb);
 
     tab.subscribe = function(provider) {
@@ -1355,6 +1359,57 @@ if ( !lhcb.widgets ) {
     return tab;
   };
 
+  /** Online widgets. Base class to show subdetector FSM groups
+   *
+   *  @author M.Frank
+   */
+  lhcb.widgets.SubdetectorSystem = function(options) {
+    var tab = document.createElement('table');
+    tab.subscriptions=[];
+    tab.logger = options.logger;
+    tab.className = 'MonitorPage';
+
+    tab.addFSMRow = function(names) {
+      var tr = document.createElement('tr');
+      for(var i=0; i<names.length; ++i) {
+	var name = names[i];
+	if ( name ) {
+	  var cell = Cell(name,1,'MonitorDataHeader');
+	  var item = FSMItem('lbWeb.'+name,this.logger,true);
+	  this[name] = item;
+	  tr.appendChild(cell);
+	  tr.appendChild(item);
+	  tr.appendChild(item.lock);
+	  this.subscriptions.push(item);
+	}
+	else {
+	  tr.appendChild(Cell('',3,null));
+	}
+      }
+      return tr;
+    };
+
+    tab.body = function(title) {
+      var tb = document.createElement('tbody');
+      tb.className   = 'MonitorPage';
+      if ( options.style ) {
+	var tr = document.createElement('tr');
+	tr.appendChild(Cell(title,6,options.style));
+	tb.appendChild(tr);
+      }
+      this.appendChild(tb);
+      return tb;
+    };
+
+    tab.subscribe = function(provider) {
+      for(var i=0; i<this.subscriptions.length;++i)
+	provider.subscribeItem(this.subscriptions[i]);
+    };
+    
+    return tab;
+  };
+
+
   lhcb.widgets.SubdetectorPage = function(name, msg) {
     var table       = document.createElement('table');
     table.body      = document.createElement('tbody');
@@ -1382,12 +1437,24 @@ if ( !lhcb.widgets ) {
       tab.split = true;
       if ( options.nosplit ) tab.split = false;
       tab.system = this.system;
+      if ( options.system ) tab.system = options.system;
       tab.addHV = function(tb) {};
       if ( options.hv ) tab.addHV = function(tb) { tb.appendChild(this.addState(this.system, this.split, 'HV', 'HV'));};
 
       tab.addLV = function(tb) {};
       if ( options.lv ) tab.addLV = function(tb) { tb.appendChild(this.addState(this.system, this.split, 'LV', 'DCS_Local')); };
       return tab.buildTable({style:'Arial12pt',top:false,hv:options.hv,hv_legend:options.hv,lv:options.lv});
+    };
+
+    table.addRow = function(items) {
+      var tb = this.tbody, tr, td, item;
+      tb.appendChild(tr=document.createElement('tr'));
+      for(var i=0; i<items.length; ++i) {
+	tr.appendChild(td=document.createElement('td'));
+	td.style.verticalAlign = 'top';
+	td.appendChild(items[i]);
+	this.subscriptions.push(items[i]);
+      }
     };
 
     /// Empty placeholder
@@ -1454,6 +1521,7 @@ if ( !lhcb.widgets ) {
       t1.appendChild(this.left=document.createElement('tbody'));
       t1.className = this.left.className = 'MonitorPage';
       t1.style.border = this.left.style.border = 'none';
+      this.left.style.verticalAlign = 'top';
 
       // Right hand of the display
       tr.appendChild(td=document.createElement('td'));
@@ -1461,11 +1529,13 @@ if ( !lhcb.widgets ) {
       t1.appendChild(this.right=document.createElement('tbody'));
       t1.className = this.right.className = 'MonitorPage';
       t1.style.border = this.right.style.border = 'none';
+      this.right.style.verticalAlign = 'top';
 
       this.left.addItem = function(item) {
 	var tr1, td1;
 	this.appendChild(tr1=document.createElement('tr'));
 	tr1.appendChild(td1=document.createElement('td'));
+	td1.style.verticalAlign = 'top';
 	td1.appendChild(item);
 	this.parent.subscriptions.push(item);
 	return td1;
@@ -2023,11 +2093,15 @@ if ( !lhcb.widgets ) {
       this.tt_manifold_temp03 = StyledItem('lbWeb.CaV/TtPlant.Actual.Measurements.param13',null,'%7.2f &#186;C');
       this.tt_manifold_temp04 = StyledItem('lbWeb.CaV/TtPlant.Actual.Measurements.param14',null,'%7.2f &#186;C');
       this.tt_c6f14flow       = StyledItem('lbWeb.CaV/TtPlant.Actual.Measurements.param18',null,'%7.2f l/h');
+      this.mixedWaterIn  = StyledItem('lbWeb.CaV/'+sys+'Plant.Actual.Measurements.param16',null,'%7.2f <sup>o</sup>C');
+      this.mixedWaterOut = StyledItem('lbWeb.CaV/'+sys+'Plant.Actual.Measurements.param17',null,'%7.2f <sup>o</sup>C');
       this.subscriptions.push(this.tt_manifold_temp01);
       this.subscriptions.push(this.tt_manifold_temp02);
       this.subscriptions.push(this.tt_manifold_temp03);
       this.subscriptions.push(this.tt_manifold_temp04);
       this.subscriptions.push(this.tt_c6f14flow);
+      this.subscriptions.push(this.mixedWaterIn);
+      this.subscriptions.push(this.mixedWaterOut);
 
       tb.appendChild(tr=document.createElement('tr'));
       tr.appendChild(cell=Cell('Manifold<br>Temperatures',1,'MonitorDataHeader'));
@@ -2044,6 +2118,13 @@ if ( !lhcb.widgets ) {
       tr.appendChild(this.tt_manifold_temp04);
 
       tb.appendChild(tr=document.createElement('tr'));
+      tr.appendChild(Cell('Mixed water',1,'MonitorDataHeader'));
+      tr.appendChild(Cell('In:',1,null));
+      tr.appendChild(this.mixedWaterIn);
+      tr.appendChild(Cell('Out:',1,null));
+      tr.appendChild(this.mixedWaterOut);
+
+      tb.appendChild(tr=document.createElement('tr'));
       tr.appendChild(Cell('C6F14 flow:',1,'MonitorDataHeader'));
       tr.appendChild(this.tt_c6f14flow);
       this.tt_c6f14flow.colSpan = 2;
@@ -2053,15 +2134,38 @@ if ( !lhcb.widgets ) {
       this.it_manifold_temp01 = StyledItem('lbWeb.CaV/ItPlant.Actual.Measurements.param01',null,'%7.2f &#186;C');
       this.it_manifold_temp02 = StyledItem('lbWeb.CaV/ItPlant.Actual.Measurements.param02',null,'%7.2f &#186;C');
       this.it_c6f14flow = StyledItem('lbWeb.CaV/ItPlant.Actual.Measurements.param06',null,'%7.2f l/h');
+      this.mixedWaterIn  = StyledItem('lbWeb.CaV/'+sys+'Plant.Actual.Measurements.param04',null,'%7.2f <sup>o</sup>C');
+      this.mixedWaterOut = StyledItem('lbWeb.CaV/'+sys+'Plant.Actual.Measurements.param05',null,'%7.2f <sup>o</sup>C');
+      this.mixedWaterFlow = StyledItem('lbWeb.CaV/'+sys+'Plant.Actual.Measurements.param03',null,'%7.1f l/h');
+      this.outletWaterFlow = StyledItem('lbWeb.CaV/'+sys+'Plant.Actual.Measurements.param06',null,'%7.1f l/h');
       this.subscriptions.push(this.it_manifold_temp01);
       this.subscriptions.push(this.it_manifold_temp02);
       this.subscriptions.push(this.it_c6f14flow);
+      this.subscriptions.push(this.mixedWaterIn);
+      this.subscriptions.push(this.mixedWaterOut);
+      this.subscriptions.push(this.mixedWaterFlow);
+      this.subscriptions.push(this.outletWaterFlow);
+
       tb.appendChild(tr=document.createElement('tr'));
       tr.appendChild(cell=Cell('Manifold',1,'MonitorDataHeader'));
       tr.appendChild(Cell('Temp.1:',1,null));
       tr.appendChild(this.it_manifold_temp01);
       tr.appendChild(Cell('Temp.2:',1,null));
       tr.appendChild(this.it_manifold_temp02);
+
+      tb.appendChild(tr=document.createElement('tr'));
+      tr.appendChild(Cell('Mixed water',1,'MonitorDataHeader'));
+      tr.appendChild(Cell('In:',1,null));
+      tr.appendChild(this.mixedWaterIn);
+      tr.appendChild(Cell('Out:',1,null));
+      tr.appendChild(this.mixedWaterOut);
+
+      tb.appendChild(tr=document.createElement('tr'));
+      tr.appendChild(Cell('Water flow',1,'MonitorDataHeader'));
+      tr.appendChild(Cell('Outlet:',1,null));
+      tr.appendChild(this.outletWaterFlow);
+      tr.appendChild(Cell('Mixed:',1,null));
+      tr.appendChild(this.mixedWaterFlow);
 
       tb.appendChild(tr=document.createElement('tr'));
       tr.appendChild(Cell('C6F14 flow:',1,'MonitorDataHeader'));

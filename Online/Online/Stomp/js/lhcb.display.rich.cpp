@@ -74,11 +74,8 @@ var RichStatus = function(msg)   {
   };
   table.attachWidgets = function() {
     var opts = {style:'Arial12pt',legend:true,rich:true,logger:this.logger};
-    this.system = 'RICH1';
-    this.left.addItem(this.hvSummary({hv:true,lv:true,nosplit:true}));
-    this.system = 'RICH2';
-    this.left.addItem(this.hvSummary({hv:true,lv:true,nosplit:true}));
-    this.system = 'RICH';
+    this.left.addItem(this.hvSummary({system:'RICH1',hv:true,lv:true,nosplit:true}));
+    this.left.addItem(this.hvSummary({system:'RICH2',hv:true,lv:true,nosplit:true}));
     this.left.addSpacer(10);
     this.left.addItem(lhcb.widgets.SafetySummary(opts));
 

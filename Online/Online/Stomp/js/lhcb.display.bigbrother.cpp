@@ -231,23 +231,18 @@ function _loadWidgets() {
     tr = document.createElement('tr');
     tr.appendChild(Cell('No. L&Oslash; events',null,'MonitorDataHeader'));
     tr.appendChild(tab.neventsIn);
-    tr.appendChild(Cell('',null,'Text-Left'));
+    tab.neventsIn.colSpan = 2;
     tb.appendChild(tr);
 
     tr = document.createElement('tr');
     tr.appendChild(Cell('Evts.recorded',null,'MonitorDataHeader'));
     tr.appendChild(tab.neventsRec);
-    tr.appendChild(Cell('',null,'Text-Left'));
+    tab.neventsRec.colSpan = 2;
     tb.appendChild(tr);
 
     tab.appendChild(tb);
 
     tab.subscribe = function(provider) {
-      /*
-      provider.subscribeItem(this.lumiNOW);
-      provider.subscribeItem(this.lumiDEL);
-      provider.subscribeItem(this.lumiREC);
-      */
       provider.subscribeItem(this.lumi);
       provider.subscribeItem(this.neventsRec);
       provider.subscribeItem(this.neventsIn);

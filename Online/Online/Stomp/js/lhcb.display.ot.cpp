@@ -24,54 +24,19 @@ var OtStatus = function(msg)   {
    *
    *  @author  M.Frank
    */
-  lhcb.widgets.ot.OTsystems = function(options) {
-    var tab = document.createElement('table');
-    tab.subscriptions=[];
-    tab.logger = options.logger;
-    tab.className = 'MonitorPage';
-
-    tab.addBoard = function(n1,n2,q) {
-      var name1 = 'OTA_'+q+n1, name2='OTC_'+q+n2;
-      var tr = document.createElement('tr');
-      var cell=Cell('OTA/'+n1,1,'MonitorDataHeader');
-      this[name1] = FSMItem('lbWeb.'+name1,this.logger,true);
-      tr.appendChild(cell);
-      tr.appendChild(this[name1]);
-      tr.appendChild(this[name1].lock);
-      this.subscriptions.push(this[name1]);
-      cell=Cell('OTC/'+n2,1,'MonitorDataHeader');
-      this[name2] = FSMItem('lbWeb.'+name2,this.logger,true);
-      tr.appendChild(cell);
-      tr.appendChild(this[name2]);
-      tr.appendChild(this[name2].lock);
-      this.subscriptions.push(this[name2]);
-      return tr;
-    };
-
+  lhcb.widgets.ot.Systems = function(options) {
+    var tab = lhcb.widgets.SubdetectorSystem(options);
     tab.addStations = function(title,id) {
-      var tb = document.createElement('tbody');
-      tb.className   = 'MonitorPage';
-      if ( options.style ) {
-	var tr = document.createElement('tr');
-	tr.appendChild(Cell(title,6,options.style));
-	tb.appendChild(tr);
-      }
-      tb.appendChild(tab.addBoard('T1', 'T1', id));
-      tb.appendChild(tab.addBoard('T2', 'T2', id));
-      tb.appendChild(tab.addBoard('T3', 'T3', id));
-      this.appendChild(tb);
+      var tb = this.body(title);
+      tb.appendChild(tab.addFSMRow(['OTA_'+id+'_T1', 'OTC_'+id+'_T1']));
+      tb.appendChild(tab.addFSMRow(['OTA_'+id+'_T2', 'OTC_'+id+'_T2']));
+      tb.appendChild(tab.addFSMRow(['OTA_'+id+'_T3', 'OTC_'+id+'_T3']));
       return this;
     };
-    tab.addHV = function() { return this.addStations('High Voltage per Station','HV_'); };
-    tab.addLV = function() { return this.addStations('Low Voltage per Station', 'DCS_LV_'); };
-    tab.addFE = function() { return this.addStations('Front end (FE) Status per Station','DAQ_FEE_'); };
-    tab.addTell1 = function() { return this.addStations('TELL1 Board Status per Station','DAQ_TELL1_'); };
-
-    tab.subscribe = function(provider) {
-      for(var i=0; i<this.subscriptions.length;++i) {
-	provider.subscribeItem(this.subscriptions[i]);
-      }
-    };
+    tab.addHV = function() { return this.addStations('High Voltage per Station','HV'); };
+    tab.addLV = function() { return this.addStations('Low Voltage per Station', 'DCS_LV'); };
+    tab.addFE = function() { return this.addStations('Front end (FE) Status per Station','DAQ_FEE'); };
+    tab.addTell1 = function() { return this.addStations('TELL1 Board Status per Station','DAQ_TELL1'); };
     return tab;
   };
 
@@ -85,14 +50,14 @@ var OtStatus = function(msg)   {
 						    legend:true,
 						    rowing:true,
 						    logger:this.logger});
+    this.left.addItem(lhcb.widgets.LHCStateSummary(opts));
     this.left.addItem(this.hvSummary({hv:true,lv:false}));
-    this.left.addItem(lhcb.widgets.ot.OTsystems(opts).addHV());
-    this.left.addItem(lhcb.widgets.ot.OTsystems(opts).addLV());
-    this.left.addItem(lhcb.widgets.ot.OTsystems(opts).addTell1());
-    this.left.addItem(lhcb.widgets.ot.OTsystems(opts).addFE());
-    this.left.addSpacer('30px');
+    this.left.addItem(lhcb.widgets.ot.Systems(opts).addHV());
+    this.left.addItem(lhcb.widgets.ot.Systems(opts).addLV());
+    this.left.addItem(lhcb.widgets.ot.Systems(opts).addTell1());
+    this.left.addItem(lhcb.widgets.ot.Systems(opts).addFE());
+    //this.left.addSpacer('30px');
 
-    this.right.addItem(lhcb.widgets.LHCStateSummary(opts));
     this.right.addItem(lhcb.widgets.DSS.MixedWaterStatus(opts));
     this.right.addItem(lhcb.widgets.DSS.CaVPlantStatus('Ot',opts));
     this.right.addItem(otDAQ);
