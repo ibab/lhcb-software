@@ -4,6 +4,9 @@
 ! Purpose     : Package for general utility algorithms
 !-----------------------------------------------------------------------------
 
+! 2010-06-10 - V. Gligorov
+ - Remove obsolete default HLT track locations. 
+
 ! 2010-06-08 - Rob Lambert
  - Fix final windows warning
 
