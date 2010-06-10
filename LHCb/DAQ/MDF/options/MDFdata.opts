@@ -3,9 +3,12 @@ EventSelector.PrintFreq              = 200;
 EventSelector.Input                  = {
    "DATA='PFN:root:file://../cmt/mdfData_1.dat' SVC='LHCb::MDFSelector'"
   ,"DATA='PFN:root:file://mdfData_0.dat'        SVC='LHCb::MDFSelector'"
+  ,"DATA='PFN:raw:file://mdfData_0.dat'        SVC='LHCb::MDFSelector'"
   ,"DATA='root:file:mdfData_2.dat'              SVC='LHCb::MDFSelector'"
+  ,"DATA='raw:file:mdfData_2.dat'              SVC='LHCb::MDFSelector'"
   ,"DATA='PFN:root:mdfData_3.dat'               SVC='LHCb::MDFSelector'"
   ,"DATA='root:mdfData_4.dat'                   SVC='LHCb::MDFSelector'"
+  ,"DATA='raw:mdfData_4.dat'                   SVC='LHCb::MDFSelector'"
   ,"DATA='PFN:root:file://$MDFROOT/cmt/mdfData_5.dat'        SVC='LHCb::MDFSelector'"
   ,"DATA='PFN:root:file:$MDFROOT/cmt/mdfData_6.dat'          SVC='LHCb::MDFSelector'"
   ,"DATA='PFN:root:$MDFROOT/cmt/mdfData_7.dat'               SVC='LHCb::MDFSelector'"

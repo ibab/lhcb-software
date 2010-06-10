@@ -106,6 +106,18 @@ StatusCode RawDataSelector::initialize()  {
   m_rootCLID = eds->rootCLID();
   eds->release();
   log << MSG::DEBUG << "Selection CLID:" << m_rootCLID << endmsg;
+  if ( !m_trgMask.empty() ) {
+    log << MSG::INFO << "Trigger mask: " << std::hex;
+    for(size_t i=0; i<m_trgMask.size(); ++i) 
+      log << "0x" << std::setw(8) << std::setfill('0') << m_trgMask[i] << " ";
+    log << endmsg;
+  }
+  if ( !m_vetoMask.empty() ) {
+    log << MSG::INFO << "Trigger mask: " << std::hex;
+    for(size_t i=0; i<m_vetoMask.size(); ++i) 
+      log << "0x" << std::setw(8) << std::setfill('0') << m_vetoMask[i] << " ";
+    log << endmsg;
+  }
   m_evtCount = 0;
   return status;
 }
