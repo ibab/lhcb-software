@@ -194,9 +194,29 @@
 	</code>
       </method>
 
+      <method
+	type = 'Gaudi::XYZVector'
+	name = 'p3A'
+	desc = 'fitted p3 of first track'
+	const   = 'TRUE'>
+      </method>
+      
+      <method
+        type = 'Gaudi::XYZVector'
+        name = 'p3B'
+        desc = 'fitted p3 of second track'
+        const   = 'TRUE'>
+     </method>
 
- 
-
+       <method 
+        type = 'Gaudi::XYZVector'
+        name = 'p3'
+        desc = 'fitted momentum of two-prong'
+        const   = 'TRUE'>
+	<code>
+	  return p3A()+p3B() ; 
+	</code>
+      </method>
 
       <method
 	type = "const Gaudi::SymMatrix7x7"	
@@ -205,6 +225,13 @@
 	const = "TRUE">
 	<arg type="double"  name="mass1" const="TRUE"/>
 	<arg type="double"  name="mass2" const="TRUE"/>
+	</method>
+
+      <method
+	type = "Gaudi::SymMatrix6x6"	
+	name = "covMatrix6x6"
+	desc = "retrieve the 6x6 covariance matrix, x, y, z, px, py, pz for the two-prong"
+	const = "TRUE">
 	</method>
 
       <method

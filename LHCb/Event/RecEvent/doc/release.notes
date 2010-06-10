@@ -5,6 +5,10 @@
 ! Purpose     : LHCb Event model. Reconstruction classes (Brunel output) 
 !-----------------------------------------------------------------------------
 
+
+! 2010-06-10 - Wouter Hulsbergen
+ - added p3 and cov6 methods to TwoProngVertex
+
 ! 2010-06-01 - Patrick Koppenburg
  - Removed SelResult class
 
