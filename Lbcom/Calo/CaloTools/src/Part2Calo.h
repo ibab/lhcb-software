@@ -1,4 +1,4 @@
-// $Id: Part2Calo.h,v 1.1.1.1 2008-05-08 09:09:02 cattanem Exp $
+// $Id: Part2Calo.h,v 1.2 2010-06-10 12:46:38 cattanem Exp $
 #ifndef PART2CALO_H 
 #define PART2CALO_H 1
 
@@ -49,9 +49,9 @@ private:
 #endif // PART2CALO_H
 
 inline bool Part2Calo::inAcceptance(){
-  if(m_det == DeCalorimeterLocation::Spd)  return m_proto->info(LHCb::ProtoParticle::InAccSpd,  0.);
-  if(m_det == DeCalorimeterLocation::Prs)  return m_proto->info(LHCb::ProtoParticle::InAccPrs,  0.);
-  if(m_det == DeCalorimeterLocation::Ecal) return m_proto->info(LHCb::ProtoParticle::InAccEcal, 0.);
-  if(m_det == DeCalorimeterLocation::Hcal) return m_proto->info(LHCb::ProtoParticle::InAccHcal, 0.);
+  if(m_det == DeCalorimeterLocation::Spd)  return m_proto->info(LHCb::ProtoParticle::InAccSpd,  0.)!=0;
+  if(m_det == DeCalorimeterLocation::Prs)  return m_proto->info(LHCb::ProtoParticle::InAccPrs,  0.)!=0;
+  if(m_det == DeCalorimeterLocation::Ecal) return m_proto->info(LHCb::ProtoParticle::InAccEcal, 0.)!=0;
+  if(m_det == DeCalorimeterLocation::Hcal) return m_proto->info(LHCb::ProtoParticle::InAccHcal, 0.)!=0;
   return false;    
 }
