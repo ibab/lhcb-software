@@ -5,6 +5,11 @@
 !               CondDB URLs into XML documents
 !-----------------------------------------------------------------------------
 
+! 2010-06-10 - Marco Clemencic
+ - Fixed bug #68612: CondDBEntityResolver produces useless INFO printout
+   Changed the level of the messages to DEBUG.
+ - Removed the obsolete _dll.cpp file.
+
 !================ Tools/CondDBEntityResolver v5r1 2008-07-17 ===============
 ! 2008-07-17 - Marco Clemencic
  - Fixed a problem in the implementation of the IFileAccess interface.

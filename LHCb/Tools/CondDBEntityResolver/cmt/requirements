@@ -3,9 +3,9 @@
 # Maintainer : Marco Clemencic
 #============================================================================
 package           CondDBEntityResolver
-version           v5r1
+version           v5r2
 
-# Structure, i.e. directories to process. 
+# Structure, i.e. directories to process.
 #============================================================================
 branches          cmt doc src
 include_path      none
@@ -17,7 +17,7 @@ use DetCond  v* Det
 
 # Component library building rule
 #============================================================================
-library          CondDBEntityResolver    ../src/component/*.cpp 
+library          CondDBEntityResolver    ../src/component/*.cpp
 
 # define component library link options
 #============================================================================

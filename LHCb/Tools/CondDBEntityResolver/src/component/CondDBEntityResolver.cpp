@@ -1,5 +1,5 @@
 // $Id: CondDBEntityResolver.cpp,v 1.2 2008-07-17 17:36:21 marcocle Exp $
-// Include files 
+// Include files
 
 #include "GaudiKernel/IDetDataSvc.h"
 #include "GaudiKernel/MsgStream.h"
@@ -33,7 +33,7 @@ DECLARE_TOOL_FACTORY(CondDBEntityResolver)
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-CondDBEntityResolver::CondDBEntityResolver( const std::string& type, 
+CondDBEntityResolver::CondDBEntityResolver( const std::string& type,
                                             const std::string& name,
                                             const IInterface* parent ):
   AlgTool(type,name,parent),
@@ -43,16 +43,16 @@ CondDBEntityResolver::CondDBEntityResolver( const std::string& type,
 
   declareInterface<IXmlEntityResolver>(this);
   declareInterface<IFileAccess>(this);
-  
+
   declareProperty("DetDataSvc", m_detDataSvcName = "DetDataSvc/DetectorDataSvc");
   declareProperty("CondDBReader", m_condDBReaderName = "CondDBCnvSvc");
-  
+
   m_protocols.push_back("conddb");
 }
 //=============================================================================
 // Destructor
 //=============================================================================
-CondDBEntityResolver::~CondDBEntityResolver() {}; 
+CondDBEntityResolver::~CondDBEntityResolver() {};
 
 
 //=========================================================================
@@ -63,7 +63,7 @@ StatusCode CondDBEntityResolver::initialize ( ) {
   if ( ! sc.isSuccess() ) return sc;
 
   MsgStream log(msgSvc(), name() );
-  log << MSG::INFO << "Initializing..." << endmsg;
+  log << MSG::DEBUG << "Initializing..." << endmsg;
 
   // Initialize the Xerces-C++ XML subsystem
   try {
@@ -76,7 +76,7 @@ StatusCode CondDBEntityResolver::initialize ( ) {
     return StatusCode::FAILURE;
   }
 
-  log << MSG::INFO << "Successfully initialized." << endmsg;
+  log << MSG::DEBUG << "Successfully initialized." << endmsg;
   return StatusCode::SUCCESS;
 }
 
@@ -84,7 +84,7 @@ StatusCode CondDBEntityResolver::initialize ( ) {
 //  Finalize the service
 //=========================================================================
 StatusCode CondDBEntityResolver::finalize ( ) {
-  
+
   if ( m_condDBReader ) {
     m_condDBReader->release();
     m_condDBReader = 0;
@@ -118,7 +118,7 @@ ICondDBReader *CondDBEntityResolver::condDBReader() {
                            name(),StatusCode::FAILURE);
     } else {
       MsgStream log(msgSvc(), name());
-      log << MSG::DEBUG << "Succesfully located service " << m_condDBReaderName << endmsg;
+      log << MSG::DEBUG << "Successfully located service " << m_condDBReaderName << endmsg;
     }
   }
   return m_condDBReader;
@@ -134,7 +134,7 @@ IDetDataSvc *CondDBEntityResolver::detDataSvc() {
                            name(),StatusCode::FAILURE);
     } else {
       MsgStream log(msgSvc(), name());
-      log << MSG::DEBUG << "Succesfully located service " << m_detDataSvcName << endmsg;
+      log << MSG::DEBUG << "Successfully located service " << m_detDataSvcName << endmsg;
     }
   }
   return m_detDataSvc;
@@ -157,7 +157,7 @@ StatusCode CondDBEntityResolver::i_getData(const std::string &url,
   } else {
     path = url;
   }
-  
+
   // extract the channel id
   cool::ChannelId channel = 0;
   size_t column_pos = path.find(":");
@@ -196,7 +196,7 @@ StatusCode CondDBEntityResolver::i_getData(const std::string &url,
   // outputs
   std::string descr;
   ICondDBReader::DataPtr data;
-  
+
   StatusCode sc = condDBReader()->getObject(path,now,data,descr,since,until,channel);
   if (sc.isSuccess()) {
     if ( data.get() == NULL ) {
@@ -240,17 +240,17 @@ const std::vector<std::string> &CondDBEntityResolver::protocols() const {
 xercesc::InputSource *CondDBEntityResolver::resolveEntity(const XMLCh *const, const XMLCh *const systemId) {
 
   MsgStream log(msgSvc(), name());
-  
+
   std::string systemIdString;
-  
+
   char *cString = xercesc::XMLString::transcode(systemId);
   if (cString) {
     systemIdString = cString;
     xercesc::XMLString::release(&cString);
   }
-  
+
   log << MSG::DEBUG << "systemId = \"" << systemIdString << "\"" << endmsg;
-  
+
   if ( systemIdString.find("conddb:") != 0 ) {
     // the string does not start with "conddb:", so I cannot handle it
     log << MSG::VERBOSE << "Not a conddb URL" << endmsg;
@@ -261,15 +261,15 @@ xercesc::InputSource *CondDBEntityResolver::resolveEntity(const XMLCh *const, co
   Gaudi::Time since, until;
   std::string str;
   StatusCode sc = i_getData(systemIdString,since,until,str);
-  
+
   if (sc.isSuccess()) {
     // Create a copy of the string for the InputSource
-    
+
     // fill the buffer
     unsigned int buff_size = static_cast<unsigned int>(str.size());
     XMLByte* buff = new XMLByte[buff_size];
     std::copy(str.begin(),str.end(),buff);
-    
+
     // Create the input source using the string
     ValidInputSource *inputSource = new ValidInputSource((XMLByte*) buff,
                                                          buff_size,
