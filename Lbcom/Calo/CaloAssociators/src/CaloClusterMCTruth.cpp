@@ -1,4 +1,4 @@
-// $Id: CaloClusterMCTruth.cpp,v 1.11 2009-09-02 13:31:31 cattanem Exp $
+// $Id: CaloClusterMCTruth.cpp,v 1.12 2010-06-10 07:44:30 cattanem Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -215,7 +215,7 @@ StatusCode CaloClusterMCTruth::execute    ()
         if ( cluster->e() > 0 && energy / cluster->e() < m_wFilter ) { continue; }
         
         // fill the relation table:         ATTENTION "i_push" is used!
-        table->i_push ( cluster , particle , energy ) ; // NB: "i_push"
+        table->i_push ( cluster , particle , (float)energy ) ; // NB: "i_push"
       }       
     }  // end of loop over clusters
   }  // end of loop over containers of clusters

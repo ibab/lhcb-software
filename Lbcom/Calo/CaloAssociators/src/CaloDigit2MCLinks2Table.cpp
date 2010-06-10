@@ -1,4 +1,4 @@
-// $Id: CaloDigit2MCLinks2Table.cpp,v 1.9 2009-10-27 14:33:10 ibelyaev Exp $
+// $Id: CaloDigit2MCLinks2Table.cpp,v 1.10 2010-06-10 07:44:30 cattanem Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -173,7 +173,7 @@ StatusCode CaloDigit2MCLinks2Table::execute    ()
             mcMap.end() != entry ; ++entry ) 
       {
         const LHCb::MCParticle* particle = entry -> first  ;
-        const double            energy   = entry -> second ;
+        const float             energy   = (float)entry -> second ;
         // use fast i_push method! 
         table->i_push ( digit , particle , energy ) ; // NB !!
       }
