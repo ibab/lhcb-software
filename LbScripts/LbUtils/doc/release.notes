@@ -1,3 +1,10 @@
+2010-06-10  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* LbUtils/python/LbUtils/File.py: use the AFSLockFile class for the md5 file creation.
+	* LbUtils/python/LbUtils/Script.py: fixe pylint warnings.
+	* python/LbUtils/afs/directory.py: Implemented AFSLockFile which is a plain copy of the LockFile
+	class using the AFSLock class.
+
 2010-06-04  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* python/LbUtils/Script.py: added the possibility to use the docstring of

@@ -1,7 +1,7 @@
 #@PydevCodeAnalysisIgnore
 """ manipulation of files and directories module """
 
-from LbUtils.afs.directory import AFSLock
+from LbUtils.afs.directory import AFSLock, AFSLockFile
 
 from shutil import copy2
 
@@ -181,15 +181,20 @@ def createMD5File(fname, md5fname, targetname=None):
     if not targetname :
         targetname = fname
 
-    lock = AFSLock(md5fname)
-    lock.lock(force=False)
+    locked_file = AFSLockFile(md5fname, "w", force=False)
+    locked_file.write("%s  %s" % (md5sum, targetname))
+    locked_file.close()
+    
 
-    mdf = open(md5fname, "w")
-    mdf.write("%s  %s" % (md5sum, targetname))
-    mdf.flush()
-    os.fsync(mdf.fileno())
-    mdf.close()
-    lock.unlock()
+#    lock = AFSLock(md5fname)
+#    lock.lock(force=False)
+#
+#    mdf = open(md5fname, "w")
+#    mdf.write("%s  %s" % (md5sum, targetname))
+#    mdf.flush()
+#    os.fsync(mdf.fileno())
+#    mdf.close()
+#    lock.unlock()
 
 
 def getMD5Info(md5fname):

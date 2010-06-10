@@ -21,7 +21,7 @@ class PlainScript:
         and logger """
         if version is None:
             if hasattr(self, "__version__"):
-                version = self.__version__
+                version = self.__version__ #IGNORE:E1101
             else:
                 version = self._version
             
@@ -32,7 +32,7 @@ class PlainScript:
                 description = self.__doc__
         if usage is None :
             if hasattr(self, "__usage__"):
-                usage = self.__usage__
+                usage = self.__usage__ #IGNORE:E1101
         self.parser = parser(usage=usage, version=version, 
                              help_output=help_output, description=description)
         self.env = getDefaultEnv()

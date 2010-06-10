@@ -275,4 +275,41 @@ class AFSLock(Lock2):
         super(AFSLock, self).unlock(ignore)
 
 class AFSLockFile(AFSLock):
-    pass
+    """ plain copy of the LockFile class 
+    @todo: change the way the Lock class is used. It should be passed as argument of 
+    the constructor
+    """
+    def __init__(self, filename, mode='r', bufsize=-1, timeout=5, step=0.1, force=True):
+        AFSLock.__init__(self, filename, timeout, step)
+        # may raise an error if lock is ``False``
+        self.lock(force)
+        # may also raise an error
+        self._file = open(filename, mode, bufsize)
+    def close(self, ignore=True):
+        """
+        close the file and release the lock.
+        ignore has the same meaning as for ``Lock2.unlock``
+        """
+        self._file.flush()
+        os.fsync(self._file.fileno())
+        self._file.close()
+        self.unlock(ignore)
+    def __getattr__(self, name):
+        """delegate appropriate method/attribute calls to the file."""
+        return getattr(self._file, name)
+    def __setattr__(self, name, value):
+        """Only allow attribute setting that don't clash with the file."""
+        if not '_file' in self.__dict__:
+            AFSLock.__setattr__(self, name, value)
+        elif hasattr(self._file, name):
+            return setattr(self._file, name, value)
+        else:
+            AFSLock.__setattr__(self, name, value)
+
+    def __del__(self):
+        """Auto unlock (and close file) when object is deleted."""
+        if self.locked:
+            self.unlock()
+            self._file.close()
+
+    
