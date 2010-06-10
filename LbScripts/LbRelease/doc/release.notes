@@ -1,3 +1,8 @@
+2010-06-10  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* LbRelease/python/LbRelease/TarBall.py: created the generation of the 
+	html file.
+
 2010-06-08  Karol Kruzelecki  <Karol.Kruzelecki@cern.ch>
 
 	* python/LbRelease/LHCbNightlies.py: -j, -l parameters added to the build

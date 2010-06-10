@@ -9,6 +9,7 @@ from LbUtils import CMT
 from LbUtils.Tar import createTarBallFromFilter
 from LbUtils.Temporary import TempDir
 from LbUtils.File import createMD5File, checkMD5Info
+from LbUtils.afs.directory import AFSLockFile
 
 from fnmatch import fnmatch
 
@@ -199,9 +200,9 @@ def generateHTML(project, version, cmtconfig=None, top_dir=None, output_dir=None
         log.debug("Guessed version for %s is %s" % (prj_conf.Name(), version))
     filename = os.path.join(tb_dir, prj_conf.tarBallName(version, cmtconfig, full=True))
     if os.path.exists(filename) :
-        print getTarDependencies(project, version, 
-                                 cmtconfig, top_dir, 
-                                 project_only=False, full=True)
+#        print getTarDependencies(project, version, 
+#                                 cmtconfig, top_dir, 
+#                                 project_only=False, full=True)
         title = "Project %s version %s" % (prj_conf.Name(), version)
         if cmtconfig :
             depcont = "<H3>%s (%s binary files) </H3>\n" % (title, cmtconfig)
@@ -223,7 +224,17 @@ def generateHTML(project, version, cmtconfig=None, top_dir=None, output_dir=None
             depcont += "<MENU><LI>\n"
             depcont += "".join(tobeadded)
             depcont += "</MENU>\n" 
-        print depcont
+            htmlname = os.path.join(output_dir, prj_conf.htmlFileName(version, cmtconfig))
+            if os.path.exists(htmlname) :
+                os.remove(htmlname)
+                log.info("Replacing %s for %s" % (htmlname, filename))
+            else :
+                log.info("Creating %s for %s" % (htmlname, filename))                
+
+            hf = AFSLockFile(htmlname, "w", force=False)
+            hf.write(depcont)
+            hf.close()
+
 #    prefix = prj_conf.releasePrefix(version)
 #    prj_path = os.path.join(top_dir, prefix)
 #    prj = CMT.Project(prj_path)
@@ -442,12 +453,9 @@ def buildTar(project, version=None, cmtconfig=None,
             version = str(Version.getVersionsFromDir(maindir, pattern, reverse=True)[0])
             log.debug("Guessed version for %s is %s" % (prj_conf.Name(), version))
         if not cmtconfig :
-            fixed_cmtconfig = False
             cmtconfig = Platform.binary_list
             if overwrite :
                 overwrite_shared = True
-        else :
-            fixed_cmtconfig = True
         update_shared = False
         for c in cmtconfig :
             status = generateTar(project, version, c, top_dir, output_dir, 
