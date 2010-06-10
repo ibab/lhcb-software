@@ -1,4 +1,4 @@
-// $Id: L0MuonMuonComp.cpp,v 1.7 2010-03-11 08:11:25 jucogan Exp $
+// $Id: L0MuonMuonComp.cpp,v 1.8 2010-06-10 17:34:37 cattanem Exp $
 // Include files 
 
 #include <math.h>
@@ -158,7 +158,7 @@ StatusCode L0MuonMuonComp::execute() {
 
   if (m_rnd()>m_prescale) return StatusCode::SUCCESS;
 
-  static int ievt=0;
+  static ulonglong ievt=0;
   if (exist<LHCb::RecHeader> (LHCb::RecHeaderLocation::Default)) {
     LHCb::RecHeader* evt = get<LHCb::RecHeader> (LHCb::RecHeaderLocation::Default);
     ievt = evt->evtNumber();

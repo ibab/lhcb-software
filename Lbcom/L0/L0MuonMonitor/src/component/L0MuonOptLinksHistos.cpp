@@ -1,4 +1,4 @@
-// $Id: L0MuonOptLinksHistos.cpp,v 1.2 2009-02-04 15:12:02 marcocle Exp $
+// $Id: L0MuonOptLinksHistos.cpp,v 1.3 2010-06-10 17:34:37 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -154,7 +154,7 @@ void L0MuonOptLinksHistos::fillHistos(const std::vector<LHCb::MuonTileID> &tiles
   }
   fill(m_hmultitot,ntot,1);
 
-  static int ievt=0;
+  static ulonglong ievt=0;
   if (exist<LHCb::ODIN> (LHCb::ODINLocation::Default)) {
     ievt = get<LHCb::ODIN>(LHCb::ODINLocation::Default)->eventNumber();
   } else if (exist<LHCb::RecHeader> (LHCb::RecHeaderLocation::Default)) {
@@ -163,7 +163,7 @@ void L0MuonOptLinksHistos::fillHistos(const std::vector<LHCb::MuonTileID> &tiles
   } else {
     ++ievt;
   }
-  fill(m_hevt,ievt&0xFFFF,ntot*1024./65536.);
+  fill(m_hevt,(double)(ievt&0xFFFF),ntot*1024./65536.);
   
 }
 
