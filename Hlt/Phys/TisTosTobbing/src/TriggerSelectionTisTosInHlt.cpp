@@ -1,4 +1,4 @@
-// $Id: TriggerSelectionTisTosInHlt.cpp,v 1.6 2009-12-27 13:19:52 graven Exp $
+// $Id: TriggerSelectionTisTosInHlt.cpp,v 1.7 2010-06-10 13:50:45 gligorov Exp $
 // Include files 
 #include <algorithm>
 #include <vector>
@@ -59,11 +59,11 @@ TriggerSelectionTisTosInHlt::TriggerSelectionTisTosInHlt( const std::string& typ
    // if you ever use this tool for offline particles (after Hlt was run) change
    // OfflineMuonTrackLocation to LHCb::TrackLocation::Muon i.e. 'Rec/Track/Muon' 
    declareProperty("OfflineMuonTrackLocation",
-                   m_MuonTracksLocation = LHCb::TrackLocation::HltMuon); 
+                   m_MuonTracksLocation = ""); 
    //             m_MuonTracksLocation = LHCb::TrackLocation::Muon); 
    // do not change this one even if you call the tool in offline
    declareProperty("HltOfflineMuonTrackLocation",
-                   m_HltMuonTracksLocation =  LHCb::TrackLocation::HltMuon);
+                   m_HltMuonTracksLocation =  "");
    
    declareProperty("TOSFracVelo", m_TOSFrac[kVelo] = 0.7 );
    declareProperty("TOSFracTT",   m_TOSFrac[kTT]   = 0.7 );

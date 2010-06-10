@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.55 2010-01-11 14:15:39 graven Exp $
+! $Id: release.notes,v 1.56 2010-06-10 13:51:10 gligorov Exp $
 ! Package     : TisTosTobbing
 ! Responsible : Tomasz Skwarnicki
 ! Purpose     : TisTosTobbing of the trigger 
 ! ====================================================================
+
+! 2010-06-10 - V. Gligorov
+ - Remove obsolete default HLT track locations. 
 
 !========================== TisTosTobbing v4r1 2010-01-11 ===================
 

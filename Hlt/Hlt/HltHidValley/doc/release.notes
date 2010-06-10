@@ -1,9 +1,12 @@
-!$Id: release.notes,v 1.17 2010-05-27 15:14:55 graven Exp $
+!$Id: release.notes,v 1.18 2010-06-10 13:54:12 gligorov Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/HltHidValley
 ! Responsible : Marcin Kucharczyk
 ! Purpose     : Holds algorithms for selections of Hidden Valley particles
 !-----------------------------------------------------------------------------
+
+! 2010-06-10 - V. Gligorov
+ - Remove obsolete default HLT track locations. 
 
 !========================== HltHidValley v1r3  2010-05-27 ===================
 ! 2010-05-13 - Juan Palacios

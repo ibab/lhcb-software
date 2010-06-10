@@ -37,8 +37,7 @@ Hlt2HidValley::Hlt2HidValley(const std::string& name,
                              ISvcLocator* pSvcLocator)
   : DVAlgorithm(name,pSvcLocator)
 {
-  declareProperty("InputTracks", m_inputTracks = 
-                  LHCb::TrackLocation::HltForward);
+  declareProperty("InputTracks", m_inputTracks = "");
   declareProperty("InputDisplacedVertices", m_inputDisplacedVertices = 
                   "Rec/Vertices/displacedOffVertices");
 }

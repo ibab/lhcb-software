@@ -1,4 +1,4 @@
-// $Id: HltMuonRefine.cpp,v 1.11 2009-10-08 19:17:55 graven Exp $
+// $Id: HltMuonRefine.cpp,v 1.12 2010-06-10 13:58:18 gligorov Exp $
 // Include files 
 
 // from Gaudi
@@ -40,7 +40,7 @@ HltMuonRefine::HltMuonRefine( const std::string& name,
  
 
     declareProperty( "TESInputTracksName" ,
-                     m_TESInputTracksName = LHCb::TrackLocation::HltForward);
+                     m_TESInputTracksName = "");
     m_selections.declareProperties();
 
 }
