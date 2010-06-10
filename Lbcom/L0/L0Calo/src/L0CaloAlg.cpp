@@ -1,4 +1,4 @@
-// $Id: L0CaloAlg.cpp,v 1.64 2010-01-22 14:23:15 robbep Exp $
+// $Id: L0CaloAlg.cpp,v 1.65 2010-06-10 11:15:05 cattanem Exp $
 
 /// local
 #include "L0CaloAlg.h"
@@ -1040,7 +1040,7 @@ StatusCode L0CaloAlg::updateL0Calibration( ) {
     Warning("Use default AddECALToHCAL = true").ignore() ;
     m_addEcalToHcal = m_addEcalToHcalOpts ;
   } else {
-    m_addEcalToHcal = m_l0Cond -> param< int >( "AddECALToHCAL" ) ;
+    m_addEcalToHcal = (m_l0Cond -> param< int >( "AddECALToHCAL" ))!=0 ;
   }
 
   if ( ! m_l0Cond -> exists( "UsePSSPD" ) ) {
@@ -1048,7 +1048,7 @@ StatusCode L0CaloAlg::updateL0Calibration( ) {
     Warning("Use default UsePSSPD = true").ignore() ;
     m_usePsSpd = m_usePsSpdOpts ;
   } else {
-    m_usePsSpd      = m_l0Cond -> param< int >( "UsePSSPD" ) ;
+    m_usePsSpd      = (m_l0Cond -> param< int >( "UsePSSPD" ))!=0 ;
   }
   
   debug() << "Add ECAL to HCAL = " << m_addEcalToHcal << endreq ;
