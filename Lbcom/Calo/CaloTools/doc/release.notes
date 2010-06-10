@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.87 2010-03-18 13:56:26 cattanem Exp $
+! $Id: release.notes,v 1.88 2010-06-10 12:06:29 cattanem Exp $
 ! Package     : CaloUtils
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 !------------------------------------------------------------------------------
+
+! 2010-06-10 - Marco Cattaneo
+ - Fix Windows compilation warnings
 
 !========================== CaloTools v5r16 2010-03-18 =========================
 ! 2010-03-08 - Olivier Deschamps

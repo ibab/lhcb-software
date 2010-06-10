@@ -1,4 +1,4 @@
-// $Id: CaloCosmicsTool.cpp,v 1.10 2009-10-12 16:08:13 odescham Exp $
+// $Id: CaloCosmicsTool.cpp,v 1.11 2010-06-10 12:06:29 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -305,7 +305,7 @@ StatusCode CaloCosmicsTool::fit2D(){
   //  Best 2D slope fit  (minimize   Chi2 = Sum_i  [ADC_i (phi_i - phi)^2/sigma_i^2)
   double swa  = 0;
   double sw   = 0;
-  for(std::vector<LHCb::CaloAdc>::iterator id = m_zsupADCs.begin(); id != m_zsupADCs.end(); ++id){
+  {for(std::vector<LHCb::CaloAdc>::iterator id = m_zsupADCs.begin(); id != m_zsupADCs.end(); ++id){
     LHCb::CaloCellID cell = (*id).cellID();
     if( m_max.cellID() == cell)continue;    
     Gaudi::XYZPoint pos = m_calo->cellCenter( cell );
@@ -326,7 +326,7 @@ StatusCode CaloCosmicsTool::fit2D(){
     double w = adc  / s2;   // weight = ADC_i/sigma_i^2    
     sw  += w;
     swa += w*a;
-  }
+  }}
 
   debug() << "Point : " << ref.X()  << " " << ref.Y() << endmsg;
 
@@ -351,7 +351,7 @@ StatusCode CaloCosmicsTool::fit2D(){
   double ssx2= 0;
   m_adcSum = 0;
   double kernel = 0.;
-  for(std::vector<LHCb::CaloAdc>::iterator id =m_zsupADCs.begin(); id != m_zsupADCs.end(); ++id){
+  {for(std::vector<LHCb::CaloAdc>::iterator id =m_zsupADCs.begin(); id != m_zsupADCs.end(); ++id){
     LHCb::CaloCellID cell = (*id).cellID();
     double size = m_calo->cellSize( cell );
     double sx2  = size*size/12;
@@ -370,7 +370,7 @@ StatusCode CaloCosmicsTool::fit2D(){
       y += pos.Y();
       ssx2 += sx2;
     }
-  }
+  }}
   m_kernel = kernel / (double) m_adcSum;
   
 
@@ -579,8 +579,8 @@ StatusCode CaloCosmicsTool::tupling(unsigned int unit){
     
     LHCb::CaloCellID id = (*iadc).cellID();
     ids.push_back(  id.all()  );
-    x.push_back( det()->cellCenter( id ).X() );
-    y.push_back( det()->cellCenter( id ).Y() );
+    x.push_back( (float)det()->cellCenter( id ).X() );
+    y.push_back( (float)det()->cellCenter( id ).Y() );
     a.push_back( (*iadc).adc() );
   }
   sc = ntp->farray("id"   , ids      ,"NAdcs", m_maxAdc);
