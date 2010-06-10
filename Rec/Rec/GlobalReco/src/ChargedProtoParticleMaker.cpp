@@ -35,8 +35,6 @@ ChargedProtoParticleMaker::ChargedProtoParticleMaker( const std::string& name,
   m_tracksPath.clear();
   if ( context() == "HLT" || context() == "Hlt" )
   {
-    m_tracksPath.push_back(LHCb::TrackLocation::HltForward);
-    m_protoPath  = LHCb::ProtoParticleLocation::HltCharged;
     m_trSelType  = "TrackSelector";
   }
   else
