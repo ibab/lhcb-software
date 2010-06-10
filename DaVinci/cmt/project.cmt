@@ -1,6 +1,6 @@
 project DAVINCI
 
-use HLT      HLT_v10r4
+use HLT      HLT_v10r4p1
 use PHYS     PHYS_v9r6
 use ANALYSIS ANALYSIS_v4r5
 use REC      REC_v10r0p1
