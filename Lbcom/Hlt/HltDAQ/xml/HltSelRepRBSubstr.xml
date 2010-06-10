@@ -173,9 +173,9 @@ Never write into into the bank with iterator not at its end-of-the bank position
              if( iWord&gt;= s ) return ((unsigned int)HltSelRepRBEnums::kPtrOutOfRange);
              unsigned short nW;
              if( iPart ){
-                nW =  ( ( m_location[iWord] &amp; 0xFFFF0000L ) &gt;&gt; 16 );
+                nW = (unsigned short)( ( m_location[iWord] &amp; 0xFFFF0000L ) &gt;&gt; 16 );
              } else {
-                nW =   ( m_location[iWord] &amp; 0xFFFFL );
+                nW = (unsigned short)  ( m_location[iWord] &amp; 0xFFFFL );
              }
              unsigned int nL = lenSubstr(nW);
              itera += nL +1;
@@ -202,9 +202,9 @@ Never write into into the bank with iterator not at its end-of-the bank position
           throw GaudiException( "Iterating beyond extend of the bank in HltSelRepRBSubstr","HltSelRepRBSubstr",StatusCode::FAILURE );
           unsigned short nW;
           if( iPart ){
-              nW =  ( ( m_location[iWord] &amp; 0xFFFF0000L ) &gt;&gt; 16 );
+              nW = (unsigned short)( ( m_location[iWord] &amp; 0xFFFF0000L ) &gt;&gt; 16 );
           } else {
-              nW =   ( m_location[iWord] &amp; 0xFFFFL );
+              nW = (unsigned short)  ( m_location[iWord] &amp; 0xFFFFL );
           }
           unsigned int nL = lenSubstr(nW);
           std::vector&lt; unsigned short &gt; vect;
@@ -216,9 +216,9 @@ Never write into into the bank with iterator not at its end-of-the bank position
           throw GaudiException( "Iterating beyond extend of the bank in HltSelRepRBSubstr","HltSelRepRBSubstr",StatusCode::FAILURE );
              unsigned short n;
              if( iPart ){
-                n =  ( ( m_location[iWord] &amp; 0xFFFF0000L ) &gt;&gt; 16 );
+                n = (unsigned short) ( ( m_location[iWord] &amp; 0xFFFF0000L ) &gt;&gt; 16 );
              } else {
-                n =   ( m_location[iWord] &amp; 0xFFFFL );
+                n = (unsigned short)   ( m_location[iWord] &amp; 0xFFFFL );
              }
              vect.push_back( n );
           }
@@ -252,9 +252,9 @@ Never write into into the bank with iterator not at its end-of-the bank position
              throw GaudiException( "Iterating beyond extend of the bank in HltSelRepRBSubstr","HltSelRepRBSubstr",StatusCode::FAILURE );
              unsigned short nW;
              if( iPart ){
-                nW =  ( ( m_location[iWord] &amp; 0xFFFF0000L ) &gt;&gt; 16 );
+                nW = (unsigned short) ( ( m_location[iWord] &amp; 0xFFFF0000L ) &gt;&gt; 16 );
              } else {
-                nW =   ( m_location[iWord] &amp; 0xFFFFL );
+                nW = (unsigned short)   ( m_location[iWord] &amp; 0xFFFFL );
              }
              unsigned int nL = lenSubstr(nW);
              itera += nL +1;
@@ -397,9 +397,9 @@ Never write into into the bank with iterator not at its end-of-the bank position
                ++itera;
                unsigned short nW;
                if( iPart ){
-                  nW =  ( ( m_location[iWord] &amp; 0xFFFF0000L ) &gt;&gt; 16 );
+                  nW = (unsigned short) ( ( m_location[iWord] &amp; 0xFFFF0000L ) &gt;&gt; 16 );
                } else {
-                  nW =   ( m_location[iWord] &amp; 0xFFFFL );
+                  nW = (unsigned short) ( m_location[iWord] &amp; 0xFFFFL );
                }
                unsigned int nL = lenSubstr(nW);
                ss &lt;&lt; " subStr : " &lt;&lt; iSub &lt;&lt; " size " &lt;&lt; nL
@@ -410,9 +410,9 @@ Never write into into the bank with iterator not at its end-of-the bank position
                   ++itera;
                   unsigned short n;
                   if( iPart ){
-                     n =  ( ( m_location[iWord] &amp; 0xFFFF0000L ) &gt;&gt; 16 );
+                     n = (unsigned short) ( ( m_location[iWord] &amp; 0xFFFF0000L ) &gt;&gt; 16 );
                   } else {
-                     n =   ( m_location[iWord] &amp; 0xFFFFL );
+                     n = (unsigned short)   ( m_location[iWord] &amp; 0xFFFFL );
                   }
                   ss  &lt;&lt; " "  &lt;&lt; int(n);
                }

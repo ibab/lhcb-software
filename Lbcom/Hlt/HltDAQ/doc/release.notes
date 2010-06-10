@@ -4,6 +4,9 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !-----------------------------------------------------------------------------
 
+! 2010-06-10 - Marco Cattaneo
+ - Fix windows compiler warnings
+
 !========================== HltDAQ v2r0p1 2010-06-03 ===========================
 ! 2010-06-03 - Gerhard Raven
  - fix (I hope!) memory leak, see https://savannah.cern.ch/bugs/index.php?68285

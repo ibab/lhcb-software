@@ -1,4 +1,4 @@
-// $Id: HltConfigSvc.cpp,v 1.1 2010-05-05 13:20:44 graven Exp $
+// $Id: HltConfigSvc.cpp,v 1.2 2010-06-10 13:52:00 cattanem Exp $
 // Include files 
 
 #include <algorithm>
@@ -26,6 +26,10 @@ namespace bl=boost::lambda;
 #if linux
 #include <netdb.h>
 #include <unistd.h>
+#endif
+
+#ifdef _WIN32
+#pragma warning(disable : 4355) // 'this' used in base member initializer list
 #endif
 
 using namespace std;
