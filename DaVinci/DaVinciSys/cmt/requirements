@@ -1,5 +1,5 @@
 package DaVinciSys
-version v25r5
+version v25r5p1
 
 branches doc cmt
 
@@ -7,6 +7,7 @@ branches doc cmt
 use  DaVinci                 	v25r5   Phys
 use  DaVinciTests               v1r0
 # Patches
+use  PhysSelPython              v5r4p1  PhysSel
 use  StrippingSelections        v1r22p1 Phys
   
 # Declare this as a container package
