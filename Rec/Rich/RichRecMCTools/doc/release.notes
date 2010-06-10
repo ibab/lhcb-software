@@ -4,6 +4,9 @@
 ! Purpose     : Monte Carlo Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+! 2010-06-10 - V. Gligorov
+ - Remove obsolete default HLT track locations. 
+
 !====================== RichRecMCTools v2r26 2010-03-18 =====================
 ! 2010-03-05 - Chris Jones
  - Various changes to support the configuration of multiple reconstruction 
