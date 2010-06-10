@@ -5,10 +5,12 @@ Purpose             : LHCb physics analysis application
 
 </PRE><H1><A NAME=v25r5p1>2010-06-?? DaVinci v25r5p1. LHCb v31r1 based version for RecoStripping-05</A></H1><PRE>
 
+  * Uses patched HLT v10r4p1
   * Patches to some B->XMuMu stripping lines
   * QM tests moved to DaVinciTests package.
   * Patch to Selection "Framework" for DataOndEmand safety.
   * Fix to stripped DST FSR corruption problem?
+
 
 </PRE><H1><A NAME=v25r5>2010-05-09 DaVinci v25r5. LHCb v31r1 based version for stripping and re-processing</A></H1><PRE>
 
