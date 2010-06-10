@@ -32,7 +32,7 @@ MCTruthTool::MCTruthTool( const std::string& type,
     m_truth            ( NULL ),
     m_mcSegToRingLinks ( NULL ),
     m_trLoc            ( "/Event/"+LHCb::TrackLocation::Default ),
-    m_otherTrLoc       ( "/Event/"+LHCb::TrackLocation::HltForward )
+    m_otherTrLoc       ( "" )
 {
   // interface
   declareInterface<Rich::Rec::MC::IMCTruthTool>(this);
@@ -40,12 +40,12 @@ MCTruthTool::MCTruthTool( const std::string& type,
   // Context specific track locations
   if ( contextContains("HLT") )
   {
-    m_trLoc      = "/Event/"+LHCb::TrackLocation::HltForward;
     m_otherTrLoc = "/Event/"+LHCb::TrackLocation::Default;
   }
 
   // job options
   declareProperty( "TrackLocation", m_trLoc );
+  declareProperty( "OtherTrackLocation", m_otherTrLoc );
 }
 
 // destructor
