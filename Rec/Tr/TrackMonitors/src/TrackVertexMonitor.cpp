@@ -9,6 +9,7 @@
 #include "TrackInterfaces/ITrackVertexer.h"
 #include <boost/lambda/bind.hpp>
 #include <boost/lambda/lambda.hpp>
+#include <boost/foreach.hpp>
 #include <algorithm>
 #include "AIDA/IHistogram1D.h"
 #include "AIDA/IProfile1D.h"
@@ -33,7 +34,7 @@ public:
 
   /** Algorithm execute */
   virtual StatusCode execute();
-  
+
 private:
   std::string m_trackContainerName;
   std::string m_pvContainerName;
@@ -43,6 +44,7 @@ private:
   double m_zpvmin ;
   double m_zpvmax ;
   double m_maxLongTrackChisqPerDof ;
+  double m_minLongTrackMomentum ;
   size_t m_nprbins ;
 
   DeVelo* m_velo;
@@ -51,18 +53,27 @@ private:
   
 
   ToolHandle<ITrackVertexer> m_vertexer ;
+  AIDA::IHistogram1D* m_trackXIP ;
+  AIDA::IProfile1D* m_trackXIPVsPhi ;
+  AIDA::IProfile1D* m_trackXIPVsEta ;
+  AIDA::IHistogram1D* m_trackYIP ;
+  AIDA::IProfile1D* m_trackYIPVsPhi ;
+  AIDA::IProfile1D* m_trackYIPVsEta ;
 
-  AIDA::IHistogram1D* m_trackTransverseIP ;
-  AIDA::IProfile1D* m_trackTransverseIPVsPhi ;
-  AIDA::IProfile1D* m_trackTransverseIPVsEta ;
-  AIDA::IHistogram1D* m_trackLongitudinalIP ;
-  AIDA::IProfile1D* m_trackLongitudinalIPVsPhi ;
-  AIDA::IProfile1D* m_trackLongitudinalIPVsEta ;
-
+  AIDA::IHistogram1D* m_fastTrackTransverseIP ;
+  AIDA::IProfile1D* m_fastTrackTransverseIPVsPhi ;
+  AIDA::IProfile1D* m_fastTrackTransverseIPVsEta ;
+  AIDA::IHistogram1D* m_fastTrackLongitudinalIP ;
+  AIDA::IProfile1D* m_fastTrackLongitudinalIPVsPhi ;
+  AIDA::IProfile1D* m_fastTrackLongitudinalIPVsEta ;
+ 
   AIDA::IHistogram1D* m_twoprongMass ;
+  AIDA::IHistogram1D* m_twoprongMomentum ;
   AIDA::IHistogram1D* m_twoprongDoca ;
   AIDA::IHistogram1D* m_twoprongDocaPull ;
   AIDA::IHistogram1D* m_twoprongDecaylength ;
+  AIDA::IHistogram1D* m_twoprongDecaylengthSignificance ;
+  AIDA::IHistogram1D* m_twoprongIPChisquare ;
   AIDA::IProfile1D* m_twoprongDocaVsEta ; 
   AIDA::IProfile1D* m_twoprongDocaVsPhi ;
 
@@ -86,8 +97,8 @@ TrackVertexMonitor::TrackVertexMonitor( const std::string& name,
   declareProperty( "MaxRPV", m_rpvmax = 1*Gaudi::Units::mm ) ;
   declareProperty( "MinZPV", m_zpvmin = -20*Gaudi::Units::cm ) ;
   declareProperty( "MaxZPV", m_zpvmax =  20*Gaudi::Units::cm ) ;
-  declareProperty( "MaxLongTrackChisqPerDof", m_maxLongTrackChisqPerDof
- = 5 ) ;
+  declareProperty( "MaxLongTrackChisqPerDof", m_maxLongTrackChisqPerDof = 5 ) ;
+  declareProperty( "MinLongTrackMomentum", m_minLongTrackMomentum = 5 ) ;
   declareProperty( "NumProfileBins", m_nprbins = 20 ) ;
 }
 
@@ -113,18 +124,29 @@ StatusCode TrackVertexMonitor::initialize()
   if ( "" == histoTopDir() ) setHistoTopDir(histoDir);
 
   // impact parameters of the hightest Pt track wrt the vertex
-  m_trackTransverseIP   = book1D("fast track transverse IP",-m_ipmax,m_ipmax) ;
-  m_trackLongitudinalIP = book1D("fast track longitudinal IP",-m_ipmax,m_ipmax) ;
-  m_trackTransverseIPVsPhi = bookProfile1D("fast track transverse IP vs phi",-Gaudi::Units::pi,Gaudi::Units::pi,m_nprbins) ;
-  m_trackTransverseIPVsEta = bookProfile1D("fast track transverse IP vs eta",2.0,5.0,m_nprbins) ;
-  m_trackLongitudinalIPVsPhi = bookProfile1D("fast track longitudinal IP vs phi",-Gaudi::Units::pi,Gaudi::Units::pi,m_nprbins) ;
-  m_trackLongitudinalIPVsEta = bookProfile1D("fast track longitudinal IP vs eta",2.0,5.0,m_nprbins) ;
+  m_trackXIP = book1D("track IP X","track IP X (biased)",-m_ipmax,m_ipmax) ;
+  m_trackYIP = book1D("track IP Y","track IP Y (biased)",-m_ipmax,m_ipmax) ;
+  m_trackXIPVsPhi = bookProfile1D("track IP X vs phi","track IP X vs phi (biased)",-Gaudi::Units::pi,Gaudi::Units::pi,m_nprbins) ;
+  m_trackXIPVsEta = bookProfile1D("track IP X vs eta","track IP X vs eta (biased)",2.0,5.0,m_nprbins) ;
+  m_trackYIPVsPhi = bookProfile1D("track IP Y vs phi","track IP Y vs phi (biased)",-Gaudi::Units::pi,Gaudi::Units::pi,m_nprbins) ;
+  m_trackYIPVsEta = bookProfile1D("track IP Y vs eta","track IP Y vs eta (biased)",2.0,5.0,m_nprbins) ;
+
+  m_fastTrackTransverseIP   = book1D("fast track transverse IP",-m_ipmax,m_ipmax) ;
+  m_fastTrackLongitudinalIP = book1D("fast track longitudinal IP",-m_ipmax,m_ipmax) ;
+  m_fastTrackTransverseIPVsPhi = bookProfile1D("fast track transverse IP vs phi",-Gaudi::Units::pi,Gaudi::Units::pi,m_nprbins) ;
+  m_fastTrackTransverseIPVsEta = bookProfile1D("fast track transverse IP vs eta",2.0,5.0,m_nprbins) ;
+  m_fastTrackLongitudinalIPVsPhi = bookProfile1D("fast track longitudinal IP vs phi",-Gaudi::Units::pi,Gaudi::Units::pi,m_nprbins) ;
+  m_fastTrackLongitudinalIPVsEta = bookProfile1D("fast track longitudinal IP vs eta",2.0,5.0,m_nprbins) ;
 
   // impact parameter and vertex chisquare of the two highest Pt tracks
   m_twoprongMass      = book1D("twoprong mass (GeV)",0,10) ;
+  m_twoprongMomentum  = book1D("twoprong momentum (GeV)",0,200) ;
   m_twoprongDoca      = book1D("twoprong doca",-m_ipmax,m_ipmax) ;
   m_twoprongDocaPull  = book1D("twoprong doca pull",-5,5) ;
-  m_twoprongDecaylength = book1D("twoprong decaylength",-5,5) ;
+  m_twoprongDecaylength = book1D("twoprong decaylength",-2,2) ;
+  m_twoprongDecaylengthSignificance = book1D("twoprong decaylength significance",-5,5) ;
+  m_twoprongIPChisquare = book1D("twoprong IP chi2 per dof",0,10) ;
+
   m_twoprongDocaVsEta = bookProfile1D("twoprong doca vs vs eta",2.0,5.0,m_nprbins) ;
   m_twoprongDocaVsPhi = bookProfile1D("twoprong doca vs phi",-Gaudi::Units::pi,Gaudi::Units::pi,m_nprbins) ;
 
@@ -143,60 +165,62 @@ StatusCode TrackVertexMonitor::finalize()
   return m_vertexer.release() && GaudiHistoAlg::finalize() ;
 }
 
+namespace {
 
-std::vector<const LHCb::Track*> myconvert( const SmartRefVector<LHCb::Track> & tracks )
-{
-  std::vector<const LHCb::Track*> rc(tracks.size()) ;
-  std::copy(tracks.begin(),tracks.end(),rc.begin()) ;
-  return rc ;
+  std::vector<const LHCb::Track*> myconvert( const SmartRefVector<LHCb::Track> & tracks )
+  {
+    std::vector<const LHCb::Track*> rc(tracks.size()) ;
+    std::copy(tracks.begin(),tracks.end(),rc.begin()) ;
+    return rc ;
+  }
+  
+  template< class TrackContainer, class Predicate >
+  std::vector<const LHCb::Track*> myselect( const TrackContainer& tracks, Predicate selector) 
+  {
+    std::vector<const LHCb::Track*> rc ;
+    for( typename TrackContainer::const_iterator itrack = tracks.begin() ;
+	 itrack != tracks.end(); ++itrack) 
+      if( selector(*itrack) ) rc.push_back(*itrack) ;
+    return rc ;
+  }
+  
+  struct TrackTypePredicate
+  {
+    int m_type ;
+    TrackTypePredicate(int atype) : m_type(atype) {} 
+    bool operator()(const LHCb::Track* track) const { return track->type()==m_type ; }
+  } ;
+  
+  struct TrackFlagPredicate
+  {
+    LHCb::Track::Flags m_flag ;
+    bool m_positive ;
+    TrackFlagPredicate(LHCb::Track::Flags flag, bool positive=true) : m_flag(flag), m_positive(positive) {} 
+    bool operator()(const LHCb::Track* track) const { return m_positive ? track->checkFlag(m_flag) : !track->checkFlag(m_flag) ; }
+  } ;
+  
+  struct TrackVeloSidePredicate
+  {
+    int m_sign ;
+    TrackVeloSidePredicate(int asign) : m_sign(asign) {}
+    bool operator()(const LHCb::Track* track) const { 
+      return track->firstState().tx()*m_sign*(track->checkFlag(LHCb::Track::Backward)? -1 : 1 )>0 ; }
+  } ;
+  
+  struct TrackChisqPredicate
+  {
+    double m_maxchisq ;
+    TrackChisqPredicate(double maxChisqPerDof) : m_maxchisq(maxChisqPerDof) {}
+    bool operator()(const LHCb::Track* track) const { return track->chi2PerDoF() < m_maxchisq  ; }
+  } ;
 }
-
-template< class TrackContainer, class Predicate >
-std::vector<const LHCb::Track*> myselect( const TrackContainer& tracks, Predicate selector) 
-{
-  std::vector<const LHCb::Track*> rc ;
-  for( typename TrackContainer::const_iterator itrack = tracks.begin() ;
-       itrack != tracks.end(); ++itrack) 
-    if( selector(*itrack) ) rc.push_back(*itrack) ;
-  return rc ;
-}
-
-struct TrackTypePredicate
-{
-  int m_type ;
-  TrackTypePredicate(int atype) : m_type(atype) {} 
-  bool operator()(const LHCb::Track* track) const { return track->type()==m_type ; }
-} ;
-
-struct TrackFlagPredicate
-{
-  LHCb::Track::Flags m_flag ;
-  bool m_positive ;
-  TrackFlagPredicate(LHCb::Track::Flags flag, bool positive=true) : m_flag(flag), m_positive(positive) {} 
-  bool operator()(const LHCb::Track* track) const { return m_positive ? track->checkFlag(m_flag) : !track->checkFlag(m_flag) ; }
-} ;
-
-struct TrackVeloSidePredicate
-{
-  int m_sign ;
-  TrackVeloSidePredicate(int asign) : m_sign(asign) {}
-  bool operator()(const LHCb::Track* track) const { 
-    return track->firstState().tx()*m_sign*(track->checkFlag(LHCb::Track::Backward)? -1 : 1 )>0 ; }
-} ;
-
-struct TrackChisqPredicate
-{
-  double m_maxchisq ;
-  TrackChisqPredicate(double maxChisqPerDof) : m_maxchisq(maxChisqPerDof) {}
-  bool operator()(const LHCb::Track* track) const { return track->chi2PerDoF() < m_maxchisq  ; }
-} ;
 
 StatusCode TrackVertexMonitor::execute()
 { 
-  if (!exist<LHCb::RecVertices>(m_pvContainerName)) 
-    return Warning( m_pvContainerName+" not found", StatusCode::SUCCESS, 0);
-  const LHCb::RecVertices* pvcontainer = get<LHCb::RecVertices>( m_pvContainerName ) ;
-  //const LHCb::Tracks* tracks = get<LHCb::Tracks>( m_trackContainerName );
+  
+  LHCb::RecVertex::Range pvcontainer  = get<LHCb::RecVertex::Range>(m_pvContainerName) ;
+
+  LHCb::Track::Range alltracks = get<LHCb::Track::Range>( m_trackContainerName );
   
   TrackTypePredicate isLong( LHCb::Track::Long ) ;
   TrackFlagPredicate isBackward( LHCb::Track::Backward ) ;
@@ -211,16 +235,13 @@ StatusCode TrackVertexMonitor::execute()
   typedef std::vector<const LHCb::Track*> TrackVector ;
 
   // number of primary vertices
-  plot(pvcontainer->size(),"NumPrimaryVertices",-0.5,10.5,11) ;
+  plot(pvcontainer.size(),"NumPrimaryVertices",-0.5,10.5,11) ;
 
-  for( LHCb::RecVertices::const_iterator ipv = pvcontainer->begin() ;
-       ipv != pvcontainer->end(); ++ipv ) {
-    const LHCb::RecVertex* pv = *ipv ;
+  BOOST_FOREACH( const LHCb::RecVertex* pv, pvcontainer ) {
     TrackVector tracks = myconvert(pv->tracks()) ;
     TrackVector forwardtracks = myselect(tracks,isForward) ;
     TrackVector backwardtracks =  myselect(tracks,isBackward) ;
     TrackVector longtracks =  myselect(tracks,isLong) ;
-    TrackVector goodlongtracks = myselect(tracks,TrackChisqPredicate(m_maxLongTrackChisqPerDof)) ;
     
     // number of tracks per primary vertex
     plot( tracks.size(), "NumTracksPerPV",-0.5,99.5,50) ;
@@ -229,7 +250,7 @@ StatusCode TrackVertexMonitor::execute()
     // number of backward tracks per primary vertex
     plot( backwardtracks.size(), "NumBackTracksPerPV",-0.5,99.5,50) ;
     // chisquare
-    plot( pv->chi2() / pv->nDoF(), "PV chisquare per dof",0,20) ;
+    plot( pv->chi2() / pv->nDoF(), "PV chisquare per dof",0,10) ;
     // position
     if(std::abs(pv->position().x()) > 0.00001 && std::abs(pv->position().y()) > 0.00001 ){   // crap hack for vertices at exactly 0
             //info() << "pvx " << pv->position().x() << endmsg;
@@ -246,7 +267,7 @@ StatusCode TrackVertexMonitor::execute()
     // refit the primary vertex with only the long tracks
     if(longtracks.size()>=2) {
       LHCb::RecVertex* longvertex = m_vertexer->fit( longtracks ) ;
-      if(longvertex) plot( longvertex->chi2() / longvertex->nDoF(), "PV long chisquare per dof",0,20) ;
+      if(longvertex) plot( longvertex->chi2() / longvertex->nDoF(), "PV long chisquare per dof",0,10) ;
       delete longvertex ;
     }
     
@@ -290,8 +311,8 @@ StatusCode TrackVertexMonitor::execute()
 	plot( dx.y()/std::sqrt(cov(1,1)), "PV left-right delta y pull",-5,5) ;
 	plot( dx.z()/std::sqrt(cov(2,2)), "PV left-right delta z pull",-5,5) ;
 	// draw the chisquares
-	plot( leftvertex->chi2() / leftvertex->nDoF(), "PV left chisquare per dof",0,20) ;
-	plot( rightvertex->chi2() / rightvertex->nDoF(), "PV right chisquare per dof",0,20) ;
+	plot( leftvertex->chi2() / leftvertex->nDoF(), "PV left chisquare per dof",0,10) ;
+	plot( rightvertex->chi2() / rightvertex->nDoF(), "PV right chisquare per dof",0,10) ;
       }
       delete leftvertex ;
       delete rightvertex ;
@@ -319,97 +340,127 @@ StatusCode TrackVertexMonitor::execute()
 	plot( dx.y()/std::sqrt(cov(1,1)), "PV forward-backward delta y pull",-5,5) ;
 	plot( dx.z()/std::sqrt(cov(2,2)), "PV forward-backward delta z pull",-5,5) ;
 	// draw the chisquares
-	plot( forwardvertex->chi2() / forwardvertex->nDoF(), "PV forward chisquare/dof",0,20) ;
-	plot( backwardvertex->chi2() / backwardvertex->nDoF(), "PV backward chisquare/dof",0,20) ;
+	plot( forwardvertex->chi2() / forwardvertex->nDoF(), "PV forward chisquare/dof",0,10) ;
+	plot( backwardvertex->chi2() / backwardvertex->nDoF(), "PV backward chisquare/dof",0,10) ;
 
       }
       delete forwardvertex ;
       delete backwardvertex ;
     }
-    
-    // do something with IP of highest momentum track, as function of phi and eta
-    // first sort tracks by type and IP
-    if( goodlongtracks.size()>=2 && tracks.size()>=7 ) {
-      using namespace boost::lambda;
-      std::sort(goodlongtracks.begin(), goodlongtracks.end(), 
-		bind(&LHCb::State::pt,bind(&LHCb::Track::firstState,*_1)) <
-		bind(&LHCb::State::pt,bind(&LHCb::Track::firstState,*_2)) ) ;
-      const LHCb::Track* firsttrack = goodlongtracks.back() ;
-      goodlongtracks.pop_back() ;
-
-      // now pick a 2nd track that makes the highest possible invariant mass with this one
-      double highestmass2(0) ;
-      const LHCb::Track* secondtrack(0) ;
-      Gaudi::XYZVector firstp3 = firsttrack->firstState().momentum() ;
-      for( TrackVector::const_iterator it = goodlongtracks.begin();
-	   it != goodlongtracks.end(); ++it) {
-	Gaudi::XYZVector p3 = (*it)->firstState().momentum() ;
-	double mass2= p3.r() * firstp3.r() - p3.Dot( firstp3 ) ;
-	if(secondtrack==0 || highestmass2 < mass2 ) {
-	  highestmass2 = mass2 ;
-	  secondtrack = *it ;
-	}
-      }
+  
+    // for events with a single vertex, do something with IP of
+    // highest momentum track, as function of phi and eta.
+    if( pvcontainer.size()==1 && tracks.size()>=10 ) {
       
-      // recompute the vertex without these tracks
-      TrackVector::iterator newend = tracks.end() ;
-      newend = std::remove(tracks.begin(),newend,firsttrack) ;
-      newend = std::remove(tracks.begin(),newend,secondtrack) ;
-      tracks.erase(newend,tracks.end()) ;
-      LHCb::RecVertex* restvertex  = m_vertexer->fit( tracks ) ;
-      if( restvertex && firsttrack->nStates()!=0 ) {
-	const LHCb::State& firststate = firsttrack->firstState() ;
-	double dz  = restvertex->position().z() - firststate.z() ;
-	double dx  = firststate.x() + dz * firststate.tx() - restvertex->position().x()  ;
-	double dy  = firststate.y() + dz * firststate.ty() - restvertex->position().y() ;
-	double nt  = std::sqrt( firststate.tx()*firststate.tx() + firststate.ty()*firststate.ty() ) ;
-	// transverse and longitudinal impact parameter
-	double iptrans = (dx * firststate.ty() - dy * firststate.tx())/nt ;
-	double iplong  = (dx * firststate.tx() + dy * firststate.ty())/nt ;
-	double phi = firstp3.phi() ;
-	double eta = firstp3.eta() ;
-	
-	m_trackTransverseIP->fill(iptrans ) ;
-	m_trackLongitudinalIP->fill(iplong ) ;
+      // now get all good long tracks from the best container:
+      TrackVector goodlongtracks ;
+      BOOST_FOREACH( const LHCb::Track* tr, alltracks ) 
+	if( isLong(tr) && tr->chi2PerDoF()<m_maxLongTrackChisqPerDof &&
+	    tr->p()>m_minLongTrackMomentum) 
+	  goodlongtracks.push_back( tr ) ;
+      
+      BOOST_FOREACH( const LHCb::Track* tr, goodlongtracks ) {
+	const LHCb::State& firststate = tr->firstState() ;
+	double dz  = pv->position().z() - firststate.z() ;
+	double dx  = firststate.x() + dz * firststate.tx() - pv->position().x() ;
+	double dy  = firststate.y() + dz * firststate.ty() - pv->position().y() ;
+	Gaudi::XYZVector p3 = firststate.momentum() ;
+	m_trackXIP->fill( dx ) ;
+	m_trackYIP->fill( dy ) ;
 	// apply a cut for the profiles
-	if( std::abs(iptrans) < m_trackTransverseIP->axis().upperEdge() &&
-	    std::abs(iplong) < m_trackLongitudinalIP->axis().upperEdge() ) {
-	  m_trackTransverseIPVsEta->fill(eta,iptrans) ;
-	  m_trackTransverseIPVsPhi->fill(phi,iptrans) ;
-	  m_trackLongitudinalIPVsEta->fill(eta,iplong) ;
-	  m_trackLongitudinalIPVsPhi->fill(phi,iplong) ;
-	}
-      
-	// The two-track cuts we only make for relatively heavy objects
-	double mass = std::sqrt(highestmass2) ;
-	m_twoprongMass->fill(mass / Gaudi::Units::GeV ) ;
-	if( mass > 1*Gaudi::Units::GeV ) {
-	  // compute doca of two tracks
-	  Gaudi::XYZVector dx3 = firsttrack->firstState().position() - secondtrack->firstState().position() ;
-	  Gaudi::XYZVector n3  = firsttrack->firstState().slopes().Cross( secondtrack->firstState().slopes() ) ;
-	  double doca = dx3.Dot(n3) / n3.R() ;
-	  m_twoprongDoca->fill(doca) ;
-	  if( std::abs(doca) < m_twoprongDoca->axis().upperEdge() ) {
-	    m_twoprongDocaVsEta->fill(eta,doca) ;
-	    m_twoprongDocaVsPhi->fill(phi,doca) ;
-	  }
-	  // the easiest way to compute the pull is with a vertex fit
-	  LHCb::TwoProngVertex* twoprong = m_vertexer->fit(firsttrack->firstState(),secondtrack->firstState()) ;
-	  if(twoprong) {
-	    m_twoprongDocaPull->fill(std::sqrt(twoprong->chi2()) * (doca>0 ? 1 : -1)) ;
-	    
-	    // also compute the decay length. to compute a proper pull
-	    // here we need to move some code from TrackV0Finder to
-	    // TrackVertexer.
-	    Gaudi::XYZVector dir = twoprong->momentum(0,0).Vect().Unit() ;
-	    double decaylength = dir.Dot( twoprong->position() - restvertex->position() ) ;
-	    m_twoprongDecaylength->fill( decaylength ) ;
-	    delete twoprong ;
-	  }
+	if( std::abs(dx) < m_ipmax && std::abs(dy) < m_ipmax ) {
+	  double phi = p3.phi() ;
+	  double eta = p3.eta() ;
+	  m_trackXIPVsEta->fill(eta,dx) ;
+	  m_trackXIPVsPhi->fill(phi,dx) ;
+	  m_trackYIPVsEta->fill(eta,dy) ;
+	  m_trackYIPVsPhi->fill(phi,dy) ;
 	}
       }
+      
+      if( goodlongtracks.size()>=2 ) {
+	
+	using namespace boost::lambda;
+	std::sort(goodlongtracks.begin(), goodlongtracks.end(), 
+		  bind(&LHCb::State::pt,bind(&LHCb::Track::firstState,*_1)) <
+		  bind(&LHCb::State::pt,bind(&LHCb::Track::firstState,*_2)) ) ;
+	
+	const LHCb::Track* firsttrack = goodlongtracks.back() ;
+	goodlongtracks.pop_back() ;
 
-      delete restvertex ;
+	// now pick a 2nd track that makes the highest possible invariant mass with this one
+	double highestmass2(0) ;
+	const LHCb::Track* secondtrack(0) ;
+	Gaudi::XYZVector firstp3 = firsttrack->firstState().momentum() ;
+	for( TrackVector::const_iterator it = goodlongtracks.begin();
+	     it != goodlongtracks.end(); ++it) {
+	  Gaudi::XYZVector p3 = (*it)->firstState().momentum() ;
+	  double mass2= p3.r() * firstp3.r() - p3.Dot( firstp3 ) ;
+	  if(secondtrack==0 || highestmass2 < mass2 ) {
+	    highestmass2 = mass2 ;
+	    secondtrack = *it ;
+	  }
+	}
+	
+	// recompute the vertex without these tracks
+	TrackVector::iterator newend = tracks.end() ;
+	newend = std::remove(tracks.begin(),newend,firsttrack) ;
+	newend = std::remove(tracks.begin(),newend,secondtrack) ;
+	tracks.erase(newend,tracks.end()) ;
+	LHCb::RecVertex* restvertex  = m_vertexer->fit( tracks ) ;
+	if( restvertex && firsttrack->nStates()!=0 ) {
+	  const LHCb::State& firststate = firsttrack->firstState() ;
+	  double dz  = restvertex->position().z() - firststate.z() ;
+	  double dx  = firststate.x() + dz * firststate.tx() - restvertex->position().x()  ;
+	  double dy  = firststate.y() + dz * firststate.ty() - restvertex->position().y() ;
+	  double nt  = std::sqrt( firststate.tx()*firststate.tx() + firststate.ty()*firststate.ty() ) ;
+	  // transverse and longitudinal impact parameter
+	  double iptrans = (dx * firststate.ty() - dy * firststate.tx())/nt ;
+	  double iplong  = (dx * firststate.tx() + dy * firststate.ty())/nt ;
+	  Gaudi::XYZVector p3 = firststate.momentum() ;
+	  double phi = p3.phi() ;
+	  double eta = p3.eta() ;
+	  
+	  m_fastTrackTransverseIP->fill(iptrans ) ;
+	  m_fastTrackLongitudinalIP->fill(iplong ) ;
+	  // apply a cut for the profiles
+	  if( std::abs(iptrans) < m_ipmax && std::abs(iplong) < m_ipmax ) {
+	    m_fastTrackTransverseIPVsEta->fill(eta,iptrans) ;
+	    m_fastTrackTransverseIPVsPhi->fill(phi,iptrans) ;
+	    m_fastTrackLongitudinalIPVsEta->fill(eta,iplong) ;
+	    m_fastTrackLongitudinalIPVsPhi->fill(phi,iplong) ;
+	  }
+	  
+	  // The two-track cuts we only make for relatively heavy objects
+	  double mass = std::sqrt(highestmass2) ;
+	  m_twoprongMass->fill(mass / Gaudi::Units::GeV ) ;
+	  if( mass > 1*Gaudi::Units::GeV ) {
+	    // compute doca of two tracks
+	    Gaudi::XYZVector dx3 = firsttrack->firstState().position() - secondtrack->firstState().position() ;
+	    Gaudi::XYZVector n3  = firsttrack->firstState().slopes().Cross( secondtrack->firstState().slopes() ) ;
+	    double doca = dx3.Dot(n3) / n3.R() ;
+	    m_twoprongDoca->fill(doca) ;
+	    if( std::abs(doca) < m_twoprongDoca->axis().upperEdge() ) {
+	      m_twoprongDocaVsEta->fill(firstp3.eta(),doca) ;
+	      m_twoprongDocaVsPhi->fill(firstp3.phi(),doca) ;
+	    }
+	    // the easiest way to compute the pull is with a vertex fit
+	    LHCb::TwoProngVertex* twoprong = m_vertexer->fit(firsttrack->firstState(),secondtrack->firstState()) ;
+	    if(twoprong) {
+	      m_twoprongMomentum->fill( twoprong->p3().R() / Gaudi::Units::GeV ) ;
+	      m_twoprongDocaPull->fill(std::sqrt(twoprong->chi2()) * (doca>0 ? 1 : -1)) ;	      
+	      double chi2, decaylength,decaylengtherr ;
+	      m_vertexer->computeDecayLength( *twoprong, *restvertex, chi2, decaylength,decaylengtherr ) ;
+	      m_twoprongDecaylength->fill( decaylength ) ;
+	      m_twoprongDecaylengthSignificance->fill( decaylength/decaylengtherr ) ;
+	      m_twoprongIPChisquare->fill( chi2 / 2 ) ;
+	      
+	      delete twoprong ;
+	    }
+	  }
+	}
+	delete restvertex ;
+      }
     }
   }
   return StatusCode::SUCCESS ;
