@@ -35,6 +35,10 @@ PatChecker::PatChecker( const std::string& name,
   declareProperty( "CheckMatchNotForward", m_checkMatchNotForward  = false );
   declareProperty( "MeasureTime",          m_measureTime           = false );
   declareProperty( "VeloTrackLocation",    veloSpaceName = LHCb::TrackLocation::Velo);
+  declareProperty( "HltRZVeloTrackLocation", m_hltRZVeloLocation = "");
+  declareProperty( "HltVeloTrackLocation", m_hltVeloLocation = "");
+  declareProperty( "HltVeloTTTrackLocation", m_hltVeloTTLocation = "");
+  declareProperty( "HltForwardTrackLocation", m_hltForwardLocation = ""); 
 }
 //=============================================================================
 // Destructor
@@ -54,10 +58,10 @@ StatusCode PatChecker::initialize() {
   std::string veloTTName    =  LHCb::TrackLocation::VeloTT;
   std::string forwardName   =  LHCb::TrackLocation::Forward;
   if ( "Hlt" == context() ) {
-    veloRzName    = LHCb::TrackLocation::HltRZVelo;
-    veloSpaceName = LHCb::TrackLocation::HltVelo;
-    veloTTName    = LHCb::TrackLocation::HltVeloTT;
-    forwardName   = LHCb::TrackLocation::HltForward;
+    veloRzName    = m_hltRZVeloLocation;
+    veloSpaceName = m_hltVeloLocation;
+    veloTTName    = m_hltVeloTTLocation;
+    forwardName   = m_hltForwardLocation;
   }
 
   m_veloRz = tool<PatCounter>( "PatCounter", "VeloRZ", this );

@@ -67,6 +67,10 @@
     int m_partTime;
 
     std::string veloSpaceName;    
+    std::string m_hltRZVeloLocation;
+    std::string m_hltVeloLocation;
+    std::string m_hltVeloTTLocation;
+    std::string m_hltForwardLocation;
   }; 
 
 #endif // PATCHECKER_H
