@@ -28,8 +28,8 @@ PatForward::PatForward( const std::string& name,
   declareProperty( "TrackSelectorName", m_trackSelectorName = "None");
 
   if ( "Hlt" == context() ) {
-    m_inputTracksName  =  LHCb::TrackLocation::HltVelo;
-    m_outputTracksName =  LHCb::TrackLocation::HltForward;
+    m_inputTracksName  =  "";
+    m_outputTracksName =  "";
   }
   declareProperty( "DeltaNumberInT",   m_deltaNumberInT  = 3 );
   declareProperty( "DeltaNumberInTT",  m_deltaNumberInTT = 1 );
