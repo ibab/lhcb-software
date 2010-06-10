@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2010-06-10 - Wouter Hulsbergen
+ - Added method to TrackVertexer to compute decay length
+
 ! 2010-06-09 - Rob Lambert
  - Fix final windows warning
 

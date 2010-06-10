@@ -36,6 +36,10 @@ public:
   /// Create a vertex from a set of tracks.
   LHCb::RecVertex* fit(const TrackContainer& tracks) const ;
   
+  /// Compute decaylength and IP chi2 wrt to PV. returns true if successful
+  bool computeDecayLength(const LHCb::TwoProngVertex& vertex,
+			  const LHCb::RecVertex& pv,
+			  double& chi2,double& decaylength,double& decaylengtherr) const ;
 private:
   size_t m_maxNumIter ;    ///< Max number of iterations
   double m_maxDChisq ;     ///< Min change in chisquare to run another iteration
