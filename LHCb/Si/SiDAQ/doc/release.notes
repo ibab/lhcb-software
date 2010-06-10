@@ -2,6 +2,9 @@ Package         : SiDAQ
 Package manager : Matt Needham
 !-----------------------------------------------------------------------
 
+! 2010-06-10 - Marco Cattaneo
+ - Fix windows compiler warnings
+
 !========================== SiDAQ v2r1 2008-06-30 ========================
 ! 2008-06-17 M Needham
  - Bug fix in SiHeaderWord decoding

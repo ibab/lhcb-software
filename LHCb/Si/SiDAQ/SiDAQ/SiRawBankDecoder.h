@@ -9,6 +9,10 @@
 #include "SiDAQ/SiRawBufferWord.h"
 #include "SiDAQ/SiADCBankTraits.h"
 
+#ifdef _WIN32
+#pragma warning(disable : 4355) // 'this' used in base member initializer list
+#endif
+
 // forward declaration needed for friendship with iterators
 template<class CLUSTERWORD>
 class SiRawBankDecoder;
