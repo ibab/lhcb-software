@@ -449,13 +449,8 @@ var TriggerStatus = function(msg)   {
   lhcb.widgets.TriggerSetup = function(options) {
     var td, tr, tab = document.createElement('table');
     var tb = document.createElement('tbody');
-
-    tab.className  = 'MonitorPage';
-    tab.width      = '100%';
-    tb.className   = 'MonitorPage';
-    tb.width       = '100%';
-    tb.cellSpacing = 0;
-    tb.cellPadding = 0;
+    tab.className  = tb.className = 'MonitorPage';
+    tb.cellSpacing = tb.cellPadding = 0;
 
     tab.l0Type        = StyledItem('lbWeb.LHCb_RunInfo.Trigger.L0Type',null, null);
     tab.HLTType       = StyledItem('lbWeb.LHCb_RunInfo.Trigger.HLTType',null, null);
@@ -503,7 +498,7 @@ var TriggerStatus = function(msg)   {
     this.trg         = lhcb.widgets.TriggerSetup(opts);
 
     this.left.addItem(this.trg);
-    //this.left.addSpacer('50px');
+    this.left.addSpacer('50px');
     this.left.addItem(this.odin);
 
     this.right.addItem(this.l0du);

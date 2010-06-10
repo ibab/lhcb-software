@@ -61,30 +61,24 @@ if ( !lhcb.widgets ) {
     var tb, td, tr, tab = document.createElement('table');
     tb = document.createElement('tbody');
   
-    tab.width = '100%';
-    tab.className = 'MonitorSubHeader';
-    tb.className = 'MonitorSubHeader';
+    tab.className = tb.className = 'MonitorSubHeader';
   
-    tr = document.createElement('tr');
-    tb.appendChild(tr);
+    tb.appendChild(tr=document.createElement('tr'));
   
-    td = document.createElement('td');
+    tr.appendChild(td=document.createElement('td'));
     td.innerHTML = 'LHC&nbsp;Fill';
-    tr.appendChild(td);
   
     tab.lhcFillNumber = StyledItem('lbWeb.LHCCOM/LHC.LHC.RunControl.FillNumber',null,null);
     tr.appendChild(tab.lhcFillNumber);
   
-    td = document.createElement('td');
+    tr.appendChild(td=document.createElement('td'));
     td.innerHTML = 'is&nbsp;in&nbsp;state:';
-    tr.appendChild(td);
   
     tab.lhcBeamMode = StyledItem('lbWeb.LHCCOM/LHC.LHC.RunControl.BeamMode',null,null);
     tr.appendChild(tab.lhcBeamMode);
   
-    td = document.createElement('td');
+    tr.appendChild(td=document.createElement('td'));
     td.innerHTML = '';
-    tr.appendChild(td);
   
     tab.appendChild(tb);
 
@@ -114,7 +108,6 @@ if ( !lhcb.widgets ) {
     var tb = document.createElement('tbody');
 
     tab.className = tb.className  = 'MonitorPage';
-    tab.width     = '100%';
     tab.height    = '120px';
 
     tab.energy       = StyledItem('lbWeb.LHCCOM/LHC.LHC.Beam.Energy',null,"%7.0f GeV");
@@ -222,9 +215,6 @@ if ( !lhcb.widgets ) {
   lhcb.widgets.LHC_operator_comments = function() {
     var tb, tr, tab = document.createElement('table');
     tb = document.createElement('tbody');
-
-    tab.width  = '100%';
-    tab.height = tb.height  = '100%';
     tab.className = tb.className = 'MonitorPage';
     
     tab.comments   = StyledItem('lbWeb.LHCCOM/LHC.LHC.RunControl.Page1Comment',null,null);
@@ -264,10 +254,7 @@ if ( !lhcb.widgets ) {
   lhcb.widgets.LHCb_shift_comments = function() {
     var tb, tr, tab = document.createElement('table');
     tb = document.createElement('tbody');
-
-    tab.className = 'MonitorPage';
-    tb.className = 'MonitorPage';
-    tab.width = '100%';
+    tab.className = tb.className = 'MonitorPage';
 
     tab.comments   = StyledItem('lbWeb.shiftComments',null,null);
     tab.comments.conversion = function(data) { return data.replace(/\n/g,'<BR>');    };
@@ -298,10 +285,7 @@ if ( !lhcb.widgets ) {
   lhcb.widgets.LHCb_PlanOfDay = function(options) {
     var tb, tr, tab = document.createElement('table');
     tb = document.createElement('tbody');
-
-    tab.className = 'MonitorPage';
-    tb.className = 'MonitorPage';
-    tab.width = '100%';
+    tab.className = tb.className = 'MonitorPage';
 
     tab.comments   = StyledItem('lbWeb.LHCCOM/LHC.LHCb.Internal.Plan',null,null);
     tab.comments.conversion = function(data) { return data.replace(/\n/g,'<BR>');    };
@@ -312,8 +296,7 @@ if ( !lhcb.widgets ) {
       tb.appendChild(tr);
       tr.appendChild(Cell('Plan of the day:',null,options.style));
     }
-    tr = document.createElement('tr');
-    tb.appendChild(tr);
+    tb.appendChild(tr=document.createElement('tr'));
     tr.appendChild(tab.comments);
     tab.comments.height = '100px';
     tab.appendChild(tb);
@@ -339,34 +322,25 @@ if ( !lhcb.widgets ) {
    * @version 1.0
    */
   lhcb.widgets.Det_Run_header = function(sys,logger) {
-    var tab = document.createElement('table');
+    var td, tr, tab = document.createElement('table');
     var tb  = document.createElement('tbody');
-    var tr  = document.createElement('tr');
-    var td  = document.createElement('td');
 
-    tab.style.width = tb.style.width = '100%';
     tab.style.height = tb.style.height = '100%';
     tab.className = tb.className = 'MonitorSubHeader';
 
-    tb.appendChild(tr);
-
-    td.innerHTML = 'Run';
-    tr.appendChild(td);
-    
     tab.runNumber = StyledItem('lbWeb.'+sys+'_RunInfo.general.runNumber',null,null);
-    tr.appendChild(tab.runNumber);
-    
-    td = document.createElement('td');
-    td.innerHTML = ' is ';
-    tr.appendChild(td);
-    
     tab.runState = FSMItem('lbWeb.'+sys,logger,true);
+
+    tb.appendChild(tr=document.createElement('tr'));
+    tr.appendChild(td=document.createElement('td'));
+    td.innerHTML = 'Run';    
+    tr.appendChild(tab.runNumber);
+    tr.appendChild(td=document.createElement('td'));
+    td.innerHTML = ' is ';
     tr.appendChild(tab.runState);
     tr.appendChild(tab.runState.lock);
-
-    td = document.createElement('td');
+    tr.appendChild(td=document.createElement('td'));
     td.innerHTML = '';
-    tr.appendChild(td);
 
     tab.appendChild(tb);
 
@@ -401,7 +375,6 @@ if ( !lhcb.widgets ) {
     tb = document.createElement('tbody');
 
     tab.className  = tb.className = 'MonitorPage';
-    tab.width      = '100%';
     tb.cellSpacing = 0;
     tb.cellPadding = 0;
 
@@ -765,59 +738,51 @@ if ( !lhcb.widgets ) {
     tab.instantLumi    = StyledItem('lbWeb.LHCCOM/LHC.LHCb.Internal.Luminosity.LumiInst_GP', null, '%7.2f Hz/&mu;b');
 
     if ( options.style ) {
-      tr = document.createElement('tr');
-      tb.appendChild(tr);
+      tb.appendChild(tr=document.createElement('tr'));
       tr.appendChild(Cell('Data taking rates and instantaneous luminosity',5,options.style));
     }
 
     // Run status
-    tr = document.createElement('tr');
-    tb.appendChild(tr);
+    tb.appendChild(tr=document.createElement('tr'));
     tr.appendChild(Cell('Activity:',null,'MonitorDataHeader'));
     tr.appendChild(tab.runType);
     tab.runType.colSpan = 4;
     tab.runType.style.textAlign = 'left';
 
     // Luminosity and interaction information
-    tr = document.createElement('tr');
-    tb.appendChild(tr);
+    tb.appendChild(tr=document.createElement('tr'));
     tr.appendChild(Cell('Interaction rate:',null,'MonitorDataHeader'));
     tr.appendChild(tab.interActionRate);
     tr.appendChild(Cell('Inst.Lumi:',1,'MonitorDataHeader'));
     tr.appendChild(tab.instantLumi);
 
     // Event processing information
-    tr = document.createElement('tr');
-    tb.appendChild(tr);
+    tb.appendChild(tr=document.createElement('tr'));
     tr.appendChild(Cell('L0 Events:',null,'MonitorDataHeader'));
     tr.appendChild(tab.nTriggers);
     tr.appendChild(Cell('accepted:',1,'MonitorDataHeader'));
     tr.appendChild(tab.hltNTriggers);
 
-    tr = document.createElement('tr');
-    tb.appendChild(tr);
+    tb.appendChild(tr=document.createElement('tr'));
     tr.appendChild(Cell('',1,null));
     tr.appendChild(Cell('Now',2,'MonitorDataHeader'));
     tr.appendChild(Cell('Run',2,'MonitorDataHeader'));
 
-    tr = document.createElement('tr');
-    tb.appendChild(tr);
+    tb.appendChild(tr=document.createElement('tr'));
     tr.appendChild(Cell('L0 rate:',1,'MonitorDataHeader'));
     tab.l0Rate.colSpan = 2;
     tab.l0RateRun.colSpan = 2;
     tr.appendChild(tab.l0Rate);
     tr.appendChild(tab.l0RateRun);
 
-    tr = document.createElement('tr');
-    tb.appendChild(tr);
+    tb.appendChild(tr=document.createElement('tr'));
     tr.appendChild(Cell('HLT rate:',1,'MonitorDataHeader'));
     tab.hltRate.colSpan = 2;
     tab.hltRateRun.colSpan = 2;
     tr.appendChild(tab.hltRate);
     tr.appendChild(tab.hltRateRun);
 
-    tr = document.createElement('tr');
-    tb.appendChild(tr);
+    tb.appendChild(tr=document.createElement('tr'));
     tr.appendChild(Cell('Dead-time:',null,'MonitorDataHeader'));
     tab.deadTime.colSpan = 2;
     tab.deadTimeRun.colSpan = 2;
@@ -853,17 +818,16 @@ if ( !lhcb.widgets ) {
     tb.className  = 'MonitorPage';
     tb.height    = '120px';
     if ( options.style ) {
-      tr = document.createElement('tr');
+      tb.appendChild(tr=document.createElement('tr'));
       tr.appendChild(Cell('Magnet Status',3,options.style));
-      tb.appendChild(tr);
-      tr = document.createElement('tr');
     }
     if ( options.legend ) {
+      tb.appendChild(tr=document.createElement('tr'));
       tr.appendChild(Cell('Set Current',1,'MonitorDataHeader'));
       tr.appendChild(Cell('Measured Current',1,'MonitorDataHeader'));
       tr.appendChild(Cell('Polarity',1,'MonitorDataHeader'));
     }
-    tb.appendChild(tr);
+    tb.appendChild(tr=document.createElement('tr'));
     tab.magSet      = StyledItem('lbWeb.LbMagnet.SetCurrent',null,'%7.0f A');
     tab.magRead     = StyledItem('lbWeb.LbMagnet.Current',null,'%7.0f A');
     tab.magPolarity = StyledItem('lbWeb.LbMagnet.Polarity',null,null);
@@ -872,7 +836,7 @@ if ( !lhcb.widgets ) {
     tr.appendChild(tab.magSet);
     tr.appendChild(tab.magRead);
     tr.appendChild(tab.magPolarity);
-    tb.appendChild(tr);
+
     tab.appendChild(tb);
 
     tab.subscribe = function(provider) {
@@ -906,9 +870,8 @@ if ( !lhcb.widgets ) {
     tab.richCoolingStatus  = StyledItem('lbWeb.CaV/RichPlant.Actual.status', null, null);
     */
     if ( options.style ) {
-      tr = document.createElement('tr');
+      tb.appendChild(tr=document.createElement('tr'));
       tr.appendChild(Cell('Cooling Plant Status',5,options.style));
-      tb.appendChild(tr);
     }
     tr = document.createElement('tr');
     tb.appendChild(tr);
@@ -921,8 +884,7 @@ if ( !lhcb.widgets ) {
     tr.appendChild(Cell('OT',1,'MonitorDataHeader'));
     tr.appendChild(Cell('Rich',1,'MonitorDataHeader'));
 
-    tr = document.createElement('tr');
-    tb.appendChild(tr);
+    tb.appendChild(tr=document.createElement('tr'));
     if ( options.legend ) tr.appendChild(Cell('Alarms',1,'MonitorDataHeader'));
 
     tr.appendChild(tab.itCoolingAlarms);
@@ -930,9 +892,8 @@ if ( !lhcb.widgets ) {
     tr.appendChild(tab.otCoolingAlarms);
     tr.appendChild(tab.richCoolingAlarms);
 
-    tr = document.createElement('tr');
-    tb.appendChild(tr);
-     if ( options.legend ) tr.appendChild(Cell('Faults',1,'MonitorDataHeader'));
+    tb.appendChild(tr=document.createElement('tr'));
+    if ( options.legend ) tr.appendChild(Cell('Faults',1,'MonitorDataHeader'));
 
     tr.appendChild(tab.itCoolingFaults);
     tr.appendChild(tab.ttCoolingFaults);
@@ -940,9 +901,8 @@ if ( !lhcb.widgets ) {
     tr.appendChild(tab.richCoolingFaults);
 
     /*
-    tr = document.createElement('tr');
-    tb.appendChild(tr);
-     if ( options.legend ) tr.appendChild(Cell('Status',1,'MonitorDataHeader'));
+    tb.appendChild(tr=document.createElement('tr'));
+    if ( options.legend ) tr.appendChild(Cell('Status',1,'MonitorDataHeader'));
 
     tr.appendChild(tab.itCoolingStatus);
     tr.appendChild(tab.ttCoolingStatus);
@@ -978,16 +938,15 @@ if ( !lhcb.widgets ) {
     tab.className = tb.className = 'MonitorPage';
 
     if ( options.style ) {
-      tr = document.createElement('tr');
+      tb.appendChild(tr=document.createElement('tr'));
       tr.appendChild(c=Cell('Background Status and Beam Permits:',7,options.style));
       c.style.width='100%';
-      tb.appendChild(tr);
     }
 
     tab.bcmBeamPermit1 = StyledItem('lbWeb.BCM_Interface.BeamPermit.getStatus',null,null);
     tab.bcmBeamPermit2 = StyledItem('lbWeb.BCM_Interface.InjPermit1.getStatus',null,null);
     tab.bcmBeamPermit3 = StyledItem('lbWeb.BCM_Interface.InjPermit2.getStatus',null,null);
-    tr = document.createElement('tr');
+    tb.appendChild(tr=document.createElement('tr'));
     if ( options.legend ) {
       tr.appendChild(c=Cell('Permits',1,'MonitorDataHeader'));
       c.style.width = '25%';
@@ -998,13 +957,12 @@ if ( !lhcb.widgets ) {
     tab.bcmBeamPermit2.colSpan = 2;
     tr.appendChild(tab.bcmBeamPermit3);
     tab.bcmBeamPermit3.colSpan = 2;
-    tb.appendChild(tr);
 
     tab.figureOfMerit1 = StyledItem('lbWeb.BCM_DP_S0.RS2_REL',             null, '%7.3f');
     tab.figureOfMerit2 = StyledItem('lbWeb.BCM_DP_S0.RS32_REL',            null, '%7.3f');
     tab.figureOfMerit3 = StyledItem('lbWeb.BCM_DP_S1.RS2_REL',             null, '%7.3f');
     tab.figureOfMerit4 = StyledItem('lbWeb.BCM_DP_S1.RS32_REL',            null, '%7.3f');
-    tr = document.createElement('tr');
+    tb.appendChild(tr=document.createElement('tr'));
     if ( options.legend ) {
       tr.appendChild(Cell('FoM',null,'MonitorDataHeader'));
     }
@@ -1014,7 +972,6 @@ if ( !lhcb.widgets ) {
     tr.appendChild(Cell('S1.RS2/32:',1,'MonitorDataHeader'));
     tr.appendChild(tab.figureOfMerit3);
     tr.appendChild(tab.figureOfMerit4);
-    tb.appendChild(tr);
     tab.appendChild(tb);
 
     tab.subscribe = function(provider) {
@@ -1031,23 +988,20 @@ if ( !lhcb.widgets ) {
   };
 
   lhcb.widgets.SafetySummary = function(options) {
-    var tb, tr, cell, tab = document.createElement('table');
-    
-    tab.className  = 'MonitorPage';
-    tb = document.createElement('tbody');
+    var tr, cell, tab = document.createElement('table');
+    var tb = document.createElement('tbody');
+
+    tab.className =  tb.className = 'MonitorPage';
     tooltips.set(tb,'Safety status of the subdetectors');
-    tb.className  = 'MonitorPage';
     if ( options.style ) {
-      tr = document.createElement('tr');
+      tb.appendChild(tr=document.createElement('tr'));
       tr.appendChild(Cell('Safety',3,options.style));
-      tb.appendChild(tr);
     }
     if ( options.legend ) {
-      tr = document.createElement('tr');
+      tb.appendChild(tr=document.createElement('tr'));
       tr.appendChild(Cell('Subdetector',1,'MonitorDataHeader'));
       tr.appendChild(Cell('State',1,'MonitorDataHeader'));
       tr.appendChild(Cell('',1,null));
-      tb.appendChild(tr);
     }
     if ( options.all || options.rich ) tab.richSafety = FSMItem('lbWeb.RICH_SAFETY',options.logger,true);
     if ( options.all || options.muon ) tab.muonSafety = FSMItem('lbWeb.MUON_Safety',options.logger,true);
@@ -1069,26 +1023,28 @@ if ( !lhcb.widgets ) {
     return tab;
   };
 
+  /** Online widgets. RICH gas pressures
+   *
+   *  @author M.Frank
+   */
   lhcb.widgets.RICHPressures = function(options) {
     var tb, tr, cell, tab = document.createElement('table');
-    tab.className  = 'MonitorPage';
+
     tb = document.createElement('tbody');
     tooltips.set(tb,'Rich parameters');
-    tb.className  = 'MonitorPage';
+    tab.className =  tb.className = 'MonitorPage';
     tb.height    = '120px';
 
     if ( options.style ) {
-      tr = document.createElement('tr');
+      tb.appendChild(tr=document.createElement('tr'));
       tr.appendChild(Cell('Rich1 Gas',2,options.style));
       tr.appendChild(Cell('Rich2 Gas',2,options.style));
-      tb.appendChild(tr);
     }
     if ( options.legend ) {
-      tr = document.createElement('tr');
+      tb.appendChild(tr=document.createElement('tr'));
       tr.appendChild(Cell('Pressure:',1,'MonitorDataHeader'));
       tr.appendChild(Cell('Temperatur',1,'MonitorDataHeader'));
       tr.appendChild(Cell('Pressure:',1,'MonitorDataHeader'));
-      tr.appendChild(Cell('Temperatur',1,'MonitorDataHeader'));
     }
     if ( options.tips ) {
       tooltips.set(tb,options.tips);
@@ -1102,12 +1058,11 @@ if ( !lhcb.widgets ) {
     tab.rich2Pressure = StyledItem('lbWeb.LHCb_RunInfoCond.RICH2.R2HltGasParameters.Pressure',null,'%7.2f hPa');
     tab.rich2Temp     = StyledItem('lbWeb.LHCb_RunInfoCond.RICH2.R2HltGasParameters.Temperature',null,'%7.1f K');
 
-    tr = document.createElement('tr');
+    tb.appendChild(tr=document.createElement('tr'));
     tr.appendChild(tab.rich1Pressure);
     tr.appendChild(tab.rich1Temp);
     tr.appendChild(tab.rich2Pressure);
     tr.appendChild(tab.rich2Temp);
-    tb.appendChild(tr);
     tab.appendChild(tb);
 
     tab.subscribe = function(provider) {
@@ -1121,6 +1076,10 @@ if ( !lhcb.widgets ) {
   lhcb.widgets.rich = new Object();
   lhcb.widgets.rich.Pressures = lhcb.widgets.RICHPressures;
 
+  /** Online widgets. HV Summary for subdetector(s) from ECS project
+   *
+   *  @author M.Frank
+   */
   lhcb.widgets.HVSummary = function(logger) {
     var tb, tr, cell, tab = document.createElement('table');
     tab.className  = 'MonitorPage';
@@ -1185,21 +1144,20 @@ if ( !lhcb.widgets ) {
 	tb.appendChild(tr);
       }
       if ( options.top ) {
-	tr = document.createElement('tr');
+	tb.appendChild(tr=document.createElement('tr'));
 	tr.appendChild(Cell('System',1,'MonitorDataHeader'));
 	tr.appendChild(Cell('State',1,'MonitorDataHeader'));
 	tr.appendChild(Cell('Requested',1,'MonitorDataHeader'));
-	tb.appendChild(tr);
-	tr = document.createElement('tr');
+
 	this.hvState  = FSMItem('lbWeb.LHCb_LHC_HV',this.logger,true);
 	this.hvRequest = StyledItem('lbWeb.LHCb_LHC_HV_Info.requestedState',null,null);
 	
+	tb.appendChild(tr=document.createElement('tr'));
 	tr.appendChild(Cell('LHCb HV &amp; LV',1,'MonitorDataHeader'));
 	tr.appendChild(this.hvState);
 	tr.appendChild(this.hvRequest);
 	tr.appendChild(this.hvState.lock);
 	this.hvState.lock.className = null;
-	tb.appendChild(tr);
 	this.appendChild(tb);
       }
 
@@ -1218,13 +1176,7 @@ if ( !lhcb.widgets ) {
 	tr.appendChild(cell=Cell('State',1,'MonitorDataHeader'));
 	tr.appendChild(cell=Cell('Request',1,'MonitorDataHeader'));
 	cell.style.width = '20%';
-	if ( this.split ) {
-	  tr.appendChild(cell=Cell('HV State Side A / C',2,'MonitorDataHeader'));
-	}
-	else {
-	  tr.appendChild(cell=Cell('HV State',2,'MonitorDataHeader'));
-	}
-	tb.appendChild(tr);
+	tr.appendChild(Cell(this.split ? 'HV State Side A / C' : 'HV State',2,'MonitorDataHeader'));
       }
       this.addHV(tb);
       this.appendChild(tb);
@@ -1345,54 +1297,52 @@ if ( !lhcb.widgets ) {
       }
       return tr;
     };
-    for(var i=0; i<options.items.length;++i) {
+    for(var i=0; i<options.items.length;++i)
       tb.appendChild(tab.addSystem(sys,options.items[i]));
-    }
     tab.appendChild(tb);
 
     tab.subscribe = function(provider) {
-      for(var i=0; i<this.subscriptions.length;++i) {
+      for(var i=0; i<this.subscriptions.length;++i)
 	provider.subscribeItem(this.subscriptions[i]);
-      }
     };
     return tab;
   };
 
+  /** Online widgets. DAQ efficiency
+   *
+   *  @author M.Frank
+   */
   lhcb.widgets.DAQEfficiency = function(options) {
-    var tb, tr, tab = document.createElement('table');
+    var tr, tab = document.createElement('table');
+    var tb = document.createElement('tbody');
     var type = options.efficiency_type;
     if ( !type ) type = 'Lumi';
-    tab.className  = 'MonitorPage';
+    tab.className  = tb.className = 'MonitorPage';
     
-    tb = document.createElement('tbody');
     tooltips.set(tb,'Run efficiency summary normalized to<br> '+type+' of datataking during this fill.');
-    tb.className = 'MonitorPage';
     tb.height    = '120px';
     if ( options.style ) {
-      tr = document.createElement('tr');
+      tb.appendChild(tr=document.createElement('tr'));
       tr.appendChild(Cell('Efficiency normalized to '+type,3,options.style));
-      tb.appendChild(tr);
     }
     if ( options.legend ) {
-      tr = document.createElement('tr');
+      tb.appendChild(tr=document.createElement('tr'));
       tr.appendChild(Cell('HV Ready',   1,'MonitorDataHeader'));
       tr.appendChild(Cell('VELO IN',    1,'MonitorDataHeader'));
       tr.appendChild(Cell('DAQ stopped',1,'MonitorDataHeader'));
       tr.appendChild(Cell('dead time',  1,'MonitorDataHeader'));
     }
-    tb.appendChild(tr);
     tab.hv      = StyledItem('lbWeb.LHCbEfficiency.Results'+type+'.HV',null,'%7.2f %%');
     tab.velo    = StyledItem('lbWeb.LHCbEfficiency.Results'+type+'.VELO',null,'%7.2f %%');
     tab.daq     = StyledItem('lbWeb.LHCbEfficiency.Results'+type+'.DAQ',null,'%7.2f %%');
     tab.dead    = StyledItem('lbWeb.LHCbEfficiency.Results'+type+'.DAQLiveTime',null,'%7.2f %%');
     tab.total   = StyledItem('lbWeb.LHCbEfficiency.'+type+'Total',null,'%7.2f %%');
-    tr = document.createElement('tr');
+    tb.appendChild(tr=document.createElement('tr'));
     tr.appendChild(tab.hv);
     tr.appendChild(tab.velo);
     tr.appendChild(tab.daq);
     tr.appendChild(tab.dead);
     tr.appendChild(tab.total);
-    tb.appendChild(tr);
     tab.appendChild(tb);
 
     tab.subscribe = function(provider) {
@@ -1415,8 +1365,7 @@ if ( !lhcb.widgets ) {
     table.logger    = null;
     if ( table.system.indexOf(' ')>0 ) table.system = name.substr(0,name.indexOf(' '));
     table.add = function() {
-      var tr = document.createElement('tr');
-      var td = document.createElement('td');
+      var td = document.createElement('td'), tr = document.createElement('tr');
       td.setAttribute('colSpan',2);
       tr.appendChild(td);
       this.body.appendChild(tr);
@@ -1443,6 +1392,7 @@ if ( !lhcb.widgets ) {
 
     /// Empty placeholder
     table.attachWidgets = function() {  };
+    table.beforeComment = function() {  };
 
     table.build = function(options) {
       var tab = document.createElement('table');
@@ -1483,24 +1433,21 @@ if ( !lhcb.widgets ) {
       this.timerHandler = function() {document.getElementById('current_time').innerHTML = (new Date()).toString(); };
       setInterval(this.timerHandler,2000);
 
-      tr = document.createElement('tr');
-
+      tb.appendChild(tr=document.createElement('tr'));
       tr.appendChild(td=document.createElement('td'));
       td.style.width = '55%';
       td.appendChild(this.lhc_header=lhcb.widgets.LHC_header());
-
       tr.appendChild(td=document.createElement('td'));
       td.appendChild(this.run_header=lhcb.widgets.Det_Run_header('LHCb',this.logger));
       td.width = '45%';
 
       this.lhc_header.style.height = '60px';
       this.run_header.style.height = '60px';
-      tb.appendChild(tr);
       this.subscriptions.push(this.lhc_header);
       this.subscriptions.push(this.run_header);
 
 
-      tr = document.createElement('tr');
+      tb.appendChild(tr=document.createElement('tr'));
       // Left half of the display
       tr.appendChild(td=document.createElement('td'));
       td.appendChild(t1=document.createElement('table'));
@@ -1534,19 +1481,14 @@ if ( !lhcb.widgets ) {
       this.right.addSpacer = this.left.addSpacer;
       this.left.parent = this.right.parent = this;
 
-      this.attachWidgets();
-
       this.tbody = tb;
-      tb.appendChild(tr);
-      if ( this.beforeComment ) {
-	this.beforeComment();
-      }
+      this.attachWidgets();
+      this.beforeComment();
 
       // Finally add suggestions text
-      tr = document.createElement('tr');
+      tb.appendChild(tr=document.createElement('tr'));
       tr.appendChild(Cell('',null,null));
       tr.appendChild(Cell('Comments and suggestions to M.Frank CERN/LHCb',2,'MonitorTinyHeader'));
-      tb.appendChild(tr);
 
       tb.appendChild(tr);
       tab.appendChild(tb);
@@ -1555,9 +1497,8 @@ if ( !lhcb.widgets ) {
     };
 
     table.subscribe = function() {
-      for(var i=0; i<this.subscriptions.length; ++i) {
+      for(var i=0; i<this.subscriptions.length; ++i)
 	this.subscriptions[i].subscribe(this.provider);
-      }
     };
     return table;
   };
@@ -1571,10 +1512,8 @@ if ( !lhcb.widgets ) {
     body.appendChild(display);
     body.className = 'MainBody';
     if ( display.options.title ) setWindowTitle(display.options.title);
-    if ( msg > 0 )
-    display.logger = new OutputLogger(display.logDisplay, 200, LOG_INFO, 'StatusLogger');
-    else
-    display.logger = new OutputLogger(display.logDisplay,  -1, LOG_INFO, 'StatusLogger');
+    if ( msg > 0 ) display.logger = new OutputLogger(display.logDisplay, 200, LOG_INFO, 'StatusLogger');
+    else           display.logger = new OutputLogger(display.logDisplay,  -1, LOG_INFO, 'StatusLogger');
     display.provider = new DataProvider(display.logger);
     display.provider.topic = '/topic/status';
     display.build(display.options);
@@ -1995,64 +1934,207 @@ if ( !lhcb.widgets ) {
    *
    *  @author  M.Frank
    */
-  lhcb.widgets.DSS.OTCaVPlantStatus = function(options) {
+  lhcb.widgets.DSS.CaVPlantStatus = function(sys, options) {
     var tab = document.createElement('table');
     var tb = document.createElement('tbody');
     var tr, cell;
 
-    tab.logger = options.logger;
     tab.subscriptions=[];
-    tab.className = 'MonitorPage';
-    tb.className   = 'MonitorPage';
+    tab.logger = options.logger;
+    tab.className = tb.className = 'MonitorPage';
     if ( options.style ) {
       tr = document.createElement('tr');
-      tr.appendChild(Cell('OT Cooling plant status',4,options.style));
+      tr.appendChild(Cell(sys+' Cooling plant status',4,options.style));
       tb.appendChild(tr);
     }
-    tab.outletPressure = StyledItem('lbWeb.CaV/OtPlant.Actual.Parameters.param03',null,'%7.2f bar');
-    tab.outletTemperature = StyledItem('lbWeb.CaV/OtPlant.Actual.Parameters.param04',null,'%7.2f <sup>o</sup>C');
+    tab.runState = StyledItem('lbWeb.CaV/'+sys+'Plant.Actual.status',null,null);
+    tab.setLEDs = function(data) {
+      for(var i=4; i<12; ++i) {
+	var m = data&(1<<i);
+	var l = this.leds[i-4];
+	l.style.color = data&(1<<i) ? 'black' : 'white';
+	l.bgColor     = data&(1<<i) ? '#00CC99' : '#333333';
+	l.innerHTML   = data&(1<<i) ? 'ON' : 'OFF';
+      }
+    };
+    tab.runState.parent = tab;
+    tab.runState.conversion = function(data) {
+      var t='';
+      var v0 = parseInt(data);
+      var v = v0&0xF;
+      for(var i=0; i<4; ++i) {
+	var m = v&(1<<i);
+	if ( 0 != m ) {
+	  if ( (v^m) != 0 ) {
+	    this.className = 'FwDEAD';
+	    this.parent.setLEDs(v0);
+	    return 'Invalid ('+data+')';
+	  }
+	  else if ( i == 2 )  {
+	    this.className = 'FwStateOKPhysics';
+	    this.parent.setLEDs(v0);
+	    return 'Run mode';
+	  }
+	  else if ( i == 0 )  {
+	    this.className = 'FwStateAttention3';
+	    this.parent.setLEDs(v0);
+	    return 'System OFF';
+	  }
+	  else {
+	    this.className = 'FwDEAD';
+	    this.parent.setLEDs(v0);
+	    if ( i == 0      ) return 'System OFF';
+	    else if ( i == 1 ) return 'Stand-by mode';
+	    else if ( i == 3 ) return 'Recovering';
+	  }
+	}
+      }
+      this.className = 'FwDEAD';
+      return 'Invalid:'+data;
+    };
 
-    tab.mixedWaterIn  = StyledItem('lbWeb.CaV/OtPlant.Actual.Measurements.param13',null,'%7.2f <sup>o</sup>C');
-    tab.mixedWaterOut = StyledItem('lbWeb.CaV/OtPlant.Actual.Measurements.param14',null,'%7.2f <sup>o</sup>C');
-    tab.runState = StyledItem('lbWeb.CaV/OtPlant.Actual.Parameters.param13xxx',null,null);
-    tab.fault    = StyledItem('lbWeb.CaV/OtPlant.Actual.fault',null,null);
-    tab.alarm    = StyledItem('lbWeb.CaV/OtPlant.Actual.alarm',null,null);
+    tab.OTspecific = function(tb) {
+      this.outletPressure = StyledItem('lbWeb.CaV/'+sys+'Plant.Actual.Parameters.param03',null,'%7.2f bar');
+      this.outletTemperature = StyledItem('lbWeb.CaV/'+sys+'Plant.Actual.Parameters.param04',null,'%7.2f <sup>o</sup>C');
+      this.mixedWaterIn  = StyledItem('lbWeb.CaV/'+sys+'Plant.Actual.Measurements.param13',null,'%7.2f <sup>o</sup>C');
+      this.mixedWaterOut = StyledItem('lbWeb.CaV/'+sys+'Plant.Actual.Measurements.param14',null,'%7.2f <sup>o</sup>C');
+      this.subscriptions.push(this.outletPressure);
+      this.subscriptions.push(this.outletTemperature);
+      this.subscriptions.push(this.mixedWaterIn);
+      this.subscriptions.push(this.mixedWaterOut);
+      tb.appendChild(tr=document.createElement('tr'));
+      tr.appendChild(cell=Cell('Outlet',2,'MonitorDataHeader'));
+      tr.appendChild(Cell('Press:',1,null));
+      tr.appendChild(this.outletPressure);
+      tr.appendChild(Cell('Temp:',1,null));
+      tr.appendChild(this.outletTemperature);
+
+      tb.appendChild(tr=document.createElement('tr'));
+      tr.appendChild(Cell('Mixed water',2,'MonitorDataHeader'));
+      tr.appendChild(Cell('In:',1,null));
+      tr.appendChild(this.mixedWaterIn);
+      tr.appendChild(Cell('Out:',1,null));
+      tr.appendChild(this.mixedWaterOut);
+    };
+
+    tab.TTspecific = function(tb) {
+      this.tt_manifold_temp01 = StyledItem('lbWeb.CaV/TtPlant.Actual.Measurements.param11',null,'%7.2f &#186;C');
+      this.tt_manifold_temp02 = StyledItem('lbWeb.CaV/TtPlant.Actual.Measurements.param12',null,'%7.2f &#186;C');
+      this.tt_manifold_temp03 = StyledItem('lbWeb.CaV/TtPlant.Actual.Measurements.param13',null,'%7.2f &#186;C');
+      this.tt_manifold_temp04 = StyledItem('lbWeb.CaV/TtPlant.Actual.Measurements.param14',null,'%7.2f &#186;C');
+      this.tt_c6f14flow       = StyledItem('lbWeb.CaV/TtPlant.Actual.Measurements.param18',null,'%7.2f l/h');
+      this.subscriptions.push(this.tt_manifold_temp01);
+      this.subscriptions.push(this.tt_manifold_temp02);
+      this.subscriptions.push(this.tt_manifold_temp03);
+      this.subscriptions.push(this.tt_manifold_temp04);
+      this.subscriptions.push(this.tt_c6f14flow);
+
+      tb.appendChild(tr=document.createElement('tr'));
+      tr.appendChild(cell=Cell('Manifold<br>Temperatures',1,'MonitorDataHeader'));
+      cell.rowSpan = "2";
+      tr.appendChild(Cell('Temp.1:',1,null));
+      tr.appendChild(this.tt_manifold_temp01);
+      tr.appendChild(Cell('Temp.2:',1,null));
+      tr.appendChild(this.tt_manifold_temp02);
+
+      tb.appendChild(tr=document.createElement('tr'));
+      tr.appendChild(Cell('Temp.3:',1,null));
+      tr.appendChild(this.tt_manifold_temp03);
+      tr.appendChild(Cell('Temp.4:',1,null));
+      tr.appendChild(this.tt_manifold_temp04);
+
+      tb.appendChild(tr=document.createElement('tr'));
+      tr.appendChild(Cell('C6F14 flow:',1,'MonitorDataHeader'));
+      tr.appendChild(this.tt_c6f14flow);
+      this.tt_c6f14flow.colSpan = 2;
+      tr.appendChild(Cell('',2,null));
+    };
+    tab.ITspecific = function(tb) {
+      this.it_manifold_temp01 = StyledItem('lbWeb.CaV/ItPlant.Actual.Measurements.param01',null,'%7.2f &#186;C');
+      this.it_manifold_temp02 = StyledItem('lbWeb.CaV/ItPlant.Actual.Measurements.param02',null,'%7.2f &#186;C');
+      this.it_c6f14flow = StyledItem('lbWeb.CaV/ItPlant.Actual.Measurements.param06',null,'%7.2f l/h');
+      this.subscriptions.push(this.it_manifold_temp01);
+      this.subscriptions.push(this.it_manifold_temp02);
+      this.subscriptions.push(this.it_c6f14flow);
+      tb.appendChild(tr=document.createElement('tr'));
+      tr.appendChild(cell=Cell('Manifold',1,'MonitorDataHeader'));
+      tr.appendChild(Cell('Temp.1:',1,null));
+      tr.appendChild(this.it_manifold_temp01);
+      tr.appendChild(Cell('Temp.2:',1,null));
+      tr.appendChild(this.it_manifold_temp02);
+
+      tb.appendChild(tr=document.createElement('tr'));
+      tr.appendChild(Cell('C6F14 flow:',1,'MonitorDataHeader'));
+      tr.appendChild(this.it_c6f14flow);
+      tr.appendChild(Cell('',4,null));
+    };
+
+    if      ( sys=='Ot'   ) tab.specific = tab.OTspecific;
+    else if ( sys == 'It' ) tab.specific = tab.ITspecific;
+    else if ( sys == 'Tt' ) tab.specific = tab.TTspecific;
+    if ( tab.specific ) {
+      tb.appendChild(tr=document.createElement('tr'));
+      tr.appendChild(cell=document.createElement('td'));
+      cell.colSpan = 6;
+      var t1, tb1;
+      cell.appendChild(t1=document.createElement('table'));
+      t1.appendChild(tb1=document.createElement('tbody'));
+      t1.className = tb1.className = 'MonitorInnerFrame';
+      tab.specific(tb1);
+    }
+
+    tab.fault    = StyledItem('lbWeb.CaV/'+sys+'Plant.Actual.fault',null,null);
+    tab.alarm    = StyledItem('lbWeb.CaV/'+sys+'Plant.Actual.alarm',null,null);
     tab.fault.conversion = tab.alarm.conversion = function(data) 
     { return data=="FALSE" ? lhcb.widgets.green_smiley() : lhcb.widgets.red_smiley();  };
 
-    tab.subscriptions.push(tab.outletPressure);
-    tab.subscriptions.push(tab.outletTemperature);
     tab.subscriptions.push(tab.fault);
     tab.subscriptions.push(tab.alarm);
     tab.subscriptions.push(tab.runState);
-    tab.subscriptions.push(tab.mixedWaterIn);
-    tab.subscriptions.push(tab.mixedWaterOut);
     
-    tr = document.createElement('tr');
-    tr.appendChild(cell=Cell('Outlet',2,'MonitorDataHeader'));
-    cell.style.width='30%';
-    tr.appendChild(Cell('Pressure:',1,null));
-    tr.appendChild(tab.outletPressure);
-    tr.appendChild(Cell('Temp:',1,null));
-    tr.appendChild(tab.outletTemperature);
-    tb.appendChild(tr);
-
-    tr = document.createElement('tr');
-    tr.appendChild(Cell('Mixed water',2,'MonitorDataHeader'));
-    tr.appendChild(Cell('In:',1,null));
-    tr.appendChild(tab.mixedWaterIn);
-    tr.appendChild(Cell('Out:',1,null));
-    tr.appendChild(tab.mixedWaterOut);
-    tb.appendChild(tr);
-
-    tr = document.createElement('tr');
-    tr.appendChild(Cell('Run state:',1,null));
+    tb.appendChild(tr=document.createElement('tr'));
+    tr.appendChild(Cell('State:',1,null));
     tr.appendChild(tab.runState);
     tr.appendChild(Cell('Alarms:',1,null));
     tr.appendChild(tab.alarm);
     tr.appendChild(Cell('Faults:',1,null));
     tr.appendChild(tab.fault);
-    tb.appendChild(tr);
+
+    if ( options.style ) {
+      tr = document.createElement('tr');
+      tr.appendChild(Cell('Plant status bits:',4,options.style));
+      tb.appendChild(tr);
+    }
+    tab.leds = [];
+    tb.appendChild(tr=document.createElement('tr'));
+    tr.appendChild(cell=Cell('Leak flow rate:',2,null));
+    tr.appendChild(cell=Cell('',1,'Text-Center'));
+    tab.leds.push(cell);
+    tr.appendChild(cell=Cell('Leak search',2,null));
+    tr.appendChild(cell=Cell('',1,'Text-Center'));
+    tab.leds.push(cell);
+
+    tb.appendChild(tr=document.createElement('tr'));
+    tr.appendChild(cell=Cell('Safety heater:',2,null));
+    tr.appendChild(cell=Cell('',1,'Text-Center'));
+    tab.leds.push(cell);
+    tr.appendChild(cell=Cell('Reserved:',2,null));
+    tr.appendChild(cell=Cell('',1,'Text-Center'));
+    tab.leds.push(cell);
+
+    var r1, r2;
+    tb.appendChild(tr=document.createElement('tr'));
+    tr.appendChild(r1=cell=Cell('Maintenance:',2,null));
+    tr.appendChild(cell=Cell('',1,'Text-Center'));
+    tab.leds.push(cell);
+    tr.appendChild(r2=cell=Cell('TCR Control:',2,null));
+    tr.appendChild(cell=Cell('',1,'Text-Center'));
+    tab.leds.push(cell);
+
+    // Reserved ones...
+    tab.leds.push(cell=Cell('',1,'Text-Center'));
+    tab.leds.push(cell=Cell('',1,'Text-Center'));
+    tab.leds.push(cell=Cell('',1,'Text-Center'));
 
     tab.appendChild(tb);
     tab.subscribe = function(provider) {

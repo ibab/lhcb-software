@@ -206,10 +206,12 @@ var navbar_subdetectors = function(navBar) {
   navBar.addURL('Big Brother/DAQ page',lhcb.constants.urls.lhcb.subdetectors.daq_bigbrother);
   navBar.addURL('TRG/L0 status page',lhcb.constants.urls.lhcb.subdetectors.trg_l0status);
   navBar.addURL('Show VELO page',lhcb.constants.urls.lhcb.subdetectors.velo);
+  navBar.addURL('Show ST page',lhcb.constants.urls.lhcb.subdetectors.st);
   navBar.addURL('Show OT page',lhcb.constants.urls.lhcb.subdetectors.ot);
   navBar.addURL('Show RICH page',lhcb.constants.urls.lhcb.subdetectors.rich);
   navBar.addURL('Show CALO page',lhcb.constants.urls.lhcb.subdetectors.calo);
   navBar.addURL('Show MUON page',lhcb.constants.urls.lhcb.subdetectors.muon);
+  navBar.addURL('Show Cooling status page',lhcb.constants.urls.lhcb.subdetectors.cooling);
 };
 
 

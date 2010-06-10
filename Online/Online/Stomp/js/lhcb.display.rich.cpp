@@ -1,6 +1,5 @@
 _loadScript('lhcb.display.items.cpp');
 _loadScript('lhcb.display.widgets.cpp');
-
 _loadFile('lhcb.display.general','css');
 _loadFile('lhcb.display.fsm','css');
 
@@ -53,13 +52,11 @@ var RichStatus = function(msg)   {
     tr0.appendChild(td0);
     tab.appendChild(tb);
 
+    tab.className = tb.className = 'MonitorPage';
     tr = document.createElement('tr');
     tr.appendChild(td=Cell('RICH',1,'MonitorDataHeader'));
-    td.style.width = '100%';
     tr.appendChild(td=Cell('RICH 1',1,'MonitorDataHeader'));
-    td.style.width = '100%';
     tr.appendChild(td=Cell('RICH 2',1,'MonitorDataHeader'));
-    td.style.width = '100%';
     tb.appendChild(tr);
 
     tr = document.createElement('tr');
@@ -77,19 +74,17 @@ var RichStatus = function(msg)   {
   };
   table.attachWidgets = function() {
     var opts = {style:'Arial12pt',legend:true,rich:true,logger:this.logger};
-    var lhc_state           = lhcb.widgets.LHCStateSummary(opts);
-    var richPressures       = lhcb.widgets.rich.Pressures(opts);
     this.system = 'RICH1';
-    var rich1Voltages       = this.hvSummary({hv:true,lv:true,nosplit:true});
+    this.left.addItem(this.hvSummary({hv:true,lv:true,nosplit:true}));
     this.system = 'RICH2';
-    var rich2Voltages       = this.hvSummary({hv:true,lv:true,nosplit:true});
-    var safety              = lhcb.widgets.SafetySummary(opts);
-    this.left.addItem(rich1Voltages);
-    this.left.addItem(rich2Voltages);
-    this.right.addItem(lhc_state);
-    //this.right.addSpacer(90);
-    this.right.addItem(richPressures);
-    this.right.addItem(safety);
+    this.left.addItem(this.hvSummary({hv:true,lv:true,nosplit:true}));
+    this.system = 'RICH';
+    this.left.addSpacer(10);
+    this.left.addItem(lhcb.widgets.SafetySummary(opts));
+
+    this.right.addItem(lhcb.widgets.LHCStateSummary(opts));
+    this.right.addItem(lhcb.widgets.rich.Pressures(opts));
+    this.right.addItem(lhcb.widgets.DSS.CaVPlantStatus('Rich',opts));
   };
   return table;
 };

@@ -16,7 +16,6 @@ function _loadWidgets() {
     tab.onclick = function() { document.location = lhcb.constants.lhcb_display_url("lhc");};
 
     tab.className = tb.className   = 'MonitorPage';
-    tb.style.width = tb.style.height = '100%';
     if ( options.fontSize ) {
       tab.style.fontSize = tb.style.fontSize = options.fontSize;
     }
@@ -180,7 +179,6 @@ function _loadWidgets() {
     tooltips.set(tab,'Current Luminosity statistics<br>Click to see LHC status');
     tab.onclick = function() { document.location = lhcb.constants.lhcb_display_url("lhc");};
     tab.className = tb.className   = 'MonitorPage';
-    tb.style.width = tb.style.height = '100%';
     if ( options.fontSize ) {
       tab.style.fontSize = tb.style.fontSize = options.fontSize;
     }
@@ -267,7 +265,6 @@ function _loadWidgets() {
     tooltips.set(tab,'Current Interaction rate statistics<br>Click to see LHC status');
     tab.onclick = function() { document.location = lhcb.constants.lhcb_display_url("lhc");};
     tab.className = tb.className = 'MonitorPage';
-    tb.style.width = tb.style.height = '100%';
 
     tab.fillNo = -1;
     tab.lumiPP     = StyledItem('lbWeb.LHCCOM/LHC.LHCb.Internal.Luminosity.LumiInst_hadron',   'Text-Right','%7.3f');

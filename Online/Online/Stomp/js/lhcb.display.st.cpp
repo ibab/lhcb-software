@@ -4,42 +4,42 @@ _loadFile('lhcb.display.general','css');
 _loadFile('lhcb.display.fsm','css');
 
 
-/** OT web widgets
+/** ST web widgets
  *
  *  @author  M.Frank
  */
-var OtStatus = function(msg)   {
-  var table = lhcb.widgets.SubdetectorPage('OT Operation State');
+var StStatus = function(msg)   {
+  var table = lhcb.widgets.SubdetectorPage('ST Operation State');
 
   table.options = {logo:    lhcb_logo('http://cern.ch/lhcb-public/Objects/Detector/Tracking-system-diagram-2.jpg'),
         	   logo_url:'http://cern.ch/lhcb-public/en/Detector/Trackers-en.html',
-		   title:   'OT Detector Status',
-		   tips:    'OT operations status:<br>-- High/Low voltage status<br>-- Tell1 Board Status<br>-- Infrastructure'
+		   title:   'ST Detector Status',
+		   tips:    'ST operations status:<br>-- High/Low voltage status<br>-- Tell1 Board Status<br>-- Infrastructure'
   };
 
 
-  lhcb.widgets.ot = new Object();
+  lhcb.widgets.st = new Object();
 
-  /** OT web widgets
+  /** ST web widgets
    *
    *  @author  M.Frank
    */
-  lhcb.widgets.ot.OTsystems = function(options) {
+  lhcb.widgets.st.STsystems = function(options) {
     var tab = document.createElement('table');
     tab.subscriptions=[];
     tab.logger = options.logger;
     tab.className = 'MonitorPage';
 
     tab.addBoard = function(n1,n2,q) {
-      var name1 = 'OTA_'+q+n1, name2='OTC_'+q+n2;
+      var name1 = 'STA_'+q+n1, name2='STC_'+q+n2;
       var tr = document.createElement('tr');
-      var cell=Cell('OTA/'+n1,1,'MonitorDataHeader');
+      var cell=Cell('STA/'+n1,1,'MonitorDataHeader');
       this[name1] = FSMItem('lbWeb.'+name1,this.logger,true);
       tr.appendChild(cell);
       tr.appendChild(this[name1]);
       tr.appendChild(this[name1].lock);
       this.subscriptions.push(this[name1]);
-      cell=Cell('OTC/'+n2,1,'MonitorDataHeader');
+      cell=Cell('STC/'+n2,1,'MonitorDataHeader');
       this[name2] = FSMItem('lbWeb.'+name2,this.logger,true);
       tr.appendChild(cell);
       tr.appendChild(this[name2]);
@@ -77,28 +77,42 @@ var OtStatus = function(msg)   {
 
   table.attachWidgets = function() {
     var opts = {style:'Arial12pt',legend:true,logger:this.logger};
-    var otDAQ = lhcb.widgets.SystemSummary({style:'Arial12pt',
-						    system: 'OT',
-						    title: 'OT Subsystem State',
-						    split: true,
+    var ttDAQ = lhcb.widgets.SystemSummary({style:'Arial12pt',
+						    system: 'TT',
+						    title: 'TT Subsystem State',
+						    split: false,
 						    items: ['DCS','DAI','DAQ','RunInfo','HLT','TFC','Storage','Monitoring'],
 						    legend:true,
 						    rowing:true,
 						    logger:this.logger});
-    this.left.addItem(this.hvSummary({hv:true,lv:false}));
-    this.left.addItem(lhcb.widgets.ot.OTsystems(opts).addHV());
-    this.left.addItem(lhcb.widgets.ot.OTsystems(opts).addLV());
-    this.left.addItem(lhcb.widgets.ot.OTsystems(opts).addTell1());
-    this.left.addItem(lhcb.widgets.ot.OTsystems(opts).addFE());
-    this.left.addSpacer('30px');
+    var itDAQ = lhcb.widgets.SystemSummary({style:'Arial12pt',
+						    system: 'IT',
+						    title: 'IT Subsystem State',
+						    split: false,
+						    items: ['DCS','DAI','DAQ','RunInfo','HLT','TFC','Storage','Monitoring'],
+						    legend:true,
+						    rowing:true,
+						    logger:this.logger});
+    this.system = 'IT';
+    opts.it = true;
+    this.left.addItem(this.hvSummary({hv:true,lv:true,nosplit:true}));
+    this.left.addItem(lhcb.widgets.SafetySummary(opts));
+    this.left.addItem(lhcb.widgets.DSS.CaVPlantStatus('It',opts));
+    this.left.addSpacer('20px');
+    this.left.addItem(itDAQ);
 
-    this.right.addItem(lhcb.widgets.LHCStateSummary(opts));
-    this.right.addItem(lhcb.widgets.DSS.MixedWaterStatus(opts));
-    this.right.addItem(lhcb.widgets.DSS.CaVPlantStatus('Ot',opts));
-    this.right.addItem(otDAQ);
+    this.system = 'TT';
+    opts.it = false;
+    opts.tt = true;
+    this.right.addItem(this.hvSummary({hv:true,lv:true,nosplit:true}));
+    this.right.addItem(lhcb.widgets.SafetySummary(opts));
+    this.right.addItem(lhcb.widgets.DSS.CaVPlantStatus('Tt',opts));
+    this.right.addItem(ttDAQ);
+
+    //this.right.addItem(lhcb.widgets.LHCStateSummary(opts));
   };
   return table;
 };
 
-var ot_unload = function() { lhcb.widgets.SubdetectorPage.stop();  };
-var ot_body = function()   { return lhcb.widgets.SubdetectorPage.start(OtStatus); };
+var st_unload = function() { lhcb.widgets.SubdetectorPage.stop();  };
+var st_body = function()   { return lhcb.widgets.SubdetectorPage.start(StStatus); };

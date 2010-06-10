@@ -133,9 +133,7 @@ var LHCStatus = function(msg)   {
     var tb = document.createElement('tbody');
     var tr = document.createElement('tr');
 
-    tab.style.width = tb.style.width = '100%';
     tab.className = tb.className = 'MonitorPage';
-
     tr.appendChild(c=Cell('Magnet Status:',null,'MonitorDataHeaderRED'));
     c.style.width = '20%';
     c.rowSpan = 2;
@@ -172,10 +170,7 @@ var LHCStatus = function(msg)   {
   table.Background_summary = function() {
     var c, tb, tr, tab = document.createElement('table');
     tb = document.createElement('tbody');
-
-    tab.width = '100%';
-    tab.className = 'MonitorPage';
-    tb.className = 'MonitorPage';
+    tab.className = tb.className = 'MonitorPage';
 
     tr = document.createElement('tr');
     tr.appendChild(c=Cell('Background, Permit &amp; RF Status:',7,'MonitorDataHeaderRED'));
@@ -260,10 +255,7 @@ var LHCStatus = function(msg)   {
   table.TED_summary = function() {
     var cell, tb, tr, tab = document.createElement('table');
     tb = document.createElement('tbody');
-
-    tab.width = '100%';
-    tab.className = 'MonitorPage';
-    tb.className  = 'MonitorPage';
+    tab.className = tb.className  = 'MonitorPage';
     //          lbWeb.LHCCOM/LHC.LHC.Machine.CollimatorPositions.TDI_4R8.lvdt_gap_upstream
     var base = 'lbWeb.LHCCOM/LHC.LHC.Machine.CollimatorPositions.';
     this.TDI_4R8_gap   = StyledItem(base+'TDI_4R8.lvdt_gap_upstream',  'Text-Center','Gap:%8.2f mm');
@@ -315,10 +307,7 @@ var LHCStatus = function(msg)   {
     var c, tab = document.createElement('table');
     var tb = document.createElement('tbody');
     var tr = document.createElement('tr');
-
-    tab.width     = '100%';
-    tab.className = 'MonitorPage';
-    tb.className  = 'MonitorPage';
+    tab.className = tb.className  = 'MonitorPage';
 
     tb.appendChild(tr);
 
@@ -349,10 +338,7 @@ var LHCStatus = function(msg)   {
     var c, tb, td, tr, tab = document.createElement('table');
     tb = document.createElement('tbody');
 
-    tab.className   = 'MonitorPage';
-    tab.style.width = '100%';
-    tb.className    = 'MonitorPage';
-    tb.style.width  = '100%';
+    tab.className   = tb.className    = 'MonitorPage';
     tb.cellSpacing  = 0;
     tb.cellPadding  = 0;
 
@@ -412,11 +398,7 @@ var LHCStatus = function(msg)   {
   table.Trigger_summary = function(logger) {
     var c, tb, td, tr, tab = document.createElement('table');
     tb = document.createElement('tbody');
-
-    tab.className  = 'MonitorPage';
-    tab.width      = '100%';
-    tb.className   = 'MonitorPage';
-    tb.width       = '100%';
+    tab.className  = tb.className   = 'MonitorPage';
     tb.cellSpacing = 0;
     tb.cellPadding = 0;
 
@@ -454,10 +436,7 @@ var LHCStatus = function(msg)   {
   table.Cooling_summary = function() {
     var c, tb, td, tr, tab = document.createElement('table');
     tb = document.createElement('tbody');
-
-    tab.className  = 'MonitorPage';
-    tab.width      = '100%';
-    tb.className   = 'MonitorPage';
+    tab.className  = tb.className   = 'MonitorPage';
     tb.cellSpacing = 0;
     tb.cellPadding = 0;
 
@@ -618,13 +597,10 @@ var LHCStatus = function(msg)   {
     setInterval(this.timerHandler,2000);
 
     tr = document.createElement('tr');
-    tr.appendChild(td=document.createElement('td'));
+    tr.appendChild(td=Cell(null,3,null));
     td.appendChild(t1=document.createElement('table'));
-    td.style.width = '100%';
-    td.colSpan = 3;
     t1.appendChild(tb1=document.createElement('tbody'));
-    t1.style.width='100%';
-    tb1.style.width='100%';
+    t1.style.width=tb1.style.width='100%';
     //-------------------------------------------------
     tb1.appendChild(tr1=document.createElement('tr'));
     tr1.appendChild(td1=document.createElement('td'));
@@ -654,7 +630,6 @@ var LHCStatus = function(msg)   {
     td1.appendChild(t2=document.createElement('table'));
     t2.appendChild(tb2=document.createElement('tbody'));
     tb2.appendChild(tr2=document.createElement('tr'));
-    tb2.width = t2.width = '100%';
     var cell = Cell(lhcb_online_picture()+' Experiment status',1,'MonitorBigHeader');    
     cell.style.textAlign = 'left';
     tr2.appendChild(cell);

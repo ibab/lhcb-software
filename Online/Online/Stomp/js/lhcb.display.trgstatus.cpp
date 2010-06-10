@@ -342,10 +342,7 @@ var TrgStatus = function(msg)   {
   var Legend = function() {
     var c, tb, td, tr, tab = document.createElement('table');
     tb = document.createElement('tbody');  
-    tab.width     = '100%';
-    tab.className = 'MonitorPage';
-    tb.className  = 'MonitorPage';
-
+    tab.className = tb.className  = 'MonitorPage';
     tb.appendChild(tr = document.createElement('tr'));
     tr.appendChild(Cell('Legend: ',1,'MonitorDataHeader'));
     tr.appendChild(Cell(green_led()+':  Status OK',1,null));

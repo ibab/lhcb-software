@@ -157,6 +157,15 @@ if ( !_lhcb().constants ) {
 	    iconCls:'Collimators32',
 	    size:   {width:  950,	height: 700}
 	  },
+	  st: {
+	    src:    this.lhcb_display_url('st'),
+	    img:    this.images.lookprod,
+	    title:  'ST',
+	    nick:   'lhcb-st-win',
+	    cls:    'Collimators16',
+	    iconCls:'Collimators32',
+	    size:   {width:  950,	height: 800}
+	  },
 	  ot: {
 	    src:    this.lhcb_display_url('ot'),
 	    img:    this.images.lookprod,
@@ -164,7 +173,7 @@ if ( !_lhcb().constants ) {
 	    nick:   'lhcb-ot-win',
 	    cls:    'Collimators16',
 	    iconCls:'Collimators32',
-	    size:   {width:  950,	height: 700}
+	    size:   {width:  950,	height: 800}
 	  },
 	  rich: {
 	    src:    this.lhcb_display_url('rich'),
@@ -189,6 +198,15 @@ if ( !_lhcb().constants ) {
 	    img:    this.images.lookprod,
 	    title:  'MUON',
 	    nick:   'lhcb-muon-win',
+	    cls:    'Collimators16',
+	    iconCls:'Collimators32',
+	    size:   {width:  950,	height: 700}
+	  },
+	  cooling: {
+	    src:    this.lhcb_display_url('cooling'),
+	    img:    this.images.lookprod,
+	    title:  'Cooling',
+	    nick:   'lhcb-cooling-win',
 	    cls:    'Collimators16',
 	    iconCls:'Collimators32',
 	    size:   {width:  950,	height: 700}

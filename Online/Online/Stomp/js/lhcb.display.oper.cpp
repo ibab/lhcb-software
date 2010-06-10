@@ -45,10 +45,8 @@ var OperationsStatus = function(msg)   {
   };
   table.Operations_Summary = function() {
     var tb, tr, td, tab = document.createElement('table');
-    tab.className  = 'MonitorPage';
-    tab.width = '100%';
     tb = document.createElement('tbody');
-    tb.className  = 'MonitorPage';
+    tab.className  = tb.className  = 'MonitorPage';
     tooltips.set(tb,'Operation state of LHCb');
     tb.appendChild(lhcb.widgets.mkFSMitem1(this.operState = FSMItem('lbWeb.LHCb_LHC',this.logger,true),'LHCb state'));
     tab.appendChild(tb);
@@ -304,7 +302,6 @@ var OperationsStatus = function(msg)   {
     tb1.appendChild(tr1=document.createElement('tr'));
     tr1.appendChild(td1=document.createElement('td'));
     td1.appendChild(this.voltages=this.Voltage_Summary());
-    td1.width = '100%';
     td1.colSpan = 2;
 
     // Right hand of the display
@@ -402,4 +399,4 @@ var oper_body = function()  {
   body.style.cursor = 'default';
 };
 
-if ( _debugLoading ) alert('Script lhcb.display.hv.cpp loaded successfully');
+if ( _debugLoading ) alert('Script lhcb.display.oper.cpp loaded successfully');
