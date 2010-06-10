@@ -198,7 +198,10 @@ class ProjectConf(ProjectBaseConf):
         mfname = self.tarBallName(version, cmtconfig, full=False)
         mfname += ".md5"
         return mfname
-
+    def htmlFileName(self, version=None, cmtconfig=None):
+        hname  = self.tarBallName(version, cmtconfig, full=False)
+        hname += ".html"
+        return hname
     def releasePrefix(self, version):
         return os.path.join(self.NAME(), "_".join([self.NAME(),version]) )
     def enableHasBinary(self):
