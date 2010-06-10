@@ -28,8 +28,8 @@ PatVeloTT::PatVeloTT( const std::string& name,
   : GaudiAlgorithm ( name , pSvcLocator )
 {
   if ( "Hlt" == context() ) {
-    m_inputTracksName =  LHCb::TrackLocation::HltVelo;
-    m_outputTracksName = LHCb::TrackLocation::HltVeloTT;
+    m_inputTracksName =  "";
+    m_outputTracksName = "";
   }
   else {
     m_inputTracksName =  LHCb::TrackLocation::Velo;
