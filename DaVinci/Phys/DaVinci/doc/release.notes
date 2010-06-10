@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.429 2010-06-07 08:52:09 jpalac Exp $
+! $Id: release.notes,v 1.430 2010-06-10 09:47:08 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -9,9 +9,11 @@
 !
 !-----------------------------------------------------------------------------
 
+!========================== DaVinci v25r5p1 2010-06-10 =====================
+
 ! 2010-06-04 - Juan Palacios
  - python/DaVinci/Configuration.py
-  . Comment out lines in DaVinci.fst method. These are already in an included
+  . Comment out lines in DaVinci.fsr method. These are already in an included
     file and some of them break the FSR writing.
 
 ! 2010-06-04 - Juan Palacios
