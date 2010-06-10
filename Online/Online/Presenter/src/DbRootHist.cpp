@@ -1,4 +1,4 @@
-// $Id: DbRootHist.cpp,v 1.169 2010-06-03 21:27:39 robbep Exp $
+// $Id: DbRootHist.cpp,v 1.170 2010-06-10 16:44:20 ggiacomo Exp $
 #include "DbRootHist.h"
 
 // STL 
@@ -899,8 +899,9 @@ void DbRootHist::fillHistogram() {
       }
     }
   }
-  
+  if (m_onlineHistogram ) { setTH1FromDB(); }
   if (0 != m_hostingPad) m_hostingPad->Modified();
+  
 }
 
 //=============================================================================

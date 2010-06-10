@@ -1,4 +1,4 @@
-// $Id: Archive.cpp,v 1.80 2010-06-03 21:27:39 robbep Exp $
+// $Id: Archive.cpp,v 1.81 2010-06-10 16:44:20 ggiacomo Exp $
 #include <iostream>
 #include <sstream>
 #include <algorithm>
@@ -214,7 +214,7 @@ void Archive::fillHistogram(DbRootHist* histogram,
         delete histo;
       }
       delete list;
-      if (histogram->hasRootHistogram() ) {
+      if ( ! histogram->hasRootHistogram() ) {
         histogram->beEmptyHisto();
       }
     } else {
