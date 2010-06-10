@@ -4,6 +4,10 @@
 ! Purpose     : Package for track data quality monitoring algorithms
 !-----------------------------------------------------------------------------
 
+! 2010-06-10 - Wouter Hulsbergen
+ - Added histograms to TrackVertexMonitor and TrackVeloOverlapMonitor
+ - Added TrackPV2HalfAlignMonitor (but not yet in sequence)
+
 ! 2010-06-08 - Daan Van Eijk
  - Added 2D histgrams in OTHitEfficiencyMonitor, to see hit/hot efficiency as function of x-y
 
