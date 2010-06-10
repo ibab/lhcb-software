@@ -499,12 +499,12 @@ void ST::STCMSNoiseCalculationTool::calcPCNConfigs( const LHCb::STTELL1Datas* da
       binary.set(0,(header[0][iPort*3+2] >= 129));
       binary.set(1,(header[0][iPort*3+1] >= 129));
       binary.set(2,(header[0][2] >= 129));
-      m_portHeader[iPort] = binary.to_ulong();
+      m_portHeader[iPort] = (char)binary.to_ulong();
     } else {
       binary.set(0,0);
       binary.set(1,0);
       binary.set(2,0);
-      m_portHeader[iPort] = binary.to_ulong();
+      m_portHeader[iPort] = (char)binary.to_ulong();
     }
   }
 }

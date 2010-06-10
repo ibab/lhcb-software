@@ -158,7 +158,7 @@ namespace ST {
     virtual StatusCode calculateNoise() = 0;
 
     bool m_firstEvent;///< First call to noise calculation
-    unsigned int m_eventNumber;///< Current event number
+    ulonglong  m_eventNumber;///< Current event number
     unsigned int m_runNumber;///< Current run number
 
     /// Keep running total of number of PPs which send the NZS banks

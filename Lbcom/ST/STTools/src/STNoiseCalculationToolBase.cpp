@@ -92,7 +92,7 @@ StatusCode ST::STNoiseCalculationToolBase::updateNoise() {
   bool newEvent=false;
   bool newRun=false;
   const LHCb::ODIN* odin = get<LHCb::ODIN>(LHCb::ODINLocation::Default); 
-  const unsigned int eventNumber = odin->eventNumber();
+  const ulonglong eventNumber = odin->eventNumber();
   const unsigned int runNumber = odin->runNumber();
   if(m_firstEvent) {
     m_firstEvent = false;
