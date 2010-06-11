@@ -7,7 +7,7 @@ __author__ = "Juan PALACIOS juan.palacios@nikhef.nl"
 
 import sys
 sys.path.append('../python')
-
+from py.test import raises
 from PyAna.pyhistogram.histogram import Axis
 
 def test_instantiate_axis() :
@@ -32,17 +32,13 @@ def test_axis_bin_centre() :
 
 def test_invalid_bin_center_raises_IndexError() :
     ax = Axis(20, -10, 10, "My first axis")
-    try :
-        ax.binCentre(100)
-    except IndexError :
-        print 'IndexError caught'
+    raises(IndexError, ax.binCentre, max(ax.underflow_bin, ax.overflow_bin)+1)
 
-def test_invalid_range_raises_ValueError() :
+
+def test_invalid_range_gets_special_bins() :
     ax = Axis(20, -10, 10, "My first axis")
-    try :
-        ax.binIndex(11.)
-    except ValueError :
-        print 'ValueError caught'
+    assert ax.binIndex(11) == ax.overflow_bin
+    assert ax.binIndex(-11) == ax.underflow_bin
 
 def test_axis_equality() :
     ax0 = Axis(20, -10, 10, "My first axis")

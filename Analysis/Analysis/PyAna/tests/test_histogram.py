@@ -7,6 +7,7 @@ __author__ = "Juan PALACIOS juan.palacios@nikhef.nl"
 
 import sys
 sys.path.append('../python')
+from py.test import raises
 
 from PyAna.pyhistogram.histogram import Histogram, Axis
 
@@ -87,14 +88,8 @@ def test_binheight() :
 
 def test_out_of_range_binheight() :
     h = Histogram(axis=Axis(100, -50., 50.))
-    try :
-        h.binHeight(100)
-    except IndexError :
-        pass
-    try :
-        h.binHeight(-1)
-    except IndexError :
-        pass
+    raises(IndexError, h.binHeight, max(h.axis.underflow_bin, h.axis.overflow_bin)+1)
+    raises(IndexError, h.binHeight, max(h.axis.underflow_bin, h.axis.overflow_bin)+1)
 
 def test_integral() :
     h = Histogram(axis=Axis(100, -50., 50.))

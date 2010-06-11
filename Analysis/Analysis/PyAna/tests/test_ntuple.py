@@ -6,7 +6,7 @@ __version__ = '1.0'
 
 import sys
 sys.path.append('../python')
-
+from py.test import raises
 from PyAna.pyntuple.ntuple import NTuple
 
 def test_instantiate() :
@@ -26,10 +26,7 @@ def test_access_row() :
 
 def test_illegal_tag_fails() :
     nt = NTuple('A','B')
-    try :
-        nt.fill('C', 5)
-    except KeyError :
-        pass
+    raises(KeyError, nt.fill, 'C', 5)
 
 def test_fill_column_twice() :
     nt = NTuple('A', 'B')
