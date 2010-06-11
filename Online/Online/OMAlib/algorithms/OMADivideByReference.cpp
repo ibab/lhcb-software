@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/algorithms/OMADivideByReference.cpp,v 1.1 2010-06-11 13:00:10 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/algorithms/OMADivideByReference.cpp,v 1.2 2010-06-11 16:28:51 ggiacomo Exp $
 #include <TH1F.h>
 #include <TH2F.h>
 #include "OMAlib/OMAAlgorithms.h"
@@ -72,13 +72,6 @@ TH1* OMADivideByReference::exec( const std::vector<TH1*> *sources,
     out->Scale(knorm);
     out->SetNameTitle(outName.data(), outTitle.data());
   }
-
-  std::cout <<"GG prima this sum="<<orig->GetSumOfWeights()<<" integral="<<orig->Integral()
-            <<" ref sum="<< ref->GetSumOfWeights()
-            << " knorm="<<knorm<<std::endl;
-  std::cout <<"GG dopo this sum="<<out->GetSumOfWeights()<<" integral="<<out->Integral()
-            <<" ref sum="<< ref->GetSumOfWeights()
-            << " knorm="<<knorm<<std::endl;
   
   out->Divide(ref);
   out->SetBit(TH1::kIsAverage);
