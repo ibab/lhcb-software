@@ -1,4 +1,4 @@
-// $Id: presenter.h,v 1.98 2010-06-03 21:27:40 robbep Exp $
+// $Id: presenter.h,v 1.99 2010-06-11 13:02:03 ggiacomo Exp $
 #ifndef PRESENTER_H_
 #define PRESENTER_H_
 
@@ -68,6 +68,7 @@ namespace pres
   enum DatabaseMode {
     ReadOnly = 0,
     ReadWrite = 1,
+
     LoggedOut = 2,
     UserSelected = 3
   };
@@ -81,6 +82,13 @@ namespace pres
     Init = 5
   };
   
+  enum DisplayMode {
+    None =0,
+    Page = 1,
+    Alarm = 2
+  };
+
+
   enum SavesetType {
     OnlineFile = 0,
     OfflineFile = 1,
@@ -238,6 +246,8 @@ namespace pres
   static const int s_maxWindowWidth = 32767;
   static const int s_maxWindowHeight = 32767;
   static const int s_maxPageNameLength = 1024;
+
+  static const int s_defStatOptions = 1110;
 
   static const TString s_lhcbPartitionName("LHCb");
 

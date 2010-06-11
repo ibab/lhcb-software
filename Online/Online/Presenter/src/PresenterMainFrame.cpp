@@ -1,4 +1,4 @@
-// $Id: PresenterMainFrame.cpp,v 1.324 2010-06-03 21:27:40 robbep Exp $
+// $Id: PresenterMainFrame.cpp,v 1.325 2010-06-11 13:02:03 ggiacomo Exp $
 #include <algorithm>
 #include <iostream>
 #include <vector>
@@ -96,6 +96,7 @@
 #include "ProblemDB.h"
 #include "RunDB.h"
 #include "PageDescriptionTextView.h"
+#include "AlarmDisplay.h"
 
 using namespace pres;
 using namespace std;
@@ -137,6 +138,7 @@ PresenterMainFrame::PresenterMainFrame(const char* name,
   m_presenterMode(History),
   m_prevPresenterMode(History),
   m_databaseMode(LoggedOut),
+  m_displayMode(None),
   m_pageRefreshTimer(NULL),
   m_clockTimer(NULL),
   m_clearedHistos(false),
@@ -146,6 +148,8 @@ PresenterMainFrame::PresenterMainFrame(const char* name,
   m_refreshingPage(false),
   m_histogramDB(NULL),
   m_analysisLib(NULL),
+  m_alarmDisplayEnabled(true),
+  m_alarmDisplay(NULL),
   m_msgBoxReturnCode(0),
   m_menuDock(NULL),
   m_toolBarDock(NULL),
@@ -178,7 +182,7 @@ PresenterMainFrame::PresenterMainFrame(const char* name,
   gStyle->SetPalette(1);
 
   //std::cout << "PresenterMainFrame() gStyle->GetOptStat: " << gStyle->GetOptStat;
-  gStyle->SetOptStat("emrou"); // nemr emrou
+  gStyle->SetOptStat(s_defStatOptions); 
 
   gStyle->SetFrameFillColor(10);
   gStyle->SetStatStyle(0);
@@ -252,8 +256,10 @@ PresenterMainFrame::~PresenterMainFrame() {
 
   removeHistogramsFromPage();
   Cleanup();
-  if (0 != m_histogramDB) { delete m_histogramDB; m_histogramDB = NULL; }
-  if (0 != m_analysisLib) { delete m_analysisLib; m_analysisLib = NULL; }
+
+  if (0 != m_alarmDisplay) { delete m_alarmDisplay; m_alarmDisplay = NULL; }
+  cleanHistogramDB();
+
   if (0 != m_dimBrowser) { delete m_dimBrowser; m_dimBrowser = NULL; }
   if (0 != m_archive) { delete m_archive; m_archive = NULL; }
 
@@ -290,6 +296,14 @@ PresenterMainFrame::~PresenterMainFrame() {
 
   if (gPresenter == this) { gPresenter = 0; }
 }
+
+
+void PresenterMainFrame::cleanHistogramDB() {
+  if (0 != m_analysisLib) { delete m_analysisLib; m_analysisLib = NULL; }
+  if (0 != m_histogramDB) { delete m_histogramDB; m_histogramDB = NULL; }
+  if (0 != m_alarmDisplay) { m_alarmDisplay->enable(false); }
+}
+
 //=========================================================================
 //  Build the graphical interface. A lot of ROOT calls !!!
 //=========================================================================
@@ -804,6 +818,7 @@ void PresenterMainFrame::buildGUI() {
     m_pagesFromHistoDBListTree->SetCheckMode(TGListTree::kRecursive);
     (m_pagesFromHistoDBListTree->GetFirstItem())->SetPictures(m_databaseSourceIcon,
                                                               m_databaseSourceIcon);
+    (m_pagesFromHistoDBListTree->GetFirstItem())->SetOpen(1);
     m_pagesFromHistoDBListTree->Connect("Clicked(TGListTreeItem*, Int_t, Int_t, Int_t)",
                                         "PresenterMainFrame", this,
                                         "clickedPageTreeItem(TGListTreeItem*, Int_t, Int_t, Int_t)");
@@ -857,7 +872,7 @@ void PresenterMainFrame::buildGUI() {
                                                    kFixedWidth);
 
     TGGroupFrame* databaseAlarmGroupFrame = new TGGroupFrame(m_leftDatabaseAlarmFrame,
-                                                             TGString("Histograms in Alarm"),
+                                                             TGString("Alarms from Automatic Analysis"),
                                                              kVerticalFrame |
                                                              kFixedWidth);
 
@@ -873,20 +888,20 @@ void PresenterMainFrame::buildGUI() {
                                                      kLHintsExpandY,
                                                      0, 0, 0, 0));
     // Alarm sort box
-    m_alarmDBFilterComboBox = new TGComboBox(databaseAlarmGroupFrame, -1,
-                                             kHorizontalFrame | kDoubleBorder |
-                                             kSunkenFrame | kOwnBackground);
-    m_alarmDBFilterComboBox->AddEntry("Severity",
-                                      HistogramsWithAnalysis); //#3 //Alarm, Warning, Info
-    m_alarmDBFilterComboBox->AddEntry("Analysis Task", Tasks); // #1
-    m_alarmDBFilterComboBox->AddEntry("Full list", AllHistograms); // #5
-    m_alarmDBFilterComboBox->Resize(149, 22);
-    m_alarmDBFilterComboBox->Select(Tasks);
-    databaseAlarmGroupFrame->AddFrame(m_alarmDBFilterComboBox,
-                                      new TGLayoutHints(kLHintsLeft |
-                                                        kLHintsTop |
-                                                        kLHintsExpandX,
-                                                        0, 0, 0, 0));
+    // m_alarmDBFilterComboBox = new TGComboBox(databaseAlarmGroupFrame, -1,
+//                                              kHorizontalFrame | kDoubleBorder |
+//                                              kSunkenFrame | kOwnBackground);
+//     m_alarmDBFilterComboBox->AddEntry("Severity",
+//                                       HistogramsWithAnalysis); //#3 //Alarm, Warning, Info
+//     m_alarmDBFilterComboBox->AddEntry("Analysis Task", Tasks); // #1
+//     m_alarmDBFilterComboBox->AddEntry("Full list", AllHistograms); // #5
+//     m_alarmDBFilterComboBox->Resize(149, 22);
+//     m_alarmDBFilterComboBox->Select(Tasks);
+//     databaseAlarmGroupFrame->AddFrame(m_alarmDBFilterComboBox,
+//                                       new TGLayoutHints(kLHintsLeft |
+//                                                         kLHintsTop |
+//                                                         kLHintsExpandX,
+//                                                         0, 0, 0, 0));
     // canvas widget
     m_alarmDBCanvas = new TGCanvas(databaseAlarmGroupFrame, 124, 460);
 
@@ -920,7 +935,9 @@ void PresenterMainFrame::buildGUI() {
                                                         kLHintsExpandX |
                                                         kLHintsExpandY,
                                                         0, 0, 0, 0));
-
+    if(m_alarmDisplayEnabled) {
+      m_alarmDisplay = new AlarmDisplay(this, m_alarmHistogramTreeList);
+    }
     //=========================================================================
     // List of known problems
     
@@ -1293,7 +1310,7 @@ void PresenterMainFrame::dataDropped(TGListTreeItem* folder, TDNDData* data) {
 void PresenterMainFrame::CloseWindow() {
   if (0 != m_pageRefreshTimer) { m_pageRefreshTimer->Stop(); }
   if (0 != m_clockTimer) { m_clockTimer->Stop(); }
-  
+
   removeHistogramsFromPage();
   if (0 != m_analysisLib) { delete m_analysisLib; m_analysisLib = NULL; }
   
@@ -1442,7 +1459,7 @@ void PresenterMainFrame::handleCommand(Command cmd) {
     m_histogramDB->refresh();
     break;
   case M_RefreshAlarmDBListTree_COMMAND:
-    listAlarmsFromHistogramDB(m_alarmHistogramTreeList, AllHistograms);
+    if(m_alarmDisplay) { m_alarmDisplay->listAlarmsFromHistogramDB();}
     break;
   case M_RefreshDBPagesListTree_COMMAND:
     refreshPagesDBListTree();
@@ -1758,6 +1775,7 @@ bool PresenterMainFrame::canWriteToHistogramDB() {
   }
 }
 
+
 void PresenterMainFrame::savePageToFile() {
   if (m_refreshingPage) {
     stopPageRefresh();
@@ -1940,8 +1958,7 @@ bool PresenterMainFrame::connectToHistogramDB(const std::string & dbPassword,
     removeHistogramsFromPage();
     try {
       if (0 != m_histogramDB && isConnectedToHistogramDB()) {
-        delete m_histogramDB;
-        m_histogramDB = NULL;
+        cleanHistogramDB();
       }
 
       m_histogramDB = new OnlineHistDB(dbPassword, dbUsername, dbName);
@@ -1986,6 +2003,7 @@ bool PresenterMainFrame::connectToHistogramDB(const std::string & dbPassword,
           (m_databaseMode == ReadWrite ? "read-write" : "read-only") <<
           " mode" <<std::endl; }
 
+      if(m_alarmDisplay) { m_alarmDisplay->enable(true);} 
 
     } catch (std::string sqlException) {
       if (m_verbosity >= Verbose) { std::cout << sqlException << std::endl; }
@@ -1998,7 +2016,7 @@ bool PresenterMainFrame::connectToHistogramDB(const std::string & dbPassword,
                      kMBIconExclamation, kMBOk, &m_msgBoxReturnCode);
       }
 
-      if (0 != m_histogramDB) { delete m_histogramDB; m_histogramDB = NULL; }
+      if (0 != m_histogramDB) { cleanHistogramDB(); }
       m_databaseMode = LoggedOut;
     }
   } else {
@@ -2036,9 +2054,7 @@ void PresenterMainFrame::logoutFromHistogramDB() {
       return;
     }
   }
-  delete m_histogramDB;
-  m_histogramDB = NULL;
-  if (0 != m_analysisLib) { delete m_analysisLib; m_analysisLib = NULL; }
+  cleanHistogramDB();
 
   m_databaseMode = LoggedOut;
 
@@ -2120,63 +2136,6 @@ OnlineHistDB* PresenterMainFrame::histogramDB() {
 DimBrowser* PresenterMainFrame::dimBrowser() {
   return m_dimBrowser;
 }
-
-//======================================================================
-// Build list of alarms from the histogram database
-//======================================================================
-void PresenterMainFrame::listAlarmsFromHistogramDB(TGListTree* listView,
-                                                   const FilterCriteria & /*filterCriteria*/) {
-  if (isConnectedToHistogramDB() && 0 != listView) {
-    listView->UnmapWindow();
-
-    // Delete first all alarms in the alarm tree
-    TGListTreeItem* treeRoot = listView->GetFirstItem();
-    listView->DeleteChildren(treeRoot);
-    listView->RenameItem(treeRoot, TString(m_dbName));
-
-    try {
-      m_histogramDB->getMessages(m_alarmMessageIDs);
-      std::vector<int>::const_iterator m_alarmMessageIDsIt;
-      for (m_alarmMessageIDsIt = m_alarmMessageIDs.begin();
-           m_alarmMessageIDsIt != m_alarmMessageIDs.end();
-           m_alarmMessageIDsIt++) {
-        OMAMessage* message = new OMAMessage(*m_alarmMessageIDsIt, *m_histogramDB);
-        if (message) {
-          // filter per partition ??? TBD
-
-          std::string nodeName (message->humanTime());
-          nodeName.erase(nodeName.length()-1); // remove \n
-          nodeName = nodeName + ": ";
-          nodeName = nodeName + message->ananame();
-          TGListTreeItem* treeNode = listView->AddItem(treeRoot, nodeName.c_str());
-          setTreeNodeType(treeNode, message->levelString());
-          listView->SetCheckBox(treeNode, false);
-          treeNode->SetUserData((void*)&(*m_alarmMessageIDsIt));
-          delete message;
-        }
-      }
-    } catch (std::string sqlException) {
-      if (m_verbosity >= Verbose) { std::cout << sqlException << std::endl; }
-      if (Batch != m_presenterMode) {
-        m_mainStatusBar->SetText(sqlException.c_str());
-        new TGMsgBox(fClient->GetRoot(), this, "Database Error",
-                     Form("OnlineHistDB server:\n\n%s\n",
-                          sqlException.c_str()),
-                     kMBIconExclamation, kMBOk, &m_msgBoxReturnCode);
-      }
-    }
-    listView->MapWindow();
-  } else if (!isConnectedToHistogramDB()) {
-    m_message = "Alarms not read from Database.";
-  }
-  if (Batch != m_presenterMode) {
-    m_mainStatusBar->SetText(m_message.c_str(), 2);
-    fClient->NeedRedraw(listView);
-  }
-  if (m_verbosity >= Verbose) { std::cout << m_message << std::endl; }
-};
-
-
 
 void PresenterMainFrame::listHistogramsFromHistogramDB(TGListTree* listView,
                                                        const FilterCriteria & filterCriteria, bool histograms) {
@@ -2717,9 +2676,22 @@ void PresenterMainFrame::deleteTreeChildrenItemsUserDataChildren(TGListTreeItem*
   }
 }
 
+const char*	PresenterMainFrame::getStatusBarText(int slice) {
+  if (Batch != m_presenterMode) {
+    return m_mainStatusBar->GetText(slice);
+  }
+  return (const char*) "";
+}
+
 void PresenterMainFrame::setStatusBarText(const char* text, int slice) {
   if (Batch != m_presenterMode) {
     m_mainStatusBar->SetText(text, slice);
+  }
+}
+
+void PresenterMainFrame::setTopStatusBarText(const char* text, int slice) {
+  if (Batch != m_presenterMode) {
+    m_statusBarTop->SetText(text, slice);
   }
 }
 
@@ -2815,7 +2787,6 @@ void PresenterMainFrame::inspectPage() {
 }
 
 void PresenterMainFrame::reconfigureGUI() {
-
   removeHistogramsFromPage();
   UInt_t current_width  = 0;
   UInt_t current_height = 0;
@@ -2823,7 +2794,10 @@ void PresenterMainFrame::reconfigureGUI() {
   current_height = this->GetHeight();
   if (isConnectedToHistogramDB()) {
     refreshPagesDBListTree();
-    listAlarmsFromHistogramDB(m_alarmHistogramTreeList, AllHistograms);
+    if(m_alarmDisplay) {
+      m_alarmDisplay->enable(true);
+      m_alarmDisplay->listAlarmsFromHistogramDB();
+    }
     enableAutoCanvasLayoutBtn();
     if (canWriteToHistogramDB() &&
         ((EditorOnline == m_presenterMode) ||
@@ -2911,7 +2885,7 @@ void PresenterMainFrame::reconfigureGUI() {
     }
   } else if (EditorOnline == m_presenterMode) {
     stopPageRefresh();
-    if (m_clearedHistos) { clearHistos(); }
+    unclearHistosIfNeeded();
     if (m_referencesOverlayed) { toggleReferenceOverlay(); }
     if (m_historyTrendPlots) { toggleHistoryPlots(); }
     // enable play/stop/reset!
@@ -2951,7 +2925,7 @@ void PresenterMainFrame::reconfigureGUI() {
     // show refreshHistoDBListTree
   } else if (EditorOffline == m_presenterMode) {
     stopPageRefresh();
-    if (m_clearedHistos) { clearHistos(); }
+    unclearHistosIfNeeded();
     if (m_referencesOverlayed) { toggleReferenceOverlay(); }
     if (m_historyTrendPlots) { toggleHistoryPlots(); }
     // enable play/stop/reset!
@@ -3448,9 +3422,17 @@ void PresenterMainFrame::clickedAlarmTreeItem(TGListTreeItem* node,
   } else if (0 != node &&
              NULL == node->GetFirstChild() &&
              isConnectedToHistogramDB()) {
-    int id = selectedAlarmFromDbTree();
+    int id;
+    
+    if (0 != node && node->GetUserData() &&
+        m_alarmHistogramTreeList->GetFirstItem() != node) {
+      id= *(int*)(node->GetUserData());
+    } else {
+      id= -1;
+    }
+
     if (id !=-1) {
-      loadSelectedAlarmFromDB(id);
+      m_alarmDisplay->loadSelectedAlarmFromDB(id);
       m_groupPages.clear(); //== No navigation there...
       m_alarmPages.clear();
 
@@ -3676,7 +3658,7 @@ void PresenterMainFrame::addDimHistosToPage() {
   disableHistogramClearing();
 
   stopPageRefresh();
-  if (m_clearedHistos) { clearHistos(); }
+  unclearHistosIfNeeded();
   if (m_referencesOverlayed) { toggleReferenceOverlay(); }
 
   fClient->WaitFor(dynamic_cast<TGWindow*>(
@@ -3817,6 +3799,16 @@ void PresenterMainFrame::toggleFastHitMapDraw() {
   } else {
     m_fastHitMapDraw = true;
     m_viewMenu->CheckEntry(FAST_HITMAP_DRAW_COMMAND);
+  }
+}
+
+void PresenterMainFrame::enableAlarmDisplay(bool mode) {
+  m_alarmDisplayEnabled = mode;
+  if (!m_alarmDisplayEnabled && m_viewMenu->IsEntryChecked(SHOW_ALARM_LIST_COMMAND)) {
+    m_leftMiscFrame->HideFrame(m_databaseAlarmsDock);
+    m_viewMenu->UnCheckEntry(SHOW_ALARM_LIST_COMMAND);
+    m_viewMenu->DisableEntry(SHOW_ALARM_LIST_COMMAND);
+    delete m_alarmDisplay; m_alarmDisplay=NULL;
   }
 }
 
@@ -4041,15 +4033,7 @@ std::string PresenterMainFrame::selectedPageFromDbTree(){
   }
 }
 
-int PresenterMainFrame::selectedAlarmFromDbTree(){
-  TGListTreeItem* node = m_alarmHistogramTreeList->GetSelected();
-  if (0 != node && node->GetUserData() &&
-      m_alarmHistogramTreeList->GetFirstItem() != node) {
-    return *(int*)(node->GetUserData());
-  } else {
-    return -1;
-  }
-}
+
 
 void PresenterMainFrame::loadAllPages() {
   if (isConnectedToHistogramDB()) {
@@ -4064,38 +4048,7 @@ void PresenterMainFrame::loadAllPages() {
   }
 }
 
-void PresenterMainFrame::loadSelectedAlarmFromDB(int msgId) {
-  if (isConnectedToHistogramDB()) {
-    if (m_clearedHistos) { clearHistos(); }
-    removeHistogramsFromPage();
 
-    OMAMessage message(msgId, *m_histogramDB);
-    std::string previousSaveset = m_savesetFileName;
-    m_savesetFileName = message.saveSet();
-    setStatusBarText(m_savesetFileName.c_str(),2);
-    m_prevPresenterMode = m_presenterMode;
-    m_presenterMode = History;
-    addHistoToPage(message.hIdentifier(), separate);
-    autoCanvasLayout();
-
-    char header[100];
-    sprintf( header, "Alarm message %3d", msgId );
-    m_statusBarTop->SetText( header, 1);
-
-    m_presenterMode = m_prevPresenterMode;
-    m_savesetFileName = previousSaveset;
-
-    m_pageDescriptionView->Clear();
-    m_pageDescriptionView->LoadBuffer(message.msgtext());
-    m_pageDescriptionView->DataChanged();
-
-    if (m_referencesOverlayed) {
-      enableReferenceOverlay();
-    } else {
-      disableReferenceOverlay();
-    }
-  }
-}
 
 
 //=====================================================================================
@@ -4115,10 +4068,13 @@ void PresenterMainFrame::loadPreviousPage() {
     } else if ( (false == m_alarmPages.empty()) ) {
       if ( m_alarmPagesIt == m_alarmPages.begin() )  m_alarmPagesIt = m_alarmPages.end();
       m_alarmPagesIt--;
-      loadSelectedAlarmFromDB( *m_alarmPagesIt );
+      if(m_alarmDisplay) {
+        m_alarmDisplay->loadSelectedAlarmFromDB( *m_alarmPagesIt );
+      }
     }
   }
 }
+
 
 //=====================================================================================
 // Load next page -- handle click on "next page" button
@@ -4136,7 +4092,9 @@ void PresenterMainFrame::loadNextPage() {
     } else if ( (false == m_alarmPages.empty()) ) {
       m_alarmPagesIt++;
       if ( m_alarmPagesIt == m_alarmPages.end() )  m_alarmPagesIt = m_alarmPages.begin();
-      loadSelectedAlarmFromDB( *m_alarmPagesIt );
+      if(m_alarmDisplay) {
+        m_alarmDisplay->loadSelectedAlarmFromDB( *m_alarmPagesIt );
+      }
     }
   }
 }
@@ -4151,7 +4109,7 @@ void PresenterMainFrame::loadSelectedPageFromDB(const std::string & pageName,
       stopPageRefresh();
       m_resumePageRefreshAfterLoading = true;
     }
-    if (m_clearedHistos) { clearHistos(); }
+    unclearHistosIfNeeded();
 
     std::string currentTCK_service = "";
 
@@ -4313,7 +4271,7 @@ void PresenterMainFrame::loadSelectedPageFromDB(const std::string & pageName,
           if ( (s_CNT == (*drawOpt_dbHistosOnPageIt)->histogramType()) &&
                (true == currentTCK_service.empty()) ) {
             HistogramIdentifier histogramIdentifier = 
-	      HistogramIdentifier((*drawOpt_dbHistosOnPageIt)->identifier());
+              HistogramIdentifier((*drawOpt_dbHistosOnPageIt)->identifier());
             if (histogramIdentifier.isPlausible()) {
               currentTCK_service = s_adder + histogramIdentifier.taskName() + s_slash +
                 histogramIdentifier.algorithmName() + s_slash +
@@ -4361,6 +4319,8 @@ void PresenterMainFrame::loadSelectedPageFromDB(const std::string & pageName,
   if ((EditorOnline == m_presenterMode) || (EditorOffline == m_presenterMode)) {
     enableAutoCanvasLayoutBtn();
   }
+  m_displayMode = Page;
+
 }
 
 void PresenterMainFrame::moveSelectedInDB() {
@@ -4599,7 +4559,7 @@ void PresenterMainFrame::deleteSelectedHistoFromCanvas() {
     disableReferenceOverlay();
     referenceOverlay = true;
   }
-  if (m_clearedHistos) { clearHistos(); }
+  unclearHistosIfNeeded();
 
   DbRootHist* histogram = selectedDbRootHistogram();
   DbRootHist * histoToDelete( 0 ) ;
@@ -4688,6 +4648,7 @@ void PresenterMainFrame::refreshClock() {
     }
   }
 }
+
 
 void PresenterMainFrame::previousInterval() {
   std::string history_entry(dynamic_cast<TGTextLBEntry*>(m_historyIntervalComboBox->GetSelectedEntry())->GetText()->GetString());
@@ -4808,7 +4769,7 @@ void PresenterMainFrame::refreshPage() {
       for (dbHistosOnPageIt = dbHistosOnPage.begin() ; dbHistosOnPageIt != dbHistosOnPage.end() ;
 	   ++dbHistosOnPageIt ) {
         (*dbHistosOnPageIt)->fillHistogram();
-	(*dbHistosOnPageIt)->normalizeReference();
+        (*dbHistosOnPageIt)->normalizeReference();
       }
     }
     if (! gROOT->IsInterrupted()) {
@@ -4957,6 +4918,7 @@ void PresenterMainFrame::removeHistogramsFromPage() {
   editorCanvas->cd();
   editorCanvas->Clear();
   editorCanvas->Update();
+  m_displayMode = None;
 }
 
 
@@ -5217,3 +5179,6 @@ void PresenterMainFrame::loadWebPage( ) {
     }
 #endif
 }
+
+
+

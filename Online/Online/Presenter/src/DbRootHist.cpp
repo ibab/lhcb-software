@@ -1,4 +1,4 @@
-// $Id: DbRootHist.cpp,v 1.170 2010-06-10 16:44:20 ggiacomo Exp $
+// $Id: DbRootHist.cpp,v 1.171 2010-06-11 13:02:03 ggiacomo Exp $
 #include "DbRootHist.h"
 
 // STL 
@@ -598,24 +598,13 @@ void DbRootHist::initHistogram() {
           }
         }
       }
-      OMAHcreatorAlg* creator = dynamic_cast<OMAHcreatorAlg*>
-        (m_analysisLib->getAlg(m_creationAlgorithm));
-      if(creator && sourcesOk) {
-        std::string htitle(onlineHistogram()->htitle());
-        m_rootHistogram = creator->exec(&sources, &m_parameters,
-					m_identifier,
-					htitle,
-					isEmptyHisto() ? NULL : m_rootHistogram);
-        beRegularHisto();
-        if (m_verbosity >= Verbose && ( 0 == m_rootHistogram ) ) { 
-          std::cout<< "creator alg. failed!"<<std::endl;
-        }
+      if (sourcesOk) {
+        makeVirtualHistogram(sources);
       }
       else {
         if (m_verbosity >= Verbose) {
-          std::cout << "creator alg. or sources not found!" << std::endl;
+          std::cout << "virtual histogram sources not found!" << std::endl;
         }
-        std::cout << "Failed for virtual histogram " << m_anaSources[0]->identifier() << std::endl;
         beEmptyHisto(); 
       }
     }
@@ -866,7 +855,7 @@ void DbRootHist::fillHistogram() {
 				    ((TH2D*)m_rootHistogram)->GetNbinsY() + 2, m_prettyPalette); 
       }
     }      
-  } else if (m_isAnaHist && m_anaSources.size()>0)  {
+  } else if (m_isAnaHist && m_anaSources.size()>0)  { // virtual histogram
     std::vector<TH1*> sources(m_anaSources.size());
     bool sourcesOk = true;
     for (unsigned int i=0; i< m_anaSources.size(); ++i) {
@@ -875,14 +864,8 @@ void DbRootHist::fillHistogram() {
       if (m_anaSources[i]->isEmptyHisto() ) 
         sourcesOk = false;
     }
-    OMAHcreatorAlg* creator = dynamic_cast<OMAHcreatorAlg*>
-      (m_analysisLib->getAlg(m_creationAlgorithm));
-    if (creator && sourcesOk) {
-      std::string htitle(onlineHistogram()->htitle());
-      m_rootHistogram = creator->exec(&sources, &m_parameters,  m_identifier,
-				      htitle,
-				      isEmptyHisto() ? NULL : m_rootHistogram);
-      beRegularHisto();
+    if(sourcesOk) {
+      makeVirtualHistogram(sources);
     }
   }
   if( m_onlineHistogram) {
@@ -903,6 +886,9 @@ void DbRootHist::fillHistogram() {
   if (0 != m_hostingPad) m_hostingPad->Modified();
   
 }
+
+
+
 
 //=============================================================================
 // Set online histogram 
@@ -934,10 +920,9 @@ bool DbRootHist::setOnlineHistogram(OnlineHistogram* newOnlineHistogram) {
 //=============================================================================
 bool DbRootHist::setRootHistogram( TH1* newRootHistogram ) {
   bool out = false;
-  bool isInit = (NULL == m_rootHistogram);
-  if (newRootHistogram) {
+  if (newRootHistogram ) {
     m_rootHistogram = newRootHistogram;
-    if (m_onlineHistogram && isInit) { setTH1FromDB(); }
+    if (m_onlineHistogram  && !m_isEmptyHisto) { setTH1FromDB(); }
     out = true;
   }
   return out;
@@ -967,7 +952,8 @@ void DbRootHist::setTH1FromDB() {
     return ;
   boost::recursive_mutex::scoped_lock oraLock(*m_oraMutex);
   boost::recursive_mutex::scoped_lock rootLock(*m_rootMutex);
-  if ( oraLock && rootLock ) {
+        
+  if ( oraLock && rootLock ) {  
     int iopt = 0;
     float fopt = 0.0;
     std::string sopt;
@@ -983,6 +969,7 @@ void DbRootHist::setTH1FromDB() {
     if (m_onlineHistogram->getDisplayOption("XMAX", &fopt)) { bxmax=fopt; }
     m_rootHistogram->GetXaxis()->SetRangeUser(bxmin,bxmax);
 
+  
     if (m_onlineHistogram->dimension() <2) { // 1d histograms
       if (m_onlineHistogram->getDisplayOption("YMIN", &fopt))
         m_rootHistogram->SetMinimum(fopt);
@@ -1001,9 +988,13 @@ void DbRootHist::setTH1FromDB() {
     }
     if (m_onlineHistogram->getDisplayOption("STATS", &iopt)) 
       m_rootHistogram->SetStats(0 != iopt);
-        
+    
+    if (m_onlineHistogram->getDisplayOption("SHOWTITLE", &sopt)) 
+      m_rootHistogram->SetTitle(sopt.c_str());
+            
     if (m_onlineHistogram->getDisplayOption("REF", &sopt)) 
       m_refOption = sopt;      
+
     if (m_onlineHistogram->getDisplayOption("FILLSTYLE", &iopt))
       m_rootHistogram->SetFillStyle(iopt);
     if (m_onlineHistogram->getDisplayOption("FILLCOLOR", &iopt))
@@ -1014,8 +1005,8 @@ void DbRootHist::setTH1FromDB() {
       m_rootHistogram->SetLineColor(iopt);
     if (m_onlineHistogram->getDisplayOption("LINEWIDTH", &iopt)) 
       m_rootHistogram->SetLineWidth(iopt);
-    if (m_onlineHistogram->getDisplayOption("MARKERSIZE", &iopt)) 
-      m_rootHistogram->SetMarkerSize((Size_t)iopt);
+    if (m_onlineHistogram->getDisplayOption("MARKERSIZE", &fopt)) 
+      m_rootHistogram->SetMarkerSize((Size_t)fopt);
     if (m_onlineHistogram->getDisplayOption("MARKERSTYLE", &iopt))
       m_rootHistogram->SetMarkerStyle(iopt);
     if (m_onlineHistogram->getDisplayOption("MARKERCOLOR", &iopt))
@@ -1118,7 +1109,8 @@ void DbRootHist::fit() {
 //=============================================================================
 // set options from database
 //=============================================================================
-void DbRootHist::setDrawOptionsFromDB(TPad* pad) {
+void DbRootHist::setDrawOptionsFromDB(TPad* pad)
+{
   if ( ( 0 == m_onlineHistogram ) || ( 0 == m_rootHistogram ) ) return ;
   int iopt = 0;
   float fopt = 0.0;
@@ -1128,7 +1120,7 @@ void DbRootHist::setDrawOptionsFromDB(TPad* pad) {
   // doesn't resize the Pave.. thus it's better to set the global stat options also 
   // before drawing
   
-  if ( m_historyTrendPlotMode ) { // special settings for trend mode
+  if (m_historyTrendPlotMode) { // special settings for trend mode
     m_rootHistogram->SetDrawOption("E1");
     m_rootHistogram->SetStats(0);
     TPaveStats* stats =  
@@ -1140,69 +1132,95 @@ void DbRootHist::setDrawOptionsFromDB(TPad* pad) {
     fopt=.16;
     pad->SetBottomMargin( (Float_t) fopt);
     bool histByRun=false;
-    if(m_presenterApp) histByRun = m_presenterApp -> global_historyByRun ;
-    if ( histByRun ) {
+    if(m_presenterApp) {
+      histByRun=m_presenterApp->global_historyByRun;
+    }
+    if (histByRun) {
       m_rootHistogram->GetXaxis()->SetTitle("run");
       fopt=1.2;
       m_rootHistogram->GetXaxis()->SetTitleOffset( (Float_t) fopt);
-    } else {
+    }
+    else {
       m_rootHistogram->GetXaxis()->SetTitle("time");
       fopt=1.6;
       m_rootHistogram->GetXaxis()->SetTitleOffset( (Float_t) fopt);
     }
     std::string ylab="Average";
-    if (m_onlineHistogram->getDisplayOption("LABEL_X", &sopt)) 
+    if (m_onlineHistogram->getDisplayOption("LABEL_X", &sopt)) {
       ylab = ylab + " (" + sopt + ")";
+    }
     m_rootHistogram->SetYTitle (ylab.data());
-  } else { // normal case
-    m_onlineHistogram->getDisplayOption("STATS", &iopt);
-    if (0 != iopt) {
-      if ( 1 == iopt ) iopt = 1110;  // remove name in the default mask
-      gStyle->SetOptStat( iopt );
+  }
+  else { // normal case
+    int statOpt;
+    if(false == m_onlineHistogram->getDisplayOption("STATS", &statOpt)) {
+      statOpt = s_defStatOptions;
+    }
+    if (0 != statOpt) {
+      int statStyle=0;
+      if (m_onlineHistogram->getDisplayOption("STATTRANSP", &iopt)) {
+        if (iopt>0) { //user requires opaque stat window 
+          statStyle=1001;
+        }
+      }        
+      gStyle->SetStatStyle(statStyle); // apparently, this must be called before SetOptStat
       
+      gStyle->SetOptStat( statOpt );
       TPaveStats* stats =  
-	(TPaveStats*) m_rootHistogram->GetListOfFunctions()->FindObject("stats");
+        (TPaveStats*)m_rootHistogram->GetListOfFunctions()->FindObject("stats");
+      
       
       if (stats) {
-	double x1=stats->GetX1NDC();
-	double x2=stats->GetX2NDC();
-	double y1=stats->GetY1NDC();
-	double y2=stats->GetY2NDC();
-	if (m_onlineHistogram->getDisplayOption("STAT_X_OFFS", &fopt)) x1 = fopt;
-	if (m_onlineHistogram->getDisplayOption("STAT_X_SIZE", &fopt)) x2 = x1 + fopt;
-	if (m_onlineHistogram->getDisplayOption("STAT_Y_OFFS", &fopt)) y1 = fopt;
-	if (m_onlineHistogram->getDisplayOption("STAT_Y_SIZE", &fopt)) y2 = y1 + fopt;
-
-	stats->SetX1NDC(x1);
-	stats->SetX2NDC(x2);
-	stats->SetY1NDC(y1);
-	stats->SetY2NDC(y2);
-	// save it to check if was changed at saving time
-	if (m_statpave) { delete m_statpave; m_statpave = 0; }
-	m_statpave = (TPave*)stats->Clone(); // memleak?
+        double x1=stats->GetX1NDC();
+        double x2=stats->GetX2NDC();
+        double y1=stats->GetY1NDC();
+        double y2=stats->GetY2NDC();
+        if (m_onlineHistogram->getDisplayOption("STAT_X_OFFS", &fopt)) x1 = fopt;
+        if (m_onlineHistogram->getDisplayOption("STAT_X_SIZE", &fopt)) x2 = x1 + fopt;
+        if (m_onlineHistogram->getDisplayOption("STAT_Y_OFFS", &fopt)) y1 = fopt;
+        if (m_onlineHistogram->getDisplayOption("STAT_Y_SIZE", &fopt)) y2 = y1 + fopt;
+        
+        stats->SetX1NDC(x1);
+        stats->SetX2NDC(x2);
+        stats->SetY1NDC(y1);
+        stats->SetY2NDC(y2);
+        // save it to check if was changed at saving time
+        if (m_statpave) { delete m_statpave; m_statpave = 0; }
+        m_statpave = (TPave*)stats->Clone(); // memleak?
       }
-    } else {
-      m_rootHistogram->SetStats(false);
-    }
+    } 
     // title pave
     TPaveText* titpave = (TPaveText*) pad->GetPrimitive("title");
     if (titpave) {
-      double x1=titpave->GetX1NDC();
-      double x2=titpave->GetX2NDC();
-      double y1=titpave->GetY1NDC();
-      double y2=titpave->GetY2NDC();
-      if (m_onlineHistogram->getDisplayOption("HTIT_X_OFFS", &fopt)) x1 = fopt;
-      if (m_onlineHistogram->getDisplayOption("HTIT_X_SIZE", &fopt)) x2 = x1 + fopt;
-      if (m_onlineHistogram->getDisplayOption("HTIT_Y_OFFS", &fopt)) y1 = fopt;
-      if (m_onlineHistogram->getDisplayOption("HTIT_Y_SIZE", &fopt)) y2 = y1 + fopt;
-      
-      titpave->SetX1NDC(x1);
-      titpave->SetX2NDC(x2);
-      titpave->SetY1NDC(y1);
-      titpave->SetY2NDC(y2);
-      // save it to check if was changed at saving time
-      if (m_titpave) { delete m_titpave; m_titpave = 0; }
-      m_titpave = (TPave*)titpave->Clone();
+      int optTit=1;
+      if(m_onlineHistogram->getDisplayOption("NOTITLE", &iopt)) {
+        if (iopt>0) { //user requires no title window
+          optTit=0;
+        }
+      }
+      if( 0 == optTit) {
+        // put window title out of sight (better than using TStyle::SetOptTitle which is too global..)          
+        titpave->SetX1NDC(-2);
+        titpave->SetX2NDC(-1);
+      }
+      else {
+        double x1=titpave->GetX1NDC();
+        double x2=titpave->GetX2NDC();
+        double y1=titpave->GetY1NDC();
+        double y2=titpave->GetY2NDC();
+        if (m_onlineHistogram->getDisplayOption("HTIT_X_OFFS", &fopt)) x1 = fopt;
+        if (m_onlineHistogram->getDisplayOption("HTIT_X_SIZE", &fopt)) x2 = x1 + fopt;
+        if (m_onlineHistogram->getDisplayOption("HTIT_Y_OFFS", &fopt)) y1 = fopt;
+        if (m_onlineHistogram->getDisplayOption("HTIT_Y_SIZE", &fopt)) y2 = y1 + fopt;
+
+        titpave->SetX1NDC(x1);
+        titpave->SetX2NDC(x2);
+        titpave->SetY1NDC(y1);
+        titpave->SetY2NDC(y2);
+        // save it to check if was changed at saving time
+        if (m_titpave) { delete m_titpave; m_titpave = 0; }
+        m_titpave = (TPave*)titpave->Clone();
+      }
     }
     
     if (m_onlineHistogram->getDisplayOption("DRAWOPTS", &sopt) ) {
@@ -1314,7 +1332,7 @@ bool DbRootHist::saveTH1ToDB(TPad* pad) {
   
   iopt = (int) m_rootHistogram->GetFillStyle();
   out |= updateDBOption("FILLSTYLE", &iopt,
-			iopt == (int) gStyle->GetHistFillStyle());
+                        iopt == (int) gStyle->GetHistFillStyle());
   iopt = (int) m_rootHistogram->GetFillColor();
   out |= updateDBOption("FILLCOLOR", &iopt,
 			iopt == (int) gStyle->GetHistFillColor());
@@ -1330,9 +1348,9 @@ bool DbRootHist::saveTH1ToDB(TPad* pad) {
   iopt = (int) m_rootHistogram->GetMarkerStyle();
   out |= updateDBOption("MARKERSTYLE", &iopt,
 			iopt == (int) gStyle->GetMarkerStyle());
-  iopt = (int) m_rootHistogram->GetMarkerSize();
-  out |= updateDBOption("MARKERSIZE", &iopt,
-			iopt == (int) gStyle->GetMarkerSize());
+  fopt = (float) m_rootHistogram->GetMarkerSize();
+  out |= updateDBOption("MARKERSIZE", &fopt,
+      TMath::Abs(fopt - (float) gStyle->GetMarkerSize())<0.00001 );
   iopt = (int) m_rootHistogram->GetMarkerColor();
   out |= updateDBOption("MARKERCOLOR", &iopt,
 			iopt == (int) gStyle->GetMarkerColor());
@@ -1467,7 +1485,7 @@ void DbRootHist::draw(TCanvas* editorCanvas, double xlow, double ylow, double xu
   //  gStyle->SetOptStat(0);
   if (0 != m_rootHistogram) {
     if (TH2D::Class() == m_rootHistogram->IsA() &&
-	m_fastHitmapPlot) {
+        m_fastHitmapPlot) {
       //      if (m_histogramImage) {
       //        delete m_histogramImage; m_histogramImage = NULL;
       //      } else
@@ -1475,6 +1493,7 @@ void DbRootHist::draw(TCanvas* editorCanvas, double xlow, double ylow, double xu
         m_histogramImage = TImage::Create();
         m_histogramImage->SetConstRatio(false);
       }
+
       m_histogramImage->SetImage((const Double_t *)((TH2D*)m_rootHistogram)->GetArray(), 
 				 ((TH2D*)m_rootHistogram)->GetNbinsX() + 2,
 				 ((TH2D*)m_rootHistogram)->GetNbinsY() + 2, 
@@ -1492,53 +1511,53 @@ void DbRootHist::draw(TCanvas* editorCanvas, double xlow, double ylow, double xu
   setDrawOptionsFromDB(pad);
   fit(); // fit if requested
   if (!m_isOverlap) pad->SetName(m_histoRootName);
-  m_hostingPad = pad;
 
+  m_hostingPad = pad;
 
   if (NULL != m_session) {
     std::string sopt("");
     boost::recursive_mutex::scoped_lock rootLock(*m_rootMutex);
     if (rootLock && 0 != m_onlineHistogram ) { 
       if (m_onlineHistogram->getDisplayOption("DRAWPATTERN", &sopt) &&
-	  false == m_isOverlap) {
-      
-	std::string drawPatternFile = m_analysisLib->refRoot() + "/" + 
-	  m_onlineHistogram->task() + "/" + sopt;
-	
-	TFile rootFile(drawPatternFile.c_str()); 
-     
-	if (rootFile.IsZombie()) {
-	  std::cout << "Error opening Root file" << std::endl;
-	} else {
-	  TIter next1( rootFile.GetListOfKeys() ) ;
-	  TKey* key;    
-	  while ( ( key = (TKey*) next1() ) ) {
-	    if ( key -> ReadObj( ) -> InheritsFrom( TCanvas::Class() ) )
-	      m_drawPattern = (TCanvas*) key -> ReadObj() ;
-	  }
-	  m_drawPattern -> SetPad( TMath::Abs( xlow ) , TMath::Abs( ylow ) ,
-				   TMath::Abs( xup  ) , TMath::Abs( yup  ) ) ;
-	  m_drawPattern -> SetName( m_identifier.c_str() ) ;
+          false == m_isOverlap) {
         
-	  TPad *padsav = (TPad*)gPad;
-	  TObject *obj; 
+        std::string drawPatternFile = m_analysisLib->refRoot() + "/" + 
+          m_onlineHistogram->task() + "/" + sopt;
         
-	  dynamic_cast< TAttLine* >( m_drawPattern ) -> Copy( (TAttLine&) *pad ) ;
-	  dynamic_cast< TAttFill* >( m_drawPattern ) -> Copy( (TAttFill&) *pad ) ;
-	  dynamic_cast< TAttPad*  >( m_drawPattern ) -> Copy( (TAttPad& ) *pad ) ;
+        TFile rootFile(drawPatternFile.c_str()); 
         
-	  TIter next( m_drawPattern -> GetListOfPrimitives() ) ;
-	  while ( ( obj=next() ) ) {
-	    pad->cd();
-	    if ( TBox::Class()     == obj->IsA() ||
-		 TLine::Class()    == obj->IsA() ||
-		 TText::Class()    == obj->IsA() || 
-		 TEllipse::Class() == obj->IsA() ) 
-	      obj->Draw();
-	  }
-	  if ( padsav ) padsav->cd();
-	}
-	rootFile.Close();
+        if (rootFile.IsZombie()) {
+          std::cout << "Error opening Root file" << std::endl;
+        } else {
+          TIter next1( rootFile.GetListOfKeys() ) ;
+          TKey* key;    
+          while ( ( key = (TKey*) next1() ) ) {
+            if ( key -> ReadObj( ) -> InheritsFrom( TCanvas::Class() ) )
+              m_drawPattern = (TCanvas*) key -> ReadObj() ;
+          }
+          m_drawPattern -> SetPad( TMath::Abs( xlow ) , TMath::Abs( ylow ) ,
+                                   TMath::Abs( xup  ) , TMath::Abs( yup  ) ) ;
+          m_drawPattern -> SetName( m_identifier.c_str() ) ;
+          
+          TPad *padsav = (TPad*)gPad;
+          TObject *obj; 
+          
+          dynamic_cast< TAttLine* >( m_drawPattern ) -> Copy( (TAttLine&) *pad ) ;
+          dynamic_cast< TAttFill* >( m_drawPattern ) -> Copy( (TAttFill&) *pad ) ;
+          dynamic_cast< TAttPad*  >( m_drawPattern ) -> Copy( (TAttPad& ) *pad ) ;
+          
+          TIter next( m_drawPattern -> GetListOfPrimitives() ) ;
+          while ( ( obj=next() ) ) {
+            pad->cd();
+            if ( TBox::Class()     == obj->IsA() ||
+                 TLine::Class()    == obj->IsA() ||
+                 TText::Class()    == obj->IsA() || 
+                 TEllipse::Class() == obj->IsA() ) 
+              obj->Draw();
+          }
+          if ( padsav ) padsav->cd();
+        }
+        rootFile.Close();
       }
     }
   }
@@ -1551,7 +1570,7 @@ void DbRootHist::normalizeReference() {
     // if GetNormFactor() >0, histogram is drawn normalized, just use the same normalization
     if (normFactor<0.1) {
       if (s_Entries == m_refOption) {
-        normFactor = m_rootHistogram->GetSumOfWeights();
+        normFactor = m_rootHistogram->GetEntries();
         m_reference->SetNormFactor(normFactor);
       } else if (s_Area == m_refOption) {
         normFactor = m_rootHistogram->Integral();
@@ -1568,33 +1587,37 @@ void DbRootHist::referenceHistogram(ReferenceVisibility visibility) {
        (s_pfixMonH2D != m_histogramType) ) {
 
     if ( (0 == m_reference) &&
-	 (s_NoReference != m_refOption) &&
-	 (m_rootHistogram->GetDimension() == 1) &&
-	 (Show == visibility)) {
+         (s_NoReference != m_refOption) &&
+         (m_rootHistogram->GetDimension() == 1) &&
+         (Show == visibility)) {
 
-      std::string subdet("");
-      if (m_onlineHistogram && m_session) {
-        OnlineHistTask histTask(*(dynamic_cast<OnlineHistDBEnv*>(m_session)), m_onlineHistogram->task());
-        if (-1 < histTask.ndet()) {
-          for (int i = 0; i < histTask.ndet(); i++) {
-            if (s_hltNodePrefix == histTask.det(i)) {
-              subdet = s_hltNodePrefix;
-              break;
-            }
-          }
-        }
-      }
+      // this makes no sense to me (GG)
+      //std::string subdet("");
+      //if (m_onlineHistogram && m_session) {
+      //  OnlineHistTask histTask(*(dynamic_cast<OnlineHistDBEnv*>(m_session)), m_onlineHistogram->task());
+      //   if (-1 < histTask.ndet()) {
+      //    for (int i = 0; i < histTask.ndet(); i++) {
+      //      if (s_hltNodePrefix == histTask.det(i)) {
+      //         subdet = s_hltNodePrefix;
+      //        break;
+      //       }
+      //     }
+      //   }
+      // }
       TH1* ref = NULL;
       std::string tck(s_default_tck);
-      if (m_presenterApp &&
-          (s_eff_init != m_presenterApp->currentTCK()) &&
-          (!(m_presenterApp->currentTCK()).empty()) &&
-          (s_hltNodePrefix == subdet) ) {
-        tck = m_presenterApp->currentTCK();
-        ref = (TH1*)m_analysisLib->getReference(m_onlineHistogram, 1, tck);
-      } else {
-        ref = (TH1*)m_analysisLib->getReference(m_onlineHistogram);
+      if (m_presenterApp) {
+        if (s_eff_init != m_presenterApp->currentTCK() &&
+            (!(m_presenterApp->currentTCK()).empty()) ) {
+              //&&  (s_hltNodePrefix == subdet) ) {
+          tck = m_presenterApp->currentTCK();
+        }
       }
+      if (tck != s_default_tck)
+        ref = (TH1*)m_analysisLib->getReference(m_onlineHistogram, 1, tck);
+      else 
+        ref = (TH1*)m_analysisLib->getReference(m_onlineHistogram);
+      
       if (ref) {
         if (m_reference) { delete m_reference; m_reference = 0; }
         m_reference = ref;
@@ -1757,4 +1780,46 @@ std::string DbRootHist::assembleCurrentDimServiceName() {
     }
   }
   return dimServiceName;
+}
+
+
+// produce virtual histogram on the fly
+TH1* DbRootHist::makeVirtualHistogram(std::vector<TH1*> &sources) {
+  if (!m_analysisLib) return NULL;
+  OMAHcreatorAlg* creator = dynamic_cast<OMAHcreatorAlg*>
+    (m_analysisLib->getAlg(m_creationAlgorithm));
+  if(creator) {
+    std::string htitle(onlineHistogram()->htitle());
+    TH1* ref=NULL;
+    if(creator->needRef() && m_anaSources.size()>0) {
+      OnlineHistogram* firsth=m_anaSources[0]->onlineHistogram();
+      std::string tck(s_default_tck);
+      if (m_presenterApp) { 
+        if (s_eff_init != m_presenterApp->currentTCK() &&
+            (!(m_presenterApp->currentTCK()).empty()) ) {
+          tck = m_presenterApp->currentTCK();
+        }
+      }
+      if (tck != s_default_tck)
+        ref = (TH1*)m_analysisLib->getReference(firsth, 1, tck);
+      else 
+        ref = (TH1*)m_analysisLib->getReference(firsth);
+    }
+    m_rootHistogram = creator->exec(&sources, &m_parameters,
+                                    m_identifier,
+                                    htitle,
+                                    isEmptyHisto() ? NULL : m_rootHistogram,
+                                    ref);
+    if (ref) delete ref;
+    if(m_rootHistogram) {
+      beRegularHisto();
+    }
+    else {
+      if (m_verbosity >= Verbose) std::cout<< "creator algorithm failed!"<<std::endl;
+    }
+  }
+  else {
+    if (m_verbosity >= Verbose) std::cout << "creator algorithm for virtual histogram not found!" << std::endl;
+  }
+  return m_rootHistogram;
 }

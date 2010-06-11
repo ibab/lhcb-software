@@ -1,4 +1,4 @@
-// $Id: Archive.cpp,v 1.81 2010-06-10 16:44:20 ggiacomo Exp $
+// $Id: Archive.cpp,v 1.82 2010-06-11 13:02:03 ggiacomo Exp $
 #include <iostream>
 #include <sstream>
 #include <algorithm>
@@ -198,8 +198,8 @@ void Archive::fillHistogram(DbRootHist* histogram,
             newh->SetBinError(i+1, ((TH1*)list->At(i))->GetMeanError() );
           }
           setHistoryLabels(newh, goodRootFiles);
-	  histogram -> deleteRootHistogram( ) ;
-	  histogram -> setRootHistogram( newh ) ;
+          histogram -> deleteRootHistogram( ) ;
+          histogram -> setRootHistogram( newh ) ;
           histogram->setHistoryTrendPlotMode(true);
         }
       }
@@ -214,6 +214,7 @@ void Archive::fillHistogram(DbRootHist* histogram,
         delete histo;
       }
       delete list;
+
       if ( ! histogram->hasRootHistogram() ) {
         histogram->beEmptyHisto();
       }
@@ -235,24 +236,15 @@ void Archive::fillHistogram(DbRootHist* histogram,
           sourcesOk = false;
         }
       }
-      OMAHcreatorAlg* creator = dynamic_cast<OMAHcreatorAlg*>
-	(m_analysisLib->getAlg(histogram->creationAlgorithm()));
-      if (creator && sourcesOk) {
-	
-        std::string htitle(histogram->onlineHistogram()->htitle());
-        histogram->setRootHistogram( creator->exec(&sources,
-						   histogram->anaParameters(),
-						   histogram->onlineHistogram()->identifier(),
-						   htitle,
-						   histogram->isEmptyHisto() ? NULL : histogram->getRootHistogram()) ) ;
-        histogram->beRegularHisto();
-        if (m_mainFrame->isHistoryTrendPlotMode()) {
-          histogram->setHistoryTrendPlotMode(true);
-        }
+      if (sourcesOk) {
+        histogram->makeVirtualHistogram(sources);
       }
       else {
         histogram->beEmptyHisto(); 
-      }      
+      }    
+      if (m_mainFrame->isHistoryTrendPlotMode()) {
+        histogram->setHistoryTrendPlotMode(true);
+      }
     }
     if ( ! histogram->hasRootHistogram() ) histogram->beEmptyHisto();
   }

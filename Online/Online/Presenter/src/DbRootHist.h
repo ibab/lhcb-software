@@ -201,6 +201,11 @@ class DbRootHist : public HistogramIdentifier
   /// set hosting pad for an histogram
   void setHostingPad( TPad * thePad ) { m_hostingPad = thePad ; } ;
 
+  /// produce virtual histogram on the fly
+  TH1* makeVirtualHistogram(std::vector<TH1*> &sources);
+
+
+
  private:
   TH1  * m_rootHistogram ; ///< pointer to the underlying ROOT histogram
   TPad * m_hostingPad ; ///< pointer to the histogram Pad  

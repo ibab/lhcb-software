@@ -1,4 +1,4 @@
-// $Id: presenter.cpp,v 1.75 2010-05-16 18:10:09 robbep Exp $
+// $Id: presenter.cpp,v 1.76 2010-06-11 13:02:03 ggiacomo Exp $
 // STL
 #include <iostream>
 #include <fstream>
@@ -135,7 +135,7 @@ int main(int argc, char* argv[])
     config.add_options()
       ("mode,M", value<std::string>()->default_value("online"),
        "starting operation mode:\n" "online, history \n" "editor-online editor-offline \n or batch")
-      ("login", value<std::string>()->default_value("read-only"),
+      ("login,l", value<std::string>()->default_value("read-only"),
        "\"no\" when not to login to histogram\n" "database on startup\n"
        "read-only or read-write")
       ("window-width,W",  value<int>(&windowWidth)->default_value(1500), "window width")
@@ -146,13 +146,14 @@ int main(int argc, char* argv[])
       ("reference-path,R", value<std::string>()->default_value(referencePath), "reference path")
       ("saveset-path,S", value<std::string>()->default_value(savesetPath), "saveset path")
       ("tnsnames-path,O", value<std::string>(), "tnsnames.ora file")
-      ("databases,DB", value<std::string>()->default_value(s_histdb),"known databases")
-      ("database-credentials,DBC", value<std::string>()->default_value(s_histReaderPair),"database credentials")
+      ("databases,d", value<std::string>()->default_value(s_histdb),"known databases")
+      ("database-credentials,k", value<std::string>()->default_value(s_histReaderPair),"database credentials")
       ("logbook-settings,L", value<std::string>(), "logbook configuration")
-      ("problem-settings,L", value<std::string>(), "Problem Database configuration")
-      ("rundb-settings,L", value<std::string>() , "Run Database configuration" )
-      ("hide-alarm-list,A", value<bool>(), "hide alarm list")
-      ("hide-problem-list,A", value<bool>(), "hide problem list")
+      ("problem-settings,x", value<std::string>(), "Problem Database configuration")
+      ("rundb-settings,r", value<std::string>() , "Run Database configuration" )
+      ("enable-alarm-display,a", value<bool>()->default_value(true), "enable alarm display")
+      ("hide-alarm-list", value<bool>(), "hide alarm list")
+      ("hide-problem-list", value<bool>(), "hide problem list")
       ("config-file,C", value<std::string>(), "configuration file")
       ("key-file,K", value<std::string>(), "TCK list file")
       ("image-path,I", value<std::string>()->default_value(gSystem->TempDirectory()), "image dump directory")
@@ -329,10 +330,16 @@ int main(int argc, char* argv[])
       presenterMainFrame.setLogbookConfig(startupSettings["logbook-settings"].as<std::string>());
     }
 
+
     if (startupSettings.count("hide-alarm-list") &&
         (true == startupSettings["hide-alarm-list"].as<bool>())) {
       presenterMainFrame.toggleShowAlarmList();
     }
+
+    if (startupSettings.count("enable-alarm-display") ) {
+      presenterMainFrame.enableAlarmDisplay(startupSettings["enable-alarm-display"].as<bool>());
+    }
+
 
     if (startupSettings.count("hide-problem-list") &&
 	( true == startupSettings[ "hide-problem-list" ].as< bool >() ) ) {

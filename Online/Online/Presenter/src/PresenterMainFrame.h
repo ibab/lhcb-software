@@ -28,6 +28,7 @@ class TString;
 class TGButton;
 class TGPictureButton;
 class TGFrame;
+class TGString;
 class TGPopupMenu;
 class TGMenuBar;
 class TGToolBar;
@@ -55,6 +56,7 @@ class DimBrowser;
 class OnlineHistDB;
 class OnlineHistoOnPage;
 class OMAlib;
+class AlarmDisplay;
 class Archive;
 class IntervalPicker;
 class TDatime;
@@ -180,7 +182,11 @@ public:
   void CloseWindow();
 
   void setPresenterMode(const pres::PresenterMode & presenterMode);
-  pres::PresenterMode presenterMode() { return m_presenterMode; }
+  void setPresenterModeVariable(const pres::PresenterMode & presenterMode)
+  { m_presenterMode = presenterMode;}
+  const pres::PresenterMode & presenterMode() { return m_presenterMode; }
+  void setDisplayModeVariable(const pres::DisplayMode & displayMode) { m_displayMode = displayMode;}
+  const pres::DisplayMode & displayMode() {return m_displayMode; }
   void setDatabaseMode(const pres::DatabaseMode & databaseMode);
   //    void setResumeRefreshAfterLoading(bool refreshAfterLoading);
   void setHistoryMode(bool mode) { m_historyMode = mode; }
@@ -202,6 +208,8 @@ public:
 
   void setReferencePath(const std::string & referencePath);
   void setSavesetPath(const std::string & savesetPath);
+  std::string& savesetFileName() {return m_savesetFileName;}
+  void setSavesetFileName(const std::string & svsFilename) { m_savesetFileName = svsFilename;}
   void setImagePath(const std::string & imagePath);
   void setDumpFormat(const std::string & dumpFormat);
 
@@ -236,6 +244,8 @@ public:
   void startPageRefresh();
   void stopPageRefresh();
   void clearHistos();
+  void unclearHistosIfNeeded() {if (m_clearedHistos) clearHistos();}
+  void clearAlarmPages() { m_alarmPages.clear();}
   void loadNextPage();
   void loadPreviousPage();
   void nextInterval();
@@ -243,12 +253,9 @@ public:
   bool threadSafePage();
   void refreshPage();
   void refreshClock();
-  void listAlarmsFromHistogramDB(TGListTree* listView,
-                                 const FilterCriteria & filterCriteria);
   void listHistogramsFromHistogramDB(TGListTree* listView,
                                      const FilterCriteria & filterCriteria,
                                      bool histograms);
-
   void fillTreeNodeWithHistograms(TGListTree* listView,
                                   TGListTreeItem* node,
                                   std::vector<std::string>* localDatabaseIDS,
@@ -256,7 +263,9 @@ public:
   std::string histogramDBName();
 
   void setTreeNodeType(TGListTreeItem* node, const std::string & type);
-  void setStatusBarText(const char* text, int slice);
+  const char* getStatusBarText(int slice=0);
+  void setStatusBarText(const char* text, int slice=0);
+  void setTopStatusBarText(const char* text, int slice=0);
   void editHistogramProperties();
   void inspectHistogram();
   void histogramDescription();
@@ -344,18 +353,18 @@ public:
 
   void deleteSelectedHistoFromDB();
   std::string selectedPageFromDbTree();
-  int selectedAlarmFromDbTree();
-  void loadSelectedAlarmFromDB(int msgId);
   void loadAllPages();
   void loadSelectedPageFromDB(const std::string & pageName = "",
                               const std::string & timePoint = "",
                               const std::string & pastDuration = "" );
+  PageDescriptionTextView*  pageDescriptionView() { return m_pageDescriptionView;}
   void moveSelectedInDB();
   void deleteSelectedPageFromDB();
   void createFolderInDB();
   void pickReferenceHistogram();
   void saveSelectedHistogramAsReference();
   void toggleReferenceOverlay();
+  void enableAlarmDisplay(bool mode);
   void toggleShowAlarmList();
   /// Show panel with list of known problems
   void toggleShowKnownProblemList() ;
@@ -370,6 +379,8 @@ public:
   bool isConnectedToHistogramDB();
   bool canWriteToHistogramDB();
   bool isHistoryTrendPlotMode() { return m_historyTrendPlots; }
+  bool referencesOverlayed() { return m_referencesOverlayed;}
+
   TCanvas* editorCanvas;
   TRootEmbeddedCanvas* editorEmbCanvas;
 
@@ -411,6 +422,7 @@ private:
   pres::PresenterMode m_presenterMode;
   pres::PresenterMode m_prevPresenterMode;
   pres::DatabaseMode  m_databaseMode;
+  pres::DisplayMode m_displayMode;
   TTimer*           m_pageRefreshTimer;
   TTimer*           m_clockTimer;
   bool              m_clearedHistos;
@@ -420,9 +432,13 @@ private:
   bool              m_refreshingPage;
   OnlineHistDB*     m_histogramDB;
   OMAlib*           m_analysisLib;
+  bool              m_alarmDisplayEnabled;
+  AlarmDisplay*     m_alarmDisplay;
   int               m_msgBoxReturnCode;
   std::string       m_dbName;
   std::string       m_message;
+
+  void cleanHistogramDB();
 
   std::vector<std::string*> m_knownDatabases;
   std::map<std::string*, std::string*> m_knownDbCredentials;
@@ -635,8 +651,6 @@ private:
 
   /// Window with list of known problems
   KnownProblemList *   m_globalKnownProblemList ;
-
-  std::vector<int> m_alarmMessageIDs;
 
   std::vector<std::string>      m_knownHistogramServices;
   //    std::vector<std::string>::const_iterator m_knownDimServicesIt;
