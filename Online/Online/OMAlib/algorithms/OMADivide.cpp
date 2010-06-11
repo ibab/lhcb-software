@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/algorithms/OMADivide.cpp,v 1.7 2010-02-12 14:25:39 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/algorithms/OMADivide.cpp,v 1.8 2010-06-11 13:00:10 ggiacomo Exp $
 #include <TH1F.h>
 #include <TH2F.h>
 #include "OMAlib/OMAAlgorithms.h"
@@ -16,10 +16,11 @@ OMADivide::OMADivide(OMAlib* Env) :
 }
 
 TH1* OMADivide::exec( const std::vector<TH1*> *sources,
-			  const std::vector<float> *params,
-			  std::string &outName,
-			  std::string &outTitle,
-			  TH1* existingHisto) {
+                      const std::vector<float> *params,
+                      std::string &outName,
+                      std::string &outTitle,
+                      TH1* existingHisto,
+                      TH1* ) {
   TH1* out=NULL;
   if (! sourceVerified(sources) ) return out;
   if (sources->size() <2) return out;
@@ -50,10 +51,11 @@ TH1* OMADivide::exec( const std::vector<TH1*> *sources,
 				   okH->GetNbinsY(), 
 				   okH->GetYaxis()->GetXmin(),
 				   okH->GetYaxis()->GetXmax()) ); 
+    outHist->Sumw2();
   }
   if(outHist) {
-    outHist->Sumw2();
     outHist->Divide(okH, allH, k1, k2);
+    outHist->SetBit(TH1::kIsAverage);
   }
   
   return  outHist;

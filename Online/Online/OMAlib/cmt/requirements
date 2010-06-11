@@ -3,7 +3,7 @@
 # Maintainer : Giacomo Graziani 
 # =============================================================================
 package          OMAlib
-version          v2r16
+version          v3r0
 
 branches src cmt doc OMAlib
 
@@ -11,7 +11,7 @@ branches src cmt doc OMAlib
 
 use   ROOT             v*       LCG_Interfaces
 
-use   OnlineHistDB     v*       Online
+use   OnlineHistDB     v7*       Online
 use   GaudiAlg         v*
 use   DIM              v*  	Online
 

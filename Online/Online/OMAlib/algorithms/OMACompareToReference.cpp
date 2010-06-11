@@ -22,7 +22,6 @@ void OMACompareToReference::exec(TH1 &Histo,
                                  TH1* Ref) {
   if( warn_thresholds.size() <m_npars ||  alarm_thresholds.size() <m_npars)
     return;
-  if(notEnoughStats(&Histo)) return; // too few hits for this test
   int test =1;
   double pvalue=1.;
   if(input_pars.size() > 0)
@@ -50,8 +49,3 @@ void OMACompareToReference::exec(TH1 &Histo,
                 hname);
 }
 
-bool OMACompareToReference::refMissing(TH1* ref,
-                                       std::vector<float> & input_pars) {
-  if (!ref && input_pars.empty()) ref=NULL; // cheat compiler (avoid warnings)
-  return (!ref); 
-}

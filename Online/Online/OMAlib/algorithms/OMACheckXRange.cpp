@@ -1,4 +1,4 @@
-// $Id: OMACheckXRange.cpp,v 1.7 2009-06-11 15:17:31 ggiacomo Exp $
+// $Id: OMACheckXRange.cpp,v 1.8 2010-06-11 13:00:10 ggiacomo Exp $
 
 #include <TH1F.h>
 #include "OMAlib/OMAAlgorithms.h"
@@ -17,9 +17,8 @@ void OMACheckXRange::exec(TH1 &Histo,
                           std::vector<float> & alarm_thresholds,
                           std::vector<float> & input_pars,
                           unsigned int anaID,
-                          TH1* Ref) {
+                          TH1*) {
   input_pars.empty(); //  avoid compil. warning 
-  Ref = NULL; //  avoid compil. warning 
   if(warn_thresholds.size() >= m_npars &&
      alarm_thresholds.size() >= m_npars)
     exec(Histo,warn_thresholds[0],warn_thresholds[1],

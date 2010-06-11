@@ -1,4 +1,4 @@
-// $Id: OMAMsgInterface.h,v 1.22 2010-03-15 18:00:50 ggiacomo Exp $
+// $Id: OMAMsgInterface.h,v 1.23 2010-06-11 13:00:10 ggiacomo Exp $
 #ifndef OMALIB_OMAMSGINTERFACE_H 
 #define OMALIB_OMAMSGINTERFACE_H 1
 
@@ -33,7 +33,7 @@ public:
   /// lower and delete all unconfirmed messages  (to be called at the end of analysis)
   void refreshMessageList(std::string& TaskName);
   /// declare a message, that is sent to output only if new or if level is higher
-  /// (this can be used only id analysis name has been already declared through setAnaName)
+  /// (this can be used only id analysis name or ID has been already declared through setAnaName or setAnaID)
   void raiseMessage(OMAMessage::OMAMsgLevel level,
                     std::string& message,
                     std::string& histogramName);   

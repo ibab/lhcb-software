@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/algorithms/OMARebin.cpp,v 1.1 2010-02-12 14:25:39 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/algorithms/OMARebin.cpp,v 1.2 2010-06-11 13:00:10 ggiacomo Exp $
 #include <TH1F.h>
 #include <TH2F.h>
 #include "OMAlib/OMAAlgorithms.h"
@@ -16,10 +16,11 @@ OMARebin::OMARebin(OMAlib* Env) :
 }
 
 TH1* OMARebin::exec( const std::vector<TH1*> *sources,
-			  const std::vector<float> *params,
-			  std::string &outName,
-			  std::string &outTitle,
-			  TH1* existingHisto) {
+                     const std::vector<float> *params,
+                     std::string &outName,
+                     std::string &outTitle,
+                     TH1* existingHisto,
+                     TH1*) {
   TH1* out=NULL;
   if (! sourceVerified(sources) ) return out;
   if (sources->size() <1) return out;

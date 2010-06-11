@@ -1,7 +1,8 @@
-// $Id: DBDrivenAnalysisTask.cpp,v 1.17 2010-02-12 14:25:39 ggiacomo Exp $
+// $Id: DBDrivenAnalysisTask.cpp,v 1.18 2010-06-11 13:00:11 ggiacomo Exp $
 #include "GaudiKernel/DeclareFactoryEntries.h" 
 #include "OMAlib/DBDrivenAnalysisTask.h"
 #include "OnlineHistDB/OnlineHistDB.h"
+#include "OnlineHistDB/OMAMessage.h"
 #include <TH1.h>
 #include <TFile.h>
 
@@ -40,17 +41,18 @@ StatusCode DBDrivenAnalysisTask::analyze(std::string& SaveSet,
   std::vector<float> alarmThr;
   std::vector<float> inputs;
   bool mask;
+  long statusbits;
+  float minstat;
+  float minstatfrac;
   if (false == f->IsZombie()) {
     std::vector<OnlineHistogram*> hlist;
     m_histDB->getHistogramsWithAnalysis( &hlist);
     debug() << hlist.size() << "histograms with analysis found in DB"<<endmsg;
     std::vector<OnlineHistogram*>::iterator ih;
     for(ih = hlist.begin(); ih != hlist.end(); ih++) {
-      if (Task != "any") {
-        std::string virtualTask = Task + "_ANALYSIS";
-        if( Task != (*ih)->task() &&
-            virtualTask != (*ih)->task()) continue;
-      }
+      if (Task != "any" &&
+          Task != (*ih)->task() &&
+          VirtualTaskName(Task) != (*ih)->task()) continue;
       m_taskname  = (*ih)->task();
       debug() << "histogram with analysis found in DB: "<<(*ih)->identifier() <<
         "  virtual="<<  (*ih)->isAnaHist() <<endmsg;
@@ -68,8 +70,21 @@ StatusCode DBDrivenAnalysisTask::analyze(std::string& SaveSet,
           warningThr.clear();
           alarmThr.clear();
           inputs.clear();
-          if ((*ih)->getAnaSettings(anaIDs[iana], &warningThr, &alarmThr, &inputs, mask) ) {
+          setAnaId(anaIDs[iana]);
+          if ((*ih)->getAnaSettings(anaIDs[iana], &warningThr, &alarmThr, &inputs, 
+                                    mask, statusbits, minstat, minstatfrac) ) {
             if (!mask) {
+              // check if conditions on detector status are fulfilled
+              if ( statusbits > 0) {
+                long curStatus=checkStatus();
+                if (  (statusbits & curStatus ) != statusbits ||
+                      (statusbits & runStatus() ) != statusbits) {
+                  sendNoGoMessage(rooth);
+                  info() << "analysis "<<anaIDs[iana]<<" not performed since requested status is "<<
+                    statusbits<<" and run status="<<runStatus()<<", current status="<<curStatus<<endmsg;
+                  continue;
+                }
+              }
               OMAalg* thisalg= getAlg(anaAlgs[iana]);
               if (thisalg) {
                 if (OMACheckAlg* cka = dynamic_cast<OMACheckAlg*>(thisalg) ) {
@@ -80,11 +95,13 @@ StatusCode DBDrivenAnalysisTask::analyze(std::string& SaveSet,
                       m_ownedRefs[(*ih)->identifier()] = myref;
                     }
                   }
-                  // check if we have statistics first, then exec the algorithm
+                  // check if we have statistics first, if yes exec the algorithm
                   if ( cka->checkStats(rooth,
                                        anaIDs[iana],
                                        myref,
-                                       inputs) ) {
+                                       inputs,
+                                       minstat,
+                                       minstatfrac) ) {
                     cka->setOnlineHistogram(*ih);
                     cka->exec(*(rooth),
                               warningThr,
@@ -92,6 +109,9 @@ StatusCode DBDrivenAnalysisTask::analyze(std::string& SaveSet,
                               inputs,
                               anaIDs[iana],
                               myref);
+                  }
+                  else { // not enough stat 
+                    sendNoGoMessage(rooth);
                   }
                   if (myref) delete myref;
                 }
@@ -125,3 +145,8 @@ StatusCode DBDrivenAnalysisTask::analyze(std::string& SaveSet,
   return StatusCode::SUCCESS;
 }
 
+void DBDrivenAnalysisTask::sendNoGoMessage(TH1* h) {
+  std::string emptyMsg("");
+  std::string hname=h->GetName();
+  raiseMessage(OMAMessage::NOSTAT, emptyMsg, hname);
+}

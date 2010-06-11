@@ -1,4 +1,4 @@
-// $Id: OMACheckMeanAndSigma.cpp,v 1.7 2010-02-12 14:25:39 ggiacomo Exp $
+// $Id: OMACheckMeanAndSigma.cpp,v 1.8 2010-06-11 13:00:10 ggiacomo Exp $
 
 #include <TH1F.h>
 #include <TMath.h>
@@ -25,14 +25,13 @@ void OMACheckMeanAndSigma::exec(TH1 &Histo,
                                 std::vector<float> & alarm_thresholds,
                                 std::vector<float> & input_pars,
                                 unsigned int anaID,
-                                TH1* Ref) {
+                                TH1*) {
   float confidence=m_inputDefValues[0];
   int axis=(int) (m_inputDefValues[1]+0.1);
-  Ref = NULL; // avoid compil. warning
   if ( input_pars.size() > 0 ) confidence = input_pars[0];
   if ( input_pars.size() > 1 ) axis = (int) (input_pars[1]+0.1);
 
-  if( warn_thresholds.size() <4 ||  alarm_thresholds.size() <4 )
+  if( warn_thresholds.size() <m_npars ||  alarm_thresholds.size() <m_npars )
     return;
   
   

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/algorithms/OMAProject.cpp,v 1.2 2010-05-17 11:05:35 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/algorithms/OMAProject.cpp,v 1.3 2010-06-11 13:00:10 ggiacomo Exp $
 #include <TH1F.h>
 #include <TH2F.h>
 #include "OMAlib/OMAAlgorithms.h"
@@ -18,10 +18,11 @@ OMAProject::OMAProject(OMAlib* Env) :
 }
 
 TH1* OMAProject::exec( const std::vector<TH1*> *sources,
-			  const std::vector<float> *params,
-			  std::string &outName,
-			  std::string &outTitle,
-			  TH1* existingHisto) {
+                       const std::vector<float> *params,
+                       std::string &outName,
+                       std::string &outTitle,
+                       TH1* existingHisto,
+                       TH1*) {
   TH1* out=NULL;
   if (! sourceVerified(sources) ) return out;
   if (sources->size() <1) return out;

@@ -1,8 +1,21 @@
-! $Id: release.notes,v 1.44 2010-05-17 11:05:35 ggiacomo Exp $
+! $Id: release.notes,v 1.45 2010-06-11 13:00:11 ggiacomo Exp $
 ! Package     : OMAlib
 ! Responsible : G. Graziani
 ! Purpose     : Online Monitoring Analysis library
 
+! ======== v3r0 ===============
+
+! 20100610 GG
+  requiring OnlineHistDB v7
+ - add tools for conditional analysis:
+   * check detector status through DIM services (the list of available status services is kept in the HistDB)
+   * statistics threshold are tunable for every analysis
+ - improve messaging system:
+   * keep solved alarms in DB for archiving
+   * keep track of occurrence, soling and retriggering of every alarm
+ - add new creator algorithm DivideByReference
+ - add new check algorithm CheckMinMax
+ - refine some other algorithms
 
 ! 20100517 GG
  - add normalization bin as input parameter in OMAScale

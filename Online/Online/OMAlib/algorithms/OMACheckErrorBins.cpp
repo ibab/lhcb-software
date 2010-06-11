@@ -1,4 +1,4 @@
-// $Id: OMACheckErrorBins.cpp,v 1.3 2010-04-07 09:40:13 ggiacomo Exp $
+// $Id: OMACheckErrorBins.cpp,v 1.4 2010-06-11 13:00:10 ggiacomo Exp $
 
 #include <TH1F.h>
 #include <TF1.h>
@@ -21,7 +21,6 @@ OMACheckErrorBins::OMACheckErrorBins(OMAlib* Env) :
   m_doc += "Threshold is the absolute bin content if Mode=1, the fraction wrt histogram area if Mode=2.";
   m_doc += "Applies to 1d histograms only";
 
-  m_minEntries=0;
   m_minEntriesPerBin=0;
 }
 

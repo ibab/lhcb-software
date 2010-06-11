@@ -1,7 +1,9 @@
-// $Id: OMAalg.cpp,v 1.10 2010-01-26 14:25:37 ggiacomo Exp $
+// $Id: OMAalg.cpp,v 1.11 2010-06-11 13:00:11 ggiacomo Exp $
 #include "OMAlib/OMAalg.h"
 #include "OMAlib/OMAlib.h"
 #include <TH1.h>
+#include <TH1F.h>
+#include <TH2F.h>
 #include <sstream>
 
 OMAalg::OMAalg(std::string Name, OMAlib* OMAenv) 
@@ -9,7 +11,8 @@ OMAalg::OMAalg(std::string Name, OMAlib* OMAenv)
     m_type(CHECK),
     m_npars(0),
     m_omaEnv(OMAenv),
-    m_oh(NULL)
+    m_oh(NULL),                                                 
+    m_needRef(false) 
 {
   m_parnames.clear(); 
   m_parDefValues.clear(); 
@@ -63,30 +66,75 @@ void OMAalg::raiseMessage(unsigned int Id,
   return;
 }
 
-bool OMACheckAlg::notEnoughStats(TH1* h) {
-  int nb=h->GetXaxis()->GetNbins();
-  return (h->GetEntries() < m_minEntries || 
-          h->GetEntries() < (nb * m_minEntriesPerBin) );
+bool OMAalg::getBinLabels(TH1 &Histo) {
+  bool hasLabels=false;
+  if(m_oh && m_omaEnv->dbSession() && Histo.GetDimension() == 1) {
+    if (Histo.GetXaxis()) {
+      if (m_oh->nXbinlabels() > 0 && 
+          Histo.GetXaxis()->GetNbins() >= (int)m_oh->nXbinlabels() ) {
+        hasLabels=true;
+        std::string sopt;
+        for (unsigned int il = 0; il < m_oh->nXbinlabels(); il++) {
+          sopt = m_oh->binlabel(il,0);
+          Histo.GetXaxis()->SetBinLabel(il+1, sopt.c_str());
+        }
+      }
+    }
+  }
+  return hasLabels;
+}
+
+// get the inverse of average weight of histogram (to convert content to supposed counts)
+double OMAalg::content2counts(TH1 &Histo) {
+  double k2c=1;
+  double sum = -1;
+  TH1F* hf= dynamic_cast<TH1F*>(&Histo);
+  if (hf) sum = hf->GetSum();
+  TH2F* hf2= dynamic_cast<TH2F*>(&Histo);
+  if (hf2) sum = hf2->GetSum();
+  if (sum>0.) k2c = Histo.GetEntries() / sum;
+  return k2c;    
 }
 
 
-bool OMACheckAlg::refMissing(TH1* ref,
-                        std::vector<float> & input_pars) {
-  ref = (input_pars.empty() ? ref : NULL); // cheat compiler (avoid warnings)
-  return false; // never mind by default (will be overloaded for algorihtm who care)
+
+// ----- OMACheckAlg ------ //
+
+bool OMACheckAlg::notEnoughStats(TH1* h,
+                                 float minstatperbin,
+                                 float minstatfrac) {
+  bool out=false;
+  int nb=h->GetNbinsX() * h->GetNbinsY();
+  double thr = minstatperbin;
+  if(thr<0) thr=m_minEntriesPerBin; // use default value
+  if (h->GetEntries() < (nb * thr)) out=true;
+
+  if (!out && minstatfrac>0.) { // check we have enough bins above stat. threshold
+    int nok=0;
+    double cont2entr = content2counts(*h);
+    for (int ix=1; ix<= h->GetNbinsX(); ix++) {
+      for (int iy=1 ; iy<= h->GetNbinsY(); iy++) {
+        double binEntries =   h->GetBinContent(ix, iy) * cont2entr; //assuming weights are constant..
+        if (binEntries > thr) nok++;
+      }
+    }
+    if ( ((double)nok / (double)nb) < minstatfrac) out=true;
+  }
+  return out;
 }
+
 
 
 bool OMACheckAlg::checkStats(TH1* h,
-                        unsigned int anaID,
-                        TH1* ref,
-                        std::vector<float> & input_pars) {
-
+                             unsigned int,
+                             TH1* ref,
+                             std::vector<float> & input_pars,
+                             float minstatperbin,
+                             float minstatfrac) {
   bool ok=true;
   std::string message="";
   std::string hname=h->GetName();
-  if (notEnoughStats(h)) {
-    raiseMessage(anaID, OMAMessage::NOSTAT, message, hname);
+  if (notEnoughStats(h, minstatperbin, minstatfrac)) {
     std::stringstream warn;
     warn << "not enough stats for histogram " << hname <<
       ": entries=" << h->GetEntries();

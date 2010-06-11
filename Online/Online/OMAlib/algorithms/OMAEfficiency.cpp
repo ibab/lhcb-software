@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/algorithms/OMAEfficiency.cpp,v 1.7 2010-02-12 14:25:39 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/algorithms/OMAEfficiency.cpp,v 1.8 2010-06-11 13:00:10 ggiacomo Exp $
 #include <cmath>
 #include <TH1F.h>
 #include <TH2F.h>
@@ -15,13 +15,13 @@ OMAEfficiency::OMAEfficiency(OMAlib* Env) :
 }
 
 TH1* OMAEfficiency::exec( const std::vector<TH1*> *sources,
-			  const std::vector<float> *params,
-			  std::string &outName,
-			  std::string &outTitle,
-			  TH1* existingHisto) {
+                          const std::vector<float> *,
+                          std::string &outName,
+                          std::string &outTitle,
+                          TH1* existingHisto,
+                          TH1* ) {
   TH1* out=NULL;
   if (! sourceVerified(sources) ) return out;
-  params=params; // avoid compil. warning
   if (sources->size() >= 2)
     out = exec( sources->at(0), sources->at(1), outName, outTitle, existingHisto);
   return out;
@@ -52,9 +52,9 @@ TH1* OMAEfficiency::exec(TH1* okH,
 				   okH->GetNbinsY(), 
 				   okH->GetYaxis()->GetXmin(),
 				   okH->GetYaxis()->GetXmax()) ); 
+    outHist->Sumw2();
   }
   if(outHist) {
-    outHist->Sumw2();
     //outHist->Divide(okH, allH, 1., 1., "B");
     // use the score confidence interval Agresti-Coull formula for more reasonable binomial errors  
     if (okH->GetNbinsX() != allH->GetNbinsX() ||
@@ -69,6 +69,8 @@ TH1* OMAEfficiency::exec(TH1* okH,
         outHist->SetBinError(ix,iy,error);  
       }
     }
+    outHist->SetEntries(okH->GetEntries());
+    outHist->SetBit(TH1::kIsAverage);
   }
   return  outHist;
 }

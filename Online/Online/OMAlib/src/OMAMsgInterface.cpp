@@ -1,5 +1,6 @@
-// $Id: OMAMsgInterface.cpp,v 1.33 2010-05-14 15:17:35 ggiacomo Exp $
+// $Id: OMAMsgInterface.cpp,v 1.34 2010-06-11 13:00:11 ggiacomo Exp $
 #include <cstring>
+#include <sstream>
 #include "OnlineHistDB/OnlineHistDB.h"
 #include "OMAlib/OMAMsgInterface.h"
 #include "GaudiKernel/MsgStream.h"
@@ -40,7 +41,7 @@ void OMAMsgInterface::checkWritePermissions() {
   }
 }
 
-
+// analysis init: load all existing messages related to this analysis
 void OMAMsgInterface::loadMessages() {
   if(m_histDB && "noMessage" != m_anaTaskname) {
     if (m_outs) {
@@ -57,8 +58,8 @@ void OMAMsgInterface::loadMessages() {
     m_histDB->getMessages(messID, m_anaTaskname);
     for (std::vector<int>::iterator im= messID.begin() ; im !=  messID.end() ; im++) {
       OMAMessage* lmsg = new OMAMessage(*im, *m_histDB);
-      publishMessage(lmsg);
       if(false == lmsg->isAbort() ) {
+        //publishMessage(lmsg);
         m_MessageStore.push_back( lmsg );
       }
       else {
@@ -96,6 +97,7 @@ void OMAMsgInterface:: startMessagePublishing() {
   }
 }
 
+// connect messages to current HistDB session
 void OMAMsgInterface::updateMessages() {
   if(m_histDB && "noMessage" != m_anaTaskname) {
     std::vector<OMAMessage*>::iterator iM;
@@ -105,46 +107,48 @@ void OMAMsgInterface::updateMessages() {
   }
 }
 
-
+// before performing the analysis, unconfirm all active messages related to it
 void OMAMsgInterface::resetMessages(std::string& TaskName) {
   std::vector<OMAMessage*>::iterator iM;
   for (iM=m_MessageStore.begin(); iM != m_MessageStore.end(); iM++) {
-    if(TaskName == "any" || 
-       TaskName == (*iM)->taskName()  || VirtualTaskName(TaskName)  == (*iM)->taskName() )
-      (*iM)->unconfirm();
+    if ((*iM)->isactive()) {
+      if(TaskName == "any" || 
+         TaskName == (*iM)->taskName()  || VirtualTaskName(TaskName)  == (*iM)->taskName() )
+        (*iM)->unconfirm();
+    }
   }
 }
 
+// at the end of analysis, disable all active unconfirmed messages
 void OMAMsgInterface::refreshMessageList(std::string& TaskName) {
   std::vector<OMAMessage*>::iterator iM = m_MessageStore.begin();
   while( iM != m_MessageStore.end() ) {
-    bool kept=true;
-    if(TaskName == "any" || 
-       TaskName == (*iM)->taskName()  || VirtualTaskName(TaskName)  == (*iM)->taskName() ) {
-      if( false == (*iM)->confirmed()) {
-        kept=false;
-        lowerAlarm( (**iM) );
-        unpublishMessage(*iM);
-        if (m_histDB) {
-          if (m_histDB->canwrite() && m_logToHistDB) {
-            (*iM)->remove();
-            m_histDB->commit();
+    if ((*iM)->isactive()) {
+      if(TaskName == "any" || 
+         TaskName == (*iM)->taskName()  || VirtualTaskName(TaskName)  == (*iM)->taskName() ) {
+        if( false == (*iM)->confirmed()) {
+          lowerAlarm( (**iM) );
+          unpublishMessage(*iM);
+          if (m_histDB) {
+            if (m_histDB->canwrite() && m_logToHistDB) {
+              (*iM)->disable();
+              (*iM)->store();
+              m_histDB->commit();
+            }
           }
         }
-        delete (*iM);
-        iM = m_MessageStore.erase(iM);
       }
     }
-    if (kept) iM++;
+    iM++;
   }
 }
 
-
+// called from analysis algorithms
 void OMAMsgInterface::raiseMessage(OMAMessage::OMAMsgLevel level,
                                    std::string& message,
                                    std::string& histogramName) {
   bool newMsg = true;
-  bool send = true;
+  bool send = false;
   OMAMessage* msg=NULL;
 
   std::string histIdentifier =m_taskname+"/"+histogramName;
@@ -156,21 +160,28 @@ void OMAMsgInterface::raiseMessage(OMAMessage::OMAMsgLevel level,
       // message is already known
       msg = (*iM);
       newMsg = false;
-      msg->confirm();
-      if ( level >=  msg->level() ) {
-        msg->setText(message);
-      }
-      // send to output only if level grew
-      if ( level >  msg->level() ) {
-        msg->setLevel(level);
+      if (msg->isactive()) { // was already there: confirm
+        msg->confirm();
       }
       else {
-        send = false;
+        send = true; // was disabled: retrigger alarm
+        msg->enable();
+      }
+      // resend to output if level grew
+      if ( level >  msg->level() ) {
+        send = true;
+        unpublishMessage(msg); // remove alarm with lower level from alarm logger (will resend with higher level)
+      }
+      if (level > OMAMessage::INFO ) { // update message
+        msg->setLevel(level);
+        msg->setText(message);
+        msg->setSaveset(m_savesetName);
       }
       break;
     }
   }
   if (newMsg && level > OMAMessage::INFO ) {
+    send = true;
     if(m_histDB)
       msg = new OMAMessage(histIdentifier,  m_taskname, m_anaTaskname, 
                            m_savesetName, m_anaName,
@@ -184,16 +195,15 @@ void OMAMsgInterface::raiseMessage(OMAMessage::OMAMsgLevel level,
   if (msg) {
     if (m_histDB) {
       if(m_histDB->canwrite() && m_logToHistDB) {
-        msg->store(m_padcolors);
-        m_histDB->commit();
+        if( !(msg->isSyncWithDB()) ) {
+          msg->store(m_padcolors);
+          m_histDB->commit();
+        }
       }
     }
   }
   if (msg && send ) {
     raiseAlarm( (*msg) );
-    if (!newMsg) {
-      unpublishMessage(msg);
-    }
     publishMessage(msg);
   }
 }
@@ -202,7 +212,9 @@ void OMAMsgInterface::raiseMessage(OMAMessage::OMAMsgLevel level,
 void OMAMsgInterface::sendLine(std::string line, 
                                OMAMessage::OMAMsgLevel level) {
   // send alarm messages to MsgService
-  (*m_outs) << (MSG::Level) level << line << endmsg;
+  if (m_outs) {
+    (*m_outs) << (MSG::Level) level << line << endmsg;
+  }
   // if required, send also to ascii log file
   if (m_textLog) {
     m_logOut << line << std::endl;
@@ -210,31 +222,60 @@ void OMAMsgInterface::sendLine(std::string line,
 }
 
 void OMAMsgInterface::senderror( const char* wmessage) {
-  (*m_outs) << MSG::ERROR << wmessage  << endmsg;
+  if (m_outs) {
+    (*m_outs) << MSG::ERROR << wmessage  << endmsg;
+  }
+  else {
+    std::cout << "ERROR: "<< wmessage  << std::endl;
+  }
 }
 void OMAMsgInterface::sendwarning( const char* wmessage) {
-  (*m_outs) << MSG::WARNING << wmessage  << endmsg;
+  if (m_outs) {
+    (*m_outs) << MSG::WARNING << wmessage  << endmsg;
+  }
+  else {
+    std::cout << "WARNING: "<< wmessage  << std::endl;
+  }
 }
 void OMAMsgInterface::sendinfo( const char* wmessage) {
-  (*m_outs) << MSG::INFO << wmessage  << endmsg;
+  if (m_outs) {
+    (*m_outs) << MSG::INFO << wmessage  << endmsg;
+  }
+  else {
+    std::cout << "INFO: "<< wmessage  << std::endl;
+  }
 }
 
 
 bool OMAMsgInterface::raiseAlarm(OMAMessage& message) {
-  sendLine( "===================================================================", message.level());
+  std::stringstream msgId;
+  std::stringstream anaId;
+  msgId << message.id();
+  anaId << message.anaId();
+  sendLine( "========== ANALYSIS ID "+ anaId.str() + "   MESSAGE ID " + msgId.str() +
+            "=============================", message.level());
   char* time = message.humanTime();
+  char* lasttime = message.humanlastTime();
 #ifndef _WIN32
   std::remove(time, time+strlen(time)+1,'\n');
+  std::remove(lasttime, lasttime+strlen(lasttime)+1,'\n');
 #endif
-  sendLine( "********     "+std::string(time) , message.level() );
+  sendLine( "********   created on  "+std::string(time) , message.level() );
   sendLine( std::string(message.levelString()) + " from Analysis Task "+
             m_anaTaskname, message.level() );
+  sendLine( " related to system " + std::string( message.concernedSystem() ), message.level() );
   if (! message.ananame().empty()) 
     sendLine("    in analysis " +  message.ananame() , message.level() ); 
   if (! message.hIdentifier().empty())
     sendLine( "      on histogram " + message.hIdentifier(), message.level() );
   sendLine(   "      from saveset " + message.saveSet(), message.level() );
   sendLine(  message.msgtext() , message.level() );
+  sendLine( "     --------         ", message.level() );
+  std::stringstream octext;
+  octext << "Occurred "<<message.noccur()<<" times, solved "<<message.nsolved()<<" times, retriggered "<<message.nretrig()
+         <<" times";
+  sendLine(octext.str(), message.level() );
+  sendLine("Last seen on " +std::string(lasttime) , message.level() );
   sendLine( "===================================================================", message.level() );
 
   return true;
@@ -243,8 +284,13 @@ bool OMAMsgInterface::raiseAlarm(OMAMessage& message) {
 
 
 bool OMAMsgInterface::lowerAlarm(OMAMessage& message) {
-  sendLine( "===================================================================", OMAMessage::INFO);
-  char* time = message.humanTime();
+  std::stringstream msgId;
+  std::stringstream anaId;
+  msgId << message.id();
+  anaId << message.anaId();
+  sendLine( "========== ANALYSIS ID "+ anaId.str() + "   MESSAGE ID " + msgId.str() +
+            "=============================", OMAMessage::INFO);
+  char* time = message.humanlastTime();
 #ifndef _WIN32
   std::remove(time, time+strlen(time)+1,'\n');
 #endif
@@ -259,6 +305,8 @@ bool OMAMsgInterface::lowerAlarm(OMAMessage& message) {
   sendLine("===================================================================", OMAMessage::INFO );
   return true;
 }
+
+// publishing alarms through DIM:
 
 void OMAMsgInterface::publishMessage(OMAMessage* &msg) {
   if (m_doPublish) {

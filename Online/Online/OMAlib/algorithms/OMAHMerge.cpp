@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/algorithms/OMAHMerge.cpp,v 1.6 2010-01-22 09:42:51 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/algorithms/OMAHMerge.cpp,v 1.7 2010-06-11 13:00:10 ggiacomo Exp $
 #include <TH2D.h>
 #include "OMAlib/OMAAlgorithms.h"
 #include "OMAlib/OMAlib.h"
@@ -13,13 +13,13 @@ OMAHMerge::OMAHMerge(OMAlib* Env) :
 }
 
 TH1* OMAHMerge::exec( const std::vector<TH1*> *sources,
-			  const std::vector<float> *params,
-			  std::string &outName,
-			  std::string &outTitle,
-			  TH1* existingHisto) {
+                      const std::vector<float>* ,
+                      std::string &outName,
+                      std::string &outTitle,
+                      TH1* existingHisto,
+                      TH1* ) {
   TH1* out=NULL;
   if (! sourceVerified(sources) ) return out;
-  params=params; // avoid compil. warning
   if(existingHisto) {
     fillMerged(existingHisto, sources);
     out = existingHisto;
@@ -102,10 +102,12 @@ TH1* OMAHMerge::hMerge(const char* newname, const char* newtitle, const std::vec
 void OMAHMerge::fillMerged(TH1* newH, const std::vector<TH1*> *in)
 {
   int dimension =newH->GetDimension();
-  
+  double totEntries=0.;
+
   std::vector<TH1*>::const_iterator ih;
   for (ih=in->begin(); ih != in->end(); ih++) {
      if( (*ih)->GetDimension() != dimension  ) return;
+     totEntries += (*ih)->GetEntries();
     for (int ix=1 ; ix<= (*ih)->GetNbinsX(); ix++) {
       for (int iy=1 ; iy<= (*ih)->GetNbinsY(); iy++) {
         double cont = (*ih)->GetBinContent(ix,iy);
@@ -148,5 +150,6 @@ void OMAHMerge::fillMerged(TH1* newH, const std::vector<TH1*> *in)
       }
     }
   }
+  newH->SetEntries(totEntries);
   
 }

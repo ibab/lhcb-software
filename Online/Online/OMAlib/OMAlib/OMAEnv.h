@@ -1,4 +1,4 @@
-// $Id: OMAEnv.h,v 1.13 2010-05-14 15:17:35 ggiacomo Exp $
+// $Id: OMAEnv.h,v 1.14 2010-06-11 13:00:10 ggiacomo Exp $
 #ifndef OMALIB_OMAENV_H 
 
 #define OMALIB_OMAENV_H 1
@@ -20,11 +20,11 @@ class TH1;
  */
 
 namespace OMAconstants {
-  static const int AlgListID = 15;
-  static const std::string version = "v2r16";
+  static const int AlgListID = 16;
+  static const std::string version = "v3r0";
   
-  static const int AlarmExpTime = 28800; // one shift
-  static const double epsilon = 1.e-10;
+  static const int AlarmExpTime = 3456000; // s =  40 days
+  static const double epsilon = 1.e-40;
 }
 
 class OMAEnv  {

@@ -1,4 +1,4 @@
-// $Id: DBDrivenAnalysisTask.h,v 1.6 2009-03-04 14:42:35 ggiacomo Exp $
+// $Id: DBDrivenAnalysisTask.h,v 1.7 2010-06-11 13:00:10 ggiacomo Exp $
 #ifndef OMALIB_DBDRIVENANALYSISTASK_H
 #define OMALIB_DBDRIVENANALYSISTASK_H 1
 #include <map>
@@ -20,6 +20,7 @@ class DBDrivenAnalysisTask : public AnalysisTask
                              std::string Task = "any");
 
  private:
+  void sendNoGoMessage(TH1* h);
   std::map<std::string, TH1*> m_ownedHisto;
   std::map<std::string, TH1*> m_ownedRefs;
 };

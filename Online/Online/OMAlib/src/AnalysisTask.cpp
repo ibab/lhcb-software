@@ -1,6 +1,6 @@
-// $Id: AnalysisTask.cpp,v 1.24 2010-02-12 14:25:39 ggiacomo Exp $
-
-
+// $Id: AnalysisTask.cpp,v 1.25 2010-06-11 13:00:11 ggiacomo Exp $
+#include <cmath>
+#include <dim/dic.hxx>
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h" 
 // local
@@ -8,6 +8,7 @@
 #include "OMAlib/OMAAlgorithms.h"
 #include "OMAlib/AnalysisTask.h"
 #include "OMAlib/SavesetFinder.h"
+#include "OMAlib/RunInfo.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : AnalysisTask
@@ -21,7 +22,11 @@ AnalysisTask::AnalysisTask( const std::string& name,
   : OMAlib(NULL, name),
     GaudiHistoAlg ( name , pSvcLocator ),
     m_inputFiles(0),
-    m_inputTasks(0)
+    m_inputTasks(0),
+    m_runInfo(NULL),
+    m_runStatus(-1),
+    m_runAvailable(false),
+    m_conditionNames(0)
 {
   declareProperty ( "useHistDB"    , m_useDB = false);
   declareProperty ( "HistDB"       , m_DB = OnlineHistDBEnv_constants::DB );
@@ -35,6 +40,7 @@ AnalysisTask::AnalysisTask( const std::string& name,
   declareProperty ( "HistDBMsgPersistency", m_logToHistDB = "true");
   declareProperty ( "StopAlgSequence", m_stayHere = true);
   declareProperty ( "ChangeHistPadColors", m_padcolors = false);
+  declareProperty ( "CheckDetectorStatus", m_checkStatus = true);
   //
   declareProperty ( "RICHclustersDir", m_RICHClDir= "/home/ryoung");
 }
@@ -43,6 +49,11 @@ AnalysisTask::~AnalysisTask() {
   std::vector<SavesetFinder*>::iterator iSS;
   for(iSS = m_saveset.begin() ; iSS != m_saveset.end() ; iSS++) {
     delete (*iSS);
+  }
+  if(m_runInfo) delete m_runInfo;
+  std::vector<DimInfo*>::iterator iDI;
+  for(iDI = m_statusInfo.begin() ; iDI != m_statusInfo.end() ; iDI++) {
+    delete (*iDI);
   }
 } 
 
@@ -57,8 +68,9 @@ StatusCode AnalysisTask::initialize() {
 
 
   if ( ! m_inputFiles.empty() ) {
-    // offline mode: switch off message dim publishing 
+    // offline mode: switch off message dim publishing and status checks
     m_doPublish = false;
+    m_checkStatus = false;
   }
   else { // online mode
     startMessagePublishing();
@@ -74,6 +86,32 @@ StatusCode AnalysisTask::initialize() {
   if (! m_textLogName.empty()) {
     m_textLog=true;
     openLog();
+  }
+
+  // access run status if requested
+  if(m_checkStatus) {
+    if(m_histDB) {
+      std::vector<int> bits;
+      std::vector<std::string> dimservices;
+      int nc = m_histDB->getConditions(bits,  m_conditionNames,  dimservices);
+      for (int ic=0; ic<nc; ic++) {
+        
+        DimInfo* dimservice = new DimInfo(dimservices[ic].c_str(), (int) -1);
+        m_statusInfo.push_back( dimservice );
+        sleep(1); // this is needed to avoid DIM crashes!!
+        if (dimservice->getInt() == -1) {
+          error() << "requested to check status " << m_conditionNames[ic] <<
+            " but DIM service is not available"<<endmsg;
+        }
+      }
+
+      m_runInfo = new RunInfo(this);
+      sleep(1); // this is needed to avoid DIM crashes!!
+      if (m_runInfo->getInt() == -1) {
+        error() << "run number DIM service is not available"<<endmsg;
+        m_runAvailable= false;
+      }
+    }
   }
 
 
@@ -145,4 +183,33 @@ void AnalysisTask::getAllTasks() {
     m_inputTasks.clear();
     m_histDB->getTasks(m_inputTasks);
   }
+}
+
+void AnalysisTask::checkRunStatus(int run) {
+  if (!m_runAvailable) {
+    info() << "Run number DIM service is now available"<<endmsg;
+    m_runAvailable = true;
+  }
+  m_runStatus=checkStatus();
+  debug() << "Start of new run "<< run << " detected: detector status is "<< m_runStatus << endmsg;
+}
+
+long AnalysisTask::checkStatus() {
+  if (!m_checkStatus) return 0xffffffff; // 32 bits are ok (no check)
+
+  long status=0;
+  bool dimfound=false;
+  for(unsigned int ic =0; ic< m_statusInfo.size() ; ic++) {
+    int cond= m_statusInfo[ic]->getInt();
+    if (cond == -1) {
+      error() << "requested to check status " << m_conditionNames[ic] <<
+            " but DIM service is not available"<<endmsg;
+    }
+    else {
+      if (cond == 1)  status += (long) pow(2,ic);
+      dimfound = true;
+    }
+  }
+  if (!dimfound) status = -1;
+  return status;
 }

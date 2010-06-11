@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/src/OMAlib.cpp,v 1.23 2010-04-20 12:20:49 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/src/OMAlib.cpp,v 1.24 2010-06-11 13:00:11 ggiacomo Exp $
 /*
   Online Monitoring Analysis library
   G. Graziani (INFN Firenze)
@@ -119,9 +119,11 @@ TH1* OMAlib::findRootHistogram(OnlineHistogram* h,
   
     h->getCreationDirections(Algorithm,sourcenames,parameters);
     bool loadok=true;
+    OnlineHistogram* firsth=NULL;
     for (is= sourcenames.begin(); is != sourcenames.end() ; is++) {
       TH1* hh=NULL;
       OnlineHistogram* dbhh=m_histDB->getHistogram(is->c_str());
+      if(!firsth) firsth=dbhh;
       if(!dbhh) {
         loadok=false;
         break;
@@ -142,17 +144,21 @@ TH1* OMAlib::findRootHistogram(OnlineHistogram* h,
       
       if (thisalg) {
         if (OMAHcreatorAlg* hca = dynamic_cast<OMAHcreatorAlg*>(thisalg) ) {
+          TH1* ref=NULL;
+          if (hca->needRef() && sources.size()>0) ref = getReference(firsth,1,"default",NULL);
           std::string htitle(h->htitle());
           out = hca->exec(&sources, 
                           &parameters,
                           rootHname, 
                           htitle,
-                          out);
-          // delete sources
+                          out,
+                          ref);
+          // delete sources (and reference)
           for (std::vector<TH1*>::iterator ih= sources.begin() ; 
                ih != sources.end() ; ih++) {
             delete (*ih);
           }
+          if (ref) delete ref;
         }
       }
     }
@@ -232,6 +238,7 @@ void OMAlib::doAlgList() {
   m_algorithms["Multiply"] =  new OMAMultiply(this);
   m_algorithms["Project"] =  new OMAProject(this);
   m_algorithms["Rebin"] =  new OMARebin(this);
+  m_algorithms["DivideByReference"] = new OMADivideByReference(this);
 
   if (m_histDB) {
     if (m_histDB->canwrite() && false == m_listSynced)

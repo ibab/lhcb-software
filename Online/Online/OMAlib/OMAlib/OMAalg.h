@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/OMAlib/OMAalg.h,v 1.14 2010-05-17 11:05:35 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/OMAlib/OMAalg.h,v 1.15 2010-06-11 13:00:10 ggiacomo Exp $
 #ifndef OMALIB_OMAALG_H
 #define OMALIB_OMAALG_H 1
 /** @class  OMAalg OMAalg.h OMAlib/OMAalg.h
@@ -29,7 +29,8 @@ class OMAalg
   inline std::string& parName(int i)  { return m_parnames[i];}
   inline float parDefValue(int i)  { return m_parDefValues[i];}
   void setOnlineHistogram(OnlineHistogram *h) {m_oh=h;}
-
+  inline bool needRef() { return m_needRef; }
+  double content2counts(TH1 &Histo);
  protected:
   inline void setType(AlgType type) {m_type = type;}
   inline void setNpars(int N) {m_npars = N;}
@@ -47,6 +48,11 @@ class OMAalg
                     bool alarmCondition,
                     std::string message,
                     std::string& histogramName);
+  virtual bool refMissing(TH1* ref,
+                          std::vector<float> &) {
+    return ( m_needRef && !ref); // default implementation
+  }
+  bool getBinLabels(TH1 &Histo);
 
   std::string m_name;
   AlgType m_type;
@@ -57,6 +63,7 @@ class OMAalg
   std::string m_doc;
   OMAlib* m_omaEnv;
   OnlineHistogram* m_oh;
+  bool m_needRef;
  private:
    // private dummy copy constructor and assignment operator 
   OMAalg(const OMAalg&) {}
@@ -67,8 +74,6 @@ class OMACheckAlg : public OMAalg
 {
  public:
   OMACheckAlg(std::string Name, OMAlib* OMAenv) : OMAalg(Name,OMAenv),
-                                                  m_needRef(false), 
-                                                  m_minEntries(50), 
                                                   m_minEntriesPerBin(5) {
     setType(OMAalg::CHECK); 
     m_inputNames.clear(); 
@@ -84,22 +89,20 @@ class OMACheckAlg : public OMAalg
                     std::vector<float> & input_pars,
                     unsigned int anaID,
                     TH1* Ref) =0;
-  inline bool needRef() { return m_needRef; }
   virtual bool checkStats(TH1* h,
                           unsigned int anaID,
                           TH1* ref,
-                          std::vector<float> & input_pars);
+                          std::vector<float> & input_pars,
+                          float minstatperbin,
+                          float minstatfrac);
 
  protected:
-  virtual bool notEnoughStats(TH1* h);
-  virtual bool refMissing(TH1* ref,
-                          std::vector<float> & input_pars);
-
+  virtual bool notEnoughStats(TH1* h,
+                              float minstatperbin,
+                              float minstatfrac);
   std::vector<std::string> m_inputNames;
   std::vector<float> m_inputDefValues;
-  bool m_needRef;
-  int m_minEntries; // minimum entries for this test
-  int m_minEntriesPerBin; // minimum entries per bin for this test
+  int m_minEntriesPerBin; // default minimum entries per bin for this test, can be overriden by single analysis
 };
 
 
@@ -114,8 +117,10 @@ class OMAHcreatorAlg : public OMAalg
                       const std::vector<float> *params,
                       std::string &outName,
                       std::string &outTitle,
-                      TH1* existingHisto=0) =0;
+                      TH1* existingHisto=0,
+                      TH1* Ref=0) =0;
   inline OnlineHistDBEnv::HistType outHType() const {return m_outHType;}
+  /// input can be an histogram set ?
   inline bool histSetFlag() { return m_histSetFlag; }
   void setHistType(OnlineHistDBEnv::HistType htype) {m_outHType = htype;}
   void setHistSetFlag(bool Flag=true) { m_histSetFlag= Flag; }

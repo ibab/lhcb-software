@@ -1,4 +1,4 @@
-// $Id: OMACheckDeadBins.cpp,v 1.4 2010-03-29 14:41:48 ggiacomo Exp $
+// $Id: OMACheckDeadBins.cpp,v 1.5 2010-06-11 13:00:10 ggiacomo Exp $
 
 #include <TH1F.h>
 #include <TF1.h>
@@ -10,17 +10,17 @@
 
 OMACheckDeadBins::OMACheckDeadBins(OMAlib* Env) : 
   OMACheckAlg("CheckDeadBins", Env) {
-  m_ninput = 1;
+  m_ninput = 2;
   m_inputNames.push_back("UseRef");  m_inputDefValues.push_back(1);
+  m_inputNames.push_back("Normalize");  m_inputDefValues.push_back(1.);
   m_npars = 1;
   m_parnames.push_back("Confidence");
   m_parDefValues.push_back(.95);
   m_needRef = true;
   m_doc = "Check for empty bins indicating a dead something. ";
-  m_doc += "The expected content of each bin is taken from the reference histogram (UseRef=1, default) ";
+  m_doc += "The expected content of each bin is taken from the normalized reference histogram (UseRef=1, default) ";
   m_doc += "or using the average entries per bin (UseRef=0)."; 
-
-  m_minEntries=1000;
+  m_doc += "Set Normalize to 0 if you do not want the ref histogram to be normalized to the online histogram";
   m_minEntriesPerBin=100;
 }
 
@@ -30,34 +30,30 @@ void OMACheckDeadBins::exec(TH1 &Histo,
                             std::vector<float> & input_pars,
                             unsigned int anaID,
                             TH1* Ref) {
-  bool useRef=true;
+  bool useRef=(bool) intParam(m_parDefValues[0]);
   double expValue=0.;
-  bool hasLabels=false;
+  int normalize = intParam(m_parDefValues[1]);
+  double k2counts=1.;
   if( warn_thresholds.size() <m_npars ||  alarm_thresholds.size() <m_npars )
     return;
   if( input_pars.size() > 0) 
-    useRef = (bool) ((int) (input_pars[0]+.1));
+    useRef = (bool) intParam(input_pars[0]);
+  if( input_pars.size() > 1) 
+    normalize = intParam(input_pars[1]);
 
   if (!Ref) useRef=false;
   if (useRef) {
     if (Ref->GetNbinsX() < Histo.GetNbinsX()) useRef=false;
     if (Ref->GetNbinsY() < Histo.GetNbinsY()) useRef=false;
   }
+  if (useRef) 
+    k2counts = content2counts(*Ref);
+  else 
+    k2counts = content2counts(Histo);
+    
 
   // get bin labels if available
-  if(m_oh && m_omaEnv->dbSession() && Histo.GetDimension() == 1) {
-    if (Histo.GetXaxis()) {
-      if (m_oh->nXbinlabels() > 0 && 
-          Histo.GetXaxis()->GetNbins() >= (int)m_oh->nXbinlabels() ) {
-        hasLabels=true;
-        std::string sopt;
-        for (unsigned int il = 0; il < m_oh->nXbinlabels(); il++) {
-          sopt = m_oh->binlabel(il,0);
-          Histo.GetXaxis()->SetBinLabel(il+1, sopt.c_str());
-        }
-      }
-    }
-  }
+  bool hasLabels=getBinLabels(Histo);
 
 
   std::stringstream ebins;
@@ -70,12 +66,12 @@ void OMACheckDeadBins::exec(TH1 &Histo,
         // empty bin, see if significant
         // (to avoid fake alarms, take reference - 3 sigma_reference as expected value)
         if (useRef) {
-          expValue = (Ref->GetBinContent(ihx,ihy) -3.*Ref->GetBinError(ihx,ihy)) 
+          expValue = k2counts * (Ref->GetBinContent(ihx,ihy) -3.*Ref->GetBinError(ihx,ihy)) 
             * Histo.Integral() / Ref->Integral();
         }
         else {
-          expValue = (Histo.Integral() -3.*TMath::Sqrt(Histo.Integral()))/
-            ( Histo.GetNbinsX()*Histo.GetNbinsY() );
+          expValue = k2counts * Histo.Integral()/( Histo.GetNbinsX()*Histo.GetNbinsY() );
+          expValue -= 3* TMath::Sqrt(expValue); // be conservative
         }
         if (expValue<0) expValue=0.;
         double zeroProb = TMath::PoissonI(0, expValue);

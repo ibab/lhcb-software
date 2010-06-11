@@ -1,4 +1,4 @@
-// $Id: AnalysisTask.h,v 1.13 2009-11-05 18:55:52 ggiacomo Exp $
+// $Id: AnalysisTask.h,v 1.14 2010-06-11 13:00:10 ggiacomo Exp $
 #ifndef OMALIB_ANALYSISTASK_H 
 #define OMALIB_ANALYSISTASK_H 1
 
@@ -12,6 +12,8 @@
 #include "GaudiAlg/GaudiHistoAlg.h"
 
 class SavesetFinder;
+class DimInfo;
+class RunInfo;
 
 class AnalysisTask : public OMAlib, public GaudiHistoAlg {
 public:
@@ -29,6 +31,14 @@ public:
                              std::string Task);
   /// opens DB session
   void openDBSession();
+  /// check detector status at beginning of run
+  void checkRunStatus(int run);
+  /// returns current detector status bits
+  long checkStatus();
+  /// return run status mask
+  inline long runStatus() {return m_runStatus;}
+  /// list of available status conditions
+  const std::vector<std::string>& conditionNames() {return m_conditionNames;}
 
 protected:
   bool m_useDB;
@@ -42,6 +52,12 @@ protected:
   std::string m_partition;
   std::string m_RICHClDir;
   bool m_stayHere;
+  bool m_checkStatus;
+  std::vector<DimInfo*> m_statusInfo;
+  RunInfo* m_runInfo;
+  long m_runStatus;
+  bool m_runAvailable;
+  std::vector<std::string> m_conditionNames;
 
 private:
   void getAllTasks();

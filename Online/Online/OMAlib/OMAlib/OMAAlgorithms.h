@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/OMAlib/OMAAlgorithms.h,v 1.15 2010-02-12 14:25:39 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/OMAlib/OMAAlgorithms.h,v 1.16 2010-06-11 13:00:10 ggiacomo Exp $
 #ifndef OMALIB_OMAALGORITHMS_H
 #define OMALIB_OMAALGORITHMS_H 1
 
@@ -116,8 +116,6 @@ class OMACompareToReference : public OMACheckAlg
                     std::vector<float> & input_pars,
                     unsigned int anaID,
                     TH1* Ref);
-  virtual bool refMissing(TH1* ref,
-                          std::vector<float> & input_pars);
 };
 
 class OMACheckEntriesInRange : public OMACheckAlg
@@ -135,7 +133,7 @@ class OMACheckEntriesInRange : public OMACheckAlg
 class OMAFit : public OMACheckAlg 
 // special one: parameters taken dinamically according to requested fit function
 {
- public:
+public:
   OMAFit(OMAlib* Env);
   virtual void exec(TH1 &Histo,
                     std::vector<float> & warn_thresholds,
@@ -165,7 +163,7 @@ private:
 };
 class OMACheckDeadBins  : public OMACheckAlg
 {
- public:
+public:
   OMACheckDeadBins(OMAlib* Env);
   virtual void exec(TH1 &Histo,
                     std::vector<float> & warn_thresholds,
@@ -178,7 +176,7 @@ class OMACheckDeadBins  : public OMACheckAlg
 };
 class OMACheckErrorBins : public OMACheckAlg
 {
- public:
+public:
   OMACheckErrorBins(OMAlib* Env);
   virtual void exec(TH1 &Histo,
                     std::vector<float> & warn_thresholds,
@@ -188,18 +186,36 @@ class OMACheckErrorBins : public OMACheckAlg
                     TH1* Ref);
   virtual bool notEnoughStats(TH1* h);
 };
+class OMACheckMinMax : public OMACheckAlg
+{
+public:
+  OMACheckMinMax(OMAlib* Env);
+  virtual void exec(TH1 &Histo,
+                    std::vector<float> & warn_thresholds,
+                    std::vector<float> & alarm_thresholds,
+                    std::vector<float> & input_pars,
+                    unsigned int anaID,
+                    TH1* Ref);
+private:
+  bool checkContent(TH1 &Histo, int ix, int iy, 
+                    float min, float max,
+                    float conf);
+  double m_k2c;
+  std::vector<int> m_badbins;
+};
 
 //------ Histogram Creator Algorithms ------------------//
 
 class OMAEfficiency : public OMAHcreatorAlg
 {
- public:
+public:
   OMAEfficiency(OMAlib* Env);
   virtual TH1* exec( const std::vector<TH1*> *sources,
                      const std::vector<float> *params,
                      std::string &outName,
                      std::string &outTitle,
-                     TH1* existingHisto=0);  
+                     TH1* existingHisto=0,
+                     TH1* Ref=0);  
   TH1* exec( TH1* okH,
              TH1* allH,
              std::string &outName,
@@ -209,45 +225,49 @@ class OMAEfficiency : public OMAHcreatorAlg
 
 class OMADivide : public OMAHcreatorAlg
 {
- public:
+public:
   OMADivide(OMAlib* Env);
   virtual TH1* exec( const std::vector<TH1*> *sources,
                      const std::vector<float> *params,
                      std::string &outName,
                      std::string &outTitle,
-                     TH1* existingHisto=0);  
+                     TH1* existingHisto=0,
+                     TH1* Ref=0);  
 };
 class OMAMultiply : public OMAHcreatorAlg
 {
- public:
+public:
   OMAMultiply(OMAlib* Env);
   virtual TH1* exec( const std::vector<TH1*> *sources,
                      const std::vector<float> *params,
                      std::string &outName,
                      std::string &outTitle,
-                     TH1* existingHisto=0);  
+                     TH1* existingHisto=0,
+                     TH1* Ref=0);  
 };
 class OMAAdd : public OMAHcreatorAlg
 {
- public:
+public:
   OMAAdd(OMAlib* Env);
   virtual TH1* exec( const std::vector<TH1*> *sources,
                      const std::vector<float> *params,
                      std::string &outName,
                      std::string &outTitle,
-                     TH1* existingHisto=0);  
+                     TH1* existingHisto=0,
+                     TH1* Ref=0);  
 };
 
 class OMAHMerge : public OMAHcreatorAlg
 {
- public:
+public:
   OMAHMerge(OMAlib* Env);
   virtual TH1* exec( const std::vector<TH1*> *sources,
                      const std::vector<float> *params,
                      std::string &outName,
                      std::string &outTitle,
-                     TH1* existingHisto=0);  
- private:
+                     TH1* existingHisto=0,
+                     TH1* Ref=0);  
+private:
   bool approxeq(double x, 
                 double y ) ;
   TH1* hMerge(const char* newname, 
@@ -260,32 +280,47 @@ class OMAHMerge : public OMAHcreatorAlg
 
 class OMAScale : public OMAHcreatorAlg
 {
- public:
+public:
   OMAScale(OMAlib* Env);
   virtual TH1* exec( const std::vector<TH1*> *sources,
                      const std::vector<float> *params,
                      std::string &outName,
                      std::string &outTitle,
-                     TH1* existingHisto=0);  
+                     TH1* existingHisto=0,
+                     TH1* Ref=0);  
 };
 class OMAProject : public OMAHcreatorAlg
 {
- public:
+public:
   OMAProject(OMAlib* Env);
   virtual TH1* exec( const std::vector<TH1*> *sources,
                      const std::vector<float> *params,
                      std::string &outName,
                      std::string &outTitle,
-                     TH1* existingHisto=0);  
+                     TH1* existingHisto=0,
+                     TH1* Ref=0);  
 };
 class OMARebin : public OMAHcreatorAlg
 {
- public:
+public:
   OMARebin(OMAlib* Env);
   virtual TH1* exec( const std::vector<TH1*> *sources,
                      const std::vector<float> *params,
                      std::string &outName,
                      std::string &outTitle,
-                     TH1* existingHisto=0);  
+                     TH1* existingHisto=0,
+                     TH1* Ref=0);  
 };
+class OMADivideByReference: public OMAHcreatorAlg
+{
+public:
+  OMADivideByReference(OMAlib* Env);
+  virtual TH1* exec( const std::vector<TH1*> *sources,
+                     const std::vector<float> *params,
+                     std::string &outName,
+                     std::string &outTitle,
+                     TH1* existingHisto=0,
+                     TH1* Ref=0);  
+};
+
 #endif // OMALIB_OMAALGORITHMS_H

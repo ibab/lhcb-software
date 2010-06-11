@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/algorithms/OMAMultiply.cpp,v 1.1 2010-02-12 14:25:39 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/algorithms/OMAMultiply.cpp,v 1.2 2010-06-11 13:00:10 ggiacomo Exp $
 #include <TH1F.h>
 #include <TH2F.h>
 #include "OMAlib/OMAAlgorithms.h"
@@ -16,10 +16,11 @@ OMAMultiply::OMAMultiply(OMAlib* Env) :
 }
 
 TH1* OMAMultiply::exec( const std::vector<TH1*> *sources,
-			  const std::vector<float> *params,
-			  std::string &outName,
-			  std::string &outTitle,
-			  TH1* existingHisto) {
+                        const std::vector<float> *params,
+                        std::string &outName,
+                        std::string &outTitle,
+                        TH1* existingHisto,
+                        TH1* ) {
   TH1* out=NULL;
   if (! sourceVerified(sources) ) return out;
   if (sources->size() <2) return out;
@@ -41,7 +42,7 @@ TH1* OMAMultiply::exec( const std::vector<TH1*> *sources,
       outHist = (TH1*) ( new TH1D (outName.data(), outTitle.data(), 
 				   okH->GetNbinsX(), 
 				   okH->GetXaxis()->GetXmin(),
-				   okH->GetXaxis()->GetXmax()) );  
+				   okH->GetXaxis()->GetXmax()) ); 
     else if(2 == okH->GetDimension())
       outHist = (TH1*) ( new TH2D (outName.data(), outTitle.data(), 
 				   okH->GetNbinsX(), 
@@ -50,10 +51,11 @@ TH1* OMAMultiply::exec( const std::vector<TH1*> *sources,
 				   okH->GetNbinsY(), 
 				   okH->GetYaxis()->GetXmin(),
 				   okH->GetYaxis()->GetXmax()) ); 
+    outHist->Sumw2();
   }
   if(outHist) {
-    outHist->Sumw2();
     outHist->Multiply(okH, allH, k1, k2);
+    outHist->SetBit(TH1::kIsAverage);
   }
   
   return  outHist;

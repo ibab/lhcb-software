@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/algorithms/OMAScale.cpp,v 1.10 2010-05-17 11:05:35 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/algorithms/OMAScale.cpp,v 1.11 2010-06-11 13:00:11 ggiacomo Exp $
 #include <TH1F.h>
 #include <TH2F.h>
 #include "OMAlib/OMAAlgorithms.h"
@@ -19,10 +19,11 @@ OMAScale::OMAScale(OMAlib* Env) :
 }
 
 TH1* OMAScale::exec( const std::vector<TH1*> *sources,
-			  const std::vector<float> *params,
-			  std::string &outName,
-			  std::string &outTitle,
-			  TH1* existingHisto) {
+                     const std::vector<float> *params,
+                     std::string &outName,
+                     std::string &outTitle,
+                     TH1* existingHisto,
+                     TH1*) {
   TH1* out=NULL;
   if (! sourceVerified(sources) ) return out;
   if (sources->size() <2) return out;
@@ -60,12 +61,16 @@ TH1* OMAScale::exec( const std::vector<TH1*> *sources,
   }  
   if (scaledHist && !cloned) {
     shift=H->GetNbinsX()-scaledHist->GetNbinsX();
+    double tote=0.;
     for (int ix=1; ix<= scaledHist->GetNbinsX(); ix++) {
       for (int iy=1 ; iy<= scaledHist->GetNbinsY(); iy++) {
         int source_ix =  (ix < normbin) ? ix : ix+shift;
         scaledHist->SetBinContent(ix, iy, H->GetBinContent(source_ix,iy));
+        scaledHist->SetBinError(ix, iy, H->GetBinError(source_ix,iy));
+        tote += H->GetBinContent(source_ix,iy);
       }
     }
+    scaledHist->SetEntries(tote);
   }
   double normK= scalefactorH->GetBinContent(normbin) * k;
   if (scaledHist && normK > 0.)
