@@ -1,4 +1,4 @@
-// $Id: Particles12.h,v 1.10 2010-01-08 15:10:06 ibelyaev Exp $
+// $Id: Particles12.h,v 1.11 2010-06-11 14:01:55 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PARTICLES12_H 
 #define LOKI_PARTICLES12_H 1
@@ -11,6 +11,7 @@
 // ============================================================================
 namespace LHCb { class ProtoParticle ; }
 namespace LHCb { class Track         ; }
+namespace LHCb { class MuonPID       ; }
 // ============================================================================
 /** @file
  *
@@ -226,6 +227,7 @@ namespace LoKi
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Predicate
     {
     public:
+      // ======================================================================
       /// MANDATORY: virtual destructor 
       virtual ~IsMuon() {} ;
       /// MANDATORY: clone method ("virtual constructor")
@@ -234,6 +236,17 @@ namespace LoKi
       result_type operator() ( argument p ) const ;
       /// OPTIONAL: the specific printout 
       virtual std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
+    protected:
+      // ======================================================================
+      /// "extract" muonPID form the particle 
+      const LHCb::MuonPID* muonPID ( const LHCb::Particle* p ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// helper object to decode muon-PID-status 
+      mutable LHCb::MuonPID m_pid ;  // helper object to decode muon-PID-status 
+      // ======================================================================
     } ;
     // ========================================================================    
     /** @class IsMuonLoose
@@ -248,8 +261,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2009-09-26
      */
-    class IsMuonLoose
-      : public LoKi::BasicFunctors<const LHCb::Particle*>::Predicate
+    class IsMuonLoose : public IsMuon 
     {
     public:
       // ======================================================================
@@ -272,8 +284,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date 2010-01-08
      */
-    class InMuonAcceptance
-      : public LoKi::BasicFunctors<const LHCb::Particle*>::Predicate
+    class InMuonAcceptance : public IsMuonLoose 
     {
     public:
       // ======================================================================

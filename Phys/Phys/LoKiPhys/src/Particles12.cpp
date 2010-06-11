@@ -1,4 +1,4 @@
-// $Id: Particles12.cpp,v 1.11 2010-01-08 15:10:06 ibelyaev Exp $
+// $Id: Particles12.cpp,v 1.12 2010-06-11 14:01:55 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -234,25 +234,45 @@ LoKi::Particles::IsMuon::operator()
     Error ( " Invalid Particle, return 'false'" ) ;
     return false ;                                    // RETURN 
   }
-  // 
-  const LHCb::ProtoParticle* pp = p->proto() ;
   //
-  if ( 0 == pp ) 
-  {
-    Error ( " Invalid ProtoParticle, return 'false'" ) ;
-    return false ;                                   // RETURN 
-  }
+  const LHCb::MuonPID* pid = muonPID ( p ) ;
   //
-  const LHCb::MuonPID* mPID = pp->muonPID() ;
-  //
-  if ( 0 == mPID ) 
+  if ( 0 == pid ) 
   {
     Error ( " Invalid MuonPID, return 'false'" ) ;
     return false ;                                   // RETURN 
   }
   //
-  return mPID -> IsMuon() ;                          // RETURN   
-} 
+  return pid -> IsMuon() ;                          // RETURN   
+}
+// ============================================================================
+// "extract" muonPID form the particle 
+// ============================================================================
+const LHCb::MuonPID* LoKi::Particles::IsMuon::muonPID 
+( const LHCb::Particle* p ) const 
+{
+  if ( 0 == p  )  { return 0 ; } ;                                // RETURN  
+  //
+  const LHCb::ProtoParticle* pp = p->proto() ;
+  if ( 0 == pp ) 
+  {
+    Warning ("muonPID: Invalid ProtoParticle, return NULL") ;
+    return 0 ;                                                    // RETURN 
+  }
+  //
+  const LHCb::MuonPID* pid = pp->muonPID() ;
+  if ( 0 != pid ) { return pid ; }                                // RETURN
+  //  
+  // Access the status word
+  LHCb::ProtoParticle::ExtraInfo::const_iterator ifind = 
+    pp->extraInfo().find ( LHCb::ProtoParticle::MuonPIDStatus );
+  //
+  if ( p->extraInfo().end () == ifind ) { return 0 ; }            // RETURN
+  //
+  m_pid.setStatus ( static_cast<unsigned int> ( ifind->second ) ) ;
+  //
+  return &m_pid ;  
+}
 // ============================================================================
 //  OPTIONAL: the specific printout 
 // ============================================================================
@@ -268,26 +288,18 @@ LoKi::Particles::IsMuonLoose::operator()
   if ( 0 == p ) 
   {
     Error ( " Invalid Particle, return 'false'" ) ;
-    return false ;                                    // RETURN 
-  }
-  // 
-  const LHCb::ProtoParticle* pp = p->proto() ;
-  //
-  if ( 0 == pp ) 
-  {
-    Error ( " Invalid ProtoParticle, return 'false'" ) ;
-    return false ;                                   // RETURN 
+    return false ;                                     // RETURN 
   }
   //
-  const LHCb::MuonPID* mPID = pp->muonPID() ;
+  const LHCb::MuonPID* pid = muonPID ( p ) ;
   //
-  if ( 0 == mPID ) 
+  if ( 0 == pid ) 
   {
     Error ( " Invalid MuonPID, return 'false'" ) ;
-    return false ;                                   // RETURN 
+    return false ;                                       // RETURN 
   }
   //
-  return mPID -> IsMuonLoose() ;                          // RETURN   
+  return pid -> IsMuonLoose() ;                          // RETURN   
 } 
 // ============================================================================
 //  OPTIONAL: the specific printout 
@@ -319,26 +331,18 @@ LoKi::Particles::InMuonAcceptance::operator()
   if ( 0 == p ) 
   {
     Error ( " Invalid Particle, return 'false'" ) ;
-    return false ;                                    // RETURN 
-  }
-  // 
-  const LHCb::ProtoParticle* pp = p->proto() ;
-  //
-  if ( 0 == pp ) 
-  {
-    Error ( " Invalid ProtoParticle, return 'false'" ) ;
-    return false ;                                   // RETURN 
+    return false ;                                     // RETURN 
   }
   //
-  const LHCb::MuonPID* mPID = pp->muonPID() ;
+  const LHCb::MuonPID* pid = muonPID ( p ) ;
   //
-  if ( 0 == mPID ) 
+  if ( 0 == pid ) 
   {
     Error ( " Invalid MuonPID, return 'false'" ) ;
-    return false ;                                   // RETURN 
+    return false ;                                       // RETURN 
   }
   //
-  return mPID -> InAcceptance () ;                  // RETURN   
+  return pid -> InAcceptance () ;                        // RETURN   
 }
 // ============================================================================
 //  OPTIONAL: the specific printout 

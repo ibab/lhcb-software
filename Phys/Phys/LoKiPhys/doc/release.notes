@@ -1,9 +1,17 @@
-! $Id: release.notes,v 1.151 2010-06-09 17:54:27 ibelyaev Exp $ 
+! $Id: release.notes,v 1.152 2010-06-11 14:01:55 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhys
 ! Responsible : Vanya Belyaev
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
+
+! 2010-06-10 - Vanya Belyaev
+
+ - IsMuon, IsMuonLoose, InMuonAcceptance :
+
+    give the functor chance:
+     in case of NULL MuonPID object, 
+     use ProtoParticle::ExtraInfo 
 
 ! 2010-06-09 - Vanya Belyaev
  - fix in AuxDTFBase 
