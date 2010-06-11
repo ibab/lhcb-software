@@ -6,6 +6,12 @@
 ! The package is subject to the Lesser GPL, see doc/COPYING and doc/COPYING.LESSER.
 !-----------------------------------------------------------------------------
 
+!======================= AnalysisPyAna v1r1 2010-06-11 =======================
+
+! 2010-06-11 - Juan Palacios
+ - Some tests were passing that should have failed. Re-implemented them. 
+   Need to take into account special under and overflow bins for histograms.
+
 ! 2010-06-09 - Juan Palacios
  - Added python/PyAna/pyhistoplots.py
   . Simple helper functions for plotting histograms, ntuple slices and 
