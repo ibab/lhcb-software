@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.192 2010-06-02 06:40:52 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.193 2010-06-11 17:53:31 albrecht Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -225,11 +225,19 @@ class HltConf(LHCbConfigurableUser):
                       , 49 : "HLT_PASS_SUBSTR('Hlt1BeamGas')"
                       , 50 : "HLT_PASS('Hlt1LumiLowBeamCrossingDecision')"
                       , 51 : "HLT_PASS('Hlt1LumiMidBeamCrossingDecision')"
+                      , 52 : "HLT_PASS_RE('Hlt1SingleHadronDecision')"
+                      , 53 : "HLT_PASS_RE('Hlt1DiHadronDecision')"
                       # 64--96: Hlt2
                       , 64 : "HLT_PASS('Hlt2Global')"
                       , 65 : "HLT_PASS('Hlt2DebugEventDecision')"
                       , 66 : "HLT_PASS_RE('Hlt2(?!Transparent).*Decision')"
-                      }
+                      , 67 : "HLT_PASS_RE('Hlt2.*SingleMuon.*Decision')"
+                      , 68 : "HLT_PASS_RE('Hlt2.*DiMuon.*Decision')"
+                      , 69 : "HLT_PASS_RE('Hlt2.*MuTrack.*Decision')"
+                      , 70 : "HLT_PASS_RE('Hlt2.*Topo.*Decision')"
+                      , 71 : "HLT_PASS_RE('Hlt2.*Charm.*Decision')"
+                      , 72 : "HLT_PASS_RE('Hlt2.*Phi.*Decision')" 
+                         }
         HltRoutingBitsWriter().RoutingBits = routingBits
 
         ## and record the settings in the ANN service
