@@ -1,4 +1,4 @@
-// $Id: DumpOMAlarms.cpp,v 1.6 2010-06-11 13:00:11 ggiacomo Exp $
+// $Id: DumpOMAlarms.cpp,v 1.7 2010-06-11 16:35:53 ggiacomo Exp $
 #include <iostream>
 #include <cstdlib>
 
@@ -75,7 +75,7 @@ int main(int narg,char **argv ) {
     OMAMessage* message = new OMAMessage(*im, *HistDB);
     bool dump=true;
     if ( !message->isactive() && !AllAlarms) dump=false;
-    if ( Anaid >0 && message->anaId() != Anaid) dump=false;
+    if ( Anaid >0 && (int) message->anaId() != Anaid) dump=false;
     if ( System != "any" && std::string(message->concernedSystem()) != System) dump=false;
     if (dump) message->dump(&(std::cout));
     delete message;
