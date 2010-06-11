@@ -9,7 +9,7 @@
   </set></argument>
   <argument name="timeout"><integer>3000</integer></argument>
   <argument name="prerequisites"><set>
-    <tuple><text>davinci.fsrs.davinci-merge</text><enumeral>PASS</enumeral></tuple>
+    <tuple><text>davinci.fsrs.davinci-merge-v0</text><enumeral>PASS</enumeral></tuple>
     <tuple><text>davinci.fsrs.davinci-dumpfsrs-tofile</text><enumeral>PASS</enumeral></tuple>
   </set></argument>
   <argument name="use_temp_dir"><enumeral>true</enumeral></argument>

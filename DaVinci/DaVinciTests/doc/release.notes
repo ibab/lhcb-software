@@ -6,6 +6,7 @@
 
 ! 2010-06-11 - Rob Lambert
  - Fix merge test such that it just looks for AppMgr success.
+ - Add v0 (full) and radiative (empty) streams, merged/tested in parallel
 
 ! 2010-06-10 - Rob Lambert
  - Added FSR propagation tests
