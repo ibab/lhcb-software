@@ -639,7 +639,7 @@ class Doc(object):
             self._log.info("Running doxygen")
             # @todo: build the documentation in a temporary directory
             # modify the doxygen file to use a temporary directory
-            import getpass, tempfile, shutil
+            import getpass, tempfile
             username = getpass.getuser()
             tempdirs = filter(os.path.isdir,
                               [os.path.join(os.path.sep, "build", "tmp"),
