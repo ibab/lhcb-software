@@ -1,3 +1,7 @@
+2010-06-11  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbUtils/Lock.py: fixed usage of relative paths.
+
 2010-06-10  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* LbUtils/python/LbUtils/File.py: use the AFSLockFile class for the md5 file creation.

@@ -93,7 +93,6 @@ class Lock(object):
             return os.system(self._command)
         else:
             cmds = self._command.split(self._splitCommand)
-            status = 0
             for c in cmds:
                 ret = os.system(c)
                 if ret != 0:
@@ -122,7 +121,7 @@ class Lock2(object):
         """
         self.timeout = timeout
         self.step = step
-        self.filename = filename
+        self.filename = os.path.realpath(filename)
         self.locked = False
 
     def lock(self, force=True):
