@@ -147,10 +147,10 @@ void RichG4HitRecon::RichG4ReconstructCherenkovAngle( const G4Event* anEvent,
 	  if(  aRichDetNum == 1 ) { anHpdNum -= aNumHpdInRich[0] ;  }
           
 
-          //G4int aPrimaryMirrCopyInfo = aHit->Mirror1PhotonDetectorCopyNum();
+          G4int aPrimaryMirrCopyInfo = aHit->Mirror1PhotonDetectorCopyNum();
           G4int aSecMirrCopyInfo = aHit->Mirror2PhotonDetectorCopyNum();
-	        //    G4cout<<" RichHitrecon hit info: richdet PrimMirrCopyInfo  SecMirrorcopyinfo "<< aRichDetNum<<" "
-          //	<<aPrimaryMirrCopyInfo<<"  " <<  aSecMirrCopyInfo<<G4endl;
+          //     G4cout<<" RichHitrecon hit info: richdet PrimMirrCopyInfo  SecMirrorcopyinfo "<< aRichDetNum<<" "
+          // 	<<aPrimaryMirrCopyInfo<<"  " <<  aSecMirrCopyInfo<<G4endl;
 
           G4int adfact = 100;
           G4int aSecMirrCopyNum = aSecMirrCopyInfo- (((G4int) (aSecMirrCopyInfo/adfact))*adfact); 
@@ -285,6 +285,15 @@ void RichG4HitRecon::RichG4ReconstructCherenkovAngle( const G4Event* anEvent,
 
 
           } //  end of all test for sat hits.
+
+          // perform reconstruction only for those hits which went through both primary and
+          // secondary mirrors.
+          if( aPrimaryMirrCopyInfo < 0 || aSecMirrCopyInfo < 0 ) {
+            SelectThisHit=false;
+            
+          }
+          
+
 
           if(  SelectThisHit ) {
 
