@@ -3,6 +3,9 @@
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 !------------------------------------------------------------------------------
 
+! 2010-06-11 - V. Gligorov
+ - Remove obsolete default HLT track locations. 
+
 !========================== CaloUtils v8r12p1 2010-06-01 ========================
 ! 2010-06-01 - Gerhard Raven
  - suppress printout of warning in case 2D inversion fails, but keep the statistics
