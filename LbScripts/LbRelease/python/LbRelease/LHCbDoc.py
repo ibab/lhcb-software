@@ -41,7 +41,7 @@ def projectURL(project, version = None):
 def _diskUsage(root):
     """
     Compute the size of a subtree.
-    
+
     @param root: directory to measure
     @return: the size of the files in bytes
     """
@@ -64,7 +64,7 @@ def _which(cmd, path = None):
     for p in path:
         if cmd in os.listdir(p):
             return p
-    return None 
+    return None
 
 _has_AFS = bool(_which("afs_admin"))
 
@@ -72,8 +72,8 @@ def _makedocdir(path):
     """
     Create the directory path.
     If the parent directory is an AFS volume, a volume is created.
-    
-    @return: True if the value was created, False if it is only a normal directory  
+
+    @return: True if the value was created, False if it is only a normal directory
     """
     parent = os.path.dirname(path)
     if _has_AFS and isAFSDir(parent) and isMountPoint(parent):
@@ -92,17 +92,17 @@ class DoxyFileCfg(object):
     """
     Dictionary-like class to simplify the generation of doxygen configuration
     files.
-    
+
     This class implements the basic dictionary interface with a record of the
     order in which the elements where entered.
-    
-    The conversion to string generates the content for the doxyfile.cfg file. 
+
+    The conversion to string generates the content for the doxyfile.cfg file.
     """
     def __init__(self, data = []):
         """
         Initialized the object (by default empty).
-        
-        @param data: an optional association list (list of key/value pairs) 
+
+        @param data: an optional association list (list of key/value pairs)
         """
         self._keys = []
         self._data = {}
@@ -170,7 +170,7 @@ class DoxyFileCfg(object):
 #--- CMT Interfaces
 def _projRoot(proj, version):
     """
-    Return the root directory of a project/version in the LHCBPROJECTPATH. 
+    Return the root directory of a project/version in the LHCBPROJECTPATH.
     """
     projDir = os.path.join(proj.upper(),
                            "%s_%s" % (proj.upper(), version))
@@ -192,11 +192,11 @@ def _cmt_show_projects(root):
 def _getProjDeps(project, version):
     """
     Get all the dependencies of a project.
-    
+
     @param project: name of the project
     @param version: version of the project
     @param exclude: list of projects to exclude from the result
-    
+
     @return: list of pairs (project, version)
     """
     pr = _projRoot(project, version)
@@ -226,7 +226,7 @@ def _getProjDepsX(project, version):
 class Doc(object):
     """
     Class to describe and manipulate documentation directory.
-    
+
     A couple of special files can be used to tune the behavior of the documentation
     directory:
      '.locked' : prevent the build of the documentation (used internally to mark if a
@@ -246,18 +246,18 @@ class Doc(object):
         Return the root directory or the default.
         """
         return root or os.environ["DOCROOT"]
-        
+
     def __init__(self, name = None, root = None):
         """
         Initialize the object.
         If the directory doesn't exist it is created.
-        
+
         @param name: name of the documentation directory, if not specified, a new one is created
         @param root: base directory of the documentations, by default taken from the environment variable DOCROOT
         """
         # base directory of the documentation directories
         self.root = self._root(root)
-        
+
         # name of the requested doc object
         if name:
             self.name = name
@@ -279,19 +279,19 @@ class Doc(object):
                     n = 1
             self.name = self._namePattern % n
             self._log.debug("Automatic directory name %s", self.name)
-        
-        # get our logger instance 
+
+        # get our logger instance
         self._log = logging.getLogger(self.name)
-        
+
         # full path to the directory of the object
         self.path = os.path.join(self.root, self.name)
-        
+
         # full path to the doxygen destination directory
         self.output = os.path.join(self.path, self._docSubdir)
-        
-        # Number of broken links in the directory 
+
+        # Number of broken links in the directory
         self.broken = 0
-        
+
         # projects in the directory
         self.projects = {}
         if not os.path.isdir(self.path):
@@ -309,18 +309,18 @@ class Doc(object):
             self._log.debug("Found %d projects: %s", len(self.projects),
                             " ,".join(map(str, self.projects.items())))
             self.isAfsVolume = _has_AFS and isAFSDir(self.path) and isMountPoint(self.path)
-        
+
         # flag to tell if the DOC dir is locked or not
         self._lockFile = os.path.join(self.path, self._docLockFile)
         self.locked = os.path.exists(self._lockFile)
-        
+
         self._rebuildFlagFile = os.path.join(self.path, self._docRebuildFlagFile)
         # flag saying if the directory has already been built or not
         self.toBeBuilt = not os.path.isdir(self.output)
         if os.path.exists(self._rebuildFlagFile):
             self._log.warning("Re-build requested")
             self.toBeBuilt = True
-    
+
     def _allDocNames(self):
         """
         Get all doc names in the same top-level directory as this one
@@ -332,7 +332,7 @@ class Doc(object):
                              os.listdir(self.root)))
         docs.sort()
         return docs
-    
+
     def getVersion(self, project):
         """
         Return the version of the project contained, or None if the project is
@@ -340,15 +340,15 @@ class Doc(object):
         """
         project = project.upper()
         return self.projects.get(project, None)
-    
+
     def canHost(self, project, version, deps):
         """
         Helper function to tell if a project with its dependencies can be
         included in this directory.
         """
         # Note: if the directory is locked, we can assume we could still host the
-        #       file, but it will not be actually added 
-        
+        #       file, but it will not be actually added
+
         # The project must not be included
         if self.getVersion(project) is not None:
             return False
@@ -361,7 +361,7 @@ class Doc(object):
     def add(self, project, version):
         """
         Add a project to the list of contained ones.
-        
+
         Raise and exception if the project is already there with a different
         version or it doesn't exist.
         """
@@ -376,7 +376,7 @@ class Doc(object):
             raise ValueError("Project %s already in %s" % (project, self.name))
         else:
             self._log.debug("Adding project %s %s", project, version)
-            # make link to the root directory of the project in the doc dir 
+            # make link to the root directory of the project in the doc dir
             root = _projRoot(project, version)
             if not root:
                 raise ValueError("Cannot find project %s %s" % (project, version))
@@ -385,7 +385,7 @@ class Doc(object):
                                           "%s_%s" % (project, version)))
             #self._log.debug("Mark the directory as to be built")
             self.toBeBuilt = True
-    
+
     def _generateDoxygenMainPage(self):
         """
         Generate the main page file for the documentation directory and return
@@ -395,7 +395,7 @@ class Doc(object):
             "Documentation for the projects:\n<ul>\n"
         projects = self.projects.keys()
         projects.sort()
-                    
+
         item = '<a href="%(homeurl)s">%(project)s</a> <a href="%(versurl)s">%(version)s</a>'
         for p in projects:
             if p == "LCGCMT":
@@ -419,7 +419,7 @@ class Doc(object):
         page += '\n\\image html dependencies.png "Graph of the dependencies between projects"\n'
         page += "*/\n"
         return page
-    
+
     def _generateDoxyFile(self):
         """
         Generate the doxygen configuration file for the current doc directory.
@@ -436,7 +436,7 @@ class Doc(object):
         doxycfg['INPUT'] = [ "%s_%s" % item
                              for item in self.projects.items()
                              if item[0] not in ["LCGCMT"] ] # avoid some projects
-        
+
         doxycfg['GENERATE_HTML']       = True
         doxycfg['GENERATE_TODOLIST']   = True
         doxycfg['GENERATE_LATEX']      = False
@@ -458,7 +458,7 @@ class Doc(object):
         doxycfg['SHOW_DIRECTORIES']    = True
         doxycfg['SEARCHENGINE']        = True
         doxycfg['BUILTIN_STL_SUPPORT'] = True
-    
+
         # EXCLUDE_PATTERNS
         excludes = [
             "*/dict/*", "*/InstallArea/*",
@@ -487,7 +487,7 @@ class Doc(object):
             "*/Panoramix/doc/h/*",
             ]
         doxycfg["EXCLUDE_PATTERNS"] = excludes
-        
+
         files = [ "*.cpp", "*.h", "*.icpp", "*.py" ]
         #files = [ "requirements" ]
         for p in doxycfg["INPUT"]:
@@ -502,7 +502,7 @@ class Doc(object):
         doxycfg['IMAGE_PATH'] = ["conf"]
 
         doxycfg["FILE_PATTERNS"] = files
-        
+
         extra_packages = [ "times", "amsmath" ]
         doxycfg["EXTRA_PACKAGES"] = extra_packages
 
@@ -514,12 +514,12 @@ class Doc(object):
         doxycfg["GRAPHICAL_HIERARCHY"]   = True
         doxycfg["INCLUDE_GRAPH"]         = True
         doxycfg["INCLUDED_BY_GRAPH"]     = True
-        
+
         # append the commands to document also private and static members
         doxycfg["EXTRACT_PRIVATE"]       = True
         doxycfg["EXTRACT_STATIC"]        = True
         doxycfg["EXTRACT_LOCAL_CLASSES"] = True
-    
+
         # get externals versions (used for the tag files)
         gaudipath = os.path.join(self.path, "GAUDI_%s" % self.getVersion("GAUDI"), "GaudiRelease", "cmt")
         if os.path.isdir(gaudipath): # we use Gaudi as entry point, if it is not there, no external versions
@@ -550,7 +550,7 @@ class Doc(object):
                                "doc", "libstdc++.tag")
         tagline = os.path.normpath(tagline) + "=http://gcc.gnu.org/onlinedocs/libstdc++/libstdc++-html-USERS-4.3"
         doxycfg["TAGFILES"].append(tagline)
-        # add tag entries for the Application Area projects 
+        # add tag entries for the Application Area projects
         for aa_project in ["ROOT", "CORAL", "COOL", "POOL"]:
             if aa_project in config_versions:
                 tagline = os.path.join(os.environ["LCG_release_area"], aa_project,
@@ -564,7 +564,7 @@ class Doc(object):
         confdir = os.path.join(self.path, "conf")
         if not os.path.isdir(confdir):
             self._log.debug("Creating directory %s", confdir)
-            os.makedirs(confdir) 
+            os.makedirs(confdir)
         open(os.path.join(confdir, "DoxyFile.cfg"), "w").write(str(doxycfg))
         open(os.path.join(confdir, "MainPage.doxygen"), "w").write(self._generateDoxygenMainPage())
         # generate the dependency graph
@@ -720,7 +720,7 @@ class Doc(object):
         Returns the number of projects hosted.
         """
         return len(self.projects)
-    
+
     def __cmp__(self, other):
         """
         Comparison operator.
@@ -730,7 +730,7 @@ class Doc(object):
 
 def allDocs(root = None):
     """
-    Get all the doc objects for a root directory. 
+    Get all the doc objects for a root directory.
     """
     root = Doc._root(root)
     docs = []
@@ -747,7 +747,7 @@ def makeDocs(projects, root = None, no_build = False):
         del os.environ["PWD"]
 
     docs = allDocs(root)
-    
+
     # keep only projects that are not already known
     def projectNotKnown(pv):
         project, version = pv
@@ -757,7 +757,7 @@ def makeDocs(projects, root = None, no_build = False):
                 return False
         return True
     projects = set(filter(projectNotKnown, projects))
-    
+
     # list to keep track of the projects that have been added as
     # dependencies of others
     projects_added = set()
@@ -765,7 +765,7 @@ def makeDocs(projects, root = None, no_build = False):
         if (project, version) in projects_added:
             continue
         # Get all the dependencies of the project
-        # @todo: projects that do not depend on LCGCMT (like LbScripts) should not join any existing doc 
+        # @todo: projects that do not depend on LCGCMT (like LbScripts) should not join any existing doc
         deps = _getProjDeps(project, version)
         if not deps: # ignore projects without dependencies
             _log.info("Ignoring %s %s, no dependencies", project, version)
@@ -801,7 +801,7 @@ def makeDocs(projects, root = None, no_build = False):
         # Then add the project
         doc.add(project, version)
         projects_added.add((project, version))
-    
+
     # Build all the documentations marked as to be built
     for doc in filter(lambda d: d.toBeBuilt, docs):
         if no_build:
@@ -846,7 +846,7 @@ def getLatestVersions(versions):
     for p in projects:
         projects[p].sort()
         projects[p] = projects[p].pop()
-    return [ "%s_%s" % t for t in projects.items() ]        
+    return [ "%s_%s" % t for t in projects.items() ]
 
 def findProjects(exclude = None):
     """
@@ -899,9 +899,9 @@ def main():
                       help = "Override the root directory of the documentation")
     parser.add_option("--no-build", action = "store_true",
                       help = "Do not run doxygen")
-    
+
     opts, args = parser.parse_args()
-    
+
     log_level = logging.WARNING
     if opts.verbose:
         log_level = logging.INFO
@@ -911,13 +911,13 @@ def main():
 
     if not args:
         projects = findProjects()
-    elif (len(args)%2 == 0): # we accept only pairs 
+    elif (len(args)%2 == 0): # we accept only pairs
         projects = set()
         for i in range(0, len(args), 2):
             projects.add((args[i].upper(), args[i + 1]))
     else:
         parser.error("Wrong number of arguments")
-    
+
     # Main function
     makeDocs(projects, opts.root, opts.no_build)
 
