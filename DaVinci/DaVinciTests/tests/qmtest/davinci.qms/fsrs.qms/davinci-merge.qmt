@@ -18,7 +18,7 @@
   <argument name="use_temp_dir"><enumeral>true</enumeral></argument>
   <argument name="validator"><text>
 findReferenceBlock("""
-DaVinciInit       SUCCESS 2 events processed
+ApplicationMgr       INFO Application Manager Finalized successfully
 """, stdout, result, causes, signature_offset = 0, id = "4100")
 </text></argument> 
 </extension>

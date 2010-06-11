@@ -10,6 +10,7 @@
   <argument name="timeout"><integer>3000</integer></argument>
   <argument name="use_temp_dir"><enumeral>true</enumeral></argument>
   <argument name="validator"><text>
+#print stdout
 import os
 f=open(os.path.expandvars('$DAVINCITESTSROOT/tests/refs/test-FSRs.ref'),'r')
 reflines=f.readlines()

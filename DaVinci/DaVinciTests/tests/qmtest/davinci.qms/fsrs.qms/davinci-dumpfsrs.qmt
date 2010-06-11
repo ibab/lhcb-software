@@ -22,7 +22,7 @@ reflines=f.readlines()
 reflines=[r.strip().split('/FileRecords')[-1] for r in reflines]
 stdlines=stdout
 
-print reflines, 'test'
+#print reflines, 'test'
 
 if '\n' in stdout:
   stdlines=stdout.split('\n')
@@ -34,7 +34,7 @@ for line in reflines:
       foundlines.append(line)
       break
 
-print foundlines
+#print foundlines
 
 ######## Check for consistency #############
 

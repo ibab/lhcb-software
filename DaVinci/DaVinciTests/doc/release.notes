@@ -4,5 +4,8 @@
 ! Purpose     : QMTests for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2010-06-11 - Rob Lambert
+ - Fix merge test such that it just looks for AppMgr success.
+
 ! 2010-06-10 - Rob Lambert
  - Added FSR propagation tests
