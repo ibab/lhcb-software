@@ -1,0 +1,11 @@
+!-----------------------------------------------------------------------------
+! Package     : Online/Trending
+! Responsible : Olivier Callot
+! Purpose     : 
+!-----------------------------------------------------------------------------
+
+! 2010-06-10 - Olivier Callot
+ - Initial release. This package provide a fast and efficient way to store a block
+   of information versus time, with threshold for suppressing non-changing values,
+   and to efficiently retrive it.
+   Documentation is available in a dedicated note.
