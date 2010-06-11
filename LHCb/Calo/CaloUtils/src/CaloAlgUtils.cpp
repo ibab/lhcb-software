@@ -127,7 +127,7 @@ std::vector<std::string>  LHCb::CaloAlgUtils::TrackLocations( std::string contex
   // else if( toUpper(context) == "HLT1FITTED")locs.push_back( "/HLT1/Track/Fitted/Default"); 
   // else if( toUpper(context) == "HLT2UNFITTED" || toUpper(context) == "HLT2")locs.push_back("/HLT2/Track/Unfitted/Default"); 
   // else if( toUpper(context) == "HLT2FITTED")locs.push_back("/HLT2/Track/Fitted/Default"); 
-  if( hltContext( context ) )locs.push_back(HltForward);
+  if( hltContext( context ) )locs.push_back("Hlt2/Track/Forward");
   else if ( toUpper(context) == "OFFLINE" || context == "" )locs.push_back(Default);  // Rec/Track/Best
   else locs.push_back(Default); // default is offline
 
