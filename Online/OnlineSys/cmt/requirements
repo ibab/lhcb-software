@@ -45,6 +45,7 @@ use PyDIM             v2r9     Online
 use RawBankSizes      v2r8     Online
 use ROMon             v1r23    Online
 use ROLogger          v0r19    Online
+use Trending          v1r0     Online
 use UPI               v1r18    Online
 use UPIR              v1r2     Online
 #Obsolete: use Viewer            v1r5     Online
