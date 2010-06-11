@@ -226,12 +226,19 @@ def _getProjDepsX(project, version):
 class Doc(object):
     """
     Class to describe and manipulate documentation directory.
+    
+    A couple of special files can be used to tune the behavior of the documentation
+    directory:
+     '.locked' : prevent the build of the documentation (used internally to mark if a
+                 documentation is being built)
+     '==REBUILD==' : force a re-build of the documentation
     """
     _nameRegexp = re.compile("^DOC_[0-9]{6}$")
     _namePattern = "DOC_%06d"
     _docSubdir = "doxygen"
     _docCollDir = "docs"
     _docLockFile = ".locked"
+    _docRebuildFlagFile = "==REBUILD=="
 
     @classmethod
     def _root(cls, root = None):
@@ -303,12 +310,16 @@ class Doc(object):
                             " ,".join(map(str, self.projects.items())))
             self.isAfsVolume = _has_AFS and isAFSDir(self.path) and isMountPoint(self.path)
         
-        # flag saying if the directory has already been built or not
-        self.toBeBuilt = not os.path.isdir(self.output)
-        
         # flag to tell if the DOC dir is locked or not
         self._lockFile = os.path.join(self.path, self._docLockFile)
         self.locked = os.path.exists(self._lockFile)
+        
+        self._rebuildFlagFile = os.path.join(self.path, self._docRebuildFlagFile)
+        # flag saying if the directory has already been built or not
+        self.toBeBuilt = not os.path.isdir(self.output)
+        if os.path.exists(self._rebuildFlagFile):
+            self._log.warning("Re-build requested")
+            self.toBeBuilt = True
     
     def _allDocNames(self):
         """
@@ -405,6 +416,7 @@ class Doc(object):
                             'versurl': projectURL("LCGCMT", self.getVersion("LCGCMT"))
                             }
                     )
+        page += '\n\\image html dependencies.png "Graph of the dependencies between projects"\n'
         page += "*/\n"
         return page
     
@@ -472,26 +484,28 @@ class Doc(object):
             # Exclude problematic files
             "*/doc/MainPage.h",
             "*/Panoramix/doc/doxygen/*",
+            "*/Panoramix/doc/h/*",
             ]
         doxycfg["EXCLUDE_PATTERNS"] = excludes
         
         files = [ "*.cpp", "*.h", "*.icpp", "*.py" ]
+        #files = [ "requirements" ]
         for p in doxycfg["INPUT"]:
             for d in [ d
                        for d in os.listdir(os.path.join(self.path, p))
                        if (d.endswith("Sys") and d != "GaudiSys") or d.endswith("Release")]:
                 files.append("*%s*requirements" % d)
         # FILE_PATTERNS   += *LHCbSys*requirements
+
+        # Configurations details to generate the main page
         doxycfg['INPUT'].append("conf/MainPage.doxygen")
+        doxycfg['IMAGE_PATH'] = ["conf"]
 
         doxycfg["FILE_PATTERNS"] = files
         
         extra_packages = [ "times", "amsmath" ]
         doxycfg["EXTRA_PACKAGES"] = extra_packages
-    
-        #doxycfg["INPUT_FILTER"] = "doxypy"
-        #doxycfg["FILTER_SOURCE_FILES"] = True
-    
+
         # append the commands to use dot tool
         doxycfg["HAVE_DOT"]              = True
         doxycfg["DOT_PATH"] = None
@@ -544,7 +558,8 @@ class Doc(object):
                                        "html", aa_project + "_reference_tags.xml")
                 tagline += "=http://lcgapp.cern.ch/doxygen/%s/%s/doxygen/html" % (aa_project, config_versions[aa_project])
                 doxycfg["TAGFILES"].append(tagline)
-        
+        #doxycfg["TAGFILES"] = []
+
         # write the output file
         confdir = os.path.join(self.path, "conf")
         if not os.path.isdir(confdir):
@@ -552,6 +567,62 @@ class Doc(object):
             os.makedirs(confdir) 
         open(os.path.join(confdir, "DoxyFile.cfg"), "w").write(str(doxycfg))
         open(os.path.join(confdir, "MainPage.doxygen"), "w").write(self._generateDoxygenMainPage())
+        # generate the dependency graph
+        self._genDepGraph(confdir)
+
+    def _projectDeps(self, project, recursive = False):
+        """
+        Return the list of projects a project depend on (by parsing the project.cmt).
+        If the flag 'recursive' is set to True, return the complete (recursive) set
+        of dependencies.
+        """
+        uses = set()
+        project = project.upper()
+        if project in self.projects:
+            proj_cmt = os.path.join(self.path,
+                                    "%s_%s" % (project, self.getVersion(project)),
+                                    "cmt", "project.cmt")
+            for l in open(proj_cmt):
+                l = l.strip()
+                if l and l[0] != "#": # this is not a comment
+                    l = l.split() # tokenize
+                    if l[0] == "use" and len(l) > 1: # we care only about 'use' statements
+                        uses.add(l[1])
+            if recursive:
+                for p in list(uses):
+                    uses.update(self._projectDeps(p, True))
+        return uses
+
+    def _genDepGraph(self, destination = ""):
+        """
+        Generate the project dependency graph.
+
+        @param destination: optional destination path of the generated files,
+            relative to the documentation directory or absolute.
+        """
+        self._log.info("Generating project dependency graph in '%s'", destination)
+        gvdata = []
+        for project in self.projects:
+            project = project_names.get(project.upper(), project)
+            deps = [ project_names.get(p.upper(), p)
+                     for p in self._projectDeps(project) ]
+            deps.sort()
+            gvdata.append("%s->{%s};" % (project, ";".join(deps)))
+        if gvdata:
+            gvdata = "digraph dependencies {\nnode [fontsize=10];\n%s\n}\n" % ("\n".join(gvdata))
+        cmd = ["dot"]
+        for format in ["png", "svgz", "eps", "fig"]:
+            if type(format) is tuple:
+                format, extension = format
+            else:
+                extension = format
+            cmd.append("-T%s" % format)
+            cmd.append("-o%s" %
+                       os.path.join(self.path, destination, "dependencies.%s" % extension))
+        gvfile = os.path.join(self.path, destination, "dependencies.gv")
+        cmd.append(gvfile)
+        open(gvfile, "w").write(gvdata)
+        Popen(cmd).wait()
 
     def build(self):
         """
@@ -637,6 +708,9 @@ class Doc(object):
                     os.symlink(os.path.join("..", self.name), doclink)
             # Mark as built
             self.toBeBuilt = False
+            # Since we have built the doc, remove the "rebuild flag" if present
+            if os.path.exists(self._rebuildFlagFile):
+                os.remove(self._rebuildFlagFile)
             self._log.debug("Documentation ready")
         finally:
             # clean up the lock

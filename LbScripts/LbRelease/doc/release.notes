@@ -1,3 +1,10 @@
+2010-06-11  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* python/LbRelease/LHCbDoc.py: Added the generation of a graph for the
+	dependencies between projects (using 'dot').
+	Added the possibility of triggering a re-build of the documentation with a
+	special file in the doc directory.
+
 2010-06-10  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* LbRelease/python/LbRelease/TarBall.py: created the generation of the 
