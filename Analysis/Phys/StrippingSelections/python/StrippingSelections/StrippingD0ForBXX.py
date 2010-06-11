@@ -1,7 +1,7 @@
-#$Id: StrippingD0ForBXX.py,v 1.1 2010-05-21 20:31:42 lzhang Exp $
+#$Id: StrippingD0ForBXX.py,v 1.2 2010-06-11 03:17:42 lzhang Exp $
 __author__ = ['Liming Zhang']
 __date__ = '20/05/2010'
-__version__ = '$Revision: 1.1 $'
+__version__ = '$Revision: 1.2 $'
 """
 D0->Kpi and D0->K3pi selections for bb-x-section
 """
@@ -15,6 +15,7 @@ class StrippingD0forBXXConf(LHCbConfigurableUser):
          ,"KaonPIDK"      : 1.0e-10  # adimensiional
          ,"KPiPT"         : 250.0  # MeV
         ,"D0DIRA"        : 0.9    # adimensiional
+        ,"D0DIRAK3Pi"    : 0.999    # adimensiional        
         ,"FDCHI2"        : 49.0   # adimensiional
         ,"D0MassWin"     : 100.0  # MeV
         ,"D0IP"          : 7.4    #mm
@@ -25,7 +26,7 @@ class StrippingD0forBXXConf(LHCbConfigurableUser):
         from Configurables import CombineParticles
         _d02kpi = CombineParticles("D02KPiForBXX")
         _d02kpi.InputLocations = [ "Phys/StdLoosePions", "Phys/StdLooseKaons" ]
-        _d02kpi.DecayDescriptors = ["D0 -> pi+ K-"]
+        _d02kpi.DecayDescriptor = '[D0 -> pi+ K-]cc'
         _d02kpi.CombinationCut = "(ADAMASS('D0') < 150 *MeV)" % self.getProps()
         _d02kpi.DaughtersCuts = { "pi+" : "  (MIPCHI2DV(PRIMARY)> %(MINIPCHI2)s) & (PT > %(KPiPT)s *MeV) "\
                                       "& (TRCHI2DOF < %(TRCHI2)s)" % self.getProps(),
@@ -39,7 +40,7 @@ class StrippingD0forBXXConf(LHCbConfigurableUser):
         from Configurables import CombineParticles
         _d02k3pi = CombineParticles("D02K3PiForBXX")
         _d02k3pi.InputLocations = [ "Phys/StdLoosePions", "Phys/StdLooseKaons" ]
-        _d02k3pi.DecayDescriptors = ["D0 -> K- pi+ pi- pi+"]
+        _d02k3pi.DecayDescriptor = '[D0 -> K- pi+ pi- pi+]cc'
         _d02k3pi.CombinationCut = "(ADAMASS('D0') < 150 *MeV)" % self.getProps()
         _d02k3pi.DaughtersCuts = { "pi+" : "  (PT > %(KPiPT)s *MeV) "\
                                       "& (TRCHI2DOF < %(TRCHI2)s)" % self.getProps(),
@@ -47,7 +48,7 @@ class StrippingD0forBXXConf(LHCbConfigurableUser):
                                       "& (TRCHI2DOF < %(TRCHI2)s) & (PIDK> %(KaonPIDK)s)" % self.getProps() }
         _d02k3pi.MotherCut = "(VFASPF(VCHI2/VDOF) < 20.0) & (SUMTREE( PT,  ISBASIC )>1500.*MeV) & (BPVIP()< %(D0IP)s *mm) " \
                             "& (INTREE((ABSID=='pi+')&(MIPCHI2DV(PRIMARY)> %(MINIPCHI2)s)))" \
-                        "& (BPVVDCHI2 > %(FDCHI2)s) & (BPVDIRA> %(D0DIRA)s) & (ADMASS('D0') < %(D0MassWin)s *MeV)"  % self.getProps()                                      
+                        "& (BPVVDCHI2 > %(FDCHI2)s) & (BPVDIRA> %(D0DIRAK3Pi)s) & (ADMASS('D0') < %(D0MassWin)s *MeV)"  % self.getProps()                                      
         return _d02k3pi
        
     def D02KPiforBXXLine( self ):
