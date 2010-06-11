@@ -169,5 +169,6 @@ private:
   double m_maxchi;
   int m_mintrks;
 
+  std::string m_forwardTracks;
 };
 #endif // Hlt2DisplVerticesDEV_H
