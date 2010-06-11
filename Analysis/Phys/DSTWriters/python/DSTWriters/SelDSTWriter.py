@@ -2,7 +2,7 @@
 Write a DST for a single selection sequence. Writes out the entire
 contents of the input DST
 """
-__version__ = "$Id: SelDSTWriter.py,v 1.9 2010-05-28 17:05:32 jpalac Exp $"
+__version__ = "$Id: SelDSTWriter.py,v 1.10 2010-06-11 07:28:11 jpalac Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -45,7 +45,6 @@ class SelDSTWriter(MicroDSTWriter) :
             log.info('More than one SelectionSequence. Partition output TES structure.')
         stream.Preload = False          # True makes LoKi crash (why?)
         stream.PreloadOptItems = False  # True makes LoKi crash (why?)
-        stream.OutputLevel = 1
         if self.getProp("SaveCandidates") :
             MicroDSTWriter.extendStream(self, seq, stream)
 
