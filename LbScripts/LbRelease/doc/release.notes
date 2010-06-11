@@ -4,10 +4,13 @@
 	dependencies between projects (using 'dot').
 	Added the possibility of triggering a re-build of the documentation with a
 	special file in the doc directory.
+	Added options to clean up documentations referring to archived projects and
+	unreferenced ones.
+	Include LHCbDirac in the allowed projects.
 
 2010-06-10  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* LbRelease/python/LbRelease/TarBall.py: created the generation of the 
+	* LbRelease/python/LbRelease/TarBall.py: created the generation of the
 	html file.
 
 2010-06-08  Karol Kruzelecki  <Karol.Kruzelecki@cern.ch>

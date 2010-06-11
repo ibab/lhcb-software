@@ -4,6 +4,7 @@
 __author__ = "Marco Clemencic"
 
 import os, re
+import shutil
 from datetime import datetime
 from subprocess import Popen, PIPE
 from stat import ST_SIZE
@@ -73,7 +74,7 @@ def _makedocdir(path):
     Create the directory path.
     If the parent directory is an AFS volume, a volume is created.
 
-    @return: True if the value was created, False if it is only a normal directory
+    @return: True if the volume was created, False if it is only a normal directory
     """
     parent = os.path.dirname(path)
     if _has_AFS and isAFSDir(parent) and isMountPoint(parent):
@@ -195,7 +196,6 @@ def _getProjDeps(project, version):
 
     @param project: name of the project
     @param version: version of the project
-    @param exclude: list of projects to exclude from the result
 
     @return: list of pairs (project, version)
     """
@@ -289,8 +289,8 @@ class Doc(object):
         # full path to the doxygen destination directory
         self.output = os.path.join(self.path, self._docSubdir)
 
-        # Number of broken links in the directory
-        self.broken = 0
+        # Broken links in the directory
+        self.broken = []
 
         # projects in the directory
         self.projects = {}
@@ -305,7 +305,7 @@ class Doc(object):
                     self.projects[p.upper()] = v # ensure that we use upper case names
                     # Update broken links count
                     if not os.path.exists(os.path.join(self.path, l)):
-                        self.broken += 1
+                        self.broken.append(l)
             self._log.debug("Found %d projects: %s", len(self.projects),
                             " ,".join(map(str, self.projects.items())))
             self.isAfsVolume = _has_AFS and isAFSDir(self.path) and isMountPoint(self.path)
@@ -690,22 +690,7 @@ class Doc(object):
             os.rename(self.output + ".new", self.output)
             shutil.rmtree(tempdir)
             os.remove(os.path.join(self.path, "conf", "DoxyFileTmp.cfg"))
-            # update links in the common directory
-            doclinkdir = os.path.join(self.root, self._docCollDir)
-            if not os.path.isdir(doclinkdir):
-                self._log.debug("Creating directory %s", doclinkdir)
-                os.makedirs(doclinkdir)
-            for project, version in self.projects.items():
-                doclink = os.path.join(doclinkdir, "%s_%s" % (project, version))
-                if os.path.exists(doclink):
-                    old = os.path.basename(os.readlink(doclink))
-                    if old < self.name:
-                        self._log.info("Moving link %s from %s to %s", doclink, old, self.name)
-                        os.remove(doclink)
-                        os.symlink(os.path.join("..", self.name), doclink)
-                else:
-                    self._log.info("Creating link %s to %s", doclink, self.name)
-                    os.symlink(os.path.join("..", self.name), doclink)
+            self._updateCommonLinks()
             # Mark as built
             self.toBeBuilt = False
             # Since we have built the doc, remove the "rebuild flag" if present
@@ -715,6 +700,28 @@ class Doc(object):
         finally:
             # clean up the lock
             os.remove(self._lockFile)
+
+    def _updateCommonLinks(self):
+        """
+        Update the links in the common directory.
+        """
+        # update links in the common directory
+        doclinkdir = os.path.join(self.root, self._docCollDir)
+        if not os.path.isdir(doclinkdir):
+            self._log.debug("Creating directory %s", doclinkdir)
+            os.makedirs(doclinkdir)
+        for project, version in self.projects.items():
+            doclink = os.path.join(doclinkdir, "%s_%s" % (project, version))
+            if os.path.exists(doclink):
+                old = os.path.basename(os.readlink(doclink))
+                if old < self.name:
+                    self._log.info("Moving link %s from %s to %s", doclink, old, self.name)
+                    os.remove(doclink)
+                    os.symlink(os.path.join("..", self.name), doclink)
+            else:
+                self._log.info("Creating link %s to %s", doclink, self.name)
+                os.symlink(os.path.join("..", self.name), doclink)
+
     def __len__(self):
         """
         Returns the number of projects hosted.
@@ -807,6 +814,8 @@ def makeDocs(projects, root = None, no_build = False):
         if no_build:
             # if we should not run doxygen, at least generate the doxygen configuration
             doc._generateDoxyFile()
+            # and create the fake sym-links
+            doc._updateCommonLinks()
         else:
             doc.build()
     ## @todo: probably, this step should be done inside the build step
@@ -855,7 +864,9 @@ def findProjects(exclude = None):
     releases = os.environ["LHCBRELEASES"]
     logging.debug("Looking for projects in '%s'", releases)
     if exclude is None: # default exclusion
-        exclude = set([ "GANGA", "DIRAC", "LHCBDIRAC", "LHCBGRID", "CURIE", "GEANT4" ])
+        exclude = set([ "GANGA", "DIRAC", "LHCBGRID", "CURIE", "GEANT4" ])
+    else:
+        exclude = set([ p.upper() for p in exclude ])
     projects = []
     for project in os.listdir(releases):
         projdir = os.path.join(releases, project)
@@ -875,7 +886,7 @@ def findBrokenDocs(root = None):
     Find all broken doc directories.
     A doc directory is broken if it contains (those containing broken symlinks, i.e.
     """
-    return [d for d in allDocs(root) if d.broken == len(d)]
+    return [d for d in allDocs(root) if d.broken]
 
 def findUnusedDocs(root = None):
     """
@@ -888,6 +899,44 @@ def findUnusedDocs(root = None):
             referenced.add(os.readlink(path).split(os.path.sep)[-1])
     return [d for d in allDocs(root) if d.name not in referenced]
 
+def cleanArchivedProjects(root = None):
+    """
+    Delete from the docs directories the broken links.
+    """
+    root = Doc._root(root)
+    logging.warning("Cleaning archived project docs from %s", root)
+    broken_docs = findBrokenDocs(root)
+    archived_project = set()
+    for d in broken_docs:
+        for b in d.broken:
+            archived_project.add(b)
+            try:
+                l = os.path.join(d.path, b)
+                logging.info("Removing %s", l)
+                os.remove(l)
+            except IOError, x:
+                logging.warning("IOError: %s", x) # ignore exceptions during removal
+    for p in archived_project:
+        try:
+            l = os.path.join(root, Doc._docCollDir, p)
+            logging.info("Removing %s", l)
+            os.remove(l)
+        except IOError, x:
+            logging.warning("IOError: %s", x) # ignore exceptions during removal
+
+def removeUnusedDocs(root = None):
+    """
+    Delete the doc directories that are not referenced by the common doc directory.
+    """
+    root = Doc._root(root)
+    logging.warning("Removing unused doc directory from %s", root)
+    for d in findUnusedDocs(root):
+        if d.isAfsVolume:
+            logging.warning("Removal of AFS volumes not yet implemented!")
+        else:
+            logging.warning("Removing %s", d.path)
+            shutil.rmtree(d.path)
+
 def main():
     from optparse import OptionParser
     parser = OptionParser(usage = "%prog [options] project version [project version ...]")
@@ -899,6 +948,12 @@ def main():
                       help = "Override the root directory of the documentation")
     parser.add_option("--no-build", action = "store_true",
                       help = "Do not run doxygen")
+    parser.add_option("--clean-archived", action = "store_true",
+                      help = "Remove all the links of archived projects")
+    parser.add_option("--remove-unused", action = "store_true",
+                      help = "Delete unused documentations")
+    parser.add_option("-x", "--exclude", action = "append",
+                      help = "Delete unused documentations")
 
     opts, args = parser.parse_args()
 
@@ -910,7 +965,7 @@ def main():
     logging.basicConfig(level = log_level)
 
     if not args:
-        projects = findProjects()
+        projects = findProjects(opts.exclude)
     elif (len(args)%2 == 0): # we accept only pairs
         projects = set()
         for i in range(0, len(args), 2):
@@ -918,6 +973,11 @@ def main():
     else:
         parser.error("Wrong number of arguments")
 
+    # Clean-up functions
+    if opts.clean_archived:
+        cleanArchivedProjects(opts.root)
+    if opts.remove_unused:
+        removeUnusedDocs(opts.root)
     # Main function
     makeDocs(projects, opts.root, opts.no_build)
 
