@@ -205,7 +205,7 @@ void MDFWriterNet::constructNet()
   declareProperty("RunFileTimeoutSeconds", m_runFileTimeoutSeconds=10);
   declareProperty("MaxQueueSizeBytes",     m_maxQueueSizeBytes=1073741824);
   declareProperty("EnableMD5",             m_enableMD5=false);
-  declareProperty("UpdatePeriod",          m_UpdatePeriod=0); //0 is no update
+  declareProperty("UpdatePeriod",          m_UpdatePeriod=2); //0 is no update
   m_log = new MsgStream(msgSvc(), name());
 }
 
