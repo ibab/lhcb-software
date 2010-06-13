@@ -1,4 +1,4 @@
-// $Id: PhysDesktop.cpp,v 1.111 2010-06-13 17:39:10 ibelyaev Exp $
+// $Id: PhysDesktop.cpp,v 1.112 2010-06-13 17:44:32 ibelyaev Exp $
 // ============================================================================
 // GaudiKernel
 // ============================================================================
@@ -670,21 +670,19 @@ StatusCode PhysDesktop::getInputRelations(std::vector<std::string>::const_iterat
   for( std::vector<std::string>::const_iterator iloc = begin; 
        iloc != end; iloc++ ) 
   {
-    const std::string location( *iloc );
-    if (exist<Particle2Vertex::Table>(location)){
+    if (exist<Particle2Vertex::Table>( *iloc ))
+    {
       if (msgLevel(MSG::DEBUG)) 
-        debug() << "Reading table from " << location << endmsg ;
-      const Particle2Vertex::Table* table = get<Particle2Vertex::Table>(location);
-      if ( 0!=table) 
-      {
-        const Particle2Vertex::Table::Range all = table->relations();
-        overWriteRelations(all.begin(), all.end());
-      } else {
-        Info("NULL Particle2Vertex::Table* at "+location+" under "+rootInTES());
-      }
-    } else {
-      Info ("No P->PV table at " + location + 
-            ( rootInTES().empty() ? : "" :  (" under "+rootInTES() ) ) ) ;
+      { debug() << "Reading table from " << (*iloc) << endmsg ; }
+      
+      const Particle2Vertex::Table* table = get<Particle2Vertex::Table>( *iloc );
+      const Particle2Vertex::Table::Range all = table->relations();
+      overWriteRelations(all.begin(), all.end());
+    } 
+    else 
+    {
+      Info ( "No P->PV table at " + (*iloc)  + 
+             ( rootInTES().empty() ? "" :  (" under "+rootInTES() ) ) ) ;
     }
     
   }
