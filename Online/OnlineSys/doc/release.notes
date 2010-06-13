@@ -6,9 +6,24 @@
 !-----------------------------------------------------------------------------
 </PRE>
 
+<H1><A NAME=v4r39>2010-06-13 OnlineSys v4r41</A></H1>
+<PRE>
+   Based in Gaudi v21r9.
+   New tags for online packages are:
+   MDF               v3r24    DAQ
+   Camera            v1r17    Online
+   Gaucho            v6r27    Online
+   InsertDB          v1r9     Online
+   OnlineHistDB      v7r0     Online
+   Presenter         v1r6     Online
+   RawBankSizes      v2r8     Online
+   Trending          v1r0     Online
+   Writer            v1r28    Online
+
 ! 2010-06-11 - Olivier Callot
  - Added a new package
 	 Trending          v1r0     Online
+
 <H1><A NAME=v4r39>2010-05-10 OnlineSys v4r40</A></H1>
 <PRE>
    Based in Gaudi v21r9.
