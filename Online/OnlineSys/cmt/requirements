@@ -1,12 +1,12 @@
 package OnlineSys
-version v4r40
+version v4r41
 
 branches cmt doc
  
 #=======================================================
 # Overrides from LHCB
 #=======================================================
-use MDF               v3r24    DAQ
+use MDF               v3r25    DAQ
 use MDF_ROOT          v1r2     DAQ
 use DAQEvent          v9r1     Event
 use GaudiObjDesc      v11r10p1
