@@ -191,7 +191,6 @@ StatusCode MDFWriterNet::execute()
 /// Read job options.
 void MDFWriterNet::constructNet()
 {
-
   //This should ideally be provided as a name and not an
   //IP address, so that the round-robin DNS can kick in.
   declareProperty("StorageServerAddr",     m_serverAddr="");
@@ -207,9 +206,7 @@ void MDFWriterNet::constructNet()
   declareProperty("MaxQueueSizeBytes",     m_maxQueueSizeBytes=1073741824);
   declareProperty("EnableMD5",             m_enableMD5=false);
   declareProperty("UpdatePeriod",          m_UpdatePeriod=0); //0 is no update
-
   m_log = new MsgStream(msgSvc(), name());
-
 }
 
 /** Overrides MDFWriter::initialize(). Initialises the Connection object.
@@ -265,8 +262,8 @@ StatusCode MDFWriterNet::initialize(void)
       snprintf(msg, msg_size, "start%c%i", DELIMITER, getpid());
       if(mq_send(m_mq, msg, msg_size, 0) < 0)  {
           *m_log << MSG::WARNING
-                << "Error sending message to the queue. "
-                << "Deactivating message queue"
+                 << "Could not send message, errno=" << errno
+                 << ". Closing queue"
                 << endmsg;
           m_mq_available = false; // prevent from further trying to protect writer
       }
@@ -360,8 +357,8 @@ StatusCode MDFWriterNet::finalize(void)
       snprintf(msg, msg_size, "stop%c%i", DELIMITER,  getpid() );
       if(mq_send(m_mq, msg, msg_size, 0) < 0) {
           *m_log << MSG::WARNING
-                 << "Could not send message"
-                 << "closing queue"
+                 << "Could not send message, errno=" << errno
+                 << ". Closing queue"
                  << endmsg;
           m_mq_available = false;
       }
@@ -468,8 +465,8 @@ File* MDFWriterNet::createAndOpenFile(unsigned int runNumber)
           DELIMITER, (int) tv.tv_usec);
       if(mq_send(m_mq, msg, msg_size, 0) < 0) {
           *m_log << MSG::WARNING
-                 << "Could not send message"
-                 << "closing queue"
+                 << "Could not send message, errno=" << errno
+                 << ". Closing queue"
                  << endmsg;
           m_mq_available = false;
       }
@@ -593,8 +590,8 @@ void MDFWriterNet::closeFile(File *currFile)
           DELIMITER, statEventsCharString); 
       if(mq_send(m_mq, msg, msg_size, 0) < 0) {
           *m_log << MSG::WARNING
-                 << "Could not send message"
-                 << "closing queue"
+                 << "Could not send message, errno=" << errno
+                 << ". Closing queue"
                  << endmsg;
           m_mq_available = false;
       }
@@ -663,7 +660,7 @@ StatusCode MDFWriterNet::writeBuffer(void *const /*fd*/, const void *data, size_
   static int nbLate=0;
   unsigned int runNumber = getRunNumber(mHeader, len);
 
-  // If we get a newer run number, start a timeout on the previous run opened file. 
+  // If we get a newer run number, start a timeout on the open files of the previous runs. 
   if(m_currentRunNumber < runNumber) {
       if(nbLate != 0)
           *m_log << MSG::WARNING << WHERE << nbLate << " events were lost, for run previous than " << m_currentRunNumber << endmsg;
@@ -831,8 +828,8 @@ StatusCode MDFWriterNet::writeBuffer(void *const /*fd*/, const void *data, size_
 
       if(mq_send(m_mq, msg, msg_size, 0) < 0) {
           *m_log << MSG::WARNING
-                 << "Could not send message"
-                 << "closing queue"
+                 << "Could not send message, errno=" << errno
+                 << ". Closing queue"
                  << endmsg;
           m_mq_available = false;
       }

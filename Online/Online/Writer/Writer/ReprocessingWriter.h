@@ -37,6 +37,9 @@ namespace LHCb {
       /// The maximum amount of seconds to wait for events after which a file is closed.
       int m_runFileTimeoutSeconds;
 
+      /// The maximum amount of seconds to wait for events after which a file is dropped.
+      int m_runFileKeepTimeout;
+
       /// The maximum file size (in MB) to write before creating a new file.
       size_t m_maxFileSizeMB;
       
@@ -54,6 +57,9 @@ namespace LHCb {
 
       /// A map of all current open files.
       FileList m_openFiles;
+
+      /// A map of all not current open files, where still events can be expected.
+      FileList m_parkFiles;
 
       /// The current open file.
       File *m_currFile;

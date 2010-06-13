@@ -83,6 +83,7 @@ ReprocessingWriter::ReprocessingWriter(const string& nam, ISvcLocator* pSvc)
   declareProperty("MaxFileSizeMB",         m_maxFileSizeMB=20000);
   declareProperty("SndRcvSizes",           m_sndRcvSizes=6553600);
   declareProperty("RunFileTimeoutSeconds", m_runFileTimeoutSeconds=30);
+  declareProperty("RunFileKeepTimeout",    m_runFileKeepTimeout=1800);
   declareProperty("MaxMemBufferMB",        m_memBufferLen=1024);
   declareProperty("MaxQueueSizeBytes",     m_maxQueueSizeBytes=1073741824);
   ::lib_rtl_create_lock(0,&m_flLock);
@@ -116,23 +117,30 @@ StatusCode ReprocessingWriter::execute()   {
 
 /// Close files on request
 void ReprocessingWriter::closeFiles(bool force) {
+  File* tmp, *toDelete;
   RTL::Lock file_list_lock(m_flLock);
-  for( File *tmp = m_openFiles.getFirstFile(); tmp; ) {
-    File* toDelete = 0;
-    if( force && tmp->isOpen() ) {
+  for(tmp = m_openFiles.getFirstFile(); tmp; )   {
+    if( force || tmp->getTimeSinceLastWrite() > m_runFileTimeoutSeconds) {
+      if ( tmp == m_currFile ) m_currFile = 0;
+      *m_log << MSG::INFO << "Close/retire file:" << *(tmp->getFileName()) << endmsg;
       toDelete = tmp;
-    }
-    else if(tmp->getTimeSinceLastWrite() > m_runFileTimeoutSeconds) {
-      *m_log << MSG::INFO << "Close after TIMEOUT:" << *(tmp->getFileName()) << endmsg;
-      toDelete = tmp;
-    }
-    if ( toDelete ) {
       closeFile(tmp);
-      // removeFile() returns the next element after the removed one.
       tmp = m_openFiles.removeFile(tmp);
-      if ( toDelete == m_currFile ) m_currFile = 0;
-      delete toDelete;
+      m_parkFiles.addFile(toDelete);
       continue;
+    }
+    tmp = tmp->getNext();
+  }
+  for(tmp = m_openFiles.getFirstFile(); tmp; )   {
+    toDelete = (force || tmp->getTimeSinceLastWrite()>m_runFileKeepTimeout) ? tmp : 0;
+    if ( toDelete ) {
+      if(tmp->getTimeSinceLastWrite() > m_runFileTimeoutSeconds) {
+	toDelete = tmp;
+	*m_log << MSG::INFO << "Remove file:" << *(tmp->getFileName()) << endmsg;
+	tmp = m_openFiles.removeFile(tmp);
+	delete toDelete;
+	continue;
+      }
     }
     tmp = tmp->getNext();
   }
@@ -147,21 +155,26 @@ StatusCode ReprocessingWriter::finalize(void)   {
   m_srvConnection->closeConnection();
   _delete(m_srvConnection);
   _delete(m_rpcObj);
+  _delete(m_log);
   m_currFile = 0;
   return StatusCode::SUCCESS;
 }
 
 /// Overrides MDFWriter::initialize(). Initialises the Connection object.
 StatusCode ReprocessingWriter::initialize(void)   {
-  if ( m_log ) delete m_log;
+  _delete(m_log);
   m_log = new MsgStream(msgSvc(), name());
   *m_log << MSG::INFO << "Writer " << getpid() << " Initializing." << endmsg;
 
   m_cancel = false;
   m_currFile = 0;
   m_bufferLength = 0;
-  m_srvConnection = new Connection(m_serverAddr, m_serverPort,
-				   m_sndRcvSizes, m_log, this, m_maxQueueSizeBytes);
+  m_srvConnection = new Connection(m_serverAddr, 
+				   m_serverPort,
+				   m_sndRcvSizes,
+				   m_log,
+				   this,
+				   m_maxQueueSizeBytes);
   m_rpcObj = new RPCComm(m_runDBURL.c_str());
   *m_log << MSG::INFO << "rundb url: " << m_runDBURL.c_str() <<endmsg;
   try {
@@ -271,9 +284,24 @@ StatusCode ReprocessingWriter::writeBuffer(void *const /*fd*/, const void *data,
     return StatusCode::SUCCESS;
   }
   unsigned int runNumber = getRunNumber(data, len);
+  RTL::Lock file_list_lock(m_flLock);
   if( m_currFile == 0 || runNumber != m_currFile->getRunNumber() ) {
-    RTL::Lock file_list_lock(m_flLock);
     m_currFile = m_openFiles.getFile(runNumber);
+    if(!m_currFile) {
+      m_currFile = m_parkFiles.getFile(runNumber);
+      if ( m_currFile ) {
+	struct cmd_header header;
+	*m_log << MSG::INFO << "RUN:" << std::dec << runNumber
+	       << ": Resurrect existing file:" << m_currFile->getFileName() << endmsg;
+	m_parkFiles.removeFile(m_currFile);
+	m_openFiles.addFile(m_currFile);
+	INIT_OPEN_COMMAND(&header, m_currFile->getFileName()->c_str(),
+			  m_currFile->getSeqNum(), runNumber);
+	m_srvConnection->sendCommand(&header);
+	m_currFile->open();
+	m_currFile->incSeqNum();
+      }
+    }
     if(!m_currFile) {
       *m_log << MSG::INFO << "RUN:" << std::dec << runNumber
 	     << ": No file exists. Creating a new one." << endmsg;
