@@ -1,4 +1,4 @@
-// $Id: AlgoMC.h,v 1.11 2010-06-01 17:07:30 ibelyaev Exp $
+// $Id: AlgoMC.h,v 1.12 2010-06-13 13:45:41 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_ALGOMC_H 
 #define LOKI_ALGOMC_H 1
@@ -23,8 +23,10 @@
 // ============================================================================
 // LoKiGen
 // ============================================================================
-#include "LoKi/GenTypes.h"
+#include "LoKi/MCTypes.h"
 #include "LoKi/IMCDecay.h"
+#include "LoKi/GenTypes.h"
+#include "LoKi/IGenDecay.h"
 // ============================================================================
 // LoKiGenMC
 // ============================================================================
@@ -867,16 +869,91 @@ namespace LoKi
      *   @param cut   the selection cuts to be applied 
      *   @return selected particles, saved into the local storage 
      */
-    template <class GENPARTICLE>
+    template <class GENPARTICLE, class GENCUT>
     inline LoKi::Types::GRange 
     gselect 
-    ( const std::string&                  tag    ,
-      GENPARTICLE                         first  , 
-      GENPARTICLE                         last   , 
-      const LoKi::Types::GCuts&           cut    ) 
+    ( const std::string& tag   ,
+      GENPARTICLE        first , 
+      GENPARTICLE        last  , 
+      const GENCUT&      cut   ) 
     {
       return m_genselected.add ( tag , first , last , cut ) ;
     } 
+    // ========================================================================
+  private:
+    // ========================================================================
+    /// select (gen)particles according to decay-finder and cuts
+    template <class GENPARTICLE, class GENCUT>
+    LoKi::Types::GRange 
+    gselect 
+    ( const std::string&               tag    ,
+      GENPARTICLE                      first  , 
+      GENPARTICLE                      last   ,
+      const Decays::IGenDecay::Finder& finder ,
+      const GENCUT&                    cut    ) ;
+    // ========================================================================
+  public:
+    // ========================================================================    
+    /** 'Select' generator(HepMC) particles to be used in local storage.
+     *  
+     *   @code
+     * 
+     *     const Decays::IGenDecay::Finder& finder = ... ;
+     *     GRange pions = gselect("gpi" , finder ) ;
+     *
+     *   @endcode 
+     * 
+     *   @param tag the unique tag to be associated with selecte dparticles 
+     *   @param finder the decay finder 
+     *   @param location TES location of LHCb::HepMCEvent::Container
+     *   @return selected particles, saved into the local storage 
+     */
+    LoKi::Types::GRange 
+    gselect 
+    ( const std::string&               tag    , 
+      const Decays::IGenDecay::Finder& finder ,
+      const std::string&               location = LHCb::HepMCEventLocation::Default ) ;
+    // ========================================================================
+    /** 'Select' generator(HepMC) particles to be used in local storage.
+     *  
+     *   @code
+     * 
+     *     const Decays::IGenDecay::iTree& tree = ... ;
+     *     GRange pions = gselect("gpi" , tree ) ;
+     *
+     *   @endcode 
+     * 
+     *   @param tag the unique tag to be associated with selecte dparticles 
+     *   @param tree  the decay tree
+     *   @param location TES location of LHCb::HepMCEvent::Container
+     *   @return selected particles, saved into the local storage 
+     */
+    LoKi::Types::GRange 
+    gselect 
+    ( const std::string&               tag    , 
+      const Decays::IGenDecay::iTree&  tree   ,
+      const std::string&               location = LHCb::HepMCEventLocation::Default ) ;
+    // ========================================================================
+    /** 'Select' generator(HepMC) particles to be used in local storage.
+     *  
+     *   @code
+     * 
+     *     GRange psis = gselect("gpsi" , "Xb --> ^( J/psi(1S) => l+ l- ) ... ") ;
+     *
+     *   @endcode 
+     * 
+     *   @param tag the unique tag to be associated with selecte dparticles 
+     *   @param descriptor the decay descriptor 
+     *   @param location TES location of LHCb::HepMCEvent::Container
+     *   @return selected particles, saved into the local storage 
+     */
+    LoKi::Types::GRange 
+    gselect 
+    ( const std::string& tag        , 
+      const std::string& descriptot ,
+      const std::string& location = LHCb::HepMCEventLocation::Default ) ;
+    // ========================================================================
+  public:
     // ========================================================================    
     /** extract the selected HepMC-paricles from Local LoKi storages 
      *  by their name/tag 
@@ -1002,8 +1079,10 @@ namespace LoKi
     // ========================================================================    
     bool                         m_disableMCMatch   ;
     // ========================================================================
-    /// teh factory to create the decay trees 
-    LoKi::Interface<Decays::IMCDecay>  m_mcdecay ;           // the decay trees 
+    /// the factory to create the (MC)decay trees 
+    LoKi::Interface<Decays::IMCDecay>  m_mcdecay  ;          // the decay trees 
+    /// the factory to create the (Gen)decay trees 
+    LoKi::Interface<Decays::IGenDecay> m_gendecay ;          // the decay trees 
     // ========================================================================
   } ;
   // ==========================================================================
@@ -1017,7 +1096,9 @@ LoKi::AlgoMC::_feedIt
 ( LoKi::MCMatchObj*              object    ,
   const LoKi::AlgoMC::Addresses& addresses ) const
 {
+  //
   if ( 0 == object ) { return StatusCode::FAILURE ; }
+  //
   for ( Addresses::const_iterator item = 
           addresses.begin() ; addresses.end() != item ; ++item ) 
   {
@@ -1032,7 +1113,8 @@ LoKi::AlgoMC::_feedIt
     const TABLE* table = get<TABLE> ( address ) ;
     // feed it! 
     object -> addMatchInfo ( table ) ;
-  } ;
+  } 
+  //
   return StatusCode::SUCCESS ;
 }
 // ============================================================================
@@ -1053,7 +1135,7 @@ LoKi::AlgoMC::mcselect
     StatusCode sc = finder.validate ( ppSvc() ) ;
     if ( sc.isFailure() ) 
     {
-      Error ( "Invalid decay finder: '" + finder.tree().toString() + "'") ;
+      Error ( "Invalid (MC)decay finder: '" + finder.tree().toString() + "'") ;
       return LoKi::Types::MCRange () ;
     }
   }
@@ -1065,6 +1147,36 @@ LoKi::AlgoMC::mcselect
   return this->mcselect ( tag              , 
                           results.begin () , 
                           results.end   () , cut ) ;
+}// ============================================================================
+// select (Gen)particles according to decay-finder and cuts
+// ============================================================================
+template <class GENPARTICLE, class GENCUT>
+LoKi::Types::GRange 
+LoKi::AlgoMC::gselect 
+( const std::string&               tag    ,
+  GENPARTICLE                      first  , 
+  GENPARTICLE                      last   ,
+  const Decays::IGenDecay::Finder& finder ,
+  const GENCUT&                    cut    ) 
+{
+  // check the validity of finder 
+  if ( !finder ) 
+  {
+    StatusCode sc = finder.validate ( ppSvc() ) ;
+    if ( sc.isFailure() ) 
+    {
+      Error ( "Invalid (Gen)decay finder: '" + finder.tree().toString() + "'") ;
+      return LoKi::Types::GRange () ;
+    }
+  }
+  //
+  LoKi::GenTypes::GenContainer results ;
+  results.reserve ( 100 ) ;
+  finder.findDecay ( first , last , results ) ;
+  //
+  return this->gselect ( tag              , 
+                         results.begin () , 
+                         results.end   () , cut ) ;
 }
 // ============================================================================
 /** @def LOKI_MCALGORITHM_BODY 

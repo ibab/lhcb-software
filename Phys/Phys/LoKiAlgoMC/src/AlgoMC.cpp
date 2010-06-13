@@ -1,4 +1,4 @@
-// $Id: AlgoMC.cpp,v 1.9 2010-06-01 17:07:30 ibelyaev Exp $
+// $Id: AlgoMC.cpp,v 1.10 2010-06-13 13:45:41 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -78,7 +78,8 @@ LoKi::AlgoMC::AlgoMC
 //
   , m_disableMCMatch   ( false ) 
 //
-  , m_mcdecay ( 0 ) 
+  , m_mcdecay  ( 0 ) 
+  , m_gendecay ( 0 ) 
 {
   //
   m_PP2MC.push_back ( "Relations/" + LHCb::ProtoParticleLocation::Charged  ) ;
@@ -318,7 +319,8 @@ StatusCode LoKi::AlgoMC::finalize   ()
     m_mcmatchers .clear() ;
   }
   //
-  m_mcdecay.release() ;
+  m_mcdecay  . release () ;
+  m_gendecay . release () ;
   // finalize the base class 
   return LoKi::Algo::finalize   () ; 
 } 
@@ -812,9 +814,129 @@ LoKi::AlgoMC::mcselect
   
 }
 // ============================================================================
-
-
-
+/*  'Select' generator(HepMC) particles to be used in local storage.
+ *  
+ *   @code
+ * 
+ *     const Decays::IGenDecay::Finder& finder = ... ;
+ *     GRange pions = gselect("gpi" , finder ) ;
+ *
+ *   @endcode 
+ * 
+ *   @param tag the unique tag to be associated with selecte dparticles 
+ *   @param finder the decay finder 
+ *   @param location TES location of LHCb::HepMCEvent::Container
+ *   @return selected particles, saved into the local storage 
+ */
+// ============================================================================
+LoKi::Types::GRange 
+LoKi::AlgoMC::gselect 
+( const std::string&               tag      , 
+  const Decays::IGenDecay::Finder& finder   ,
+  const std::string&               location ) 
+{
+  // 
+  // get HEpMC-Event form TES 
+  const LHCb::HepMCEvent::Container* events = 
+    get<LHCb::HepMCEvent::Container> ( location ) ;
+  //
+  if ( 0 == events ) { return LoKi::Types::GRange() ; }  // RETURN ;
+  // loop ocver HEpMC-events 
+  for ( LHCb::HepMCEvent::Container::const_iterator ievent = 
+          events->begin() ; events->end() != ievent ; ++ievent ) 
+  {
+    const LHCb::HepMCEvent* event  = *ievent ;
+    if ( 0 == event  ) { continue ; }                     // RETURN 
+    const HepMC::GenEvent*  gevent = event->pGenEvt() ;
+    if ( 0 == gevent ) { continue ; }                     // RETURN 
+    //
+    gselect 
+      ( tag                        , 
+        gevent->particles_begin () , 
+        gevent->particles_end   () , 
+        finder                     , 
+        LoKi::Objects::_ALL_       ) ;
+  }
+  //
+  return gselected ( tag ) ;
+}
+// ============================================================================
+/*  'Select' generator(HepMC) particles to be used in local storage.
+ *  
+ *   @code
+ * 
+ *     const Decays::IGenDecay::iTree& tree = ... ;
+ *     GRange pions = gselect("gpi" , tree ) ;
+ *
+ *   @endcode 
+ * 
+ *   @param tag the unique tag to be associated with selecte dparticles 
+ *   @param tree  the decay tree
+ *   @param location TES location of LHCb::HepMCEvent::Container
+ *   @return selected particles, saved into the local storage 
+ */
+// ============================================================================
+LoKi::Types::GRange 
+LoKi::AlgoMC::gselect 
+( const std::string&               tag      , 
+  const Decays::IGenDecay::iTree&  tree     ,
+  const std::string&               location )
+{
+  if ( !tree ) 
+  {
+    StatusCode sc = tree.validate ( ppSvc() ) ;
+    if ( sc.isFailure() ) 
+    {
+      Error ( "gselect: Unable to validate tree '" + tree.toString() + "'" ) ;
+      return LoKi::Types::GRange() ;
+    }  
+  }
+  //
+  return gselect ( tag                                , 
+                   Decays::IGenDecay::Finder ( tree ) , 
+                   location                           ) ;
+  //
+}
+// ============================================================================
+/*  'Select' generator(HepMC) particles to be used in local storage.
+ *  
+ *   @code
+ * 
+ *     GRange psis = gselect("gpsi" , "Xb --> ^( J/psi(1S) => l+ l- ) ... ") ;
+ *
+ *   @endcode 
+ * 
+ *   @param tag the unique tag to be associated with selecte dparticles 
+ *   @param descriptor the decay descriptor 
+ *   @param location TES location of LHCb::HepMCEvent::Container
+ *   @return selected particles, saved into the local storage 
+ */
+// ============================================================================
+LoKi::Types::GRange 
+LoKi::AlgoMC::gselect 
+( const std::string& tag        , 
+  const std::string& descriptor ,
+  const std::string& location   ) 
+{
+  //
+  if ( !m_gendecay ) 
+  { m_gendecay = tool<Decays::IGenDecay>  ( "LoKi::GenDecay/GenDecay" ,this ) ; }
+  //
+  Assert ( !(!m_gendecay) , "Decays::IGenDecay* points to NULL!" ) ;
+  //
+  Decays::IGenDecay::Tree tree = m_gendecay->tree ( descriptor ) ;
+  if ( !tree ) 
+  {
+    Error ( "gselect: Unable to create decay tree from descriptor '" + 
+            descriptor + "'" ) ;
+    return LoKi::Types::GRange () ;
+  }
+  //
+  return gselect ( tag      , 
+                   tree     , 
+                   location ) ;
+}
+// ============================================================================
 
 // ============================================================================
 // The END 

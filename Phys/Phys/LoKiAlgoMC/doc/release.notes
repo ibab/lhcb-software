@@ -1,9 +1,14 @@
-! $Id: release.notes,v 1.34 2010-06-01 17:07:30 ibelyaev Exp $ 
+! $Id: release.notes,v 1.35 2010-06-13 13:45:41 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiAlgoMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
 ! Purpose     : MC-analogue for the basic LoKi algorithm 
 ! -----------------------------------------------------------------------------
+
+! 2010-06-13 - Vanya Belyaev
+
+ - add decay finders for gselect methods 
+
 
 ! 2010-06-01 - Vanya Belyaev
 
