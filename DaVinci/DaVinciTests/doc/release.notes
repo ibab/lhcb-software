@@ -4,6 +4,8 @@
 ! Purpose     : QMTests for DaVinci
 !-----------------------------------------------------------------------------
 
+!============================== DaVinciTests v1r0 2010-06-13 =================
+
 ! 2010-06-11 - Rob Lambert
  - Fix merge test such that it just looks for AppMgr success.
  - Add v0 (full) and radiative (empty) streams, merged/tested in parallel
