@@ -1,4 +1,4 @@
-// $Id: OfflineVertexFitter.cpp,v 1.38 2009-09-12 16:51:07 jonrob Exp $
+// $Id: OfflineVertexFitter.cpp,v 1.39 2010-06-13 12:06:24 ibelyaev Exp $
 // Include files
 
 // from Gaudi
@@ -1971,8 +1971,9 @@ double OfflineVertexFitter::getZEstimate(const LHCb::Particle* part1,
     return zEstimate = (((sumX*sumSlopeX + sumY*sumSlopeY)/2.)
                         - sumCrossedProduct) /det;
   }
-  else {
-    err() << "Unable to make z estimate " << endmsg;
+  else 
+  {
+    Error ( "Unable to make z estimate " ).ignore() ;
     if(z1<z2) return z1-.001;
     else return z2-0.001;
   }
@@ -1989,32 +1990,24 @@ StatusCode OfflineVertexFitter::getPhotonParameter(const LHCb::Particle& photon,
   StatusCode sc = StatusCode::SUCCESS;
 
   int pid=photon.particleID().pid();
-  if(pid!=m_photonID) {
-    err() <<"Particle is not a photon!"<<endmsg;
-    return StatusCode::FAILURE;
-  }
-
+  if(pid!=m_photonID) 
+  { return Error ( "Particle is not a photon!" ) ; }
+  
   const LHCb::ProtoParticle*   proto  = photon.proto() ;
-  if( 0 == proto  ) {
-    err() <<"ProtoParticle points to NULL!"<<endmsg;
-    return StatusCode::FAILURE;
-  }
-
-  if( proto->calo().empty() ) {
-    err() <<"ProtoParticle has no CaloHypos "<<endmsg;
-    return StatusCode::FAILURE;
-  }
-
+  if( 0 == proto  ) 
+  { return Error( "ProtoParticle points to NULL!" ) ; }
+  
+  if( proto->calo().empty() ) 
+  { return Error ( "ProtoParticle has no CaloHypos " ) ; }
+  
   const LHCb::CaloHypo*   hypo  = *( (proto->calo()).begin() );
   if(LHCb::CaloHypo::Photon != hypo->hypothesis() ) return StatusCode::FAILURE;
-
+  
   // get the position
   const CaloPosition* pos = hypo->position() ;
-  if( 0 == pos    ) {
-    err() <<"CaloPosition* points to NULL! "<<endmsg;
-    return StatusCode::FAILURE;
-  }
-
+  if( 0 == pos    ) 
+  { return Error ( "CaloPosition* points to NULL! " ); }
+  
   zg=pos->z();
   para(0)=pos->x();
   para(1)=pos->y();
@@ -2044,21 +2037,15 @@ StatusCode OfflineVertexFitter::getMergedPi0Parameter(const LHCb::Particle& pi0,
   StatusCode sc = StatusCode::SUCCESS;
 
   int pid=pi0.particleID().pid();
-  if(pid!=m_pi0ID) {
-    err() <<"Particle is not a photon!"<<endmsg;
-    return StatusCode::FAILURE;
-  }
+  if(pid!=m_pi0ID) 
+  { return Error ( "Particle is not a photon!" ) ; }
 
   const LHCb::ProtoParticle*   proto  = pi0.proto() ;
-  if( 0 == proto  ) {
-    err() <<"ProtoParticle points to NULL!"<<endmsg;
-    return StatusCode::FAILURE;
-  }
-
-  if( proto->calo().empty() ) {
-    err() <<"ProtoParticle has no CaloHypos "<<endmsg;
-    return StatusCode::FAILURE;
-  }
+  if( 0 == proto  ) 
+  { return Error ( "ProtoParticle points to NULL!" ) ; }
+  
+  if( proto->calo().empty() ) 
+  { return Error ( "ProtoParticle has no CaloHypos " ) ; }
 
   const LHCb::CaloHypo*   hypo  = *( ( proto->calo()).begin() );
   if(LHCb::CaloHypo::Pi0Merged != hypo->hypothesis() ) return StatusCode::FAILURE;
@@ -2071,11 +2058,9 @@ StatusCode OfflineVertexFitter::getMergedPi0Parameter(const LHCb::Particle& pi0,
 
   // get the positions
   const CaloPosition* pos1 = g1->position() ;
-  if( 0 == pos1    ) {
-    err() <<"CaloPosition* points to NULL! "<<endmsg;
-    return StatusCode::FAILURE;
-  }
-
+  if( 0 == pos1    ) 
+  { return Error ( "CaloPosition* points to NULL! " ) ; }
+  
   zg1=pos1->z();
   para1(0)=pos1->x();
   para1(1)=pos1->y();
@@ -2085,11 +2070,9 @@ StatusCode OfflineVertexFitter::getMergedPi0Parameter(const LHCb::Particle& pi0,
   verbose() <<"Photon1 cov : " <<cov1<<endmsg;
 
   const CaloPosition* pos2 = g2->position() ;
-  if( 0 == pos2    ) {
-    err() <<"CaloPosition* points to NULL! "<<endmsg;
-    return StatusCode::FAILURE;
-  }
-
+  if ( 0 == pos2    ) 
+  { return Error ( "CaloPosition* points to NULL! ") ; }
+  
   zg2=pos2->z();
   para2(0)=pos2->x();
   para2(1)=pos2->y();
