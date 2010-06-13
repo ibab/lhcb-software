@@ -1,9 +1,15 @@
-! $Id: release.notes,v 1.61 2010-06-02 15:47:46 ibelyaev Exp $ 
+! $Id: release.notes,v 1.62 2010-06-13 13:43:47 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiAlgo
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
 ! Purpose     : LoKi-algorithm related stuff 
 ! -----------------------------------------------------------------------------
+
+! 2010-06-13 - Vanya Belyaev
+
+ - disable the default extraction of secondary vertices
+   using IPhysDersktop->secondaryVeertices() method 
+
 
 ! 2010-06-02 - Vanya Belyaev
 

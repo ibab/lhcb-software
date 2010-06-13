@@ -1,4 +1,4 @@
-// $Id: Algo.h,v 1.19 2008-12-05 13:29:43 ibelyaev Exp $
+// $Id: Algo.h,v 1.20 2010-06-13 13:43:47 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_ALGO_H 
 #define LOKI_ALGO_H 1
@@ -159,43 +159,6 @@ namespace LoKi
      *  and @c "negative" and returned as a sequence of particles 
      *  @c positive and @c negative
      *
-     *  @see LHCb::Particle::Vector
-     *  @see LoKi::Types::Range 
-     *  @see LoKi::Types::Cuts 
-     *  @see LoKi::Cuts::Q
-     *  @param name name/tag assigned to the selected particles
-     *  @param cont input container of particles 
-     *  @param cuts cut to be applied
-     *  @return selected range of particles
-     */
-    LoKi::Types::Range 
-    select   
-    ( const std::string&            name  , 
-      const LHCb::Particle::Vector& cont  , 
-      const LoKi::Types::Cuts&      cuts  ) 
-    { 
-      return select ( name , cont.begin() , cont.end() , cuts ) ; 
-    } 
-    // ========================================================================    
-    /** 'Select' the particles to be used in local storage
-     * 
-     *  - particles are selected from the container 
-     *
-     *  @code
-     *
-     *  const LHCb::Particle::Vector particles = ... ;
-     *  Range positive  = select( "positive" , particles , Q >  0.5 );
-     *  Range negative  = select( "negative" , particles , Q < -0.5 );
-     *
-     *  @endcode
-     *
-     *  - The example illustrates the 'selection'/'filtering from
-     *  container <tt>particles</tt> positive and negative particles 
-     *  - The selected particles
-     *  are stored inside local LoKi storage under the tags @c "positive"
-     *  and @c "negative" and returned as a sequence of particles 
-     *  @c positive and @c negative
-     *
      *  @see LoKi::Cuts::Q
      *  @param name name/tag assigned to the selected particles
      *  @param cont input container of particles 
@@ -241,25 +204,24 @@ namespace LoKi
      */
     LoKi::Types::Range 
     select   
-    ( const std::string&        name  , 
-      const LHCb::Particle::Container*    cont  , 
-      const LoKi::Types::Cuts&  cuts  )
+    ( const std::string&               name  , 
+      const LHCb::Particle::Container* cont  , 
+      const LoKi::Types::Cuts&         cuts  )
     {
       if ( 0 == cont ) 
       {
-        Error ( "LHCb::Particles* points to null, return empty range!" ) ;
+        Error ( "LHCb::Particle::Container* points to null, return empty range!" ) ;
         return LoKi::Types::Range() ;
       }
       return select ( name , cont->begin() , cont->end() , cuts ) ;
     } 
-    // ========================================================================
     /** 'Select' the particles to be used in local storage
      * 
      *  - particles are selected from the container 
      *
      *  @code
      *
-     *  LoKi::Keeper<LHCb::Particle> particles = ... ;
+     *  const LHCb::Particle::Container* particles = ... ;
      *  Range positive  = select( "positive" , particles , Q >  0.5 );
      *  Range negative  = select( "negative" , particles , Q < -0.5 );
      *
@@ -273,7 +235,7 @@ namespace LoKi
      *  @c positive and @c negative
      *
      *  @see LHCb::Particle
-     *  @see LoKi::Keeper
+     *  @see LHCb::Particles
      *  @see LoKi::Types::Cuts
      *  @see LoKi::Cuts::Q
      *  @param name name/tag assigned to the selected particles
@@ -283,49 +245,17 @@ namespace LoKi
      */
     LoKi::Types::Range 
     select   
-    ( const std::string&        name  , 
-      const LoKi::Keeper<LHCb::Particle>& cont  , 
-      const LoKi::Types::Cuts&  cuts  )
+    ( const std::string&               name  , 
+      const LHCb::Particle::Selection* cont  , 
+      const LoKi::Types::Cuts&         cuts  )
     {
-      return select ( name , cont.begin() , cont.end() , cuts ) ;
-    } 
-    // ========================================================================
-    /** 'Select' the particles to be used in local storage
-     * 
-     *  - particles are selected from the container 
-     *
-     *  @code
-     *
-     *  LoKi::UniqueKeeper<LHCb::Particle> particles = ... ;
-     *  Range positive  = select( "positive" , particles , Q >  0.5 );
-     *  Range negative  = select( "negative" , particles , Q < -0.5 );
-     *
-     *  @endcode
-     *
-     *  - The example illustrates the 'selection'/'filtering from
-     *  container <tt>particles</tt> positive and negative particles 
-     *  - The selected particles
-     *  are stored inside local LoKi storage under the tags @c "positive"
-     *  and @c "negative" and returned as a sequence of particles 
-     *  @c positive and @c negative
-     *
-     *  @see LHCb::Particle
-     *  @see LoKi::UniqueKeeper
-     *  @see LoKi::Types::Cuts
-     *  @see LoKi::Cuts::Q
-     *  @param name name/tag assigned to the selected particles
-     *  @param cont input container of particles 
-     *  @param cuts cut to be applied
-     *  @return selected range of particles
-     */
-    LoKi::Types::Range 
-    select   
-    ( const std::string&        name  , 
-      const LoKi::UniqueKeeper<LHCb::Particle>& cont  , 
-      const LoKi::Types::Cuts&  cuts  )
-    {
-      return select ( name , cont.begin() , cont.end() , cuts ) ;
-    } 
+      if ( 0 == cont ) 
+      {
+        Error ( "LHCb::Particle::Selection* points to null, return empty range!" ) ;
+        return LoKi::Types::Range() ;
+      }
+      return select ( name , cont->begin() , cont->end() , cuts ) ;
+    }
     // ========================================================================
     /** 'Select' the particles to be used in local storage
      * 
@@ -403,21 +333,6 @@ namespace LoKi
      *  @return selected range of vertices
      */
     LoKi::Types::VRange        
-    vselect   
-    ( const std::string&                   name ,
-      const LHCb::VertexBase::Vector&      cont ,
-      const LoKi::Types::VCuts&            cuts ) 
-    {
-      return vselect ( name , cont.begin() , cont.end() , cuts ) ;
-    } 
-    // ========================================================================
-    /** 'Select' the vertices to be used in local storage
-     *  @param name name/tag assigned to the selected vertices
-     *  @param cont container of vertices to be selected
-     *  @param cuts cut to be applied
-     *  @return selected range of vertices
-     */
-    LoKi::Types::VRange        
     vselect    
     ( const std::string&                   name ,
       const LHCb::VertexBase::ConstVector& cont ,
@@ -435,38 +350,8 @@ namespace LoKi
     LoKi::Types::VRange        
     vselect   
     ( const std::string&               name ,
-      const LHCb::Vertex::Vector&      cont ,
-      const LoKi::Types::VCuts&        cuts ) 
-    {
-      return vselect ( name , cont.begin() , cont.end() , cuts ) ;
-    } 
-    // ========================================================================
-    /** 'Select' the vertices to be used in local storage
-     *  @param name name/tag assigned to the selected vertices
-     *  @param cont container of vertices to be selected
-     *  @param cuts cut to be applied
-     *  @return selected range of vertices
-     */
-    LoKi::Types::VRange        
-    vselect   
-    ( const std::string&               name ,
       const LHCb::Vertex::ConstVector& cont ,
       const LoKi::Types::VCuts&        cuts ) 
-    {
-      return vselect ( name , cont.begin() , cont.end() , cuts ) ;
-    } 
-    // ========================================================================
-    /** 'Select' the vertices to be used in local storage
-     *  @param name name/tag assigned to the selected vertices
-     *  @param cont container of vertices to be selected
-     *  @param cuts cut to be applied
-     *  @return selected range of vertices
-     */
-    LoKi::Types::VRange        
-    vselect   
-    ( const std::string&              name ,
-      const LHCb::RecVertex::Vector&  cont ,
-      const LoKi::Types::VCuts&       cuts ) 
     {
       return vselect ( name , cont.begin() , cont.end() , cuts ) ;
     } 
@@ -495,13 +380,73 @@ namespace LoKi
      */
     LoKi::Types::VRange        
     vselect   
-    ( const std::string&        name ,
+    ( const std::string&             name ,
       const LHCb::Vertex::Container* cont ,
-      const LoKi::Types::VCuts& cuts ) 
+      const LoKi::Types::VCuts&      cuts ) 
     {
       if ( 0 == cont ) 
       {
-        Error ( "LHCb::Vertices* points to null, return empty range!" ) ;
+        Error ( "LHCb::Vertex::Container* points to null, return empty range!" ) ;
+        return LoKi::Types::VRange() ;
+      }
+      return vselect ( name , cont->begin() , cont->end() , cuts ) ;
+    } 
+    // ========================================================================
+    /** 'Select' the vertices to be used in local storage
+     *  @param name name/tag assigned to the selected vertices
+     *  @param cont container of vertices to be selected
+     *  @param cuts cut to be applied
+     *  @return selected range of vertices
+     */
+    LoKi::Types::VRange        
+    vselect   
+    ( const std::string&             name ,
+      const LHCb::Vertex::Selection* cont ,
+      const LoKi::Types::VCuts&      cuts ) 
+    {
+      if ( 0 == cont ) 
+      {
+        Error ( "LHCb::Vertex::Selection points to null, return empty range!" ) ;
+        return LoKi::Types::VRange() ;
+      }
+      return vselect ( name , cont->begin() , cont->end() , cuts ) ;
+    } 
+    // ========================================================================
+    /** 'Select' the vertices to be used in local storage
+     *  @param name name/tag assigned to the selected vertices
+     *  @param cont container of vertices to be selected
+     *  @param cuts cut to be applied
+     *  @return selected range of vertices
+     */
+    LoKi::Types::VRange        
+    vselect   
+    ( const std::string&                name ,
+      const LHCb::RecVertex::Container* cont ,
+      const LoKi::Types::VCuts&         cuts ) 
+    {
+      if ( 0 == cont ) 
+      {
+        Error ( "LHCb::RecVertex::Container* points to null, return empty range!" ) ;
+        return LoKi::Types::VRange() ;
+      }
+      return vselect ( name , cont->begin() , cont->end() , cuts ) ;
+    } 
+    // ========================================================================
+    /** 'Select' the vertices to be used in local storage
+     *  @param name name/tag assigned to the selected vertices
+     *  @param cont container of vertices to be selected
+     *  @param cuts cut to be applied
+     *  @return selected range of vertices
+     */
+    LoKi::Types::VRange        
+    vselect   
+    ( const std::string&                name ,
+      const LHCb::RecVertex::Selection* cont ,
+      const LoKi::Types::VCuts&         cuts ) 
+    {
+      if ( 0 == cont ) 
+      {
+        Error ( "LHCb::RecVertex::Selection points to null, return empty range!" ) ;
         return LoKi::Types::VRange() ;
       }
       return vselect ( name , cont->begin() , cont->end() , cuts ) ;

@@ -1,4 +1,4 @@
-// $Id: Algo.cpp,v 1.27 2010-05-14 15:08:54 ibelyaev Exp $
+// $Id: Algo.cpp,v 1.28 2010-06-13 13:43:47 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -161,7 +161,7 @@ LoKi::Algo::vselect
 ( const std::string&         name  ,
   const LoKi::Types::VCuts&  cut   ) 
 {
-  // get all PRIMARY particles from desktop
+  // get all PRIMARY particles from IDValgorithm
   const LHCb::RecVertex::Range prims = this->primaryVertices();
   //
   if ( prims.empty() ) { Warning("No Primary vertices").ignore() ; }
@@ -192,10 +192,14 @@ LoKi::Algo::vselect
     //
     vselect ( name , prims.begin() , prims.end() , cut ) ;
   }
+  //
+  Warning ( "vselect: The extraction of secondary vertices is disabled" , 
+            StatusCode::SUCCESS , 1 ).ignore() ;
+  
   // get all SECONDARY  particles from desktop
-  const LHCb::Vertex::ConstVector&     secs  = desktop()->secondaryVertices();
-  // 
-  return vselect ( name , secs.begin() , secs.end() , cut ) ;
+  // const LHCb::Vertex::ConstVector&     secs  = desktop()->secondaryVertices();
+  // return vselect ( name , secs.begin() , secs.end() , cut ) ;
+  return vselected ( name ) ;
 } 
 // ============================================================================
 // get the proper error reporter 
