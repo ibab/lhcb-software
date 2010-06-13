@@ -1,8 +1,13 @@
-! $Id: release.notes,v 1.553 2010-06-09 17:51:41 ibelyaev Exp $
+! $Id: release.notes,v 1.554 2010-06-13 17:39:10 ibelyaev Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2010-06-13 - Vanya Belyaev
+
+ - PhysDesktop:
+     add the counter for the input particles per location 
 
 ! 2010-06-09 - Vanya Belyaev
 

@@ -1,4 +1,4 @@
-// $Id: PhysDesktop.cpp,v 1.110 2010-06-09 17:51:41 ibelyaev Exp $
+// $Id: PhysDesktop.cpp,v 1.111 2010-06-13 17:39:10 ibelyaev Exp $
 // ============================================================================
 // GaudiKernel
 // ============================================================================
@@ -601,16 +601,26 @@ StatusCode PhysDesktop::getParticles(){
        iloc != m_inputLocations.end(); iloc++ ) {
     // Retrieve the particles:
     const std::string location = (*iloc)+"/Particles";
-    if ( ! exist<LHCb::Particle::Range>( location ) ) { 
-      Info("No particles at location "+location
-              +((rootInTES().size()>0)?(" under "+rootInTES()):"") );
+    if ( ! exist<LHCb::Particle::Range>( location ) ) 
+    { 
+      Info ( "Non-existing location "+(*iloc) + 
+             ( rootInTES().empty() ?  "" : (" under " + rootInTES() ) ) ) ;
       continue ;
     }
     LHCb::Particle::Range parts = get<LHCb::Particle::Range>( location );
-    // Msg number of Particles retrieved
-    if (msgLevel(MSG::VERBOSE)) verbose() << "    Number of Particles retrieved from "
-                                          << location << " = " << parts.size() << endmsg;
     
+    // statistics: 
+    counter ( "# " + (*iloc) ) += parts.size() ;
+    
+    // Msg number of Particles retrieved
+    if (msgLevel(MSG::VERBOSE)) 
+    { 
+      verbose() << "    Number of Particles retrieved from "
+                << location << " = " << parts.size() << endmsg;
+    }
+    
+    m_parts    .reserve ( m_parts    .size () + parts.size() ) ;
+    m_secVerts .reserve ( m_secVerts .size () + parts.size() ) ;
     for( LHCb::Particle::Range::const_iterator icand = parts.begin(); 
          icand != parts.end(); icand++ ) {
       m_parts.push_back(*icand);
@@ -618,17 +628,24 @@ StatusCode PhysDesktop::getParticles(){
       if (endVtx) m_secVerts.push_back(endVtx);
     }
     
-    if (msgLevel(MSG::VERBOSE)) verbose() << "Number of Particles, Veritces after adding "
-                                          << *iloc << " = " << m_parts.size() 
-                                          << ", " << m_secVerts.size() << endmsg;
+    if (msgLevel(MSG::VERBOSE)) 
+    { 
+      verbose() << "Number of Particles, Vertices after adding "
+                << *iloc << " = " << m_parts.size() 
+                << ", " << m_secVerts.size() << endmsg;
+    }
     
     
   }
 
-  if (msgLevel(MSG::VERBOSE)) {
+  if (msgLevel(MSG::VERBOSE)) 
+  {
     verbose() << "    Total number of particles " << m_parts.size() << endmsg;
     verbose() << "    Total number of secondary vertices " << m_secVerts.size() << endmsg;
   }
+  
+  // statistics: 
+  counter ("# input particles" ) += m_parts.size() ; 
   
   return StatusCode::SUCCESS;
 }
@@ -657,19 +674,19 @@ StatusCode PhysDesktop::getInputRelations(std::vector<std::string>::const_iterat
     if (exist<Particle2Vertex::Table>(location)){
       if (msgLevel(MSG::DEBUG)) 
         debug() << "Reading table from " << location << endmsg ;
-      const Particle2Vertex::Table* table = 
-        get<Particle2Vertex::Table>(location);
-      if (0!=table) {
+      const Particle2Vertex::Table* table = get<Particle2Vertex::Table>(location);
+      if ( 0!=table) 
+      {
         const Particle2Vertex::Table::Range all = table->relations();
         overWriteRelations(all.begin(), all.end());
       } else {
         Info("NULL Particle2Vertex::Table* at "+location+" under "+rootInTES());
       }
-
     } else {
-      Info("No relations table exists at "+location+" under "+rootInTES());
+      Info ("No P->PV table at " + location + 
+            ( rootInTES().empty() ? : "" :  (" under "+rootInTES() ) ) ) ;
     }
-
+    
   }
 
   return StatusCode::SUCCESS ; // could be sc
