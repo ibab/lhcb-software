@@ -352,7 +352,7 @@ Access LHCb::StreamDescriptor::connect(const std::string& specs)  {
             proto = "root";
             file  = specs;
           }
-	  else if ( proto == "raw" )   {
+	  else if ( proto == "raw" || proto == "mdf" )  {
             proto = "root";
 	  }
           PosixIO *io = getIOModule(proto);
