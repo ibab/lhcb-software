@@ -85,10 +85,22 @@ print 'using ' + setup
 print 'generating '+ sys.argv[1]
 file = open(sys.argv[1],'w+')
 file.write( """#!/bin/sh
-# pick up the online setup...
-source ./setupOnline.sh $*
+export PARENT=$1
+export PARTNAME=$2
+# remove the args because they interfere with the cmt scripts
+export HOME=/home/$(/usr/bin/whoami)
 # pick up 'our' setup... 
 source %(setup)s
+
+
+echo ${UTGID} Running as $(/usr/bin/whoami) with DIM_DNS_NODE $DIM_DNS_NODE and home $HOME , cmtconfig $CMTCONFIG
+
+export LOGFIFO=/tmp/logGaudi.fifo
+
+# define the task
+export gaudi_exe="$GAUDIONLINEROOT/$CMTCONFIG/Gaudi.exe $GAUDIONLINEROOT/$CMTCONFIG/libGaudiOnline.so OnlineTask -msgsvc=LHCb::FmcMessageSvc"  
+export CLASS1_TASK="${gaudi_exe} -tasktype=LHCb::Class1Task -main=/group/online/dataflow/templates/options/Main.opts"
+
 # pick up partition specific OnlineEnv module
 export PYTHONPATH=/group/online/dataflow/options/${PARTNAME}/HLT:${PYTHONPATH}
 # and go for it!

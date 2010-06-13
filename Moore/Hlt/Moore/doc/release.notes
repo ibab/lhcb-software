@@ -2,6 +2,9 @@ Package     : Hlt/Moore
 Package Coordinator : Gerhard Raven
 Purpose     : LHCb HLT application
 
+! 2010-06-13 - Gerhard Raven, Eric Herwijnen, Markus Frank
+- allow Moore to run in monitoring farm
+
 !========================== Moore v9r2 2010-05-31 ===================
 ! 2010-05-30 - Gerhard Raven
  - change default filter in SendSequence from Hlt1 to HltDecisionSequence
