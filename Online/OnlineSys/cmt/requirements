@@ -6,7 +6,7 @@ branches cmt doc
 #=======================================================
 # Overrides from LHCB
 #=======================================================
-use MDF               v3r23    DAQ
+use MDF               v3r24    DAQ
 use MDF_ROOT          v1r2     DAQ
 use DAQEvent          v9r1     Event
 use GaudiObjDesc      v11r10p1
@@ -24,18 +24,18 @@ use DIM               v19r8p3  Online
 use ExampleGaucho     v3r3     Online
 # Does not work on WIN32
 # use FarmMonitor     v1r0     Online
-use Gaucho            v6r26    Online
+use Gaucho            v6r27    Online
 use GaudiOnline       v2r42    Online
 use GaudiSerialize    v0r7     Online
 use GaudiUPI          v1r12    Online
 #use Hugin            v1r6     Online
 #Obsolete: use HPDMonitor        v1r6     Online
 use HistDBPython      v1r5     Online
-use InsertDB          v1r8     Online
+use InsertDB          v1r9     Online
 use MBMDump           v1r14    Online
 use OMAlib            v2r15    Online
 #Obsolete: use OnlineDummyReader v1r4     Online
-use OnlineHistDB      v6r4     Online
+use OnlineHistDB      v7r0     Online
 use OnlineBase        v1r3     Online
 use OnlineKernel      v2r3     Online
 use OnlineTools       v1r2     Online
@@ -49,7 +49,7 @@ use Trending          v1r0     Online
 use UPI               v1r18    Online
 use UPIR              v1r2     Online
 #Obsolete: use Viewer            v1r5     Online
-use Writer            v1r27    Online
+use Writer            v1r28    Online
 
 # Declare this as a container package
 apply_pattern container_package
