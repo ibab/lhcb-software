@@ -401,36 +401,39 @@ Access LHCb::StreamDescriptor::bind(const std::string& specs)  {
     default:
       getFileConnection(specs, file, proto);
       if ( !proto.empty() )  {
-  result.type = ::toupper(proto[0]); 
-  if ( result.type == 'F' ) {
-    result.ioDesc  = file_open(file.c_str(), O_RDONLY|O_BINARY );
-    result.m_write = file_write;
-    result.m_read  = file_read;
-    result.m_seek  = file_seek;
-  }
-  else {
-    if ( proto == "dcap"   ||   proto == "dcache" || 
-	 proto =="gsidcap" ||   proto == "castor" || 
-	 proto == "rfio"   ||   proto == "gfal"  )
-      {
-	proto = "root";
-	file  = specs;
-      }
-    PosixIO* io = getIOModule(proto);
-    if ( io && io->open && io->close && io->write && io->read && io->lseek64 )  {
-      result.ioFuncs    = io;
-      result.ioDesc     = io->open(file.c_str(), O_RDONLY|O_BINARY, S_IREAD);
-      if ( result.ioDesc == -1 && io->serror )  {
-        //const char* msg = io->serror();
-        //std::cout << "Error connection POSIX IO:" << file << std::endl
-        //          << (char*)(msg ? msg : "Unknown error") << std::endl;
-      }
-      result.m_write    = posix_write;
-      result.m_read     = posix_read;
-      result.m_seek     = posix_seek;
-      return result;
-    }
-        }
+	result.type = ::toupper(proto[0]); 
+	if ( result.type == 'F' ) {
+	  result.ioDesc  = file_open(file.c_str(), O_RDONLY|O_BINARY );
+	  result.m_write = file_write;
+	  result.m_read  = file_read;
+	  result.m_seek  = file_seek;
+	}
+	else {
+	  if ( proto == "dcap"   ||   proto == "dcache" || 
+	       proto =="gsidcap" ||   proto == "castor" || 
+	       proto == "rfio"   ||   proto == "gfal"  )
+	    {
+	      proto = "root";
+	      file  = specs;
+	    }
+	  else if ( proto == "raw" || proto == "mdf" )  {
+	    proto = "root";
+	  }
+	  PosixIO* io = getIOModule(proto);
+	  if ( io && io->open && io->close && io->write && io->read && io->lseek64 )  {
+	    result.ioFuncs    = io;
+	    result.ioDesc     = io->open(file.c_str(), O_RDONLY|O_BINARY, S_IREAD);
+	    if ( result.ioDesc == -1 && io->serror )  {
+	      //const char* msg = io->serror();
+	      //std::cout << "Error connection POSIX IO:" << file << std::endl
+	      //          << (char*)(msg ? msg : "Unknown error") << std::endl;
+	    }
+	    result.m_write    = posix_write;
+	    result.m_read     = posix_read;
+	    result.m_seek     = posix_seek;
+	    return result;
+	  }
+	}
       }
       break;
   }
