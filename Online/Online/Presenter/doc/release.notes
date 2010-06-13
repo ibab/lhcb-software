@@ -4,6 +4,7 @@
 ! Purpose     : GUI to allow the visualization of all data quality histograms
 !-----------------------------------------------------------------------------
 
+!============ Presenter v1r6 2010-06-13 =============
 ! 2010-06-10 G. Graziani
  requiring OnlineHistDB v7 and OMAlib v3
  - improved alarm display (new AlarmDisplay class):
