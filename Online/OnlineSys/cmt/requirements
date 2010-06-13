@@ -25,7 +25,7 @@ use ExampleGaucho     v3r3     Online
 # Does not work on WIN32
 # use FarmMonitor     v1r0     Online
 use Gaucho            v6r27    Online
-use GaudiOnline       v2r42    Online
+use GaudiOnline       v2r43    Online
 use GaudiSerialize    v0r7     Online
 use GaudiUPI          v1r12    Online
 #use Hugin            v1r6     Online
@@ -33,7 +33,7 @@ use GaudiUPI          v1r12    Online
 use HistDBPython      v1r5     Online
 use InsertDB          v1r9     Online
 use MBMDump           v1r14    Online
-use OMAlib            v2r15    Online
+use OMAlib            v3r0     Online
 #Obsolete: use OnlineDummyReader v1r4     Online
 use OnlineHistDB      v7r0     Online
 use OnlineBase        v1r3     Online

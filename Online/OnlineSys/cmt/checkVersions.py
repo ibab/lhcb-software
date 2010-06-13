@@ -63,7 +63,7 @@ for line in lines:
             break
       if line.find('Existing Tags:')>0:
         p = 1
-    pipe = os.popen3('cd '+path+'; cvs diff -r '+version)
+    pipe = os.popen3('cd '+path+'; cvs diff -r HEAD -r '+version)
     diffs = pipe[1].readlines()
     new = pipe[2].readlines()
     changes = 0
