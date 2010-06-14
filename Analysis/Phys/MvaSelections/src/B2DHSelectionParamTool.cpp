@@ -230,7 +230,7 @@ StatusCode B2DHSelectionParamTool::acquireSelectionParams(const LHCb::Particle* 
     }
   
     double afisherProb = evaluateFisherDProb();
-    //info()<<" CurrentfisherProb Value "<<afisherProb<<endmsg;
+    verbose()<<" CurrentfisherProb Value "<<afisherProb<<endmsg;
 
 
   

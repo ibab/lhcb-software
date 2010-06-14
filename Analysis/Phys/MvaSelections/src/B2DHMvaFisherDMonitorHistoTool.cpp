@@ -139,9 +139,10 @@ double B2DHMvaMonitorHistoTool::getBsMassDiffValue(const LHCb::Particles * parts
     // begin test
     int aNum=m_B2DHSelectionParamTool-> get_current_B2DH_channel_Number();
 
+    
     //info()<<"Test Bslocation "<<m_Bs2DsHMvaUtilityTool ->getcurrentBsLocation(aNum)<<endmsg;
 
-    //info()<< "Test Chnum partsBs "<< aNum <<"   "<<partsBs<<endmsg;
+     verbose()<< "Test Chnum partsBs from MvaFisherMonitor "<< aNum <<"   "<<partsBs<<endmsg;
     // info()<< "Test partsBs Size " <<(int) partsBs->size()<<endmsg;
   
     //end test  
