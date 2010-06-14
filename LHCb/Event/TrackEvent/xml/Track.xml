@@ -30,7 +30,7 @@
 
       <location name="CaloCosmicsForward"       place="Calo/Track/Forward"/>
       <location name="CaloCosmicsBackward"      place="Calo/Track/Backward"/>
-
+      <location name="HltImport"       place="Red/Track/HLTImport"/>
 
       <base name='KeyedObject&lt;int&gt;' />
       &KeyedObject;
@@ -74,6 +74,7 @@
         <enumval name = "PatDownstream"  value="17" desc="track produced with the PatDownstream pattern recognition"/>
         <enumval name = "TTGeneric"      value="18" desc="track produced with the TTGenericTracking algorithm"/>
 	<enumval name = "PatVeloPixCheated" value="19" desc="track produced with the CheatedVeloPixPat algorithm"/>
+	<enumval name = "HLTImportedTrack" value="20" desc="track imported from HLT to offline"/>
       </enum>
 
       <enum

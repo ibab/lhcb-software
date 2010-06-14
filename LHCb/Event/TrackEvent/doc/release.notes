@@ -3,6 +3,8 @@
 ! Responsible : M.Needham, W.Hulsbergen
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
+! 2010-06-14 Albert Bursche
+- Added Track History type for Tracks imported from Hlt
 
 ! 2010-06-10 - V. Gligorov
  - Remove obsolete default HLT track locations.
