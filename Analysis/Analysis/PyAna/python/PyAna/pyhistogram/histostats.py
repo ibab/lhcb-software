@@ -40,7 +40,7 @@ def sigma(bins) :
     mu = mean(bins)
     if len(bins) == 0 :
         return 0
-    return sqrt(sum([((b.height*b.centre)-mu)**2 for b in bins])/integral(bins))
+    return sqrt(sum([(b.height*(b.centre-mu)**2) for b in bins])/integral(bins))
 
 def _max(bins) :
     return max([bin.centre + bin.width/2. for bin in bins])
