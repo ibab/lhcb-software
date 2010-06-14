@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2010-06-14 - Olivier Callot
+ - Add a missing #include <ctime> needed for Windows.
+
 ! 2010-06-10 - Olivier Callot
  - Initial release. This package provide a fast and efficient way to store a block
    of information versus time, with threshold for suppressing non-changing values,
