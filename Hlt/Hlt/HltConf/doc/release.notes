@@ -1,11 +1,11 @@
-! $Id: release.notes,v 1.472 2010-06-14 08:27:24 gligorov Exp $ 
+! $Id: release.notes,v 1.473 2010-06-14 08:27:42 gligorov Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
 
-! 2010-06-15 - V. Gligorov
+! 2010-06-14 - V. Gligorov
  - Modify some of the recently added routing bits and add a few
    more.
 
