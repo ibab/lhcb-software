@@ -4,6 +4,9 @@
 ! Purpose     : Package for general utility algorithms
 !-----------------------------------------------------------------------------
 
+!2010-06-14 - Albert Bursche
+ - added HltTrackConverter (still needs testing)
+
 ! 2010-06-10 - V. Gligorov
  - Remove obsolete default HLT track locations. 
 

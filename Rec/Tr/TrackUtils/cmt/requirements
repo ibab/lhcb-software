@@ -26,6 +26,7 @@ use   PartProp           v*    Kernel
 use   STDet              v*    Det
 use   OTDet              v*    Det
 use   CaloDet            v*    Det
+use   HltInterfaces	 v*    Kernel    
 
 include_path      none
 #============================================================================
