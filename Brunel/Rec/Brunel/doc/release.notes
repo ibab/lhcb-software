@@ -22,6 +22,9 @@ Purpose: LHCb reconstruction program
   . Use OT dead strip list in expected hit calculation (TsaAlgorithms)
   . Added LumiLowCount FSR (LumiAlgs)
   . Added 2D histograms (hit-hot) to OTHitEfficiencyMonitor (TrackMonitors)
+  . New histograms in TrackVertexMonitor and TrackVeloOverlapMonitor 
+    (TrackMonitors)
+  . Less verbosity in CondDBEntityResolver (CondDBEntityResolver)
 
 </PRE><H1><A NAME=v37r3>2010-05-26 Brunel v37r3</A></H1><PRE>
  - Changes to references to reflect changes in Brunel v37r3 output:
