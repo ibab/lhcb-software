@@ -317,9 +317,11 @@ void MessagePresenter::UpdateView(){
     ++i;
   }
   fListBox816->Select(savepos);
-  fListBox816->Resize(220,650);
+  // NM: changed.
+  fListBox816->Resize(320,650);
   fMainFrame1933->AddFrame(fListBox816, new TGLayoutHints(kLHintsLeft | kLHintsTop,2,2,2,2));
-  fListBox816->MoveResize(5,24,220,650);
+  // NM: changed.
+  fListBox816->MoveResize(5,24,320,650);
 
 }
 
@@ -778,24 +780,25 @@ void MessagePresenter::Layout(){
   int fWidth =  fMainFrame1933->GetWidth();
   int fHeight =  fMainFrame1933->GetHeight();
   // std::cout<< "Size changed to "<<fWidth<<" "<<fHeight<<endl;
-  int leftwidth = 220 ;
+  int leftwidth = 320 ;
   if (fWidth<440)
     leftwidth = fWidth/2;
-  fTextButton514->MoveResize(5,2,55,17);
-  fTextButton659->MoveResize(75,2,72,17);
-  fTextButton699->MoveResize(145,2,42,17);
+  fTextButton514->MoveResize(5,2,65,17);
+  fTextButton659->MoveResize(75,2,95,17);
+  fTextButton699->MoveResize(170,2,55,17);
 
-  fstopped->MoveResize(500,2,90,17);
+  fstopped->MoveResize(540,2,90,17);
 
-  fTextButton515->MoveResize(400,2,90,20);
-  fTextButtonDump->MoveResize(600,2,90,20);
-  fLabel746->MoveResize(200,2,60,20);
-  fNumberEntry670->MoveResize(260,2,120,20);
+  fTextButton515->MoveResize(445,2,90,20);
+  fTextButtonDump->MoveResize(645,2,90,20);
+  fLabel746->MoveResize(235,2,70,20);
+  fNumberEntry670->MoveResize(315,2,120,20);
 
-
+  // NM: These are the key lines to enlarge the windows:
   fListBox816->MoveResize(5,24,leftwidth,fHeight-24-24);
   fListBox863->MoveResize(leftwidth+10,24,fWidth-leftwidth-15,fHeight-24-24);
   fStatusBar528->MoveResize(0,fHeight-24,fWidth,24);
+
   // UpdateView();
   // UpdateRight();
 
@@ -829,7 +832,7 @@ void MessagePresenter::display(){
   //=====================================
   
   TGFont *ufont;         // will reflect user font changes
-  ufont = gClient->GetFont("-adobe-helvetica-medium-r-*-*-12-*-*-*-*-*-iso8859-1");
+  ufont = gClient->GetFont("-adobe-helvetica-bold-r-*-*-14-*-*-*-*-*-iso8859-1");
   TGGC   *uGC;           // will reflect user GC changes
   // graphics context changes
 
@@ -843,24 +846,25 @@ void MessagePresenter::display(){
   uGC = gClient->GetGC(&valStopped, kTRUE);
   // 
 
+  // NM: don't bother to set the layout here since it's set again lather in the function Layout.
   fTextButton515 = new TGTextButton(fMainFrame1933,"Clear all",-1,uGC->GetGC(),ufont->GetFontStruct());
   fTextButton515->SetTextJustify(36);
   fTextButton515->Resize(90,24);
   fTextButton515->SetToolTipText("Remove all entries from the list");
   fMainFrame1933->AddFrame(fTextButton515, new TGLayoutHints(kLHintsLeft | kLHintsTop,2,2,2,2));
-
   fTextButton515->MoveResize(400,2,90,20);
+
   fTextButtonDump = new TGTextButton(fMainFrame1933,"Print Msg",-1,uGC->GetGC(),ufont->GetFontStruct());
   fTextButtonDump->SetTextJustify(36);
   fTextButtonDump->Resize(90,24);
-  fTextButtonDump->SetToolTipText("Remove all entries from the list");
+  fTextButtonDump->SetToolTipText("Save the message text");
   fMainFrame1933->AddFrame(fTextButtonDump, new TGLayoutHints(kLHintsLeft | kLHintsTop,2,2,2,2));
   fTextButtonDump->MoveResize(600,2,90,20);
 
   fNumberEntry670=new TGNumberEntry(fMainFrame1933, (Double_t) 0,14,-1,(TGNumberFormat::EStyle) 0,(TGNumberFormat::EAttribute) 1);
   fMainFrame1933->AddFrame(fNumberEntry670, new TGLayoutHints(kLHintsLeft | kLHintsTop,2,2,2,2));
   fNumberEntry670->MoveResize(260,2,120,20);
-  fNumberEntry670->SetNumber(50);
+  fNumberEntry670->SetNumber(5000);
   fLabel746 = new TGLabel(fMainFrame1933,"Max lines",uGC->GetGC(),ufont->GetFontStruct());
   fLabel746->SetTextJustify(36);
   fMainFrame1933->AddFrame(fLabel746, new TGLayoutHints(kLHintsLeft | kLHintsTop,2,2,2,2));
@@ -875,29 +879,32 @@ void MessagePresenter::display(){
   fMainFrame1933->AddFrame(fstopped, new TGLayoutHints(kLHintsLeft | kLHintsTop,2,2,2,2));
   fstopped->MoveResize(400,0,55,17);
   
-  fTextButton659 = new TGCheckButton(fMainFrame1933,"warnings",-1,uGC->GetGC(),ufont->GetFontStruct());
+  fTextButton659 = new TGCheckButton(fMainFrame1933,"Warnings",-1,uGC->GetGC(),ufont->GetFontStruct());
   fMainFrame1933->AddFrame(fTextButton659, new TGLayoutHints(kLHintsLeft | kLHintsTop,2,2,2,2));
   fTextButton659->MoveResize(75,0,72,17);
   
-  fTextButton699 = new TGCheckButton(fMainFrame1933,"info",-1,uGC->GetGC(),ufont->GetFontStruct());
+  fTextButton699 = new TGCheckButton(fMainFrame1933,"Info",-1,uGC->GetGC(),ufont->GetFontStruct());
   fMainFrame1933->AddFrame(fTextButton699, new TGLayoutHints(kLHintsLeft | kLHintsTop,2,2,2,2));
   fTextButton699->MoveResize(145,0,42,17);
 
   //========================================================================================================
   // list box
   
+  // NM: Left list box (algorithms names).
   fListBox816 = new TGListBox(fMainFrame1933,-1,kSunkenFrame);
   fListBox816->AddEntry("Hello",0);
   fMainFrame1933->AddFrame(fListBox816, new TGLayoutHints(kLHintsLeft | kLHintsTop,2,2,2,2));
 
-  fListBox816->MoveResize(5,24,220,650);
+  //NM: void MoveResize(Int_t x, Int_t y, UInt_t w, UInt_t h)
+  fListBox816->MoveResize(5,24,320,650); 
 
 
 
   // list box
+  // NM: Right list box (massages bodies).
   fListBox863 = new TGListBox(fMainFrame1933,-1,kSunkenFrame);
   fMainFrame1933->AddFrame(fListBox863, new TGLayoutHints(kLHintsNormal));
-  fListBox863->MoveResize(230,24,665,650);
+  fListBox863->MoveResize(330,24,565,650);
 
   fStatusBar528 = new TGStatusBar(fMainFrame1933,700-24,24);
 

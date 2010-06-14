@@ -4,6 +4,13 @@
 ! Purpose     : Package for the CAMERA application and supporting files.
 !-----------------------------------------------------------------------------
 
+=============== v1r18 ===============
+
+! 2010-06-14 - Nicola Mangiafave
+- /src/MessagePresenter.C: Change Gui windows size and layout.
+- /cmt/requirements: Changed version to v1r18.
+
+=============== v1r17 ===============
 
 ! 2010-06-02 - Nicola Mangiafave
 - /cmt/requirements: changed version to v1r17.
