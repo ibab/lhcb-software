@@ -1,4 +1,4 @@
-# $Id: StrippingDiMuon.py,v 1.6 2010-05-19 13:51:24 asarti Exp $
+# $Id: StrippingDiMuon.py,v 1.7 2010-06-14 10:16:15 albrecht Exp $
 ## #####################################################################
 # A stripping selection for inclusive J/psi(1S) -> mu+ mu- decays
 #
@@ -19,7 +19,7 @@ class StrippingDiMuonConf(LHCbConfigurableUser):
     __slots__ = {
 			"MuonPT":		500.	# MeV
 		,	"MuonPTLoose":		500.	# MeV
-		,	"MuonTRCHI2":		3.	# adimensional
+		,	"MuonTRCHI2":		10.	# adimensional
 		,	"MuonTRCHI2Loose":	10.	# adimensional
 		,	"JpsiAM":		2500.	# MeV
 		,	"JpsiAMLoose":		2500.	# MeV
