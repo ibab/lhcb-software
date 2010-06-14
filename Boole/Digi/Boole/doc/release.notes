@@ -8,6 +8,7 @@ Purpose: LHCb Digitization program
      STRndmChannelIDSelector to kill clusters (STTools)
    . New ST cluster monitoring histograms (STMonitors)
    . Changed calculation of effect of Lorentz angle (STTools)
+   . Reduced verbosity of CondDBEntityResolver (CondDBEntityResolver)
 
  - Changes to example options:
    . Access all castor files via xrootd protocol
