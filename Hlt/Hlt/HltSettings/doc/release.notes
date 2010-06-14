@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2010-06-15 - V. Gligorov
+ - Update topo/phi settings in preparation for Hlt2 rejection mode running.
+
 !========================== HltSettings v2r0p4 2010-06-09 ===================
 ! 2010-06-03 - Gerhard Raven
  - even more changes to Jun10 configurations, according to https://savannah.cern.ch/task/index.php?15819

@@ -35,8 +35,8 @@ class DefaultHlt2Lines :
 ##
 ## phi : whole list
 ##
-        from Phi_Nominal import PhiHigh_Nominal
-        list.extend( PhiHigh_Nominal().ActiveHlt2Lines() )
+        from Phi_Reduction5 import Phi_HadronReduction5
+        list.extend( Phi_HadronReduction5().ActiveHlt2Lines() )
 ##
 ## B 2DX
 ##
@@ -66,4 +66,7 @@ class DefaultHlt2Lines :
         from DiMuonLines import DiMuonLines
         thresholds.update( DiMuonLines().Thresholds())
 
+        from Phi_Reduction5 import Phi_HadronReduction5
+        thresholds.update(Phi_HadronReduction5().Thresholds())
+ 
         return thresholds
