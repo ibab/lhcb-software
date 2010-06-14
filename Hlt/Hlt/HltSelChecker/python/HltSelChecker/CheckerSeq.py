@@ -1,4 +1,4 @@
-## @file $Id: CheckerSeq.py,v 1.6 2010-05-18 11:48:45 pkoppenb Exp $
+## @file $Id: CheckerSeq.py,v 1.7 2010-06-14 23:05:06 gligorov Exp $
 #
 #  Create Hlt Checking sequence
 #
@@ -8,7 +8,7 @@
 ##
 # =============================================================================
 __author__  = "P. Koppenburg Patrick.Koppenburg@cern.ch"
-__version__ = "CVS Tag $Id: CheckerSeq.py,v 1.6 2010-05-18 11:48:45 pkoppenb Exp $, $Revision: 1.6 $"
+__version__ = "CVS Tag $Id: CheckerSeq.py,v 1.7 2010-06-14 23:05:06 gligorov Exp $, $Revision: 1.7 $"
 # =============================================================================
 ###############################################################################
 #
@@ -25,6 +25,7 @@ class CheckerSeq :
                  DV       = None,
                  Signal   ='Undefined',
                  Decay    ='',
+                 Simulation = 'True',
                  Input    =[],
                  DataType ='MC09'):
         """
@@ -35,6 +36,7 @@ class CheckerSeq :
         self._Decay = Decay
         self._Input = Input
         self._DataType = DataType
+        self._Simulation = Simulation
 
 ###############################################################################
     def configureDV(self,seq):
@@ -42,14 +44,13 @@ class CheckerSeq :
         DaVinci settings
         """
         DV = self._DV
-        DV.EvtMax = 1000 
+        DV.EvtMax = -1 
         DV.Hlt = True
-        DV.Hlt2Requires = 'L0+Hlt1'
         DV.DataType = self._DataType
         if ( self._DataType == 'MC09' ):
             DV.CondDBtag = 'MC09-20100430-vc-md100'
         DV.ReplaceL0BanksWithEmulated = True 
-        DV.Simulation = True
+        DV.Simulation = self._Simulation
         DV.TupleFile = "HLT-"+self._Signal+".root"
         DV.HistogramFile = "DVHlt2-"+self._Signal+".root"
         DV.MoniSequence += [ seq ]
@@ -64,7 +65,7 @@ class CheckerSeq :
         seq.Context = "HLT"
         seq.IgnoreFilterPassed = True
 
-        if (self._Decay):
+        if (self._Decay and self._Simulation):
             ftt = self.trueTracks(self._Decay)
             seq.Members.append(ftt)
             seq.Members.append( self.correlations( [ ftt.name() ] ))
@@ -80,9 +81,9 @@ class CheckerSeq :
         """
         from Configurables import EventTuple, TupleToolGeneration, TupleToolTrigger
         tuple = EventTuple("TriggerTuple")
-        tuple.ToolList = [ "TupleToolEventInfo",   #  "TupleToolGeneration",
-                           "TupleToolTrigger", "MCTupleToolEventType",
-                           "TupleToolTriggerRecoStats" ]
+        toolList = [ "TupleToolEventInfo", "TupleToolTrigger", "TupleToolTriggerRecoStats"]
+        if (self._Simulation) : toolList += ["MCTupleToolEventType"]
+        tuple.ToolList = toolList 
         tuple.addTool( TupleToolTrigger )
         tuple.TupleToolTrigger.VerboseHlt1 = True
         tuple.TupleToolTrigger.VerboseHlt2 = True
