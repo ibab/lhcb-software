@@ -69,13 +69,11 @@
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
                                                    Welcome to Brunel version v37r3
-                                          running on volhcb27.cern.ch on Thu Jun 10 12:56:34 2010
+                                          running on volhcb27.cern.ch on Mon Jun 14 09:51:33 2010
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 StatusCodeSvc        INFO initialize
 DetectorPersist...   INFO  'CnvServices':[ 'XmlCnvSvc/XmlCnvSvc' ]
-ToolSvc.CondDBE...   INFO Initializing...
-ToolSvc.CondDBE...   INFO Successfully initialized.
 DetectorPersist...   INFO Added successfully Conversion service:XmlCnvSvc
 DetectorDataSvc   SUCCESS Detector description database: conddb:/lhcb.xml
 RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
@@ -683,7 +681,7 @@ MuonTrackFitter   SUCCESS Number of counters : 1
 MuonTrackAligMo...SUCCESS Booked 42 Histogram(s) : 1D=22 2D=2 1DProf=18
 VeloClusterMonitorSUCCESS Booked 14 Histogram(s) : 1D=11 2D=3
 VeloTrackMonitor  SUCCESS Booked 112 Histogram(s) : 1D=19 1DProf=93
-TrackVertexMonitorSUCCESS Booked 12 Histogram(s) : 1D=6 1DProf=6
+TrackVertexMonitorSUCCESS Booked 21 Histogram(s) : 1D=11 1DProf=10
 TrackFitMatchMo...SUCCESS Booked 6 Histogram(s) : 1D=4 1DProf=2
 TrackAlignMonitor    INFO Number of elements in jacobian map: 0
 TrackAlignMonitor SUCCESS Booked 27 Histogram(s) : 1D=18 1DProf=9
