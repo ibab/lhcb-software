@@ -18,7 +18,7 @@ sc = StrippingConf( Streams = allStreams )
 dstWriter = SelDSTWriter("MyDSTWriter",
 	SelectionSequences = sc.activeStreams(),
         OutputPrefix = 'Strip',
-	OutputFileSuffix = 'MagDown'
+	OutputFileSuffix = '000000'
         )
 
 DaVinci().EvtMax = 10                        # Number of events
