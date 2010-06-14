@@ -3,6 +3,8 @@
 ! Responsible : Sajan EASO
 ! Purpose     : Selection of events using multivariate methods
 !-----------------------------------------------------------------------------
+!2010-06-14 - Sajan Easo
+  Removed all the CVS subdir since it is now in SVN.
 !2010-06-10- Sajan Easo
   - Modified to include the Bs2DsPi as well. The weights files
     are added for the DC06 and MC09 datafiles.
