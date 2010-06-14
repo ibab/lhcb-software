@@ -1,4 +1,4 @@
-// $Id: HltVertexReportsDecoder.cpp,v 1.4 2010-03-03 03:56:04 tskwarni Exp $
+// $Id: HltVertexReportsDecoder.cpp,v 1.5 2010-06-14 13:38:00 tskwarni Exp $
 // Include files 
 
 // from Gaudi
@@ -208,7 +208,7 @@ StatusCode HltVertexReportsDecoder::finalize() {
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
 
-float HltVertexReportsDecoder::doubleFromInt(unsigned int i)
+double HltVertexReportsDecoder::doubleFromInt(unsigned int i)
 {
         union IntFloat { unsigned int mInt; float mFloat; };
         IntFloat a; a.mInt=i;

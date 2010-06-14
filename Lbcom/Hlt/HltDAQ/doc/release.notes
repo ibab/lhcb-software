@@ -4,6 +4,9 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !-----------------------------------------------------------------------------
 
+! 2010-06-14 - Tomasz Skwarnicki
+ - cosmetic change in HltVertexReportsDecoder to avoid windows compiler warnings
+
 ! 2010-06-10 - Marco Cattaneo
  - Fix windows compiler warnings
 

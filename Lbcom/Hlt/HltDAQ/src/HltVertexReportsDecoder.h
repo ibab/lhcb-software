@@ -1,4 +1,4 @@
-// $Id: HltVertexReportsDecoder.h,v 1.2 2009-11-26 13:06:07 tskwarni Exp $
+// $Id: HltVertexReportsDecoder.h,v 1.3 2010-06-14 13:38:00 tskwarni Exp $
 #ifndef HLTVERTEXREPORTSDECODER_H 
 #define HLTVERTEXREPORTSDECODER_H 1
 
@@ -34,7 +34,7 @@ public:
   virtual StatusCode execute   ();    ///< Algorithm execution
   virtual StatusCode finalize  ();    ///< Algorithm finalization
 
-  static float doubleFromInt(unsigned int i);
+  static double doubleFromInt(unsigned int i);
 
 protected:
 
