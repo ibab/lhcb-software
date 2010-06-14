@@ -4,6 +4,11 @@
 ! Purpose     : QMTests for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2010-06-14 - Juan Palacios
+ - Rename output file in options after the main ones, trying to replicate
+   production extra-options structure.
+ - Increase to v1r1.
+
 !============================== DaVinciTests v1r0 2010-06-13 =================
 
 ! 2010-06-11 - Rob Lambert
