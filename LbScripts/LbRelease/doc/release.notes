@@ -1,3 +1,8 @@
+2010-06-14  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* scripts/buildLCGTar: New file.
+	* python/LbRelease/TarBall.py: prepared dummy function and script for the LCG tarball packaging.
+
 2010-06-14  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* python/LbRelease/LHCbDoc.py: Use SVG to display the graph of dependencies.

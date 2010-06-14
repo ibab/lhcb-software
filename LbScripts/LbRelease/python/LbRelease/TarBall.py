@@ -582,5 +582,40 @@ def checkTar(project, version=None, cmtconfig=None, input_dir=None,
         good = False
     return good
 
-if __name__ == '__main__':
-    pass
+
+#=========================================================================
+
+
+def buildLCGTar(project, version=None, cmtconfig=None, 
+             top_dir=None, output_dir=None, 
+             overwrite=False, update=False,
+             md5=True, html=True):
+    log = logging.getLogger()
+    status = 0
+    if Project.isProject(project) :
+        log.debug("%s is a software project" % project)
+        prj_conf = Project.getProject(project)
+        if not top_dir :
+            top_dir = prj_conf.ReleaseArea()
+        if not output_dir :
+            output_dir = prj_conf.TarBallDir()
+        if not version :
+            pattern = "%s_*" % prj_conf.NAME()
+            maindir = os.path.join(top_dir, prj_conf.NAME())
+            version = str(Version.getVersionsFromDir(maindir, pattern, reverse=True)[0])
+            log.debug("Guessed version for %s is %s" % (prj_conf.Name(), version))
+        if not cmtconfig :
+            cmtconfig = Platform.binary_list
+        for c in cmtconfig :
+            status = generateTar(project, version, c, top_dir, output_dir, 
+                                 overwrite, update, md5, html)
+            if status == 1 :
+                return status
+    elif Package.isPackage(project) :
+        log.debug("%s is a data package" % project)
+        status = generateDataTar(project, version, top_dir, output_dir, overwrite, md5, html)
+    else :
+        log.fatal("%s is neither a software project nor a data package")
+        status = 1
+    return status
+

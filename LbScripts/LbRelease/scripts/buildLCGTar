@@ -1,0 +1,88 @@
+#!/usr/bin/env python
+# $Id: buildTar,v 1.5 2010-03-29 14:14:32 hmdegaud Exp $
+""" Script to generate the LCG tarballs """
+
+from LbRelease.TarBall import buildLCGTar
+from LbUtils.Script import Script
+from LbUtils.CVS import CVS2Version
+
+import logging
+import sys
+import os
+
+__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.5 $")
+
+
+    
+class BuildLCGTarScript(Script):
+    _version = __version__    
+    _description = __doc__
+    def defineOpts(self):
+        parser = self.parser
+        parser.set_defaults(output_dir=None)
+        parser.add_option("-o", "--output-dir",
+                          help = "define the output directory for the created tarballs" \
+                          "[default: the LHCBTAR directory for the project]")
+        parser.set_defaults(exclude=[])
+        parser.add_option("-e", "--exclude",
+                          action = "append",
+                          help = "add exclude glob pattern to the file/dir paths")
+        parser.set_defaults(top_dir=None)
+        parser.add_option("-t","--top-dir",
+                          help = "define the top directory of the path to be tarballed." \
+                          "[default: the release directory of the project]")
+        parser.set_defaults(overwrite=False)
+        parser.add_option("--overwrite",
+                          action = "store_true",
+                          help = "remove the tarball before attempting to create it [default: %default]")
+        parser.set_defaults(update=False)
+        parser.add_option("-u","--update",
+                          action = "store_true",
+                          help = "update the tarball instead of creating it [default: %default]")
+        parser.set_defaults(md5=True)
+        parser.add_option("--md5",
+                          action = "store_true",
+                          help = "Create the md5 sum file for each tarball [default: %default]")
+        parser.add_option("--no-md5",
+                          dest = "md5",
+                          action = "store_false",
+                          help = "Prevent the creation of the md5 sum file")
+        parser.set_defaults(html=True)
+        parser.add_option("--html",
+                          action = "store_true",
+                          help = "Create the html dependency file for each tarball [default: %default]")
+        parser.add_option("--no-html",
+                          dest = "html",
+                          action = "store_false",
+                          help = "Prevent the creation of the html dependency file")
+        
+        parser.set_defaults(cmtconfig=[])
+        parser.add_option("-c", "--cmtconfig",
+                           action = "append",
+                           help = "add cmtconfig the list of target tarballs [default: all supported cmtconfigs are tried]")
+
+    def main(self):
+        log = logging.getLogger()
+        args = self.args
+        opts = self.options
+        version = None
+        if len(args) < 1 :
+            log.error("Not enough arguments")
+            sys.exit(1)
+        else :
+            project   = args[0]
+            if len(args) > 1 :
+                version   = args[1]
+        if opts.output_dir :
+            opts.output_dir = os.path.realpath(opts.output_dir)
+
+        status = buildLCGTar(project, version, opts.cmtconfig, 
+                          opts.top_dir, opts.output_dir, 
+                          opts.overwrite, opts.update,
+                          opts.md5, opts.html)
+        
+        return status
+
+if __name__ == '__main__':
+    s = BuildLCGTarScript(usage="%prog [options] project version cmtconfig")
+    sys.exit(s.run())
