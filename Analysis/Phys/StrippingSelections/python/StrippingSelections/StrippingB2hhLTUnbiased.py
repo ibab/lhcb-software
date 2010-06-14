@@ -1,6 +1,6 @@
 __author__ = 'Ulrich Kerzel'
 __date__ = '03/06/2010'
-__version__ = '$Revision: 1.1 $'
+__version__ = '$Revision: 1.2 $'
 
 """
 B->hh selection, unbiased lifetime
@@ -44,7 +44,7 @@ class StrippingB2hhLTUnbiasedConf(LHCbConfigurableUser):
         #StripB2hhLTUnbiasedLoose.ReFitPVs        = True
         #StripB2hhLTUnbiased.OutputLevel    =   1
         StripB2hhLTUnbiasedLoose.DecayDescriptor = "B_s0 -> K+ K-"
-        StripB2hhLTUnbiasedLoose.DaughtersCuts   = { "K+" : "ISLONG & (TRCHI2DOF < %(TrackChi2)s) & (PT > %(DaughterPtMinLoose)s *GeV) & (PIDK > %(DaughterPIDKMinLoose)s) & (~ISMUON)"% self.getProps() }
+        StripB2hhLTUnbiasedLoose.DaughtersCuts   = { "K+" : "ISLONG & (TRCHI2DOF < %(TrackChi2)s) & (PT > %(DaughterPtMinLoose)s *GeV) & (PIDK > %(DaughterPIDKMinLoose)s)"% self.getProps() }
         StripB2hhLTUnbiasedLoose.CombinationCut  = "((AM > %(BMassMinLoose)s *GeV) & (AM < %(BMassMaxLoose)s *GeV) & (AMAXDOCA('LoKi::DistanceCalculator') < %(DOCALoose)s))" % self.getProps()
         StripB2hhLTUnbiasedLoose.MotherCut       = "(VFASPF(VCHI2/VDOF) < %(VertexChi2)s) & (MAXTREE(('K+'==ABSID) ,PT) > %(DaughterPtMaxLoose)s*GeV) & (MAXTREE(('K+'==ABSID) , PIDK) > %(DaughterPIDKMaxLoose)s )" % self.getProps()
         
@@ -65,14 +65,36 @@ class StrippingB2hhLTUnbiasedConf(LHCbConfigurableUser):
         #StripB2hhLTUnbiased.ReFitPVs        = True
         #StripB2hhLTUnbiased.OutputLevel    =   1
         StripB2hhLTUnbiased.DecayDescriptor = "B_s0 -> K+ K-"
-        StripB2hhLTUnbiased.DaughtersCuts   = { "K+" : "ISLONG & (TRCHI2DOF < %(TrackChi2)s) & (PT > %(DaughterPtMin)s *GeV) & (PIDK > %(DaughterPIDKMin)s) & (~ISMUON)"% self.getProps() }
+        StripB2hhLTUnbiased.DaughtersCuts   = { "K+" : "ISLONG & (TRCHI2DOF < %(TrackChi2)s) & (PT > %(DaughterPtMin)s *GeV) & (PIDK > %(DaughterPIDKMin)s)"% self.getProps() }
         StripB2hhLTUnbiased.CombinationCut  = "((AM > %(BMassMin)s *GeV) & (AM < %(BMassMax)s *GeV) & (AMAXDOCA('LoKi::DistanceCalculator') < %(DOCA)s))" % self.getProps()
         StripB2hhLTUnbiased.MotherCut       = "(VFASPF(VCHI2/VDOF) < %(VertexChi2)s) & (MAXTREE(('K+'==ABSID) ,PT) > %(DaughterPtMax)s*GeV) & (MAXTREE(('K+'==ABSID) , PIDK) > %(DaughterPIDKMax)s )" % self.getProps()
         
 
         StripB2hhLTUnbiased.InputLocations = [ 'Phys/StdNoPIDsKaons' ]
-        return StrippingLine('B2hhLTUnbiased', prescale = 1, algos = [ StripB2hhLTUnbiased] )    
-    
+        return StrippingLine('B2hhLTUnbiased', prescale = 1, algos = [ StripB2hhLTUnbiased] )
+
+    #
+    # with Trigger
+    #
+    def StripB2hhLTUnbiasedTrigger( self ) :
+        from StrippingConf.StrippingLine import StrippingLine, StrippingMember
+        from Configurables import FilterDesktop, CombineParticles
+        import GaudiKernel.SystemOfUnits as Units
+
+        StripB2hhLTUnbiasedTrigger                 = CombineParticles("StripB2hhLTUnbiasedTrigger")
+        #StripB2hhLTUnbiasedTrigger.ReFitPVs        = True
+        #StripB2hhLTUnbiased.OutputLevel    =   1
+        StripB2hhLTUnbiasedTrigger.DecayDescriptor = "B_s0 -> K+ K-"
+        StripB2hhLTUnbiasedTrigger.DaughtersCuts   = { "K+" : "ISLONG" }
+        StripB2hhLTUnbiasedTrigger.CombinationCut  = "((AM > %(BMassMinLoose)s *GeV) & (AM < %(BMassMaxLoose)s *GeV))" % self.getProps()
+        StripB2hhLTUnbiasedTrigger.MotherCut       = "(VFASPF(VCHI2/VDOF) < %(VertexChi2)s)" % self.getProps()
+        
+
+        StripB2hhLTUnbiasedTrigger.InputLocations = [ 'Phys/StdNoPIDsKaons' ]
+        return StrippingLine('B2hhLTUnbiasedTrigger',
+                             prescale = 1,
+                             HLT = "HLT_PASS_RE('Hlt1DiHadronLTUnbiasedDecision')" ,
+                             algos = [ StripB2hhLTUnbiasedTrigger ] )    
 
     def getProps(self) :
         """
