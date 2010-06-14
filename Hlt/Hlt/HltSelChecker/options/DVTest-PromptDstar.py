@@ -11,8 +11,10 @@ from HltSelChecker.CheckerSeq import *
 #--------------------------------------------------------------
 CS = CheckerSeq( DV=DaVinci()
                , Signal="PromptDstar"
+               , DataType = '2010'
+               , Simulation = False 
                , Decay = "{[D*(2010)+ -> (D0 -> ^K- ^pi+ {,gamma}{,gamma}{,gamma}) ^pi+  {,gamma}{,gamma}]cc, [D*(2010)+ -> (D0 -> ^K+ ^pi- {,gamma}{,gamma}{,gamma}) ^pi+  {,gamma}{,gamma}]cc, [D*(2010)+ -> (D0 -> ^pi+ ^pi- {,gamma}{,gamma}{,gamma}) ^pi+  {,gamma}{,gamma}]cc, [D*(2010)+ -> (D0 -> ^K+ ^K- {,gamma}{,gamma}{,gamma}) ^pi+  {,gamma}{,gamma}]cc}"
-               # Funai Xing, https://twiki.cern.ch/twiki/bin/view/LHCb/NewCpOfflineSelected
-               , Input = [ "DATAFILE='PFN:castor:/castor/cern.ch/user/p/pxing/DST/DST_promptDstar2D0hhPiMC09.dst' TYP='POOL_ROOTTREE' OPT='READ'" ])
+               # Patrick Spradlin, http://www-pnp.physics.ox.ac.uk/~spradlin/CharmPeaks/D02HH/Spradlin/index.html
+               , Input = [ "DATAFILE='PFN:castor:/castor/cern.ch/user/g/gligorov/OfflineDSTsForTriggerOptimization/RealData/D02HH-Spradlin-Big-MagUp.dst' TYP='POOL_ROOTTREE' OPT='READ'","DATAFILE='PFN:castor:/castor/cern.ch/user/g/gligorov/OfflineDSTsForTriggerOptimization/RealData/Dstar-MagDown-8645427.dst' TYP='POOL_ROOTTREE' OPT='READ'" ])
 CS.configure()
 
