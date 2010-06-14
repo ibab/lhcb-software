@@ -170,5 +170,6 @@ private:
   int m_mintrks;
 
   std::string m_forwardTracks;
+  std::string m_veloTracks;
 };
 #endif // Hlt2DisplVerticesDEV_H

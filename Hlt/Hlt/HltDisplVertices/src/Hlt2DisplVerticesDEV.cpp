@@ -77,6 +77,7 @@ Hlt2DisplVerticesDEV::Hlt2DisplVerticesDEV(const std::string& name,
   declareProperty("BeamLineInitDir", m_BLInitDir );
   declareProperty("BeamLineCycle", m_cycle = 1000 );
   declareProperty("ForwardTracks", m_forwardTracks = "");
+  declareProperty("VeloTracks", m_veloTracks = "");
 }
 
 //=============================================================================
@@ -765,7 +766,7 @@ StatusCode Hlt2DisplVerticesDEV::fillHeader( Tuple & tuple ){
 
 void Hlt2DisplVerticesDEV::PrintTracksType(){
 
-  Tracks* VeloTrks = get<Tracks>(TrackLocation::HltVelo);
+  Tracks* VeloTrks = get<Tracks>(m_veloTracks);
   Tracks* ForwardTrks = get<Tracks>(m_forwardTracks);
 
   debug()<<"Printing Velo Track content, size "<< VeloTrks->size() <<endmsg;
