@@ -20,7 +20,7 @@ for arg in sys.argv:
 
 
 lines = os.popen('cmt show uses | grep -v "#" | grep "use "').readlines()
-curr_dir = os.popen('pwd').readlines()[0] ###os.getcwd()
+curr_dir = os.popen('pwd').readlines()[0][:-1] ###os.getcwd()
 
 dir2 = curr_dir[0:curr_dir.rfind('/')]
 if with_versions: dir2 = dir2[0:dir2.rfind('/')-1]
@@ -51,19 +51,44 @@ for line in lines:
   #print dir,pkg,path,dir==dir2,dir2
   if dir == dir2:
     last_tag = []
-    lines = os.popen('cd '+path+'; cvs status -v cmt/requirements').readlines()
-    p = 0
-    for line in lines:
-      if p == 1:
-        tag = line.replace(' ','').replace('(',' (').replace('\t','').replace('revision:','').split('(')
-        if len(tag):
-          last_tag.append(tag[0])
-          if len(last_tag)>4: 
-            last_tag = str(last_tag).replace('[','').replace(']','').replace("'",'')
-            break
-      if line.find('Existing Tags:')>0:
-        p = 1
-    pipe = os.popen3('cd '+path+'; cvs diff -r HEAD -r '+version)
+    os.chdir(curr_dir)
+    os.chdir(path)
+    is_svn = False
+    trunk = ''
+    try:
+      os.stat('.svn')
+      is_svn = True
+      l=open('.svn/entries').readlines()
+      vsn = l[4][:l[4].rfind(os.sep)]
+      trunk = vsn.replace('/tags/','/trunk/')
+      #print vsn, trunk
+      lines = os.popen('svn list '+vsn).readlines()
+      l = len(lines)-1
+      if l==1: last_tag=[lines[l][:-1]]
+      if l==2: last_tag=[lines[l][:-1],lines[l-1][:-1]]
+      if l==3: last_tag=[lines[l][:-1],lines[l-1][:-1],lines[l-2][:-1]]
+      if l==4: last_tag=[lines[l][:-1],lines[l-1][:-1],lines[l-3][:-1],lines[l-4][:-1]]
+      if l>4:  last_tag=[lines[l][:-1],lines[l-1][:-1],lines[l-3][:-1],lines[l-4][:-1],lines[l-5][:-1]]
+    except OSError, X:
+      ###continue
+      lines = os.popen('cvs status -v cmt/requirements').readlines()
+      p = 0
+      for line in lines:
+        if p == 1:
+          tag = line.replace(' ','').replace('(',' (').replace('\t','').replace('revision:','').split('(')
+          if len(tag):
+            last_tag.append(tag[0])
+            if len(last_tag)>4: 
+              last_tag = str(last_tag).replace('[','').replace(']','').replace("'",'')
+              break
+        if line.find('Existing Tags:')>0:
+          p = 1
+    if is_svn:
+      cmd = 'svn diff '+trunk+' '+vsn+'/'+version
+      #print cmd
+      pipe = os.popen3(cmd)
+    else:
+      pipe = os.popen3('cvs diff -r HEAD -r '+version)
     diffs = pipe[1].readlines()
     new = pipe[2].readlines()
     changes = 0
