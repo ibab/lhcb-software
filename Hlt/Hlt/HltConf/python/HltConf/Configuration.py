@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.194 2010-06-14 08:14:39 albrecht Exp $"
+__version__ = "$Id: Configuration.py,v 1.195 2010-06-14 08:26:50 gligorov Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -225,8 +225,8 @@ class HltConf(LHCbConfigurableUser):
                       , 49 : "HLT_PASS_SUBSTR('Hlt1BeamGas')"
                       , 50 : "HLT_PASS('Hlt1LumiLowBeamCrossingDecision')"
                       , 51 : "HLT_PASS('Hlt1LumiMidBeamCrossingDecision')"
-                      , 52 : "HLT_PASS_RE('Hlt1SingleHadronDecision')"
-                      , 53 : "HLT_PASS_RE('Hlt1DiHadronDecision')"
+                      , 52 : "HLT_PASS_RE('Hlt1.*SingleHadron.*Decision')"
+                      , 53 : "HLT_PASS_RE('Hlt1.*DiHadron.*Decision')"
                       # 64--96: Hlt2
                       , 64 : "HLT_PASS('Hlt2Global')"
                       , 65 : "HLT_PASS('Hlt2DebugEventDecision')"
@@ -236,10 +236,12 @@ class HltConf(LHCbConfigurableUser):
                       , 69 : "HLT_PASS_RE('Hlt2.*MuTrack.*Decision')"
                       , 70 : "HLT_PASS_RE('Hlt2.*Topo.*Decision')"
                       , 71 : "HLT_PASS_RE('Hlt2.*Charm.*Decision')"
-                      , 72 : "HLT_PASS_RE('Hlt2.*Phi.*Decision')"
-                      , 73 : "HLT_PASS_RE('Hlt2.*IncDiProton.*Decision')"
-                      , 74 : "HLT_PASS_RE('Hlt2.*(Bu2|Bs2|Bd2|Bc2|B2HH|B2JpsiX|Dst2|B2D2|diphotonDiMuon|DisplVertices).*Decision')"
-                      , 75 : "HLT_PASS_RE('Hlt2(?!Forward)(?!DebugEvent)(!?Express.*)(?!Transparent)(?!PassThrough).*Decision"
+                      , 72 : "HLT_PASS_RE('Hlt2.*IncPhi.*Decision')"
+                      , 73 : "HLT_PASS_RE('Hlt2.*B.*Gamma.*Decision')"
+                      , 74 : "HLT_PASS_RE('Hlt2.*B2D2.*Decision')"
+                      , 75 : "HLT_PASS_RE('Hlt2.*IncDiProton.*Decision')"
+                      , 76 : "HLT_PASS_RE('Hlt2.*(Bu2|Bs2|Bd2|Bc2|B2HH|B2JpsiX|Dst2|diphotonDiMuon|DisplVertices).*Decision')"
+                      , 77 : "HLT_PASS_RE('Hlt2(?!Forward)(?!DebugEvent)(!?Express.*)(?!Transparent)(?!PassThrough).*Decision"
                          }
         HltRoutingBitsWriter().RoutingBits = routingBits
 
