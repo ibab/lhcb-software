@@ -7,6 +7,8 @@
 
 	* python/LbRelease/LHCbDoc.py: Use SVG to display the graph of dependencies.
 	Exclude LHCbDirac from the allowed projects (it causes a segfault in doxygen).
+	Improved generation of dependency graph in SVG format, to be visible on more
+	browsers.
 
 2010-06-11  Marco Clemencic  <Marco.Clemencic@cern.ch>
 

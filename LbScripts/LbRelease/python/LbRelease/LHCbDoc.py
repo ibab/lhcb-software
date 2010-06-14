@@ -386,10 +386,13 @@ class Doc(object):
             #self._log.debug("Mark the directory as to be built")
             self.toBeBuilt = True
 
-    def _generateDoxygenMainPage(self):
+    def _generateDoxygenMainPage(self, depgraphsize = (0,0)):
         """
         Generate the main page file for the documentation directory and return
         it as a string.
+        
+        @param depgraphsize: tuple with the width and heigth of the dependency
+            graph (to give the correct size to the svg image).
         """
         page = "/** \\mainpage LHCb Software Documentation\n" + \
             "Documentation for the projects:\n<ul>\n"
@@ -418,7 +421,11 @@ class Doc(object):
                     )
         #page += '\n\\image html dependencies.png "Graph of the dependencies between projects"\n'
         page += '\n\\htmlonly\n<div align="center">\n<p>Graph of the dependencies between projects</p>\n'
-        page += '<object data="dependencies.svg" type="image/svg+xml"/>\n</div>\n'
+        page += '<object data="dependencies.svg" type="image/svg+xml"'
+        width, height = depgraphsize
+        if width and height:
+            page += ' width="%d" height="%d"' % (width, height)
+        page += '></object>\n</div>\n'
         page += "\\endhtmlonly\n*/\n"
         return page
 
@@ -568,9 +575,9 @@ class Doc(object):
             self._log.debug("Creating directory %s", confdir)
             os.makedirs(confdir)
         open(os.path.join(confdir, "DoxyFile.cfg"), "w").write(str(doxycfg))
-        open(os.path.join(confdir, "MainPage.doxygen"), "w").write(self._generateDoxygenMainPage())
         # generate the dependency graph
-        self._genDepGraph(confdir)
+        depgraphsize = self._genDepGraph(confdir)
+        open(os.path.join(confdir, "MainPage.doxygen"), "w").write(self._generateDoxygenMainPage(depgraphsize = depgraphsize))
 
     def _projectDeps(self, project, recursive = False):
         """
@@ -611,7 +618,7 @@ class Doc(object):
             deps.sort()
             dotdata.append("%s->{%s};" % (project, ";".join(deps)))
         if dotdata:
-            dotdata = "digraph dependencies {\nnode [fontsize=10];\n%s\n}\n" % ("\n".join(dotdata))
+            dotdata = "digraph dependencies {\nbgcolor=transparent;\nnode [fontsize=10,style=filled,fillcolor=white];\n%s\n}\n" % ("\n".join(dotdata))
         cmd = ["dot"]
         for format in ["png", "svg", "eps", "fig"]:
             if type(format) is tuple:
@@ -625,6 +632,18 @@ class Doc(object):
         cmd.append(dotfile)
         open(dotfile, "w").write(dotdata)
         Popen(cmd).wait()
+        # extract the size of the image from the SVG file
+        width, height = 0, 0
+        if os.path.exists(os.path.join(self.path, destination, "dependencies.svg")):
+            from xml.etree import ElementTree as ET
+            doc = ET.parse(os.path.join(self.path, destination, "dependencies.svg"))
+            attrib = doc.getroot().attrib
+            if "viewBox" in attrib:
+                _, _, width, height = attrib["viewBox"].split()
+                # convert to pixels assuming 96dpi (default resolution in graphviz)
+                width = int(float(width) / 72 * 96)
+                height = int(float(height) / 72 * 96)
+        return (width, height) # return the size in pixels of the image
 
     def build(self):
         """
