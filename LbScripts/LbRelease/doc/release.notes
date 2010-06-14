@@ -1,3 +1,8 @@
+2010-06-14  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* python/LbRelease/LHCbDoc.py: Use SVG to display the graph of dependencies.
+	Exclude LHCbDirac from the allowed projects (it causes a segfault in doxygen).
+
 2010-06-11  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* python/LbRelease/LHCbDoc.py: Added the generation of a graph for the

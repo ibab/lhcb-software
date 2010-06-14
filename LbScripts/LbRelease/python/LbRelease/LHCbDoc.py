@@ -416,8 +416,10 @@ class Doc(object):
                             'versurl': projectURL("LCGCMT", self.getVersion("LCGCMT"))
                             }
                     )
-        page += '\n\\image html dependencies.png "Graph of the dependencies between projects"\n'
-        page += "*/\n"
+        #page += '\n\\image html dependencies.png "Graph of the dependencies between projects"\n'
+        page += '\n\\htmlonly\n<div align="center">\n<p>Graph of the dependencies between projects</p>\n'
+        page += '<object data="dependencies.svg" type="image/svg+xml"/>\n</div>\n'
+        page += "\\endhtmlonly\n*/\n"
         return page
 
     def _generateDoxyFile(self):
@@ -601,17 +603,17 @@ class Doc(object):
             relative to the documentation directory or absolute.
         """
         self._log.info("Generating project dependency graph in '%s'", destination)
-        gvdata = []
+        dotdata = []
         for project in self.projects:
             project = project_names.get(project.upper(), project)
             deps = [ project_names.get(p.upper(), p)
                      for p in self._projectDeps(project) ]
             deps.sort()
-            gvdata.append("%s->{%s};" % (project, ";".join(deps)))
-        if gvdata:
-            gvdata = "digraph dependencies {\nnode [fontsize=10];\n%s\n}\n" % ("\n".join(gvdata))
+            dotdata.append("%s->{%s};" % (project, ";".join(deps)))
+        if dotdata:
+            dotdata = "digraph dependencies {\nnode [fontsize=10];\n%s\n}\n" % ("\n".join(dotdata))
         cmd = ["dot"]
-        for format in ["png", "svgz", "eps", "fig"]:
+        for format in ["png", "svg", "eps", "fig"]:
             if type(format) is tuple:
                 format, extension = format
             else:
@@ -619,9 +621,9 @@ class Doc(object):
             cmd.append("-T%s" % format)
             cmd.append("-o%s" %
                        os.path.join(self.path, destination, "dependencies.%s" % extension))
-        gvfile = os.path.join(self.path, destination, "dependencies.gv")
-        cmd.append(gvfile)
-        open(gvfile, "w").write(gvdata)
+        dotfile = os.path.join(self.path, destination, "dependencies.dot")
+        cmd.append(dotfile)
+        open(dotfile, "w").write(dotdata)
         Popen(cmd).wait()
 
     def build(self):
@@ -674,6 +676,9 @@ class Doc(object):
             # copy the documentation from the temporary directory to the final place with a temporary name
             self._log.info("Copy generated files from temporary directory")
             shutil.copytree(tempdir, self.output + ".new")
+            # copy the dependency graph to the doxygen directory
+            for f in [ f for f in os.listdir(os.path.join(self.path, "conf")) if f.startswith("dependencies.") ]:
+                shutil.copyfile(os.path.join(self.path, "conf", f), os.path.join(self.output + ".new", "html", f))
             if self.isAfsVolume:
                 # Give read access to everybody
                 self._log.debug("Give read access (recursively) to %s", self.path)
@@ -864,7 +869,7 @@ def findProjects(exclude = None):
     releases = os.environ["LHCBRELEASES"]
     logging.debug("Looking for projects in '%s'", releases)
     if exclude is None: # default exclusion
-        exclude = set([ "GANGA", "DIRAC", "LHCBGRID", "CURIE", "GEANT4" ])
+        exclude = set([ "GANGA", "DIRAC", "LHCBDIRAC", "LHCBGRID", "CURIE", "GEANT4" ])
     else:
         exclude = set([ p.upper() for p in exclude ])
     projects = []
