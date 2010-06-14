@@ -4,7 +4,7 @@ Python options:-opt=command=import GaudiOnlineTests;GaudiOnlineTests.runEvtHolde
 Python options:-opt=command=import GaudiOnlineTests;GaudiOnlineTests.runMBMRead(percent=100.0)
 Python options:-opt=command=import GaudiOnlineTests;GaudiOnlineTests.runSender(target=None)
 Parent: Started process:MEPInit_0 output redirected to:/dev/null
-Parent: Started process:MEPInit_0 output redirected to:/dev/null
+Parent: Started process:SNDInit_0 output redirected to:/dev/null
 Starting processes .....
 Parent: Started process:EvtProd_0 output redirected to:/dev/null
 Parent: Started process:EvtHold_0 output redirected to:/dev/null
