@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.470 2010-06-11 17:56:21 albrecht Exp $ 
+! $Id: release.notes,v 1.471 2010-06-14 08:15:22 albrecht Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2010-06-14 - Johannes Albrecht
+ - add more HLT2 routing bits
 
 ! 2010-06-11 - Johannes Albrecht
  - add HLT2 routing bits and add Hlt1 single and di hadron
