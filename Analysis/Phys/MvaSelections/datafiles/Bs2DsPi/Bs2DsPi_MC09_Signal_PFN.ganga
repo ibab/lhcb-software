@@ -1,0 +1,659 @@
+#Ganga# File created by Ganga - Thu Mar  4 18:21:02 2010
+#Ganga#
+#Ganga# Object properties may be freely edited before reloading into Ganga
+#Ganga#
+#Ganga# Lines beginning #Ganga# are used to divide object definitions,
+#Ganga# and must not be deleted
+
+#Ganga# LHCbDataset object (category: datasets)
+LHCbDataset (
+ depth = 0 ,
+ files = [ PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00004869/0000/00004869_00000001_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00004869/0000/00004869_00000002_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00004869/0000/00004869_00000003_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00004869/0000/00004869_00000004_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00004869/0000/00004869_00000005_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00004869/0000/00004869_00000006_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00004869/0000/00004869_00000007_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00004869/0000/00004869_00000008_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00004869/0000/00004869_00000009_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00004869/0000/00004869_00000010_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00004869/0000/00004869_00000011_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00004869/0000/00004869_00000013_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00004869/0000/00004869_00000014_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00004869/0000/00004869_00000015_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00004869/0000/00004869_00000016_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00004869/0000/00004869_00000017_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00004869/0000/00004869_00000018_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00004869/0000/00004869_00000019_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00004869/0000/00004869_00000020_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00004869/0000/00004869_00000021_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00004869/0000/00004869_00000022_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00004869/0000/00004869_00000023_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00004869/0000/00004869_00000024_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00004869/0000/00004869_00000025_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00004869/0000/00004869_00000026_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00004869/0000/00004869_00000027_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00004869/0000/00004869_00000028_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00004869/0000/00004869_00000029_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00004869/0000/00004869_00000030_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00004869/0000/00004869_00000031_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00004869/0000/00004869_00000032_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00004869/0000/00004869_00000033_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00004869/0000/00004869_00000034_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00004869/0000/00004869_00000035_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00004869/0000/00004869_00000036_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00004869/0000/00004869_00000038_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00004869/0000/00004869_00000039_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00004869/0000/00004869_00000040_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00004869/0000/00004869_00000041_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00004869/0000/00004869_00000042_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00004869/0000/00004869_00000043_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00004869/0000/00004869_00000044_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00004869/0000/00004869_00000045_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00004869/0000/00004869_00000046_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00004869/0000/00004869_00000047_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00004869/0000/00004869_00000048_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00004869/0000/00004869_00000049_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00004869/0000/00004869_00000050_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00004869/0000/00004869_00000051_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00004869/0000/00004869_00000052_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000001_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000002_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000003_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000004_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000005_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000006_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000007_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000008_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000009_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000010_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000011_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000015_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000017_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000020_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000021_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000023_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000024_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000025_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000026_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000027_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000028_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000029_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000030_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000031_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000032_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000033_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000034_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000035_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000036_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000037_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000038_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000039_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000040_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000041_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000042_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000043_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000044_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000045_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000046_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000047_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000048_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000049_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000050_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000051_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000052_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000053_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000054_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000055_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000056_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000057_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000058_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000059_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000060_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000061_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000062_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000063_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000064_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000065_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000066_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000067_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000068_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000069_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000070_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000071_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000072_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000073_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000074_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000075_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000076_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000077_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000078_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000079_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000080_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000081_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000082_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000083_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000084_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000085_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000086_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000087_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000088_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000089_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000090_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000091_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000092_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000093_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000094_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000095_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000096_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000097_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000098_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000099_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000100_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000101_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000102_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000103_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000104_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000105_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000106_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000107_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000109_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000110_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000111_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000112_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000113_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000114_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000116_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000117_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000118_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000119_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000120_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000121_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000122_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000123_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000124_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000125_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000126_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000127_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000128_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000129_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000130_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000131_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000132_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000133_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000134_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000135_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000136_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000137_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000138_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000139_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000140_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000141_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000142_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000143_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000144_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000145_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000146_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000147_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000148_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000149_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000150_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000151_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000152_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000153_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000154_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000155_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000156_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000157_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000158_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000159_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000160_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000161_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000162_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000163_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000164_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000165_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000166_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000167_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000168_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000169_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000170_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000171_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000172_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000173_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000174_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000175_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000176_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000177_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000178_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000179_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000180_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000181_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000182_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000183_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000184_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000185_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000186_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000187_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000188_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000189_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000190_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000191_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000192_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000193_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000194_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000195_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000196_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000197_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000198_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000199_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000200_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000201_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000202_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000203_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000204_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000205_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000206_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000207_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000208_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000209_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000210_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000211_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000212_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000213_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000214_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000215_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000216_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000217_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000218_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000219_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000220_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000221_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000222_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000223_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000224_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000225_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000226_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000227_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000228_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000229_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000230_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000231_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000232_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000233_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000234_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000235_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000236_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000237_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000238_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000239_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000240_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000241_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000242_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000243_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000244_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000245_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000246_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000247_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000248_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000249_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000250_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000251_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000252_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000253_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000254_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000255_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000256_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000257_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000258_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000259_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000260_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000261_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000262_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000263_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000264_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000265_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000266_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000267_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000268_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000269_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000270_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000271_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000272_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000273_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000274_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000275_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000276_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000277_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000278_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000279_1.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005005/0000/00005005_00000280_1.dst' 
+    ) , ] ,
+ XMLCatalogueSlice = File (
+    name = '' ,
+    subdir = '.' 
+    ) 
+ ) 
+

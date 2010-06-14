@@ -1,0 +1,27 @@
+#Ganga# File created by Ganga - Thu Mar  4 18:13:34 2010
+#Ganga#
+#Ganga# Object properties may be freely edited before reloading into Ganga
+#Ganga#
+#Ganga# Lines beginning #Ganga# are used to divide object definitions,
+#Ganga# and must not be deleted
+
+#Ganga# LHCbDataset object (category: datasets)
+LHCbDataset (
+ depth = 0 ,
+ files = [ LogicalFile (
+    name = '/lhcb/MC/2010/DST/00005967/0000/00005967_00000001_1.dst' 
+    ) , LogicalFile (
+    name = '/lhcb/MC/2010/DST/00005967/0000/00005967_00000002_1.dst' 
+    ) , LogicalFile (
+    name = '/lhcb/MC/2010/DST/00005967/0000/00005967_00000003_1.dst' 
+    ) , LogicalFile (
+    name = '/lhcb/MC/2010/DST/00005967/0000/00005967_00000004_1.dst' 
+    ) , LogicalFile (
+    name = '/lhcb/MC/2010/DST/00005967/0000/00005967_00000005_1.dst' 
+    ) , ] ,
+ XMLCatalogueSlice = File (
+    name = '' ,
+    subdir = '.' 
+    ) 
+ ) 
+

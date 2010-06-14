@@ -1,0 +1,109 @@
+<?xml version="1.0"?>
+<MethodSetup Method="Fisher::FisherD">
+  <GeneralInfo>
+    <Info name="TMVA Release" value="4.0.2 [262146]"/>
+    <Info name="ROOT Release" value="5.22/00 [333312]"/>
+    <Info name="Creator" value="seaso"/>
+    <Info name="Date" value="Mon Nov 30 15:45:03 2009"/>
+    <Info name="Host" value="Linux lxbuild114.cern.ch 2.6.25.1-pfm080429 #1 SMP Tue May 6 17:53:24 CEST 2008 x86_64 x86_64 x86_64 GNU/Linux"/>
+    <Info name="Dir" value="/afs/cern.ch/user/s/seaso/w0/tmva/TMVA/Bs2DsH"/>
+    <Info name="Training events" value="215515"/>
+    <Info name="TrainingTime" value="0.523254"/>
+    <Info name="AnalysisType" value="Classification"/>
+  </GeneralInfo>
+  <Options>
+    <Option name="V" modified="Yes">False</Option>
+    <Option name="VerbosityLevel" modified="No">Default</Option>
+    <Option name="VarTransform" modified="Yes">N</Option>
+    <Option name="H" modified="Yes">True</Option>
+    <Option name="CreateMVAPdfs" modified="Yes">True</Option>
+    <Option name="IgnoreNegWeightsInTraining" modified="No">False</Option>
+    <Option name="Method" modified="Yes">Fisher</Option>
+  </Options>
+  <Variables NVar="10">
+    <Variable VarIndex="0" Expression="log(FSBs)" Label="log(FSBs)" Title="log(FSBs)" Unit="" Internal="log_FSBs_" Type="F" Min="-10.2506" Max="5.99597"/>
+    <Variable VarIndex="1" Expression="log(IpsPiKBachlor/IpsBs)" Label="log(IpsPiKBachlor/IpsBs)" Title="log(IpsPiKBachlor/IpsBs)" Unit="" Internal="log_IpsPiKBachlor_D_IpsBs_" Type="F" Min="-3.45228" Max="8.17048"/>
+    <Variable VarIndex="2" Expression="log(MomPiKBachlor)" Label="log(MomPiKBachlor)" Title="log(MomPiKBachlor)" Unit="" Internal="log_MomPiKBachlor_" Type="F" Min="6.95042" Max="21.0816"/>
+    <Variable VarIndex="3" Expression="log(BMomentum*sin(acos(CosBs)))" Label="log(BMomentum*sin(acos(CosBs)))" Title="log(BMomentum*sin(acos(CosBs)))" Unit="" Internal="log_BMomentum_T_sin_acos_CosBs___" Type="F" Min="2.6551" Max="12.6783"/>
+    <Variable VarIndex="4" Expression="log((IpsPiSec_0*IpsPiSec_1*IpsPiSec_2)/IpsBs)" Label="log((IpsPiSec_0*IpsPiSec_1*IpsPiSec_2)/IpsBs)" Title="log((IpsPiSec_0*IpsPiSec_1*IpsPiSec_2)/IpsBs)" Unit="" Internal="log__IpsPiSec_0_T_IpsPiSec_1_T_IpsPiSec_2__D_IpsBs_" Type="F" Min="-1.93419" Max="14.461"/>
+    <Variable VarIndex="5" Expression="log(PtPiSec_0*PtPiSec_1*PtPiSec_2)" Label="log(PtPiSec_0*PtPiSec_1*PtPiSec_2)" Title="log(PtPiSec_0*PtPiSec_1*PtPiSec_2)" Unit="" Internal="log_PtPiSec_0_T_PtPiSec_1_T_PtPiSec_2_" Type="F" Min="17.0671" Max="33.2182"/>
+    <Variable VarIndex="6" Expression="log((dllKaonSec_0+20)*(dllKaonSec_1+20))" Label="log((dllKaonSec_0+20)*(dllKaonSec_1+20))" Title="log((dllKaonSec_0+20)*(dllKaonSec_1+20))" Unit="" Internal="log__dllKaonSec_0_P_20__T__dllKaonSec_1_P_20__" Type="F" Min="5.41851" Max="11.7409"/>
+    <Variable VarIndex="7" Expression="dllKaonSec_2" Label="dllKaonSec_2" Title="dllKaonSec_2" Unit="" Internal="dllKaonSec_2" Type="F" Min="-944.811" Max="363.51"/>
+    <Variable VarIndex="8" Expression="log(dvtxchi2)" Label="log(dvtxchi2)" Title="log(dvtxchi2)" Unit="" Internal="log_dvtxchi2_" Type="F" Min="-15.5511" Max="3.91221"/>
+    <Variable VarIndex="9" Expression="log(bvtxchi2)" Label="log(bvtxchi2)" Title="log(bvtxchi2)" Unit="" Internal="log_bvtxchi2_" Type="F" Min="-25.4495" Max="2.99571"/>
+  </Variables>
+  <Transformations NTransformations="1">
+    <Transform Name="Normalize" NVariables="10" NTargets="0">
+      <Class ClassIndex="0">
+        <Variables>
+          <Variable VarIndex="0" Min="1.5755294263362885e-01" Max="5.2882361412048340e+00"/>
+          <Variable VarIndex="1" Min="-1.3626124858856201e+00" Max="5.8762941360473633e+00"/>
+          <Variable VarIndex="2" Min="7.4123625755310059e+00" Max="1.3117865562438965e+01"/>
+          <Variable VarIndex="3" Min="2.6550981998443604e+00" Max="1.0645971298217773e+01"/>
+          <Variable VarIndex="4" Min="1.3041239976882935e+00" Max="1.3498962402343750e+01"/>
+          <Variable VarIndex="5" Min="1.7404655456542969e+01" Max="2.7824886322021484e+01"/>
+          <Variable VarIndex="6" Min="5.7258977890014648e+00" Max="9.3302717208862305e+00"/>
+          <Variable VarIndex="7" Min="-1.3275253295898438e+02" Max="2.8787046432495117e+01"/>
+          <Variable VarIndex="8" Min="-4.7374157905578613e+00" Max="3.8964734077453613e+00"/>
+          <Variable VarIndex="9" Min="-1.9235324859619141e+01" Max="2.9761552810668945e+00"/>
+        </Variables>
+        <Targets/>
+      </Class>
+      <Class ClassIndex="1">
+        <Variables>
+          <Variable VarIndex="0" Min="-1.0250619888305664e+01" Max="5.9959707260131836e+00"/>
+          <Variable VarIndex="1" Min="-3.4522755146026611e+00" Max="8.1704778671264648e+00"/>
+          <Variable VarIndex="2" Min="6.9504156112670898e+00" Max="2.1081600189208984e+01"/>
+          <Variable VarIndex="3" Min="2.6957302093505859e+00" Max="1.2678277015686035e+01"/>
+          <Variable VarIndex="4" Min="-1.9341855049133301e+00" Max="1.4460956573486328e+01"/>
+          <Variable VarIndex="5" Min="1.7067066192626953e+01" Max="3.3218231201171875e+01"/>
+          <Variable VarIndex="6" Min="5.4185104370117188e+00" Max="1.1740932464599609e+01"/>
+          <Variable VarIndex="7" Min="-9.4481103515625000e+02" Max="3.6350988769531250e+02"/>
+          <Variable VarIndex="8" Min="-1.5551134109497070e+01" Max="3.9122059345245361e+00"/>
+          <Variable VarIndex="9" Min="-2.5449510574340820e+01" Max="2.9957077503204346e+00"/>
+        </Variables>
+        <Targets/>
+      </Class>
+      <Class ClassIndex="2">
+        <Variables>
+          <Variable VarIndex="0" Min="-1.0250619888305664e+01" Max="5.9959707260131836e+00"/>
+          <Variable VarIndex="1" Min="-3.4522755146026611e+00" Max="8.1704778671264648e+00"/>
+          <Variable VarIndex="2" Min="6.9504156112670898e+00" Max="2.1081600189208984e+01"/>
+          <Variable VarIndex="3" Min="2.6550981998443604e+00" Max="1.2678277015686035e+01"/>
+          <Variable VarIndex="4" Min="-1.9341855049133301e+00" Max="1.4460956573486328e+01"/>
+          <Variable VarIndex="5" Min="1.7067066192626953e+01" Max="3.3218231201171875e+01"/>
+          <Variable VarIndex="6" Min="5.4185104370117188e+00" Max="1.1740932464599609e+01"/>
+          <Variable VarIndex="7" Min="-9.4481103515625000e+02" Max="3.6350988769531250e+02"/>
+          <Variable VarIndex="8" Min="-1.5551134109497070e+01" Max="3.9122059345245361e+00"/>
+          <Variable VarIndex="9" Min="-2.5449510574340820e+01" Max="2.9957077503204346e+00"/>
+        </Variables>
+        <Targets/>
+      </Class>
+    </Transform>
+  </Transformations>
+  <MVAPdfs>
+    <PDF Name="FisherD_PDFSig" MinNSmooth="1" MaxNSmooth="1" InterpolMethod="2" KDE_type="1" KDE_iter="1" KDE_border="1" KDE_finefactor="1.0000000000000000e+00">
+      <Histogram Name="Fisher_tr_S_original" NBins="50" XMin="-2.0118860900402069e-01" XMax="2.6737233996391296e-01" HasEquidistantBins="1">
+        0 0 0 0 0 0 0 0 0 0 0.017079 0 0.017079 0.0512371 0.034158 0.119553 0.324501 0.358659 0.649003 1.0589 1.50295 2.13488 3.12546 3.97941 4.28683 5.12371 6.47295 7.71972 7.68556 8.21501 8.02714 7.92466 7.03656 6.25092 5.75563 4.86752 4.09896 3.19378 2.13488 1.82745 1.09306 0.751477 0.392817 0.204948 0.204948 0.0683161 0 0 0 0 
+      </Histogram>
+    </PDF>
+    <PDF Name="FisherD_PDFBkg" MinNSmooth="1" MaxNSmooth="1" InterpolMethod="2" KDE_type="1" KDE_iter="1" KDE_border="1" KDE_finefactor="1.0000000000000000e+00">
+      <Histogram Name="Fisher_tr_B_original" NBins="50" XMin="-2.0118860900402069e-01" XMax="2.6737233996391296e-01" HasEquidistantBins="1">
+        0.00303611 0.0171589 0.0700133 0.245074 0.652688 1.61145 3.24924 5.57969 8.06381 9.86966 11.1257 11.1279 10.2524 9.11026 7.63258 6.2912 4.92565 3.81819 3.11017 2.37987 1.7949 1.39287 1.12135 0.818769 0.63687 0.460871 0.36553 0.273913 0.207696 0.139268 0.0946197 0.0718888 0.0583872 0.0388131 0.031146 0.0224867 0.0109255 0.00778185 0.00853292 0.00600212 0.00293818 0.0030868 0.000757206 0.000462099 0.00106728 0.0019596 0.000970705 3.43426e-05 2.28951e-05 1.14475e-05 
+      </Histogram>
+    </PDF>
+  </MVAPdfs>
+  <Weights NCoeff="11">
+    <Coefficient Index="0" Value="2.7375426831760169e-01"/>
+    <Coefficient Index="1" Value="3.2779504880493415e-02"/>
+    <Coefficient Index="2" Value="1.1563361238947105e-01"/>
+    <Coefficient Index="3" Value="3.7627756501302720e-02"/>
+    <Coefficient Index="4" Value="2.8183378961189772e-02"/>
+    <Coefficient Index="5" Value="9.0748263514930927e-02"/>
+    <Coefficient Index="6" Value="8.0023286263340113e-02"/>
+    <Coefficient Index="7" Value="9.2935968918517520e-02"/>
+    <Coefficient Index="8" Value="1.0581887540365079e-02"/>
+    <Coefficient Index="9" Value="-1.2279826136123352e-01"/>
+    <Coefficient Index="10" Value="-6.9161457709008195e-02"/>
+  </Weights>
+</MethodSetup>
