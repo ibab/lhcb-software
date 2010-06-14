@@ -90,8 +90,11 @@ class TopoLines :
                                          , 'Hlt2TopoTF4BodySA' : 1.00
                                          }
                         , 'Postscale'  : { 'Hlt2Topo2BodySA' : 1.00
-                                         , 'Hlt2Topo3BodySA' : 1.00
-                                         , 'Hlt2Topo4BodySA' : 1.00
+                                         , 'Hlt2Topo3BodySA' : 0.10
+                                         , 'Hlt2Topo4BodySA' : 0.10
+                                         , 'Hlt2TopoTF2BodySA' : 1.00
+                                         , 'Hlt2TopoTF3BodySA' : 0.10
+                                         , 'Hlt2TopoTF4BodySA' : 0.10
                                          }
                     }
                   } )
