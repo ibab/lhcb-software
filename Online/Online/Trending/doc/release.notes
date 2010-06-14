@@ -1,7 +1,7 @@
 !-----------------------------------------------------------------------------
 ! Package     : Online/Trending
 ! Responsible : Olivier Callot
-! Purpose     : 
+! Purpose     : Provide tools for fast trending in C++
 !-----------------------------------------------------------------------------
 
 ! 2010-06-14 - Olivier Callot

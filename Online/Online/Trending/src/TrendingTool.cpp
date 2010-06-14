@@ -1,5 +1,6 @@
-// $Id: TrendingTool.cpp,v 1.1.1.1 2010-06-11 09:58:56 ocallot Exp $
+// $Id: TrendingTool.cpp,v 1.2 2010-06-14 15:10:36 ocallot Exp $
 // Include files
+#include <ctime>
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
