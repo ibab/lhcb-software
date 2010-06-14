@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.474 2010-06-14 13:46:42 albrecht Exp $ 
+! $Id: release.notes,v 1.475 2010-06-14 23:09:42 gligorov Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2010-06-15 - V. Gligorov
+ - fix typo in new routing bits 
 
 ! 2010-06-14 - Johannes Albrecht
  - fix syntax error
