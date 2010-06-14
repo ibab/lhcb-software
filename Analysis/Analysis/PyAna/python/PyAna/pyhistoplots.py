@@ -20,11 +20,13 @@ Subject to the Lesser GNU Public License - see < http://www.gnu.org/licenses/lgp
 __author__ = 'Juan Palacios <juan.palacios@nikhef.nl>'
 __version__ = '1.0'
 
-__all__ = ('histo_plot','sequence_histo_plot','ntuple_plot', 'ntuple_column_histo')
+__all__ = ('histo_plot','sequence_histo_plot','ntuple_plot', 'ntuple_column_histo', 'default_stats')
 
 from matplotlib import pyplot
 
-def histo_plot(histogram, histtype='step', color='red', linewidth='1.5', **kwargs) :
+default_stats =  ('entries','mean', 'sigma', 'integral')
+
+def histo_plot(histogram, histtype='step', color='red', linewidth='1.5',  stats = default_stats, show = True, **kwargs) :
     '''
     Plot the contents of a histogram.Histogram
     '''
@@ -33,10 +35,20 @@ def histo_plot(histogram, histtype='step', color='red', linewidth='1.5', **kwarg
     bins = histogram.filledBins()
     x = [bin.centre for bin in bins]
     w = [bin.height for bin in bins]
-    return sequence_histo_plot(x, weights=w, bins=axis.nbins, 
-                               range = axis.range, xlabel=axis.label)
+    stat_text = None
+    if stats :
+        stat_text = 'Statistics'
+        for stat in stats :
+            stat_text += '\n'+stat + '   ' + str(histogram.__getattribute__(stat)())
+    return sequence_histo_plot(x,
+                               weights=w,
+                               bins=axis.nbins, 
+                               range = axis.range,
+                               xlabel=axis.label,
+                               stats = stat_text,
+                               show = show)
 
-def sequence_histo_plot(x, bins=100, xlabel='',histtype='step', color='red', linewidth='1.5',**kwargs) :
+def sequence_histo_plot(x, bins=100, xlabel='',histtype='step', color='red', linewidth='1.5', stats = None, show = True, **kwargs) :
     '''
     Plot the contents of a sequence
     '''
@@ -45,7 +57,15 @@ def sequence_histo_plot(x, bins=100, xlabel='',histtype='step', color='red', lin
     ax.hist(x, bins=bins, histtype=histtype, color=color, linewidth=linewidth, **kwargs)
     ax.set_ylabel('Entries')
     ax.set_xlabel(xlabel)
-    fig.show()
+    if stats :
+        ax.text(0.75, 0.95, stats,
+                horizontalalignment='left',
+                verticalalignment='top',
+                multialignment = 'left',
+                transform = ax.transAxes,
+                bbox=dict(edgecolor = 'black', facecolor='none', alpha=1.))
+    if show :
+        fig.show()
     return fig
 
 def ntuple_plot(ntuple, tag, cut=None, **kwargs) :
@@ -59,6 +79,7 @@ def ntuple_column_histo(ntuple, tag, cut=None, bins=100, **kwargs) :
     Create and return a histogram.Histogram object constructed from the 
     contents of an ntuple.NTuple column.
     '''
+    from PyAna.pythistogram.histogram import Histogram, Axis
     col = ntuple.column(tag,cut)
     min_range = min(col)
     max_range = max(col)
