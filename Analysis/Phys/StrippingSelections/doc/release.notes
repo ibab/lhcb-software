@@ -5,6 +5,9 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-06-14 - Johannes Albrecht
+ - change DiMuon track chi2 cut
+
 ! 2010-Jun-11 - Spradlin
  - StrippingDstarPromptWithD02HH.py
    . Added lines to monitor the D0 selections without the D* reconstruction.
