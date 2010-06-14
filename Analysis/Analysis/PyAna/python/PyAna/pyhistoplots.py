@@ -44,11 +44,14 @@ def histo_plot(histogram, histtype='step', color='red', linewidth='1.5',  stats 
                                weights=w,
                                bins=axis.nbins, 
                                range = axis.range,
+                               histtype = histtype,
+                               color = color,
+                               linewidth = linewidth,
                                xlabel=axis.label,
                                stats = stat_text,
                                show = show)
 
-def sequence_histo_plot(x, bins=100, xlabel='',histtype='step', color='red', linewidth='1.5', stats = None, show = True, **kwargs) :
+def sequence_histo_plot(x, bins=100, xlabel='', histtype='step', color='red', linewidth='1.5', stats = None, show = True, **kwargs) :
     '''
     Plot the contents of a sequence
     '''
@@ -68,25 +71,31 @@ def sequence_histo_plot(x, bins=100, xlabel='',histtype='step', color='red', lin
         fig.show()
     return fig
 
-def ntuple_plot(ntuple, tag, cut=None, **kwargs) :
+def ntuple_plot(ntuple, tag, cut=None, histtype='step', color='red', linewidth='1.5', show = True, **kwargs) :
     '''
     Plot the contents of an ntuple.Ntuple column
     '''
-    return sequence_histo_plot(ntuple.column(tag, cut), xlabel = tag, **kwargs) 
+    return sequence_histo_plot(ntuple.column(tag, cut),
+                               histtype = histtype,
+                               color = color,
+                               linewidth = linewidth,
+                               xlabel = tag,
+                               show = show,
+                               **kwargs) 
 
 def ntuple_column_histo(ntuple, tag, cut=None, bins=100, **kwargs) :
     '''
     Create and return a histogram.Histogram object constructed from the 
     contents of an ntuple.NTuple column.
     '''
-    from PyAna.pythistogram.histogram import Histogram, Axis
+    from PyAna.pyhistogram.histogram import Histogram, Axis
     col = ntuple.column(tag,cut)
     min_range = min(col)
     max_range = max(col)
     width = (max_range-min_range)/bins
     max_range += width/2.
     max_range -= width/2.
-    histo =  Histogram(axis=Axis(bins, max_range, min_range, label=tag))
+    histo =  Histogram(axis=Axis(bins, min_range, max_range, label=tag))
     for x in col :
         histo.fill(x)
     return histo
