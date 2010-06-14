@@ -53,11 +53,10 @@ for line in lines:
     last_tag = []
     os.chdir(curr_dir)
     os.chdir(path)
-    is_svn = False
-    trunk = ''
+    proto = 'cvs'
     try:
       os.stat('.svn')
-      is_svn = True
+      proto = 'svn'
       l=open('.svn/entries').readlines()
       vsn = l[4][:l[4].rfind(os.sep)]
       trunk = vsn.replace('/tags/','/trunk/')
@@ -70,7 +69,6 @@ for line in lines:
       if l==4: last_tag=[lines[l][:-1],lines[l-1][:-1],lines[l-3][:-1],lines[l-4][:-1]]
       if l>4:  last_tag=[lines[l][:-1],lines[l-1][:-1],lines[l-3][:-1],lines[l-4][:-1],lines[l-5][:-1]]
     except OSError, X:
-      ###continue
       lines = os.popen('cvs status -v cmt/requirements').readlines()
       p = 0
       for line in lines:
@@ -83,16 +81,14 @@ for line in lines:
               break
         if line.find('Existing Tags:')>0:
           p = 1
-    if is_svn:
-      cmd = 'svn diff '+trunk+' '+vsn+'/'+version
-      #print cmd
-      pipe = os.popen3(cmd)
+    if proto == 'svn':
+      pipe = os.popen3('svn diff '+trunk+' '+vsn+'/'+version)
     else:
       pipe = os.popen3('cvs diff -r HEAD -r '+version)
     diffs = pipe[1].readlines()
     new = pipe[2].readlines()
     changes = 0
-    prefix = '%-28s %-10s'%(pkg,'['+version+']',)
+    prefix = '%s %-28s %-10s'%(proto,pkg,'['+version+']',)
     if len(diffs) > 0:
       for d in diffs:
         if d[:2] == '? ': continue
