@@ -9,6 +9,10 @@
 !               reconstruction algorithm for beam tracks
 !-----------------------------
 
+! 2010-06-15 - Marco Cattaneo
+ - Fix Windows linker warnings
+ - Fix remaining Windows compilation warning
+
 ! 2010-06-04 - Rob Lambert
  - Fixes for some windows warnings savannah 15808
  - Still have a strange linker warning

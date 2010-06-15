@@ -2,7 +2,7 @@
 // Include files 
 
 // from Gaudi
-#include "GaudiKernel/DeclareFactoryEntries.h" 
+#include "GaudiKernel/ToolFactory.h" 
 #include "GaudiKernel/IIncidentSvc.h" 
 // local
 #include "MuonClusterRec.h"

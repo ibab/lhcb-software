@@ -24,12 +24,12 @@ namespace OfflineTimeAlig {
   DLLEXPORT bool m_offlineTimeAlignment;
   DLLEXPORT std::string m_timeResidualFile;
 
-  DLLEXPORT std::map<long int, float>* ResMap;
-  DLLEXPORT long int logicalPadKey(int q, int s, int r, int nx, int ny, int view) {
+  std::map<long int, float>* ResMap;
+  long int logicalPadKey(int q, int s, int r, int nx, int ny, int view) {
     return (view + nx*3 + ny*96*3 + r*16*96*3 + s*4*16*96*3 + q*5*4*16*96*3);
   }
 
-  DLLEXPORT bool loadTimeRes() {
+  bool loadTimeRes() {
     bool out = true;
     ResMap = NULL;
     if(m_offlineTimeAlignment && m_timeResidualFile != "none") { 
@@ -58,7 +58,7 @@ namespace OfflineTimeAlig {
     return out;
   }
   
-  DLLEXPORT void correctMisAlignment(MuonLogPad* pad) {
+  void correctMisAlignment(MuonLogPad* pad) {
     // this has to be updated with the unified format!!
     long int key=0;
     if (pad->type() == MuonLogPad::XTWOFE) {
@@ -95,7 +95,7 @@ namespace OfflineTimeAlig {
       }
     }
   }
-  DLLEXPORT void clearResMap() {
+  void clearResMap() {
     if(ResMap) delete ResMap;
   }
 

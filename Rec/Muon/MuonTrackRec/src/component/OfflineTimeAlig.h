@@ -13,20 +13,15 @@
 #include <map>
 #include <string>
 class MuonLogPad;
-#ifdef _WIN32
-    #define EXTERN extern __declspec(dllimport) 
-#else
-    #define EXTERN extern
-#endif
 
 namespace OfflineTimeAlig {
-      EXTERN bool m_offlineTimeAlignment;
-      EXTERN std::string m_timeResidualFile;
+      extern bool m_offlineTimeAlignment;
+      extern std::string m_timeResidualFile;
       
-      EXTERN std::map<long int, float>* ResMap;
-      EXTERN long int logicalPadKey(int q, int s, int r, int nx, int ny, int view); 
-      EXTERN bool loadTimeRes();  
-      EXTERN void correctMisAlignment(MuonLogPad* pad);
-      EXTERN void clearResMap();
+      extern std::map<long int, float>* ResMap;
+      extern long int logicalPadKey(int q, int s, int r, int nx, int ny, int view); 
+      extern bool loadTimeRes();  
+      extern void correctMisAlignment(MuonLogPad* pad);
+      extern void clearResMap();
     };
 #endif // MUONTRACKREC_OFFLINETIMEALIG_H

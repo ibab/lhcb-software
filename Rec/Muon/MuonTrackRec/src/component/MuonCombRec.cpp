@@ -64,16 +64,16 @@ MuonCombRec::MuonCombRec( const std::string& type,
   declareProperty( "SeedStation"      , m_optSeedStation = 4); // default seed: M5
   //                 R1     R2    R3    R4
   declareProperty( "xFOIs"          , m_xFOIs = list_of
-                   (100.)(200.)(300.)(400.)   // M1
-                   (100.)(200.)(300.)(400.)   // M2
-                   (100.)(200.)(300.)(400.)   // M3
-                   (400.)(400.)(400.)(400.)); // M4
+                   (100.0F)(200.0F)(300.0F)(400.0F)   // M1
+                   (100.0F)(200.0F)(300.0F)(400.0F)   // M2
+                   (100.0F)(200.0F)(300.0F)(400.0F)   // M3
+                   (400.0F)(400.0F)(400.0F)(400.0F)); // M4
   //                 R1     R2    R3    R4
   declareProperty( "yFOIs"          , m_yFOIs = list_of
-                   ( 30.)( 60.)(100.)(150.)   // M1
-                   ( 60.)(120.)(180.)(240.)   // M2
-                   ( 60.)(120.)(240.)(480.)   // M3
-                   ( 60.)(120.)(240.)(480.)); // M4
+                   ( 30.0F)( 60.0F)(100.0F)(150.0F)   // M1
+                   ( 60.0F)(120.0F)(180.0F)(240.0F)   // M2
+                   ( 60.0F)(120.0F)(240.0F)(480.0F)   // M3
+                   ( 60.0F)(120.0F)(240.0F)(480.0F)); // M4
   declareProperty( "PhysicsTiming"    , m_physicsTiming = true );
   declareProperty( "AssumeCosmics"    , m_assumeCosmics = false );
   declareProperty( "AssumePhysics"    , m_assumePhysics = true );
