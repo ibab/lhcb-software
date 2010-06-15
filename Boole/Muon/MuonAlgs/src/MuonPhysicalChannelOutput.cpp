@@ -191,7 +191,7 @@ void MuonPhysicalChannelOutput::fillTimeList()
       iterInHits<hitsTraceBack().end();iterInHits++){ 
     if((*iterInHits).getMCMuonHistory().isHitFiring()){
       // add time to the list
-      m_timeList.push_back((*iterInHits).hitArrivalTime());
+      m_timeList.push_back((float)((*iterInHits).hitArrivalTime()));
     }
   }
 }

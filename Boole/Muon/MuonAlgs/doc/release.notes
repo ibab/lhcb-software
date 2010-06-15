@@ -4,6 +4,9 @@
 ! Purpose     : Muon digitisation algorithms
 !-----------------------------------------------------------------------------
 
+! 2010-06-15 - Marco Cattaneo
+ - Fix Windows compilation warnings
+
 !========================= MuonAlgs v6r9 2009-10-22 ==========================
 ! 2009-10-22 - Marco Cattaneo
  - remove obsolete file MuonAlgs_dll.cpp

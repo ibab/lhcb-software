@@ -23,7 +23,7 @@ void  MuonCardiacChannelOutput::addPhyChannel(MuonPhysicalChannelOutput* value)
     //	  m_Hits.push_back(po);
     if( po->getMCMuonHistory().isHitFiring() ) {
       MuonCardiacTraceBack pi(po);      
-      float time= (*po).hitArrivalTime();      
+      float time= (float)((*po).hitArrivalTime());      
 //      std::cout<<chID()<<" "<<time<<std::endl;
       m_timeList.push_back(std::pair<float,MuonCardiacTraceBack>(time,pi));      
     }    

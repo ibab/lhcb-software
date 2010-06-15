@@ -288,7 +288,7 @@ StatusCode MuonDigitization::addChamberNoise(){
             IPVolume* gasGapLayer=(p_chamber)->getGasGapLayer(gap);
 
 
-            float zhalfgap= 1.0;
+            double zhalfgap= 1.0;
             
             //  if(p_Gap!=NULL){
             const ISolid* gasGapSolid=gasGap->lvolume()
@@ -319,7 +319,7 @@ StatusCode MuonDigitization::addChamberNoise(){
               toGlobal(pointInCh1);
             Gaudi::XYZPoint point2=(p_chamber->geometry())->
               toGlobal(pointInCh2);
-            float z=(point1.z()+point2.z())/2.0F;
+            double z=(point1.z()+point2.z())/2.0;
             
             //              p_chamber->
             
@@ -894,7 +894,7 @@ fillCardiacChannel(MuonDigitizationData<MuonPhysicalChannelOutput>&
    if(!CardiacChannelOutput.isEmpty(i)){				
       for(iterOutput=CardiacChannelOutput.getPartition(i)->begin();
           iterOutput<CardiacChannelOutput.getPartition(i)->end();iterOutput++){
-        (*iterOutput)-> processForDeadTime(25, m_gate);
+        (*iterOutput)-> processForDeadTime(25, (float)m_gate);
         //        (*iterOutput)-> setFiringTime(); 
         //  info()<<" dopo il deadtime "<< (*iterOutput)->chInfo().isAlive()<<endmsg;
         

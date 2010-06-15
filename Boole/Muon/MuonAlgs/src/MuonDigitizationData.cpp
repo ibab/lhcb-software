@@ -8,6 +8,10 @@
 #include "MuonPhysicalChannelOutput.h" 
 #include "MuonCardiacChannelOutput.h"
 
+#ifdef _WIN32
+#pragma warning ( disable : 4661 ) // No suitable definition provided for explicit template instantiation request
+#endif
+
 template<class T> 
 MuonDigitizationData<T>::MuonDigitizationData(const std::string &path, 
                                               MsgStream* mlog, 
