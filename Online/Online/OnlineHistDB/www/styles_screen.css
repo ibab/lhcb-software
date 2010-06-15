@@ -115,6 +115,12 @@ a.asalink {
  margin-left:12;
 }
 
+.mysmall {
+  color:blue;
+  font-size: 8pt;
+  text-decoration: none;
+}
+
 /* order by links */
 /* normal */
 a.order_link {

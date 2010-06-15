@@ -48,6 +48,7 @@ function histo_header($id,$htype,$mode)
   global $fulllist;
   global $Reference_home;
   $script=$_SERVER["PHP_SELF"];
+  $maxPl=100;
   if($mode == "display") {
     $script='write/histo_header.php';
     foreach (array("DESCR","DOC","TASKNAME","HSALGO","HSTYPE","HSTITLE","SUBTITLE","NHS","NAME","REFPAGE") 
@@ -137,8 +138,10 @@ function histo_header($id,$htype,$mode)
     $stid = OCIParse($conn,"SELECT PAGENAME FROM PAGE order by PAGENAME");
     OCIExecute($stid);
     while (OCIFetchInto($stid, $page, OCI_ASSOC )) 
-      printf("<option class='normal' %s> %s </option>\n",($_POST["REFPAGE"] == $page["PAGENAME"]) ? "selected" : "",
-             $page["PAGENAME"]);
+       printf("<option class='mysmall' %s value='%s'> %s </option>\n",
+               ($_POST["REFPAGE"] == $page["PAGENAME"]) ? "selected" : "",
+               $page["PAGENAME"],
+               (strlen($page["PAGENAME"])>$maxPl ? "..." : "").substr($page["PAGENAME"],-$maxPl));
     ocifreestatement($stid);
     echo "</select> <br>";
 
