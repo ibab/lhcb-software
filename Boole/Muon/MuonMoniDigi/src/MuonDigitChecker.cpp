@@ -92,10 +92,6 @@ StatusCode MuonDigitChecker::execute() {
     }
   }
 
-  long m_evt = evt->evtNumber();
-
-  long m_digit_evt = evt->evtNumber();
-  
   std::vector<float> m_sta,m_reg,m_cha,m_con,m_x,m_y,m_z,m_time, m_id;
   std::vector<float> m_px,m_py,m_pz,m_E,m_xv,m_yv,m_zv,m_tv, m_mom;
   std::vector<float> m_ple,m_hen,m_dix,m_dxz,m_dyz;
@@ -144,26 +140,26 @@ StatusCode MuonDigitChecker::execute() {
 	  
 	  debug()<<" region:: " <<region<<endmsg;
 	  
-	  float xpos=((*iter)->entry().x()+(*iter)->exit().x())/2.0;
-	  float ypos=((*iter)->entry().y()+(*iter)->exit().y())/2.0;
-	  float zpos=((*iter)->entry().z()+(*iter)->exit().z())/2.0;
-	  float time=(*iter)->time();
+	  float xpos=(float)(((*iter)->entry().x()+(*iter)->exit().x())/2.0);
+	  float ypos=(float)(((*iter)->entry().y()+(*iter)->exit().y())/2.0);
+	  float zpos=(float)(((*iter)->entry().z()+(*iter)->exit().z())/2.0);
+	  float time=(float)((*iter)->time());
 	  
 	  double tof=time-sqrt(xpos*xpos+ypos*ypos+zpos*zpos)/300.0;
 	  if(tof<0.1)tof=0.1;
 	  float r=sqrt(xpos*xpos+ypos*ypos);
 	  
-	  m_sta.push_back(station);
-	  m_reg.push_back(region);
-	  m_cha.push_back(chamber);
-	  m_con.push_back(container);
+	  m_sta.push_back((float)station);
+	  m_reg.push_back((float)region);
+	  m_cha.push_back((float)chamber);
+	  m_con.push_back((float)container);
 	  
 	  //Temporary monitoring (need to check if already available)
-	  m_ple.push_back((*iter)->pathLength());
-	  m_hen.push_back((*iter)->energy());
-	  m_dix.push_back((*iter)->displacement().x());
-	  m_dxz.push_back((*iter)->dxdz());
-	  m_dyz.push_back((*iter)->dydz());
+	  m_ple.push_back((float)((*iter)->pathLength()));
+	  m_hen.push_back((float)((*iter)->energy()));
+	  m_dix.push_back((float)((*iter)->displacement().x()));
+	  m_dxz.push_back((float)((*iter)->dxdz()));
+	  m_dyz.push_back((float)((*iter)->dydz()));
 	  
 	  m_x.push_back(xpos); m_y.push_back(ypos); m_z.push_back(zpos);
 	  m_time.push_back(time);
@@ -178,24 +174,24 @@ StatusCode MuonDigitChecker::execute() {
 	  const LHCb::MCParticle* particle=(*iter)->mcParticle();
 	  if(particle){            
 	    if(abs(particle->particleID().pid())<100000){
-	      m_id.push_back(particle->particleID().pid());
+	      m_id.push_back((float)particle->particleID().pid());
 	    }
 	    
-	    m_px.push_back(particle->momentum().px());
-	    m_py.push_back(particle->momentum().py());
+	    m_px.push_back((float)particle->momentum().px());
+	    m_py.push_back((float)particle->momentum().py());
 	    //Pz sign tells you the particle direction
-	    m_pz.push_back(particle->momentum().pz());
-	    m_E.push_back(particle->momentum().e());
+	    m_pz.push_back((float)particle->momentum().pz());
+	    m_E.push_back((float)particle->momentum().e());
 	    
 	    //Particle Vertex studies	    
-	    m_xv.push_back(particle->originVertex()->position().x());
-	    m_yv.push_back(particle->originVertex()->position().y());
-	    m_zv.push_back(particle->originVertex()->position().z());
-	    m_tv.push_back(particle->originVertex()->time());
+	    m_xv.push_back((float)particle->originVertex()->position().x());
+	    m_yv.push_back((float)particle->originVertex()->position().y());
+	    m_zv.push_back((float)particle->originVertex()->position().z());
+	    m_tv.push_back((float)particle->originVertex()->time());
 	    
 	    const LHCb::MCParticle * moth=particle->mother();
 	    if(moth && (abs(moth->particleID().pid())<100000)){
-	      m_mom.push_back(moth->particleID().pid()); 
+	      m_mom.push_back((float)moth->particleID().pid()); 
 	    } else {
 	      m_mom.push_back(0);
 	    }
@@ -235,21 +231,21 @@ StatusCode MuonDigitChecker::execute() {
     Dsta = (*jdigit)->key().station();
     Dreg = (*jdigit)->key().region();
     
-    m_digit_s.push_back(Dsta);
-    m_digit_r.push_back(Dreg);
-    m_digit_time.push_back((*jdigit)->TimeStamp());
+    m_digit_s.push_back((float)Dsta);
+    m_digit_r.push_back((float)Dreg);
+    m_digit_time.push_back((float)(*jdigit)->TimeStamp());
     
     // Timestamp is one of the 8 intervals (8 digits) in which
     // the 20ns acceptance window is subdivided after beam crossing
     StatusCode sc=muonD->Tile2XYZ((*jdigit)->key(),x,dx,y,dy,z,dz);
     if(sc.isFailure())debug()<<"error in tile "<<endmsg;
-    m_digit_x.push_back(x);
-    m_digit_y.push_back(y);
-    m_digit_z.push_back(z);
+    m_digit_x.push_back((float)x);
+    m_digit_y.push_back((float)y);
+    m_digit_z.push_back((float)z);
     
-    m_digit_dx.push_back(dx);
-    m_digit_dy.push_back(dy);
-    m_digit_dz.push_back(dz);
+    m_digit_dx.push_back((float)dx);
+    m_digit_dy.push_back((float)dy);
+    m_digit_dz.push_back((float)dz);
     
     //Match with "true" MC digit    
     LHCb::MCMuonDigit * MCmd = mcdigit->object((*jdigit)->key());
@@ -272,12 +268,12 @@ StatusCode MuonDigitChecker::execute() {
     Deve = digInfo.doesFiringHitBelongToCurrentEvent();
     Dali = digInfo.isAlive();
     Dfir = MCmd->firingTime();
-    m_digit_firing.push_back(Dfir);
-    m_digit_origin.push_back(Dcon);
-    m_digit_bx.push_back(Deve);
+    m_digit_firing.push_back((float)Dfir);
+    m_digit_origin.push_back((float)Dcon);
+    m_digit_bx.push_back((float)Deve);
     
     // Hits mupltiplicity
-    m_digit_multi.push_back( MCmd->mcHits().size());
+    m_digit_multi.push_back( (float)MCmd->mcHits().size());
     //if(Deve) 
     tnDhit[Dsta][Dreg][Dcon]++;
     //if(globalTimeOffset()>0)info()<<" qui "<<Dcon<<" "<<Dfir<<" "<<Deve<<" "<<Dsta<<" "<<Dreg<<endreq;
@@ -295,6 +291,7 @@ StatusCode MuonDigitChecker::execute() {
   if(m_hitMonitor) {
     Tuple nt1 = nTuple(41,"MC HITS",CLID_ColumnWiseTuple);
     
+    long m_evt = (long)evt->evtNumber()&0x7FFFFFFF;  
     StatusCode sc=nt1->column("Event",m_evt,0,10000);
     if(sc.isFailure())debug()<<" nt error "<<endmsg;
     nt1->farray("is", m_sta ,"Nhits",1000);
@@ -348,6 +345,7 @@ StatusCode MuonDigitChecker::execute() {
   }
   Tuple nt2 = nTuple(42,"DIGITS",CLID_ColumnWiseTuple);
   
+  long m_digit_evt = (long)evt->evtNumber()&0x7FFFFFFF;
   StatusCode sc=nt2->column("Event", m_digit_evt, 0,10000);
   if(sc.isFailure())debug()<<" nt error "<<endmsg;
   sc=nt2->farray("is",    m_digit_s,      "Ndigits",1000);
