@@ -9,6 +9,9 @@
 !               reconstruction algorithm for beam tracks
 !-----------------------------
 
+! 2010-06-15 - GG
+ - remove OfflineTimeAlig stuff
+
 ! 2010-06-15 - Marco Cattaneo
  - Fix Windows linker warnings
  - Fix remaining Windows compilation warning
