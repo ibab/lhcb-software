@@ -962,9 +962,9 @@ debug()<<"to check "<<pToCheck<<endreq;
                                            ySlope,averageZ,entryGlobal,
                                            exitGlobal);
         if ( sc.isFailure() )return  sc;
-        float x=(entryGlobal.x()+exitGlobal.x())/2.0F;
-        float y=(entryGlobal.y()+exitGlobal.y())/2.0F;
-        float z=(entryGlobal.z()+exitGlobal.z())/2.0F;
+        double x=(entryGlobal.x()+exitGlobal.x())/2.0;
+        double y=(entryGlobal.y()+exitGlobal.y())/2.0;
+        double z=(entryGlobal.z()+exitGlobal.z())/2.0;
         LHCb::MCHit* pHit = new LHCb::MCHit();
         pHit->setEntry(entryGlobal);                     
         pHit->setDisplacement(exitGlobal-entryGlobal);
@@ -1066,9 +1066,9 @@ StatusCode MuonBackground::calculateHitPosInGap(DeMuonChamber* pChamber,
   if(p_Gap!=NULL){  
     const ISolid* gapSolid=(p_Gap)->lvolume()->solid();
     const SolidBox* gapBox = dynamic_cast<const SolidBox *>(gapSolid);
-    float zhalfgap= gapBox->zHalfLength() ;
-    float xhalfgap= gapBox->xHalfLength() ;
-    float yhalfgap= gapBox->yHalfLength() ;
+    const double zhalfgap= gapBox->zHalfLength() ;
+    const double xhalfgap= gapBox->xHalfLength() ;
+    const double yhalfgap= gapBox->yHalfLength() ;
 //    verbose()<<"half gap size "<<xhalfgap <<" "<<yhalfgap<<" "<<zhalfgap
 //           <<endmsg;    
     
@@ -1079,7 +1079,7 @@ StatusCode MuonBackground::calculateHitPosInGap(DeMuonChamber* pChamber,
     Gaudi::XYZPoint logaslayer=p_GapLayer->toLocal(loch);
     Gaudi::XYZPoint poslocal=p_Gap->toLocal(logaslayer);
 
-    float zcenter=poslocal.z();
+    const double zcenter=poslocal.z();
 //    verbose()<<" input data "<<xpos<<" "<<ypos<<" "<<gapNumber<<" "
 //          <<zavegaps<<" "<<endmsg;    
 //    verbose()<<"center gap "<<poslocal.x()<<" "<<poslocal.y()<<" "
@@ -1087,26 +1087,26 @@ StatusCode MuonBackground::calculateHitPosInGap(DeMuonChamber* pChamber,
     //Gaudi::Transform3D matrixToLocal= (p_Gap->geometry())->matrix();
     //Gaudi::XYZPoint slopelocal=matrixToLocal*
     Gaudi::XYZPoint slopelocal=Gaudi::XYZPoint(xSlope,ySlope,1.0F);
-    float zinf=-zhalfgap;    
-    float zsup=+zhalfgap;
+    const double zinf=-zhalfgap;    
+    const double zsup=+zhalfgap;
 //    verbose()<<"local slopes "<<
 //      slopelocal.x()<<" "<<slopelocal.y()<<" "<<slopelocal.z()<<endmsg;    
-    float xentry=poslocal.x()+(zinf-zcenter)*
+    double xentry=poslocal.x()+(zinf-zcenter)*
       (slopelocal.x()/slopelocal.z());
-    float xexit=poslocal.x()+(zsup-zcenter)*
+    double xexit=poslocal.x()+(zsup-zcenter)*
       (slopelocal.x()/slopelocal.z());
-    float yentry=poslocal.y()+
+    double yentry=poslocal.y()+
       (zinf-zcenter)*(slopelocal.y()/slopelocal.z());
-    float yexit=poslocal.y()+
+    double yexit=poslocal.y()+
       (zsup-zcenter)*(slopelocal.y()/slopelocal.z());
 
     //check that gap boundaries have not been crossed
-    float xmin=-xhalfgap;    
-    float ymin=-yhalfgap;
-    float xmax=xhalfgap;
-    float ymax=yhalfgap;
-    float zmin=-zhalfgap;
-    float zmax=zhalfgap;
+    const double xmin=-xhalfgap;    
+    const double ymin=-yhalfgap;
+    const double xmax=xhalfgap;
+    const double ymax=yhalfgap;
+    double zmin=-zhalfgap;
+    double zmax=zhalfgap;
     bool correct=true;    
     if(xentry<xmin||xentry>xmax)correct=false;
     if(yentry<ymin||yentry>ymax)correct=false;
@@ -1117,23 +1117,22 @@ StatusCode MuonBackground::calculateHitPosInGap(DeMuonChamber* pChamber,
 //    verbose()<<" correct "<<correct<<" "<<slopelocal.x()<<" "<<
 //      slopelocal.y()<<endmsg;
     if(correct){
-      float z1,z2;
       //then x
       if(slopelocal.x()==0)return StatusCode::FAILURE;
-      z1=(xmin-poslocal.x())/(slopelocal.x()/slopelocal.z());
-      z2=(xmax-poslocal.x())/(slopelocal.x()/slopelocal.z());
-      float zz1=min(z1,z2);
-      float zz2=max(z1,z2);
-      zmin=max(zmin,zz1);
-      zmax=min(zmax,zz2);      
+      double z1=(xmin-poslocal.x())/(slopelocal.x()/slopelocal.z());
+      double z2=(xmax-poslocal.x())/(slopelocal.x()/slopelocal.z());
+	  double zz1=std::min(z1,z2);
+	  double zz2=std::max(z1,z2);
+	  zmin=std::max(zmin,zz1);
+	  zmax=std::min(zmax,zz2);      
       //then y
       if(slopelocal.y()==0)return StatusCode::FAILURE;
       z1=(xmin-poslocal.y())/(slopelocal.y()/slopelocal.z());
       z2=(xmax-poslocal.y())/(slopelocal.y()/slopelocal.z());
-      zz1=min(z1,z2);
-      zz2=max(z1,z2);
-      zmin=max(zmin,zz1);
-      zmax=min(zmax,zz2);
+	  zz1=std::min(z1,z2);
+	  zz2=std::max(z1,z2);
+	  zmin=std::max(zmin,zz1);
+	  zmax=std::min(zmax,zz2);
       if(zmin>zhalfgap||zmax<-zhalfgap)return StatusCode::FAILURE;      
       xentry=poslocal.x()+(slopelocal.x()/slopelocal.z())*(zmin-zcenter);  
       xexit=poslocal.x()+(slopelocal.x()/slopelocal.z())*(zmax-zcenter);  
@@ -1181,15 +1180,15 @@ StatusCode MuonBackground::calculateAverageGap(DeMuonChamber* pChamber,
     //get 3 points to build a plane for the gap center
     Gaudi::XYZPoint point1=pChamber->geometry()->
       toGlobal(pGapLayer->
-	       toMother(pGap->toMother(Gaudi::XYZPoint(0,0,0))));
+	       toMother(pGap->toMother(Gaudi::XYZPoint(0.,0.,0.))));
     Gaudi::XYZPoint point2=pChamber->geometry()->
       toGlobal(pGapLayer->
-	       toMother(pGap->toMother(Gaudi::XYZPoint(1,0,0))));
+	       toMother(pGap->toMother(Gaudi::XYZPoint(1.,0.,0.))));
     Gaudi::XYZPoint point3=pChamber->geometry()->
       toGlobal(pGapLayer->
-	       toMother(pGap->toMother(Gaudi::XYZPoint(0,1,0))));
+	       toMother(pGap->toMother(Gaudi::XYZPoint(0.,1.,0.))));
     Gaudi::Plane3D plane(point1,point2,point3);
-    float zInterceptThisPlane=0;      
+    double zInterceptThisPlane=0.;      
     Gaudi::XYZVector para=plane.Normal();
     if(para.Z()!=0){
       double a=para.X();
@@ -1197,7 +1196,7 @@ StatusCode MuonBackground::calculateAverageGap(DeMuonChamber* pChamber,
       double d=plane.HesseDistance();        
       zInterceptThisPlane=-(a*xpos+b*ypos+d)/(para.Z());
     }else zInterceptThisPlane=point1.z();      
-    zaverage=zaverage+ zInterceptThisPlane;
+    zaverage=zaverage+ (float)zInterceptThisPlane;
   }    
   countGap++;    
   
