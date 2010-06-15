@@ -1,6 +1,6 @@
 <?
 include 'util.php';
-$conn=HistDBconnect();
+$conn=HistDBconnect(0,"HIST_READER","reader");
 $type=$_GET["type"];
 echo "<table border=1><thead>";
 $inputdoc= ($type == "HCREATOR") ? "Input <br> Histograms" : "Input <br>Parameters";
@@ -16,5 +16,6 @@ while (OCIFetchInto($stid,$myfun,OCI_ASSOC )) {
     $myfun["ALGDOC"]."</td></tr>";
  }
 echo "</table>";
+ocilogoff($conn);
 ?>
 </body></html>
