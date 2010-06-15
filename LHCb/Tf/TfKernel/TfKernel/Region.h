@@ -91,6 +91,14 @@ namespace Tf
     inline double xLocal(const double globalX, const double globalY) const { return globalX*m_cosT + globalY*m_sinT ; }
     /// XXX???XXX Not sure at all what this is
     inline double yLocal(const double globalX, const double globalY) const { return globalX*m_cosT - globalY*m_sinT ; }
+
+    /// vector in x direction of local frame (given in global frame)
+    inline const Gaudi::XYZVector& vx() const { return m_vx; }
+    /// vector in y direction of local frame (given in global frame)
+    inline const Gaudi::XYZVector& vy() const { return m_vy; }
+    /// vector in z direction of local frame (given in global frame)
+    inline const Gaudi::XYZVector& vz() const { return m_vz; }
+
   protected:
     unsigned int m_numelements ; ///< The number of elements
     double m_xmin ; ///< The min x value
@@ -105,6 +113,9 @@ namespace Tf
     double m_ymaxT ;
     double m_cosT ;
     double m_sinT ;
+    Gaudi::XYZVector m_vx; ///< vector in x direction of local frame (given in global frame)
+    Gaudi::XYZVector m_vy; ///< vector in y direction of local frame (given in global frame)
+    Gaudi::XYZVector m_vz; ///< vector in z direction of local frame (given in global frame)
   } ;
 
   /** @class Envelope TfKernel/Region.h
@@ -144,6 +155,9 @@ namespace Tf
 
     // Should be able to do this a bit smarter, but OK, too tired
     // now.
+    m_vx = detelement.globalPoint(1.0, 0., 0.) - detelement.globalPoint(0., 0., 0.);
+    m_vy = detelement.globalPoint(0., 1.0, 0.) - detelement.globalPoint(0., 0., 0.);
+    m_vz = detelement.globalPoint(0., 0., 1.0) - detelement.globalPoint(0., 0., 0.);
     bool first=true ;
     for( int ix=0; ix<2; ++ix)
       for(int iy=0; iy<2; ++iy)
@@ -191,6 +205,9 @@ namespace Tf
       m_ymaxT = std::max( m_ymaxT, element.m_ymaxT ) ;
       m_sinT  = (m_sinT*m_numelements + element.m_sinT)/(m_numelements+1) ;
       m_cosT  = sqrt(1-m_sinT*m_sinT) ;
+      m_vx = (m_vx * m_numelements + element.vx()) / (m_numelements + 1);
+      m_vy = (m_vy * m_numelements + element.vy()) / (m_numelements + 1);
+      m_vz = (m_vz * m_numelements + element.vz()) / (m_numelements + 1);
       ++m_numelements ;
     }
   }

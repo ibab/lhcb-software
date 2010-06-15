@@ -4,6 +4,11 @@
 ! Purpose     : Core classes for the Tf framework
 !-----------------------------------------------------------------------------
 
+! 2010-06-15 - Manuel Tobias Schiller
+ - keep track of average local unit vectors along local coordinate axes of
+   each region, add accessors to return these vectors in the global (LHCb)
+   coordinate frame
+
 !============================ TfKernel v2r17 2010-04-26 ======================
 ! 2010-04-07 Wouter Hulsbergen
  - replaced LoKi::Range with Gaudi::Range
