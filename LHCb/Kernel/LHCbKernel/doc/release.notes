@@ -4,6 +4,10 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+! 2010-06-15 - Manuel Tobias Schiller
+ - fix HitPattern: IT A/C side and Top/Bottom fields are swapped in
+   initialization
+
 ! 2010-05-26 - Chris Jones
  - Fix ifdef logic in FastAllocVector.h for GCC 4.X
 
@@ -182,7 +186,7 @@
 
 ! 2009-03-05 - Rob Lambert
  - Extended IEvtTypeSvc. allTypes returns a set of all known types
-	 Added typdefs LHCb::EventTypeSet, as an ordered set of types
+    Added typdefs LHCb::EventTypeSet, as an ordered set of types
 
 ! 2009-02-25 - Olivier Deschamps 
  - CaloCellID.xml : make setCalo() method public
@@ -1057,7 +1061,7 @@
 
 ! 2005-04-08 - Jose Hernando
  - LHCbID class revisited:
-		. using 26 bits for ST, 2 bits used for size 
+      . using 26 bits for ST, 2 bits used for size 
 
 
 !====================== LHCbKernel v5r9 2005-04-07 ========================
@@ -1449,9 +1453,9 @@
  - modification in Relations, file src/AssociatorBase.cpp
    the associator now tries and set the Property "OutputTable" or "Output"
    of the building algorithm (in this order of priority) to the value of
-	 its own "Location" property.
+    its own "Location" property.
    This allows to make sure that the algorithm produces the relations table
-	 at the right place
+    at the right place
 
 !========================= LHCbKernel v1r2 2002-07-09 ===================
 ! 2002-06-18 - Stefan Roiser
@@ -1495,10 +1499,10 @@
 ! 13/05/2002- Philippe Charpentier
   - Relations/Associator.h and IAssociator.h
     add method to retrieve THE related object in case there is at most one.
-	  Otherwise it returns the first one or a null pointer if there is none.
+     Otherwise it returns the first one or a null pointer if there is none.
   - Relations/AssociatorWeighted.h and IAssociatorWeighted
     add method to retrieve THE related object in case there is at most one.
-	  Otherwise it returns the first one or a null pointer if there is none.
+     Otherwise it returns the first one or a null pointer if there is none.
 
 ! 12/05/2002 - Vanya Belyaev
   - src/Test/LHCbKernelTest.cpp  removed
@@ -1526,12 +1530,12 @@
      StatusCode xxx( *, Range&)         returns FAILURE if no table
      ToRange    xxx( * )                returns empty range if no table
 
-	  Relations/IAssociator[Weighted].h   Removed unsafe methods
+     Relations/IAssociator[Weighted].h   Removed unsafe methods
                                         Added methods [inv]range()
                                         Method bool tableExists()
                                          creates/accesses the table and returns
                                          true if successful
-	  Relations/IAssociatorWeighted.h     Added methods with cuts on weight:
+     Relations/IAssociatorWeighted.h     Added methods with cuts on weight:
                                          [inv]rangeWith{Low|High}Cut
 
 ! 10/05/2002 - Vanya Belyaev

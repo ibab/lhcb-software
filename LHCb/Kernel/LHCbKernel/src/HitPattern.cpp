@@ -52,9 +52,9 @@ namespace LHCb
 		    LHCb::STChannelID stid = id->stID() ;
 		    unsigned int uniquelayer = (stid.station()-1)*4 + stid.layer()-1 ;
 		    if (stid.detRegion() == 1 || stid.detRegion() == 2)
-		      m_itTopBottom.set(uniquelayer) ;
-		    else
 		      m_itAC.set(uniquelayer);
+		    else
+		      m_itTopBottom.set(uniquelayer);
 		}
 		break ;
 		case LHCbID::OT:
