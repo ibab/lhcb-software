@@ -4,9 +4,14 @@
 ! Purpose     : Provide tools for fast trending in C++
 !-----------------------------------------------------------------------------
 
+! 2010-06-15 - Olivier Callot
+ - Protect against too big tag array, at 10% of buffer size.
+ - Improve the runTest script to test the trending tool.
+
 ! 2010-06-14 - Olivier Callot
  - Add a missing #include <ctime> needed for Windows.
 
+!============================== 2010-06-13 v1r0 ==============================
 ! 2010-06-10 - Olivier Callot
  - Initial release. This package provide a fast and efficient way to store a block
    of information versus time, with threshold for suppressing non-changing values,

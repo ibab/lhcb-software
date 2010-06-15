@@ -15,9 +15,8 @@ END-OF-OPTS
 #
 
 cat /tmp/${USER}_Test.opts;
-setenvOnline v4r40
-export LD_LIBRARY_PATH=/sw/lib/lhcb/LHCB/LHCB_v30r0/InstallArea/x86_64-slc5-gcc43-opt/lib:$LD_LIBRARY_PATH
-cd Online/Trending/cmt
+cd $TRENDINGROOT/cmt
+source setup.sh
 $ONLINEKERNELROOT/$CMTCONFIG/gentest.exe libGaudiKernel.so GaudiMain  /tmp/${USER}_Test.opts
 rm /tmp/${USER}_Test.opts;
 }
