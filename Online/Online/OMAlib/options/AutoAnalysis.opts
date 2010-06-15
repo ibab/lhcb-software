@@ -1,11 +1,8 @@
 
 
-ApplicationMgr.DLLs += { "OMAlib" };
-
 // for using Monitoring Service 
 //ApplicationMgr.ExtSvc += { "MonitorSvc" };
 //ApplicationMgr.DLLs += {"Gaucho"};
-
 
 
 ApplicationMgr.TopAlg = { "DBDrivenAnalysisTask"};
@@ -30,17 +27,18 @@ DBDrivenAnalysisTask.TextLog = "/tmp/mylog.txt";
 //DBDrivenAnalysisTask.HistDB      = "LHCBR_HIST";
 
 // uncomment for using test offline DB
-DBDrivenAnalysisTask.HistDB      = "devdb10";
-DBDrivenAnalysisTask.HistDBuser  = "lhcb_devmon_giacomo";
-DBDrivenAnalysisTask.HistDBpw    = "testhist2009";
+//DBDrivenAnalysisTask.HistDB      = "devdb10";
+//DBDrivenAnalysisTask.HistDBuser  = "lhcb_mon_giacomo";
+//DBDrivenAnalysisTask.HistDBpw    = "password";
 DBDrivenAnalysisTask.RICHclustersDir = "~/omaTest";
-DBDrivenAnalysisTask.ChangeHistPadColors =true;
+DBDrivenAnalysisTask.ChangeHistPadColors =false;
+
 
 // uncomment for changing the reference path
-DBDrivenAnalysisTask.HistRefRoot = "/afs/cern.ch/user/g/ggiacomo/public/Histograms/Reference";
+//DBDrivenAnalysisTask.HistRefRoot = "/afs/cern.ch/user/g/ggiacomo/public/Histograms/Reference";
 
-// uncomment to switch off saving of alarms to HistDB
-//DBDrivenAnalysisTask.HistDBMsgPersistency = false;
+// switch off saving of alarms to HistDB
+DBDrivenAnalysisTask.HistDBMsgPersistency = false;
 
 
 
