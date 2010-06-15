@@ -13,32 +13,24 @@ int StreamTaskMgr_install()  {
   names[4]  = makeDynString ("","Node","","");
   names[5]  = makeDynString ("","Command","","");
   names[6]  = makeDynString ("","State","","");
-  names[7]  = makeDynString ("","Messages","","");
-  names[8]  = makeDynString ("","","severity","");
-  names[9]  = makeDynString ("","","msg","");
-  names[10] = makeDynString ("","","source","");
-  names[11] = makeDynString ("","Class","","");
-  names[12] = makeDynString ("","InUse","","");
-  names[13] = makeDynString ("","Priority","","");
-  names[14] = makeDynString ("","FMC_Start","","");
-  names[15] = makeDynString ("","SysName","","");
-  names[16] = makeDynString ("","DimDNS","","");
+  names[7]  = makeDynString ("","Class","","");
+  names[8]  = makeDynString ("","InUse","","");
+  names[9]  = makeDynString ("","Priority","","");
+  names[10] = makeDynString ("","FMC_Start","","");
+  names[11] = makeDynString ("","SysName","","");
+  names[12] = makeDynString ("","DimDNS","","");
   types[1]  = makeDynInt (DPEL_STRUCT,0,0,0);
   types[2]  = makeDynInt (0,DPEL_STRING,0,0);
   types[3]  = makeDynInt (0,DPEL_STRING,0,0);
   types[4]  = makeDynInt (0,DPEL_STRING,0,0);
   types[5]  = makeDynInt (0,DPEL_STRING,0,0);
   types[6]  = makeDynInt (0,DPEL_STRING,0,0);
-  types[7]  = makeDynInt (0,DPEL_STRUCT,0,0);
-  types[8]  = makeDynInt (0,0,DPEL_INT,0);
-  types[9]  = makeDynInt (0,0,DPEL_STRING,0);
-  types[10] = makeDynInt (0,0,DPEL_STRING,0);
-  types[11] = makeDynInt (0,DPEL_INT,0,0);
-  types[12] = makeDynInt (0,DPEL_INT,0,0);
-  types[13] = makeDynInt (0,DPEL_INT,0,0);
-  types[14] = makeDynInt (0,DPEL_STRING,0,0);
-  types[15] = makeDynInt (0,DPEL_STRING,0,0);
-  types[16] = makeDynInt (0,DPEL_STRING,0,0);
+  types[7]  = makeDynInt (0,DPEL_INT,0,0);
+  types[8]  = makeDynInt (0,DPEL_INT,0,0);
+  types[9]  = makeDynInt (0,DPEL_INT,0,0);
+  types[10] = makeDynInt (0,DPEL_STRING,0,0);
+  types[11] = makeDynInt (0,DPEL_STRING,0,0);
+  types[12] = makeDynInt (0,DPEL_STRING,0,0);
   ctrlUtils_installDataType(names,types);
 
   names[1]  = makeDynString ("StreamTaskCreator","","","");
@@ -107,6 +99,7 @@ int StreamTaskMgr_install()  {
   names[14] = makeDynString ("","StreamInfrastructure","","");
   names[15] = makeDynString ("","StreamReceivers","","");
   names[16] = makeDynString ("","StreamSenders","","");
+  names[17] = makeDynString ("","CtrlInfrastructure","","");
   types[1]  = makeDynInt (DPEL_STRUCT,0,0,0);
   types[2]  = makeDynInt (0,DPEL_STRING,0,0);
   types[3]  = makeDynInt (0,DPEL_INT,0,0);
@@ -123,6 +116,7 @@ int StreamTaskMgr_install()  {
   types[14] = makeDynInt (0,DPEL_DYN_STRING,0,0);
   types[15] = makeDynInt (0,DPEL_DYN_STRING,0,0);
   types[16] = makeDynInt (0,DPEL_DYN_STRING,0,0);
+  types[17] = makeDynInt (0,DPEL_DYN_STRING,0,0);
   ctrlUtils_installDataType(names,types);
 }
 //=============================================================================
@@ -141,6 +135,7 @@ int StreamTaskMgr_connectTaskManager(string stream)  {
   int res = dpGet(stream+"Alloc.RecvNodes",recvNodes,stream+"Alloc.StreamNodes",strmNodes);
   if ( 0 == res )  {
     dynAppend(recvNodes,strmNodes);
+    dynAppend(recvNodes,getHostname());
     for(int i=1; i<=dynlen(recvNodes); ++i)  {
       string name = strtoupper(recvNodes[i]);
       string dp_name = name+"_StreamTaskCreator";
@@ -246,7 +241,7 @@ int StreamTaskMgr_createTree(string stream,
 			     string monitoringInput,
 			     int num_monTasks,
 			     int refresh=1,
-                           bool have_config=1)  
+                             bool have_config=1)  
 {
   dyn_string recvNodes, strmNodes, sendNodes;
   // Get stream configuration from the corresponding StreamControl datapoint
@@ -266,6 +261,10 @@ int StreamTaskMgr_createTree(string stream,
         StreamTaskMgr_addTreeNode(stream_node, node+"_Config", "StreamConfigurator", 0);
         fwFsmTree_setNodeLabel(node+"_Config","Configurator");
       }
+      // Controls node: Fix number of processes to 10!
+      name = node+"_"+getHostname();
+      StreamTaskMgr_createNode(stream_node,name,"FSM_Tasks",10);
+      fwFsmTree_setNodeLabel(name,getHostname());
       for(int i=1; i<=dynlen(sendNodes); ++i)  {
         name = node+"_"+sendNodes[i];
         StreamTaskMgr_createNode(stream_node,name,"FSM_Tasks",num_monTasks);

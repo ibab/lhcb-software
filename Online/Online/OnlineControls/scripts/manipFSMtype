@@ -14,7 +14,7 @@ i=0
 while(i<len(args)):
   a = str(args[i]).upper()[:2]
   if a=='-P':
-    print 'export PVSS_PROJECT_NAME='+args[i+1]+'; shift 1; shift 1;'
+    print 'export PVSS_PROJECT_NAME='+args[i+1].upper()+'; shift 1; shift 1;'
     i = i + 2
   elif a=='-T':
     print 'export FSMTYPE='+args[i+1]+'; shift 1; shift 1;'
@@ -40,14 +40,13 @@ if test -z "${PVSS_PROJECT_NAME}" -o -z "${PVSSACTION}" -o -z "${FSMTYPE}";
     then
     echo "No Project name given!";
     echo "usage: Install.sh -project <project-name> <install_name>";
-    echo "  -project <name>: Choose one of: STORAGE MONITORING LBECS, ...";
+    echo "   -project <name>: Choose one of: STORAGE MONITORING LBECS, ...";
     echo "   -type    <name>: Choose FSM type to extract";
     exit 0;
 fi;
 export PVSS_PROJECT_BASE=/localdisk/pvss/${PVSS_PROJECT_NAME}
 export PVSS_II=${PVSS_PROJECT_BASE}/config/config
 #
-
 . ../cmt/setup.sh
 export PVSS_II="/localdisk/pvss/${PVSS_PROJECT_NAME}/config/config"
 export PVSS_PROJECT_BASE=/localdisk/pvss/${PVSS_PROJECT_NAME}

@@ -390,7 +390,7 @@ class FSMmanip:
     fifo = '/tmp/logSrv.fifo'
     # cmd = sysname+'#-E /tmp/logGaudi.fifo -O /tmp/logGaudi.fifo '+\
     fifo = self.fifoName(task)
-    fifo = '/tmp/'+slice+'.fifo'
+    #fifo = '/tmp/'+slice+'.fifo'
     #cmd = sysname+'#-e -o'+\
     cmd = sysname+'#-E '+fifo+' -O '+fifo+\
           ' -c -u '+utgid+' -n '+account+\
@@ -710,6 +710,12 @@ class Allocator(StreamingDescriptor):
     part_info = self.allocateSlots(rundp_name,partition,nLayer1Slots,recv_slots_per_node,nLayer2Slots,strm_slots_per_node)
 
     if part_info is not None:   # Allocation was successful: Now update Info table+tasks
+      pinfo = PartitionInfo.PartitionInfo(self.manager,part_info.name).load()
+      fsm_manip = self.fsmManip(pinfo,'_FwFsmDevice',match='*')
+      slots = fsm_manip.collectTaskSlots()
+      if slots:
+        log('Cleaning task slots for '+partition,timestamp=1)
+        fsm_manip.reset(slots)
       return part_info.name
     self.free(rundp_name,partition)
     error('Failed to allocate slots of type:'+self.name+' for partition:'+partition,timestamp=1)
@@ -767,8 +773,13 @@ class Allocator(StreamingDescriptor):
       self.reader.add(self.recvSlices)
       self.reader.add(self.strmSlices)
       if self.reader.execute():
-        slice = part_info.fsmSlice()
         #print 'Partition name:',nam, slice
+        fsm_manip = self.fsmManip(part_info,'_FwFsmDevice',match='*')
+        slots = fsm_manip.collectTaskSlots()
+        if slots:
+          log('Cleaning task slots for '+partition,timestamp=1)
+          fsm_manip.reset(slots)
+        slice = part_info.fsmSlice()
         for i in part_info.datapoints[4].data:
           self.recvSlices.data.push_back(i)
         for i in part_info.datapoints[6].data:

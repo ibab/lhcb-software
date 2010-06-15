@@ -6,8 +6,8 @@ fwOT_FSM_Tasks	_FwFsmObjectType	168586
 
 # DpValue
 ElementName	TypeName	_original.._value	_original.._status64	_original.._stime
-fwOT_FSM_Tasks.panel	_FwFsmObjectType	"StreamControl/FSM_Tasks.pnl"	0x101	04.03.2009 07:41:55.855
-fwOT_FSM_Tasks.components	_FwFsmObjectType		0x141	02.03.2009 07:10:46.447
+fwOT_FSM_Tasks.panel	_FwFsmObjectType	"StreamControl/FSM_Tasks.pnl"	0x101	15.06.2010 21:16:21.024
+fwOT_FSM_Tasks.components	_FwFsmObjectType		0x101	03.06.2009 15:16:50.628
 fwOT_FSM_Tasks.states	_FwFsmObjectType	"NOT_READY", "FwStateAttention1", "when ( $ANY$FwCHILDREN in_state ERROR ) move_to ERROR
 |when ( $ALL$FwCHILDREN in_state {NOT_READY,READY,RUNNING} )  move_to CONFIGURED
 |when ( $ALL$FwCHILDREN in_state STOPPED )  move_to STOPPED
@@ -36,7 +36,7 @@ fwOT_FSM_Tasks.states	_FwFsmObjectType	"NOT_READY", "FwStateAttention1", "when (
 |when ( $ALL$FwCHILDREN in_state FINALIZED )  move_to FINALIZED
 |when ( $ALL$FwCHILDREN in_state STOPPED )  move_to STOPPED
 |when ( $ALL$FwCHILDREN in_state {OFFLINE,NOT_READY} )  move_to NOT_READY
-|", "", ""	0x101	16.04.2009 07:51:30.747
+|", "", ""	0x101	15.06.2010 21:22:59.618
 fwOT_FSM_Tasks.actions	_FwFsmObjectType	"NOT_READY/Configure", "", "1", "move_to CONFIGURED
 ", "0", "NOT_READY/Unload", "", "1", "do Unload $ALL$FwCHILDREN
 if ( $ALL$FwCHILDREN in_state OFFLINE )  then
@@ -57,9 +57,7 @@ endif
 if ( $ANY$FwCHILDREN not_in_state OFFLINE )  then
   do Unload $ALL$FwCHILDREN
 endif
-if ( $ANY$FwCHILDREN not_in_state OFFLINE )  then
-  do Kill $ALL$FwCHILDREN
-endif
+do Kill $ALL$FwCHILDREN
 if ( $ALL$FwCHILDREN in_state OFFLINE )  then
    move_to NOT_READY
 endif
@@ -81,22 +79,6 @@ if ( $ALL$FwCHILDREN in_state OFFLINE )  then
    move_to NOT_READY
 endif
 move_to NOT_READY
-", "0", "CONFIGURED/Restart", "", "1", "if ( $ANY$FwCHILDREN in_state RUNNING )  then
-   do Stop $ALL$FwCHILDREN
-endif
-if ( $ANY$FwCHILDREN in_state {READY,STOPPED} )  then
-   do Restart $ALL$FwCHILDREN
-endif
-if ( $ANY$FwCHILDREN not_in_state OFFLINE )  then
-  do Unload $ALL$FwCHILDREN
-endif
-if ( $ANY$FwCHILDREN not_in_state OFFLINE )  then
-  do Kill $ALL$FwCHILDREN
-endif
-if ( $ALL$FwCHILDREN in_state OFFLINE )  then
-   move_to NOT_READY
-endif
-move_to NOT_READY
 ", "0", "CONFIGURED/Reset", "", "1", "if ( $ANY$FwCHILDREN in_state RUNNING )  then
    do Stop $ALL$FwCHILDREN
 endif
@@ -106,9 +88,7 @@ endif
 if ( $ANY$FwCHILDREN not_in_state OFFLINE )  then
   do Unload $ALL$FwCHILDREN
 endif
-if ( $ANY$FwCHILDREN not_in_state OFFLINE )  then
-  do Kill $ALL$FwCHILDREN
-endif
+do Kill $ALL$FwCHILDREN
 if ( $ALL$FwCHILDREN in_state OFFLINE )  then
    move_to NOT_READY
 endif
@@ -137,25 +117,7 @@ endif
 if ( $ANY$FwCHILDREN not_in_state OFFLINE )  then
   do Unload $ALL$FwCHILDREN
 endif
-if ( $ANY$FwCHILDREN not_in_state OFFLINE )  then
-  do Kill $ALL$FwCHILDREN
-endif
-if ( $ALL$FwCHILDREN in_state OFFLINE )  then
-   move_to NOT_READY
-endif
-move_to NOT_READY
-", "0", "CREATED/Restart", "", "1", "if ( $ANY$FwCHILDREN in_state RUNNING )  then
-   do Stop $ALL$FwCHILDREN
-endif
-if ( $ANY$FwCHILDREN in_state {READY,STOPPED} )  then
-   do Restart $ALL$FwCHILDREN
-endif
-if ( $ANY$FwCHILDREN not_in_state OFFLINE )  then
-  do Unload $ALL$FwCHILDREN
-endif
-if ( $ANY$FwCHILDREN not_in_state OFFLINE )  then
-  do Kill $ALL$FwCHILDREN
-endif
+do Kill $ALL$FwCHILDREN
 if ( $ALL$FwCHILDREN in_state OFFLINE )  then
    move_to NOT_READY
 endif
@@ -173,9 +135,7 @@ endif
 if ( $ANY$FwCHILDREN not_in_state OFFLINE )  then
   do Unload $ALL$FwCHILDREN
 endif
-if ( $ANY$FwCHILDREN not_in_state OFFLINE )  then
-  do Kill $ALL$FwCHILDREN
-endif
+do Kill $ALL$FwCHILDREN
 if ( $ALL$FwCHILDREN in_state OFFLINE )  then
    move_to NOT_READY
 endif
@@ -191,22 +151,6 @@ endif
 if ( $ALL$FwCHILDREN in_state OFFLINE )  then
    move_to NOT_READY
 endif
-", "0", "READY/Restart", "", "1", "if ( $ANY$FwCHILDREN in_state RUNNING )  then
-   do Stop $ALL$FwCHILDREN
-endif
-if ( $ALL$FwCHILDREN in_state {READY,STOPPED,NOT_READY,OFFLINE} )  then
-   do Restart $ALL$FwCHILDREN
-endif
-if ( $ANY$FwCHILDREN not_in_state OFFLINE )  then
-  do Unload $ALL$FwCHILDREN
-endif
-if ( $ANY$FwCHILDREN not_in_state OFFLINE )  then
-  do Kill $ALL$FwCHILDREN
-endif
-if ( $ALL$FwCHILDREN in_state OFFLINE )  then
-   move_to NOT_READY
-endif
-move_to NOT_READY
 ", "0", "RUNNING/Stop", "", "1", "do Stop $ALL$FwCHILDREN
 if ( $ALL$FwCHILDREN in_state STOPPED )  then
    move_to STOPPED
@@ -231,9 +175,7 @@ endif
 if ( $ANY$FwCHILDREN not_in_state OFFLINE )  then
   do Unload $ALL$FwCHILDREN
 endif
-if ( $ANY$FwCHILDREN not_in_state OFFLINE )  then
-  do Kill $ALL$FwCHILDREN
-endif
+do Kill $ALL$FwCHILDREN
 if ( $ALL$FwCHILDREN in_state OFFLINE )  then
    move_to NOT_READY
 endif
@@ -261,22 +203,7 @@ do Reset $ALL$FwCHILDREN
 if ( $ALL$FwCHILDREN in_state {OFFLINE,NOT_READY} )  then
    do Unload $ALL$FwCHILDREN
 endif
-if ( $ANY$FwCHILDREN not_in_state OFFLINE )  then
-  do Kill $ALL$FwCHILDREN
-endif
-if ( $ALL$FwCHILDREN in_state OFFLINE )  then
-   move_to NOT_READY
-endif
-", "0", "STOPPED/Restart", "", "1", "if ( $ANY$FwCHILDREN in_state RUNNING )  then
-   do Stop $ALL$FwCHILDREN
-endif
-do Restart $ALL$FwCHILDREN
-if ( $ALL$FwCHILDREN in_state {OFFLINE,NOT_READY} )  then
-   do Unload $ALL$FwCHILDREN
-endif
-if ( $ANY$FwCHILDREN not_in_state OFFLINE )  then
-  do Kill $ALL$FwCHILDREN
-endif
+do Kill $ALL$FwCHILDREN
 if ( $ALL$FwCHILDREN in_state OFFLINE )  then
    move_to NOT_READY
 endif
@@ -298,10 +225,6 @@ endif
 if ( $ALL$FwCHILDREN in_state OFFLINE )  then
    move_to NOT_READY
 endif
-", "0", "FINALIZED/Restart", "", "1", "do Unload $ALL$FwCHILDREN
-if ( $ALL$FwCHILDREN in_state OFFLINE )  then
-   move_to NOT_READY
-endif
 ", "0", "ERROR/Recover", "", "1", "do Recover $ALL$FwCHILDREN
 if ( $ANY$FwCHILDREN in_state OFFLINE )  then
    move_to NOT_READY
@@ -316,9 +239,7 @@ endif
 if ( $ANY$FwCHILDREN not_in_state OFFLINE )  then
   do Unload $ALL$FwCHILDREN
 endif
-if ( $ANY$FwCHILDREN not_in_state OFFLINE )  then
-   do Kill $ALL$FwCHILDREN
-endif
+do Kill $ALL$FwCHILDREN
 if ( $ALL$FwCHILDREN in_state OFFLINE )  then
    move_to NOT_READY 
 endif
@@ -343,21 +264,5 @@ endif
 if ( $ALL$FwCHILDREN in_state OFFLINE )  then
    move_to NOT_READY
 endif
-", "0", "ERROR/Restart", "", "1", "if ( $ANY$FwCHILDREN in_state RUNNING )  then
-   do Stop $ALL$FwCHILDREN
-endif
-if ( $ANY$FwCHILDREN in_state {READY,STOPPED} )  then
-   do Restart $ALL$FwCHILDREN
-endif
-if ( $ANY$FwCHILDREN not_in_state OFFLINE )  then
-  do Unload $ALL$FwCHILDREN
-endif
-if ( $ANY$FwCHILDREN not_in_state OFFLINE )  then
-  do Kill $ALL$FwCHILDREN
-endif
-if ( $ALL$FwCHILDREN in_state OFFLINE )  then
-   move_to NOT_READY 
-endif
-move_to NOT_READY
-", "0"	0x101	16.04.2009 07:51:30.743
-fwOT_FSM_Tasks.parameters	_FwFsmObjectType		0x101	04.03.2009 07:41:55.855
+", "0"	0x101	15.06.2010 21:22:59.615
+fwOT_FSM_Tasks.parameters	_FwFsmObjectType		0x101	14.06.2010 21:10:04.976
