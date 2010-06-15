@@ -4,6 +4,14 @@
 ! Purpose     : Options to generate selection or Micro DSTs and scripts to test them.
 !-----------------------------------------------------------------------------
 
+! 2010-05-28 - Juan Palacios
+ - scripts/check_p2pv.py
+  . Generalise to scan all tree nodes ending in "/Particles", then look for
+    related PVs through relations tables, and print summary with location
+    of the related PVs.
+ - cmt/requirements
+  . Increase to v1r3.
+
 ! ========================== DstwriterTests v1r2 2010-05-28 ==================
 
 ! 2010-05-28 - Juan Palacios
