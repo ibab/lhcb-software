@@ -6,14 +6,12 @@
 #include "GaudiKernel/IIncidentSvc.h" 
 // local
 #include "MuonClusterRec.h"
-#include "OfflineTimeAlig.h"
 #include "MuonInterfaces/MuonLogPad.h"
 #include "MuonInterfaces/MuonHit.h"
 #include "MuonDet/IMuonFastPosTool.h"
 #include "MuonDet/DeMuonDetector.h"
 using namespace LHCb;
 using namespace std;
-using namespace OfflineTimeAlig;
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : MuonClusterRec
@@ -34,14 +32,11 @@ MuonClusterRec::MuonClusterRec( const std::string& type,
 {
   declareInterface<IMuonClusterRec>(this);
   declareProperty( "PosTool"          , m_posToolName = "MuonDetPosTool");
-  declareProperty( "OfflineTimeAlignment", m_offlineTimeAlignment = false );
-  declareProperty( "TimeResidualFile" , m_timeResidualFile = "none");
   declareProperty( "MaxPadsPerStation" , m_maxPadsPerStation = 1500);
   m_clustersDone = false;
 }
 
 MuonClusterRec::~MuonClusterRec() {
-  clearResMap();
   clear();
 } 
 
@@ -62,11 +57,6 @@ StatusCode MuonClusterRec::initialize () {
     return StatusCode::FAILURE;
   }
   
-  if(!loadTimeRes()){
-    err()<<"Time corrections file "<<m_timeResidualFile<<" not found"<<endmsg;
-    return StatusCode::FAILURE;
-  }
-
   incSvc()->addListener( this, IncidentType::EndEvent );
   return sc;
 }
@@ -142,8 +132,6 @@ const std::vector<MuonHit*>* MuonClusterRec::clusters(const std::vector<MuonLogP
         {
           // cluster seed
           usedPad[*ipad]=true;
-          // correct for time misalig. if requested
-          if (m_offlineTimeAlignment) correctMisAlignment(*ipad);
           MuonHit* muon_Hit = new MuonHit(m_muonDetector, *ipad, 
                                           m_posTool );
           // store a progressive hit number for debugging purposes
@@ -188,8 +176,6 @@ const std::vector<MuonHit*>* MuonClusterRec::clusters(const std::vector<MuonLogP
               }
               if (takeit) {  // it's a neighbour, add it to the cluster
                 usedPad[*jpad]=true;
-                // correct for time misalig. if requested
-                if (m_offlineTimeAlignment) correctMisAlignment(*jpad);
                 muon_Hit->addPad(*jpad);
                 searchNeighbours=true; // we exit the loop and restart from ipad+1 ith the larger cluster
                 break; 

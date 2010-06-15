@@ -6,14 +6,12 @@
 #include "GaudiKernel/IIncidentSvc.h" 
 // local
 #include "MuonFakeClustering.h"
-#include "OfflineTimeAlig.h"
 #include "MuonInterfaces/MuonLogPad.h"
 #include "MuonInterfaces/MuonHit.h"
 #include "MuonDet/IMuonFastPosTool.h"
 #include "MuonDet/DeMuonDetector.h"
 using namespace LHCb;
 using namespace std;
-using namespace OfflineTimeAlig;
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : MuonFakeClustering
@@ -34,13 +32,10 @@ MuonFakeClustering::MuonFakeClustering( const std::string& type,
 {
   declareInterface<IMuonClusterRec>(this);
   declareProperty( "PosTool"          , m_posToolName = "MuonDetPosTool");
-  declareProperty( "OfflineTimeAlignment", m_offlineTimeAlignment = false );
-  declareProperty( "TimeResidualFile" , m_timeResidualFile = "none");
   m_clustersDone = false;
 }
 
 MuonFakeClustering::~MuonFakeClustering() {
-  clearResMap();
   clear();
 } 
 
@@ -61,11 +56,6 @@ StatusCode MuonFakeClustering::initialize () {
     return StatusCode::FAILURE;
   }
   
-  if(!loadTimeRes()){
-    err()<<"Time corrections file "<<m_timeResidualFile<<" not found"<<endmsg;
-    return StatusCode::FAILURE;
-  }
-
   incSvc()->addListener( this, IncidentType::EndEvent );
   return sc;
 }
@@ -107,8 +97,6 @@ const std::vector<MuonHit*>* MuonFakeClustering::clusters(const std::vector<Muon
     if (pads) {
       for (ipad = pads->begin(); ipad != pads->end(); ipad++ ){
         if(! (*ipad)->truepad() ) continue;
-        // correct for time misalig. if requested
-        if (m_offlineTimeAlignment) correctMisAlignment(*ipad);
 
         // fill the hit array
         // create a MuonHit object

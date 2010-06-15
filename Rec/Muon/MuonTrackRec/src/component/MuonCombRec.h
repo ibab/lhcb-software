@@ -172,10 +172,6 @@ private:
   bool m_assumeCosmics;
   // if true we assume that tracks have the "right" direction (pz>0)
   bool m_assumePhysics;
-  // if true, offline-computed corrections are applied to detector time-alignment
-  bool m_offlineTimeAlignment;
-  // path of file containing offline-computed corrections to time-alignment
-  std::string m_timeResidualFile;
   // name of decoding tool (MuonHitDecode for offline, MuonMonHitDecode for online monitoring)
   std::string m_decToolName;
   // name of pad rec tool (MuonPadRec only option so far)
