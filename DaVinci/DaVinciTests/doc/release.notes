@@ -4,6 +4,11 @@
 ! Purpose     : QMTests for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2010-06-16
+ - tests/qmtest/davinci.qms/fsrs.qms/davinci-strip-magup.qmt
+ - tests/qmtest/davinci.qms/fsrs.qms/davinci-strip-magdown.qmt
+  . Run over all events in input. Add some tests to check for FATALs.
+
 ! 2010-06-14 - Juan Palacios
  - Rename output file in options after the main ones, trying to replicate
    production extra-options structure.
