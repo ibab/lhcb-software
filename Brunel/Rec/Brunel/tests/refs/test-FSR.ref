@@ -39,18 +39,18 @@
 # applying configuration of LumiAlgsConf
 # /***** User LumiAlgsConf/LumiAlgsConf **************************************************************
 # |-ForceFullSequence = False
-# |-DataType          = '2009'  (default: '2009')
+# |-DataType          = '2009'  (default: '2010')
 # |-SetFSRStatus      = ''
 # |-OutputLevel       = 1  (default: 3)
 # |-BXTypes           = ['NoBeam', 'BeamCrossing', 'Beam1', 'Beam2']
 # |                   (default: ['NoBeam', 'BeamCrossing', 'Beam1', 'Beam2'])
 # |-Context           = 'Offline'
-# |-LumiSequencer     = <GaudiSequencer/LumiSequence at 0x483f9d0>  (default: None)
+# |-LumiSequencer     = <GaudiSequencer/LumiSequence at 0x153f4400>  (default: None)
 # |-InputType         = 'DST'  (default: 'MDF')
 # \----- (End of User LumiAlgsConf/LumiAlgsConf) -----------------------------------------------------
 # applying configuration of DDDBConf
 # WARNING: Using default tag head-20100518 for partition DDDB
-# WARNING: Using default tag head-20100518 for partition LHCBCOND
+# WARNING: Using default tag head-20100531 for partition LHCBCOND
 # WARNING: Using default tag MC-20100412-vc15mm-md100 for partition SIMCOND
 # /***** User DDDBConf/DDDBConf **********************************************************************
 # |-DataType   = '2009'
@@ -79,8 +79,8 @@
 ApplicationMgr      DEBUG Getting my own properties
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
-                                                   Welcome to Brunel version v37r2p2
-                                          running on volhcb27.cern.ch on Wed May 26 08:39:28 2010
+                                                   Welcome to Brunel version v37r3
+                                          running on volhcb27.cern.ch on Wed Jun 16 08:04:06 2010
 ====================================================================================================================================
 ApplicationMgr    VERBOSE declareMultiSvcType: declared service EvtDataSvc/EventDataSvc
 ApplicationMgr    VERBOSE declareMultiSvcType: declared service DetDataSvc/DetectorDataSvc
@@ -106,8 +106,8 @@ XmlParserSvc        DEBUG Service base class initialized successfully
 ToolSvc             DEBUG Service base class initialized successfully
 XmlParserSvc      VERBOSE ServiceLocatorHelper::service: found service ToolSvc
 ToolSvc           VERBOSE Created tool CondDBEntityResolver/ToolSvc.CondDBEntityResolver
-ToolSvc.CondDBE...   INFO Initializing...
-ToolSvc.CondDBE...   INFO Successfully initialized.
+ToolSvc.CondDBE...  DEBUG Initializing...
+ToolSvc.CondDBE...  DEBUG Successfully initialized.
 XmlParserSvc        DEBUG using the xercesc::EntityResolver provided by CondDBEntityResolver/CondDBEntityResolver
 DetectorPersist...VERBOSE ServiceLocatorHelper::service: found service XmlCnvSvc/XmlCnvSvc
 DetectorPersist...   INFO Added successfully Conversion service:XmlCnvSvc
@@ -251,7 +251,7 @@ RndmGenSvc.Engine   DEBUG Service base class initialized successfully
 RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
 RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-ToolSvc.Sequenc...   INFO This machine has a speed about   1.89 times the speed of a 2.8 GHz Xeon.
+ToolSvc.Sequenc...   INFO This machine has a speed about   1.79 times the speed of a 2.8 GHz Xeon.
 LumiSequence        DEBUG The tool of type 'SequencerTimerTool' has been added with the name 'ToolSvc.SequencerTimerTool'
 EventAccount        DEBUG Property update for OutputLevel : new value = 1
 EventAccount        DEBUG Property update for OutputLevel : new value = 1
@@ -639,74 +639,74 @@ createODIN          DEBUG Property update for OutputLevel : new value = 1
 TouchLumiFSR        DEBUG Property update for OutputLevel : new value = 1
 TouchLumiLowFSR     DEBUG Property update for OutputLevel : new value = 1
 RootDBase.open    SUCCESS 56721-100ev.dst File version:52600
-PoolRootTreeEvt...   INFO Records token:[DB=30535E4F-D667-DF11-8F38-001E4F3DD7AB][CNT=/FileRecords][CLID=00000001-0000-0000-0000-000000000000][TECH=00000202][OID=0000001C-00000000]
+PoolRootTreeEvt...   INFO Records token:[DB=225D08B8-656A-DF11-89C9-001E4F3DD7AB][CNT=/FileRecords][CLID=00000001-0000-0000-0000-000000000000][TECH=00000202][OID=0000001C-00000000]
 IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [FILE_OPEN_READ]
-FileRecordDataSvc   DEBUG Request to load record for file 30535E4F-D667-DF11-8F38-001E4F3DD7AB
-FileRecordDataSvc VERBOSE Requested object /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB
+FileRecordDataSvc   DEBUG Request to load record for file 225D08B8-656A-DF11-89C9-001E4F3DD7AB
+FileRecordDataSvc VERBOSE Requested object /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB
 FileRecordPersi...VERBOSE ServiceLocatorHelper::service: found service FileRecordCnvSvc
 FileRecordPersi...   INFO Added successfully Conversion service:FileRecordCnvSvc
 PoolDbBaseCnv       DEBUG Created object shape for class:DataObject
 PoolDbBaseCnv       DEBUG {ID=00000001-0000-0000-0000-000000000000}{CL=DataObject}{NCOL=3}{CNT=0}{COL={{NAME=DataObject}{CLASS=DataObject}{TYP=21}{OPT=0}{OFF=0}{SIZ=0}{CNT=1}}}{COL={{NAME=Links}{CLASS=LinkManager}{TYP=21}{OPT=0}{OFF=0}{SIZ=0}{CNT=1}}}{COL={{NAME=Refs}{CLASS=PoolDbLinkManager}{TYP=21}{OPT=0}{OFF=0}{SIZ=0}{CNT=1}}}
-FileRecordDataSvc VERBOSE Object /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB created
-FileRecordDataSvc VERBOSE Filling object /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB
-FileRecordDataSvc VERBOSE Object /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB successfully loaded
-FileRecordDataSvc   DEBUG Loaded records object: /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB
-FileRecordDataSvc VERBOSE Requested object /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiFSRNoBeam
+FileRecordDataSvc VERBOSE Object /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB created
+FileRecordDataSvc VERBOSE Filling object /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB
+FileRecordDataSvc VERBOSE Object /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB successfully loaded
+FileRecordDataSvc   DEBUG Loaded records object: /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB
+FileRecordDataSvc VERBOSE Requested object /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/LumiFSRNoBeam
 PoolDbBaseCnv       DEBUG Created object shape for class:KeyedContainer<LHCb::LumiFSR,Containers::KeyedObjectManager<Containers::hashmap> >
 PoolDbBaseCnv       DEBUG {ID=000634BD-0000-0000-0000-000000000000}{CL=KeyedContainer<LHCb::LumiFSR,Containers::KeyedObjectManager<Containers::hashmap> >}{NCOL=3}{CNT=0}{COL={{NAME=KeyedContainer<LHCb::LumiFSR,Containers::KeyedObjectManager<Containers::hashmap> >}{CLASS=KeyedContainer<LHCb::LumiFSR,Containers::KeyedObjectManager<Containers::hashmap> >}{TYP=21}{OPT=0}{OFF=0}{SIZ=0}{CNT=1}}}{COL={{NAME=Links}{CLASS=LinkManager}{TYP=21}{OPT=0}{OFF=0}{SIZ=0}{CNT=1}}}{COL={{NAME=Refs}{CLASS=PoolDbLinkManager}{TYP=21}{OPT=0}{OFF=0}{SIZ=0}{CNT=1}}}
-FileRecordDataSvc VERBOSE Object /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiFSRNoBeam created
-FileRecordDataSvc VERBOSE Filling object /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiFSRNoBeam
-FileRecordDataSvc VERBOSE Object /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiFSRNoBeam successfully loaded
-FileRecordDataSvc   DEBUG Loaded records object: /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiFSRNoBeam
-FileRecordDataSvc VERBOSE Requested object /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiFSRBeamCrossing
-FileRecordDataSvc VERBOSE Object /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiFSRBeamCrossing created
-FileRecordDataSvc VERBOSE Filling object /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiFSRBeamCrossing
-FileRecordDataSvc VERBOSE Object /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiFSRBeamCrossing successfully loaded
-FileRecordDataSvc   DEBUG Loaded records object: /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiFSRBeamCrossing
-FileRecordDataSvc VERBOSE Requested object /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiFSRBeam1
-FileRecordDataSvc VERBOSE Object /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiFSRBeam1 created
-FileRecordDataSvc VERBOSE Filling object /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiFSRBeam1
-FileRecordDataSvc VERBOSE Object /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiFSRBeam1 successfully loaded
-FileRecordDataSvc   DEBUG Loaded records object: /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiFSRBeam1
-FileRecordDataSvc VERBOSE Requested object /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiFSRBeam2
-FileRecordDataSvc VERBOSE Object /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiFSRBeam2 created
-FileRecordDataSvc VERBOSE Filling object /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiFSRBeam2
-FileRecordDataSvc VERBOSE Object /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiFSRBeam2 successfully loaded
-FileRecordDataSvc   DEBUG Loaded records object: /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiFSRBeam2
-FileRecordDataSvc VERBOSE Requested object /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiLowFSRNoBeam
-FileRecordDataSvc VERBOSE Object /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiLowFSRNoBeam created
-FileRecordDataSvc VERBOSE Filling object /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiLowFSRNoBeam
-FileRecordDataSvc VERBOSE Object /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiLowFSRNoBeam successfully loaded
-FileRecordDataSvc   DEBUG Loaded records object: /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiLowFSRNoBeam
-FileRecordDataSvc VERBOSE Requested object /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiLowFSRBeamCrossing
-FileRecordDataSvc VERBOSE Object /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiLowFSRBeamCrossing created
-FileRecordDataSvc VERBOSE Filling object /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiLowFSRBeamCrossing
-FileRecordDataSvc VERBOSE Object /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiLowFSRBeamCrossing successfully loaded
-FileRecordDataSvc   DEBUG Loaded records object: /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiLowFSRBeamCrossing
-FileRecordDataSvc VERBOSE Requested object /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiLowFSRBeam1
-FileRecordDataSvc VERBOSE Object /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiLowFSRBeam1 created
-FileRecordDataSvc VERBOSE Filling object /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiLowFSRBeam1
-FileRecordDataSvc VERBOSE Object /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiLowFSRBeam1 successfully loaded
-FileRecordDataSvc   DEBUG Loaded records object: /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiLowFSRBeam1
-FileRecordDataSvc VERBOSE Requested object /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiLowFSRBeam2
-FileRecordDataSvc VERBOSE Object /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiLowFSRBeam2 created
-FileRecordDataSvc VERBOSE Filling object /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiLowFSRBeam2
-FileRecordDataSvc VERBOSE Object /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiLowFSRBeam2 successfully loaded
-FileRecordDataSvc   DEBUG Loaded records object: /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiLowFSRBeam2
-FileRecordDataSvc VERBOSE Requested object /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/TimeSpanFSR
+FileRecordDataSvc VERBOSE Object /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/LumiFSRNoBeam created
+FileRecordDataSvc VERBOSE Filling object /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/LumiFSRNoBeam
+FileRecordDataSvc VERBOSE Object /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/LumiFSRNoBeam successfully loaded
+FileRecordDataSvc   DEBUG Loaded records object: /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/LumiFSRNoBeam
+FileRecordDataSvc VERBOSE Requested object /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/LumiFSRBeamCrossing
+FileRecordDataSvc VERBOSE Object /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/LumiFSRBeamCrossing created
+FileRecordDataSvc VERBOSE Filling object /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/LumiFSRBeamCrossing
+FileRecordDataSvc VERBOSE Object /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/LumiFSRBeamCrossing successfully loaded
+FileRecordDataSvc   DEBUG Loaded records object: /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/LumiFSRBeamCrossing
+FileRecordDataSvc VERBOSE Requested object /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/LumiFSRBeam1
+FileRecordDataSvc VERBOSE Object /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/LumiFSRBeam1 created
+FileRecordDataSvc VERBOSE Filling object /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/LumiFSRBeam1
+FileRecordDataSvc VERBOSE Object /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/LumiFSRBeam1 successfully loaded
+FileRecordDataSvc   DEBUG Loaded records object: /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/LumiFSRBeam1
+FileRecordDataSvc VERBOSE Requested object /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/LumiFSRBeam2
+FileRecordDataSvc VERBOSE Object /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/LumiFSRBeam2 created
+FileRecordDataSvc VERBOSE Filling object /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/LumiFSRBeam2
+FileRecordDataSvc VERBOSE Object /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/LumiFSRBeam2 successfully loaded
+FileRecordDataSvc   DEBUG Loaded records object: /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/LumiFSRBeam2
+FileRecordDataSvc VERBOSE Requested object /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/LumiLowFSRNoBeam
+FileRecordDataSvc VERBOSE Object /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/LumiLowFSRNoBeam created
+FileRecordDataSvc VERBOSE Filling object /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/LumiLowFSRNoBeam
+FileRecordDataSvc VERBOSE Object /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/LumiLowFSRNoBeam successfully loaded
+FileRecordDataSvc   DEBUG Loaded records object: /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/LumiLowFSRNoBeam
+FileRecordDataSvc VERBOSE Requested object /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/LumiLowFSRBeamCrossing
+FileRecordDataSvc VERBOSE Object /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/LumiLowFSRBeamCrossing created
+FileRecordDataSvc VERBOSE Filling object /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/LumiLowFSRBeamCrossing
+FileRecordDataSvc VERBOSE Object /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/LumiLowFSRBeamCrossing successfully loaded
+FileRecordDataSvc   DEBUG Loaded records object: /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/LumiLowFSRBeamCrossing
+FileRecordDataSvc VERBOSE Requested object /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/LumiLowFSRBeam1
+FileRecordDataSvc VERBOSE Object /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/LumiLowFSRBeam1 created
+FileRecordDataSvc VERBOSE Filling object /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/LumiLowFSRBeam1
+FileRecordDataSvc VERBOSE Object /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/LumiLowFSRBeam1 successfully loaded
+FileRecordDataSvc   DEBUG Loaded records object: /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/LumiLowFSRBeam1
+FileRecordDataSvc VERBOSE Requested object /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/LumiLowFSRBeam2
+FileRecordDataSvc VERBOSE Object /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/LumiLowFSRBeam2 created
+FileRecordDataSvc VERBOSE Filling object /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/LumiLowFSRBeam2
+FileRecordDataSvc VERBOSE Object /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/LumiLowFSRBeam2 successfully loaded
+FileRecordDataSvc   DEBUG Loaded records object: /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/LumiLowFSRBeam2
+FileRecordDataSvc VERBOSE Requested object /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/TimeSpanFSR
 PoolDbBaseCnv       DEBUG Created object shape for class:KeyedContainer<LHCb::TimeSpanFSR,Containers::KeyedObjectManager<Containers::hashmap> >
 PoolDbBaseCnv       DEBUG {ID=000634C0-0000-0000-0000-000000000000}{CL=KeyedContainer<LHCb::TimeSpanFSR,Containers::KeyedObjectManager<Containers::hashmap> >}{NCOL=3}{CNT=0}{COL={{NAME=KeyedContainer<LHCb::TimeSpanFSR,Containers::KeyedObjectManager<Containers::hashmap> >}{CLASS=KeyedContainer<LHCb::TimeSpanFSR,Containers::KeyedObjectManager<Containers::hashmap> >}{TYP=21}{OPT=0}{OFF=0}{SIZ=0}{CNT=1}}}{COL={{NAME=Links}{CLASS=LinkManager}{TYP=21}{OPT=0}{OFF=0}{SIZ=0}{CNT=1}}}{COL={{NAME=Refs}{CLASS=PoolDbLinkManager}{TYP=21}{OPT=0}{OFF=0}{SIZ=0}{CNT=1}}}
-FileRecordDataSvc VERBOSE Object /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/TimeSpanFSR created
-FileRecordDataSvc VERBOSE Filling object /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/TimeSpanFSR
-FileRecordDataSvc VERBOSE Object /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/TimeSpanFSR successfully loaded
-FileRecordDataSvc   DEBUG Loaded records object: /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/TimeSpanFSR
-FileRecordDataSvc VERBOSE Requested object /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/EventCountFSR
+FileRecordDataSvc VERBOSE Object /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/TimeSpanFSR created
+FileRecordDataSvc VERBOSE Filling object /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/TimeSpanFSR
+FileRecordDataSvc VERBOSE Object /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/TimeSpanFSR successfully loaded
+FileRecordDataSvc   DEBUG Loaded records object: /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/TimeSpanFSR
+FileRecordDataSvc VERBOSE Requested object /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/EventCountFSR
 PoolDbBaseCnv       DEBUG Created object shape for class:LHCb::EventCountFSR
 PoolDbBaseCnv       DEBUG {ID=000034BF-0000-0000-0000-000000000000}{CL=LHCb::EventCountFSR}{NCOL=3}{CNT=0}{COL={{NAME=EventCountFSR}{CLASS=LHCb::EventCountFSR}{TYP=21}{OPT=0}{OFF=0}{SIZ=0}{CNT=1}}}{COL={{NAME=Links}{CLASS=LinkManager}{TYP=21}{OPT=0}{OFF=0}{SIZ=0}{CNT=1}}}{COL={{NAME=Refs}{CLASS=PoolDbLinkManager}{TYP=21}{OPT=0}{OFF=0}{SIZ=0}{CNT=1}}}
-FileRecordDataSvc VERBOSE Object /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/EventCountFSR created
-FileRecordDataSvc VERBOSE Filling object /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/EventCountFSR
-FileRecordDataSvc VERBOSE Object /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/EventCountFSR successfully loaded
-FileRecordDataSvc   DEBUG Loaded records object: /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/EventCountFSR
+FileRecordDataSvc VERBOSE Object /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/EventCountFSR created
+FileRecordDataSvc VERBOSE Filling object /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/EventCountFSR
+FileRecordDataSvc VERBOSE Object /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/EventCountFSR successfully loaded
+FileRecordDataSvc   DEBUG Loaded records object: /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/EventCountFSR
 EventSelector     SUCCESS Reading Event record 1. Record number within stream 1: 1
 EventDataSvc      VERBOSE Requested object /Event
 PoolDbBaseCnv       DEBUG Created object shape for class:DataObject
@@ -3402,57 +3402,57 @@ TouchLumiFSR         INFO number of files seen: 1
 TouchLumiFSR         INFO number of events seen: 97
 TouchLumiFSR         INFO integrating normalization:
 TouchLumiFSR        DEBUG ==> Explore: /FileRecords for /LumiFSR
-TouchLumiFSR        DEBUG address: /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiFSRNoBeam
-TouchLumiFSR        DEBUG address: /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiFSRBeamCrossing
-TouchLumiFSR        DEBUG address: /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiFSRBeam1
-TouchLumiFSR        DEBUG address: /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiFSRBeam2
-TouchLumiFSR      VERBOSE constructed time span address/FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/TimeSpanFSR
-TouchLumiFSR        DEBUG using the container: /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiFSRBeamCrossing
-TouchLumiFSR      VERBOSE retrieveObject: /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiFSRBeamCrossing
-TouchLumiFSR      VERBOSE /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/TimeSpanFSR found
-TouchLumiFSR        DEBUG The object of type 'KeyedContainer<LHCb::TimeSpanFSR,Containers::KeyedObjectManager<Containers::hashmap> >*' has been retrieved from TS at address '/FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/TimeSpanFSR'
-TouchLumiFSR        DEBUG /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/TimeSpanFSRREAD TimeSpanFSR: {  earliest : 1252422464006336 - latest : 1252422464350464 }
-TouchLumiFSR        DEBUG /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/TimeSpanFSRinterval: 1252422464006336-1252422464350464
-TouchLumiFSR      VERBOSE /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiFSRBeamCrossing found
-TouchLumiFSR        DEBUG The object of type 'KeyedContainer<LHCb::LumiFSR,Containers::KeyedObjectManager<Containers::hashmap> >*' has been retrieved from TS at address '/FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiFSRBeamCrossing'
+TouchLumiFSR        DEBUG address: /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/LumiFSRNoBeam
+TouchLumiFSR        DEBUG address: /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/LumiFSRBeamCrossing
+TouchLumiFSR        DEBUG address: /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/LumiFSRBeam1
+TouchLumiFSR        DEBUG address: /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/LumiFSRBeam2
+TouchLumiFSR      VERBOSE constructed time span address/FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/TimeSpanFSR
+TouchLumiFSR        DEBUG using the container: /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/LumiFSRBeamCrossing
+TouchLumiFSR      VERBOSE retrieveObject: /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/LumiFSRBeamCrossing
+TouchLumiFSR      VERBOSE /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/TimeSpanFSR found
+TouchLumiFSR        DEBUG The object of type 'KeyedContainer<LHCb::TimeSpanFSR,Containers::KeyedObjectManager<Containers::hashmap> >*' has been retrieved from TS at address '/FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/TimeSpanFSR'
+TouchLumiFSR        DEBUG /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/TimeSpanFSRREAD TimeSpanFSR: {  earliest : 1252422464006336 - latest : 1252422464350464 }
+TouchLumiFSR        DEBUG /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/TimeSpanFSRinterval: 1252422464006336-1252422464350464
+TouchLumiFSR      VERBOSE /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/LumiFSRBeamCrossing found
+TouchLumiFSR        DEBUG The object of type 'KeyedContainer<LHCb::LumiFSR,Containers::KeyedObjectManager<Containers::hashmap> >*' has been retrieved from TS at address '/FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/LumiFSRBeamCrossing'
 TouchLumiFSR        DEBUG addPrimary   : {  runs :  files :  info (key/incr/integral) :  }
-TouchLumiFSR      VERBOSE constructed address/FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiFSRBeamCrossing
-TouchLumiFSR      VERBOSE constructed address/FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiFSRNoBeam
-TouchLumiFSR        DEBUG using the container: /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiFSRNoBeam
-TouchLumiFSR      VERBOSE retrieveObject: /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiFSRNoBeam
-TouchLumiFSR      VERBOSE /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/TimeSpanFSR found
-TouchLumiFSR        DEBUG The object of type 'KeyedContainer<LHCb::TimeSpanFSR,Containers::KeyedObjectManager<Containers::hashmap> >*' has been retrieved from TS at address '/FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/TimeSpanFSR'
-TouchLumiFSR        DEBUG /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/TimeSpanFSRREAD TimeSpanFSR: {  earliest : 1252422464006336 - latest : 1252422464350464 }
-TouchLumiFSR        DEBUG /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/TimeSpanFSRinterval: 1252422464006336-1252422464350464
-TouchLumiFSR      VERBOSE /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiFSRNoBeam found
-TouchLumiFSR        DEBUG The object of type 'KeyedContainer<LHCb::LumiFSR,Containers::KeyedObjectManager<Containers::hashmap> >*' has been retrieved from TS at address '/FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiFSRNoBeam'
+TouchLumiFSR      VERBOSE constructed address/FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/LumiFSRBeamCrossing
+TouchLumiFSR      VERBOSE constructed address/FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/LumiFSRNoBeam
+TouchLumiFSR        DEBUG using the container: /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/LumiFSRNoBeam
+TouchLumiFSR      VERBOSE retrieveObject: /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/LumiFSRNoBeam
+TouchLumiFSR      VERBOSE /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/TimeSpanFSR found
+TouchLumiFSR        DEBUG The object of type 'KeyedContainer<LHCb::TimeSpanFSR,Containers::KeyedObjectManager<Containers::hashmap> >*' has been retrieved from TS at address '/FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/TimeSpanFSR'
+TouchLumiFSR        DEBUG /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/TimeSpanFSRREAD TimeSpanFSR: {  earliest : 1252422464006336 - latest : 1252422464350464 }
+TouchLumiFSR        DEBUG /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/TimeSpanFSRinterval: 1252422464006336-1252422464350464
+TouchLumiFSR      VERBOSE /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/LumiFSRNoBeam found
+TouchLumiFSR        DEBUG The object of type 'KeyedContainer<LHCb::LumiFSR,Containers::KeyedObjectManager<Containers::hashmap> >*' has been retrieved from TS at address '/FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/LumiFSRNoBeam'
 TouchLumiFSR        DEBUG addNormalized: {  runs :  files :  info (key/incr/integral) :  }
-TouchLumiFSR      VERBOSE constructed address/FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiFSRBeam1
-TouchLumiFSR        DEBUG using the container: /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiFSRBeam1
-TouchLumiFSR      VERBOSE retrieveObject: /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiFSRBeam1
-TouchLumiFSR      VERBOSE /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/TimeSpanFSR found
-TouchLumiFSR        DEBUG The object of type 'KeyedContainer<LHCb::TimeSpanFSR,Containers::KeyedObjectManager<Containers::hashmap> >*' has been retrieved from TS at address '/FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/TimeSpanFSR'
-TouchLumiFSR        DEBUG /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/TimeSpanFSRREAD TimeSpanFSR: {  earliest : 1252422464006336 - latest : 1252422464350464 }
-TouchLumiFSR        DEBUG /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/TimeSpanFSRinterval: 1252422464006336-1252422464350464
-TouchLumiFSR      VERBOSE /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiFSRBeam1 found
-TouchLumiFSR        DEBUG The object of type 'KeyedContainer<LHCb::LumiFSR,Containers::KeyedObjectManager<Containers::hashmap> >*' has been retrieved from TS at address '/FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiFSRBeam1'
+TouchLumiFSR      VERBOSE constructed address/FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/LumiFSRBeam1
+TouchLumiFSR        DEBUG using the container: /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/LumiFSRBeam1
+TouchLumiFSR      VERBOSE retrieveObject: /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/LumiFSRBeam1
+TouchLumiFSR      VERBOSE /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/TimeSpanFSR found
+TouchLumiFSR        DEBUG The object of type 'KeyedContainer<LHCb::TimeSpanFSR,Containers::KeyedObjectManager<Containers::hashmap> >*' has been retrieved from TS at address '/FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/TimeSpanFSR'
+TouchLumiFSR        DEBUG /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/TimeSpanFSRREAD TimeSpanFSR: {  earliest : 1252422464006336 - latest : 1252422464350464 }
+TouchLumiFSR        DEBUG /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/TimeSpanFSRinterval: 1252422464006336-1252422464350464
+TouchLumiFSR      VERBOSE /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/LumiFSRBeam1 found
+TouchLumiFSR        DEBUG The object of type 'KeyedContainer<LHCb::LumiFSR,Containers::KeyedObjectManager<Containers::hashmap> >*' has been retrieved from TS at address '/FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/LumiFSRBeam1'
 TouchLumiFSR        DEBUG addNormalized: {  runs :  files :  info (key/incr/integral) :  }
-TouchLumiFSR      VERBOSE constructed address/FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiFSRBeam2
-TouchLumiFSR        DEBUG using the container: /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiFSRBeam2
-TouchLumiFSR      VERBOSE retrieveObject: /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiFSRBeam2
-TouchLumiFSR      VERBOSE /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/TimeSpanFSR found
-TouchLumiFSR        DEBUG The object of type 'KeyedContainer<LHCb::TimeSpanFSR,Containers::KeyedObjectManager<Containers::hashmap> >*' has been retrieved from TS at address '/FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/TimeSpanFSR'
-TouchLumiFSR        DEBUG /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/TimeSpanFSRREAD TimeSpanFSR: {  earliest : 1252422464006336 - latest : 1252422464350464 }
-TouchLumiFSR        DEBUG /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/TimeSpanFSRinterval: 1252422464006336-1252422464350464
-TouchLumiFSR      VERBOSE /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiFSRBeam2 found
-TouchLumiFSR        DEBUG The object of type 'KeyedContainer<LHCb::LumiFSR,Containers::KeyedObjectManager<Containers::hashmap> >*' has been retrieved from TS at address '/FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiFSRBeam2'
+TouchLumiFSR      VERBOSE constructed address/FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/LumiFSRBeam2
+TouchLumiFSR        DEBUG using the container: /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/LumiFSRBeam2
+TouchLumiFSR      VERBOSE retrieveObject: /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/LumiFSRBeam2
+TouchLumiFSR      VERBOSE /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/TimeSpanFSR found
+TouchLumiFSR        DEBUG The object of type 'KeyedContainer<LHCb::TimeSpanFSR,Containers::KeyedObjectManager<Containers::hashmap> >*' has been retrieved from TS at address '/FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/TimeSpanFSR'
+TouchLumiFSR        DEBUG /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/TimeSpanFSRREAD TimeSpanFSR: {  earliest : 1252422464006336 - latest : 1252422464350464 }
+TouchLumiFSR        DEBUG /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/TimeSpanFSRinterval: 1252422464006336-1252422464350464
+TouchLumiFSR      VERBOSE /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/LumiFSRBeam2 found
+TouchLumiFSR        DEBUG The object of type 'KeyedContainer<LHCb::LumiFSR,Containers::KeyedObjectManager<Containers::hashmap> >*' has been retrieved from TS at address '/FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/LumiFSRBeam2'
 TouchLumiFSR        DEBUG addNormalized: {  runs :  files :  info (key/incr/integral) :  }
 TouchLumiFSR         INFO Result for this file: {  runs :  files :  info (key/incr/integral) :  }
 TouchLumiFSR        DEBUG ==> Explore: /FileRecords for /EventCountFSR
 TouchLumiFSR      VERBOSE address: /FileRecords/EventCountFSR
-TouchLumiFSR      VERBOSE address: /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/EventCountFSR
+TouchLumiFSR      VERBOSE address: /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/EventCountFSR
 TouchLumiFSR        DEBUG ==> Explore: /FileRecords for /TimeSpanFSR
-TouchLumiFSR      VERBOSE ts address: /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/TimeSpanFSR
+TouchLumiFSR      VERBOSE ts address: /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/TimeSpanFSR
 TouchLumiFSR         INFO integrated normalization: {  runs :  files :  info (key/incr/integral) :  }
 TouchLumiFSR        DEBUG Finalize base class GaudiAlgorithm
 TouchLumiFSR        DEBUG Tools to release : ToolSvc.LumiIntegrator
@@ -3466,57 +3466,57 @@ TouchLumiLowFSR      INFO number of files seen: 1
 TouchLumiLowFSR      INFO number of events seen: 97
 TouchLumiLowFSR      INFO integrating normalization:
 TouchLumiLowFSR     DEBUG ==> Explore: /FileRecords for /LumiLowFSR
-TouchLumiLowFSR     DEBUG address: /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiLowFSRNoBeam
-TouchLumiLowFSR     DEBUG address: /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiLowFSRBeamCrossing
-TouchLumiLowFSR     DEBUG address: /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiLowFSRBeam1
-TouchLumiLowFSR     DEBUG address: /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiLowFSRBeam2
-TouchLumiLowFSR   VERBOSE constructed time span address/FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/TimeSpanFSR
-TouchLumiLowFSR     DEBUG using the container: /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiLowFSRBeamCrossing
-TouchLumiLowFSR   VERBOSE retrieveObject: /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiLowFSRBeamCrossing
-TouchLumiLowFSR   VERBOSE /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/TimeSpanFSR found
-TouchLumiLowFSR     DEBUG The object of type 'KeyedContainer<LHCb::TimeSpanFSR,Containers::KeyedObjectManager<Containers::hashmap> >*' has been retrieved from TS at address '/FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/TimeSpanFSR'
-TouchLumiLowFSR     DEBUG /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/TimeSpanFSRREAD TimeSpanFSR: {  earliest : 1252422464006336 - latest : 1252422464350464 }
-TouchLumiLowFSR     DEBUG /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/TimeSpanFSRinterval: 1252422464006336-1252422464350464
-TouchLumiLowFSR   VERBOSE /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiLowFSRBeamCrossing found
-TouchLumiLowFSR     DEBUG The object of type 'KeyedContainer<LHCb::LumiFSR,Containers::KeyedObjectManager<Containers::hashmap> >*' has been retrieved from TS at address '/FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiLowFSRBeamCrossing'
+TouchLumiLowFSR     DEBUG address: /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/LumiLowFSRNoBeam
+TouchLumiLowFSR     DEBUG address: /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/LumiLowFSRBeamCrossing
+TouchLumiLowFSR     DEBUG address: /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/LumiLowFSRBeam1
+TouchLumiLowFSR     DEBUG address: /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/LumiLowFSRBeam2
+TouchLumiLowFSR   VERBOSE constructed time span address/FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/TimeSpanFSR
+TouchLumiLowFSR     DEBUG using the container: /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/LumiLowFSRBeamCrossing
+TouchLumiLowFSR   VERBOSE retrieveObject: /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/LumiLowFSRBeamCrossing
+TouchLumiLowFSR   VERBOSE /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/TimeSpanFSR found
+TouchLumiLowFSR     DEBUG The object of type 'KeyedContainer<LHCb::TimeSpanFSR,Containers::KeyedObjectManager<Containers::hashmap> >*' has been retrieved from TS at address '/FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/TimeSpanFSR'
+TouchLumiLowFSR     DEBUG /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/TimeSpanFSRREAD TimeSpanFSR: {  earliest : 1252422464006336 - latest : 1252422464350464 }
+TouchLumiLowFSR     DEBUG /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/TimeSpanFSRinterval: 1252422464006336-1252422464350464
+TouchLumiLowFSR   VERBOSE /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/LumiLowFSRBeamCrossing found
+TouchLumiLowFSR     DEBUG The object of type 'KeyedContainer<LHCb::LumiFSR,Containers::KeyedObjectManager<Containers::hashmap> >*' has been retrieved from TS at address '/FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/LumiLowFSRBeamCrossing'
 TouchLumiLowFSR     DEBUG addPrimary   : {  runs :  files :  info (key/incr/integral) :  }
-TouchLumiLowFSR   VERBOSE constructed address/FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiLowFSRBeamCrossing
-TouchLumiLowFSR   VERBOSE constructed address/FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiLowFSRNoBeam
-TouchLumiLowFSR     DEBUG using the container: /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiLowFSRNoBeam
-TouchLumiLowFSR   VERBOSE retrieveObject: /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiLowFSRNoBeam
-TouchLumiLowFSR   VERBOSE /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/TimeSpanFSR found
-TouchLumiLowFSR     DEBUG The object of type 'KeyedContainer<LHCb::TimeSpanFSR,Containers::KeyedObjectManager<Containers::hashmap> >*' has been retrieved from TS at address '/FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/TimeSpanFSR'
-TouchLumiLowFSR     DEBUG /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/TimeSpanFSRREAD TimeSpanFSR: {  earliest : 1252422464006336 - latest : 1252422464350464 }
-TouchLumiLowFSR     DEBUG /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/TimeSpanFSRinterval: 1252422464006336-1252422464350464
-TouchLumiLowFSR   VERBOSE /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiLowFSRNoBeam found
-TouchLumiLowFSR     DEBUG The object of type 'KeyedContainer<LHCb::LumiFSR,Containers::KeyedObjectManager<Containers::hashmap> >*' has been retrieved from TS at address '/FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiLowFSRNoBeam'
+TouchLumiLowFSR   VERBOSE constructed address/FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/LumiLowFSRBeamCrossing
+TouchLumiLowFSR   VERBOSE constructed address/FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/LumiLowFSRNoBeam
+TouchLumiLowFSR     DEBUG using the container: /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/LumiLowFSRNoBeam
+TouchLumiLowFSR   VERBOSE retrieveObject: /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/LumiLowFSRNoBeam
+TouchLumiLowFSR   VERBOSE /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/TimeSpanFSR found
+TouchLumiLowFSR     DEBUG The object of type 'KeyedContainer<LHCb::TimeSpanFSR,Containers::KeyedObjectManager<Containers::hashmap> >*' has been retrieved from TS at address '/FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/TimeSpanFSR'
+TouchLumiLowFSR     DEBUG /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/TimeSpanFSRREAD TimeSpanFSR: {  earliest : 1252422464006336 - latest : 1252422464350464 }
+TouchLumiLowFSR     DEBUG /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/TimeSpanFSRinterval: 1252422464006336-1252422464350464
+TouchLumiLowFSR   VERBOSE /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/LumiLowFSRNoBeam found
+TouchLumiLowFSR     DEBUG The object of type 'KeyedContainer<LHCb::LumiFSR,Containers::KeyedObjectManager<Containers::hashmap> >*' has been retrieved from TS at address '/FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/LumiLowFSRNoBeam'
 TouchLumiLowFSR     DEBUG addNormalized: {  runs :  files :  info (key/incr/integral) :  }
-TouchLumiLowFSR   VERBOSE constructed address/FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiLowFSRBeam1
-TouchLumiLowFSR     DEBUG using the container: /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiLowFSRBeam1
-TouchLumiLowFSR   VERBOSE retrieveObject: /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiLowFSRBeam1
-TouchLumiLowFSR   VERBOSE /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/TimeSpanFSR found
-TouchLumiLowFSR     DEBUG The object of type 'KeyedContainer<LHCb::TimeSpanFSR,Containers::KeyedObjectManager<Containers::hashmap> >*' has been retrieved from TS at address '/FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/TimeSpanFSR'
-TouchLumiLowFSR     DEBUG /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/TimeSpanFSRREAD TimeSpanFSR: {  earliest : 1252422464006336 - latest : 1252422464350464 }
-TouchLumiLowFSR     DEBUG /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/TimeSpanFSRinterval: 1252422464006336-1252422464350464
-TouchLumiLowFSR   VERBOSE /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiLowFSRBeam1 found
-TouchLumiLowFSR     DEBUG The object of type 'KeyedContainer<LHCb::LumiFSR,Containers::KeyedObjectManager<Containers::hashmap> >*' has been retrieved from TS at address '/FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiLowFSRBeam1'
+TouchLumiLowFSR   VERBOSE constructed address/FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/LumiLowFSRBeam1
+TouchLumiLowFSR     DEBUG using the container: /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/LumiLowFSRBeam1
+TouchLumiLowFSR   VERBOSE retrieveObject: /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/LumiLowFSRBeam1
+TouchLumiLowFSR   VERBOSE /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/TimeSpanFSR found
+TouchLumiLowFSR     DEBUG The object of type 'KeyedContainer<LHCb::TimeSpanFSR,Containers::KeyedObjectManager<Containers::hashmap> >*' has been retrieved from TS at address '/FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/TimeSpanFSR'
+TouchLumiLowFSR     DEBUG /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/TimeSpanFSRREAD TimeSpanFSR: {  earliest : 1252422464006336 - latest : 1252422464350464 }
+TouchLumiLowFSR     DEBUG /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/TimeSpanFSRinterval: 1252422464006336-1252422464350464
+TouchLumiLowFSR   VERBOSE /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/LumiLowFSRBeam1 found
+TouchLumiLowFSR     DEBUG The object of type 'KeyedContainer<LHCb::LumiFSR,Containers::KeyedObjectManager<Containers::hashmap> >*' has been retrieved from TS at address '/FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/LumiLowFSRBeam1'
 TouchLumiLowFSR     DEBUG addNormalized: {  runs :  files :  info (key/incr/integral) :  }
-TouchLumiLowFSR   VERBOSE constructed address/FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiLowFSRBeam2
-TouchLumiLowFSR     DEBUG using the container: /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiLowFSRBeam2
-TouchLumiLowFSR   VERBOSE retrieveObject: /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiLowFSRBeam2
-TouchLumiLowFSR   VERBOSE /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/TimeSpanFSR found
-TouchLumiLowFSR     DEBUG The object of type 'KeyedContainer<LHCb::TimeSpanFSR,Containers::KeyedObjectManager<Containers::hashmap> >*' has been retrieved from TS at address '/FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/TimeSpanFSR'
-TouchLumiLowFSR     DEBUG /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/TimeSpanFSRREAD TimeSpanFSR: {  earliest : 1252422464006336 - latest : 1252422464350464 }
-TouchLumiLowFSR     DEBUG /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/TimeSpanFSRinterval: 1252422464006336-1252422464350464
-TouchLumiLowFSR   VERBOSE /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiLowFSRBeam2 found
-TouchLumiLowFSR     DEBUG The object of type 'KeyedContainer<LHCb::LumiFSR,Containers::KeyedObjectManager<Containers::hashmap> >*' has been retrieved from TS at address '/FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/LumiLowFSRBeam2'
+TouchLumiLowFSR   VERBOSE constructed address/FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/LumiLowFSRBeam2
+TouchLumiLowFSR     DEBUG using the container: /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/LumiLowFSRBeam2
+TouchLumiLowFSR   VERBOSE retrieveObject: /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/LumiLowFSRBeam2
+TouchLumiLowFSR   VERBOSE /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/TimeSpanFSR found
+TouchLumiLowFSR     DEBUG The object of type 'KeyedContainer<LHCb::TimeSpanFSR,Containers::KeyedObjectManager<Containers::hashmap> >*' has been retrieved from TS at address '/FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/TimeSpanFSR'
+TouchLumiLowFSR     DEBUG /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/TimeSpanFSRREAD TimeSpanFSR: {  earliest : 1252422464006336 - latest : 1252422464350464 }
+TouchLumiLowFSR     DEBUG /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/TimeSpanFSRinterval: 1252422464006336-1252422464350464
+TouchLumiLowFSR   VERBOSE /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/LumiLowFSRBeam2 found
+TouchLumiLowFSR     DEBUG The object of type 'KeyedContainer<LHCb::LumiFSR,Containers::KeyedObjectManager<Containers::hashmap> >*' has been retrieved from TS at address '/FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/LumiLowFSRBeam2'
 TouchLumiLowFSR     DEBUG addNormalized: {  runs :  files :  info (key/incr/integral) :  }
 TouchLumiLowFSR      INFO Result for this file: {  runs :  files :  info (key/incr/integral) :  }
 TouchLumiLowFSR     DEBUG ==> Explore: /FileRecords for /EventCountFSR
 TouchLumiLowFSR   VERBOSE address: /FileRecords/EventCountFSR
-TouchLumiLowFSR   VERBOSE address: /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/EventCountFSR
+TouchLumiLowFSR   VERBOSE address: /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/EventCountFSR
 TouchLumiLowFSR     DEBUG ==> Explore: /FileRecords for /TimeSpanFSR
-TouchLumiLowFSR   VERBOSE ts address: /FileRecords/30535E4F-D667-DF11-8F38-001E4F3DD7AB/TimeSpanFSR
+TouchLumiLowFSR   VERBOSE ts address: /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/TimeSpanFSR
 TouchLumiLowFSR      INFO integrated normalization: {  runs :  files :  info (key/incr/integral) :  }
 TouchLumiLowFSR     DEBUG Finalize base class GaudiAlgorithm
 TouchLumiLowFSR     DEBUG Tools to release : ToolSvc.LumiLowIntegrator
@@ -3570,14 +3570,14 @@ ToolSvc.OdinTim...  DEBUG Releasing service 'EventDataSvc'
 ToolSvc.OdinTim...  DEBUG Releasing service 'IncidentSvc'
 ToolSvc             DEBUG   Performing finalization of ToolSvc.SequencerTimerTool (refCount 1)
 ToolSvc.Sequenc...   INFO ------------------------------------------------------------------------------------------------
-ToolSvc.Sequenc...   INFO This machine has a speed about   1.89 times the speed of a 2.8 GHz Xeon.
+ToolSvc.Sequenc...   INFO This machine has a speed about   1.79 times the speed of a 2.8 GHz Xeon.
 ToolSvc.Sequenc...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 ToolSvc.Sequenc...   INFO ------------------------------------------------------------------------------------------------
-ToolSvc.Sequenc...   INFO LumiSequence                  |     1.144 |     3.524 |    0.562     206.3 |      97 |     0.342 |
+ToolSvc.Sequenc...   INFO LumiSequence                  |     1.216 |     2.541 |    0.616      55.2 |      97 |     0.246 |
 ToolSvc.Sequenc...   INFO   EventAccount                |     0.000 |     0.003 |    0.002       0.0 |      97 |     0.000 |
-ToolSvc.Sequenc...   INFO   createODIN                  |     1.072 |     3.489 |    0.528     206.2 |      97 |     0.338 |
-ToolSvc.Sequenc...   INFO   TouchLumiFSR                |     0.010 |     0.011 |    0.009       0.0 |      97 |     0.001 |
-ToolSvc.Sequenc...   INFO   TouchLumiLowFSR             |     0.000 |     0.009 |    0.008       0.0 |      97 |     0.001 |
+ToolSvc.Sequenc...   INFO   createODIN                  |     1.196 |     2.503 |    0.580      55.1 |      97 |     0.243 |
+ToolSvc.Sequenc...   INFO   TouchLumiFSR                |     0.010 |     0.012 |    0.010       0.0 |      97 |     0.001 |
+ToolSvc.Sequenc...   INFO   TouchLumiLowFSR             |     0.000 |     0.010 |    0.009       0.0 |      97 |     0.001 |
 ToolSvc.Sequenc...   INFO ------------------------------------------------------------------------------------------------
 ToolSvc.Sequenc...  DEBUG  ==> Finalize the base class GaudiTool
 ToolSvc.Sequenc...  DEBUG Tools to release :
@@ -3602,13 +3602,13 @@ ToolSvc           VERBOSE   Delaying   deletion of ToolSvc.OdinTimeDecoder.ODIND
 ToolSvc             DEBUG   Performing deletion of ToolSvc.OdinTimeDecoder.ODINDecodeTool
 ServiceManager      DEBUG Finalizing service DetectorPersistencySvc
 ServiceManager      DEBUG Finalizing service IncidentSvc
-IncidentSvc         DEBUG Incident  timing: Mean(+-rms)/Min/Max:0.114486(+-2.01733)/0/39.994[ms] Total:0.044993[s]
+IncidentSvc         DEBUG Incident  timing: Mean(+-rms)/Min/Max:0.0992214(+-1.81505)/0/35.994[ms] Total:0.038994[s]
 ServiceManager      DEBUG Finalizing service AppMgrRunable
 ServiceManager      DEBUG Finalizing service FileRecordCnvSvc
 FileRecordCnvSvc     INFO File sharing enabled. Do not retire files.
 FileRecordCnvSvc    DEBUG POOL conversion service finalized FileRecordCnvSvc successfully
 ServiceManager      DEBUG Finalizing service PoolRootTreeEvtCnvSvc
-PoolRootTreeEvt...   INFO Disconnected data IO:30535E4F-D667-DF11-8F38-001E4F3DD7AB[56721-100ev.dst]
+PoolRootTreeEvt...   INFO Disconnected data IO:225D08B8-656A-DF11-89C9-001E4F3DD7AB[56721-100ev.dst]
 PoolRootTreeEvt...  DEBUG POOL conversion service finalized PoolRootTreeEvtCnvSvc successfully
 ServiceManager      DEBUG Finalizing service PoolRootKeyEvtCnvSvc
 PoolRootKeyEvtC...  DEBUG POOL conversion service finalized PoolRootKeyEvtCnvSvc successfully
