@@ -390,7 +390,7 @@ class Doc(object):
         """
         Generate the main page file for the documentation directory and return
         it as a string.
-        
+
         @param depgraphsize: tuple with the width and heigth of the dependency
             graph (to give the correct size to the svg image).
         """
@@ -674,10 +674,15 @@ class Doc(object):
             shutil.copyfile(os.path.join(self.path, "conf", "DoxyFile.cfg"),
                             os.path.join(self.path, "conf", "DoxyFileTmp.cfg"))
             open(os.path.join(self.path, "conf", "DoxyFileTmp.cfg"), "a").write("OUTPUT_DIRECTORY = %s\n" % tempdir)
-            proc = Popen(["doxygen", os.path.join("conf", "DoxyFileTmp.cfg")],
-                         cwd = self.path, stdin = PIPE)
-            proc.stdin.write("r\n") # make latex enter \nonstopmode on the first error
-            retcode = proc.wait()
+            if "LHCBDOC_TESTING" not in os.environ:
+                proc = Popen(["doxygen", os.path.join("conf", "DoxyFileTmp.cfg")],
+                             cwd = self.path, stdin = PIPE)
+                proc.stdin.write("r\n") # make latex enter \nonstopmode on the first error
+                retcode = proc.wait()
+            else:
+                os.mkdir(os.path.join(tempdir, "html"))
+                open(os.path.join(tempdir, "html", "index.html"), "w").write("testing\n")
+                retcode = 0
             if retcode != 0:
                 raise RuntimeError("Doxygen failed with error %d in %s" % (retcode, tempdir))
             if os.path.exists(self.output + ".bk"):
@@ -735,16 +740,22 @@ class Doc(object):
             self._log.debug("Creating directory %s", doclinkdir)
             os.makedirs(doclinkdir)
         for project, version in self.projects.items():
-            doclink = os.path.join(doclinkdir, "%s_%s" % (project, version))
+            project = project.lower()
+            # create the project directory if missing
+            if not os.path.isdir(os.path.join(doclinkdir, project)):
+                os.makedirs(os.path.join(doclinkdir, project))
+            # make the version symlink (if necessary)
+            doclink = os.path.join(doclinkdir, project, version)
+            linkdest = os.path.join("..", "..", self.name, self._docSubdir, "html")
             if os.path.exists(doclink):
                 old = os.path.basename(os.readlink(doclink))
                 if old < self.name:
                     self._log.info("Moving link %s from %s to %s", doclink, old, self.name)
                     os.remove(doclink)
-                    os.symlink(os.path.join("..", self.name), doclink)
+                    os.symlink(linkdest, doclink)
             else:
                 self._log.info("Creating link %s to %s", doclink, self.name)
-                os.symlink(os.path.join("..", self.name), doclink)
+                os.symlink(linkdest, doclink)
 
     def __len__(self):
         """
@@ -845,17 +856,23 @@ def makeDocs(projects, root = None, no_build = False):
     ## @todo: probably, this step should be done inside the build step
     # Update links pointing to the latest versions
     doclinkdir = os.path.join(Doc._root(root), Doc._docCollDir)
-    for p in getLatestVersions([ x for x in os.listdir(doclinkdir)
-                                 if not x.startswith("LCGCMT") and not x.endswith("_latest") ]):
-        latest = p.split("_")[0].upper() + "_latest"
-        latest = os.path.join(doclinkdir, latest)
-        if not (os.path.islink(latest) and (os.readlink(latest) == p)):
+    all_versions = []
+    for project in os.listdir(doclinkdir):
+        if project == "lcgcmt":
+            continue
+        for version in os.listdir(os.path.join(doclinkdir, project)):
+            if version == "latest":
+                continue
+            all_versions.append((project, version))
+    for p, v in getLatestVersions(all_versions):
+        latest = os.path.join(doclinkdir, p, "latest")
+        if not (os.path.islink(latest) and (os.readlink(latest) == v)):
             # the link doesn't exist or doesn't point to the most recent version
             if os.path.exists(latest) or os.path.islink(latest):
                 # ensure that the link is not present before creating the new one
                 os.remove(latest)
-            _log.debug("Moving link %s to %s", os.path.basename(latest), p)
-            os.symlink(p, latest)
+            _log.debug("Moving link %s to %s", os.path.join(p, "latest"), os.path.join(p, v))
+            os.symlink(v, latest)
 
     projects -= projects_added
     if projects:
@@ -863,14 +880,14 @@ def makeDocs(projects, root = None, no_build = False):
 
 def getLatestVersions(versions):
     """
-    Given a list of project versions in the form of "<PROJECT>_<version>",
+    Given a list of project versions in the form of (project, version),
     return a list of the latest version for each project.
     """
     from LbConfiguration.Version import CoreVersion
     projects = {} # dictionary with a list of versions per project
-    for p, v in [ (p.upper(),      # ensure we use the uppercase name
+    for p, v in [ (p.lower(),      # ensure we use the uppercase name
                    CoreVersion(v)) # Sortable class to wrap a version string
-                  for p, v in [ pv.split("_") for pv in versions ] ]:
+                  for p, v in versions ]:
         try:
             projects[p].append(v)
         except:
@@ -878,8 +895,8 @@ def getLatestVersions(versions):
     # sort the versions of each project and get the last one
     for p in projects:
         projects[p].sort()
-        projects[p] = projects[p].pop()
-    return [ "%s_%s" % t for t in projects.items() ]
+        projects[p] = str(projects[p][-1])
+    return projects.items()
 
 def findProjects(exclude = None):
     """
@@ -918,9 +935,22 @@ def findUnusedDocs(root = None):
     """
     doclinkdir = os.path.join(Doc._root(root), Doc._docCollDir)
     referenced = set()
-    for path in [os.path.join(doclinkdir, p) for p in os.listdir(doclinkdir)]:
-        if os.path.islink(path):
-            referenced.add(os.readlink(path).split(os.path.sep)[-1])
+    # the structure of the common directory is:
+    #   docs/<project>/<version>
+    # so we have to iterate over the 2 levels
+    for project in os.listdir(doclinkdir):
+        projectdir = os.path.join(doclinkdir, project)
+        for version in os.listdir(projectdir):
+            path = os.path.join(projectdir, version)
+            try:
+                relpath = os.readlink(path).split(os.path.sep)
+                referenced.add(relpath[2])
+            except:
+                # the previous block can fail if path is not a link or in the case
+                # of a "latest" link:
+                #  - a normal link is "../../DOC_123456/doxygen/html"
+                #  - a "latest" link is "<version>"
+                pass
     return [d for d in allDocs(root) if d.name not in referenced]
 
 def cleanArchivedProjects(root = None):
@@ -930,6 +960,7 @@ def cleanArchivedProjects(root = None):
     root = Doc._root(root)
     logging.warning("Cleaning archived project docs from %s", root)
     broken_docs = findBrokenDocs(root)
+    # Collect the list of archived projects
     archived_project = set()
     for d in broken_docs:
         for b in d.broken:
@@ -940,9 +971,12 @@ def cleanArchivedProjects(root = None):
                 os.remove(l)
             except IOError, x:
                 logging.warning("IOError: %s", x) # ignore exceptions during removal
+    # For each archived project, remove the entry in the common directory
+    # (docs/<project>/<version>)
     for p in archived_project:
         try:
-            l = os.path.join(root, Doc._docCollDir, p)
+            p = p.split("_")
+            l = os.path.join(root, Doc._docCollDir, p[0].lower(), p[1])
             logging.info("Removing %s", l)
             os.remove(l)
         except IOError, x:

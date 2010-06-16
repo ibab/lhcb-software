@@ -1,3 +1,10 @@
+2010-06-16  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* python/LbRelease/LHCbDoc.py: Added the possibility of skipping the actual
+	generation of the documentation using the environment variable LHCBDOC_TESTING.
+	Changed the structure of the global directory to have one directory per
+	project with links for the versions, pointing directly to the html directory.
+
 2010-06-14  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* scripts/buildLCGTar: New file.
