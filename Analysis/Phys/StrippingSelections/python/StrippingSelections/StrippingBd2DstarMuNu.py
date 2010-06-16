@@ -1,8 +1,8 @@
-# $Id: StrippingBd2DstarMuNu.py,v 1.2 2010-04-20 23:02:13 gcowan Exp $
+# $Id: StrippingBd2DstarMuNu.py,v 1.3 2010-06-16 13:00:18 gcowan Exp $
 
 __author__ = 'Greig Cowan, Marta Calvi'
 __date__ = '30/07/2009'
-__version__ = '$Revision: 1.2 $'
+__version__ = '$Revision: 1.3 $'
 
 '''
 Bd->Dstar mu nu stripping selection using LoKi::Hybrid and python
@@ -26,13 +26,12 @@ muonCuts = "  (ISLONG)"\
 
 # Cuts on D*
 DstarCuts1 = "  (ADMASS('D*(2010)+') < 30.*MeV)"\
-             "& (PT > 2000.*MeV)"\
              "& (VFASPF(VCHI2) < 20. )"\
              "& (M-MAXTREE('D0'==ABSID,M) < 165.*MeV)"
 
 # Cuts on D0 from D*
 DstarCuts2 = "& CHILDCUT("\
-             "    (PT > 1800.*MeV)"\
+             "    (PT > 1600.*MeV)"\
              "  & (ADMASS('D0') < 30.*MeV )"\
              "  & (BPVVDCHI2 > 16.)"\
              "  & (VFASPF(VCHI2) < 20. )"\

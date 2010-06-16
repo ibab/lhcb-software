@@ -1,8 +1,8 @@
-# $Id: StrippingBd2DstarMuNuLoose.py,v 1.5 2010-05-10 11:58:49 jpalac Exp $
+# $Id: StrippingBd2DstarMuNuLoose.py,v 1.6 2010-06-16 13:00:18 gcowan Exp $
 
 __author__ = 'Greig Cowan, Marta Calvi'
 __date__ = '10/12/2009'
-__version__ = '$Revision: 1.5 $'
+__version__ = '$Revision: 1.6 $'
 
 '''
 Bd->Dstar mu nu loose stripping selection using LoKi::Hybrid and python
@@ -28,7 +28,7 @@ class StrippingBd2DstarMuNuLooseConf(LHCbConfigurableUser):
 		,	"PionPT"		: 350.0		# MeV  
 		,	"BdDeltaMassLower"	: -2279.0	# MeV
 		,	"BdDeltaMassUpper"	: 0.0		# MeV
-		,	"BdVCHI2" 		: 20.0		# adimensional
+		,	"BdVCHI2" 		: 10.0		# adimensional
                 }
     
     def line( self ):
@@ -78,7 +78,7 @@ class StrippingBd2DstarMuNuLooseConf(LHCbConfigurableUser):
 	Bd2DstarMu.CombinationCut = "  (DAMASS('B0') > %(BdDeltaMassLower)s *MeV)"\
                             	    "& (DAMASS('B0') < %(BdDeltaMassUpper)s *MeV)" % self.getProps()
 
-	Bd2DstarMu.MotherCut = "  (VFASPF(VCHI2) < %(BdVCHI2)s)" % self.getProps()
+	Bd2DstarMu.MotherCut = "  (VFASPF(VCHI2/VDOF) < %(BdVCHI2)s)" % self.getProps()
 	
 	Bd2DstarMuSel = Selection("SelBd2DstarMuNuLoose",
                  	Algorithm = Bd2DstarMu,

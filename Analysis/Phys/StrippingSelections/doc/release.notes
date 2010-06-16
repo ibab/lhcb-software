@@ -5,6 +5,10 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-06-16 - Greig Cowan
+ - Loosened D0 and D* PT cuts in Bd2DstarMuNu line. Modified B VCHI2 cut in 
+   Bd2DstarMuNuLoose line.
+
 ! 2010-06-16 - Marco Gersabeck
 - loosen D0 IPCHI2 cut in D2hhNoPID(Xsec) to allow better prompt-secondary distinction
 
