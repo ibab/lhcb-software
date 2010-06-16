@@ -6,6 +6,13 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2010-06-16 - Vanya Belyaev
+
+ - Kinematics: 
+
+    add overload methods for matrix expressions 
+  
+
 ! 2010-06-08 - Vanya Belyaev
 
  - LorentzVectorWithError: 
