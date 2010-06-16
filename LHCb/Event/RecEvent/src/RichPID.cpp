@@ -85,10 +85,8 @@ std::ostream& LHCb::RichPID::fillStream(std::ostream& s) const
   // Track info
   if ( track() )
   {
-    const LHCb::State* state = &(track())->firstState();
-    const double tkPtot      = ( state ? state->p()/Gaudi::Units::GeV : 0.0 );
     s << " | Track " << track()->key() << " type=" << track()->type()
-      << " Ptot=" << boost::format(sF)%tkPtot << " GeV/c";
+      << " Ptot=" << boost::format(sF)%track()->p() << " GeV/c";
   }
   else
   {
