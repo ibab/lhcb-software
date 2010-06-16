@@ -162,8 +162,9 @@ StatusCode TrackPV2HalfAlignMonitor::execute()
   } else {
     Warning("No ODIN Header",StatusCode::SUCCESS,0).ignore();
   }
-
-  float eventTimeGpsMinute = ((float) (evTimeGps  - 1270064494071424)/1000000.)/3600.;
+  
+  long long int tzero= 1270064494071424ll; //there is an ll at the end, so that C++ knows this has to be a long long
+  float eventTimeGpsMinute = (float) (((evTimeGps  - tzero)/1000000.)/3600.);
 
   // get the input data
   typedef std::vector<const LHCb::Track*> TrackVector ;
