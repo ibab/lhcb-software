@@ -166,7 +166,7 @@ TrackVertexer::computeDecayLength(const LHCb::TwoProngVertex& vertex,
 	- a * (cov6(row+3,col) + cov6(col+3,row)) ;
   
   int OK = W.InvertChol() ;
-  if( !OK ) info() << "inversion error in fitDecayLength" << endmsg ;
+  if( OK==0 ) info() << "inversion error in fitDecayLength" << endmsg ;
   
   double halfdChi2dLam2 = ROOT::Math::Similarity(W,dir) ;
   decaylength    = ROOT::Math::Dot(dir,W*dx)/halfdChi2dLam2 ;
@@ -176,5 +176,5 @@ TrackVertexer::computeDecayLength(const LHCb::TwoProngVertex& vertex,
   
   chi2 = ROOT::Math::Similarity(W,res) ;
 
-  return OK ;
+  return (OK!=0) ;
 }
