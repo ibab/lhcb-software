@@ -6,13 +6,13 @@
 ! The package is subject to the Lesser GPL, see doc/COPYING and doc/COPYING.LESSER.
 !-----------------------------------------------------------------------------
 
+!======================= AnalysisPyAna v1r1 2010-06-11 =======================
+
 ! 2010-06-14 - Juan Palacios
  - python/PyAna/pyhistoplots.py
   . Add stats box to histogram plots.
  - python/PyAna/pyhistogram/histostats.py
   . Bug in binned sigma definition.
-
-!======================= AnalysisPyAna v1r1 2010-06-11 =======================
 
 ! 2010-06-11 - Juan Palacios
  - Some tests were passing that should have failed. Re-implemented them. 
