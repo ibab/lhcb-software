@@ -86,7 +86,8 @@ std::ostream& LHCb::RichPID::fillStream(std::ostream& s) const
   if ( track() )
   {
     s << " | Track " << track()->key() << " type=" << track()->type()
-      << " Ptot=" << boost::format(sF)%track()->p() << " GeV/c";
+      << " Ptot=" << boost::format(sF) % (track()->p()/Gaudi::Units::GeV)
+      << " GeV/c";
   }
   else
   {
