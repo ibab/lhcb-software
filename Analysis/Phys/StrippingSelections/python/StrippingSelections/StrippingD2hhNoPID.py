@@ -6,7 +6,7 @@
 
 __author__ = ['Marco Gersabeck']
 __date__ = '03/11/2009'
-__version__ = '$Revision: 1.6 $'
+__version__ = '$Revision: 1.7 $'
 
 __all__ = ('name', 'D0', 'sequence')
 
@@ -19,7 +19,7 @@ name = "D2hhNoPID"
 
 _D0DauCuts = { "K+": "ISLONG & (PT>500) & (MIPCHI2DV(PRIMARY)>9) & (TRCHI2DOF<9)" }
 _D0CombCut = "(APT>1500) & (ADAMASS(1940*MeV)<250*MeV)"
-_D0Cuts = "(ADMASS(1940*MeV)<125*MeV) & (BPVVDCHI2>9) & (BPVIPCHI2()<9) & (BPVDIRA>0.99975)"
+_D0Cuts = "(ADMASS(1940*MeV)<125*MeV) & (BPVVDCHI2>9) & (BPVIPCHI2()<100) & (BPVDIRA>0.99975)"
 
 _D0 = CombineParticles( name,
                         DecayDescriptor = "D0 -> K- K+",

@@ -5,6 +5,9 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-06-16 - Marco Gersabeck
+- loosen D0 IPCHI2 cut in D2hhNoPID(Xsec) to allow better prompt-secondary distinction
+
 ! 2010-06-14 - Ulrich Kerzel
 - remove muon veto in B2HH lifetime unbiased
 - add 3rd stripping line to B2HH lifetime unbiased: very loose but require HLT1 
