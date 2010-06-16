@@ -1,4 +1,4 @@
-// $Id: L0MuonOutputs.cpp,v 1.32 2010-03-02 10:59:09 jucogan Exp $
+// $Id: L0MuonOutputs.cpp,v 1.33 2010-06-16 13:57:15 jucogan Exp $
 // Include files 
 
 // from Gaudi
@@ -342,7 +342,7 @@ StatusCode L0MuonOutputs::writeRawBanks(){
   
   if (exist<LHCb::RecHeader> (LHCb::RecHeaderLocation::Default)) {
     LHCb::RecHeader* evt = get<LHCb::RecHeader> (LHCb::RecHeaderLocation::Default);
-    ievt = evt->evtNumber();
+    ievt = int(evt->evtNumber());
   } else {
     ievt = m_bankEventCounter;
     ++m_bankEventCounter;
@@ -909,7 +909,7 @@ void L0MuonOutputs::statTot(MsgStream & os) const{
        <<format("%8d",m_nCandFinalTot) <<endmsg;
     os << "- Number of Bx with at least 1 candidate     : "
        <<format("%8d",m_nTriggeredEvt) 
-       <<format("  (%6.2f\%)",(100.*m_nTriggeredEvt)/m_nCandFinalNorm) << endmsg;
+       <<format("  (%6.2f%%)",(100.*m_nTriggeredEvt)/m_nCandFinalNorm) << endmsg;
     os << "- Number of candidate per Bx                 : "
        <<format("      %5.2f",(1.*m_nCandFinalTot)/m_nCandFinalNorm) << endmsg;
     os << "- Average Pt of the candidates               : "
