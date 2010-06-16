@@ -8,6 +8,12 @@
 
 ! 2010-06-16 - Vanya Belyaev
 
+ - LHCbMath/Types.py
+
+   add the proper pritotu for matrices and symmetric matrices 
+
+! 2010-06-16 - Vanya Belyaev
+
  - Kinematics: 
 
     add overload methods for matrix expressions 

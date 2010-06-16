@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: test.py,v 1.5 2010-05-26 13:19:16 ibelyaev Exp $
+# $Id: test.py,v 1.6 2010-06-16 12:20:57 ibelyaev Exp $
 # =============================================================================
 ## @file
 #  Test-file for various "with error" objects
@@ -18,7 +18,6 @@ from GaudiPython.Bindings import gbl as cpp
 
 Gaudi = cpp.Gaudi
 
-print dir(Gaudi)
 
 p1 = Gaudi.XYZPoint      (0,1,2)
 print '3D-point:       ', p1 
@@ -120,6 +119,8 @@ pars = Gaudi.Math.ParticleParams(
     Gaudi.Vector4   ()    
     )
 
+print 'ParticleParams ', pars
+
 print 'Before mass-constrained fit:' , pars
 fitted, chi2 = pars.fitMass ( 5.0 )
 mom = fitted.momentum()
@@ -133,6 +134,15 @@ fitted2, chi2 = fitted.fitMass ( 5.0 )
 mom = fitted2.momentum()
 print 'Mass-constrained fit:' , fitted2 , chi2, mom.M()
 print ' ', mom.sigma2Mass2() , mom.sigma2Mass() , mom.sigmaMass()  
+
+
+print 'symmatrix   \n' , mom.cov2()
+
+print 'sym  matrix \n' , pars.momCovMatrix ()
+print 'sym  matrix \n' , pars.posCovMatrix ()
+print 'corr matrix \n' , pars.momPosCov    ()
+
+
 
 # =============================================================================
 # The  END 

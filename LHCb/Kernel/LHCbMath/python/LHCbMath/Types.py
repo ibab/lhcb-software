@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Types.py,v 1.8 2010-05-26 13:19:16 ibelyaev Exp $
+# $Id: Types.py,v 1.9 2010-06-16 12:20:57 ibelyaev Exp $
 # =============================================================================
 ## @file
 #
@@ -70,7 +70,7 @@ Simple file to provide 'easy' access in python for the basic ROOT::Math classes
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
 __date__    = " 2009-09-12 "
-__version__ = " CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.8 $ "
+__version__ = " CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.9 $ "
 # =============================================================================
 __all__     = ()  ## nothing to be imported !
 # =============================================================================
@@ -231,20 +231,20 @@ def _o_sub_ ( self , other ) :
 
 
 ## Self-printout of 3D-points and 3D-vectors
-def _o1_str_ ( self ) :
+def _o1_str_ ( self , fmt = "( %g, %g, %g) ") :
     """    
     Self-printout of 3D-points and 3D-vectors
     
     """
-    return "( %g, %g, %g)"       % ( self.X() , self.Y( ), self.Z() )
+    return fmt % ( self.X() , self.Y( ), self.Z() )
 
 ## Self-printout of 4D-vectors 
-def _o2_str_ ( self ) :
+def _o2_str_ ( self , fmt = "[( %g, %g, %g), %g]" ) :
     """    
     Self-printout of 4D-vectors 
     
     """
-    return "[( %g, %g, %g), %g]" % ( self.X() , self.Y( ), self.Z() , self.E() )
+    return fmt % ( self.X() , self.Y( ), self.Z() , self.E() )
 
 
 if not hasattr ( _P3D , '__mul__' ) : _P3D.__mul__ = _o_mul_
@@ -285,6 +285,61 @@ def _l_str_ ( self ) :
 Gaudi.Math.XYZLine.__str__  = _l_str_
 Gaudi.Math.XYZLine.__repr__ = _l_str_
 
+# ============================================================================
+## self-printpout of matrices
+def _mg_str_ ( self , fmt = ' %+11.4g') :
+    """
+    Self-printout of matrices 
+    """
+    _rows = self.kRows 
+    _cols = self.kCols
+    _line = ''
+    for _irow in range ( 0 , _rows ) :
+        _line += ' |' 
+        for _icol in range ( 0 , _cols ) :
+            _line += fmt % self( _irow , _icol )
+        _line += ' |'
+        if ( _rows - 1 )  != _irow : _line += '\n'
+    return _line
+# 
+## self-printpout of symmetrical matrices
+def _ms_str_ ( self , fmt = ' %+11.4g' , width = 12 ) :
+    """
+    Self-printout of symetrical matrices 
+    """
+    _rows = self.kRows 
+    _cols = self.kCols
+    _line = ''
+    for _irow in range ( 0 , _rows ) :
+        _line += ' |' 
+        for _icol in range ( 0 , _cols  ) :
+            if _icol < _irow : _line += width*' ' 
+            else             : _line += fmt % self( _irow , _icol )
+        _line += ' |'
+        if ( _rows - 1 )  != _irow : _line += '\n'
+    return _line
+
+for m in ( Gaudi.Matrix5x5      ,
+           Gaudi.TrackMatrix    ,
+           Gaudi.Matrix4x3      ) :
+    m. __repr__ = _mg_str_
+    m. __str__  = _mg_str_
+    
+for m in ( Gaudi.SymMatrix2x2   ,
+           Gaudi.SymMatrix3x3   ,
+           Gaudi.SymMatrix4x4   ,
+           Gaudi.SymMatrix5x5   ,
+           Gaudi.SymMatrix6x6   ,
+           Gaudi.SymMatrix7x7   ,
+           Gaudi.SymMatrix8x8   ,
+           Gaudi.SymMatrix9x9   ,
+           Gaudi.TrackSymMatrix ) :
+    m. __repr__ = _ms_str_
+    m. __str__  = _ms_str_
+
+           
+           
+    
 # =============================================================================
 ## Self-printout of 3D-plane
 #  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
@@ -302,7 +357,7 @@ Gaudi.Plane3D.__repr__  = _p_str_
 ## self-printout of S-vectors 
 #  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 #  @date 2009-09-12
-def _v_str_ ( self ) :
+def _v_str_ ( self , fmt = ' %g' ) :
     """
     Self-printout of SVectors: (...)
     """
@@ -310,7 +365,7 @@ def _v_str_ ( self ) :
     result = ''
     while index < self.kSize :
         if 0 != index : result += ', '
-        result += " %g" % self.At( index )
+        result += fmt % self.At( index )
         index  += 1 
     return "( " + result + ' )'
 
