@@ -538,44 +538,8 @@ void PIDQC::print( MsgStream & msg,
                    const Rich::ParticleIDType pid,
                    const Rich::ParticleIDType mcpid  ) const
 {
-  // Track type
-  const Rich::Rec::Track::Type tkType = Rich::Rec::Track::type(iPID->track());
-
-  // Track momentum in GeV/C
-  const double tkPtot = trackP( iPID );
-
-  msg << "RichPID " << iPID->key() << " ("
-      << iPID->pidType() << "), '"
-      << tkType << "' track, Ptot " << boost::format(m_sF)%tkPtot << " GeV/c," << endmsg
-      << "  Active rads =";
-  if ( iPID->usedAerogel()  ) { msg << " " << Rich::Aerogel;  }
-  if ( iPID->usedRich1Gas() ) { msg << " " << Rich::Rich1Gas; }
-  if ( iPID->usedRich2Gas() ) { msg << " " << Rich::Rich2Gas; }
-  msg << endmsg
-      << "  Threshold   = ";
-  for ( Rich::Particles::const_iterator ipid = Rich::particles().begin();
-        ipid != Rich::particles().end(); ++ipid )
-  {
-    const std::string T = iPID->isAboveThreshold(*ipid) ? "T" : "F";
-    msg << T << " ";
-  }
-  msg << endmsg
-      << "  Dlls        =";
-  for ( Rich::Particles::const_iterator ipid = Rich::particles().begin();
-        ipid != Rich::particles().end(); ++ipid )
-  {
-    msg << " " << boost::format(m_sF)%(iPID->particleDeltaLL(*ipid));
-  }
-  msg << endmsg
-      << "  Prob(r/n)   = ";
-  for ( Rich::Particles::const_iterator ipid = Rich::particles().begin();
-        ipid != Rich::particles().end(); ++ipid )
-  {
-    msg << boost::format(m_sF)%(iPID->particleRawProb(*ipid))
-        << "/" << boost::format(m_sF)%(iPID->particleNormProb(*ipid)) << " ";
-  }
-  msg << endmsg
-      << "  RecoPID     = " << pid << endmsg;
+  msg << *iPID << endmsg;
+  msg << "  RecoPID     = " << pid << endmsg;
   msg << "  MCID        = " << mcpid << endmsg;
 }
 

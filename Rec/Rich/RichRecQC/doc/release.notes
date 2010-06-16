@@ -4,6 +4,9 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2010-06-16 - Chris Jones
+ - Update RichPID printout to use new fillStream overloaded method.
+
 !======================= RichRecQC v2r41 2010-05-21 ========================
 ! 2010-05-20 - Chris Jones
  - Add event selection algorithm from Tom Hampson
