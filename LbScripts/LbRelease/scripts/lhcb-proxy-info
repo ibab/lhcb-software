@@ -24,11 +24,11 @@ while ($nar <= $narg)
   endif
 end
 
-if ! $?DIRACSYSROOT then
+if ! $?LHCBDIRACSYSROOT then
    unsetenv User_release_area
-   source `which SetupProject.csh` $dirac_dev Dirac $version >&! /dev/null
+   source `which SetupProject.csh` $dirac_dev LHCbDirac $version >&! /dev/null
    if $SetupProjectStatus != 0 then
-      echo Problem to set the Dirac environment
+      echo Problem to set the LHCbDirac environment
       exit 1
    endif
 endif
