@@ -39,7 +39,8 @@ def histo_plot(histogram, histtype='step', color='red', linewidth='1.5',  stats 
     if stats :
         stat_text = 'Statistics'
         for stat in stats :
-            stat_text += '\n'+stat + '   ' + str(histogram.__getattribute__(stat)())
+            stat_text += '\n%(st)s  %(#)g' % { 'st' : stat, '#' : histogram.__getattribute__(stat)() }
+
     return sequence_histo_plot(x,
                                weights=w,
                                bins=axis.nbins, 
@@ -61,8 +62,8 @@ def sequence_histo_plot(x, bins=100, xlabel='', histtype='step', color='red', li
     ax.set_ylabel('Entries')
     ax.set_xlabel(xlabel)
     if stats :
-        ax.text(0.75, 0.95, stats,
-                horizontalalignment='left',
+        ax.text(0.975, 0.975, stats,
+                horizontalalignment='right',
                 verticalalignment='top',
                 multialignment = 'left',
                 transform = ax.transAxes,
