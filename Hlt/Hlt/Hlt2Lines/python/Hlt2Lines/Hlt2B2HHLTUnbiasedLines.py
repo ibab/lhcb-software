@@ -2,15 +2,18 @@ from Gaudi.Configuration import *
 from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
 
 class Hlt2B2HHLTUnbiasedLinesConf(HltLinesConfigurableUser) :
-    __slots__ = {  'BMassWinLow'         : 5000      # MeV
-                   ,'BMassWinHigh'       : 5900      # MeV
-                   ,'doca'               : 0.1 
-                   ,'KaonPTmin'          : 1000       # MeV
-                   ,'KaonPTmax'          : 1100      # MeV
-                   ,'KaonPmin'           : 10000
-                   ,'PIDK_min'           : 0
-                   ,'PIDK_max'           : 5  
-                   ,'TrackChi2'          : 10  
+    __slots__ = {  'BMassWinLow'         :  5000      # MeV
+                   ,'BMassWinHigh'       :  5900      # MeV
+                   ,'doca'               :     0.07
+                   ,'KaonPTmin'          :  1800       # MeV
+                   ,'KaonPTmax'          :  2500       # MeV
+                   ,'KaonPmin'           : 10000       # MeV
+                   ,'BPmin'              : 10000
+                   ,'PIDK_min'           :     0.1
+                   ,'PIDK_max'           :     0.1
+                   ,'PIDMu_min'          :     2.0
+                   ,'TrackChi2'          :    10
+                   ,'VertexChi2'         :    10.0
                    }
     
 
@@ -24,12 +27,13 @@ class Hlt2B2HHLTUnbiasedLinesConf(HltLinesConfigurableUser) :
         from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedRichKaons            
         
         Hlt2B2HHLTUnbiased = Hlt2Member( CombineParticles 
-                               , "Combine"     
-                               , DecayDescriptor = "B0 -> K+ K-"
-                               , CombinationCut = "((AM> %(BMassWinLow)s *MeV) & (AM< %(BMassWinHigh)s *MeV) & (AMAXDOCA('LoKi::DistanceCalculator')< %(doca)s ))" % self.getProps()
-                               , DaughtersCuts = { "K+" : "((P>%(KaonPmin)s)&(TRCHI2DOF<%(TrackChi2)s)&(PT> %(KaonPTmin)s *MeV)&(PIDK > %(PIDK_min)s))" % self.getProps() }
-                               , MotherCut = "(INTREE ( (ABSID=='K+') & (PT> %(KaonPTmax)s *MeV) & (PIDK > %(PIDK_max)s) ))" % self.getProps()
-                               , InputLocations = [BiKalmanFittedRichKaons])
+                                         , "Combine"     
+                                         , DecayDescriptor = "B_s0 -> K+ K-"
+                                         , DaughtersCuts = { "K+" : "(ISLONG & (TRCHI2DOF<%(TrackChi2)s)& (P> %(KaonPmin)s *MeV) &(PT> %(KaonPTmin)s *MeV)&(PIDK > %(PIDK_min)s) & (PIDmu < %(PIDMu_min)s))" % self.getProps() }
+                                         , CombinationCut = "((AM> %(BMassWinLow)s *MeV) & (AM< %(BMassWinHigh)s *MeV) & (AMAXDOCA('LoKi::DistanceCalculator')< %(doca)s ))" % self.getProps()
+                                         , MotherCut = "(P>%(BPmin)s * MeV) & (MAXTREE(('K+'==ABSID) ,PT) > %(KaonPTmax)s*MeV) & (MAXTREE(('K+'==ABSID) , PIDK) > %(PIDK_max)s ) & (VFASPF(VCHI2/VDOF) < %(VertexChi2)s)"  % self.getProps()
+                                         , InputLocations = [BiKalmanFittedRichKaons]
+                                         )
         ###########################################################################
         # Define the Hlt2 Line
         #

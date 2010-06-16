@@ -8,6 +8,10 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2010-06-16 - Ulrich Kerzel
+- update cuts for HLT2 line for lifetime-unbiased B->hh
+  (reject > 1/20 on L0 yes, HLT1 yes real data)
+
 ! 2010-06-08 - L. de Paula
  - Introducing Monitoring Histograms in Hlt2InclusiveDiMuonLines.py 
        (Biased DiMuons)
