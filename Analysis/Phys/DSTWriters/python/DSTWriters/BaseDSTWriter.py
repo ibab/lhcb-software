@@ -2,7 +2,7 @@
 Write a DST for a single selection sequence. Writes out the entire
 contents of the input DST
 """
-__version__ = "$Id: BaseDSTWriter.py,v 1.8 2010-06-09 10:26:33 jpalac Exp $"
+__version__ = "$Id: BaseDSTWriter.py,v 1.9 2010-06-16 14:16:05 rlambert Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -86,6 +86,7 @@ class BaseDSTWriter(ConfigurableUser) :
         FSRWriter = RecordStream( fsrStreamName,
                                   ItemList         = [ "/FileRecords#999" ],
                                   EvtDataSvc       = "FileRecordDataSvc",
+                                  EvtConversionSvc = "FileRecordPersistencySvc",
                                   Output           = "DATAFILE='"+dstName+"' TYP='POOL_ROOTTREE'  OPT='REC'"
                                   )
 

@@ -1,9 +1,14 @@
-!$Id: release.notes,v 1.33 2010-06-11 07:28:25 jpalac Exp $
+!$Id: release.notes,v 1.34 2010-06-16 14:16:05 rlambert Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DSTWriters
 ! Responsible : Juan PALACIOS
 ! Purpose     : Python code for DST writers.
 !-----------------------------------------------------------------------------
+
+! 2010-06-16 - Rob Lambert
+ - Add a missing FSR configuration
+   . FileRecords.EvtConversionSvc = "FileRecordPersistencySvc" 
+   . in BaseDSTWriter.py
 
 ! ======================== DSTWriters v1r6p2 2010-06-11 ======================
 
