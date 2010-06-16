@@ -49,7 +49,7 @@
         setMeth = 'FALSE' />
 
        <attribute
-        type = 'float'
+        type = 'double'
         name = 'deltaTimeOfFlight'
         desc = 'time of flight correction' />
 
