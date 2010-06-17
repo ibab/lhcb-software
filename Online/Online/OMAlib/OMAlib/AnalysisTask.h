@@ -1,4 +1,4 @@
-// $Id: AnalysisTask.h,v 1.14 2010-06-11 13:00:10 ggiacomo Exp $
+// $Id: AnalysisTask.h,v 1.15 2010-06-17 10:46:00 ggiacomo Exp $
 #ifndef OMALIB_ANALYSISTASK_H 
 #define OMALIB_ANALYSISTASK_H 1
 
@@ -48,8 +48,10 @@ protected:
   std::string m_myRefRoot;
   std::vector<std::string> m_inputFiles;
   std::vector<std::string> m_inputTasks;
-  std::vector<SavesetFinder*> m_saveset;
   std::string m_partition;
+  bool m_forceOnlineEnv;
+
+  std::vector<SavesetFinder*> m_saveset;
   std::string m_RICHClDir;
   bool m_stayHere;
   bool m_checkStatus;

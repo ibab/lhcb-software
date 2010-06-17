@@ -1,4 +1,4 @@
-// $Id: OMAMsgInterface.cpp,v 1.34 2010-06-11 13:00:11 ggiacomo Exp $
+// $Id: OMAMsgInterface.cpp,v 1.35 2010-06-17 10:46:00 ggiacomo Exp $
 #include <cstring>
 #include <sstream>
 #include "OnlineHistDB/OnlineHistDB.h"
@@ -37,6 +37,7 @@ void OMAMsgInterface::checkWritePermissions() {
     if(false == m_histDB->canwrite()) {
       (*m_outs) << MSG::WARNING << "You don't have write permissions on HistDB" <<endmsg;
       (*m_outs) << MSG::WARNING << "No persistency available for analysis messages" <<endmsg;
+      m_logToHistDB = false;
     }
   }
 }
@@ -94,6 +95,7 @@ void OMAMsgInterface:: startMessagePublishing() {
     char initVal[5]="";
     m_dimSvc = new DimService(svcName.c_str(),initVal);    
     DimServer::start(ServerName.c_str());
+    sleep(1);
   }
 }
 
@@ -316,14 +318,12 @@ void OMAMsgInterface::publishMessage(OMAMessage* &msg) {
 #endif
     std::stringstream svcContent;
     svcContent << msg->levelString() <<  "/" << msg->id() << "/"
-	       << time << " " << msg->levelString() << " from Analysis Task "
-               << m_anaTaskname;
+               << time << " " << msg->msgtext() << "---" << msg->levelString() << " from Analysis Task "
+               << m_anaTaskname << " on Saveset "<< msg->saveSet();
     if (! msg->ananame().empty()) 
       svcContent << " analysis " << msg->ananame().data();
     if (! msg->hIdentifier().empty())
-      svcContent << " on histogram " << msg->hIdentifier().data();
-    svcContent << ":\n";
-    svcContent << msg->msgtext();
+      svcContent << " on histogram " << msg->hIdentifier().data();    
     updateDIMservice(svcContent.str());
   }
 }
@@ -337,9 +337,11 @@ void OMAMsgInterface::unpublishMessage(OMAMessage* &msg) {
 }
 
 void OMAMsgInterface::updateDIMservice(std::string svcString) {
-  if (svcString.size() > OnlineHistDBEnv_constants::VSIZE_MESSAGE-1) {
-    svcString.resize(OnlineHistDBEnv_constants::VSIZE_MESSAGE-1);
+  if(m_dimSvc) {
+    if (svcString.size() > OnlineHistDBEnv_constants::VSIZE_MESSAGE-1) {
+      svcString.resize(OnlineHistDBEnv_constants::VSIZE_MESSAGE-1);
+    }
+    strcpy ( m_lastMessage, svcString.c_str());
+    m_dimSvc->updateService( m_lastMessage );
   }
-  strcpy ( m_lastMessage, svcString.c_str());
-  m_dimSvc->updateService( m_lastMessage );
 }

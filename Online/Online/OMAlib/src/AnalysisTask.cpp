@@ -1,4 +1,4 @@
-// $Id: AnalysisTask.cpp,v 1.25 2010-06-11 13:00:11 ggiacomo Exp $
+// $Id: AnalysisTask.cpp,v 1.26 2010-06-17 10:46:00 ggiacomo Exp $
 #include <cmath>
 #include <dim/dic.hxx>
 // from Gaudi
@@ -23,6 +23,7 @@ AnalysisTask::AnalysisTask( const std::string& name,
     GaudiHistoAlg ( name , pSvcLocator ),
     m_inputFiles(0),
     m_inputTasks(0),
+    m_forceOnlineEnv(false),
     m_runInfo(NULL),
     m_runStatus(-1),
     m_runAvailable(false),
@@ -37,7 +38,9 @@ AnalysisTask::AnalysisTask( const std::string& name,
   declareProperty ( "InputTasks"   , m_inputTasks);
   declareProperty ( "Partition"    , m_partition = "LHCb" );
   declareProperty ( "TextLog"      , m_textLogName = "");
-  declareProperty ( "HistDBMsgPersistency", m_logToHistDB = "true");
+  declareProperty ( "HistDBMsgPersistency", m_logToHistDB = true);
+  declareProperty ( "PublishDIMmessages", m_doPublish = true);
+  declareProperty ( "ForceOnlineEnv", m_forceOnlineEnv = false); // enable online tools (DIM, status checks) also in offline mode 
   declareProperty ( "StopAlgSequence", m_stayHere = true);
   declareProperty ( "ChangeHistPadColors", m_padcolors = false);
   declareProperty ( "CheckDetectorStatus", m_checkStatus = true);
@@ -67,8 +70,8 @@ StatusCode AnalysisTask::initialize() {
   debug() << "Initializing Analysis Task "<<m_anaTaskname << endmsg;
 
 
-  if ( ! m_inputFiles.empty() ) {
-    // offline mode: switch off message dim publishing and status checks
+  if ( ! m_inputFiles.empty() &&  !m_forceOnlineEnv) {
+    // offline mode: switch off message dim publishing and status checks unless forced
     m_doPublish = false;
     m_checkStatus = false;
   }
@@ -95,7 +98,6 @@ StatusCode AnalysisTask::initialize() {
       std::vector<std::string> dimservices;
       int nc = m_histDB->getConditions(bits,  m_conditionNames,  dimservices);
       for (int ic=0; ic<nc; ic++) {
-        
         DimInfo* dimservice = new DimInfo(dimservices[ic].c_str(), (int) -1);
         m_statusInfo.push_back( dimservice );
         sleep(1); // this is needed to avoid DIM crashes!!
