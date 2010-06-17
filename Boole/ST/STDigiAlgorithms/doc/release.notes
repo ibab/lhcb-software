@@ -4,6 +4,10 @@
 ! Purpose     : Algorithms for ST Digitization
 !-----------------------------------------------------------------------------
 
+! 2010-06-17 - Jeroen VAN TILBURG
+ - Changed itDigi.opts, ttDigi.opts, MCSTDepositCreator and STChargeSharingTool
+   to pick up the new 2010 settings (charge sharing, cap coupling and lorentz).
+
 ! 2010-05-21 - Jeroen VAN TILBURG
  - Updated tuning of the capacitive coupling.
  - Added possibility to have different capacitive coupling values for left/right

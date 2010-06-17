@@ -10,17 +10,11 @@ MCITDepositCreator.TofVector = {25.9, 28.3, 30.5};
 // charge sharing function  for IT
 MCITDepositCreator.ChargeSharerTypes = {"320", "410" };
 MCITDepositCreator.STChargeSharingTool320.Thickness = 0.320*mm;
-MCITDepositCreator.STChargeSharingTool320.SharingFunction = {
-  1.0, 1.0, 0.97, 0.935, 0.90, 0.83,
-  0.73, 0.57, 0.44, 0.34, 0.20, 0.11,
-  0.065, 0.038, 0.016, 0.0, 0.0
-};
+MCITDepositCreator.STChargeSharingTool320.UseAnalyticErf = true;
+MCITDepositCreator.STChargeSharingTool320.ErfWidth = 0.0182;
 MCITDepositCreator.STChargeSharingTool410.Thickness = 0.410*mm;
-MCITDepositCreator.STChargeSharingTool410.SharingFunction = {
-  1.0, 1.0, 0.97, 0.935, 0.90, 0.83,
-  0.73, 0.57, 0.44, 0.34, 0.20, 0.11,
-  0.065, 0.038, 0.016, 0.0, 0.0
-};
+MCITDepositCreator.STChargeSharingTool410.UseAnalyticErf = true;
+MCITDepositCreator.STChargeSharingTool410.ErfWidth = 0.0222;
 
 MCITDepositCreator.ResponseTypes = { "LRsignal","LRcapCoupling", 
                                      "TBsignal", "TBcapCoupling"};

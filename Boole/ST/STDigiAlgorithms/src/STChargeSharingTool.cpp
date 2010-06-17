@@ -24,8 +24,8 @@ STChargeSharingTool::STChargeSharingTool( const std::string& type,
 {
   // constructer
   declareProperty("SharingFunction", m_sharingFunction );
-  declareProperty("UseAnalyticErf",  m_useAnalyticErf = false    );
-  declareProperty("ErfWidth",        m_erfWidth       = 0.02     );
+  declareProperty("UseAnalyticErf",  m_useAnalyticErf = true    );
+  declareProperty("ErfWidth",        m_erfWidth       = 0.0224   );
   declareProperty("Thickness",       m_thickness      = 0.500*mm );
   declareInterface<ISTChargeSharingTool>(this);
 }

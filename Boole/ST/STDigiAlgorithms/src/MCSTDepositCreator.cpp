@@ -56,21 +56,17 @@ MCSTDepositCreator::MCSTDepositCreator( const std::string& name,
 
   declareProperty("DepChargeTool", m_depChargeToolName = "SiDepositedCharge");
 
-  declareProperty("SiteSize", m_siteSize = 0.02*Gaudi::Units::mm);
+  declareProperty("SiteSize", m_siteSize = 0.001*Gaudi::Units::mm);
   declareProperty("MaxNumSites", m_maxNumSites = 150);
 
   declareProperty("XTalkParamsRightEven", m_xTalkParamsRightEven = 
-                  boost::assign::list_of(0.0356)(0.0908/(55*picofarad)));
-  //                  boost::assign::list_of(0.0503)(0.001754/picofarad));
+                  boost::assign::list_of(0.0503)(0.001754/picofarad));
   declareProperty("XTalkParamsLeftEven", m_xTalkParamsLeftEven = 
-                  boost::assign::list_of(0.0356)(0.0908/(55*picofarad)));
-  //                  boost::assign::list_of(0.0185)(0.001625/picofarad));
+                  boost::assign::list_of(0.0185)(0.001625/picofarad));
   declareProperty("XTalkParamsRightOdd", m_xTalkParamsRightOdd = 
-                  boost::assign::list_of(0.0356)(0.0908/(55*picofarad)));
-  //                  boost::assign::list_of(0.0215)(0.001824/picofarad));
+                    boost::assign::list_of(0.0215)(0.001824/picofarad));
   declareProperty("XTalkParamsLeftOdd", m_xTalkParamsLeftOdd = 
-                  boost::assign::list_of(0.0356)(0.0908/(55*picofarad)));
-  //                  boost::assign::list_of(0.0494)(0.001416/picofarad));
+                    boost::assign::list_of(0.0494)(0.001416/picofarad));
 
   declareProperty("Scaling", m_scaling = 1.0);
   declareProperty("ApplyScaling", m_applyScaling = true );
@@ -81,7 +77,7 @@ MCSTDepositCreator::MCSTDepositCreator( const std::string& name,
   declareProperty("pMin", m_pMin = 1e-4 *Gaudi::Units::MeV);
 
 
-  declareProperty("ApplyLorentzCorrection", m_applyLorentzCorrection = false);
+  declareProperty("ApplyLorentzCorrection", m_applyLorentzCorrection = true);
   declareProperty("LorentzFactor", m_lorentzFactor = 0.025/Gaudi::Units::tesla);
 
   m_inputLocation = MCHitLocation::TT; 

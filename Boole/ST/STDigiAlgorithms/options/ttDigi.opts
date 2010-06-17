@@ -8,11 +8,8 @@ MCTTDepositCreator.TofVector = {7.8, 8.8};
 // charge sharing function  for TT
 MCTTDepositCreator.ChargeSharerTypes = { "500" };
 MCTTDepositCreator.STChargeSharingTool500.Thickness = 0.500*mm;
-MCTTDepositCreator.STChargeSharingTool500.SharingFunction = {
-  1.0, 1.0, 0.97, 0.935, 0.90, 0.83,
-  0.73, 0.57, 0.44, 0.34, 0.20, 0.11,
-  0.065, 0.038, 0.016, 0.0, 0.0
-};
+MCTTDepositCreator.STChargeSharingTool500.UseAnalyticErf = true;
+MCTTDepositCreator.STChargeSharingTool500.ErfWidth = 0.0224;
 
 MCTTDepositCreator.ResponseTypes = { "12signal", "12capCoupling", 
                                      "43capCoupling", "43signal" };
