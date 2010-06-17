@@ -11,7 +11,7 @@ use  PhysSelPython              v5r4p1  PhysSel
 use  StrippingSelections        v1r22p1 Phys
 use  PyAna                      v1r1    Analysis
 use  DSTWriters                 v1r6p3  Phys
-
+use  DSTWriterTests             v1r3    Phys
 # Declare this as a container package
 apply_pattern container_package
 
