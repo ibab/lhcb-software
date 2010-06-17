@@ -23,18 +23,23 @@ __version__ = '1.0'
 __all__ = ('histo_plot','sequence_histo_plot','ntuple_plot', 'ntuple_column_histo', 'default_stats')
 
 from matplotlib import pyplot
+from PyAna.pyhistogram.histostats import poissonSigma
 
 default_stats =  ('entries','mean', 'sigma', 'integral')
 
-def histo_plot(histogram, histtype='step', color='red', linewidth='1.5',  stats = default_stats, show = True, **kwargs) :
+def histo_plot(histogram, errorfunction = poissonSigma, stats = default_stats, show = True, **kwargs) :
     '''
     Plot the contents of a histogram.Histogram
     '''
-    fig = pyplot.figure()
     axis = histogram.axis
     bins = histogram.filledBins()
     x = [bin.centre for bin in bins]
     w = [bin.height for bin in bins]
+
+    e = None
+    if errorfunction :
+        e = [errorfunction(bin) for bin in bins]
+
     stat_text = None
     if stats :
         stat_text = 'Statistics'
@@ -43,24 +48,30 @@ def histo_plot(histogram, histtype='step', color='red', linewidth='1.5',  stats 
 
     return sequence_histo_plot(x,
                                weights=w,
+                               errors = e,
                                bins=axis.nbins, 
                                range = axis.range,
-                               histtype = histtype,
-                               color = color,
-                               linewidth = linewidth,
                                xlabel=axis.label,
                                stats = stat_text,
-                               show = show)
+                               show = show,
+                               **kwargs)
 
-def sequence_histo_plot(x, bins=100, xlabel='', histtype='step', color='red', linewidth='1.5', stats = None, show = True, **kwargs) :
+def sequence_histo_plot(x, weights=None, errors = None, bins=100, range = None, xlabel='', stats = None, show = True, histtype = 'step', **kwargs) :
     '''
     Plot the contents of a sequence
     '''
     fig = pyplot.figure()
     ax = fig.add_subplot(1,1,1)
-    ax.hist(x, bins=bins, histtype=histtype, color=color, linewidth=linewidth, **kwargs)
+
+    if errors == None :
+        ax.hist(x, weights = weights, bins=bins, range = range, **kwargs)
+    else :
+        ax.errorbar(x, weights, errors, fmt = 'o', **kwargs)
+        
+    ax.set_xlim(range[0], range[1])
     ax.set_ylabel('Entries')
     ax.set_xlabel(xlabel)
+
     if stats :
         ax.text(0.975, 0.975, stats,
                 horizontalalignment='right',
@@ -72,19 +83,16 @@ def sequence_histo_plot(x, bins=100, xlabel='', histtype='step', color='red', li
         fig.show()
     return fig
 
-def ntuple_plot(ntuple, tag, cut=None, histtype='step', color='red', linewidth='1.5', show = True, **kwargs) :
+def ntuple_plot(ntuple, tag, cut=None, **kwargs) :
     '''
     Plot the contents of an ntuple.Ntuple column
     '''
-    return sequence_histo_plot(ntuple.column(tag, cut),
-                               histtype = histtype,
-                               color = color,
-                               linewidth = linewidth,
-                               xlabel = tag,
-                               show = show,
-                               **kwargs) 
 
-def ntuple_column_histo(ntuple, tag, cut=None, bins=100, **kwargs) :
+    column_histo = ntuple_column_histo(ntuple, tag, cut)
+
+    return histo_plot(column_histo, **kwargs)
+
+def ntuple_column_histo(ntuple, tag, cut=None, bins=100) :
     '''
     Create and return a histogram.Histogram object constructed from the 
     contents of an ntuple.NTuple column.
