@@ -1,4 +1,4 @@
-// $Id: AlarmDisplay.h,v 1.1 2010-06-11 13:02:03 ggiacomo Exp $
+// $Id: AlarmDisplay.h,v 1.2 2010-06-17 10:44:19 ggiacomo Exp $
 #ifndef ALARMDISPLAY_H 
 #define ALARMDISPLAY_H 1
 /** @class AlarmDisplay AlarmDisplay.h
@@ -24,8 +24,8 @@ public:
                                        m_mainFrame(mainFrame),
                                        m_enabled(false),
                                        m_listView(listView),
-                                       m_filterCriteria(AllHistograms) {}
-
+                                       m_filterCriteria(AllHistograms),
+                                       m_nAlarms(0), m_nWarning(0), m_nArchived(0) {}
   virtual ~AlarmDisplay( ) {}
   inline void enable(bool state) {m_enabled=state;}
   inline void setFilterCriteria(FilterCriteria filterCriteria) { m_filterCriteria = filterCriteria;}
@@ -45,5 +45,6 @@ private:
   int m_msgBoxReturnCode;
   int m_nAlarms;
   int m_nWarning;
+  int m_nArchived;
 };
 #endif // ALARMDISPLAY_H

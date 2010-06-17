@@ -1,4 +1,4 @@
-// $Id: AlarmDisplay.cpp,v 1.1 2010-06-11 13:02:03 ggiacomo Exp $
+// $Id: AlarmDisplay.cpp,v 1.2 2010-06-17 10:44:19 ggiacomo Exp $
 
 #include <vector>
 #include <iostream>
@@ -28,8 +28,7 @@ void AlarmDisplay::listAlarmsFromHistogramDB() {
     m_listView->DeleteChildren(treeRoot);
     treeRoot->SetOpen(1);
     TGListTreeItem* archive=m_listView->AddItem(treeRoot, "archive");
-    m_nAlarms=0; 
-    m_nWarning=0;
+    m_nAlarms=m_nWarning=m_nArchived=0; 
     m_alarmMessageIDs.clear();
     try {
       m_mainFrame->histogramDB()->getMessages(m_alarmMessageIDs);
@@ -59,8 +58,13 @@ void AlarmDisplay::listAlarmsFromHistogramDB() {
           m_mainFrame->setTreeNodeType(treeNode, message->levelString());
           m_listView->SetCheckBox(treeNode, false);
           treeNode->SetUserData((void*)&(*alarmMessageIDsIt));
-          if (message->level() == OMAMessage::ALARM) m_nAlarms++;
-          if (message->level() == OMAMessage::WARNING) m_nWarning++;
+          if (message->isactive()) {
+            if (message->level() == OMAMessage::ALARM) m_nAlarms++;
+            if (message->level() == OMAMessage::WARNING) m_nWarning++;
+          }
+          else {
+            m_nArchived++;
+          }
         }
         delete message;
       }
@@ -74,7 +78,7 @@ void AlarmDisplay::listAlarmsFromHistogramDB() {
                      kMBIconExclamation, kMBOk, &m_msgBoxReturnCode);
       }
     }
-    m_listView->RenameItem(treeRoot, Form("%d Alarms %d Warnings", m_nAlarms, m_nWarning));
+    m_listView->RenameItem(treeRoot, Form("%d Alarms %d Warnings %d archived", m_nAlarms, m_nWarning, m_nArchived));
     m_listView->SortChildren(treeRoot);
     m_listView->MapWindow();
   } else if (!(m_mainFrame->isConnectedToHistogramDB())) {
