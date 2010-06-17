@@ -4,7 +4,7 @@
  *  Implementation file for Millepede configuration tool : TAConfig
  *
  *  CVS Log :-
- *  $Id: TAConfig.cpp,v 1.42 2010-06-09 14:41:29 jblouw Exp $
+ *  $Id: TAConfig.cpp,v 1.43 2010-06-17 14:57:08 jblouw Exp $
  *
  *  @author J. Blouw (johan.blouw@mpi-hd.mpg.de)
  *  @date   12/04/2007
@@ -344,10 +344,13 @@ StatusCode TAConfig::ConstrainLagrangeMultOT(){
   if ( m_otHalfLayer) {
     m_Sigzmean_ot_a /= (m_nAlignObj/2);
     m_Sigzmean_ot_c /= (m_nAlignObj/2);
+    m_Sigzmean_ot_a = sqrt(m_Sigzmean_ot_a);
+    m_Sigzmean_ot_c = sqrt(m_Sigzmean_ot_c);
     info()<<" LM ===> m_Sigzmean_ot_a " << m_Sigzmean_ot_a << endreq;
     info()<<" LM ===> m_Sigzmean_ot_c " << m_Sigzmean_ot_c << endreq;
   } else {
     m_Sigzmean_ot /= m_nAlignObj; // nominator of shearing term
+    m_Sigzmean_ot = sqrt(m_Sigzmean_ot);
     info()<<" LM ===> m_Sigzmean_ot " << m_Sigzmean_ot << endreq;
   }
   
@@ -358,6 +361,9 @@ StatusCode TAConfig::ConstrainLagrangeMultOT(){
     m_consTU.push_back(0.0);
     m_consTUA.push_back(0.0);
     m_consTUC.push_back(0.0);
+    m_consTV.push_back(0.0);
+    m_consTVA.push_back(0.0);
+    m_consTVC.push_back(0.0);
     m_consTZ.push_back(0.);  // layers/modules
     m_consTZA.push_back(0.);  // A side
     m_consTZC.push_back(0.);  // C side
@@ -367,9 +373,18 @@ StatusCode TAConfig::ConstrainLagrangeMultOT(){
     m_shearUZ.push_back(0.0);
     m_shearUZA.push_back(0.0);
     m_shearUZC.push_back(0.0);
+    m_shearVZ.push_back(0.0);
+    m_shearVZA.push_back(0.0);
+    m_shearVZC.push_back(0.0);
     m_shear_RotCZx.push_back(0.0);
+    m_shear_RotCZu.push_back(0.0);
+    m_shear_RotCZv.push_back(0.0);
     m_shear_RotCZxA.push_back(0.0);
+    m_shear_RotCZuA.push_back(0.0);
+    m_shear_RotCZvA.push_back(0.0);
     m_shear_RotCZxC.push_back(0.0);
+    m_shear_RotCZuC.push_back(0.0);
+    m_shear_RotCZvC.push_back(0.0);
     m_scale_Z.push_back(0.);
     m_scale_ZA.push_back(0.);
     m_scale_ZC.push_back(0.);
@@ -380,8 +395,14 @@ StatusCode TAConfig::ConstrainLagrangeMultOT(){
     m_cons_RotYA.push_back(0.0);
     m_cons_RotYC.push_back(0.0);
     m_cons_RotZ.push_back(0.0);
+    m_cons_RotZu.push_back(0.0);
+    m_cons_RotZv.push_back(0.0);
     m_cons_RotZA.push_back(0.0);
+    m_cons_RotZAu.push_back(0.0);
+    m_cons_RotZAv.push_back(0.0);
     m_cons_RotZC.push_back(0.0);
+    m_cons_RotZCu.push_back(0.0);
+    m_cons_RotZCv.push_back(0.0);
   }
   if(m_otHalfLayer)
     CalcHLLC();
@@ -394,18 +415,24 @@ StatusCode TAConfig::ConstrainLagrangeMultOT(){
       m_Centipede->ConstF(m_consTXC,0.);  
       m_Centipede->ConstF(m_shearXZC,0.);  
       m_Centipede->ConstF(m_consTUC,0.);  
+      m_Centipede->ConstF(m_consTVC,0.);  
       m_Centipede->ConstF(m_shearUZC,0.);  
+      m_Centipede->ConstF(m_shearVZC,0.);  
       //Aside
       m_Centipede->ConstF(m_consTXA,0.);  
       m_Centipede->ConstF(m_shearXZA,0.);  
+      m_Centipede->ConstF(m_consTVA,0.);  
       m_Centipede->ConstF(m_consTZA,0.);  
       m_Centipede->ConstF(m_shearUZA,0.);  
+      m_Centipede->ConstF(m_shearVZA,0.);  
     }
     else{
       m_Centipede->ConstF(m_consTX,0.0);  
       m_Centipede->ConstF(m_shearXZ,0.);  
       m_Centipede->ConstF(m_consTU,0.0);  
       m_Centipede->ConstF(m_shearUZ,0.);  
+      m_Centipede->ConstF(m_consTV,0.0);
+      m_Centipede->ConstF(m_shearVZ,0.);  
     }
   }
   if(m_dof[2]){ 
@@ -443,13 +470,18 @@ StatusCode TAConfig::ConstrainLagrangeMultOT(){
     if ( m_otHalfLayer ) {
       // CSide
       m_Centipede->ConstF( m_cons_RotZA, 0.0 );
+      m_Centipede->ConstF( m_cons_RotZAu, 0.0 );
       m_Centipede->ConstF( m_shear_RotCZxA, 0.0 );
       // ASide
       m_Centipede->ConstF( m_cons_RotZC, 0.0 );
+      m_Centipede->ConstF( m_cons_RotZCu, 0.0 );
       m_Centipede->ConstF( m_shear_RotCZxC, 0.0 );
     } else {
       m_Centipede->ConstF( m_cons_RotZ, 0.0 );
+      m_Centipede->ConstF( m_cons_RotZu, 0.0 );
       m_Centipede->ConstF( m_shear_RotCZx, 0.0 );
+      m_Centipede->ConstF( m_shear_RotCZu, 0.0 );
+      m_Centipede->ConstF( m_shear_RotCZv, 0.0 );
     }
   }
   for(int i =0; i< m_n_dof*m_nAlignObj;i++){  
@@ -525,20 +557,13 @@ void TAConfig::MeanZ() {
 	   << " mean z = " << m_zmean_ot<<endreq; 
   }
   info() << " LM ===> " << " m_zmean_ot = " << m_zmean_ot<<endreq; 
+  info() << " LM ===> " << " m_zmean_ot_a = " << m_zmean_ot_a<<endreq; 
+  info() << " LM ===> " << " m_zmean_ot_c = " << m_zmean_ot_c<<endreq; 
   
   iter  = m_RnkZAngle.begin();
   for(; iter != m_RnkZAngle.end(); iter++){
     m_Sigzmean_ot += ( (iter->second).first-m_zmean_ot) * ( (iter->second).first-m_zmean_ot ); 
     m_layerZ.push_back((iter->second).first);
-    int rnk = iter->first;
-    if ( m_otHalfLayer && rnk%2 == 0 ) {
-      m_Sigzmean_ot_a += ((iter->second).first-m_zmean_ot_a)*((iter->second).first-m_zmean_ot_a);
-      m_layerZ.push_back((iter->second).first);
-    }
-    if ( m_otHalfLayer && rnk%2 != 0 ) {
-      m_Sigzmean_ot_c += ((iter->second).first-m_zmean_ot_c)*((iter->second).first-m_zmean_ot_c);
-      m_layerZ.push_back((iter->second).first);
-    }
   }
   m_misalDetEl_Z = m_layerZ ;
   m_misalDetEl_meanZ = m_zmean_ot;
@@ -549,32 +574,47 @@ void TAConfig::CalcLC( int rank,
 		       double Zmean,
 		       double SigZmean,
 		       std::vector<double> & X_constraint,
-		       std::vector<double> & UV_constraint,
+		       std::vector<double> & U_constraint,
+		       std::vector<double> & V_constraint,
 		       std::vector<double> & Z_constraint,
 		       std::vector<double> & RotA_constraint,
 		       std::vector<double> & RotB_constraint,
-		       std::vector<double> & RotC_constraint,
+		       std::vector<double> & RotCx_constraint,
+		       std::vector<double> & RotCu_constraint,
+		       std::vector<double> & RotCv_constraint,
 		       std::vector<double> & shear_XZ,
 		       std::vector<double> & shear_UZ,
+		       std::vector<double> & shear_VZ,
 		       std::vector<double> & shear_RotCZx,
+		       std::vector<double> & shear_RotCZu,
+		       std::vector<double> & shear_RotCZv,
 		       std::vector<double> & scale_Z ) {
   double g = m_stereoAngle[rank];
   double Zpos = m_layerZ.at(rank);
-  for ( int k = 0; k < 6; k++ ) {
+  std::vector<bool>::const_iterator k = m_dof.begin();
+  int i = -1;
+  for ( ; k < m_dof.end(); k++ ) {
+    i++;
     int dof = 0;
-    if ( m_dof[k] )
-      dof = 1 << k;
+    if ( *k )
+      dof = 1 << i;
+    info() << "dof = " << dof << " " << *k << endreq;
     switch (dof) {
     case 0:
       ; // nothing to do
       break;
     case 1: // shift along measurement direction
-      X_constraint.at(rank)  = cos( g );
-      shear_XZ.at(rank) = (( Zpos - Zmean ) / SigZmean ) * cos ( g );
-      if ( g != 0.0 ) {
-	UV_constraint.at(rank)  = cos( g ) + sin( g ); // y
-	shear_UZ.at(rank) = (( Zpos - Zmean ) / SigZmean ) * cos( g ) +
-	  (( Zpos - Zmean ) / SigZmean ) * sin( g );
+      if ( g == 0.0 ) {
+	X_constraint.at(rank)  = 1.0;
+	shear_XZ.at(rank) = (( Zpos - Zmean ) / SigZmean );
+      }
+      if ( g > 0.0 ) {
+	U_constraint.at(rank)  = 1.0;
+	shear_UZ.at(rank) = (( Zpos - Zmean ) / SigZmean );
+      }
+      if ( g < 0.0 ) {
+	V_constraint.at(rank)  = 1.0;
+	shear_VZ.at(rank) = (( Zpos - Zmean ) / SigZmean );
       }
       cnt++;
       break;
@@ -594,8 +634,18 @@ void TAConfig::CalcLC( int rank,
       cnt++;
       break;
     case 32: // rotation about z
-      RotC_constraint.at(rank+cnt*m_nAlignObj) = 1.;
-      shear_RotCZx.at(rank+cnt*m_nAlignObj) = ( Zpos - Zmean ) / SigZmean;
+      if ( g == 0.0 ) {
+	RotCx_constraint.at(rank+cnt*m_nAlignObj) = 1.0;
+	shear_RotCZx.at(rank+cnt*m_nAlignObj) = ( Zpos - Zmean ) / SigZmean;
+      }
+      if ( g > 0.0 ) {
+	RotCu_constraint.at(rank+cnt*m_nAlignObj) = 1.0;
+	shear_RotCZu.at(rank+cnt*m_nAlignObj) = ( Zpos - Zmean ) / SigZmean;
+      }
+      if ( g < 0.0 ) {
+	RotCv_constraint.at(rank+cnt*m_nAlignObj) = 1.0;
+	shear_RotCZv.at(rank+cnt*m_nAlignObj) = ( Zpos - Zmean ) / SigZmean;
+      }
       cnt++;
       break;
     default: // something went wrong!
@@ -619,13 +669,19 @@ void TAConfig::CalcHLLC() {
 		    m_Sigzmean_ot_a,
 		    m_consTXA,
 		    m_consTUA,
+		    m_consTVA,
 		    m_consTZA,
 		    m_cons_RotXA,
 		    m_cons_RotYA,
 		    m_cons_RotZA,
+		    m_cons_RotZAu,
+		    m_cons_RotZAv,
 		    m_shearXZA,
 		    m_shearUZA,
+		    m_shearVZA,
 		    m_shear_RotCZxA,
+		    m_shear_RotCZuA,
+		    m_shear_RotCZvA,
 		    m_scale_ZA
 		    );
     }
@@ -636,13 +692,19 @@ void TAConfig::CalcHLLC() {
 		    m_Sigzmean_ot_c,
 		    m_consTXC,
 		    m_consTUC,
+		    m_consTVC,
 		    m_consTZC,
 		    m_cons_RotXC,
 		    m_cons_RotYC,
 		    m_cons_RotZC,
+		    m_cons_RotZCu,
+		    m_cons_RotZCv,
 		    m_shearXZC,
 		    m_shearUZC,
+		    m_shearVZC,
 		    m_shear_RotCZxC,
+		    m_shear_RotCZuC,
+		    m_shear_RotCZvC,
 		    m_scale_ZC
 		    );
     }
@@ -659,13 +721,19 @@ void TAConfig::CalcLC() {
 		  m_Sigzmean_ot,
 		  m_consTX,
 		  m_consTU,
+		  m_consTV,
 		  m_consTZ,
 		  m_cons_RotX,
 		  m_cons_RotY,
 		  m_cons_RotZ,
+		  m_cons_RotZu,
+		  m_cons_RotZv,
 		  m_shearXZ,
 		  m_shearUZ,
+		  m_shearVZ,
 		  m_shear_RotCZx,
+		  m_shear_RotCZu,
+		  m_shear_RotCZv,
 		  m_scale_Z );
   }
 }

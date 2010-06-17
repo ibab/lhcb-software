@@ -6,7 +6,7 @@
  *  Header file for Tstation alignment : TAConfig
  *
  *  CVS Log :-
- *  $Id: TAConfig.h,v 1.28 2010-06-09 14:35:02 jblouw Exp $
+ *  $Id: TAConfig.h,v 1.29 2010-06-17 14:57:08 jblouw Exp $
  *
  *  @author J. Blouw johan.blouw@cern.ch
  *  @date   12/04/2007
@@ -59,6 +59,10 @@
 #include "boost/assign/list_of.hpp"
 #include "boost/numeric/conversion/bounds.hpp"
 #include "boost/limits.hpp"
+
+
+
+
 
 class TAConfig : public GaudiTupleTool, 
                  virtual public ITAConfigTool {
@@ -329,6 +333,12 @@ public:
 	       std::vector<double> &,
 	       std::vector<double> &,
 	       std::vector<double> &,
+	       std::vector<double> &,
+	       std::vector<double> &,
+	       std::vector<double> &,
+	       std::vector<double> &,
+	       std::vector<double> &,
+	       std::vector<double> &,
 	       std::vector<double> &
 	      );
   void MeanZ();
@@ -368,6 +378,9 @@ public:
   std::vector< double > m_consTU;  // shift along measurement direction
   std::vector< double > m_consTUA; // Aside
   std::vector< double > m_consTUC; // Cside
+  std::vector< double > m_consTV;  // shift along measurement direction
+  std::vector< double > m_consTVA; // Aside
+  std::vector< double > m_consTVC; // Cside
   std::vector< double > m_consTZ;
   std::vector< double > m_consTZA; // Aside
   std::vector< double > m_consTZC; // Cside
@@ -377,9 +390,18 @@ public:
   std::vector< double > m_shearUZ;
   std::vector< double > m_shearUZA; // u/v-z shearing, ASide
   std::vector< double > m_shearUZC; // idem, Cside
-  std::vector< double > m_shear_RotCZx; // cork-screw ('tilt') movement
+  std::vector< double > m_shearVZ;
+  std::vector< double > m_shearVZA; // u/v-z shearing, ASide
+  std::vector< double > m_shearVZC; // idem, Cside
+  std::vector< double > m_shear_RotCZx; // cork-screw ('tilt') movement (x layer)
   std::vector< double > m_shear_RotCZxA; // idem, Aside
   std::vector< double > m_shear_RotCZxC; // idem, Cside
+  std::vector< double > m_shear_RotCZu; // cork-screw ('tilt') movement (x layer)
+  std::vector< double > m_shear_RotCZuA; // idem, Aside
+  std::vector< double > m_shear_RotCZuC; // idem, Cside
+  std::vector< double > m_shear_RotCZv; // cork-screw ('tilt') movement (x layer)
+  std::vector< double > m_shear_RotCZvA; // idem, Aside
+  std::vector< double > m_shear_RotCZvC; // idem, Cside
   std::vector< double > m_scale_Z;
   std::vector< double > m_scale_ZA; // z-scale, Aside
   std::vector< double > m_scale_ZC; // idem, Cside
@@ -389,6 +411,8 @@ public:
   std::vector< double > m_cons_RotX, m_cons_RotXA, m_cons_RotXC;
   std::vector< double > m_cons_RotY, m_cons_RotYA, m_cons_RotYC;
   std::vector< double > m_cons_RotZ, m_cons_RotZA, m_cons_RotZC;
+  std::vector< double > m_cons_RotZu, m_cons_RotZAu, m_cons_RotZCu;
+  std::vector< double > m_cons_RotZv, m_cons_RotZAv, m_cons_RotZCv;
   
 
   std::vector<int> m_rank;
