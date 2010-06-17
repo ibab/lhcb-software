@@ -4,6 +4,10 @@
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
 
+! 2010-06-17 - Chris Jones
+ - Add a public method to DeRichAerogelRadiator to allow access to the tile ID
+   number.
+
 !======================== RichDet v14r3 2010-05-21 ===========================
 ! 2010-05-17 - Antonis Papanestis
  - Update to allow the detector element to initialize even if the 

@@ -58,6 +58,12 @@ public:
    */
   virtual StatusCode initialize();
 
+public:
+
+  /** Access the Aerogel tile ID number
+   *  @return The tile ID */
+  inline int tileID() const { return m_tileNumber; }
+
 private:
 
   /// method to update the refractive index of the radiator
@@ -78,6 +84,8 @@ private:
   StatusCode calcAbsorption(const std::vector<double>& momVect,
                             const TabulatedProperty* tabProp);
 
+private:
+
   /// access to DeRich1 for user parameters
   DetectorElement* m_deRich1;
 
@@ -91,4 +99,5 @@ private:
   int m_tileNumber;
 
 };
+
 #endif // RICHDET_DERICHAEROGELRADIATOR_H

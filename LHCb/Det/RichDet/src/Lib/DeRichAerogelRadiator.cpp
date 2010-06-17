@@ -35,17 +35,24 @@ const CLID CLID_DeRichAerogelRadiator = 12043;  // User defined
 // Standard constructor, initializes variables
 //=============================================================================
 DeRichAerogelRadiator::DeRichAerogelRadiator(const std::string & name)
-  : DeRichSingleSolidRadiator(name) {}
+  : DeRichSingleSolidRadiator ( name ),
+    m_deRich1                 ( NULL ),
+    m_photMomWaveConv         ( 0    ),
+    m_tileNumber              ( -1   )
+{ }
 
 //=============================================================================
 // Destructor
 //=============================================================================
-DeRichAerogelRadiator::~DeRichAerogelRadiator() {}
+DeRichAerogelRadiator::~DeRichAerogelRadiator() { }
 
 //=========================================================================
 // Retrieve Pointer to class defininition structure
 //=========================================================================
-const CLID& DeRichAerogelRadiator::classID() { return CLID_DeRichAerogelRadiator; }
+const CLID& DeRichAerogelRadiator::classID() 
+{ 
+  return CLID_DeRichAerogelRadiator; 
+}
 
 //=========================================================================
 //  initialize
@@ -72,6 +79,11 @@ StatusCode DeRichAerogelRadiator::initialize ( )
 
   SmartDataPtr<DetectorElement> deRich1( dataSvc(), DeRichLocations::Rich1 );
   m_deRich1 = deRich1;
+  if ( !m_deRich1 )
+  {
+    fatal() << "Failed to load DeRich1 detector element" << endmsg;
+    return StatusCode::FAILURE;
+  }
 
   // configure refractive index updates
 
