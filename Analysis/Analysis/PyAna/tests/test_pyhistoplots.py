@@ -29,7 +29,8 @@ for x in xrange(10000) :
 
 def test_ntuple_plot() :
     pt_plot = ntuple_plot(nt, 'pt', show = False)
-
+    p_plot = ntuple_plot(nt, 'p', errorfunction=lambda x : x.height/2., color = 'red', linewidth='1.5', show = False)
+    
 def test_ntuple_column_histo():
     h_pt = ntuple_column_histo(nt, 'pt')
 
