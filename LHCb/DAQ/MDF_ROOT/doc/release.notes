@@ -4,6 +4,10 @@
 ! Purpose     : ROOT plugin to read MDF files.
 !-----------------------------------------------------------------------------
 
+!========================== MDF_ROOT v1r3 2010-06-17 =========================
+! 2008-06-17 - Markus Frank
+ - Improve EOF detection. TFile::Seek(0,kEnd) does not set relative offset correctly.
+
 !========================== MDF_ROOT v1r2 2008-03-03 =========================
 ! 2008-03-03 - Markus Frank
  - Detector EOF when reading MDF files with ROOT.
