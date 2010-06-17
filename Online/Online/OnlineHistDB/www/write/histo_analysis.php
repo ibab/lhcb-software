@@ -56,11 +56,11 @@ function update_histo_analysis() {
     }
   }
   $statCond=$upCond="";
-  if ($_POST["a${ia}_mst"]) {
+  if (strlen($_POST["a${ia}_mst"])>0) {
     $statCond .= ",theMinStat => ".$_POST["a${ia}_mst"];
     $upCond .= ",MINBINSTAT=".$_POST["a${ia}_mst"];
   }
-  if ($_POST["a${ia}_msf"]) {
+  if (strlen($_POST["a${ia}_msf"])>0) {
     $statCond .= ",theMinStatFrac => ".$_POST["a${ia}_msf"];
     $upCond .= ",MINBINSTATFRAC=".$_POST["a${ia}_msf"];
   }
