@@ -41,12 +41,11 @@ STOfflinePosition::STOfflinePosition(const std::string& type,
                                      const IInterface* parent) :
   ST::ToolBase( type, name, parent )
 {
-  m_errorVec += 0.196, 0.147, 0.177, 0.037;
+  m_errorVec += 0.256, 0.301, 0.283, 0.212;
   declareProperty("ErrorVec",m_errorVec);
-  declareProperty("SharingCorr",m_sharingCorr = -112.); 
-  declareProperty("CubicSharingCorr2",m_cubicSharingCorr2 = 5.4); 
-  declareProperty("LinSharingCorr2",m_linSharingCorr2 = 1.1);
-  declareProperty("LinSharingCorr4",m_linSharingCorr4 = 0.67);
+  declareProperty("LinSharingCorr2",m_linSharingCorr2 = 0.484);
+  declareProperty("CubicSharingCorr2",m_cubicSharingCorr2 = 14.2); 
+  declareProperty("LinSharingCorr4",m_linSharingCorr4 = 0.637);
   declareProperty("MaxNtoCorr",m_maxNtoCorr = 4);
   declareProperty("trim", m_trim = 0.0);
   declareProperty("MergeClusters", m_mergeClusters = false );
@@ -54,7 +53,7 @@ STOfflinePosition::STOfflinePosition(const std::string& type,
                           STClusterLocation::TTClusters);
   declareProperty("APE", m_APE = 0.0); // Alignment Precision Error
 
-  declareProperty("applyLorentzCorrection", m_applyLorentzCorrection = false);
+  declareProperty("applyLorentzCorrection", m_applyLorentzCorrection = true );
   declareProperty("lorentzFactor", m_lorentzFactor = 0.025/Gaudi::Units::tesla);
 
   declareInterface<ISTClusterPosition>(this);
@@ -211,51 +210,27 @@ double STOfflinePosition::stripFraction(const double stripNum,
   double corStripPos = stripNum - floor(stripNum);
   if ( (clusterSize>1) && ((int)clusterSize <= m_maxNtoCorr) ) {
 
-    if ( m_sharingCorr > 0.0 ) { // Old charge sharing correction
-      corStripPos = chargeSharingCorr( corStripPos );
-    } else { // New charge sharing correction
-      if (clusterSize == 2) {
-        // Linear plus cubic term
-        corStripPos = (corStripPos-0.5)*m_linSharingCorr2 +
-          pow((corStripPos-0.5), 3.0)*m_cubicSharingCorr2 + 0.5;    
-      } else if( clusterSize == 3 ) {
-        // Cubic term
-        corStripPos = pow((corStripPos-0.5), 3.0)*4.0+0.5;
-      } else if( clusterSize == 4 ) {
-        // Linear term only
-        corStripPos = (corStripPos-0.5)*m_linSharingCorr4+0.5;
-      }    
+    // Charge sharing correction
+    if (clusterSize == 2) {
+      // Linear plus cubic term
+      corStripPos = (corStripPos-0.5)*m_linSharingCorr2 +
+        pow((corStripPos-0.5), 3.0)*m_cubicSharingCorr2 + 0.5;    
+    } else if( clusterSize == 3 ) {
+      // Cubic term
+      corStripPos = pow((corStripPos-0.5), 3.0)*4.0+0.5;
+    } else if( clusterSize == 4 ) {
+      // Linear term only
+      corStripPos = (corStripPos-0.5)*m_linSharingCorr4+0.5;
     }
   }
+
+  // Corrected position should be between 0 and 1
+  if( corStripPos < 0.0 ) corStripPos = 0.0;
+  if( corStripPos > 1.0 ) corStripPos = 1.0;
 
   return corStripPos;
 }
 
-
-// Old charge
-double STOfflinePosition::chargeSharingCorr(const double origDist) const
-{
-  // non-linear charge sharing correction
-  double newDist = origDist-0.5;
-
-  // FIXME: No correction should indeed be applied for symmetric, uneven-sized
-  //        clusters (i.e. origDist==0.0), but this makes the correction
-  //        function non-continuous. Try to find a better function that still
-  //        leaves the zero intact. --- JvT 09.01.2009
-
-  // No correction in case of symmetric, uneven-sized clusters
-  if (m_sharingCorr > 0.0 && !lomont_compare_double(origDist, 0.0, 100) ) {
-    if (newDist<0.) {
-      newDist = -cbrt(-newDist/m_sharingCorr);
-    }
-    else {
-      newDist = cbrt(newDist/m_sharingCorr);
-    }
-  } // apply corr
-
-  return newDist+0.5;
-  
-}
 
 void STOfflinePosition::lorentzShift( const STChannelID& chan , 
                                       double& fracPosition ) const

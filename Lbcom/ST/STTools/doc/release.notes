@@ -2,6 +2,10 @@
 ! Package manager : Jeroen van Tilburg
 !------------------------------------------------------------------------------
 
+! 2010-06-17 - Jeroen VAN TILBURG
+ - New tuning of eta correction (for new charge sharing tune) and new hit error
+   estimates for MC.
+
 ! 2010-06-10 - Marco Cattaneo
  - Fix windows compiler warnings
 

@@ -7,9 +7,9 @@ class EarlyDataConf(object):
                        ):
         #New tune (March 2010)
         if IT is not None:
-            IT.LinSharingCorr2 = 0.61
-            IT.CubicSharingCorr2 = 7.4
-            IT.LinSharingCorr4 = 0.63
+            IT.LinSharingCorr2 = 0.0398 
+            IT.CubicSharingCorr2 = 13.6;
+            IT.LinSharingCorr4 = 0.866
             IT.DetType = "IT"
             IT.ErrorVec = [0.28, 0.20, 0.3, 0.2]
             IT.APE = 0.05
@@ -24,25 +24,26 @@ class DefaultConf(object):
                        IT=STOfflinePosition('ToolSvc.ITClusterPosition'),
                        TT=STOfflinePosition('ToolSvc.STOfflinePosition')
                        ):
-        # New tune (JvT - 24.04.2009)
+        # New tune (JvT - 17.06.2009)
         if IT is not None:
-            IT.ErrorVec = [ 0.189, 0.117, 0.166, 0.037 ]
-            IT.LinSharingCorr2 = 0.61
-            IT.CubicSharingCorr2 = 7.4
-            IT.LinSharingCorr4 = 0.63
+            IT.LinSharingCorr2 = 0.0398 
+            IT.CubicSharingCorr2 = 13.6;
+            IT.LinSharingCorr4 = 0.866
             IT.DetType = "IT"
+            IT.ErrorVec =[ 0.258, 0.255, 0.290, 0.163 ];
             # Uncomment to switch to old settings
-            #IT.MaxNtoCorr = 3
-            #IT.SharingCorr = 112.0
-            #IT.trim = 0.3
-            #IT.ErrorVec =[ 0.22, 0.11, 0.24, 0.2]
-            #IT.MaxNtoCorr = 3
+            #IT.LinSharingCorr2 = 0.61
+            #IT.CubicSharingCorr2 = 7.4;
+            #IT.LinSharingCorr4 = 0.63
+            #IT.applyLorentzCorrection = False;
+            #IT.ErrorVec =[  0.189, 0.117, 0.166, 0.037 ]
             #IT.DetType = "IT"
 
         if TT is not None:
             pass
             # Uncomment to switch to old settings
-            #TT.SharingCorr = 112.0
-            #TT.trim = 0.3
-            #TT.ErrorVec =[ 0.24, 0.13, 0.26, 0.23]
-            
+            #TT.LinSharingCorr2 = 1.1
+            #TT.CubicSharingCorr2 = 5.4;
+            #TT.LinSharingCorr4 = 0.67
+            #TT.applyLorentzCorrection = False;
+            #TT.ErrorVec =[ 0.196, 0.147, 0.177, 0.037 ]

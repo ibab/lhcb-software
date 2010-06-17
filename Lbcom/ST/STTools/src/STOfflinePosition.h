@@ -57,8 +57,6 @@ private:
   double stripFraction( const double stripNum,
                         const unsigned int clusterSize ) const;
 
-  double chargeSharingCorr( const double dist ) const;
-
   void lorentzShift(const LHCb::STChannelID& chan , double& fracPosition) const;
 
   /// STCluster container, needed to merge splitted clusters
