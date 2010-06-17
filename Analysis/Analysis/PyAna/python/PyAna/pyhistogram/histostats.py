@@ -23,7 +23,7 @@ __version__ = '1.0'
 
 from math import sqrt
 
-__all__ = ('integral', 'mean', 'sigma', '_max', '_min')
+__all__ = ('integral', 'mean', 'sigma', '_max', '_min', 'poissonSigma')
 
 def integral(bins) :
     return sum([bin.height for bin in bins])
@@ -41,6 +41,9 @@ def sigma(bins) :
     if len(bins) == 0 :
         return 0
     return sqrt(sum([(b.height*(b.centre-mu)**2) for b in bins])/integral(bins))
+
+def poissonSigma(bin) :
+    return sqrt(bin.sumWeight2)
 
 def _max(bins) :
     return max([bin.centre + bin.width/2. for bin in bins])
