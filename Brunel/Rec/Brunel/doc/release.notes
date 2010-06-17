@@ -25,6 +25,7 @@ Purpose: LHCb reconstruction program
   . New histograms in TrackVertexMonitor and TrackVeloOverlapMonitor 
     (TrackMonitors)
   . Less verbosity in CondDBEntityResolver (CondDBEntityResolver)
+  . Changed precision of OTMeasurement::deltaTimeOfFlight (TrackFitEvent)
 
 </PRE><H1><A NAME=v37r3>2010-05-26 Brunel v37r3</A></H1><PRE>
  - Changes to references to reflect changes in Brunel v37r3 output:
