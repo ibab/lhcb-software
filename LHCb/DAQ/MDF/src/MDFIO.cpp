@@ -476,7 +476,7 @@ LHCb::MDFIO::readLegacyBanks(const MDFHeader& h, void* const ioDesc, bool dbg)
       }
       else if ( sc == 0 ) {
         MsgStream log(m_msgSvc, m_parent);
-        log << MSG::INFO << "Cannot read more data. End-of-File reached." << endmsg;
+        log << MSG::INFO << "Cannot read more data (Compressed record). End-of-File reached." << endmsg;
         return MDFDescriptor(0,-1);
       }
 
@@ -518,7 +518,7 @@ LHCb::MDFIO::readLegacyBanks(const MDFHeader& h, void* const ioDesc, bool dbg)
     }
     else if ( sc == 0 ) {
       MsgStream log(m_msgSvc, m_parent);
-      log << MSG::INFO << "Cannot read more data. End-of-File reached." << endmsg;
+      log << MSG::INFO << "Cannot read more data (Uncompressed record). End-of-File reached." << endmsg;
       return MDFDescriptor(0,-1);
     }
 
@@ -620,7 +620,7 @@ NoSpace:
       }
       else if ( sc == 0 ) {
         MsgStream log(m_msgSvc, m_parent);
-        log << MSG::INFO << "Cannot read more data. End-of-File reached." << endmsg;
+        log << MSG::INFO << "Cannot read more data (Compressed record). End-of-File reached." << endmsg;
         return MDFDescriptor(0,-1);
       }
       MsgStream log1(m_msgSvc, m_parent);
@@ -640,7 +640,7 @@ NoSpace:
     }
     else if ( sc == 0 ) {
       MsgStream log(m_msgSvc, m_parent);
-      log << MSG::INFO << "Cannot read more data. End-of-File reached." << endmsg;
+      log << MSG::INFO << "Cannot read more data (Uncompressed record). End-of-File reached." << endmsg;
       return MDFDescriptor(0,-1);
     }
     MsgStream log2(m_msgSvc, m_parent);
@@ -666,7 +666,7 @@ MDFDescriptor LHCb::MDFIO::readBanks(void* const ioDesc, bool dbg)   {
   }
   else if ( sc == 0 ) {
     MsgStream log(m_msgSvc, m_parent);
-    log << MSG::INFO << "Cannot read more data. End-of-File reached." << endmsg;
+    log << MSG::INFO << "Cannot read more data  (Header). End-of-File reached." << endmsg;
     return MDFDescriptor(0,-1);
   }
   MsgStream log(m_msgSvc, m_parent);

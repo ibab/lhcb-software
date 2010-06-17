@@ -149,8 +149,8 @@ namespace {
 	  tmp += sc;
 	}
 	else   {
-	  end = posix_seek(con,0,SEEK_END);
 	  cur = posix_seek(con,0,SEEK_CUR);
+	  end = posix_seek(con,0,SEEK_END);
 	  return (cur==end && cur>0 ) ? 0 : -1;
 	}
       }

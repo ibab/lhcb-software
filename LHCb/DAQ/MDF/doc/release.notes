@@ -6,6 +6,10 @@
 !               MEP fragments
 !-----------------------------------------------------------------------------
 
+!========================= MDF v3r26 2010-06-17 ==============================
+! 2010-06-17  Markus Frank
+ - Improve printouts at end of file.
+
 !========================= MDF v3r25 2010-06-05 ==============================
 ! 2010-06-05  Markus Frank
  - Allow to specify trigger/veto masks to the MDF selector.
