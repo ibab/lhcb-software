@@ -29,7 +29,16 @@ static const int S_IRWXU = (S_IREAD|S_IWRITE);
 namespace {
 
   struct MyFile : public TFile {
-    Long64_t offset() const { return this->TFile::GetRelOffset(); }
+    Long64_t offset() const { 
+      const TFile* f = this;
+      std::cout << "TFile::Read> Bytes read:" << f->GetBytesRead() 
+		<< " Size:"             << f->GetSize() 
+		<< " Relative offset:"  << (long)f->GetRelOffset()
+		<< " Archive offset:"   << (long)this->fArchiveOffset
+		<< std::endl;
+      return this->GetRelOffset(); 
+    }
+    Long64_t aoffset() const { return this->fArchiveOffset; }
   };
 
   typedef std::map<int,TFile*> FileMap;
@@ -89,16 +98,18 @@ namespace {
     FileMap::iterator i = fileMap().find(fd);
     if ( i != fileMap().end() ) {
       TFile* f = (*i).second;
+      Long64_t off;
       switch(how) {
       case SEEK_SET:
         f->Seek(offset,TFile::kBeg);
-        return ((MyFile*)f)->offset();
+        return f->GetRelOffset();
       case SEEK_CUR:
         f->Seek(offset,TFile::kCur);
-        return ((MyFile*)f)->offset();
+        return f->GetRelOffset();
       case SEEK_END:
+	off = f->GetRelOffset();
         f->Seek(offset,TFile::kEnd);
-        return ((MyFile*)f)->offset();
+        return offset==0 && off==f->GetSize() ? off : f->GetRelOffset();
       }
     }
     return -1;
@@ -111,7 +122,13 @@ namespace {
     if ( i != fileMap().end() ) {
       TFile* f = (*i).second;
       if ( f->GetBytesRead()+size > f->GetSize() ) {
-	//std::cout << "TFile:" << f->GetBytesRead() << " " << f->GetSize() << " " << std::endl;
+	/*
+	std::cout << "TFile::Read> Bytes read:" << f->GetBytesRead() 
+		  << " Size:"             << f->GetSize() 
+		  << " Relative offset:"  << (long)f->GetRelOffset()
+		  << " Archive offset:"   << (long)this->fArchiveOffset
+		  << std::endl;
+	*/
 	return 0;
       }
       if ( f->ReadBuffer((char*)ptr,size)==0 )
