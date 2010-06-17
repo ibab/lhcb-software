@@ -7,6 +7,8 @@
 !-----------------------------------------------------------------------------
 
 ! 2010-06-17 - Juan Palacios
+ - python/PyAna/pyhistograms.py
+  . Fix histtype.
  - python/PyAna/pyhistogram/histogram.py
   . Add Bin.sumWeight2 attribute. Holds sum of squares of bin weights.
  - python/PyAna/pyhistogram/histostats.py
