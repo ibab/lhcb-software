@@ -72,7 +72,7 @@ bool LHCb::RichPID::traversedRadiator(const Rich::RadiatorType radiator) const
   }
 }
 
-std::ostream& LHCb::RichPID::fillStream(std::ostream& s) const
+std::ostream& LHCb::RichPID::fillStream( std::ostream& s ) const
 {
   s << "[ ";
 
@@ -80,13 +80,13 @@ std::ostream& LHCb::RichPID::fillStream(std::ostream& s) const
   const std::string sF = "%7.3f";
 
   // PID type
-  s << "Key " << key() << " (" << pidType() << ")";
+  s << "Key=" << key() << " " << pidType();
 
   // Track info
   if ( track() )
   {
-    s << " | Track " << track()->key() << " type=" << track()->type()
-      << " Ptot=" << boost::format(sF) % (track()->p()/Gaudi::Units::GeV)
+    s << " | Track Key=" << track()->key() << " " << track()->type()
+      << " Ptot = " << boost::format(sF) % (track()->p()/Gaudi::Units::GeV)
       << " GeV/c";
   }
   else
@@ -94,7 +94,7 @@ std::ostream& LHCb::RichPID::fillStream(std::ostream& s) const
     s << " | NO ASSOCIATED TRACK";
   }
 
-  // Active radaitors
+  // Active radiators
   s << " | Active Rads =";
   if ( usedAerogel()  ) { s << " " << Rich::text(Rich::Aerogel);  }
   if ( usedRich1Gas() ) { s << " " << Rich::text(Rich::Rich1Gas); }
@@ -110,7 +110,7 @@ std::ostream& LHCb::RichPID::fillStream(std::ostream& s) const
   }
 
   // DLL values
-  s << " | Dlls =";
+  s << " | DLLs(el,mu,pi,ka,pr,bt) =";
   for ( Rich::Particles::const_iterator ipid = Rich::particles().begin();
         ipid != Rich::particles().end(); ++ipid )
   {
