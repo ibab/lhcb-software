@@ -6,6 +6,19 @@
 ! The package is subject to the Lesser GPL, see doc/COPYING and doc/COPYING.LESSER.
 !-----------------------------------------------------------------------------
 
+! 2010-06-17 - Juan Palacios
+ - python/PyAna/pyhistogram/histogram.py
+  . Add Bin.sumWeight2 attribute. Holds sum of squares of bin weights.
+ - python/PyAna/pyhistogram/histostats.py
+  . Add poissonSigma function acting on bins. 
+    Returns sqrt( sum of squares of bin weights)
+ - python/PyAna/pyhistoplots.py
+  . Add errorFunction to histo_plot. For function acting on bins and 
+    returning bin error. 
+  . ntuple_column_histo makes Histogram then plot, to access stats and errors.
+ - cmt/requirements
+  . Increase to v1r2.
+
 !======================= AnalysisPyAna v1r1 2010-06-11 =======================
 
 ! 2010-06-14 - Juan Palacios
