@@ -1,3 +1,7 @@
+2010-06-16  Joel Closier <joel.closier@cern.ch>
+
+    * scripts/lhcb-proxy-info: change Dirac by LHCbDirac
+
 2010-06-16  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* python/LbRelease/LHCbDoc.py: Added the possibility of skipping the actual
