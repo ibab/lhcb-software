@@ -1,3 +1,7 @@
+2010-06-17  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* scripts/generateLogin: fixed stupid typo for the main wrapper on windows.
+
 2010-06-10  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* LbConfiguration/python/LbConfiguration/Project.py: added htmlFileName method.

@@ -509,7 +509,7 @@ unset LbLogin_tmpfile
     elif shell == "bat" :
         prefix = """ @echo off
 
-set LbLogin_tmpfile="%%TEMP%%\LbLogin_tmpsetup.bat"
+set LbLogin_tmpfile="%TEMP%\LbLogin_tmpsetup.bat"
 """
         if mysiteroot :
             if withoutcache :
