@@ -64,7 +64,7 @@ def sequence_histo_plot(x, weights=None, errors = None, bins=100, range = None, 
     ax = fig.add_subplot(1,1,1)
 
     if errors == None :
-        ax.hist(x, weights = weights, bins=bins, range = range, **kwargs)
+        ax.hist(x, weights = weights, bins=bins, range = range, histtype=histtype, **kwargs)
     else :
         ax.errorbar(x, weights, errors, fmt = 'o', **kwargs)
         
