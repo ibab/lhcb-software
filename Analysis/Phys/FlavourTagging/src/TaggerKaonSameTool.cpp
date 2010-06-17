@@ -33,6 +33,7 @@ TaggerKaonSameTool::TaggerKaonSameTool( const std::string& type,
   declareProperty( "KaonSPID_kS_cut",  m_KaonSPID_kS_cut   =  1.0 );
   declareProperty( "KaonSPID_kpS_cut", m_KaonSPID_kpS_cut  = -1.0 );
 
+  declareProperty( "ProbMin_kaonS",m_ProbMin_kaonS  = 0. ); //no cut
   declareProperty( "AverageOmega",    m_AverageOmega = 0.33 );
 
   m_nnet = 0;
@@ -64,6 +65,7 @@ Tagger TaggerKaonSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
   Tagger tkaonS;
   if(!RecVert) return tkaonS;
 
+  debug()<<"--Kaon SS Tagger--"<<endreq;
   verbose()<<"allVtx.size()="<< allVtx.size() << endreq;
 
   Gaudi::LorentzVector ptotB = AXB0->momentum();
@@ -81,7 +83,7 @@ Tagger TaggerKaonSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
     double pidk=(*ipart)->proto()->info( ProtoParticle::CombDLLk, -1000.0 );
     double pidp=(*ipart)->proto()->info( ProtoParticle::CombDLLp, -1000.0 ); 
 
-    debug()<<(*ipart)->particleID().abspid()<<" candidate kaonS p="<<(*ipart)->p()/GeV
+    verbose()<<(*ipart)->particleID().abspid()<<" candidate kaonS p="<<(*ipart)->p()/GeV
 	   <<"  PIDk="<<pidk<<"  PIDp="<<pidp <<endreq;
 
     if(pidk==0) continue;
@@ -103,12 +105,12 @@ Tagger TaggerKaonSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
     if(fabs(IPsig) > m_IP_cut_kaonS) continue;
 
     double deta  = fabs(log(tan(ptotB.Theta()/2.)/tan(asin(Pt/P)/2.)));
-    debug()<<"     deta="<<deta <<endreq;
+    verbose()<<"     deta="<<deta <<endreq;
     if(deta > m_etacut_kaonS) continue;
 
     double dphi  = fabs((*ipart)->momentum().Phi() - ptotB.Phi()); 
     if(dphi>3.1416) dphi=6.2832-dphi;
-    debug()<<"     dphi="<<dphi <<endreq;
+    verbose()<<"     dphi="<<dphi <<endreq;
     if(dphi > m_phicut_kaonS) continue;
 
     Gaudi::LorentzVector pm  = (*ipart)->momentum();
@@ -116,7 +118,7 @@ Tagger TaggerKaonSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
     Gaudi::LorentzVector pmK ( pm.Px(),pm.Py(),pm.Pz(), E);
 
     double dQ    = (ptotB+pmK).M() - ptotB.M();
-    debug()<<"kS dQ="<<dQ<<"  "<<((ptotB+(*ipart)->momentum()).M())
+    verbose()<<"kS dQ="<<dQ<<"  "<<((ptotB+(*ipart)->momentum()).M())
 	   <<"  "<< ptotB.M()<<endreq;
 
     if(dQ > m_dQcut_kaonS ) continue;
@@ -126,13 +128,14 @@ Tagger TaggerKaonSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
     if( lcs > m_lcs_cut ) continue;
 
     ncand++;
+
     if( Pt > ptmaxkS ) { 
       ikaonS  = (*ipart);
       ptmaxkS = Pt;
       save_dphi=dphi;
       save_dQ=dQ;
       save_IPsig=IPsig;
-      debug()<< " KaoS P="<< P <<" Pt="<< Pt << " IPsig=" << IPsig 
+      debug()<<" Kaon Ss cand, P="<< P <<" Pt="<< Pt << " IPsig=" << IPsig 
 	     << " deta="<<deta << " dphi="<<dphi << " dQ="<<dQ <<endreq;
     }
 
@@ -159,6 +162,8 @@ Tagger TaggerKaonSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
     NNinputs.at(9) = ncand;
 
     pn = m_nnet->MLPkS( NNinputs );
+
+    if( pn < m_ProbMin_kaonS ) return tkaonS;
 
   }
 

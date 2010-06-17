@@ -25,7 +25,9 @@ TaggerMuonTool::TaggerMuonTool( const std::string& type,
   declareProperty( "NeuralNetName",  m_NeuralNetName     = "NNetTool_MLP" );
   declareProperty( "Muon_Pt_cut", m_Pt_cut_muon   = 1.1 *GeV );
   declareProperty( "Muon_P_cut",  m_P_cut_muon    = 0.0 *GeV );
-  declareProperty( "Muon_lcs_cut",m_lcs_cut_muon  = 2.0 );
+  declareProperty( "Muon_lcs_cut",m_lcs_cut_muon  = 2.2 );
+  declareProperty( "Muon_PIDm_cut",m_PIDm_cut  = 2.0 );
+  declareProperty( "ProbMin_muon",m_ProbMin_muon  = 0. ); //no cut
   declareProperty( "AverageOmega",m_AverageOmega  = 0.33 );
   m_nnet = 0;
   m_util = 0;
@@ -60,7 +62,8 @@ Tagger TaggerMuonTool::tag( const Particle* AXB0, const RecVertex* RecVert,
                             Particle::ConstVector& vtags ){
   Tagger tmu;
   if(!RecVert) return tmu;
-
+  
+  debug()<<"--Muon Tagger--"<<endreq;
   verbose()<<"allVtx.size()="<< allVtx.size() << endreq;
   
   //select muon tagger(s)
@@ -70,6 +73,9 @@ Tagger TaggerMuonTool::tag( const Particle* AXB0, const RecVertex* RecVert,
   Particle::ConstVector::const_iterator ipart;
   for( ipart = vtags.begin(); ipart != vtags.end(); ipart++ ) {
     if( (*ipart)->particleID().abspid() != 13 ) continue;
+
+    double pidm=(*ipart)->proto()->info( ProtoParticle::CombDLLmu, -1000.0 );
+    if(pidm < m_PIDm_cut ) continue;
 
     double Pt = (*ipart)->pt();
     if( Pt < m_Pt_cut_muon ) continue;
@@ -87,9 +93,11 @@ Tagger TaggerMuonTool::tag( const Particle* AXB0, const RecVertex* RecVert,
     if(lcs>m_lcs_cut_muon) continue;
 
     ncand++;
+
     if( Pt > ptmaxm ) { //Pt ordering
       imuon = (*ipart);
       ptmaxm = Pt;
+      debug()<<" Muon cand, Pt="<<Pt<<endreq;
     }
   }
   if( ! imuon ) return tmu;
@@ -112,6 +120,8 @@ Tagger TaggerMuonTool::tag( const Particle* AXB0, const RecVertex* RecVert,
     NNinputs.at(9) = ncand;
     
     pn = m_nnet->MLPm( NNinputs );
+
+    if( pn < m_ProbMin_muon ) return tmu;
 
   }
 

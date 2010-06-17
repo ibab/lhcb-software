@@ -30,6 +30,10 @@ public:
                              const LHCb::RecVertex::ConstVector& ,
                              double& , double& )=0;
 
+  virtual StatusCode calcDOCAmin( const LHCb::Particle* ,
+				  const LHCb::Particle* ,
+				  const LHCb::Particle* , double& , double& )=0;
+
   virtual int countTracks( LHCb::Particle::ConstVector& )=0;
 
   virtual bool isinTree( const LHCb::Particle*, 

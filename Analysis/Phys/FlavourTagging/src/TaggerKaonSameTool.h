@@ -1,4 +1,4 @@
-// $Id: TaggerKaonSameTool.h,v 1.10 2009-12-11 15:15:05 musy Exp $
+// $Id: TaggerKaonSameTool.h,v 1.11 2010-06-17 17:46:04 mgrabalo Exp $
 #ifndef USER_TAGGERKAONSAMETOOL_H 
 #define USER_TAGGERKAONSAMETOOL_H 1
 
@@ -58,6 +58,7 @@ private:
   double m_lcs_cut;
   double m_KaonSPID_kpS_cut;
   double m_KaonSPID_kS_cut;
+  double m_ProbMin_kaonS;
 
   double m_AverageOmega;
 };

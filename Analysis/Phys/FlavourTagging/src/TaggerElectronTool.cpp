@@ -23,14 +23,16 @@ TaggerElectronTool::TaggerElectronTool( const std::string& type,
 
   declareProperty( "CombTech",  m_CombinationTechnique = "NNet" );
   declareProperty( "NeuralNetName",  m_NeuralNetName   = "NNetTool_MLP" );
-  declareProperty( "Ele_Pt_cut",   m_Pt_cut_ele = 1.2 * GeV );
+  declareProperty( "Ele_Pt_cut",   m_Pt_cut_ele = 1.1 * GeV );
   declareProperty( "Ele_P_cut",    m_P_cut_ele  = 0.0 * GeV );
-  declareProperty( "Ele_lcs_cut",  m_lcs_cut_ele= 3.0 );
-  declareProperty( "Ele_ghost_cut",m_ghost_cut_ele= -999.0 );
+  declareProperty( "Ele_lcs_cut",  m_lcs_cut_ele= 2.5 );
+  declareProperty( "Ele_ghost_cut",m_ghost_cut_ele= -15.0 );
   declareProperty( "VeloChargeMin",m_VeloChMin  = 0.0 );
   declareProperty( "VeloChargeMax",m_VeloChMax  = 1.3 );
   declareProperty( "EoverP",       m_EoverP     = 0.85 );
   declareProperty( "AverageOmega", m_AverageOmega = 0.33 );
+  declareProperty( "Ele_PIDe_cut", m_PIDe_cut  = 4.0 );
+  declareProperty( "ProbMin_ele",  m_ProbMin_ele  = 0. ); //no cut
   m_nnet = 0;
   m_util = 0;
   m_electron = 0;
@@ -66,6 +68,7 @@ Tagger TaggerElectronTool::tag( const Particle* AXB0, const RecVertex* RecVert,
   Tagger tele;
   if(!RecVert) return tele;
 
+  debug()<<"--Electron Tagger--"<<endreq;
   verbose()<<"allVtx.size()="<< allVtx.size() << endreq;
 
   //select electron tagger(s)
@@ -80,6 +83,9 @@ Tagger TaggerElectronTool::tag( const Particle* AXB0, const RecVertex* RecVert,
     bool inEcalACC= (*ipart)->proto()->info(ProtoParticle::InAccEcal,false);
     if(!inEcalACC) continue;
     
+    double pide=(*ipart)->proto()->info( ProtoParticle::CombDLLe, -1000.0 );
+    if(pide < m_PIDe_cut ) continue;
+
     double Pt = (*ipart)->pt();
     if( Pt < m_Pt_cut_ele )  continue;
 
@@ -108,9 +114,11 @@ Tagger TaggerElectronTool::tag( const Particle* AXB0, const RecVertex* RecVert,
         verbose() << "   veloch=" << veloch << endreq;
         
         ncand++;
+
         if( Pt > ptmaxe ) { 
           iele = (*ipart);
           ptmaxe = Pt;
+	  debug()<<" Electron cand, Pt="<<Pt<<endreq;
         }
       }
     }
@@ -135,6 +143,8 @@ Tagger TaggerElectronTool::tag( const Particle* AXB0, const RecVertex* RecVert,
     NNinputs.at(9) = ncand;
 
     pn = m_nnet->MLPe( NNinputs );
+
+    if( pn < m_ProbMin_ele ) return tele;
 
   }
 

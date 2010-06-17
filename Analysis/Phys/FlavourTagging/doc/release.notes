@@ -1,9 +1,26 @@
-! $Id: release.notes,v 1.170 2010-06-03 07:16:40 jpalac Exp $
+! $Id: release.notes,v 1.171 2010-06-17 17:46:03 mgrabalo Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/FlavourTagging
 ! Responsible : Marco Musy (marco.musy@cern.ch)
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
+
+! 2010-06-03 - Marc Grabalosa
+  - TaggingUtils
+   .Added function to calculate DOCA
+  - Taggers
+   .Optimized with new cuts for MC2010
+   .TaggerVertexChargeTool redefined
+  - NNet
+   .Optimized NNs for each tagger (MC10)
+   .Add a NN for SVCh tagger
+  - SVertexOneSeedTool, new tool to select the SecVtx
+  - BTaggingTool modified and some small changes for cuts
+  - CombineTaggersNN, new tool to combine the taggers, takes
+    into account the correlation between taggers, and no bias 
+    appear after combination
+  . raise to version v12r0
+
 
 ! 2010-06-03 - Juan Palacios
  - TaggingUtils

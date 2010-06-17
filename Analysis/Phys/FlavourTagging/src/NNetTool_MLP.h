@@ -13,9 +13,9 @@
  * tagger p/GeV, pt/GeV, IP-significance,
  * Delta-eta between B and tagger,
  * Delta-phi, Delta-Q (= mass of B+tagger system - mass of B).
- *  v1.3
- *  @author Marco Musy
- *  @date   2004-12-14
+ *  v1.4
+ *  @author Marc Grabalosa
+ *  @date   2010-06-17
  */
 class NNetTool_MLP : public GaudiTool, 
                      virtual public INNetTool {
@@ -43,9 +43,11 @@ public:
 private:
   void normaliseOS(std::vector<double>& );
   void normaliseSS(std::vector<double>& );
+  void normaliseVtx(std::vector<double>& );
   double pol2(double x, double a0, double a1);
+  double pol4(double x, double a0, double a1, double a2, double a3);
   double m_P0mu, m_P1mu, m_P0e, m_P1e, m_P0k, m_P1k; 
-  double m_P0ks, m_P1ks, m_P0ps, m_P1ps, m_P0vtx, m_P1vtx;  
+  double m_P0ks, m_P1ks, m_P0ps, m_P1ps, m_P0vtx, m_P1vtx, m_P2vtx, m_P3vtx;  
   double m_Gt075, m_wSameSign2, m_wSameSignMoreThan2;
   double m_ProbMinVtx, m_MinimumVCharge;
 

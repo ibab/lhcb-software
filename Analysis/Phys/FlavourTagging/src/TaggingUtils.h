@@ -41,6 +41,11 @@ public:
                      const LHCb::RecVertex::ConstVector& ,
                      double& , double& );
 
+  StatusCode calcDOCAmin( const LHCb::Particle* axp,
+			  const LHCb::Particle* p1,
+			  const LHCb::Particle* p2,
+			  double& doca, double& docaerr) ;
+
   int countTracks( LHCb::Particle::ConstVector& );
   bool isinTree( const LHCb::Particle*, 
                  std::vector<const LHCb::Particle*>& , double& );

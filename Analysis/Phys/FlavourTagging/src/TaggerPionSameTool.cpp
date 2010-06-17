@@ -25,12 +25,12 @@ TaggerPionSameTool::TaggerPionSameTool( const std::string& type,
 
   declareProperty( "ProbMin", m_ProbMin               = 0.55);
   declareProperty( "PionSame_Pt_cut", m_Pt_cut_pionS  = 0.6 *GeV );
-  declareProperty( "PionSame_P_cut",  m_P_cut_pionS   = 5.0 *GeV );
-  declareProperty( "PionSame_IPs_cut",m_IPs_cut_pionS = 2.8 );
-  declareProperty( "PionS_LCS_cut",   m_lcs_cut       = 3.0 );
+  declareProperty( "PionSame_P_cut",  m_P_cut_pionS   = 0.0 *GeV );
+  declareProperty( "PionSame_IPs_cut",m_IPs_cut_pionS = 3.5 );
+  declareProperty( "PionS_LCS_cut",   m_lcs_cut       = 2.0 );
   declareProperty( "PionSame_dQ_cut", m_dQcut_pionS   = 3.0 *GeV);
   declareProperty( "PionSame_dQ_extra_cut", m_dQcut_extra_pionS = 1.5 *GeV);
-  declareProperty( "Pion_ghost_cut", m_ghost_cut = -25.0);
+  declareProperty( "Pion_ghost_cut", m_ghost_cut = -999.0);
 
 
   declareProperty( "PionSame_PIDNoK_cut", m_PionSame_PIDNoK_cut = 3.0);
@@ -71,6 +71,7 @@ Tagger TaggerPionSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
   Tagger tpionS;
   if(!RecVert) return tpionS;
 
+  debug()<<"--Pion SS Tagger--"<<endreq;
   verbose()<<"allVtx.size()="<< allVtx.size() << endreq;
 
   Gaudi::LorentzVector ptotB = AXB0->momentum();
@@ -133,12 +134,12 @@ Tagger TaggerPionSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
 
 
     ncand++;
-    
+
     if( Pt <= ptmaxpS ) continue;//equal sign in "<=" is used to kill duplicates
     //accept candidate
     ipionS = (*ipart);
     ptmaxpS = Pt;
-    verbose() << " PioS P="<< P <<" Pt="<< Pt << " IPsig=" << IPsig 
+    debug()<<" Pion Ss cand, P="<< P <<" Pt="<< Pt << " IPsig=" << IPsig 
               << " IP=" << IP << " dQ=" << dQ<<endreq;
   } 
   if( ipionS  ) {

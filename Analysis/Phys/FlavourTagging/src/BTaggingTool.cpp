@@ -21,15 +21,15 @@ BTaggingTool::BTaggingTool( const std::string& type,
 
   declareInterface<IBTaggingTool>(this);
 
-  declareProperty( "CombineTaggersName",
-                   m_CombineTaggersName = "CombineTaggersProbability" );
+  //  declareProperty( "CombineTaggersName", m_CombineTaggersName = "CombineTaggersProbability" ); //"CombineTaggersNN"
+  declareProperty( "CombineTaggersName", m_CombineTaggersName = "CombineTaggersNN" );
   declareProperty( "UseVtxChargeWithoutOS", m_UseVtxOnlyWithoutOS = false );
 
   declareProperty( "ChoosePVCriterium",     m_ChoosePV="PVbyIPs");
   declareProperty( "UseReFitPV",            m_UseReFitPV  = false );
 
   declareProperty( "IPPU_cut",     m_IPPU_cut    = 3.0 );
-  declareProperty( "thetaMin_cut", m_thetaMin    = 0.012 );
+  declareProperty( "thetaMin_cut", m_thetaMin    = 0.012 ); 
   declareProperty( "distphi_cut",  m_distphi_cut = 0.005 );
 
   declareProperty( "EnableMuonTagger",    m_EnableMuon    = true );
@@ -345,28 +345,38 @@ BTaggingTool::chooseCandidates(const Particle* AXB,
   axdaugh.push_back( AXB );
   for ( ip = parts.begin(); ip != parts.end(); ip++ ){
 
-    //debug()<<" aaaaa1 "<<(*ip)->p()/GeV<<"  "<<(*ip)->particleID().pid()<<endreq;
+    const ProtoParticle* proto = (*ip)->proto();
     if( (*ip)->p()/GeV < 2.0 ) continue;               
     if( (*ip)->momentum().theta() < m_thetaMin ) continue;
     if( (*ip)->charge() == 0 ) continue;               
-    if( !(*ip)->proto() )      continue;
-    if( !(*ip)->proto()->track() ) continue;
-    if( (*ip)->proto()->track()->type() < 3 )   continue; 
-    if( (*ip)->proto()->track()->type() > 4 )   continue; 
+    if( !proto )               continue;
+    if( !proto->track() ) continue;
+    if( proto->track()->type() < 3 )   continue; 
+    if( proto->track()->type() > 4 )   continue; 
+    //    if( (proto->track()->type()!=3) and (proto->track()->type()!=4) and  (proto->track()->type()!=7) )   continue; 
     if( (*ip)->p()/GeV  > 200 ) continue;
     if( (*ip)->pt()/GeV >  10 ) continue;
     if( m_util->isinTree( *ip, axdaugh, distphi ) ) continue ;//exclude signal
-    //debug()<<"                aaaaa2 distphi="<< distphi <<endreq;
     if( distphi < m_distphi_cut ) continue;
 
     //calculate the min IP wrt all pileup vtxs
     double ippu, ippuerr;
     m_util->calcIP( *ip, PileUpVtx, ippu, ippuerr );
-    //if(ippuerr) debug()<<"                aaaaa3 ippu="<< ippu/ippuerr <<endreq;
     //eliminate from vtags all parts coming from a pileup vtx
     if(ippuerr) if( ippu/ippuerr<m_IPPU_cut ) continue; //preselection
 
-    //debug()<<"                        aaaaa4 STORED " <<endreq;
+    bool dup=false;
+    //if((*ip)->particleID().abspid()==211) { 
+    Particle::ConstVector::const_iterator ik;
+    for ( ik = ip+1; ik != parts.end(); ik++) {
+      if((*ik)->proto() == proto) { 
+	dup=true; 
+	break; 
+      }
+    }
+    //}
+    if(dup) continue; 
+ 
     //////////////////////////////////
     vtags.push_back(*ip);          // store tagger candidate
     ////////////////////////////////
@@ -374,12 +384,12 @@ BTaggingTool::chooseCandidates(const Particle* AXB,
     if (msgLevel(MSG::DEBUG)) 
       debug() <<"part ID="<<(*ip)->particleID().pid()
               <<" p="<<(*ip)->p()/GeV
+              <<" pt="<<(*ip)->pt()/GeV
               <<" PIDm="<<(*ip)->proto()->info( ProtoParticle::CombDLLmu, 0)
               <<" PIDe="<<(*ip)->proto()->info( ProtoParticle::CombDLLe, 0)
               <<" PIDk="<<(*ip)->proto()->info( ProtoParticle::CombDLLk, 0)
               <<endreq;
   }
-
   return vtags;
 }
 

@@ -1,4 +1,4 @@
-// $Id: TaggerVertexChargeTool.h,v 1.6 2008-06-10 19:01:00 musy Exp $
+// $Id: TaggerVertexChargeTool.h,v 1.7 2010-06-17 17:46:04 mgrabalo Exp $
 #ifndef USER_TAGGERVERTEXCHARGETOOL_H 
 #define USER_TAGGERVERTEXCHARGETOOL_H 1
 
@@ -6,10 +6,17 @@
 #include "GaudiAlg/GaudiTool.h"
 #include "GaudiKernel/AlgTool.h"
 #include "GaudiKernel/ToolFactory.h"
+
+#include "Kernel/IVertexFit.h"
+
 // from Event
 #include "Event/FlavourTag.h"
 #include "Kernel/ITagger.h"
 #include "Kernel/ISecondaryVertexTool.h"
+
+// from local
+#include "ITaggingUtils.h"
+#include "INNetTool.h"
 
 /** @class TaggerVertexChargeTool TaggerVertexChargeTool.h 
  *
@@ -34,18 +41,21 @@ public:
   //-------------------------------------------------------------
   virtual LHCb::Tagger tag( const LHCb::Particle*, const LHCb::RecVertex*,
 			    std::vector<const LHCb::Vertex*>&, 
-			    LHCb::Particle::ConstVector&);
+			    LHCb::Particle::ConstVector& );
   //-------------------------------------------------------------
 
 private:
-
+  
+  INNetTool* m_nnet;
+  ITaggingUtils* m_util;
   ISecondaryVertexTool* m_svtool;
   std::string m_SecondaryVertexToolName;
 
   std::string m_CombinationTechnique;
-  double m_AverageOmega, m_PowerK, m_MinimumCharge, m_P0, m_P1, m_Gt075;
-  double m_wSameSign2, m_wSameSignMoreThan2;
-  double m_ProbMin;
+  std::string m_NeuralNetName;
+  double m_AverageOmega, m_PowerK, m_MinimumVCharge;
+  double m_ProbMin_vtx;
+  double m_wSameSign2, m_wSameSignMoreThan2, m_P0, m_P1, m_Gt075;
 
 };
 

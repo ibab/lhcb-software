@@ -42,6 +42,7 @@ StatusCode TaggingUtils::initialize() {
     Error("Unable to retrieve the IDistanceCalculator tool");
     return StatusCode::FAILURE;
   }
+
   m_pvReFitter = tool<IPVReFitter>("AdaptivePVReFitter", this );
   if(! m_pvReFitter) {
     fatal() << "Unable to retrieve AdaptivePVReFitter" << endreq;
@@ -50,6 +51,22 @@ StatusCode TaggingUtils::initialize() {
 
   return StatusCode::SUCCESS; 
 }
+
+//==========================================================================                                                                                 
+StatusCode TaggingUtils::calcDOCAmin( const Particle* axp,
+				      const Particle* p1,
+				      const Particle* p2,
+				      double& doca, double& docaerr) {
+  double doca1, doca2, err1, err2;
+  StatusCode sc1 = m_Dist->distance (axp, p1, doca1, err1);
+  StatusCode sc2 = m_Dist->distance (axp, p2, doca2, err2);
+
+  doca = std::min(doca1, doca2);
+  if(doca == doca1) docaerr=err1; else docaerr=err2;
+
+  return (sc1 && sc2);
+}
+
 //==========================================================================
 StatusCode TaggingUtils::calcIP( const Particle* axp, 
                                  const VertexBase* v, 

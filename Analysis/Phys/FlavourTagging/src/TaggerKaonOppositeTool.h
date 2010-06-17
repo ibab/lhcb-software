@@ -1,4 +1,4 @@
-// $Id: TaggerKaonOppositeTool.h,v 1.10 2010-02-02 19:29:08 musy Exp $
+// $Id: TaggerKaonOppositeTool.h,v 1.11 2010-06-17 17:46:03 mgrabalo Exp $
 #ifndef USER_TAGGERKAONOPPOSITETOOL_H 
 #define USER_TAGGERKAONOPPOSITETOOL_H 1
 
@@ -56,6 +56,7 @@ private:
   double m_ghost_cut;
   double m_PID_k_cut;
   double m_PIDkp_cut;
+  double m_ProbMin_kaon;
 
 };
 

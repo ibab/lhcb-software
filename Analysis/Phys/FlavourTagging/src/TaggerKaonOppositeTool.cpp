@@ -35,8 +35,10 @@ TaggerKaonOppositeTool::TaggerKaonOppositeTool( const std::string& type,
 
   declareProperty( "Kaon_ghost_cut", m_ghost_cut =-14.0 );
 
-  declareProperty( "Kaon_LongTrack_IP_cut",     m_IP_kl  = 999.0 );
-  declareProperty( "Kaon_upstreamTrack_IP_cut", m_IP_ku  = 999.0 );
+  declareProperty( "Kaon_LongTrack_IP_cut",     m_IP_kl  = 999.0 ); //no cut
+  declareProperty( "Kaon_upstreamTrack_IP_cut", m_IP_ku  = 999.0 ); //no cut
+
+  declareProperty( "ProbMin_kaon",m_ProbMin_kaon  = 0. ); //no cut
 
   declareProperty( "AverageOmega", m_AverageOmega = 0.33 );
   m_nnet = 0;
@@ -68,6 +70,9 @@ Tagger TaggerKaonOppositeTool::tag( const Particle* AXB0,
                                     Particle::ConstVector& vtags ){
   Tagger tkaon;
   if(!RecVert) return tkaon;
+
+  debug()<<"--Kaon Op Tagger--"<<endreq;
+  verbose()<<"allVtx.size()="<< allVtx.size() << endreq;
 
   //select kaon opposite tagger(s)
   //if more than one satisfies cuts, take the highest Pt one
@@ -108,9 +113,11 @@ Tagger TaggerKaonOppositeTool::tag( const Particle* AXB0,
 	 || 
 	 (track->type()==Track::Upstream && lcs<m_lcs_ku && fabs(IP)<m_IP_ku )){
         ncand++;
+
         if( Pt > ptmaxk ) { 
           ikaon = (*ipart);
           ptmaxk = Pt;
+	  debug()<<" Kaon Op cand, Pt="<<Pt<<endreq;
         }
       }
     }
@@ -134,6 +141,8 @@ Tagger TaggerKaonOppositeTool::tag( const Particle* AXB0,
     NNinputs.at(9) = ncand;
 
     pn = m_nnet->MLPk( NNinputs );
+
+    if( pn < m_ProbMin_kaon ) return tkaon;
 
   }
 
