@@ -107,11 +107,13 @@ class Bin(object) :
         self.height=height
         self.centre=centre
         self.width = width
+        self.sumWeight2 = pow(height,2)
         self.empty = True
 
     def fill(self, weight) :
         self.entries += 1
         self.height += weight
+        self.sumWeight2 += pow(weight,2)
         self.empty = False
 
     def __add__(self, other) :
@@ -131,9 +133,11 @@ class Bin(object) :
 
     def _binary_op(self, other, binary_fun) :
         self.empty = self.empty and other.empty
-        return Bin(entries = binary_fun(self.entries, other.entries),
+        result = Bin(entries = binary_fun(self.entries, other.entries),
                    height = binary_fun(self.height, other.height),
                    centre = self.centre)
+        result.sumWeight2 = self.sumWeight2 + other.sumWeight2
+        return result
 
 class Axis(object) :
     '''
