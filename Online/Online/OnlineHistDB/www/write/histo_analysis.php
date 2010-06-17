@@ -112,8 +112,12 @@ function remove_histo_analysis($aid,$hset) {
   $stid = OCIParse($conn,"UPDATE HISTOGRAMSET set NANALYSIS=NANALYSIS-1 where HSID=$hset");
   $r=OCIExecute($stid,OCI_DEFAULT);
   if (!$r) return 0;
-  ocicommit($conn);
   ocifreestatement($stid);
+  $stid = OCIParse($conn,"begin ONLINEHISTDB.CleanPadColors; end;");
+  $r=OCIExecute($stid,OCI_DEFAULT);
+  if (!$r) return 0;
+  ocifreestatement($stid);
+  ocicommit($conn);
   return 1;  
 }
 
