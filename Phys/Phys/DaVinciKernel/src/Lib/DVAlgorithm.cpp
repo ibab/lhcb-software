@@ -1,4 +1,4 @@
-// $Id: DVAlgorithm.cpp,v 1.81 2010-06-18 09:42:06 jpalac Exp $
+// $Id: DVAlgorithm.cpp,v 1.82 2010-06-18 09:53:49 jpalac Exp $
 // ============================================================================
 // Include 
 // ============================================================================
@@ -258,8 +258,8 @@ StatusCode DVAlgorithm::loadTools()
                                          m_inputLocations.end(),
                                          onOffline()->trunkOnTES() );
  
-  if (msgLevel(MSG::DEBUG)) debug() {
-    << ">>> Preloading PhysDesktop locations " << m_inputLocations << endmsg;
+  if (msgLevel(MSG::DEBUG)) {
+    debug() << ">>> Preloading PhysDesktop locations " << m_inputLocations << endmsg;
   }
   
   desktop()->setInputLocations(m_inputLocations);
@@ -282,7 +282,7 @@ StatusCode DVAlgorithm::loadTools()
                                            m_p2PVInputLocations.end(),
                                            onOffline()->trunkOnTES()     );
 
-    for ( std::vector<std::string>::iterator iloc = m_p2PVInnputLocations.begin();
+    for ( std::vector<std::string>::iterator iloc = m_p2PVInputLocations.begin();
           iloc != m_p2PVInputLocations.end(); ++iloc ) {
       p2pvInputLocations.push_back((*iloc));
     }
@@ -291,11 +291,11 @@ StatusCode DVAlgorithm::loadTools()
 
   if (msgLevel(MSG::DEBUG)) {
     debug() << ">>> Preloading PhysDesktop with P->PV locations " 
-            << p2PVInputLocation << endmsg;
+            << p2pvInputLocations << endmsg;
   }
   
 
-  desktop()->setP2PVInputLocations(p2PVInputLocations);   
+  desktop()->setP2PVInputLocations(p2pvInputLocations);   
 
   desktop()->setWriteP2PV( m_writeP2PV && !m_noPVs );
  
