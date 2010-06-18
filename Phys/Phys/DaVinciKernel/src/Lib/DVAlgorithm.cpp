@@ -1,4 +1,4 @@
-// $Id: DVAlgorithm.cpp,v 1.80 2010-06-02 11:22:21 jpalac Exp $
+// $Id: DVAlgorithm.cpp,v 1.81 2010-06-18 09:42:06 jpalac Exp $
 // ============================================================================
 // Include 
 // ============================================================================
@@ -25,58 +25,59 @@ DVAlgorithm::DVAlgorithm
 ( const std::string& name, 
   ISvcLocator* pSvcLocator ) 
   : base_class    ( name , pSvcLocator )
+//
+  , m_desktop               ( 0 )
+  , m_desktopName           ( "PhysDesktop" )
+// 
+  , m_vertexFitNames        () 
+  , m_vertexFits            () 
   //
-    , m_desktop               ( 0 )
-    , m_desktopName           ( "PhysDesktop" )
+  , m_filterNames           () 
+  , m_filters               () 
+  //
+  , m_particleCombinerNames ()
+  , m_particleCombiners     ()
   // 
-    , m_vertexFitNames        () 
-    , m_vertexFits            () 
+  , m_particleReFitterNames ()
+  , m_particleReFitters     ()
   //
-    , m_filterNames           () 
-    , m_filters               () 
+  , m_pvReFitterNames       ()
+  , m_pvReFitters           ()
   //
-    , m_particleCombinerNames ()
-    , m_particleCombiners     ()
-  // 
-    , m_particleReFitterNames ()
-    , m_particleReFitters     ()
+  , m_decayTreeFitterNames  ()
+  , m_decayTreeFitters      ()
   //
-    , m_pvReFitterNames       ()
-    , m_pvReFitters           ()
+  , m_massFitterNames       ()
+  , m_massFitters           ()
   //
-    , m_decayTreeFitterNames  ()
-    , m_decayTreeFitters      ()
+  , m_lifetimeFitterNames   ()
+  , m_lifetimeFitters       ()
   //
-    , m_massFitterNames       ()
-    , m_massFitters           ()
-  //
-    , m_lifetimeFitterNames   ()
-    , m_lifetimeFitters       ()
-  //
-    , m_directionFitterNames  ()
-    , m_directionFitters      ()
+  , m_directionFitterNames  ()
+  , m_directionFitters      ()
     //
-    , m_distanceCalculatorNames  ()
-    , m_distanceCalculators      ()
+  , m_distanceCalculatorNames  ()
+  , m_distanceCalculators      ()
   //
-    , m_checkOverlapName      ( "CheckOverlap" ) 
-    , m_checkOverlap          ( 0 )
-    , m_taggingToolName       ( "BTaggingTool" )
-    , m_taggingTool           ( 0 )
-    , m_descendants           ( 0 )
-    , m_descendantsName       ("ParticleDescendants")
-    , m_onOffline             ( 0 )
-    , m_pvRelator             ( 0 )
-    , m_ppSvc                 ( 0 )
-    , m_setFilterCalled       ( false )
-    , m_countFilterWrite      ( 0 )
-    , m_countFilterPassed     ( 0 )
-    , m_refitPVs              ( false )
-    , m_multiPV               ( false )
-    , m_useP2PV               ( true  )
-    , m_writeP2PV             ( true  )
-    , m_PVLocation            ("")
-    , m_noPVs                 ( false )
+  , m_checkOverlapName      ( "CheckOverlap" ) 
+  , m_checkOverlap          ( 0 )
+  , m_taggingToolName       ( "BTaggingTool" )
+  , m_taggingTool           ( 0 )
+  , m_descendants           ( 0 )
+  , m_descendantsName       ("ParticleDescendants")
+  , m_onOffline             ( 0 )
+  , m_pvRelator             ( 0 )
+  , m_ppSvc                 ( 0 )
+  , m_setFilterCalled       ( false )
+  , m_countFilterWrite      ( 0 )
+  , m_countFilterPassed     ( 0 )
+  , m_refitPVs              ( false )
+  , m_multiPV               ( false )
+  , m_useP2PV               ( true  )
+  , m_writeP2PV             ( true  )
+  , m_ignoreP2PVFromInputLocations (false)
+  , m_PVLocation            ("")
+  , m_noPVs                 ( false )
 {
   m_inputLocations.clear() ;
   declareProperty( "InputLocations", 
@@ -95,6 +96,9 @@ DVAlgorithm::DVAlgorithm
 
   declareProperty("WriteP2PVRelations", m_writeP2PV, 
                   "Write out P->PV relations table to TES. Default: true");
+
+  declareProperty( "IngoreP2PVFromInputLocations", m_ignoreP2PVFromInputLocations);
+  
 
   // 
   m_vertexFitNames [ "Offline"       ] = "OfflineVertexFitter" ;
@@ -235,16 +239,7 @@ StatusCode DVAlgorithm::initialize ()
 
   m_noPVs = (m_PVLocation=="None"||m_PVLocation=="") ? true : false;
   
-  if (!m_p2PVInputLocations.empty() ) 
-  {
-    DaVinci::StringUtils::expandLocations( m_p2PVInputLocations.begin(),
-                                           m_p2PVInputLocations.end(),
-                                           onOffline()->trunkOnTES()     );
-    if (msgLevel(MSG::DEBUG)) debug() << ">>> Preloading PhysDesktop with P->PV locations " << endmsg;
-    desktop()->setP2PVInputLocations(m_p2PVInputLocations);
-  }
-   
-  desktop()->setWriteP2PV( m_writeP2PV && !m_noPVs );
+
 
   if (msgLevel(MSG::DEBUG)) debug() << "End of DVAlgorithm::initialize with " << sc << endmsg;
   
@@ -263,8 +258,46 @@ StatusCode DVAlgorithm::loadTools()
                                          m_inputLocations.end(),
                                          onOffline()->trunkOnTES() );
  
-  if (msgLevel(MSG::DEBUG)) debug() << ">>> Preloading PhysDesktop with locations " << m_inputLocations << endmsg;
+  if (msgLevel(MSG::DEBUG)) debug() {
+    << ">>> Preloading PhysDesktop locations " << m_inputLocations << endmsg;
+  }
+  
   desktop()->setInputLocations(m_inputLocations);
+  std::vector<std::string> p2pvInputLocations;
+  
+
+  if (!m_ignoreP2PVFromInputLocations) {
+    // load default P->PV locations.
+    for ( std::vector<std::string>::iterator iloc = m_inputLocations.begin();
+          iloc != m_inputLocations.end(); ++iloc ) {
+      p2pvInputLocations.push_back((*iloc)+"/Particle2VertexRelations");
+    }
+    
+  }
+
+  if (!m_p2PVInputLocations.empty() ) 
+  {
+    // load user-defined P->PV locations.
+    DaVinci::StringUtils::expandLocations( m_p2PVInputLocations.begin(),
+                                           m_p2PVInputLocations.end(),
+                                           onOffline()->trunkOnTES()     );
+
+    for ( std::vector<std::string>::iterator iloc = m_p2PVInnputLocations.begin();
+          iloc != m_p2PVInputLocations.end(); ++iloc ) {
+      p2pvInputLocations.push_back((*iloc));
+    }
+
+  }
+
+  if (msgLevel(MSG::DEBUG)) {
+    debug() << ">>> Preloading PhysDesktop with P->PV locations " 
+            << p2PVInputLocation << endmsg;
+  }
+  
+
+  desktop()->setP2PVInputLocations(p2PVInputLocations);   
+
+  desktop()->setWriteP2PV( m_writeP2PV && !m_noPVs );
  
   std::string outputLocation = this->name();
   

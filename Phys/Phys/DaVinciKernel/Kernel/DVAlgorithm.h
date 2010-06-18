@@ -1,4 +1,4 @@
-// $Id: DVAlgorithm.h,v 1.58 2010-06-02 10:59:12 jpalac Exp $ 
+// $Id: DVAlgorithm.h,v 1.59 2010-06-18 09:42:06 jpalac Exp $ 
 // ============================================================================
 #ifndef DAVINCIKERNEL_DVALGORITHM_H
 #define DAVINCIKERNEL_DVALGORITHM_H 1
@@ -78,7 +78,13 @@
  *  - <b>PVReFitters</b> : the map for possible primary vertex re-fitters 
  *     @see IPVReFitter
  *
- *  - <b>ReFitPVs</b> : bool. Perform automatic PV re-fitting when asking for best PV.
+ *  - <b>ReFitPVs</b> : bool. Perform automatic PV re-fitting when asking for best PV. Default: false.
+ *
+ *  - <b>UseP2PVRelations</b> : bool. Use P2PV relations internally or calculate best PV on the fly. Forced to false for events with one PV. Forced to true if <b>ReFitPVs</b> is true, for all events. Default: true.
+ *
+ *  - <b>WriteP2PVRelations</b> : bool. Write P2PV relations to output TES location "<algorithm output location>/Particle2VertexRelations". Default: true.
+ * 
+ *  - <b>IgnoreP2PVFromInputLocations</b> : Do not pick up <InputLocations>"/Particle2VertexRelations". Forces to calculate best PV on the fly. To be used specially if you want to use ReFitPVs when the input algorithms didn't or vice versa. Or to be sure that you are re-calculating the best PV in your own algorithm. Bear in mind this involves potentially CPU expensive calculations. Default: false.
  *
  *  - <b>DecayDescriptor</b>  : the decay descriptor ofthe algorithm 
  *               in the spirit of (MC)DecayFinder tool by Olivier Dormond.
@@ -691,6 +697,11 @@ private:
   /// Do we want to write the Particle -> PV relations table to the TES?
   /// Default: true
   bool m_writeP2PV;
+
+
+  /// Ignore Particle->PV relations from InputLocations?
+  /// User-defined ones are kept.
+  bool m_ignoreP2PVFromInputLocations;
 
   /// Switch PreloadTools to false no to preload any tools.
   /// This will have the effect that they will be loaded on demand, when needed,
