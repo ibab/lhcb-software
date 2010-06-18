@@ -88,6 +88,14 @@ StatusCode TrackMuonMatchMonitor::initialize() {
   return StatusCode::SUCCESS;
 }
 
+namespace {
+  struct MuonHit {
+    const LHCb::MuonCoord* coord;
+    double x,y,z ;
+    double dx,dy,dz ;
+  } ;
+}
+
 //=============================================================================
 // Main execution
 //=============================================================================
@@ -99,7 +107,7 @@ StatusCode TrackMuonMatchMonitor::execute() {
   
   const LHCb::MuonCoords* coords = NULL;
   
-  if ( ! exist<LHCb::MuonCoords>("Raw/Muon/Coords")) { 
+  if ( ! exist<LHCb::MuonCoords>("Raw/Muon/Coords")) {
     debug()<<" Container Raw/Muon/Coords doesn't exist"<<endmsg;
     return StatusCode::SUCCESS;
   }
@@ -108,6 +116,19 @@ StatusCode TrackMuonMatchMonitor::execute() {
     debug() << " No hits retrieved , skip event" << endmsg;
     return StatusCode::SUCCESS;    
   }
+
+  // cache the position of the hits. that saves a lot of time.
+  std::vector< MuonHit > muonhits ;
+  MuonHit muonhit ;
+  muonhits.reserve( coords->size() ) ;
+  BOOST_FOREACH(muonhit.coord , *coords )  
+    if ( m_iMS == int(muonhit.coord->key().station()) ) { // only the Chosen station
+      StatusCode sc = m_muonDet->Tile2XYZ(muonhit.coord->key(),
+					  muonhit.x,muonhit.dx,
+					  muonhit.y,muonhit.dy,
+					  muonhit.z,muonhit.dz) ;
+      if(sc.isSuccess()) muonhits.push_back( muonhit ) ;
+    }
   
   debug()<<" Found "<<tTracks.size() << " tracks in the container "<<endmsg;
   BOOST_FOREACH( const LHCb::Track* track, tTracks) {
@@ -122,38 +143,30 @@ StatusCode TrackMuonMatchMonitor::execute() {
 	 std::abs(stateAtM1.x()) < m_MAXsizeX && std::abs(stateAtM1.y()) < m_MAXsizeY &&
 	 std::sqrt(stateAtM1.errX2()) < m_maxErrX && std::sqrt(stateAtM1.errY2()) < m_maxErrY ) {
 	
-	for(LHCb::MuonCoords::const_iterator ihT = coords->begin(); ihT != coords->end() ; ++ihT ) { // loop on all the hits
-	  if ( m_iMS == int((*ihT)->key().station()) ) { // only the Chosen station
+	BOOST_FOREACH( const MuonHit& hit, muonhits ) {
 	    
-	    int region = (*ihT)->key().region() ;
-
-	    double x_hit,dx_hit,y_hit,dy_hit,z_hit,dz_hit;
-	    StatusCode sc = m_muonDet->Tile2XYZ((*ihT)->key(),x_hit,dx_hit,y_hit,dy_hit,z_hit,dz_hit);
-	    if(sc.isSuccess()) {
+	  int region = hit.coord->key().region() ;
+	  double deltaZ = hit.z - stateAtM1.z() ;
+	  double deltaX = hit.x - (stateAtM1.x() + stateAtM1.tx() * deltaZ) ;
+	  double deltaY = hit.y - (stateAtM1.y() + stateAtM1.ty() * deltaZ) ;
 	      
-	      double deltaZ = z_hit - stateAtM1.z() ;
-	      double deltaX = x_hit - (stateAtM1.x() + stateAtM1.tx() * deltaZ) ;
-	      double deltaY = y_hit - (stateAtM1.y() + stateAtM1.ty() * deltaZ) ;
-	      
-	      if( std::abs(deltaX) < m_hisxmax[region] &&
-		  std::abs(deltaY) < m_hisxmax[region] ) {
-
-		AIDA::IHistogram1D *tempx, *tempy;
-		
-		tempx = x_hit > 0 ? m_resx_a[ region ] : m_resx_c[ region ];
-		tempy = x_hit > 0 ? m_resy_a[ region ] : m_resy_c[ region ];	  	  
-		
-		tempx->fill( deltaX );  // X residuals on the same Z as the hit
-		tempy->fill( deltaY );  // Y residuals on the same Z as the hit
-		
-	      } 
-	    }
-	  }
+	  if( std::abs(deltaX) < m_hisxmax[region] &&
+	      std::abs(deltaY) < m_hisxmax[region] ) {
+	    
+	    AIDA::IHistogram1D *tempx, *tempy;
+	    
+	    tempx = hit.x > 0 ? m_resx_a[ region ] : m_resx_c[ region ];
+	    tempy = hit.x > 0 ? m_resy_a[ region ] : m_resy_c[ region ];	  	  
+	    
+	    tempx->fill( deltaX );  // X residuals on the same Z as the hit
+	    tempy->fill( deltaY );  // Y residuals on the same Z as the hit
+	    
+	  } 
 	}
       }
     }
   }
-
+  
   return StatusCode::SUCCESS;
 }
 
