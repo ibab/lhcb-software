@@ -6,30 +6,23 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+!========================= LHCbMath v3r18 2010-06-18 =========================
 ! 2010-06-16 - Vanya Belyaev
-
  - LHCbMath/Types.py
-
-   add the proper pritotu for matrices and symmetric matrices 
+   add the proper printout for matrices and symmetric matrices 
 
 ! 2010-06-16 - Vanya Belyaev
-
  - Kinematics: 
-
     add overload methods for matrix expressions 
-  
 
 ! 2010-06-08 - Vanya Belyaev
-
  - LorentzVectorWithError: 
-
       add few useful methods 
 
 ! 2010-05-26 - Vanya Belyaev
  - fix some errors in ParticleParams 
 
 ! 2010-05-26 - Vanya BELYAEV 
-
  - SymPosDefMatrixInverter.h
    add helper structire _invertForAllN 
    ( the code is copied from Manuel's class invertForAllN, 
@@ -37,16 +30,12 @@
      and thus it allows the compilation for Win32 platform) .
    The inverter<> has been update dto use _inverterFroAllN instead of invertrerForAlLN.
    It is *safe*, since for inverter<>, N is a compile tiem constant.
-   
-
 
 ! 2010-05-25 - Vanya Belyaev
-
  - minor fix, hopefully it also fixes the compilation 
    problem for windows platform
 
 ! 2010-05-24 - Vanya Belyaev
-
  - ParticleParams.h/cpp
    new object for representation of 4-momentum/reference-point&decay-length  
    iformation coherent, self-contained way. It is a useful representation 
@@ -61,7 +50,6 @@
       add few useful accessors 
 
  - cmt/requirements 
-
      version increment to v3r18 
 
 !========================= LHCbMath v3r17p1 2010-05-21 =======================
