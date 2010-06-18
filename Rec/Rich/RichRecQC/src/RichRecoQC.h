@@ -35,6 +35,10 @@
 // RichKernel
 #include "RichKernel/RichStatDivFunctor.h"
 
+// RichDet
+#include "RichDet/DeRichMultiSolidRadiator.h"
+#include "RichDet/DeRichAerogelRadiator.h"
+
 // boost
 #include "boost/assign/list_of.hpp"
 

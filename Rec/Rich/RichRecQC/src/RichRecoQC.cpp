@@ -56,7 +56,7 @@ RecoQC::RecoQC( const std::string& name,
 
   declareProperty( "Radiators", m_rads = list_of(true)(true)(true) );
 
-  declareProperty( "MinRadSegs", m_minRadSegs = list_of (0)       (0)       (0)      );
+  declareProperty( "MinRadSegs", m_minRadSegs = list_of (0)       (0)       (0)       );
   declareProperty( "MaxRadSegs", m_maxRadSegs = list_of (9999999) (9999999) (9999999) );
 
   declareProperty( "CheckAeroGasPhots", m_checkAeroGas = false );
@@ -87,6 +87,20 @@ StatusCode RecoQC::initialize()
 
 StatusCode RecoQC::prebookHistograms()
 {
+  // Aerogel DetElem
+  const DeRichMultiSolidRadiator * aerogel 
+    = getDet<DeRichMultiSolidRadiator>( DeRichLocations::Aerogel );
+
+  // List of active Aerogel tile IDs
+  std::vector<int> tileIDs;
+  for ( DeRichRadiator::Vector::const_iterator dRad = aerogel->radiators().begin();
+        dRad != aerogel->radiators().end(); ++dRad )
+  {
+    const DeRichAerogelRadiator* d = dynamic_cast<const DeRichAerogelRadiator*>(*dRad);
+    if (!d) return Error( "Failed to cast to DeRichAerogelRadiator" );
+    tileIDs.push_back( d->tileID() );
+  }
+
   // Loop over radiators
   for ( Rich::Radiators::const_iterator rad = Rich::radiators().begin();
         rad != Rich::radiators().end(); ++rad )
@@ -107,18 +121,37 @@ StatusCode RecoQC::prebookHistograms()
                    0.0, 2.0*Gaudi::Units::pi, nBins1D() );
       richHisto1D( HID("ckResAll",*rad), "Rec-Exp Cktheta | All photons",
                    -m_ckResRange[*rad], m_ckResRange[*rad], nBins1D() );
-      richHisto1D( HID("thetaRecIsolated",*rad),"Reconstructed Ch Theta | All photons | Isolated Tracks",
+      richHisto1D( HID("thetaRecIsolated",*rad), "Reconstructed Ch Theta | All photons | Isolated Tracks",
                    m_ckThetaMin[*rad], m_ckThetaMax[*rad], nBins1D() );
-      richHisto1D( HID("ckResAllIsolated",*rad),"Rec-Exp Cktheta | All photons | Isolated Tracks",
+      richHisto1D( HID("ckResAllIsolated",*rad), "Rec-Exp Cktheta | All photons | Isolated Tracks",
                    -m_ckResRange[*rad], m_ckResRange[*rad], nBins1D() );
       richHisto1D( HID("totalPhotons",*rad),"Photon Yield | All Tracks",
                    -0.5, 50.5, 51 );
-      richHisto1D( HID("totalPhotonsIsolated",*rad),"Photon Yield | Isolated Tracks",
+      richHisto1D( HID("totalPhotonsIsolated",*rad), "Photon Yield | Isolated Tracks",
                    -0.5, 50.5, 51 );
       richHisto1D( HID("ckPullIso",*rad), "(Rec-Exp)/Res CKtheta | Isolated Tracks",
                    -4, 4, nBins1D() );
       richProfile1D( HID("ckPullVthetaIso",*rad), "(Rec-Exp)/Res CKtheta Versus CKtheta | Isolated Tracks",
                      m_ckThetaMin[*rad], m_ckThetaMax[*rad], nBins1D() );
+      if ( *rad == Rich::Aerogel )
+      {
+        // Book a few plots for each aerogel tile
+        for ( std::vector<int>::const_iterator tileID = tileIDs.begin();
+              tileID != tileIDs.end(); ++tileID )
+        {
+          std::ostringstream id,title;
+          id << "ckResAllTile" << *tileID;
+          title << "Rec-Exp Cktheta | All photons | Tile " << *tileID;
+          richHisto1D( HID(id.str(),*rad), title.str(),
+                       -m_ckResRange[*rad], m_ckResRange[*rad], nBins1D() );
+          id.str("");
+          title.str("");
+          id << "thetaRecTile" << *tileID;
+          title << "Reconstructed Ch Theta | All photons | Tile " << *tileID;
+          richHisto1D( HID(id.str(),*rad), title.str(),
+                       m_ckThetaMin[*rad], m_ckThetaMax[*rad], nBins1D() );
+        }
+      }
     }
   }
 
@@ -174,7 +207,7 @@ StatusCode RecoQC::execute()
 
     // # Segment cuts
     if ( segsPerRad[rad] < m_minRadSegs[rad] ||
-         segsPerRad[rad] > m_maxRadSegs[rad] ) continue;
+         segsPerRad[rad] > m_maxRadSegs[rad]  ) continue;
 
     // track selection
     if ( !m_trSelector->trackSelected(segment->richRecTrack()) ) continue;
@@ -277,6 +310,26 @@ StatusCode RecoQC::execute()
       {
         richHisto1D( HID("ckPullIso",rad) ) -> fill( ckPull );
         richProfile1D( HID("ckPullVthetaIso",rad) ) -> fill( thetaRec, ckPull );
+      }
+
+      // Aerogel tiles
+      if ( Rich::Aerogel == rad )
+      {
+        // get the list of radiator intersections
+        const LHCb::RichTrackSegment & tkSeg = segment->trackSegment();
+        const RichRadIntersection::Vector & intersects = tkSeg.radIntersections();
+        for ( RichRadIntersection::Vector::const_iterator intersect = intersects.begin();
+              intersect != intersects.end(); ++intersect )
+        {
+          const DeRichAerogelRadiator* d = 
+            dynamic_cast<const DeRichAerogelRadiator*>((*intersect).radiator());
+          if (!d) return Error( "Failed to cast to DeRichAerogelRadiator" );
+          std::ostringstream ida,idb;
+          ida << "ckResAllTile" << d->tileID();
+          richHisto1D(HID(ida.str(),rad))->fill(deltaTheta);
+          idb << "thetaRecTile" << d->tileID();
+          richHisto1D(HID(idb.str(),rad))->fill(thetaRec);
+        }
       }
 
       // MC based plots
