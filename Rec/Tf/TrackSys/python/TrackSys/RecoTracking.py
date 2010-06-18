@@ -17,6 +17,7 @@ from Configurables import ( ProcessPhase, MagneticFieldSvc,
                             PatSeeding,
                             TrackMatchVeloSeed, PatDownstream, PatVeloTT,
                             TrackStateInitAlg,
+                            FilterMatchTracks, FilterDownstreamTracks, FilterSeedTracks,
                             TrackEventCloneKiller, TrackPrepareVelo,
                             TrackAddLikelihood, TrackLikelihood, TrackAddNNGhostId, Tf__OTHitCreator,
                             TrackBuildCloneTable, TrackCloneCleaner, AlignMuonRec,
@@ -195,6 +196,8 @@ def RecoTracking(exclude=[]):
       if stdSeq :
          ## Match fit initialization
          track.DetectorList += [ "MatchFit" ]
+         if TrackSys().getProp("FilterBeforeFit") : 
+            GaudiSequencer("TrackMatchFitSeq").Members +=  [ FilterMatchTracks() ]
          GaudiSequencer("TrackMatchFitSeq").Members += [TrackStateInitAlg("InitMatchFit")]
          TrackStateInitAlg("InitMatchFit").TrackLocation = "Rec/Track/Match"
          ## Match fit
@@ -211,6 +214,8 @@ def RecoTracking(exclude=[]):
       
       if stdSeq :
          track.DetectorList += [ "DownstreamFit" ]
+         if TrackSys().getProp("FilterBeforeFit") : 
+            GaudiSequencer("TrackDownstreamFitSeq").Members +=  [ FilterDownstreamTracks() ]
          GaudiSequencer("TrackDownstreamFitSeq").Members += [TrackStateInitAlg("InitDownstreamFit")]
          TrackStateInitAlg("InitDownstreamFit").TrackLocation = "Rec/Track/Downstream"
          ## Downstream fit
@@ -236,6 +241,8 @@ def RecoTracking(exclude=[]):
       ## Refit Seeds with standard fitter
       track.DetectorList += [ "SeedRefit" ]
       ## Seed refit initialization
+      if TrackSys().getProp("FilterBeforeFit") : 
+         GaudiSequencer("TrackSeedRefitSeq").Members +=  [ FilterSeedTracks() ]
       GaudiSequencer("TrackSeedRefitSeq").Members += [TrackStateInitAlg("InitSeedRefit")]
       TrackStateInitAlg("InitSeedRefit").TrackLocation = "Rec/Track/Seed"
       ## Seed refit

@@ -24,6 +24,7 @@ class TrackSys(LHCbConfigurableUser):
        ,"TrackExtraInfoAlgorithms": []  # List of track 'extra info' algorithms to run
        ,"WithMC":       False # set to True to use MC truth
        ,"OutputType": "" # set to "RDST" for special RDST sequence
+       ,"FilterBeforeFit": False  #Set to true, remove duplicated tracks before fit
         }
     
     ## Possible expert options

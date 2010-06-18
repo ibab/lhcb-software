@@ -4,6 +4,12 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+! 2010-06-18 - Olivier Callot
+ - Add a slot 'FilterBeforeFit' to TrackSys to include filtering algorithms
+   before the track fit, to increase speed
+ - Add algorytjms FilterMatchTracks / Downstream / Seed conditionnaly in 
+   RecoTracking.py in front of the respective fit sequence
+
 ! 2010-06-09 - Rob Lambert
  - fix savannah bug #bug 68610, missing import statement in RecoTracking.py
 
