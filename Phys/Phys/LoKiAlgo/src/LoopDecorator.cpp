@@ -250,6 +250,16 @@ const LoKi::Loop& LoKi::Dicts::DictsLoop::setReFitter
   return l ;
 }
 // ============================================================================
+// set the default ICheckOverlap tool
+// ============================================================================
+const LoKi::Loop& LoKi::Dicts::DictsLoop::setOverlapChecker
+( const LoKi::Loop&        l , 
+  const ICheckOverlap*     c ) 
+{
+  if ( l ) { l->setOverlapChecker( c ) ; }
+  return l ;
+}
+// ============================================================================
 // get the associated vertex 
 // ============================================================================
 const LHCb::VertexBase* LoKi::Dicts::DictsLoop::pv  ( const LoKi::Loop& l ) 
@@ -304,6 +314,19 @@ StatusCode LoKi::Dicts::DictsLoop::reFit
 ( const LoKi::Loop&  l    , 
   const std::string& nick ) 
 { return l ? l->reFit ( nick ) : s_BAD ; }
+// ============================================================================
+// check the overlap 
+// ============================================================================
+bool LoKi::Dicts::DictsLoop::noOverlap 
+( const LoKi::Loop&  l ) 
+{ return l ? l->noOverlap () : false ; }
+// ============================================================================
+// check the overlap 
+// ============================================================================
+bool LoKi::Dicts::DictsLoop::noOverlap 
+( const LoKi::Loop&  l , 
+  ICheckOverlap*     c ) 
+{ return l ? l->noOverlap ( c ) : false ; }
 // ============================================================================
 // save the particle into LoKi storage
 // ============================================================================

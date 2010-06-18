@@ -6,6 +6,10 @@
 // ============================================================================
 #include "Kernel/ParticleProperty.h"
 // ============================================================================
+// DaVinciInetrfaces 
+// ============================================================================
+#include "Kernel/ICheckOverlap.h"
+// ============================================================================
 // LoKiCore 
 // ============================================================================
 #include "LoKi/ParticleProperties.h"
@@ -40,30 +44,32 @@ LoKi::LoopObj::LoopObj
   const LoKi::IReporter*   reporter , 
   const LoKi::Algo*        algo     , 
   const IParticleCombiner* combiner , 
-  const IParticleReFitter* fitter   )
+  const IParticleReFitter* fitter   ,
+  const ICheckOverlap*     overlap  )
   : LoKi::Base ( name , reporter  )
   , m_algo     ( algo      )
   , m_comb     ( combiner  )
   , m_reFit    ( fitter    )
-  //
+  , m_overlap  ( overlap   )
+///
   , m_formula       (         ) 
   , m_combiner      (         )
   , m_combination   (         )
-  ///
+///
   , m_valid         ( false   ) 
   , m_status        ( StatusCode::SUCCESS , true ) 
-  ///
+///
   , m_particle      ( 0       )
   , m_vertex        ( 0       )
   , m_pOwner        ( false   ) 
   , m_vOwner        ( false   ) 
-  ///
+///
   , m_pid           (         ) 
   , m_pp            ( 0       )
   , m_pidname       (         ) 
-  //
+///
   , m_pv            ( 0       )
-  //
+///
   , m_clones        (         )
 {} 
 // ============================================================================
@@ -498,11 +504,35 @@ StatusCode LoKi::LoopObj::save ( const std::string& tag ) const
     { Error ( "save('"+tag+"'): Particle* is NULL", status () ) ; }
     if ( 0 == m_vertex   ) 
     { Error ( "save('"+tag+"'): Vertex*   is NULL", status ()  ) ; }
-  };
+  }
   //
   return StatusCode::SUCCESS ;
 }
 // ============================================================================
+//  check the overlap using ICheckOverlapTool 
+// ============================================================================
+bool LoKi::LoopObj::noOverlap ( ICheckOverlap* ut ) const 
+{
+  if ( 0 == ut ) 
+  {
+    Error   ( "noOverlap: ICheckOverlap* points to NULL, return false" ) ;
+    return false ;                                              // RETURN
+  }
+  //
+  if ( !valid() ) 
+  {
+    Warning ( "noOverlap: non-valid state, return false") ;
+    return false ;                                              // RETURN
+  }
+  //
+  const bool overlap = ut->foundOverlap ( m_combination ) ;
+  //
+  return !overlap ; 
+}  
+// ============================================================================
+//  check the overlap using ICheckOverlapTool 
+// ============================================================================
+bool LoKi::LoopObj::noOverlap () const { return noOverlap ( m_overlap ) ; }
 
 
 

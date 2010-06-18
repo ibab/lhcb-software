@@ -13,10 +13,11 @@
 // ============================================================================
 #include "Kernel/ParticleProperty.h"
 // ============================================================================
-// DaVinciKernel
+// DaVinciInterfaces 
 // ============================================================================
 #include "Kernel/IParticleCombiner.h"
 #include "Kernel/IParticleReFitter.h"
+#include "Kernel/ICheckOverlap.h"
 // ============================================================================
 // LoKiCore 
 // ============================================================================
@@ -271,21 +272,31 @@ namespace LoKi
     // ========================================================================
   public:
     // ========================================================================
-    /// set the particle ID for the effectiev particle of the loop 
+    /// set the particle ID for the effective particle of the loop 
     LoopObj& setPID ( const LHCb::ParticleID& pid ) ;
-    /// set the particle ID for the effectiev particle of the loop 
+    /// set the particle ID for the effective particle of the loop 
     LoopObj& setPID ( const std::string&      pid ) ;
-    /// set the particle ID for the effectiev particle of the loop 
+    /// set the particle ID for the effective particle of the loop 
     LoopObj& setPID ( const LHCb::ParticleProperty* pid ) ;
     // ========================================================================
   public:
     // ========================================================================
     /// set the default IParticleCombiner tool
-    LoopObj& setCombiner ( const IParticleCombiner* c ) 
-    { m_comb  = c ; return *this ; }
-    /// set the default IParticleCombiner tool
-    LoopObj& setReFitter ( const IParticleReFitter* c ) 
-    { m_reFit = c ; return *this ; }
+    LoopObj& setCombiner       ( const IParticleCombiner* c ) 
+    { m_comb    = c ; return *this ; }
+    /// set the default IParticleReFitter tool
+    LoopObj& setReFitter       ( const IParticleReFitter* c ) 
+    { m_reFit   = c ; return *this ; }
+    /// set the default ICheckOverlap tool
+    LoopObj& setOverlapChecker ( const ICheckOverlap*     c ) 
+    { m_overlap = c ; return *this ; }
+    // ========================================================================
+  public:
+    // ========================================================================
+    /// check the overlap using ICheckOverlapTool 
+    bool noOverlap ( ICheckOverlap* s ) const ;
+    /// check the overlap using ICheckOverlapTool 
+    bool noOverlap (                  ) const ;
     // ========================================================================
   public:
     // ========================================================================
@@ -349,13 +360,15 @@ namespace LoKi
      *  @param algo the actual horse 
      *  @param combiner the default IParticleCombiner tool 
      *  @param fitter   the default IParticleReFitter tool 
+     *  @param overlap  the default ICheckOverlap     tool 
      */
     LoopObj 
     ( const std::string&       name          , 
       const LoKi::IReporter*   reporter      ,
       const LoKi::Algo*        algo          , 
       const IParticleCombiner* combiner  = 0 ,
-      const IParticleReFitter* fitter    = 0 ) ;
+      const IParticleReFitter* fitter    = 0 , 
+      const ICheckOverlap*     overlap   = 0 ) ;
     // ========================================================================
   protected:
     // ========================================================================
@@ -383,7 +396,9 @@ namespace LoKi
     /// creator of valid combinations
     LoKi::Interface<IParticleCombiner> m_comb  ; // creator of valid combinations
     /// re-fitter 
-    LoKi::Interface<IParticleReFitter> m_reFit ; // re-fitter
+    LoKi::Interface<IParticleReFitter> m_reFit   ; // re-fitter
+    /// overlap checker 
+    LoKi::Interface<ICheckOverlap>     m_overlap ; // overlap checker 
     /// the Loop "formula"
     Formula  m_formula ; // the Loop "formula"
     /// the "Combiner"
@@ -419,7 +434,7 @@ namespace LoKi
     // ========================================================================
   };
   // ==========================================================================
-}  // end of the namespace LoKi
+}  //                                                 end of the namespace LoKi
 // ============================================================================
 #endif // LOKI_LOOPOBJ_H
 // ============================================================================

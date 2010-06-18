@@ -11,11 +11,14 @@
 // ============================================================================
 namespace LoKi 
 {
+  // ==========================================================================
   namespace Dicts
   {
+    // ========================================================================
     class DictsLoop
     {
     public:
+      // ======================================================================
       /// get the effective formula of the loop, see LoKi::LoopObj::formula
       static const LoKi::LoopObj::Formula& formula( const LoKi::Loop& l ) ;
       /// get the effective dimension of the loop (== number of components)
@@ -112,6 +115,10 @@ namespace LoKi
       static const LoKi::Loop& setReFitter 
       ( const LoKi::Loop&        l , 
         const IParticleReFitter* c ) ;
+      /// set the default ICheckOvrlap tool
+      static const LoKi::Loop& setOverlapChecker
+      ( const LoKi::Loop&        l , 
+        const ICheckOverlap*     c ) ;
       /// get the associated vertex 
       static const LHCb::VertexBase* pv  
       ( const LoKi::Loop& l ) ;
@@ -141,6 +148,13 @@ namespace LoKi
       static StatusCode reFit 
       ( const LoKi::Loop&        l        , 
         const IParticleReFitter* fit      ) ;
+      /// check the overlap using IcheckOverlap tool 
+      static bool       noOverlap 
+      ( const LoKi::Loop&        l  ) ;
+      /// check the overlap using ICheckOverlap tool 
+      static bool       noOverlap 
+      ( const LoKi::Loop&        l  , 
+        ICheckOverlap*           t  ) ;  
       /// save the particle into LoKi storage
       static StatusCode save  
       ( const LoKi::Loop&  l   , 
@@ -149,9 +163,12 @@ namespace LoKi
       static const LoKi::Loop& backup  ( const LoKi::Loop& l ) ;
       /// restore the loop from the last backup state
       static const LoKi::Loop& restore ( const LoKi::Loop& l ) ;
-    } ; // end of class LoKi::Dicts::LoopDicts 
-  } // end of namespace LoKi::Dicts 
-} // end of namespace LoKi 
+      // ======================================================================
+    } ; //                                  end of class LoKi::Dicts::LoopDicts 
+    // ========================================================================
+  } //                                             end of namespace LoKi::Dicts 
+  // ==========================================================================
+} //                                                      end of namespace LoKi 
 // ============================================================================
 // The END   
 // ============================================================================
