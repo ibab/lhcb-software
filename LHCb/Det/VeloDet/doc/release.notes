@@ -3,6 +3,7 @@
 ! package manager : Velo Group
 !-----------------------------------------------------------------------------
 
+!======================== VeloDet v13r10p1 2010-06-18 ========================
 ! 2010-06-11 - Marco Cattaneo
  - Update reference file for velodet.veloaligncond.updates QMTest, following
    change in CondDBEntityResolver verbosity (bug #68612) 
