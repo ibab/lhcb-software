@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.554 2010-06-13 17:39:10 ibelyaev Exp $
+! $Id: release.notes,v 1.555 2010-06-18 09:36:55 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2010-06-18 - Juan Palacios
+ - PhysDesktop
+  . Default P->PV relations tables set by parent DVAlgorithm, together with user-defined ones.
 
 ! 2010-06-13 - Vanya Belyaev
 
