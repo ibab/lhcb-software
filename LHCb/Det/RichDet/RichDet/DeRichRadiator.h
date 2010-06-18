@@ -232,13 +232,12 @@ protected:
    */
   inline const Rich::TabulatedProperty1D* checkRefIndex() const
   {
-    if ( m_refIndex )
-      return m_refIndex;
-    else
+    if ( !m_refIndex )
+    {
       throw GaudiException( "Invalid refractive index", "DeRichRadiator", StatusCode::FAILURE );
-
+    }
+    return m_refIndex;
   }
-
 
 protected:
 
