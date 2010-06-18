@@ -5,6 +5,7 @@
 ! Purpose     : LHCb Event model. Reconstruction classes (Brunel output) 
 !-----------------------------------------------------------------------------
 
+!========================= RecEvent v2r29 2010-06-18 =========================
 ! 2010-06-16 - Chris Jones
  - Add a human readable implementation of fillStream to LHCb::RichPID
 
