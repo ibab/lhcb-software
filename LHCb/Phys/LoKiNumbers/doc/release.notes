@@ -4,6 +4,7 @@
 ! Purpose     : Set of dictionaries for LoKi functions 
 ! -----------------------------------------------------------------------------
 
+!========================== LoKiNumbers v9r1 2010-06-18 =======================
 ! 2010-06-05 - Vanya Belyaev
 
  - add examples/tests  for new streamers 
