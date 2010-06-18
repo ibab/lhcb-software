@@ -1,28 +1,25 @@
-!$Id: release.notes,v 1.8 2010-06-09 17:49:13 ibelyaev Exp $
+!$Id: release.notes,v 1.9 2010-06-18 16:40:23 cattanem Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinciTypes
 ! Responsible : Juan Palacios
 ! Purpose     : Package containing useful typedefs for Phys
 !-----------------------------------------------------------------------------
 
+!======================== DaVinciTypes v2r0 2010-06-18 =======================
 ! 2010-06-09 - Vanya Belyaev
-
  - TreeClonetrs.h 
      add functiion to clone/delete trees 
 
 ! 2010-06-09 - Vanya Belyaev
-
  - DecayTree::cloneMap
     fix in cloneTree method 
     add the counter for the proper clone/delete     
 
 ! 2010-05-24 - Vanya Belyaev
-
  - LHCb::DecayTree
     add the default constructor (invalid tree) 
 
 ! 2010-05-24 - Vanya Belyaev
-
  - add LHCb::DecayTree from DaVinciKernel to allow the usage of this class 
    in Phys/DaVinciInterfaces 
  - cmt/requirements 
