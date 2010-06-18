@@ -2,6 +2,8 @@
 ! Package     : HltInterfaces
 ! Responsible : Gerhard Raven
 !------------------------------------------------------------------------------
+
+!============ Kernel/HltInterfaces v4r1 2010-06-18 ============================
 ! 2010-06-02 - Gerhard Raven
  - check that Property::fromString can parse what Property::toString
    produces...
