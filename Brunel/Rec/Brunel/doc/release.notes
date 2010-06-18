@@ -12,10 +12,13 @@ Purpose: LHCb reconstruction program
 - Changes to tests
   . remove brunelmdfrst test, as all functionality is already tested elsewhere
   . ignore BrunelInit warnings count in comparisons (due to fluctuations in
-    memory usage)
+    memory usage) 
+  . switch off STOfflinePosition Lorentz correction in brunel-mc09-withtruth and
+    brunel-mc09-withtruth-invfield tests, to avoid differences when inverting
+    the magnetic field.
 
 - Changes to references to reflect changes in Brunel v37r4 output:
-  . Follow fix to MagnaticFieldSvc().ForceToUseDownMap. As a result of this bug,
+  . Follow fix to MagneticFieldSvc().ForceToUseDownMap. As a result of this bug,
     DC06 reco was using wrong polarity, since Brunel v37r2 (Det/Magnet)
   . New STClusterMonitor histograms (STMonitors)
   . Latest Calo calibration from head-20100531 LHCBCOND tag
@@ -26,6 +29,12 @@ Purpose: LHCb reconstruction program
     (TrackMonitors)
   . Less verbosity in CondDBEntityResolver (CondDBEntityResolver)
   . Changed precision of OTMeasurement::deltaTimeOfFlight (TrackFitEvent)
+  . New hit error estimates for MC (STTools)
+  . New tuning of eta correction (STTools)
+
+- New incompatibility
+  . The new default ST hit error estimates applied by STTools are only compatible
+    with the corresponding tuning from Boole v21r5
 
 </PRE><H1><A NAME=v37r3>2010-05-26 Brunel v37r3</A></H1><PRE>
  - Changes to references to reflect changes in Brunel v37r3 output:

@@ -10,7 +10,7 @@
     <text>$BRUNELOPTS/Brunel-MC09-WithTruth.py</text>
     <text>$BRUNELOPTS/MC09-Files.py</text>
     <text>--option</text>
-    <text>from Brunel.Configuration import *; Brunel().Histograms="Expert"; Brunel().RecL0Only=True; Brunel().EvtMax=15; from Configurables import RecInit, RichRecQCConf, MagneticFieldSvc, TrackPrepareVelo; RecInit("BrunelInit").PrintEventTime=True; MagneticFieldSvc().ForceToUseDownMap=True; RichRecQCConf(Brunel().richMoniConfName).removeMonitor("TracklessRingAngles"); TrackPrepareVelo().reverseCharge=True</text>
+    <text>from Brunel.Configuration import *; Brunel().Histograms="Expert"; Brunel().RecL0Only=True; Brunel().EvtMax=15; from Configurables import RecInit, RichRecQCConf, MagneticFieldSvc, TrackPrepareVelo, STOfflinePosition; RecInit("BrunelInit").PrintEventTime=True; MagneticFieldSvc().ForceToUseDownMap=True; RichRecQCConf(Brunel().richMoniConfName).removeMonitor("TracklessRingAngles"); TrackPrepareVelo().reverseCharge=True; STOfflinePosition('ToolSvc.ITClusterPosition').applyLorentzCorrection=False; STOfflinePosition('ToolSvc.STOfflinePosition').applyLorentzCorrection=False</text>
   </set></argument>
   <argument name="reference"><text>../refs/testBrunel-MC09-WithTruth.ref</text></argument>
   <argument name="validator"><text>
