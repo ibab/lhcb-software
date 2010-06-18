@@ -7,6 +7,9 @@
 // GSL
 #include "gsl/gsl_sf_erf.h"
 
+// Boost
+#include <boost/assign/list_of.hpp>
+
 // local
 #include "STChargeSharingTool.h"
 
@@ -23,7 +26,10 @@ STChargeSharingTool::STChargeSharingTool( const std::string& type,
   m_responseSpline(0)
 {
   // constructer
-  declareProperty("SharingFunction", m_sharingFunction );
+  declareProperty("SharingFunction", m_sharingFunction = 
+                  boost::assign::list_of(1.0)(1.0)(0.97)(0.935)(0.90)(0.83)
+                  (0.73)(0.5)(0.44)(0.34)(0.20)(0.11)(0.065)(0.038)(0.016)
+                  (0.0)(0.0) );
   declareProperty("UseAnalyticErf",  m_useAnalyticErf = true    );
   declareProperty("ErfWidth",        m_erfWidth       = 0.0224   );
   declareProperty("Thickness",       m_thickness      = 0.500*mm );
@@ -41,23 +47,25 @@ StatusCode STChargeSharingTool::initialize()
   StatusCode sc = ST::ToolBase::initialize();
   if (sc.isFailure()) return Error("Failed to initialize", sc);
 
-  unsigned int nBin = m_sharingFunction.size();
-  if (nBin == 0){
-    return Error("no charge sharing data !" + name(), StatusCode::FAILURE);
-  } 
+  if( !m_useAnalyticErf ) {
+    unsigned int nBin = m_sharingFunction.size();
+    if( nBin == 0 ) {
+      return Error("no charge sharing data !" + name(), StatusCode::FAILURE);
+    }
+    
+    // bin centers
+    std::vector<double> binCenters;
+    binCenters.reserve(nBin);  
+    double binSize = 1.0/(double)nBin;
+    for (unsigned int iBin = 0; iBin<nBin; ++iBin) {
+      double binCenter = (0.5+(double)iBin)*binSize;
+      binCenters.push_back(binCenter);
+    } //iBin
 
-  // bin centers
-  std::vector<double> binCenters;
-  binCenters.reserve(nBin);  
-  double binSize = 1.0/(double)nBin;
-  for (unsigned int iBin = 0; iBin<nBin; ++iBin) {
-    double binCenter = (0.5+(double)iBin)*binSize;
-    binCenters.push_back(binCenter);
-  } //iBin
-
-  // Fit the spline.
-  m_responseSpline = new SimpleSpline( binCenters, m_sharingFunction, Linear );
-
+    // Fit the spline.
+    m_responseSpline = new SimpleSpline(binCenters, m_sharingFunction, Linear );
+  }
+  
   return StatusCode::SUCCESS;
 }
 
