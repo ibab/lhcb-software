@@ -40,8 +40,26 @@ public:
   // Integrate Lumi FSR data
   StatusCode integrate( LHCb::LumiIntegral* fsr );
 
+  // Integrate Lumi FSR data with mask sum one scalar
+  StatusCode integrate( LHCb::LumiIntegral& fsr, std::vector<double> v, double f=1.0 );
+
+  // Integrate Lumi FSR data with mask sum one scalar
+  StatusCode integrate( LHCb::LumiIntegral* fsr, std::vector<double> v, double f=1.0 );
+
+  // Set absolute scale
+  StatusCode setAbsolute(double scale, double relerror);
+
+  // Get final result
+  double lumiValue();
+
+  // Get error on result
+  double lumiError();
+
   // Retrieve the integrated Lumi FSR data
   const LHCb::LumiIntegral& integral( ) const;
+
+  // Retrieve duplicates
+  std::vector<std::string> duplicates( ) const;
 
   // Count the number of events for a given file
   void countEvents( );
@@ -59,6 +77,11 @@ private:
 
   unsigned long m_count_files;                  // number of files
   unsigned long m_count_events;                 // number of events
+  std::vector<std::string> m_duplicateFiles;    // keep track of duplicates
+
+  double m_integral;                            // the sum
+  double m_lumi_scale;                          // absolute scale 
+  double m_lumi_rel_error;                      // absolute scale error
 
   LHCb::LumiIntegral m_LumiSum;                 // overall sum of FSRs
 };

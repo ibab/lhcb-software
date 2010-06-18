@@ -10,8 +10,6 @@ from LHCbKernel.Configuration import *
 
 from Configurables import GaudiSequencer as Sequence
 from Configurables import ( LHCbConfigurableUser, LHCbApp )
-
-from Configurables import LoKi__ODINFilter  as ODINFilter
 from Configurables import LumiIntegrateFSR, LumiReadBackFSR
 
 import GaudiKernel.ProcessJobOptions
@@ -38,17 +36,15 @@ class LumiIntegratorConf(LHCbConfigurableUser):
 
     # normalization of BeamCrossing
     seqMembers=[]
-    seqMembers.append( ODINFilter ( 'FilterBeamCrossing',
-                                    Code = ' ( ODIN_TRGTYP == LHCb.ODIN.LumiTrigger ) | ( ODIN_TRGTYP == LHCb.ODIN.PhysicsTrigger ) ' ) )
     seqMembers.append( LumiIntegrateFSR('IntegrateBeamCrossing',
                                         PrimaryBXType = 'BeamCrossing',
                                         AddBXTypes = ['NoBeam'],
                                         SubtractBXTypes = ['Beam1','Beam2'],
                                         IntegratorToolName = 'IntegrateBeamCrossing',
                                         ))
-    seqMembers.append( LumiReadBackFSR('IntegrateReadBackBeamCrossing',
-                                       IntegratorToolName = 'IntegrateBeamCrossing',
-                                       ))
+    #seqMembers.append( LumiReadBackFSR('IntegrateReadBackBeamCrossing',
+    #                                   IntegratorToolName = 'IntegrateBeamCrossing',
+    #                                   ))
     sequence.Members = seqMembers
     sequence.MeasureTime = True
     sequence.ModeOR = False

@@ -9,12 +9,14 @@
 #include "GaudiKernel/StatEntity.h"
 
 // event model
-#include "Event/RawEvent.h"
-#include "Event/ODIN.h"
 #include "Event/LumiFSR.h"
 #include "Event/TimeSpanFSR.h"
 #include "Event/LumiIntegral.h"
 #include "Event/LumiCounters.h"
+
+// CondDB
+#include "DetDesc/Condition.h"
+#include "GaudiKernel/IDetDataSvc.h"
 
 // local
 #include "LumiIntegrateFSR.h"
@@ -36,10 +38,11 @@ DECLARE_ALGORITHM_FACTORY( LumiIntegrateFSR );
 LumiIntegrateFSR::LumiIntegrateFSR( const std::string& name,
                                     ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator ),
-    m_incSvc(0)
+    m_condRelative(NULL),
+    m_condAbsolute(NULL),
+    m_condCoefficients(NULL),
+    m_condGUIDs(NULL)
 {
-  // need to get the registry
-  declareProperty( "RawEventLocation"   , m_rawEventLocation = LHCb::RawEventLocation::Default );
   // expect the data to be written at LHCb::LumiFSRLocation::Default
   declareProperty( "FileRecordLocation" , m_FileRecordName    = "/FileRecords"  );
   declareProperty( "FSRName"            , m_FSRName           = "/LumiFSR"     );
@@ -89,25 +92,30 @@ StatusCode LumiIntegrateFSR::initialize() {
 
   // get the File Records service
   m_fileRecordSvc = svc<IDataProviderSvc>("FileRecordDataSvc", true);
-  // incident service
-  m_incSvc = svc<IIncidentSvc> ( "IncidentSvc" , true );
   
-  //check extended file incidents are defined
-#ifdef GAUDI_FILE_INCIDENTS
-  m_incSvc->addListener( this, IncidentType::BeginInputFile);
-  if ( msgLevel(MSG::DEBUG) ) debug() << "registered with incSvc" << endmsg;
-  //if not then the counting is not reliable
-#else
-  warn() << "cannot register with incSvc" << endmsg;
-#endif //GAUDI_FILE_INCIDENTS
-
-  // counting 
-  m_current_fname = "";
-  m_count_events = 0;
-  m_events_in_file = 0;
-
   // prepare integrator tool
   m_integratorTool = tool<ILumiIntegrator>( "LumiIntegrator" , m_ToolName );
+
+  // initialize calibration factors
+  m_statusScale = 1.0;
+  m_calibScale = 0;
+  m_calibScaleError = 0;
+  for ( int key = 0; key <= LHCb::LumiCounters::Random; key++ ) {
+    std::string counterName = LHCb::LumiCounters::counterKeyToString( key );
+    m_calibRelative.push_back(0);
+    m_calibCoefficients.push_back(0);
+  }
+  m_calibRevolutionFrequency = 1.;
+  m_calibCollidingBunches = 1;
+  m_calibRandomFrequencyBB = 1.;
+
+
+  // get the detectorDataSvc
+  m_dds = detSvc();
+  if (m_dds == NULL) {
+    m_statusScale = 0;        // invalid luminosity
+    return StatusCode::SUCCESS;
+  }
 
   return StatusCode::SUCCESS;
 }
@@ -118,7 +126,6 @@ StatusCode LumiIntegrateFSR::initialize() {
 StatusCode LumiIntegrateFSR::execute() {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
-  m_count_events++;
   // use tool to count events for this file
   m_integratorTool->countEvents( );
 
@@ -134,43 +141,30 @@ StatusCode LumiIntegrateFSR::execute() {
 StatusCode LumiIntegrateFSR::finalize() {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
-
-  // look at LumiAnalyser for examples
-  info() << "number of files seen: " << m_count_files << endmsg;
+  info() << "========== Integrating luminosity normalization: START ==========" << endmsg;
 
   // use tool to count events for this file
-  info() << "number of events seen: " << m_integratorTool->events( ) << endmsg;
+  debug() << "number of events seen: " << m_integratorTool->events( ) << endmsg;
 
   // integrate all FSRs in one go
-  info() << "integrating normalization: " << endmsg;
   add_file();
 
   // use tool to get summary for this file
-  info() << "integrated normalization: " << m_integratorTool->integral( ) << endmsg;
+  debug() << "integrated normalization: " << m_integratorTool->integral( ) << endmsg;
 
-  // declare statEntities for xml output
+  // declare statEntities for xml output and print list of counters
   add_to_xml();
 
-  return GaudiAlgorithm::finalize();  // must be called after all other actions
-}
+  // final results
+  info() << "Integrated luminosity: " 
+	 << m_integratorTool->lumiValue() << " +/- "
+	 << m_integratorTool->lumiError() << " [pb-1]" << endmsg;
 
-// ==========================================================================
-// IIncindentListener interface
-// ==========================================================================
-void LumiIntegrateFSR::handle( const Incident& incident )
-{
-  //check extended file incidents are defined
-#ifdef GAUDI_FILE_INCIDENTS
-  if(incident.type()==IncidentType::BeginInputFile)
-  {
-    m_current_fname = incident.source();
-    if ( msgLevel(MSG::DEBUG) ) debug() << "==>from handle " << m_current_fname << endmsg;
-    m_count_files++;
-    m_events_in_file = 0;
-
+  if ( m_integratorTool->duplicates().size() > 0 ) {
+    warning() << "Duplicate Files: " << m_integratorTool->duplicates() << endmsg;
   }
-#endif
-
+  info() << "========== Integrating luminosity normalization: END ==========" << endmsg;
+  return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
 
 
@@ -194,11 +188,141 @@ void LumiIntegrateFSR::add_to_xml() {
       }
     }
   }
+  // final results
+  double lumi = m_integratorTool->lumiValue();
+  double lumi_error = m_integratorTool->lumiError();
+
+  StatEntity statEntityLumi( 1, lumi, lumi_error, 0, 0 );
+  if ( m_counterSummarySvc != NULL ) {
+    m_counterSummarySvc->addCounter(name(), "Luminosity", statEntityLumi, 
+				    Gaudi::CounterSummary::SaveAlwaysStatEntity);
+  }
 }
 
+
 //=============================================================================
-void LumiIntegrateFSR::add_file() {
+// DB access
+//=============================================================================
+StatusCode LumiIntegrateFSR::registerDB() {
+  // register the DB conditions for the update maganer
+  debug() << "==> Register DB" << endmsg;
+
+  // register absolute calibration
+  try {
+    registerCondition("Conditions/Lumi/LHCb/AbsoluteCalibration",
+                      m_condAbsolute, &LumiIntegrateFSR::i_cacheAbsoluteData);
+  }
+  catch (GaudiException &er2){
+    fatal() << er2 << endmsg;
+    m_statusScale = 0;        // invalid luminosity
+    return StatusCode::SUCCESS;
+  }
+
+  // register relative calibration
+  try {
+    registerCondition("Conditions/Lumi/LHCb/RelativeCalibration",
+                      m_condRelative, &LumiIntegrateFSR::i_cacheRelativeData);
+  }
+  catch (GaudiException &er1){
+    fatal() << er1 << endmsg;
+    m_statusScale = 0;        // invalid luminosity
+    return StatusCode::SUCCESS;
+  }
+
+  // register usage coefficients
+  try {
+    registerCondition("Conditions/Lumi/LHCb/Coefficients",
+                      m_condCoefficients, &LumiIntegrateFSR::i_cacheCoefficientData);
+  }
+  catch (GaudiException &er3){
+    fatal() << er3 << endmsg;
+    m_statusScale = 0;        // invalid luminosity
+    return StatusCode::SUCCESS;
+  }
+
+  // register sampling frequencies of bunches
+  try {
+    registerCondition("Conditions/Lumi/LHCb/Sampling",
+                      m_condSampling, &LumiIntegrateFSR::i_cacheSamplingData);
+  }
+  catch (GaudiException &er3){
+    fatal() << er3 << endmsg;
+    m_statusScale = 0;        // invalid luminosity
+    return StatusCode::SUCCESS;
+  }
+  return StatusCode::SUCCESS;
+}
+
+//=========================================================================
+//  Extract data from relativeCalibration
+//=========================================================================
+StatusCode LumiIntegrateFSR::i_cacheRelativeData() {
+  //m_relativeValue = m_condRelative->param<double>("relativeValue");
+  debug() << "callback RelativeCalibration:" << endmsg;
+  std::vector<double> cal = m_condRelative->paramVect<double>("RelativeFactors");
+  if ( cal.size() == m_calibRelative.size() ) {
+    m_calibRelative = cal;
+    return StatusCode::SUCCESS;
+  }
+  fatal() << "inconsistent number of parameters in RelativeCalibration:" << cal.size() << endmsg;
+  m_statusScale = 0;        // invalid luminosity
+  return StatusCode::SUCCESS;
+
+}
+
+//=========================================================================
+//  Extract data from Coefficients
+//=========================================================================
+StatusCode LumiIntegrateFSR::i_cacheCoefficientData() {
+  debug() << "callback Coefficients:" << endmsg;
+  std::vector<double> cal = m_condCoefficients->paramVect<double>("Coefficients");
+  if ( cal.size() == m_calibCoefficients.size() ) {
+    m_calibCoefficients = cal;
+    return StatusCode::SUCCESS;
+  }
+  fatal() << "inconsistent number of parameters in Coefficients:" << cal.size() << endmsg;
+  m_statusScale = 0;        // invalid luminosity
+  return StatusCode::SUCCESS;
+
+}
+
+//=========================================================================
+//  Extract data from AbsoluteCalibration
+//=========================================================================
+StatusCode LumiIntegrateFSR::i_cacheAbsoluteData() {
+  debug() << "callback AbsoluteCalibration:" << endmsg;
+  m_calibScale = m_condAbsolute->param<double>("Scale");
+  m_calibScaleError = m_condAbsolute->param<double>("RelativeError");
+  return StatusCode::SUCCESS;
+}
+
+
+//=========================================================================
+//  Extract data from AbsoluteCalibration
+//=========================================================================
+StatusCode LumiIntegrateFSR::i_cacheSamplingData() {
+  debug() << "callback Sampling:" << endmsg;
+  m_calibRevolutionFrequency = m_condSampling->param<double>("RevolutionFrequency");
+  m_calibRandomFrequencyBB = m_condSampling->param<double>("RandomFrequencyBB");
+  m_calibCollidingBunches = m_condSampling->param<int>("CollidingBunches");
+
+  return StatusCode::SUCCESS;
+}
+
+
+//=========================================================================
+//  add the FSR data
+//=============================================================================
+StatusCode LumiIntegrateFSR::add_file() {
   // add the FSRs of all input files at the same time
+
+
+  // register conditions for database acces
+  StatusCode sc0 = registerDB(); // must be executed first
+  if ( sc0.isFailure() ) return sc0;  // error printed already
+  
+  double rel_scale = 1.0;
+  long n_runs = 0;
 
   // make an inventory of the FileRecord store
   std::string fileRecordRoot = m_FileRecordName; 
@@ -221,9 +345,39 @@ void LumiIntegrateFSR::add_file() {
       timeSpanRecordAddress.replace( timeSpanRecordAddress.find(m_PrimaryBXType), m_PrimaryBXType.size(), "" );
       timeSpanRecordAddress.replace( timeSpanRecordAddress.find(m_FSRName), m_FSRName.size(), m_TimeSpanFSRName );
       if ( msgLevel(MSG::VERBOSE) ) verbose() << "constructed time span address" << timeSpanRecordAddress << endmsg; 
+
+
+      // read TimeSpanFSR to prepare DB access 
+      ulonglong t0(0);
+      ulonglong t1(0);
+      if ( !exist<LHCb::TimeSpanFSRs>(m_fileRecordSvc, timeSpanRecordAddress) ) {
+        //Error("A timeSpan FSR was not found").ignore();
+        if ( msgLevel(MSG::ERROR) ) error() << timeSpanRecordAddress << " not found" << endmsg ;
+      } else {
+        if ( msgLevel(MSG::VERBOSE) ) verbose() << timeSpanRecordAddress << " found" << endmsg ;
+        LHCb::TimeSpanFSRs* timeSpanFSRs = get<LHCb::TimeSpanFSRs>(m_fileRecordSvc, timeSpanRecordAddress);
+        // look at all TimeSpanFSRs (normally only one)
+        LHCb::TimeSpanFSRs::iterator tsfsr;
+        for ( tsfsr = timeSpanFSRs->begin(); tsfsr != timeSpanFSRs->end(); tsfsr++ ) {
+          if ( msgLevel(MSG::DEBUG) ) debug() << timeSpanRecordAddress << " READ TimeSpanFSR: " << *(*tsfsr) << endmsg;
+          t0 = (*tsfsr)->earliest();
+          t1 = (*tsfsr)->latest();
+          if ( msgLevel(MSG::DEBUG) ) debug() << timeSpanRecordAddress << " interval: " << t0 << "-" << t1 << endmsg;
+        }
+
+        // the TimeSpanFSRs have now been read -  fake event loop to get update of calibration constants
+        m_dds->setEventTime(Gaudi::Time( (t1/2+t0/2)*1000 ));
+        debug() << " creating new event " << endmsg;
+        StatusCode sc = updMgrSvc()->newEvent();
+        if (sc.isFailure()) {
+	  m_statusScale = 0;        // invalid luminosity
+	  error() << "ERROR updating luminosity constants from DB " << endmsg;
+	}
+      }    
+
       // initialize with the primary BX
       LHCb::LumiIntegral* result = new LHCb::LumiIntegral();
-      add_fsr(result, primaryFileRecordAddress, 0, timeSpanRecordAddress);
+      add_fsr(result, primaryFileRecordAddress, 0);
       // get the background to be subtracted/added
       std::string fileRecordAddress("undefined");
       // get all FSR objects - this is anyway needed to instantiate them on the TDS
@@ -237,19 +391,59 @@ void LumiIntegrateFSR::add_file() {
           factor = 1.;
         if ( m_subtractBXTypes.end() != find( m_subtractBXTypes.begin(), m_subtractBXTypes.end(), (*bx) ) ) 
           factor = -1.;
-        if ( factor != 0) add_fsr(result, fileRecordAddress, factor, timeSpanRecordAddress);
+        if ( factor != 0) {
+	  StatusCode sc =  add_fsr(result, fileRecordAddress, factor);
+	  if (sc.isFailure()) {
+	    m_statusScale = 0;        // invalid luminosity
+	    error() << "ERROR summing bunch crossing types for luminosity " << endmsg;
+	  }
+	}
       }
-      
 
-      // use tool to integrate the background subtracted result for the whole job
-      if ( m_integratorTool->integrate( (*result) ) == StatusCode::FAILURE ) {
-      	Warning("fail to integrate fsr using tool").ignore(); 
+      // apply calibration
+      debug() << "Result for this file (before calibration): " << *result << endmsg;
+      result->scale(m_calibRelative);
+      verbose() << "Result for this file (after calibration): " << *result << endmsg;
+      // simple summing per counter
+      if ( m_integratorTool->integrate( *result ) == StatusCode::FAILURE ) {
+	m_statusScale = 0;        // invalid luminosity
+	error() << "ERROR summing result using tool " << endmsg;
       }
-      info() << "Result for this file: " << *result << endmsg;
+      // summing of integral
+      long old_n_runs = n_runs;
+      if ( result->runNumbers().size() ) {
+	n_runs = result->runNumbers()[0];
+      } else {
+	n_runs = 0;
+      }
+      double old_scale = rel_scale;
+      rel_scale = m_calibRevolutionFrequency * m_calibCollidingBunches / m_calibRandomFrequencyBB;
+      if ( old_scale != rel_scale || old_n_runs != n_runs ) {
+        info() << "run: " << result->runNumbers()
+               << " Revolution frequency " << m_calibRevolutionFrequency 
+               << " RandomFrequencyBB " << m_calibRandomFrequencyBB 
+	       << " CollidingBunches " << m_calibCollidingBunches 
+	       << endmsg;
+      }
+      if ( m_integratorTool->integrate( *result, m_calibCoefficients, rel_scale ) == StatusCode::FAILURE ) {
+	m_statusScale = 0;        // invalid luminosity
+	error() << "ERROR integrating luminosity result" << endmsg;
+      }
       delete result;
+
+      // set absolute scales for tool
+      double abs_scale = m_statusScale * m_calibScale;
+      m_integratorTool->setAbsolute(abs_scale, m_calibScaleError);
+      debug() << "Intermediate Integrated luminosity: " << m_integratorTool->lumiValue() << endmsg;
+
     }
   }
+  // set absolute scales for tool
+  double abs_scale = m_statusScale * m_calibScale;
+  m_integratorTool->setAbsolute(abs_scale, m_calibScaleError);
+  info() << "Luminosity scale used: " << m_calibScale << " relative uncertainty " << m_calibScaleError << endmsg;
   
+  ///////////////////  the following is not needed - but keep to see if we can use the FSR
   //touch all EventCountFSRs
   std::vector< std::string > evAddresses = navigate(fileRecordRoot, m_EventCountFSRName);
   for(std::vector< std::string >::iterator iAddr = evAddresses.begin() ; 
@@ -258,60 +452,25 @@ void LumiIntegrateFSR::add_file() {
   }  
   //in the future I'll need to calculate/check something here...
 
-  
-  //touch all TimeSpanFSRs (independently of the LumiFSRs)
-  std::vector< std::string > tsAddresses = navigate(fileRecordRoot, m_TimeSpanFSRName);
-  for(std::vector< std::string >::iterator iAddr = tsAddresses.begin() ; 
-  	  iAddr != tsAddresses.end() ; ++iAddr ){
-  	if ( msgLevel(MSG::VERBOSE) ) verbose() << "ts address: " << (*iAddr) << endmsg;
-  }  
+  return StatusCode::SUCCESS;
+
 }
 
 
 //=============================================================================
-void LumiIntegrateFSR::add_fsr(LHCb::LumiIntegral* result, 
+StatusCode LumiIntegrateFSR::add_fsr(LHCb::LumiIntegral* result, 
 			       std::string fileRecordAddress, 
-			       float factor,
-			       std::string timeSpanRecordAddress
-			       ) {
-  // add or subtract this crossing type
-  if ( msgLevel(MSG::DEBUG) ) debug() << "using the container: " << fileRecordAddress << endmsg;
-  if ( msgLevel(MSG::DEBUG) ) {
-    // check if FSR can be found as DataObject (debugging only)
-    DataObject* pObj=0;
-    StatusCode sc = m_fileRecordSvc->retrieveObject(fileRecordAddress, pObj);
-    if ( !sc.isSuccess() ) {
-      debug() << "retrieveObject did not get: " << fileRecordAddress << endmsg;
-    } else {
-      verbose() << "retrieveObject: " << fileRecordAddress << endmsg;
-    }
-  }
+			       float factor ) {
 
-  // read TimeSpanFSR to prepare DB access 
-  if ( !exist<LHCb::TimeSpanFSRs>(m_fileRecordSvc, timeSpanRecordAddress) ) {
-    Warning("A timeSpan FSR was not found").ignore();
-    if ( msgLevel(MSG::DEBUG) ) debug() << timeSpanRecordAddress << " not found" << endmsg ;
-  } else {
-    if ( msgLevel(MSG::VERBOSE) ) verbose() << timeSpanRecordAddress << " found" << endmsg ;
-    LHCb::TimeSpanFSRs* timeSpanFSRs = get<LHCb::TimeSpanFSRs>(m_fileRecordSvc, timeSpanRecordAddress);
-    // look at all TimeSpanFSRs (normally only one)
-    LHCb::TimeSpanFSRs::iterator tsfsr;
-    for ( tsfsr = timeSpanFSRs->begin(); tsfsr != timeSpanFSRs->end(); tsfsr++ ) {
-      if ( msgLevel(MSG::DEBUG) ) debug() << timeSpanRecordAddress << "READ TimeSpanFSR: " << *(*tsfsr) << endmsg;
-      ulonglong t0 = (*tsfsr)->earliest();
-      ulonglong t1 = (*tsfsr)->latest();
-      if ( msgLevel(MSG::DEBUG) ) debug() << timeSpanRecordAddress << "interval: " << t0 << "-" << t1 << endmsg;
-    }
-    // the TimeSpanFSRs have now been read - something sensible should be done to access DB now and apply calibration
-  }
 
   // read LumiFSR 
   if ( !exist<LHCb::LumiFSRs>(m_fileRecordSvc, fileRecordAddress) ) {
     Warning("A fileRecord FSR was not found").ignore();
     if ( msgLevel(MSG::DEBUG) ) debug() << fileRecordAddress << " not found" << endmsg ;
   } else {
-    if ( msgLevel(MSG::VERBOSE) ) verbose() << fileRecordAddress << " found" << endmsg ;
     LHCb::LumiFSRs* lumiFSRs = get<LHCb::LumiFSRs>(m_fileRecordSvc, fileRecordAddress);
+    if ( msgLevel(MSG::VERBOSE) ) verbose() << fileRecordAddress << " found" << endmsg ;
+    debug() << fileRecordAddress << " found" << endmsg ;
 
     // prepare an empty summary for this BXType
     LHCb::LumiFSR bxFSR;
@@ -352,6 +511,7 @@ void LumiIntegrateFSR::add_fsr(LHCb::LumiIntegral* result,
       if ( msgLevel(MSG::DEBUG) ) debug() << "addNormalized: " << *result << endmsg;
     }
   }
+  return StatusCode::SUCCESS;
 }
 
 

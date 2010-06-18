@@ -50,8 +50,8 @@ class LumiFsrReaderConf(LHCbConfigurableUser):
     create reader sequence
     '''
     # create ODIN by hand - just to get the events
-    odin =  createODIN ('createODIN')
-    sequence.Members+=[ odin ]
+    #odin =  createODIN ('createODIN')
+    #sequence.Members+=[ odin ]
 
     # dump FSR
     dump =  DumpFSR ('dumpFSR', AsciiFileName = self.getProp('asciiFile'),

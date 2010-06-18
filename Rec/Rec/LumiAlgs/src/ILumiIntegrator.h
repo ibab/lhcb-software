@@ -34,15 +34,33 @@ public:
 
   // Integrate Lumi FSR data
   virtual StatusCode integrate( LHCb::LumiFSR* fsr ) = 0;
-
+ 
   // Integrate Lumi FSR data
   virtual StatusCode integrate( LHCb::LumiIntegral& fsr ) = 0;
 
   // Integrate Lumi FSR data
   virtual StatusCode integrate( LHCb::LumiIntegral* fsr ) = 0;
+ 
+  // Integrate Lumi FSR data with mask sum one scalar
+  virtual StatusCode integrate( LHCb::LumiIntegral& fsr, std::vector<double> v , double f=1.0) = 0;
+ 
+  // Integrate Lumi FSR data with mask sum one scalar
+  virtual StatusCode integrate( LHCb::LumiIntegral* fsr, std::vector<double> v , double f=1.0) = 0;
+
+  // Set absolute scale
+  virtual StatusCode setAbsolute(double scale, double relerror) = 0;
+
+  // Get final result
+  virtual double lumiValue() = 0;
+
+  // Get error on result
+  virtual double lumiError() = 0;
 
   // Retrieve the integrated Lumi FSR data
   virtual const LHCb::LumiIntegral& integral( ) const = 0;
+
+  // Retrieve duplicates
+  virtual std::vector<std::string> duplicates( ) const = 0;
 
   // Count the number of events for a given file
   virtual void countEvents( ) = 0;

@@ -4,6 +4,14 @@
 ! Purpose     : Accounting of LumiSummaries (offline code)
 !-----------------------------------------------------------------------------
 
+! 2010-06-18 - Jaap Panman
+ - python/LumiAlgs/Configuration.py
+  . only run EventAccount on DST type data.  Remove unneccessary algorithms.
+ - python/LumiIntegratorConf.py 
+  . remove Remove unneccessary algorithms, just run integration.
+ - requirements
+  . add DetDesc to access database
+
 ! 2010-06-07 - Yasmine Amhis 
  - Add new algorithm : GetLumiIntegratedLuminosity.cpp/h 	
    . For the time being the value of the returned integrated luminosity is -16. 

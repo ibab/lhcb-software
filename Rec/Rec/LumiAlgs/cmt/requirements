@@ -17,6 +17,7 @@ use LumiEvent       v* Event
 use DAQEvent        v* Event
 use EventBase       v* Event
 use LHCbKernel      v* Kernel
+use DetDesc         v* Det
 use GaudiAlg        v*
 use GaudiConf       v*
 use GaudiPoolDb     v*
