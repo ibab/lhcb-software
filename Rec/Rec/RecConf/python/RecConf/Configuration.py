@@ -83,11 +83,6 @@ class RecSysConf(LHCbConfigurableUser):
                 if "2009" == self.getProp("DataType"):
                     from PatPV import PVConf 
                     PVConf.VLoosePV().configureAlg() 
-                    #importOptions("$PATPVROOT/options/PVVeryLoose.py")
-                else:
-                    from PatPV import PVConf 
-                    PVConf.LoosePV().configureAlg() 
-                    #importOptions("$PATPVROOT/options/PVLoose.py")
             GaudiSequencer("RecoVertexSeq").Members += [ pvAlg ];
             if self.getProp( "OutputType" ).upper() == "RDST":
                 # Velo tracks not copied to Rec/Track/Best for RDST 
