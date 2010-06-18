@@ -4,6 +4,7 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+!===================== LHCbKernel v12r1 2010-06-18 ========================
 ! 2010-06-15 - Manuel Tobias Schiller
  - fix HitPattern: IT A/C side and Top/Bottom fields are swapped in
    initialization
