@@ -5,7 +5,7 @@
 # Maintainer : Olivier Deschamps odescham@in2p3.fr
 # =============================================================================
 package             CaloUtils
-version             v8r12p1
+version             v8r13
 
 # ================= structure =================================================
 branches            cmt doc src python CaloUtils 
