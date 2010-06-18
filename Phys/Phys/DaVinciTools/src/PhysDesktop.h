@@ -1,4 +1,4 @@
-// $Id: PhysDesktop.h,v 1.53 2010-05-16 09:47:01 jpalac Exp $
+// $Id: PhysDesktop.h,v 1.54 2010-06-18 09:36:35 jpalac Exp $
 #ifndef PHYSDESKTOP_H 
 #define PHYSDESKTOP_H 1
 
@@ -257,12 +257,6 @@ private: // data
   std::vector<std::string> m_inputLocations;
   /// TES pathname for Output Particles & Vertices
   std::string m_outputLocn;
-
-  /** 
-   *  TES location of default Particle->PV relaitons tables.
-   *  These are the InputLocations + "/Particle2VertexRelations"
-   */
-  std::vector<std::string> m_p2PVDefaultLocations;
 
   /// TES locations of user-defined Particle->PV relations
   std::vector<std::string> m_p2PVInputLocations;

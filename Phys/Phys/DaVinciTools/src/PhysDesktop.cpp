@@ -1,4 +1,4 @@
-// $Id: PhysDesktop.cpp,v 1.112 2010-06-13 17:44:32 ibelyaev Exp $
+// $Id: PhysDesktop.cpp,v 1.113 2010-06-18 09:36:35 jpalac Exp $
 // ============================================================================
 // GaudiKernel
 // ============================================================================
@@ -96,7 +96,6 @@ PhysDesktop::PhysDesktop( const std::string& type,
     , m_usingP2PV            (true)
     , m_inputLocations       ()
     , m_outputLocn           ("")
-    , m_p2PVDefaultLocations ()
     , m_p2PVInputLocations   ()
   //
     , m_parts     (   )
@@ -654,13 +653,9 @@ StatusCode PhysDesktop::getParticles(){
 //=============================================================================
 StatusCode PhysDesktop::getInputRelations(){
 
-  StatusCode sc = getInputRelations(m_p2PVDefaultLocations.begin(), 
-                                    m_p2PVDefaultLocations.end());
-  
-  sc = getInputRelations(m_p2PVInputLocations.begin(), 
+  return getInputRelations(m_p2PVInputLocations.begin(), 
                          m_p2PVInputLocations.end());
 
-  return sc;
 }
 //=============================================================================
 StatusCode PhysDesktop::getInputRelations(std::vector<std::string>::const_iterator begin,
@@ -777,11 +772,6 @@ StatusCode PhysDesktop::setInputLocations ( const std::vector<std::string>& dv_i
     if (msgLevel(MSG::DEBUG)) {
       debug() << "Particles and Vertices will be loaded from :- " << m_inputLocations << endreq ;
     }
-  }
-  // set PV relation locations
-  for ( std::vector<std::string>::iterator iloc = m_inputLocations.begin();
-        iloc != m_inputLocations.end(); ++iloc ) {
-    m_p2PVDefaultLocations.push_back((*iloc)+"/Particle2VertexRelations");
   }
 
   return StatusCode::SUCCESS ;
