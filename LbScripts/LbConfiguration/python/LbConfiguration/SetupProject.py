@@ -811,6 +811,9 @@ def FixProjectCase(project):
     If the project is not known, the name is returned unchanged.
     """
     proj = project.lower()
+    if proj == 'dirac':
+      proj = 'lhcbdirac'
+
     for p in project_names:
         if p.lower() == proj:
             return p
