@@ -1,3 +1,7 @@
+2010-06-18  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* python/LbRelease/LHCbDoc.py: Fixed a problem in the update of the common links.
+
 2010-06-16  Joel Closier <joel.closier@cern.ch>
 
     * scripts/lhcb-proxy-info: change Dirac by LHCbDirac

@@ -569,6 +569,9 @@ class Doc(object):
                 doxycfg["TAGFILES"].append(tagline)
         #doxycfg["TAGFILES"] = []
 
+        # Requested to run with doxygen 1.7.0
+        #doxycfg["DOT_NUM_THREADS"] = 1
+
         # write the output file
         confdir = os.path.join(self.path, "conf")
         if not os.path.isdir(confdir):
@@ -658,6 +661,7 @@ class Doc(object):
         try:
             self._generateDoxyFile()
             self._log.info("Running doxygen")
+            self._log.debug(_which("doxygen"))
             # @todo: build the documentation in a temporary directory
             # modify the doxygen file to use a temporary directory
             import getpass, tempfile
@@ -748,7 +752,10 @@ class Doc(object):
             doclink = os.path.join(doclinkdir, project, version)
             linkdest = os.path.join("..", "..", self.name, self._docSubdir, "html")
             if os.path.exists(doclink):
-                old = os.path.basename(os.readlink(doclink))
+                try:
+                    old = os.readlink(doclink).split(os.path.sep)[2]
+                except:
+                    old = None
                 if old < self.name:
                     self._log.info("Moving link %s from %s to %s", doclink, old, self.name)
                     os.remove(doclink)
@@ -934,6 +941,10 @@ def findUnusedDocs(root = None):
     Find all doc directories that are not referenced from the common directory.
     """
     doclinkdir = os.path.join(Doc._root(root), Doc._docCollDir)
+    # If the doclinkdir doesn't exists, it's still to be created and we can ignore
+    # it.
+    if not os.path.isdir(doclinkdir):
+        return []
     referenced = set()
     # the structure of the common directory is:
     #   docs/<project>/<version>
