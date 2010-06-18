@@ -1,3 +1,7 @@
+2010-06-18  Joel Closier <joel.closier@cern.ch>
+
+    * python/SetupProject.py: if Dirac is asked, then return LHCbDirac
+
 2010-06-17  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* scripts/generateLogin: fixed stupid typo for the main wrapper on windows.
@@ -8,11 +12,11 @@
 
 2010-06-08  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* scripts/doxygen: New file. Wrapper script to call the version of doxygen specified 
+	* scripts/doxygen: New file. Wrapper script to call the version of doxygen specified
 	in the LbConfiguration.External module. The wrapper takes 2 options
 	  --lcgcmt-version : specifiy the interface version (ex 58c)
 	  --doxygen-version : override the default version
-	* scripts/getExtVersion: New file. Script to extract the external version from the 
+	* scripts/getExtVersion: New file. Script to extract the external version from the
 	LbConfiguration.External module
 	* python/LbConfiguration/External.py:
 	- added the getExternalVersion function.
