@@ -1,4 +1,4 @@
-// $Id: TESSelectionTisTos.cpp,v 1.3 2009-12-27 13:19:52 graven Exp $
+// $Id: TESSelectionTisTos.cpp,v 1.4 2010-06-18 05:29:09 tskwarni Exp $
 // Include files 
 #include <algorithm>
 #include <vector>
@@ -482,29 +482,32 @@ void TESSelectionTisTos::particleListTISTOS(const std::vector<LHCb::Particle*> &
           // add muon hits only if needed 
           if(  ( m_TOSFrac[kMuon] > 0.0 ) && (0!=onit)  ){
             if ( msgLevel(MSG::VERBOSE) ) verbose() << " particleListTISTOS fs trying for muons " << endmsg;
-            if( m_HLTmuonTracks==0 ){ 
-              if( exist<LHCb::Tracks>(m_HltMuonTracksLocation) ){
-                m_HLTmuonTracks = get<LHCb::Tracks>(m_HltMuonTracksLocation);
-              } else {
-                Warning(" No HLT muon tracks at " + m_HltMuonTracksLocation.value() 
-                        + " thus, muon hits will be missing on trigger particles. " 
-                        , StatusCode::SUCCESS, 10 ).setChecked();
-              }
-            }
-            if( m_HLTmuonTracks != 0 ){
-              const LHCb::MuonPID* muid = pp->muonPID();
-              if( muid!=0 ){
-                if ( msgLevel(MSG::VERBOSE) ) verbose() << " particleListTISTOS fs muid " << endmsg;
-                if( muid->IsMuon() ){
-                  if ( msgLevel(MSG::VERBOSE) ) verbose() << " particleListTISTOS fs onit->key() " << onit->key() << endmsg;
-                  const Track* mu= m_HLTmuonTracks->object(onit->key());
-                  if ( msgLevel(MSG::VERBOSE) ) verbose() << " particleListTISTOS fs mu " << endmsg;
-                  if( mu!=0 ){                                                                   
-                    if ( msgLevel(MSG::VERBOSE) ) verbose() << " particleListTISTOS fs muon hits " << endmsg;
-                    const std::vector<LHCbID>& ids = mu->lhcbIDs();
-                    for( std::vector<LHCbID>::const_iterator i=ids.begin(); i!=ids.end(); ++i){
-                      onlineT.addToLhcbIDs(*i);
+            const LHCb::MuonPID* muid = pp->muonPID();
+            if( muid!=0 ){
+              if ( msgLevel(MSG::VERBOSE) ) verbose() << " particleListTISTOS fs muid " << endmsg;
+              if( muid->IsMuon() ){
+                if ( msgLevel(MSG::VERBOSE) ) verbose() << " particleListTISTOS fs mu " << endmsg;
+                const LHCb::Track*  mu=muid->muonTrack();
+                if (!mu ){              
+                  if( m_HLTmuonTracks==0 ){ 
+                    if( exist<LHCb::Tracks>(m_HltMuonTracksLocation) ){
+                      m_HLTmuonTracks = get<LHCb::Tracks>(m_HltMuonTracksLocation);
+                    } else {
+                      Warning(" No HLT muon tracks at " + m_HltMuonTracksLocation.value() 
+                              + " thus, muon hits will be missing on trigger particles. " 
+                              , StatusCode::SUCCESS, 10 ).setChecked();
                     }
+                  }
+                  if ( msgLevel(MSG::VERBOSE) ) verbose() << " particleListTISTOS fs onit->key() " << onit->key() << endmsg;
+                  if( m_HLTmuonTracks != 0 ){
+                    mu= m_HLTmuonTracks->object(onit->key());
+                  }
+                }
+                if( mu!=0 ){                                                                   
+                  if ( msgLevel(MSG::VERBOSE) ) verbose() << " particleListTISTOS fs muon hits " << endmsg;
+                  const std::vector<LHCbID>& ids = mu->lhcbIDs();
+                  for( std::vector<LHCbID>::const_iterator i=ids.begin(); i!=ids.end(); ++i){
+                    onlineT.addToLhcbIDs(*i);
                   }
                 }
               }
@@ -764,33 +767,36 @@ void TESSelectionTisTos::addToOfflineInput( const LHCb::ProtoParticle & protoPar
     addToOfflineInput(*t,hitidlist);
     // add muon hits only if needed 
     if( m_TOSFrac[kMuon]>0.0  ){
-      if( m_muonTracks==0 ){ 
-        if( exist<LHCb::Tracks>(m_MuonTracksLocation) ){
-          m_muonTracks = get<LHCb::Tracks>(m_MuonTracksLocation);
-          m_muonsOff = (m_muonTracks==0);          
-        } else {
-          m_muonsOff = true;          
-          Warning(" No offline muon tracks at "+m_MuonTracksLocation.value()+
-                  " thus, muon hits will be ignored on trigger tracks. " , StatusCode::SUCCESS, 10 ).setChecked();
-        }
-      }
-      if( m_muonTracks != 0 ){
-       if ( msgLevel(MSG::VERBOSE) ) verbose() << " addToOfflineInput with ProtoParticle TRACK-MUON " << endmsg;
-        const LHCb::MuonPID* muid = protoParticle.muonPID();
-        if( muid!=0 ){
-          if( muid->IsMuon() ){
-            const Track* mu= m_muonTracks->object(t->key());
-            if( mu!=0 ){                                                                   
-              const std::vector<LHCbID>& ids = mu->lhcbIDs();
-              addToOfflineInput( ids, hitidlist);
+      const LHCb::MuonPID* muid = protoParticle.muonPID();
+      if( muid!=0 ){
+        if( muid->IsMuon() ){
+          const LHCb::Track*  mu=muid->muonTrack();
+          if (!mu ){              
+            if( m_muonTracks==0 ){ 
+              if( exist<LHCb::Tracks>(m_MuonTracksLocation) ){
+                m_muonTracks = get<LHCb::Tracks>(m_MuonTracksLocation);
+                m_muonsOff = (m_muonTracks==0);          
+              } else {
+                m_muonsOff = true;          
+                Warning(" No offline muon tracks at "+m_MuonTracksLocation.value()+
+                        " thus, muon hits will be ignored on trigger tracks. " , StatusCode::SUCCESS, 10 ).setChecked();
+              }
             }
+            if( m_muonTracks != 0 ){
+              mu= m_muonTracks->object(t->key());
+            }
+          }
+          if( mu!=0 ){                                                                   
+            if ( msgLevel(MSG::VERBOSE) ) verbose() << " addToOfflineInput with ProtoParticle TRACK-MUON " << endmsg;
+            const std::vector<LHCbID>& ids = mu->lhcbIDs();
+            addToOfflineInput( ids, hitidlist);
           }
         }
       }
     }
-  }
-
+ }
 }
+
 
 
 

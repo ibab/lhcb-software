@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.56 2010-06-10 13:51:10 gligorov Exp $
+! $Id: release.notes,v 1.57 2010-06-18 05:29:09 tskwarni Exp $
 ! Package     : TisTosTobbing
 ! Responsible : Tomasz Skwarnicki
 ! Purpose     : TisTosTobbing of the trigger 
 ! ====================================================================
+
+! 2010-06-18 - Tomasz Skwarnicki
+ - Fix TriggerSelectionTisTosInHlt access to selections via use of Hlt::Inspector
+ - All SelectionTisTos: add use of MuonPID::muonTrack(). Keep keyed muon search as backup.
 
 ! 2010-06-10 - V. Gligorov
  - Remove obsolete default HLT track locations. 

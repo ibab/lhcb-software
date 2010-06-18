@@ -1,4 +1,4 @@
-// $Id: TriggerSelectionTisTos.cpp,v 1.19 2009-11-05 15:06:36 pkoppenb Exp $
+// $Id: TriggerSelectionTisTos.cpp,v 1.20 2010-06-18 05:29:09 tskwarni Exp $
 // Include files 
 #include <algorithm>
 
@@ -527,35 +527,35 @@ void TriggerSelectionTisTos::addToOfflineInput( const LHCb::ProtoParticle & prot
     addToOfflineInput(*t,hitidlist);
     // add muon hits only if needed 
     if( m_TOSFrac[kMuon]>0.0  ){
-      if( m_muonTracks==0 ){ 
-        if( exist<LHCb::Tracks>(m_MuonTracksLocation) ){
-          m_muonTracks = get<LHCb::Tracks>(m_MuonTracksLocation);
-          m_muonsOff = (m_muonTracks==0);          
-        } else {
-          m_muonsOff = true;          
-          Warning(" No offline muon tracks at "+m_MuonTracksLocation.value()+
-                  " thus, muon hits will be ignored on trigger tracks. " , StatusCode::SUCCESS, 10 ).setChecked();
-        }
-      }
-      if( m_muonTracks != 0 ){
        if ( msgLevel(MSG::VERBOSE) ) verbose() << " addToOfflineInput with ProtoParticle TRACK-MUON " << endmsg;
         const LHCb::MuonPID* muid = protoParticle.muonPID();
         if( muid!=0 ){
           if( muid->IsMuon() ){
-            const Track* mu= m_muonTracks->object(t->key());
+            const LHCb::Track*  mu=muid->muonTrack();
+            if (!mu ){              
+              if( m_muonTracks==0 ){ 
+                if( exist<LHCb::Tracks>(m_MuonTracksLocation) ){
+                  m_muonTracks = get<LHCb::Tracks>(m_MuonTracksLocation);
+                  m_muonsOff = (m_muonTracks==0);          
+                } else {
+                  m_muonsOff = true;          
+                  Warning(" No offline muon tracks at "+m_MuonTracksLocation.value()+
+                  " thus, muon hits will be ignored on trigger tracks. " , StatusCode::SUCCESS, 10 ).setChecked();
+                }
+              }
+              if( m_muonTracks != 0 ){
+                mu= m_muonTracks->object(t->key());
+              }
+            }
             if( mu!=0 ){                                                                   
               const std::vector<LHCbID>& ids = mu->lhcbIDs();
               addToOfflineInput( ids, hitidlist);
             }
           }
         }
-      }
     }
-  }
-
+ }
 }
-
-
 
 //    Particle input; for composite particles loop over daughters will be executed ------------------------------
 void TriggerSelectionTisTos::addToOfflineInput( const LHCb::Particle & particle, ClassifiedHits hitidlist[]  )
