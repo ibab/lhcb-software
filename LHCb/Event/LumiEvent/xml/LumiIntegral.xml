@@ -32,7 +32,14 @@
       <import name="Event/LumiFSR" />
 
 
-
+<!--
+      <typedef
+        type="std::vector&lt;  double &gt;"
+        def="DoubleVector"
+        desc="for method"
+        access="PUBLIC"
+	/>       
+-->
       <typedef
         type="std::pair&lt;  int, double &gt;"
         def="ValuePair"
@@ -250,6 +257,28 @@
 	<code>
 	  return m_extraInfo.erase( key ) ; 
 	</code>
+      </method>
+
+
+      <method
+        desc="scales the values for existing keys with a vector of double"
+        name="scale"
+        type="ExtraInfo"
+	>
+	<arg name="scalefactor" type="std::vector &lt; double &gt; " const="TRUE"/>
+	<!-- <arg name="scalefactor" type="DoubleVector" const="TRUE"/> -->
+        <code> 
+   // scale existing info values
+   ExtraInfo::const_iterator infoIter;
+   for (infoIter = m_extraInfo.begin(); infoIter != m_extraInfo.end(); infoIter++) {
+      int key = (*infoIter).first;
+      ValuePair value = (*infoIter).second;
+      eraseInfo(key);
+      double scale = scalefactor[key];
+      addInfo( key, value.first, value.second * scale );
+   }
+   return m_extraInfo;
+        </code>
       </method>
 
       <method

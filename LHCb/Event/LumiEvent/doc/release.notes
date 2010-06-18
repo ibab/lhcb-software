@@ -4,6 +4,10 @@
 ! Purpose     : EventModel for Lumi data
 !-----------------------------------------------------------------------------
 
+! 2010-06-18 - Jaap Panman
+ - xml/LumiIntegral 
+  . update to allow for multiplication with a vector of calibration constants
+
 !======================== LumiEvent v2r6 2010-04-18 ==========================
 ! 2010-04-12 - Jaap Panman
  - Enable an additional lumi bookkeeping method for random lumi events
