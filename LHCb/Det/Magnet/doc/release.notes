@@ -4,6 +4,7 @@
 ! Purpose     : Provides magnetic field map and Bdl tools
 !-----------------------------------------------------------------------------
 
+!====================== Magnet v7r1 2010-06-18 ===============================
 ! 2010-05-26 - Marco Cattaneo
  - Fix bug that was causing MagneticFieldSvc().ForceToUseDownMap and
    MagneticFieldSvc().ForceToUseUpMap options to be ignored
