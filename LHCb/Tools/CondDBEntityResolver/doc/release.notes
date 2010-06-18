@@ -5,6 +5,7 @@
 !               CondDB URLs into XML documents
 !-----------------------------------------------------------------------------
 
+!================ Tools/CondDBEntityResolver v5r2 2010-06-18 ===============
 ! 2010-06-10 - Marco Clemencic
  - Fixed bug #68612: CondDBEntityResolver produces useless INFO printout
    Changed the level of the messages to DEBUG.
