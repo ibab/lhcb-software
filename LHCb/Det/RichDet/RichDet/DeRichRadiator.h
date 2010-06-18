@@ -15,6 +15,9 @@
 #ifndef RICHDET_DERICHRADIATOR_H
 #define RICHDET_DERICHRADIATOR_H 1
 
+// STL
+#include <vector>
+
 // Math typedefs
 #include "GaudiKernel/Point3DTypes.h"
 #include "GaudiKernel/GaudiException.h"
@@ -49,6 +52,11 @@
 
 class DeRichRadiator: public DeRichBase
 {
+
+public:
+
+  /// Type for a vector of pointers to DeRichRadiators
+  typedef std::vector<DeRichRadiator*> Vector;
 
 public:
 

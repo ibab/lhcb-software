@@ -4,6 +4,10 @@
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
 
+! 2010-06-18 - Chris Jones
+ - Add a public method to DeRichMultiSolidRadiator to allow access to the list
+   of single solid radiators making up the multisolid radiator.
+
 ! 2010-06-17 - Chris Jones
  - Add a public method to DeRichAerogelRadiator to allow access to the tile ID
    number.

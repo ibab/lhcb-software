@@ -75,7 +75,6 @@ StatusCode DeRichMultiSolidRadiator::addVolumes (const ILVolume* lv,
                                                  const std::string volName,
                                                  const Gaudi::Transform3D& toLowerLevel)
 {
-
   // while string volumes also store the total transformation to
   // get to/from the low level volume to the top level volume
   ILVolume::PVolumes::const_iterator pviter;
@@ -108,8 +107,9 @@ StatusCode DeRichMultiSolidRadiator::addVolumes (const ILVolume* lv,
                 << (*pviter)->name() << endmsg;
         return StatusCode::FAILURE;
       }
-      debug() << "Loading " << radLoc << endmsg;
+      debug() << "Loading " << radLoc << " " << tileNumStr << endmsg;
       m_radiators.push_back( deRad );
+
     }
   }
 
@@ -251,7 +251,7 @@ DeRichMultiSolidRadiator::intersectionPoints( const Gaudi::XYZPoint& pGlobal,
 unsigned int DeRichMultiSolidRadiator::
 intersections( const Gaudi::XYZPoint& pGlobal,
                const Gaudi::XYZVector& vGlobal,
-               std::vector<RichRadIntersection>& intersections ) const
+               RichRadIntersection::Vector& intersections ) const
 {
   const Gaudi::XYZPoint pLocal = geometry()->toLocal(pGlobal);
   const Gaudi::XYZVector vLocal( geometry()->toLocalMatrix()*vGlobal );
@@ -294,7 +294,7 @@ DeRichMultiSolidRadiator::refractiveIndex( const double energy, bool hlt ) const
 {
   double refIn(0);
   // Loop over all tiles and form an average
-  for ( std::vector<DeRichRadiator*>::const_iterator iRad = m_radiators.begin();
+  for ( DeRichRadiator::Vector::const_iterator iRad = m_radiators.begin();
         iRad != m_radiators.end(); ++iRad )
   {
     // Should this be a weighted average of some form ?

@@ -69,36 +69,43 @@ public:
   virtual StatusCode initialize();
 
   // Finds the next intersection point with radiator.
-  StatusCode nextIntersectionPoint(const Gaudi::XYZPoint& pGlobal,
-                                   const Gaudi::XYZVector& vGlobal,
-                                   Gaudi::XYZPoint& returnPoint) const;
+  StatusCode nextIntersectionPoint( const Gaudi::XYZPoint& pGlobal,
+                                    const Gaudi::XYZVector& vGlobal,
+                                    Gaudi::XYZPoint& returnPoint ) const;
 
   // Finds the entry and exit points of the radiator after looking
   // at all the solids to find the first and last intersection point.
-  virtual StatusCode intersectionPoints(const Gaudi::XYZPoint& position,
-                                        const Gaudi::XYZVector& direction,
-                                        Gaudi::XYZPoint& entryPoint,
-                                        Gaudi::XYZPoint& exitPoint ) const;
+  virtual StatusCode intersectionPoints( const Gaudi::XYZPoint& position,
+                                         const Gaudi::XYZVector& direction,
+                                         Gaudi::XYZPoint& entryPoint,
+                                         Gaudi::XYZPoint& exitPoint ) const;
 
   // Finds the intersection points with radiator after looking at all the solids
-  virtual unsigned int intersectionPoints(const Gaudi::XYZPoint& pGlobal,
-                                          const Gaudi::XYZVector& vGlobal,
-                                          std::vector<Gaudi::XYZPoint>& points) const;
+  virtual unsigned int intersectionPoints( const Gaudi::XYZPoint& pGlobal,
+                                           const Gaudi::XYZVector& vGlobal,
+                                           std::vector<Gaudi::XYZPoint>& points ) const;
 
   // Finds the intersections (entry/exit) with radiator. For boolean solids there
   virtual unsigned int intersections( const Gaudi::XYZPoint& pGlobal,
                                       const Gaudi::XYZVector& vGlobal,
-                                      std::vector<RichRadIntersection>& intersections ) const;
+                                      RichRadIntersection::Vector& intersections ) const;
 
   // Returns the refractive index at the given photon energy for this radiator
   virtual double refractiveIndex( const double energy, bool hlt = false ) const;
 
+public:
+
+  /// Access to the list of single solid radiators
+  inline const DeRichRadiator::Vector& radiators() const { return m_radiators; }
+
 private:
 
+  /// Add radiator volumes
   StatusCode addVolumes(const ILVolume* lv,
                         const std::string volName,
                         const Gaudi::Transform3D& toUpperLevel);
 
+private:
 
   /// vector of solids
   typedef std::vector<const ISolid*> Solids;
@@ -107,13 +114,13 @@ private:
   /// vector of transformation matrices
   typedef std::vector<Gaudi::Transform3D> Transforms;
 
-  Solids m_solids;        ///< The solids that make up this radiator
-  PVolumes m_pVolumes;    ///< The physical volumes
+  Solids m_solids;         ///< The solids that make up this radiator
+  PVolumes m_pVolumes;     ///< The physical volumes
   Transforms m_toTopLevel; ///< Tranforms to top level of the detector element
   Transforms m_toLowLevel; ///< Tranforms to low (solid) level of the detector element
 
   /// The DeRichRadiators that make up this radiator
-  std::vector<DeRichRadiator*> m_radiators;
+  DeRichRadiator::Vector m_radiators;
 
 };
 
