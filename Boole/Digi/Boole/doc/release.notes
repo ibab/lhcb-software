@@ -9,6 +9,7 @@ Purpose: LHCb Digitization program
    . New ST cluster monitoring histograms (STMonitors)
    . Changed calculation of effect of Lorentz angle (STTools)
    . Reduced verbosity of CondDBEntityResolver (CondDBEntityResolver)
+   . New charge sharing tuning for ST (STDigiAlgorithms)
 
  - Changes to example options:
    . Access all castor files via xrootd protocol
