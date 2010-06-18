@@ -1,8 +1,17 @@
-!$Id: release.notes,v 1.360 2010-06-04 12:35:23 ibelyaev Exp $
+!$Id: release.notes,v 1.361 2010-06-18 09:41:52 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciKernel
 ! Responsible : J.P. Palacios
 !============================================================================
+
+! 2010-06-18 - Juan Palacios
+ - DVAlgorithm
+  . Add property IgnoreP2PVFromInputLocations, default false. If set to true, 
+    Particle->RecVertex relations tables from InputLocations will not be used.
+    All best PVs will be calculated from scratch. Useful if you want to be in
+    control, but could be CPU intensive.
+  . Now set all P->PV input locations of PhysDesktop.
+  . Improve doxygen.
 
 ! 2010-06-04 - Vanya Belyaev
 
