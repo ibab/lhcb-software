@@ -271,6 +271,9 @@ void MCSTDepositCreator::createDeposits(const MCHits* mcHitsCont,
             double weightedCharge = (1.-xTalkLeft -xTalkRight)*stripMap[iStrip]
               + xTalkRight*leftCharge + xTalkLeft*rightCharge ; 
 
+            // Do not store deposits which have too small charge
+            if( weightedCharge < 1e-3 ) continue;
+
             // Scaling for the number of electrons (JvT: do we need this?)
             const double scaling = m_applyScaling ?
               m_scaling * (1.0 + xTalkLeft + xTalkRight ) : 1.0;
