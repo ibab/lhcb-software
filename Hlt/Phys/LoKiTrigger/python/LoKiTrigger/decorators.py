@@ -11,6 +11,7 @@ _author_ = "Vanya BELYAEV ibelyaev@physics.syr.edu"
 # =============================================================================
 
 from   LoKiTrigger.functions   import *
+from   LoKiCore.functions      import equal_to
 
 _name = __name__ 
 # =============================================================================
@@ -205,6 +206,24 @@ def _decorate ( name = _name  ) :
 ## perform the decoration 
 _decorated = _decorate ()                         ## ATTENTION 
 # =============================================================================
+
+## @see LoKi::Cuts::TrDOWNSTREAM
+TrDOWNSTREAM  = equal_to ( TrTYPE , LHCb.Track.Downstream  )
+## @see LoKi::Cuts::TrLONG
+TrLONG        = equal_to ( TrTYPE , LHCb.Track.Long        ) 
+## @see LoKi::Cuts::TrMUON
+TrMUON        = equal_to ( TrTYPE , LHCb.Track.Muon        ) 
+## @see LoKi::Cuts::TrTTRACK
+TrTTRACK      = equal_to ( TrTYPE , LHCb.Track.Ttrack      ) 
+## @see LoKi::Cuts::TrUNKNOWN
+TrUNKNOWN     = equal_to ( TrTYPE , LHCb.Track.TypeUnknown ) 
+## @see LoKi::Cuts::TrUPSTREAM
+TrUPSTREAM    = equal_to ( TrTYPE , LHCb.Track.Upstream    ) 
+## @see LoKi::Cuts::TrVELO
+TrVELO        = equal_to ( TrTYPE , LHCb.Track.Velo        ) 
+## @see LoKi::Cuts::TrVELOR
+TrVELOR       = equal_to ( TrTYPE , LHCb.Track.VeloR       ) 
+
 
 # =============================================================================
 if '__main__' == __name__ :

@@ -2,19 +2,39 @@
 # =============================================================================
 ## @file
 #  The set of basic objects from LoKiTrigger library
-#  The file is a part of LoKi and Bender projects
+#
+#        This file is a part of LoKi project - 
+#    "C++ ToolKit  for Smart and Friendly Physics Analysis"
+#
+#  The package has been designed with the kind help from
+#  Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
+#  contributions and advices from G.Raven, J.van Tilburg, 
+#  A.Golutvin, P.Koppenburg have been used in the design.
+#
 #  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-#  @daet 2007-06-09
+#  @date 2007-06-09
 # =============================================================================
 """
-The set of basic objects from LoKiTrack library
+The set of basic objects from LoKiTrigger library
+
+
+      This file is a part of LoKi project - 
+``C++ ToolKit  for Smart and Friendly Physics Analysis''
+
+The package has been designed with the kind help from
+Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
+contributions and advices from G.Raven, J.van Tilburg, 
+A.Golutvin, P.Koppenburg have been used in the design.
+
+
 """
 # =============================================================================
-__author__ = "Vanya BELYAEV ibelyaev@physics.syr.edu" 
+__author__  = "Vanya BELYAEV ibelyaev@physics.syr.edu" 
+__date__    = "2007-06-09"
+__version__ = "CVS Tag: $Name:$, version $Revision: $ "
 # =============================================================================
 
 import LoKiCore.decorators as _LoKiCore 
-from   LoKiCore.functions import equal_to 
 
 ## needed since there is no autoloading of Tracking dictionaries:
 import sys,PyCintex
@@ -133,8 +153,6 @@ TrBACKWARD    = LoKi.Tracks.CheckFlag ( LHCb.Track.Backward )
 TrCHI2        = LoKi.Tracks.Chi2 () 
 ## @see LoKi::Cuts::TrCLONE
 TrCLONE       = LoKi.Tracks.CheckFlag ( LHCb.Track.Clone ) 
-## @see LoKi::Cuts::TrDOWNSTREAM
-TrDOWNSTREAM  = equal_to ( TrTYPE , LHCb.Track.Downstream )
 ## @see LoKi::Cuts::TrDE
 TrDE          = LoKi.Tracks.DeltaE     () 
 ## @see LoKi::Cuts::TrFALSE
@@ -159,10 +177,6 @@ TrISFLAG      = LoKi.Tracks.CheckFlag
 TrKEY         = LoKi.Tracks.Key    () 
 ## @see LoKi::Cuts::TrL0CANDIDATE
 TrL0CANDIDATE = LoKi.Tracks.CheckFlag ( LHCb.Track.L0Candidate ) 
-## @see LoKi::Cuts::TrLONG
-TrLONG        = equal_to ( TrTYPE , LHCb.Track.Long ) 
-## @see LoKi::Cuts::TrMUON
-TrMUON        = equal_to ( TrTYPE , LHCb.Track.Muon ) 
 ## @see LoKi::Cuts::TrNONE
 TrNONE        = LoKi.Constant( _T , bool ) ( False )
 ## @see LoKi::Cuts::TrONE
@@ -185,18 +199,8 @@ TrSELECTOR   = LoKi.Tracks.Selector
 TrSINFO       = LoKi.Tracks.SmartInfo
 ## @see LoKi::Cuts::TrTRUE
 TrTRUE        = LoKi.Constant( _T , bool ) ( True  )
-## @see LoKi::Cuts::TrTTRACK
-TrTTRACK      = equal_to ( TrTYPE , LHCb.Track.Ttrack ) 
-## @see LoKi::Cuts::TrUNKNOWN
-TrUNKNOWN     = equal_to ( TrTYPE , LHCb.Track.TypeUnknown ) 
-## @see LoKi::Cuts::TrUPSTREAM
-TrUPSTREAM    = equal_to ( TrTYPE , LHCb.Track.Upstream ) 
 ## @see LoKi::Cuts::TrUSED
 TrUSED        = LoKi.Tracks.CheckFlag ( LHCb.Track.Used )
-## @see LoKi::Cuts::TrVELO
-TrVELO        = equal_to ( TrTYPE , LHCb.Track.Velo ) 
-## @see LoKi::Cuts::TrVELOR
-TrVELOR       = equal_to ( TrTYPE , LHCb.Track.VeloR ) 
 ## @see LoKi::Cuts::TrZERO
 TrZERO        = LoKi.Constant( _T , 'double' ) ( 0.0 )
 
@@ -419,7 +423,7 @@ def bindAbsMin ( a , b , *c ) :
     >>> value = pt ( track )                ## use it !
 
     
-    Essenntially the following expression are equivalent :
+    Essentially the following expression are equivalent :
 
     >>> fun = binAbsMin (       f   , a , ... )
     >>> fun = bindMin   ( abs ( f ) , a , ... )
@@ -517,8 +521,15 @@ bindAbsMax . __doc__ += "\n\n" + LoKi.Dicts.HltBind.bindAbsMax . __doc__
 
 import LoKiTrigger.Service
 
+# =============================================================================
 if '__main__' == __name__ :
-    for i in dir() : print i 
+    print 80*'*'
+    print __doc__
+    print ' Author  : ' , __author__
+    print ' Version : ' , __version__
+    print ' Date    : ' , __date__    
+    print 80*'*'
+
 
 # =============================================================================
 # The END 

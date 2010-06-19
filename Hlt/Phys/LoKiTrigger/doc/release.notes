@@ -5,6 +5,15 @@
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
 
+! 2010-06-19 - Vanya Belyaev
+
+
+ - LoKiTrigger/decorators.py
+   LoKiTrigger/functions.py
+  
+     move all "equal_to"-functors form functions to decorators 
+ 
+
 ! 2010-06-06 - Vanya Belyaev
 
  - fix for new, enhanced streamers
