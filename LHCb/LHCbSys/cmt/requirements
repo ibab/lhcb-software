@@ -115,10 +115,10 @@ use SimComponents         v2r20p1 Sim     # Gloria Corti, Marco Cattaneo
 use CondDBEntityResolver  v5r2    Tools   # In SVN. Marco Clemencic
 use CondDBUI              v3r4    Tools   # In SVN. Marco Clemencic
 use XmlTools              v6r3p1  Tools   # In SVN. Marco Clemencic
-use TfKernel              v2r17   Tf      # Stephanie Hansmann-Menzemer
+use TfKernel              v2r18   Tf      # Stephanie Hansmann-Menzemer
 use TsaKernel             v3r6    Tf      # Matt Needham
-use TrackInterfaces       v4r12   Tr      # Matt Needham
-use TrackKernel           v1r3    Tr      # Wouter Hulsbergen
+use TrackInterfaces       v4r13   Tr      # Matt Needham
+use TrackKernel           v1r4    Tr      # Wouter Hulsbergen
 
 # Declare this as a container package
 apply_pattern container_package
