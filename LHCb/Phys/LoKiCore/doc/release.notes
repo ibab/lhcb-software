@@ -15,6 +15,7 @@
 ! 
 ! -----------------------------------------------------------------------------
 
+! =========================== LoKiCore v10r2 2010-06-19 =======================
 ! 2010-06-19 - Vanya Belyaev
 
  - Primitives:
@@ -22,7 +23,6 @@
     the bug has been incrodiced recently with 
     reshuffling of line sin Primitives 
 
-! =========================== LoKiCore v10r2 2010-06-18 =======================
 ! 2010-06-05 - Vanya Belyaev
 
  - add more operations with streamers :
