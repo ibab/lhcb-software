@@ -4,7 +4,7 @@
 #include <iomanip>
 #include <vector>
 #include "boost/assign/list_of.hpp"
-
+#include <boost/lexical_cast.hpp>
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
@@ -13,6 +13,7 @@
 
 // local
 #include "MuonPIDChecker.h"
+
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : MuonPIDChecker
@@ -96,6 +97,151 @@ StatusCode MuonPIDChecker::initialize() {
     m_ntotTr.push_back(0);
     if ( m_nMonitorCuts>j && msgLevel(MSG::DEBUG) ) debug() <<"initialize:: cut "<<i<<""<<m_monitCutValues[j]<<endmsg;
   }
+
+  //Book histograms according to m_HistosOutput
+
+    if (m_HistosOutput>0){
+      //fillMultiplicityPlots
+      book1D("hNIMLtracks","IsMuonLoose Track multiplicity", -0.5, 11.5, 12);
+      book1D("hNIMtracks","IsMuonLoose Track multiplicity", -0.5, 11.5, 12);
+      book1D("hNIMLtracksRatio","#IsMuonLoose/#Tracks", 0., 1.1, 22);
+      //fillIMLPlots
+      book1D( "hIMLMomentum", "IsMuonLoose Candidate Momentum (GeV/c^2)", -25., 25., 100);
+      book1D( "hIMLPT", "IsMuonLoose Candidate p_T (GeV/c^2)", -5., 5., 100);
+      book1D( "hIMLRegion", "MS Region for IML  tracks",0.5,4.5,4); 
+    }
+    if (m_HistosOutput>1){
+      //fillMultiplicityPlots
+      book1D("hNtracks","Track multiplicity", -0.5, 60.5, 61);
+      book1D("hPSNtracks","PreSelection Track multiplicity", -0.5, 50.5, 51);
+      book1D("hNIMLPStracksRatio","#IsMuonLoose/#PSTracks", 0., 1.1, 22);
+      book1D("hNIMPStracksRatio","#IsMuon/#PSTracks", 0., 1.1, 22);
+      book1D("hNIMtracksRatio","#IsMuon/#Tracks", 0., 1.1, 22);
+      //fillPreSelPlots
+      book1D( "hPSRegion", "MS Region for PS  tracks",0.5,4.5,4); 
+      book1D( "hPSMomentum", "PreSelected Track Momentum (GeV/c^2)", -25., 25., 100);
+      book1D( "hPSPT", "PreSelected Track p_T (GeV/c^2)", -5., 5., 100);
+      book1D( "hIML_PS"  , " IsMuonLoose for PS Tracks ", -0.5 , 1.5, 2 );
+      book1D( "hIM_PS"  , " IsMuon for PS Tracks ", -0.5 , 1.5, 2 );
+      //fillIMLPlots
+      book1D( "hNShared_IML"  , " NShared for PS Tracks ", -0.5 , 5.5, 6 );
+      book1D( "hDist2_IML", "Muon Dist for IML candidates", 0., 600., 100); 
+      book1D( "hProbMu_IML", "Muon Probability for IML candidates", -0.1, 1.1, 60);
+      book1D( "hProbNMu_IML", "Non-Muon Probability for IML candidates", -0.1, 1.1, 60);
+      book1D( "hMuDLL_IML", "Muon DLL for IML candidates",m_DLLlower, m_DLLupper, m_DLLnbins); 
+      book1D( "hNIMLvsXM2", "MS X position at M2 for IML  tracks",-5500, 5500, 550);
+      book1D( "hNIMLvsYM2", "MS Y position at M2 for IML  tracks",-5500, 5500, 550);
+      //fillIMPlots
+      book1D( "hIMMomentum", "IsMuon candidate Momentum (GeV/c^2)", -25., 25., 100);
+      book1D( "hIMPT", "IsMuon candidate p_T (GeV/c^2)", -5., 5., 100);
+      book1D( "hIMRegion", "MS Region for IM tracks",0.5,4.5,4); 
+      book1D( "hNShared_IM"  , " NShared for PS Tracks ", -0.5 , 5.5, 6 );
+      book1D( "hDist2_IM", "Muon Dist for IM candidates", 0., 600., 100); 
+      book1D( "hProbMu_IM", "Muon Probability for IM candidates", -0.1, 1.1, 60);
+      book1D( "hProbNMu_IM", "Non-Muon Probability for IM candidates", -0.1, 1.1, 60);
+      book1D( "hMuDLL_IM", "Muon DLL for IM candidates",m_DLLlower, m_DLLupper, m_DLLnbins); 
+      book1D( "hNIMvsXM2", "MS X position at M2 for IM  tracks",-5500, 5500, 550);
+      book1D( "hNIMvsYM2", "MS Y position at M2 for IM  tracks",-5500, 5500, 550);
+      for (unsigned int i=1;i<m_NRegion+1;i++){
+	//fillIMLPlots
+        GaudiAlg::HistoID  hname;
+        std::string htitle;
+	hname = "hDist2_IML_R"+boost::lexical_cast<std::string>(i);
+        htitle= "Muon Dist for IML candidates at R"+boost::lexical_cast<std::string>(i);
+	book1D( hname, htitle, 0., 600., 100); 
+	hname = "hProbMu_IML_R"+boost::lexical_cast<std::string>(i);
+	htitle= "Muon Probability for IML candidates at R"+boost::lexical_cast<std::string>(i);
+	book1D( hname , htitle , -0.1, 1.1, 60);
+	//fillIMPlots
+	hname = "hDist2_IM_R"+boost::lexical_cast<std::string>(i);
+        htitle= "Muon Dist for IM candidates at R"+boost::lexical_cast<std::string>(i);
+	book1D( hname, htitle, 0., 600., 100); 
+	hname = "hProbMu_IM_R"+boost::lexical_cast<std::string>(i);
+	htitle= "Muon Probability for IM candidates at R"+boost::lexical_cast<std::string>(i);
+	book1D( hname , htitle , -0.1, 1.1, 60);
+      }
+    }
+    if (m_HistosOutput>2){
+      //fillPreSelPlots
+      bookProfile1D( "hEffvsP_IML", "IML Efficiency vs P (GeV/c^2)", -25., 25., 100);
+      bookProfile1D( "hEffvsPT_IML", "IML Efficiency vs PT (GeV/c^2)", -5., 5., 100);
+      bookProfile1D( "hEffvsP_IM", "IM Efficiency vs P (GeV/c^2)", -25., 25., 100);
+      bookProfile1D( "hEffvsPT_IM", "IM Efficiency vs PT (GeV/c^2)", -5., 5., 100);
+      //fillIMLPlots
+      book1D( "hIM_IML"  , " IsMuon for IML Tracks ", -0.5 , 1.5, 2 );
+      for (unsigned int i=1;i<m_NRegion+1;i++){
+	//fillIMLPlots
+	GaudiAlg::HistoID hname;
+	std::string htitle;
+	hname = "hDLL_IML_R"+boost::lexical_cast<std::string>(i);
+	htitle= "Muon DLL for IML candidates at R"+boost::lexical_cast<std::string>(i);
+	book1D( hname , htitle , m_DLLlower, m_DLLupper, m_DLLnbins);
+	//fillIMPlots
+	hname = "hDLL_IM_R"+boost::lexical_cast<std::string>(i);
+	htitle= "Muon DLL for IM candidates at R"+boost::lexical_cast<std::string>(i);
+	book1D( hname , htitle , m_DLLlower, m_DLLupper, m_DLLnbins);
+      }
+      //fillHitMultPlots
+      GaudiAlg::HistoID hname;
+      std::string htitle;
+      hname = "hAvTotNhitsFOIvsR";
+      htitle= "Mean Number of hits in FOI vs Region (M2)";
+      bookProfile1D( hname, htitle ,0.5,4.5,4); 
+      hname = "hAvTotNhitsFOIvsX";
+      htitle= "Mean Number of hits in FOI vs X (M2)";
+      bookProfile1D( hname, htitle, -5000, 5000, 200); 
+      hname = "hAvTotNhitsFOIvsY";
+      htitle= "Mean Number of hits in FOI vs Y (M2)";
+      bookProfile1D( hname, htitle, -5000, 5000, 200); 
+      for (unsigned int i=1;i<m_NStation+1;i++){
+	hname = "hAvNHhitsFOIvsR_M"+boost::lexical_cast<std::string>(i);
+	htitle= "Mean Number of hits in FOI for M"+boost::lexical_cast<std::string>(i)+" vs MS Region";
+	bookProfile1D( hname ,htitle , 0.5, 4.5, 4);
+      }
+    } 
+    if (m_HistosOutput>3){
+      //fillIMLPlots
+      book1D( "hChi2_IML", "Chi2 per nDOF for IML Candidates", 0., 200., 100);
+      book1D( "hQuality_IML", "Track Quality for IML Candidates", 0., 200., 100);
+      book1D( "hCLQuality_IML", "Track CL Quality for IML Candidates", -0.1, 1.1, 60);
+      book1D( "hCLArrival_IML", "Track CL Arrival for IML Candidates", -0.1, 1.1, 60);
+      bookProfile1D( "hProbMuvsP_IML", "Mean Muon Prob vs p for IML tracks", 0.,100.,100);
+      bookProfile1D( "hNProbMuvsP_IML", "Mean non-Muon Prob vs P for IML tracks ", 0.,100.,100);
+      //fillIMPlots
+      book1D( "hChi2_IM", "Chi2 per nDOF for IM Candidates", 0., 200., 100);
+      book1D( "hQuality_IM", "Track Quality for IM Candidates", 0., 200., 100);
+      book1D( "hCLQuality_IM", "Track CL Quality for IM Candidates", -0.1, 1.1, 60);
+      book1D( "hCLArrival_IM", "Track CL Arrival for IM Candidates", -0.1, 1.1, 60);
+      bookProfile1D( "hProbMuvsP_IM", "Mean Muon Prob vs p for IM tracks", 0.,100.,100);
+      bookProfile1D( "hNProbMuvsP_IM", "Mean non-Muon Prob vs P for IM tracks ", 0.,100.,100);
+      //fillHitMultPlots
+      for (unsigned int i=1;i<m_NStation+1;i++){
+	GaudiAlg::HistoID hname;
+	std::string htitle;
+	hname = "hNHhitsFOIvsR_M"+boost::lexical_cast<std::string>(i);
+	htitle= "Number of hits in FOI for M"+boost::lexical_cast<std::string>(i)+" vs MS Region";
+	book2D(hname, htitle, 0.5,4.5,4, -0.5,10.5,11); 
+
+	hname = "hNhitsFOIvsX_M"+boost::lexical_cast<std::string>(i);
+	htitle= "Number of hits in FOI for M"+boost::lexical_cast<std::string>(i)+" vs MS X Pos.";
+	book2D(hname, htitle, -0.5,10.5, 11, -5000, 5000, 200); 
+
+	hname = "hNhitsFOIvsY_M"+boost::lexical_cast<std::string>(i);
+	htitle= "Number of hits in FOI for M"+boost::lexical_cast<std::string>(i)+" vs MS Y Pos.";
+	book2D(hname, htitle, -0.5,10.5, 11,-5000, 5000, 200); 
+
+	hname = "hAvNhitsFOIvsX_M"+boost::lexical_cast<std::string>(i);
+	htitle= "Mean Number of hits in FOI for M"+boost::lexical_cast<std::string>(i)+" vs MS X Pos.";
+	bookProfile1D( hname, htitle, -5000, 5000, 200); 
+
+	hname = "hAvNhitsFOIvsY_M"+boost::lexical_cast<std::string>(i);
+	htitle= "Mean Number of hits in FOI for M"+boost::lexical_cast<std::string>(i)+" vs MS Y Pos.";
+	bookProfile1D( hname, htitle, -5000, 5000, 200); 
+
+      }
+
+    }
+
   if ( msgLevel(MSG::DEBUG) ) debug() <<"initialize:: TrackType "<< m_TrackType <<endmsg;
   if ( msgLevel(MSG::DEBUG) ) debug() <<"initialize:: HistosOutput "<<m_HistosOutput <<endmsg;
 
@@ -472,17 +618,17 @@ void MuonPIDChecker::fillMultiplicityPlots(int level) {
 void MuonPIDChecker::fillPreSelPlots(int level) {
   if (level>1){
     plot1D( m_TrRegionM2, "hPSRegion", "MS Region for PS  tracks",0.5,4.5,4); 
-    plot1D( m_Trp0, "hPSMomentum", "PreSelected Track Momentum (GeV/c^2)", -100., 100., 100);
-    plot1D( m_TrpT, "hPSPT", "PreSelected Track p_T (GeV/c^2)", -10., 10., 100);
+    plot1D( m_Trp0, "hPSMomentum", "PreSelected Track Momentum (GeV/c^2)", -25., 25., 100);
+    plot1D( m_TrpT, "hPSPT", "PreSelected Track p_T (GeV/c^2)", -5., 5., 100);
     plot1D( m_TrIsMuonLoose, "hIML_PS"  , " IsMuonLoose for PS Tracks ", -0.5 , 1.5, 2 );
     plot1D( m_TrIsMuon, "hIM_PS"  , " IsMuon for PS Tracks ", -0.5 , 1.5, 2 );
   }
   if (level>2){
     //Efficiencies
-    profile1D( m_Trp0, m_TrIsMuonLoose, "hEffvsP_IML", "IML Efficiency vs P (GeV/c^2)", -100., 100., 100);
-    profile1D( m_TrpT, m_TrIsMuonLoose, "hEffvsPT_IML", "IML Efficiency vs PT (GeV/c^2)", -10., 10., 100);
-    profile1D( m_Trp0, m_TrIsMuon, "hEffvsP_IM", "IM Efficiency vs P (GeV/c^2)", -100., 100., 100);
-    profile1D( m_TrpT, m_TrIsMuon, "hEffvsPT_IM", "IM Efficiency vs PT (GeV/c^2)", -10., 10., 100);
+    profile1D( m_Trp0, m_TrIsMuonLoose, "hEffvsP_IML", "IML Efficiency vs P (GeV/c^2)", -25., 25., 100);
+    profile1D( m_TrpT, m_TrIsMuonLoose, "hEffvsPT_IML", "IML Efficiency vs PT (GeV/c^2)", -5., 5., 100);
+    profile1D( m_Trp0, m_TrIsMuon, "hEffvsP_IM", "IM Efficiency vs P (GeV/c^2)", -25., 25., 100);
+    profile1D( m_TrpT, m_TrIsMuon, "hEffvsPT_IM", "IM Efficiency vs PT (GeV/c^2)", -5., 5., 100);
   }
   return; 
 }
@@ -501,49 +647,42 @@ void MuonPIDChecker::fillIMLPlots(int level) {
 	  debug() << "IMLPlots:: "<<i<<"-> m_ntotTr[i]"<<m_ntotTr[i]<< endmsg;
 
   if (level>0){
-    plot1D( m_Trp0, "hIMLMomentum", "IsMuonLoose Candidate Momentum (GeV/c^2)", -100., 100., 100);
-    plot1D( m_TrpT, "hIMLPT", "IsMuonLoose Candidate p_T (GeV/c^2)", -10., 10., 100);
+    plot1D( m_Trp0, "hIMLMomentum", "IsMuonLoose Candidate Momentum (GeV/c^2)", -25., 25., 100);
+    plot1D( m_TrpT, "hIMLPT", "IsMuonLoose Candidate p_T (GeV/c^2)", -5., 5., 100);
     plot1D( m_TrRegionM2, "hIMLRegion", "MS Region for IML  tracks",0.5,4.5,4); 
   }
-
   if (level>1){
     plot1D( m_TrNShared, "hNShared_IML"  , " NShared for PS Tracks ", -0.5 , 5.5, 6 );
     plot1D( m_TrDist2, "hDist2_IML", "Muon Dist for IML candidates", 0., 600., 100); 
-    char hname1[20];
-    char htitle1[48];
-    sprintf ( hname1, "hDist2_IML_R%d",m_TrRegionM2);
-    sprintf ( htitle1, "Muon Dist for IML candidates at R%d",m_TrRegionM2);
-    plot1D( m_TrDist2, hname1 , htitle1 , 0., 600., 100); 
-
-    char hname2[20];
-    char htitle2[48];
     plot1D( exp(m_TrMuonLhd), "hProbMu_IML", "Muon Probability for IML candidates", -0.1, 1.1, 60);
-    sprintf ( hname2, "hProbMu_IML_R%d",m_TrRegionM2);
-    sprintf ( htitle2, "Muon Probability for IML candidates at R%d",m_TrRegionM2);
-    plot1D( exp(m_TrMuonLhd), hname2 , htitle2 , -0.1, 1.1, 60);
-
     plot1D( exp(m_TrNMuonLhd), "hProbNMu_IML", "Non-Muon Probability for IML candidates", -0.1, 1.1, 60);
-    plot1D( m_TrMuonLhd-m_TrNMuonLhd, "hProbNMu_IML", "Muon DLL for IML candidates",m_DLLlower, m_DLLupper, m_DLLnbins); 
-
+    plot1D( m_TrMuonLhd-m_TrNMuonLhd, "hMuDLL_IML", "Muon DLL for IML candidates",m_DLLlower, m_DLLupper, m_DLLnbins); 
     plot1D( m_trackX[1], "hNIMLvsXM2", "MS X position at M2 for IML  tracks",-5500, 5500, 550);
     plot1D( m_trackY[1], "hNIMLvsYM2", "MS Y position at M2 for IML  tracks",-5500, 5500, 550);
 
+    GaudiAlg::HistoID hname1 = "hDist2_IML_R"+boost::lexical_cast<std::string>(m_TrRegionM2);
+    std::string htitle1= "Muon Dist for IML candidates at R"+boost::lexical_cast<std::string>(m_TrRegionM2);
+    plot1D( m_TrDist2, hname1 , htitle1 , 0., 600., 100); 
+
+    hname1 = "hProbMu_IML_R"+boost::lexical_cast<std::string>(m_TrRegionM2);
+    htitle1= "Muon Probability for IML candidates at R"+boost::lexical_cast<std::string>(m_TrRegionM2);
+    plot1D( exp(m_TrMuonLhd), hname1 , htitle1 , -0.1, 1.1, 60);
+
   }
   if (level>2){
+
     plot1D( m_TrIsMuon, "hIM_IML"  , " IsMuon for IML Tracks ", -0.5 , 1.5, 2 );
+    GaudiAlg::HistoID hname = "hDLL_IML_R"+boost::lexical_cast<std::string>(m_TrRegionM2);
+    std::string htitle = "Muon DLL for IML candidates at R"+boost::lexical_cast<std::string>(m_TrRegionM2);
+    plot1D( m_TrMuonLhd-m_TrNMuonLhd, hname , htitle , m_DLLlower, m_DLLupper, m_DLLnbins);
+  }
+  if (level>3){     
     plot1D(m_TrChi2, "hChi2_IML", "Chi2 per nDOF for IML Candidates", 0., 200., 100);
     plot1D(m_Trquality, "hQuality_IML", "Track Quality for IML Candidates", 0., 200., 100);
     plot1D(m_TrCLquality, "hCLQuality_IML", "Track CL Quality for IML Candidates", -0.1, 1.1, 60);
     plot1D(m_TrCLarrival, "hCLArrival_IML", "Track CL Arrival for IML Candidates", -0.1, 1.1, 60);
-  }     
-  if (level>3){
     profile1D( std::abs(m_Trp0), exp(m_TrMuonLhd), "hProbMuvsP_IML", "Mean Muon Prob vs p for IML tracks", 0.,100.,100);
     profile1D( std::abs(m_Trp0), exp(m_TrNMuonLhd), "hNProbMuvsP_IML", "Mean non-Muon Prob vs P for IML tracks ", 0.,100.,100);
-    char hname[20];
-    char htitle[48];
-    sprintf ( hname, "hDLL_IML_R%d",m_TrRegionM2);
-    sprintf ( htitle, "Muon DLL for IML candidates at R%d",m_TrRegionM2);
-    plot1D( m_TrMuonLhd-m_TrNMuonLhd, hname , htitle , m_DLLlower, m_DLLupper, m_DLLnbins);
   }
   return;
 }
@@ -557,40 +696,35 @@ void MuonPIDChecker::fillIMPlots(int level) {
   if ( msgLevel(MSG::DEBUG) ) for (int i=0;i<m_nMonitorCuts+2;i++)
 	  debug() << "IMPlots:: "<<i<<"-> m_ntotTr[i]"<<m_ntotTr[i]<< endmsg;
   if (level>1){
-    plot1D( m_Trp0, "hIMMomentum", "IsMuon candidate Momentum (GeV/c^2)", -100., 100., 100);
-    plot1D( m_TrpT, "hIMPT", "IsMuon candidate p_T (GeV/c^2)", -10., 10., 100);
+    plot1D( m_Trp0, "hIMMomentum", "IsMuon candidate Momentum (GeV/c^2)", -25., 25., 100);
+    plot1D( m_TrpT, "hIMPT", "IsMuon candidate p_T (GeV/c^2)", -5., 5., 100);
     plot1D( m_TrRegionM2, "hIMRegion", "MS Region for IM tracks",0.5,4.5,4); 
     plot1D( m_TrNShared, "hNShared_IM"  , " NShared for PS Tracks ", -0.5 , 5.5, 6 );
     plot1D( m_TrDist2, "hDist2_IM", "Muon Dist for IM candidates", 0., 600., 100); 
-    char hname[20];
-    char htitle[48];
-    sprintf ( hname, "hDist2_IM_R%d",m_TrRegionM2);
-    sprintf ( htitle, "Muon Dist for IM candidates at R%d",m_TrRegionM2);
+    GaudiAlg::HistoID hname = "hDist2_IM_R"+boost::lexical_cast<std::string>(m_TrRegionM2);
+    std::string htitle= "Muon Dist for IML candidates at R"+boost::lexical_cast<std::string>(m_TrRegionM2);
     plot1D( m_TrDist2, hname , htitle , 0., 600., 100); 
-
     plot1D( exp(m_TrMuonLhd), "hProbMu_IM", "Muon Probability for IM candidates", -0.1, 1.1, 60);
-    sprintf ( hname, "hProbMu_IM_R%d",m_TrRegionM2);
-    sprintf ( htitle, "Muon Probability for IM candidates at R%d",m_TrRegionM2);
+    hname = "hProbMu_IM_R"+boost::lexical_cast<std::string>(m_TrRegionM2);
+    htitle= "Muon Probability for IM candidates at R"+boost::lexical_cast<std::string>(m_TrRegionM2);
     plot1D( exp(m_TrMuonLhd), hname , htitle , -0.1, 1.1, 60);
     plot1D( exp(m_TrNMuonLhd), "hProbNMu_IM", "Non-Muon Probability for IM candidates", -0.1, 1.1, 60);
-    plot1D( m_TrMuonLhd-m_TrNMuonLhd, "hProbNMu_IM", "Muon DLL for IM candidates",m_DLLlower, m_DLLupper, m_DLLnbins); 
+    plot1D( m_TrMuonLhd-m_TrNMuonLhd, "hMuDLL_IM", "Muon DLL for IM candidates",m_DLLlower, m_DLLupper, m_DLLnbins); 
     plot1D( m_trackX[1], "hNIMvsXM2", "MS X position at M2 for IM  tracks",-5500, 5500, 550);
     plot1D( m_trackY[1], "hNIMvsYM2", "MS Y position at M2 for IM  tracks",-5500, 5500, 550);
   }
   if (level>2){
+    GaudiAlg::HistoID hname = "hDLL_IM_R"+boost::lexical_cast<std::string>(m_TrRegionM2);
+    std::string htitle = "Muon DLL for IM candidates at R"+boost::lexical_cast<std::string>(m_TrRegionM2);
+    plot1D( m_TrMuonLhd-m_TrNMuonLhd, hname , htitle , m_DLLlower, m_DLLupper, m_DLLnbins);
+  }
+  if (level>3){
     plot1D(m_TrChi2, "hChi2_IM", "Chi2 per nDOF for IM Candidates", 0., 200., 100);
     plot1D(m_Trquality, "hQuality_IM", "Track Quality for IM Candidates", 0., 200., 100);
     plot1D(m_TrCLquality, "hCLQuality_IM", "Track CL Quality for IM Candidates", -0.1, 1.1, 60);
     plot1D(m_TrCLarrival, "hCLArrival_IM", "Track CL Arrival for IM Candidates", -0.1, 1.1, 60);
-  }
-  if (level>3){
     profile1D( std::abs(m_Trp0), exp(m_TrMuonLhd), "hProbMuvsP_IM", "Mean Muon Prob vs p for IM tracks", 0.,100.,100);
     profile1D( std::abs(m_Trp0), exp(m_TrNMuonLhd), "hNProbMuvsP_IM", "Mean non-Muon Prob vs P for IM tracks ", 0.,100.,100);
-    char hname[20];
-    char htitle[48];
-    sprintf ( hname, "hDLL_IM_R%d",m_TrRegionM2);
-    sprintf ( htitle, "Muon DLL for IM candidates at R%d",m_TrRegionM2);
-    plot1D( m_TrMuonLhd-m_TrNMuonLhd, hname , htitle , m_DLLlower, m_DLLupper, m_DLLnbins);
   }
   return;
 }
@@ -598,8 +732,9 @@ void MuonPIDChecker::fillIMPlots(int level) {
 //  Fill Plots for Hit Multiplicities    
 //====================================================================
 void MuonPIDChecker::fillHitMultPlots(int level) {
-  char hname[20], htitle[48];
 
+  GaudiAlg::HistoID hname; 
+  std::string htitle;
   if (level>2){
     std::vector<unsigned int>  nhitsfoiS(m_NStation);    
     unsigned int NhitsFOI=0;
@@ -608,36 +743,43 @@ void MuonPIDChecker::fillHitMultPlots(int level) {
         nhitsfoiS[i]+=m_Trnhitsfoi[i*m_NRegion+j];
       }
       NhitsFOI += nhitsfoiS[i];
-      sprintf (hname, "hNHhitsFOIvsR_M%d",i+1); 
-      sprintf (htitle, "Number of hits in FOI for M%d vs MS Region",i+1); 
-      if (level>3)plot2D(m_TrRegionM2, nhitsfoiS[i], hname, htitle, 0.5,4.5,-0.5,10.5,4,11); 
-      sprintf (hname, "hAvNHhitsFOIvsR_M%d",i+1); 
-      sprintf (htitle, "Mean Number of hits in FOI for M%d vs MS Region",i+1); 
+
+      hname = "hAvNHhitsFOIvsR_M"+boost::lexical_cast<std::string>(i+1);
+      htitle= "Mean Number of hits in FOI for M"+boost::lexical_cast<std::string>(i+1)+" vs MS Region";
       profile1D( m_TrRegionM2, nhitsfoiS[i],hname ,htitle , 0.5, 4.5, 4);
 
       if (level > 3){
-        sprintf ( hname, "hNhitsFOIvsX_M%d", i+1);
-        sprintf (htitle, "Number of hits in FOI for M%d vs MS X pos.",i+1); 
-        plot2D(m_trackX[i], nhitsfoiS[i], hname, htitle, -0.5,10.5, -5000, 5000, 200); 
-        sprintf ( hname, "hNhitsFOIvsY_M%d", i+1);
-        sprintf (htitle, "Number of hits in FOI for M%d vs MS Y pos.",i+1); 
-        plot2D(m_trackY[i], nhitsfoiS[i], hname, htitle, -0.5,10.5, -5000, 5000, 200); 
-        sprintf ( hname, "hAvNhitsFOIvsX_M%d", i+1);
-        sprintf (htitle, "Mean Number of hits in FOI for M%d vs MS X pos.",i+1); 
+	hname = "hNHhitsFOIvsR_M"+boost::lexical_cast<std::string>(i+1);
+	htitle= "Number of hits in FOI for M"+boost::lexical_cast<std::string>(i+1)+" vs MS Region";
+        plot2D(m_TrRegionM2, nhitsfoiS[i], hname, htitle, 0.5,4.5,-0.5,10.5,4,11); 
+        
+	hname = "hNhitsFOIvsX_M"+boost::lexical_cast<std::string>(i+1);
+	htitle= "Number of hits in FOI for M"+boost::lexical_cast<std::string>(i+1)+" vs MS X Pos.";
+        plot2D(nhitsfoiS[i], m_trackX[i], hname, htitle, -0.5,10.5, -5000, 5000, 11, 200); 
+
+	hname = "hNhitsFOIvsY_M"+boost::lexical_cast<std::string>(i+1);
+	htitle= "Number of hits in FOI for M"+boost::lexical_cast<std::string>(i+1)+" vs MS Y Pos.";
+        plot2D(nhitsfoiS[i], m_trackY[i], hname, htitle, -0.5,10.5, -5000, 5000, 11, 200); 
+
+	hname = "hAvNhitsFOIvsX_M"+boost::lexical_cast<std::string>(i+1);
+	htitle= "Mean Number of hits in FOI for M"+boost::lexical_cast<std::string>(i+1)+" vs MS X Pos.";
         profile1D(m_trackX[i], nhitsfoiS[i], hname, htitle, -5000, 5000, 200); 
-        sprintf ( hname, "hAvNhitsFOIvsY_M%d", i+1);
-        sprintf (htitle, "Mean Number of hits in FOI for M%d vs MS Y pos.",i+1); 
+
+	hname = "hAvNhitsFOIvsY_M"+boost::lexical_cast<std::string>(i+1);
+	htitle= "Mean Number of hits in FOI for M"+boost::lexical_cast<std::string>(i+1)+" vs MS Y Pos.";
         profile1D(m_trackY[i], nhitsfoiS[i], hname, htitle, -5000, 5000, 200); 
       }
     }
-    sprintf ( hname, "hAvTotNhitsFOIvsR");
-    sprintf (htitle, "Average Number of hits in FOI vs Region"); 
+    hname = "hAvTotNhitsFOIvsR";
+    htitle= "Mean Number of hits in FOI vs Region (M2)";
     profile1D(m_TrRegionM2, NhitsFOI, hname, htitle ,0.5,4.5,4); 
-    sprintf ( hname, "hAvTotNhitsFOIvsX");
-    sprintf (htitle, "Average Number of hits in FOI vs X (M2)"); 
+
+    hname = "hAvTotNhitsFOIvsX";
+    htitle= "Mean Number of hits in FOI vs X (M2)";
     profile1D(m_trackX[1], NhitsFOI, hname, htitle ,-5000, 5000, 200);
-    sprintf ( hname, "hAvTotNhitsFOIvsY");
-    sprintf (htitle, "Average Number of hits in FOI vs Y (M2)"); 
+
+    hname = "hAvTotNhitsFOIvsY";
+    htitle= "Mean Number of hits in FOI vs Y (M2)";
     profile1D(m_trackY[1], NhitsFOI, hname, htitle ,-5000, 5000, 200);
   }
   return;
