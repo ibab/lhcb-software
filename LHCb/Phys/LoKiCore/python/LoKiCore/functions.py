@@ -129,17 +129,25 @@ def equal_to  ( f  , v , *args ) :
     
     
     """
+    print 'I am equal_to( ', f , ",", v , ")"
+    print ' hasattr f ' , hasattr ( f , '__equal_to__' ) , dir(f)
+    print ' hasattr v ' , hasattr ( v , '__equal_to__' ) , dir(v) 
+    
     if args :
         v = doubles ( v , *args )
+        print ' 1st clause'
         return equal_to ( f , v )
     
     if   hasattr ( f , '__equal_to__' ) :
         if list == type ( v )  : v = doubles ( v )
+        print ' 2nd clause', v 
         return f.__equal_to__ ( v ) 
     elif hasattr ( v , '__equal_to__' ) :
         if list == type ( f )  : f = doubles ( f ) 
+        print ' 3rd clause', f 
         return v.__equal_to__ ( f )
-    
+
+    print '4th clause ', f, v
     # use the generic version:
     return f == v
 

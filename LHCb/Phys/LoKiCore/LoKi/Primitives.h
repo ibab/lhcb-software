@@ -168,15 +168,15 @@ namespace LoKi
     // ========================================================================
     /// evaluate the first functor 
     typename functor::result_type fun1 
-    ( typename functor::argument a ) const { return m_two.fun1 ( a ) ; }
+    ( typename functor::argument a )  const { return m_two.fun1 ( a ) ; }
     /// evaluate the first functor 
     typename functor::result_type fun2 
-    ( typename functor::argument a ) const { return m_two.fun1 ( a ) ; }
+    ( typename functor::argument a )  const { return m_two.fun2 ( a ) ; }
     // ========================================================================
     /// get the first functor 
     const functor& func1 ()           const { return m_two.func1 () ; }
     /// get the second functor 
-    const functor& func2 ()           const { return m_two.func1 () ; }
+    const functor& func2 ()           const { return m_two.func2 () ; }
     // ========================================================================
   private:
     // ========================================================================
