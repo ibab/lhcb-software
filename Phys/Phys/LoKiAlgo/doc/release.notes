@@ -5,6 +5,10 @@
 ! Purpose     : LoKi-algorithm related stuff 
 ! -----------------------------------------------------------------------------
 
+! 2010-06-19 - Vanya Belyaev
+
+ - add selectio with decay descriptor 
+
 ! 2010-06-18 - Vanya Belyaev
 
  - improve a little bit Loop-object to allow 

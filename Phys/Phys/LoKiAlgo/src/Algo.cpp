@@ -2,6 +2,10 @@
 // ============================================================================
 // Include files 
 // ============================================================================
+// GaudiKernel
+// ============================================================================
+#include "GaudiKernel/IToolSvc.h"
+// ============================================================================
 // LoKiCore
 // ============================================================================
 #include "LoKi/Tokens.h"
@@ -18,6 +22,7 @@
 #include "LoKi/Loop.h"
 #include "LoKi/LoopObj.h"
 #include "LoKi/Algo.h"
+#include "LoKi/Objects.h"
 // ============================================================================
 /** @file
  *
@@ -51,7 +56,7 @@ namespace
     return result ;
   } 
   // ==========================================================================
-} 
+} //                                                 end of anonymous namespace 
 // ============================================================================
 LoKi::Algo::Lock::Lock ( LoKi::Algo* algo )
 {
@@ -88,15 +93,16 @@ LoKi::Algo::Algo
 ( const std::string& name , 
   ISvcLocator*       pSvc ) 
   : DVAlgorithm ( name , pSvc )
-  // local storage of selected particles 
+// local storage of selected particles 
   , m_selected  ( ) 
-  // local storage of selected paricles 
+// local storage of selected paricles 
   , m_vselected ( ) 
-  // collection of error reporters 
+// collection of error reporters 
   , m_reporters ( )
-  // the list of cut values 
+// the list of cut values 
   , m_cutValues ( ) 
-  //
+//
+  , m_decay     ( ) 
 {
   //
   declareProperty 
@@ -318,7 +324,7 @@ LoKi::Loop LoKi::Algo::loop
   return LoKi::Loop( object ) ;
 } 
 // ============================================================================
-/* Create the loop object from "decay"
+/*  Create the loop object from "decay"
  *  @see Decays::Decay
  *  @param decay the decay desctrptor
  *  @param combined the combiner
@@ -375,7 +381,7 @@ StatusCode LoKi::Algo::save
   return StatusCode::SUCCESS ;
 }
 // ============================================================================
-/** shortcut for the following symbolic expression:
+/*  shortcut for the following symbolic expression:
  * 
  *  @code 
  * 
@@ -443,7 +449,7 @@ LoKi::Types::Range LoKi::Algo::pattern
   return selected ( tag ) ;
 }     
 // ============================================================================
-/** shortcut for the following symbolic expression:
+/*  shortcut for the following symbolic expression:
  * 
  *  @code 
  * 
@@ -518,7 +524,7 @@ LoKi::Types::Range LoKi::Algo::pattern
   return selected ( tag ) ;
 } 
 // ============================================================================
-/** shortcut for the following expression:
+/*  shortcut for the following expression:
  *
  *  @code 
  *
@@ -559,6 +565,7 @@ LoKi::Types::Range LoKi::Algo::pattern
  *  @param vcut2 vertex cut to be used for filtering after refitt
  *  @return the selected range of particles 
  */
+// ============================================================================
 LoKi::Types::Range LoKi::Algo::pattern
 ( const std::string&        tag    , 
   const LoKi::Loop&         loop   ,
@@ -598,7 +605,7 @@ LoKi::Types::Range LoKi::Algo::pattern
   return selected ( tag ) ;
 } 
 // ============================================================================
-/** shortcut for the following expression:
+/*  shortcut for the following expression:
  *
  *  @code 
  *
@@ -639,6 +646,7 @@ LoKi::Types::Range LoKi::Algo::pattern
  *  @param vcut2 vertex cut to be used for filtering after refitt
  *  @return the selected range of particles 
  */
+// ============================================================================
 LoKi::Types::Range LoKi::Algo::pattern
 ( const std::string&        tag    , 
   const LoKi::Loop&         loop   ,
@@ -758,6 +766,8 @@ StatusCode LoKi::Algo::finalize ()
             << Gaudi::Utils::toString ( m_cutValues ) << endreq ;
   }
   //
+  m_decay.release() ;
+  //
   return DVAlgorithm::finalize () ;
 }
 // ============================================================================
@@ -785,6 +795,207 @@ LoKi::Vertices::ImpParBase LoKi::Algo::geo
   return LoKi::Vertices::ImpParBase ( point , t ) ;
 } 
 // ============================================================================
+/*  'Select' the particles using decay finder 
+ * 
+ *  @code
+ *
+ *  const Decays::IDecay::Finder& finder = ... ;
+ *  
+ *  Range d0 = select( "D0" , finder ) ;
+ *
+ *  @endcode
+ *
+ *  @see Decays::IDecay::Finder  
+ *  @param name   (INPUT)  name/tag assigned to the selected particles
+ *  @param finder (INPUT) the decay finder 
+ *  @return selected range of particles
+ */
+// ============================================================================
+LoKi::Types::Range 
+LoKi::Algo::select    
+( const std::string&            name   ,
+  const Decays::IDecay::Finder& finder ) 
+{
+  // get all particles from IDVAlgorihtm 
+  LHCb::Particle::Range parts = this->particles () ;
+  // add the particles to the local storage 
+  return select ( name , parts , finder )  ;
+} 
+// ============================================================================
+/* 'Select' the particles using decay tree
+ * 
+ *  @code
+ *
+ *  const Decays::IDecay::iTree& tree = ... ;
+ *  
+ *  Range d0 = select( "D0" , tree ) ;
+ *
+ *  @endcode
+ *
+ *  @see Decays::IDecay::iTree  
+ *  @param name   (INPUT)  name/tag assigned to the selected particles
+ *  @param tree   (INPUT) the decay tree 
+ *  @return selected range of particles
+ */
+// ============================================================================
+LoKi::Types::Range 
+LoKi::Algo::select 
+( const std::string&            tag    ,
+  const Decays::IDecay::iTree&  tree   ) 
+{
+  // get all particles from IDVAlgorihtm 
+  LHCb::Particle::Range parts = this->particles () ;
+  // add the particles to the local storage 
+  return select ( tag , parts , tree  )  ;
+}
+// ============================================================================
+/*  'Select' the particles using decay descriptor 
+ * 
+ *  @code
+ *
+ *  Range d0 = select( "D0" , "[ D0 -> K- pi+ ]CC") ;
+ *
+ *  @endcode
+ *
+ *  @param name       (INPUT)  name/tag assigned to the selected particles
+ *  @param descriptor (INPUT) the decay descriptor 
+ *  @return selected range of particles
+ */
+// ============================================================================
+LoKi::Types::Range 
+LoKi::Algo::select 
+( const std::string&            tag        ,
+  const std::string&            descriptor ) 
+{
+  // get all particles from IDVAlgorihtm 
+  LHCb::Particle::Range parts = this->particles () ;
+  // add the particles to the local storage 
+  return select ( tag , parts , descriptor )  ;
+}
+// ============================================================================
+/*  'Sub-select' the particles using decay finder 
+ * 
+ *  @code
+ *
+ *  const Decays::IDecay::Finder& finder = ... ;
+ *  const Range input = ... ;
+ * 
+ *  Range d0 = select( "D0" , input , finder ) ;
+ *
+ *  @endcode
+ *
+ *  @see Decays::IDecay::Finder  
+ *  @param name   (INPUT) name/tag assigned to the selected particles
+ *  @param input  (INPUT) the input particles 
+ *  @param finder (INPUT) the decay finder 
+ *  @return selected range of particles
+ */
+// ============================================================================
+LoKi::Types::Range 
+LoKi::Algo::select 
+( const std::string&            tag    ,
+  const LoKi::Types::Range&     range  ,
+  const Decays::IDecay::Finder& finder ) 
+{
+  // check the validity of finder 
+  if ( !finder ) 
+  {
+    StatusCode sc = finder.validate ( ppSvc() ) ;
+    if ( sc.isFailure() ) 
+    {
+      Error ( "Invalid decay finder: '" + finder.tree().toString() + "'") ;
+      return LoKi::Types::Range () ;
+    }
+  }
+  //
+  LHCb::Particle::ConstVector results ;
+  results.reserve  ( 100 ) ;
+  finder.findDecay ( range.begin () , range.end   () , results ) ;
+  //
+  return this->select ( tag              , 
+                        results.begin () , 
+                        results.end   () , 
+                        LoKi::Objects::_ALL_ ) ;
+}
+// ============================================================================
+/*  'Select' the particles using decay tree
+ * 
+ *  @code
+ *
+ *  const Decays::IDecay::iTree& tree = ... ;
+ *  const Range  input = ... ;
+ *
+ *  Range d0 = select( "D0" , input , tree ) ;
+ *
+ *  @endcode
+ *
+ *  @see Decays::IDecay::iTree  
+ *  @param name   (INPUT) name/tag assigned to the selected particles
+ *  @param input  (INPUT) the input particles 
+ *  @param tree   (INPUT) the decay tree 
+ *  @return selected range of particles
+ */
+// ============================================================================
+LoKi::Types::Range 
+LoKi::Algo::select 
+( const std::string&            tag    ,
+  const LoKi::Types::Range&     range  ,
+  const Decays::IDecay::iTree&  tree   ) 
+{
+  //
+  if ( !tree ) 
+  {
+    StatusCode sc = tree.validate ( ppSvc() ) ;
+    if ( sc.isFailure() ) 
+    {
+      Error ( "select: Unable to validate tree '" + tree.toString() + "'" ) ;
+      return LoKi::Types::Range() ;
+    }  
+  }
+  //
+  return select ( tag , range , Decays::IDecay::Finder ( tree ) ) ;
+}
+// ============================================================================
+/*  'Select' the particles using decay descriptor 
+ * 
+ *  @code
+ *
+ *  const Range  input = ... ;
+ *  Range d0 = select( "D0" , input , "[ D0 -> K- pi+ ]CC") ;
+ *
+ *  @endcode
+ *
+ *  @param name       (INPUT)  name/tag assigned to the selected particles
+ *  @param input      (INPUT) the input particles 
+ *  @param descriptor (INPUT) the decay descriptor 
+ *  @return selected range of particles
+ */
+// ============================================================================
+LoKi::Types::Range 
+LoKi::Algo::select 
+( const std::string&            tag        ,
+  const LoKi::Types::Range&     range      ,
+  const std::string&            descriptor ) 
+{
+  // 
+  if ( !m_decay ) 
+  { m_decay = tool<Decays::IDecay>  ( "LoKi::Decay/Decay" ,this ) ; }
+  //
+  Assert ( !(!m_decay) , "Decays::IDecay* poitns to NULL!" ) ;
+  //
+  Decays::IDecay::Tree tree = m_decay->tree ( descriptor ) ;
+  if ( !tree ) 
+  {
+    Error ( "select: Unable to create decay tree from descriptor '" + 
+            descriptor + "'" ) ;
+    return LoKi::Types::Range () ;
+  }
+  //
+  return select ( tag, range , Decays::IDecay::Finder ( tree ) ) ;
+}
+// ============================================================================
+
+
 
 
 // ============================================================================

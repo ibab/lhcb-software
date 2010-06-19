@@ -30,7 +30,9 @@
 // ============================================================================
 #include "LoKi/PhysTypes.h"
 #include "LoKi/PhysRangeTypes.h"
+#include "LoKi/IDecay.h"
 #include "LoKi/ImpParBase.h"
+#include "LoKi/Interface.h"
 // ============================================================================
 // LoKiAlgo
 // ============================================================================
@@ -215,6 +217,7 @@ namespace LoKi
       }
       return select ( name , cont->begin() , cont->end() , cuts ) ;
     } 
+    // ========================================================================
     /** 'Select' the particles to be used in local storage
      * 
      *  - particles are selected from the container 
@@ -299,6 +302,133 @@ namespace LoKi
     {
       return m_selected.add ( name , first , last , cut ) ;
     } 
+    // ========================================================================
+  public: // decay descriptors: 
+    // ========================================================================
+    /** 'Select' the particles using decay finder 
+     * 
+     *  @code
+     *
+     *  const Decays::IDecay::Finder& finder = ... ;
+     *  
+     *  Range d0 = select( "D0" , finder ) ;
+     *
+     *  @endcode
+     *
+     *  @see Decays::IDecay::Finder  
+     *  @param name   (INPUT)  name/tag assigned to the selected particles
+     *  @param finder (INPUT) the decay finder 
+     *  @return selected range of particles
+     */
+    LoKi::Types::Range 
+    select 
+    ( const std::string&            tag    ,
+      const Decays::IDecay::Finder& finder ) ;
+    // ========================================================================
+    /** 'Select' the particles using decay tree
+     * 
+     *  @code
+     *
+     *  const Decays::IDecay::iTree& tree = ... ;
+     *  
+     *  Range d0 = select( "D0" , tree ) ;
+     *
+     *  @endcode
+     *
+     *  @see Decays::IDecay::iTree  
+     *  @param name   (INPUT)  name/tag assigned to the selected particles
+     *  @param tree   (INPUT) the decay tree 
+     *  @return selected range of particles
+     */
+    LoKi::Types::Range 
+    select 
+    ( const std::string&            tag    ,
+      const Decays::IDecay::iTree&  tree   ) ;
+    // ========================================================================
+    /** 'Select' the particles using decay descriptor 
+     * 
+     *  @code
+     *
+     *  Range d0 = select( "D0" , "[ D0 -> K- pi+ ]CC") ;
+     *
+     *  @endcode
+     *
+     *  @param name       (INPUT)  name/tag assigned to the selected particles
+     *  @param descriptor (INPUT) the decay descriptor 
+     *  @return selected range of particles
+     */
+    LoKi::Types::Range 
+    select 
+    ( const std::string&            tag        ,
+      const std::string&            descriptor ) ;
+    // ========================================================================
+    /** 'Sub-select' the particles using decay finder 
+     * 
+     *  @code
+     *
+     *  const Decays::IDecay::Finder& finder = ... ;
+     *  const Range input = ... ;
+     * 
+     *  Range d0 = select( "D0" , input , finder ) ;
+     *
+     *  @endcode
+     *
+     *  @see Decays::IDecay::Finder  
+     *  @param name   (INPUT) name/tag assigned to the selected particles
+     *  @param input  (INPUT) the input particles 
+     *  @param finder (INPUT) the decay finder 
+     *  @return selected range of particles
+     */
+    LoKi::Types::Range 
+    select 
+    ( const std::string&            tag    ,
+      const LoKi::Types::Range&     range  ,
+      const Decays::IDecay::Finder& finder ) ;
+    // ========================================================================
+    /** 'Select' the particles using decay tree
+     * 
+     *  @code
+     *
+     *  const Decays::IDecay::iTree& tree = ... ;
+     *  const Range  input = ... ;
+     *
+     *  Range d0 = select( "D0" , input , tree ) ;
+     *
+     *  @endcode
+     *
+     *  @see Decays::IDecay::iTree  
+     *  @param name   (INPUT) name/tag assigned to the selected particles
+     *  @param input  (INPUT) the input particles 
+     *  @param tree   (INPUT) the decay tree 
+     *  @return selected range of particles
+     */
+    LoKi::Types::Range 
+    select 
+    ( const std::string&            tag    ,
+      const LoKi::Types::Range&     range  ,
+      const Decays::IDecay::iTree&  tree   ) ;
+    // ========================================================================
+    /** 'Select' the particles using decay descriptor 
+     * 
+     *  @code
+     *
+     *  const Range  input = ... ;
+     *  Range d0 = select( "D0" , input , "[ D0 -> K- pi+ ]CC") ;
+     *
+     *  @endcode
+     *
+     *  @param name       (INPUT)  name/tag assigned to the selected particles
+     *  @param input      (INPUT) the input particles 
+     *  @param descriptor (INPUT) the decay descriptor 
+     *  @return selected range of particles
+     */
+    LoKi::Types::Range 
+    select 
+    ( const std::string&            tag        ,
+      const LoKi::Types::Range&     range      ,
+      const std::string&            descriptor ) ;
+    // ========================================================================
+  public: // vertices 
     // ========================================================================
     /** 'Select' the vertices to be used in local storage
      *  - Vertices are selected from desktop
@@ -997,14 +1127,21 @@ namespace LoKi
     // ========================================================================
     class Lock
     {
+      // ======================================================================
     public:
+      // ======================================================================
       Lock ( LoKi::Algo* algo ) ;
       ~Lock() ;
+      // ======================================================================
     private:
+      // ======================================================================
       Lock() ;
       Lock( const Lock& ) ;
+      // ======================================================================
     private:
+      // ======================================================================
       LoKi::Algo* m_old ;       
+      // ======================================================================
     } ;
     // ========================================================================
   public:
@@ -1074,12 +1211,17 @@ namespace LoKi
     // ========================================================================
   private:
     // ========================================================================
+    /// the factory for decay-trees 
+    LoKi::Interface<Decays::IDecay> m_decay ; // the factory for decay-trees
+    // ========================================================================
+  private:
+    // ========================================================================
     // the static pointer to current algorithm 
     static LoKi::Algo* s_currentAlgo ;
     // ========================================================================
   } ;  
   // ==========================================================================
-} // end of namespace LoKi
+} //                                                      end of namespace LoKi
 // ============================================================================
 /** @def LOKI_ALGORITHM_BODY 
  *
