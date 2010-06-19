@@ -4,6 +4,7 @@
 ! Purpose     : Core classes for the Tf framework
 !-----------------------------------------------------------------------------
 
+!============================ TfKernel v2r18 2010-06-19 ======================
 ! 2010-06-15 - Manuel Tobias Schiller
  - keep track of average local unit vectors along local coordinate axes of
    each region, add accessors to return these vectors in the global (LHCb)
