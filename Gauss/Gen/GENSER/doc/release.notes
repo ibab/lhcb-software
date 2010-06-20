@@ -4,6 +4,10 @@
 ! Purpose     : interface package to GENSER
 !-----------------------------------------------------------------------------
 
+! 2010-06-21 - Patrick Robbe
+ - requirements: use Photos 215.4 to have HEPEVT common block size set to
+   10000.
+
 !========================== GENSER v6r2 2010-03-22 ===========================
 ! 2010-03-09 - Patrick Robbe
  - pythia6/xsectionPsiStar.F: fix bug in return value of the function which
