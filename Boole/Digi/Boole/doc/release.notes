@@ -3,6 +3,8 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+ - Upgrade MC: Improved spillover subtraction for Velo and TT
+
  - Changes to references to reflect changes in Boole v21r5 output:
    . Cluster selector now uses STRndmEffSelector tool instead of 
      STRndmChannelIDSelector to kill clusters (STTools)

@@ -1,7 +1,7 @@
 """
 High level configuration tools for Boole
 """
-__version__ = "$Id: Configuration.py,v 1.69 2010-04-26 15:28:45 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.70 2010-06-20 07:24:02 tskwarni Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration  import *
@@ -295,6 +295,10 @@ class Boole(LHCbConfigurableUser):
                     seq.Members += [ VeloDataProcessor("VeloDataProcessorPrev") ]
                     seq.Members += [ VeloSpillSubtraction() ]
                     importOptions("$BOOLEUMCROOT/options/VeloSimPrev.opts")
+                    seq.Members += [ VeloSim("VeloSimNext") ]
+                    seq.Members += [ VeloDataProcessor("VeloDataProcessorNext") ]
+                    seq.Members += [ VeloSpillSubtraction("VeloSpillSubtractionNext") ]
+                    importOptions("$BOOLEUMCROOT/options/VeloSimNext.opts")
                 seq.Members += [ VeloClusterMaker("VeloClusterMaker") ]
                 seq.Members += [ PrepareVeloRawBuffer("PrepareVeloRawBuffer") ]
             else:
@@ -334,16 +338,32 @@ class Boole(LHCbConfigurableUser):
             seq.Members += [ MCSTDigitCreator("MC%sDigitCreator%s"%(det,tae),DetType=det) ]
             seq.Members += [ STDigitCreator("%sDigitCreator%s"%(det,tae),DetType=det) ]
             if self.getProp("DataType") == "Upgrade" :
-                from Configurables import STSpilloverSubtraction
+                from Configurables import STSpilloverSubtraction, TTSpilloverSubtraction 
                 if det == "IT":
                     importOptions("$BOOLEUMCROOT/options/itDigiPrev.opts")
                 elif det == "TT":
+                    TTSpilloverSubtractionNext = TTSpilloverSubtraction("TTSpilloverSubtractionNext")
+                    TTSpilloverSubtractionPrevPrevFromPrev = TTSpilloverSubtraction("TTSpilloverSubtractionPrevPrevFromPrev")
+                    TTSpilloverSubtractionPrevPrev = TTSpilloverSubtraction("TTSpilloverSubtractionPrevPrev")
+                    importOptions("$BOOLEUMCROOT/options/ttDigiPrevPrevFromPrev.opts")
+                    importOptions("$BOOLEUMCROOT/options/ttDigiPrevPrev.opts")
                     importOptions("$BOOLEUMCROOT/options/ttDigiPrev.opts")
+                    importOptions("$BOOLEUMCROOT/options/ttDigiNext.opts")
+                    seq.Members += [ MCSTDigitCreator("MCTTDigitCreatorNext",DetType=det) ]
+                    seq.Members += [ MCSTDigitCreator("MCTTDigitCreatorPrevPrev",DetType=det) ]
+                    seq.Members += [ STDigitCreator("TTDigitCreatorNext",DetType=det) ]
+                    seq.Members += [ STDigitCreator("TTDigitCreatorPrevPrev",DetType=det) ]
                 else:
                     raise RuntimeError("Unknown ST detector '%s'"%det)
                 seq.Members += [ MCSTDigitCreator("MC%sDigitCreator%sPrev"%(det,tae),DetType=det) ]
                 seq.Members += [ STDigitCreator("%sDigitCreator%sPrev"%(det,tae),DetType=det) ]
-                seq.Members += [ STSpilloverSubtraction("%sSpilloverSubtraction%s"%(det,tae),DetType=det) ]
+                if det =="IT":
+                    seq.Members += [ STSpilloverSubtraction("%sSpilloverSubtraction%s"%(det,tae),DetType=det) ]
+                if det =="TT":
+                    seq.Members += [ TTSpilloverSubtraction("%sSpilloverSubtraction%s"%(det,tae),DetType=det) ]
+                    seq.Members += [ TTSpilloverSubtraction("TTSpilloverSubtractionNext",DetType=det) ]
+                    seq.Members += [ TTSpilloverSubtraction("TTSpilloverSubtractionPrevPrevFromPrev",DetType=det) ]
+                    seq.Members += [ TTSpilloverSubtraction("TTSpilloverSubtractionPrevPrev",DetType=det) ]
             seq.Members += [ STClusterCreator("%sClusterCreator%s"%(det,tae),DetType=det) ]
             seq.Members += [ STClusterKiller("%sClusterKiller%s"%(det,tae),DetType=det) ]
             seq.Members += [ STClustersToRawBankAlg("create%sRawBuffer%s"%(det,tae),DetType=det) ]
