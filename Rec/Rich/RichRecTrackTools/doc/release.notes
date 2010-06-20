@@ -4,6 +4,9 @@
 ! Purpose     : Utility tracks tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+! 2010-06-20 - Chris Jones
+ - Some minor improvements to debugging information in RichExpectedTrackSignal
+
 ! 2010-06-04 - Rob Lambert
  - Fixes for some windows warnings savannah 15808
 
