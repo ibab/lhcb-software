@@ -380,7 +380,12 @@ class RichTools(RichConfigurableUser):
 
     ## @brief Raw Event encode/decode tool
     def rawDecoder(self):
-        return self.smartIDTool().RawDecoder        
+        return self.smartIDTool().RawDecoder
+
+    ## @brief Expected track signal tool
+    def expectedTrackSignal(self,nickname="RichExpectedTrackSignal",private=False):
+        from Configurables import Rich__Rec__ExpectedTrackSignal
+        return self.__makeRichTool( Rich__Rec__ExpectedTrackSignal, nickname, private )
 
 # ----------------------------------------------------------------------------------
 

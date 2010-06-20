@@ -4,10 +4,14 @@
 ! Purpose     : General purpose RICH classes
 !-----------------------------------------------------------------------
 
+! 2010-06-20 - Chris Jones
+ - Add a new method to python Configurable to return track expected 
+   signal tool Configurable
+
 !====================== RichKernel v7r35 2010-05-21 ====================
-! 2010-05-19 Ulrich Kerzel
-- HPDdisableTool: add function "ReportHPD" to report HPDs with errors which are
-  not necessarily severe (ie. don't have to lead to disable)
+! 2010-05-19 - Ulrich Kerzel
+ - HPDdisableTool: add function "ReportHPD" to report HPDs with errors 
+   which are not necessarily severe (ie. don't have to lead to disable)
 
 !====================== RichKernel v7r34 2010-04-26 ====================
 ! 2010-04-25 - Chris Jones
