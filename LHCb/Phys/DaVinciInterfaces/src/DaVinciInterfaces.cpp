@@ -1,4 +1,4 @@
-// $Id: DaVinciInterfaces.cpp,v 1.10 2010-06-02 10:57:04 jpalac Exp $
+// $Id: DaVinciInterfaces.cpp,v 1.11 2010-06-20 15:49:19 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -23,9 +23,10 @@
 #include "Kernel/IDVAlgorithm.h"
 #include "Kernel/IParticleFilter.h"
 #include "Kernel/IDecayTreeFit.h"
+#include "Kernel/ICheckOverlap.h"
 // ============================================================================
 /** @file
- *  Implementation file for class doem interfaces from 
+ *  Implementation file for class some interfaces from 
  *  Phys/DaVinciInterfaces package 
  *  @date 2009-08-15 
  *  @author Vanya  BELYAEV Ivan.Belyaev
@@ -48,6 +49,7 @@ ITrackIsolation          :: ~ITrackIsolation          () {}
 IDVAlgorithm             :: ~IDVAlgorithm             () {}
 IParticleFilter          :: ~IParticleFilter          () {}
 IDecayTreeFit            :: ~IDecayTreeFit            () {}
+ICheckOverlap            :: ~ICheckOverlap            () {}
 
 // ============================================================================
 // The END 

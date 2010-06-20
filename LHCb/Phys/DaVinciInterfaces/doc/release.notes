@@ -4,6 +4,13 @@
 ! Purpose     : Tool interfaces and dictionaries for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2010-06-20 - Vanya Belyaev
+
+ - Kernel/ICheckOverlap.h
+   
+    1. remove foundOverlap  method with two vectors
+    2. remove removeOverlap method with LHCb::Particle::Vector
+
 !===================== DaVinciInterfaces v2r4 2010-06-18 =====================
 ! 2010-06-09 - Juan Palacios
  - Kernel/IPhysDesktop.h

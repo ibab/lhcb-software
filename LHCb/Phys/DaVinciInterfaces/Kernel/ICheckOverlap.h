@@ -1,4 +1,4 @@
-// $Id: ICheckOverlap.h,v 1.2 2009-08-04 09:45:31 jpalac Exp $
+// $Id: ICheckOverlap.h,v 1.3 2010-06-20 15:49:19 ibelyaev Exp $
 // ============================================================================
 #ifndef DAVINCIKERNEL_ICHECKOVERLAP_H 
 #define DAVINCIKERNEL_ICHECKOVERLAP_H 1
@@ -17,58 +17,48 @@
 // ============================================================================
 #include "Event/Particle.h"
 // ============================================================================
-/** @class ICheckOverlap ICheckOverlap.h
+/** @class ICheckOverlap  Kernel/ICheckOverlap.h
  *  
  *  Tool to check if more than one particle originate 
  *  from the same source 
  *
- *  @author Jose Helder Lopes, redesigned by P. Koppenburg
+ *  @author Jose Helder Lopes, redesigned by P. Koppenburg  
+ *                           & modified a bit by Vanya Belyaev 
  *  @date   28/06/2002
  */
 class GAUDI_API ICheckOverlap : virtual public IAlgTool 
 {
-  
 public:
-
-  DeclareInterfaceID(ICheckOverlap, 3, 0);
-  
-  /// Check for duplicate use of a protoparticle to produce particles.
-  /// Argument: parts is a vector of pointers to particles.  
+  // ==========================================================================
+  DeclareInterfaceID(ICheckOverlap, 4, 0);
+  // ==========================================================================
+public:
+  // ==========================================================================
+  /** Check for duplicate use of a protoparticle to produce particles.
+   *  @param parts is a vector of pointers to particles.  
+   */
   virtual bool foundOverlap( const LHCb::Particle::ConstVector & parts  ) = 0;
-  
   /// Check for duplicate use of a protoparticle to produce particles.  
   virtual bool foundOverlap( const LHCb::Particle* ) = 0;
-  
   /// Check for duplicate use of a protoparticle to produce particles.  
   virtual bool foundOverlap( const LHCb::Particle*, 
                              const LHCb::Particle* ) = 0;
-  
   /// Check for duplicate use of a protoparticle to produce particles.  
   virtual bool foundOverlap( const LHCb::Particle*, 
                              const LHCb::Particle*, 
                              const LHCb::Particle*) = 0;
-  
   /// Check for duplicate use of a protoparticle to produce particles.  
   virtual bool foundOverlap( const LHCb::Particle*,
                              const LHCb::Particle*,
                              const LHCb::Particle*,
                              const LHCb::Particle*) = 0;
-  
-  /// Check for duplicate use of a protoparticle to produce particles.
-  /// Continue a previous check using the contents of the vector of pointers 
-  /// to protoparticles.(Most intended for internal use by the other methods).
-  /// Arguments: parts is a vector of pointer to particles. 
-  ///            proto is a vector of pointers to protoparticles.
-  virtual bool foundOverlap( const LHCb::Particle::ConstVector & parts,
-                             std::vector<const LHCb::ProtoParticle* > & proto ) = 0 ;
-  
-  /// Check for duplicate use of a protoparticle to produce decay tree of
-  /// any particle in vector. Removes found particles from vector.
+  // ==========================================================================
+public:
+  // ==========================================================================
+  /** Check for duplicate use of a protoparticle to produce decay tree of
+   *  any particle in vector. Removes found particles from vector.
+   */
   virtual StatusCode removeOverlap( LHCb::Particle::ConstVector& ) = 0;
-  
-  /// Check for duplicate use of a protoparticle to produce decay tree of
-  /// any particle in vector. Removes found particles from vector.
-  virtual StatusCode removeOverlap( LHCb::Particle::Vector& ) = 0;
   // ==========================================================================  
   /** Check for the overlap for the arbitrary sequence of the objects, 
    *  implicitely convertible to <c>const LHCb::Particle*</c>.
@@ -110,12 +100,13 @@ public:
   }
   // ==========================================================================  
 protected:
-  
-private:
-  
+  // ==========================================================================
+  /// virtual and protected destructors 
+  virtual ~ICheckOverlap() ;               // virtual and protected destructors
+  // ==========================================================================
 };
 // ============================================================================
-// The END 
+//                                                                      The END 
 // ============================================================================
 #endif // DAVINCIKERNEL_ICHECKOVERLAP_H
 // ============================================================================
