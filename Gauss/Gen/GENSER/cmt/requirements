@@ -17,7 +17,7 @@ use GaudiPolicy  v*
 
 #-- Photos
 #============================================================================
-macro photos_native_version "215.5"
+macro photos_native_version "215.4"
 use photos v* LCG_GeneratorsInterfaces
 
 #-- LHAPDF
