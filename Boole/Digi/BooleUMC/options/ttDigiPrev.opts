@@ -1,18 +1,27 @@
 // options for spillover suppression in upgrade simulations
 // Tomasz Skwarnicki 2009/09/11 
 
-MCTTDepositCreator.SamplesVector = {"/","/Prev/"};
-MCTTDepositCreator.SampleTimes = { 0.0, -25.0 };
+MCTTDepositCreator.SamplesVector = {"/","/Prev/", "/PrevPrev/", "/Next/"};
+MCTTDepositCreator.SampleTimes = { 0.0, -25.0 , -50.0, +25.0};
+//MCTTDepositCreator.SamplesVector = {"/","/Prev/"};
+//MCTTDepositCreator.SampleTimes = { 0.0, -25.0};
 
 MCTTDigitCreatorPrev.InputLocation = "Prev/MC/TT/Deposits";
 MCTTDigitCreatorPrev.OutputLocation = "Prev/MC/TT/Digits";
 TTDigitCreatorPrev.InputLocation = "Prev/MC/TT/Digits";
 TTDigitCreatorPrev.OutputLocation = "Prev/Raw/TT/Digits";
 
+TTSpilloverSubtraction.SpillVector = {"/","/Prev/"};
+
 // subtract only if previous charge larger than this (set to very large value to switch any suppression off)
 TTSpilloverSubtraction.PrevChargeCut = 8.5;
+
 // fraction of previous charge to be subtracted from the current
-TTSpilloverSubtraction.SpilloverFraction = 0.3333;
+//TTSpilloverSubtraction.SpilloverFraction = {0.0, 0.0, 0.0, 0.0};  // No Spillover removed..
+//TTSpilloverSubtraction.SpilloverFraction = {0.3333, 0.3333, 0.3333, 0.3333};  // Before Sector separation.
+//TTSpilloverSubtraction.SpilloverFraction = {0.3669, 0.3825, 0.4616, 0.4912};  // After Sector Separation.
+TTSpilloverSubtraction.SpilloverFraction = {0.3946, 0.4243, 0.5133, 0.4993};  // After Sector Separation and PrevPrev removed from Prev.
+
 // set current charge to zero (i.e. kill the hit) if previous above this
 TTSpilloverSubtraction.ChargeSaturationCut = 126.5;
 

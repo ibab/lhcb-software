@@ -1,0 +1,15 @@
+// options for spillover suppression in upgrade simulations - next bunch crossing
+// Adam Webber 2010/04/23 
+
+TTSpilloverSubtractionPrevPrev.SpillVector = {"/","/PrevPrev/"};
+// subtract only if next charge larger than this (set to very large value to switch any suppression off)
+TTSpilloverSubtractionPrevPrev.PrevChargeCut = 8.5; // Probably need to make smaller as the gradient is low.
+
+// fraction of previous charge to be subtracted from the current:
+//TTSpilloverSubtractionPrevPrev.SpilloverFraction = {0.0, 0.0, 0.0, 0.0};  // No Spillover removal.
+TTSpilloverSubtractionPrevPrev.SpilloverFraction = {0, 0, 0.1160, 0.1114};  // Spillover from PrevPrev removal.
+// set current charge to zero (i.e. kill the hit) if previous above this
+TTSpilloverSubtractionPrevPrev.ChargeSaturationCut = 126.5;
+
+// set always charge to zero instead of subtraction
+//TTSpilloverSubtraction.SpilloverFraction = -10.0;

@@ -1,0 +1,20 @@
+// options for spillover suppression in upgrade simulations - next bunch crossing
+// Adam Webber 2010/04/23 
+
+MCTTDigitCreatorPrevPrev.InputLocation = "PrevPrev/MC/TT/Deposits";
+MCTTDigitCreatorPrevPrev.OutputLocation = "PrevPrev/MC/TT/Digits";
+TTDigitCreatorPrevPrev.InputLocation = "PrevPrev/MC/TT/Digits";
+TTDigitCreatorPrevPrev.OutputLocation = "PrevPrev/Raw/TT/Digits";
+
+TTSpilloverSubtractionPrevPrevFromPrev.SpillVector = {"/Prev/","/PrevPrev/"};
+// subtract only if next charge larger than this (set to very large value to switch any suppression off)
+TTSpilloverSubtractionPrevPrevFromPrev.PrevChargeCut = 8.5; // Probably need to make smaller as the gradient is low.
+
+// fraction of previous charge to be subtracted from the current:
+//TTSpilloverSubtractionPrevPrevFromPrev.SpilloverFraction = {0.0, 0.0, 0.0, 0.0};  // No Spillover Subtraction.
+TTSpilloverSubtractionPrevPrevFromPrev.SpilloverFraction = {0.3669, 0.3825, 0.4616, 0.4912};  // After Sector Separation.
+// set current charge to zero (i.e. kill the hit) if previous above this
+TTSpilloverSubtractionPrevPrevFromPrev.ChargeSaturationCut = 126.5;
+
+// set always charge to zero instead of subtraction
+//TTSpilloverSubtraction.SpilloverFraction = -10.0;
