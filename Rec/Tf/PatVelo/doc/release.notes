@@ -4,6 +4,9 @@
 ! Purpose     : Velo pattern recognition
 !-----------------------------------------------------------------------------
 
+! 2010-06-20 - David Hutchcroft
+ - Improved rejection of R clusters on other side from non-overlap tracks
+
 !========================== PatVelo v3r23 2010-05-21 =========================
 ! 2010-05-20 - David Hutchcroft
  - Changed how PatVeloGeneral flags backward tracks for beam gas events

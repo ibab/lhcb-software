@@ -123,13 +123,15 @@ namespace Tf {
       double xTrack = xPoint + slopeX*( (*iR)->z() - zPoint );
       double yTrack = yPoint + slopeY*( (*iR)->z() - zPoint );
       double phiTrack = atan2(yTrack,xTrack);
+      if( tr->side() != (*iR)->side() ){
+        xTrack += xOffsetOtherHB((*iR)->sensorNumber(),phiTrack);
+        yTrack += yOffsetOtherHB((*iR)->sensorNumber(),phiTrack);
+        phiTrack = atan2(yTrack,xTrack);
+      }
       Gaudi::XYZPoint halfBoxPoint(xTrack,yTrack,(*iR)->z());
       Gaudi::XYZPoint localPoint =
         (*iR)->sensor()->veloHalfBoxToLocal(halfBoxPoint);
-      if ( !m_angleUtils.
-          contains((*iR)->sensor()->halfboxPhiRange((*iR)->hit()->zone()),
-            phiTrack,m_phiAngularTol) ||
-          !(*iR)->sensor()->isInActiveArea(localPoint) ) {
+      if ( !(*iR)->sensor()->isInActiveArea(localPoint) ) {
         if(isVerbose) {
           verbose() << "deleting cluster " << iR - rCoords->begin() << endreq;
         }
@@ -294,14 +296,12 @@ namespace Tf {
     const LHCb::Track* ances = patTrack->ancestor();
 
     if( ances ) {
-      newTrack->setLhcbIDs( ances->lhcbIDs() );
       newTrack->addToAncestors( ances );
-    }else{
-      std::vector<PatVeloRHit*>::iterator itC;
-      for ( itC = patTrack->rCoords()->begin();
-          patTrack->rCoords()->end() != itC; ++itC ) {
-        newTrack->addToLhcbIDs( (*itC)->hit()->lhcbID() );
-      }
+    }
+    std::vector<PatVeloRHit*>::iterator itR;
+    for ( itR = patTrack->rCoords()->begin();
+          patTrack->rCoords()->end() != itR; ++itR ) {
+      newTrack->addToLhcbIDs( (*itR)->hit()->lhcbID() );
     }
 
     newTrack->setFlag( LHCb::Track::Backward, patTrack->backward() );
@@ -335,7 +335,6 @@ namespace Tf {
       newTrack->addToLhcbIDs( (*itC)->hit()->lhcbID() );
     }
     // add "no fit" coords from other side of detector
-    std::vector<PatVeloRHit*>::iterator itR;
     for ( itR = patTrack->rCoordsNoFit()->begin();
 	  patTrack->rCoordsNoFit()->end() != itR; ++itR ) {
       newTrack->addToLhcbIDs( (*itR)->hit()->lhcbID() );
