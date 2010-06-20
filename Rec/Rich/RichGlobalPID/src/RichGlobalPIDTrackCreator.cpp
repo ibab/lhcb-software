@@ -4,9 +4,6 @@
  *
  *  Implementation file for RICH Global PID tool : Rich::Rec::GlobalPID::TrackCreator
  *
- *  CVS Log :-
- *  $Id: RichGlobalPIDTrackCreator.cpp,v 1.3 2009-07-30 11:06:48 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2008-03-01
  */
@@ -29,7 +26,7 @@ DECLARE_TOOL_FACTORY( TrackCreator );
 TrackCreator::TrackCreator( const std::string& type,
                             const std::string& name,
                             const IInterface* parent )
-  : Rich::Rec::GlobalPID::ToolBase ( type, name, parent ),
+  : ToolBase   ( type, name, parent ),
     m_tkSignal ( NULL )
 {
   declareInterface<ITrackCreator>(this);
@@ -44,7 +41,7 @@ TrackCreator::~TrackCreator() {}
 StatusCode TrackCreator::initialize()
 {
   // Sets up various tools and services
-  const StatusCode sc = Rich::Rec::GlobalPID::ToolBase::initialize();
+  const StatusCode sc = ToolBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // get tools
@@ -70,7 +67,8 @@ LHCb::RichGlobalPIDTrack * TrackCreator::createTrack( LHCb::RichRecTrack * track
 
   // Set Track reference
   const LHCb::Track * trtrack = dynamic_cast<const LHCb::Track *>(track->parentTrack());
-  if ( !trtrack ) Warning( "Input track type is not Track -> RichPID has null track reference" ).ignore();
+  if ( !trtrack ) 
+    Warning( "Input track type is not Track -> RichPID has null track reference" ).ignore();
   newPID->setTrack( trtrack );
 
   // Set its SmartRef to RichRecTrack
@@ -98,6 +96,7 @@ void TrackCreator::finaliseTrack( LHCb::RichGlobalPIDTrack * track ) const
   pid->setUsedRich1Gas ( rRTrack->inGas1()    );
   pid->setUsedRich2Gas ( rRTrack->inGas2()    );
 
+  // -------------------------------------------------------------------------------
   // Finalise delta LL values
   // -------------------------------------------------------------------------------
   // Make a working copy of the DLL values
@@ -109,8 +108,13 @@ void TrackCreator::finaliseTrack( LHCb::RichGlobalPIDTrack * track ) const
   if ( deltaLLs[pid->bestParticleID()] > 1e-10 )
   {
     Warning("non-zero deltaLL value").ignore();
-    if(msgLevel(MSG::DEBUG)) debug() << "PID " << pid->key() << " best ID " << pid->bestParticleID()
-              << " has non-zero deltaLL value! " << deltaLLs[pid->bestParticleID()] << endmsg;
+    if (msgLevel(MSG::DEBUG) ) 
+    {
+      debug() << "PID " << pid->key() 
+              << " best ID " << pid->bestParticleID()
+              << " has non-zero deltaLL value! " << deltaLLs[pid->bestParticleID()] 
+              << endmsg;
+    }
   }
   // Internally, the Global PID normalises the DLL values to the best hypothesis
   // and also works in "-loglikelihood" space.
@@ -124,6 +128,17 @@ void TrackCreator::finaliseTrack( LHCb::RichGlobalPIDTrack * track ) const
   }
   // final update DLL values in stored RichPID data object
   pid->setParticleLLValues(deltaLLs);
+  // -------------------------------------------------------------------------------
+
+  // -------------------------------------------------------------------------------
+  // Final checks
+  // -------------------------------------------------------------------------------
+  if ( !pid->isAboveThreshold(pidTypes().front()) )
+  {
+    warning() << "Lowest active mass hypothesis '" << pidTypes().front() 
+              << "' is below threshold ..." << endmsg;
+    warning() << *pid << endmsg;
+  }
   // -------------------------------------------------------------------------------
 
 }
