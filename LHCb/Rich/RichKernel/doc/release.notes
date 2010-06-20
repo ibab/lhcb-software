@@ -4,6 +4,7 @@
 ! Purpose     : General purpose RICH classes
 !-----------------------------------------------------------------------
 
+!====================== RichKernel v7r36 2010-06-20 ====================
 ! 2010-06-20 - Chris Jones
  - Add a new method to python Configurable to return track expected 
    signal tool Configurable
