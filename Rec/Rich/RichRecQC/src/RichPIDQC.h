@@ -4,9 +4,6 @@
  *
  *  Header file for RICH reconstruction monitoring algorithm : Rich::Rec::MC::PIDQC
  *
- *  CVS Log :-
- *  $Id: RichPIDQC.h,v 1.34 2009-01-20 15:49:30 cattanem Exp $
- *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2002-06-13
  */

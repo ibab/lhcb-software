@@ -2,10 +2,8 @@
 //-----------------------------------------------------------------------------
 /** @file RichPIDQC.cpp
  *
- *  Implementation file for RICH reconstruction monitoring algorithm : Rich::Rec::MC::PIDQC
- *
- *  CVS Log :-
- *  $Id: RichPIDQC.cpp,v 1.73 2009-07-30 11:02:36 jonrob Exp $
+ *  Implementation file for RICH reconstruction monitoring algorithm : 
+ *    Rich::Rec::MC::PIDQC
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2002-06-13
@@ -83,7 +81,10 @@ StatusCode PIDQC::initialize()
   m_plotsConfig.maxPt = m_trSelector->maxPtCut() * Gaudi::Units::GeV;
 
   // Initialise summary information
-  for ( int i = 0; i<6; ++i ) { for ( int j = 0; j<6; ++j ) { m_sumTab[i][j] = 0; } }
+  for ( int i = 0; i<6; ++i ) 
+  {
+    for ( int j = 0; j<6; ++j ) { m_sumTab[i][j] = 0; } 
+  }
   m_nEvents[0] = 0;
   m_nEvents[1] = 0;
   m_nTracks[0] = 0;
@@ -96,18 +97,22 @@ StatusCode PIDQC::initialize()
   }
 
   // Warn if ignoring threshold information
-  if ( m_ignoreRecoThres ) Warning( "Ignoring reco threshold information", StatusCode::SUCCESS ).ignore();
-  if ( m_ignoreMCThres )   Warning( "Ignoring MC threshold information", StatusCode::SUCCESS ).ignore();
+  if ( m_ignoreRecoThres ) Warning( "Ignoring reco threshold information", 
+                                    StatusCode::SUCCESS ).ignore();
+  if ( m_ignoreMCThres )   Warning( "Ignoring MC threshold information", 
+                                    StatusCode::SUCCESS ).ignore();
 
   // Warn if using kaon DLL cut
-  if ( m_dllKaonCut < 9999991 ) Warning( "Applying kaon selection dll(kaon) < " +
-                                         boost::lexical_cast<std::string>(m_dllKaonCut),
-                                         StatusCode::SUCCESS ).ignore();
+  if ( m_dllKaonCut < 9999991 ) 
+    Warning( "Applying kaon selection dll(kaon) < " +
+             boost::lexical_cast<std::string>(m_dllKaonCut),
+             StatusCode::SUCCESS ).ignore();
 
   // Warn if using pion DLL cut
-  if ( m_dllPionCut < 9999991 ) Warning( "Applying pion selection dll(pion) < " +
-                                         boost::lexical_cast<std::string>(m_dllPionCut),
-                                         StatusCode::SUCCESS ).ignore();
+  if ( m_dllPionCut < 9999991 ) 
+    Warning( "Applying pion selection dll(pion) < " +
+             boost::lexical_cast<std::string>(m_dllPionCut),
+             StatusCode::SUCCESS ).ignore();
 
   return sc;
 }
@@ -167,9 +172,11 @@ StatusCode PIDQC::execute()
   int pidCount = 0;
 
   // Loop over all PID results
-  if ( !m_richPIDs.empty() ) {
+  if ( !m_richPIDs.empty() ) 
+  {
     for ( std::vector<ContainedObject*>::const_iterator iC = m_richPIDs.begin();
-          iC != m_richPIDs.end(); ++iC ) {
+          iC != m_richPIDs.end(); ++iC ) 
+    {
       LHCb::RichPID * iPID = dynamic_cast<LHCb::RichPID*>(*iC);
 
       // Track for this PID
