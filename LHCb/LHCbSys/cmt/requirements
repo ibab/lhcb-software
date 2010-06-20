@@ -106,7 +106,7 @@ use LoKiHlt               v3r2    Phys    # Ivan Belyaev
 use LoKiMC                v9r1    Phys    # Ivan Belyaev
 use LoKiNumbers           v9r1    Phys    # Ivan Belyaev
 use PatKernel             v2r3p1  Tf      # Stephanie Hansmann-Menzemer
-use RichKernel            v7r35   Rich    # In SVN. Chris Jones
+use RichKernel            v7r36   Rich    # In SVN. Chris Jones
 use RichRecBase           v3r30p1 Rich    # In SVN. Chris Jones
 use SiDAQ                 v2r1p1  Si      # Matt Needham
 use STKernel              v2r2    ST      # In SVN. Matt Needham
