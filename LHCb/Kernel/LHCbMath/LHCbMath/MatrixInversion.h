@@ -9,8 +9,8 @@
 // ============================================================================
 // matrix inversion implementation
 // ============================================================================
-#include "SymMatrixInverter.h"
-#include "SymPosDefMatrixInverter.h"
+#include "LHCbMath/SymMatrixInverter.h"
+#include "LHCbMath/SymPosDefMatrixInverter.h"
 
 // ============================================================================
 /** @file

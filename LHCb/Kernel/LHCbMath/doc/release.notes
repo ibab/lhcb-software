@@ -6,7 +6,11 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
-!========================= LHCbMath v3r18 2010-06-18 =========================
+!========================= LHCbMath v3r18 2010-06-20 =========================
+! 2010-06-20 - Marco Cattaneo
+ - LHCbMath/MatrixInversion.h:
+    Add missing include path to LHCbMath includes
+
 ! 2010-06-16 - Vanya Belyaev
  - LHCbMath/Types.py
    add the proper printout for matrices and symmetric matrices 
