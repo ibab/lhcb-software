@@ -1,9 +1,24 @@
-!$Id: release.notes,v 1.65 2010-06-01 09:40:07 poluekt Exp $
+!$Id: release.notes,v 1.66 2010-06-20 16:40:49 poluekt Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/StrippingConf
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
+
+! 2010-06-19 - Anton Poluektov
+ - Options BadEventSelection and GoodEventSelection in StrippingStream
+   and corresponding member functions SetBadEventSelection and SetGoodEventSelection. 
+   
+   If an algo is passed as BadEventSelection, it will run before all the lines 
+   of the stream. If it passes, the lines will NOT be run, but the event will be 
+   accepted. Use this if bad events have to be stored on stream DST.
+   
+   If GoodEventSelection is given, the lines will run only if it passes. 
+   If it fails (bad event), the event will not be accepted. 
+   Use this if bad events should NOT be stored on stream DST. 
+
+   BadEventSelection and GoodEventSelection cannot be given at the same time. 
+   By default, both are None. 
 
 ! 2010-06-01 - Anton Poluektov 
  - Added stream decisions (OR of all stream lines) to stripping DecReports
