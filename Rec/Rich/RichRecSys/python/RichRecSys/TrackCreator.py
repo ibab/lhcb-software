@@ -66,9 +66,6 @@ class RichTrackCreatorConfig(RichConfigurableUser):
         trackCr.MaxInputTracks = self.getProp("MaxInputTracks")
         trackCr.MaxUsedTracks  = self.getProp("MaxUsedTracks")
 
-        # OutputLevel
-        self.setOutputLevel(trackCr)
-
         # Input tracks
         if not self.isPropertySet("InputTracksLocation"):
             raise RuntimeError("ERROR : Input Track Location not set" )
@@ -97,6 +94,10 @@ class RichTrackCreatorConfig(RichConfigurableUser):
             trSeg = self.richTools().trSegMaker()
             trSeg.UseRadiators = self.getProp("Radiators")
             trackCr.addTool( trSeg, trSegNickName )
+
+        # OutputLevels
+        self.setOutputLevel(trackCr)
+        self.setOutputLevel(self.richTools().expectedTrackSignal())
 
         # Printout
         self.printInfo(segConf)

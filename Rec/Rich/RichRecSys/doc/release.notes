@@ -4,6 +4,9 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+! 2010-06-20 - Chris
+ - Propagate OutputLevel to expected track signal tool, when set.
+
 !====================== RichRecSys v3r29 2010-04-26 ==========================
 ! 2010-04-24 - Chris Jones
  - Tune the "Tight" photon selection cuts for 2010 data and make these the
