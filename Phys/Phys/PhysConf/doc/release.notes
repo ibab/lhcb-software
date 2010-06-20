@@ -1,9 +1,15 @@
-!$Id: release.notes,v 1.30 2009-11-16 15:43:22 jpalac Exp $
+!$Id: release.notes,v 1.31 2010-06-20 09:13:31 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/PhysConf
 ! Responsible : Patrick Koppenburg
 ! Purpose     : Configuration for Phys project
 !-----------------------------------------------------------------------------
+
+! 2010-06-20 - Juan Palacios for Vanya Belyaev
+ - Added python/PhysConf/Filters.py
+  . Helpers for instantiating various LoKi filter algorithms.
+ - cmt/requirements
+  . Increase to v1r7
 
 !========================== PhysConf v1r6 2009-11-16 ===================
 
