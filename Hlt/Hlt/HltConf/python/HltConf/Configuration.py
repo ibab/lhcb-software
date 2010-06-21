@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.197 2010-06-14 23:09:15 gligorov Exp $"
+__version__ = "$Id: Configuration.py,v 1.198 2010-06-21 06:13:54 albrecht Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -227,6 +227,7 @@ class HltConf(LHCbConfigurableUser):
                       , 51 : "HLT_PASS('Hlt1LumiMidBeamCrossingDecision')"
                       , 52 : "HLT_PASS_RE('Hlt1.*SingleHadron.*Decision')"
                       , 53 : "HLT_PASS_RE('Hlt1.*DiHadron.*Decision')"
+                      , 54 : "HLT_PASS_RE('Hlt1.*(SingleMuon|DiMuon|MuTrack).*Decision')"
                       # 64--96: Hlt2
                       , 64 : "HLT_PASS('Hlt2Global')"
                       , 65 : "HLT_PASS('Hlt2DebugEventDecision')"
@@ -242,6 +243,8 @@ class HltConf(LHCbConfigurableUser):
                       , 75 : "HLT_PASS_RE('Hlt2.*IncDiProton.*Decision')"
                       , 76 : "HLT_PASS_RE('Hlt2.*(Bu2|Bs2|Bd2|Bc2|B2HH|B2JpsiX|Dst2|diphotonDiMuon|DisplVertices).*Decision')"
                       , 77 : "HLT_PASS_RE('Hlt2(?!Forward)(?!DebugEvent)(?!Express)(?!Transparent)(?!PassThrough).*Decision')"
+                      , 78 : "HLT_PASS_RE('Hlt2.*(SingleMuon|DiMuon|MuTrack).*Decision')"
+                      , 79 : "HLT_PASS_RE('Hlt2.*(Topo|Charm|IncPhi|B2D2).*Decision')" 
                          }
         HltRoutingBitsWriter().RoutingBits = routingBits
 
