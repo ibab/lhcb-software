@@ -3,6 +3,9 @@
 ! Responsible : Patrick Koppenburg, Gerhard Raven
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
+! 2010-06-21 - Johannes Albrecht
+ - add Muons_Retention25: Collection of muon lines for HLT2 in rejection mode
+ - adapt Muons_Minimal - fallback solution which is supposed to be robust
 
 ! 2010-06-20 - V. Gligorov
  - Add prescaling of monitoring parts of the topological and add "CoreHlt2" setting
