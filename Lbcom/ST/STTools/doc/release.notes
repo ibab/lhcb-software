@@ -2,6 +2,7 @@
 ! Package manager : Jeroen van Tilburg
 !------------------------------------------------------------------------------
 
+!=========================== STTools v4r2 2010-06-21 ==========================
 ! 2010-06-17 - Jeroen VAN TILBURG
  - New tuning of eta correction (for new charge sharing tune) and new hit error
    estimates for MC.
@@ -15,15 +16,16 @@
 ! 2010-06-01 Mark Tobin
  - Implementation of pedestal method in noise calculation tools.
  - The method is needed as the methods which return the mean raw ADCs etc.. do
- so for values after the pedestal substraction in the CMS code.  The pedestal
- method return the average ADC before any processing.
+   so for values after the pedestal substraction in the CMS code.  The pedestal
+   method return the average ADC before any processing.
 
 ! 2010-06-02 M Needham
- - Add new selector tool STRndmEffSelector (used by default by cluster selector from channel)
+ - Add new selector tool STRndmEffSelector 
+   (used by default by cluster selector from channel)
 
 ! 2010-06-01 Mark Tobin
  - Implementation of new methods in noise calculation tools.  Now returns a list
- of TELL1 source ID which had an NZS bank.
+   of TELL1 source ID which had an NZS bank.
 
 !=========================== STTools v4r1 2010-05-21 ==========================
 ! 2010-05-12 - Rob Lambert
