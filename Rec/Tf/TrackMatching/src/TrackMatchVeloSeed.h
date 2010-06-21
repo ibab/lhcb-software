@@ -9,6 +9,7 @@
 // -------------
 // from Gaudi
 #include "GaudiAlg/GaudiHistoAlg.h"
+#include "GaudiAlg/ISequencerTimerTool.h"
 
 // from TrackInterfaces
 #include "TrackInterfaces/ITrackExtrapolator.h"
@@ -163,6 +164,10 @@ private:
 
   unsigned int m_maxNSeed;
   unsigned int m_maxNVelo;
+
+   ISequencerTimerTool* m_timerTool;
+   int  m_matchTime;
+   bool m_doTiming;
 
 };
 

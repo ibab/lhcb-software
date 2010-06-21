@@ -102,10 +102,9 @@ TrackMatchVeloSeed::TrackMatchVeloSeed( const std::string& name,
 
   declareProperty("maxNVelo", m_maxNVelo = 1000);
   declareProperty("maxNSeed", m_maxNSeed = 2000);
-
+  
+  declareProperty( "TimingMeasurement", m_doTiming = false);
  
-
-
 }
 //=============================================================================
 // Destructor
@@ -141,6 +140,15 @@ StatusCode TrackMatchVeloSeed::initialize()
   if (m_tyTParams.empty() || m_yTParams.empty()){
     return Error("Failed to initialize: Empty parameter vector !", StatusCode::FAILURE);
   }
+  
+
+  if ( m_doTiming) {
+    m_timerTool = tool<ISequencerTimerTool>( "SequencerTimerTool" );
+    m_timerTool->increaseIndent();
+    m_matchTime = m_timerTool->addTimer( "Internal TrackMatching" );
+    m_timerTool->decreaseIndent();
+  }
+
 
   return StatusCode::SUCCESS;
 };
@@ -150,6 +158,8 @@ StatusCode TrackMatchVeloSeed::initialize()
 //=============================================================================
 StatusCode TrackMatchVeloSeed::execute()
 {
+  if ( m_doTiming ) m_timerTool->start( m_matchTime );
+
   // Retrieve velo and seed tracks from EvDS
   Tracks* veloTracks = get<Tracks>( m_veloTracks );
   Tracks* seedTracks = get<Tracks>( m_seedTracks );
@@ -214,6 +224,8 @@ StatusCode TrackMatchVeloSeed::execute()
   // clean up the maps
   m_usedVelo.clear();
   m_usedT.clear();
+
+  if ( m_doTiming) m_timerTool->stop( m_matchTime );
 
   return StatusCode::SUCCESS;
 };
