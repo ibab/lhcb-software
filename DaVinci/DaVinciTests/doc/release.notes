@@ -4,6 +4,10 @@
 ! Purpose     : QMTests for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2010-06-21 - Juan Palacios
+ - Removed tests/qmtest/davinci.qms/stripping.qms/test_realdata.qmt
+  . Covered by other stripping tests and getting out of date.
+
 ! 2010-06-16
  - tests/qmtest/davinci.qms/fsrs.qms/davinci-strip-magup.qmt
  - tests/qmtest/davinci.qms/fsrs.qms/davinci-strip-magdown.qmt
