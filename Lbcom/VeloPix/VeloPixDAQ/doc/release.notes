@@ -4,6 +4,7 @@
 ! Purpose     : Prepare VeloPix RawBank and decode it
 !--------------------------------------------------------------------------
 
+!=========================  VeloPixDAQ v1r2 2010-06-21 =====================
 ! 2010-06-10 - Marco Cattaneo
  - Fix windows compiler warnings
 
