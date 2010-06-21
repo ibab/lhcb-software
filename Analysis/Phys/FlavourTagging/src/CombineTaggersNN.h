@@ -40,6 +40,7 @@ private:
   double m_P0_NN, m_P1_NN;
   double m_omegascale, m_omegamaxbin;
 
+  std::string getPath(std::string);
   std::string m_TmvaMethod;
   std::string m_WeightsFile;
   TMVA::Reader* m_reader_comb;

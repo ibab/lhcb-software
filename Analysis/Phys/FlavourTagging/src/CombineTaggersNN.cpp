@@ -25,7 +25,7 @@ CombineTaggersNN::CombineTaggersNN( const std::string& type,
   declareProperty( "P0_NN",     m_P0_NN     = 0.502625 ); 
   declareProperty( "P1_NN",     m_P1_NN     = 0.504699 );
   declareProperty( "ProbMin_NN",     m_ProbMin_NN     = 0.55 );
-  declareProperty( "WeightsFile", m_WeightsFile= "/afs/cern.ch/user/m/mgrabalo/TMVAClassification_MLP.weights.xml");
+  declareProperty( "WeightsFile", m_WeightsFile="CombineNN_MLP.weights.xml");
   declareProperty( "TmvaMethod",  m_TmvaMethod = "MLP method");
 }
 
@@ -34,15 +34,14 @@ CombineTaggersNN::~CombineTaggersNN(){}
 //=============================================================================
 StatusCode CombineTaggersNN::initialize() { 
 
-  //  m_reader_comb = new TMVA::Reader(0);
-  info()<<"The weights file is at "<<m_WeightsFile<<endreq;
+  std::string pathWeightsFile = getPath( m_WeightsFile );
   m_reader_comb = new TMVA::Reader("!Color");
   m_reader_comb->AddVariable("pmu", &pmu);
   m_reader_comb->AddVariable("pe", &pe);
   m_reader_comb->AddVariable("pk", &pk);
   m_reader_comb->AddVariable("pss", &pss);
   m_reader_comb->AddVariable("pvtx", &pvtx);
-  m_reader_comb->BookMVA( m_TmvaMethod, m_WeightsFile );
+  m_reader_comb->BookMVA( m_TmvaMethod, pathWeightsFile ); 
   return StatusCode::SUCCESS;
 }
 
@@ -178,3 +177,26 @@ int CombineTaggersNN::combineTaggers(FlavourTag& theTag,
   return category;
 }
 //=============================================================================
+
+std::string CombineTaggersNN::getPath( std::string nameWeightsFile ) {
+
+ char Path[500];
+ /*set a default path to weights file*/
+ if( strlen( nameWeightsFile.c_str() ) == 0) return "";
+ char defPath[500];
+ char* relPathPart1;
+ relPathPart1 = getenv("FLAVOURTAGGINGROOT");
+ char* relPathPart2;
+ relPathPart2 = "/src/NeuralNet/weights/";
+#if defined (WIN32)
+ relPathPart2 = "\src\NeuralNet\weights\\";
+#endif
+ std::sprintf( defPath, "%s%s", relPathPart1, relPathPart2);
+ std::string stringdefPath( defPath );
+    std::sprintf( Path, "%s%s", defPath, nameWeightsFile.c_str());
+ std::string stringPath( Path );
+ info()<<"Reading from "<<stringPath<<endreq;
+ return stringPath;
+}
+
+
