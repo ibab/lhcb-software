@@ -1,4 +1,4 @@
-// $Id: PVReFitterAlg.cpp,v 1.16 2010-04-15 12:56:20 jpalac Exp $
+// $Id: PVReFitterAlg.cpp,v 1.17 2010-06-21 12:11:36 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -56,7 +56,6 @@ PVReFitterAlg::PVReFitterAlg( const std::string& name,
   declareProperty("UseIPVReFitter",    m_useIPVReFitter);
   declareProperty("ParticleInputLocation",  m_particleInputLocation);
   declareProperty("PrimaryVertexInputLocation",  m_PVInputLocation);
-  declareProperty("OutputLocation", m_outputLocation);
   
 }
 //=============================================================================
@@ -100,12 +99,17 @@ StatusCode PVReFitterAlg::initialize() {
   }
   
 
-  m_outputLocation = this->name();
+  m_outputLocation = m_particleInputLocation;
+  
+  removeEnding(m_outputLocation, "/Particles");
+
+  std::string instanceName = this->name();
+  
   DaVinci::StringUtils::expandLocation(m_outputLocation,
                                        m_onOfflineTool->trunkOnTES());
 
-  m_vertexOutputLocation = m_outputLocation + "/_ReFittedPVs";
-  m_particle2VertexRelationsOutputLocation = m_outputLocation + "/Particle2VertexRelations";
+  m_vertexOutputLocation = m_outputLocation + "/"+instanceName+"ReFittedPVs";
+  m_particle2VertexRelationsOutputLocation = m_outputLocation + "/"+instanceName+"P2PVRelations";
 
   return sc;
   
@@ -274,4 +278,14 @@ StatusCode PVReFitterAlg::finalize() {
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
 
+//=============================================================================
+void PVReFitterAlg::removeEnding(std::string& a, const std::string& ending)
+{
+  std::string::size_type pos = a.rfind(ending);
+  if ( pos != std::string::npos ) {
+    std::cout << "found " << ending << " at " << pos << std::endl;
+    a = std::string(a, 0, pos);
+    
+  }
+}
 //=============================================================================
