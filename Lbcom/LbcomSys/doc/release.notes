@@ -6,6 +6,50 @@
 !             : project contain components used by all applications except Gauss
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v9r4>2010-06-23 LbcomSys v9r4</A></H1><PRE>
+This version uses Gaudi v21r9 and LHCb v31r2
+
+- Packages modified: CaloAssociators v6r10p1, CaloTools v5r16p1, HltDAQ v2r0p2,
+    L0Calo v11r2p1, L0DU v10r8, L0Muon v9r1p1, L0MuonMonitor v2r0p1,
+    STAlgorithms v4r1, STMonitors v3r2, STTools v4r2, VeloPixDAQ v1r2p1
+
+- In HltDAQ v2r0p1
+  . Fix memory leak, see https://savannah.cern.ch/bugs/index.php?68285
+
+- In L0DU v10r8
+  . L0Filter : fix doxygen documentation
+  . L0DURawBankMonitor : BXID-decision monitoring in detail 
+                         (positive bcid per channel/trigger). 
+
+- In STAlgorithms v4r1
+  . STClusterKiller prints out fraction of clusters killed
+
+- In STMonitors v3r2
+  . Some bug fixes in the NZS monitoring algorithm
+  . More robust calculation of MPV in cluster monitoring
+  . STNoiseCalculation changed to GaudiAlgorithm and not STBaseAlg as it doesn't
+    care about the detector type.
+  . Add options for monitoring TAE NZS events
+  . Use new noise tool interface to only update NZS plots for TELL1s which have
+    sent NZS data.  Hopefully fixes issues running on round robin data.
+  . Added an event counting histogram, plus fraction errors/port/tell1
+    STErrorMonitor.
+  . Added extra histograms to STClusterMonitor.
+  . Plus some extra bug fixes.
+
+- In STTools v4r2
+  . New tuning of eta correction (for new charge sharing tune) and new hit error
+    estimates for MC.
+  . Changed the calculation of the effect of the Lorentz angle.
+  . Add new selector tool STRndmEffSelector 
+    (used by default by cluster selector from channel)
+  . Implementation of new methods in noise calculation tools
+
+- In CaloAssociators v6r10p1, CaloTools v5r16p1, HltDAQ v2r0p1, L0Calo v11r2p1,
+     L0Muon v9r1p1, L0MuonMonitor v2r0p1, STTools v4r2, VeloPixDAQ v1r2p1
+  . Fix Windows compilation warnings. Now there are no such warnings left in
+    Lbcom project
+
 </PRE><H1><A NAME=v9r3>2010-05-25 LbcomSys v9r3</A></H1><PRE>
 This version uses Gaudi v21r9 and LHCb v31r1
 
