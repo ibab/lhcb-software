@@ -8,9 +8,13 @@
 #include "TVector3.h"
 #include "TLorentzVector.h"
 #include "TROOT.h"
+#include "TApplication.h"
+#include "TLine.h"
 
 // global variables
+int globall0tis=0, globall0tos=0;
 double nsele(0);
+double PI(3.14159);
 string CombTechnique="NNet";
 double nrt[20],nwt[20],nrtag[20],nwtag[20];
 float nlm(0),nllm(0),nle(0),nlle(0),nlk(0),nlkS(0),nllk(0),nllkS(0),nidm(0)
@@ -19,18 +23,18 @@ float nghost_m(0),nghost_e(0),nghost_k(0), nghost_kS(0), ghrate_k(0),gherror_k(0
 float ghrate_kS(0),gherror_kS(0); 
 float ghrate_m(0),gherror_m(0),ghrate_e(0),gherror_e(0);
 int nrTisTis(0),nrTosTos(0),nrTisTos(0),nrTosTis(0),nrTob(0);
-int n2trackR=0, n2trackW=0, ntrackR=0, ntrackW=0;
 int ntruemu=0, ntrueel=0, ntruekO=0, ntruekS=0;
 int ntruemutag=0, ntrueeltag=0, ntruekOtag=0, ntruekStag=0;
 int ndirect_mu=0,ndirect_el=0,nbc_mu=0,nbc_el=0,nbc_kO=0,nbc_kS=0;
-int isBs(0), DBG(0), askL0(0), askHlt1(0), askHlt2(0);
+int isBs(0), DBG(0), askL0(0), askHlt1(0), askHlt2(0), askTis(0), askTos(0), askPtB(0), askWeightedch(0);
+int askNNcomb(0), DBGNN(0);
 string ROJO("\x1b[91m"),ROJO2("\x1b[31m"), VERDE("\x1b[32m"), AMARILLO("\x1b[33m"),
   AZUL("\x1b[94m"),AZULCLARO("\x1b[36m"), VIOLETA("\x1b[95m"),SUBROJO("\x1b[101m"),
   SUBVERDE("\x1b[102m"), SUBAMARILLO("\x1b[103m"), SUBAZUL("\x1b[104m"), 
   SUBVIOLETA("\x1b[105m"),SUBBLANCO("\x1b[107m"),BLANCO("\x1b[37m"), 
   BOLD("\x1b[1m"),ENDC("\x1b[m"),FAINT("\x1b[2m"),UNDERLINE("\x1b[4m"),
   BLINK("\x1b[5m"),CLEARSCREEN("\x1b[2J"), DEL1L("\x1b[2A\n\n");
-
+double tag();
 
 //functions////////////////////////////////////////////////////////////////
 TString readString(TString varname) {
@@ -87,6 +91,14 @@ double read(TString varname) {
 }
 
 //////////////////////////////////////////////////////////////////////////
+bool isNonResonantD(float id) {
+  
+  int aid = (int)fabs(id);
+  if(aid==411 || aid==421 || aid==431) return true;
+
+  return false;
+}
+//////////////////////////////////////////////////////////////////////////
 bool isD(int id) {
   
   int aid = abs(id);
@@ -97,7 +109,11 @@ bool isD(int id) {
 
   return false;
 }
-
+double dPhi(double f1, double f2){
+  double a = fabs(f1-f2);
+  if(a>PI) a = 2*PI-a;
+  return a;
+}
 //////////////////////////////////////////////////////////////////////////
 TGraphErrors* plotVersus(TH1F* rh, TH1F* wh, TString name="graphic" ){ 
 
@@ -231,6 +247,58 @@ void calculateOmega(TH1F* rh, TH1F* wh, TH1F* omega){ //used by plot_omega()
   omega->SetMinimum(0.0); 
   omega->SetMaximum(0.7);
 }
+////////////////////////////////////////////////////////////////////////
+TH1F* plot_ratio(TString name, TH1F* rh, TH1F* wh, TH1F* extra=0){ 
+
+  TCanvas* c= (TCanvas*)gROOT->GetListOfCanvases()->FindObject("c");  
+  c->Clear(); 
+  c->Divide(1,2);
+  c->cd(1);
+
+  TH1F* htot = (TH1F*) rh->Clone(); 
+  htot->SetName("htotal");
+  htot->Add(wh);
+  htot->SetLineColor(2);
+  htot->SetFillColor(2);
+  htot->SetLineWidth(1); 
+  htot->SetMinimum(0.0); 
+  htot->SetTitle("; "   +name+"; Events");
+  htot->Draw();
+
+  rh->SetLineColor(0);
+  rh->SetFillColor(3);
+  rh->SetLineWidth(1); 
+  rh->SetMinimum(0.0); 
+  rh->Draw("same");
+
+  
+  if(extra) {
+    extra->SetLineStyle(2);
+    extra->SetLineColor(4);
+    extra->SetLineWidth(1); 
+    extra->Draw("same");
+  }
+
+  TH1F* hhh = (TH1F*) rh->Clone(); 
+  hhh->SetName("_hratio");
+  calculateOmega(wh, rh, hhh);
+  hhh->SetTitle("; "   +name+"; Purity");
+  hhh->SetMaximum(1.1);
+  hhh->SetMinimum(0);
+  c->GetPad(1)->RedrawAxis();
+  c->cd(2); c->GetPad(2)->SetGrid();
+  hhh->Fit("pol2");
+  double p0= hhh->GetFunction("pol2")->GetParameter(0);
+  double p1= hhh->GetFunction("pol2")->GetParameter(1);
+  double p2= hhh->GetFunction("pol2")->GetParameter(2);
+  cout<< "double prob_"<<name<<" = pol("<<name 
+      <<", "<<p0<<", "<<p1<<", "<<p2<<");"<<endl;
+
+  c->Print("pics/ratio_"+name+".gif"); c->cd();
+  c->Update();
+
+  return hhh;
+}
 
 ////////////////////////////////////////////////////////////////////////
 TH1F* plot_omega(TH1F* rh, TH1F* wh, TString name, int opts=1){ 
@@ -280,6 +348,8 @@ TH1F* plot_omega(TH1F* rh, TH1F* wh, TString name, int opts=1){
     } else cout<<"ERROR: do touch ./NN_FitParameters.txt"<<endl;
   } 
   if(opts==1) hhh->Fit("pol1"); 
+  TLine* a=new TLine(0,0, .6,.6);
+  if(opts==1) a->Draw(); a->SetLineColor(4); a->SetLineStyle(4); a->SetLineWidth(2);
   c->Print("pics/nn_"+name+".gif"); c->cd();
   c->Update();
 
@@ -287,14 +357,10 @@ TH1F* plot_omega(TH1F* rh, TH1F* wh, TString name, int opts=1){
 }
 
 ////////////////////////////////////////////////////////////////////////
-TH1F* calculateEffEff(const TH1F* rh, const TH1F* wh, 
-		      TString direction="left2right" ){ 
+void calculateEffEff(double nsele, TH1F* rh, TH1F* wh, TH1F* effeff, 
+		     TString direction="left2right" ){ 
 
-  TH1F* effeff = new TH1F(*rh);
-  effeff->Reset();
-  effeff->SetName("heffec");
-
-  for(int i=1; i!=rh->GetNbinsX(); ++i) {
+  for(int i=0; i!=rh->GetNbinsX()+1; ++i) {
 
     double rtag=0, wtag=0;
     if(direction == "left2right") {
@@ -307,12 +373,12 @@ TH1F* calculateEffEff(const TH1F* rh, const TH1F* wh,
 	rtag += rh->GetBinContent(j);
 	wtag += wh->GetBinContent(j);
       }
-    } else cout<<"calculateEffEff Error: unknown option "<<direction<<endl;
+    } else cout<<"Error: unknown option "<<direction<<endl;
 
     if(rtag) if(wtag) {
       double utag = nsele-rtag-wtag;              // untagged
       double omtag = wtag/(rtag+wtag);
-      double eftag = (rtag+wtag)/nsele;// tagging efficiency
+      double eftag = (rtag+wtag)/nsele;           // tagging efficiency
       double epsil = eftag*pow(1-2*omtag,2);      // effective efficiency
       if(rtag<wtag) epsil= -epsil;
       double epsilerr = sqrt((pow(rtag - wtag,2)*
@@ -323,16 +389,56 @@ TH1F* calculateEffEff(const TH1F* rh, const TH1F* wh,
       effeff->SetBinError(i, epsilerr*100);
     }
   }
-  effeff->SetMinimum(0);
-
-  return effeff;
+  rh->SetMinimum(0);
+  wh->SetMinimum(0);
 }
+// ////////////////////////////////////////////////////////////////////////
+// TH1F* calculateEffEff(const TH1F* rh, const TH1F* wh, 
+// 		      TString direction="left2right" ){ 
+
+//   TH1F* effeff = new TH1F(*rh);
+//   effeff->Reset();
+//   effeff->SetName("heffec");
+
+//   for(int i=1; i!=rh->GetNbinsX(); ++i) {
+
+//     double rtag=0, wtag=0;
+//     if(direction == "left2right") {
+//       for(int j=i; j!=rh->GetNbinsX()+1; j++)  { 
+// 	rtag += rh->GetBinContent(j);
+// 	wtag += wh->GetBinContent(j);
+//       }
+//     } else if(direction == "right2left") {
+//       for(int j=1; j!=i+1; j++)  { 
+// 	rtag += rh->GetBinContent(j);
+// 	wtag += wh->GetBinContent(j);
+//       }
+//     } else cout<<"calculateEffEff Error: unknown option "<<direction<<endl;
+
+//     if(rtag) if(wtag) {
+//       double utag = nsele-rtag-wtag;              // untagged
+//       double omtag = wtag/(rtag+wtag);
+//       double eftag = (rtag+wtag)/nsele;// tagging efficiency
+//       double epsil = eftag*pow(1-2*omtag,2);      // effective efficiency
+//       if(rtag<wtag) epsil= -epsil;
+//       double epsilerr = sqrt((pow(rtag - wtag,2)*
+// 			      (-(pow(rtag - wtag,2)*(rtag +wtag))+nsele
+// 			       *(pow(rtag,2) +14*rtag*wtag+ pow(wtag,2))))
+// 			     /(pow(rtag+wtag+utag,3)*pow(rtag + wtag,3)));
+//       effeff->SetBinContent(i, epsil*100);
+//       effeff->SetBinError(i, epsilerr*100);
+//     }
+//   }
+//   effeff->SetMinimum(0.2);
+
+//   return effeff;
+// }
 
 //======================================================================
 void decode(const int flags, int& a, int& b, int& c) {
   a = int(float(flags)/100);
   b = int(float(flags-100*a)/10);
-  c = int(float(flags-100*a-10000*b)/1);
+  c = int(float(flags-100*a-10*b)/1);
 }
 void decode(const int flags, int& a, int& b, int& c, int& d, int& e, int& f){
   a = int(float(flags)/100000);
@@ -378,13 +484,13 @@ float PrintPerformance(){
       "\n=========================================================\n";
     cout<<"Fraction in event sample of true particles from B:"<<endl;
     cout<<ENDC<<setprecision(3)<<"mu= "<<float(ntruemu)/nsele*100
-	<< "%\t (sel. as tagger:"<<float(ntruemutag)/nsele*100<<"%)"<<endl;
+	<< "  %\t (sel. as tagger:"<<float(ntruemutag)/nsele*100<<"%)"<<endl;
     cout<<"el= "<<float(ntrueel)/nsele*100
-	<< "%\t (sel. as tagger:"<<float(ntrueeltag)/nsele*100<<"%)"<<endl;
+	<< "  %\t (sel. as tagger:"<<float(ntrueeltag)/nsele*100<<"%)"<<endl;
     cout<<"kO= "<<float(ntruekO)/nsele*100
-	<< "%\t (sel. as tagger:"<<float(ntruekOtag)/nsele*100<<"%)"<<endl;
+	<< "  %\t (sel. as tagger:"<<float(ntruekOtag)/nsele*100<<"%)"<<endl;
     if(isBs)cout<<"kS= "<<float(ntruekS)/nsele*100
-	<< "%\t (sel. as tagger:"<<float(ntruekStag)/nsele*100<<"%)"<<endl;
+	<< "  %\t (sel. as tagger:"<<float(ntruekStag)/nsele*100<<"%)"<<endl;
     cout<<BOLD<<"Fraction in tagger sample of:\n"<<ENDC;
     cout<<"b->mu= "<<int(float(ndirect_mu)/(nrtag[1]+nwtag[1])*100)<<"%\t";
     cout<<"b->c->mu= "<<int(float(nbc_mu)/(nrtag[1]+nwtag[1])*100)<<"%\n";
@@ -430,7 +536,7 @@ float PrintPerformance(){
 		   <<"       "<<(nllk/nlk*100)<<" %"<<endl;
     if(isBs && den_kS)
       cout <<"kaonS:      "<<(nidkS/den_kS*100)
-	   <<"       "<<(nllkS/nlkS*100)<<" %"<<endl;
+	   <<"       "<<(nllkS/nlkS*100)<<" %";
   }
   cout<<BOLD<<"\n=========================================================";
   cout<< "\n Category            EFF.          Etag         Wrong TF"
@@ -520,4 +626,47 @@ float PrintPerformance(){
   cout <<BOLD<< 
     "=========================================================\n\n"<<ENDC;
   return effe_tot*100;
+}
+//=====================================================================
+#include <fstream>
+#include <iostream>
+#include <string>
+
+#ifdef __CINT__
+#undef __attribute__
+#define __attribute__(X)
+#endif
+#include <dirent.h>
+
+#include <unistd.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+std::vector<TString> getFiles(string dir) {
+
+  std::vector<TString> filelist(0);
+  ifstream fin;
+  string filepath;
+  DIR *dp;
+  struct dirent *dirp;
+  struct stat filestat;
+
+  dp = opendir( dir.c_str() );
+  if (dp == NULL) {
+    cout << "Error opening " << dir << endl;
+    return filelist;
+  }
+  while ((dirp = readdir( dp ))) {
+    filepath = dir + "/" + dirp->d_name;
+    // If the file is a directory (or is in some way invalid) we'll skip it 
+    if (stat( filepath.c_str(), &filestat )) continue;
+    if (S_ISDIR( filestat.st_mode ))         continue;
+    const char* astr = "root";//check that filepath word contains root
+    const char* conroot = strstr( filepath.c_str(), astr );
+    if( !conroot ) continue;
+    //cout<<conroot<<"file  "<<filepath<<endl;
+    filelist.push_back(filepath);
+  }
+  closedir( dp );
+  std::sort(filelist.begin(), filelist.end());
+  return filelist;
 }

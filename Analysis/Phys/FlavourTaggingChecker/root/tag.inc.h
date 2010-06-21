@@ -40,6 +40,13 @@
    Float_t         tau;
    Float_t         tauErr;
    Float_t         ctChi2;
+   Int_t           V;
+   Float_t         SecVtx_pt1[100];
+   Float_t         SecVtx_pt2[100];
+   Float_t         SecVtx_x[100];
+   Float_t         SecVtx_y[100];
+   Float_t         SecVtx_z[100];
+   Float_t         SecVtx_chi2[100];
    Int_t           M;
    Float_t         sID[10];
    Float_t         sMothID[10];
@@ -85,12 +92,19 @@
    Float_t         MCP[200];
    Float_t         MCPt[200];
    Float_t         MCphi[200];
+//   Float_t         MCx[200];
+//   Float_t         MCy[200];
    Float_t         MCz[200];
    Float_t         mothID[200];
    Float_t         ancID[200];
    Float_t         bFlag[200];
    Float_t         xFlag[200];
    Float_t         vFlag[200];
+   Float_t         IPSV[200];
+   Float_t         IPSVerr[200];
+   Float_t         DOCA[200];
+   Float_t         DOCAerr[200];
+   Float_t         Chi2Seed[200];
 
    // Set branch addresses.
    mytagging->SetBranchAddress("trig",&trig);
@@ -133,6 +147,13 @@
    mytagging->SetBranchAddress("tau",&tau);
    mytagging->SetBranchAddress("tauErr",&tauErr);
    mytagging->SetBranchAddress("ctChi2",&ctChi2);
+   mytagging->SetBranchAddress("V",&V);
+   mytagging->SetBranchAddress("SecVtx_pt1",SecVtx_pt1);
+   mytagging->SetBranchAddress("SecVtx_pt2",SecVtx_pt2);
+   mytagging->SetBranchAddress("SecVtx_x",SecVtx_x);
+   mytagging->SetBranchAddress("SecVtx_y",SecVtx_y);
+   mytagging->SetBranchAddress("SecVtx_z",SecVtx_z);
+   mytagging->SetBranchAddress("SecVtx_chi2",SecVtx_chi2);
    mytagging->SetBranchAddress("M",&M);
    mytagging->SetBranchAddress("sID",sID);
    mytagging->SetBranchAddress("sMothID",sMothID);
@@ -178,9 +199,17 @@
    mytagging->SetBranchAddress("MCP",MCP);
    mytagging->SetBranchAddress("MCPt",MCPt);
    mytagging->SetBranchAddress("MCphi",MCphi);
+//   mytagging->SetBranchAddress("MCx",MCx);
+//   mytagging->SetBranchAddress("MCy",MCy);
    mytagging->SetBranchAddress("MCz",MCz);
    mytagging->SetBranchAddress("mothID",mothID);
    mytagging->SetBranchAddress("ancID",ancID);
    mytagging->SetBranchAddress("bFlag",bFlag);
    mytagging->SetBranchAddress("xFlag",xFlag);
    mytagging->SetBranchAddress("vFlag",vFlag);
+   mytagging->SetBranchAddress("IPSV",IPSV);
+   mytagging->SetBranchAddress("IPSVerr",IPSVerr);
+   mytagging->SetBranchAddress("DOCA",DOCA);
+   mytagging->SetBranchAddress("DOCAerr",DOCAerr);
+   mytagging->SetBranchAddress("Chi2Seed",Chi2Seed);
+

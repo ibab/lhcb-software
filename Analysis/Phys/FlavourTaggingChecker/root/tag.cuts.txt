@@ -1,7 +1,7 @@
   //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
   //
   //THIS A TEXT FILE!
-  //REMEMBER, the "=" sign needs spaces around it, no need of ,;""
+  //REMEMBER, the "=" sign needs spaces around it, no need of , ; or ""
   //
   //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> DATA
    this is the file name that you want to run (LAST ONE IS TAKEN)
@@ -10,15 +10,40 @@
    datafile = /afs/cern.ch/user/m/musy/public
    datafile = /afs/cern.ch/user/m/musy/public/analysis.root
 
+ 
+   datafile = dati/v25r2/MC10/bsdspi
+
+ 
+   datafile = dati/v25r2_retune/bsdspi
+
+   datafile = dati/v25r2_retune/bsdspi_seed2
+   datafile = dati/v25r2_retune/bsjpsiphi_seed2
+   datafile = dati/v25r2_retune/bskk_seed2
+   datafile = dati/v25r2_retune/bdkp_seed2
+   datafile = dati/v25r2_retune/bujpsik_seed2
+
+   datafile = ../../work/TaggingMC10/jpsi
+   datafile = ../../work/TaggingMC10/other
+   datafile = ../../work/TaggingMC10/Bs2DsPi/7tev
+   datafile = ../../work/TaggingMC10/Bs2KK/7tev
+   datafile = ../../work/TaggingMC10/Bs2JpsiPhi/7tev
+   datafile = ../../work/TaggingMC10/Bd2JpsiKst/7tev
+   datafile = ../../work/TaggingMC10/Bs2DsPi/7tev
 
    //>>>>>>>>>>>>>>>>>>>>>> STEERING >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
-   askL0   = 0      // Trigger 
+   askL0   = 1     // Trigger
    askHlt1 = 0 
    askHlt2 = 0 
+   askTis  = 0
+   askTos  = 0
+   askPtB  = 0       // PtB window (8-11GeV)
+   askWeightedch = 0 // Weighted ch with Pt
+   askNNcomb = 1     // Comb taggers with NN
+   DBGNN = 0
 
-   Nmax    = 10000     // events to run, -1=all
-   param   = -1     // a user internal value to play with
+   param   = -1         // a user internal value to play with
+   Nmax    = -1     // events to run, -1=all
 
    cheatID = 0      // Perfect ID with MC truth
    cheatP  = 0      // Perfect  P and Pt of tracks
@@ -31,45 +56,57 @@
 
   //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> MC09 nu=1 cuts
   //Taggers common selection cuts 
-   IPPU_cut = 3.0, distPhi_cut = 0.005;
+   IPPU_cut   = 3.0, distPhi_cut = 0.005;
   //dilution binning range for omega combination
    ProbMin    = 0.55;
+   ProbMin_NNcomb = 0.555;
    omegascale = 0.06, omegamaxbin = 0.36;
 
   //muons -------------
    Muon_Pt_cut = 1.1, Muon_P_cut = 0; 
-   lcs_m_cut   = 2.0;
-   PID_m_cut   = 0.0;
+   lcs_m_cut   = 2.2;
+   PID_m_cut   = 2.0;
+   ProbMin_muon = 0.5;
 
   //elect -------------
-   Ele_Pt_cut   = 1.2, Ele_P_cut = 0;
+   Ele_Pt_cut   = 1.1, Ele_P_cut = 0;
    VeloChargeMin = 0.0, VeloChargeMax = 1.3, Ele_EoverP_cut = 0.85;
-   lcs_e_cut  = 3.0; 
-   Ele_ghost_cut = -999;
+   lcs_e_cut  = 2.5; 
+   Ele_ghost_cut = -15;
    PID_e_cut  = 4.0;
+   ProbMin_ele = 0.5;
 
   //OS kaons -------------
-   Kaon_Pt_cut = 0.4, Kaon_P_cut = 4.0,  Kaon_IP_cut = 3.8, Kaon_IPRAW_cut = 1.5;
+   Kaon_Pt_cut   = 0.5, Kaon_P_cut = 4,  Kaon_IP_cut = 3.0, Kaon_IPRAW_cut = 1.5;
+   lcs_k_ups_cut = 2.0, lcs_k_long_cut = 2.0 , Kaon_ghost_prob_cut = -12 ;
+   PID_k_cut     = 0.0, PID_kp_cut     = -1.0;
+
+SUSSTITUTED!!! with the older wihich were better:
+  //OS kaons -------------
+   Kaon_Pt_cut = 0.4, Kaon_P_cut = 4,  Kaon_IP_cut = 3.8, Kaon_IPRAW_cut = 1.5;
    lcs_k_ups_cut = 2.0, lcs_k_long_cut = 2.5 , Kaon_ghost_prob_cut = -14 ;
    PID_k_cut     = 0.0, PID_kp_cut     = -1.0;
+   ProbMin_kaon = 0.5;
+   powkOS = 0.35, kwcut = 0.15;
 
   //cuts x Same Side tagging Kaons -------------
    KaonSame_Pt_cut  = 0.45, KaonSame_P_cut   = 4,   KaonSame_IP_cut = 3.0;
    KaonSame_Phi_cut = 1.1,  KaonSame_Eta_cut = 1.0, KaonSame_dQ_cut = 1.6;
    lcs_kS_cut = 2.0;
    PID_kS_cut = 1.0, PID_kpS_cut = -1.0;
+   ProbMin_kaonS = 0.5;
+   powkSS = 0.35, kSwcut = 0.1;
 
   //cuts x Same Side tagging Pions -------------
-   PionSame_Pt_cut = 0.6, PionSame_P_cut   = 5, PionSame_IP_cut = 2.8;
+   PionSame_Pt_cut = 0.6, PionSame_P_cut   = 0, PionSame_IP_cut = 3.5;
    PionSame_dQ_cut = 3.0, PionSame_dQ2_cut = 1.5;
    PionSame_PIDNoK_cut = 3, PionSame_PIDNoP_cut = 10.0;
-   Pion_ghost_prob_cut = -25;
-   lcs_pS_cut   = 3.0;
+   Pion_ghost_prob_cut = -999;
+   lcs_pS_cut   = 2.0;
    ProbMin_pion = 0.55;
+   powpSS = 5., pSwcut = 0.1;
 
   //weight of Vch in tagging decision -------------
-   VchPowerK = 0.35, MinimumVCharge = 0.15;
-   m_P0 = 5.255669e-01, m_P1 = -3.251661e-01, m_Gt075 = 0.35;
-   wSameSign2 = 0.4141, wSameSignMoreThan2 = 0.3250;
+   VchPowerK = 0.35, MinimumVCharge = 0.12;
    ProbMinVtx = 0.52;
   //>>>>>>>>>>>>>>>>>>>>>>>>
