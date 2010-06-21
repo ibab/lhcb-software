@@ -1,4 +1,4 @@
-// $Id: DaVinciStringUtils.h,v 1.2 2009-11-10 13:13:19 jpalac Exp $
+// $Id: DaVinciStringUtils.h,v 1.3 2010-06-21 12:17:04 jpalac Exp $
 #ifndef KERNEL_DAVINCISTRINGUTILS_H 
 #define KERNEL_DAVINCISTRINGUTILS_H 1
 
@@ -74,6 +74,25 @@ namespace DaVinci
      */
     void expandLocation( std::string& location,
                          const std::string& prefix);
+
+    /**
+     * @author Juan Palacios juan.palacios@cern.ch
+     *
+     * Remove end of string starting from substring beginning with <b>ending</b>
+     *
+     * <b> Examples:</b>
+     * 
+     * @code
+     * std::string loc = "Phys/SomeAlgorithm/Particles"
+     * removeEnding(loc, "/Part")
+     * @endcode
+     * transforms "loc" into "Phys/SomeAlgorithm"
+     *
+     * @date 2010-06-21
+     *
+     */
+    void removeEnding(std::string& location, const std::string& ending);
+
   }
 }
 #endif // KERNEL_DAVINCISTRINGUTILS_H

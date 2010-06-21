@@ -1,4 +1,4 @@
-// $Id: DaVinciStringUtils.cpp,v 1.2 2009-11-10 13:13:20 jpalac Exp $
+// $Id: DaVinciStringUtils.cpp,v 1.3 2010-06-21 12:17:04 jpalac Exp $
 // Include files 
 
 
@@ -45,7 +45,16 @@ namespace DaVinci
           location = prefix + "/" + location;
       }
     }
-    
+    //=========================================================================
+    void removeEnding(std::string& a, const std::string& ending)
+    {
+      std::string::size_type pos = a.rfind(ending);
+      if ( pos != std::string::npos ) {
+        std::cout << "found " << ending << " at " << pos << std::endl;
+        a = std::string(a, 0, pos);
+        
+      }
+    }
     
   } // namespace StringUtils
   
