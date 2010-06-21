@@ -5,8 +5,170 @@
 ! Purpose     : LHCb base classes and event model
 !-----------------------------------------------------------------------------
 
+</</PRE><H1><A NAME=v31r2>2010-06-21 LHCbSys v31r2</A></H1><PRE>
+This version uses Gaudi v21r9 and LCG_58c
 
-</PRE><H1><A NAME=v31r1>2010-05-25 LHCbSys v31r1</A></H1><PRE>
+- Packages removed:  RecInterfaces (obsolete)
+- Packages modified: CaloUtils v8r13, MDF v3r26, MDF_ROOT v1r3, DDDB v1r32,
+    Magnet v7r1, RichDet v14r4, STDet v4r20, VeloDet v13r10p1, LumiEvent v2r7,
+    PhysEvent v11r12p1, RecEvent v2r29, TrackEvent v5r5, VeloEvent v16r8p1,
+    HltInterfaces v4r1, LHCbKernel v12r1, LHCbMath v3r18, DaVinciInterfaces v2r4,
+    DaVinciTypes v2r0, LoKiCore v10r2, LoKiGen v9r1, LoKiHlt v3r2, LoKiMC v9r1,
+    LoKiNumbers v9r1, RichKernel v7r36, SiDAQ v2r1p1, STKernel v2r2,
+    CondDBEntityResolver v5r2, TfKernel v2r18, TrackInterfaces v4r13,
+    TrackKernel v1r4
+
+- In CaloUtils v8r13
+  . Remove obsolete default HLT track locations. 
+
+- In MDF v3r26, v3r25
+  . Improve printouts at end of file.
+  . Allow to specify trigger/veto masks to the MDF selector.
+    The default is to have empty masks, which are ignored.
+
+- In MDF_ROOT v1r3
+  . Improve EOF detection. TFile::Seek(0,kEnd) does not set relative offset
+    correctly.
+
+- In DDDB v1r32
+  . Changed default tags for 2009 and 2010 data:
+    o head-20100531         for LHCBCOND
+
+- In Magnet v7r1
+  . Fix bug that was causing MagneticFieldSvc().ForceToUseDownMap and
+    MagneticFieldSvc().ForceToUseUpMap options to be ignored
+
+- In RichDet v14r4
+  . Add a public method to DeRichMultiSolidRadiator to allow access to the list
+    of single solid radiators making up the multisolid radiator.
+  . Add a public method to DeRichAerogelRadiator to allow access to the tile ID
+    number.
+
+- In STDet v4r20
+  . Add measuredEff method
+
+- In VeloDet v13r10p1
+  . Update reference file for velodet.veloaligncond.updates QMTest, following
+    change in CondDBEntityResolver verbosity (bug #68612) 
+
+- In LumiEvent v2r7
+  . xml/LumiIntegral: Update to allow for multiplication with a vector of 
+    calibration constants
+
+- In PhysEvent v11r12p1
+  . Fix a genreflex warning on windows
+
+- In RecEvent v2r29
+  . Fix threshold setting methods in RichPID
+  . Add a human readable implementation of fillStream to LHCb::RichPID
+  . added p3 and cov6 methods to TwoProngVertex
+  . Removed SelResult class
+
+- In TrackEvent v5r5
+  . Added Track History type for Tracks imported from Hlt
+  . Remove obsolete default HLT track locations.
+
+- In HltInterfaces v4r1
+  . Check that Property::fromString can parse what Property::toString
+    produces...
+
+- In LHCbKernel v12r1
+  . Fix HitPattern: IT A/C side and Top/Bottom fields are swapped in
+    initialization
+  . Fix ifdef logic in FastAllocVector.h for GCC 4.X
+
+- In LHCbMath v3r18
+  . MatrixInversion.h: Add missing include path to LHCbMath includes
+  . Types.py: 
+    o Add proper printout for matrices and symmetric matrices 
+    o Fix a few typos 
+  . Kinematics: Add overload methods for matrix expressions 
+  . LorentzVectorWithError: Add few methods and accessors 
+  . Fix some errors in ParticleParams 
+  . SymPosDefMatrixInverter.h: Add helper structure _invertForAllN 
+    The inverter<> has been updated to use _inverterForAllN instead of 
+    inverterForAllN.
+  . ParticleParams.h/cpp: New object for representation of 4-momentum / 
+    reference-point&decay-length information in coherent, self-contained way.
+
+- In DaVinciInterfaces v2r4
+  . ICheckOverlap.h:
+    o remove foundOverlap  method with two vectors
+    o remove removeOverlap method with LHCb::Particle::Vector
+  . IPhysDesktop.h: 
+    o Remove keep(const Vertex*) method.
+    o Update doxygen
+  . Add IDecayTreeFit: New (simplified) interface for decay tree fitter 
+  . IDVAlgorithm: Add accessor to decay tree fitter 
+  . Remove IFilterCriterion and IGeomDispCalculator.
+
+- In DaVinciTypes v2r0
+  . TreeCloners.h: Add functiion to clone/delete trees 
+  . DecayTree::cloneMap
+    o fix in cloneTree method 
+    o add counter for proper clone/delete     
+  . LHCb::DecayTree: add default constructor (invalid tree) 
+  . Add LHCb::DecayTree from DaVinciKernel to allow the usage of this class 
+    in Phys/DaVinciInterfaces 
+
+- In LoKiCore v10r2
+  . Primitives: Fix major bug in boolean operators. The bug was introduced
+    recently with reshuffling of lines in Primitives 
+  . Add more operations with streamers: union, intersection, difference,
+     sym_difference, includes 
+  . Reshuffle many lines in decorators 
+  . LoKi/Constants.h: redefine some numerical 'InvalidConstants' 
+  . LoKi/Kinematics.h: add functions for evaluation of ``transversity-angles''
+  . add more functions for decay finders 
+  . small polishing of functions 
+  . DecayFinder: add more methods ...
+
+- In LoKiGen v9r1
+  . Polish for various functions 
+
+- In LoKiHlt v3r2
+  . EvtTupleTool: add new properties:
+       ODIN_Location   : TES location of LHCb::ODIN          object
+       L0DU_Location   : TES location of LHCb::L0DUReport    object
+       HLT_Location    : TES location of LHCb::HltDecReports object 
+
+- In LoKiMC v9r1
+  . improve sources 
+  . add symbols for evaluation of cos(thetta_tr), sin(phi_tr), cos(phi_tr) 
+  . add "Child-Selector"
+  . add functions for evaluation of various polarization angles 
+  . polish for various MC-functions 
+
+- In LoKiNumbers v9r1
+  . add examples/tests  for new streamers 
+
+- In RichKernel v7r36
+  . Add a new method to python Configurable to return track expected 
+    signal tool Configurable
+
+- In STKernel v2r2
+  . Added methods to interface of noise calculation tool.
+
+- In CondDBEntityResolver v5r2
+  . Fixed bug #68612: CondDBEntityResolver produces useless INFO printout
+    Changed the level of the messages to DEBUG.
+  . Removed the obsolete _dll.cpp file.
+
+- In TfKernel v2r18
+  . Keep track of average local unit vectors along local coordinate axes of
+    each region, add accessors to return these vectors in the global (LHCb)
+    coordinate frame
+
+- In TrackInterfaces v4r13
+  . Added method to ITrackVertexer to compute decay length
+
+- In TrackKernel v1r4
+  . Add test on inversion in TrackStateVertex
+
+- In VeloEvent v16r8p1, SiDAQ v2r1p1
+  . Fix windows compiler warnings
+
+PRE><H1><A NAME=v31r1>2010-05-25 LHCbSys v31r1</A></H1><PRE>
 This version uses Gaudi v21r9 and LCG_58c
 
 - Packages added:    GaudiPatches v1r1 - patches to be moved to Gaudi
