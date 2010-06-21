@@ -1,4 +1,4 @@
-#$Id: Wrappers.py,v 1.46 2010-06-04 15:01:50 jpalac Exp $
+#$Id: Wrappers.py,v 1.47 2010-06-21 15:14:45 jpalac Exp $
 """
 Wrapper classes for a DaVinci offline physics selection. The following classes
 are available:
@@ -15,6 +15,7 @@ __author__ = "Juan PALACIOS juan.palacios@nikhef.nl"
 __all__ = ('DataOnDemand',
            'AutomaticData',
            'Selection',
+           'MergedSelection',
            'EventSelection',
            'SelectionSequence',
            'MultiSelectionSequence',
@@ -47,7 +48,7 @@ from SelPy.selection import ( Selection,
 from SelPy.selection import AutomaticData as autodata
 
 from Configurables import LoKi__VoidFilter as VoidFilter
-
+from Configurables import FilterDesktop
 
 class AutomaticData(autodata) :
     """
@@ -109,6 +110,48 @@ class EventSelection(object) :
     def outputLocation(self) :
         return ''
 
+class MergedSelection(object) :
+    """
+    Selection wrapper class for merging output of various Selections.
+    Can be used just like any Selection object.
+    Example:
+    
+    from PhysSelPython.Wrappers import MergedSelection, AutomaticData, SelectionSequence
+    sel00 = AutomaticData(Location = 'Phys/Sel00')
+    sel01 = AutomaticData(Location = 'Phys/Sel01')
+    sel02 = AutomaticData(Location = 'Phys/Sel02')
+    sel03 = AutomaticData(Location = 'Phys/Sel03')
+    merge = MergedSelection('SelMerger', RequiredSelections = [sel00, sel01, sel02, sel03])
+    seqMerge = SelectionSequence('SeqMergeSelections, TopSelection = merge)
+
+    This will OR all the selections and place the output in merge.outputLocation().
+    """
+    def __init__(self,
+                 name,
+                 RequiredSelections = [],
+                 OutputBranch = "Phys") :
+
+        self._sel = Selection(name,
+                              Algorithm = FilterDesktop('_'+ name,
+                                                        Code='ALL'),
+                              RequiredSelections = RequiredSelections,
+                              OutputBranch = OutputBranch)
+        
+        self.algos = FlatSelectionListBuilder(self._sel).selectionList
+
+        self.requiredSelections = self._sel.requiredSelections
+        self._name = name
+        self._alg = _sequencerType('Seq'+self.name(),
+                                   Members = self.algos,
+                                   ModeOR = True,
+                                   ShortCircuit = False)
+    def algorithm(self) :
+        return self._alg
+    def name(self) :
+        return self._name
+    def outputLocation(self) :
+        return self._sel.outputLocation()
+
 class SelectionSequence(SelSequence) :
     """
     Wrapper class for offline selection sequence creation.
@@ -164,6 +207,8 @@ class SelectionSequence(SelSequence) :
         new_dict = update_overlap(self.__ctor_dict__, args)
         return SelectionSequence(name, **new_dict)
 
+
+    
 class MultiSelectionSequence(object) :
     """
     Wrapper class for offline multiple selection sequence creation.
