@@ -1,9 +1,17 @@
-!$Id: release.notes,v 1.64 2010-06-10 09:31:58 jpalac Exp $
+!$Id: release.notes,v 1.65 2010-06-21 15:16:12 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : PhysSel/PhysSelPython
 ! Responsible : Juan Palacios
 ! Purpose     : Helper python classes for writing offline selections
 !-----------------------------------------------------------------------------
+
+! 2010-06-21 - Juan Palacios
+ - python/PhysSelPython/Wrappers.py
+  . add MergeSelection class. Run OR of selections and put data in outputLocation()
+ - cmt/requirements
+  . Increase to v5r5
+ - tests/test_sequence.py
+  . Add tests for MergeSelection class.
 
 !==================== PhysSel/PhysSelPython v5r4p1 2010-06-10 ==============
 
