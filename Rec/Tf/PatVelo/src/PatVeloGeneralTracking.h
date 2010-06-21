@@ -5,6 +5,7 @@
 // Include files
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
+#include "GaudiAlg/ISequencerTimerTool.h"
 
 // from VeloDet
 #include "VeloDet/DeVelo.h"
@@ -251,6 +252,11 @@ namespace Tf {
 
     /// Number of 3D points in an R/Phi zone to cause the zone to be killed as too hot
     unsigned int m_ZoneMaxPoints;
+
+    /// Timing tools
+    ISequencerTimerTool* m_timerTool;
+    int  m_veloGeneralTime;
+    bool m_doTiming;
 
   };
 

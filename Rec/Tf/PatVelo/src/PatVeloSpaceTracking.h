@@ -5,6 +5,7 @@
 // Include files
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
+#include "GaudiAlg/ISequencerTimerTool.h"
 
 // track selection tool
 #include "TrackInterfaces/ITrackSelector.h"
@@ -64,8 +65,12 @@ namespace Tf {
 	    return (first->chi2PerDoF() < second->chi2PerDoF());
           }
           return ( first->nLHCbIDs() > second->nLHCbIDs() ) ;
-        }
+        } 
       };
+
+      ISequencerTimerTool* m_timerTool;
+      int  m_veloSpaceTime;
+      bool m_doTiming;
 
   };
 }

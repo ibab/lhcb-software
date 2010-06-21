@@ -30,7 +30,10 @@ namespace Tf {
           m_spaceToolName = "Tf::PatVeloSpaceTool/PatVeloSpaceTool" );
 
       declareProperty("TrackSelectorName",
-          m_trackSelectorName = "None");
+          m_trackSelectorName = "None"); 
+
+      declareProperty( "TimingMeasurement", 
+		       m_doTiming = false);
     }
 
   //=============================================================================
@@ -56,6 +59,13 @@ namespace Tf {
     m_PatVeloSpaceTool = 
       tool<ITracksFromTrack>( m_spaceToolName,this);
 
+    if ( m_doTiming) {
+      m_timerTool = tool<ISequencerTimerTool>( "SequencerTimerTool" );
+      m_timerTool->increaseIndent();
+      m_veloSpaceTime = m_timerTool->addTimer( "Internal VeloSpaceTracking" );
+      m_timerTool->decreaseIndent();
+    }
+
     return StatusCode::SUCCESS;
   };
 
@@ -74,6 +84,9 @@ namespace Tf {
   }
 
   StatusCode PatVeloSpaceTracking::execute() {
+
+    if ( m_doTiming ) m_timerTool->start( m_veloSpaceTime );
+    
 
     bool isDebug   = msgLevel( MSG::DEBUG   );
     if(isDebug)  debug() << "==> Execute" << endmsg;
@@ -145,6 +158,8 @@ namespace Tf {
         << m_outputTracks->size() << " in "
         << m_outputTracksLocation
         << endreq;
+
+    if ( m_doTiming ) m_timerTool->stop( m_veloSpaceTime );
 
     return StatusCode::SUCCESS;
 

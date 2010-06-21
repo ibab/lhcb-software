@@ -3,6 +3,8 @@
 ! Responsible : David Hutchcroft
 ! Purpose     : Velo pattern recognition
 !-----------------------------------------------------------------------------
+! 2010-06-21 - Stephanie Hansmann-Menzemer
+ - Add switch timing information
 
 ! 2010-06-20 - David Hutchcroft
  - Improved rejection of R clusters on other side from non-overlap tracks

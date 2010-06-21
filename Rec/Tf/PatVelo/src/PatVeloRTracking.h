@@ -5,6 +5,7 @@
 // Include files
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
+#include "GaudiAlg/ISequencerTimerTool.h"
 
 #include "PatVeloRHitManager.h"
 #include "PatVeloTrackTool.h"
@@ -143,6 +144,12 @@ namespace Tf {
       bool m_OverlapCorrection; 
       /// Look for tracks in backward overlap region (default true)
       bool m_backWardOverlap;
+
+      /// Timing measurment
+      ISequencerTimerTool* m_timerTool;
+      int  m_veloRZTime;
+      bool m_doTiming;
+
   };
 }
 #endif // TF_PATVELORTRACKING_H

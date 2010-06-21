@@ -57,7 +57,7 @@ Tf::PatVeloGeneralTracking::PatVeloGeneralTracking( const std::string& name,
                    m_overlapXWindow = 1.*Gaudi::Units::mm );
 
   declareProperty( "MaxPointsInZone", m_ZoneMaxPoints = 500 );
-  
+  declareProperty( "TimingMeasurement", m_doTiming = false);
 }
 
 //=============================================================================
@@ -72,6 +72,7 @@ Tf::PatVeloGeneralTracking::~PatVeloGeneralTracking() {};
 
 StatusCode Tf::PatVeloGeneralTracking::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize();
+
   if ( sc.isFailure() ) return sc;
   m_isDebug   = msgLevel( MSG::DEBUG   );
   m_isVerbose = msgLevel( MSG::VERBOSE );
@@ -98,6 +99,14 @@ StatusCode Tf::PatVeloGeneralTracking::initialize() {
 
   m_NSensorSingle = 2*m_NStationSingle;
 
+  
+  if ( m_doTiming) {
+    m_timerTool = tool<ISequencerTimerTool>( "SequencerTimerTool" );
+    m_timerTool->increaseIndent();
+    m_veloGeneralTime = m_timerTool->addTimer( "Internal PatVeloGeneral" );
+    m_timerTool->decreaseIndent();
+  }
+
   return StatusCode::SUCCESS;
 };
 
@@ -106,6 +115,8 @@ StatusCode Tf::PatVeloGeneralTracking::initialize() {
 //=============================================================================
 
 StatusCode Tf::PatVeloGeneralTracking::execute() {
+ 
+  if ( m_doTiming ) m_timerTool->start( m_veloGeneralTime );
 
   if( m_isDebug ) debug() << "==> Execute" << endmsg;
 
@@ -134,6 +145,8 @@ StatusCode Tf::PatVeloGeneralTracking::execute() {
 
   m_NumEvt += 1;
 
+  if ( m_doTiming ) m_timerTool->stop( m_veloGeneralTime );
+  
   return StatusCode::SUCCESS;
 };
 
