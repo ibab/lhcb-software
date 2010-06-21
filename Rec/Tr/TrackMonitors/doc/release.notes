@@ -3,6 +3,8 @@
 ! Responsible : Wouter Hulsbergen, Stephanie Hansmann-Menzemer
 ! Purpose     : Package for track data quality monitoring algorithms
 !-----------------------------------------------------------------------------
+! 2010-06-21 - Stephanie Hansmann-Menzemer
+ - add TrackTimingMonitor 
 
 ! 2010-06-18 - Wouter Hulsbergen
  - speedup of TrackMuonMatchMonitor

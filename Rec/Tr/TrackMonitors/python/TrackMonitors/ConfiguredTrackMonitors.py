@@ -4,14 +4,18 @@ from Configurables import (GaudiSequencer, TrackMonitor, TrackVertexMonitor,
                            OTTrackMonitor, OTHitEfficiencyMonitor,OTTimeMonitor,
                            TrackCaloMatchMonitor,TrackMuonMatchMonitor,
                            TrackITOverlapMonitor,TrackVeloOverlapMonitor,
-                           TTTrackMonitor, ITTrackMonitor)
+                           TTTrackMonitor, ITTrackMonitor, TrackTimingMonitor)
 from Configurables import (RecSysConf, RecMoniConf, TrackSys)
 
 def ConfiguredTrackMonitorSequence(Name = "TrackMonitorSequence",
-                                   HistoPrint = False ):
+                                   HistoPrint = False):
     seq = GaudiSequencer(Name)
     seq.Members.append( TrackMonitor(HistoPrint=HistoPrint) )
     seq.Members.append( TrackDiMuonMonitor(HistoPrint=HistoPrint) )
+
+    from Configurables import TrackSys
+    if TrackSys().timing():
+      seq.Members.append( TrackTimingMonitor(HistoPrint=HistoPrint) )
 
     if not RecMoniConf().getProp("Histograms") is "Online":
         seq.Members.append( TrackVertexMonitor(HistoPrint=HistoPrint) )
