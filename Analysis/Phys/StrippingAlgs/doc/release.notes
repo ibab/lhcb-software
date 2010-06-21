@@ -6,7 +6,7 @@
 ! -----------------------------------------------------------------------------
 
 ! 2010-06-21 - Anton Poluektov 
- - Corrected (hopefully) a bug that caused a segfault during the output. 
+ - Corrected (hopefully) a bug that caused a segfault in StrippingReport output. 
    String length for the formatted output was insufficient. 
 
 !======================== StrippngAlgs v1r2 2010-05-24 ========================
