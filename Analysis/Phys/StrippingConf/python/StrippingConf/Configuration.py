@@ -93,9 +93,11 @@ class StrippingConf ( object ) :
         corresponding sequencer to _streamSequencers list.
         """
         log.info(self._name+ " appending stream "+ stream.name())
-	stream.createConfigurables( TES = self.TES, 
-				    TESPrefix = self._tesPrefix, 
-				    HDRLocation = self._hdrLocation )
+        
+        stream.TESPrefix = self._tesPrefix
+        stream.HDRLocation = self._hdrLocation
+        
+	stream.createConfigurables( TES = self.TES )
 	self._streams.append(stream)
         self._appendSequencer(stream)
         

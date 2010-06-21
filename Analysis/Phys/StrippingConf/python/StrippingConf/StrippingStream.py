@@ -19,9 +19,8 @@ class StrippingStream ( object ) :
     def __init__ ( self,
                    name = 'StrippingStream',
                    Lines =  [],               # List of stream lines
-                   BadEventSelection = None,  # Bad event selection algo; 
-                                              # bad events will be stored to DST without running selections
-                   GoodEventSelection = None  # Good events selection algo; bad events will be skipped
+                   BadEventSelection = None,  # Bad event selection algo
+                   AcceptBadEvents = True     
                  ) :
         self.lines = copy(Lines)
         for line in Lines : 
@@ -32,28 +31,13 @@ class StrippingStream ( object ) :
         self._name = name
         self.streamLine = None
         self.eventSelectionLine = None
-        self.badEventSelection = BadEventSelection
-        self.goodEventSelection = GoodEventSelection
-
+        self.BadEventSelection = BadEventSelection
+        self.AcceptBadEvents = AcceptBadEvents
+        self.TESPrefix = 'Strip'
+        self.HDRLocation = 'Phys/DecReports'
 
     def name(self) :
         return self._name
-
-    # Good or bad event selections can be given (not both). 
-    # In both cases, the stream selections will be called 
-    # if the event satisfies good event condition. 
-    # The difference is: if badEventSelection is given, bad 
-    # events will produce a positive decision in the stream 
-    # sequencer (and thus, e.g. will be written to DST)
-    # If goodEventSelection is given, bad events will be 
-    # skipped. 
-
-    def SetBadEventSelection(self, selection) : 
-        self.badEventSelection = selection    
-
-
-    def SetGoodEventSelection(self, selection) : 
-        self.goodEventSelection = selection    
 
 
     def appendLines (self, lines) : 
@@ -62,9 +46,7 @@ class StrippingStream ( object ) :
 	    line.declareAppended()
 	    
 
-    def createConfigurables(self, TES = False, 
-				  TESPrefix = 'Strip', 
-				  HDRLocation = 'Phys/DecReports') :
+    def createConfigurables(self, TES = False) :
         from Configurables import StrippingCheck
 
         # Create configurables
@@ -73,10 +55,10 @@ class StrippingStream ( object ) :
 	    if TES :
                 print "ADDINGXX", alg.configurable(), "name ", alg.name(), "to StrippingStream.lines" 
                 alg = StrippingCheck(line.name(),
-                                     InputLocation = "/Event/" + TESPrefix + "/" + line.outputLocation() + "/Particles")
+                                     InputLocation = "/Event/" + self.TESPrefix + "/" + line.outputLocation() + "/Particles")
                 self.algs.append( alg )
 	    else :  
-		line.createConfigurable( TESPrefix + "/" + HDRLocation )
+		line.createConfigurable( self.TESPrefix + "/" + self.HDRLocation )
                 print "ADDING not TES", line.configurable(), "name ", line.configurable().name(), "to StrippingStream.lines" 
                 self.algs.append(line.configurable())
 
@@ -90,59 +72,80 @@ class StrippingStream ( object ) :
 	from StrippingLine import StrippingLine
 
 	self.streamLine = StrippingLine("Stream"+self.name(), checkPV = False, algos = [ linesSeq ] )
-	self.streamLine.createConfigurable( TESPrefix + "/" + HDRLocation )
+	self.streamLine.createConfigurable( self.TESPrefix + "/" + self.HDRLocation )
 	self.streamLine.declareAppended()
 
         # Make the line to mark bad events (those satisfying BadEventSelection)
 
-	if self.badEventSelection != None : 
+	if self.BadEventSelection != None : 
 	    self.eventSelectionLine = StrippingLine("Stream"+self.name()+"BadEvent", 
-	                                      checkPV = False, algos = [ self.badEventSelection ] )
-	    self.eventSelectionLine.createConfigurable( TESPrefix + "/" + HDRLocation )
-	    self.eventSelectionLine.declareAppended()
-
-        # Good event selector (both good and bad event selectors cannot be specified at the same time)
-
-	if self.goodEventSelection != None : 
-	    if self.badEventSelection != None : 
-	        raise ValueError,"Good and bad event selectors cannot be given simultaneously, stream %s " % self.name()
-	        
-	    self.eventSelectionLine = StrippingLine("Stream"+self.name()+"BadEvent", 
-	                                      checkPV = False, algos = [ self.goodEventSelection ] )
-	    self.eventSelectionLine.createConfigurable( TESPrefix + "/" + HDRLocation )
+	                                      checkPV = False, algos = [ self.BadEventSelection ] )
+	    self.eventSelectionLine.createConfigurable( self.TESPrefix + "/" + self.HDRLocation )
 	    self.eventSelectionLine.declareAppended()
 
 
     def sequence ( self ) :
         if self.seq == None :
-            # members = self.algs
-            # members.append(self.streamLine.configurable())
 
             if self.eventSelectionLine == None : 
-                # Sequencer for all line configurables, including the stream decision line
+                # If we don't care about bad events, build a flat 
+                # sequencer for all line configurables, including the stream decision line
 
                 self.seq = GaudiSequencer("StrippingSequenceStream"+self.name(),
                                       ModeOR = True,
                                       ShortCircuit = False,
                                       Members = self.algs + [ self.streamLine.configurable() ] )
             else : 
-                # If BadEventSelection or GoodEventSelection is used, need to create another 
-                # "protection" sequencer. 
-
-                lineSeq = GaudiSequencer("StrippingProtectedSequence"+self.name(),
+                # If BadEventSelection is used, the stream sequencer has to be "protected" by 
+                # another one, which ensures that it runs only for good events 
+                
+            	lineSeq = GaudiSequencer("StrippingProtectedSequence"+self.name(),
                                           ModeOR = True,
                                           ShortCircuit = False,
                                           Members = self.algs + [ self.streamLine.configurable() ] )
+                                          
+                # The structure differs depending on whether we want to accept or reject bad events
 
-        	self.seq = GaudiSequencer("StrippingSequenceStream" + self.name(), 
+            	if self.AcceptBadEvents == True : 
+            	
+            	    # If we want to accept bad events, create the sequencer in OR mode with ShortCircuit=True
+            	    # If the bad event condition passes, the stream sequencer will not run
+
+        	    self.seq = GaudiSequencer("StrippingSequenceStream" + self.name(), 
         	                          Members = [ self.eventSelectionLine.configurable(), lineSeq ] )
-
-	        # If bad event selection is specified, the sequencer should work in OR mode, 
-	        # so that stream sequencer is called only for good events. 
-
-		if self.badEventSelection != None : 
             	    self.seq.ModeOR = True 
         	    self.seq.ShortCircuit = True
+        	    
+        	else : 
+        	    
+        	    # If we want to reject bad events, things are more complicated. 
+        	    # We need a logical NOT of the bad event condition. 
+        	    
+        	    # To get it, we first run the bad event condition, and ignore its result. 
+        	    # This is achieved by the GaudiSequencer in IgnoreFilterPassed mode
+        	    # that has only the BadEventSelection as a member. It always passes. 
+        	    
+        	    badEventSeq = GaudiSequencer("StrippingBadEventSequence"+self.name(), 
+        					 Members = [ self.eventSelectionLine.configurable() ], 
+        	                                 IgnoreFilterPassed = True)
+        	    
+        	    # Now create a LoKi filter that negates the result of the bad event selection
+        	    
+        	    from Configurables import LoKi__VoidFilter as Filter 
+        	    
+        	    goodEventFilter = Filter( "StrippingGoodEventCondition"+self.name() , 
+        	        Code      = " ALG_EXECUTED('%s') & ~ALG_PASSED('%s') " 
+        	                  % (self.eventSelectionLine.name(), self.eventSelectionLine.name()) ,
+        	        Preambulo = [ "from LoKiHlt.algorithms import *" ] 
+        	    )
+        	    
+        	    # Finally, the AND sequencer that will run the bad event selection (its result will 
+        	    # be ignored since it's wrapped into a GaudiSequencer with IgnoreFilterPassed), 
+        	    # then good event LokiFilter (it will pass only for good events)
+        	    # then the stream sequence. 
+        	    
+        	    self.seq = GaudiSequencer("StrippingSequenceStream" + self.name(), 
+        	                          Members = [ badEventSeq, goodEventFilter, lineSeq ] )
 
         return self.seq
 

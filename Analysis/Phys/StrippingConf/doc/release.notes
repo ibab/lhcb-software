@@ -1,9 +1,19 @@
-!$Id: release.notes,v 1.66 2010-06-20 16:40:49 poluekt Exp $
+!$Id: release.notes,v 1.67 2010-06-21 21:02:59 poluekt Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/StrippingConf
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
+
+! 2010-06-21 - Anton Poluektov
+ - More logical interface for treating bad events in StrippingStream. Options: 
+     * BadEventSelection - algorithm that should pass for bad events
+     * AcceptBadEvents   - If True, bad events will be accepted 
+                           by StrippingStream sequencer (default). 
+   The options can be changed after the stream constructor, e.g. 
+     stream = StrippingStream("Stream")
+     stream.BadEventSelection = filter
+     stream.AcceptBadEvents = False
 
 ! 2010-06-19 - Anton Poluektov
  - Options BadEventSelection and GoodEventSelection in StrippingStream
