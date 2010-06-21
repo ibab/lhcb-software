@@ -92,6 +92,7 @@ StatusCode MuonTrackAligMonitor::initialize() {
   const StatusCode sc = GaudiHistoAlg::initialize();
 
   GaudiAlg::HistoID  name;
+  std::string title;
   m_notOnline = (m_histoLevel != "Online");
 
   m_muonDet = getDet<DeMuonDetector>(DeMuonLocation::Default); 
@@ -116,11 +117,11 @@ StatusCode MuonTrackAligMonitor::initialize() {
   }
 
   if(m_LongToMuonMatch) {
-
-    //chi2 match
-    name = "chi2_match";
-    m_h_chi2 = book1D( name, "chi2 match", -3, 50, 53);
-
+    if(m_notOnline) {
+      //chi2 match
+      name = "chi2_match";
+      m_h_chi2 = book1D( name, "chi2 match", -3, 50, 53);
+    }
     // x coord
     name = "prof_resx_x";
     m_p_resxx = bookProfile1D( name, "profile res. x vs x", -4000, 4000, 80);
@@ -178,23 +179,31 @@ StatusCode MuonTrackAligMonitor::initialize() {
   
   if(m_notOnline) {
     for(int i = 0; i < m_muonDet->stations(); i++){
-      name = "residxL_aSide_station_" + boost::lexical_cast<std::string>(i);
-      m_h_resxL_a.push_back( book1D( name, name, -500, 500, 100 ));
-      name = "residyL_aSide_station_" + boost::lexical_cast<std::string>(i);
-      m_h_resyL_a.push_back( book1D( name, name, -500, 500, 100 ));
-      name = "residxL_cSide_station_" + boost::lexical_cast<std::string>(i);
-      m_h_resxL_c.push_back( book1D( name, name, -500, 500, 100 ));
-      name = "residyL_cSide_station_" + boost::lexical_cast<std::string>(i);
-      m_h_resyL_c.push_back( book1D( name, name, -500, 500, 100 ));
+      name = "residxL_aSide_station_$" + boost::lexical_cast<std::string>(i);
+      title = "X resid from Long tracks A side M" + boost::lexical_cast<std::string>(i);
+      m_h_resxL_a.push_back( book1D( name, title.c_str(), -500, 500, 100 ));
+      name = "residyL_aSide_station_$" + boost::lexical_cast<std::string>(i);
+      title = "Y resid from Long tracks A side M" + boost::lexical_cast<std::string>(i);      
+      m_h_resyL_a.push_back( book1D( name, title.c_str(), -500, 500, 100 ));
+      name = "residxL_cSide_station_$" + boost::lexical_cast<std::string>(i);
+      title = "X resid from Long tracks C side M" + boost::lexical_cast<std::string>(i);
+      m_h_resxL_c.push_back( book1D( name, title.c_str(), -500, 500, 100 ));
+      name = "residyL_cSide_station_$" + boost::lexical_cast<std::string>(i);
+      title = "Y resid from Long tracks C side M" + boost::lexical_cast<std::string>(i);
+      m_h_resyL_c.push_back( book1D( name, title.c_str(), -500, 500, 100 ));
 
-      name = "residxM_aSide_station_" + boost::lexical_cast<std::string>(i);
-      m_h_resxM_a.push_back( book1D( name, name, -500, 500, 100 ));
-      name = "residyM_aSide_station_" + boost::lexical_cast<std::string>(i);
-      m_h_resyM_a.push_back( book1D( name, name, -500, 500, 100 ));
-      name = "residxM_cSide_station_" + boost::lexical_cast<std::string>(i);
-      m_h_resxM_c.push_back( book1D( name, name, -500, 500, 100 ));
-      name = "residyM_cSide_station_" + boost::lexical_cast<std::string>(i);
-      m_h_resyM_c.push_back( book1D( name, name, -500, 500, 100 ));
+      name = "residxM_aSide_station_$" + boost::lexical_cast<std::string>(i);
+      title = "X resid from Muon tracks A side M" + boost::lexical_cast<std::string>(i);
+      m_h_resxM_a.push_back( book1D( name, title.c_str(), -500, 500, 100 ));
+      name = "residyM_aSide_station_$" + boost::lexical_cast<std::string>(i);
+      title = "Y resid from Muon tracks A side M" + boost::lexical_cast<std::string>(i);
+      m_h_resyM_a.push_back( book1D( name, title.c_str(), -500, 500, 100 ));
+      name = "residxM_cSide_station_$" + boost::lexical_cast<std::string>(i);
+      title = "X resid from Muon tracks C side M" + boost::lexical_cast<std::string>(i);
+      m_h_resxM_c.push_back( book1D( name, title.c_str(), -500, 500, 100 ));
+      name = "residyM_cSide_station_$" + boost::lexical_cast<std::string>(i);
+      title = "Y resid from Muon tracks C side M" + boost::lexical_cast<std::string>(i);
+      m_h_resyM_c.push_back( book1D( name, title.c_str(), -500, 500, 100 ));
 
     }
   }

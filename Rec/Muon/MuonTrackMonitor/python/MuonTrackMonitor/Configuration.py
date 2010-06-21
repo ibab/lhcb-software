@@ -82,6 +82,6 @@ class MuonTrackMonitorConf(LHCbConfigurableUser):
         moneff.xyDistCut = 40.
         moneff.PCutEff = 12.     
         
-        moneff.HistoLevel   =  "OfflineFull" 
+        moneff.OutputLevel = self.getProp("OutputLevel")
 
         muonMoniSeq.Members += [moneff]
