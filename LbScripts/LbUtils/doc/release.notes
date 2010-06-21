@@ -1,3 +1,8 @@
+2010-06-21  Karol Kruzelecki  <Karol.Kruzelecki@cern.ch>
+
+	* scripts/killtree: new file; wrapper over killTree python function
+	from LbUtils.Processes
+
 2010-06-11  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbUtils/Lock.py: fixed usage of relative paths.
@@ -17,7 +22,7 @@
 
 2010-06-02  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* python/LbUtils/afs/volume.py: 
+	* python/LbUtils/afs/volume.py:
 	- inserted speed up for quota adjustment.
 	- fixed the matching of the volume names that contain ".". Now this is escaped.
 
@@ -33,13 +38,13 @@
 2010-05-31  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* scripts/tuneAFSVol: New file. Added class and scripts to deal with AFS volumes
-	* cmt/requirements: 
-	* python/LbUtils/afs/directory.py: 
-	* python/LbUtils/Storage.py: 
-	* tests/testafs.py: 
-	* python/LbUtils/afs/volume.py: added placeholder methods for the Volume class. 
+	* cmt/requirements:
+	* python/LbUtils/afs/directory.py:
+	* python/LbUtils/Storage.py:
+	* tests/testafs.py:
+	* python/LbUtils/afs/volume.py: added placeholder methods for the Volume class.
 	This class is only meant to be used with an already existing AFS volume.
-	
+
 
 2010-05-26  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 

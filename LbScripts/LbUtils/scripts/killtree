@@ -1,0 +1,27 @@
+#!/usr/bin/env python
+"""
+killtree accepts one parameter which is PID. It stops the process (and all its
+children) with SIGSTOP and then sends SIGKILL signal to each of them separately
+starting from the most "deep" one in the process tree.
+"""
+from LbUtils.Processes import killTree
+from LbUtils.Script import Script
+import sys
+
+class KillTree(Script):
+    _description = __doc__
+    def __init__(self):
+        Script.__init__(self, usage = "\n\t%prog PID",
+                              description = "kill the process tree with the root PID given")
+    def main(self):
+        if len(self.args) == 1 and self.args[0].isdigit():
+            pid = int(self.args[0])
+        else:
+            print "use: --help"
+            return -1
+        killTree(pid)
+        return 0
+
+if __name__ == '__main__':
+    s = KillTree()
+    sys.exit(s.run())
