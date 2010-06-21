@@ -53,7 +53,8 @@ namespace Tf {
       declareProperty( "OnlyBackward"    , m_onlyBackward     = false     );
       declareProperty( "OverlapCorrection" , m_OverlapCorrection = true   );
       declareProperty( "BackwardOverlapSearch" , m_backWardOverlap = true );
-      declareProperty( "BackwardOverlapSearch" , m_backWardOverlap = true );
+      declareProperty( "TimingMeasurement", m_doTiming = false);
+
     }
   //=============================================================================
   // Destructor
@@ -109,6 +110,14 @@ namespace Tf {
 		   StatusCode::FAILURE);
     }
 
+
+    if ( m_doTiming) {
+      m_timerTool = tool<ISequencerTimerTool>( "SequencerTimerTool" );
+      m_timerTool->increaseIndent();
+      m_veloRZTime = m_timerTool->addTimer( "Internal VeloRZ" );
+      m_timerTool->decreaseIndent();
+    }
+
     return StatusCode::SUCCESS;
   };
 
@@ -119,6 +128,8 @@ namespace Tf {
 
     if(m_isDebug) {debug() << "==> Execute" << endreq;}
 
+    if ( m_doTiming ) m_timerTool->start( m_veloRZTime );
+    
     LHCb::Tracks* outputTracks;
     if ( exist<LHCb::Tracks>( m_outputLocation ) ) {
       outputTracks = get<LHCb::Tracks>( m_outputLocation );
@@ -339,6 +350,11 @@ namespace Tf {
         << m_outputLocation << " from " << rzTracks.size()
         << " rz tracks found" << endreq;
     }
+
+
+    if ( m_doTiming ) m_timerTool->stop( m_veloRZTime );
+
+    
 
     return StatusCode::SUCCESS;
   };
