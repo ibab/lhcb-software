@@ -26,6 +26,7 @@ extern "C" {
 
 using namespace LHCb;
 
+
 /**
  * The acker thread body.
  * This thread just starts the startAcking() method of
@@ -157,7 +158,8 @@ start:
       struct cmd_header *cmd;
       if((cmd = m_mmObj->dequeueCommand(seqNum, ackHeaderBuf.run_no)) == NULL) {
         *m_log << MSG::ERROR << "DANGER: Received an unsolicited ack, run = "
-               << ackHeaderBuf.run_no << endmsg;
+           << ackHeaderBuf.run_no 
+           << endmsg;
       } else {
         notify(cmd);
         m_mmObj->freeCommand(cmd);
