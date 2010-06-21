@@ -1,8 +1,13 @@
-!$Id: release.notes,v 1.361 2010-06-18 09:41:52 jpalac Exp $
+!$Id: release.notes,v 1.362 2010-06-21 12:16:50 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciKernel
 ! Responsible : J.P. Palacios
 !============================================================================
+
+! 2010-06-21 - Juan Palacios
+ - DaVinci::StringUtils
+  . Add method to remove the ending of a string. Specially useful if you want
+    to go from "Phys/SomeSel/Particles" to "Phys/SomeSel"
 
 ! 2010-06-18 - Juan Palacios
  - DVAlgorithm
