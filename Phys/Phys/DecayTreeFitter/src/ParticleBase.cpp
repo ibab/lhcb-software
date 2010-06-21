@@ -79,8 +79,9 @@ namespace DecayTreeFitter
   {
     daucontainer::iterator it = std::find(m_daughters.begin(),m_daughters.end(),pb) ;
     if(it != m_daughters.end() ) {
-      delete *it ;
+      ParticleBase* _dp = *it ;
       m_daughters.erase(it) ;
+      delete _dp ;
     } else {
       std::cout << "ERROR: cannot remove particle, because not found ..." << std::endl ;
     }
