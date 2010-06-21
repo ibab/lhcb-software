@@ -4,6 +4,9 @@
 ! Purpose     : Upgrade Monte Carlo additions needed to run Boole
 !-----------------------------------------------------------------------------
 
+! 2010-06-21 - Marco Cattaneo
+ - Fix compilation on slc5 and Windows
+
 ! 2010-06-20 - Tomasz Skwarnicki
  - add subtraction of Next in Velo
    add strip length depedent subtractions in TT from Adam Webber

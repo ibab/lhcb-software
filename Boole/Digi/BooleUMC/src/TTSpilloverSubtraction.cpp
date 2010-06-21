@@ -1,4 +1,4 @@
-// $Id: TTSpilloverSubtraction.cpp,v 1.1 2010-06-20 07:20:05 tskwarni Exp $
+// $Id: TTSpilloverSubtraction.cpp,v 1.2 2010-06-21 14:37:41 cattanem Exp $
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/ToolFactory.h"
@@ -12,7 +12,7 @@
 // Boost
 #include "boost/assign/list_of.hpp"
 #include <boost/foreach.hpp>
-#include <iostream.h>
+#include <iostream>
 using namespace LHCb;
 
 DECLARE_ALGORITHM_FACTORY(TTSpilloverSubtraction);
