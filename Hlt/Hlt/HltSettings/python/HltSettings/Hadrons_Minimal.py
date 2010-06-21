@@ -80,7 +80,7 @@ class Hadrons_Minimal :
        
         d = { }
  
-        from Topo_Lines import TopoLines
+        from TopoLines import TopoLines
         d.update ( TopoLines().Thresholds() )
 
         from CharmLines import CharmLines
@@ -88,3 +88,5 @@ class Hadrons_Minimal :
 
         from Phi_Reduction5 import Phi_HadronReduction5
         d.update ( Phi_HadronReduction5().Thresholds() )
+
+        return d
