@@ -75,14 +75,18 @@ if __name__ == '__main__' :
                 p2pvloc = leaf.replace('/Particles',
                                        '/Particle2VertexRelations')
                 p2pv = evtSvc[p2pvloc]
-                else :
+                if p2pv :
+                    print 'Found Particle->PV', p2pv.relations().size(), 'relations in', p2pvloc
                     for p in particles :
                         rng = p2pv.relations(p)
                         if not rng.empty():
+                            print 'Found a relation'
                             for rel in rng :
                                 pv = rel.to()
                                 pvLoc = pv.parent().registry().identifier()
                                 p2pvSummaries[leaf].addEntry(pvLoc, 1)
+                        else :
+                            print 'Particle->PV relations empty'
     print '==================================================================='
     print 'Analysed', nEvents, 'in location', location
     for particleloc, value in p2pvSummaries.iteritems() :
