@@ -5,6 +5,9 @@
 ! Purpose     : collection of various kinematical LoKi-based fitters 
 ! -----------------------------------------------------------------------------
 
+! 2010-06-21 - Vanya Belyaev
+ - fix the stupid bug 
+
 ! 2010-06-09 - Vanya Belyaev
  - minor fix 
 

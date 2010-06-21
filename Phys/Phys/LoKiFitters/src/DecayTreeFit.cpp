@@ -500,11 +500,12 @@ StatusCode LoKi::DecayTreeFit::fit                     // fit the decay tree
   { // clear local container of local constraints
     m_locals_pids.clear () ;
   }
-  // get the status 
-  if ( Fitter::Success != m_fitter->status() ) 
+  // get the status
+  Fitter::FitStatus status = m_fitter->status() ;
+  if ( Fitter::Success != status ) 
   { 
     m_fitter.reset () ;
-    return Error ( "Error from fitter, status" , 110 +  m_fitter->status() ) ; 
+    return Error ( "Error from fitter, status" , 110 + status ) ; 
   }
   //
   return StatusCode::SUCCESS ;
@@ -528,10 +529,11 @@ LoKi::DecayTreeFit::fitted ( const LHCb::Particle* p ) const
     return 0 ;                                                    // RETURN 
   }
   // 
-  if ( Fitter::Success != m_fitter->status() ) 
+  Fitter::FitStatus status = m_fitter->status() ;
+  if ( Fitter::Success != status ) 
   {
     Error ( "fitted: fit is not successfull , return NULL" , 
-            120 + m_fitter->status() ).ignore()  ;
+            120 + status ).ignore()  ;
     m_fitter.reset() ;
     return 0 ;                                                    // RETURN 
   }
@@ -574,10 +576,11 @@ LoKi::DecayTreeFit::fittedTree () const
     return LHCb::DecayTree() ;                                      // RETURN 
   }
   //
-  if ( Fitter::Success != m_fitter->status() ) 
+  Fitter::FitStatus status = m_fitter->status() ;
+  if ( Fitter::Success != status ) 
   {
     Warning ( "fitted: fit is not successful, return empty tree" , 
-              120 + m_fitter->status() ) ;
+              120 + status ) ;
     m_fitter.reset() ; 
     return LHCb::DecayTree() ;                                      // RETURN 
   }
@@ -613,10 +616,11 @@ double LoKi::DecayTreeFit::chi2 ( ) const
     return LoKi::Constants::InvalidChi2 ;                             // RETURN 
   }
   //
-  if ( Fitter::Success != m_fitter->status() ) 
+  Fitter::FitStatus status = m_fitter->status() ;
+  if ( Fitter::Success != status ) 
   {
     Warning ( "chi2: fit is not successfull, return InvalidChi2" , 
-              120 + m_fitter->status() ) ;
+              120 + status ) ;
     m_fitter.reset() ; 
     return LoKi::Constants::InvalidChi2 ;                             // RETURN 
   }
@@ -652,10 +656,11 @@ unsigned int LoKi::DecayTreeFit::nDoF ( ) const
     return 0 ;                                                       // RETURN 
   }
   //
-  if ( Fitter::Success != m_fitter->status() ) 
+  Fitter::FitStatus status = m_fitter->status () ;
+  if ( Fitter::Success != status ) 
   {
     Warning ( "nDoF: fit is notsucessfull, return 0 " , 
-              120 + m_fitter->status() ) ;
+              120 + status ) ;
     m_fitter.reset() ; 
     return 0 ;                                                        // RETURN 
   }
@@ -709,10 +714,11 @@ StatusCode LoKi::DecayTreeFit::reFit ( LHCb::Particle& particle ) const
   if ( sc.isFailure() )
   { return Error ("reFit: error form fit", sc ) ; }
   //
-  if ( 0 == m_fitter.get() ) { return Warning("reFit: invalid fitter") ; }
+  if ( 0 == m_fitter.get() ) { return Error ("reFit: invalid fitter") ; }
   //
-  if ( Fitter::Success != m_fitter->status() ) 
-  { return Error ( "reFit: invalid fit status " , 120 + m_fitter->status() ) ; }
+  Fitter::FitStatus status = m_fitter->status() ;
+  if ( Fitter::Success != status ) 
+  { return Error ( "reFit: invalid fit status " , 120 + status ) ; }
   //
   // the actual refit 
   if ( !m_fitter->updateCand ( particle ) ) 
