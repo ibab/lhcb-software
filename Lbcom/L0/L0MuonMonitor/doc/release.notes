@@ -1,9 +1,10 @@
-! $Id: release.notes,v 1.38 2010-06-10 17:34:37 cattanem Exp $
+! $Id: release.notes,v 1.39 2010-06-21 08:18:15 cattanem Exp $
 ! Package     : L0MuonMonitor
 ! Responsible : Julien Cogan
 ! Purpose     : Monitoring of the L0Muon
-!--------------------------------------------------------------------------
+!----------------------------------------------------------------------------
 
+!========================== L0MuonMonitor v2r0p1 2010-06-21 =================
 ! 2010-06-10 - Marco Cattaneo
  - Fix windows compiler warnings
 
