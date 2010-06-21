@@ -4,6 +4,15 @@
 ! Purpose     : Options to generate selection or Micro DSTs and scripts to test them.
 !-----------------------------------------------------------------------------
 
+! 2010-06-21 - Juan Palacios
+ - Added: scripts/check_p2pvtable.py
+  . Look for Particle->PV relations tables in DST. Searches standard locations
+    and prints summary with number of relations per From, To TES location pair.
+ - scripts/check_p2pv.py
+  . Fix indentation problems.
+ - cmt/requirements
+  . Increase to v1r4.
+
 ! ========================== DstwriterTests v1r3 2010-06-17 ==================
 
 ! 2010-05-28 - Juan Palacios
