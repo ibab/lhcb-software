@@ -21,12 +21,12 @@ class Muons_Minimal :
             'Hlt2MuonFromHLT1',
             'Hlt2SingleMuon',
             'Hlt2SingleHighPTMuon',
+            'Hlt2MuTrack',
             'Hlt2DiMuonUnbiasedJPsi',
             'Hlt2DiMuonUnbiasedPsi2S',
             'Hlt2DiMuonUnbiasedBmm',
-#            'Hlt2BiasedDiMuonRefined',
             'Hlt2BiasedDiMuonMass',
-#            'Hlt2BiasedDiMuonIP',
+            'Hlt2BiasedDiMuonIP',
             'Hlt2UnbiasedDiMuon',  
             'Hlt2UnbiasedDiMuonLowMass'
             ]
@@ -51,22 +51,33 @@ class Muons_Minimal :
             ,'UnbiasedDiMuonLowPt'     : 0.0
             ,'UnbiasedDiMuonLowMuPt'   : 0.0
             ,'UnbiasedJPsiPt'          : 0.0      # MeV
+            ,'UnbiasedJPsiMuPt'        : 0.0      # MeV
             ,'UnbiasedJPsiMassWindow'  : 120      # MeV
             ,'UnbiasedPsi2SPt'         : 0.0      # MeV
             ,'UnbiasedPsi2SMuPt'       : 500      # MeV
             ,'UnbiasedPsi2SMassWindow' : 120      # MeV
-            ,'UnbiasedBmmMinMass'      : 5000     # MeV
-            , 'Prescale'   : { 'Hlt2UnbiasedDiMuon'          : 1.00
+            ,'UnbiasedBmmMinMass'      : 4700     # MeV
+            , 'Prescale'   : { 'Hlt2UnbiasedDiMuon'          : 1.0
                                , 'Hlt2UnbiasedDiMuonLowMass' : 0.1
+                               ,'Hlt2BiasedDiMuonIP'         :  1
                                }           
             }
               , Hlt2InclusiveMuonLinesConf : {
-            'SingleMuonPt'        : 1000      # MeV
+            'SingleMuonPt'        : 1300      # MeV
             ,'SingleMuonIP'        : 0.08     # mm
             ,'SingleMuonHighPt'    : 10000     # MeV
-            ,'Prescale'   : { 'Hlt2MuonFromHLT1'     : 1.0 # 0.01   
+            ,'MuTrackMuPt'         : 1000      # MeV
+            ,'MuTrackTrPt'         : 600       # MeV
+            ,'MuTrackMuIP'         : 0.08     # mm
+            ,'MuTrackTrIP'         : 0.08     # mm
+            ,'MuTrackDoca'         : 0.2     # mm
+            ,'MuTrackDz'           : 1.0       # mm
+            ,'MuTrackMass'         : 2000      # MeV
+            ,'MuTrackPoint'        : 0.4       # dimensionless
+            ,'Prescale'   : { 'Hlt2MuonFromHLT1'     : 0.01   
                             ,'Hlt2SingleMuon'        : 1.0
                             ,'Hlt2SingleHighPTMuon'  : 1.0
+                            ,'Hlt2IncMuTrack'        : 1.0
                             }
             }
                     }
