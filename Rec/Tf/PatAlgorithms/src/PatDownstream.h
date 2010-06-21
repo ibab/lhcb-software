@@ -9,6 +9,7 @@
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
 #include "Kernel/ILHCbMagnetSvc.h"
+#include "GaudiAlg/ISequencerTimerTool.h"
 
 #include "TfKernel/TTStationHitManager.h"
 #include "PatKernel/PatTTHit.h"
@@ -120,6 +121,10 @@ private:
   PatTTHits m_uvHits;
     
   int   m_seedKey;
-  bool  m_printing;  
+  bool  m_printing; 
+
+  ISequencerTimerTool* m_timerTool;
+  int  m_downTime;
+  bool m_doTiming; 
 };
 #endif // PATKSHORT_H

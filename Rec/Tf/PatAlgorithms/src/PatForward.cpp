@@ -6,6 +6,7 @@
 
 // local
 #include "PatForward.h"
+#include "Event/ProcStatus.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : PatForward
@@ -31,9 +32,11 @@ PatForward::PatForward( const std::string& name,
     m_inputTracksName  =  "";
     m_outputTracksName =  "";
   }
+  declareProperty( "MaxNVelo",   m_maxNVelo = 1000 ); 
   declareProperty( "DeltaNumberInT",   m_deltaNumberInT  = 3 );
   declareProperty( "DeltaNumberInTT",  m_deltaNumberInTT = 1 );
-  declareProperty( "DoCleanUp", m_doClean = true);
+  declareProperty( "DoCleanUp", m_doClean = true); 
+  declareProperty( "TimingMeasurement", m_doTiming = false);
   // switch on or off NN var. writing
   declareProperty( "writeNNVariables", m_writeNNVariables = true);
 }
@@ -60,7 +63,7 @@ StatusCode PatForward::initialize() {
   m_forwardTool = tool<IPatForwardTool>( "PatForwardTool", this );
   m_forwardTool->setNNSwitch( m_writeNNVariables); // pass the NN switch to PatForwardTool
 
-  if ( msgLevel( MSG::DEBUG ) ) {
+  if ( msgLevel( MSG::DEBUG ) || m_doTiming) {
     m_timerTool = tool<ISequencerTimerTool>( "SequencerTimerTool" );
     m_timerTool->increaseIndent();
     m_fwdTime = m_timerTool->addTimer( "Internal PatForward" );
@@ -94,13 +97,24 @@ StatusCode PatForward::execute() {
   //== Prepare tracks
  
   LHCb::Tracks* inputTracks   = get<LHCb::Tracks>( m_inputTracksName ); 
-    
+
   LHCb::Tracks* outputTracks  = 
     getOrCreate<LHCb::Tracks,LHCb::Tracks>( m_outputTracksName);
 
+  if (inputTracks->size() > m_maxNVelo) {
+    LHCb::ProcStatus* procStat =
+      getOrCreate<LHCb::ProcStatus,LHCb::ProcStatus>(
+		 LHCb::ProcStatusLocation::Default);
+    // give some indication that we had to skip this event
+    // (ProcStatus returns zero status for us in cases where we don't
+    // explicitly add a status code)
+    procStat->addAlgorithmStatus(name(), -3);  
+    return Warning("Too many velo tracks", StatusCode::SUCCESS, 1);
+  }
+
   debug() << "==> Execute" << endmsg;
 
-  if ( msgLevel( MSG::DEBUG ) ) m_timerTool->start( m_fwdTime );
+  if ( msgLevel( MSG::DEBUG ) || m_doTiming ) m_timerTool->start( m_fwdTime );
 
   int oriSize = outputTracks->size();
   LHCb::Tracks::iterator itT;
@@ -168,7 +182,7 @@ StatusCode PatForward::execute() {
   // end of NNTools loop
 
   if (!m_doClean) {
-    if ( msgLevel( MSG::DEBUG ) ) {
+    if ( msgLevel( MSG::DEBUG ) || m_doTiming) {
       double t = m_timerTool->stop( m_fwdTime );
       debug() << "=== In total, produced " 
 	      << outputTracks->size() - oriSize  << " tracks from "
@@ -240,7 +254,7 @@ StatusCode PatForward::execute() {
     }
   }
 
-  if ( msgLevel( MSG::DEBUG ) ) {
+  if ( msgLevel( MSG::DEBUG ) || m_doTiming ) {
     double t = m_timerTool->stop( m_fwdTime );
     debug() << "=== In total, produced " <<  outputTracks->size() - oriSize  << " tracks from "
             << inputTracks->size() << " Velo tracks in " << t << " ms"

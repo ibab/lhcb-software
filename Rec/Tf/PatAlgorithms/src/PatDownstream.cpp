@@ -51,7 +51,7 @@ PatDownstream::PatDownstream( const std::string& name,
   declareProperty( "InputLocation" , m_inputLocation  = ""    );
   declareProperty( "OutputLocation", m_outputLocation = LHCb::TrackLocation::Downstream );
   declareProperty( "PrintTracks"   , m_printTracks    = false );
-
+  declareProperty( "TimingMeasurement", m_doTiming = false);
   declareProperty( "deltaP"        , m_deltaP        = 2.0  );
   declareProperty( "xPredTol"      , m_xPredTol      = 150. * Gaudi::Units::mm * Gaudi::Units::GeV  );
   declareProperty( "xPredTol2"      , m_xPredTol2      = 10. * Gaudi::Units::mm );
@@ -147,6 +147,13 @@ StatusCode PatDownstream::initialize() {
 
   m_magFieldSvc = svc<ILHCbMagnetSvc>( "MagneticFieldSvc", true );
 
+  if ( m_doTiming) {
+    m_timerTool = tool<ISequencerTimerTool>( "SequencerTimerTool" );
+    m_timerTool->increaseIndent();
+    m_downTime = m_timerTool->addTimer( "Internal PatDownstream" );
+    m_timerTool->decreaseIndent();
+  }
+
   return StatusCode::SUCCESS;
 };
 
@@ -154,7 +161,9 @@ StatusCode PatDownstream::initialize() {
 // Main execution
 //=============================================================================
 StatusCode PatDownstream::execute() {
-    
+      
+  if ( m_doTiming ) m_timerTool->start( m_downTime );
+
   m_printing = msgLevel( MSG::DEBUG );  
   if (m_printing) debug() << "==> Execute" << endmsg;
   
@@ -330,6 +339,9 @@ StatusCode PatDownstream::execute() {
     }
   }
   debug() << "Found " << finalTracks->size() << " tracks." << endmsg;
+
+  if ( m_doTiming ) m_timerTool->stop( m_downTime );
+   
   
   return StatusCode::SUCCESS;
 };

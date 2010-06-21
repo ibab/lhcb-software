@@ -4,6 +4,7 @@
 
 // Include files
 // from Gaudi
+#include "GaudiAlg/ISequencerTimerTool.h"
 #include "GaudiAlg/GaudiAlgorithm.h"
 
 #include "TrackInterfaces/IPatSeedingTool.h"
@@ -33,7 +34,10 @@
 
   private:
     std::string m_outputTracksName;
-    IPatSeedingTool* m_seedingTool;
+    IPatSeedingTool* m_seedingTool; 
+    ISequencerTimerTool* m_timerTool;
+    int  m_seedTime;
+    bool m_doTiming;
 
   };
 

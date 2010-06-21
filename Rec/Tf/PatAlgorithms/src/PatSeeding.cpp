@@ -31,6 +31,7 @@ PatSeeding::PatSeeding( const std::string& name,
   : GaudiAlgorithm ( name , pSvcLocator )
 {
   declareProperty( "OutputTracksName",  m_outputTracksName = LHCb::TrackLocation::Seed     );
+  declareProperty( "TimingMeasurement", m_doTiming = false);
 }
 //=============================================================================
 // Destructor
@@ -48,6 +49,13 @@ StatusCode PatSeeding::initialize()
   m_seedingTool = tool<IPatSeedingTool>(
 		  "PatSeedingTool", "PatSeedingTool", this );
 
+  if ( m_doTiming) {
+    m_timerTool = tool<ISequencerTimerTool>( "SequencerTimerTool" );
+    m_timerTool->increaseIndent();
+    m_seedTime = m_timerTool->addTimer( "Internal PatSeeding" );
+    m_timerTool->decreaseIndent();
+  }
+
   return StatusCode::SUCCESS;
 }
 
@@ -56,12 +64,17 @@ StatusCode PatSeeding::initialize()
 //=============================================================================
 StatusCode PatSeeding::execute()
 {
+  if ( m_doTiming ) m_timerTool->start( m_seedTime );
+
   LHCb::Tracks* outputTracks = new LHCb::Tracks();
+
 
   m_seedingTool->prepareHits();
   StatusCode sc = m_seedingTool->performTracking(outputTracks);
 
   put(outputTracks, m_outputTracksName);
+
+  if ( m_doTiming ) m_timerTool->stop( m_seedTime );
 
   return sc;
 }
