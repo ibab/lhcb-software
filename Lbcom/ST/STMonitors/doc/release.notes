@@ -4,6 +4,7 @@
 ! Purpose     : Standard package for monitoring NZS and ZS data.
 !-----------------------------------------------------------------------------
 
+!======================= STMonitors v3r2 2010-06-21 ==========================
 ! 2010-06-08 - Mark Tobin
  - Some bug fixes in the NZS monitoring algorithm
    - Pedestal method of noise tools were returning the values after pedestal was
