@@ -1,4 +1,4 @@
-// $Id: PVReFitterAlg.h,v 1.15 2010-06-21 12:11:36 jpalac Exp $
+// $Id: PVReFitterAlg.h,v 1.16 2010-06-21 12:32:11 jpalac Exp $
 #ifndef PVREFITTERALG_H 
 #define PVREFITTERALG_H 1
 
@@ -42,8 +42,8 @@ class IOnOffline;
  * tracks that originate from the particle, and creates a relations table
  * connecting the particle to the re-fitted vertices. The re-fitted vertices 
  * are stored  in a KeyedContainer<LHCb::RecVertex>,
- * which is placed in <location>/<instance name>ReFittedPVs. The relations table 
- * is placed in <location>/<instance name>P2PVRelations. <location> 
+ * which is placed in <location>/<instance name>_PVs. The relations table 
+ * is placed in <location>/<instance name>_P2PV. <location> 
  * is obtained by stripping away "/Particles" from <b> ParticleInputLocation</b>
  *
  * The re-fitting itself is a sequence of

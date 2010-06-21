@@ -1,4 +1,4 @@
-// $Id: PVReFitterAlg.cpp,v 1.17 2010-06-21 12:11:36 jpalac Exp $
+// $Id: PVReFitterAlg.cpp,v 1.18 2010-06-21 12:32:11 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -108,8 +108,8 @@ StatusCode PVReFitterAlg::initialize() {
   DaVinci::StringUtils::expandLocation(m_outputLocation,
                                        m_onOfflineTool->trunkOnTES());
 
-  m_vertexOutputLocation = m_outputLocation + "/"+instanceName+"ReFittedPVs";
-  m_particle2VertexRelationsOutputLocation = m_outputLocation + "/"+instanceName+"P2PVRelations";
+  m_vertexOutputLocation = m_outputLocation + "/"+instanceName+"_PVs";
+  m_particle2VertexRelationsOutputLocation = m_outputLocation + "/"+instanceName+"_P2PV";
 
   return sc;
   
