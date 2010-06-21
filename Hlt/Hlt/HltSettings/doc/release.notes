@@ -4,6 +4,10 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2010-06-20 - V. Gligorov
+ - Add prescaling of monitoring parts of the topological and add "CoreHlt2" setting
+   to the hysics25 family as a template for higher interaction rate "CoreHlt2" settings.  
+
 ! 2010-06-15 - V. Gligorov
  - Update topo/phi settings in preparation for Hlt2 rejection mode running.
 
