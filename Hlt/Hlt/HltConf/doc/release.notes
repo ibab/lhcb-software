@@ -1,9 +1,11 @@
-! $Id: release.notes,v 1.475 2010-06-14 23:09:42 gligorov Exp $ 
+! $Id: release.notes,v 1.476 2010-06-21 06:14:45 albrecht Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+! 2010-06-21 - Johannes Albrecht
+ - add more routing bits
 
 ! 2010-06-15 - V. Gligorov
  - fix typo in new routing bits 
