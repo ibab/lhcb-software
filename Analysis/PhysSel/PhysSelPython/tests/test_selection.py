@@ -5,7 +5,7 @@
 import sys
 from py.test import raises
 sys.path.append('../python')
-from PhysSelPython.Wrappers import Selection, AutomaticData, NameError, NonEmptyInputLocations, IncompatibleInputLocations
+from PhysSelPython.Wrappers import Selection, AutomaticData, MergedSelection, NameError, NonEmptyInputLocations, IncompatibleInputLocations
 from SelPy.configurabloids import DummyAlgorithm, DummySequencer
 
 def test_automatic_data() :
@@ -19,6 +19,16 @@ def test_automatic_data_does_not_accept_more_than_one_ctor_argument() :
 
 def test_automatic_data_with_no_location_raises() :
      raises(Exception, AutomaticData)
+
+def test_merged_selection() :
+    sel00 = AutomaticData(Location = 'Phys/Sel00')
+    sel01 = AutomaticData(Location = 'Phys/Sel01')
+    ms = MergedSelection('Merge00And01', RequiredSelections = [sel00, sel01])
+    assert ms.name() == 'Merge00And01'
+    assert ms.requiredSelections == [sel00, sel01]
+    assert ms.outputLocation() == 'Phys/Merge00And01'
+    assert [alg.name() for alg in ms.algos] == ['SelFilterSel01', 'SelFilterSel00', 'Merge00And01']
+    assert ms.algos == [sel01.algorithm(), sel00.algorithm(), ms._sel.algorithm()]
     
 def test_instantiate_tree(selID='0000') :
     sel00 = AutomaticData(Location = 'Phys/Sel00')
