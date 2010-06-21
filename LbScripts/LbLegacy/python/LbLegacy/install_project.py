@@ -1089,7 +1089,7 @@ def getProjectTar(tar_list, already_present_list=None):
 def getMySelf():
     log = logging.getLogger()
     here = os.getcwd()
-    mysiteroot = os.environ["MYSITEROOT"].split()[0]
+    mysiteroot = os.environ["MYSITEROOT"].split(":")[0]
     os.chdir(mysiteroot)
     the_install = "install_project.py"
     new_install = "latest_%s" % the_install

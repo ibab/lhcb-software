@@ -1,3 +1,7 @@
+2010-06-21  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbLegacy/install_project.py: fixed MYSITEROOT splitting.
+
 2010-06-09  Joel Closier
     * scripts/archive_project: add the tools to remove the package on the grid
 
