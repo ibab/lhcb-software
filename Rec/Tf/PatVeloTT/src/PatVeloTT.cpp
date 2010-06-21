@@ -44,6 +44,7 @@ PatVeloTT::PatVeloTT( const std::string& name,
   declareProperty("Fitter"             , m_fitterName = "TrackMasterFitter" );
   declareProperty("maxChi2"            , m_maxChi2          = 5.); 
   declareProperty("TrackSelectorName"  , m_trackSelectorName = "None");
+  declareProperty( "TimingMeasurement", m_doTiming = false);
 }
 //=============================================================================
 // Destructor
@@ -71,6 +72,14 @@ StatusCode PatVeloTT::initialize() {
   
   info() << " InputTracksName    = " << m_inputTracksName            << endmsg;
   info() << " OutputTracksName   = " << m_outputTracksName           << endmsg;
+
+  if ( m_doTiming) {
+    m_timerTool = tool<ISequencerTimerTool>( "SequencerTimerTool" );
+    m_timerTool->increaseIndent();
+    m_veloTTTime = m_timerTool->addTimer( "Internal VeloTT Tracking" );
+    m_timerTool->decreaseIndent();
+  }
+
          
   return StatusCode::SUCCESS;
 }
@@ -80,7 +89,7 @@ StatusCode PatVeloTT::initialize() {
 //=============================================================================
 StatusCode PatVeloTT::execute() {
 
-  
+  if ( m_doTiming ) m_timerTool->start( m_veloTTTime );
   
   m_ttHitManager->prepareHits();
 
@@ -160,6 +169,8 @@ StatusCode PatVeloTT::execute() {
     tmptracks.clear();
     fittracks.clear();
   }
+
+  if ( m_doTiming ) m_timerTool->stop( m_veloTTTime );
 
   return StatusCode::SUCCESS;
 }

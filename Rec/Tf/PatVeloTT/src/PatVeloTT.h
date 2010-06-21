@@ -4,6 +4,7 @@
 
 // Include files
 // from Gaudi
+#include "GaudiAlg/ISequencerTimerTool.h"
 #include "GaudiAlg/GaudiAlgorithm.h"
 // from TrackInterfaces
 #include "TrackInterfaces/ITrackFitter.h"
@@ -62,7 +63,10 @@
     PatVeloTTTool* m_veloTTTool;
     std::vector< std::string > m_inputUsedTracksNames;
     double m_maxChi2;
-    bool m_fitTracks;
+    bool m_fitTracks; 
+    ISequencerTimerTool* m_timerTool;
+    int  m_veloTTTime;
+    bool m_doTiming;
 
   };
 

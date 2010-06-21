@@ -3,6 +3,8 @@
 ! Responsible : Mariusz Witek
 ! Purpose     : 
 !-----------------------------------------------------------------------------
+! 2010-06-21 - Stephanie Hansmann-Menzemer
+ - Add switch for timing measurements
 
 ! 2010-06-10 - V. Gligorov
  - Remove obsolete default HLT track locations. 
