@@ -71,15 +71,17 @@ DECLARE_ALGORITHM_FACTORY( MuonTrackAligMonitor );
 MuonTrackAligMonitor::MuonTrackAligMonitor( const std::string& name,
 					    ISvcLocator* pSvcLocator)
   : GaudiHistoAlg ( name , pSvcLocator ), 
-    m_h_resx_a(0), m_h_resy_a(0), m_h_resx_c(0), m_h_resy_c(0),
+    m_h_resxL_a(0), m_h_resyL_a(0), m_h_resxL_c(0), m_h_resyL_c(0),
+    m_h_resxM_a(0), m_h_resyM_a(0), m_h_resxM_c(0), m_h_resyM_c(0),
     m_notOnline(true)
 {
   declareProperty( "Extrapolator", m_extrapolatorName = "TrackMasterExtrapolator" );
   declareProperty( "Chi2Calculator", m_Chi2CalculatorName = "TrackChi2Calculator" );
-  declareProperty( "IsLongTrackState"   , m_IsLongTrackState = true               );
   declareProperty( "LongToMuonMatch"   ,  m_LongToMuonMatch  = true               );
-  declareProperty( "pCut"       ,  m_pCut = 0./GeV);
-  declareProperty( "HistoLevel",   m_histoLevel="OfflineFull");
+  declareProperty( "pCut"        ,  m_pCut = 0./GeV);
+  declareProperty( "chi2nCut"    ,  m_chi2nCut = 3);
+  declareProperty( "chi2matchCut",  m_chi2matchCut = 10);
+  declareProperty( "HistoLevel",    m_histoLevel="OfflineFull");
   declareProperty( "IsCosmics"       , m_IsCosmics = false);
 }
 
@@ -99,7 +101,7 @@ StatusCode MuonTrackAligMonitor::initialize() {
   }  
   m_zM1 = m_muonDet->getStationZ(0) / mm;
 
-  double ulow = m_IsCosmics ? -1.5 : -0.7;
+  double ulow = m_IsCosmics ? -1.5 : -0.4;
   double uhigh = -ulow;
 
   if(m_notOnline) {
@@ -176,20 +178,35 @@ StatusCode MuonTrackAligMonitor::initialize() {
   
   if(m_notOnline) {
     for(int i = 0; i < m_muonDet->stations(); i++){
-      name = "residx_aSide_station_" + boost::lexical_cast<std::string>(i);
-      m_h_resx_a.push_back( book1D( name, name, -500, 500, 100 ));
-      name = "residy_aSide_station_" + boost::lexical_cast<std::string>(i);
-      m_h_resy_a.push_back( book1D( name, name, -500, 500, 100 ));
-      name = "residx_cSide_station_" + boost::lexical_cast<std::string>(i);
-      m_h_resx_c.push_back( book1D( name, name, -500, 500, 100 ));
-      name = "residy_cSide_station_" + boost::lexical_cast<std::string>(i);
-      m_h_resy_c.push_back( book1D( name, name, -500, 500, 100 ));
+      name = "residxL_aSide_station_" + boost::lexical_cast<std::string>(i);
+      m_h_resxL_a.push_back( book1D( name, name, -500, 500, 100 ));
+      name = "residyL_aSide_station_" + boost::lexical_cast<std::string>(i);
+      m_h_resyL_a.push_back( book1D( name, name, -500, 500, 100 ));
+      name = "residxL_cSide_station_" + boost::lexical_cast<std::string>(i);
+      m_h_resxL_c.push_back( book1D( name, name, -500, 500, 100 ));
+      name = "residyL_cSide_station_" + boost::lexical_cast<std::string>(i);
+      m_h_resyL_c.push_back( book1D( name, name, -500, 500, 100 ));
+
+      name = "residxM_aSide_station_" + boost::lexical_cast<std::string>(i);
+      m_h_resxM_a.push_back( book1D( name, name, -500, 500, 100 ));
+      name = "residyM_aSide_station_" + boost::lexical_cast<std::string>(i);
+      m_h_resyM_a.push_back( book1D( name, name, -500, 500, 100 ));
+      name = "residxM_cSide_station_" + boost::lexical_cast<std::string>(i);
+      m_h_resxM_c.push_back( book1D( name, name, -500, 500, 100 ));
+      name = "residyM_cSide_station_" + boost::lexical_cast<std::string>(i);
+      m_h_resyM_c.push_back( book1D( name, name, -500, 500, 100 ));
+
     }
   }
-  name = "residx_per_halfstation";
-  m_resxhs = bookProfile1D( name, "average X res. per half station", -0.5, 9.5, 10);
-  name = "residy_per_halfstation";
-  m_resyhs = bookProfile1D( name, "average Y res. per half station", -0.5, 9.5, 10);
+  name = "residx_per_halfstationL";
+  m_resxhsL = bookProfile1D( name, "average X res. per half station wtr LONG", -0.5, 9.5, 10, "", -500, 500);
+  name = "residy_per_halfstationL";
+  m_resyhsL = bookProfile1D( name, "average Y res. per half station wtr LONG", -0.5, 9.5, 10, "", -500, 500);
+
+  name = "residx_per_halfstationM";
+  m_resxhsM = bookProfile1D( name, "average X res. per half station wtr MUON", -0.5, 9.5, 10, "", -500, 500);
+  name = "residy_per_halfstationM";
+  m_resyhsM = bookProfile1D( name, "average Y res. per half station wtr MUON", -0.5, 9.5, 10, "", -500, 500);
 
   m_extrapolator      = tool<ITrackExtrapolator>( m_extrapolatorName, "Extrapolator" ,this );
   if(!m_extrapolator){
@@ -227,13 +244,19 @@ StatusCode MuonTrackAligMonitor::execute() {
               <<")... skipping" << endmsg;
       continue;
     }
-
+    
     if(!longTrack) {
       warning() << "no track associated to MuonPID object.. skipping" << endmsg;
       continue;
     }
-
-    if( longTrack->p()/GeV > m_pCut ) {
+    
+    debug() << "LongTrack p "<<longTrack->p()/GeV<<endmsg;
+    debug() << "LongTrack chi2 "<<longTrack->chi2PerDoF()<<" dof "<<longTrack->nDoF()<<endmsg;
+    debug() << "MuonTrack chi2 "<<muTrack->chi2PerDoF()<<" dof "<<muTrack->nDoF()<<endmsg;
+    if( longTrack->p()/GeV > m_pCut && 
+        longTrack->chi2PerDoF() < m_chi2nCut && 
+        muTrack->chi2PerDoF()   < m_chi2nCut &&
+        muTrack->nDoF()> 3 ) {
       
       LHCb::State muState = muTrack->closestState( m_zM1 ); 
       LHCb::State longState = longTrack->closestState( muState.z() ); 
@@ -251,6 +274,9 @@ StatusCode MuonTrackAligMonitor::execute() {
         Warning("Extrapolating a muon muState to z failed ");
         continue;
       }
+      debug()<<" Extrapolation to z "<<m_zM1<<
+        " long = ("<<longState.x()<<","<<longState.y()<<")"<<
+        " muon = ("<<muState.x()<<","<<muState.y()<<")"<<endmsg;
       
       double chi2;
       if(m_notOnline) {
@@ -265,6 +291,10 @@ StatusCode MuonTrackAligMonitor::execute() {
         Warning("Could not invert matrices");
         //info() <<  "Could not invert matrices" << endmsg;
         continue;
+      }
+      if(chi2 > m_chi2matchCut ) {
+        debug()<<" matching chisquare not satisfactory "<<chi2<<endmsg;
+        continue;        
       }
       
       double resx = longState.x() - muState.x();
@@ -328,31 +358,36 @@ StatusCode MuonTrackAligMonitor::execute() {
           debug() << " x = " << x << " y = " << y << " z = " << z << endreq;
           debug() << " region " << tile.region() <<" station " << tile.station() << endreq;
           debug() << "*********************" << tile << endreq;
-          
-          sc = m_extrapolator->propagate( longState, z, pid );
-          if ( sc.isFailure() ) {
-            Warning("Extrapolating a muon longState to z failed ");
-            debug() << "Extrapolating longState to z = " << z << " failed " << endmsg;
-            continue;
+
+          for (int i=0; i<2; i++){
+
+            LHCb::State fitState = i==0 ? longState : muState;
+            
+            double deltaZ = z - fitState.z() ;
+            double rx= x - ( fitState.x() + fitState.tx() * deltaZ);          
+            double ry= y - ( fitState.y() + fitState.ty() * deltaZ);
+            if(m_notOnline) {
+              AIDA::IHistogram1D *tempx, *tempy;
+              if(i==0){              
+                tempx = x > 0 ? m_h_resxL_a[ tile.station() ] : m_h_resxL_c[ tile.station() ];
+                tempy = x > 0 ? m_h_resyL_a[ tile.station() ] : m_h_resyL_c[ tile.station() ];	  	  
+              }else{
+                tempx = x > 0 ? m_h_resxM_a[ tile.station() ] : m_h_resxM_c[ tile.station() ];
+                tempy = x > 0 ? m_h_resyM_a[ tile.station() ] : m_h_resyM_c[ tile.station() ];	  	  
+              }            
+              
+              tempx->fill( rx );
+              tempy->fill( ry );
+            }
+            if(i==0) {
+              m_resxhsL->fill( (x > 0 ? 0 : 5) + tile.station(), rx );
+              m_resyhsL->fill( (x > 0 ? 0 : 5) + tile.station(), ry );          
+            }else {
+              m_resxhsM->fill( (x > 0 ? 0 : 5) + tile.station(), rx );
+              m_resyhsM->fill( (x > 0 ? 0 : 5) + tile.station(), ry );          
+            }
           }
-          LHCb::State fitState = m_IsLongTrackState ? longState : muState;
-          double rx= x - fitState.x();
-          double ry= y - fitState.y();
-          if(m_notOnline) {
-            AIDA::IHistogram1D *tempx, *tempy;
-            
-            tempx = x > 0 ? m_h_resx_a[ tile.station() ] : m_h_resx_c[ tile.station() ];
-            tempy = x > 0 ? m_h_resy_a[ tile.station() ] : m_h_resy_c[ tile.station() ];	  	  
-            
-            LHCb::State fitState = m_IsLongTrackState ? longState : muState;
-            
-            tempx->fill( rx );
-            tempy->fill( ry );
-          }
-          m_resxhs->fill( (x > 0 ? 0 : 5) + tile.station(), rx );
-          m_resyhs->fill( (x > 0 ? 0 : 5) + tile.station(), ry );
-          
-        }
+        }        
       }
     }
   }

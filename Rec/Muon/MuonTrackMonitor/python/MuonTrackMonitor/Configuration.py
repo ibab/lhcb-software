@@ -28,13 +28,15 @@ class MuonTrackMonitorConf(LHCbConfigurableUser):
         muonTrackFit.Fitter.MeasProvider.IgnoreIT   = True 
         muonTrackFit.Fitter.MeasProvider.IgnoreOT   = True 
         muonTrackFit.Fitter.MeasProvider.IgnoreMuon = False 
+        muonTrackFit.Fitter.MeasProvider.MuonProvider.clusterize    = True #=======
+        #muonTrackFit.Fitter.MeasProvider.MuonProvider.OutputLevel    = DEBUG #=======
         muonTrackFit.Fitter.NodeFitter.BiDirectionalFit = False
         muonTrackFit.Fitter.ErrorX  = 1000
         muonTrackFit.Fitter.ErrorY  = 1000
         muonTrackFit.Fitter.ErrorTx = 0.7
         muonTrackFit.Fitter.ErrorTy = 0.7
         muonTrackFit.Fitter.NumberFitIterations = 4
-        muonTrackFit.Fitter.MaxNumberOutliers   = 2
+        muonTrackFit.Fitter.MaxNumberOutliers   = 0 #2
         muonTrackFit.OutputLevel = self.getProp("OutputLevel")
 
 
@@ -51,11 +53,12 @@ class MuonTrackMonitorConf(LHCbConfigurableUser):
                                         HistoLevel = self.getProp("Histograms")
                                         )
         monalig.OutputLevel = self.getProp("OutputLevel")
-        monalig.IsLongTrackState = True
+        #monalig.IsLongTrackState = True
         monalig.LongToMuonMatch = True
-        monalig.pCut = 0
+        monalig.pCut = 6  # =========
+        monalig.chi2nCut = 3
+        monalig.chi2matchCut = 10
         monalig.IsCosmics = False
-        
         muonMoniSeq.Members += [muonTrackFit, monalig]
         
  

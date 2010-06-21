@@ -3,7 +3,13 @@
 ! Responsible : Giacomo GRAZIANI
 ! Purpose     : High level Muon Monitoring after reconstruction
 !-----------------------------------------------------------------------------
-
+! 2010-06-18 - S. Vecchi
+- MuonTrackAligMonitor.cpp/h: 
+  - speeded up the extrapolation for residuals calculation on each muon station
+  - added some useful histograms to understand if there are shearings wrt to the
+    tracking
+- Configuration.py: 
+  refined the track selection to produce Alignment monitoring histograms
 !====================== MuonTrackMonitor v1r0 2010-05-21 ======================
 ! 2010-05-11 - G. Graziani
 - test output of Tile2XYZ
