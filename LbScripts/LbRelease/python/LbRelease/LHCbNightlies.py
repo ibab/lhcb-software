@@ -1,30 +1,17 @@
 
 import os, sys, random, shutil
 import re, pickle, time, datetime
-import checkLogFiles
 
 #__all__ = ['LHCbProjectBuilder', 'builderMap']
 
-localDirsOnWindows = {}
-localDirsOnWindows['Z:\\cern.ch\\user\\k\\kkruzele\\cmtuser\\LBSCRIPTS\\LBSCRIPTS_v99r0\\InstallArea\\win32_vc71\\lib'] = '' # delete from the path
-localDirsOnWindows['Z:\\LOCALDRIVE\\C\\'] = 'C:\\'
-localDirsOnWindows['Z:\\LOCALDRIVE\\D\\'] = 'D:\\'
-localDirsOnWindows['Z:\\LOCALDRIVE\\E\\'] = 'E:\\'
-localDirsOnWindows['Z:\\LOCALDRIVE\\F\\'] = 'F:\\'
-localDirsOnWindows['Z:\\cern.ch\\sw\\lcg\\external'] = 'C:\\local\\external'
-localDirsOnWindows['Z:\\cern.ch\\sw\\contrib\\CMT\\v1r20p20070208'] = 'C:\\local\\releases\\CMT\\v1r20p20070208'
-localDirsOnWindows['Z:\\cern.ch\\sw\\Gaudi\\releases'] = 'C:\\local\\Gaudi-releases'
-localDirsOnWindows['Z:\\cern.ch\\sw\\lcg\\app\\releases\\LCGCMT'] = 'C:\\local\\LCGCMT'
-localDirsOnWindows['Z:\\cern.ch\\sw\\lcg\\app\\nightlies\\scripts'] = 'C:\\local\\LCG-nightlies'
 
-localDirsOnWindows['Z:\\cern.ch\\sw\\lcg\\external'] = 'C:\\local\\external;D:\\local\\lib\\lcg\\external'
-localDirsOnWindows['Z:\\cern.ch\\lhcb\\scripts'] = 'C:\\local\\LHCb-scripts;D:\\local\\lib\\scripts'
-localDirsOnWindows['Z:\\LOCALCOPY\\releases'] = 'C:\\local\\releases;D:\\local\\lib\\lhcb'
-
-
+print "#"*60
+print "#"*60
+print "LHCB NIGHTLIES EXTENSION"
+print "#"*60
+print "#"*60
 
 class LHCbProjectBuilder(object):
-
     def canBuild(cls, project):
         from LbConfiguration.Project import project_names
         return (project in project_names)
@@ -36,6 +23,21 @@ class LHCbProjectBuilder(object):
 
     def __init__(self, slot,thread,load, proj, tag, platIn, conf, thread_counter, tpInstaller, wu, sem, tagOrder, host='', port=''):
         print "[LHCb] __init__\n"
+        self.localDirsOnWindows = {}
+        self.localDirsOnWindows['Z:\\cern.ch\\user\\k\\kkruzele\\cmtuser\\LBSCRIPTS\\LBSCRIPTS_v99r0\\InstallArea\\win32_vc71\\lib'] = '' # delete from the path
+        self.localDirsOnWindows['Z:\\LOCALDRIVE\\C\\'] = 'C:\\'
+        self.localDirsOnWindows['Z:\\LOCALDRIVE\\D\\'] = 'D:\\'
+        self.localDirsOnWindows['Z:\\LOCALDRIVE\\E\\'] = 'E:\\'
+        self.localDirsOnWindows['Z:\\LOCALDRIVE\\F\\'] = 'F:\\'
+        self.localDirsOnWindows['Z:\\cern.ch\\sw\\lcg\\external'] = 'C:\\local\\external'
+        self.localDirsOnWindows['Z:\\cern.ch\\sw\\contrib\\CMT\\v1r20p20070208'] = 'C:\\local\\releases\\CMT\\v1r20p20070208'
+        self.localDirsOnWindows['Z:\\cern.ch\\sw\\Gaudi\\releases'] = 'C:\\local\\Gaudi-releases'
+        self.localDirsOnWindows['Z:\\cern.ch\\sw\\lcg\\app\\releases\\LCGCMT'] = 'C:\\local\\LCGCMT'
+        self.localDirsOnWindows['Z:\\cern.ch\\sw\\lcg\\app\\nightlies\\scripts'] = 'C:\\local\\LCG-nightlies'
+        self.localDirsOnWindows['Z:\\cern.ch\\sw\\lcg\\external'] = 'C:\\local\\external;D:\\local\\lib\\lcg\\external'
+        self.localDirsOnWindows['Z:\\cern.ch\\lhcb\\scripts'] = 'C:\\local\\LHCb-scripts;D:\\local\\lib\\scripts'
+        self.localDirsOnWindows['Z:\\LOCALCOPY\\releases'] = 'C:\\local\\releases;D:\\local\\lib\\lhcb'
+
         self.cmtCommand = 'cmt -disable_warnings'
         self.getpackCommand = 'getpack --no-config --batch -p anonymous'
         self.pythonCommand = 'python '
@@ -46,8 +48,8 @@ class LHCbProjectBuilder(object):
             self.projectNamesDict[p.upper()] = p
 
         self.slot = slot
-        self.minusj = thread
-        self.minusl = load
+        self.minusj = 50 #thread
+        self.minusl = 15 #load
         self.slotName = slot.getName()
         self.project = slot.getProject(proj)
         self.projName = self.projectNamesDict[proj.upper()]
@@ -81,29 +83,47 @@ class LHCbProjectBuilder(object):
 
     def buildProject(self):
         print "[LHCb] buildProject: start"
-        ################################
-        # save configuration.xml taken from the server to "history" directory if environ variable is set
-        #os.environ['LCG_NIGHTLIES_XMLCONFIGCOPIES'] = self.configurationHistoryPath
-        # make copy of configuration.xml file if LCG_NIGHTLIES_XMLCONFIGCOPIES exists
-        #self.makeCopy(datetime.date.today().strftime('%a'))
-        # must be changed to writing the file from internal variable
+        from threading import Thread
+        import checkLogFiles
         cfgFile = os.path.sep.join([self.slot.releaseDir(), 'configuration.xml'])
         if not os.path.exists(cfgFile):
             file(cfgFile, 'w').write(self.configContents)
+            if os.path.exists(self.configurationHistoryPath):
+                file(os.path.sep.join([self.configurationHistoryPath, "%s.%s.xml" % (self.day, self.slotName)]), 'w').write(self.configContents)
         #TODO: --> should be written to AFS by server, not by client - then clients would do not need AFS access.
         #TODO: --> reload configuration if it's already in the releaseDir
-        #TODO: --> make a copy to the 'history' dir
-        ################################
         self.checkout()
         self.build()
-        self.test()
-        self.docs()
-        checkLogFiles.checkBuildLogs(self.slot, self.project, self.day, self.plat, self.config._generalConfig)
-        self.install()
+
+        class ThreadedAction(Thread):
+            def __init__(self, obj, action):
+                Thread.__init__(self)
+                self.obj = obj
+                self.action = action
+            def run(self):
+                if self.action == "test":
+                    self.obj.test()
+                elif self.action == "docs":
+                    self.obj.docs()
+                else: # "install"
+                    if self.obj.systemType == 'windows':
+                        print "Windows platform. Installation skipped."
+                    else:
+                        nWarn, nErr, nMkErr, nCMTErr = checkLogFiles.checkBuildLogs(self.obj.slot, self.obj.project, self.obj.day, self.obj.plat, self.obj.config._generalConfig)
+                        if nMkErr == 0:
+                            self.obj.install()
+                        else:
+                            print "Errors found during the build. Installation skipped."
+        actionList = [
+                       ThreadedAction(self, "test"),
+                       ThreadedAction(self, "docs"),
+                       ThreadedAction(self, "install")
+                     ]
+
+        for x in actionList: x.start()
+        for x in actionList: x.join()
         self.status = 0
         pass
-
-
     # --------------------------------------------------------------------------------
 
     def setupProj(self):
@@ -299,8 +319,8 @@ class LHCbProjectBuilder(object):
                     d[x][0] = changesMadeDict[x]
             self.changeRequirementsFile(f, d)
 
-        os.chdir(self.generatePath(self.slot, p, 'SYSPACKAGECMT', self.projName))
-        os.system(self.cmtCommand + ' br "' + self.cmtCommand + ' config"')
+        #os.chdir(self.generatePath(self.slot, p, 'SYSPACKAGECMT', self.projName))
+        #os.system(self.cmtCommand + ' br "' + self.cmtCommand + ' config"')
 
         # creating 'done' flag; removing 'working' flag
         os.chdir(self.generatePath(self.slot, self.project, 'TAG', self.project.getName()))
@@ -368,7 +388,7 @@ class LHCbProjectBuilder(object):
                 os.environ['CMTEXTRATAGS'] = 'no-pyzip,'+os.environ.get('CMTEXTRATAGS', '')
             else:
                 os.environ['CMTEXTRATAGS'] = 'no-pyzip'
-            self.system('make -k -j%d -l%d Package_failure_policy=ignore logging=enabled | tee make.%s.log' % (self.minusj, self.minusl, os.environ['CMTCONFIG'],) )
+            self.system('make -k -j%s -l%s Package_failure_policy=ignore logging=enabled | tee make.%s.log' % (str(self.minusj), str(self.minusl), str(os.environ['CMTCONFIG']),) )
             os.chdir(self.generatePath(self.slot, self.project, 'TAG', self.projName))
             logFiles = []
             for r, d, f in os.walk("."):
@@ -617,9 +637,9 @@ class LHCbProjectBuilder(object):
             for y in pth:
                 yy = y.lower()
                 newY = yy
-                for q in localDirsOnWindows.keys():
+                for q in self.localDirsOnWindows.keys():
                     if q.lower() in newY:
-                        newY = newY.replace(q.lower(), localDirsOnWindows[q])
+                        newY = newY.replace(q.lower(), self.localDirsOnWindows[q])
                         newY = newY.lower()
                 if yy != newY:
                     newPth1.append(newY)
@@ -703,3 +723,67 @@ class LHCbProjectBuilder(object):
                     else:
                         Lock(commandLinux,str(os.getpid()), commandLinux)
 
+
+import BaseServer
+
+class LHCbServer(BaseServer.Server):
+    def __init__(self, cfgFile, cfgContents=None):
+        self.unitsTaken = []
+        BaseServer.Server.__init__(self, cfgFile, cfgContents)
+    def setToday(self):
+        "used when reseting server"
+        self.unitsTaken = []
+        BaseServer.Server.setToday(self)
+    def cmpWorkUnits(self, a, b):
+        #POLICY: slots in order, then platforms in order
+        slotOrder = ['lhcb-prerelease','lhcb-head','lhcb-patches','lhcb-branches','lhcb-gaudi-head','lhcb-lcg-head']
+        platOrder = ['x86_64-slc5-gcc43-opt','slc4_amd64_gcc34','slc4_ia32_gcc34',
+                     'x86_64-slc5-gcc43-dbg','slc4_amd64_gcc34_dbg','slc4_ia32_gcc34_dbg',
+                     'win32_vc71_dbg']
+        # compare slot names
+        if a[0] in slotOrder and b[0] not in slotOrder: return -1
+        elif b[0] in slotOrder and a[0] not in slotOrder: return 1
+        elif a[0] in slotOrder and b[0] in slotOrder:
+            #if both of slot names on order list
+            if slotOrder.index(a[0]) < slotOrder.index(b[0]): return -1
+            else: return 1
+        else:
+            #if none of slot names on order list
+            if a[1] in platOrder and b[1] not in platOrder: return -1
+            elif b[1] in platOrder and a[1] not in platOrder: return 1
+            elif a[1] in platOrder and b[1] in platOrder:
+                #if both of platforms on order list
+                if platOrder.index(a[1]) < platOrder.index(b[1]): return -1
+                else: return 1
+            else:
+                #if none of platforms on order list
+                return 0
+    def getWorkUnit(self,configuration):
+        import LbConfiguration.Platform
+        self.readConfigurationFile(self.cfgFile)
+        jobs = []
+        for slotObj in self.conf._slotList:
+            for plObj in slotObj.getPlatforms():
+                #check "waitfor" flag, if False, skip this (slot, platform)
+                plName = plObj.getName()
+                if slotObj.waitForFlag(plName) \
+                and sum([int(os.path.exists(q)) for q in slotObj.waitForFlag(plObj)])!=len(slotObj.waitForFlag(plObj)):
+                    continue
+                jobs.append((slotObj.getName(), plObj.getName()))
+        jobs.sort(self.cmpWorkUnits)
+        print jobs
+        platformType = LbConfiguration.Platform.getPlatformType(configuration)
+        #slc5 on slc5, slc4 on slc4, etc... and only if not already taken
+        toBeTaken = map(lambda x:platformType==LbConfiguration.Platform.getPlatformType(x[1]) and x not in self.unitsTaken, jobs)
+        print toBeTaken
+        #return the first one from the list, if any
+        if True in toBeTaken:
+            ret = jobs[toBeTaken.index(True)]
+            self.unitsTaken.append((ret[0], ret[1]))
+            return ":".join([ret[0], ret[1], '50', ' priority 122: time 2010-06-04 16:00:00.123456'])
+        else:
+            return ""
+
+
+__lcg_nightlies_extensions__ = {"server": [LHCbServer],
+                                "builder": [LHCbProjectBuilder]}

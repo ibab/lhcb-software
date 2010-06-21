@@ -1,3 +1,10 @@
+2010-06-21  Karol Kruzelecki  <Karol.Kruzelecki@cern.ch>
+
+	* python/LbRelease/LHCbNightlies.py: Server class added to the module;
+	directories replacements for Windows moved to the class; -j & -l values
+	of make fixed for the moment to 50 and 15; tests, docs, and install on
+	separate threads after the build step, joined per project.
+
 2010-06-18  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* python/LbRelease/LHCbDoc.py: Fixed a problem in the update of the common links.
