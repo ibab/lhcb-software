@@ -6,6 +6,7 @@
 !               Olivier Deschamps odescham@in2p3.fr
 ! =============================================================================
 
+!===================== CaloAssociators v6r10p1 2010-06-21 =====================
 ! 2010-06-10 - Marco Cattaneo
  - Fix Windows compilation warnings
 
