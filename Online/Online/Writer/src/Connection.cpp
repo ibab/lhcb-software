@@ -40,7 +40,7 @@ Connection::Connection(std::string serverAddr, int serverPort, int sndRcvSizes,
   m_state = Connection::STATE_CONN_CLOSED;
   m_serverAddr = serverAddr;
   m_serverPort = serverPort;
-  m_log = log;
+  m_log = new MsgStream(*log);
   m_maxQueueSize = maxQueueSize;
   m_notifyClient = nClient;
   m_sndRcvSizes = sndRcvSizes;
@@ -48,6 +48,7 @@ Connection::Connection(std::string serverAddr, int serverPort, int sndRcvSizes,
   m_stopRetrying = 0;
   pthread_mutex_init(&m_failoverLock, NULL);
 }
+
 
 /**
  * Connects to a storage cluster node.
@@ -146,6 +147,7 @@ void Connection::closeConnection()
 int Connection::failover(int currThread)
 {
   int ret = 0;
+  MsgStream l_log(*m_log);
 
   ret = pthread_mutex_trylock(&m_failoverLock);
   if(ret == EBUSY) /* Someone else is already in the failover routine. Die.*/
@@ -153,17 +155,17 @@ int Connection::failover(int currThread)
 
   switch(currThread) {
     case ACK_THREAD:
-      *m_log << MSG::WARNING << WHERE
+      l_log << MSG::WARNING << WHERE
              << " Failover initiated by ACK thread. Errno is: " << errno
              << endmsg;
       break;
     case SEND_THREAD:
-      *m_log << MSG::WARNING << WHERE
+      l_log << MSG::WARNING << WHERE
              << " Failover initiated by SEND thread. Errno is: " << errno
              << endmsg;
       break;
     case FAILOVER_THREAD:
-      *m_log << MSG::WARNING << WHERE
+      l_log << MSG::WARNING << WHERE
              << " Failover initiated by FAILOVER thread. Errno is: " << errno
              << endmsg;
 
@@ -216,7 +218,7 @@ int Connection::failover(int currThread)
     m_ackThread->start();
   }
 
-  *m_log << MSG::WARNING << WHERE
+  l_log << MSG::WARNING << WHERE
          << "Successfully failed over. "
          << endmsg;
   pthread_mutex_unlock(&m_failoverLock);
@@ -250,8 +252,8 @@ void Connection::sendCommand(struct cmd_header *header)
 void Connection::sendCommand(struct cmd_header *header, void *data)
 {
   static int failureCnt=0;
-  
-
+  MsgStream l_log(*m_log);
+ 
   struct cmd_header *newHeader;
   int totalSize = 0;
   switch(header->cmd) {
@@ -270,7 +272,7 @@ void Connection::sendCommand(struct cmd_header *header, void *data)
       if(newHeader == NULL) {
           if(failureCnt%60==0) {
 //              *m_log << MSG::FATAL << "Buffer is full!, allocated bytes=" <<m_mmObj.getAllocByteCount() << ", MaxQueueSizeBytes=" << m_maxQueueSize 
-              *m_log << MSG::WARNING << "Writing an event was delayed due to back pressure from the writerd. Performance drop -> /clusterlogs/services/writerd.log" << endmsg;
+              l_log << MSG::WARNING << "Writing an event was delayed due to back pressure from the writerd. Performance drop -> /clusterlogs/services/writerd.log" << endmsg;
           }
           failureCnt ++;
           sleep(1);
@@ -280,18 +282,18 @@ void Connection::sendCommand(struct cmd_header *header, void *data)
       // do a clean shutdown
       // m_mmObj and its buffer will be deleted when the
       // connection object will be deleted
-      *m_log << MSG::FATAL << m_mmObj.getAllocByteCount() << " Bytes are lost." << endmsg;
+      l_log << MSG::FATAL << m_mmObj.getAllocByteCount() << " Bytes are lost." << endmsg;
       return;
   }
   if(newHeader != NULL) { 
       m_mmObj.enqueueCommand(newHeader);
       if(failureCnt !=0) {
-          *m_log << MSG::WARNING << "Event written after " << failureCnt << " second(s)." << endmsg;
+          l_log << MSG::WARNING << "Event written after " << failureCnt << " second(s)." << endmsg;
       } 
       failureCnt=0;
   } else {
         // Should normally never happen
-        *m_log << MSG::FATAL << "ERROR: Buffer is still full, giving up. Event is lost!" << endmsg;
+        l_log << MSG::FATAL << "ERROR: Buffer is still full, giving up. Event is lost!" << endmsg;
     }
 }
 

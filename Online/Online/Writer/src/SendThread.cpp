@@ -27,6 +27,7 @@ extern "C" {
 
 using namespace LHCb;
 
+
 /**
  * The sender thread body.
  * This thread just starts the startSending() method of

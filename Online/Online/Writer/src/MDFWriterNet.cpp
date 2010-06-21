@@ -435,7 +435,9 @@ File* MDFWriterNet::createAndOpenFile(unsigned int runNumber)
     *m_log << MSG::ERROR
            << " Exception: "
            << e.what() << endmsg; 
-    *m_log << MSG::ERROR << " Could not get new file name! Check the RunDB XML_RPC logfile /clusterlogs/services/xmlrpc.log"
+    *m_log << MSG::ERROR << " Could not get new file name for run "
+           << runNumber
+           << " ! Check the RunDB XML_RPC logfile /clusterlogs/services/xmlrpc.log"
            <<  endmsg ;
     return currFile;       
   }
@@ -681,24 +683,30 @@ StatusCode MDFWriterNet::writeBuffer(void *const /*fd*/, const void *data, size_
       }
       return StatusCode::SUCCESS; 
     }
-    if(!m_currFile) { 
-      *m_log << MSG::INFO << WHERE
-             << "No file exists for run " << runNumber
-             << " Creating a new one."
-             << endmsg;
-      m_currFile = createAndOpenFile(runNumber);
-      if(m_currFile == NULL) {
-          Incident incident(name(),"DAQ_ERROR");
-          m_incidentSvc->fireIncident(incident);
-          if (pthread_mutex_unlock(&m_SyncFileList)) {
-            *m_log << MSG::ERROR << WHERE << " Unlocking mutex" << endmsg;
+    int nbTry=0;
+    if(!m_currFile) {
+        while(!m_currFile && nbTry < 5) { 
+          *m_log << MSG::INFO << WHERE
+                 << "No file exists for run " << runNumber
+                 << " Creating a new one."
+                 << " Try number " << nbTry
+                 << endmsg;
+          m_currFile = createAndOpenFile(runNumber);
+          ++nbTry;
+        }
+        if(m_currFile == NULL) {
+            Incident incident(name(),"DAQ_ERROR");
+            m_incidentSvc->fireIncident(incident);
+            if (pthread_mutex_unlock(&m_SyncFileList)) {
+              *m_log << MSG::ERROR << WHERE << " Unlocking mutex" << endmsg;
+              return StatusCode::FAILURE;
+            }
+          
             return StatusCode::FAILURE;
-          }
-      
-          return StatusCode::FAILURE;
-      }    
-      m_openFiles.addFile(m_currFile);
+        }    
+        m_openFiles.addFile(m_currFile);
     }
+    
 
     // This block is entered in 2 cases: 
     // 1- An event from a previous run
@@ -777,10 +785,10 @@ StatusCode MDFWriterNet::writeBuffer(void *const /*fd*/, const void *data, size_
                           trgEvents,
                           statEvents);
      } catch(std::exception& e) {
-        *m_log << MSG::ERROR
+        *m_log << MSG::WARNING
            << " Exception: "
            << e.what() << endmsg;
-        *m_log << MSG::ERROR << " Could not update Run Database Record. Check the RunDB XML_RPC logfile /clusterlogs/services/xmlrpc.log";
+        *m_log << MSG::WARNING << " Could not update Run Database Record. Check the RunDB XML_RPC logfile /clusterlogs/services/xmlrpc.log";
         *m_log << " Record is: FileName=" << *(m_currFile->getFileName());
         *m_log << " Run Number=" << m_currentRunNumber << endmsg;
       }
@@ -831,7 +839,7 @@ StatusCode MDFWriterNet::writeBuffer(void *const /*fd*/, const void *data, size_
                  << "Could not send message, errno=" << errno
                  << ". Closing queue"
                  << endmsg;
-          m_mq_available = false;
+              m_mq_available = false;
       }
       free(msg);
       msg = NULL;
@@ -1107,10 +1115,10 @@ void MDFWriterNet::notifyClose(struct cmd_header *cmd)
 	        md5sum[8],md5sum[9],md5sum[10],md5sum[11],
 	        md5sum[12],md5sum[13],md5sum[14],md5sum[15]);
 
-    *m_log << MSG::WARNING
+    *m_log << MSG::ERROR
            << " Exception: "
            << rte.what() << endmsg;
-    *m_log << MSG::WARNING << " Could not update Run Database Record. Check the RunDB XML_RPC logfile /clusterlogs/services/xmlrpc.log";
+    *m_log << MSG::ERROR << " Could not update Run Database Record. Check the RunDB XML_RPC logfile /clusterlogs/services/xmlrpc.log";
     *m_log << " Record is: FileName=" << cmd->file_name;
     *m_log << " Adler32 Sum=" << pdu->adler32_sum;
     *m_log << " MD5 Sum=" << md5buf << endmsg;
@@ -1162,10 +1170,10 @@ void MDFWriterNet::notifyClose(struct cmd_header *cmd)
 	        md5sum[8],md5sum[9],md5sum[10],md5sum[11],
 	        md5sum[12],md5sum[13],md5sum[14],md5sum[15]);
 
-    *m_log << MSG::WARNING
+    *m_log << MSG::ERROR
            << " Exception: "
            << rte.what() << endmsg;
-    *m_log << MSG::WARNING << " Could not update Run Database Record. Check the RunDB XML_RPC logfile /clusterlogs/services/xmlrpc.log";
+    *m_log << MSG::ERROR << " Could not update Run Database Record. Check the RunDB XML_RPC logfile /clusterlogs/services/xmlrpc.log";
     *m_log << " Record is: FileName=" << cmd->file_name;
     *m_log << " Adler32 Sum=" << pdu->adler32_sum;
     *m_log << " MD5 Sum=" << md5buf << endmsg;
@@ -1183,12 +1191,13 @@ void MDFWriterNet::notifyError(struct cmd_header* /*cmd*/, int /*errno*/)
 
 StatusCode MDFWriterNet::CleanUpFiles() {
   
-  *m_log << MSG::INFO << WHERE << " Clean up routine started" << endmsg;
+  MsgStream *log = new MsgStream(*m_log);
+  *log << MSG::INFO << WHERE << " Clean up routine started" << endmsg;
   while (!m_CleanUpStop) {
     sleep(1);
 
     if (pthread_mutex_lock(&m_SyncFileList)) {
-      *m_log << MSG::ERROR << WHERE << " Locking mutex" << endmsg;
+      *log << MSG::ERROR << WHERE << " Locking mutex" << endmsg;
       return StatusCode::FAILURE;
     }
     File *tmpFile =  m_openFiles.getFirstFile();
@@ -1197,7 +1206,7 @@ StatusCode MDFWriterNet::CleanUpFiles() {
       if(tmpFile->getRunNumber() != m_currentRunNumber &&
          tmpFile->getTimeSinceLastWrite() > m_runFileTimeoutSeconds) {
         // This file hasn't been written to in a loong time. Close it.
-        *m_log << MSG::INFO << WHERE
+        *log << MSG::INFO << WHERE
                << "Closing file " << tmpFile->getMonitor()->m_name << " after time out." 
                << endmsg;
         File *toDelete = tmpFile;
@@ -1210,11 +1219,11 @@ StatusCode MDFWriterNet::CleanUpFiles() {
       tmpFile = tmpFile->getNext();
     }
     if (pthread_mutex_unlock(&m_SyncFileList)) {
-      *m_log << MSG::ERROR << WHERE << " Unlocking mutex" << endmsg;
+      *log << MSG::ERROR << WHERE << " Unlocking mutex" << endmsg;
       return StatusCode::FAILURE;
     }
   }
-  *m_log << MSG::INFO << WHERE << " Clean up routine ended" << endmsg;
+  *log << MSG::INFO << WHERE << " Clean up routine ended" << endmsg;
   return StatusCode::SUCCESS;
 } 
 

@@ -123,7 +123,7 @@ void MM::freeCommand(struct cmd_header *cmd)
       return;
       break;
   }
-  pthread_mutex_unlock(&m_listLock);
+//  pthread_mutex_unlock(&m_listLock);
 
   free(cmd);
   pthread_mutex_lock(&m_allocLock);
@@ -149,13 +149,17 @@ void MM::enqueueCommand(struct cmd_header *cmd)
       return; // should only be the case when allocAndCopyCommand
               // return NULL because the queueSize was too big
   }
+
   struct list_head *newElem;
 
   newElem = (struct list_head *)malloc_blocking(sizeof(struct list_head));
   newElem->cmd = cmd;
   newElem->next = NULL;
 
+
   pthread_mutex_lock(&m_listLock);
+
+
   if(m_head == NULL) {
     m_head = newElem;
     m_tail = newElem;
@@ -169,6 +173,7 @@ void MM::enqueueCommand(struct cmd_header *cmd)
   }
 
   m_queueLength++;
+
   pthread_mutex_unlock(&m_listLock);
 
   /*Let the sender thread know that the list isn't empty.*/
@@ -234,6 +239,7 @@ struct cmd_header* MM::moveSendPointer(void)
   /* At this point we have the list lock. */
   oldSendPointer = m_sendPointer;
   m_sendPointer = m_sendPointer->next;
+
   pthread_mutex_unlock(&m_listLock);
   return oldSendPointer->cmd;
 }
@@ -268,6 +274,7 @@ struct cmd_header* MM::dequeueCommand(unsigned int sequenceNum, unsigned int run
   while(tmp != NULL) {
     if(tmp->cmd->data.chunk_data.seq_num == sequenceNum &&
        tmp->cmd->run_no == run_no) {
+      if(tmp == m_sendPointer) m_sendPointer = NULL;
       if(!prev) {
         m_head = tmp->next;
         if(!m_head) {
@@ -276,10 +283,13 @@ struct cmd_header* MM::dequeueCommand(unsigned int sequenceNum, unsigned int run
         }
       } else {
         prev->next = tmp->next;
+        if(tmp == m_tail) m_tail = prev;
       }
       m_queueLength--;
       retCmd = tmp->cmd;
       free(tmp);
+
+      pthread_mutex_unlock(&m_listLock);
       return retCmd;
     }
     prev = tmp;
