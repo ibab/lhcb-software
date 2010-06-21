@@ -31,6 +31,11 @@ Purpose: LHCb reconstruction program
   . Changed precision of OTMeasurement::deltaTimeOfFlight (TrackFitEvent)
   . New hit error estimates for MC (STTools)
   . New tuning of eta correction (STTools)
+  . New Cherenkov angle plots for aerogel (RichRecQC)
+  . Book all histos at initialize (MuonPIDChecker)
+  . Switch from loose to default PV (RecConf)
+  . Reduce verbosity of LumiAlgs (LumiAlgs)
+  . Improved rejection of R clusters (PatVelo)
 
 - New incompatibility
   . The new default ST hit error estimates applied by STTools are only compatible
