@@ -10,18 +10,15 @@ import sys
 
 class KillTree(Script):
     _description = __doc__
-    def __init__(self):
-        Script.__init__(self, usage = "\n\t%prog PID",
-                              description = "kill the process tree with the root PID given")
     def main(self):
         if len(self.args) == 1 and self.args[0].isdigit():
             pid = int(self.args[0])
         else:
-            print "use: --help"
+            self.parser.print_help()
             return -1
         killTree(pid)
         return 0
 
 if __name__ == '__main__':
-    s = KillTree()
+    s = KillTree(usage="\n\t%prog PID")
     sys.exit(s.run())
