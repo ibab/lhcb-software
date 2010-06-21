@@ -76,7 +76,7 @@ void StrippingReport::report(bool onlyPositive) {
 
   std::vector<ReportStat>::iterator i;
 
-  char str[80];
+  char str[128];
 
   sprintf(str,"%-51.51s: %8.8s %10.10s %7.7s", "Decision name", "Rate", "Accepted", "Mult.");
 
@@ -119,7 +119,7 @@ StatusCode StrippingReport::execute() {
   
   std::vector< ReportStat >::iterator i;
 
-  char str[80];
+  char str[128];
 
   if (m_everyEvent) { 
     sprintf(str,"%-51.51s: %4s %5s", "Decision name", "Decn", "Cands");
@@ -185,7 +185,7 @@ StatusCode StrippingReport::finalize() {
 
   std::vector<ReportStat>::iterator i;
 
-  char str[80];
+  char str[128];
 
   // List non-responding lines
   if (m_printNonResponding) {

@@ -5,6 +5,10 @@
 ! Purpose     : Stripping framework c++ component algorithms
 ! -----------------------------------------------------------------------------
 
+! 2010-06-21 - Anton Poluektov 
+ - Corrected (hopefully) a bug that caused a segfault during the output. 
+   String length for the formatted output was insufficient. 
+
 !======================== StrippngAlgs v1r2 2010-05-24 ========================
 
 ! 2010-05-24 - Anton Poluektov 
