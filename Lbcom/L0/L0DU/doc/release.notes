@@ -1,12 +1,13 @@
-! $Id: release.notes,v 1.208 2010-05-26 10:46:21 odescham Exp $
+! $Id: release.notes,v 1.209 2010-06-21 08:13:52 cattanem Exp $
 ! Package		: L0/L0DU
 ! Package Manager : Olivier Deschamps
 !--------------------------------------------------------------------------
 
+!========================== L0DU v10r8 2010-06-21 =========================
 ! 2010-05-26 Olivier Deschamps
   - L0Filter : fix doxygen documentation
-  - L0DURawBankMonitor : BXID-decision monitoring in detail (positive bcid per channel/trigger). 
-
+  - L0DURawBankMonitor : BXID-decision monitoring in detail 
+                        (positive bcid per channel/trigger). 
 
 !========================== L0DU v10r7 2010-05-22 =========================
 ! 2010-05-19 - Julien Cogan
