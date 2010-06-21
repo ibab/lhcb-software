@@ -1,8 +1,13 @@
-! $Id: release.notes,v 1.189 2010-06-13 12:06:24 ibelyaev Exp $
+! $Id: release.notes,v 1.190 2010-06-21 12:11:47 jpalac Exp $
 !===========================================================================
 ! Package     : VertexFit
 ! Responsible : Yuehong Xie
 !===========================================================================
+
+! 2010-06-21 - Juan Palacios
+ - PVReFitterAlg
+  . Change location of output PVs and relations tables. Now go to TES trunk
+    of input particles.
 
 ! 2010-06-13 - Vanya Belyaev
 
