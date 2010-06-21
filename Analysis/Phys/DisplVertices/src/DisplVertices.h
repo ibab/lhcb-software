@@ -37,7 +37,7 @@
 
 /** @class DisplVertices DisplVertices.h
  *  
- *  @Version 6r3
+ *  @brief Apply a set of cuts on given Particles.
  *  @author Neal Gauvin
  *  @date  30 june 2009
  */
@@ -179,8 +179,8 @@ private:
   StatusCode fillHeader( Tuple & );
   StatusCode ReconstructMother( LHCb::Particle::ConstVector & );
 
-  /*****************************************************************
-   * the type of R cut to be applied 
+  /***************************************************************//**
+   * the type of radial (R) cut to be applied 
    * ""                   : cut with respect to (0,0,z)
    * "FromUpstreamPV"     : cut with respect to the upstream PV (PV3D)
    * "FromBeamLine"       : cut with respect to given beam line
@@ -213,7 +213,10 @@ private:
   double m_DocaMax;           ///< Max distance of closest approach
   unsigned int m_NbCands;     ///< Min nb of desired candidates
   int    m_nTracks ;          ///< Min # of tracks at reconstructed vertex
-  /*****************************************************************
+  unsigned int m_PVnbtrks;    ///< Min nb of trks for upstream PV candidate
+  double m_SigmaZ;            ///< Max on error Z
+  double m_SigmaR;            ///< Max on error R
+  /***************************************************************//**
    * Remove vtx if in detector material ?
    * if = 0  : disabled
    * if = 1  : remove reco vtx if in detector material
@@ -225,7 +228,7 @@ private:
    ******************************************************************/
   int m_RemVtxFromDet ;    
   double m_DetDist;           ///< Min distance to det material 
-  //Remove vtx if found in RF-Foil area, based on geometric cuts
+  ///<Remove vtx if found in RF-Foil area, based on geometric cuts
   bool   m_RemFromRFFoil;
 
   Gaudi::Transform3D m_toVeloLFrame; ///< to transform to local velo L frame

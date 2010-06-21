@@ -84,10 +84,13 @@ DisplVertices::DisplVertices( const std::string& name,
   declareProperty("PurityMin", m_PurityMin = 100 );
   declareProperty("DocaMax", m_DocaMax = 0.1 * mm);//Simulate resolution
   declareProperty("NbTracks", m_nTracks = 1 );//~ nb B meson max # of tracks 5
+  declareProperty("SigmaZ", m_SigmaZ = 1000. );
+  declareProperty("SigmaR", m_SigmaR = 1000. );
   declareProperty("RCutMethod", m_RCut = "FromUpstreamPV" );
   declareProperty("RemVtxFromDet", m_RemVtxFromDet = 0  );
   declareProperty("DetDist", m_DetDist = 1*mm );
   declareProperty("RemFromRFFoil", m_RemFromRFFoil = false );
+  declareProperty("PVnbtrks", m_PVnbtrks = 5 ); //corr. to 'tight' PV reco
   declareProperty("BeamLineLocation", 
 		  m_BLLoc = "HLT/Hlt2LineDisplVertices/BeamLine");
 }
@@ -383,13 +386,16 @@ StatusCode DisplVertices::execute(){
     Gaudi::LorentzVector mom = p->momentum();
     double sumpt = GetSumPt(p);
     double muon = HasMuons(p);
+    const Gaudi::SymMatrix3x3 & err = p->endVertex()->covMatrix();
+    double errr = sqrt( err(0,0)*err(0,0) + err(1,1)*err(1,1) );
 
     //Let's go for Prey hunting
     if( msgLevel( MSG::DEBUG ) ){
       debug()<< m_Prey <<" candidate with mass "<< mass/Gaudi::Units::GeV 
-	     <<" GeV, nb of tracks " << nbtrks << ", Chi2/ndof " 
-	     << chi <<", R "<< rho <<", pos of end vtx " 
-	     << pos;
+             <<" GeV, nb of tracks " << nbtrks << ", Chi2/ndof " 
+             << chi <<", R "<< rho <<", pos of end vtx " 
+             << pos <<", sigmaX "<< err(0,0)<<", sigmaY "<< err(1,1)
+             <<", sigmaZ "<< err(2,2) <<", sigmaR "<< errr ;
       if(muon){
         debug()<<", has muon with pt "<< muon <<" GeV" << endmsg;
       } else { debug()<< endmsg; }
@@ -407,7 +413,7 @@ StatusCode DisplVertices::execute(){
     if( mass < m_PreyMinMass || mass > m_PreyMaxMass || 
         nbtrks < m_nTracks || rho <  m_RMin || rho > m_RMax || 
         abs(zpos) > m_DistMax || sumpt < m_SumPt || chi > m_MaxChi2OvNDoF ||
-        muon < m_MuonpT ){ 
+        muon < m_MuonpT || errr > m_SigmaR || err(2,2) > m_SigmaZ ){ 
       if( msgLevel( MSG::DEBUG ) )
         debug()<<"Particle do not pass the cuts"<< endmsg; 
       continue; 
@@ -3080,14 +3086,16 @@ void DisplVertices::GetUpstreamPV(){
 
   for ( RecVertex::Range::const_iterator i = PVs.begin(); 
         i != PVs.end() ; ++i ){
+    const RecVertex* pv = *i;
     //Do not consider PVs outside some limits.
-    if( abs((*i)->position().x()>1.5*mm) || abs((*i)->position().y()>1.5*mm))
+    if( abs(pv->position().x()>1.5*mm) || abs(pv->position().y()>1.5*mm))
       continue;
-    double z = (*i)->position().z();
+    double z = pv->position().z();
     if( abs(z) > 150*mm ) continue;
+    if( pv->tracks().size() < m_PVnbtrks ) continue;
     if( z < tmp ){
       tmp = z;
-      PV = (*i);
+      PV = pv;
     } 
   }
 }

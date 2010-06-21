@@ -20,8 +20,7 @@
 #include "DetDesc/ITransportSvc.h"
 
 /** @class RecVertices2Particles RecVertices2Particles.h
- *  
- *  @Version 6r3
+ *  @brief Turn a given container of RecVertex if they fulfill some criteria
  *  @author Neal Gauvin
  *  @date   12 janvier 2010
  */
@@ -90,19 +89,20 @@ private:
   double Norm( const Gaudi::XYZVector &);
   Gaudi::XYZPoint Normed( const Gaudi::LorentzVector &, double range = 1 );
 
-  std::string m_Prey ;        ///< LHCb Name of the neutralino LSP
+  std::string m_Prey;         ///< LHCb Name of the neutralino LSP
   LHCb::ParticleID m_PreyID;  ///< ID of this particle
-  int    m_PreyPID ;          ///< PID of the prey (for MC and Gen use)
+  int    m_PreyPID;           ///< PID of the prey (for MC and Gen use)
 
-  const double pi ;
+  const double pi;
 
-  int    m_nTracks ;          ///< Min # of tracks at reconstructed vertex
-  double m_PreyMinMass ;      ///< Minimum reconstructed mass
-  double m_PreyMaxMass ;      ///< Maximum reconstructed mass
+  int    m_nTracks;           ///< Min # of tracks at reconstructed vertex
+  double m_PreyMinMass;       ///< Minimum reconstructed mass
+  double m_PreyMaxMass;       ///< Maximum reconstructed mass
   double m_RMin;              ///< Min dist to the z axis
   double m_RMax;              ///< Max dist to the z axis
-  double m_Dist;              ///< distance bet. RV to be said isolated
-  /*****************************************************************
+  double m_Dist;              ///< Distance bet. RV to be said isolated
+  unsigned int m_PVnbtrks;    ///< Min nb of trks for upstream PV candidate
+  /***************************************************************//**
    * Remove vtx if in detector material ?
    * if = 0  : disabled
    * if = 1  : remove reco vtx if in detector material
@@ -112,17 +112,17 @@ private:
    *                             +- DetDist * PositionCovMatrix
    * if = 4 : 3 but range+3 if in RF foil.
    ******************************************************************/
-  int m_RemVtxFromDet ;    
-  double m_DetDist;           ///< Min distance to det material 
-  //Remove vtx if found in RF-Foil area, based on geometric cuts
+  int m_RemVtxFromDet;    
+  double m_DetDist;          ///< Min distance to det material 
+  ///Remove vtx if found in RF-Foil area, based on geometric cuts
   bool   m_RemFromRFFoil;
-  bool   m_KeepLowestZ ;      ///< keep the RV with the lowest Z (particle gun)
-  bool   m_SaveTuple ;        ///< Save candidate infos in a tuple
-  bool   m_UseMap ;           ///< Use a map to store Particle Track relation
+  bool   m_KeepLowestZ;      ///< keep the RV with the lowest Z (particle gun)
+  bool   m_SaveTuple;        ///< Save candidate infos in a tuple
+  bool   m_UseMap;           ///< Use a map to store Particle Track relation
   /// Where RecVertices are stored on the TES
-  std::vector<std::string> m_RVLocation ;
-  std::string m_Fitter ;      ///< method for fitting the RecVertex
-  /*****************************************************************
+  std::vector<std::string> m_RVLocation;
+  std::string m_Fitter;      ///< method for fitting the RecVertex
+  /***************************************************************//**
    * the type of R cut to be applied 
    * ""                   : cut with respect to (0,0,z)
    * "FromUpstreamPV"     : cut with respect to the upstream PV (PV3D)
@@ -131,6 +131,7 @@ private:
   std::string m_RCut;         
   std::string m_BLLoc;        ///< Location in TES of Beam line
   LHCb::Particle * m_BeamLine;
+
 
   Gaudi::Transform3D m_toVeloLFrame; ///< to transform to local velo L frame
   Gaudi::Transform3D m_toVeloRFrame; ///< to transform to local velo R frame

@@ -57,6 +57,7 @@ RecVertices2Particles::RecVertices2Particles( const std::string& name,
   declareProperty("BeamLineLocation", 
 		  m_BLLoc = "HLT/Hlt2LineDisplVertices/BeamLine");
   declareProperty("UseMap", m_UseMap = false );
+  declareProperty("PVnbtrks", m_PVnbtrks = 5 ); //corr. to 'tight' PV reco
 }
 //=============================================================================
 // Destructor
@@ -381,14 +382,23 @@ const RecVertex * RecVertices2Particles::GetUpstreamPV(){
   double tmp = 1000;
   for ( RecVertex::Range::const_iterator i = PVs.begin(); 
         i != PVs.end() ; ++i ){
-    //Do not consider PVs outside some limits.
-    if( abs((*i)->position().x()>1.5*mm) || abs((*i)->position().y()>1.5*mm))
+    const RecVertex* pv = *i;
+    //Apply some cuts
+    if( abs(pv->position().x()>1.5*mm) || abs(pv->position().y()>1.5*mm))
       continue;
-    double z = (*i)->position().z();
+    double z = pv->position().z();
     if( abs(z) > 150*mm ) continue;
+    //const Gaudi::SymMatrix3x3  & mat = pv->covMatrix();
+    if( msgLevel( MSG::DEBUG ) )
+      debug() <<"PV candidate : nb of tracks "<< pv->tracks().size() << endmsg;
+    //<<" sigmaX "<< mat(0,0) <<" sigmaY "<< mat(1,1) 
+    //<<" sigmaZ "<< mat(2,2) << endmsg;
+    //if( mat(0,0) > m_PVsxy || mat(1,1) > m_PVsxy ) continue;
+    //if( mat(2,2) > m_PVsz ) continue;
+    if( pv->tracks().size() < m_PVnbtrks ) continue;
     if( z < tmp ){
       tmp = z;
-      upPV = (*i);
+      upPV = pv;
     } 
   }
   return upPV;
@@ -778,7 +788,7 @@ bool RecVertices2Particles::IsAPointInDet( const Particle & P, int mode,
   else if( mode == 3 || mode == 4 ){
 
     const Gaudi::XYZPoint  RVPosition = RV->position();
-    Gaudi::SymMatrix3x3 RVPositionCovMatrix = RV->covMatrix();
+    const Gaudi::SymMatrix3x3 & RVPositionCovMatrix = RV->covMatrix();
     double sigNx = range*sqrt(RVPositionCovMatrix[0][0]);
     double sigNy = range*sqrt(RVPositionCovMatrix[1][1]);
     double sigNz = range*sqrt(RVPositionCovMatrix[2][2]);
