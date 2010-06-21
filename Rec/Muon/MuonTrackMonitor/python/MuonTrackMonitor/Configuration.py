@@ -3,7 +3,7 @@ from Gaudi.Configuration import *
 from TrackFitter.ConfiguredFitters import ( ConfiguredEventFitter )
 from TrackSys.Configuration import TrackSys
 from Configurables import ( LHCbConfigurableUser, GaudiSequencer, TrackKalmanFilter, MeasurementProvider,
-                            MuonTrackMonitor, MuonTrackAligMonitor)
+                            MuonTrackAligMonitor, MuEffMonitor)
 
 class MuonTrackMonitorConf(LHCbConfigurableUser):
 
@@ -43,11 +43,6 @@ class MuonTrackMonitorConf(LHCbConfigurableUser):
         
         muonMoniSeq = self.getProp("Sequencer")
 
-        ## montracks = MuonTrackMonitor( "MuonTrackMonitor",
-        ##                               HistoTopDir = "Muon/",
-        ##                               HistoLevel = self.getProp("Histograms")
-        ##                               )
-
         monalig = MuonTrackAligMonitor( "MuonTrackAligMonitor",
                                         HistoTopDir = "Muon/",
                                         HistoLevel = self.getProp("Histograms")
@@ -62,3 +57,31 @@ class MuonTrackMonitorConf(LHCbConfigurableUser):
         muonMoniSeq.Members += [muonTrackFit, monalig]
         
  
+        moneff =  MuEffMonitor( "MuEffMonitor",
+                                HistoTopDir = "Muon/",
+                                HistoLevel = self.getProp("Histograms")
+                                )
+        
+        #moneff.Extrapolator.ApplyMultScattCorr = True
+        #moneff.Extrapolator.ApplyEnergyLossCorr = True
+        #moneff.Extrapolator.OutputLevel = 5
+
+        moneff.DoTrigger = False
+        
+        moneff.MomentumCut = 3000.
+        
+        moneff.EecalMax = 1300.
+        moneff.EecalMin = -100.                                   
+        moneff.EhcalMax = 4500.
+        moneff.EhcalMin = 1000.
+        
+        moneff.nSigmaX = [3.5,3.5,3.5,3.5,3.5]
+        moneff.nSigmaY = [2.,2.,2.,2.,2.]
+        moneff.Chi2Min = 30
+        moneff.CosThetaCut = 0.99
+        moneff.xyDistCut = 40.
+        moneff.PCutEff = 12.     
+        
+        moneff.HistoLevel   =  "OfflineFull" 
+
+        muonMoniSeq.Members += [moneff]

@@ -3,6 +3,11 @@
 ! Responsible : Giacomo GRAZIANI
 ! Purpose     : High level Muon Monitoring after reconstruction
 !-----------------------------------------------------------------------------
+
+! 2010-06-21 - P. De Simone
+- new algorithm for chamber efficiency monitoring
+- remove empty MuonTrackMonitor algorithm
+
 ! 2010-06-18 - S. Vecchi
 - MuonTrackAligMonitor.cpp/h: 
   - speeded up the extrapolation for residuals calculation on each muon station
