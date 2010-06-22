@@ -1,4 +1,4 @@
-#$Id: Wrappers.py,v 1.47 2010-06-21 15:14:45 jpalac Exp $
+#$Id: Wrappers.py,v 1.48 2010-06-22 08:55:40 jpalac Exp $
 """
 Wrapper classes for a DaVinci offline physics selection. The following classes
 are available:
@@ -139,7 +139,7 @@ class MergedSelection(object) :
         
         self.algos = FlatSelectionListBuilder(self._sel).selectionList
 
-        self.requiredSelections = self._sel.requiredSelections
+        self.requiredSelections = []
         self._name = name
         self._alg = _sequencerType('Seq'+self.name(),
                                    Members = self.algos,
