@@ -146,6 +146,9 @@ class bindMembers (object) :
         self._outputsel = loc
         self._outputloc = loc
 
+    def _handle_AutomaticData(self, line, alg) :
+        self._handle_Selection(line, alg)
+
     def _handle_SelSequence(self, line, alg) :
         gaudiSeq = alg.sequence()
         members = gaudiSeq.Members
