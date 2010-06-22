@@ -4,6 +4,7 @@
 ! Purpose     : Holds generic reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+!========================== RecAlgs v1r8p1 2010-06-22 ==========================
 ! 2010-06-04 - Rob Lambert
  - Fixes for some windows warnings savannah 15808
 
