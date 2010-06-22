@@ -1,9 +1,15 @@
-!$Id: release.notes,v 1.35 2010-06-16 14:48:53 jpalac Exp $
+!$Id: release.notes,v 1.36 2010-06-22 08:33:55 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DSTWriters
 ! Responsible : Juan PALACIOS
 ! Purpose     : Python code for DST writers.
 !-----------------------------------------------------------------------------
+
+! 2010-06-22 - Juan Palacios
+ - python/DSTWriters/MicroDSTWriter.py, dstwriterutils.py, microdstelements.py
+  . Hack to find FilterDesktops inside GaudiSequencers.
+ - cmt/requirements
+  . Increase to v1r7.
 
 ! ======================== DSTWriters v1r6p3 2010-06-16 ======================
 
