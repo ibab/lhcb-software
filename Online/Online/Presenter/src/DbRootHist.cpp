@@ -1,4 +1,4 @@
-// $Id: DbRootHist.cpp,v 1.171 2010-06-11 13:02:03 ggiacomo Exp $
+// $Id: DbRootHist.cpp,v 1.172 2010-06-22 23:34:49 robbep Exp $
 #include "DbRootHist.h"
 
 // STL 
@@ -869,7 +869,8 @@ void DbRootHist::fillHistogram() {
     }
   }
   if( m_onlineHistogram) {
-    if (m_onlineHistogram->hasFitFunction() && NULL != m_fitfunction && false == m_isEmptyHisto) {
+    if (m_onlineHistogram->hasFitFunction() && NULL != m_fitfunction && 
+	false == m_isEmptyHisto) {
       // trick to update fit w/o redrawing
       TF1* newfit = new TF1(*(m_fitfunction->fittedfun())); // clone fit TF1
       newfit->SetRange( m_rootHistogram->GetXaxis()->GetXmin(),
@@ -1087,7 +1088,8 @@ void DbRootHist::setPadMarginsFromDB(TPad* &pad) {
 
 void DbRootHist::fit() {
   if(m_onlineHistogram) {
-    if ( true == m_onlineHistogram->hasFitFunction() && NULL != m_rootHistogram) {
+    if ( true == m_onlineHistogram->hasFitFunction() && 
+	 NULL != m_rootHistogram ) {
       std::string Name;
       std::vector<float> initValues;
       gStyle->SetOptFit(1111111);
@@ -1096,10 +1098,20 @@ void DbRootHist::fit() {
         std::cout << "fitting histogram " << m_onlineHistogram->identifier() <<
           " with function "<< Name << std::endl;
       }
+
       if (!m_fitfunction) { // first call
-        OMAFitFunction* requestedFit =  m_analysisLib->getFitFunction(Name);
-        // clone to own it and be thread-safe
-        m_fitfunction = new OMAFitFunction(*requestedFit);
+       OMAFitFunction* requestedFit =  m_analysisLib->getFitFunction(Name);
+
+       if ( 0 == requestedFit ) {
+	 std::cerr << "Unknown fit function: " << Name 
+		   << " to fit histogram " 
+		   << m_onlineHistogram -> identifier() 
+		   << std::endl ;
+	 return ;
+       }
+       
+       // clone to own it and be thread-safe
+       m_fitfunction = new OMAFitFunction(*requestedFit);
       }
       m_fitfunction->fit(m_rootHistogram, &initValues);
     }
