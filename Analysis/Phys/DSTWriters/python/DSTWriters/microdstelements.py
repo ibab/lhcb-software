@@ -3,6 +3,7 @@
 '''
 
 from copy import copy
+from dstwruterutils import setCloneFilteredParticlesToTrue
 
 class MicroDSTExtras(object) :
     def __init__(self, branch = 'MicroDST', callables = []) :
@@ -17,7 +18,7 @@ class CopyWithBranch(object) :
         self.branch = branch
     def setOutputPrefix(self,alg) :
         alg.OutputPrefix = self.branch
-        
+
 def _personaliseName(sel, name) :
     return name + "_" + sel.name()
 
@@ -71,12 +72,7 @@ class _copyParticleTrees(CopyWithBranch) :
         self.setOutputPrefix(cloner)
 
         confList = ConfigurableList(sel)
-        for alg in confList.flatList() :
-            try :
-                alg.CloneFilteredParticles = True
-                print 'Set CloneFilteredParticles of', alg.name(), ' to True'
-            except :
-                pass
+        setCloneFilteredParticlesToTrue( confList.flatList() )
 
         return [cloner]
 

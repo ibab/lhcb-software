@@ -1,14 +1,14 @@
 """
 
 """
-__version__ = "$Id: MicroDSTWriter.py,v 1.14 2010-06-22 08:23:15 jpalac Exp $"
+__version__ = "$Id: MicroDSTWriter.py,v 1.15 2010-06-22 08:32:34 jpalac Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
 from GaudiConf.Configuration import *
 
 from BaseDSTWriter import BaseDSTWriter
-from dstwriterutils import ConfigurableList
+from dstwriterutils import ConfigurableList, setCloneFilteredParticlesToTrue
 
 class MicroDSTWriter(BaseDSTWriter) :
     __slots__ = { "CopyParticles"        : True
@@ -87,16 +87,7 @@ class MicroDSTWriter(BaseDSTWriter) :
         self.setOutputPrefix(sel, cloner)
         return [cloner]
         
-    def _setCloneFilteredParticlesToTrue(self, algs) :
-        for alg in algs :
-            try :
-                alg.CloneFilteredParticles = True
-                print 'Set CloneFilteredParticles of', alg.name(), ' to True'
-            except :
-                try :
-                    self._setCloneFilteredParticlesToTrue(alg.Members)
-                except :
-                    pass
+
 
     def _copyParticleTrees(self, sel) :
         from Configurables import (CopyParticles,
@@ -105,7 +96,7 @@ class MicroDSTWriter(BaseDSTWriter) :
                                    ProtoParticleCloner )
         
         confList = ConfigurableList(sel)
-        self._setCloneFilteredParticlesToTrue( confList.flatList() )
+        setCloneFilteredParticlesToTrue( confList.flatList() )
         
         cloner = CopyParticles(self._personaliseName(sel,
                                                      'CopyParticles'))

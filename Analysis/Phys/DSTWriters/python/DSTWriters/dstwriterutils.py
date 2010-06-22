@@ -2,7 +2,7 @@
 '''
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
-__all__ = ('ConfigurableList')
+__all__ = ('ConfigurableList', 'setCloneFilteredParticlesToTrue', 'flattenList')
 
 def isIterable(obj) :
     '''
@@ -21,6 +21,17 @@ def flattenList(sequence) :
         else :
             flatList.append(member)
     return flatList
+
+def setCloneFilteredParticlesToTrue(algs) :
+    for alg in algs :
+        try :
+            alg.CloneFilteredParticles = True
+            print 'Set CloneFilteredParticles of', alg.name(), ' to True'
+        except :
+            try :
+                setCloneFilteredParticlesToTrue(alg.Members)
+            except :
+                pass
 
 class ConfigurableList(object) :
     '''
