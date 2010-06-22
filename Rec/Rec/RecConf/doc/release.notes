@@ -3,6 +3,8 @@
 !Package Coordinator: Rob Lambert
 !Purpose: Configurables for LHCb reconstruction
 !--------------------------------------------------
+
+!========================== RecSysConf v1r1 2010-06-21 ========================
 ! 2010-06-17 - Stephanie Hansmann-Menzemer
  - use standard PV instead of loose tuning as default for 2010 data
 
