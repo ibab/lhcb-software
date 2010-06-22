@@ -1,4 +1,4 @@
-// $Id: BTaggingAnalysis.h,v 1.25 2010-06-01 09:42:34 pkoppenb Exp $
+// $Id: BTaggingAnalysis.h,v 1.26 2010-06-22 09:43:37 mgrabalo Exp $
 #ifndef USER_BTAGGINGANALYSIS_H 
 #define USER_BTAGGINGANALYSIS_H 1
 
@@ -27,6 +27,7 @@
 #include "Kernel/ILifetimeFitter.h"
 #include "Kernel/ITriggerTisTos.h"
 #include "Kernel/IPVReFitter.h"
+#include "Kernel/IVertexFit.h"
 
 #include "MCInterfaces/IForcedBDecayTool.h"
 
@@ -41,9 +42,12 @@
  *  @date   28/02/2007
  */
 
+using namespace LHCb;
+using namespace Gaudi::Units;
+
 class BTaggingAnalysis : public DVAlgorithm {
 
- public: 
+public: 
   /// Standard constructor
   BTaggingAnalysis( const std::string& name, ISvcLocator* pSvcLocator );
   virtual ~BTaggingAnalysis( ); ///< Destructor
@@ -51,40 +55,57 @@ class BTaggingAnalysis : public DVAlgorithm {
   virtual StatusCode execute   ();    ///< Algorithm execution
   virtual StatusCode finalize  ();    ///< Algorithm finalization
 
- private:
+private:
 
-  const LHCb::Particle*  chooseBHypothesis(const LHCb::Particle::ConstVector&);
-  const LHCb::Particle::ConstVector 
-  chooseParticles(const LHCb::Particle::ConstVector& ,
-                  LHCb::Particle::ConstVector,
-                  LHCb::RecVertex::ConstVector);
-  const LHCb::RecVertex::ConstVector 
-  choosePrimary(const LHCb::Particle* AXB,
-                const LHCb::MCParticle* BS,
-                const LHCb::RecVertex::Range verts,
-                const LHCb::RecVertex*& RecVert,
-                LHCb::RecVertex& RefitRecVert) ;
-  LHCb::FlavourTag* tagevent (const LHCb::Particle* AXBS);
+  const Particle*  chooseBHypothesis(const Particle::ConstVector&);
+  const Particle::ConstVector 
+  chooseCandidates(const Particle::ConstVector& ,
+		   Particle::ConstVector,
+		   const RecVertex::ConstVector);
+  const RecVertex::ConstVector 
+  choosePrimary(const Particle* AXB,
+		//const RecVertex::Container* verts,
+                const RecVertex::Range& verts,
+                const RecVertex*& RecVert,
+                RecVertex& RefitRecVert) ;
+  const ProtoParticle::ConstVector tagevent (Tuple& tuple, 
+					     const Particle* AXBS);
+  StatusCode FillTrigger (Tuple& tuple, const Particle* AXBS) ;
+  Particle::ConstVector FillSelectedB (Tuple& tuple, const Particle* AXBS);
+  StatusCode FillMCInfoOfB(Tuple& tuple, const MCParticles* mcpart);
+  void FillSeedInfo(Tuple& tuple, 
+		    const RecVertex* RecVert,
+		    const Particle::ConstVector& vtags,
+		    std::vector<Vertex>& svertices,
+		    const Particle *&SVpart1, 
+		    const Particle *&SVpart2 ) ;
   
+  std::string m_veloChargeName, 
+    m_SecondaryVertexToolName,
+    m_TagLocation, 
+    m_BHypoCriterium, 
+    m_ChoosePV, 
+    m_taggerLocation ;
 
-  std::string m_SVtype, m_veloChargeName, 
-    m_TagLocation, m_BHypoCriterium, m_ChoosePV, m_taggerLocation ;
   IPrintMCDecayTreeTool*     m_debug;
   ICaloElectron*             m_electron;
   IForcedBDecayTool*         m_forcedBtool;
   IBackgroundCategory*       m_bkgCategory;
   ILifetimeFitter*           m_pLifetimeFitter;
   ITaggingUtilsChecker*      m_util;
-  ISecondaryVertexTool*      m_vtxtool;
   IParticleDescendants*      m_descend;
   IPVReFitter*               m_pvReFitter;
   ITriggerTisTos*            m_TriggerTisTosTool;
   IParticle2MCAssociator*    m_assoc; 
- 
+  ISecondaryVertexTool*      m_svtool;
+  IVertexFit *               m_fitter;
+  const MCParticle*          m_BS;
+
   double m_IPPU_cut, m_distphi_cut, m_thetaMin;
 
   //properties ----------------
-  bool m_requireTrigger, m_UseMCTrueFlavour, m_requireTisTos;
+  bool m_requireTrigger, m_requireTisTos;
+  bool m_saveHlt1Lines, m_saveHlt2Lines;
 
 };
 

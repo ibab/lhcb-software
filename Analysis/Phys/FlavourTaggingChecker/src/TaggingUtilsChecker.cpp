@@ -49,6 +49,20 @@ StatusCode TaggingUtilsChecker::initialize() {
 }
 
 //==========================================================================
+StatusCode TaggingUtilsChecker::calcDOCAmin( const Particle* axp,
+					     const Particle* p1, 
+					     const Particle* p2,
+					     double& doca, double& docaerr) {
+  double doca1, doca2, err1, err2;
+  StatusCode sc1 = m_Dist->distance (axp, p1, doca1, err1);
+  StatusCode sc2 = m_Dist->distance (axp, p2, doca2, err2);
+  
+  doca = std::min(doca1, doca2);
+  if(doca == doca1) docaerr=err1; else docaerr=err2;
+
+  return (sc1 && sc2);
+}
+//==========================================================================
 StatusCode TaggingUtilsChecker::calcIP( const Particle* axp, 
                                         const VertexBase* v, 
                                         double& ip, double& iperr) {

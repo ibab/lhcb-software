@@ -5,10 +5,10 @@
 // Implementation file for class : BTaggingAnalysis
 //
 // Authors: Marco Musy, Marc Grabalosa
+// 
+// To train SVertexOneSeedTool, we need to get only the seed form 
+// SVertexOneSeedTool.cpp. Please uncomment line in Flavourtagging/src
 //-----------------------------------------------------------------------------
-
-using namespace LHCb;
-using namespace Gaudi::Units;
 
 // Declaration of the Algorithm Factory
 DECLARE_ALGORITHM_FACTORY( BTaggingAnalysis );
@@ -16,27 +16,32 @@ DECLARE_ALGORITHM_FACTORY( BTaggingAnalysis );
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-BTaggingAnalysis::BTaggingAnalysis(const std::string& name,
-                                   ISvcLocator* pSvcLocator):
+BTaggingAnalysis::BTaggingAnalysis(const std::string& name, ISvcLocator* pSvcLocator):
   DVAlgorithm(name, pSvcLocator), 
+  m_debug(0), 
   m_electron(0), 
   m_forcedBtool(0),
   m_bkgCategory(0) ,
   m_pLifetimeFitter(0),
   m_util(0),
-  m_vtxtool(0),
   m_descend(0),
   m_pvReFitter(0),
   m_TriggerTisTosTool(0),
-  m_assoc(0) 
+  m_assoc(0),
+  m_svtool(0),
+  m_fitter(0),
+  m_BS(0)
 {
-  declareProperty( "SecondaryVertexType",m_SVtype           = "SVertexTool" );
   declareProperty( "BHypoCriterium",     m_BHypoCriterium   = "MaximumPt");
-  declareProperty( "UseMCTrueFlavour",   m_UseMCTrueFlavour = true );
   declareProperty( "RequireTrigger",     m_requireTrigger   = true );
   declareProperty( "RequireTisTos",      m_requireTisTos    = true );
+  declareProperty( "SaveHlt1Lines",      m_saveHlt1Lines    = false );
+  declareProperty( "SaveHlt2Lines",      m_saveHlt2Lines    = false );
+
   declareProperty( "ChoosePVCriterium",  m_ChoosePV         = "PVbyIPs" );
   declareProperty( "TagOutputLocation",  m_TagLocation = FlavourTagLocation::Default );
+  
+  declareProperty( "SecondaryVertexToolName",m_SecondaryVertexToolName="SVertexOneSeedTool");
 
   declareProperty( "IPPU_cut",     m_IPPU_cut    = 3.0 );
   declareProperty( "distphi_cut",  m_distphi_cut = 0.005 );
@@ -93,19 +98,24 @@ StatusCode BTaggingAnalysis::initialize() {
     fatal() << "Unable to retrieve ICaloElectronTool"<< endreq;
     return StatusCode::FAILURE;
   }
-  m_vtxtool = tool<ISecondaryVertexTool> ( m_SVtype );
-  if(! m_vtxtool) {
-    fatal() << "Unable to retrieve SecondaryVertexTool"<< endreq;
-    return StatusCode::FAILURE;
-  }
   m_util = tool<ITaggingUtilsChecker> ( "TaggingUtilsChecker", this );
   if( ! m_util ) {
     fatal() << "Unable to retrieve TaggingUtilsChecker tool "<< endreq;
     return StatusCode::FAILURE;
   }
-  m_pvReFitter = tool<IPVReFitter>("AdaptivePVReFitter", this );
-  if(! m_pvReFitter) {
-    fatal() << "Unable to retrieve AdaptivePVReFitter" << endreq;
+//   m_pvReFitter = tool<IPVReFitter>("AdaptivePVReFitter", this );
+//   if(! m_pvReFitter) {
+//     fatal() << "Unable to retrieve AdaptivePVReFitter" << endreq;
+//     return StatusCode::FAILURE;
+//   }
+  m_svtool = tool<ISecondaryVertexTool> (m_SecondaryVertexToolName, this);
+  if(! m_svtool) {
+    warning()<< "*** No Vertex Charge tag will be used! " 
+             << m_SecondaryVertexToolName << endreq;
+  }
+  m_fitter = tool<IVertexFit>("OfflineVertexFitter");
+  if ( !m_fitter ) {   
+    err() << "Unable to Retrieve Default VertexFitter" << endreq;
     return StatusCode::FAILURE;
   }
 
@@ -120,33 +130,7 @@ StatusCode BTaggingAnalysis::execute() {
   setFilterPassed( false );
    
   //new ntuple
-  debug()<<"Booking ntuple"<<endreq;
   Tuple tuple = nTuple("mytagging","mytagging",CLID_ColumnWiseTuple);
-    
-  //----------------------------------------------------------------------
-  long L0Decision = -1;
-  long HLT1Decision = 0;
-  long HLT2Decision = 0;
-  if(m_requireTrigger){
-    if( !exist<L0DUReport>(L0DUReportLocation::Default) ) {
-      err() << "L0DUReport not found in " 
-            << L0DUReportLocation::Default << endreq;
-      return StatusCode::SUCCESS;
-    }
-    L0DUReport* l0 = get<L0DUReport>(L0DUReportLocation::Default);
-    L0Decision  = l0->decision();
-    if( exist<HltDecReports>( HltDecReportsLocation::Default ) ){ 
-      const HltDecReports* decReports = 
-        get<HltDecReports>( HltDecReportsLocation::Default );
-      HLT1Decision = decReports->decReport("Hlt1Global") ? 
-        decReports->decReport("Hlt1Global")->decision() : 0 ;
-      HLT2Decision = decReports->decReport("Hlt2Global") ? 
-        decReports->decReport("Hlt2Global")->decision() : 0 ;
-    }
-  } 
-  long trigger = HLT2Decision*100 +HLT1Decision*10 + L0Decision;
-  debug()<<"trig: "<<trigger<<endreq;
-  tuple -> column ("trig", trigger);
     
   //----------------------------------------------------------------------
   RecHeader* evt = get<RecHeader> (RecHeaderLocation::Default);
@@ -168,220 +152,55 @@ StatusCode BTaggingAnalysis::execute() {
   const SmartRefVector<GenCollision>& mcColls = gene->collisions();
   if(mcColls.empty()) err()<< "No pp mcCollision retrieved" << endreq;
   debug() << "Nr of Collisions = " << mcColls.size() << endreq;
-  long kType = 0;
+  long proType = 0;
   for ( unsigned int icoll=0; icoll!=mcColls.size(); icoll++ ) {
     if( mcColls.at(icoll)->isSignal() ) {
-      kType = mcColls.at(icoll)->processType();
-      debug() << "Collision process type: " << kType << endreq;
+      proType = mcColls.at(icoll)->processType();
+      debug() << "Collision process type: " << proType << endreq;
     }
   }
-  tuple -> column ("kType", kType);
-  tuple -> column ("Run", evt->runNumber());
-  tuple -> column ("Event", (long) evt->evtNumber());
-  tuple -> column ("evType", gene->evType());
+  tuple -> column ("Run",   evt->runNumber());
+  tuple -> column ("Event", (long)evt->evtNumber());
+  tuple -> column ("evType",gene->evType());
+  tuple -> column ("proType",proType);
   
 
-  //----------------------------------------------------------------------
+  //----------------------------------------------------------
   //PhysDeskTop
   const Particle::ConstVector& parts = desktop()->particles();
-  const RecVertex::Range  verts = primaryVertices();
-  debug() << "  Nr of rec. Vertices: " << verts.size() 
-          << "  Nr of rec. Particles: " << parts.size() <<endreq;
+  const RecVertex::Range verts=get<RecVertex::Range>(RecVertexLocation::Primary);
+  debug()<<"  Nr of rec. Vertices: " << verts.size() 
+         <<"  Nr of rec. Particles: "<< parts.size() <<endreq;
   desktop()->saveDesktop();
 
-  //----------------------------------------------------------------------
-  //look for B in selection:
-  debug() << "-------- Signal:" << endreq;
-  
+  //----------------------------------------------
   const Particle* AXBS = chooseBHypothesis(parts);
-
   if(!AXBS) {
     debug() <<"Unselected. Skip." <<endreq;
     return StatusCode::SUCCESS;
   }
+  //----------------------------------------------
 
-  bool isBd = false;
-  bool isBs = false;
-  bool isBu = false;
-  double BSmass= 0, BSthe= 0, BSphi= 0;
-  Gaudi::LorentzVector ptotBS(0.0,0.0,0.0,0.0);
-  Particle::ConstVector axdaugh = m_descend->descendants(AXBS);
-  axdaugh.push_back(AXBS);
-  if( AXBS->particleID().hasDown() )    isBd = true;
-  if( AXBS->particleID().hasStrange() ) isBs = true;
-  if( AXBS->particleID().hasUp() )      isBu = true;
-  ptotBS = AXBS->momentum();
-  BSmass = ptotBS.M()/Gaudi::Units::GeV;
-  BSthe  = ptotBS.theta();
-  BSphi  = ptotBS.phi();
-  debug() << "Found Selected B with "<< axdaugh.size()-1 
-          << "  daughters, B-Mass=" << BSmass 
-          << "  pT="<<AXBS->pt()/Gaudi::Units::GeV<< endreq;
+  //---------------------------------------
+  StatusCode sc = FillTrigger(tuple, AXBS);
+  if(!sc) err()<<"FillTrigger returns failure."<<endreq;
+  //---------------------------------------
 
-  //TIS TOS ----------------------------------------
-  long L0TisTos  = 0;
-  long HltTisTos = 0;
-  if(m_requireTrigger) {
-    if(m_requireTisTos) {
-      m_TriggerTisTosTool->setOfflineInput( *AXBS );
-      // L0 
-      bool decisionL0, L0Tis, L0Tos;
-      m_TriggerTisTosTool->setTriggerInput("Hlt1L0*Decision");
-      std::vector<std::string> vs= m_TriggerTisTosTool->triggerSelectionNames();
-      //Fill the decision, tis and tos parametres for the L0 as a whole
-      m_TriggerTisTosTool->selectionTisTos(vs,decisionL0,L0Tis,L0Tos);
-      // Hlt1
-      bool decisionHltAlleys, alleysTis, alleysTos;
-      m_TriggerTisTosTool->setTriggerInput("Hlt1*Decision");
-      //Fill the decision, tis and tos parametres for the Hlt1 as a whole
-      m_TriggerTisTosTool->triggerTisTos(decisionHltAlleys,alleysTis,alleysTos);
-      // Hlt2
-      bool decisionHltSelB, selBTis, selBTos;
-      m_TriggerTisTosTool->setTriggerInput("Hlt2*Decision");
-      //Fill the decision, tis and tos parametres for the Hlt2 as a whole
-      m_TriggerTisTosTool->triggerTisTos(decisionHltSelB, selBTis, selBTos);
+  //---------------------------------------------------------
+  Particle::ConstVector axdaugh = FillSelectedB(tuple, AXBS);
+  debug() <<"End fill selected" <<endreq;
+   //---------------------------------------------------------
 
-      if(L0Tis) L0TisTos += 10;
-      if(L0Tos) L0TisTos +=  1;
+  //-----------------------------------------------------
+  m_BS = m_forcedBtool->forcedB();
+  sc = FillMCInfoOfB(tuple, mcpart);
+  if(!sc)err()<<"FillMCInfoOfB returns failure."<<endreq;
+  //-----------------------------------------------------
 
-      if(alleysTis) HltTisTos +=  1000;
-      if(alleysTos) HltTisTos +=   100;
-      if(selBTis)   HltTisTos +=    10;
-      if(selBTos)   HltTisTos +=     1;
-    }
-  }
-  tuple -> column ("L0TisTos", L0TisTos);
-  tuple -> column ("HltTisTos", HltTisTos);
-  
-  //fill signal particle block:
-  debug()<<"fill sig block"<<endreq;
-  std::vector<float> sigID, sigMothID, sigP, sigPt, sigPhi, sigMass;
-  std::vector<float> sigMCID, sigMCMothID, sigMCP, sigMCPt, sigMCPhi, 
-    sigVx, sigVy, sigVz;
-  
-  Particle::ConstVector::const_iterator ip;
-  for ( ip = axdaugh.begin(); ip != axdaugh.end(); ip++){
-    sigID.push_back((*ip)->particleID().pid());
-    const Particle* mater   = m_util->motherof(*ip, parts);
-    if(mater) sigMothID.push_back(mater->particleID().pid()); else sigMothID.push_back(0);
-    sigP.push_back((*ip)->p() /Gaudi::Units::GeV);
-    sigPt.push_back((*ip)->pt()/Gaudi::Units::GeV);
-    sigPhi.push_back((*ip)->momentum().Phi());
-    sigMass.push_back((*ip)->momentum().M() /Gaudi::Units::GeV);
+  //Official tag of the event ------------------------------------------
+  ProtoParticle::ConstVector partsInSV = tagevent( tuple, AXBS );
 
-    const Vertex* endv = (*ip)->endVertex();
-    if(endv){
-      sigVx.push_back((*ip)->endVertex()->position().x() /Gaudi::Units::mm);
-      sigVy.push_back((*ip)->endVertex()->position().y() /Gaudi::Units::mm);
-      sigVz.push_back((*ip)->endVertex()->position().z() /Gaudi::Units::mm);
-    } else { sigVx.push_back(0); sigVy.push_back(0); sigVz.push_back(20000); }
-
-    //mc truth
-    const MCParticle* mcp = m_assoc->relatedMCP( *ip );
-    if( mcp ) {
-      sigMCID.push_back(mcp->particleID().pid());
-      if( mcp->mother() ) sigMCMothID.push_back(mcp->mother()->particleID().pid()); 
-      else sigMCMothID.push_back(0);
-      sigMCP.push_back(mcp->p()/Gaudi::Units::GeV);
-      sigMCPt.push_back(mcp->pt()/Gaudi::Units::GeV);
-      sigMCPhi.push_back(mcp->momentum().Phi());
-    } else { 
-      sigMCID.push_back(0); sigMCMothID.push_back(0); 
-      sigMCP.push_back(0); sigMCPt.push_back(0); sigMCPhi.push_back(0); 
-    }
-  }
-  
-  ////////////////////////////////////////////////////
-  //check what is the B forced to decay
-  const MCParticle* BS = m_forcedBtool->forcedB();
-  if ( !BS ) {
-    warning() << "Missing Signal B meson in MC!"<< endreq;
-    //return StatusCode::SUCCESS;                      
-  }
-
-  //look for opposite
-  const MCParticle* BO = 0;
-  MCParticles::const_iterator imc;
-  double maxBP = -1;
-  for ( imc = mcpart->begin(); imc != mcpart->end(); imc++ ) {
-    if( !(*imc)->particleID().hasBottom() ) continue;
-    if( (*imc) == BS) continue;
-    int aid  = (*imc)->particleID().abspid();
-    if( aid==511 || aid==521 || aid==531 || aid==541
-        || (aid>5000 && aid<5599) ) {
-      bool close2BS = false;
-      if(BS) if(fabs((*imc)->originVertex()->position().z() 
-                     - BS->originVertex()->position().z()) 
-                /Gaudi::Units::mm < 1.0)
-        close2BS = true;
-	
-      if( close2BS || (!BS) ) {
-        if( maxBP < (*imc)->momentum().P() ) {
-          maxBP = (*imc)->momentum().P();
-          BO = (*imc);
-        }
-      }
-    }
-  }
-
-  if(BS) {
-    tuple -> column ("kx", BS->originVertex()->position().x()/Gaudi::Units::mm);
-    tuple -> column ("ky", BS->originVertex()->position().y()/Gaudi::Units::mm);
-    tuple -> column ("kz", BS->originVertex()->position().z()/Gaudi::Units::mm);
-  } else {
-    tuple -> column ("kx", 0.);
-    tuple -> column ("ky", 0.);
-    tuple -> column ("kz", 0.);
-  }
-  
-  ////////////////////////////////////////////////////
-  if ( !BO ) warning() << "Missing Opposite B meson in MC!"<< endreq;
- 
-  ////////////////////////////////////////////////////
-  //debug()<<"SIGNAL B:"<<endreq; m_debug -> printTree(BS);
-  //debug()<<"OPPOSITE B (TAGGING B):"<<endreq; m_debug -> printTree(BO);
-
-  //-------------------- OFFICIAL TAG of the Event --------------------
-  FlavourTag* theTag = tagevent( AXBS );
-  if(!theTag) { 
-    err() <<"Tagging Tool returned error."<< endreq;
-    return StatusCode::SUCCESS;
-  }
-  
-  tuple -> column ("Tag",     theTag->decision());
-  tuple -> column ("Omega",   theTag->omega());
-  tuple -> column ("TagCat",  theTag->category());
-  tuple -> column ("TagOS",   theTag->decisionOS());
-  tuple -> column ("OmegaOS", theTag->omegaOS());
-  tuple -> column ("TagCatOS",theTag->categoryOS());
-
-  long TrueTag = 0;
-  if(BS) TrueTag = BS->particleID().pid()>0 ? 1 : -1; 
-  if(!m_UseMCTrueFlavour) TrueTag = AXBS->particleID().pid()>0 ? 1 : -1; 
-  tuple -> column ("TrueTag", TrueTag);
-
-  debug()<<"looking at taggers"<<endreq;
-  ProtoParticle::ConstVector partsInSV(0);
-  std::vector<float> tagtype, tagdecision, tagomega;
-  std::vector<Tagger> taggers = theTag->taggers();
-  for(size_t i=0; i<taggers.size(); ++i) {
-    Tagger itagger = taggers.at(i);
-    if( itagger.decision() ) {
-      debug()<<"Tagger "<<itagger.type()
-             <<" decision= "<<itagger.decision()<<endreq;
-      tagtype.push_back(itagger.type());
-      tagdecision.push_back(itagger.decision());
-      tagomega.push_back(itagger.omega());
-      Particle::ConstVector::iterator kp;
-      if(itagger.type()==Tagger::VtxCharge) {
-        for( unsigned int i=0; i!=itagger.taggerParts().size(); i++){
-          partsInSV.push_back( itagger.taggerParts().at(i)->proto() );
-        }
-      }
-    }
-  }
-
-  //Background category
+  //Background category ------------------------------------------------
   int bcat = -1;
   if(AXBS) if(m_bkgCategory) if( ! AXBS->isBasicParticle() ){
     bcat = (int) m_bkgCategory->category(AXBS);
@@ -389,96 +208,60 @@ StatusCode BTaggingAnalysis::execute() {
   }
   tuple -> column ("bkgCat", bcat);
 
-  info() << "BTAGGING MON "<< std::setw(3) << trigger 
-         << std::setw(4) << TrueTag << std::setw(4) << bcat << endreq;
-  //----------------------------------------------------------------------------
-
-  //true Signal B
-  int BSosc = 0;
-  float BSx=0., BSy=0., BSz=0.;
-  if(BS) {
-    if( BS->hasOscillated() ) BSosc = 1;
-    debug()<< "BSignal: " <<BS->particleID().pid()<<" osc? "<<BSosc<<endreq;
-    const SmartRefVector<MCVertex>& BSvert = BS->endVertices() ;
-    if( BSvert.empty() ) return StatusCode::SUCCESS;
-    BSx = (BSvert.at(0))->position().x()/Gaudi::Units::mm;
-    BSy = (BSvert.at(0))->position().y()/Gaudi::Units::mm;
-    BSz = (BSvert.at(0))->position().z()/Gaudi::Units::mm;
-  } 
-  tuple -> column ("BSosc", BSosc);
-  tuple -> column ("BSx", BSx);
-  tuple -> column ("BSy", BSy);
-  tuple -> column ("BSz", BSz);
-
-  //true opposite B
-  int BOosc = 0;
-  long BOID =0;
-  float BOx=-10000., BOy=-10000., BOz=-10000.;
-  float BOP=-1., BOthe=10000., BOphi=10000.;
-  if(BO) {
-    if( BO->hasOscillated() ) BOosc = 1; 
-    debug()<< "BOppost: " <<BO->particleID().pid()<<" osc? "<<BOosc<<endreq;
-    BOID = BO->particleID().pid();
-    BOP  = BO->momentum().P()/Gaudi::Units::GeV;
-    BOthe= BO->momentum().Theta();
-    BOphi= BO->momentum().Phi();
-    const SmartRefVector<MCVertex>& BOvert = BO->endVertices() ;
-    if( BOvert.empty() ) return StatusCode::SUCCESS;
-    BOx = (BOvert.at(0))->position().x()/Gaudi::Units::mm;
-    BOy = (BOvert.at(0))->position().y()/Gaudi::Units::mm;
-    BOz = (BOvert.at(0))->position().z()/Gaudi::Units::mm;
-  } 
-  tuple -> column ("BOID", BOID);
-  tuple -> column ("BOP", BOP);
-  tuple -> column ("BOthe", BOthe);
-  tuple -> column ("BOphi", BOphi);
-  tuple -> column ("BOx", BOx);
-  tuple -> column ("BOy", BOy);
-  tuple -> column ("BOz", BOz);
-  tuple -> column ("BOosc", BOosc);
-
+  //--------------------------------------------------------------------
   //build primary and pileup vertices
   const RecVertex* RecVert=0;
   RecVertex RefitRecVert(0);
-  const RecVertex::ConstVector PileUpVtx = 
-    choosePrimary(AXBS, BS, verts, RecVert, RefitRecVert);
+  const RecVertex::ConstVector PileUpVtx = choosePrimary(AXBS, verts, 
+							 RecVert, RefitRecVert);
   if( !RecVert ) {
     err() <<"No Reconstructed Vertex!! Skip." <<endreq;
     return StatusCode::SUCCESS;
   }    
 
-  tuple -> column ("krec",  verts.size() );
-  tuple -> column ("RVx",   RecVert->position().x()/Gaudi::Units::mm);
-  tuple -> column ("RVy",   RecVert->position().y()/Gaudi::Units::mm);
-  tuple -> column ("RVz",   RecVert->position().z()/Gaudi::Units::mm);
-//   tuple -> column ("RVx_r", RefitRecVert.position().x()/Gaudi::Units::mm);
-//   tuple -> column ("RVy_r", RefitRecVert.position().y()/Gaudi::Units::mm);
-//   tuple -> column ("RVz_r", RefitRecVert.position().z()/Gaudi::Units::mm);
+  tuple -> column ("krec", verts.size() );
+  tuple -> column ("RVx",  RecVert->position().x()/mm);
+  tuple -> column ("RVy",  RecVert->position().y()/mm);
+  tuple -> column ("RVz",  RecVert->position().z()/mm);
 
   //lifetime fitter
   double ct=0., ctErr=0., ctChi2=0.;
-  for ( ip = parts.begin(); ip != parts.end(); ip++){
-    if(!(*ip)->particleID().hasBottom()) continue;
-    m_pLifetimeFitter->fit(*RecVert, *AXBS, ct, ctErr, ctChi2);
-    tuple -> column ("tau", ct/Gaudi::Units::picosecond);
-    tuple -> column ("tauErr", ctErr/Gaudi::Units::picosecond);
+  sc = m_pLifetimeFitter->fit(*RecVert, *AXBS, ct, ctErr, ctChi2);
+  if(sc){
+    tuple -> column ("tau", ct/picosecond);
+    tuple -> column ("tauErr", ctErr/picosecond);
     tuple -> column ("ctChi2", ctChi2);
-    break;
+  } else {
+    tuple -> column ("tau", 0. );
+    tuple -> column ("tauErr", 1.);
+    tuple -> column ("ctChi2", 0.);
+
   }
 
-  /////////////////////////////////////////////////////////////
-  const Particle::ConstVector vtags = chooseParticles(parts, axdaugh, PileUpVtx);
-
+  //------------------------------------------------------------------------------
+  const Particle::ConstVector vtags = chooseCandidates(parts, axdaugh, PileUpVtx);
   debug() << "-------- Tagging Candidates: " << vtags.size() <<endreq;
+  //------------------------------------------------------------------------------
+
+
+  //------------------------------------------------------------------------------
+  std::vector<Vertex> svertices(0);
+  const Particle *SVpart1, *SVpart2; 
+  FillSeedInfo(tuple, RecVert, vtags, svertices, SVpart1, SVpart2);
+  debug() << "  Loop on seeds done " <<endreq;
+  //------------------------------------------------------------------------------
+
 
   ///------------------------------------------------------- Fill Tagger info
-  std::vector<float> pID(0), pP(0), pPt(0), pphi(0), pch(0), pip(0), 
-    piperr(0), pip_r(0), piperr_r(0), pipPU(0);
+  std::vector<float> pID(0), pP(0), pPt(0), pphi(0), pch(0), pip(0), piperr(0), pipPU(0);
   std::vector<float> ptrtyp(0), plcs(0), ptsal(0), pdistPhi(0), pveloch(0), 
     pEOverP(0), pPIDe(0), pPIDm(0), pPIDk(0), pPIDp(0),pPIDfl(0);
-  std::vector<float> pMCID, pMCP, pMCPt, pMCphi, pMCz(0), 
+  std::vector<float> pMCID, pMCP, pMCPt, pMCphi, pMCx(0), pMCy(0), pMCz(0), 
     pmothID(0), pancID(0), pbFlag(0), pxFlag(0), pvFlag(0);
+  std::vector<float> pIPSV(0), pIPSVerr(0), pDOCA(0), pDOCAerr(0), pChi2Seed(0);
 
+  debug()<<"Fill tagger info, vtags: "<<vtags.size()<<endreq;
+  Particle::ConstVector::const_iterator ip;
   for( ip = vtags.begin(); ip != vtags.end(); ip++ ) {
 
     const Particle* axp = (*ip);
@@ -487,34 +270,69 @@ StatusCode BTaggingAnalysis::execute() {
 
     //calculate some useful vars
     long   ID  = axp->particleID().pid(); 
-    double P   = axp->p()/Gaudi::Units::GeV;
-    double Pt  = axp->pt()/Gaudi::Units::GeV;
-    double deta= fabs(log(tan(BSthe/2.)/tan(asin(Pt/P)/2.)));
-    double dphi= fabs(axp->momentum().phi() - BSphi); 
+    double P   = axp->p()/GeV;
+    double Pt  = axp->pt()/GeV;
+    debug()<< " tagging particle pt: "<<Pt<<endreq;
+    double deta= fabs(log(tan(AXBS->momentum().theta()/2.)/tan(asin(Pt/P)/2.)));
+    double dphi= fabs(axp->momentum().phi() - AXBS->momentum().phi()); 
     if(dphi>3.1416) dphi=6.2832-dphi;
-    double dQ  = (ptotBS + axp->momentum()).M()/Gaudi::Units::GeV - BSmass;
+    double dQ  = ((AXBS->momentum() + axp->momentum()).M()
+		  - AXBS->momentum().M()) /GeV;
     double lcs = track->chi2PerDoF();
     long trtyp = track->type();
+    debug()<< " track type: "<<trtyp<<endreq;
     if (track->checkHistory(Track::TrackMatching) == true) trtyp=7;
+    debug()<< " trackmatching ok"<<endreq;
 
     double distphi;
     m_util->isinTree( axp, axdaugh, distphi );
 
     ptsal.push_back(track->likelihood());
-    
+
+    debug()<< " calculate ip "<<endreq;    
     //calculate signed IP wrt RecVert
-    double IP, IPerr, IP_r=0, IPerr_r=0;
+    double IP, IPerr;
     if(!(axp->particleID().hasBottom())) {
       m_util->calcIP(axp, RecVert, IP, IPerr);
-      //m_util->calcIP(axp, &RefitRecVert, IP_r, IPerr_r);
     }
+
     //calculate min IP wrt all pileup vtxs 
     double IPPU = 10000;
     double ipval, iperr;
     m_util->calcIP( axp, PileUpVtx, ipval, iperr );
     if(iperr) IPPU=ipval/iperr;
-  
 
+    debug()<< " calculate min IP wrt SV"<<endreq;  
+    //calculate min IP wrt SV
+    double ipSV=0, iperrSV=0, docaSV=0, docaErrSV=0, Chi2Seed=-1;
+    if(!svertices.empty()) {
+      Vertex mySV = svertices.at(0);
+      debug()<< " vertex size: "<<svertices.size()<<endreq;    
+      debug()<<"svpart1 "<<SVpart1->pt()/GeV<<endreq;
+      debug()<<"svpart1 "<<SVpart1->proto()<<endreq;
+      //      if( proto == SVpart1->proto() || proto == SVpart2->proto()) { debug()<<"igual"<<endreq;} 
+      if( proto != SVpart1->proto() && proto != SVpart2->proto()){ 
+        m_util->calcIP( axp, &mySV, ipSV, iperrSV );
+        debug()<<" ipSV: "<<ipSV<<endreq;
+        debug()<<" svpart for doca! svpart1 pt: "<<SVpart1->pt()/GeV<<endreq;
+        m_util->calcDOCAmin( axp, SVpart1, SVpart2, docaSV, docaErrSV);
+        debug()<<" doca: "<<docaSV<<endreq;
+        Vertex VfitTMP(0);
+        Particle::ConstVector threeparts(0);
+        threeparts.push_back(SVpart1);
+        threeparts.push_back(SVpart2);
+        threeparts.push_back(axp);
+        debug()<<" fit 3 parts"<<endreq;
+        StatusCode sc = m_fitter->fit( VfitTMP, threeparts );
+        if(sc) {
+          Chi2Seed = VfitTMP.chi2PerDoF();
+          debug()<<" chi2 of fit: "<<Chi2Seed<<endreq;
+        }
+      }
+      debug()<<"end loop svpart"<<endreq;
+    }
+
+    debug()<< " fill ntp "<<endreq;    
     //Fill NTP info -------------------------------------------------------   
     ptrtyp.push_back(trtyp);
     pID   .push_back(ID);
@@ -524,12 +342,16 @@ StatusCode BTaggingAnalysis::execute() {
     pch   .push_back((int) axp->charge());
     pip   .push_back(IP);
     piperr.push_back(IPerr);
-    pip_r .push_back(IP_r);
-    piperr_r.push_back(IPerr_r);
     pipPU .push_back(IPPU);
     plcs     .push_back(lcs);
     pdistPhi .push_back(distphi);
-    
+    pIPSV    .push_back(ipSV);
+    pIPSVerr .push_back(iperrSV);
+    pDOCA    .push_back(docaSV);
+    pDOCAerr .push_back(docaErrSV);
+    pChi2Seed.push_back(Chi2Seed);
+
+    debug()<<" pid"<<endreq;
     // electrons
     pPIDe.push_back( proto->info( ProtoParticle::CombDLLe, -1000.0 ) );
     double eOverP  = -999.9;
@@ -546,6 +368,7 @@ StatusCode BTaggingAnalysis::execute() {
     // protons
     pPIDp.push_back(proto->info( ProtoParticle::CombDLLp, -1000.0 ));
 
+    debug()<< " global flags "<<endreq;    
     // global flags 
     const bool inEcalACC = proto->info(ProtoParticle::InAccEcal, false);
     const bool inHcalACC = proto->info(ProtoParticle::InAccHcal, false);
@@ -555,19 +378,32 @@ StatusCode BTaggingAnalysis::execute() {
     if( muonNSH>0 )                  PIDfl +=  10000;
     if( inHcalACC )                  PIDfl +=   1000;
     if( inEcalACC )                  PIDfl +=    100;
-    if( proto->info(ProtoParticle::MuonPIDStatus, 0) ) PIDfl += 10;
-    if( proto->info(ProtoParticle::RichPIDStatus, 0) ) PIDfl +=  1;
+    if( proto->info(ProtoParticle::MuonPIDStatus,0)) PIDfl += 10;
+    if( proto->info(ProtoParticle::RichPIDStatus,0)) PIDfl +=  1;
     pPIDfl.push_back(PIDfl);
     
+    debug()<< " sec vtx flags "<<endreq;    
     // secondary vertex flag
     int vFlag = 0;
     ProtoParticle::ConstVector::iterator prkp;
     for(prkp = partsInSV.begin(); prkp != partsInSV.end(); prkp++) {
-      if( axp->proto() == (*prkp) ) {
-        vFlag = 1;
+      if( proto == (*prkp) ) {
+        vFlag = 1; //Flag as 1 the track in SV from FT package
         break;
       }
     }
+    if(!svertices.empty()) {
+      const SmartRefVector<Particle> partsInSVnew = 
+        svertices.at(0).outgoingParticles();
+      for(SmartRefVector<Particle>::const_iterator i = 
+            partsInSVnew.begin(); i != partsInSVnew.end(); i++) {
+        if( proto == (*i)->proto() ) {
+          vFlag += 10;//add 10 if track is in new SV 
+          break;
+        }
+      }
+    }
+    
     pvFlag.push_back(vFlag);
     
     //-------------------------------------------------------
@@ -576,19 +412,18 @@ StatusCode BTaggingAnalysis::execute() {
       debug() << " deta="<<deta << " dphi="<<dphi << " dQ="<<dQ <<endreq;
       debug() << " IPsig="<<(IPerr!=0 ? fabs(IP/IPerr) : -999)
               << " IPPU="<<IPPU <<endreq;
-      //debug() << " sigPhi="<<distphi<< " lcs " << lcs << endreq;
-      //debug()<< " mNSH="<<muonNSH<< " vFlag="<<vFlag<<endreq;
       if(vFlag) debug() << "Found to be in SVTX "<<endreq;
     }
 
     //store MC info 
-    float MCP  = 0.0, MCPt = 0.0, MCphi= -999.0, MCz  = -999.0;
+    float MCP= 0.0, MCPt= 0.0, MCphi=-999.0, MCx= -999.0, MCy= -999.0, MCz= -999.0;
     long  MCID = 0, mothID= 0, ancID = 0, bFlag = 0, xFlag = 0;
 
+    debug()<<" mc info"<<endreq;
     const MCParticle* mcp = m_assoc->relatedMCP( axp );
     if( mcp ) {
-      MCP = mcp->momentum().P()/Gaudi::Units::GeV;
-      MCPt = mcp->pt()/Gaudi::Units::GeV;
+      MCP = mcp->momentum().P()/GeV;
+      MCPt = mcp->pt()/GeV;
       MCphi = mcp->momentum().phi();
       MCID = mcp->particleID().pid();
 
@@ -597,30 +432,36 @@ StatusCode BTaggingAnalysis::execute() {
         mothID = mother->particleID().pid();
         const SmartRefVector<MCVertex>& motherVtx = mother->endVertices();
         if(motherVtx.size()) 
-          MCz = (motherVtx.at(0))->position().z()/Gaudi::Units::mm;
+          MCx = motherVtx.at(0)->position().x()/mm;
+          MCy = motherVtx.at(0)->position().y()/mm;
+          MCz = motherVtx.at(0)->position().z()/mm;
       }
 
       const MCParticle* ancestor = m_util->originof(mcp) ;
       ancID = ancestor->particleID().pid();
       if( ancestor->particleID().hasBottom() ) {
         bFlag = 1;  
-        if(BS) if( ancestor == BS ) {
+        if(m_BS) if( ancestor == m_BS ) {
           bFlag = -1;
           debug() <<" Warning: tag from signal! ID=" << mcp->particleID().pid() 
                   <<" P="<< mcp->momentum().P() << endreq;
         }
       }
-
-      if(BS) xFlag = m_util->comes_from_excitedB(BS, mcp);
+      if(m_BS) xFlag = m_util->comes_from_excitedB(m_BS, mcp);
       if(xFlag) debug()<<" comes_from_excitedB="<< xFlag << endreq;
-
+      
+      debug()<<"mc info finish"<<endreq;
+      
+      
     }//if( mcp )
 
     pMCID .push_back(MCID);
     pMCP  .push_back(MCP);
     pMCPt .push_back(MCPt);
     pMCphi.push_back(MCphi);
-    pMCz.push_back(MCz);
+    pMCx  .push_back(MCx);
+    pMCy  .push_back(MCy);
+    pMCz  .push_back(MCz);
     pmothID.push_back(mothID);
     pancID.push_back(ancID);
     pxFlag.push_back(xFlag);
@@ -629,29 +470,12 @@ StatusCode BTaggingAnalysis::execute() {
     //---------------
   }
 
-  if(pID.size() > 199 || sigID.size() > 9) {
+  if(pID.size() > 199) {
     warning()<<"Bursting array limit of 200.  "<<pID.size()<<endreq;
     return StatusCode::SUCCESS;
   }
 
   debug()<<"writing ntuple"<<endreq;
-  tuple -> farray ("sID",     sigID, "M", 10);
-  tuple -> farray ("sMothID", sigMothID, "M", 10);
-  tuple -> farray ("sP",      sigP, "M", 10);
-  tuple -> farray ("sPt",     sigPt, "M", 10);
-  tuple -> farray ("sPhi",    sigPhi, "M", 10);
-  tuple -> farray ("sMass",   sigMass, "M", 10);
-  tuple -> farray ("sMCID",   sigMCID, "M", 10);
-  tuple -> farray ("sMCMothID", sigMCMothID, "M", 10);
-  tuple -> farray ("sMCP",    sigMCP, "M", 10);
-  tuple -> farray ("sMCPt",   sigMCPt,"M", 10);
-  tuple -> farray ("sMCPhi",  sigMCPhi,"M", 10);
-  tuple -> farray ("sVx",     sigVx, "M", 10);
-  tuple -> farray ("sVy",     sigVy, "M", 10);
-  tuple -> farray ("sVz",     sigVz, "M", 10);
-  tuple -> farray ("TaggerType",    tagtype, "T", 10);
-  tuple -> farray ("TaggerDecision",tagdecision, "T", 10);
-  tuple -> farray ("TaggerOmega",   tagomega, "T", 10);
   tuple -> farray ("ID",      pID, "N", 200);
   tuple -> farray ("P",       pP, "N", 200);
   tuple -> farray ("Pt",      pPt, "N", 200);
@@ -659,8 +483,6 @@ StatusCode BTaggingAnalysis::execute() {
   tuple -> farray ("ch",      pch, "N", 200);
   tuple -> farray ("ip",      pip, "N", 200);
   tuple -> farray ("iperr",   piperr, "N", 200);
-//   tuple -> farray ("ip_r",    pip_r, "N", 200);
-//   tuple -> farray ("iperr_r", piperr_r, "N", 200);
   tuple -> farray ("ipPU",    pipPU, "N", 200);
   tuple -> farray ("trtyp",   ptrtyp, "N", 200);
   tuple -> farray ("lcs",     plcs, "N", 200);
@@ -677,12 +499,19 @@ StatusCode BTaggingAnalysis::execute() {
   tuple -> farray ("MCP",     pMCP, "N", 200);
   tuple -> farray ("MCPt",    pMCPt, "N", 200);
   tuple -> farray ("MCphi",   pMCphi, "N", 200);
+  tuple -> farray ("MCx",     pMCx, "N", 200);
+  tuple -> farray ("MCy",     pMCy, "N", 200);
   tuple -> farray ("MCz",     pMCz, "N", 200);
   tuple -> farray ("mothID",  pmothID, "N", 200);
   tuple -> farray ("ancID",   pancID, "N", 200);
   tuple -> farray ("bFlag",   pbFlag, "N", 200);
   tuple -> farray ("xFlag",   pxFlag, "N", 200);
   tuple -> farray ("vFlag",   pvFlag, "N", 200);
+  tuple -> farray ("IPSV",    pIPSV, "N", 200);
+  tuple -> farray ("IPSVerr", pIPSVerr, "N", 200);
+  tuple -> farray ("DOCA",    pDOCA, "N", 200);
+  tuple -> farray ("DOCAerr", pDOCAerr, "N", 200);
+  tuple -> farray ("Chi2Seed",pChi2Seed, "N", 200);
 
   if( !( tuple->write()) ) err() << "Cannot fill mytagging Ntuple" << endreq;
   ///----------------------------------------------------------------------
@@ -690,6 +519,13 @@ StatusCode BTaggingAnalysis::execute() {
   setFilterPassed( true );
   return StatusCode::SUCCESS;
 }
+
+
+//=============================================================================
+//=============================================================================
+//=============================================================================
+
+
 
 //=============================================================================
 const Particle* BTaggingAnalysis::chooseBHypothesis(const Particle::ConstVector& parts) {
@@ -715,19 +551,20 @@ const Particle* BTaggingAnalysis::chooseBHypothesis(const Particle::ConstVector&
 //=============================================================================
 const RecVertex::ConstVector 
 BTaggingAnalysis::choosePrimary(const Particle* AXB,
-                                const MCParticle* BS,
-                                const RecVertex::Range verts,
+                                //const RecVertex::Container* verts,
+                                const RecVertex::Range& verts,
                                 const RecVertex*& RecVert,
                                 RecVertex& RefitRecVert) {
 
   RecVertex::ConstVector PileUpVtx(0); //will contain all the other primary vtx's
 
   double kdmin = 1000000;
+  //RecVertex::Container::const_iterator iv;
   RecVertex::Range::const_iterator iv;
   for(iv=verts.begin(); iv!=verts.end(); iv++){
     double var, ip, iperr;
     if(m_ChoosePV == "CheatPV") {
-      var = fabs( BS->primaryVertex()->position().z() - (*iv)->position().z() );
+      var = fabs( m_BS->primaryVertex()->position().z() - (*iv)->position().z() );
       debug()<<" distance from true PV="<<var<<endreq;
     } 
     else if(m_ChoosePV=="PVbyIP") { //cheated sel needs this
@@ -770,9 +607,9 @@ BTaggingAnalysis::choosePrimary(const Particle* AXB,
 
 //=============================================================================
 const Particle::ConstVector 
-BTaggingAnalysis::chooseParticles(const Particle::ConstVector& parts,
-                                  Particle::ConstVector axdaugh,
-                                  RecVertex::ConstVector PileUpVtx) {
+BTaggingAnalysis::chooseCandidates(const Particle::ConstVector& parts,
+				   Particle::ConstVector axdaugh,
+				   const RecVertex::ConstVector PileUpVtx) {
 
   //loop over Particles, preselect tags 
   double distphi;
@@ -791,6 +628,7 @@ BTaggingAnalysis::chooseParticles(const Particle::ConstVector& parts,
     if( (*ip)->p()  > 200000 ) continue;
     if( (*ip)->pt() >  10000 ) continue;
     if( m_util->isinTree(*ip, axdaugh, distphi) ) continue ; 
+    //m_util->isinTree(*ip, axdaugh, distphi); //let the signal in!
     if( distphi < m_distphi_cut ) continue;
 
     //calculate the min IP wrt all pileup vtxs
@@ -798,38 +636,46 @@ BTaggingAnalysis::chooseParticles(const Particle::ConstVector& parts,
     m_util->calcIP( *ip, PileUpVtx, ippu, ippuerr );
     //eliminate from vtags all parts coming from a pileup vtx
     if(ippuerr) if( ippu/ippuerr < m_IPPU_cut ) continue; //preselection
-
+    
     bool dup=false;
-    if((*ip)->particleID().abspid()==211) { 
-      Particle::ConstVector::const_iterator ik;
-      for ( ik = ip+1; ik != parts.end(); ik++) {
-	if((*ik)->proto() == proto) { 
-	  dup=true; 
-	  break; 
-	}
+    double partp= (*ip)->p();
+    Particle::ConstVector::const_iterator ik;
+    for ( ik = ip+1; ik != parts.end(); ik++) {
+      if((*ik)->proto() == proto ) { 
+	dup=true; 
+	break; 
+      }
+      if( (*ik)->p() == partp )  { 
+       	warning()<<"Same particle momentum but different protoparticle"<<endreq;
+       	dup=true; 
+       	break; 
       }
     }
-    if(dup) continue; //kill parts duplicated as pions
+    if(dup) continue; 
 
     ///////////////////////////////////////
     vtags.push_back(*ip);               // Fill container of candidates
     /////////////////////////////////////
 
     if (msgLevel(MSG::DEBUG)) 
-      debug() <<"part ID="<<(*ip)->particleID().pid()
-              <<" p="<<(*ip)->p()/Gaudi::Units::GeV
-              <<" PIDm="<<(*ip)->proto()->info( ProtoParticle::CombDLLmu, 0)
-              <<" PIDe="<<(*ip)->proto()->info( ProtoParticle::CombDLLe, 0)
-              <<" PIDk="<<(*ip)->proto()->info( ProtoParticle::CombDLLk, 0)
-              <<endreq;
+      debug() <<"   part ID="<<(*ip)->particleID().pid()
+	      <<" p="<<(*ip)->p()/GeV
+              <<" PIDm="<<proto->info( ProtoParticle::CombDLLmu, 0)
+              <<" PIDe="<<proto->info( ProtoParticle::CombDLLe, 0)
+              <<" PIDk="<<proto->info( ProtoParticle::CombDLLk, 0)
+              <<" proto="<<proto<<endreq;
   }
 
+//  checkOverlap()->removeOverlap(vtags); //doesnt work
+  
   return vtags;
 }
 
 //=============================================================================
-FlavourTag* BTaggingAnalysis::tagevent (const Particle* AXBS) {
-      
+const ProtoParticle::ConstVector BTaggingAnalysis::tagevent (Tuple& tuple, 
+							     const Particle* AXBS) {
+  ProtoParticle::ConstVector partsInSV(0);
+
   bool foundb = false;
   FlavourTags*  tags = new FlavourTags;
   FlavourTag* theTag = new FlavourTag;
@@ -854,7 +700,7 @@ FlavourTag* BTaggingAnalysis::tagevent (const Particle* AXBS) {
     if (!sc) {
       err() <<"Tagging Tool returned error."<< endreq;
       delete theTag;
-      return NULL;
+      return partsInSV;
     } 
     if(!exist<FlavourTags>(m_TagLocation)){
       tags->insert(theTag);
@@ -862,8 +708,385 @@ FlavourTag* BTaggingAnalysis::tagevent (const Particle* AXBS) {
       debug()<<"Inserted tags into "<<m_TagLocation<<endreq;
     }
   }
+
+  if(!theTag) return partsInSV;
+
+  tuple -> column ("Tag",     theTag->decision());
+  tuple -> column ("Omega",   theTag->omega());
+  tuple -> column ("TagCat",  theTag->category());
+  tuple -> column ("TagOS",   theTag->decisionOS());
+  tuple -> column ("OmegaOS", theTag->omegaOS());
+  tuple -> column ("TagCatOS",theTag->categoryOS());
+
+  debug()<<"looking at taggers"<<endreq;
+  std::vector<float> tagtype, tagdecision, tagomega;
+  std::vector<Tagger> taggers = theTag->taggers();
+  debug()<<"tagger size: "<<taggers.size()<<endreq;
+  for(size_t i=0; i<taggers.size(); ++i) {
+    Tagger itagger = taggers.at(i);
+    if( itagger.decision() ) {
+      debug()<<"Tagger "<<itagger.type()
+             <<" decision= "<<itagger.decision()<<endreq;
+      tagtype.push_back(itagger.type());
+      tagdecision.push_back(itagger.decision());
+      tagomega.push_back(itagger.omega());
+      Particle::ConstVector::iterator kp;
+      if(itagger.type()==Tagger::VtxCharge) {
+        for( unsigned int i=0; i!=itagger.taggerParts().size(); i++){
+          partsInSV.push_back( itagger.taggerParts().at(i)->proto() );
+        }
+      }
+    }
+  }
+  tuple -> farray ("TaggerType",    tagtype, "T", 10);
+  tuple -> farray ("TaggerDecision",tagdecision, "T", 10);
+  tuple -> farray ("TaggerOmega",   tagomega, "T", 10);
+
+  return partsInSV;
+}
+
+//=============================================================================
+StatusCode BTaggingAnalysis::FillTrigger (Tuple& tuple, const Particle* AXBS) {
+
+  long L0Decision = -1;
+  long L0DecisionByName = 0;
+  long HLT1Decision = 0;
+  long HLT2Decision = 0;
+  if(m_requireTrigger){
+    if( !exist<L0DUReport>(L0DUReportLocation::Default) ) {
+      err() << "L0DUReport not found in " 
+            << L0DUReportLocation::Default << endreq;
+      return StatusCode::FAILURE;
+    }
+    L0DUReport* l0 = get<L0DUReport>(L0DUReportLocation::Default);
+    L0Decision  = l0->decision();
+    //channelDecisionByName
+    if (l0->channelDecisionByName("Electron")) L0DecisionByName      +=         1;
+    if (l0->channelDecisionByName("Photon"))   L0DecisionByName      +=        10;    
+    if (l0->channelDecisionByName("Hadron"))   L0DecisionByName      +=       100;    
+    if (l0->channelDecisionByName("LocalPi0")) L0DecisionByName      +=      1000;    
+    if (l0->channelDecisionByName("GlobalPi0"))L0DecisionByName      +=     10000;    
+    if (l0->channelDecisionByName("Muon"))     L0DecisionByName      +=    100000;    
+    if (l0->channelDecisionByName("DiMuon"))   L0DecisionByName      +=   1000000;    
+    if (l0->channelDecisionByName("Muon,lowMult"))  L0DecisionByName +=  10000000;    
+    if (l0->channelDecisionByName("DiMuon,lowMult"))L0DecisionByName += 100000000;
+    if( exist<HltDecReports>( HltDecReportsLocation::Default ) ){ 
+      const HltDecReports* decReports = 
+        get<HltDecReports>( HltDecReportsLocation::Default );
+      HLT1Decision = decReports->decReport("Hlt1Global") ? 
+        decReports->decReport("Hlt1Global")->decision() : 0 ;
+      HLT2Decision = decReports->decReport("Hlt2Global") ? 
+        decReports->decReport("Hlt2Global")->decision() : 0 ;
+    }
+  } 
+  long trigger = HLT2Decision*100 +HLT1Decision*10 + L0Decision;
+  debug()<<"Require trigger"<<endreq;
+  debug()<<" l0: "<<L0Decision<<endreq;
+  debug()<<" l0 by name: "<<L0DecisionByName<<endreq;
+  debug()<<" trig: "<<trigger
+	 <<" (Hlt1Global and Hlt2Global can include triggers in no physics lines)"<<endreq;
+  tuple -> column ("L0byName", L0DecisionByName);
+
+  tuple -> column ("trig", trigger);
+
+  //TIS TOS ----------------------------------------
+  long L0TisTos  = 0;
+  long HltTisTos = 0;
+  if(m_requireTrigger) {
+    if(m_requireTisTos) {
+      m_TriggerTisTosTool->setOfflineInput( *AXBS );
+      //***************************************************************
+      //Fill the decision, tis and tos parametres for the L0 as a whole             
+      bool decision=false;
+      bool tis=0;
+      bool tos=0;
+      ITriggerTisTos::TisTosDecision classifiedL0Dec = //emulation of L0
+	m_TriggerTisTosTool->selectionTisTos(m_TriggerTisTosTool  
+					     ->triggerSelectionNames("Hlt1L0.*Decision") ); 
+      decision = m_TriggerTisTosTool->hltObjectSummaries("Hlt1L0.*Decision").size()!=0;
+      debug()<<"L0Global: "<<decision
+	     <<", tis: "<<classifiedL0Dec.tis()
+	     <<", tos: "<<classifiedL0Dec.tos()<<endreq;
+      if(classifiedL0Dec.tis()) L0TisTos += 10;
+      if(classifiedL0Dec.tos()) L0TisTos +=  1;
+      //Save L0 lines
+      std::vector<std::string> l0lines = m_TriggerTisTosTool->triggerSelectionNames();
+      bool linedecision = false;
+      for ( unsigned int i=0; i!=l0lines.size(); i++){
+	linedecision = m_TriggerTisTosTool->hltObjectSummaries(l0lines.at(i) ).size() > 0;
+	ITriggerTisTos::TisTosDecision lineL0Dec = 
+	  m_TriggerTisTosTool->selectionTisTos( m_TriggerTisTosTool
+						->triggerSelectionNames( l0lines.at(i) ) );
+	debug()<<" "<<l0lines.at(i)<<" dec: "<<linedecision
+	       <<", tis: "<<lineL0Dec.tis()
+	       <<", tos:"<<lineL0Dec.tos()<<endreq;
+      }
+
+      if(m_saveHlt1Lines){
+	//***************************************************************
+	//Do the Hlt1                                                                 
+	m_TriggerTisTosTool->setTriggerInput("Hlt1.*Decision");
+	m_TriggerTisTosTool->triggerTisTos(decision,tis,tos);
+	debug()<<"HLT1Global: "<<decision<<", tis: "<<tis<<", tos: "<<tos<<endreq;
+	if(tis) HltTisTos +=  1000;
+	if(tos) HltTisTos +=   100;
+	//Look and save HLT1 lines
+	std::vector<std::string> hltlines = m_TriggerTisTosTool->triggerSelectionNames();
+	bool linehltdecision = false;
+	long hltlinetrigger=0;
+	for ( unsigned int i=0; i!=hltlines.size(); i++){
+	  linehltdecision = m_TriggerTisTosTool->hltObjectSummaries(hltlines.at(i)).size() > 0;
+	  ITriggerTisTos::TisTosDecision lineHLTDec = m_TriggerTisTosTool
+	    ->selectionTisTos( m_TriggerTisTosTool->triggerSelectionNames( hltlines.at(i)) );
+	  hltlinetrigger = linehltdecision*100 + lineHLTDec.tis()*10 + lineHLTDec.tos()*1;
+	  debug()<<" "<<hltlines.at(i)<<" dec: "<<linehltdecision
+		 <<", tis: "<<lineHLTDec.tis()
+		 <<", tos: "<<lineHLTDec.tos()<<endreq;
+	  tuple->column( hltlines.at(i), hltlinetrigger ); 
+	}
+      }
+      if(m_saveHlt2Lines) {
+	//***************************************************************
+	//Do the Hlt2                                                                 
+	m_TriggerTisTosTool->setTriggerInput("Hlt2.*Decision");
+	m_TriggerTisTosTool->triggerTisTos(decision,tis,tos);
+	debug()<<"HLT2Global: "<<decision<<", tis: "<<tis<<", tos: "<<tos<<endreq;
+	if(tis)   HltTisTos +=    10;
+	if(tos)   HltTisTos +=     1;
+	//Look and save HLT2 lines
+	std::vector<std::string> hlt2lines = m_TriggerTisTosTool->triggerSelectionNames();
+	bool linehlt2decision = false;
+	long hlt2linetrigger=0;
+	for ( unsigned int i=0; i!=hlt2lines.size(); i++){
+	  linehlt2decision = m_TriggerTisTosTool->hltObjectSummaries(hlt2lines.at(i)).size() > 0;
+	  ITriggerTisTos::TisTosDecision lineHLT2Dec = 
+	    m_TriggerTisTosTool->selectionTisTos( m_TriggerTisTosTool
+						  ->triggerSelectionNames( hlt2lines.at(i)) );
+	  hlt2linetrigger = linehlt2decision*100 + lineHLT2Dec.tis()*10 + lineHLT2Dec.tos()*1;
+	  debug()<<" "<<hlt2lines.at(i)<<" dec: "<<linehlt2decision
+		 <<", tis: "<<lineHLT2Dec.tis()
+		 <<", tos:"<<lineHLT2Dec.tos()<<endreq;
+	  tuple->column( hlt2lines.at(i), hlt2linetrigger ); //Hlt2lines
+	}
+      }
+    }
+  }
+  tuple -> column ("L0TisTos",  L0TisTos);
+  tuple -> column ("HltTisTos", HltTisTos);
+
+  return StatusCode::SUCCESS;
+}
+
+//=============================================================================
+Particle::ConstVector BTaggingAnalysis::FillSelectedB (Tuple& tuple, const Particle* AXBS) {
+
+  Particle::ConstVector axdaugh = m_descend->descendants(AXBS);
+  axdaugh.push_back(AXBS);
+  debug() << "Found Selected B with "<< axdaugh.size()-1 
+          << "  daughters, Mass=" << AXBS->momentum().M()/GeV
+          << "  pT="<<AXBS->pt()/GeV<< endreq;
+
+  std::vector<float> sigID, sigMothID, sigP, sigPt, sigPhi, sigMass;
+  std::vector<float> sigMCP, sigVx, sigVy, sigVz;
   
-  return theTag;
+  Particle::ConstVector::const_iterator ip;
+  for ( ip = axdaugh.begin(); ip != axdaugh.end(); ip++){
+    sigID.push_back((*ip)->particleID().pid());
+    const Particle* mater = m_util->motherof(*ip, axdaugh);
+    if(mater) sigMothID.push_back(mater->particleID().pid()); else sigMothID.push_back(0);
+    sigP.push_back((*ip)->p() /GeV);
+    sigPt.push_back((*ip)->pt()/GeV);
+    sigPhi.push_back((*ip)->momentum().Phi());
+    sigMass.push_back((*ip)->momentum().M() /GeV);
+
+    const Vertex* endv = (*ip)->endVertex();
+    if(endv){
+      sigVx.push_back((*ip)->endVertex()->position().x() /mm);
+      sigVy.push_back((*ip)->endVertex()->position().y() /mm);
+      sigVz.push_back((*ip)->endVertex()->position().z() /mm);
+    } else { 
+      sigVx.push_back(0); 
+      sigVy.push_back(0); 
+      sigVz.push_back(20000); 
+    }
+    //mc truth to use as link 
+    const MCParticle* mcp = m_assoc->relatedMCP( *ip );
+    if( mcp ) sigMCP.push_back(mcp->p()/GeV); else sigMCP.push_back(0); 
+  
+  }
+
+  tuple -> farray ("sID",     sigID, "M", 10);
+  tuple -> farray ("sMothID", sigMothID, "M", 10);
+  tuple -> farray ("sP",      sigP, "M", 10);
+  tuple -> farray ("sPt",     sigPt, "M", 10);
+  tuple -> farray ("sPhi",    sigPhi, "M", 10);
+  tuple -> farray ("sMass",   sigMass, "M", 10);
+  tuple -> farray ("sVx",     sigVx, "M", 10);
+  tuple -> farray ("sVy",     sigVy, "M", 10);
+  tuple -> farray ("sVz",     sigVz, "M", 10);
+  tuple -> farray ("sMCP",    sigMCP, "M", 10);
+
+  return axdaugh;
+}
+
+
+//=============================================================================
+StatusCode BTaggingAnalysis::FillMCInfoOfB(Tuple& tuple, 
+					   const LHCb::MCParticles* mcpart) {
+
+  ////////////////////////////////////////////////////
+  //check what is the B forced to decay
+  debug() << "Looking for MC"<< endreq;
+  if ( !m_BS ) warning() << "Missing Signal B meson in MC!"<< endreq;
+
+  long TrueTag = 0;
+  if(m_BS) TrueTag = m_BS->particleID().pid()>0 ? 1 : -1; 
+  tuple -> column ("TrueTag", TrueTag);
+
+  int   BSosc = 0;
+  float BSx = 0, BSy = 0, BSz = 0;
+  if(m_BS) {
+    if( m_BS->hasOscillated() ) BSosc = 1;
+    const SmartRefVector<MCVertex>& BSvert = m_BS->endVertices() ;
+    if( BSvert.empty() ) return StatusCode::SUCCESS;
+    BSx = (BSvert.at(0))->position().x()/mm;
+    BSy = (BSvert.at(0))->position().y()/mm;
+    BSz = (BSvert.at(0))->position().z()/mm;
+  } 
+  tuple -> column ("BSosc", BSosc);
+  tuple -> column ("BSx",   BSx);
+  tuple -> column ("BSy",   BSy);
+  tuple -> column ("BSz",   BSz);
+  if(m_BS) {
+    tuple -> column ("kx", m_BS->originVertex()->position().x()/mm);
+    tuple -> column ("ky", m_BS->originVertex()->position().y()/mm);
+    tuple -> column ("kz", m_BS->originVertex()->position().z()/mm);
+  } else {
+    tuple -> column ("kx", 0.);
+    tuple -> column ("ky", 0.);
+    tuple -> column ("kz", 0.);
+  }
+
+  //look for opposite B
+  const MCParticle* BO = 0;
+  MCParticles::const_iterator imc;
+  double maxBP = -1;
+  for ( imc = mcpart->begin(); imc != mcpart->end(); imc++ ) {
+    if( !(*imc)->particleID().hasBottom() ) continue;
+    if( (*imc) == m_BS) continue;
+    int aid  = (*imc)->particleID().abspid();
+    if( aid==511 || aid==521 || aid==531 || aid==541
+        || (aid>5000 && aid<5599) ) {
+      bool close2BS = false;
+      if(m_BS) if(fabs((*imc)->originVertex()->position().z() 
+		       - m_BS->originVertex()->position().z()) 
+                /mm < 1.0) close2BS = true;
+      if( close2BS || (!m_BS) ) {
+        if( maxBP < (*imc)->momentum().P() ) {
+          maxBP = (*imc)->momentum().P();
+          BO = (*imc);
+        }
+      }
+    }
+  }
+  ////////////////////////////////////////////////////
+  if ( !BO ) warning() << "Missing Opposite B meson in MC!"<< endreq;
+ 
+  ////////////////////////////////////////////////////
+  //debug()<<"SIGNAL B:"<<endreq; m_debug -> printTree(BS);
+  //debug()<<"OPPOSITE B (TAGGING B):"<<endreq; m_debug -> printTree(BO);
+
+  int BOosc = 0;
+  long BOID =0;
+  float BOx=-10000., BOy=-10000., BOz=-10000.;
+  float BOP=-1., BOthe=10000., BOphi=10000.;
+  if(BO) {
+    if( BO->hasOscillated() ) BOosc = 1; 
+    debug()<< "BOppost: " <<BO->particleID().pid()<<" osc? "<<BOosc<<endreq;
+    BOID = BO->particleID().pid();
+    BOP  = BO->momentum().P()/GeV;
+    BOthe= BO->momentum().Theta();
+    BOphi= BO->momentum().Phi();
+    const SmartRefVector<MCVertex>& BOvert = BO->endVertices() ;
+    if( BOvert.empty() ) return StatusCode::SUCCESS;
+    BOx = (BOvert.at(0))->position().x()/mm;
+    BOy = (BOvert.at(0))->position().y()/mm;
+    BOz = (BOvert.at(0))->position().z()/mm;
+  } 
+  tuple -> column ("BOID",  BOID);
+  tuple -> column ("BOP",   BOP);
+  tuple -> column ("BOthe", BOthe);
+  tuple -> column ("BOphi", BOphi);
+  tuple -> column ("BOx",   BOx);
+  tuple -> column ("BOy",   BOy);
+  tuple -> column ("BOz",   BOz);
+  tuple -> column ("BOosc", BOosc);
+
+  return StatusCode::SUCCESS;
+
+}
+
+//=============================================================================
+void BTaggingAnalysis::FillSeedInfo(Tuple& tuple, const RecVertex* RecVert,
+				    const Particle::ConstVector& vtags,
+				    std::vector<Vertex>& svertices,
+				    const Particle *&SVpart1, 
+				    const Particle *&SVpart2 ) { 
+			   
+  /// Inclusive Secondary Vertex -------------
+  //look for a secondary Vtx due to opposite B
+  std::vector<float> pSecVtx_x(0), pSecVtx_y(0), pSecVtx_z(0), pSecVtx_chi2(0),
+    pSecVtx_pt1(0), pSecVtx_pt2(0);
+
+  svertices.clear();
+  SVpart1=0;
+  SVpart2=0; 
+  
+  std::vector<Vertex>::const_iterator isv;
+  if(m_svtool) svertices = m_svtool -> buildVertex( *RecVert, vtags );
+
+  debug() << "  Look seed vertex position " <<endreq;
+  debug() << "  vertices: " <<svertices.size()<<endreq;
+  
+  Vertex tmpseed;
+  int seeds=0;
+  //save NEW seed vertex positions
+  for (isv=svertices.begin(); isv!=svertices.end(); ++isv) {
+    
+    if (seeds>0) break;//select only first seed
+    seeds++;
+    Particle::ConstVector Pfit = (*isv).outgoingParticlesVector();
+    debug() << "seed 2 tracks, vtx "<< Pfit.size()<<endreq;
+    if(Pfit.size()==0) {
+      svertices.clear();
+      break;
+    }
+
+    SVpart1=Pfit.at(0);
+    SVpart2=Pfit.at(1);
+    m_fitter->fit(tmpseed, *SVpart1,*SVpart2);
+    tmpseed.addToOutgoingParticles(SVpart1);
+    tmpseed.addToOutgoingParticles(SVpart2);
+
+    pSecVtx_x.push_back(tmpseed.position().x()/mm);
+    pSecVtx_y.push_back(tmpseed.position().y()/mm);
+    pSecVtx_z.push_back(tmpseed.position().z()/mm);
+    debug()<<"seed xposition: "<<tmpseed.position().x()/mm<<endreq;
+    debug()<<"     yposition: "<<tmpseed.position().y()/mm<<endreq;
+    debug()<<"     zposition: "<<tmpseed.position().z()/mm<<endreq;
+    pSecVtx_chi2.push_back(tmpseed.chi2PerDoF());
+    debug()<<"Pfit.at(0) pt: "<<Pfit.at(0)->pt()/GeV<<endreq;
+    pSecVtx_pt1.push_back(Pfit.at(0)->pt()/GeV);
+    pSecVtx_pt2.push_back(Pfit.at(1)->pt()/GeV);
+    svertices.at(0)=tmpseed;
+    break;
+  }
+  tuple -> farray ("SecVtx_pt1", pSecVtx_pt1, "V", 100);
+  tuple -> farray ("SecVtx_pt2", pSecVtx_pt2, "V", 100);
+  tuple -> farray ("SecVtx_x",   pSecVtx_x, "V", 100);
+  tuple -> farray ("SecVtx_y",   pSecVtx_y, "V", 100);
+  tuple -> farray ("SecVtx_z",   pSecVtx_z, "V", 100);
+  tuple -> farray ("SecVtx_chi2",pSecVtx_chi2, "V", 100);
 }
 
 //=============================================================================

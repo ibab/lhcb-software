@@ -1,4 +1,4 @@
-// $Id: ITaggingUtilsChecker.h,v 1.2 2010-01-18 22:17:30 musy Exp $
+// $Id: ITaggingUtilsChecker.h,v 1.3 2010-06-22 09:43:37 mgrabalo Exp $
 #ifndef ITAGGINGUTILSCHECKER_H 
 #define ITAGGINGUTILSCHECKER_H 1
 
@@ -48,5 +48,8 @@ public:
   virtual int comes_from_excitedB(const LHCb::MCParticle* , 
                                   const LHCb::MCParticle* )=0;
 
+  virtual StatusCode calcDOCAmin( const LHCb::Particle* ,
+				  const LHCb::Particle* , 
+				  const LHCb::Particle* , double& , double& )=0;
 };
 #endif // ITAGGINGUTILSCHECKER_H

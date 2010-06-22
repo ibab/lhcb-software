@@ -36,6 +36,9 @@ public:
   StatusCode calcIP( const LHCb::Particle*,
 		     const LHCb::RecVertex::ConstVector& ,
 		     double& , double& );
+  StatusCode calcDOCAmin( const LHCb::Particle* ,
+			  const LHCb::Particle* , 
+			  const LHCb::Particle* , double& , double& );
   int countTracks( LHCb::Particle::ConstVector& );
   const LHCb::Particle* motherof( const LHCb::Particle* ,
                                   const LHCb::Particle::ConstVector& );
@@ -43,6 +46,7 @@ public:
   LHCb::Particle::ConstVector FindDaughters( const LHCb::Particle* );
   const LHCb::MCParticle* originof( const LHCb::MCParticle*  );
   int comes_from_excitedB(const LHCb::MCParticle* , const LHCb::MCParticle* );
+
   //-------------------------------------------------------------
 
 private:
@@ -54,7 +58,7 @@ private:
   LHCb::MCParticle* associatedofHEP(HepMC::GenParticle* );
 
   IPrintMCDecayTreeTool* m_debug;
-  const IDistanceCalculator* m_Dist;
+  const IDistanceCalculator *m_Dist;
   DVAlgorithm* m_dva;
 
 };

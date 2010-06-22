@@ -1,10 +1,22 @@
-! $Id: release.notes,v 1.86 2010-06-01 09:42:34 pkoppenb Exp $
+! $Id: release.notes,v 1.87 2010-06-22 09:43:37 mgrabalo Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/FlavourTaggingChecker
 ! Responsible : Marco Musy (marco.musy@cern.ch)
 ! Purpose     : Checker package for Phys/FlavourTagging
 ! Twiki page  : https://twiki.cern.ch/twiki/bin/viewauth/LHCb/FlavourTagging
 !-----------------------------------------------------------------------------
+
+
+! 2010-06-22 - Marc Grabalosa
+ - BTaggingAnalysis
+	 . Added Trigger$TisTos Info. Possibility to save HltLines
+   . Use RecVertex::Range instead of RecVertex::Container for inputs.
+   . Use SvertexOneSeedTool.cpp
+   . Add fill seed info
+ - TaggingUtilsChecker
+   .Add calcDOCAmin
+ - Raise to v6r0  
+
 
 ! 2010-06-01 - Patrick Koppenburg
  - Removed SelResult which wasn't used anyway
