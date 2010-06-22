@@ -1,4 +1,4 @@
-// $Id: HltSelReportsMaker.cpp,v 1.23 2010-03-23 22:40:11 gligorov Exp $
+// $Id: HltSelReportsMaker.cpp,v 1.24 2010-06-22 15:26:30 tskwarni Exp $
 // #define DEBUGCODE
 // Include files 
 #include "boost/algorithm/string/replace.hpp"
@@ -304,7 +304,8 @@ StatusCode HltSelReportsMaker::execute() {
         && !rank<RecVertex>   (candidate, rnk)
         && !rank<Particle>    (candidate, rnk)
         && !rank<CaloCluster> (candidate, rnk) )
-         Warning( " Unsupported data type among candidates, CLID= " + boost::lexical_cast<std::string>(sel->classID()) + " - skip selection ID=" 
+         Warning( " Unsupported data type among candidates, CLID= " 
+                  + boost::lexical_cast<std::string>(sel->classID()) + " - skip selection ID=" 
                           +selName,StatusCode::SUCCESS, 2 );
 
      sortedSelections.push_back( std::make_pair(rnk, *is ));
@@ -991,32 +992,38 @@ const LHCb::HltObjectSummary* HltSelReportsMaker::store_(const LHCb::Particle* o
         const LHCb::MuonPID* muid = pp->muonPID();
         if( muid!=0 && object->particleID().abspid()==13 ){
           if( muid->IsMuon() ){
-            if( !m_HLTmuonTracks ){ 
-	      //Now we need to derive the muon segment container from
-	      //the track container
-	      m_HltMuonTracksLocation = "";
-	      if (track->parent()) {
-	        const DataObject* obj = track->parent() ;
-		if ( 0 != obj ){
-                  const IRegistry* reg = obj->registry() ;
-                  if ( 0 != reg ){
-                    m_HltMuonTracksLocation = reg->identifier() + m_muonIDSuffix;
+            const LHCb::Track*  muStub=muid->muonTrack();
+            if (!muStub ){
+              if( !m_HLTmuonTracks ){ 
+                //Now we need to derive the muon segment container from
+                //the track container
+                m_HltMuonTracksLocation = "";
+                if (track->parent()) {
+                  const DataObject* obj = track->parent() ;
+                  if ( 0 != obj ){
+                    const IRegistry* reg = obj->registry() ;
+                    if ( 0 != reg ){
+                      m_HltMuonTracksLocation = reg->identifier() + m_muonIDSuffix;
+                    }
                   }
                 }
-	      }
-              if( exist<LHCb::Tracks>(m_HltMuonTracksLocation) ){
-                m_HLTmuonTracks = get<LHCb::Tracks>(m_HltMuonTracksLocation);
-              } else {
-                Warning(" Found track which is a muon but no muon tracks at " + m_HltMuonTracksLocation.value()
-                        ,StatusCode::SUCCESS,10 );
+                if( exist<LHCb::Tracks>(m_HltMuonTracksLocation) ){
+                  m_HLTmuonTracks = get<LHCb::Tracks>(m_HltMuonTracksLocation);
+                } else {
+                  Warning(" Found Particle which is a muon but no muon tracks at " + m_HltMuonTracksLocation.value()
+                          ,StatusCode::SUCCESS,10 );
+                }
+              }
+              if( m_HLTmuonTracks ){          
+                muStub= m_HLTmuonTracks->object(track->key());     
               }
             }
-            if( m_HLTmuonTracks ){          
-              const Track* muStub= m_HLTmuonTracks->object(track->key());     
-              if( muStub ){
-                hos->addToSubstructure( store_( muStub ) );
-              }
-            }
+            if( muStub ){
+              hos->addToSubstructure( store_( muStub ) );
+            } else {
+              Warning(" Found Particle which is a muon but could not reach muon lhcbids "
+                          ,StatusCode::SUCCESS,10 );
+            }            
           }
         }
       } else {

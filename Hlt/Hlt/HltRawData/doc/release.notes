@@ -1,9 +1,12 @@
-!$Id: release.notes,v 1.65 2010-06-01 14:29:21 graven Exp $
+!$Id: release.notes,v 1.66 2010-06-22 15:26:30 tskwarni Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/HltRawData
 ! Responsible : Tomasz Skwarnicki
 ! Purpose     : Hlt Raw Data Makers of persisted TES info
 !-----------------------------------------------------------------------------
+
+! 2010-06-22 - Tomasz Skwarnicki
+ - use MuonPID::muonTrack() in HltSelReportsMaker to get to muon hits
 
 !========================== HltRawData v2r6 2010-06-01 ===================
 ! 2010-06-01 - Gerhard Raven
