@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/algorithms/OMADivide.cpp,v 1.8 2010-06-11 13:00:10 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/algorithms/OMADivide.cpp,v 1.9 2010-06-22 09:45:55 ggiacomo Exp $
 #include <TH1F.h>
 #include <TH2F.h>
 #include "OMAlib/OMAAlgorithms.h"
@@ -38,20 +38,12 @@ TH1* OMADivide::exec( const std::vector<TH1*> *sources,
       outHist= dynamic_cast<TH2D*>(existingHisto);
   }
   if (!outHist) {
-    if ( 1 == okH->GetDimension() ) 
-      outHist = (TH1*) ( new TH1D (outName.data(), outTitle.data(), 
-				   okH->GetNbinsX(), 
-				   okH->GetXaxis()->GetXmin(),
-				   okH->GetXaxis()->GetXmax()) );  
-    else if(2 == okH->GetDimension())
-      outHist = (TH1*) ( new TH2D (outName.data(), outTitle.data(), 
-				   okH->GetNbinsX(), 
-				   okH->GetXaxis()->GetXmin(),
-				   okH->GetXaxis()->GetXmax(),
-				   okH->GetNbinsY(), 
-				   okH->GetYaxis()->GetXmin(),
-				   okH->GetYaxis()->GetXmax()) ); 
-    outHist->Sumw2();
+    outHist = (TH1*) okH->Clone(outName.data());
+    if(outHist) {
+      outHist->SetTitle(outTitle.data());
+      outHist->Reset();
+      outHist->Sumw2();
+    }
   }
   if(outHist) {
     outHist->Divide(okH, allH, k1, k2);
