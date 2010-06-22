@@ -2,10 +2,12 @@
 ! Responsible : E. Polycarpo, H. Lopes    
 !----------------------------------------------------------------------------
 
+!====================== MuonPIDChecker v5r2 2010-06-21 ======================
 ! 2010-06-19 - Erica Polycarpo
  - use strings instead of char for titles 
  - change level for some histos
  - book all histos at initialize
+
 !====================== MuonPIDChecker v5r1p2 2010-05-21 ======================
 ! 2010-05-11 - Rob Lambert
  - Review warning messages, and correct whitespace
