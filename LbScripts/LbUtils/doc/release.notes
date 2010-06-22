@@ -1,3 +1,9 @@
+2010-06-22  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbUtils/Script.py: changed the default config file location. Now uses 
+	XDG_CONFIG_HOME
+	* tests/ScriptTest.py: 
+
 2010-06-21  Karol Kruzelecki  <Karol.Kruzelecki@cern.ch>
 
 	* scripts/killtree: new file; wrapper over killTree python function

@@ -78,7 +78,8 @@ class ConfigScript(PlainScript):
         else :
             if not config_dir :
                 config_dir = []
-            home_cfg = os.path.join(os.environ.get("HOME", "."), ".config")
+            home_cfg = os.environ.get("XDG_CONFIG_HOME", 
+                                      os.path.join(os.environ.get("HOME", "."), ".config"))
             if home_cfg not in config_dir :
                 config_dir.append(home_cfg)
             if not config_name :

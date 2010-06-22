@@ -5,6 +5,7 @@
 from LbUtils.Script import ConfigScript as Script 
 from LbUtils.CVS import CVS2Version
 
+import logging
 import os
 
 __version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.2 $")
@@ -13,12 +14,16 @@ class ScriptTest(Script):
     _version = __version__    
     _description = __doc__
     def defineOpts(self):
-#        self.setConfigFile(config_file=os.path.join(os.environ["HOME"], ".totorc"))
         parser = self.parser
         parser.set_defaults(toto_val="bla")
         parser.add_option("-t", "--toto-val", help="set toto value [default %default]")
         
     def main(self):
+        log = logging.getLogger()
+        log.debug("This is a debug message")
+        log.info("This is an info message")
+        log.warning("This is a warning message")
+        print self.options.toto_val
         return 0
 
 if __name__ == '__main__':
