@@ -4,7 +4,7 @@
 ! Purpose     : Package for the tracking fitting-related classes
 !-----------------------------------------------------------------------------
 
-=========================== TrackFitEvent v4r6p1 2010-06-21 ==================
+=========================== TrackFitEvent v5r0 2010-06-21 ==================
 ! 2010-06-16 - Rob Lambert
  - Changed type of OTMeasurement::deltaTimeOfFlight from float to double
 
