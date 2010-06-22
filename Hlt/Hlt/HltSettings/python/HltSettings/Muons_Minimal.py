@@ -54,7 +54,7 @@ class Muons_Minimal :
             ,'UnbiasedJPsiMuPt'        : 0.0      # MeV
             ,'UnbiasedJPsiMassWindow'  : 120      # MeV
             ,'UnbiasedPsi2SPt'         : 0.0      # MeV
-            ,'UnbiasedPsi2SMuPt'       : 500      # MeV
+            ,'UnbiasedPsi2SMuPt'       :   0      # MeV
             ,'UnbiasedPsi2SMassWindow' : 120      # MeV
             ,'UnbiasedBmmMinMass'      : 4700     # MeV
             , 'Prescale'   : { 'Hlt2UnbiasedDiMuon'          : 1.0
