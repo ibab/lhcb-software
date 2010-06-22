@@ -7,7 +7,9 @@
 !   http://indico.cern.ch/getFile.py/access?subContId=0&contribId=6&resId=1&materialId=slides&confId=26109
 !               implementation of MuonCombRac, combinatorial track 
 !               reconstruction algorithm for beam tracks
-!-----------------------------
+!-----------------------------------------------------------------------------
+
+!======================== MuonTrackRec v3r4 2010-06-21 ======================
 
 ! 2010-06-15 - GG
  - remove OfflineTimeAlig stuff
@@ -20,7 +22,7 @@
  - Fixes for some windows warnings savannah 15808
  - Still have a strange linker warning
 
-!======================== MuonTrackRec v3r3 2010-04-09 ======================------------------------------------------------
+!======================== MuonTrackRec v3r3 2010-04-09 ======================
 
 ! 2010-05-14 - Rob Lambert
  - Fixed typo from yesterday
