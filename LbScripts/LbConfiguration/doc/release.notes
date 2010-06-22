@@ -1,3 +1,8 @@
+2010-06-22  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbConfiguration/Package.py: added LCGTarBallDir
+	* python/LbConfiguration/Project.py: idem
+
 2010-06-18  Joel Closier <joel.closier@cern.ch>
 
     * python/SetupProject.py: if Dirac is asked, then return LHCbDirac

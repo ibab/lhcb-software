@@ -85,6 +85,8 @@ class PackageConf(object):
         return self._project.upper()
     def TarBallDir(self):
         return os.path.join(self.DistLocation(), self.DistPrefix())
+    def LCGTarBallDir(self):
+        return os.path.join(self.DistLocation(), "source")
     def HTMLDir(self):
         return os.path.join(self.DistLocation(), "html")
     def releasePrefix(self, version=None):
