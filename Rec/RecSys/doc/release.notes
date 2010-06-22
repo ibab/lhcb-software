@@ -5,6 +5,89 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
+</PRE><H1><A NAME=v10r1>2010-06-22 RecSys v10r1</A></H1><PRE>
+This version uses Gaudi v21r9 and LHCb v31r2
+
+- Minor release in the run up to the summer conferences.
+  . Campaign against windows compiler warnings, none are left, task #15808
+  . Add the possibility to time all the tracking steps
+  . Change track locations for HLT, there are no longer any defaults
+  . Calculate luminosity based on calibration from the CondDB
+
+- Patches for windows compiler warnings:
+  Calo/CaloMoniDst v5r3, Calo/CaloPIDs v5r6p1, Muon/MuonTrackRec v3r4, 
+  Rich/RichRecTrackTools v1r21, Tf/TsaAlgorithms v3r21, Tr/TrackCheckers v4r10p2,
+  Tr/TrackFitter v2r48p1, Tr/TrackMonitors v1r26, Tr/TrackProjectors v2r28p2,
+  Tr/TrackTools v3r32, Tr/TrackUtils v1r37, Velo/VeloRecMonitors v2r10p1
+
+- Changes to add timing to tracking steps:
+  Tf/PatAlgorithms v4r3, Tf/PatVelo v3r24, Tf/PatVeloTT v3r14, Tf/TrackMatching v2r29,
+  Tr/TrackMonitors v1r26, Tf/TrackSys v4r34
+
+- Adaptation to obsolete track locations for HLT:
+  Calo/CaloUtils v8r13, Rec/GlobalReco v6r32p2, Rich/RichRecMCTools v2r27, 
+  Tf/PatAlgorithms v4r3, Tf/PatVeloTT v3r14, Tr/PatChecker v3r8, Tr/TrackUtils v1r37
+
+- Minor updates for monitoring:
+  Tr/TrackMonitors v1r26, Muon/MuonPIDChecker v5r2, 
+  Muon/MuonTrackMonitor v2r0, Rich/RichRecQC v2r42
+  
+- In RecSys v10r1:
+  . Removal of obsolete package RecUtils
+
+- Other package updates:
+  Calo/CaloReco v5r6p1, Rec/LumiAlgs v3r6, Rec/RecConf v1r1, 
+  Rich/RichGlobalPID v3r13p2, Rich/RichRecSys v3r29p1,
+  Rich/RichRecTrackTools v1r21, Tf/PatVelo v3r24, Tf/TrackSys v4r34,
+  Tf/TsaAlgorithms v3r21, Tr/TrackFitEvent v5r0, Tr/TrackProjectors v2r28p2,
+  Tr/TrackUtils v1r37
+
+- In Calo/CaloReco v5r6p1:
+  . suppress printout of another error from CaloClusterCovarianceAlg
+
+- In Rec/LumiAlgs v3r6:
+  . Introduce database usage to calculate integrated luminosity
+  . remove usage of unnecessary algorithms (TouchFSR).
+  . add ascii file writer for FSRs (job/LumiFsrToFile.py) uses LumiFsrReaderConf.py.
+  . added qmtest for the file writer
+  . All Configurations: . update to be compatible with Moore >= v9r1
+  . Update default DataType to 2010
+  . allow separate .py files for input files
+
+- In Rec/RecConf v1r1:
+  . switch from loose to default PV
+
+- In Rich/RichGlobalPID v3r13p2:
+  . Add a threshold consistency check
+
+- In Rich/RichRecSys v3r29p1:
+  . Propagate OutputLevel to expected track signal tool, when set
+
+- In Rich/RichRecTrackTools v1r21:
+  . Some minor improvements to debugging information in RichExpectedTrackSignal
+
+- In Tf/PatVelo v3r24:
+  . Improved rejection of R clusters on other side from non-overlap tracks
+
+- In Tf/TrackSys v4r34:
+  . Added option FilterBeforeFit in TrackSys and relevant algorithms
+    under that condition in RecoTracking
+
+- In Tf/TsaAlgorithms v3r21:
+  . Use OT dead strip list in expected hit calculation
+
+- In Tr/TrackFitEvent v5r0:
+  . Changed type of OTMeasurement::deltaTimeOfFlight from float to double
+
+- In Tr/TrackProjectors v2r28p2:
+  . Fixed bug with noDrifttimes bug #68610
+
+- In Tr/TrackUtils v1r37:
+  . Added 3 algorithms to filter duplicated tracks before the fit
+  . Added algorithm to import Tracks from Hlt to offline
+
+
+
 </PRE><H1><A NAME=v10r0p1>2010-05-27 RecSys v10r0p1</A></H1><PRE>
 This version uses Gaudi v21r9 and LHCb v31r1
 
