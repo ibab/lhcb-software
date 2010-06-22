@@ -1,4 +1,4 @@
-// $Id: SVertexOneSeedTool.cpp,v 1.1 2010-06-17 17:46:03 mgrabalo Exp $
+// $Id: SVertexOneSeedTool.cpp,v 1.2 2010-06-22 09:28:55 mgrabalo Exp $
 #include "SVertexOneSeedTool.h"
 #include "Event/RecVertex.h"
 
@@ -64,7 +64,7 @@ std::vector<Vertex> SVertexOneSeedTool::buildVertex(const RecVertex& RecVert,
   double ipl, iperrl, ips, iperrs; 
   StatusCode sc;
   Vertex Vfit(0);
-  Vertex vtx, myseed;
+  Vertex vtx, myseed(0);
   std::vector<Vertex> vtxvect(0);
   const Particle *p1=0, *p2=0;
   Particle::ConstVector::const_iterator jp, kp;
@@ -183,11 +183,6 @@ std::vector<Vertex> SVertexOneSeedTool::buildVertex(const RecVertex& RecVert,
   Vfit.addToOutgoingParticles(p1);
   Vfit.addToOutgoingParticles(p2);
   
-  //  for testing, return only the seed
-  //  info()<<"ATENTION: return only seed"<<endreq;
-  //  vtxvect.push_back(myseed);
-  //  return vtxvect;
-
   verbose()<<"maxprobf="<<maxprobf<<endreq;
   if(maxprobf<=m_maxprobf) return vtxvect; //return empty
 
@@ -204,7 +199,6 @@ std::vector<Vertex> SVertexOneSeedTool::buildVertex(const RecVertex& RecVert,
     if( ip < 0.1 ) continue;     //cut
     double ipSV, ipErrSV;
     m_util->calcIP( *jpp, &myseed, ipSV, ipErrSV );
-    //    m_util->calcIP( *jpp, myseed, ipSV, ipErrSV );
     verbose()<<" ipSV: "<<ipSV<<endreq;
     if( ipSV > 0.7 ) continue;
     double docaSV, docaErrSV;
