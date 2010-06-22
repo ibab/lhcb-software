@@ -4,6 +4,9 @@
 ! Purpose     : GUI to allow the visualization of all data quality histograms
 !-----------------------------------------------------------------------------
 
+! 2010-06-22 - Patrick Robbe
+ - src/DbRootHist.cpp: protect against non existing fit function name
+
 !============ Presenter v1r6 2010-06-13 =============
 ! 2010-06-10 G. Graziani
  requiring OnlineHistDB v7 and OMAlib v3
