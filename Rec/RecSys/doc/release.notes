@@ -16,9 +16,10 @@ This version uses Gaudi v21r9 and LHCb v31r2
 
 - Patches for windows compiler warnings:
   Calo/CaloMoniDst v5r3, Calo/CaloPIDs v5r6p1, Muon/MuonTrackRec v3r4, 
-  Rich/RichRecTrackTools v1r21, Tf/TsaAlgorithms v3r21, Tr/TrackCheckers v4r10p2,
-  Tr/TrackFitter v2r48p1, Tr/TrackMonitors v1r26, Tr/TrackProjectors v2r28p2,
-  Tr/TrackTools v3r32, Tr/TrackUtils v1r37, Velo/VeloRecMonitors v2r10p1
+  Rec/RecAlgs v1r8p1, Rich/RichRecTrackTools v1r21, Tf/TsaAlgorithms v3r21, 
+	Tr/TrackCheckers v4r10p2, Tr/TrackFitter v2r48p1, Tr/TrackMonitors v1r26, 
+  Tr/TrackProjectors v2r28p2, Tr/TrackTools v3r32, Tr/TrackUtils v1r37, 
+  Velo/VeloRecMonitors v2r10p1
 
 - Changes to add timing to tracking steps:
   Tf/PatAlgorithms v4r3, Tf/PatVelo v3r24, Tf/PatVeloTT v3r14, Tf/TrackMatching v2r29,
