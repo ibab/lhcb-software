@@ -1101,6 +1101,7 @@ void MuEffMonitor::ClearSeleVecs(){
 void MuEffMonitor::fillHistos(){
 //============================================
 
+  static const bool includeM1=false;
   int i, j;
   double Chi2traccia;
 
@@ -1313,7 +1314,7 @@ void MuEffMonitor::fillHistos(){
         m_P_Shit -> fill(P);
         if (m_notOnline) m_P_S1hit -> fill(P);
       }
-      if (range) {
+      if (range && includeM1) {
         int stazione = 1;
         m_StationsEff_den -> fill(stazione);
         m_RegionsEff_den  -> fill(regione[0]);
