@@ -4,6 +4,7 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+!======================= RichRecQC v2r42 2010-06-21 ========================
 ! 2010-06-18 - Chris Jones
  - Add some new plots to RichRecoQC to make Cherenkov angle plots for each
    aerogel tile seperately.
