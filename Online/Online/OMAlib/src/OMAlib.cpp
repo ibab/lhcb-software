@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/src/OMAlib.cpp,v 1.24 2010-06-11 13:00:11 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/src/OMAlib.cpp,v 1.25 2010-06-22 13:56:59 ggiacomo Exp $
 /*
   Online Monitoring Analysis library
   G. Graziani (INFN Firenze)
@@ -229,6 +229,7 @@ void OMAlib::doAlgList() {
   m_algorithms["IfbMonitor"] = new OMAIfbMonitor(this);
   m_algorithms["CheckDeadBins"] = new OMACheckDeadBins(this);
   m_algorithms["CheckErrorBins"] = new OMACheckErrorBins(this);
+  m_algorithms["CheckMinMax"] = new OMACheckMinMax(this);
 
   m_algorithms["Efficiency"] = new OMAEfficiency(this);
   m_algorithms["Divide"] = new OMADivide(this);
