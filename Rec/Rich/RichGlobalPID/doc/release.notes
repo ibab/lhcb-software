@@ -4,6 +4,7 @@
 ! Purpose     : The Rich Global PID algorithm
 !-----------------------------------------------------------------------------
 
+!======================= RichGlobalPID v3r13p2 2010-06-21 ====================
 ! 2010-06-20 - Chris Jones
  - Add a consistency check for incorrect threshold information
 
