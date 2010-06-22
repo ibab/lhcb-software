@@ -4,6 +4,7 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+!========================= PatAlgorithms v4r3 2010-06-21 ====================
 ! 2010-06-22 - Rob Lambert
  - Fix nightly warnings and some debug output
 
