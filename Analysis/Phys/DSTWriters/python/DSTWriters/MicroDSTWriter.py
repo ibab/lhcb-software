@@ -1,7 +1,7 @@
 """
 
 """
-__version__ = "$Id: MicroDSTWriter.py,v 1.13 2010-05-18 16:02:08 jpalac Exp $"
+__version__ = "$Id: MicroDSTWriter.py,v 1.14 2010-06-22 08:23:15 jpalac Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -87,6 +87,17 @@ class MicroDSTWriter(BaseDSTWriter) :
         self.setOutputPrefix(sel, cloner)
         return [cloner]
         
+    def _setCloneFilteredParticlesToTrue(self, algs) :
+        for alg in algs :
+            try :
+                alg.CloneFilteredParticles = True
+                print 'Set CloneFilteredParticles of', alg.name(), ' to True'
+            except :
+                try :
+                    self._setCloneFilteredParticlesToTrue(alg.Members)
+                except :
+                    pass
+
     def _copyParticleTrees(self, sel) :
         from Configurables import (CopyParticles,
                                    VertexCloner,
@@ -94,12 +105,7 @@ class MicroDSTWriter(BaseDSTWriter) :
                                    ProtoParticleCloner )
         
         confList = ConfigurableList(sel)
-        for alg in confList.flatList() :
-            try :
-                alg.CloneFilteredParticles = True
-                print 'Set CloneFilteredParticles of', alg.name(), ' to True'
-            except :
-                pass
+        self._setCloneFilteredParticlesToTrue( confList.flatList() )
         
         cloner = CopyParticles(self._personaliseName(sel,
                                                      'CopyParticles'))
