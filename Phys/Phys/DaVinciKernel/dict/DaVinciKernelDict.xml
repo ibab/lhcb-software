@@ -8,7 +8,7 @@
 <function name    = "DaVinci::Utils::setInput"/>
 <function name    = "DaVinci::filter"         />
 <function pattern = "DaVinci::Transporter::*" />
-<function pattern = "DaVinci::StringUtils::*" />
+<!--<function pattern = "DaVinci::StringUtils::*" />-->
 
 <class name = "LHCb::DecayTree">
   <field name="m_head"     transient="true" />
