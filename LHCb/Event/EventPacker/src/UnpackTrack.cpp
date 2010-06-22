@@ -28,6 +28,8 @@ UnpackTrack::UnpackTrack( const std::string& name,
   declareProperty( "InputName" , m_inputName  = LHCb::PackedTrackLocation::Default );
   declareProperty( "OutputName", m_outputName = LHCb::TrackLocation::Default );
   declareProperty( "AlwaysCreateOutput",         m_alwaysOutput = false     );
+  declareProperty( "AncestorFor",                m_ancestorFor    = LHCb::PackedTrackLocation::Muon    );
+  declareProperty( "AncestorSource",             m_ancestorSource = LHCb::TrackLocation::Default );
 }
 //=============================================================================
 // Destructor
@@ -45,13 +47,19 @@ StatusCode UnpackTrack::execute() {
   if ( !m_alwaysOutput && !exist<LHCb::PackedTracks>(m_inputName) ) return StatusCode::SUCCESS;
 
   const LHCb::PackedTracks* dst = getOrCreate<LHCb::PackedTracks,LHCb::PackedTracks>( m_inputName );
-  if ( msgLevel(MSG::DEBUG) )
+  if ( msgLevel(MSG::DEBUG) ) 
     debug() << "Size of PackedTracks = " << dst->end() - dst->begin() << endmsg;
 
   LHCb::Tracks* newTracks = new LHCb::Tracks();
   newTracks->reserve( dst->tracks().size() );
   put( newTracks, m_outputName );
 
+  //== If one nedds to build ancestors, get the location of the ancestor's container
+  LHCb::Tracks* targetTracks = 0;
+  if ( m_inputName == m_ancestorFor ) {
+    targetTracks = get<LHCb::Tracks>( m_ancestorSource );
+  }
+  
   StandardPacker pack;
   
   for ( std::vector<LHCb::PackedTrack>::const_iterator itS = dst->begin();
@@ -104,6 +112,15 @@ StatusCode UnpackTrack::execute() {
       track->setGhostProbability( track->info( 102, 999) );        // was the key of ghost probability
       track->eraseInfo(   1 );
       track->eraseInfo( 102 );
+    }
+    //== Create an ancestor if needed
+    if ( m_inputName == m_ancestorFor ) {
+      LHCb::Track* ancest = targetTracks->object( track->key() );
+      if ( 0 != ancest ) {   
+        SmartRef<LHCb::Track> myAncestor( ancest );
+        track->addToAncestors( ancest );
+        debug() << "Add ancestor for track " << track->key() << endmsg;
+      }
     }
   }
 

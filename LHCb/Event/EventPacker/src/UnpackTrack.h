@@ -31,5 +31,7 @@ private:
   std::string m_inputName;
   std::string m_outputName;
   bool m_alwaysOutput;      ///< Flag to turn on the creation of output, even when input is missing
+  std::string m_ancestorFor;  ///< Container name for which ancestors shoudl be built
+  std::string m_ancestorSource; ///< Container where ancestors are.
 };
 #endif // UNPACKTRACK_H

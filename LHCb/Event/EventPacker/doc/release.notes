@@ -4,6 +4,12 @@
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
+! 2010-06-22 - Olivier Callot
+ - Modify UnpackTrack.cpp to create ancestors of Muon tracks from Best.
+   This is controlled by options 'AncestorFor' (name of the packed container, 
+   default pRec/Track/Muon) and 'AncestorSource' (name of the ancestor container
+   default Rec/Track/Best ), ancestor has the same key.
+
 ! 2010-05-18 - Chris Jones
  - Add templated algorithms for Particles and Vertices
 
