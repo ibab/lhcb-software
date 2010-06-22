@@ -83,7 +83,7 @@ bool PatForward::acceptTrack(const LHCb::Track& track) {
   ok = ok && (!(track.checkFlag( LHCb::Track::Backward) ));
   if (m_trackSelector) ok = ok && (m_trackSelector->accept(track));
 
-  verbose() << "For track " << track.key() << " accept flag =" << ok << endmsg;
+  if ( msgLevel( MSG::VERBOSE )) verbose() << "For track " << track.key() << " accept flag =" << ok << endmsg;
   return ok;
 }
 
@@ -101,7 +101,7 @@ StatusCode PatForward::execute() {
   LHCb::Tracks* outputTracks  = 
     getOrCreate<LHCb::Tracks,LHCb::Tracks>( m_outputTracksName);
 
-  if (inputTracks->size() > m_maxNVelo) {
+  if (inputTracks->size() > (unsigned int) m_maxNVelo) {
     LHCb::ProcStatus* procStat =
       getOrCreate<LHCb::ProcStatus,LHCb::ProcStatus>(
 		 LHCb::ProcStatusLocation::Default);
@@ -112,7 +112,7 @@ StatusCode PatForward::execute() {
     return Warning("Too many velo tracks", StatusCode::SUCCESS, 1);
   }
 
-  debug() << "==> Execute" << endmsg;
+  if ( msgLevel( MSG::DEBUG )) debug() << "==> Execute" << endmsg;
 
   if ( msgLevel( MSG::DEBUG ) || m_doTiming ) m_timerTool->start( m_fwdTime );
 
@@ -124,12 +124,12 @@ StatusCode PatForward::execute() {
     if ( acceptTrack(*seed) ) {
       int prevSize = outputTracks->size();
       m_forwardTool->forwardTrack(seed, outputTracks );
-      debug()  << " track " << seed->key()
-               << " position " << seed->position()
-               << " slopes " << seed->slopes()  
-	       << " cov \n" << seed->firstState().covariance() << "\n"
-               << " produced " << outputTracks->size() - prevSize
-               << " tracks " << endmsg;
+      if ( msgLevel( MSG::DEBUG )) debug()  << " track " << seed->key()
+                                            << " position " << seed->position()
+                                            << " slopes " << seed->slopes()  
+                                            << " cov \n" << seed->firstState().covariance() << "\n"
+                                            << " produced " << outputTracks->size() - prevSize
+                                            << " tracks " << endmsg;
 
     }
   }

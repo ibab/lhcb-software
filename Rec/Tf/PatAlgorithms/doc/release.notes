@@ -3,6 +3,10 @@
 ! Responsible : Stephanie-Hansmann-Menzemer
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
+
+! 2010-06-22 - Rob Lambert
+ - Fix nightly warnings and some debug output
+
 ! 2010-06-21 - Stephanie Hansmann-Menzemer
  - Add timing measurements to algorithms
 
