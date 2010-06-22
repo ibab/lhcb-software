@@ -4,6 +4,7 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+!========================== GlobalReco v6r32p2 2010-06-21 =====================
 ! 2010-06-10 - V. Gligorov
  - Remove obsolete default HLT track locations. 
 
