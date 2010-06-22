@@ -1,8 +1,14 @@
-!$Id: release.notes,v 1.362 2010-06-21 12:16:50 jpalac Exp $
+!$Id: release.notes,v 1.363 2010-06-22 07:18:27 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciKernel
 ! Responsible : J.P. Palacios
 !============================================================================
+
+! 2010-06-22 - Juan Palacios
+ - src/Lib/DaVinciStringUtils.cpp
+  . Typo.
+ - dict/DaVinciKernel.*
+  . Remove dicts for DaVinci::StringUtils, seem to hang compilation.
 
 ! 2010-06-21 - Juan Palacios
  - DaVinci::StringUtils
