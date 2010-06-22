@@ -1,4 +1,4 @@
-// $Id: DaVinciStringUtils.cpp,v 1.3 2010-06-21 12:17:04 jpalac Exp $
+// $Id: DaVinciStringUtils.cpp,v 1.4 2010-06-22 07:18:19 jpalac Exp $
 // Include files 
 
 
@@ -50,9 +50,7 @@ namespace DaVinci
     {
       std::string::size_type pos = a.rfind(ending);
       if ( pos != std::string::npos ) {
-        std::cout << "found " << ending << " at " << pos << std::endl;
         a = std::string(a, 0, pos);
-        
       }
     }
     
