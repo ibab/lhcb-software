@@ -1,9 +1,14 @@
-!$Id: release.notes,v 1.65 2010-06-21 15:16:12 jpalac Exp $
+!$Id: release.notes,v 1.66 2010-06-22 08:56:16 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : PhysSel/PhysSelPython
 ! Responsible : Juan Palacios
 ! Purpose     : Helper python classes for writing offline selections
 !-----------------------------------------------------------------------------
+
+! 2010-06-22 - Juan Palacios
+ - python/PhysSelPython/Wrappers.py
+  . MergedSelection returns empty requiredSelections list to avoid confusing
+    SelectionSequence. Need to find a more elegant way of doing this.
 
 ! 2010-06-21 - Juan Palacios
  - python/PhysSelPython/Wrappers.py
