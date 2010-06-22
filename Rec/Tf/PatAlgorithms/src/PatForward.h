@@ -40,7 +40,7 @@
     std::string      m_trackSelectorName;
     int m_deltaNumberInTT;
     int m_deltaNumberInT;
-    int m_maxNVelo;
+    unsigned int m_maxNVelo;
     bool m_doClean;
     bool m_doTiming;
     
