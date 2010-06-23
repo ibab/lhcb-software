@@ -163,7 +163,7 @@ class bindMembers (object) :
         for a in members :
             self._members += [a]
         loc = alg.outputLocations()[0]
-        self._outputsel = alg.name()
+        self._outputsel = loc
         self._outputloc = loc
 
     # allow chaining of previously bound members...
