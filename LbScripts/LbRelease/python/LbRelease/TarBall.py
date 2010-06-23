@@ -575,7 +575,7 @@ def checkTar(project, version=None, cmtconfig=None, input_dir=None,
         log.debug("%s is a data package" % project)
         status = checkDataMD5(project, version, input_dir)
     else :
-        log.fatal("%s is neither a software project nor a data package")
+        log.fatal("%s is neither a software project nor a data package" % project)
         status = 1
         
     if not status :
@@ -584,6 +584,50 @@ def checkTar(project, version=None, cmtconfig=None, input_dir=None,
 
 
 #=========================================================================
+def generateLCGTar(project, version=None, cmtconfig=None, 
+                top_dir=None, output_dir=None, overwrite=False,
+                update=False, md5=True, html=True):
+    log = logging.getLogger()
+    prj_conf = Project.getProject(project)
+    status = 0
+    if not top_dir :
+        top_dir = prj_conf.ReleaseArea()
+    if not output_dir :
+        output_dir = prj_conf.LCGTarBallDir()
+    if not version :
+        pattern = "%s_*" % prj_conf.NAME()
+        maindir = os.path.join(top_dir, prj_conf.NAME())
+        version = str(Version.getVersionsFromDir(maindir, pattern, reverse=True)[0])
+        log.debug("Guessed version for %s is %s" % (prj_conf.Name(), version))
+    prefix = prj_conf.releasePrefix(version)
+    ppath = os.path.join(top_dir, prefix)
+    prj = CMT.Project(ppath)
+
+    srcdirs = [os.path.join(top_dir, prefix)]
+    log.debug("="*100)
+    filename = os.path.join(output_dir, prj_conf.tarBallName(version, cmtconfig, full=True))
+    if os.path.exists(filename) and not (overwrite or update) :
+        log.info("The file %s already exists. Skipping." % filename)
+        status = 2
+    else :
+        if overwrite :
+            os.remove(filename)
+        if cmtconfig :
+            pathfilter = lambda x : projectFilter(x, cmtconfig)
+        else :
+            pathfilter = projectFilter
+        prefix = prj_conf.releasePrefix(version)
+        status = createTarBallFromFilter(srcdirs, filename, pathfilter,
+                                         prefix=prefix, dereference=False, update=update)
+        if status != 0 :
+            if status == 1 :
+                log.fatal("The source directories do not exist")
+        else :
+            if md5 :
+                generateMD5(project, version, cmtconfig, output_dir)
+            if html :
+                generateHTML(project, version, cmtconfig, top_dir, output_dir)
+    return status
 
 
 def buildLCGTar(project, version=None, cmtconfig=None, 
@@ -598,24 +642,21 @@ def buildLCGTar(project, version=None, cmtconfig=None,
         if not top_dir :
             top_dir = prj_conf.ReleaseArea()
         if not output_dir :
-            output_dir = prj_conf.TarBallDir()
+            output_dir = prj_conf.LCGTarBallDir()
         if not version :
             pattern = "%s_*" % prj_conf.NAME()
             maindir = os.path.join(top_dir, prj_conf.NAME())
             version = str(Version.getVersionsFromDir(maindir, pattern, reverse=True)[0])
             log.debug("Guessed version for %s is %s" % (prj_conf.Name(), version))
         if not cmtconfig :
-            cmtconfig = Platform.binary_list
+            cmtconfig = Platform.binary_opt_list
         for c in cmtconfig :
-            status = generateTar(project, version, c, top_dir, output_dir, 
+            status = generateLCGTar(project, version, c, top_dir, output_dir, 
                                  overwrite, update, md5, html)
             if status == 1 :
                 return status
-    elif Package.isPackage(project) :
-        log.debug("%s is a data package" % project)
-        status = generateDataTar(project, version, top_dir, output_dir, overwrite, md5, html)
     else :
-        log.fatal("%s is neither a software project nor a data package")
+        log.fatal("%s is not a software project" % project)
         status = 1
     return status
 

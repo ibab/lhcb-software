@@ -1,3 +1,7 @@
+2010-06-22  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbRelease/TarBall.py: create skeleton of generateLCGTar
+
 2010-06-21  Karol Kruzelecki  <Karol.Kruzelecki@cern.ch>
 
 	* python/LbRelease/LHCbNightlies.py: Server class added to the module;
