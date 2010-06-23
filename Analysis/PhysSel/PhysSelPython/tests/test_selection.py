@@ -30,6 +30,17 @@ def test_merged_selection() :
     assert [alg.name() for alg in ms.algos] == ['SelFilterSel01', 'SelFilterSel00', 'Merge00And01']
     assert ms.algos == [sel01.algorithm(), sel00.algorithm(), ms._sel.algorithm()]
 
+def test_clone_merged_selection() :
+    sel00 = AutomaticData(Location = 'Phys/Sel00')
+    sel01 = AutomaticData(Location = 'Phys/Sel01')
+    ms = MergedSelection('Merge00And01Original', RequiredSelections = [sel00, sel01])
+    msClone = ms.clone('Merge00And01Clone')
+    assert msClone.name() == 'Merge00And01Clone'
+    assert msClone.requiredSelections == [] # should not export its required selections. Algos contained internally.
+    assert msClone.outputLocation() == 'Phys/Merge00And01Clone'
+    assert [alg.name() for alg in msClone.algos] == ['SelFilterSel01', 'SelFilterSel00', 'Merge00And01Clone']
+    assert msClone.algos == [sel01.algorithm(), sel00.algorithm(), msClone._sel.algorithm()]
+
 def test_merged_selection_with_existing_selection_name_raises() :
     
     sel00 = AutomaticData(Location = 'Phys/Sel00')
