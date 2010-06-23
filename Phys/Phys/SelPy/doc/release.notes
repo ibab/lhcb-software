@@ -5,6 +5,12 @@
 ! Purpose     : Pure python core components for Selection "Framework".
 !-----------------------------------------------------------------------------
 
+! 2010-06-23 - Juan Palacios
+ - python/SelPy/selection.py
+  . Add selection() method to SelSequence. Returns top selection.
+ - cmt/requirements
+  . Increase to v1r3
+
 !======================== SelPy v1r2 2010-05-24 ==============================
 
 ! 2010-05-06 - Juan Palacios
