@@ -1,4 +1,4 @@
-!$Id: release.notes,v 1.70 2010-06-23 13:26:58 jpalac Exp $
+!$Id: release.notes,v 1.71 2010-06-23 15:03:50 jpalac Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/StrippingConf
 ! Responsible : Anton Poluektov
@@ -7,10 +7,9 @@
 
 ! 2010-06-23 - Juan Palacios
  - python/StrippingConf/StrippingLine.py
-  . StrippingLines constructed from Selection or AutomaticData write data to 
+  . StrippingLines constructed from Selection, SelectionSequence or AutomaticData write data to 
     'Phys/'+ line.name()
-  . SelectionSequence (and, less importantly, MergedSelection) still behave as before.
-    THIS MUST BE FIXED TO AVOID MULTIPLE LINES WRITING TO SAME LOCAITON!!!!
+  . MergedSelection still behave as before. Need to fix this.
 
 ! 2010-06-23 - Anton Poluektov 
  - python/StrippingConf/StrippingLine.py
