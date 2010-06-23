@@ -233,8 +233,6 @@ StatusCode MuEffMonitor::execute() {
       continue;
     }
     
-    StatusCode tsc;
-
     //===== Track selection
     MuoneCan = false;  
     passed = DoTrackSelection(pTrack);
@@ -278,7 +276,7 @@ StatusCode MuEffMonitor::execute() {
       passed = DoCaloMIP(pTrack);
       if(!passed)continue;
 
-      if (m_DoTrigger && m_HLTMuon) {
+      if (m_DoTrigger && (m_HLTMuon>0)) {
        
         m_TriggerTisTosTool->setOfflineInput();
         if (MuoneCan) {
@@ -963,6 +961,12 @@ void MuEffMonitor::ClearSeleVecs(){
   m_event = 0;
   m_run = 0;
   m_BX = 0;
+
+  //--------------
+  // Trigger Block:
+  //--------------
+  m_L0Decision = 0;
+  m_HLTMuon = 0;
 
   // ----------------
   // Decay products:
