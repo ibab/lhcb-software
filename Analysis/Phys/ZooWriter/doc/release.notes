@@ -1,0 +1,318 @@
+!-----------------------------------------------------------------------------
+! Package     : Zoo
+! Responsible : Stephanie Hansmann-Menzemer <menzemer@physi.uni-heidelberg.de>
+! Purpose     : write events and particles to an analysis tree
+!-----------------------------------------------------------------------------
+!============================ Zoo v11r0 2010-06-23 ===========================
+! 2010-06-23 - Georg Alexander Krocker
+ - Import to Analysis SVN repository
+
+! 2010-06-22 - Georg Alexander Krocker
+ - Added flight distance chi2 to the tuple in addition to the flight distance
+   and the flight distance error.
+ - Updated files in option directory. Using standalone.py user should be able to
+   generate a first ntuple for data and mc as a starting point. Some details
+   might need to be changed to addapt the config file to the DaVinci Version
+   used by the user. Standalone.py also provides comments on all options for
+   ZooWriter.
+ - Added getDecs.py to options folder. This script can be used to extract
+   HLT decision names from logfile to put them into ZooTriggerDecisions. It is
+   still in a developement state.
+ - Updated files in example directory. Macro should now compile standalone using
+   the provided Makefile. May require to set the paths right and link Zoo/Zoo
+   folder in examples. 
+
+! 2010-06-15 - Georg Alexander Krocker
+ - fix bug concerning a new return type of the PhysDesktop primaryVertices(),
+   was KeyedContainer, is now NamedRange. Zoo library now gets DaVinci version
+   extracted from $DAVINCIROOT from preprocessor and code for the appropriate
+   Version is compiled. Should now be compatible to all DaVinci Versions.
+ - Added L0 information extracted directly from L0DUreport. Can be extracted for
+   the event from ZooTriggerDecisions. This is the L0 information that should be
+   used to decide if the event was triggered by a certain L0 line.
+ - Updated structure and names of the event trigger decisions that get written
+   out by ZooTriggerDecisions. For the moment, HLT1 names are updated to what is
+   available in DaVinci v25r5, most should also work with older versions since
+   HLT1 seems reasonably stable. For HLT2, only HLT2Global is supplied at the
+   moment since there is a lot of fluctuation in HLT2. HLT2 Decisions can be
+   added by the User, see Documentation in ZooTriggerDecisions.h.
+
+!============================ Zoo v10r6 2010-04-28 ===========================
+! 2010-04-28 - Manuel Tobias Schiller
+ - fix to Georg's patch below: it should be possible to select charged and/or
+   neutral particles, and a cut on the particle's minimum ctau_PDG seems
+   sensible as well...
+ - fix Makefile for standalone compilation to work with g++ versions 4.0 to
+   4.1.xx again
+
+! 2010-04-27 - Georg Alexander Krocker
+ - introduced variable for generated (MC) track multiplicity in detector
+   acceptance to ZooEv. Acceptance region can be defined via Job option
+   MCAcceptanceRegion = [pmin, etamin, etamax].
+ 
+! 2010-04-27 - Manuel Tobias Schiller
+ - fix bug in initialization of static variables in ZooTriggerDecision
+ - fix "reuse" of ZooTrackInfo blocks
+ - fix "reuse" of ZooDLL blocks
+ - for MC association of stable particles, one should automatically use the
+   list of InputCollections of the ZooWriter instance instead of using the
+   default location(s); that way, any (stable) particles in non-standard
+   locations will get linked correctly
+   (for composite particles, you have to adjust the list of track containers
+   and protoparticles made from them for the ChargedPP2MC algorithm which is
+   called by the DataOnDemand service; depending on which linker tool you use,
+   you may have to do something else)
+
+!============================ Zoo v10r5 2010-04-01 ===========================
+! 2010-04-01 - Manuel Tobias Schiller
+ - fix tuple writing when there are several instances of ZooWriter in a single
+   job
+
+!============================ Zoo v10r4 2010-03-29 ===========================
+! 2010-03-27 - Manuel Tobias Schiller
+ - fix ZooLinks: is info Block and inherited from ZooPArray which calls
+   IgnoreTObjectStreamer: won't work, so have ZooLinks inherit from TObject
+   and add a ZooPArray member
+ - ZooLinks: save weights as Char_t instead of using a Float_t
+ - ZooLinks: add some convenience functions
+ - TrackExpectedHitTool: add option which forces hits to be expected even if
+   the track in question does not have a single Velo hit
+
+!============================ Zoo v10r3 2010-03-02 ===========================
+! 2010-03-02 - Manuel Tobias Schiller
+ - fix problem with PV refit: although it takes a VertexBase pointer, it
+   refuses to work with a VertexBase object, you need a RecVertex, so make
+   sure that is what we provide
+
+! 2010-03-02 - Manuel Tobias Schiller
+ - add SPD, PRS, ECal, HCal multiplicities to ZooEv
+
+! 2010-02-26 - Manuel Tobias Schiller
+ - apply patches for optional use of DecayTreeFitter I got from Christoph
+   Langenbruch
+
+!============================ Zoo v10r2 2010-02-16 ===========================
+! 2010-02-16 - Manuel Tobias Schiller
+ - fix crashes in writePackedStates which happen when the list of PIDs for
+   which to write PackedStates is not chosen carefully to include only high
+   quality tracks
+ - add option to write out state at POCA of track wrt z axis
+
+! 2010-02-15 - Manuel Tobias Schiller
+ - avoid new/delete throughout the ZooWriter; isolate memory management in
+   ZooWriterContext which will also deal with the intricacies of writing the
+   tree itself (the main reason behind this architectural change is that is
+   becomes much easier to track who allocates and owns the pointers, thus
+   making memory leaks easier to find)
+
+! 2010-02-14 - Manuel Tobias Schiller
+ - reworked Georg's patch into an additional info block to the ZooEv header
+   which can optionally be written out (just like we already do with
+   ZooOccupancy blocks); the need for a more efficient coding should be
+   dinished somewhat by the fact that few people will write the block to their
+   tuples
+
+! 2010-02-10 - Georg Alexander Krocker
+ - added vector of Pythia process numbers to event header. Process numbers for
+   each collision in the events get saved so as to distinguish different 
+   processes, e.g. single and double diffractive events from inellastic 
+   scattering. Comprehensive list of subprocesses can be found in
+   http://home.thep.lu.se/~torbjorn/pythia/lutp0613man2.pdf. To be substituted 
+   by simpler coding of subtypes instead of vector in future tuple versions.
+
+! 2010-02-10 - Manuel Tobias Schiller
+ - added flags to ZooMCP: hasOscillated and isFromPV (backward compatible)
+ - ZooTrigger block now supports up to 64 trigger (decision,tis,tos) triples
+   for each L0, HLT1, HLT2 (backward compatible)
+ - in ZooLHCbID, make TT definition of A side compatible with picture in
+   Matt's note
+
+! 2010-02-08 - Manuel Tobias Schiller
+ - add methods which tell if a channel is on A/C side or in top/bottom half of
+   the detector; for OT this corresponds to quarters, in the IT, this is
+   equivalent to A/C/Top/Bottom boxes, and for TT, a similar notion to OT
+   quarters is introduced.
+
+! 2010-02-04 - Manuel Tobias Schiller
+ - add enum with track history to ZooTrackInfo
+
+! 2010-02-03 - Manuel Tobias Schiller
+ - patch from Sebastion Wandernoth: add Kaon triggering the SS Kaon tag to
+   ZooTagging
+ - get rid of need for friend declaration in ZooTagging
+ - correct typo in method name
+
+! 2010-02-03 - Manuel Tobias Schiller
+ - add getters for unique straw/strip/layer numbers etc. to
+   OT/ST/VeloChannelID
+   nota bene: the returned unique numbers need not be continuous
+
+! 2010-02-03 - Manuel Tobias Schiller
+ - add pretty-printing to ZooLHCbID and derived classes
+
+!============================ Zoo v10r1 2010-02-02 ===========================
+! 2010-02-02 - Manuel Tobias Schiller
+ - introduce proper info block for ZooLHCbIDs
+ - this also gets rid of ugly and dangerous reinterpret_cast<>()s
+ - introduce packing (simple subtraction in ordered list or UInt_ts) for
+   ZooLHCbIDBlocks which saves about 25% of space when written to disk
+   because things compress better (xor works less well)
+
+! 2010-02-02 - Manuel Tobias Schiller
+ - added possibility to save LHCbIDs on the tracks saved
+ - in case flags for writing LHCbIDs and collected/expected HitPatterns are
+   both true, write expected/collected LHCbIDs as well
+ - expected Velo LHCbIDs is not currently implemented because we have no tool
+   on DaVinci side to provide that information
+
+! 2010-02-02 - Manuel Tobias Schiller
+ - added track multiplicities per track type to ZooEv (plus special field
+   counting only Velo backward tracks)
+ - use sane return types for POD throughout Zoo.h (instead of returning the
+   "packed" type, i.e. if something is saves as Short_t, the accessor method
+   still returns an int)
+
+! 2010-02-01 - Manuel Tobias Schiller
+ - fix bug in unified track refitting (was accidentally refitting only Velo
+   tracks which the refitter does not do properly instead of vetoing them)
+ - unify handling of oridinary and emergency PVs in ZooWriter
+
+! 2010-02-01 - Manuel Tobias Schiller
+ - consistently refit tracks when writing out packed states or collected or
+   expected hit patterns; avoid refitting in multiple places
+ - update requirements file to associate ZooLHCbID header with libZooROOT
+
+! 2010-02-01 - Manuel Tobias Schiller
+ - remove ZooHitCollector, use official version ITrackHitCollector from
+   Tr/TrackInterfaces and Tr/TrackTools; you may need to upgrade these
+   packages to at least tag "mschille_20100201" if the new code in CVS is
+   not in your release yet...
+
+! 2010-02-01 - Manuel Tobias Schiller
+ - add ZooLHCbID classes
+ - some documentation fixes
+
+! 2010-01-22 - Manuel Tobias Schiller
+ - optionally write out an occupancy block to ZooEv which contains
+   fine-grained information about the number of hits in each subdetector
+   compononent (i.e. Velo/ST sensors, OT modules)
+ - add code and tools to optionally write out collected and expected hit
+   patterns of tracks; the tools for this are not finished yet and are
+   expected to to to LHCb CVS once finished.
+
+! 2010-01-20 - Manuel Tobias Schiller
+ - include # of Velo, TT, IT, OT, Muon hits in ZooTrackInfo
+
+! 2010-01-18 - Manuel Tobias Schiller
+ - fix bug in b/c flags of ZooMCBkg (was based on the particle itself instead
+   of being based on the MC mothers (of mothers of mothers etc.) of all
+   daughters)
+ - add flag to ZooMCBkg to indicate if particle is from PV (particle itself
+   must be associated); short-lived resonances are skipped (a MC particle
+   is considered to come from the PV if the MC particle's origin vertex
+   is less than 10^-5 mm away from the corresponding (MC) PV)
+ - when writing out track information, take care not to duplicate it if it
+   comes from different protoparticles (but the same underlying track)
+
+! 2010-01-18 - Manuel Tobias Schiller
+ - moved some longer methods from Zoo.h into Zoo.cpp (won't be inlined anyhow)
+ - add fields for expected and collected hit patterns to ZooTrackInfo
+   (ZooWriter part will follow in a second commit)
+ - define bitwise and, or and xor on ZooHitPattern
+ - fix in ZooTriggerDecisions to fix a compilation issue on SLC5
+
+!============================ Zoo v10r0 2010-01-07 ===========================
+! 2009-12-23 - Manuel Tobias Schiller
+ - modify the charge() method of ZooP to give something remotely sensible
+   in case the ZooP is not a stable particle (sum up charges of daughters)
+
+! 2009-12-22 - Manuel Tobias Schiller
+ - Zoo, ZooWriter, ZooTriggerDecisions: introduce a trigger decision type
+   this should significantly decrease the amount of work required to
+   change/add new trigger decisions to the Zoo tuple, thereby reducing the
+   chance to screw things up
+
+! 2009-12-22 - Manuel Tobias Schiller
+ - ZooWriter: add emergency PV calculation using Wouter's method if there is
+   no PV in the event; using it can be switched on and off using job options
+
+! 2009-12-22 - Manuel Tobias Schiller
+ - ZooWriter: only fill m_nbMCPVs member of ZooEv if m_writeMC is true
+
+! 2009-12-22 - Manuel Tobias Schiller
+ - remove vertex isolation tools (unused, definition not clear), second part
+   (part one slipped in between revisions 87 and 88, sorry for the mess)
+   keep field in ZooDecay for now
+
+! 2009-12-22 - Manuel Tobias Schiller
+ - fix trigger decision selection strings in ZooWriter default properties
+   (LHCb software now uses proper regular expressions)
+
+! 2009-12-22 - Manuel Tobias Schiller
+ - ZooGhostCategory does not need a float to store ghost category, use int
+   instead
+
+! 2009-12-22 - Manuel Tobias Schiller
+ - added (most) ODIN fields to ZooEv
+
+! 2009-12-22 - Manuel Tobias Schiller
+ - remove obsolete junk in Zoo subdirectory and put a symlinks to src and a
+   proper Makefile there to make it easy for people to build a standalone
+   version of the Zoo library for use in standalone tuple reading applications
+   both shared and static versions of the library are build
+
+! 2009-12-22 - Manuel Tobias Schiller
+ - add a flag field to ZooMCBkg which stores if a particle has a b/c quark
+   among its ancestors
+
+! 2009-12-22 - Manuel Tobias Schiller
+ - adjust hit pattern to class found in LHCb software nowadays
+
+! 2009-12-22 - Manuel Tobias Schiller
+ - fix a tiny glitch in packed covaricance matrix when errors on diagonale
+   are exactly zero (all off-diagonal elements linked to the zero on the
+   diagonal incorrectly read NaN)
+
+! 2009-06-10 - Stephanie Hansmann-Menzemer
+- add ghostprobability 
+- add access to reconstructed PVs to ZooEv
+- add nb of Vis PV (MC) to ZooEv
+
+! 2009-05-11 - Stephanie Hansmann-Menzemer
+- add HLT1+HLT2 Trigger to event info
+- add track extra info, hitpattern and track info as info block to stable particle 
+
+! 2009-04-06 - Manuel Tobias Schiller
+ - introduced ZooObjectManager
+   * all objects that are supposed to end up in the ROOT file are to be
+     handled by ZooObjectManager
+   * it does all the memory management
+   * organizes the objects of diffent types into "banks" which are then
+     written to the tree (advantage: the objects themselves contain only
+     references, so there's no need to read in a bank if you don't intend to
+     use the information saved there), you also gain because similar objects
+     are all saved together (potentially faster writes, better compression)
+   * ZooMCP have been formally "demoted" to an InfoBlock as well; thus, we now
+     have proper links to MC truth (i.e. you get a NULL pointer or a valid
+     one, no more messing around with indices into an array of a different
+     branch)
+ - introduced packed storage for positions, four-vectors, states and the
+   corresponding covariance matrices (positions are saved in units of 1e-4 mm,
+   four-vectors in units of 0.01 MeV and slopes in units of 1e-8 in a 32 bit
+   signed integer; covariance matrices are saved by saving the square root of
+   the diagonal elements in these units, for the rest, we calculate the
+   correlation matrix and save the range from -1 to 1 as a 16 bit signed
+   integer)
+   by default, covariance matrices are not filled, but this can be turned on
+   via job options
+ - the event now knows its track multiplicity (Rec/Track/Best)
+ - introduced ZooTrackInfo, ZooTrackExtraInfo, ZooHitPattern info blocks
+ - removed a lot of old/dead code to avoid duplicating information (use new
+   packed classes whereever possible), shortened a few members to reasonable
+   precision
+ - reduced size of all buffers (TBasket) written out the the tree to 64k; the
+   underlying compression can not use more than that, and we save some memory
+   (essentially there is one basket for every member variable you save,
+   contained objects are decomposed to POD types recursively)
+ - updated Makefile in Zoo subdirectory for standalone builds (only ROOT libs,
+   but no ZooWriter or other stuff from LHCb software)
