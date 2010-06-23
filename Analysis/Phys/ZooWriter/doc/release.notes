@@ -1,6 +1,6 @@
 !-----------------------------------------------------------------------------
 ! Package     : Zoo
-! Responsible : Stephanie Hansmann-Menzemer <menzemer@physi.uni-heidelberg.de>
+! Responsible : Georg Krocker <krocker@physi.uni-heidelberg.de>
 ! Purpose     : write events and particles to an analysis tree
 !-----------------------------------------------------------------------------
 !============================ Zoo v11r0 2010-06-23 ===========================

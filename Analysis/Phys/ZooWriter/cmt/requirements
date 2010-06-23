@@ -1,10 +1,9 @@
 # Created    : 14-02-2008
-# Maintainer : Alexey Zhelezov zhelezov@physi.uni-heidelberg.de
-# Updated    : 30-10-2008 Manuel Schiller schiller@physi.uni-heidelberg.de
+# Maintainer : Georg Krocker krocker@physi.uni-heidelberg.de
 #              No idea if file is correct for builds on WIN32
 
 package      Zoo
-version      v10r5
+version      v11r0
 
 
 branches     cmt doc src options
