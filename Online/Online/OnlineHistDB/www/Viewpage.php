@@ -80,7 +80,7 @@ function page_form($page,$mode) {
     echo "<input type='hidden' name='ORIGINALNAME'  value='".$_POST["ORIGINALNAME"]."'>\n";
   }
   echo "</td></tr></table>\n";
-  echo "<table align=\"center\"><tr><td>Description <td><textarea valign='center' cols='50' rows='2' name='PAGEDOC'".
+  echo "<table align=\"center\"><tr><td>Description <td><textarea valign='center' cols='50' rows='15' name='PAGEDOC'".
     " $readonly >".$_POST["PAGEDOC"]."</textarea></tr></table><br>\n";
   printf("File name containing optional ROOT background pattern  <input class='normal' type='text' size=30 name='PAGEPATTERN' value='%s'><br>\n",
          $_POST["PAGEPATTERN"]);
