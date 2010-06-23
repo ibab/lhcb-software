@@ -152,6 +152,13 @@ class bindMembers (object) :
         sel = alg.clone(line)
         self._handleSelectionType( line, sel )
 
+    def _handle_MergedSelection(self, line, alg) :
+        sel = alg.clone(line)
+        self._members += [sel.algorithm()]
+        loc = sel.outputLocation()
+        self._outputsel = loc
+        self._outputloc = loc
+
     def _handle_AutomaticData(self, line, alg) :
         from PhysSelPython.Wrappers import MergedSelection
         sel = MergedSelection(line, RequiredSelections = [alg])
