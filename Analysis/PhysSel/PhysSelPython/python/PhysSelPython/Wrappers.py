@@ -1,4 +1,4 @@
-#$Id: Wrappers.py,v 1.48 2010-06-22 08:55:40 jpalac Exp $
+#$Id: Wrappers.py,v 1.49 2010-06-23 16:14:43 jpalac Exp $
 """
 Wrapper classes for a DaVinci offline physics selection. The following classes
 are available:
@@ -131,6 +131,10 @@ class MergedSelection(object) :
                  RequiredSelections = [],
                  OutputBranch = "Phys") :
 
+        self.__ctor_dict__ = copy(locals())
+        del self.__ctor_dict__['self']
+        del self.__ctor_dict__['name']
+
         self._sel = Selection(name,
                               Algorithm = FilterDesktop('_'+ name,
                                                         Code='ALL'),
@@ -151,6 +155,10 @@ class MergedSelection(object) :
         return self._name
     def outputLocation(self) :
         return self._sel.outputLocation()
+
+    def clone(self, name, **args) :
+        new_dict = update_overlap(self.__ctor_dict__, args)
+        return MergedSelection(name, **new_dict)
 
 class SelectionSequence(SelSequence) :
     """
