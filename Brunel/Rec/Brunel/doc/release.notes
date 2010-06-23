@@ -3,6 +3,7 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+</PRE><H1><A NAME=v37r4>2010-06-24 Brunel v37r4</A></H1><PRE>
 - Changes to configurable
   . Fix AgeLimit when reprocessing from RDST or SDST
 
@@ -19,23 +20,25 @@ Purpose: LHCb reconstruction program
 
 - Changes to references to reflect changes in Brunel v37r4 output:
   . Follow fix to MagneticFieldSvc().ForceToUseDownMap. As a result of this bug,
-    DC06 reco was using wrong polarity, since Brunel v37r2 (Det/Magnet)
-  . New STClusterMonitor histograms (STMonitors)
+    DC06 reco was using wrong polarity, since Brunel v37r2 (Magnet v7r1)
   . Latest Calo calibration from head-20100531 LHCBCOND tag
-  . Use OT dead strip list in expected hit calculation (TsaAlgorithms)
-  . Added LumiLowCount FSR (LumiAlgs)
-  . Added 2D histograms (hit-hot) to OTHitEfficiencyMonitor (TrackMonitors)
+  . Improved rejection of R clusters (PatVelo v3r24)
+  . Use OT dead strip list in expected hit calculation (TsaAlgorithms v3r21)
+  . New hit error estimates for MC (STTools v4r2)
+  . New tuning of eta correction (STTools v4r2)
+  . Changed precision of OTMeasurement::deltaTimeOfFlight (TrackFitEvent v5r0)
+  . Do not reconstruct forward tracks if there are more than 1000 velo tracks
+    (PatAlgorithms v4r3)
+  . Switch from loose to default PV (RecConf v1r1)
+  . Added LumiLowCount FSR (LumiAlgs v3r6)
+  . Reduce verbosity of LumiAlgs (LumiAlgs v3r6)
+  . New STClusterMonitor histograms (STMonitors v3r2)
+  . Added 2D histograms (hit-hot) to OTHitEfficiencyMonitor (TrackMonitors v1r26)
   . New histograms in TrackVertexMonitor and TrackVeloOverlapMonitor 
-    (TrackMonitors)
-  . Less verbosity in CondDBEntityResolver (CondDBEntityResolver)
-  . Changed precision of OTMeasurement::deltaTimeOfFlight (TrackFitEvent)
-  . New hit error estimates for MC (STTools)
-  . New tuning of eta correction (STTools)
-  . New Cherenkov angle plots for aerogel (RichRecQC)
-  . Book all histos at initialize (MuonPIDChecker)
-  . Switch from loose to default PV (RecConf)
-  . Reduce verbosity of LumiAlgs (LumiAlgs)
-  . Improved rejection of R clusters (PatVelo)
+    (TrackMonitors v1r26)
+  . Less verbosity in CondDBEntityResolver (CondDBEntityResolver v5r2)
+  . New Cherenkov angle plots for aerogel (RichRecQC v2r42)
+  . Book all histos at initialize (MuonPIDChecker v5r2)
 
 - New incompatibility
   . The new default ST hit error estimates applied by STTools are only compatible
