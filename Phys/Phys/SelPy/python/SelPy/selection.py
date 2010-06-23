@@ -231,6 +231,12 @@ class SelSequence(object) :
         new_dict = update_overlap(self.__ctor_dict__, args)
         return SelSequence(name, **new_dict)
 
+    def selection(self) :
+        '''
+        Return the sequence's top Selection.
+        '''
+        return self._topSelection
+
     def __getitem__(self, index) :
         return self.algos[index]
     
