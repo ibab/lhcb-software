@@ -102,25 +102,27 @@ Tagger TaggerKaonOppositeTool::tag( const Particle* AXB0,
     m_util->calcIP(*ipart, RecVert, IP, IPerr);
     if(!IPerr) continue;
     double IPsig = fabs(IP/IPerr);
-    //fatal() << " Kaon P="<< P/GeV <<" Pt="<< Pt/GeV << " IPsig=" << IPsig 
-    //        << " IP=" << IP <<" tsa="<< tsa<<" pidk="<<pidk<<" pidp="<<pidproton<<endreq;
+    verbose() << " Kaon P="<< P/GeV <<" Pt="<< Pt/GeV << " IPsig=" << IPsig 
+	      << " IP=" << IP <<" tsa="<< tsa<<" pidk="<<pidk<<" pidp="<<pidproton<<endreq;
 
-    if(IPsig > m_IPs_cut_kaon ) if(fabs(IP)< m_IP_cut_kaon)  {
-      const Track* track = (*ipart)->proto()->track();
-      double lcs = track->chi2PerDoF();
+    if (IPsig < m_IPs_cut_kaon) continue;
+    if (abs(IP) > m_IP_cut_kaon) continue;
+    
+    const Track* track = (*ipart)->proto()->track();
+    double lcs = track->chi2PerDoF();
 
-      if((track->type()==Track::Long && lcs<m_lcs_kl && fabs(IP)<m_IP_kl ) 
-	 || 
-	 (track->type()==Track::Upstream && lcs<m_lcs_ku && fabs(IP)<m_IP_ku )){
-        ncand++;
-
-        if( Pt > ptmaxk ) { 
-          ikaon = (*ipart);
-          ptmaxk = Pt;
-	  debug()<<" Kaon Op cand, Pt="<<Pt<<endreq;
-        }
+    if((track->type()==Track::Long || track->checkHistory(Track::TrackMatching)==true && lcs<m_lcs_kl && fabs(IP)<m_IP_kl ) 
+       || 
+       (track->type()==Track::Upstream && lcs<m_lcs_ku && fabs(IP)<m_IP_ku )){
+      ncand++;
+	
+      if( Pt > ptmaxk ) { 
+	ikaon = (*ipart);
+	ptmaxk = Pt;
+	debug()<<" Kaon Op cand, Pt="<<Pt<<endreq;
       }
     }
+    
   } 
   if( ! ikaon ) return tkaon;
 

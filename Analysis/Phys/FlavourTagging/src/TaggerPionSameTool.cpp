@@ -36,11 +36,12 @@ TaggerPionSameTool::TaggerPionSameTool( const std::string& type,
   declareProperty( "PionSame_PIDNoK_cut", m_PionSame_PIDNoK_cut = 3.0);
   declareProperty( "PionSame_PIDNoP_cut", m_PionSame_PIDNoP_cut = 10.0);
 
+  /*
   declareProperty( "Inverse_PID_m_cut", m_Inverse_PID_m_cut = 0.0);
   declareProperty( "Inverse_PID_e_cut", m_Inverse_PID_e_cut = 4.0);
   declareProperty( "Inverse_PID_k_cut", m_Inverse_PID_k_cut = 1.0);
   declareProperty( "Inverse_PID_kp_cut",m_Inverse_PID_kp_cut = -1.0);
-
+  */
   declareProperty( "AverageOmega",    m_AverageOmega  = 0.41 );
 
   m_nnet = 0;
@@ -102,7 +103,7 @@ Tagger TaggerPionSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
     const Track* track = proto->track();
     double lcs = track->chi2PerDoF();
     if( lcs > m_lcs_cut ) continue;
-    if( track->type() != Track::Long ) continue;
+    if( track->type() != Track::Long && track->checkHistory(Track::TrackMatching)!=true ) continue;
 
     double tsa = track->likelihood();
     if(tsa < m_ghost_cut) continue;
@@ -121,6 +122,7 @@ Tagger TaggerPionSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
                      PIDp < m_PionSame_PIDNoP_cut) pidpass=true;
     if(!pidpass) continue;
 
+    /*
     //PID cuts to kill other used species
     int iflag_m = false;
     if( proto->muonPID() ) if(proto->muonPID()->IsMuon()) iflag_m=true;
@@ -131,7 +133,7 @@ Tagger TaggerPionSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
 	&&  PIDk-PIDp > m_Inverse_PID_kp_cut) myID = 321;
     if( iflag_m && PIDm > m_Inverse_PID_m_cut ) myID = 13 ;
     if(myID != 211 ) continue;
-
+    */
 
     ncand++;
 

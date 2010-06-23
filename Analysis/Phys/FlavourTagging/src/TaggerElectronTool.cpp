@@ -79,10 +79,13 @@ Tagger TaggerElectronTool::tag( const Particle* AXB0, const RecVertex* RecVert,
   Particle::ConstVector::const_iterator ipart;
   for( ipart = vtags.begin(); ipart != vtags.end(); ipart++ ) {
     
-    if( (*ipart)->particleID().abspid() != 11 ) continue;
-    bool inEcalACC= (*ipart)->proto()->info(ProtoParticle::InAccEcal,false);
-    if(!inEcalACC) continue;
-    
+    //    if( (*ipart)->particleID().abspid() != 11 ) continue;
+    //    bool inEcalACC= (*ipart)->proto()->info(ProtoParticle::InAccEcal,false);
+    //    if(!inEcalACC) continue;
+
+    bool inHcalACC= (*ipart)->proto()->info(ProtoParticle::InAccHcal, false);
+    if(!inHcalACC) continue;
+
     double pide=(*ipart)->proto()->info( ProtoParticle::CombDLLe, -1000.0 );
     if(pide < m_PIDe_cut ) continue;
 
@@ -96,8 +99,8 @@ Tagger TaggerElectronTool::tag( const Particle* AXB0, const RecVertex* RecVert,
     double lcs = track->chi2PerDoF();
     if( lcs > m_lcs_cut_ele ) continue;
     if(track->type() != Track::Long 
-       && track->type() != Track::Upstream) continue;
-
+       && track->checkHistory(Track::TrackMatching)!=true) continue;
+ 
     double tsa = track->likelihood();
     if(tsa < m_ghost_cut_ele) continue;
 

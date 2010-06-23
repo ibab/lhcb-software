@@ -72,8 +72,10 @@ Tagger TaggerMuonTool::tag( const Particle* AXB0, const RecVertex* RecVert,
   double ptmaxm = -99.0, ncand=0;
   Particle::ConstVector::const_iterator ipart;
   for( ipart = vtags.begin(); ipart != vtags.end(); ipart++ ) {
-    if( (*ipart)->particleID().abspid() != 13 ) continue;
 
+    //    if( (*ipart)->particleID().abspid() != 13 ) continue;
+    if(!(*ipart)->proto()->info(ProtoParticle::MuonPIDStatus,0)) continue;
+	
     double pidm=(*ipart)->proto()->info( ProtoParticle::CombDLLmu, -1000.0 );
     if(pidm < m_PIDm_cut ) continue;
 
@@ -91,6 +93,7 @@ Tagger TaggerMuonTool::tag( const Particle* AXB0, const RecVertex* RecVert,
     const Track* track = (*ipart)->proto()->track();
     double lcs = track->chi2PerDoF();
     if(lcs>m_lcs_cut_muon) continue;
+    if( track->type()!= Track::Long && track->checkHistory(Track::TrackMatching)!=true ) continue;
 
     ncand++;
 

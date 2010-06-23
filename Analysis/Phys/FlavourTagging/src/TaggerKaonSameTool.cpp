@@ -79,7 +79,7 @@ Tagger TaggerKaonSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
   Particle::ConstVector::const_iterator ipart;
   for( ipart = vtags.begin(); ipart != vtags.end(); ipart++ ) {
 
-    if(! (*ipart)->proto()->info(ProtoParticle::RichPIDStatus, 0) ) continue;
+    //    if(! (*ipart)->proto()->info(ProtoParticle::RichPIDStatus, 0) ) continue;
     double pidk=(*ipart)->proto()->info( ProtoParticle::CombDLLk, -1000.0 );
     double pidp=(*ipart)->proto()->info( ProtoParticle::CombDLLp, -1000.0 ); 
 
