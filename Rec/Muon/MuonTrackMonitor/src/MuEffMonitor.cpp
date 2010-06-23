@@ -1293,10 +1293,10 @@ void MuEffMonitor::fillHistos(){
 
 
     if (Norma1) {
-      m_P_S -> fill(P);
+      if (includeM1) m_P_S -> fill(P);
       if (m_notOnline) m_P_S1 -> fill(P);
       if (m_P_occu1[i] >=1) {
-        m_P_Shit -> fill(P);
+        if (includeM1) m_P_Shit -> fill(P);
         if (m_notOnline) m_P_S1hit -> fill(P);
       }
       if (range && includeM1) {
