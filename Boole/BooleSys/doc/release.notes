@@ -3,8 +3,27 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
-! 2010-06-14 - Marco Cattaneo
- - Add a configurables test
+
+</PRE><H1><A NAME=v21r5>2010-06-24 Boole v21r5</A></H1><PRE>
+This version uses projects Gaudi v21r9, LHCb v31r2, Lbcom v9r4
+ and SQLDDDB v5r30, ParamFiles v8r2, FieldMap v5r4, L0TCK v3r1, AppConfig v3r*
+
+ - New tuning:
+   . Upgrade MC: Improved spillover subtraction for Velo and TT (BooleUMC v1r1)
+   . New tuning of ST charge sharing and capacitive coupling
+     (STDigiAlgorithms v2r1)
+   . Changed calculation of effect of Lorentz angle (STTools v4r2)
+   . Changed methods for ST noise and efficiency calculations (STTools v4r2)
+
+ - Monitoring changes
+   . New ST cluster monitoring histograms (STMonitors v3r2)
+   . Reduced verbosity of CondDBEntityResolver (CondDBEntityResolver v5r2) 
+
+ - Changes to tests
+   . Add a test to check presence of all expected configurables (BooleSys)
+
+ - Changes to example options:
+   . Access all castor files via xrootd protocol
 
 </PRE><H1><A NAME=v21r4>2010-06-03 Boole v21r4</A></H1><PRE>
 This version uses projects Gaudi v21r9, LHCb v31r1, Lbcom v9r3
