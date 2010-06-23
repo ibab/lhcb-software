@@ -20,8 +20,31 @@
 #include <boost/foreach.hpp>
 
 namespace {
-  AIDA::IProfile2D* m_2DHitEfficiency ;
-  AIDA::IProfile2D* m_2DHotEfficiency ;
+
+  struct LayerEfficiencyHistograms
+  {
+    AIDA::IProfile2D* m_2DHitEfficiency ;
+    AIDA::IProfile2D* m_2DHotEfficiency ;
+    //AIDA::IHistogram2D* m_2DHitOccupancy;  
+    AIDA::IHistogram2D* m_2DExpOccupancy;  
+    //AIDA::IHistogram2D* m_2DHotOccupancy;
+
+    
+    LayerEfficiencyHistograms(GaudiHistoAlg& alg,  size_t LayerID ) {
+      // construct a directory name
+      std::string Layername = std::string("Layer") + boost::lexical_cast<std::string>( LayerID ) + "/" ;
+      m_2DHitEfficiency = alg.bookProfile2D( Layername + "2DHitEfficiency", "2DHitEfficiency", 
+                                             -3157.0, 3157.0, 74, -2800,2800,100);
+      m_2DHotEfficiency = alg.bookProfile2D( Layername + "2DHotEfficiency", "2DHotEfficiency",
+                                             -3157.0, 3157.0, 74, -2800,2800,100);
+
+      //m_2DHitOccupancy = alg.book2D( Layername + "2DHitOccupancy", "2D Hit Occupancy",-3157.0, 3157.0, 74, -2800,2800,100); 
+      m_2DExpOccupancy = alg.book2D( Layername + "2DExpOccupancy", "2D Exp Occupancy", 
+                                     -3157.0, 3157.0, 74, -2800,2800,100);
+      //m_2DHotOccupancy = alg.book2D( Layername + "2DHotOccupancy", "2D Hot Occupancy", -3157.0, 3157.0, 74, -2800,2800,100);
+    }
+  };
+  
   struct ModuleEfficiencyHistograms
   {
     AIDA::IProfile1D* m_effvsmonocoord ;
@@ -120,6 +143,9 @@ private:
   AIDA::IProfile1D* m_efficiencyPerModulePr ;
   AIDA::IProfile1D* m_efficiencyPerOtisPr ;
   std::vector<ModuleEfficiencyHistograms*> m_moduleHistograms ;
+  std::vector<LayerEfficiencyHistograms*> m_layerHistograms ;
+
+
 } ;
 
 // Declaration of the Algorithm Factory
@@ -173,11 +199,15 @@ StatusCode OTHitEfficiencyMonitor::initialize()
   m_efficiencyPerOtisPr = bookProfile1D( "efficiencyVsOtis","efficiency per otis",
 					 -0.5,NumUniqueOtis-0.5,NumUniqueOtis) ;
   m_moduleHistograms.reserve(9) ;
-  m_2DHitEfficiency = bookProfile2D( "2DHitEfficiency", "2DHitEfficiency", -3200,3200,100,-2800,2800,100) ;
-  m_2DHotEfficiency = bookProfile2D( "2DHotEfficiency", "2DHotEfficiency", -3200,3200,100,-2800,2800,100) ;
+  m_layerHistograms.reserve(12) ;
+
   for(int i=0; i<9; ++i)
     m_moduleHistograms.push_back( new ModuleEfficiencyHistograms(*this,i+1) ) ;
   
+  for(int i=0; i<12; ++i)
+    m_layerHistograms.push_back( new LayerEfficiencyHistograms(*this, i) );
+  
+
   return sc;
 }
 
@@ -190,6 +220,9 @@ StatusCode OTHitEfficiencyMonitor::finalize()
   
   // the delete the structure that holds the histograms
   BOOST_FOREACH ( ModuleEfficiencyHistograms* hist, m_moduleHistograms ) delete hist ;
+  BOOST_FOREACH ( LayerEfficiencyHistograms* hist, m_layerHistograms ) delete hist ;
+
+  
   // rescale the occupancy histogram
   m_decoder.release().ignore() ;
   m_interpolator.release().ignore() ;
@@ -245,11 +278,15 @@ void OTHitEfficiencyMonitor::fillEfficiency( const LHCb::Track& track,
   // make a temporary structure that tells which hits are in this
   // module. if this takes time, then we should do it once per event
   LHCb::OTChannelID modid = module.elementID() ;
+  
   double pitch = module.xPitch() ;
   int uniquemodule  = uniqueModule(modid) ;
+    
   size_t nstraws = module.nChannels() ;
+  
   ModuleEfficiencyHistograms* modulehist = m_moduleHistograms[module.elementID().module()-1] ;
-
+  LayerEfficiencyHistograms* layerhist = m_layerHistograms[module.elementID().uniqueLayer()-4] ;
+  
   // compute the direction in the local frame. this can be done a lot more efficient, but okay:
   Gaudi::XYZVector localslopes = module.geometry()->toLocal( refstate.slopes() ) ;
   double localTx  = localslopes.x()/localslopes.z() ;
@@ -260,6 +297,7 @@ void OTHitEfficiencyMonitor::fillEfficiency( const LHCb::Track& track,
     int monooffset = imono * nstraws/2 - 1 ;
     int minstraw = std::max(int(strawpos[imono]) - 2,1) ;
     int maxstraw = std::min(int(strawpos[imono]) + 3,int(nstraws/2)) ;
+
     for( int istraw = minstraw; istraw<=maxstraw; ++istraw) {
       LHCb::OTChannelID channel = m_moduleHitMap[ uniquemodule ].hashit[ istraw + monooffset ] ;
       bool foundhit = channel != 0 ;
@@ -269,13 +307,26 @@ void OTHitEfficiencyMonitor::fillEfficiency( const LHCb::Track& track,
       modulehist->m_effvsdist->fill(dstraw,foundhit) ;
       modulehist->m_effvsmonocoord->fill(monocoord,foundhit) ;
       modulehist->m_receffvsmonocoord->fill(monocoord,foundhot) ;
-      if( std::abs(dstraw) < 0.25 ) {
-	modulehist->m_effvsyfrac->fill(yfrac[imono],foundhit) ;
-	modulehist->m_receffvsyfrac->fill(yfrac[imono],foundhot) ;
-	m_efficiencyPerModulePr->fill( uniquemodule, foundhit ) ;	
-	m_efficiencyPerOtisPr->fill( uniquemodule*4 + (istraw+monooffset-1)/32, foundhit ) ;
-  m_2DHitEfficiency->fill(refstate.x(),refstate.y(),foundhit);
-  m_2DHotEfficiency->fill(refstate.x(),refstate.y(),foundhot);
+      if( std::abs(dstraw) < 1.25 ) {
+      modulehist->m_effvsyfrac->fill(yfrac[imono],foundhit) ;
+      modulehist->m_receffvsyfrac->fill(yfrac[imono],foundhot) ;
+      m_efficiencyPerModulePr->fill( uniquemodule, foundhit ) ;	
+      m_efficiencyPerOtisPr->fill( uniquemodule*4 + (istraw+monooffset-1)/32, foundhit ) ;
+
+      //Filling the 2D expected occupancy, hiteff and hoteff
+      layerhist->m_2DExpOccupancy->fill(refstate.x(),refstate.y());
+      layerhist->m_2DHitEfficiency->fill(refstate.x(),refstate.y(),foundhit);
+      layerhist->m_2DHotEfficiency->fill(refstate.x(),refstate.y(),foundhot);
+
+      //Filling a 2D histo with the multiplicity of the hits
+      //if (foundhit){
+      //layerhist->m_2DHitOccupancy->fill(refstate.x(),refstate.y());
+      //}
+
+      //if(foundhot){
+      //layerhist->m_2DHotOccupancy->fill(refstate.x(),refstate.y());    
+      //}
+      
       }
     }
     // monitor 'cluster size'. cluster size is zero if there is no hit in 'closest straw'.

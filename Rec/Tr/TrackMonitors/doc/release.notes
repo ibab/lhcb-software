@@ -4,6 +4,9 @@
 ! Purpose     : Package for track data quality monitoring algorithms
 !-----------------------------------------------------------------------------
 
+! 2010-06-23 - Daan Van Eijk
+ - Added 2D histo's (hiteff,hoteff,expected occ) per layer in OTHitEfficiencyMonitor.cpp
+
 !========================== TrackMonitors v1r26 2010-06-21 ==================
 ! 2010-06-21 - Stephanie Hansmann-Menzemer
  - add TrackTimingMonitor 
