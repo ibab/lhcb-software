@@ -1,9 +1,16 @@
-!$Id: release.notes,v 1.69 2010-06-23 12:23:30 poluekt Exp $
+!$Id: release.notes,v 1.70 2010-06-23 13:26:58 jpalac Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/StrippingConf
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
+
+! 2010-06-23 - Juan Palacios
+ - python/StrippingConf/StrippingLine.py
+  . StrippingLines constructed from Selection or AutomaticData write data to 
+    'Phys/'+ line.name()
+  . SelectionSequence (and, less importantly, MergedSelection) still behave as before.
+    THIS MUST BE FIXED TO AVOID MULTIPLE LINES WRITING TO SAME LOCAITON!!!!
 
 ! 2010-06-23 - Anton Poluektov 
  - python/StrippingConf/StrippingLine.py
