@@ -1,9 +1,13 @@
-!$Id: release.notes,v 1.66 2010-06-22 15:26:30 tskwarni Exp $
+!$Id: release.notes,v 1.67 2010-06-23 22:50:27 tskwarni Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/HltRawData
 ! Responsible : Tomasz Skwarnicki
 ! Purpose     : Hlt Raw Data Makers of persisted TES info
 !-----------------------------------------------------------------------------
+
+! 2010-06-24 - Tomasz Skwarnicki
+ - add L0SelReportsMaker,L0DecReportsMaker to translate L0DUReport 
+   into Hlt like Sel and Dec Reports. For offline use with L0TriggerTisTos tool.
 
 ! 2010-06-22 - Tomasz Skwarnicki
  - use MuonPID::muonTrack() in HltSelReportsMaker to get to muon hits

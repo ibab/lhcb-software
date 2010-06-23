@@ -1,4 +1,4 @@
-#$Id: requirements,v 1.24 2010-06-01 14:29:21 graven Exp $
+#$Id: requirements,v 1.25 2010-06-23 22:50:27 tskwarni Exp $
 #============================================================================
 # Created    : 2008-07-12
 # Maintainer : Tomasz Skwarnicki
@@ -29,6 +29,7 @@ use HltEvent            v*    Event
 use DAQEvent            v*    Event
 use TrackEvent          v*    Event
 
+use L0Event             v*    Event
 
 #============================================================================
 # Component library building rule
