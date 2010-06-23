@@ -130,11 +130,13 @@ class bindMembers (object) :
         self._getOutputLocation(alg)
 
     def _handle_SelectionSequence(self, line, alg) :
-        gaudiSeq = alg.sequence()
+        topSel = alg.selection().clone(line)
+        seq = alg.clone('Seq'+line, TopSelection = topSel)
+        gaudiSeq = seq.sequence()
         members = gaudiSeq.Members
         for a in members :
             self._members += [a]
-        loc = alg.outputLocations()[0]
+        loc = seq.outputLocations()[0]
         self._outputsel = loc
         self._outputloc = loc
 
@@ -161,7 +163,7 @@ class bindMembers (object) :
         for a in members :
             self._members += [a]
         loc = alg.outputLocations()[0]
-        self._outputsel = loc
+        self._outputsel = alg.name()
         self._outputloc = loc
 
     # allow chaining of previously bound members...
