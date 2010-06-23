@@ -19,7 +19,7 @@ use MuonID               v7r8p2  Muon # Erica Polycarpo, Miriam Gandelman
 use MuonPIDChecker       v5r2    Muon # Erica Polycarpo, Miriam Gandelman
 use MuonTools            v5r2p1  Muon # Alessia Satta
 use MuonTrackAlign       v1r8p1  Muon # Silvia Pozzi
-use MuonTrackMonitor     v2r0    Muon # Giacomo Graziani
+use MuonTrackMonitor     v1r0    Muon # Giacomo Graziani
 use MuonTrackRec         v3r4    Muon # Giacomo Graziani
 
 

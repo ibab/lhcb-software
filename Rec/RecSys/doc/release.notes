@@ -31,7 +31,7 @@ This version uses Gaudi v21r9 and LHCb v31r2
 
 - Minor updates for monitoring:
   Tr/TrackMonitors v1r26, Muon/MuonPIDChecker v5r2, 
-  Muon/MuonTrackMonitor v2r0, Rich/RichRecQC v2r42
+  Rich/RichRecQC v2r42
   
 - In RecSys v10r1:
   . Removal of obsolete package RecUtils
