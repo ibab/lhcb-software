@@ -4,6 +4,10 @@
 ! Purpose     : Algorithms for ST Digitization
 !-----------------------------------------------------------------------------
 
+!========================= STDigiAlgorithms v2r1 2010-06-23 ==================
+! 2010-06-23 - Marco Cattaneo
+ - Remove obsolete file STDigiAlgorithms_dll.cpp
+
 ! 2010-06-17 - Jeroen VAN TILBURG
  - Changed itDigi.opts, ttDigi.opts, MCSTDepositCreator and STChargeSharingTool
    to pick up the new 2010 settings (charge sharing, cap coupling and lorentz).
