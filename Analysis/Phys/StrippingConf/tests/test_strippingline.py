@@ -4,6 +4,8 @@
 '''
 __author__ = 'Juan Palacios juan.palacios@nikhef.nl'
 
+from py.test import raises
+
 from StrippingConf.Configuration import StrippingLine, StrippingStream, StrippingConf
 
 from PhysSelPython.Wrappers import AutomaticData
@@ -27,11 +29,8 @@ def test_instantiate_from_Selection_object() :
     
 def test_duplicate_name_raises_ValueError() :
     line0 = StrippingLine('DuplicateLine')
-    try :
-        line1 = StrippingLine('DuplicateLine')
-        assert(False)
-    except ValueError :
-        pass
+    raises(ValueError, StrippingLine, 'DuplicateLine' )
+
 
 def test_filterMembers() :
     '''
