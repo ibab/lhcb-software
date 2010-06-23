@@ -14,7 +14,7 @@ from Configurables import LHCbApp
 LHCbApp().XMLSummary = 'summary.xml'
 
 #--- determine application to run
-from Configurables import LumiAlgsConf
+from Configurables import LumiAlgsConf, DumpFSR
 
 # standard sequence from configurable
 LumiAlgsConf().LumiSequencer = GaudiSequencer("LumiSeq", ShortCircuit = False )
@@ -22,7 +22,7 @@ LumiAlgsConf().InputType = 'DST'
 LumiAlgsConf().OutputLevel =  INFO
 
 #-- main
-ApplicationMgr( TopAlg = [ GaudiSequencer( "LumiSeq", OutputLevel = INFO ), ], HistogramPersistency = 'NONE' )
+ApplicationMgr( TopAlg = [ GaudiSequencer( "LumiSeq", OutputLevel = INFO ), DumpFSR() ], HistogramPersistency = 'NONE' )
 
 #-- File catalogs. First one is read-write
 FileCatalog().Catalogs = [ "xmlcatalog_file:MyCatalog.xml" ]

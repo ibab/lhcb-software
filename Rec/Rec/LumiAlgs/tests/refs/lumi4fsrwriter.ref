@@ -1,18 +1,15 @@
-# --> Including file '/afs/cern.ch/user/r/rlambert/cmtuser/Rec_v10r0/Rec/LumiAlgs/job/LumiFsrWriter.py'
-# <-- End of file '/afs/cern.ch/user/r/rlambert/cmtuser/Rec_v10r0/Rec/LumiAlgs/job/LumiFsrWriter.py'
+# --> Including file '/afs/cern.ch/user/r/rlambert/cmtuser/Rec_v10r1/Rec/LumiAlgs/job/LumiFsrWriter.py'
+# <-- End of file '/afs/cern.ch/user/r/rlambert/cmtuser/Rec_v10r1/Rec/LumiAlgs/job/LumiFsrWriter.py'
 # applying configuration of LumiFsrWriterConf
 # WARNING: Using default tag head-20100518 for partition DDDB
-# WARNING: Using default tag head-20100518 for partition LHCBCOND
-# WARNING: Using default tag MC-20100412-vc15mm-md100 for partition SIMCOND
+# WARNING: Using default tag head-20100531 for partition LHCBCOND
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
                                                    Welcome to ApplicationMgr $Revision: 1.77 $
-                                          running on lxplus210.cern.ch on Mon May 24 12:03:25 2010
+                                          running on lxplus203.cern.ch on Wed Jun 23 10:13:09 2010
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 DetectorPersist...   INFO  'CnvServices':[ 'XmlCnvSvc/XmlCnvSvc' ]
-ToolSvc.CondDBE...   INFO Initializing...
-ToolSvc.CondDBE...   INFO Successfully initialized.
 DetectorPersist...   INFO Added successfully Conversion service:XmlCnvSvc
 DetectorDataSvc   SUCCESS Detector description database: conddb:/lhcb.xml
 CounterSummarySvc    INFO Wrote xml file summary.xml
@@ -20,7 +17,7 @@ LumiSeq              INFO Member list: GaudiSequencer/writeLumiSeq, GaudiSequenc
 RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
 RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-ToolSvc.Sequenc...   INFO This machine has a speed about   1.59 times the speed of a 2.8 GHz Xeon.
+ToolSvc.Sequenc...   INFO This machine has a speed about   1.35 times the speed of a 2.8 GHz Xeon.
 writeLumiSeq         INFO Member list: createODIN, bankKiller/KillAll, FileIdBankWriter
 KillAll           SUCCESS bankKiller : all banks of type 'ODIN' will be kept.
 KillAll           SUCCESS bankKiller : all banks of type 'HltLumiSummary' will be kept.
@@ -161,58 +158,58 @@ Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye
 
 ToolSvc              INFO Removing all tools created by ToolSvc
 ToolSvc.Sequenc...   INFO ------------------------------------------------------------------------------------------------
-ToolSvc.Sequenc...   INFO This machine has a speed about   1.59 times the speed of a 2.8 GHz Xeon.
+ToolSvc.Sequenc...   INFO This machine has a speed about   1.35 times the speed of a 2.8 GHz Xeon.
 ToolSvc.Sequenc...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 ToolSvc.Sequenc...   INFO ------------------------------------------------------------------------------------------------
-ToolSvc.Sequenc...   INFO writeLumiSeq                  |     0.184 |     0.201 |    0.132       1.2 |    1000 |     0.201 |
-ToolSvc.Sequenc...   INFO   createODIN                  |     0.041 |     0.045 |    0.034       0.5 |    1000 |     0.045 |
-ToolSvc.Sequenc...   INFO   KillAll                     |     0.128 |     0.141 |    0.084       0.5 |    1000 |     0.141 |
-ToolSvc.Sequenc...   INFO   FileIdBankWriter            |     0.006 |     0.010 |    0.007       0.2 |    1000 |     0.010 |
-ToolSvc.Sequenc...   INFO LumiFsrSeq                    |     0.222 |     0.205 |    0.146       1.6 |    1000 |     0.205 |
-ToolSvc.Sequenc...   INFO   LumiNoBeamSeq               |     0.013 |     0.015 |    0.010       0.1 |    1000 |     0.015 |
-ToolSvc.Sequenc...   INFO     FilterNoBeam              |     0.004 |     0.007 |    0.005       0.1 |    1000 |     0.007 |
-ToolSvc.Sequenc...   INFO     LumiDecodeNoBeam          |     0.033 |     0.030 |    0.025       0.1 |      30 |     0.001 |
-ToolSvc.Sequenc...   INFO     LumiFilterNoBeam          |     0.000 |     0.009 |    0.007       0.0 |      30 |     0.000 |
-ToolSvc.Sequenc...   INFO     LumiCountNoBeam           |     0.034 |     0.024 |    0.022       0.0 |      29 |     0.001 |
-ToolSvc.Sequenc...   INFO   LumiBeamCrossingSeq         |     0.070 |     0.056 |    0.010       1.4 |    1000 |     0.056 |
-ToolSvc.Sequenc...   INFO     FilterBeamCrossing        |     0.003 |     0.006 |    0.004       0.0 |    1000 |     0.006 |
-ToolSvc.Sequenc...   INFO     LumiDecodeBeamCrossing    |     0.037 |     0.028 |    0.021       0.2 |     784 |     0.022 |
-ToolSvc.Sequenc...   INFO     LumiFilterBeamCrossing    |     0.017 |     0.008 |    0.006       0.0 |     784 |     0.007 |
-ToolSvc.Sequenc...   INFO     LumiCountBeamCrossing     |     0.020 |     0.027 |    0.019       1.2 |     505 |     0.013 |
-ToolSvc.Sequenc...   INFO   LumiBeam1Seq                |     0.019 |     0.020 |    0.010       0.3 |    1000 |     0.020 |
-ToolSvc.Sequenc...   INFO     FilterBeam1               |     0.009 |     0.007 |    0.004       0.0 |    1000 |     0.007 |
-ToolSvc.Sequenc...   INFO     LumiDecodeBeam1           |     0.035 |     0.030 |    0.022       0.2 |     115 |     0.003 |
-ToolSvc.Sequenc...   INFO     LumiFilterBeam1           |     0.000 |     0.009 |    0.007       0.1 |     115 |     0.001 |
-ToolSvc.Sequenc...   INFO     LumiCountBeam1            |     0.010 |     0.024 |    0.020       0.0 |     104 |     0.003 |
-ToolSvc.Sequenc...   INFO   LumiBeam2Seq                |     0.018 |     0.016 |    0.009       0.1 |    1000 |     0.016 |
-ToolSvc.Sequenc...   INFO     FilterBeam2               |     0.005 |     0.006 |    0.004       0.0 |    1000 |     0.006 |
-ToolSvc.Sequenc...   INFO     LumiDecodeBeam2           |     0.015 |     0.028 |    0.023       0.0 |      66 |     0.002 |
-ToolSvc.Sequenc...   INFO     LumiFilterBeam2           |     0.000 |     0.008 |    0.007       0.0 |      66 |     0.001 |
-ToolSvc.Sequenc...   INFO     LumiCountBeam2            |     0.000 |     0.024 |    0.020       0.0 |      61 |     0.001 |
-ToolSvc.Sequenc...   INFO   LumiLowNoBeamSeq            |     0.006 |     0.012 |    0.010       0.0 |    1000 |     0.012 |
-ToolSvc.Sequenc...   INFO     FilterLowNoBeam           |     0.001 |     0.006 |    0.004       0.0 |    1000 |     0.006 |
-ToolSvc.Sequenc...   INFO     LumiDecodeNoBeam          |     0.000 |     0.024 |    0.024       0.0 |       3 |     0.000 |
-ToolSvc.Sequenc...   INFO     LumiLowFilterNoBeam       |     0.000 |     0.008 |    0.006       0.0 |      33 |     0.000 |
+ToolSvc.Sequenc...   INFO writeLumiSeq                  |     0.175 |     0.201 |    0.143       1.2 |    1000 |     0.201 |
+ToolSvc.Sequenc...   INFO   createODIN                  |     0.043 |     0.045 |    0.038       0.5 |    1000 |     0.045 |
+ToolSvc.Sequenc...   INFO   KillAll                     |     0.123 |     0.141 |    0.091       0.5 |    1000 |     0.141 |
+ToolSvc.Sequenc...   INFO   FileIdBankWriter            |     0.003 |     0.010 |    0.008       0.3 |    1000 |     0.010 |
+ToolSvc.Sequenc...   INFO LumiFsrSeq                    |     0.203 |     0.214 |    0.146       1.6 |    1000 |     0.214 |
+ToolSvc.Sequenc...   INFO   LumiNoBeamSeq               |     0.012 |     0.016 |    0.011       0.2 |    1000 |     0.016 |
+ToolSvc.Sequenc...   INFO     FilterNoBeam              |     0.006 |     0.008 |    0.006       0.2 |    1000 |     0.008 |
+ToolSvc.Sequenc...   INFO     LumiDecodeNoBeam          |     0.033 |     0.030 |    0.025       0.0 |      30 |     0.001 |
+ToolSvc.Sequenc...   INFO     LumiFilterNoBeam          |     0.033 |     0.010 |    0.007       0.0 |      30 |     0.000 |
+ToolSvc.Sequenc...   INFO     LumiCountNoBeam           |     0.000 |     0.025 |    0.021       0.0 |      29 |     0.001 |
+ToolSvc.Sequenc...   INFO   LumiBeamCrossingSeq         |     0.051 |     0.058 |    0.011       1.4 |    1000 |     0.058 |
+ToolSvc.Sequenc...   INFO     FilterBeamCrossing        |     0.008 |     0.006 |    0.005       0.0 |    1000 |     0.006 |
+ToolSvc.Sequenc...   INFO     LumiDecodeBeamCrossing    |     0.017 |     0.029 |    0.024       0.2 |     784 |     0.023 |
+ToolSvc.Sequenc...   INFO     LumiFilterBeamCrossing    |     0.010 |     0.009 |    0.006       0.0 |     784 |     0.007 |
+ToolSvc.Sequenc...   INFO     LumiCountBeamCrossing     |     0.024 |     0.028 |    0.022       1.2 |     505 |     0.014 |
+ToolSvc.Sequenc...   INFO   LumiBeam1Seq                |     0.013 |     0.021 |    0.011       0.3 |    1000 |     0.021 |
+ToolSvc.Sequenc...   INFO     FilterBeam1               |     0.004 |     0.007 |    0.005       0.0 |    1000 |     0.007 |
+ToolSvc.Sequenc...   INFO     LumiDecodeBeam1           |     0.000 |     0.031 |    0.024       0.2 |     115 |     0.004 |
+ToolSvc.Sequenc...   INFO     LumiFilterBeam1           |     0.017 |     0.009 |    0.007       0.1 |     115 |     0.001 |
+ToolSvc.Sequenc...   INFO     LumiCountBeam1            |     0.038 |     0.026 |    0.022       0.0 |     104 |     0.003 |
+ToolSvc.Sequenc...   INFO   LumiBeam2Seq                |     0.010 |     0.017 |    0.010       0.1 |    1000 |     0.017 |
+ToolSvc.Sequenc...   INFO     FilterBeam2               |     0.004 |     0.006 |    0.004       0.0 |    1000 |     0.006 |
+ToolSvc.Sequenc...   INFO     LumiDecodeBeam2           |     0.030 |     0.029 |    0.024       0.0 |      66 |     0.002 |
+ToolSvc.Sequenc...   INFO     LumiFilterBeam2           |     0.000 |     0.009 |    0.007       0.0 |      66 |     0.001 |
+ToolSvc.Sequenc...   INFO     LumiCountBeam2            |     0.000 |     0.026 |    0.022       0.0 |      61 |     0.002 |
+ToolSvc.Sequenc...   INFO   LumiLowNoBeamSeq            |     0.010 |     0.013 |    0.010       0.1 |    1000 |     0.013 |
+ToolSvc.Sequenc...   INFO     FilterLowNoBeam           |     0.002 |     0.006 |    0.005       0.0 |    1000 |     0.006 |
+ToolSvc.Sequenc...   INFO     LumiDecodeNoBeam          |     0.000 |     0.027 |    0.025       0.0 |       3 |     0.000 |
+ToolSvc.Sequenc...   INFO     LumiLowFilterNoBeam       |     0.030 |     0.008 |    0.007       0.0 |      33 |     0.000 |
 ToolSvc.Sequenc...   INFO     LumiLowCountNoBeam        |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-ToolSvc.Sequenc...   INFO   LumiLowBeamCrossingSeq      |     0.024 |     0.024 |    0.009       0.2 |    1000 |     0.024 |
-ToolSvc.Sequenc...   INFO     FilterLowBeamCrossing     |     0.004 |     0.006 |    0.004       0.0 |    1000 |     0.006 |
+ToolSvc.Sequenc...   INFO   LumiLowBeamCrossingSeq      |     0.019 |     0.024 |    0.010       0.1 |    1000 |     0.024 |
+ToolSvc.Sequenc...   INFO     FilterLowBeamCrossing     |     0.000 |     0.006 |    0.005       0.0 |    1000 |     0.006 |
 ToolSvc.Sequenc...   INFO     LumiDecodeBeamCrossing    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-ToolSvc.Sequenc...   INFO     LumiLowFilterBeamCrossing |     0.005 |     0.008 |    0.006       0.1 |     784 |     0.006 |
-ToolSvc.Sequenc...   INFO     LumiLowCountBeamCrossing  |     0.023 |     0.024 |    0.019       0.0 |     213 |     0.005 |
-ToolSvc.Sequenc...   INFO   LumiLowBeam1Seq             |     0.011 |     0.013 |    0.009       0.1 |    1000 |     0.013 |
-ToolSvc.Sequenc...   INFO     FilterLowBeam1            |     0.006 |     0.006 |    0.004       0.0 |    1000 |     0.006 |
-ToolSvc.Sequenc...   INFO     LumiDecodeBeam1           |     0.000 |     0.027 |    0.026       0.0 |       2 |     0.000 |
+ToolSvc.Sequenc...   INFO     LumiLowFilterBeamCrossing |     0.004 |     0.008 |    0.003       0.0 |     784 |     0.006 |
+ToolSvc.Sequenc...   INFO     LumiLowCountBeamCrossing  |     0.028 |     0.025 |    0.021       0.0 |     213 |     0.005 |
+ToolSvc.Sequenc...   INFO   LumiLowBeam1Seq             |     0.018 |     0.014 |    0.010       0.1 |    1000 |     0.014 |
+ToolSvc.Sequenc...   INFO     FilterLowBeam1            |     0.010 |     0.006 |    0.004       0.0 |    1000 |     0.006 |
+ToolSvc.Sequenc...   INFO     LumiDecodeBeam1           |     0.000 |     0.029 |    0.028       0.0 |       2 |     0.000 |
 ToolSvc.Sequenc...   INFO     LumiLowFilterBeam1        |     0.009 |     0.008 |    0.006       0.0 |     117 |     0.001 |
-ToolSvc.Sequenc...   INFO     LumiLowCountBeam1         |     0.000 |     0.054 |    0.054       0.1 |       1 |     0.000 |
-ToolSvc.Sequenc...   INFO   LumiLowBeam2Seq             |     0.009 |     0.012 |    0.009       0.0 |    1000 |     0.012 |
-ToolSvc.Sequenc...   INFO     FilterLowBeam2            |     0.002 |     0.006 |    0.004       0.0 |    1000 |     0.006 |
+ToolSvc.Sequenc...   INFO     LumiLowCountBeam1         |     0.000 |     0.072 |    0.072       0.1 |       1 |     0.000 |
+ToolSvc.Sequenc...   INFO   LumiLowBeam2Seq             |     0.009 |     0.013 |    0.010       0.0 |    1000 |     0.013 |
+ToolSvc.Sequenc...   INFO     FilterLowBeam2            |     0.005 |     0.006 |    0.003       0.0 |    1000 |     0.006 |
 ToolSvc.Sequenc...   INFO     LumiDecodeBeam2           |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-ToolSvc.Sequenc...   INFO     LumiLowFilterBeam2        |     0.015 |     0.008 |    0.006       0.0 |      66 |     0.001 |
+ToolSvc.Sequenc...   INFO     LumiLowFilterBeam2        |     0.000 |     0.008 |    0.006       0.0 |      66 |     0.001 |
 ToolSvc.Sequenc...   INFO     LumiLowCountBeam2         |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-ToolSvc.Sequenc...   INFO   TimeSpanSeq                 |     0.029 |     0.025 |    0.010       0.2 |    1000 |     0.025 |
-ToolSvc.Sequenc...   INFO     TimeSpanFilter            |     0.008 |     0.006 |    0.004       0.0 |    1000 |     0.006 |
-ToolSvc.Sequenc...   INFO     TimeSpanAccounting        |     0.010 |     0.013 |    0.009       0.2 |     995 |     0.012 |
-ToolSvc.Sequenc...   INFO   EventAccount                |     0.001 |     0.002 |    0.001       0.0 |    1000 |     0.002 |
+ToolSvc.Sequenc...   INFO   TimeSpanSeq                 |     0.035 |     0.026 |    0.011       0.2 |    1000 |     0.026 |
+ToolSvc.Sequenc...   INFO     TimeSpanFilter            |     0.005 |     0.006 |    0.003       0.0 |    1000 |     0.006 |
+ToolSvc.Sequenc...   INFO     TimeSpanAccounting        |     0.024 |     0.013 |    0.010       0.2 |     995 |     0.013 |
+ToolSvc.Sequenc...   INFO   EventAccount                |     0.001 |     0.003 |    0.001       0.0 |    1000 |     0.003 |
 ToolSvc.Sequenc...   INFO ------------------------------------------------------------------------------------------------
 CounterSummarySvc    INFO filling counters...
 CounterSummarySvc    INFO counters filled OK

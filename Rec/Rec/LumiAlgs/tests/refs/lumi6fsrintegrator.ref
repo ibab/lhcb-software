@@ -1,4 +1,4 @@
-# --> Including file '/afs/cern.ch/user/p/panmanj/cmtuser/DaVinci_v25r4/Rec/LumiAlgs/job/LumiFsrIntegrator.py'
+# --> Including file '/afs/cern.ch/user/r/rlambert/cmtuser/Rec_v10r1/Rec/LumiAlgs/job/LumiFsrIntegrator.py'
 # --> Including file '/afs/cern.ch/sw/Gaudi/releases/GAUDI/GAUDI_v21r9/GaudiPoolDb/options/GaudiPoolDbRoot.opts'
 # ApplicationMgr.ExtSvc    += { "Gaudi::MultiFileCatalog/FileCatalog",                              "Gaudi::IODataManager/IODataManager",                              "PoolDbCacheSvc/PoolDbCacheSvc",                              "PoolDbCnvSvc/PoolRootEvtCnvSvc",                              "PoolDbCnvSvc/PoolRootKeyEvtCnvSvc",                              "PoolDbCnvSvc/PoolRootTreeEvtCnvSvc"                            };
 # EventPersistencySvc.CnvServices += { "PoolRootEvtCnvSvc" };
@@ -21,25 +21,25 @@
 # PoolRootKeyEvtCnvSvc.EnableIncident   =    1;
 # PoolRootTreeEvtCnvSvc.EnableIncident  =    1;
 # <-- End of file '/afs/cern.ch/sw/Gaudi/releases/GAUDI/GAUDI_v21r9/GaudiPoolDb/options/GaudiPoolDbRoot.opts'
-# <-- End of file '/afs/cern.ch/user/p/panmanj/cmtuser/DaVinci_v25r4/Rec/LumiAlgs/job/LumiFsrIntegrator.py'
+# <-- End of file '/afs/cern.ch/user/r/rlambert/cmtuser/Rec_v10r1/Rec/LumiAlgs/job/LumiFsrIntegrator.py'
 # applying configuration of LumiAlgsConf
 # /***** User LumiAlgsConf/LumiAlgsConf **************************************************************
 # |-ForceFullSequence = False
-# |-DataType          = '2009'
+# |-DataType          = '2010'
 # |-SetFSRStatus      = ''
 # |-OutputLevel       = 3  (default: 3)
 # |-BXTypes           = ['NoBeam', 'BeamCrossing', 'Beam1', 'Beam2']
 # |                   (default: ['NoBeam', 'BeamCrossing', 'Beam1', 'Beam2'])
 # |-Context           = 'Offline'
-# |-LumiSequencer     = <GaudiSequencer/LumiSeq at 0xa5a730>  (default: None)
+# |-LumiSequencer     = <GaudiSequencer/LumiSeq at 0xf7fc1dbcL>  (default: None)
 # |-InputType         = 'DST'  (default: 'MDF')
 # \----- (End of User LumiAlgsConf/LumiAlgsConf) -----------------------------------------------------
 # applying configuration of LHCbApp
 # /***** User LHCbApp/LHCbApp ************************************************************************
+# |-OutputLevel = 3
 # |-DataType    = '2009'
 # |-TimeStamp   = False
 # |-SkipEvents  = 0
-# |-OutputLevel = 3
 # |-EvtMax      = -1
 # |-Simulation  = False
 # |-Monitors    = []  (default: [])
@@ -48,8 +48,8 @@
 # |-DDDBtag     = ''
 # \----- (End of User LHCbApp/LHCbApp) ---------------------------------------------------------------
 # applying configuration of DDDBConf
-# WARNING: Using default tag head-20100407 for partition DDDB
-# WARNING: Using default tag head-20100414 for partition LHCBCOND
+# WARNING: Using default tag head-20100518 for partition DDDB
+# WARNING: Using default tag head-20100531 for partition LHCBCOND
 # WARNING: Using default tag MC-20100412-vc15mm-md100 for partition SIMCOND
 # /***** User DDDBConf/DDDBConf **********************************************************************
 # |-DataType   = '2009'
@@ -61,8 +61,8 @@
 # |-XMLSummary = 'summary.xml'  (default: None)
 # \----- (End of User XMLSummary/XMLSummary) ---------------------------------------------------------
 # applying configuration of CondDB
-# --> Including file '/afs/cern.ch/lhcb/software/releases/DBASE/Det/SQLDDDB/v5r28/options/SQLDDDB.py'
-# <-- End of file '/afs/cern.ch/lhcb/software/releases/DBASE/Det/SQLDDDB/v5r28/options/SQLDDDB.py'
+# --> Including file '/afs/cern.ch/lhcb/software/DEV/DBASE/Det/SQLDDDB/options/SQLDDDB.py'
+# <-- End of file '/afs/cern.ch/lhcb/software/DEV/DBASE/Det/SQLDDDB/options/SQLDDDB.py'
 # /***** User CondDB/CondDB **************************************************************************
 # |-PartitionConnectionString = {}  (default: {})
 # |-LocalTags                 = {}  (default: {})
@@ -81,34 +81,26 @@
 # \----- (End of User CondDB/CondDB) -----------------------------------------------------------------
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
-                                                   Welcome to DaVinci version v25r4
-                                          running on lxplus204.cern.ch on Wed May 12 10:07:20 2010
+                                                   Welcome to ApplicationMgr $Revision: 1.77 $
+                                          running on lxplus203.cern.ch on Wed Jun 23 10:20:08 2010
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 DetectorPersist...   INFO  'CnvServices':[ 'XmlCnvSvc/XmlCnvSvc' ]
-ToolSvc.CondDBE...   INFO Initializing...
-ToolSvc.CondDBE...   INFO Successfully initialized.
 DetectorPersist...   INFO Added successfully Conversion service:XmlCnvSvc
 DetectorDataSvc   SUCCESS Detector description database: conddb:/lhcb.xml
 CounterSummarySvc    INFO Wrote xml file summary.xml
-LumiSeq              INFO OR Member list: EventAccounting/EventAccount, createODIN, LumiIntegrateFSR/TouchLumiFSR, LumiIntegrateFSR/TouchLumiLowFSR
+LumiSeq              INFO OR Member list: EventAccounting/EventAccount
 RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
 RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-ToolSvc.Sequenc...   INFO This machine has a speed about   2.09 times the speed of a 2.8 GHz Xeon.
+ToolSvc.Sequenc...   INFO This machine has a speed about   1.74 times the speed of a 2.8 GHz Xeon.
 FileRecordPersi...   INFO  'CnvServices':[ 'FileRecordCnvSvc' ]
-TouchLumiFSR         INFO Primary  BXType BeamCrossing
-TouchLumiFSR         INFO Add      BXType NoBeam
-TouchLumiFSR         INFO Subtract BXType Beam1
-TouchLumiFSR         INFO Subtract BXType Beam2
-TouchLumiLowFSR      INFO Primary  BXType BeamCrossing
-TouchLumiLowFSR      INFO Add      BXType NoBeam
-TouchLumiLowFSR      INFO Subtract BXType Beam1
-TouchLumiLowFSR      INFO Subtract BXType Beam2
 EventPersistenc...   INFO  'CnvServices':[ 'PoolRootEvtCnvSvc' , 'PoolRootTreeEvtCnvSvc' , 'PoolRootKeyEvtCnvSvc' ]
 EventPersistenc...   INFO Added successfully Conversion service:PoolRootEvtCnvSvc
 EventPersistenc...   INFO Added successfully Conversion service:PoolRootTreeEvtCnvSvc
 EventSelector        INFO Stream:EventSelector.DataStreamTool_1 Def:DATAFILE='PFN:testFSRout.dst' TYP='POOL_ROOTTREE'  OPT='REC'
+DumpFSR              INFO ev address: /FileRecords/EventCountFSR
+DumpFSR              INFO /FileRecords/EventCountFSR: EventCountFSR: {  input : 0 output : 0 statusFlag : UNCHECKED }
 HistogramPersis...   INFO  'CnvServices':[ 'HbookHistSvc' , 'RootHistSvc' ]
 HistogramPersis...WARNING Histograms saving not required.
 ApplicationMgr       INFO Application Manager Initialized successfully
@@ -117,46 +109,57 @@ RootDBase.open    SUCCESS testFSRout.dst File version:52600
 PoolRootTreeEvt...   INFO Records token:[DB=AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517][CNT=/FileRecords][CLID=00000001-0000-0000-0000-000000000000][TECH=00000202][OID=00000009-00000000]
 FileRecordPersi...   INFO Added successfully Conversion service:FileRecordCnvSvc
 EventSelector     SUCCESS Reading Event record 1. Record number within stream 1: 1
+DumpFSR              INFO lu address: /FileRecords/AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517/LumiFSRNoBeam
+DumpFSR              INFO /FileRecords/AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517/LumiFSRNoBeam: LumiFSR: {  runs : 71185  files : b3190bc2-5651-11df-8bb8-00074305d05b  info (key/incr/integral) : 0 29 0 / 1 29 0 / 2 29 0 / 6 29 0 / 7 29 11691 / 8 29 0 / 10 29 0 / 21 29 58 /  }
+DumpFSR              INFO lu address: /FileRecords/AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517/LumiFSRBeamCrossing
+DumpFSR              INFO /FileRecords/AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517/LumiFSRBeamCrossing: LumiFSR: {  runs : 71185  files : b3190bc2-5651-11df-8bb8-00074305d05b  info (key/incr/integral) : 0 505 90 / 1 505 164 / 2 505 16 / 6 505 996 / 7 505 264175 / 8 505 0 / 10 505 0 / 20 14 14 / 21 505 1010 /  }
+DumpFSR              INFO lu address: /FileRecords/AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517/LumiFSRBeam1
+DumpFSR              INFO /FileRecords/AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517/LumiFSRBeam1: LumiFSR: {  runs : 71185  files : b3190bc2-5651-11df-8bb8-00074305d05b  info (key/incr/integral) : 0 104 1 / 1 104 0 / 2 104 0 / 6 104 0 / 7 104 39416 / 8 104 0 / 10 104 0 / 21 104 208 /  }
+DumpFSR              INFO lu address: /FileRecords/AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517/LumiFSRBeam2
+DumpFSR              INFO /FileRecords/AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517/LumiFSRBeam2: LumiFSR: {  runs : 71185  files : b3190bc2-5651-11df-8bb8-00074305d05b  info (key/incr/integral) : 0 61 0 / 1 61 0 / 2 61 0 / 6 61 0 / 7 61 22759 / 8 61 0 / 10 61 0 / 21 61 122 /  }
+DumpFSR              INFO lo address: /FileRecords/AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517/LumiLowFSRNoBeam
+DumpFSR              INFO lo address: /FileRecords/AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517/LumiLowFSRBeamCrossing
+DumpFSR              INFO /FileRecords/AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517/LumiLowFSRBeamCrossing: LumiLowFSR: {  runs : 71185  files : b3190bc2-5651-11df-8bb8-00074305d05b  info (key/incr/integral) : 0 213 850 / 1 213 2004 / 2 213 330 / 6 213 10567 / 7 213 929047 / 8 213 0 / 10 213 1 / 20 213 213 / 21 14 28 /  }
+DumpFSR              INFO lo address: /FileRecords/AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517/LumiLowFSRBeam1
+DumpFSR              INFO /FileRecords/AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517/LumiLowFSRBeam1: LumiLowFSR: {  runs : 71185  files : b3190bc2-5651-11df-8bb8-00074305d05b  info (key/incr/integral) : 0 1 1 / 1 1 0 / 2 1 0 / 6 1 11 / 7 1 1879 / 8 1 0 / 10 1 0 / 20 1 1 /  }
+DumpFSR              INFO lo address: /FileRecords/AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517/LumiLowFSRBeam2
+DumpFSR              INFO ev address: /FileRecords/EventCountFSR
+DumpFSR              INFO /FileRecords/EventCountFSR: EventCountFSR: {  input : 1 output : 0 statusFlag : UNCHECKED }
+DumpFSR              INFO ev address: /FileRecords/AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517/EventCountFSR
+DumpFSR              INFO /FileRecords/AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517/EventCountFSR: EventCountFSR: {  input : 1000 output : 1000 statusFlag : VERIFIED }
+DumpFSR              INFO ts address: /FileRecords/AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517/TimeSpanFSR
+DumpFSR              INFO /FileRecords/AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517/TimeSpanFSR: TimeSpanFSR: {  earliest : 1272849358040384 - latest : 1272849358813632 }
 ApplicationMgr       INFO Application Manager Stopped successfully
-TouchLumiFSR         INFO number of files seen: 1
-TouchLumiFSR         INFO number of events seen: 1000
-TouchLumiFSR         INFO integrating normalization:
-TouchLumiFSR         INFO Result for this file: {  runs : 71185  files : b3190bc2-5651-11df-8bb8-00074305d05b  info (key/incr/integral) : 0 505 85.1442 / 1 505 164 / 2 505 16 / 6 505 996 / 7 505 87950 / 8 505 0 / 10 505 0 / 20 14 14 / 21 505 0 /  }
-TouchLumiFSR         INFO integrated normalization: {  runs : 71185  files : b3190bc2-5651-11df-8bb8-00074305d05b  info (key/incr/integral) : 0 505 85.1442 / 1 505 164 / 2 505 16 / 6 505 996 / 7 505 87950 / 8 505 0 / 10 505 0 / 20 14 14 / 21 505 0 /  }
-TouchLumiFSR         INFO counter PUMult: 0 505 85.1442
-TouchLumiFSR         INFO counter RZVelo: 1 505 164
-TouchLumiFSR         INFO counter RZVeloBW: 2 505 16
-TouchLumiFSR         INFO counter SPDMult: 6 505 996
-TouchLumiFSR         INFO counter CaloEt: 7 505 87950
-TouchLumiFSR         INFO counter TTIP: 8 505 0
-TouchLumiFSR         INFO counter PV2D: 10 505 0
-TouchLumiFSR         INFO counter Method: 20 14 14
-TouchLumiFSR         INFO counter Random: 21 505 0
-TouchLumiLowFSR      INFO number of files seen: 1
-TouchLumiLowFSR      INFO number of events seen: 1000
-TouchLumiLowFSR      INFO integrating normalization:
-TouchLumiLowFSR      INFO Result for this file: {  runs : 71185  files : b3190bc2-5651-11df-8bb8-00074305d05b  info (key/incr/integral) : 0 213 637 / 1 213 2004 / 2 213 330 / 6 213 8224 / 7 213 528820 / 8 213 0 / 10 213 1 / 20 213 0 / 21 14 28 /  }
-TouchLumiLowFSR      INFO integrated normalization: {  runs : 71185  files : b3190bc2-5651-11df-8bb8-00074305d05b  info (key/incr/integral) : 0 213 637 / 1 213 2004 / 2 213 330 / 6 213 8224 / 7 213 528820 / 8 213 0 / 10 213 1 / 20 213 0 / 21 14 28 /  }
-TouchLumiLowFSR      INFO counter PUMult: 0 213 637
-TouchLumiLowFSR      INFO counter RZVelo: 1 213 2004
-TouchLumiLowFSR      INFO counter RZVeloBW: 2 213 330
-TouchLumiLowFSR      INFO counter SPDMult: 6 213 8224
-TouchLumiLowFSR      INFO counter CaloEt: 7 213 528820
-TouchLumiLowFSR      INFO counter TTIP: 8 213 0
-TouchLumiLowFSR      INFO counter PV2D: 10 213 1
-TouchLumiLowFSR      INFO counter Method: 20 213 0
-TouchLumiLowFSR      INFO counter Random: 21 14 28
+DumpFSR              INFO number of files seen: 1
+DumpFSR              INFO number of events seen: 1000
+DumpFSR              INFO lu address: /FileRecords/AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517/LumiFSRNoBeam
+DumpFSR              INFO /FileRecords/AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517/LumiFSRNoBeam: LumiFSR: {  runs : 71185  files : b3190bc2-5651-11df-8bb8-00074305d05b  info (key/incr/integral) : 0 29 0 / 1 29 0 / 2 29 0 / 6 29 0 / 7 29 11691 / 8 29 0 / 10 29 0 / 21 29 58 /  }
+DumpFSR              INFO lu address: /FileRecords/AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517/LumiFSRBeamCrossing
+DumpFSR              INFO /FileRecords/AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517/LumiFSRBeamCrossing: LumiFSR: {  runs : 71185  files : b3190bc2-5651-11df-8bb8-00074305d05b  info (key/incr/integral) : 0 505 90 / 1 505 164 / 2 505 16 / 6 505 996 / 7 505 264175 / 8 505 0 / 10 505 0 / 20 14 14 / 21 505 1010 /  }
+DumpFSR              INFO lu address: /FileRecords/AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517/LumiFSRBeam1
+DumpFSR              INFO /FileRecords/AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517/LumiFSRBeam1: LumiFSR: {  runs : 71185  files : b3190bc2-5651-11df-8bb8-00074305d05b  info (key/incr/integral) : 0 104 1 / 1 104 0 / 2 104 0 / 6 104 0 / 7 104 39416 / 8 104 0 / 10 104 0 / 21 104 208 /  }
+DumpFSR              INFO lu address: /FileRecords/AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517/LumiFSRBeam2
+DumpFSR              INFO /FileRecords/AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517/LumiFSRBeam2: LumiFSR: {  runs : 71185  files : b3190bc2-5651-11df-8bb8-00074305d05b  info (key/incr/integral) : 0 61 0 / 1 61 0 / 2 61 0 / 6 61 0 / 7 61 22759 / 8 61 0 / 10 61 0 / 21 61 122 /  }
+DumpFSR              INFO lo address: /FileRecords/AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517/LumiLowFSRNoBeam
+DumpFSR              INFO lo address: /FileRecords/AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517/LumiLowFSRBeamCrossing
+DumpFSR              INFO /FileRecords/AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517/LumiLowFSRBeamCrossing: LumiLowFSR: {  runs : 71185  files : b3190bc2-5651-11df-8bb8-00074305d05b  info (key/incr/integral) : 0 213 850 / 1 213 2004 / 2 213 330 / 6 213 10567 / 7 213 929047 / 8 213 0 / 10 213 1 / 20 213 213 / 21 14 28 /  }
+DumpFSR              INFO lo address: /FileRecords/AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517/LumiLowFSRBeam1
+DumpFSR              INFO /FileRecords/AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517/LumiLowFSRBeam1: LumiLowFSR: {  runs : 71185  files : b3190bc2-5651-11df-8bb8-00074305d05b  info (key/incr/integral) : 0 1 1 / 1 1 0 / 2 1 0 / 6 1 11 / 7 1 1879 / 8 1 0 / 10 1 0 / 20 1 1 /  }
+DumpFSR              INFO lo address: /FileRecords/AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517/LumiLowFSRBeam2
+DumpFSR              INFO ev address: /FileRecords/EventCountFSR
+DumpFSR              INFO /FileRecords/EventCountFSR: EventCountFSR: {  input : 1000 output : 0 statusFlag : UNRELIABLE }
+DumpFSR              INFO ev address: /FileRecords/AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517/EventCountFSR
+DumpFSR              INFO /FileRecords/AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517/EventCountFSR: EventCountFSR: {  input : 1000 output : 1000 statusFlag : VERIFIED }
+DumpFSR              INFO ts address: /FileRecords/AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517/TimeSpanFSR
+DumpFSR              INFO /FileRecords/AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517/TimeSpanFSR: TimeSpanFSR: {  earliest : 1272849358040384 - latest : 1272849358813632 }
 EventLoopMgr         INFO Histograms converted successfully according to request.
 ToolSvc              INFO Removing all tools created by ToolSvc
 ToolSvc.Sequenc...   INFO ------------------------------------------------------------------------------------------------
-ToolSvc.Sequenc...   INFO This machine has a speed about   2.09 times the speed of a 2.8 GHz Xeon.
+ToolSvc.Sequenc...   INFO This machine has a speed about   1.74 times the speed of a 2.8 GHz Xeon.
 ToolSvc.Sequenc...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 ToolSvc.Sequenc...   INFO ------------------------------------------------------------------------------------------------
-ToolSvc.Sequenc...   INFO LumiSeq                       |     0.087 |     0.086 |    0.078       5.2 |    1000 |     0.086 |
-ToolSvc.Sequenc...   INFO   EventAccount                |     0.000 |     0.002 |    0.001       0.0 |    1000 |     0.002 |
-ToolSvc.Sequenc...   INFO   createODIN                  |     0.074 |     0.076 |    0.069       5.2 |    1000 |     0.076 |
-ToolSvc.Sequenc...   INFO   TouchLumiFSR                |     0.002 |     0.002 |    0.001       0.0 |    1000 |     0.002 |
-ToolSvc.Sequenc...   INFO   TouchLumiLowFSR             |     0.003 |     0.002 |    0.001       0.0 |    1000 |     0.002 |
+ToolSvc.Sequenc...   INFO LumiSeq                       |     0.005 |     0.005 |    0.004       0.0 |    1000 |     0.005 |
+ToolSvc.Sequenc...   INFO   EventAccount                |     0.004 |     0.002 |    0.001       0.0 |    1000 |     0.002 |
 ToolSvc.Sequenc...   INFO ------------------------------------------------------------------------------------------------
 CounterSummarySvc    INFO filling counters...
 CounterSummarySvc    INFO counters filled OK

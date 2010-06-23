@@ -4,7 +4,11 @@
 ! Purpose     : Accounting of LumiSummaries (offline code)
 !-----------------------------------------------------------------------------
 
-!========================== LumiAlgs v3r6 2010-06-21 ========================
+!========================== LumiAlgs v3r6 2010-06-23 ========================
+
+! 2010-06-23 - Rob Lambert
+ - Update references
+
 ! 2010-06-18 - Jaap Panman
  - python/LumiAlgs/Configuration.py
   . only run EventAccount on DST type data.  Remove unneccessary algorithms.
