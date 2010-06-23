@@ -3,15 +3,17 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
- - Upgrade MC: Improved spillover subtraction for Velo and TT
+</PRE><H1><A NAME=v21r5>2010-06-23 Boole v21r5</A></H1></PRE>
+ - Changes to configurable:
+   . Upgrade MC: Improved spillover subtraction for Velo and TT
 
  - Changes to references to reflect changes in Boole v21r5 output:
    . Cluster selector now uses STRndmEffSelector tool instead of 
-     STRndmChannelIDSelector to kill clusters (STTools)
-   . New ST cluster monitoring histograms (STMonitors)
-   . Changed calculation of effect of Lorentz angle (STTools)
-   . Reduced verbosity of CondDBEntityResolver (CondDBEntityResolver)
-   . New charge sharing tuning for ST (STDigiAlgorithms)
+     STRndmChannelIDSelector to kill clusters (STTools v4r2)
+   . New ST cluster monitoring histograms (STMonitors v3r2)
+   . Changed calculation of effect of Lorentz angle (STTools v4r2)
+   . Reduced verbosity of CondDBEntityResolver (CondDBEntityResolver v5r2)
+   . New charge sharing tuning for ST (STDigiAlgorithms v2r1)
 
  - Changes to example options:
    . Access all castor files via xrootd protocol
