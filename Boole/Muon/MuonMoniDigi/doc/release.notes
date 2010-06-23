@@ -2,6 +2,7 @@
 !Package manager : A Sarti
 !-----------------------------------------------------------------------------
 
+!======================= MuonMoniDigi v2r4p1 2010-06-23 ======================
 ! 2010-06-15 - Marco Cattaneo
  - Remove obsolete file MuonMoniDigi_dll.cpp
  - Fix Windows compilation warnings
