@@ -150,12 +150,31 @@ def listTarBallObjects(dirname, pathfilter=None, prefix=None):
             else :
                 yield fullo, relo
 
+
 def updateTarBallFromFilter(srcdirs, filename, pathfilter=None,
                             prefix=None, dereference=False):
+    srcdict = {}
+    for s in srcdirs :
+        srcdict[s] = prefix
+    return updateTarBallFromFilterDict(srcdict, filename, pathfilter, dereference)
+
+def createTarBallFromFilter(srcdirs, filename, pathfilter=None, 
+                            prefix=None, dereference=False, update=False):
+    srcdict = {}
+    for s in srcdirs :
+        srcdict[s] = prefix
+    return createTarBallFromFilterDict(srcdict, filename, pathfilter, dereference)
+
+# ------------------------------------------------------------------------------------------------
+
+def updateTarBallFromFilterDict(srcdict, filename, pathfilter=None, dereference=False):
+    """ function to update an already existing tarball. The srcdict parameter is a dictionary
+    containing the path of the source as the key and the prefix in the tarball as value.
+    """
     log = logging.getLogger()
     status = 0
     if not os.path.exists(filename) :
-        status = createTarBallFromFilter(srcdirs, filename, pathfilter, prefix, dereference, update=False)
+        status = createTarBallFromFilterDict(srcdict, filename, pathfilter, dereference, update=False)
     else :
         tarf, lock = openTar(filename, tar_mode="r")
         tmpdir = TempDir("updateTarballFromFilter")
@@ -163,20 +182,21 @@ def updateTarBallFromFilter(srcdirs, filename, pathfilter=None,
         extracted_objs = [ x[1] for x in listTarBallObjects(tmpdir.getName()) ]
         closeTar(tarf, lock, filename)
         tobeupdated = False
-        if prefix :
-            dstprefix = os.path.join(tmpdir.getName(), prefix)
-            if not os.path.exists(dstprefix) :
-                os.makedirs(dstprefix)
-        else :
-            dstprefix = tmpdir.getName()
         srcexist = False
-        for dirname in srcdirs:
+        for dirname in srcdict.key() :
             if os.path.exists(dirname) :
                 srcexist = True
                 break
         if not srcexist :
             return 1
-        for dirname in srcdirs :
+        for dirname in srcdict :
+            prefix = srcdict[dirname] 
+            if prefix :
+                dstprefix = os.path.join(tmpdir.getName(), prefix)
+                if not os.path.exists(dstprefix) :
+                    os.makedirs(dstprefix)
+            else :
+                dstprefix = tmpdir.getName()
             for y in listTarBallObjects(dirname, pathfilter, prefix) :
                 if y[1] not in extracted_objs :
                     tobeupdated = True
@@ -195,19 +215,22 @@ def updateTarBallFromFilter(srcdirs, filename, pathfilter=None,
                                     prefix=None, dereference=dereference, update=False)
     return status
 
-def createTarBallFromFilter(srcdirs, filename, pathfilter=None, 
-                            prefix=None, dereference=False, update=False):
+def createTarBallFromFilterDict(srcdict, filename, pathfilter=None, 
+                                dereference=False, update=False):
+    """ function to create a tarball. The srcdict parameter is a dictionary
+    containing the path of the source as the key and the prefix in the tarball as value.
+    """
     log = logging.getLogger()
     if update :
-        log.info("Updating %s with %s" % (filename, ", ".join(srcdirs)) )
+        log.info("Updating %s with %s" % (filename, ", ".join(srcdict.keys())) )
     else :
-        log.info("Creating %s with %s" % (filename, ", ".join(srcdirs)) )        
+        log.info("Creating %s with %s" % (filename, ", ".join(srcdict.keys())) )        
     status = 0
     if not update :
         tarf, lock = openTar(filename, tar_mode="w")
         keep_tar = False
         srcexist = False
-        for dirname in srcdirs:
+        for dirname in srcdict.keys() :
             if os.path.exists(dirname) :
                 srcexist = True
                 break
@@ -215,7 +238,8 @@ def createTarBallFromFilter(srcdirs, filename, pathfilter=None,
             os.remove(filename)
             status = 1 # status=1 means that the src directories do not exist
         else :
-            for dirname in srcdirs :
+            for dirname in srcdict.keys() :
+                prefix = srcdict[dirname]
                 for fullo, relo in listTarBallObjects(dirname, pathfilter, prefix) :
                     keep_tar = True
                     tarf.add(fullo, relo, recursive=False)
@@ -225,8 +249,10 @@ def createTarBallFromFilter(srcdirs, filename, pathfilter=None,
                 os.remove(filename)
                 status = 2 # status=2 means that the tarball was empty
     else :
-        status = updateTarBallFromFilter(srcdirs, filename, pathfilter, prefix, dereference)
+        status = updateTarBallFromFilterDict(srcdict, filename, pathfilter, dereference)
     return status
+
+# ------------------------------------------------------------------------------------------------
 
 def getTarFileName(basename, binaryname=None, tar_type="gz", dirname=None):
     if binaryname :

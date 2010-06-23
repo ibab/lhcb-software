@@ -1,3 +1,10 @@
+2010-06-23  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbUtils/Tar.py: added updateTarBallFromFilterDict and 
+	createTarBallFromFilterDict functions which are more general then the 
+	corresponding ones without the "Dict". They allow to have a unique prefix
+	offset for each source directory.
+
 2010-06-22  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbUtils/Script.py: changed the default config file location. Now uses 
