@@ -358,7 +358,7 @@ class StrippingLine(object):
         self._outputloc = None
         # bind members to line
         _boundMembers = bindMembers( line, algos )
-        _members = _boundMembers.members()
+        self._members = _boundMembers.members()
         self._outputsel = _boundMembers.outputSelection()
         self._outputloc = _boundMembers.outputLocation()
         
@@ -393,15 +393,12 @@ class StrippingLine(object):
         #start to contruct the sequence        
         line = self.subname()
         
-        _boundMembers = bindMembers( line, algos )
-        _members = _boundMembers.members()
-
         # if needed, check Primary Vertex before running all algos
         if checkPV :
             from Configurables import CheckPV
     	    check = CheckPV("checkPV");
     	    check.MinPVs = 1;
-    	    _members.insert(0, check);
+    	    self._members.insert(0, check);
 
         # create the line configurable
         # NOTE: even if pre/postscale = 1, we want the scaler, as we may want to clone configurations
@@ -414,12 +411,12 @@ class StrippingLine(object):
         if L0DU : mdict.update( { 'L0DU' : L0Filter   ( l0entryName  ( line ) , Code = self._L0DU )  } )
         if HLT  : mdict.update( { 'HLT'  : HDRFilter  ( hltentryName ( line ) , Code = self._HLT  ) } )
 
-        if _members : 
-            last = _members[-1]
+        if self._members : 
+            last = self._members[-1]
             while hasattr(last,'Members') : 
                 last = getattr(last,'Members')[-1]
 
-            members = _members
+            members = self._members
 
             ## TODO: check if 'last' is a FilterDesktop, CombineParticles, or something else...
 #            needsCopy = [ 'CombineParticles', 'FilterDesktop', 'Hlt2DisplVertices' ]

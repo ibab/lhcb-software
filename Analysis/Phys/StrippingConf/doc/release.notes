@@ -1,9 +1,13 @@
-!$Id: release.notes,v 1.68 2010-06-22 15:24:42 jpalac Exp $
+!$Id: release.notes,v 1.69 2010-06-23 12:23:30 poluekt Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/StrippingConf
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
+
+! 2010-06-23 - Anton Poluektov 
+ - python/StrippingConf/StrippingLine.py
+   Make bindMembers to be called only in the StrippingLine constructor. 
 
 ! 2010-06-22 - Juan Palacios
  - python/StripingConf/StrippingLine.py
