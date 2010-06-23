@@ -4,6 +4,7 @@
 ! Purpose     : Muon digitisation algorithms
 !-----------------------------------------------------------------------------
 
+!========================= MuonAlgs v6r9p1 2010-06-23 ========================
 ! 2010-06-15 - Marco Cattaneo
  - Fix Windows compilation warnings
 
