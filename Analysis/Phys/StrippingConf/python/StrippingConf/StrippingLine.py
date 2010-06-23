@@ -138,16 +138,22 @@ class bindMembers (object) :
         self._outputsel = loc
         self._outputloc = loc
 
-    def _handle_Selection(self, line, alg) :
-        members = FlatSelectionListBuilder(alg).selectionList
+    def _handleSelectionType(self, line, sel) :
+        members = FlatSelectionListBuilder(sel).selectionList
         for a in members :
             self._members += [a]
-        loc = alg.outputLocation()
+        loc = sel.outputLocation()
         self._outputsel = loc
         self._outputloc = loc
 
+    def _handle_Selection(self, line, alg) :
+        sel = alg.clone(line)
+        self._handleSelectionType( line, sel )
+
     def _handle_AutomaticData(self, line, alg) :
-        self._handle_Selection(line, alg)
+        from PhysSelPython.Wrappers import MergedSelection
+        sel = MergedSelection(line, RequiredSelections = [alg])
+        self._handleSelectionType( line, sel )
 
     def _handle_SelSequence(self, line, alg) :
         gaudiSeq = alg.sequence()
