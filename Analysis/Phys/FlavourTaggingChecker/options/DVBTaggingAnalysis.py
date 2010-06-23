@@ -31,9 +31,18 @@ tag.InputLocations = [ location ]
 tag.OutputLevel    = 4
 tag.addTool( PhysDesktop )
 tag.PhysDesktop.OutputLevel = 4
+tag.addTool( TriggerTisTos )
+tag.TriggerTisTos.OutputLevel = 4
+tag.addTool( MCMatchObjP2MCRelator )
+tag.MCMatchObjP2MCRelator.OutputLevel = 4
+tag.addTool( BackgroundCategory )
+tag.BackgroundCategory.OutputLevel = 4
+
 
 tag.addTool( BTaggingTool )
 tag.BTaggingTool.ChoosePVCriterium = "PVbyIP"#needed by CheatedSel
+tag.BTaggingTool.CombineTaggersName = "CombineTaggersNN"#combine taggers with NN
+tag.BTaggingTool.OutputLevel    = 3
 #tag.BTaggingTool.ChoosePVCriterium = "RefitPV"
 #tag.BTaggingTool.UseReFitPV = True
 
@@ -57,7 +66,7 @@ tagana.InputLocations = [ location,
 tagana.TagOutputLocation =  location + "/FlavourTags"
 
 tagana.ChoosePVCriterium = "PVbyIP"  #needed by CheatedSel   
-tagana.RequireTisTos = False
+tagana.RequireTisTos = True
 
 tagana.OutputLevel = 4
 
@@ -72,6 +81,18 @@ tagana.MCMatchObjP2MCRelator.OutputLevel = 4
 tagana.addTool( BackgroundCategory )
 tagana.BackgroundCategory.OutputLevel = 4
 
+#################################################################
+# Triger information
+from Configurables import L0Conf
+#See L0Conf().TCK at $L0TCKROOT/options/L0DUConfig_201002_0x1210-0x1810.opts
+L0Conf().TCK = "0xDC09"
+
+DaVinci().ReplaceL0BanksWithEmulated = True    # Redo L0
+
+from Configurables import HltConf
+DaVinci().Hlt = True
+DaVinci().HltThresholdSettings = 'Physics_10000Vis_1000L0_40Hlt1_Apr09'
+
 
 ########################################################################
 # Standard configuration
@@ -84,7 +105,9 @@ DaVinci().TupleFile     = "analysis.root"     # Ntuple
 DaVinci().HistogramFile = "DVHistos.root"     # Histogram file
 
 DaVinci().Simulation = True
-DaVinci().DataType   = "MC09" 
+DaVinci().DataType   = "2010"
+DaVinci().DDDBtag    = "head-20100119"
+DaVinci().CondDBtag  = "sim-20100222-vc-md100"
 
 DaVinci().MoniSequence = [ cheatsel,
                            tag,
@@ -93,11 +116,8 @@ DaVinci().MoniSequence = [ cheatsel,
                            ]  # The algorithms
 
 ########################################################################
-#DAVINCI/DAVINCI_HEAD/DaVinciSys/tests/options/DVTestTagging.py
-# example data files
-#bsdspi_1.py
-EventSelector().Input   = ["DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005138/0000/00005138_00000001_1.dst' TYP='POOL_ROOTTREE' OPT='READ'"]
+#Bs2DsPi
+EventSelector().Input = [ "DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/2010/DST/00005967/0000/00005967_00000001_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
+                          "DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/2010/DST/00005967/0000/00005967_00000002_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'" ]
 
-#bdjpsiks_nu3
-#EventSelector().Input   = ["DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005146/0000/00005146_00000001_1.dst' TYP='POOL_ROOTTREE' OPT='READ'"]
 
