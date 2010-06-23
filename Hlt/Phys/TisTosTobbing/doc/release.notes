@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.57 2010-06-18 05:29:09 tskwarni Exp $
+! $Id: release.notes,v 1.58 2010-06-23 22:39:24 tskwarni Exp $
 ! Package     : TisTosTobbing
 ! Responsible : Tomasz Skwarnicki
 ! Purpose     : TisTosTobbing of the trigger 
 ! ====================================================================
+
+! 2010-06-24 -  Tomasz Skwarnicki
+ - Add L0TriggerTisTos (same as TriggerTisTos except for default input locations).
 
 ! 2010-06-18 - Tomasz Skwarnicki
  - Fix TriggerSelectionTisTosInHlt access to selections via use of Hlt::Inspector

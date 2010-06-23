@@ -1,4 +1,5 @@
-// $Id: TriggerSelectionTisTos.cpp,v 1.20 2010-06-18 05:29:09 tskwarni Exp $
+// $Id: TriggerSelectionTisTos.cpp,v 1.21 2010-06-23 22:39:24 tskwarni Exp $
+//#define LOCDEBUG
 // Include files 
 #include <algorithm>
 
@@ -259,8 +260,17 @@ void TriggerSelectionTisTos::hosTISTOS(const LHCb::HltObjectSummary & hos,
                                          bool& TIS,bool& TOS) const
 { 
   const SmartRefVector< LHCb::HltObjectSummary > & sub = hos.substructure();
+
+#ifdef LOCDEBUG  
+  if ( msgLevel(MSG::VERBOSE) ) verbose() << " hosTISTOS sub.size() "  << sub.size() << endmsg;
+#endif
   
   if( hos.summarizedObjectCLID() == 1 ){
+
+#ifdef LOCDEBUG  
+    if ( msgLevel(MSG::VERBOSE) ) verbose() << " hosTISTOS CLID=1 " << endmsg;
+#endif
+
     // this is summary of trigger selection 
     //     calculate OR among substructure
     TIS=false; TOS=false;
@@ -272,6 +282,11 @@ void TriggerSelectionTisTos::hosTISTOS(const LHCb::HltObjectSummary & hos,
       if( TIS && TOS )break; // don't waste time if tis && tos already
     }
   } else if( sub.size() ){    
+
+#ifdef LOCDEBUG  
+    if ( msgLevel(MSG::VERBOSE) ) verbose() << " hosTISTOS substr " << endmsg;
+#endif
+
     // this is summary of reco object with substructure
     //     calculate AND among substructure
     TIS=true; TOS=true;
@@ -284,6 +299,11 @@ void TriggerSelectionTisTos::hosTISTOS(const LHCb::HltObjectSummary & hos,
       if( (!TIS) && (!TOS) ){ break; }
     }    
   } else {
+
+#ifdef LOCDEBUG  
+    if ( msgLevel(MSG::VERBOSE) ) verbose() << " hosTISTOS ids " << endmsg;
+#endif
+
     // this is summary of reco object with no-substructure
     // calculate AND among hit types
     double overlap[nHitTypes];
@@ -306,6 +326,11 @@ void TriggerSelectionTisTos::hosTISTOS(const LHCb::HltObjectSummary & hos,
       if( !TIS )break;
     }
   }  
+
+#ifdef LOCDEBUG  
+  if ( msgLevel(MSG::VERBOSE) ) verbose() << " hosTISTOS tis " << TIS << " tos " << TOS << endmsg;
+#endif
+
 }
 
 
@@ -607,6 +632,9 @@ void TriggerSelectionTisTos::addToOfflineInput( const LHCb::Particle & particle,
 void TriggerSelectionTisTos::selectionTisTos( const std::string & selectionName,  
                      					      bool & decision, bool & tis, bool & tos )
 {
+#ifdef LOCDEBUG  
+  if ( msgLevel(MSG::VERBOSE) ) verbose() << " selectionTisTos selectionName=" + selectionName << endmsg;
+#endif
   if( findInCache( selectionName, decision, tis, tos ) )return;
 
   decision=false; tis=false; tos=false;
@@ -622,6 +650,9 @@ void TriggerSelectionTisTos::selectionTisTos( const std::string & selectionName,
     }    
   }
   
+#ifdef LOCDEBUG  
+  if ( msgLevel(MSG::VERBOSE) ) verbose() << " selectionTisTos selectionName=" + selectionName << " dec0 " << decision << endmsg;
+#endif
   if( !m_hltSelReports ){ storeInCache(selectionName,decision,tis,tos); return;}
   const LHCb::HltObjectSummary* sel =   m_hltSelReports->selReport( selectionName );
   if( !sel ){ storeInCache(selectionName,decision,tis,tos); return;}
@@ -631,9 +662,17 @@ void TriggerSelectionTisTos::selectionTisTos( const std::string & selectionName,
   // do not overwrite decisions from HltDecReports, since positive selection could have been killed by postscale
   if( !decFound )decision=true;
 
+#ifdef LOCDEBUG  
+  if ( msgLevel(MSG::VERBOSE) ) verbose() << " selectionTisTos selectionName=" + selectionName << " dec1 " << decision << endmsg;
+#endif
+
   // classify the decision
   hosTISTOS( *sel, m_offlineInput,tis,tos);
   storeInCache(selectionName,decision,tis,tos);
+#ifdef LOCDEBUG  
+  if ( msgLevel(MSG::VERBOSE) ) verbose() << " selectionTisTos selectionName=" + selectionName << " tis " << tis << " tos " 
+                                          << tos << endmsg;
+#endif
 
 }
 

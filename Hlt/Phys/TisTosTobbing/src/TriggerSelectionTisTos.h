@@ -1,4 +1,4 @@
-// $Id: TriggerSelectionTisTos.h,v 1.13 2009-10-21 09:02:13 tskwarni Exp $
+// $Id: TriggerSelectionTisTos.h,v 1.14 2010-06-23 22:39:24 tskwarni Exp $
 #ifndef TRIGGERSELECTIONTISTOS_H 
 #define TRIGGERSELECTIONTISTOS_H 1
 
@@ -174,6 +174,9 @@ protected:
   LHCb::HltDecReports* m_hltDecReports;
   LHCb::HltSelReports* m_hltSelReports;
   
+  /// Location of Hlt Summary
+  StringProperty m_HltSelReportsLocation;
+  StringProperty m_HltDecReportsLocation;
   
   bool m_newEvent;
 
@@ -236,9 +239,6 @@ private:
   /// flag to disable muon hits if muon tracks cannot be found
   bool m_muonsOff;  
   
-  /// Location of Hlt Summary
-  StringProperty m_HltSelReportsLocation;
-  StringProperty m_HltDecReportsLocation;
 
   
   // Cache of results for the same Offline Input
