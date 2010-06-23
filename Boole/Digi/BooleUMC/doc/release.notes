@@ -4,6 +4,10 @@
 ! Purpose     : Upgrade Monte Carlo additions needed to run Boole
 !-----------------------------------------------------------------------------
 
+!========================== BooleUMC v1r1 2010-10-23 =========================
+! 2010-06-23 - Marco Cattaneo
+ - Remove obsolete file BooleUMC_dll.cpp
+
 ! 2010-06-21 - Marco Cattaneo
  - Fix compilation on slc5 and Windows
 
