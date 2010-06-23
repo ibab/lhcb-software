@@ -110,7 +110,8 @@ private:
   //
   // 1) header:
   // ----------
-  double m_event, m_run, m_BX;
+  ulonglong m_event;
+  unsigned int m_run, m_BX;
   
   // Trigger:
   int  m_L0Decision;
@@ -175,44 +176,44 @@ private:
   //-------------------------
   std::vector<int>   m_P_FlagMCan;
   std::vector<int>   m_P_carica;
-  std::vector<float> m_P_chi2trk, m_P_trtype, m_P_trflag;
-  std::vector<float> m_P_Mom, m_P_Mom0;
-  std::vector<float> m_P_TrMom, m_P_TrMom0;
-  std::vector<float> m_P_TrSlx, m_P_TrSlx0;
-  std::vector<float> m_P_TrSly, m_P_TrSly0;
+  std::vector<double> m_P_chi2trk, m_P_trtype, m_P_trflag;
+  std::vector<double> m_P_Mom, m_P_Mom0;
+  std::vector<double> m_P_TrMom, m_P_TrMom0;
+  std::vector<double> m_P_TrSlx, m_P_TrSlx0;
+  std::vector<double> m_P_TrSly, m_P_TrSly0;
 
   std::vector<int> m_P_SeleTIS, m_P_SeleTOS, m_P_SeleTOB;
 
-  std::vector<float> m_P_Xs1, m_P_Ys1;
-  std::vector<float> m_P_Xs2, m_P_Ys2;
-  std::vector<float> m_P_Xs3, m_P_Ys3;
-  std::vector<float> m_P_Xs4, m_P_Ys4;
-  std::vector<float> m_P_Xs5, m_P_Ys5;
-  std::vector<float> m_P_Xp1, m_P_Yp1, m_P_Zp1;
-  std::vector<float> m_P_Xp2, m_P_Yp2, m_P_Zp2;
-  std::vector<float> m_P_Xp3, m_P_Yp3, m_P_Zp3;
-  std::vector<float> m_P_Xp4, m_P_Yp4, m_P_Zp4;
-  std::vector<float> m_P_Xp5, m_P_Yp5, m_P_Zp5;
+  std::vector<double> m_P_Xs1, m_P_Ys1;
+  std::vector<double> m_P_Xs2, m_P_Ys2;
+  std::vector<double> m_P_Xs3, m_P_Ys3;
+  std::vector<double> m_P_Xs4, m_P_Ys4;
+  std::vector<double> m_P_Xs5, m_P_Ys5;
+  std::vector<double> m_P_Xp1, m_P_Yp1, m_P_Zp1;
+  std::vector<double> m_P_Xp2, m_P_Yp2, m_P_Zp2;
+  std::vector<double> m_P_Xp3, m_P_Yp3, m_P_Zp3;
+  std::vector<double> m_P_Xp4, m_P_Yp4, m_P_Zp4;
+  std::vector<double> m_P_Xp5, m_P_Yp5, m_P_Zp5;
   std::vector<int>  m_P_occu1;
   std::vector<int>  m_P_occu2;
   std::vector<int>  m_P_occu3;
   std::vector<int>  m_P_occu4;
   std::vector<int>  m_P_occu5; 
-  std::vector<float> m_P_dist1, m_P_dist2, m_P_dist3, m_P_dist4, m_P_dist5;
-  std::vector<float> m_P_xdist1, m_P_xdist2, m_P_xdist3, m_P_xdist4, m_P_xdist5;
-  std::vector<float> m_P_ydist1, m_P_ydist2, m_P_ydist3, m_P_ydist4, m_P_ydist5;
-  std::vector<float> m_P_Dx1, m_P_Dx2, m_P_Dx3, m_P_Dx4, m_P_Dx5;
-  std::vector<float> m_P_Dy1, m_P_Dy2, m_P_Dy3, m_P_Dy4, m_P_Dy5;
-  std::vector<float> m_P_dimx1, m_P_dimx2, m_P_dimx3, m_P_dimx4, m_P_dimx5;
-  std::vector<float> m_P_dimy1, m_P_dimy2, m_P_dimy3, m_P_dimy4, m_P_dimy5;
-  std::vector<float> m_P_Chisq1, m_P_Chisq2, m_P_Chisq3, m_P_Chisq4, m_P_Chisq5;
+  std::vector<double> m_P_dist1, m_P_dist2, m_P_dist3, m_P_dist4, m_P_dist5;
+  std::vector<double> m_P_xdist1, m_P_xdist2, m_P_xdist3, m_P_xdist4, m_P_xdist5;
+  std::vector<double> m_P_ydist1, m_P_ydist2, m_P_ydist3, m_P_ydist4, m_P_ydist5;
+  std::vector<double> m_P_Dx1, m_P_Dx2, m_P_Dx3, m_P_Dx4, m_P_Dx5;
+  std::vector<double> m_P_Dy1, m_P_Dy2, m_P_Dy3, m_P_Dy4, m_P_Dy5;
+  std::vector<double> m_P_dimx1, m_P_dimx2, m_P_dimx3, m_P_dimx4, m_P_dimx5;
+  std::vector<double> m_P_dimy1, m_P_dimy2, m_P_dimy3, m_P_dimy4, m_P_dimy5;
+  std::vector<double> m_P_Chisq1, m_P_Chisq2, m_P_Chisq3, m_P_Chisq4, m_P_Chisq5;
   std::vector<int>  m_P_Sample1, m_P_Sample2, m_P_Sample3, m_P_Sample4, m_P_Sample5;
   std::vector<int>  m_P_reg1, m_P_reg2, m_P_reg3, m_P_reg4, m_P_reg5;
 
-  std::vector<float> m_P_Eecal, m_P_Ehcal;
-  std::vector<float> m_P_Espd, m_P_Eprs;
-  std::vector<float> m_P_Xecal, m_P_Yecal;
-  std::vector<float> m_P_Xhcal, m_P_Yhcal;
+  std::vector<double> m_P_Eecal, m_P_Ehcal;
+  std::vector<double> m_P_Espd, m_P_Eprs;
+  std::vector<double> m_P_Xecal, m_P_Yecal;
+  std::vector<double> m_P_Xhcal, m_P_Yhcal;
 
   //--------------------------
   // Muon Detector variables:
@@ -278,11 +279,11 @@ private:
  
   void resetTrkVariables();
   
-  StatusCode DoTrackSelection(bool &passed,const LHCb::Track *pTrack);
+  bool DoTrackSelection(const LHCb::Track *pTrack);
 
-  void DoAccCheck(bool &passed,const LHCb::Track *pTrack);
-  void DoHitsInPad(bool &passed);
-  StatusCode DoCaloMIP(bool &passed,const LHCb::Track *pTrack);
+  bool DoAccCheck(const LHCb::Track *pTrack);
+  bool DoHitsInPad();
+  bool DoCaloMIP(const LHCb::Track *pTrack);
 
   StatusCode fillCoordVectors();
 

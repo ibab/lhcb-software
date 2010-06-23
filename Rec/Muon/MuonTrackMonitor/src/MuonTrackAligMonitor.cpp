@@ -344,8 +344,8 @@ StatusCode MuonTrackAligMonitor::execute() {
           
           m_p_restytx->fill( tx, resty ); 
           m_p_restyty->fill( ty, resty );
+          m_h_chi2->fill(chi2);
         }
-        m_h_chi2->fill(chi2);
       }
       
       std::vector<LHCb::LHCbID>  list_of_tile = (muTrack)->lhcbIDs();

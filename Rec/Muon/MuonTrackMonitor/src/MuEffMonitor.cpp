@@ -233,11 +233,11 @@ StatusCode MuEffMonitor::execute() {
       continue;
     }
     
-    StatusCode sc;
+    StatusCode tsc;
 
     //===== Track selection
     MuoneCan = false;  
-    sc = DoTrackSelection(passed,pTrack);
+    passed = DoTrackSelection(pTrack);
     if (passed) {
       MuoneCan = true;
       m_FlagMCan = 1;
@@ -275,7 +275,7 @@ StatusCode MuEffMonitor::execute() {
       m_TrSly0 = m_stateP0->ty();
       
       //======  Do Mip       
-      sc=DoCaloMIP(passed,pTrack);
+      passed = DoCaloMIP(pTrack);
       if(!passed)continue;
 
       if (m_DoTrigger && m_HLTMuon) {
@@ -468,11 +468,10 @@ StatusCode MuEffMonitor::fillCoordVectors(){
 //
 //Do track selection
 //================================================================================
-StatusCode MuEffMonitor::DoTrackSelection(bool &passed,const LHCb::Track *pTrack){
+bool MuEffMonitor::DoTrackSelection(const LHCb::Track *pTrack){
 //================================================================================
 
   m_momentum0 = -1.;
-  passed=true;
 
   for (int i=0;i<5;i++){
     m_trackX[i] = -99999.;
@@ -501,38 +500,31 @@ StatusCode MuEffMonitor::DoTrackSelection(bool &passed,const LHCb::Track *pTrack
   if ( (pTrack->checkFlag(LHCb::Track::Clone)) ||
        !( ( pTrack->checkType(LHCb::Track::Long) ) ||
           ( pTrack->checkType(LHCb::Track::Downstream) ) ) ){
-    passed = false;
-    return StatusCode::SUCCESS;
+    return false;
   }
   if (m_notOnline) m_nTracks->fill(1.);   
 
   // get the momentum (MeV/c) in the first state of the track and cut on it
   m_momentum0 = m_stateP0 -> p();
   if (!(m_momentum0 > m_MomentumCut)) {
-    passed=false;
-    return StatusCode::SUCCESS;
+    return false;
   }
   if (m_notOnline) m_nTracks->fill(2.); 
 
-  DoAccCheck(passed,pTrack);
-  if (!passed) return StatusCode::SUCCESS;
+  if (!DoAccCheck(pTrack)) return false;
   if (m_notOnline) m_nTracks->fill(3.); 
 
-   // ==  Returns true if track passes the
-  DoHitsInPad(passed);     
-  if (!passed) return StatusCode::SUCCESS;
+  if (!DoHitsInPad()) return false;     
   if (m_notOnline) m_nTracks->fill(4.); 
 
-  passed = true;
-  return StatusCode::SUCCESS;
+  return true;
 }
 
 // Check if the track is in the muon detector acceptance:
 //=================================================================
-void MuEffMonitor::DoAccCheck(bool &passed,const LHCb::Track *pTrack){
+bool MuEffMonitor::DoAccCheck(const LHCb::Track *pTrack){
 //=================================================================
 
-  passed=true;
   
   LHCb::State ExtraState;
   double z[5];
@@ -555,8 +547,7 @@ void MuEffMonitor::DoAccCheck(bool &passed,const LHCb::Track *pTrack){
     StatusCode sc = m_extrapolator->propagate(ExtraState,z[station],pid);
     if( sc.isFailure() ) {
       debug() << " ==> Extrapolating to z = " << z[station] << " failed "<<endmsg;
-      passed = false;
-      return;
+      return false;
     }
 
     m_trackX[station] = ExtraState.x();
@@ -608,18 +599,14 @@ void MuEffMonitor::DoAccCheck(bool &passed,const LHCb::Track *pTrack){
     inacc = false;
   }
     
-  // set  track flag bit
-  if ( !inacc ) passed=false;
-  return;
-  
+  return inacc;  
 }
 
 // Look for hits that match track
 //============================================
-void MuEffMonitor::DoHitsInPad(bool &passed){
+bool MuEffMonitor::DoHitsInPad(){
 //============================================
-
-  passed = false;
+  bool passed = false;
 
   int station;
   int region;
@@ -759,15 +746,14 @@ void MuEffMonitor::DoHitsInPad(bool &passed){
     }
   }
   
-  return;
+  return passed;
 }
 
 // Pick up the Calorimeter informations for a given track
 //===========================================================================
-  StatusCode MuEffMonitor::DoCaloMIP(bool &passed, const LHCb::Track *pTrack){
+  bool MuEffMonitor::DoCaloMIP(const LHCb::Track *pTrack){
 //===========================================================================
         
-    passed = true;
     float Zecal=12660.;
     float Zhcal=13500.;
 
@@ -798,10 +784,10 @@ void MuEffMonitor::DoHitsInPad(bool &passed){
         m_Espd  =  proto->info( LHCb::ProtoParticle::CaloSpdE , -1 * Gaudi::Units::GeV  );
         m_Eprs  =  proto->info( LHCb::ProtoParticle::CaloPrsE , -1 * Gaudi::Units::GeV  );
        
-        return StatusCode::SUCCESS;
+        return true; 
       } 
     } // end loop iproto
-    return StatusCode::SUCCESS; 
+    return true;
   }
 
 //
@@ -841,7 +827,6 @@ void MuEffMonitor::resetTrkVariables(){
   m_SeleTOB = 0;
   
 }
-
 //====================
 // Fill Array
 //====================
