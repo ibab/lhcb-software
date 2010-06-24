@@ -5,6 +5,8 @@
 ! Purpose     : MC-analogue for the basic LoKi algorithm 
 ! -----------------------------------------------------------------------------
 
+!========================== LoKiAlgoMC v9r1 2010-06-24 ========================
+
 ! 2010-06-13 - Vanya Belyaev
 
  - add decay finders for gselect methods 
