@@ -73,9 +73,6 @@ StatusCode Finalize::execute()
 
   }
 
-  // All OK - Update ProcStatus with number of PIDs
-  procStatus()->addAlgorithmStatus( gpidName(), gpidPIDs()->size() );
-
   return StatusCode::SUCCESS;
 }
 

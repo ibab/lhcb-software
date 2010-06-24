@@ -87,6 +87,7 @@ StatusCode TrackSel::eventInit()
   if ( procStatus()->aborted() ) 
   {
     procStatus()->addAlgorithmStatus( gpidName(), Rich::Rec::ProcStatAbort );
+    procStatus()->setAborted( true );
     richStatus()->setEventOK( false );
     deleteGPIDEvent();
     return Warning("Processing aborted -> Abort",StatusCode::SUCCESS,0);
@@ -96,6 +97,7 @@ StatusCode TrackSel::eventInit()
   if ( trackCreator()->nInputTracks() > m_maxInputTracks ) 
   {
     procStatus()->addAlgorithmStatus( gpidName(), Rich::Rec::ReachedTrTrackLimit );
+    procStatus()->setAborted( true );
     richStatus()->setEventOK( false );
     deleteGPIDEvent();
     std::ostringstream mess;
@@ -116,6 +118,7 @@ StatusCode TrackSel::eventInit()
   else if ( (int)richTracks()->size() > m_maxUsedTracks )
   {
     procStatus()->addAlgorithmStatus( gpidName(), Rich::Rec::ReachedRichTrackLimit );
+    procStatus()->setAborted( true );
     richStatus()->setEventOK( false );
     deleteGPIDEvent();
     std::ostringstream mess;
