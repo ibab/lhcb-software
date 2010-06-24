@@ -34,8 +34,8 @@ class Physics_HighNu_80Vis_30L0_5Hlt1_AllHlt2_Jun10           ( Physics_HighNu_4
         thresholds.update(PhiCharmLepton_Reduction5().Thresholds())
       
         from Hlt2Lines.Hlt2CommissioningLines  import Hlt2CommissioningLinesConf
-        thresholds.update( { Hlt2CommissioningLinesConf : { 'Prescale' : { 'Hlt2PassThrough'    : 0.
-                                                                           , 'Hlt2Transparent'  : 0. }
+        thresholds.update( { Hlt2CommissioningLinesConf : { 'Prescale' : { 'Hlt2PassThrough'    : 0.01
+                                                                           , 'Hlt2Transparent'  : 1. }
                                                           }
                              }
                            )
