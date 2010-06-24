@@ -1,4 +1,4 @@
- )!$Id: release.notes,v 1.184 2010-06-03 10:37:06 yamhis Exp $
+ )!$Id: release.notes,v 1.185 2010-06-24 16:16:08 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/CommonParticles
 ! Responsible : P. Koppenburg, Juan Palacios
@@ -7,6 +7,8 @@
 ! When adding a Particle make sure it is appended to one of the Standard* files
 !
 !-----------------------------------------------------------------------------
+
+!========================== CommonParticles v7r3 2010-06-24 ===================
 
 ! 2010-06-03 - Yasmine Amhis
  - Add Standard Loose Downstream Kaons.
