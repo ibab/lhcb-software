@@ -67,7 +67,7 @@ class Physics_HighNu_40Vis_15L0_2Hlt1_ExpressHlt2_Jun10 :
                                                    , 'EleCompanion_PtCut'     : 4750
                                                    , 'DiEle_HighMassCut'      : -1 # only applied if >0
                                                    }
-                       , Hlt1MuonLinesConf : {  'DiMuon_SumPtCut'                : 320.0
+                       , Hlt1MuonLinesConf : {  'DiMuon_SumPtCut'                : 1000.
                                                 , 'Muon_DeltaPCut'               :   -1 
                                                 , 'Muon_TConfNSigmaX'            :   10 
                                                 , 'Muon_TConfNSigmaY'            :   10 
