@@ -3,6 +3,13 @@
 ! Responsible : Kurt Rinnert, Chris Parkes
 !--------------------------------------------------------------------------
 
+! 2010-06-24 - David Hutchcroft
+ - Changed how ProcStatus is used as per Savannah task #16278
+   Now still set ProcStatus for any problem, but also set 
+   ProcStatus->setAborted(true)
+   when all clusters are removed due to high multiplicity
+   Removed setFilterPass options as it was unused.
+
 !=========================  VeloDAQ v5r2 2010-05-15 =======================
 ! 2010-05-13 - David Hutchcroft
  - Make lite decoding check full bank length, remove lite and full clusters 

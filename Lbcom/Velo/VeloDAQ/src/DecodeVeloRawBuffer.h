@@ -78,10 +78,13 @@ private:
    * */
   void createEmptyBanks(); 
 
-  /// Add DecodeVeloRawBuffer to list of failed algorithms
-  StatusCode failEvent(const std::string &ErrorText,
-                       AlgStatusType status = Other,
-                       bool AbortEvent = false);  
+  /** Add DecodeVeloRawBuffer to list of failed algorithms
+   *  if procAbort = true set the ProcStatus to "aborted" to show 
+   *  this event should be removed from physics streams
+   */
+  void failEvent(const std::string &ErrorText,
+                 AlgStatusType status,
+                 bool procAborted);  
 
 private:
 
