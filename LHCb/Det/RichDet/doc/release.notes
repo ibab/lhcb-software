@@ -4,6 +4,19 @@
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
 
+! 2010-06-24 - Chris Jones
+ - Various improvements to Rich::TabulatedFunction1D
+  + Fix the rms() method to return a real RMS (was returning the standard 
+    deviation)
+  + Add an explicit standardDeviation() method
+  + Add to the rms() and new standardDeviation() and optional weight function
+    that can be used during the calculations if supplied to weight (multiply)
+    the function.
+  + Add a new static method combine() that takes a vector of tabulated 
+    functions, merges them, and returns a new function that represents the 
+    product of the functions.
+  + Inline the constructors for speed
+
 !======================== RichDet v14r4 2010-06-18 ===========================
 ! 2010-06-18 - Chris Jones
  - Add a public method to DeRichMultiSolidRadiator to allow access to the list

@@ -14,6 +14,7 @@
 
 // STL
 #include <sstream>
+#include <cmath>
 
 // GaudiKernel
 // Suppress "debug information truncated" warnings on Windows
@@ -23,86 +24,16 @@
 // local
 #include "RichDet/Rich1DTabFunc.h"
 
+// boost
+#include "boost/numeric/conversion/bounds.hpp"
+#include "boost/limits.hpp"
+
 using namespace Rich;
-
-//============================================================================
-
-// Default Constructor
-TabulatedFunction1D::TabulatedFunction1D( const gsl_interp_type * interType ) :
-  m_OK                 ( false ),
-  m_mainDistAcc        ( NULL ),
-  m_mainDistSpline     ( NULL ),
-  m_weightedDistAcc    ( NULL ),
-  m_weightedDistSpline ( NULL ),
-  m_interType          ( interType ) { }
 
 //============================================================================
 
 // Destructor
 TabulatedFunction1D::~TabulatedFunction1D( ) { clearInterpolator(); }
-
-//============================================================================
-
-// Constructor from arrays
-TabulatedFunction1D::TabulatedFunction1D( const double x[],
-                                          const double y[],
-                                          const int size,
-                                          const gsl_interp_type * interType ) :
-  m_OK                 ( false ),
-  m_mainDistAcc        ( NULL  ),
-  m_mainDistSpline     ( NULL  ),
-  m_weightedDistAcc    ( NULL  ),
-  m_weightedDistSpline ( NULL  ),
-  m_interType          ( interType )
-{
-  initInterpolator ( x, y, size, interType );
-}
-
-//============================================================================
-
-// Constructor from std::vector
-TabulatedFunction1D::TabulatedFunction1D( const std::vector<double> & x,
-                                          const std::vector<double> & y,
-                                          const gsl_interp_type * interType ) :
-  m_OK                 ( false ),
-  m_mainDistAcc        ( NULL  ),
-  m_mainDistSpline     ( NULL  ),
-  m_weightedDistAcc    ( NULL  ),
-  m_weightedDistSpline ( NULL  ),
-  m_interType          ( interType )
-{
-  initInterpolator ( x, y, interType );
-}
-
-//============================================================================
-
-// Constructor from map
-TabulatedFunction1D::TabulatedFunction1D( const std::map<double,double> & data,
-                                          const gsl_interp_type * interType ) :
-  m_OK                 ( false ),
-  m_mainDistAcc        ( NULL  ),
-  m_mainDistSpline     ( NULL  ),
-  m_weightedDistAcc    ( NULL  ),
-  m_weightedDistSpline ( NULL  ),
-  m_interType          ( interType )
-{
-  initInterpolator( data, interType );
-}
-
-//============================================================================
-
-// Constructor from vector of pairs
-TabulatedFunction1D::TabulatedFunction1D( const std::vector< std::pair<double,double> > & data,
-                                          const gsl_interp_type * interType ) :
-  m_OK                 ( false ),
-  m_mainDistAcc        ( NULL  ),
-  m_mainDistSpline     ( NULL  ),
-  m_weightedDistAcc    ( NULL  ),
-  m_weightedDistSpline ( NULL  ),
-  m_interType          ( interType )
-{
-  initInterpolator( data, interType );
-}
 
 //============================================================================
 
@@ -135,7 +66,7 @@ bool TabulatedFunction1D::initInterpolator( const std::vector<double> & x,
   {
     m_OK = false;
     clearInterpolator();
-    throw GaudiException( "Size of x vector != size of y vector", 
+    throw GaudiException( "Size of x vector != size of y vector",
                           "*Rich::TabulatedFunction1D*", StatusCode::FAILURE );
   }
   else
@@ -169,7 +100,7 @@ bool TabulatedFunction1D::initInterpolator( const std::map<double,double> & data
 
 //============================================================================
 
-bool 
+bool
 TabulatedFunction1D::initInterpolator( const std::vector< std::pair<double,double> > & data,
                                        const gsl_interp_type * interType )
 {
@@ -204,12 +135,12 @@ bool TabulatedFunction1D::initInterpolator( const gsl_interp_type * interType )
 
   // Check number of points needed to work ...
   const unsigned int min_points = gsl_interp_min_size(m_mainDistSpline->interp);
-  if ( m_data.size() < min_points ) 
+  if ( m_data.size() < min_points )
   {
     std::ostringstream mess;
     mess << "Error whilst initialising GSL interpolator : Type '" << interpName()
-         << "' requires a minimum of " << min_points << " data points. Only given " 
-         << m_data.size(); 
+         << "' requires a minimum of " << min_points << " data points. Only given "
+         << m_data.size();
     clearInterpolator();
     throw GaudiException( mess.str(), "*Rich::TabulatedFunction1D*", StatusCode::FAILURE );
     return false;
@@ -280,36 +211,121 @@ void TabulatedFunction1D::clearInterpolator()
 
 //============================================================================
 
-double TabulatedFunction1D::rms( const double from,
-                                 const double to,
-                                 const unsigned int samples ) const
+double
+TabulatedFunction1D::rms( const double from,
+                          const double to,
+                          const unsigned int samples,
+                          const TabulatedFunction1D * weightFunc ) const
 {
   if ( samples < 2 )
   {
     throw GaudiException( "rms() : samples must be > 1",
-                          "*TabulatedFunction1D*", StatusCode::FAILURE );
+                          "*Rich::TabulatedFunction1D*", StatusCode::FAILURE );
+  }
+
+  // x increment
+  const double xInc = (to-from)/(double)(samples-1);
+
+  double rms(0), X(from);
+  for ( unsigned int i = 0; i < samples; ++i, X += xInc )
+  {
+    const double Y = value(X) * ( weightFunc ? weightFunc->value(X) : 1.0 );
+    if ( Y>0 )
+    {
+      rms += Y * Y;
+    }
+  }
+  rms /= (double)samples;
+
+  return std::sqrt(rms);
+}
+
+//============================================================================
+
+double
+TabulatedFunction1D::standardDeviation( const double from,
+                                        const double to,
+                                        const unsigned int samples,
+                                        const TabulatedFunction1D * weightFunc ) const
+{
+  if ( samples < 2 )
+  {
+    throw GaudiException( "standardDeviation() : samples must be > 1",
+                          "*Rich::TabulatedFunction1D*", StatusCode::FAILURE );
   }
 
   // mean value
   const double avgX = meanX(from,to);
 
   // x increment
-  const double xInc = (to-from)/(samples-1);
+  const double xInc = (to-from)/(double)(samples-1);
 
-  double rms(0), sum(0);
-  for ( unsigned int i = 0; i < samples; ++i )
+  double sd(0), sum(0), X(from);
+  for ( unsigned int i = 0; i < samples; ++i, X += xInc )
   {
-    const double X = from + i*xInc;
-    const double Y = value(X);
+    const double Y = value(X) * ( weightFunc ? weightFunc->value(X) : 1.0 );
     if ( Y>0 )
     {
-      rms += Y*(X-avgX)*(X-avgX);
+      sd  += Y * std::pow(X-avgX,2);
       sum += Y;
     }
   }
-  rms /= sum;
+  sd /= sum;
 
-  return sqrt(rms);
+  return std::sqrt(sd);
 }
 
 //============================================================================
+
+TabulatedFunction1D * TabulatedFunction1D::combine( const ConstVector & funcs,
+                                                    const unsigned int samples,
+                                                    const gsl_interp_type * interType )
+{
+  if ( samples < 2 )
+  {
+    throw GaudiException( "combine() : samples must be > 1",
+                          "*Rich::TabulatedFunction1D*", StatusCode::FAILURE );
+  }
+  
+  // Default top a NULL pointer. Filled later on.
+  TabulatedFunction1D * combFunc = NULL;
+
+  // Get global min and max range of function
+  double maxX(boost::numeric::bounds<double>::highest());
+  double minX(boost::numeric::bounds<double>::lowest());
+  for ( ConstVector::const_iterator iF = funcs.begin();
+        iF != funcs.end(); ++iF )
+  {
+    if ( (*iF)->minX() > minX ) { minX = (*iF)->minX(); }
+    if ( (*iF)->maxX() < maxX ) { maxX = (*iF)->maxX(); }
+  }
+
+  // Check all is OK
+  if ( minX < maxX )
+  {
+
+    // x increment
+    const double xInc = (maxX-minX)/(double)(samples-1);
+
+    // Create the data points
+    Data mergedData;
+    double X(minX);
+    for ( unsigned int i = 0; i < samples; ++i, X += xInc )
+    {
+      double Y = 1.0;
+      for ( ConstVector::const_iterator iF = funcs.begin();
+            iF != funcs.end(); ++iF )
+      {
+        Y *= (*iF)->value(X);
+      }
+      mergedData[X] = Y;
+    }
+
+    // Create the new interpolated function
+    combFunc = new TabulatedFunction1D(mergedData,interType);
+
+  }
+
+  // return
+  return combFunc;
+}
