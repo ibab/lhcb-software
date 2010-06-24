@@ -1,9 +1,11 @@
-!$Id: release.notes,v 1.73 2010-06-24 07:27:38 jpalac Exp $
+!$Id: release.notes,v 1.74 2010-06-24 16:17:53 jpalac Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/StrippingConf
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
+
+!========================== StrippingConf v3r5 2010-06-24 =================
 
 ! 2010-06-24 - Juan Palacios
  - python/StrippingConf/StrippingLine.py
