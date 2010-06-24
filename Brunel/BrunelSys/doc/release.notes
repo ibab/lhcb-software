@@ -3,9 +3,73 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
+</PRE><H1><A NAME=v37r4>2010-06-24 Brunel v37r4</A></H1><PRE>
+This version uses projects Gaudi v21r9, LHCb v31r2, Lbcom v9r4, Rec v10r1
+ and SQLDDDB v5r30, ParamFiles v8r2, FieldMap v5r4, AppConfig v3r*
+
+This is a development version for processing 2010 data and Montecarlo
+
+Output requires DaVinci v25r2p3 or later if saving packed DST, DaVinci v24r5p1
+or later otherwise
+
+Simulation should be produced with Boole v21r5 or later
+
+- New tuning
+  . Changes available in SQLDDDB v5r30:
+    o new Calo calibration (head-20100531 LHCBCOND tag)
+    o Rich run by run refractive index calibration (head-20100531 LHCBCOND tag)
+    o Velo RF foil thickness change (head-20100531 DDDB tag)
+  . Changed default tags for 2009 and 2010 data (DDDB v1r32)
+    o head-20100531         for LHCBCOND
+  . Switch from loose to default PV (RecConf v1r1)
+  . Improved rejection of R clusters on other side from non-overlap tracks
+    (PatVelo v3r24)
+  . Do not reconstruct forward tracks if there are more than 1000 velo tracks
+    (PatAlgorithms v4r3)
+  . New tuning of eta correction (STTools v4r2)
+  . Changed the calculation of the effect of the Lorentz angle (STTools v4r2)
+  . Use OT dead strip list in expected hit calculation (TsaAlgorithms v3r21)
+  . New hit error estimates for MC (STTools v4r2). N.B. The default values are
+    only compatible with the corresponding tuning from Boole v21r5
+  . Changed precision of OTMeasurement::deltaTimeOfFlight (TrackFitEvent v5r0)
+
+- New features
+  . Introduce database usage to calculate integrated luminosity (LumiAlgs v3r6)
+  . Added LumiLowCount FSR (LumiAlgs v3r6)
+  . Added option FilterBeforeFit in TrackSys and relevant algorithms
+    under that condition in RecoTracking (TrackSys v4r34, TrackUtils v1r37)
+
+- Bug fixes
+  . In Configurable, fix AgeLimit when reprocessing from RDST or SDST
+  . Follow fix #67937 to MagneticFieldSvc().ForceToUseDownMap. As result of this
+    bug, DC06 reco was using wrong polarity, since Brunel v37r2 (Magnet v7r1)
+  . Fixed configuration bug #68610 with noDrifttimes (TrackProjectors v2r28p2)
+  . Improve end of file detection (MDF v3r26, MDF_ROOT v1r3)
+
+- Monitoring changes
+  . Reduce verbosity of log file (CondDBEntityResolver v5r2, LumiAlgs v3r6)
+  . New STClusterMonitor histograms (STMonitors v3r2)
+  . Added 2D histograms (hit-hot) to OTHitEfficiencyMonitor (TrackMonitors v1r26)
+  . New histograms in TrackVertexMonitor and TrackVeloOverlapMonitor 
+    (TrackMonitors v1r26)
+  . New Cherenkov angle plots for aerogel (RichRecQC v2r42)
+  . Book all histos at initialize (MuonPIDChecker v5r2)
+
+- Changes to example options
+  . All castor data accesses are now down through root: (xrootd) protocol
+
+- Changes to tests
+  . remove brunelmdfrst test, as all functionality is already tested elsewhere
+  . ignore BrunelInit warnings count in comparisons (due to fluctuations in
+    memory usage) 
+  . switch off STOfflinePosition Lorentz correction in brunel-mc09-withtruth and
+    brunel-mc09-withtruth-invfield tests, to avoid differences when inverting
+    the magnetic field.
+
+
 </PRE><H1><A NAME=v37r3>2010-05-28 Brunel v37r3</A></H1><PRE>
 This version uses projects Gaudi v21r9, LHCb v31r1, Lbcom v9r3, Rec v10r0p1
- and SQLDDDB v5r28, ParamFiles v8r2, FieldMap v5r4, AppConfig v3r*
+ and SQLDDDB v5r29, ParamFiles v8r2, FieldMap v5r4, AppConfig v3r*
 
 This is a production version for processing 2010 data
 
@@ -24,10 +88,12 @@ or later otherwise
     (VeloDAQ v5r1)
  
 - New tuning
-  . Changes available in SQLDDDB v5r28:
+  . Changes available in SQLDDDB v5r29:
     o Latest Rich calibration from head-20100430 LHCBCOND tag
     o Latest OT T0 calibration from head-20100509 LHCBCOND tag
     o New field map from head-20100518 LHCBCOND tag
+    o Muon half station X,Y positions compatible with tracking alignment from
+      head-20100518 LHCBCOND tag
   . Changes to default database tags (DDDB v1r31)
     o default tags for 2009 and 2010 data:
       head-20100518         for DDDB
