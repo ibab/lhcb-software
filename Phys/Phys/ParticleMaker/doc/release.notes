@@ -1,7 +1,9 @@
-! $Id: release.notes,v 1.116 2010-06-01 09:52:04 pkoppenb Exp $ 
+! $Id: release.notes,v 1.117 2010-06-24 13:31:43 jpalac Exp $ 
 ! Package     : ParticleMaker
 ! Responsible : Chris Jones, J. Palacios, Olivier Deschamps
 !==============================================================================
+
+!========================== ParticleMaker v5r6p1 2010-06-24 ==================
 
 ! 2010-06-01 - Patrick Koppenburg
  - Remove AvoidSelResult from Base class
