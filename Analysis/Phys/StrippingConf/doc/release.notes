@@ -1,9 +1,13 @@
-!$Id: release.notes,v 1.72 2010-06-23 16:45:23 jpalac Exp $
+!$Id: release.notes,v 1.73 2010-06-24 07:27:38 jpalac Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/StrippingConf
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
+
+! 2010-06-24 - Juan Palacios
+ - python/StrippingConf/StrippingLine.py
+  . Give cloned SelectionSequence a more unique name. Print warning.
 
 ! 2010-06-23 - Juan Palacios
  - python/StrippingConf/StrippingLine.py
