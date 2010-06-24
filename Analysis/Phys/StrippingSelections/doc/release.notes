@@ -5,6 +5,10 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-06-24 - Juan Palacios
+ - python/StrippingSelections/StrippingDstarPromptWithD02HH.py
+  . outputSelection() -> outputLocation()
+
 ! 2010-06-17 - Alexandr Kozlinskiy
  - Loosened cuts on D0 vertex chi2 and life time fit chi2 and D* vertex chi2
    in line StrippingDstarPromptWithD02HHNoPt
