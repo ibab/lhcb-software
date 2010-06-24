@@ -4,6 +4,9 @@
 ! Purpose     : Velo pattern recognition
 !-----------------------------------------------------------------------------
 
+! 2010-06-24 - Rob Lambert
+ - Fixed a few uninitialized vectors, see bug #68795
+
 !========================== PatVelo v3r24 2010-06-21 =========================
 ! 2010-06-21 - Stephanie Hansmann-Menzemer
  - Add switch timing information

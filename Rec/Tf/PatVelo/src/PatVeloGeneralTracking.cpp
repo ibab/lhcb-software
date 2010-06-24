@@ -26,6 +26,10 @@ Tf::PatVeloGeneralTracking::PatVeloGeneralTracking( const std::string& name,
                                                     ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator ), m_Num3DCreated(0), m_NumEvt(0)
   , m_angleUtils(-Gaudi::Units::pi,Gaudi::Units::pi)
+  , m_XOffsetTop(0)
+  , m_XOffsetBottom(0)
+  , m_YOffsetTop(0)
+  , m_YOffsetBottom(0)
 {
 
   declareProperty( "OutputTracksLocation" , 
