@@ -1,9 +1,11 @@
-!$Id: release.notes,v 1.67 2010-06-23 16:14:52 jpalac Exp $
+!$Id: release.notes,v 1.68 2010-06-24 16:08:55 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : PhysSel/PhysSelPython
 ! Responsible : Juan Palacios
 ! Purpose     : Helper python classes for writing offline selections
 !-----------------------------------------------------------------------------
+
+!==================== PhysSel/PhysSelPython v5r5 2010-06-24 ================
 
 ! 2010-06-23 - Juan Palacios
  - python/PhysSelPython/Wrappers.py
