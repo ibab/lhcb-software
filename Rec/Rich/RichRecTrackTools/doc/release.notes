@@ -4,6 +4,12 @@
 ! Purpose     : Utility tracks tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+! 2010-06-24 - Chris Jones
+ - Adapt to change in where the method that returns the S.D. of the observable 
+   n-1 distribution is.
+ - Add a method to the effective track refractive index tool that returns the
+   standard deviation for a given track segment.
+
 !======================== RichRecTrackTools v1r21 2010-06-21 ================
 ! 2010-06-20 - Chris Jones
  - Some minor improvements to debugging information in RichExpectedTrackSignal

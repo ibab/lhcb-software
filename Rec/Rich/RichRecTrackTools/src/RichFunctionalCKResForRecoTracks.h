@@ -24,6 +24,7 @@
 #include "RichKernel/IRichParticleProperties.h"
 #include "TrackInterfaces/ITrackExtrapolator.h"
 #include "RichRecBase/IRichTrackEffectiveRefractiveIndex.h"
+#include "RichKernel/IRichDetParameters.h"
 
 // DetDesc
 #include "DetDesc/ITransportSvc.h"
@@ -114,6 +115,9 @@ namespace Rich
 
       /// Pointer to RichParticleProperties interface
       const IParticleProperties * m_richPartProp;
+
+      /// Detector parameters
+      const IDetParameters * m_detParams;
 
       mutable ITrackExtrapolator * m_trExt; ///< Track extrapolation tool
       std::string m_Ext; ///< Track extrapolation tool name

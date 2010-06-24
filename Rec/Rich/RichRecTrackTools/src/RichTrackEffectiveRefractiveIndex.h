@@ -74,9 +74,13 @@ namespace Rich
       // for all visable photon energies.
       virtual double refractiveIndex ( const LHCb::RichRecSegment * segment ) const;
 
-      // Calculates the refractive index R.M.S. for the radiator assoicated 
+      // Calculates the refractive index R.M.S. for the radiator associated 
       // to the given track segment
       virtual double refractiveIndexRMS ( const LHCb::RichRecSegment * segment ) const;
+
+      // Calculates the refractive index standard deviation for the radiator associated 
+      // to the given track segment
+      virtual double refractiveIndexSD  ( const LHCb::RichRecSegment * segment ) const;
 
     private: // Private data
 

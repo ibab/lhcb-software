@@ -56,7 +56,7 @@ double
 TrackEffectiveRefractiveIndex::
 refractiveIndex ( const LHCb::RichRecSegment * segment ) const
 {
-  const LHCb::RichTrackSegment & tkSeg = segment->trackSegment();
+  const LHCb::RichTrackSegment     & tkSeg = segment->trackSegment();
   const RichRadIntersection::Vector & rads = tkSeg.radIntersections();
   return m_refIndex->refractiveIndex( rads );
 }
@@ -65,5 +65,16 @@ double
 TrackEffectiveRefractiveIndex::
 refractiveIndexRMS ( const LHCb::RichRecSegment * segment ) const
 {
-  return m_refIndex->refractiveIndexRMS( segment->trackSegment().radiator() );
+  const LHCb::RichTrackSegment     & tkSeg = segment->trackSegment();
+  const RichRadIntersection::Vector & rads = tkSeg.radIntersections();
+  return m_refIndex->refractiveIndexRMS( rads );
+}
+
+double 
+TrackEffectiveRefractiveIndex::
+refractiveIndexSD ( const LHCb::RichRecSegment * segment ) const
+{
+  const LHCb::RichTrackSegment     & tkSeg = segment->trackSegment();
+  const RichRadIntersection::Vector & rads = tkSeg.radIntersections();
+  return m_refIndex->refractiveIndexSD( rads );
 }

@@ -38,6 +38,8 @@ FunctionalCKResForRecoTracks ( const std::string& type,
   : HistoToolBase   ( type, name, parent  ),
     m_ckAngle       ( NULL                          ),
     m_refIndex      ( NULL                          ),
+    m_richPartProp  ( NULL                          ),
+    m_detParams     ( NULL                          ),
     m_trExt         ( NULL                          ),
     m_Ext           ( "TrackRungeKuttaExtrapolator" ),
     m_transSvc      ( NULL                          ),
@@ -85,6 +87,7 @@ StatusCode FunctionalCKResForRecoTracks::initialize()
   acquireTool( "RichCherenkovAngle",      m_ckAngle      );
   acquireTool( "RichTrackEffectiveRefIndex", m_refIndex  );
   acquireTool( "RichParticleProperties",  m_richPartProp );
+  acquireTool( "RichDetParameters", m_detParams );
 
   m_pidTypes = m_richPartProp->particleTypes();
   info() << "Particle types considered = " << m_pidTypes << endmsg;
@@ -201,7 +204,7 @@ FunctionalCKResForRecoTracks::ckThetaResolution( LHCb::RichRecSegment * segment,
           //-------------------------------------------------------------------------------
           const double index      = m_refIndex->refractiveIndex(segment);
           const double chromFact  = ( index>0 ? 
-                                      m_refIndex->refractiveIndexRMS(segment)/index : 0 );
+                                      m_detParams->refIndexSD(rad)/index : 0 );
           const double chromatErr = gsl_pow_2( chromFact / tanCkExp );
           hypo_res2 += chromatErr;
           //-------------------------------------------------------------------------------
