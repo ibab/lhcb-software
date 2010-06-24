@@ -8,6 +8,8 @@
 ! http://www.slac.stanford.edu/spires/find/hep/www?eprint=physics/0503191
 !-----------------------------------------------------------------------------
 
+!======================= DecayTreeFitter v1r8 2010-06-24 =====================
+
 ! 2010-06-21 - Vanya Belyaev
 
  - ParticleBase.cpp
