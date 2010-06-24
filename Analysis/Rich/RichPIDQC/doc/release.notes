@@ -5,6 +5,10 @@
 ! Purpose     : PID Calbriation and Monitoring on Data
 !-----------------------------------------------------------------------------
 
+! 2010-05-24 - Nicola Mangiafave
+ - python/RichPIDQC/JPsiMuMu.py
+  . Changed selection cuts and mass windows.
+
 !========================== RichPIDQC v1r4 2010-05-24 ========================
 
 ! 2010-05-15 - Juan Palacios

@@ -42,8 +42,12 @@ class JPsiMuMuConf(LHCbConfigurableUser) :
         JPsiMuMu.DecayDescriptor            = "J/psi(1S) -> mu+ mu- "
         JPsiMuMu.InputLocations             = ["Phys/StdLooseMuons"]
         JPsiMuMu.CombinationCut             = "(ADAMASS('J/psi(1S)') < 150*MeV)"
-        JPsiMuMu.MotherCut                  = "(ADMASS('J/psi(1S)') < 100*MeV) & (VFASPF(VCHI2/VDOF)<6)"
-        JPsiMuMu.DaughtersCuts              = {"mu+"     :    "(PT>1000*MeV) & (P>5*GeV) & (TRCHI2DOF<2.0) & (PPINFO(LHCb.ProtoParticle.MuonMuLL,-10000)>-10)"}
+        JPsiMuMu.MotherCut                  = "(ADMASS('J/psi(1S)') < 130*MeV) & (VFASPF(VCHI2/VDOF)<6)"
+        JPsiMuMu.DaughtersCuts              = {"mu+" : "(PT>1400*MeV)"\
+                                               "& (P>5*GeV)"\
+                                               "& (TRCHI2DOF<2.0)"\
+                                               "& (PPINFO(LHCb.ProtoParticle.MuonBkgLL,-10000)<-2.5)"\
+                                               "& (PPINFO(LHCb.ProtoParticle.MuonMuLL,-10000)>-10)"}
 
         seq.Members += [JPsiMuMu]
 
@@ -51,8 +55,8 @@ class JPsiMuMuConf(LHCbConfigurableUser) :
         from Configurables import ( ParticleMonitor )
         plotter =  ParticleMonitor(JPsiMuMuName+"Plots")
         plotter.InputLocations = [ "Phys/"+JPsiMuMuName ]
-        plotter.PeakCut     = "(ADMASS('J/psi(1S)')<30*MeV)" # CRJ : Guess
-        plotter.SideBandCut = "(ADMASS('J/psi(1S)')>30*MeV)" # CRJ : Guess
+        plotter.PeakCut     = "(ADMASS('J/psi(1S)')<40*MeV)" # Considering sigma = 13
+        plotter.SideBandCut = "(ADMASS('J/psi(1S)')>40*MeV)" # Considering sigma = 13
         plotter.PlotTools = [ "MassPlotTool","MomentumPlotTool",
                               "CombinedPidPlotTool",
                               "RichPlotTool","CaloPlotTool","MuonPlotTool" ]
