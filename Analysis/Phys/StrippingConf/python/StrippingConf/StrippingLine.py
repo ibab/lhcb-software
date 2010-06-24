@@ -130,7 +130,7 @@ class bindMembers (object) :
         self._getOutputLocation(alg)
 
     def _handle_SelectionSequence(self, line, alg) :
-        print 'Warning: line', line, 'using SelectionSequence', alg.name()
+        print 'WARNING: line', line, 'using SelectionSequence', alg.name(), '. This could be unnecessary. Consider using Selection directly.'
         topSel = alg.selection().clone(line)
         seq = alg.clone('StrippingSeq'+line, TopSelection = topSel)
         gaudiSeq = seq.sequence()
