@@ -81,7 +81,7 @@ class Physics_HighNu_40Vis_15L0_2Hlt1_ExpressHlt2_Jun10 :
                                                 , 'DiMuonIP_MassCut'             : 750
                                                 , 'DiMuon_IPCut'                 : 0.0
                                                 , 'Muon_FitChiCut'               : 50.
-                                                , 'Muon_FitMuChi2Cut'            : 50.
+                                                , 'Muon_FitMuChi2Cut'            : 100.
                                                 , 'MuTrackMuPt'                  : 800
                                                 , 'MuTrackMuIP'                  : 0.05
                                                 , 'MuTrackTrPt'                  : 600
