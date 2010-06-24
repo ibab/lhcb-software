@@ -6,6 +6,8 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! -----------------------------------------------------------------------------
 
 ! 2010-06-24 - Juan Palacios
+ - tests/test_stream_output_locations.py
+  . Test if more than one line in allStreams writes to the same location.
  - python/StrippingSelections/StrippingDstarPromptWithD02HH.py
   . outputSelection() -> outputLocation()
 
