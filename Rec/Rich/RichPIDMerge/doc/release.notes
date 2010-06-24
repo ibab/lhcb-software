@@ -3,6 +3,9 @@
 ! Responsible : Chris Jones
 ! Purpose     : Contains the merging algorithms for final RICH PID results
 !-----------------------------------------------------------------------------
+ 
+! 2010-06-24 - Chris Jones
+ - Don't call ProcStat->addAlgorithmStatus for non-failure cases.
 
 !======================= RichPIDMerge v2r8 2010-03-19 ======================
 ! 2010-03-05 - Chris Jones

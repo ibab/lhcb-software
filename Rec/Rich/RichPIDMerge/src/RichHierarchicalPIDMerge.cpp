@@ -91,7 +91,8 @@ StatusCode HierarchicalPIDMerge::execute()
   newPIDs->setVersion(m_PIDversion);
 
   // Locate the processing status object  
-  LHCb::ProcStatus * procStat = ( m_fillProcStat ? get<LHCb::ProcStatus>(m_procStatLocation) : NULL );
+  LHCb::ProcStatus * procStat = ( m_fillProcStat ? 
+                                  get<LHCb::ProcStatus>(m_procStatLocation) : NULL );
   if ( procStat && procStat->aborted() )
   {
     return Warning("Processing aborted -> Empty RichPID container",StatusCode::SUCCESS);
@@ -127,12 +128,6 @@ StatusCode HierarchicalPIDMerge::execute()
     }
 
   } // use Global PIDs
-
-  // Update Rich status words
-  if ( procStat )
-  {
-    procStat->addAlgorithmStatus( name()+":UsedGlobalPIDs",    nUsedglobalPIDs );
-  }
 
   // Final debug information
   if ( msgLevel(MSG::DEBUG) )
