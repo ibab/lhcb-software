@@ -8,7 +8,7 @@
  - Add a new method to IRichDetParameters.h to return the S.D. of the 
    (n-1) distribution for observable photons. Moved here from 
    IRichRefractiveIndex.h
- - Add a new method to IRichRefravtiveIndex to return the standard 
+ - Add a new method to IRichRefractiveIndex to return the standard 
    deviation for a given set of radiator intersections.
 
 !====================== RichKernel v7r36 2010-06-20 ====================
