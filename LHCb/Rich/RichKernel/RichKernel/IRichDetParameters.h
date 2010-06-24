@@ -30,7 +30,9 @@ namespace Rich
   //-----------------------------------------------------------------------------
   /** @class IDetParameters IRichDetParameters.h RichKernel/IRichDetParameters.h
    *
-   *  Interface for tools providing access to useful detector parameters
+   *  Interface for tools providing access to useful detector parameters, that 
+   *  cannot be easily calculated on the fly. Some could eventually be moved to 
+   *  either the LHCbCond or DDDB databases. 
    *
    *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
    *  @date   2004-03-29
@@ -49,7 +51,8 @@ namespace Rich
      *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
      *  @date   2005-01-29
      */
-    class RadLimits {
+    class RadLimits 
+    {
 
     public:
 
@@ -114,6 +117,14 @@ namespace Rich
      * @return The value of the mean photon energy for the given radiator
      */
     virtual double meanPhotonEnergy ( const Rich::RadiatorType rad ) const = 0;
+
+    /** Calculate the standard deviation of n-1 distribution for observed photons
+     *
+     *  @param rad  The radiator type
+     *
+     * @return The standard deviation of n-1 distribution for observed photons for the given radiator
+     */
+    virtual double refIndexSD ( const Rich::RadiatorType rad ) const = 0;
 
     /** Returns the average acceptance outer limits in local HPD coordinates
      *  for the given radiator type

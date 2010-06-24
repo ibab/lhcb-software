@@ -4,6 +4,13 @@
 ! Purpose     : General purpose RICH classes
 !-----------------------------------------------------------------------
 
+! 2010-06-24 - Chris Jones
+ - Add a new method to IRichDetParameters.h to return the S.D. of the 
+   (n-1) distribution for observable photons. Moved here from 
+   IRichRefractiveIndex.h
+ - Add a new method to IRichRefravtiveIndex to return the standard 
+   deviation for a given set of radiator intersections.
+
 !====================== RichKernel v7r36 2010-06-20 ====================
 ! 2010-06-20 - Chris Jones
  - Add a new method to python Configurable to return track expected 
