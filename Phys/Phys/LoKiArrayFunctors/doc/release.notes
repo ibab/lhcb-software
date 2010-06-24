@@ -5,6 +5,8 @@ $Id: release.notes,v 1.63 2010-06-03 06:06:12 jpalac Exp $
 ! Purpose     : Some special "vector-like" functors to Exclusive "HLT"
 ! -----------------------------------------------------------------------------
 
+!========================== LoKiArrayFunctors v9r2 2010-06-24 =================
+
 ! 2010-06-03 Juan Palacios
  - Remove remaining references to IGeomDispCalculator.
 
