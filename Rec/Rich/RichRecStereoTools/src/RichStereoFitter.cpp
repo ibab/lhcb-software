@@ -121,6 +121,7 @@ StatusCode StereoFitter::initialize()
   acquireTool( "RichGeomEff",             m_geomEffic );
   acquireTool( "RichPhotonSignal",        m_photonSig );
   acquireTool( "RichTrackEffectiveRefIndex", m_refIndex );
+  acquireTool( "RichDetParameters", m_detParams );
 
   return sc;
 }
@@ -548,7 +549,7 @@ double StereoFitter::improvedErrorPerPhoton_index( const LHCb::RichRecSegment * 
   // average refractive index
   const double avgRefIndex = m_refIndex->refractiveIndex(segment);
   // refractive index RMS
-  const double rmsRefIndex = m_refIndex->refractiveIndexRMS(segment);
+  const double rmsRefIndex = m_detParams->refIndexSD(radiator);
 
   //compute asymptotic and non asymptotic chromatic error
   const double chromaticErrCoeff      = rmsRefIndex / avgRefIndex;

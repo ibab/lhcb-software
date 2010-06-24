@@ -35,6 +35,7 @@
 #include "RichKernel/IRichParticleProperties.h"
 #include "RichRecBase/IRichTrackEffectiveRefractiveIndex.h"
 #include "RichRecBase/IRichPhotonSignal.h"
+#include "RichKernel/IRichDetParameters.h"
 
 // Kernel
 #include "RichKernel/RichMap.h"
@@ -142,6 +143,7 @@ namespace Rich
       const IGeomEff *m_geomEffic;                //Pointer to RichGeomEff tool
       const IPhotonSignal *m_photonSig;
       const ITrackEffectiveRefractiveIndex * m_refIndex;
+      const IDetParameters * m_detParams;
 
       //fitter internal variables ('mutable' because of 'const' functions and object....)
       mutable double m_err_xp;
