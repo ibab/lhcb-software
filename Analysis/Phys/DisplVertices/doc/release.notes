@@ -5,6 +5,8 @@
 !               of events with exotic displaced vertices
 !-----------------------------------------------------------------------------
 
+!========================== DisplVertices v6r8 2010-06-24 ===================
+
 ! 2010-06-21 - Neal Gauvin
  - Added some cuts for the selection of the upstream PV candidate.
 
