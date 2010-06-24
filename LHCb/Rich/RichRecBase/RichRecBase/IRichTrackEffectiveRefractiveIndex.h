@@ -71,14 +71,23 @@ namespace Rich
        */
       virtual double refractiveIndex ( const LHCb::RichRecSegment * segment ) const = 0;
 
-      /** Calculates the refractive index R.M.S. for the radiator assoicated
+      /** Calculates the refractive index R.M.S. for the radiator associated
        *  to the given track segment
        *
        *  @param segment The track segment
        *
-       *  @return The overall average refractive index
+       *  @return The refractive index R.M.S.
        */
       virtual double refractiveIndexRMS ( const LHCb::RichRecSegment * segment ) const = 0;
+
+      /** Calculates the refractive index S.D. for the radiator associated
+       *  to the given track segment
+       *
+       *  @param segment The track segment
+       *
+       *  @return The refractive index S.D.
+       */
+      virtual double refractiveIndexSD ( const LHCb::RichRecSegment * segment ) const = 0;
 
     };
 

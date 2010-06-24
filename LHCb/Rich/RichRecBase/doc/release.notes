@@ -4,6 +4,10 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+! 2010-06-24 - Chris Jones
+ - Add a new method to IRichTrackEffectiveRefractiveIndex.h that returns the
+   standard deviation of the refractive index for a given track segment.
+
 !===================== RichRecBase v3r30p1 2010-04-28 ========================
 ! 2010-04-28 - Chris Jones
  - Fix bug in ProcStatus object accessor caused by caching of a pointer
