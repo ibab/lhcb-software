@@ -71,8 +71,8 @@ class Hadrons_Minimal :
             ]
 
         # For inclusive phi extend using Kim's setting
-        from Phi_Reduction5 import Phi_HadronReduction5
-        lines.extend ( Phi_HadronReduction5().ActiveHlt2Lines() )
+        from Phi_Reduction5 import PhiCharmLepton_Reduction5
+        lines.extend ( PhiCharmLepton_Reduction5().ActiveHlt2Lines() )
        
         return lines
 
@@ -86,7 +86,7 @@ class Hadrons_Minimal :
         from CharmLines import CharmLines
         d.update ( CharmLines().Thresholds() )
 
-        from Phi_Reduction5 import Phi_HadronReduction5
-        d.update ( Phi_HadronReduction5().Thresholds() )
+        from Phi_Reduction5 import PhiCharmLepton_Reduction5
+        d.update ( PhiCharmLepton_Reduction5().Thresholds() )
 
         return d
