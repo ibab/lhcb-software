@@ -5,6 +5,14 @@
 ! Purpose     : Stripping framework c++ component algorithms
 ! -----------------------------------------------------------------------------
 
+! 2010-06-24 - Anton Poluektov
+ - Added ProcStatusCheck algorithm: A simple algorithm that checks for 
+   the events aborted by reconstruction algorithms. 
+   Accepts for the events where at least one record is present in ProcStatus 
+   structure. 
+   If OutputLevel == DEBUG, prints out the names and status of the failed 
+   algorithms 
+
 ! 2010-06-21 - Anton Poluektov 
  - Corrected (hopefully) a bug that caused a segfault in StrippingReport output. 
    String length for the formatted output was insufficient. 
