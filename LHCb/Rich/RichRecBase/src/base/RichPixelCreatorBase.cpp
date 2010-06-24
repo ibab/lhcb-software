@@ -4,9 +4,6 @@
  *
  *  Implementation file for tool base class : RichPixelCreatorBase
  *
- *  CVS Log :-
- *  $Id: RichPixelCreatorBase.cpp,v 1.36 2009-07-31 12:00:19 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/04/2005
  */
@@ -397,6 +394,7 @@ namespace Rich
           Warning( mess.str(), StatusCode::SUCCESS, 0 ).ignore();
           richPixels()->clear();
           procStatus()->addAlgorithmStatus( name(), Rich::Rec::ReachedPixelLimit );
+          procStatus()->setAborted(true);
         }
  
         // Must always do the following, even for empty comtainers.

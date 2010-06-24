@@ -4,9 +4,6 @@
  *
  *  Implementation file for tool base class : Rich::Rec::PhotonCreatorBase
  *
- *  CVS Log :-
- *  $Id: RichPhotonCreatorBase.cpp,v 1.31 2010-01-23 00:51:24 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/05/2005
  */
@@ -304,6 +301,7 @@ namespace Rich
         if ( abortPhotonReco )
         {
           procStatus()->addAlgorithmStatus( name(), Rich::Rec::ReachedRichPhotonLimit );
+          procStatus()->setAborted(true);
           std::ostringstream mess;
           mess << "Number of photon candidates exceeds maximum of " 
                << m_maxPhotons << " -> Processing aborted";
