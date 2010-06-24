@@ -5,6 +5,8 @@
 ! Purpose     : colleciton of utils for LoKi
 ! -----------------------------------------------------------------------------
 
+!========================== LoKiUtils v1r0 2010-06-24 =========================
+
 ! 2010-05-29 - Vanya Belyaev
 	 - GetTools: 
       add accessors for Particle Filters & Decay Tree Fitters 
