@@ -9,6 +9,8 @@
    n-1 distribution is.
  - Add a method to the effective track refractive index tool that returns the
    standard deviation for a given track segment.
+ - Call ProcStat->setAbort(true) when the processing is aborted due to too
+   many tracks in RichTrackCreatorFromRecoTracks
 
 !======================== RichRecTrackTools v1r21 2010-06-21 ================
 ! 2010-06-20 - Chris Jones

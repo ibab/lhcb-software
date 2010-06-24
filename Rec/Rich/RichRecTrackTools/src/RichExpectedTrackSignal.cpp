@@ -26,12 +26,13 @@ DECLARE_TOOL_FACTORY( ExpectedTrackSignal );
 ExpectedTrackSignal::ExpectedTrackSignal ( const std::string& type,
                                            const std::string& name,
                                            const IInterface* parent )
-  : RichRecToolBase( type, name, parent ),
-    m_geomEff      ( 0 ),
-    m_sellmeir     ( 0 ),
-    m_sigDetEff    ( 0 ),
-    m_richPartProp ( 0 ),
-    m_rayScat      ( 0 ),
+  : ToolBase           ( type, name, parent ),
+    m_geomEff          ( NULL ),
+    m_sellmeir         ( NULL ),
+    m_sigDetEff        ( NULL ),
+    m_richPartProp     ( NULL ),
+    m_rayScat          ( NULL ),
+    m_gasQuartzWin     ( NULL ),
     m_minPhotonsPerRad ( Rich::NRadiatorTypes, 0 )
 {
   // interface
@@ -46,7 +47,7 @@ StatusCode ExpectedTrackSignal::initialize()
 {
 
   // Sets up various tools and services
-  const StatusCode sc = RichRecToolBase::initialize();
+  const StatusCode sc = ToolBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
