@@ -1,8 +1,10 @@
-!$Id: release.notes,v 1.363 2010-06-22 07:18:27 jpalac Exp $
+!$Id: release.notes,v 1.364 2010-06-24 13:05:46 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciKernel
 ! Responsible : J.P. Palacios
 !============================================================================
+
+!======================== DaVinciKernel v8r8 2010-06-24 =====================
 
 ! 2010-06-22 - Juan Palacios
  - src/Lib/DaVinciStringUtils.cpp
