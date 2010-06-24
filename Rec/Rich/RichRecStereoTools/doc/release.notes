@@ -5,8 +5,8 @@
 !-----------------------------------------------------------------------------
 
 ! 2010-06-24 - Chris Jones
- - Adapt to change in where the S.D. of the observable n-1 distribution is
-   available.
+ - Adapt to change in where the method that returns the S.D. of the observable 
+   n-1 distribution is.
 
 !======================= RichRecStereoTools v1r6p1 2009-09-03 ================
 ! 2009-09-03 Marco Cattaneo
