@@ -5,6 +5,8 @@
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
 
+! ========================== LoKiPhys v9r2 2010-06-24 =========================
+
 ! 2010-06-10 - Vanya Belyaev
 
  - IsMuon, IsMuonLoose, InMuonAcceptance :
