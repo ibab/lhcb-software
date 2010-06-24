@@ -4,6 +4,14 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+! 2010-06-24 - Chris Jones
+ - Add to RichDetParameters a new method to return the S.D. of the n-1
+   distribution for observable photons. 
+ - Remove from RichTabulatedRefractiveIndex the private hard coded n-1 S.D. 
+   values.
+ - Update refractiveIndexRMS() to return the RMS and not the S.D.
+ - Add new method refractiveIndexSD() to return the standard deviation.
+
 !=========================== RichTools v2r29p4 2010-05-19 ====================
 ! 2010-05-18 - Chris Jones
  - Add missing HLT mode flag to refractiveIndex call in 

@@ -4,9 +4,6 @@
  *
  *  Header file for tool : Rich::TabulatedRefractiveIndex
  *
- *  CVS Log :-
- *  $Id: RichTabulatedRefractiveIndex.h,v 1.19 2009-01-20 16:00:55 cattanem Exp $
- *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
@@ -18,9 +15,10 @@
 // from Gaudi
 #include "GaudiKernel/IUpdateManagerSvc.h"
 
-// Base class and interface
+// Base class and interfaces
 #include "RichKernel/RichToolBase.h"
 #include "RichKernel/IRichRefractiveIndex.h"
+#include "RichKernel/IRichDetParameters.h"
 
 // RichKernel
 #include "RichKernel/IRichDetParameters.h"
@@ -85,10 +83,6 @@ namespace Rich
     // for a all visable photon energies.
     double refractiveIndex ( const Rich::RadiatorType rad ) const;
 
-    // Calculates the refractive index R.M.S. for a given radiator type
-    // for all visable photon energies.
-    double refractiveIndexRMS ( const Rich::RadiatorType rad ) const;
-
     // Calculates the average refractive index for a given set of radiator intersections
     // for all visable photon energies.
     double refractiveIndex ( const RichRadIntersection::Vector & intersections,
@@ -98,19 +92,13 @@ namespace Rich
     // for all visable photon energies
     double refractiveIndex ( const RichRadIntersection::Vector & intersections ) const;
 
-  private: // methods
+    // Calculates the refractive index R.M.S. for a given set of radiator intersections
+    // for all visable photon energies.
+    double refractiveIndexRMS ( const RichRadIntersection::Vector & intersections ) const;
 
-    /// UMS update method for Aerogel refractive index
-    StatusCode updateAerogelRefIndex();
-
-    /// UMS update method for Rich1Gas refractive index
-    StatusCode updateRich1GasRefIndex();
-
-    /// UMS update method for Rich2Gas refractive index
-    StatusCode updateRich2GasRefIndex();
-
-    /// Update refractive index for given radiator
-    StatusCode updateRefIndex( const Rich::RadiatorType rad );
+    // Calculates the refractive index S.D. for a given set of radiator intersections
+    // for all visable photon energies.
+    double refractiveIndexSD ( const RichRadIntersection::Vector & intersections ) const;
 
   private: // Private data
 
@@ -122,9 +110,6 @@ namespace Rich
 
     /// Pointers to RICH radiator detector elements
     std::vector<DeRichRadiator *> m_deRads;
-
-    /// refractive index RMS values
-    std::vector<double> m_refRMS;
 
     /// Flag to say if we are in HLT mode or not
     bool m_hltMode;

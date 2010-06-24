@@ -28,7 +28,9 @@ namespace Rich
   //-----------------------------------------------------------------------------
   /** @class DetParameters RichDetParameters.h
    *
-   *  Tool to provide access to useful detector parameters
+   *  Tool to provide access to useful detector parameters, that cannot be easily
+   *  calculated on the fly. Some could eventually be moved to either the LHCbCond 
+   *  or DDDB databases. 
    *
    *  @author Chris Jones         Christopher.Rob.Jones@cern.ch
    *  @date   2004-03-29
@@ -68,6 +70,9 @@ namespace Rich
     // Calculates the mean observable photon energy for a given radiator medium
     double meanPhotonEnergy ( const Rich::RadiatorType rad ) const;
 
+    // Calculate the standard deviation of n-1 distribution for observed photons
+    double refIndexSD ( const Rich::RadiatorType rad ) const;
+
     // Returns the average acceptance outer limits in local HPD coordinates
     // for the given radiator type
     const IDetParameters::RadLimits & AvAcceptOuterLimitsLocal( const Rich::RadiatorType rad ) const;
@@ -77,6 +82,8 @@ namespace Rich
     std::vector<double> m_maxPhotEn;  ///< The maximum photon energies
     std::vector<double> m_minPhotEn;  ///< The minimum photon energies
     std::vector<double> m_meanPhotEn; ///< The mean photon energies
+
+    std::vector<double> m_refSD; ///< Standard deviation of n-1 distribution for observed photons
 
     /// The radiator acceptance limits
     boost::array< IDetParameters::RadLimits, Rich::NRadiatorTypes > m_radOutLimLoc;

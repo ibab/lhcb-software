@@ -33,7 +33,8 @@ namespace Rich
     : RichToolBase ( type, name , parent ),
       m_maxPhotEn  ( Rich::NRadiatorTypes ),
       m_minPhotEn  ( Rich::NRadiatorTypes ),
-      m_meanPhotEn ( Rich::NRadiatorTypes )
+      m_meanPhotEn ( Rich::NRadiatorTypes ),
+      m_refSD      ( Rich::NRadiatorTypes )
   {
 
     declareInterface<IDetParameters>(this);
@@ -53,6 +54,11 @@ namespace Rich
     m_meanPhotEn[Rich::Rich2Gas] = 4.34;
     declareProperty( "MeanPhotonEnergy", m_meanPhotEn );
 
+    m_refSD[Rich::Aerogel]  = 0.488e-3;
+    m_refSD[Rich::Rich1Gas] = 0.393e-4;
+    m_refSD[Rich::Rich2Gas] = 0.123e-4;
+    declareProperty( "RefIndexSD", m_refSD );
+
   }
 
   StatusCode DetParameters::initialize()
@@ -61,7 +67,7 @@ namespace Rich
     const StatusCode sc = RichToolBase::initialize();
     if ( sc.isFailure() ) return sc;
 
-    // Initialise the data. Eventually, some of this should code from XML or D-Base
+    // Initialise the data. Eventually, some of this should come from a DataBase
 
     // Out radiator limits for a single HPD panel (unsigned)
     m_radOutLimLoc[Rich::Aerogel]  = RadLimits ( 0,   625,  0,   600 );
@@ -96,6 +102,11 @@ namespace Rich
   Rich::DetParameters::AvAcceptOuterLimitsLocal( const Rich::RadiatorType rad ) const
   {
     return m_radOutLimLoc[rad];
+  }
+
+  double DetParameters::refIndexSD( const Rich::RadiatorType rad ) const
+  {
+    return m_refSD[rad];
   }
 
 }
