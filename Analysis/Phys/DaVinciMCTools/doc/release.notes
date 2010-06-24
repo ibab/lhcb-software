@@ -1,8 +1,10 @@
-! $Id: release.notes,v 1.299 2010-06-01 09:38:21 pkoppenb Exp $
+! $Id: release.notes,v 1.300 2010-06-24 15:49:05 jpalac Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
 !=============================================================================
+
+!========================== DaVinciMCTools v9r25p4 2010-06-24 ================
 
 ! 2010-06-01 - Patrick Koppenburg
  - Removed SelResult from IsBEvent
