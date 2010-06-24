@@ -86,7 +86,7 @@
 #include "EvtGenModels/EvtHypNonLepton.hh"
 
 #include "EvtGenModels/EvtbTosllAli.hh"
-//#include "EvtGenModels/EvtBToDDalitzCPK.hh"
+#include "EvtGenModels/EvtBToDDalitzCPK.hh"
 #include "EvtGenModels/EvtPVVCPLH.hh"
 #include "EvtGenModels/EvtLambdaB2LambdaV.hh"
 #include "EvtGenModels/EvtSSD_DirectCP.hh"
@@ -269,7 +269,7 @@ EvtModelReg::EvtModelReg(const std::list<EvtDecayBase*>* extraModels)
 //    modelist.registerModel(new EvtJscontCDF);
 
     modelist.registerModel(new EvtbTosllAli);
-    //    modelist.registerModel(new EvtBToDDalitzCPK);
+    modelist.registerModel(new EvtBToDDalitzCPK);
     modelist.registerModel(new EvtLambdaB2LambdaV);
     modelist.registerModel(new EvtLambda2PPiForLambdaB2LambdaV);
     modelist.registerModel(new EvtV2VpVmForLambdaB2LambdaV);
