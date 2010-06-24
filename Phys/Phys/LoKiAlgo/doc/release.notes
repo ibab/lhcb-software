@@ -5,6 +5,8 @@
 ! Purpose     : LoKi-algorithm related stuff 
 ! -----------------------------------------------------------------------------
 
+!========================== LoKiAlgo v9r2 2010-06-24 ==========================
+
 ! 2010-06-19 - Vanya Belyaev
 
  - add selectio with decay descriptor 
