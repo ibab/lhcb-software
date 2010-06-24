@@ -3,6 +3,9 @@
 ! package manager : Velo Group
 !-----------------------------------------------------------------------------
 
+! 2010-06-24 - Rob Lambert
+ - Fixed a few uninitialized variables, see bug #68795
+
 !======================== VeloDet v13r10p1 2010-06-18 ========================
 ! 2010-06-11 - Marco Cattaneo
  - Update reference file for velodet.veloaligncond.updates QMTest, following
