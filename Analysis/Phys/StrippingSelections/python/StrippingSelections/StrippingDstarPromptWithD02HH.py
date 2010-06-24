@@ -1,8 +1,8 @@
-# $Id: StrippingDstarPromptWithD02HH.py,v 1.4 2010-06-11 19:58:53 spradlin Exp $
+# $Id: StrippingDstarPromptWithD02HH.py,v 1.5 2010-06-24 09:56:51 jpalac Exp $
 
 __author__ = ['Philip Xing', 'Patrick Spradlin']
 __date__ = '04 January 2010'
-__version__ = '$Revision: 1.4 $'
+__version__ = '$Revision: 1.5 $'
 
 '''
 Configurable for the analysis selections for D*+ -> pi+ D0(h h'').
@@ -240,7 +240,7 @@ class StrippingDstarPromptWithD02HHConf(LHCbConfigurableUser) : # {
         d0Seq = self.seqD02RSKPi()   ## Seq for D0 -> K- pi+ reconstruction
         dstar = self.combRSDstar()   ## CombineParticles for D*+ -> D0 pi+
 
-        dstar.InputLocations = [ 'StdNoPIDsPions', d0Seq.outputSelection() ]
+        dstar.InputLocations = [ 'StdNoPIDsPions', d0Seq.outputLocation() ]
 
         seqName = "%(LinePrefix)sWithD02RSKPiSeq" % self.getProps()
 
@@ -269,7 +269,7 @@ class StrippingDstarPromptWithD02HHConf(LHCbConfigurableUser) : # {
         combName = "%(LinePrefix)sWithD02WSKPiComb" % self.getProps()
 
         dstar = rsDstar.clone(combName)
-        dstar.InputLocations = [ 'StdNoPIDsPions', d0Seq.outputSelection() ]
+        dstar.InputLocations = [ 'StdNoPIDsPions', d0Seq.outputLocation() ]
 
         seqName = "%(LinePrefix)sWithD02WSKPiSeq" % self.getProps()
 
@@ -298,7 +298,7 @@ class StrippingDstarPromptWithD02HHConf(LHCbConfigurableUser) : # {
         combName = "%(LinePrefix)sWithD02KKComb" % self.getProps()
 
         dstar = rsDstar.clone(combName)
-        dstar.InputLocations = [ 'StdNoPIDsPions', d0Seq.outputSelection() ]
+        dstar.InputLocations = [ 'StdNoPIDsPions', d0Seq.outputLocation() ]
 
         seqName = "%(LinePrefix)sWithD02KKSeq" % self.getProps()
 
@@ -327,7 +327,7 @@ class StrippingDstarPromptWithD02HHConf(LHCbConfigurableUser) : # {
         combName = "%(LinePrefix)sWithD02PiPiComb" % self.getProps()
 
         dstar = rsDstar.clone(combName)
-        dstar.InputLocations = [ 'StdNoPIDsPions', d0Seq.outputSelection() ]
+        dstar.InputLocations = [ 'StdNoPIDsPions', d0Seq.outputLocation() ]
 
         seqName = "%(LinePrefix)sWithD02PiPiSeq" % self.getProps()
 
