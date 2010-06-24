@@ -1,4 +1,4 @@
-// $Id: MCTupleToolReconstructed.cpp,v 1.7 2010-01-26 15:39:26 rlambert Exp $
+// $Id: MCTupleToolReconstructed.cpp,v 1.8 2010-06-24 12:43:40 rlambert Exp $
 // Include files 
 #include "gsl/gsl_sys.h"
 
@@ -85,7 +85,8 @@ StatusCode MCTupleToolReconstructed::fill( const LHCb::MCParticle*
   int catible = -10 ;
 
   // pointer is ready, prepare the values:
-  if( 0!=mcp ) {
+  if( 0!=mcp ) 
+  {
     catted  = m_rected->reconstructed(mcp);
     catible = m_recible->reconstructible(mcp);
   }
@@ -121,22 +122,20 @@ StatusCode MCTupleToolReconstructed::fill( const LHCb::MCParticle*
       }
     }
   }
-  if (isStable(mcp))
+  const unsigned int maxPP = 20 ;
+  test &= tuple->farray(  prefix+"_PP_PX", PX,  prefix+"_ProtoParticles" , maxPP );
+  test &= tuple->farray(  prefix+"_PP_PY", PY,  prefix+"_ProtoParticles" , maxPP );
+  test &= tuple->farray(  prefix+"_PP_PZ", PZ,  prefix+"_ProtoParticles" , maxPP );
+  test &= tuple->farray(  prefix+"_PP_Weight", Weights,  prefix+"_ProtoParticles" , maxPP );
+  test &= tuple->farray(  prefix+"_PP_tr_pchi2", pchi2,  prefix+"_ProtoParticles" , maxPP );
+  if (m_pid)
   {
-    const unsigned int maxPP = 20 ;
-    test &= tuple->farray(  prefix+"_PP_PX", PX,  prefix+"_ProtoParticles" , maxPP );
-    test &= tuple->farray(  prefix+"_PP_PY", PY,  prefix+"_ProtoParticles" , maxPP );
-    test &= tuple->farray(  prefix+"_PP_PZ", PZ,  prefix+"_ProtoParticles" , maxPP );
-    test &= tuple->farray(  prefix+"_PP_Weight", Weights,  prefix+"_ProtoParticles" , maxPP );
-    test &= tuple->farray(  prefix+"_PP_tr_pchi2", pchi2,  prefix+"_ProtoParticles" , maxPP );
-    if (m_pid)
-    {
-      test &= tuple->farray(  prefix+"_PP_DLLe", dlle,  prefix+"_ProtoParticles" , maxPP );
-      test &= tuple->farray(  prefix+"_PP_DLLk", dllk,  prefix+"_ProtoParticles" , maxPP );
-      test &= tuple->farray(  prefix+"_PP_DLLp", dllp,  prefix+"_ProtoParticles" , maxPP );
-      test &= tuple->farray(  prefix+"_PP_DLLmu", dllmu,  prefix+"_ProtoParticles" , maxPP );
-    }
+    test &= tuple->farray(  prefix+"_PP_DLLe", dlle,  prefix+"_ProtoParticles" , maxPP );
+    test &= tuple->farray(  prefix+"_PP_DLLk", dllk,  prefix+"_ProtoParticles" , maxPP );
+    test &= tuple->farray(  prefix+"_PP_DLLp", dllp,  prefix+"_ProtoParticles" , maxPP );
+    test &= tuple->farray(  prefix+"_PP_DLLmu", dllmu,  prefix+"_ProtoParticles" , maxPP );
   }
+  
   
   return StatusCode(test);
 }

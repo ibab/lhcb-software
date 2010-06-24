@@ -4,6 +4,10 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2010-06-24 - Rob Lambert
+ - MCTupleToolReconstructed bugfix bug #67537
+   . not all entries filled if mcp was not stable.
+
 ! 2010-06-08 - Patrick Koppenburg
  - TupleToolTriggerBase : reduce printout
 
