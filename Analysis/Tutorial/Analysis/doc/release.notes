@@ -1,4 +1,4 @@
-!$Id: release.notes,v 1.96 2010-06-08 13:29:59 pkoppenb Exp $
+!$Id: release.notes,v 1.97 2010-06-24 16:09:56 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Tutorial/Analysis
 ! Responsible : P. Koppenburg
@@ -8,6 +8,8 @@
 !   See https://twiki.cern.ch/twiki/bin/view/LHCb/DaVinciTutorial
 !
 !-----------------------------------------------------------------------------
+
+!========================== Analysis v8r6 2010-06-24 =================
 
 ! 2010-06-08 - Patrick Koppenburg
  - New solution DaVinci8/DVReadStrippedDst.py
