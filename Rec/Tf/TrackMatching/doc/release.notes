@@ -3,8 +3,10 @@
 ! Responsible : Eduardo Rodrigues
 ! Purpose     : Package for the track matching algorithms
 !-----------------------------------------------------------------------------
+! 2010-06-25 - Stephanie Hansmann-Menzemer
+ - Set procStatus->aborted for hot events 
 
-!======================= TrackMatching v2r29 2010-06-21=====================
+!========================= TrackMatching v2r29 2010-06-21=====================
 ! 2010-06-21 - Stephanie Hansmann-Menzemer
  - Add switch for timing measurements
 
