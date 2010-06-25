@@ -3,6 +3,13 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+- Changes to references to reflect changes in Brunel v37r5 output:
+  . OTHitEfficiencyMonitor: Add 2D histos per layer (TrackMonitors)
+  . Add MuonEffMonitor (temporarily, must be speeded up) (MuonTrackMonitor)
+  . Improved Muon alignment monitor (MuonTrackMonitor)
+  . Report processing aborted in ProcStatus (Rich, Tracking, Velo)
+  . Fix uninitialised variables (VeloDet(
+
 </PRE><H1><A NAME=v37r4>2010-06-24 Brunel v37r4</A></H1><PRE>
 - Changes to configurable
   . Fix AgeLimit when reprocessing from RDST or SDST
