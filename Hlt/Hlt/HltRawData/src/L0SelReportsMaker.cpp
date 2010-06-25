@@ -1,4 +1,4 @@
-// $Id: L0SelReportsMaker.cpp,v 1.1 2010-06-23 22:50:27 tskwarni Exp $
+// $Id: L0SelReportsMaker.cpp,v 1.2 2010-06-25 13:13:24 tskwarni Exp $
 // #define DEBUGCODE
 // Include files 
 //#include "boost/lexical_cast.hpp"
@@ -132,7 +132,7 @@ StatusCode L0SelReportsMaker::execute() {
   }
       
   // translate all L0CaloCandidates into Object Summaries
-  if( exist<L0CaloCandidates>( L0CaloCandidateLocation::Default ) )
+  if( exist<L0CaloCandidates>( L0CaloCandidateLocation::Full ) )
   {    
     HltObjectSummary selSumOut;    
     selSumOut.setSummarizedObjectCLID( 1 ); // use special CLID for selection summaries (lowest number for sorting to the end)
@@ -142,7 +142,7 @@ StatusCode L0SelReportsMaker::execute() {
     static boost::hash<std::string> hasher;
     selSumOut.addToInfo("0#SelectionID", float( hasher(selName) )  ); // fake: cannot make them persistent
 
-    L0CaloCandidates* pL0CaloCandidates = get<L0CaloCandidates>( L0CaloCandidateLocation::Default );
+    L0CaloCandidates* pL0CaloCandidates = get<L0CaloCandidates>( L0CaloCandidateLocation::Full );
     for(L0CaloCandidates::const_iterator ic=pL0CaloCandidates->begin();ic!=pL0CaloCandidates->end();++ic){      
       const HltObjectSummary* hos = store<LHCb::L0CaloCandidate>(*ic);
       if( !hos ){
@@ -441,7 +441,6 @@ const LHCb::HltObjectSummary* L0SelReportsMaker::store_(const LHCb::L0MuonCandid
   hos->setSummarizedObjectCLID( object->clID() );
   hos->setSummarizedObject(object);
  
-  // find mutations of the same object
   HltObjectSummary::Info theseInfo = infoToSave( hos );
   std::vector<LHCbID> theseHits;
   for(int s=0;s<3;++s){
@@ -449,81 +448,7 @@ const LHCb::HltObjectSummary* L0SelReportsMaker::store_(const LHCb::L0MuonCandid
      for(std::vector<LHCb::MuonTileID>::const_iterator muHit=muHits.begin();muHit!=muHits.end();++muHit){
        theseHits.push_back( LHCbID(*muHit) );
      }
-  }
-  std::vector<LHCbID>::const_iterator rbegin1=theseHits.end(); --rbegin1;
-  std::vector<LHCbID>::const_iterator rend1=theseHits.begin(); --rend1;        
-  
-  //    look for objects with the same lhcbids
-  //      if many then the one which leaves least amount info on this one
-  int smallestSize = theseInfo.size();
-  const HltObjectSummary* pBestHos(0);
-
-  //   couldn't get reverse operator to work
-  HltObjectSummarys::const_iterator rbegin=m_objectSummaries->end();  --rbegin;
-  HltObjectSummarys::const_iterator rend  =m_objectSummaries->begin(); --rend;  
-  for( HltObjectSummarys::const_iterator ppHos=rbegin;ppHos!=rend;--ppHos){
-    const HltObjectSummary* pHos(*ppHos);    
-    if( pHos->summarizedObjectCLID() == object->clID() ){
-      std::vector<LHCbID> otherHits = pHos->lhcbIDsFlattened();      
-      bool different=false;      
-      if( otherHits.size() == theseHits.size() ){
-        std::vector<LHCbID>::const_iterator h2=otherHits.end(); --h2;        
-        for( std::vector<LHCbID>::const_iterator h1=rbegin1;h1!=rend1;--h1,--h2){
-          if( h1->lhcbID() != h2->lhcbID() ){
-            different=true;
-            break;            
-          }
-        }
-        if( different )continue;
-        // found object of the same type with the same lhcbid content!
-        // now check if its Info content is a subset of this one
-        HltObjectSummary::Info otherInfo = pHos->numericalInfoFlattened(); 
-        if( otherInfo.size() <= theseInfo.size() ){
-          bool notcontained=false;          
-          for( HltObjectSummary::Info::const_iterator i1=otherInfo.begin();i1!=otherInfo.end();++i1 ){
-            HltObjectSummary::Info::const_iterator i2 = theseInfo.find( i1->first );
-            if( i2==theseInfo.end() ){
-              notcontained = true;
-              break;
-            }
-            if( i1->second != i2->second ){
-              notcontained = false;
-              break;
-            }
-          }
-          if( notcontained )continue;
-          if( otherInfo.size() == theseInfo.size() ){
-            smallestSize=0;
-            pBestHos=pHos;
-            // don't need to look any more since subobject has all the info
-            break;            
-          } else {
-            int presentSize = theseInfo.size()-otherInfo.size();
-            if( presentSize < smallestSize ){
-              smallestSize = presentSize;
-              pBestHos=pHos;
-            }
-          }
-        }
-      }
-    }
-  }
-  // found subobject
-  if( pBestHos ){
-    if( smallestSize==0 ){      
-      theseInfo.clear();
-    } else {
-        HltObjectSummary::Info otherInfo = pBestHos->numericalInfoFlattened(); 
-        for( HltObjectSummary::Info::const_iterator i1=otherInfo.begin();i1!=otherInfo.end();++i1 ){
-          theseInfo.erase( i1->first );
-        }
-    }
-    // lhcbids are stored at the botton object
-    theseHits.clear();
-    // set subobject link
-    hos->addToSubstructure( pBestHos );          
-  }
-  
+  }  
   hos->setLhcbIDs( theseHits );
   hos->setNumericalInfo( theseInfo );
 
@@ -552,83 +477,16 @@ const LHCb::HltObjectSummary* L0SelReportsMaker::store_(const LHCb::L0CaloCandid
   hos->setSummarizedObjectCLID( object->clID() );
   hos->setSummarizedObject(object);
  
-  // find mutations of the same object
   HltObjectSummary::Info theseInfo = infoToSave( hos );
   std::vector<LHCbID> theseHits;
-  theseHits.push_back( LHCbID(object->id()) );
-  std::vector<LHCbID>::const_iterator rbegin1=theseHits.end(); --rbegin1;
-  std::vector<LHCbID>::const_iterator rend1=theseHits.begin(); --rend1;        
-  
-  //    look for objects with the same lhcbids
-  //      if many then the one which leaves least amount info on this one
-  int smallestSize = theseInfo.size();
-  const HltObjectSummary* pBestHos(0);
-
-  //   couldn't get reverse operator to work
-  HltObjectSummarys::const_iterator rbegin=m_objectSummaries->end();  --rbegin;
-  HltObjectSummarys::const_iterator rend  =m_objectSummaries->begin(); --rend;  
-  for( HltObjectSummarys::const_iterator ppHos=rbegin;ppHos!=rend;--ppHos){
-    const HltObjectSummary* pHos(*ppHos);    
-    if( pHos->summarizedObjectCLID() == object->clID() ){
-      std::vector<LHCbID> otherHits = pHos->lhcbIDsFlattened();      
-      bool different=false;      
-      if( otherHits.size() == theseHits.size() ){
-        std::vector<LHCbID>::const_iterator h2=otherHits.end(); --h2;        
-        for( std::vector<LHCbID>::const_iterator h1=rbegin1;h1!=rend1;--h1,--h2){
-          if( h1->lhcbID() != h2->lhcbID() ){
-            different=true;
-            break;            
-          }
-        }
-        if( different )continue;
-        // found object of the same type with the same lhcbid content!
-        // now check if its Info content is a subset of this one
-        HltObjectSummary::Info otherInfo = pHos->numericalInfoFlattened(); 
-        if( otherInfo.size() <= theseInfo.size() ){
-          bool notcontained=false;          
-          for( HltObjectSummary::Info::const_iterator i1=otherInfo.begin();i1!=otherInfo.end();++i1 ){
-            HltObjectSummary::Info::const_iterator i2 = theseInfo.find( i1->first );
-            if( i2==theseInfo.end() ){
-              notcontained = true;
-              break;
-            }
-            if( i1->second != i2->second ){
-              notcontained = false;
-              break;
-            }
-          }
-          if( notcontained )continue;
-          if( otherInfo.size() == theseInfo.size() ){
-            smallestSize=0;
-            pBestHos=pHos;
-            // don't need to look any more since subobject has all the info
-            break;            
-          } else {
-            int presentSize = theseInfo.size()-otherInfo.size();
-            if( presentSize < smallestSize ){
-              smallestSize = presentSize;
-              pBestHos=pHos;
-            }
-          }
-        }
-      }
-    }
-  }
-  // found subobject
-  if( pBestHos ){
-    if( smallestSize==0 ){      
-      theseInfo.clear();
-    } else {
-        HltObjectSummary::Info otherInfo = pBestHos->numericalInfoFlattened(); 
-        for( HltObjectSummary::Info::const_iterator i1=otherInfo.begin();i1!=otherInfo.end();++i1 ){
-          theseInfo.erase( i1->first );
-        }
-    }
-    // lhcbids are stored at the botton object
-    theseHits.clear();
-    // set subobject link
-    hos->addToSubstructure( pBestHos );          
-  }
+  CaloCellID id = object->id();
+  CaloCellID id1(id.calo(), id.area(), id.row()+1, id.col()   );
+  CaloCellID id2(id.calo(), id.area(), id.row()+1, id.col()+1 );
+  CaloCellID id3(id.calo(), id.area(), id.row()  , id.col()+1 );
+  theseHits.push_back( LHCbID(id) );
+  theseHits.push_back( LHCbID(id1) );
+  theseHits.push_back( LHCbID(id2) );
+  theseHits.push_back( LHCbID(id3) );
   
   hos->setLhcbIDs( theseHits );
   hos->setNumericalInfo( theseInfo );
