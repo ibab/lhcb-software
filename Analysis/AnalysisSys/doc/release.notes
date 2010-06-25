@@ -3,8 +3,11 @@ Package     : AnalysisSys
 Package Coordinator : Juan Palacios
 Purpose     : LHCb analysis packages
 
-</PRE><H1><A NAME=v4r6>2010-06-24 Analysis v4r6 </A></H1><PRE>
+</PRE><H1><A NAME=v4r6>2010-06-25 Analysis v4r6 </A></H1><PRE>
 
+ ***  STRIPPING LINES DEVELOPMENT VERSION ***
+ - StrippingSelections are *not* commissioned or approved. Do not use for
+   production with the released Phys/StrippingSelections and Phys/StrippingConf.
  - Based on Phys v9r7 and LHCb v31r2
 
 </PRE><H1><A NAME=v4r5>2010-05-28 Analysis v4r5 </A></H1><PRE>
