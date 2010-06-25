@@ -460,6 +460,7 @@ StatusCode PatSeedingTool::performTracking(
       // (ProcStatus returns zero status for us in cases where we don't
       // explicitly add a status code)
       procStat->addAlgorithmStatus(name(), ETooManyHits);
+      procStat->setAborted(true);
       
       return StatusCode::SUCCESS;
     }

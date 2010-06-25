@@ -109,6 +109,7 @@ StatusCode PatForward::execute() {
     // (ProcStatus returns zero status for us in cases where we don't
     // explicitly add a status code)
     procStat->addAlgorithmStatus(name(), -3);  
+    procStat->setAborted(true);
     return Warning("Too many velo tracks", StatusCode::SUCCESS, 1);
   }
 
