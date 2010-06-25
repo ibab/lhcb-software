@@ -117,6 +117,7 @@ StatusCode Seed::execute(){
       // (ProcStatus returns zero status for us in cases where we don't
       // explicitly add a status code)
       procStat->addAlgorithmStatus(name(), -3);     
+      procStat->setAborted(true);
     return Warning("To many IT hits event rejected", StatusCode::SUCCESS, 1);
   }  
 
@@ -131,7 +132,7 @@ StatusCode Seed::execute(){
       // (ProcStatus returns zero status for us in cases where we don't
       // explicitly add a status code)
      procStat->addAlgorithmStatus(name(), -3);
-      
+     procStat->setAborted(true);
     return Warning("To Many OT hits event rejected", StatusCode::SUCCESS,1); 
   }
 

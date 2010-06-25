@@ -3,6 +3,8 @@
 ! Responsible : M Needham
 ! Purpose     : Tsa algorithms
 !----------------------------------------------------------------------------
+! 2010-06-25 - Stephanie Hansmann-Menzemer
+ - set procStat->setAbort(true) for busy events
 
 !======================= TsaAlgorithms v3r21 2010-06-21====================
 ! 2010-06-07 - Rob Lambert
