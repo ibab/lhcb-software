@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.196 2010-06-24 16:24:36 jpalac Exp $
+# $Id: requirements,v 1.197 2010-06-25 06:38:56 jpalac Exp $
 package AnalysisSys
 version v4r6
 
@@ -52,7 +52,7 @@ use  MicroDSTConf               v2r9    MicroDST          # Juan Palacios
 
 ####################################################################
 use Analysis            	v8r6    Tutorial          # P. Koppenburg
-use LoKiExample         	v8r5p2  Ex                # Vanya Belyaev
+use LoKiExample         	v8r6    Ex                # Vanya Belyaev
 use MicroDSTExample             v2r13p1 Ex                # Juan Palacios
 
 # Declare this as a container package
