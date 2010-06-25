@@ -8,7 +8,10 @@ Purpose: LHCb reconstruction program
   . Add MuonEffMonitor (temporarily, must be speeded up) (MuonTrackMonitor)
   . Improved Muon alignment monitor (MuonTrackMonitor)
   . Report processing aborted in ProcStatus (Rich, Tracking, Velo)
-  . Fix uninitialised variables (VeloDet(
+  . Fix uninitialised variables (VeloDet)
+  . New Velo RF foil thickness from head-20100531 DDDB and LHCBCOND tags
+  . New HPD demagnification parameters from head-20100531 DDDB tag
+  
 
 </PRE><H1><A NAME=v37r4>2010-06-24 Brunel v37r4</A></H1><PRE>
 - Changes to configurable
