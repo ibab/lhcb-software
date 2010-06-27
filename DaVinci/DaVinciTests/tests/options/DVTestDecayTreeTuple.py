@@ -10,6 +10,19 @@
 from Gaudi.Configuration import *
 from GaudiKernel.SystemOfUnits import *
 MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"
+#######################################################################
+#
+# Selection
+#
+
+from StrippingConf.Configuration import StrippingConf
+from StrippingConf.StrippingStream import StrippingStream
+from StrippingSelections import StrippingBd2JpsiKS
+
+stream = StrippingStream("Test")
+stream.appendLines( [ StrippingBd2JpsiKS.line1 ] )
+sc = StrippingConf()
+sc.appendStream( stream )
 ########################################################################
 #
 # The Decay Tuple
@@ -27,7 +40,8 @@ tuple.ToolList +=  [
     , "TupleToolTrackInfo"
 #    , "TupleToolTISTOS"
      ]
-tuple.InputLocations = ["SelBLLBd2JpsiKS"]
+tuple.InputLocations = [StrippingBd2JpsiKS.line1.outputLocation()]
+#tuple.InputLocations = ["SelBLLBd2JpsiKS"]
 tuple.Decay = "[B0 -> (^J/psi(1S) -> ^mu+ ^mu-) (^KS0 -> ^pi+ ^pi-)]cc"
 #tuple.OutputLevel = 1 ;
 ########################################################################
@@ -55,22 +69,7 @@ from Configurables import MCTupleToolReconstructed, MCReconstructed
 #ToolSvc().MCReconstructed.OutputLevel = 1
 
 #mcTuple.OutputLevel = 1
-#######################################################################
-#
-# Selection
-#
 
-from StrippingConf.Configuration import StrippingConf
-from StrippingConf.StrippingStream import StrippingStream
-from StrippingSelections import StrippingBd2JpsiKS
-
-stream = StrippingStream("Test")
-stream.appendLines( [ StrippingBd2JpsiKS.line1 ] )
-
-sc = StrippingConf()
-sc.appendStream( stream )
-
-########################################################################
 from Configurables import PrintMCTree
 pmc = PrintMCTree()
 pmc.ParticleNames = [ "B0", "B~0" ]
