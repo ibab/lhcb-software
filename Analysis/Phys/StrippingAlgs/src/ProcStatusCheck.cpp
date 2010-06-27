@@ -9,10 +9,10 @@
 // A simple algorithm that checks for the events aborted by reconstruction 
 // algorithms. 
 // 
-// Returns True if at least one record is present in ProcStatus structure. 
+// Checks for ProcStatus->aborted()
 // 
-// If OutputLevel == DEBUG, prints out the names and status of the failed 
-// algorithms 
+// If OutputLevel == DEBUG, prints out the names and status codes of algorithms 
+// in ProcStatus
 //
 // 2010-06-24 : Anton Poluektov
 //-----------------------------------------------------------------------------
@@ -58,9 +58,15 @@ StatusCode ProcStatusCheck::execute() {
   LHCb::ProcStatus* procStat = get<LHCb::ProcStatus*>( LHCb::ProcStatusLocation::Default ); 
   if (procStat) {
     int procStatSize = procStat->algs().size();
+    
+    if ( procStat->aborted() ) {
+      selected = true;
+      
+      if ( msgLevel(MSG::DEBUG) ) debug() << " ProcStat: aborted " << endmsg;
+    }
+    
     if ( msgLevel(MSG::DEBUG) ) debug() << " ProcStat size = " << procStatSize << endmsg;
     if( 0 < procStatSize ) {
-      // event failed some alg in Brunel
       
       if ( msgLevel(MSG::DEBUG) ) { 
         for (int i = 0; i < procStatSize; i++) {
@@ -70,8 +76,9 @@ StatusCode ProcStatusCheck::execute() {
         }
       }
 
-      selected = true;
     }
+    
+    
   }
       
   setFilterPassed( selected );

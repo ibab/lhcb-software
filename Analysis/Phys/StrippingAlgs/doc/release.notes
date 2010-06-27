@@ -5,6 +5,10 @@
 ! Purpose     : Stripping framework c++ component algorithms
 ! -----------------------------------------------------------------------------
 
+! 2010-06-27 - Anton Poluektov 
+ - ProcStatusCheck looks for ProcStatus->aborted() rather than counting 
+   the number of entries in ProcStatus. 
+
 ! 2010-06-24 - Anton Poluektov
  - Added ProcStatusCheck algorithm: A simple algorithm that checks for 
    the events aborted by reconstruction algorithms. 
