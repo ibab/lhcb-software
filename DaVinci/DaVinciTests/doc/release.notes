@@ -4,6 +4,11 @@
 ! Purpose     : QMTests for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2010-06-27 - Juan Palaciosn
+ - test/options/DVTestDecayTreeTuple.py
+  . Tuple had hard-wired InputLocations and was thus failing with latest 
+    StrippingConf. Get location from stripping line directly.
+
 ! 2010-06-21 - Juan Palacios
  - Removed tests/qmtest/davinci.qms/stripping.qms/test_realdata.qmt
   . Covered by other stripping tests and getting out of date.
