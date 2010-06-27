@@ -13,6 +13,7 @@ from Gaudi.Configuration import *
 from StrippingConf.StrippingStream import StrippingStream
 
 from StrippingSelections import StrippingB2Charged2Body
+from StrippingSelections.StrippingB02D0Kstar_D02KPiPi0 import StrippingB02D0Kstar_D02KPiPi0Conf
 from StrippingSelections import StrippingB2DPi
 from StrippingSelections import StrippingB2DPiChi2
 from StrippingSelections import StrippingB2DPiChi2NOMWPres
@@ -66,5 +67,7 @@ stream.appendLines( [
                         StrippingBs2PhiKstConf().nominall(),
                         StrippingBs2PhiKstConf().loosel(),
                         StrippingB2hhLTUnbiasedConf().StripB2hhLTUnbiased(),
-                        StrippingB2hhLTUnbiasedConf().StripB2hhLTUnbiasedLoose()
+                        StrippingB2hhLTUnbiasedConf().StripB2hhLTUnbiasedLoose(), 
+			StrippingB02D0Kstar_D02KPiPi0Conf().NominalResolved_Line(),
+			StrippingB02D0Kstar_D02KPiPi0Conf().NominalMerged_Line()
 		    ] )
