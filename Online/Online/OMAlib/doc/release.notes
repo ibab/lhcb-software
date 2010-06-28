@@ -1,8 +1,10 @@
-! $Id: release.notes,v 1.46 2010-06-22 09:45:55 ggiacomo Exp $
+! $Id: release.notes,v 1.47 2010-06-28 11:26:40 ggiacomo Exp $
 ! Package     : OMAlib
 ! Responsible : G. Graziani
 ! Purpose     : Online Monitoring Analysis library
 
+! 20100628 GG
+ - fix problem with fake retriggering of inactive alarm
 
 ! 20100622 GG
  - correct some creator algorithms to support inputs with variable bin size

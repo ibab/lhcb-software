@@ -1,4 +1,4 @@
-// $Id: OMAMsgInterface.cpp,v 1.35 2010-06-17 10:46:00 ggiacomo Exp $
+// $Id: OMAMsgInterface.cpp,v 1.36 2010-06-28 11:26:40 ggiacomo Exp $
 #include <cstring>
 #include <sstream>
 #include "OnlineHistDB/OnlineHistDB.h"
@@ -166,8 +166,10 @@ void OMAMsgInterface::raiseMessage(OMAMessage::OMAMsgLevel level,
         msg->confirm();
       }
       else {
-        send = true; // was disabled: retrigger alarm
-        msg->enable();
+        if(level > OMAMessage::INFO ) {
+          send = true; // was disabled: retrigger alarm
+          msg->enable();
+        }
       }
       // resend to output if level grew
       if ( level >  msg->level() ) {
