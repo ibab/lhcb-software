@@ -1,3 +1,7 @@
+2010-06-28  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbConfiguration/Project.py: removed the alias SetupDirac
+
 2010-06-22  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbConfiguration/Package.py: added LCGTarBallDir

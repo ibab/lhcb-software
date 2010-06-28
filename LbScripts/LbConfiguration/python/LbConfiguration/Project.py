@@ -310,7 +310,9 @@ DaVinci.setFullSize(800000)#IGNORE:E0602
 
 # Dirac
 Dirac.disableSetenvAlias()#IGNORE:E0602
+Dirac.disableSetupAlias()#IGNORE:E0602
 Dirac.setFullSize(500000)#IGNORE:E0602
+
 
 # LHCbDirac
 LHCbDirac.disableSetenvAlias()#IGNORE:E0602
