@@ -5,6 +5,10 @@
 ! Purpose     : LHCb Event model. Reconstruction classes (Brunel output) 
 !-----------------------------------------------------------------------------
 
+! 2010-06-28 - Chris Jones
+ - Add a method to ProcStatus to add a formatted algorithm entry with  sub-
+   system, abort and why the entry was made.
+
 !========================= RecEvent v2r29 2010-06-20 =========================
 ! 2010-06-20 - Chris Jones
  - Fix threshold setting methods in RichPID

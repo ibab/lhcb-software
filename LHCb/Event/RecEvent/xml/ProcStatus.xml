@@ -12,53 +12,29 @@
       id     = "5001" >
 
       <import name="vector"  std="TRUE"/>
+      <import name="string"  std="TRUE"/>
       <import name="utility" std="TRUE"/>
 
       <base name = "DataObject" />
       &DataObject;
+
       <attribute 
 	name = "aborted" 
 	type = "bool"
 	desc = "Indicate if the processing should be aborted" 
         init = "false" />
 
-	<constructor 
-		desc     = "Copy constructor. Creates a new ProcStatus with the same information" 
-		initList = "DataObject(), m_aborted(proc.aborted()), m_algs(proc.algs())">
-                <arg const="TRUE" name="proc" type="LHCb::ProcStatus"/>
-                <code/>
-      	</constructor>
+      <typedef access="PUBLIC" 
+               def="AlgStatus" 
+               desc="Status for a given algorithm" 
+               type="std::pair&lt;std::string,int&gt;"
+      />
 
-      <method
-	name = "addAlgorithmStatus"
-	type = "void"
-	desc = "Add an entry for an algorithm"
-	argList = "const std::string name, int status" >
-        <code>
-  for ( unsigned int jj=0 ; m_algs.size() > jj ; jj++ ) {
-    if ( m_algs[jj].first == name ) {
-      m_algs[jj].second = status;
-      return;
-    }
-  }
-  m_algs.push_back( std::pair&lt;std::string,int&gt;(name,status) );
-        </code>
-      </method>
-
-      <method
-	name = "algorithmStatus" 
-	type = "int"
-	desc = "Status of this algorithm" 
-	argList = "const std::string name" >
-        <code>
-  for ( unsigned int jj=0 ; m_algs.size() > jj ; jj++ ) {
-    if ( m_algs[jj].first == name ) {
-      return m_algs[jj].second;
-    }
-  }
-  return 0;
-        </code>
-      </method>
+      <typedef access="PUBLIC" 
+               def="AlgStatusVector" 
+               desc="Vector of AlgStatus objects" 
+               type="std::vector&lt;AlgStatus&gt;"
+      />
 
       <attribute
 	name = "algs"
@@ -66,6 +42,39 @@
 	desc = "List of algorithms with status"
 	setMeth = "FALSE"
         getMeth = "TRUE" />
+
+      <constructor 
+	desc     = "Copy constructor. Creates a new ProcStatus with the same information" 
+	initList = "DataObject(), m_aborted(proc.aborted()), m_algs(proc.algs())">
+        <arg const="TRUE" name="proc" type="LHCb::ProcStatus"/>
+        <code/>
+      </constructor>
+
+      <method
+	name = "addAlgorithmStatus"
+	type = "void"
+	desc = "Add an entry for an algorithm" >
+        <arg const="TRUE" name="name"   type="std::string" />
+        <arg const="TRUE" name="status" type="int" inout="BYVALUE" />
+      </method>
+
+      <method
+	name = "addAlgorithmStatus"
+	type = "void"
+	desc = "Add an entry for an algorithm, with sub-system, type and abort code" >
+        <arg const="TRUE" name="algName" type="std::string" />
+        <arg const="TRUE" name="subsystem" type="std::string" />
+        <arg const="TRUE" name="reason" type="std::string" />
+        <arg const="TRUE" name="status" type="int" inout="BYVALUE" />
+        <arg const="TRUE" name="eventAborted" type="bool" inout="BYVALUE" />
+      </method>
+
+      <method
+	name = "algorithmStatus" 
+	type = "int"
+	desc = "Status of this algorithm" >
+        <arg const="TRUE" name="name" type="std::string" />
+      </method>
 	
     </class>
   </package>
