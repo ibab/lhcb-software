@@ -1,8 +1,8 @@
-# $Id: StrippingBs2JpsiPhi_dev.py,v 1.1 2010-06-28 15:55:47 jpalac Exp $
+# $Id: StrippingBs2JpsiPhi_dev.py,v 1.2 2010-06-28 19:55:26 jpalac Exp $
 
 __author__ = ['Greig Cowan', 'Juan Palacios']
 __date__ = '24/01/2010'
-__version__ = '$Revision: 1.1 $'
+__version__ = '$Revision: 1.2 $'
 
 '''
 Bs->JpsiPhi lifetime unbiased stripping selection using LoKi::Hybrid and
@@ -16,8 +16,6 @@ __all__ = ('StrippingBs2JpsiPhiConf',
            'makePhi2KKLoose',
            'makeJpsi2MuMuLoose')
 
-#from Gaudi.Configuration import *
-#from LHCbKernel.Configuration import *
 from Configurables import FilterDesktop, CombineParticles, OfflineVertexFitter
 from StrippingConf.StrippingLine import StrippingLine
 from PhysSelPython.Wrappers import Selection, DataOnDemand
@@ -104,10 +102,13 @@ def makeJpsi2MuMuLoose( name,
                         JpsiMassWinLoose,
                         JpsiVCHI2Loose):
     _params = locals()
-    _JpsiFilter = FilterDesktop("JpsiFilterForBs2JpsiPhiLoose")
-    _JpsiFilter.Code = "  (MAXTREE('mu+'==ABSID, TRCHI2DOF) < %(MuonTRCHI2Loose)s)" \
-                       "& (ADMASS('J/psi(1S)') < %(JpsiMassWinLoose)s *MeV)" \
-                       "& (VFASPF(VCHI2/VDOF) < %(JpsiVCHI2Loose)s)" % _params
+    _code = "  (MAXTREE('mu+'==ABSID, TRCHI2DOF) < %(MuonTRCHI2Loose)s)" \
+        "& (ADMASS('J/psi(1S)') < %(JpsiMassWinLoose)s *MeV)" \
+        "& (VFASPF(VCHI2/VDOF) < %(JpsiVCHI2Loose)s)" % _params
+    print 'makeJpsi2MuMuLoose Code =', _code
+    _JpsiFilter = FilterDesktop("JpsiFilterForBs2JpsiPhiLoose",
+                                Code = _code)
+
     stdVeryLooseJpsi2MuMu = DataOnDemand(Location = "Phys/StdVeryLooseJpsi2MuMu")
     return Selection(name,
                      Algorithm = _JpsiFilter,
@@ -119,13 +120,14 @@ def makePhi2KKLoose( name,
                      PhiPTLoose,
                      PhiVCHI2Loose):
     _params = locals()
+    _code = "  (MAXTREE('K+'==ABSID, TRCHI2DOF) < %(KaonTRCHI2Loose)s)" \
+        "& (ADMASS('phi(1020)') < %(PhiMassWinLoose)s *MeV)" \
+        "& (PT > %(PhiPTLoose)s *MeV)" \
+        "& (VFASPF(VCHI2/VDOF) < %(PhiVCHI2Loose)s)" % _params
+    print 'makePhi2KKLoose Code =', _code
     StdLoosePhi2KK = DataOnDemand(Location = "Phys/StdLoosePhi2KK")
-    _phiFilter = FilterDesktop("PhiFilterForBs2JpsiPhiLoose")
-    _phiFilter.Code = "  (MAXTREE('K+'==ABSID, TRCHI2DOF) < %(KaonTRCHI2Loose)s)" \
-                      "& (ADMASS('phi(1020)') < %(PhiMassWinLoose)s *MeV)" \
-                      "& (PT > %(PhiPTLoose)s *MeV)" \
-                      "& (VFASPF(VCHI2/VDOF) < %(PhiVCHI2Loose)s)" % _params
-
+    _phiFilter = FilterDesktop("PhiFilterForBs2JpsiPhiLoose",
+                               Code = _code)
     return Selection (name,
                       Algorithm = _phiFilter,
                       RequiredSelections = [StdLoosePhi2KK])
@@ -136,12 +138,14 @@ def makePhi2KK( name,
                 PhiPT,
                 PhiVCHI2 ):
     _params = locals()
+    _code = "  (MINTREE('K+'==ABSID, PIDK) > %(KaonPIDK)s)" \
+        "& (ADMASS('phi(1020)') < %(PhiMassWin)s *MeV)" \
+        "& (PT > %(PhiPT)s *MeV)" \
+        "& (VFASPF(VCHI2/VDOF) < %(PhiVCHI2)s)" % _params
+    print 'makeJpsiPhi2KK Code =', _code
     StdLoosePhi2KK = DataOnDemand(Location = "Phys/StdLoosePhi2KK")
-    _phiFilter = FilterDesktop("PhiFilterForBs2JpsiPhi")
-    _phiFilter.Code = "  (MINTREE('K+'==ABSID, PIDK) > %(KaonPIDK)s)" \
-                      "& (ADMASS('phi(1020)') < %(PhiMassWin)s *MeV)" \
-                      "& (PT > %(PhiPT)s *MeV)" \
-                      "& (VFASPF(VCHI2/VDOF) < %(PhiVCHI2)s)" % _params
+    _phiFilter = FilterDesktop("PhiFilterForBs2JpsiPhi",
+                               Code = _code)
 
     return Selection (name,
                       Algorithm = _phiFilter,
@@ -153,11 +157,15 @@ def makeBs2JpsiPhi( name,
                     BsMassWin,
                     BsVCHI2):
     _params = locals()
-    _Bs = CombineParticles("Bs2JpsiPhi")
-    _Bs.DecayDescriptor = "B_s0 -> J/psi(1S) phi(1020)"
-    _Bs.CombinationCut = "ADAMASS('B_s0') < %(BsMassWin)s *MeV" % _params
-    _Bs.MotherCut = "(VFASPF(VCHI2/VDOF) < %(BsVCHI2)s)" % _params
-    _Bs.ReFitPVs = True
+    _combCut =  "ADAMASS('B_s0') < %(BsMassWin)s *MeV" % _params
+    _motherCut = "(VFASPF(VCHI2/VDOF) < %(BsVCHI2)s)" % _params
+    print 'makeBs2JpsiPhi CombinationCut =', _combCut
+    print 'makeBs2JpsiPhi MotherCut =', _motherCut
+    _Bs = CombineParticles("Bs2JpsiPhi",
+                           DecayDescriptor = "B_s0 -> J/psi(1S) phi(1020)",
+                           CombinationCut = _combCut,
+                           MotherCut = _motherCut,
+                           ReFitPVs = True)
     # Set the OfflineVertexFitter to keep the 4 tracks and not the J/Psi Phi
     _Bs.addTool( OfflineVertexFitter() )
     _Bs.VertexFitters.update( { "" : "OfflineVertexFitter"} )
