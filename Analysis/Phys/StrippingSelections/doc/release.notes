@@ -5,6 +5,11 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-06-28 - Juan Palacios
+ - Add python/StrippingSelections/StrippingBs2JpsiPhi_dev.py
+  . Experimantal module to try out new way of configuring and building lines.
+ - Add tests/test_bs2jpsiphi.py to play with the above module.
+
 ! 2010-06-27 - Anton Poluektov
  - Added StrippingB2DX - the implementation of congigurable 
    (but not LHCbConfigurable) B->DX lines using particle selection framework. 
