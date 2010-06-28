@@ -1,8 +1,8 @@
-# $Id: StrippingBs2JpsiPhi_dev.py,v 1.2 2010-06-28 19:55:26 jpalac Exp $
+# $Id: StrippingBs2JpsiPhi_dev.py,v 1.3 2010-06-28 20:52:53 jpalac Exp $
 
 __author__ = ['Greig Cowan', 'Juan Palacios']
 __date__ = '24/01/2010'
-__version__ = '$Revision: 1.2 $'
+__version__ = '$Revision: 1.3 $'
 
 '''
 Bs->JpsiPhi lifetime unbiased stripping selection using LoKi::Hybrid and
@@ -26,22 +26,22 @@ class StrippingBs2JpsiPhiConf(object):
     Definition of nominal Bs->JpsiPhi stripping. 
     """
 
-    __configuration__keys__ = ("MuonTRCHI2Loose",
-                               "JpsiMassWinLoose",
-                               "JpsiVCHI2Loose",
-                               "KaonTRCHI2Loose",
-                               "KaonPIDK",
-                               "PhiMassWin",
-                               "PhiMassWinLoose",
-                               "PhiPT",
-                               "PhiPTLoose",
-                               "PhiVCHI2",
-                               "PhiVCHI2Loose",
-                               "BsMassWin",
-                               "BsMassWinLoose",
-                               "BsVCHI2",
-                               "BsVCHI2Loose"
-                               )
+    __configuration_keys__ = ("MuonTRCHI2Loose",
+                              "JpsiMassWinLoose",
+                              "JpsiVCHI2Loose",
+                              "KaonTRCHI2Loose",
+                              "KaonPIDK",
+                              "PhiMassWin",
+                              "PhiMassWinLoose",
+                              "PhiPT",
+                              "PhiPTLoose",
+                              "PhiVCHI2",
+                              "PhiVCHI2Loose",
+                              "BsMassWin",
+                              "BsMassWinLoose",
+                              "BsVCHI2",
+                              "BsVCHI2Loose"
+                              )
     
     def __init__(self,
                  config
@@ -89,13 +89,29 @@ class StrippingBs2JpsiPhiConf(object):
         
         self._loose_line =  StrippingLine('Bs2JpsiPhiLooseLine',
                                           prescale = 1,
-                                          algos = [self._Bs2JpsiPhiLooseSel])   
+                                          algos = [self._Bs2JpsiPhiLooseSel])
 
     def lines(self) :
         return (self._loose_line, self._nominal_line)
 
     def checkConfig(self, configuration) :
-        print 'StrippingBs2JpsiPhiConf: checkConfig now implemented yet'
+        '''
+        Check that all the required configuration parameters are present
+        in configuration's keys, and that the number of keys in configuration
+        are as expected.
+        '''
+        absentKeys = []
+        for key in StrippingBs2JpsiPhiConf.__configuration_keys__ :
+            if key not in configuration.keys():
+                absentKeys.append(key)
+
+        if len(absentKeys) != 0 :
+            raise KeyError('Keys missing in configuration: '+ str(absentKeys))
+
+        if len(configuration.keys()) != len(StrippingBs2JpsiPhiConf.__configuration_keys__) :
+            raise KeyError('Configuration has unexpected number of parameters.')
+
+
 
 def makeJpsi2MuMuLoose( name,
                         MuonTRCHI2Loose,
