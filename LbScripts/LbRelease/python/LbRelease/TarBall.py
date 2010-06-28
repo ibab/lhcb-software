@@ -200,9 +200,6 @@ def generateHTML(project, version, cmtconfig=None, top_dir=None, output_dir=None
         log.debug("Guessed version for %s is %s" % (prj_conf.Name(), version))
     filename = os.path.join(tb_dir, prj_conf.tarBallName(version, cmtconfig, full=True))
     if os.path.exists(filename) :
-#        print getTarDependencies(project, version, 
-#                                 cmtconfig, top_dir, 
-#                                 project_only=False, full=True)
         title = "Project %s version %s" % (prj_conf.Name(), version)
         if cmtconfig :
             depcont = "<H3>%s (%s binary files) </H3>\n" % (title, cmtconfig)
@@ -584,9 +581,10 @@ def checkTar(project, version=None, cmtconfig=None, input_dir=None,
 
 
 #=========================================================================
+
 def generateLCGTar(project, version=None, cmtconfig=None, 
-                top_dir=None, output_dir=None, overwrite=False,
-                update=False, md5=True, html=True):
+                   top_dir=None, output_dir=None, overwrite=False,
+                   update=False, md5=True, html=True):
     log = logging.getLogger()
     prj_conf = Project.getProject(project)
     status = 0
@@ -602,31 +600,40 @@ def generateLCGTar(project, version=None, cmtconfig=None,
     prefix = prj_conf.releasePrefix(version)
     ppath = os.path.join(top_dir, prefix)
     prj = CMT.Project(ppath)
+    for data in CMT.walk(top=prj, cmtprojectpath=os.environ["CMTPROJECTPATH"]) :
+        if data[0].name() == "LCGCMT" :
+            lcg_prj = data[0]
+            break
+    os.environ["CMTEXTRATAGS"] = "LHCb"
+    for p in prj.binaryExternalPackages(cmtprojectpath=os.environ["CMTPROJECTPATH"], 
+                                        binary=cmtconfig) :
+        print p.fullLocation()
 
-    srcdirs = [os.path.join(top_dir, prefix)]
-    log.debug("="*100)
-    filename = os.path.join(output_dir, prj_conf.tarBallName(version, cmtconfig, full=True))
-    if os.path.exists(filename) and not (overwrite or update) :
-        log.info("The file %s already exists. Skipping." % filename)
-        status = 2
-    else :
-        if overwrite :
-            os.remove(filename)
-        if cmtconfig :
-            pathfilter = lambda x : projectFilter(x, cmtconfig)
-        else :
-            pathfilter = projectFilter
-        prefix = prj_conf.releasePrefix(version)
-        status = createTarBallFromFilter(srcdirs, filename, pathfilter,
-                                         prefix=prefix, dereference=False, update=update)
-        if status != 0 :
-            if status == 1 :
-                log.fatal("The source directories do not exist")
-        else :
-            if md5 :
-                generateMD5(project, version, cmtconfig, output_dir)
-            if html :
-                generateHTML(project, version, cmtconfig, top_dir, output_dir)
+        
+#    srcdirs = [os.path.join(top_dir, prefix)]
+#    log.debug("="*100)
+#    filename = os.path.join(output_dir, prj_conf.tarBallName(version, cmtconfig, full=True))
+#    if os.path.exists(filename) and not (overwrite or update) :
+#        log.info("The file %s already exists. Skipping." % filename)
+#        status = 2
+#    else :
+#        if overwrite :
+#            os.remove(filename)
+#        if cmtconfig :
+#            pathfilter = lambda x : projectFilter(x, cmtconfig)
+#        else :
+#            pathfilter = projectFilter
+#        prefix = prj_conf.releasePrefix(version)
+#        status = createTarBallFromFilter(srcdirs, filename, pathfilter,
+#                                         prefix=prefix, dereference=False, update=update)
+#        if status != 0 :
+#            if status == 1 :
+#                log.fatal("The source directories do not exist")
+#        else :
+#            if md5 :
+#                generateMD5(project, version, cmtconfig, output_dir)
+#            if html :
+#                generateHTML(project, version, cmtconfig, top_dir, output_dir)
     return status
 
 

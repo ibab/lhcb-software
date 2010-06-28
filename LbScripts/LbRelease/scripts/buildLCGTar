@@ -77,9 +77,9 @@ class BuildLCGTarScript(Script):
             opts.output_dir = os.path.realpath(opts.output_dir)
 
         status = buildLCGTar(project, version, opts.cmtconfig, 
-                          opts.top_dir, opts.output_dir, 
-                          opts.overwrite, opts.update,
-                          opts.md5, opts.html)
+                             opts.top_dir, opts.output_dir, 
+                             opts.overwrite, opts.update,
+                             opts.md5, opts.html)
         
         return status
 
