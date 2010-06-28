@@ -1,9 +1,13 @@
-!$Id: release.notes,v 1.74 2010-06-24 16:17:53 jpalac Exp $
+!$Id: release.notes,v 1.75 2010-06-28 14:00:46 poluekt Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/StrippingConf
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
+
+! 2010-06-28 - Anton Poluektov 
+  - BadEventSelection and AcceptBadEvents can be given to StrippingConf. 
+    However, those in StrippingStream have priority. 
 
 !========================== StrippingConf v3r5 2010-06-24 =================
 

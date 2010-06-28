@@ -22,7 +22,9 @@ class StrippingConf ( object ) :
                   TES = False,
                   TESPrefix = 'Strip', 
                   HDRLocation = 'Phys/DecReports', 
-                  Streams = [] ) :
+                  Streams = [], 
+                  BadEventSelection = None, 
+                  AcceptBadEvents = True ) :
         
         log.info("Initialising StrippingConf "+ name)
         if name == "" :
@@ -35,6 +37,8 @@ class StrippingConf ( object ) :
         self._sequence = None
         self._hdrLocation = HDRLocation
         self._tesPrefix = TESPrefix
+        self.BadEventSelection = BadEventSelection
+        self.AcceptBadEvents = AcceptBadEvents
         for stream in Streams :
             self.appendStream(stream)
 	
@@ -96,6 +100,10 @@ class StrippingConf ( object ) :
         
         stream.TESPrefix = self._tesPrefix
         stream.HDRLocation = self._hdrLocation
+        if stream.BadEventSelection == "OverrideInStrippingConf" : 
+            stream.BadEventSelection = self.BadEventSelection
+        if stream.AcceptBadEvents == None : 
+            stream.AcceptBadEvents = self.AcceptBadEvents
         
 	stream.createConfigurables( TES = self.TES )
 	self._streams.append(stream)

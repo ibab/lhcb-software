@@ -18,9 +18,16 @@ class StrippingStream ( object ) :
 
     def __init__ ( self,
                    name = 'StrippingStream',
-                   Lines =  [],               # List of stream lines
-                   BadEventSelection = None,  # Bad event selection algo
-                   AcceptBadEvents = True     
+                   Lines =  [],                                    # List of stream lines
+                   BadEventSelection = "OverrideInStrippingConf",  # Bad event selection algo
+                                                                   # By default, it will be 
+                                                                   # overridden in StrippingConf, 
+                                                                   # but can be set to None here
+                                                                   # to cancel bad event check
+
+                   AcceptBadEvents = None                          # If None, will be overridden 
+                                                                   # in StrippingConf
+
                  ) :
         self.lines = copy(Lines)
         for line in Lines : 
@@ -75,8 +82,13 @@ class StrippingStream ( object ) :
 	self.streamLine.createConfigurable( self.TESPrefix + "/" + self.HDRLocation )
 	self.streamLine.declareAppended()
 
-        # Make the line to mark bad events (those satisfying BadEventSelection)
+        # If the BadEventsSelection was not given neither in StrippingConf nor in StrippingStream
+        
+        if self.BadEventSelection == "OverrideInStrippingConf" : 
+            self.BadEventSelection = None
 
+        # Make the line to mark bad events (those satisfying BadEventSelection)
+        
 	if self.BadEventSelection != None : 
 	    self.eventSelectionLine = StrippingLine("Stream"+self.name()+"BadEvent", 
 	                                      checkPV = False, algos = [ self.BadEventSelection ] )
@@ -106,7 +118,7 @@ class StrippingStream ( object ) :
                                           
                 # The structure differs depending on whether we want to accept or reject bad events
 
-            	if self.AcceptBadEvents == True : 
+            	if self.AcceptBadEvents != False : 
             	
             	    # If we want to accept bad events, create the sequencer in OR mode with ShortCircuit=True
             	    # If the bad event condition passes, the stream sequencer will not run
