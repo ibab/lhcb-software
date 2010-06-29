@@ -1,8 +1,8 @@
-# $Id: StrippingBs2JpsiPhi.py,v 1.6 2010-05-10 11:58:49 jpalac Exp $
+# $Id: StrippingBs2JpsiPhi.py,v 1.7 2010-06-29 15:18:51 jpalac Exp $
 
 __author__ = ['Greig Cowan']
 __date__ = '24/01/2010'
-__version__ = '$Revision: 1.6 $'
+__version__ = '$Revision: 1.7 $'
 
 '''
 Bs->JpsiPhi lifetime unbiased stripping selection using LoKi::Hybrid and
@@ -13,7 +13,7 @@ loose lifetime unbiased stripping selections.
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
 from Configurables import FilterDesktop, CombineParticles, OfflineVertexFitter	
-from PhysSelPython.Wrappers import Selection, SelectionSequence, DataOnDemand
+from PhysSelPython.Wrappers import Selection, DataOnDemand
 
 class StrippingBs2JpsiPhiConf(LHCbConfigurableUser):
     """
@@ -40,14 +40,12 @@ class StrippingBs2JpsiPhiConf(LHCbConfigurableUser):
     def nominal_line( self ):
         from StrippingConf.StrippingLine import StrippingLine
 	Bs2JpsiPhiSel = self.Bs2JpsiPhi()
-	Bs2JpsiPhiSeq = SelectionSequence("SeqBs2JpsiPhi", TopSelection = Bs2JpsiPhiSel)
-	return StrippingLine('Bs2JpsiPhiLine', prescale = 1, algos = [Bs2JpsiPhiSeq])   
+	return StrippingLine('Bs2JpsiPhiLine', prescale = 1, algos = [Bs2JpsiPhiSel])   
      	
     def loose_line( self ):
         from StrippingConf.StrippingLine import StrippingLine
 	Bs2JpsiPhiSel = self.Bs2JpsiPhiLoose()
-	Bs2JpsiPhiSeq = SelectionSequence("SeqBs2JpsiPhiLoose", TopSelection = Bs2JpsiPhiSel)
-	return StrippingLine('Bs2JpsiPhiLooseLine', prescale = 1, algos = [Bs2JpsiPhiSeq])   
+	return StrippingLine('Bs2JpsiPhiLooseLine', prescale = 1, algos = [Bs2JpsiPhiSel])   
      
     def Jpsi2MuMuLoose( self ):
 	StdVeryLooseJpsi2MuMu = DataOnDemand(Location = "Phys/StdVeryLooseJpsi2MuMu")

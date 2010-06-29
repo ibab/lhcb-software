@@ -1,14 +1,14 @@
-# $Id: StrippingBs2JpsiPhiPrescaled.py,v 1.4 2010-05-10 11:58:49 jpalac Exp $
+# $Id: StrippingBs2JpsiPhiPrescaled.py,v 1.5 2010-06-29 15:18:51 jpalac Exp $
 
 __author__ = ['Greig Cowan','Juan Palacios']
 __date__ = '01/10/2009'
-__version__ = '$Revision: 1.4 $'
+__version__ = '$Revision: 1.5 $'
 
-__all__ = ('name', 'Phi', 'Jpsi', 'Bs', 'sequence')
+__all__ = ('name', 'Phi', 'Jpsi', 'Bs')
 
 from Gaudi.Configuration import *
 from Configurables import FilterDesktop, CombineParticles
-from PhysSelPython.Wrappers import Selection, SelectionSequence, DataOnDemand
+from PhysSelPython.Wrappers import Selection, DataOnDemand
 
 name = "Bs2JpsiPhiPrescaled"
 
@@ -32,9 +32,7 @@ Bs = Selection ( "Sel"+name,
                  Algorithm = _Bs,
                  RequiredSelections = [Phi, Jpsi])
 
-sequence = SelectionSequence("Seq"+name, TopSelection = Bs)
-
-from StrippingConf.StrippingLine import StrippingLine, StrippingMember
+from StrippingConf.StrippingLine import StrippingLine
 
 ############################################
 # Create StrippingLine with this selection #
@@ -42,5 +40,5 @@ from StrippingConf.StrippingLine import StrippingLine, StrippingMember
 line = StrippingLine("Bs2JpsiPhiPrescaledLine"
                           , prescale = 1.
                           , postscale = 0.1
-                          , algos = [ sequence ]
+                          , algos = [ Bs ]
                           )

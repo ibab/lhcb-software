@@ -1,14 +1,13 @@
-# $Id: StrippingBs2JpsiPhiDetached.py,v 1.2 2009-10-30 11:08:30 poluekt Exp $
+# $Id: StrippingBs2JpsiPhiDetached.py,v 1.3 2010-06-29 15:18:51 jpalac Exp $
 
 __author__ = ['Juan Palacios']
 __date__ = '01/10/2009'
-__version__ = '$Revision: 1.2 $'
+__version__ = '$Revision: 1.3 $'
 
-__all__ = ('name', 'Phi', 'Jpsi', 'Bs', 'sequence')
+__all__ = ('name', 'Phi', 'Jpsi', 'Bs')
 
-from Gaudi.Configuration import *
-from Configurables import FilterDesktop, CombineParticles
-from PhysSelPython.Wrappers import Selection, SelectionSequence
+from PhysSelPython.Wrappers import Selection
+from StrippingConf.StrippingLine import StrippingLine
 
 name = "Bs2JpsiPhiDetached"
 
@@ -24,12 +23,10 @@ Bs = Selection ( "Sel"+name,
                  Algorithm = _Bs,
                  RequiredSelections = [Phi, Jpsi])
 
-sequence = SelectionSequence("Seq"+name, TopSelection = Bs)
 
-from StrippingConf.StrippingLine import StrippingLine, StrippingMember
 
 line = StrippingLine("Bs2JpsiPhiDetachedLine"
                         , prescale = 1.
                         , postscale = 1.
-                        , algos = [ sequence ]
+                        , algos = [ Bs ]
                         )
