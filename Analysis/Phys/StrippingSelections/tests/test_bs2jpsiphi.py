@@ -17,7 +17,8 @@ config_params =  { "MuonTRCHI2Loose"	: 10.0,
                    "BsMassWin"	        : 300.0,
                    "BsMassWinLoose"	: 300.0,
                    "BsVCHI2" 	        : 5.0,
-                   "BsVCHI2Loose" 	: 20.0
+                   "BsVCHI2Loose" 	: 20.0,
+                   "BsReFitPVs"         : True
                    }
 
 bs2jpsiphi = stripping.StrippingBs2JpsiPhiConf(config_params)

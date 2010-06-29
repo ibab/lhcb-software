@@ -1,4 +1,4 @@
-# $Id: StrippingBs2JpsiPhi_dev.py,v 1.4 2010-06-29 09:21:10 jpalac Exp $
+# $Id: StrippingBs2JpsiPhi_dev.py,v 1.5 2010-06-29 13:13:41 jpalac Exp $
 '''
 Module for construction of Bs->JpsiPhi lifetime unbiased stripping Selections and StrippingLines.
 Provides functions to build Bs, Jpsi, Phi nominal and loose selections.
@@ -14,7 +14,7 @@ Exported symbols (use python help!):
 
 __author__ = ['Juan Palacios', 'Greig Cowan']
 __date__ = '29/06/2010'
-__version__ = '$Revision: 1.4 $'
+__version__ = '$Revision: 1.5 $'
 
 
 __all__ = ('StrippingBs2JpsiPhiConf',
@@ -70,7 +70,7 @@ class StrippingBs2JpsiPhiConf(object):
                               "BsMassWinLoose",
                               "BsVCHI2",
                               "BsVCHI2Loose",
-                              "BsReFitPV"
+                              "BsReFitPVs"
                               )
     
     def __init__( self, config ) :
@@ -88,7 +88,8 @@ class StrippingBs2JpsiPhiConf(object):
                                             jpsiSel = self.selJpsi2MuMu,
                                             phiSel = self.selPhi2KK,
                                             BsMassWin = config['BsMassWin'],
-                                            BsVCHI2 = config['BsVCHI2'])
+                                            BsVCHI2 = config['BsVCHI2'],
+                                            BsReFitPVs = config['BsReFitPVs'])
         
         self.nominal_line = StrippingLine('Bs2JpsiPhiLine',
                                           prescale = 1,
@@ -111,7 +112,7 @@ class StrippingBs2JpsiPhiConf(object):
                                                  phiSel = self.selPhi2KKLoose,
                                                  BsMassWin = config['BsMassWinLoose'],
                                                  BsVCHI2 = config['BsVCHI2Loose'],
-                                                 BsReFitPV = config['BsReFitPV'])
+                                                 BsReFitPVs = config['BsReFitPVs'])
         
         self.loose_line =  StrippingLine('Bs2JpsiPhiLooseLine',
                                          prescale = 1,
@@ -230,7 +231,8 @@ def makeBs2JpsiPhi( name,
                     jpsiSel,
                     phiSel,
                     BsMassWin,
-                    BsVCHI2):
+                    BsVCHI2,
+                    BsReFitPVs):
 
     """
     Create and return a Bs -> J/Psi (MuMu) Phi (KK) Selection object.
@@ -251,7 +253,7 @@ def makeBs2JpsiPhi( name,
                            DecayDescriptor = "B_s0 -> J/psi(1S) phi(1020)",
                            CombinationCut = _combCut,
                            MotherCut = _motherCut,
-                           ReFitPVs = True)
+                           ReFitPVs = BsReFitPVs)
     # Set the OfflineVertexFitter to keep the 4 tracks and not the J/Psi Phi
     _Bs.addTool( OfflineVertexFitter() )
     _Bs.VertexFitters.update( { "" : "OfflineVertexFitter"} )
