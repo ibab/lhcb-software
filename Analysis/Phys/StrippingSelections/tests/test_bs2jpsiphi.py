@@ -21,6 +21,7 @@ config_params =  { "MuonTRCHI2Loose"	: 10.0,
                    }
 
 bs2jpsiphi = stripping.StrippingBs2JpsiPhiConf(config_params)
-bs2JpsiPhiStream = StrippingStream('StreamBs2JpsiPhi', Lines = bs2jpsiphi.lines())
+bs2JpsiPhiStream = StrippingStream('StreamBs2JpsiPhi', Lines = bs2jpsiphi.lines)
+print '\n'
 for line in bs2JpsiPhiStream.lines :
     print 'Line', line.name(), 'Location', line.outputLocation()
