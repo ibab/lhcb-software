@@ -1,14 +1,21 @@
-# $Id: StrippingBs2JpsiPhi_dev.py,v 1.3 2010-06-28 20:52:53 jpalac Exp $
-
-__author__ = ['Greig Cowan', 'Juan Palacios']
-__date__ = '24/01/2010'
-__version__ = '$Revision: 1.3 $'
-
+# $Id: StrippingBs2JpsiPhi_dev.py,v 1.4 2010-06-29 09:21:10 jpalac Exp $
 '''
-Bs->JpsiPhi lifetime unbiased stripping selection using LoKi::Hybrid and
-python configurables. PV refitting is done. Implements the nominal and 
-loose lifetime unbiased stripping selections.
+Module for construction of Bs->JpsiPhi lifetime unbiased stripping Selections and StrippingLines.
+Provides functions to build Bs, Jpsi, Phi nominal and loose selections.
+Provides class StrippingBs2JpsiPhiConf, which constructs the Selections and StrippingLines given
+a configuration dictionary.
+Exported symbols (use python help!):
+   - StrippingBs2JpsiPhiConf
+   - makeBs2JpsiPhi
+   - makePhi2KK
+   - makePhi2KKLoose
+   - makeJpsi2MuMuLoose
 '''
+
+__author__ = ['Juan Palacios', 'Greig Cowan']
+__date__ = '29/06/2010'
+__version__ = '$Revision: 1.4 $'
+
 
 __all__ = ('StrippingBs2JpsiPhiConf',
            'makeBs2JpsiPhi',
@@ -23,7 +30,29 @@ from copy import copy
 
 class StrippingBs2JpsiPhiConf(object):
     """
-    Definition of nominal Bs->JpsiPhi stripping. 
+    Builder of nominal Bs->JpsiPhi stripping Selections and StrippingLines.
+    Constructs Bs -> J/Psi Phi Selections and StrippingLines from a configuration dictionary.
+    Usage:
+    >>> config = { .... }
+    >>> bsConf = StrippingBs2JpsiPhiConf(config)
+    >>> bsLines = bsConf.lines
+    >>> for line in line :
+    >>>  print line.name(), line.outputLocation()
+    The lines can be used directly to build a StrippingStream object.
+
+    Exports as instance data members:
+    selJpsi2MuMu       : nominal Jpsi-> Mu+Mu- Selection object
+    selPhi2KK          : nominal Phi -> K+K- Selection object
+    selBs2JpsiPhiSel   : nominal Bs -> Jpsi(Mu+Mu-) Phi(K+K-) Selection object
+    nominal_line       : StrippingLine made out of selBs2jpsiPhiSel
+    selJpsi2MuMuLoose  : loose Jpsi-> Mu+Mu- Selection object
+    selPhi2KKLoose     : loose Phi -> K+K- Selection object
+    selBs2JpsiPhiLoose : loose Bs -> Jpsi(Mu+Mu-) Phi(K+K-) Selection object
+    loose_line         : StrippingLine made out of selBs2JpsiPhiLoose
+    lines              : List of lines, [nominal_line, loose_line]
+
+    Exports as class data member:
+    StrippingBs2JpsiPhiConf.__configuration_keys__ : List of required configuration parameters.
     """
 
     __configuration_keys__ = ("MuonTRCHI2Loose",
@@ -40,66 +69,62 @@ class StrippingBs2JpsiPhiConf(object):
                               "BsMassWin",
                               "BsMassWinLoose",
                               "BsVCHI2",
-                              "BsVCHI2Loose"
+                              "BsVCHI2Loose",
+                              "BsReFitPV"
                               )
     
-    def __init__(self,
-                 config
-                 ) :
+    def __init__( self, config ) :
         self.checkConfig(config)
-        self._config_dict = copy(config)
-        for key, val in config.iteritems() :
-            self.__setattr__(str(key), val)
 
-        self._jpsi2MuMu = DataOnDemand(Location = "Phys/StdLTUnbiasedJpsi2MuMu")
+        self.selJpsi2MuMu = DataOnDemand(Location = "Phys/StdLTUnbiasedJpsi2MuMu")
 
-        self._phi2KK = makePhi2KK("Phi2KKForBs2JpsiPhi",
-                                  KaonPIDK = config['KaonPIDK'],
-                                  PhiMassWin = config['PhiMassWin'],
-                                  PhiPT = config['PhiPT'],
-                                  PhiVCHI2 = config['PhiVCHI2'])
+        self.selPhi2KK = makePhi2KK("Phi2KKForBs2JpsiPhi",
+                                    KaonPIDK = config['KaonPIDK'],
+                                    PhiMassWin = config['PhiMassWin'],
+                                    PhiPT = config['PhiPT'],
+                                    PhiVCHI2 = config['PhiVCHI2'])
 
-        self._Bs2JpsiPhiSel = makeBs2JpsiPhi("SelBs2JpsiPhi",
-                                             jpsiSel = self._jpsi2MuMu,
-                                             phiSel = self._phi2KK,
-                                             BsMassWin = config['BsMassWin'],
-                                             BsVCHI2 = config['BsVCHI2'])
+        self.selBs2JpsiPhi = makeBs2JpsiPhi("SelBs2JpsiPhi",
+                                            jpsiSel = self.selJpsi2MuMu,
+                                            phiSel = self.selPhi2KK,
+                                            BsMassWin = config['BsMassWin'],
+                                            BsVCHI2 = config['BsVCHI2'])
         
-        self._nominal_line = StrippingLine('Bs2JpsiPhiLine',
-                                           prescale = 1,
-                                           algos = [self._Bs2JpsiPhiSel])
+        self.nominal_line = StrippingLine('Bs2JpsiPhiLine',
+                                          prescale = 1,
+                                          algos = [self.selBs2JpsiPhi])
      	
-        self._jpsi2MuMuLooseSel = makeJpsi2MuMuLoose(name = "Jpsi2MuMuForBs2JpsiPhiLoose",
+        self.selJpsi2MuMuLoose = makeJpsi2MuMuLoose(name = "Jpsi2MuMuForBs2JpsiPhiLoose",
                                                      MuonTRCHI2Loose = config['MuonTRCHI2Loose'],
                                                      JpsiMassWinLoose = config['JpsiMassWinLoose'],
                                                      JpsiVCHI2Loose = config['JpsiVCHI2Loose'])
 
-        self._phi2KKLooseSel = makePhi2KKLoose(name = "Phi2KKForBs2JpsiPhiLoose",
-                                               KaonTRCHI2Loose = config['KaonTRCHI2Loose'],
-                                               PhiMassWinLoose = config['PhiMassWinLoose'],
-                                               PhiPTLoose = config['PhiPTLoose'],
-                                               PhiVCHI2Loose = config['PhiVCHI2Loose']
-                                               )
+        self.selPhi2KKLoose = makePhi2KKLoose(name = "Phi2KKForBs2JpsiPhiLoose",
+                                              KaonTRCHI2Loose = config['KaonTRCHI2Loose'],
+                                              PhiMassWinLoose = config['PhiMassWinLoose'],
+                                              PhiPTLoose = config['PhiPTLoose'],
+                                              PhiVCHI2Loose = config['PhiVCHI2Loose']
+                                              )
         
-        self._Bs2JpsiPhiLooseSel = makeBs2JpsiPhi("SelBs2JpsiPhiLoose",
-                                                  jpsiSel = self._jpsi2MuMuLooseSel,
-                                                  phiSel = self._phi2KKLooseSel,
-                                                  BsMassWin = config['BsMassWinLoose'],
-                                                  BsVCHI2 = config['BsVCHI2Loose'])
+        self.selBs2JpsiPhiLoose = makeBs2JpsiPhi("SelBs2JpsiPhiLoose",
+                                                 jpsiSel = self.selJpsi2MuMuLoose,
+                                                 phiSel = self.selPhi2KKLoose,
+                                                 BsMassWin = config['BsMassWinLoose'],
+                                                 BsVCHI2 = config['BsVCHI2Loose'],
+                                                 BsReFitPV = config['BsReFitPV'])
         
-        self._loose_line =  StrippingLine('Bs2JpsiPhiLooseLine',
-                                          prescale = 1,
-                                          algos = [self._Bs2JpsiPhiLooseSel])
+        self.loose_line =  StrippingLine('Bs2JpsiPhiLooseLine',
+                                         prescale = 1,
+                                         algos = [self.selBs2JpsiPhiLoose])
 
-    def lines(self) :
-        return (self._loose_line, self._nominal_line)
+        self.lines = [self.loose_line, self.nominal_line]
 
     def checkConfig(self, configuration) :
-        '''
+        """
         Check that all the required configuration parameters are present
-        in configuration's keys, and that the number of keys in configuration
+        in configuration.keys(), and that the number of keys in configuration
         are as expected.
-        '''
+        """
         absentKeys = []
         for key in StrippingBs2JpsiPhiConf.__configuration_keys__ :
             if key not in configuration.keys():
@@ -117,6 +142,17 @@ def makeJpsi2MuMuLoose( name,
                         MuonTRCHI2Loose,
                         JpsiMassWinLoose,
                         JpsiVCHI2Loose):
+
+    """
+    Create and return a Jpsi->MuMu Selection object.
+    Starts from DataOnDemand 'Phys/StdVeryLooseJpsi2MuMu'.
+    Arguments:
+    name             : name of the Selection.
+    MuonTRCHI2Loose  : Maximum muon track chi2 (per degree of freedom?)
+    JpsiMassWinLoose : J/Psi invariant mass window around PDG mass value (MeV).
+    JpsiVCHI2Loose   : Maximum J/Psi vertex chi2 (per degree of freedom?)
+    """
+    
     _params = locals()
     _code = "  (MAXTREE('mu+'==ABSID, TRCHI2DOF) < %(MuonTRCHI2Loose)s)" \
         "& (ADMASS('J/psi(1S)') < %(JpsiMassWinLoose)s *MeV)" \
@@ -135,6 +171,17 @@ def makePhi2KKLoose( name,
                      PhiMassWinLoose,
                      PhiPTLoose,
                      PhiVCHI2Loose):
+
+    """
+    Create and return a Phi -> KK Selection object.
+    Starts from DataOnDemand 'Phys/StdLoosePhi2KK'.
+    Arguments:
+    name             : name of the Selection.
+    KaonTRCHI2Loose  : Maximum kaon track chi2 (per degree of freedom?)
+    PhiMassWinLoose  : Phi invariant mass window around PDG mass value (MeV).
+    PhiVCHI2Loose    : Maximum Phi vertex chi2 (per degree of freedom?)
+    """
+    
     _params = locals()
     _code = "  (MAXTREE('K+'==ABSID, TRCHI2DOF) < %(KaonTRCHI2Loose)s)" \
         "& (ADMASS('phi(1020)') < %(PhiMassWinLoose)s *MeV)" \
@@ -153,6 +200,18 @@ def makePhi2KK( name,
                 PhiMassWin,
                 PhiPT,
                 PhiVCHI2 ):
+
+    """
+    Create and return a Phi -> KK Selection object.
+    Starts from DataOnDemand 'Phys/StdLoosePhi2KK'.
+    Arguments:
+    name             : name of the Selection.
+    KaonPIDK         : ??
+    PhiPT            : Minimum transverse momentum of Phi (MeV).
+    PhiMassWin       : Phi invariant mass window around PDG mass value (MeV).
+    PhiVCHI2         : Maximum Phi vertex chi2 (per degree of freedom?)
+    """
+
     _params = locals()
     _code = "  (MINTREE('K+'==ABSID, PIDK) > %(KaonPIDK)s)" \
         "& (ADMASS('phi(1020)') < %(PhiMassWin)s *MeV)" \
@@ -172,6 +231,17 @@ def makeBs2JpsiPhi( name,
                     phiSel,
                     BsMassWin,
                     BsVCHI2):
+
+    """
+    Create and return a Bs -> J/Psi (MuMu) Phi (KK) Selection object.
+    Arguments:
+    name      : name of the Selection.
+    jpsiSel   : J/Psi -> Mu+Mu- Selection object.
+    phiSel    : Phi -> K+K- Selection object,
+    BsMassWin : Bs invariant mass window around PDG mass value (MeV).
+    BsVCHI2   : Maximum Bs vertex chi2 (per degree of freedom?)
+    """
+    
     _params = locals()
     _combCut =  "ADAMASS('B_s0') < %(BsMassWin)s *MeV" % _params
     _motherCut = "(VFASPF(VCHI2/VDOF) < %(BsVCHI2)s)" % _params
