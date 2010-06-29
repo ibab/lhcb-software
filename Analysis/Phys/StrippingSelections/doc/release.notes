@@ -6,6 +6,11 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! -----------------------------------------------------------------------------
 
 ! 2010-06-29 - Juan Palacios
+ - python/StrippingSelections/StrippingBs2JpsiPhi.py
+ - python/StrippingSelections/StrippingBs2JpsiPhiPrescaled.py
+ - python/StrippingSelections/StrippingBs2JpsiPhiDetatched.py
+  . Remove unnecessry SelectionSequences.
+
  - python/StrippingSelections/StrippingBs2JpsiPhi_dev.py
   . Make Selections, StrippingLines "public" in StrippingBs2JpsiPhiConf.
   . Add required boolean parameter 'BsReFitPV' to StrippingBs2JpsiPhiConf.
