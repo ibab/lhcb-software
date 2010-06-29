@@ -5,6 +5,13 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-06-29 - Juan Palacios
+ - python/StrippingSelections/StrippingBs2JpsiPhi_dev.py
+  . Make Selections, StrippingLines "public" in StrippingBs2JpsiPhiConf.
+  . Add required boolean parameter 'BsReFitPV' to StrippingBs2JpsiPhiConf.
+    Controls whether PV re-fitting is performed for the Bs PV-related cuts.
+  . Improve documentation.
+
 ! 2010-06-28 - Juan Palacios
  - Add python/StrippingSelections/StrippingBs2JpsiPhi_dev.py
   . Experimantal module to try out new way of configuring and building lines.
