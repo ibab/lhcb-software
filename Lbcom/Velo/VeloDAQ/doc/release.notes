@@ -3,6 +3,9 @@
 ! Responsible : Kurt Rinnert, Chris Parkes
 !--------------------------------------------------------------------------
 
+! 2010-06-30 - Chris Jones
+ - Add a missing use statement for Event/RecEvent in cmt/requirements
+
 ! 2010-06-24 - David Hutchcroft
  - Changed how ProcStatus is used as per Savannah task #16278
    Now still set ProcStatus for any problem, but also set 

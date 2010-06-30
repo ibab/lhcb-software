@@ -17,6 +17,7 @@ use  VeloEvent    v*  Event	-no_auto_imports
 use  DigiEvent    v*  Event	-no_auto_imports
 use  SiDAQ        v*  Si	-no_auto_imports
 use  Tell1Kernel  v*  DAQ  	-no_auto_imports
+use  RecEvent     v*  Event
 
 
 # Component library building rule
