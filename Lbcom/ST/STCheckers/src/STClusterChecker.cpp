@@ -3,6 +3,7 @@
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
 
+#include "GaudiKernel/SystemOfUnits.h"
 // Event
 #include "Event/STCluster.h"
 #include "Event/MCHit.h"
@@ -14,6 +15,14 @@
 
 // local
 #include "STClusterChecker.h"
+
+// from PartProp
+#include "Kernel/ParticleProperty.h"
+
+// From PartProp
+#include "Kernel/IParticlePropertySvc.h"
+
+#include "Kernel/SiLandauFun.h"
 
 DECLARE_ALGORITHM_FACTORY( STClusterChecker );
 
@@ -55,13 +64,21 @@ StatusCode STClusterChecker::initialize()
     return Error("Failed to initialize", sc);
   }
 
-  
-
-
   // MCParticle selection tool
   m_selector = tool<IMCParticleSelector>(m_selectorName,m_selectorName,this);
 
- 
+  LHCb::ParticleID pid = LHCb::ParticleID(211); 
+  IParticlePropertySvc* pp = svc<LHCb::IParticlePropertySvc>( "LHCb::ParticlePropertySvc", true );
+  const LHCb::ParticleProperty* partProp = pp->find(pid);
+  const double mPion = partProp->mass();
+  pp->release();  
+
+  const double betaGammaMin = 4.8;
+  const double P = betaGammaMin * mPion;
+  const double E = sqrt( P*P + mPion * mPion); 
+  m_betaMin = P/E;
+  m_gammaMin = E/mPion; 
+
   return StatusCode::SUCCESS;
 }
 
@@ -101,6 +118,12 @@ void STClusterChecker::fillHistograms( const STCluster* aCluster,
       const DeSTSector* sector = findSector(aCluster->channelID()); 
       const double signalToNoise = aCluster->totalCharge()/sector->noise(aCluster->channelID()); 
       plot(signalToNoise,dType+"/2","S/N",0.,100., 100);
+
+      double mpv = SiLandauFun::MPV(aHit->mcParticle()->beta(),aHit->mcParticle()->gamma(),aHit->pathLength());
+      double norm = SiLandauFun::MPV(m_betaMin, m_gammaMin, sector->thickness());
+      plot(signalToNoise*norm/mpv ,dType+"/3","S/N (scaled)",0.,100., 100);
+    
+
     }  // accepted
   } // aHit 
 }

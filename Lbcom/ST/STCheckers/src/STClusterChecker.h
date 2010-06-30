@@ -8,6 +8,14 @@
 // from Associators
 #include "Linker/LinkerTool.h"
 
+// GSL
+#include "gsl/gsl_math.h"
+
+
+// LHCbKernel
+#include "Kernel/LHCbConstants.h"
+#include "GaudiKernel/SystemOfUnits.h"
+
 class DeSTDetector;
 
 namespace LHCb{
@@ -51,20 +59,20 @@ private:
   typedef Table::iterator iterator;
 
   void fillHistograms(const LHCb::STCluster* aCluster, const LHCb::MCHit* aHit);
-
-  double betaGamma(const LHCb::MCParticle* aParticle) const;
-  
-
   std::string m_clusterLocation; 
   std::string m_asctLocation; 
-
 
 
   // selector
   std::string m_selectorName;
   IMCParticleSelector* m_selector;
 
+  double m_betaMin;
+  double m_gammaMin;
+
 };
+
+
 
 #endif // STClusterChecker_H
 

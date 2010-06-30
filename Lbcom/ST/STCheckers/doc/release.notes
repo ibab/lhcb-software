@@ -2,6 +2,9 @@
 ! Package manager : Jeroen van Tilburg
 !------------------------------------------------------------------------------
 
+! 2010-06-30 M Needham
+ - Add histograms normalizig to MIP to STClusterChecker 
+
 !=========================== STCheckers v3r0 2010-04-09 =======================
 !  2010-03-20 M.Needham
  - Remove ISTSignalToNoiseTool
