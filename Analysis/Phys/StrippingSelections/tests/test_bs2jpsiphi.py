@@ -59,7 +59,7 @@ def test_bs2jpsiphiprescaledanddetatched() :
                      'DetatchedLinePrescale' : 1.0,
                      'DetatchedLinePostscale' : 1.0}
 
-    bs2jpsiphi = conf('Bs2JpsiPhi', config_params)
+    bs2jpsiphi = conf('Bs2JpsiPhiTest2', config_params)
 
     bs2JpsiPhiStream = StrippingStream('StreamBs2JpsiPhi', 
                                    Lines = bs2jpsiphi.lines)
