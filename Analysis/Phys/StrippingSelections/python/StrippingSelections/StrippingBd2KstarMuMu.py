@@ -1,6 +1,6 @@
 __author__ = 'Patrick Koppenburg, Rob Lambert, Mitesh Patel'
 __date__ = '21/01/2009'
-__version__ = '$Revision: 1.23 $'
+__version__ = '$Revision: 1.24 $'
 
 """
 Bd->K*MuMu selections 
@@ -101,7 +101,7 @@ class StrippingBd2KstarMuMuConf(LHCbConfigurableUser):
         """
         The Signal line
         """
-        from StrippingConf.StrippingLine import StrippingLine, StrippingMember       
+        from StrippingConf.StrippingLine import StrippingLine      
         from PhysSelPython.Wrappers import DataOnDemand
         from CommonParticles.StdVeryLooseDetachedKstar import StdVeryLooseDetachedKst2Kpi
         return StrippingLine('Bd2KstarMuMu_Early_Signal'
@@ -140,7 +140,7 @@ class StrippingBd2KstarMuMuConf(LHCbConfigurableUser):
         """
         The same sign line
         """
-        from StrippingConf.StrippingLine import StrippingLine, StrippingMember       
+        from StrippingConf.StrippingLine import StrippingLine      
         from CommonParticles.StdVeryLooseDetachedKstar import StdVeryLooseDetachedKst2Kpi
         return StrippingLine('Bd2KstarMuMu_Early_SameSign'
                              , prescale = 1
@@ -187,7 +187,7 @@ class StrippingBd2KstarMuMuConf(LHCbConfigurableUser):
         """
         The Wide K* line
         """
-        from StrippingConf.StrippingLine import StrippingLine, StrippingMember       
+        from StrippingConf.StrippingLine import StrippingLine      
         return StrippingLine('Bd2KstarMuMu_Early_WideKstar'
                              , prescale = 1
                              , algos = [ self._Early_DiMuon() ,
@@ -227,7 +227,7 @@ class StrippingBd2KstarMuMuConf(LHCbConfigurableUser):
         """
         The no MuID line
         """
-        from StrippingConf.StrippingLine import StrippingLine, StrippingMember       
+        from StrippingConf.StrippingLine import StrippingLine      
         from CommonParticles.StdVeryLooseDetachedKstar import StdVeryLooseDetachedKst2Kpi
         return StrippingLine('Bd2KstarMuMu_Early_NoMuID'
                              , prescale = 0.2   # lower prescale
@@ -266,7 +266,7 @@ class StrippingBd2KstarMuMuConf(LHCbConfigurableUser):
         """
         The eMu line
         """
-        from StrippingConf.StrippingLine import StrippingLine, StrippingMember       
+        from StrippingConf.StrippingLine import StrippingLine      
         from CommonParticles.StdVeryLooseDetachedKstar import StdVeryLooseDetachedKst2Kpi
         return StrippingLine('Bd2KstarMuMu_Early_eMu'
                              , prescale = 1
@@ -284,7 +284,7 @@ class StrippingBd2KstarMuMuConf(LHCbConfigurableUser):
 
         This line will need serious prescaling as soon as we get some non-0 luminosity
         """
-        from StrippingConf.StrippingLine import StrippingLine, StrippingMember       
+        from StrippingConf.StrippingLine import StrippingLine      
         from PhysSelPython.Wrappers import DataOnDemand
         from CommonParticles.StdVeryLooseDiMuon import StdVeryLooseDiMuon
         return StrippingLine('Bd2KstarMuMu_Early_DiMuonOnly'
@@ -304,7 +304,7 @@ class StrippingBd2KstarMuMuConf(LHCbConfigurableUser):
         @author P. Koppenburg
         @date 25/2/2010
         """
-        from PhysSelPython.Wrappers import Selection, SelectionSequence, DataOnDemand
+        from PhysSelPython.Wrappers import Selection, DataOnDemand
         from StrippingConf.StrippingLine import StrippingLine
         from Configurables import FilterDesktop, CombineParticles
         
@@ -352,15 +352,14 @@ class StrippingBd2KstarMuMuConf(LHCbConfigurableUser):
         @date 25/2/2010
         """
         from StrippingConf.StrippingLine import StrippingLine
-        from PhysSelPython.Wrappers import Selection, SelectionSequence, DataOnDemand
+        from PhysSelPython.Wrappers import Selection, DataOnDemand
 
  	_kstar =  DataOnDemand(Location = 'Phys/StdVeryLooseDetachedKst2Kpi')
         _comb = self.simplestCombineFD()
         _sb = Selection("SelSimpleBd2KstarMuMuFD",
                        Algorithm = _comb,
                        RequiredSelections = [ self.simplestDiMuon("FD"), _kstar ] )
-	ss = SelectionSequence("SeqSelSimpleBd2KstarMuMuFD", TopSelection = _sb )
-	return StrippingLine('SimpleBd2KstarMuMuFD', prescale = 1, algos = [ ss ])   
+	return StrippingLine('SimpleBd2KstarMuMuFD', prescale = 1, algos = [ _sb ])   
 
     def simplestLTLine( self ):
         """
@@ -370,15 +369,14 @@ class StrippingBd2KstarMuMuConf(LHCbConfigurableUser):
         @date 25/2/2010
         """
         from StrippingConf.StrippingLine import StrippingLine
-        from PhysSelPython.Wrappers import Selection, SelectionSequence, DataOnDemand
+        from PhysSelPython.Wrappers import Selection, DataOnDemand
 
  	_kstar =  DataOnDemand(Location = 'Phys/StdVeryLooseDetachedKst2Kpi')
         _comb = self.simplestCombineLT()
         _sb = Selection("SelSimpleBd2KstarMuMuLT",
                        Algorithm = _comb,
                        RequiredSelections = [ self.simplestDiMuon("LT"), _kstar ] )
-	ss = SelectionSequence("SeqSelSimpleBd2KstarMuMuLT", TopSelection = _sb )
-	return StrippingLine('SimpleBd2KstarMuMuLT', prescale = 1, algos = [ ss ])   
+	return StrippingLine('SimpleBd2KstarMuMuLT', prescale = 1, algos = [ _sb ])   
 #
 #
 ####################################################################################################
@@ -461,7 +459,7 @@ class StrippingBd2KstarMuMuConf(LHCbConfigurableUser):
         
         if StrippingBd2KstarMuMuConf._line_for_nominal_high == None :
         
-            from StrippingConf.StrippingLine import StrippingLine, StrippingMember       
+            from StrippingConf.StrippingLine import StrippingLine
 	    StrippingBd2KstarMuMuConf._line_for_nominal_high = StrippingLine('Bd2KstarMuMu_ForNominal_High'
                              , prescale = 1
                              , algos = [ self._Strip_loose_Bd2KstarMuMu(),
@@ -475,7 +473,7 @@ class StrippingBd2KstarMuMuConf(LHCbConfigurableUser):
         The '2 Hz' line
         """
         from Configurables import FilterDesktop
-        from StrippingConf.StrippingLine import StrippingLine, StrippingMember
+        from StrippingConf.StrippingLine import StrippingLine
 
          
         return self.line_for_nominal_high().clone("Bd2KstarMuMu_ForNominal_Med"
@@ -489,7 +487,7 @@ class StrippingBd2KstarMuMuConf(LHCbConfigurableUser):
         The '1 Hz' line
         """
         from Configurables import FilterDesktop
-        from StrippingConf.StrippingLine import StrippingLine, StrippingMember
+        from StrippingConf.StrippingLine import StrippingLine
 
         return self.line_for_nominal_high().clone("Bd2KstarMuMu_ForNominal_Low"
                                              , algos = [ self._Strip_loose_Bd2KstarMuMu(),
@@ -572,14 +570,11 @@ class StrippingBd2KstarMuMuConf(LHCbConfigurableUser):
         """
         Stripping line for D0 -> K- pi+ pi- pi+
         """
-        from StrippingConf.StrippingLine import StrippingLine, StrippingMember
-        from PhysSelPython.Wrappers import Selection, SelectionSequence
-
-        _seq = SelectionSequence('Seq_Bd2KstarMuMu_DKpipipi',
-                                 TopSelection= self._DKpipipi_D() )
+        from StrippingConf.StrippingLine import StrippingLine
+        from PhysSelPython.Wrappers import Selection
 
         _line = StrippingLine( 'Line_Bd2KstarMuMu_DKpipipi',
-                              prescale = 1, algos = [ _seq ] )
+                              prescale = 1, algos = [ self._DKpipipi_D() ] )
 
         if self.getProp('DKpipipiRequiresMB'):
             _line.HLT = "HLT_PASS_RE('Hlt1MB.*Decision')"
