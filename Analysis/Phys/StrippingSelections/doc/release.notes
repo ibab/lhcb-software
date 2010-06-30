@@ -6,6 +6,10 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! -----------------------------------------------------------------------------
 
 ! 2010-06-30 - Juan Palacios
+ - python/StrippingSelections/StrippingBs2JpsiPhiPrescaledAndDetatched.py
+  . New configurable module for prescaled and detatched Bs->J/Psi (MuMu) Phi (KK) selections.     
+   Should eventually replace StrippingBs2JpsiPhiPrescaled.py and StrippingBs2JpsiPhiDetatched.py.
+
  - python/StrippingSelections/StrippingBs2JpsiPhi_dev.py
   . Builder class name changed from StrippingBs2JpsiPhiConf to Bs2JpsiPhiConf
   . Use Utils.checkConfig instead of member function.
