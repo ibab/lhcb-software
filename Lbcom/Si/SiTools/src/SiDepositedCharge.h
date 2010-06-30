@@ -43,26 +43,10 @@ public:
 private:
 
  
-  /// Calculate scale of the Landau function (scales with the thickness)
-  double landauScale( const double beta, const double pathLength ) const;
-
-  /// Calculate the density effect (needed to get the MPV of the Landau)
-  double densityEffect( const double x ) const;
-
-  /// Calculate the most probable value of a Landau function
-  double landauMPV( const double beta, const double betaGamma, 
-                    const double scale) const;
-
- 
   SmartIF<IRndmGen> m_LandauDist;
  
 };
 
-inline double SiDepositedCharge::landauScale(const double beta, 
-                                             const double pathLength) const
-{
-  return 0.017825*pathLength*Gaudi::Units::micrometer / 
-          (gsl_pow_2(GSL_MAX(beta,0.1))*Gaudi::Units::keV);
-}
+
 
 #endif // SiDepositedCharge_H

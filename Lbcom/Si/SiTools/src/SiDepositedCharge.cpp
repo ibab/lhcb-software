@@ -7,6 +7,7 @@
 
 // LHCbKernel
 #include "Kernel/LHCbConstants.h"
+#include "Kernel/SiLandauFun.h"
 
 // MCEvent
 #include "Event/MCHit.h"
@@ -61,42 +62,12 @@ double SiDepositedCharge::charge(const MCHit* aHit) const
   double betaGamma = aHit->p()/aParticle->virtualMass();
 
   // calculate scale of landau
-  double scale = landauScale(beta,pathLength);  
+  double scale = SiLandauFun::scale(beta,pathLength);  
 
-  return ( landauMPV(beta,betaGamma,scale) + 
+  return ( SiLandauFun::MPVFromScale(beta,betaGamma,scale) + 
            (m_LandauDist->shoot()*scale) + 
            (m_GaussDist->shoot()*atomicBinding(pathLength)) ) /
     LHCbConstants::SiEnergyPerIonPair ;
 }
 
 
-double SiDepositedCharge::densityEffect(const double x) const
-{
-  // density effect due to Sternheimer 83
-  double dEffect = 0.;
-  if (x < 0.09666){
-    // 0
-  }
-  else if ((x > 0.09666)&&(x<2.5)){
-    dEffect = 4.606*x - 4.435 +(0.3755*(pow(3.0-x,2.72)));
-  }
-  else {
-    dEffect = 4.606*x - 4.435;
-  }
-  return dEffect;
-}
-
-double SiDepositedCharge::landauMPV(const double beta, 
-                                    const double betaGamma,
-                                    const double scale) const
-{
-  // calculate density effect
-  double dEffect = densityEffect(log10(betaGamma));  
-
-  // MPV of landau
-  double mpv = scale*( log(2*electron_mass_c2*gsl_pow_2(betaGamma)/
-                           LHCbConstants::SiExcitationEnergy) + 
-                       log(scale/LHCbConstants::SiExcitationEnergy) +
-                       0.2 - gsl_pow_2(beta) - dEffect );
-  return mpv;
-}
