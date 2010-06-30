@@ -1,4 +1,4 @@
-// $Id: Archive.cpp,v 1.82 2010-06-11 13:02:03 ggiacomo Exp $
+// $Id: Archive.cpp,v 1.83 2010-06-30 11:17:46 robbep Exp $
 #include <iostream>
 #include <sstream>
 #include <algorithm>
@@ -174,7 +174,7 @@ void Archive::fillHistogram(DbRootHist* histogram,
             goodRootFiles.push_back(*foundRootFilesIt);
 	    
             if ( ! histogram -> hasRootHistogram( ) ) {
-	      histogram -> setRootHistogram( (TH1*) (archiveHisto->Clone() ) ) ;
+	      histogram -> setRootHistogram( (TH1*) ( archiveHisto->Clone() ) ) ;
               histogram -> rootHistogramReset( ) ; 
             }
           }
@@ -200,7 +200,7 @@ void Archive::fillHistogram(DbRootHist* histogram,
           setHistoryLabels(newh, goodRootFiles);
           histogram -> deleteRootHistogram( ) ;
           histogram -> setRootHistogram( newh ) ;
-          histogram->setHistoryTrendPlotMode(true);
+          histogram -> setHistoryTrendPlotMode(true);
         }
       }
       else {

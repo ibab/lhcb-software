@@ -1,4 +1,4 @@
-// $Id: DbRootHist.cpp,v 1.172 2010-06-22 23:34:49 robbep Exp $
+// $Id: DbRootHist.cpp,v 1.173 2010-06-30 11:17:46 robbep Exp $
 #include "DbRootHist.h"
 
 // STL 
@@ -613,6 +613,9 @@ void DbRootHist::initHistogram() {
   if ( 0 == m_rootHistogram) beEmptyHisto();
   else m_rootHistogram->SetBit(kNoContextMenu);
   
+  // Apply default drawing options:
+  applyDefaultDrawOptions( ) ;
+
   if (m_verbosity >= Verbose && m_isEmptyHisto) 
     std::cout << "Histogram " << m_identifier << " empty after Init" << std::endl;
  
@@ -647,6 +650,8 @@ void DbRootHist::beEmptyHisto() {
     m_rootHistogram->AddDirectory(kFALSE);
     setRootHistogram( m_rootHistogram ) ;
   }
+
+  applyDefaultDrawOptions() ;
 }
 
 //=============================================================================
@@ -921,9 +926,10 @@ bool DbRootHist::setOnlineHistogram(OnlineHistogram* newOnlineHistogram) {
 //=============================================================================
 bool DbRootHist::setRootHistogram( TH1* newRootHistogram ) {
   bool out = false;
-  if (newRootHistogram ) {
-    m_rootHistogram = newRootHistogram;
-    if (m_onlineHistogram  && !m_isEmptyHisto) { setTH1FromDB(); }
+  if ( newRootHistogram ) {
+    m_rootHistogram = newRootHistogram ;
+    applyDefaultDrawOptions( ) ;
+    if ( m_onlineHistogram ) { setTH1FromDB() ; }
     out = true;
   }
   return out;
@@ -987,7 +993,7 @@ void DbRootHist::setTH1FromDB() {
       if (m_onlineHistogram->getDisplayOption("ZMAX", &fopt)) 
         m_rootHistogram->SetMaximum(fopt);
     }
-    if (m_onlineHistogram->getDisplayOption("STATS", &iopt)) 
+    if (m_onlineHistogram->getDisplayOption("STATS", &iopt))
       m_rootHistogram->SetStats(0 != iopt);
     
     if (m_onlineHistogram->getDisplayOption("SHOWTITLE", &sopt)) 
@@ -1121,8 +1127,7 @@ void DbRootHist::fit() {
 //=============================================================================
 // set options from database
 //=============================================================================
-void DbRootHist::setDrawOptionsFromDB(TPad* pad)
-{
+void DbRootHist::setDrawOptionsFromDB(TPad* pad) {
   if ( ( 0 == m_onlineHistogram ) || ( 0 == m_rootHistogram ) ) return ;
   int iopt = 0;
   float fopt = 0.0;
@@ -1834,4 +1839,12 @@ TH1* DbRootHist::makeVirtualHistogram(std::vector<TH1*> &sources) {
     if (m_verbosity >= Verbose) std::cout << "creator algorithm for virtual histogram not found!" << std::endl;
   }
   return m_rootHistogram;
+}
+
+//===========================================================================================
+// Apply default Drawing options 
+//===========================================================================================
+void DbRootHist::applyDefaultDrawOptions( ) {
+  if ( 0 == m_rootHistogram ) return ;
+  m_rootHistogram -> SetStats( false ) ;
 }

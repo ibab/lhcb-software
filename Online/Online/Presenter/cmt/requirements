@@ -11,8 +11,8 @@ branches cmt doc src test
 use DIM           v*  Online
 use Gaucho        v*  Online
 
-use OnlineHistDB  v7*  Online
-use OMAlib        v3*  Online
+use OnlineHistDB  v*  Online
+use OMAlib        v*  Online
 
 use ROOT          v*  LCG_Interfaces
 use Python        v*  LCG_Interfaces
@@ -20,16 +20,7 @@ use Boost         v*  LCG_Interfaces
 
 # Application building rule
 #============================================================================
-application presenter " $(PRESENTERROOT)/$(tag)/dict/*.cpp ParallelWait.cpp \
-                                     DbRootHist.cpp HistogramIdentifier.cpp \
-                                     Elog.cpp ElogDialog.cpp \
-                                     ReferencePicker.cpp IntervalPicker.cpp \
-                                     KnownProblemList.cpp ShiftDB.cpp ProblemDB.cpp \
-                                     PageDescriptionTextView.cpp \
-                                     LoginDialog.cpp HistoPropDialog.cpp Archive.cpp \
-                                     DatabasePagePathDialog.cpp MonRateRace.cpp \
-                                     AlarmDisplay.cpp RunDB.cpp \
-                                     PresenterMainFrame.cpp presenter.cpp "
+application presenter " $(PRESENTERROOT)/$(tag)/dict/*.cpp *.cpp "
 
 document rootcint cintBootstrap cintBootstrap.h
 

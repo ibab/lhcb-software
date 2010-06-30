@@ -286,5 +286,8 @@ class DbRootHist : public HistogramIdentifier
 
   /// updates pad margins from  Histogram DB
   void setPadMarginsFromDB(TPad* &pad);
+
+  /// Apply default drawing options before getting them from the DB
+  void applyDefaultDrawOptions( ) ;
 };
 #endif // DBROOTHIST_H

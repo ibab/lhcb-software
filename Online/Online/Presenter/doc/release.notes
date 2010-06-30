@@ -4,6 +4,9 @@
 ! Purpose     : GUI to allow the visualization of all data quality histograms
 !-----------------------------------------------------------------------------
 
+! 2010-06-29 - Patrick Robbe
+ - src/DbRootHist.cpp: remove stat box by default
+
 ! 2010-06-22 - Patrick Robbe
  - src/DbRootHist.cpp: protect against non existing fit function name
 
