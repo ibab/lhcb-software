@@ -1,4 +1,4 @@
-# $Id: StrippingBs2JpsiPhiPrescaled.py,v 1.6 2010-06-30 08:41:23 jpalac Exp $
+# $Id: StrippingBs2JpsiPhiPrescaled.py,v 1.7 2010-06-30 16:02:48 jpalac Exp $
 '''
 Module for construction of Bs->JpsiPhi pre-scaled lifetime unbiased 
 stripping Selections and StrippingLines.
@@ -15,7 +15,7 @@ Exported symbols (use python help!):
 
 __author__ = ['Greig Cowan','Juan Palacios']
 __date__ = '01/10/2009'
-__version__ = '$Revision: 1.6 $'
+__version__ = '$Revision: 1.7 $'
 
 __all__ = ('Bs2JpsiPhiPrescaledConf',
            'makePhi2KK',
@@ -121,7 +121,9 @@ def makeBs2JpsiPhi(name,
     BsLTFITCHI2 : Maximum lifetime fit Chi2.
     BsVCHI2     : Maximum Bs vertex chi2 (per degree of freedom?)
     """
-    _motherCuts = "(ADMASS('B_s0')<(BsMassWin)s *MeV) & (BPVLTFITCHI2()<(BsLTFITCHI2)s) & (VFASPF( (BsVCHI2)s )<20)" % locals()
+
+    _motherCuts = "(ADMASS('B_s0')<%(BsMassWin)s *MeV) & (BPVLTFITCHI2()<%(BsLTFITCHI2)s) & (VFASPF(VCHI2)<%(BsVCHI2)s)" % locals()
+
     _Bs = CombineParticles( '_'+ name,
                             DecayDescriptor = "B_s0 -> J/psi(1S) phi(1020)",
                             MotherCut = _motherCuts)
