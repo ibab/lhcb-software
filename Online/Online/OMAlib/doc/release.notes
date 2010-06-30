@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.47 2010-06-28 11:26:40 ggiacomo Exp $
+! $Id: release.notes,v 1.48 2010-06-30 15:56:12 ggiacomo Exp $
 ! Package     : OMAlib
 ! Responsible : G. Graziani
 ! Purpose     : Online Monitoring Analysis library
+
+! 20100630 GG
+ - fix a precision problem with HMerge algorithm
 
 ! 20100628 GG
  - fix problem with fake retriggering of inactive alarm

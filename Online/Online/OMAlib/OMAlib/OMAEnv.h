@@ -1,4 +1,4 @@
-// $Id: OMAEnv.h,v 1.15 2010-06-22 09:45:55 ggiacomo Exp $
+// $Id: OMAEnv.h,v 1.16 2010-06-30 15:56:12 ggiacomo Exp $
 #ifndef OMALIB_OMAENV_H 
 
 #define OMALIB_OMAENV_H 1
@@ -24,7 +24,7 @@ namespace OMAconstants {
   static const std::string version = "v3r1";
   
   static const int AlarmExpTime = 3456000; // s =  40 days
-  static const double epsilon = 1.e-40;
+  static const double epsilon = 1.e-10;
 }
 
 class OMAEnv  {
