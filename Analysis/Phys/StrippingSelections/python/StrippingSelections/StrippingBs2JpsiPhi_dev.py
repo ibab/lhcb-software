@@ -1,11 +1,11 @@
-# $Id: StrippingBs2JpsiPhi_dev.py,v 1.5 2010-06-29 13:13:41 jpalac Exp $
+# $Id: StrippingBs2JpsiPhi_dev.py,v 1.6 2010-06-30 08:23:50 jpalac Exp $
 '''
 Module for construction of Bs->JpsiPhi lifetime unbiased stripping Selections and StrippingLines.
 Provides functions to build Bs, Jpsi, Phi nominal and loose selections.
-Provides class StrippingBs2JpsiPhiConf, which constructs the Selections and StrippingLines given
+Provides class Bs2JpsiPhiConf, which constructs the Selections and StrippingLines given
 a configuration dictionary.
 Exported symbols (use python help!):
-   - StrippingBs2JpsiPhiConf
+   - Bs2JpsiPhiConf
    - makeBs2JpsiPhi
    - makePhi2KK
    - makePhi2KKLoose
@@ -14,10 +14,10 @@ Exported symbols (use python help!):
 
 __author__ = ['Juan Palacios', 'Greig Cowan']
 __date__ = '29/06/2010'
-__version__ = '$Revision: 1.5 $'
+__version__ = '$Revision: 1.6 $'
 
 
-__all__ = ('StrippingBs2JpsiPhiConf',
+__all__ = ('Bs2JpsiPhiConf',
            'makeBs2JpsiPhi',
            'makePhi2KK',
            'makePhi2KKLoose',
@@ -25,16 +25,17 @@ __all__ = ('StrippingBs2JpsiPhiConf',
 
 from Configurables import FilterDesktop, CombineParticles, OfflineVertexFitter
 from StrippingConf.StrippingLine import StrippingLine
+from StrippingSelections.Utils import checkConfig
 from PhysSelPython.Wrappers import Selection, DataOnDemand
 from copy import copy
 
-class StrippingBs2JpsiPhiConf(object):
+class Bs2JpsiPhiConf(object):
     """
     Builder of nominal Bs->JpsiPhi stripping Selections and StrippingLines.
     Constructs Bs -> J/Psi Phi Selections and StrippingLines from a configuration dictionary.
     Usage:
     >>> config = { .... }
-    >>> bsConf = StrippingBs2JpsiPhiConf(config)
+    >>> bsConf = Bs2JpsiPhiConf(config)
     >>> bsLines = bsConf.lines
     >>> for line in line :
     >>>  print line.name(), line.outputLocation()
@@ -52,7 +53,7 @@ class StrippingBs2JpsiPhiConf(object):
     lines              : List of lines, [nominal_line, loose_line]
 
     Exports as class data member:
-    StrippingBs2JpsiPhiConf.__configuration_keys__ : List of required configuration parameters.
+    Bs2JpsiPhiConf.__configuration_keys__ : List of required configuration parameters.
     """
 
     __configuration_keys__ = ("MuonTRCHI2Loose",
@@ -74,7 +75,8 @@ class StrippingBs2JpsiPhiConf(object):
                               )
     
     def __init__( self, config ) :
-        self.checkConfig(config)
+
+        checkConfig(Bs2JpsiPhiConf.__configuration_keys__, config)
 
         self.selJpsi2MuMu = DataOnDemand(Location = "Phys/StdLTUnbiasedJpsi2MuMu")
 
@@ -127,14 +129,14 @@ class StrippingBs2JpsiPhiConf(object):
         are as expected.
         """
         absentKeys = []
-        for key in StrippingBs2JpsiPhiConf.__configuration_keys__ :
+        for key in Bs2JpsiPhiConf.__configuration_keys__ :
             if key not in configuration.keys():
                 absentKeys.append(key)
 
         if len(absentKeys) != 0 :
             raise KeyError('Keys missing in configuration: '+ str(absentKeys))
 
-        if len(configuration.keys()) != len(StrippingBs2JpsiPhiConf.__configuration_keys__) :
+        if len(configuration.keys()) != len(Bs2JpsiPhiConf.__configuration_keys__) :
             raise KeyError('Configuration has unexpected number of parameters.')
 
 
