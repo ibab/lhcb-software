@@ -1,4 +1,4 @@
-// $Id: SVertexOneSeedTool.cpp,v 1.2 2010-06-22 09:28:55 mgrabalo Exp $
+// $Id: SVertexOneSeedTool.cpp,v 1.3 2010-06-30 16:37:17 mgrabalo Exp $
 #include "SVertexOneSeedTool.h"
 #include "Event/RecVertex.h"
 
@@ -150,27 +150,27 @@ std::vector<Vertex> SVertexOneSeedTool::buildVertex(const RecVertex& RecVert,
       double ipsmin= std::min(ipl/iperrl, ips/iperrs);
       if (ipsmin<2.5) continue;
       if(ipsmin<6) 
-	prob_ipsmin    = pol(ipsmin, -0.642335, 0.356381, -0.0239819);
+        prob_ipsmin    = pol(ipsmin, -0.642335, 0.356381, -0.0239819);
       else prob_ipsmin = pol(ipsmin, 0.536929, 0.0254873, -0.000439594);
-
+      
       double prob_deltaphi = pol(dphi, 0.699251, -0.19263, 0.00319839);
-	
+      
       double prob_rdist;
       if(rdist<1) prob_rdist= pol(rdist, 9.61771e-05, 0.936598, -0.433183);
       else        prob_rdist= pol(rdist, 0.44296, 0.0956002, -0.0130237);
-
+      
       double probf = combine(prob_chi2,   prob_ptmin,    prob_ipmax,
-			     prob_ipsmin, prob_deltaphi, prob_rdist);
-
+                             prob_ipsmin, prob_deltaphi, prob_rdist);
+      
       debug()<<"      seed formed - probf: "<<probf<<endreq;
       if(probf>=maxprobf) {
-	myseed=vtx;
-	if (probf>1) probf=1;
-	maxprobf=probf;
-	p1=(*jp);
-	p2=(*kp);
-	debug() << "       === pt=" << p1->pt() <<endreq;
-	debug() << "       === pt=" << p2->pt() <<endreq;
+        myseed=vtx;
+        if (probf>1) probf=1;
+        maxprobf=probf;
+        p1=(*jp);
+        p2=(*kp);
+        debug() << "       === pt=" << p1->pt() <<endreq;
+        debug() << "       === pt=" << p2->pt() <<endreq;
       }
       
     }//kp

@@ -184,7 +184,8 @@ double NNetTool_MLP::MLPpS(std::vector<double>& par) {
   NNpionS net;
   double rnet = net.value(0,par.at(0),par.at(2),par.at(3),par.at(4),
                           //par.at(5),par.at(6),par.at(7),par.at(8),par.at(9),par.at(1));
-                          par.at(5),par.at(6),par.at(7),par.at(9),par.at(1));
+//                          par.at(5),par.at(6),par.at(7),par.at(9),par.at(1));
+                          par.at(5),par.at(6),par.at(7),par.at(8),par.at(1));
 
   double pn = 1.0-pol2(rnet, m_P0ps, m_P1ps);// <=========
 
