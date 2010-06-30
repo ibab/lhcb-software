@@ -41,6 +41,27 @@ def test_bs2jpsiphiprescaled() :
     bs2jpsiphi = conf('Bs2JpsiPhiPrescTest', config_params)
 
     bs2JpsiPhiStream = StrippingStream('StreamBs2JpsiPhi', 
+                                       Lines = bs2jpsiphi.lines)
+    print '\n'
+    for line in bs2JpsiPhiStream.lines :
+        print 'Line', line.name(), 'Location', line.outputLocation()
+
+def test_bs2jpsiphiprescaledanddetatched() :
+
+    from StrippingSelections.StrippingBs2JpsiPhiPrescaledAndDetatched import Bs2JpsiPhiPrescaledAndDetatchedConf as conf
+    config_params = {'PhiPT' : 500.,
+                     'BsMassWin' : 300.,
+                     'BsLTFITCHI2' : 14.,
+                     'BsVCHI2' : 20.,
+                     'DetatchedBsLTIME' : 15.,
+                     'PrescaledLinePrescale' : 1.0,
+                     'PrescaledLinePostscale' : 0.1,
+                     'DetatchedLinePrescale' : 1.0,
+                     'DetatchedLinePostscale' : 1.0}
+
+    bs2jpsiphi = conf('Bs2JpsiPhi', config_params)
+
+    bs2JpsiPhiStream = StrippingStream('StreamBs2JpsiPhi', 
                                    Lines = bs2jpsiphi.lines)
     print '\n'
     for line in bs2JpsiPhiStream.lines :
