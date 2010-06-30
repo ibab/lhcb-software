@@ -1,8 +1,8 @@
 '''
 Helpers for construction of Stripping Selections
 '''
-__author__ "Juan Palacios juan.palacios@cern.ch"
-__date__ "30/06/2010"
+__author__ = "Juan Palacios juan.palacios@cern.ch"
+__date__ = "30/06/2010"
 
 __all__ = ('checkConfig')
 
