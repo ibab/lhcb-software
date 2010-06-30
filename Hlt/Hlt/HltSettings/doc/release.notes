@@ -4,6 +4,10 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2010-06-30 - Gerhard Raven
+ - add Physics_HighNu_80Vis_25L0_2Hlt1_ExpressHlt2_Jun10, update L0TCK in 
+   Physics_HighNu_40Vis_15L0_2Hlt1_ExpressHlt2_Jun10
+
 ! 2010-06-23 - Jibo He
  - Add Electrons_All.py, Electrons_Minimal_TrackFitted.py, Electrons_Minimal_TrackUnfitted.py 
    settings.
