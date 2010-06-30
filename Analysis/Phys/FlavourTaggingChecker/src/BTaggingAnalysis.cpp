@@ -32,6 +32,8 @@ BTaggingAnalysis::BTaggingAnalysis(const std::string& name, ISvcLocator* pSvcLoc
   m_fitter(0),
   m_BS(0)
 {
+  declareProperty( "EnableMC",  m_EnableMC = true );
+
   declareProperty( "BHypoCriterium",     m_BHypoCriterium   = "MaximumPt");
   declareProperty( "RequireTrigger",     m_requireTrigger   = true );
   declareProperty( "RequireTisTos",      m_requireTisTos    = true );
@@ -71,7 +73,7 @@ StatusCode BTaggingAnalysis::initialize() {
   m_bkgCategory = tool<IBackgroundCategory>("BackgroundCategory", this);
   if(!m_bkgCategory){
     fatal() << "Unable to retrieve BackgroundCategory tool" << endreq;
-    return StatusCode::FAILURE;
+    if (m_EnableMC) return StatusCode::FAILURE;
   }
   m_pLifetimeFitter = tool<ILifetimeFitter>("PropertimeFitter", this);
   if(!m_pLifetimeFitter){
@@ -86,12 +88,12 @@ StatusCode BTaggingAnalysis::initialize() {
   m_debug = tool<IPrintMCDecayTreeTool> ( "PrintMCDecayTreeTool", this );
   if( ! m_debug ) {
     fatal() << "Unable to retrieve Debug tool "<< endreq;
-    return StatusCode::FAILURE;
+    if (m_EnableMC) return StatusCode::FAILURE;
   }
   m_forcedBtool = tool<IForcedBDecayTool> ( "ForcedBDecayTool", this );
   if( ! m_forcedBtool ) {
     fatal() << "Unable to retrieve ForcedBDecayTool tool "<< endreq;
-    return StatusCode::FAILURE;
+    if (m_EnableMC) return StatusCode::FAILURE;
   }
   m_electron = tool<ICaloElectron>( "CaloElectron");
   if(! m_electron) {
@@ -118,6 +120,8 @@ StatusCode BTaggingAnalysis::initialize() {
     err() << "Unable to Retrieve Default VertexFitter" << endreq;
     return StatusCode::FAILURE;
   }
+  
+  if (!m_EnableMC) warning() << "  Running without MC info  " <<endreq;
 
   return StatusCode::SUCCESS;
 }
@@ -138,33 +142,37 @@ StatusCode BTaggingAnalysis::execute() {
   debug()<<">>>>>  Processing Run "<<evt->runNumber()
          <<"   Event "<<evt->evtNumber()<<"  <<<<<" <<endreq;
 
-  GenHeader* gene = get<GenHeader> (GenHeaderLocation::Default);
+  MCParticles* mcpart = 0;
+  if (m_EnableMC) {
+    GenHeader* gene = get<GenHeader> (GenHeaderLocation::Default);
 
-  // Retrieve MCParticles
-  MCParticles* mcpart = get<MCParticles> (MCParticleLocation::Default);
-  debug() << "Nr of MCParticles retrieved="<< mcpart->size()<< endreq;
-
-  // Retrieve MCVertex
-  MCVertices* mcvert = get<MCVertices> (MCVertexLocation::Default);
-  debug() << "Nr of MCVertices retrieved="<< mcvert->size()<< endreq;
-
-  // Retrieve information about primary pp collisions
-  const SmartRefVector<GenCollision>& mcColls = gene->collisions();
-  if(mcColls.empty()) err()<< "No pp mcCollision retrieved" << endreq;
-  debug() << "Nr of Collisions = " << mcColls.size() << endreq;
-  long proType = 0;
-  for ( unsigned int icoll=0; icoll!=mcColls.size(); icoll++ ) {
-    if( mcColls.at(icoll)->isSignal() ) {
-      proType = mcColls.at(icoll)->processType();
-      debug() << "Collision process type: " << proType << endreq;
+    // Retrieve MCParticles
+    mcpart = get<MCParticles> (MCParticleLocation::Default);
+    debug() << "Nr of MCParticles retrieved="<< mcpart->size()<< endreq;
+    
+    // Retrieve MCVertex
+    MCVertices* mcvert = get<MCVertices> (MCVertexLocation::Default);
+    debug() << "Nr of MCVertices retrieved="<< mcvert->size()<< endreq;
+    
+    // Retrieve information about primary pp collisions
+    const SmartRefVector<GenCollision>& mcColls = gene->collisions();
+    if(mcColls.empty()) err()<< "No pp mcCollision retrieved" << endreq;
+    debug() << "Nr of Collisions = " << mcColls.size() << endreq;
+    long proType = 0;
+    for ( unsigned int icoll=0; icoll!=mcColls.size(); icoll++ ) {
+      if( mcColls.at(icoll)->isSignal() ) {
+	proType = mcColls.at(icoll)->processType();
+	debug() << "Collision process type: " << proType << endreq;
+      }
     }
+
+    tuple -> column ("evType",gene->evType());
+    tuple -> column ("proType",proType);
   }
+  
   tuple -> column ("Run",   evt->runNumber());
   tuple -> column ("Event", (long)evt->evtNumber());
-  tuple -> column ("evType",gene->evType());
-  tuple -> column ("proType",proType);
   
-
   //----------------------------------------------------------
   //PhysDeskTop
   const Particle::ConstVector& parts = desktop()->particles();
@@ -192,22 +200,25 @@ StatusCode BTaggingAnalysis::execute() {
    //---------------------------------------------------------
 
   //-----------------------------------------------------
-  m_BS = m_forcedBtool->forcedB();
-  sc = FillMCInfoOfB(tuple, mcpart);
-  if(!sc)err()<<"FillMCInfoOfB returns failure."<<endreq;
+  if (m_EnableMC) {
+    m_BS = m_forcedBtool->forcedB();
+    sc = FillMCInfoOfB(tuple, mcpart);
+    if(!sc)err()<<"FillMCInfoOfB returns failure."<<endreq;
+  }
   //-----------------------------------------------------
 
   //Official tag of the event ------------------------------------------
   ProtoParticle::ConstVector partsInSV = tagevent( tuple, AXBS );
 
-  //Background category ------------------------------------------------
-  int bcat = -1;
-  if(AXBS) if(m_bkgCategory) if( ! AXBS->isBasicParticle() ){
-    bcat = (int) m_bkgCategory->category(AXBS);
-    debug() << "Result of BackgroundCategory is: " << bcat << endreq;
+  if (m_EnableMC) {
+    //Background category ------------------------------------------------
+    int bcat = -1;
+    if(AXBS) if(m_bkgCategory) if( ! AXBS->isBasicParticle() ){
+	  bcat = (int) m_bkgCategory->category(AXBS);
+	  debug() << "Result of BackgroundCategory is: " << bcat << endreq;
+	}
+    tuple -> column ("bkgCat", bcat);
   }
-  tuple -> column ("bkgCat", bcat);
-
   //--------------------------------------------------------------------
   //build primary and pileup vertices
   const RecVertex* RecVert=0;
@@ -415,45 +426,45 @@ StatusCode BTaggingAnalysis::execute() {
       if(vFlag) debug() << "Found to be in SVTX "<<endreq;
     }
 
-    //store MC info 
-    float MCP= 0.0, MCPt= 0.0, MCphi=-999.0, MCx= -999.0, MCy= -999.0, MCz= -999.0;
-    long  MCID = 0, mothID= 0, ancID = 0, bFlag = 0, xFlag = 0;
-
-    debug()<<" mc info"<<endreq;
-    const MCParticle* mcp = m_assoc->relatedMCP( axp );
-    if( mcp ) {
-      MCP = mcp->momentum().P()/GeV;
-      MCPt = mcp->pt()/GeV;
-      MCphi = mcp->momentum().phi();
-      MCID = mcp->particleID().pid();
-
-      const MCParticle* mother = mcp->mother();
-      if(mother) {
-        mothID = mother->particleID().pid();
-        const SmartRefVector<MCVertex>& motherVtx = mother->endVertices();
-        if(motherVtx.size()) 
-          MCx = motherVtx.at(0)->position().x()/mm;
-          MCy = motherVtx.at(0)->position().y()/mm;
-          MCz = motherVtx.at(0)->position().z()/mm;
-      }
-
-      const MCParticle* ancestor = m_util->originof(mcp) ;
-      ancID = ancestor->particleID().pid();
-      if( ancestor->particleID().hasBottom() ) {
-        bFlag = 1;  
-        if(m_BS) if( ancestor == m_BS ) {
-          bFlag = -1;
-          debug() <<" Warning: tag from signal! ID=" << mcp->particleID().pid() 
-                  <<" P="<< mcp->momentum().P() << endreq;
-        }
-      }
-      if(m_BS) xFlag = m_util->comes_from_excitedB(m_BS, mcp);
-      if(xFlag) debug()<<" comes_from_excitedB="<< xFlag << endreq;
+    if (m_EnableMC) {
+      //store MC info 
+      float MCP= 0.0, MCPt= 0.0, MCphi=-999.0, MCx= -999.0, MCy= -999.0, MCz= -999.0;
+      long  MCID = 0, mothID= 0, ancID = 0, bFlag = 0, xFlag = 0;
       
-      debug()<<"mc info finish"<<endreq;
+      debug()<<" mc info"<<endreq;
+      const MCParticle* mcp = m_assoc->relatedMCP( axp );
+      if( mcp ) {
+	MCP = mcp->momentum().P()/GeV;
+	MCPt = mcp->pt()/GeV;
+	MCphi = mcp->momentum().phi();
+	MCID = mcp->particleID().pid();
+	
+	const MCParticle* mother = mcp->mother();
+	if(mother) {
+	  mothID = mother->particleID().pid();
+	  const SmartRefVector<MCVertex>& motherVtx = mother->endVertices();
+	  if(motherVtx.size()) 
+	    MCx = motherVtx.at(0)->position().x()/mm;
+	    MCy = motherVtx.at(0)->position().y()/mm;
+	    MCz = motherVtx.at(0)->position().z()/mm;
+	}
+
+	const MCParticle* ancestor = m_util->originof(mcp) ;
+	ancID = ancestor->particleID().pid();
+	if( ancestor->particleID().hasBottom() ) {
+	  bFlag = 1;  
+	  if(m_BS) if( ancestor == m_BS ) {
+	      bFlag = -1;
+	      debug() <<" Warning: tag from signal! ID=" << mcp->particleID().pid() 
+		      <<" P="<< mcp->momentum().P() << endreq;
+	    }
+	}
+	if(m_BS) xFlag = m_util->comes_from_excitedB(m_BS, mcp);
+	if(xFlag) debug()<<" comes_from_excitedB="<< xFlag << endreq;
       
-      
-    }//if( mcp )
+	debug()<<"mc info finish"<<endreq;
+	
+      }//if( mcp )
 
     pMCID .push_back(MCID);
     pMCP  .push_back(MCP);
@@ -468,6 +479,7 @@ StatusCode BTaggingAnalysis::execute() {
     pbFlag.push_back(bFlag);
     
     //---------------
+    }
   }
 
   if(pID.size() > 199) {
@@ -495,13 +507,15 @@ StatusCode BTaggingAnalysis::execute() {
   tuple -> farray ("PIDk",    pPIDk, "N", 200);
   tuple -> farray ("PIDp",    pPIDp, "N", 200);
   tuple -> farray ("PIDfl",   pPIDfl, "N", 200);
-  tuple -> farray ("MCID",    pMCID, "N", 200);
-  tuple -> farray ("MCP",     pMCP, "N", 200);
-  tuple -> farray ("MCPt",    pMCPt, "N", 200);
-  tuple -> farray ("MCphi",   pMCphi, "N", 200);
-  tuple -> farray ("MCx",     pMCx, "N", 200);
-  tuple -> farray ("MCy",     pMCy, "N", 200);
-  tuple -> farray ("MCz",     pMCz, "N", 200);
+  if (m_EnableMC) {
+    tuple -> farray ("MCID",    pMCID, "N", 200);
+    tuple -> farray ("MCP",     pMCP, "N", 200);
+    tuple -> farray ("MCPt",    pMCPt, "N", 200);
+    tuple -> farray ("MCphi",   pMCphi, "N", 200);
+    tuple -> farray ("MCx",     pMCx, "N", 200);
+    tuple -> farray ("MCy",     pMCy, "N", 200);
+    tuple -> farray ("MCz",     pMCz, "N", 200);
+  }
   tuple -> farray ("mothID",  pmothID, "N", 200);
   tuple -> farray ("ancID",   pancID, "N", 200);
   tuple -> farray ("bFlag",   pbFlag, "N", 200);
@@ -564,8 +578,10 @@ BTaggingAnalysis::choosePrimary(const Particle* AXB,
   for(iv=verts.begin(); iv!=verts.end(); iv++){
     double var, ip, iperr;
     if(m_ChoosePV == "CheatPV") {
-      var = fabs( m_BS->primaryVertex()->position().z() - (*iv)->position().z() );
-      debug()<<" distance from true PV="<<var<<endreq;
+      if (m_EnableMC) {
+	var = fabs( m_BS->primaryVertex()->position().z() - (*iv)->position().z() );
+	debug()<<" distance from true PV="<<var<<endreq;
+      } else warning()<<"MC disable and try to use CheatPV -> Change ChoosePVCriterium!"<<endreq;
     } 
     else if(m_ChoosePV=="PVbyIP") { //cheated sel needs this
       m_util->calcIP(AXB, *iv, ip, iperr);
@@ -909,9 +925,11 @@ Particle::ConstVector BTaggingAnalysis::FillSelectedB (Tuple& tuple, const Parti
       sigVy.push_back(0); 
       sigVz.push_back(20000); 
     }
-    //mc truth to use as link 
-    const MCParticle* mcp = m_assoc->relatedMCP( *ip );
-    if( mcp ) sigMCP.push_back(mcp->p()/GeV); else sigMCP.push_back(0); 
+    if (m_EnableMC) {
+      //mc truth to use as link 
+      const MCParticle* mcp = m_assoc->relatedMCP( *ip );
+      if( mcp ) sigMCP.push_back(mcp->p()/GeV); else sigMCP.push_back(0); 
+    }
   
   }
 
@@ -924,7 +942,7 @@ Particle::ConstVector BTaggingAnalysis::FillSelectedB (Tuple& tuple, const Parti
   tuple -> farray ("sVx",     sigVx, "M", 10);
   tuple -> farray ("sVy",     sigVy, "M", 10);
   tuple -> farray ("sVz",     sigVz, "M", 10);
-  tuple -> farray ("sMCP",    sigMCP, "M", 10);
+  if (m_EnableMC) tuple -> farray ("sMCP",    sigMCP, "M", 10);
 
   return axdaugh;
 }
@@ -1053,6 +1071,13 @@ void BTaggingAnalysis::FillSeedInfo(Tuple& tuple, const RecVertex* RecVert,
   //save NEW seed vertex positions
   for (isv=svertices.begin(); isv!=svertices.end(); ++isv) {
     
+    //We keep only the first two tracks, which are the ones which 
+    //makes the seed. The vertexvector inherits from an old way to
+    //to obtain all the possibles seed 
+
+    //the svertices.clear is to put the vector at zero and breaks because is the only one
+    //the svertices.at(0) put the seed, fitted again with the 2 tracks, breaks because is the only one
+
     if (seeds>0) break;//select only first seed
     seeds++;
     Particle::ConstVector Pfit = (*isv).outgoingParticlesVector();

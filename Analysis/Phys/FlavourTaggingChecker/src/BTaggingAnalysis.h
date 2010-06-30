@@ -1,4 +1,4 @@
-// $Id: BTaggingAnalysis.h,v 1.26 2010-06-22 09:43:37 mgrabalo Exp $
+// $Id: BTaggingAnalysis.h,v 1.27 2010-06-30 16:34:33 mgrabalo Exp $
 #ifndef USER_BTAGGINGANALYSIS_H 
 #define USER_BTAGGINGANALYSIS_H 1
 
@@ -107,6 +107,8 @@ private:
   bool m_requireTrigger, m_requireTisTos;
   bool m_saveHlt1Lines, m_saveHlt2Lines;
 
+  //mc
+  bool m_EnableMC;
 };
 
 //===========================================================================//
