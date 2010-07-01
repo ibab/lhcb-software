@@ -164,6 +164,18 @@ def dumpL0( id, cas  = ConfigAccessSvc() ) :
         print 100*'*'
 
 
+def getL0Prescales( id, cas  = ConfigAccessSvc() ) :
+    tree  =  execInSandbox( _getConfigTree, id, cas )
+    l0s   = [ i for i in tree if i.leaf and i.leaf.type == 'L0DUConfigProvider' ]
+    ret = dict()
+    for i in l0s : 
+        l0tck = i.leaf.props['TCK' ] 
+        ret[ l0tck ]  = dict()
+        settings = _parseL0settings( eval(i.leaf.props['Channels']) )
+        for chan in settings.itervalues() :
+            ret[ l0tck ][ chan['name'] ] = chan['rate']
+    return ret
+
 
 def _updateL0TCK( id, l0tck, label, cas ) :
     if not label : 

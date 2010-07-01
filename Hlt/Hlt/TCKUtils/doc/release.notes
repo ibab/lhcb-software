@@ -5,7 +5,10 @@
 !               and the underlying information
 !-----------------------------------------------------------------------------
 
+! 2010-07-01 - Gerhard Raven
  - implement dumpL0(TCK)
+ - implement getL0Prescales
+
 !========================== TCKUtils v1r6p5 2010-05-28 ===================
 ! 2010-05-27 - Gerhard Raven
  - fix listHlt2Lines
