@@ -4,6 +4,12 @@
 ! Purpose     : Apply some cuts on reconstructed vertices
 !-----------------------------------------------------------------------------
 
+! 2010-07-01 - Neal Gauvin
+ - Remove use of new in execute() to avoid potential leaks
+
+! 2010-06-30 - Neal Gauvin
+ - Cosmethic changes
+
 ! 2010-06-14 - V. Gligorov
  - Remove obsolete default HLT track locations.
 

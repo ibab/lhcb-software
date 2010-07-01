@@ -1,4 +1,4 @@
-// $Id: Hlt2SelDV.h,v 1.1 2010-04-20 14:15:06 ngueissa Exp $
+// $Id: Hlt2SelDV.h,v 1.2 2010-07-01 13:59:34 ngueissa Exp $
 #ifndef HLT2SELDV_H 
 #define HLT2SELDV_H 1
 
@@ -16,8 +16,9 @@
 
 /** @class Hlt2SelDV Hlt2SelDV.h
  *  
+ *  @brief Apply a set of cuts on given Particles.
  *  @author Neal Gauvin
- *  @date   2010-04-20
+ *  @date   12 janvier 2010
  */
 class Hlt2SelDV : public DVAlgorithm {
 public: 
@@ -41,12 +42,13 @@ private:
   //questions
   bool IsAPointInDet( const LHCb::Particle *, int mode = 2,
                       double range = 1*Gaudi::Units::mm );
+  /// Is a point in the RF-Foil ?
   bool IsInRFFoil( const Gaudi::XYZPoint & );
   /// Has a candidate a daughter muon ?
   double HasMuons( const LHCb::Particle * );
   double GetSumPt( const LHCb::Particle * );
   double GetRFromBL( const Gaudi::XYZPoint& );
-  void GetUpstreamPV();
+  void GetUpstreamPV(); ///< Get the Upstream PV
   StatusCode fillHeader( Tuple & );
 
   //Geometric tools
@@ -60,7 +62,7 @@ private:
   Gaudi::XYZPoint Normed( const Gaudi::LorentzVector &, double range = 1 );
   double VertDistance( const Gaudi::XYZPoint &, const Gaudi::XYZPoint &);
 
-  /*****************************************************************
+  /***************************************************************//**
    * the type of R cut to be applied 
    * ""                   : cut with respect to (0,0,z)
    * "FromUpstreamPV"     : cut with respect to the upstream PV (PV3D)
@@ -78,6 +80,7 @@ private:
 
   // cuts
   unsigned int m_NbCands;     ///< Min nb of desired candidates
+  unsigned int m_PVnbtrks;    ///< Min nb of trks for upstream PV candidate
   int    m_nTracks ;          ///< Min # of tracks at reconstructed vertex
   double m_PreyMinMass ;      ///< Minimum reconstructed mass
   double m_PreyMaxMass ;      ///< Maximum reconstructed mass
@@ -86,14 +89,16 @@ private:
   double m_RMax;              ///< Max dist to the z axis
   double m_MaxChi2OvNDoF;     ///< Max chi2 of a vertex
   double m_MuonpT;            ///< Muon with a pT of min m_MuonpT
-  double m_MinRecpt;  ///< Min measured pT
-  double m_MinX;      ///< Min X position     
-  double m_MaxX;      ///< Max X position     
-  double m_MinY;      ///< Min Y position     
-  double m_MaxY;      ///< Max Y position     
-  double m_MinZ;      ///< Min Z position     
-  double m_MaxZ;      ///< Max Z position     
-  /*****************************************************************
+  double m_MinRecpt;          ///< Min measured pT
+  double m_SigmaZ;            ///< Max on error Z
+  double m_SigmaR;            ///< Max on error R
+  double m_MinX;              ///< Min X position     
+  double m_MaxX;              ///< Max X position     
+  double m_MinY;              ///< Min Y position     
+  double m_MaxY;              ///< Max Y position     
+  double m_MinZ;              ///< Min Z position     
+  double m_MaxZ;              ///< Max Z position     
+  /***************************************************************//**
    * Remove vtx if in detector material ?
    * if = 0  : disabled
    * if = 1  : remove reco vtx if in detector material
@@ -133,4 +138,5 @@ private:
   } SortPVz;
 
 };
+
 #endif // HLT2SELDV_H

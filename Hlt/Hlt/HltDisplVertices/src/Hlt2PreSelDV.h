@@ -17,8 +17,7 @@
 #include "DetDesc/ITransportSvc.h"
 
 /** @class Hlt2PreSelDV Hlt2PreSelDV.h
- *  
- *  @Version 6r3
+ *  @brief Turn a given container of RecVertex if they fulfill some criteria
  *  @author Neal Gauvin
  *  @date   12 janvier 2010
  */
@@ -63,9 +62,8 @@ private:
   ///Is a vertex too close to detector material ?
   bool IsAPointInDet( const LHCb::Particle &, int mode = 2,
                       double range = 1*Gaudi::Units::mm );
-  ///Cut on the mass
-  bool TestMass( const LHCb::Particle * );
-  bool TestMass( LHCb::Particle & );
+  bool TestMass( const LHCb::Particle * );  ///< Cut on the mass
+  bool TestMass( LHCb::Particle & );  ///< Cut on the mass
   /// Cut on the RF-Foil position
   bool IsInRFFoil( const Gaudi::XYZPoint & );
   StatusCode SavePreysTuple( Tuple &, LHCb::Particle::ConstVector & );
@@ -94,12 +92,13 @@ private:
   const double pi ;
 
   int    m_nTracks ;          ///< Min # of tracks at reconstructed vertex
+  unsigned int m_PVnbtrks;    ///< Min nb of trks for upstream PV candidate
   double m_PreyMinMass ;      ///< Minimum reconstructed mass
   double m_PreyMaxMass ;      ///< Maximum reconstructed mass
   double m_RMin;              ///< Min dist to the z axis
   double m_RMax;              ///< Max dist to the z axis
   double m_Dist;              ///< distance bet. RV to be said isolated
-  /*****************************************************************
+  /***************************************************************//**
    * Remove vtx if in detector material ?
    * if = 0  : disabled
    * if = 1  : remove reco vtx if in detector material
@@ -111,7 +110,7 @@ private:
    ******************************************************************/
   int m_RemVtxFromDet ;    
   double m_DetDist;           ///< Min distance to det material 
-  //Remove vtx if found in RF-Foil area, based on geometric cuts
+  ///Remove vtx if found in RF-Foil area, based on geometric cuts
   bool   m_RemFromRFFoil;
   bool   m_KeepLowestZ ;      ///< keep the RV with the lowest Z (particle gun)
   bool   m_SaveTuple ;        ///< Save candidate infos in a tuple
@@ -119,7 +118,7 @@ private:
   /// Where RecVertices are stored on the TES
   std::vector<std::string> m_RVLocation ;
   std::string m_Fitter ;      ///< method for fitting the RecVertex
-  /*****************************************************************
+  /***************************************************************//**
    * the type of R cut to be applied 
    * ""                   : cut with respect to (0,0,z)
    * "FromUpstreamPV"     : cut with respect to the upstream PV (PV3D)

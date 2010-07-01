@@ -56,6 +56,7 @@ Hlt2PreSelDV::Hlt2PreSelDV( const std::string& name,
   declareProperty("BeamLineLocation", 
 		  m_BLLoc = "HLT/Hlt2LineDisplVertices/BeamLine");
   declareProperty("UseMap", m_UseMap = true );
+  declareProperty("PVnbtrks", m_PVnbtrks = 5 ); //corr. to 'tight' PV reco
 }
 //=============================================================================
 // Destructor
@@ -101,48 +102,50 @@ StatusCode Hlt2PreSelDV::initialize() {
     
   
 
-  if( false ){
-    info()<<"--------------------------------------------------------"<<endmsg;
-    info()<<"Hlt2PreSelDV takes every RecVertex from "
+  if(msgLevel(MSG::DEBUG)){
+    debug()<<"-------------------------------------------------------"<<endmsg;
+    debug()<<"Hlt2PreSelDV takes every RecVertex from "
           << m_RVLocation <<" and turns them into Particles if they satisfies "
           <<"the following criterias :"<< endmsg ;
-    info()<<"RecVertex has no backward tracks"<< endmsg ;
+    debug()<<"RecVertex has no backward tracks"<< endmsg ;
     if(!m_KeepLowestZ) 
-      info()<<"RecVertex has not the lowest z position (PV)"<< endmsg;
+      debug()<<"RecVertex has not the lowest z position (PV)"<< endmsg;
     if( m_RemFromRFFoil )
-      info()<<"Remove RecVertex if in RF-Foil region"<< endmsg ;
+      debug()<<"Remove RecVertex if in RF-Foil region"<< endmsg ;
     if( m_RemVtxFromDet == 1 )
-      info()<<"Remove RecVertex if in detector material"<< endmsg;
+      debug()<<"Remove RecVertex if in detector material"<< endmsg;
     if( m_RemVtxFromDet == 2 )
-      info()<<"Remove RecVertex if closer than " << m_DetDist 
+      debug()<<"Remove RecVertex if closer than " << m_DetDist 
             <<"mm from detector material along momentum"<< endmsg;
     if( m_RemVtxFromDet == 3 || m_RemVtxFromDet == 4 )
-      info()<<"Remove RecVertex if closer than " << m_DetDist 
+      debug()<<"Remove RecVertex if closer than " << m_DetDist 
             <<"*PosCovMatric from detector material"<< endmsg;
     if( m_RemVtxFromDet == 4 )
-      info()<<"("<< m_DetDist+3 <<" when in RF-Foil region)"<< endmsg;
-    info()<<"Reconstructed Mass of the RecVertex"<< endmsg;
-    info()<<"Min Mass : " << m_PreyMinMass/GeV <<" GeV"<< endmsg;
-    info()<<"Max Mass : " << m_PreyMaxMass/GeV <<" GeV"<< endmsg;
-    info()<<"Minimum number of tracks at the RecVertex : "
+      debug()<<"("<< m_DetDist+3 <<" when in RF-Foil region)"<< endmsg;
+    debug()<<"Reconstructed Mass of the RecVertex"<< endmsg;
+    debug()<<"Min Mass : " << m_PreyMinMass/GeV <<" GeV"<< endmsg;
+    debug()<<"Max Mass : " << m_PreyMaxMass/GeV <<" GeV"<< endmsg;
+    debug()<<"Minimum number of tracks at the RecVertex : "
           << m_nTracks <<" tracks."<< endmsg;
-    info()<< "The radial displacement is ";
+    debug()<< "The radial displacement is ";
     if( m_RCut == "FromUpstreamPV" ){
-      info()<< "computed with respect to the upstream PV of PV3D." << endmsg;
+      debug()<< "computed with respect to the upstream PV of PV3D." << endmsg;
+      debug()<< "Min nb of tracks on the upPV candidate : "
+            << m_PVnbtrks << endmsg; 
     } else if( m_RCut == "FromBeamLine" ){
-      info()<< "computed with respect to the beam line given at " 
+      debug()<< "computed with respect to the beam line given at " 
             << m_BLLoc << endmsg;
     } else {
-      info()<< "computed with respect to (0,0,z) in the global LHCb frame" 
+      debug()<< "computed with respect to (0,0,z) in the global LHCb frame" 
             << endmsg;
-      info()<< "THIS OPTION SHOULD NOT BE USED ON REAL DATA !!" 
+      debug()<< "THIS OPTION SHOULD NOT BE USED ON REAL DATA !!" 
             << endmsg;
     }
-    info()<<"Min R    : " << m_RMin/mm <<" mm"<< endmsg ;
-    info()<<"Max R    : " << m_RMax/mm <<" mm"<< endmsg ;
-    info()<<"Particles will be made with "<< m_Prey <<" id" << endmsg ;
-    info()<<"Vertex fitter used : "<< m_Fitter << endmsg ;
-    info()<<"--------------------------------------------------------"<<endmsg;
+    debug()<<"Min R    : " << m_RMin/mm <<" mm"<< endmsg ;
+    debug()<<"Max R    : " << m_RMax/mm <<" mm"<< endmsg ;
+    debug()<<"Particles will be made with "<< m_Prey <<" id" << endmsg ;
+    debug()<<"Vertex fitter used : "<< m_Fitter << endmsg ;
+    debug()<<"-------------------------------------------------------"<<endmsg;
   }
   
 
@@ -331,6 +334,8 @@ StatusCode Hlt2PreSelDV::initialize() {
 //=============================================================================
 StatusCode Hlt2PreSelDV::finalize() {
 
+  if( m_RCut !="FromBeamLine" ) delete m_BeamLine;
+
   if( msgLevel( MSG::DEBUG ) ) debug() << "==> Finalize" << endmsg;
   return DVAlgorithm::finalize(); 
 }
@@ -369,11 +374,20 @@ const RecVertex * Hlt2PreSelDV::GetUpstreamPV(){
   double tmp = 1000;
   for ( RecVertex::Range::const_iterator i = PVs.begin(); 
 	i != PVs.end() ; ++i ){
-    //Do not consider PVs outside some limits.
-    if( abs((*i)->position().x()>1.5*mm) || abs((*i)->position().y()>1.5*mm))
+    const RecVertex* pv = *i;
+    //Apply some cuts
+    if( abs(pv->position().x()>1.5*mm) || abs(pv->position().y()>1.5*mm))
       continue;
-    double z = (*i)->position().z();
+    double z = pv->position().z();
     if( abs(z) > 150*mm ) continue;
+    //const Gaudi::SymMatrix3x3  & mat = pv->covMatrix();
+    //double sr = sqrt( mat(0,0) + mat(1,1) );
+    if( msgLevel( MSG::DEBUG ) )
+      debug() <<"PV candidate : nb of tracks "<< pv->tracks().size() << endmsg;
+    //<<" sigmaR "<< sr <<" sigmaZ "<< sqrt(mat(2,2)) << endmsg;
+    //if( sr > m_PVsr ) continue;
+    //if( sqrt(mat(2,2)) > m_PVsz ) continue;
+    if( pv->tracks().size() < m_PVnbtrks ) continue;
     if( z < tmp ){
       tmp = z;
       upPV = (*i);
@@ -760,7 +774,7 @@ bool Hlt2PreSelDV::IsAPointInDet( const Particle & P, int mode,
   else if( mode == 3 || mode == 4 ){
 
     const Gaudi::XYZPoint  RVPosition = RV->position();
-    Gaudi::SymMatrix3x3 RVPositionCovMatrix = RV->covMatrix();
+    const Gaudi::SymMatrix3x3 & RVPositionCovMatrix = RV->covMatrix();
     double sigNx = range*sqrt(RVPositionCovMatrix[0][0]);
     double sigNy = range*sqrt(RVPositionCovMatrix[1][1]);
     double sigNz = range*sqrt(RVPositionCovMatrix[2][2]);
