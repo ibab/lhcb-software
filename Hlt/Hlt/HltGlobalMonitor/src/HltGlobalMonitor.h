@@ -8,6 +8,8 @@
 
 #include "GaudiKernel/IIncidentListener.h"
 #include "GaudiKernel/StringKey.h"
+#include "GaudiKernel/HistoDef.h"
+#include "GaudiKernel/ObjectContainerBase.h"
 #include "HltBase/HltBaseAlg.h"
 
 /** @class HltGlobalMonitor HltGlobalMonitor.h
@@ -78,6 +80,28 @@ private:
   AIDA::IHistogram2D* m_hlt2AlleysCorrelations;
 
   AIDA::IProfile1D* m_hltTimeVsEvtSize;
+
+  class histopair {
+  public:
+        histopair(GaudiHistoAlg& parent,const std::string& loc, const Gaudi::Histo1DDef& def, const char* yaxislabel=0 );
+        void fill(double x,double y) {
+                m_histo->fill(x);
+                m_profile->fill(x,y);
+        }
+        void operator()(double CPUtime) {
+            size_t n = m_parent->exist<ObjectContainerBase>(m_loc) ?  m_parent->get<ObjectContainerBase>(m_loc)->numberOfObjects() : -1 ;
+            fill( n , CPUtime );
+        }
+  private:
+        GaudiHistoAlg      *m_parent;
+        AIDA::IHistogram1D *m_histo;
+        AIDA::IProfile1D   *m_profile;
+        std::string         m_loc;
+  };
+
+  std::map<std::string,Gaudi::Histo1DDef> m_correlateCPU;
+  std::vector<histopair> m_CPUcorrelations;
+
   double   m_currentTime; // seconds since start of clock
   double m_timeSize;
   double m_timeInterval;

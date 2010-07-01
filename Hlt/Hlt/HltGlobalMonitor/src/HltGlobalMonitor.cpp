@@ -1,5 +1,5 @@
 
-// $Id: HltGlobalMonitor.cpp,v 1.72 2010-06-03 08:47:56 graven Exp $
+// $Id: HltGlobalMonitor.cpp,v 1.73 2010-07-01 12:43:50 graven Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -55,6 +55,18 @@ using namespace Hlt::HistogramUtilities;
 
 using namespace LHCb;
 
+
+HltGlobalMonitor::histopair::histopair(GaudiHistoAlg& parent,const std::string& loc, const Gaudi::Histo1DDef& def, const char* yaxislabel ) 
+    : m_parent(&parent)
+    , m_histo(   parent.book( def ) )
+    , m_profile( parent.bookProfile1D( def.title(),def.lowEdge(),def.highEdge(),def.bins() )  )
+    , m_loc( loc )
+{ 
+    if (yaxislabel) {
+        setAxisLabels(m_profile,std::string("# of ") + m_loc,yaxislabel); 
+    }
+}
+
 //-----------------------------------------------------------------------------
 // Implementation file for class : HltGlobalMonitor
 //
@@ -92,6 +104,10 @@ HltGlobalMonitor::HltGlobalMonitor( const std::string& name,
   declareProperty("Hlt1DecName", m_hlt1Decision = "Hlt1Global" );
   declareProperty("Hlt2DecName", m_hlt2Decision = "Hlt2Global" );
   declareProperty( "RawEventLocation"   , m_rawEventLocation = LHCb::RawEventLocation::Default );
+
+  declareProperty("CorrelateCPUWith", m_correlateCPU = boost::assign::list_of<std::pair<std::string,Gaudi::Histo1DDef> >("Hlt/Vertex/PV3D",Gaudi::Histo1DDef("PV3D", -0.5,10.5,11    ) )
+                                                                             ("Hlt/Track/Velo",Gaudi::Histo1DDef("Velo", -0.5,999.5,100  ) )
+                                                                             ("Hlt2/Track/Forward",Gaudi::Histo1DDef("Forward", -0.5,999.5,100  ) ) );
 }
 //=============================================================================
 // Destructor
@@ -230,10 +246,14 @@ StatusCode HltGlobalMonitor::initialize() {
 
   declareInfo("COUNTER_TO_RATE[virtmem]", m_virtmem, "Virtual memory");
   declareInfo("COUNTER_TO_RATE[elapsed time]", m_currentTime, "Elapsed time");
+
+  for (std::map<std::string,Gaudi::Histo1DDef>::const_iterator j = m_correlateCPU.begin(); j!=m_correlateCPU.end(); ++j) {
+        m_CPUcorrelations.push_back( histopair( *this, j->first, j->second, "Average CPU time [ms]") );
+  }
   
 
   //declareInfo("COUNTER_TO_RATE[L0Accept]",counter("L0Accept"),"L0Accept");
-  declareInfo("COUNTER_TO_RATE[GpsTimeoflast]",m_gpstimesec,"Gps time of last event");
+  declareInfo("COUNTER_TO_RATE[GpsTimeoflast]",m_gpstimesec,"GPS time of last event");
 
   // register for incidents...
   IIncidentSvc* incidentSvc = svc<IIncidentSvc>( "IncidentSvc" );
@@ -345,16 +365,6 @@ void HltGlobalMonitor::monitorHLT(const LHCb::ODIN* /*odin*/, const LHCb::HltDec
     }
   }
   
-  //monitor CPU time vs evt size
-  size_t evtSize = 0;
-  if( exist<LHCb::RawEvent>(m_rawEventLocation) ){
-    RawEvent* evt = get<LHCb::RawEvent>(m_rawEventLocation);
-    evtSize = rawEvtLength(evt);
-  }
-  double elapsedTime = double(System::currentTime( System::microSec ) - m_startEvent);
-  double t = log10(elapsedTime)-3; // convert to log(time/ms)
-  m_hltTimeVsEvtSize->fill(evtSize, t );
-
 }
 
 
@@ -379,7 +389,21 @@ void HltGlobalMonitor::monitorTrends() {
   i = m_tasks->axis().coordToIndex( when );
   if ( m_tasks->binEntries(i)==0 ) m_tasks->fill( when, 1 );
  
+
+  t = elapsedTime/1000; // convert to ms
+  //monitor CPU time vs evt size
+  size_t evtSize = 0;
+  if( exist<LHCb::RawEvent>(m_rawEventLocation) ){
+    RawEvent* evt = get<LHCb::RawEvent>(m_rawEventLocation);
+    evtSize = rawEvtLength(evt);
+  }
+  m_hltTimeVsEvtSize->fill(evtSize, t );
+
+  // location, distribution, profile
+  // monitor CPU time vs # of PVs, # of RZVelo tracks, ...
+  for (std::vector<histopair>::iterator i = m_CPUcorrelations.begin(); i!= m_CPUcorrelations.end(); ++i) (*i)(t);
 }
+
 
 size_t HltGlobalMonitor::rawEvtLength(const LHCb::RawEvent* evt)    {
   size_t i, len;
