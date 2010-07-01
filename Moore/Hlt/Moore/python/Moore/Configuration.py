@@ -1,7 +1,7 @@
 """
 High level configuration tool(s) for Moore
 """
-__version__ = "$Id: Configuration.py,v 1.125 2010-06-13 20:31:35 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.126 2010-07-01 14:25:57 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ, path
@@ -28,8 +28,9 @@ def _datafmt(fn) :
     fmt = { 'RAW' : "DATAFILE='%s' SVC='LHCb::MDFSelector'"
           , 'DST' : "DATAFILE='%s' TYP='POOL_ROOTTREE' OPT='READ'" 
           }
-    fmt['DIGI'] = fmt['DST']
-    return fmt[ _ext(pfn) ] % pfn
+    ext = _ext(pfn)
+    if ext not in fmt.iterkeys() : ext = 'DST'
+    return fmt[ ext ] % pfn
 
 # canonicalize tck  -- eats integer + string, returns canonical string
 def _tck(x) :

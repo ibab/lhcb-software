@@ -2,8 +2,11 @@ Package     : Hlt/Moore
 Package Coordinator : Gerhard Raven
 Purpose     : LHCb HLT application
 
+! 2010-07-01 - Gerhard Raven, Johannes Albrecht
+ - if unknown filetype, treat it as if it were a DST...
+
 ! 2010-06-13 - Gerhard Raven, Eric Herwijnen, Markus Frank
-- allow Moore to run in monitoring farm
+ - allow Moore to run in monitoring farm
 
 !========================== Moore v9r2 2010-05-31 ===================
 ! 2010-05-30 - Gerhard Raven
