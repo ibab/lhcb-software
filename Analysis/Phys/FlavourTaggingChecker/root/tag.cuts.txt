@@ -6,30 +6,26 @@
   //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> DATA
    this is the file name that you want to run (LAST ONE IS TAKEN)
 
-   datafile = .
-   datafile = /afs/cern.ch/user/m/musy/public
-   datafile = /afs/cern.ch/user/m/musy/public/analysis.root
+   datafile = /afs/cern.ch/user/m/mgrabalo/analysis.root
 
- 
-   datafile = dati/v25r2/MC10/bsdspi
 
- 
-   datafile = dati/v25r2_retune/bsdspi
-
-   datafile = dati/v25r2_retune/bsdspi_seed2
-   datafile = dati/v25r2_retune/bsjpsiphi_seed2
-   datafile = dati/v25r2_retune/bskk_seed2
-   datafile = dati/v25r2_retune/bdkp_seed2
-   datafile = dati/v25r2_retune/bujpsik_seed2
+   datafile = ../dati/v25r2_retune/bsdspi_seed2
+   datafile = ../dati/v25r2_retune/bsjpsiphi_seed2
+   datafile = ../dati/v25r2_retune/bskk_seed2
+   datafile = ../dati/v25r2_retune/bdkp_seed2
+   datafile = ../dati/v25r2_retune/bujpsik_seed2
 
    datafile = ../../work/TaggingMC10/jpsi
-   datafile = ../../work/TaggingMC10/other
    datafile = ../../work/TaggingMC10/Bs2DsPi/7tev
    datafile = ../../work/TaggingMC10/Bs2KK/7tev
    datafile = ../../work/TaggingMC10/Bs2JpsiPhi/7tev
    datafile = ../../work/TaggingMC10/Bd2JpsiKst/7tev
-   datafile = ../../work/TaggingMC10/Bs2DsPi/7tev
 
+   datafile = ../tagvdstar/inclbb_bdstarmunu
+   datafile = ../tagvdstar/bdstarmunu
+   datafile = ../../work/TaggingMC10/other
+   datafile = ../test.root
+  
    //>>>>>>>>>>>>>>>>>>>>>> STEERING >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
    askL0   = 1     // Trigger
@@ -39,7 +35,7 @@
    askTos  = 0
    askPtB  = 0       // PtB window (8-11GeV)
    askWeightedch = 0 // Weighted ch with Pt
-   askNNcomb = 1     // Comb taggers with NN
+   askNNcomb = 1      // Comb taggers with NN
    DBGNN = 0
 
    param   = -1         // a user internal value to play with

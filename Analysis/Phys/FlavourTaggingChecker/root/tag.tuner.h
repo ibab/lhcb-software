@@ -17,10 +17,11 @@ double P0_pS(0), P1_pS(0), P2_pS(0), P3_pS(0);
 
 //TMVA method
 bool myinit = true;
-std::string m_WeightsFile= "weights/TMVAClassification_MLP.weights.xml"; //for bs (kSS) --> GOOD
+std::string m_WeightsFile= "weights/TMVAClassification_MLP.weights.xml"; 
 std::string m_TmvaMethod = "MLP method";
 TMVA::Reader *reader_comb=0;
-
+//remember to creat a folder in weights containing weigths
+//in weights do: ln -s . weights
 
 ////////////////////////////////////////////////////////////////////////
 void normalise(std::vector<double>& par){
@@ -60,8 +61,7 @@ double MLP_muon(std::vector<double>& par, double& rnet) {
   NNmuon net;
   rnet= net.Value(0, par.at(0),par.at(2),par.at(3),par.at(4),par.at(8),par.at(1));
 
-//   double out= 1-pol(rnet, 9.610658e-01, -9.336494e-01);// <=========NU=1
-  double out= 1-pol(rnet,0.974458, -0.967522);
+  double out= 1-pol(rnet,0.994053, -0.990767);
   
   if(DBG) {
     cout<<"mu after  "<<" "<<par.at(0)<<"  "<<par.at(2)<<"  "<<par.at(3)
@@ -78,8 +78,7 @@ double MLP_ele(std::vector<double>& par, double& rnet) {
 
   rnet= net.Value(0, par.at(0),par.at(2),par.at(3),par.at(4),par.at(8),par.at(1));
 
-//   double out=1-pol(rnet, 7.353325e-01, -6.463841e-01);// <========= NU=1
-  double out=1-pol(rnet, 0.865053, -0.813964) ;
+  double out=1-pol(rnet, 0.960898, -0.956197) ;
  
   if(DBG) {
     cout<<"ele after  "<<" "<<par.at(0)<<"  "<<par.at(2)<<"  "<<par.at(3)<<"  "
@@ -95,8 +94,7 @@ double MLP_kaon(std::vector<double>& par, double& rnet) {
   NNkaon net;
   rnet= net.Value(0, par.at(0),par.at(2),par.at(3),par.at(4),par.at(8),par.at(1));
 
-//   double out= 1-pol(rnet, 9.149897e-01, -8.646468e-01);// <=========NU=1
-  double out= 1-pol(rnet, 0.967369, -0.956133 );
+  double out= 1-pol(rnet, 0.910427, -0.864479 );
 
   if(DBG) {
     cout<<"kOppo after  "<<" "<<par.at(0)<<"  "<<par.at(2)<<"  "<<par.at(3)<<"  "
@@ -111,10 +109,10 @@ double MLP_kaonS(std::vector<double>& par, double& rnet) {
   normalise(par);
 
   NNkaonS net;
-  rnet= net.value(0, par.at(0),par.at(2),par.at(3),par.at(4),
-		  par.at(5),par.at(6),par.at(7),par.at(8),par.at(9),par.at(1) );
+  rnet= net.Value(0, par.at(0),par.at(2),par.at(3),par.at(4),
+		  par.at(5),par.at(6),par.at(7),par.at(8),par.at(1) );
 
-  double out=1-pol(rnet, 9.845081e-01, -9.742343e-01);// <=========NU=1
+  double out=1-pol(rnet, 1.03063, -1.04504);
  
   if(DBG) {
   cout<<"kS after  "<<par.at(0)<<"  "<<par.at(2)<<"  "<<par.at(3)<<"  "
@@ -132,7 +130,6 @@ double MLP_pionS(std::vector<double>& par, double& rnet) {
   rnet= net.Value(0, par.at(0),par.at(2),par.at(3),par.at(4),
 		  par.at(5),par.at(6),par.at(7),par.at(8),par.at(1) );
 
-//   double out=1-pol(rnet, 1.222453, -1.369672 );// <=========NU=1
   double out=1-pol(rnet, 1.05709,  -1.09695);
 
   if(DBG) {
@@ -150,9 +147,7 @@ double MLP_vtx(std::vector<double>& par, double& rnet) {
   rnet= net.Value(0, par.at(0),par.at(1),par.at(2),par.at(3),par.at(4),
 		  par.at(5),par.at(6),par.at(7),par.at(8),par.at(9) );
 
-//   double out=1-pol(rnet, 1., -1. );// <=========NU=1
-//  double out=1-pol(rnet, 0.229318, 1.46734, -2.30111);//bad trained
-  double out=1-pol(rnet, 0.359564, 0.972845, -2.14715, 0.644519);//good trained
+  double out=1-pol(rnet, 2.34711, -7.63911, 10.7425, -5.37049);
 
   if(DBG) {
     cout<<"vtx after  "<<par.at(0)<<"  "<<par.at(1)<<"  "<<par.at(2)<<"  "
@@ -165,6 +160,7 @@ double MLP_vtx(std::vector<double>& par, double& rnet) {
 
 //////////////////////////////////////////////////
 void MultiLayerPerceptronTuning(TString NNetTrain){
+  // next line might fail or not...
   //  TApplication app("appKey",0,0);
 
   TFile* inputFile = TFile::Open( "tag.root" );

@@ -29,8 +29,9 @@ gStyle->SetOptStat(0);
 // goto weightedch;
 // goto omegapt;
 // goto propomega;
+// goto asymmetry;
 
-   weightedch:
+ weightedch:
 //To test weight the pt to select candidate
 c->Clear(); c->Divide(1,2);
 TH1F* hom = plot_omega(hr_k_ncand,  hw_k_ncand,  "ncand_for_k"); 
@@ -43,9 +44,9 @@ c->Update();cout<<"--> Hit return to continue ";gets(s);if(*s=='q')return;
 TH1F* hom = plot_omega(hr_SS_weightedch,  hw_SS_weightedch,  "weightedch_Pt_SS"); 
 c->Update();cout<<"--> Hit return to continue ";gets(s);if(*s=='q')return;
  goto end;
-
-   omegapt:
-// omega vs pt
+ 
+ omegapt:
+ // omega vs pt
 c->Clear(); c->Divide(1,2);
 TH1F* hom = plot_omega(h6rSS,  h6wSS,  "PtB_SS"); 
 c->Update();cout<<"--> Hit return to continue ";gets(s);if(*s=='q')return;
@@ -284,7 +285,7 @@ c->Update();cout<<"--> Hit return to continue ";gets(s);if(*s=='q')return;
 TH1F* homp= plot_omega(h53210p, h63210p,"sameside_om",1);
 c->Update();cout<<"--> Hit return to continue ";gets(s);if(*s=='q')return;
 
- TH1F* hom = plot_omega(h540,  h640,  "vtx", 3);  
+TH1F* hom = plot_omega(h540,  h640,  "vtx", 3);  
 c->Update();cout<<"--> Hit return to continue ";gets(s);if(*s=='q')return;
 TH1F* homp= plot_omega(h540p, h640p, "vtx_om", 1); 
 c->Update();cout<<"--> Hit return to continue ";gets(s);if(*s=='q')return;
@@ -397,6 +398,138 @@ leg = new TLegend(0.6,0.8,0.98,0.996);
  leg->Draw();
  c->Print("someplots/vtx_omega_vs_"+propname+".gif");
 cout<<"--> Hit return to continue ";gets(s);if(*s=='q')return;
+
+ goto end;
+
+/////////////////////////////////////////////////////////////
+ asymmetry:
+
+ c->Clear();
+ h4161.DrawNormalized();h4162.SetLineColor(kRed);h4162.DrawNormalized("same");
+ c->Print("pics/mixed_unmixed.gif");
+ c->cd();c->Update();cout<<"--> Hit return to continue ";gets(s);if(*s=='q')return;
+
+ TF1* cosn = new TF1("cosn","(1-2*[1])*cos(0.5*x)",0.0,10.0);
+ // TF1* cosn = new TF1("cosn","(1-2*[1])*cos([0]*x)",0.0,10.0);
+ cosn->SetLineColor(2); cosn->SetLineWidth(2);
+ cosn->SetParameters(0.5, 0.35);
+ cosn->SetParNames("#Delta m","Omega");
+
+ //all true(mc)
+ cout<<"**********"<<endl;
+ cout<<"MonteCarlo"<<endl;
+ c->Clear();
+ cosn->SetParameters(0.52, 0.01);
+ TGraphErrors* ttrue = asymmetry(h4061, h4062, "truetag");
+ ttrue->SetTitle("True; time/ps; Asymmetry"); ttrue->Draw("AP"); ttrue->Fit("cosn");
+ c->Print("pics/Truetime.gif");
+ c->cd();c->Update();cout<<"--> Hit return to continue ";gets(s);if(*s=='q')return;
+
+ //all
+ cout<<"**********"<<endl;
+ cout<<"All cat"<<endl;
+ c->Clear(); c->Divide(1,2);
+ c->cd(1);
+ h3061->Draw(); h3061->SetLineColor(kRed); h3062->Draw("same");
+ h3061->SetTitle("Oscillation");
+ c->cd(2);
+ cosn->SetParameters(0.52, 0.42);
+ TGraphErrors* asy = asymmetry(h3061, h3062,  "asy_allcat"); 
+ asy->SetTitle("Asy; time/ps; Asymmetry"); asy->Draw("AP"); asy->Fit("cosn");
+ c->Print("pics/Measuredtime.gif");
+ c->Update();cout<<"--> Hit return to continue ";gets(s);if(*s=='q')return;
+
+ //taggers
+ cout<<"**********"<<endl;
+ cout<<"All Taggers"<<endl;
+ c->Clear(); c->Divide(3,2);
+ c->cd(1);
+ h2011->Draw(); h2012->SetLineColor(kRed); h2012->Draw("same");
+ h2011->SetTitle("Muon Oscillation");
+ c->cd(2);
+ h2021->Draw(); h2022->SetLineColor(kRed); h2022->Draw("same");
+ h2021->SetTitle("Ele Oscillation");
+ c->cd(3);
+ h2031->Draw(); h2032->SetLineColor(kRed); h2032->Draw("same");
+ h2031->SetTitle("K Op Oscillation");
+ c->cd(4);
+ h2041->Draw(); h2042->SetLineColor(kRed); h2042->Draw("same");
+ h2041->SetTitle("K SS Oscillation");
+ c->cd(5);
+ h2051->Draw(); h2052->SetLineColor(kRed); h2052->Draw("same");
+ h2051->SetTitle("VTX Oscillation");
+ c->Print("pics/OscillationTag.gif");
+ c->Update();cout<<"--> Hit return to continue ";gets(s);if(*s=='q')return;
+ //
+ c->Clear();
+ c->Divide(3,2);
+ gPad->SetBorderMode(0);
+ c->cd(1);
+ cosn->SetParameters(0.52, 0.33);
+ TGraphErrors* tmu = asymmetry(h2011, h2012, "tmu");
+ tmu->SetTitle("MUON; time/ps; Asymmetry"); tmu->Draw("AP"); tmu->Fit("cosn");
+ c->cd(2);
+ cosn->SetParameters(5.02851e-01, 3.68680e-01);
+ TGraphErrors* tel = asymmetry(h2021, h2022, "tel");
+ tel->SetTitle("ELEC; time/ps; Asymmetry"); tel->Draw("AP"); tel->Fit("cosn");
+ c->cd(3);
+ cosn->SetParameters(5.05261e-01, 3.82341e-01);
+ TGraphErrors* tko = asymmetry(h2031, h2032, "tko");
+ tko->SetTitle("KOPP; time/ps; Asymmetry"); tko->Draw("AP"); tko->Fit("cosn");
+ c->cd(4);
+ cosn->SetParameters(4.63291e-01, 4.12674e-01);
+ TGraphErrors* tks = asymmetry(h2041, h2042, "tks");
+ tks->SetTitle("PSAME;time/ps; Asymmetry"); tks->Draw("AP"); tks->Fit("cosn");
+ c->cd(5);
+ TGraphErrors* tvtx = asymmetry(h2051, h2052, "tvtx");gPad->Clear();
+ tvtx->SetTitle("VERTEX;time/ps; Asymmetry"); tvtx->Draw("AP"); tvtx->Fit("cosn");
+ c->Print("pics/AsymmetryTag.gif");
+ c->cd();c->Update();cout<<"--> Hit return to continue ";gets(s);if(*s=='q')return;
+
+ //cattegories
+ cout<<"**********"<<endl;
+ cout<<"All Cattegories"<<endl;
+ c->Clear(); c->Divide(3,2);
+ c->cd(1);
+ h3011->Draw(); h3011->SetLineColor(kRed); h3012->Draw("same");
+ h3011->SetTitle("cat1 Oscillation");
+ c->cd(2);
+ h3021->Draw(); h3021->SetLineColor(kRed); h3022->Draw("same");
+ h3021->SetTitle("cat2 Oscillation");
+ c->cd(3);
+ h3031->Draw(); h3031->SetLineColor(kRed); h3032->Draw("same");
+ h3031->SetTitle("cat3 Oscillation");
+ c->cd(4);
+ h3041->Draw(); h3041->SetLineColor(kRed); h3042->Draw("same");
+ h3041->SetTitle("cat4 Oscillation");
+ c->cd(5);
+ h3051->Draw(); h3051->SetLineColor(kRed); h3052->Draw("same");
+ h3051->SetTitle("cat5 Oscillation");
+ c->Print("pics/OscillationCat.gif");
+ c->Update();cout<<"--> Hit return to continue ";gets(s);if(*s=='q')return;
+ //
+ c->Clear();c->Divide(3,2);
+ c->cd(1);
+ cosn->SetParameters(4.99175e-01, 2.42345e-01);
+ TGraphErrors* tc5 = asymmetry(h3051, h3052, "tc5");
+ tc5->SetTitle("CAT5; time/ps; Asymmetry"); tc5->Draw("AP"); tc5->Fit("cosn");
+ c->cd(2);
+ cosn->SetParameters(5.24695e-01, 3.11415e-01);
+ TGraphErrors* tc4 = asymmetry(h3041, h3042, "tc4");
+ tc4->SetTitle("CAT4; time/ps; Asymmetry"); tc4->Draw("AP"); tc4->Fit("cosn");
+ c->cd(3);
+ cosn->SetParameters(5.04505e-01, 3.63808e-01);
+ TGraphErrors* tc3 = asymmetry(h3031, h3032, "tc3");
+ tc3->SetTitle("CAT3; time/ps; Asymmetry"); tc3->Draw("AP"); tc3->Fit("cosn");
+ c->cd(4);
+ cosn->SetParameters(4.45541e-01, 4.16305e-01);
+ TGraphErrors* tc2 = asymmetry(h3021, h3022, "tc2");
+ tc2->SetTitle("CAT2;time/ps; Asymmetry"); tc2->Draw("AP"); tc2->Fit("cosn");
+ c->cd(5);
+ TGraphErrors* tc1 = asymmetry(h3011, h3012, "tc1");gPad->Clear();
+ tc1->SetTitle("CAT1;time/ps; Asymmetry"); tc1->Draw("AP"); tc1->Fit("cosn");
+ c->Print("pics/AsymmetryCat.gif");
+ c->Update();cout<<"--> Hit return to continue ";gets(s);if(*s=='q')return;
 
  goto end;
 

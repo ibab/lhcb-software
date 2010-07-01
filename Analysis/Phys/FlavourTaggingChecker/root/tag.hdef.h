@@ -4,6 +4,7 @@ TString rootsubdir = "";
 TFile fhisto("tag.root","RECREATE");
 if(rootsubdir != "") { fhisto.mkdir(rootsubdir); fhisto.cd(rootsubdir); } 
 
+
 //>>>>>>>>>>>>>>>>>>>>>>>>//create  histograms
 TH1F* h5    = new TH1F("h5","BSmass ",100, 5.2, 5.5);
 
@@ -146,7 +147,10 @@ TH1F* h3051   = new TH1F("h3051","cat5 tag B time (ps) no osc.", 1000,0,10);
 TH1F* h3052   = new TH1F("h3052","cat5 tag B time (ps) osc.",    1000,0,10);
 TH1F* h3061   = new TH1F("h3061","ALL tag B time (ps) no osc.",  1000,0,10);
 TH1F* h3062   = new TH1F("h3062","ALL tag B time (ps) osc.",     1000,0,10);
-
+TH1F* h4061   = new TH1F("h4061","true tag B time (ps) no osc.",  1000,0,10);
+TH1F* h4062   = new TH1F("h4062","true tag B time (ps) osc.",     1000,0,10);
+TH1F* h4161   = new TH1F("h4161","true tag B time (ps) no osc.",  100,0,10);
+TH1F* h4162   = new TH1F("h4162","true tag B time (ps) osc.",     100,0,10);
 
 TH1F* h70 = new TH1F("h70","ko pt",50, 0., 10.); //ALL
 TH1F* h71 = new TH1F("h71","ko p" ,50, 0., 100.);

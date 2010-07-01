@@ -208,6 +208,9 @@
       if(catt==5){if(iosc>0) h3051->Fill(Btime);else h3052->Fill(Btime);}
       if(catt!=0){if(iosc>0) h3061->Fill(Btime);else h3062->Fill(Btime);}
 
+      {if(!BSosc) h4061->Fill(Btime);else h4062->Fill(Btime);}//mc
+      {if(!BSosc) h4161->Fill(Btime);else h4162->Fill(Btime);}//mc
+
       //counting
       if(bmuon>0  && abs(MCID[imuon])==13)  nidm++; //pid purity
       if(bele>0   && abs(MCID[iele]) ==11)  nide++;
