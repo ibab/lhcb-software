@@ -120,6 +120,7 @@ private:
   bool IsQuark( HepMC::GenParticle * );
   bool IsAPointInDet( const LHCb::Particle *, int mode = 2,
                       double range = 1*Gaudi::Units::mm );
+  /// Is a point in the RF-Foil ?
   bool IsInRFFoil( const Gaudi::XYZPoint & );
   /// Has a RecVertex a backward track ?
   bool HasBackwardTracks( const LHCb::Particle * );
@@ -168,7 +169,7 @@ private:
   double GetMCMass( LHCb::MCParticle::ConstVector & );
   double GetRFromBL( const Gaudi::XYZPoint& );
   
-  void GetUpstreamPV();
+  void GetUpstreamPV(); ///< Get the Upstream PV
   void GetPartsFromRecVtx(const LHCb::RecVertex*, 
 			  const LHCb::Particle::ConstVector &, 
 			  LHCb::Particle::ConstVector & );
@@ -212,10 +213,16 @@ private:
   double m_MuonpT;            ///< Muon with a pT of min m_MuonpT
   double m_DocaMax;           ///< Max distance of closest approach
   unsigned int m_NbCands;     ///< Min nb of desired candidates
-  int    m_nTracks ;          ///< Min # of tracks at reconstructed vertex
   unsigned int m_PVnbtrks;    ///< Min nb of trks for upstream PV candidate
+  int    m_nTracks ;          ///< Min # of tracks at reconstructed vertex
   double m_SigmaZ;            ///< Max on error Z
   double m_SigmaR;            ///< Max on error R
+  double m_MinX;              ///< Min X position     
+  double m_MaxX;              ///< Max X position     
+  double m_MinY;              ///< Min Y position     
+  double m_MaxY;              ///< Max Y position     
+  double m_MinZ;              ///< Min Z position     
+  double m_MaxZ;              ///< Max Z position
   /***************************************************************//**
    * Remove vtx if in detector material ?
    * if = 0  : disabled

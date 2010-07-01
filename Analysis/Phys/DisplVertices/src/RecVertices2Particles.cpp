@@ -133,7 +133,9 @@ StatusCode RecVertices2Particles::initialize() {
           << m_nTracks <<" tracks."<< endmsg;
     info()<< "The radial displacement is ";
     if( m_RCut == "FromUpstreamPV" ){
-      info()<< "computed with respect to the upstream PV of PV3D." << endmsg;
+      info()<< "computed with respect to the upstream PV of PV3D."<< endmsg;
+      info()<< "Min nb of tracks on the upPV candidate : "
+            << m_PVnbtrks << endmsg;
     } else if( m_RCut == "FromBeamLine" ){
       info()<< "computed with respect to the beam line given at " 
             << m_BLLoc << endmsg;
@@ -343,6 +345,8 @@ StatusCode RecVertices2Particles::initialize() {
 //=============================================================================
 StatusCode RecVertices2Particles::finalize() {
 
+  if( m_RCut !="FromBeamLine" ) delete m_BeamLine;
+
   debug() << "==> Finalize" << endmsg;
   return DVAlgorithm::finalize(); 
 }
@@ -389,12 +393,12 @@ const RecVertex * RecVertices2Particles::GetUpstreamPV(){
     double z = pv->position().z();
     if( abs(z) > 150*mm ) continue;
     //const Gaudi::SymMatrix3x3  & mat = pv->covMatrix();
+    //double sr = sqrt( mat(0,0) + mat(1,1) );
     if( msgLevel( MSG::DEBUG ) )
       debug() <<"PV candidate : nb of tracks "<< pv->tracks().size() << endmsg;
-    //<<" sigmaX "<< mat(0,0) <<" sigmaY "<< mat(1,1) 
-    //<<" sigmaZ "<< mat(2,2) << endmsg;
-    //if( mat(0,0) > m_PVsxy || mat(1,1) > m_PVsxy ) continue;
-    //if( mat(2,2) > m_PVsz ) continue;
+    //<<" sigmaR "<< sr <<" sigmaZ "<< sqrt(mat(2,2)) << endmsg;
+    //if( sr > m_PVsr ) continue;
+    //if( sqrt(mat(2,2)) > m_PVsz ) continue;
     if( pv->tracks().size() < m_PVnbtrks ) continue;
     if( z < tmp ){
       tmp = z;

@@ -45,7 +45,7 @@ private:
   ITransportSvc * m_transSvc;
   IGeometryInfo* m_lhcbGeo;
 
-  ///Get all RecVertex from RecVerticesLocatio
+  ///Get all RecVertex from RecVerticesLocation
   void GetRecVertices( LHCb::RecVertex::ConstVector & );
   ///Get the upstream PV
   const LHCb::RecVertex * GetUpstreamPV();
@@ -66,9 +66,8 @@ private:
   ///Is a vertex too close to detector material ?
   bool IsAPointInDet( const LHCb::Particle &, int mode = 2,
                       double range = 1*Gaudi::Units::mm );
-  ///Cut on the mass
-  bool TestMass( const LHCb::Particle * );
-  bool TestMass( LHCb::Particle & );
+  bool TestMass( const LHCb::Particle * );  ///< Cut on the mass
+  bool TestMass( LHCb::Particle & );  ///< Cut on the mass
   /// Cut on the RF-Foil position
   bool IsInRFFoil( const Gaudi::XYZPoint & );
   StatusCode SavePreysTuple( Tuple &, LHCb::Particle::ConstVector & );

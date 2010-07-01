@@ -90,6 +90,12 @@ DisplVertices::DisplVertices( const std::string& name,
   declareProperty("RemVtxFromDet", m_RemVtxFromDet = 0  );
   declareProperty("DetDist", m_DetDist = 1*mm );
   declareProperty("RemFromRFFoil", m_RemFromRFFoil = false );
+  declareProperty("MinX", m_MinX = -10.*m );
+  declareProperty("MaxX", m_MaxX = 10.*m );
+  declareProperty("MinY", m_MinY = -10.*m );
+  declareProperty("MaxY", m_MaxY = 10.*m );
+  declareProperty("MinZ", m_MinZ = -10.*m );
+  declareProperty("MaxZ", m_MaxZ = 100*m );
   declareProperty("PVnbtrks", m_PVnbtrks = 5 ); //corr. to 'tight' PV reco
   declareProperty("BeamLineLocation", 
 		  m_BLLoc = "HLT/Hlt2LineDisplVertices/BeamLine");
@@ -205,6 +211,11 @@ StatusCode DisplVertices::initialize() {
     info() << "Max distance of the vertices "<< m_DistMax <<" mm" << endmsg;
     info() << "Max chi2/ndof of a vertex "<< m_MaxChi2OvNDoF << endmsg;
     info() << "Min sum of daughters's pT "<< m_SumPt << endmsg;
+    info() << m_MinX/mm <<" mm < pos X < "<< m_MaxX/mm <<" mm"<< endmsg;
+    info() << m_MinY/mm <<" mm < pos Y < "<< m_MaxY/mm <<" mm"<< endmsg;
+    info() << m_MinZ/mm <<" mm < pos Z < "<< m_MaxZ/mm <<" mm"<< endmsg;
+    info() << "Max sigma R : "<< m_SigmaR <<" mm"<< endmsg;
+    info() << "Max sigma Z : "<< m_SigmaZ <<" mm"<< endmsg;
     if( m_MuonpT )
       info()<<"At least one muon with pT > "<< m_MuonpT << endmsg;
     if( m_RemFromRFFoil )
@@ -222,6 +233,8 @@ StatusCode DisplVertices::initialize() {
     info()<< "The radial displacement is ";
     if( m_RCut == "FromUpstreamPV" ){
       info() << "computed with respect to the upstream PV of PV3D." << endmsg;
+      info()<< "Min nb of tracks on the upPV candidate : "
+            << m_PVnbtrks << endmsg;
     } else if( m_RCut == "FromBeamLine" ){
       info() << "computed with respect to the beam line given at " 
              << m_BLLoc << endmsg;
@@ -387,15 +400,15 @@ StatusCode DisplVertices::execute(){
     double sumpt = GetSumPt(p);
     double muon = HasMuons(p);
     const Gaudi::SymMatrix3x3 & err = p->endVertex()->covMatrix();
-    double errr = sqrt( err(0,0)*err(0,0) + err(1,1)*err(1,1) );
+    double errr = sqrt( err(0,0) + err(1,1) );
 
     //Let's go for Prey hunting
     if( msgLevel( MSG::DEBUG ) ){
       debug()<< m_Prey <<" candidate with mass "<< mass/Gaudi::Units::GeV 
              <<" GeV, nb of tracks " << nbtrks << ", Chi2/ndof " 
-             << chi <<", R "<< rho <<", pos of end vtx " 
-             << pos <<", sigmaX "<< err(0,0)<<", sigmaY "<< err(1,1)
-             <<", sigmaZ "<< err(2,2) <<", sigmaR "<< errr ;
+             << chi <<", R "<< rho <<", pos of end vtx "<< pos <<", sigmaX "
+             << sqrt(err(0,0))<<", sigmaY "<< sqrt(err(1,1)) <<", sigmaZ "
+             << sqrt(err(2,2)) <<", sigmaR "<< errr ;
       if(muon){
         debug()<<", has muon with pt "<< muon <<" GeV" << endmsg;
       } else { debug()<< endmsg; }
@@ -412,8 +425,10 @@ StatusCode DisplVertices::execute(){
 
     if( mass < m_PreyMinMass || mass > m_PreyMaxMass || 
         nbtrks < m_nTracks || rho <  m_RMin || rho > m_RMax || 
-        abs(zpos) > m_DistMax || sumpt < m_SumPt || chi > m_MaxChi2OvNDoF ||
-        muon < m_MuonpT || errr > m_SigmaR || err(2,2) > m_SigmaZ ){ 
+        sumpt < m_SumPt || chi > m_MaxChi2OvNDoF || muon < m_MuonpT || 
+        pos.x() < m_MinX || pos.x() > m_MaxX || pos.y() < m_MinY || 
+        pos.y() > m_MaxY || pos.z() < m_MinZ || pos.z() > m_MaxZ ||
+        errr > m_SigmaR || sqrt(err(2,2)) > m_SigmaZ ){ 
       if( msgLevel( MSG::DEBUG ) )
         debug()<<"Particle do not pass the cuts"<< endmsg; 
       continue; 
@@ -435,9 +450,12 @@ StatusCode DisplVertices::execute(){
       if( !m_MC ) m_purities.push_back( 0. );
     }
 
-    Particle * clone = new Particle( *p );
-    clone->setParticleID( m_PreyID );
-    Cands.push_back( desktop()->keep( clone ) );
+//     Particle * clone = new Particle( *p );
+//     clone->setParticleID( m_PreyID );
+//     Cands.push_back( desktop()->keep( clone ) );
+    Particle clone = Particle( *p );
+    clone.setParticleID( m_PreyID );
+    Cands.push_back( desktop()->keep( &clone ) );
 
   }//  <--- end of Prey loop
 
@@ -493,7 +511,7 @@ StatusCode DisplVertices::execute(){
 
 
   //--------------Mother Reconstruction------------------  
-  if( Cands.size() >= 2 && false ){
+  if( false && Cands.size() >= 2 ){
     if( ReconstructMother( Cands ).isFailure() )
       Warning("Reconstruction process for mother"+ m_MotherPrey +" failed !");
   }
@@ -512,6 +530,8 @@ StatusCode DisplVertices::finalize() {
   debug() << "==> Finalize" << endmsg;
 
   if (NULL!=m_pLinker) delete m_pLinker ;
+
+  if( m_RCut !="FromBeamLine" ) delete m_BeamLine;
 
   if( context() == "HLT" ) return DVAlgorithm::finalize(); 
 
@@ -2621,8 +2641,8 @@ bool DisplVertices::IsAPointInDet( const Particle* P, int mode, double range ){
   } //end of 2 condition
   else if( mode == 3 || mode == 4 ){
 
-    Gaudi::XYZPoint  RVPosition = RV->position();
-    Gaudi::SymMatrix3x3 RVPositionCovMatrix = RV->covMatrix();
+    const Gaudi::XYZPoint  RVPosition = RV->position();
+    const Gaudi::SymMatrix3x3 & RVPositionCovMatrix = RV->covMatrix();
     double sigNx = range*sqrt(RVPositionCovMatrix[0][0]);
     double sigNy = range*sqrt(RVPositionCovMatrix[1][1]);
     double sigNz = range*sqrt(RVPositionCovMatrix[2][2]);
@@ -3087,11 +3107,17 @@ void DisplVertices::GetUpstreamPV(){
   for ( RecVertex::Range::const_iterator i = PVs.begin(); 
         i != PVs.end() ; ++i ){
     const RecVertex* pv = *i;
-    //Do not consider PVs outside some limits.
+    //Apply some cuts
     if( abs(pv->position().x()>1.5*mm) || abs(pv->position().y()>1.5*mm))
       continue;
     double z = pv->position().z();
     if( abs(z) > 150*mm ) continue;
+    //const Gaudi::SymMatrix3x3  & mat = pv->covMatrix();
+    if( msgLevel( MSG::DEBUG ) )
+      debug() <<"PV candidate : nb of tracks "<< pv->tracks().size() << endmsg;
+    //<<" sigmaR "<< sr <<" sigmaZ "<< sqrt(mat(2,2)) << endmsg;
+    //if( sr > m_PVsr ) continue;
+    //if( sqrt(mat(2,2)) > m_PVsz ) continue;
     if( pv->tracks().size() < m_PVnbtrks ) continue;
     if( z < tmp ){
       tmp = z;
