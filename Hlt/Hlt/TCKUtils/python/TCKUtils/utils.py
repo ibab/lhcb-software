@@ -122,6 +122,48 @@ class _TreeNodeCache:
           _TreeNodeCache.lcache[ id ] = leaf
        return _TreeNodeCache.lcache[id]
        
+# utilities to pack and unpack L0 conditions into Condition property...
+# given the 'Conditions' property of an L0DUCOnfig tool instance, 
+# return a pythonized table of settings
+# i.e. the inverse of 'genItems'
+def _parseL0settings( settings ) :
+    d = {}
+    for s in  [ _parseL0setting(i) for i in settings ] :
+        d[s['name']] = s
+    return d
+def _parseL0setting( setting ) :
+    import re
+    p = re.compile('([^ ]+) *= *\[(.+)\]')
+    val = {}
+    for s in setting :
+        m = p.match(s)
+        key = m.group(1) 
+        value = m.group(2)
+        # adapt to ideosyncracies
+        if key == 'rate=' : key = 'rate'
+        if key == 'conditions' :
+            value = '[%s]'%value # put back the []
+            # make it a list of conditions which are ANDed
+            if '&&' in value : value = value.split('&&')
+            else             : value = [ value ]
+            #  and get rid of the [] again...
+            value =  [ re.sub('\[(.*)\]',r'\1',i.strip()) for i in value ]
+        val.update( { key : value } )
+    return val
+
+def dumpL0( id, cas  = ConfigAccessSvc() ) :
+    tree  =  execInSandbox( _getConfigTree, id, cas )
+    l0s   = [ i for i in tree if i.leaf and i.leaf.type == 'L0DUConfigProvider' ]
+    for i in l0s : 
+        from pprint import pprint
+        print '%s TCK = %s %s' % ( 20*'*',i.leaf.props['TCK'],20 *'*' )
+        print '%s Channels %s' % ( 20*'*',20 *'*' )
+        pprint( _parseL0settings( eval(i.leaf.props['Channels']) ) )
+        print '%s Conditions %s' % ( 19*'*',19 *'*' )
+        pprint( _parseL0settings( eval(i.leaf.props['Conditions']) ) )
+        print 100*'*'
+
+
 
 def _updateL0TCK( id, l0tck, label, cas ) :
     if not label : 
