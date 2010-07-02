@@ -6,6 +6,7 @@
 
 ! 2010-07-02 - Gerhard Raven
  - add Physics_HighNu_80Vis_25L0_2Hlt1_CoreHlt2_Jun10
+ - add Physics_HighNu_80Vis_30L0_5Hlt1_CorePileUpHlt2_Jun10.py
 
 ! 2010-06-30 - Gerhard Raven
  - add Physics_HighNu_80Vis_25L0_2Hlt1_ExpressHlt2_Jun10, update L0TCK in 
