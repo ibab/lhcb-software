@@ -9,7 +9,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.25 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.26 $"
 # =============================================================================
 
 import Gaudi.Configuration 
@@ -72,12 +72,11 @@ class Hlt1HadronLinesConf(HltLinesConfigurableUser) :
                 , 'HadLTUnbVertex_MassMinCut'       :  5000.0
                 , 'HadLTUnbVertex_MassMaxCut'       :  5800.0
                 , 'HadLTUnbVertex_CosThetaStarCut'  :  0.9
-                , 'Prescale'                : { 'Hlt1HadronMonComp'  : 'RATE(1000)'}
+                , 'HadMonCompRate'                  :  1
                 , 'Postscale'               : { 'Hlt1HadronMonVeloReco' : 0.000001,
                                                 'Hlt1HadronMonConf1'    : 0.000001,
                                                 'Hlt1HadronMonConf2'    : 0.000001,
-                                                'Hlt1HadronMonComp'     : 0.000001
-                                              }  
+                                              }   
                 }
     
     def __apply_configuration__(self) : 
@@ -404,7 +403,7 @@ class Hlt1HadronLinesConf(HltLinesConfigurableUser) :
             Line ( 'HadronMonComp'
                  , prescale = self.prescale
                  , postscale = self.postscale
-                 , L0DU = "L0_CHANNEL('%(L0Channel)s')"%self.getProps()
+                 , L0DU = "scale(L0_CHANNEL('%(L0Channel)s'), RATE(%(HadMonCompRate)s))"%self.getProps()   ### TODO: make sure it is added to Hlt2Transparent!!!! -- can we do this by naming convention???
                  , algos = [confirmationl0part()]+\
                             monveloreco()+\
                             mondecision('Comp')

@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.185 2010-06-03 21:28:36 graven Exp $
+! $Id: release.notes,v 1.186 2010-07-02 07:03:02 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
+!========================== Hlt1Lines v4r0p2 2010-07-02 ===================
+! 2010-07-01 - Gerhard Raven
+ - run Hlt1HadronMonComp on 1 Hz of L0 Hadron 
+
 !========================== Hlt1Lines v4r0p1 2010-06-03 ===================
 ! 2010-06-03 - Gerhard Raven
  - explicitly specify post- and prescale on clone to avoid grabbing the
