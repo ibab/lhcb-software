@@ -1116,9 +1116,11 @@ void ZooWriter::writeEventTriggerInfo(boost::shared_ptr<ZooEv> event) const
 	    if(declist[i].second.first != 0) {
 		const LHCb::HltDecReport *dec =
 		    HLTdecReports->decReport(declist[i].first);
-		//if(!dec) always() << "The decision " << declist[i].first 
-		//<< " does not exist in the current trigger scenario" 
-		//<< endmsg;
+		if(!dec) debug() << "The decision " << declist[i].first 
+		<< " does not exist in the current trigger scenario" 
+		<< endmsg;
+		else debug() << "The decision " << declist[i].first 
+		    << " returned " << dec->decision() << endmsg;
 		if (dec && dec->decision()) {
 		    event->m_triggerDecisions[declist[i].second.first] |=
 			declist[i].second.second;

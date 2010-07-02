@@ -3,6 +3,9 @@
 ! Responsible : Georg Krocker <krocker@physi.uni-heidelberg.de>
 ! Purpose     : write events and particles to an analysis tree
 !-----------------------------------------------------------------------------
+! 2010-07-02 - Georg Alexander Krocker
+ - Fixed bug in the naming of HLT1 lines
+
 !============================ Zoo v11r0 2010-06-23 ===========================
 ! 2010-06-23 - Georg Alexander Krocker
  - Import to Analysis SVN repository

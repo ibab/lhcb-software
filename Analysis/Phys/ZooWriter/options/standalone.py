@@ -115,7 +115,7 @@ zoowriter.DecayName = [
 
 # Output filename
 zoowriter.Filename = "MC.root"
-
+#zoowriter.OutputLevel=2
 ##################################################################################
 # Expert ZooWriter options 
 
@@ -235,6 +235,6 @@ importOptions("$ZOOROOT/options/Beam3500-VeloCloseMagDownNu1-2010-Sim03Reco03.py
 # set the number of events you like to run on
 
 DaVinci().UserAlgorithms += [ preselSeq ]
-DaVinci().EvtMax = 10000
+DaVinci().EvtMax = 100
 ##########################################################################################
 # start the job with: gaudirun.py options/standalone.py options/Bs_DsPi.py
