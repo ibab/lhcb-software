@@ -74,6 +74,7 @@ class Hlt2InclusiveMuonLinesConf(HltLinesConfigurableUser) :
         line = Hlt2Line('MuonFromHLT1'
                         , prescale = self.prescale
                         , HLT =Hlt1AllMuons
+                        , VoidFilter = '' # explicitly require NO pile up filter... 
                         , postscale = self.postscale
                         )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2MuonFromHLT1Decision" : 50190 } )        
