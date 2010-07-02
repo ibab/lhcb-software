@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.87 2010-06-22 09:43:37 mgrabalo Exp $
+! $Id: release.notes,v 1.88 2010-07-02 08:12:17 mgrabalo Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/FlavourTaggingChecker
 ! Responsible : Marco Musy (marco.musy@cern.ch)
@@ -6,6 +6,10 @@
 ! Twiki page  : https://twiki.cern.ch/twiki/bin/viewauth/LHCb/FlavourTagging
 !-----------------------------------------------------------------------------
 
+
+! 2010-07-02 - Marc Grabalosa
+  .Added Some comments
+  .Enable BTaggingAnalysis for real data
 
 ! 2010-06-22 - Marc Grabalosa
  - BTaggingAnalysis

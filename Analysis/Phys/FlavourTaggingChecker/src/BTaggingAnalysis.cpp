@@ -32,7 +32,7 @@ BTaggingAnalysis::BTaggingAnalysis(const std::string& name, ISvcLocator* pSvcLoc
   m_fitter(0),
   m_BS(0)
 {
-  declareProperty( "EnableMC",  m_EnableMC = true );
+  declareProperty( "EnableMC",  m_EnableMC = true ); //deasactivate to run with real data
 
   declareProperty( "BHypoCriterium",     m_BHypoCriterium   = "MaximumPt");
   declareProperty( "RequireTrigger",     m_requireTrigger   = true );
@@ -170,8 +170,8 @@ StatusCode BTaggingAnalysis::execute() {
     tuple -> column ("proType",proType);
   }
   
-  tuple -> column ("Run",   evt->runNumber());
-  tuple -> column ("Event", (long)evt->evtNumber());
+  tuple -> column ("run",   evt->runNumber());
+  tuple -> column ("event", (long)evt->evtNumber());
   
   //----------------------------------------------------------
   //PhysDeskTop
