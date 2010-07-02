@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.476 2010-06-21 06:14:45 albrecht Exp $ 
+! $Id: release.notes,v 1.477 2010-07-02 07:47:47 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
@@ -25,6 +25,9 @@
 
 ! 2010-06-07 - V. Gligorov
  - Remove an obsolete Hlt2 tracking configuration.
+
+!========================== HltConf v8r1 2010-07-02 ===================
+ - add a default PU veto in Hlt2
 
 !========================== HltConf v8r0p1 2010-05-31 ===================
 ! 2010-05-30 - Gerhard Raven

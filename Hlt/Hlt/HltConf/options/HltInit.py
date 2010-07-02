@@ -3,6 +3,7 @@ from Configurables import HltANNSvc
 # quick hack to make sure Hlt2Global is OK...
 Hlt2ID = HltANNSvc().Hlt2SelectionID
 if "Hlt2Global" not in Hlt2ID : Hlt2ID.update( {  "Hlt2Global" : 2 } )
+Hlt2ID.update(  { 'Hlt2PileUpDecision'                    : 65534 } )
 
 HltANNSvc().Hlt1SelectionID = {
     # Global

@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.198 2010-06-21 06:13:54 albrecht Exp $"
+__version__ = "$Id: Configuration.py,v 1.199 2010-07-02 07:47:47 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -140,14 +140,7 @@ class HltConf(LHCbConfigurableUser):
             if self.getProp('RequireRoutingBits') : filter.RequireMask = self.getProp('RequireRoutingBits')
             if self.getProp('VetoRoutingBits')    : filter.VetoMask    = self.getProp('VetoRoutingBits') 
             Sequence("HltDecisionSequence").Members.insert(0,filter)
-        #Hlt = Sequence('Hlt', ModeOR= True, ShortCircuit = False
-        #              , Members = 
-        #                   [ Sequence('Hlt1') 
-        #                   , Sequence('Hlt2') 
-        #                   , Sequence('HltEndSequence') 
-        #                   ] 
-        #              )
-
+            Sequence("HltEndSequence").Members.insert(0,filter)
         #
         # dispatch Hlt1 configuration
         #
@@ -160,6 +153,8 @@ class HltConf(LHCbConfigurableUser):
         self.setOtherProps(Hlt2Conf(),[ "DataType" ])
         Hlt2Conf().ThresholdSettings = ThresholdSettings
         Hlt2Conf().WithMC = self.getProp("WithMC")
+        if thresClass and hasattr( thresClass, 'Hlt2DefaultVoidFilter' ) :
+            Hlt2Conf().DefaultVoidFilter = getattr( thresClass, 'Hlt2DefaultVoidFilter' )
 
 #########################################################################################
 # Utility function for setting thresholds both in Hlt1 and 2
@@ -466,10 +461,19 @@ class HltConf(LHCbConfigurableUser):
             activeHlt1Lines = [ i.name() for i in hlt1Lines() ]
             activeHlt2Lines = [ i.name() for i in hlt2Lines() ]
 
+        ###
         # append additional lines # WARNING do that in DaVinci, not Moore!
         # @todo : Need to protect against that when making a TCK. Gerhard know how
         activeHlt1Lines.extend( self.getProp('AdditionalHlt1Lines')  )
         activeHlt2Lines.extend( self.getProp('AdditionalHlt2Lines')  )
+
+        ### @FIXME / @TODO
+        #  brute force addition of Hlt2PileUp -- needs to be done in an elegant fashion...
+        #  problem is that it is the setting which drives this, but Hlt2.py which generates
+        #  the Hlt2Line('PileUp',... ) -- so for now we rely on the fact that we happen
+        #  to know what Hlt2.py does...
+        if activeHlt2Lines and 'Hlt2PileUp' in [ i.name() for i in hlt2Lines() ] and 'Hlt2PileUp' not in activeHlt2Lines :
+                activeHlt2Lines += [ 'Hlt2PileUp' ]
 
         # make sure Hlt.Global is included as soon as there is at least one Hlt. line...
         if activeHlt1Lines : activeHlt1Lines += [ 'Hlt1Global' ]

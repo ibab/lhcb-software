@@ -6,7 +6,7 @@
 """
 # =============================================================================
 __author__  = "P. Koppenburg Patrick.Koppenburg@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.66 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.67 $"
 # =============================================================================
 import types
 from Gaudi.Configuration import *
@@ -87,6 +87,8 @@ class Hlt2Conf(LHCbConfigurableUser):
     __slots__ = { "DataType"                   : '2009'    # datatype is one of 2009, MC09, DC06...
                 , "ThresholdSettings"          : {} # ThresholdSettings predefined by Configuration
                 , "WithMC"                     : False 
+                , "DefaultVoidFilter"          : ''
+                , "Hlt2ForwardMaxVelo"         : 500
                 }
 
 ###################################################################################
@@ -101,8 +103,19 @@ class Hlt2Conf(LHCbConfigurableUser):
         The actual lines
         """
         from HltLine.HltLine     import Hlt2Line
-        Hlt2Line( "Global", HLT= "HLT_PASS_SUBSTR('Hlt2') ", priority = 255 )
+        Hlt2Line( "Global", HLT= "HLT_PASS_SUBSTR('Hlt2') ", priority = 255, VoidFilter = '' )
         ThresholdSettings = self.getProp("ThresholdSettings")
+
+        #
+        # check if this threshold setting has some global event cut...
+        #  if so, set it, and add a line which does (prescaled) the opposite
+        #
+        if self.getProp('DefaultVoidFilter') :
+            from HltLine.HltLine import Hlt2Line
+            Hlt2Line.setDefaultVoidFilter( self.getProp('DefaultVoidFilter') )
+            Hlt2Line( 'PileUp', VoidFilter = '  ~ ( %s ) ' % self.getProp('DefaultVoidFilter') , postscale = 0.01 )
+        
+
         #
         # Loop over thresholds
         #
@@ -138,6 +151,7 @@ class Hlt2Conf(LHCbConfigurableUser):
         from Gaudi.Configuration import ConfigurableUser
         for thistracking in definedTrackings :
             setDataTypeForTracking(thistracking,self.getProp("DataType"))
+            if self.getProp('Hlt2ForwardMaxVelo') : thistracking.Hlt2ForwardMaxVelo = self.getProp("Hlt2ForwardMaxVelo")
 ###################################################################################
 #
 # MC
@@ -176,6 +190,10 @@ class Hlt2Conf(LHCbConfigurableUser):
         # set Hlt2 PID
         self.configureReconstruction()
         # lines
+        print self
+        if self.getProp("DefaultVoidFilter") :
+            from HltLine.HltLine import Hlt2Line  
+            Hlt2Line.setDefaultVoidFilter( self.getProp("DefaultVoidFilter") )
         self.hlt2Lines(Hlt2)
         # reco
         if self.getProp('WithMC'): self.withMC()
