@@ -11,7 +11,7 @@
 ##
 # =============================================================================
 __author__  = "V. Gligorov vladimir.gligorov@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.20 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.21 $"
 # =============================================================================
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
@@ -107,6 +107,7 @@ class Hlt2Tracking(LHCbConfigurableUser):
                 , "MakeNeutrals"                    : False
                 , "RichHypos"                       : HltRichDefaultHypos
                 , "RichRadiators"                   : HltRichDefaultRadiators
+                , "Hlt2ForwardMaxVelo"              : 0
                 # TODO : make these variables, not slots 
                 , "__hlt2ChargedNoPIDsProtosSeq__"  : 0
                 , "__hlt2ChargedCaloProtosSeq__"    : 0
@@ -1004,7 +1005,8 @@ class Hlt2Tracking(LHCbConfigurableUser):
                                    , InputTracksName  = self.__hlt2VeloTracking().outputSelection() 
                                     , OutputTracksName = forwardTrackOutputLocation )
 
-
+        if self.getProp('Hlt2ForwardMaxVelo') > 0 :
+            recoForward.MaxNVelo = self.getProp('Hlt2ForwardMaxVelo')
         #JA: TODO: put something in like: if(early data):
         #recoForward.addTool(ConfiguredPR( "Forward" ))
 
