@@ -11,7 +11,7 @@
 ##
 # =============================================================================
 __author__  = "V. Gligorov vladimir.gligorov@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.21 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.22 $"
 # =============================================================================
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
@@ -358,8 +358,6 @@ class Hlt2Tracking(LHCbConfigurableUser):
                                  self.__hlt2MuonID()                 )
                 self.setProp(    "__hlt2CALOIDSeq__"            ,
                                  self.__hlt2CALOID()                 )
-                self.setProp(    "__hlt2NeutralProtosSeq__"        ,
-                                 self.__hlt2NeutralProtos()          )
                 #
                 # The protoparticles
                 #
