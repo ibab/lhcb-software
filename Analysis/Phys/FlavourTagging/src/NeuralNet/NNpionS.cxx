@@ -1,7 +1,8 @@
 #include "NNpionS.h"
 #include <cmath>
 
-double NNpionS::value(int index,double in0,double in1,double in2,double in3,double in4,double in5,double in6,double in7,double in8) {
+double NNpionS::value(int index,double in0,double in1,double in2,double in3,
+                      double in4,double in5,double in6,double in7,double in8) {
    input0 = (in0 - 0)/1;
    input1 = (in1 - 0)/1;
    input2 = (in2 - 0)/1;

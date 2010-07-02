@@ -1,9 +1,11 @@
-// $Id: SVertexOneSeedTool.cpp,v 1.3 2010-06-30 16:37:17 mgrabalo Exp $
+// $Id: SVertexOneSeedTool.cpp,v 1.4 2010-07-02 08:07:43 mgrabalo Exp $
 #include "SVertexOneSeedTool.h"
 #include "Event/RecVertex.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : SVertexOneSeedTool v1.4
+//
+// 2010-06-1 : Marc Grabalosa       
 //
 // Secondary inclusive vertexing based on a likelihood function
 //-----------------------------------------------------------------------------

@@ -14,7 +14,7 @@
 //-----------------------------------------------------------------------------
 // Implementation file for class : NNetTool_MLP v1.3
 //
-// 2008-10-10 : Marco Musy 
+// 2008-10-10 : Marco Musy & Marc Grabalosa
 //
 // Neural Net tuned with Root.
 //-----------------------------------------------------------------------------
@@ -29,20 +29,20 @@ NNetTool_MLP::NNetTool_MLP( const std::string& type,
   GaudiTool ( type, name, parent ) { 
   declareInterface<INNetTool>(this);
 
-  declareProperty( "P0_mu_scale", m_P0mu =  0.974458); //MC09 defaults
-  declareProperty( "P1_mu_scale", m_P1mu = -0.967522);
-  declareProperty( "P0_e_scale",  m_P0e  =  0.865053);
-  declareProperty( "P1_e_scale",  m_P1e  = -0.813964);
-  declareProperty( "P0_k_scale",  m_P0k  =  0.967369);
-  declareProperty( "P1_k_scale",  m_P1k  = -0.956133);
-  declareProperty( "P0_ks_scale", m_P0ks =  9.845081e-01);
-  declareProperty( "P1_ks_scale", m_P1ks = -9.742343e-01);
+  declareProperty( "P0_mu_scale", m_P0mu =  0.994053); //MC10 defaults
+  declareProperty( "P1_mu_scale", m_P1mu = -0.990767);
+  declareProperty( "P0_e_scale",  m_P0e  =  0.960898);
+  declareProperty( "P1_e_scale",  m_P1e  = -0.956197);
+  declareProperty( "P0_k_scale",  m_P0k  =  0.910427);
+  declareProperty( "P1_k_scale",  m_P1k  = -0.864479);
+  declareProperty( "P0_ks_scale", m_P0ks =  1.03063);
+  declareProperty( "P1_ks_scale", m_P1ks = -1.04504);
   declareProperty( "P0_ps_scale", m_P0ps =  1.05709);
   declareProperty( "P1_ps_scale", m_P1ps = -1.09695);
-  declareProperty( "P0_vtx_scale", m_P0vtx =  0.359564);
-  declareProperty( "P1_vtx_scale", m_P1vtx =  0.972845);
-  declareProperty( "P2_vtx_scale", m_P2vtx = -2.14715);
-  declareProperty( "P3_vtx_scale", m_P3vtx =  0.644519);
+  declareProperty( "P0_vtx_scale", m_P0vtx =  2.34711);
+  declareProperty( "P1_vtx_scale", m_P1vtx = -7.63911);
+  declareProperty( "P2_vtx_scale", m_P2vtx = 10.7425);
+  declareProperty( "P3_vtx_scale", m_P3vtx = -5.37049);
   //  declareProperty( "P0_vtx_scale", m_P0vtx =  5.255669e-01);
   //  declareProperty( "P1_vtx_scale", m_P1vtx = -3.251661e-01);
   //  declareProperty( "Gt075_vtx",    m_Gt075 = 0.35);
@@ -108,7 +108,6 @@ double NNetTool_MLP::MLPm(std::vector<double>& par) {
   normaliseOS(par);
   NNmuon net;
   double rnet = net.value(0, par.at(0),par.at(2),par.at(3),par.at(4),
-                          //par.at(8),par.at(9),par.at(1));
                           par.at(8),par.at(1));
 
   double pn = 1.0-pol2(rnet, m_P0mu, m_P1mu);// <=========
@@ -126,7 +125,6 @@ double NNetTool_MLP::MLPe(std::vector<double>& par) {
   normaliseOS( par );
   NNele net;
   double rnet = net.value(0, par.at(0),par.at(2),par.at(3),par.at(4),
-			  //par.at(8),par.at(9),par.at(1));
                           par.at(8),par.at(1));
 
   double pn = 1.0-pol2(rnet, m_P0e, m_P1e);// <=========
@@ -145,7 +143,6 @@ double NNetTool_MLP::MLPk(std::vector<double>& par ) {
   normaliseOS( par );
   NNkaon net;
   double rnet = net.value(0, par.at(0),par.at(2),par.at(3),par.at(4),
-                          //par.at(8),par.at(9),par.at(1));
                           par.at(8),par.at(1));
 
   double pn = 1.0-pol2(rnet, m_P0k, m_P1k);// <=========
@@ -164,7 +161,7 @@ double NNetTool_MLP::MLPkS(std::vector<double>& par) {
   normaliseSS( par );
   NNkaonS net;
   double rnet = net.value(0, par.at(0),par.at(2),par.at(3),par.at(4),
-                          par.at(5),par.at(6),par.at(7),par.at(8),par.at(9),par.at(1));
+                          par.at(5),par.at(6),par.at(7),par.at(8),par.at(1));
   
   double pn = 1.0-pol2(rnet, m_P0ks, m_P1ks);// <=========
 
@@ -183,8 +180,6 @@ double NNetTool_MLP::MLPpS(std::vector<double>& par) {
   normaliseSS( par );
   NNpionS net;
   double rnet = net.value(0,par.at(0),par.at(2),par.at(3),par.at(4),
-                          //par.at(5),par.at(6),par.at(7),par.at(8),par.at(9),par.at(1));
-//                          par.at(5),par.at(6),par.at(7),par.at(9),par.at(1));
                           par.at(5),par.at(6),par.at(7),par.at(8),par.at(1));
 
   double pn = 1.0-pol2(rnet, m_P0ps, m_P1ps);// <=========

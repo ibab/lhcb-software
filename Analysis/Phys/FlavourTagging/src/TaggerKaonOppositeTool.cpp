@@ -21,7 +21,7 @@ TaggerKaonOppositeTool::TaggerKaonOppositeTool( const std::string& type,
   declareInterface<ITagger>(this);
 
   declareProperty( "CombTech",  m_CombinationTechnique = "NNet" );
-  declareProperty( "NeuralNetName", m_NeuralNetName   = "NNetTool_MLP" );
+  declareProperty( "NeuralNetName", m_NeuralNetName    = "NNetTool_MLP" );
   declareProperty( "Kaon_Pt_cut",   m_Pt_cut_kaon        = 0.4 *GeV );
   declareProperty( "Kaon_P_cut",    m_P_cut_kaon         = 4.0 *GeV );
   declareProperty( "Kaon_IPs_cut",  m_IPs_cut_kaon       = 3.8 );

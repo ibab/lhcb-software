@@ -23,15 +23,15 @@ TaggerElectronTool::TaggerElectronTool( const std::string& type,
 
   declareProperty( "CombTech",  m_CombinationTechnique = "NNet" );
   declareProperty( "NeuralNetName",  m_NeuralNetName   = "NNetTool_MLP" );
-  declareProperty( "Ele_Pt_cut",   m_Pt_cut_ele = 1.1 * GeV );
-  declareProperty( "Ele_P_cut",    m_P_cut_ele  = 0.0 * GeV );
-  declareProperty( "Ele_lcs_cut",  m_lcs_cut_ele= 2.5 );
+  declareProperty( "Ele_Pt_cut",   m_Pt_cut_ele   = 1.1 * GeV );
+  declareProperty( "Ele_P_cut",    m_P_cut_ele    = 0.0 * GeV );
+  declareProperty( "Ele_lcs_cut",  m_lcs_cut_ele  = 2.5 );
   declareProperty( "Ele_ghost_cut",m_ghost_cut_ele= -15.0 );
-  declareProperty( "VeloChargeMin",m_VeloChMin  = 0.0 );
-  declareProperty( "VeloChargeMax",m_VeloChMax  = 1.3 );
-  declareProperty( "EoverP",       m_EoverP     = 0.85 );
+  declareProperty( "VeloChargeMin",m_VeloChMin    = 0.0 );
+  declareProperty( "VeloChargeMax",m_VeloChMax    = 1.3 );
+  declareProperty( "EoverP",       m_EoverP       = 0.85 );
   declareProperty( "AverageOmega", m_AverageOmega = 0.33 );
-  declareProperty( "Ele_PIDe_cut", m_PIDe_cut  = 4.0 );
+  declareProperty( "Ele_PIDe_cut", m_PIDe_cut     = 4.0 );
   declareProperty( "ProbMin_ele",  m_ProbMin_ele  = 0. ); //no cut
   m_nnet = 0;
   m_util = 0;
@@ -79,7 +79,6 @@ Tagger TaggerElectronTool::tag( const Particle* AXB0, const RecVertex* RecVert,
   Particle::ConstVector::const_iterator ipart;
   for( ipart = vtags.begin(); ipart != vtags.end(); ipart++ ) {
     
-    //    if( (*ipart)->particleID().abspid() != 11 ) continue;
     //    bool inEcalACC= (*ipart)->proto()->info(ProtoParticle::InAccEcal,false);
     //    if(!inEcalACC) continue;
 
@@ -141,7 +140,6 @@ Tagger TaggerElectronTool::tag( const Particle* AXB0, const RecVertex* RecVert,
     NNinputs.at(2) = iele->p()/GeV;
     NNinputs.at(3) = iele->pt()/GeV;
     NNinputs.at(4) = IP/IPerr;
-//    NNinputs.at(8) = m_util->getNvtx();
     NNinputs.at(8) = allVtx.size();
     NNinputs.at(9) = ncand;
 

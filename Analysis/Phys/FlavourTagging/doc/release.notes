@@ -1,11 +1,15 @@
-! $Id: release.notes,v 1.171 2010-06-17 17:46:03 mgrabalo Exp $
+! $Id: release.notes,v 1.172 2010-07-02 08:10:16 mgrabalo Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/FlavourTagging
 ! Responsible : Marco Musy (marco.musy@cern.ch)
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
 
-! 2010-06-03 - Marc Grabalosa
+! 2010-07-02 - Marc Grabalosa
+  . New tuning for NNets
+  . Added some comments
+
+! 2010-06-23 - Marc Grabalosa
   - TaggingUtils
    .Added function to calculate DOCA
   - Taggers

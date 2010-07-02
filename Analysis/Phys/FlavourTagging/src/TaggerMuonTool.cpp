@@ -26,7 +26,7 @@ TaggerMuonTool::TaggerMuonTool( const std::string& type,
   declareProperty( "Muon_Pt_cut", m_Pt_cut_muon   = 1.1 *GeV );
   declareProperty( "Muon_P_cut",  m_P_cut_muon    = 0.0 *GeV );
   declareProperty( "Muon_lcs_cut",m_lcs_cut_muon  = 2.2 );
-  declareProperty( "Muon_PIDm_cut",m_PIDm_cut  = 2.0 );
+  declareProperty( "Muon_PIDm_cut",m_PIDm_cut     = 2.0 );
   declareProperty( "ProbMin_muon",m_ProbMin_muon  = 0. ); //no cut
   declareProperty( "AverageOmega",m_AverageOmega  = 0.33 );
   m_nnet = 0;
@@ -73,7 +73,6 @@ Tagger TaggerMuonTool::tag( const Particle* AXB0, const RecVertex* RecVert,
   Particle::ConstVector::const_iterator ipart;
   for( ipart = vtags.begin(); ipart != vtags.end(); ipart++ ) {
 
-    //    if( (*ipart)->particleID().abspid() != 13 ) continue;
     if(!(*ipart)->proto()->info(ProtoParticle::MuonPIDStatus,0)) continue;
 	
     double pidm=(*ipart)->proto()->info( ProtoParticle::CombDLLmu, -1000.0 );
@@ -118,7 +117,6 @@ Tagger TaggerMuonTool::tag( const Particle* AXB0, const RecVertex* RecVert,
     NNinputs.at(2) = imuon->p()/GeV;
     NNinputs.at(3) = imuon->pt()/GeV;
     NNinputs.at(4) = IP/IPerr;
-//    NNinputs.at(8) = m_util->getNvtx();
     NNinputs.at(8) = allVtx.size();
     NNinputs.at(9) = ncand;
     
