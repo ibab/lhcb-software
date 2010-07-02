@@ -5,6 +5,7 @@
 !               and the underlying information
 !-----------------------------------------------------------------------------
 
+!========================== TCKUtils v1r6p6 2010-07-02 ===================
 ! 2010-07-01 - Gerhard Raven
  - implement dumpL0(TCK)
  - implement getL0Prescales
