@@ -1,4 +1,4 @@
-# $Id: Hlt2CommissioningLines.py,v 1.23 2010-05-20 21:03:42 graven Exp $
+# $Id: Hlt2CommissioningLines.py,v 1.24 2010-07-02 07:27:23 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of Hlt Lines for commissioning 
@@ -10,7 +10,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.23 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.24 $"
 # =============================================================================
 
 from HltLine.HltLinesConfigurableUser import *
@@ -26,10 +26,12 @@ class Hlt2CommissioningLinesConf(HltLinesConfigurableUser):
    def __apply_configuration__(self):
         from HltLine.HltLine import Hlt2Line   as Line
         Line('PassThrough' ,  HLT = "HLT_PASS_RE('^Hlt1(?!Lumi).*Decision$')"
+            , VoidFilter = '' # make sure we DO NOT get a filter thrown on top of us!!!
             , prescale = self.prescale
             , postscale = self.postscale
             )
-        Line('Transparent' ,  HLT = "HLT_PASS_RE('^Hlt1(ODIN.*|L0.*|Lumi.*|MB.*|Velo.*|Incident|Tell1Error)Decision$')"
+        Line('Transparent' ,  HLT = "HLT_PASS_RE('^Hlt1(ODIN.*|L0.*|Lumi.*|MB.*|Velo.*|Incident|Tell1Error|HadronMonComp)Decision$')"
+            , VoidFilter = '' # make sure we DO NOT get a filter thrown on top of us!!!
             , prescale = self.prescale
             , postscale = self.postscale
             )
