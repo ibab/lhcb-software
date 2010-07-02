@@ -1,16 +1,16 @@
-!$Id: release.notes,v 1.132 2010-07-02 07:52:18 graven Exp $
+!$Id: release.notes,v 1.133 2010-07-02 08:17:08 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/HltTracking
 ! Responsible : Jose A. Hernando
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2010-06-07 - V. Gligorov
+ - Remove an obsolete Hlt2 tracking configuration.
+
 !========================== HltTracking v6r1 2010-07-02 ===================
 ! 2010-07-01 - Gerhard Raven
  - make the max # of Velo tracks in PatForward a slot
-
-! 2010-06-07 - V. Gligorov
- - Remove an obsolete Hlt2 tracking configuration.
 
 !========================== HltTracking v6r0   2010-05-28 ===================
 ! 2010-05-28 - Gerhard Raven
