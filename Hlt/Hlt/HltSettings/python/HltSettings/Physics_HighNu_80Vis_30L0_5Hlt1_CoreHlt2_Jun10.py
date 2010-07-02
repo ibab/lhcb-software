@@ -11,6 +11,7 @@ class Physics_HighNu_80Vis_30L0_5Hlt1_CoreHlt2_Jun10           ( Physics_HighNu_
     
     __all__ = ( 'HltType', 'ActiveHlt2Lines', 'Thresholds' )
 
+
     def HltType(self) :
         self.verifyType( Physics_HighNu_80Vis_30L0_5Hlt1_CoreHlt2_Jun10 )
         return          'Physics_HighNu_80Vis_30L0_5Hlt1_CoreHlt2_Jun10'
@@ -33,8 +34,6 @@ class Physics_HighNu_80Vis_30L0_5Hlt1_CoreHlt2_Jun10           ( Physics_HighNu_
                                                           }
                              }
                            )
-
-      
         ##prescale topo monitoring cuts
         from Hlt2Lines.Hlt2TopologicalLines  import Hlt2TopologicalLinesConf
         thresholds.update( { Hlt2TopologicalLinesConf : {
@@ -66,12 +65,11 @@ class Physics_HighNu_80Vis_30L0_5Hlt1_CoreHlt2_Jun10           ( Physics_HighNu_
         return thresholds
 
     
-
-    
     def ActiveHlt2Lines(self) :
         """
         Returns a list of active lines
         """
+
         list = Physics_HighNu_40Vis_15L0_2Hlt1_ExpressHlt2_Jun10.ActiveHlt2Lines(self)
 
         from Muons_Retention15 import Muons_Retention15 
@@ -83,5 +81,4 @@ class Physics_HighNu_80Vis_30L0_5Hlt1_CoreHlt2_Jun10           ( Physics_HighNu_
         from Hadrons_Minimal import Hadrons_Minimal
         list.extend( Hadrons_Minimal().ActiveHlt2Lines() )
         
-               
         return list
