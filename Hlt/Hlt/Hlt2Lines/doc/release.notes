@@ -12,8 +12,8 @@
  - Add Hlt2B2HHPi0Line.py
 
 ! 2010-06-16 - Ulrich Kerzel
-- update cuts for HLT2 line for lifetime-unbiased B->hh
-  (reject > 1/20 on L0 yes, HLT1 yes real data)
+ - update cuts for HLT2 line for lifetime-unbiased B->hh
+   (reject > 1/20 on L0 yes, HLT1 yes real data)
 
 ! 2010-06-08 - L. de Paula
  - Introducing Monitoring Histograms in Hlt2InclusiveDiMuonLines.py 
@@ -23,6 +23,11 @@
  - Change the mass hypothesis in the topological 3 and 4 body to KKK/KKKK
    from KKPi/KKPiPi. This is in order to have the same mass window efficiency
    on all of our "core" 4 body and lower decay modes. 
+
+!========================== Hlt2Lines v4r1 2010-07-01 ===================
+! 2010-07-02 - Gerhard Raven
+ - exclude MuonFromHlt1 from the new default global pileup veto in Hlt2 
+ - add Hlt1HadronMonComp (which runs on 1 Hz of L0 Hadron) to Hlt2Transparant
 
 !========================== Hlt2Lines v4r0 2010-05-27 ===================
 ! 2010-05-27 - V. Gligorov
