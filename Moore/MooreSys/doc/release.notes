@@ -3,8 +3,13 @@ Package     : MooreSys
 Package Coordinator : G.Raven
 Purpose     : LHCb HLT application
 
+</PRE><H1><A NAME=v9r3>2010-07-02 Moore v9r3</A></H1><PRE>
+Patches on top of v9r2, but given that there is eg. now 
+(the possibility of adding) a global pile-up veto in Hlt2, 
+call it v9r3 instead of v9r2p1...
+
 </PRE><H1><A NAME=v9r2>2010-05-31 Moore v9r2</A></H1><PRE>
-Relase of top of Hlt v10r4
+Release of top of Hlt v10r4
 
 </PRE><H1><A NAME=v9r1p2>2010-05-07 Moore v9r1p2</A></H1><PRE>
 Patches on top of v9r1p1 to pick up RICH gas parameters online,

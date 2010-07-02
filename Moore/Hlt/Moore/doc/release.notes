@@ -2,6 +2,7 @@ Package     : Hlt/Moore
 Package Coordinator : Gerhard Raven
 Purpose     : LHCb HLT application
 
+!========================== Moore v9r3 2010-07-02 ===================
 ! 2010-07-01 - Gerhard Raven, Johannes Albrecht
  - if unknown filetype, treat it as if it were a DST...
 
