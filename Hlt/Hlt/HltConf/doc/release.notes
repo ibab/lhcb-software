@@ -1,9 +1,16 @@
-! $Id: release.notes,v 1.477 2010-07-02 07:47:47 graven Exp $ 
+! $Id: release.notes,v 1.478 2010-07-02 08:28:40 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+! 2010-06-07 - V. Gligorov
+ - Remove an obsolete Hlt2 tracking configuration.
+
+!========================== HltConf v8r1 2010-07-02 ===================
+! 2010-07-02
+ - add a default PU veto in Hlt2
+
 ! 2010-06-21 - Johannes Albrecht
  - add more routing bits
 
@@ -22,12 +29,6 @@
 
 ! 2010-06-11 - Johannes Albrecht
  - add HLT2 routing bits and add Hlt1 single and di hadron
-
-! 2010-06-07 - V. Gligorov
- - Remove an obsolete Hlt2 tracking configuration.
-
-!========================== HltConf v8r1 2010-07-02 ===================
- - add a default PU veto in Hlt2
 
 !========================== HltConf v8r0p1 2010-05-31 ===================
 ! 2010-05-30 - Gerhard Raven

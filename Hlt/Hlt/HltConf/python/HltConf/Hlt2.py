@@ -6,7 +6,7 @@
 """
 # =============================================================================
 __author__  = "P. Koppenburg Patrick.Koppenburg@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.67 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.68 $"
 # =============================================================================
 import types
 from Gaudi.Configuration import *
@@ -88,7 +88,7 @@ class Hlt2Conf(LHCbConfigurableUser):
                 , "ThresholdSettings"          : {} # ThresholdSettings predefined by Configuration
                 , "WithMC"                     : False 
                 , "DefaultVoidFilter"          : ''
-                , "Hlt2ForwardMaxVelo"         : 500
+                , "Hlt2ForwardMaxVelo"         : 350
                 }
 
 ###################################################################################
