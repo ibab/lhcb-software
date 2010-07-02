@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltLine.py,v 1.37 2010-05-19 04:16:54 gligorov Exp $ 
+# $Id: HltLine.py,v 1.38 2010-07-02 07:49:15 graven Exp $ 
 # =============================================================================
 ## @file
 #
@@ -54,7 +54,7 @@ Also few helper symbols are defined:
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.37 $ "
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.38 $ "
 # =============================================================================
 
 __all__ = ( 'Hlt1Line'     ,  ## the Hlt1 line itself 
@@ -126,6 +126,12 @@ def l0entryName    ( line, level = 'Hlt1' ) :
 def hltentryName    ( line, level = 'Hlt1' ) :
     """ Convention: the name of 'HLTFilter' algorithm inside HltLine """
     return '%s%sHltFilter'   % (level,line)
+
+## Convention: the name of 'VoidFilter' algorithm inside HltLine
+def voidName    ( line, level = 'Hlt1' ) :
+    """ Convention: the name of 'VoidFilter' algorithm inside HltLine """
+    return '%s%sVoidFilter'   % (level,line) # or do we share them???
+
 ## Convention: the generic name of 'member' algorithm inside HltLine 
 def memberName     ( member, line, level='Hlt1' ) :
     """ Convention: the generic name of 'member' algorithm inside HltLine """
@@ -1265,6 +1271,22 @@ class Hlt2Line(object):
     @date   2009-03-25   
     """
 
+    _defaultVoidFilter = None
+    _defaultVoidFilterLock = False
+    @classmethod
+    def setDefaultVoidFilter( cls, code ) :
+        if cls._defaultVoidFilter == code : return code
+        if cls._defaultVoidFilterLock : raise AttributeError("cannot change filter after it has been used")
+        prev = cls._defaultVoidFilter
+        cls._defaultVoidFilter = code
+        print "Setting Default Hlt2 VoidFilter to '%s'" % cls._defaultVoidFilter
+        return prev
+    @classmethod
+    def getDefaultVoidFilter( cls ) :
+        cls._defaultVoidFilterLock = True
+        return cls._defaultVoidFilter
+
+
     ## The constructor, which defines the line
     #
     #  The major arguments
@@ -1282,6 +1304,7 @@ class Hlt2Line(object):
                    ODIN      = None ,   # ODIN predicate
                    L0DU      = None ,   # L0DU predicate  
                    HLT       = None ,   # HltDecReports predicate
+                   VoidFilter = None ,   # extra VoidFilter
                    algos     = []   ,   # the list of algorithms/members
                    postscale = 1    ,   # postscale factor
                    priority  = None ,   # hint for ordering lines
@@ -1310,11 +1333,16 @@ class Hlt2Line(object):
             #  and please note the trailing 'Decision' which is there to skip Hlt1Global!
             HLT = "HLT_PASS_RE('Hlt1(?!Lumi)(?!Velo).*Decision')"
 
+        if VoidFilter == None : # distguish between None and "" -- if we write 'if not VoidFilter' then "" would get overruled...
+            code = self.getDefaultVoidFilter()
+            if code : VoidFilter = code
+
         ## 1) clone all arguments
         name  = deepcopy ( name  )
         ODIN  = deepcopy ( ODIN  )
         L0DU  = deepcopy ( L0DU  )
         HLT   = deepcopy ( HLT   )
+        VoidFilter = deepcopy ( VoidFilter )
         algos = deepcopy ( algos )
         args  = deepcopy ( args  )
         
@@ -1328,6 +1356,7 @@ class Hlt2Line(object):
         self._ODIN      = ODIN
         self._L0DU      = L0DU
         self._HLT       = HLT
+        self._VoidFilter       = VoidFilter
         self._algos     = algos
         self._args      = args
 
@@ -1361,6 +1390,8 @@ class Hlt2Line(object):
         if self._L0DU : mdict.update( { 'L0DU' : L0Filter   ( l0entryName  ( line,'Hlt2' ) , Code = self._L0DU )  } )
         ## TODO: in case of HLT, we have a dependency... dangerous, as things become order dependent...
         if self._HLT  : mdict.update( { 'HLT'  : HDRFilter  ( hltentryName ( line,'Hlt2' ) , Code = self._HLT  ) } )
+        from Configurables import LoKi__VoidFilter
+        if self._VoidFilter : mdict.update( { 'Filter0' : LoKi__VoidFilter( voidName( line, 'Hlt2' ), Code = self._VoidFilter ) }  )
         if _members : 
             last = _members[-1]
             while hasattr(last,'Members') : 

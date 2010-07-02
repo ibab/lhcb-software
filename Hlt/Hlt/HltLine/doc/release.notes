@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.103 2010-05-27 15:16:21 graven Exp $
+! $Id: release.notes,v 1.104 2010-07-02 07:49:15 graven Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltLine
 ! Responsible : Gerhard Raven, Vanya Belyaev
 ! Purpose     : Infrastructure for HLT 'lines'
 ! -----------------------------------------------------------------------------
+!========================== HltLine v4r4  2010-07-02 ===================
+! 2010-07-02 - Gerhard Raven
+ - create infrastructure for default VoidFilter cuts in each Hlt2 line
 
 !========================== HltLine v4r3  2010-05-27 ===================
 ! 2010-05-19 - V. Gligorov
