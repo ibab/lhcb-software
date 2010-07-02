@@ -6,7 +6,7 @@
 """
 # =============================================================================
 __author__  = "P. Koppenburg Patrick.Koppenburg@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.68 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.69 $"
 # =============================================================================
 import types
 from Gaudi.Configuration import *
@@ -47,6 +47,7 @@ from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedForwardTrac
 from HltTracking.Hlt2TrackingConfigurations import Hlt2UnfittedLongTracking 
 from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedLongTracking 
 from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedRichForProtonsForwardTracking
+from HltTracking.Hlt2TrackingConfigurations import Hlt2UnfittedForwardTrackingForNeutrals
 from HltTracking.Hlt2TrackingConfigurations import setDataTypeForTracking
 # Define what categories stand for
 # There are the strings used in HltThresholdSettings
@@ -62,6 +63,7 @@ class Hlt2Conf(LHCbConfigurableUser):
                              , (Hlt2Tracking, "Hlt2BiKalmanFittedForwardTracking")
                              , (Hlt2Tracking, "Hlt2BiKalmanFittedLongTracking")
                              , (Hlt2Tracking, "Hlt2UnfittedLongTracking")
+                             , (Hlt2Tracking, "Hlt2UnfittedForwardTrackingForNeutrals")
                              , Hlt2TopologicalLinesConf
                              , Hlt2B2DXLinesConf 
                              , Hlt2CharmLinesConf
@@ -139,6 +141,7 @@ class Hlt2Conf(LHCbConfigurableUser):
                            , Hlt2BiKalmanFittedDownstreamTracking()
                            , Hlt2UniKalmanFittedForwardTracking()
                            , Hlt2UnfittedLongTracking()
+                           , Hlt2UnfittedForwardTrackingForNeutrals()
                            , Hlt2BiKalmanFittedForwardTracking()
                            , Hlt2BiKalmanFittedLongTracking() 
                            , Hlt2BiKalmanFittedRichForProtonsForwardTracking() 
