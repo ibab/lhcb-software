@@ -1,8 +1,9 @@
-!$Id: release.notes,v 1.85 2010-07-01 12:43:50 graven Exp $
+!$Id: release.notes,v 1.86 2010-07-02 07:00:14 graven Exp $
 Package     : Hlt/HltGlobalMonitor
 Package Coordinator : Bruno Souza de Paula 
 Purpose     : LHCb HLT Global Monitoring
 ! -----------------------------------------------------------------------------
+!========================== HltGlobalMonitor v3r6p1 2010-07-02 ===================
 ! 2010-07-01 - Gerhard Raven
  - add monitoring of CPU time vs. #PV3D, #Velo, #forward
 
