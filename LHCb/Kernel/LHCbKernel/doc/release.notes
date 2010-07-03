@@ -4,6 +4,9 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+! 2010-07-03 M Needham
+ - Few bug fixes in SiLandauFun
+
 ! 2010-06-30 M Needham
  - Add SiLandauFun.h and .cpp (MPV, scale of Landau in Silicon)
 

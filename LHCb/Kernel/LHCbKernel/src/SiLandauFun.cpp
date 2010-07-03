@@ -19,7 +19,7 @@ double SiLandauFun::densityEffect(const double x)
     // 0
   }
   else if ((x > 0.09666)&&(x<2.5)){
-    dEffect = 4.606*x - 4.435 +(0.3755*(pow(3.0-x,2.72)));
+    dEffect = 4.606*x - 4.435 +(0.3755*(pow(2.5-x,2.72)));
   }
   else {
     dEffect = 4.606*x - 4.435;
@@ -28,14 +28,15 @@ double SiLandauFun::densityEffect(const double x)
 }
 
 double SiLandauFun::MPVFromScale(const double beta, 
-                                      const double betaGamma,
+                                      const double gamma,
                                       const double scale)
 {
   // calculate density effect
-  const double dEffect = densityEffect(log10(betaGamma));  
+  const double x = log10(beta*gamma);
+  const double dEffect = densityEffect(x);  
 
   const double beta2 = beta*beta;
-  const double betaGamma2 = betaGamma*betaGamma;
+  const double betaGamma2 = beta2*gamma*gamma;
 
   // MPV of landau
   double mpv = scale*( log(2*Gaudi::Units::electron_mass_c2*betaGamma2/
