@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/OMAlib/OMAAlgorithms.h,v 1.16 2010-06-11 13:00:10 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/OMAlib/OMAAlgorithms.h,v 1.17 2010-07-04 13:29:55 ggiacomo Exp $
 #ifndef OMALIB_OMAALGORITHMS_H
 #define OMALIB_OMAALGORITHMS_H 1
 
@@ -184,7 +184,6 @@ public:
                     std::vector<float> & input_pars,
                     unsigned int anaID,
                     TH1* Ref);
-  virtual bool notEnoughStats(TH1* h);
 };
 class OMACheckMinMax : public OMACheckAlg
 {

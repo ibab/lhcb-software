@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.48 2010-06-30 15:56:12 ggiacomo Exp $
+! $Id: release.notes,v 1.49 2010-07-04 13:29:55 ggiacomo Exp $
 ! Package     : OMAlib
 ! Responsible : G. Graziani
 ! Purpose     : Online Monitoring Analysis library
+
+! 20100704 GG
+ - adapt OMACheckErrorBins to 2d histograms
 
 ! 20100630 GG
  - fix a precision problem with HMerge algorithm
