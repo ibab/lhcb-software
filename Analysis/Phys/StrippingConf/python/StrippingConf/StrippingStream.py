@@ -19,15 +19,16 @@ class StrippingStream ( object ) :
     def __init__ ( self,
                    name = 'StrippingStream',
                    Lines =  [],                                    # List of stream lines
-                   BadEventSelection = "OverrideInStrippingConf",  # Bad event selection algo
+                   BadEventSelection = "Override",                 # Bad event selection algo
                                                                    # By default, it will be 
                                                                    # overridden in StrippingConf, 
                                                                    # but can be set to None here
                                                                    # to cancel bad event check
 
-                   AcceptBadEvents = None                          # If None, will be overridden 
+                   AcceptBadEvents = None,                         # If None, will be overridden 
                                                                    # in StrippingConf
-
+		   MaxCandidates = "Override", 
+		   MaxCombinations = "Override"
                  ) :
         self.lines = copy(Lines)
         for line in Lines : 
@@ -40,6 +41,8 @@ class StrippingStream ( object ) :
         self.eventSelectionLine = None
         self.BadEventSelection = BadEventSelection
         self.AcceptBadEvents = AcceptBadEvents
+        self.MaxCandidates = MaxCandidates
+        self.MaxCombinations = MaxCombinations
         self.TESPrefix = 'Strip'
         self.HDRLocation = 'Phys/DecReports'
 
@@ -65,6 +68,12 @@ class StrippingStream ( object ) :
                                      InputLocation = "/Event/" + self.TESPrefix + "/" + line.outputLocation() + "/Particles")
                 self.algs.append( alg )
 	    else :  
+
+	        if line.MaxCandidates == "Override" : 
+	    	    line.MaxCandidates = self.MaxCandidates
+	        if line.MaxCombinations == "Override" : 
+	    	    line.MaxCombinations = self.MaxCombinations
+	    	    
 		line.createConfigurable( self.TESPrefix + "/" + self.HDRLocation )
                 print "ADDING not TES", line.configurable(), "name ", line.configurable().name(), "to StrippingStream.lines" 
                 self.algs.append(line.configurable())
@@ -84,7 +93,7 @@ class StrippingStream ( object ) :
 
         # If the BadEventsSelection was not given neither in StrippingConf nor in StrippingStream
         
-        if self.BadEventSelection == "OverrideInStrippingConf" : 
+        if self.BadEventSelection == "Override" : 
             self.BadEventSelection = None
 
         # Make the line to mark bad events (those satisfying BadEventSelection)

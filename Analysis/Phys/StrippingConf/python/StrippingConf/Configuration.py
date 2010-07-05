@@ -24,7 +24,9 @@ class StrippingConf ( object ) :
                   HDRLocation = 'Phys/DecReports', 
                   Streams = [], 
                   BadEventSelection = None, 
-                  AcceptBadEvents = True ) :
+                  AcceptBadEvents = True,
+                  MaxCandidates = None, 
+                  MaxCombinations = None ) :
         
         log.info("Initialising StrippingConf "+ name)
         if name == "" :
@@ -39,9 +41,18 @@ class StrippingConf ( object ) :
         self._tesPrefix = TESPrefix
         self.BadEventSelection = BadEventSelection
         self.AcceptBadEvents = AcceptBadEvents
+        self.MaxCandidates = MaxCandidates
+        self.MaxCombinations = MaxCombinations
         for stream in Streams :
             self.appendStream(stream)
-	
+
+	self.checkAppendedLines()
+	self.checkUniqueOutputLocations()
+
+    def checkAppendedLines (self) : 
+        """
+        Check if all declared lines are appended to streams
+        """
 	allAppended = True
 	from StrippingLine import strippingLines
 	for line in strippingLines() : 
@@ -52,6 +63,25 @@ class StrippingConf ( object ) :
 	if allAppended : 
 	    log.info("All declared lines are appended to streams")
 
+    def checkUniqueOutputLocations (self) : 
+        """
+        Check if the output locations of all active lines are unique
+        """
+	import sys
+	locations = {}
+	for stream in self.activeStreams() :
+	    for line in stream.lines :
+	        if line.outputLocation() not in locations.keys() : 
+	    	    locations[line.outputLocation()] = [ line.name() ]
+	    	else : 
+	    	    locations[line.outputLocation()] += [ line.name() ]
+	locationsUnique = True
+	for loc, names in locations.iteritems() : 
+	    if len(names) > 1 : 
+		message = "Lines "+str(names)+" share the same output location '"+loc+"'\n"
+		sys.stderr.write(message)
+		locationsUnique = False
+	if not locationsUnique : assert(False)
 
     def activeStreams (self) :
         """
@@ -100,10 +130,15 @@ class StrippingConf ( object ) :
         
         stream.TESPrefix = self._tesPrefix
         stream.HDRLocation = self._hdrLocation
-        if stream.BadEventSelection == "OverrideInStrippingConf" : 
+        if stream.BadEventSelection == "Override" : 
             stream.BadEventSelection = self.BadEventSelection
         if stream.AcceptBadEvents == None : 
             stream.AcceptBadEvents = self.AcceptBadEvents
+            
+        if stream.MaxCandidates == "Override" : 
+    	    stream.MaxCandidates = self.MaxCandidates
+        if stream.MaxCombinations == "Override" : 
+    	    stream.MaxCombinations = self.MaxCombinations
         
 	stream.createConfigurables( TES = self.TES )
 	self._streams.append(stream)

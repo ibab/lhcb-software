@@ -343,6 +343,8 @@ class StrippingLine(object):
                    checkPV   = True ,   # Check PV before running algos 
                    algos     = []   ,   # the list of algorithms/members
                    postscale = 1    ,   # postscale factor
+                   MaxCandidates = "Override",   # Maxumum number of candidates for CombineParticles
+                   MaxCombinations = "Override", # Maxumum number of combinations for CombineParticles
                    **args           ) : # other configuration parameters
 
         ## 1) clone all arguments
@@ -366,6 +368,8 @@ class StrippingLine(object):
         self._postscale = postscale
         self._algos     = algos
         self._args      = args
+        self.MaxCandidates = MaxCandidates
+        self.MaxCombinations = MaxCombinations
 
         line = self.subname()
 
@@ -459,7 +463,11 @@ class StrippingLine(object):
         self._configurable = StrippingAlg ( self.name() , **__mdict )
 
         # put upper limit on combinatorics
-        limitCombinatorics( self._configurable, maxCandidates = 2000 ) 
+        if self.MaxCandidates == "Override" : self.MaxCandidates = None
+        if self.MaxCombinations == "Override" : self.MaxCombinations = None
+        limitCombinatorics( self._configurable, 
+                            MaxCandidates = self.MaxCandidates, 
+                            MaxCombinations = self.MaxCombinations ) 
 
         print '# created StrippingAlg configurable for', name, '\n'
         print self._configurable
@@ -612,24 +620,33 @@ class StrippingLine(object):
                                algos     = __algos      , 
                                **__args )
 
-def limitCombinatorics( configurable, maxCandidates, incidentName = 'ExceedsCombinatoricsLimit' ) :
+def limitCombinatorics( configurable, 
+                        MaxCandidates, 
+                        MaxCombinations, 
+                        incidentName = 'ExceedsCombinatoricsLimit' ) :
     val = False
     from Configurables import CombineParticles, StrippingAlg
     if hasattr( configurable, 'Members' ) :
         for i in getattr( configurable, 'Members' ) : 
             # order is important to avoid shortcircuit from skipping call to limitCombinatorics!
-            val = limitCombinatorics( i, maxCandidates, incidentName ) or val
+            val = limitCombinatorics( i, MaxCandidates, MaxCombinations, incidentName ) or val
         return val
     elif type(configurable) == StrippingAlg :
         stages = [ 'Filter1' ]
         for i in [ getattr( configurable, j ) for j in stages if hasattr(configurable,j) ] :
             # order is important to avoid shortcircuit from skipping call to limitCombinatorics!
-            val = limitCombinatorics( i, maxCandidates, incidentName ) or val
+            val = limitCombinatorics( i, MaxCandidates, MaxCombinations, incidentName ) or val
         if val : configurable.IncidentsToBeFlagged += [ incidentName ]
         return val
     elif type(configurable) == CombineParticles :
-        configurable.StopAtMaxCandidates = True
-        configurable.MaxCandidates       = maxCandidates
-        configurable.StopIncidentType    = incidentName
-        return True
-
+	if MaxCandidates != None : 
+    	    configurable.StopAtMaxCandidates = True
+    	    configurable.MaxCandidates       = MaxCandidates
+    	if MaxCombinations != None : 
+    	    configurable.StopAtMaxCombinations = True
+    	    configurable.MaxCombinations       = MaxCombinations
+    	if MaxCandidates != None or MaxCombinations != None : 
+    	    configurable.StopIncidentType    = incidentName
+    	    return True
+	else :
+	    return False

@@ -1,9 +1,21 @@
-!$Id: release.notes,v 1.75 2010-06-28 14:00:46 poluekt Exp $
+!$Id: release.notes,v 1.76 2010-07-05 23:57:56 poluekt Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/StrippingConf
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
+
+! 2010-07-06 - Anton Poluektov 
+  - New options 'MaxCandidates' and 'MaxCombinations' for 
+    StrippingConf, StrippingStream and StrippingLine. They apply combinatorics 
+    limits to CombineParticles in the stripping lines. Options given at the 
+    upper level (e.g. StrippingConf) are overridden by the lower level
+    (e.g. StrippingStream or StrippingLine). 
+    By default, both 'MaxCandidates' and 'MaxCombinations' are 'None', 
+    meaning that no combinatorics limit is applied. 
+    
+  - Check that the output locations of all active lines in StrippingConf 
+    are unique. Otherwise, the error is raised. 
 
 ! 2010-06-28 - Anton Poluektov 
   - BadEventSelection and AcceptBadEvents can be given to StrippingConf. 
