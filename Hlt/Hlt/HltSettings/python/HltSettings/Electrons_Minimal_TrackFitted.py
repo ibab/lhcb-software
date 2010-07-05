@@ -40,8 +40,8 @@ class Electrons_Minimal_TrackFitted:
             # 
             # Bu2eek already included in Exclusive_Nominal.py
             #
-            'Hlt2B2KstareeRobustAndFittedLargeBMassWindow',
-            'Hlt2B2KstareeRobustAndFittedLargeBMassWindowSignal'
+            'Hlt2B2KstareeFittedLargeBMassWindow',
+            'Hlt2B2KstareeFittedLargeBMassWindowSignal'
             ]
         
         return lines
@@ -216,8 +216,8 @@ class Electrons_Minimal_TrackFitted:
         
         from Hlt2Lines.Hlt2B2KstareeLines           import Hlt2B2KstareeLinesConf
         d.update({ Hlt2B2KstareeLinesConf : {
-                'Prescale'   :  {   'Hlt2B2KstareeRobustAndFittedLargeBMassWindow'        : 1.
-                                   ,'Hlt2B2KstareeRobustAndFittedLargeBMassWindowSignal'  : 1.  
+                'Prescale'   :  {  'Hlt2B2KstareeFittedLargeBMassWindow'                 : 1.
+                                  ,'Hlt2B2KstareeFittedLargeBMassWindowSignal'           : 1.  
                                   }
                 
                 #----------------------------
