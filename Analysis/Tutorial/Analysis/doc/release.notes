@@ -1,4 +1,4 @@
-!$Id: release.notes,v 1.97 2010-06-24 16:09:56 jpalac Exp $
+!$Id: release.notes,v 1.98 2010-07-05 12:28:21 jhe Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Tutorial/Analysis
 ! Responsible : P. Koppenburg
@@ -8,6 +8,13 @@
 !   See https://twiki.cern.ch/twiki/bin/view/LHCb/DaVinciTutorial
 !
 !-----------------------------------------------------------------------------
+
+! 2010-07-05 - Jibo He
+ - solutions/DaVinci2/TutorialAlgorithm.cpp
+   Two bugs fixed: 
+   1) it should continue processing the next event instead of exiting  
+      when there is no muon in this event
+   2) wrong arguments given to vertex fitter    
 
 !========================== Analysis v8r6 2010-06-24 =================
 

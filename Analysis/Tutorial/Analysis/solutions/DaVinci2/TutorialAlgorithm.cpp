@@ -1,4 +1,4 @@
-// $Id: TutorialAlgorithm.cpp,v 1.14 2010-05-27 15:02:30 jpalac Exp $
+// $Id: TutorialAlgorithm.cpp,v 1.15 2010-07-05 12:28:22 jhe Exp $
 // Include files 
 
 #include <boost/lambda/lambda.hpp>
@@ -77,6 +77,9 @@ StatusCode TutorialAlgorithm::execute() {
 
   // code goes here  
   LHCb::Particle::Range muons = this->particles(); // get particles
+  
+  if (msgLevel(MSG::DEBUG)) debug() << "muon size:" <<  muons.size() << endmsg;
+
   sc = loopOnMuons(muons);
   if (!sc) return sc;
   sc = makeJpsi(muons);
@@ -99,7 +102,7 @@ StatusCode TutorialAlgorithm::makeJpsi(const LHCb::Particle::Range& muons){
                          MuPlus);
   } else {
     warning() << "Filtered no muons" << endmsg ;
-    return StatusCode::FAILURE ;
+    return StatusCode::SUCCESS ;
   }
 
   for ( LHCb::Particle::ConstVector::const_iterator imp =  MuPlus.begin() ;
@@ -114,7 +117,7 @@ StatusCode TutorialAlgorithm::makeJpsi(const LHCb::Particle::Range& muons){
       // vertex 
       LHCb::Vertex MuMuVertex;
       LHCb::Particle Jpsi(m_jPsiID);
-      StatusCode scFit = vertexFitter()->fit(MuMuVertex, *(*imp), *(*imm), Jpsi);
+      StatusCode scFit = vertexFitter()->fit(*(*imp), *(*imm), MuMuVertex, Jpsi);
       if (!scFit) {
         Warning("Fit error").ignore();
         continue;
@@ -122,6 +125,7 @@ StatusCode TutorialAlgorithm::makeJpsi(const LHCb::Particle::Range& muons){
       if (msgLevel(MSG::DEBUG)) debug() << "Vertex fit at " << MuMuVertex.position()/cm
               << " with chi2 " << MuMuVertex.chi2() << endmsg;
       plot(MuMuVertex.chi2(), "DiMuChi2", "DiMu Chi^2",0.,200.);
+      plot(Jpsi.measuredMass(), "Jpsi_MM", "Jpsi measured mass", 3.0*GeV, 3.2*GeV);
       if ( MuMuVertex.chi2() > m_jPsiChi2 ) continue ; // chi2 cut
       // happy -> keep
       plot(twoMu.M(),"SelDiMuChi2", "Selected DiMu mass",m_jPsiMass-m_jPsiMassWin,m_jPsiMass+m_jPsiMassWin);
