@@ -3,6 +3,10 @@
 ! Responsible : Kurt Rinnert, Chris Parkes
 !--------------------------------------------------------------------------
 
+! 2010-07-05 - David Hutchcroft
+ - Adapted ProcStatus setting to changes in the interface and official 
+   use policy
+
 ! 2010-06-30 - Chris Jones
  - Add a missing use statement for Event/RecEvent in cmt/requirements
 

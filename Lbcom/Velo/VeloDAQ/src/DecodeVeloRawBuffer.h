@@ -83,6 +83,7 @@ private:
    *  this event should be removed from physics streams
    */
   void failEvent(const std::string &ErrorText,
+                 const std::string &ProcText,
                  AlgStatusType status,
                  bool procAborted);  
 

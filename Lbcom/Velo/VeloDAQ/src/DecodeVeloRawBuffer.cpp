@@ -157,14 +157,16 @@ StatusCode DecodeVeloRawBuffer::decodeToVeloLiteClusters(const std::vector<LHCb:
     // --> protect against corrupted banks
     if(LHCb::RawBank::MagicPattern!=rb->magic()) {
       failEvent(format("Bad magic pattern in bank source ID %i",
-                       rb->sourceID()),CorruptVeloBuffer,false);
+                       rb->sourceID()),
+                "CorruptVeloBuffer",CorruptVeloBuffer,false);
       continue;
     }
 
     const DeVeloSensor* sensor = m_velo->sensorByTell1Id(static_cast<unsigned int>(rb->sourceID()));
     if (!sensor) {
       failEvent(format("Could not map source ID %i to sensor number!",
-                       rb->sourceID()),BadTELL1IDMapping,false);
+                       rb->sourceID()),
+                "BadTELL1IDMapping",BadTELL1IDMapping,false);
       continue;
     }
     
@@ -181,7 +183,8 @@ StatusCode DecodeVeloRawBuffer::decodeToVeloLiteClusters(const std::vector<LHCb:
 	      << " Decoded: " << byteCount 
 	      << endmsg;
       failEvent(format("Raw data corruption in the VELO, bank source ID %i",
-                       rb->sourceID()),CorruptVeloBuffer,false);
+                       rb->sourceID()),
+                "CorruptVeloBuffer",CorruptVeloBuffer,false);
       unsigned int badSensor = sensor->sensorNumber();
       // assume all clusters from the bad sensor at the end 
       while( !fastCont->empty() &&
@@ -194,7 +197,8 @@ StatusCode DecodeVeloRawBuffer::decodeToVeloLiteClusters(const std::vector<LHCb:
   if( fastCont->size() > m_maxVeloClusters){
     fastCont->clear();
     failEvent(format("Deleted all lite VELO clusters as more than limit %i in the event",
-                     m_maxVeloClusters),TooManyClusters,true);
+                     m_maxVeloClusters),
+              "TooManyClusters",TooManyClusters,true);
   }
 
   std::sort(fastCont->begin(),fastCont->end(),SiDataFunctor::Less_by_Channel< LHCb::VeloLiteCluster >());
@@ -225,7 +229,8 @@ StatusCode DecodeVeloRawBuffer::decodeToVeloClusters(const std::vector<LHCb::Raw
     // --> protect against corrupted banks
     if(LHCb::RawBank::MagicPattern!=rb->magic()) {
       failEvent(format("Bad magic pattern in bank source ID %i",
-                       rb->sourceID()),CorruptVeloBuffer,false);
+                       rb->sourceID()),
+                "CorruptVeloBuffer",CorruptVeloBuffer,false);
       continue;
     }
 
@@ -234,7 +239,8 @@ StatusCode DecodeVeloRawBuffer::decodeToVeloClusters(const std::vector<LHCb::Raw
     const DeVeloSensor* sensor = m_velo->sensorByTell1Id(static_cast<unsigned int>(rb->sourceID()));
     if (!sensor) {
       failEvent(format("Could not map source ID %i to sensor number!",
-                       rb->sourceID()),BadTELL1IDMapping,false);
+                       rb->sourceID()),
+                "BadTELL1IDMapping",BadTELL1IDMapping,false);
       continue;
     }
 
@@ -257,7 +263,8 @@ StatusCode DecodeVeloRawBuffer::decodeToVeloClusters(const std::vector<LHCb::Raw
         break;
       default: // bank version is not supported: kill the event
         failEvent(format("VELO raw buffer version %i is not supported.",
-                         rb->sourceID()),UnsupportedBufferVersion,false);
+                         rb->sourceID()),
+                  "UnsupportedBufferVersion",UnsupportedBufferVersion,false);
         continue;
     }
     if (rb->size() != byteCount) {      
@@ -266,7 +273,8 @@ StatusCode DecodeVeloRawBuffer::decodeToVeloClusters(const std::vector<LHCb::Raw
 	      << " Decoded: " << byteCount 
 	      << endmsg;
       failEvent(format("Raw data corruption in the VELO, bank source ID %i",
-                      rb->sourceID()),CorruptVeloBuffer,false);
+                      rb->sourceID()),
+                "CorruptVeloBuffer",CorruptVeloBuffer,false);
       unsigned int badSensor = sensor->sensorNumber();
       // assume all clusters from the bad sensor at the end
       LHCb::VeloClusters::iterator iClus = clusters->begin();
@@ -279,7 +287,8 @@ StatusCode DecodeVeloRawBuffer::decodeToVeloClusters(const std::vector<LHCb::Raw
 
   if( clusters->size() > m_maxVeloClusters){
     clusters->clear();
-    failEvent(format("Deleted all full VELO clusters as more than limit %i in the event",m_maxVeloClusters),TooManyClusters,true);
+    failEvent(format("Deleted all full VELO clusters as more than limit %i in the event",m_maxVeloClusters),
+              "TooManyClusters",TooManyClusters,true);
   }
 
   put(clusters,m_veloClusterLocation);
@@ -336,15 +345,14 @@ void DecodeVeloRawBuffer::createEmptyBanks() {
 }
 
 void DecodeVeloRawBuffer::failEvent(const std::string &ErrorText,
+                                    const std::string &ProcText,
                                     AlgStatusType status,
                                     bool procAborted){ 
   // set ProcStat for this event to failed in DecodeVeloRawBuffer
   LHCb::ProcStatus *pStat = 
     getOrCreate<LHCb::ProcStatus,LHCb::ProcStatus>(LHCb::ProcStatusLocation::Default);
-  // hard code algorithm name in case people rename it in HLT lines
-  pStat->addAlgorithmStatus("DecodeVeloRawBuffer",status); 
-  //flag if the event should be treated as aborted in VELO decoding
-  if(procAborted) pStat->setAborted(true); 
+  pStat->addAlgorithmStatus("DecodeVeloRawBuffer",
+                            "VELO",ProcText,status,procAborted);
   unsigned int msgCount = 1;
   if ( msgLevel(MSG::DEBUG) ) msgCount = 10;
   Error(ErrorText,StatusCode::SUCCESS,msgCount).ignore();
