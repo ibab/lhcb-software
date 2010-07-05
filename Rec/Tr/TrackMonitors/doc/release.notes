@@ -3,6 +3,10 @@
 ! Responsible : Wouter Hulsbergen, Stephanie Hansmann-Menzemer
 ! Purpose     : Package for track data quality monitoring algorithms
 !-----------------------------------------------------------------------------
+! 2010-07-05 Georg Alexander Krocker
+ - add HitEffPlotter and TrackExpectedXYZHitsTool to make 2D hit efficiency
+   plots for Velo, TT, IT, OT
+ - add 2D hit efficiency plots to (offline) monitoring sequence
 
 ! 2010-06-23 - Daan Van Eijk
  - Added 2D histo's (hiteff,hoteff,expected occ) per layer in OTHitEfficiencyMonitor.cpp
