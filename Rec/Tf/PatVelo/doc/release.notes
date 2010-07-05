@@ -4,6 +4,9 @@
 ! Purpose     : Velo pattern recognition
 !-----------------------------------------------------------------------------
 
+! 2010-07-05 - Marco Gersabeck
+ - Reduced memory consumption of PatVeloAlignTrackFilter
+
 ! 2010-06-24 - Rob Lambert
  - Fixed a few uninitialized vectors, see bug #68795
 

@@ -70,6 +70,14 @@ namespace Tf {
     m_rHitManager   = tool<DefaultVeloRHitManager>  ( "Tf::DefaultVeloRHitManager", m_rHitManagerName  );
     m_phiHitManager = tool<DefaultVeloPhiHitManager>( "Tf::DefaultVeloPhiHitManager", m_phiHitManagerName  );
 
+    if ( m_nBinsPhi > 72 ) {
+      warning() << "Phi binning is too fine, will be limited to 72" << endreq;
+      m_nBinsPhi = 72;
+    }
+    if ( m_nBinsR > 72 ) {
+      warning() << "R binning is too fine, will be limited to 72" << endreq;
+      m_nBinsR = 72;
+    }
     return StatusCode::SUCCESS;
   };
 

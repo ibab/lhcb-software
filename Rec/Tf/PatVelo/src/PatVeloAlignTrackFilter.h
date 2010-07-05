@@ -59,11 +59,11 @@ namespace Tf {
       bool m_debugLevel;
       bool m_verboseLevel;
 
-      int m_3Dhits[ 360 ][ 360 ][ 42 ];
-      int m_hits[ 360 ][ 360 ];
-      int m_hitsR[ 360 ][ 360 ];
-      int m_hitsL[ 360 ][ 360 ];
-      int m_rhits[ 360 ];
+      int m_3Dhits[ 72 ][ 72 ][ 42 ];
+      int m_hits[ 72 ][ 72 ];
+      int m_hitsR[ 72 ][ 72 ];
+      int m_hitsL[ 72 ][ 72 ];
+      int m_rhits[ 72 ];
       int m_tothits;
       int hitsInCell( int rhit, int phit );
       int hitsInRightCell( int rhit, int phit );
