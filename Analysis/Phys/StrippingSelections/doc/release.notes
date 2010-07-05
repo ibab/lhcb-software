@@ -5,6 +5,9 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-07-05
+ - Update cuts in line StrippingDstarPromptWithD02HHNoPt
+
 ! 2010-06-30 - Juan Palacios
  - python/StrippingSelections/StrippingBd2KstarMuMu.py
   . Remove some unnecessary SelectionSequences.

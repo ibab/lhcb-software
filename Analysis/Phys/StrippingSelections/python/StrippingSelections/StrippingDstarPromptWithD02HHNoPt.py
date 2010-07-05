@@ -1,7 +1,7 @@
 
 __author__ = 'Alexandr Kozlinskiy'
 __date__ = '22/05/2010'
-__version__ = '$Revision: 1.3 $'
+__version__ = '$Revision: 1.4 $'
 
 from PhysSelPython.Wrappers import DataOnDemand
 pions = DataOnDemand(Location = 'Phys/StdNoPIDsPions')
@@ -11,19 +11,19 @@ from Configurables import CombineParticles
 D0Combine = CombineParticles( "D02PiPiKPiKK" )
 D0Combine.DecayDescriptors = [ "[D0 -> pi+ pi-]cc", "[D0 -> K- pi+]cc", "[D0 -> K+ K-]cc" ]
 D0Combine.DaughtersCuts = {
-  "pi+" : "BPVIPCHI2() > 6.25",
-  "K+" : "BPVIPCHI2() > 6.25"
+  "pi+" : "BPVIPCHI2() > 9",
+  "K+" : "BPVIPCHI2() > 9"
 }
 D0Combine.CombinationCut = "(ADAMASS('D0') < 100 * MeV)"
-D0Combine.MotherCut = "(VFASPF(VCHI2/VDOF) < 16) & (BPVLTFITCHI2() < 25) & (BPVLTIME() > 0.3 * ps)"
+D0Combine.MotherCut = "(VFASPF(VCHI2/VDOF) < 16) & (BPVLTFITCHI2() < 100) & (BPVLTIME() > 0.2 * ps)"
 
 DstarCombine = CombineParticles( "Dstar2D0PiWithD02PiPiKPiKK" )
 DstarCombine.DecayDescriptor = '[D*(2010)+ -> D0 pi+]cc'
 DstarCombine.DaughtersCuts = {
-  'pi+' : "BPVIPCHI2() < 100"
+  'pi+' : "BPVIPCHI2() < 10000"
 }
 DstarCombine.CombinationCut = "(ADAMASS('D*(2010)+') < 500 * MeV)"
-DstarCombine.MotherCut = "(VFASPF(VCHI2/VDOF) < 25) & ((M - MAXTREE('D0' == ABSID, M)) < 160 * MeV)"
+DstarCombine.MotherCut = "(VFASPF(VCHI2/VDOF) < 100) & ((M - MAXTREE('D0' == ABSID, M)) < 160 * MeV)"
 
 from PhysSelPython.Wrappers import Selection
 D0Selection = Selection("SelectionD02PiPiKPiKK", Algorithm = D0Combine, RequiredSelections = [ pions, kaons ])
