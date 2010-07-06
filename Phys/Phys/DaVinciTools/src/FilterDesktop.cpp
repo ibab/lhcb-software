@@ -1,4 +1,4 @@
-// $Id: FilterDesktop.cpp,v 1.29 2010-06-03 12:06:54 jpalac Exp $
+// $Id: FilterDesktop.cpp,v 1.30 2010-07-06 16:13:00 jpalac Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -7,6 +7,9 @@
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/StatEntity.h"
 #include "GaudiKernel/IAlgContextSvc.h"
+// ============================================================================
+// DaVinci
+#include "Kernel/DaVinciFun.h"
 // ============================================================================
 // LoKi
 // ============================================================================
@@ -453,6 +456,8 @@ LHCb::Particle::Range FilterDesktop::_save
     }
   }
   
+  this->saveOrphanRelatedPVs(table);
+
   // commented out due to bug in Gaudi..
   // Gaudi::Utils::GetData<LHCb::Particle::Range> helper ;
   Gaudi::Utils::GetData<Gaudi::Range_<LHCb::Particle::ConstVector> > helper ;
@@ -493,6 +498,7 @@ void FilterDesktop::cloneP2PVRelation
 {
   const LHCb::VertexBase* bestPV = getStoredBestPV(particle);
   if ( 0!= bestPV ) { table->relate ( clone , bestPV ) ; }
+    
 }
 // ============================================================================
 void FilterDesktop::writeEmptyKeyedContainers(const std::string& ) const
@@ -503,6 +509,29 @@ void FilterDesktop::writeEmptyKeyedContainers(const std::string& ) const
 void FilterDesktop::writeEmptySharedContainers(const std::string& ) const
 {
   return;
+}
+// ============================================================================
+void  FilterDesktop::saveOrphanRelatedPVs(const Particle2Vertex::Table* table) const 
+{
+  Particle2Vertex::Table::Range relations = table->relations();
+  if (relations.empty()) return;
+
+  LHCb::RecVertices* orphanPVs = new LHCb::RecVertex::Container();
+  put (orphanPVs, 
+       desktop()->getOutputLocation() + "/_RelatedPVs") ;
+
+  Particle2Vertex::Table::Range::const_iterator beginRel = relations.begin();
+  Particle2Vertex::Table::Range::const_iterator endRel = relations.end();
+
+  for (Particle2Vertex::Table::Range::const_iterator irel = beginRel;
+       irel != endRel;
+       ++irel) {
+    const LHCb::RecVertex* relPV = dynamic_cast<const LHCb::RecVertex*>(irel->to());
+    if (relPV && !DaVinci::inTES(relPV) ) {
+      orphanPVs->insert(const_cast<LHCb::RecVertex*>(relPV));
+    }
+  }
+  
 }
 // ============================================================================
 /// the factory 

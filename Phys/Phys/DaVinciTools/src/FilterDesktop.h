@@ -1,4 +1,4 @@
-// $Id: FilterDesktop.h,v 1.4 2010-04-05 14:59:26 ibelyaev Exp $
+// $Id: FilterDesktop.h,v 1.5 2010-07-06 16:13:00 jpalac Exp $
 // ============================================================================
 #ifndef FILTERDESKTOP_H 
 #define FILTERDESKTOP_H 1
@@ -181,7 +181,8 @@ protected:
   void writeEmptyKeyedContainers  ( const std::string& loc ) const;
   /// Write empty container if selection fails.
   void writeEmptySharedContainers ( const std::string& loc ) const;
-  ///
+  /// Save related PVs that aren't in the TES.
+  void saveOrphanRelatedPVs(const Particle2Vertex::Table* table) const;
   // ============================================================================
 private:
   // ============================================================================
