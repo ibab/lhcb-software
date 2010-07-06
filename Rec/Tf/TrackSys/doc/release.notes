@@ -4,6 +4,11 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+! 2010-07-06 - Olivier Callot
+ - New version of RecoTracking, the old one kept as 'RecoTrackingOld.py'
+   This fits the tracks after clone cleaning for speed
+   Old behaviour available by setting TrackSys().FilterBeforeFit = False
+
 !============================ TrackSys v4r34 2010-06-21 ======================
 ! 2010-06-21 - Stephanie Hansmann-Menzemer
  - Add switch for timing measurements

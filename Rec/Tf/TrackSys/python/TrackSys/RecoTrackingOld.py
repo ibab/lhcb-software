@@ -114,18 +114,29 @@ def RecoTracking(exclude=[]):
    
    # Clone killer
    cloneKiller = TrackEventCloneKiller()
-   cloneKiller.TracksInContainers = []   
+   cloneKiller.TracksInContainers = []
+   
    
    # Is this standard sequence?
    stdSeq = "fastSequence" not in TrackSys().getProp("ExpertTracking")
+   #print "*** Standard sequence: ", stdSeq
    
    ## Forward pattern
    if "Forward" in trackAlgs :
       track.DetectorList += [ "ForwardPat" ]
       GaudiSequencer("TrackForwardPatSeq").Members +=  [ PatForward("PatForward") ]
+      #importOptions("$PATALGORITHMSROOT/options/PatForward.py")
       from PatAlgorithms import PatAlgConf
-      PatAlgConf.ForwardConf().configureAlg()      
+      PatAlgConf.ForwardConf().configureAlg()
+      
       cloneKiller.TracksInContainers += ["Rec/Track/Forward"]
+      if stdSeq :
+         # Fit now
+         track.DetectorList += [ "ForwardFit" ]
+         GaudiSequencer("TrackForwardFitSeq").Members += [TrackStateInitAlg("InitForwardFit")]
+         TrackStateInitAlg("InitForwardFit").TrackLocation = "Rec/Track/Forward"
+         ## Forward fit
+         GaudiSequencer("TrackForwardFitSeq").Members += [ConfiguredFit("FitForward","Rec/Track/Forward")]
    
    ## Seed pattern
    if "TsaSeed" in trackAlgs and "PatSeed" in trackAlgs :
@@ -134,16 +145,19 @@ def RecoTracking(exclude=[]):
       track.DetectorList += [ "SeedPat" ]
       GaudiSequencer("TrackSeedPatSeq").Members += [Tf__Tsa__Seed("TsaSeed"),
                                                     Tf__Tsa__SeedTrackCnv( "TsaSeedTrackCnv" )]
+      #importOptions("$TSAALGORITHMSROOT/options/TsaSeeding.py")
       from TsaAlgorithms import TsaAlgConf
       TsaAlgConf.TsaSeedConf().configureAlg()
       
    if "PatSeed" in trackAlgs :
       track.DetectorList += [ "SeedPat" ]
       GaudiSequencer("TrackSeedPatSeq").Members += [PatSeeding("PatSeeding")]
+      #importOptions("$PATALGORITHMSROOT/options/PatSeeding.py")
       from PatAlgorithms import PatAlgConf
       PatAlgConf.SeedingConf().configureAlg()
       
       if TrackSys().cosmics() :
+         #importOptions("$PATALGORITHMSROOT/options/PatSeedingTool-Cosmics.opts")
          from PatAlgorithms import PatAlgConf
          PatAlgConf.CosmicConf().configureAlg()
          
@@ -169,37 +183,81 @@ def RecoTracking(exclude=[]):
    if "Match" in trackAlgs :
       track.DetectorList += [ "MatchPat" ]
       GaudiSequencer("TrackMatchPatSeq").Members += [ TrackMatchVeloSeed("TrackMatch") ]
+      #importOptions("$TRACKMATCHINGROOT/options/TrackMatch.py")
       from TrackMatching import TrackMatchConf
-      TrackMatchConf.MatchingConf().configureAlg()      
+      TrackMatchConf.MatchingConf().configureAlg()
+      
       TrackMatchVeloSeed("TrackMatch").LikCut = -99999.
    if "PatMatch" in trackAlgs :
       track.DetectorList += [ "MatchPat" ]
       GaudiSequencer("TrackMatchPatSeq").Members += [ PatMatch("PatMatch") ]
    if "Match" in trackAlgs or "PatMatch" in trackAlgs :
       cloneKiller.TracksInContainers  += ["Rec/Track/Match"]
+      if stdSeq :
+         ## Match fit initialization
+         track.DetectorList += [ "MatchFit" ]
+         if TrackSys().getProp("FilterBeforeFit") : 
+            GaudiSequencer("TrackMatchFitSeq").Members +=  [ FilterMatchTracks() ]
+         GaudiSequencer("TrackMatchFitSeq").Members += [TrackStateInitAlg("InitMatchFit")]
+         TrackStateInitAlg("InitMatchFit").TrackLocation = "Rec/Track/Match"
+         ## Match fit
+         GaudiSequencer("TrackMatchFitSeq").Members += [ConfiguredFit("FitMatch","Rec/Track/Match")]
          
    ## Downstream
    if "Downstream" in trackAlgs :
       track.DetectorList += [ "DownstreamPat" ]
       GaudiSequencer("TrackDownstreamPatSeq").Members += [ PatDownstream() ];
       cloneKiller.TracksInContainers += ["Rec/Track/Downstream"]
+      #importOptions("$PATALGORITHMSROOT/options/PatDownstream.py")
       from PatAlgorithms import PatAlgConf
       PatAlgConf.DownstreamConf().configureAlg()
       
+      if stdSeq :
+         track.DetectorList += [ "DownstreamFit" ]
+         if TrackSys().getProp("FilterBeforeFit") : 
+            GaudiSequencer("TrackDownstreamFitSeq").Members +=  [ FilterDownstreamTracks() ]
+         GaudiSequencer("TrackDownstreamFitSeq").Members += [TrackStateInitAlg("InitDownstreamFit")]
+         TrackStateInitAlg("InitDownstreamFit").TrackLocation = "Rec/Track/Downstream"
+         ## Downstream fit
+         GaudiSequencer("TrackDownstreamFitSeq").Members += [ConfiguredFit("FitDownstream","Rec/Track/Downstream")]
+         
    ## Velo-TT pattern
    if "VeloTT" in trackAlgs :
       track.DetectorList += ["VeloTTPat"]
       GaudiSequencer("TrackVeloTTPatSeq").Members += [ PatVeloTT("PatVeloTT")] 
+      #importOptions ("$PATVELOTTROOT/options/PatVeloTT.py")
       from PatVeloTT import PatVeloConf
-      PatVeloConf.PatVeloTTConf().configureAlg()      
+      PatVeloConf.PatVeloTTConf().configureAlg()
+      
       cloneKiller.TracksInContainers += ["Rec/Track/VeloTT"]
+      if stdSeq :
+         track.DetectorList += ["VeloTTFit"]
+         GaudiSequencer("TrackVeloTTFitSeq").Members += [TrackStateInitAlg("InitVeloTTFit")]
+         TrackStateInitAlg("InitVeloTTFit").TrackLocation = "Rec/Track/VeloTT"
+         ## Velo-TT fit
+         GaudiSequencer("TrackVeloTTFitSeq").Members += [ ConfiguredFit("FitVeloTT","Rec/Track/VeloTT") ]
          
-
-   ### Clean clone and fit
-   track.DetectorList += ["Fit"]
-   GaudiSequencer("TrackFitSeq").Members += [ cloneKiller ]
-   GaudiSequencer("TrackFitSeq").Members += [TrackStateInitAlg("InitBestFit")]
-   GaudiSequencer("TrackFitSeq").Members += [ConfiguredFit("FitBest","Rec/Track/Best")]      
+   if stdSeq and "Match" in trackAlgs :
+      ## Refit Seeds with standard fitter
+      track.DetectorList += [ "SeedRefit" ]
+      ## Seed refit initialization
+      if TrackSys().getProp("FilterBeforeFit") : 
+         GaudiSequencer("TrackSeedRefitSeq").Members +=  [ FilterSeedTracks() ]
+      GaudiSequencer("TrackSeedRefitSeq").Members += [TrackStateInitAlg("InitSeedRefit")]
+      TrackStateInitAlg("InitSeedRefit").TrackLocation = "Rec/Track/Seed"
+      ## Seed refit
+      GaudiSequencer("TrackSeedRefitSeq").Members += [ConfiguredFit("RefitSeed", "Rec/Track/Seed")]
+      
+   if stdSeq :
+      track.DetectorList += ["PostFit"]
+      GaudiSequencer("TrackPostFitSeq").Members += [ cloneKiller ]
+   else :
+      track.DetectorList += ["Fit"]
+      GaudiSequencer("TrackFitSeq").Members += [ cloneKiller ]
+      GaudiSequencer("TrackFitSeq").Members += [TrackStateInitAlg("InitBestFit")]
+      TrackStateInitAlg("InitBestFit").TrackLocation = "Rec/Track/Best"
+      GaudiSequencer("TrackFitSeq").Members += [ConfiguredFit("FitBest","Rec/Track/Best")]
+      
       
    ## Velo fitting
    if "Velo" in trackAlgs :

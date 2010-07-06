@@ -24,7 +24,7 @@ class TrackSys(LHCbConfigurableUser):
        ,"TrackExtraInfoAlgorithms": []  # List of track 'extra info' algorithms to run
        ,"WithMC":       False # set to True to use MC truth
        ,"OutputType": "" # set to "RDST" for special RDST sequence
-       ,"FilterBeforeFit": False  #Set to true, remove duplicated tracks before fit
+       ,"FilterBeforeFit": True  #Clone kill before fit of the Best container only. False = fit before clone killing
         }
     
     ## Possible expert options
@@ -87,13 +87,14 @@ class TrackSys(LHCbConfigurableUser):
     ## @brief Apply the configuration
     def __apply_configuration__(self):
         self.defineOptions()
-        from TrackSys import RecoTracking
-        RecoTracking.RecoTracking()
-        
-        #importOptions( "$TRACKSYSROOT/options/RecoTracking.py" )
+        if self.getProp( "FilterBeforeFit" ) :
+            from TrackSys import RecoTracking
+            RecoTracking.RecoTracking()
+        else :
+            from TrackSys import RecoTrackingOld
+            RecoTrackingOld.RecoTracking()
+
         if self.getProp( "WithMC" ):
             from TrackSys import PatChecking
             PatChecking.PatChecking()
-            
-            #importOptions("$TRACKSYSROOT/options/PatChecking.py")
    
