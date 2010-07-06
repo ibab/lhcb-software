@@ -1,8 +1,16 @@
-! $Id: release.notes,v 1.556 2010-06-24 13:07:37 jpalac Exp $
+! $Id: release.notes,v 1.557 2010-07-06 16:13:23 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2010-07-06 - Juan Palacios
+ - FilterDesktop
+  . Bug fix! Related PVs that weren't on the TES were not being saved.
+  . Add method saveOrphanRelatedPVs(const Particle2Vertex::Table* table)
+    that puts related PVs that are not in the TES into a TES container.
+ - cmt/requirements
+  . Increase to v21r3p1
 
 !========================== DaVinciTools v21r3 2010-06-24 ===================
 
