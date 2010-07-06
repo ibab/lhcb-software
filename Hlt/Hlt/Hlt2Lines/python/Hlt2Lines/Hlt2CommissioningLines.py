@@ -1,4 +1,4 @@
-# $Id: Hlt2CommissioningLines.py,v 1.24 2010-07-02 07:27:23 graven Exp $
+# $Id: Hlt2CommissioningLines.py,v 1.25 2010-07-06 08:40:35 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of Hlt Lines for commissioning 
@@ -10,7 +10,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.24 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.25 $"
 # =============================================================================
 
 from HltLine.HltLinesConfigurableUser import *
@@ -22,6 +22,7 @@ class Hlt2CommissioningLinesConf(HltLinesConfigurableUser):
                               , 'Hlt2Forward'      : 0.0001
                               , 'Hlt2DebugEvent'   : 0.0001
                               }
+               , 'Postscale' : { 'Hlt2ErrorEvent' : 'RATE(1)' }
                }
    def __apply_configuration__(self):
         from HltLine.HltLine import Hlt2Line   as Line
@@ -30,7 +31,7 @@ class Hlt2CommissioningLinesConf(HltLinesConfigurableUser):
             , prescale = self.prescale
             , postscale = self.postscale
             )
-        Line('Transparent' ,  HLT = "HLT_PASS_RE('^Hlt1(ODIN.*|L0.*|Lumi.*|MB.*|Velo.*|Incident|Tell1Error|HadronMonComp)Decision$')"
+        Line('Transparent' ,  HLT = "HLT_PASS_RE('^Hlt1(ODIN.*|L0.*|Lumi.*|MB.*|Velo.*|Incident|Tell1Error|HadronMonComp|ErrorEvent)Decision$')"
             , VoidFilter = '' # make sure we DO NOT get a filter thrown on top of us!!!
             , prescale = self.prescale
             , postscale = self.postscale
@@ -56,9 +57,17 @@ class Hlt2CommissioningLinesConf(HltLinesConfigurableUser):
                       ]
             )
 
+        Line('ErrorEvent',prescale = self.prescale, postscale = self.postscale
+            , HLT = "HLT_COUNT_ERRORBITS_RE('^Hlt2.*',0xffff) > 0" # HLT_ERRORBITS(0xffff) would be nice... don't want to count...
+            , VoidFilter = '' 
+            , priority = 254
+            )
+
         from Configurables import HltANNSvc
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2PassThroughDecision"     : 50011
                                             , "Hlt2TransparentDecision"     : 50012
                                             , "Hlt2ForwardDecision"         : 50013
-                                            , "Hlt2DebugEventDecision"      : 50014 } )
+                                            , "Hlt2DebugEventDecision"      : 50014 
+                                            , "Hlt2ErrorEventDecision"       : 50015
+                                            } )
 

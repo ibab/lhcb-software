@@ -19,15 +19,19 @@
  - Introducing Monitoring Histograms in Hlt2InclusiveDiMuonLines.py 
        (Biased DiMuons)
 
-!========================== Hlt2Lines v4r1 2010-07-01 ===================
+!========================== Hlt2Lines v4r1 2010-07-06 ===================
+! 2010-07-06 - Gerhard Raven
+ - add Hlt2ErrorEvent line, add Hlt1ErrorEvent to Hlt2Transparent
+
+! 2010-07-02 - Gerhard Raven
+ - exclude MuonFromHlt1 from the new default global pileup veto in Hlt2 
+ - add Hlt1HadronMonComp (which runs on 1 Hz of L0 Hadron) to Hlt2Transparant
+
 ! 2010-06-07 - V. Gligorov
  - Change the mass hypothesis in the topological 3 and 4 body to KKK/KKKK
    from KKPi/KKPiPi. This is in order to have the same mass window efficiency
    on all of our "core" 4 body and lower decay modes. 
 
-! 2010-07-02 - Gerhard Raven
- - exclude MuonFromHlt1 from the new default global pileup veto in Hlt2 
- - add Hlt1HadronMonComp (which runs on 1 Hz of L0 Hadron) to Hlt2Transparant
 
 !========================== Hlt2Lines v4r0 2010-05-27 ===================
 ! 2010-05-27 - V. Gligorov
