@@ -1,4 +1,4 @@
-!$Id: release.notes,v 1.133 2010-07-02 08:17:08 graven Exp $
+!$Id: release.notes,v 1.134 2010-07-06 08:37:00 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/HltTracking
 ! Responsible : Jose A. Hernando
@@ -8,7 +8,10 @@
 ! 2010-06-07 - V. Gligorov
  - Remove an obsolete Hlt2 tracking configuration.
 
-!========================== HltTracking v6r1 2010-07-02 ===================
+!========================== HltTracking v6r1 2010-07-06 ===================
+! 2010-07-06 - Gerhard Raven
+ - remove unneeded import, set output selection on minimalVelo
+
 ! 2010-07-01 - Gerhard Raven
  - make the max # of Velo tracks in PatForward a slot
 

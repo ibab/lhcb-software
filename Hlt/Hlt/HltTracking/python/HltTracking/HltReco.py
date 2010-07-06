@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltReco.py,v 1.4 2010-05-23 19:38:40 gligorov Exp $
+# $Id: HltReco.py,v 1.5 2010-07-06 08:37:00 graven Exp $
 # =============================================================================
 ## @file HltTracking/HltReco.py
 #  Collection of predefined algorithms to perform reconstruction
@@ -42,7 +42,7 @@ __all__ = ('MinimalRZVelo'   # bindMembers instance with algorithms needed to ge
 from Gaudi.Configuration import *
 from Configurables import GaudiSequencer
 from Configurables import PatPV3D
-from Configurables import Tf__PatVeloGeneric, Tf__PatVeloRTracking, Tf__PatVeloGeneralTracking
+from Configurables import Tf__PatVeloGeneric, Tf__PatVeloRTracking
 from Configurables import PVOfflineTool
 from Configurables import HltTrackFilter, HltVertexFilter, HltTrackUpgrade
 from HltLine.HltLine import bindMembers
@@ -124,7 +124,7 @@ from Configurables import DecodeVeloRawBuffer
 MinimalRZVelo   = bindMembers( None, [DecodeVELO, patVeloR ] )
 RZVelo   = bindMembers( None, [ MinimalRZVelo, prepareRZVelo ] )
 
-MinimalVelo = bindMembers( None, [                  MinimalRZVelo , recoVelo ] )
+MinimalVelo = bindMembers( None, [                  MinimalRZVelo , recoVelo ] ).setOutputSelection( recoVelo.OutputTracksName )
 Velo     = bindMembers( None, [                  MinimalVelo, prepare3DVelo ] )
 
 from Configurables import PatSeeding

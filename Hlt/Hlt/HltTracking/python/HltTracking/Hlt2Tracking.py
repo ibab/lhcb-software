@@ -11,7 +11,7 @@
 ##
 # =============================================================================
 __author__  = "V. Gligorov vladimir.gligorov@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.22 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.23 $"
 # =============================================================================
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
@@ -961,7 +961,6 @@ class Hlt2Tracking(LHCbConfigurableUser):
         """
         Velo track reconstruction for Hlt2
         """
-        from Configurables     import Tf__PatVeloSpaceTracking
         from Configurables      import Tf__PatVeloGeneralTracking
         from Configurables      import Tf__PatVeloSpaceTool
         #From HltReco we just get the shared stuff between Hlt1 and Hlt2
