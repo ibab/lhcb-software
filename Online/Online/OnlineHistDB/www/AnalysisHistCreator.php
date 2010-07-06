@@ -9,7 +9,7 @@ include 'dbforms.php';
 </HEAD>
 <body class=listing>
   <?
-echo "<center><H2> Definition of \"Analysis\" Histogram </H2>";
+echo "<center><H2> Definition of \"virtual\" Histogram </H2>";
 if (array_key_exists("Alg",$_POST)) {
   // specify input histograms (or set) and parameters
   $alg=$_POST["Alg"];
