@@ -4,6 +4,10 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2010-07-06 - V. Gligorov
+ - Fix bug in Hadrons_Minimal, a line was wrongly being included and another 
+   wrongly excluded. 
+
 ! 2010-07-05 - Jibo He
  - Electrons_Minimal_TrackFitted.py
    Replace Hlt2B2KstareeRobustAndFitted lines by Hlt2B2KstareeFitted lines,

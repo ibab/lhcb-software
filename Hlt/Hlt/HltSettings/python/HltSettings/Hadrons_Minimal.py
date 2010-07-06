@@ -63,7 +63,7 @@ class Hadrons_Minimal :
             'Hlt2B2D2hhhBachelorWithKsBroadMW',
             'Hlt2B2D2hhBachelorBroadMW',    
             'Hlt2B2D2hhBachelorSignal',    
-            'Hlt2B2D2hhhBachelorSignal',
+            'Hlt2B2D2hhhBachelorWithKsSignal',
             'Hlt2B2D2XRobust3BodyMonitor', 
             'Hlt2B2D2hhBachelorSignalMonitor',       
             'Hlt2B2D2hhhBachelorWithKsBroadMWMonitor',
