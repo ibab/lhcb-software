@@ -1,4 +1,4 @@
-// $Id: NodeStatsPublisher.cpp,v 1.5 2008-11-19 11:07:57 frankb Exp $
+// $Id: NodeStatsPublisher.cpp,v 1.6 2010-07-06 11:52:21 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/NodeStatsPublisher.cpp,v 1.5 2008-11-19 11:07:57 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/NodeStatsPublisher.cpp,v 1.6 2010-07-06 11:52:21 frankb Exp $
 
 // C++ include files
 #include <iostream>
@@ -46,7 +46,7 @@ namespace {
     FMCMonListener& info;
     _Svc(FMCMonListener& i, size_t l, const std::string& nam, int flg=0)
       : id(0), flag(flg), buffLen(l), buff(0), name(nam), info(i) {
-      buffLen *= 1024;
+      buffLen *= (1024*8); // *8 for 64 node farms
       buff = new char[buffLen];
     }
     virtual ~_Svc() {
