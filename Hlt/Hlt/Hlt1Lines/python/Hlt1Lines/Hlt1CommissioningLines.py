@@ -9,7 +9,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.7 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.8 $"
 # =============================================================================
 
 from HltLine.HltLinesConfigurableUser import *
@@ -21,7 +21,8 @@ class Hlt1CommissioningLinesConf(HltLinesConfigurableUser):
                               , 'Hlt1ODINTechnical'  : 0.000001 # @OnlineEnv.AcceptRate
                               , 'Hlt1Tell1Error'     : 0
                               }
-               , 'Postscale' : { 'Hlt1Incident'     : 'RATE(1)' }
+               , 'Postscale' : { 'Hlt1Incident'     : 'RATE(1)' 
+                               , 'Hlt1ErrorEvent'   : 'RATE(1)' }
                , 'ODINPhysics'   : '( ODIN_TRGTYP == LHCb.ODIN.PhysicsTrigger )'
                , 'ODINTechnical' : '( ODIN_TRGTYP == LHCb.ODIN.TechnicalTrigger )'
                }
@@ -51,5 +52,9 @@ class Hlt1CommissioningLinesConf(HltLinesConfigurableUser):
             , algos = [ HltIncidentFilter('Hlt1IncidentDecision') ]
             , prescale = self.prescale
             , postscale = self.postscale
+            , priority = 254
+            )
+        Line('ErrorEvent',prescale = self.prescale, postscale = self.postscale
+            , HLT = "HLT_COUNT_ERRORBITS_RE('^Hlt1.*',0xffff) > 0" # TODO: just want presence, so want HLT_ERRORBITS(0xffff) would be nice to have...
             , priority = 254
             )
