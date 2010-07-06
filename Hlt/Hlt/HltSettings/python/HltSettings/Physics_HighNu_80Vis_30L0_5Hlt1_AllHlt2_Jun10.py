@@ -8,6 +8,11 @@ class Physics_HighNu_80Vis_30L0_5Hlt1_AllHlt2_Jun10           ( Physics_HighNu_4
     @author P.Koppenburg, M. Gandelman, G. Raven, J. Albrecht
     @date 2010-06-23
     """
+
+    def __init__(self) :
+        from HltTracking.HltReco import MinimalVelo 
+        velo = MinimalVelo.outputSelection()
+        self.Hlt2DefaultVoidFilter = " CONTAINS( '%s') < 350" %  (velo) 
     
     __all__ = ( 'HltType', 'ActiveHlt2Lines', 'Thresholds' )
 

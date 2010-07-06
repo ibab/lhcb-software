@@ -175,7 +175,7 @@ class Physics_HighNu_40Vis_15L0_2Hlt1_ExpressHlt2_Jun10 :
         """
         Returns a list of active lines
         """
-        hlt2 = [ 'Hlt2PassThrough', 'Hlt2Transparent','Hlt2Forward','Hlt2DebugEvent']
+        hlt2 = [ 'Hlt2PassThrough', 'Hlt2Transparent','Hlt2Forward','Hlt2DebugEvent','Hlt2ErrorEvent']
         from Express_Hlt2_Jan10 import Express_Hlt2_Jan10
         hlt2.extend( Express_Hlt2_Jan10().ActiveHlt2Lines() )
 
@@ -216,6 +216,7 @@ class Physics_HighNu_40Vis_15L0_2Hlt1_ExpressHlt2_Jun10 :
                  , 'Hlt1PhotonTrack', 'Hlt1PhotonTrackFromEle'
                  , 'Hlt1PhotonDiTrack', 'Hlt1PhotonDiTrackFromEle'
                  , 'Hlt1Incident'
+                 , 'Hlt1ErrorEvent'
                  ]
 
         lines += [ i + 'RateLimited' for i in lines 

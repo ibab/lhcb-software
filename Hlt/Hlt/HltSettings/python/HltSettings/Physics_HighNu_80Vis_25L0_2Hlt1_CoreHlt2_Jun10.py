@@ -1,3 +1,10 @@
+def __update_conf__( thresholds, conf, d ) :
+        if conf not in thresholds : thresholds.update( { conf : {} } )
+        for (i,j) in d.iteritems() :
+            if i not in thresholds[conf] : thresholds[conf].update({ i : {} })
+            thresholds[conf][i].update( j )
+
+
 from  Physics_HighNu_80Vis_25L0_2Hlt1_ExpressHlt2_Jun10 import Physics_HighNu_80Vis_25L0_2Hlt1_ExpressHlt2_Jun10 
 class Physics_HighNu_80Vis_25L0_2Hlt1_CoreHlt2_Jun10         ( Physics_HighNu_80Vis_25L0_2Hlt1_ExpressHlt2_Jun10 ) :
     """
@@ -11,6 +18,11 @@ class Physics_HighNu_80Vis_25L0_2Hlt1_CoreHlt2_Jun10         ( Physics_HighNu_80
     
     __all__ = ( 'HltType', 'ActiveHlt2Lines', 'Thresholds' )
 
+
+    def __init__(self) :
+        from HltTracking.HltReco import MinimalVelo 
+        velo = MinimalVelo.outputSelection()
+        self.Hlt2DefaultVoidFilter = " CONTAINS( '%s') < 350" %  (velo) 
 
     def HltType(self) :
         self.verifyType( Physics_HighNu_80Vis_25L0_2Hlt1_CoreHlt2_Jun10 )
@@ -62,6 +74,14 @@ class Physics_HighNu_80Vis_25L0_2Hlt1_CoreHlt2_Jun10         ( Physics_HighNu_80
                            )
         
 
+        ### extra prescales on 
+        # Hlt2B2D2hhhBachelorSignal
+        # Hlt2B2D2hhBachelorSignal
+        #  see http://lblogbook.cern.ch/HLT+Trigger/172 for why...
+
+        from Hlt2Lines.Hlt2B2DXLines import Hlt2B2DXLinesConf
+        __update_conf__(thresholds, Hlt2B2DXLinesConf, { 'Prescale' : { 'Hlt2B2D2hhhBachelorSignal' : 0.1
+                                                                      , 'Hlt2B2D2hhBachelorSignal'  : 0.1 } } )
         return thresholds
 
     

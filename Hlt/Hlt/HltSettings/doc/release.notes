@@ -11,6 +11,12 @@
 
 !========================== HltSettings v2r1  2010-07-02 ===================
 ! 2010-07-02 - Gerhard Raven
+ - in the Physics_HighNu configurations, add an explicit pile up cut of
+   < 350 Velo (space) tracks, and prescale the B2dhh(h) by a factor 10.
+ - update the IncPhi settings in HadronMinimal
+ - add the Hlt{1,2}ErrorEvent lines
+
+! 2010-07-02 - Gerhard Raven
  - add Physics_HighNu_80Vis_25L0_2Hlt1_CoreHlt2_Jun10
  - add Physics_HighNu_80Vis_30L0_5Hlt1_CorePileUpHlt2_Jun10.py
 

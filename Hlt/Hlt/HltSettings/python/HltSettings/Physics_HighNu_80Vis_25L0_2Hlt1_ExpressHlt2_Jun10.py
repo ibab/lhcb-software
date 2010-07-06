@@ -10,6 +10,11 @@ class Physics_HighNu_80Vis_25L0_2Hlt1_ExpressHlt2_Jun10 :
     
     __all__ = ( 'ActiveHlt1Lines', 'ActiveHlt2Lines', 'Thresholds','L0TCK' )
 
+    def __init__(self) :
+        from HltTracking.HltReco import MinimalVelo 
+        velo = MinimalVelo.outputSelection()
+        self.Hlt2DefaultVoidFilter = " CONTAINS( '%s') < 350" %  (velo) 
+
     def verifyType(self,ref) :
         # verify self.ActiveLines is still consistent with
         # our types self.ActiveHlt2Lines and self.ActiveHlt1Lines...
@@ -168,7 +173,7 @@ class Physics_HighNu_80Vis_25L0_2Hlt1_ExpressHlt2_Jun10 :
         """
         Returns a list of active lines
         """
-        hlt2 = [ 'Hlt2PassThrough', 'Hlt2Transparent','Hlt2Forward','Hlt2DebugEvent']
+        hlt2 = [ 'Hlt2PassThrough', 'Hlt2Transparent','Hlt2Forward','Hlt2DebugEvent','Hlt2ErrorEvent']
         from Express_Hlt2_Jan10 import Express_Hlt2_Jan10
         hlt2.extend( Express_Hlt2_Jan10().ActiveHlt2Lines() )
 
@@ -209,6 +214,7 @@ class Physics_HighNu_80Vis_25L0_2Hlt1_ExpressHlt2_Jun10 :
                  , 'Hlt1PhotonTrack', 'Hlt1PhotonTrackFromEle'
                  , 'Hlt1PhotonDiTrack', 'Hlt1PhotonDiTrackFromEle'
                  , 'Hlt1Incident'
+                 , 'Hlt1ErrorEvent'
                  ]
 
         lines += [ i + 'RateLimited' for i in lines 
