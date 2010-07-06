@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.49 2010-07-04 13:29:55 ggiacomo Exp $
+! $Id: release.notes,v 1.50 2010-07-06 17:01:12 ggiacomo Exp $
 ! Package     : OMAlib
 ! Responsible : G. Graziani
 ! Purpose     : Online Monitoring Analysis library
+
+! 20100706 GG
+ - expand OMAScale to support multiplication instead of division and normalization by mean,rms,integral or 
+   entries of the normalization histogram 
 
 ! 20100704 GG
  - adapt OMACheckErrorBins to 2d histograms

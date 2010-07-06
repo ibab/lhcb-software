@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/src/OMAlib.cpp,v 1.25 2010-06-22 13:56:59 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/src/OMAlib.cpp,v 1.26 2010-07-06 17:01:12 ggiacomo Exp $
 /*
   Online Monitoring Analysis library
   G. Graziani (INFN Firenze)
@@ -405,7 +405,7 @@ void OMAlib::syncList() {
     }
     else if (dbAlgListID > OMAconstants::AlgListID) {
       cout << " -- OMAlib WARNING: HistDB has an algorithm list more recent than your code --"<<endl;
-      cout << " -- Please update to latest OMAlib to profit of all functionalities         --"<<endl;
+      cout << " -- Please update to the latest OMAlib to profit of all its functionalities --"<<endl;
     }
 
     
