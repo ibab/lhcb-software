@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.478 2010-07-02 08:28:40 graven Exp $ 
+! $Id: release.notes,v 1.479 2010-07-06 08:42:31 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
@@ -7,8 +7,12 @@
 ! 2010-06-07 - V. Gligorov
  - Remove an obsolete Hlt2 tracking configuration.
 
-!========================== HltConf v8r1 2010-07-02 ===================
-! 2010-07-02
+!========================== HltConf v8r1 2010-07-06 ===================
+! 2010-07-06 Gerhard Raven
+ - set (default) slow threshold different in Hlt1 and Hlt2
+ - seperate setting slow threshold from setting accept if slow
+
+! 2010-07-02 Gerhard Raven
  - add a default PU veto in Hlt2
 
 ! 2010-06-21 - Johannes Albrecht

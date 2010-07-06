@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.199 2010-07-02 07:47:47 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.200 2010-07-06 08:42:31 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -36,6 +36,8 @@ class HltConf(LHCbConfigurableUser):
                 , "EnableHltRoutingBits"           : True
                 , "EnableLumiEventWriting"         : False
                 , "EnableAcceptIfSlow"             : False      # Switch on AcceptIfSlow switch of HltLine
+                , "SlowHlt1Threshold"              : 500000     # microseconds
+                , "SlowHlt2Threshold"              : 5000000     # microseconds
                 , 'RequireL0ForEndSequence'        : True
                 , 'RequireRoutingBits'             : [] # to require not lumi exclusive, set to [ 0x0, 0x4, 0x0 ]
                 , 'VetoRoutingBits'                : []
@@ -523,10 +525,13 @@ class HltConf(LHCbConfigurableUser):
         log.info( '# List of configured Hlt2Lines not added to Hlt2 : ' + str(set(hlt2Lines())-set(lines2)) )
         Sequence('Hlt2').Members += [ i.configurable() for i in lines2 ] 
 
-        # switch on timing limit
-        if  self.getProp('EnableAcceptIfSlow') : 
-            for i in hlt1Lines()+hlt2Lines() :
-                i.configurable().AcceptIfSlow = True 
+        # switch on timing limit / accept if slow
+        for i in hlt1Lines() :
+                i.configurable().AcceptIfSlow = self.getProp('EnableAcceptIfSlow') 
+                i.configurable().FlagAsSlowThreshold = self.getProp('SlowHlt1Threshold')
+        for i in hlt2Lines() :
+                i.configurable().AcceptIfSlow =  self.getProp('EnableAcceptIfSlow')
+                i.configurable().FlagAsSlowThreshold = self.getProp('SlowHlt2Threshold')
         
         self.configureHltMonitoring(lines1, lines2)
         self.configureVertexPersistence( [ i.name() for i in lines1 ] ) # TODO: add lines2...
