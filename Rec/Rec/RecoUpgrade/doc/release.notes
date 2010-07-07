@@ -4,6 +4,10 @@
 ! Purpose     : Package for the reconstruction in upgraded detector classes
 !-----------------------------------------------------------------------------
 
+!========================== RecoUpgrade v1r1 2010-07-07 =====================
+! 2010-07-07 - Laurence Carson
+ - Correct the weights in linear fit in PatVeloPixFitLHCbIDs.
+
 !========================== RecoUpgrade v1r0p1 2010-05-21 =====================
 ! 2010-05-11 - Rob Lambert
  - Added RecoTrackingUpgrade.py, a python module to replace the options file

@@ -52,27 +52,40 @@ namespace Tf {
 
   private:
 
-    double m_s0;     ///< sum of weight of clusters
+    double m_sa;     ///< sum of weights for x
+    double m_sb;     ///< sum of weights for y
+
     double m_s02;    ///< sum of square weight of clusters
-    double m_sx;     ///< sum of ( weight of clusters * x )
-    double m_sy;     ///< sum of ( weight of clusters * y )
-    double m_sz;     ///< sum of ( weight of clusters * z )
-    double m_sxz;    ///< sum of ( weight of clusters * x * z )
-    double m_syz;    ///< sum of ( weight of clusters * y * z )
-    double m_sx2;    ///< sum of ( weight of clusters * x**2 )
-    double m_sy2;    ///< sum of ( weight of clusters * y**2 )
-    double m_sz2;    ///< sum of ( weight of clusters * z**2 )
+
+    double m_sax;     ///< sum of ( weights for x * x )
+    double m_sby;     ///< sum of ( weights for y * y )
+
+    double m_saz;     ///< sum of ( weights for x * z )
+    double m_sbz;     ///< sum of ( weights for y * z )
+
+    double m_saxz;    ///< sum of ( weights for x * x * z )
+    double m_sbyz;    ///< sum of ( weights for y * y * z )
+
+    double m_sax2;    ///< sum of ( weights for x * x**2 )
+    double m_sby2;    ///< sum of ( weights for y * y**2 )
+
+    double m_saz2;    ///< sum of ( weights for x * z**2 )
+    double m_sbz2;    ///< sum of ( weights for x * z**2 )
 
     double m_slopeX;  ///< slope in x
     double m_slopeY;  ///< slope in y
     double m_interceptX;   ///< x at z = 0
     double m_interceptY;   ///< y at z = 0
-    double m_meanZ;  ///< average of z measurements
+    double m_meanZ_a;  ///< average of z measurements using x weights
+    double m_meanZ_b;  ///< average of z measurements using y weights
     double m_errorSlopX; ///< error on X slope
     double m_errorSlopY; ///< error on Y slope
 
     /// detector element
     DeVeloPix* m_veloPix;
+
+    /// parameter to take MS into account
+    double m_stepError;
 
     LHCb::VeloPixLiteCluster::VeloPixLiteClusters* m_clusters;
     IVeloPixClusterPosition* m_positiontool;
