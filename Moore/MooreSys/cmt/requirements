@@ -9,7 +9,7 @@ branches doc cmt
 
 use  Moore              v9r3   Hlt
 
-use Hlt1Lines           v4r0p2  Hlt
+use Hlt1Lines           v4r1    Hlt
 use Hlt2Lines           v4r1    Hlt
 use HltConf             v8r1    Hlt
 use HltDAQ              v2r0p1  Hlt
