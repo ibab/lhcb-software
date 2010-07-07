@@ -1,16 +1,16 @@
-!$Id: release.notes,v 1.135 2010-07-07 08:55:07 albrecht Exp $
+!$Id: release.notes,v 1.136 2010-07-07 19:46:56 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/HltTracking
 ! Responsible : Jose A. Hernando
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
-! 2010-07-07 - Johannes Albrecht
- - HltConfiguredPR: change tracking cuts to default (tight) cuts
-
 ! 2010-06-07 - V. Gligorov
  - Remove an obsolete Hlt2 tracking configuration.
 
-!========================== HltTracking v6r1 2010-07-06 ===================
+!========================== HltTracking v6r1 2010-07-07 ===================
+! 2010-07-07 - Johannes Albrecht
+ - HltConfiguredPR: change tracking cuts to default (tight) cuts
+
 ! 2010-07-06 - Gerhard Raven
  - remove unneeded import, set output selection on minimalVelo
 
