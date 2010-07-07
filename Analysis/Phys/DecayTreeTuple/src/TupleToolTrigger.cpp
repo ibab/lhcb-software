@@ -1,4 +1,4 @@
-// $Id: TupleToolTrigger.cpp,v 1.19 2010-03-16 01:11:28 rlambert Exp $
+// $Id: TupleToolTrigger.cpp,v 1.20 2010-07-07 17:14:47 tskwarni Exp $
 // Include files
 
 // from Gaudi
@@ -62,12 +62,11 @@ StatusCode TupleToolTrigger::fillBasic( Tuples::Tuple& tuple ) {
   const std::string prefix=fullName();
   //fill the L0 global
   if (m_fillL0)
-  {
-    
+  {    
     if( exist<LHCb::L0DUReport>(LHCb::L0DUReportLocation::Default) )
     {
       LHCb::L0DUReport* report = get<LHCb::L0DUReport>(LHCb::L0DUReportLocation::Default);
-      if ( ! tuple->column( prefix+"L0Decision", report->decision() ) ) return StatusCode::FAILURE;
+      if ( ! tuple->column( prefix+"L0Global", report->decision() ) ) return StatusCode::FAILURE;
       if (msgLevel(MSG::DEBUG)) debug() << "L0 decision:  " << report->decision() << endreq;
     }
   }
@@ -125,46 +124,25 @@ StatusCode TupleToolTrigger::fillVerbose( Tuples::Tuple& tuple )
 //=============================================================================
 StatusCode TupleToolTrigger::fillL0( Tuples::Tuple& tuple )
 {
-  const std::string prefix=fullName();
-  if( exist<LHCb::L0DUReport>(LHCb::L0DUReportLocation::Default) )
-  {
-    LHCb::L0DUReport* report = get<LHCb::L0DUReport>(LHCb::L0DUReportLocation::Default);
-    if (msgLevel(MSG::DEBUG)) debug() << "L0 decision:  " << report->decision() << endreq;
-    LHCb::L0DUChannel::Map channels = report->configuration()->channels();
-    
-    for(LHCb::L0DUChannel::Map::const_iterator it = channels.begin();
-        it!=channels.end();it++)
-    {
-      if ( ! tuple->column( prefix+"L0_"+(*it).first , 
-                            report->channelDecision( ((*it).second)->id() )))
-        return StatusCode::FAILURE;
-      if (msgLevel(MSG::VERBOSE)) verbose() << (*it).first << " : " 
-                                            << report->channelDecision( ((*it).second)->id() ) << endreq;
-    } 
-  }
-  else 
-  {
-    Warning("Can't get LHCb::L0DUReportLocation::Default (" +
-	    LHCb::L0DUReportLocation::Default + ")" );
-    if ( ! tuple->column( "L0Decision", -1 ) ) return StatusCode::FAILURE;
-  }
-  return StatusCode::SUCCESS;
+  return fillHlt(tuple,"L0");
 }
 //============================================================================
 StatusCode TupleToolTrigger::fillHlt( Tuples::Tuple& tuple, const std::string & level)
 {
   const std::string prefix=fullName();
   
-  if( exist<LHCb::HltDecReports>( LHCb::HltDecReportsLocation::Default ) )
+  std::string loca = LHCb::HltDecReportsLocation::Default;
+  if( level == "L0" )loca="HltLikeL0/DecReports";
+  if( exist<LHCb::HltDecReports>( loca ) )
   { 
-    const LHCb::HltDecReports* decReports = 
-      get<LHCb::HltDecReports>( LHCb::HltDecReportsLocation::Default );
+    const LHCb::HltDecReports* decReports = get<LHCb::HltDecReports>( loca );
     
     unsigned int nsel = 0 ;
     
     std::vector<std::string> names = std::vector<std::string>(0);
     
-    if(level=="Hlt1") names=m_hlt1;
+    if(level=="L0") names=m_l0;
+    else if(level=="Hlt1") names=m_hlt1;
     else if(level=="Hlt2") names=m_hlt2;
     else return StatusCode::FAILURE;
     
@@ -197,7 +175,7 @@ StatusCode TupleToolTrigger::fillHlt( Tuples::Tuple& tuple, const std::string & 
     }
     if ( ! tuple->column(prefix+level+"nSelections" , nsel ) ) return StatusCode::FAILURE;
   }
-  else Warning("No HltDecReports at "+LHCb::HltDecReportsLocation::Default,StatusCode::FAILURE,1);
+  else return Warning("No HltDecReports at "+loca,StatusCode::FAILURE,2);
   if (msgLevel(MSG::DEBUG)) debug() << "Done " << prefix+level << endmsg ;
   return StatusCode::SUCCESS ;
 }

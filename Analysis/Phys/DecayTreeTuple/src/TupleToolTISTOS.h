@@ -67,6 +67,7 @@ protected:
 private:
 
   ITriggerTisTos* m_TriggerTisTosTool;
+  ITriggerTisTos* m_L0TriggerTisTosTool;
   IParticleDescendants* m_particleDescendants;
 
   StatusCode fillBasic( const LHCb::Particle* 

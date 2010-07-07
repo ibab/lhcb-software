@@ -78,10 +78,12 @@ protected:
   std::vector<std::string> m_hlt2;
   
   // cache the trigger to check if/when names mutate from event-to-event
+  std::vector<std::string> m_l0_init;
   std::vector<std::string> m_hlt1_init;
   std::vector<std::string> m_hlt2_init;
   
   // collect all Trigger names for ease of the user, print in finalize
+  std::vector<std::string> m_l0_all;
   std::vector<std::string> m_hlt1_all;
   std::vector<std::string> m_hlt2_all;
   
@@ -94,6 +96,7 @@ protected:
   bool checkAutoList();
   bool appendToList();
   
+  std::vector< std::string > l0TriggersFromL0DU() const;
   
 private:
   

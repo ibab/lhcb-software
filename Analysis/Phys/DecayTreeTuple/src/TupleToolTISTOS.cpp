@@ -35,6 +35,7 @@ TupleToolTISTOS::TupleToolTISTOS( const std::string& type,
                               const IInterface* parent )
   : TupleToolTriggerBase ( type, name , parent )
     , m_TriggerTisTosTool()
+    , m_L0TriggerTisTosTool()
 {
   declareInterface<IParticleTupleTool>(this);
   
@@ -55,6 +56,7 @@ StatusCode TupleToolTISTOS::initialize( )
   StatusCode sc = TupleToolTriggerBase::initialize();
   if (!sc) return sc;
   m_TriggerTisTosTool = tool<ITriggerTisTos>( "TriggerTisTos",this);
+  m_L0TriggerTisTosTool = tool<ITriggerTisTos>( "L0TriggerTisTos",this);
   
   return sc;
 }
@@ -77,38 +79,35 @@ StatusCode TupleToolTISTOS::fillBasic( const LHCb::Particle*
 {
   const std::string prefix=fullName(head);
  
-  bool decision = false;
-  bool tis = 0;
-  bool tos = 0;
+  ITriggerTisTos::TisTosDecision classifiedDec;
 
+  m_L0TriggerTisTosTool->setOfflineInput(*P);
+  m_L0TriggerTisTosTool->setTriggerInput("L0.*Decision");
+  classifiedDec = m_L0TriggerTisTosTool->triggerTisTos();
+  tuple->column( prefix+"L0Global"+"_Dec", classifiedDec.decision());
+  tuple->column( prefix+"L0Global"+"_TIS", classifiedDec.tis());
+  tuple->column( prefix+"L0Global"+"_TOS", classifiedDec.tos());
+  
+ 
   m_TriggerTisTosTool->setOfflineInput(*P);
 
-  //Fill the decision, tis and tos parametres for the L0 as a whole
-  ITriggerTisTos::TisTosDecision classifiedL0Dec = m_TriggerTisTosTool->selectionTisTos(m_TriggerTisTosTool->triggerSelectionNames("Hlt1L0.*Decision") );
-  // decision here is that of Hlt1 L0 pass through lines and not of L0 itself
-  // however if any candidates were saved then L0 decision must have been true
-  
-  decision = m_TriggerTisTosTool->hltObjectSummaries("Hlt1L0.*Decision").size()!=0;
-  tuple->column( prefix+"L0Global"+"_Dec", decision);
-  tuple->column( prefix+"L0Global"+"_TIS", classifiedL0Dec.tis());
-  tuple->column( prefix+"L0Global"+"_TOS", classifiedL0Dec.tos());
- 
   //Do the Hlt1
   m_TriggerTisTosTool->setTriggerInput("Hlt1.*Decision");
   //Fill the decision, tis and tos parametres for the Hlt1 as a whole   
-  m_TriggerTisTosTool->triggerTisTos(decision,tis,tos);
-  tuple->column( prefix+"Hlt1Global"+"_Dec", decision);
-  tuple->column( prefix+"Hlt1Global"+"_TIS", tis);
-  tuple->column( prefix+"Hlt1Global"+"_TOS", tos);
+  classifiedDec = m_TriggerTisTosTool->triggerTisTos();
+  tuple->column( prefix+"Hlt1Global"+"_Dec", classifiedDec.decision());
+  tuple->column( prefix+"Hlt1Global"+"_TIS", classifiedDec.tis());
+  tuple->column( prefix+"Hlt1Global"+"_TOS", classifiedDec.tos());
     
 
   //Do the Hlt2
   m_TriggerTisTosTool->setTriggerInput("Hlt2.*Decision");
-  //Fill the decision, tis and tos parametres for the Hlt2 as a whole
-  m_TriggerTisTosTool->triggerTisTos(decision,tis,tos);
-  tuple->column( prefix+"Hlt2Global"+"_Dec", decision);
-  tuple->column( prefix+"Hlt2Global"+"_TIS", tis);
-  tuple->column( prefix+"Hlt2Global"+"_TOS", tos);
+  //Fill the decision, tis and tos parametres for the Hlt2 as a whole   
+  classifiedDec = m_TriggerTisTosTool->triggerTisTos();
+  tuple->column( prefix+"Hlt2Global"+"_Dec", classifiedDec.decision());
+  tuple->column( prefix+"Hlt2Global"+"_TIS", classifiedDec.tis());
+  tuple->column( prefix+"Hlt2Global"+"_TOS", classifiedDec.tos());
+    
   
   return StatusCode::SUCCESS;
 }
@@ -124,29 +123,33 @@ StatusCode TupleToolTISTOS::fillVerbose( const LHCb::Particle*
   bool tis = 0;
   bool tos = 0;
   
-  m_TriggerTisTosTool->setOfflineInput(*P);
   
   if( m_verboseL0 )
   {      
+    m_L0TriggerTisTosTool->setOfflineInput(*P);
     //Now loop over all the subtriggers
-    for( std::vector< std::string >::const_iterator s=m_l0.begin();s != m_l0.end();++s)
-    {
-      if (msgLevel(MSG::VERBOSE)) verbose() << "Selection " << *s << endmsg ;
-      m_TriggerTisTosTool->selectionTisTos(*s,decision,tis,tos);
-      // need to overwrite Hlt1L0XXXDecision 
-      decision = m_TriggerTisTosTool->hltSelectionObjectSummaries(*s).size()!=0;      
-      std::string sl0 = s->substr( s->find("L0") );      
-      tuple->column( prefix+sl0+"_Dec", decision);
-      tuple->column( prefix+sl0+"_TIS", tis);
-      tuple->column( prefix+sl0+"_TOS", tos);
-    }
+    for( std::vector< std::string >::const_iterator s=m_l0.begin();s!= m_l0.end();++s){
+        if (msgLevel(MSG::VERBOSE)) verbose() << "Selection " << *s << endmsg  ;
+        m_L0TriggerTisTosTool->triggerTisTos(*s,decision,tis,tos);
+        tuple->column( prefix+*s+"_Dec", decision);
+        tuple->column( prefix+*s+"_TIS", tis);
+        tuple->column( prefix+*s+"_TOS", tos);
+      }
   }
+
+  m_TriggerTisTosTool->setOfflineInput(*P);
   if( m_verboseHlt1 )
-  {      
+  {
     //Now loop over all the subtriggers
     for( std::vector< std::string >::const_iterator s=m_hlt1.begin();s != m_hlt1.end();++s){
         if (msgLevel(MSG::VERBOSE)) verbose() << "Selection " << *s << endmsg  ;
-        m_TriggerTisTosTool->triggerTisTos(*s,decision,tis,tos);
+        if( s->find("Hlt1L0") == 0 ){
+          // assume that we want to look at L0 rather than Hlt1L0 decisions
+          m_TriggerTisTosTool->selectionTisTos(*s,decision,tis,tos);
+          decision = m_TriggerTisTosTool->hltSelectionObjectSummaries(*s).size()!=0;      
+        } else {
+          m_TriggerTisTosTool->triggerTisTos(*s,decision,tis,tos);
+        }        
         tuple->column( prefix+*s+"_Dec", decision);
         tuple->column( prefix+*s+"_TIS", tis);
         tuple->column( prefix+*s+"_TOS", tos);

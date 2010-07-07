@@ -20,6 +20,7 @@ use   MCInterfaces       v*    Kernel
 use   HltInterfaces      v*    Kernel
 use   DecFiles           v*    Gen     --no_auto_imports
 use   DAQEvent           v*    Event
+use   L0Event            v*    Event
 
 use Boost        v*   LCG_Interfaces
 

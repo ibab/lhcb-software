@@ -4,6 +4,12 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2010-07-03 - Tomasz Skwarnicki
+ - change TriggerTupleBase to treat L0 same way as Hlt1,Hlt2
+   change TupleToolTrigger to use HltlikeL0 DecReports and line names
+   change TuplrToolTISTOS to use L0TriggerTisTos tool for L0, 
+          now Hlt1L0 lines appear under their own rather then L0 names 
+
 !========================== DecayTreeTuple v3r5p1 2010-06-24 ================
 
 ! 2010-06-24 - Rob Lambert
