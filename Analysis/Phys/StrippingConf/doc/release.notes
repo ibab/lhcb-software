@@ -1,9 +1,17 @@
-!$Id: release.notes,v 1.76 2010-07-05 23:57:56 poluekt Exp $
+!$Id: release.notes,v 1.77 2010-07-07 14:56:03 jpalac Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/StrippingConf
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
+
+! 2010-07-07 - Juan Palacios
+ - Added tests/test_strippingconf.py and related QM test.
+ - cmt/requirements
+  . Increase to v3r6
+ - python/StrippingConf/Configuration.py
+  . Raise exception instead of asserting when lines have duplicate output locations.
+  . Do not write to stderr in this case, let the exception do the work.
 
 ! 2010-07-06 - Anton Poluektov 
   - New options 'MaxCandidates' and 'MaxCombinations' for 
