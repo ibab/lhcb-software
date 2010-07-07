@@ -128,6 +128,7 @@ StatusCode TrackEventFitter::execute() {
       }
     }
 
+    double qopBefore = track.firstState().qOverP() ;
     StatusCode sc = m_tracksFitter -> fit( track );
 
     if ( sc.isSuccess() ) {
@@ -142,6 +143,7 @@ StatusCode TrackEventFitter::execute() {
 	double chisqprob = track.probChi2() ;
 	counter("chisqprobSum") += chisqprob ;
 	counter("badChisq") += bool(chisqprob<0.01) ;
+	counter("flipCharge") += bool( qopBefore * track.firstState().qOverP() <0) ;
       }
       counter("numOutliers") += track.nMeasurementsRemoved() ;
     }
@@ -150,6 +152,7 @@ StatusCode TrackEventFitter::execute() {
       ++nFitFail;
       if ( msgLevel( MSG::DEBUG ) )
         debug() << "Unable to fit the track # " << track.key() << endmsg;
+      if( m_makeNewContainer ) delete &track ;
     }
   } // loop over input Tracks
 
