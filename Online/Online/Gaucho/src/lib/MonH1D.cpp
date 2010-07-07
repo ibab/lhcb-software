@@ -17,8 +17,9 @@ MonObject(msgSvc, source, version)
   m_fSumw2 = 0;  
   m_axisLabelX="";
   m_axisLabelY="";
-  baxisLabelX="false";
-  baxisLabelY="false";
+  baxisLabelX=false;
+  baxisLabelY=false;
+  bBinLabelX=false;
 }
 
 MonH1D::~MonH1D(){
@@ -92,9 +93,9 @@ void MonH1D::load2(boost::archive::binary_iarchive  & ar, const unsigned int ver
   for (int i=0 ; i < m_fSumSize; ++i) {
     ar & m_fSumw2[i];
   }
-  
+
   //put axislabels at the end
-  if (version > 0) {
+  if (m_version > 0) {
      ar & baxisLabelX;
      ar & baxisLabelY;
   

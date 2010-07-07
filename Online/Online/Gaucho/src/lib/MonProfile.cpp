@@ -16,6 +16,7 @@ MonObject(msgSvc, source, version)
   //binErr = 0;
   binEntries = 0;
   m_fSumw2 = 0;  
+  bBinLabelX=false;
 }
 
 MonProfile::~MonProfile(){
@@ -246,9 +247,9 @@ void MonProfile::loadObject(){
 
 void MonProfile::splitObject(){
   //need some protection here
+  MsgStream msg = createMsgStream();
   if (!m_profile) {
      isLoaded = false;
-     MsgStream msg = createMsgStream();
      msg << MSG::WARNING << "Null pointer m_profile. MonProfile can not be not loaded."<< endreq;
      return;
   } 
@@ -292,7 +293,11 @@ void MonProfile::splitObject(){
      if (bBinLabelX){
          binLabelX.clear();
        for (int i = 1; i < (nbinsx+1) ; ++i){
-         binLabelX.push_back(m_profile->GetXaxis()->GetBinLabel(i));
+         if (m_profile->GetXaxis()->GetBinLabel(i)) {
+	    binLabelX.push_back(m_profile->GetXaxis()->GetBinLabel(i));}
+         else {
+	    msg << MSG::WARNING << "No bin label found. Pushing back empty bin label " << i << " in profile " << sTitle << endreq; 
+	    binLabelX.push_back("");}
        }
      }
 
@@ -354,13 +359,14 @@ void MonProfile::combine(MonObject * H){
   if (sTitle !=  HH->sTitle) matchParam = false;
 
   if (!matchParam){
-    msg << MSG::ERROR<<"Trying to combine uncompatible MonObjects" << endreq;
-    msg << MSG::ERROR<<"  nbinsx ="<<nbinsx << "; HH->nbinsx="<<HH->nbinsx << endreq;
-    msg << MSG::ERROR<<"  Xmin ="<<Xmin << "; HH->Xmin="<<HH->Xmin << endreq;
-    msg << MSG::ERROR<<"  Xmax ="<<Xmax << "; HH->Xmax="<<HH->Xmax << endreq;
-    msg << MSG::ERROR<<"  Ymin ="<<Xmin << "; HH->Ymin="<<HH->Xmin << endreq;
-    msg << MSG::ERROR<<"  Ymax ="<<Xmax << "; HH->Ymax="<<HH->Xmax << endreq;
-    msg << MSG::ERROR<<"  sTitle ="<<sTitle << "; HH->sTitle="<<HH->sTitle << endreq;
+    msg << MSG::DEBUG<<"Trying to combine uncompatible MonObjects" << endreq;
+    if (HH->nbinsx<8){
+       msg << MSG::ERROR<<"  nbinsx ="<<nbinsx << "; HH->nbinsx="<<HH->nbinsx << endreq;
+       msg << MSG::ERROR<<"  Xmin ="<<Xmin << "; HH->Xmin="<<HH->Xmin << endreq;
+       msg << MSG::ERROR<<"  Xmax ="<<Xmax << "; HH->Xmax="<<HH->Xmax << endreq;
+       msg << MSG::ERROR<<"  Ymin ="<<Xmin << "; HH->Ymin="<<HH->Xmin << endreq;
+       msg << MSG::ERROR<<"  Ymax ="<<Xmax << "; HH->Ymax="<<HH->Xmax << endreq;
+       msg << MSG::ERROR<<"  sTitle ="<<sTitle << "; HH->sTitle="<<HH->sTitle << endreq;}
     return;
   }
 
@@ -441,7 +447,7 @@ void MonProfile::copyFrom(MonObject * H){
 
   if (binEntries != 0) delete []binEntries;
   binEntries = new double[(nbinsx+2)];
-
+  if (HH!=0) {
   for (int i = 0; i < (nbinsx+2) ; ++i){
     binEntries[i] = HH->binEntries[i];
   }
@@ -475,6 +481,7 @@ void MonProfile::copyFrom(MonObject * H){
   }
 
   isLoaded = true;
+  }
 }
 
 void MonProfile::synchronizeLabelNames(MonObject * H){

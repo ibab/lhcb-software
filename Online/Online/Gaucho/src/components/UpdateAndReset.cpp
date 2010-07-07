@@ -89,7 +89,7 @@ UpdateAndReset::UpdateAndReset(const std::string& name, ISvcLocator* ploc)
   m_offsetTimeLastEvInCycle=0;
   m_gpsTimeLastEvInCycle=0;
   m_offsetGpsTimeLastEvInCycle=0;
- // m_desiredDeltaTCycle = 30;
+  m_desiredDeltaTCycle = 30;
 }
 
 

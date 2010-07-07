@@ -5,6 +5,7 @@
 #include "TProfile.h"
 #include "AIDA/IProfile1D.h"
 #include <boost/serialization/list.hpp>
+#include <boost/serialization/version.hpp>
 
 class FriendOfTProfile: public TProfile{
  public:

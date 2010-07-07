@@ -31,7 +31,7 @@ void DimServiceMonObject::setDataFromMonObject() {
      std::stringstream os;
      boost::archive::binary_oarchive oa(os);
      try {
-        m_monObject->save(oa, m_monObject->version());
+       m_monObject->save(oa, m_monObject->mon_version());
        this->DimService::setData((void*)os.str().data(),os.str().length());
        this->DimService::updateService();
      }

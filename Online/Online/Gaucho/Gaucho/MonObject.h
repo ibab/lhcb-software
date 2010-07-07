@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Gaucho/Gaucho/MonObject.h,v 1.18 2010-05-06 15:23:01 evh Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Gaucho/Gaucho/MonObject.h,v 1.19 2010-07-07 15:09:55 evh Exp $
 #ifndef GAUCHO_MONOBJECT_H
 #define GAUCHO_MONOBJECT_H 1
 
@@ -113,7 +113,7 @@ public:
   void setDimPrefix(std::string dimPrefix){m_dimPrefix = dimPrefix;}
 
   virtual std::string typeName() const {return m_typeName;} 
-  virtual int version(){return m_version;}
+  virtual int mon_version(){return m_version;}
 
   virtual void combine(MonObject* monObject);
   virtual void copyFrom(MonObject* monObject);

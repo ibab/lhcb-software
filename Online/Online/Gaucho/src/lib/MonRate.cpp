@@ -29,7 +29,11 @@ void MonRate::save(boost::archive::binary_oarchive & ar, const unsigned int vers
        m_numCounters = m_counterMap.size();
 //       if (m_profile) { delete m_profile; m_profile = 0; }
        if (m_profile) { m_profile->Reset(); }
-       else m_profile = new TProfile("profile","MonRate Profile", m_maxNumCounters+8, 0, m_maxNumCounters+8);
+       else {
+         m_profile = new TProfile("profile","MonRate Profile", m_maxNumCounters+8, 0, m_maxNumCounters+8);
+      	  //set m_profile as the one used by MonProfile
+	  MonProfile::setProfile(m_profile);  
+       }      
        m_profile->Fill(0.50, *m_offsetTimeFirstEvInRun, 1.00);
        m_profile->Fill(1.50, *m_offsetTimeLastEvInCycle, 1.00);
        m_profile->Fill(2.50, *m_offsetGpsTimeLastEvInCycle, 1.00);
@@ -74,9 +78,10 @@ void MonRate::save(boost::archive::binary_oarchive & ar, const unsigned int vers
 	    m_profile->Fill((double)i - 0.5, counter.nEntries(), 1.00);
 	    msg <<MSG::DEBUG<<"Counter :" << counter.nEntries() << endreq;
           }  
-          else {
-            msg <<MSG::ERROR<<"Incompatible counter type for MonRate.." << endreq;
-          }
+         else {
+            msg <<MSG::WARNING<<"Counter "<< m_counterMapIt->first << " has a type "<< m_counterMapIt->second.second.first << " that is not supported by MonRate.." << endreq;
+	    return;
+           }
           i++;
         }
     

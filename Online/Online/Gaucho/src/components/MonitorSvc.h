@@ -3,6 +3,7 @@
 
 #include "GaudiKernel/Service.h"
 #include "GaudiKernel/IMonitorSvc.h"
+#include "GaudiKernel/IUpdateable.h"
 #include "Gaucho/IGauchoMonitorSvc.h"
 #include "GaudiKernel/StatEntity.h"
 #include <string>
@@ -36,7 +37,8 @@ Algorithm.Property and returns the value of the property.
 
 class MonitorSvc : public Service, 
                    virtual public IMonitorSvc, 
-		   virtual public IGauchoMonitorSvc 
+		   virtual public IGauchoMonitorSvc,
+	           virtual public IUpdateableIF		    
 {
 public:
   MonitorSvc(const std::string& name, ISvcLocator* sl);

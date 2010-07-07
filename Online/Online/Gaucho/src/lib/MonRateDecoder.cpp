@@ -309,9 +309,9 @@ std::string MonRateDecoder::makeServiceName(std::string nameHeader, int counterI
      else finished=true;
   }  
   while (!finished) {     
-     std::size_t exclpos = comment.find("=");
-     if (exclpos != std::string::npos) {
-        comment=comment.substr(0,exclpos)+"eq"+comment.substr(exclpos+1);
+     std::size_t eqpos = comment.find("=");
+     if (eqpos != std::string::npos) {
+        comment=comment.substr(0,eqpos)+"eq"+comment.substr(eqpos+1);
      }  
      else finished=true;
   } 

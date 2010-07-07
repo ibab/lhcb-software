@@ -122,7 +122,8 @@ void MonH2D::load2(boost::archive::binary_iarchive  & ar, const unsigned int ver
   }
   
   //axis labels at the end
-  if (version >0) {
+
+  if (m_version >0) {
      ar & baxisLabelX;
      ar & baxisLabelY;
      if (baxisLabelX){

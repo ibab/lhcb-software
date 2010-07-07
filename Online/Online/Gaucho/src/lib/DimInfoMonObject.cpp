@@ -67,7 +67,7 @@ bool DimInfoMonObject::createMonObject() {
   m_StringSize = tmpStringSize;
   MonObject *monObjectBase;
     
-  char* c;
+  char* c=NULL;
   try {
     c = const_cast<char *>((const char*) m_dimInfo->getData());
     if ( 0 == m_noValidMonObject.compare(c)) {
@@ -152,7 +152,7 @@ bool DimInfoMonObject::loadMonObject(){
     std::stringstream is;
     //msg << MSG::DEBUG << "putsetbuf " << endreq;
     is.rdbuf()->pubsetbuf(c, m_StringSize);
-    //msg << MSG::DEBUG << "binary_iarchive " << endreq;
+    if (is==0) return false;
     boost::archive::binary_iarchive ia(is);
   //  msg << MSG::INFO << " loading MonObject "<< endreq;
     if (m_monObject!=0) m_monObject->load(ia, 1);

@@ -183,6 +183,8 @@ StatusCode AdderSvc::start() {
         // three underscores found in UTGID -> we're in the Monitoring Farm
         m_nodeName = m_utgid.substr(first_us+1,second_us-first_us-1);
         m_farm = "MF";
+	//msg << MSG::INFO  << "In MF."<< endreq;
+        //lib_rtl_sleep(15000);  
         taskName = m_utgid.substr(second_us + 1, third_us - second_us - 1);
      }   
      else {

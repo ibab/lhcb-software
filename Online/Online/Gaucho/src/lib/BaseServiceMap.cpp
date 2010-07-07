@@ -357,14 +357,14 @@ void BaseServiceMap::deleteDimService(const std::string &serviceName){
     return;  
   }
   
-  if (m_dimSrv[groupName].second->typeName().compare (s_monRate) == 0) {
+/*  if (m_dimSrv[groupName].second->typeName().compare (s_monRate) == 0) {
     if (m_processMgr->publishRates())  {
  //     msg << MSG::DEBUG << " erasing MonRateDecoder" <<endreq;
       if (m_monRateDecoder != 0) {
         delete m_monRateDecoder; m_monRateDecoder = 0;
       }
     }
-  }
+  }*/
 //  msg << MSG::DEBUG << " erasing published MonObject from map" <<endreq;
   delete m_dimSrv[groupName].second; 
   m_dimSrv[groupName].second = 0;
@@ -407,7 +407,7 @@ std::string BaseServiceMap::createAdderName (const std::string &serviceName){
   std::string utgid = serviceParts[1];
   std::string task = Misc::splitString(utgid, "_")[1];
   std::string farm=m_processMgr->getFarm();
-  if (farm=="MF") task = "RecBrunel" ;
+  if (farm=="MF") task = "Brunel" ;
     
   int index = 2;
 
@@ -426,8 +426,15 @@ std::string BaseServiceMap::createAdderName (const std::string &serviceName){
   if (partitionName.find("PART")!= std::string::npos) {
     adderName = svctype + "/" + m_processMgr->getPartitionName() + "_Adder_1/" + task + "/";
   }
-  else adderName = svctype + "/" + m_processMgr->utgid()  + "/" + task + "/";
-  
+  else {
+     if (farm=="MF") {
+        //in the monitoring farm, remove the nodename so the presenter can handle online/offline Brunel difference
+	std::string recfarmAdderName =   Misc::splitString(m_processMgr->utgid(),"_")[2];
+	std::string instance =  Misc::splitString(m_processMgr->utgid(),"_")[3];
+        adderName = svctype + "/" + partitionName + "_" + recfarmAdderName + "_" + instance + "/" + task + "/";
+	//msg << MSG::INFO << " adderName = " << adderName <<endreq; 
+     }
+     else adderName = svctype + "/" + m_processMgr->utgid()  + "/" + task + "/";  }
   if ((s_pfixMonH1F==svctype)||(s_pfixMonH2F==svctype)||(s_pfixMonH1D==svctype)||(s_pfixMonH2D==svctype)||(s_pfixMonProfile==svctype)||(s_pfixMonRate==svctype)||(s_pfixMonStatEntity==svctype))
     adderName = adderName + algo + "/" + object;
   else

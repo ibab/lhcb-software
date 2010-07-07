@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Gaucho/src/lib/MonObject.cpp,v 1.20 2010-05-06 15:23:02 evh Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Gaucho/src/lib/MonObject.cpp,v 1.21 2010-07-07 15:09:55 evh Exp $
 
 // Include files
 #include "Gaucho/MonObject.h"
@@ -8,6 +8,7 @@ MonObject::MonObject(IMessageSvc* msgSvc, const std::string& source, int version
   m_msgSvc = msgSvc;
   m_source = source;
   m_version = version;
+  m_version = 0;
   m_typeName = s_monObject;
   m_dimPrefix = "MonObj";
   m_comments = "";
@@ -20,7 +21,7 @@ MonObject::~MonObject(){
 }
 
 void MonObject::save(boost::archive::binary_oarchive & ar, const unsigned int version){
-  if (version != m_version) m_version = version;
+  m_version = 1;
 
   ar & m_typeName;
   ar & m_version;
@@ -29,7 +30,7 @@ void MonObject::save(boost::archive::binary_oarchive & ar, const unsigned int ve
 }
 
 void MonObject::load(boost::archive::binary_iarchive & ar, const unsigned int version){
-  if (version != m_version) m_version = version;
+ // if (version != m_version) m_version = version;
   ar & m_typeName;
   ar & m_version;
   ar & m_comments;
@@ -50,7 +51,7 @@ void MonObject::print(){
   msgStream <<MSG::INFO<<"*************************************"<<endreq;
   msgStream <<MSG::INFO<<"*************************************"<<endreq;
   msgStream <<MSG::INFO << " type:" << typeName()<<endreq;
-  msgStream <<MSG::INFO << " version:"<< version()<<endreq;
+  msgStream <<MSG::INFO << " version:"<< m_version<<endreq;
   msgStream <<MSG::INFO << " comments:"<< comments()<<endreq;
   msgStream <<MSG::INFO << " end of run:"<< endOfRun()<<endreq;
   msgStream <<MSG::INFO<<"*************************************"<<endreq;

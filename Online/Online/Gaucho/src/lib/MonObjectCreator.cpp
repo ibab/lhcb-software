@@ -80,7 +80,7 @@ int MonObjectCreator::monObjectSize(MonObject* monObject){
   std::stringstream m_ss;
   m_ss.str("");
   boost::archive::binary_oarchive oa(m_ss);
-  monObject->save(oa, monObject->version());
+  monObject->save(oa, monObject->mon_version());
   return m_ss.str().length();
 }
 
