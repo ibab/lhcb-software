@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2010-07-07 - Johannes Albrecht
+ - add electron lines, include prescale for express lines, add testHlt2 setting
+
 !========================== HltSettings v2r1  2010-07-06 ===================
 ! 2010-07-06 - V. Gligorov
  - Fix bug in Hadrons_Minimal, a line was wrongly being included and another 
