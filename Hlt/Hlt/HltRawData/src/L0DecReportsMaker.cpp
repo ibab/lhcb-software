@@ -1,4 +1,4 @@
-// $Id: L0DecReportsMaker.cpp,v 1.1 2010-06-23 22:50:27 tskwarni Exp $
+// $Id: L0DecReportsMaker.cpp,v 1.2 2010-07-07 20:48:40 tskwarni Exp $
 // #define DEBUGCODE
 // Include files 
 //#include "boost/lexical_cast.hpp"
@@ -79,7 +79,7 @@ StatusCode L0DecReportsMaker::execute() {
   if( !exist<L0DUReport>( m_inputL0DUReportLocation ) ){ 
     return Error( " No L0DUReport at " + m_inputL0DUReportLocation.value(), StatusCode::SUCCESS, 10 );
   }
-  const L0DUReport* pL0DUReport = get<L0DUReport>( L0DUReportLocation::Default );
+  const L0DUReport* pL0DUReport = get<L0DUReport>( m_inputL0DUReportLocation.value() );
   if ( msgLevel(MSG::VERBOSE) ) verbose() << " L0 global decision= " << pL0DUReport->decision() << endmsg;
 
 
