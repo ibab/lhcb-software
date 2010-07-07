@@ -12,7 +12,7 @@ from HltTrackNames import Hlt2LongTracksName, HltUniDirectionalKalmanFitSuffix
 # The  vanilla  configuration, no track fitting or seeding
 #
 def Hlt2UnfittedForwardTracking() :
-     return Hlt2Tracking("Hlt2UnfittedForwardTracking",                          EarlyDataTracking       = True,
+     return Hlt2Tracking("Hlt2UnfittedForwardTracking",        
                                                                                  Prefix                  = Hlt2TracksPrefix, 
                                                                                  FastFitType             = HltUnfittedTracksSuffix,
                                                                                  Hlt2Tracks              = Hlt2ForwardTracksName,
@@ -23,7 +23,7 @@ def Hlt2UnfittedForwardTracking() :
 # With unidirectional track fitting, no seeding
 #
 def Hlt2UniKalmanFittedForwardTracking() :
-        return Hlt2Tracking("Hlt2UniKalmanFittedForwardTracking",                EarlyDataTracking      = True,
+        return Hlt2Tracking("Hlt2UniKalmanFittedForwardTracking",       
                                                                                  Prefix                 = Hlt2TracksPrefix,
                                                                                  FastFitType            = HltUniDirectionalKalmanFitSuffix,
                                                                                  Hlt2Tracks             = Hlt2ForwardTracksName,
@@ -34,7 +34,7 @@ def Hlt2UniKalmanFittedForwardTracking() :
 # With bidirectional track fitting, no seeding
 #
 def Hlt2BiKalmanFittedForwardTracking() :
-        return Hlt2Tracking("Hlt2BiKalmanFittedForwardTracking",                 EarlyDataTracking      = True,
+        return Hlt2Tracking("Hlt2BiKalmanFittedForwardTracking",        
                                                                                  Prefix                 = Hlt2TracksPrefix,
                                                                                  FastFitType            = HltBiDirectionalKalmanFitSuffix,
                                                                                  Hlt2Tracks             = Hlt2ForwardTracksName,
@@ -45,7 +45,7 @@ def Hlt2BiKalmanFittedForwardTracking() :
 # With seeding, no track fitting
 #
 def Hlt2UnfittedLongTracking() :
-        return Hlt2Tracking("Hlt2UnfittedLongTracking",                          EarlyDataTracking      = True, 
+        return Hlt2Tracking("Hlt2UnfittedLongTracking",              
                                                                                  Prefix                 = Hlt2TracksPrefix,
                                                                                  FastFitType            = HltUnfittedTracksSuffix,
                                                                                  Hlt2Tracks             = Hlt2LongTracksName,
@@ -57,7 +57,7 @@ def Hlt2UnfittedLongTracking() :
 # With seeding and track fitting
 #
 def Hlt2BiKalmanFittedLongTracking() :
-        return Hlt2Tracking("Hlt2BiKalmanFittedLongTracking",                    EarlyDataTracking      = True, 
+        return Hlt2Tracking("Hlt2BiKalmanFittedLongTracking",           
                                                                                  Prefix                 = Hlt2TracksPrefix,
                                                                                  FastFitType            = HltBiDirectionalKalmanFitSuffix,
                                                                                  Hlt2Tracks             = Hlt2LongTracksName,
@@ -69,7 +69,7 @@ def Hlt2BiKalmanFittedLongTracking() :
 # Now for the Downstream tracks, but no track fit. 
 #
 def Hlt2UnfittedDownstreamTracking() :
-    return Hlt2Tracking("Hlt2UnfittedDownstreamTracking",                        EarlyDataTracking      = True, 
+    return Hlt2Tracking("Hlt2UnfittedDownstreamTracking",                 
                                                                                  Prefix                 = Hlt2TracksPrefix,
                                                                                  FastFitType            = HltUnfittedTracksSuffix,
                                                                                  Hlt2Tracks             = Hlt2DownstreamTracksName,
@@ -80,7 +80,7 @@ def Hlt2UnfittedDownstreamTracking() :
 # Now the Downstream tracks with the bidirectional Kalman fit.
 #
 def Hlt2BiKalmanFittedDownstreamTracking() :
-    return Hlt2Tracking("Hlt2BiKalmanFittedDownstreamTracking",                  EarlyDataTracking      = True, 
+    return Hlt2Tracking("Hlt2BiKalmanFittedDownstreamTracking",            
                                                                                  Prefix                 = Hlt2TracksPrefix,
                                                                                  FastFitType            = HltBiDirectionalKalmanFitSuffix,
                                                                                  Hlt2Tracks             = Hlt2DownstreamTracksName,
@@ -91,7 +91,7 @@ def Hlt2BiKalmanFittedDownstreamTracking() :
 # With track fitting and RICH PID for 3 hypotheses (kaon-proton-pion), but no seeding
 #
 def Hlt2BiKalmanFittedRichForProtonsForwardTracking() :
-        return Hlt2Tracking("Hlt2BiKalmanFittedRichForProtonsForwardTracking",   EarlyDataTracking      = True, 
+        return Hlt2Tracking("Hlt2BiKalmanFittedRichForProtonsForwardTracking", 
                                                                                  Prefix                 = Hlt2TracksPrefix,
                                                                                  FastFitType            = HltBiDirectionalKalmanFitSuffix,
                                                                                  Hlt2Tracks             = Hlt2ForwardTracksName,

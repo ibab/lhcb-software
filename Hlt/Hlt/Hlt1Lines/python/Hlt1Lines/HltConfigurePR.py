@@ -2,30 +2,38 @@ from Gaudi import Configuration
 from Configurables import PatForwardTool, PatSeedingTool
 from HltLine.HltLine import Hlt1Tool   as Tool
 
+#TODO: pick up from HltTracking
+EarlyDataTracking = False
+
 def ConfiguredPR( tool ):
     if tool is "Forward" :
-        # to come: if Hlttrackin.earlyData = true or similar
-        return Tool( PatForwardTool
-                     , MinXPlanes = 4
-                     , MinPlanes = 8
-                     , MaxSpreadX = 1.5
-                     , MaxSpreadY = 3.0
-                     , MaxChi2 = 40
-                     , MaxChi2Track = 40
-                     , MinHits = 12
-                     , MinOTHits = 14 )
+        if EarlyDataTracking: 
+            return Tool( PatForwardTool
+                         , MinXPlanes = 4
+                         , MinPlanes = 8
+                         , MaxSpreadX = 1.5
+                         , MaxSpreadY = 3.0
+                         , MaxChi2 = 40
+                         , MaxChi2Track = 40
+                         , MinHits = 12
+                         , MinOTHits = 14 )
+        else : return Tool( PatForwardTool)
+        
     elif tool is "PatSeeding":
-        return Tool( PatSeedingTool,
-                     OTNHitsLowThresh=12,
-                     MinTotalPlanes = 7,
-                     MaxMisses = 2,
-                     MaxTrackChi2LowMult=10,
-                     MaxFinalTrackChi2=20,
-                     MaxFinalChi2=30,
-                     MaxTrackChi2=40,
-                     MaxChi2HitIT=10,
-                     MaxChi2HitOT=30
-                     ) 
+        if EarlyDataTracking:
+            return Tool( PatSeedingTool,
+                         OTNHitsLowThresh=12,
+                         MinTotalPlanes = 7,
+                         MaxMisses = 2,
+                         MaxTrackChi2LowMult=10,
+                         MaxFinalTrackChi2=20,
+                         MaxFinalChi2=30,
+                         MaxTrackChi2=40,
+                         MaxChi2HitIT=10,
+                         MaxChi2HitOT=30
+                         )
+        else : return Tool(PatSeedingTool)
+        
     else :
         raise KeyError('unknown tool %s requested' % tool)
 
