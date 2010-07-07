@@ -37,6 +37,9 @@ class Physics_HighNu_80Vis_25L0_2Hlt1_CoreHlt2_Jun10         ( Physics_HighNu_80
         from Muons_Retention15 import Muons_Retention15         
         thresholds.update( Muons_Retention15().Thresholds() )
 
+	from Electrons_Minimal_TrackFitted import Electrons_Minimal_TrackFitted
+        thresholds.update( Electrons_Minimal_TrackFitted().Thresholds() )
+
         from Hadrons_Minimal import Hadrons_Minimal
         thresholds.update( Hadrons_Minimal().Thresholds() )
     
@@ -94,6 +97,12 @@ class Physics_HighNu_80Vis_25L0_2Hlt1_CoreHlt2_Jun10         ( Physics_HighNu_80
 
         from Muons_Retention15 import Muons_Retention15 
         list.extend( Muons_Retention15().ActiveHlt2Lines() )
+
+        ##
+        ## electrons
+        ##
+        from Electrons_Minimal_TrackFitted import Electrons_Minimal_TrackFitted
+        list.extend( Electrons_Minimal_TrackFitted().ActiveHlt2Lines() )
 
         ##
         ## hadrons

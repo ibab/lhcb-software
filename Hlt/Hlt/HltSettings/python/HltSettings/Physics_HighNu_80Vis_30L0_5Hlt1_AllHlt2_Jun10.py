@@ -29,15 +29,15 @@ class Physics_HighNu_80Vis_30L0_5Hlt1_AllHlt2_Jun10           ( Physics_HighNu_4
         from Muons_Retention15 import Muons_Retention15         
         thresholds.update( Muons_Retention15().Thresholds() )
 
+        from Electrons_Minimal_TrackFitted import Electrons_Minimal_TrackFitted
+        thresholds.update( Electrons_Minimal_TrackFitted().Thresholds() )
+
         from CharmLines import CharmLines
         thresholds.update( CharmLines().Thresholds() )
         
         from TopoLines import TopoLines
         thresholds.update( TopoLines().Thresholds())
 
-        from Phi_Reduction5 import PhiCharmLepton_Reduction5
-        thresholds.update(PhiCharmLepton_Reduction5().Thresholds())
-      
         from Hlt2Lines.Hlt2CommissioningLines  import Hlt2CommissioningLinesConf
         thresholds.update( { Hlt2CommissioningLinesConf : { 'Prescale' : { 'Hlt2PassThrough'    : 0.01
                                                                            , 'Hlt2Transparent'  : 1. }
@@ -113,5 +113,11 @@ class Physics_HighNu_80Vis_30L0_5Hlt1_AllHlt2_Jun10           ( Physics_HighNu_4
         ##
         from Exclusive_Nominal import Exclusive_Nominal
         list.extend( Exclusive_Nominal().ActiveHlt2Lines() )
+        
+        ##
+        ## electrons
+        ##
+        from Electrons_Minimal_TrackFitted import Electrons_Minimal_TrackFitted
+        list.extend( Electrons_Minimal_TrackFitted().ActiveHlt2Lines() )
                
         return list
