@@ -1,7 +1,7 @@
 """
 
 """
-__version__ = "$Id: MicroDSTWriter.py,v 1.15 2010-06-22 08:32:34 jpalac Exp $"
+__version__ = "$Id: MicroDSTWriter.py,v 1.16 2010-07-07 17:35:42 jpalac Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -21,7 +21,7 @@ class MicroDSTWriter(BaseDSTWriter) :
                   , "CopyL0DUReport"       : False
                   , "CopyHltDecReports"    : False
                   , "CopyMCTruth"          : False
-                  , "OutputPrefix"         : "MicroDST"
+                  , "OutputPrefix"         : ""
                   }
 
     _propertyDocDct =  {  "CopyParticles"        : """ """
@@ -65,11 +65,12 @@ class MicroDSTWriter(BaseDSTWriter) :
         return loc
 
     def outputPrefix(self, seq) :
-        prefix = self.getProp('OutputPrefix')
-        if prefix != 'SequenceName' :
-            return self.getProp('OutputPrefix')
+        prefix = seq.name().replace('.', '')
+        branch = self.getProp('OutputPrefix')
+        if branch == '' :
+            return prefix
         else :
-            return seq.name().replace('.', '')
+            return branch + '/' + prefix
     
     def setOutputPrefix(self, seq, cloner) :
         cloner.OutputPrefix = self.outputPrefix(seq)

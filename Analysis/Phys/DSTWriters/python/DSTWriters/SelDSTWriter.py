@@ -2,7 +2,7 @@
 Write a DST for a single selection sequence. Writes out the entire
 contents of the input DST
 """
-__version__ = "$Id: SelDSTWriter.py,v 1.10 2010-06-11 07:28:11 jpalac Exp $"
+__version__ = "$Id: SelDSTWriter.py,v 1.11 2010-07-07 17:35:42 jpalac Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -22,15 +22,14 @@ class SelDSTWriter(MicroDSTWriter) :
                   "CopyProtoParticles" : False,
                   "CopyBTags"          : False,
                   "CopyPVRelations"    : {"Particle2VertexRelations":True},
-                  "OutputPrefix"       : "Sel"
                   }
 
     _propertyDocDct = {"SaveCandidates" : """Copy candidate decay tree. Default: True.""",
                        "CopyODIN" : """Copy ODIN bank into /Event/OutputPrefix. Default: False. """,
                        "CopyRecHeader" : """Copy RecHeader bank into /Event/OutputPrefix """,
                        "CopyPVs" : """ Copy primary vertices bank into /Event/OutputPrefix. Default: False. """,
-                       "CopyBTags" : """ Copy FlavourTags bank into /Event/OutputPrefix. Default: False. """,
-                       "OutputPrefix" : """ Prefix of TES location of candidates output: /Event/OutputPrefix/xxxx. Default 'Sel'."""}
+                       "CopyBTags" : """ Copy FlavourTags bank into /Event/OutputPrefix. Default: False. """
+                       }
 
     def multiSequences(self) :
         return len(self.selectionSequences()) > 1
@@ -40,9 +39,9 @@ class SelDSTWriter(MicroDSTWriter) :
         return InputCopyStream
 
     def extendStream(self, seq, stream) :
-        if self.multiSequences() :
-            self.setProp('OutputPrefix', 'SequenceName')
-            log.info('More than one SelectionSequence. Partition output TES structure.')
+#        if self.multiSequences() :
+#            self.setProp('OutputPrefix', 'SequenceName')
+#            log.info('More than one SelectionSequence. Partition output TES structure.')
         stream.Preload = False          # True makes LoKi crash (why?)
         stream.PreloadOptItems = False  # True makes LoKi crash (why?)
         if self.getProp("SaveCandidates") :
