@@ -158,9 +158,17 @@ class Physics_HighNu_40Vis_15L0_2Hlt1_ExpressHlt2_Jun10 :
                        , Hlt2ExpressLinesConf : { 'ExKSMassWin'           :  70
                                                   , 'ExLambdaMassWin'     :  40 
                                                   , 'ExLambdaMassWinWide' :  60
+                                                  # to save CPU time, prescale lines to double of needed input
+                                                  # Ks takes 1/4 of HLT1 --> 10Hz
+                                                  # Lambda takes 1/20 --> 50Hz
+                                                  , 'Prescale' :  { 'Hlt2ExpressKS' : 'RATE(10)'
+                                                                    ,'Hlt2ExpressLambda' : 'RATE(50)'
+                                                                    ,'Hlt2ExpressBeamHalo': 'RATE(100)'
+                                                                    ,'Hlt2ExpressJPsiTagProbe': 'RATE(200)'
+                                                                    }
                                                   }
                        }
-
+        
 ##         # Hlt2
 ##         from DefaultHlt2Lines import DefaultHlt2Lines         
 ##         thresholds.update( DefaultHlt2Lines().Thresholds() )

@@ -163,6 +163,11 @@ class Physics_HighNu_80Vis_25L0_2Hlt1_ExpressHlt2_Jun10 :
                  , Hlt2ExpressLinesConf : { 'ExKSMassWin'           :  70
                                             , 'ExLambdaMassWin'     :  40 
                                             , 'ExLambdaMassWinWide' :  60
+                                              , 'Prescale' :  { 'Hlt2ExpressKS' : 'RATE(10)'
+                                                                    ,'Hlt2ExpressLambda' : 'RATE(50)'
+                                                                    ,'Hlt2ExpressBeamHalo': 'RATE(100)'
+                                                                    ,'Hlt2ExpressJPsiTagProbe': 'RATE(200)'
+                                                                    }
                                             }
                  }
 
