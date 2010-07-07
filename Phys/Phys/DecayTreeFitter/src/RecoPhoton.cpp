@@ -73,6 +73,7 @@ namespace DecayTreeFitter
     const LHCb::CaloPosition* pos = hypo->position() ;
     m_m = pos->parameters() ;
     m_V = pos->covariance() ;
+    m_z = pos->z() ;
     return ErrCode() ;
   }
 
