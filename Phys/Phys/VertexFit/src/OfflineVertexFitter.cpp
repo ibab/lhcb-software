@@ -1,4 +1,4 @@
-// $Id: OfflineVertexFitter.cpp,v 1.39 2010-06-13 12:06:24 ibelyaev Exp $
+// $Id: OfflineVertexFitter.cpp,v 1.40 2010-07-07 11:12:07 jonrob Exp $
 // Include files
 
 // from Gaudi
@@ -474,7 +474,8 @@ StatusCode OfflineVertexFitter::addFlying(LHCb::Particle& part,
   sc = m_transporter->transportAndProject(dau, z2, transParticleDau);
   if( sc.isFailure ()) 
   {
-    debug() << "transport of dau failed in addFlying(" << endmsg;
+    if (msgLevel(MSG::DEBUG))
+      debug() << "transport of dau failed in addFlying(" << endmsg;
     return sc;
   }
 
@@ -607,7 +608,8 @@ StatusCode OfflineVertexFitter::addFlying(LHCb::Particle& part,
 
     Gaudi::SymMatrix2x2 VD=ROOT::Math::Similarity<double,2,13>(D, Cx);
     if(!VD.Invert()) {
-      debug() << "could not invert matrix VD in addFlying! " <<endmsg;
+      if (msgLevel(MSG::DEBUG))
+        debug() << "could not invert matrix VD in addFlying! " <<endmsg;
       return StatusCode::FAILURE;
     }
 
@@ -747,7 +749,9 @@ StatusCode OfflineVertexFitter::addVertexed(LHCb::Particle& part,
 
   while(!converged && iter< m_maxIter)  {
     iter++;
-    verbose() << ":-) Iteration   " << iter << endmsg;
+
+    if ( msgLevel(MSG::VERBOSE) )
+      verbose() << ":-) Iteration   " << iter << endmsg;
 
     //f(0)=x2-x1;
     //f(1)=y2-y1;
@@ -772,7 +776,8 @@ StatusCode OfflineVertexFitter::addVertexed(LHCb::Particle& part,
 
     Gaudi::SymMatrix3x3 VD=ROOT::Math::Similarity<double,3,14>(D, Cx);
     if(!VD.Invert()) {
-      debug() << "could not invert matrix VD in addVertexed! " <<endmsg;
+      if (msgLevel(MSG::DEBUG))
+        debug() << "could not invert matrix VD in addVertexed! " <<endmsg;
       return StatusCode::FAILURE;
     }
 
@@ -865,7 +870,8 @@ StatusCode OfflineVertexFitter::addPhoton(LHCb::Particle& part,
 
   sc=getPhotonParameter(*dau, zg, gammapara, gammacov);
   if(sc.isFailure()) {
-    debug() << "Fail to getPhotonParameter in  addPhoton" << endmsg;
+    if (msgLevel(MSG::DEBUG))
+      debug() << "Fail to getPhotonParameter in  addPhoton" << endmsg;
     return StatusCode::FAILURE;
   }
 
@@ -969,7 +975,8 @@ StatusCode OfflineVertexFitter::addPhotonPair(LHCb::Particle& part,
 
   sc=getPhotonParameter(*gamma1, zg1, gamma1para, gamma1cov);
   if(sc.isFailure()) {
-    debug() << "Fail to getPhotonParameter in  addPhotonPair" << endmsg;
+    if (msgLevel(MSG::DEBUG))
+      debug() << "Fail to getPhotonParameter in  addPhotonPair" << endmsg;
     return StatusCode::FAILURE;
   }
 
@@ -979,7 +986,8 @@ StatusCode OfflineVertexFitter::addPhotonPair(LHCb::Particle& part,
 
   sc=getPhotonParameter(*gamma2, zg2, gamma2para, gamma2cov);
   if(sc.isFailure()) {
-    debug() << "Fail to getPhotonParameter in  addPhotonPair" << endmsg;
+    if (msgLevel(MSG::DEBUG))
+      debug() << "Fail to getPhotonParameter in  addPhotonPair" << endmsg;
     return StatusCode::FAILURE;
   }
 
@@ -1148,7 +1156,8 @@ StatusCode OfflineVertexFitter::addPhotonPair(LHCb::Particle& part,
     dd[0]=-nominalMass;
     Gaudi::SymMatrix1x1 Cd = ROOT::Math::Similarity<double, 1, 8>(DD,Cnew);
     if ( !Cd.Invert() ) {
-      debug() << "could not invert matrix Cd in addPhotonPair" << endmsg;
+      if (msgLevel(MSG::DEBUG))
+        debug() << "could not invert matrix Cd in addPhotonPair" << endmsg;
       return StatusCode::FAILURE;
     }
     Vnew-= Cnew*ROOT::Math::Transpose(DD)*Cd*(DD*Vnew+dd);
@@ -1198,7 +1207,8 @@ StatusCode OfflineVertexFitter::addMergedPi0(LHCb::Particle& part,
 
   sc=getMergedPi0Parameter(*dau, zg1, gamma1para, gamma1cov, zg2, gamma2para, gamma2cov);
   if(sc.isFailure()) {
-    debug() << "Fail to getMeregdPi0Parameter in  addMeregdPi0Pair" << endmsg;
+    if (msgLevel(MSG::DEBUG))
+      debug() << "Fail to getMeregdPi0Parameter in  addMeregdPi0Pair" << endmsg;
     return StatusCode::FAILURE;
   }
 
@@ -1367,7 +1377,8 @@ StatusCode OfflineVertexFitter::addMergedPi0(LHCb::Particle& part,
     dd[0]=-nominalMass;
     Gaudi::SymMatrix1x1 Cd = ROOT::Math::Similarity<double, 1, 8>(DD,Cnew);
     if ( !Cd.Invert() ) {
-      debug() << "could not invert matrix Cd in addPhotonPair" << endmsg;
+      if (msgLevel(MSG::DEBUG))
+        debug() << "could not invert matrix Cd in addPhotonPair" << endmsg;
       return StatusCode::FAILURE;
     }
     Vnew-= Cnew*ROOT::Math::Transpose(DD)*Cd*(DD*Vnew+dd);
@@ -1431,7 +1442,8 @@ StatusCode OfflineVertexFitter::fitTwo(const LHCb::Particle* dau1,
                                             zPreviousFit,
                                             transParticle1);
     if( sc.isFailure ()) {
-      debug() << "transport of dau1 failed in fitTwo!" << endmsg;
+      if (msgLevel(MSG::DEBUG))
+        debug() << "transport of dau1 failed in fitTwo!" << endmsg;
       return sc;
     }
 
@@ -1440,7 +1452,8 @@ StatusCode OfflineVertexFitter::fitTwo(const LHCb::Particle* dau1,
                                             zPreviousFit,
                                             transParticle2);
     if( sc.isFailure ()) {
-      debug() << "transport of dau2 failed in fitTwo!" << endmsg;
+      if (msgLevel(MSG::DEBUG))
+        debug() << "transport of dau2 failed in fitTwo!" << endmsg;
       return sc;
     }
 
@@ -1497,7 +1510,8 @@ StatusCode OfflineVertexFitter::fitTwo(const LHCb::Particle* dau1,
     X[10]=dau2mpara[5];
     X[11]=dau2mpara[6];
 
-    verbose() << "X vector is " << X << endmsg ;
+    if ( msgLevel(MSG::VERBOSE) )
+      verbose() << "X vector is " << X << endmsg ;
 
     Gaudi::SymMatrix6x6 newcov1;
     Gaudi::SymMatrix6x6 newcov2;
@@ -1714,7 +1728,6 @@ StatusCode OfflineVertexFitter::updateParticle(LHCb::Particle& part,
 
   const Gaudi::XYZPoint refPoint(V7[0], V7[1], V7[2]);
 
-
   // @todo JPP check LorentzVector constructors vis a vis CLHEP ones!
   const Gaudi::LorentzVector lmom(V7[3], V7[4], V7[5], V7[6]);
 
@@ -1726,7 +1739,6 @@ StatusCode OfflineVertexFitter::updateParticle(LHCb::Particle& part,
 
   Gaudi::Vector7 Vm7;
   Gaudi::SymMatrix7x7 Cm7;
-
   convertE2M(V7,C7,Vm7,Cm7);
 
   const double measuredMass=Vm7[6];
@@ -1766,8 +1778,8 @@ void OfflineVertexFitter::getParticleInfo(const LHCb::Particle& part,
 {
   const LHCb::Vertex* tmpvert = part.endVertex();
 
-  Gaudi::XYZPoint refPoint= part.referencePoint();
-  Gaudi::LorentzVector lmom= part.momentum();
+  const Gaudi::XYZPoint& refPoint  = part.referencePoint();
+  const Gaudi::LorentzVector& lmom = part.momentum();
 
   V7(0)=refPoint.x();
   V7(1)=refPoint.y();
@@ -1806,7 +1818,7 @@ void OfflineVertexFitter::convertE2M(const Gaudi::Vector7& V7,
   double py     = V7[4];
   double pz     = V7[5];
   double energy = V7[6];
-  double mass=std::sqrt(energy*energy-px*px-py*py-pz*pz);
+  double mass   = std::sqrt(energy*energy-px*px-py*py-pz*pz);
 
   Te2m(6,3) = -px/mass;
   Te2m(6,4) = -py/mass;
@@ -1862,8 +1874,7 @@ StatusCode OfflineVertexFitter::constrainMass(Gaudi::Vector7& V7,
   Gaudi::SymMatrix7x7 Cm;
   convertE2M(V7,C7,Vm,Cm);
 
-
-
+  // CRJ : floating point comparison is not a good idea 
   if(Cm(6,6)!=0.0) {
     // need translation
     /*
@@ -1942,41 +1953,42 @@ bool OfflineVertexFitter::requireMassConstraint(const LHCb::Particle* part,
 double OfflineVertexFitter::getZEstimate(const LHCb::Particle* part1,
                                          const LHCb::Particle* part2) const
 {
-  double tx1=part1->slopes().X();
-  double ty1=part1->slopes().Y();
-  double tx2=part2->slopes().X();
-  double ty2=part2->slopes().Y();
-  const Gaudi::XYZPoint pos1=part1->referencePoint();
-  double x1= pos1.x();
-  double y1= pos1.y();
-  double z1= pos1.z();
-  const Gaudi::XYZPoint pos2=part2->referencePoint();
-  double x2= pos2.x();
-  double y2= pos2.y();
-  double z2= pos2.z();
+  const double tx1=part1->slopes().X();
+  const double ty1=part1->slopes().Y();
+  const double tx2=part2->slopes().X();
+  const double ty2=part2->slopes().Y();
+  const Gaudi::XYZPoint& pos1=part1->referencePoint();
+  const double x1= pos1.x();
+  const double y1= pos1.y();
+  const double z1= pos1.z();
+  const Gaudi::XYZPoint& pos2=part2->referencePoint();
+  const double x2= pos2.x();
+  const double y2= pos2.y();
+  const double z2= pos2.z();
 
   //return (y2-y1+ty1*z1-ty2*z2)/(ty1-ty2);
-  double  sumSquaredSlopes = tx1*tx1 + ty1*ty1+ tx2*tx2 + ty2*ty2;
-  double  sumCrossedProduct = tx1*(x1-tx1*z1) + ty1*(y1-ty1*z1) +
+  const double  sumSquaredSlopes = tx1*tx1 + ty1*ty1+ tx2*tx2 + ty2*ty2;
+  const double  sumCrossedProduct = tx1*(x1-tx1*z1) + ty1*(y1-ty1*z1) +
     tx2*(x2-tx2*z2) + ty2*(y2-ty2*z2);
 
-  double sumX=x1-tx1*z1 + x2-tx2*z2;
-  double sumY=y1-ty1*z1 + y2-ty2*z2;
+  const double sumX=x1-tx1*z1 + x2-tx2*z2;
+  const double sumY=y1-ty1*z1 + y2-ty2*z2;
 
-  double sumSlopeX= tx1+tx2;
-  double sumSlopeY= ty1+ty2;
-  double det = sumSquaredSlopes - ((sumSlopeX*sumSlopeX + sumSlopeY*sumSlopeY))/2.;
+  const double sumSlopeX= tx1+tx2;
+  const double sumSlopeY= ty1+ty2;
+  const double det = sumSquaredSlopes - ((sumSlopeX*sumSlopeX + sumSlopeY*sumSlopeY))/2.;
   double zEstimate = 0;
+  // CRJ : This floating point comparison isn't a good idea.... 
   if (det != 0) {
-    return zEstimate = (((sumX*sumSlopeX + sumY*sumSlopeY)/2.)
-                        - sumCrossedProduct) /det;
+    zEstimate = (((sumX*sumSlopeX + sumY*sumSlopeY)/2.)
+                 - sumCrossedProduct) /det;
   }
   else 
   {
-    Error ( "Unable to make z estimate " ).ignore() ;
-    if(z1<z2) return z1-.001;
-    else return z2-0.001;
+    Error ( "Unable to make z estimate" ).ignore() ;
+    zEstimate = ( z1<z2 ? z1-.001 : z2-0.001 );
   }
+  return zEstimate;
 }
 
 //=============================================================================
@@ -2066,8 +2078,11 @@ StatusCode OfflineVertexFitter::getMergedPi0Parameter(const LHCb::Particle& pi0,
   para1(1)=pos1->y();
   para1(2)=pos1->e();
   cov1=pos1 -> covariance();
-  verbose() <<"Photon1 parameters: " <<para1<<endmsg;
-  verbose() <<"Photon1 cov : " <<cov1<<endmsg;
+  if ( msgLevel(MSG::VERBOSE) )
+  {
+    verbose() <<"Photon1 parameters: " <<para1<<endmsg;
+    verbose() <<"Photon1 cov : " <<cov1<<endmsg;
+  }
 
   const CaloPosition* pos2 = g2->position() ;
   if ( 0 == pos2    ) 
@@ -2078,12 +2093,14 @@ StatusCode OfflineVertexFitter::getMergedPi0Parameter(const LHCb::Particle& pi0,
   para2(1)=pos2->y();
   para2(2)=pos2->e();
   cov2=pos2 -> covariance();
-  verbose() <<"Photon2 parameters: " <<para2<<endmsg;
-  verbose() <<"Photon2 cov : " <<cov2<<endmsg;
+  if ( msgLevel(MSG::VERBOSE) )
+  {
+    verbose() <<"Photon2 parameters: " <<para2<<endmsg;
+    verbose() <<"Photon2 cov : " <<cov2<<endmsg;
+  }
 
   return sc;
 }
-
 
 //=============================================================================
 //add To particle Daughters
