@@ -8,6 +8,10 @@
 ! http://www.slac.stanford.edu/spires/find/hep/www?eprint=physics/0503191
 !-----------------------------------------------------------------------------
 
+! 2010-07-07 - Wouter Hulsbergen
+
+ - fixed major bug in RecoPhoton: the z-position of the cluster was uninitialized.
+
 !======================= DecayTreeFitter v1r8 2010-06-24 =====================
 
 ! 2010-06-21 - Vanya Belyaev
