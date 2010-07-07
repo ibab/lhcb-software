@@ -1,7 +1,7 @@
 """
 High level configuration tools for DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.112 2010-06-08 12:05:07 jpalac Exp $"
+__version__ = "$Id: Configuration.py,v 1.113 2010-07-07 17:12:55 tskwarni Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -231,6 +231,9 @@ class DaVinci(LHCbConfigurableUser) :
 # Decode DecReports
 #
     def decReports(self):
+        from Configurables import L0SelReportsMaker, L0DecReportsMaker
+        DataOnDemandSvc().AlgMap["HltLikeL0/DecReports"] = L0DecReportsMaker( OutputLevel = 4 )
+        DataOnDemandSvc().AlgMap["HltLikeL0/SelReports"] = L0SelReportsMaker( OutputLevel = 4 )        
         """
         Decode DecReports _if_ Hlt is not run
         """

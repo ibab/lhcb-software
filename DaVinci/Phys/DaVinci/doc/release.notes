@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.430 2010-06-10 09:47:08 jpalac Exp $
+! $Id: release.notes,v 1.431 2010-07-07 17:12:55 tskwarni Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -8,6 +8,10 @@
 ! Do not forget to update requirements and job/DaVinci_Ganga.py before tagging
 !
 !-----------------------------------------------------------------------------
+
+! 2010-07-07 - Tomasz Skwarnicki
+ - python/DaVinci/Configuration.py
+   add L0DecReportsMaker,L0SelReportsMaker via DataOnDemandSvc
 
 !========================== DaVinci v25r5p1 2010-06-10 =====================
 
