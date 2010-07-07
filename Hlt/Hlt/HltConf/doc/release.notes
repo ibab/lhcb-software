@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.479 2010-07-06 08:42:31 graven Exp $ 
+! $Id: release.notes,v 1.480 2010-07-07 14:28:03 albrecht Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+! 2010-07-07 - Johannes Albrecht
+ - add more HLT2 routing bits
+
 ! 2010-06-07 - V. Gligorov
  - Remove an obsolete Hlt2 tracking configuration.
 

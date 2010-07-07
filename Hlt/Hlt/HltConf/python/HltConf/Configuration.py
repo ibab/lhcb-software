@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.200 2010-07-06 08:42:31 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.201 2010-07-07 14:24:49 albrecht Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -241,7 +241,8 @@ class HltConf(LHCbConfigurableUser):
                       , 76 : "HLT_PASS_RE('Hlt2.*(Bu2|Bs2|Bd2|Bc2|B2HH|B2JpsiX|Dst2|diphotonDiMuon|DisplVertices).*Decision')"
                       , 77 : "HLT_PASS_RE('Hlt2(?!Forward)(?!DebugEvent)(?!Express)(?!Transparent)(?!PassThrough).*Decision')"
                       , 78 : "HLT_PASS_RE('Hlt2.*(SingleMuon|DiMuon|MuTrack).*Decision')"
-                      , 79 : "HLT_PASS_RE('Hlt2.*(Topo|Charm|IncPhi|B2D2).*Decision')" 
+                      , 79 : "HLT_PASS_RE('Hlt2.*(Topo|Charm|IncPhi|B2D2).*Decision')"
+                      , 80 : "HLT_PASS_RE('Hlt2.*Electron.*Decision')"
                          }
         HltRoutingBitsWriter().RoutingBits = routingBits
 
