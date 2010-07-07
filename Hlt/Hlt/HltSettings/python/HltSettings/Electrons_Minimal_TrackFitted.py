@@ -23,14 +23,14 @@ class Electrons_Minimal_TrackFitted:
             'Hlt2UnbiasedTFDiElectronLowPID',
             'Hlt2UnbiasedTFJpsi2ee',          
             'Hlt2UnbiasedTFPsi2ee',           
-            'Hlt2UnbiasedTFB2ee',
+            #'Hlt2UnbiasedTFB2ee',
             # Biased
             'Hlt2BiasedTFDiElectron',        
             'Hlt2BiasedTFDiElectronLowMass',
             'Hlt2BiasedTFDiElectronLowPID',
             'Hlt2BiasedTFJpsi2ee',          
             'Hlt2BiasedTFPsi2ee',           
-            'Hlt2BiasedTFB2ee',
+            #'Hlt2BiasedTFB2ee',
             # single
             'Hlt2SingleTFElectron',     
             'Hlt2TFElectronPlusTrack',
