@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.187 2010-07-06 08:38:58 graven Exp $
+! $Id: release.notes,v 1.188 2010-07-07 08:54:13 albrecht Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
+
+! 2010-07-07 - Johannes Albrecht
+ - HltConfiguredPR: change tracking cuts to default (tight) cuts
 
 !========================== Hlt1Lines v4r0p2 2010-07-06 ===================
 ! 2010-07-06 - Gerhard Raven

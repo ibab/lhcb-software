@@ -1,9 +1,11 @@
-!$Id: release.notes,v 1.134 2010-07-06 08:37:00 graven Exp $
+!$Id: release.notes,v 1.135 2010-07-07 08:55:07 albrecht Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/HltTracking
 ! Responsible : Jose A. Hernando
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
+! 2010-07-07 - Johannes Albrecht
+ - HltConfiguredPR: change tracking cuts to default (tight) cuts
 
 ! 2010-06-07 - V. Gligorov
  - Remove an obsolete Hlt2 tracking configuration.
