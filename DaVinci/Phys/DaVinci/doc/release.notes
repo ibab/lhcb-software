@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.431 2010-07-07 17:12:55 tskwarni Exp $
+! $Id: release.notes,v 1.432 2010-07-08 14:36:08 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -8,6 +8,8 @@
 ! Do not forget to update requirements and job/DaVinci_Ganga.py before tagging
 !
 !-----------------------------------------------------------------------------
+
+!========================== DaVinci v25r6 2010-07-08 =======================
 
 ! 2010-07-07 - Tomasz Skwarnicki
  - python/DaVinci/Configuration.py
