@@ -4,7 +4,10 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
-!========================== HltSettings v2r1  2010-07-07 ===================
+!========================== HltSettings v2r1  2010-07-08 ===================
+! 2010-07-08 - Gerhard Raven
+ - remove B2D2hh prescale in HighNu_80Vis settings
+
 ! 2010-07-07 - Johannes Albrecht
  - add electron lines, include prescale for express lines, add testHlt2 setting
 

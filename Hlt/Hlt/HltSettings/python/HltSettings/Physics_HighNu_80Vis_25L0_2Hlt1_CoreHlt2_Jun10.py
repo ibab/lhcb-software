@@ -82,9 +82,9 @@ class Physics_HighNu_80Vis_25L0_2Hlt1_CoreHlt2_Jun10         ( Physics_HighNu_80
         # Hlt2B2D2hhBachelorSignal
         #  see http://lblogbook.cern.ch/HLT+Trigger/172 for why...
 
-        from Hlt2Lines.Hlt2B2DXLines import Hlt2B2DXLinesConf
-        __update_conf__(thresholds, Hlt2B2DXLinesConf, { 'Prescale' : { 'Hlt2B2D2hhhBachelorSignal' : 0.1
-                                                                      , 'Hlt2B2D2hhBachelorSignal'  : 0.1 } } )
+        #from Hlt2Lines.Hlt2B2DXLines import Hlt2B2DXLinesConf
+        #__update_conf__(thresholds, Hlt2B2DXLinesConf, { 'Prescale' : { 'Hlt2B2D2hhhBachelorSignal' : 0.1
+        #                                                              , 'Hlt2B2D2hhBachelorSignal'  : 0.1 } } )
         return thresholds
 
     
