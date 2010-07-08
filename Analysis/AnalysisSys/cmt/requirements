@@ -1,6 +1,6 @@
-# $Id: requirements,v 1.197 2010-06-25 06:38:56 jpalac Exp $
+# $Id: requirements,v 1.198 2010-07-08 14:07:28 jpalac Exp $
 package AnalysisSys
-version v4r6
+version v4r7
 
 branches doc cmt
 
@@ -8,7 +8,7 @@ branches doc cmt
 ####################################################################
 
 use  AnalysisConf               v2r0     Phys   # Patrick Koppenburg, Juan Palacios
-use  DSTWriters                 v1r7     Phys   # Juan Palacios
+use  DSTWriters                 v1r8     Phys   # Juan Palacios
 use  DSTWriterTests             v1r4     Phys   # Juan Palacios
 #===================================================================
 #use  AnalysisDict               v1r0     Phys   # TEMPORARY!
@@ -27,9 +27,9 @@ use  VertexFitCheck             v1r6     Phys   # Yuehong Xie
 use  MCStandardParticles        v1r3     Phys   # Juan Palacios
 use  FlavourTaggingChecker      v5r4p1   Phys   # Marco Musy
 use  ParticleMakerChecker       v1r3p2   Phys   # Chris Jones
-use  DecayTreeTuple             v3r5p1   Phys   # Rob Lambert
+use  DecayTreeTuple             v3r6     Phys   # Rob Lambert
 use  LoKiJets                   v5r2     Phys   # Victor Coco
-use  DisplVertices              v6r8     Phys   # Neal Gueissaz
+use  DisplVertices              v6r9     Phys   # Neal Gueissaz
 use  HighPtJets                 v1r1     Phys   # Marcin Kucharczyk
 ####################################################################
 #
@@ -39,9 +39,9 @@ use PyAna                       v1r2     Analysis
 #
 # Stripping
 #
-use StrippingAlgs               v1r2   Phys   # Anton Poluektov
-use StrippingConf               v3r5   Phys   # Anton Poluektov
-use StrippingSelections         v1r23  Phys   # Anton Poluektov
+use StrippingAlgs               v1r3   Phys   # Anton Poluektov
+use StrippingConf               v3r6   Phys   # Anton Poluektov
+use StrippingSelections         v1r24  Phys   # Anton Poluektov
 
 ####################################################################
 use  MicroDSTBase        	v1r7p4  MicroDST          # Juan Palacios

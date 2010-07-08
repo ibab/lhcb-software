@@ -3,6 +3,20 @@ Package     : AnalysisSys
 Package Coordinator : Juan Palacios
 Purpose     : LHCb analysis packages
 
+</PRE><H1><A NAME=v4r7>2010-07-08 Analysis v4r7 </A></H1><PRE>
+
+ ***  STRIPPING LINES DEVELOPMENT VERSION ***
+ - StrippingSelections are *not* commissioned or approved. Do not use for
+   production with the released Phys/StrippingSelections and Phys/StrippingConf.
+ - Based on Phys v9r7 and LHCb v31r2
+ - New infrastructire to reject "bad" events from Stripping while keeping 
+   then in the DST.
+ - MaxCandidates and MaxCombinations for Stripping CombineParticles instances.
+ - Change in default structure of MicroDST.
+ - Change in default structure of default single-SelectionSequence stripping DST.
+ - Examples of configurable (not Configurable) StrippingStreams
+ - Minor additions to PyAna histogram plotting.
+
 </PRE><H1><A NAME=v4r6>2010-06-25 Analysis v4r6 </A></H1><PRE>
 
  ***  STRIPPING LINES DEVELOPMENT VERSION ***
