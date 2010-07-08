@@ -118,7 +118,7 @@ void CtrlFarmSubDisplay::updateContent(XML::TaskSupervisorParser& ts) {
   char txt[128];
   string val;
   Cluster& c = m_cluster;
-  Cluster::Nodes::const_iterator i;
+  Cluster::Nodes::const_iterator i, e;
   int col = NORMAL, pos = 0, line=3;
   size_t taskCount=0, missTaskCount=0;
   size_t connCount=0, missConnCount=0;
@@ -127,7 +127,7 @@ void CtrlFarmSubDisplay::updateContent(XML::TaskSupervisorParser& ts) {
   ts.getClusterNodes(c);
   ::scrc_put_chars(m_display,"", NORMAL,3,1,1);
   ::scrc_put_chars(m_display,"", NORMAL,4,1,1);
-  for(i=c.nodes.begin(), pos=1; i!=c.nodes.end();++i) {
+  for(i=c.nodes.begin(), e=c.nodes.end(), pos=1; i!=e;++i) {
     const Cluster::Node& n = (*i).second;
     bool good = n.status == "ALIVE";
     for(Cluster::Projects::const_iterator q=n.projects.begin(); q != n.projects.end(); ++q) {
@@ -142,9 +142,14 @@ void CtrlFarmSubDisplay::updateContent(XML::TaskSupervisorParser& ts) {
     connCount     += n.connCount;
     missConnCount += n.missConnCount;
     val = " "+(n.name == m_name ? n.name : n.name.substr(n.name.length()-2));
-    ::scrc_put_chars(m_display,val.c_str(),col,line,pos,0);
-    pos += val.length();
-    if ( pos>DISP_WIDTH-3 )  {
+    if ( twoline && pos > DISP_WIDTH-4 ) {
+      ::scrc_put_chars(m_display,"...",col,line,pos,0);
+    }
+    else {
+      ::scrc_put_chars(m_display,val.c_str(),col,line,pos,0);
+      pos += val.length();
+    }
+    if ( !twoline && pos>DISP_WIDTH-3 )  {
       ++line;
       pos=1;
       twoline=true;

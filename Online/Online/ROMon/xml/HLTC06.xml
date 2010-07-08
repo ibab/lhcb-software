@@ -12,7 +12,40 @@
    <Node name="hltc0609"   type="HLTWorker"/>
    <Node name="hltc0610"   type="HLTWorker"/>
    <Node name="hltc0611"   type="HLTWorker"/>
+   <Node name="hltc0612"   type="HLTWorker"/>
+   <Node name="hltc0613"   type="HLTWorker"/>
+   <Node name="hltc0614"   type="HLTWorker"/>
+   <Node name="hltc0615"   type="HLTWorker"/>
+   <Node name="hltc0616"   type="HLTWorker"/>
+   <Node name="hltc0617"   type="HLTWorker"/>
+   <Node name="hltc0618"   type="HLTWorker"/>
+   <Node name="hltc0619"   type="HLTWorker"/>
+   <Node name="hltc0620"   type="HLTWorker"/>
+   <Node name="hltc0621"   type="HLTWorker"/>
+   <Node name="hltc0622"   type="HLTWorker"/>
+   <Node name="hltc0623"   type="HLTWorker"/>
+   <Node name="hltc0624"   type="HLTWorker"/>
+   <Node name="hltc0625"   type="HLTWorker"/>
    <Node name="hltc06"   type="HLTControl"/>
+   <Node name="hltc0626"   type="HLTWorker"/>
+   <Node name="hltc0627"   type="HLTWorker"/>
+   <Node name="hltc0628"   type="HLTWorker"/>
+   <Node name="hltc0629"   type="HLTWorker"/>
+   <Node name="hltc0630"   type="HLTWorker"/>
+   <Node name="hltc0631"   type="HLTWorker"/>
+   <Node name="hltc0632"   type="HLTWorker"/>
+   <Node name="hltc0633"   type="HLTWorker"/>
+   <Node name="hltc0634"   type="HLTWorker"/>
+   <Node name="hltc0635"   type="HLTWorker"/>
+   <Node name="hltc0636"   type="HLTWorker"/>
+   <Node name="hltc0637"   type="HLTWorker"/>
+   <Node name="hltc0638"   type="HLTWorker"/>
+   <Node name="hltc0639"   type="HLTWorker"/>
+   <Node name="hltc0640"   type="HLTWorker"/>
+   <Node name="hltc0641"   type="HLTWorker"/>
+   <Node name="hltc0642"   type="HLTWorker"/>
+   <Node name="hltc0643"   type="HLTWorker"/>
+   <Node name="hltc0644"   type="HLTWorker"/>
   </NodeList>
 </TaskInventory>
 
