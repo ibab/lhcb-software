@@ -4,9 +4,6 @@
  *
  *  Header file for tool : Rich::Rec::PhotonSignalJeffreysErf
  *
- *  CVS Log :-
- *  $Id: RichPhotonSignalJeffreysErf.h,v 1.2 2008-06-05 06:59:43 cattanem Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
@@ -14,6 +11,9 @@
 
 #ifndef RICHRECTOOLS_RICHPHOTONSIGNALJEFFREYSERF_H
 #define RICHRECTOOLS_RICHPHOTONSIGNALJEFFREYSERF_H 1
+
+// STL
+#include <cmath>
 
 // base class
 #include "RichPhotonSignalGaussProb.h"
