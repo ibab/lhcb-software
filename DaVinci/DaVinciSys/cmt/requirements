@@ -4,9 +4,13 @@ version v25r6
 branches doc cmt
 
 #=======================================================
-use  DaVinci                 	v25r5p1   Phys
-use  DaVinciTests               v1r0
+use  DaVinci                 	v25r6   Phys
+use  DaVinciTests               v1r1
+
 # Patches
+use  DaVinciTools               v21r3p1 Phys
+use  DecayTreeFitter            v2r1    Phys
+
 # Declare this as a container package
 apply_pattern container_package
 

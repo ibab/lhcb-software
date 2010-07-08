@@ -3,6 +3,26 @@ Package             : DaVinciSys
 Package Coordinator : Juan Palacios
 Purpose             : LHCb physics analysis application
 
+</PRE><H1><A NAME=v25r6>2010-07-08 DaVinci v25r6. Version for Stripping line development.</A></H1><PRE>
+
+  * Based on LHCb v31r2
+  * StrippingSelections are *not* commissioned or approved. Do not use 
+    for production with the released Phys/StrippingSelections and 
+    Phys/StrippingConf
+  * New infrastructire to reject "bad" events from Stripping while keeping them
+    in the DST.
+  * MaxCandidates and MaxCombinations for Stripping CombineParticles instances.
+  * Important bug fix for Particle->re-fitted PV relations storage in 
+    Micro / strip DST.
+  * Change in default structure of MicroDST. 
+    Data goes to /Event/<sequence name> instead of /Event/MicroDST
+  * Change in default structure of default single-SelectionSequence 
+    stripping DST. Data goes to /Event/<sequence name> instead of /Event/Sel
+  * Important bug-fix for DecayTreeFitter.
+  * Various improvements and additions, including new features shown in the
+    Friday session of the June/2010 software week: 
+    http://indico.cern.ch/conferenceDisplay.py?confId=73578
+
 </PRE><H1><A NAME=v25r5p1>2010-06-?? DaVinci v25r5p1. LHCb v31r1 based version for RecoStripping-05</A></H1><PRE>
 
   * Uses patched HLT v10r4p1
