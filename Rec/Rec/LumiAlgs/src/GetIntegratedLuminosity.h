@@ -1,4 +1,3 @@
-
 #ifndef GETINTEGRATEDLUMINOSITY_H 
 #define GETINTEGRATEDLUMINOSITY_H 1
 
@@ -7,14 +6,14 @@
 
 #include "GaudiAlg/GaudiTupleAlg.h"
 #include "GaudiKernel/IDataManagerSvc.h"
-#include "GaudiKernel/IIncidentListener.h"
-#include "GaudiKernel/IIncidentSvc.h"
-/// Reference to run records data service
+
   
 // event model
 #include "Event/HltLumiSummary.h"
 #include "Event/LumiFSR.h"
 #include "Event/LumiIntegral.h"
+#include "Event/EventCountFSR.h"
+#include "Event/TimeSpanFSR.h"
 
 // local
 #include "LumiIntegrator.h"
@@ -25,8 +24,8 @@
  *  @author Yasmine Amhis
  *  @date   2010-05-26
  */
-class GetIntegratedLuminosity : public GaudiTupleAlg , 
-                                virtual public IIncidentListener {
+class GetIntegratedLuminosity : public GaudiTupleAlg  
+                               {
 public: 
   /// Standard constructor
   GetIntegratedLuminosity( const std::string& name, ISvcLocator* pSvcLocator );
@@ -36,19 +35,27 @@ public:
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
   virtual StatusCode finalize  ();    ///< Algorithm finalization
-  // ==========================================================================
-  // IIncindentListener interface
-  // ==========================================================================
-  virtual void handle ( const Incident& ) {m_nHandled++; m_eventFSR->setOutput(m_nHandled);}
+  
   // ==========================================================================
 protected:
-  int m_nHandled; ///<total events
   
+  virtual int check( );
+  virtual std::vector< std::string > navigate(std::string rootname, std::string tag); 
+  virtual void explore(IRegistry* pObj, std::string tag, std::vector< std::string >& a);
+  
+  
+
+  
+  IDataProviderSvc* m_fileRecordSvc;
+  std::string m_FileRecordName;                 // location of FileRecords
+  std::string m_FSRName;                        // specific tag of summary data in FSR
+  std::string m_defaultStatusStr; ///status to start with if nothing else is known, Set by DefaultStatus
+  LHCb::EventCountFSR::StatusFlag m_defaultStatus; ///status to start with if nothing else is known, cast from DefaultStatus
+  int         m_events_in_file;                 // events after OpenFileIncident
   bool m_countersDetails;
   int m_count_input;  // number of events seen
   int m_count_output;  // number of incidents seen
- 
-  LHCb::EventCountFSR* m_eventFSR; // FSR for current file 
+  //LHCb::EventCountFSR* m_eventFSR; // FSR for current file 
   
   
   std::string m_ToolName;                       // name of tool for normalization
@@ -56,6 +63,6 @@ protected:
   
 private:
   ILumiIntegrator *m_integratorTool;            // tool to integrate luminosity
-  mutable IIncidentSvc* m_incSvc ;                      // the incident service 
+
 };
 #endif 

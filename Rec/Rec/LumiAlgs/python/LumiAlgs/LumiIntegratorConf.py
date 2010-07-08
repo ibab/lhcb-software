@@ -11,6 +11,8 @@ from LHCbKernel.Configuration import *
 from Configurables import GaudiSequencer as Sequence
 from Configurables import ( LHCbConfigurableUser, LHCbApp )
 from Configurables import LumiIntegrateFSR, LumiReadBackFSR
+from Configurables import GetIntegratedLuminosity
+
 
 import GaudiKernel.ProcessJobOptions
 
@@ -41,6 +43,10 @@ class LumiIntegratorConf(LHCbConfigurableUser):
                                         AddBXTypes = ['NoBeam'],
                                         SubtractBXTypes = ['Beam1','Beam2'],
                                         IntegratorToolName = 'IntegrateBeamCrossing',
+                                        ))
+    seqMembers.append( GetIntegratedLuminosity('GetIntegratedLuminosity',
+                                               IntegratorToolName = 'IntegrateBeamCrossing',
+                                               WriteCountersDetails = False
                                         ))
     #seqMembers.append( LumiReadBackFSR('IntegrateReadBackBeamCrossing',
     #                                   IntegratorToolName = 'IntegrateBeamCrossing',
