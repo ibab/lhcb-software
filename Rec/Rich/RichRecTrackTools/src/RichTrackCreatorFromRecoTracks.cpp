@@ -4,9 +4,6 @@
  *
  *  Implementation file for tool : Rich::Rec::TrackCreatorFromRecoTracks
  *
- *  CVS Log :-
- *  $Id: RichTrackCreatorFromRecoTracks.cpp,v 1.17 2009-08-06 18:10:57 smenzeme Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
@@ -75,47 +72,133 @@ StatusCode TrackCreatorFromRecoTracks::newTracks() const
   {
     m_allDone = true;
 
-    // Iterate over all reco tracks, and create new RichRecTracks
-    const LHCb::Tracks * tracks = trTracks();
-    if ( tracks )
+    // Check for event aborts. If already aborted stop here
+    if ( !procStatus()->aborted() )
     {
 
-      // check the number of input tracks
-      if ( tracks->size() > m_maxInputTracks )
+      // Iterate over all reco tracks, and create new RichRecTracks
+      const LHCb::Tracks * tracks = trTracks();
+      if ( tracks )
       {
-        procStatus()->addAlgorithmStatus( name(), Rich::Rec::ReachedTrTrackLimit );
-        procStatus()->setAborted(true);
-        std::ostringstream mess;
-        mess << "Number of input tracks exceeds maximum of "
-             << m_maxInputTracks << " -> Abort";
-        return Warning( mess.str(), StatusCode::SUCCESS, 1 );
-      }
-      
-      // make rich tracks
-      richTracks()->reserve( nInputTracks() );
-      for ( LHCb::Tracks::const_iterator track = tracks->begin();
-            track != tracks->end(); ++track )
-      {
-        newTrack( *track );
-      }
-      
-      // Too many selected tracks ?
-      if ( richTracks()->size() > m_maxSelTracks )
-      {
-        procStatus()->addAlgorithmStatus( name(), Rich::Rec::ReachedRichTrackLimit );
-        procStatus()->setAborted(true);
-        richTracks()->clear();
-        std::ostringstream mess;
-        mess << "Number of RICH tracks exceeds maximum of "
-             << m_maxSelTracks << " -> Abort";
-        return Warning( mess.str(), StatusCode::SUCCESS, 0 );
-      }
-      
-    }
-    
-  }
-  
+
+        // check the number of input tracks
+        if ( tracks->size() > m_maxInputTracks )
+        {
+          procStatus()->addAlgorithmStatus( name(), "RICH", "ReachedTrTrackLimit",
+                                            Rich::Rec::ReachedTrTrackLimit, true );
+          std::ostringstream mess;
+          mess << "Number of input tracks exceeds maximum of "
+               << m_maxInputTracks << " -> Abort";
+          return Warning( mess.str(), StatusCode::SUCCESS, 1 );
+        }
+
+        // make rich tracks
+        richTracks()->reserve( nInputTracks() );
+        for ( LHCb::Tracks::const_iterator track = tracks->begin();
+              track != tracks->end(); ++track )
+        {
+          newTrack( *track );
+        }
+
+        // Too many selected tracks ?
+        if ( richTracks()->size() > m_maxSelTracks )
+        { // Try removing the 'lesser' track types
+
+          // Try removing Seed tracks
+          if ( removeTracksByType(Rich::Rec::Track::Seed) > m_maxSelTracks )
+          { // Still not OK ?
+
+            // Try removing VeloTT tracks
+            if ( removeTracksByType(Rich::Rec::Track::VeloTT) > m_maxSelTracks )
+            { // Still not OK ?
+
+              // Try removing KsTrack tracks
+              if ( removeTracksByType(Rich::Rec::Track::KsTrack) > m_maxSelTracks )
+              { // Still not OK ?
+
+                // Give up and abort completely ...
+                removeTracksByType(Rich::Rec::Track::Forward); // To get stats correct
+                removeTracksByType(Rich::Rec::Track::Match);   // To get stats correct
+                // just to be sure nothing is left over
+                richTracks()->clear(); 
+                segmentCreator()->richSegments()->clear();
+                // Put something into ProcStat and set abort flag
+                procStatus()->addAlgorithmStatus( name(), "RICH", "ReachedRichTrackLimit",
+                                                  Rich::Rec::ReachedRichTrackLimit, true );
+                // Print a warning for the stats
+                std::ostringstream mess;
+                mess << "Number of RICH tracks exceeds maximum of "
+                     << m_maxSelTracks << " -> Abort";
+                return Warning( mess.str(), StatusCode::SUCCESS, 0 );
+
+              } // remove KsTrack
+
+            } // remove VeloTT
+
+          } // remove Seed
+
+        } // Too many tracks
+
+      } // input tracks OK
+
+    } // ProcStat
+
+  } // already done
+
   return StatusCode::SUCCESS;
+}
+
+unsigned int 
+TrackCreatorFromRecoTracks::removeTracksByType( const Rich::Rec::Track::Type type ) const
+{
+
+  // First, select the tracks to remove
+  typedef LHCb::RichRecTrack::Vector TracksToRemove;
+  TracksToRemove toRemove;
+  for ( LHCb::RichRecTracks::const_iterator iT = richTracks()->begin();
+        iT != richTracks()->end(); ++iT )
+  {
+    // if correct type, add to list to remove
+    if ( (*iT)->trackID().trackType() == type ) toRemove.push_back(*iT);
+  }
+
+  // loop over the selected tracks and remove them (taking care of stats and segments)
+  for ( TracksToRemove::const_iterator iT = toRemove.begin();
+        iT != toRemove.end(); ++iT )
+  {
+    // get stats object
+    TrackCount & tkCount = trackStats().trackStats(type,(*iT)->trackID().unique());
+
+    // decrement track count
+    --(tkCount.selectedTracks);
+
+    // Loop over segments for this track
+    for ( LHCb::RichRecTrack::Segments::const_iterator iSeg = (*iT)->richRecSegments().begin();
+          iSeg != (*iT)->richRecSegments().end(); ++iSeg )
+    {
+      // decrement segment count
+      tkCount.uncountRadiator( (*iSeg)->trackSegment().radiator() );
+      // delete segment from main container
+      segmentCreator()->richSegments()->erase(*iSeg);
+    }
+
+    // delete the track
+    richTracks()->erase(*iT);
+  }
+
+  // add to ProcStat
+  procStatus()->addAlgorithmStatus( name(), 
+                                    "RICH", "RejectedAll"+Rich::text(type)+"Tracks",
+                                    Rich::Rec::ReachedRichTrackLimit, false );
+
+  // Warning message (for tally)
+  std::ostringstream mess;
+  mess << "Number of RICH tracks exceeds maximum of "
+       << m_maxSelTracks << " -> Rejecting " << Rich::text(type);
+  Warning( mess.str(), StatusCode::SUCCESS, 0 ).ignore();
+  
+  // return number of tracks left
+  return richTracks()->size();
 }
 
 long TrackCreatorFromRecoTracks::nInputTracks() const

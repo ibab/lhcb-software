@@ -34,13 +34,9 @@ MatchTrackSelector::MatchTrackSelector( const std::string& type,
                                         const IInterface* parent )
   : BaseTrackSelector ( type, name , parent )
 {
-  // job options
   // Effectively disable these cuts, but keep the possibility to re-enable them later on.
-  declareProperty( "MinMatchChi2", m_minMatchChi2 = boost::numeric::bounds<double>::lowest()  ); // was 0
-  declareProperty( "MaxMatchChi2", m_maxMatchChi2 = boost::numeric::bounds<double>::highest() ); // was 200
-  // redefine default GhostProb cuts
-  setProperty( "MinGhostProbCut", boost::numeric::bounds<double>::lowest() );
-  setProperty( "MaxGhostProbCut", 0.99 );
+  declareProperty( "MinMatchChi2", m_minMatchChi2 = boost::numeric::bounds<double>::lowest()  );
+  declareProperty( "MaxMatchChi2", m_maxMatchChi2 = boost::numeric::bounds<double>::highest() );
 }
 
 //=============================================================================

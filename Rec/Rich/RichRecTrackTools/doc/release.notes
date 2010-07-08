@@ -4,6 +4,16 @@
 ! Purpose     : Utility tracks tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+! 2010-07-08 - Chris Jones
+ - Change default cuts in track selector tools so they are NULL (no selection)
+   All cuts are now explicitly set during configuration.
+ - Update the track creator tool so when the maximum number of selected tracks
+   limit is exceeded, instead of aborting the entire event straight away, try 
+   selecting removing 'lesser' track types to see if this takes us below the
+   limit. removal starts with Seed tracks, then VeloTT the KsTracks. If the 
+   limit is still exceeded (with only long tracks) only then is the entire 
+   event aborted.
+
 ! 2010-06-24 - Chris Jones
  - Adapt to change in where the method that returns the S.D. of the observable 
    n-1 distribution is.

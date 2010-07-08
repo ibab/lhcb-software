@@ -32,11 +32,7 @@ DECLARE_TOOL_FACTORY( KsTrackSelector );
 KsTrackSelector::KsTrackSelector( const std::string& type,
                                   const std::string& name,
                                   const IInterface* parent )
-  : BaseTrackSelector ( type, name , parent )
-{
-  // redefine default cut values for Ks tracks
-  setProperty( "MinPCut", 1.0 );
-}
+  : BaseTrackSelector ( type, name , parent ) { }
 
 //=============================================================================
 // Destructor

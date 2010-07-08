@@ -4,9 +4,6 @@
  *
  *  Implementation file for RICH reconstruction tool : Rich::Rec::BaseTrackSelector
  *
- *  CVS Log :-
- *  $Id: RichBaseTrackSelector.cpp,v 1.9 2009-09-14 10:42:03 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/08/2006
  */
@@ -40,19 +37,21 @@ BaseTrackSelector::BaseTrackSelector( const std::string& type,
 
   // JOs
 
-  declareProperty( "MinPCut",    m_minPCut     = 0.0 ); // in GeV
-  declareProperty( "MaxPCut",    m_maxPCut     = 500 ); // in GeV
+  // By default all cuts are off ....
 
-  declareProperty( "MinPtCut",   m_minPtCut    = 0.0 ); // in GeV
-  declareProperty( "MaxPtCut",   m_maxPtCut    = 500 ); // in GeV
+  declareProperty( "MinPCut",    m_minPCut     = boost::numeric::bounds<double>::lowest() ); // in GeV
+  declareProperty( "MaxPCut",    m_maxPCut     = boost::numeric::bounds<double>::highest() ); // in GeV
 
-  declareProperty( "MinChi2Cut", m_minChi2Cut  = 0.0 );
-  declareProperty( "MaxChi2Cut", m_maxChi2Cut  = 10  );
+  declareProperty( "MinPtCut",   m_minPtCut    = boost::numeric::bounds<double>::lowest() ); // in GeV
+  declareProperty( "MaxPtCut",   m_maxPtCut    = boost::numeric::bounds<double>::highest()  ); // in GeV
 
-  declareProperty( "MinLikelihood",  m_minLL = -100 );
+  declareProperty( "MinChi2Cut", m_minChi2Cut  = boost::numeric::bounds<double>::lowest() );
+  declareProperty( "MaxChi2Cut", m_maxChi2Cut  = boost::numeric::bounds<double>::highest() );
+
+  declareProperty( "MinLikelihood",  m_minLL = boost::numeric::bounds<double>::lowest()  );
   declareProperty( "MaxLikelihood",  m_maxLL = boost::numeric::bounds<double>::highest() );
 
-  declareProperty( "MinCloneDistCut", m_minCloneCut    = -1e10 );
+  declareProperty( "MinCloneDistCut", m_minCloneCut    = boost::numeric::bounds<double>::lowest() );
   declareProperty( "MaxCloneDistCut", m_maxCloneCut    = boost::numeric::bounds<double>::highest() );
 
   declareProperty( "MinGhostProbCut", m_minGhostProb   = boost::numeric::bounds<double>::lowest() );
@@ -94,9 +93,35 @@ MsgStream & BaseTrackSelector::printSel( MsgStream & os ) const
   const int slash          = name().find_last_of(".");
   const std::string tkName = ( slash>0 ? name().substr(slash+1) : "UnknownTrackType" );
 
-  // Basic cuts
-  os << boost::format( " %|.12s| %|12t| : P = %|-4.2e|->%|-4.2e| GeV : Pt = %|-4.2e|->%|-4.2e| GeV : fitchi2 = %|-4.2e|->%|-4.2e|" )
-    % tkName % m_minPCut % m_maxPCut % m_minPtCut % m_maxPtCut % m_minChi2Cut % m_maxChi2Cut ;
+  // Name
+  os << boost::format( " %|.12s| %|12t|" ) % tkName;
+
+  // p cut
+  m_pCutEnabled = false;
+  if ( m_minPCut > boost::numeric::bounds<double>::lowest() ||
+       m_maxPCut < boost::numeric::bounds<double>::highest() )
+  {
+    m_pCutEnabled = true;
+    os << boost::format( " : P = %|-4.2e|->%|-4.2e| GeV" ) % m_minPCut % m_maxPCut ;
+  }
+
+  // pt cut
+  m_ptCutEnabled = false;
+  if ( m_minPtCut > boost::numeric::bounds<double>::lowest() ||
+       m_maxPtCut < boost::numeric::bounds<double>::highest() )
+  {
+    m_ptCutEnabled = true;
+    os << boost::format( " : Pt = %|-4.2e|->%|-4.2e| GeV" ) % m_minPtCut % m_maxPtCut ;
+  }
+
+  // Chi^2 cut
+  m_chiSqCutEnabled = false;
+  if ( m_minChi2Cut > boost::numeric::bounds<double>::lowest() ||
+       m_maxChi2Cut < boost::numeric::bounds<double>::highest() )
+  {
+    m_chiSqCutEnabled = true;
+    os << boost::format( " : fitchi2 = %|-4.2e|->%|-4.2e|" ) % m_minChi2Cut % m_maxChi2Cut ;
+  }
 
   // Likelihood cut
   m_likelihoodCutEnabled = false;
@@ -156,36 +181,45 @@ BaseTrackSelector::trackSelected( const LHCb::Track * track ) const
   }
 
   // cut p
-  const double p = track->p() / Gaudi::Units::GeV;
-  if ( p < m_minPCut || p > m_maxPCut )
+  if ( m_pCutEnabled )
   {
-    if ( msgLevel(MSG::VERBOSE) )
-      verbose() << " -> P " << p << " failed cut "
-                << m_minPCut << " -> " << m_maxPCut
-                << endmsg;
-    return false;
+    const double p = track->p() / Gaudi::Units::GeV;
+    if ( p < m_minPCut || p > m_maxPCut )
+    {
+      if ( msgLevel(MSG::VERBOSE) )
+        verbose() << " -> P " << p << " failed cut "
+                  << m_minPCut << " -> " << m_maxPCut
+                  << endmsg;
+      return false;
+    }
   }
 
   // cut on pt
-  const double pt = track->pt() / Gaudi::Units::GeV;
-  if ( pt < m_minPtCut || pt > m_maxPtCut )
+  if ( m_ptCutEnabled )
   {
-    if ( msgLevel(MSG::VERBOSE) )
-      verbose() << " -> Pt " << pt << " failed cut "
-                << m_minPtCut << " -> " << m_maxPtCut
-                << endmsg;
-    return false;
+    const double pt = track->pt() / Gaudi::Units::GeV;
+    if ( pt < m_minPtCut || pt > m_maxPtCut )
+    {
+      if ( msgLevel(MSG::VERBOSE) )
+        verbose() << " -> Pt " << pt << " failed cut "
+                  << m_minPtCut << " -> " << m_maxPtCut
+                  << endmsg;
+      return false;
+    }
   }
 
   // chi-squared
-  const double chi2 = track->chi2PerDoF();
-  if ( chi2 < m_minChi2Cut || chi2 > m_maxChi2Cut )
+  if ( m_chiSqCutEnabled )
   {
-    if ( msgLevel(MSG::VERBOSE) )
-      verbose() << " -> Chi^2 " << chi2 << " failed cut "
-                << m_minChi2Cut << " -> " << m_maxChi2Cut
-                << endmsg;
-    return false;
+    const double chi2 = track->chi2PerDoF();
+    if ( chi2 < m_minChi2Cut || chi2 > m_maxChi2Cut )
+    {
+      if ( msgLevel(MSG::VERBOSE) )
+        verbose() << " -> Chi^2 " << chi2 << " failed cut "
+                  << m_minChi2Cut << " -> " << m_maxChi2Cut
+                  << endmsg;
+      return false;
+    }
   }
 
   // track charge

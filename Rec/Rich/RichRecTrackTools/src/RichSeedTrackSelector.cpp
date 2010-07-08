@@ -35,7 +35,6 @@ SeedTrackSelector::SeedTrackSelector( const std::string& type,
   : BaseTrackSelector ( type, name , parent )
 {
   // job options
-  //declareProperty( "MinSeedLikelihood", m_minSeedLL = -15 );
   declareProperty( "MinSeedLikelihood", m_minSeedLL = boost::numeric::bounds<double>::lowest()  );
   declareProperty( "MaxSeedLikelihood", m_maxSeedLL = boost::numeric::bounds<double>::highest() );
 }

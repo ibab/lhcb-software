@@ -4,9 +4,6 @@
  *
  *  Header file for RICH reconstruction tool : Rich::Rec::BaseTrackSelector
  *
- *  CVS Log :-
- *  $Id: RichBaseTrackSelector.h,v 1.5 2009-07-06 12:28:36 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/08/2006
  */
@@ -150,9 +147,12 @@ namespace Rich
       double m_minGhostProb; ///< minimum ghost probability cut
       double m_maxGhostProb; ///< maximum ghost probability cut
 
+      mutable bool m_chiSqCutEnabled;
       mutable bool m_ghostProbCutEnabled;
       mutable bool m_cloneDistCutEnabled;
       mutable bool m_likelihoodCutEnabled;
+      mutable bool m_pCutEnabled;
+      mutable bool m_ptCutEnabled;
 
     };
 

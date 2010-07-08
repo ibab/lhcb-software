@@ -4,9 +4,6 @@
  *
  *  Header file for tool : Rich::Rec::TrackCreatorFromRecoTracks
  *
- *  CVS Log :-
- *  $Id: RichTrackCreatorFromRecoTracks.h,v 1.5 2008-10-29 14:41:38 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
@@ -88,6 +85,9 @@ namespace Rich
 
       /// Returns a pointer to the Tracks
       const LHCb::Tracks * trTracks() const;
+
+      /// Remove RICH tracks by type
+      unsigned int removeTracksByType( const Rich::Rec::Track::Type type ) const;
 
     private: // data
 
