@@ -1,10 +1,11 @@
-!$Id: release.notes,v 1.68 2010-06-25 13:13:24 tskwarni Exp $
+!$Id: release.notes,v 1.69 2010-07-08 21:19:41 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/HltRawData
 ! Responsible : Tomasz Skwarnicki
 ! Purpose     : Hlt Raw Data Makers of persisted TES info
 !-----------------------------------------------------------------------------
 
+!========================== HltRawData v2r7 2010-07-08 ===================
 ! 2010-06-25 - Tomasz Skwarnicki
  - Fix bug in L0SelReportsMaker to include all calo candidates etc.
 
