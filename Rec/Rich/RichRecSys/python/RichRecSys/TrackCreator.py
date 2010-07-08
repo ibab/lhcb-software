@@ -26,11 +26,12 @@ class RichTrackCreatorConfig(RichConfigurableUser):
     __slots__ = {
         "Context":       "Offline"  # The context within which to run
        ,"Radiators": [True,True,True] # The radiators to use (Aerogel/Rich1Gas/Rich2Gas)
-       ,"SpecialData"  : []   # Various special data processing options. See KnownSpecialData in RecSys for all options
+       ,"SpecialData"    : []   # Various special data processing options. See KnownSpecialData in RecSys for all options
        ,"InputTracksLocation" : "" # The input location for tracks
-       ,"OutputLevel"   : INFO    # The output level to set all algorithms and tools to use
-       ,"TrackTypes"    : [ "Forward","Match","Seed","VeloTT","KsTrack" ]
-       ,"TrackCuts"     : { } # { "Chi2Cut" : [0,50] }
+       ,"OutputLevel"    : INFO    # The output level to set all algorithms and tools to use
+       ,"TrackTypes"     : [ "Forward","Match","Seed","VeloTT","KsTrack" ]
+        # CRJ : Defaults pre-data cuts "CloneDistCut" : [-1e10,1e300] "Likelihood"   : [-100,1e300]
+       ,"TrackCuts"      : None
        ,"MaxInputTracks" : None
        ,"MaxUsedTracks"  : None
         }
@@ -42,6 +43,14 @@ class RichTrackCreatorConfig(RichConfigurableUser):
                                                    "HLT"     : 99999 } )
         self.setRichDefaults ( "MaxUsedTracks",  { "Offline" : 500, 
                                                    "HLT"     : 500 } )
+        self.setRichDefault ( "TrackCuts", "Offline",
+                              { "Forward" : { "Chi2Cut" : [0,10], "PCut" : [1,500] },
+                                "Match"   : { "Chi2Cut" : [0,10], "PCut" : [1,500] },
+                                "Seed"    : { "Chi2Cut" : [0,10], "PCut" : [1,500] },
+                                "VeloTT"  : { "Chi2Cut" : [0,10], "PCut" : [1,500] },
+                                "KsTrack" : { "Chi2Cut" : [0,10], "PCut" : [1,500] } } )
+        self.setRichDefault ( "TrackCuts", "HLT",
+                              { "Forward" : { "Chi2Cut" : [0,10], "PCut" : [1,500] } } )
 
     ## @brief Set OutputLevel 
     def setOutputLevel(self,conponent):
@@ -74,19 +83,10 @@ class RichTrackCreatorConfig(RichConfigurableUser):
         # Track selector
         trselname = "TrackSelector"
         trackCr.addTool( self.richTools().trackSelector(trselname), name=trselname )
-
-        # Track Selector Cuts
-        if "earlyData" in self.getProp("SpecialData") and 0 == len(self.getProp("TrackCuts")):
-            cuts = { "Chi2Cut"    : [0,100],
-                     "Likelihood" : [-999999,999999] }
-            self.setProp("TrackCuts",cuts)
-
         trackCr.TrackSelector.TrackAlgs = self.getProp("TrackTypes")
-        cuts = self.getProp("TrackCuts")
-        for name,cut in cuts.iteritems() :
-            trackCr.TrackSelector.setProp("Min"+name,cut[0])
-            trackCr.TrackSelector.setProp("Max"+name,cut[1])
-            
+        import TrackSelectorTools
+        TrackSelectorTools.configureTrackSelectorCuts(trackCr.TrackSelector,self.getProp("TrackCuts"))
+           
         # Segment maker
         if trackCr.getType() != "Rich::Rec::DelegatedTrackCreatorFromRecoTracks" :
             trSegNickName = "TrSegMaker"

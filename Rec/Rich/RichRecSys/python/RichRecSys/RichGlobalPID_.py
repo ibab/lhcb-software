@@ -45,6 +45,7 @@ class RichGlobalPIDConfig(RichConfigurableUser):
         "MinSignalForNoLLCalc"    : None
        ,"PidSequencer"            : None # The sequencer to add the RICH reconstruction algorithms to
        ,"OutputLevel"             : INFO # The output level to set all algorithms and tools to use
+       ,"TrackCuts"               : None
         }
 
     ## Initialize 
@@ -66,7 +67,15 @@ class RichGlobalPIDConfig(RichConfigurableUser):
         self.setRichDefaults("MinSignalForNoLLCalc",
                              { "Offline" : [ 1e-3, 1e-3, 1e-3, 1e-3 ],
                                "HLT"     : [ 1e-3, 1e-3, 1e-3, 1e-3 ] } )
-    
+        self.setRichDefault ( "TrackCuts", "Offline",
+                              { "Forward" : { "Chi2Cut" : [0,10], "PCut" : [1,500] },
+                                "Match"   : { "Chi2Cut" : [0,10], "PCut" : [1,500] },
+                                "Seed"    : { "Chi2Cut" : [0,10], "PCut" : [1,500] },
+                                "VeloTT"  : { "Chi2Cut" : [0,10], "PCut" : [1,500] },
+                                "KsTrack" : { "Chi2Cut" : [0,10], "PCut" : [1,500] } } )
+        self.setRichDefault ( "TrackCuts", "HLT",
+                              { "Forward" : { "Chi2Cut" : [0,10], "PCut" : [1,500] } } )
+        
     ## @brief Apply the configuration
     #  @param sequence The sequencer to add the PID algorithms to
     def applyConf(self):
@@ -102,6 +111,12 @@ class RichGlobalPIDConfig(RichConfigurableUser):
         tool = self.makeRichAlg(Rich__Rec__GlobalPID__TrackCreator,"ToolSvc."+cont+"_GPIDTrackCreator")
         tool.Context = cont
 
+        # Track Selection cuts
+        trselname = "TrackSelector"
+        gTrkSel.addTool( self.richTools().trackSelector(trselname), name=trselname )
+        import TrackSelectorTools
+        TrackSelectorTools.configureTrackSelectorCuts(gTrkSel.TrackSelector,self.getProp("TrackCuts"))
+        
         # Likelihood minimisation
         likSeq = self.makeRichAlg(GaudiSequencer,"Rich"+cont+"GPIDLLSeq")
         likSeq.MeasureTime = True

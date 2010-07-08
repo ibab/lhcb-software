@@ -43,4 +43,3 @@ use RichRecTemplateRings  v*   Rich
 
 # Setup Python Configurables
 apply_pattern install_python_modules
-#macro RichRecSysConfUserModules "RichRecSys.RichGlobalPID_"
