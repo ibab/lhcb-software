@@ -86,8 +86,6 @@ StatusCode TrackSel::eventInit()
   // Check if track processing was aborted.
   if ( procStatus()->aborted() ) 
   {
-    procStatus()->addAlgorithmStatus( gpidName(), Rich::Rec::ProcStatAbort );
-    procStatus()->setAborted( true );
     richStatus()->setEventOK( false );
     deleteGPIDEvent();
     return Warning("Processing aborted -> Abort",StatusCode::SUCCESS,0);
@@ -96,8 +94,8 @@ StatusCode TrackSel::eventInit()
   // Check the number of input raw tracks
   if ( trackCreator()->nInputTracks() > m_maxInputTracks ) 
   {
-    procStatus()->addAlgorithmStatus( gpidName(), Rich::Rec::ReachedTrTrackLimit );
-    procStatus()->setAborted( true );
+    procStatus()->addAlgorithmStatus( gpidName(), "RICH", "ReachedTrTrackLimit",
+                                      Rich::Rec::ReachedTrTrackLimit, true );
     richStatus()->setEventOK( false );
     deleteGPIDEvent();
     std::ostringstream mess;
@@ -110,15 +108,14 @@ StatusCode TrackSel::eventInit()
   if ( !trackCreator()->newTracks() ) return StatusCode::FAILURE;
   if ( richTracks()->empty() ) 
   {
-    procStatus()->addAlgorithmStatus( gpidName(), Rich::Rec::NoRichTracks );
     richStatus()->setEventOK( false );
     deleteGPIDEvent();
     return Warning("No tracks selected -> Abort",StatusCode::SUCCESS,0);
   } 
   else if ( (int)richTracks()->size() > m_maxUsedTracks )
   {
-    procStatus()->addAlgorithmStatus( gpidName(), Rich::Rec::ReachedRichTrackLimit );
-    procStatus()->setAborted( true );
+    procStatus()->addAlgorithmStatus( gpidName(), "RICH", "ReachedRichTrackLimit",
+                                      Rich::Rec::ReachedRichTrackLimit, true );
     richStatus()->setEventOK( false );
     deleteGPIDEvent();
     std::ostringstream mess;
@@ -183,7 +180,8 @@ StatusCode TrackSel::execute()
 
   if ( gpidTracks()->empty() ) 
   {
-    procStatus()->addAlgorithmStatus( gpidName(), Rich::Rec::NoRichTracks );
+    procStatus()->addAlgorithmStatus( name(), "RICH", "NoRichTracks",
+                                      Rich::Rec::NoRichTracks, false );
     richStatus()->setEventOK( false );
     deleteGPIDEvent();
     return Warning("No tracks selected -> Abort",StatusCode::SUCCESS,0);

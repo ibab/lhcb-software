@@ -4,6 +4,10 @@
 ! Purpose     : The Rich Global PID algorithm
 !-----------------------------------------------------------------------------
 
+! 2010-07-08 - Chris Jones
+ - Adapt calls to ProcStat to use new interface that includes additional abort
+   information.
+
 ! 2010-06-24 - Chris Jones
  - Don't call ProcStat->addAlgorithmStatus for non-failure cases.
  - Call ProcStat->setAbort(true) when processing is aborted due to too many

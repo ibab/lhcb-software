@@ -4,9 +4,6 @@
  *
  *  Header file for RICH Global PID tool : Rich::Rec::GlobalPID::LikelihoodTool
  *
- *  CVS Log :-
- *  $Id: RichGlobalPIDLikelihoodTool.h,v 1.1 2008-03-25 16:26:44 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2008-03-01
  */
