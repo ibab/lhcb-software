@@ -19,6 +19,7 @@
 !
 !-----------------------------------------------------------------------------
 
+!========================== HltSelChecker v11r1 2010-07-08 ===================
 ! 2010-06-15 - V. Gligorov
  - Begin update of scripts by allowing real data to be used for selections
    where real signal is available and reducing number of best selections from
