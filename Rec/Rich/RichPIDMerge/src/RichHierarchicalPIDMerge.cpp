@@ -95,7 +95,7 @@ StatusCode HierarchicalPIDMerge::execute()
                                   get<LHCb::ProcStatus>(m_procStatLocation) : NULL );
   if ( procStat && procStat->aborted() )
   {
-    return Warning("Processing aborted -> Empty RichPID container",StatusCode::SUCCESS);
+    return Warning("Processing already aborted -> Empty RichPID container",StatusCode::SUCCESS);
   }
 
   // tallies of number of PID results used of each type
