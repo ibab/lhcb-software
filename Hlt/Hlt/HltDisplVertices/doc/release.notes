@@ -4,6 +4,7 @@
 ! Purpose     : Apply some cuts on reconstructed vertices
 !-----------------------------------------------------------------------------
 
+!========================== HltDisplVertices v2r4 2010-06-08 ===================
 ! 2010-07-01 - Neal Gauvin
  - Remove use of new in execute() to avoid potential leaks
 
