@@ -9,6 +9,8 @@
    that include sub-detector, reason and status (OK/ABORT) information.
  - Update the the track selector base class so the default cuts are null (no
    rejection. Cuts are now explicitly set during configuration time.
+ - Small technical change to the RichRecPhoton class that improves CPU 
+   efficiency a little.
 
 ! 2010-07-08 - Olivier Callot
  - Add PatMatch as supported track type in RichTrackID.cpp
