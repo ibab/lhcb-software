@@ -126,48 +126,90 @@
                 type        = "Rich::ObjPtn&lt; LHCb::RichGeomPhoton &gt;"
         />   
 
-        <method 
+        <!--method 
                 desc  = "Retrieve const The Expected number of signal photons for each particle hypothesis" 
                 name  = "expPixelSignalPhots" 
                 const = "TRUE" 
                 type  = "const Rich::HypoData&lt;LHCb::RichRecPhoton::FloatType&gt; &amp;" >
                 <code> return *m_expPixelSignalPhots.object(); </code>
+        </method-->
+        <!--method 
+                desc  = "Retrieve The Expected number of signal photons for each particle hypothesis" 
+                name  = "expPixelSignalPhots" 
+                const = "FALSE" 
+                type  = "Rich::HypoData&lt;LHCb::RichRecPhoton::FloatType&gt; &amp;" >
+                <code> return *m_expPixelSignalPhots.object(); </code>
+        </method-->
+        <!--attribute 
+                setMeth     = "FALSE"
+                getMeth     = "FALSE"
+                desc        = "The Expected number of signal photons for each particle hypothesis" 
+                name        = "expPixelSignalPhots" 
+                type        = "Rich::ObjPtn&lt; Rich::HypoData&lt;LHCb::RichRecPhoton::FloatType&gt; &gt;"
+        /-->
+        <method 
+                desc  = "Retrieve const The Expected number of signal photons for each particle hypothesis" 
+                name  = "expPixelSignalPhots" 
+                const = "TRUE" 
+                type  = "const Rich::HypoData&lt;LHCb::RichRecPhoton::FloatType&gt; &amp;" >
+                <code> return m_expPixelSignalPhots; </code>
         </method>
         <method 
                 desc  = "Retrieve The Expected number of signal photons for each particle hypothesis" 
                 name  = "expPixelSignalPhots" 
                 const = "FALSE" 
                 type  = "Rich::HypoData&lt;LHCb::RichRecPhoton::FloatType&gt; &amp;" >
-                <code> return *m_expPixelSignalPhots.object(); </code>
+                <code> return m_expPixelSignalPhots; </code>
         </method>
         <attribute 
                 setMeth     = "FALSE"
                 getMeth     = "FALSE"
                 desc        = "The Expected number of signal photons for each particle hypothesis" 
                 name        = "expPixelSignalPhots" 
-                type        = "Rich::ObjPtn&lt; Rich::HypoData&lt;LHCb::RichRecPhoton::FloatType&gt; &gt;"
+                type        = "Rich::HypoData&lt;LHCb::RichRecPhoton::FloatType&gt;"
         />
 
-        <method 
+        <!--method 
                 desc  = "Retrieve const The Expected number of scattered photons for each particle hypothesis" 
                 name  = "expPixelScattPhots" 
                 const = "TRUE" 
                 type  = "const Rich::HypoData&lt;LHCb::RichRecPhoton::FloatType&gt; &amp;" >
                 <code> return *m_expPixelScattPhots.object(); </code>
+        </method-->
+        <!--method 
+                desc  = "Retrieve The Expected number of scattered photons for each particle hypothesis" 
+                name  = "expPixelScattPhots" 
+                const = "FALSE" 
+                type  = "Rich::HypoData&lt;LHCb::RichRecPhoton::FloatType&gt; &amp;" >
+                <code> return *m_expPixelScattPhots.object(); </code>
+        </method-->
+        <!--attribute 
+                setMeth     = "FALSE"
+                getMeth     = "FALSE"
+                desc        = "The Expected number of scattered photons for each particle hypothesis" 
+                name        = "expPixelScattPhots" 
+                type        = "Rich::ObjPtn&lt; Rich::HypoData&lt;LHCb::RichRecPhoton::FloatType&gt; &gt;"
+        /-->
+        <method 
+                desc  = "Retrieve const The Expected number of scattered photons for each particle hypothesis" 
+                name  = "expPixelScattPhots" 
+                const = "TRUE" 
+                type  = "const Rich::HypoData&lt;LHCb::RichRecPhoton::FloatType&gt; &amp;" >
+                <code> return m_expPixelScattPhots; </code>
         </method>
         <method 
                 desc  = "Retrieve The Expected number of scattered photons for each particle hypothesis" 
                 name  = "expPixelScattPhots" 
                 const = "FALSE" 
                 type  = "Rich::HypoData&lt;LHCb::RichRecPhoton::FloatType&gt; &amp;" >
-                <code> return *m_expPixelScattPhots.object(); </code>
+                <code> return m_expPixelScattPhots; </code>
         </method>
         <attribute 
                 setMeth     = "FALSE"
                 getMeth     = "FALSE"
                 desc        = "The Expected number of scattered photons for each particle hypothesis" 
                 name        = "expPixelScattPhots" 
-                type        = "Rich::ObjPtn&lt; Rich::HypoData&lt;LHCb::RichRecPhoton::FloatType&gt; &gt;"
+                type        = "Rich::HypoData&lt;LHCb::RichRecPhoton::FloatType&gt;"
         />
 
         <attribute 

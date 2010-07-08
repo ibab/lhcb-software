@@ -4,9 +4,6 @@
  *
  *  Implementation file for tool base class : RichTrackCreatorBase
  *
- *  CVS Log :-
- *  $Id: RichTrackCreatorBase.cpp,v 1.19 2009-07-30 11:30:22 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/05/2005
  */

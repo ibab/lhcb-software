@@ -4,9 +4,6 @@
  *
  *  Header file for tool base class : RichTrackCreatorBase
  *
- *  CVS Log :-
- *  $Id: RichTrackCreatorBase.h,v 1.12 2008-02-17 13:31:56 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/05/2005
  */
@@ -102,11 +99,19 @@ namespace Rich
         unsigned int rich2GasSegs;   ///< Number of Rich2Gas segments created
         /** Increment segment count for given radiator
          *  @param rad Radiator type to increment count for */
-        void countRadiator( const Rich::RadiatorType rad )
+        inline void countRadiator( const Rich::RadiatorType rad )
         {
-          if      ( Rich::Rich1Gas   == rad ) { ++rich1GasSegs; }
-          else if ( Rich::Rich2Gas     == rad ) { ++rich2GasSegs;   }
-          else if ( Rich::Aerogel == rad ) { ++aeroSegs;  }
+          if      ( Rich::Rich1Gas  == rad ) { ++rich1GasSegs; }
+          else if ( Rich::Rich2Gas  == rad ) { ++rich2GasSegs; }
+          else if ( Rich::Aerogel   == rad ) { ++aeroSegs;     }
+        }
+        /** Decrement segment count for given radiator
+         *  @param rad Radiator type to decrement count for */
+        inline void uncountRadiator( const Rich::RadiatorType rad )
+        {
+          if      ( Rich::Rich1Gas  == rad ) { --rich1GasSegs; }
+          else if ( Rich::Rich2Gas  == rad ) { --rich2GasSegs; }
+          else if ( Rich::Aerogel   == rad ) { --aeroSegs;     }
         }
       };
 

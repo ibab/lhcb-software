@@ -48,15 +48,19 @@ namespace Rich
       }
       declareProperty( "TrackAlgs", m_trNames );
 
-      declareProperty( "MinPCut",       m_minPCut           ); // in GeV
+      declareProperty( "MinPCut",       m_minPCut     = 0.0 ); // in GeV
+      declareProperty( "MaxPCut",       m_maxPCut     = 500 ); // in GeV
+
       declareProperty( "MinPtCut",      m_minPtCut    = 0.0 ); // in GeV
+      declareProperty( "MaxPtCut",      m_maxPtCut    = 500 ); // in GeV
+
       declareProperty( "MinChi2Cut",    m_minChi2Cut  = 0.0 );
-      declareProperty( "MaxPCut",       m_maxPCut     = 200 ); // in GeV
-      declareProperty( "MaxPtCut",      m_maxPtCut    = 200 ); // in GeV
-      declareProperty( "MaxChi2Cut",    m_maxChi2Cut  = 10  );
+      declareProperty( "MaxChi2Cut",    m_maxChi2Cut  = boost::numeric::bounds<double>::highest() );
+
       declareProperty( "Charge",        m_chargeSel   = 0   );
 
-      declareProperty( "MinCloneDistCut", m_minCloneCut    = -1e10 );
+      //declareProperty( "MinCloneDistCut", m_minCloneCut    = -1e10 );
+      declareProperty( "MinCloneDistCut", m_minCloneCut    = boost::numeric::bounds<double>::lowest() );
       declareProperty( "MaxCloneDistCut", m_maxCloneCut    = boost::numeric::bounds<double>::highest() );
 
       declareProperty( "MinGhostProbCut", m_minGhostProb   = boost::numeric::bounds<double>::lowest() );
@@ -66,8 +70,8 @@ namespace Rich
 
       declareProperty( "RejectNonIsolated", m_rejectNonIsolated = false );
 
-      declareProperty( "MinLikelihood", m_minLL = -100 );
-      //declareProperty( "MinLikelihood", m_minLL = boost::numeric::bounds<double>::lowest() );
+      //declareProperty( "MinLikelihood", m_minLL = -100 );
+      declareProperty( "MinLikelihood", m_minLL = boost::numeric::bounds<double>::lowest() );
       declareProperty( "MaxLikelihood", m_maxLL = boost::numeric::bounds<double>::highest() );
 
       m_jobOpts =

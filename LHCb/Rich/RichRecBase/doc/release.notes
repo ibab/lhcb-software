@@ -4,6 +4,12 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+! 2010-07-08 - Chris Jones
+ - Update the way ProcStat is filled on event aborts, to use the new method
+   that include sub-detector, reason and status (OK/ABORT) information.
+ - Update the the track selector base class so the default cuts are null (no
+   rejection. Cuts are now explicitly set during configuration time.
+
 ! 2010-07-08 - Olivier Callot
  - Add PatMatch as supported track type in RichTrackID.cpp
 
