@@ -4,6 +4,11 @@
 ! Purpose     : QMTests for DaVinci
 !-----------------------------------------------------------------------------
 
+!============================== DaVinciTests v1r1 2010-07-08 =================
+
+! 2010-07-08 - Juan Palacios
+ - Imported test_strippingconf.qmt and test_strippingline.qmt from Phys/StrippingConf.
+
 ! 2010-06-27 - Juan Palaciosn
  - test/options/DVTestDecayTreeTuple.py
   . Tuple had hard-wired InputLocations and was thus failing with latest 
