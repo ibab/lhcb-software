@@ -174,6 +174,8 @@ namespace Rich
 
         unsigned int m_nEvts; ///< Total number of events processed
 
+        unsigned int m_maxPixels; ///< Maximum pixels 
+
       };
 
     }

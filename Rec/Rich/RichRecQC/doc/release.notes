@@ -4,6 +4,12 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2010-07-08 - Chris Jones
+ - Update the Configuration of the processingh time monitors.
+ - Slight change to binning in the pixel monitor.
+ - Add a plot to the reco monitor for the total number of photon candidates 
+   produced by the reconstruction.
+
 !======================= RichRecQC v2r42 2010-06-21 ========================
 ! 2010-06-18 - Chris Jones
  - Add some new plots to RichRecoQC to make Cherenkov angle plots for each

@@ -125,10 +125,12 @@ StatusCode RecoQC::prebookHistograms()
                    m_ckThetaMin[*rad], m_ckThetaMax[*rad], nBins1D() );
       richHisto1D( HID("ckResAllIsolated",*rad), "Rec-Exp Cktheta | All photons | Isolated Tracks",
                    -m_ckResRange[*rad], m_ckResRange[*rad], nBins1D() );
-      richHisto1D( HID("totalPhotons",*rad),"Photon Yield | All Tracks",
-                   -0.5, 50.5, 51 );
-      richHisto1D( HID("totalPhotonsIsolated",*rad), "Photon Yield | Isolated Tracks",
-                   -0.5, 50.5, 51 );
+      richHisto1D( HID("totalPhotons",*rad),"Reconstructed Photon Candidates",
+                   0, 10000, 100 );
+      richHisto1D( HID("totalPhotonsPerSeg",*rad),"Photons per Segment | All Tracks",
+                   -0.5, 500.5, 501 );
+      richHisto1D( HID("totalPhotonsPerSegIso",*rad), "Photon Yield | Isolated Tracks",
+                   -0.5, 500.5, 501 );
       richHisto1D( HID("ckPullIso",*rad), "(Rec-Exp)/Res CKtheta | Isolated Tracks",
                    -4, 4, nBins1D() );
       richProfile1D( HID("ckPullVthetaIso",*rad), "(Rec-Exp)/Res CKtheta Versus CKtheta | Isolated Tracks",
@@ -192,6 +194,9 @@ StatusCode RecoQC::execute()
     if ( !m_trSelector->trackSelected((*iSeg)->richRecTrack()) ) continue;
     ++segsPerRad[(*iSeg)->trackSegment().radiator()];
   }
+
+  // Count photons per radiator
+  Rich::Map<Rich::RadiatorType,unsigned int> photsPerRad;
 
   // Iterate over segments
   if ( msgLevel(MSG::DEBUG) )
@@ -268,6 +273,9 @@ StatusCode RecoQC::execute()
           iPhot != segment->richRecPhotons().end(); ++iPhot )
     {
       LHCb::RichRecPhoton * photon = *iPhot;
+
+      // count photons
+      ++photsPerRad[rad];
 
       // If turned on, reject aerogel photons for which the same pixel made a gas photon
       if ( Rich::Aerogel == rad && m_checkAeroGas )
@@ -365,10 +373,10 @@ StatusCode RecoQC::execute()
 
     } // photon loop
 
-    richHisto1D(HID("totalPhotons",rad))->fill(segment->richRecPhotons().size());
+    richHisto1D(HID("totalPhotonsPerSeg",rad))->fill(segment->richRecPhotons().size());
     if ( isolated )
     {
-      richHisto1D(HID("totalPhotonsIsolated",rad))->fill(segment->richRecPhotons().size());
+      richHisto1D(HID("totalPhotonsPerSegIso",rad))->fill(segment->richRecPhotons().size());
     }
 
     // number of true photons
@@ -384,6 +392,13 @@ StatusCode RecoQC::execute()
     }
 
   } // end loop over segments
+
+  // fill total number of photons plots
+  for ( Rich::Radiators::const_iterator rad = Rich::radiators().begin();
+        rad != Rich::radiators().end(); ++rad )
+  {
+    if ( m_rads[*rad] ) richHisto1D(HID("totalPhotons",*rad))->fill(photsPerRad[*rad]);
+  }
 
   return StatusCode::SUCCESS;
 }

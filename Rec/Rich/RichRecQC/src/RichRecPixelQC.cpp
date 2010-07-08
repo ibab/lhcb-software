@@ -4,8 +4,6 @@
  *
  *  Implementation file for algorithm class : Rich::Rec::MC::PixelQC
  *
- *  $Id: RichRecPixelQC.cpp,v 1.30 2010-02-11 20:01:30 jonrob Exp $
- *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
  */
@@ -28,7 +26,10 @@ PixelQC::PixelQC( const std::string& name,
     m_richRecMCTruth    ( NULL ),
     m_truth             ( NULL ),
     m_richSys           ( NULL ),
-    m_nEvts             ( 0    ) { }
+    m_nEvts             ( 0    ) 
+{
+  declareProperty( "MaxPixels", m_maxPixels = 10000 );
+}
 
 // Destructor
 PixelQC::~PixelQC() { }
@@ -61,7 +62,7 @@ StatusCode PixelQC::prebookHistograms()
                  "Average overall HPD occupancy (nHits>0)",
                  0.5, 150.5, 150 );
     richHisto1D( Rich::HistogramID("nTotalPixs",*rich), 
-                 "Overall occupancy (nHits>0)", 0, 5000, 100 );
+                 "Overall occupancy (nHits>0)", -0.5, m_maxPixels+0.5, m_maxPixels+1 );
     richHisto1D( Rich::HistogramID("nActiveHPDs",*rich), 
                  "# Active HPDs (nHits>0)", -0.5, 300.5, 301 );
   }

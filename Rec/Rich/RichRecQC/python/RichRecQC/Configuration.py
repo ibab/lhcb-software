@@ -665,15 +665,28 @@ class RichRecQCConf(RichConfigurableUser):
 
             seq = self.newSeq(sequence,check)
 
-            # overall rich reconstruction
-            moni = self.createMonitor(Rich__Rec__TimeMonitor,"RichTime")
+            cont = self.getProp("Context")
+
+            # RICH reconstruction only (tracks,pixels,photons)
+            moni = self.createMonitor(Rich__Rec__TimeMonitor,"RichRecoTime")
+            moni.TimingName = "RichRecInit"+cont+"Seq"
+            moni.Algorithms = [ moni.TimingName ]
+            seq.Members += [moni]
+
+            # RICH PID only
+            moni = self.createMonitor(Rich__Rec__TimeMonitor,"RichPIDTime")
+            moni.TimingName = "Rich"+cont+"PIDSeq"
+            moni.Algorithms = [ moni.TimingName ]
+            seq.Members += [moni]
+
+            # overall RICH reconstruction
+            moni = self.createMonitor(Rich__Rec__TimeMonitor,"OverallRichTime")
             moni.TimingName = "RecoRICHSeq"
-            moni.Algorithms = [ "RecoRICHSeq" ]
+            moni.Algorithms = [ moni.TimingName ]
             seq.Members += [moni]
 
             # overall track reconstruction
-            moni = self.createMonitor(Rich__Rec__TimeMonitor,"TrackTime")
+            moni = self.createMonitor(Rich__Rec__TimeMonitor,"OverallTrackTime")
             moni.TimingName = "RecoTrSeq"
-            moni.Algorithms = [ "RecoTrSeq" ]
+            moni.Algorithms = [ moni.TimingName ]
             seq.Members += [moni]
-

@@ -4,9 +4,6 @@
  *
  *  Header file for algorithm class : Rich::Rec::PixelClusterMoni
  *
- *  CVS Log :-
- *  $Id: RichPixelClusterMoni.h,v 1.2 2010-02-03 08:17:54 jonrob Exp $
- *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   31/02/2010
  */
@@ -75,12 +72,6 @@ namespace Rich
 
       /// Pre-Book all (non-MC) histograms
       virtual StatusCode prebookHistograms();
-
-    private: // methods
-
-
-    private: // data
-
 
     };
 
