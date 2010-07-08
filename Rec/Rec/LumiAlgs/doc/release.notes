@@ -4,6 +4,13 @@
 ! Purpose     : Accounting of LumiSummaries (offline code)
 !-----------------------------------------------------------------------------
 
+
+! 2010-07-08 - Yasmine Amhis 
+  - src/GetIntegratedLuminosity.cpp/h
+    . update algorithm
+  - python/LumiIntegratedConf.py
+    . run GetIntegratedLuminosity  
+
 !========================== LumiAlgs v3r6 2010-06-23 ========================
 
 ! 2010-06-23 - Rob Lambert
