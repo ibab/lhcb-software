@@ -5,6 +5,8 @@
 !               of events with exotic displaced vertices
 !-----------------------------------------------------------------------------
 
+!========================== DisplVertices v6r9 2010-07-08 ===================
+
 ! 2010-07-01 - Neal Gauvin
  - Remove use of new in execute() to avoid potential leaks
 
