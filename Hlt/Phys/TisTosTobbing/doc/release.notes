@@ -1,9 +1,10 @@
-! $Id: release.notes,v 1.58 2010-06-23 22:39:24 tskwarni Exp $
+! $Id: release.notes,v 1.59 2010-07-08 21:26:49 graven Exp $
 ! Package     : TisTosTobbing
 ! Responsible : Tomasz Skwarnicki
 ! Purpose     : TisTosTobbing of the trigger 
 ! ====================================================================
 
+!========================== TisTosTobbing v4r2 2010-07-08 ===================
 ! 2010-06-24 -  Tomasz Skwarnicki
  - Add L0TriggerTisTos (same as TriggerTisTos except for default input locations).
 
