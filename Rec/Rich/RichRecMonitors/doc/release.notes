@@ -4,6 +4,9 @@
 ! Purpose     : MC based detailed monitor algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2010-07-08 - Chris Jones
+ - Improvements to the processing time monitor
+
 !====================== RichRecMonitors v2r27 2010-04-09 =====================
 ! 2010-04-01 - Chris Jones
  - Improvements to the CK theta and resolution detailed monitors

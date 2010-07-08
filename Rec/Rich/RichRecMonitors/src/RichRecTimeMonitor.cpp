@@ -4,9 +4,6 @@
  *
  *  Implementation file for algorithm class : RichRecTimeMonitor
  *
- *  CVS Log :-
- *  $Id: RichRecTimeMonitor.cpp,v 1.9 2009-07-30 11:18:33 jonrob Exp $
- *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
  */
@@ -28,10 +25,10 @@ DECLARE_ALGORITHM_FACTORY( TimeMonitor );
 // Standard constructor, initializes variables
 TimeMonitor::TimeMonitor( const std::string& name,
                           ISvcLocator* pSvcLocator)
-  : RichRecHistoAlgBase ( name, pSvcLocator ),
-    m_nEvents           ( 0 ),
-    m_nPIDs             ( 0 ),
-    m_totTime           ( 0 )
+  : HistoAlgBase ( name, pSvcLocator ),
+    m_nEvents    ( 0 ),
+    m_nPIDs      ( 0 ),
+    m_totTime    ( 0 )
 {
 
   // Location of RichPIDs in TES
@@ -44,25 +41,16 @@ TimeMonitor::TimeMonitor( const std::string& name,
   declareProperty( "Algorithms", m_algNames );
 
   // Timing boundaries
-  declareProperty( "MaxEventTime",       m_maxTime       = 3000 );
-  declareProperty( "MaxEventTimePerPID", m_maxTimePerPID = 50   );
+  declareProperty( "MaxEventTime",       m_maxTime       = 10000 );
+  declareProperty( "MaxEventTimePerPID", m_maxTimePerPID = 100   );
+  declareProperty( "MaxTracks",          m_maxTracks     = 500   );
+  declareProperty( "MaxPixels",          m_maxPixels     = 10000 );
+  declareProperty( "MaxPIDs",            m_maxPIDs       = 300   );
 
 }
 
 // Destructor
 TimeMonitor::~TimeMonitor() {};
-
-//  Initialize
-StatusCode TimeMonitor::initialize()
-{
-  // Sets up various tools and services
-  const StatusCode sc = RichRecHistoAlgBase::initialize();
-  if ( sc.isFailure() ) { return sc; }
-
-  // do any init things here ...
-
-  return sc;
-}
 
 // Main execution
 StatusCode TimeMonitor::execute()
@@ -94,22 +82,24 @@ StatusCode TimeMonitor::execute()
   m_totTime += time;
   m_nPIDs   += nPIDs;
 
-  // Fill histograms
+  richHisto1D( HID("totTime"), m_name+" total processing time (ms)", 
+               0, m_maxTime, nBins1D() )->fill(time);
+  richHisto1D( HID("pidTime"), m_name+" processing time per PID (ms)",
+               0, m_maxTimePerPID, nBins1D() )->fill(timePerPID);
 
-  const int maxTracks = 150;
-  const int maxPixels = 5000;
+  richHisto1D( HID("nPIDs"), m_name+" total # PIDs",
+               -0.5, m_maxPIDs+0.5, m_maxPIDs+1 )->fill(nPIDs);
+  richHisto1D( HID("nPixels"), m_name+" total # Rich Pixels",
+               -0.5, m_maxPixels+0.5, m_maxPixels+1 )->fill(richPixels()->size());
 
-  plot1D( time, "totTime", m_name+" total processing time (ms)", 0, m_maxTime );
-  plot1D( timePerPID, "pidTime", m_name+" processing time per PID (ms)",0,m_maxTimePerPID );
-
-  plot2D( nPIDs, time, "tottimeVnpids", m_name+" total processing time (ms) V #PIDs",
-          0.5, maxTracks+0.5, 0, m_maxTime, 1+maxTracks );
-  plot2D( richPixels()->size(), time, "tottimeVnpixs", m_name+" total processing time (ms) V #Pixels",
-          0.5,maxPixels+0.5,0,m_maxTime );
-  plot2D( nPIDs, timePerPID, "pidtimeVnpids", m_name+" processing time per PID (ms) V #PIDs",
-          0.5,maxTracks+0.5, 0,m_maxTimePerPID, 1+maxTracks );
-  plot2D( richPixels()->size(), timePerPID, "pidtimeVnpixs",
-          m_name+" processing time per PID (ms) V #Pixels",0.5,maxPixels+0.5,0,m_maxTimePerPID );
+  richProfile1D( HID("tottimeVnpids"), m_name+" total processing time (ms) V # RICH PIDs",
+                 -0.5, m_maxTracks+0.5, m_maxTracks+1 )->fill(nPIDs,time);
+  richProfile1D( HID("tottimeVnpixs"), m_name+" total processing time (ms) V # RICH Pixels",
+                 -0.5,m_maxPixels+0.5,m_maxPixels+1 )->fill(richPixels()->size(),time);
+  richProfile1D( HID("pidtimeVnpids"), m_name+" processing time per PID (ms) V # RICH PIDs",
+                 -0.5,m_maxTracks+0.5,m_maxTracks+1 )->fill(nPIDs, timePerPID);
+  richProfile1D( HID("pidtimeVnpixs"), m_name+" processing time per PID (ms) V # RICH Pixels",
+                 -0.5,m_maxPixels+0.5,m_maxPixels+1 )->fill(richPixels()->size(),timePerPID);
 
   return StatusCode::SUCCESS;
 }
