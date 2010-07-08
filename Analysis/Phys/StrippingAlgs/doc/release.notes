@@ -5,6 +5,8 @@
 ! Purpose     : Stripping framework c++ component algorithms
 ! -----------------------------------------------------------------------------
 
+!======================== StrippngAlgs v1r3 2010-07-08 ========================
+
 ! 2010-06-27 - Anton Poluektov 
  - ProcStatusCheck looks for ProcStatus->aborted() rather than counting 
    the number of entries in ProcStatus. 
