@@ -152,7 +152,6 @@ bool DimInfoMonObject::loadMonObject(){
     std::stringstream is;
     //msg << MSG::DEBUG << "putsetbuf " << endreq;
     is.rdbuf()->pubsetbuf(c, m_StringSize);
-    if (is==0) return false;
     boost::archive::binary_iarchive ia(is);
   //  msg << MSG::INFO << " loading MonObject "<< endreq;
     if (m_monObject!=0) m_monObject->load(ia, 1);
