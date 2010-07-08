@@ -87,6 +87,7 @@ Rich::Rec::Track::Type Rich::Rec::Track::type( const LHCb::Track * track )
     if      ( LHCb::Track::PatForward    == hist )  { return Rich::Rec::Track::Forward;  }
     // match track types
     else if ( LHCb::Track::TrackMatching == hist )  { return Rich::Rec::Track::Match;    }
+    else if ( LHCb::Track::PatMatch      == hist )  { return Rich::Rec::Track::Match;    }
     // seed types
     else if ( LHCb::Track::TsaTrack      == hist )  { return Rich::Rec::Track::Seed;     }
     else if ( LHCb::Track::PatSeeding    == hist )  { return Rich::Rec::Track::Seed;     }
