@@ -68,7 +68,7 @@ EventSelector.D...   INFO Compression:1 Checksum:1
 R__unzip: too small target
 EventSelector.D...   INFO Retry with increased buffer space of 185208 bytes.
 EventSelector     SUCCESS Reading Event record 1. Record number within stream 1: 1
-Explorer             INFO ========= /Event[0x15d629f0@EventDataSvc]:
+Explorer             INFO ========= /Event[0x20c36230@EventDataSvc]:
 Explorer             INFO +--> /Event [Address: CLID=0x1 Type=0xa000000]  DataObject
 Explorer             INFO | +--> /Prev5 [Address: CLID=0x1 Type=0xa000000]  DataObject
 Explorer             INFO | | +--> /DAQ [Address: CLID=0x1 Type=0xa000000]  DataObject
@@ -119,7 +119,7 @@ EventSelector     SUCCESS Reading Event record 2201. Record number within stream
 EventSelector     SUCCESS Reading Event record 2401. Record number within stream 1: 2401
 EventSelector     SUCCESS Reading Event record 2601. Record number within stream 1: 2601
 EventSelector     SUCCESS Reading Event record 2801. Record number within stream 1: 2801
-EventSelector.D...   INFO Cannot read more data. End-of-File reached.
+EventSelector.D...   INFO Cannot read more data  (Header). End-of-File reached.
 EventLoopMgr         INFO No more events in event selection
 +-------------------> Finished processing events
 ApplicationMgr       INFO Application Manager Stopped successfully

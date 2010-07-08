@@ -51,7 +51,7 @@ ApplicationMgr       INFO Application Manager Started successfully
 EventSelector.D...   INFO Compression:0 Checksum:0
 EventSelector     SUCCESS Reading Event record 1. Record number within stream 1: 1
 EventPersistenc...   INFO Added successfully Conversion service:RawDataCnvSvc
-Explorer             INFO ========= /Event[0x1f2e2f0@EventDataSvc]:
+Explorer             INFO ========= /Event[0x1ef75630@EventDataSvc]:
 Explorer             INFO +--> /Event [Address: CLID=0x1 Type=0xa000000]  DataObject
 Explorer             INFO | +--> /DAQ [Address: CLID=0x1 Type=0xa000000]  DataObject
 Explorer             INFO | | +--> /RawEvent [No Address]  LHCb::RawEvent
@@ -94,7 +94,7 @@ EventSelector     SUCCESS Reading Event record 1201. Record number within stream
 EventSelector     SUCCESS Reading Event record 1401. Record number within stream 1: 1401
 EventSelector     SUCCESS Reading Event record 1601. Record number within stream 1: 1601
 EventSelector     SUCCESS Reading Event record 1801. Record number within stream 1: 1801
-EventSelector.D...   INFO Cannot read more data. End-of-File reached.
+EventSelector.D...   INFO Cannot read more data  (Header). End-of-File reached.
 EventSelector        INFO Stream:EventSelector.DataStreamTool_2 Def:DATA='PFN:root:file://mdfData_0.dat'        SVC='LHCb::MDFSelector'
 EventSelector.D...   INFO Compression:2 Checksum:1
 EventSelector     SUCCESS Reading Event record 2001. Record number within stream 2: 1
