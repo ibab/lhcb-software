@@ -6,6 +6,15 @@
 !-----------------------------------------------------------------------------
 </PRE>
 
+<H1><A NAME=v4r39>2010-07-13 OnlineSys v4r42</A></H1>
+<PRE>
+   Based in Gaudi v21r9.
+   New tags for online packages are:
+   MDF               v3r26    DAQ
+   MDF_ROOT          v1r3     DAQ
+   ROMon             v1r24    Online
+</PRE>
+
 <H1><A NAME=v4r39>2010-06-13 OnlineSys v4r41</A></H1>
 <PRE>
    Based in Gaudi v21r9.
@@ -23,6 +32,7 @@
 ! 2010-06-11 - Olivier Callot
  - Added a new package
 	 Trending          v1r0     Online
+</PRE>
 
 <H1><A NAME=v4r39>2010-05-10 OnlineSys v4r40</A></H1>
 <PRE>

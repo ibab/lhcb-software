@@ -1,13 +1,13 @@
 package OnlineSys
-version v4r41
+version v4r42
 
 branches cmt doc
  
 #=======================================================
 # Overrides from LHCB
 #=======================================================
-use MDF               v3r25    DAQ
-use MDF_ROOT          v1r2     DAQ
+use MDF               v3r26    DAQ
+use MDF_ROOT          v1r3     DAQ
 use DAQEvent          v9r1     Event
 use GaudiObjDesc      v11r10p1
 #=======================================================
@@ -43,7 +43,7 @@ use OnlineTasks       v1r33    Online
 use Presenter         v1r6     Online
 use PyDIM             v2r9     Online
 use RawBankSizes      v2r8     Online
-use ROMon             v1r23    Online
+use ROMon             v1r24    Online
 use ROLogger          v0r19    Online
 use Trending          v1r0     Online
 use UPI               v1r18    Online
