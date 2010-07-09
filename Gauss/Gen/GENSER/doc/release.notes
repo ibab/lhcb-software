@@ -4,6 +4,7 @@
 ! Purpose     : interface package to GENSER
 !-----------------------------------------------------------------------------
 
+!========================== GENSER v7r0 2010-07-09 ===========================
 ! 2010-06-21 - Patrick Robbe
  - requirements: use Photos 215.4 to have HEPEVT common block size set to
    10000.

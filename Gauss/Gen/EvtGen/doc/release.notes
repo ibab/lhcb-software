@@ -4,10 +4,11 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
-!========================= EvtGen v11r8p1 2010-05-09 =========================
+!========================== EvtGen v11r9 2010-07-08 ==========================
 ! 2010-06-24 - Mark Whitehead
-- EvtModelReg.cpp Turned EvtBToDDalitzCPK model back on
+ - EvtModelReg.cpp Turned EvtBToDDalitzCPK model back on
 
+!========================= EvtGen v11r8p1 2010-05-09 =========================
 ! 2010-05-05 - Patrick Robbe
  - EvtPythia.cpp: use temporary file name to store Pythia new decay table
 
