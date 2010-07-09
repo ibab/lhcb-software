@@ -1,9 +1,10 @@
 !-----------------------------------------------------------------------------
 ! Package     : EvtGenExtra
-! Responsible : Will REECE
+! Responsible : Mark WHITEHEAD, Patrick ROBBE
 ! Purpose     : Repository of EvtGen models with external linkages
 !-----------------------------------------------------------------------------
 
+!======================= EvtGenExtras v2r4 2010-07-09 ========================
 ! 2010-05-28 - Nikolai Nikitin
  - Add new classes for the description of rare radiative leptonic B-mesons decays
    (MNT - Model) with CP-violation effects.
