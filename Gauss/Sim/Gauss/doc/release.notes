@@ -4,6 +4,11 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+!========================= Gauss v38r6 2010-07-09 ============================
+! 2010-07-09 - Gloria CORTI
+ - Use latest SIMCOND tags for DEV for 2010 data.
+   . options/Gauss-DEV.py
+
 !========================= Gauss v38r5 2010-05-09 ============================
 ! 2010-05-09 - Gloria CORTI
  - Introduce new options for setting mean value of interaction (x,y,z). X and
