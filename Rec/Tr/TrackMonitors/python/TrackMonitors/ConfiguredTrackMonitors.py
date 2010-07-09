@@ -27,7 +27,9 @@ def ConfiguredTrackMonitorSequence(Name = "TrackMonitorSequence",
         seq.Members.append( TrackVeloOverlapMonitor(HistoPrint=HistoPrint) )
         seq.Members.append( TTTrackMonitor(HistoPrint=HistoPrint) )
         seq.Members.append( ITTrackMonitor(HistoPrint=HistoPrint) )
-        seq.Members.append( HitEffPlotter(HistoPrint=HistoPrint) )
+        
+	if RecMoniConf().expertHistos() : 
+            seq.Members.append( HitEffPlotter(HistoPrint=HistoPrint) )
 
         if "CALO" in RecSysConf().RecoSequence:
             seq.Members.append( TrackCaloMatchMonitor("TrackEcalMatchMonitor", CaloSystem='Ecal', HistoPrint=HistoPrint) )
