@@ -68,9 +68,9 @@ StatusCode LoKi::VertexFitter::_load
   for ( ; ds.end() != c && sc.isSuccess() ; ++c , ++e ) 
   { sc = _load ( *c , *e ) ; } ;
   if ( sc.isFailure () ) 
-  { return Error ( "_load(): the error from _load:" , sc ) ; }        // RETURN 
+  { return Error ( "_load(): the error from _load:" , sc          , 1 ) ; } // RETURN 
   if ( m_entries.empty() ) 
-  { return Error ( "_load(): no valid data found" , InvalidData ) ; } // RETURN 
+  { return Error ( "_load(): no valid data found"   , InvalidData , 1 ) ; } // RETURN 
   return StatusCode::SUCCESS ;
 } 
 // ============================================================================
@@ -81,7 +81,7 @@ StatusCode LoKi::VertexFitter::_load
   LoKi::VertexFitter::Entry& entry    ) const 
 {
   if ( 0 == particle ) 
-  { return Error ( "_load(): invalid particle" , InvalidParticle ) ; } // RETURN 
+  { return Error ( "_load(): invalid particle" , InvalidParticle , 1 ) ; } // RETURN 
   //
   switch ( particleType ( particle ) ) 
   {
@@ -108,10 +108,10 @@ StatusCode LoKi::VertexFitter::_add
   m_entries.push_back( Entry() ) ;
   StatusCode sc = _load      ( child , m_entries.back() ) ;
   if ( sc.isFailure() ) 
-  { Warning ("_add(): the error from _add()      , ignore", sc ) ; }
+  { Warning ("_add(): the error from _add()      , ignore", sc , 1 ).ignore() ; }
   sc = _transport ( m_entries.back() , newZ ) ;
   if ( sc.isFailure() ) 
-  { Warning ("_add(): the error from _transport(), ignore", sc ) ; }
+  { Warning ("_add(): the error from _transport(), ignore", sc , 1 ).ignore() ; }
   return StatusCode::SUCCESS ;
 } 
 // ============================================================================
@@ -135,7 +135,7 @@ StatusCode LoKi::VertexFitter::_iterate
     const double newZ = (*x)(2) ;
     StatusCode sc = _transport ( newZ ) ;
     if ( sc.isFailure() ) 
-    { Warning ( "_iterate(): problem with transport ", sc ) ;}    
+    { Warning ( "_iterate(): problem with transport ", sc , 1 ).ignore() ;}    
     // initialize the covariance matrix 
     if ( 0 != iIter ) { m_seedci = (*ci) * s_scale2 ; }
     ci   = &m_seedci ;
@@ -157,13 +157,13 @@ StatusCode LoKi::VertexFitter::_iterate
     // kalman smooth
     sc = LoKi::KalmanFilter::smooth ( m_entries ) ;
     if ( sc.isFailure() ) 
-    { Warning ( "_iterate(): problem with smoother", sc ) ; }
+    { Warning ( "_iterate(): problem with smoother", sc , 1 ).ignore() ; }
     // distance in the absolute position 
     const double d1 = ROOT::Math::Mag        ( (*x) - x0 ) ;
     // distance in the chi2 units 
     const double d2 = ROOT::Math::Similarity ( (*x) - x0 , *ci ) ;
     if ( d2 < 0 ) 
-    {  Warning ( "_iterate: negative chi2 detected, ignore" ) ; }
+    {  Warning ( "_iterate: negative chi2 detected, ignore" , sc , 1 ).ignore() ; }
     // termination conditions:
     //
     //  (1) STOP if the distance is sufficiently small 
@@ -174,14 +174,14 @@ StatusCode LoKi::VertexFitter::_iterate
     {
       sc = LoKi::KalmanFilter::evalCov ( m_entries ) ;
       if ( sc.isFailure() ) 
-      { Warning ( "_iterate(): problems with covariances" , sc ) ; }
+      { Warning ( "_iterate(): problems with covariances" , sc , 1 ).ignore() ; }
       // 
       counter ( "#iterations" ) += iIter ;
       //
       return StatusCode::SUCCESS ;                             // RETURN 
     }    
   } // end of iterations
-  return Error ( "No convergency has been reached" , NoConvergency ) ; // RETURN 
+  return Error ( "No convergency has been reached" , NoConvergency , 1 ) ; // RETURN 
 } 
 // ============================================================================
 // make a seed 
@@ -215,27 +215,27 @@ StatusCode LoKi::VertexFitter::_seed ( const LHCb::Vertex* vertex ) const
     m_seed[0] = 0.0 ; m_seed[1] = 0.0 ; m_seed [2] = 0.0 ;
     Gaudi::Math::setToUnit ( m_seedci , 1.0/s_middle2 ) ;
     m_seedci(2,2) = 1.0/s_large2 ;
-    Warning ( "_seed(): error in matrix inversion" ) ; 
+    Warning ( "_seed(): error in matrix inversion" , sc , 1 ).ignore()  ; 
   }
   /// check the validity of the seed 
   Gaudi::XYZPoint pnt ( m_seed[0] , m_seed[1] , m_seed[2] ) ;
   if ( m_seedZmin > pnt.Z() ) 
   { 
-    Warning ("_seed(): Seed is outside of 'Zmin' fiducial volume ") ; 
+    Warning ("_seed(): Seed is outside of 'Zmin' fiducial volume " , sc , 1 ).ignore() ; 
     m_seed[2] = 0.5 * ( 0.0 + m_seedZmin ) ; 
     m_seedci(0,2) = 0 ; m_seedci(1,2) = 0 ;
     m_seedci(2,2) = 4.0/m_seedZmin/m_seedZmin;
   }
   if ( m_seedZmax < pnt.Z() ) 
   { 
-    Warning ("_seed(): Seed is outside of 'Zmax' fiducial volume ") ; 
+    Warning ("_seed(): Seed is outside of 'Zmax' fiducial volume " , sc , 1 ).ignore() ; 
     m_seed[2] = 0.5 * ( 0.0 + m_seedZmax ) ; 
     m_seedci(0,2) = 0 ; m_seedci(1,2) = 0 ;
     m_seedci(2,2) = 4.0/m_seedZmax/m_seedZmax;
   }
   if ( m_seedRho  < pnt.Rho() ) 
   { 
-    Warning ("_seed(): Seed is outside of 'Rho'  fiducial volume ") ; 
+    Warning ("_seed(): Seed is outside of 'Rho'  fiducial volume " , sc , 1 ).ignore() ; 
     m_seed[0]     = 0.0 ; m_seed[1] = 0.0 ; 
     m_seedci(0,1) = 0   ; m_seedci(0,2) = 0 ; 
     m_seedci(1,2) = 0   ; m_seedci(0,2) = 0 ;
@@ -254,14 +254,14 @@ StatusCode LoKi::VertexFitter::fit
   // load the data 
   StatusCode sc = _load ( daughters ) ;
   if ( sc.isFailure() ) 
-  { return Error ( "fit(): failure from _load() ", sc ) ; }      // RETURN 
+  { return Error ( "fit(): failure from _load() ", sc , 1 ) ; }      // RETURN 
   sc = _seed ( &vertex ) ; 
   if ( sc.isFailure() ) 
-  { Warning  ( "fit(): failure from _seed()"     , sc ) ; }
+  { Warning  ( "fit(): failure from _seed()"     , sc , 1 ).ignore() ; }
   // make "m_nIterMax" iterations 
   sc = _iterate ( m_nIterMaxI , m_seed ) ;
   if ( sc.isFailure() ) 
-  { return Error ( "fit(): failure from _iterate()"  , sc ) ; } // RETURN 
+  { return Error ( "fit(): failure from _iterate()"  , sc , 1 ) ; } // RETURN 
   // get the data from filter 
   const Entry&               entry = m_entries.back() ;
   const Gaudi::Vector3&      x     = entry.m_x         ;
@@ -304,7 +304,7 @@ StatusCode LoKi::VertexFitter::fit
   
   // make a vertex fit 
   StatusCode sc = fit ( vertex , daughters ) ;
-  if ( sc.isFailure() ) { return Error ( "fit(): failure form fit", sc ) ; }
+  if ( sc.isFailure() ) { return Error ( "fit(): failure form fit", sc , 1 ) ; }
   // links:
   particle.clearDaughters() ;
   for ( LHCb::Particle::ConstVector::const_iterator dau = 
@@ -364,7 +364,7 @@ StatusCode LoKi::VertexFitter::add
   LHCb::Vertex&          vertex   ) const
 {
   if ( 0 == particle ) 
-  { return Error ( "add: Particle* point to NULL!" , InvalidParticle ) ;}
+  { return Error ( "add: Particle* point to NULL!" , InvalidParticle , 1 ) ;}
   //
   if ( &vertex != m_vertex ) 
   {
@@ -375,24 +375,24 @@ StatusCode LoKi::VertexFitter::add
                   vertex.outgoingParticles().begin () , 
                   vertex.outgoingParticles().end   () ) ;
     if ( sc.isFailure() ) 
-    { return Error ( "add: error from 'fit'", sc ) ; }
+    { return Error ( "add: error from 'fit'", sc , 1 ) ; }
   }
   StatusCode sc = _add ( particle , vertex.position().Z() ) ;
-  if ( sc.isFailure() ) { Warning ("add(): failure from _add" , sc ) ; }
+  if ( sc.isFailure() ) { Warning ("add(): failure from _add" , sc , 1 ).ignore() ; }
   //
   Entry& entry    =   m_entries.back()   ;
   const Entry& e0 = *(m_entries.end()-2) ;
   // make one Kalman step using the previos parameters as estimate
   sc = LoKi::KalmanFilter::step  ( entry , e0.m_x , e0.m_ci , e0.m_chi2) ;
-  if ( sc.isFailure() ) { Warning ("add(): failure from _step" , sc ) ; }
+  if ( sc.isFailure() ) { Warning ("add(): failure from _step" , sc , 1 ).ignore() ; }
   // smooth it!
   sc = LoKi::KalmanFilter::smooth ( m_entries ) ;
-  if ( sc.isFailure() ) { Warning ("add(): failure from _smooth" , sc ) ; }
+  if ( sc.isFailure() ) { Warning ("add(): failure from _smooth" , sc , 1 ).ignore() ; }
   // make few more full iterations 
   m_seedci = entry.m_ci ;
   Gaudi::Math::scale ( m_seedci , s_scale2 ) ;
   sc = _iterate ( m_nIterMaxII , entry.m_x ) ;
-  if ( sc.isFailure() ) { Warning ("add(): failure from _iterate" , sc ) ; }
+  if ( sc.isFailure() ) { Warning ("add(): failure from _iterate" , sc , 1 ).ignore() ; }
   //
   const Gaudi::Vector3&      x     = entry.m_x         ;
   const Gaudi::SymMatrix3x3& c     = entry.m_c         ;
@@ -407,11 +407,11 @@ StatusCode LoKi::VertexFitter::add
   m_vertex = &vertex ;
   // check for positions
   if ( m_seedZmin > vertex.position().Z() ) 
-  { Warning ( "fit():Vertex is outside of 'Zmin' fiducial volume " ) ; }
+  { Warning ( "fit():Vertex is outside of 'Zmin' fiducial volume " , sc , 1 ).ignore() ; }
   if ( m_seedZmax < vertex.position().Z() ) 
-  { Warning ( "fit():Vertex is outside of 'Zmax' fiducial volume " ) ; }
+  { Warning ( "fit():Vertex is outside of 'Zmax' fiducial volume " , sc , 1 ).ignore() ; }
   if ( m_seedRho  < vertex.position().Rho() ) 
-  { Warning ( "fit():Vertex is outside of 'Rho'  fiducial volume " ) ; }
+  { Warning ( "fit():Vertex is outside of 'Rho'  fiducial volume " , sc , 1 ).ignore() ; }
   //
   return StatusCode::SUCCESS ;
 } 
@@ -422,11 +422,11 @@ StatusCode LoKi::VertexFitter::remove
 ( const LHCb::Particle*  particle , 
   LHCb::Vertex&          vertex   ) const
 {
-  return Warning ( "remove(): not implemented (yet)!" , NotImplemented ) ; // ATTENTION!!!
+  return Warning ( "remove(): not implemented (yet)!" , NotImplemented , 1 ) ; // ATTENTION!!!
   //
   const StatusCode OK = StatusCode::SUCCESS ;
   if ( 0 == particle ) 
-  { return Warning ( "remove: nothing to remove" , OK ) ; }        // RETURN 
+  { return Warning ( "remove: nothing to remove" , OK , 1 ) ; }        // RETURN 
   if ( &vertex != m_vertex ) 
   {
     // first need to fit it !
@@ -436,7 +436,7 @@ StatusCode LoKi::VertexFitter::remove
                   vertex.outgoingParticles().begin() , 
                   vertex.outgoingParticles().end  () ) ;
     if ( sc.isFailure() ) 
-    { return Error ( "remove: error from 'fit'", sc ) ;  }           // RETURN 
+    { return Error ( "remove: error from 'fit'", sc , 1 ) ;  }           // RETURN 
   }
   // remove the particle from the vertex 
   vertex.removeFromOutgoingParticles ( particle ) ;
@@ -520,13 +520,13 @@ StatusCode LoKi::VertexFitter::initialize()
   // validate  
   sc = m_longLived.validate ( m_ppSvc ) ;
   if ( sc.isFailure() ) 
-  { return Error ( "Unable to validate Long-Lived particles"  , sc ); }
+  { return Error ( "Unable to validate Long-Lived particles"  , sc , 1 ) ; }
   sc = m_shortLived.validate ( m_ppSvc ) ;
   if ( sc.isFailure() ) 
-  { return Error ( "Unable to validate Short-Lived particles" , sc ); }
+  { return Error ( "Unable to validate Short-Lived particles" , sc , 1 ) ; }
   sc = m_gammaLike.validate ( m_ppSvc ) ;
   if ( sc.isFailure() ) 
-  { return Error ( "Unable to validate Short-Lived particles" , sc ); }
+  { return Error ( "Unable to validate Short-Lived particles" , sc , 1 ) ; }
   //
   return StatusCode::SUCCESS ;
 }
