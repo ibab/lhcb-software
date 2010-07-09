@@ -90,8 +90,8 @@ namespace Rich
       private: // data
 
 
-        int m_richTemp;    ///< which rich detector to monitor
-        Rich::DetectorType m_rich;
+        int m_radTemp;    ///< which rich detector to monitor
+        Rich::RadiatorType m_radiator;
 
         int m_maxUsedTracks;
 

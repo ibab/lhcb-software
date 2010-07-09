@@ -18,15 +18,15 @@ class RichAlignmentConf(RichConfigurableUser):
     __slots__ = {
         "Context": "Offline"  # The context within which to run
         ,"AlignmentSequencer" : None
-        ,"Detectors"        : [ "Rich1", "Rich2" ] # The RICH detectors to monitor
+        ,"Radiators"        : [ "Rich1Gas", "Rich2Gas" ] # The RICH detectors to monitor
         ,"NTupleProduce"    : True
         ,"R1NTupleProduce"  : False
         ,"R2NTupleProduce"  : False
         ,"Histograms"       : "OfflineFull"
         ,"WithMC"           : False     # set to True to use MC truth
-        ,"MinTrackMomentum" : [ 5, 10 ] # momentum cut in GeV, use -1 for default
-        ,"DeltaThetaRange"  : [ 0.01, 0.005 ]
-        ,"HPDList"          : [ [], [] ] # list of HPDs for histograms
+        ,"MinTrackMomentum" : [ 5, 5, 10 ] # momentum cut in GeV, use -1 for default
+        ,"DeltaThetaRange"  : [ 0.04, 0.01, 0.005 ]
+        ,"HPDList"          : [ [], [], [] ] # list of HPDs for histograms
         }
 
     ## Apply the configuration
@@ -40,23 +40,53 @@ class RichAlignmentConf(RichConfigurableUser):
 
         from Configurables import ( Rich__Rec__MC__AlignmentMonitor )
 
+        # Mirror Alignment monitor for Aerogel
+        #-------------------------------------------------------------------------------
+        if "Aerogel" in self.getProp("Radiators") :
+
+            RichAlignMoniAerogel = Rich__Rec__MC__AlignmentMonitor("RichAlignMoniAerogel")
+            sequence.Members += [RichAlignMoniAerogel]
+
+            RichAlignMoniAerogel.UseMCTruth      = self.getProp("WithMC")
+            RichAlignMoniAerogel.Radiator        = 0   # Aerogel = 0, Rich1Gas = 1, Rich2Gas = 2
+            RichAlignMoniAerogel.DeltaThetaRange = self.getProp("DeltaThetaRange")[0]
+
+            # Track selector
+            trselname = "TrackSelector"
+            RichAlignMoniAerogel.addTool( self.richTools().trackSelector(trselname), name=trselname )
+
+            RichAlignMoniAerogel.TrackSelector.TrackAlgs = [ "Match","Forward" ]
+            aeroMinPCut = self.getProp("MinTrackMomentum")[0]
+            if aeroMinPCut < 0: aeroMinPCut = 5
+            RichAlignMoniAerogel.TrackSelector.MinPCut   = aeroMinPCut
+
+            RichAlignMoniAerogel.NTupleProduce = self.getProp("NTupleProduce") and self.getProp("R1NTupleProduce")
+            RichAlignMoniAerogel.HistoProduce  = self.getProp("Histograms") != "None"
+
+            RichAlignMoniAerogel.HistoOutputLevel = histoLevel[self.getProp("Histograms")]
+
+            # This list is of "popular" mirrors. A longer list is required for full alignment
+            RichAlignMoniAerogel.PreBookHistos = ['0000','0001','0002','0003', '0104','0105','0106','0107',
+                                                  '0212','0213','0214','0215', '0308','0309','0310','0311' ]
+            RichAlignMoniAerogel.HPDList = self.getProp("HPDList")[0]
+
         # Mirror Alignment monitor for Rich1
         #-------------------------------------------------------------------------------
-        if "Rich1" in self.getProp("Detectors") :
+        if "Rich1Gas" in self.getProp("Radiators") :
 
-            RichAlignMoniR1 = Rich__Rec__MC__AlignmentMonitor("RichAlignMoniR1")
+            RichAlignMoniR1 = Rich__Rec__MC__AlignmentMonitor("RichAlignMoniR1Gas")
             sequence.Members += [RichAlignMoniR1]
 
             RichAlignMoniR1.UseMCTruth      = self.getProp("WithMC")
-            RichAlignMoniR1.RichDetector    = 0   # Rich1 = 0, Rich2 = 1
-            RichAlignMoniR1.DeltaThetaRange = self.getProp("DeltaThetaRange")[0]
+            RichAlignMoniR1.Radiator        = 1   # Aerogel = 0, Rich1Gas = 1, Rich2Gas = 2
+            RichAlignMoniR1.DeltaThetaRange = self.getProp("DeltaThetaRange")[1]
 
             # Track selector
             trselname = "TrackSelector"
             RichAlignMoniR1.addTool( self.richTools().trackSelector(trselname), name=trselname )
 
             RichAlignMoniR1.TrackSelector.TrackAlgs = [ "Match","Forward" ]
-            r1MinPCut = self.getProp("MinTrackMomentum")[0]
+            r1MinPCut = self.getProp("MinTrackMomentum")[1]
             if r1MinPCut < 0: r1MinPCut = 5
             RichAlignMoniR1.TrackSelector.MinPCut   = r1MinPCut
 
@@ -68,25 +98,25 @@ class RichAlignmentConf(RichConfigurableUser):
             # This list is of "popular" mirrors. A longer list is required for full alignment
             RichAlignMoniR1.PreBookHistos = ['0000','0001','0002','0003', '0104','0105','0106','0107',
                                              '0212','0213','0214','0215', '0308','0309','0310','0311' ]
-            RichAlignMoniR1.HPDList = self.getProp("HPDList")[0]
+            RichAlignMoniR1.HPDList = self.getProp("HPDList")[1]
 
         # Mirror Alignment monitor for Rich2
         #-------------------------------------------------------------------------------
-        if "Rich2" in self.getProp("Detectors") :
+        if "Rich2Gas" in self.getProp("Radiators") :
 
-            RichAlignMoniR2 = Rich__Rec__MC__AlignmentMonitor("RichAlignMoniR2")
+            RichAlignMoniR2 = Rich__Rec__MC__AlignmentMonitor("RichAlignMoniR2Gas")
             sequence.Members += [RichAlignMoniR2]
 
             RichAlignMoniR2.UseMCTruth      = self.getProp("WithMC")
-            RichAlignMoniR2.RichDetector    = 1   # Rich1 = 0, Rich2 = 1
-            RichAlignMoniR2.DeltaThetaRange = self.getProp("DeltaThetaRange")[1]
+            RichAlignMoniR2.Radiator        = 2   # Aerogel = 0, Rich1Gas = 1, Rich2Gas = 2
+            RichAlignMoniR2.DeltaThetaRange = self.getProp("DeltaThetaRange")[2]
 
             # Track selector
             trselname = "TrackSelector"
             RichAlignMoniR2.addTool( self.richTools().trackSelector(trselname), name=trselname )
 
             RichAlignMoniR2.TrackSelector.TrackAlgs = [ "Match","Forward" ]
-            r2MinPCut = self.getProp("MinTrackMomentum")[1]
+            r2MinPCut = self.getProp("MinTrackMomentum")[2]
             if r2MinPCut < 0: r2MinPCut = 10
             RichAlignMoniR2.TrackSelector.MinPCut   = r2MinPCut
 
@@ -95,7 +125,7 @@ class RichAlignmentConf(RichConfigurableUser):
 
             RichAlignMoniR2.HistoOutputLevel = histoLevel[self.getProp("Histograms")]
 
-            RichAlignMoniR2.HPDList = self.getProp("HPDList")[1]
+            RichAlignMoniR2.HPDList = self.getProp("HPDList")[2]
 
             # List of combinations of RICH2 spheric and flat mirror segments where
             # e.g. '2719' means spheric mirror No 27 and flat mirror No 19.

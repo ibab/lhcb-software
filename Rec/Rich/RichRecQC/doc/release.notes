@@ -4,6 +4,10 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2010-07-09 - Antonis Papanestis
+ - Changed the Alignment monitor so that it is possible to run an instance
+   per radiator, so that the Aerogel can be used as well.
+
 ! 2010-07-08 - Chris Jones
  - Update the Configuration of the processingh time monitors.
  - Slight change to binning in the pixel monitor.

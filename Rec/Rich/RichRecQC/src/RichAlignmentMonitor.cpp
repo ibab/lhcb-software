@@ -45,7 +45,7 @@ AlignmentMonitor::AlignmentMonitor( const std::string& name,
   declareProperty( "UseMCTruth",           m_useMCTruth     = false );
   declareProperty( "PreBookHistos",        m_preBookHistos );
   declareProperty( "ParticleType",         m_particleType = 2 ); // pion
-  declareProperty( "RichDetector",         m_richTemp = 1 ); // default is Rich2
+  declareProperty( "Radiator",             m_radTemp = 2 ); // default is Rich2
   declareProperty( "HistoOutputLevel",     m_histoOutputLevel = 0 );
   declareProperty( "HPDList",              m_HPDList );
 }
@@ -78,23 +78,23 @@ StatusCode AlignmentMonitor::initialize()
 
   m_pType = static_cast<Rich::ParticleIDType>(m_particleType);
   debug() << "Fixed particle type:" << m_pType << endmsg;
-  m_rich = static_cast<Rich::DetectorType>(m_richTemp);
-  debug() << "Detector:" << m_rich << endmsg;
+  m_radiator = static_cast<Rich::RadiatorType>(m_radTemp);
+  debug() << "Radiator:" << m_radiator << " " << m_radTemp << endmsg;
 
-  Rich::RadiatorType rad;
-  if ( m_rich == Rich::Rich1 )
-    rad = Rich::Rich1Gas;
+  Rich::DetectorType rich;
+  if ( m_radiator == Rich::Rich1Gas || m_radiator  == Rich::Aerogel )
+    rich = Rich::Rich1;
   else
-    rad = Rich::Rich2Gas;
+    rich = Rich::Rich2;
 
-  const std::string RAD = Rich::text(rad);
+  const std::string RAD = Rich::text(m_radiator);
 
   // prebook histograms
 
 
-  m_sideHistos.push_back( book2D("dThetavphiRecSide0","dTheta v phi "+ Rich::text( m_rich, Rich::Side(0) ),
+  m_sideHistos.push_back( book2D("dThetavphiRecSide0","dTheta v phi "+ Rich::text( rich, Rich::Side(0) ),
                                  0.0, 2*Gaudi::Units::pi, 20, -m_deltaThetaHistoRange, m_deltaThetaHistoRange,50) );
-  m_sideHistos.push_back( book2D("dThetavphiRecSide1","dTheta v phi "+ Rich::text( m_rich, Rich::Side(1) ),
+  m_sideHistos.push_back( book2D("dThetavphiRecSide1","dTheta v phi "+ Rich::text( rich, Rich::Side(1) ),
                                  0.0, 2*Gaudi::Units::pi, 20, -m_deltaThetaHistoRange, m_deltaThetaHistoRange,50) );
 
   if ( m_histoOutputLevel > 0 )
@@ -110,18 +110,18 @@ StatusCode AlignmentMonitor::initialize()
   {
     book2D( "dThetavphiRecIso", "dTheta v phi Isolated", 0.0, 2*Gaudi::Units::pi, 20,
             -m_deltaThetaHistoRange, m_deltaThetaHistoRange, 50);
-    m_sideIsolatedHistos.push_back( book2D("dThetavphiRecIsoSide0","dTheta v phi isolated "+ Rich::text( m_rich, Rich::Side(0) ),
+    m_sideIsolatedHistos.push_back( book2D("dThetavphiRecIsoSide0","dTheta v phi isolated "+ Rich::text( rich, Rich::Side(0) ),
                                            0.0, 2*Gaudi::Units::pi, 20, -m_deltaThetaHistoRange, m_deltaThetaHistoRange,50) );
-    m_sideIsolatedHistos.push_back( book2D("dThetavphiRecIsoSide1","dTheta v phi isolated "+ Rich::text( m_rich, Rich::Side(1) ),
+    m_sideIsolatedHistos.push_back( book2D("dThetavphiRecIsoSide1","dTheta v phi isolated "+ Rich::text( rich, Rich::Side(1) ),
                                            0.0, 2*Gaudi::Units::pi, 20, -m_deltaThetaHistoRange, m_deltaThetaHistoRange,50) );
     // quarter histos
-    m_quarterHistos.push_back( book2D("dThetavphiRecQuart0","dTheta v phi "+ Rich::text( m_rich, Rich::Side(0) )+" Pos",
+    m_quarterHistos.push_back( book2D("dThetavphiRecQuart0","dTheta v phi "+ Rich::text( rich, Rich::Side(0) )+" Pos",
                                       0.0, 2*Gaudi::Units::pi, 20, -m_deltaThetaHistoRange, m_deltaThetaHistoRange,50) );
-    m_quarterHistos.push_back( book2D("dThetavphiRecQuart1","dTheta v phi "+ Rich::text( m_rich, Rich::Side(0) )+" Neg",
+    m_quarterHistos.push_back( book2D("dThetavphiRecQuart1","dTheta v phi "+ Rich::text( rich, Rich::Side(0) )+" Neg",
                                       0.0, 2*Gaudi::Units::pi, 20, -m_deltaThetaHistoRange, m_deltaThetaHistoRange,50) );
-    m_quarterHistos.push_back( book2D("dThetavphiRecQuart2","dTheta v phi "+ Rich::text( m_rich, Rich::Side(1) )+" Pos",
+    m_quarterHistos.push_back( book2D("dThetavphiRecQuart2","dTheta v phi "+ Rich::text( rich, Rich::Side(1) )+" Pos",
                                       0.0, 2*Gaudi::Units::pi, 20, -m_deltaThetaHistoRange, m_deltaThetaHistoRange,50) );
-    m_quarterHistos.push_back( book2D("dThetavphiRecQuart3","dTheta v phi "+ Rich::text( m_rich, Rich::Side(1) )+" Neg",
+    m_quarterHistos.push_back( book2D("dThetavphiRecQuart3","dTheta v phi "+ Rich::text( rich, Rich::Side(1) )+" Neg",
                                       0.0, 2*Gaudi::Units::pi, 20, -m_deltaThetaHistoRange, m_deltaThetaHistoRange,50) );
   }
 
@@ -146,18 +146,18 @@ StatusCode AlignmentMonitor::initialize()
       std::string h_id = "dThetavphiRec"+strCombi;
       std::string sph  = strCombi.substr(0,2);
       std::string flat = strCombi.substr(2,2);
-      std::string title = "Alignment Histogram: Sph "+sph+" flat "+flat+" R"+(boost::lexical_cast<std::string>(m_rich+1));
-      book2D( Rich::HistogramID(h_id,rad), title, 0.0, 2*Gaudi::Units::pi, 20, -m_deltaThetaHistoRange,
+      std::string title = "Alignment Histogram: Sph "+sph+" flat "+flat+" R"+(boost::lexical_cast<std::string>(rich+1));
+      book2D( Rich::HistogramID(h_id,m_radiator), title, 0.0, 2*Gaudi::Units::pi, 20, -m_deltaThetaHistoRange,
               m_deltaThetaHistoRange, 50 );
       if ( m_useMCTruth ) {
         // use MC estimate for cherenkov angle
         h_id += "MC";
         title += " MC";
-        book2D( Rich::HistogramID(h_id,rad), title, 0.0, 2*Gaudi::Units::pi, 20, -m_deltaThetaHistoRange,
+        book2D( Rich::HistogramID(h_id,m_radiator), title, 0.0, 2*Gaudi::Units::pi, 20, -m_deltaThetaHistoRange,
                 m_deltaThetaHistoRange, 50 );
         title += " TrueP";
         h_id += "TruP";
-        book2D( Rich::HistogramID(h_id,rad), title, 0.0, 2*Gaudi::Units::pi, 20, -m_deltaThetaHistoRange,
+        book2D( Rich::HistogramID(h_id,m_radiator), title, 0.0, 2*Gaudi::Units::pi, 20, -m_deltaThetaHistoRange,
                 m_deltaThetaHistoRange, 50 );
       }
     }
@@ -230,7 +230,7 @@ StatusCode AlignmentMonitor::execute()
     // Radiator info
     const Rich::RadiatorType rad = segment->trackSegment().radiator();
 
-    if (rad == Rich::Aerogel || rich != m_rich) continue;
+    if ( m_radiator != rad ) continue;
 
     const std::string RAD = Rich::text(rad);
 
