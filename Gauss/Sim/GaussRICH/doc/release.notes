@@ -4,6 +4,10 @@
 ! Purpose     : collection of sensitive detectors, G4 actions, etc for RICH
 !----------------------------------------------------------------------------- 
 
+!========================= GaussRICH v11r1 2010-07-09 ========================
+! 2010-06-11 - Sajan EASO
+ - Minor fix to the analysis after simulation in RichAnalysis/RichG4HitRecon
+
 !========================= GaussRICH v11r0 2010-05-09 ========================
 ! 2010-04-19  Sajan Easo
   - In Rich.opts the CF4 scintillation is activated as default by commenting out
