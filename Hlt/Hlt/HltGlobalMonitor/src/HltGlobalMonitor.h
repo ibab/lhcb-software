@@ -85,11 +85,11 @@ private:
   public:
         histopair(GaudiHistoAlg& parent,const std::string& loc, const Gaudi::Histo1DDef& def, const char* yaxislabel=0 );
         void fill(double x,double y) {
-                m_histo->fill(x);
-                m_profile->fill(x,y);
+            m_histo->fill(x);
+            m_profile->fill(x,y);
         }
         void operator()(double CPUtime) {
-            size_t n = m_parent->exist<ObjectContainerBase>(m_loc) ?  m_parent->get<ObjectContainerBase>(m_loc)->numberOfObjects() : -1 ;
+            int n = m_parent->exist<ObjectContainerBase>(m_loc) ?  m_parent->get<ObjectContainerBase>(m_loc)->numberOfObjects() : -1 ;
             fill( n , CPUtime );
         }
   private:
