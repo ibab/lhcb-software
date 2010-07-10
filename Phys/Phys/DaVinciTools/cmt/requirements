@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.149 2010-07-06 16:13:15 jpalac Exp $
+# $Id: requirements,v 1.150 2010-07-10 14:22:37 ibelyaev Exp $
 # Created    : 05/02/2002
 # Maintainer : P. Koppenburg, J. Palacios
 #
@@ -6,7 +6,7 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 
 package           DaVinciTools
-version           v21r3p1
+version           v21r4
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -20,6 +20,7 @@ use  LHCbMath              v* Kernel
 use  CaloUtils             v* Calo
 use  LoKiPhys              v* Phys
 use  LoKiArrayFunctors     v* Phys
+use  DecayTreeFitter       v* Phys 
 
 # Extra language for translating yacc to c++
 # This is used to generate once the necessary files on Linux that are

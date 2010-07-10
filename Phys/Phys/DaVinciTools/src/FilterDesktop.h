@@ -1,4 +1,4 @@
-// $Id: FilterDesktop.h,v 1.5 2010-07-06 16:13:00 jpalac Exp $
+// $Id: FilterDesktop.h,v 1.6 2010-07-10 14:22:38 ibelyaev Exp $
 // ============================================================================
 #ifndef FILTERDESKTOP_H 
 #define FILTERDESKTOP_H 1
@@ -161,13 +161,16 @@ public:
 protected:
   // ==========================================================================
   /// construct the preambulo string 
-  std::string preambulo() const ;
+  std::string preambulo   () const ;          // construct the preambulo string 
   // ==========================================================================
-  // update the major properties 
-  StatusCode updateMajor  () ;
+  /// update the major properties 
+  StatusCode updateMajor  () ;                //    update the major properties 
   // ==========================================================================
-  // update histos 
-  StatusCode updateHistos () ;
+  /// update histos 
+  StatusCode updateHistos () ;                //                  update histos 
+  // ==========================================================================
+  /// decode the code 
+  virtual StatusCode decodeCode () ;          //                decode the code 
   // ==========================================================================
 protected:
   // ==========================================================================
@@ -200,6 +203,15 @@ protected :
   /// get the actual predicate: 
   const LoKi::BasicFunctors<const LHCb::Particle*>::Predicate& predicate() const 
   { return m_cut ;}
+  // ==========================================================================
+  /// access to the code-string
+  const std::string& code() const { return m_code ; }
+  // ==========================================================================
+  /// CloneFilteredParticles ? 
+  bool cloneFilteredParticles() const { return m_cloneFilteredParticles ; }
+  /// CloneFilteredParticles ? 
+  void setCloneFilteredParticles ( const bool value ) 
+  { m_cloneFilteredParticles = value ; }
   // ==========================================================================
 private:
   // ==========================================================================

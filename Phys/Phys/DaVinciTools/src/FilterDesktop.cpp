@@ -1,4 +1,4 @@
-// $Id: FilterDesktop.cpp,v 1.30 2010-07-06 16:13:00 jpalac Exp $
+// $Id: FilterDesktop.cpp,v 1.31 2010-07-10 14:22:37 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -192,10 +192,10 @@ FilterDesktop::FilterDesktop                  // standard contructor
     -> declareUpdateHandler ( &FilterDesktop::updateHandler1 , this ) ;
   
   // cloning of selected particles and secondary vertices
-  declareProperty ("CloneFilteredParticles",
-                   m_cloneFilteredParticles,
-                   "Clone filtered particles and env vertices into KeyedContainers");
-  
+  declareProperty 
+    ( "CloneFilteredParticles" ,
+      m_cloneFilteredParticles ,
+      "Clone filtered particles and end-vertices into KeyedContainers" ) ;
   // 
   StatusCode sc = setProperty ( "HistoProduce" , false ) ;
   Assert ( sc.isSuccess() , "Could not reset property HistoProduce" ) ;
@@ -266,32 +266,30 @@ std::string FilterDesktop::preambulo() const
 // ============================================================================
 StatusCode FilterDesktop::updateMajor () 
 {
+  // decode the code 
+  StatusCode sc = decodeCode () ;
+  if ( sc.isFailure() ) { return Error ( "Error from decodeCode()'" ) ; }
+  
   // locate the factory
   LoKi::IHybridFactory* factory = tool<LoKi::IHybridFactory> ( m_factory , this ) ;
-  
-  // use the factory 
-  StatusCode sc = factory-> get ( m_code , m_cut , preambulo() ) ;
-  if ( sc.isFailure() ) 
-  { return Error ( "Error from LoKi/Bender 'hybrid' factory for Code='" 
-                   + m_code + "'" , sc )  ; }
   
   // pre-monitoring: 
   if ( monitor() && !m_preMonitorCode.empty () ) 
   { sc = factory-> get ( m_preMonitorCode  , m_preMonitor  , preambulo() ) ; }
   else { m_preMonitor  = _CBOOL ( false ) ; }
-    
-    // post-monitoring: 
-    if ( monitor() && !m_postMonitorCode.empty() ) 
-    { sc = factory-> get ( m_postMonitorCode , m_postMonitor , preambulo() ) ; }
-    else { m_postMonitor = _CBOOL ( false ) ; }
-    
-    // release the factory (not needed anymore) 
-    release ( factory ) ;
-    //
-    m_to_be_updated1 = false ;
-    //
-    return StatusCode::SUCCESS ;
-  }
+  
+  // post-monitoring: 
+  if ( monitor() && !m_postMonitorCode.empty() ) 
+  { sc = factory-> get ( m_postMonitorCode , m_postMonitor , preambulo() ) ; }
+  else { m_postMonitor = _CBOOL ( false ) ; }
+  
+  // release the factory (not needed anymore) 
+  release ( factory ) ;
+  //
+  m_to_be_updated1 = false ;
+  //
+  return StatusCode::SUCCESS ;
+}
 // ============================================================================
 // update histos 
 // ============================================================================
@@ -519,10 +517,10 @@ void  FilterDesktop::saveOrphanRelatedPVs(const Particle2Vertex::Table* table) c
   LHCb::RecVertices* orphanPVs = new LHCb::RecVertex::Container();
   put (orphanPVs, 
        desktop()->getOutputLocation() + "/_RelatedPVs") ;
-
-  Particle2Vertex::Table::Range::const_iterator beginRel = relations.begin();
-  Particle2Vertex::Table::Range::const_iterator endRel = relations.end();
-
+  
+  Particle2Vertex::Table::Range::const_iterator beginRel = relations.begin () ;
+  Particle2Vertex::Table::Range::const_iterator endRel   = relations.end   () ;
+  
   for (Particle2Vertex::Table::Range::const_iterator irel = beginRel;
        irel != endRel;
        ++irel) {
@@ -532,6 +530,24 @@ void  FilterDesktop::saveOrphanRelatedPVs(const Particle2Vertex::Table* table) c
     }
   }
   
+}
+// ============================================================================
+// decode the code 
+// ============================================================================
+StatusCode FilterDesktop::decodeCode () 
+{
+  // locate the factory
+  LoKi::IHybridFactory* factory = tool<LoKi::IHybridFactory> ( m_factory , this ) ;
+  
+  // use the factory 
+  StatusCode sc = factory-> get ( code() , m_cut , preambulo() ) ;
+  if ( sc.isFailure() ) 
+  { return Error ( "Error from LoKi/Bender 'hybrid' factory for Code='" 
+                   + code() + "'" , sc )  ; }
+  //
+  release ( factory ) ;
+  //
+  return sc ;
 }
 // ============================================================================
 /// the factory 

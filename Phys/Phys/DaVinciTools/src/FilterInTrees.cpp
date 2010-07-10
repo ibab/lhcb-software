@@ -1,4 +1,4 @@
-// $Id: FilterInTrees.cpp,v 1.1 2010-04-05 14:59:26 ibelyaev Exp $
+// $Id: FilterInTrees.cpp,v 1.2 2010-07-10 14:22:38 ibelyaev Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -19,7 +19,7 @@
  *  select/filter particles in decay trees, e.g. daughter muons 
  *  @see FilterDesktop 
  *  @author Vanya BELYAEV   Ivan.Belyaev@itep.ru
- *  @date 2010-04--5
+ *  @date 2010-04-05
  */
 class FilterInTrees : public FilterDesktop 
 {

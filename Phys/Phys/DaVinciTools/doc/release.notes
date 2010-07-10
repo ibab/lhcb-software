@@ -1,8 +1,34 @@
-! $Id: release.notes,v 1.558 2010-07-08 14:28:50 jpalac Exp $
+! $Id: release.notes,v 1.559 2010-07-10 14:22:37 ibelyaev Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2010-07-10 - Vanya Belyaev
+
+ - new algorthm FitDecayTrees to perform the massive 
+   refit of decay trees using brillinat utility DecayTreeFitter::Fitter
+   by Wouter Hulsbergen. 
+  
+
+   @code 
+ 
+    myAlg = FitDecayTrees ( 
+       ...                                                  , 
+       Code            = " [B_s0 -> J/psi(1S) phi(1020)]CC" , 
+       MaxChi2PerDoF   = 10                                 ,
+       UsePVConstraint = True                               , 
+       MassConstraints = [ 'J/psi(1S)' ]                    , 
+       ...                                                  ,
+       ) 
+
+   @endcode 
+      
+
+ - cmt/requirements 
+
+   verison increment to v21r4 
+
 
 !========================== DaVinciTools v21r3p1 2010-07-08 =================
 
