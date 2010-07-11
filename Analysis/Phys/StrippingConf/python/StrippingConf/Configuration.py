@@ -71,14 +71,16 @@ class StrippingConf ( object ) :
 	locations = {}
 	for stream in self.activeStreams() :
 	    for line in stream.lines :
-	        if line.outputLocation() not in locations.keys() : 
-	    	    locations[line.outputLocation()] = [ line.name() ]
-	    	else : 
-	    	    locations[line.outputLocation()] += [ line.name() ]
+                location = line.outputLocation()
+                if location :
+                    if location not in locations.keys() : 
+                        locations[location] = [ line.name() ]
+                    else : 
+                        locations[location] += [ line.name() ]
 	locationsUnique = True
         message = ''
 	for loc, names in locations.iteritems() : 
-	    if len(names) > 1 : 
+	    if len(names) > 1 :
 		message += "\tLines "+str(names)+" share the same output location '"+loc+"'\n"
 		#sys.stderr.write(message)
 		locationsUnique = False
