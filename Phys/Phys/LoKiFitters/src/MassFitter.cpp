@@ -38,6 +38,7 @@
 // ============================================================================
 namespace LoKi
 {
+  // ==========================================================================
   /** @class MassFitter
    *  The most simple implementation of abstract interface IMassFit
    *  The tool performs the mass-constrained fit
@@ -131,9 +132,7 @@ namespace LoKi
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
    *  @date 2008-01-15
    */
-  class MassFitter 
-    : public virtual IMassFit
-    , public GaudiTool 
+  class MassFitter : public extends1<GaudiTool,IMassFit>
   {
     // ========================================================================
     // the friend factory (needed for instantiuation)
@@ -301,15 +300,12 @@ namespace LoKi
     ( const std::string& type   ,
       const std::string& name   ,
       const IInterface*  parent )
-      : GaudiTool ( type, name , parent )
+      : base_class      ( type, name , parent )
       , m_ppSvc         (  0 ) 
       , m_iterMax       ( 20 )
       , m_tolerance     ( 0.2  * Gaudi::Units::MeV ) 
       , m_change_vertex ( true )
     {
-      //
-      declareInterface<IMassFit>          ( this ) ;
-      declareInterface<IParticleReFitter> ( this ) ;
       //
       declareProperty 
         ( "MaxIterations" , 

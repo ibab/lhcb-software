@@ -174,9 +174,7 @@ namespace LoKi
    *  @date 2006-05-24
    */
   // ==========================================================================
-  class VertexFitter 
-    : public          GaudiTool 
-    , public virtual IVertexFit 
+  class VertexFitter : public extends1<GaudiTool,IVertexFit> 
   {
     // ========================================================================
     /// the friend factory for instantiation 
@@ -479,8 +477,7 @@ namespace LoKi
     StatusCode _add 
     ( const LHCb::Particle* child , const double newZ ) const ;
     /// transport the data to a certain position 
-    StatusCode _transport ( Entry& entry , const double newZ ) const 
-    { return LoKi::KalmanFilter::transport ( entry , newZ , transporter() ) ; }
+    StatusCode _transport ( Entry& entry , const double newZ ) const ;
     /// transport all data to a certain position 
     StatusCode _transport ( const double newZ ) const 
     {
@@ -488,7 +485,7 @@ namespace LoKi
       { 
         StatusCode sc = _transport ( *entry , newZ ) ; 
         if ( sc.isFailure() ) 
-        { Warning ("_transport(): the error from transport() , ignore", sc ) ; }
+        { Warning ("_transport(): the error from transport(), ignore", sc , 1 ).ignore() ; }
       }
       return StatusCode::SUCCESS ;
     }
@@ -530,6 +527,13 @@ namespace LoKi
     double                             m_seedZmin        ;
     double                             m_seedZmax        ;
     double                             m_seedRho         ;
+    /// use the special branch for two-body decays 
+    bool m_use_twobody_branch    ; // use the special branch for two-body decays 
+    /// transport tolerance 
+    double m_transport_tolerance ; // the transport tolerance 
+    // ========================================================================
+  private:
+    // ========================================================================
     /// local auxillary storages 
     mutable Entries                    m_entries  ;
     mutable const LHCb::Vertex*        m_vertex   ;

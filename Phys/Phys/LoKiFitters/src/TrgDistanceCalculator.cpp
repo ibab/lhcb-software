@@ -33,8 +33,7 @@ namespace LoKi
    *  @date   2008-03-05
    */
   class TrgDistanceCalculator 
-    : public virtual IDistanceCalculator 
-    , public LoKi::DistanceCalculatorBase  
+    : public extends1<LoKi::DistanceCalculatorBase,IDistanceCalculator>
   {
     // ========================================================================
     // the friend factory for instantiation 
@@ -536,12 +535,8 @@ LoKi::TrgDistanceCalculator::TrgDistanceCalculator
 ( const std::string& type   , // tool type (?)
   const std::string& name   , // tool instance name 
   const IInterface*  parent ) // the parent 
-  : LoKi::DistanceCalculatorBase ( type , name , parent ) 
-{
-  //
-  declareInterface<IDistanceCalculator> ( this ) ;
-  //
-}
+  : base_class ( type , name , parent ) 
+{}
 // ============================================================================
 /*  The method for the evaluation of the impact parameter ("distance")
  *  vector of the particle with respect to some vertex. 

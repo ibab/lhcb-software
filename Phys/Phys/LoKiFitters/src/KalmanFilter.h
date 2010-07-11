@@ -279,6 +279,22 @@ namespace LoKi
     ( const LHCb::Particle&      particle , 
       LoKi::KalmanFilter::Entry& entry    ) ;
     // ========================================================================
+    /** Load the particle into "entry" representation"
+     *
+     *  Essentially it includes also the proper tarnsformation 
+     *  of the covariance matrix of the particle 
+     *
+     *  @attention It is not implemented properly yet! 
+     *
+     *  @param  particle (input)  the particle to be added 
+     *  @param  entry    (output) the resulting entry 
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date 2010-01-04
+     */
+    StatusCode loadAsShortLived
+    ( const LHCb::Particle&      particle , 
+      LoKi::KalmanFilter::Entry& entry    ) ;
+    // ========================================================================
     /** transport the entry into new Z 
      *  @param entry the entry to be transported 
      *  @param newZ  new Z-position 
@@ -306,6 +322,23 @@ namespace LoKi
       const Gaudi::Vector3&       x     , 
       const Gaudi::SymMatrix3x3&  ci    , 
       const double                chi2  ) ;
+    // ========================================================================    
+    /** make one step of Kalman filter from two entries 
+     *  @param entry1 (update)       measurements to be updated 
+     *  @param entry2 (update)       measurements to be updated 
+     *  @param x      (input)        the initial position of the vertex 
+     *  @param ci     (input)        its gain matrix 
+     *  @param chi2   (input)        the initial chi2 
+     *  @return status code 
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2008-03-06
+     */
+    StatusCode step 
+    ( LoKi::KalmanFilter::Entry&  entry1 ,
+      LoKi::KalmanFilter::Entry&  entry2 , 
+      const Gaudi::Vector3&       x      , 
+      const Gaudi::SymMatrix3x3&  ci     , 
+      const double                chi2   ) ;
     // ========================================================================    
     /** make one step of Kalman filter 
      *  @param entry (update)       measurement to be updated 

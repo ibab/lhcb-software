@@ -6,6 +6,32 @@
 ! -----------------------------------------------------------------------------
 
 ! 2010-07-11 - Vanya Belyaev
+ 
+ - *ALL* fitters: 
+
+      remove all declareInterface<...> , rely on extends<...>
+
+ - VertexFitter & FastVertexFitter 
+
+   A. Introduce the special branch for twobody decays 
+   That could be up to 30-50% faster, sicen it has only half 
+    of matrix operations
+
+   The usage of this branch under the control of new property
+
+        "UseTwoBodyBranch"
+
+   The default value of this property is set to be :
+
+        - 'false' for LoKi::VertexFitter 
+        - 'true'  for LoKi::FastVertexFitter 
+
+    B. Reduce number of particle-transports, now the transports 
+       use the 'TransportTolerance' proeprty with defautl value 
+        - 10 micrometers for LoKi::VertexFitter 
+        - 50 micrometers for LoKi::FastVertexFitter
+
+! 2010-07-11 - Vanya Belyaev
   
    - FastVertexFitter.cpp
 

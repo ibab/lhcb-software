@@ -23,6 +23,7 @@ namespace LoKi
    *    - maximal number of iteration for 'fit'    is 5 
    *    - maximal number of iteration for 'add'    is 3 
    *    - maximal number of iteration for 'remove' is 3 
+   *    - the special branch for two-body decays is activated 
    * 
    *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
    *  @date 2010-07-11
@@ -75,16 +76,20 @@ LoKi::FastVertexFitter::FastVertexFitter
   const IInterface*  parent ) 
   : LoKi::VertexFitter ( type , name , parent ) 
 {
-  StatusCode sc = setProperty ( "MaxIterations"    ,  5 ) ;
-  Assert ( sc.isSuccess() , "Unable to redefine property 'MaxIterations'"    ) ;
-  sc            = setProperty ( "MaxIterForAdd"    ,  3 ) ;
-  Assert ( sc.isSuccess() , "Unable to redefine property 'MaxIterForAdd'"    ) ;
-  sc            = setProperty ( "MaxIterForRemove" ,  3 ) ;
-  Assert ( sc.isSuccess() , "Unable to redefine property 'MaxIterForRemove'" ) ;   
-  sc            = setProperty ( "DeltaDistance"    ,  3 * Gaudi::Units::micrometer ) ;
-  Assert ( sc.isSuccess() , "Unable to redefine property 'DeltaDistance'"    ) ;   
-  sc            = setProperty ( "DeltaChi2"        , 10 * Gaudi::Units::perCent    ) ;
-  Assert ( sc.isSuccess() , "Unable to redefine property 'DeltaChi2'"        ) ;   
+  StatusCode sc = setProperty ( "MaxIterations"      ,  5 ) ;
+  Assert ( sc.isSuccess() , "Unable to redefine property 'MaxIterations'"      ) ;
+  sc            = setProperty ( "MaxIterForAdd"      ,  3 ) ;
+  Assert ( sc.isSuccess() , "Unable to redefine property 'MaxIterForAdd'"      ) ;
+  sc            = setProperty ( "MaxIterForRemove"   ,  3 ) ;
+  Assert ( sc.isSuccess() , "Unable to redefine property 'MaxIterForRemove'"   ) ;   
+  sc            = setProperty ( "DeltaDistance"      ,  3 * Gaudi::Units::micrometer ) ;
+  Assert ( sc.isSuccess() , "Unable to redefine property 'DeltaDistance'"      ) ;   
+  sc            = setProperty ( "DeltaChi2"          , 10 * Gaudi::Units::perCent    ) ;
+  Assert ( sc.isSuccess() , "Unable to redefine property 'DeltaChi2'"          ) ;   
+  sc            = setProperty ( "UseTwoBodyBranch"   , true ) ;
+  Assert ( sc.isSuccess() , "Unable to redefine property 'UseTwoBodyBranch'"   ) ;   
+  sc            = setProperty ( "TransportTolerance" , 40 * Gaudi::Units::micrometer ) ;
+  Assert ( sc.isSuccess() , "Unable to redefine property 'TransportTolerance'" ) ;   
 }
 // ============================================================================
 // destructor 

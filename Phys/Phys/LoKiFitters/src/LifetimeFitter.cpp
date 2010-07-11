@@ -36,11 +36,10 @@ namespace LoKi
    *  @date 2008-02-12
    */
   class LifetimeFitter 
-    : public virtual ILifetimeFitter
-    , public LoKi::DirectionFitBase
+    : public extends1<LoKi::DirectionFitBase,ILifetimeFitter>
   {
     // ========================================================================
-    /// the friend factopry needed for instantiation
+    /// the friend factory needed for instantiation
     friend class ToolFactory<LoKi::LifetimeFitter> ;
     // ========================================================================
   public:
@@ -99,10 +98,8 @@ namespace LoKi
     ( const std::string& type   , 
       const std::string& name   , 
       const IInterface*  parent ) 
-      : LoKi::DirectionFitBase ( type , name , parent ) 
-    {
-      declareInterface<ILifetimeFitter>   ( this ) ;
-    } 
+      : base_class ( type , name , parent ) 
+    {} 
     /// virtual & protected destructor
     virtual ~LifetimeFitter() {}  ;
     // ========================================================================
@@ -117,7 +114,7 @@ namespace LoKi
     // ========================================================================
   };
   // ==========================================================================
-} // end of namespace LoKi
+} //                                                      end of namespace LoKi
 // ============================================================================
 // Evaluate the particle  lifetime
 // ============================================================================

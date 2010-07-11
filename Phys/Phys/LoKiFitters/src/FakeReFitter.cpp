@@ -32,10 +32,9 @@ namespace LoKi
    *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
    *  @date 2008-03-16
    */
-  class FakeReFitter 
-    : public virtual IParticleReFitter  
-    , public GaudiTool 
+  class FakeReFitter : public extends1<GaudiTool,IParticleReFitter>
   {
+    // ========================================================================
     // the friend factory for instantiation 
     friend class ToolFactory<LoKi::FakeReFitter> ;
     // ========================================================================
@@ -62,10 +61,8 @@ namespace LoKi
     ( const std::string& type   , // tool type 
       const std::string& name   , // tool instance name 
       const IInterface*  parent ) // the parent  
-      : GaudiTool ( type , name , parent ) 
-    {
-      declareInterface<IParticleReFitter> ( this ) ;
-    }
+      : base_class ( type , name , parent ) 
+    {}
     // ========================================================================
     /// virtual and protected destructor 
     virtual ~FakeReFitter(){} // virtual and protected destructor
@@ -79,7 +76,7 @@ namespace LoKi
     FakeReFitter& operator=( const FakeReFitter& ) ; // no assignement
   };
   // ==========================================================================
-} // end of namespace LoKi 
+} //                                                      end of namespace LoKi 
 // ============================================================================
 // initialize the tool 
 // ============================================================================

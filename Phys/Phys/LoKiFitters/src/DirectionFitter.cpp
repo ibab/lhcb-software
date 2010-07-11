@@ -44,11 +44,12 @@ namespace LoKi
    *  @date   2008-02-17
    */
   class DirectionFitter 
-    : public virtual IDirectionFit
-    , public LoKi::DirectionFitBase
+    : public extends1<LoKi::DirectionFitBase,IDirectionFit>
   {
+    // ========================================================================
     /// the friend factory needed for instantiation
     friend class ToolFactory<LoKi::DirectionFitter> ;
+    // ========================================================================
   public: 
     // ========================================================================
     /** perform a "direction" fit for the particle.
@@ -128,11 +129,7 @@ namespace LoKi
     ( const std::string& type   , 
       const std::string& name   , 
       const IInterface*  parent ) 
-      : DirectionFitBase ( type , name , parent ) 
-    {
-      declareInterface<IDirectionFit>     ( this ) ;
-      declareInterface<IParticleReFitter> ( this ) ;
-    } 
+      : base_class ( type , name , parent ) {} 
     /// virtual & protected destructor
     virtual ~DirectionFitter() {}  ;
     // ========================================================================
@@ -151,7 +148,7 @@ namespace LoKi
     // ========================================================================
   };
   // ==========================================================================
-} // end of namespace LoKi
+} //                                                      end of namespace LoKi
 // ============================================================================
 // The basic method for "refit" of the particle
 // ============================================================================

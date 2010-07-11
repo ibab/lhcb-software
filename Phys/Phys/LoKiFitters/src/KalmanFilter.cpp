@@ -27,7 +27,7 @@ namespace
 {
   // ==========================================================================
   /** make Z-projection of the particle 
-   *  see the documentation for namesapce DaVinciTransporter
+   *  see the documentation for namespace DaVinciTransporter
    *  projectAndTransport for deltaZ = 0 
    */
   void _project_Z_ (  LoKi::KalmanFilter::Entry& entry ) 
@@ -94,7 +94,8 @@ namespace
                        LoKi::KalmanFilter::ParticleType type  ) 
   {
     // make the proper projection (if required) 
-    if ( LoKi::KalmanFilter::LongLivedParticle == type ) { _project_Z_ ( entry ) ; }
+    if ( LoKi::KalmanFilter::LongLivedParticle == type ) 
+    { _project_Z_ ( entry ) ; }
     //
     const Gaudi::SymMatrix3x3& _pmcov = entry.m_p.posCovMatrix() ;
     //
@@ -139,7 +140,8 @@ namespace
     //
     return StatusCode::SUCCESS ;
   }
-} // end of anonymous namespace
+  // ==========================================================================
+} //                                                 end of anonymous namespace
 // ============================================================================
 // Load the particle into "entry" representation"
 // ============================================================================
@@ -161,6 +163,19 @@ StatusCode LoKi::KalmanFilter::loadAsFlying
   LoKi::KalmanFilter::Entry& entry    ) 
 { 
   entry.m_type = LoKi::KalmanFilter::LongLivedParticle ;
+  entry.m_p0   = &particle ;
+  entry.m_p    =  particle ;
+  //
+  return _update ( entry , entry.m_type ) ;
+}
+// ============================================================================
+// Load the particle into "entry" representation"
+// ============================================================================
+StatusCode LoKi::KalmanFilter::loadAsShortLived
+( const LHCb::Particle&      particle , 
+  LoKi::KalmanFilter::Entry& entry    ) 
+{ 
+  entry.m_type = LoKi::KalmanFilter::ShortLivedParticle ;
   entry.m_p0   = &particle ;
   entry.m_p    =  particle ;
   //
@@ -208,7 +223,7 @@ StatusCode LoKi::KalmanFilter::step
   return step ( entry , xx , ci , chi2 ) ;
 }
 // ============================================================================
-// make one step of Kalman filter 
+// make one step of Kalman filter q
 // ============================================================================
 StatusCode LoKi::KalmanFilter::step 
 ( LoKi::KalmanFilter::Entry&  entry , 
@@ -216,7 +231,7 @@ StatusCode LoKi::KalmanFilter::step
   const Gaudi::SymMatrix3x3&  ci    , 
   const double                chi2  ) 
 {
-  // OK ! 
+  // OK !
   /// \f$ C^{-1}_k=C^{-1}_{k-1}+A^TG_kA =  C^{-1}_{k-1}+ V^{-1}_{k} \f$
   entry.m_ci = ci + entry.m_vxi  ; 
   // OK ! 
@@ -243,7 +258,58 @@ StatusCode LoKi::KalmanFilter::step
   //
   return StatusCode::SUCCESS ;
 }
-// ========================================================================    
+// ============================================================================
+/*  make one step of Kalman filter (similar to seeding)
+ *  @param entry1 (update)       measurements to be updated 
+ *  @param entry2 (update)       measurements to be updated 
+ *  @param x     (input)        the initial position of the vertex 
+ *  @param ci    (input)        its gain matrix 
+ *  @param chi2  (input)        the initial chi2 
+ *  @return status code 
+ *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+ *  @date 2008-03-06
+ */
+// ============================================================================
+StatusCode LoKi::KalmanFilter::step 
+( LoKi::KalmanFilter::Entry&  entry1   ,
+  LoKi::KalmanFilter::Entry&  entry2   , 
+  const Gaudi::Vector3&       /* x  */ , 
+  const Gaudi::SymMatrix3x3&  /* ci */ , 
+  const double                chi2     ) 
+{
+  entry1.m_ci = entry1.m_vxi + entry2.m_vxi ; 
+  entry2.m_ci = entry1.m_ci ;
+  //
+  /// \f$ C_k = \left( C^{-1}_{k} \right)^{-1}\f$ 
+  int ifail = 0 ;
+  entry1.m_c  = entry1.m_ci.Inverse( ifail ) ; 
+  if ( 0 != ifail ) { return StatusCode ( ErrorInMatrixInversion3 , true ) ; }
+  entry2.m_c  = entry1.m_c ;
+  
+  /// \f$\vec{x}_k\f$
+  entry1.m_x = entry1.m_c * ( entry1.m_vxi * entry1.m_parx + 
+                              entry2.m_vxi * entry2.m_parx ) ;
+  
+  entry2.m_x = entry1.m_x ;
+  // OK ! 
+  const Gaudi::Vector3 dx1 = entry1.m_parx - entry1.m_x ;  
+  entry1.m_q = entry1.m_parq - entry1.m_p.posMomCovMatrix() * entry1.m_vxi * dx1 ; 
+  // OK !
+  const Gaudi::Vector3 dx2 = entry2.m_parx - entry2.m_x ;  
+  entry2.m_q = entry2.m_parq - entry2.m_p.posMomCovMatrix() * entry2.m_vxi * dx2 ; 
+  // OK ! 
+  const double dchi2_1 = ROOT::Math::Similarity ( entry1.m_vxi , dx1 ) ;
+  //
+  // update chi2 
+  entry1.m_chi2 = chi2          + dchi2_1 ;
+  //
+  const double dchi2_2 = ROOT::Math::Similarity ( entry2.m_vxi , dx2 ) ;
+  //
+  entry2.m_chi2 = entry1.m_chi2 + dchi2_2 ;
+  //
+  return StatusCode::SUCCESS ;
+}
+// ============================================================================
 // kalman smoothing  
 // ============================================================================
 StatusCode LoKi::KalmanFilter::smooth
@@ -271,9 +337,9 @@ StatusCode LoKi::KalmanFilter::evalCov
 ( LoKi::KalmanFilter::Entries& entries ) 
 {
   if ( entries.empty() ) { return StatusCode::FAILURE ; }
-  
+  //
   using namespace ROOT::Math ;
-  
+  //
   const Entry& last = entries.back() ;
   for ( Entries::iterator entry = entries.begin() ; 
         entries.end() != entry ; ++entry ) 
@@ -285,10 +351,11 @@ StatusCode LoKi::KalmanFilter::evalCov
     /// \f$ E_k = - F_k C_n \f$ 
     entry -> m_e = -1.0 * entry->m_f * entry->m_c ;
     /// \f$ D_k = W_k - E^{n}_kF^{T}_{k} = V_p - V^T_{xp}V^{-1}_{x}V_{xp} + F_kC_nF_k^T \f$ 
-    entry->m_d = entry->m_p.momCovMatrix() 
+    entry -> m_d = entry->m_p.momCovMatrix() 
       - Similarity ( entry -> m_p.posMomCovMatrix() , entry -> m_vxi ) 
       + Similarity ( entry -> m_f                   , entry -> m_c   ) ;
   }
+  //
   return StatusCode::SUCCESS ;
 }
 // ============================================================================
@@ -317,7 +384,7 @@ StatusCode LoKi::KalmanFilter::seed
   { return StatusCode ( ErrorInMatrixInversion4 , true ) ; } // RETURN 
   //
   x = c * seed ; 
-  // 
+  //
   Gaudi::Math::scale ( ci , scale ) ; // scale the gain matrix 
   //
   return StatusCode::SUCCESS ;

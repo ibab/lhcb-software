@@ -35,8 +35,7 @@ namespace LoKi
    *  @date   2008-03-05
    */
   class DistanceCalculator 
-    : public virtual IDistanceCalculator 
-    , public LoKi::DistanceCalculatorBase  
+    : public extends1<LoKi::DistanceCalculatorBase, IDistanceCalculator>
   {
     // ========================================================================
     // the friend factory for instantiation 
@@ -610,7 +609,7 @@ LoKi::DistanceCalculator::DistanceCalculator
 ( const std::string& type   , // tool type (?)
   const std::string& name   , // tool instance name 
   const IInterface*  parent ) // the parent 
-  : LoKi::DistanceCalculatorBase ( type , name , parent ) 
+  : base_class ( type , name , parent ) 
   /// the maximal number of iterations 
   , m_nIter_max ( 10 ) // the maximal number of iterations 
   /// the convergency criterion for ip-evaluation
@@ -627,8 +626,6 @@ LoKi::DistanceCalculator::DistanceCalculator
   , m_particle1 ( LHCb::ParticleID ( 511 ) ) 
   , m_particle2 ( LHCb::ParticleID ( 511 ) )
 {
-  //
-  declareInterface<IDistanceCalculator> ( this ) ;
   //
   declareProperty 
     ( "MaxIterations"    , m_nIter_max           , 

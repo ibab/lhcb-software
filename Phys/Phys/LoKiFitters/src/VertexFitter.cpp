@@ -61,10 +61,11 @@ StatusCode LoKi::VertexFitter::_load
 ( const LHCb::Particle::ConstVector& ds ) const 
 {
   StatusCode sc = StatusCode::SUCCESS ;
+  m_entries.clear() ;
   m_entries.resize ( ds.size() ) ;
   LHCb::Particle::ConstVector::const_iterator c = ds.begin()        ;
   Entries::iterator                           e = m_entries.begin() ;
-  
+  //
   for ( ; ds.end() != c && sc.isSuccess() ; ++c , ++e ) 
   { sc = _load ( *c , *e ) ; } ;
   if ( sc.isFailure () ) 
@@ -86,11 +87,14 @@ StatusCode LoKi::VertexFitter::_load
   switch ( particleType ( particle ) ) 
   {
     //
-  case LoKi::KalmanFilter::LongLivedParticle : 
-    return LoKi::KalmanFilter::loadAsFlying ( *particle  , entry ) ; // RETURN 
+  case LoKi::KalmanFilter::LongLivedParticle  : 
+    return LoKi::KalmanFilter::loadAsFlying     ( *particle  , entry ) ; // RETURN 
     //
-  case LoKi::KalmanFilter::GammaLikeParticle : 
-    return LoKi::KalmanFilter::loadAsGamma  ( *particle  , entry ) ; // RETURN 
+  case LoKi::KalmanFilter::GammaLikeParticle  : 
+    return LoKi::KalmanFilter::loadAsGamma      ( *particle  , entry ) ; // RETURN 
+    // 
+  case LoKi::KalmanFilter::ShortLivedParticle : 
+    return LoKi::KalmanFilter::loadAsShortLived ( *particle  , entry ) ; // RETURN 
     //
   default:
     return LoKi::KalmanFilter::load         ( *particle  , entry ) ; // RETURN 
@@ -143,16 +147,43 @@ StatusCode LoKi::VertexFitter::_iterate
     chi2 = &_chi2 ;
     const Gaudi::Vector3 x0 ( *x ) ;    
     // start the kalman filter 
-    for ( EIT entry = m_entries.begin() ; m_entries.end() != entry ; ++entry ) 
+    bool done = false ;
+    // A) the simplest case: 2 body fit 
+    if  ( 2 == m_entries.size() && m_use_twobody_branch ) 
     {
-      // make one Kalman step 
-      sc = LoKi::KalmanFilter::step ( *entry , *x , *ci , *chi2 ) ;
-      // skip on Failure
-      if ( sc.isFailure() ) { continue ; }                    // CONTINUE 
-      // update the parameters 
-      ci   = &entry->m_ci   ;
-      x    = &entry->m_x    ;
-      chi2 = &entry->m_chi2 ;
+      sc = LoKi::KalmanFilter::step ( m_entries[0] , 
+                                      m_entries[1] , 
+                                      *x , *ci , *chi2 ) ;
+      if ( sc.isSuccess () ) 
+      {
+        // update the parameters 
+        const LoKi::KalmanFilter::Entry& last = m_entries.back() ;
+        ci   = &last.m_ci   ;
+        x    = &last.m_x    ;
+        chi2 = &last.m_chi2 ;
+        //
+        done = true ;
+      }
+      else { Warning ( "Error from twobody Kalman step" , sc , 1 ).ignore() ; }      
+    }
+    // B) general case (of failure of two-body specialiation) 
+    if  ( !done ) 
+    {
+      for ( EIT entry = m_entries.begin() ; m_entries.end() != entry ; ++entry ) 
+      {
+        // make one Kalman step 
+        sc = LoKi::KalmanFilter::step ( *entry , *x , *ci , *chi2 ) ;
+        // skip on Failure
+        if ( sc.isFailure() ) 
+        {  
+          Warning ( "Error from Kalman-step, skip" , sc , 1 ).ignore() ;
+          continue ;                                                // CONTINUE 
+        }
+        // update the parameters 
+        ci   = &entry->m_ci   ;
+        x    = &entry->m_x    ;
+        chi2 = &entry->m_chi2 ;
+      }
     }
     // kalman smooth
     sc = LoKi::KalmanFilter::smooth ( m_entries ) ;
@@ -170,7 +201,7 @@ StatusCode LoKi::VertexFitter::_iterate
     //      - either the absolute distance 
     //      - or chi2 distance (if at least one iteration is performed) 
     //
-    if ( d1 < m_DistanceMax || ( 1 < iIter && 0 <= d2 && d2 < m_DistanceChi2 ) )
+    if ( d1 < m_DistanceMax ) // || ( 1 < iIter && 0 <= d2 && d2 < m_DistanceChi2 ) )
     {
       sc = LoKi::KalmanFilter::evalCov ( m_entries ) ;
       if ( sc.isFailure() ) 
@@ -179,9 +210,10 @@ StatusCode LoKi::VertexFitter::_iterate
       counter ( "#iterations" ) += iIter ;
       //
       return StatusCode::SUCCESS ;                             // RETURN 
-    }    
+    } 
   } // end of iterations
-  return Warning ( "No convergency has been reached" , NoConvergency , 1 ) ; // RETURN 
+  //
+  return Warning ( "No convergency has been reached" , NoConvergency , 1  ) ; // RETURN 
 } 
 // ============================================================================
 // make a seed 
@@ -189,8 +221,9 @@ StatusCode LoKi::VertexFitter::_iterate
 StatusCode LoKi::VertexFitter::_seed ( const LHCb::Vertex* vertex ) const
 {
   // check if vertex could be used as a seed 
-  const Gaudi::XYZPoint& p     = vertex->position  () ;
+  const Gaudi::XYZPoint&     p = vertex->position  () ;
   const Gaudi::SymMatrix3x3& c = vertex->covMatrix () ;
+  
   if ( m_seedZmin < p.Z() && m_seedZmax > p.Z() && m_seedRho > p.Rho()   && 
        s_small2 < Gaudi::Math::min_diagonal ( c ) && 
        s_large2 > Gaudi::Math::max_diagonal ( c )   ) 
@@ -261,7 +294,8 @@ StatusCode LoKi::VertexFitter::fit
   // make "m_nIterMax" iterations 
   sc = _iterate ( m_nIterMaxI , m_seed ) ;
   if ( sc.isFailure() ) 
-  { return Error ( "fit(): failure from _iterate()"  , sc , 1 ) ; } // RETURN 
+  { return Error ( "fit(): failure from _iterate()"  , sc , 10 ) ; } // RETURN 
+  
   // get the data from filter 
   const Entry&               entry = m_entries.back() ;
   const Gaudi::Vector3&      x     = entry.m_x         ;
@@ -304,8 +338,9 @@ StatusCode LoKi::VertexFitter::fit
   
   // make a vertex fit 
   StatusCode sc = fit ( vertex , daughters ) ;
-  if ( sc.isFailure() ) { return Error ( "fit(): failure form fit", sc , 1 ) ; }
+  if ( sc.isFailure() ) { return Error ( "fit(): failure from fit", sc , 1 ) ; }
   // links:
+  
   particle.clearDaughters() ;
   for ( LHCb::Particle::ConstVector::const_iterator dau = 
           daughters.begin() ; daughters.end() != dau ; ++dau ) 
@@ -474,53 +509,60 @@ LoKi::VertexFitter::VertexFitter
 ( const std::string& type   , 
   const std::string& name   , 
   const IInterface*  parent ) 
-  : GaudiTool ( type , name , parent )
+  : base_class ( type , name , parent )
   /// maximal number of iteration for vertex fit  
-  , m_nIterMaxI       ( 10 ) // maximal number of iteration for vertex fit  
+  , m_nIterMaxI          ( 10 ) // maximal number of iteration for vertex fit  
   /// maximal number of iteration for "add" 
-  , m_nIterMaxII      (  5 ) // maximal number of iteration for "add" 
+  , m_nIterMaxII         (  5 ) // maximal number of iteration for "add" 
   /// maximal number of iteration for "remove"    
-  , m_nIterMaxIII     (  5 ) // maximal number of iteration for "remove"    
-  , m_DistanceMax     ( 1.0 * Gaudi::Units::micrometer ) 
-  , m_DistanceChi2    ( 1.0 * Gaudi::Units::perCent    ) 
-  , m_transporterName ( "ParticleTransporter:PUBLIC")  
-  , m_transporter     ( 0 )
-  , m_seedZmin        ( -1.5 * Gaudi::Units::meter      ) 
-  , m_seedZmax        (  3.0 * Gaudi::Units::meter      ) 
-  , m_seedRho         ( 50.0 * Gaudi::Units::centimeter )
-    //
-  , m_ppSvc      ( 0       ) 
-  , m_longLived  (         ) 
-  , m_shortLived (         ) 
-  , m_gammaLike  ( "gamma" )
+  , m_nIterMaxIII        (  5 ) // maximal number of iteration for "remove"    
+  , m_DistanceMax        ( 1.0 * Gaudi::Units::micrometer ) 
+  , m_DistanceChi2       ( 1.0 * Gaudi::Units::perCent    ) 
+  , m_transporterName    ( "ParticleTransporter:PUBLIC")  
+  , m_transporter        ( 0 )
+  , m_seedZmin           ( -1.5 * Gaudi::Units::meter      ) 
+  , m_seedZmax           (  3.0 * Gaudi::Units::meter      ) 
+  , m_seedRho            ( 50.0 * Gaudi::Units::centimeter )
+  /// Use the sepcial branch for two-body decays 
+  , m_use_twobody_branch  ( false   ) // Use the sepcial branch for two-body decays?
+  /// The transport tolerance  
+  , m_transport_tolerance (  10 * Gaudi::Units::micrometer ) 
+  //
+  , m_ppSvc              ( 0       ) 
+  , m_longLived          (         ) 
+  , m_shortLived         (         ) 
+  , m_gammaLike          ( "gamma" )
     //
 {
-  // declare all interfaces
-  declareInterface <IVertexFit>        ( this ) ;
-  declareInterface <IParticleCombiner> ( this ) ;
-  declareInterface <IParticleReFitter> ( this ) ;
-  //
   // ==========================================================================
   declareProperty 
-    ( "MaxIterations"    , 
-      m_nIterMaxI        , 
+    ( "MaxIterations"      , 
+      m_nIterMaxI          , 
       "Maximal number of iterations"                     ) ;
   declareProperty
-    ( "MaxIterForAdd"    , 
-      m_nIterMaxII       , 
+    ( "MaxIterForAdd"      , 
+      m_nIterMaxII         , 
       "Maximal number of iterations for 'Add'-method"    ) ;
   declareProperty 
-    ( "MaxIterForRemove" , 
-      m_nIterMaxIII      , 
+    ( "MaxIterForRemove"   , 
+      m_nIterMaxIII        , 
       "Maximal number of iterations for 'Remove'-method" ) ;
   declareProperty 
-    ( "DeltaDistance"    , 
-      m_DistanceMax      , 
-      "Delta-distance as convergency criterion" ) ;
+    ( "DeltaDistance"      , 
+      m_DistanceMax        , 
+      "Delta-distance as convergency criterion"    ) ;
   declareProperty 
-    ( "DeltaChi2"        , 
-      m_DistanceChi2     , 
-      "Delta-chi2     as convergency criterion" ) ;
+    ( "DeltaChi2"          ,  
+      m_DistanceChi2       , 
+      "Delta-chi2     as convergency criterion"    ) ;
+  declareProperty 
+    ( "UseTwoBodyBranch"   , 
+      m_use_twobody_branch , 
+      "Use the special branch for two-body decays" ) ;
+  declareProperty 
+    ( "TransportTolerance"  , 
+      m_transport_tolerance , 
+      "The tolerance for particle transport" ) ;
   // ==========================================================================
   declareProperty ( "SeedZmin"         , m_seedZmin    ) ;
   declareProperty ( "SeedZmax"         , m_seedZmax    ) ;
@@ -564,18 +606,30 @@ StatusCode LoKi::VertexFitter::finalize()
   if ( msgLevel ( MSG::DEBUG ) ) 
   {
     MsgStream& log = debug () ;
-    log << "Short-Lived particles : " << std::endl ;
-    LHCb::ParticleProperties::printAsTable ( m_shortLived.accepted () , log , m_ppSvc ) ;
-    log << endmsg ;
-    log << "Long-Lived  particles : " << std::endl ;
-    LHCb::ParticleProperties::printAsTable ( m_longLived .accepted () , log , m_ppSvc ) ;
-    log << endmsg ;
+    if ( !m_shortLived.accepted().empty() ) 
+    {
+      log << "Short-Lived particles : " << std::endl ;
+      LHCb::ParticleProperties::printAsTable ( m_shortLived.accepted () , log , m_ppSvc ) ;
+      log << endmsg ;
+    }
+    if ( !m_longLived.accepted().empty() ) 
+    {
+      log << "Long-Lived  particles : " << std::endl ;
+      LHCb::ParticleProperties::printAsTable ( m_longLived .accepted () , log , m_ppSvc ) ;
+      log << endmsg ;
+    }
     log << "Gamma-like  particles : " << std::endl ;
     log << m_gammaLike ;
     log << endmsg ;
-    log << "Unclassifid particles : " << std::endl ;
-    log << Gaudi::Utils::toString ( m_unclassified ) ;
-    log << endmsg ;
+  }
+  if ( !m_unclassified.empty() ) 
+  {
+    MsgStream& log = warning() ;
+    std::vector<LHCb::ParticleID> tmp ( m_unclassified.begin() , 
+                                        m_unclassified.end  () ) ;
+    log << "Unclassified particles : " << std::endl ;
+    LHCb::ParticleProperties::printAsTable ( tmp , log , m_ppSvc ) ;
+    log << endmsg ;      
   }
   // 
   m_ppSvc = 0 ;
@@ -604,6 +658,39 @@ LoKi::VertexFitter::particleType ( const LHCb::Particle* p ) const
   //
   return LoKi::KalmanFilter::UnspecifiedParticle ;
 }
+// ============================================================================
+// transport the data to a certain position 
+// ============================================================================
+StatusCode LoKi::VertexFitter::_transport 
+( LoKi::VertexFitter::Entry& entry , const double newZ ) const 
+{
+  const double refPointZ = entry.m_p.referencePoint().Z() ;
+  const double parZ      = entry.m_parx [2]               ;
+  //
+  // for short-lived particles one needs to transport them into their decay vertex
+  if ( LoKi::KalmanFilter::ShortLivedParticle == entry.m_type )
+  {
+    // get the end-vertex 
+    const LHCb::VertexBase* vertex = entry.m_p0->endVertex() ;
+    if ( 0 != vertex ) 
+    {
+      const double vertexZ = vertex->position().Z() ;
+      // already properly transported ? 
+      if ( std::fabs ( refPointZ - vertexZ ) < m_transport_tolerance && 
+           std::fabs ( parZ      - vertexZ ) < m_transport_tolerance ) 
+      { return StatusCode::SUCCESS ; }                                // RETURN 
+      // else : transport them into own vertex 
+      return LoKi::KalmanFilter::transport 
+        ( entry , vertexZ , transporter () ) ;                        // RETURN
+    }
+  }
+  // no need for transport?
+  if ( std::fabs ( refPointZ - newZ ) < m_transport_tolerance && 
+       std::fabs ( parZ      - newZ ) < m_transport_tolerance  ) 
+  { return StatusCode::SUCCESS ; }                                    // RETURN 
+  // finally: transport it! 
+  return LoKi::KalmanFilter::transport ( entry , newZ , transporter() ) ; 
+}  
 // ============================================================================
 /// the factory needed for instantiation
 DECLARE_NAMESPACE_TOOL_FACTORY ( LoKi , VertexFitter ) ;
