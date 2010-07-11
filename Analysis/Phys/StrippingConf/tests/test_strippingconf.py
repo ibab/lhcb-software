@@ -44,7 +44,7 @@ def test_dumplicated_outputLocation_in_different_streams_raises_Exception() :
 
     stream1 = StrippingStream('Stream0', Lines = [line1])
 
-    raises( Exception, StrippingConf, Streams = [stream0,] )
+    raises( Exception, StrippingConf, Streams = [stream0,stream1] )
 
                     
 if '__main__' == __name__ :
