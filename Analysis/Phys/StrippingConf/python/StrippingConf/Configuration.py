@@ -72,7 +72,7 @@ class StrippingConf ( object ) :
 	for stream in self.activeStreams() :
 	    for line in stream.lines :
                 location = line.outputLocation()
-                if location :
+                if location and location != '' :
                     if location not in locations.keys() : 
                         locations[location] = [ line.name() ]
                     else : 
