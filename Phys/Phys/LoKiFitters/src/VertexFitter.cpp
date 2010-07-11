@@ -181,7 +181,7 @@ StatusCode LoKi::VertexFitter::_iterate
       return StatusCode::SUCCESS ;                             // RETURN 
     }    
   } // end of iterations
-  return Error ( "No convergency has been reached" , NoConvergency , 1 ) ; // RETURN 
+  return Warning ( "No convergency has been reached" , NoConvergency , 1 ) ; // RETURN 
 } 
 // ============================================================================
 // make a seed 
@@ -475,10 +475,12 @@ LoKi::VertexFitter::VertexFitter
   const std::string& name   , 
   const IInterface*  parent ) 
   : GaudiTool ( type , name , parent )
-    //
-  , m_nIterMaxI       ( 10 ) ///< maximal number of iteration for vertex fit
-  , m_nIterMaxII      (  5 ) ///< maximal number of iteration for "add" 
-  , m_nIterMaxIII     (  5 ) ///< maximal number of iteration for "remove"    
+  /// maximal number of iteration for vertex fit  
+  , m_nIterMaxI       ( 10 ) // maximal number of iteration for vertex fit  
+  /// maximal number of iteration for "add" 
+  , m_nIterMaxII      (  5 ) // maximal number of iteration for "add" 
+  /// maximal number of iteration for "remove"    
+  , m_nIterMaxIII     (  5 ) // maximal number of iteration for "remove"    
   , m_DistanceMax     ( 1.0 * Gaudi::Units::micrometer ) 
   , m_DistanceChi2    ( 1.0 * Gaudi::Units::perCent    ) 
   , m_transporterName ( "ParticleTransporter:PUBLIC")  
@@ -498,14 +500,37 @@ LoKi::VertexFitter::VertexFitter
   declareInterface <IParticleCombiner> ( this ) ;
   declareInterface <IParticleReFitter> ( this ) ;
   //
-  declareProperty ( "MaxIterations"    , m_nIterMaxI   ) ;
-  declareProperty ( "MaxIterForAdd"    , m_nIterMaxII  ) ;
-  declareProperty ( "MaxIterForRemove" , m_nIterMaxIII ) ;
+  // ==========================================================================
+  declareProperty 
+    ( "MaxIterations"    , 
+      m_nIterMaxI        , 
+      "Maximal number of iterations"                     ) ;
+  declareProperty
+    ( "MaxIterForAdd"    , 
+      m_nIterMaxII       , 
+      "Maximal number of iterations for 'Add'-method"    ) ;
+  declareProperty 
+    ( "MaxIterForRemove" , 
+      m_nIterMaxIII      , 
+      "Maximal number of iterations for 'Remove'-method" ) ;
+  declareProperty 
+    ( "DeltaDistance"    , 
+      m_DistanceMax      , 
+      "Delta-distance as convergency criterion" ) ;
+  declareProperty 
+    ( "DeltaChi2"        , 
+      m_DistanceChi2     , 
+      "Delta-chi2     as convergency criterion" ) ;
+  // ==========================================================================
   declareProperty ( "SeedZmin"         , m_seedZmin    ) ;
   declareProperty ( "SeedZmax"         , m_seedZmax    ) ;
   declareProperty ( "SeedRho"          , m_seedRho     ) ;
   declareProperty ( "Transporter"      , m_transporterName );
 } 
+// ============================================================================
+// desctructor 
+// ============================================================================
+LoKi::VertexFitter::~VertexFitter(){}
 // ============================================================================
 // the standard initialization of the tool 
 // ============================================================================
@@ -539,14 +564,17 @@ StatusCode LoKi::VertexFitter::finalize()
   if ( msgLevel ( MSG::DEBUG ) ) 
   {
     MsgStream& log = debug () ;
-    log << "Short-Lived Particles accepted: " << std::endl ;
+    log << "Short-Lived particles : " << std::endl ;
     LHCb::ParticleProperties::printAsTable ( m_shortLived.accepted () , log , m_ppSvc ) ;
     log << endmsg ;
-    log << "Long-Lived  Particles accepted: " << std::endl ;
+    log << "Long-Lived  particles : " << std::endl ;
     LHCb::ParticleProperties::printAsTable ( m_longLived .accepted () , log , m_ppSvc ) ;
     log << endmsg ;
-    log << "Gamma-like decays : " << std::endl ;
+    log << "Gamma-like  particles : " << std::endl ;
     log << m_gammaLike ;
+    log << endmsg ;
+    log << "Unclassifid particles : " << std::endl ;
+    log << Gaudi::Utils::toString ( m_unclassified ) ;
     log << endmsg ;
   }
   // 
@@ -570,7 +598,9 @@ LoKi::VertexFitter::particleType ( const LHCb::Particle* p ) const
   else if ( m_longLived  ( p->particleID () ) ) 
   { return LoKi::KalmanFilter::LongLivedParticle   ; }  // RETURN 
   else if ( m_shortLived ( p->particleID () ) )
-  { return LoKi::KalmanFilter::LongLivedParticle   ; }  // RETURN 
+  { return LoKi::KalmanFilter::ShortLivedParticle  ; }  // RETURN 
+  //
+  m_unclassified.insert ( p->particleID() ) ;
   //
   return LoKi::KalmanFilter::UnspecifiedParticle ;
 }

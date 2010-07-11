@@ -5,7 +5,7 @@
 # =============================================================================
 package           LoKiFitters
 author            Vanya Belyaev
-version           v2r5p1
+version           v2r6
 
 # =============== structure ===================================================
 branches          cmt doc src 

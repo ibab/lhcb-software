@@ -8,6 +8,7 @@
 // STD & STL 
 // ============================================================================
 #include <algorithm>
+#include <set>
 // ============================================================================
 // GaudiKernel
 // ============================================================================
@@ -165,6 +166,9 @@ namespace LoKi
    *  - \f$ G_x - G_{xp}G_{p}^{-1}G_{xp} = V^{-1}_{x}     \f$ 
    *  - \f$ G_{p}^{-1} = V_{p} - V^T_{xp}V^{-1}_{x}V_{xp} \f$ 
    *  - \f$ G^{-1}G^T_{xp} = -V^T_{xp}V^{-1}_{x}          \f$ 
+   *
+   * 
+   *  @todo LoKi::VertexFitter still unable to deal with photons 
    *
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
    *  @date 2006-05-24
@@ -453,7 +457,7 @@ namespace LoKi
       const std::string& name   , 
       const IInterface*  parent ) ;
     /// virtual & protected destrcutor
-    virtual ~VertexFitter() {}                // virtual & protected destructor
+    virtual ~VertexFitter () ;              //   virtual & protected destructor
     // ========================================================================
   private:
     // ========================================================================
@@ -541,13 +545,15 @@ namespace LoKi
   private:
     // ========================================================================
     /// particle property service 
-    mutable const LHCb::IParticlePropertySvc* m_ppSvc      ;
+    mutable const LHCb::IParticlePropertySvc* m_ppSvc        ;
     /// Long-lived particles 
-    mutable Decays::Nodes::LongLived_         m_longLived  ;
+    mutable Decays::Nodes::LongLived_         m_longLived    ;
     /// Short-lived particles 
-    mutable Decays::Nodes::ShortLived_        m_shortLived ;
+    mutable Decays::Nodes::ShortLived_        m_shortLived   ;
     /// Gamma-like particles 
-    mutable Decays::Nodes::Pid                m_gammaLike  ;
+    mutable Decays::Nodes::Pid                m_gammaLike    ;
+    /// Unclassified particles 
+    mutable std::set<LHCb::ParticleID>        m_unclassified ;
     // ========================================================================
   } ;
   // ==========================================================================

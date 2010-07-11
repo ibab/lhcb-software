@@ -5,6 +5,34 @@
 ! Purpose     : collection of various kinematical LoKi-based fitters 
 ! -----------------------------------------------------------------------------
 
+! 2010-07-11 - Vanya Belyaev
+  
+   - FastVertexFitter.cpp
+
+        The preconfigured version for vertex fitter with loose
+        convergency criteria:
+
+        *    - delta-distance as 3.0 micrometers 
+        *    - delta-chi2     as 0.1 
+        *    - maximal number of iteration for 'fit'    is 5 
+        *    - maximal number of iteration for 'add'    is 3 
+        *    - maximal number of iteration for 'remove' is 3 
+
+        Presumably it can be 15-30% faster with only the 
+        moderate degradation in performance      
+      
+   - VertexFitter.cpp
+
+        Fix a stupid bug in particle classification 
+        The bug appears from version v2r3 (commit 2010-01-04)   
+   
+        many thanks to Yuehong Xie for pointing to the problem
+
+   - cmt/requirements 
+
+       version increment to v2r6 
+
+
 ! 2010-07-09 - Vanya Belyaev
 
  - VertexFitter.cpp
