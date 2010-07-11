@@ -9,7 +9,7 @@ use  DaVinciTests               v1r1
 
 # Patches
 use  DaVinciTools               v21r3p1 Phys
-use  DecayTreeFitter            v2r1    Phys
+use  DecayTreeFitter            v1r9    Phys
 
 # Declare this as a container package
 apply_pattern container_package
