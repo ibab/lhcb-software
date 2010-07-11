@@ -1,8 +1,24 @@
-!$Id: release.notes,v 1.364 2010-06-24 13:05:46 jpalac Exp $
+!$Id: release.notes,v 1.365 2010-07-11 19:08:20 ibelyaev Exp $
 !============================================================================
 ! Package     : DaVinciKernel
 ! Responsible : J.P. Palacios
 !============================================================================
+
+! 2010-07-11 - Vanya Belyaev
+
+ - DVAlgorithm: 
+
+    add 'LoKiFast' and 'FastLoKi'    ( alias for Loki::FastVertexFitter)
+    entries for following tools: 
+
+      - particle combiners 
+      - particle refitters 
+      - vertex fitters 
+
+ - cmt/requirements 
+
+    version increment to v8r8p1 
+    
 
 !======================== DaVinciKernel v8r8 2010-06-24 =====================
 

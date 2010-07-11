@@ -1,4 +1,4 @@
-// $Id: DVAlgorithm.cpp,v 1.82 2010-06-18 09:53:49 jpalac Exp $
+// $Id: DVAlgorithm.cpp,v 1.83 2010-07-11 19:08:08 ibelyaev Exp $
 // ============================================================================
 // Include 
 // ============================================================================
@@ -101,12 +101,14 @@ DVAlgorithm::DVAlgorithm
   
 
   // 
-  m_vertexFitNames [ "Offline"       ] = "OfflineVertexFitter" ;
-  m_vertexFitNames [ "Trigger"       ] = "TrgVertexFitter"     ;
-  m_vertexFitNames [ "Blind"         ] = "BlindVertexFitter"   ;
-  m_vertexFitNames [ "LoKi"          ] = "LoKi::VertexFitter"  ;
-  m_vertexFitNames [ "Kalman"        ] = "LoKi::VertexFitter"  ;
-  m_vertexFitNames [ "ParticleAdder" ] = "ParticleAdder"       ;
+  m_vertexFitNames [ "Offline"       ] = "OfflineVertexFitter"     ;
+  m_vertexFitNames [ "Trigger"       ] = "TrgVertexFitter"         ;
+  m_vertexFitNames [ "Blind"         ] = "BlindVertexFitter"       ;
+  m_vertexFitNames [ "LoKi"          ] = "LoKi::VertexFitter"      ;
+  m_vertexFitNames [ "Kalman"        ] = "LoKi::VertexFitter"      ;
+  m_vertexFitNames [ "ParticleAdder" ] = "ParticleAdder"           ;
+  m_vertexFitNames [ "LoKiFast"      ] = "LoKi::FastVertexFitter"  ;
+  m_vertexFitNames [ "FastLoKi"      ] = "LoKi::FastVertexFitter"  ;
   declareProperty ( "VertexFitters"     , m_vertexFitNames, "Names of vertex fitters" ) ;
   //
   declareProperty ( "CheckOverlapTool"  , m_checkOverlapName, "Name of Overlap Tool"  ) ;
@@ -120,31 +122,35 @@ DVAlgorithm::DVAlgorithm
   // 
   declareProperty ( "ReFitPVs"    , m_refitPVs, "Refit PV"     ) ; 
 
-  m_particleCombinerNames [ "Offline"       ] = "OfflineVertexFitter" ;
-  m_particleCombinerNames [ "Trigger"       ] = "TrgVertexFitter"     ;
-  m_particleCombinerNames [ "Kalman"        ] = "LoKi::VertexFitter"  ;
-  m_particleCombinerNames [ "Blind"         ] = "BlindVertexFitter"   ;
-  m_particleCombinerNames [ "LoKi"          ] = "LoKi::VertexFitter"  ;
-  m_particleCombinerNames [ "ParticleAdder" ] = "ParticleAdder"       ;
-  m_particleCombinerNames [ "Adder"         ] = "ParticleAdder"       ;
-  m_particleCombinerNames [ "Combiner"      ] = "MomentumCombiner"    ;
-  m_particleCombinerNames [ "Momenta"       ] = "MomentumCombiner"    ;
-  m_particleCombinerNames [ "Jet"           ] = "MomentumCombiner"    ;
+  m_particleCombinerNames [ "Offline"       ] = "OfflineVertexFitter"     ;
+  m_particleCombinerNames [ "Trigger"       ] = "TrgVertexFitter"         ;
+  m_particleCombinerNames [ "Kalman"        ] = "LoKi::VertexFitter"      ;
+  m_particleCombinerNames [ "Blind"         ] = "BlindVertexFitter"       ;
+  m_particleCombinerNames [ "LoKi"          ] = "LoKi::VertexFitter"      ;
+  m_particleCombinerNames [ "ParticleAdder" ] = "ParticleAdder"           ;
+  m_particleCombinerNames [ "Adder"         ] = "ParticleAdder"           ;
+  m_particleCombinerNames [ "Combiner"      ] = "MomentumCombiner"        ;
+  m_particleCombinerNames [ "Momenta"       ] = "MomentumCombiner"        ;
+  m_particleCombinerNames [ "Jet"           ] = "MomentumCombiner"        ;
+  m_particleCombinerNames [ "LoKiFast"      ] = "LoKi::FastVertexFitter"  ;
+  m_particleCombinerNames [ "FastLoKi"      ] = "LoKi::FastVertexFitter"  ;
   declareProperty
     ( "ParticleCombiners"     , 
       m_particleCombinerNames , 
       "Names of particle combiners, the basic tools for creation of composed particles" ) ;
   //
-  m_particleReFitterNames [ ""              ] = "OfflineVertexFitter"   ;
-  m_particleReFitterNames [ "Offline"       ] = "OfflineVertexFitter"   ;
-  m_particleReFitterNames [ "Vertex"        ] = "OfflineVertexFitter"   ;
-  m_particleReFitterNames [ "Blind"         ] = "BlindVertexFitter"     ;
-  m_particleReFitterNames [ "Kalman"        ] = "LoKi::VertexFitter"    ;
-  m_particleReFitterNames [ "LoKi"          ] = "LoKi::VertexFitter"    ;
-  m_particleReFitterNames [ "Mass"          ] = "LoKi::MassFitter"      ;
-  m_particleReFitterNames [ "Direction"     ] = "LoKi::DirectionFitter" ;
-  m_particleReFitterNames [ "ParticleAdder" ] = "ParticleAdder"         ;
-  m_particleReFitterNames [ "Adder"         ] = "ParticleAdder"         ;
+  m_particleReFitterNames [ ""              ] = "OfflineVertexFitter"    ;
+  m_particleReFitterNames [ "Offline"       ] = "OfflineVertexFitter"    ;
+  m_particleReFitterNames [ "Vertex"        ] = "OfflineVertexFitter"    ;
+  m_particleReFitterNames [ "Blind"         ] = "BlindVertexFitter"      ;
+  m_particleReFitterNames [ "Kalman"        ] = "LoKi::VertexFitter"     ;
+  m_particleReFitterNames [ "LoKi"          ] = "LoKi::VertexFitter"     ;
+  m_particleReFitterNames [ "Mass"          ] = "LoKi::MassFitter"       ;
+  m_particleReFitterNames [ "Direction"     ] = "LoKi::DirectionFitter"  ;
+  m_particleReFitterNames [ "ParticleAdder" ] = "ParticleAdder"          ;
+  m_particleReFitterNames [ "Adder"         ] = "ParticleAdder"          ;
+  m_particleReFitterNames [ "LoKiFast"      ] = "LoKi::FastVertexFitter" ;
+  m_particleReFitterNames [ "FastLoKi"      ] = "LoKi::FastVertexFitter" ;
   declareProperty  ( "ParticleReFitters" , m_particleReFitterNames, "Names of particle refitters" ) ;
   //
   m_pvReFitterNames [ ""           ] = "AdaptivePVReFitter" ;
@@ -187,6 +193,7 @@ DVAlgorithm::DVAlgorithm
   m_distanceCalculatorNames [ "Trg"     ] = "LoKi::TrgDistanceCalculator" ;
   m_distanceCalculatorNames [ "Hlt"     ] = "LoKi::TrgDistanceCalculator" ;
   m_distanceCalculatorNames [ "Trigger" ] = "LoKi::TrgDistanceCalculator" ;
+  m_distanceCalculatorNames [ "Fast"    ] = "LoKi::TrgDistanceCalculator" ;
   declareProperty 
     ( "DistanceCalculators"     , 
       m_distanceCalculatorNames , 
