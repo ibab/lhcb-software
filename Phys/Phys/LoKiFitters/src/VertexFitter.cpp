@@ -201,7 +201,7 @@ StatusCode LoKi::VertexFitter::_iterate
     //      - either the absolute distance 
     //      - or chi2 distance (if at least one iteration is performed) 
     //
-    if ( d1 < m_DistanceMax ) // || ( 1 < iIter && 0 <= d2 && d2 < m_DistanceChi2 ) )
+    if ( d1 < m_DistanceMax || ( 1 < iIter && 0 <= d2 && d2 < m_DistanceChi2 ) )
     {
       sc = LoKi::KalmanFilter::evalCov ( m_entries ) ;
       if ( sc.isFailure() ) 
