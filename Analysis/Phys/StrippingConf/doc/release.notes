@@ -1,11 +1,17 @@
-!$Id: release.notes,v 1.78 2010-07-08 13:35:37 jpalac Exp $
+!$Id: release.notes,v 1.79 2010-07-11 15:18:50 jpalac Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/StrippingConf
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
 
-!========================== StrippingConf v3r6 2010-07-08 =================
+!========================== StrippingConf v3r6 2010-07-11 =================
+
+! 2010-07-11 - Juan Palacios
+ - python/StrippingConf/Configuration.py
+  . Protect chechUniqueOutputLocation against lines with outputLocation = None.
+ - tests/test_strippingconf.py
+  . Typo.
 
 ! 2010-07-07 - Juan Palacios
  - Added tests/test_strippingconf.py and related QM test.
