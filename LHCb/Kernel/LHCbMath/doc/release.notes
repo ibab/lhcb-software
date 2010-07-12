@@ -6,6 +6,15 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2010-07-12 - Manuel Tobias Schiller
+ - remove the code in SymPosDefMatrixInverter.h since an improved version is
+   now part of ROOT (as it was an implementation header the code was never
+   meant to be used directly, so I just left a comment pointing to the new
+   code; "bad" code using this file directly should break and get fixed)
+ - in MatrixInversion.h replace the call into SymPosDefMatrixInverter to the
+   newer corresponding routine in ROOT; this should be transparent for all
+   well-behaved client code
+
 !========================= LHCbMath v3r18 2010-06-20 =========================
 ! 2010-06-20 - Marco Cattaneo
  - LHCbMath/MatrixInversion.h:

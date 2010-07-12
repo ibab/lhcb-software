@@ -10,7 +10,6 @@
 // matrix inversion implementation
 // ============================================================================
 #include "LHCbMath/SymMatrixInverter.h"
-#include "LHCbMath/SymPosDefMatrixInverter.h"
 
 // ============================================================================
 /** @file
@@ -47,16 +46,20 @@ namespace Gaudi
      *  than SMatrix's built-in Invert() for the symmetric case. Again,
      *  benchmark before starting to believe!
      *
+     *  Nowadays, this is part of ROOT, so we just call SMatrix::InvertChol...
+     *
      *  @param matrix symmetric positive definite matrix
      *  @return true if inversion was sucessful, false otherwise
      */
     template<class T> inline bool invertPosDefSymMatrix(T& matrix)
     {
+      /* make sure we break in the typedefs below if the user calls this
+       * method with an unsuitable type T */
       enum { N = T::kRows };
       typedef typename T::value_type F;
       typedef typename ROOT::Math::MatRepSym<F, N> R;
       typedef typename ROOT::Math::SMatrix<F, N, N, R> M;
-      return Gaudi::Math::SymPosDefMatrixInverter::inverter<M, F, N>()(matrix);
+      return matrix.InvertChol();
     }
     /** invert symmetric matrices
      *
