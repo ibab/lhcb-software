@@ -48,7 +48,7 @@ class HitEffPlotter : public GaudiHistoAlg
 	TrackExpectedHitsXYZTool* m_xyzExpectation;
 
 	/// plot hit efficiency numerator and denominator as function of (x, y)
-	template<unsigned long N> void plot(
+	template<size_t N> void plot(
 		std::string namepfx, std::string titlepfx,
 		unsigned nxbins, const double xmin, const double xmax,
 		unsigned nybins, const double ymin, const double ymax,

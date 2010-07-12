@@ -56,7 +56,7 @@ StatusCode HitEffPlotter::initialize()
     return StatusCode::SUCCESS;
 }
 
-template<unsigned long N> void HitEffPlotter::plot(
+template<size_t N> void HitEffPlotter::plot(
 	std::string namepfx, std::string titlepfx,
 	unsigned nxbins, const double xmin, const double xmax,
 	unsigned nybins, const double ymin, const double ymax,
@@ -123,8 +123,13 @@ StatusCode HitEffPlotter::execute()
 
 	// get intersection points for each layer
 	TrackExpectedHitsXYZTool::HitPatternXYZ xyzpat;
-	m_xyzExpectation->execute(*tr, xyzpat);
-	
+	StatusCode sc = m_xyzExpectation->execute(*tr, xyzpat);
+ 
+	if (sc.isFailure()) { 
+		error() << "XYZ Hit Expectation failed" << endmsg;
+		return sc;  // error printed already by GaudiHistoAlg
+	}
+
 	// plot Velo
 	plot("veloR", "Velo R sensor",
 		100u, -75., 75., 100u, -75., 75.,

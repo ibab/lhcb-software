@@ -319,7 +319,11 @@ void TrackExpectedHitsXYZTool::collectVeloHits(HITMANAGER* hitman,
 
 	//Calculates the intersection point of track and sensor taking
 	//alignement into account	
-	((DeVeloSensor*)sensor)->intersectWithLine(p, vdir, hit); 
+	StatusCode sc = ((DeVeloSensor*)sensor)->intersectWithLine(p, vdir, hit);
+	if (sc.isFailure()) {
+		error() << "Could not calculate intesecting point in Velo";  // error printed already by GaudiTool
+	}
+	 
 
 	idx(side, sta, type) = Gaudi::XYZVector(hit.x(), hit.y(), hit.z());
 
