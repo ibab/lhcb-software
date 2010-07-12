@@ -10,7 +10,11 @@ void L0Muon::L0MuonKernelFromXML(std::string xmlFileName, bool emulator){
 
   DOMDocument*  doc;      //The DOM document
   DOMElement*   root;     //The root element
+#ifdef XERCESC_GE_31
+  DOMLSParser*   parser;  //The XML parser
+#else
   DOMBuilder*   parser;   //The XML parser
+#endif
   XMLCh*        xmlStr;   //The XML String ...
   DOMNodeList*  li;       //The DOM list of nodes 
   DOMNode*     child;
@@ -31,13 +35,25 @@ void L0Muon::L0MuonKernelFromXML(std::string xmlFileName, bool emulator){
   // Instantiate the DOM parser.
   static const XMLCh gLS[] = { chLatin_L, chLatin_S, chNull };
   DOMImplementation *impl = DOMImplementationRegistry::getDOMImplementation(gLS);  
+#ifdef XERCESC_GE_31
+  parser = ((DOMImplementationLS*)impl)->
+    createLSParser(DOMImplementationLS::MODE_SYNCHRONOUS, 0);
+  if (parser->getDomConfig()->canSetParameter(XMLUni::fgDOMNamespaces, doNamespaces))
+    parser->getDomConfig()->setParameter(XMLUni::fgDOMNamespaces, doNamespaces);
+  if (parser->getDomConfig()->canSetParameter(XMLUni::fgXercesSchema, doSchema))
+    parser->getDomConfig()->setParameter(XMLUni::fgXercesSchema, doSchema);
+  if (parser->getDomConfig()->canSetParameter(XMLUni::fgXercesSchemaFullChecking, schemaFullChecking))
+    parser->getDomConfig()->setParameter(XMLUni::fgXercesSchemaFullChecking, schemaFullChecking);
+  if (parser->getDomConfig()->canSetParameter(XMLUni::fgDOMDatatypeNormalization, dtNormalization))
+    parser->getDomConfig()->setParameter(XMLUni::fgDOMDatatypeNormalization, dtNormalization);
+#else
   parser = ((DOMImplementationLS*)impl)->
     createDOMBuilder(DOMImplementationLS::MODE_SYNCHRONOUS, 0);
-
   parser->setFeature(XMLUni::fgDOMNamespaces, doNamespaces);
   parser->setFeature(XMLUni::fgXercesSchema, doSchema);
   parser->setFeature(XMLUni::fgXercesSchemaFullChecking, schemaFullChecking);
   parser->setFeature(XMLUni::fgDOMDatatypeNormalization, dtNormalization);
+#endif
 
   // Parse the document and get the root element
   doc  = parser->parseURI(xmlFileName.c_str());
