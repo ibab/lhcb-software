@@ -56,7 +56,8 @@ public:
     LowGain = 6, 
     Noisy = 7,
     OtherFault = 9,
-    Dead = 10
+    Dead = 10,
+    UnknownStatus = 100
   };
 
   typedef std::vector<DeSTSensor*> Sensors;

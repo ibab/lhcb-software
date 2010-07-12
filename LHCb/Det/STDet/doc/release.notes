@@ -3,6 +3,9 @@
 !Package manager : M. Needham
 !-------------------------------------------------------------------------
 
+! 2010-07-12 M Needham
+ - Add find methods for enum string conversion to StatusMap
+
 !======================== STDet v4r20 2010-06-18 =========================
 ! 2010-06-02 M Needham
  - Add measuredEff method
