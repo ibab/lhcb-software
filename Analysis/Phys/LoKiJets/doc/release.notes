@@ -11,6 +11,14 @@
 
 ! 2010-07-12 - Juan Palacios
  - cmt/requirements
+  . Remove Phys/Particle2MCTruth. Not actually needed.
+ - src/HepMCJets2Jets.cpp
+  . Remove include of IP2MCP.h
+
+!================== LoKiJets v5r2p1 2010-07-12 ===============================
+
+! 2010-07-12 - Juan Palacios
+ - cmt/requirements
   . Need Phys/Particle2MCTruth. Increase to v5r2p1.
 
 !================== LoKiJets v5r2 2010-04-30 =================================
