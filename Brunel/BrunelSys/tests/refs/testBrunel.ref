@@ -43,7 +43,7 @@
 # |-SpecialData  = []  (default: [])
 # \----- (End of User RecSysConf/RecSysConf) ---------------------------------------------------------
 # /***** User TrackSys/TrackSys **********************************************************************
-# |-FilterBeforeFit          = False
+# |-FilterBeforeFit          = True
 # |-ExpertTracking           = []  (default: [])
 # |-ExpertHistos             = False
 # |-TrackExtraInfoAlgorithms = []  (default: [])
@@ -65,12 +65,12 @@
 # DstWriter.ItemList=['/Event/Rec/Header#1', '/Event/Rec/Status#1', '/Event/pRec/Track/Best#1', '/Event/pRec/Rich/PIDs#1', '/Event/pRec/Muon/MuonPID#1', '/Event/pRec/Calo/Electrons#1', '/Event/pRec/Calo/Photons#1', '/Event/pRec/Calo/MergedPi0s#1', '/Event/pRec/Calo/SplitPhotons#1', '/Event/pRec/ProtoP/Charged#1', '/Event/pRec/ProtoP/Neutrals#1', '/Event/pRec/Vertex/Primary#1', '/Event/pRec/Vertex/V0#1', '/Event/pRec/Track/Muon#1', '/Event/DAQ/RawEvent#1']
 # DstWriter.OptItemList=['/Event/Phys/Selections#1']
 # No Writer defined for DIGI
-# WARNING: Using default tag head-20100518 for partition DDDB
-# WARNING: Using default tag head-20100531 for partition LHCBCOND
+# WARNING: Using default tag head-20100624 for partition DDDB
+# WARNING: Using default tag head-20100624 for partition LHCBCOND
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
                                                    Welcome to Brunel version v37r3
-                                          running on volhcb27.cern.ch on Fri Jun 25 14:53:44 2010
+                                          running on volhcb27.cern.ch on Mon Jul 12 16:36:07 2010
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 StatusCodeSvc        INFO initialize
@@ -80,7 +80,7 @@ DetectorDataSvc   SUCCESS Detector description database: conddb:/lhcb.xml
 RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
 RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-TimingAuditor.T...   INFO This machine has a speed about   1.82 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO This machine has a speed about   1.88 times the speed of a 2.8 GHz Xeon.
 TransportSvc         INFO Initialize the static pointer to DetDesc::IGeometryErrorSvc
 TransportSvc         INFO Recovery of geometry errors is  ENABLED
 BrunelSequencer      INFO Member list: ProcessPhase/Init, GaudiSequencer/LumiSeq, GaudiSequencer/NotPhysicsSeq, GaudiSequencer/PhysicsSeq, ProcessPhase/Output, with context 'Offline'
@@ -115,9 +115,9 @@ PrsCheckBanks        INFO  if not (MC) re-create them from packed bank and delet
 COOLConfSvc          INFO CORAL Connection Retrial Period set to 60s
 COOLConfSvc          INFO CORAL Connection Retrial Time-Out set to 900s
 DDDB                 INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/DDDB.db/DDDB"
-DDDB                 INFO Using TAG "head-20100518"
+DDDB                 INFO Using TAG "head-20100624"
 LHCBCOND             INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/LHCBCOND.db/LHCBCOND"
-LHCBCOND             INFO Using TAG "head-20100531"
+LHCBCOND             INFO Using TAG "head-20100624"
 PrsSpdFillRawBu...   INFO Data coding type 2
 RemovePrsPacked...SUCCESS bankKiller : all banks of type 'PrsPacked' will be removed.
 EcalBanksHandler     INFO Member list: CheckCaloBank/EcalCheckBanks, CaloZSupAlg/EcalADCs, CaloTriggerAdcsFromRawAlg/EcalTrigFromRaw, CaloFillRawBuffer/EcalFillRawBuffer, bankKiller/RemoveEcalPackedBanks, with context 'Offline'
@@ -135,25 +135,29 @@ RemoveHcalPacke...SUCCESS bankKiller : all banks of type 'HcalPacked' will be re
 Reco                 INFO Member list: GaudiSequencer/RecoDecodingSeq, GaudiSequencer/RecoVELOSeq, GaudiSequencer/RecoTTSeq, GaudiSequencer/RecoITSeq, GaudiSequencer/RecoOTSeq, GaudiSequencer/RecoTrSeq, GaudiSequencer/RecoVertexSeq, GaudiSequencer/RecoRICHSeq, GaudiSequencer/RecoCALOSeq, GaudiSequencer/RecoMUONSeq, GaudiSequencer/RecoPROTOSeq, with context 'Offline'
 RecoDecodingSeq      INFO Member list: DecodeVeloRawBuffer/DecodeVeloClusters, RawBankToSTClusterAlg/CreateTTClusters, RawBankToSTLiteClusterAlg/CreateTTLiteClusters, RawBankToSTClusterAlg/CreateITClusters, RawBankToSTLiteClusterAlg/CreateITLiteClusters, with context 'Offline'
 DecodeVeloClusters   INFO Cancel processing of events with more than 10000 Velo clusters
-ONLINE_201006        INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/ONLINE-201006.db/ONLINE"
-ONLINE_201006        INFO Using TAG ""
+ONLINE_201007        INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/ONLINE-201007.db/ONLINE"
+ONLINE_201007        INFO Using TAG ""
 RecoVELOSeq          INFO Member list: Tf::PatVeloRTracking/PatVeloRTracking, Tf::PatVeloSpaceTracking/PatVeloSpaceTracking, Tf::PatVeloGeneralTracking/PatVeloGeneralTracking, with context 'Offline'
 RecoTTSeq            INFO Member list: , with context 'Offline'
 RecoITSeq            INFO Member list: , with context 'Offline'
 RecoOTSeq            INFO Member list: , with context 'Offline'
 RecoTrSeq            INFO Member list: ProcessPhase/Track, with context 'Offline'
-Track                INFO Member list: GaudiSequencer/TrackForwardPatSeq, GaudiSequencer/TrackForwardFitSeq, GaudiSequencer/TrackSeedPatSeq, GaudiSequencer/TrackSeedFitSeq, GaudiSequencer/TrackMatchPatSeq, GaudiSequencer/TrackMatchFitSeq, GaudiSequencer/TrackDownstreamPatSeq, GaudiSequencer/TrackDownstreamFitSeq, GaudiSequencer/TrackVeloTTPatSeq, GaudiSequencer/TrackVeloTTFitSeq, GaudiSequencer/TrackSeedRefitSeq, GaudiSequencer/TrackPostFitSeq, GaudiSequencer/TrackVeloFitSeq, GaudiSequencer/TrackAddExtraInfoSeq, GaudiSequencer/TrackEraseExtraInformationSeq, with context 'Offline'
+Track                INFO Member list: GaudiSequencer/TrackForwardPatSeq, GaudiSequencer/TrackSeedPatSeq, GaudiSequencer/TrackSeedFitSeq, GaudiSequencer/TrackMatchPatSeq, GaudiSequencer/TrackDownstreamPatSeq, GaudiSequencer/TrackVeloTTPatSeq, GaudiSequencer/TrackFitSeq, GaudiSequencer/TrackVeloFitSeq, GaudiSequencer/TrackAddExtraInfoSeq, GaudiSequencer/TrackEraseExtraInformationSeq, with context 'Offline'
 TrackForwardPatSeq   INFO Member list: PatForward, with context 'Offline'
 ToolSvc.OTRawBa...   INFO  countsPerBX = 64
 ToolSvc.OTRawBa...   INFO  numberOfBX  = 3
 ToolSvc.OTRawBa...   INFO  timePerBX = 25
 ToolSvc.OTRawBa...   INFO  ForceBankVersion = 255
-MagneticFieldSvc     INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/FieldMap/v5r4/cdf/c1_onemap_down.cdf
-MagneticFieldSvc     INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/FieldMap/v5r4/cdf/c2_onemap_down.cdf
-MagneticFieldSvc     INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/FieldMap/v5r4/cdf/c3_onemap_down.cdf
-MagneticFieldSvc     INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/FieldMap/v5r4/cdf/c4_onemap_down.cdf
+MagneticFieldSvc     INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/FieldMap/cdf/c1_onemap_down.cdf
+MagneticFieldSvc     INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/FieldMap/cdf/c2_onemap_down.cdf
+MagneticFieldSvc     INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/FieldMap/cdf/c3_onemap_down.cdf
+MagneticFieldSvc     INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/FieldMap/cdf/c4_onemap_down.cdf
 MagneticFieldSvc     INFO Map scaled by factor 1 with polarity internally used: -1 signed relative current: -1
-TrackForwardFitSeq   INFO Member list: TrackStateInitAlg/InitForwardFit, TrackEventFitter/FitForward, with context 'Offline'
+TrackSeedPatSeq      INFO Member list: Tf::Tsa::Seed/TsaSeed, Tf::Tsa::SeedTrackCnv/TsaSeedTrackCnv, with context 'Offline'
+ToolSvc.TsaData...   INFO Max OT cluster size     = 5
+ToolSvc.TsaData...   INFO Max OT module occupancy = 0.4
+ToolSvc.TsaData...   INFO Max ST sector occupancy = 48
+TrackSeedFitSeq      INFO Member list: TrackStateInitAlg/InitSeedFit, TrackEventFitter/FitSeedForMatch, with context 'Offline'
 MagneticFieldSvc     INFO Map scaled by factor 1 with polarity internally used: -1 signed relative current: -1
 ToolSvc.PatTTMa...   INFO Start generation of VeloTT Bdl LUTs
 ToolSvc.PatTTMa...   INFO Generation of VeloTT Bdl LUTs finished
@@ -163,18 +167,6 @@ ToolSvc.STOffli...   INFO APE set to 0
 ToolSvc.STOffli...   INFO Error Vec 0.256 0.301 0.283 0.212
 ToolSvc.ITClust...   INFO APE set to 0
 ToolSvc.ITClust...   INFO Error Vec 0.258 0.255 0.29 0.163
-FitForward           INFO
-FitForward           INFO =========== FitForward Settings ============
-FitForward           INFO   Tracks input container   : Rec/Track/Forward
-FitForward           INFO   Tracks output container  : Rec/Track/Forward
-FitForward           INFO   Fitter name              : FitForward.Fitter
-FitForward           INFO ==================================================
-FitForward           INFO
-TrackSeedPatSeq      INFO Member list: Tf::Tsa::Seed/TsaSeed, Tf::Tsa::SeedTrackCnv/TsaSeedTrackCnv, with context 'Offline'
-ToolSvc.TsaData...   INFO Max OT cluster size     = 5
-ToolSvc.TsaData...   INFO Max OT module occupancy = 0.4
-ToolSvc.TsaData...   INFO Max ST sector occupancy = 48
-TrackSeedFitSeq      INFO Member list: TrackStateInitAlg/InitSeedFit, TrackEventFitter/FitSeedForMatch, with context 'Offline'
 FitSeedForMatch      INFO
 FitSeedForMatch      INFO =========== FitSeedForMatch Settings ============
 FitSeedForMatch      INFO   Tracks input container   : Rec/Track/Seed
@@ -184,14 +176,6 @@ FitSeedForMatch      INFO ==================================================
 FitSeedForMatch      INFO
 TrackMatchPatSeq     INFO Member list: TrackMatchVeloSeed/TrackMatch, with context 'Offline'
 ToolSvc.TrackHe...   INFO ExtrapolatorID=5
-TrackMatchFitSeq     INFO Member list: TrackStateInitAlg/InitMatchFit, TrackEventFitter/FitMatch, with context 'Offline'
-FitMatch             INFO
-FitMatch             INFO =========== FitMatch Settings ============
-FitMatch             INFO   Tracks input container   : Rec/Track/Match
-FitMatch             INFO   Tracks output container  : Rec/Track/Match
-FitMatch             INFO   Fitter name              : FitMatch.Fitter
-FitMatch             INFO ==================================================
-FitMatch             INFO
 TrackDownstream...   INFO Member list: PatDownstream, with context 'Offline'
 PatDownstream        INFO ========================================
 PatDownstream        INFO  deltaP             = 2
@@ -208,34 +192,10 @@ PatDownstream        INFO  LongChisq          = 1.5
 PatDownstream        INFO ========================================
 PatDownstream        INFO zMagnetParams 5376.8 -3895.12 309.877 85527.9
 PatDownstream        INFO momentumParams 1148.65 961.786 5326.81
-TrackDownstream...   INFO Member list: TrackStateInitAlg/InitDownstreamFit, TrackEventFitter/FitDownstream, with context 'Offline'
-FitDownstream        INFO
-FitDownstream        INFO =========== FitDownstream Settings ============
-FitDownstream        INFO   Tracks input container   : Rec/Track/Downstream
-FitDownstream        INFO   Tracks output container  : Rec/Track/Downstream
-FitDownstream        INFO   Fitter name              : FitDownstream.Fitter
-FitDownstream        INFO ==================================================
-FitDownstream        INFO
 TrackVeloTTPatSeq    INFO Member list: PatVeloTT, with context 'Offline'
 PatVeloTT            INFO  InputTracksName    = Rec/Track/Velo
 PatVeloTT            INFO  OutputTracksName   = Rec/Track/VeloTT
-TrackVeloTTFitSeq    INFO Member list: TrackStateInitAlg/InitVeloTTFit, TrackEventFitter/FitVeloTT, with context 'Offline'
-FitVeloTT            INFO
-FitVeloTT            INFO =========== FitVeloTT Settings ============
-FitVeloTT            INFO   Tracks input container   : Rec/Track/VeloTT
-FitVeloTT            INFO   Tracks output container  : Rec/Track/VeloTT
-FitVeloTT            INFO   Fitter name              : FitVeloTT.Fitter
-FitVeloTT            INFO ==================================================
-FitVeloTT            INFO
-TrackSeedRefitSeq    INFO Member list: TrackStateInitAlg/InitSeedRefit, TrackEventFitter/RefitSeed, with context 'Offline'
-RefitSeed            INFO
-RefitSeed            INFO =========== RefitSeed Settings ============
-RefitSeed            INFO   Tracks input container   : Rec/Track/Seed
-RefitSeed            INFO   Tracks output container  : Rec/Track/Seed
-RefitSeed            INFO   Fitter name              : RefitSeed.Fitter
-RefitSeed            INFO ==================================================
-RefitSeed            INFO
-TrackPostFitSeq      INFO Member list: TrackEventCloneKiller, with context 'Offline'
+TrackFitSeq          INFO Member list: TrackEventCloneKiller, TrackStateInitAlg/InitBestFit, TrackEventFitter/FitBest, with context 'Offline'
 TrackEventClone...   INFO
 TrackEventClone...   INFO ============ TrackEventCloneKiller Settings ===========
 TrackEventClone...   INFO TracksInContainers                    : [ 'Rec/Track/Forward' , 'Rec/Track/Seed' , 'Rec/Track/Match' , 'Rec/Track/Downstream' , 'Rec/Track/VeloTT' ]
@@ -247,6 +207,13 @@ TrackEventClone...   INFO SkipSameContainerTracks               : True
 TrackEventClone...   INFO CompareInSameContainerForwardUpstream : False
 TrackEventClone...   INFO =======================================================
 TrackEventClone...   INFO
+FitBest              INFO
+FitBest              INFO =========== FitBest Settings ============
+FitBest              INFO   Tracks input container   : Rec/Track/Best
+FitBest              INFO   Tracks output container  : Rec/Track/Best
+FitBest              INFO   Fitter name              : FitBest.Fitter
+FitBest              INFO ==================================================
+FitBest              INFO
 TrackVeloFitSeq      INFO Member list: TrackPrepareVelo, TrackEventFitter/FitVelo, TrackContainerCopy/CopyVelo, with context 'Offline'
 FitVelo              INFO
 FitVelo              INFO =========== FitVelo Settings ============
@@ -288,11 +255,11 @@ ToolSvc.Offline...   INFO Av. optical distortion correction parameters : [0.03, 
 ToolSvc.Offline...   INFO Maximum number of pixels per event = 30000
 RichOfflineTrac...   INFO Member list: Rich::Rec::Initialise/CreateOfflineTracks, with context 'Offline'
 ToolSvc.Offline...   INFO Track Selection : [Forward, Match, Seed, VeloTT, KsTrack]
-ToolSvc.Offline...   INFO  Forward     : P = 0.00e+00->5.00e+02 GeV : Pt = 0.00e+00->5.00e+02 GeV : fitchi2 = 0.00e+00->1.00e+01 : Likelihood = -1.00e+02->1.80e+308 : CloneCut = -1.00e+10->1.80e+308 : GhostProb = -1.80e+308->9.90e-01
-ToolSvc.Offline...   INFO  Match       : P = 0.00e+00->5.00e+02 GeV : Pt = 0.00e+00->5.00e+02 GeV : fitchi2 = 0.00e+00->1.00e+01 : Likelihood = -1.00e+02->1.80e+308 : CloneCut = -1.00e+10->1.80e+308 : GhostProb = -1.80e+308->9.90e-01
-ToolSvc.Offline...   INFO  Seed        : P = 0.00e+00->5.00e+02 GeV : Pt = 0.00e+00->5.00e+02 GeV : fitchi2 = 0.00e+00->1.00e+01 : Likelihood = -1.00e+02->1.80e+308 : CloneCut = -1.00e+10->1.80e+308
-ToolSvc.Offline...   INFO  VeloTT      : P = 1.00e+00->5.00e+02 GeV : Pt = 0.00e+00->5.00e+02 GeV : fitchi2 = 0.00e+00->1.00e+01 : Likelihood = -1.00e+02->1.80e+308 : CloneCut = -1.00e+10->1.80e+308
-ToolSvc.Offline...   INFO  KsTrack     : P = 1.00e+00->5.00e+02 GeV : Pt = 0.00e+00->5.00e+02 GeV : fitchi2 = 0.00e+00->1.00e+01 : Likelihood = -1.00e+02->1.80e+308 : CloneCut = -1.00e+10->1.80e+308
+ToolSvc.Offline...   INFO  Forward     : P = 1.00e+00->5.00e+02 GeV : fitchi2 = 0.00e+00->1.00e+01
+ToolSvc.Offline...   INFO  Match       : P = 1.00e+00->5.00e+02 GeV : fitchi2 = 0.00e+00->1.00e+01
+ToolSvc.Offline...   INFO  Seed        : P = 1.00e+00->5.00e+02 GeV : fitchi2 = 0.00e+00->1.00e+01
+ToolSvc.Offline...   INFO  VeloTT      : P = 1.00e+00->5.00e+02 GeV : fitchi2 = 0.00e+00->1.00e+01
+ToolSvc.Offline...   INFO  KsTrack     : P = 1.00e+00->5.00e+02 GeV : fitchi2 = 0.00e+00->1.00e+01
 ToolSvc.Offline...   INFO Aerogel  Track RichTraceMode[ DetectionPrecision=SimpleHPDs DetPlaneBoundaries=IgnoreHPDAcceptance [Will correct for refraction at Aerogel/Rich1Gas boundary] ]
 ToolSvc.Offline...   INFO Rich1Gas Track RichTraceMode[ DetectionPrecision=SimpleHPDs DetPlaneBoundaries=IgnoreHPDAcceptance ]
 ToolSvc.Offline...   INFO Rich2Gas Track RichTraceMode[ DetectionPrecision=SimpleHPDs DetPlaneBoundaries=IgnoreHPDAcceptance ]
@@ -352,11 +319,11 @@ RichOfflinePIDSeq    INFO Member list: GaudiSequencer/RichOfflineGPIDSeq, Rich::
 RichOfflineGPIDSeq   INFO Member list: GaudiSequencer/RichOfflineGPIDInitSeq, GaudiSequencer/RichOfflineGPIDLLSeq, Rich::Rec::GlobalPID::Finalize/RichOfflineGPIDFin, with context 'Offline'
 RichOfflineGPID...   INFO Member list: Rich::Rec::GlobalPID::Initialize/RichOfflineGPIDInit, Rich::Rec::GlobalPID::DigitSel/RichOfflineGPIDDigSel, Rich::Rec::GlobalPID::TrackSel/RichOfflineGPIDTrSel, with context 'Offline'
 RichOfflineGPID...   INFO Track Selection : [Forward, Match, Seed, VeloTT, KsTrack]
-RichOfflineGPID...   INFO  Forward     : P = 0.00e+00->5.00e+02 GeV : Pt = 0.00e+00->5.00e+02 GeV : fitchi2 = 0.00e+00->1.00e+01 : Likelihood = -1.00e+02->1.80e+308 : CloneCut = -1.00e+10->1.80e+308 : GhostProb = -1.80e+308->9.90e-01
-RichOfflineGPID...   INFO  Match       : P = 0.00e+00->5.00e+02 GeV : Pt = 0.00e+00->5.00e+02 GeV : fitchi2 = 0.00e+00->1.00e+01 : Likelihood = -1.00e+02->1.80e+308 : CloneCut = -1.00e+10->1.80e+308 : GhostProb = -1.80e+308->9.90e-01
-RichOfflineGPID...   INFO  Seed        : P = 0.00e+00->5.00e+02 GeV : Pt = 0.00e+00->5.00e+02 GeV : fitchi2 = 0.00e+00->1.00e+01 : Likelihood = -1.00e+02->1.80e+308 : CloneCut = -1.00e+10->1.80e+308
-RichOfflineGPID...   INFO  VeloTT      : P = 1.00e+00->5.00e+02 GeV : Pt = 0.00e+00->5.00e+02 GeV : fitchi2 = 0.00e+00->1.00e+01 : Likelihood = -1.00e+02->1.80e+308 : CloneCut = -1.00e+10->1.80e+308
-RichOfflineGPID...   INFO  KsTrack     : P = 1.00e+00->5.00e+02 GeV : Pt = 0.00e+00->5.00e+02 GeV : fitchi2 = 0.00e+00->1.00e+01 : Likelihood = -1.00e+02->1.80e+308 : CloneCut = -1.00e+10->1.80e+308
+RichOfflineGPID...   INFO  Forward     : P = 1.00e+00->5.00e+02 GeV : fitchi2 = 0.00e+00->1.00e+01
+RichOfflineGPID...   INFO  Match       : P = 1.00e+00->5.00e+02 GeV : fitchi2 = 0.00e+00->1.00e+01
+RichOfflineGPID...   INFO  Seed        : P = 1.00e+00->5.00e+02 GeV : fitchi2 = 0.00e+00->1.00e+01
+RichOfflineGPID...   INFO  VeloTT      : P = 1.00e+00->5.00e+02 GeV : fitchi2 = 0.00e+00->1.00e+01
+RichOfflineGPID...   INFO  KsTrack     : P = 1.00e+00->5.00e+02 GeV : fitchi2 = 0.00e+00->1.00e+01
 RichOfflineGPID...   INFO Member list: Rich::Rec::PixelBackgroundAlg/RichOfflineBckEstIt0, Rich::Rec::GlobalPID::Likelihood/RichOfflineGPIDLLIt0, Rich::Rec::PixelBackgroundAlg/RichOfflineBckEstIt1, Rich::Rec::GlobalPID::Likelihood/RichOfflineGPIDLLIt1, with context 'Offline'
 RichOfflineGPID...   INFO Maximum event iterations                  = 500
 RichOfflineGPID...   INFO Minimum signal for LL calculation         = 0.001
@@ -474,42 +441,42 @@ RiSeedTrkEff.Tr...   INFO Track Selection : [Seed]
 RiSeedTrkEff.Tr...   INFO  Seed        : P = 0.00e+00->1.00e+30 GeV : Pt = 0.00e+00->1.00e+30 GeV : fitchi2 = 0.00e+00->1.00e+30 : Likelihood = -1.00e+30->1.00e+30 : CloneCut = -1.00e+30->1.00e+30 : GhostProb = -1.00e+30->1.00e+30 clonesOK
 RichRecoMoni         INFO Member list: Rich::Rec::MC::RecoQC/RiCKResLong, Rich::Rec::MC::RecoQC/RiAeroMoniLong, Rich::Rec::MC::RecoQC/RiCKResForward, Rich::Rec::MC::RecoQC/RiAeroMoniLong, Rich::Rec::MC::RecoQC/RiCKResMatch, Rich::Rec::MC::RecoQC/RiAeroMoniLong, Rich::Rec::MC::RecoQC/RiCKResKsTrack, Rich::Rec::MC::RecoQC/RiAeroMoniLong, Rich::Rec::MC::RecoQC/RiCKResVeloTT, Rich::Rec::MC::RecoQC/RiAeroMoniLong, Rich::Rec::MC::RecoQC/RiCKResSeed, Rich::Rec::MC::RecoQC/RiAeroMoniLong, with context 'Offline'
 RiCKResLong.Tra...   INFO Track Selection : [Forward, Match]
-RiCKResLong.Tra...   INFO  Forward     : P = 0.00e+00->5.00e+02 GeV : Pt = 0.00e+00->5.00e+02 GeV : fitchi2 = 0.00e+00->1.00e+01 : Likelihood = -1.00e+02->1.80e+308 : CloneCut = -1.00e+10->1.80e+308 : GhostProb = -1.80e+308->9.90e-01
-RiCKResLong.Tra...   INFO  Match       : P = 0.00e+00->5.00e+02 GeV : Pt = 0.00e+00->5.00e+02 GeV : fitchi2 = 0.00e+00->1.00e+01 : Likelihood = -1.00e+02->1.80e+308 : CloneCut = -1.00e+10->1.80e+308 : GhostProb = -1.80e+308->9.90e-01
+RiCKResLong.Tra...   INFO  Forward
+RiCKResLong.Tra...   INFO  Match
 RiAeroMoniLong....   INFO Track Selection : [Forward, Match]
-RiAeroMoniLong....   INFO  Forward     : P = 0.00e+00->5.00e+02 GeV : Pt = 0.00e+00->5.00e+02 GeV : fitchi2 = 0.00e+00->1.00e+01 : Likelihood = -1.00e+02->1.80e+308 : CloneCut = -1.00e+10->1.80e+308 : GhostProb = -1.80e+308->9.90e-01
-RiAeroMoniLong....   INFO  Match       : P = 0.00e+00->5.00e+02 GeV : Pt = 0.00e+00->5.00e+02 GeV : fitchi2 = 0.00e+00->1.00e+01 : Likelihood = -1.00e+02->1.80e+308 : CloneCut = -1.00e+10->1.80e+308 : GhostProb = -1.80e+308->9.90e-01
+RiAeroMoniLong....   INFO  Forward
+RiAeroMoniLong....   INFO  Match
 RiCKResForward....   INFO Track Selection : [Forward]
-RiCKResForward....   INFO  Forward     : P = 0.00e+00->5.00e+02 GeV : Pt = 0.00e+00->5.00e+02 GeV : fitchi2 = 0.00e+00->1.00e+01 : Likelihood = -1.00e+02->1.80e+308 : CloneCut = -1.00e+10->1.80e+308 : GhostProb = -1.80e+308->9.90e-01
+RiCKResForward....   INFO  Forward
 RiCKResMatch.Tr...   INFO Track Selection : [Match]
-RiCKResMatch.Tr...   INFO  Match       : P = 0.00e+00->5.00e+02 GeV : Pt = 0.00e+00->5.00e+02 GeV : fitchi2 = 0.00e+00->1.00e+01 : Likelihood = -1.00e+02->1.80e+308 : CloneCut = -1.00e+10->1.80e+308 : GhostProb = -1.80e+308->9.90e-01
+RiCKResMatch.Tr...   INFO  Match
 RiCKResKsTrack....   INFO Track Selection : [KsTrack]
-RiCKResKsTrack....   INFO  KsTrack     : P = 1.00e+00->5.00e+02 GeV : Pt = 0.00e+00->5.00e+02 GeV : fitchi2 = 0.00e+00->1.00e+01 : Likelihood = -1.00e+02->1.80e+308 : CloneCut = -1.00e+10->1.80e+308
+RiCKResKsTrack....   INFO  KsTrack
 RiCKResVeloTT.T...   INFO Track Selection : [VeloTT]
-RiCKResVeloTT.T...   INFO  VeloTT      : P = 1.00e+00->5.00e+02 GeV : Pt = 0.00e+00->5.00e+02 GeV : fitchi2 = 0.00e+00->1.00e+01 : Likelihood = -1.00e+02->1.80e+308 : CloneCut = -1.00e+10->1.80e+308
+RiCKResVeloTT.T...   INFO  VeloTT
 RiCKResSeed.Tra...   INFO Track Selection : [Seed]
-RiCKResSeed.Tra...   INFO  Seed        : P = 0.00e+00->5.00e+02 GeV : Pt = 0.00e+00->5.00e+02 GeV : fitchi2 = 0.00e+00->1.00e+01 : Likelihood = -1.00e+02->1.80e+308 : CloneCut = -1.00e+10->1.80e+308
+RiCKResSeed.Tra...   INFO  Seed
 RichPIDMoni          INFO Member list: Rich::Rec::MC::PIDQC/RiPIDMonLong2To100, Rich::Rec::MC::PIDQC/RiPIDMonLong2To10, Rich::Rec::MC::PIDQC/RiPIDMonLong10To70, Rich::Rec::MC::PIDQC/RiPIDMonLong70To100, with context 'Offline'
 RiPIDMonLong2To...   INFO Track Selection : [Forward, Match]
-RiPIDMonLong2To...   INFO  Forward     : P = 2.00e+00->1.00e+02 GeV : Pt = 0.00e+00->5.00e+02 GeV : fitchi2 = 0.00e+00->1.00e+01 : Likelihood = -1.00e+02->1.80e+308 : CloneCut = -1.00e+10->1.80e+308 : GhostProb = -1.80e+308->9.90e-01
-RiPIDMonLong2To...   INFO  Match       : P = 2.00e+00->1.00e+02 GeV : Pt = 0.00e+00->5.00e+02 GeV : fitchi2 = 0.00e+00->1.00e+01 : Likelihood = -1.00e+02->1.80e+308 : CloneCut = -1.00e+10->1.80e+308 : GhostProb = -1.80e+308->9.90e-01
+RiPIDMonLong2To...   INFO  Forward     : P = 2.00e+00->1.00e+02 GeV
+RiPIDMonLong2To...   INFO  Match       : P = 2.00e+00->1.00e+02 GeV
 RiPIDMonLong2To...   INFO Track Selection : [Forward, Match]
-RiPIDMonLong2To...   INFO  Forward     : P = 2.00e+00->1.00e+01 GeV : Pt = 0.00e+00->5.00e+02 GeV : fitchi2 = 0.00e+00->1.00e+01 : Likelihood = -1.00e+02->1.80e+308 : CloneCut = -1.00e+10->1.80e+308 : GhostProb = -1.80e+308->9.90e-01
-RiPIDMonLong2To...   INFO  Match       : P = 2.00e+00->1.00e+01 GeV : Pt = 0.00e+00->5.00e+02 GeV : fitchi2 = 0.00e+00->1.00e+01 : Likelihood = -1.00e+02->1.80e+308 : CloneCut = -1.00e+10->1.80e+308 : GhostProb = -1.80e+308->9.90e-01
+RiPIDMonLong2To...   INFO  Forward     : P = 2.00e+00->1.00e+01 GeV
+RiPIDMonLong2To...   INFO  Match       : P = 2.00e+00->1.00e+01 GeV
 RiPIDMonLong10T...   INFO Track Selection : [Forward, Match]
-RiPIDMonLong10T...   INFO  Forward     : P = 1.00e+01->7.00e+01 GeV : Pt = 0.00e+00->5.00e+02 GeV : fitchi2 = 0.00e+00->1.00e+01 : Likelihood = -1.00e+02->1.80e+308 : CloneCut = -1.00e+10->1.80e+308 : GhostProb = -1.80e+308->9.90e-01
-RiPIDMonLong10T...   INFO  Match       : P = 1.00e+01->7.00e+01 GeV : Pt = 0.00e+00->5.00e+02 GeV : fitchi2 = 0.00e+00->1.00e+01 : Likelihood = -1.00e+02->1.80e+308 : CloneCut = -1.00e+10->1.80e+308 : GhostProb = -1.80e+308->9.90e-01
+RiPIDMonLong10T...   INFO  Forward     : P = 1.00e+01->7.00e+01 GeV
+RiPIDMonLong10T...   INFO  Match       : P = 1.00e+01->7.00e+01 GeV
 RiPIDMonLong70T...   INFO Track Selection : [Forward, Match]
-RiPIDMonLong70T...   INFO  Forward     : P = 7.00e+01->1.00e+02 GeV : Pt = 0.00e+00->5.00e+02 GeV : fitchi2 = 0.00e+00->1.00e+01 : Likelihood = -1.00e+02->1.80e+308 : CloneCut = -1.00e+10->1.80e+308 : GhostProb = -1.80e+308->9.90e-01
-RiPIDMonLong70T...   INFO  Match       : P = 7.00e+01->1.00e+02 GeV : Pt = 0.00e+00->5.00e+02 GeV : fitchi2 = 0.00e+00->1.00e+01 : Likelihood = -1.00e+02->1.80e+308 : CloneCut = -1.00e+10->1.80e+308 : GhostProb = -1.80e+308->9.90e-01
+RiPIDMonLong70T...   INFO  Forward     : P = 7.00e+01->1.00e+02 GeV
+RiPIDMonLong70T...   INFO  Match       : P = 7.00e+01->1.00e+02 GeV
 RichENNTrackles...   INFO Member list: Rich::Rec::MC::TracklessRingMoni/ENNRingMoniAll, Rich::Rec::MC::TracklessRingMoni/ENNRingMoniBest, Rich::Rec::MC::TracklessRingMoni/ENNRingMoniIsolated, with context 'Offline'
-RichMirrAlignMoni    INFO Member list: Rich::Rec::MC::AlignmentMonitor/RichAlignMoniR1, Rich::Rec::MC::AlignmentMonitor/RichAlignMoniR2, with context 'Offline'
+RichMirrAlignMoni    INFO Member list: Rich::Rec::MC::AlignmentMonitor/RichAlignMoniR1Gas, Rich::Rec::MC::AlignmentMonitor/RichAlignMoniR2Gas, with context 'Offline'
 RichAlignMoniR1...   INFO Track Selection : [Match, Forward]
-RichAlignMoniR1...   INFO  Match       : P = 5.00e+00->5.00e+02 GeV : Pt = 0.00e+00->5.00e+02 GeV : fitchi2 = 0.00e+00->1.00e+01 : Likelihood = -1.00e+02->1.80e+308 : CloneCut = -1.00e+10->1.80e+308 : GhostProb = -1.80e+308->9.90e-01
-RichAlignMoniR1...   INFO  Forward     : P = 5.00e+00->5.00e+02 GeV : Pt = 0.00e+00->5.00e+02 GeV : fitchi2 = 0.00e+00->1.00e+01 : Likelihood = -1.00e+02->1.80e+308 : CloneCut = -1.00e+10->1.80e+308 : GhostProb = -1.80e+308->9.90e-01
+RichAlignMoniR1...   INFO  Match       : P = 5.00e+00->1.80e+308 GeV
+RichAlignMoniR1...   INFO  Forward     : P = 5.00e+00->1.80e+308 GeV
 RichAlignMoniR2...   INFO Track Selection : [Match, Forward]
-RichAlignMoniR2...   INFO  Match       : P = 1.00e+01->5.00e+02 GeV : Pt = 0.00e+00->5.00e+02 GeV : fitchi2 = 0.00e+00->1.00e+01 : Likelihood = -1.00e+02->1.80e+308 : CloneCut = -1.00e+10->1.80e+308 : GhostProb = -1.80e+308->9.90e-01
-RichAlignMoniR2...   INFO  Forward     : P = 1.00e+01->5.00e+02 GeV : Pt = 0.00e+00->5.00e+02 GeV : fitchi2 = 0.00e+00->1.00e+01 : Likelihood = -1.00e+02->1.80e+308 : CloneCut = -1.00e+10->1.80e+308 : GhostProb = -1.80e+308->9.90e-01
+RichAlignMoniR2...   INFO  Match       : P = 1.00e+01->1.80e+308 GeV
+RichAlignMoniR2...   INFO  Forward     : P = 1.00e+01->1.80e+308 GeV
 RichHPDIonFeedback   INFO Member list: Rich::Mon::HPDIonFeedbackMoni/RichHPDIFBMoni, with context 'Offline'
 RichHPDImageShifts   INFO Member list: Rich::Mon::RichHPDImageSummary/RichHPDImageSummary, with context 'Offline'
 MoniMUONSeq          INFO Member list: MuonPIDChecker/MuonPIDMonitorDown, MuonPIDChecker/MuonPIDMonitorLong, TrackEventFitter/MuonTrackFitter, MuonTrackAligMonitor, MuEffMonitor, with context 'Offline'
@@ -584,28 +551,12 @@ CreateITLiteClu...SUCCESS Number of counters : 2
  | "# valid banks"                                 |         0 |          0 |     0.0000 |     0.0000 | 1.7977e+308 |-1.7977e+308 |
  | "skipped Banks"                                 |         0 |          0 |     0.0000 |     0.0000 | 1.7977e+308 |-1.7977e+308 |
 PatVeloGeneralT...   INFO No events processed
-FitForward           INFO   Fitting performance   :     0.00 %
-FitForward        SUCCESS Number of counters : 1
- |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "nTracks"                                       |         0 |          0 |     0.0000 |     0.0000 | 1.7977e+308 |-1.7977e+308 |
 FitSeedForMatch      INFO   Fitting performance   :     0.00 %
 FitSeedForMatch   SUCCESS Number of counters : 1
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
  | "nTracks"                                       |         0 |          0 |     0.0000 |     0.0000 | 1.7977e+308 |-1.7977e+308 |
-FitMatch             INFO   Fitting performance   :     0.00 %
-FitMatch          SUCCESS Number of counters : 1
- |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "nTracks"                                       |         0 |          0 |     0.0000 |     0.0000 | 1.7977e+308 |-1.7977e+308 |
-FitDownstream        INFO   Fitting performance   :     0.00 %
-FitDownstream     SUCCESS Number of counters : 1
- |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "nTracks"                                       |         0 |          0 |     0.0000 |     0.0000 | 1.7977e+308 |-1.7977e+308 |
-FitVeloTT            INFO   Fitting performance   :     0.00 %
-FitVeloTT         SUCCESS Number of counters : 1
- |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "nTracks"                                       |         0 |          0 |     0.0000 |     0.0000 | 1.7977e+308 |-1.7977e+308 |
-RefitSeed            INFO   Fitting performance   :     0.00 %
-RefitSeed         SUCCESS Number of counters : 1
+FitBest              INFO   Fitting performance   :     0.00 %
+FitBest           SUCCESS Number of counters : 1
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
  | "nTracks"                                       |         0 |          0 |     0.0000 |     0.0000 | 1.7977e+308 |-1.7977e+308 |
 FitVelo              INFO   Fitting performance   :     0.00 %
@@ -643,13 +594,13 @@ RiMatchTrkEff     SUCCESS Booked 15 Histogram(s) : 1D=10 1DProf=5
 RiKsTrackTrkEff   SUCCESS Booked 15 Histogram(s) : 1D=10 1DProf=5
 RiVeloTTTrkEff    SUCCESS Booked 15 Histogram(s) : 1D=10 1DProf=5
 RiSeedTrkEff      SUCCESS Booked 15 Histogram(s) : 1D=10 1DProf=5
-RiCKResLong       SUCCESS Booked 68 Histogram(s) : 1D=65 1DProf=3
-RiAeroMoniLong    SUCCESS Booked 44 Histogram(s) : 1D=43 1DProf=1
-RiCKResForward    SUCCESS Booked 68 Histogram(s) : 1D=65 1DProf=3
-RiCKResMatch      SUCCESS Booked 68 Histogram(s) : 1D=65 1DProf=3
-RiCKResKsTrack    SUCCESS Booked 68 Histogram(s) : 1D=65 1DProf=3
-RiCKResVeloTT     SUCCESS Booked 68 Histogram(s) : 1D=65 1DProf=3
-RiCKResSeed       SUCCESS Booked 68 Histogram(s) : 1D=65 1DProf=3
+RiCKResLong       SUCCESS Booked 71 Histogram(s) : 1D=68 1DProf=3
+RiAeroMoniLong    SUCCESS Booked 45 Histogram(s) : 1D=44 1DProf=1
+RiCKResForward    SUCCESS Booked 71 Histogram(s) : 1D=68 1DProf=3
+RiCKResMatch      SUCCESS Booked 71 Histogram(s) : 1D=68 1DProf=3
+RiCKResKsTrack    SUCCESS Booked 71 Histogram(s) : 1D=68 1DProf=3
+RiCKResVeloTT     SUCCESS Booked 71 Histogram(s) : 1D=68 1DProf=3
+RiCKResSeed       SUCCESS Booked 71 Histogram(s) : 1D=68 1DProf=3
 RiPIDMonLong2To100WARNING NO ENTRIES -> PID table skipped ...
 RiPIDMonLong2To10 WARNING NO ENTRIES -> PID table skipped ...
 RiPIDMonLong10To70WARNING NO ENTRIES -> PID table skipped ...
@@ -657,8 +608,8 @@ RiPIDMonLong70T...WARNING NO ENTRIES -> PID table skipped ...
 ENNRingMoniAll    SUCCESS Booked 12 Histogram(s) : 1D=12
 ENNRingMoniBest   SUCCESS Booked 12 Histogram(s) : 1D=12
 ENNRingMoniIsol...SUCCESS Booked 12 Histogram(s) : 1D=12
-RichAlignMoniR1   SUCCESS Booked 13 Histogram(s) : 1D=3 2D=10
-RichAlignMoniR2   SUCCESS Booked 13 Histogram(s) : 1D=3 2D=10
+RichAlignMoniR1GasSUCCESS Booked 13 Histogram(s) : 1D=3 2D=10
+RichAlignMoniR2GasSUCCESS Booked 13 Histogram(s) : 1D=3 2D=10
 RichHPDIFBMoni    SUCCESS Booked 487 Histogram(s) : 1D=487
 MuonPIDMonitorDown   INFO ----------------------------------------------------------------
 MuonPIDMonitorDown   INFO Total Number of Tracks analysed: 0
@@ -750,7 +701,7 @@ ToolSvc.RichSma...SUCCESS  #WARNINGS   = 1        Message = 'Ingress/ODIN Event 
 ToolSvc.OTChann...SUCCESS Exceptions/Errors/Warnings/Infos Statistics : 0/0/1/0
 ToolSvc.OTChann...SUCCESS  #WARNINGS   = 1        Message = 'Updating OT channel map for bank version 3'
 TimingAuditor.T...   INFO ------------------------------------------------------------------------------------------------
-TimingAuditor.T...   INFO This machine has a speed about   1.82 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO This machine has a speed about   1.88 times the speed of a 2.8 GHz Xeon.
 TimingAuditor.T...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 TimingAuditor.T...   INFO ------------------------------------------------------------------------------------------------
 TimingAuditor.T...   INFO EVENT LOOP                    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
@@ -845,9 +796,6 @@ TimingAuditor.T...   INFO     RecoTrSeq                 |     0.000 |     0.000 
 TimingAuditor.T...   INFO      Track                    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO       TrackForwardPatSeq      |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO        PatForward             |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO       TrackForwardFitSeq      |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO        InitForwardFit         |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO        FitForward             |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO       TrackSeedPatSeq         |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO        TsaSeed                |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO        TsaSeedTrackCnv        |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
@@ -856,24 +804,14 @@ TimingAuditor.T...   INFO        InitSeedFit            |     0.000 |     0.000 
 TimingAuditor.T...   INFO        FitSeedForMatch        |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO       TrackMatchPatSeq        |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO        TrackMatch             |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO       TrackMatchFitSeq        |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO        InitMatchFit           |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO        FitMatch               |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO       TrackDownstreamPatSeq   |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO        PatDownstream          |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO       TrackDownstreamFitSeq   |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO        InitDownstreamFit      |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO        FitDownstream          |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO       TrackVeloTTPatSeq       |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO        PatVeloTT              |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO       TrackVeloTTFitSeq       |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO        InitVeloTTFit          |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO        FitVeloTT              |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO       TrackSeedRefitSeq       |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO        InitSeedRefit          |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO        RefitSeed              |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO       TrackPostFitSeq         |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO       TrackFitSeq             |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO        TrackEventCloneKiller  |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO        InitBestFit            |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO        FitBest                |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO       TrackVeloFitSeq         |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO        TrackPrepareVelo       |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO        FitVelo                |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
@@ -1049,8 +987,8 @@ TimingAuditor.T...   INFO       ENNRingMoniAll          |     0.000 |     0.000 
 TimingAuditor.T...   INFO       ENNRingMoniBest         |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO       ENNRingMoniIsolated     |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO      RichMirrAlignMoni        |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO       RichAlignMoniR1         |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO       RichAlignMoniR2         |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO       RichAlignMoniR1Gas      |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO       RichAlignMoniR2Gas      |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO      RichHPDIonFeedback       |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO       RichHPDIFBMoni          |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO      RichHPDImageShifts       |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
