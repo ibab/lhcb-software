@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.199 2010-07-12 11:46:38 jpalac Exp $
+# $Id: requirements,v 1.200 2010-07-12 12:29:55 jpalac Exp $
 package AnalysisSys
 version v4r7
 
@@ -28,7 +28,7 @@ use  MCStandardParticles        v1r3     Phys   # Juan Palacios
 use  FlavourTaggingChecker      v5r4p1   Phys   # Marco Musy
 use  ParticleMakerChecker       v1r3p2   Phys   # Chris Jones
 use  DecayTreeTuple             v3r6     Phys   # Rob Lambert
-use  LoKiJets                   v5r2p1   Phys   # Victor Coco
+use  LoKiJets                   v5r2p2   Phys   # Victor Coco
 use  DisplVertices              v6r9     Phys   # Neal Gueissaz
 use  HighPtJets                 v1r1     Phys   # Marcin Kucharczyk
 ####################################################################
