@@ -11,6 +11,11 @@ Purpose: LHCb reconstruction program
   . Fix uninitialised variables (VeloDet)
   . New Velo RF foil thickness from head-20100531 DDDB and LHCBCOND tags
   . New HPD demagnification parameters from head-20100531 DDDB tag
+  . Track fits now done after clone killing (TrackSys)
+  . Updated track selection cuts for the Rich
+  . Add plot to monitor total number of photon candidates (RichRecQC)
+  . Add counter for number of tracks changing sign (TrackFitter)
+  . Add HitEffPlotter algorithm to expert monitoring
   
 
 </PRE><H1><A NAME=v37r4>2010-06-24 Brunel v37r4</A></H1><PRE>
