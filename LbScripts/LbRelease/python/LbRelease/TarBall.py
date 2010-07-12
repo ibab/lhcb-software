@@ -18,6 +18,7 @@ import logging
 import os
 import tarfile
 import shutil
+from subprocess import Popen, PIPE
 
 class EmptyTarBallException(Exception): pass
 class EmptySourceDirsException(Exception): pass
@@ -605,11 +606,40 @@ def generateLCGTar(project, version=None, cmtconfig=None,
             lcg_prj = data[0]
             break
     os.environ["CMTEXTRATAGS"] = "LHCb"
+    ext_dict = {}
     for p in prj.binaryExternalPackages(cmtprojectpath=os.environ["CMTPROJECTPATH"], 
                                         binary=cmtconfig) :
-        print p.fullLocation()
-
-        
+        if p.name().split(os.sep)[0] == "LCG_Interfaces" :
+            ext_name = os.sep.join(p.name().split(os.sep)[1:])
+            ext_dict[ext_name] = []
+            ext_dict[ext_name].append(p.fullLocation())
+            p = Popen(["cmt", "show", "macro_value", "%s_home" % ext_name], stdout=PIPE)
+            ext_home = p.stdout.read()[:-1]
+            ext_home = ext_home.replace("\\", os.sep)
+            ext_home = ext_home.replace("%SITEROOT%", os.environ.get("SITEROOT", ""))
+            ext_dict[ext_name].append(ext_home)
+            p = Popen(["cmt", "show", "macro_value", "%s_config_version" % ext_name], stdout=PIPE)
+            ext_config_version = p.stdout.read()[:-1]
+            ext_dict[ext_name].append(ext_config_version)
+            p = Popen(["cmt", "show", "macro_value", "%s_native_version" % ext_name], stdout=PIPE)
+            ext_native_version = p.stdout.read()[:-1]
+            ext_dict[ext_name].append(ext_native_version)
+            print ext_dict[ext_name]
+    ext_shared_dict = {}
+    ext_binary_dict = {}
+    for p in ext_dict.keys() :
+        if ext_dict[p][1] :
+            bin_prefix = os.path.join(p, ext_dict[p][3], cmtconfig)
+            bin_location = ext_dict[p][1]
+            if bin_location.endswith(bin_prefix) :
+                if os.path.exists(bin_location) :
+                    ext_binary_dict[bin_location] = os.path.join("external", bin_prefix)
+                shared_prefix = os.sep.join(["external"] + bin_prefix.split(os.sep)[:-1])
+                shared_location = os.path.dirname(bin_location)
+                if os.path.exists(shared_location) :
+                    ext_shared_dict[shared_location] = shared_prefix
+    print ext_shared_dict
+    print ext_binary_dict
 #    srcdirs = [os.path.join(top_dir, prefix)]
 #    log.debug("="*100)
 #    filename = os.path.join(output_dir, prj_conf.tarBallName(version, cmtconfig, full=True))
