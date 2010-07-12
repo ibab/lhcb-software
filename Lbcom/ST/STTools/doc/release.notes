@@ -2,6 +2,9 @@
 ! Package manager : Jeroen van Tilburg
 !------------------------------------------------------------------------------
 
+! 2010-07-12 M Needham
+ - Add STBeetleStateTransition and STRndmBeetleStateTransition
+
 !=========================== STTools v4r2 2010-06-21 ==========================
 ! 2010-06-17 - Jeroen VAN TILBURG
  - New tuning of eta correction (for new charge sharing tune) and new hit error

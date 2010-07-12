@@ -41,7 +41,8 @@ STOfflinePosition::STOfflinePosition(const std::string& type,
                                      const IInterface* parent) :
   ST::ToolBase( type, name, parent )
 {
-  m_errorVec += 0.256, 0.301, 0.283, 0.212;
+
+  m_errorVec += 0.289, 0.339, 0.322, 0.459;
   declareProperty("ErrorVec",m_errorVec);
   declareProperty("LinSharingCorr2",m_linSharingCorr2 = 0.484);
   declareProperty("CubicSharingCorr2",m_cubicSharingCorr2 = 14.2); 

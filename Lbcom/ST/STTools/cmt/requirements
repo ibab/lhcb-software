@@ -5,7 +5,7 @@
 package           STTools
 
 
-version           v4r2
+version           v4r3
 
 
 branches          cmt doc src options python
