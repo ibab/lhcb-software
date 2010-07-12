@@ -3,6 +3,9 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+ - Changes to references to reflect changes in Boole v21r6 output:
+   . Move to use SiLandauFun in SiDepositedCharge (SiTools)
+
 </PRE><H1><A NAME=v21r5>2010-06-23 Boole v21r5</A></H1></PRE>
  - Changes to configurable:
    . Upgrade MC: Improved spillover subtraction for Velo and TT
