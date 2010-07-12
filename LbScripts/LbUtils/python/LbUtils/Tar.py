@@ -127,7 +127,7 @@ def openTar(filename, tar_mode="r"):
     
     return tarf, lock
 
-def closeTar(tarf, lock, filename=None):
+def closeTar(tarf, lock, _filename=None):
     tarf.close()
     lock.unlock()
 
@@ -153,6 +153,9 @@ def listTarBallObjects(dirname, pathfilter=None, prefix=None):
 
 def updateTarBallFromFilter(srcdirs, filename, pathfilter=None,
                             prefix=None, dereference=False):
+    """ Front end to updateTarBallFromFilterDict if the src dirs have all the same
+    prefix
+    """
     srcdict = {}
     for s in srcdirs :
         srcdict[s] = prefix
@@ -160,16 +163,24 @@ def updateTarBallFromFilter(srcdirs, filename, pathfilter=None,
 
 def createTarBallFromFilter(srcdirs, filename, pathfilter=None, 
                             prefix=None, dereference=False, update=False):
+    """ Front end to createTarBallFromFilterDict if the src dirs have all the same
+    prefix
+    """
     srcdict = {}
     for s in srcdirs :
         srcdict[s] = prefix
-    return createTarBallFromFilterDict(srcdict, filename, pathfilter, dereference)
+    return createTarBallFromFilterDict(srcdict, filename, pathfilter, dereference, update)
 
 # ------------------------------------------------------------------------------------------------
 
 def updateTarBallFromFilterDict(srcdict, filename, pathfilter=None, dereference=False):
     """ function to update an already existing tarball. The srcdict parameter is a dictionary
     containing the path of the source as the key and the prefix in the tarball as value.
+    @param srcdict: dictionary with the src directory and their prefix
+    @param filename: output file name
+    @param pathfilter: filter function that takes as input a path and returns True or False if
+                       the path as to be included in the tarball or not.
+    @param dereference: dereference links in the tarball or not 
     """
     log = logging.getLogger()
     status = 0
@@ -219,6 +230,12 @@ def createTarBallFromFilterDict(srcdict, filename, pathfilter=None,
                                 dereference=False, update=False):
     """ function to create a tarball. The srcdict parameter is a dictionary
     containing the path of the source as the key and the prefix in the tarball as value.
+    @param srcdict: dictionary with the src directory and their prefix
+    @param filename: output file name
+    @param pathfilter: filter function that takes as input a path and returns True or False if
+                       the path as to be included in the tarball or not.
+    @param dereference: dereference links in the tarball or not 
+    @param update: if the tarball has to be either updated or replaced 
     """
     log = logging.getLogger()
     if update :
