@@ -1,4 +1,4 @@
-# $Id: StrippingBs2JpsiPhiPrescaled.py,v 1.7 2010-06-30 16:02:48 jpalac Exp $
+# $Id: StrippingBs2JpsiPhiPrescaled.py,v 1.8 2010-07-12 07:24:56 jpalac Exp $
 '''
 Module for construction of Bs->JpsiPhi pre-scaled lifetime unbiased 
 stripping Selections and StrippingLines.
@@ -15,7 +15,7 @@ Exported symbols (use python help!):
 
 __author__ = ['Greig Cowan','Juan Palacios']
 __date__ = '01/10/2009'
-__version__ = '$Revision: 1.7 $'
+__version__ = '$Revision: 1.8 $'
 
 __all__ = ('Bs2JpsiPhiPrescaledConf',
            'makePhi2KK',
@@ -98,7 +98,7 @@ def makePhi2KK(name, PhiPT) :
     PhiPT            : Minimum transverse momentum of Phi (MeV).
     """
     _phiFilter = FilterDesktop("_filterFor"+name)
-    _phiFilter.Code = "(PT> (PhiPT)s *MeV)" % locals()
+    _phiFilter.Code = "(PT> %(PhiPT)s *MeV)" % locals()
     _stdPhi2KK = DataOnDemand(Location = "Phys/StdLoosePhi2KK")
 
     return Selection (name,
