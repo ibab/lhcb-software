@@ -4,17 +4,17 @@
 # Maintainer : Victor COCO victor.coco@cern.ch
 # =============================================================================
 package           LoKiJets
-version           v5r2
+version           v5r2p1
 
 # =============== structure ===================================================
 branches          cmt doc python src
 
 # =============== dependencies ================================================
-use               LoKiAlgo v* Phys 
-use               fastjet  v* LCG_Interfaces 
-use               LoKi        v* Phys
-use               LHCbMath    v* Kernel 
-
+use               LoKiAlgo         v* Phys 
+use               fastjet          v* LCG_Interfaces 
+use               LoKi             v* Phys
+use               LHCbMath         v* Kernel 
+use               Particle2MCTruth v* Phys
 # =============== exported include directories ================================
 include_path      none
 

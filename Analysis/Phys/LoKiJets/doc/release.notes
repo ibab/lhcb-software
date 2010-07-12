@@ -7,6 +7,12 @@
 ! Purpose     : Jet finding algorithm embedded into LHCb software
 ! -----------------------------------------------------------------------------
 
+!================== LoKiJets v5r2p1 2010-07-12 ===============================
+
+! 2010-07-12 - Juan Palacios
+ - cmt/requirements
+  . Need Phys/Particle2MCTruth. Increase to v5r2p1.
+
 !================== LoKiJets v5r2 2010-04-30 =================================
 
 ! 2010-04-16 - Juan Palacios
