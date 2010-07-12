@@ -35,6 +35,7 @@
 #include "LoKi/Particles28.h"
 #include "LoKi/Particles29.h"
 #include "LoKi/Particles34.h"
+#include "LoKi/Particles37.h"
 // ============================================================================
 #include "LoKi/IDecay.h"
 #include "LoKi/FinderDict.h"

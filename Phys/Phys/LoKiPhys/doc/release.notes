@@ -5,6 +5,19 @@
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
 
+! 2010-07-12 - Roel Aaij
+ - Added two new and related functors: DLS and BPVDLS
+
+   They calculate the decay length significance of a particle. This is defined
+   as the distance the particle travelled, projected onto its momentum and
+   devided by the error on this number. Actual lines came from Wouter Hulsbergen.
+
+   DLS calculates the decay length significance with respect to the vertex
+   which the functor contains.
+
+   BPVDLS gets the related vertex of the particle and calculates the decay
+   length significance with respect to that vertex.
+
 ! ========================== LoKiPhys v9r2 2010-06-24 =========================
 
 ! 2010-06-10 - Vanya Belyaev

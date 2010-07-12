@@ -805,6 +805,12 @@ DTF_CTAUSIGNIFICANCE = LoKi.Particles.ChildCTauSignificance
 
 
 
+# Decay length significance functors from Wouter Hulsbergen
+
+## @see LoKi::Cuts::DLS
+DLS                  = LoKi.Particles.DecayLengthSignificance
+## @see LoKi::Cuts::BPVDLS
+BPVDLS               = LoKi.Particles.DecayLengthSignificanceDV()
 
 # =============================================================================
 # Functional part: 
