@@ -12,9 +12,12 @@ def StripPath(path):
     for p in path.split(pathsep):
         rp = realpath(p)
         # We keep the entry if it is a directory not empty or a zipfile
-        if exists(rp) and ((isdir(rp) and listdir(rp))
-                           or is_zipfile(rp)) and p not in collected:
-            collected.append(p)
+        try :
+            if exists(rp) and ((isdir(rp) and listdir(rp)) 
+                          or is_zipfile(rp)) and p not in collected:
+                collected.append(p)
+        except OSError :
+            pass
     return pathsep.join(collected)
 
 def CleanVariable(varname, shell, out):
@@ -46,27 +49,27 @@ def _check_output_options_cb(option, opt_str, value, parser):
 
 if __name__ == '__main__':
     
-    parser = OptionParser()
+    script_parser = OptionParser()
 
-    parser.add_option("-e", "--env",
+    script_parser.add_option("-e", "--env",
                       action="append",
                       dest="envlist",
                       metavar="PATHVAR",
                       help="add environment variable to be processed")
-    parser.add_option("--shell", action="store", dest="shell", type="choice", metavar="SHELL",
+    script_parser.add_option("--shell", action="store", dest="shell", type="choice", metavar="SHELL",
                       choices = ['csh','sh','bat'],
                       help="select the type of shell to use")
     
-    parser.set_defaults(output=stdout)
-    parser.add_option("-o", "--output", action="callback", metavar="FILE",
+    script_parser.set_defaults(output=stdout)
+    script_parser.add_option("-o", "--output", action="callback", metavar="FILE",
                       type = "string", callback = _check_output_options_cb,
                       help="(internal) output the command to set up the environment ot the given file instead of stdout")
-    parser.add_option("--mktemp", action="callback",
+    script_parser.add_option("--mktemp", action="callback",
                       dest="mktemp",
                       callback = _check_output_options_cb,
                       help="(internal) send the output to a temporary file and print on stdout the file name (like mktemp)")
     
-    options, args = parser.parse_args()
+    options, args = script_parser.parse_args()
 
     if not options.shell and environ.has_key("SHELL"):
         options.shell = environ["SHELL"]

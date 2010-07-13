@@ -1,3 +1,8 @@
+2010-07-13  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbScriptsPolicy/PathStripper.py: added protection against directories which are 
+	not listable. They are ignored.
+
 2010-06-03  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* python/LbScriptsPolicy/PathStripper.py: Modified to accept zip files
