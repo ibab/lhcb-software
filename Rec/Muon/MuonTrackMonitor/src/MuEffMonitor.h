@@ -5,7 +5,7 @@
 /** @class MuEffMonitor MuEffMonitor.h
  *  monitoring of Muon Chamber Efficiency
  *
- *  @author P. DeSimone
+ *  @author P. de Simone
  *  @date   2010-06-16
  */
 
@@ -97,7 +97,8 @@ private:
   AIDA::IHistogram1D *m_TrkType, *m_Chi2Hits;
   AIDA::IHistogram1D *m_PpreSel, *m_PSel;
   AIDA::IHistogram1D *m_Hcal, *m_Ecal, *m_Angolo, *m_Distanza;
-  AIDA::IHistogram2D *m_ene, *m_DeltaP;
+  AIDA::IHistogram1D *m_SHcal, *m_SEcal;
+  AIDA::IHistogram2D *m_ene, *m_Sene, *m_DeltaP;
   
   AIDA::IHistogram1D *m_P_S1, *m_P_S2, *m_P_S3, *m_P_S4, *m_P_S5, *m_P_S;
   AIDA::IHistogram1D *m_P_S1hit, *m_P_S2hit, *m_P_S3hit, *m_P_S4hit, *m_P_S5hit, *m_P_Shit;
@@ -281,9 +282,10 @@ private:
   
   bool DoTrackSelection(const LHCb::Track *pTrack);
 
-  bool DoAccCheck(const LHCb::Track *pTrack);
+  bool DoAccCheck();
   bool DoHitsInPad();
   bool DoCaloMIP(const LHCb::Track *pTrack);
+  bool estrapola(const LHCb::Track *pTrack);
 
   StatusCode fillCoordVectors();
 

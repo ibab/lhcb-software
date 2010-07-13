@@ -15,7 +15,7 @@ using namespace Gaudi::Units;
 //-----------------------------------------------------------------------------
 // Implementation file for class : MuEffMonitor
 //
-// 2010-6-18 : monitoring of Muon Chamber Efficiency by Patrizia De Simone
+// 2010-6-18 : Patrizia de Simone
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
@@ -43,22 +43,22 @@ MuEffMonitor::MuEffMonitor( const std::string& name,
   m_nSigmaY[2] = 2.;
   m_nSigmaY[3] = 2.;
   m_nSigmaY[4] = 2.;
-  
+
   declareProperty ( "DoTrigger"     ,m_DoTrigger = false );
   declareProperty ( "MomentumCut"   ,m_MomentumCut = 3000. ) ;
-  declareProperty ( "EecalMax"      ,m_EecalMax = 1300. ) ;
+  declareProperty ( "EecalMax"      ,m_EecalMax = 1000. ) ;
   declareProperty ( "EecalMin"      ,m_EecalMin = -100. ) ;
-  declareProperty ( "EhcalMax"      ,m_EhcalMax = 4500. ) ;
+  declareProperty ( "EhcalMax"      ,m_EhcalMax = 3500. ) ;
   declareProperty ( "EhcalMin"      ,m_EhcalMin = 1000. ) ;
 
   declareProperty ( "nSigmaX"       ,m_nSigmaX );
   declareProperty ( "nSigmaY"       ,m_nSigmaY );
-  declareProperty ( "Chi2Min"       ,m_Chi2Min = 30.) ;
+  declareProperty ( "Chi2Min"       ,m_Chi2Min = 10.) ;
   declareProperty ( "CosThetaCut"   ,m_CosThetaCut = 0.99 ) ;
   declareProperty ( "xyDistCut"     ,m_xyDistCut = 40. ) ;
   declareProperty ( "PCutEff"       ,m_PCutEff = 12.) ;
   declareProperty ( "Extrapolator"  ,m_extrapolatorName = "TrackMasterExtrapolator" ) ;
-  declareProperty ( "HistoLevel"    ,m_histoLevel = "OfflineFull" );
+  declareProperty ( "HistoLevel"    ,m_histoLevel = "Online" );
 }
 
 //===========================
@@ -70,20 +70,19 @@ MuEffMonitor::~MuEffMonitor() {}
 // Initialization
 //===========================
 StatusCode MuEffMonitor::initialize() {
-  
-  StatusCode sc =  GaudiHistoAlg::initialize();
+
+  StatusCode sc = GaudiHistoAlg::initialize();
   if ( sc.isFailure() ) { return sc; }
-  debug()   << " MuEffMonitor ==> Initialize " << endmsg;
+  debug()   << " MuEffMonitor v1r0  ==> Initialize " << endmsg;
 
   GaudiAlg::HistoID  name;
   m_notOnline = (m_histoLevel != "Online"); 
 
-  debug() << "required histogram Level="<<m_histoLevel<<std::endl;
-
   if (m_notOnline) {
-    m_nEvts   = book1D("m_nEvts","number of processed evts",0.5, 1.5, 1 );
+
+    m_nEvts   = book1D("m_nEvts","number of processed evts",-0.5, 2.5, 3 );
     m_nHLT1mu = book1D("m_nHLT1mu","number of HLT1mu triggers",-0.5, 2.5, 3 );
-    m_nTracks = book1D("m_nTracks","number of tracks after selection steps",-0.5, 4.5, 5 );
+    m_nTracks = book1D("m_nTracks","number of tracks after selection steps",-0.5, 7.5, 8 );
 
     m_nMuPreS = book1D("m_nMuPreS","number of MuCan PreSel per event",-0.5, 9.5, 10 );   
     
@@ -97,26 +96,31 @@ StatusCode MuEffMonitor::initialize() {
     m_Ecal = book1D("m_Ecal","Ecal distribution",10., 2000., 40);
     m_ene  = book2D("m_ene","Hcal vs Ecal",0.0, 10000., 100, 0.0, 2000., 20);
 
-    m_Angolo   = book1D("m_Angle","Cos opening angle",0.8, 1.1, 32);
-    m_Distanza = book1D("m_Distance","Distance",0., 800., 250);
+    m_SHcal = book1D("m_SHcal","Hcal distribution",10., 6000., 60); 
+    m_SEcal = book1D("m_SEcal","Ecal distribution",10., 2000., 40);
+    m_Sene  = book2D("m_Sene","Hcal vs Ecal",0.0, 10000., 100, 0.0, 2000., 20);
+
+    m_Angolo   = book1D("m_Angolo","Cos opening angle",0.8, 1.1, 32);
+    m_Distanza = book1D("m_Distanza","Distanza ",0., 800., 250);
     m_DeltaP   = book2D("m_DeltaP","DeltaP",-1., 1., 100, 0.8, 1.1, 32);
 
     m_nMuSel = book1D("m_nMuSel","number of MuCan Sel per event",-0.5, 9.5, 10 );   
 
     m_PSel  = book1D("m_PSel","P selected tracks",0.0, 60.0, 60);
-    
-    m_P_S1    = book1D("m_P_S_$1","P Sample1 selected tracks",0.0, 40., 8);
-    m_P_S1hit = book1D("m_P_Shit_$1","P Sample1 selected tracks",0.0, 40., 8);
-    m_P_S2    = book1D("m_P_S_$2","P Sample2 selected tracks",0.0, 40., 8);
-    m_P_S2hit = book1D("m_P_Shit_$2","P Sample2 selected tracks",0.0, 40., 8);
-    m_P_S3    = book1D("m_P_S_$3","P Sample3 selected tracks",0.0, 40., 8);
-    m_P_S3hit = book1D("m_P_Shit_$3","P Sample3 selected tracks",0.0, 40., 8);
-    m_P_S4    = book1D("m_P_S_$4","P Sample4 selected tracks",0.0, 40., 8);
-    m_P_S4hit = book1D("m_P_Shit_$4","P Sample4 selected tracks",0.0, 40., 8);
-    m_P_S5    = book1D("m_P_S_$5","P Sample5 selected tracks",0.0, 40., 8);
-    m_P_S5hit = book1D("m_P_Shit_$5","P Sample5 selected tracks",0.0, 40., 8);
-  }
 
+    m_P_S1    = book1D("m_P_S1","P Sample1 selected tracks",0.0, 40., 8);
+    m_P_S1hit = book1D("m_P_S1hit","P Sample1 selected tracks",0.0, 40., 8);
+    m_P_S2    = book1D("m_P_S2","P Sample2 selected tracks",0.0, 40., 8);
+    m_P_S2hit = book1D("m_P_S2hit","P Sample2 selected tracks",0.0, 40., 8);
+    m_P_S3    = book1D("m_P_S3","P Sample3 selected tracks",0.0, 40., 8);
+    m_P_S3hit = book1D("m_P_S3hit","P Sample3 selected tracks",0.0, 40., 8);
+    m_P_S4    = book1D("m_P_S4","P Sample4 selected tracks",0.0, 40., 8);
+    m_P_S4hit = book1D("m_P_S4hit","P Sample4 selected tracks",0.0, 40., 8);
+    m_P_S5    = book1D("m_P_S5","P Sample5 selected tracks",0.0, 40., 8);
+    m_P_S5hit = book1D("m_P_S5hit","P Sample5 selected tracks",0.0, 40., 8);
+    
+  }
+     
   m_P_S    = book1D("m_P_S","P selected tracks",0.0, 40., 8);
   m_P_Shit = book1D("m_P_Shit","P selected tracks",0.0, 40., 8);
 
@@ -201,6 +205,7 @@ StatusCode MuEffMonitor::execute() {
     return StatusCode::FAILURE;
   }
   debug() << " ==> number of tracks " << trTracks->size() << endmsg;
+  
   // ----------------------------------------------
   // BEGIN long Tracks loop
   // ----------------------------------------------
@@ -233,6 +238,8 @@ StatusCode MuEffMonitor::execute() {
       continue;
     }
     
+    StatusCode sc;
+
     //===== Track selection
     MuoneCan = false;  
     passed = DoTrackSelection(pTrack);
@@ -261,7 +268,6 @@ StatusCode MuEffMonitor::execute() {
       
       m_trtype  = pTrack->type();
       m_trflag  = pTrack->flag();
-      m_chi2trk = (pTrack->chi2())/(pTrack->nDoF());
       
       m_Mom  = m_stateP->p(); 
       m_Mom0 = m_stateP0->p();
@@ -271,12 +277,8 @@ StatusCode MuEffMonitor::execute() {
       m_TrSly  = m_stateP->ty();
       m_TrSlx0 = m_stateP0->tx(); 
       m_TrSly0 = m_stateP0->ty();
-      
-      //======  Do Mip       
-      passed = DoCaloMIP(pTrack);
-      if(!passed)continue;
 
-      if (m_DoTrigger && (m_HLTMuon>0)) {
+      if ((m_DoTrigger) && (m_HLTMuon >= 1)) {
        
         m_TriggerTisTosTool->setOfflineInput();
         if (MuoneCan) {
@@ -316,7 +318,7 @@ StatusCode MuEffMonitor::execute() {
 StatusCode MuEffMonitor::finalize() {
 
   debug() << "MuEffMonitor ==> Finalize" << endmsg;
-  return   GaudiHistoAlg::finalize();
+  return GaudiHistoAlg::finalize();
 }
 
 //==============================
@@ -392,11 +394,7 @@ StatusCode MuEffMonitor::DoEvent(){
 
 StatusCode MuEffMonitor::DoTrigger(){
 
-  // L0
-  bool L0Decision = false;  
-  m_L0Decision = 0;
-  // HLT1
-  m_HLTMuon = 0;
+  bool L0Decision = false;
 
   if (!exist<LHCb::L0DUReport>(LHCb::L0DUReportLocation::Default) ) {
     error() << " ==> L0DUReport not found in " << LHCb::L0DUReportLocation::Default << endreq;
@@ -470,7 +468,8 @@ bool MuEffMonitor::DoTrackSelection(const LHCb::Track *pTrack){
 //================================================================================
 
   m_momentum0 = -1.;
-
+  m_chi2trk = -1.;
+  
   for (int i=0;i<5;i++){
     m_trackX[i] = -99999.;
     m_trackY[i] = -99999.;
@@ -493,36 +492,126 @@ bool MuEffMonitor::DoTrackSelection(const LHCb::Track *pTrack){
     m_reg[i] = 0;
   }
 
-  if (m_notOnline) m_nTracks->fill(0.); 
   // == long track && Downstream && !clone 
   if ( (pTrack->checkFlag(LHCb::Track::Clone)) ||
        !( ( pTrack->checkType(LHCb::Track::Long) ) ||
           ( pTrack->checkType(LHCb::Track::Downstream) ) ) ){
     return false;
-  }
+  }   
   if (m_notOnline) m_nTracks->fill(1.);   
 
   // get the momentum (MeV/c) in the first state of the track and cut on it
   m_momentum0 = m_stateP0 -> p();
-  if (!(m_momentum0 > m_MomentumCut)) {
-    return false;
-  }
-  if (m_notOnline) m_nTracks->fill(2.); 
+  if (!(m_momentum0 > m_MomentumCut)) return false;
+  if (m_notOnline) m_nTracks->fill(2.);
 
-  if (!DoAccCheck(pTrack)) return false;
-  if (m_notOnline) m_nTracks->fill(3.); 
+  m_chi2trk = (pTrack->chi2())/(pTrack->nDoF());
+  if (!(m_chi2trk < m_Chi2Min)) return false;
+  if (m_notOnline) m_nTracks->fill(3.);
 
+  if (!DoAccCheck()) return false;
+  if (m_notOnline) m_nTracks->fill(4.);
+  
+  //======  Do Mip       
+  if (!DoCaloMIP(pTrack)) return false;
+  if (m_notOnline) m_nTracks->fill(5.);
+
+   //======  Do Extrapolation
+  if (!estrapola(pTrack)) return false;
+  if (m_notOnline) m_nTracks->fill(6.);
+
+   // ==  Returns true if track passes the
   if (!DoHitsInPad()) return false;     
-  if (m_notOnline) m_nTracks->fill(4.); 
+  if (m_notOnline) m_nTracks->fill(7.);
 
   return true;
 }
 
 // Check if the track is in the muon detector acceptance:
-//=================================================================
-bool MuEffMonitor::DoAccCheck(const LHCb::Track *pTrack){
-//=================================================================
+//===============================
+bool MuEffMonitor::DoAccCheck(){
+//===============================
 
+// get state closest state to M1
+
+  double M1trackX = m_stateP->x();
+  double M1trackY = m_stateP->y();
+         
+// get state closest state to M5
+// x(z') = x(z) + (dx/dz * (z' - z))
+
+  double M5trackX = (m_stateP->x() + ( m_stateP->tx()*(m_stationZ[4]-m_stateP->z()) ));
+  double M5trackY = (m_stateP->y() + ( m_stateP->ty()*(m_stationZ[4]-m_stateP->z()) ));
+  
+  // == Returns true if the track is in the muon detector acceptance
+
+  bool OuterFV1 =  ( (fabs(M1trackX) < (m_regionOuterX[0]+m_nSigmaX[0]*m_padSizeX[3])) &&
+                     (fabs(M1trackY) < (m_regionOuterY[0]+m_nSigmaY[0]*m_padSizeY[3])) );
+  bool InnerFV1 =  ( (fabs(M1trackX) > (m_regionInnerX[0]-2.*m_nSigmaX[0]*m_padSizeX[0])) &&
+                     (fabs(M1trackY) > (m_regionInnerY[0]-2.*m_nSigmaY[0]*m_padSizeY[0])) );
+
+  bool OuterFV5 =  ( (fabs(M5trackX) < (m_regionOuterX[4]+m_nSigmaX[4]*m_padSizeX[19])) &&
+                     (fabs(M5trackY) < (m_regionOuterY[4]+m_nSigmaY[4]*m_padSizeY[19])) );
+  bool InnerFV5 =  ( (fabs(M5trackX) > (m_regionInnerX[4]-2.*m_nSigmaX[4]*m_padSizeX[16])) &&
+                     (fabs(M5trackY) > (m_regionInnerY[4]-2.*m_nSigmaY[4]*m_padSizeY[16])) );
+
+  bool Volume_Fiduciale = ( (OuterFV1 && InnerFV1)&&(OuterFV5 && InnerFV5) );
+
+  return Volume_Fiduciale;  
+}
+
+// Pick up the Calorimeter informations for a given track
+//=========================================================
+  bool MuEffMonitor::DoCaloMIP(const LHCb::Track *pTrack){
+//=========================================================
+
+    float Zecal=12660.;
+    float Zhcal=13500.;
+    bool Ecut = false;
+
+    // Project the state into ECAL:
+    m_Xecal = m_stateP->x() +  m_stateP->tx() * (Zecal - m_stateP->z());
+    m_Yecal = m_stateP->y() +  m_stateP->ty() * (Zecal - m_stateP->z());
+    // Project the state into HCAL:
+    m_Xhcal = m_stateP->x() +  m_stateP->tx() * (Zhcal - m_stateP->z());
+    m_Yhcal = m_stateP->y() +  m_stateP->ty() * (Zhcal - m_stateP->z());
+    
+    // Get Protoparticles to get calo infos:
+    const LHCb::ProtoParticle::Container* protos = 
+      get<LHCb::ProtoParticle::Container>( LHCb::ProtoParticleLocation::Charged ) ;
+    
+    // loop over the protoparticles:
+    LHCb:: ProtoParticle::Container:: const_iterator iproto; 
+    for( iproto = protos->begin() ; protos->end() != iproto ; ++iproto )  {
+      
+      const LHCb::ProtoParticle* proto = *iproto ;    
+      if ( 0 == proto ) continue ;
+      
+      const LHCb::Track* protoTrack = proto->track() ;
+      if ( 0 == protoTrack ) continue ;
+      
+      if ((protoTrack) == (pTrack)) {      
+        m_Eecal =  proto->info( LHCb::ProtoParticle::CaloEcalE , -1 * Gaudi::Units::GeV  );
+        m_Ehcal =  proto->info( LHCb::ProtoParticle::CaloHcalE , -1 * Gaudi::Units::GeV  );
+        m_Espd  =  proto->info( LHCb::ProtoParticle::CaloSpdE , -1 * Gaudi::Units::GeV  );
+        m_Eprs  =  proto->info( LHCb::ProtoParticle::CaloPrsE , -1 * Gaudi::Units::GeV  );
+       
+        Ecut = ( (( m_Ehcal >= m_EhcalMin) && ( m_Ehcal <= m_EhcalMax)) && ( m_Eecal <= m_EecalMax) );
+        if (m_notOnline) m_Hcal -> fill(m_Ehcal);
+        if (m_notOnline) m_Ecal -> fill(m_Eecal);
+        if (m_notOnline) m_ene  -> fill(m_Ehcal,m_Eecal);
+
+        return Ecut;
+      } 
+    } // end loop iproto
+     
+    return Ecut;
+  }
+
+// Check if the track is in the muon detector acceptance:
+//=======================================================
+bool MuEffMonitor::estrapola(const LHCb::Track *pTrack){
+//=======================================================
   
   LHCb::State ExtraState;
   double z[5];
@@ -530,8 +619,6 @@ bool MuEffMonitor::DoAccCheck(const LHCb::Track *pTrack){
   for (int i=0;i<5;i++){
     z[i] = -1.;
   }
-
-  bool inacc = true;
 
   double z_OuterT9 = 9.415*Gaudi::Units::m;
   ExtraState = pTrack -> closestState(z_OuterT9);
@@ -574,36 +661,15 @@ bool MuEffMonitor::DoAccCheck(const LHCb::Track *pTrack){
     m_trackPZ[station] = pZ;
 
   }
-    
-  // == Returns true if the track is in the muon detector acceptance
-  if( ! (fabs(m_trackX[0]) <  m_regionOuterX[0] && 
-         fabs(m_trackY[0]) <  m_regionOuterY[0] )  ||  
-      ! (fabs(m_trackX[m_NStation-1]) < 
-         m_regionOuterX[m_NStation-1] &&
-         fabs(m_trackY[m_NStation-1]) <  
-         m_regionOuterY[m_NStation-1] ) ) {
-    // outside M1 - M5 region
-    inacc = false;
-  }
-  // Inner acceptance
-  if( (fabs(m_trackX[0]) <  m_regionInnerX[0] && 
-       fabs(m_trackY[0]) <  m_regionInnerY[0] )  ||  
-      (fabs(m_trackX[m_NStation-1]) < 
-       m_regionInnerX[m_NStation-1] &&
-       fabs(m_trackY[m_NStation-1]) <  
-       m_regionInnerY[m_NStation-1] )) {
-    
-    // inside M1 - M5 chamber hole
-    inacc = false;
-  }
-    
-  return inacc;  
+  
+  return true;
+  
 }
 
 // Look for hits that match track
-//============================================
+//================================
 bool MuEffMonitor::DoHitsInPad(){
-//============================================
+//================================
   bool passed = false;
 
   int station;
@@ -661,8 +727,8 @@ bool MuEffMonitor::DoHitsInPad(){
           Dx = 2.*dx + m_nSigmaX[station]*sqrt(m_err2X[station]);
           Dy = 2.*dy + m_nSigmaY[station]*sqrt(m_err2Y[station]);
 
-          double Err2x = pow((2.*dx),2.) + m_err2X[station];
-          double Err2y = pow((2.*dy),2.) + m_err2Y[station];
+          double Err2x = pow(dx,2.) + m_err2X[station];
+          double Err2y = pow(dy,2.) + m_err2Y[station];
       
           double xdist = (x-m_trackX[station]);
           double ydist = (y-m_trackY[station]);         
@@ -747,47 +813,6 @@ bool MuEffMonitor::DoHitsInPad(){
   return passed;
 }
 
-// Pick up the Calorimeter informations for a given track
-//===========================================================================
-  bool MuEffMonitor::DoCaloMIP(const LHCb::Track *pTrack){
-//===========================================================================
-        
-    float Zecal=12660.;
-    float Zhcal=13500.;
-
-    // Project the state into ECAL:
-    m_Xecal = m_stateP->x() +  m_stateP->tx() * (Zecal - m_stateP->z());
-    m_Yecal = m_stateP->y() +  m_stateP->ty() * (Zecal - m_stateP->z());
-    // Project the state into HCAL:
-    m_Xhcal = m_stateP->x() +  m_stateP->tx() * (Zhcal - m_stateP->z());
-    m_Yhcal = m_stateP->y() +  m_stateP->ty() * (Zhcal - m_stateP->z());
-    
-    // Get Protoparticles to get calo infos:
-    const LHCb::ProtoParticle::Container* protos = 
-      get<LHCb::ProtoParticle::Container>( LHCb::ProtoParticleLocation::Charged ) ;
-    
-    // loop over the protoparticles:
-    LHCb:: ProtoParticle::Container:: const_iterator iproto; 
-    for( iproto = protos->begin() ; protos->end() != iproto ; ++iproto )  {
-      
-      const LHCb::ProtoParticle* proto = *iproto ;    
-      if ( 0 == proto ) continue ;
-      
-      const LHCb::Track* protoTrack = proto->track() ;
-      if ( 0 == protoTrack ) continue ;
-      
-      if ((protoTrack) == (pTrack)) {      
-        m_Eecal =  proto->info( LHCb::ProtoParticle::CaloEcalE , -1 * Gaudi::Units::GeV  );
-        m_Ehcal =  proto->info( LHCb::ProtoParticle::CaloHcalE , -1 * Gaudi::Units::GeV  );
-        m_Espd  =  proto->info( LHCb::ProtoParticle::CaloSpdE , -1 * Gaudi::Units::GeV  );
-        m_Eprs  =  proto->info( LHCb::ProtoParticle::CaloPrsE , -1 * Gaudi::Units::GeV  );
-       
-        return true; 
-      } 
-    } // end loop iproto
-    return true;
-  }
-
 //
 //====================
 // reset variables
@@ -799,8 +824,7 @@ void MuEffMonitor::resetTrkVariables(){
   m_carica = 0;
   m_trtype = -99999.;
   m_trflag = -99999.;
-  m_chi2trk = -99999.;
-  
+    
   m_Mom  = -99999.;
   m_Mom0 = -99999.;
   m_TrMom  = -99999.;
@@ -825,6 +849,7 @@ void MuEffMonitor::resetTrkVariables(){
   m_SeleTOB = 0;
   
 }
+
 //====================
 // Fill Array
 //====================
@@ -1094,7 +1119,6 @@ void MuEffMonitor::fillHistos(){
   int i, j;
   double Chi2traccia;
 
-  bool Ecut;
   bool range = false;
 
   int nStations;
@@ -1142,12 +1166,7 @@ void MuEffMonitor::fillHistos(){
     Chi2traccia = Chi2traccia/nStations + m_P_chi2trk[i];
     if (m_notOnline) m_Chi2Hits -> fill(Chi2traccia);
     
-    Ecut = ( (( m_P_Ehcal[i] >= m_EhcalMin) && ( m_P_Ehcal[i] <= m_EhcalMax)) && ( m_P_Eecal[i] <= m_EecalMax) );
-    if (m_notOnline) m_Hcal -> fill(m_P_Ehcal[i]);
-    if (m_notOnline) m_Ecal -> fill(m_P_Eecal[i]);
-    if (m_notOnline) m_ene  -> fill(m_P_Ehcal[i],m_P_Eecal[i]);
-    
-    if ( (Chi2traccia > m_Chi2Min) || (!Ecut) ) {
+    if ( Chi2traccia > m_Chi2Min ) {
       if (selezionata[i] == 1) {
         selezionate--;
         selezionata[i] = 0;
@@ -1200,7 +1219,7 @@ void MuEffMonitor::fillHistos(){
                        (fabs(m_P_Ys5[i]) > (m_regionInnerY[4]+m_nSigmaY[4]*m_padSizeY[16])) );
 
     bool Volume_Fiduciale = ( (OuterFV1 && InnerFV1)&&(OuterFV5 && InnerFV5) );
-   
+
     bool Hit5 =((m_P_occu5[i]>=1)&&(fabs(m_P_xdist5[i])<= m_P_Dx5[i] )&&(fabs(m_P_ydist5[i])<= m_P_Dy5[i]) );
     bool Hit4 =((m_P_occu4[i]>=1)&&(fabs(m_P_xdist4[i])<= m_P_Dx4[i] )&&(fabs(m_P_ydist4[i])<= m_P_Dy4[i]) );
 
@@ -1225,6 +1244,14 @@ void MuEffMonitor::fillHistos(){
     double YendM5[4] = {62.,124.,247.,490.};
 
     range = (P > m_PCutEff);
+   
+    if (m_notOnline) {
+      if ( range && Volume_Fiduciale ) {
+        m_SHcal -> fill(m_P_Ehcal[i]);
+        m_SEcal -> fill(m_P_Eecal[i]);
+        m_Sene  -> fill(m_P_Ehcal[i],m_P_Eecal[i]);
+      }
+    }
 
     double xTrk;
     double yTrk;     
@@ -1317,7 +1344,7 @@ void MuEffMonitor::fillHistos(){
     if (Norma2) {
       m_P_S -> fill(P);
       if (m_notOnline) m_P_S2 -> fill(P);
-      if (m_P_occu1[i] >=1) {
+      if (m_P_occu2[i] >=1) {
         m_P_Shit -> fill(P);
         if (m_notOnline) m_P_S2hit -> fill(P);
       }
@@ -1336,7 +1363,7 @@ void MuEffMonitor::fillHistos(){
     if (Norma3) {
       m_P_S -> fill(P);
       if (m_notOnline) m_P_S3 -> fill(P);
-      if (m_P_occu1[i] >=1) {
+      if (m_P_occu3[i] >=1) {
         m_P_Shit -> fill(P);
         if (m_notOnline) m_P_S3hit -> fill(P);
       }
@@ -1355,7 +1382,7 @@ void MuEffMonitor::fillHistos(){
     if (Norma4) {
       m_P_S -> fill(P);
       if (m_notOnline) m_P_S4 -> fill(P);
-      if (m_P_occu1[i] >=1) {
+      if (m_P_occu4[i] >=1) {
         m_P_Shit -> fill(P);
         if (m_notOnline) m_P_S4hit -> fill(P);
       }
@@ -1374,7 +1401,7 @@ void MuEffMonitor::fillHistos(){
     if (Norma5) {
       m_P_S -> fill(P);
       if (m_notOnline) m_P_S5 -> fill(P);
-      if (m_P_occu1[i] >=1) {
+      if (m_P_occu5[i] >=1) {
         m_P_Shit -> fill(P);
         if (m_notOnline) m_P_S5hit -> fill(P);
       }
@@ -1389,6 +1416,7 @@ void MuEffMonitor::fillHistos(){
         }
       }
     }
+
   }
 
 }

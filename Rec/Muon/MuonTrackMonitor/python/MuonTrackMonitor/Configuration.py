@@ -62,22 +62,23 @@ class MuonTrackMonitorConf(LHCbConfigurableUser):
                                 HistoLevel = self.getProp("Histograms")
                                 )
         
-        #moneff.Extrapolator.ApplyMultScattCorr = True
-        #moneff.Extrapolator.ApplyEnergyLossCorr = True
-        #moneff.Extrapolator.OutputLevel = 5
+        moneff.Extrapolator.ApplyMultScattCorr = True
+        moneff.Extrapolator.ApplyEnergyLossCorr = True
+        moneff.Extrapolator.MaterialLocator = "SimplifiedMaterialLocator" 
+        moneff.Extrapolator.OutputLevel = 5
 
         moneff.DoTrigger = False
         
         moneff.MomentumCut = 3000.
         
-        moneff.EecalMax = 1300.
+        moneff.EecalMax = 1000.
         moneff.EecalMin = -100.                                   
-        moneff.EhcalMax = 4500.
+        moneff.EhcalMax = 3500.
         moneff.EhcalMin = 1000.
         
         moneff.nSigmaX = [3.5,3.5,3.5,3.5,3.5]
         moneff.nSigmaY = [2.,2.,2.,2.,2.]
-        moneff.Chi2Min = 30
+        moneff.Chi2Min = 10
         moneff.CosThetaCut = 0.99
         moneff.xyDistCut = 40.
         moneff.PCutEff = 12.     

@@ -5,6 +5,11 @@
 !-----------------------------------------------------------------------------
 
 !====================== MuonTrackMonitor v2r0 2010-06-23 ======================
+! 2010-07-12 - P. de Simone
+- faster efficiency monitor
+- src/MuEffMonitor.cpp,h
+- python/MuonTrackMonitor/Configuration.py
+
 ! 2010-06-23 - GG
 - fix unchecked status code and windoz compil. warnings in MuEffMonitor
 - bug fix in MuonTrackAligMonitor
