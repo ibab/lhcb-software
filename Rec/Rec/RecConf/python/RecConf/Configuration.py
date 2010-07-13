@@ -41,7 +41,7 @@ class RecSysConf(LHCbConfigurableUser):
     ## Default reconstruction sequence for field-off data
     DefaultSubDetsFieldOff = DefaultTrackingSubdets+["CALO","RICH","MUON","PROTO"]
     ## List of known special data processing options
-    KnownSpecialData = [ "cosmics", "veloOpen", "fieldOff", "beamGas", "earlyData" ]
+    KnownSpecialData = [ "cosmics", "veloOpen", "fieldOff", "beamGas", "earlyData", "microBiasTrigger" ]
     
     ## Steering options
     __slots__ = {
@@ -82,7 +82,11 @@ class RecSysConf(LHCbConfigurableUser):
             if "earlyData" in self.getProp("SpecialData"):
                 if "2009" == self.getProp("DataType"):
                     from PatPV import PVConf 
-                    PVConf.VLoosePV().configureAlg() 
+                    PVConf.VLoosePV().configureAlg()
+                else:     
+                  if "veloOpen" in self.getProb("SpecialData") or "microBiasTrigger" in self.getProb("SpecialData"):
+                    from PatPV import PVConf
+                    PVConf.LoosePV().configureAlg()
             GaudiSequencer("RecoVertexSeq").Members += [ pvAlg ];
             if self.getProp( "OutputType" ).upper() == "RDST":
                 # Velo tracks not copied to Rec/Track/Best for RDST 
