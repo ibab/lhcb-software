@@ -34,18 +34,9 @@ def check_space(thelog):
     return True
 
 def main():
-    thelog = logging.getLogger("My example")
+    thelog = logging.getLogger("AFS Project Space checking")
     thelog.setLevel(logging.DEBUG)
-    fh = logging.FileHandler("jojo.log")
-    fh.setLevel(logging.DEBUG)
-    console = logging.StreamHandler()
-    console.setLevel(logging.INFO)
     formatter = logging.Formatter("%(asctime)s - %(levelname)-8s: %(message)s")
-    fh.setFormatter(formatter)
-    console.setFormatter(formatter)
-    thelog.addHandler(console)
-    thelog.addHandler(fh)
-    thelog.info("Start checking AFS project space for LHCb")
     sm = logging.handlers.SMTPHandler('localhost','joel.closier@cern.ch','lhcb-afs-admins@cern.ch','LHCb AFS project space')
     sm.setLevel(logging.INFO)
     sm.setFormatter(formatter)
