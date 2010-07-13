@@ -11,6 +11,7 @@
 #include "TfKernel/TStationHitManager.h"
 #include "PatKernel/PatForwardHit.h"
 
+class IOTRawBankDecoder;
 
   /** @class PatForward PatForward.h
    *  Forward pattern recognition. Connect a Velo track to the T stations.
@@ -43,7 +44,12 @@
     unsigned int m_maxNVelo;
     bool m_doClean;
     bool m_doTiming;
+
+    unsigned int m_maxNumberOTHits;      
+    unsigned int m_maxNumberITHits; 
     
+    IOTRawBankDecoder* m_rawBankDecoder;
+        
     Tf::TStationHitManager <PatForwardHit> *  m_tHitManager;
     
     ITrackSelector*      m_trackSelector;

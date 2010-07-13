@@ -8,6 +8,9 @@
 #include "PatForward.h"
 #include "Event/ProcStatus.h"
 
+#include "Event/STLiteCluster.h"
+#include "OTDAQ/IOTRawBankDecoder.h"
+
 //-----------------------------------------------------------------------------
 // Implementation file for class : PatForward
 //
@@ -32,7 +35,9 @@ PatForward::PatForward( const std::string& name,
     m_inputTracksName  =  "";
     m_outputTracksName =  "";
   }
-  declareProperty( "MaxNVelo",   m_maxNVelo = 1000 ); 
+  declareProperty( "MaxNVelo",   m_maxNVelo = 1000 );  
+  declareProperty( "maxITHits" ,  m_maxNumberITHits = 3000);  
+  declareProperty( "maxOTHits" , m_maxNumberOTHits = 10000 );
   declareProperty( "DeltaNumberInT",   m_deltaNumberInT  = 3 );
   declareProperty( "DeltaNumberInTT",  m_deltaNumberInTT = 1 );
   declareProperty( "DoCleanUp", m_doClean = true); 
@@ -69,6 +74,9 @@ StatusCode PatForward::initialize() {
     m_fwdTime = m_timerTool->addTimer( "Internal PatForward" );
     m_timerTool->decreaseIndent();
   }
+
+  // tool handle to the ot raw bank decoder
+  m_rawBankDecoder = tool<IOTRawBankDecoder>("OTRawBankDecoder");
 
   m_tHitManager    = tool<Tf::TStationHitManager <PatForwardHit> >("PatTStationHitManager");
 
@@ -111,6 +119,32 @@ StatusCode PatForward::execute() {
     procStat->addAlgorithmStatus(name(), -3);  
     procStat->setAborted(true);
     return Warning("Too many velo tracks", StatusCode::SUCCESS, 1);
+  }
+ // reject hot events
+  const LHCb::STLiteCluster::STLiteClusters* clusterCont 
+    = get<LHCb::STLiteCluster::STLiteClusters>(LHCb::STLiteClusterLocation::ITClusters);
+  if (clusterCont->size() > m_maxNumberITHits ){
+     LHCb::ProcStatus* procStat =
+	getOrCreate<LHCb::ProcStatus,LHCb::ProcStatus>(
+	    LHCb::ProcStatusLocation::Default);
+      // give some indication that we had to skip this event
+      // (ProcStatus returns zero status for us in cases where we don't
+      // explicitly add a status code)
+      procStat->addAlgorithmStatus(name(), -3);     
+    return Warning("To many IT hits event rejected", StatusCode::SUCCESS, 1);
+  }  
+
+  const unsigned int nHitsInOT = m_rawBankDecoder->totalNumberOfHits();
+  if (nHitsInOT > m_maxNumberOTHits){
+    LHCb::ProcStatus* procStat =
+	getOrCreate<LHCb::ProcStatus,LHCb::ProcStatus>(
+	    LHCb::ProcStatusLocation::Default);
+      // give some indication that we had to skip this event
+      // (ProcStatus returns zero status for us in cases where we don't
+      // explicitly add a status code)
+     procStat->addAlgorithmStatus(name(), -3);
+      
+    return Warning("To Many OT hits event rejected", StatusCode::SUCCESS,1); 
   }
 
   if ( msgLevel( MSG::DEBUG )) debug() << "==> Execute" << endmsg;

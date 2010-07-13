@@ -3,8 +3,11 @@
 ! Responsible : Stephanie-Hansmann-Menzemer
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
+! 2010-07-13 - Stephanie Hansmann-Menzemer
+ - add procStatus abort for events with many OT and IT hits
+
 ! 2010-06-25 - Stephanie Hansmann-Menzemer
- - add procStatus aborted for busy events
+ - add procStatus aborted for events with many velo tracks
 
 ======================== PatAlgorithms v4r3 2010-06-21 ====================
 ! 2010-06-22 - Rob Lambert
