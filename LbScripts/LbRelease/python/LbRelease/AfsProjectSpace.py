@@ -24,11 +24,12 @@ def check_space(thelog):
         if nb_line < 6 :
             member = line.split()
             if member[0] in ('lhcb', 'lhcb_q','lhcb_s'):
-               space_left = str(( int(member[1]) - int(member[2]) ) * 100 / int(member[1]))
-               if int(space_left) < 5 :
+               free_space = str( int(member[1]) - int(member[2]) )
+               space_left = str( int(free_space)  * 100 / int(member[1]))
+               if int(space_left) < 10 :
                    size_GB = int(member[1]) / 100000
-                   thelog.info('The space left for %s represents %s percent (Total is %s GB)' %( member[0], space_left, size_GB))
-        else:
+                   free_GB = int(free_space) / 100000
+                   thelog.info('The space left for %s represents %s percent \n (Total is %s GB and free is %s GB)' %( member[0], space_left, size_GB, free_GB))        else:
             break
 
     return True
