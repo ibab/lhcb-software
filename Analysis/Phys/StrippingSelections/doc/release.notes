@@ -5,6 +5,9 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-07-14 - Sebastian Schleich
+ - removed PV requirement in InclPhiStripping, adjusted Mass/Pt windows and prescales
+
 ! 2010-07-12 - Greig Cowan
  - Added options for benchmarking stripping lines.
 

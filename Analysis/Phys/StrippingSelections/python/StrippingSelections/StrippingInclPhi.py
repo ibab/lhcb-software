@@ -1,8 +1,8 @@
-# $Id: StrippingInclPhi.py,v 1.4 2010-05-23 12:32:25 schleich Exp $
+# $Id: StrippingInclPhi.py,v 1.5 2010-07-13 22:35:37 schleich Exp $
 
 __author__ = 'Andrew Powell, Sebastian Schleich'
 __date__ = '2010/05/23'
-__version__ = '$Revision: 1.4 $'
+__version__ = '$Revision: 1.5 $'
 
 '''
 InclPhi stripping selection
@@ -32,10 +32,10 @@ class StrippingInclPhiConf(LHCbConfigurableUser):
     __slots__ = {
                   'KaonPT'              : 500      # MeV
                 , 'KaonDLL'             : 15       # adimensional
-                , 'PhiMassWindow'       : 30       # MeV
-                , 'HighPtPrescale'      : 0.5      # adimensional
-                , 'LowPtPrescale'       : 0.16     # adimensional
-                , 'LDPrescale'          : 0.005    # adimensional
+                , 'PhiMassWindow'       : 31       # MeV
+                , 'HighPtPrescale'      : 0.21      # adimensional
+                , 'LowPtPrescale'       : 0.07     # adimensional
+                , 'LDPrescale'          : 0.002    # adimensional
                 }
 
     _InclPhiHighPtLine = None # only to be used in InclPhiHighPtLine()
@@ -51,7 +51,7 @@ class StrippingInclPhiConf(LHCbConfigurableUser):
             " & (%(KaonDLL)s<PPINFO(LHCb.ProtoParticle.RichDLLk,-500,-1000))"% self.getProps() +\
             " ))" % self.getProps()
       if CutOnPhiPT == True :
-        GOODKAON = GOODKAON +  " & (PT>2*%(KaonPT)s*MeV)" % self.getProps()
+        GOODKAON = GOODKAON +  " & (PT>(2*%(KaonPT)s-20)*MeV)" % self.getProps()
       return GOODKAON + " & (ADMASS('phi(1020)')<%(PhiMassWindow)s*MeV)" % self.getProps()
     def _LOWPTK( self ) :
       lowptk = "&(0==NINTREE( " +\
@@ -59,7 +59,7 @@ class StrippingInclPhiConf(LHCbConfigurableUser):
         " ))" % self.getProps()
       return lowptk
     def _LOWPTPHI( self ) :
-      return "&(PT<2*%(KaonPT)s*MeV)" % self.getProps()
+      return "&(PT<(2*%(KaonPT)s+20)*MeV)" % self.getProps()
     def _Phi2KK_CC( self ) :
       coarsemasswindow = 30 + self.getProps()['PhiMassWindow']
       return "(ADAMASS('phi(1020)')<%s*MeV)" % coarsemasswindow
@@ -99,6 +99,7 @@ class StrippingInclPhiConf(LHCbConfigurableUser):
         StrippingInclPhiConf._InclPhiHighPtLine = StrippingLine('InclPhiHighPtLine'
               , HLT = "HLT_PASS_RE('Hlt1MB.*Decision')"
              #, prescale = ps   Prescale realized by my own prescaler (shared between Phi and K)->Do not set here!
+              , checkPV = False
               , postscale = 1
               , algos = [StrippingInclPhiHighPtScaler, Phi2KK]
               )
@@ -138,6 +139,7 @@ class StrippingInclPhiConf(LHCbConfigurableUser):
         StrippingInclPhiConf._InclPhiLowPtLine = StrippingLine('InclPhiLowPtLine'
               , HLT = "HLT_PASS_RE('Hlt1MB.*Decision')"
              #, prescale = ps   Prescale realized by my own prescaler (shared between Phi and K)->Do not set here!
+              , checkPV = False
               , postscale = 1
               , algos = [StrippingInclPhiLowPtScaler, Phi2KK]
               )
@@ -208,6 +210,7 @@ class StrippingInclPhiConf(LHCbConfigurableUser):
               , HLT = "HLT_PASS_RE('Hlt1MB.*Decision')"
               , prescale = ps
               , postscale = 1
+              , checkPV = False
               , algos = [DownNoPIDsKaons, Phi2KK]
               )
 
