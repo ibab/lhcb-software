@@ -84,7 +84,7 @@ class RecSysConf(LHCbConfigurableUser):
                     from PatPV import PVConf 
                     PVConf.VLoosePV().configureAlg()
                 else:     
-                  if "veloOpen" in self.getProb("SpecialData") or "microBiasTrigger" in self.getProb("SpecialData"):
+                  if "veloOpen" in self.getProp("SpecialData") or "microBiasTrigger" in self.getProp("SpecialData"):
                     from PatPV import PVConf
                     PVConf.LoosePV().configureAlg()
             GaudiSequencer("RecoVertexSeq").Members += [ pvAlg ];
