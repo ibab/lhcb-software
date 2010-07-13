@@ -1,3 +1,7 @@
+2010-07-13 Joel Closier <joel.closier@cern.ch>
+
+        * python/AfsProjectSpace.py: first version
+
 2010-07-13  Karol Kruzelecki  <Karol.Kruzelecki@cern.ch>
 
 	* python/LbConfiguration/GetPack.py: bugfix of Getpack asking for a repository
