@@ -8,6 +8,11 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! 2010-07-12 - Greig Cowan
  - Added options for benchmarking stripping lines.
 
+! 2010-07-13 - Ulrich Kerzel
+- update cuts in B2hhLTUnbiased: approach rate of 10^-4 for nominal line,
+   prescale loose line(doesn't work?) and did not succeed to make line
+   requiring HLT1 work 
+
 !========================== StrippingSelections v1r24 2010-07-08 ==============
 
 ! 2010-07-05
