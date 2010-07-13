@@ -4,6 +4,9 @@
 ! Purpose     : High level Muon Monitoring after reconstruction
 !-----------------------------------------------------------------------------
 
+! 2010-07-13 - Marco Cattaneo
+ - Fix an untested StatusCode
+
 ! 2010-07-12 - P. de Simone
 - faster efficiency monitor
 

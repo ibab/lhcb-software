@@ -238,8 +238,6 @@ StatusCode MuEffMonitor::execute() {
       continue;
     }
     
-    StatusCode sc;
-
     //===== Track selection
     MuoneCan = false;  
     passed = DoTrackSelection(pTrack);
