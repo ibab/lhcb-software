@@ -127,12 +127,16 @@ StatusCode Mixture::computeByAtoms()
   ///
   /// Compute molecular weight
   double sum     = 0.0;
-  for( unsigned int i1 = 0 ; i1 < m_elements.size() ; ++i1 )
-    sum += m_atoms[i1]; 
+  for( unsigned int i1 = 0 ; i1 < m_elements.size() ; ++i1 ) {
+    Element* elem = m_elements[i1].second ;
+    sum += m_atoms[i1]*elem->A();
+  }
   ///
   /// Compute proprotion by weight for each element
-  for( unsigned int i2 = 0; i2 < m_elements.size() ;  ++i2  )      
-    m_elements[i2].first = m_atoms[i2]/ sum; 
+  for( unsigned int i2 = 0; i2 < m_elements.size() ;  ++i2  ) {
+    Element* elem = m_elements[i2].second ;
+    m_elements[i2].first = m_atoms[i2]*elem->A()/ sum;
+  }
   ///
   m_atoms.clear();
   ///
