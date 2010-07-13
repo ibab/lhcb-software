@@ -182,7 +182,7 @@ struct VeloIndexHelper
 		return m_pat.VeloRC[sta] ;
 	    case 2:
 		return m_pat.VeloPhiA[sta] ;
-	    case 3:
+	    default:
 		return m_pat.VeloPhiC[sta] ;			   
 	}
     }	

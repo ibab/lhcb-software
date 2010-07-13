@@ -71,10 +71,14 @@ template<size_t N> void HitEffPlotter::plot(
 	// check that we expect a hit there before we plot
 	if (!expected[i]) continue;
 	// if we expect a hit but do not have coordinates, we skip as well
-	if (std::isnan(points[i].x()) || std::isinf(points[i].x()) ||
-		std::isnan(points[i].y()) || std::isinf(points[i].y()) ||
-		std::isnan(points[i].z()) || std::isinf(points[i].z()))
-	    continue;
+	if (points[i].x() != points[i].x() || 
+		points[i].y() != points[i].y() ||
+		points[i].z() != points[i].z())
+		continue;
+	if (2*points[i].x() <= points[i].x() || 
+		2*points[i].y() <= points[i].y() ||
+		2*points[i].z() <= points[i].z())
+		continue;
 	// convert i to decimal
 	numstr[0] = '0' + ((i / 10) % 10);
 	numstr[1] = '0' + (i % 10);
@@ -124,12 +128,9 @@ StatusCode HitEffPlotter::execute()
 	// get intersection points for each layer
 	TrackExpectedHitsXYZTool::HitPatternXYZ xyzpat;
 	StatusCode sc = m_xyzExpectation->execute(*tr, xyzpat);
+	if( sc.isFailure() ) 
+		return Warning( "XYZ Hit Expectation failed", StatusCode::SUCCESS, 0 );
  
-	if (sc.isFailure()) { 
-		error() << "XYZ Hit Expectation failed" << endmsg;
-		return sc;  // error printed already by GaudiHistoAlg
-	}
-
 	// plot Velo
 	plot("veloR", "Velo R sensor",
 		100u, -75., 75., 100u, -75., 75.,

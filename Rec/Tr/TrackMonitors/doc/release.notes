@@ -3,6 +3,10 @@
 ! Responsible : Wouter Hulsbergen, Stephanie Hansmann-Menzemer
 ! Purpose     : Package for track data quality monitoring algorithms
 !-----------------------------------------------------------------------------
+! 2010-07-13 Georg Alexander Krocker
+ - Fixed warnings in compilation of HitEffPlotter and trackexpectedXYZTool
+ - Fixed compilation issue in WIN32
+
 ! 2010-07-12 Georg Alexander Krocker
  - Fixed bug in HitEffPlotter (wrong template type for bitset) that prevented
    compilation in slc4_i32_gcc34
