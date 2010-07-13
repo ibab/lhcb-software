@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2010-07-13 - V. Gligorov
+ - Add Displaced Vertex triggers for Higgs/SUSY to Hadrons Core. 
+
 !========================== HltSettings v2r1  2010-07-08 ===================
 ! 2010-07-08 - Gerhard Raven
  - remove B2D2hh prescale in HighNu_80Vis settings

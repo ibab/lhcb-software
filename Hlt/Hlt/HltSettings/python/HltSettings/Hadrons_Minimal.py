@@ -35,6 +35,8 @@ class Hadrons_Minimal :
             'Hlt2IncDiProton', 
             'Hlt2IncDiProtonPresel', 
             'Hlt2IncDiProtonTrackFitted',
+            'Hlt2DisplVerticesDouble', 
+            'Hlt2DisplVerticesSingle',            
             # The topological 
             'Hlt2Topo2BodySA',
             'Hlt2Topo3BodySA',
