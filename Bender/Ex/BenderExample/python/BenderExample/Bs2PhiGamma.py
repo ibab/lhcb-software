@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Bs2PhiGamma.py,v 1.8 2010-03-12 16:41:13 ibelyaev Exp $ 
+# $Id: Bs2PhiGamma.py,v 1.9 2010-07-13 18:46:07 ibelyaev Exp $ 
 # =============================================================================
 ## @file BenderExample/Bs2PhiGamma.py
 #
@@ -47,7 +47,7 @@ with the campain of Dr.O.Callot et al.:
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
 __date__    = '2008-12-19'
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.8 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.9 $"
 # =============================================================================
 from Bender.MainMC import * 
 import GaudiKernel.SystemOfUnits as Units
@@ -67,15 +67,13 @@ class Bs2PhiGamma(AlgoMC) :
         The only one essential method
         """
 
-        finder = self.mcFinder()
+        mcbs  = self.mcselect('mcbs' , '[ B_s0 -> (  phi(1020) =>  K+  K- )  gamma]CC')
+        if mcbs.empty() : return self.Warning('No MC-Bs are found', SUCCESS )
         
-        mcbs  = finder.find("[ B_s0 -> (  phi(1020) ->  K+  K- )  gamma]cc")
+        mcphi = self.mcselect('mcphi' , '[ B_s0 -> ^( phi(1020) =>  K+  K- )  gamma]CC') 
+        mck   = self.mcselect('mck'   , '[ B_s0 ->  ( phi(1020) => ^K+ ^K- )  gamma]CC')
+        mcg   = self.mcselect('mcg'   , '[ B_s0 ->  ( phi(1020) =>  K+  K- ) ^gamma]CC') 
         
-        if mcbs.empty() : return self.Warning('No MC-Bs are found', SUCCESS ) 
-        mcphi = finder.find("[ B_s0 -> ( ^phi(1020) ->  K+  K- )  gamma]cc") 
-        mck   = finder.find("[ B_s0 -> (  phi(1020) -> ^K+ ^K- )  gamma]cc")
-        mcg   = finder.find("[ B_s0 -> (  phi(1020) ->  K+  K- ) ^gamma]cc") 
-
         if mcphi.empty() or mck.empty() or mcg.empty() : 
             return self.Warning ('No MC are found', SUCCESS ) 
 

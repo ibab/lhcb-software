@@ -1,13 +1,37 @@
 <PRE>
 ! -----------------------------------------------------------------------------
-! $Id: release.notes,v 1.57 2010-07-08 09:16:34 ibelyaev Exp $
+! $Id: release.notes,v 1.58 2010-07-13 18:48:25 ibelyaev Exp $
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.57 $
+! CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.58 $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/Bender
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 ! Purpose     : Python-based environment for Physics Analysis 
 ! -----------------------------------------------------------------------------
+
+
+! ==================== Phys/Bender v14r3 2010-07-08 =========================
+
+! 2010-07-13 - Vanya Belyaev
+
+ - new version, based on DaVinci v25r6
+
+   the major changes:
+
+   - now the decay finder can be applied implicitly:
+
+        mu = self.mcselect ('mu' , 'J/psi(1S) => ^mu+ ^mu-' ) 
+
+        D  = self.select   ( 'D' , ' [D+ => K- pi+ pi+]CC' ) 
+
+  - now one can deal with DecayTreeFitter and DTF_*-functors 
+
+    see http://indico.cern.ch/materialDisplay.py?contribId=16&sessionId=8&materialId=slides&confId=73578
+ 
+- cmt/requirements 
+
+   version increment to v14r3 
+
 
 ! ==================== Phys/Bender v14r2p1 2010-07-08 =========================
 

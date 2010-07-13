@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.50 2010-05-04 18:06:48 ibelyaev Exp $
+! $Id: release.notes,v 1.51 2010-07-13 18:46:07 ibelyaev Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Ex/BenderExample
 ! Responsible : Vanya  BELYAEV ibelyaev@physics.syr.edu
@@ -7,7 +7,14 @@
 ! -----------------------------------------------------------------------------
 
 
-! ====================== Ex/BenderExample v14r2p1 2010-04-04 ====================
+! ====================== Ex/BenderExample v14r6 2010-07-13 ====================
+
+! 2010-07-13 - Vanya Belyaev
+
+ -  add few more exmaples & test-scripts 
+
+
+! ====================== Ex/BenderExample v14r2p1 2010-04-04 ==================
 
 ! 2010-05-04 - Vanya Belyaev
 
@@ -35,7 +42,7 @@
 
  - add new example for reading Striping DST for real 2k+10 data by Graig Cowan 
 
-! ====================== Ex/BenderExample v14rp1 2010-03-18 ====================
+! ====================== Ex/BenderExample v14rp1 2010-03-18 ===================
 
 ! 2010-03-19 - Vanya Belyaev
 

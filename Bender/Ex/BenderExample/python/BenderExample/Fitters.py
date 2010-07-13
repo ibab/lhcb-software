@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Fitters.py,v 1.1 2010-07-13 16:58:46 ibelyaev Exp $ 
+# $Id: Fitters.py,v 1.1 2010-07-13 18:46:07 ibelyaev Exp $ 
 # =============================================================================
 ## @file BenderExample/Fitters.py
 #  The simple Bender-based example to compare variosu fitters

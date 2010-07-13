@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: PhiMC.py,v 1.12 2010-03-12 16:41:15 ibelyaev Exp $ 
+# $Id: PhiMC.py,v 1.13 2010-07-13 18:46:07 ibelyaev Exp $ 
 # =============================================================================
 ## @file BenderExample/PhiMC.py
 # The simple Bender-based example: plot dikaon mass peak with MC-truth
@@ -43,7 +43,7 @@ with the campain of Dr.O.Callot et al.:
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
 __date__    = " 2006-10-12 "
-__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.12 $ "
+__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.13 $ "
 # =============================================================================
 ## import everything form bender
 from Bender.MainMC import *
@@ -69,14 +69,9 @@ class PhiMC(AlgoMC) :
         Standard method for analyses
         """
         
-        finder  = self.mcFinder()
-        mcphi   = finder.find ( ' phi(1020) -> K+ K- ')
-        
+        mcphi   = self.mcselect ( 'mcPhi', 'phi(1020) => K+ K-')        
         if mcphi.empty() : return self.Warning('No MC-phi is found!', SUCCESS )
         
-        #for i in mcphi :
-        #    print ' MC: %s' % LoKi.Print.printDecay ( i ) 
-            
         matcher = self.mcTruth ()
         mc  = MCTRUTH( matcher , mcphi ) 
         
@@ -124,7 +119,7 @@ def configure ( datafiles , catalogs  = [] ) :
     ##    
     from Configurables import DaVinci
     daVinci = DaVinci (
-        DataType   = 'MC09' ,
+        DataType   = '2010' ,
         Simulation = True   
         )
 
@@ -164,21 +159,12 @@ if __name__ == '__main__' :
     print ' Author  : %s ' %   __author__    
     print ' Version : %s ' %   __version__
     print ' Date    : %s ' %   __date__
-    print ' dir(%s) : %s ' % ( __name__    , dir() )
     print '*'*120  
   
-    configure ( [
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005102/0000/00005102_00000311_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005102/0000/00005102_00000312_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005102/0000/00005102_00000313_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005102/0000/00005102_00000314_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005102/0000/00005102_00000315_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005102/0000/00005102_00000316_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005102/0000/00005102_00000317_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005102/0000/00005102_00000318_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005102/0000/00005102_00000319_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005102/0000/00005102_00000322_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'"]
-                )
+    ## configure the job:
+    configure (
+        [ '/castor/cern.ch/grid' + '/lhcb/MC/2010/DST/00006522/0000/00006522_00000%03d_1.dst' % n for n in range ( 2 , 150 ) ]
+        ) 
     
     run(500) 
 

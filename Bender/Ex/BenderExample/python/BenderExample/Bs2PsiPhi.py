@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Bs2PsiPhi.py,v 1.15 2010-07-13 16:58:13 ibelyaev Exp $ 
+# $Id: Bs2PsiPhi.py,v 1.16 2010-07-13 18:46:07 ibelyaev Exp $ 
 # =============================================================================
 ## @file BenderExample/Bs2PsiPhi.py
 #  The simple Bender-based example for Bs-> Jpsi phi selection
@@ -43,7 +43,7 @@ with the campain of Dr.O.Callot et al.:
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
 __date__    = "2006-10-12"
-__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.15 $ "
+__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.16 $ "
 # =============================================================================
 ## import everything from bender 
 from Bender.All                import *
@@ -69,12 +69,12 @@ class Bs2PsiPhi(AlgoMC) :
 
         mips = MIPCHI2( primaries, self.geo() ) 
         
-        finder  = self.mcFinder()
-        mcbs  = finder.find ( '[ B_s0 -> (  J/psi(1S) ->  mu+  mu- {, gamma } ) (  phi(1020) ->  K+  K- ) ]cc' )
-        mcpsi = finder.find ( '[ B_s0 -> ( ^J/psi(1S) ->  mu+  mu- {, gamma } ) (  phi(1020) ->  K+  K- ) ]cc' )
-        mcphi = finder.find ( '[ B_s0 -> (  J/psi(1S) ->  mu+  mu- {, gamma } ) ( ^phi(1020) ->  K+  K- ) ]cc' ) 
-        mcmu  = finder.find ( '[ B_s0 -> (  J/psi(1S) -> ^mu+ ^mu- {, gamma } ) (  phi(1020) ->  K+  K- ) ]cc' )
-        mck   = finder.find ( '[ B_s0 -> (  J/psi(1S) ->  mu+  mu- {, gamma } ) (  phi(1020) -> ^K+ ^K- ) ]cc' )
+        
+        mcbs  = self.mcselect('mcbs'  , '[ B_s0 ->  ( J/psi(1S) =>  mu+  mu- )  ( phi(1020) =>  K+  K- ) ]CC' )
+        mcpsi = self.mcselect('mcpsi' , '[ B_s0 -> ^( J/psi(1S) =>  mu+  mu- )  ( phi(1020) =>  K+  K- ) ]CC' )
+        mcphi = self.mcselect('mcphi' , '[ B_s0 ->  ( J/psi(1S) =>  mu+  mu- ) ^( phi(1020) =>  K+  K- ) ]CC' ) 
+        mcmu  = self.mcselect('mcmu'  , '[ B_s0 ->  ( J/psi(1S) => ^mu+ ^mu- )  ( phi(1020) =>  K+  K- ) ]CC' )
+        mck   = self.mcselect('mck'   , '[ B_s0 ->  ( J/psi(1S) =>  mu+  mu- )  ( phi(1020) => ^K+ ^K- ) ]CC' )
         
         if mcbs  . empty() : return self.Warning ( 'No MC-Bs  is found!' , SUCCESS ) # RETURN
         if mcpsi . empty() : return self.Warning ( 'No MC-psi is found!' , SUCCESS ) # RETURN 
@@ -232,7 +232,7 @@ def configure ( datafiles , catalogs = [] ) :
     
     from Configurables import DaVinci
     daVinci = DaVinci (
-        DataType   = 'MC09'      ,
+        DataType   = '2010' ,
         Simulation = True
         )
     
@@ -280,22 +280,12 @@ if __name__ == '__main__' :
     print ' Author  : %s ' %   __author__    
     print ' Version : %s ' %   __version__
     print ' Date    : %s ' %   __date__
-    print ' dir(%s) : %s ' % ( __name__    , dir() )
     print '*'*120  
     
     ## configure the job:
-    configure( [ 
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005135/0000/00005135_00000514_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005135/0000/00005135_00000515_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005135/0000/00005135_00000516_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005135/0000/00005135_00000517_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005135/0000/00005135_00000518_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005135/0000/00005135_00000519_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005135/0000/00005135_00000520_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005135/0000/00005135_00000521_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005135/0000/00005135_00000522_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005135/0000/00005135_00000523_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'"]
-               )
+    configure (
+        [ '/castor/cern.ch/grid' + '/lhcb/MC/2010/DST/00006522/0000/00006522_00000%03d_1.dst' % n for n in range ( 1 , 150 ) ]
+        ) 
     
     ## run the job
     run(501)
