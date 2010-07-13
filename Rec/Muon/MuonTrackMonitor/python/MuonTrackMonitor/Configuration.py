@@ -3,7 +3,7 @@ from Gaudi.Configuration import *
 from TrackFitter.ConfiguredFitters import ( ConfiguredEventFitter )
 from TrackSys.Configuration import TrackSys
 from Configurables import ( LHCbConfigurableUser, GaudiSequencer, TrackKalmanFilter, MeasurementProvider,
-                            MuonTrackAligMonitor, MuEffMonitor)
+                            MuonTrackAligMonitor, MuEffMonitor, TrackMasterExtrapolator)
 
 class MuonTrackMonitorConf(LHCbConfigurableUser):
 
@@ -61,11 +61,13 @@ class MuonTrackMonitorConf(LHCbConfigurableUser):
                                 HistoTopDir = "Muon/",
                                 HistoLevel = self.getProp("Histograms")
                                 )
+        moneff.addTool(TrackMasterExtrapolator, name = "MuEffExtrap")
+        moneff.Extrapolator = moneff.MuEffExtrap
         
-        moneff.Extrapolator.ApplyMultScattCorr = True
-        moneff.Extrapolator.ApplyEnergyLossCorr = True
-        moneff.Extrapolator.MaterialLocator = "SimplifiedMaterialLocator" 
-        moneff.Extrapolator.OutputLevel = 5
+        moneff.MuEffExtrap.ApplyMultScattCorr = True
+        moneff.MuEffExtrap.ApplyEnergyLossCorr = True
+        moneff.MuEffExtrap.MaterialLocator = "SimplifiedMaterialLocator" 
+        moneff.MuEffExtrap.OutputLevel = 5
 
         moneff.DoTrigger = False
         

@@ -141,7 +141,7 @@ StatusCode MuEffMonitor::initialize() {
   
   
   // Tracks extrapolator Tool:
-  m_extrapolator = tool<ITrackExtrapolator>( m_extrapolatorName, "Extrapolator",this );
+  m_extrapolator = tool<ITrackExtrapolator>( m_extrapolatorName, "MuEffExtrap",this );
   if (!m_extrapolator){
     err()<<" error retrieving the Extrapolator Tool"<<endreq;
     return StatusCode::FAILURE;
