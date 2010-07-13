@@ -397,6 +397,9 @@ class GetPack(Script):
     def checkout(self, package, version = "head"):
         reps = self.packages[package]
         if len(reps) > 1:
+            if self.options.batch:
+            	# never ask for a repository in batch mode
+                raise Skip
             lst = []
             for k in reps:
                 lst.append('%s (%s)' % (k, self.repositories[k]))
