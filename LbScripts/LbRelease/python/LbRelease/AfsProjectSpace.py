@@ -1,6 +1,6 @@
 #!/bin/env python
 
-#$Id
+# $Id:
 
 """
 Check the space used by the 3 LHCb AFS project space.
