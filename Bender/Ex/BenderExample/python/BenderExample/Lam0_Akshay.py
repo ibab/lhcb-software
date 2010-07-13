@@ -1,0 +1,229 @@
+#! /usr/bin/env python
+# ==========================================================================================
+## @file BenderExample/Lam0_Akshay.py
+#
+#  A little bit modified version of original script by Alexander KOZLINSKY  and
+#  Thomas BAUER to look for Lambda0 -> p pi- peak on real data
+#
+#  This file is a part of 
+#  <a href="http://cern.ch/lhcb-comp/Analysis/Bender/index.html">Bender project</a>
+#  <b>``Python-based Interactive Environment for Smart and Friendly 
+#   Physics Analysis''</b>
+#
+#  The package has been designed with the kind help from
+#  Pere MATO and Andrey TSAREGORODTSEV. 
+#  And it is based on the 
+#  <a href="http://cern.ch/lhcb-comp/Analysis/LoKi/index.html">LoKi project:</a>
+#  ``C++ ToolKit for Smart and Friendly Physics Analysis''
+#
+#  By usage of this code one clearly states the disagreement 
+#  with the campain of Dr.O.Callot et al.: 
+#  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
+#
+#  @author Alexander KOZLINSKY  akozlins@gmail.com
+#  @author Thomas    BAUER       thomas@nikhef.nl
+#  @author Vanya     BELYAEV    vanya@nikhef.nl
+#  @date   2010-06-21   
+# ===========================================================================================
+"""
+
+A little bit modified version of original script by Alexander KOZLINSKY and
+Thomas BAUER to look for Lambda0 -> p pi- peak on real data
+
+This file is a part of BENDER project:
+``Python-based Interactive Environment for Smart and Friendly Physics Analysis''
+
+The project has been designed with the kind help from
+Pere MATO and Andrey TSAREGORODTSEV. 
+
+And it is based on the 
+LoKi project: ``C++ ToolKit for Smart and Friendly Physics Analysis''
+
+By usage of this code one clearly states the disagreement 
+with the campain of Dr.O.Callot et al.: 
+``No Vanya's lines are allowed in LHCb/Gaudi software.''
+
+"""
+# ===========================================================================================
+__author__   = " Alexander KOZLINSKY, Thomas BAUER & Vanya BELYAEV "
+__date__     = " 2010-06-21 "
+__version__  = " CVS Tag $Name: not supported by cvs2svn $, verison $Release:$"
+# ===========================================================================================
+import ROOT                           ## needed to produce/visualize the histograms
+import LHCbMath.Types                 ## easy access to various geometry routines 
+from   Bender.Main         import *   ## import all bender goodies 
+from   Gaudi.Configuration import *   ## needed for job configuration
+
+from   GaudiKernel.SystemOfUnits     import GeV, MeV, mm, cm 
+from   GaudiKernel.PhysicalConstants import c_light
+
+# =============================================================================
+## @class Lam0
+#  Simple algorithm to study Lambda0 -> p pi-
+#  @author Alexander KOZLINSKY  akozlins@gmail.com
+#  @author Thomas    BAUER       thomas@nikhef.nl
+#  @author Vanya     BELYAEV    vanya@nikhef.nl
+#  @date 2009-12-21
+class Lam0(Algo) :
+    """
+    Simple algorithm to study Lam0 -> p pi-
+    """
+    ## the only one esential method: 
+    def analyse  (self ) :
+        """
+        The only one essential method
+        """
+
+        ## get the list of all reconstructe dvertices 
+        primaries = self.vselect( 'PVs' , ISPRIMARY )
+        if primaries.empty() :
+            return self.Warning('No primary vertices are found', SUCCESS )
+
+        ## get the list of all protons 
+        protons = self.select ( 'proton' , 'p+'  == ABSID )
+        if protons.empty() : 
+            return self.Warning('No protons are found', SUCCESS )
+
+        ## get the list of all pions 
+        pions   = self.select ( 'pion'   , 'pi+' == ABSID )        
+        if pions  .empty() : 
+            return self.Warning('No pions   are found', SUCCESS )
+
+
+        lambdas = self.loop ('proton pion' , 'Lambda0')
+
+        for lam in lambdas : 
+            
+            m12 = lam.mass(1, 2) / GeV
+            if m12 > 1.5 : continue
+            
+            if m12 < 1.25 :
+                self.plot ( m12 , 'proton pion mass 1', 1.05 , 1.25 ) 
+
+            ## get the proton as the firss  daughter particle : 
+            proton   = lam(1)
+            
+            ## get the pion   as the second daughter particle :
+            pion     = lam(2)
+
+            ## get the charge 
+            qProton = Q ( proton )
+            qPion   = Q ( pion   )
+            
+            # check the charge:
+            if not -0.5 < ( qProton + qPion ) < 0.5 : continue
+            
+            if m12 < 1.25 :
+                self.plot ( m12 , 'p pi mass, correct sign', 1.05 , 1.25 ) 
+            
+            ## fit the common vertex & check chi2 
+            vchi2 = VCHI2(lam)
+            if not 0 <= vchi2 < 100 : continue
+            
+            if m12 < 1.25 :
+                self.plot ( m12 , 'p pi mass, chi2(vx)<100', 1.05 , 1.25 ) 
+            
+            ## get the correct mass 
+            m = M(lam) / GeV;
+            if m > 1.250           : continue
+          
+            self.plot ( m , 'p pi mass, correct mass', 1.05 , 1.25 ) 
+
+            bpv = self.bestVertex ( lam.particle() )
+            if not bpv :
+                self.Warning('No primary vertex has been found')
+                continue
+            
+            lam.save('lam0')
+            
+
+        lams = self.selected('lam0')
+        
+        self.setFilterPassed ( not lams.empty() )
+          
+        return SUCCESS 
+
+    ## finalize & print histos 
+    def finalize ( self ) :
+        """
+        Finalize & print histos         
+        """
+        histos = self.Histos()
+        for key in histos :
+            h = histos[key]
+            if hasattr ( h , 'dump' ) : print h.dump(50,30,True)
+        return Algo.finalize ( self )
+  
+# =============================================================================
+## configure the job 
+def configure ( datafiles , catalogs = [] ) :
+    """
+    Job configuration 
+    """
+    
+    ##
+    ## 1. Static configuration using "Configurables"
+    ##
+    
+    from Configurables           import DaVinci   
+    davinci = DaVinci (
+        DataType      = '2010' ,
+        PrintFreq     = 1000   ,
+        EvtMax        = -1     , 
+        HistogramFile = 'Lam0_Akshay_Histos.root' 
+        )
+    
+    from GaudiConf.Configuration import NTupleSvc
+    NTupleSvc (
+        Output = [ "LAM0 DATAFILE='Lam0_Akshay_Tuples.root' TYPE='ROOT' OPT='NEW'" ]
+        )
+    
+    ## define the input data:
+    setData ( datafiles , catalogs )
+    
+    ##
+    ## 2. Jump into the wonderful world of the actual Gaudi components!
+    ## 
+    
+    ## get the actual application manager (create if needed)
+    gaudi = appMgr() 
+    
+    ## create local algorithm:
+    alg = Lam0(
+        'Lam0'             ,   ## Algorithm name
+        NTupleLUN = 'LAM0' ,   ## Logical unit for output file with N-tuples 
+        InputLocations = [ 'StdLoosePions'         ,
+                           'StdNoPIDsDownPions'    ,
+                           'StdLooseProtons'       ,
+                           'StdNoPIDsDownProtons'  ] ## input particles 
+        )
+    
+    gaudi.setAlgorithms ( [ alg ] ) 
+
+    return SUCCESS 
+
+# =============================================================================
+# The actual job steering
+if '__main__' == __name__ :
+    
+    ## make printout of the own documentations 
+    print '*'*120
+    print                      __doc__
+    print ' Author  : %s ' %   __author__    
+    print ' Version : %s ' %   __version__
+    print ' Date    : %s ' %   __date__
+    print '*'*120  
+    
+    configure (
+        ## V0-stream       (use for testing) 
+        ## [ '/castor/cern.ch/grid' + '/lhcb/data/2010/V0.DST/00006614/0000/00006614_00000%03d_1.v0.dst' % n             for n in range ( 2 , 196 ) ] + 
+        ## min-bias stream (use for real work)
+        [ '/castor/cern.ch/grid' + '/lhcb/data/2010/MINIBIAS.DST/00006590/0000/00006590_00000%03d_1.minibias.dst' % n for n in range ( 5 , 508 ) ] 
+        ) 
+    
+    run ( 10000 )
+
+
+# =============================================================================
+# The END 
+# =============================================================================

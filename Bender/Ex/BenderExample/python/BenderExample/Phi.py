@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Phi.py,v 1.12 2010-03-12 16:41:14 ibelyaev Exp $
+# $Id: Phi.py,v 1.13 2010-07-13 16:58:13 ibelyaev Exp $
 # =============================================================================
 ## @file BenderExample/Phi.py
 #  The simple Bender-based example: plot dikaon mass peak
@@ -43,9 +43,9 @@ with the campain of Dr.O.Callot et al.:
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
 __date__    = " 2006-10-12 " 
-__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.12 $ "
+__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.13 $ "
 # =============================================================================
-## import everything form bender 
+## import everything from bender 
 from Bender.Main import * 
 
 # =============================================================================

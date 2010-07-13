@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Bs2PsiPhi.py,v 1.14 2010-03-18 11:04:41 ibelyaev Exp $ 
+# $Id: Bs2PsiPhi.py,v 1.15 2010-07-13 16:58:13 ibelyaev Exp $ 
 # =============================================================================
-## @file BEnderExample/Bs2PsiPhi.py
+## @file BenderExample/Bs2PsiPhi.py
 #  The simple Bender-based example for Bs-> Jpsi phi selection
 #
 #  This file is a part of 
@@ -43,7 +43,7 @@ with the campain of Dr.O.Callot et al.:
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
 __date__    = "2006-10-12"
-__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.14 $ "
+__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.15 $ "
 # =============================================================================
 ## import everything from bender 
 from Bender.All                import *
@@ -169,7 +169,7 @@ class Bs2PsiPhi(AlgoMC) :
         if phi.empty() : return self.Warning ( "No RC-phi" , SUCCESS) # RETURN         
 
         ## loop over selected psi & phi
-        bs = self.loop("psi phi", "B_s0")
+        bs = self.loop("psi phi", "B_s0", self.particleCombiner('LoKi') )
         for b in bs :
             m12  = b.mass(1,2) / 1000 
             if 4 > m12 or    6 < m12  : continue                 # CONTINUE  
@@ -262,12 +262,8 @@ def configure ( datafiles , catalogs = [] ) :
         ## MC-relations
         PP2MCs = [ 'Relations/Rec/ProtoP/Charged' ] ,
         ## input particles :
-        InputLocations = [ 'StdTightKaons' , 'StdTightMuons' ]
+        InputLocations    = [ 'StdTightKaons' , 'StdTightMuons' ] 
         )
-
-                            
-    ## get the application manager (create if needed)
-    gaudi = appMgr()
     
     ## if runs locally at CERN lxplus 
     gaudi.setAlgorithms( [alg] ) ## gaudi.addAlgorithm ( alg ) 

@@ -2,7 +2,7 @@
 # ===========================================================================# ==========================================================================================
 ## @file BenderExample/RealK0S_V0.py
 #
-#  The script to analyse the K0S from the V0-stripping
+#  The script to analyse the K0S from the V0-stripping RecoStripping04
 #
 #  This file is a part of 
 #  <a href="http://cern.ch/lhcb-comp/Analysis/Bender/index.html">Bender project</a>
@@ -268,8 +268,9 @@ def configure ( datafiles , catalogs = [] ) :
     alg = Ks(
         'Ks'              ,   ## Algorithm name
         NTupleLUN = 'K0S' ,   ## Logical unit for output file with N-tuples
-        ## 
-        InputLocations = [ '/Event/Strip/Phys/StrippingK0S' ] ## input particles 
+        ##
+        ## RecoStripping-04 convention 
+        InputLocations = [ '/Event/V0/Phys/StrippingK0S']
         )
     
     gaudi.setAlgorithms ( [ alg ] ) 
@@ -286,13 +287,13 @@ if '__main__' == __name__ :
     print ' Author  : %s ' %   __author__    
     print ' Version : %s ' %   __version__
     print ' Date    : %s ' %   __date__
-    print ' dir(%s) : %s ' % ( __name__    , dir() )
     print '*'*120  
-
     
-    configure ('/castor/cern.ch/user/p/pkoppenb/DATA2009/000000.V0.dst') 
+    configure (
+        [ '/castor/cern.ch/grid' + '/lhcb/data/2010/V0.DST/00006614/0000/00006614_00000%03d_1.v0.dst' % n for n in range ( 2 , 196 ) ] 
+        ) 
     
-    run ( -1 )
+    run ( 5000 )
     
 
 # =============================================================================

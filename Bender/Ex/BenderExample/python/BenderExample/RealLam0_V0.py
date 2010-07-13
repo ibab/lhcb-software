@@ -2,7 +2,8 @@
 # =============================================================================
 ## @file BenderExample/RealLam0_V0.py
 #
-#  The script to analyse the Lambda0 from the V0-stripping
+#  The script to analyse the Lambda0
+#     from the V0-stripping RecoStripping04 
 #
 #  This file is a part of 
 #  <a href="http://cern.ch/lhcb-comp/Analysis/Bender/index.html">Bender project</a>
@@ -278,8 +279,8 @@ class Lam0(Algo) :
         tup.column ( 'trptmin' , ptmin ) 
         tup.column ( 'trptmax' , ptmax ) 
         tup.column ( 'nLong'   , nLong ) 
-        tup.farray ( 'trpt'    , pts   , 'nTrk' , 100 ) 
-        tup.farray ( 'trtyp'   , typ   , 'nTrk' , 100 ) 
+        tup.farray ( 'trpt'    , pts   , 'nTrk' , 500 ) 
+        tup.farray ( 'trtyp'   , typ   , 'nTrk' , 500 ) 
                      
         return SUCCESS 
     
@@ -295,6 +296,7 @@ class Lam0(Algo) :
         return Algo.finalize ( self )
 
 
+_local_algs_ = [] 
 # =============================================================================
 ## configure the job 
 def configure ( datafiles , catalogs = [] ) :
@@ -333,10 +335,11 @@ def configure ( datafiles , catalogs = [] ) :
     alg = Lam0(
         'Lam0'             ,   ## Algorithm name
         NTupleLUN = 'LAM0' ,   ## Logical unit for output file with N-tuples
-        ## 
-        InputLocations = [ '/Event/Strip/Phys/StrippingLambda0' ] ## input particles 
+        ##
+        ## RecoStripping-04 conventions! 
+        InputLocations = [ '/Event/V0/Phys/StrippingLambda0' ] ## input particles 
         )
-    
+
     gaudi.setAlgorithms ( [ alg ] ) 
     
     return SUCCESS 
@@ -345,19 +348,20 @@ def configure ( datafiles , catalogs = [] ) :
 # =============================================================================
 # The actual job steering
 if '__main__' == __name__ :
-
+    
     ## make printout of the own documentation
     print '*'*120
     print                      __doc__
     print ' Author  : %s ' %   __author__    
     print ' Version : %s ' %   __version__
     print ' Date    : %s ' %   __date__
-    print ' dir(%s) : %s ' % ( __name__    , dir() )
     print '*'*120  
     
-    configure ('/castor/cern.ch/user/p/pkoppenb/DATA2009/000000.V0.dst') 
+    configure (
+        [ '/castor/cern.ch/grid' + '/lhcb/data/2010/V0.DST/00006614/0000/00006614_00000%03d_1.v0.dst' % n for n in range ( 2 , 196 ) ] 
+        ) 
     
-    run ( -1 )
+    run ( 5000 )
     
 
 # =============================================================================
