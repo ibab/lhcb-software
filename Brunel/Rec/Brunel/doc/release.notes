@@ -16,6 +16,8 @@ Purpose: LHCb reconstruction program
   . Add plot to monitor total number of photon candidates (RichRecQC)
   . Add counter for number of tracks changing sign (TrackFitter)
   . Add HitEffPlotter algorithm to expert monitoring
+  . Add cut on max number of IT and OT hits (PatAlgorithms)
+  . Fix wrong fractional mass calculation in mixtures (DetDesc)
   
 
 </PRE><H1><A NAME=v37r4>2010-06-24 Brunel v37r4</A></H1><PRE>
