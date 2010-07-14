@@ -13,7 +13,7 @@ class EarlyDataConf(object):
             IT.LinSharingCorr4 = 0.530
             IT.DetType = "IT"
             IT.ErrorVec =[ 0.253, 0.236, 0.273, 0.185 ];
-            IT.APE = 0.05  # corresponds to 10 um
+            IT.APE = 0.0758  # corresponds to 15 um
         
         if TT is not None:
             TT.APE = 0.197 # corresponds to 36 um
