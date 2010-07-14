@@ -4,6 +4,9 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+! 2010-07-14 - Jeroen VAN TILBURG
+ - Added new functions in ISTClusterPosition to allow for slope dependence.
+
 ! 2010-07-03 M Needham
  - Few bug fixes in SiLandauFun
 

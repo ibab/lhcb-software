@@ -5,6 +5,8 @@
 #include "GaudiKernel/IAlgTool.h"
 #include "GaudiKernel/SmartRefVector.h"
 
+#include "Event/StateVector.h"
+
 #include "SiPositionInfo.h"
 
 namespace LHCb{
@@ -41,6 +43,8 @@ public:
   * <br> error = estimate of the error 
   */
   virtual Info estimate(const LHCb::STCluster* aCluster) const=0;
+  virtual Info estimate(const LHCb::STCluster* aCluster, 
+                        const LHCb::StateVector& refVector) const=0;
 
   /** calc position
   * @param digits vector of digits
@@ -56,6 +60,8 @@ public:
   * @return error estimate
   */
   virtual double error(const unsigned int nStrips) const =0;
+  virtual double error(const unsigned int nStrips, 
+                       const LHCb::StateVector& refVector) const =0;
 
 };
 
