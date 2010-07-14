@@ -1,3 +1,13 @@
+2010-07-14  Joel Closier  <Joel.Closier@cern.ch>
+
+	* scripts/GridEnv.csh: add GridEnv
+	* scripts/GridEnv.sh: add GridEnv
+	* cmt/requirements: add GridEnv
+
+2010-07-13  Joel Closier  <Joel.Closier@cern.ch>
+
+	* scripts/usedProjects: Add Moore, Ganga
+
 2010-07-13 Joel Closier <joel.closier@cern.ch>
 
         * python/AfsProjectSpace.py: first version
