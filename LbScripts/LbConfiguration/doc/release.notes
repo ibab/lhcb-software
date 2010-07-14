@@ -1,3 +1,7 @@
+2010-07-14  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbConfiguration/Platform.py: added support for fedora 13.
+
 2010-06-28  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbConfiguration/Project.py: removed the alias SetupDirac
