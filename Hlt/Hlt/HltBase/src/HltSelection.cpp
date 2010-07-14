@@ -2,6 +2,11 @@
 #include "Event/L0CaloCandidate.h"
 #include "Event/L0MuonCandidate.h"
 
+#include "Event/HltL0DiMuonCandidate.h"
+#include "Event/HltMultiTrack.h"
+#include "Event/HltCandidate.h"
+#include "Event/HltStage.h"
+
 
 
 template <typename T>
@@ -22,6 +27,14 @@ template class Hlt::TSelection<LHCb::RecVertex>;
 template class Hlt::TSelection<LHCb::L0CaloCandidate>;
 template class Hlt::TSelection<LHCb::L0MuonCandidate>;
 template class Hlt::TSelection<LHCb::Particle>;
+
+
+template class Hlt::TSelection<Hlt::Candidate>         ;
+template class Hlt::TSelection<Hlt::Stage>             ;
+template class Hlt::TSelection<Hlt::MultiTrack>        ;
+template class Hlt::TSelection<Hlt::L0DiMuonCandidate> ;
+
+
 //FIXME: why do we need this? (in HltSelectionFilter...)
 template class Hlt::TSelection<Hlt::Selection>;
 

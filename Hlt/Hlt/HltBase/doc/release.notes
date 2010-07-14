@@ -3,9 +3,19 @@
 ! Responsible : Gerhard Raven
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
+
+! 2010-07-14 - Vanya Belyaev
+
+ - Add new Hlt-Event-model by Sasha Mazurov 
+
+ - cmt/requirements 
+    version increment to v9r1 
+
+
 !========================== HltBase v9r0p1 2010-06-06 ===================
 ! 2010-06-06 - Gerhard Raven
  - add function to compute impact parameters significance of track
+
 
 !========================== HltBase v9r0 2010-05-27 ===================
 ! 2010-05-05 - Gerhard Raven

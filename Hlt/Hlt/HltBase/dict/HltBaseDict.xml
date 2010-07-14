@@ -9,4 +9,59 @@
   <class name = "Hlt::VertexSelection" />
   <class name = "ISequencerTimerTool" />
   <class name = "IConfigTreeEditor" />
+
+  <class name = "IConfigTreeEditor" />
+  
+  <class name   = "Hlt::Cache" />
+  
+  <class name   = "Hlt::Candidate"         
+         id     = "00001D89-0000-0000-0000-000000000000" />
+  <class name   = "Hlt::MultiTrack"        
+         id     = "00001D8C-0000-0000-0000-000000000000" />
+  <class name   = "Hlt::L0DiMuonCandidate" 
+         id     = "00001D8B-0000-0000-0000-000000000000" />
+  <class name   = "Hlt::Stage"           
+         id     = "00001D8A-0000-0000-0000-000000000000"  >
+    <field name = "m_locker" transient = "true"/>
+  </class> 
+  
+  
+  <class name   = "Hlt::Candidate::Vector"      />
+  <class name   = "Hlt::Candidate::ConstVector" />
+  <class name   = "Hlt::Candidate::Container"   />
+  <class name   = "Hlt::Candidate::Range"       />
+
+  <class name   = "Hlt::Stage::Vector"      />
+  <class name   = "Hlt::Stage::ConstVector" />
+  <class name   = "Hlt::Stage::Container"   />
+  <class name   = "Hlt::Stage::Range"       />
+  <class name   = "Hlt::Stage::Lock"        />
+
+  <class name   = "Hlt::MultiTrack::Vector"      />
+  <class name   = "Hlt::MultiTrack::ConstVector" />
+  <class name   = "Hlt::MultiTrack::Container"   />
+  <class name   = "Hlt::MultiTrack::Range"       />
+
+  <class name   = "Hlt::L0DiMuonCandidate::Vector"      />
+  <class name   = "Hlt::L0DiMuonCandidate::ConstVector" />
+  <class name   = "Hlt::L0DiMuonCandidate::Container"   />
+  <class name   = "Hlt::L0DiMuonCandidate::Range"       />
+  
+  <class name   = "Hlt::TSelection<Hlt::Candidate>"          />
+  <class name   = "Hlt::TSelection<Hlt::Stage>"              />
+  <class name   = "Hlt::TSelection<Hlt::MultiTrack>"         />
+  <class name   = "Hlt::TSelection<Hlt::L0DiMuonCandidate>"  />
+  
+  <!--
+      
+      uncomment with new gaudi
+      
+      <class name   = "Hlt::Candidate::Selection"            />
+      <class name   = "Hlt::Stage::Selection"                />
+      <class name   = "Hlt::MultiTrack::Selection"           />
+      <class name   = "Hlt::L0DiMuonCandidate::Selection"    />
+  -->
+  
+  
+
 </lcgdict>

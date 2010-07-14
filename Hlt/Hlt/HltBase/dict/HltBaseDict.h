@@ -17,6 +17,49 @@
 
 #include "GaudiAlg/ISequencerTimerTool.h"
 
+#include "Event/HltCandidate.h"
+#include "Event/HltL0DiMuonCandidate.h"
+#include "Event/HltMultiTrack.h"
+
+namespace 
+{
+  struct __Instantiations
+  {
+    
+    Hlt::Stage::Vector          m_s_1 ;
+    Hlt::Stage::ConstVector     m_s_2 ;
+    Hlt::Stage::Container       m_s_3 ;
+    Hlt::Stage::Range           m_s_4 ;
+    Hlt::Stage::Selection       m_s_5 ;
+
+    Hlt::Candidate::Vector       m_c_1 ;
+    Hlt::Candidate::ConstVector  m_c_2 ;
+    Hlt::Candidate::Container    m_c_3 ;
+    Hlt::Candidate::Range        m_c_4 ;
+    Hlt::Candidate::Selection    m_c_5 ;
+
+    Hlt::MultiTrack::Vector      m_t_1 ;
+    Hlt::MultiTrack::ConstVector m_t_2 ;
+    Hlt::MultiTrack::Container   m_t_3 ;
+    Hlt::MultiTrack::Range       m_t_4 ;
+    Hlt::MultiTrack::Selection   m_t_5 ;
+
+    Hlt::L0DiMuonCandidate::Vector      m_m_1 ;
+    Hlt::L0DiMuonCandidate::ConstVector m_m_2 ;
+    Hlt::L0DiMuonCandidate::Container   m_m_3 ;
+    Hlt::L0DiMuonCandidate::Range       m_m_4 ;    
+    Hlt::L0DiMuonCandidate::Selection   m_m_5 ;
+
+    Hlt::TSelection<Hlt::Candidate>         m_a_1 ;
+    Hlt::TSelection<Hlt::Stage>             m_a_2 ;
+    Hlt::TSelection<Hlt::MultiTrack>        m_a_3 ;
+    Hlt::TSelection<Hlt::L0DiMuonCandidate> m_a_4 ;
+    
+    __Instantiations() ;
+    
+  } ;
+  
+}
 
 #endif // DICT_HLTBASEDICT_H
 
