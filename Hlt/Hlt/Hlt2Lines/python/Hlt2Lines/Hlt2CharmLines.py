@@ -1,7 +1,7 @@
-## $Id: Hlt2CharmLines.py,v 1.17 2010-04-23 21:25:38 spradlin Exp $
+## $Id: Hlt2CharmLines.py,v 1.18 2010-07-14 08:34:41 akozlins Exp $
 __author__  = 'Patrick Spradlin'
-__date__    = '$Date: 2010-04-23 21:25:38 $'
-__version__ = '$Revision: 1.17 $'
+__date__    = '$Date: 2010-07-14 08:34:41 $'
+__version__ = '$Revision: 1.18 $'
 
 ## ######################################################################
 ## Defines a configurable to define and configure Hlt2 lines for selecting
@@ -78,6 +78,8 @@ class Hlt2CharmLinesConf(HltLinesConfigurableUser) :
                 , 'KshhTFDDiraLL'           : 0.999      # unitless
                 , 'KshhTFDwKsLLSymMassWin'  : 100.0      # in MeV
                 , 'KshhTFDwKsDDSymMassWin'  : 120.0      # in MeV
+                , 'D02MuMuMinDaughterPt'      : 1          # in GeV
+                , 'D02MuMuMinLifeTime'        : 0.1        # in ps
                 , 'Prescale'                : {
                                                  'Hlt2CharmTF2BodySA' : 0.001
                                                , 'Hlt2CharmTF3BodySA' : 0.001
@@ -91,6 +93,9 @@ class Hlt2CharmLinesConf(HltLinesConfigurableUser) :
                                                , 'Hlt2CharmOSTF2BodyWideMass' : 0.05
                                                , 'Hlt2CharmOSTF3BodyWideMass' : 0.05
                                                , 'Hlt2CharmOSTF4BodyWideMass' : 0.05
+                                               , 'Hlt2CharmD02PiPiForD02MuMu' : 0.01
+                                               , 'Hlt2CharmD02KPiForD02MuMu'  : 0.01
+                                               , 'Hlt2CharmD02KKForD02MuMu'   : 0.01
                                               }
                 , 'Postscale'               : {'Hlt2Charm2BodySA' : 0.002
                                                , 'Hlt2Charm3BodySA' : 0.0005
@@ -128,6 +133,10 @@ class Hlt2CharmLinesConf(HltLinesConfigurableUser) :
                                    ## Kshh' lines
                                    , 'Hlt2CharmTFD2HHKsLLDecision' : 50967
                                    , 'Hlt2CharmTFD2HHKsDDDecision' : 50968
+                                   , 'Hlt2CharmD02MuMuDecision' : 50971
+                                   , 'Hlt2CharmD02PiPiForD02MuMuDecision' : 50972
+                                   , 'Hlt2CharmD02KPiForD02MuMuDecision' : 50973
+                                   , 'Hlt2CharmD02KKForD02MuMuDecision' : 50974
                                    }
                   }
 
@@ -998,3 +1007,54 @@ class Hlt2CharmLinesConf(HltLinesConfigurableUser) :
         self.__makeLine('CharmTFD2HHKsDD' , algos = [ combineKshhTFD2HHKsDD ])
 
 
+        ## D[0 -> mu+ mu-] with pt cut on daughters and life time cut on D0;
+        ## prescaled calibration channels: pi+ pi-, K- pi+, K+ K-
+        ###################################################################
+
+#        D0DaughterCut = "(PT > 1 * GeV)"
+        D0DaughterCut = "(PT > %(D02MuMuMinDaughterPt)s * GeV)" % self.getProps()
+        D0CombinationCut = "(ADAMASS('D0') < 100 * MeV)"
+#        D0MotherCut = "(VFASPF(VCHI2/VDOF) < 100) & (BPVLTFITCHI2() < 100) & (BPVLTIME() > 0.1 * ps)"
+        D0MotherCut = "(VFASPF(VCHI2/VDOF) < 100) & (BPVLTFITCHI2() < 100) & (BPVLTIME() > %(D02MuMuMinLifeTime)s * ps)" % self.getProps()
+
+        from Hlt2SharedParticles.BasicParticles import Muons, NoCutsPions, NoCutsKaons
+
+        D02MuMuCombine = Hlt2Member(CombineParticles
+                                    , 'D02MuMuCombine'
+                                    , DecayDescriptor = '[ D0 -> mu+ mu- ]cc'
+                                    , InputLocations = [ Muons ]
+                                    , DaughtersCuts = { "mu+" : D0DaughterCut }
+                                    , CombinationCut = D0CombinationCut
+                                    , MotherCut = D0MotherCut)
+        self.__makeLine('CharmD02MuMu'
+                        , algos = [ PV3D(), Muons, D02MuMuCombine ])
+
+        D02PiPiForD02MuMuCombine = Hlt2Member(CombineParticles
+                                              , 'D02PiPiForD02MuMuCombine'
+                                              , DecayDescriptor = '[ D0 -> pi+ pi- ]cc'
+                                              , InputLocations = [ NoCutsPions ]
+                                              , DaughtersCuts = { "pi+" : D0DaughterCut }
+                                              , CombinationCut = D0CombinationCut
+                                              , MotherCut = D0MotherCut)
+        self.__makeLine('CharmD02PiPiForD02MuMu'
+                        , algos = [ PV3D(), NoCutsPions, D02PiPiForD02MuMuCombine ])
+
+        D02KPiForD02MuMuCombine = Hlt2Member(CombineParticles
+                                             , 'D02KPiForD02MuMuCombine'
+                                             , DecayDescriptor = '[ D0 -> K+ pi- ]cc'
+                                             , InputLocations = [ NoCutsKaons, NoCutsPions ]
+                                             , DaughtersCuts = { "K+" : D0DaughterCut, "pi+" : D0DaughterCut }
+                                             , CombinationCut = D0CombinationCut
+                                             , MotherCut = D0MotherCut)
+        self.__makeLine('CharmD02KPiForD02MuMu'
+                        , algos = [ PV3D(), NoCutsKaons, NoCutsPions, D02KPiForD02MuMuCombine ])
+
+        D02KKForD02MuMuCombine = Hlt2Member(CombineParticles
+                                            , 'D02KKForD02MuMuCombine'
+                                            , DecayDescriptor = '[ D0 -> K+ K- ]cc'
+                                            , InputLocations = [ NoCutsKaons ]
+                                            , DaughtersCuts = { "K+" : D0DaughterCut }
+                                            , CombinationCut = D0CombinationCut
+                                            , MotherCut = D0MotherCut)
+        self.__makeLine('CharmD02KKForD02MuMu'
+                        , algos = [ PV3D(), NoCutsKaons, D02KKForD02MuMuCombine ])
