@@ -2,6 +2,9 @@
 ! Package manager : Jeroen van Tilburg
 !------------------------------------------------------------------------------
 
+! 2010-07-14 - Jeroen VAN TILBURG
+ - Updated tune for eta correction + new hit error estimates.
+
 ! 2010-07-12 M Needham
  - Add STBeetleStateTransition and STRndmBeetleStateTransition
 

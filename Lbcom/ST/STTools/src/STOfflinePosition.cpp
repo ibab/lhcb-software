@@ -41,13 +41,13 @@ STOfflinePosition::STOfflinePosition(const std::string& type,
                                      const IInterface* parent) :
   ST::ToolBase( type, name, parent )
 {
+  m_errorVec += 0.257, 0.245, 0.277, 0.208;
 
-  //m_errorVec += 0.289, 0.339, 0.322, 0.459;
-  m_errorVec += 0.256, 0.301, 0.322, 0.212;            
   declareProperty("ErrorVec",m_errorVec);
-  declareProperty("LinSharingCorr2",m_linSharingCorr2 = 0.484);
-  declareProperty("CubicSharingCorr2",m_cubicSharingCorr2 = 14.2); 
-  declareProperty("LinSharingCorr4",m_linSharingCorr4 = 0.637);
+  declareProperty("LinSharingCorr2",m_linSharingCorr2 = 0.370);
+  declareProperty("CubicSharingCorr2",m_cubicSharingCorr2 = 15.4); 
+  declareProperty("CubicSharingCorr3",m_cubicSharingCorr3 = 4.433); 
+  declareProperty("LinSharingCorr4",m_linSharingCorr4 = 0.564);
   declareProperty("MaxNtoCorr",m_maxNtoCorr = 4);
   declareProperty("trim", m_trim = 0.0);
   declareProperty("MergeClusters", m_mergeClusters = false );
@@ -196,7 +196,7 @@ STOfflinePosition::estimate(const SmartRefVector<STDigit>& digits) const
 
 double STOfflinePosition::error(const unsigned int nStrips) const
 {
-  // estimate of error                                                           
+  // estimate of error
   double eValue =0.0;
   nStrips < m_errorVec.size() ?  eValue = m_errorVec[nStrips-1] : eValue = m_errorVec.back();
   if (m_APE > 0.0){
@@ -219,7 +219,7 @@ double STOfflinePosition::stripFraction(const double stripNum,
         pow((corStripPos-0.5), 3.0)*m_cubicSharingCorr2 + 0.5;    
     } else if( clusterSize == 3 ) {
       // Cubic term
-      corStripPos = pow((corStripPos-0.5), 3.0)*4.0+0.5;
+      corStripPos = pow((corStripPos-0.5), 3.0)*m_cubicSharingCorr3+0.5;
     } else if( clusterSize == 4 ) {
       // Linear term only
       corStripPos = (corStripPos-0.5)*m_linSharingCorr4+0.5;

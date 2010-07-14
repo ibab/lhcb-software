@@ -65,8 +65,9 @@ private:
   // job options
   std::vector<double> m_errorVec;  ///< Error parametrized by cluster size
   double m_sharingCorr;            ///< Old charge sharing correction factor
-  double m_cubicSharingCorr2;      ///< Corr factor cubic term 2-strip clusters
   double m_linSharingCorr2;        ///< Corr factor linear term 2-strip clusters
+  double m_cubicSharingCorr2;      ///< Corr factor cubic term 2-strip clusters
+  double m_cubicSharingCorr3;      ///< Corr factor cubic term 3-strip clusters
   double m_linSharingCorr4;        ///< Corr factor linear term 4-strip clusters
   int m_maxNtoCorr;                ///< Maximum size of cluster for S-shape corr
   double m_trim;                   ///< Trimming value to suppress cap. coupling
