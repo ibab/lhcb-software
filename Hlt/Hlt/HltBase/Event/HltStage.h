@@ -1,4 +1,4 @@
-// $Id: HltStage.h,v 1.1 2010-07-14 10:48:57 ibelyaev Exp $ 
+// $Id: HltStage.h,v 1.2 2010-07-14 15:14:53 amazurov Exp $ 
 // =============================================================================
 #ifndef HltEvent_Stage_H
 #define HltEvent_Stage_H 1
@@ -120,6 +120,11 @@ public:
    *  @endcode
    */
   template<typename T> const T* get() const;
+
+  /**
+   *  Get a wrapped object (suitable for python)
+   */
+  const ContainedObject* _get() const;
 
   /** Set a wrapped object
    *   @code

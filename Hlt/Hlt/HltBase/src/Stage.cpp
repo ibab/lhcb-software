@@ -1,4 +1,4 @@
-// $Id: Stage.cpp,v 1.1 2010-07-14 10:48:58 ibelyaev Exp $ 
+// $Id: Stage.cpp,v 1.2 2010-07-14 15:14:54 amazurov Exp $ 
 // ============================================================================
 #include "Event/HltStage.h"
 #include <cassert>
@@ -34,6 +34,15 @@ void Stage::SetAllToNull() {
     m_l0_dimuon_candidate = 0;
 }
 
+const ContainedObject* Stage::_get() const {
+  if (is<LHCb::Track> ()) return get<LHCb::Track>();
+  if (is<LHCb::RecVertex> ()) return get<LHCb::RecVertex>();
+  if (is<LHCb::L0CaloCandidate> ()) return get<LHCb::L0CaloCandidate>();
+  if (is<LHCb::L0MuonCandidate> ()) return  get<LHCb::L0MuonCandidate>();
+  if (is<Hlt::MultiTrack> ()) return  get<Hlt::MultiTrack>();
+  if (is<Hlt::L0DiMuonCandidate> ()) return get<Hlt::L0DiMuonCandidate>();
+  return 0;
+}
 void Stage::_lock (const INamedInterface* locker) {
     if (locked()) { 
         throw GaudiException("Stage already locked","Stage::_lock",

@@ -1,4 +1,4 @@
-// $Id: HltCandidate.h,v 1.1 2010-07-14 10:48:57 ibelyaev Exp $ 
+// $Id: HltCandidate.h,v 1.2 2010-07-14 15:14:53 amazurov Exp $ 
 // ============================================================================
 #ifndef HltEvent_Candidate_H
 #define HltEvent_Candidate_H 1
@@ -125,18 +125,16 @@ namespace Hlt
     /** Update  Reference to the stages
      */
     void setStages(const SmartRefVector<Hlt::Stage>& value);
-  
-    /** Add to  reference to the stages
-     */
-    void addToStages(const SmartRef<Hlt::Stage>& value);
-  
+    
     /** Add to (pointer) reference to the stages
      */
     void addToStages(const Hlt::Stage* value);
   
+  
+  
     /** Remove from  reference to the stages
      */
-    void removeFromStages(const SmartRef<Hlt::Stage>& value);
+    void removeFromStages(const Hlt::Stage* value);
   
     /** Clear  Reference to the stages
      */
@@ -230,20 +228,17 @@ inline void Hlt::Candidate::setStages(const SmartRefVector<Hlt::Stage>& value)
   m_stages = value;
 }
 
-inline void Hlt::Candidate::addToStages(const SmartRef<Hlt::Stage>& value)
-{
-  m_stages.push_back(value);
-}
 
 inline void Hlt::Candidate::addToStages(const Hlt::Stage* value)
 {
   m_stages.push_back(value);
 }
 
-inline void Hlt::Candidate::removeFromStages(const SmartRef<Hlt::Stage>& value)
+inline void Hlt::Candidate::removeFromStages(const Hlt::Stage* value)
 {
+  SmartRef<Hlt::Stage> ref(value);
   SmartRefVector<Hlt::Stage>::iterator iter =
-    std::remove(m_stages.begin(), m_stages.end(), value);
+    std::remove(m_stages.begin(), m_stages.end(), ref);
   m_stages.erase(iter, m_stages.end());
 }
 
