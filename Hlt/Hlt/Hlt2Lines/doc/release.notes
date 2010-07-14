@@ -8,6 +8,10 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2010-07-14 - Alexandr Kozlinskiy
+ - Added line D02MuMu to Charm lines with cuts on dau pt and D0 life time,
+   plus prescaled calibration channels PiPi, KPi, KK
+
 !========================== Hlt2Lines v4r2 2010-07-08 ===================
 ! 2010-05-27 - O. Deschamps for R. Lefevre
  - Add Hlt2B2HHPi0Line.py
