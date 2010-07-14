@@ -42,10 +42,16 @@ public:
   virtual ISTClusterPosition::Info estimate(const LHCb::STCluster* 
                                             aCluster) const;
 
+  virtual ISTClusterPosition::Info estimate(const LHCb::STCluster* aCluster,
+                                            const LHCb::StateVector& ) const;
+
   virtual ISTClusterPosition::Info 
   estimate(const SmartRefVector<LHCb::STDigit>& digits) const;
 
   virtual double error(const unsigned int nStrips) const;
+
+  virtual double error(const unsigned int nStrips, 
+                       const LHCb::StateVector&) const;
 
 private:
 

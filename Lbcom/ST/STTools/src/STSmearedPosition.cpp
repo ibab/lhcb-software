@@ -67,15 +67,23 @@ STSmearedPosition::~STSmearedPosition()
   //destructer
 }
 
-ISTClusterPosition::Info STSmearedPosition::estimate( const LHCb::STCluster* 
-                                                     aCluster ) const
+ISTClusterPosition::Info STSmearedPosition::estimate( const STCluster*
+                                                      aCluster ) const
 {
-
   ISTClusterPosition::Info theInfo = m_baseTool->estimate(aCluster);
-  const double newFracPos = applySmear(theInfo.fractionalPosition, theInfo.clusterSize); 
+  const double newFracPos = applySmear(theInfo.fractionalPosition, 
+                                       theInfo.clusterSize); 
   theInfo.fractionalPosition = newFracPos;
   return theInfo;
 }
+
+ISTClusterPosition::Info STSmearedPosition::estimate( const STCluster* aCluster,
+                                                      const StateVector& ) const
+{  
+  return this->estimate( aCluster );
+}
+
+
 
 ISTClusterPosition::Info 
 STSmearedPosition::estimate(const SmartRefVector<LHCb::STDigit>& digits) const
@@ -100,5 +108,8 @@ double STSmearedPosition::error(const unsigned int nStrips) const
  return sqrt (eValue * eValue + corrValue * corrValue);
 }
 
-
-
+double STSmearedPosition::error( const unsigned int nStrips, 
+                                 const StateVector&) const
+{ 
+  return this->error( nStrips );  
+}

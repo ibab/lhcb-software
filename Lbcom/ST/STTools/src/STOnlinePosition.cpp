@@ -65,6 +65,13 @@ ISTClusterPosition::Info STOnlinePosition::estimate( const LHCb::STCluster*
   return theInfo;
 }
 
+ISTClusterPosition::Info STOnlinePosition::estimate(const STCluster* aCluster,
+                                                    const StateVector& ) const
+{  
+  return this->estimate( aCluster );
+}
+
+
 ISTClusterPosition::Info 
 STOnlinePosition::estimate(const SmartRefVector<LHCb::STDigit>& digits) const
 {  
@@ -102,5 +109,8 @@ double STOnlinePosition::error(const unsigned int nStrips) const
  return eValue;
 }
 
-
-
+double STOnlinePosition::error( const unsigned int nStrips, 
+                                const StateVector&) const
+{ 
+  return this->error( nStrips );  
+}

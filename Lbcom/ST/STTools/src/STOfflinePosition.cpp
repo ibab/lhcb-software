@@ -167,6 +167,13 @@ ISTClusterPosition::Info STOfflinePosition::estimate(const STCluster*
 
 }
 
+ISTClusterPosition::Info STOfflinePosition::estimate(const STCluster* aCluster,
+                                                     const StateVector& ) const
+{  
+  return this->estimate( aCluster );
+}
+
+
 ISTClusterPosition::Info
 STOfflinePosition::estimate(const SmartRefVector<STDigit>& digits) const
 {  
@@ -204,6 +211,13 @@ double STOfflinePosition::error(const unsigned int nStrips) const
   }
   return eValue;
 }
+
+double STOfflinePosition::error( const unsigned int nStrips, 
+                                 const StateVector&) const
+{ 
+  return this->error( nStrips );  
+}
+
 
 double STOfflinePosition::stripFraction(const double stripNum,
                                         const unsigned int clusterSize) const
