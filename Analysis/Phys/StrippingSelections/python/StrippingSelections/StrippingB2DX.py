@@ -34,23 +34,19 @@
 # state, only CF is taken: e.g. K-Pi+ combination is always called D0, instead
 # of producing two candidates, D0 and D0bar. In B combinations, both suppressed
 # and favored modes are included (e.g. B+ -> D0bar K+ and B+ -> D0 K+ and c.c.)
-# This results in significant improvement in speed: 166 ms/event compared to 
-# 266 ms/event for L0Hlt1 accepted MB. 
-#
-# This version creates 2*7=14 lines corresponding to 7 different B decay modes
-#   DK, DPi, Drho, DKStar, Dphi with neutral D, and DK, DPi with charged D
-# each in a prescaled and signal variations.  
 #
 # Authors: J. Nardulli & V. Gligorov 
 # Converted to the particle selection framework by A. Poluektov
 #
 
 def B2DXLines(
-        moduleName = "B2DXChi2", 
-        MinDMass = 1768.,               # MeV 
+        moduleName = "B2DXChi2Loose", 
+        MinDAMass = 1748.,              # MeV
+        MaxDAMass = 2088.,              # MeV
+        MinDMass = 1768.,               # MeV
         MaxDMass = 2068.,               # MeV
-        MaxDVertChi2DOF = 10.,          # D vertex Chi2
-        MinDPVVDChi2 = 36.,             # Chi2 of D vertex separation from the related PV
+        MaxDVertChi2DOF = 12.,          # D vertex Chi2
+        MinDPVVDChi2 = 4.,              # Chi2 of D vertex separation from the related PV
         MinSignalDMass = 1840.,         # MeV
         MaxSignalDMass = 1895.,         # MeV
         MinSignalDsMass = 1944.,        # MeV
@@ -58,9 +54,9 @@ def B2DXLines(
 	MinDPt = 1000.,                 # MeV
 	MaxKstarVertChi2DOF = 12.,      # Used for Kstar, phi and rho: vertex chi2
 	MinKstarIPChi2DV = 4.,          # Used for Kstar, phi and rho: min chi2 distance to any PV
-	MaxBVertChi2DOF = 10.,          # B vertex Chi2
-	MaxBPVIPChi2 = 36.,             # chi2 of B impact parameter to the related PV
-	MinBPVVDChi2 = 144.,            # Chi2 of B vertex separation from the related PV
+	MaxBVertChi2DOF = 12.,          # B vertex Chi2
+	MaxBPVIPChi2 = 49.,             # chi2 of B impact parameter to the related PV
+	MinBPVVDChi2 = 4.,              # Chi2 of B vertex separation from the related PV
 	MinBPVDIRA = 0.9995,            # DIRA of the B to the related PV
 	MinBMass = 4800,                # MeV
 	MaxBMass = 5900,                # MeV
@@ -71,19 +67,27 @@ def B2DXLines(
 	MaxDaughterChi2 = 10.,          # Max Chi2 for daughter tracks (D,Kstar,phi,rho decay products)
 	MinDaughterPt = 250.,           # MeV
 	MinDaughterP  = 2000.,          # MeV
-	MinDaughterIPChi2DV = 4.,
+	MinDaughterIPChi2DV = 4.,       # Min Chi2 distance to any PV
 	MaxBachelorChi2 = 10.,          # Max Chi2 for bachelor K/pi track
-	MinBachelorPt = 400.,           # MeV
+	MinBachelorPt = 350.,           # MeV
 	MinBachelorP  = 2000.,          # MeV
-	MinBachelorIPChi2DV = 4.,
+	MinBachelorIPChi2DV = 4.,       # Min Chi2 distance to any PV
 	KsDAMass = 50.,                 # MeV,  Ks inv. mass range for pion combinations before vertex fitting
 	KsDMass = 30.,                  # MeV,  Ks inv. mass range after vertex fitting
 	MaxKsVertChi2DOF = 16.,         # Vertex chi2 for Ks
 	MinD2hhhhDaughterPt = 400.,     # MeV
 	MinD2kpipi0DaughterPt = 400.,   # MeV
+	MinD2hhhhP = 3000.,             # MeV
+	MinD2kpipi0P = 3000.,           # MeV
+	MinD2kpipi0Pt = 2000.,          # MeV
 	MinPi0Pt = 800,                 # MeV
 	MinPi0P  = 4500,                # MeV
-	SidebandPostscale = 0.05
+	SidebandPostscale = 1., 
+	D2hhPrescale = 1., 
+	D2hhhPrescale = 1., 
+	D2hhhhPrescale = 1., 
+	D2KsPrescale = 1., 
+	D2pi0Prescale = 1.
     ) : 
 
     from Configurables import CombineParticles, FilterDesktop
@@ -91,25 +95,19 @@ def B2DXLines(
     from PhysSelPython.Wrappers import Selection, SelectionSequence, DataOnDemand, MergedSelection
 
     #Define the shared cuts
-    Dcut = "((M > %(MinDMass)s*MeV) & (M < %(MaxDMass)s*MeV) & (VFASPF(VCHI2/VDOF)<%(MaxDVertChi2DOF)s) & (BPVVDCHI2 > %(MinDPVVDChi2)s)) " % locals()
-    DSignalcut = "((M > %(MinSignalDMass)s*MeV) & (M < %(MaxSignalDMass)s*MeV)) | ((M > %(MinSignalDsMass)s*MeV ) & (M < %(MaxSignalDsMass)s*MeV))" % locals()
+    Dcut = "(in_range(%(MinDMass)s*MeV, M, %(MaxDMass)s*MeV) & (VFASPF(VCHI2/VDOF)<%(MaxDVertChi2DOF)s) & (BPVVDCHI2 > %(MinDPVVDChi2)s)) " % locals()
+#    Dcut = "((VFASPF(VCHI2/VDOF)<%(MaxDVertChi2DOF)s) & (BPVVDCHI2 > %(MinDPVVDChi2)s)) " % locals()
+    DSignalcut = "(in_range(%(MinSignalDMass)s*MeV, M, %(MaxSignalDMass)s*MeV)) | (in_range(%(MinSignalDsMass)s*MeV, M, %(MaxSignalDsMass)s*MeV))" % locals()
 
-    Dptcut = "PT>%(MinDPt)s*MeV" % locals()
-    Dcombcut = "(A" + Dptcut + ")"   #Common pt cut for D, K*, phi, second version to use
-                                     #before the vertexing  
+    Dcombcut = "((APT>%(MinDPt)s*MeV) & (in_range(%(MinDAMass)s*MeV, AM, %(MaxDAMass)s*MeV)))" % locals()
+#    Dcombcut = "(APT>%(MinDPt)s*MeV)" % locals()
+    KstarCombcut = "(APT>%(MinDPt)s*MeV)" % locals()
+
     KPhiMothercut = "((VFASPF(VCHI2/VDOF) < %(MaxKstarVertChi2DOF)s) & (MIPCHI2DV(PRIMARY) > %(MinKstarIPChi2DV)s))" % locals()
 
-    Kstarcut = "(M > 0)"
-    KstarSignalcut = "(M > 0)" #Removed K* mass cuts for B->DKpi Dalitz analysis 
-                               #funny coding for now, clean all this up 
-                               #this is also why we cannot use any common Kstar 
-
-    Phicut = "(M > 0)"
-    PhiSignalcut = "(M > 0)"
-
     Bcut = "((VFASPF(VCHI2/VDOF)<%(MaxBVertChi2DOF)s)  & (BPVIPCHI2() < %(MaxBPVIPChi2)s) & (BPVVDCHI2 > %(MinBPVVDChi2)s)  & (BPVDIRA > %(MinBPVDIRA)s))" % locals()
-    Bcombcut = "((AM > %(MinBMass)s*MeV) & (AM < %(MaxBMass)s*MeV))" % locals()
-    BSignalcombcut = "((M > %(MinSignalBMass)s*MeV) & (M < %(MaxSignalBMass)s*MeV)) | ((M > %(MinSignalBsMass)s*MeV ) & (M < %(MaxSignalBsMass)s*MeV))" % locals()
+    Bcombcut = "(in_range(%(MinBMass)s*MeV, AM, %(MaxBMass)s*MeV))" % locals()
+    BSignalcombcut = "(in_range(%(MinSignalBMass)s*MeV, M, %(MaxSignalBMass)s*MeV)) | (in_range(%(MinSignalBsMass)s*MeV, M, %(MaxSignalBsMass)s*MeV))" % locals()
 
     Daughtercut = "((TRCHI2DOF<%(MaxDaughterChi2)s) & (PT > %(MinDaughterPt)s*MeV) & (P > %(MinDaughterP)s*MeV) & (MIPCHI2DV(PRIMARY) > %(MinDaughterIPChi2DV)s))" % locals()
     Bachelorcut = "((TRCHI2DOF<%(MaxBachelorChi2)s) & (PT > %(MinBachelorPt)s*MeV) & (P > %(MinBachelorP)s*MeV) & (MIPCHI2DV(PRIMARY) > %(MinBachelorIPChi2DV)s))" % locals()
@@ -147,7 +145,7 @@ def B2DXLines(
     Kstar.DecayDescriptors = [ "[K*(892)0 -> K+ pi-]cc" ]
     Kstar.DaughtersCuts =  { "K+"        : Daughtercut,
                              "pi+"       : Daughtercut }
-    Kstar.CombinationCut = Dcombcut
+    Kstar.CombinationCut = KstarCombcut
     Kstar.MotherCut = KPhiMothercut
     KstarSel = Selection("SelKstarFor" + moduleName, Algorithm = Kstar, RequiredSelections = [ StdPi, StdK ] )
 
@@ -155,7 +153,7 @@ def B2DXLines(
     Rho = CombineParticles("RhoFor" + moduleName)
     Rho.DecayDescriptors = [ "rho(770)0 -> pi+ pi-" ]
     Rho.DaughtersCuts =  { "pi+"       : Daughtercut }
-    Rho.CombinationCut = Dcombcut
+    Rho.CombinationCut = KstarCombcut
     Rho.MotherCut = KPhiMothercut
     RhoSel = Selection("SelRhoFor" + moduleName, Algorithm = Rho, RequiredSelections = [ StdPi ] )
 
@@ -163,7 +161,7 @@ def B2DXLines(
     Phi = CombineParticles("PhiFor" + moduleName)
     Phi.DecayDescriptor = "phi(1020) -> K+ K-"
     Phi.DaughtersCuts =  { "K+"        : Daughtercut}
-    Phi.CombinationCut = Dcombcut
+    Phi.CombinationCut = KstarCombcut
     Phi.MotherCut = KPhiMothercut
     PhiSel = Selection("SelPhiFor" + moduleName, Algorithm = Phi, RequiredSelections = [ StdK ] )
 
@@ -209,9 +207,10 @@ def B2DXLines(
     
     D2KPiPiPi = CombineParticles("D2KPiPiPiFor" + moduleName)
     D2KPiPiPi.DecayDescriptors  = ["[D0 -> K- pi+ pi- pi+]cc" ]
-    D2KPiPiPi.DaughtersCuts = { "K+"        : Daughtercut+ "& (PT>400*MeV)","pi+"        : Daughtercut+ "& (PT>400*MeV)"}
+    D2KPiPiPi.DaughtersCuts = { "K+"        : Daughtercut+ "& (PT>%(MinD2hhhhDaughterPt)s*MeV)" % locals(),
+                                "pi+"       : Daughtercut+ "& (PT>%(MinD2hhhhDaughterPt)s*MeV)" % locals() }
     D2KPiPiPi.CombinationCut =  Dcombcut
-    D2KPiPiPi.MotherCut = Dcut+" & (BPVDIRA>0) & (P>3000*MeV)"
+    D2KPiPiPi.MotherCut = Dcut+" & (BPVDIRA>0) & (P>%(MinD2hhhhP)s*MeV)" % locals()
     D2KPiPiPiSel = Selection("SelD2KPiPiPiFor" + moduleName, Algorithm = D2KPiPiPi, RequiredSelections = [ StdPi, StdK ] )
 
     D2KKPiPi = D2KPiPiPi.clone("D2KKPiPiFor" + moduleName, DecayDescriptors  = ["D0 -> K- K+ pi- pi+"] )
@@ -220,11 +219,11 @@ def B2DXLines(
     # D -> KPiPi0
     D2KPiPi0 = CombineParticles("D2KPiPi0For" + moduleName)
     D2KPiPi0.DecayDescriptors = [ "[D0 -> K- pi+ pi0]cc" ] 
-    D2KPiPi0.DaughtersCuts = { "K-"        : Daughtercut + "& (PT>400*MeV)",
-                               "pi+"       : Daughtercut + "& (PT>400*MeV)",
-                               "pi0": "(PT>800*MeV) & (P>4500*MeV)"}
-    D2KPiPi0.CombinationCut =  "(APT>2000*MeV)"
-    D2KPiPi0.MotherCut = Dcut+" & (BPVDIRA>0) & (P>3000*MeV)"
+    D2KPiPi0.DaughtersCuts = { "K-"        : Daughtercut + "& (PT>%(MinD2kpipi0DaughterPt)s*MeV)" % locals(),
+                               "pi+"       : Daughtercut + "& (PT>%(MinD2kpipi0DaughterPt)s*MeV)" % locals(),
+                               "pi0": "(PT>%(MinPi0Pt)s*MeV) & (P>%(MinPi0P)s*MeV)" % locals() }
+    D2KPiPi0.CombinationCut =  ("(APT>%(MinD2kpipi0Pt)s*MeV) & " % locals()) + Dcombcut
+    D2KPiPi0.MotherCut = Dcut+" & (BPVDIRA>0) & (P>%(MinD2kpipi0P)s*MeV)" % locals()
     D2KPiPi0Sel = Selection("SelD2KPiPi0For" + moduleName, Algorithm = D2KPiPi0, RequiredSelections = [ StdPi, StdK, StdPi0 ] )
 
     # D->Kshh
@@ -241,113 +240,109 @@ def B2DXLines(
     D2KsKPi = D2KsPiPi.clone("D2KsKPiFor" + moduleName, DecayDescriptors = [ "[D0 -> KS0 K+ pi-]cc" ] )
     D2KsKPiSel = Selection("SelD2KsKPiFor" + moduleName, Algorithm = D2KsKPi, RequiredSelections = [ KsSel, StdK, StdPi ] )
 
-
     # Dictionary of D0 selections: "name" : "list of selections"
     # Selections under each "name" will be merged for a single B selection
 
-#    D0Selections = { 
-#      "D2KPi"       : [ D2KPiSel ], 
-#      "D2PiPi"      : [ D2PiPiSel ], 
-#      "D2KK"        : [ D2KKSel ], 
-#      "D2KPiPiPi"   : [ D2KPiPiPiSel ], 
-#      "D2KKPiPi"    : [ D2KKPiPiSel ], 
-#      "D2KPiPi0"    : [ D2KPiPi0Sel ], 
-#      "D2KsPiPi"    : [ D2KsPiPiSel ],  
-#      "D2KsKK"      : [ D2KsKKSel ],  
-#      "D2KsKPi"     : [ D2KsKPiSel ]
-#    }
-
     D0Selections = {
-      "D0" : [ D2KPiSel, D2PiPiSel, D2KKSel, 
-               D2KPiPiPiSel, D2KKPiPiSel, 
-               D2KPiPi0Sel, 
-               D2KsPiPiSel, D2KsKKSel, D2KsKPiSel ]
+      "D2hh"   : [ D2KPiSel, D2PiPiSel, D2KKSel ], 
+      "D2Ks"   : [ D2KsPiPiSel, D2KsKKSel, D2KsKPiSel ], 
+      "D2pi0"  : [ D2KPiPi0Sel ], 
+      "D2hhhh" : [ D2KPiPiPiSel, D2KKPiPiSel ]
     }
 
     # List of B selections
 
-    BSelections = []
+    BSelections = {}
 
     for name,selections in D0Selections.iteritems() : 
 
-        DSel = MergedSelection("Sel" + name + "For" + moduleName, 
+	BSelections[name] = []
+
+        DSel = MergedSelection("Merged" + name + "For" + moduleName, 
                                RequiredSelections = selections )
     
 	B2DPi = CombineParticles("B2DPiWith" + name + "For" + moduleName)
 	B2DPi.DecayDescriptors = [ "[B+ -> D~0 pi+]cc", "[B+ -> D0 pi+]cc" ]
-        B2DPi.DaughtersCuts = { "D0" : Dcut , "pi+" : Bachelorcut }
+        B2DPi.DaughtersCuts = { "D0" : Dcut , 
+                                "pi+" : Bachelorcut }
         B2DPi.CombinationCut = Bcombcut
         B2DPi.MotherCut = Bcut
         B2DPiSel = Selection("SelB2DPiWith" + name + "For" + moduleName, Algorithm = B2DPi, 
                         RequiredSelections = [ DSel, BachelorPiSel] )
-        BSelections.append(B2DPiSel)
+        BSelections[name].append(B2DPiSel)
 
 	B2DK = B2DPi.clone("B2DKWith" + name + "For" + moduleName, 
-	                   DaughtersCuts = { "D0" : Dcut , "K+" : Bachelorcut }, 
+	                   DaughtersCuts = { "D0" : Dcut , 
+	                                     "K+" : Bachelorcut }, 
 	                   DecayDescriptors = [ "[B+ -> D~0 K+]cc", "[B+ -> D0 K+]cc" ] ) 
         B2DKSel = Selection("SelB2DKWith" + name + "For" + moduleName, Algorithm = B2DK, 
                         RequiredSelections = [ DSel, BachelorKSel] )
-        BSelections.append(B2DKSel)
+        BSelections[name].append(B2DKSel)
 
 	B2DKstar = B2DPi.clone("B2DKstarWith" + name + "For" + moduleName, 
-	                   DaughtersCuts = { "D0" : Dcut , "K*(892)0" : Kstarcut }, 
+	                   DaughtersCuts = { "D0" : Dcut 
+	                                   }, 
 	                   DecayDescriptors = [ "[B0 -> D~0 K*(892)0]cc", "[B0 -> D0 K*(892)0]cc" ] ) 
         B2DKstarSel = Selection("SelB2DKstarWith" + name + "For" + moduleName, Algorithm = B2DKstar, 
                         RequiredSelections = [ DSel, KstarSel] )
-        BSelections.append(B2DKstarSel)
+        BSelections[name].append(B2DKstarSel)
 
 	B2DRho = B2DPi.clone("B2DRhoWith" + name + "For" + moduleName, 
-	                   DaughtersCuts = { "D0" : Dcut , "rho(770)0" : Kstarcut }, 
+	                   DaughtersCuts = { "D0" : Dcut 
+	                                   }, 
 	                   DecayDescriptors = [ "B0 -> D~0 rho(770)0", "B0 -> D0 rho(770)0" ] ) 
         B2DRhoSel = Selection("SelB2DRhoWith" + name + "For" + moduleName, Algorithm = B2DRho, 
                         RequiredSelections = [ DSel, RhoSel] )
-        BSelections.append(B2DRhoSel)
+        BSelections[name].append(B2DRhoSel)
 
 	B2DPhi = B2DPi.clone("B2DPhiWith" + name + "For" + moduleName, 
-	                   DaughtersCuts = { "D0" : Dcut , "phi(1020)": Phicut } , 
+	                   DaughtersCuts = { "D0" : Dcut 
+	                                   } , 
 	                   DecayDescriptors = [ "B0 -> D~0 phi(1020)", "B0 -> D0 phi(1020)" ] ) 
         B2DPhiSel = Selection("SelB2DPhiWith" + name + "For" + moduleName, Algorithm = B2DPhi, 
                         RequiredSelections = [ DSel, PhiSel] )
-        BSelections.append(B2DPhiSel)
+        BSelections[name].append(B2DPhiSel)
 
     # Dictionary of charged D selections
 
-#    DcSelections = { 
-#      "D2KPiPi"       : [ D2KPiPiSel ], 
-#      "D2PiPiPi"      : [ D2PiPiPiSel ], 
-#      "D2KKPi"        : [ D2KKPiSel ], 
-#      "D2KPiPiDCS"    : [ D2KPiPiDCSSel ]
-#    } 
-
     DcSelections = {
-       "Dch"           : [ D2KPiPiSel, D2PiPiPiSel, D2KKPiSel, D2KPiPiDCSSel ]
+       "D2hhh"           : [ D2KPiPiSel, D2PiPiPiSel, D2KKPiSel, D2KPiPiDCSSel ]
     }
 
     for name,selections in DcSelections.iteritems() : 
 
-        DSel = MergedSelection("Sel" + name + "For" + moduleName, 
+	BSelections[name] = []
+
+        DSel = MergedSelection("Merged" + name + "For" + moduleName, 
                                RequiredSelections = selections )
 
 	B2DPi = CombineParticles("B2DPiWith" + name + "For" + moduleName)
 	B2DPi.DecayDescriptors = [ "[B0 -> D- pi+]cc" ]
-        B2DPi.DaughtersCuts = { "D0" : Dcut , "pi+" : Bachelorcut }
+        B2DPi.DaughtersCuts = { "D0" : Dcut , 
+                                "pi+" : Bachelorcut }
         B2DPi.CombinationCut = Bcombcut
         B2DPi.MotherCut = Bcut
         B2DPiSel = Selection("SelB2DPiWith" + name + "For" + moduleName, Algorithm = B2DPi, 
                         RequiredSelections = [ DSel, BachelorPiSel] )
-        BSelections.append(B2DPiSel)
+        BSelections[name].append(B2DPiSel)
 
 	B2DK = B2DPi.clone("B2DKWith" + name + "For" + moduleName, 
-	                   DaughtersCuts = { "D0" : Dcut , "K+" : Bachelorcut }, 
+	                   DaughtersCuts = { "D0" : Dcut , 
+	                                     "K+" : Bachelorcut }, 
 	                   DecayDescriptors = [ "[B0 -> D- K+]cc" ] ) 
         B2DKSel = Selection("SelB2DKWith" + name + "For" + moduleName, Algorithm = B2DK, 
                         RequiredSelections = [ DSel, BachelorKSel] )
-        BSelections.append(B2DKSel)
+        BSelections[name].append(B2DKSel)
 
-    # For now, we merge all B selections to create one line
+    # For now, we merge all B selections to create one line for each set of D modes
 
-#    BSel = MergedSelection("Sel" + moduleName, 
-#                           RequiredSelections = BSelections )
+    BMergedSel = []
+
+    for name,list in BSelections.iteritems() : 
+
+	BSel = MergedSelection(moduleName + "With" + name, 
+                               RequiredSelections = list )
+        BMergedSel.append(BSel)
 
     ########################################################################
     ########################################################################
@@ -360,20 +355,32 @@ def B2DXLines(
     ########################################################################
 
     B2DXSignal = FilterDesktop("B2DXSignalFilterFor" + moduleName)
-    B2DXSignal.Code = BSignalcombcut + "&" + "INTREE(((ABSID == 'D0') | (ABSID == 'D+')) & " + DSignalcut + ")" + "&" + "(INTREE((ABSID == 'K*(892)0') &" + KstarSignalcut + ") | INTREE((ABSID == 'phi(1020)') &" + PhiSignalcut + ") | INGENERATION(ABSID == 'K+',1) | INGENERATION(ABSID == 'pi+',1))"
+    B2DXSignal.Code = BSignalcombcut + "&" + "INTREE(((ABSID == 'D0') | (ABSID == 'D+')) & " + DSignalcut + ")"
+
+    B2DXSideband = FilterDesktop("B2DXSidebandFilterFor" + moduleName)
+    B2DXSideband.Code = "ALL"
 
     lines = []
 
-    for selection in BSelections : 
+    for selection in BMergedSel : 
 
         BSignalSel = Selection(selection.name() + "Signal", Algorithm = B2DXSignal, RequiredSelections = [ selection ] ) 
 
-        line = StrippingLine(selection.name()+"Line", prescale = 1.0, 
-                algos = [ selection ], postscale = "%(SidebandPostscale)s" % locals() )
+        BSidebandSel = Selection(selection.name() + "Sideband", Algorithm = B2DXSideband, RequiredSelections = [ selection ] ) 
+
+	prescaleFactor = 1.0
+	if selection.name() == moduleName + "WithD2hh"  : prescaleFactor = "%(D2hhPrescale)s" % locals()
+	if selection.name() == moduleName + "WithD2hhh" : prescaleFactor = "%(D2hhhPrescale)s" % locals()
+	if selection.name() == moduleName + "WithD2hhhh": prescaleFactor = "%(D2hhhhPrescale)s" % locals()
+	if selection.name() == moduleName + "WithD2Ks"  : prescaleFactor = "%(D2KsPrescale)s" % locals()
+	if selection.name() == moduleName + "WithD2pi0" : prescaleFactor = "%(D2pi0Prescale)s" % locals()
+
+        line = StrippingLine(selection.name()+"Line", prescale = prescaleFactor, 
+                algos = [ BSidebandSel ], postscale = "%(SidebandPostscale)s" % locals() )
 
         lines.append( line )
 
-        signalLine = StrippingLine(BSignalSel.name()+"Line", prescale = 1.0, 
+        signalLine = StrippingLine(BSignalSel.name()+"Line", prescale = prescaleFactor, 
                 algos = [ BSignalSel ] )
             
         lines.append( signalLine )

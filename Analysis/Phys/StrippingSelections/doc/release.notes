@@ -5,6 +5,13 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-07-14 - Anton Poluektov 
+ - Updated StrippingB2DX lines: 
+   * Now there are 10 lines, with D->hh, D->hhh, D->hhhh, D->Kshh and D->hhpi0, 
+     each with wide and signal D mass window. 
+   * Speed improved by using AM cut before D vertex fit (now ~10 ms/event with benchmark data)
+   * Wide D mass lines are not prescaled by default
+
 ! 2010-07-14 - Sebastian Schleich
  - removed PV requirement in InclPhiStripping, adjusted Mass/Pt windows and prescales
 

@@ -14,12 +14,6 @@ from StrippingConf.StrippingStream import StrippingStream
 
 from StrippingSelections import StrippingB2Charged2Body
 from StrippingSelections.StrippingB02D0Kstar_D02KPiPi0 import StrippingB02D0Kstar_D02KPiPi0Conf
-from StrippingSelections import StrippingB2DPi
-from StrippingSelections import StrippingB2DPiChi2
-from StrippingSelections import StrippingB2DPiChi2NOMWPres
-from StrippingSelections import StrippingB2DPiChi2NOMWPresLoose
-from StrippingSelections import StrippingB2DPiChi2Loose
-from StrippingSelections import StrippingB2DPiLoose
 from StrippingSelections import StrippingB2D3Pi
 from StrippingSelections.StrippingBs2PhiPhi import StrippingBs2PhiPhiConf #from StrippingSelections import StrippingBs2PhiPhi
 from StrippingSelections.StrippingBu2D0K_D02KSPiPi import StrippingBu2D0K_D02KSPiPiConf
@@ -32,18 +26,13 @@ from StrippingSelections import StrippingTopo
 from StrippingSelections.StrippingBs2Kst0Kst0 import StrippingBs2KstKstConf
 from StrippingSelections.StrippingBs2PhiKst0 import StrippingBs2PhiKstConf
 from StrippingSelections.StrippingB2hhLTUnbiased import StrippingB2hhLTUnbiasedConf
+from StrippingSelections.StrippingB2DX import B2DXLines
 
 stream = StrippingStream("Bhadron")
 stream.appendLines( [ 
 		        StrippingB2Charged2Body.line,  
 		        StrippingB2Charged2Body.line1,  
 		        StrippingB2Charged2Body.line2,  
-                        StrippingB2DPiChi2.line1,
-                        StrippingB2DPiChi2.line2,
-                        StrippingB2DPiChi2Loose.line1,
-                        StrippingB2DPiChi2Loose.line2,
-                        StrippingB2DPiChi2NOMWPres.line1,
-                        StrippingB2DPiChi2NOMWPresLoose.line1,
                         StrippingB2D3Pi.line1,
                         StrippingB2D3Pi.line2,
 			StrippingBs2PhiPhiConf().normal(),  #StrippingBs2PhiPhi.line1, 
@@ -71,3 +60,5 @@ stream.appendLines( [
 			StrippingB02D0Kstar_D02KPiPi0Conf().NominalResolved_Line(),
 			StrippingB02D0Kstar_D02KPiPi0Conf().NominalMerged_Line()
 		    ] )
+
+stream.appendLines( B2DXLines() ) # B2DX lines with default cuts
