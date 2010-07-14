@@ -229,8 +229,7 @@ StatusCode TrackExpectedHitsXYZTool::execute(
 	    ; // not implemented yet
 	}
     } catch (CollectionFailure f) {
-	info() << f.what() << endreq;
-	return StatusCode::FAILURE;
+	return Warning( f.what(), StatusCode::FAILURE, 0 ); 
     }
     return StatusCode::SUCCESS;
 }

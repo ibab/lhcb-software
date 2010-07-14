@@ -3,6 +3,9 @@
 ! Responsible : Wouter Hulsbergen, Stephanie Hansmann-Menzemer
 ! Purpose     : Package for track data quality monitoring algorithms
 !-----------------------------------------------------------------------------
+! 2010-07-14 Georg Alexander Krocker
+ - Fixed output in TrackExpectedXYZTool
+
 ! 2010-07-13 Georg Alexander Krocker
  - Fixed warnings in compilation of HitEffPlotter and trackexpectedXYZTool
  - Fixed compilation issue in WIN32
