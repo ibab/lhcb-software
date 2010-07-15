@@ -1,9 +1,9 @@
 // $Id: RecInit.cpp,v 1.8 2009-03-05 14:51:27 cattanem Exp $
-// Include files 
+// Include files
 
 // from Gaudi
 #include "GaudiKernel/GaudiException.h"
-#include "GaudiKernel/AlgFactory.h" 
+#include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/Incident.h"
 #include "GaudiKernel/IIncidentSvc.h"
 #include "GaudiAlg/IGenericTool.h"
@@ -45,13 +45,14 @@ RecInit::RecInit( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-RecInit::~RecInit() {} 
+RecInit::~RecInit() {}
 
 //=============================================================================
 // Initialization
 //=============================================================================
-StatusCode RecInit::initialize() {
-  StatusCode sc = LbAppInit::initialize(); // must be executed first
+StatusCode RecInit::initialize()
+{
+  const StatusCode sc = LbAppInit::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
   debug() << "==> Initialize" << endmsg;
@@ -62,14 +63,14 @@ StatusCode RecInit::initialize() {
   // Pointer to IncidentSvc
   m_incidentSvc = svc<IIncidentSvc>("IncidentSvc",true);
 
-  return StatusCode::SUCCESS;
+  return sc;
 }
 
 //=============================================================================
 // Main execution
 //=============================================================================
-StatusCode RecInit::execute() {
-
+StatusCode RecInit::execute()
+{
   StatusCode sc = LbAppInit::execute(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by LbAppInit
 
@@ -79,28 +80,29 @@ StatusCode RecInit::execute() {
 
   // Get the run and event number from the ODIN bank
   LHCb::ODIN* odin = 0;
-  try {
+  try
+  {
     odin = get<LHCb::ODIN> ( LHCb::ODINLocation::Default );
   }
-  
-  catch( const GaudiException& Exception ) {
+
+  catch( const GaudiException& Exception )
+  {
     m_incidentSvc->fireIncident(Incident(name(),IncidentType::AbortEvent));
-    this->setFilterPassed( false );    
+    this->setFilterPassed( false );
     //dummy printout to remove warning in windows..
     if(msgLevel(MSG::DEBUG)) debug() << Exception.message() << endmsg;
     return Error( "ODIN missing, skipping event", StatusCode::SUCCESS );
   }
-  
-  unsigned int runNumber = odin->runNumber();
-  ulonglong    evtNumber = odin->eventNumber();
-  
+
+  const unsigned int runNumber = odin->runNumber();
+  const ulonglong    evtNumber = odin->eventNumber();
+
   this->printEventRun( evtNumber, runNumber, 0, odin->eventTime() );
 
   // Initialize the random number
   std::vector<long int> seeds = getSeeds( runNumber, evtNumber );
   sc = this->initRndm( seeds );
   if ( sc.isFailure() ) return sc;  // error printed already by initRndm
-
 
   // Create the Reconstruction event header
   LHCb::RecHeader* header = new LHCb::RecHeader();
@@ -113,12 +115,13 @@ StatusCode RecInit::execute() {
   put( header, LHCb::RecHeaderLocation::Default );
 
   // Create a ProcStatus if it does not already exist
-  if( !exist<LHCb::ProcStatus>( LHCb::ProcStatusLocation::Default ) ) {
+  if( !exist<LHCb::ProcStatus>( LHCb::ProcStatusLocation::Default ) ) 
+  {
     LHCb::ProcStatus* procStat = new LHCb::ProcStatus();
     put( procStat, LHCb::ProcStatusLocation::Default );
   }
 
-  return StatusCode::SUCCESS;
+  return sc;
 }
 
 //=============================================================================
