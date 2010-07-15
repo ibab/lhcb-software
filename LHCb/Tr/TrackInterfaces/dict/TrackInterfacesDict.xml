@@ -15,6 +15,7 @@
   <class name    = "IPVOfflineTool"          />
   <class name    = "IRecVertexFunctionTool"  />
   <class name    = "IStateCorrectionTool"    />
+  <class name    = "ISTClusterPosition"      />
   <class name    = "ITrackCaloMatch"         />
   <class name    = "ITrackChi2Calculator"    />
   <class name    = "ITrackCloneFinder"       />
