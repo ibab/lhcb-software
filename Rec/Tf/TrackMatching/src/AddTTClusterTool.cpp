@@ -30,10 +30,10 @@
 // from LHCbKernel
 #include "Kernel/ITrajPoca.h"
 #include "Kernel/Trajectory.h"
-#include "Kernel/ISTClusterPosition.h"
 
 // from TrackInterfaces
 #include "TrackInterfaces/ITrackExtrapolator.h"
+#include "TrackInterfaces/ISTClusterPosition.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : AddTTClusterTool
