@@ -3,6 +3,9 @@
 ! Responsible : M Needham
 ! Purpose     : Tsa algorithms
 !----------------------------------------------------------------------------
+! 2010-07-15 - Stephanie Hansmann-Menzemer
+ - use new more detailed procStatus interface
+
 ! 2010-06-25 - Stephanie Hansmann-Menzemer
  - set procStat->setAbort(true) for busy events
 
