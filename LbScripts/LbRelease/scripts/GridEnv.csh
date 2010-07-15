@@ -16,7 +16,7 @@ if ( $?rh ) then
   else if ( $rh == "slc4_amd64" ) then
       source /afs/cern.ch/project/gd/LCG-share/sl4/etc/profile.d/grid_env.csh
   else if ( $rh == "x86_64-slc5-gcc43-opt" ) then
-      source /afs/cern.ch/project/gd/LCG-share/sl5/etc/profile.d/grid_env.csh
+      source /afs/cern.ch/project/gd/LCG-share/sl4/etc/profile.d/grid_env.csh
   else
       echo "$CMTCONFIG not known, use the current UI settings"
       source /afs/cern.ch/project/gd/LCG-share/sl4/etc/profile.d/grid_env.csh
