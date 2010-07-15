@@ -1,7 +1,6 @@
-// $Id: Stage.cpp,v 1.2 2010-07-14 15:14:54 amazurov Exp $ 
+// $Id: Stage.cpp,v 1.3 2010-07-15 16:06:42 amazurov Exp $ 
 // ============================================================================
 #include "Event/HltStage.h"
-#include <cassert>
 
 namespace Hlt {
 Stage::Lock::Lock (  Stage* stage , const INamedInterface* locker) { 
@@ -67,16 +66,18 @@ void Stage::_unlock (const INamedInterface* locker) {
 std::ostream& Stage::fillStream(std::ostream& s) const {
   if (is<LHCb::Track> ())
     s << "Track " << get<LHCb::Track> ();
-  if (is<LHCb::RecVertex> ())
+  else  if (is<LHCb::RecVertex> ())
     s << "RecVertex " << get<LHCb::RecVertex> ();
-  if (is<LHCb::L0CaloCandidate> ())
+  else if (is<LHCb::L0CaloCandidate> ())
     s << "L0CaloCandidate " << get<LHCb::L0CaloCandidate> ();
-  if (is<LHCb::L0MuonCandidate> ())
+  else if (is<LHCb::L0MuonCandidate> ())
     s << "L0MuonCandidate  " << get<LHCb::L0MuonCandidate> ();
-  if (is<Hlt::MultiTrack> ())
+  else if (is<Hlt::MultiTrack> ())
     s << "MultiTrack " << get<Hlt::MultiTrack> ();
-  if (is<Hlt::L0DiMuonCandidate> ())
+  else if (is<Hlt::L0DiMuonCandidate> ())
     s << "L0DiMuonCandidate " << get<Hlt::L0DiMuonCandidate> ();
+  else s << "NULL";
+
 
   s <<  ", " << m_cache;
   s << ", history: [";

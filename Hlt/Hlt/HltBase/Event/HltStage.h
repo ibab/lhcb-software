@@ -1,4 +1,4 @@
-// $Id: HltStage.h,v 1.2 2010-07-14 15:14:53 amazurov Exp $ 
+// $Id: HltStage.h,v 1.3 2010-07-15 16:06:42 amazurov Exp $ 
 // =============================================================================
 #ifndef HltEvent_Stage_H
 #define HltEvent_Stage_H 1
@@ -199,31 +199,26 @@ public:
    * @brief Add value with the specified type and key
    * @return true if value was added and false if we try insert an existing key
    */
-  template<typename T>
-    bool insertInfo(const std::string& key, const T& value) {
-      _checkLock();
-      return m_cache.insert<T>(key, value);
-    }
+  template<typename T> bool insertInfo(const std::string&key,const T& value);
+ 
 // =============================================================================
-  /**
-   * @brief Update a cached value with the specified type and key. If the value
-   * with the same key already exists it will be replaced.
+   /**
+   * @brief Update  value with the specified type and key
    */
-  template<typename T>
-    void updateInfo(const std::string& key, const T& value) {
-      _checkLock();
-      return m_cache.update<T>(key, value);
-    }
+  template<typename T> void updateInfo(const std::string& key, 
+                                                                const T& value);
+ 
+ 
 // =============================================================================
   /**
    * @brief Get a cached value associated with the specified type and key.
    * @returns The value associated with the specified type and key. If the such
    * value does not exists def is returned.
    */
-  template<typename T>
-    T info(const std::string& key, const T& default_value) const {
-        return m_cache.info<T>(key, default_value);
-    }
+    template<typename T>
+       T info(const std::string& key, const T& default_value) const;
+
+   
 // =============================================================================
   /**
    * @brief Erase all cached values with the specified key
@@ -247,8 +242,9 @@ public:
   const INamedInterface* locked() const { return m_locker; }
 // =============================================================================
 protected:
-
+// =============================================================================
 private:
+// =============================================================================
   SmartRef<LHCb::Track> m_track;
   SmartRef<LHCb::RecVertex> m_rec_vertex;
   SmartRef<LHCb::L0CaloCandidate> m_l0_calo_candidate;
@@ -265,9 +261,19 @@ private:
   void _lock (const INamedInterface* locker);
   void _unlock (const INamedInterface* locker);
   void _checkLock() const;
-
+  
+ template<typename T>
+    bool _insertInfo(const std::string& key, const T& value);
+  
+ template<typename T>
+    void _updateInfo(const std::string& key, const T& value);
+ 
+  template<typename T>
+    T _info(const std::string& key, const T& default_value) const;
+ 
+// =============================================================================
 }; // class Stage
-
+// =============================================================================
 
 /// Definition of vector container type for Stage
 typedef ObjectVector<Stage> Stages;
@@ -370,9 +376,85 @@ template<> inline
       bool Hlt::Stage::is<Hlt::L0DiMuonCandidate>() const {
   return m_l0_dimuon_candidate != 0;
 }
-
 // =============================================================================
-} // namespace LHCb;
+template<typename T> inline
+    bool Stage::_insertInfo(const std::string& key, const T& value) {
+      _checkLock();
+      return m_cache.insert<T>(key, value);
+    }
+
+template<> inline
+    bool Stage::insertInfo(const std::string &key, const bool& value){
+      return _insertInfo(key, value);
+}
+
+template<> inline
+    bool Stage::insertInfo(const std::string &key, const int& value){
+      return _insertInfo(key, value);
+}
+
+template<> inline
+    bool Stage::insertInfo(const std::string &key, const double& value) {
+      return _insertInfo(key, value);
+}
+template<> inline
+    bool Stage::insertInfo(const std::string &key, const std::string& value){
+      return _insertInfo(key, value);
+}
+// =============================================================================
+template<typename T> inline
+    void Stage::_updateInfo(const std::string& key, const T& value) {
+      _checkLock();
+       m_cache.update<T>(key, value);
+}
+
+template<> inline
+  void Stage::updateInfo(const std::string& key, const bool& value) {
+       _updateInfo(key,value);
+}
+
+template<> inline
+  void Stage::updateInfo(const std::string& key, const int& value) {
+       _updateInfo(key,value);
+}
+
+template<> inline
+  void Stage::updateInfo(const std::string& key, const double& value) {
+       _updateInfo(key,value);
+}
+
+template<> inline
+  void Stage::updateInfo(const std::string& key, const std::string& value) {
+       _updateInfo(key,value);
+}
+// =============================================================================
+template<typename T> inline
+    T Stage::_info(const std::string& key, const T& default_value) const {
+        return m_cache.info<T>(key, default_value);
+}
+
+template<> inline
+ bool Stage::info(const std::string& key, const bool& default_value) const {
+        return _info(key, default_value);
+}
+
+template<> inline
+ int Stage::info(const std::string& key, const int& default_value) const {
+        return _info(key, default_value);
+}
+
+template<> inline
+ double Stage::info(const std::string& key, const double& default_value) const {
+        return _info(key, default_value);
+}
+
+template<> inline
+ std::string Stage::info(const std::string& key, 
+                                       const std::string& default_value) const {
+        return _info(key, default_value);
+}
+// =============================================================================
+} // namespace Hlt
 
 // -----------------------------------------------------------------------------
 // end of class

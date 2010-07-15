@@ -8,14 +8,12 @@
  * @brief  Cache implementation for stage objects
  */
 // =============================================================================
-#include <boost/variant.hpp>
-#include <boost/foreach.hpp>
-// =============================================================================
 #include <string>
 #include <map>
 #include <vector>
 #include <ostream>
 // =============================================================================
+#include "GaudiKernel/StatusCode.h"
 #include "GaudiKernel/StringKey.h"
 #include "GaudiKernel/VectorMap.h"
 #include "GaudiKernel/ToStream.h"
@@ -83,11 +81,16 @@ class Cache
    * value does not exists def is returned.
    */
   template<typename T> T info(const StringKey& key, const T& def) const;
-
+  
+   /**
+    * @brief Cache to string 
+    * 
+    */
+  std::string toString() const;
    /**
     * @brief Fill the ASCII output stream
     */
-  virtual std::ostream& fillStream(std::ostream& s) const;
+  std::ostream& fillStream(std::ostream& s) const;
 // =============================================================================
  private:
 // =============================================================================
@@ -205,7 +208,7 @@ inline bool Cache::has(const StringKey& key) const {
   return has_<bool>(key) || has_<int>(key) || has_<double>(key) ||
       has_<std::string>(key);
 }
-
+// =============================================================================
 inline void Cache::erase(const StringKey& key) {
   m_boolean_store.erase(key);
   m_integer_store.erase(key);
@@ -213,73 +216,17 @@ inline void Cache::erase(const StringKey& key) {
   m_string_store.erase(key);
 }
 
-inline const std::vector<const StringKey*> Cache::keys() const{
-  std::vector<const StringKey*> result;
-  BOOST_FOREACH (BooleanMap::reference value, m_boolean_store){
-    result.push_back(&value.first);
-  }
-  BOOST_FOREACH (IntegerMap::reference value, m_integer_store){
-      result.push_back(&value.first);
-    }
-  BOOST_FOREACH (DoubleMap::reference value, m_double_store){
-      result.push_back(&value.first);
-    }
-
-  BOOST_FOREACH (StringMap::reference value, m_string_store){
-      result.push_back(&value.first);
-    }
-  return result;
-}
 // =============================================================================
 inline std::ostream& operator << (std::ostream& str, const Cache& obj) {
   return obj.fillStream(str);
 }
 // =============================================================================
-inline std::ostream& Cache::fillStream(std::ostream& s) const
-{
-  std::string delim = "";
-  s << "Cache {";
-  BOOST_FOREACH (BooleanMap::reference value, m_boolean_store){
-    s << delim;
-    Gaudi::Utils::toStream(value.first, s);
-    s << ": ";
-    Gaudi::Utils::toStream(value.second,s);
-    delim = ", ";
-  }
-  BOOST_FOREACH (IntegerMap::reference value, m_integer_store){
-    s << delim;
-    Gaudi::Utils::toStream(value.first, s);
-    s<< ": ";
-    Gaudi::Utils::toStream(value.second, s);
-    delim = ", ";
-  }
-  BOOST_FOREACH (DoubleMap::reference value, m_double_store){
-      s << delim;
-      Gaudi::Utils::toStream(value.first, s);
-      s << ": ";
-      Gaudi::Utils::toStream(value.second, s);
-      delim = ", ";
-  }
-
-  BOOST_FOREACH (StringMap::reference value, m_string_store){
-      s << delim;
-      Gaudi::Utils::toStream(value.first, s);
-      s << ": ";
-      Gaudi::Utils::toStream(value.second, s);
-      delim = ", ";
-  }
-  s << "}";
-  s << " CacheKeys [";
-  delim = "";
-  BOOST_FOREACH(const StringKey* key, keys()) {
-    s << delim;
-    Gaudi::Utils::toStream(*key, s);
-    delim = ", ";
-  }
-  s << "]";
-  return s;
+inline std::string Cache::toString() const {
+    std::ostringstream s ;
+    fillStream(s) ;
+    return s.str();
 }
-
+// =============================================================================
 
 } //  Hlt
 
