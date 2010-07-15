@@ -56,7 +56,7 @@ StatusCode RecProcessingTimeMoni::execute()
     time += chronoSvc()->chronoDelta((*name)+":execute",IChronoStatSvc::ELAPSED)/1000;
   }
   
-  plot1D( time, "overallTime", "Overall Event Processing Time", 0, m_maxTime, 100 );
+  plot1D( time, "overallTime", "Overall Event Processing Time (ms)", 0, m_maxTime, 100 );
   
   return StatusCode::SUCCESS;
 }
