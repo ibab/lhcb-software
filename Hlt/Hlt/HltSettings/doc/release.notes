@@ -4,6 +4,10 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2010-07-15 - Johannes Albrecht
+ - Add exclusive leptonic lines for D2mumu to the two core settings
+   reinclude B2ee lines 
+
 ! 2010-07-13 - V. Gligorov
  - Add Displaced Vertex triggers for Higgs/SUSY to Hadrons Core. 
 
