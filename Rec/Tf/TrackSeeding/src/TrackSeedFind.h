@@ -11,7 +11,7 @@
 
 //tools
 #include "TrackInterfaces/ITrackMomentumEstimate.h"
-#include "Kernel/ISTClusterPosition.h"
+#include "TrackInterfaces/ISTClusterPosition.h"
 
 /** @class TrackSeedFind TrackSeedFind.h
  *  

@@ -4,6 +4,9 @@
 ! Purpose     : Package for the Seeding Pattern Recognition algorithm
 !-----------------------------------------------------------------------------
 
+! 2010-07-15 - Jeroen VAN TILBURG
+ - Changed include location of ISTClusterPosition (now in Tr/TrackInterfaces).
+
 !========================= TrackSeeding v1r4p4 2010-05-22 ====================
 ! 2010-05-13 - Rob Lambert
  - Review of warnings
