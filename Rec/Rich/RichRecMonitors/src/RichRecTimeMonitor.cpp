@@ -37,20 +37,22 @@ TimeMonitor::TimeMonitor( const std::string& name,
   // Name associated to algorithm(s)
   declareProperty( "TimingName", m_name );
 
-  // List of algorithms
+  // List of algorithms to time
   declareProperty( "Algorithms", m_algNames );
 
   // Timing boundaries
-  declareProperty( "MaxEventTime",       m_maxTime       = 10000 );
-  declareProperty( "MaxEventTimePerPID", m_maxTimePerPID = 100   );
-  declareProperty( "MaxTracks",          m_maxTracks     = 500   );
-  declareProperty( "MaxPixels",          m_maxPixels     = 10000 );
-  declareProperty( "MaxPIDs",            m_maxPIDs       = 300   );
+  declareProperty( "MaxEventTime",       m_maxTime          = 10000  );
+  declareProperty( "MaxEventTimePerPID", m_maxTimePerPID    = 100    );
+  declareProperty( "MaxTracks",          m_maxTracks        = 500    );
+  declareProperty( "MaxPixels",          m_maxPixels        = 10000  );
+  declareProperty( "MaxPhotons",         m_maxPhotons       = 500000 );
+  declareProperty( "MaxPhotonsPerPID",   m_maxPhotonsPerPID = 1000   );
+  declareProperty( "MaxPIDs",            m_maxPIDs          = 300    );
 
 }
 
 // Destructor
-TimeMonitor::~TimeMonitor() {};
+TimeMonitor::~TimeMonitor() {}
 
 // Main execution
 StatusCode TimeMonitor::execute()
@@ -58,7 +60,7 @@ StatusCode TimeMonitor::execute()
   // Check event status
   if ( !richStatus()->eventOK() ) return StatusCode::SUCCESS;
 
-  // Acquire PID results
+  // Number of RichPIDs
   if ( !loadPIDData() ) return StatusCode::SUCCESS;
   const unsigned nPIDs = m_richPIDs.size();
 
@@ -69,7 +71,10 @@ StatusCode TimeMonitor::execute()
   {
     time += chronoSvc()->chronoDelta((*name)+":execute",IChronoStatSvc::ELAPSED)/1000;
   }
-  const double timePerPID = ( nPIDs>0 ? time/static_cast<double>(nPIDs) : 0 );
+  const double timePerPID = ( nPIDs>0 ? time/(double)nPIDs : 0 );
+
+  // # Photons per PID
+  const double photsPerPID = ( nPIDs>0 ? (double)richPhotons()->size()/(double)nPIDs : 0 );
 
   if ( msgLevel(MSG::DEBUG) )
   {
@@ -82,24 +87,37 @@ StatusCode TimeMonitor::execute()
   m_totTime += time;
   m_nPIDs   += nPIDs;
 
-  richHisto1D( HID("totTime"), m_name+" total processing time (ms)", 
+  richHisto1D( HID("totTime"), m_name+" total processing time (ms)",
                0, m_maxTime, nBins1D() )->fill(time);
-  richHisto1D( HID("pidTime"), m_name+" processing time per PID (ms)",
+  richHisto1D( HID("pidTime"), m_name+" processing time / PID (ms)",
                0, m_maxTimePerPID, nBins1D() )->fill(timePerPID);
 
   richHisto1D( HID("nPIDs"), m_name+" total # PIDs",
                -0.5, m_maxPIDs+0.5, m_maxPIDs+1 )->fill(nPIDs);
   richHisto1D( HID("nPixels"), m_name+" total # Rich Pixels",
                -0.5, m_maxPixels+0.5, m_maxPixels+1 )->fill(richPixels()->size());
+  richHisto1D( HID("nPhotons"), m_name+" total # Rich Photons",
+               0, m_maxPhotons, nBins1D() )->fill(richPhotons()->size());
+  richHisto1D( HID("nPhotonsPerPID"), m_name+" total # Rich Photons / PID",
+               0, m_maxPhotonsPerPID, nBins1D() )->fill(photsPerPID);
 
   richProfile1D( HID("tottimeVnpids"), m_name+" total processing time (ms) V # RICH PIDs",
                  -0.5, m_maxTracks+0.5, m_maxTracks+1 )->fill(nPIDs,time);
   richProfile1D( HID("tottimeVnpixs"), m_name+" total processing time (ms) V # RICH Pixels",
                  -0.5,m_maxPixels+0.5,m_maxPixels+1 )->fill(richPixels()->size(),time);
+  richProfile1D( HID("tottimeVnphots"), m_name+" total processing time (ms) V # RICH Photons",
+                 0, m_maxPhotons, nBins1D() )->fill(richPhotons()->size(),time);
+  richProfile1D( HID("tottimeVnphotsPerPID"), m_name+" total processing time (ms) V # RICH Photons / PID",
+                 0, m_maxPhotonsPerPID, nBins1D() )->fill(photsPerPID,time);
+
   richProfile1D( HID("pidtimeVnpids"), m_name+" processing time per PID (ms) V # RICH PIDs",
                  -0.5,m_maxTracks+0.5,m_maxTracks+1 )->fill(nPIDs, timePerPID);
   richProfile1D( HID("pidtimeVnpixs"), m_name+" processing time per PID (ms) V # RICH Pixels",
                  -0.5,m_maxPixels+0.5,m_maxPixels+1 )->fill(richPixels()->size(),timePerPID);
+  richProfile1D( HID("pidtimeVnphots"), m_name+" processing time per PID (ms) V # RICH Photons",
+                 0, m_maxPhotons, nBins1D() )->fill(richPhotons()->size(),timePerPID);
+  richProfile1D( HID("pidtimeVnphotsPerPID"), m_name+" processing time per PID (ms) V # RICH Photons / PID",
+                 0, m_maxPhotonsPerPID, nBins1D() )->fill(photsPerPID,timePerPID);
 
   return StatusCode::SUCCESS;
 }
@@ -114,7 +132,7 @@ StatusCode TimeMonitor::finalize()
          << pidTime << " ms/PID" << endmsg;
 
   // return
-  return RichRecHistoAlgBase::finalize();
+  return HistoAlgBase::finalize();
 }
 
 StatusCode TimeMonitor::loadPIDData()

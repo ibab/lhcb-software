@@ -77,9 +77,11 @@ namespace Rich
       double m_maxTime;         ///< Maximum overall processing time for plots
       double m_maxTimePerPID;   ///< Maximum processing pre PID time for plots
 
-      unsigned int m_maxTracks; ///< Maximum number of tracks for plots
-      unsigned int m_maxPixels; ///< Maximum number of pixels for plots
-      unsigned int m_maxPIDs;   ///< Maximum number of PIDs for plots
+      unsigned int m_maxTracks;  ///< Maximum number of tracks for plots
+      unsigned int m_maxPixels;  ///< Maximum number of pixels for plots
+      unsigned int m_maxPhotons; ///< Maximum number of photons for plots
+      unsigned int m_maxPhotonsPerPID; ///< Maximum number of photons/PID for plots
+      unsigned int m_maxPIDs;    ///< Maximum number of PIDs for plots
       
 
     };
