@@ -10,7 +10,7 @@
 #include "Event/STCluster.h"
 
 // from Kernel
-#include "Kernel/ISTClusterPosition.h"
+#include "TrackInterfaces/ISTClusterPosition.h"
 
 // local
 #include "Event/STMeasurement.h"

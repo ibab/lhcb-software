@@ -25,7 +25,7 @@
       <import name='StateVector' soft='FORWARDONLY'/>
       <import name='STDet/DeSTDetector.h' />
       <import name='STDet/DeSTSector' />
-      <import name='Kernel/ISTClusterPosition' />
+      <import name='TrackInterfaces/ISTClusterPosition' />
 
  
       <attribute
