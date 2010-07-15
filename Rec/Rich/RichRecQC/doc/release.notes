@@ -4,6 +4,9 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2010-07-15 - Chris Jones
+ - Only enable ChronoSvc in timing monitors if not already enabled
+
 ! 2010-07-09 - Antonis Papanestis
  - Changed the Alignment monitor so that it is possible to run an instance
    per radiator, so that the Aerogel can be used as well.

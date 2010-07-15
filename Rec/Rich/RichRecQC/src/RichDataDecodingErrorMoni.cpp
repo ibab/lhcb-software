@@ -49,7 +49,7 @@ StatusCode DataDecodingErrorMoni::prebookHistograms()
   //using namespace boost::assign;
   //using namespace Gaudi::Utils::Histos;
   //const Gaudi::Utils::Histos::Labels labels = list_of
-  //  ("HPDs Suppressed")("ODIN/Ingress BXID MisMatch")
+  //  ("L1 Ingress Truncated")("ODIN/Ingress BXID MisMatch")
   //  ("HPD Inhibit")("HPD DB Lookup")("Ingress/HPD EventID MisMatch")
   //  ("Extended HPD Header");
   //AIDA::IProfile1D * h = 
@@ -67,7 +67,7 @@ StatusCode DataDecodingErrorMoni::execute()
   const DAQ::L1Map & data = m_decoder->allRichSmartIDs();
 
   // Get the ODIN
-  LHCb::ODIN * odin = get<LHCb::ODIN>( LHCb::ODINLocation::Default );
+  const LHCb::ODIN * odin = get<LHCb::ODIN>( LHCb::ODINLocation::Default );
 
   // Loop over L1 boards
   for ( Rich::DAQ::L1Map::const_iterator iL1 = data.begin();
@@ -107,8 +107,7 @@ StatusCode DataDecodingErrorMoni::execute()
                      (*iHPD).second.header().eventID() ? 100 : 0 ); 
           // HPD header in extended mode
           richProfile1D( HID("decodingErrors") )
-            -> fill( 6, (*iHPD).second.header().extendedFormat() ? 100.0 : 0.0 );
-                     
+            -> fill( 6, (*iHPD).second.header().extendedFormat() ? 100.0 : 0.0 );       
         }
       } // loop over HPDs
 

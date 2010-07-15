@@ -660,7 +660,10 @@ class RichRecQCConf(RichConfigurableUser):
         if check in checks:
             from Configurables import ( AuditorSvc, ChronoAuditor, Rich__Rec__TimeMonitor )
 
-            AuditorSvc().Auditors += [ "ChronoAuditor" ]
+            # Enable ChronoAuditor
+            chronoAuditor = "ChronoAuditor"
+            if chronoAuditor not in AuditorSvc().Auditors :
+                AuditorSvc().Auditors += [ chronoAuditor ]
             ChronoAuditor().Enable = True
 
             seq = self.newSeq(sequence,check)
