@@ -18,14 +18,14 @@ from GaudiKernel.SystemOfUnits import MeV
 #
 # These are all based on unfitted tracks
 #
-from HltTracking.Hlt2TrackingConfigurations import Hlt2UnfittedForwardTracking
-Hlt2UnfittedForwardTracking = Hlt2UnfittedForwardTracking()
+from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedForwardTracking
+Hlt2BiKalmanFittedForwardTracking   			= Hlt2BiKalmanFittedForwardTracking()
 ##########################################################################
 #
 # Charged protoparticles -> pulls all the pid
 #
-caloProtos 		= Hlt2UnfittedForwardTracking.hlt2ChargedCaloProtos( )
-muonWithCaloProtos 	= Hlt2UnfittedForwardTracking.hlt2ChargedMuonWithCaloProtos( )
+caloProtos 		= Hlt2BiKalmanFittedForwardTracking.hlt2ChargedCaloProtos( )
+muonWithCaloProtos 	= Hlt2BiKalmanFittedForwardTracking.hlt2ChargedMuonWithCaloProtos( )
 ##########################################################################
 # Make the pions
 #
