@@ -3,6 +3,9 @@
 ! Responsible : Stephanie-Hansmann-Menzemer
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
+! 2010-07-15 - Stephanie Hansmann-Menzemer
+ - use new more detailed procStatus interface
+
 ! 2010-07-13 - Stephanie Hansmann-Menzemer
  - add procStatus abort for events with many OT and IT hits
 
