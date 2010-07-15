@@ -313,7 +313,7 @@ DECLARE_TOOL_FACTORY( VeloLitePhiMeasurementProvider );
 #include "Event/STCluster.h"
 #include "Event/STMeasurement.h"
 #include "Event/STLiteMeasurement.h"
-#include "Kernel/ISTClusterPosition.h"
+#include "TrackInterfaces/ISTClusterPosition.h"
 #include "STDet/DeSTDetector.h"
 #include "Event/STLiteCluster.h"
 

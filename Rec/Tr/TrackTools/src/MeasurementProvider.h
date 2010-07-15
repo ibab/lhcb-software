@@ -10,10 +10,10 @@
 
 // from LHCbKernel
 #include "Kernel/LHCbID.h"
-#include "Kernel/ISTClusterPosition.h"
 
 // from TrackInterfaces
 #include "TrackInterfaces/IMeasurementProvider.h"
+#include "TrackInterfaces/ISTClusterPosition.h"
 
 // from TrackEvent
 #include "Event/Track.h"
