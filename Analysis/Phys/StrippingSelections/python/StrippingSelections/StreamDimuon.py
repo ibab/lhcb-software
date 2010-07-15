@@ -40,6 +40,9 @@ from StrippingSelections.StrippingBs2PhiMuMu import StrippingBs2PhiMuMuConf
 from StrippingSelections.StrippingB2XMuMuSS import StrippingB2XMuMuSSConf
 from StrippingSelections.StrippingD2XMuMuSS import StrippingD2XMuMuSSConf
 
+
+from StrippingSelections.StrippingDKPiMu import StrippingDKPiMuConf
+
 stream = StrippingStream("Dimuon")
 stream.appendLines( [ 
 		        StrippingDiMuonConf().nominal_line(), 
@@ -93,4 +96,7 @@ stream.appendLines( [
                         , StrippingD2XMuMuSSConf().PiOS_line()
                         , StrippingD2XMuMuSSConf().KSS_line()
                         , StrippingD2XMuMuSSConf().KOS_line()
+
+                        
+                        , StrippingDKPiMuConf().line_DKpimu()
                         ] )

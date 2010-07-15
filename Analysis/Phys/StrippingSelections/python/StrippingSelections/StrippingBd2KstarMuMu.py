@@ -1,6 +1,6 @@
 __author__ = 'Patrick Koppenburg, Rob Lambert, Mitesh Patel'
 __date__ = '21/01/2009'
-__version__ = '$Revision: 1.24 $'
+__version__ = '$Revision: 1.25 $'
 
 """
 Bd->K*MuMu selections 
@@ -39,17 +39,21 @@ class StrippingBd2KstarMuMuConf(LHCbConfigurableUser):
                 ,  'SimpleBdFDChi2'      : 100       # adimentional1
                 ,  'SimpleBdLT'          : 0.00001   # unit ?
 # D -> K pi pi pi selection for calibration
+
                 ,  'DKpipipiTrackCHI2'   : 6         # dimensionless
                 ,  'DKpipipiTrackIPCHI2' : 9         # dimensionless
+                ,  'DKpipipiTightTrackIPCHI2' : 16 #dimensionless
                 ,  'DKpipipiTrackP'      : 1000.0    # MeV
+                ,  'DKpipipiTightTrackP' : 3000.0    # MeV
                 ,  'DKpipipiTrackPT'     : 200.0     # MeV
-                ,  'DKpipipiFDCHI2'      : 81        # dimensionless
-                ,  'DKpipipiDIRA'        : 0.9998    # dimensionless
+                ,  'DKpipipiFDCHI2'      : 400        # dimensionless
+                ,  'DKpipipiDIRA'        : 0.99995   # dimensionless
                 ,  'DKpipipiVertexCHI2'  : 16        # per degree of freedom, dimensionless
                 ,  'DKpipipiIPCHI2'      : 64        # dimensionless
                 ,  'DKpipipiMassHighWin' : 150       # MeV
-                ,  'DKpipipiMassLowWin'  : -50        # MeV
+                ,  'DKpipipiMassLowWin'  : -75       # MeV
                 ,  'DKpipipiRequiresMB'  : False
+                   
                    }
                    
     _line_for_nominal_high = None
@@ -510,11 +514,11 @@ class StrippingBd2KstarMuMuConf(LHCbConfigurableUser):
         _kstar = DataOnDemand(Location='Phys/StdVeryLooseDetachedKst2Kpi')
 
         _filter = FilterDesktop('Kstar_Bd2KstarMuMu_DKpipipi')
-        _filter.Code = "(2 == NINTREE( (ISBASIC) & (P > %(DKpipipiTrackP)s ) & " \
+        _filter.Code = "(VFASPF(VCHI2/VDOF) < %(DKpipipiVertexCHI2)s ) &" \
+                       "(2 == NINTREE( (ISBASIC) & (P > %(DKpipipiTrackP)s ) & " \
                        "(PT > %(DKpipipiTrackPT)s ) & " \
                        "(TRCHI2DOF < %(DKpipipiTrackCHI2)s ) & " \
-                       "(MIPCHI2DV(PRIMARY) > %(DKpipipiTrackIPCHI2)s ))) & "\
-                       "(VFASPF(VCHI2/VDOF) < %(DKpipipiVertexCHI2)s )" % self.getProps() 
+                       "(MIPCHI2DV(PRIMARY) > %(DKpipipiTrackIPCHI2)s )))" % self.getProps() 
 
         return Selection( 'Sel_Kstar_Bd2KstarMuMu_DKpipipi',
                           Algorithm=_filter,
@@ -530,10 +534,10 @@ class StrippingBd2KstarMuMuConf(LHCbConfigurableUser):
         
         _pions = DataOnDemand(Location='Phys/StdLoosePions')
 
-        _pionCuts = "(P > %(DKpipipiTrackP)s ) & " \
+        _pionCuts = "(P > %(DKpipipiTightTrackP)s ) & " \
                     "(PT > %(DKpipipiTrackPT)s ) & " \
                     "(TRCHI2DOF < %(DKpipipiTrackCHI2)s ) & " \
-                    "(MIPCHI2DV(PRIMARY) > %(DKpipipiTrackIPCHI2)s )" % self.getProps()
+                    "(MIPCHI2DV(PRIMARY) > %(DKpipipiTightTrackIPCHI2)s )" % self.getProps()
 
         _rho = CombineParticles('Rho_Bd2KstarMuMu_DKpipipi')
         _rho.DecayDescriptor =  "[rho(770)0 -> pi+ pi-]cc"              
@@ -554,12 +558,16 @@ class StrippingBd2KstarMuMuConf(LHCbConfigurableUser):
     
         _DKpipipi = CombineParticles('D_Bd2KstarMuMu_DKpipipi')
         _DKpipipi.DecayDescriptor = '[D0 -> K*(892)~0 rho(770)0]cc'
+
+        _DKpipipi.CombinationCut = "ADAMASS('D0')<200*MeV"
+        
         _DKpipipi.MotherCut = "(VFASPF(VCHI2/VDOF) < %(DKpipipiVertexCHI2)s ) & " \
+                              "(DMASS('D0') > %(DKpipipiMassLowWin)s *MeV) & " \
+                              "(DMASS('D0') < %(DKpipipiMassHighWin)s *MeV) & " \
                               "(BPVVDCHI2 > %(DKpipipiFDCHI2)s ) & " \
                               "(BPVDIRA > %(DKpipipiDIRA)s ) & " \
-                              "(MIPCHI2DV(PRIMARY) < %(DKpipipiIPCHI2)s ) & " \
-                              "(DMASS('D0') > %(DKpipipiMassLowWin)s *MeV) & " \
-                              "(DMASS('D0') < %(DKpipipiMassHighWin)s *MeV)" % self.getProps()
+                              "(MIPCHI2DV(PRIMARY) < %(DKpipipiIPCHI2)s )" % self.getProps()
+
         return Selection( 'Sel_D_Bd2KstarMuMu_DKpipipi',
                           Algorithm=_DKpipipi,
                           RequiredSelections=[ self._DKpipipi_Kstar(), self._DKpipipi_Rho() ] )
@@ -579,8 +587,10 @@ class StrippingBd2KstarMuMuConf(LHCbConfigurableUser):
         if self.getProp('DKpipipiRequiresMB'):
             _line.HLT = "HLT_PASS_RE('Hlt1MB.*Decision')"
         return _line
-        
-#
+
+## ####################################################################################################
+
+
 #
 ####################################################################################################
 #

@@ -5,6 +5,11 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-07-15 - Thomas BLAKE
+ - Updated StrippingBd2KstarMuMu D to K3Pi line.
+ - Added D+ to K- Pi+ Mu+ line for calibration
+
+
 ! 2010-07-14 - Anton Poluektov 
  - Updated StrippingB2DX lines: 
    * Now there are 10 lines, with D->hh, D->hhh, D->hhhh, D->Kshh and D->hhpi0, 
