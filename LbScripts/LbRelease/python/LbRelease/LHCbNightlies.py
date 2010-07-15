@@ -2,14 +2,20 @@
 import os, sys, random, shutil
 import re, pickle, time, datetime
 
-#__all__ = ['LHCbProjectBuilder', 'builderMap']
-
-
 print "#"*60
 print "#"*60
 print "LHCB NIGHTLIES EXTENSION"
 print "#"*60
 print "#"*60
+
+def fork_call(func):
+    def f(self, *args, **kwargs):
+        if self.systemType == "windows":
+            return func(self, *args, **kwargs)
+        elif os.fork() == 0:
+            func(self, *args, **kwargs)
+            sys.exit()
+    return f
 
 class LHCbProjectBuilder(object):
     def canBuild(cls, project):
@@ -41,6 +47,7 @@ class LHCbProjectBuilder(object):
         self.cmtCommand = 'cmt -disable_warnings'
         self.getpackCommand = 'getpack --no-config --batch -p anonymous'
         self.pythonCommand = 'python '
+        self.status = 0
 
         from LbConfiguration.Project import project_names as listOfProjectNames
         self.projectNamesDict = {}
@@ -81,10 +88,15 @@ class LHCbProjectBuilder(object):
             log = ''
         os.system(cmd + log)
 
+    def cleanReleaseDir(self):
+        if '%CMTCONFIG%' in self.slot._releaseDir:
+            #means that buildDir is per platform so if it already exists, it should be removed and recreated
+            shutil.rmtree(self.slot.releaseDir(), ignore_errors=True)
+            os.mkdir(self.slot.releaseDir())
+
     def buildProject(self):
         print "[LHCb] buildProject: start"
-        from threading import Thread
-        import checkLogFiles
+        self.cleanReleaseDir()
         cfgFile = os.path.sep.join([self.slot.releaseDir(), 'configuration.xml'])
         if not os.path.exists(cfgFile):
             file(cfgFile, 'w').write(self.configContents)
@@ -94,36 +106,9 @@ class LHCbProjectBuilder(object):
         #TODO: --> reload configuration if it's already in the releaseDir
         self.checkout()
         self.build()
-
-        class ThreadedAction(Thread):
-            def __init__(self, obj, action):
-                Thread.__init__(self)
-                self.obj = obj
-                self.action = action
-            def run(self):
-                if self.action == "test":
-                    self.obj.test()
-                elif self.action == "docs":
-                    self.obj.docs()
-                else: # "install"
-                    if self.obj.systemType == 'windows':
-                        print "Windows platform. Installation skipped."
-                    else:
-                        nWarn, nErr, nMkErr, nCMTErr = checkLogFiles.checkBuildLogs(self.obj.slot, self.obj.project, self.obj.day, self.obj.plat, self.obj.config._generalConfig)
-                        if nMkErr == 0:
-                            self.obj.install()
-                        else:
-                            print "Errors found during the build. Installation skipped."
-        actionList = [
-                       ThreadedAction(self, "test"),
-                       ThreadedAction(self, "docs"),
-                       ThreadedAction(self, "install")
-                     ]
-
-        for x in actionList: x.start()
-        for x in actionList: x.join()
-        self.status = 0
-        pass
+        self.test()
+        self.docs()
+        self.install()
     # --------------------------------------------------------------------------------
 
     def setupProj(self):
@@ -319,8 +304,8 @@ class LHCbProjectBuilder(object):
                     d[x][0] = changesMadeDict[x]
             self.changeRequirementsFile(f, d)
 
-        #os.chdir(self.generatePath(self.slot, p, 'SYSPACKAGECMT', self.projName))
-        #os.system(self.cmtCommand + ' br "' + self.cmtCommand + ' config"')
+        os.chdir(self.generatePath(self.slot, p, 'SYSPACKAGECMT', self.projName))
+        os.system(self.cmtCommand + ' br "' + self.cmtCommand + ' config"')
 
         # creating 'done' flag; removing 'working' flag
         os.chdir(self.generatePath(self.slot, self.project, 'TAG', self.project.getName()))
@@ -443,8 +428,30 @@ class LHCbProjectBuilder(object):
                 os.system('echo "Copying documentation to AFS finished: '+ time.strftime('%c', time.localtime()) +'"')
         return 0
 
+    @fork_call
     def install(self):
         print "[LHCb] install"
+        import checkLogFiles
+        from LbConfiguration.Platform import pathBinaryMatch
+        from LbConfiguration.Platform import pathSharedMatch
+
+        copyLogs = True
+        nWarn, nErr, nMkErr, nCMTErr = checkLogFiles.checkBuildLogs(self.slot, self.project, self.day, self.plat, self.config._generalConfig)
+        if self.systemType == 'windows':
+            copyNotShared = False
+            copyShared = False
+            print "Windows platform. Installation skipped."
+        elif nErr == 0: #  + nMkErr + nCMTErr
+            copyNotShared = True
+            copyShared = True
+            print "No errors found during the build. Shared and common files will be copied."
+            print "(%s)" % ( str(nWarn)+', '+str(nErr)+', '+str(nMkErr)+', '+str(nCMTErr) )
+        else:
+            copyNotShared = True
+            copyShared = False
+            print "Errors found during the build. Only not shared files will be copied."
+            print "(%s)" % ( str(nWarn)+', '+str(nErr)+', '+str(nMkErr)+', '+str(nCMTErr) )
+
         self.setCmtProjectPath(self.slot)
         self.changeEnvVariables()
         self.disableLCG_NIGHTLIES_BUILD()
@@ -468,29 +475,52 @@ class LHCbProjectBuilder(object):
             isStartedTo = os.path.join(self.slot.releaseDir(), 'isStarted-'+os.environ['CMTCONFIG'])
             if not os.path.exists(isStartedTo): file(isStartedTo, "w").close()
             if os.path.exists(isDoneTo) and os.path.exists(isStartedTo): os.remove(isStartedTo)
-            self.copyLocal(os.path.join(self.slot.buildDir(), self.projName.upper(), self.project.getTag()), os.path.join(releasePath, self.projName.upper(), self.project.getTag()))
+            if copyNotShared and copyShared:
+                self.copyLocal(
+                               os.path.join(self.slot.buildDir(), self.projName.upper(), self.project.getTag()),
+                               os.path.join(releasePath, self.projName.upper(), self.project.getTag())
+                )
+            elif not copyNotShared and not copyShared:
+                pass
+            else:
+                self.copyLocal(
+                               os.path.join(self.slot.buildDir(), self.projName.upper(), self.project.getTag()),
+                               os.path.join(releasePath, self.projName.upper(), self.project.getTag()),
+                               lambda path: (copyNotShared and pathBinaryMatch(path, self.plat)) or (copyShared and pathSharedMatch(path))
+                )
+
             if not os.path.exists(os.path.join(releasePath, 'configuration.xml')):  shutil.copy2(os.path.join(os.environ['LCG_XMLCONFIGDIR'], 'configuration.xml'), releasePath)
         return 0
 
+    @fork_call
     def test(self):
         print "[LHCb] test"
-
         self.disableLCG_NIGHTLIES_BUILD()
         self.setCMTEXTRATAGS(self.slotName)
         self.setCmtProjectPath(self.slot)
         self.changeEnvVariables()
         os.chdir(self.generatePath(self.slot, self.project, 'SYSPACKAGECMT', self.projName))
 
+        htmlLogDirName = self.slotName + '.' + datetime.date.today().strftime('%a') + '_' + self.project.getTag() + '-' + os.environ['CMTCONFIG'] + '-qmtest'
+        os.environ['GAUDI_QMTEST_HTML_OUTPUT'] = os.path.abspath( os.path.join(self.generatePath(self.slot, self.project, 'SYSPACKAGECMT', self.projName),'..','..','logs',htmlLogDirName) )
         os.system('echo "'+ time.strftime('%c', time.localtime()) +'" >> ../../logs/' + os.environ['CMTCONFIG'] + '-qmtest.log')
         os.system('cmt br - cmt TestPackage')
+        os.chdir(self.generatePath(self.slot, self.project, 'SYSPACKAGECMT', self.projName))
         os.system('cmt qmtest_summarize 2>&1 >> ../../logs/' + os.environ['CMTCONFIG'] + '-qmtest.log')
         os.system('echo "'+ time.strftime('%c', time.localtime()) +'" >> ../../logs/' + os.environ['CMTCONFIG'] + '-qmtest.log')
 
-        #log files copying:
+        #log summary (text file) copying:
         testSummaryFrom = os.path.join(self.generatePath(self.slot, self.project, 'SYSPACKAGECMT', self.projName), '..', '..', 'logs', os.environ['CMTCONFIG'] + '-qmtest.log')
         testSummaryTo = os.path.join(self.slot.wwwDir(), self.slotName + '.' + datetime.date.today().strftime('%a') + '_' + self.project.getTag() + '-' + os.environ['CMTCONFIG'] + '-qmtest.log')
         if os.path.exists(testSummaryFrom): shutil.copy2(testSummaryFrom, testSummaryTo)
-
+        #log summary (html) copying:
+        if self.systemType != 'windows':
+            testSummaryFrom = os.path.join(self.generatePath(self.slot, self.project, 'SYSPACKAGECMT', self.projName), '..', '..', 'logs', self.slotName + '.' + datetime.date.today().strftime('%a') + '_' + self.project.getTag() + '-' + os.environ['CMTCONFIG'] + '-qmtest')
+            testSummaryTo = os.path.join(self.slot.wwwDir(), self.slotName + '.' + datetime.date.today().strftime('%a') + '_' + self.project.getTag() + '-' + os.environ['CMTCONFIG'] + '-qmtest/')
+            if os.path.exists(testSummaryFrom):
+                if os.path.exists(testSummaryTo):
+                    shutil.rmtree(testSummaryTo, ignore_errors=True)
+                shutil.copytree(testSummaryFrom, testSummaryTo)
         return 0
 
 #=============================== Nightlies/function.py ==============================#
@@ -691,13 +721,15 @@ class LHCbProjectBuilder(object):
             containerPkg = projectName + 'Sys'
         return containerPkg
 
-    def copyLocal(self, sourceDir, targetDir):
+    def copyLocal(self, sourceDir, targetDir, check=None):
         """ tar-pipe copying with locking from <sourceDir> to <targetDir>. Target directory is created if necessary.
 
             Locking is implemented on the level of the most deep sub-directory. Empty directories are not copied.
             Works only on Linux, both <sourceDir> and <targetDir> must be accessible locally.
         """
         from LbUtils.Lock import Lock
+        #by default, the check function is always True
+        if check is None: check = lambda path: True
         if not os.path.exists(targetDir): os.makedirs(targetDir)
         os.chdir(targetDir) # .lock_* files are stored in CWD and they must by on shared file system
         sourceDir = os.path.abspath(sourceDir)
@@ -705,8 +737,9 @@ class LHCbProjectBuilder(object):
         dirList = [x for x in os.walk(sourceDir, topdown=False)]
         for root, dires, files in dirList:
             if files:
-                path = (root+os.sep).replace(sourceDir, '')
-                files = [x for x in files if x[-4:] != '.pyc' and x[-4:] != '.pyo']
+                fullPath = root+os.sep
+                path = fullPath.replace(sourceDir, '')
+                files = [x for x in files if x[-4:] != '.pyc' and x[-4:] != '.pyo' and check(fullPath+x)]
                 if len(' '.join(files)) > 30720: # to be on the safe side: 30K limit (Win: 32K, Red Hat 128K)
                     maxFilesPerCopyCmd = 200 # files
                     listOfLists = [files[i:i+maxFilesPerCopyCmd] for i in range(0, len(files), maxFilesPerCopyCmd)]
@@ -760,14 +793,16 @@ class LHCbServer(BaseServer.Server):
                 return 0
     def getWorkUnit(self,configuration):
         import LbConfiguration.Platform
-        self.readConfigurationFile(self.cfgFile)
+        self.readConfigurationFile(self.cfgFile, self.cfgContents)
         jobs = []
         for slotObj in self.conf._slotList:
             for plObj in slotObj.getPlatforms():
                 #check "waitfor" flag, if False, skip this (slot, platform)
                 plName = plObj.getName()
-                if slotObj.waitForFlag(plName) \
-                and sum([int(os.path.exists(q)) for q in slotObj.waitForFlag(plObj)])!=len(slotObj.waitForFlag(plObj)):
+                try:
+                    if slotObj.waitForFlag(plName) and sum([int(os.path.exists(q)) for q in slotObj.waitForFlag(plName)])!=len(slotObj.waitForFlag(plName)):
+                        continue
+                except IOError:
                     continue
                 jobs.append((slotObj.getName(), plObj.getName()))
         jobs.sort(self.cmpWorkUnits)

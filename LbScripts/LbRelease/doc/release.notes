@@ -1,3 +1,9 @@
+2010-07-15  Karol Kruzelecki  <Karol.Kruzelecki@cern.ch>
+
+	* python/LbRelease/LHCbNightlies.py: fork instead of threads for install/test
+	actions; cmt config after checkout; copying of shared files only if the build
+	was sucessful; html test summaries; bugfix for waitforflag option
+
 2010-07-14  Joel Closier  <Joel.Closier@cern.ch>
 
 	* scripts/GridEnv.csh: add GridEnv
