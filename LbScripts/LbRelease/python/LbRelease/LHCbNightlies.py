@@ -373,7 +373,7 @@ class LHCbProjectBuilder(object):
                 os.environ['CMTEXTRATAGS'] = 'no-pyzip,'+os.environ.get('CMTEXTRATAGS', '')
             else:
                 os.environ['CMTEXTRATAGS'] = 'no-pyzip'
-            self.system('make -k -j%s -l%s Package_failure_policy=ignore logging=enabled | tee make.%s.log' % (str(self.minusj), str(self.minusl), str(os.environ['CMTCONFIG']),) )
+            self.system('make -k -j%s -l%s Package_failure_policy=ignore logging=enabled > make.%s.log' % (str(self.minusj), str(self.minusl), str(os.environ['CMTCONFIG']),) )
             os.chdir(self.generatePath(self.slot, self.project, 'TAG', self.projName))
             logFiles = []
             for r, d, f in os.walk("."):
@@ -383,11 +383,15 @@ class LHCbProjectBuilder(object):
                     if "build.%(CMTCONFIG)s.log" % os.environ in f:
                         logFiles.append((os.stat(os.path.join(r, "build.%(CMTCONFIG)s.log" % os.environ)).st_mtime, os.path.join(r, "build.%(CMTCONFIG)s.log" % os.environ)))
             logFiles.sort()
+            sys.stdout.flush()
+            sys.stderr.flush()
             for x in logFiles:
-                print "-"*80
-                print "Logfile:", x[1]
-                print "-"*80
-                print file(x[1], 'r').read()
+                self.system('echo "' + '-'*80 + '"')
+                self.system('echo "Logfile: ' + x[1] + '"')
+                self.system('echo "' + '-'*80 + '"')
+                self.system('cat ' + x[1])
+                sys.stdout.flush()
+                sys.stderr.flush()
         else:
             makeCmd = '%s make ' % (self.cmtCommand,)
             if self.slot.getQuickMode() is not None : makeCmd += ' QUICK=' + str(self.slot.getQuickMode())  # append
