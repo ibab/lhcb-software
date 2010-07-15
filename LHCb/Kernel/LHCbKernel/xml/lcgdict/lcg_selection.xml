@@ -38,7 +38,6 @@
   <class name = "IMCVeloFEType"        />
   <class name = "INormalizeTool"       />
   <class name = "ISiAmplifierResponse" />
-  <class name = "ISTClusterPosition"   />
   <class name = "ITrajPoca"            />
   <class name = "IUsedLHCbID"          />
   <class name = "IReferenceRate"    />

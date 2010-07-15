@@ -35,7 +35,6 @@
 #include "Kernel/IMCVeloFEType.h"
 #include "Kernel/INormalizeTool.h"
 #include "Kernel/ISiAmplifierResponse.h"
-#include "Kernel/ISTClusterPosition.h"
 #include "Kernel/ITrajPoca.h"
 #include "Kernel/IUsedLHCbID.h"
 #include "Kernel/TTNames.h"
