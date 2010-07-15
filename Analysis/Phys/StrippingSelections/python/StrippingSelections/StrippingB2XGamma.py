@@ -1,6 +1,6 @@
 __author__ = 'Fatima Soomro'
 __date__ = '18/12/2009'
-__version__ = '$Revision: 1.6 $'
+__version__ = '$Revision: 1.7 $'
 
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
@@ -122,7 +122,8 @@ class StrippingB2XGammaConf(LHCbConfigurableUser):
             mylist = Sel.requiredSelections 
             mygamma = mylist[0].clone("myGamma")
             KstMass =  mylist[1].algorithm().clone("KstMass",
-                                                   CombinationCut ="(ADAMASS('K*(892)0')<%(KstMassWinSB)s*MeV)" % self.getProps() ) # a combineParticles
+                                                   Code = "(MINTREE(ABSID=='K+', MIPCHI2DV(PRIMARY))> %(TrIPchi2Kst)s) & (MINTREE(ABSID=='pi-', MIPCHI2DV(PRIMARY))> %(TrIPchi2Kst)s) & (VFASPF(VCHI2/VDOF) < %(KstVCHI2)s) & (ADMASS('K*(892)0')<%(KstMassWinSB)s*MeV)" % self.getProps()) # a FilterDesktop
+            
             KstMass.PropertiesPrint = False
             myKst = mylist[1].clone("myKst", Algorithm = KstMass)
             makeB0 = Sel.algorithm().clone("makeB0", InputLocations = [])
@@ -144,18 +145,13 @@ class StrippingB2XGammaConf(LHCbConfigurableUser):
         """
         Define the Bd
         """        
-        _K4Kst  = DataOnDemand(Location = "Phys/StdLooseKaons")
-        _pi4Kst = DataOnDemand(Location = "Phys/StdLoosePions")
-
-        LooseKstar2Kpi = CombineParticles ("LooseKstar2Kpi")
-        LooseKstar2Kpi.DecayDescriptor = "[K*(892)0 -> K+ pi-]cc"
-        LooseKstar2Kpi.DaughtersCuts = { "K+" :  "(MIPCHI2DV(PRIMARY)> %(TrIPchi2Kst)s)"% self.getProps(),"pi-" :  "MIPCHI2DV(PRIMARY)>%(TrIPchi2Kst)s"% self.getProps() }
-        LooseKstar2Kpi.CombinationCut = "(ADAMASS('K*(892)0') < %(KstMassWinT)s*MeV)"% self.getProps()
-        LooseKstar2Kpi.MotherCut = "(VFASPF(VCHI2/VDOF) < %(KstVCHI2)s)"% self.getProps()
+        _stdkst4Bd = DataOnDemand(Location = "Phys/StdVeryLooseDetachedKst2Kpi")
+        _kst4BdFilter = FilterDesktop ("KstFilterFor"+name)
+        _kst4BdFilter.Code = "(MINTREE(ABSID=='K+', MIPCHI2DV(PRIMARY))> %(TrIPchi2Kst)s) & (MINTREE(ABSID=='pi-', MIPCHI2DV(PRIMARY))> %(TrIPchi2Kst)s) & (VFASPF(VCHI2/VDOF) < %(KstVCHI2)s) & (ADMASS('K*(892)0') < %(KstMassWinT)s*MeV)"% self.getProps()
         
         Kst4Bd   =  Selection ("Kst2KPiFor"+name
-                               ,Algorithm = LooseKstar2Kpi
-                               ,RequiredSelections = [ _K4Kst, _pi4Kst ]
+                               ,Algorithm =  _kst4BdFilter 
+                               ,RequiredSelections = [ _stdkst4Bd  ] 
                                )
         
         _stdgamma = DataOnDemand(Location = "Phys/StdLooseAllPhotons")
@@ -176,9 +172,9 @@ class StrippingB2XGammaConf(LHCbConfigurableUser):
         Bd2KstGamma = Selection ( "Sel"+name
                                   ,Algorithm = _Bd2KstGamma
                                   ,RequiredSelections = [Gamma, Kst4Bd])
-
+        
         return Bd2KstGamma
-
+    
     def getProps(self) :
         """
         From HltLinesConfigurableUser
