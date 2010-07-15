@@ -3,9 +3,12 @@
 !Package Coordinator: Rob Lambert
 !Purpose: Configurables for LHCb reconstruction
 !--------------------------------------------------
+
+! 2010-07-15 - Chris Jones
+ - Add options to turn on some simple processing time monitors
+
 ! 2010-07-13 - Stephanie Hansmann-Menzemer
  - use loose PV for open velo and micro bias trigger in 2010 data
-
 
 !========================== RecSysConf v1r1 2010-06-21 ========================
 ! 2010-06-17 - Stephanie Hansmann-Menzemer

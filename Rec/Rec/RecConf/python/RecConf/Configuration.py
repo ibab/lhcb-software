@@ -205,7 +205,7 @@ class RecMoniConf(LHCbConfigurableUser):
        }
 
     ## Known monitoring sequences, all run by default
-    KnownMoniSubdets        = ["CALO","RICH","MUON","VELO","Tr","OT","ST","PROTO"] 
+    KnownMoniSubdets        = ["GENERAL","CALO","RICH","MUON","VELO","Tr","OT","ST","PROTO"] 
     KnownExpertMoniSubdets  = KnownMoniSubdets+["TT","IT"]
 
     def expertHistos(self): return self.getProp("Histograms") == "Expert"
@@ -233,6 +233,36 @@ class RecMoniConf(LHCbConfigurableUser):
         ProcessPhase("Moni").DetectorList += moniSeq
 
         # Histograms filled both in real and simulated data cases
+        if "GENERAL" in moniSeq :
+
+            # Enable ChronoAuditor
+            chronoAuditor = "ChronoAuditor"
+            if chronoAuditor not in AuditorSvc().Auditors :
+                AuditorSvc().Auditors += [ chronoAuditor ]
+            ChronoAuditor().Enable = True
+            # Turn off most output
+            ChronoStatSvc().ChronoPrintOutTable = False
+            ChronoStatSvc().PrintUserTime       = False
+            ChronoStatSvc().PrintSystemTime     = False
+            
+            from Configurables import GaudiSequencer, RecProcessingTimeMoni
+            seq = GaudiSequencer( "MoniGENERALSeq")
+
+            # Overall time
+            overallTime = RecProcessingTimeMoni("OverallEventProcTime")
+            overallTime.Algorithms = ["BrunelSequencer"]
+            seq.Members += [overallTime]
+
+            # Tracking
+            trackTime = RecProcessingTimeMoni("TrackEventProcTime")
+            trackTime.Algorithms = ["RecoTrSeq","RecoVELOSeq","RecoDecodingSeq"]
+            seq.Members += [trackTime]
+
+            # RICH
+            richTime = RecProcessingTimeMoni("RichEventProcTime")
+            richTime.Algorithms = ["RecoRICHSeq"]
+            seq.Members += [richTime]
+        
         if "CALO" in moniSeq :
             from Configurables import GaudiSequencer
             seq = GaudiSequencer( "MoniCALOSeq")
