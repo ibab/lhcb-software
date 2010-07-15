@@ -6,7 +6,7 @@
 #include "Kernel/STToolBase.h"
 
 // From LHCbKernel
-#include "Kernel/ISTClusterPosition.h"
+#include "TrackInterfaces/ISTClusterPosition.h"
 
 // rndm numbers
 #include "GaudiKernel/SmartIF.h"

@@ -9,7 +9,7 @@
 
 
 // LHCbKernel
-#include "Kernel/ISTClusterPosition.h"
+#include "TrackInterfaces/ISTClusterPosition.h"
 
 /** @class STOfflinePosition STOfflinePosition.h
  *

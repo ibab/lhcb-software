@@ -6,7 +6,7 @@
 #include "GaudiAlg/GaudiTool.h"
 
 // From LHCbKernel
-#include "Kernel/ISTClusterPosition.h"
+#include "TrackInterfaces/ISTClusterPosition.h"
 
 /** @class STOnlinePosition STOnlinePosition.h
  *
