@@ -17,7 +17,7 @@
 
 // STTools interfaces from LHCbKernel and MCInterfaces
 #include "MCInterfaces/IMCParticleSelector.h"
-#include "Kernel/ISTClusterPosition.h"
+#include "TrackInterfaces/ISTClusterPosition.h"
 #include "Kernel/LineTraj.h"
 #include "Math/VectorUtil.h"
 
