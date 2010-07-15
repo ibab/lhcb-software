@@ -2,6 +2,9 @@
 ! Package manager : Matt Needham
 !-----------------------------------------------------------------------------
 
+! 2010-07-15 - Jeroen VAN TILBURG
+ - Changed include location of ISTClusterPosition (now in Tr/TrackInterfaces).
+
 !======================= STAlgorithms v4r1 2010-06-21 ========================
 ! 2010-06-02 M. Needham
  - STClusterKiller prints out fraction of clusters killed

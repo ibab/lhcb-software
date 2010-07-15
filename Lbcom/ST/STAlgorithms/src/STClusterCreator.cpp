@@ -6,10 +6,10 @@
 // LHCbKernel includes
 #include "Kernel/STChannelID.h"
 #include "Kernel/STDetSwitch.h"
-#include "Kernel/ISTClusterPosition.h"
-
 #include "Kernel/ISTReadoutTool.h"
 #include "Kernel/LHCbConstants.h"
+
+#include "TrackInterfaces/ISTClusterPosition.h"
 
 // xml geometry
 #include "STDet/DeSTDetector.h"
