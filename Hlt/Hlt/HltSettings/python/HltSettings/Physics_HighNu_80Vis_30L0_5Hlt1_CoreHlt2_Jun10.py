@@ -103,6 +103,10 @@ class Physics_HighNu_80Vis_30L0_5Hlt1_CoreHlt2_Jun10           ( Physics_HighNu_
 	from Muons_Retention15 import Muons_Retention15 
         list.extend( Muons_Retention15().ActiveHlt2Lines() )
 
+
+	from Exclusive_Leptonic import Exclusive_Leptonic
+	list.extend( Exclusive_Leptonic().ActiveHlt2Lines() )
+
         ##
         ## electrons
         ##
