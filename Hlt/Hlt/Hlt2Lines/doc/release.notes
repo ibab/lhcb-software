@@ -9,6 +9,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2010-07-15 - Roel Aaij
+ - Updated Express lines to use track-fitted inputs
+
+! 2010-07-15 - Roel Aaij
  - Updated all Muon, MuTrack and DiMuon lines to use track-fitted inputs.
 
 ! 2010-07-14 - Alexandr Kozlinskiy

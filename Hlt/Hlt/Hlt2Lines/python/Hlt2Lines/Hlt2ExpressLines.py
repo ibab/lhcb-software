@@ -1,5 +1,5 @@
 # =============================================================================
-# $Id: Hlt2ExpressLines.py,v 1.28 2010-07-15 12:51:33 raaij Exp $
+# $Id: Hlt2ExpressLines.py,v 1.29 2010-07-15 15:10:33 raaij Exp $
 # =============================================================================
 ## @file
 #  Configuration of Hlt2 Lines for the express stream
@@ -11,7 +11,7 @@
 """
 # =============================================================================
 __author__  = "Johannes Albrecht albrecht@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.28 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.29 $"
 # =============================================================================
 
 from HltLine.HltLinesConfigurableUser import *
@@ -209,14 +209,15 @@ class Hlt2ExpressLinesConf(HltLinesConfigurableUser):
       Lambda no PID
       from StrippingLambdaNoPID.py
       '''
-      from Hlt2SharedParticles.BasicParticles import NoCutsPions,NoCutsProtons
+      from Hlt2SharedParticles.TrackFittedBasicParticles import ( BiKalmanFittedProtons,
+                                                                  BiKalmanFittedPions )
       from Configurables import CombineParticles
       from HltTracking.HltPVs import PV3D
      
       LambdaCombine = Hlt2Member( CombineParticles
                                   , "LambdaCombine"
                                   , DecayDescriptor = "[Lambda0 -> p+ pi-]cc"
-                                  , InputLocations = [NoCutsPions,NoCutsProtons ]
+                                  , InputLocations = [BiKalmanFittedPions,BiKalmanFittedProtons ]
                                   , CombinationCut = "(ADAMASS('Lambda0')<%(ExLambdaMassWinWide)s*MeV)"%  self.getProps()
                                   , MotherCut = "(ADMASS('Lambda0')<%(ExLambdaMassWin)s*MeV)"\
                                   " & (%(ExLambdaMinDz)s*mm<BPVVDZ)"\
@@ -234,21 +235,20 @@ class Hlt2ExpressLinesConf(HltLinesConfigurableUser):
       
       line = Hlt2Line('ExpressLambda'
                       , prescale = self.prescale 
-                      , algos = [ PV3D(), NoCutsPions, NoCutsProtons, LambdaCombine ]
+                      , algos = [ PV3D(), BiKalmanFittedPions, BiKalmanFittedProtons, LambdaCombine ]
                       , postscale = self.postscale
                       )
       #--------------------------------------------
       '''
       Ks no PID
       '''
-      from Hlt2SharedParticles.BasicParticles import NoCutsPions,NoCutsProtons
       from Configurables import CombineParticles
       from HltTracking.HltPVs import PV3D
 
       KsCombine = Hlt2Member( CombineParticles
                               , "KsCombine"
                               , DecayDescriptor = "KS0 -> pi+ pi-"
-                              , InputLocations = [NoCutsPions]
+                              , InputLocations = [BiKalmanFittedPions]
                               , CombinationCut = "(ADAMASS('KS0') < %(ExKSMassWinWide)s*MeV)"%  self.getProps()
                               , MotherCut = "(ADMASS('KS0') < %(ExKSMassWin)s*MeV)"\
                               " & (log((CHILD(MIPDV(PRIMARY), 1)) * (CHILD(MIPDV(PRIMARY), 2) )"\
@@ -258,7 +258,7 @@ class Hlt2ExpressLinesConf(HltLinesConfigurableUser):
       
       line = Hlt2Line('ExpressKS'
                       , prescale = self.prescale 
-                      , algos = [ PV3D(), NoCutsPions, KsCombine]
+                      , algos = [ PV3D(), BiKalmanFittedPions, KsCombine]
                       , postscale = self.postscale
                       )
       #--------------------------------------------
@@ -269,14 +269,15 @@ class Hlt2ExpressLinesConf(HltLinesConfigurableUser):
       Updated selection, please check!
 
       '''
-      from Hlt2SharedParticles.BasicParticles import NoCutsKaons
+      from Hlt2SharedParticles.TrackFittedBasicParticles import ( BiKalmanFittedKaons,
+                                                                  BiKalmanFittedPions )
       from Configurables import CombineParticles
       from HltTracking.HltPVs import PV3D
 
       PhiCombine = Hlt2Member( CombineParticles
                                , "PhiCombine"
                                , DecayDescriptor = "phi(1020) -> K+ K-"
-                               , InputLocations = [NoCutsKaons]
+                               , InputLocations = [BiKalmanFittedKaons]
                                , CombinationCut = "(ADAMASS('phi(1020)')<%(ExPhiMassWinWide)s*MeV)"%  self.getProps()
                                , MotherCut = "(ADMASS('phi(1020)') < %(ExPhiMassWin)s*MeV)"\
                                " & (DOCAMAX < %(ExPhiDOCAMax)s*mm)"\
@@ -290,7 +291,7 @@ class Hlt2ExpressLinesConf(HltLinesConfigurableUser):
       DsCombine = Hlt2Member( CombineParticles
                               , "DsCombine"
                               , DecayDescriptor = "[D_s+ -> pi+ phi(1020)]cc"
-                              , InputLocations = [NoCutsPions, PhiCombine]
+                              , InputLocations = [BiKalmanFittedPions, PhiCombine]
                               , CombinationCut = "(ADAMASS('D_s+')<%(ExDsMassWinWide)s*MeV)"%  self.getProps()
                               , MotherCut = "(ADMASS('D_s+')<%(ExDsMassWin)s*MeV)"\
                               " & (BPVDIRA > %(ExDsBPVDIRA)s)"\
@@ -305,7 +306,7 @@ class Hlt2ExpressLinesConf(HltLinesConfigurableUser):
       
       line = Hlt2Line('ExpressDs2PhiPi'
                       , prescale = self.prescale 
-                      , algos = [ PV3D(), NoCutsPions, NoCutsKaons, PhiCombine, DsCombine]
+                      , algos = [ PV3D(), BiKalmanFittedPions, BiKalmanFittedKaons, PhiCombine, DsCombine]
                       , postscale = self.postscale
                       )
 
@@ -343,14 +344,15 @@ class Hlt2ExpressLinesConf(HltLinesConfigurableUser):
       From RichPIDQC/DstarToDzeroPi.py
 
       '''
-      from Hlt2SharedParticles.BasicParticles import NoCutsKaons, NoCutsPions
+      from Hlt2SharedParticles.TrackFittedBasicParticles import ( BiKalmanFittedKaons,
+                                                                  BiKalmanFittedPions )
       from Configurables import CombineParticles
       from HltTracking.HltPVs import PV3D
       
       D02KPiCombine = Hlt2Member( CombineParticles
                                   , "D02KPiCombine"
                                   , DecayDescriptor = "[ D0 -> K- pi+ ]cc"
-                                  , InputLocations = [NoCutsKaons, NoCutsPions]
+                                  , InputLocations = [BiKalmanFittedKaons, BiKalmanFittedPions]
                                   , CombinationCut = "(ADAMASS('D0')<%(ExD0MassWinWide)s*MeV)"%  self.getProps()
                                   , MotherCut = "(ADMASS('D0') < %(ExD0MassWin)s*MeV)"\
                                   " & (VFASPF(VCHI2/VDOF) < %(ExD0VCHI2)s)"\
@@ -370,7 +372,7 @@ class Hlt2ExpressLinesConf(HltLinesConfigurableUser):
       DStarCombine = Hlt2Member( CombineParticles
                                  , "DStarCombine"
                                  , DecayDescriptor = "[ D*(2010)+ -> D0 pi+ ]cc"
-                                 , InputLocations = [NoCutsPions, D02KPiCombine]
+                                 , InputLocations = [BiKalmanFittedPions, D02KPiCombine]
                                  , CombinationCut = "(ADAMASS('D*(2010)+')<%(ExDStarMassWinWide)s*MeV)"%  self.getProps()
                                  , MotherCut = "(ADMASS('D*(2010)+')<%(ExDStarMassWin)s*MeV)"\
                                  " & (PT > %(ExDStarPt)s*MeV)"\
@@ -385,7 +387,8 @@ class Hlt2ExpressLinesConf(HltLinesConfigurableUser):
 
       line = Hlt2Line('ExpressDStar2D0Pi'
                       , prescale = self.prescale 
-                      , algos = [ PV3D(), NoCutsPions, NoCutsKaons, D02KPiCombine, DStarCombine]
+                      , algos = [ PV3D(), BiKalmanFittedPions, BiKalmanFittedKaons,
+                                  D02KPiCombine, DStarCombine ]
                       , postscale = self.postscale
                       ) 
       
