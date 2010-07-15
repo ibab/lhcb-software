@@ -180,8 +180,7 @@ StatusCode TrackMatchVeloSeed::execute()
       // give some indication that we had to skip this event
       // (ProcStatus returns zero status for us in cases where we don't
       // explicitly add a status code)
-     procStat->addAlgorithmStatus(name(), -3);
-     procStat->setAborted(true);
+     procStat->addAlgorithmStatus(name(), "Tracking", "LimitOfVeloTracksExceeded", -3 , true );
      return Warning("Too many velo tracks", StatusCode::SUCCESS, 1);
   }
 
@@ -192,8 +191,7 @@ StatusCode TrackMatchVeloSeed::execute()
       // give some indication that we had to skip this event
       // (ProcStatus returns zero status for us in cases where we don't
       // explicitly add a status code)
-      procStat->addAlgorithmStatus(name(), -3);
-      procStat->setAborted(true);
+      procStat->addAlgorithmStatus(name(), "Tracking", "LimitOfSeedTracksExceeded", -3 , true );
     return Warning("Too many seed tracks", StatusCode::SUCCESS, 1);
   }
 
