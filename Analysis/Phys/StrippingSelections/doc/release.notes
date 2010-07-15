@@ -5,6 +5,13 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-07-15 - Rob Lambert
+ - Modified B0q2DplusMuX lines
+   * Tails are reduced by a factor of 10
+   * The loose 'Presel' line is prescaled by a factor 10 as default
+   * Juan's new framework is used
+   * Timing is now well within budget (0.15 ms av, 20 ms max)
+
 ! 2010-07-15 - Thomas BLAKE
  - Updated StrippingBd2KstarMuMu D to K3Pi line.
  - Added D+ to K- Pi+ Mu+ line for calibration

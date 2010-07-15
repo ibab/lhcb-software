@@ -17,7 +17,6 @@ from StrippingSelections.StrippingBd2DstarMuNuLoose import StrippingBd2DstarMuNu
 from StrippingSelections import Strippingb2DMuX
 from StrippingSelections import StrippingB0q2DplusMuX
 
-
 from StrippingSelections.StrippingB2XuMuNu import StrippingB2XuMuNuConf
 
 stream = StrippingStream("Semileptonic")
@@ -37,4 +36,4 @@ stream.appendLines( [
                         , StrippingB2XuMuNuConf().KstarSS_line()
 		    ] )
 
-stream.appendLines(StrippingB0q2DplusMuX.StrippingB0q2DplusMuXClass().Lines())
+stream.appendLines(StrippingB0q2DplusMuX.StrippingB0q2DplusMuXAllLinesConf(StrippingB0q2DplusMuX.confdict))
