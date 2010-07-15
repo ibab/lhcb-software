@@ -18,10 +18,10 @@ class Hlt2diphotonDiMuonLinesConf(HltLinesConfigurableUser) :
     def __apply_configuration__(self) :
         from HltLine.HltLine import Hlt2Line, Hlt2Member
         from Configurables import HltANNSvc
-        from Hlt2SharedParticles.BasicParticles import Muons
+        from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedMuons
         # Get the muon tracks straight from the HLT reconstruction
         # TODO: check that this does what it is supposed to do
-        from HltTracking.Hlt2TrackingConfigurations import Hlt2UnfittedForwardTracking
+        from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedForwardTracking
         from Configurables import CombineParticles, FilterDesktop, NumberOfTracksFilter
 
         #-------------------------------------------
@@ -34,7 +34,7 @@ class Hlt2diphotonDiMuonLinesConf(HltLinesConfigurableUser) :
         FilterNumMuons = NumberOfTracksFilter("FilterNumMuons")
         FilterNumMuons.MinTracks = 2  
         FilterNumMuons.MaxTracks = 2  
-        FilterNumMuons.TrackLocations  = [ Hlt2UnfittedForwardTracking()._trackifiedMuonIDLocation() ]
+        FilterNumMuons.TrackLocations  = [ Hlt2BiKalmanFittedForwardTracking()._trackifiedMuonIDLocation() ]
 
        #------------------------------------------------
         
@@ -47,7 +47,7 @@ class Hlt2diphotonDiMuonLinesConf(HltLinesConfigurableUser) :
                             , MotherCut = "ALL"  
                             , InputPrimaryVertices = "None"
                             , UseP2PVRelations = False
-                            , InputLocations  = [ Muons ]
+                            , InputLocations  = [ BiKalmanFittedMuons ]
                             )
         
 
@@ -55,7 +55,7 @@ class Hlt2diphotonDiMuonLinesConf(HltLinesConfigurableUser) :
         line = Hlt2Line( 'diphotonDiMuon'
                        , prescale = self.prescale
 ### TODO: where is the input to FilterNumMuons???
-                       , algos = [ FilterNumMuons, Muons, Filter ]
+                       , algos = [ FilterNumMuons, BiKalmanFittedMuons, Filter ]
                        , postscale = self.postscale
                        )
 

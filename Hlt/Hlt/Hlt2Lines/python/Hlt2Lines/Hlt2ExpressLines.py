@@ -1,5 +1,5 @@
 # =============================================================================
-# $Id: Hlt2ExpressLines.py,v 1.27 2010-05-20 21:03:42 graven Exp $
+# $Id: Hlt2ExpressLines.py,v 1.28 2010-07-15 12:51:33 raaij Exp $
 # =============================================================================
 ## @file
 #  Configuration of Hlt2 Lines for the express stream
@@ -11,7 +11,7 @@
 """
 # =============================================================================
 __author__  = "Johannes Albrecht albrecht@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.27 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.28 $"
 # =============================================================================
 
 from HltLine.HltLinesConfigurableUser import *
@@ -117,7 +117,7 @@ class Hlt2ExpressLinesConf(HltLinesConfigurableUser):
       from HltLine.Hlt2Monitoring import Hlt2Monitor,Hlt2MonitorMinMax
       from HltTracking.HltPVs import PV3D
       from Configurables import HltANNSvc
-      from Hlt2SharedParticles.TrackFittedDiMuon import TrackFittedDiMuon as DiMuon
+      from Hlt2SharedParticles.TrackFittedDiMuon import TrackFittedDiMuon
       from Configurables import FilterDesktop
       '''
       Comment content of express stream here
@@ -133,7 +133,7 @@ class Hlt2ExpressLinesConf(HltLinesConfigurableUser):
                              , Code = " (ADMASS('J/psi(1S)')<%(ExJPsiMassWindow)s*MeV)"\
                              " & (PT>%(ExJPsiPt)s*MeV)"\
                              " & (MINTREE('mu-'==ABSID,PT)>%(ExJPsiMuPt)s*MeV) " %  self.getProps() 
-                             , InputLocations  = [ DiMuon ]
+                             , InputLocations  = [ TrackFittedDiMuon ]
                              , InputPrimaryVertices = "None"
                              , UseP2PVRelations = False
                              , PreMonitor  =  Hlt2Monitor( "M","M(#mu#mu)",3097,self.getProp("ExJPsiMassWindow"),'M_in',nbins=101) 
@@ -142,7 +142,7 @@ class Hlt2ExpressLinesConf(HltLinesConfigurableUser):
       
       line = Hlt2Line('ExpressJPsi'
                       , prescale = self.prescale 
-                      , algos = [ DiMuon, filter ]
+                      , algos = [ TrackFittedDiMuon, filter ]
                       , postscale = self.postscale
                       )
       #--------------------------------------------

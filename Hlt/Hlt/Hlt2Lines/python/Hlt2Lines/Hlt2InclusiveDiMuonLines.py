@@ -93,7 +93,7 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
         from HltLine.Hlt2Monitoring import Hlt2Monitor, Hlt2MonitorMinMax
         from HltTracking.HltPVs import PV3D
         from Configurables import HltANNSvc
-        from Hlt2SharedParticles.DiMuon import DiMuon
+        from Hlt2SharedParticles.TrackFittedDiMuon import TrackFittedDiMuon
         from Configurables import FilterDesktop
         '''
           There are in total four unbiased selections:
@@ -105,7 +105,7 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
         '''
 
         from Configurables import CombineParticles
-        from Hlt2SharedParticles.BasicParticles import Muons
+        from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedMuons
         #--------------------------------------------        
         '''
         unbiased same sign dimuon
@@ -120,11 +120,11 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
                                    "& (VFASPF(VCHI2/VDOF)<%(UnbiasedDiMuonVertexChi2)s )" %  self.getProps()
                                    , InputPrimaryVertices = "None"
                                    , UseP2PVRelations = False
-                                   , InputLocations  = [ Muons ]
+                                   , InputLocations  = [ BiKalmanFittedMuons ]
                                    )
         line = Hlt2Line('DiMuonSameSign'
                         , prescale = self.prescale 
-                        , algos = [Muons,SameSignDiMu]
+                        , algos = [BiKalmanFittedMuons,SameSignDiMu]
                         , postscale = self.postscale
                         )
 
@@ -139,7 +139,7 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
                                "& (VFASPF(VCHI2/VDOF)<%(UnbiasedDiMuonVertexChi2)s )" %  self.getProps() 
                                , InputPrimaryVertices = "None"
                                , UseP2PVRelations = False
-                               , InputLocations  = [ DiMuon ]
+                               , InputLocations  = [ TrackFittedDiMuon ]
 #                               , PreMonitor  =  Hlt2Monitor( "M","M(#mu#mu)",3097,200,'M_in',nbins=25) 
  #                              , PostMonitor =  Hlt2Monitor( "M","M(#mu#mu)",3097,200,'M_out',nbins=25)
                                )
@@ -150,7 +150,7 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
         '''
         line = Hlt2Line('UnbiasedDiMuon'
                         , prescale = self.prescale 
-                        , algos = [ DiMuon, filter ]
+                        , algos = [ TrackFittedDiMuon, filter ]
                         , postscale = self.postscale
                         )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2UnbiasedDiMuonDecision" : 50200 } )
@@ -321,8 +321,7 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
         '''
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2BiasedDiMuonSimpleDecision"  : 50040 } )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2BiasedDiMuonRefinedDecision" : 50041 } )
-        
-        
+
         '''
            cut definitions for biased DiMuon Lines
         '''
@@ -344,7 +343,7 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
         '''
         SimpleDiMuon = Hlt2Member( FilterDesktop
                                    , "SimpleDiMuon"          
-                                   , InputLocations = [ DiMuon ]
+                                   , InputLocations = [ TrackFittedDiMuon ]
                                    , Code = MuPtCut +"&"+ MassCut +"&"+ MuIPCut +"&"+ LTimeCut
                                    , PreMonitor = 
                                    Hlt2MonitorMinMax( "M","M(#mu#mu)",0,6000,'M_in',nbins=25) 
@@ -380,7 +379,7 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
         '''
         line = Hlt2Line('BiasedDiMuonSimple'
                         , prescale = self.prescale 
-                        , algos = [ PV3D(), DiMuon, SimpleDiMuon ]
+                        , algos = [ PV3D(), TrackFittedDiMuon, SimpleDiMuon ]
                         , postscale = self.postscale
                         )
 
@@ -390,7 +389,7 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
         '''
         line = Hlt2Line('BiasedDiMuonRefined'
                         , prescale = self.prescale 
-                        , algos = [ PV3D(), DiMuon, SimpleDiMuon, RefinedDiMuon ]
+                        , algos = [ PV3D(), TrackFittedDiMuon, SimpleDiMuon, RefinedDiMuon ]
                         , postscale = self.postscale
                         )
 

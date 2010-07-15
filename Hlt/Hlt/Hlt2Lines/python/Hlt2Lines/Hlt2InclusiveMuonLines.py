@@ -50,7 +50,8 @@ class Hlt2InclusiveMuonLinesConf(HltLinesConfigurableUser) :
         from Configurables import HltANNSvc
         from Configurables import CombineParticles, PhysDesktop
         from Configurables import FilterDesktop
-        from Hlt2SharedParticles.BasicParticles import Muons, NoCutsPions
+        from Hlt2SharedParticles.TrackFittedBasicParticles import ( BiKalmanFittedMuons,
+                                                                    BiKalmanFittedPions )
 
         #some string definitions... 
         decayDescB2MuTrack = ["[B0 -> mu+ pi-]cc","[B0 -> mu+ pi+]cc"]
@@ -83,12 +84,12 @@ class Hlt2InclusiveMuonLinesConf(HltLinesConfigurableUser) :
         
         Hlt2SelSingleMuon= Hlt2Member( FilterDesktop
                                        , "Filter"
-                                       , InputLocations  = [Muons]
+                                       , InputLocations  = [BiKalmanFittedMuons]
                                        , Code = "((PT>"+str(self.getProp('SingleMuonPt'))+"*MeV) & (MIPDV(PRIMARY)>"+str(self.getProp('SingleMuonIP'))+"))"
                                        )
         line = Hlt2Line('SingleMuon'
                         , prescale = self.prescale 
-                        , algos = [ Muons, PV3D(), Hlt2SelSingleMuon ]
+                        , algos = [ BiKalmanFittedMuons, PV3D(), Hlt2SelSingleMuon ]
                         , postscale = self.postscale
                         )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2SingleMuonDecision" : 50191 } )
@@ -98,13 +99,13 @@ class Hlt2InclusiveMuonLinesConf(HltLinesConfigurableUser) :
         Hlt2SelSingleHighPTMuon = Hlt2Member(   FilterDesktop
                                                 , "Filter"
                                                 , Code = "(PT>"+str(self.getProp('SingleMuonHighPt'))+"*MeV)"
-                                                , InputLocations  = [Muons]
+                                                , InputLocations  = [BiKalmanFittedMuons]
                                                 , InputPrimaryVertices = "None"
                                                 , UseP2PVRelations = False
                                                 )
         line = Hlt2Line( 'SingleHighPTMuon'
                          , prescale = self.prescale 
-                         , algos = [ Muons, Hlt2SelSingleHighPTMuon]
+                         , algos = [ BiKalmanFittedMuons, Hlt2SelSingleHighPTMuon]
                          , postscale = self.postscale
                          )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2SingleHighPTMuonDecision" : 50192 } )
@@ -120,11 +121,11 @@ class Hlt2InclusiveMuonLinesConf(HltLinesConfigurableUser) :
                                                   "pi+" : "(PT>"+str(self.getProp('MuTrackTrPt'))+"*MeV) & (MIPDV(PRIMARY)>"+str(self.getProp('MuTrackTrIP'))+")"}
                               , CombinationCut =  Doca+" & "+Mass 
                               , MotherCut = Dz+" & "+ Point
-                              , InputLocations  = [ Muons , NoCutsPions ]
+                              , InputLocations  = [ BiKalmanFittedMuons , BiKalmanFittedPions ]
                               )
         line = Hlt2Line('MuTrack'
                         , prescale = self.prescale 
-                        , algos = [Muons, NoCutsPions, PV3D(), combine]
+                        , algos = [BiKalmanFittedMuons, BiKalmanFittedPions, PV3D(), combine]
                         , postscale = self.postscale
                         )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2MuTrackDecision" : 50400 } )
@@ -139,14 +140,14 @@ class Hlt2InclusiveMuonLinesConf(HltLinesConfigurableUser) :
                                                        "pi-" : "(PT>"+str(self.getProp('MuTrackNoIPTrPt'))+"*MeV)" }
                                    , CombinationCut = DocaNoIP+" & "+MassNoIP 
                                    , MotherCut = "ALL"
-                                   , InputLocations  = [ Muons , NoCutsPions ]
+                                   , InputLocations  = [ BiKalmanFittedMuons , BiKalmanFittedPions ]
                                    , InputPrimaryVertices = "None"
                                    , UseP2PVRelations = False
                                    )
         line = Hlt2Line('MuTrackNoIP'
                         , prescale = self.prescale 
                         , HLT = Hlt1UnbMuon
-                        , algos = [Muons, NoCutsPions, combine_noip]
+                        , algos = [BiKalmanFittedMuons, BiKalmanFittedPions, combine_noip]
                         , postscale = self.postscale
                         )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2MuTrackNoIPDecision" : 50401 } )

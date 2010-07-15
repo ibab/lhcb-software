@@ -8,6 +8,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2010-07-15 - Roel Aaij
+ - Updated all Muon, MuTrack and DiMuon lines to use track-fitted inputs.
+
 ! 2010-07-14 - Alexandr Kozlinskiy
  - Added line D02MuMu to Charm lines with cuts on dau pt and D0 life time,
    plus prescaled calibration channels PiPi, KPi, KK
