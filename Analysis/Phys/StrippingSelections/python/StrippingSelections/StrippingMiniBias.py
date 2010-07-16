@@ -19,11 +19,20 @@ for i in [ 'LoKiTrigger.decorators' ] :
 #-----------------------------------------------------------------
 # Microbias line
 #-----------------------------------------------------------------
-MBMicroBiasLine  = StrippingLine( "MBMicroBias"
-                                  , HLT = "HLT_PASS_RE('Hlt1MBMicro.*Decision')"
-                                  , checkPV = False
-                                  , prescale = 1
-                                  , postscale = 1)
+MBMicroBiasRateLimitedLine  = StrippingLine( "MBMicroBiasRateLimited"
+                                             , HLT = "HLT_PASS_RE('Hlt1MBMicro.*RateLimitedDecision')"
+                                             , checkPV = False
+                                             , prescale = 1
+                                             , postscale = 1)
+
+
+MBMicroBiasNotRateLimitedLine  = StrippingLine( "MBMicroBiasNotRateLimited"
+                                                , HLT = "HLT_PASS_RE('Hlt1MBMicro.*(?<!RateLimited)Decision')"
+                                                , checkPV = False
+                                                , prescale = 1
+                                                , postscale = 1)
+
+
 
 #-----------------------------------------------------------------
 # No bias line

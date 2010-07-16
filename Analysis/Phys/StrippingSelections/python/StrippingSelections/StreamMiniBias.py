@@ -14,7 +14,8 @@ from StrippingSelections.StrippingPass import StrippingPassConf
 
 stream = StrippingStream("MiniBias")
 
-stream.appendLines( [ StrippingMiniBias.MBMicroBiasLine ,
+stream.appendLines( [ StrippingMiniBias.MBMicroBiasRateLimitedLine, 
+                      StrippingMiniBias.MBMicroBiasNotRateLimitedLine,  
                       StrippingMiniBias.MBNoBiasLine ,
                       StrippingMiniBias.MBMiniBiasLine ,
                       StrippingBeamGas.lineUnbiased ,

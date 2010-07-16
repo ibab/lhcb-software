@@ -4,6 +4,9 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
+! 2010-07-16- Yasmine Amhis
+  - Modified StrippingMiniBias
+    * Adapt the MiniBias lines to the rate limited triggers. 		
 
 ! 2010-07-15 - Rob Lambert
  - Modified B0q2DplusMuX lines
