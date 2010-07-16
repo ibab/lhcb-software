@@ -37,6 +37,9 @@ class Physics_HighNu_80Vis_25L0_2Hlt1_CoreHlt2_Jun10         ( Physics_HighNu_80
         from Muons_Retention15 import Muons_Retention15         
         thresholds.update( Muons_Retention15().Thresholds() )
 
+	from Exclusive_Leptonic import Exclusive_Leptonic
+	thresholds.update( Exclusive_Leptonic().Thresholds() )
+	
 	from Electrons_Minimal_TrackFitted import Electrons_Minimal_TrackFitted
         thresholds.update( Electrons_Minimal_TrackFitted().Thresholds() )
 
