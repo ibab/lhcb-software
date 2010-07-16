@@ -61,10 +61,9 @@ class Hlt2B2XGammaLinesConf(HltLinesConfigurableUser) :
         from Configurables import HltANNSvc
         from Configurables import CombineParticles, PhysDesktop
         from Configurables import FilterDesktop
-        from Hlt2SharedParticles.GoodParticles import GoodKaons, GoodPions
         from Hlt2SharedParticles.BasicParticles import Photons
         from Hlt2SharedParticles.BasicParticles import NoCutsKaons, NoCutsPions
- 
+        from Hlt2SharedParticles.TrackFittedBasicParticles import  BiKalmanFittedKaons, BiKalmanFittedPions
       
       
         ############################################################################
@@ -77,7 +76,7 @@ class Hlt2B2XGammaLinesConf(HltLinesConfigurableUser) :
                                        , DaughtersCuts = { "K+" : "(MIPCHI2DV(PRIMARY)>"+str(self.getProp('TrIPchi2Phi'))+")" }
                                        , CombinationCut =  "(ADAMASS('phi(1020)')<"+str(self.getProp('PhiMassWinL'))+"*MeV)"
                                        , MotherCut = "( VFASPF(VCHI2) < "+str(self.getProp('PhiVCHI2'))+")"
-                                       , InputLocations  = [ GoodKaons ]
+                                       , InputLocations  = [ BiKalmanFittedKaons ]
                                        )
         
         
@@ -88,7 +87,7 @@ class Hlt2B2XGammaLinesConf(HltLinesConfigurableUser) :
                                                            "pi-" : "(MIPCHI2DV(PRIMARY)>"+str(self.getProp('TrIPchi2Kst'))+")"}
                                        , CombinationCut =  "(ADAMASS('K*(892)0')<"+str(self.getProp('KstMassWinL'))+"*MeV)"
                                        , MotherCut = "( VFASPF(VCHI2) < "+str(self.getProp('KstVCHI2'))+")"
-                                       , InputLocations  = [ GoodKaons, GoodPions ]
+                                       , InputLocations  = [ BiKalmanFittedKaons, BiKalmanFittedPions ]
                                        )
 
      
@@ -130,7 +129,7 @@ class Hlt2B2XGammaLinesConf(HltLinesConfigurableUser) :
 
         line = Hlt2Line('Bs2PhiGamma'
                         , prescale = self.prescale
-                        , algos = [ GoodKaons, 
+                        , algos = [ BiKalmanFittedKaons, 
                                     Hlt2Phi4PhiGamma, 
                                     Photons,
                                     Hlt2BstoPhiGamma]
@@ -154,7 +153,7 @@ class Hlt2B2XGammaLinesConf(HltLinesConfigurableUser) :
         #   Bs mass sideband
         line.clone('Bs2PhiGammaWideBMass'
                    , prescale = self.prescale
-                   , algos = [GoodKaons, PV3D(), Hlt2Phi4PhiGamma, Photons, Hlt2BstoPhiGamma]
+                   , algos = [BiKalmanFittedKaons, PV3D(), Hlt2Phi4PhiGamma, Photons, Hlt2BstoPhiGamma]
                    , CombineBs = {"CombinationCut" :  "(ADAMASS('B_s0')<"+str(self.getProp('BMassWinSB'))+"*MeV)"  }
                    , postscale = self.postscale
                    )
@@ -163,7 +162,7 @@ class Hlt2B2XGammaLinesConf(HltLinesConfigurableUser) :
         #  Bs dira monitoring
         line.clone('Bs2PhiGammaLooseDira'
                    , prescale = self.prescale
-                   , algos = [ GoodKaons, PV3D(), Hlt2Phi4PhiGamma, Photons, Hlt2BstoPhiGamma]
+                   , algos = [ BiKalmanFittedKaons, PV3D(), Hlt2Phi4PhiGamma, Photons, Hlt2BstoPhiGamma]
                    , CombineBs = {"MotherCut" : "( (BPVDIRA > " + str(self.getProp('BDirAngleMoni'))+") & (BPVIPCHI2()<" + str(self.getProp('BsPVIPchi2'))+"))"   }
                    , postscale = self.postscale
                    )
@@ -175,8 +174,8 @@ class Hlt2B2XGammaLinesConf(HltLinesConfigurableUser) :
         
         line = Hlt2Line('Bd2KstGamma'
                         , prescale = self.prescale
-                        , algos = [ GoodKaons,
-                                    GoodPions,
+                        , algos = [ BiKalmanFittedKaons,
+                                    BiKalmanFittedPions,
                                     Hlt2Kst4KstGamma, 
                                     Photons,
                                     Hlt2BdtoKstGamma]
@@ -199,7 +198,7 @@ class Hlt2B2XGammaLinesConf(HltLinesConfigurableUser) :
         #  Kst mass sideband
         line.clone('Bd2KstGammaWideKMass'
                    , prescale = self.prescale
-                   , algos = [ GoodKaons, GoodPions, PV3D(), Hlt2Kst4KstGamma, Photons, Hlt2BdtoKstGamma]
+                   , algos = [ BiKalmanFittedKaons, BiKalmanFittedPions, PV3D(), Hlt2Kst4KstGamma, Photons, Hlt2BdtoKstGamma]
                    , CombineB0   = { "DaughtersCuts" :{ "gamma"    : "(PT>"+str(self.getProp('photonPT'))+"*MeV)",
                                                         "K*(892)0" : "(ADMASS('K*(892)0')<"+str(self.getProp('KstMassWinSB'))+"*MeV) " } }
                    , postscale = self.postscale
@@ -208,7 +207,7 @@ class Hlt2B2XGammaLinesConf(HltLinesConfigurableUser) :
         # B0 mass sideband
         line.clone('Bd2KstGammaWideBMass'
                    , prescale = self.prescale
-                   , algos = [GoodKaons, GoodPions, PV3D(), Hlt2Kst4KstGamma, Photons, Hlt2BdtoKstGamma]
+                   , algos = [BiKalmanFittedKaons, BiKalmanFittedPions, PV3D(), Hlt2Kst4KstGamma, Photons, Hlt2BdtoKstGamma]
                    , CombineB0 = { "CombinationCut" :  "(ADAMASS('B0')<"+str(self.getProp('BMassWinSB'))+"*MeV)" }
                    , postscale = self.postscale
                    )
@@ -216,7 +215,7 @@ class Hlt2B2XGammaLinesConf(HltLinesConfigurableUser) :
         # B0 dira monitoring
         line.clone('Bd2KstGammaLooseDira'
                    , prescale = self.prescale
-                   , algos = [GoodKaons, GoodPions, PV3D(), Hlt2Kst4KstGamma, Photons, Hlt2BdtoKstGamma]
+                   , algos = [BiKalmanFittedKaons, BiKalmanFittedPions, PV3D(), Hlt2Kst4KstGamma, Photons, Hlt2BdtoKstGamma]
                    , CombineB0 = { "MotherCut" :  "( (BPVDIRA > " + str(self.getProp('BDirAngleMoni'))+") & (BPVIPCHI2()<" + str(self.getProp('B0PVIPchi2'))+"))" }
                    , postscale = self.postscale
                    )
