@@ -14,7 +14,7 @@ import socket
 from urllib import urlretrieve, urlopen, urlcleanup
 from shutil import rmtree
 
-script_version = '100601'
+script_version = '100716'
 python_version = sys.version_info[:3]
 txt_python_version = ".".join([str(k) for k in python_version])
 lbscripts_version = "v5r2"
@@ -1089,7 +1089,7 @@ def getProjectTar(tar_list, already_present_list=None):
 def getMySelf():
     log = logging.getLogger()
     here = os.getcwd()
-    mysiteroot = os.environ["MYSITEROOT"].split(":")[0]
+    mysiteroot = os.environ["MYSITEROOT"].split(os.pathsep)[0]
     os.chdir(mysiteroot)
     the_install = "install_project.py"
     new_install = "latest_%s" % the_install

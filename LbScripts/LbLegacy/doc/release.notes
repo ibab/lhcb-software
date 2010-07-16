@@ -1,3 +1,7 @@
+2010-07-16  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbLegacy/install_project.py: fixed path separator for windows.
+
 2010-06-21  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbLegacy/install_project.py: fixed MYSITEROOT splitting.
