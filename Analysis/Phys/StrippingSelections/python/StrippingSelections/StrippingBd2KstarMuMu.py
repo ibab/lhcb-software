@@ -1,6 +1,6 @@
 __author__ = 'Patrick Koppenburg, Rob Lambert, Mitesh Patel'
 __date__ = '21/01/2009'
-__version__ = '$Revision: 1.26 $'
+__version__ = '$Revision: 1.27 $'
 
 """
 Bd->K*MuMu selections 
@@ -329,8 +329,11 @@ class StrippingBd2KstarMuMuConf(LHCbConfigurableUser):
         @author P. Koppenburg
         @date 25/2/2010
         """
-        _comb = self.simplestCombineFD().clone("SimpleBd2KstarMuMuLT")
-        _comb.MotherCut = "(VFASPF(VCHI2/VDOF) < %(IntVertexCHI2Tight)s ) & ( BPVLTIME() > %(SimpleBdLT)s )" % self.getProps()
+        from Configurables import CombineParticles
+        _comb = CombineParticles("SimpleBd2KstarMuMuLT",
+                                 DecayDescriptor = "[B0 -> J/psi(1S) K*(892)0 ]cc" ,
+                                 CombinationCut = "(ADAMASS('B0') < %(BMassMedWin)s *MeV)"  % self.getProps(),
+                                 MotherCut = "(VFASPF(VCHI2/VDOF) < %(IntVertexCHI2Tight)s ) & ( BPVLTIME() > %(SimpleBdLT)s ) & (ADMASS('B0') < %(BMassMedWin)s *MeV)" % self.getProps() )
         return _comb 
         
        
