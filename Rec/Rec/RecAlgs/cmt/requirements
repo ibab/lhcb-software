@@ -13,6 +13,8 @@ use DAQEvent        v* Event
 use EventBase       v* Event
 use LHCbKernel      v* Kernel
 use GaudiAlg        v*
+use GaudiUtils      v*
+use AIDA            v*   LCG_Interfaces
 
 library RecAlgs ../src/*.cpp
 

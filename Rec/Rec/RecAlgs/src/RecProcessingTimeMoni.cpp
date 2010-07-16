@@ -16,7 +16,7 @@ DECLARE_ALGORITHM_FACTORY( RecProcessingTimeMoni );
 // Standard constructor, initializes variables
 //=============================================================================
 RecProcessingTimeMoni::RecProcessingTimeMoni( const std::string& name,
-                                              ISvcLocator* pSvcLocator)
+                                              ISvcLocator* pSvcLocator )
   : GaudiHistoAlg ( name , pSvcLocator )
 {
   declareProperty( "Algorithms",   m_algNames );

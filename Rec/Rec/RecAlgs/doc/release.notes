@@ -5,6 +5,10 @@
 !-----------------------------------------------------------------------------
 
 ! 2010-07-16 - Chris Jones
+ - Add new monitor for ProcStatus processing aborts. Fill a single histogram
+   with the abort rates (%) overall and by sub-system.
+
+! 2010-07-16 - Chris Jones
  - Update timing monitor to show log10(time) instead of time, to better show
    the tails in the timing distribution.
 
