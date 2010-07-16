@@ -218,14 +218,9 @@ class LbLoginScript(SourceScript):
 
     def setPath(self):
         ev = self.Environment()
-        if sys.platform != "win32" :
-            if ev.has_key("SAVEPATH") :
-                if ev["PATH"] != ev["SAVEPATH"] :
-                    ev["PATH"] = ev["SAVEPATH"]
-                else :
-                    ev["SAVEPATH"] = ev["PATH"]
         opts = self.options
         log = logging.getLogger()
+        log.debug("%s is set to %s" % ("PATH", ev["PATH"]) )
         if not opts.strip_path :
             log.debug("Disabling the path stripping")
             ev["LB_NO_STRIP_PATH"] = "1"
@@ -756,10 +751,15 @@ class LbLoginScript(SourceScript):
                 if lastver :
                     compat_rel = os.path.join(compat_dir, lastver)
                     compat_lib = os.path.join(compat_rel, "CompatSys", ev["CMTOPT"], "lib")
-                    compat_bin = os.path.join(compat_rel, "CompatSys", ev["CMTOPT"], "bin")
-                    envPathPrepend("PATH", compat_bin)
-                    envPathPrepend("LD_LIBRARY_PATH", compat_lib)
-
+                    if sys.platform != "win32" :
+                        compat_bin = os.path.join(compat_rel, "CompatSys", ev["CMTOPT"], "bin")
+                        envPathPrepend("PATH", compat_bin)
+                        envPathPrepend("LD_LIBRARY_PATH", compat_lib)
+                        log.debug("Internal %s is set to %s" % ("LD_LIBRARY_PATH", os.environ["LD_LIBRARY_PATH"]))
+                    else :
+                        envPathPrepend("PATH", compat_lib)
+                    log.debug("Internal %s is set to %s" % ("PATH", os.environ["PATH"]))
+                        
 
     def setupLbScripts(self):
         """ Call to SetupProject with LbScripts and python """
@@ -769,6 +769,10 @@ class LbLoginScript(SourceScript):
         log.debug("Setting up LbScripts and appending to the output")
         for var in ev.keys() :
             os.environ[var] = ev[var]
+        
+        log.debug("%s is set to %s" % ("PATH", ev.get("PATH", "")))
+        if sys.platform != "win32" :
+            log.debug("%s is set to %s" % ("LD_LIBRARY_PATH", ev.get("LD_LIBRARY_PATH", "")))
 
         cachefile = getLoginCacheName(shell=self.targetShell(), location=_scripts_dir)
         if opts.use_cache and os.path.exists(cachefile):
@@ -831,6 +835,10 @@ class LbLoginScript(SourceScript):
                 if opts.compat_prepend :
                     self.setupCompat()
                 SetupProject().main(setupprojargs)
+
+        log.debug("%s is set to %s" % ("PATH", ev.get("PATH", "")))
+        if sys.platform != "win32" :
+            log.debug("%s is set to %s" % ("LD_LIBRARY_PATH", ev.get("LD_LIBRARY_PATH", "")))
 
     def copyEnv(self):
         ev = self.Environment()

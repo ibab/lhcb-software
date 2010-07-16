@@ -1,3 +1,10 @@
+2010-07-16  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbConfiguration/LbLogin.py: 
+	- fixed the usage of the internal path to the Compat binaries for the windows platform.
+	- removed useless SAVE_PATH variables
+	- added a few more debug printout
+
 2010-07-14  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbConfiguration/Platform.py: added support for fedora 13.
