@@ -2,7 +2,7 @@
 
 __author__ = 'Susan Haines'
 __date__ = '10/02/2010'
-__version__ = '$Revision: 1.1 $'
+__version__ = '$Revision: 1.2 $'
 
 '''
 Bu->D0(KShh)h stripping selection using LoKi::Hybrid and python
@@ -19,7 +19,7 @@ class StrippingBu2D0h_D02KShh_NoPIDConf(LHCbConfigurableUser):
         ,  'BIPCHI2_LL'         : 16.         
         ,  'BVertexCHI2_LL'     : 9.
         ,  'BachIPCHI2_LL'     : 9.
-        ,  'BachPt_LL'         : 0.9  
+        ,  'BachPt_LL'         : 1.0#0.9  
         ,  'DVertexCHI2_LL'     : 6.25     
         ,  'DdaughterIPCHI2_LL' : 9.
         ,  'KSFlightCHI2_LL'    : 4.
@@ -30,7 +30,7 @@ class StrippingBu2D0h_D02KShh_NoPIDConf(LHCbConfigurableUser):
         ,  'BIPCHI2_DD'         : 25.         
         ,  'BVertexCHI2_DD'     : 12.25
         ,  'BachIPCHI2_DD'     : 4.
-        ,  'BachPt_DD'         : 0.4  
+        ,  'BachPt_DD'         : 0.5#0.4  
         ,  'DVertexCHI2_DD'     : 16.        
         ,  'DdaughterIPCHI2_DD' : 4.
         ,  'KSFlightCHI2_DD'    : 4.
@@ -130,7 +130,7 @@ class StrippingBu2D0h_D02KShh_NoPIDConf(LHCbConfigurableUser):
         from Configurables import FilterDesktop
         import GaudiKernel.SystemOfUnits as Units
 
-        LLPi_FilterCut = "(BPVIPCHI2() > %(KSdaughterPiIPCHI2_LL)s) & (P < 100.*GeV)"% self.getProps() 
+        LLPi_FilterCut = "(P < 100.*GeV) & (TRCHI2DOF<10.) & (BPVIPCHI2() > %(KSdaughterPiIPCHI2_LL)s)"% self.getProps() 
         
         LLPionFilterForBu2D0h_D02KShh = FilterDesktop("StripLLPionFilterForBu2D0h_D02KShh")
         LLPionFilterForBu2D0h_D02KShh.InputLocations = ["StdNoPIDsPions"]
@@ -144,7 +144,7 @@ class StrippingBu2D0h_D02KShh_NoPIDConf(LHCbConfigurableUser):
         from Configurables import FilterDesktop
         import GaudiKernel.SystemOfUnits as Units
 
-        DDPi_FilterCut = "(ISDOWN) & (BPVIPCHI2() > %(KSdaughterPiIPCHI2_DD)s) & (P < 100.*GeV) & ((-PIDK) > 0.)"% self.getProps()
+        DDPi_FilterCut = "(ISDOWN) & (P < 100.*GeV) & (TRCHI2DOF<10.) & (BPVIPCHI2() > %(KSdaughterPiIPCHI2_DD)s)  & ((-PIDK) > 0.)"% self.getProps()
         
         DDPionFilterForBu2D0h_D02KShh = FilterDesktop("StripDDPionFilterForBu2D0h_D02KShh")
         DDPionFilterForBu2D0h_D02KShh.InputLocations = ["StdNoPIDsDownPions"]
@@ -158,7 +158,7 @@ class StrippingBu2D0h_D02KShh_NoPIDConf(LHCbConfigurableUser):
         from Configurables import CombineParticles
         import GaudiKernel.SystemOfUnits as Units
 
-        KSLL_CombCut = "(AMINDOCA('LoKi::TrgDistanceCalculator')<2.4) & (ADAMASS('KS0') < 40.*MeV)"
+        KSLL_CombCut = "(ADAMASS('KS0') < 40.*MeV) & (AMINDOCA('LoKi::TrgDistanceCalculator')<1.5)"
         KSLL_MotherCut = "(ADMASS('KS0') < 30.*MeV) & (VFASPF(VCHI2/VDOF) < %(KSVertexCHI2_LL)s) & (BPVVDCHI2 > %(KSFlightCHI2_LL)s)"% self.getProps()
 
         KSLLForBu2D0h_D02KShh = CombineParticles("StripKSLLForBu2D0h_D02KShh")
@@ -176,8 +176,8 @@ class StrippingBu2D0h_D02KShh_NoPIDConf(LHCbConfigurableUser):
         from Configurables import CombineParticles
         import GaudiKernel.SystemOfUnits as Units
 
-        KSDD_CombCut = "(AMINDOCA('LoKi::TrgDistanceCalculator')<24.) & (ADAMASS('KS0') < 50.*MeV)"
-        KSDD_MotherCut = "(ADMASS('KS0') < 42.*MeV) & (VFASPF(VCHI2/VDOF) < %(KSVertexCHI2_DD)s) & (BPVVDCHI2 > %(KSFlightCHI2_DD)s)"% self.getProps()
+        KSDD_CombCut = "(ADAMASS('KS0') < 50.*MeV) & (AMINDOCA('LoKi::TrgDistanceCalculator')<22.)"
+        KSDD_MotherCut = "(ADMASS('KS0') < 42.*MeV) & (VFASPF(VCHI2/VDOF) < %(KSVertexCHI2_DD)s)" % self.getProps() #& (BPVVDCHI2 > %(KSFlightCHI2_DD)s)"% self.getProps()
         
         KSDDForBu2D0h_D02KShh = CombineParticles("StripKSDDForBu2D0h_D02KShh")
         KSDDForBu2D0h_D02KShh.InputLocations = ["StripDDPionFilterForBu2D0h_D02KShh"]
@@ -194,8 +194,8 @@ class StrippingBu2D0h_D02KShh_NoPIDConf(LHCbConfigurableUser):
         from Configurables import CombineParticles
         import GaudiKernel.SystemOfUnits as Units
 
-        D_LL_DaughterCut = "(BPVIPCHI2() > %(DdaughterIPCHI2_LL)s) & (P < 100.*GeV)"% self.getProps()
-        D_LL_CombCut = "(AMAXDOCA('LoKi::TrgDistanceCalculator') < 1.2) & (AM > 1020.*MeV) & (AM < 1940.*MeV)"
+        D_LL_DaughterCut = "(P < 100.*GeV) & (TRCHI2DOF<10.) & (BPVIPCHI2() > %(DdaughterIPCHI2_LL)s) "% self.getProps()
+        D_LL_CombCut = "(AM > 1050.*MeV) & (AM < 1910.*MeV) & (AMAXDOCA('LoKi::TrgDistanceCalculator') < 1.8)"
         D_LL_MotherCut = "(M > 1060.*MeV) & (M < 1897.3*MeV) & (VFASPF(VCHI2/VDOF) < %(DVertexCHI2_LL)s)"% self.getProps()
 
         DForBu2D0h_D02KSPiPi_KSLL = CombineParticles("StripDForBu2D0h_D02KSPiPi_KSLL")
@@ -221,8 +221,8 @@ class StrippingBu2D0h_D02KShh_NoPIDConf(LHCbConfigurableUser):
         from Configurables import CombineParticles
         import GaudiKernel.SystemOfUnits as Units
 
-        D_DD_DaughterCut = "(BPVIPCHI2() > %(DdaughterIPCHI2_DD)s) & (P < 100.*GeV)"% self.getProps()
-        D_DD_CombCut = "(AMAXDOCA('LoKi::TrgDistanceCalculator') < 7.2) & (AM > 1020.*MeV) & (AM < 1950.*MeV)"
+        D_DD_DaughterCut = "(P < 100.*GeV) & (TRCHI2DOF<10.) & (BPVIPCHI2() > %(DdaughterIPCHI2_DD)s)"% self.getProps()
+        D_DD_CombCut = "(AM > 1050.*MeV) & (AM < 1915.*MeV)& (AMAXDOCA('LoKi::TrgDistanceCalculator') < 9.2)"
         D_DD_MotherCut = "(M > 1060.*MeV) & (M < 1904.*MeV) & (VFASPF(VCHI2/VDOF) < %(DVertexCHI2_DD)s)"% self.getProps()
         
         DForBu2D0h_D02KSPiPi_KSDD = CombineParticles("StripDForBu2D0h_D02KSPiPi_KSDD")
@@ -245,9 +245,9 @@ class StrippingBu2D0h_D02KShh_NoPIDConf(LHCbConfigurableUser):
         from Configurables import CombineParticles
         import GaudiKernel.SystemOfUnits as Units    
 
-        B_LL_BachCut = "(BPVIPCHI2() > %(BachIPCHI2_LL)s ) & (PT > %(BachPt_LL)s *GeV ) &  (P < 100.*GeV)"% self.getProps()
-        B_LL_CombCut = "(ADAMASS('B+') < 600.*MeV)"
-        B_LL_MotherCut = "(ADMASS('B+') < 500.*MeV)  & (VFASPF(VCHI2/VDOF)<%(BVertexCHI2_LL)s) & (BPVIPCHI2() < %(BIPCHI2_LL)s)  & (BPVDIRA > %(BDIRA_LL)s) & (BPVVDCHI2 > %(BFlightCHI2_LL)s)" % self.getProps()
+        B_LL_BachCut = "(PT > %(BachPt_LL)s *GeV ) &  (P < 100.*GeV) & (TRCHI2DOF<10.) & (BPVIPCHI2() > %(BachIPCHI2_LL)s )"% self.getProps()
+        B_LL_CombCut = "(ADAMASS('B+') < 510.*MeV)"
+        B_LL_MotherCut = "(ADMASS('B+') < 500.*MeV)  & (VFASPF(VCHI2/VDOF)<%(BVertexCHI2_LL)s) & (BPVIPCHI2() < %(BIPCHI2_LL)s) & (BPVVDCHI2 > %(BFlightCHI2_LL)s) & (BPVDIRA > %(BDIRA_LL)s)"% self.getProps()
 
         Bu2D0h_KSLL = CombineParticles("StripBu2D0h_KSLL")
         Bu2D0h_KSLL.DecayDescriptor = "[B+ -> D~0 K+]cc"
@@ -269,9 +269,9 @@ class StrippingBu2D0h_D02KShh_NoPIDConf(LHCbConfigurableUser):
         from Configurables import CombineParticles
         import GaudiKernel.SystemOfUnits as Units
 
-        B_DD_BachCut = "(BPVIPCHI2() > %(BachIPCHI2_DD)s) & (PT > %(BachPt_DD)s *GeV) &  (P < 100.*GeV)"% self.getProps()
-        B_DD_CombCut = "(ADAMASS('B+') < 600.*MeV)"
-        B_DD_MotherCut = "(ADMASS('B+') < 500.*MeV)  & (VFASPF(VCHI2/VDOF) < %(BVertexCHI2_DD)s) & (BPVIPCHI2() < %(BIPCHI2_DD)s) & (BPVDIRA > %(BDIRA_DD)s) & (BPVVDCHI2 > %(BFlightCHI2_DD)s)"% self.getProps()
+        B_DD_BachCut = "(PT > %(BachPt_DD)s *GeV) &  (P < 100.*GeV) & (TRCHI2DOF<10.) & (BPVIPCHI2() > %(BachIPCHI2_DD)s)"% self.getProps()
+        B_DD_CombCut = "(ADAMASS('B+') < 510.*MeV)"
+        B_DD_MotherCut = "(ADMASS('B+') < 500.*MeV)  & (VFASPF(VCHI2/VDOF) < %(BVertexCHI2_DD)s) & (BPVIPCHI2() < %(BIPCHI2_DD)s) & (BPVVDCHI2 > %(BFlightCHI2_DD)s)& (BPVDIRA > %(BDIRA_DD)s)"% self.getProps()
 
 
         Bu2D0h_KSDD = CombineParticles("StripBu2D0h_KSDD")

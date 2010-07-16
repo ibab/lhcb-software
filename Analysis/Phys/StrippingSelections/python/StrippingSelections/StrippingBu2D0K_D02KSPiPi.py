@@ -2,7 +2,7 @@
 
 __author__ = 'Susan Haines'
 __date__ = '22/01/2010'
-__version__ = '$Revision: 1.2 $'
+__version__ = '$Revision: 1.3 $'
 
 '''
 Bu->D0(KSPiPi)K stripping selection using LoKi::Hybrid and python
@@ -19,7 +19,7 @@ class StrippingBu2D0K_D02KSPiPiConf(LHCbConfigurableUser):
         ,  'BIPCHI2_LL'         : 16.         
         ,  'BVertexCHI2_LL'     : 9.
         ,  'BachKIPCHI2_LL'     : 9.
-        ,  'BachKPt_LL'         : 0.9  
+        ,  'BachKPt_LL'         : 1.0 #0.9  
         ,  'DVertexCHI2_LL'     : 6.25     
         ,  'DdaughterPiIPCHI2_LL' : 9.
         ,  'KSFlightCHI2_LL'    : 4.
@@ -30,7 +30,7 @@ class StrippingBu2D0K_D02KSPiPiConf(LHCbConfigurableUser):
         ,  'BIPCHI2_DD'         : 25.         
         ,  'BVertexCHI2_DD'     : 12.25
         ,  'BachKIPCHI2_DD'     : 4.
-        ,  'BachKPt_DD'         : 0.4  
+        ,  'BachKPt_DD'         : 0.5  #0.4  
         ,  'DVertexCHI2_DD'     : 16.        
         ,  'DdaughterPiIPCHI2_DD' : 4.
         ,  'KSFlightCHI2_DD'    : 4.
@@ -70,28 +70,59 @@ class StrippingBu2D0K_D02KSPiPiConf(LHCbConfigurableUser):
     ###############################################
     def Bu2D0K_KSLL( self ) :
         from StrippingConf.StrippingLine import StrippingLine, StrippingMember
+        B2DK_KSLL_StrippingNumTracksGEC=self.GEC_NumTracks_KsLLAlg()
         LLPionFilterForBu2D0K_D02KSPiPi = self.LLPionFilterForBu2D0K_D02KSPiPiAlg()
         KSLLForBu2D0K_D02KSPiPi = self.KSLLForBu2D0K_D02KSPiPiAlg()
         DForBu2D0K_D02KSPiPi_KSLL = self.DForBu2D0K_D02KSPiPi_KSLLAlg()
         Bu2D0K_KSLL = self.Bu2D0K_KSLLAlg()
         return StrippingLine('Bu2D0K_D02KSPiPi_KSLL'
                              , prescale = 1
-                             , algos = [LLPionFilterForBu2D0K_D02KSPiPi, KSLLForBu2D0K_D02KSPiPi, DForBu2D0K_D02KSPiPi_KSLL, Bu2D0K_KSLL]
+                             , algos = [B2DK_KSLL_StrippingNumTracksGEC, LLPionFilterForBu2D0K_D02KSPiPi, KSLLForBu2D0K_D02KSPiPi, DForBu2D0K_D02KSPiPi_KSLL, Bu2D0K_KSLL]
                              , postscale = 1
                              )
     
     def Bu2D0K_KSDD( self ) :
         from StrippingConf.StrippingLine import StrippingLine, StrippingMember
+        B2DK_KSDD_StrippingNumTracksGEC=self.GEC_NumTracks_KsDDAlg()
         DDPionFilterForBu2D0K_D02KSPiPi = self.DDPionFilterForBu2D0K_D02KSPiPiAlg()
         KSDDForBu2D0K_D02KSPiPi = self.KSDDForBu2D0K_D02KSPiPiAlg()
         DForBu2D0K_D02KSPiPi_KSDD = self.DForBu2D0K_D02KSPiPi_KSDDAlg()
         Bu2D0K_KSDD = self.Bu2D0K_KSDDAlg()
         return StrippingLine('Bu2D0K_D02KSPiPi_KSDD'
                              , prescale = 1
-                             , algos = [DDPionFilterForBu2D0K_D02KSPiPi, KSDDForBu2D0K_D02KSPiPi, DForBu2D0K_D02KSPiPi_KSDD, Bu2D0K_KSDD]
+                             , algos = [B2DK_KSDD_StrippingNumTracksGEC, DDPionFilterForBu2D0K_D02KSPiPi, KSDDForBu2D0K_D02KSPiPi, DForBu2D0K_D02KSPiPi_KSDD, Bu2D0K_KSDD]
                              , postscale = 1
                              )
 
+        # Define the GEC on number of tracks, needed in order to control
+        # the time for the combinatorics (D in particular)
+    def GEC_NumTracks_KsLLAlg( self ):
+        from Configurables import LoKi__VoidFilter as VoidFilter# Need the Void filter for the GEC
+        from Configurables import LoKi__Hybrid__CoreFactory as CoreFactory
+        modules =  CoreFactory('CoreFactory').Modules
+        for i in [ 'LoKiTrigger.decorators' ] :
+            if i not in modules : modules.append(i)
+
+        # Define the GEC on number of tracks, needed in order to control
+        # the time for the combinatorics (D in particular)
+        B2DK_KSLL_StrippingNumTracksGEC = VoidFilter('B2DK_KSLL_StrippingNumTracksGEC'
+                                           , Code = "TrSOURCE('Rec/Track/Best') >> (TrSIZE < 240 )"
+                                           )
+        return B2DK_KSLL_StrippingNumTracksGEC
+
+    def GEC_NumTracks_KsDDAlg( self ):
+        from Configurables import LoKi__VoidFilter as VoidFilter# Need the Void filter for the GEC
+        from Configurables import LoKi__Hybrid__CoreFactory as CoreFactory
+        modules =  CoreFactory('CoreFactory').Modules
+        for i in [ 'LoKiTrigger.decorators' ] :
+            if i not in modules : modules.append(i)
+
+        # Define the GEC on number of tracks, needed in order to control
+        # the time for the combinatorics (D in particular)
+        B2DK_KSDD_StrippingNumTracksGEC = VoidFilter('B2DK_KSDD_StrippingNumTracksGEC'
+                                           , Code = "TrSOURCE('Rec/Track/Best') >> (TrSIZE < 240 )"
+                                           )
+        return B2DK_KSDD_StrippingNumTracksGEC
 
 
         ###########################
@@ -101,7 +132,7 @@ class StrippingBu2D0K_D02KSPiPiConf(LHCbConfigurableUser):
         from Configurables import FilterDesktop
         import GaudiKernel.SystemOfUnits as Units
 
-        LLPi_FilterCut = "(BPVIPCHI2() > %(KSdaughterPiIPCHI2_LL)s) & (P < 100.*GeV)"% self.getProps() 
+        LLPi_FilterCut = "(P < 100.*GeV) & (TRCHI2DOF<10.) & (BPVIPCHI2() > %(KSdaughterPiIPCHI2_LL)s)"% self.getProps() 
         
         LLPionFilterForBu2D0K_D02KSPiPi = FilterDesktop("StripLLPionFilterForBu2D0K_D02KSPiPi")
         LLPionFilterForBu2D0K_D02KSPiPi.InputLocations = ["StdLoosePions"]
@@ -115,7 +146,7 @@ class StrippingBu2D0K_D02KSPiPiConf(LHCbConfigurableUser):
         from Configurables import FilterDesktop
         import GaudiKernel.SystemOfUnits as Units
 
-        DDPi_FilterCut = "(ISDOWN) & (BPVIPCHI2() > %(KSdaughterPiIPCHI2_DD)s) & (P < 100.*GeV) & ((-PIDK) > 0.)"% self.getProps()
+        DDPi_FilterCut = "(ISDOWN) & (P < 100.*GeV) & (TRCHI2DOF<10.)  & (BPVIPCHI2() > %(KSdaughterPiIPCHI2_DD)s) & ((-PIDK) > 0.)"% self.getProps()
         
         DDPionFilterForBu2D0K_D02KSPiPi = FilterDesktop("StripDDPionFilterForBu2D0K_D02KSPiPi")
         DDPionFilterForBu2D0K_D02KSPiPi.InputLocations = ["StdNoPIDsDownPions"]
@@ -129,8 +160,8 @@ class StrippingBu2D0K_D02KSPiPiConf(LHCbConfigurableUser):
         from Configurables import CombineParticles
         import GaudiKernel.SystemOfUnits as Units
 
-        KSLL_CombCut = "(ADAMASS('KS0') < 40.*MeV)"
-        KSLL_MotherCut = "(ADMASS('KS0') < 30.*MeV) & (VFASPF(VCHI2/VDOF) < %(KSVertexCHI2_LL)s) & (BPVVDCHI2 > %(KSFlightCHI2_LL)s)"% self.getProps()
+        KSLL_CombCut = "(ADAMASS('KS0') < 40.*MeV) & (AMINDOCA('LoKi::TrgDistanceCalculator')<1.5)"
+        KSLL_MotherCut = "(ADMASS('KS0') < 30.*MeV) & (VFASPF(VCHI2/VDOF) < %(KSVertexCHI2_LL)s)"% self.getProps()# & (BPVVDCHI2 > %(KSFlightCHI2_LL)s)"% self.getProps()
 
         KSLLForBu2D0K_D02KSPiPi = CombineParticles("StripKSLLForBu2D0K_D02KSPiPi")
         KSLLForBu2D0K_D02KSPiPi.InputLocations = ["StripLLPionFilterForBu2D0K_D02KSPiPi"]
@@ -147,8 +178,8 @@ class StrippingBu2D0K_D02KSPiPiConf(LHCbConfigurableUser):
         from Configurables import CombineParticles
         import GaudiKernel.SystemOfUnits as Units
 
-        KSDD_CombCut = "(ADAMASS('KS0') < 50.*MeV)"
-        KSDD_MotherCut = "(ADMASS('KS0') < 42.*MeV) & (VFASPF(VCHI2/VDOF) < %(KSVertexCHI2_DD)s) & (BPVVDCHI2 > %(KSFlightCHI2_DD)s)"% self.getProps()
+        KSDD_CombCut = "(ADAMASS('KS0') < 50.*MeV) & (AMINDOCA('LoKi::TrgDistanceCalculator')<22.)"
+        KSDD_MotherCut = "(ADMASS('KS0') < 42.*MeV) & (VFASPF(VCHI2/VDOF) < %(KSVertexCHI2_DD)s)"% self.getProps()# & (BPVVDCHI2 > %(KSFlightCHI2_DD)s)"% self.getProps()
         
         KSDDForBu2D0K_D02KSPiPi = CombineParticles("StripKSDDForBu2D0K_D02KSPiPi")
         KSDDForBu2D0K_D02KSPiPi.InputLocations = ["StripDDPionFilterForBu2D0K_D02KSPiPi"]
@@ -165,8 +196,8 @@ class StrippingBu2D0K_D02KSPiPiConf(LHCbConfigurableUser):
         from Configurables import CombineParticles
         import GaudiKernel.SystemOfUnits as Units
 
-        D_LL_DaughterPiCut = "(BPVIPCHI2() > %(DdaughterPiIPCHI2_LL)s) & (P < 100.*GeV) & ((-PIDK) > -11.)"% self.getProps()
-        D_LL_CombCut = "(ADAMASS('D0') < 60.*MeV)" 
+        D_LL_DaughterPiCut = "(P < 100.*GeV) & (TRCHI2DOF<10.) & (BPVIPCHI2() > %(DdaughterPiIPCHI2_LL)s) & ((-PIDK) > -11.)"% self.getProps()
+        D_LL_CombCut = "(ADAMASS('D0') < 60.*MeV) & (AMAXDOCA('LoKi::TrgDistanceCalculator') < 1.8)" 
         D_LL_MotherCut = "(ADMASS('D0') < 50.*MeV) & (VFASPF(VCHI2/VDOF) < %(DVertexCHI2_LL)s)"% self.getProps()
         
         DForBu2D0K_D02KSPiPi_KSLL = CombineParticles("StripDForBu2D0K_D02KSPiPi_KSLL")
@@ -192,8 +223,8 @@ class StrippingBu2D0K_D02KSPiPiConf(LHCbConfigurableUser):
         from Configurables import CombineParticles
         import GaudiKernel.SystemOfUnits as Units
 
-        D_DD_DaughterPiCut = "(BPVIPCHI2() > %(DdaughterPiIPCHI2_DD)s) & (P < 100.*GeV) & ((-PIDK) > 0.)"% self.getProps()
-        D_DD_CombCut = "(ADAMASS('D0') < 70.*MeV)" 
+        D_DD_DaughterPiCut = "(P < 100.*GeV) & (TRCHI2DOF<10.)  & (BPVIPCHI2() > %(DdaughterPiIPCHI2_DD)s) &  ((-PIDK) > 0.)"% self.getProps()
+        D_DD_CombCut = "(ADAMASS('D0') < 70.*MeV) & (AMAXDOCA('LoKi::TrgDistanceCalculator') < 9.2)" 
         D_DD_MotherCut = "(ADMASS('D0') < 60.*MeV) & (VFASPF(VCHI2/VDOF) < %(DVertexCHI2_DD)s)"% self.getProps()
         
         DForBu2D0K_D02KSPiPi_KSDD = CombineParticles("StripDForBu2D0K_D02KSPiPi_KSDD")
@@ -216,9 +247,9 @@ class StrippingBu2D0K_D02KSPiPiConf(LHCbConfigurableUser):
         from Configurables import CombineParticles
         import GaudiKernel.SystemOfUnits as Units    
 
-        B_LL_BachKCut = "(PT > %(BachKPt_LL)s *GeV ) & (BPVIPCHI2() > %(BachKIPCHI2_LL)s ) & (P < 100.*GeV) & (PIDK > -4.) & ((PIDK - PIDp) > -11.)"% self.getProps()
-        B_LL_CombCut = "(ADAMASS('B+') < 600.*MeV)"
-        B_LL_MotherCut = "(ADMASS('B+') < 500.*MeV)  & (VFASPF(VCHI2/VDOF)<%(BVertexCHI2_LL)s) & (BPVIPCHI2() < %(BIPCHI2_LL)s)  & (BPVDIRA > %(BDIRA_LL)s) & (BPVVDCHI2 > %(BFlightCHI2_LL)s)" % self.getProps()
+        B_LL_BachKCut = "(PT > %(BachKPt_LL)s *GeV )& (P < 100.*GeV) & (TRCHI2DOF<10.) & (BPVIPCHI2() > %(BachKIPCHI2_LL)s ) & (PIDK > -4.) & ((PIDK - PIDp) > -11.)"% self.getProps()
+        B_LL_CombCut = "(ADAMASS('B+') < 510.*MeV)"
+        B_LL_MotherCut = "(ADMASS('B+') < 500.*MeV)  & (VFASPF(VCHI2/VDOF)<%(BVertexCHI2_LL)s) & (BPVIPCHI2() < %(BIPCHI2_LL)s) & (BPVVDCHI2 > %(BFlightCHI2_LL)s)"% self.getProps()#& (BPVDIRA > %(BDIRA_LL)s)" % self.getProps() 
 
         Bu2D0K_KSLL = CombineParticles("StripBu2D0K_KSLL")
         Bu2D0K_KSLL.DecayDescriptor = "[B+ -> D~0 K+]cc"
@@ -240,9 +271,9 @@ class StrippingBu2D0K_D02KSPiPiConf(LHCbConfigurableUser):
         from Configurables import CombineParticles
         import GaudiKernel.SystemOfUnits as Units
 
-        B_DD_BachKCut = "(PT > %(BachKPt_DD)s *GeV) & (BPVIPCHI2() > %(BachKIPCHI2_DD)s) & (P < 100.*GeV) & (PIDK > -2.5) & ((PIDK - PIDp) > -7.5)"% self.getProps()
-        B_DD_CombCut = "(ADAMASS('B+') < 600.*MeV)"
-        B_DD_MotherCut = "(ADMASS('B+') < 500.*MeV)  & (VFASPF(VCHI2/VDOF) < %(BVertexCHI2_DD)s) & (BPVIPCHI2() < %(BIPCHI2_DD)s) & (BPVDIRA > %(BDIRA_DD)s) & (BPVVDCHI2 > %(BFlightCHI2_DD)s)"% self.getProps()
+        B_DD_BachKCut = "(PT > %(BachKPt_DD)s *GeV)& (P < 100.*GeV) & (TRCHI2DOF<10.) & (BPVIPCHI2() > %(BachKIPCHI2_DD)s)  & (PIDK > -2.5) & ((PIDK - PIDp) > -7.5)"% self.getProps()
+        B_DD_CombCut = "(ADAMASS('B+') < 510.*MeV)"
+        B_DD_MotherCut = "(ADMASS('B+') < 500.*MeV)  & (VFASPF(VCHI2/VDOF) < %(BVertexCHI2_DD)s) & (BPVIPCHI2() < %(BIPCHI2_DD)s) & (BPVVDCHI2 > %(BFlightCHI2_DD)s)"% self.getProps()# & (BPVDIRA > %(BDIRA_DD)s)"% self.getProps()"
 
 
         Bu2D0K_KSDD = CombineParticles("StripBu2D0K_KSDD")

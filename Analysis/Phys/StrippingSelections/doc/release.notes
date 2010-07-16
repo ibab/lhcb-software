@@ -5,6 +5,9 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-07-16 - Susan Haines
+	- Modified Bu2D0K_D02KsPiPi and Bu2D0h_D02Kshh_NoPID lines for improved CPU time (cuts added/removed/reordered/values changed)
+
 ! 2010-07-16 - Patrick Koppenburg
  - Remove B2MuMuKstar FD line
  - Tighten T line by a factor 1000
