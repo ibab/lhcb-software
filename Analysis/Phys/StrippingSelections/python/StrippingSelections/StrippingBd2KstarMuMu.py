@@ -1,6 +1,6 @@
 __author__ = 'Patrick Koppenburg, Rob Lambert, Mitesh Patel'
 __date__ = '21/01/2009'
-__version__ = '$Revision: 1.25 $'
+__version__ = '$Revision: 1.26 $'
 
 """
 Bd->K*MuMu selections 
@@ -36,8 +36,7 @@ class StrippingBd2KstarMuMuConf(LHCbConfigurableUser):
                 ,  'TrackChi2'          : 10         # adimentional
 # simple selection
                 ,  'SimpleDiMuonPT'      : 0         # MeV
-                ,  'SimpleBdFDChi2'      : 100       # adimentional1
-                ,  'SimpleBdLT'          : 0.00001   # unit ?
+                ,  'SimpleBdLT'          : 0.01      # unit ?
 # D -> K pi pi pi selection for calibration
 
                 ,  'DKpipipiTrackCHI2'   : 6         # dimensionless
@@ -299,7 +298,7 @@ class StrippingBd2KstarMuMuConf(LHCbConfigurableUser):
 
 ####################################################################################################
 #
-# Simplest lines. One based on FDchi2 and one on LT (better)
+# Simplest line based on LT
 #
     def simplestDiMuon( self, trail="" ):
         """
@@ -322,19 +321,6 @@ class StrippingBd2KstarMuMuConf(LHCbConfigurableUser):
 
         return _sd
 
-    def simplestCombineFD( self ):
-        """
-        Very simple line based on ONE cut!
-        
-        @author P. Koppenburg
-        @date 25/2/2010
-        """
-        from Configurables import CombineParticles
-        _comb = CombineParticles("SimpleBd2KstarMuMuFD",
-                                 DecayDescriptor = "[B0 -> J/psi(1S) K*(892)0 ]cc" ,
-                                 CombinationCut = "(ADAMASS('B0') < %(BMassMedWin)s *MeV)"  % self.getProps(),
-                                 MotherCut = "(VFASPF(VCHI2/VDOF) < %(IntVertexCHI2Tight)s ) & ( BPVVDCHI2 > %(SimpleBdFDChi2)s )" % self.getProps() )
-        return _comb 
         
     def simplestCombineLT( self ):
         """
@@ -348,23 +334,6 @@ class StrippingBd2KstarMuMuConf(LHCbConfigurableUser):
         return _comb 
         
        
-    def simplestFDLine( self ):
-        """
-        Very simple line based on ONE cut! : the FD significance
-        
-        @author P. Koppenburg
-        @date 25/2/2010
-        """
-        from StrippingConf.StrippingLine import StrippingLine
-        from PhysSelPython.Wrappers import Selection, DataOnDemand
-
- 	_kstar =  DataOnDemand(Location = 'Phys/StdVeryLooseDetachedKst2Kpi')
-        _comb = self.simplestCombineFD()
-        _sb = Selection("SelSimpleBd2KstarMuMuFD",
-                       Algorithm = _comb,
-                       RequiredSelections = [ self.simplestDiMuon("FD"), _kstar ] )
-	return StrippingLine('SimpleBd2KstarMuMuFD', prescale = 1, algos = [ _sb ])   
-
     def simplestLTLine( self ):
         """
         Very simple line based on ONE cut! : the lifetime
