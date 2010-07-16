@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.432 2010-07-08 14:36:08 jpalac Exp $
+! $Id: release.notes,v 1.433 2010-07-16 11:38:41 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -8,6 +8,11 @@
 ! Do not forget to update requirements and job/DaVinci_Ganga.py before tagging
 !
 !-----------------------------------------------------------------------------
+
+! 2010-07-16 - Juan Palacios
+ - python/DaVinci/Configuration.py
+  . Allow Lumi to be True when InputType = 'MDST'.
+ - Increase to v25r6p1.
 
 !========================== DaVinci v25r6 2010-07-08 =======================
 
