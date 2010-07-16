@@ -5,6 +5,14 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-07-16
+ - Added python/StrippingSelections/StrippingLambdac.py for Lambda_c -> K p pi
+   already tested on MinBias and Signal MC samples, to be presented soon. 
+ - Slight modifications in StrippingDstD02xx.py (input locations change for muons
+   and electrons)
+ - Removal of unneeded StrippingDstarD02PipiMuMuPiMuKPiKmu.py in agreement with
+   Walter Bonivento
+
 ! 2010-07-16 - Susan Haines
 	- Modified Bu2D0K_D02KsPiPi and Bu2D0h_D02Kshh_NoPID lines for improved CPU time (cuts added/removed/reordered/values changed)
 

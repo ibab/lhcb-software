@@ -1,7 +1,7 @@
 #
 __author__ = ['Francesco Dettori', 'Walter Bonivento']
 __date__ = '2010/04/23'
-__version__ = '$Revision: 1.2 $'
+__version__ = '$Revision: 1.3 $'
 
 '''
   Stripping for D*(2010)+ -> pi+ (D0->xx) selection:
@@ -69,9 +69,9 @@ class StrippingDstarD02xxConf(LHCbConfigurableUser):
         tbline = CombineParticles( name )
         inputLoc = {
              "pi" : "StdNoPIDsPions"
-            ,"mu" : "StdNoPIDsMuons"
+            ,"mu" : "StdLooseMuons"
             ,"K" : "StdNoPIDsKaons"
-            ,"e" : "StdNoPIDsElectrons"
+            ,"e" : "StdLooseElectrons"
             }
         if xplus != xminus :
             decays = ["D0 -> "+ xplus + "+ " + xminus + "- ", "D0 -> "+ xplus + "- " + xminus + "+ " ]
