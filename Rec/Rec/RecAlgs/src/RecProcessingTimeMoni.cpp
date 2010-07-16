@@ -20,8 +20,8 @@ RecProcessingTimeMoni::RecProcessingTimeMoni( const std::string& name,
   : GaudiHistoAlg ( name , pSvcLocator )
 {
   declareProperty( "Algorithms",   m_algNames );
-  declareProperty( "MinEventTime", m_logMinTime = -3 );
-  declareProperty( "MaxEventTime", m_logMaxTime =  8 );
+  declareProperty( "LogMinEventTime", m_logMinTime = -3 );
+  declareProperty( "LogMaxEventTime", m_logMaxTime =  8 );
 }
 
 //=============================================================================
