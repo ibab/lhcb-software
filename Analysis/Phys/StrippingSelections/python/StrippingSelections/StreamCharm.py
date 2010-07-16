@@ -10,6 +10,7 @@
 from Gaudi.Configuration import *
 from StrippingConf.StrippingStream import StrippingStream
 
+from StrippingSelections.StrippingD2KS0h_KS02PiPi import StrippingD2KS0h_KS02PiPiConf
 from StrippingSelections import StrippingD2hhh
 from StrippingSelections import StrippingD2hhhXS
 from StrippingSelections import StrippingD5h
@@ -40,8 +41,9 @@ from StrippingSelections.StrippingBd2KstarMuMu import StrippingBd2KstarMuMuConf
 
 stream = StrippingStream("Charm")
 
-stream.appendLines( [ 
-          StrippingD2hhh.lineD2PPP_A_NoPID_Bkg
+stream.appendLines( [
+          StrippingD2KS0h_KS02PiPiConf().D2KS0h_KS02PiPi()
+        , StrippingD2hhh.lineD2PPP_A_NoPID_Bkg
         , StrippingD2hhh.lineD2PPP_B_NoPID_Bkg
         , StrippingD2hhh.lineD2PPP_A_NoPID_Sig
         , StrippingD2hhh.lineD2PPP_B_NoPID_Sig
