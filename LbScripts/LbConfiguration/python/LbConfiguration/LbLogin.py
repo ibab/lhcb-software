@@ -788,7 +788,7 @@ class LbLoginScript(SourceScript):
         else :
             if not os.path.exists(cachefile) :
                 log.debug("Cache file %s doesn't exist" % cachefile)
-                log.debug("Calling SetupProject directly")
+            log.debug("Calling SetupProject directly")
 
             setupprojargs = []
             if opts.log_level == "DEBUG" :
