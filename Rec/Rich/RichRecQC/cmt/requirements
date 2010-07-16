@@ -21,7 +21,7 @@ set RICHRECQCOPTS $(RICHRECQCROOT)/options
 use MCEvent              v*    Event
 use RichRecBase          v*    Rich
 use MCInterfaces         v*    Kernel
-#use GaudiUtils           v* # Needed eventually for histo labels
+use GaudiUtils           v*
 
 # Component library building rule
 #============================================================================
