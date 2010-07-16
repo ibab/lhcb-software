@@ -20,8 +20,8 @@ RecProcessingTimeMoni::RecProcessingTimeMoni( const std::string& name,
   : GaudiHistoAlg ( name , pSvcLocator )
 {
   declareProperty( "Algorithms",   m_algNames );
-  declareProperty( "MinEventTime", m_minTime = 1e-3 );
-  declareProperty( "MaxEventTime", m_maxTime = 1e8  );
+  declareProperty( "MinEventTime", m_logMinTime = -3 );
+  declareProperty( "MaxEventTime", m_logMaxTime =  8 );
 }
 
 //=============================================================================
@@ -39,10 +39,6 @@ StatusCode RecProcessingTimeMoni::initialize()
 
   // are we properly configured
   if ( m_algNames.empty() ) { sc = Warning( "No algorithms to time !"); }
-
-  // cache some numbers
-  m_logMinTime = std::log10(m_minTime);
-  m_logMaxTime = std::log10(m_maxTime);
 
   return sc;
 }
