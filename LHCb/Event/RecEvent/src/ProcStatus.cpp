@@ -51,7 +51,7 @@ void LHCb::ProcStatus::addAlgorithmStatus(const std::string& algName,
   if (eventAborted) setAborted(true);
 }
 
-int LHCb::ProcStatus::algorithmStatus(const std::string& name)
+int LHCb::ProcStatus::algorithmStatus(const std::string& name) const
 {
   int status = 0;
   for ( LHCb::ProcStatus::AlgStatusVector::const_iterator iS = m_algs.begin();
@@ -64,4 +64,31 @@ int LHCb::ProcStatus::algorithmStatus(const std::string& name)
     }
   }
   return status;
+}
+
+bool LHCb::ProcStatus::subSystemAbort(const std::string& subsystem) const
+{
+  bool isaborted = false;
+  if ( aborted() ) 
+  {
+    // Loop over reports
+    for ( LHCb::ProcStatus::AlgStatusVector::const_iterator iS = m_algs.begin();
+          iS != m_algs.end(); ++iS )
+    {
+      // Is this report an ABORT or OK ?
+      int colon = (*iS).first.find_first_of(":");
+      if ( colon > 0 && (*iS).first.substr(0,colon) == "ABORTED" )
+      {
+        // This is an abort, but is it the correct subsystem ?
+        const std::string tmpS = (*iS).first.substr(colon+1);
+        colon = tmpS.find_first_of(":");
+        if ( colon > 0 && tmpS.substr(0,colon) == subsystem )
+        {
+          isaborted = true;
+          break;
+        }
+      }
+    }
+  }
+  return isaborted;
 }

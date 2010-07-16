@@ -72,8 +72,17 @@
       <method
 	name = "algorithmStatus" 
 	type = "int"
+        const= "TRUE"
 	desc = "Status of this algorithm" >
         <arg const="TRUE" name="name" type="std::string" />
+      </method>
+
+      <method
+	name = "subSystemAbort" 
+	type = "bool"
+        const= "TRUE"
+	desc = "Checks if the given sub-system triggered an abort" >
+        <arg const="TRUE" name="subsystem" type="std::string" />
       </method>
 	
     </class>
