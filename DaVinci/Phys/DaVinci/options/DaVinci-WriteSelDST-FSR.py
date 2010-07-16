@@ -29,8 +29,7 @@ jpsi.Code = "ALL"
 
 from PhysSelPython.Wrappers import Selection, DataOnDemand, SelectionSequence
 
-MyLooseJpsi = DataOnDemand('DODStdLooseJpsi2MuMu',
-                           Location = 'Phys/StdLooseJpsi2MuMu')
+MyLooseJpsi = DataOnDemand(Location = 'Phys/StdLooseJpsi2MuMu')
 
 SelJpsi = Selection('SelJpsi',
                     Algorithm = jpsi,

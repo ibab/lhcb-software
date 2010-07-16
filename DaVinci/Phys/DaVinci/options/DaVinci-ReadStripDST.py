@@ -1,4 +1,4 @@
-#$Id: DaVinci-ReadStripDST.py,v 1.1 2009-10-13 06:21:28 jpalac Exp $
+#$Id: DaVinci-ReadStripDST.py,v 1.2 2010-07-16 11:59:02 jpalac Exp $
 #
 # Example for running on a stripping DST.
 # @author Juan Palacios
@@ -15,12 +15,11 @@ importOptions("$STDOPTS/PreloadUnits.opts")
 importOptions("$STDOPTS/LHCbApplication.opts")
 #############################################################
 
-from PhysSelPython.Wrappers import DataOnDemand, Selection, SelectionSequence
+from PhysSelPython.Wrappers import AutomaticData, Selection, SelectionSequence
 
 # Need to know the address, since this is an old-style selection.
 # Treat particles already on the DST as data-on-demand
-JpsiSel = DataOnDemand(name = 'DOD_Bs',
-                       Location = "/Event/Strip/Phys/StrippingJpsiInclusiveCombine")
+JpsiSel = AutomaticData(Location = "/Event/Dimuon/Phys/StrippingJpsiInclusiveCombine")
 
 # Filter the J/Psi
 from Configurables import FilterDesktop
