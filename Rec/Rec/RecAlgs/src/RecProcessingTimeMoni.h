@@ -34,7 +34,11 @@ private:
   typedef std::vector<std::string> AlgorithmNames;
   AlgorithmNames m_algNames; ///< List of algorithm(s) to include in timing
 
-  double m_maxTime; ///< Maximum overall processing time for plots
+  double m_maxTime; ///< Job Option for maximum overall processing time for plots
+  double m_minTime; ///< Job Option for minimum overall processing time for plots
+
+  double m_logMinTime; /// Cached log of min time
+  double m_logMaxTime; /// cached log of max time
 
 };
 

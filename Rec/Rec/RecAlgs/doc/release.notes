@@ -4,6 +4,10 @@
 ! Purpose     : Holds generic reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+! 2010-07-16 - Chris Jones
+ - Update timing monitor to show log10(time) instead of time, to better show
+   the tails in the timing distribution.
+
 ! 2010-07-15 - Chris Jones
  - Add a new monitor for the event processing times. Simple monitor that takes
    a list of algorithm names, and uses the ChronoSvc to sum the processing time

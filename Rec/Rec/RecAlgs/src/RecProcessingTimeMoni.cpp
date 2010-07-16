@@ -20,7 +20,8 @@ RecProcessingTimeMoni::RecProcessingTimeMoni( const std::string& name,
   : GaudiHistoAlg ( name , pSvcLocator )
 {
   declareProperty( "Algorithms",   m_algNames );
-  declareProperty( "MaxEventTime", m_maxTime = 10000  );
+  declareProperty( "MinEventTime", m_minTime = 1e-3 );
+  declareProperty( "MaxEventTime", m_maxTime = 1e8  );
 }
 
 //=============================================================================
@@ -39,6 +40,10 @@ StatusCode RecProcessingTimeMoni::initialize()
   // are we properly configured
   if ( m_algNames.empty() ) { sc = Warning( "No algorithms to time !"); }
 
+  // cache some numbers
+  m_logMinTime = std::log10(m_minTime);
+  m_logMaxTime = std::log10(m_maxTime);
+
   return sc;
 }
 
@@ -55,8 +60,12 @@ StatusCode RecProcessingTimeMoni::execute()
   {
     time += chronoSvc()->chronoDelta((*name)+":execute",IChronoStatSvc::ELAPSED)/1000;
   }
+
+  // Take the base 10 log of the time (helps show the large tails)
+  const double logtime = std::log10(time);
   
-  plot1D( time, "overallTime", "Overall Event Processing Time (ms)", 0, m_maxTime, 100 );
+  plot1D( logtime, "overallTime", "log10(Event Processing Time / ms)", 
+          m_logMinTime, m_logMaxTime, 100 );
   
   return StatusCode::SUCCESS;
 }
