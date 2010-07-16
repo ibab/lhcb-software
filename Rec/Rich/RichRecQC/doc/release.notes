@@ -4,6 +4,10 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2010-07-16 - Chris Jones
+ - Enable usage of new Histogram label setting utilities, available in the
+   next Gaudi release
+
 ! 2010-07-15 - Chris Jones
  - Only enable ChronoSvc in timing monitors if not already enabled
 

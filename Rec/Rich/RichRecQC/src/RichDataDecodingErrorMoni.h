@@ -4,9 +4,6 @@
  *
  *  Header file for algorithm class : Rich::DAQ::DataDecodingErrorMoni
  *
- *  CVS Log :-
- *  $Id: RichDataDecodingErrorMoni.h,v 1.6 2009-08-05 23:14:59 jonrob Exp $
- *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
  */
@@ -22,7 +19,7 @@
 #include "GaudiKernel/AlgFactory.h"
 
 // GaudiUtils
-//#include "GaudiUtils/HistoLabels.h"
+#include "GaudiUtils/HistoLabels.h"
 
 // base class
 #include "RichKernel/RichHistoAlgBase.h"

@@ -4,8 +4,6 @@
  *
  *  Implementation file for algorithm class : Rich::DAQ::DataDecodingErrorMoni
  *
- *  $Id: RichDataDecodingErrorMoni.cpp,v 1.12 2010-02-11 20:01:30 jonrob Exp $
- *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
  */
@@ -45,18 +43,16 @@ StatusCode DataDecodingErrorMoni::initialize()
 
 StatusCode DataDecodingErrorMoni::prebookHistograms()
 {
-  // CRJ : Disable histogram label setting until available via Gaudi
-  //using namespace boost::assign;
-  //using namespace Gaudi::Utils::Histos;
-  //const Gaudi::Utils::Histos::Labels labels = list_of
-  //  ("L1 Ingress Truncated")("ODIN/Ingress BXID MisMatch")
-  //  ("HPD Inhibit")("HPD DB Lookup")("Ingress/HPD EventID MisMatch")
-  //  ("Extended HPD Header");
-  //AIDA::IProfile1D * h = 
-  richProfile1D( HID("decodingErrors"), "DAQ Decoding Error Rates (%)", 0.5, 6.5, 6 );
-  //bool ok = setBinLabels( h, labels );
-  //return ok ? StatusCode::SUCCESS : StatusCode::FAILURE ;
-  return StatusCode::SUCCESS;
+  using namespace boost::assign;
+  using namespace Gaudi::Utils::Histos;
+  const Gaudi::Utils::Histos::Labels labels = list_of
+    ("L1 Ingress Truncated")("ODIN/Ingress BXID MisMatch")
+    ("HPD Inhibit")("HPD DB Lookup")("Ingress/HPD EventID MisMatch")
+    ("Extended HPD Header");
+  AIDA::IProfile1D * h = 
+    richProfile1D( HID("decodingErrors"), "DAQ Decoding Error Rates (%)", 0.5, 6.5, 6 );
+  const bool ok = setBinLabels( h, labels );
+  return ok ? StatusCode::SUCCESS : StatusCode::FAILURE ;
 }
 
 // Main execution
