@@ -262,6 +262,10 @@ class RecMoniConf(LHCbConfigurableUser):
             richTime = RecProcessingTimeMoni("RichEventProcTime")
             richTime.Algorithms = ["RecoRICHSeq"]
             seq.Members += [richTime]
+
+            # ProcStat Abort rates
+            from Configurables import ProcStatAbortMoni
+            seq.Members += [ProcStatAbortMoni()]
         
         if "CALO" in moniSeq :
             from Configurables import GaudiSequencer

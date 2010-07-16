@@ -4,6 +4,9 @@
 !Purpose: Configurables for LHCb reconstruction
 !--------------------------------------------------
 
+! 2010-07-16 - Chris Jones
+ - Add a new ProcStatus abort rate monitor
+
 ! 2010-07-15 - Chris Jones
  - Add options to turn on some simple processing time monitors
 
