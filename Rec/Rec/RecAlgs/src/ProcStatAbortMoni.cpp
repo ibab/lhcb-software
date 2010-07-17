@@ -21,8 +21,8 @@ ProcStatAbortMoni::ProcStatAbortMoni( const std::string& name,
     m_h           ( NULL )
 {
   using namespace boost::assign;
-  declareProperty( "SubSystems",  m_subSystems = list_of
-                   ("Overall")("VELO")("TT")("IT")("OT")("Tr")("Vertex")
+  declareProperty( "SubSystems", m_subSystems = list_of
+                   ("Overall")("VELO")("TT")("IT")("OT")("Tracking")("Vertex")
                    ("RICH")("CALO")("MUON")("PROTO") );
   declareProperty( "ProcStatusLocation",
                    m_procStatLocation = LHCb::ProcStatusLocation::Default );
