@@ -163,7 +163,7 @@ namespace Rich
       {
         InitNewEvent();
       }
-      // Debug printout at the end of each event
+      // End of event stuff
       else if ( IncidentType::EndEvent == incident.type() )
       {
         FinishEvent();
@@ -427,7 +427,8 @@ namespace Rich
     {
       if ( !track->allPhotonsDone() && track->inUse() )
       {
-        debug() << "Reconstructing all photons for track " << track->key() << endmsg;
+        if ( msgLevel(MSG::DEBUG) )
+          debug() << "Reconstructing all photons for track " << track->key() << endmsg;
 
         // Iterate over segments
         for ( LHCb::RichRecTrack::Segments::iterator segment =
@@ -460,7 +461,10 @@ namespace Rich
                                             pixelCreator()->range(rich) :
                                             has1 ? pixelCreator()->range(rich,Rich::top) :
                                             pixelCreator()->range(rich,Rich::bottom) );
-        debug() << " -> Found " << range.size() << " pixels" << endmsg;
+        if ( msgLevel(MSG::DEBUG) )
+        {
+          debug() << " -> Found " << range.size() << " pixels" << endmsg;
+        }
         for ( IPixelCreator::PixelRange::const_iterator iPixel = range.begin();
               iPixel != range.end(); ++iPixel )
         {
