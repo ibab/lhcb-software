@@ -76,6 +76,9 @@ StatusCode ProcStatAbortMoni::execute()
     }
   }
 
+  // Debug printout if aborted
+  if ( proc->aborted() && msgLevel(MSG::DEBUG) ) { debug() << *proc << endmsg; }
+
   return StatusCode::SUCCESS;
 }
 
