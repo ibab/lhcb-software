@@ -3,6 +3,10 @@
 ! Responsible : Stephanie-Hansmann-Menzemer
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
+
+! 2010-07-17 - Chris Jones
+ - Update PatSeedingTool to use detailed ProcStatus interface
+
 ! 2010-07-15 - Stephanie Hansmann-Menzemer
  - use new more detailed procStatus interface
 

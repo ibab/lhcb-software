@@ -454,13 +454,12 @@ StatusCode PatSeedingTool::performTracking(
                                        << nHitsOT << " OT hits)" << endmsg;
       // Create a ProcStatus if it does not already exist
       LHCb::ProcStatus* procStat =
-        getOrCreate<LHCb::ProcStatus,LHCb::ProcStatus>(
-                                                       LHCb::ProcStatusLocation::Default);
+        getOrCreate<LHCb::ProcStatus,LHCb::ProcStatus>(LHCb::ProcStatusLocation::Default);
       // give some indication that we had to skip this event
       // (ProcStatus returns zero status for us in cases where we don't
       // explicitly add a status code)
-      procStat->addAlgorithmStatus(name(), ETooManyHits);
-      procStat->setAborted(true);
+      procStat->addAlgorithmStatus( name(), "Tracking", "TooManyHits",
+                                    ETooManyHits, true );
       
       return StatusCode::SUCCESS;
     }
