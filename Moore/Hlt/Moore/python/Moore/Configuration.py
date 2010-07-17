@@ -1,7 +1,7 @@
 """
 High level configuration tool(s) for Moore
 """
-__version__ = "$Id: Configuration.py,v 1.127 2010-07-06 08:51:23 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.128 2010-07-17 18:30:06 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ, path
@@ -446,7 +446,7 @@ class Moore(LHCbConfigurableUser):
         if (self.getProp('L0')) :
             if (self.getProp('RunOnline')) : raise RuntimeError('NEVER try to rerun L0 online! -- aborting ')
             from Hlt1Lines.HltL0Candidates import decodeL0Channels
-            decodeL0Channels( '0x%4X' % ( int( _tck(self.getProp('InitialTCK') ),16) & 0xFFFF )
+            decodeL0Channels( '0x%04X' % ( int( _tck(self.getProp('InitialTCK') ),16) & 0xFFFF )
                             , skipDisabled               = self.getProp('SkipDisabledL0Channels')
                             , forceSingleL0Configuration = self.getProp('ForceSingleL0Configuration') 
                             )
