@@ -4,9 +4,6 @@
  *
  *  Implementation file for RICH base class : Rich::HistoBase
  *
- *  CVS Log :-
- *  $Id: RichHistoBase.icpp,v 1.4 2010-02-12 16:44:33 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2009-07-27
  */
@@ -14,11 +11,16 @@
 
 // local
 #include "RichKernel/RichHistoBase.h"
+#include "RichKernel/RichException.h"
 
 // Disable warning on windows
 #ifdef _WIN32
 #pragma warning ( disable:4661 ) // incomplete explicit templates
 #endif
+
+// GaudiUtils
+#include "GaudiUtils/HistoLabels.h"
+using namespace Gaudi::Utils::Histos;
 
 // Base class methods
 #include "RichCommonBase.icpp"
@@ -95,16 +97,35 @@ Rich::HistoBase<PBASE>::richHisto1D( const Rich::HistogramID & id,
                                      const std::string &    title,
                                      const double             low,
                                      const double            high,
-                                     const unsigned long     bins ) const
+                                     const unsigned long     bins,
+                                     const std::string&      xAxisLabel,
+                                     const std::string&      yAxisLabel,
+                                     const BinLabels&        binLabels ) const
 {
   // Already been booked ?
   AIDA::IHistogram1D *& h = m_1dhmap.getmap(id.packedData())[id.id()];
   if ( !h )
   {
     // Book the histo
-    h = PBASE::book1D( id.fullid(), 
+    h = PBASE::book1D( id.fullid(),
                        id.fullTitle(title),
                        low, high, bins );
+    // set the labels
+    if ( !xAxisLabel.empty() ||
+         !yAxisLabel.empty()  )
+    {
+      if ( !setAxisLabels( h, xAxisLabel, yAxisLabel ) )
+      {
+        throw Rich::Exception( "Problem Setting Histogram Axis Labels" );
+      }
+    }
+    if ( !binLabels.empty() )
+    {
+      if ( !setBinLabels( h, binLabels ) )
+      {
+        throw Rich::Exception( "Problem Setting Histogram Bin Labels" );
+      }
+    }
   }
 
   // return the histo
@@ -120,17 +141,42 @@ Rich::HistoBase<PBASE>::richHisto2D( const Rich::HistogramID & id,
                                      const unsigned long     binsX,
                                      const double             lowY,
                                      const double            highY,
-                                     const unsigned long     binsY ) const
+                                     const unsigned long     binsY,
+                                     const std::string&      xAxisLabel,
+                                     const std::string&      yAxisLabel,
+                                     const std::string&      zAxisLabel,
+                                     const BinLabels&        xBinLabels,
+                                     const BinLabels&        yBinLabels ) const
 {
   // Already been booked ?
   AIDA::IHistogram2D *& h = m_2dhmap.getmap(id.packedData())[id.id()];
   if ( !h )
   {
     // Book the histo
-    h = PBASE::book2D( id.fullid(), 
+    h = PBASE::book2D( id.fullid(),
                        id.fullTitle(title),
                        lowX, highX, binsX,
                        lowY, highY, binsY );
+    // set the labels
+    if ( !xAxisLabel.empty() ||
+         !yAxisLabel.empty() ||
+         !zAxisLabel.empty()  )
+    {
+      // Bug in GaudiUtils (to be fixed) with no way to set z axis. Ignore for the moment
+      //setAxisLabels( h, xAxisLabel, yAxisLabel, zAxisLabel );
+      if ( !setAxisLabels( h, xAxisLabel, yAxisLabel ) )
+      {
+        throw Rich::Exception( "Problem Setting Histogram Axis Labels" );
+      }
+    }
+    if ( !xBinLabels.empty() ||
+         !yBinLabels.empty()  )
+    {
+      if ( !setBinLabels( h, xBinLabels, yBinLabels ) )
+      {
+        throw Rich::Exception( "Problem Setting Histogram Bin Labels" );
+      }
+    }
   }
 
   // return the histo
@@ -143,16 +189,35 @@ Rich::HistoBase<PBASE>::richProfile1D( const Rich::HistogramID & id,
                                        const std::string &    title,
                                        const double             low,
                                        const double            high,
-                                       const unsigned long     bins ) const
+                                       const unsigned long     bins,
+                                       const std::string&      xAxisLabel,
+                                       const std::string&      yAxisLabel,
+                                       const BinLabels&        binLabels ) const
 {
   // Already been booked ?
   AIDA::IProfile1D *& h = m_1dpmap.getmap(id.packedData())[id.id()];
   if ( !h )
   {
     // Book the histo
-    h = PBASE::bookProfile1D( id.fullid(), 
+    h = PBASE::bookProfile1D( id.fullid(),
                               id.fullTitle(title),
                               low, high, bins );
+    // set the labels
+    if ( !xAxisLabel.empty() ||
+         !yAxisLabel.empty()  )
+    {
+      if ( !setAxisLabels( h, xAxisLabel, yAxisLabel ) )
+      {
+        throw Rich::Exception( "Problem Setting Histogram Axis Labels" );
+      }
+    }
+    if ( !binLabels.empty() )
+    {
+      if ( !setBinLabels( h, binLabels ) )
+      {
+        throw Rich::Exception( "Problem Setting Histogram Bin Labels" );
+      }
+    }
   }
 
   // return the histo
@@ -168,17 +233,42 @@ Rich::HistoBase<PBASE>::richProfile2D( const Rich::HistogramID & id,
                                        const unsigned long     binsX,
                                        const double             lowY,
                                        const double            highY,
-                                       const unsigned long     binsY ) const
+                                       const unsigned long     binsY,
+                                       const std::string&      xAxisLabel,
+                                       const std::string&      yAxisLabel,
+                                       const std::string&      zAxisLabel,
+                                       const BinLabels&        xBinLabels,
+                                       const BinLabels&        yBinLabels ) const
 {
   // Already been booked ?
   AIDA::IProfile2D *& h = m_2dpmap.getmap(id.packedData())[id.id()];
   if ( !h )
   {
     // Book the histo
-    h = PBASE::bookProfile2D( id.fullid(), 
+    h = PBASE::bookProfile2D( id.fullid(),
                               id.fullTitle(title),
                               lowX, highX, binsX,
                               lowY, highY, binsY );
+    // set the labels
+    if ( !xAxisLabel.empty() ||
+         !yAxisLabel.empty() ||
+         !zAxisLabel.empty()  )
+    {
+      // Bug in GaudiUtils (to be fixed) with no way to set z axis. Ignore for the moment
+      //setAxisLabels( h, xAxisLabel, yAxisLabel, zAxisLabel );
+      if ( !setAxisLabels( h, xAxisLabel, yAxisLabel ) )
+      {
+        throw Rich::Exception( "Problem Setting Histogram Axis Labels" );
+      }
+    }
+    if ( !xBinLabels.empty() ||
+         !yBinLabels.empty()  )
+    {
+      if ( !setBinLabels( h, xBinLabels, yBinLabels ) )
+      {
+        throw Rich::Exception( "Problem Setting Histogram Bin Labels" );
+      }
+    }
   }
 
   // return the histo

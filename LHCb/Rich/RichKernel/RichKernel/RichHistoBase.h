@@ -4,9 +4,6 @@
  *
  *  Header file for RICH base class : Rich::HistoBase
  *
- *  CVS Log :-
- *  $Id: RichHistoBase.h,v 1.5 2010-02-13 15:10:46 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2009-07-27
  */
@@ -16,7 +13,9 @@
 #define RICHKERNEL_RICHHISTOBASE_H 1
 
 #include <vector>
+#include <string>
 
+// Local
 #include "RichKernel/RichCommonBase.h"
 #include "RichKernel/RichHistoID.h"
 #include "RichKernel/RichMap.h"
@@ -109,6 +108,9 @@ namespace Rich
 
     //-----------------------------------------------------------------------------------------
 
+    /// short name for bin labels
+    typedef std::vector<std::string> BinLabels;
+
     /** Book a 1D histogram
      *
      * @param id      Histogram identifier
@@ -123,7 +125,10 @@ namespace Rich
                                      const std::string &    title,
                                      const double             low,
                                      const double            high,
-                                     const unsigned long     bins ) const;
+                                     const unsigned long     bins,
+                                     const std::string&      xAxisLabel = "",
+                                     const std::string&      yAxisLabel = "",
+                                     const BinLabels& binLabels = BinLabels() ) const;
 
     /** Book a 2D histogram
      *
@@ -145,7 +150,12 @@ namespace Rich
                                      const unsigned long     binsX,
                                      const double             lowY,
                                      const double            highY,
-                                     const unsigned long     binsY ) const;
+                                     const unsigned long     binsY,
+                                     const std::string&      xAxisLabel = "",
+                                     const std::string&      yAxisLabel = "",
+                                     const std::string&      zAxisLabel = "",
+                                     const BinLabels& xBinLabels = BinLabels(),
+                                     const BinLabels& yBinLabels = BinLabels() ) const;
 
     /** Book a 1D profile histogram
      *
@@ -161,7 +171,10 @@ namespace Rich
                                      const std::string &    title,
                                      const double             low,
                                      const double            high,
-                                     const unsigned long     bins ) const;
+                                     const unsigned long     bins,
+                                     const std::string&      xAxisLabel = "",
+                                     const std::string&      yAxisLabel = "",
+                                     const BinLabels& binLabels = BinLabels() ) const;
 
     /** Book a 2D profile histogram
      *
@@ -183,7 +196,12 @@ namespace Rich
                                      const unsigned long     binsX,
                                      const double             lowY,
                                      const double            highY,
-                                     const unsigned long     binsY ) const;
+                                     const unsigned long     binsY,
+                                     const std::string&      xAxisLabel = "",
+                                     const std::string&      yAxisLabel = "",
+                                     const std::string&      zAxisLabel = "",
+                                     const BinLabels& xBinLabels = BinLabels(),
+                                     const BinLabels& yBinLabels = BinLabels() ) const;
 
     //-----------------------------------------------------------------------------------------
 

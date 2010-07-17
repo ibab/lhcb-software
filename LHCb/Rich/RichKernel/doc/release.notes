@@ -4,6 +4,10 @@
 ! Purpose     : General purpose RICH classes
 !-----------------------------------------------------------------------
 
+! 2010-07-17 - Chris Jones
+ - Extend histogram booking interfaces to include options axis and bin
+   labels.
+
 ! 2010-06-24 - Chris Jones
  - Add a new method to IRichDetParameters.h to return the S.D. of the 
    (n-1) distribution for observable photons. Moved here from 
