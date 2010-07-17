@@ -1,4 +1,4 @@
-// $Id: HltSelReportsMaker.cpp,v 1.24 2010-06-22 15:26:30 tskwarni Exp $
+// $Id: HltSelReportsMaker.cpp,v 1.25 2010-07-17 06:11:31 tskwarni Exp $
 // #define DEBUGCODE
 // Include files 
 #include "boost/algorithm/string/replace.hpp"
@@ -105,6 +105,9 @@ HltSelReportsMaker::HltSelReportsMaker( const std::string& name,
 
   declareProperty("InfoLevelSelection", m_infoLevelSelection = ((unsigned int)kMaxInfoLevel) );
   declareProperty("InfoLevelSelectionDebug", m_infoLevelSelectionDebug = ((unsigned int)kMaxInfoLevel) );
+
+  declareProperty("SuppressPostscale", m_SuppressPostscale = true  );
+  declareProperty("SuppressPostscaleDebug", m_SuppressPostscaleDebug = false  );
 
   declareProperty("DebugIncident", m_debugIncidentName = "RequestDebugEvent" );
 
@@ -334,6 +337,16 @@ StatusCode HltSelReportsMaker::execute() {
      if( outputSummary->hasSelectionName(selName) ){
          Warning( " duplicate selection ignored selectionName=" + selName,StatusCode::SUCCESS, 10 );
          continue;        
+     }
+
+     if( ( !m_debugMode && m_SuppressPostscale ) ||  ( m_debugMode && m_SuppressPostscaleDebug ) ){
+     // must also check its decision in HltDecReports since it might have been killed by postscale
+       if( decReports ){
+         const HltDecReport* decReport = decReports->decReport(selName);
+         if( decReport ){
+           if( !(decReport->decision()) )continue;
+         }
+       }
      }
 
      std::vector<ContainedObject*> candidates;

@@ -1,4 +1,4 @@
-// $Id: HltSelReportsMaker.h,v 1.12 2010-03-23 22:40:11 gligorov Exp $
+// $Id: HltSelReportsMaker.h,v 1.13 2010-07-17 06:11:31 tskwarni Exp $
 #ifndef HLTSELREPORTSMAKER_H 
 #define HLTSELREPORTSMAKER_H 1
 
@@ -215,6 +215,10 @@ private:
   UnsignedIntegerProperty m_infoLevelCaloClusterDebug;
   UnsignedIntegerProperty m_infoLevelSelection;
   UnsignedIntegerProperty m_infoLevelSelectionDebug;
+
+  /// whether selections killed by postscale are allowed to save candidates 
+  bool m_SuppressPostscale;
+  bool m_SuppressPostscaleDebug;
 
 };
 
