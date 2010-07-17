@@ -1,4 +1,4 @@
-// $Id: HltSelReportsMaker.cpp,v 1.25 2010-07-17 06:11:31 tskwarni Exp $
+// $Id: HltSelReportsMaker.cpp,v 1.26 2010-07-17 17:08:37 tskwarni Exp $
 // #define DEBUGCODE
 // Include files 
 #include "boost/algorithm/string/replace.hpp"
@@ -82,7 +82,8 @@ HltSelReportsMaker::HltSelReportsMaker( const std::string& name,
   declareProperty("SelectionMaxCandidates", m_maxCandidates );
   declareProperty("SelectionMaxCandidatesDebug", m_maxCandidatesDebug );
 
-  declareProperty("InfoLevelDecision", m_infoLevelDecision = ((unsigned int)kStandardInfoLevel) );
+  // changed on 2010/7/17  declareProperty("InfoLevelDecision", m_infoLevelDecision = ((unsigned int)kStandardInfoLevel) );
+  declareProperty("InfoLevelDecision", m_infoLevelDecision = ((unsigned int)kMinInfoLevel ));
   declareProperty("InfoLevelDecisionDebug", m_infoLevelDecisionDebug = ((unsigned int)kMaxInfoLevel) );
   
   declareProperty("InfoLevelNonDecision", m_infoLevelNonDecision = ((unsigned int)kMinInfoLevel) );

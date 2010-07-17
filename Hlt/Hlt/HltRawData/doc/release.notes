@@ -1,4 +1,4 @@
-!$Id: release.notes,v 1.70 2010-07-17 06:11:31 tskwarni Exp $
+!$Id: release.notes,v 1.71 2010-07-17 17:08:37 tskwarni Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/HltRawData
 ! Responsible : Tomasz Skwarnicki
@@ -6,6 +6,7 @@
 !-----------------------------------------------------------------------------
 
 ! 2010-07-17 - Tomasz Skwarnicki
+ - Change default InfoLevel to minimal in HltSelReports 	
  - Introduce SuppressPostscale property to skip from HltSelReports
    selections killed by postscale (true by default)
 
