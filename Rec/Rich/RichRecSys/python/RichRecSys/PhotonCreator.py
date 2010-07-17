@@ -33,8 +33,8 @@ class RichPhotonCreatorConfig(RichConfigurableUser):
         # default values
         self.setRichDefaults ( "Radiators", { "Offline" : [True,True,True], 
                                               "HLT"     : [True,True,True] } )
-        self.setRichDefaults ( "MaxPhotons", { "Offline" : 1000000, 
-                                               "HLT"     : 1000000 } )
+        self.setRichDefaults ( "MaxPhotons", { "Offline" : 250000, 
+                                               "HLT"     : 250000 } )
 
     ## Apply configurations
     def applyConf(self):

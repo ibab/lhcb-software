@@ -41,16 +41,16 @@ class RichTrackCreatorConfig(RichConfigurableUser):
         # default values
         self.setRichDefaults ( "MaxInputTracks", { "Offline" : 99999, 
                                                    "HLT"     : 99999 } )
-        self.setRichDefaults ( "MaxUsedTracks",  { "Offline" : 500, 
-                                                   "HLT"     : 500 } )
+        self.setRichDefaults ( "MaxUsedTracks",  { "Offline" : 250, 
+                                                   "HLT"     : 250 } )
         self.setRichDefault ( "TrackCuts", "Offline",
-                              { "Forward" : { "Chi2Cut" : [0,10], "PCut" : [1,500] },
-                                "Match"   : { "Chi2Cut" : [0,10], "PCut" : [1,500] },
-                                "Seed"    : { "Chi2Cut" : [0,10], "PCut" : [1,500] },
-                                "VeloTT"  : { "Chi2Cut" : [0,10], "PCut" : [1,500] },
-                                "KsTrack" : { "Chi2Cut" : [0,10], "PCut" : [1,500] } } )
+                              { "Forward" : { "Chi2Cut" : [0,10], "PCut" : [0,10000] },
+                                "Match"   : { "Chi2Cut" : [0,10], "PCut" : [0,10000] },
+                                "Seed"    : { "Chi2Cut" : [0,10], "PCut" : [1,10000] },
+                                "VeloTT"  : { "Chi2Cut" : [0,10], "PCut" : [1,10000] },
+                                "KsTrack" : { "Chi2Cut" : [0,10], "PCut" : [1,10000] } } )
         self.setRichDefault ( "TrackCuts", "HLT",
-                              { "Forward" : { "Chi2Cut" : [0,10], "PCut" : [1,500] } } )
+                              { "Forward" : { "Chi2Cut" : [0,16], "PCut" : [1,10000] } } )
 
     ## @brief Set OutputLevel 
     def setOutputLevel(self,conponent):
