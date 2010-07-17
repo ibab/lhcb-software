@@ -55,9 +55,8 @@ StatusCode DigitSel::execute()
   // Check if track processing was aborted.
   if ( procStatus()->aborted() ) 
   {
-    procStatus()->addAlgorithmStatus( gpidName(), "RICH", "ProcStatAbort",
-                                      Rich::Rec::ProcStatAbort, true );
     richStatus()->setEventOK( false );
+    deleteGPIDEvent();
     return Warning( "Processing aborted -> Abort", StatusCode::SUCCESS, 0 );
   }
 
