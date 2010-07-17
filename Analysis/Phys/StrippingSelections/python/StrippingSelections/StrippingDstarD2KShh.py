@@ -1,8 +1,8 @@
-# $Id: StrippingDstarD2KShh.py,v 1.4 2010-05-19 15:11:13 mcharles Exp $
+# $Id: StrippingDstarD2KShh.py,v 1.5 2010-07-17 23:02:20 mcharles Exp $
 
 __author__ = [ 'Mat Charles' ]
 __date__ = '2010-02-05'
-__version = '$Revision: 1.4 $'
+__version = '$Revision: 1.5 $'
 
 # Please contact m.charles1@physics.ox.ac.uk before changing anything. Thanks.
 
@@ -99,6 +99,8 @@ class StrippingDstarD2KShhConf(LHCbConfigurableUser) :
         memberKSLL = self.makeKSLL()
         memberKSDD = self.makeKSDD()
 
+        # FIXME: For signalbox line, use narrow mass window up-front.
+        # FIXME: For sideband lines, this needs to be wider.
         # Reconstruct D0 -> KS h+ h- with wide mass window:
         memberD2KSpp_LL_wide = self.makeD2KSpp(self.getProps()['preFitDMassCut_LL'], self.getProps()['wideDMassCut_ppLL'])
         memberD2KSpp_DD_wide = self.makeD2KSpp(self.getProps()['preFitDMassCut_DD'], self.getProps()['wideDMassCut_ppDD'])
@@ -107,6 +109,7 @@ class StrippingDstarD2KShhConf(LHCbConfigurableUser) :
         memberD2KSKK_LL_wide = self.makeD2KSKK(self.getProps()['preFitDMassCut_LL'], self.getProps()['wideDMassCut_KKLL'])
         memberD2KSKK_DD_wide = self.makeD2KSKK(self.getProps()['preFitDMassCut_DD'], self.getProps()['wideDMassCut_KKDD'])
 
+        # FIXME: I think this becomes redundant once above mass cuts are done properly...
         # Add an optional mass window filter here.
         # By default it requires events to lie within a signal box.
         #memberDMassFilter = StrippingMember(FilterDesktop, "FilterD0", InputLocations = [ "%CombineD0" ], Code = "ALL")
@@ -151,8 +154,8 @@ class StrippingDstarD2KShhConf(LHCbConfigurableUser) :
         #    [in wide D mass window AND DM sidebands] OR [in D mass sidebands and wide DM window]
         # The wide cuts (both on D mass and DM) have already been applied in CombineParticles so
         # we don't need to redo them explicitly.
-        strCutInDMLowerSideband = '(MM - CHILD(MM,1) - CHILD(MM,2) > %(wideDMCutLower)s *MeV) & (MM - CHILD(MM,1) - CHILD(MM,2) < %(signalDMCutLower)s *MeV)' % self.getProps()
-        strCutInDMUpperSideband = '(MM - CHILD(MM,1) - CHILD(MM,2) > %(signalDMCutUpper)s *MeV) & (MM - CHILD(MM,1) - CHILD(MM,2) < %(wideDMCutUpper)s *MeV)' % self.getProps()
+        strCutInDMLowerSideband = '( (MM - CHILD(MM,1) - CHILD(MM,2) > %(wideDMCutLower)s *MeV) & (MM - CHILD(MM,1) - CHILD(MM,2) < %(signalDMCutLower)s *MeV) )' % self.getProps()
+        strCutInDMUpperSideband = '( (MM - CHILD(MM,1) - CHILD(MM,2) > %(signalDMCutUpper)s *MeV) & (MM - CHILD(MM,1) - CHILD(MM,2) < %(wideDMCutUpper)s *MeV) )' % self.getProps()
         strCutInDMSidebands = '(' + strCutInDMLowerSideband + ' | ' + strCutInDMUpperSideband + ')'
         # For the sidebands, expand inwards by 2 MeV to give some overlap.
         cutMassSidebands_ppLL = self.getProps()['signalDMassCut_ppLL'] - self.getProps()['sidebandDMassOverlap']
@@ -202,6 +205,7 @@ class StrippingDstarD2KShhConf(LHCbConfigurableUser) :
 
     def makeDstar(self, cutPT, cutChi2):
         str_cutsSoftPi = '( PIDe-PIDpi < %(SoftPionCutPIDe)s )' % self.getProps()
+        # FIXME: Instead of applying cut on m(D0pi), cut directly on m(D0pi)-m(D0)-m(pi) at CombinationCut level.
         str_cutsDstarComb = "ADAMASS('D*(2010)+') < %(preFitDstarMassCut)s *MeV" % self.getProps()
         strDstarMotherCutBasepp = '(PT > ' + str(cutPT) + '*MeV) & (VFASPF(VCHI2/VDOF)<' + str(cutChi2) + ')'
         str_cutsDstar_DM_wide = '(MM - CHILD(MM,1) - CHILD(MM,2) > %(wideDMCutLower)s *MeV) & (MM - CHILD(MM,1) - CHILD(MM,2) < %(wideDMCutUpper)s *MeV)' % self.getProps()
