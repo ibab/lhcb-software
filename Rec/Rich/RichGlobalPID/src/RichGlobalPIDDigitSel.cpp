@@ -55,7 +55,8 @@ StatusCode DigitSel::execute()
   // Check if track processing was aborted.
   if ( procStatus()->aborted() ) 
   {
-    procStatus()->addAlgorithmStatus( gpidName(), Rich::Rec::ProcStatAbort );
+    procStatus()->addAlgorithmStatus( gpidName(), "RICH", "ProcStatAbort",
+                                      Rich::Rec::ProcStatAbort, true );
     richStatus()->setEventOK( false );
     return Warning( "Processing aborted -> Abort", StatusCode::SUCCESS, 0 );
   }
@@ -66,14 +67,15 @@ StatusCode DigitSel::execute()
   // check the number of pixels
   if ( richPixels()->empty() ) 
   { // empty event ?
-    procStatus()->addAlgorithmStatus( gpidName(), Rich::Rec::NoRichPixels );
+    procStatus()->addAlgorithmStatus( gpidName(), "RICH", "NoRichPixels",
+                                      Rich::Rec::NoRichPixels, false );
     richStatus()->setEventOK( false );
     return Warning( "Event contains no pixels -> Abort", StatusCode::SUCCESS, 0 );
   }
   else if ( m_maxUsedPixels < (int)richPixels()->size() ) 
   { // too many pixels
-    procStatus()->addAlgorithmStatus( gpidName(), Rich::Rec::ReachedPixelLimit );
-    procStatus()->setAborted( true );
+    procStatus()->addAlgorithmStatus( gpidName(), "RICH", "ReachedPixelLimit",
+                                      Rich::Rec::ReachedPixelLimit, true );
     richStatus()->setEventOK( false );
     std::ostringstream mess;
     mess << "Number of selected pixels exceeds maximum of " << m_maxUsedPixels << " -> Abort";

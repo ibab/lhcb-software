@@ -4,9 +4,6 @@
  *
  *  Implementation file for RICH Global PID algorithm class : Rich::Rec::GlobalPID::TrackSel
  *
- *  CVS Log :-
- *  $Id: RichGlobalPIDTrTrackSel.cpp,v 1.38 2009-10-02 13:04:10 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
  */
