@@ -44,15 +44,13 @@ StatusCode DataDecodingErrorMoni::initialize()
 StatusCode DataDecodingErrorMoni::prebookHistograms()
 {
   using namespace boost::assign;
-  using namespace Gaudi::Utils::Histos;
-  const Gaudi::Utils::Histos::Labels labels = list_of
+  const BinLabels labels = list_of
     ("L1 Ingress Truncated")("ODIN/Ingress BXID MisMatch")
     ("HPD Inhibit")("HPD DB Lookup")("Ingress/HPD EventID MisMatch")
     ("Extended HPD Header");
-  AIDA::IProfile1D * h = 
-    richProfile1D( HID("decodingErrors"), "DAQ Decoding Error Rates (%)", 0.5, 6.5, 6 );
-  const bool ok = setBinLabels( h, labels );
-  return ok ? StatusCode::SUCCESS : StatusCode::FAILURE ;
+  richProfile1D( HID("decodingErrors"), "DAQ Decoding Error Rates (%)", 0.5, 6.5, 6,
+                 "DAQ Decoding Error Types", "Error Rate (%)", labels );
+  return StatusCode::SUCCESS;
 }
 
 // Main execution

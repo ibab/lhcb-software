@@ -4,6 +4,10 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2010-07-17 - Chris Jones
+ - Update decoding error rates monitor to use new features in RichKernel
+   histogram booking methods to set axis and bin labels.
+
 ! 2010-07-16 - Chris Jones
  - Enable usage of new Histogram label setting utilities, available in the
    next Gaudi release

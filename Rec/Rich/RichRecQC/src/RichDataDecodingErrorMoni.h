@@ -18,9 +18,6 @@
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
 
-// GaudiUtils
-#include "GaudiUtils/HistoLabels.h"
-
 // base class
 #include "RichKernel/RichHistoAlgBase.h"
 
