@@ -40,14 +40,14 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivab.Belyaev@nikhef.nl
      *  @date   2008-11-14
      */
-    class TrMatch : public LoKi::BasicFunctors<LHCb::Track*>::Pipe 
+    class TrMatch : public LoKi::BasicFunctors<const LHCb::Track*>::Pipe 
     {
     protected:
       // ======================================================================
       /// the actual type of track source
-      typedef LoKi::BasicFunctors<LHCb::Track*>::Source TrSource ;
+      typedef LoKi::BasicFunctors<const LHCb::Track*>::Source TrSource ;
       // ======================================================================
-     public:
+    public:
       // ======================================================================
       /// constructor 
       TrMatch 

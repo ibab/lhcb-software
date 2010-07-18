@@ -34,7 +34,7 @@ namespace LoKi
      *  @date   2008-11-11
      */
     class TrUpgrade 
-      : public LoKi::BasicFunctors<LHCb::Track*>::Pipe 
+      : public LoKi::BasicFunctors<const LHCb::Track*>::Pipe 
       , public LoKi::Hlt1::UpgradeTool 
     {
     public:
@@ -82,11 +82,11 @@ namespace LoKi
       // ======================================================================      
     };
     // ========================================================================
-  } // end of namespace LoKi::Hlt1 
+  } //                                              end of namespace LoKi::Hlt1 
   // ==========================================================================
-} // end of namespace LoKi 
+} //                                                      end of namespace LoKi 
 // ============================================================================
-// The END 
+//                                                                      The END 
 // ============================================================================
 #endif // LOKI_TRUPGRADE_H
 // ============================================================================

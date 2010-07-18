@@ -21,6 +21,7 @@
 #include "LoKi/BasicFunctors.h"
 #include "LoKi/Interface.h"
 #include "LoKi/TrackTypes.h"
+#include "LoKi/TriggerTypes.h"
 // ============================================================================
 namespace LoKi 
 {
@@ -37,7 +38,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-11-10
      */
-    class TrSelection : public LoKi::BasicFunctors<LHCb::Track*>::Source
+    class TrSelection : public LoKi::BasicFunctors<const LHCb::Track*>::Source
     {
       // ======================================================================
     public:
@@ -87,7 +88,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-11-10
      */
-    class TrRegister : public LoKi::BasicFunctors<LHCb::Track*>::Pipe
+    class TrRegister : public LoKi::BasicFunctors<const LHCb::Track*>::Pipe
     {
       // ======================================================================
     public:
@@ -230,7 +231,7 @@ namespace LoKi
      *  @date   2009-07-13
      */
     class TrTESInput
-      : public LoKi::BasicFunctors<LHCb::Track*>::Source 
+      : public LoKi::BasicFunctors<const LHCb::Track*>::Source 
     {
     public: 
       // ======================================================================

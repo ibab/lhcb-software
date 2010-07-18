@@ -22,8 +22,10 @@
 // ============================================================================
 namespace LoKi
 {
+  // ==========================================================================
   namespace Hybrid 
   {
+    // ========================================================================
     /** @class TrackSelector  HybridTrackSelector.cpp
      *  Simple "hybrid-based" implementation of the interface 
      *  ITrackSelector 
@@ -34,28 +36,30 @@ namespace LoKi
       : public GaudiTool 
       , public virtual ITrackSelector
     {
+      // ======================================================================
       /// the friend factory for istantiation
       friend class ToolFactory<LoKi::Hybrid::TrackSelector> ;
+      // ======================================================================
     public:
-      // ==================================================================
+      // ======================================================================
       /// the method @see ITrackSelector
       virtual bool accept(const LHCb::Track& aTrack) const 
-      { return m_cut ( aTrack ) ; }
-      // ==================================================================
+      { return m_cut ( &aTrack ) ; }
+      // ======================================================================
     public:
-      // ==================================================================
+      // ======================================================================
       /// intialize the tool 
       virtual StatusCode initialize () ;      
-      // ==================================================================
+      // ======================================================================
     protected:
-      // ==================================================================
+      // ======================================================================
       /// Standard constructor
       TrackSelector  
       ( const std::string& type, 
         const std::string& name,
         const IInterface* parent)
         : GaudiTool ( type , name , parent )
-        , m_cut     ( LoKi::BasicFunctors<LHCb::Track>::BooleanConstant ( false ) ) 
+        , m_cut     ( LoKi::BasicFunctors<const LHCb::Track*>::BooleanConstant ( false ) ) 
         , m_code    ( "TrNONE" )
         , m_factory ( "LoKi::Hybrid::TrTool/TrHybridFactory:PUBLIC") 
       {
@@ -65,20 +69,23 @@ namespace LoKi
         declareProperty 
           ( "Factory" , m_factory , "Type/Name for C++/Python Hybrid Factory" ) ;
       } ;
-      // ==================================================================      
+      // ======================================================================
       /// destructor : virtual and protected
       virtual ~TrackSelector () {}
-      // ==================================================================
+      // ======================================================================
     private:
-      // selection criteria itself 
-      LoKi::Types::TrCut m_cut ; ///< selection criteria itself
-      // python pseudo-code
-      std::string        m_code    ; ///< python pseudo-code
-      // factory type/name
-      std::string        m_factory ; ///< factory type/name
-    } ;  
-  } // end of namespace Hybrid 
-} // end of namespace LoKi 
+      // ======================================================================
+      /// selection criteria itself 
+      LoKi::Types::TrCut m_cut     ;              //  selection criteria itself
+      /// python pseudo-code
+      std::string        m_code    ;              //         python pseudo-code
+      /// factory type/name
+      std::string        m_factory ;              //          factory type/name
+    } ; 
+    // ========================================================================
+  } //                                                  end of namespace Hybrid 
+  // ==========================================================================
+} //                                                      end of namespace LoKi 
 // ============================================================================
 /// Declaration of the Tool Factory
 DECLARE_NAMESPACE_TOOL_FACTORY(LoKi::Hybrid,TrackSelector);

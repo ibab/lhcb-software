@@ -68,9 +68,15 @@ LoKi::Tracks::TrFunction::operator()
   ( LoKi::Tracks::TrFunction::argument a ) const 
 {
   //
+  if ( 0 == a ) 
+  {
+    Error("LHCb::Track* points to NULL, return -inf") ;
+    return LoKi::Constants::NegativeInfinity ;
+  }
+  //
   Assert ( !(!m_tool) , "Invalid ITrackFunctionTool!" ) ;
   // 
-  return m_tool->function ( a ) ;
+  return m_tool->function ( *a ) ;
 }
 // ============================================================================
 // OPTIONAL: nice printout 

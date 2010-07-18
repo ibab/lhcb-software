@@ -16,11 +16,12 @@
 // ============================================================================
 // LoKi 
 // ============================================================================
-#include "LoKi/TrackTypes.h"
+#include "LoKi/TriggerTypes.h"
 // ============================================================================
 namespace LoKi
 { 
-  /** @class ITrHybridTool ITrHybridTool.h LoKi/ITrHybridTool.h
+  // ==========================================================================
+  /** @class ITrHybridTool LoKi/ITrHybridTool.h
    *
    *  Helper interface for implementation of C++/Python "Hybrid" solution
    *
@@ -38,9 +39,12 @@ namespace LoKi
   class ITrHybridTool : public virtual IAlgTool 
   {
   public:
+    // ========================================================================
     /// Return the unique interface ID
     static const InterfaceID& interfaceID() ;
+    // ========================================================================
   public:
+    // ========================================================================
     /// set the C++ predicate for LHCb::Track
     virtual void set ( const LoKi::Types::TrCuts&    cut ) = 0 ;    
     /// set the C++ predicate for LHCb::RecVertex 
@@ -61,7 +65,9 @@ namespace LoKi
     virtual void set ( const LoKi::Types::TrVFunc&   fun ) = 0 ;    
     /// set the C++ function for Vertex-Vertex pair
     virtual void set ( const LoKi::Types::RVVFunc&   fun ) = 0 ;
+    // ========================================================================
   public:
+    // ========================================================================
     // the functional part
     /// set the C++ "maps"     for Tracks 
     virtual void set ( const LoKi::Types::TrMaps&     fun ) = 0 ;
@@ -73,19 +79,24 @@ namespace LoKi
     virtual void set ( const LoKi::Types::TrElements& fun ) = 0 ;
     /// set the C++ "sources"  for Tracks 
     virtual void set ( const LoKi::Types::TrSources&  fun ) = 0 ;
+    // ========================================================================
   public:
+    // ========================================================================
     /// get the reference container of tracks   (needed from Trigger) 
     virtual std::vector<LHCb::Track*>*     tracks   () const = 0 ;
     /// get the reference container of vertices (needed for Trigger) 
     virtual std::vector<LHCb::RecVertex*>* vertices () const = 0 ;
+    // ========================================================================
   protected:
+    // ========================================================================
     /// destructor : virtual and protected 
     virtual ~ITrHybridTool() ;
-  private:
-  }; 
-} // end of namespace LoKi 
+    // ========================================================================
+  };
+  // ==========================================================================
+} //                                                      end of namespace LoKi 
 // ============================================================================
-// The END 
+//                                                                      The END 
 // ============================================================================
 #endif // LOKI_ITRHYBRIDTOOL_H
 // ============================================================================

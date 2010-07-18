@@ -7,7 +7,7 @@
 // ============================================================================
 // LoKi
 // ============================================================================
-#include "LoKi/TrackTypes.h"
+#include "LoKi/TriggerTypes.h"
 // ============================================================================
 namespace LoKi 
 {
@@ -16,17 +16,17 @@ namespace LoKi
     namespace TrInfo
     {
       // ======================================================================
-      LoKi::BasicFunctors<LHCb::Track>::FunctionFromFunction
+      LoKi::BasicFunctors<const LHCb::Track*>::FunctionFromFunction
       info 
-      ( const int                                         index          , 
-        const LoKi::BasicFunctors<LHCb::Track>::Function& fun            ,
-        const bool                                        update = false ) ;
+      ( const int                                                index          , 
+        const LoKi::BasicFunctors<const LHCb::Track*>::Function& fun            ,
+        const bool                                               update = false ) ;
       // ======================================================================
       LoKi::BasicFunctors<LHCb::RecVertex>::FunctionFromFunction
       info 
-      ( const int                                             index          , 
-        const LoKi::BasicFunctors<LHCb::RecVertex>::Function& fun            ,
-        const bool                                            update = false ) ;
+      ( const int                                                index          , 
+        const LoKi::BasicFunctors<LHCb::RecVertex>::Function&    fun            ,
+        const bool                                               update = false ) ;
     }
   }  
 }

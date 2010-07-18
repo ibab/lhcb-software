@@ -101,7 +101,9 @@ LoKi::Hlt1::VxUpgrade::operator()
   typedef std::vector<LHCb::RecVertex*> INPUT    ;
   typedef std::vector<LHCb::RecVertex*> OUTPUT   ;
   typedef SmartRefVector<LHCb::Track>   TRKs     ;
-  typedef std::vector<LHCb::Track*>     TRACKS   ;
+
+  //typedef std::vector<LHCb::Track*>     TRACKS   ;
+  typedef LHCb::Track::ConstVector TRACKS   ;
   
   // get container of vertices
   Vertices* vertices = alg() -> getOrCreate<Vertices,Vertices> ( location() ) ;

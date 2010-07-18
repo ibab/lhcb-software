@@ -21,7 +21,7 @@
 // ============================================================================
 LoKi::Hlt1::TrSelection::TrSelection 
 ( const Hlt::TSelection<LHCb::Track>* selection ) 
-  : LoKi::BasicFunctors<LHCb::Track*>::Source () 
+  : LoKi::BasicFunctors<const LHCb::Track*>::Source () 
   , m_selection ( selection )
 {
   Assert ( 0 != m_selection , "Hlt::TSelection<LHCb::Track>* points to NULL!" ) ;
@@ -32,7 +32,7 @@ LoKi::Hlt1::TrSelection::TrSelection
 // ============================================================================
 LoKi::Hlt1::TrSelection::TrSelection 
 ( const Hlt::Selection* sel ) 
-  : LoKi::BasicFunctors<LHCb::Track*>::Source () 
+  : LoKi::BasicFunctors<const LHCb::Track*>::Source () 
   , m_selection ( 0 ) 
 {
   Assert ( 0 != sel , "Hlt::Selection* point to NULL!" ) ;
@@ -45,7 +45,7 @@ LoKi::Hlt1::TrSelection::TrSelection
 // ============================================================================
 LoKi::Hlt1::TrSelection::TrSelection 
 ( const std::string&    selection ) 
-  : LoKi::BasicFunctors<LHCb::Track*>::Source () 
+  : LoKi::BasicFunctors<const LHCb::Track*>::Source () 
   , m_selection ( 0 )
   , m_selName ( selection ) 
 {
@@ -80,7 +80,7 @@ std::ostream& LoKi::Hlt1::TrSelection::fillStream ( std::ostream& s ) const
 // ============================================================================
 LoKi::Hlt1::TrRegister::TrRegister 
 ( const std::string&    selection ) 
-  : LoKi::BasicFunctors<LHCb::Track*>::Pipe () 
+  : LoKi::BasicFunctors<const LHCb::Track*>::Pipe () 
   , m_selection ( 0 )
   , m_selName ( selection ) 
 {
@@ -99,7 +99,13 @@ LoKi::Hlt1::TrRegister::operator()
 {
   Assert ( 0 != m_selection , "Hlt::TSelection<LHCb::Track>* point to NULL!" ) ;  
   //
-  m_selection->insert ( m_selection->end() , a.begin() , a.end() ) ;
+  for ( LHCb::Track::ConstVector::const_iterator ia = a.begin() ; 
+        a.end() != ia ; ++ia ) 
+  {
+    const LHCb::Track* t = *ia ;
+    if ( 0 == t ) { continue ; }
+    m_selection->push_back ( const_cast<LHCb::Track*> ( t ) ) ;
+  }
   //
   return a ;
 }
@@ -213,7 +219,7 @@ std::ostream& LoKi::Hlt1::RvRegister::fillStream ( std::ostream& s ) const
 LoKi::Hlt1::TrTESInput::TrTESInput
 ( const std::string&         key  , 
   const LoKi::Types::TrCuts& cuts ) 
-  : LoKi::BasicFunctors<LHCb::Track*>::Source () 
+  : LoKi::BasicFunctors<const LHCb::Track*>::Source () 
   , m_unit (      ) 
   , m_key  ( key  ) 
   , m_cut  ( cuts ) 
@@ -233,7 +239,7 @@ LoKi::Hlt1::TrTESInput::TrTESInput
 LoKi::Hlt1::TrTESInput::TrTESInput
 ( const LoKi::Types::TrCuts& cuts ,
   const std::string&         key  )
-  : LoKi::BasicFunctors<LHCb::Track*>::Source () 
+  : LoKi::BasicFunctors<const LHCb::Track*>::Source () 
   , m_unit (      ) 
   , m_key  ( key  ) 
   , m_cut  ( cuts ) 
@@ -252,10 +258,10 @@ LoKi::Hlt1::TrTESInput::TrTESInput
 // ============================================================================
 LoKi::Hlt1::TrTESInput::TrTESInput
 ( const std::string&         key  )
-  : LoKi::BasicFunctors<LHCb::Track*>::Source () 
+  : LoKi::BasicFunctors<const LHCb::Track*>::Source () 
   , m_unit (      ) 
   , m_key  ( key  ) 
-  , m_cut  ( LoKi::Constant<LHCb::Track,bool>( true ) ) 
+  , m_cut  ( LoKi::Constant<const LHCb::Track*,bool>( true ) ) 
 {
   // get the unit :
   SmartIF<Hlt::IUnit> _unit = LoKi::Hlt1::Utils::getUnit ( *this ) ;

@@ -123,7 +123,7 @@ namespace
 // ============================================================================
 size_t LoKi::Hlt1::UpgradeTool::find 
 ( const LHCb::Track*         seed    , 
-  std::vector<LHCb::Track*>& tracks  ,
+  LHCb::Track::ConstVector&  tracks  ,
   LHCb::Track::Container*    otracks ) const 
 {
   //
@@ -145,7 +145,7 @@ size_t LoKi::Hlt1::UpgradeTool::find
 // ============================================================================
 StatusCode LoKi::Hlt1::UpgradeTool::reco 
 ( const LHCb::Track*         seed    , 
-  std::vector<LHCb::Track*>& tracks  , 
+  LHCb::Track::ConstVector&  tracks  , 
   LHCb::Track::Container*    otracks ) const 
 {
   typedef std::vector<LHCb::Track*> OUTPUT ;
@@ -181,8 +181,8 @@ StatusCode LoKi::Hlt1::UpgradeTool::reco
 // upgrade set of tracks
 // ============================================================================
 StatusCode LoKi::Hlt1::UpgradeTool::upgrade 
-( const std::vector<LHCb::Track*>& itracks , 
-  std::vector<LHCb::Track*>&       output  ) const 
+( const LHCb::Track::ConstVector&  itracks , 
+  LHCb::Track::ConstVector&        output  ) const 
 {
   //
   if ( !m_upgrade  || 0 == m_alg || -1 == recoID () ) { init () ; } 
@@ -191,7 +191,7 @@ StatusCode LoKi::Hlt1::UpgradeTool::upgrade
   Assert ( 0 != m_alg    , "GaudiAlgorithm*   points to NULL!" ) ;
   
   typedef LHCb::Track::Container    TRACKS ;
-  typedef std::vector<LHCb::Track*> OUTPUT ;
+  typedef LHCb::Track::ConstVector  OUTPUT ;
   
   // get or create the output
   TRACKS* otracks = 0 ;
@@ -202,7 +202,7 @@ StatusCode LoKi::Hlt1::UpgradeTool::upgrade
   // ==========================================================================
   for ( OUTPUT::const_iterator iseed = itracks.begin() ; itracks.end() != iseed ; ++iseed ) 
   {
-    LHCb::Track* seed = *iseed ;
+    const LHCb::Track* seed = *iseed ;
     if ( 0 == seed ) { continue ; }                                  // CONTINUE 
     StatusCode sc = iupgrade ( seed , output , otracks ) ;
     if ( sc.isFailure () ) 
@@ -221,7 +221,7 @@ StatusCode LoKi::Hlt1::UpgradeTool::upgrade
 // ============================================================================
 StatusCode LoKi::Hlt1::UpgradeTool::upgrade 
 ( const LHCb::Track*         itrack , 
-  std::vector<LHCb::Track*>& output ) const 
+  LHCb::Track::ConstVector&  output ) const 
 {
   //
   if ( 0 == itrack ) 
@@ -252,7 +252,7 @@ StatusCode LoKi::Hlt1::UpgradeTool::upgrade
 // ============================================================================
 StatusCode LoKi::Hlt1::UpgradeTool::iupgrade 
 ( const LHCb::Track*         seed    , 
-  std::vector<LHCb::Track*>& output  , 
+  LHCb::Track::ConstVector&  output  , 
   LHCb::Track::Container*    otracks ) const
 {  
   // seed is already ugraded track ?

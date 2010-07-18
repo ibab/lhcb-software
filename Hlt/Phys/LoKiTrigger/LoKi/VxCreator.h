@@ -65,8 +65,8 @@ namespace LoKi
        *  @return number of created vertices 
        */
       size_t make 
-      ( const std::vector<LHCb::Track*>& tracks1 , 
-        const std::vector<LHCb::Track*>& tracks2 , 
+      ( const LHCb::Track::ConstVector& tracks1 , 
+        const LHCb::Track::ConstVector& tracks2 , 
         std::vector<LHCb::RecVertex*>& vertices  ) const ;
       // ======================================================================
       /// alkl cuts are trivial?

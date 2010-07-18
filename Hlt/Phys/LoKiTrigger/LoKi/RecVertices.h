@@ -12,7 +12,7 @@
 // LoKi
 // ============================================================================
 #include "LoKi/ExtraInfo.h"
-#include "LoKi/TrackTypes.h"
+#include "LoKi/TriggerTypes.h"
 // ============================================================================
 namespace LoKi
 {

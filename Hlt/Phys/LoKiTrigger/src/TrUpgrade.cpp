@@ -36,7 +36,7 @@
 LoKi::Hlt1::TrUpgrade::TrUpgrade 
 ( const std::string&             output  ,         // output selection name/key 
   const LoKi::Hlt1::UpgradeConf& config  )         //             configuration 
-  : LoKi::BasicFunctors<LHCb::Track*>::Pipe () 
+  : LoKi::BasicFunctors<const LHCb::Track*>::Pipe () 
   , LoKi::Hlt1::UpgradeTool ( config ) 
   , m_sink      ( output ) 
 {}
@@ -49,7 +49,7 @@ LoKi::Hlt1::TrUpgrade::TrUpgrade
 LoKi::Hlt1::TrUpgrade::TrUpgrade 
 ( const std::string&             output  ,         // output selection name/key 
   const LoKi::Hlt1::UpgradeTool& config  )         //             configuration 
-  : LoKi::BasicFunctors<LHCb::Track*>::Pipe () 
+  : LoKi::BasicFunctors<const LHCb::Track*>::Pipe () 
   , LoKi::Hlt1::UpgradeTool ( config ) 
   , m_sink      ( output ) 
 {}

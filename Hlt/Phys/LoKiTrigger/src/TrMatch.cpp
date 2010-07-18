@@ -31,7 +31,7 @@ LoKi::Hlt1::TrMatch::TrMatch
 ( const std::string&                   output  ,   // output selection name/key 
   const LoKi::Hlt1::TrMatch::TrSource& tracks2 ,   // tracks to be matched with 
   const LoKi::Hlt1::MatchConf&         config  )   //        tool configuration 
-  : LoKi::BasicFunctors<LHCb::Track*>::Pipe ()
+  : LoKi::BasicFunctors<const LHCb::Track*>::Pipe ()
   , m_tracks2    ( tracks2 ) 
   , m_config     ( config  )
   , m_sink       ( output  ) 
@@ -56,8 +56,8 @@ LoKi::Hlt1::TrMatch::operator()
   
   Assert ( !(!m_match) && 0 != alg() ,  "Invalid setup!" ) ;
   
-  typedef LHCb::Track::Container    Tracks ;  
-  typedef std::vector<LHCb::Track*> TRACKS ;
+  typedef LHCb::Track::Container          Tracks ;  
+  typedef std::vector<const LHCb::Track*> TRACKS ;
   
   /// get TES container 
   Tracks* otracks = alg() -> getOrCreate<Tracks,Tracks> ( address() ) ;
@@ -110,14 +110,18 @@ LoKi::Hlt1::TrMatch::operator()
           Hlt::MergeInfo ( *trk2 , *track3 ) ;          
         }        
         /// add the track to the selection 
-        output.push_back ( track3.release() ) ;
-        /// add the track to the TES container 
-        otracks->insert ( output.back() ) ;
+        LHCb::Track* track3_ = track3.release() ; // ATTENTION! 
+        output.push_back ( track3_ ) ;
+        /// add the track to the TES container
+        otracks->insert  ( track3_ ) ;
       }
       // ======================================================================
     } //                    end of the loop over the second container of tracks 
-  } //                      end of the loop over the first constainer of tarcks
+    // ========================================================================
+  } //                      end of the loop over the first  container of tracks
+  // ==========================================================================
   //                                                                   final... 
+  // ==========================================================================
   // register the selection in Hlt Data Service 
   return m_sink ( output ) ;                                          // RETURN 
 }

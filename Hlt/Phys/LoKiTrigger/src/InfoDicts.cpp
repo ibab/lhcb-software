@@ -12,11 +12,11 @@
  *  @date 2007-08-14 
  */
 // ============================================================================
-LoKi::BasicFunctors<LHCb::Track>::FunctionFromFunction
+LoKi::BasicFunctors<const LHCb::Track*>::FunctionFromFunction
 LoKi::Dicts::TrInfo::info 
-( const int                                         index  , 
-  const LoKi::BasicFunctors<LHCb::Track>::Function& fun    ,
-  const bool                                        update ) 
+( const int                                                index  , 
+  const LoKi::BasicFunctors<const LHCb::Track*>::Function& fun    ,
+  const bool                                              update ) 
 { 
   return LoKi::Tracks::SmartInfo ( index , fun , update ) ; 
 }  

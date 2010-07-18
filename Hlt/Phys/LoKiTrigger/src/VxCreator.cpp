@@ -44,7 +44,7 @@ LoKi::Hlt1::VxCreator::VxCreator
   const LoKi::Types::RVCuts&  cuts4rv ) 
   : LoKi::AuxFunBase () 
   //
-  , m_cut    ( LoKi::Constant<LHCb::Track,bool>( true ) ) 
+  , m_cut    ( LoKi::Constant<const LHCb::Track*,bool>( true ) ) 
   , m_cut_trivial    ( true  ) 
   , m_cut2tr ( cuts2tr ) 
   , m_cut2tr_trivial ( false ) 
@@ -101,8 +101,8 @@ LoKi::Hlt1::VxCreator::VxCreator
 LoKi::Hlt1::VxCreator::VxCreator
 ( const LoKi::Types::TTrCuts& cuts2tr ) 
   : LoKi::AuxFunBase () 
-  //
-  , m_cut    ( LoKi::Constant<LHCb::Track,bool>( true ) ) 
+//
+  , m_cut    ( LoKi::Constant<const LHCb::Track*,bool>( true ) ) 
   , m_cut_trivial    ( true  ) 
   , m_cut2tr ( cuts2tr ) 
   , m_cut2tr_trivial ( false ) 
@@ -116,7 +116,7 @@ LoKi::Hlt1::VxCreator::VxCreator
 ( const LoKi::Types::RVCuts&  cuts4rv ) 
   : LoKi::AuxFunBase () 
   //
-  , m_cut    ( LoKi::Constant<LHCb::Track,bool>( true ) ) 
+  , m_cut    ( LoKi::Constant<const LHCb::Track*,bool>( true ) ) 
   , m_cut_trivial    ( true  ) 
   , m_cut2tr ( LoKi::Constant<LoKi::TrackTypes::TrackPair,bool>( true ) ) 
   , m_cut2tr_trivial ( true ) 
@@ -129,7 +129,7 @@ LoKi::Hlt1::VxCreator::VxCreator
 LoKi::Hlt1::VxCreator::VxCreator () 
   : LoKi::AuxFunBase () 
   //
-  , m_cut    ( LoKi::Constant<LHCb::Track,bool>( true ) ) 
+  , m_cut    ( LoKi::Constant<const LHCb::Track*,bool>( true ) ) 
   , m_cut_trivial    ( true  ) 
   , m_cut2tr ( LoKi::Constant<LoKi::TrackTypes::TrackPair,bool>( true ) ) 
   , m_cut2tr_trivial ( true ) 
@@ -162,8 +162,8 @@ std::ostream& LoKi::Hlt1::VxCreator::fillStream ( std::ostream& s ) const
 // make the vertices
 // ============================================================================
 size_t LoKi::Hlt1::VxCreator::make 
-( const std::vector<LHCb::Track*>& tracks1  , 
-  const std::vector<LHCb::Track*>& tracks2  , 
+( const LHCb::Track::ConstVector&  tracks1  , 
+  const LHCb::Track::ConstVector&  tracks2  , 
   std::vector<LHCb::RecVertex*>&   vertices ) const 
 {
   if ( tracks1.empty() || tracks2.empty() ) { return 0 ; }
@@ -178,7 +178,7 @@ size_t LoKi::Hlt1::VxCreator::make
                      vertices.size() + n1*(n1-1)/2 : 
                      vertices.size() + n1*n2       ) ;
   
-  typedef std::vector<LHCb::Track*>  Tracks   ;
+  typedef LHCb::Track::ConstVector   Tracks   ;
   typedef LoKi::Combiner_<Tracks>    Combiner ;
   typedef Combiner::Range            Range    ;
   
@@ -232,9 +232,6 @@ size_t LoKi::Hlt1::VxCreator::make
   // return number of created vertcies 
   return vertices.size() - size ; // RETURN 
 }
-
-
-
 // ============================================================================
 // The END 
 // ============================================================================

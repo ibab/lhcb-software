@@ -53,8 +53,8 @@ namespace LoKi
        *  @return status code 
        */
       StatusCode upgrade 
-      ( const std::vector<LHCb::Track*>& itracks , 
-        std::vector<LHCb::Track*>&       otracks ) const ;
+      ( const LHCb::Track::ConstVector&  itracks , 
+        LHCb::Track::ConstVector&        otracks ) const ;
       // ======================================================================
       /** upgrade one seed          
        *  @param itrack  input track/seeds 
@@ -62,8 +62,8 @@ namespace LoKi
        *  @return status code 
        */
       StatusCode upgrade 
-      ( const LHCb::Track* itrack , 
-        std::vector<LHCb::Track*>&       otracks ) const ;
+      ( const LHCb::Track*        itrack , 
+        LHCb::Track::ConstVector& otracks ) const ;
       // ======================================================================
     public:
       // ======================================================================
@@ -111,7 +111,7 @@ namespace LoKi
        */
       StatusCode iupgrade 
       ( const LHCb::Track*         seed    , 
-        std::vector<LHCb::Track*>& output  , 
+        LHCb::Track::ConstVector&  tracks  , 
         LHCb::Track::Container*    otracks ) const ;
       // ======================================================================
     private:
@@ -124,7 +124,7 @@ namespace LoKi
        */
       StatusCode reco 
       ( const LHCb::Track*         seed    , 
-        std::vector<LHCb::Track*>& tracks  , 
+        LHCb::Track::ConstVector&  tracks  , 
         LHCb::Track::Container*    otracks ) const ;
       /** find upgraded tracks in the TES container 
        *  @param seed   the seed to be upgraded 
@@ -134,7 +134,7 @@ namespace LoKi
        */
       size_t find
       ( const LHCb::Track*         seed    , 
-        std::vector<LHCb::Track*>& tracks  , 
+        LHCb::Track::ConstVector& tracks  , 
         LHCb::Track::Container*    otracks ) const ;
       // ======================================================================
     private:

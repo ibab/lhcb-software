@@ -7,7 +7,7 @@
 // ============================================================================
 // LoKi 
 // ============================================================================
-#include "LoKi/TrackTypes.h"
+#include "LoKi/TriggerTypes.h"
 #include "LoKi/Interface.h"
 #include "LoKi/HltBinders.h"
 // ============================================================================
@@ -88,9 +88,10 @@ namespace LoKi
      *  @date 2007-08-13
      */     
     class DeltaE 
-      : public LoKi::BasicFunctors<LHCb::Track>::Function
+      : public LoKi::BasicFunctors<const LHCb::Track*>::Function
     {
     public:
+      // ======================================================================
       /// MANDATORY: virtual destructor
       virtual ~DeltaE() {} ;
       /// MANDATORY: clone method ("virtual constructor")  
@@ -99,8 +100,9 @@ namespace LoKi
       virtual result_type operator() ( argument a ) const ;
       /// OPTIONAL: the nice printout 
       virtual std::ostream& fillStream( std::ostream& s ) const 
-      { return s << "TrDE" ; }      
-    } ;
+      { return s << "TrDE" ; }       
+      // ======================================================================
+   } ;
     // ========================================================================
     /** @class TrackMatch
      *  "Match" twho tracks and return the "distance"

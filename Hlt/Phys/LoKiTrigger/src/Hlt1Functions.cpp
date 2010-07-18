@@ -112,17 +112,23 @@ LoKi::Tracks::MuonDeltaP::result_type
 LoKi::Tracks::MuonDeltaP::operator() 
   ( LoKi::Tracks::MuonDeltaP::argument t ) const 
 {
+  if ( 0 == t ) 
+  {
+    Error ("LHCb::Track* points to NULL, return 'false'") ;
+    return false ;  
+  }
+  
   // check ancestors :
-  if ( t.ancestors().empty() ) { return false ; }                     // RETURN 
+  if ( t->ancestors().empty() ) { return false ; }                     // RETURN 
   // get the oldest ancestor
-  const LHCb::Track* old = t.ancestors().front() ;
-  if ( 0 == old              ) { return false ; }                     // RETURN
+  const LHCb::Track* old = t->ancestors().front() ;
+  if ( 0 == old               ) { return false ; }                     // RETURN
   // get the momentum of the oldest ancestor:
-  const double pNew = t  .  p () ;
+  const double pNew = t  -> p () ;
   if ( 0 >= pNew             ) { return false ; }                     // RETURN 
   const double pOld = old-> p () ;
   if ( 0 >= pOld             ) { return false ; }                     // RETURN 
-
+  
   // get the momentum difference:
   const double delta = ( pNew - pOld ) / pNew ;
   
@@ -133,7 +139,7 @@ LoKi::Tracks::MuonDeltaP::operator()
     typedef std::vector<LHCb::LHCbID> LHCbIDs ;
     
     // get all IDs from the track 
-    const LHCbIDs& ids = t.lhcbIDs() ;
+    const LHCbIDs& ids = t->lhcbIDs() ;
     
     // loop over all IDs in backward direction (why???) and find muon tile
     using namespace boost::lambda ;
@@ -141,7 +147,7 @@ LoKi::Tracks::MuonDeltaP::operator()
       std::find_if ( ids.rbegin() , ids.rend () ,
                      bind( &LHCb::LHCbID::isMuon , _1 ) ) ;
     if ( ids.rend() == itile ) { return false ; }                     // RETURN
-
+    
     const LHCb::MuonTileID tile = itile->muonID() ;
     const unsigned int muReg = tile.region() ;
     Assert ( muReg < s_nRegions , "Illegal muon region!" ) ;

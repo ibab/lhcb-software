@@ -5,6 +5,24 @@
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
 
+! 2010-07-18 - Vanya Belyaev
+
+    prepare the scene for creation of "new"-functors for *new* Hlt1-event model
+ 
+    move all Track-related functions into new package LoKiTrack 
+
+    change the signature from LHCb::Track to const LHCb::Track* 
+
+    remove *all* classes form dictionary 
+
+         - from now: add only on case-by-case basis
+
+
+ - cmt/requirements
+ 
+    add dependency on new package LoKiTrack 
+    version increment to v11r0 
+
 !========================== LoKiTrigger v10r1 2010-07-08 ===================
 ! 2010-06-19 - Vanya Belyaev
 

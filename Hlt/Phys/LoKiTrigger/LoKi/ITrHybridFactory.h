@@ -16,11 +16,12 @@
 // ============================================================================
 // LoKi 
 // ============================================================================
-#include "LoKi/TrackTypes.h"
+#include "LoKi/TriggerTypes.h"
 // ============================================================================
 namespace LoKi
 {
-  /** @class ITrHybridFactory ITrHybridFactory.h LoKi/ITrHybridFactory.h
+  // ==========================================================================
+  /** @class ITrHybridFactory LoKi/ITrHybridFactory.h
    *  The abstract interface to "hybrid factory"  
    *  @author Vanya BELYAEV ibelayev@physics.syr.edu
    *  @date   2007-06-10
@@ -28,8 +29,10 @@ namespace LoKi
   class ITrHybridFactory : public virtual IAlgTool
   {
   public: 
+    // ========================================================================
     /// Return the unique interface ID
     static const InterfaceID& interfaceID() ;
+    // ========================================================================
   public:
     // ========================================================================
     /** "Factory": get the the object form python code 
@@ -222,12 +225,15 @@ namespace LoKi
       INamedInterface*               who    = 0 ) = 0 ;
     // ========================================================================
   protected:
+    // ========================================================================
     // virtual and protected destructor
-    virtual ~ITrHybridFactory( ); ///< Destructor
+    virtual ~ITrHybridFactory( ); // Destructor
+    // ========================================================================
   } ;
-} // end of namespace LoKi
+  // ==========================================================================
+} //                                                      end of namespace LoKi
 // ============================================================================
-// The END 
+//                                                                      The END 
 // ============================================================================
 #endif // LOKI_ITRHYBRIDFACTORY_H
 // ============================================================================

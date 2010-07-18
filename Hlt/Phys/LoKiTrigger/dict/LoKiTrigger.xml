@@ -10,6 +10,22 @@
 
 <lcgdict>
   
+  <class name    = "Hlt::IRegister"        />
+  <class name    = "Hlt::IRegister::Lock"  />
+  <class name    = "Hlt::IData"            />
+  <class name    = "Hlt::IInspector"       />
+  <class name    = "std::vector<const IAlgorithm*>"     />
+  <class name    = "std::vector<const Hlt::Selection*>" />
+  <class pattern = "LoKi::Interface<Hlt::I*"  />
+
+  <class name    = "LoKi::Hlt1::Tool"                />
+  <class name    = "LoKi::Hlt1::TrackFunction"       />
+  <class name    = "LoKi::Hlt1::TrackBiFunction"     />
+  <class name    = "LoKi::Hlt1::MatchTVelo"          />
+  <class name    = "LoKi::Hlt1::TrackVertexFunction" />
+  
+  <!-- 
+  
   <class pattern   = "LoKi::Functor<*LHCb::Tr*>"                 />
   <class pattern   = "LoKi::FunctorFromFunctor<*LHCb::Tr*>"      />
   <class pattern   = "LoKi::Constant<*LHCb::Tr*>"                />
@@ -78,13 +94,6 @@
 
   <class pattern   = "LoKi::Hlt1::*" />
   
-  <class name    = "Hlt::IRegister"        />
-  <class name    = "Hlt::IRegister::Lock"  />
-  <class name    = "Hlt::IData"            />
-  <class name    = "Hlt::IInspector"       />
-  <class name    = "std::vector<const IAlgorithm*>"     />
-  <class name    = "std::vector<const Hlt::Selection*>" />
-  <class pattern = "LoKi::Interface<Hlt::I*"  />
 
 
   <exclusion>
@@ -168,5 +177,7 @@
     
     
   </exclusion>
-  
+
+  -->
+
 </lcgdict>
