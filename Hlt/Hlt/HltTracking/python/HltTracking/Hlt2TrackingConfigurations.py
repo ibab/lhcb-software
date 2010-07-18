@@ -88,20 +88,6 @@ def Hlt2BiKalmanFittedDownstreamTracking() :
                                                                                  DoSeeding              = True
                                                                         )
 #
-# Now the instance which we will use in order to make the neutral
-# protoparticles.
-#
-def Hlt2UnfittedForwardTrackingForNeutrals() :
-        return Hlt2Tracking("Hlt2UnfittedForwardTrackingForNeutrals",            EarlyDataTracking       = True, 
-                                                                                 Prefix                  = Hlt2TracksPrefix,
-                                                                                 FastFitType             = HltUnfittedTracksSuffix,
-                                                                                 Hlt2Tracks              = Hlt2ForwardTracksName,
-                                                                                 DoFastFit               = False,
-                                                                                 DoSeeding               = False,
-                                                                                 DoCloneKilling          = False,
-                                                                                 MakeNeutrals            = True
-                                                                        )
-#
 # With track fitting and RICH PID for 3 hypotheses (kaon-proton-pion), but no seeding
 #
 def Hlt2BiKalmanFittedRichForProtonsForwardTracking() :
@@ -112,8 +98,8 @@ def Hlt2BiKalmanFittedRichForProtonsForwardTracking() :
                                                                                  DoFastFit              = True,
                                                                                  DoSeeding              = False,
                                                                                  DoCloneKilling         = False,
-                                                                                 MakeNeutrals           = False,
-                                                                                 RichHypos              = ["pion","kaon","proton"]
+                                                                                 RichHypos              = ["pion","proton"],
+                                                                                 RichTrackCuts          = { "Chi2Cut" : [0,16], "PCut" : [2,100], "PtCut" : [1.8,100], "Likelihood" : [-999999,999999] }   
                                                                         )
 #
 def setDataTypeForTracking(trackingInstance, dataType):

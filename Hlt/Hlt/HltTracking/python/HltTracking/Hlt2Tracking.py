@@ -11,7 +11,7 @@
 ##
 # =============================================================================
 __author__  = "V. Gligorov vladimir.gligorov@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.23 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.24 $"
 # =============================================================================
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
@@ -31,6 +31,7 @@ from HltTrackNames import HltGlobalTrackLocation
 from HltTrackNames import Hlt2ChargedProtoParticleSuffix, Hlt2NeutralProtoParticleSuffix  
 from HltTrackNames import HltRichDefaultHypos, HltRichDefaultRadiators
 from HltTrackNames import Hlt2TrackingRecognizedFitTypesForRichID 
+from HltTrackNames import HltRichDefaultTrackCuts
 
 from Configurables import CaloProcessor, RichRecSysConf
 
@@ -104,9 +105,9 @@ class Hlt2Tracking(LHCbConfigurableUser):
                 , "DoFastFit"                       : False
                 , "DoSeeding"                       : False
                 , "DoCloneKilling"                  : False
-                , "MakeNeutrals"                    : False
                 , "RichHypos"                       : HltRichDefaultHypos
                 , "RichRadiators"                   : HltRichDefaultRadiators
+                , "RichTrackCuts"                   : HltRichDefaultTrackCuts
                 , "Hlt2ForwardMaxVelo"              : 0
                 # TODO : make these variables, not slots 
                 , "__hlt2ChargedNoPIDsProtosSeq__"  : 0
@@ -290,7 +291,6 @@ class Hlt2Tracking(LHCbConfigurableUser):
         log.debug('## INFO Fast Fit? = '          + str(self.getProp("DoFastFit"      )))
         log.debug('## INFO Seeding? = '           + str(self.getProp("DoSeeding"      )))
         log.debug('## INFO Clone Killing? = '     + str(self.getProp("DoCloneKilling" )))
-        log.debug('## INFO Make Neutrals ? = '    + str(self.getProp("MakeNeutrals"   )))
         log.debug('## INFO Rich hypos = '         + str(self.getProp("RichHypos"      )))
         log.debug('## INFO Rich radiators = '     + str(self.getProp("RichRadiators"  )))
         log.debug('############################################################')
@@ -335,60 +335,52 @@ class Hlt2Tracking(LHCbConfigurableUser):
         self.setProp( "__hlt2PrepareTracksSeq__"
                     , self.__hlt2StagedFastFit()
                     )
-        #
-        # If MakeNeutrals is set we only allow the user to make photons/pi0s
-        # This requires tracking but other options are ignored! 
-        #
-        if not self.getProp("MakeNeutrals") :
-            self.setProp(   "__hlt2ChargedNoPIDsProtosSeq__"    
-                            , self.__hlt2ChargedNoPIDsProtos()  )
-            #
-            # If something special is being done for the RICH then we only fill the
-            # RICH sequences, to prevent the RICH and CALO clashing. In other words, we
-            # only make the muon and calo protoparticles for the instances which use
-            # the default settings for the RICH
-            #
-            if  (    self.getProp("RichHypos")         == HltRichDefaultHypos         and 
-                     self.getProp("RichRadiators")     == HltRichDefaultRadiators    
-                ) :
-                #
-                # The PID sequences
-                #
-                self.setProp(    "__hlt2MuonIDSeq__"            ,
-                                 self.__hlt2MuonID()                 )
-                self.setProp(    "__hlt2CALOIDSeq__"            ,
-                                 self.__hlt2CALOID()                 )
-                #
-                # The protoparticles
-                #
-                self.setProp(    "__hlt2ChargedCaloProtosSeq__"        ,
-                                 self.__hlt2ChargedCaloProtos()        )
         
-                self.setProp(    "__hlt2ChargedMuonProtosSeq__"        ,
-                                 self.__hlt2ChargedMuonProtos()        )
-        
-                self.setProp(    "__hlt2ChargedMuonWithCaloProtosSeq__"    ,
-                                 self.__hlt2ChargedMuonWithCaloProtos()  )
+        self.setProp(   "__hlt2ChargedNoPIDsProtosSeq__"    
+                        , self.__hlt2ChargedNoPIDsProtos()  )
+        #
+        # If something special is being done for the RICH then we only fill the
+        # RICH sequences, to prevent the RICH and CALO clashing. In other words, we
+        # only make the muon and calo protoparticles for the instances which use
+        # the default settings for the RICH
+        #
+        if  (    self.getProp("RichHypos")         == HltRichDefaultHypos         and 
+                 self.getProp("RichRadiators")     == HltRichDefaultRadiators    
+            ) :
             #
-            # The RICH needs fitted tracks!
+            # The PID sequences
             #
-            if (self.getProp("FastFitType") in Hlt2TrackingRecognizedFitTypesForRichID) :
-                #
-                # Define the RICH ID and the RICH protos
-                #
-                self.setProp(    "__hlt2RICHIDSeq__"            ,
-                                 self.__hlt2RICHID()                 )
-                       
-                self.setProp(    "__hlt2ChargedRichProtosSeq__"        ,
-                                 self.__hlt2ChargedRichProtos()      )    
-        else :
+            self.setProp(    "__hlt2MuonIDSeq__"            ,
+                             self.__hlt2MuonID()                 )
+            self.setProp(    "__hlt2CALOIDSeq__"            ,
+                             self.__hlt2CALOID()                 )
             #
-            # Just create the CALO ID and the neutral protos sequence
-            # 
+            # The protoparticles
+            #
+            self.setProp(    "__hlt2ChargedCaloProtosSeq__"        ,
+                             self.__hlt2ChargedCaloProtos()        )
+    
+            self.setProp(    "__hlt2ChargedMuonProtosSeq__"        ,
+                             self.__hlt2ChargedMuonProtos()        )
+    
+            self.setProp(    "__hlt2ChargedMuonWithCaloProtosSeq__"    ,
+                             self.__hlt2ChargedMuonWithCaloProtos()  )
             self.setProp(    "__hlt2CALOIDSeq__"        ,
                              self.__hlt2CALOID()                 )
-            self.setProp(    "__hlt2NeutralProtosSeq__"        ,
-                             self.__hlt2NeutralProtos()          )
+            self.setProp(    "__hlt2NeutralProtosSeq__"        ,       
+                             self.__hlt2NeutralProtos()          )    
+        #
+        # The RICH needs fitted tracks!
+        #
+        if (self.getProp("FastFitType") in Hlt2TrackingRecognizedFitTypesForRichID) :
+            #
+            # Define the RICH ID and the RICH protos
+            #
+            self.setProp(    "__hlt2RICHIDSeq__"            ,
+                             self.__hlt2RICHID()                 )
+                   
+            self.setProp(    "__hlt2ChargedRichProtosSeq__"        ,
+                             self.__hlt2ChargedRichProtos()      )    
     #############################################################################################
     #############################################################################################
     #
@@ -472,9 +464,7 @@ class Hlt2Tracking(LHCbConfigurableUser):
         return baseSuffix
     #
     def __caloIDLocation(self) :
-        caloBase =  self.__hltBasePIDLocation() + "/" + HltCALOIDSuffix + "/"
-        if (self.getProp("MakeNeutrals")) : caloBase += Hlt2NeutralProtoParticleSuffix
-        else : caloBase += Hlt2ChargedProtoParticleSuffix
+        caloBase =  self.__hltBasePIDLocation() + "/" + HltCALOIDSuffix
         return caloBase
     #
     # The prefixes for the various tools and algorithms used
@@ -806,6 +796,8 @@ class Hlt2Tracking(LHCbConfigurableUser):
         richConf.InitPhotons        = True
         richConf.TracklessRingAlgs  = []
         richConf.Particles          = self.getProp("RichHypos")
+        # Set cuts on which tracks enter the RICH reco
+        richConf.trackConfig().TrackCuts = self.getProp("RichTrackCuts")
         richConf.Radiators          = self.getProp("RichRadiators")
         # Set the sequence to run the RICH PID in
         richConf.setProp("RecoSequencer",richSeq)
@@ -1190,9 +1182,6 @@ class Hlt2Tracking(LHCbConfigurableUser):
         #
         myCALOProcessor.SkipNeutrals    = False
         myCALOProcessor.SkipCharged     = False
-        if (self.getProp("MakeNeutrals") == True): 
-            myCALOProcessor.SkipNeutrals    = False
-            myCALOProcessor.SkipCharged     = True
 
         # The sequences are given the track and protoparticle locations when initializing 
         myPIDSeq         = myCALOProcessor.caloSequence(        [tracks.outputSelection()]                    )
