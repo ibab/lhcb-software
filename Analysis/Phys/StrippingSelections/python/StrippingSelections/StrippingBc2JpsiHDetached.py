@@ -42,7 +42,7 @@ class StrippingBc2JpsiHDetachedConf(LHCbConfigurableUser):
         name = "Bc2JpsiHDetached"
         
         from Configurables import FilterDesktop, CombineParticles, OfflineVertexFitter
-        from PhysSelPython.Wrappers import Selection, SelectionSequence, DataOnDemand
+        from PhysSelPython.Wrappers import Selection, DataOnDemand
 
         # Jpsi Cut
         # Which is faster, INTREE or CHILDCUT?
@@ -106,8 +106,7 @@ class StrippingBc2JpsiHDetachedConf(LHCbConfigurableUser):
                                           Algorithm = _Bc2JpsiHDetached,
                                           RequiredSelections = [ SelJpsi2MuMu, SelPion ] )
         
-        SeqBc2JpsiHDetached = SelectionSequence("Seq"+name, TopSelection = SelBc2JpsiHDetached )
-        return SeqBc2JpsiHDetached
+        return SelBc2JpsiHDetached
 
     def getProps(self):
         """

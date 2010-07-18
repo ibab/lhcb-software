@@ -1,4 +1,4 @@
-# $Id: StrippingDiElectron.py,v 1.3 2010-05-27 17:49:21 gcowan Exp $
+# $Id: StrippingDiElectron.py,v 1.4 2010-07-18 17:04:41 jhe Exp $
 ## #####################################################################
 # Stripping selections for inclusive di-electron, J/psi(1S) -> e+ e- 
 #
@@ -10,7 +10,7 @@
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
 from Configurables import FilterDesktop, CombineParticles, OfflineVertexFitter	
-from PhysSelPython.Wrappers import Selection, SelectionSequence, DataOnDemand
+from PhysSelPython.Wrappers import Selection, DataOnDemand
 
 class StrippingDiElectronConf(LHCbConfigurableUser):
     """
@@ -66,8 +66,7 @@ class StrippingDiElectronConf(LHCbConfigurableUser):
                                     Algorithm = _RefineLooseJpsi2ee,
                                     RequiredSelections = [ _LooseJpsi2ee ]                           
                                     )
-	SeqLooseJpsi2ee = SelectionSequence("SeqLooseJpsi2ee", TopSelection = SelLooseJpsi2ee )
-	return StrippingLine('LooseJpsi2ee', prescale = 1, algos = [ SeqLooseJpsi2ee ])
+	return StrippingLine('LooseJpsi2ee', prescale = 1, algos = [ SelLooseJpsi2ee ])
 
 
 
@@ -89,8 +88,7 @@ class StrippingDiElectronConf(LHCbConfigurableUser):
                                Algorithm = _RefineJpsi2ee,
                                RequiredSelections = [ _Jpsi2ee ]                           
                                )
-	SeqJpsi2ee = SelectionSequence("SeqJpsi2ee", TopSelection = SelJpsi2ee )
-	return StrippingLine('Jpsi2ee', prescale = 1, algos = [ SeqJpsi2ee ])
+	return StrippingLine('Jpsi2ee', prescale = 1, algos = [ SelJpsi2ee ])
 
 
     
@@ -112,8 +110,7 @@ class StrippingDiElectronConf(LHCbConfigurableUser):
                                      Algorithm = _RefineIncDiElectron,
                                      RequiredSelections = [ _IncDiElectron ]                           
                                      )
-	SeqIncDiElectron = SelectionSequence("SeqIncDiElectron", TopSelection = SelIncDiElectron )
-	return StrippingLine('IncDiElectron', prescale = 1, algos = [ SeqIncDiElectron ])
+	return StrippingLine('IncDiElectron', prescale = 1, algos = [ SelIncDiElectron ])
 
     
     #------------------------------------------------------
@@ -134,8 +131,7 @@ class StrippingDiElectronConf(LHCbConfigurableUser):
                                             Algorithm = _RefineIncDiElectronLowMass,
                                             RequiredSelections = [ _IncDiElectronLowMass ]                           
                                             )
-	SeqIncDiElectronLowMass = SelectionSequence("SeqIncDiElectronLowMass", TopSelection = SelIncDiElectronLowMass )
-	return StrippingLine('IncDiElectronLowMass', prescale = 1, algos = [ SeqIncDiElectronLowMass ])
+	return StrippingLine('IncDiElectronLowMass', prescale = 0.1, algos = [ SelIncDiElectronLowMass ])
     
 
     
@@ -159,9 +155,8 @@ class StrippingDiElectronConf(LHCbConfigurableUser):
                                            Algorithm = _RefineBiasedIncDiElectron,
                                            RequiredSelections = [ _BiasedIncDiElectron ]                           
                                            )
-	SeqBiasedIncDiElectron = SelectionSequence("SeqBiasedIncDiElectron", TopSelection = SelBiasedIncDiElectron )
-	return StrippingLine('BiasedIncDiElectron', prescale = 1, algos = [ SeqBiasedIncDiElectron ])    
-
+	return StrippingLine('BiasedIncDiElectron', prescale = 1, algos = [ SelBiasedIncDiElectron ])    
+    
     
     #------------------------------------------------------
     # Biased Inclusive DiEelctron using StdLooseDiElectron
@@ -184,10 +179,8 @@ class StrippingDiElectronConf(LHCbConfigurableUser):
                                                   Algorithm = _RefineBiasedIncDiElectronLowMass,
                                                   RequiredSelections = [ _BiasedIncDiElectronLowMass ]                           
                                                   )
-	SeqBiasedIncDiElectronLowMass = SelectionSequence("SeqBiasedIncDiElectronLowMass", TopSelection = SelBiasedIncDiElectronLowMass )
-	return StrippingLine('BiasedIncDiElectronLowMass', prescale = 1, algos = [ SeqBiasedIncDiElectronLowMass ])
+	return StrippingLine('BiasedIncDiElectronLowMass', prescale = 0.1, algos = [ SelBiasedIncDiElectronLowMass ])
     
-
         
     def getProps(self) :
         """
