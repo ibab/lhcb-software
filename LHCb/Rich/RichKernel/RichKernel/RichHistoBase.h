@@ -106,18 +106,23 @@ namespace Rich
      */
     virtual StatusCode prebookHistograms();
 
-    //-----------------------------------------------------------------------------------------
+  protected:
 
     /// short name for bin labels
     typedef std::vector<std::string> BinLabels;
 
+  protected:
+
     /** Book a 1D histogram
      *
-     * @param id      Histogram identifier
-     * @param title   Histogram title
-     * @param low     Lower histogram edge
-     * @param high    Upper histogram edge
-     * @param bins    Number of bins
+     * @param id         Histogram identifier
+     * @param title      Histogram title
+     * @param low        Lower histogram edge
+     * @param high       Upper histogram edge
+     * @param bins       Number of bins
+     * @param xAxisLabel Label for the X Axis
+     * @param yAxisLabel Label for the Y Axis
+     * @param binLabels  Labels for the X axis bins
      *
      * @return Pointer to booked histogram
      */
@@ -132,14 +137,19 @@ namespace Rich
 
     /** Book a 2D histogram
      *
-     * @param id      Histogram identifier
-     * @param title   Histogram title
-     * @param lowX    Lower histogram edge in X
-     * @param highX   Upper histogram edge in X
-     * @param binsX   Number of bins in X
-     * @param lowY    Lower histogram edge in Y
-     * @param highY   Upper histogram edge in Y
-     * @param binsY   Number of bins in Y
+     * @param id         Histogram identifier
+     * @param title      Histogram title
+     * @param lowX       Lower histogram edge in X
+     * @param highX      Upper histogram edge in X
+     * @param binsX      Number of bins in X
+     * @param lowY       Lower histogram edge in Y
+     * @param highY      Upper histogram edge in Y
+     * @param binsY      Number of bins in Y
+     * @param xAxisLabel Label for the X Axis
+     * @param yAxisLabel Label for the Y Axis
+     * @param zAxisLabel Label for the Z Axis
+     * @param xBinLabels Labels for the X axis bins
+     * @param yBinLabels Labels for the Y axis bins
      *
      * @return Pointer to booked histogram
      */
@@ -159,11 +169,14 @@ namespace Rich
 
     /** Book a 1D profile histogram
      *
-     * @param id      Histogram identifier
-     * @param title   Histogram title
-     * @param low     Lower hisstogram edge
-     * @param high    Upper histogram edge
-     * @param bins    Number of bins
+     * @param id         Histogram identifier
+     * @param title      Histogram title
+     * @param low        Lower hisstogram edge
+     * @param high       Upper histogram edge
+     * @param bins       Number of bins
+     * @param xAxisLabel Label for the X Axis
+     * @param yAxisLabel Label for the Y Axis
+     * €param binLabels  Labels for the X axis bins
      *
      * @return Pointer to booked histogram
      */
@@ -178,14 +191,19 @@ namespace Rich
 
     /** Book a 2D profile histogram
      *
-     * @param id      Histogram identifier
-     * @param title   Histogram title
-     * @param lowX    Lower histogram edge in X
-     * @param highX   Upper histogram edge in X
-     * @param binsX   Number of bins in X
-     * @param lowY    Lower histogram edge in Y
-     * @param highY   Upper histogram edge in Y
-     * @param binsY   Number of bins in Y
+     * @param id         Histogram identifier
+     * @param title      Histogram title
+     * @param lowX       Lower histogram edge in X
+     * @param highX      Upper histogram edge in X
+     * @param binsX      Number of bins in X
+     * @param lowY       Lower histogram edge in Y
+     * @param highY      Upper histogram edge in Y
+     * @param binsY      Number of bins in Y
+     * @param xAxisLabel Label for the X Axis
+     * @param yAxisLabel Label for the Y Axis
+     * @param zAxisLabel Label for the Z Axis
+     * @param xBinLabels Labels for the X axis bins
+     * @param yBinLabels Labels for the Y axis bins
      *
      * @return Pointer to booked histogram
      */
