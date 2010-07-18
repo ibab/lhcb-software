@@ -1,0 +1,183 @@
+#!/usr/bin/env python
+# =============================================================================
+## @file
+#  The set of basic objects from LoKiTracks library
+#
+#        This file is a part of LoKi project - 
+#    "C++ ToolKit  for Smart and Friendly Physics Analysis"
+#
+#  The package has been designed with the kind help from
+#  Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
+#  contributions and advices from G.Raven, J.van Tilburg, 
+#  A.Golutvin, P.Koppenburg have been used in the design.
+#
+#  By usage of this code one clearly states the disagreement 
+#  with the campain of Dr.O.Callot et al.: 
+#  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
+#
+#  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+#  @date 2007-06-09
+# =============================================================================
+"""
+The set of basic objects from LoKiTracks library
+
+      This file is a part of LoKi project - 
+``C++ ToolKit  for Smart and Friendly Physics Analysis''
+
+The package has been designed with the kind help from
+Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
+contributions and advices from G.Raven, J.van Tilburg, 
+A.Golutvin, P.Koppenburg have been used in the design.
+
+By usage of this code one clearly states the disagreement 
+with the campain of Dr.O.Callot et al.: 
+ ``No Vanya's lines are allowed in LHCb/Gaudi software.''
+ 
+"""
+# =============================================================================
+__author__  = "Vanya BELYAEV  Ivan.Belyaev@nikhef.nl "
+__date__    = "2010-07-17"
+__version__ = "CVS tag $Name:$, version $Revision:$ "
+# =============================================================================
+
+
+import LoKiCore.decorators as _LoKiCore 
+
+## needed since there is no autoloading of Tracking dictionaries:
+import sys,PyCintex
+
+if sys.platform == 'win32' : PyCintex.loadDict (    "TrackEventDict" )  
+else                       : PyCintex.loadDict ( "libTrackEventDict" )  
+    
+
+# Namespaces:
+_global  = _LoKiCore._global 
+std      = _global.std
+LoKi     = _global.LoKi
+LHCb     = _global.LHCb
+
+_T = 'const LHCb::Track*'
+
+# =============================================================================
+## "Ordinary" functions for Tracks: "Tr"
+# =============================================================================
+
+## @see LoKi::Types::TrFunc
+TrFunc  = LoKi.Functor                ( _T , 'double' ) 
+## @see LoKi::Types::TrCuts
+TrCuts  = LoKi.Functor                ( _T ,  bool    ) 
+## @see LoKi::Types::TrFun
+TrFun   = LoKi.FunctorFromFunctor     ( _T , 'double' ) 
+## @see LoKi::Types::TrCut
+TrCut   = LoKi.FunctorFromFunctor     ( _T ,  bool    )
+
+ 
+## @see LoKi::Cuts::TrTYPE
+TrTYPE        = LoKi.Tracks.Type  () 
+
+## @see @see LoKi::Cuts::TrALL
+TrALL         = LoKi.Constant ( _T , bool ) ( True )
+## @see LoKi::Cuts::TrBACKWARD
+TrBACKWARD    = LoKi.Tracks.CheckFlag ( LHCb.Track.Backward ) 
+## @see LoKi::Cuts::TrCHI2 
+TrCHI2        = LoKi.Tracks.Chi2 () 
+## @see LoKi::Cuts::TrCLONE
+TrCLONE       = LoKi.Tracks.CheckFlag ( LHCb.Track.Clone ) 
+## ## @see LoKi::Cuts::TrDE
+## TrDE          = LoKi.Tracks.DeltaE     () 
+## @see LoKi::Cuts::TrFALSE
+TrFALSE       = LoKi.Constant( _T , bool ) ( False )
+## @see LoKi::Cuts::TrFILTER
+TrFILTER      = LoKi.Tracks.Selector 
+## @see LoKi::Cuts::TrHASINFO
+TrHASINFO     = LoKi.Tracks.HasInfo
+## @see LoKi::Cuts::TrHASSTATE
+TrHASSTATE    = LoKi.Tracks.HasStateAt
+## @see LoKi::Cuts::TrINTES
+TrINTES       = LoKi.Tracks.InTES  () 
+## @see LoKi::Cuts::TrINFO
+TrINFO        = LoKi.Tracks.Info
+## @see LoKi::Cuts::TrINVALID
+TrINVALID     = LoKi.Tracks.CheckFlag ( LHCb.Track.Invalid )
+## @see LoKi::Cuts::TrIPSELECTED
+TrIPSELECTED  = LoKi.Tracks.CheckFlag ( LHCb.Track.IPSelected  )
+## @see LoKi::Cuts::TrISFLAG
+TrISFLAG      = LoKi.Tracks.CheckFlag
+## @see LoKi::Cuts::TrKEY
+TrKEY         = LoKi.Tracks.Key    () 
+## @see LoKi::Cuts::TrL0CANDIDATE
+TrL0CANDIDATE = LoKi.Tracks.CheckFlag ( LHCb.Track.L0Candidate ) 
+## @see LoKi::Cuts::TrNONE
+TrNONE        = LoKi.Constant( _T , bool ) ( False )
+## @see LoKi::Cuts::TrONE
+TrONE         = LoKi.Constant( _T , 'double' ) ( 1.0 )
+## @see LoKi::Cuts::TrP
+TrP           = LoKi.Tracks.Momentum          () 
+## @see LoKi::Cuts::TrPIDSELECTED
+TrPIDSELECTED = LoKi.Tracks.CheckFlag ( LHCb.Track.PIDSelected ) 
+## @see LoKi::Cuts::TrPROBCHI2 
+TrPROBCHI2    = LoKi.Tracks.ProbChi2 () 
+## @see LoKi::Cuts::TrPT
+TrPT          = LoKi.Tracks.TransverseMomentum () 
+## @see LoKi::Cuts::TrQ
+TrQ           = LoKi.Tracks.Charge ()
+## @see LoKi::Cuts::TrSELECTED
+TrSELECTED    = LoKi.Tracks.CheckFlag ( LHCb.Track.Selected ) 
+## @see LoKi::Cuts::TrSELECTOR
+TrSINFO       = LoKi.Tracks.SmartInfo
+## @see LoKi::Cuts::TrTRUE
+TrTRUE        = LoKi.Constant( _T , bool ) ( True  )
+## @see LoKi::Cuts::TrUSED
+TrUSED        = LoKi.Tracks.CheckFlag ( LHCb.Track.Used )
+## @see LoKi::Cuts::TrZERO
+TrZERO        = LoKi.Constant( _T , 'double' ) ( 0.0 )
+
+## @see LoKi::Cuts::TrIDC
+TrIDC         = LoKi.Tracks.CountIDs
+## @see LoKi::Cuts::TrOTIDC
+TrOTIDC       = LoKi.Tracks.CountOTIDs
+## @see LoKi::Cuts::TrSTIDC
+TrSTIDC       = LoKi.Tracks.CountSTIDs
+## @see LoKi::Cuts::TrVELOIDC
+TrVELOIDC     = LoKi.Tracks.CountVeloIDs
+
+## @see LoKi::Cuts::TrSTATEZ
+TrSTATEZ      = LoKi.Tracks.StateZ
+## @see LoKi::Cuts::TrFIRTSHITZ
+TrFIRSTHITZ   = LoKi.Tracks.StateZ ( LHCb.State.FirstMeasurement )
+
+## functional part
+_vt       = 'std::vector<const LHCb::Track*>'
+_vd       = 'std::vector<double>'
+#
+TrMaps         = LoKi.Functor             ( _vt  , _vd       )
+TrMap          = LoKi.FunctorFromFunctor  ( _vt  , _vd       )
+TrPipes        = LoKi.Functor             ( _vt  , _vt       )
+TrPipe         = LoKi.FunctorFromFunctor  ( _vt  , _vt       )
+TrFunVals      = LoKi.Functor             ( _vt  , 'double'  )
+TrFunVal       = LoKi.FunctorFromFunctor  ( _vt  , 'double'  )
+TrElements     = LoKi.Functor             ( _vt  , 'const LHCb::Track*' ) 
+TrElement      = LoKi.FunctorFromFunctor  ( _vt  , 'const LHCb::Track*' )
+TrSources      = LoKi.Functor             ('void', _vt  )
+TrSource       = LoKi.FunctorFromFunctor  ('void', _vt  )
+TrCutVals      = LoKi.Functor             ( _vt  , bool )
+TrCutVal       = LoKi.FunctorFromFunctor  ( _vt  , bool )
+
+TrSOURCE       = LoKi.Tracks.SourceTES 
+TrTES          = LoKi.Tracks.SourceTES 
+
+TrEMPTY        = LoKi.Functors.Empty ( _T ) ()
+TrSIZE         = LoKi.Functors.Size  ( _T ) ()
+
+# =============================================================================
+if __name__ == '__main__' :
+    print '*'*120
+    print                      __doc__
+    print ' Author  : %s ' %   __author__    
+    print ' Version : %s ' %   __version__
+    print ' Date    : %s ' %   __date__
+    print '*'*120
+    
+# =============================================================================
+# The END 
+# =============================================================================
