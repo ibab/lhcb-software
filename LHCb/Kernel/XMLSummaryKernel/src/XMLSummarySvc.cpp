@@ -1,8 +1,11 @@
 #include "XMLSummarySvc.h"
 #include "GaudiKernel/MsgStream.h"
+#include "GaudiKernel/SmartIF.h"
+#include "GaudiKernel/IAppMgrUI.h"
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/IIncidentListener.h"
 #include "GaudiKernel/IIncidentSvc.h"
+#include "GaudiKernel/AppReturnCode.h"
 #include "GaudiUtils/RegEx.h"
 #include "GaudiUtils/IIODataManager.h"
 #include "GaudiKernel/Memory.h"
@@ -150,13 +153,32 @@ XMLSummarySvc::finalize()
   
   //add own counter
   addCounter(name(),"handled",m_handled);
-
+  
+  //need to get return code from AppMgr
+  
+  int gaudiReturn=0;
+  
+  SmartIF<IProperty> appmgr(serviceLocator()->service("ApplicationMgr"));
+  gaudiReturn=Gaudi::getAppReturnCode(appmgr);
+  
+  
+  //IntegerProperty returnCode("ReturnCode",0);
+  
+  //const IntegerProperty returnCode=(const IntegerProperty) getProperty("ReturnCode");//Gaudi::Utils::getProperty(&returnCode);
+  
   //log << MSG::VERBOSE << "state " << FSMState() 
   //    << " running " << Gaudi::StateMachine::RUNNING << endmsg;
+  //IInterface* iface = Gaudi::createApplicationMgr();
+  //SmartIF<IProperty> appmgr(iface);
+  
+  //int gaudiReturn=returnCode.value();//Gaudi::getAppReturnCode(this);//getProperty(this,"ReturnCode");//Gaudi::getAppReturnCode(m_propertyMgr);
+  log << MSG::DEBUG << "gaudi return code" << gaudiReturn << endmsg;
+  
   
   //write collected counters
   PyObject_CallMethod(m_summary, chr("set_step"), chr("s,i"), chr("finalize"), 
-                      1);
+                      int(gaudiReturn==0));
+  
   log << MSG::INFO << "filling counters..." << endmsg;
   fillcounters().ignore();
   log << MSG::INFO << "counters filled OK" << endmsg;

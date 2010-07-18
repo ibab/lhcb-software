@@ -33,7 +33,7 @@ class Counter(GaudiAlgo) :
 
         if executed.flag() > 3:
             import os
-            os._exit(0)
+            os._exit(1)
             #from opencv import
             #import sys
             #sys.exit(255)

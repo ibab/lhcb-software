@@ -4,6 +4,13 @@
 ! Purpose     : Holds code for writing an XML-based summary in Gaudi
 !-----------------------------------------------------------------------------
 
+! 2010-07-18 - Rob Lambert
+ - Adapt references for new Exception handling
+ - Add check on gaudi return code
+ - This is not the end of the story, because failure in the event loop
+   is no longer caught in this new gaudi. So checking for success in
+   the XMLSumamry is pointless.
+
 !======================== XmlSummaryKernel v1r0 2009-10-16 ===================
 ! 2009-10-07 - Rob Lambert
  - Protection against the loss of the summary object

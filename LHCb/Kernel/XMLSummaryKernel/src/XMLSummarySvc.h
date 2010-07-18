@@ -12,6 +12,7 @@
 #include "GaudiKernel/ICounterSummarySvc.h"
 #include "GaudiKernel/IIncidentListener.h"
 #include "GaudiKernel/IIncidentSvc.h"
+#include "GaudiKernel/AppReturnCode.h"
 #include "GaudiUtils/IFileCatalog.h"
 #include <string>
 #include <vector>

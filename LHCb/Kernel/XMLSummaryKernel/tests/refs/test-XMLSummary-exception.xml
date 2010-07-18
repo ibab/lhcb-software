@@ -1,18 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <summary version="1.0" xsi:noNamespaceSchemaLocation="$XMLSUMMARYBASEROOT/xml/XMLSummary.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-	<success>False</success>
-	<step>execute</step>
+	<success>True</success>
+	<step>finalize</step>
 	<usage>
-		<stat unit="KB" useOf="MemoryMaximum">252168.0</stat>
+		<stat unit="KB" useOf="MemoryMaximum">231312.0</stat>
 	</usage>
 	<input>
 		<file GUID="" name="PFN:YouCannotOpenMe.dst" status="fail">0</file>
-		<file GUID="CAA89D27-E42D-DC11-B844-003048836626" name="PFN:rfio:/castor/cern.ch/user/c/cattanem/Brunel/v32r1/00001820_00000001_5.dst" status="part">3</file>
+		<file GUID="CAA89D27-E42D-DC11-B844-003048836626" name="PFN:rfio:/castor/cern.ch/user/c/cattanem/Brunel/v32r1/00001820_00000001_5.dst" status="part">4</file>
 	</input>
 	<output>
-		<file GUID="82197A7B-4FB2-DE11-89EC-001E4F3E5C1F" name="PFN:PoolDst.root" status="part">3</file>
+		<file GUID="56608552-3F92-DF11-9213-000423D675CA" name="PFN:PoolDst.root" status="full">4</file>
 	</output>
-	<counters />
+	<counters>
+		<counter name="Counter/executed">4</counter>
+		<counter name="CounterSummarySvc/handled">14</counter>
+	</counters>
 	<lumiCounters />
 </summary>
