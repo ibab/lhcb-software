@@ -5,8 +5,7 @@
 !-----------------------------------------------------------------------------
 
 ! 2010-07-17 - Chris Jones
- - Tighten "large event" abort cuts for photons from <1000000 to <250000 and
-   for tracks from <500 to <250
+ - Tighten "large event" abort cuts for photons from <1000000 to <250000
 
 ! 2010-07-08 - Chris Jones
  - Rework the Track Configuration to explicitly set all track selection cuts.
