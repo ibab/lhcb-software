@@ -92,17 +92,24 @@ void PIDPlots::plots( const LHCb::ProtoParticle * proto,
     const double accEff( proto->richPID() ? 100.0 : 0.0 );
     
     // Eff v P and Pt plots
-    std::string title = "Eff. RICH acceptance Versus P (MeV)";
+    std::string title = "Eff. RICH acceptance V P";
     richProfile1D( HID(title,hypo), title,
-                   config.minP, config.maxP, nBins1D() )->fill(pTot,accEff);
-    title = "Eff. RICH acceptance Versus Pt (MeV)";
+                   config.minP, config.maxP, nBins1D(),
+                   "Track Momentum (MeV/c)", 
+                   "Selection Efficiency (%)" )->fill(pTot,accEff);
+    title = "Eff. RICH acceptance Versus Pt";
     richProfile1D( HID(title,hypo), title,
-                   config.minPt, config.maxPt, nBins1D() )->fill(pT,accEff);
+                   config.minPt, config.maxPt, nBins1D(),
+                   "Track Transverse Momentum (MeV/c)",
+                   "Selection Efficiency (%)" )->fill(pT,accEff);
     title = "Eff. RICH acceptance Versus P,Pt (MeV)";
     richProfile2D( HID(title,hypo), title,
                    config.minP,  config.maxP,  nBins2D(),
-                   config.minPt, config.maxPt, nBins2D() )->fill(pTot,pT,accEff);
-    
+                   config.minPt, config.maxPt, nBins2D(),
+                   "Track Momentum (MeV/c)", 
+                   "Track Transverse Momentum (MeV/c)",
+                   "Selection Efficiency (%)" )->fill(pTot,pT,accEff);
+ 
   }
   
 }
@@ -162,16 +169,23 @@ void PIDPlots::plots( const LHCb::RichPID * pid,
         title.str("");
         title << "Eff. RichDLL(" << DllDiff << ")>" << m_dllCut << " Versus P (MeV)";
         richProfile1D( HID(title.str(),hypo), title.str(),
-                       config.minP, config.maxP, nBins1D() )->fill(pTot,eff);
+                       config.minP, config.maxP, nBins1D(),
+                       "Track Momentum (MeV/c)",
+                       "PID Efficiency (%)" )->fill(pTot,eff);
         title.str("");
         title << "Eff. RichDLL(" << DllDiff << ")>" << m_dllCut << " Versus Pt (MeV)";
         richProfile1D( HID(title.str(),hypo), title.str(),
-                       config.minPt, config.maxPt, nBins1D() )->fill(pT,eff);
+                       config.minPt, config.maxPt, nBins1D(),
+                       "Track Transverse Momentum (MeV/c)",
+                       "PID Efficiency (%)" )->fill(pT,eff);
         title.str("");
         title << "Eff. RichDLL(" << DllDiff << ")>" << m_dllCut << " Versus P,Pt (MeV)";
         richProfile2D( HID(title.str(),hypo), title.str(),
                        config.minP,  config.maxP,  nBins2D(),
-                       config.minPt, config.maxPt, nBins2D() )->fill(pTot,pT,eff);
+                       config.minPt, config.maxPt, nBins2D(),
+                       "Track Momentum (MeV/c)", 
+                       "Track Transverse Momentum (MeV/c)",
+                       "PID Efficiency (%)" )->fill(pTot,pT,eff);
 
         // # Sigma distributions
         title.str("");
@@ -182,7 +196,9 @@ void PIDPlots::plots( const LHCb::RichPID * pid,
         title.str("");
         title << "# Sigma(" << DllDiff << ") Versus P (MeV)";
         richProfile1D( HID(title.str(),hypo), title.str(),
-                       config.minP, config.maxP, nBins1D() )->fill(pTot,nsigma);
+                       config.minP, config.maxP, nBins1D(),
+                       "Track Momentum (MeV/c)",
+                       title.str() )->fill(pTot,nsigma);
 
       }
     }
@@ -204,6 +220,7 @@ void PIDPlots::plots( const LHCb::Track * track,
   const double tkPtot = trackP( track );
 
   // Momentum spectra
-  richHisto1D( HID("Ptot",hypo), "Ptot",
-               config.minP, config.maxP, nBins1D() )->fill(tkPtot);
+  richHisto1D( HID("Ptot",hypo), "Track Momentum",
+               config.minP, config.maxP, nBins1D(),
+               "Track Momentum (MeV/c)" )->fill(tkPtot);
 }
