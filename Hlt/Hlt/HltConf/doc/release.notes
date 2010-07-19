@@ -1,9 +1,10 @@
-! $Id: release.notes,v 1.481 2010-07-18 00:08:09 gligorov Exp $ 
+! $Id: release.notes,v 1.482 2010-07-19 21:38:48 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+!========================== HltConf v8r2 2010-07-19 ===================
 ! 2010-07-18 - V. Gligorov
  - Remove an obsolete Hlt2 tracking configuration which had been
    reintroduced by a misresolution of a commit conflict. 
