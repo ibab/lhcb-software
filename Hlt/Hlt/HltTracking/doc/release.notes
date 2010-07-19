@@ -1,9 +1,10 @@
-!$Id: release.notes,v 1.137 2010-07-18 00:05:29 gligorov Exp $
+!$Id: release.notes,v 1.138 2010-07-19 21:43:43 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/HltTracking
 ! Responsible : Jose A. Hernando
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
+!========================== HltTracking v6r2 2010-07-17 ===================
 ! 2010-07-18 - V. Gligorov
  - Add default momentum cuts to the RICH reconstruction. Also fix a bug introduced
    by some conflicting commits regarding the removal of the obsolete configuration
