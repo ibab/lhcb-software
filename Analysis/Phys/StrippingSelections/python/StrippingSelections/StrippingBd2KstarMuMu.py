@@ -1,6 +1,6 @@
 __author__ = 'Patrick Koppenburg, Rob Lambert, Mitesh Patel'
 __date__ = '21/01/2009'
-__version__ = '$Revision: 1.27 $'
+__version__ = '$Revision: 1.28 $'
 
 """
 Bd->K*MuMu selections 
@@ -35,8 +35,8 @@ class StrippingBd2KstarMuMuConf(LHCbConfigurableUser):
                 ,  'IntFlightCHI2'      : 9          # adimentional
                 ,  'TrackChi2'          : 10         # adimentional
 # simple selection
-                ,  'SimpleDiMuonPT'      : 0         # MeV
-                ,  'SimpleBdLT'          : 0.01      # unit ?
+                ,  'SimpleDiMuonPT'      : 1000      # MeV
+                ,  'SimpleBdLT'          : 0.001     # unit ?
 # D -> K pi pi pi selection for calibration
 
                 ,  'DKpipipiTrackCHI2'   : 6         # dimensionless

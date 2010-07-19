@@ -6,10 +6,10 @@ from StrippingConf.Configuration import StrippingConf
 
 MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"
 
-from StrippingSelections.StrippingBd2KstarMuMu import StrippingBd2KstarMuMuConf
+from StrippingSelections.StrippingBd2DstarMuNuLoose import StrippingBd2DstarMuNuLooseConf
 from StrippingConf.StrippingStream import StrippingStream
 stream = StrippingStream("Test")
-stream.appendLines( [ StrippingBd2KstarMuMuConf().simplestLTLine() ] )
+stream.appendLines( [ StrippingBd2DstarMuNuLooseConf().line() ] )
 sc = StrippingConf( Streams = [ stream ] )
 
 from StrippingSelections.StartupOptions import veloNZSKiller, redoPV

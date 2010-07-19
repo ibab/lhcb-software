@@ -5,6 +5,9 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-07-19 - Patrick Koppenburg
+ - Better MuuK* simple LT line : cut at 0.001 and J/psi PT>1GeV
+
 ! 2010-07-18 - Jibo He
  - StrippingDiElectron.py
    BiasedIncDiElectronLowMass prescaled by a factor of 10
