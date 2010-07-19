@@ -2,6 +2,12 @@
 ! Responsible : Erica Polycarpo, Miriam Gandelman
 !-----------------------------------------------------------------------------
 
+! 2010-07-19 - Chris Jones
+ - Update the Muon PID algorithm to lazy load the PID tool for first time it
+   is really needed. Avoids loading it by default in DaVinci during 
+   initialization, since it triggers a lot of underlying tools to get 
+   configured which take some time and aren't needed.
+
 !======================== MuonID v7r8p2 2010-05-21 ===========================
 ! 2010-05-12 - Rob Lambert
  - Fix error introduced yeasterday in MuonIDAlg

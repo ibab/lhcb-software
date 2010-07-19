@@ -28,14 +28,14 @@ class MuonCoord;
 class DeMuonDetector;
 
 /** @class MuonIDAlg MuonIDAlg.h
- *  
+ *
  *  This is an Algorithm to create MuonPID objects starting from tracks and
  *  using the hits in the muon system
  *
  *  @author Erica Polycarpo, Miriam Gandelman
  *  @date   20/03/2006
- *   
- *  
+ *
+ *
  */
 class MuonIDAlg : public GaudiAlgorithm{
 public:
@@ -68,7 +68,7 @@ private:
 
   /// Compare the coordinates of two MuonPIDs
   bool compareHits( LHCb::MuonPID* muonid1, LHCb::MuonPID* muonid2 );
- 
+
   /// check the track is in the p and angle acceptance
   StatusCode preSelection(LHCb::MuonPID* pMuid, bool &passed);
 
@@ -100,12 +100,19 @@ private:
   double foiX(const int &station, const int &region, const double &p, const double &dx);
   /// return the FOI in y in a station and region for momentum (in MeV/c)
   double foiY(const int &station, const int &region, const double &p, const double &dy);
-  
+
   /// clear track based local variables
   void resetTrackLocals();
 
   LHCb::Track* makeMuonTrack(const LHCb::MuonPID& pMuid);
 
+  /// Load ImuIDTool on demand (avoid loading always in initialize())
+  inline ImuIDTool* Chi2MuIDTool() 
+  {
+    if ( !m_Chi2MuIDTool ) m_Chi2MuIDTool = tool<ImuIDTool>(m_myMuIDTool,"myMuIDTool",this);
+    return m_Chi2MuIDTool;
+  }
+  
   // Properties
 
   /// TES path of the tracks to analyse
@@ -124,7 +131,7 @@ private:
 
   /// Ignore MuonID info from conditions database.
   bool m_OverrideDB;
-  
+
   /// Preselection momentum (no attempt to ID below this)
   double m_PreSelMomentum;
 
@@ -135,14 +142,14 @@ private:
   std::vector<double> m_distPion;
   std::vector<double> m_distMuon;
 
-  
-  // GL&SF: 
+
+  // GL&SF:
   bool m_weightFlag;// flag to introduce weights in IsMuon/IsMuonLoose
   int m_dllFlag;  // flag to discriminate among the different DLLs
-  
+
   /// GL&SF: Calculate weights:
   void P_weights(const double& p, bool *w);
-  
+
   /// GL&SF: Calculates the Distance Likelihood given a MuonPID
   StatusCode calcMuonLL_dist(LHCb::MuonPID* muonid, const double& p);
 
@@ -158,7 +165,7 @@ private:
   double calc_ProbMu(const double& dist, const double *parMu);
   /// GL&SF: Calculate the compatibility with the Non-Muon hypothesis
   double calc_ProbNonMu(const double& dist, const double *parNonMu);
-  
+
   /// GL&SF: Normalizations of the Landaus
   StatusCode calcLandauNorm();
   double calcNorm(double *par);
@@ -166,29 +173,29 @@ private:
 
   /// Return the momentum bin corresponding to p, given the region
   int GetPbin(double p, int region);
-  
+
   /// Determine probabilities for DLL_flag=3
   StatusCode calcMuonLL_tanhdist(LHCb::MuonPID * pMuid, const double& p);
   double     calc_ProbMu_tanh(const double& tanhdist0, int pBin, int region);
   double     calc_ProbNonMu_tanh(const double& tanhdist0, int pBin, int region);
-  
+
   double Fdist[5];
   double small_dist[5];
   double closest_region[5];
   double closest_x[5];
   double closest_y[5];
-  
+
 
   /// GL&SF: define parameters for the hypothesis test
 
-  std::vector<double> m_MupBinsR1; 
-  std::vector<double> m_MupBinsR2; 
-  std::vector<double> m_MupBinsR3; 
-  std::vector<double> m_MupBinsR4; 
-  int m_nMupBinsR1, m_nMupBinsR2, m_nMupBinsR3, m_nMupBinsR4;  
+  std::vector<double> m_MupBinsR1;
+  std::vector<double> m_MupBinsR2;
+  std::vector<double> m_MupBinsR3;
+  std::vector<double> m_MupBinsR4;
+  int m_nMupBinsR1, m_nMupBinsR2, m_nMupBinsR3, m_nMupBinsR4;
 
   double m_parLandauMu;
-  double m_parLandauNonMu;  
+  double m_parLandauNonMu;
   std::vector< double >     m_MuLanParR1_1;
   std::vector< double >     m_MuLanParR1_2;
   std::vector< double >     m_MuLanParR1_3;
@@ -208,36 +215,36 @@ private:
   std::vector< double >     m_MuLanParR3_3;
   std::vector< double >     m_MuLanParR3_4;
   std::vector< double >     m_MuLanParR3_5;
-  
+
   std::vector< double >     m_MuLanParR4_1;
   std::vector< double >     m_MuLanParR4_2;
   std::vector< double >     m_MuLanParR4_3;
   std::vector< double >     m_MuLanParR4_4;
   std::vector< double >     m_MuLanParR4_5;
-  
+
   std::vector< double >     m_NonMuLanParR1;
   std::vector< double >     m_NonMuLanParR2;
   std::vector< double >     m_NonMuLanParR3;
   std::vector< double >     m_NonMuLanParR4;
 
-  
+
   double m_x; // x-width for the integral
   int m_nMax;// number of steps
 
   // hyperbolic tangent mapping of distances:
-  
+
   // Number of bins for tanh(dist) histos
   int m_nDistBins;
 
   // tanh scale factors
-  std::vector< double > 	m_tanhScaleFactorsR1;
-  std::vector< double > 	m_tanhScaleFactorsR2;
-  std::vector< double > 	m_tanhScaleFactorsR3;
-  std::vector< double > 	m_tanhScaleFactorsR4;
+  std::vector< double >  m_tanhScaleFactorsR1;
+  std::vector< double >  m_tanhScaleFactorsR2;
+  std::vector< double >  m_tanhScaleFactorsR3;
+  std::vector< double >  m_tanhScaleFactorsR4;
 
   typedef std::vector< std::vector< double >* > vectorOfVectors;
   vectorOfVectors m_tanhScaleFactors;
-  
+
   // tanh(dist2) histograms contents
   std::vector< double >     m_tanhCumulHistoMuonR1_1;
   std::vector< double >     m_tanhCumulHistoMuonR1_2;
@@ -248,7 +255,7 @@ private:
   std::vector< double >     m_tanhCumulHistoMuonR1_7;
   vectorOfVectors m_tanhCumulHistoMuonR1;
 
-  
+
   std::vector< double >     m_tanhCumulHistoMuonR2_1;
   std::vector< double >     m_tanhCumulHistoMuonR2_2;
   std::vector< double >     m_tanhCumulHistoMuonR2_3;
@@ -269,9 +276,9 @@ private:
   std::vector< double >     m_tanhCumulHistoMuonR4_4;
   std::vector< double >     m_tanhCumulHistoMuonR4_5;
   vectorOfVectors m_tanhCumulHistoMuonR4;
-  
+
   std::vector< vectorOfVectors * > m_tanhCumulHistoMuon;
-  
+
   // tanh(dist2) histograms contents
   std::vector< double >     m_tanhCumulHistoNonMuonR1_1;
   std::vector< double >     m_tanhCumulHistoNonMuonR1_2;
@@ -282,7 +289,7 @@ private:
   std::vector< double >     m_tanhCumulHistoNonMuonR1_7;
   vectorOfVectors m_tanhCumulHistoNonMuonR1;
 
-  
+
   std::vector< double >     m_tanhCumulHistoNonMuonR2_1;
   std::vector< double >     m_tanhCumulHistoNonMuonR2_2;
   std::vector< double >     m_tanhCumulHistoNonMuonR2_3;
@@ -303,8 +310,8 @@ private:
   std::vector< double >     m_tanhCumulHistoNonMuonR4_4;
   std::vector< double >     m_tanhCumulHistoNonMuonR4_5;
   vectorOfVectors m_tanhCumulHistoNonMuonR4;
-  
-  std::vector< vectorOfVectors * > m_tanhCumulHistoNonMuon;  
+
+  std::vector< vectorOfVectors * > m_tanhCumulHistoNonMuon;
 
   //want to find quality?
   bool m_FindQuality;
@@ -313,7 +320,7 @@ private:
 
   //Which MuIDTool should be used
   std::string m_myMuIDTool;
-  
+
   // function that defines the field of interest size
   // formula is p(1) + p(2)*exp(-p(3)*momentum)
   std::vector< double >     m_xfoiParam1;
@@ -340,7 +347,7 @@ private:
   // fill local arrays of pad sizes and region sizes
   DeMuonDetector*  m_mudet;
 
-  //load muonIDtool
+  // muonIDtool
   ImuIDTool* m_Chi2MuIDTool;
 
   // local array of pad sizes in mm
@@ -350,11 +357,11 @@ private:
 
   // local array of region sizes
   std::vector<double> m_regionInnerX; // inner edge in abs(x)
-  std::vector<double> m_regionOuterX; // outer edge in abs(x) 
-                            
+  std::vector<double> m_regionOuterX; // outer edge in abs(x)
+
   std::vector<double> m_regionInnerY; // inner edge in abs(y)
-  std::vector<double> m_regionOuterY; // outer edge in abs(y) 
-  
+  std::vector<double> m_regionOuterY; // outer edge in abs(y)
+
   // These are indexed [station]
   //std::vector<double> m_stationZ; // station position
   double m_stationZ[5]; // station position
@@ -366,7 +373,7 @@ private:
   double m_MomentumPre; // in MeV/c
   double m_trackSlopeX;
   std::vector<double> m_trackX; // position of track in x(mm) in each station
-  std::vector<double> m_trackY; // position of track in y(mm) in each station  
+  std::vector<double> m_trackY; // position of track in y(mm) in each station
 
   //test if found a hit in the MuonStations
   std::vector<int> m_occupancy;
@@ -375,7 +382,7 @@ private:
   // store X of hits for dx/dz matching with track (only need M2/M3)
   std::vector<double> m_CoordX;
   int m_xMatchStation; // first station to calculate slope (M2)
-  
+
   // OK nasty optimisation here, store x,dx,y,dy of each coord to test against
   // track extrapolation
   class coordExtent_{
@@ -389,9 +396,9 @@ private:
     LHCb::MuonCoord *m_pCoord;
   };
 
-  // vector of positions of coords (innner vector coords, 
+  // vector of positions of coords (innner vector coords,
   // outer is [station* m_NRegion + region ]
-  std::vector<std::vector<coordExtent_> > m_coordPos; 
+  std::vector<std::vector<coordExtent_> > m_coordPos;
 
 };
 #endif // MUONID_H
