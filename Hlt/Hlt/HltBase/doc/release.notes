@@ -4,6 +4,13 @@
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
 
+! 2010-07-19 - Vanya Belyaev
+
+ - small reshullfling of lines in new event-classes 
+
+ - cmt/requirements 
+    version increment to v9r1p1
+
 !========================== HltBase v9r1 2010-07-14 ===================
 ! 2010-07-14 - Vanya Belyaev
 
