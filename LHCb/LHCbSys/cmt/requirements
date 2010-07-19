@@ -1,5 +1,5 @@
 package LHCbSys
-version v31r2
+version v31r3
 
 branches doc cmt test
 
@@ -27,18 +27,18 @@ use DetSys                v17r0   Det     # Marco Cattaneo
 use BcmDet                v1r3    Det     # Magnus Lieng
 use CaloDet               v10r5   Det     # Olivier Deschamps
 use CaloDetXmlCnv         v3r2    Det     # Olivier Deschamps
-use DDDB                  v1r32   Det     # Marco Cattaneo
+use DDDB                  v1r33   Det     # In SVN. Marco Cattaneo
 use DetCond               v12r13  Det     # In SVN. Marco Clemencic
-use DetDesc               v18r20  Det     # In SVN. Marco Clemencic,Juan Palacios
+use DetDesc               v18r21  Det     # In SVN. Marco Clemencic,Juan Palacios
 use DetDescChecks         v5r3    Det     # In SVN. Marco Clemencic, Ivan Belyaev
 use DetDescCnv            v4r11   Det     # In SVN. Marco Clemencic,Juan Palacios
 use DetDescSvc            v2r4    Det     # In SVN. Marco Clemencic, Matt Needham
 use Magnet                v7r1    Det     # Marco Cattaneo
 use MuonDet               v9r2    Det     # Alessia Satta, Alessio Sarti
 use OTDet                 v8r4    Det     # Jan Amoraal
-use RichDet               v14r4   Det     # In SVN. Chris Jones
-use STDet                 v4r20   Det     # Jeroen van Tilburg, Matt Needham
-use VeloDet              v13r10p1 Det     # In SVN. Mark Tobin, Kurt Rinnert
+use RichDet               v14r5   Det     # In SVN. Chris Jones
+use STDet                 v4r21   Det     # In SVN. J. van Tilburg, Matt Needham
+use VeloDet               v13r11  Det     # In SVN. Mark Tobin, Kurt Rinnert
 use VeloPixDet            v1r5    Det     # Victor Coco
 
 # Event data model
@@ -47,16 +47,16 @@ use EventSys              v25r0   Event   # Marco Cattaneo
 use DigiEvent             v2r16   Event   # Marco Cattaneo and sub-det experts
 use EventAssoc            v5r0    Event   # Juan Palacios
 use EventBase             v2r5p1  Event   # Marco Cattaneo, Gloria Corti
-use EventPacker           v2r2    Event   # Olivier Callot
+use EventPacker           v2r3    Event   # Olivier Callot
 use GenEvent              v5r6    Event   # Gloria Corti
 use HltEvent              v9r0    Event   # Jose Angel Hernando-Morata
 use LinkerEvent           v3r6    Event   # Olivier Callot
 use LumiEvent             v2r7    Event   # Jaap Panman
 use L0Event               v18r3   Event   # Olivier Deschamps, Julien Cogan
 use MCEvent               v2r17   Event   # Gloria Corti and sub-det experts
-use PackedEvent           v4r1p1  Event   # Marco Cattaneo, Olivier Callot
+use PackedEvent           v4r2  Event   # Marco Cattaneo, Olivier Callot
 use PhysEvent            v11r12p1 Event   # Patrick Koppenburg, Juan Palacios
-use RecEvent              v2r29   Event   # Marco Cattaneo and sub-det experts
+use RecEvent              v2r30   Event   # Marco Cattaneo and sub-det experts
 use TrackEvent            v5r5    Event   # Wouter Hulsbergen
 use VeloEvent             v16r8p1 Event   # Tomasz Szumlak, Chris Parkes
 
@@ -68,24 +68,24 @@ use IOExample             v3r4    Ex      # Marco Cattaneo
 # Packages without Hat, cannot have comment field. In SVN. Maintainer M.Cattaneo
 use GaudiConf             v13r5
 use GaudiObjDesc          v11r10p1
-use GaudiPatches          v1r1
+use GaudiPatches          v1r2
 
 # Kernel packages
 use HistoStrings          v1r0    Kernel  # Vanya Belyaev 
 use HltInterfaces         v4r1    Kernel  # Patrick Koppenburg
 use KernelSys             v12r1   Kernel  # Marco Cattaneo
 use LHCbAlgs              v2r34p1 Kernel  # Marco Cattaneo
-use LHCbKernel            v12r1   Kernel  # Marco Cattaneo
-use LHCbMath              v3r18   Kernel  # Juan Palacios
+use LHCbKernel            v12r2   Kernel  # Marco Cattaneo
+use LHCbMath              v3r19   Kernel  # Juan Palacios
 use MCInterfaces          v1r11   Kernel  # Marco Cattaneo et al.
 use PartProp              v1r6    Kernel  # Vanya Belyaev 
 use Relations             v5r9p1  Kernel  # Ivan Belyaev
 use XMLSummaryBase        v1r1    Kernel  # Rob Lambert
-use XMLSummaryKernel      v1r0    Kernel  # Rob Lambert
+use XMLSummaryKernel      v1r0p1  Kernel  # Rob Lambert
 
 use L0Base                v1r3    L0      # Julien Cogan
 use L0Interfaces          v1r7    L0      # Olivier Deschamps
-use L0MuonKernel          v9r2    L0      # Julien Cogan
+use L0MuonKernel          v9r3    L0      # Julien Cogan
 use ProcessorKernel       v6r0p1  L0      # Julien Cogan
 
 use MuonDAQ               v4r8    Muon    # Alessia Satta
@@ -106,8 +106,8 @@ use LoKiHlt               v3r2    Phys    # Ivan Belyaev
 use LoKiMC                v9r1    Phys    # Ivan Belyaev
 use LoKiNumbers           v9r1    Phys    # Ivan Belyaev
 use PatKernel             v2r3p1  Tf      # Stephanie Hansmann-Menzemer
-use RichKernel            v7r36   Rich    # In SVN. Chris Jones
-use RichRecBase           v3r30p1 Rich    # In SVN. Chris Jones
+use RichKernel            v7r37   Rich    # In SVN. Chris Jones
+use RichRecBase           v3r31   Rich    # In SVN. Chris Jones
 use SiDAQ                 v2r1p1  Si      # Matt Needham
 use STKernel              v2r2    ST      # In SVN. Matt Needham
 use STTELL1Event          v1r9p1  ST      # In SVN. Matt Needham
@@ -117,7 +117,7 @@ use CondDBUI              v3r4    Tools   # In SVN. Marco Clemencic
 use XmlTools              v6r3p1  Tools   # In SVN. Marco Clemencic
 use TfKernel              v2r18   Tf      # Stephanie Hansmann-Menzemer
 use TsaKernel             v3r6    Tf      # Matt Needham
-use TrackInterfaces       v4r13   Tr      # Matt Needham
+use TrackInterfaces       v4r14   Tr      # Matt Needham
 use TrackKernel           v1r4    Tr      # Wouter Hulsbergen
 
 # Declare this as a container package
