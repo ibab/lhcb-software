@@ -1,3 +1,11 @@
+2010-07-19  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbConfiguration/SetupProject.py: added prompt modification for the sh and csh shells.
+	- If the SP_PROMPT env variable is set, "[<project> <version>]" is prepended to the prompt
+	- If the SP_PROMPT env variable is set to "without_version", "[<project>]" is prepended to
+	the prompt
+	- If the SP_PROMPT env variable is not set, nothing is done.
+
 2010-07-16  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbConfiguration/LbLogin.py: 

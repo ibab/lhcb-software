@@ -1458,6 +1458,21 @@ class SetupProject:
         # Do not forget changes in the environment
         new_env.commit()
         return ( "\n".join(lines), errors )
+    
+    def _prepend_prompt(self):
+        new_prompt = ""
+        if os.environ["SP_PROMPT"] == "without_version" or not self.project_info.version:
+            if self.shell == "sh" :
+                new_prompt = 'PS1="\\[\\e[1;34m\\][%s]\\[\\e[m\\]$PS1"\n' % self.project_info.name
+            elif self.shell == "csh" :
+                new_prompt = 'set prompt="%%B%%{\\033[34m%%}[%s]%%{\\033[0m%%}%%b$prompt"\n' % self.project_info.name
+        else :
+            if self.shell == "sh" :
+                new_prompt = 'PS1="\\[\\e[1;34m\\][%s %s]\\[\\e[m\\]$PS1"\n' % (self.project_info.name, self.project_info.version)
+            elif self.shell == "csh" :
+                new_prompt = 'set prompt="%%B%%{\\033[34m%%}[%s %s]%%{\\033[0m%%}%%b$prompt"\n' % (self.project_info.name, self.project_info.version)
+        
+        return new_prompt
 
     def parse_args(self,args = sys.argv[1:]):
         self.opts,self.args = self.parser.parse_args(args=args)
@@ -1760,6 +1775,9 @@ class SetupProject:
         if self.opts.touch_logfile:
             #I have to touch a file to tell the release manager which version of the project I'm using
             output_script += self._touch_project_logfiles()
+
+        if os.environ.has_key("SP_PROMPT") :
+            output_script += self._prepend_prompt()
 
         self._verbose("########## done ##########")
 
