@@ -5,6 +5,7 @@
 ! Purpose     : LHCb Event model. Reconstruction classes (Brunel output) 
 !-----------------------------------------------------------------------------
 
+!========================= RecEvent v2r30 2010-07-19 =========================
 ! 2010-07-16 - Chris Jones
  - Add a new method to ProcStat to test if a given sub-system triggered an
    event abort. Relies on all aborts being set using the new addAlgorithmStatus
