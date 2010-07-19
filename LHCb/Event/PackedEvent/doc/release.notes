@@ -4,6 +4,7 @@
 ! Purpose     : Pack, Unpack and Compare containers for optimized persistency
 !-----------------------------------------------------------------------------
 
+!======================= PackedEvent v4r2 2010-07-19 =========================
 ! 2010-05-18 - Chris Jones
  - Add (empty) implementations of the Packers for Particles and Vertices.
    Details on how the packing is done to be implemented.
