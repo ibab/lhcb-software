@@ -52,7 +52,7 @@ void RPCComm::confirmFile(char *fileName, //still
            fileName, adler32String, md5CharString, size, events, physEvents); 
 //           trgEventsCharString, statEventsCharString);
   if(ret < 0 || (unsigned int) ret > sizeof(xmlData)) {
-    throw std::runtime_error("Could not format rpc call correctly.");
+    throw FailureException("Could not format rpc call correctly.");
   } 
 
   snprintf(headerData, sizeof(headerData), HEADER_TEMPLATE,
@@ -62,9 +62,12 @@ void RPCComm::confirmFile(char *fileName, //still
   ret = requestResponse(headerData, xmlData, response, sizeof(response));
 
   if(ret < 0)
-    throw std::runtime_error("Could not run RPC call for confirm.");
-  if(isError(response))
-    throw std::runtime_error(response);
+    throw FailureException("Could not run RPC call for confirm.");
+  ret = isError(response); 
+  if (ret == 2)
+    throw DiscardException(response);
+  if (ret != 0)
+    throw FailureException(response);
 
   return;
 }
@@ -84,7 +87,7 @@ void RPCComm::updateFile(char *fileName, unsigned int *trgEvents, unsigned int *
       statEvents[RANDEX], statEvents[PHYSEX], statEvents[MBIASEX], statEvents[LUMIEX],
       statEvents[BEAMGASEX], statEvents[RANDEX], statEvents[LOWLUMI], statEvents[MIDLUMI]);
   if(ret < 0 || (unsigned int) ret > sizeof(statEventsCharString)) {
-    throw std::runtime_error("Could not format stat counters correctly.");
+    throw FailureException("Could not format stat counters correctly.");
   }
   /* XXX Tricky here, send RANDEX value for RANDIN, as RANDIN should be greater or equal to RANDEX and nothing is counted in it */
   
@@ -92,7 +95,7 @@ void RPCComm::updateFile(char *fileName, unsigned int *trgEvents, unsigned int *
   ret = snprintf(xmlData, sizeof(xmlData), UPDATE_TEMPLATE,
            fileName, statEventsCharString);
   if(ret < 0 || (unsigned int) ret > sizeof(xmlData)) {
-    throw std::runtime_error("Could not format rpc call correctly.");
+    throw FailureException("Could not format rpc call correctly.");
   }
 
   snprintf(headerData, sizeof(headerData), HEADER_TEMPLATE,
@@ -102,9 +105,12 @@ void RPCComm::updateFile(char *fileName, unsigned int *trgEvents, unsigned int *
   ret = requestResponse(headerData, xmlData, response, sizeof(response));
 
   if(ret < 0)
-    throw std::runtime_error("Could not run RPC call for confirm.");
-  if(isError(response))
-    throw std::runtime_error(response);
+    throw FailureException("Could not run RPC call for confirm.");
+  ret = isError(response); 
+  if (ret == 2)
+    throw DiscardException(response);
+  if (ret != 0)
+    throw FailureException(response);
 
   return;
 }
@@ -135,9 +141,12 @@ void RPCComm::createFile(char *fileName, unsigned int runNumber)
   ret = requestResponse(headerData, xmlData, response, sizeof(response));
 
   if (ret < 0)
-    throw std::runtime_error("Could not run RPC call for create.");
-  if (isError(response))
-    throw std::runtime_error(response);
+    throw FailureException("Could not run RPC call for create.");
+  ret = isError(response); 
+  if (ret == 2)
+    throw DiscardException(response);
+  if (ret != 0)
+    throw FailureException(response);
 
   return;
 }
@@ -154,7 +163,7 @@ int RPCComm::requestResponse(char *requestHeader, char *requestData, char *respo
 
 
   if(Utils::nameLookup(m_serverURL->getHost(), &destAddr, NULL) != 0)
-    throw std::runtime_error("Could not resolve name.");
+    throw FailureException("Could not resolve name.");
   destAddr.sin_port = htons(m_serverURL->getPort());
   destAddr.sin_family = AF_INET;
 
@@ -166,21 +175,27 @@ int RPCComm::requestResponse(char *requestHeader, char *requestData, char *respo
   BIF recvBif(sockFd, response, responseLen);
 
   if(sockFd < 0)
-    throw std::runtime_error("Could not connect to RPC server.");
+    throw FailureException("Could not connect to RPC server.");
   ret = sendBif1.nbSendTimeout();
   if(ret == BIF::TIMEDOUT || ret == BIF::DISCONNECTED) {
     close(sockFd);
-    throw std::runtime_error("Could not send request header.");
+    if(ret == BIF::TIMEDOUT) throw RetryException("Could not send request header: timed out.");
+    throw FailureException("Could not send request header: disconnected.");
+    //throw std::runtime_error("Could not send request header.");
   } 
   ret = sendBif2.nbSendTimeout();
   if(ret == BIF::TIMEDOUT || ret == BIF::DISCONNECTED) {
     close(sockFd);
-    throw std::runtime_error("Could not send request data.");
+    //throw std::runtime_error("Could not send request data.");
+    if(ret == BIF::TIMEDOUT) throw RetryException("Could not send request data: timed out.");
+    throw FailureException("Could not send request data: disconnected.");
   }
   ret = recvBif.nbRecvTimeout();
   if(recvBif.getBytesRead() <= 0) {
     close(sockFd);
-    throw std::runtime_error("Could not read response data.");
+    if(ret == BIF::TIMEDOUT) throw RetryException("Could not read request data: timed out.");
+    if(ret == BIF::DISCONNECTED) throw FailureException("Could not read request data: disconnected.");
+    throw FailureException("Could not read response data: unknown error.");
   }
 
   close(sockFd);
@@ -189,18 +204,27 @@ int RPCComm::requestResponse(char *requestHeader, char *requestData, char *respo
 
 /**
  * Checks the XML RPC response string for an error code.
- * Returns 1 in case of an error, and 0 if not.
+ * @Return 0 if no error
+ * @Return 1 in case of an unknown/unmanaged error 
+ * @Return 2 in case of run closed
  */
 int RPCComm::isError(char *response)
 {
   std::string responseStr(response);
   char failedRPC[] = "<?xml version='1.0'?>\n<methodResponse>\n<params>\n<param>\n<value><array><data>\n<value><int>0</int></value>\n<value>";
+  char discardRPC[] = "<?xml version='1.0'?>\n<methodResponse>\n<params>\n<param>\n<value><array><data>\n<value><int>-42</int></value>\n<value>";
   size_t len;
   len = responseStr.length();
 
+  
   /* First check for HTTP response status */
   if(responseStr.find("200 OK") > len)
     return 1;
+
+  /* Check for managed errors */
+  if(responseStr.find(discardRPC) < len)
+    return 2;
+
   /* Check for the return code from the function */
   if (responseStr.find(failedRPC) < len) 
     return 1;
@@ -230,9 +254,12 @@ std::string RPCComm::createNewFile(unsigned int runNumber)
   ret = requestResponse(headerData, xmlData, response, sizeof(response));
 
   if (ret < 0)
-    throw std::runtime_error("Could not run RPC call for create");
-  if (isError(response))
-    throw std::runtime_error(response);
+    throw FailureException("Could not run RPC call for create"); 
+  ret = isError(response); 
+  if (ret == 2)
+    throw DiscardException(response);
+  if (ret != 0)
+    throw FailureException(response);
 
   std::string res(response);
 
@@ -260,16 +287,26 @@ std::string RPCComm::createNewFile(unsigned int runNumber, std::string streamID,
   ret = requestResponse(headerData, xmlData, response, sizeof(response));
 
   if (ret < 0)
-    throw std::runtime_error("Could not run RPC call for create");
-  if (isError(response))
-    throw std::runtime_error(response);
+    throw FailureException("Could not run RPC call for create");
+  ret = isError(response); 
+  if (ret == 2)
+    throw DiscardException(response);
+  if (ret != 0)
+    throw FailureException(response);
 
   std::string res(response);
 
-  start = res.find(startStr) + sizeof(startStr) - 1;
+  start = res.find(startStr);
+  if(start == res.npos) 
+      throw RetryException("Could not find filename in the RunDB answer");
+
+  start = start + sizeof(startStr) - 1;
   end = res.find(endStr);
+  if(end == res.npos) 
+      throw RetryException("Could not find filename in the RunDB answer");
+
   file = std::string(response, start, end-start);
-  
+
   return file;
 }
 

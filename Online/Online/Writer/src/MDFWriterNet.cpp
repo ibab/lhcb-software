@@ -42,7 +42,6 @@ extern "C" {
 
 #include "Writer/defs.h"
 
-
 DECLARE_NAMESPACE_ALGORITHM_FACTORY(LHCb,MDFWriterNet);
 
 using namespace LHCb;
@@ -220,6 +219,7 @@ StatusCode MDFWriterNet::initialize(void)
   else *m_log << MSG::INFO << "MD5 sum on-the-fly computing disabled." << endmsg;
 
   gettimeofday(&m_prevUpdate, NULL);
+  gettimeofday(&m_prevMsgQueue, NULL);
 
   m_currFile = NULL;
   m_srvConnection = new Connection(m_serverAddr, m_serverPort,
@@ -290,7 +290,7 @@ StatusCode MDFWriterNet::initialize(void)
   }
 
 
-
+  m_discardCurrentRun = false;
   m_currentRunNumber=0;
   m_CleanUpStop = false;
 
@@ -420,26 +420,17 @@ File* MDFWriterNet::createAndOpenFile(unsigned int runNumber)
   struct cmd_header header;
   memset(&header, 0, sizeof(struct cmd_header));
 
-  /* The RunDb generates file names now */
-  try {
-    /* trying to get an 'official'file name from the RunDatabase
-     * If there is any kinf of error generate one locally
-     */
-    *m_log << MSG::INFO << "Getting a new file name for run "
-           << runNumber << " ..." << endmsg;
-    std::string f = this->createNewFile(runNumber);
-    *m_log << MSG::INFO << "new filename: " << f << endmsg;
-    currFile = new File(f, runNumber, m_streamID, m_enableMD5);
-  } catch (std::exception &e) {
-    currFile = NULL; 
-    *m_log << MSG::ERROR
-           << " Exception: "
-           << e.what() << endmsg; 
-    *m_log << MSG::ERROR << " Could not get new file name for run "
-           << runNumber
-           << " ! Check the RunDB XML_RPC logfile /clusterlogs/services/xmlrpc.log"
-           <<  endmsg ;
-    return currFile;       
+  /* trying to get an 'official'file name from the RunDatabase
+   * If there is any kinf of error generate one locally
+   */
+  *m_log << MSG::INFO << "Getting a new file name for run "
+         << runNumber << " ..." << endmsg;
+  std::string f = this->createNewFile(runNumber);
+  *m_log << MSG::INFO << "new filename: " << f << endmsg;
+  currFile = new File(f, runNumber, m_streamID, m_enableMD5);
+
+  if(currFile == NULL) {
+    throw FailureException("Unknown error creating a file, pointer dereferenced, aborting.");
   }
 
   INIT_OPEN_COMMAND(&header, currFile->getFileName()->c_str(),
@@ -610,11 +601,17 @@ void MDFWriterNet::closeFile(File *currFile)
 void  MDFWriterNet::handle(const Incident& inc)    {
    *m_log << MSG::INFO << "Got incident:" << inc.source() << " of type " << inc.type() << endmsg;
   if (inc.type() == "DAQ_CANCEL" || inc.type() == "DAQ_ERROR")  {
+      this->stopRetrying();
       m_srvConnection->stopRetrying();
   }
 }
 
-
+/*
+ * Stop the endless retries on XML RPC call failures.
+ */
+void MDFWriterNet::stopRetrying() {
+  m_StopRetry = true;  
+}
 
 /* Writes out the buffer to the socket through the Connection object.
  * This function first checks if a new file needs to be created. After
@@ -665,17 +662,18 @@ StatusCode MDFWriterNet::writeBuffer(void *const /*fd*/, const void *data, size_
   // If we get a newer run number, start a timeout on the open files of the previous runs. 
   if(m_currentRunNumber < runNumber) {
       if(nbLate != 0)
-          *m_log << MSG::WARNING << WHERE << nbLate << " events were lost, for run previous than " << m_currentRunNumber << endmsg;
+          *m_log << MSG::WARNING << WHERE << nbLate << " events were lost, for run number <= " << m_currentRunNumber << endmsg;
       nbLate=0;
 
       m_currentRunNumber = runNumber;
+      m_discardCurrentRun = false;
       m_TotEvts = 0;
   }
 
   if(m_currFile == NULL || runNumber != m_currFile->getRunNumber()) {
     m_currFile = m_openFiles.getFile(runNumber);
     // Do not accept event from previous runs if no file is open anymore 
-    if(!m_currFile && runNumber < m_currentRunNumber) {
+    if(!m_currFile && (runNumber < m_currentRunNumber || (runNumber == m_currentRunNumber && m_discardCurrentRun) ) ) {
       ++nbLate;
       if (pthread_mutex_unlock(&m_SyncFileList)) {
         *m_log << MSG::ERROR << WHERE << " Unlocking mutex" << endmsg;
@@ -683,27 +681,72 @@ StatusCode MDFWriterNet::writeBuffer(void *const /*fd*/, const void *data, size_
       }
       return StatusCode::SUCCESS; 
     }
-    int nbTry=0;
     if(!m_currFile) {
-        while(!m_currFile && nbTry < 5) { 
-          *m_log << MSG::INFO << WHERE
-                 << "No file exists for run " << runNumber
-                 << " Creating a new one."
-                 << " Try number " << nbTry
-                 << endmsg;
-          m_currFile = createAndOpenFile(runNumber);
-          ++nbTry;
+        // In a loop, catch recoverable first, if so, continue, else catch failure and manage
+        while(!m_StopRetry) {
+            /* The RunDb generates file names now */
+            try {
+              m_currFile = createAndOpenFile(runNumber);
+            }
+            catch (RetryException &e) {
+              m_currFile = NULL;
+              *m_log << MSG::ERROR
+                     << " Exception: "
+                     << e.what() << endmsg; 
+              *m_log << MSG::ERROR << " Could not get new file name for run "
+                     << runNumber
+                     << ". Retrying ... "
+                     << " ! Check the RunDB XML_RPC logfile /clusterlogs/services/xmlrpc.log"
+                     <<  endmsg ;
+              continue;
+            }
+            catch (DiscardException &e) {
+              m_currFile = NULL;
+              *m_log << MSG::ERROR
+                     << " Exception: "
+                     << e.what() << endmsg;
+              *m_log << MSG::ERROR << " Run "
+                     << runNumber
+                     << " closed, and no file to be written. All subsequent events will be discarded."
+                     <<  endmsg ;
+              m_discardCurrentRun = true;
+              if (pthread_mutex_unlock(&m_SyncFileList)) {
+                *m_log << MSG::ERROR << WHERE << " Unlocking mutex" << endmsg;
+                return StatusCode::FAILURE;
+              }
+              return StatusCode::SUCCESS;  
+            }
+            catch (std::exception &e) { 
+              m_currFile = NULL;
+              // Should catch the FailureException and all other std::exception based exceptions
+              *m_log << MSG::ERROR
+                     << " Exception: "
+                     << e.what() << endmsg; 
+              *m_log << MSG::ERROR << " Could not get new file name for run "
+                     << runNumber
+                     << " because of an unmanaged error"
+                     << " ! Check the RunDB XML_RPC logfile /clusterlogs/services/xmlrpc.log"
+                     <<  endmsg ;
+              Incident incident(name(),"DAQ_ERROR");
+              m_incidentSvc->fireIncident(incident);
+              if (pthread_mutex_unlock(&m_SyncFileList)) {
+                *m_log << MSG::ERROR << WHERE << " Unlocking mutex" << endmsg;
+                return StatusCode::FAILURE;
+              }
+          
+              return StatusCode::FAILURE;
+            }
+            break;
         }
         if(m_currFile == NULL) {
-            Incident incident(name(),"DAQ_ERROR");
-            m_incidentSvc->fireIncident(incident);
+            *m_log << MSG::ERROR << "Giving up to get new file name for run " << runNumber << endmsg;
             if (pthread_mutex_unlock(&m_SyncFileList)) {
               *m_log << MSG::ERROR << WHERE << " Unlocking mutex" << endmsg;
               return StatusCode::FAILURE;
             }
-          
-            return StatusCode::FAILURE;
-        }    
+            // Error managed by the user, we get here only on a DAQ_CANCEL
+            return StatusCode::SUCCESS;
+        }
         m_openFiles.addFile(m_currFile);
     }
     
@@ -785,6 +828,7 @@ StatusCode MDFWriterNet::writeBuffer(void *const /*fd*/, const void *data, size_
                           trgEvents,
                           statEvents);
      } catch(std::exception& e) {
+        // Not important error, as update in the middle of the run, so not processed
         *m_log << MSG::WARNING
            << " Exception: "
            << e.what() << endmsg;
@@ -798,7 +842,7 @@ StatusCode MDFWriterNet::writeBuffer(void *const /*fd*/, const void *data, size_
 
  
   // after every MB send statistics
-  if (m_mq_available && totalBytesWritten % 1048576 < len) {
+  if (m_mq_available && (totalBytesWritten % (30*1048576) < len || tv.tv_sec - m_prevMsgQueue.tv_sec > 0.5)) {
 
       unsigned int statEvents[MAX_STAT_TYPES];
       if(m_currFile->getStatEvents(statEvents, MAX_STAT_TYPES) != 0) {
@@ -843,6 +887,9 @@ StatusCode MDFWriterNet::writeBuffer(void *const /*fd*/, const void *data, size_
       }
       free(msg);
       msg = NULL;
+
+      m_prevMsgQueue.tv_sec = tv.tv_sec;
+      m_prevMsgQueue.tv_usec = tv.tv_usec;
   }
   
   //How much have we written?
@@ -1084,16 +1131,32 @@ MDFWriterNet::~MDFWriterNet()
  */
 void MDFWriterNet::notifyOpen(struct cmd_header *cmd)
 {
-  try {
-    m_rpcObj->createFile(cmd->file_name, cmd->run_no);
-  } catch(std::exception& e) {
-    *m_log << MSG::ERROR
-           << " Exception: "
-           << e.what() << endmsg;
-    *m_log << MSG::ERROR << " Could not create Run Database Record. Check the RunDB XML_RPC logfile /clusterlogs/services/xmlrpc.log";
-    *m_log << " Record is: FileName=" << cmd->file_name;
-    *m_log << " Run Number=" << cmd->run_no << endmsg;
-  }
+    // In a loop, catch recoverable first, if so, continue, else catch failure and manage
+    while(!m_StopRetry) {
+        /* The RunDb generates file names now */
+        try {
+          m_rpcObj->createFile(cmd->file_name, cmd->run_no);
+        }
+        catch(RetryException &e) {
+          *m_log << MSG::ERROR
+                 << " Exception: "
+                 << e.what() << endmsg;
+          *m_log << MSG::ERROR << " Could not create Run Database Record. Check the RunDB XML_RPC logfile /clusterlogs/services/xmlrpc.log";
+          *m_log << " Record is: FileName=" << cmd->file_name;
+          *m_log << " Run Number=" << cmd->run_no << endmsg;
+          continue;
+        }
+        catch (std::exception &e) {
+          // Should catch the FailureException, discard (shouldn't be) and all other std::exception based exceptions
+          *m_log << MSG::ERROR
+                 << " Exception: "
+                 << e.what() << endmsg;
+          *m_log << MSG::ERROR << " Could not create Run Database Record. Check the RunDB XML_RPC logfile /clusterlogs/services/xmlrpc.log";
+          *m_log << " Record is: FileName=" << cmd->file_name;
+          *m_log << " Run Number=" << cmd->run_no << endmsg;
+        }
+        break;
+    }
 }
 
 /** A notify listener callback, which is executed  when a close command is acked.
@@ -1102,35 +1165,97 @@ void MDFWriterNet::notifyClose(struct cmd_header *cmd)
 {
   struct cmd_stop_pdu *pdu=(struct cmd_stop_pdu *) ((char*)cmd + sizeof(struct cmd_header));
     *m_log << MSG::INFO << WHERE << " notifyClose start" << endmsg;
-  try {
-    m_rpcObj->updateFile(cmd->file_name,
+
+  // In a loop, catch recoverable first, if so, continue, else catch failure and manage
+  while(!m_StopRetry) {
+    /* The RunDb generates file names now */
+    try {
+      m_rpcObj->updateFile(cmd->file_name,
                           pdu->trgEvents,
                           pdu->statEvents);
-  } catch(std::exception& rte) {
-    char md5buf[33];
-    unsigned char *md5sum = pdu->md5_sum;
-    sprintf(md5buf, "%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X",
+    }
+    catch(RetryException &e) {
+      char md5buf[33];
+      unsigned char *md5sum = pdu->md5_sum;
+      sprintf(md5buf, "%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X",
 	        md5sum[0],md5sum[1],md5sum[2],md5sum[3],
 	        md5sum[4],md5sum[5],md5sum[6],md5sum[7],
 	        md5sum[8],md5sum[9],md5sum[10],md5sum[11],
 	        md5sum[12],md5sum[13],md5sum[14],md5sum[15]);
-
-    *m_log << MSG::ERROR
-           << " Exception: "
-           << rte.what() << endmsg;
-    *m_log << MSG::ERROR << " Could not update Run Database Record. Check the RunDB XML_RPC logfile /clusterlogs/services/xmlrpc.log";
-    *m_log << " Record is: FileName=" << cmd->file_name;
-    *m_log << " Adler32 Sum=" << pdu->adler32_sum;
-    *m_log << " MD5 Sum=" << md5buf << endmsg;
+      *m_log << MSG::ERROR
+             << " Exception: "
+             << e.what() << endmsg;
+      *m_log << MSG::ERROR << " Could not update Run Database Record. Check the RunDB XML_RPC logfile /clusterlogs/services/xmlrpc.log";
+      *m_log << " Record is: FileName=" << cmd->file_name;
+      *m_log << " Adler32 Sum=" << pdu->adler32_sum;
+      *m_log << " MD5 Sum=" << md5buf << endmsg;
+      continue;
+    }
+    catch (std::exception &e) {
+      char md5buf[33];
+      unsigned char *md5sum = pdu->md5_sum;
+      sprintf(md5buf, "%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X",
+	        md5sum[0],md5sum[1],md5sum[2],md5sum[3],
+	        md5sum[4],md5sum[5],md5sum[6],md5sum[7],
+	        md5sum[8],md5sum[9],md5sum[10],md5sum[11],
+	        md5sum[12],md5sum[13],md5sum[14],md5sum[15]);
+      // Should catch the FailureException, discard (shouldn't be) and all other std::exception based exceptions
+      *m_log << MSG::ERROR
+             << " Exception: "
+             << e.what() << endmsg;
+      *m_log << MSG::ERROR << " Could not update Run Database Record. Check the RunDB XML_RPC logfile /clusterlogs/services/xmlrpc.log";
+      *m_log << " Record is: FileName=" << cmd->file_name;
+      *m_log << " Adler32 Sum=" << pdu->adler32_sum;
+      *m_log << " MD5 Sum=" << md5buf << endmsg;
+    }
+    break;
   }
-  try { 
-    m_rpcObj->confirmFile(cmd->file_name,
-			              pdu->adler32_sum,
-			              pdu->md5_sum,
-                          cmd->data.stop_data.size,
-                          pdu->events,
-                          pdu->physStat);
 
+  // In a loop, catch recoverable first, if so, continue, else catch failure and manage
+  while(!m_StopRetry) {
+    /* The RunDb generates file names now */
+    try {
+      m_rpcObj->confirmFile(cmd->file_name,
+  	              pdu->adler32_sum,
+	              pdu->md5_sum,
+                      cmd->data.stop_data.size,
+                      pdu->events,
+                      pdu->physStat);
+    }
+    catch(RetryException &e) {
+      char md5buf[33];
+      unsigned char *md5sum = pdu->md5_sum;
+      sprintf(md5buf, "%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X",
+	        md5sum[0],md5sum[1],md5sum[2],md5sum[3],
+	        md5sum[4],md5sum[5],md5sum[6],md5sum[7],
+	        md5sum[8],md5sum[9],md5sum[10],md5sum[11],
+	        md5sum[12],md5sum[13],md5sum[14],md5sum[15]);
+      *m_log << MSG::ERROR
+             << " Exception: "
+             << e.what() << endmsg;
+      *m_log << MSG::ERROR << " Could not confirm Run Database Record. Check the RunDB XML_RPC logfile /clusterlogs/services/xmlrpc.log";
+      *m_log << " Record is: FileName=" << cmd->file_name;
+      *m_log << " Adler32 Sum=" << pdu->adler32_sum;
+      *m_log << " MD5 Sum=" << md5buf << endmsg;
+      continue;
+    }
+    catch (std::exception &e) {
+      char md5buf[33];
+      unsigned char *md5sum = pdu->md5_sum;
+      sprintf(md5buf, "%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X",
+	        md5sum[0],md5sum[1],md5sum[2],md5sum[3],
+	        md5sum[4],md5sum[5],md5sum[6],md5sum[7],
+	        md5sum[8],md5sum[9],md5sum[10],md5sum[11],
+	        md5sum[12],md5sum[13],md5sum[14],md5sum[15]);
+      // Should catch the FailureException, discard (shouldn't be) and all other std::exception based exceptions
+      *m_log << MSG::ERROR
+             << " Exception: "
+             << e.what() << endmsg;
+      *m_log << MSG::ERROR << " Could not update Run Database Record. Check the RunDB XML_RPC logfile /clusterlogs/services/xmlrpc.log";
+      *m_log << " Record is: FileName=" << cmd->file_name;
+      *m_log << " Adler32 Sum=" << pdu->adler32_sum;
+      *m_log << " MD5 Sum=" << md5buf << endmsg;
+    }
     *m_log << MSG::INFO << "Confirmed file " << cmd->file_name 
          << "RunNumber: "  << cmd->run_no << " "
          << "Adler32: "    << pdu->adler32_sum << " "
@@ -1160,23 +1285,7 @@ void MDFWriterNet::notifyClose(struct cmd_header *cmd)
          << "LOWLUMI : " << pdu->statEvents[LOWLUMI] << " "
          << "MIDLUMI : " << pdu->statEvents[MIDLUMI] << " "
          << endmsg;
-
-  } catch(std::exception& rte) {
-    char md5buf[33];
-    unsigned char *md5sum = pdu->md5_sum;
-    sprintf(md5buf, "%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X",
-	        md5sum[0],md5sum[1],md5sum[2],md5sum[3],
-	        md5sum[4],md5sum[5],md5sum[6],md5sum[7],
-	        md5sum[8],md5sum[9],md5sum[10],md5sum[11],
-	        md5sum[12],md5sum[13],md5sum[14],md5sum[15]);
-
-    *m_log << MSG::ERROR
-           << " Exception: "
-           << rte.what() << endmsg;
-    *m_log << MSG::ERROR << " Could not update Run Database Record. Check the RunDB XML_RPC logfile /clusterlogs/services/xmlrpc.log";
-    *m_log << " Record is: FileName=" << cmd->file_name;
-    *m_log << " Adler32 Sum=" << pdu->adler32_sum;
-    *m_log << " MD5 Sum=" << md5buf << endmsg;
+    break;
   }
   *m_log << MSG::INFO << WHERE << " notifyClose end" << endmsg;
 }
