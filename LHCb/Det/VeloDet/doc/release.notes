@@ -3,6 +3,7 @@
 ! package manager : Velo Group
 !-----------------------------------------------------------------------------
 
+!======================== VeloDet v13r11 2010-07-19 ==========================
 ! 2010-06-24 - Rob Lambert
  - Fixed a few uninitialized variables, see bug #68795
 
