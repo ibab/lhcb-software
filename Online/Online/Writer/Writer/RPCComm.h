@@ -11,6 +11,33 @@
  */
 namespace LHCb {
 
+  class RetryException: public std::runtime_error {
+    public:
+      /** Takes a character string describing the error.  */
+      explicit RetryException(const std::string&  __arg) : std::runtime_error(__arg){}
+ 
+      virtual ~RetryException() throw() {};
+
+  };
+
+  class DiscardException: public std::runtime_error {
+    public:
+      /** Takes a character string describing the error.  */
+      explicit DiscardException(const std::string&  __arg) : std::runtime_error(__arg){}
+ 
+      virtual ~DiscardException() throw() {};
+
+  };
+
+  class FailureException: public std::runtime_error {
+    public:
+      /** Takes a character string describing the error.  */
+      explicit FailureException(const std::string&  __arg) : std::runtime_error(__arg){}
+ 
+      virtual ~FailureException() throw() {};
+ 
+  };
+
   /**
    * A class for obtaining the host, protocol and path from a formatted URL string.
    */

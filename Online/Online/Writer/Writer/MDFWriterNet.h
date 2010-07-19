@@ -329,11 +329,21 @@ namespace LHCb {
     typedef LHCb::Connection Connection;
   protected:
 
+    /// A boolean to notify that events of the current run number should be discarded.
+    /// Useful in case of run close and no more file opening possible.
+    bool m_discardCurrentRun;
+
+    /// A boolean to tell to stop RPC tries
+    bool m_StopRetry;
+
     /// Period between two updates.
     int m_UpdatePeriod;
 
     /// Time when the Online statistics were updated for the last time in the RunDB. 
-    struct timeval m_prevUpdate;    
+    struct timeval m_prevUpdate;   
+ 
+    /// Time when the trigger rates were sent to the message queue. 
+    struct timeval m_prevMsgQueue;    
 
     /// Condition to perform the MD5 sum on the fly.
     bool m_enableMD5;
@@ -437,6 +447,9 @@ namespace LHCb {
 
     /// Check the integrity of the MDFHeader. Statistics can only be performed on version 3 
     virtual bool checkHeader(const MDFHeader *mHeader, size_t);
+
+    // Set the boolean which allows the process to exit from the endless retry loop on XML RPC failures
+    virtual void stopRetrying();
 
     /// Returns a File object for the specified run number
 

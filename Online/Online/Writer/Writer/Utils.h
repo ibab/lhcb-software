@@ -21,7 +21,7 @@ namespace LHCb {
       static const int THREAD_STOPPED = -3;
       static const int AGAIN = 0;
       static const int DISCONNECTED = -1;
-      static const int FAILURE_TIMEOUT_SEC = 5;
+      static const int FAILURE_TIMEOUT_SEC = 10; //XXX set as param?
       static const int POLL_TIMEOUT_MSEC = 1500;
       BIF(int sockFd, void *data, int bufLen)
       {
