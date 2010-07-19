@@ -32,6 +32,8 @@ use Fidel               v1r4p1  Phys  # Sara Furcas
 use LoKiTrigger         v10r1   Phys  # Vanya Belyaev  ###### CHECK
 use TisTosTobbing       v4r2    Phys  # Tomasz Skwarnicki
 
+use LoKiTracks          v*      Phys  # Vanya Belyaev  
+
 # Declare this as a container package
 apply_pattern container_package
 
