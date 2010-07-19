@@ -5,6 +5,10 @@
 ! Purpose     : LHCb Event model. Reconstruction classes (Brunel output) 
 !-----------------------------------------------------------------------------
 
+! 2010-07-19 - Chris Jones
+ - Remove the obsolete method 
+     ProcStatus::addAlgorithmStatus(const std::string& name,int status)
+
 !========================= RecEvent v2r30 2010-07-19 =========================
 ! 2010-07-16 - Chris Jones
  - Add a new method to ProcStat to test if a given sub-system triggered an

@@ -51,9 +51,10 @@
       </constructor>
 
       <method
-	name = "addAlgorithmStatus"
-	type = "void"
-	desc = "Add an entry for an algorithm" >
+	name   = "addAlgorithmStatus"
+	type   = "void"
+        access ="PRIVATE" 
+	desc   = "Add an entry for an algorithm" >
         <arg const="TRUE" name="name"   type="std::string" />
         <arg const="TRUE" name="status" type="int" inout="BYVALUE" />
       </method>
