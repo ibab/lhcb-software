@@ -4,6 +4,7 @@
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
 
+!======================== RichDet v14r5 2010-07-19 ===========================
 ! 2010-06-24 - Chris Jones
  - Various improvements to Rich::TabulatedFunction1D
   + Fix the rms() method to return a real RMS (was returning the standard 
