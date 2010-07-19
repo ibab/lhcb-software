@@ -1,9 +1,9 @@
-# $Id: requirements,v 1.27 2010-05-27 15:07:25 graven Exp $
+# $Id: requirements,v 1.28 2010-07-19 21:37:22 graven Exp $
 # Created    : 2009/04/06
 # Maintainer : P. Koppenburg & G.Raven
 
 package           Hlt2SharedParticles
-version           v4r2
+version           v4r3
 
 # ============================================================================
 # ======= the structure ======================================================
