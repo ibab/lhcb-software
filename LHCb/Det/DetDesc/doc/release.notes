@@ -5,6 +5,7 @@
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
 
+!====================== DetDesc v18r21 2010-07-19 =============================
 ! 2010-07-13 - Marco Cattaneo
  - Fix bug #69364: Wrong fractional mass calculation on composite material
    in DetDesc
