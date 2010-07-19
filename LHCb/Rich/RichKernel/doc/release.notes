@@ -4,6 +4,7 @@
 ! Purpose     : General purpose RICH classes
 !-----------------------------------------------------------------------
 
+!====================== RichKernel v7r37 2010-07-19 ====================
 ! 2010-07-17 - Chris Jones
  - Extend histogram booking interfaces to include options axis and bin
    labels.
