@@ -6,6 +6,7 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+!========================= LHCbMath v3r19 2010-07-19 =========================
 ! 2010-07-12 - Manuel Tobias Schiller
  - remove the code in SymPosDefMatrixInverter.h since an improved version is
    now part of ROOT (as it was an implementation header the code was never
