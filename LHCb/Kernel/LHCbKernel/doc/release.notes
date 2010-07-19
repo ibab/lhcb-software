@@ -4,6 +4,7 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+!===================== LHCbKernel v12r2 2010-07-19 ========================
 ! 2010-07-15 - Jeroen VAN TILBURG
  - Moved ISTClusterPosition to Tr/TrackInterfaces.
 
