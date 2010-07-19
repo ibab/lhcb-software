@@ -130,6 +130,7 @@ class Hlt2B2XGammaLinesConf(HltLinesConfigurableUser) :
         line = Hlt2Line('Bs2PhiGamma'
                         , prescale = self.prescale
                         , algos = [ BiKalmanFittedKaons, 
+                                    PV3D(),
                                     Hlt2Phi4PhiGamma, 
                                     Photons,
                                     Hlt2BstoPhiGamma]
@@ -176,6 +177,7 @@ class Hlt2B2XGammaLinesConf(HltLinesConfigurableUser) :
                         , prescale = self.prescale
                         , algos = [ BiKalmanFittedKaons,
                                     BiKalmanFittedPions,
+                                    PV3D(),
                                     Hlt2Kst4KstGamma, 
                                     Photons,
                                     Hlt2BdtoKstGamma]
