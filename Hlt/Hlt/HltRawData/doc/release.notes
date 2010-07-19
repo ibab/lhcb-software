@@ -1,10 +1,11 @@
-!$Id: release.notes,v 1.71 2010-07-17 17:08:37 tskwarni Exp $
+!$Id: release.notes,v 1.72 2010-07-19 21:39:43 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/HltRawData
 ! Responsible : Tomasz Skwarnicki
 ! Purpose     : Hlt Raw Data Makers of persisted TES info
 !-----------------------------------------------------------------------------
 
+!========================== HltRawData v2r8 2010-07-19 ===================
 ! 2010-07-17 - Tomasz Skwarnicki
  - Change default InfoLevel to minimal in HltSelReports 	
  - Introduce SuppressPostscale property to skip from HltSelReports
