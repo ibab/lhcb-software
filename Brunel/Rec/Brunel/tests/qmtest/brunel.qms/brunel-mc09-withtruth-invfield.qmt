@@ -19,6 +19,4 @@ preprocessor = BrunelPreprocessor + \
   LineSkipper(["Requested condDB but using manually set polarity"])
 validateWithReference(preproc = preprocessor)
 </text></argument>
-  <argument name="stderr"><text>Seckrb5: Initializing the client
-</text></argument>
 </extension>

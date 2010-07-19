@@ -12,6 +12,4 @@
 from Brunel.QMTest.BrunelExclusions import preprocessor
 validateWithReference(preproc = preprocessor)
 </text></argument>
-  <argument name="stderr"><text>Seckrb5: Initializing the client
-</text></argument>
 </extension>
