@@ -790,6 +790,31 @@ def allDocs(root = None):
             docs.append(Doc(d, root))
     return docs
 
+def updateLatestLinks(root = None):
+    """
+    Update the links to the latest version of the projects in the common
+    directory.
+    """
+    doclinkdir = os.path.join(Doc._root(root), Doc._docCollDir)
+    all_versions = []
+    for project in os.listdir(doclinkdir):
+        if project == "lcgcmt":
+            continue
+        for version in os.listdir(os.path.join(doclinkdir, project)):
+            if version == "latest":
+                continue
+            all_versions.append((project, version))
+    for p, v in getLatestVersions(all_versions):
+        latest = os.path.join(doclinkdir, p, "latest")
+        if not (os.path.islink(latest) and (os.readlink(latest) == v)):
+            # the link doesn't exist or doesn't point to the most recent version
+            if os.path.exists(latest) or os.path.islink(latest):
+                # ensure that the link is not present before creating the new one
+                os.remove(latest)
+            _log.debug("Moving link %s to %s", os.path.join(p, "latest"), os.path.join(p, v))
+            os.symlink(v, latest)
+
+
 #--- Application logic
 def makeDocs(projects, root = None, no_build = False):
     if "PWD" in os.environ:
@@ -864,24 +889,7 @@ def makeDocs(projects, root = None, no_build = False):
             doc.build()
     ## @todo: probably, this step should be done inside the build step
     # Update links pointing to the latest versions
-    doclinkdir = os.path.join(Doc._root(root), Doc._docCollDir)
-    all_versions = []
-    for project in os.listdir(doclinkdir):
-        if project == "lcgcmt":
-            continue
-        for version in os.listdir(os.path.join(doclinkdir, project)):
-            if version == "latest":
-                continue
-            all_versions.append((project, version))
-    for p, v in getLatestVersions(all_versions):
-        latest = os.path.join(doclinkdir, p, "latest")
-        if not (os.path.islink(latest) and (os.readlink(latest) == v)):
-            # the link doesn't exist or doesn't point to the most recent version
-            if os.path.exists(latest) or os.path.islink(latest):
-                # ensure that the link is not present before creating the new one
-                os.remove(latest)
-            _log.debug("Moving link %s to %s", os.path.join(p, "latest"), os.path.join(p, v))
-            os.symlink(v, latest)
+    updateLatestLinks(root)
 
     projects -= projects_added
     if projects:

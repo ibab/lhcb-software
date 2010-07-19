@@ -2,6 +2,8 @@
 
 	* python/LbRelease/LHCbDoc.py: Fixed a problem occurring with empty DOC directories
 	(can appen only in case of some previous errors).
+	Moved the code to generate the links to the "latest" versions to a separate
+	function (to be able to use it to fix problems).
 
 2010-07-15  Karol Kruzelecki  <Karol.Kruzelecki@cern.ch>
 
