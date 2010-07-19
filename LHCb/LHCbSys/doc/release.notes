@@ -5,7 +5,107 @@
 ! Purpose     : LHCb base classes and event model
 !-----------------------------------------------------------------------------
 
-</</PRE><H1><A NAME=v31r2>2010-06-21 LHCbSys v31r2</A></H1><PRE>
+</PRE><H1><A NAME=v31r3>2010-07-19 LHCbSys v31r3</A></H1><PRE>
+This version uses Gaudi v21r10 and LCG_58d
+
+- Packages modified: DDDB v1r33, DetDesc v18r21, RichDet v14r5, STDet v4r21,
+    VeloDet v13r11, EventPacker v2r3, PackedEvent v4r2, RecEvent v2r30,
+    GaudiPatches v1r2, LHCbKernel v12r2, LHCbMath v3r19, XMLSummaryKernel v1r0p1,
+    L0MuonKernel v9r3, RichKernel v7r37, RichRecBase v3r31, TrackInterfaces v4r14
+
+- In DDDB v1r33
+  . Changed default tags for 2009 and 2010 data:
+    o head-20100624         for DDDB
+    o head-20100715         for LHCBCOND
+
+- In DetDesc v18r21
+  . Fix bug #69364: Wrong fractional mass calculation on composite material
+
+- In RichDet v14r5
+  . Various improvements to Rich::TabulatedFunction1D
+    + Fix the rms() method to return a real RMS (was returning the standard 
+      deviation)
+    + Add an explicit standardDeviation() method
+    + Add to the rms() and new standardDeviation() an optional weight function
+      that can be used during the calculations if supplied to weight (multiply)
+      the function.
+    + Add a new static method combine() that takes a vector of tabulated 
+      functions, merges them, and returns a new function that represents the 
+      product of the functions.
+    + Inline the constructors for speed
+
+- In STDet v4r21
+  . Add find methods for enum string conversion to StatusMap
+
+- In VeloDet v13r11
+  . Fixed a few uninitialized variables, see bug #68795
+
+- In EventPacker v2r3
+  . Modify UnpackTrack.cpp to create ancestors of Muon tracks from Best.
+    This is controlled by options 'AncestorFor' (name of the packed container, 
+    default pRec/Track/Muon) and 'AncestorSource' (name of the ancestor container
+    default Rec/Track/Best ), ancestor has the same key.
+  . Add templated algorithms for Particles and Vertices
+
+- In PackedEvent v4r2
+  . Add (empty) implementations of the Packers for Particles and Vertices.
+    Details on how the packing is done to be implemented.
+
+- In RecEvent v2r30
+  . Add a new method to ProcStat to test if a given sub-system triggered an
+    event abort. Relies on all aborts being set using the new addAlgorithmStatus
+    method that includes the abort and sub-system information in the string in
+    a predefined manner.
+  . Add a method to ProcStatus to add a formatted algorithm entry with sub-
+    system, abort flag and why the entry was made.
+
+- In GaudiPatches v1r2
+  . Adapted to avoid conflicts with Gaudi v21r10.
+
+- In LHCbKernel v12r2
+  . Moved ISTClusterPosition to Tr/TrackInterfaces.
+  . Add SiLandauFun.h and .cpp (MPV, scale of Landau in Silicon)
+
+- In LHCbMath v3r19
+  . Remove the code in SymPosDefMatrixInverter.h since an improved version is
+    now part of ROOT
+  . In MatrixInversion.h replace the call into SymPosDefMatrixInverter to the
+    newer corresponding routine in ROOT; this should be transparent for all
+    well-behaved client code
+
+- In XMLSummaryKernel v1r0p1
+  . Fixes for compatibility with Gaudi v21r10
+    o Adapt references for new Exception handling
+    o Add check on gaudi return code
+
+- In L0MuonKernel v9r3
+  . L0MuonKernelFromXML.cpp : Adapt to Xerces 3.1
+
+- In RichKernel v7r37
+  . Extend histogram booking interfaces to include options axis and bin labels.
+  . Add a new method to IRichDetParameters.h to return the S.D. of the (n-1) 
+    distribution for observable photons. Moved here from IRichRefractiveIndex.h
+  . Add a new method to IRichRefractiveIndex to return the standard 
+    deviation for a given set of radiator intersections.
+
+- In RichRecBase v3r31
+  . Protect some debug() calls behind msgLevel(MSG::DEBUG) checks
+  . Call ProcStat->setAbort(true) when processing is aborted due to too many
+    pixels or photons. Uses the new method that include sub-detector, reason
+    and status (OK/ABORT) information.
+  . Update the the track selector base class so the default cuts are null (no
+    rejection. Cuts are now explicitly set during configuration time.
+  . Small technical change to the RichRecPhoton class that improves CPU 
+    efficiency a little.
+  . Add PatMatch as supported track type in RichTrackID.cpp
+  . Add a new method to IRichTrackEffectiveRefractiveIndex.h that returns the
+    standard deviation of the refractive index for a given track segment.
+
+- In TrackInterfaces v4r14
+  . Moved ISTClusterPosition from Kernel/LHCbKernel and added new functions to
+    allow for slope dependence.
+
+</PRE><H1><A NAME=v31r2>2010-06-21 LHCbSys v31r2</A></H1><PRE>
 This version uses Gaudi v21r9 and LCG_58c
 
 - Packages removed:  RecInterfaces (obsolete)
@@ -168,7 +268,7 @@ This version uses Gaudi v21r9 and LCG_58c
 - In VeloEvent v16r8p1, SiDAQ v2r1p1
   . Fix windows compiler warnings
 
-PRE><H1><A NAME=v31r1>2010-05-25 LHCbSys v31r1</A></H1><PRE>
+</PRE><H1><A NAME=v31r1>2010-05-25 LHCbSys v31r1</A></H1><PRE>
 This version uses Gaudi v21r9 and LCG_58c
 
 - Packages added:    GaudiPatches v1r1 - patches to be moved to Gaudi
