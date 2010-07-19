@@ -1,10 +1,10 @@
-#$Id: requirements,v 1.61 2010-07-19 16:23:59 ibelyaev Exp $
+#$Id: requirements,v 1.62 2010-07-19 19:27:19 amazurov Exp $
 #============================================================================
 # Created    : 2005-11-15
 # Maintainer : Gerhard Raven
 #============================================================================
 package           HltBase
-version           v9r1p1
+version           v9r1p2
 
 # Structure, i.e. directories to process. 
 #============================================================================

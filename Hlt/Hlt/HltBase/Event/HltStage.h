@@ -1,4 +1,4 @@
-// $Id: HltStage.h,v 1.4 2010-07-19 16:23:56 ibelyaev Exp $ 
+// $Id: HltStage.h,v 1.5 2010-07-19 19:27:19 amazurov Exp $ 
 // =============================================================================
 #ifndef HltEvent_Stage_H
 #define HltEvent_Stage_H 1
@@ -287,7 +287,7 @@ namespace Hlt
   { return m_track;}
   // ==========================================================================
   template<> 
-  inline void Hlt::Stage::set(const LHCb::Track* value) 
+  inline void Hlt::Stage::set<LHCb::Track>(const LHCb::Track* value) 
   {
     SetAllToNull();
     m_track = value;
@@ -303,7 +303,7 @@ namespace Hlt
   { return m_rec_vertex; }
   // ==========================================================================
   template<> 
-  inline void Hlt::Stage::set(const LHCb::RecVertex* value) 
+  inline void Hlt::Stage::set<LHCb::RecVertex>(const LHCb::RecVertex* value) 
   {
     SetAllToNull();
     m_rec_vertex = value;
@@ -319,7 +319,7 @@ namespace Hlt
   { return m_l0_calo_candidate; }
   // ==========================================================================
   template<> 
-  inline void Hlt::Stage::set(const LHCb::L0CaloCandidate* value) 
+  inline void Hlt::Stage::set<LHCb::L0CaloCandidate>(const LHCb::L0CaloCandidate* value) 
   {
     SetAllToNull();
     m_l0_calo_candidate = value;
@@ -334,8 +334,9 @@ namespace Hlt
   Hlt::Stage::get<LHCb::L0MuonCandidate>() const 
   { return m_l0_muon_candidate; }
   // ==========================================================================
-  template<> inline
-  void Hlt::Stage::set(const LHCb::L0MuonCandidate* value) 
+  template<> 
+  inline void 
+  Hlt::Stage::set<LHCb::L0MuonCandidate>(const LHCb::L0MuonCandidate* value) 
   {
     SetAllToNull();
     m_l0_muon_candidate = value;
@@ -351,7 +352,7 @@ namespace Hlt
   { return m_multitrack; }
   // ==========================================================================
   template<> 
-  inline void Hlt::Stage::set(const Hlt::MultiTrack* value) 
+  inline void Hlt::Stage::set<Hlt::MultiTrack>(const Hlt::MultiTrack* value) 
   {
     SetAllToNull();
     m_multitrack = value;
@@ -367,15 +368,15 @@ namespace Hlt
   { return m_l0_dimuon_candidate; }
   // ==========================================================================
   template<> 
-  inline void Hlt::Stage::set(const Hlt::L0DiMuonCandidate* value) 
+  inline void 
+  Hlt::Stage::set<Hlt::L0DiMuonCandidate>(const Hlt::L0DiMuonCandidate* value) 
   {
     SetAllToNull();
     m_l0_dimuon_candidate = value;
   }
   // ==========================================================================
   template<> 
-  inline
-  bool Hlt::Stage::is<Hlt::L0DiMuonCandidate>() const 
+  inline bool Hlt::Stage::is<Hlt::L0DiMuonCandidate>() const 
   {return m_l0_dimuon_candidate != 0; }
   // ==========================================================================
   template<typename T> 
@@ -386,25 +387,27 @@ namespace Hlt
   }
   // ==========================================================================
   template<>
-  inline bool Stage::insertInfo(const std::string &key, const bool& value)
+  inline bool 
+  Stage::insertInfo<bool>(const std::string &key, const bool& value)
   {
     return _insertInfo(key, value);
   }
   // ==========================================================================
   template<> 
-  inline bool Stage::insertInfo(const std::string &key, const int& value)
+  inline bool Stage::insertInfo<int>(const std::string &key, const int& value)
   {
     return _insertInfo(key, value);
   }
-  // =========================================
+  // =========================================================================
   template<> inline
-  bool Stage::insertInfo(const std::string &key, const double& value) 
+  bool Stage::insertInfo<double>(const std::string &key, const double& value) 
   {
     return _insertInfo(key, value);
   }
   // ==========================================================================
   template<> 
-  inline bool Stage::insertInfo(const std::string &key, const std::string& value)
+  inline bool Stage::insertInfo<std::string>(const std::string &key, 
+                                                      const std::string& value)
   {
     return _insertInfo(key, value);
   }
@@ -417,19 +420,22 @@ namespace Hlt
   }
   // ==========================================================================
   template<> 
-  inline void Stage::updateInfo(const std::string& key, const bool& value) 
+  inline void Stage::updateInfo<bool>(const std::string& key, const bool& value) 
   { _updateInfo(key,value); }
   // ==========================================================================
   template<> 
-  inline void Stage::updateInfo(const std::string& key, const int& value) 
+  inline void Stage::updateInfo<int>(const std::string& key, const int& value) 
   { _updateInfo(key,value); }
   // ==========================================================================
   template<> 
-  inline void Stage::updateInfo(const std::string& key, const double& value) 
+  inline void 
+  Stage::updateInfo<double>(const std::string& key, const double& value) 
   { _updateInfo(key,value); }
   // ==========================================================================
   template<> 
-  inline void Stage::updateInfo(const std::string& key, const std::string& value) 
+  inline void 
+  Stage::updateInfo<std::string>(const std::string& key, 
+                                                      const std::string& value) 
   { _updateInfo(key,value); }
   // ==========================================================================
   template<typename T> 
@@ -437,20 +443,25 @@ namespace Hlt
   { return m_cache.info<T>(key, default_value); }
   // ==========================================================================
   template<> 
-  inline bool Stage::info(const std::string& key, const bool& default_value) const 
+  inline bool 
+  Stage::info<bool>(const std::string& key, const bool& default_value) const 
   { return _info(key, default_value); }
   // ==========================================================================
   template<> 
-  inline int Stage::info(const std::string& key, const int& default_value) const 
+  inline int 
+  Stage::info<int>(const std::string& key, const int& default_value) const 
   { return _info(key, default_value); }
   // ==========================================================================
   template<> 
-  inline double Stage::info(const std::string& key, const double& default_value) const 
+  inline double 
+  Stage::info<double>(const std::string& key, 
+                                             const double& default_value) const 
   { return _info(key, default_value); }
   // ==========================================================================
   template<> 
-  inline std::string Stage::info(const std::string& key, 
-                                 const std::string& default_value) const 
+  inline std::string 
+  Stage::info<std::string>(const std::string& key, 
+                                        const std::string& default_value) const 
   {
     return _info(key, default_value);
   }
