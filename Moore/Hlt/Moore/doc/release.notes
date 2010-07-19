@@ -2,6 +2,10 @@ Package     : Hlt/Moore
 Package Coordinator : Gerhard Raven
 Purpose     : LHCb HLT application
 
+!========================== Moore v9r4 2010-07-17 ===================
+! 2010-07-16 - Gerhard Raven
+ - fix L0 TCK format in case of leading 0
+
 !========================== Moore v9r3 2010-07-02 ===================
 ! 2010-07-01 - Gerhard Raven, Johannes Albrecht
  - if unknown filetype, treat it as if it were a DST...

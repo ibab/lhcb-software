@@ -1,5 +1,5 @@
 package MooreSys
-version v9r3
+version v9r4
 
 branches doc cmt
 
@@ -7,22 +7,16 @@ branches doc cmt
 # Don't forget the applications
 #=======================================================
 
-use  Moore              v9r3   Hlt
+use  Moore              v9r4   Hlt
 
-use Hlt1Lines           v4r1    Hlt
-use Hlt2Lines           v4r1    Hlt
-use HltConf             v8r1    Hlt
-use HltDAQ              v2r0p1  Hlt
-use HltGlobalMonitor    v3r6p1  Hlt
-use HltLine             v4r4    Hlt
-use HltRawData          v2r6    Hlt
-use HltSettings         v2r1    Hlt
-use HltTracking         v6r1    Hlt
-use TCKUtils            v1r6p6  Hlt
-use CaloUtils           v8r12p1 Calo
-use CaloReco            v5r5p2  Calo
-use CaloPIDs            v5r6    Calo
-use PatAlgorithms       v4r3    Tf
+use Hlt2Lines           v4r3    Hlt
+use Hlt2SharedParticles v4r3    Hlt
+use HltConf             v8r2    Hlt
+use HltRawData          v2r8    Hlt
+use HltSettings         v2r2    Hlt
+use HltTracking         v6r2    Hlt
+
+use PatAlgorithms       v4r4    Tf
 
 # Declare this as a container package
 apply_pattern container_package
