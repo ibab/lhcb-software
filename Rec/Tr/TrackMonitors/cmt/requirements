@@ -24,6 +24,7 @@ use   TrackKernel	v*	Tr
 use   STKernel          v*      ST
 use   PartProp          v*      Kernel
 use   CaloDet           v*      Det
+use PhysEvent           v*      Event
 
 #============================================================================
 # Component library building rule
