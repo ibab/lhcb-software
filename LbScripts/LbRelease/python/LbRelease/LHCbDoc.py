@@ -622,6 +622,8 @@ class Doc(object):
             dotdata.append("%s->{%s};" % (project, ";".join(deps)))
         if dotdata:
             dotdata = "digraph dependencies {\nbgcolor=transparent;\nnode [fontsize=10,style=filled,fillcolor=white];\n%s\n}\n" % ("\n".join(dotdata))
+        else:
+            dotdata = ""
         cmd = ["dot"]
         for format in ["png", "svg", "eps", "fig"]:
             if type(format) is tuple:

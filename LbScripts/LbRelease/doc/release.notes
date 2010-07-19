@@ -1,3 +1,8 @@
+2010-07-19  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* python/LbRelease/LHCbDoc.py: Fixed a problem occurring with empty DOC directories
+	(can appen only in case of some previous errors).
+
 2010-07-15  Karol Kruzelecki  <Karol.Kruzelecki@cern.ch>
 
 	* python/LbRelease/LHCbNightlies.py: fork instead of threads for install/test
