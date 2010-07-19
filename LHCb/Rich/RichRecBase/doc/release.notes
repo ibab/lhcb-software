@@ -4,6 +4,7 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+!===================== RichRecBase v3r31 2010-07-19 ==========================
 ! 2010-07-17 - Chris Jones
  - Protect some debug() calls behind msgLevel(MSG::DEBUG) checks
 
