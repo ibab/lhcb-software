@@ -4,6 +4,7 @@
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
+!============================ EventPacker v2r3 2010-07-19 ====================
 ! 2010-06-22 - Olivier Callot
  - Modify UnpackTrack.cpp to create ancestors of Muon tracks from Best.
    This is controlled by options 'AncestorFor' (name of the packed container, 
