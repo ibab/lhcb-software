@@ -4,6 +4,7 @@
 ! Purpose     : The Rich Global PID algorithm
 !-----------------------------------------------------------------------------
 
+!======================= RichGlobalPID v3r14 2010-07-20 ======================
 ! 2010-07-08 - Chris Jones
  - Adapt calls to ProcStat to use new interface that includes additional abort
    information.
