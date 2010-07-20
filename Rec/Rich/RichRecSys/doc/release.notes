@@ -4,6 +4,7 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+!====================== RichRecSys v3r30 2010-07-20 ==========================
 ! 2010-07-17 - Chris Jones
  - Tighten "large event" abort cuts for photons from <1000000 to <250000
 
