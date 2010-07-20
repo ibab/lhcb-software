@@ -5,6 +5,10 @@
 ! package manager : Marco Clemencic
 ! =============================================================================
 
+                            NEEDS LCGCMT >= 58d (Gaudi v21r10)
+! 2010-07-20 - Marco Clemencic
+ - Use pygraphics + Qt instead of pyqt (new schema in LCGCMT).
+
 !===================== Tools/CondDBUI v3r4 2010-05-21 =========================
 ! 2010-05-19 - Illya Shapoval
  - Added CreateDBLookupFile.py script which generates the full set of files with 

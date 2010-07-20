@@ -33,7 +33,8 @@ apply_tag    NEEDS_COOL_FACTORY
 # This one is needed by CORAL
 use XercesC v* LCG_Interfaces -no_auto_imports
 
-use pyqt v* LCG_Interfaces -no_auto_imports
+use pygraphics v* LCG_Interfaces -no_auto_imports
+use Qt v* LCG_Interfaces -no_auto_imports
 
 # ====================================================================
 # Install scripts and modules
