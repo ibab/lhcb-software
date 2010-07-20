@@ -4,6 +4,7 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+!=========================== RichTools v2r30 2010-07-20 ======================
 ! 2010-06-24 - Chris Jones
  - Add to RichDetParameters a new method to return the S.D. of the n-1
    distribution for observable photons. 
