@@ -1,4 +1,4 @@
-// $Id: CombineParticles.cpp,v 1.40 2010-05-14 15:31:51 ibelyaev Exp $
+// $Id: CombineParticles.cpp,v 1.41 2010-07-20 12:17:40 graven Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -934,7 +934,7 @@ StatusCode CombineParticles::execute    ()  // standard execution
       
       if ( 0 < m_maxCand && m_maxCand <= nGood )  
       {
-        Warning ( "Too many saved candidates for " + idecay->toString(), 0 ) ;
+        Warning ( "Too many saved candidates for " + idecay->toString(), StatusCode::SUCCESS, 0 ) ;
         if ( m_maxCandStop ) {  problem = true ; break ; }          //  BREAK
       }
       

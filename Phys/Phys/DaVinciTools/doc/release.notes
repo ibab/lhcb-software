@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.559 2010-07-10 14:22:37 ibelyaev Exp $
+! $Id: release.notes,v 1.560 2010-07-20 12:17:40 graven Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+
+! 2010-07-20 - Gerhard Raven
+ - fix suppression of 'Too many candidates' warning.
 
 ! 2010-07-10 - Vanya Belyaev
 
