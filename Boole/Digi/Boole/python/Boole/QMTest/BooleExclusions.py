@@ -3,6 +3,6 @@ from GaudiConf.QMTest.LHCbExclusions import preprocessor as LHCbPreprocessor
 
 preprocessor = LHCbPreprocessor + \
     RegexpReplacer(when = "XmlParserSvc        ERROR DOM",
-        orig = r'Id=.*conddb:',
-        repl = r'Id=conddb:')
+        orig = r'entity .*conddb:',
+        repl = r'entity conddb:')
  
