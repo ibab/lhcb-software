@@ -6,6 +6,38 @@
 !             : project contain components used by all applications except Gauss
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v9r5>2010-07-21 LbcomSys v9r5</A></H1><PRE>
+This version uses Gaudi v21r10 and LHCb v31r3
+
+- Packages modified: RichTools v2r30, STAlgorithms v4r2, STCheckers v3r1,
+    STTools v4r3, VeloDAQ v5r3
+
+- In RichTools v2r30
+  . Add to RichDetParameters a new method to return the S.D. of the n-1
+    distribution for observable photons. 
+  . Remove from RichTabulatedRefractiveIndex the private hard coded n-1 S.D. 
+    values.
+  . Update refractiveIndexRMS() to return the RMS and not the S.D.
+  . Add new method refractiveIndexSD() to return the standard deviation.
+
+- In STAlgorithms v4r2, STCheckers v3r1, STTools v4r3
+  . Changed include location of ISTClusterPosition (now in Tr/TrackInterfaces).
+
+- In STCheckers v3r1
+  . Add histograms normalizing to MIP to STClusterChecker 
+
+- In STTools v4r3
+  . Follow changes in ISTClusterPosition interface.
+  . Updated tune for eta correction + new hit error estimates.
+  . Add STBeetleStateTransition and STRndmBeetleStateTransition
+
+- In VeloDAQ v5r3
+  . Changed how ProcStatus is used as per Savannah task #16278. Now still set 
+    ProcStatus for any problem, but also set ProcStatus->setAborted(true)
+    when all clusters are removed due to high multiplicity
+  . Removed setFilterPass options as it was unused.
+  . Add a missing use statement for Event/RecEvent in cmt/requirements
+
 </PRE><H1><A NAME=v9r4>2010-06-23 LbcomSys v9r4</A></H1><PRE>
 This version uses Gaudi v21r9 and LHCb v31r2
 
