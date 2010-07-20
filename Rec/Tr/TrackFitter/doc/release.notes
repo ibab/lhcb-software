@@ -3,6 +3,7 @@
 ! Responsible : Wouter Hulsbergen
 !----------------------------------------------------------------------------
 
+!=========================== TrackFitter v2r49 2010-07-20 ===================
 ! 2010-07-07 - Wouter Hulsbergen
  - Fixed memory leak affecting HLT2
  - Added counter for number of tracks changing sign (to help debugging field problems)
