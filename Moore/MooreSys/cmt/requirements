@@ -17,6 +17,7 @@ use HltSettings         v2r2    Hlt
 use HltTracking         v6r2    Hlt
 
 use PatAlgorithms       v4r4    Tf
+use DaVinciTools        v21r3p2 Phys
 
 # Declare this as a container package
 apply_pattern container_package
