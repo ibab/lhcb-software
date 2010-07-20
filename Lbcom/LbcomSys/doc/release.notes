@@ -10,7 +10,7 @@
 This version uses Gaudi v21r10 and LHCb v31r3
 
 - Packages modified: RichTools v2r30, STAlgorithms v4r2, STCheckers v3r1,
-    STTools v4r3, VeloDAQ v5r3
+    STTools v4r3, SiTools v1r8, VeloDAQ v5r3
 
 - In RichTools v2r30
   . Add to RichDetParameters a new method to return the S.D. of the n-1
@@ -30,6 +30,10 @@ This version uses Gaudi v21r10 and LHCb v31r3
   . Follow changes in ISTClusterPosition interface.
   . Updated tune for eta correction + new hit error estimates.
   . Add STBeetleStateTransition and STRndmBeetleStateTransition
+
+- In SiTools v1r8
+  . Remove obsolete file SiTools_dll.cpp
+  . SiDepositedCharge now uses SiLandauFun.h/cpp 
 
 - In VeloDAQ v5r3
   . Changed how ProcStatus is used as per Savannah task #16278. Now still set 
