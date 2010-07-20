@@ -3,6 +3,9 @@
 ! Responsible : M. Needham
 !----------------------------------------------------------------------------
 
+! 2010-20-07 
+  - Change procStatus method to new syntax
+
 !====================== STKernel v2r2 2010-06-18 ============================
 ! 2010-06-08 - Mark Tobin
  - Added method to return pedestal for the noise calculation tool.

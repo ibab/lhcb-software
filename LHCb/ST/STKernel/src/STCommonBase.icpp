@@ -211,11 +211,11 @@ inline const std::vector<std::string*>& ST::CommonBase<PBASE>::flipList() const{
 
 #include "Event/ProcStatus.h"
 template <class PBASE>
-inline StatusCode ST::CommonBase<PBASE>::procFailure() const{
+inline StatusCode ST::CommonBase<PBASE>::procFailure(const std::string& reason, const bool aborted) const{
 
    LHCb::ProcStatus* procStat =
       this-> template getOrCreate<LHCb::ProcStatus,LHCb::ProcStatus>(LHCb::ProcStatusLocation::Default);
 
-   procStat->addAlgorithmStatus(this->name(), -3);     
-   return this->Warning("Event processing failed", StatusCode::SUCCESS, 1);
+   procStat->addAlgorithmStatus(this->name(),"ST" ,reason , -3, aborted);     
+   return this->Warning("Processing failed: " + reason, StatusCode::SUCCESS, 1);
 }

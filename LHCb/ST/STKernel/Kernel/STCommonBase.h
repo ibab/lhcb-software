@@ -135,7 +135,7 @@ namespace ST
    DeSTSector* findSector(const LHCb::STChannelID& aChannel) const;
 
    /** return a procstatus in case event is aborted */
-   StatusCode procFailure() const;
+   StatusCode procFailure(const std::string& reason, const bool aborted = false) const;
 
   private:
 
