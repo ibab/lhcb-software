@@ -27,8 +27,6 @@ from StrippingSelections import StrippingBiasedBs2JpsiPhi
 from StrippingSelections.StrippingBu2JpsiK import StrippingBu2JpsiKConf
 from StrippingSelections import StrippingBu2JpsiKDetached
 from StrippingSelections import StrippingBs2JpsiPhiForBs2MuMu
-from StrippingSelections import StrippingBs2MuMuNoMuID
-
 from StrippingSelections import StrippingBu2JpsiKDetachedR
 from StrippingSelections.StrippingBu2LLK  import StrippingBu2LLKConf
 from StrippingSelections.StrippingBd2KstarMuMu import StrippingBd2KstarMuMuConf
@@ -79,7 +77,6 @@ stream.appendLines( [
 		        StrippingBu2JpsiKDetached.line,  
 		        StrippingBu2JpsiKDetachedR.line,
                         StrippingBs2JpsiPhiForBs2MuMu.line,
-                        StrippingBs2MuMuNoMuID.line,  
 		        StrippingBu2LLKConf().mmK(),
                         StrippingBc2JpsiMuXConf().MuMu(),
                         StrippingBc2JpsiHConf().MuMu(),
@@ -99,3 +96,10 @@ stream.appendLines( [
                         
                         , StrippingDKPiMuConf().line_DKpimu()
                         ] )
+###
+# Stripping lines for Bs2MuMu
+# attempt to write them in recommended format 
+#
+from StrippingSelections.StrippingBs2MuMuNoMuID import Bs2MuMuNoMuIDConf
+bs2mm = Bs2MuMuNoMuIDConf("Bs2MuMu",Bs2MuMuNoMuIDConf.config_default)
+stream.appendLines(bs2mm.lines)
