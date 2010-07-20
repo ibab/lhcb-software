@@ -3,6 +3,7 @@
 ! Responsible : Kurt Rinnert, Chris Parkes
 !--------------------------------------------------------------------------
 
+!=========================  VeloDAQ v5r3 2010-07-20 =======================
 ! 2010-07-05 - David Hutchcroft
  - Adapted ProcStatus setting to changes in the interface and official 
    use policy
