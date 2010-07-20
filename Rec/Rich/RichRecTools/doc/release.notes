@@ -4,6 +4,7 @@
 ! Purpose     : Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+!===================== RichRecTools v4r12 2010-07-20 ==========================
 ! 2010-07-18 - Chris Jones
  - Add some axis labels to RICH PID plot tool histograms.
 
