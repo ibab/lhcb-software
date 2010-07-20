@@ -1,4 +1,4 @@
-# $Id: StrippingDiMuon.py,v 1.7 2010-06-14 10:16:15 albrecht Exp $
+# $Id: StrippingDiMuon.py,v 1.8 2010-07-20 11:30:02 pkoppenb Exp $
 ## #####################################################################
 # A stripping selection for inclusive J/psi(1S) -> mu+ mu- decays
 #
@@ -25,7 +25,10 @@ class StrippingDiMuonConf(LHCbConfigurableUser):
 		,	"JpsiAMLoose":		2500.	# MeV
 		,	"JpsiVCHI2":		20.	# adimensional
 		,	"JpsiVCHI2Loose":	20.	# adimensional
-                ,       "DiMuonFDCHI2" :        10.     # adimensional
+                ,       "DiMuonFDCHI2" :        100.    # adimensional
+                ,       "DiMuonHighPT" :        2000.   # MeV
+                ,       "DiMuonHighIP" :        9.      # adimensional
+                ,       "DiMuonVCHI2" :         10.     # adimensional
 		}
 
     def nominal_line( self ):
@@ -101,7 +104,7 @@ class StrippingDiMuonConf(LHCbConfigurableUser):
         """
         Biased DiMuon adapted from Antonio Perez-Calero, implemented by P. Koppenburg
 
-        This will need to be tightened
+        Tightened on 20/7/2010
         
         @author P. Koppenburg
         @date 17/2/2010
@@ -109,7 +112,7 @@ class StrippingDiMuonConf(LHCbConfigurableUser):
         from StrippingConf.StrippingLine import StrippingLine
 	_muons =  DataOnDemand(Location = 'Phys/StdVeryLooseDiMuon')
         _diMu = FilterDesktop("FilterForB2DiMuon")
-        _diMu.Code = "(MAXTREE('mu+'==ABSID,PT)>1*GeV) & (VFASPF(VCHI2/VDOF)<20) & (BPVVDCHI2> %(DiMuonFDCHI2)s )" % self.getProps()
+        _diMu.Code = "(MAXTREE('mu+'==ABSID,PT)>%(DiMuonHighPT)s*MeV) & (MAXTREE('mu+'==ABSID,(MIPCHI2DV(PRIMARY)))>%(DiMuonHighIP)s) & (VFASPF(VCHI2/VDOF)<%(DiMuonVCHI2)s) & (BPVVDCHI2> %(DiMuonFDCHI2)s )" % self.getProps()
 
         s = Selection("SelB2DiMuon",
                          Algorithm = _diMu,
