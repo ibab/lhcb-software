@@ -56,7 +56,7 @@ class Physics_HighNu_80Vis_25L0_2Hlt1_CoreHlt2_Jun10         ( Physics_HighNu_80
         from Hlt2Lines.Hlt2TopologicalLines  import Hlt2TopologicalLinesConf
         thresholds.update( {
 		Hlt2InclusivePhiLinesConf : {
-		'TFKaonPT ' : 800 },
+		'TFKaonPT' : 800 },
 		Hlt2TopologicalLinesConf : {
 		'Prescale'   : {
 		'Hlt2Topo2BodySA' : 0.1
