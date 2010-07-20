@@ -54,29 +54,32 @@ class Physics_HighNu_80Vis_25L0_2Hlt1_CoreHlt2_Jun10         ( Physics_HighNu_80
                            )
         ##prescale topo monitoring cuts
         from Hlt2Lines.Hlt2TopologicalLines  import Hlt2TopologicalLinesConf
-        thresholds.update( { Hlt2TopologicalLinesConf : {
-            'Prescale'   : {
-            'Hlt2Topo2BodySA' : 0.1
-            , 'Hlt2TopoRobTF2Body' : 0.1
-            , 'Hlt2TopoRobTF3Body' : 0.1
-            , 'Hlt2TopoRobTF4Body' : 0.1
-            , 'Hlt2CharmTF2BodyWideMass' : 0.1
-            , 'Hlt2CharmTF3BodyWideMass' : 0.1
-            , 'Hlt2CharmTF4BodyWideMass' : 0.1
-            , 'Hlt2CharmTF2BodyWideMassSA' : 0.1
-            , 'Hlt2CharmTF3BodyWideMassSA' : 0.1
-            , 'Hlt2CharmTF4BodyWideMassSA' : 0.1
-            , 'Hlt2CharmOSTF2BodyWideMass' : 0.1
-            , 'Hlt2CharmOSTF3BodyWideMass' : 0.1
-            , 'Hlt2CharmOSTF4BodyWideMass' : 0.1
-            }
+        thresholds.update( {
+		Hlt2InclusivePhiLinesConf : {
+		'TFKaonPT ' : 800 },
+		Hlt2TopologicalLinesConf : {
+		'Prescale'   : {
+		'Hlt2Topo2BodySA' : 0.1
+		, 'Hlt2TopoRobTF2Body' : 0.1
+		, 'Hlt2TopoRobTF3Body' : 0.1
+		, 'Hlt2TopoRobTF4Body' : 0.1
+		, 'Hlt2CharmTF2BodyWideMass' : 0.1
+		, 'Hlt2CharmTF3BodyWideMass' : 0.1
+		, 'Hlt2CharmTF4BodyWideMass' : 0.1
+		, 'Hlt2CharmTF2BodyWideMassSA' : 0.1
+		, 'Hlt2CharmTF3BodyWideMassSA' : 0.1
+		, 'Hlt2CharmTF4BodyWideMassSA' : 0.1
+		, 'Hlt2CharmOSTF2BodyWideMass' : 0.1
+		, 'Hlt2CharmOSTF3BodyWideMass' : 0.1
+		, 'Hlt2CharmOSTF4BodyWideMass' : 0.1
+		}
             ,'Postscale'   : { 'Hlt2Topo3BodySA'    : 0.1
                                , 'Hlt2Topo4BodySA'  : 0.1
                                , 'Hlt2Charm2BodySA' : 0.1
                                , 'Hlt2Charm3BodySA' : 0.1
                                , 'Hlt2Charm4BodySA' : 0.1 }
-            }
-                                                          }
+		}
+		}
                            )
         
 
