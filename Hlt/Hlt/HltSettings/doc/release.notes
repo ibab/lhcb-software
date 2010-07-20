@@ -4,6 +4,10 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2010-07-20 - Johannes Albrecht
+ -change micor bias rate limited presclae to 1/100
+ - add TFPhi pt cut
+
 !========================== HltSettings v2r2  2010-07-17 ===================
 ! 2010-07-15 - Johannes Albrecht
  - Add exclusive leptonic lines for D2mumu to the two core settings
