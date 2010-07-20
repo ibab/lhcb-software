@@ -4,7 +4,11 @@
 ! Purpose     : Package for track data quality monitoring algorithms
 !-----------------------------------------------------------------------------
 
-! 2010-07-20 M Needham
+!========================== TrackMonitors v1r27 2010-07-20 ===================
+! 2010-07-20 - Marco Cattaneo
+ - Remove wrong cut and paste comments from header of TrackTune.cpp
+
+! 2010-07-19 M Needham
  - Add TrackTune algorithm
 
 ! 2010-07-14 Georg Alexander Krocker

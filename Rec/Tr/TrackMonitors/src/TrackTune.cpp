@@ -1,21 +1,6 @@
-// $Id: LoKi_Test1.cpp,v 1.2 2007/04/16 16:16:42 pkoppenb Exp $
-// ============================================================================
-// CVS tag $Name: v1r1p1 $, version $Revision: 1.2 $ 
-// ============================================================================
-// $Log: LoKi_Test1.cpp,v $
-// Revision 1.2  2007/04/16 16:16:42  pkoppenb
-// removed polemic comment
-//
-// Revision 1.1.1.1  2006/08/16 17:01:31  ibelyaev
-// New package: the first import
-// 
+// $Id: $
 // ============================================================================
 // Include files 
-// ============================================================================
-// LoKiAlgo
-// ============================================================================
-// ============================================================================
-// LoKiPhys 
 // ============================================================================
 
 #include "TrackTune.h"
@@ -29,25 +14,6 @@
 
 
 DECLARE_ALGORITHM_FACTORY( TrackTune );
-// ============================================================================
-/** @file 
- *  Implementation file for test algorithm class LoKi_Test1
- *
- *  This file is a part of LoKi project - 
- *    "C++ ToolKit  for Smart and Friendly Physics Analysis"
- *
- *  The package has been designed with the kind help from
- *  Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
- *  contributions and advices from G.Raven, J.van Tilburg, 
- *  A.Golutvin, P.Koppenburg have been used in the design.
- *
- *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
- *  @2006-08-16 
- */
-// ============================================================================
-
-
-
 
 TrackTune::TrackTune(const std::string& name, ISvcLocator* pSvc):
  GaudiTupleAlg(name,pSvc)
