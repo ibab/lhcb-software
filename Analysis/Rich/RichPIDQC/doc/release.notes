@@ -5,6 +5,11 @@
 ! Purpose     : PID Calbriation and Monitoring on Data
 !-----------------------------------------------------------------------------
 
+! 2010-07-19 - Chris Jones
+ - Update the PID selections to use the 'Selection' famework, in order to 
+   allow the use of SelDSTWriter to write out DST streams for the selected
+   events (disabled by Default). Used for Brunel PID tuning.
+
 ! 2010-06-24 - Nicola Mangiafave
  - python/RichPIDQC/JPsiMuMu.py
   . Changed selection cuts and mass windows.

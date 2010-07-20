@@ -8,7 +8,8 @@ __version__ = "$Id: KshortPiPi.py,v 1.6 2009-07-06 16:02:19 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from LHCbKernel.Configuration import *
-        
+from Configurables import SelDSTWriter
+   
 ## @class KshortPiPiConf
 #  Configurable for RICH Ds -> phi(KK) pi PID monitoring
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
@@ -16,14 +17,18 @@ from LHCbKernel.Configuration import *
 #  @date   03/05/2009
 class KshortPiPiConf(LHCbConfigurableUser) :
 
+    ## Selection Name
+    __sel_name__ = "RichKsToPiPiSel"
+    
     ## Possible used Configurables
-    __used_configurables__ = [ ]
+    __used_configurables__ = [ (SelDSTWriter, __sel_name__+'DST') ]
     
     ## Steering options
     __slots__ = {
         "Sequencer"   : None    # The sequencer to add the calibration algorithms too
         ,"MCChecks"   : False
         ,"MakeNTuple" : False
+        ,"MakeSelDST" : False
         }
 
     ## Configure Ds -> Phi Pi selection
@@ -31,38 +36,55 @@ class KshortPiPiConf(LHCbConfigurableUser) :
 
         from Configurables import ( GaudiSequencer,
                                     CombineParticles, FilterDesktop )
-
+        from PhysSelPython.Wrappers import Selection, SelectionSequence, DataOnDemand
+        
         if not self.isPropertySet("Sequencer") :
             raise RuntimeError("ERROR : Sequence not set")
         seq = self.getProp("Sequencer")
 
+        # STD particles
+        stdPions = DataOnDemand( Location = 'Phys/StdNoPIDsPions' )
+
         # Filter Pi Tracks
-        pionFilterName = "RichKsSelPiFilter"
+        pionFilterName = self.__sel_name__+"_PiFilter"
         pionfilter = FilterDesktop(pionFilterName)
-        pionfilter.InputLocations = [ "Phys/StdNoPIDsPions" ]
-        pionfilter.Code = "(P > 2*GeV) & (MIPCHI2DV(PRIMARY) > 30) & (TRCHI2DOF < 5) & (ISLONG)"
+        pionfilter.Code = "(ISLONG) & (TRCHI2DOF < 5) & (P > 2*GeV) & (MIPCHI2DV(PRIMARY) > 30)"
+        pionfilterSel = Selection( pionFilterName+'Sel',
+                                   Algorithm = pionfilter,
+                                   RequiredSelections = [stdPions] )
 
         # Make the KS0
-        ks02pipiName = "RichKsToPiPiSel"
-        ks02pipi = CombineParticles(ks02pipiName)
-        ks02pipi.InputLocations = [ "Phys/" + pionFilterName ]
+        ks02pipi = CombineParticles(self.__sel_name__)
         ks02pipi.DecayDescriptor = "KS0 -> pi+ pi-"
         ks02pipi.CombinationCut = "(ADAMASS('KS0') < 200*MeV) & (AMAXDOCA('') < 0.6*mm)"
         ks02pipi.MotherCut = "(ADMASS('KS0') < 100*MeV) & (VFASPF(VCHI2/VDOF) < 10) & (MIPDV(PRIMARY) < 0.75) & (BPVVDCHI2 > 150)  & (MIPCHI2DV(PRIMARY) < 100) & ( ADWM( 'Lambda0' , WM( 'p+' , 'pi-') ) > 8*MeV ) & ( ADWM( 'Lambda0' , WM( 'pi+' , 'p~-') ) > 8*MeV )"
+        ks02pipiSel = Selection( self.__sel_name__+'Sel',
+                                 Algorithm = ks02pipi,
+                                 RequiredSelections = [pionfilterSel] )
 
-        # Add selection algs to the sequence
-        seq.Members += [pionfilter,ks02pipi]
+        # Selection Sequence
+        selSeq = SelectionSequence( self.__sel_name__+'Seq', TopSelection = ks02pipiSel )
+
+        # Run the selection sequence.
+        seq.Members += [selSeq.sequence()]
 
         # Particle Monitoring plots
         from Configurables import ParticleMonitor
-        plotter = ParticleMonitor(ks02pipiName+"Plots")
-        plotter.InputLocations = [ "Phys/"+ks02pipiName ]
+        plotter = ParticleMonitor(self.__sel_name__+"Plots")
+        plotter.InputLocations = [ selSeq.outputLocation() ]
         plotter.PeakCut     = "(ADMASS('KS0')<7*MeV)"
         plotter.SideBandCut = "(ADMASS('KS0')>7*MeV)"
         plotter.PlotTools = [ "MassPlotTool","MomentumPlotTool",
                               "CombinedPidPlotTool",
                               "RichPlotTool","CaloPlotTool","MuonPlotTool" ]
         seq.Members += [ plotter ]
+
+        # Make a DST ?
+        if self.getProp("MakeSelDST"):
+            MyDSTWriter = SelDSTWriter( self.__sel_name__+"DST",
+                                        SelectionSequences = [ selSeq ],
+                                        OutputPrefix = self.__sel_name__ )
+            seq.Members += [MyDSTWriter.sequence()]
 
         # MC Performance checking ?
         if self.getProp("MCChecks") :

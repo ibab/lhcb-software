@@ -8,7 +8,8 @@ __version__ = "$Id: DsToPhiPi.py,v 1.9 2009-09-29 16:38:27 nmangiaf Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from LHCbKernel.Configuration import *
-        
+from Configurables import SelDSTWriter
+
 ## @class RichRecSysConf
 #  Configurable for RICH Ds -> phi(KK) pi PID monitoring
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
@@ -16,14 +17,18 @@ from LHCbKernel.Configuration import *
 #  @date   15/08/2008
 class DsToPhiPiConf(LHCbConfigurableUser) :
 
+    ## Selection Name
+    __sel_name__ = "RichDs2PiPhi"
+
     ## Possible used Configurables
-    __used_configurables__ = [ ]
+    __used_configurables__ = [ (SelDSTWriter, __sel_name__+'DST') ]
     
     ## Steering options
     __slots__ = {
         "Sequencer"   : None    # The sequencer to add the calibration algorithms too
         ,"MCChecks"   : False
         ,"MakeNTuple" : False
+        ,"MakeSelDST" : False
         }
 
     ## Configure Ds -> Phi Pi selection
@@ -31,45 +36,61 @@ class DsToPhiPiConf(LHCbConfigurableUser) :
 
         from Configurables import ( GaudiSequencer,
                                     CombineParticles, OfflineVertexFitter )
-
+        from PhysSelPython.Wrappers import Selection, SelectionSequence, DataOnDemand
+        
         seq = self.getProp("Sequencer")
         if seq == None : raise RuntimeError("ERROR : Sequence not set")
-          
+
+        # STD particles
+        stdKaons = DataOnDemand( Location = 'Phys/StdNoPIDsKaons' )
+        stdPions = DataOnDemand( Location = 'Phys/StdNoPIDsPions' )
+        
         ## phi -> K+ K-
-        Phi2KKName = "RichPhi2KK"
+        Phi2KKName = self.__sel_name__+"_Phi2KK"
         Phi2KK = CombineParticles(Phi2KKName)
         Phi2KK.DecayDescriptor = "phi(1020) -> K+ K-"
-        Phi2KK.InputLocations = ["Phys/StdNoPIDsKaons"]
         Phi2KK.CombinationCut = "(ADAMASS('phi(1020)')<75*MeV)"
         Phi2KK.MotherCut = "(ADMASS('phi(1020)')<50*MeV) & (BPVVDCHI2>60) & (MIPDV(PRIMARY)<0.5) & (VFASPF(VCHI2) < 20)"
         Phi2KK.DaughtersCuts = {"K+"     :    "(PT>300*MeV) & (P>2*GeV) & (MIPDV(PRIMARY) < 0.5) &  (BPVIPCHI2() > 20)",
                                 "K-"     :    "(PT>300*MeV) & (P>2*GeV) & (MIPDV(PRIMARY) < 0.5) &  (BPVIPCHI2() > 20)"}
+        Phi2KKSel = Selection( Phi2KKName+'Sel',
+                               Algorithm = Phi2KK,
+                               RequiredSelections = [stdKaons] )
         
         ## Bs -> J/psi phi
-        Ds2piPhiName = "RichDs2PiPhi"
+        Ds2piPhiName = self.__sel_name__
         Ds2piPhi = CombineParticles(Ds2piPhiName)
         Ds2piPhi.DecayDescriptor = "[D_s+ -> pi+ phi(1020)]cc"
         Ds2piPhi.addTool( OfflineVertexFitter )
         Ds2piPhi.VertexFitters.update( { "" : "OfflineVertexFitter"} )
         Ds2piPhi.OfflineVertexFitter.useResonanceVertex = True
-        Ds2piPhi.InputLocations = ["Phys/"+Phi2KKName,"Phys/StdNoPIDsPions"]
         Ds2piPhi.CombinationCut = "(ADAMASS('D_s+')<75*MeV)"
         Ds2piPhi.MotherCut = "(ADMASS('D_s+')<50*MeV) & (BPVDIRA>0.9999) & (BPVVDCHI2>85) & (MIPDV(PRIMARY)<0.1) &  (VFASPF(VCHI2) < 10)"
         Ds2piPhi.DaughtersCuts = {"pi+"        :       "(PT>300*MeV) & (P>2*GeV) & (MIPDV(PRIMARY) >0.1) & (BPVIPCHI2() > 20)"}
+        Ds2piPhiSel = Selection( Ds2piPhiName+'Sel',
+                                 Algorithm = Ds2piPhi,
+                                 RequiredSelections = [Phi2KKSel,stdPions] )
 
-        # Add selection algs to the sequence
-        seq.Members += [Phi2KK,Ds2piPhi]
+        # Selection Sequence
+        selSeq = SelectionSequence( self.__sel_name__+'Seq', TopSelection = Ds2piPhiSel )
 
         # Particle Monitoring plots
         from Configurables import ParticleMonitor
-        plotter =  ParticleMonitor(Ds2piPhiName+"Plots")
-        plotter.InputLocations = [ "Phys/"+Ds2piPhiName ]
+        plotter =  ParticleMonitor(self.__sel_name__+"Plots")
+        plotter.InputLocations = [ selSeq.outputLocation() ]
         plotter.PeakCut     = "(ADMASS('D_s+')<100*MeV)"
         plotter.SideBandCut = "(ADMASS('D_s+')>100*MeV)"
         plotter.PlotTools = [ "MassPlotTool","MomentumPlotTool",
                               "CombinedPidPlotTool",
                               "RichPlotTool","CaloPlotTool","MuonPlotTool" ]
         seq.Members += [ plotter ]
+
+        # Make a DST ?
+        if self.getProp("MakeSelDST"):
+            MyDSTWriter = SelDSTWriter( self.__sel_name__+"DST",
+                                        SelectionSequences = [ selSeq ],
+                                        OutputPrefix = self.__sel_name__ )
+            seq.Members += [MyDSTWriter.sequence()]
         
         # MC Performance checking ?
         if self.getProp("MCChecks") :

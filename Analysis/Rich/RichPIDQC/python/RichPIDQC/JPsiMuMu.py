@@ -8,6 +8,7 @@ __version__ = "$Id: JPsiMuMu.py,v 1.14 2009-10-02 11:54:18 pkoppenb Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from LHCbKernel.Configuration import *
+from Configurables import SelDSTWriter
                 
 ## @class JPsiMuMuConf
 #  Configurable for RICH J/psi -> mu mu PID monitoring
@@ -16,51 +17,68 @@ from LHCbKernel.Configuration import *
 #  @date   15/08/2008
 class JPsiMuMuConf(LHCbConfigurableUser) :
 
+    ## Selection Name
+    __sel_name__ = "RichJPsiMuMu"
+
     ## Possible used Configurables
-    __used_configurables__ = [ ]
+    __used_configurables__ = [ (SelDSTWriter, __sel_name__+'DST') ]
     
     ## Steering options
     __slots__ = {
         "Sequencer"   : None    # The sequencer to add the calibration algorithms too
         ,"MCChecks"   : False
         ,"MakeNTuple" : False
+        ,"MakeSelDST" : False
         }
 
     ## Configure Jpsi -> Mu Mu selection
     def __apply_configuration__(self) :
 
-        from Configurables import ( GaudiSequencer,
-                                    CombineParticles )
+        from Configurables import ( GaudiSequencer, CombineParticles )
+        from PhysSelPython.Wrappers import Selection, SelectionSequence, DataOnDemand
         
         if not self.isPropertySet("Sequencer") :
             raise RuntimeError("ERROR : Sequence not set")
         seq = self.getProp("Sequencer")
+
+        # STD particles
+        stdMuons = DataOnDemand( Location = 'Phys/StdLooseMuons' )
    
         ## J/psi -> mu mu
-        JPsiMuMuName                        = "RichJPsiMuMu"
-        JPsiMuMu                            = CombineParticles(JPsiMuMuName)
-        JPsiMuMu.DecayDescriptor            = "J/psi(1S) -> mu+ mu- "
-        JPsiMuMu.InputLocations             = ["Phys/StdLooseMuons"]
-        JPsiMuMu.CombinationCut             = "(ADAMASS('J/psi(1S)') < 150*MeV)"
-        JPsiMuMu.MotherCut                  = "(ADMASS('J/psi(1S)') < 130*MeV) & (VFASPF(VCHI2/VDOF)<6)"
-        JPsiMuMu.DaughtersCuts              = {"mu+" : "(PT>1400*MeV)"\
-                                               "& (P>5*GeV)"\
-                                               "& (TRCHI2DOF<2.0)"\
-                                               "& (PPINFO(LHCb.ProtoParticle.MuonBkgLL,-10000)<-2.5)"\
-                                               "& (PPINFO(LHCb.ProtoParticle.MuonMuLL,-10000)>-10)"}
+        JPsiMuMuName               = self.__sel_name__
+        JPsiMuMu                   = CombineParticles(JPsiMuMuName)
+        JPsiMuMu.DecayDescriptor   = "J/psi(1S) -> mu+ mu- "
+        JPsiMuMu.CombinationCut    = "(ADAMASS('J/psi(1S)') < 150*MeV)"
+        JPsiMuMu.MotherCut         = "(ADMASS('J/psi(1S)') < 130*MeV) & (VFASPF(VCHI2/VDOF)<6)"
+        JPsiMuMu.DaughtersCuts     = {"mu+" : "(PT>1400*MeV)"\
+                                      "& (P>5*GeV)"\
+                                      "& (TRCHI2DOF<2.0)"\
+                                      "& (PPINFO(LHCb.ProtoParticle.MuonBkgLL,-10000)<-2.5)"\
+                                      "& (PPINFO(LHCb.ProtoParticle.MuonMuLL,-10000)>-10)"}
+        JPsiMuMuSel = Selection( JPsiMuMuName+'Sel',
+                                 Algorithm = JPsiMuMu,
+                                 RequiredSelections = [stdMuons] )
 
-        seq.Members += [JPsiMuMu]
+        # Selection Sequence
+        selSeq = SelectionSequence( self.__sel_name__+'Seq', TopSelection = JPsiMuMuSel )
 
         # Particle Monitoring plots
         from Configurables import ( ParticleMonitor )
-        plotter =  ParticleMonitor(JPsiMuMuName+"Plots")
-        plotter.InputLocations = [ "Phys/"+JPsiMuMuName ]
+        plotter =  ParticleMonitor(self.__sel_name__+"Plots")
+        plotter.InputLocations = [ selSeq.outputLocation() ]
         plotter.PeakCut     = "(ADMASS('J/psi(1S)')<40*MeV)" # Considering sigma = 13
         plotter.SideBandCut = "(ADMASS('J/psi(1S)')>40*MeV)" # Considering sigma = 13
         plotter.PlotTools = [ "MassPlotTool","MomentumPlotTool",
                               "CombinedPidPlotTool",
                               "RichPlotTool","CaloPlotTool","MuonPlotTool" ]
         seq.Members += [plotter]
+
+        # Make a DST ?
+        if self.getProp("MakeSelDST"):
+            MyDSTWriter = SelDSTWriter( self.__sel_name__+"DST",
+                                        SelectionSequences = [ selSeq ],
+                                        OutputPrefix = self.__sel_name__ )
+            seq.Members += [MyDSTWriter.sequence()]
         
         # MC Performance checking ?
         if self.getProp("MCChecks") :

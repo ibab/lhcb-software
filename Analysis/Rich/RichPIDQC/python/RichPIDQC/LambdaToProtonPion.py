@@ -8,7 +8,8 @@ __version__ = "$Id: LambdaToProtonPion.py,v 1.5 2009-07-06 16:02:19 jonrob Exp $
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from LHCbKernel.Configuration import *
-        
+from Configurables import SelDSTWriter
+                
 ## @class LambdaToProtonPionConf
 #  Configurable for RICH Lambda -> proton pi PID monitoring
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
@@ -16,14 +17,18 @@ from LHCbKernel.Configuration import *
 #  @date   03/05/2009
 class LambdaToProtonPionConf(LHCbConfigurableUser) :
 
+    ## Selection Name
+    __sel_name__ = "RichLambdaToPrPiSel"
+
     ## Possible used Configurables
-    __used_configurables__ = [ ]
+    __used_configurables__ = [ (SelDSTWriter, __sel_name__+'DST') ]
     
     ## Steering options
     __slots__ = {
         "Sequencer"   : None    # The sequencer to add the calibration algorithms too
         ,"MCChecks"   : False
         ,"MakeNTuple" : False
+        ,"MakeSelDST" : False
         }
 
     ## Configure Ds -> Phi Pi selection
@@ -31,44 +36,64 @@ class LambdaToProtonPionConf(LHCbConfigurableUser) :
 
         from Configurables import ( GaudiSequencer,
                                     CombineParticles, FilterDesktop )
-        
+        from PhysSelPython.Wrappers import Selection, SelectionSequence, DataOnDemand
+                
         if not self.isPropertySet("Sequencer") :
             raise RuntimeError("ERROR : Sequence not set")
         seq = self.getProp("Sequencer")
+
+        # STD particles
+        stdPions   = DataOnDemand( Location = 'Phys/StdNoPIDsPions' )
+        stdProtons = DataOnDemand( Location = 'Phys/StdNoPIDsProtons' )
       
         # Filter Pi Tracks
-        pionfilterName = "RichLambdaSelPiFilter"
+        pionfilterName = self.__sel_name__+"_PiFilter"
         pionfilter = FilterDesktop(pionfilterName)
-        pionfilter.InputLocations = [ "StdNoPIDsPions" ]
-        pionfilter.Code = "(PT > 0.1*GeV) & (MIPCHI2DV(PRIMARY) > 9) & (TRCHI2DOF < 3) & (ISLONG)"
+        pionfilter.Code = "(ISLONG) & (TRCHI2DOF < 3) & (PT > 0.1*GeV) & (MIPCHI2DV(PRIMARY) > 9)"
+        pionfilterSel = Selection( pionfilterName+'Sel',
+                                   Algorithm = pionfilter,
+                                   RequiredSelections = [stdPions] )
 
         # Filter Proton Tracks
-        protonfilterName = "RichLambdaSelPrFilter"
+        protonfilterName = self.__sel_name__+"_PrFilter"
         protonfilter = FilterDesktop(protonfilterName)
-        protonfilter.InputLocations = [ "StdNoPIDsProtons" ]
-        protonfilter.Code = "(PT > 0.4*GeV) & (MIPCHI2DV(PRIMARY) > 9) & (TRCHI2DOF < 3) & (ISLONG)"
+        protonfilter.Code = "(ISLONG) & (TRCHI2DOF < 3) & (PT > 0.4*GeV) & (MIPCHI2DV(PRIMARY) > 9)"
+        protonfilterSel = Selection( protonfilterName+'Sel',
+                                     Algorithm = protonfilter,
+                                     RequiredSelections = [stdProtons] ) 
 
         # Make the Lambda
-        lambda2ppiName = "RichLambdaToPrPiSel"
-        lambda2ppi = CombineParticles(lambda2ppiName)
-        lambda2ppi.InputLocations = [ protonfilterName, pionfilterName ]
+        lambda2ppi = CombineParticles(self.__sel_name__)
         lambda2ppi.DecayDescriptor = "[ Lambda0 -> p+ pi- ]cc"
         lambda2ppi.CombinationCut = "(ADAMASS('Lambda0') < 100*MeV) & (AMAXDOCA('') < 0.2*mm)"
         lambda2ppi.MotherCut = "(ADMASS('Lambda0') < 50.0*MeV) & (PT > 0.5*GeV) & (VFASPF(VCHI2/VDOF) < 6.0) & (MIPDV(PRIMARY) < 0.5) & (BPVVDCHI2 > 750) & (MIPCHI2DV(PRIMARY) < 200) & ( ADWM( 'KS0' , WM( 'pi+' , 'pi-') ) > 15*MeV ) & (LV01 < 0.98) & (LV02 < 0.98) & (LV01 > -0.98) & (LV02 > -0.98)"
+        lambda2ppiSel = Selection( self.__sel_name__+'Sel',
+                                   Algorithm = lambda2ppi,
+                                   RequiredSelections = [pionfilterSel,protonfilterSel] )
 
-        # Add selection algs to the sequence
-        seq.Members += [pionfilter,protonfilter,lambda2ppi]
+        # Selection Sequence
+        selSeq = SelectionSequence( self.__sel_name__+'Seq', TopSelection = lambda2ppiSel )
+
+        # Run the selection sequence.
+        seq.Members += [selSeq.sequence()]
 
         # Particle Monitoring plots
         from Configurables import ParticleMonitor
-        plotter = ParticleMonitor(lambda2ppiName+"Plots")
-        plotter.InputLocations = [ "Phys/"+lambda2ppiName ]
+        plotter = ParticleMonitor(self.__sel_name__+"Plots")
+        plotter.InputLocations = [ selSeq.outputLocation() ]
         plotter.PeakCut     = "(ADMASS('Lambda0')<2*MeV)"
         plotter.SideBandCut = "(ADMASS('Lambda0')>2*MeV)"
         plotter.PlotTools = [ "MassPlotTool","MomentumPlotTool",
                               "CombinedPidPlotTool",
                               "RichPlotTool","CaloPlotTool","MuonPlotTool" ]
         seq.Members += [ plotter ]
+
+        # Make a DST ?
+        if self.getProp("MakeSelDST"):
+            MyDSTWriter = SelDSTWriter( self.__sel_name__+"DST",
+                                        SelectionSequences = [ selSeq ],
+                                        OutputPrefix = self.__sel_name__ )
+            seq.Members += [MyDSTWriter.sequence()]
         
         # MC Performance checking ?
         if self.getProp("MCChecks") :
