@@ -4,6 +4,10 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+!============================ TrackSys v4r35 2010-07-20 ======================
+! 2010-07-20 - Marco Cattaneo
+ - Remove RecoTrackingOld.py. Can always be retrieved from SVN if needed...
+
 ! 2010-07-06 - Olivier Callot
  - New version of RecoTracking, the old one kept as 'RecoTrackingOld.py'
    This fits the tracks after clone cleaning for speed
