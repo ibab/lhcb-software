@@ -4,6 +4,10 @@
 ! Purpose     : Package for the Seeding Pattern Recognition algorithm
 !-----------------------------------------------------------------------------
 
+!========================= TrackSeeding v1r5 2010-07-20 ======================
+! 2010-07-20 - Marco Cattaneo
+ - Remove obsolete file TrackSeeding_dll.cpp
+
 ! 2010-07-15 - Jeroen VAN TILBURG
  - Changed include location of ISTClusterPosition (now in Tr/TrackInterfaces).
 
