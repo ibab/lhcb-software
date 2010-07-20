@@ -3,6 +3,8 @@
 ! Responsible : M Needham
 ! Purpose     : Tsa algorithms
 !----------------------------------------------------------------------------
+
+!======================= TsaAlgorithms v3r22 2010-07-20 =====================
 ! 2010-07-15 - Stephanie Hansmann-Menzemer
  - use new more detailed procStatus interface
 
