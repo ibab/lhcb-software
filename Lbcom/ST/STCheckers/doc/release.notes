@@ -2,11 +2,12 @@
 ! Package manager : Jeroen van Tilburg
 !------------------------------------------------------------------------------
 
+!=========================== STCheckers v3r1 2010-07-20 =======================
 ! 2010-07-15 - Jeroen VAN TILBURG
  - Changed include location of ISTClusterPosition (now in Tr/TrackInterfaces).
 
 ! 2010-06-30 M Needham
- - Add histograms normalizig to MIP to STClusterChecker 
+ - Add histograms normalizing to MIP to STClusterChecker 
 
 !=========================== STCheckers v3r0 2010-04-09 =======================
 !  2010-03-20 M.Needham
