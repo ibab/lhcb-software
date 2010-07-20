@@ -1,9 +1,9 @@
 project MOORE
 
-use HLT     HLT_v10r4
-use LBCOM	LBCOM_v9r3
-use REC		REC_v10r0p1
-use ONLINE  ONLINE_v4r40
+use HLT     HLT_v10r5
+use LBCOM	LBCOM_v9r4
+use REC		REC_v10r1
+use ONLINE  ONLINE_v4r41
 
 container       MooreSys
 build_strategy	with_installarea
