@@ -4,6 +4,7 @@
 ! Purpose     : Stereographic tools
 !-----------------------------------------------------------------------------
 
+!======================= RichRecStereoTools v1r7 2010-07-20 ==================
 ! 2010-06-24 - Chris Jones
  - Adapt to change in where the method that returns the S.D. of the observable 
    n-1 distribution is.
