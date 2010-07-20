@@ -4,6 +4,7 @@
 ! Purpose     : Velo pattern recognition
 !-----------------------------------------------------------------------------
 
+!========================== PatVelo v3r25 2010-07-20 =========================
 ! 2010-07-05 - Marco Gersabeck
  - Reduced memory consumption of PatVeloAlignTrackFilter
 
