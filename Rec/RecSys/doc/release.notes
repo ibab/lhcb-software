@@ -5,6 +5,129 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
+
+</PRE><H1><A NAME=v10r2>2010-07-21 RecSys v10r2</A></H1><PRE>
+This version uses Gaudi v21r10 and LHCb v31r3
+
+- Packages modified: MuonID v7r9, MuonTrackMonitor v2r1, LumiAlgs v3r7,
+    RecAlgs v1r9, RecConf v1r2, RecoUpgrade v1r1, RichGlobalPID v3r14,
+    RichPIDMerge v2r9, RichRecMonitors v2r28, RichRecQC v2r43,
+    RichRecStereoTools v1r7, RichRecSys v3r30,  RichRecTools v4r12,
+    RichRecTrackTools v1r22, PatAlgorithms v4r5, PatVelo v3r25,
+    TrackMatching v2r30, TrackSeeding v1r5, TrackSys v4r35, TsaAlgorithms v3r22,
+    TrackFitEvent v5r1, TrackFitter v2r49,  TrackMonitors v1r27, TrackTools v3r33
+
+- In MuonID v7r9
+	. Update the Muon PID algorithm to lazy load the PID tool for first time it
+    is really needed.
+
+- In MuonTrackMonitor v2r1
+  . New algorithm for chamber efficiency monitoring, including fixes to
+    speed up the track extrapolations
+  . Remove empty MuonTrackMonitor algorithm
+  . MuonTrackAligMonitor.cpp/h: 
+    o speeded up the extrapolation for residuals calculation on each muon station
+    o added some useful histograms to understand if there are shearings wrt to
+      the tracking 
+  . Configuration.py: refined the track selection to produce Alignment monitoring
+    histograms
+
+- In LumiAlgs v3r7
+  . src/GetIntegratedLuminosity.cpp/h: update algorithm
+  . python/LumiIntegratedConf.py: run GetIntegratedLuminosity  
+
+- In RecAlgs v1r9
+  . Add new monitor for ProcStatus processing aborts. Fill a single histogram
+    with the abort rates (%) overall and by sub-system.
+  . Add a new monitor for the event processing times. Simple monitor that takes
+    a list of algorithm names, and uses the ChronoSvc to sum the processing time
+    per event for them, and produce some basic plots.
+
+- In RecConf v1r2
+  . Add a new ProcStatus abort rate monitor
+  . Add options to turn on some simple processing time monitors
+  . Use loose PV for open velo and micro bias trigger in 2010 data
+
+- In RecoUpgrade v1r1
+  . Correct the weights in linear fit in PatVeloPixFitLHCbIDs.
+
+- In RichGlobalPID v3r14, RichRecTrackTools v1r22, PatAlgorithms v4r5,
+     TrackMatching v2r30, TsaAlgorithms v3r22
+  . Set procStatus->aborted for hot events 
+  . Adapt calls to ProcStat to use new interface that includes additional abort
+    information.
+
+- In RichGlobalPID v3r14, RichPIDMerge v2r9, 
+  . Don't call ProcStat->addAlgorithmStatus for non-failure cases.
+
+- In RichRecMonitors v2r28
+  . Improvements to the processing time monitor
+
+- In RichRecQC v2r43
+  . Update decoding error rates monitor to use new features in RichKernel
+    histogram booking methods to set axis and bin labels.
+  . Enable usage of new Histogram label setting utilities, available in
+    Gaudi v21r10
+  . Only enable ChronoSvc in timing monitors if not already enabled
+  . Changed the Alignment monitor so that it is possible to run an instance
+    per radiator, so that the Aerogel can be used as well.
+  . Update the Configuration of the processing time monitors.
+  . Slight change to binning in the pixel monitor.
+  . Add a plot to the reco monitor for the total number of photon candidates 
+    produced by the reconstruction.
+
+- In RichRecStereoTools v1r7, RichRecTrackTools v1r22
+  . Adapt to change in where the method that returns the S.D. of the observable 
+    n-1 distribution is.
+
+- In RichRecSys v3r30
+  . Tighten "large event" abort cuts for photons from <1000000 to <250000
+  . Rework the Track Configuration to explicitly set all track selection cuts.
+    (Defaults in the C++ now NULL).
+  . Remove the "earlyData" track selection cuts (main change is chi^2/dof cut 
+    is tightened from <100 to <10.
+  . Turn off the "earlyData" loose photon selection cuts. 
+
+- In RichRecTools v4r12
+  . Add some axis labels to RICH PID plot tool histograms.
+
+- In RichRecTrackTools v1r22
+  . Change default cuts in track selector tools so they are NULL (no selection)
+    All cuts are now explicitly set during configuration.
+  . Update the track creator tool so when the maximum number of selected tracks
+    limit is exceeded, instead of aborting the entire event straight away, try 
+    selecting removing 'lesser' track types to see if this takes us below the
+    limit. Removal starts with Seed tracks, then VeloTT the KsTracks. If the 
+    limit is still exceeded (with only long tracks) only then is the entire 
+    event aborted.
+  . Add a method to the effective track refractive index tool that returns the
+    standard deviation for a given track segment.
+
+- In PatVelo v3r25
+  . Reduced memory consumption of PatVeloAlignTrackFilter
+  . Fixed a few uninitialized vectors, see bug #68795
+
+- In TrackSys v4r35
+  . RecoTracking.py now fits the tracks after clone cleaning for speed
+    Old behaviour available by setting TrackSys().FilterBeforeFit = False
+
+- In TrackFitter v2r49
+  . Fixed memory leak affecting HLT2
+  . Added counter for number of tracks changing sign
+
+- In TrackMonitors v1r27
+  . Add TrackTune algorithm
+  . Add HitEffPlotter and TrackExpectedXYZHitsTool to make 2D hit efficiency
+    plots for Velo, TT, IT, OT. Runs only in Expert mode
+  . Added 2D histo's (hiteff,hoteff,expected occ) per layer in 
+    OTHitEfficiencyMonitor.cpp
+
+- In TrackMatching v2r30, TrackSeeding v1r5, TrackFitEvent v5r1, TrackTools v3r33
+  . Changed include location of ISTClusterPosition (now in Tr/TrackInterfaces).
+
+- In TrackSeeding v1r5
+  . Removed obsolete file TrackSeeding_dll.cpp
+
 </PRE><H1><A NAME=v10r1>2010-06-22 RecSys v10r1</A></H1><PRE>
 This version uses Gaudi v21r9 and LHCb v31r2
 
