@@ -11,7 +11,7 @@ from Gaudi.Configuration import *
 from StrippingConf.StrippingStream import StrippingStream
 
 from StrippingSelections import StrippingBd2DstarMuNu
-from StrippingSelections.StrippingBd2DstarMuNuLoose import StrippingBd2DstarMuNuLooseConf
+#from StrippingSelections.StrippingBd2DstarMuNuLoose import StrippingBd2DstarMuNuLooseConf
 #from StrippingSelections import StrippingBsDsMuNu
 #superceded by B0q2DplusMuX
 from StrippingSelections import Strippingb2DMuX
@@ -22,7 +22,7 @@ from StrippingSelections.StrippingB2XuMuNu import StrippingB2XuMuNuConf
 stream = StrippingStream("Semileptonic")
 stream.appendLines( [ 
 		        StrippingBd2DstarMuNu.line, 
-		        StrippingBd2DstarMuNuLooseConf().line(), 
+		        #StrippingBd2DstarMuNuLooseConf().line(), 
 		        #StrippingBsDsMuNu.line, 
 			Strippingb2DMuX.line, 
 			Strippingb2DMuX.line1
@@ -36,4 +36,4 @@ stream.appendLines( [
                         , StrippingB2XuMuNuConf().KstarSS_line()
 		    ] )
 
-stream.appendLines(StrippingB0q2DplusMuX.StrippingB0q2DplusMuXAllLinesConf(StrippingB0q2DplusMuX.confdict))
+#stream.appendLines(StrippingB0q2DplusMuX.StrippingB0q2DplusMuXAllLinesConf(StrippingB0q2DplusMuX.confdict))
