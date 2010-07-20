@@ -2,6 +2,7 @@ Package         : Si/SiTools
 Package manager : Matt Needham
 !------------------------------------------------------------------------------
 
+!============================ SiTools v1r8 2010-07-20 =========================
 ! 2010-06-30  M Needham
  - SiDepositedCharge now uses SiLandauFun.h/cpp 
 
