@@ -4,7 +4,7 @@
 ! Purpose     : Accounting of LumiSummaries (offline code)
 !-----------------------------------------------------------------------------
 
-
+!========================== LumiAlgs v3r7 2010-07-20 =========================
 ! 2010-07-08 - Yasmine Amhis 
   - src/GetIntegratedLuminosity.cpp/h
     . update algorithm
