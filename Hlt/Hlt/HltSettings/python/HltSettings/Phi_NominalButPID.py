@@ -40,7 +40,7 @@ class Phi_NominalButPID :
             ,'PhiMassWin'         : 12       # MeV
             ,'PhiPT'              : 1800     # MeV
             ,'PhiDOCA'            : 0.2      # mm
-            ,'TFKaonPT'           : 0        # MeV
+            ,'TFKaonPT'           : 800        # MeV
             ,'TFKaonIPS'          : 6        # dimensionless
             ,'TFPhiMassWin'       : 12       # MeV
             ,'TFPhiPT'            : 1800     # MeV
