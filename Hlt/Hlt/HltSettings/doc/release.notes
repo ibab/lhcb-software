@@ -4,6 +4,10 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2010-07-21 - Johannes Albrecht
+ - fix syntax error, correctly put hte MB prescales in
+   which missed the commit yesterday (but made it in the TCK)	
+
 !========================== HltSettings v2r2  2010-07-17 ===================
 ! 2010-07-20 - Johannes Albrecht
  - change micro bias rate limited presclae to 1/100
