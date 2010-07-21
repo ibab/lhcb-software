@@ -54,6 +54,7 @@ class Physics_HighNu_80Vis_25L0_2Hlt1_CoreHlt2_Jun10         ( Physics_HighNu_80
                            )
         ##prescale topo monitoring cuts
         from Hlt2Lines.Hlt2TopologicalLines  import Hlt2TopologicalLinesConf
+	from Hlt2Lines.Hlt2InclusivePhiLines import Hlt2InclusivePhiLinesConf
         thresholds.update( {
 		Hlt2InclusivePhiLinesConf : {
 		'TFKaonPT' : 800 },
