@@ -22,7 +22,8 @@ Purpose: LHCb reconstruction program
   . ChronoSvc output level increased, to avoid duplicate timing table (RecConf)
   . Reduce max number of photon candidates to 250k (from 1M) (RichRecSys)
   . Add MoniGENERALSeq, with monitoring of processing time and status (RecAlgs)
-  . Remove suppression of Seckrb5 stderr that was prodeced by xrootd 
+  . Remove suppression of Seckrb5 stderr that was produced by xrootd 
+  . Add suppression of warnings of delta memory greater than 3*sigma
 
 </PRE><H1><A NAME=v37r4>2010-06-24 Brunel v37r4</A></H1><PRE>
 - Changes to configurable

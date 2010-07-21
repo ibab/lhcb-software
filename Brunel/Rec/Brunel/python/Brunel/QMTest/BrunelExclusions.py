@@ -11,6 +11,7 @@ preprocessor = LHCbPreprocessor + \
   LineSkipper(["DDDB_"]) + \
   LineSkipper(["INFO MuonIDAlg v"]) + \
   LineSkipper(["Memory for the event exceeds 3*sigma"]) + \
+  LineSkipper(["Mean 'delta-memory' exceeds 3*sigma"]) + \
   LineSkipper(["BrunelInit.Brun...SUCCESS Exceptions/Errors/Warnings/Infos Statistics : 0/0/"]) + \
   LineSkipper(["AfterMagnetRegion/"]) + \
   LineSkipper(["MagnetRegion/"]) +\
