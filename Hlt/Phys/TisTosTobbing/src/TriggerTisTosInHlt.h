@@ -1,4 +1,4 @@
-// $Id: TriggerTisTosInHlt.h,v 1.2 2009-12-27 13:19:52 graven Exp $
+// $Id: TriggerTisTosInHlt.h,v 1.3 2010-07-21 21:22:17 tskwarni Exp $
 #ifndef TRIGGERTISTOSINHLT_H 
 #define TRIGGERTISTOSINHLT_H 1
 
@@ -41,17 +41,31 @@ public:
   /// add Trigger Selection Name pattern to Trigger Input; pattern may contain wild character *, all matches will be added
   void addToTriggerInput( const std::string & selectionNameWithWildChar);
   
-  /// returns Trigger Selection names matching optional pattern of decision,tis,tos for previously set Trigger and Offline Inputs
+   /// Complete classification of the Trigger Input (see ITisTis::TisTosTob for the meaning)
+  unsigned int tisTosTrigger();
+
+  /// check for TOS  - may be faster than using tisTosTrigger()
+  bool tosTrigger(); 
+ 
+  /// check for TIS  - may be faster than using tisTosTrigger()
+  bool tisTrigger();
+
+  /// check for TUS (Trigger Used Signal: TPS or TOS) - may be faster than using tisTosTrigger()
+  bool tusTrigger();
+
+  /// analysis report
+  std::string analysisReportTrigger();
+
+ /// returns Trigger Selection names matching optional pattern of decision,tis,tos for previously set Trigger and Offline Inputs
   std::vector< std::string > triggerSelectionNames( unsigned int decisionRequirement = kAnything, 
                                                     unsigned int tisRequirement      = kAnything,
-                                                    unsigned int tosRequirement      = kAnything );
+                                                    unsigned int tosRequirement      = kAnything,
+                                                    unsigned int tpsRequirement      = kAnything);
 
   /// list of HltObjectSummaries from Selections satisfying TOS,TIS requirements (define Trigger and Offline Input before calling)
   std::vector<const LHCb::HltObjectSummary*> hltObjectSummaries( unsigned int tisRequirement      = kAnything,
-                                                                 unsigned int tosRequirement      = kAnything );
-  
-   /// calculate decision,Tis,Tos  (for previously defined Offline and Trigger Inputs)
-  void triggerTisTos( bool & decision, bool & tis, bool & tos);
+                                                                 unsigned int tosRequirement      = kAnything,
+                                                                 unsigned int tpsRequirement      = kAnything );
   
 private:
 

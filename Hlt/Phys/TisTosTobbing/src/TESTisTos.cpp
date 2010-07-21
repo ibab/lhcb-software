@@ -1,7 +1,8 @@
-// $Id: TESTisTos.cpp,v 1.3 2009-12-27 13:19:52 graven Exp $
+// $Id: TESTisTos.cpp,v 1.4 2010-07-21 21:22:16 tskwarni Exp $
 // Include files 
 #include <algorithm>
 #include <vector>
+#include <sstream>
 
 // from Gaudi
 #include "GaudiKernel/StatusCode.h"
@@ -15,10 +16,6 @@
 #include "TESTisTos.h"
 
 #include "boost/regex.hpp"
-
-#include "Event/HltDecReports.h"
-#include "Event/HltSelReports.h"
-
 
 using namespace LHCb;
 
@@ -119,6 +116,7 @@ void TESTisTos::setTriggerInput()
 
 void TESTisTos::addToTriggerInput( const std::string & selectionNameWithWildChar)
 {
+#if 0
   if( m_newEvent )setTriggerInput();
   // if selectionNameWithWildChar contains a * without a . in front of it: print warning...
   static boost::regex warn("[^\\.]\\*");
@@ -132,6 +130,7 @@ void TESTisTos::addToTriggerInput( const std::string & selectionNameWithWildChar
                  ,StatusCode::SUCCESS 
                  ).ignore();
   }
+#endif
   unsigned int sizeAtEntrance( m_triggerInput_Selections.size() );
   getTriggerNames(selectionNameWithWildChar);
   boost::regex expr;
@@ -156,23 +155,121 @@ void TESTisTos::addToTriggerInput( const std::string & selectionNameWithWildChar
   }
 }
  
-std::vector< std::string > TESTisTos::triggerSelectionNames(unsigned int decisionRequirement,
-                                                                  unsigned int tisRequirement,
-                                                                  unsigned int tosRequirement )
-{ 
+unsigned int TESTisTos::tisTosTrigger()
+{
+  unsigned int result=0;  
   if( m_newEvent )setTriggerInput();
-  if( (decisionRequirement>=kAnything) && ( tisRequirement>=kAnything) && ( tosRequirement>=kAnything) )
+  if( m_triggerInput_Selections.empty() ){
+    if( m_trigInputWarn )Warning(" triggerTisTos called with empty Trigger Input").setChecked();
+    return result;
+  }
+  for( std::vector< std::string >::const_iterator iTriggerSelection=m_triggerInput_Selections.begin();
+       iTriggerSelection!=m_triggerInput_Selections.end(); ++iTriggerSelection){
+    unsigned int res = tisTosSelection( *iTriggerSelection );
+    if( res & kDecision ){      
+      result |= res;
+    }  
+    if( (result & kTOS) && (result & kTIS) && (result & kTPS ) )break;  
+  }
+  return result;  
+}
+
+std::string TESTisTos::analysisReportTrigger()
+{
+  std::ostringstream report;
+  report << offset() 
+         << " Trigger #-of-sel " <<   m_triggerInput_Selections.size() << std::endl;
+  unsigned int result=0;  
+  if( m_newEvent )setTriggerInput();
+  if( m_triggerInput_Selections.empty() )
+    { report << "Trigger Input empty" << std::endl; return report.str();}
+  for( std::vector< std::string >::const_iterator iTriggerSelection=m_triggerInput_Selections.begin();
+       iTriggerSelection!=m_triggerInput_Selections.end(); ++iTriggerSelection){
+    unsigned int res = tisTosSelection( *iTriggerSelection );
+    ++m_reportDepth;
+    if( res & kDecision ){      
+      report << analysisReportSelection( *iTriggerSelection );
+      result |= res;
+    } else {
+      report << offset() << " Selection " + *iTriggerSelection + " decision=false " << std::endl;      
+    }
+    --m_reportDepth;
+    //    if( (result & kTOS) && (result & kTIS) && (result & kTPS ) )break;  
+  }
+  TisTosTob res( result );
+  report << offset() 
+         << " Trigger #-of-sel " <<   m_triggerInput_Selections.size()
+         << " TIS= " << res.tis() << " TOS= " << res.tos() << " TPS= " << res.tps() 
+         << " decision= " << res.decision() << std::endl;
+  return report.str();
+}
+
+// fast check for TOS
+bool TESTisTos::tosTrigger(){ 
+  if( m_triggerInput_Selections.empty() ){
+    if( m_trigInputWarn )Warning(" tosTrigger called with empty Trigger Input").setChecked();
+    return false;
+  }
+  for( std::vector< std::string >::const_iterator iTriggerSelection=m_triggerInput_Selections.begin();
+       iTriggerSelection!=m_triggerInput_Selections.end(); ++iTriggerSelection){
+    if( tosSelection( *iTriggerSelection ) )return true;
+  }
+  return false;  
+}
+
+// fast check for TIS
+bool TESTisTos::tisTrigger(){
+  if( m_triggerInput_Selections.empty() ){
+    if( m_trigInputWarn )Warning(" tisTrigger called with empty Trigger Input").setChecked();
+    return false;
+  }
+  for( std::vector< std::string >::const_iterator iTriggerSelection=m_triggerInput_Selections.begin();
+       iTriggerSelection!=m_triggerInput_Selections.end(); ++iTriggerSelection){
+    if( tisSelection( *iTriggerSelection ) )return true;
+  }
+  return false;  
+}
+
+// fast check for TIS
+bool TESTisTos::tusTrigger(){
+  if( m_triggerInput_Selections.empty() ){
+    if( m_trigInputWarn )Warning(" tpsTrigger called with empty Trigger Input").setChecked();
+    return false;
+  }
+  for( std::vector< std::string >::const_iterator iTriggerSelection=m_triggerInput_Selections.begin();
+       iTriggerSelection!=m_triggerInput_Selections.end(); ++iTriggerSelection){
+    if( tusSelection( *iTriggerSelection ) )return true;
+  }
+  return false;  
+}
+
+
+
+
+std::vector< std::string > TESTisTos::triggerSelectionNames(unsigned int decisionRequirement,
+                                                            unsigned int tisRequirement,
+                                                            unsigned int tosRequirement,
+                                                            unsigned int tpsRequirement)
+{
+  if( m_newEvent )setTriggerInput();
+  if( (decisionRequirement>=kAnything) && ( tisRequirement>=kAnything) && ( tosRequirement>=kAnything)
+      && ( tpsRequirement>=kAnything) )
   {
     return m_triggerInput_Selections;
   }
   std::vector< std::string > selections;  
   for( std::vector<std::string>::const_iterator iSel = m_triggerInput_Selections.begin();
        iSel != m_triggerInput_Selections.end(); ++iSel ){
-    bool decision,tis,tos;
-    selectionTisTos( *iSel,decision,tis,tos);
+    bool decision,tis,tos,tps;
+    unsigned int result = tisTosSelection( *iSel);
+    decision = result & kDecision;
+    tos = result & kTOS;
+    tis = result & kTIS;
+    tps = result & kTPS;    
     if( ((decisionRequirement>=kAnything)||(decision==decisionRequirement))
         && ((tisRequirement>=kAnything)||(tis==tisRequirement)) 
-        && ((tosRequirement>=kAnything)||(tos==tosRequirement)) ){
+        && ((tosRequirement>=kAnything)||(tos==tosRequirement)) 
+        && ((tpsRequirement>=kAnything)||(tps==tpsRequirement)) ){
       selections.push_back( *iSel );
     }
   }
@@ -180,30 +277,10 @@ std::vector< std::string > TESTisTos::triggerSelectionNames(unsigned int decisio
 }
 
 
-void TESTisTos::triggerTisTos( bool & decision, bool & tis, bool & tos)
-{
-  if( m_newEvent )setTriggerInput();
-  decision = false; tis=false; tos=false;
-  if( m_triggerInput_Selections.empty() ){
-    if( m_trigInputWarn )Warning(" triggerTisTos called with empty Trigger Input").setChecked();
-    return;
-  }
-  for( std::vector< std::string >::const_iterator iTriggerSelection=m_triggerInput_Selections.begin();
-       iTriggerSelection!=m_triggerInput_Selections.end(); ++iTriggerSelection){
-    bool decisionThis, tisThis, tosThis;
-    selectionTisTos( *iTriggerSelection, decisionThis, tisThis, tosThis );
-    if( decisionThis ){      
-      //      decision = decision || decisionThis;
-      decision = true;      
-      tis = tis || tisThis;
-      tos = tos || tosThis;
-    }    
-    if( tis && tos ){ break; }
-  }
-}
 
 std::vector<const LHCb::HltObjectSummary*> TESTisTos::hltObjectSummaries( unsigned int tisRequirement,
-                                                                              unsigned int tosRequirement)
+                                                                          unsigned int tosRequirement,
+                                                                          unsigned int tpsRequirement)
 {
   if( m_newEvent )setTriggerInput();
   std::vector<const LHCb::HltObjectSummary*> hosVec;  
@@ -214,7 +291,7 @@ std::vector<const LHCb::HltObjectSummary*> TESTisTos::hltObjectSummaries( unsign
   for( std::vector< std::string >::const_iterator iTriggerSelection=m_triggerInput_Selections.begin();
        iTriggerSelection!=m_triggerInput_Selections.end(); ++iTriggerSelection){
     std::vector<const LHCb::HltObjectSummary*> selHosVec = 
-      hltSelectionObjectSummaries(*iTriggerSelection,tisRequirement,tosRequirement);
+      hltSelectionObjectSummaries(*iTriggerSelection,tisRequirement,tosRequirement,tpsRequirement);
     hosVec.insert(hosVec.end(),selHosVec.begin(),selHosVec.end());
   }
   return hosVec;

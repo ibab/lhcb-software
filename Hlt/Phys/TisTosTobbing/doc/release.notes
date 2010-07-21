@@ -1,8 +1,14 @@
-! $Id: release.notes,v 1.59 2010-07-08 21:26:49 graven Exp $
+! $Id: release.notes,v 1.60 2010-07-21 21:22:16 tskwarni Exp $
 ! Package     : TisTosTobbing
 ! Responsible : Tomasz Skwarnicki
 ! Purpose     : TisTosTobbing of the trigger 
 ! ====================================================================
+
+! 2010-07-21 - Tomasz Skwarnicki
+ - Major rewrite of all the code. TisTos, ParticleTisTos added (new lower level tools).
+   Trigger(Selection)TisTos, Trigger(Selection)TisTosInHlt, TES(Selection)TisTos changed.
+   Requires new/updated interfaces from Phys/DaVinciInterfaces.
+   New functionality added. Default TOS threshold for Muon hits changed from 0.7 to 0.6.
 
 !========================== TisTosTobbing v4r2 2010-07-08 ===================
 ! 2010-06-24 -  Tomasz Skwarnicki
