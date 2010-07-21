@@ -3,6 +3,83 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
+</PRE><H1><A NAME=v37r5>2010-07-22 Brunel v37r5</A></H1><PRE>
+This version uses projects LCG 58d, Gaudi v21r10, LHCb v31r3, Lbcom v9r5,
+ Rec v10r2 and SQLDDDB v5r33, ParamFiles v8r2, FieldMap v5r5, AppConfig v3r*
+
+This is a production version for processing 2010 data and Montecarlo
+
+Output requires DaVinci v25r2p3 or later if saving packed DST, DaVinci v24r5p1
+or later otherwise
+
+Simulation should be produced with Boole v21r5 or later
+
+- New tuning:
+  . Changes available in SQLDDDB v5r33:
+    o New ST charge calibration  (LHCBCOND tag head-20100715)
+    o Updated ST dead strip maps (LHCBCOND tag head-20100715)
+    o New HPD demagnification parameters (DDDB tag head-20100624)
+    o Updated simplified material description including new Velo RF foil
+      thickness (DDDB tag head-20100624)
+  . Use loose PV for open velo and micro bias trigger in 2010 data. Latter
+    requires setting Brunel().SpecialData += ["microBiasTrigger"] (RecConf v1r2)
+  . Updated ST eta correction and hit error estimates (STTools  v4r3)
+  . Abort processing of hot events in various algorithms:
+    o Too many Velo clusters (VeloDAQ v5r3)
+    o Too many input data objects (RichGlobalPID v3r14, RichRecBase v3r31) 
+    o Too many input tracks (RichRecTrackTools v1r22, RichRecBase v3r31) 
+    o Too many Velo tracks (PatAlgorithms v4r5, TrackMatching v2r30)
+    o Too many IT or OT hits
+      (PatAlgorithms v4r5, TrackMatching v2r30, TsaAlgorithms v3r22)
+  . Tighten "large event" abort cuts for photons from <1000000 to <250000
+    (RichRecSys v3r30)
+  . Remove the "earlyData" track selection cuts (main change is chi^2/dof cut 
+    is tightened from <100 to <10) (RichRecBase v3r31, RichRecSys v3r30)
+  . Turn off the "earlyData" loose photon selection cuts (RichRecSys v3r30)
+  . In track selection of Rich PID, attempt to use only long tracks if total 
+    tracks exceed large event cuts (RichRecTrackTools v1r22)
+  . Track fits now done after clone killing, avoids fitting tracks that are
+    subsequently killed (TrackSys v4r35)
+	. Update the Muon PID algorithm to lazy load the PID tool for first time it
+    is really needed (MuonID v7r9)
+
+- Persistency changes
+  . ProcStatus now has abort flag set if any algorithm has aborted processing
+    due to hot event cuts. Abort reason follows convention enforced by new
+    ProcStatus addAlgorithmStatus method (RecEvent v2r30)
+
+- Bug fixes:
+  . Removal of spurious "Seckrb5" error when opening files with xrootd
+    (Root 5.26.00c from LCGCMT_58d)
+  . Fix bug #68626, small memory leak when connecting to SQLite database
+    (CORAL_2_3_10 from LCGCMT_58d) 
+  . Fix bug #69364: Wrong fractional mass calculation on composite material
+    (DetDesc v18r21)
+  . Fixed a few uninitialized variables, see bug #68795 (VeloDet v13r11)
+
+- Monitoring changes
+  . Changes to histogram axis and bin labels 
+    (GaudiUtils v3r9,  RichKernel v7r37, RichRecQC v2r43, RichRecTools v4r12)
+  . Add MuonEffMonitor, for chamber efficiency monitoring, including fixes to
+    speed up the track extrapolations (MuonTrackMonitor v2r1)
+  . MuonTrackAligMonitor (MuonTrackMonitor v2r1): 
+    o speeded up the extrapolation for residuals calculation on each muon station
+    o added some useful histograms to understand if there are shearings wrt to
+      the tracking 
+  . Add MoniGENERALSeq sequence, with the following algorithms (RecConf v1r2):
+    o New monitor for ProcStatus processing aborts. Fill a single histogram
+      with the abort rates (%) overall and by sub-system (RecAlgs v1r9)
+    o New monitor for the event processing times. Takes a list of algorithm
+      names, uses the ChronoSvc to sum the processing time per event for them,
+      and produces some basic plots (RecAlgs v1r9)
+    o ChronoSvc output level increased, to avoid duplicate timing table
+  . Add plot to monitor total number of photon candidates (RichRecQC v2r43)
+  . Add counter for number of tracks changing sign (TrackFitter v2r49)
+  . Add HitEffPlotter and TrackExpectedXYZHitsTool to make 2D hit efficiency
+    plots for Velo, TT, IT, OT. Runs only in Expert mode (TrackMonitors v1r27)
+  . Added 2D histos (hiteff,hoteff,expected occ) per layer in 
+    OTHitEfficiencyMonitor.cpp (TrackMonitors v1r27)
+
 </PRE><H1><A NAME=v37r4>2010-06-24 Brunel v37r4</A></H1><PRE>
 This version uses projects Gaudi v21r9, LHCb v31r2, Lbcom v9r4, Rec v10r1
  and SQLDDDB v5r30, ParamFiles v8r2, FieldMap v5r4, AppConfig v3r*
