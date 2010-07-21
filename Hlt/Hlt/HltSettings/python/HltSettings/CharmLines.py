@@ -129,9 +129,13 @@ class CharmLines :
                                 , 'Hlt2CharmOSTF4BodyWideMass' : 1.0
                                 }
                         , 'Postscale'               : {
-                                  'Hlt2Charm2BodySA' : 0.1
-                                , 'Hlt2Charm3BodySA' : 0.1
-                                , 'Hlt2Charm4BodySA' : 0.1
+                                  'Hlt2Charm2BodySA' : 0.05
+                                , 'Hlt2Charm3BodySA' : 0.05
+                                , 'Hlt2Charm4BodySA' : 0.05
+                                , 'Hlt2CharmTF2BodyWideMassSA' : 0.05
+                                , 'Hlt2CharmTF3BodyWideMassSA' : 0.05
+                                , 'Hlt2CharmTF2BodyWideMass'   : 0.05
+                                , 'Hlt2CharmTF2BodyWideMass'   : 0.05
                                 }
                     }
                   } )

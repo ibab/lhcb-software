@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2010-07-21 - V. Gligorov
+ - Fix prescales for wide mass charm lines to 5%.
+ 
 ! 2010-07-21 - Johannes Albrecht
  - fix syntax error, correctly put hte MB prescales in
    which missed the commit yesterday (but made it in the TCK)	
