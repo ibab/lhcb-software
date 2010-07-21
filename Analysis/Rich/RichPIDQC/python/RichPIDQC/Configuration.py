@@ -26,9 +26,11 @@ class RichPIDQCConf(LHCbConfigurableUser):
     __slots__ = {
          "CalibSequencer"  : None  # The sequencer to add the calibration algorithms too
         ,"PIDCalibrations" : [ "DsPhiPi","DstarD0Pi","JPsiMuMu","LambdaPrPi","KshortPiPi" ]
-        ,"MCChecks"   : False
-        ,"MakeNTuple" : False
-        ,"MakeSelDST" : False
+        ,"RunSelection" : True
+        ,"RunMonitors"  : True
+        ,"MCChecks"     : False
+        ,"MakeNTuple"   : False
+        ,"MakeSelDST"   : False
         }
 
     ## Check a new sequence and add to main sequence
@@ -46,6 +48,10 @@ class RichPIDQCConf(LHCbConfigurableUser):
         sequence = self.getProp("CalibSequencer")
         return sequence
 
+    ## Propagate the options
+    def propagateOptions(self,conf):
+        self.setOtherProps(conf,["MCChecks","MakeNTuple","MakeSelDST","RunSelection","RunMonitors"])
+
     ## @brief Apply the configuration to the configured GaudiSequencer
     def __apply_configuration__(self) :
 
@@ -55,32 +61,38 @@ class RichPIDQCConf(LHCbConfigurableUser):
         calibSeq = self.calibSeq()
         calibSeq.IgnoreFilterPassed = True
 
+        # Sanity checks
+        if not self.getProp("RunSelection") :
+            if self.getProp("MCChecks")   : raise RuntimeError("ERROR : Must run selections in order to run MC checks")
+            if self.getProp("MakeNTuple") : raise RuntimeError("ERROR : Must run selections in order to make an NTuple")
+            if self.getProp("MakeSelDST") : raise RuntimeError("ERROR : Must run selections in order to write a DST")
+
         # Run Conor's Ds -> Phi Pi selection and calibration
         if "DsPhiPi" in calibs :
             from DsToPhiPi          import DsToPhiPiConf
-            self.setOtherProps(DsToPhiPiConf(),["MCChecks","MakeNTuple","MakeSelDST"])
+            self.propagateOptions(DsToPhiPiConf())
             DsToPhiPiConf().setProp("Sequencer",self.newSeq( calibSeq, "RichDsToPhiPiPIDMoni"))
 
         # Andrew's D* -> D0(KPi) Pi selection and calibration
         if "DstarD0Pi" in calibs :
             from DstarToDzeroPi     import DstarToDzeroPiConf
-            self.setOtherProps(DstarToDzeroPiConf(),["MCChecks","MakeNTuple","MakeSelDST"])
+            self.propagateOptions(DstarToDzeroPiConf())
             DstarToDzeroPiConf().setProp("Sequencer",self.newSeq( calibSeq, "RichDstarToD0PiPIDMoni"))
 
         # Andrew's Lambda -> Proton Pion selection
         if "LambdaPrPi" in calibs :
             from LambdaToProtonPion import LambdaToProtonPionConf
-            self.setOtherProps(LambdaToProtonPionConf(),["MCChecks","MakeNTuple","MakeSelDST"])
+            self.propagateOptions(LambdaToProtonPionConf())
             LambdaToProtonPionConf().setProp("Sequencer",self.newSeq( calibSeq, "RichLambdaToPrPiPIDMoni"))
 
         # Andrew's Kshort -> Pion Pion selection
         if "KshortPiPi" in calibs :
             from KshortPiPi         import KshortPiPiConf
-            self.setOtherProps(KshortPiPiConf(),["MCChecks","MakeNTuple","MakeSelDST"])
+            self.propagateOptions(KshortPiPiConf())
             KshortPiPiConf().setProp("Sequencer",self.newSeq( calibSeq, "RichKsToPiPiPIDMoni"))
 
         # Nicola's J/Psi -> Mu Mu selection
         if "JPsiMuMu" in calibs :
             from JPsiMuMu           import JPsiMuMuConf
-            self.setOtherProps(JPsiMuMuConf(),["MCChecks","MakeNTuple","MakeSelDST"])
+            self.propagateOptions(JPsiMuMuConf())
             JPsiMuMuConf().setProp("Sequencer",self.newSeq( calibSeq, "RichJPsiToMuMuPIDMoni"))

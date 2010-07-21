@@ -26,6 +26,8 @@ class KshortPiPiConf(LHCbConfigurableUser) :
     ## Steering options
     __slots__ = {
         "Sequencer"   : None    # The sequencer to add the calibration algorithms too
+        ,"RunSelection" : True
+        ,"RunMonitors"  : True
         ,"MCChecks"   : False
         ,"MakeNTuple" : False
         ,"MakeSelDST" : False
@@ -42,45 +44,50 @@ class KshortPiPiConf(LHCbConfigurableUser) :
             raise RuntimeError("ERROR : Sequence not set")
         seq = self.getProp("Sequencer")
 
-        # STD particles
-        stdPions = DataOnDemand( Location = 'Phys/StdNoPIDsPions' )
+        if self.getProp("RunSelection") : 
 
-        # Filter Pi Tracks
-        pionFilterName = self.__sel_name__+"_PiFilter"
-        pionfilter = FilterDesktop(pionFilterName)
-        pionfilter.Code = "(ISLONG) & (TRCHI2DOF < 5) & (P > 2*GeV) & (MIPCHI2DV(PRIMARY) > 30)"
-        pionfilterSel = Selection( pionFilterName+'Sel',
-                                   Algorithm = pionfilter,
-                                   RequiredSelections = [stdPions] )
+            # STD particles
+            stdPions = DataOnDemand( Location = 'Phys/StdNoPIDsPions' )
 
-        # Make the KS0
-        ks02pipi = CombineParticles(self.__sel_name__)
-        ks02pipi.DecayDescriptor = "KS0 -> pi+ pi-"
-        ks02pipi.CombinationCut = "(ADAMASS('KS0') < 200*MeV) & (AMAXDOCA('') < 0.6*mm)"
-        ks02pipi.MotherCut = "(ADMASS('KS0') < 100*MeV) & (VFASPF(VCHI2/VDOF) < 10) & (MIPDV(PRIMARY) < 0.75) & (BPVVDCHI2 > 150)  & (MIPCHI2DV(PRIMARY) < 100) & ( ADWM( 'Lambda0' , WM( 'p+' , 'pi-') ) > 8*MeV ) & ( ADWM( 'Lambda0' , WM( 'pi+' , 'p~-') ) > 8*MeV )"
-        ks02pipiSel = Selection( self.__sel_name__+'Sel',
-                                 Algorithm = ks02pipi,
-                                 RequiredSelections = [pionfilterSel] )
+            # Filter Pi Tracks
+            pionFilterName = self.__sel_name__+"_PiFilter"
+            pionfilter = FilterDesktop(pionFilterName)
+            pionfilter.Code = "(ISLONG) & (TRCHI2DOF < 5) & (P > 2*GeV) & (MIPCHI2DV(PRIMARY) > 30)"
+            pionfilterSel = Selection( pionFilterName+'Sel',
+                                       Algorithm = pionfilter,
+                                       RequiredSelections = [stdPions] )
 
-        # Selection Sequence
-        selSeq = SelectionSequence( self.__sel_name__+'Seq', TopSelection = ks02pipiSel )
+            # Make the KS0
+            ks02pipi = CombineParticles(self.__sel_name__)
+            ks02pipi.DecayDescriptor = "KS0 -> pi+ pi-"
+            ks02pipi.CombinationCut = "(ADAMASS('KS0') < 200*MeV) & (AMAXDOCA('') < 0.6*mm)"
+            ks02pipi.MotherCut = "(ADMASS('KS0') < 100*MeV) & (VFASPF(VCHI2/VDOF) < 10) & (MIPDV(PRIMARY) < 0.75) & (BPVVDCHI2 > 150)  & (MIPCHI2DV(PRIMARY) < 100) & ( ADWM( 'Lambda0' , WM( 'p+' , 'pi-') ) > 8*MeV ) & ( ADWM( 'Lambda0' , WM( 'pi+' , 'p~-') ) > 8*MeV )"
+            ks02pipiSel = Selection( self.__sel_name__+'Sel',
+                                     Algorithm = ks02pipi,
+                                     RequiredSelections = [pionfilterSel] )
 
-        # Run the selection sequence.
-        seq.Members += [selSeq.sequence()]
+            # Selection Sequence
+            selSeq = SelectionSequence( self.__sel_name__+'Seq', TopSelection = ks02pipiSel )
+
+            # Run the selection sequence.
+            seq.Members += [selSeq.sequence()]
 
         # Particle Monitoring plots
-        from Configurables import ParticleMonitor
-        plotter = ParticleMonitor(self.__sel_name__+"Plots")
-        plotter.InputLocations = [ selSeq.outputLocation() ]
-        plotter.PeakCut     = "(ADMASS('KS0')<7*MeV)"
-        plotter.SideBandCut = "(ADMASS('KS0')>7*MeV)"
-        plotter.PlotTools = [ "MassPlotTool","MomentumPlotTool",
-                              "CombinedPidPlotTool",
-                              "RichPlotTool","CaloPlotTool","MuonPlotTool" ]
-        seq.Members += [ plotter ]
+        if self.getProp("RunMonitors") :
+
+            from Configurables import ParticleMonitor
+            plotter = ParticleMonitor(self.__sel_name__+"Plots")
+            plotter.InputLocations = [ 'Phys/'+self.__sel_name__+'Sel' ]
+            plotter.PeakCut     = "(ADMASS('KS0')<7*MeV)"
+            plotter.SideBandCut = "(ADMASS('KS0')>7*MeV)"
+            plotter.PlotTools = [ "MassPlotTool","MomentumPlotTool",
+                                  "CombinedPidPlotTool",
+                                  "RichPlotTool","CaloPlotTool","MuonPlotTool" ]
+            seq.Members += [ plotter ]
 
         # Make a DST ?
         if self.getProp("MakeSelDST"):
+            
             MyDSTWriter = SelDSTWriter( self.__sel_name__+"DST",
                                         SelectionSequences = [ selSeq ],
                                         OutputPrefix = self.__sel_name__ )

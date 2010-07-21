@@ -25,10 +25,12 @@ class DsToPhiPiConf(LHCbConfigurableUser) :
     
     ## Steering options
     __slots__ = {
-        "Sequencer"   : None    # The sequencer to add the calibration algorithms too
-        ,"MCChecks"   : False
-        ,"MakeNTuple" : False
-        ,"MakeSelDST" : False
+         "Sequencer"    : None    # The sequencer to add the calibration algorithms too
+        ,"RunSelection" : True
+        ,"RunMonitors"  : True
+        ,"MCChecks"     : False
+        ,"MakeNTuple"   : False
+        ,"MakeSelDST"   : False
         }
 
     ## Configure Ds -> Phi Pi selection
@@ -41,52 +43,60 @@ class DsToPhiPiConf(LHCbConfigurableUser) :
         seq = self.getProp("Sequencer")
         if seq == None : raise RuntimeError("ERROR : Sequence not set")
 
-        # STD particles
-        stdKaons = DataOnDemand( Location = 'Phys/StdNoPIDsKaons' )
-        stdPions = DataOnDemand( Location = 'Phys/StdNoPIDsPions' )
-        
-        ## phi -> K+ K-
-        Phi2KKName = self.__sel_name__+"_Phi2KK"
-        Phi2KK = CombineParticles(Phi2KKName)
-        Phi2KK.DecayDescriptor = "phi(1020) -> K+ K-"
-        Phi2KK.CombinationCut = "(ADAMASS('phi(1020)')<75*MeV)"
-        Phi2KK.MotherCut = "(ADMASS('phi(1020)')<50*MeV) & (BPVVDCHI2>60) & (MIPDV(PRIMARY)<0.5) & (VFASPF(VCHI2) < 20)"
-        Phi2KK.DaughtersCuts = {"K+"     :    "(PT>300*MeV) & (P>2*GeV) & (MIPDV(PRIMARY) < 0.5) &  (BPVIPCHI2() > 20)",
-                                "K-"     :    "(PT>300*MeV) & (P>2*GeV) & (MIPDV(PRIMARY) < 0.5) &  (BPVIPCHI2() > 20)"}
-        Phi2KKSel = Selection( Phi2KKName+'Sel',
-                               Algorithm = Phi2KK,
-                               RequiredSelections = [stdKaons] )
-        
-        ## Bs -> J/psi phi
-        Ds2piPhiName = self.__sel_name__
-        Ds2piPhi = CombineParticles(Ds2piPhiName)
-        Ds2piPhi.DecayDescriptor = "[D_s+ -> pi+ phi(1020)]cc"
-        Ds2piPhi.addTool( OfflineVertexFitter )
-        Ds2piPhi.VertexFitters.update( { "" : "OfflineVertexFitter"} )
-        Ds2piPhi.OfflineVertexFitter.useResonanceVertex = True
-        Ds2piPhi.CombinationCut = "(ADAMASS('D_s+')<75*MeV)"
-        Ds2piPhi.MotherCut = "(ADMASS('D_s+')<50*MeV) & (BPVDIRA>0.9999) & (BPVVDCHI2>85) & (MIPDV(PRIMARY)<0.1) &  (VFASPF(VCHI2) < 10)"
-        Ds2piPhi.DaughtersCuts = {"pi+"        :       "(PT>300*MeV) & (P>2*GeV) & (MIPDV(PRIMARY) >0.1) & (BPVIPCHI2() > 20)"}
-        Ds2piPhiSel = Selection( Ds2piPhiName+'Sel',
-                                 Algorithm = Ds2piPhi,
-                                 RequiredSelections = [Phi2KKSel,stdPions] )
+        if self.getProp("RunSelection") : 
 
-        # Selection Sequence
-        selSeq = SelectionSequence( self.__sel_name__+'Seq', TopSelection = Ds2piPhiSel )
+            # STD particles
+            stdKaons = DataOnDemand( Location = 'Phys/StdNoPIDsKaons' )
+            stdPions = DataOnDemand( Location = 'Phys/StdNoPIDsPions' )
+        
+            # phi -> K+ K-
+            Phi2KKName = self.__sel_name__+"_Phi2KK"
+            Phi2KK = CombineParticles(Phi2KKName)
+            Phi2KK.DecayDescriptor = "phi(1020) -> K+ K-"
+            Phi2KK.CombinationCut = "(ADAMASS('phi(1020)')<75*MeV)"
+            Phi2KK.MotherCut = "(ADMASS('phi(1020)')<50*MeV) & (BPVVDCHI2>60) & (MIPDV(PRIMARY)<0.5) & (VFASPF(VCHI2) < 20)"
+            Phi2KK.DaughtersCuts = {"K+"     :    "(PT>300*MeV) & (P>2*GeV) & (MIPDV(PRIMARY) < 0.5) &  (BPVIPCHI2() > 20)",
+                                    "K-"     :    "(PT>300*MeV) & (P>2*GeV) & (MIPDV(PRIMARY) < 0.5) &  (BPVIPCHI2() > 20)"}
+            Phi2KKSel = Selection( Phi2KKName+'Sel',
+                                   Algorithm = Phi2KK,
+                                   RequiredSelections = [stdKaons] )
+        
+            # Bs -> J/psi phi
+            Ds2piPhiName = self.__sel_name__
+            Ds2piPhi = CombineParticles(Ds2piPhiName)
+            Ds2piPhi.DecayDescriptor = "[D_s+ -> pi+ phi(1020)]cc"
+            Ds2piPhi.addTool( OfflineVertexFitter )
+            Ds2piPhi.VertexFitters.update( { "" : "OfflineVertexFitter"} )
+            Ds2piPhi.OfflineVertexFitter.useResonanceVertex = True
+            Ds2piPhi.CombinationCut = "(ADAMASS('D_s+')<75*MeV)"
+            Ds2piPhi.MotherCut = "(ADMASS('D_s+')<50*MeV) & (BPVDIRA>0.9999) & (BPVVDCHI2>85) & (MIPDV(PRIMARY)<0.1) &  (VFASPF(VCHI2) < 10)"
+            Ds2piPhi.DaughtersCuts = {"pi+"        :       "(PT>300*MeV) & (P>2*GeV) & (MIPDV(PRIMARY) >0.1) & (BPVIPCHI2() > 20)"}
+            Ds2piPhiSel = Selection( Ds2piPhiName+'Sel',
+                                     Algorithm = Ds2piPhi,
+                                     RequiredSelections = [Phi2KKSel,stdPions] )
+
+            # Selection Sequence
+            selSeq = SelectionSequence( self.__sel_name__+'Seq', TopSelection = Ds2piPhiSel )
+
+            # Run the selection sequence.
+            seq.Members += [selSeq.sequence()]
 
         # Particle Monitoring plots
-        from Configurables import ParticleMonitor
-        plotter =  ParticleMonitor(self.__sel_name__+"Plots")
-        plotter.InputLocations = [ selSeq.outputLocation() ]
-        plotter.PeakCut     = "(ADMASS('D_s+')<100*MeV)"
-        plotter.SideBandCut = "(ADMASS('D_s+')>100*MeV)"
-        plotter.PlotTools = [ "MassPlotTool","MomentumPlotTool",
-                              "CombinedPidPlotTool",
-                              "RichPlotTool","CaloPlotTool","MuonPlotTool" ]
-        seq.Members += [ plotter ]
+        if self.getProp("RunMonitors") :
+            
+            from Configurables import ParticleMonitor
+            plotter =  ParticleMonitor(self.__sel_name__+"Plots")
+            plotter.InputLocations = [ 'Phys/'+self.__sel_name__+'Sel' ]
+            plotter.PeakCut     = "(ADMASS('D_s+')<100*MeV)"
+            plotter.SideBandCut = "(ADMASS('D_s+')>100*MeV)"
+            plotter.PlotTools = [ "MassPlotTool","MomentumPlotTool",
+                                  "CombinedPidPlotTool",
+                                  "RichPlotTool","CaloPlotTool","MuonPlotTool" ]
+            seq.Members += [ plotter ]
 
         # Make a DST ?
         if self.getProp("MakeSelDST"):
+            
             MyDSTWriter = SelDSTWriter( self.__sel_name__+"DST",
                                         SelectionSequences = [ selSeq ],
                                         OutputPrefix = self.__sel_name__ )
@@ -94,16 +104,15 @@ class DsToPhiPiConf(LHCbConfigurableUser) :
         
         # MC Performance checking ?
         if self.getProp("MCChecks") :
-
+            
             from Configurables import ParticleEffPurMoni
-
             mcPerf = ParticleEffPurMoni(Ds2piPhiName+"MCPerf")
-            mcPerf.InputLocations = ["Phys/"+Ds2piPhiName]
+            mcPerf.InputLocations = ['Phys/'+self.__sel_name__+'Sel']
             seq.Members += [mcPerf]
                     
         # Ntuple ?
         if self.getProp("MakeNTuple") :
-	#if 0:
+
             outputLevel = INFO
 
             from Configurables import ( DecayTreeTuple, TupleToolDecay, TupleToolMCTruth,

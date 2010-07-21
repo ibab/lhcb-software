@@ -7,6 +7,8 @@
 
 ! 2010-07-21 - Chris Jones
  - Remove obsolete C++ code. Package is now a pure python Configurable package
+ - Extend python Configurables with options to allow the monitors to be run, 
+   without running the selections themselves (for use of streamed DSTs).
 
 ! 2010-07-19 - Chris Jones
  - Update the PID selections to use the 'Selection' famework, in order to 

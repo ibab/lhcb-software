@@ -26,6 +26,8 @@ class DstarToDzeroPiConf(LHCbConfigurableUser) :
     ## Steering options
     __slots__ = {
         "Sequencer"   : None    # The sequencer to add the calibration algorithms too
+        ,"RunSelection" : True
+        ,"RunMonitors"  : True
         ,"MCChecks"   : False
         ,"MakeNTuple" : False
         ,"MakeSelDST" : False
@@ -42,77 +44,81 @@ class DstarToDzeroPiConf(LHCbConfigurableUser) :
             raise RuntimeError("ERROR : Sequence not set")
         seq = self.getProp("Sequencer")
 
-        # STD particles
-        stdPions = DataOnDemand( Location = 'Phys/StdNoPIDsPions' )
-        stdKaons = DataOnDemand( Location = 'Phys/StdNoPIDsKaons' )
-      
-        # Filter Pi/K Tracks
-        trackfilterName = self.__sel_name__+"_TrackFilter"
-        trackfilter = FilterDesktop(trackfilterName)
-        trackfilter.Code = "(PT > 0.4*GeV) & (P > 2.0*GeV) & (TRCHI2DOF < 10) & (MIPCHI2DV(PRIMARY) > 6)"
-        trackfilterSel = Selection( trackfilterName+'Sel',
-                                    Algorithm = trackfilter,
-                                    RequiredSelections = [stdPions,stdKaons] )
+        if self.getProp("RunSelection") : 
 
-        # Filter Pi Tracks
-        pionfilterName = self.__sel_name__+"_PiFilter"
-        pionfilter = FilterDesktop(pionfilterName)
-        pionfilter.Code = "(PT > 110*MeV) & (MIPCHI2DV(PRIMARY) > 2)"
-        pionfilterSel = Selection( pionfilterName+'Sel',
-                                   Algorithm = pionfilter,
-                                   RequiredSelections = [stdPions] )
+            # STD particles
+            stdPions = DataOnDemand( Location = 'Phys/StdNoPIDsPions' )
+            stdKaons = DataOnDemand( Location = 'Phys/StdNoPIDsKaons' )
+            
+            # Filter Pi/K Tracks
+            trackfilterName = self.__sel_name__+"_TrackFilter"
+            trackfilter = FilterDesktop(trackfilterName)
+            trackfilter.Code = "(PT > 0.4*GeV) & (P > 2.0*GeV) & (TRCHI2DOF < 10) & (MIPCHI2DV(PRIMARY) > 6)"
+            trackfilterSel = Selection( trackfilterName+'Sel',
+                                        Algorithm = trackfilter,
+                                        RequiredSelections = [stdPions,stdKaons] )
 
-        # Make the D0
-        d02kpiName = self.__sel_name__+"_D0ToKPiSel"
-        d02kpi = CombineParticles(d02kpiName)
-        d02kpi.DecayDescriptor = "[ D0 -> K- pi+ ]cc"
-        d02kpi.CombinationCut = "(ADAMASS('D0') < 100*MeV)"
-        d02kpi.MotherCut = "(ADMASS('D0') < 50.0*MeV)"\
-                           "& (PT > 1.00*GeV)"\
-                           "& (VFASPF(VCHI2/VDOF)< 10.0)"\
-                           "& (BPVDIRA > 0.9999)"\
-                           "& (BPVVDCHI2 > 12)"
-        d02kpiSel = Selection( d02kpiName+'Sel',
-                               Algorithm = d02kpi,
-                               RequiredSelections = [trackfilterSel] )
+            # Filter Pi Tracks
+            pionfilterName = self.__sel_name__+"_PiFilter"
+            pionfilter = FilterDesktop(pionfilterName)
+            pionfilter.Code = "(PT > 110*MeV) & (MIPCHI2DV(PRIMARY) > 2)"
+            pionfilterSel = Selection( pionfilterName+'Sel',
+                                       Algorithm = pionfilter,
+                                       RequiredSelections = [stdPions] )
 
-        # Make the D*
-        dstar2d0piName = self.__sel_name__
-        dstar2d0pi = CombineParticles(dstar2d0piName)
-        #dstar2d0pi.InputLocations = [ d02kpiName, pionfilterName ]
-        dstar2d0pi.DecayDescriptor = "[ D*(2010)+ -> D0 pi+ ]cc"
-        dstar2d0pi.CombinationCut = "(ADAMASS('D*(2010)+') < 100*MeV)"
-        dstar2d0pi.MotherCut = "(ADMASS('D*(2010)+') < 50.0*MeV)"\
-                               "& (PT > 2.2*GeV)"\
-                               "& (VFASPF(VCHI2/VDOF)< 15.0)"\
-                               "& (M-MAXTREE('D0'==ABSID,M)<155.5)"
-        dstar2d0piSel = Selection( dstar2d0piName+'Sel',
-                                   Algorithm = dstar2d0pi,
-                                   RequiredSelections = [d02kpiSel,pionfilterSel] )
+            # Make the D0
+            d02kpiName = self.__sel_name__+"_D0ToKPiSel"
+            d02kpi = CombineParticles(d02kpiName)
+            d02kpi.DecayDescriptor = "[ D0 -> K- pi+ ]cc"
+            d02kpi.CombinationCut = "(ADAMASS('D0') < 100*MeV)"
+            d02kpi.MotherCut = "(ADMASS('D0') < 50.0*MeV)"\
+                               "& (PT > 1.00*GeV)"\
+                               "& (VFASPF(VCHI2/VDOF)< 10.0)"\
+                               "& (BPVDIRA > 0.9999)"\
+                               "& (BPVVDCHI2 > 12)"
+            d02kpiSel = Selection( d02kpiName+'Sel',
+                                   Algorithm = d02kpi,
+                                   RequiredSelections = [trackfilterSel] )
 
-        # Selection Sequence
-        selSeq = SelectionSequence( self.__sel_name__+'Seq', TopSelection = dstar2d0piSel )
+            # Make the D*
+            dstar2d0piName = self.__sel_name__
+            dstar2d0pi = CombineParticles(dstar2d0piName)
+            dstar2d0pi.DecayDescriptor = "[ D*(2010)+ -> D0 pi+ ]cc"
+            dstar2d0pi.CombinationCut = "(ADAMASS('D*(2010)+') < 100*MeV)"
+            dstar2d0pi.MotherCut = "(ADMASS('D*(2010)+') < 50.0*MeV)"\
+                                   "& (PT > 2.2*GeV)"\
+                                   "& (VFASPF(VCHI2/VDOF)< 15.0)"\
+                                   "& (M-MAXTREE('D0'==ABSID,M)<155.5)"
+            dstar2d0piSel = Selection( dstar2d0piName+'Sel',
+                                       Algorithm = dstar2d0pi,
+                                       RequiredSelections = [d02kpiSel,pionfilterSel] )
 
-        # Run the selection sequence.
-        seq.Members += [selSeq.sequence()]
-        
+            # Selection Sequence
+            selSeq = SelectionSequence( self.__sel_name__+'Seq', TopSelection = dstar2d0piSel )
+
+            # Run the selection sequence.
+            seq.Members += [selSeq.sequence()]
+
         # Particle Monitoring plots
-        from Configurables import ( ParticleMonitor, PhysDesktop )
-        plotter =  ParticleMonitor(self.__sel_name__+"Plots")
-        plotter.InputLocations = [ selSeq.outputLocation() ]
-        plotter.PeakCut     = "(M-MAXTREE('D0'==ABSID,M)<147.43) "\
-                              "& (M-MAXTREE('D0'==ABSID,M)>143.43) "\
-                              "& (INTREE((ABSID=='D0') & (ADMASS('D0') < 15*MeV) ))"
-        plotter.SideBandCut = "(M-MAXTREE('D0'==ABSID,M)>147.43) "\
-                              "& (M-MAXTREE('D0'==ABSID,M)<143.43) "\
-                              "& (INTREE((ABSID=='D0') & (ADMASS('D0') > 15*MeV) ))"
-        plotter.PlotTools = [ "MassPlotTool","MomentumPlotTool",
-                              "CombinedPidPlotTool",
-                              "RichPlotTool","CaloPlotTool","MuonPlotTool" ]
-        seq.Members += [ plotter ]
+        if self.getProp("RunMonitors") :
+
+            from Configurables import ( ParticleMonitor, PhysDesktop )
+            plotter =  ParticleMonitor(self.__sel_name__+"Plots")
+            plotter.InputLocations = [ 'Phys/'+self.__sel_name__+'Sel' ]
+            plotter.PeakCut     = "(M-MAXTREE('D0'==ABSID,M)<147.43) "\
+                                  "& (M-MAXTREE('D0'==ABSID,M)>143.43) "\
+                                  "& (INTREE((ABSID=='D0') & (ADMASS('D0') < 15*MeV) ))"
+            plotter.SideBandCut = "(M-MAXTREE('D0'==ABSID,M)>147.43) "\
+                                  "& (M-MAXTREE('D0'==ABSID,M)<143.43) "\
+                                  "& (INTREE((ABSID=='D0') & (ADMASS('D0') > 15*MeV) ))"
+            plotter.PlotTools = [ "MassPlotTool","MomentumPlotTool",
+                                  "CombinedPidPlotTool",
+                                  "RichPlotTool","CaloPlotTool","MuonPlotTool" ]
+            seq.Members += [ plotter ]
 
         # Make a DST ?
         if self.getProp("MakeSelDST"):
+            
             MyDSTWriter = SelDSTWriter( self.__sel_name__+"DST",
                                         SelectionSequences = [ selSeq ],
                                         OutputPrefix = self.__sel_name__ )

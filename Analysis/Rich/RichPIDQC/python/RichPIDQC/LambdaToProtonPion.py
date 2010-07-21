@@ -26,6 +26,8 @@ class LambdaToProtonPionConf(LHCbConfigurableUser) :
     ## Steering options
     __slots__ = {
         "Sequencer"   : None    # The sequencer to add the calibration algorithms too
+        ,"RunSelection" : True
+        ,"RunMonitors"  : True
         ,"MCChecks"   : False
         ,"MakeNTuple" : False
         ,"MakeSelDST" : False
@@ -42,54 +44,59 @@ class LambdaToProtonPionConf(LHCbConfigurableUser) :
             raise RuntimeError("ERROR : Sequence not set")
         seq = self.getProp("Sequencer")
 
-        # STD particles
-        stdPions   = DataOnDemand( Location = 'Phys/StdNoPIDsPions' )
-        stdProtons = DataOnDemand( Location = 'Phys/StdNoPIDsProtons' )
+        if self.getProp("RunSelection") : 
+
+            # STD particles
+            stdPions   = DataOnDemand( Location = 'Phys/StdNoPIDsPions' )
+            stdProtons = DataOnDemand( Location = 'Phys/StdNoPIDsProtons' )
       
-        # Filter Pi Tracks
-        pionfilterName = self.__sel_name__+"_PiFilter"
-        pionfilter = FilterDesktop(pionfilterName)
-        pionfilter.Code = "(ISLONG) & (TRCHI2DOF < 3) & (PT > 0.1*GeV) & (MIPCHI2DV(PRIMARY) > 9)"
-        pionfilterSel = Selection( pionfilterName+'Sel',
-                                   Algorithm = pionfilter,
-                                   RequiredSelections = [stdPions] )
+            # Filter Pi Tracks
+            pionfilterName = self.__sel_name__+"_PiFilter"
+            pionfilter = FilterDesktop(pionfilterName)
+            pionfilter.Code = "(ISLONG) & (TRCHI2DOF < 3) & (PT > 0.1*GeV) & (MIPCHI2DV(PRIMARY) > 9)"
+            pionfilterSel = Selection( pionfilterName+'Sel',
+                                       Algorithm = pionfilter,
+                                       RequiredSelections = [stdPions] )
 
-        # Filter Proton Tracks
-        protonfilterName = self.__sel_name__+"_PrFilter"
-        protonfilter = FilterDesktop(protonfilterName)
-        protonfilter.Code = "(ISLONG) & (TRCHI2DOF < 3) & (PT > 0.4*GeV) & (MIPCHI2DV(PRIMARY) > 9)"
-        protonfilterSel = Selection( protonfilterName+'Sel',
-                                     Algorithm = protonfilter,
-                                     RequiredSelections = [stdProtons] ) 
+            # Filter Proton Tracks
+            protonfilterName = self.__sel_name__+"_PrFilter"
+            protonfilter = FilterDesktop(protonfilterName)
+            protonfilter.Code = "(ISLONG) & (TRCHI2DOF < 3) & (PT > 0.4*GeV) & (MIPCHI2DV(PRIMARY) > 9)"
+            protonfilterSel = Selection( protonfilterName+'Sel',
+                                         Algorithm = protonfilter,
+                                         RequiredSelections = [stdProtons] ) 
 
-        # Make the Lambda
-        lambda2ppi = CombineParticles(self.__sel_name__)
-        lambda2ppi.DecayDescriptor = "[ Lambda0 -> p+ pi- ]cc"
-        lambda2ppi.CombinationCut = "(ADAMASS('Lambda0') < 100*MeV) & (AMAXDOCA('') < 0.2*mm)"
-        lambda2ppi.MotherCut = "(ADMASS('Lambda0') < 50.0*MeV) & (PT > 0.5*GeV) & (VFASPF(VCHI2/VDOF) < 6.0) & (MIPDV(PRIMARY) < 0.5) & (BPVVDCHI2 > 750) & (MIPCHI2DV(PRIMARY) < 200) & ( ADWM( 'KS0' , WM( 'pi+' , 'pi-') ) > 15*MeV ) & (LV01 < 0.98) & (LV02 < 0.98) & (LV01 > -0.98) & (LV02 > -0.98)"
-        lambda2ppiSel = Selection( self.__sel_name__+'Sel',
-                                   Algorithm = lambda2ppi,
-                                   RequiredSelections = [pionfilterSel,protonfilterSel] )
+            # Make the Lambda
+            lambda2ppi = CombineParticles(self.__sel_name__)
+            lambda2ppi.DecayDescriptor = "[ Lambda0 -> p+ pi- ]cc"
+            lambda2ppi.CombinationCut = "(ADAMASS('Lambda0') < 100*MeV) & (AMAXDOCA('') < 0.2*mm)"
+            lambda2ppi.MotherCut = "(ADMASS('Lambda0') < 50.0*MeV) & (PT > 0.5*GeV) & (VFASPF(VCHI2/VDOF) < 6.0) & (MIPDV(PRIMARY) < 0.5) & (BPVVDCHI2 > 750) & (MIPCHI2DV(PRIMARY) < 200) & ( ADWM( 'KS0' , WM( 'pi+' , 'pi-') ) > 15*MeV ) & (LV01 < 0.98) & (LV02 < 0.98) & (LV01 > -0.98) & (LV02 > -0.98)"
+            lambda2ppiSel = Selection( self.__sel_name__+'Sel',
+                                       Algorithm = lambda2ppi,
+                                       RequiredSelections = [pionfilterSel,protonfilterSel] )
 
-        # Selection Sequence
-        selSeq = SelectionSequence( self.__sel_name__+'Seq', TopSelection = lambda2ppiSel )
+            # Selection Sequence
+            selSeq = SelectionSequence( self.__sel_name__+'Seq', TopSelection = lambda2ppiSel )
 
-        # Run the selection sequence.
-        seq.Members += [selSeq.sequence()]
+            # Run the selection sequence.
+            seq.Members += [selSeq.sequence()]
 
         # Particle Monitoring plots
-        from Configurables import ParticleMonitor
-        plotter = ParticleMonitor(self.__sel_name__+"Plots")
-        plotter.InputLocations = [ selSeq.outputLocation() ]
-        plotter.PeakCut     = "(ADMASS('Lambda0')<2*MeV)"
-        plotter.SideBandCut = "(ADMASS('Lambda0')>2*MeV)"
-        plotter.PlotTools = [ "MassPlotTool","MomentumPlotTool",
-                              "CombinedPidPlotTool",
-                              "RichPlotTool","CaloPlotTool","MuonPlotTool" ]
-        seq.Members += [ plotter ]
-
+        if self.getProp("RunMonitors") :
+            
+            from Configurables import ParticleMonitor
+            plotter = ParticleMonitor(self.__sel_name__+"Plots")
+            plotter.InputLocations = [ 'Phys/'+self.__sel_name__+'Sel' ]
+            plotter.PeakCut     = "(ADMASS('Lambda0')<2*MeV)"
+            plotter.SideBandCut = "(ADMASS('Lambda0')>2*MeV)"
+            plotter.PlotTools = [ "MassPlotTool","MomentumPlotTool",
+                                  "CombinedPidPlotTool",
+                                  "RichPlotTool","CaloPlotTool","MuonPlotTool" ]
+            seq.Members += [ plotter ]
+            
         # Make a DST ?
         if self.getProp("MakeSelDST"):
+
             MyDSTWriter = SelDSTWriter( self.__sel_name__+"DST",
                                         SelectionSequences = [ selSeq ],
                                         OutputPrefix = self.__sel_name__ )
