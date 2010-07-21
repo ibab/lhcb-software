@@ -3,6 +3,7 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+</PRE><H1><A NAME=v37r5>2010-07-22 Brunel v37r5</A></H1><PRE>
 - Changes to references to reflect changes in Brunel v37r5 output:
   . OTHitEfficiencyMonitor: Add 2D histos per layer (TrackMonitors)
   . Add MuonEffMonitor (MuonTrackMonitor)
