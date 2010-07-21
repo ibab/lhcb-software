@@ -7,6 +7,12 @@
 !           ALWAYS also edit Hlt/HltSettings
 !
 !-----------------------------------------------------------------------------
+
+
+! 2010-07-21 - O. Deschamps for R. Lefevre
+ - update Hlt2B2HHPi0Line.py
+
+
 !========================== Hlt2Lines v4r3 2010-07-08 ===================
 !2010-07-16 - Johannes Albrecht
  - fix pre and postsclaer in Hlt2Dst2D2...

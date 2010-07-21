@@ -3,16 +3,20 @@ from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
 
 class Hlt2B2HHPi0LinesConf(HltLinesConfigurableUser) :    
     __slots__ = {
-                     'PiMinPT'              : 300       # MeV
-                    ,'PiMinP'               : 2000      # MeV
-                    ,'PiMinIPChi2'          : 9         # unitless
-                    ,'TrackMaxChi2Ndof'     : 10        # unitless 
-                    ,'Pi0MinPT'             : 1000      # MeV
+                    'PiMinPT'               : 270       # MeV
+                    ,'PiMinP'               : 1800      # MeV
+                    ,'TrackMaxChi2Ndof'     : 10        # unitless
+                    ,'PiMinIPChi2'          : 16        # unitless
+                    ,'Pi0MinPT_M'           : 2250      # MeV
+                    ,'Pi0MinPT_R'           : 1350      # MeV
+                    ,'BMinM'                : 4000      # MeV
+                    ,'BMaxM'                : 6600      # MeV
+                    ,'BMinPT_M'             : 2700      # MeV
+                    ,'BMinPT_R'             : 2250      # MeV
                     ,'BMinVtxProb'          : 0.0001    # unitless
-                    ,'BMaxIPChi2'           : 25.0      # unitless
-                    ,'BMinDIRA'             : 0.99987   # unitless
-                    ,'BMinPT'               : 2000      # MeV
-                    ,'BMaxADMass'           : 1000      # MeV
+                    ,'BMaxIPChi2'           : 16        # unitless
+                    ,'BMinDIRA'             : 0.9999    # unitless
+                    ,'BMinVVDChi2'          : 36        # unitless
                     ,'Prescale'           : {   'Hlt2B2HHPi0_Merged'         : 1.0
                                               , 'Hlt2B2HHPi0_Resolved'       : 1.0
                                                 }
@@ -36,17 +40,28 @@ class Hlt2B2HHPi0LinesConf(HltLinesConfigurableUser) :
         from HltTracking.HltPVs import PV3D
         
        ###########################################################################
+        Hlt2Rho4HHPi0 = Hlt2Member(
+            CombineParticles , "CombineRho"
+            , DecayDescriptor = "rho(770)0 -> pi+ pi-"
+            , DaughtersCuts = {
+            "pi-"  : "(PT>%(PiMinPT)s *MeV) & (P>%(PiMinP)s *MeV) & (TRCHI2DOF<%(TrackMaxChi2Ndof)s) & (MIPCHI2DV(PRIMARY)>%(PiMinIPChi2)s)" % self.getProps()
+            ,"pi+" : "(PT>%(PiMinPT)s *MeV) & (P>%(PiMinP)s *MeV) & (TRCHI2DOF<%(TrackMaxChi2Ndof)s) & (MIPCHI2DV(PRIMARY)>%(PiMinIPChi2)s)" % self.getProps()   
+                                 } 
+            , CombinationCut = "AALL" % self.getProps()
+            , MotherCut      = "(VFASPF(VPCHI2)>%(BMinVtxProb)s) & (BPVVDCHI2>%(BMinVVDChi2)s)" % self.getProps()
+            , InputLocations = [ BiKalmanFittedPions ] )
+
+       ###########################################################################
         Hlt2B2HHPi0 = Hlt2Member(
             CombineParticles , "CombineB"
-            , DecayDescriptor = "B0 -> pi+ pi- pi0"
+            , DecayDescriptor = "B0 -> rho(770)0 pi0"
             , DaughtersCuts = {
-                                 "pi-" : "(TRCHI2DOF<%(TrackMaxChi2Ndof)s) & (PT>%(PiMinPT)s *MeV) & (P>%(PiMinP)s *MeV) & (MIPCHI2DV(PRIMARY)>%(PiMinIPChi2)s)" % self.getProps()
-                                ,"pi+" : "(TRCHI2DOF<%(TrackMaxChi2Ndof)s) & (PT>%(PiMinPT)s *MeV) & (P>%(PiMinP)s *MeV) & (MIPCHI2DV(PRIMARY)>%(PiMinIPChi2)s)" % self.getProps()   
-                                ,"pi0" : "(PT>%(Pi0MinPT)s *MeV)" % self.getProps()   
-                                 } 
-            , CombinationCut = "(ADAMASS('B0')<%(BMaxADMass)s *MeV)" % self.getProps()
-            , MotherCut      = "(VFASPF(VPCHI2)>%(BMinVtxProb)s) & (BPVIPCHI2()<%(BMaxIPChi2)s) & (BPVDIRA>%(BMinDIRA)s) & (PT>%(BMinPT)s *MeV)" % self.getProps()
-            , InputLocations = [ BiKalmanFittedPions, MergedPi0s ])
+            "rho(770)0" : "ALL" % self.getProps()
+            ,"pi0"      : "(PT>%(Pi0MinPT_M)s *MeV)" % self.getProps()   
+            } 
+            , CombinationCut = "(AM>%(BMinM)s *MeV) & (AM<%(BMaxM)s *MeV)" % self.getProps()
+            , MotherCut      = "(PT>%(BMinPT_M)s *MeV) & (BPVIPCHI2()<%(BMaxIPChi2)s) & (BPVDIRA>%(BMinDIRA)s)" % self.getProps()
+            , InputLocations = [ Hlt2Rho4HHPi0, MergedPi0s ])
         
         
         ############################################################################
@@ -54,7 +69,7 @@ class Hlt2B2HHPi0LinesConf(HltLinesConfigurableUser) :
         ############################################################################
         line = Hlt2Line('B2HHPi0_Merged'
                         , prescale = self.prescale
-                        , algos = [ BiKalmanFittedPions, MergedPi0s, PV3D(), Hlt2B2HHPi0 ]
+                        , algos = [ BiKalmanFittedPions, PV3D(), Hlt2Rho4HHPi0, MergedPi0s, Hlt2B2HHPi0 ]
                         , postscale = self.postscale
                         )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2B2HHPi0_MergedDecision" : self.getProp('HltANNSvcID')['Hlt2B2HHPi0_Merged'] } )
@@ -64,19 +79,17 @@ class Hlt2B2HHPi0LinesConf(HltLinesConfigurableUser) :
         ############################################################################
         line.clone('B2HHPi0_Resolved'
                    , prescale = self.prescale
-                   , algos = [ BiKalmanFittedPions, ResolvedPi0s, PV3D(), Hlt2B2HHPi0 ]
+                   , algos = [ BiKalmanFittedPions, PV3D(), Hlt2Rho4HHPi0, ResolvedPi0s, Hlt2B2HHPi0 ]
                    , CombineB =
                    {
-                     "DaughtersCuts" :
-                     {
-                        "pi-" : "(TRCHI2DOF<%(TrackMaxChi2Ndof)s) & (PT>%(PiMinPT)s *MeV) & (P>%(PiMinP)s *MeV) & (MIPCHI2DV(PRIMARY)>%(PiMinIPChi2)s)" % self.getProps()
-                       ,"pi+" : "(TRCHI2DOF<%(TrackMaxChi2Ndof)s) & (PT>%(PiMinPT)s *MeV) & (P>%(PiMinP)s *MeV) & (MIPCHI2DV(PRIMARY)>%(PiMinIPChi2)s)" % self.getProps()   
-                       ,"pi0" : "(PT>%(Pi0MinPT)s *MeV)" % self.getProps()   
-                        }
-                     , "CombinationCut" : "(ADAMASS('B0')<%(BMaxADMass)s *MeV)" % self.getProps()
-                     , "MotherCut"      : "(VFASPF(VPCHI2)>%(BMinVtxProb)s) & (BPVIPCHI2()<%(BMaxIPChi2)s) & (BPVDIRA>%(BMinDIRA)s) & (PT>%(BMinPT)s *MeV)" % self.getProps()
-                     , "InputLocations" : [BiKalmanFittedPions, ResolvedPi0s]
-                     }
+            "DaughtersCuts" : {
+            "rho(770)0" : "ALL" % self.getProps()
+            ,"pi0"      : "(PT>%(Pi0MinPT_R)s *MeV)" % self.getProps()   
+            }
+            , "CombinationCut" : "(AM>%(BMinM)s *MeV) & (AM<%(BMaxM)s *MeV)" % self.getProps()
+            , "MotherCut"      : "(PT>%(BMinPT_R)s *MeV) & (BPVIPCHI2()<%(BMaxIPChi2)s) & (BPVDIRA>%(BMinDIRA)s)" % self.getProps()
+            , "InputLocations" : [ Hlt2Rho4HHPi0, ResolvedPi0s ]
+            }
                    , postscale = self.postscale
                    )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2B2HHPi0_ResolvedDecision" :  self.getProp('HltANNSvcID')['Hlt2B2HHPi0_Resolved'] } )
