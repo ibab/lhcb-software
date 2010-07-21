@@ -112,7 +112,7 @@ class Physics_HighNu_40Vis_15L0_2Hlt1_ExpressHlt2_Jun10 :
                                            }
                        , Hlt1MBLinesConf : { 'Prescale' : { 'Hlt1MBMicroBias.*' : 1.
                                                             ,'Hlt1MBMicroBias.*(?<!RateLimited)$' : 0.0001 
-                                                            , 'Hlt1MBMicroBias.*RateLimited'       : 0.1} 
+                                                            , 'Hlt1MBMicroBias.*RateLimited'       : 0.01} 
                                              , 'Postscale': { 'Hlt1MBMicroBias.*' : 1.
                                                               ,'Hlt1MBMicroBias.*(?<!RateLimited)$' : 1
                                                               # must veto 'RateLimited' at the end...
