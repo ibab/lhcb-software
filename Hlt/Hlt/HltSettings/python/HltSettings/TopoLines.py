@@ -89,15 +89,15 @@ class TopoLines :
                                          , 'Hlt2TopoTF3BodySA' : 1.00
                                          , 'Hlt2TopoTF4BodySA' : 1.00
                                          }
-                        , 'Postscale'  : { 'Hlt2Topo2BodySA' : 1.00
-                                         , 'Hlt2Topo3BodySA' : 0.10
-                                         , 'Hlt2Topo4BodySA' : 0.10
-                                         , 'Hlt2TopoTF2BodySA' : 1.00
-                                         , 'Hlt2TopoTF3BodySA' : 0.10
-                                         , 'Hlt2TopoTF4BodySA' : 0.10
-                                         , 'Hlt2TopoRobTF2Body' : 1.00
-                                         , 'Hlt2TopoRobTF3Body' : 0.10
-                                         , 'Hlt2TopoRobTF4Body' : 0.10 
+                        , 'Postscale'  : { 'Hlt2Topo2BodySA' : 0.10
+                                         , 'Hlt2Topo3BodySA' : 0.01
+                                         , 'Hlt2Topo4BodySA' : 0.01
+                                         , 'Hlt2TopoTF2BodySA' : 0.10
+                                         , 'Hlt2TopoTF3BodySA' : 0.01
+                                         , 'Hlt2TopoTF4BodySA' : 0.01
+                                         , 'Hlt2TopoRobTF2Body' : 0.10
+                                         , 'Hlt2TopoRobTF3Body' : 0.01
+                                         , 'Hlt2TopoRobTF4Body' : 0.01 
                                          }
                     }
                   } )

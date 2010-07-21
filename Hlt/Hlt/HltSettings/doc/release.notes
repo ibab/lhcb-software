@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2010-07-21 - V. Gligorov
+ - Increase default prescales for monitoring topo lines.
+
+! 2010-07-21 - V. Gligorov
  - Fix prescales for wide mass charm lines to 5%.
  
 ! 2010-07-21 - Johannes Albrecht
