@@ -263,7 +263,7 @@ StatusCode ReadPackedDst::execute() {
       for ( unsigned int kk = 0 ; nbAlg > kk ; ++kk ) 
       {
         const std::string temp = stringFromData();
-        algs.push_back( AlgStatus(temp,nextInt()) );
+        algs.push_back( LHCb::ProcStatus::AlgStatus(temp,nextInt()) );
       }
       procStatus->setAlgs(algs);
 
