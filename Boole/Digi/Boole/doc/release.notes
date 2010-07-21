@@ -3,6 +3,7 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v21r6>2010-07-22 Boole v21r6</A></H1></PRE>
  - Changes to references to reflect changes in Boole v21r6 output:
    . Move to use SiLandauFun in SiDepositedCharge (SiTools)
    . New version of xerces with different warning messages
