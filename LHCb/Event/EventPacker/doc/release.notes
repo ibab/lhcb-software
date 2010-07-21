@@ -4,6 +4,9 @@
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
+! 2010-07-21 - Chris Jones
+ - Adapt ReadPackedDst to new ProcStatus interface
+
 !============================ EventPacker v2r3 2010-07-19 ====================
 ! 2010-06-22 - Olivier Callot
  - Modify UnpackTrack.cpp to create ancestors of Muon tracks from Best.

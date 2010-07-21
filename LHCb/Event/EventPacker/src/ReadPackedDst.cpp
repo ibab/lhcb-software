@@ -252,18 +252,23 @@ StatusCode ReadPackedDst::execute() {
       getFromBlob<LHCb::PackedVertex> ( pids->data(), blobs );
 
     } else if ( LHCb::CLID_ProcStatus == classID ) {
+
       LHCb::ProcStatus* procStatus = new LHCb::ProcStatus();
       put( procStatus, name + m_postfix );
       processLinks( procStatus, version );
       procStatus->setAborted( (nextInt()!=0) );
-      unsigned int nbAlg = nextInt();
-      std::string temp;
-      for ( unsigned int kk = 0 ; nbAlg > kk ; ++kk ) {
-        temp = stringFromData();
-        procStatus->addAlgorithmStatus( temp, nextInt() );
+      const unsigned int nbAlg = nextInt();
+      LHCb::ProcStatus::AlgStatusVector algs;
+      algs.reserve(nbAlg);
+      for ( unsigned int kk = 0 ; nbAlg > kk ; ++kk ) 
+      {
+        const std::string temp = stringFromData();
+        algs.push_back( AlgStatus(temp,nextInt()) );
       }
+      procStatus->setAlgs(algs);
 
     } else if ( LHCb::CLID_RawEvent == classID ) {
+
       LHCb::RawEvent* rawEvent = new LHCb::RawEvent();
       put( rawEvent, name + m_postfix );
       processLinks( rawEvent, version );
