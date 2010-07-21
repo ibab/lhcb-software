@@ -4,6 +4,34 @@ Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
 
+</PRE><H1><A NAME=v21r6>2010-07-22 Boole v21r6</A></H1><PRE>
+This version uses projects LCGCMT 58d, Gaudi v21r10, LHCb v31r3, Lbcom v9r5
+ and SQLDDDB v5r33, ParamFiles v8r2, FieldMap v5r5, L0TCK v3r5, AppConfig v3r*
+
+Development version for 2010 simulation. 
+Output needs Brunel v37r4 or later
+Needs SQLDDDB v5r25 or later with SIMCOND tags from *-20100412*
+
+- New tuning:
+  . New ST charge calibration (SIMCOND tags sim-20100715-* from SQLDDDB v5r33)
+  . Updated tune for eta correction (STTools  v4r3)
+  . Use SiLandauFun (for MPV, scale of Landau) in SiDepositedCharge 
+    (LHCbKernel v12r2, SiTools v1r8)
+
+- Bug fixes:
+  . Removal of spurious "Seckrb5" error when opening files with xrootd
+    (Root 5.26.00c from LCGCMT_58d)
+  . Fix bug #68626, small memory leak when connecting to SQLite database
+    (CORAL_2_3_10 from LCGCMT_58d) 
+  . Fix bug #69364: Wrong fractional mass calculation on composite material
+    (DetDesc v18r21)
+  . Fixed a few uninitialized variables, see bug #68795 (VeloDet v13r11)
+
+- New packaging:
+  . Uses Xerces 3.1.1 from LCGCMT_58d, requiring adaptation of XML parsing C++
+    (L0MuonKernel v9r3)
+
+
 </PRE><H1><A NAME=v21r5>2010-06-24 Boole v21r5</A></H1><PRE>
 This version uses projects Gaudi v21r9, LHCb v31r2, Lbcom v9r4
  and SQLDDDB v5r30, ParamFiles v8r2, FieldMap v5r4, L0TCK v3r1, AppConfig v3r*
