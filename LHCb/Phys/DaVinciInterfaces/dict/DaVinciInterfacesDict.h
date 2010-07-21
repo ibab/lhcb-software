@@ -1,4 +1,4 @@
-// $Id: DaVinciInterfacesDict.h,v 1.12 2010-06-02 10:57:04 jpalac Exp $
+// $Id: DaVinciInterfacesDict.h,v 1.13 2010-07-21 21:19:27 tskwarni Exp $
 #ifndef DICT_DAVINCIINTERFACESDICT_H 
 #define DICT_DAVINCIINTERFACESDICT_H 1
 
@@ -40,6 +40,7 @@
 #include "Kernel/IParticleMaker.h"
 #include "Kernel/IParticleReFitter.h"
 #include "Kernel/IParticleStuffer.h"
+#include "Kernel/IParticleTisTos.h"
 #include "Kernel/IParticleTransporter.h"
 #include "Kernel/IParticleTupleTool.h"
 #include "Kernel/IPhysDesktop.h"
@@ -49,6 +50,7 @@
 #include "Kernel/IRelatedPVFinder.h"
 #include "Kernel/ISecondaryVertexTool.h"
 #include "Kernel/ITagger.h"
+#include "Kernel/ITisTos.h"
 #include "Kernel/ITrackIsolation.h"
 #include "Kernel/ITriggerSelectionTisTos.h"
 #include "Kernel/ITriggerTisTos.h"

@@ -30,6 +30,7 @@
   <class name = "IParticleReFitter"/>
   <class name = "IParticleStuffer"/>
   <class name = "IParticleTransporter"/>
+  <class name = "IParticleTisTos"/> 
   <class name = "IParticleTupleTool"/>
   <class name = "IPhysDesktop"/>
   <class name = "IPlotTool"/>
@@ -38,6 +39,8 @@
   <class name = "IRelatedPVFinder"/>
   <class name = "ISecondaryVertexTool"/> 
   <class name = "ITagger"/>
+  <class name = "ITisTos"/>
+  <class name = "ITisTos::TisTosTob"/>
   <class name = "ITrackIsolation"/>
   <class name = "ITriggerSelectionTisTos"/>
   <class name = "ITriggerSelectionTisTos::TisTosDecision"/>

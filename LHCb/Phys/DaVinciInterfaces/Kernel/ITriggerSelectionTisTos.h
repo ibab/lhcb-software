@@ -1,4 +1,4 @@
-// $Id: ITriggerSelectionTisTos.h,v 1.2 2009-08-04 09:45:31 jpalac Exp $
+// $Id: ITriggerSelectionTisTos.h,v 1.3 2010-07-21 21:19:26 tskwarni Exp $
 #ifndef ITRIGGERSELECTIONTISTOS_H 
 #define ITRIGGERSELECTIONTISTOS_H 1
 
@@ -6,9 +6,12 @@
 // from STL
 #include <string>
 #include <vector>
+#include "boost/foreach.hpp"
 
 // from Gaudi
-#include "GaudiKernel/IAlgTool.h"
+//#include "GaudiKernel/IAlgTool.h"
+
+#include "Kernel/IParticleTisTos.h"
 
 #include "Kernel/LHCbID.h"
 
@@ -120,10 +123,10 @@ namespace LHCb {
  *      bool tob = decision && (!tis) && (!tos);  
  *     @endcode
  */
-class GAUDI_API ITriggerSelectionTisTos : virtual public IAlgTool {
+class GAUDI_API ITriggerSelectionTisTos : virtual public IParticleTisTos {
 public: 
 
-  DeclareInterfaceID(ITriggerSelectionTisTos, 3, 0);
+  DeclareInterfaceID(ITriggerSelectionTisTos, 4, 0);
 
   /// meaning of optional unsigned int input parameters for Tis/Tos requirements
   enum TisTosRequirement 
@@ -160,6 +163,8 @@ public:
   // ------------ basic interface (must be implemented)
   // -------------------------------------------------
 
+  // -------------------------- OFFLINE INPUT (SIGNAL) -----------------------
+
   /// erase previous Offline Input 
   virtual void setOfflineInput( ) = 0; 
  
@@ -173,17 +178,76 @@ public:
   /// Track input 
   virtual void addToOfflineInput( const LHCb::Track & track ) = 0;  
 
-  ///    Detector hit input 
+  /// Detector hit input 
   virtual void addToOfflineInput( const std::vector<LHCb::LHCbID> & hitlist ) = 0;
 
-  /// single Trigger Selection Summary TisTos  (define Offline Input before calling)
-  virtual void selectionTisTos( const std::string & selectionName,  
-                                bool & decision, bool & tis, bool & tos ) = 0;
+  // -------------------------- OUTPUTS  -----------------------
 
-  /// multiple Trigger Selection Summaries TisTos (set selectionOR=false for an AND) (define Offline Input before calling)
-  virtual void selectionTisTos( const std::vector< std::string > & selectionNames,
-                                bool & decision, bool & tis, bool & tos ,
-                                bool selectionOR = kSelectionDefaultLogic ) = 0;  // false->AND
+  /// Complete classification of the Trigger Selection (see ITisTis::TisTosTob for the meaning)
+  virtual unsigned int tisTosSelection( const std::string & selectionName ) =0;
+
+
+  /// check for TOS  - may be faster than using tisTosSelection()
+  virtual bool tosSelection(const std::string & selectionName) =0; 
+ 
+  /// check for TIS  - may be faster than using tisTosSelection()
+  virtual bool tisSelection(const std::string & selectionName) =0;
+
+  /// check for TUS (Trigger Used Signal: TPS or TOS) - may be faster than using tisTosSelection()
+  virtual bool tusSelection(const std::string & selectionName) =0;
+
+  /// analysis report
+  virtual std::string analysisReportSelection(const std::string & selectionName) =0;
+
+
+  /// shortcut to get result in TisTosTob format 
+  TisTosTob tisTosTobSelection( const std::string & selectionName )
+  { return TisTosTob(tisTosSelection(selectionName)); }
+
+  /// shortcut to get result for OR of selections
+  unsigned int tisTosSelection( const std::vector< std::string > & selectionNames )
+  {
+      unsigned int result =0;    
+      BOOST_FOREACH( std::string selName, selectionNames )
+        { 
+          result |= tisTosSelection(selName);
+          if( (result&kTPS) && (result&kTOS) && (result&kTIS) && (result&kDecision) )break;
+        }
+      return result;
+  }
+  /// shortcut to get result in TisTosTob format for OR of selections
+  TisTosTob tisTosTobSelection( const std::vector< std::string > & selectionNames )
+  { return TisTosTob(tisTosSelection(selectionNames)); }
+
+  bool tosSelection(const std::vector< std::string > & selectionNames )
+  {
+      BOOST_FOREACH( std::string selName, selectionNames )
+        { 
+          if( tosSelection(selName) )return true;
+        }
+      return false;      
+  }
+    
+  bool tisSelection(const std::vector< std::string > & selectionNames )
+  {
+      BOOST_FOREACH( std::string selName, selectionNames )
+        { 
+          if( tisSelection(selName) )return true;
+        }
+      return false;      
+  }
+    
+  bool tusSelection(const std::vector< std::string > & selectionNames )
+  {
+      BOOST_FOREACH( std::string selName, selectionNames )
+        { 
+          if( tusSelection(selName) )return true;
+        }
+      return false;      
+  }
+    
+ 
+
 
   // ------------ auxiliary outputs
 
@@ -193,42 +257,95 @@ public:
 
    /** @par hltSelectionObjectSummaries
    *       returns HltObjectSummaries for trigger objects which match optional pattern of tis,tos
-   *       (tis,tos depend on the Offline Input) for specific Trigger identified by selection name
+   *       (tis,tos depend on the Offline Input i.e. Signal) for specific Trigger identified by selection name
    *  @par
    *       Possible tis,tos pattern values are: 0=false is required; 1=true is required; >=2 no requirement.
    *       Use ITriggerTisTos::kFalseRequired, ITriggerTisTos::kTrueRequired, ITriggerTisTos::kAnything to avoid magic numbers. 
    *  @par
    *       When no pattern is imposed (default) HltObjectSummaries for all trigger objects in the Trigger Input are returned.
    *  @par
-   *       Guide to Tis-Tos pattern meaning:
-   *       kFalseRequired,kFalseRequired -> TOB trigger objects (neither TIS nor TOS);
+   *       Guide to Tis-Tos pattern meaning: 
+   *       kFalseRequired,kFalseRequired -> TOB trigger objects (neither TIS nor TOS); [should be TPS]
    *       kFalseRequired,kTrueRequired  -> TOS trigger objects (same as kAnything,kTrueRequired);
    *       kTrueRequired,kFalseRequired  -> TIS trigger objects (same as kTrueRequired,kAnything);
    *       kTrueRequired,kTrueRequired   -> cannot be satisfied;
-   *       kFalseRequired,kAnything      -> TOS and TOB trigger objects;
+   *       kFalseRequired,kAnything      -> TOS and TOB trigger objects; [TUS]
    *       kAnything,kFalseRequired      -> TIS and TOB trigger objects;
    *       kAnything,kAnything           -> all trigger objects;
    *  @par
+   *       Optional TPS requirement should be redundant with the above for simple objects.
+   *       Has independent meaning for objects with substructure, when CompositeTPSviaTOSonly in ParticleTisTos is used. 
+   *  @par
    *       Inlined shortcuts to define the Offline Input and get outputs in one call are provided.
    */
- /// list of HltObjectSummaries from Selection Summary satisfying TOS,TIS requirements (define Offline Input before calling)
+
+  /// list of HltObjectSummaries from Selection Summary satisfying TOS,TIS requirements (define Offline Input before calling)
   virtual std::vector<const LHCb::HltObjectSummary*> hltSelectionObjectSummaries( const std::string & selectionName,
                                                                                   unsigned int tisRequirement = kAnything,
-                                                                                  unsigned int tosRequirement = kAnything ) =0;
+                                                                                  unsigned int tosRequirement = kAnything,
+                                                                                  unsigned int tpsRequirement = kAnything) =0;
+
+
+  // ------------------------------ LEGACY INTERFACE ------------------------------------------------------
+
+  // matchedTOSxxx these are legacy methods - to be retired 
+
+  // list of tracks from Selection Summary (none if mismatch) satisfying TOS (define Offline Input before calling)
+  //virtual std::vector<const LHCb::Track*>     matchedTOSTracks( const std::string & selectionName ) =0;
+
+  // list of vertices from Selection Summary (none if mismatch) satisfying TOS (define Offline Input before calling)
+  //virtual std::vector<const LHCb::RecVertex*> matchedTOSVertices( const std::string & selectionName ) =0;
+
+  // list of particles from Selection Summary (none if mismatch) satisfying TOS (define Offline Input before calling)
+  //virtual std::vector<const LHCb::Particle*>  matchedTOSParticles( const std::string & selectionName ) =0;
 
   // -------------------------------------------------
   // ------------ inlined shortcuts for user convenience
   // -------------------------------------------------
 
-  /// list of tracks from Selection Summary (none if mismatch) satisfying TOS (define Offline Input before calling)
-  virtual std::vector<const LHCb::Track*>     matchedTOSTracks( const std::string & selectionName ) =0;
+  // old style calling - to be retired 
 
-  /// list of vertices from Selection Summary (none if mismatch) satisfying TOS (define Offline Input before calling)
-  virtual std::vector<const LHCb::RecVertex*> matchedTOSVertices( const std::string & selectionName ) =0;
+  /// single Trigger Selection Summary TisTos  (define Offline Input before calling)
+  void selectionTisTos( const std::string & selectionName,  
+                                bool & decision, bool & tis, bool & tos )
+  {
+    unsigned int result = tisTosSelection(selectionName);
+    decision = result&kDecision;
+    tis = result&kTIS;
+    tos = result&kTOS;
+  }
+  
 
-  /// list of particles from Selection Summary (none if mismatch) satisfying TOS (define Offline Input before calling)
-  virtual std::vector<const LHCb::Particle*>  matchedTOSParticles( const std::string & selectionName ) =0;
-
+  /// multiple Trigger Selection Summaries TisTos (set selectionOR=false for an AND) (define Offline Input before calling)
+  void selectionTisTos( const std::vector< std::string > & selectionNames,
+                        bool & decision, bool & tis, bool & tos ,
+                        bool selectionOR = kSelectionDefaultLogic )  // false->AND
+  {
+    if( selectionOR ){
+      unsigned int result =0;    
+      BOOST_FOREACH( std::string selName, selectionNames )
+        { 
+          result |= tisTosSelection(selName);
+          if( (result&kTOS) && (result&kTIS) && (result&kDecision) )break;
+        }
+      decision = result&kDecision;
+      tis = result&kTIS;
+      tos = result&kTOS;
+      return;
+    } else {
+      unsigned int result =(kTOSandTIS|kDecision);      
+      BOOST_FOREACH( std::string selName, selectionNames )
+        { 
+          result &= tisTosSelection(selName);
+          if( !(result&kTOS) && !(result&kTIS) && !(result&kDecision) )break;
+        }
+      decision = result&kDecision;
+      tis = result&kTIS;
+      tos = result&kTOS;
+      return;
+    }
+  }
+      
   // --------------------------------------------------------------------------------------
 
   /// python friendly -  single Trigger Selection Summary TisTos  (define Offline Input before calling)
@@ -301,20 +418,20 @@ public:
   //               satisfying TOS, ordered according to TOS quality (best first)
   //               return empty vector in case of a mismatch between the output type and the selection summary
 
-   /// shortcuts to define Offline Input and get matched TOS objects in one call
-   std::vector<const LHCb::Track*> matchedTOSTracks(const LHCb::Track & track, const std::string & selectionName )
-     { setOfflineInput(track); return  matchedTOSTracks(selectionName); }
-   /// shortcuts to define Offline Input and get matched TOS objects in one call
-   std::vector<const LHCb::Track*> matchedTOSTracks(const LHCb::Particle & particle, const std::string & selectionName )
-     { setOfflineInput(particle); return  matchedTOSTracks(selectionName); }
+   // shortcuts to define Offline Input and get matched TOS objects in one call
+  //   std::vector<const LHCb::Track*> matchedTOSTracks(const LHCb::Track & track, const std::string & selectionName )
+  // { setOfflineInput(track); return  matchedTOSTracks(selectionName); }
+   // shortcuts to define Offline Input and get matched TOS objects in one call
+  // std::vector<const LHCb::Track*> matchedTOSTracks(const LHCb::Particle & particle, const std::string & selectionName )
+  //   { setOfflineInput(particle); return  matchedTOSTracks(selectionName); }
 
-   /// shortcuts to define Offline Input and get matched TOS objects in one call
-   std::vector<const LHCb::RecVertex*> matchedTOSVertices(const LHCb::Particle & particle, const std::string & selectionName )
-     { setOfflineInput(particle); return  matchedTOSVertices(selectionName); }
+   // shortcuts to define Offline Input and get matched TOS objects in one call
+   //std::vector<const LHCb::RecVertex*> matchedTOSVertices(const LHCb::Particle & particle, const std::string & selectionName )
+   //  { setOfflineInput(particle); return  matchedTOSVertices(selectionName); }
 
-   /// shortcuts to define Offline Input and get matched TOS objects in one call
-   std::vector<const LHCb::Particle*>  matchedTOSParticles(const LHCb::Particle & particle, const std::string & selectionName )
-     { setOfflineInput(particle); return  matchedTOSParticles(selectionName); }
+   // shortcuts to define Offline Input and get matched TOS objects in one call
+   //std::vector<const LHCb::Particle*>  matchedTOSParticles(const LHCb::Particle & particle, const std::string & selectionName )
+   //  { setOfflineInput(particle); return  matchedTOSParticles(selectionName); }
 
  // ------------ auxiliary output --------------------------------------------
   
@@ -323,17 +440,19 @@ public:
   std::vector<const LHCb::HltObjectSummary*> hltSelectionObjectSummaries( const LHCb::Track & track,
                                                                           const std::string & selectionName,
                                                                  unsigned int tisRequirement      = kAnything,
-                                                                 unsigned int tosRequirement      = kAnything )
+                                                                 unsigned int tosRequirement      = kAnything,
+                                                                 unsigned int tpsRequirement      = kAnything )
   { setOfflineInput(track); 
-    return hltSelectionObjectSummaries(selectionName,tisRequirement,tosRequirement); }
+    return hltSelectionObjectSummaries(selectionName,tisRequirement,tosRequirement,tpsRequirement); }
 
   /// shortcut to set Offline and Trigger Input and call hltSelectionObjectSummaries 
   std::vector<const LHCb::HltObjectSummary*> hltSelectionObjectSummaries( const LHCb::Particle & particle,
                                                                           const std::string & selectionName,
                                                                  unsigned int tisRequirement      = kAnything,
-                                                                 unsigned int tosRequirement      = kAnything )
+                                                                 unsigned int tosRequirement      = kAnything,
+                                                                 unsigned int tpsRequirement      = kAnything )
   { setOfflineInput(particle); 
-    return hltSelectionObjectSummaries(selectionName,tisRequirement,tosRequirement); }
+    return hltSelectionObjectSummaries(selectionName,tisRequirement,tosRequirement,tpsRequirement); }
 
 
 protected:

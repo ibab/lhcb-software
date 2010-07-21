@@ -1,4 +1,4 @@
-// $Id: ITriggerTisTos.h,v 1.2 2009-08-04 09:45:31 jpalac Exp $
+// $Id: ITriggerTisTos.h,v 1.3 2010-07-21 21:19:26 tskwarni Exp $
 #ifndef ITRIGGERTISTOS_H 
 #define ITRIGGERTISTOS_H 1
 
@@ -72,7 +72,7 @@ namespace LHCb {
  * @par Trigger Input (members of @c ITriggerTisTos)
  *   Trigger Input is defined by Trigger Selection Name pattern passed as @c std::string (or std::vector<std::string>) 
  *   which may contain multiple wild characters.
- *   Examples:  "Hlt1*Decision", "Hlt1*Mu*Decision", "Hlt1MuonSingleTUVelo", "Hlt2SelB*Decision", 
+ *   Examples:  "Hlt1.*Decision", "Hlt1.*Mu.*Decision", "Hlt1MuonSingleTUVelo", "Hlt2SelB.*Decision", 
  * @par
  *   If Trigger Input corresponds to many trigger selection names, the TisTosing output corresponds 
  *   to an OR between these selections.
@@ -129,17 +129,17 @@ namespace LHCb {
  *      ITriggerTisTos* triggerTisTosTool = tool<ITriggerTisTos>("TriggerTisTos",this);
  *      LHCb::Particle signalB =...;
  *      bool decision,tis,tos;
- *      triggerTisTosTool->triggerTisTos( signalB, "Hlt1*Decision", decision, tis, tos);
+ *      triggerTisTosTool->triggerTisTos( signalB, "Hlt1.*Decision", decision, tis, tos);
  *      bool tob = decision && (!tis) && (!tos);  
  *     @endcode
  */
 class GAUDI_API ITriggerTisTos : virtual public ITriggerSelectionTisTos {
 public: 
 
-  DeclareInterfaceID(ITriggerTisTos, 3, 0);
+  DeclareInterfaceID(ITriggerTisTos, 4, 0);
 
   // -------------------------------------------------
-  // ------------ basic interface (must be implemented)
+  // ------------ Trigger input 
   // -------------------------------------------------
 
   /// erase previous Trigger Input 
@@ -148,17 +148,34 @@ public:
   /// add Trigger Selection Name pattern to Trigger Input; pattern may contain wild character *, all matches will be added
   virtual void addToTriggerInput( const std::string & selectionNameWithWildChar ) =0;
    
-  /** @par triggerTisTos
-   *       Calculates decision,tis,tos for previously defined Trigger Input (set of Trigger Selection Names)
-   *       with respect to previously defined Offline Input (set of Particles,tracks or hits).
-   *       Only tis and tos depend on the Offline Input.
-   * @par
-   *       To set the Offline Input see methods inherited from @c ITriggerSelectionTisTos.
-   * @par
-   *       Inlined shortcuts to define the inputs and get outputs in one call are provided.
-   */  
-  /// calculate decision,Tis,Tos  (for previously defined Trigger and Offline Inputs) - see inheritance for Offline Input def 
-  virtual void triggerTisTos( bool & decision, bool & tis, bool & tos ) =0;
+  // -------------------------------------------------
+  // ------------ OUTPUTS  ----------------------
+  // -------------------------------------------------
+
+  /// Complete classification of the Trigger Input (see ITisTis::TisTosTob for the meaning)
+  virtual unsigned int tisTosTrigger() =0;
+
+  /// check for TOS  - may be faster than using tisTosTrigger()
+  virtual bool tosTrigger() =0; 
+ 
+  /// check for TIS  - may be faster than using tisTosTrigger()
+  virtual bool tisTrigger() =0;
+
+  /// check for TUS (Trigger Used Signal: TPS or TOS) - may be faster than using tisTosTrigger()
+  virtual bool tusTrigger() =0;
+
+  /// analysis report
+  virtual std::string analysisReportTrigger() =0;
+
+  /// analysis report: typical use
+  std::string analysisReportTrigger(const std::string & selectionNameWithWildChar)
+  {setTriggerInput();addToTriggerInput(selectionNameWithWildChar);
+  return ( " Trigger Pattern ="+ selectionNameWithWildChar+ " BEGIN\n"
+          + analysisReportTrigger()
+          +" Trigger Pattern ="+ selectionNameWithWildChar+ " END\n");}
+
+  /// shortcut to get result in TisTosTob format 
+  TisTosTob tisTosTobTrigger()  { return TisTosTob(tisTosTrigger()); }
 
   // ------------ auxiliary output --------------------------------------------
 
@@ -179,7 +196,8 @@ public:
   /// returns Trigger Selection names matching optional pattern of decision,tis,tos for previously set Trigger and Offline Inputs
   virtual std::vector< std::string > triggerSelectionNames(unsigned int decisionRequirement = kAnything, 
                                                            unsigned int tisRequirement = kAnything,
-                                                           unsigned int tosRequirement = kAnything )  = 0;
+                                                           unsigned int tosRequirement = kAnything,
+                                                           unsigned int tpsRequirement = kAnything)  = 0;
 
 
   /** @par hltObjectSummaries
@@ -200,11 +218,39 @@ public:
    *       kAnything,kFalseRequired      -> TIS and TOB trigger objects;
    *       kAnything,kAnything           -> all trigger objects;
    *  @par
+   *       Optional TPS requirement should be redundant with the above for simple objects.
+   *       Has independent meaning for objects with substructure, when CompositeTPSviaTOSonly in ParticleTisTos is used. 
+   *  @par
    *       Inlined shortcuts to define the Offline and Trigger Inputs and get outputs in one call are provided.
    */
+
   /// list of HltObjectSummaries from Selections satisfying TOS,TIS requirements (define Trigger and Offline Input before calling)
   virtual std::vector<const LHCb::HltObjectSummary*> hltObjectSummaries( unsigned int tisRequirement      = kAnything,
-                                                                         unsigned int tosRequirement      = kAnything ) = 0;
+                                                                         unsigned int tosRequirement      = kAnything,
+                                                                         unsigned int tpsRequirement      = kAnything ) = 0;
+
+
+
+ // ------------------------------ LEGACY INTERFACE ------------------------------------------------------
+
+  /** @par triggerTisTos
+   *       Calculates decision,tis,tos for previously defined Trigger Input (set of Trigger Selection Names)
+   *       with respect to previously defined Offline Input (set of Particles,tracks or hits).
+   *       Only tis and tos depend on the Offline Input.
+   * @par
+   *       To set the Offline Input see methods inherited from @c ITriggerSelectionTisTos.
+   * @par
+   *       Inlined shortcuts to define the inputs and get outputs in one call are provided.
+   */  
+
+  /// calculate decision,Tis,Tos  (for previously defined Trigger and Offline Inputs) - see inheritance for Offline Input def 
+  void triggerTisTos( bool & decision, bool & tis, bool & tos )
+  {
+    unsigned int result = tisTosTrigger();
+    decision = result&kDecision;
+    tis = result&kTIS;
+    tos = result&kTOS;
+  }
 
   // -------------------------------------------------
   // ------------ inlined shortcuts for user convenience
@@ -312,9 +358,10 @@ public:
   std::vector< std::string > triggerSelectionNames( const std::string & selectionNameWithWildChar,
                                                     unsigned int decisionRequirement = kAnything, 
                                                     unsigned int tisRequirement = kAnything,
-                                                    unsigned int tosRequirement = kAnything )
+                                                    unsigned int tosRequirement = kAnything,
+                                                    unsigned int tpsRequirement = kAnything )
   { setTriggerInput(selectionNameWithWildChar);
-    return triggerSelectionNames(decisionRequirement,tisRequirement,tosRequirement); }
+    return triggerSelectionNames(decisionRequirement,tisRequirement,tosRequirement,tpsRequirement); }
   
 
   /// shortcut to set Offline and Trigger Input and return Trigger Sel. names matching dec.,tis,tos pattern 
@@ -322,9 +369,10 @@ public:
                                                     const std::string & selectionNameWithWildChar,
                                                     unsigned int decisionRequirement = kAnything, 
                                                     unsigned int tisRequirement = kAnything,
-                                                    unsigned int tosRequirement = kAnything )
+                                                    unsigned int tosRequirement = kAnything,
+                                                    unsigned int tpsRequirement = kAnything )
   { setOfflineInput(particle); setTriggerInput(selectionNameWithWildChar);
-    return triggerSelectionNames(decisionRequirement,tisRequirement,tosRequirement); }
+    return triggerSelectionNames(decisionRequirement,tisRequirement,tosRequirement,tpsRequirement); }
 
  
  // ------------ auxiliary output --------------------------------------------
@@ -333,17 +381,19 @@ public:
   /// shortcut to set Trigger Input and call hltObjectSummaries
   std::vector<const LHCb::HltObjectSummary*> hltObjectSummaries( const std::string & selectionNameWithWildChar,
                                                                  unsigned int tisRequirement      = kAnything,
-                                                                 unsigned int tosRequirement      = kAnything )
+                                                                 unsigned int tosRequirement      = kAnything,
+                                                                 unsigned int tpsRequirement      = kAnything )
   { setTriggerInput(selectionNameWithWildChar); 
-    return hltObjectSummaries(tisRequirement,tosRequirement); }
+    return hltObjectSummaries(tisRequirement,tosRequirement,tpsRequirement); }
   
     /// shortcut to set Offline and Trigger Input and call hltObjectSummaries 
   std::vector<const LHCb::HltObjectSummary*> hltObjectSummaries( const LHCb::Particle & particle,
                                                                  const std::string & selectionNameWithWildChar,
                                                                  unsigned int tisRequirement      = kAnything,
-                                                                 unsigned int tosRequirement      = kAnything )
+                                                                 unsigned int tosRequirement      = kAnything,
+                                                                 unsigned int tpsRequirement      = kAnything)
   { setOfflineInput(particle); setTriggerInput(selectionNameWithWildChar);
-  return hltObjectSummaries(tisRequirement,tosRequirement); }
+  return hltObjectSummaries(tisRequirement,tosRequirement,tpsRequirement); }
 
 protected:
 
