@@ -51,21 +51,6 @@ void LHCb::ProcStatus::addAlgorithmStatus(const std::string& algName,
   if (eventAborted) setAborted(true);
 }
 
-int LHCb::ProcStatus::algorithmStatus(const std::string& name) const
-{
-  int status = 0;
-  for ( LHCb::ProcStatus::AlgStatusVector::const_iterator iS = m_algs.begin();
-        iS != m_algs.end(); ++iS )
-  {
-    if ( iS->first == name )
-    {
-      status = iS->second;
-      break;
-    }
-  }
-  return status;
-}
-
 bool LHCb::ProcStatus::subSystemAbort(const std::string& subsystem) const
 {
   bool isaborted = false;
@@ -91,4 +76,16 @@ bool LHCb::ProcStatus::subSystemAbort(const std::string& subsystem) const
     }
   }
   return isaborted;
+}
+
+std::ostream& LHCb::ProcStatus::fillStream(std::ostream& s) const
+{
+  const char l_aborted = aborted() ? 'T' : 'F';
+  s << "{ " << "aborted :	" << l_aborted << " Algorithm Status Reports : ";
+  for ( LHCb::ProcStatus::AlgStatusVector::const_iterator iS = m_algs.begin();
+          iS != m_algs.end(); ++iS )
+  {
+    s << "[" << iS->first << ":" << iS->second << "] "; 
+  }
+  return s << " }";
 }

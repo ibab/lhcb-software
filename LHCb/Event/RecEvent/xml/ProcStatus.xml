@@ -38,9 +38,9 @@
 
       <attribute
 	name = "algs"
-	type = "std::vector&lt;std::pair&lt;std::string,int&gt; &gt;"
+        type = "std::vector&lt;std::pair&lt;std::string,int&gt; &gt;"
 	desc = "List of algorithms with status"
-	setMeth = "FALSE"
+	setMeth = "TRUE"
         getMeth = "TRUE" />
 
       <constructor 
@@ -71,20 +71,23 @@
       </method>
 
       <method
-	name = "algorithmStatus" 
-	type = "int"
-        const= "TRUE"
-	desc = "Status of this algorithm" >
-        <arg const="TRUE" name="name" type="std::string" />
-      </method>
-
-      <method
 	name = "subSystemAbort" 
 	type = "bool"
         const= "TRUE"
 	desc = "Checks if the given sub-system triggered an abort" >
         <arg const="TRUE" name="subsystem" type="std::string" />
       </method>
+
+       <method
+         name    = "fillStream"
+         desc    = "Print this ProcStatus in a human readable way"
+         type    = "std::ostream&amp;"
+         virtual = "FALSE"
+         const   = "TRUE">
+         <arg
+           type = "std::ostream"
+           name = "s"/>
+       </method>
 	
     </class>
   </package>

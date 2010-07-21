@@ -5,6 +5,14 @@
 ! Purpose     : LHCb Event model. Reconstruction classes (Brunel output) 
 !-----------------------------------------------------------------------------
 
+! 2010-07-21 - Chris Jones
+ - Another update to the ProcStatus method. Remove 
+   ProcStatus::algorithmStatus(const std::string& name)
+   as it made no sense to keep it after 
+   addAlgorithmStatusconst std::string& name,int status) was removed.
+   Add a setter for the algs list (needed by EventPacker).
+   Add a nicer explicit implementation of ProcStatus::fillStream.
+
 ! 2010-07-19 - Chris Jones
  - Remove the obsolete method 
      ProcStatus::addAlgorithmStatus(const std::string& name,int status)
