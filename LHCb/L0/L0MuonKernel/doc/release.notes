@@ -4,6 +4,9 @@
 ! Purpose     : 
 !------------------------------------------------------------------------------
 
+! 2010-07-21 - Julien Cogan
+ - Bug fix : m_ignoreM1 variable was not initialized in CoreUnit 
+
 !============================ L0MuonKernel v9r3 2010-07-19 ==================== 
 ! 2010-07-12 - Julien Cogan
  - L0MuonKernelFromXML.cpp : Adapt to Xerces 3.1

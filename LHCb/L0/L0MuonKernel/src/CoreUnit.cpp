@@ -12,6 +12,7 @@ L0Muon::CoreUnit::CoreUnit(LHCb::MuonTileID id):L0MUnit(id) {
     
 L0Muon::CoreUnit::CoreUnit(DOMNode* pNode):L0MUnit(pNode) {  
   m_tower = Tower();
+  m_ignoreM1 = false;
 }
     
 L0Muon::CoreUnit::~CoreUnit() {};  
@@ -60,12 +61,6 @@ bool L0Muon::CoreUnit::makePads() {
     if (m_ignoreM1){
       if (itr->name().find("M1") < itr->name().size()){
         if (m_debug) std::cout << "*!! Core:makePads: ignoreM1 => skipping register " << itr->name()<< std::endl;
-        continue;
-      } 
-    }
-    if (m_ignoreM2){
-      if (itr->name().find("M2") < itr->name().size()){
-        if (m_debug) std::cout << "*!! Core:makePads: ignoreM2 => skipping register " << itr->name()<< std::endl;
         continue;
       } 
     }
@@ -361,7 +356,9 @@ void L0Muon::CoreUnit::setProperties(std::map<std::string,L0Muon::Property> prop
   Unit::setProperties( properties );
 
   // Set the NO M1 flag
-  m_tower.setIgnoreM1( ignoreM1() );
+  bool noM1 = ignoreM1();
+  m_ignoreM1 = noM1;
+  m_tower.setIgnoreM1( noM1 );
   if (m_ignoreM1) initializeM1TowerMap();
 
   // Set the foi

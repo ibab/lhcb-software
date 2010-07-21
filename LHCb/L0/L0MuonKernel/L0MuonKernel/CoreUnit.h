@@ -1,4 +1,4 @@
-// $Id: CoreUnit.h,v 1.11 2010-02-04 15:58:26 jucogan Exp $
+// $Id: CoreUnit.h,v 1.12 2010-07-21 12:24:37 jucogan Exp $
 #ifndef L0MUONKERNEL_COREUNIT_H
 #define L0MUONKERNEL_COREUNIT_H     1
 
@@ -91,9 +91,6 @@ namespace L0Muon {
     /// Return the flag for searching candidates without M1 
     bool ignoreM1();
 
-//     /// Return the flag for searching candidates without M1 
-//     bool ignoreM2(){return false;}
-
     /// Return the emulator version
     int procVersion();
 
@@ -161,7 +158,6 @@ namespace L0Muon {
     CandRegisterHandler m_candRegHandlerOut; ///< CandRegisterHandler (pointing to the output register)  
 
     bool m_ignoreM1; ///< Flag to ignore M1 in the processing
-    bool m_ignoreM2; ///< Flag to ignore M2 in the processing
   
   };
 
