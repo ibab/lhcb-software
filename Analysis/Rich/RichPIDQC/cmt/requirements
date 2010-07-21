@@ -8,21 +8,16 @@ version           v1r4
 #============================================================================
 # Structure
 #============================================================================
-branches          cmt doc src python
+branches          cmt doc python
 
 #============================================================================
 # Used packages
 #============================================================================
-use DaVinciKernel v*  Phys
-use RichRecBase   v*  Rich
+use GaudiPolicy   v*
+#use DaVinciKernel v*  Phys
+#use RichRecBase   v*  Rich
 
 include_path      none
-
-#============================================================================
-# Component library building rule
-#============================================================================
-library          RichPIDQC           ../src/*.cpp 
-apply_pattern    component_library   library=RichPIDQC
 
 #============================================================================
 # Setup Python Configurables
