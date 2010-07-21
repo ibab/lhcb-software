@@ -1458,7 +1458,7 @@ class SetupProject:
         # Do not forget changes in the environment
         new_env.commit()
         return ( "\n".join(lines), errors )
-    
+
     def _prepend_prompt(self):
         new_prompt = ""
         if os.environ["SP_PROMPT"] == "without_version" or not self.project_info.version:
@@ -1471,7 +1471,7 @@ class SetupProject:
                 new_prompt = 'PS1="\\[\\e[1;34m\\][%s %s]\\[\\e[m\\]$PS1"\n' % (self.project_info.name, self.project_info.version)
             elif self.shell == "csh" :
                 new_prompt = 'set prompt="%%B%%{\\033[34m%%}[%s %s]%%{\\033[0m%%}%%b$prompt"\n' % (self.project_info.name, self.project_info.version)
-        
+
         return new_prompt
 
     def parse_args(self,args = sys.argv[1:]):
@@ -1509,7 +1509,7 @@ class SetupProject:
             self._error("You have to specify a project")
             return 1
         else:
-            self.project_name = self.args.pop(0)
+            self.project_name = FixProjectCase(self.args.pop(0))
 
 
         # Force the use of GaudiPoolDb in LHCb to simplify the merging of datasets
