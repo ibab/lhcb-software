@@ -808,6 +808,8 @@ class LbLoginScript(SourceScript):
             if opts.get_python :
                 setupprojargs.append("--runtime-project")
                 setupprojargs.append("LCGCMT")
+                if ev["CMTCONFIG"].startswith("win32_vc71") :
+                    setupprojargs.append("5[0-8]*")
                 setupprojargs.append("Python")
                 if opts.pythonvers :
                     setupprojargs.append("-v")

@@ -1,6 +1,11 @@
+2010-07-22  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbConfiguration/LbLogin.py: forced the version of LCGCMT to be used to 5[0-8]*. This is
+	to prevent windows of using missing python 2.6.
+
 2010-07-21 Joel 
 
-        * python/SetupProject.py : fix projectname
+    * python/SetupProject.py : fix projectname
         
 2010-07-19  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
