@@ -31,6 +31,7 @@ class JPsiMuMuConf(LHCbConfigurableUser) :
         ,"MCChecks"   : False
         ,"MakeNTuple" : False
         ,"MakeSelDST" : False
+        ,"DSTPreScaleFraction" : 1.0
         }
 
     ## Configure Jpsi -> Mu Mu selection
@@ -84,7 +85,13 @@ class JPsiMuMuConf(LHCbConfigurableUser) :
 
         # Make a DST ?
         if self.getProp("MakeSelDST"):
-            
+
+            # Prescale
+            from Configurables import DeterministicPrescaler
+            scaler = DeterministicPrescaler( self.__sel_name__+'PreScale',
+                                             AcceptFraction = self.getProp("DSTPreScaleFraction") )
+            seq.Members += [scaler]
+            # Write the DST
             MyDSTWriter = SelDSTWriter( self.__sel_name__+"DST",
                                         SelectionSequences = [ selSeq ],
                                         OutputPrefix = self.__sel_name__ )

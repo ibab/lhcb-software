@@ -9,6 +9,11 @@
  - Remove obsolete C++ code. Package is now a pure python Configurable package
  - Extend python Configurables with options to allow the monitors to be run, 
    without running the selections themselves (for use of streamed DSTs).
+ - Explicitly import the CommonParticle definitions (needed in Brunel)
+ - Add a prescaler to the DST writer, which allows all the of the selections
+   to be run at the same time and get roughly similar sized DST samples for
+   each (The default settings prescales the Lambda and Ks streams, but keeps
+   all of the others.)
 
 ! 2010-07-19 - Chris Jones
  - Update the PID selections to use the 'Selection' famework, in order to 

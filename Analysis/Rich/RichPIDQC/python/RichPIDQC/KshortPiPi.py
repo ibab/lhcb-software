@@ -25,12 +25,13 @@ class KshortPiPiConf(LHCbConfigurableUser) :
     
     ## Steering options
     __slots__ = {
-        "Sequencer"   : None    # The sequencer to add the calibration algorithms too
-        ,"RunSelection" : True
-        ,"RunMonitors"  : True
-        ,"MCChecks"   : False
-        ,"MakeNTuple" : False
-        ,"MakeSelDST" : False
+        "Sequencer"         : None    # The sequencer to add the calibration algorithms too
+        ,"RunSelection"     : True
+        ,"RunMonitors"      : True
+        ,"MCChecks"         : False
+        ,"MakeNTuple"       : False
+        ,"MakeSelDST"       : False
+        ,"DSTPreScaleFraction" : 0.01
         }
 
     ## Configure Ds -> Phi Pi selection
@@ -44,7 +45,7 @@ class KshortPiPiConf(LHCbConfigurableUser) :
             raise RuntimeError("ERROR : Sequence not set")
         seq = self.getProp("Sequencer")
 
-        if self.getProp("RunSelection") : 
+        if self.getProp("RunSelection") :
 
             # STD particles
             stdPions = DataOnDemand( Location = 'Phys/StdNoPIDsPions' )
@@ -87,7 +88,13 @@ class KshortPiPiConf(LHCbConfigurableUser) :
 
         # Make a DST ?
         if self.getProp("MakeSelDST"):
-            
+
+            # Prescale
+            from Configurables import DeterministicPrescaler
+            scaler = DeterministicPrescaler( self.__sel_name__+'PreScale',
+                                             AcceptFraction = self.getProp("DSTPreScaleFraction") )
+            seq.Members += [scaler]
+            # Write the DST
             MyDSTWriter = SelDSTWriter( self.__sel_name__+"DST",
                                         SelectionSequences = [ selSeq ],
                                         OutputPrefix = self.__sel_name__ )

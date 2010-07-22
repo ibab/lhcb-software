@@ -31,6 +31,7 @@ class LambdaToProtonPionConf(LHCbConfigurableUser) :
         ,"MCChecks"   : False
         ,"MakeNTuple" : False
         ,"MakeSelDST" : False
+        ,"DSTPreScaleFraction" : 0.1
         }
 
     ## Configure Ds -> Phi Pi selection
@@ -97,6 +98,12 @@ class LambdaToProtonPionConf(LHCbConfigurableUser) :
         # Make a DST ?
         if self.getProp("MakeSelDST"):
 
+            # Prescale
+            from Configurables import DeterministicPrescaler
+            scaler = DeterministicPrescaler( self.__sel_name__+'PreScale',
+                                             AcceptFraction = self.getProp("DSTPreScaleFraction") )
+            seq.Members += [scaler]
+            # Write the DST
             MyDSTWriter = SelDSTWriter( self.__sel_name__+"DST",
                                         SelectionSequences = [ selSeq ],
                                         OutputPrefix = self.__sel_name__ )
