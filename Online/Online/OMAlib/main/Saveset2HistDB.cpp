@@ -1,4 +1,4 @@
-// $Id: Saveset2HistDB.cpp,v 1.5 2009-11-05 18:55:52 ggiacomo Exp $
+// $Id: Saveset2HistDB.cpp,v 1.6 2010-07-22 16:21:51 ggiacomo Exp $
 #include <iostream>
 #include <TFile.h>
 #include <TKey.h>
@@ -79,10 +79,6 @@ int main(int narg,char **argv ) {
     return 1;
   }
   
-  OMAlib* omalib = new OMAlib(HistDB); // this is just to test OMAlib
-  std::string algo("Scale");
-  omalib->getAlg(algo);
-
   // loop on input root files and store histograms to be declared
   int nh=0;
   for (iarg = firstfile ; iarg < narg ; iarg++ ) {

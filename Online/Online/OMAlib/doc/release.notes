@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.50 2010-07-06 17:01:12 ggiacomo Exp $
+! $Id: release.notes,v 1.51 2010-07-22 16:21:50 ggiacomo Exp $
 ! Package     : OMAlib
 ! Responsible : G. Graziani
 ! Purpose     : Online Monitoring Analysis library
+
+! 20100722 GG
+ - remove (harmless) crash at the end of Saveset2HistDB
 
 ! 20100706 GG
  - expand OMAScale to support multiplication instead of division and normalization by mean,rms,integral or 
