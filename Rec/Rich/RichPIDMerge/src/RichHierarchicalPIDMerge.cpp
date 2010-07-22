@@ -4,9 +4,6 @@
  *
  *  Implementation file for RICH algorithm : RichHierarchicalPIDMerge
  *
- *  CVS Log :-
- *  $Id: RichHierarchicalPIDMerge.cpp,v 1.12 2009-07-30 11:12:04 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2002-07-10
  */
