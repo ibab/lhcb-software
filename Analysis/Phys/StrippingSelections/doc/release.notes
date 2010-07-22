@@ -6,6 +6,9 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! -----------------------------------------------------------------------------
 
 ! 2010-07-22 - Thomas BLAKE
+ - Updated Stream leptonic to fix lines breaking the stripping
+
+! 2010-07-22 - Thomas BLAKE
  - Updated charm stream to reflect reco-04-stripping-07
 
 

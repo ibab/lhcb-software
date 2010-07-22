@@ -15,7 +15,7 @@ from StrippingSelections import StrippingBd2DstarMuNu
 #from StrippingSelections import StrippingBsDsMuNu
 #superceded by B0q2DplusMuX
 from StrippingSelections import Strippingb2DMuX
-from StrippingSelections import StrippingB0q2DplusMuX
+
 
 from StrippingSelections.StrippingB2XuMuNu import StrippingB2XuMuNuConf
 
@@ -36,4 +36,9 @@ stream.appendLines( [
                         , StrippingB2XuMuNuConf().KstarSS_line()
 		    ] )
 
-#stream.appendLines(StrippingB0q2DplusMuX.StrippingB0q2DplusMuXAllLinesConf(StrippingB0q2DplusMuX.confdict))
+
+from StrippingSelections import StrippingB0q2DplusMuX #B0q2DplusMuXAllLinesConf, confdict
+
+confB0q2DplusMuX = StrippingB0q2DplusMuX.B0q2DplusMuXAllLinesConf(StrippingB0q2DplusMuX.confdict)
+
+stream.appendLines( confB0q2DplusMuX.Lines ) #StrippingB0q2DplusMuX.B0q2DplusMuXAllLinesConf(StrippingB0q2DplusMuX.confdict))
