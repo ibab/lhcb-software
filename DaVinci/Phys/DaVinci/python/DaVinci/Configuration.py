@@ -1,7 +1,7 @@
 """
 High level configuration tools for DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.114 2010-07-16 11:37:00 jpalac Exp $"
+__version__ = "$Id: Configuration.py,v 1.115 2010-07-22 07:05:30 jpalac Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -189,7 +189,9 @@ class DaVinci(LHCbConfigurableUser) :
             log.info("Creating Lumi Algorithms")
             lumi = self.lumi()
             init.Members += lumi
-        
+            tupleFile = self.getProp('TupleFile')
+            if tupleFile == '' :
+                self.setProp('TupleFile', 'lumi.root')
         # Phys
         inputType = self.getProp( "InputType" ).upper()
         if inputType != 'MDST' :
