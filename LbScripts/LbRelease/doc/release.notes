@@ -1,3 +1,7 @@
+2010-07-22  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbRelease/TarBall.py: lcg tarball script completed.
+
 2010-07-19  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* python/LbRelease/LHCbDoc.py: Fixed a problem occurring with empty DOC directories

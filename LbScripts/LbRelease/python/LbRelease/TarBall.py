@@ -6,7 +6,8 @@ from LbConfiguration import Version
 from LbConfiguration import Project
 from LbConfiguration import Package
 from LbUtils import CMT
-from LbUtils.Tar import createTarBallFromFilter
+from LbUtils.Tar import createTarBallFromFilter, createTarBallFromFilterDict
+from LbUtils.Tar import updateTarBallFromFilterDict
 from LbUtils.Temporary import TempDir
 from LbUtils.File import createMD5File, checkMD5Info
 from LbUtils.afs.directory import AFSLockFile
@@ -589,81 +590,104 @@ def generateLCGTar(project, version=None, cmtconfig=None,
     log = logging.getLogger()
     prj_conf = Project.getProject(project)
     status = 0
-    if not top_dir :
-        top_dir = prj_conf.ReleaseArea()
-    if not output_dir :
-        output_dir = prj_conf.LCGTarBallDir()
-    if not version :
-        pattern = "%s_*" % prj_conf.NAME()
-        maindir = os.path.join(top_dir, prj_conf.NAME())
-        version = str(Version.getVersionsFromDir(maindir, pattern, reverse=True)[0])
-        log.debug("Guessed version for %s is %s" % (prj_conf.Name(), version))
-    prefix = prj_conf.releasePrefix(version)
-    ppath = os.path.join(top_dir, prefix)
-    prj = CMT.Project(ppath)
-    for data in CMT.walk(top=prj, cmtprojectpath=os.environ["CMTPROJECTPATH"]) :
-        if data[0].name() == "LCGCMT" :
-            lcg_prj = data[0]
-            break
-    os.environ["CMTEXTRATAGS"] = "LHCb"
-    ext_dict = {}
-    for p in prj.binaryExternalPackages(cmtprojectpath=os.environ["CMTPROJECTPATH"], 
-                                        binary=cmtconfig) :
-        if p.name().split(os.sep)[0] == "LCG_Interfaces" :
-            ext_name = os.sep.join(p.name().split(os.sep)[1:])
-            ext_dict[ext_name] = []
-            ext_dict[ext_name].append(p.fullLocation())
-            p = Popen(["cmt", "show", "macro_value", "%s_home" % ext_name], stdout=PIPE)
-            ext_home = p.stdout.read()[:-1]
-            ext_home = ext_home.replace("\\", os.sep)
-            ext_home = ext_home.replace("%SITEROOT%", os.environ.get("SITEROOT", ""))
-            ext_dict[ext_name].append(ext_home)
-            p = Popen(["cmt", "show", "macro_value", "%s_config_version" % ext_name], stdout=PIPE)
-            ext_config_version = p.stdout.read()[:-1]
-            ext_dict[ext_name].append(ext_config_version)
-            p = Popen(["cmt", "show", "macro_value", "%s_native_version" % ext_name], stdout=PIPE)
-            ext_native_version = p.stdout.read()[:-1]
-            ext_dict[ext_name].append(ext_native_version)
-            print ext_dict[ext_name]
-    ext_shared_dict = {}
-    ext_binary_dict = {}
-    for p in ext_dict.keys() :
-        if ext_dict[p][1] :
-            bin_prefix = os.path.join(p, ext_dict[p][3], cmtconfig)
-            bin_location = ext_dict[p][1]
-            if bin_location.endswith(bin_prefix) :
-                if os.path.exists(bin_location) :
-                    ext_binary_dict[bin_location] = os.path.join("external", bin_prefix)
-                shared_prefix = os.sep.join(["external"] + bin_prefix.split(os.sep)[:-1])
-                shared_location = os.path.dirname(bin_location)
-                if os.path.exists(shared_location) :
-                    ext_shared_dict[shared_location] = shared_prefix
-    print ext_shared_dict
-    print ext_binary_dict
-#    srcdirs = [os.path.join(top_dir, prefix)]
-#    log.debug("="*100)
-#    filename = os.path.join(output_dir, prj_conf.tarBallName(version, cmtconfig, full=True))
-#    if os.path.exists(filename) and not (overwrite or update) :
-#        log.info("The file %s already exists. Skipping." % filename)
-#        status = 2
-#    else :
-#        if overwrite :
-#            os.remove(filename)
-#        if cmtconfig :
-#            pathfilter = lambda x : projectFilter(x, cmtconfig)
-#        else :
-#            pathfilter = projectFilter
-#        prefix = prj_conf.releasePrefix(version)
-#        status = createTarBallFromFilter(srcdirs, filename, pathfilter,
-#                                         prefix=prefix, dereference=False, update=update)
-#        if status != 0 :
-#            if status == 1 :
-#                log.fatal("The source directories do not exist")
+    if not prj_conf.LCGTarBallName() :
+        log.debug("The project %s has no LCG tarball dependency" % prj_conf.Name())
+    else :
+        if not top_dir :
+            top_dir = prj_conf.ReleaseArea()
+        if not output_dir :
+            output_dir = prj_conf.LCGTarBallDir()
+        if not version :
+            pattern = "%s_*" % prj_conf.NAME()
+            maindir = os.path.join(top_dir, prj_conf.NAME())
+            version = str(Version.getVersionsFromDir(maindir, pattern, reverse=True)[0])
+            log.debug("Guessed version for %s is %s" % (prj_conf.Name(), version))
+        prefix = prj_conf.releasePrefix(version)
+        ppath = os.path.join(top_dir, prefix)
+        prj = CMT.Project(ppath)
+        for data in CMT.walk(top=prj, cmtprojectpath=os.environ["CMTPROJECTPATH"]) :
+            if data[0].name() == "LCGCMT" :
+                lcg_prj = data[0]
+                break
+        if prj_conf.LCGTarBallName() == "LCGCMT" :
+            lcg_version = lcg_prj.version().split("_")[-1]
+            filename = os.path.join(output_dir, prj_conf.LCGTarBallName(lcg_version, cmtconfig, full=True))
+        else :
+            filename = os.path.join(output_dir, prj_conf.LCGTarBallName(version, cmtconfig, full=True))
+        log.info("The output file name is %s" % filename)
+        ext_shared_dict = {}
+        ext_binary_dict = {}
+        shared_location = lcg_prj.fullLocation()
+        if os.path.exists(shared_location) :
+            shared_prefix   = os.sep.join(["external", lcg_prj.name(), lcg_prj.version()])
+            ext_shared_dict[shared_location] = shared_prefix
+            log.debug("Adding %s to %s" % (shared_location, shared_prefix))
+        if cmtconfig :
+            bin_location = os.path.join(shared_location, cmtconfig)
+            if os.path.exists(bin_location):
+                bin_prefix = os.sep.join([shared_prefix, cmtconfig])
+                ext_binary_dict[bin_location] = bin_prefix
+                log.debug("Adding %s to %s" % (bin_location, bin_prefix))
+        os.environ["CMTEXTRATAGS"] = "LHCb"
+        ext_dict = {}
+        for p in prj.binaryExternalPackages(cmtprojectpath=os.environ["CMTPROJECTPATH"], 
+                                            binary=cmtconfig) :
+            if p.name().split(os.sep)[0] == "LCG_Interfaces" :
+                ext_name = os.sep.join(p.name().split(os.sep)[1:])
+                ext_dict[ext_name] = []
+                ext_dict[ext_name].append(p.fullLocation())
+                p = Popen(["cmt", "show", "macro_value", "%s_home" % ext_name], stdout=PIPE)
+                ext_home = p.stdout.read()[:-1]
+                ext_home = ext_home.replace("\\", os.sep)
+                ext_home = ext_home.replace("%SITEROOT%", os.environ.get("SITEROOT", ""))
+                ext_dict[ext_name].append(ext_home)
+                p = Popen(["cmt", "show", "macro_value", "%s_config_version" % ext_name], stdout=PIPE)
+                ext_config_version = p.stdout.read()[:-1]
+                ext_dict[ext_name].append(ext_config_version)
+                p = Popen(["cmt", "show", "macro_value", "%s_native_version" % ext_name], stdout=PIPE)
+                ext_native_version = p.stdout.read()[:-1]
+                ext_dict[ext_name].append(ext_native_version)
+#                print ext_dict[ext_name]
+        for p in ext_dict.keys() :
+            if ext_dict[p][1] :
+                bin_prefix = os.path.join(p, ext_dict[p][3], cmtconfig)
+                bin_location = ext_dict[p][1]
+                if bin_location.endswith(bin_prefix) :
+                    if os.path.exists(bin_location) :
+                        ext_binary_dict[bin_location] = os.path.join("external", bin_prefix)
+                        log.debug("Adding %s to %s" % (bin_location, os.path.join("external", bin_prefix)))
+                    shared_prefix = os.sep.join(["external"] + bin_prefix.split(os.sep)[:-1])
+                    shared_location = os.path.dirname(bin_location)
+                    if os.path.exists(shared_location) :
+                        ext_shared_dict[shared_location] = shared_prefix
+                        log.debug("Adding %s to %s" % (shared_location, shared_prefix))
+        log.info("Adding %d shared locations" % len(ext_shared_dict))         
+        log.info("Adding %d binary locations" % len(ext_binary_dict))         
+#        print ext_shared_dict
+#        print ext_binary_dict
+    log.debug("="*100)
+    if os.path.exists(filename) and not (overwrite or update) :
+        log.info("The file %s already exists. Skipping." % filename)
+        status = 2
+    else :
+        if overwrite :
+            os.remove(filename)
+        if cmtconfig :
+            binary_pathfilter = lambda x : projectFilter(x, cmtconfig)
+        shared_pathfilter = projectFilter        
+        status = createTarBallFromFilterDict(ext_shared_dict, filename, shared_pathfilter, dereference=False, update=update)
+        if status != 0 :
+            if status == 1 :
+                log.fatal("The source directories do not exist")
+        else:
+            status = updateTarBallFromFilterDict(ext_binary_dict, filename, binary_pathfilter, dereference=False)
 #        else :
 #            if md5 :
 #                generateMD5(project, version, cmtconfig, output_dir)
 #            if html :
 #                generateHTML(project, version, cmtconfig, top_dir, output_dir)
+    if status == 0 :
+        log.info("The file %s was successfully generated" % filename)
     return status
 
 
