@@ -132,7 +132,7 @@ def closeTar(tarf, lock, _filename=None):
     lock.unlock()
 
 
-def listTarBallObjects(dirname, pathfilter=None, prefix=None):
+def listTarBallObjects(dirname, pathfilter=None, prefix=None, top_most=False):
     if dirname[-1] != os.sep :
         dirname += os.sep
     
@@ -140,16 +140,21 @@ def listTarBallObjects(dirname, pathfilter=None, prefix=None):
         relroot = root.replace(dirname,"")
         objs = files + dirs
         for o in objs :
+            if top_most :
+                dirs_to_remove = []
             fullo = os.path.join(root, o)
             relo  = os.path.join(relroot, o)
             if prefix :
                 relo = os.path.join(prefix, relo)
             if pathfilter :
                 if pathfilter(relo) :
+                    if top_most and o in dirs :
+                        dirs_to_remove.append(o)
                     yield fullo, relo
             else :
                 yield fullo, relo
-
+        for d in dirs_to_remove :
+            dirs.remove(d)
 
 def updateTarBallFromFilter(srcdirs, filename, pathfilter=None,
                             prefix=None, dereference=False):

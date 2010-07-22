@@ -3,6 +3,8 @@
 	* python/LbUtils/Tar.py: 
 	- fixed wrong usage of the prefix in updateTarBallFromFilterDict
 	- added some more debug statements.
+	- added possibility to stop on the top most objects in listTarBallObjects according to
+	  the filter.
 	* scripts/unlockAFSDir: fixed description
 
 2010-06-23  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
