@@ -1,4 +1,4 @@
-// $Id: ITriggerTisTos.h,v 1.3 2010-07-21 21:19:26 tskwarni Exp $
+// $Id: ITriggerTisTos.h,v 1.4 2010-07-22 14:58:26 tskwarni Exp $
 #ifndef ITRIGGERTISTOS_H 
 #define ITRIGGERTISTOS_H 1
 
@@ -247,9 +247,9 @@ public:
   void triggerTisTos( bool & decision, bool & tis, bool & tos )
   {
     unsigned int result = tisTosTrigger();
-    decision = result&kDecision;
-    tis = result&kTIS;
-    tos = result&kTOS;
+    decision = ((result&kDecision)!=0);
+    tis = ((result&kTIS)!=0);
+    tos = ((result&kTOS)!=0);
   }
 
   // -------------------------------------------------

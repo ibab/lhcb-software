@@ -1,4 +1,4 @@
-// $Id: ITriggerSelectionTisTos.h,v 1.3 2010-07-21 21:19:26 tskwarni Exp $
+// $Id: ITriggerSelectionTisTos.h,v 1.4 2010-07-22 14:58:26 tskwarni Exp $
 #ifndef ITRIGGERSELECTIONTISTOS_H 
 #define ITRIGGERSELECTIONTISTOS_H 1
 
@@ -310,9 +310,9 @@ public:
                                 bool & decision, bool & tis, bool & tos )
   {
     unsigned int result = tisTosSelection(selectionName);
-    decision = result&kDecision;
-    tis = result&kTIS;
-    tos = result&kTOS;
+    decision = ((result&kDecision)!=0);
+    tis = ((result&kTIS)!=0);
+    tos = ((result&kTOS)!=0);
   }
   
 
@@ -328,9 +328,9 @@ public:
           result |= tisTosSelection(selName);
           if( (result&kTOS) && (result&kTIS) && (result&kDecision) )break;
         }
-      decision = result&kDecision;
-      tis = result&kTIS;
-      tos = result&kTOS;
+      decision = ((result&kDecision)!=0);
+      tis = ((result&kTIS)!=0);
+      tos = ((result&kTOS)!=0);
       return;
     } else {
       unsigned int result =(kTOSandTIS|kDecision);      
@@ -339,9 +339,9 @@ public:
           result &= tisTosSelection(selName);
           if( !(result&kTOS) && !(result&kTIS) && !(result&kDecision) )break;
         }
-      decision = result&kDecision;
-      tis = result&kTIS;
-      tos = result&kTOS;
+      decision = ((result&kDecision)!=0);
+      tis = ((result&kTIS)!=0);
+      tos = ((result&kTOS)!=0);
       return;
     }
   }

@@ -1,4 +1,4 @@
-// $Id: ITisTos.h,v 1.1 2010-07-21 21:19:26 tskwarni Exp $
+// $Id: ITisTos.h,v 1.2 2010-07-22 14:58:26 tskwarni Exp $
 #ifndef KERNEL_ITISTOS_H 
 #define KERNEL_ITISTOS_H 1
 
@@ -59,15 +59,15 @@ public:
     virtual ~TisTosTob(){};
   
     /// check for TIS
-    bool tis() const {return (m_tistostob&kTIS);}
+    bool tis() const {return ((m_tistostob&kTIS)!=0);}
     /// check for TOS
-    bool tos() const {return (m_tistostob&kTOS);}
+    bool tos() const {return ((m_tistostob&kTOS)!=0);}
     /// check for TPS
-    bool tps() const {return (m_tistostob&kTPS);}
+    bool tps() const {return ((m_tistostob&kTPS)!=0);}
     /// check for TUS i.e. if Signal was used (TPS||TOS)
-    bool tus() const {return (m_tistostob&kTUS);}
+    bool tus() const {return ((m_tistostob&kTUS)!=0);}
     /// check for decision (used only for trigger selections)
-    bool decision() const {return (m_tistostob&kDecision);}
+    bool decision() const {return ((m_tistostob&kDecision)!=0);}
     /// get entire classification
     unsigned int value() const {return m_tistostob;}
 

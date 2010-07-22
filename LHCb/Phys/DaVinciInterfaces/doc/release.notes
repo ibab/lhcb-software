@@ -4,6 +4,9 @@
 ! Purpose     : Tool interfaces and dictionaries for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2010-07-22 - Tomasz Skwarnicki
+ - fix window compilation warnings in changes from yesterday
+
 ! 2010-07-21 - Tomasz Skwarnicki
  - Kernel/ITisTos.h IParticleTisTos.h new, ITrigger(Selection)TisTos modified
    needed for rewritten Phys/TisTosTobbing
