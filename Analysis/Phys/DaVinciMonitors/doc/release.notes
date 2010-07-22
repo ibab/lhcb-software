@@ -4,6 +4,9 @@
 ! Purpose     : Monitoring algorithms after reconstruction
 !-----------------------------------------------------------------------------
 
+! 2010-07-22 - Chris Jones
+ - Supress unneccessary warning in ParticleMonitor
+
 !========================== DaVinciMonitors v1r12 2010-06-24 =================
 
 ! 2010-06-03 - Alessio Sarti

@@ -1,8 +1,8 @@
-// $Id: ParticleMonitor.cpp,v 1.5 2009-04-07 16:25:12 pkoppenb Exp $
-// Include files 
+// $Id: ParticleMonitor.cpp,v 1.6 2010-07-22 09:38:43 jonrob Exp $
+// Include files
 
 // from Gaudi
-#include "GaudiKernel/AlgFactory.h" 
+#include "GaudiKernel/AlgFactory.h"
 #include "LoKi/PhysTypes.h"
 #include "LoKi/IHybridFactory.h"
 #include "Kernel/IPlotTool.h"
@@ -30,14 +30,14 @@ ParticleMonitor::ParticleMonitor( const std::string& name,
   ,   m_sideband(LoKi::BasicFunctors<const LHCb::Particle*>::BooleanConstant( false ))
   ,   m_massPlotToolName("MassPlotTool")
 {
-  declareProperty( "MotherCut", m_motherCut = "ALL", 
+  declareProperty( "MotherCut", m_motherCut = "ALL",
                    "The cut to be applied to all mother particle (default all)." )  ;
-  // declareProperty( "FinalCut", m_finalCut = "ALL", 
+  // declareProperty( "FinalCut", m_finalCut = "ALL",
   //      "The cut to be applied to final state particle before plotting (default all)." )  ;
-  declareProperty( "PeakCut", m_peakCut = "ALL", 
+  declareProperty( "PeakCut", m_peakCut = "ALL",
                    "Selection of mass peak (default all)." )  ;
-  declareProperty( "SideBandCut", m_sidebandCut = "False", 
-      "Selection of sidebands (default none)." )  ;
+  declareProperty( "SideBandCut", m_sidebandCut = "False",
+                   "Selection of sidebands (default none)." )  ;
   m_plotToolNames.push_back("PidPlotTool"); // default
   declareProperty( "PlotTools" , m_plotToolNames, "Names of plot tools");
 }
@@ -45,18 +45,17 @@ ParticleMonitor::ParticleMonitor( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-ParticleMonitor::~ParticleMonitor() {} 
+ParticleMonitor::~ParticleMonitor() {}
 
 //=============================================================================
 // Initialization
 //=============================================================================
-StatusCode ParticleMonitor::initialize() {
-  //=== The following two lines should be commented for DC04 algorithms ! ===
-  StatusCode sc = DVAlgorithm::initialize(); 
+StatusCode ParticleMonitor::initialize() 
+{
+  const StatusCode sc = DVAlgorithm::initialize();
   if ( sc.isFailure() ) return sc;
 
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
-  LoKi::IHybridFactory* factory = tool<LoKi::IHybridFactory> 
+  LoKi::IHybridFactory* factory = tool<LoKi::IHybridFactory>
     ("LoKi::Hybrid::Tool/HybridFactory:PUBLIC" , this ) ;
 
   if (! configure ( factory, m_motherCut , m_mother  )) return StatusCode::FAILURE ;
@@ -68,72 +67,71 @@ StatusCode ParticleMonitor::initialize() {
 
   if ( m_plotToolNames.empty() )
   {
-    err() << "No plot Tool defined. Will do nothing." << endmsg ;
-    return StatusCode::FAILURE ;
-  } 
-  else 
+    return Error( "No plot Tool defined. Will do nothing." ) ;
+  }
+  else
   {
     if (msgLevel(MSG::DEBUG)) debug() << "Using" ;
     m_plotTools.insert(std::pair<std::string,IPlotTool*>(m_massPlotToolName,
                                                          tool<IPlotTool>(m_massPlotToolName,this)));
-    if (msgLevel(MSG::DEBUG)) debug() << " " << m_massPlotToolName << endmsg ;  
+    if (msgLevel(MSG::DEBUG)) debug() << " " << m_massPlotToolName << endmsg ;
     for ( std::vector<std::string>::const_iterator s = m_plotToolNames.begin() ;
           s != m_plotToolNames.end() ; ++s)
     {
       if ( *s == m_massPlotToolName ) {
-        warning() <<  *s << " is mandatory. Is already added to list." << endmsg ;
+        // CRJ : No need to print this 
+        // warning() <<  *s << " is mandatory. Is already added to list." << endmsg ;
         continue ; // already done
       }
       m_plotTools.insert(std::pair<std::string,IPlotTool*>(*s,tool<IPlotTool>(*s,this)));
       if (msgLevel(MSG::DEBUG)) debug() << " " << *s << endmsg ;
-    }    
+    }
     if (msgLevel(MSG::DEBUG)) debug() << endmsg ;
   }
 
-  return StatusCode::SUCCESS;
+  return sc;
 }
 
 //=============================================================================
 // Main execution
 //=============================================================================
-StatusCode ParticleMonitor::execute() {
+StatusCode ParticleMonitor::execute() 
+{
 
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
-
-  // code goes here  
+  // code goes here
   for ( LHCb::Particle::ConstVector::const_iterator m = desktop()->particles().begin();
         m != desktop()->particles().end(); ++m)
   {
     counter("# Mothers")++ ;
-    if ( !m_mother( *m ) )  { continue ; }   // discard particles with no cut   
+    if ( !m_mother( *m ) )  { continue ; }   // discard particles with no cut
 
     std::string trail = "all";
     m_plotTools[m_massPlotToolName]->fillPlots(*m,trail); // full mass plot
-    
+
     counter("# Accepted Mothers")++;
     const bool peak     = m_peak( *m ) ;
     const bool sideband = m_sideband( *m ) ;
 
-    if (peak) 
+    if (peak)
     {
       counter("# Accepted Mothers in Peak")++;
       trail = "peak";
     }
-    else if (sideband) 
+    else if (sideband)
     {
       counter("# Accepted Mothers in Sidebands")++;
       trail = "sideband";
-    } 
+    }
     else continue ;  // ignore events ouside of sidebands
-    
+
     if (!fillPlots(*m,trail)) return StatusCode::FAILURE;
   }
 
-  setFilterPassed(true);  // Mandatory. Set to true if event is accepted. 
+  setFilterPassed(true);  // Mandatory. Set to true if event is accepted.
   return StatusCode::SUCCESS;
 }
 
-StatusCode ParticleMonitor::fillPlots( const LHCb::Particle* d, 
+StatusCode ParticleMonitor::fillPlots( const LHCb::Particle* d,
                                        const std::string & where )
 {
   for ( std::map<std::string,IPlotTool*>::iterator s = m_plotTools.begin() ;
@@ -145,12 +143,12 @@ StatusCode ParticleMonitor::fillPlots( const LHCb::Particle* d,
   return StatusCode::SUCCESS;
 }
 
-StatusCode ParticleMonitor::configure( LoKi::IHybridFactory* f, 
-                                       std::string & s, 
+StatusCode ParticleMonitor::configure( LoKi::IHybridFactory* f,
+                                       std::string & s,
                                        LoKi::Types::Cut& c )
 {
-  StatusCode sc = f -> get ( s , c  ) ;
-  if ( sc.isFailure () ) { return Error ( "Unable to  decode cut: " + s  , sc ) ; }  
+  const StatusCode sc = f -> get ( s , c  ) ;
+  if ( sc.isFailure () ) { return Error ( "Unable to  decode cut: " + s  , sc ) ; }
   if ( msgLevel(MSG::DEBUG)) debug () << "The decoded cut is: " << s << endreq ;
   return sc;
 }
