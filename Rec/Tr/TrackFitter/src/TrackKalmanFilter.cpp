@@ -123,6 +123,7 @@ StatusCode TrackKalmanFilter::fit( LHCb::Track& track, NodeRange& nodes,
 
     // save filtered state
     node.setState( state );
+    node.setFilteredStateForward( state ) ;
 
   } // end of prediction and filter
 
@@ -179,6 +180,9 @@ StatusCode TrackKalmanFilter::fit( LHCb::Track& track, NodeRange& nodes,
         chisqreverse += node.chi2() ;
         node.setDeltaChi2Backward( node.chi2() );
       }
+
+      // save the filtered state
+      node.setFilteredStateBackward( state ) ;
       
       // save filtered state, but not for the first node. we also
       // don't smooth for the first state.
@@ -278,8 +282,11 @@ StatusCode TrackKalmanFilter::fit( Track& track ) const
       sc = predictReverseFit( *prevNode, *node, state );
       if(!sc.isSuccess()) Warning("Unable to predict reverse fit node", StatusCode::SUCCESS,1).ignore();
       node->setState(state) ;
-      node->setPredictedStateForward( LHCb::State() );
-      node->setPredictedStateBackward( LHCb::State() );
+      node->setPredictedStateBackward( state );
+      node->setFilteredStateBackward( state );
+      state.setCovariance( seedCov ) ;
+      node->setPredictedStateForward( state );
+      node->setFilteredStateForward( state );
       node->setDeltaChi2Forward(0);
       node->setDeltaChi2Backward(0);
       updateResidual(*node) ;
@@ -294,8 +301,11 @@ StatusCode TrackKalmanFilter::fit( Track& track ) const
       sc = predict( *node, state );
       if(!sc.isSuccess()) Warning("Unable to predict reverse fit node", StatusCode::SUCCESS,1).ignore();
       node->setState(state) ;
-      node->setPredictedStateForward( LHCb::State() );
-      node->setPredictedStateBackward( LHCb::State() );
+      node->setPredictedStateForward( state );
+      node->setFilteredStateForward( state );
+      state.setCovariance( seedCov ) ;
+      node->setPredictedStateBackward( state );
+      node->setFilteredStateBackward( state );
       node->setDeltaChi2Forward(0);
       node->setDeltaChi2Backward(0);
       updateResidual(*node) ;
