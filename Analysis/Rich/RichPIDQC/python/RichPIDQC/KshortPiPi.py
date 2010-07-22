@@ -55,6 +55,7 @@ class KshortPiPiConf(RichConfigurableUser) :
         if self.getProp("RunSelection") :
 
             # STD particles
+            from CommonParticles.StdNoPIDsPions import StdNoPIDsPions
             stdPions = DataOnDemand( Location = 'Phys/StdNoPIDsPions' )
 
             # Filter Pi Tracks

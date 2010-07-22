@@ -54,6 +54,7 @@ class JPsiMuMuConf(RichConfigurableUser) :
         if self.getProp("RunSelection") :
 
             # STD particles
+            from CommonParticles.StdLooseMuons   import StdLooseMuons
             stdMuons = DataOnDemand( Location = 'Phys/StdLooseMuons' )
 
             # J/psi -> mu mu

@@ -55,6 +55,8 @@ class LambdaToProtonPionConf(RichConfigurableUser) :
         if self.getProp("RunSelection") : 
 
             # STD particles
+            from CommonParticles.StdNoPIDsPions   import StdNoPIDsPions
+            from CommonParticles.StdNoPIDsProtons import StdNoPIDsProtons
             stdPions   = DataOnDemand( Location = 'Phys/StdNoPIDsPions' )
             stdProtons = DataOnDemand( Location = 'Phys/StdNoPIDsProtons' )
       

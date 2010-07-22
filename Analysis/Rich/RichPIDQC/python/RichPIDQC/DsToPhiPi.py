@@ -54,6 +54,8 @@ class DsToPhiPiConf(RichConfigurableUser) :
         if self.getProp("RunSelection") : 
 
             # STD particles
+            from CommonParticles.StdNoPIDsPions   import StdNoPIDsPions
+            from CommonParticles.StdNoPIDsKaons   import StdNoPIDsKaons
             stdKaons = DataOnDemand( Location = 'Phys/StdNoPIDsKaons' )
             stdPions = DataOnDemand( Location = 'Phys/StdNoPIDsPions' )
         
