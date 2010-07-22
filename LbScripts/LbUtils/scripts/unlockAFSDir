@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # $Id: $
-""" This script is made for removing the write access of an AFS directory """
+""" This script is made for readding the write access of an AFS directory """
 
 from LbUtils.Script import Script
 from LbUtils.CVS import CVS2Version

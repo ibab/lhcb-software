@@ -1,3 +1,7 @@
+2010-07-22  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* scripts/unlockAFSDir: fixed description
+
 2010-06-23  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbUtils/Tar.py: added updateTarBallFromFilterDict and 
