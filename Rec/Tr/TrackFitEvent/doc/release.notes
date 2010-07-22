@@ -4,6 +4,11 @@
 ! Purpose     : Package for the tracking fitting-related classes
 !-----------------------------------------------------------------------------
 
+! 2010-07-22 - Wouter Hulsbergen
+ - added filtered states to FitNode
+ - added boost allocator to FitNode
+ - protected KalmanFitResult::computeChi2 against tracks with zero nodes
+
 =========================== TrackFitEvent v5r1 2010-07-20 ==================
 ! 2010-07-15 - Jeroen VAN TILBURG
  - Changed include location of ISTClusterPosition (now in Tr/TrackInterfaces).
