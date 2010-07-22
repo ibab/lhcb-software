@@ -128,9 +128,9 @@ def get_tar_files(packages_versions,binary_dir):
                             shutil.copyfile(os.path.join(MCGen_tar_dir,file),file)
                         str = 'tar --extract --ungzip --file '+file+' '+key_value+'/share/PDFsets/cteq6l.LHpdf'+' '+key_value+'/share/PDFsets/cteq6ll.LHpdf'
                         rc = os.system(str)
-                        if rc == 0 :
-                            print "%s/share/PDFsets/cteq6l.LHpdf found in %s" % (key_value, file)
-                            print "%s/share/PDFsets/cteq6ll.LHpdf found in %s" % (key_value, file)
+                    if rc == 0 :
+                        print "%s/share/PDFsets/cteq6l.LHpdf found in %s" % (key_value, file)
+                        print "%s/share/PDFsets/cteq6ll.LHpdf found in %s" % (key_value, file)
                 os.remove(file)
 
     os.chdir('/tmp')
