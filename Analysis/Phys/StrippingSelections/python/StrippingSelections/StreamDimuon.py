@@ -64,7 +64,6 @@ stream.appendLines( [
 		        StrippingBd2KstarMuMuConf().Early_WideKstarLine(),  
 		        StrippingBd2KstarMuMuConf().Early_NoMuIDLine(),  
 		        StrippingBd2KstarMuMuConf().Early_eMuLine(),
-                        StrippingBd2KstarMuMuConf().Early_DiMuonLine(),
                         StrippingBd2KstarMuMuConf().simplestLTLine(),
 			StrippingBs2PhiMuMuConf().Bs2PhiMuMuLine(),
                     	StrippingBs2PhiMuMuConf().Bs2f0MuMuLine(),

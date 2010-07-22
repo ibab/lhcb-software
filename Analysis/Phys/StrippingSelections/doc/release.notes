@@ -5,6 +5,9 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-07-22 - Thomas BLAKE
+ - Removed early dimuon line from Stream Dimuon
+
 
 ! 2010-07-21 - O. Deschamps for R. Lefevre
  - new stripping options for B->HHPi0 (StrippingB2HHPi0.py)
