@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2010-07-23 - Wouter Hulsbergen
+ - Cleaned up TrackInterpolator by using cached filtered states in FitNode
+
 !======================== TrackTools v3r33 2010-07-20 ========================
 ! 2010-07-15 - Jeroen VAN TILBURG
  - Changed include location of ISTClusterPosition (now in Tr/TrackInterfaces).
