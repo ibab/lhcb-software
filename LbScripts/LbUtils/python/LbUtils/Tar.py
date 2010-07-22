@@ -187,6 +187,7 @@ def updateTarBallFromFilterDict(srcdict, filename, pathfilter=None, dereference=
     if not os.path.exists(filename) :
         status = createTarBallFromFilterDict(srcdict, filename, pathfilter, dereference, update=False)
     else :
+        log.debug("Updating %s" % filename)
         tarf, lock = openTar(filename, tar_mode="r")
         tmpdir = TempDir("updateTarballFromFilter")
         tarf.extractall(tmpdir.getName())
@@ -194,25 +195,29 @@ def updateTarBallFromFilterDict(srcdict, filename, pathfilter=None, dereference=
         closeTar(tarf, lock, filename)
         tobeupdated = False
         srcexist = False
-        for dirname in srcdict.key() :
+        for dirname in srcdict.keys() :
             if os.path.exists(dirname) :
                 srcexist = True
                 break
         if not srcexist :
             return 1
         for dirname in srcdict :
-            prefix = srcdict[dirname] 
+            prefix = srcdict[dirname]
+            if prefix :
+                log.debug("Adding %s to %s" % (dirname, prefix))
+            else :
+                log.debug("Adding %s" % dirname)
             if prefix :
                 dstprefix = os.path.join(tmpdir.getName(), prefix)
                 if not os.path.exists(dstprefix) :
                     os.makedirs(dstprefix)
-            else :
-                dstprefix = tmpdir.getName()
+#            else :
+#                dstprefix = tmpdir.getName()
             for y in listTarBallObjects(dirname, pathfilter, prefix) :
                 if y[1] not in extracted_objs :
                     tobeupdated = True
                     src = y[0]
-                    dst = os.path.join(dstprefix, y[1])
+                    dst = os.path.join(tmpdir.getName(), y[1])
                     if not dereference and os.path.islink(src) :
                         linkto = os.readlink(src)
                         os.symlink(linkto, dst)
@@ -222,7 +227,7 @@ def updateTarBallFromFilterDict(srcdict, filename, pathfilter=None, dereference=
                         copy2(src, dst)
         if tobeupdated :
             log.debug("Updating tarball %s" % filename)
-            status = createTarBallFromFilter([tmpdir.getName()], filename, pathfilter,
+            status = createTarBallFromFilter([tmpdir.getName()], filename, pathfilter=None,
                                     prefix=None, dereference=dereference, update=False)
     return status
 
@@ -238,12 +243,9 @@ def createTarBallFromFilterDict(srcdict, filename, pathfilter=None,
     @param update: if the tarball has to be either updated or replaced 
     """
     log = logging.getLogger()
-    if update :
-        log.info("Updating %s with %s" % (filename, ", ".join(srcdict.keys())) )
-    else :
-        log.info("Creating %s with %s" % (filename, ", ".join(srcdict.keys())) )        
     status = 0
     if not update :
+        log.debug("Creating %s" % filename )        
         tarf, lock = openTar(filename, tar_mode="w")
         keep_tar = False
         srcexist = False
@@ -257,6 +259,10 @@ def createTarBallFromFilterDict(srcdict, filename, pathfilter=None,
         else :
             for dirname in srcdict.keys() :
                 prefix = srcdict[dirname]
+                if prefix :
+                    log.debug("Adding %s to %s" % (dirname, prefix))
+                else :
+                    log.debug("Adding %s" % dirname)                    
                 for fullo, relo in listTarBallObjects(dirname, pathfilter, prefix) :
                     keep_tar = True
                     tarf.add(fullo, relo, recursive=False)
