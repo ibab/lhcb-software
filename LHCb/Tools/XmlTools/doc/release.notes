@@ -4,6 +4,9 @@
 ! Purpose     : Interface to XML Xerces Parser plus some extra services
 !-----------------------------------------------------------------------------
 
+! 2010-07-22 - Marco Clemencic
+ - Fixed a compilation warning on Windows after the switch to XercesC 3.1.
+
 !======================== XmlTools v6r3p1 2010-03-17 =========================
 ! 2010-03-17 - Marco Cattaneo
  - Remove obsolete file XmlTools_dll.cpp
@@ -144,7 +147,7 @@
 ! 2003-12-08 - Marco Cattaneo
  - Move to Gaudi v13
    . in requirements: use GaudiKernel v14r*, CLHEP v2r1810*, XERCES v2r230*)
-   . in XmlCnvSvc.h, .cpp: change createAddress to take long svc_type 
+   . in XmlCnvSvc.h, .cpp: change createAddress to take long svc_type
 
 !================= XmlTools v2r0p1 2003-11-24 ========================
 ! 2003-11-24 - Guy Barrand
