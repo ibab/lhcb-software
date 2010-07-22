@@ -1,4 +1,4 @@
-// $Id: OnOfflineTool.cpp,v 1.27 2010-07-22 11:12:35 jonrob Exp $
+// $Id: OnOfflineTool.cpp,v 1.28 2010-07-22 11:17:22 jonrob Exp $
 // Include files
 
 // from Gaudi
@@ -106,7 +106,7 @@ StatusCode OnOfflineTool::initialize()
   else if ( context() != "" || context() != "Offline" )
   {
     Warning( "Unexpected context '" + context() + 
-             "'. Assuming offline mode, please check !" ).ignore()
+             "'. Assuming offline mode, please check !" ).ignore();
   }
 
   // check it is not global
