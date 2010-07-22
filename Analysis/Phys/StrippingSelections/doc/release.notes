@@ -6,6 +6,10 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! -----------------------------------------------------------------------------
 
 ! 2010-07-22 - Thomas BLAKE
+ - Removed B2Charged2Body1000 and B2Charged2Body4000 from the BHadron stream
+
+
+! 2010-07-22 - Thomas BLAKE
  - Removed early dimuon line from Stream Dimuon
 
 

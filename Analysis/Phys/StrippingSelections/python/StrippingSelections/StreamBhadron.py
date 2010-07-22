@@ -30,8 +30,8 @@ from StrippingSelections.StrippingB2DX import B2DXLines
 stream = StrippingStream("Bhadron")
 stream.appendLines( [ 
 		        StrippingB2Charged2Body.line,  
-		        StrippingB2Charged2Body.line1,  
-		        StrippingB2Charged2Body.line2,  
+#		        StrippingB2Charged2Body.line1,  
+#		        StrippingB2Charged2Body.line2,  
                         StrippingB2D3Pi.line1,
                         StrippingB2D3Pi.line2,
 			StrippingBs2PhiPhiConf().normal(),  #StrippingBs2PhiPhi.line1, 
