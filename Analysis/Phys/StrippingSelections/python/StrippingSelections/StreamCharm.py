@@ -44,15 +44,15 @@ stream = StrippingStream("Charm")
 stream.appendLines( [
           StrippingD2KS0h_KS02PiPiConf().D2KS0h_KS02PiPi()
         , StrippingD2hhh.lineD2PPP_A_NoPID_Bkg
-        , StrippingD2hhh.lineD2PPP_B_NoPID_Bkg
+#        , StrippingD2hhh.lineD2PPP_B_NoPID_Bkg
         , StrippingD2hhh.lineD2PPP_A_NoPID_Sig
-        , StrippingD2hhh.lineD2PPP_B_NoPID_Sig
+#        , StrippingD2hhh.lineD2PPP_B_NoPID_Sig
         , StrippingD2hhh.lineD2KPP_A_NoPID_Bkg
-        , StrippingD2hhh.lineD2KPP_B_NoPID_Bkg
+#        , StrippingD2hhh.lineD2KPP_B_NoPID_Bkg
         , StrippingD2hhh.lineD2KPP_A_LoosePID_Bkg
         , StrippingD2hhh.lineD2KPP_B_LoosePID_Bkg
         , StrippingD2hhh.lineD2KPP_A_NoPID_Sig
-        , StrippingD2hhh.lineD2KPP_B_NoPID_Sig
+#        , StrippingD2hhh.lineD2KPP_B_NoPID_Sig
         , StrippingD2hhh.lineD2KPP_A_LoosePID_Sig
         , StrippingD2hhh.lineD2KPP_B_LoosePID_Sig
         , StrippingD2hhh.lineD2KKP_B_NoPID_Bkg
@@ -67,39 +67,39 @@ stream.appendLines( [
         , StrippingD2hhh.lineD2KKK_B_LoosePID_Sig
         , StrippingD2hhh.lineD2KKP_A_NoPID_Sig
         , StrippingD2hhh.lineD2KKP_A_NoPID_Bkg
-        , StrippingD2hhh.lineDs2KPP_A_LoosePID_Sig
-        , StrippingD2hhh.lineDs2KPP_B_LoosePID_Sig
-        , StrippingD2hhh.lineDs2KPP_A_LoosePID_Bkg
-        , StrippingD2hhh.lineDs2KPP_B_LoosePID_Bkg
-        , StrippingD2hhh.lineD2KPP_DCS_A_LoosePID_Sig
-        , StrippingD2hhh.lineD2KPP_DCS_B_LoosePID_Sig
-        , StrippingD2hhh.lineD2KPP_DCS_A_LoosePID_Bkg
-        , StrippingD2hhh.lineD2KPP_DCS_B_LoosePID_Bkg
+#        , StrippingD2hhh.lineDs2KPP_A_LoosePID_Sig
+#        , StrippingD2hhh.lineDs2KPP_B_LoosePID_Sig
+#        , StrippingD2hhh.lineDs2KPP_A_LoosePID_Bkg
+#        , StrippingD2hhh.lineDs2KPP_B_LoosePID_Bkg
+#        , StrippingD2hhh.lineD2KPP_DCS_A_LoosePID_Sig
+#        , StrippingD2hhh.lineD2KPP_DCS_B_LoosePID_Sig
+#        , StrippingD2hhh.lineD2KPP_DCS_A_LoosePID_Bkg
+#        , StrippingD2hhh.lineD2KPP_DCS_B_LoosePID_Bkg
         , StrippingD2hhh.lineD2HHH
-        , StrippingD2hhhXS.lineD2PPP_B_NoPID_BkgXS
-        , StrippingD2hhhXS.lineD2PPP_B_NoPID_SigXS
-        , StrippingD2hhhXS.lineD2KPP_B_NoPID_BkgXS
+#        , StrippingD2hhhXS.lineD2PPP_B_NoPID_BkgXS
+#        , StrippingD2hhhXS.lineD2PPP_B_NoPID_SigXS
+#        , StrippingD2hhhXS.lineD2KPP_B_NoPID_BkgXS
         , StrippingD2hhhXS.lineD2KPP_B_LoosePID_BkgXS
-        , StrippingD2hhhXS.lineD2KPP_B_NoPID_SigXS
+#        , StrippingD2hhhXS.lineD2KPP_B_NoPID_SigXS
         , StrippingD2hhhXS.lineD2KPP_B_LoosePID_SigXS
-        , StrippingD2hhhXS.lineD2KKP_B_NoPID_BkgXS
-        , StrippingD2hhhXS.lineD2KKP_B_LoosePID_BkgXS
-        , StrippingD2hhhXS.lineD2KKP_B_NoPID_SigXS
-        , StrippingD2hhhXS.lineD2KKP_B_LoosePID_SigXS
-        , StrippingD2hhhXS.lineD2KKK_B_LoosePID_BkgXS
-        , StrippingD2hhhXS.lineD2KKK_B_LoosePID_SigXS
-        , StrippingD2hhhXS.lineDs2KPP_B_LoosePID_SigXS
-        , StrippingD2hhhXS.lineDs2KPP_B_LoosePID_BkgXS
-        , StrippingD2hhhXS.lineD2KPP_DCS_B_LoosePID_SigXS
-        , StrippingD2hhhXS.lineD2KPP_DCS_B_LoosePID_BkgXS
-        , StrippingD5h.lineD2KKPPP_B_NoPID_Bkg 
-        , StrippingD5h.lineD2KKPPP_B_LoosePID_Bkg 
-        , StrippingD5h.lineD2KKPPP_B_NoPID_Sig    
-        , StrippingD5h.lineD2KKPPP_B_LoosePID_Sig
-        , StrippingD5h.lineD2KPPPP_B_NoPID_Bkg 
-        , StrippingD5h.lineD2KPPPP_B_LoosePID_Bkg 
-        , StrippingD5h.lineD2KPPPP_B_NoPID_Sig    
-        , StrippingD5h.lineD2KPPPP_B_LoosePID_Sig 
+#        , StrippingD2hhhXS.lineD2KKP_B_NoPID_BkgXS
+#        , StrippingD2hhhXS.lineD2KKP_B_LoosePID_BkgXS
+#        , StrippingD2hhhXS.lineD2KKP_B_NoPID_SigXS
+#        , StrippingD2hhhXS.lineD2KKP_B_LoosePID_SigXS
+#        , StrippingD2hhhXS.lineD2KKK_B_LoosePID_BkgXS
+#        , StrippingD2hhhXS.lineD2KKK_B_LoosePID_SigXS
+#        , StrippingD2hhhXS.lineDs2KPP_B_LoosePID_SigXS
+#        , StrippingD2hhhXS.lineDs2KPP_B_LoosePID_BkgXS
+#        , StrippingD2hhhXS.lineD2KPP_DCS_B_LoosePID_SigXS
+#        , StrippingD2hhhXS.lineD2KPP_DCS_B_LoosePID_BkgXS
+#        , StrippingD5h.lineD2KKPPP_B_NoPID_Bkg 
+#        , StrippingD5h.lineD2KKPPP_B_LoosePID_Bkg 
+#        , StrippingD5h.lineD2KKPPP_B_NoPID_Sig    
+#        , StrippingD5h.lineD2KKPPP_B_LoosePID_Sig
+#        , StrippingD5h.lineD2KPPPP_B_NoPID_Bkg 
+#        , StrippingD5h.lineD2KPPPP_B_LoosePID_Bkg 
+#        , StrippingD5h.lineD2KPPPP_B_NoPID_Sig    
+#        , StrippingD5h.lineD2KPPPP_B_LoosePID_Sig 
         , StrippingDstar_D2KPiPi0.lineRS
         , StrippingDstar_D2KPiPi0.lineWS
         , StrippingDstarVeryLooseWithD02HHConf().line()
@@ -108,11 +108,11 @@ stream.appendLines( [
         , StrippingD2Kh.DKhPreselLine
         , StrippingD2KhLoose.DKhPreselLooseLine
         ,StrippingD0forBXXConf().D02KPiforBXXLine()
-        ,StrippingD0forBXXConf().D02K3PiforBXXLine()
+#        ,StrippingD0forBXXConf().D02K3PiforBXXLine()
         , StrippingBd2KstarMuMuConf().line_for_DKpipipi()
         , StrippingDstarPromptWithD02HHNoPt.lineDstarPromptWithD02HHNoPt
-        , StrippingDstarD02KKpipiRobust.line1
-        , StrippingDstarD02KKpipiRegular.line1
+#        , StrippingDstarD02KKpipiRobust.line1
+#        , StrippingDstarD02KKpipiRegular.line1
         , StrippingDstarD02KKmumuRobust.line1
         , StrippingDstarD02KKmumuRegular.line1
   
@@ -123,6 +123,6 @@ stream.appendLines( StrippingDstarD02xxConf().lines() )
 # Charmonium -> p pbar
 stream.appendLines( [ StrippingCcbar2PpbarConf().Nominal_Line() ] )
 stream.appendLines( [ StrippingCcbar2PpbarConf().Loose_Line() ] )
-stream.appendLines( StrippingDstarPromptWithD02K3PiConf().lines() )
-stream.appendLines( StrippingD02K3PiForCrossSectionConf().lines() )
+#stream.appendLines( StrippingDstarPromptWithD02K3PiConf().lines() )
+#stream.appendLines( StrippingD02K3PiForCrossSectionConf().lines() )
 stream.appendLines( StrippingLambdacConf().lines() )
