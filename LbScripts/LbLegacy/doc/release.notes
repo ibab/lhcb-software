@@ -1,5 +1,7 @@
 2010-07-22  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
+	* python/LbLegacy/install_project.py: fixed up the problem with the missing <cmtconfig>.tar.gz
+	tarball.
 	* scripts/mkMCGentar: fixed erroneous error about lhapdf.
 
 2010-07-16  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>

@@ -14,7 +14,7 @@ import socket
 from urllib import urlretrieve, urlopen, urlcleanup
 from shutil import rmtree
 
-script_version = '100716'
+script_version = '100722'
 python_version = sys.version_info[:3]
 txt_python_version = ".".join([str(k) for k in python_version])
 lbscripts_version = "v5r2"
@@ -263,8 +263,6 @@ def addPermissions(authbits, directory, recursive=True):
         else :
             chmodcmd = "chmod -R %s %s" % (",".join(authlist), directory)
         commands.getstatusoutput(chmodcmd)
-
-
 
 
 def getGlobalMask():
@@ -928,6 +926,7 @@ def getProjectTar(tar_list, already_present_list=None):
                 getFile(url_dist + 'source/', fname)
             elif tar_list[fname] == "system":
                 log.info("Obsolete package %s will not be installed. The Compat project is replacing it" % fname)
+                continue
             else:
                 checkWriteAccess(this_lhcb_dir)
                 os.chdir(this_lhcb_dir)
