@@ -45,10 +45,13 @@ def ConfiguredTrackMonitorSequence(Name = "TrackMonitorSequence",
 def ConfiguredOTMonitorSequence(Name = "MoniOTSeq",
                                 HistoPrint = False ):
     seq = GaudiSequencer(Name)
-    seq.Members.append( OTTimeMonitor(HistoPrint=HistoPrint) )
-    if not RecMoniConf().getProp("Histograms") is "Online":
-        seq.Members.append( OTTrackMonitor(HistoPrint=HistoPrint) )
-        seq.Members.append( OTHitEfficiencyMonitor(HistoPrint=HistoPrint) )
+    if RecMoniConf().getProp("Histograms") is "Online":
+    	OTTrackMonitor().Online = True
+    	OTHitEfficiencyMonitor().Online = True
+    
+    seq.Members.append( OTTimeMonitor(HistoPrint=HistoPrint) )	    
+    seq.Members.append( OTTrackMonitor(HistoPrint=HistoPrint) )
+    seq.Members.append( OTHitEfficiencyMonitor(HistoPrint=HistoPrint) )
 
     from Configurables import TrackSys
     if TrackSys().cosmics():

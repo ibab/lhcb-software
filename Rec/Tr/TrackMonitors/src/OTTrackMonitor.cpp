@@ -20,8 +20,11 @@
 
 #include <boost/foreach.hpp>
 #include <boost/lexical_cast.hpp>
+#include <map>
 
 const double cellRadius = 2.5;
+
+
 
 class OTTrackMonitor: public GaudiHistoAlg
 {
@@ -37,6 +40,8 @@ class OTTrackMonitor: public GaudiHistoAlg
   static const int HIST_GOOD_DRIFTTIME_RESIDUAL = 8 + 3;
   static const int HIST_GOOD_RESIDUAL = 8 + 4;
   static const int HIST_GOOD_RESIDUAL_PULL = 8 + 5;
+
+
 private:
   AIDA::IHistogram1D* hists[12][16];
   AIDA::IHistogram2D* histXY[12];
@@ -71,6 +76,9 @@ private:
 
   AIDA::IHistogram1D* histEventAverageTimeResidual;
 
+
+ 
+
 public:
   /** Standard construtor */
   OTTrackMonitor(const std::string& name, ISvcLocator* pSvcLocator);
@@ -88,7 +96,9 @@ public:
   virtual StatusCode execute();
 private:
   void bookHists(int index, const std::string& prefix);
-
+  void plotHist1D( AIDA::IHistogram1D* hist, double value, double weight);
+  void plotHist2D( AIDA::IHistogram2D* hist, double x, double y, double weight);
+  void plotProf1D(AIDA::IProfile1D* hist, double x, double y, double weight);
   void setNormalization(AIDA::IHistogram1D* hist);
 
   enum
@@ -130,6 +140,9 @@ private:
   double m_maxUnbiasedChisqPerDofGoodTracks;
   int m_granularity;
   size_t m_numEvents;
+  bool m_isOnline;
+ 
+
 };
 
 // Declaration of the Algorithm Factory
@@ -148,6 +161,8 @@ OTTrackMonitor::OTTrackMonitor(const std::string& name, ISvcLocator* pSvcLocator
   declareProperty( "MaxUnbiasedChisqPerDofGoodTracks", m_maxUnbiasedChisqPerDofGoodTracks = 2 ) ;
   declareProperty( "Granularity", m_granularity = 1 ) ;
   declareProperty( "RawBankDecoder", m_decoder ) ;
+  declareProperty( "Online", m_isOnline = false );
+  
 }
 
 //=============================================================================
@@ -159,30 +174,40 @@ OTTrackMonitor::~OTTrackMonitor()
 
 void OTTrackMonitor::bookHists(int index, const std::string& prefix)
 {
+ 
   hists[index][HIST_DRIFTTIME] = book(prefix + "drifttime", "drifttime", -25, 75);
-  hists[index][HIST_DRIFTRADIUS] = book(prefix + "driftradius", "driftradius", 0, 5);
-  hists[index][HIST_TRACK_DISTANCE] = book(prefix + "trkdist", "unbiased distance", -5, 5);
-  hists[index][HIST_DRIFTTIME_RESIDUAL] = book(prefix + "drifttimeresidual", "drifttime residual (rms unbiased)", -20, 20);
   hists[index][HIST_RESIDUAL] = book(prefix + "residual", "residual (rms unbiased)", -2, 2);
-  hists[index][HIST_RESIDUAL_PULL] = book(prefix + "residualpull", "residual pull", -5, 5);
-
-  hists[index][HIST_GOOD_DRIFTTIME] = book(prefix + "drifttimegood", "drifttime (good tracks)", -25, 75);
-  hists[index][HIST_GOOD_DRIFTRADIUS] = book(prefix + "driftradiusgood", "driftradius (good tracks)", 0, 5);
-  hists[index][HIST_GOOD_TRACK_DISTANCE] = book(prefix + "trkdistgood", "unbiased distance (good tracks)", -5, 5);
-  hists[index][HIST_GOOD_DRIFTTIME_RESIDUAL] = book(prefix +
-                                                    "drifttimeresidualgood",
-                                                    "drifttime residual (rms unbiased, good tracks)",
-                                                    -20, 20);
-  hists[index][HIST_GOOD_RESIDUAL] = book(prefix + "residualgood", "residual (rms unbiased, good tracks)", -2, 2);
-  hists[index][HIST_GOOD_RESIDUAL_PULL] = book(prefix + "residualpullgood", "residual pull (good tracks)", -5, 5);
-
   histXY[index] = book2D(prefix + "xyh2", "position of track at hit",
-    -3000, 3000, 20, -3000, 3000, 20);
+                         -3000, 3000, 20, -3000, 3000, 20);
   histRT[index] = book2D(prefix + "rt", "drifttime versus unbiased distance",
-    -cellRadius, cellRadius, 50, -25, 75, 50);
-  histAverageTimeResidualVsY[index] = bookProfile1D(prefix + "avtimeresvsy", "average time residual versus y", 
-						    0, 2000, 40) ;
+                         -cellRadius, cellRadius, 50, -25, 75, 50);
+  
+  if(!m_isOnline){
+    hists[index][HIST_DRIFTRADIUS] = book(prefix + "driftradius", "driftradius", 0, 5);
+    hists[index][HIST_TRACK_DISTANCE] = book(prefix + "trkdist", "unbiased distance", -5, 5);
+    hists[index][HIST_DRIFTTIME_RESIDUAL] = book(prefix + "drifttimeresidual", "drifttime residual (rms unbiased)", -20, 20);
+    
+    hists[index][HIST_RESIDUAL_PULL] = book(prefix + "residualpull", "residual pull", -5, 5);
+    
+    hists[index][HIST_GOOD_DRIFTTIME] = book(prefix + "drifttimegood", "drifttime (good tracks)", -25, 75);
+    hists[index][HIST_GOOD_DRIFTRADIUS] = book(prefix + "driftradiusgood", "driftradius (good tracks)", 0, 5);
+    hists[index][HIST_GOOD_TRACK_DISTANCE] = book(prefix + "trkdistgood", "unbiased distance (good tracks)", -5, 5);
+    hists[index][HIST_GOOD_DRIFTTIME_RESIDUAL] = book(prefix +
+                                                      "drifttimeresidualgood",
+                                                      "drifttime residual (rms unbiased, good tracks)",
+                                                      -20, 20);
+    hists[index][HIST_GOOD_RESIDUAL] = book(prefix + "residualgood", "residual (rms unbiased, good tracks)", -2, 2);
+    hists[index][HIST_GOOD_RESIDUAL_PULL] = book(prefix + "residualpullgood", "residual pull (good tracks)", -5, 5);
+    
+    
+    
+    histAverageTimeResidualVsY[index] = bookProfile1D(prefix + "avtimeresvsy", "average time residual versus y", 
+                                                      0, 2000, 40) ;
+  }
+  
+   
 }
+
 
 //=============================================================================
 // Initialization
@@ -217,58 +242,67 @@ StatusCode OTTrackMonitor::initialize()
     break;
   }
 
-  const int numDistBins = 25;
-
-  profileTimeResidualVsModule = bookProfile1D("timeresvsmodule", "unbiased drifttime residual versus module",
-    -0.5, 1.0 * NumUniqueModule - 0.5, NumUniqueModule);
-  profileTimeResidualVsModuleGood = bookProfile1D("timeresvsmodulegood", "unbiased drifttime residual versus module",
-    -0.5, 1.0 * NumUniqueModule - 0.5, NumUniqueModule);
-  profileResidualVsModule = bookProfile1D("resvsmodule", "unbiased residual versus module",
-    -0.5, 1.0 * NumUniqueModule - 0.5, NumUniqueModule);
-  profileResidualPullVsModule = bookProfile1D("respullvsmodule", "residual pull versus module",
-    -0.5, 1.0 * NumUniqueModule - 0.5, NumUniqueModule);
-
-  profileTimeResidualVsDistance = bookProfile1D("timeresvsdistance", "unbiased drifttime residual versus distance",
-    0, cellRadius, numDistBins);
-  profileResidualVsDistance = bookProfile1D("resvsdistance", "unbiased residual versus distance",
-    0, cellRadius, numDistBins);
-  profileResidualPullVsDistance = bookProfile1D("respullvsdistance", "residual pull versus distance",
-    0, cellRadius, numDistBins);
-
-  profileTimeResidualVsDistanceGood = bookProfile1D("timeresvsdistancegood", 
-                                                    "unbiased drifttime residual versus distance (good tracks)",
-    0, cellRadius, numDistBins);
-  profileResidualVsDistanceGood = bookProfile1D("resvsdistancegood", "unbiased residual versus distance (good tracks)",
-    0, cellRadius, numDistBins);
-  profileResidualPullVsDistanceGood = bookProfile1D("respullvsdistancegood", "residual pull versus distance (good tracks)",
-    0, cellRadius, numDistBins);
-
-  histModuleHitOccupancy = book("moduleHitOccupancy", "number of hits per module",
-    -0.5, 1.0 * NumUniqueModule - 0.5, NumUniqueModule);
-  histModuleHotOccupancy = book("moduleHotOccupancy", "number of HOTs per module",
-    -0.5, 1.0 * NumUniqueModule - 0.5, NumUniqueModule);
-  histModuleOutlierOccupancy = book("moduleOutlierOccupancy", "number of outliers per module",
-    -0.5, 1.0 * NumUniqueModule - 0.5, NumUniqueModule);
-  histOtisHitOccupancy = book("otisHitOccupancy", "number of hits per otis",
-    -0.5, 1.0 * NumUniqueOtis - 0.5, NumUniqueOtis);
-  histOtisHotOccupancy = book("otisHotOccupancy", "number of HOTs per otis",
-    -0.5, 1.0 * NumUniqueOtis - 0.5, NumUniqueOtis);
   
-  histAverageTimeResidual = book("avtimeres", "track t0", -10, 10);
-  histAverageTimeResidualVsMomentum = book2D("avtimeresvsmom", "average time residual versus momentum",
-    0, 20, 40, -5, 5, 50) ;
-  histDeltaToF = book("deltaToF", "delta time of flight",
-    -25, 25);
+  const int numDistBins = 25;
+ 
+  profileTimeResidualVsModule = bookProfile1D("timeresvsmodule", "unbiased drifttime residual versus module",
+                                              -0.5, 1.0 * NumUniqueModule - 0.5, NumUniqueModule);
+  profileResidualVsModule = bookProfile1D("resvsmodule", "unbiased residual versus module",
+                                          -0.5, 1.0 * NumUniqueModule - 0.5, NumUniqueModule);
   m_hitMultiplicity = book("hitmultiplicity","hit multiplicity", 0, 5000, 200) ;
-  m_hotMultiplicity = book("hotmultiplicity","hot multiplicity", 0, 5000, 200) ;
-  m_driftTimeUse    = book("drifttimeuse","drift time strategy flag", -0.5,5.5,6) ;
+  m_hotMultiplicity = book("hotmultiplicity","hot multiplicity", 0, 5000, 200) ; 
+  histModuleHitOccupancy = book("moduleHitOccupancy", "number of hits per module",
+                                -0.5, 1.0 * NumUniqueModule - 0.5, NumUniqueModule);
+  histModuleHotOccupancy = book("moduleHotOccupancy", "number of HOTs per module",
+                                -0.5, 1.0 * NumUniqueModule - 0.5, NumUniqueModule);
+  
+  if(!m_isOnline){
+    profileTimeResidualVsModuleGood = bookProfile1D("timeresvsmodulegood", "unbiased drifttime resid// ual versus module",
+                                                    -0.5, 1.0 * NumUniqueModule - 0.5, NumUniqueModule);
+    
+    profileResidualPullVsModule = bookProfile1D("respullvsmodule", "residual pull versus module",
+                                                -0.5, 1.0 * NumUniqueModule - 0.5, NumUniqueModule);
+    
+    profileTimeResidualVsDistance = bookProfile1D("timeresvsdistance", "unbiased drifttime residual versus distance",
+                                                  0, cellRadius, numDistBins);
+    profileResidualVsDistance = bookProfile1D("resvsdistance", "unbiased residual versus distance",
+                                              0, cellRadius, numDistBins);
+    profileResidualPullVsDistance = bookProfile1D("respullvsdistance", "residual pull versus distance",
+                                                  0, cellRadius, numDistBins);
+    
+    profileTimeResidualVsDistanceGood = bookProfile1D("timeresvsdistancegood", 
+                                                      "unbiased drifttime residual versus distance (good tracks)",
+                                                      0, cellRadius, numDistBins);
+  profileResidualVsDistanceGood = bookProfile1D("resvsdistancegood", "unbiased residual versus distance (good tracks)",
+                                                  0, cellRadius, numDistBins);
+    profileResidualPullVsDistanceGood = bookProfile1D("respullvsdistancegood", "residual pull versus distance (good tracks)",
+                                                      0, cellRadius, numDistBins);
 
-  histEventAverageTimeResidual = book("eventavtimeres", "event average time residual",
-    -10, 10);
+    histModuleOutlierOccupancy = book("moduleOutlierOccupancy", "number of outliers per module",
+                                      -0.5, 1.0 * NumUniqueModule - 0.5, NumUniqueModule);
 
+    histOtisHitOccupancy = book("otisHitOccupancy", "number of hits per otis",
+                                -0.5, 1.0 * NumUniqueOtis - 0.5, NumUniqueOtis);
+
+    histOtisHotOccupancy = book("otisHotOccupancy", "number of HOTs per otis",
+                                -0.5, 1.0 * NumUniqueOtis - 0.5, NumUniqueOtis);
+    histAverageTimeResidual = book("avtimeres", "track t0", -10, 10);
+    histAverageTimeResidualVsMomentum = book2D("avtimeresvsmom", "average time residual versus momentum",
+                                               0, 20, 40, -5, 5, 50) ;
+    histDeltaToF = book("deltaToF", "delta time of flight",
+                        -25, 25);
+    
+    m_driftTimeUse    = book("drifttimeuse","drift time strategy flag", -0.5,5.5,6) ;
+    
+    histEventAverageTimeResidual = book("eventavtimeres", "event average time residual",
+                                        -10, 10);
+  }
+  
+
+  
   debug() << "------------ TrackMonitor::initialize() / end ---------" << endmsg;
-
-  return statusCode;
+  
+return statusCode;
 }
 
 //=============================================================================
@@ -282,6 +316,24 @@ StatusCode OTTrackMonitor::finalize()
   return GaudiHistoAlg::finalize();
 }
 
+
+void OTTrackMonitor::plotHist1D(AIDA::IHistogram1D* hist, double value, double weight)
+{
+  if(hist)
+    fill(hist, value, weight);
+} 
+
+void OTTrackMonitor::plotHist2D(AIDA::IHistogram2D* hist, double x, double y, double weight)
+{
+  if(hist)
+  	fill(hist, x, y, weight);
+} 
+
+void OTTrackMonitor::plotProf1D(AIDA::IProfile1D* hist, double x, double y, double weight)
+{
+  if(hist)
+  	fill(hist, x, y, weight);
+} 
 //=========================================================================
 // 
 //=========================================================================
@@ -357,7 +409,7 @@ StatusCode OTTrackMonitor::execute()
       const LHCb::OTMeasurement* measurement = dynamic_cast<const LHCb::OTMeasurement*>(&node->measurement());
       if(measurement == 0) continue;
 
-      m_driftTimeUse->fill( measurement->driftTimeStrategy() ) ;
+      plotHist1D(m_driftTimeUse, measurement->driftTimeStrategy(), 1.0 ) ;
 
       LHCb::OTChannelID channel = measurement->channel();
 
@@ -415,16 +467,16 @@ StatusCode OTTrackMonitor::execute()
       {
         if(std::abs( drifttimeResidual ) < 12)
         {
-          fill(profileTimeResidualVsModule, uniquemodule, drifttimeResidual, 1.0);
+          plotProf1D(profileTimeResidualVsModule, uniquemodule, drifttimeResidual, 1.0);
         }
-        fill(profileResidualVsModule, uniquemodule, residual, 1.0);
-        fill(profileResidualPullVsModule, uniquemodule, residualPull, 1.0);
+        plotProf1D(profileResidualVsModule, uniquemodule, residual, 1.0);
+        plotProf1D(profileResidualPullVsModule, uniquemodule, residualPull, 1.0);
       }
 
-      fill(histModuleHotOccupancy, uniquemodule, 1.0);
-      if(isOutlier) fill(histModuleOutlierOccupancy, uniquemodule, 1.0);
+      plotHist1D(histModuleHotOccupancy, uniquemodule, 1.0);
+      if(isOutlier) plotHist1D(histModuleOutlierOccupancy, uniquemodule, 1.0);
 
-      fill(histOtisHotOccupancy, uniqueOtis(channel), 1.0);
+      plotHist1D(histOtisHotOccupancy, uniqueOtis(channel), 1.0);
 
       // get index of hist - this depends on granularity (plots per stations or per layer)
       int histIndex = 0;
@@ -433,24 +485,23 @@ StatusCode OTTrackMonitor::execute()
       case 1: histIndex = channel.station() - 1; break;
       case 2: histIndex = uniquelayer; break;
       }
-
-      fill(hists[histIndex][HIST_DRIFTTIME], drifttime, 1.0);
-      fill(hists[histIndex][HIST_DRIFTRADIUS], radius, 1.0);
-      fill(hists[histIndex][HIST_TRACK_DISTANCE], trackDistance, 1.0);
+      plotHist1D(hists[histIndex][HIST_DRIFTTIME], drifttime, 1.0);
+      plotHist1D(hists[histIndex][HIST_DRIFTRADIUS], radius, 1.0);
+      plotHist1D(hists[histIndex][HIST_TRACK_DISTANCE], trackDistance, 1.0);
       if( drifttimeWasUsed )
       {
-        fill(hists[histIndex][HIST_DRIFTTIME_RESIDUAL], drifttimeResidual * residualScaleFactor, 1.0);
-        fill(hists[histIndex][HIST_RESIDUAL], residual * residualScaleFactor, 1.0);
-        fill(hists[histIndex][HIST_RESIDUAL_PULL], residualPull, 1.0);
+        plotHist1D(hists[histIndex][HIST_DRIFTTIME_RESIDUAL], drifttimeResidual * residualScaleFactor, 1.0);
+        plotHist1D(hists[histIndex][HIST_RESIDUAL], residual * residualScaleFactor, 1.0);
+        plotHist1D(hists[histIndex][HIST_RESIDUAL_PULL], residualPull, 1.0);
 
-        fill(profileTimeResidualVsDistance, std::abs(trackDistance), drifttimeResidual, 1.0);
-        fill(profileResidualVsDistance, std::abs(trackDistance), residual, 1.0);
-        fill(profileResidualPullVsDistance, std::abs(trackDistance), residualPull, 1.0);
+        plotProf1D(profileTimeResidualVsDistance, std::abs(trackDistance), drifttimeResidual, 1.0);
+        plotProf1D(profileResidualVsDistance, std::abs(trackDistance), residual, 1.0);
+        plotProf1D(profileResidualPullVsDistance, std::abs(trackDistance), residualPull, 1.0);
         double y = unbiasedState.y() - fitnode->measurement().trajectory().beginPoint().y() ;
-        histAverageTimeResidualVsY[histIndex]->fill( y, drifttimeResidual ) ;
+        plotProf1D(histAverageTimeResidualVsY[histIndex], y, drifttimeResidual, 1.0) ;
       }
 
-      fill(histDeltaToF, measurement->deltaTimeOfFlight(), 1.0);
+      plotHist1D(histDeltaToF, measurement->deltaTimeOfFlight(), 1.0);
 
       // same for 'good' tracks
       double unbiasedChi2 = (track->chi2() - residualPull * residualPull) / (track->nDoF() - 1);
@@ -460,24 +511,24 @@ StatusCode OTTrackMonitor::execute()
       {
         if(std::abs( drifttimeResidual ) < 12)
         {
-          fill(profileTimeResidualVsModuleGood, uniquemodule, drifttimeResidual, 1.0);
+          plotProf1D(profileTimeResidualVsModuleGood, uniquemodule, drifttimeResidual, 1.0);
         }
 
-        fill(hists[histIndex][HIST_GOOD_DRIFTTIME], drifttime, 1.0);
-        fill(hists[histIndex][HIST_GOOD_DRIFTRADIUS], radius, 1.0);
-        fill(hists[histIndex][HIST_GOOD_TRACK_DISTANCE], trackDistance, 1.0);
+        plotHist1D(hists[histIndex][HIST_GOOD_DRIFTTIME], drifttime, 1.0);
+        plotHist1D(hists[histIndex][HIST_GOOD_DRIFTRADIUS], radius, 1.0);
+        plotHist1D(hists[histIndex][HIST_GOOD_TRACK_DISTANCE], trackDistance, 1.0);
 
         // remove hits outside cell radius
         // NOTE: actualy it is qute strange: the hits outside of cell radius also can be good
         if(std::abs(trackDistance) < cellRadius)
         {
-          fill(hists[histIndex][HIST_GOOD_DRIFTTIME_RESIDUAL], drifttimeResidual * residualScaleFactor, 1.0);
-          fill(hists[histIndex][HIST_GOOD_RESIDUAL], residual * residualScaleFactor, 1.0);
-          fill(hists[histIndex][HIST_GOOD_RESIDUAL_PULL], residualPull, 1.0);
+          plotHist1D(hists[histIndex][HIST_GOOD_DRIFTTIME_RESIDUAL], drifttimeResidual * residualScaleFactor, 1.0);
+          plotHist1D(hists[histIndex][HIST_GOOD_RESIDUAL], residual * residualScaleFactor, 1.0);
+          plotHist1D(hists[histIndex][HIST_GOOD_RESIDUAL_PULL], residualPull, 1.0);
 
-          fill(profileTimeResidualVsDistanceGood, std::abs(trackDistance), drifttimeResidual, 1.0);
-          fill(profileResidualVsDistanceGood, std::abs(trackDistance), residual, 1.0);
-          fill(profileResidualPullVsDistanceGood, std::abs(trackDistance), residualPull, 1.0);
+          plotProf1D(profileTimeResidualVsDistanceGood, std::abs(trackDistance), drifttimeResidual, 1.0);
+          plotProf1D(profileResidualVsDistanceGood, std::abs(trackDistance), residual, 1.0);
+          plotProf1D(profileResidualPullVsDistanceGood, std::abs(trackDistance), residualPull, 1.0);
 
           if(!isOutlier && drifttimeWasUsed)
           {
@@ -490,20 +541,20 @@ StatusCode OTTrackMonitor::execute()
       } // if(isGoodTrack)
 
       // 2D occupancy plot, quite a beast. should be forbidden in monitoring!
-      fill(histXY[histIndex], node->state().x(), node->state().y(), 1.0);
-      fill(histRT[histIndex], trackDistance, drifttime, 1.0);
+      plotHist2D(histXY[histIndex], node->state().x(), node->state().y(), 1.0);
+      plotHist2D(histRT[histIndex], trackDistance, drifttime, 1.0);
     } // BOOST_FOREACH(const LHCb::Node* node, track->nodes())
 
     if(timeResidualSumN > 5)
     {
-      fill(histAverageTimeResidual, timeResidualSum / timeResidualSumN, 1.0);
-      fill(histAverageTimeResidualVsMomentum, track->p() / 1000.0, timeResidualSum / timeResidualSumN, 1.0);
+      plotHist1D(histAverageTimeResidual, timeResidualSum / timeResidualSumN, 1.0);
+      plotHist2D(histAverageTimeResidualVsMomentum, track->p() / 1000.0, timeResidualSum / timeResidualSumN, 1.0);
     } // if(timeResidualSumN > 5)
   } // BOOST_FOREACH(const LHCb::Track* track,tracks)
 
   if(eventAverageTimeResidualN > 9)
   {
-    fill(histEventAverageTimeResidual, eventAverageTimeResidual / eventAverageTimeResidualN, 1.0);
+    plotHist1D(histEventAverageTimeResidual, eventAverageTimeResidual / eventAverageTimeResidualN, 1.0);
   }
 
   BOOST_FOREACH(const DeOTModule* module, m_otdet->modules())
@@ -511,20 +562,21 @@ StatusCode OTTrackMonitor::execute()
     LHCb::OTChannelID modid = module->elementID();
     LHCb::OTLiteTimeRange liteTimes = m_decoder->decodeModule(modid);
     size_t numhits = liteTimes.size();
-    fill(histModuleHitOccupancy, uniqueModule(modid), numhits);
+    plotHist1D(histModuleHitOccupancy, uniqueModule(modid), numhits);
     BOOST_FOREACH(const LHCb::OTLiteTime& liteTime, liteTimes)
     {
-      fill(histOtisHitOccupancy, uniqueOtis(liteTime.channel()), 1.0);
+      plotHist1D(histOtisHitOccupancy, uniqueOtis(liteTime.channel()), 1.0);
     }
   } // BOOST_FOREACH(const DeOTModule* module, m_otdet->modules())
 
-  m_hitMultiplicity->fill( m_decoder->totalNumberOfHits() ) ;
-  m_hotMultiplicity->fill( numHots ) ;
+  plotHist1D(m_hitMultiplicity, m_decoder->totalNumberOfHits(), 1.0 );
+  plotHist1D(m_hotMultiplicity, numHots , 1.0);
 
   // set this on every event
   setNormalization(histModuleHitOccupancy);
   setNormalization(histModuleHotOccupancy);
-  setNormalization(histModuleOutlierOccupancy);
+  if(!m_isOnline)
+    setNormalization(histModuleOutlierOccupancy);
 
   debug() << "------------ TrackMonitor::execute() / end ------------" << endmsg;
 
@@ -538,3 +590,5 @@ void OTTrackMonitor::setNormalization(AIDA::IHistogram1D* hist)
   TH1* h1 = Gaudi::Utils::Aida2ROOT::aida2root(hist);
   if(h1) h1->SetEntries(m_numEvents);
 }
+
+

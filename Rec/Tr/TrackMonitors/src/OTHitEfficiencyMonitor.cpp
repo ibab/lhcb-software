@@ -29,20 +29,29 @@ namespace {
     AIDA::IHistogram2D* m_2DExpOccupancy;  
     //AIDA::IHistogram2D* m_2DHotOccupancy;
 
-    
-    LayerEfficiencyHistograms(GaudiHistoAlg& alg,  size_t LayerID ) {
+    LayerEfficiencyHistograms(GaudiHistoAlg& alg,  size_t LayerID , bool isOnline) {
       // construct a directory name
       std::string Layername = std::string("Layer") + boost::lexical_cast<std::string>( LayerID ) + "/" ;
-      m_2DHitEfficiency = alg.bookProfile2D( Layername + "2DHitEfficiency", "2DHitEfficiency", 
-                                             -3157.0, 3157.0, 74, -2800,2800,100);
-      m_2DHotEfficiency = alg.bookProfile2D( Layername + "2DHotEfficiency", "2DHotEfficiency",
-                                             -3157.0, 3157.0, 74, -2800,2800,100);
-
+      if(!isOnline){
+        m_2DHitEfficiency = alg.bookProfile2D( Layername + "2DHitEfficiency", "2DHitEfficiency", 
+                                               -3157.0, 3157.0, 74, -2800,2800,100);
+        
+        m_2DHotEfficiency = alg.bookProfile2D( Layername + "2DHotEfficiency", "2DHotEfficiency",
+                                               -3157.0, 3157.0, 74, -2800,2800,100);
+        
       //m_2DHitOccupancy = alg.book2D( Layername + "2DHitOccupancy", "2D Hit Occupancy",-3157.0, 3157.0, 74, -2800,2800,100); 
-      m_2DExpOccupancy = alg.book2D( Layername + "2DExpOccupancy", "2D Exp Occupancy", 
-                                     -3157.0, 3157.0, 74, -2800,2800,100);
-      //m_2DHotOccupancy = alg.book2D( Layername + "2DHotOccupancy", "2D Hot Occupancy", -3157.0, 3157.0, 74, -2800,2800,100);
+        m_2DExpOccupancy = alg.book2D( Layername + "2DExpOccupancy", "2D Exp Occupancy", 
+                                       -3157.0, 3157.0, 74, -2800,2800,100);
+        //m_2DHotOccupancy = alg.book2D( Layername + "2DHotOccupancy", "2D Hot Occupancy", -3157.0, 3157.0, 74, -2800,2800,100);
+        
+      } else {
+        m_2DHitEfficiency = alg.bookProfile2D( Layername + "2DHitEfficiency", "2DHitEfficiency", 
+                                               -3157.0, 3157.0, 74, -2800,2800,100);
+        m_2DHotEfficiency =0;
+        m_2DExpOccupancy = 0;
+      }
     }
+    
   };
   
   struct ModuleEfficiencyHistograms
@@ -55,24 +64,35 @@ namespace {
     AIDA::IHistogram2D* m_clustersize ;
     AIDA::IHistogram1D* m_deltatdc ;
     
-    ModuleEfficiencyHistograms(GaudiHistoAlg& alg,  size_t moduleID ) {
+    ModuleEfficiencyHistograms(GaudiHistoAlg& alg,  size_t moduleID, bool isOnline ) {
       // construct a directory name
       std::string modulename = std::string("Module") + boost::lexical_cast<std::string>( moduleID ) + "/" ;
-      m_effvsmonocoord = alg.bookProfile1D( modulename + "effvsmonocoord", 
-						"hit efficiency versus coordinate in mono layer plane", -3, 3, 200) ;
-      m_effvsdist     = alg.bookProfile1D( modulename + "effvsdist", 
-					   "hit efficiency versus distance", -7.5, 7.5, 200) ;
-      m_effvsyfrac    = alg.bookProfile1D( modulename + "effvsy", 
-					   "hit efficiency versus y-coordinate in mono layer plane", -0.1, 1.1, 120) ;
-      m_receffvsmonocoord = alg.bookProfile1D( modulename + "hoteffvsmonocoord", 
-						"hot efficiency versus coordinate in mono layer plane", -3, 3, 200) ;
-      m_receffvsyfrac    = alg.bookProfile1D( modulename + "hoteffvsy", 
-					      "hot efficiency versus y-coordinate in mono layer plane", -0.1, 1.1, 120) ;
-      
-      m_clustersize = alg.book2D( modulename + "clustersize", 
-				  "clustersize versus slope", -1,1,20,-0.5,10.5,11) ;
-      m_deltatdc = alg.book1D( modulename + "deltatdc", 
-			       "tdc_neighbour - tdc_central for 2-cell clusters",-128,128,256) ;
+      if(!isOnline){
+        m_effvsdist     = alg.bookProfile1D( modulename + "effvsdist", 
+                                        "hit efficiency versus distance", -7.5, 7.5, 200) ;
+        m_effvsmonocoord = alg.bookProfile1D( modulename + "effvsmonocoord", 
+                                              "hit efficiency versus coordinate in mono layer plane", -3, 3, 200) ;
+        m_effvsyfrac    = alg.bookProfile1D( modulename + "effvsy", 
+                                             "hit efficiency versus y-coordinate in mono layer plane", -0.1, 1.1, 120) ;
+        m_receffvsmonocoord = alg.bookProfile1D( modulename + "hoteffvsmonocoord", 
+                                                 "hot efficiency versus coordinate in mono layer plane", -3, 3, 200) ;
+        m_receffvsyfrac    = alg.bookProfile1D( modulename + "hoteffvsy", 
+                                                "hot efficiency versus y-coordinate in mono layer plane", -0.1, 1.1, 120) ;
+        
+        m_clustersize = alg.book2D( modulename + "clustersize", 
+                                    "clustersize versus slope", -1,1,20,-0.5,10.5,11) ;
+        m_deltatdc = alg.book1D( modulename + "deltatdc",
+                                 "tdc_neighbour - tdc_central for 2-cell clusters",-128,128,256) ;
+      } else {
+        m_effvsdist     = alg.bookProfile1D( modulename + "effvsdist", 
+                                             "hit efficiency versus distance", -7.5, 7.5, 200) ;
+        m_effvsmonocoord = 0;
+        m_receffvsmonocoord =0;
+        m_effvsyfrac=0;
+        m_receffvsyfrac=0;
+        m_clustersize=0;
+        m_deltatdc=0;
+      }
     }
   } ;
   
@@ -126,6 +146,10 @@ private:
   void fillEfficiency(const LHCb::Track& track, const DeOTModule& module, const LHCb::State& state) ;
   void fillEfficiency(const LHCb::Track& track, const DeOTModule& module,const LHCb::FitNode* nodeA,const LHCb::FitNode* nodeB) ;
   void fillEfficiency(const LHCb::Track& track) ;
+  void plotHist1D(AIDA::IHistogram1D* hist, double value, double weight);
+  void plotHist2D(AIDA::IHistogram2D* hist, double x, double y, double weight);
+  void plotProf1D(AIDA::IProfile1D* hist, double x, double y, double weight);
+  void plotProf2D(AIDA::IProfile2D* hist, double x, double y, double z, double weight);
 private:
   ToolHandle<IOTRawBankDecoder> m_decoder ;
   ToolHandle<ITrackInterpolator> m_interpolator ;
@@ -135,7 +159,8 @@ private:
   size_t m_minOTHitsPerTrack ;
   double m_maxChi2PerDoF ;
   double m_maxDistError ;
-
+  bool m_isOnline;
+  
   // event data. we'll keep it such that we don't have to move it around.
   ModuleHitMap m_moduleHitMap[NumUniqueModule] ;
 
@@ -166,6 +191,8 @@ OTHitEfficiencyMonitor::OTHitEfficiencyMonitor( const std::string& name,
   declareProperty( "MaxChi2PerDoF",m_maxChi2PerDoF = 2   ) ;
   declareProperty( "MaxDistError", m_maxDistError = 0.2 ) ;
   declareProperty( "RawBankDecoder",m_decoder ) ;
+  declareProperty( "Online", m_isOnline = false);
+  
 }
 
 //=============================================================================
@@ -174,7 +201,6 @@ OTHitEfficiencyMonitor::OTHitEfficiencyMonitor( const std::string& name,
 OTHitEfficiencyMonitor::~OTHitEfficiencyMonitor() 
 {
 }
-
 
 //=============================================================================
 // Initialization
@@ -196,18 +222,19 @@ StatusCode OTHitEfficiencyMonitor::initialize()
   setHistoTopDir("OT/") ;
   m_efficiencyPerModulePr = bookProfile1D( "efficiencyVsModule","efficiency per module",
 					   -0.5,NumUniqueModule-0.5,NumUniqueModule) ;
-  m_efficiencyPerOtisPr = bookProfile1D( "efficiencyVsOtis","efficiency per otis",
-					 -0.5,NumUniqueOtis-0.5,NumUniqueOtis) ;
+  if(!m_isOnline)
+    m_efficiencyPerOtisPr = bookProfile1D( "efficiencyVsOtis","efficiency per otis",
+                                           -0.5,NumUniqueOtis-0.5,NumUniqueOtis) ;
   m_moduleHistograms.reserve(9) ;
   m_layerHistograms.reserve(12) ;
 
   for(int i=0; i<9; ++i)
-    m_moduleHistograms.push_back( new ModuleEfficiencyHistograms(*this,i+1) ) ;
+    m_moduleHistograms.push_back( new ModuleEfficiencyHistograms(*this,i+1, m_isOnline) ) ;
   
   for(int i=0; i<12; ++i)
-    m_layerHistograms.push_back( new LayerEfficiencyHistograms(*this, i) );
+    m_layerHistograms.push_back( new LayerEfficiencyHistograms(*this, i, m_isOnline) );
   
-
+   
   return sc;
 }
 
@@ -230,11 +257,36 @@ StatusCode OTHitEfficiencyMonitor::finalize()
   return GaudiHistoAlg::finalize() ;
 }
 
+
+void OTHitEfficiencyMonitor::plotHist1D(AIDA::IHistogram1D* hist, double value, double weight)
+{
+  if(hist)
+    fill(hist, value, weight);
+} 
+void OTHitEfficiencyMonitor::plotHist2D(AIDA::IHistogram2D* hist, double x, double y, double weight)
+{
+  if(hist)
+    fill(hist, x, y, weight);
+}
+
+
+void OTHitEfficiencyMonitor::plotProf1D(AIDA::IProfile1D* hist, double x, double y, double weight)
+{ 
+  if(hist)
+    fill(hist, x, y, weight);
+} 
+void OTHitEfficiencyMonitor::plotProf2D(AIDA::IProfile2D* hist, double x, double y, double z, double weight)
+{ 
+  if(hist)
+    fill(hist, x, y, z, weight);
+}
+
 //=========================================================================
 // 
 //=========================================================================
 StatusCode OTHitEfficiencyMonitor::execute()
 { 
+
   // first clear the hit map
   for(size_t imod=0; imod<NumUniqueModule; ++imod)
     for(size_t istraw=0; istraw<ModuleHitMap::MaxChan; ++istraw)
@@ -286,7 +338,8 @@ void OTHitEfficiencyMonitor::fillEfficiency( const LHCb::Track& track,
   
   ModuleEfficiencyHistograms* modulehist = m_moduleHistograms[module.elementID().module()-1] ;
   LayerEfficiencyHistograms* layerhist = m_layerHistograms[module.elementID().uniqueLayer()-4] ;
-  
+
+   
   // compute the direction in the local frame. this can be done a lot more efficient, but okay:
   Gaudi::XYZVector localslopes = module.geometry()->toLocal( refstate.slopes() ) ;
   double localTx  = localslopes.x()/localslopes.z() ;
@@ -304,19 +357,19 @@ void OTHitEfficiencyMonitor::fillEfficiency( const LHCb::Track& track,
       bool foundhot = foundhit && track.isOnTrack( LHCb::LHCbID( channel ) ) ;
       double monocoord = strawpos[imono] - istraw ;
       double dstraw    = monocoord*pitch*cosalpha  ;
-      modulehist->m_effvsdist->fill(dstraw,foundhit) ;
-      modulehist->m_effvsmonocoord->fill(monocoord,foundhit) ;
-      modulehist->m_receffvsmonocoord->fill(monocoord,foundhot) ;
+      plotProf1D(modulehist->m_effvsdist, dstraw,foundhit, 1.0) ;
+      plotProf1D(modulehist->m_effvsmonocoord, monocoord,foundhit, 1.0) ;
+      plotProf1D(modulehist->m_receffvsmonocoord, monocoord,foundhot, 1.0) ;
       if( std::abs(dstraw) < 1.25 ) {
-      modulehist->m_effvsyfrac->fill(yfrac[imono],foundhit) ;
-      modulehist->m_receffvsyfrac->fill(yfrac[imono],foundhot) ;
-      m_efficiencyPerModulePr->fill( uniquemodule, foundhit ) ;	
-      m_efficiencyPerOtisPr->fill( uniquemodule*4 + (istraw+monooffset-1)/32, foundhit ) ;
+      plotProf1D(modulehist->m_effvsyfrac, yfrac[imono],foundhit, 1.0) ;
+      plotProf1D(modulehist->m_receffvsyfrac, yfrac[imono],foundhot, 1.0) ;
+      plotProf1D(m_efficiencyPerModulePr, uniquemodule, foundhit, 1.0 ) ;	
+      plotProf1D(m_efficiencyPerOtisPr, uniquemodule*4 + (istraw+monooffset-1)/32, foundhit, 1.0 ) ;
 
       //Filling the 2D expected occupancy, hiteff and hoteff
-      layerhist->m_2DExpOccupancy->fill(refstate.x(),refstate.y());
-      layerhist->m_2DHitEfficiency->fill(refstate.x(),refstate.y(),foundhit);
-      layerhist->m_2DHotEfficiency->fill(refstate.x(),refstate.y(),foundhot);
+      plotHist2D(layerhist->m_2DExpOccupancy, refstate.x(),refstate.y(), 1.0);
+      plotProf2D(layerhist->m_2DHitEfficiency, refstate.x(),refstate.y(),foundhit, 1.0);
+      plotProf2D(layerhist->m_2DHotEfficiency, refstate.x(),refstate.y(),foundhot, 1.0);
 
       //Filling a 2D histo with the multiplicity of the hits
       //if (foundhit){
@@ -340,9 +393,9 @@ void OTHitEfficiencyMonitor::fillEfficiency( const LHCb::Track& track,
       for( int istraw = closeststraw-1; 
 	   istraw>=1 && (tmp = m_moduleHitMap[ uniquemodule ].hashit[ istraw + monooffset ]) ;
 	   --istraw) clusterhits.push_back( tmp ) ;
-      modulehist->m_clustersize->fill( localTx, clusterhits.size() ) ;
+      plotHist2D(modulehist->m_clustersize, localTx, clusterhits.size(), 1.0 ) ;
       if( clusterhits.size() ==2 ) 
-	modulehist->m_deltatdc->fill( double(clusterhits[1].tdcTime()) - double(clusterhits[0].tdcTime()) ) ;
+        plotHist1D(modulehist->m_deltatdc, double(clusterhits[1].tdcTime()) - double(clusterhits[0].tdcTime()), 1.0 ) ;
     }
   }
 }

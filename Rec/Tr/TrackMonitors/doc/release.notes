@@ -4,6 +4,10 @@
 ! Purpose     : Package for track data quality monitoring algorithms
 !-----------------------------------------------------------------------------
 
+! 2010-07-21 - Christian Linn
+ - Added property "Online" to OTTrackMonitor and OTHitEfficiencyMonitor to control
+   number of produced histograms in online monitoring
+
 !========================== TrackMonitors v1r27 2010-07-20 ===================
 ! 2010-07-20 - Marco Cattaneo
  - Remove wrong cut and paste comments from header of TrackTune.cpp
