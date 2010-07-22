@@ -4,6 +4,18 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2010-07-22 - Chris Jones
+ - Add an monitor monitoring option "RichPerfFromData" that runs the PID
+   selections from RichPIDQC to monitor the PID performance without the need
+   for MC information (i.e. on real data). 
+   NOTE : This option requires runtime access to DaVinci components, so has 
+   to be run under a combined environment like
+    > SetupProject Brunel vXrY --runtime DaVinci vNrM --use DaVinciSys
+   where vXrY and vNrM are compatible versions (share the same underlying 
+   projects). For this reason, it is not enabled by default in any histogram 
+   mode.
+ - Add histogram axis labels to all plots in RichRecoQC.
+
 !======================= RichRecQC v2r43 2010-07-20 ========================
 ! 2010-07-17 - Chris Jones
  - Update decoding error rates monitor to use new features in RichKernel

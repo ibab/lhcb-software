@@ -10,7 +10,7 @@ __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 from RichKernel.Configuration import *
 from Alignment import RichAlignmentConf
 from Configurables import ( GaudiSequencer, MessageSvc )
-from DDDB.Configuration import DDDBConf
+#from DDDB.Configuration import DDDBConf
 
 # -------------------------------------------------------------------------------------------
 
@@ -21,7 +21,7 @@ from DDDB.Configuration import DDDBConf
 class RichRecQCConf(RichConfigurableUser):
 
     ## Possible used Configurables
-    __used_configurables__ = [ (RichAlignmentConf,None) ]
+    __used_configurables__ = [ (RichAlignmentConf,None), ("RichPIDQCConf",None) ]
 
     ## Default Histogram set
     __default_histo_set__ = "OfflineFull"
@@ -41,7 +41,9 @@ class RichRecQCConf(RichConfigurableUser):
                            "RichPhotonGeometry", "PhotonRecoEfficiency",
                            "RichPhotonTrajectory", "RichStereoFitterTests",
                            "RichRayTracingTests", "RichDataObjectChecks",
-                           "RichRecoTiming", "RichFuncCKResPlots" ]
+                           "RichRecoTiming", "RichFuncCKResPlots",
+                           "RichPerfFromData"
+                           ]
 
     ## Added monitors
     __added_monitors__ = [ ]
@@ -693,3 +695,35 @@ class RichRecQCConf(RichConfigurableUser):
             moni.TimingName = "RecoTrSeq"
             moni.Algorithms = [ moni.TimingName ]
             seq.Members += [moni]
+
+        check = "RichPerfFromData"
+        if check in checks:
+            
+            # Warning : This option requires access to some items from the Analysis software stack
+            #         : Will only work in a Brunel + DaVinci software environment
+            #         : Use 'SetupProject Brunel vXrY --runtime DaVinci vNrM --use DaVinciSys'
+            
+            from Configurables import ( GaudiSequencer, ChargedProtoParticleAddRichInfo,
+                                        ChargedProtoCombineDLLsAlg, RichPIDQCConf )
+ 
+            # General sequence
+            seq = self.newSeq(sequence,check)
+
+            # make sure ProtoParticles are all up to date with the RICH info
+            seq.Members += [ ChargedProtoParticleAddRichInfo("ChargedProtoPAddRich"),
+                             ChargedProtoCombineDLLsAlg("ChargedProtoPCombDLL") ]
+
+            # Set up PID monitoring sequence
+            pidSeq = GaudiSequencer("RichPIDSelections")
+            seq.Members += [pidSeq]
+
+            # Get the PID QC configurable
+            pidqcConf = self.getRichCU(RichPIDQCConf)
+
+            # Set options
+            self.setOtherProps(pidqcConf,['OutputLevel','Context'])
+            pidqcConf.setProp("CalibSequencer",pidSeq)
+
+            # Only run the PID monitors, not the selections themselves
+            #pidqcConf.RunSelection = False
+            #pidqcConf.RunMonitors = True
