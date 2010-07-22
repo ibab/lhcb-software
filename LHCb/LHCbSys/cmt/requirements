@@ -68,7 +68,7 @@ use IOExample             v3r4    Ex      # Marco Cattaneo
 # Packages without Hat, cannot have comment field. In SVN. Maintainer M.Cattaneo
 use GaudiConf             v13r5
 use GaudiObjDesc          v11r10p1
-use GaudiPatches          v1r2
+#use GaudiPatches          v1r2
 
 # Kernel packages
 use HistoStrings          v1r0    Kernel  # Vanya Belyaev 
