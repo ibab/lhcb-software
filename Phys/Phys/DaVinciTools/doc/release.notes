@@ -1,14 +1,13 @@
-! $Id: release.notes,v 1.562 2010-07-22 10:25:22 jonrob Exp $
+! $Id: release.notes,v 1.563 2010-07-22 11:12:35 jonrob Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
 
 ! 2010-07-22 - Chris Jones
- - Suppress warning in OnOfflineTool when context() is neither "HLT" or "".
-   Tool implicitly treats anything that isn't "HLT" as offline. 
- - Add "Hlt" as an HLT context() in OnOfflineTool (I think I may use this 
-   in the RICH somewhere)
+ - Update OnOfflineTool to 'support' context() == "" or "Offline", or "HLT",
+   or "Hlt". For anything else it issues a warnings, and carries on assuming
+   offline mode.
 
 ! 2010-07-10 - Vanya Belyaev
 

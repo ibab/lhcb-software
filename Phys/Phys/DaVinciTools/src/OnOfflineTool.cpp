@@ -1,4 +1,4 @@
-// $Id: OnOfflineTool.cpp,v 1.26 2010-07-22 10:25:23 jonrob Exp $
+// $Id: OnOfflineTool.cpp,v 1.27 2010-07-22 11:12:35 jonrob Exp $
 // Include files
 
 // from Gaudi
@@ -99,8 +99,14 @@ StatusCode OnOfflineTool::initialize()
 
   if ( context() == "HLT" || context() == "Hlt" )
   {
-    if (msgLevel(MSG::DEBUG)) debug() << "Running in HLT context: Online = true" << endmsg ;
+    if (msgLevel(MSG::DEBUG)) 
+      debug() << "Running in HLT context: Online = true" << endmsg ;
     m_online = true ;
+  }
+  else if ( context() != "" || context() != "Offline" )
+  {
+    Warning( "Unexpected context '" + context() + 
+             "'. Assuming offline mode, please check !" ).ignore()
   }
 
   // check it is not global
