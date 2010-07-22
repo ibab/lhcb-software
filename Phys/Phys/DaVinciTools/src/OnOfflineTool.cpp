@@ -1,12 +1,12 @@
-// $Id: OnOfflineTool.cpp,v 1.25 2010-03-11 09:50:47 pkoppenb Exp $
-// Include files 
+// $Id: OnOfflineTool.cpp,v 1.26 2010-07-22 10:25:23 jonrob Exp $
+// Include files
 
 // from Gaudi
-#include "GaudiKernel/ToolFactory.h" 
-#include "GaudiKernel/IToolSvc.h" 
+#include "GaudiKernel/ToolFactory.h"
+#include "GaudiKernel/IToolSvc.h"
 
 // from Event model
-#include "Event/RecVertex.h" 
+#include "Event/RecVertex.h"
 
 #include "Kernel/IRelatedPVFinder.h"
 // local
@@ -42,93 +42,93 @@ OnOfflineTool::OnOfflineTool( const std::string& type,
   , m_offlineTESTrunk("Phys")
   , m_onlineTESTrunk("Hlt2")
 {
-  
+
   declareInterface<IOnOffline>(this);
-  
+
   declareProperty( "OfflinePVLocation",    m_offlinePVLocation    );
   declareProperty( "OnlinePVLocation",     m_onlinePVLocation     );
-  
+
   declareProperty( "Online",               m_online               );
-  
-  declareProperty 
-    ( "OfflineDistanceTool" , 
-      m_offlineDistTool     , 
+
+  declareProperty
+    ( "OfflineDistanceTool" ,
+      m_offlineDistTool     ,
       "The tool to be used as Off-Line Distance Calclulator" ) ;
   declareProperty
-    ( "OnlineDistanceTool"  ,   
-      m_onlineDistTool      , 
+    ( "OnlineDistanceTool"  ,
+      m_onlineDistTool      ,
       "The tool to be used as On-Line  Distance Calclulator" ) ;
   declareProperty
-    ( "OfflineVertexFitter" ,  
-      m_offlineVertexFitter , 
+    ( "OfflineVertexFitter" ,
+      m_offlineVertexFitter ,
       "The tool to be used as Off-Line Vertex Fitter" ) ;
   declareProperty
-    ( "OnlineVertexFitter"  ,  
-      m_onlineVertexFitter  , 
+    ( "OnlineVertexFitter"  ,
+      m_onlineVertexFitter  ,
       "The tool to be used as On-Line  Vertex Fitter" ) ;
-  
+
   declareProperty
-    ( "OfflinePartricleCombiner",  
-      m_offlineCombiner         , 
+    ( "OfflinePartricleCombiner",
+      m_offlineCombiner         ,
       "The tool to be used as Off-Line creator of composed particles" ) ;
-  declareProperty 
-    ( "OnlineParticleCombiner"  ,  
-      m_onlineCombiner          , 
+  declareProperty
+    ( "OnlineParticleCombiner"  ,
+      m_onlineCombiner          ,
       "The tool to be used as On-Line  creator of composed particles"  ) ;
-  
+
   declareProperty( "OfflinePVRelatorName", m_offlinePVRelatorName );
   declareProperty( "OnlinePVRelatorName",  m_onlinePVRelatorName  );
-  
+
   declareProperty( "OfflineTrunkOnTES", m_offlineTESTrunk );
   declareProperty( "OnlineTrunkOnTES",  m_onlineTESTrunk  );
-  
-  
+
 }
+
 //=============================================================================
 // Destructor
 //=============================================================================
 OnOfflineTool::~OnOfflineTool() {}
+
 // ============================================================================
 // initialize
 // ============================================================================
 StatusCode OnOfflineTool::initialize()
 {
-  
-  StatusCode sc = GaudiTool::initialize();
+  const StatusCode sc = GaudiTool::initialize();
   if (!sc) return sc ;
-  
-  if ( context()=="HLT" ) {
+
+  if ( context() == "HLT" || context() == "Hlt" )
+  {
     if (msgLevel(MSG::DEBUG)) debug() << "Running in HLT context: Online = true" << endmsg ;
     m_online = true ;
-  } else if ( context()!="" ){
-    warning() << "Running in " << context() << " context" << endmsg ;
   }
-  
+
   // check it is not global
   const IToolSvc* par = dynamic_cast<const IToolSvc*>( this->parent() );
   if ( 0 != par )
   { return Error ( "Parent of OnOfflineTool is ToolSvc. OnOfflineTool *must* be private" ) ; }
-  
-  return sc; 
+
+  return sc;
 }
+
 // ============================================================================
-const std::string& OnOfflineTool::primaryVertexLocation() const 
+const std::string& OnOfflineTool::primaryVertexLocation() const
 { return online() ? m_onlinePVLocation : m_offlinePVLocation ; }
 // ============================================================================
-const std::string& OnOfflineTool::distanceCalculatorType() const 
+const std::string& OnOfflineTool::distanceCalculatorType() const
 { return online() ? m_onlineDistTool : m_offlineDistTool ; }
 // ============================================================================
-const std::string& OnOfflineTool::relatedPVFinderType() const 
+const std::string& OnOfflineTool::relatedPVFinderType() const
 { return online() ? m_onlinePVRelatorName : m_offlinePVRelatorName ; }
 // ============================================================================
-const std::string& OnOfflineTool::particleCombinerType() const 
+const std::string& OnOfflineTool::particleCombinerType() const
 { return online() ? m_onlineCombiner : m_offlineCombiner ; }
 // ============================================================================
-const std::string& OnOfflineTool::vertexFitterType() const 
+const std::string& OnOfflineTool::vertexFitterType() const
 { return online() ? m_onlineVertexFitter : m_offlineVertexFitter ; }
 // ============================================================================
-const std::string& OnOfflineTool::trunkOnTES() const 
+const std::string& OnOfflineTool::trunkOnTES() const
 { return online() ? m_onlineTESTrunk : m_offlineTESTrunk ; }
 // ============================================================================
-// The END 
+// The END
 // ============================================================================
