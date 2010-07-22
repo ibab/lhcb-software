@@ -7,7 +7,7 @@
 __version__ = "$Id: DsToPhiPi.py,v 1.9 2009-09-29 16:38:27 nmangiaf Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
-from LHCbKernel.Configuration import *
+from RichKernel.Configuration import *
 from Configurables import SelDSTWriter
 
 ## @class RichRecSysConf
@@ -15,7 +15,7 @@ from Configurables import SelDSTWriter
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @author Conor Fitzpatrick  (Conor.Fitzpatrick@cern.ch)
 #  @date   15/08/2008
-class DsToPhiPiConf(LHCbConfigurableUser) :
+class DsToPhiPiConf(RichConfigurableUser) :
 
     ## Selection Name
     __sel_name__ = "RichDs2PiPhi"
@@ -25,14 +25,21 @@ class DsToPhiPiConf(LHCbConfigurableUser) :
     
     ## Steering options
     __slots__ = {
-         "Sequencer"    : None    # The sequencer to add the calibration algorithms too
+         "Context"         : "Offline"  # The context within which to run
+        ,"OutputLevel"     : INFO  # The output level to set all algorithms and tools to use
+        ,"Sequencer"    : None    # The sequencer to add the calibration algorithms too
         ,"RunSelection" : True
         ,"RunMonitors"  : True
         ,"MCChecks"     : False
         ,"MakeNTuple"   : False
         ,"MakeSelDST"   : False
         ,"DSTPreScaleFraction" : 1.0
+        ,"PlotTools" : [ ]
         }
+
+    ## Set general job options
+    def setOptions(self,alg):
+        if self.isPropertySet("OutputLevel") : alg.OutputLevel = self.getProp("OutputLevel")
 
     ## Configure Ds -> Phi Pi selection
     def __apply_configuration__(self) :
@@ -58,6 +65,7 @@ class DsToPhiPiConf(LHCbConfigurableUser) :
             Phi2KK.MotherCut = "(ADMASS('phi(1020)')<50*MeV) & (BPVVDCHI2>60) & (MIPDV(PRIMARY)<0.5) & (VFASPF(VCHI2) < 20)"
             Phi2KK.DaughtersCuts = {"K+"     :    "(PT>300*MeV) & (P>2*GeV) & (MIPDV(PRIMARY) < 0.5) &  (BPVIPCHI2() > 20)",
                                     "K-"     :    "(PT>300*MeV) & (P>2*GeV) & (MIPDV(PRIMARY) < 0.5) &  (BPVIPCHI2() > 20)"}
+            self.setOptions(Phi2KK)
             Phi2KKSel = Selection( Phi2KKName+'Sel',
                                    Algorithm = Phi2KK,
                                    RequiredSelections = [stdKaons] )
@@ -72,6 +80,7 @@ class DsToPhiPiConf(LHCbConfigurableUser) :
             Ds2piPhi.CombinationCut = "(ADAMASS('D_s+')<75*MeV)"
             Ds2piPhi.MotherCut = "(ADMASS('D_s+')<50*MeV) & (BPVDIRA>0.9999) & (BPVVDCHI2>85) & (MIPDV(PRIMARY)<0.1) &  (VFASPF(VCHI2) < 10)"
             Ds2piPhi.DaughtersCuts = {"pi+"        :       "(PT>300*MeV) & (P>2*GeV) & (MIPDV(PRIMARY) >0.1) & (BPVIPCHI2() > 20)"}
+            self.setOptions(Ds2piPhi)
             Ds2piPhiSel = Selection( Ds2piPhiName+'Sel',
                                      Algorithm = Ds2piPhi,
                                      RequiredSelections = [Phi2KKSel,stdPions] )
@@ -90,9 +99,8 @@ class DsToPhiPiConf(LHCbConfigurableUser) :
             plotter.InputLocations = [ 'Phys/'+self.__sel_name__+'Sel' ]
             plotter.PeakCut     = "(ADMASS('D_s+')<100*MeV)"
             plotter.SideBandCut = "(ADMASS('D_s+')>100*MeV)"
-            plotter.PlotTools = [ "MassPlotTool","MomentumPlotTool",
-                                  "CombinedPidPlotTool",
-                                  "RichPlotTool","CaloPlotTool","MuonPlotTool" ]
+            plotter.PlotTools   = self.getProp("PlotTools") 
+            self.setOptions(plotter)
             seq.Members += [ plotter ]
 
         # Make a DST ?
@@ -115,6 +123,7 @@ class DsToPhiPiConf(LHCbConfigurableUser) :
             from Configurables import ParticleEffPurMoni
             mcPerf = ParticleEffPurMoni(Ds2piPhiName+"MCPerf")
             mcPerf.InputLocations = ['Phys/'+self.__sel_name__+'Sel']
+            self.setOptions(mcPerf)
             seq.Members += [mcPerf]
                     
         # Ntuple ?

@@ -5,6 +5,12 @@
 ! Purpose     : PID Calbriation and Monitoring on Data
 !-----------------------------------------------------------------------------
 
+! 2010-07-22 - Chris Jones
+ - Some more minor improvements to the Configuration options
+  + Make the tools to run a configurable option
+  + Allow the OutputLevel to be propagated to all algorithms
+  + Propagate the top level Context 
+
 ! 2010-07-21 - Chris Jones
  - Remove obsolete C++ code. Package is now a pure python Configurable package
  - Extend python Configurables with options to allow the monitors to be run, 

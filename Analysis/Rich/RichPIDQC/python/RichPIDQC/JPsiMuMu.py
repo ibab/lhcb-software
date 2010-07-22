@@ -7,7 +7,7 @@
 __version__ = "$Id: JPsiMuMu.py,v 1.14 2009-10-02 11:54:18 pkoppenb Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
-from LHCbKernel.Configuration import *
+from RichKernel.Configuration import *
 from Configurables import SelDSTWriter
 
 ## @class JPsiMuMuConf
@@ -15,7 +15,7 @@ from Configurables import SelDSTWriter
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @author Nicola Mangiafave
 #  @date   15/08/2008
-class JPsiMuMuConf(LHCbConfigurableUser) :
+class JPsiMuMuConf(RichConfigurableUser) :
 
     ## Selection Name
     __sel_name__ = "RichJPsiMuMu"
@@ -25,14 +25,21 @@ class JPsiMuMuConf(LHCbConfigurableUser) :
 
     ## Steering options
     __slots__ = {
-        "Sequencer"   : None    # The sequencer to add the calibration algorithms too
+         "Context"         : "Offline"  # The context within which to run
+        ,"OutputLevel"     : INFO  # The output level to set all algorithms and tools to use
+        ,"Sequencer"   : None    # The sequencer to add the calibration algorithms too
         ,"RunSelection" : True
         ,"RunMonitors"  : True
         ,"MCChecks"   : False
         ,"MakeNTuple" : False
         ,"MakeSelDST" : False
         ,"DSTPreScaleFraction" : 1.0
+        ,"PlotTools" : [ ]
         }
+
+    ## Set general job options
+    def setOptions(self,alg):
+        if self.isPropertySet("OutputLevel") : alg.OutputLevel = self.getProp("OutputLevel")
 
     ## Configure Jpsi -> Mu Mu selection
     def __apply_configuration__(self) :
@@ -60,6 +67,7 @@ class JPsiMuMuConf(LHCbConfigurableUser) :
                                           "& (TRCHI2DOF<2.0)"\
                                           "& (PPINFO(LHCb.ProtoParticle.MuonBkgLL,-10000)<-2.5)"\
                                           "& (PPINFO(LHCb.ProtoParticle.MuonMuLL,-10000)>-10)"}
+            self.setOptions(JPsiMuMu)
             JPsiMuMuSel = Selection( JPsiMuMuName+'Sel',
                                      Algorithm = JPsiMuMu,
                                      RequiredSelections = [stdMuons] )
@@ -78,9 +86,8 @@ class JPsiMuMuConf(LHCbConfigurableUser) :
             plotter.InputLocations = [ 'Phys/'+self.__sel_name__+'Sel' ]
             plotter.PeakCut     = "(ADMASS('J/psi(1S)')<40*MeV)" # Considering sigma = 13
             plotter.SideBandCut = "(ADMASS('J/psi(1S)')>40*MeV)" # Considering sigma = 13
-            plotter.PlotTools = [ "MassPlotTool","MomentumPlotTool",
-                                  "CombinedPidPlotTool",
-                                  "RichPlotTool","CaloPlotTool","MuonPlotTool" ]
+            plotter.PlotTools   = self.getProp("PlotTools") 
+            self.setOptions(plotter)
             seq.Members += [plotter]
 
         # Make a DST ?
@@ -103,6 +110,7 @@ class JPsiMuMuConf(LHCbConfigurableUser) :
             from Configurables import ParticleEffPurMoni
             mcPerf = ParticleEffPurMoni(JPsiMuMuName+"MCPerf")
             mcPerf.InputLocations = ['Phys/'+self.__sel_name__+'Sel']
+            self.setOptions(mcPerf)
             seq.Members += [mcPerf]
 
         # Ntuple ?

@@ -13,9 +13,7 @@ branches          cmt doc python
 #============================================================================
 # Used packages
 #============================================================================
-use GaudiPolicy   v*
-#use DaVinciKernel v*  Phys
-#use RichRecBase   v*  Rich
+use RichKernel v*  Rich
 
 include_path      none
 

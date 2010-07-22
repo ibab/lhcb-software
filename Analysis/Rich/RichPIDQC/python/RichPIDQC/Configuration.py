@@ -7,31 +7,37 @@
 __version__ = "$Id: Configuration.py,v 1.7 2009-10-28 10:17:57 jpalac Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
-from LHCbKernel.Configuration import *
-        
+from RichKernel.Configuration import *
+       
 ## @class RichPIDQCConf
 #  Configurable for RICH reconstruction
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
-class RichPIDQCConf(LHCbConfigurableUser):
+class RichPIDQCConf(RichConfigurableUser):
 
     ## Possible used Configurables
-    __used_configurables__ = [ 'DsToPhiPiConf',
-                               'JPsiMuMuConf',
-                               'KshortPiPiConf',
-                               'LambdaToProtonPionConf',
-                               'DstarToDzeroPiConf'     ]
+    __used_configurables__ = [ ('DsToPhiPiConf',None),
+                               ('JPsiMuMuConf',None),
+                               ('KshortPiPiConf',None),
+                               ('LambdaToProtonPionConf',None),
+                               ('DstarToDzeroPiConf',None) ]
 
     ## Steering options
     __slots__ = {
-         "CalibSequencer"  : None  # The sequencer to add the calibration algorithms too
+         "Context"         : "Offline"  # The context within which to run
+        ,"OutputLevel"     : INFO  # The output level to set all algorithms and tools to use
+        ,"CalibSequencer"  : None  # The sequencer to add the calibration algorithms too
         ,"PIDCalibrations" : [ "DsPhiPi","DstarD0Pi","JPsiMuMu","LambdaPrPi","KshortPiPi" ]
-        ,"RunSelection" : True
-        ,"RunMonitors"  : True
-        ,"MCChecks"     : False
-        ,"MakeNTuple"   : False
-        ,"MakeSelDST"   : False
+        ,"RunSelection"    : True
+        ,"RunMonitors"     : True
+        ,"MCChecks"        : False
+        ,"MakeNTuple"      : False
+        ,"MakeSelDST"      : False
+        ,"PlotTools"       : [ "MassPlotTool","MomentumPlotTool","RichPlotTool","CombinedPidPlotTool" ]
         }
+
+    ## Full list of 'PlotTools' = "MassPlotTool","MomentumPlotTool", "CombinedPidPlotTool",
+    ##                            "RichPlotTool","CaloPlotTool","MuonPlotTool"
 
     ## Check a new sequence and add to main sequence
     def newSeq(self,sequence,name):
@@ -50,7 +56,8 @@ class RichPIDQCConf(LHCbConfigurableUser):
 
     ## Propagate the options
     def propagateOptions(self,conf):
-        self.setOtherProps(conf,["MCChecks","MakeNTuple","MakeSelDST","RunSelection","RunMonitors"])
+        self.setOtherProps(conf,["MCChecks","MakeNTuple","MakeSelDST","Context",
+                                 "RunSelection","RunMonitors","OutputLevel","PlotTools"])
 
     ## @brief Apply the configuration to the configured GaudiSequencer
     def __apply_configuration__(self) :
@@ -69,30 +76,35 @@ class RichPIDQCConf(LHCbConfigurableUser):
 
         # Run Conor's Ds -> Phi Pi selection and calibration
         if "DsPhiPi" in calibs :
-            from DsToPhiPi          import DsToPhiPiConf
-            self.propagateOptions(DsToPhiPiConf())
-            DsToPhiPiConf().setProp("Sequencer",self.newSeq( calibSeq, "RichDsToPhiPiPIDMoni"))
+            from DsToPhiPi import DsToPhiPiConf
+            conf = self.getRichCU(DsToPhiPiConf)
+            self.propagateOptions(conf)
+            conf.setProp("Sequencer",self.newSeq( calibSeq, "RichDsToPhiPiPIDMoni"))
 
         # Andrew's D* -> D0(KPi) Pi selection and calibration
         if "DstarD0Pi" in calibs :
-            from DstarToDzeroPi     import DstarToDzeroPiConf
-            self.propagateOptions(DstarToDzeroPiConf())
-            DstarToDzeroPiConf().setProp("Sequencer",self.newSeq( calibSeq, "RichDstarToD0PiPIDMoni"))
+            from DstarToDzeroPi import DstarToDzeroPiConf
+            conf = self.getRichCU(DstarToDzeroPiConf)
+            self.propagateOptions(conf)
+            conf.setProp("Sequencer",self.newSeq( calibSeq, "RichDstarToD0PiPIDMoni"))
 
         # Andrew's Lambda -> Proton Pion selection
         if "LambdaPrPi" in calibs :
             from LambdaToProtonPion import LambdaToProtonPionConf
-            self.propagateOptions(LambdaToProtonPionConf())
-            LambdaToProtonPionConf().setProp("Sequencer",self.newSeq( calibSeq, "RichLambdaToPrPiPIDMoni"))
+            conf = self.getRichCU(LambdaToProtonPionConf)
+            self.propagateOptions(conf)
+            conf.setProp("Sequencer",self.newSeq( calibSeq, "RichLambdaToPrPiPIDMoni"))
 
         # Andrew's Kshort -> Pion Pion selection
         if "KshortPiPi" in calibs :
-            from KshortPiPi         import KshortPiPiConf
-            self.propagateOptions(KshortPiPiConf())
-            KshortPiPiConf().setProp("Sequencer",self.newSeq( calibSeq, "RichKsToPiPiPIDMoni"))
+            from KshortPiPi import KshortPiPiConf
+            conf = self.getRichCU(KshortPiPiConf)
+            self.propagateOptions(conf)
+            conf.setProp("Sequencer",self.newSeq( calibSeq, "RichKsToPiPiPIDMoni"))
 
         # Nicola's J/Psi -> Mu Mu selection
         if "JPsiMuMu" in calibs :
-            from JPsiMuMu           import JPsiMuMuConf
-            self.propagateOptions(JPsiMuMuConf())
-            JPsiMuMuConf().setProp("Sequencer",self.newSeq( calibSeq, "RichJPsiToMuMuPIDMoni"))
+            from JPsiMuMu import JPsiMuMuConf
+            conf = self.getRichCU(JPsiMuMuConf)
+            self.propagateOptions(conf)
+            conf.setProp("Sequencer",self.newSeq( calibSeq, "RichJPsiToMuMuPIDMoni"))

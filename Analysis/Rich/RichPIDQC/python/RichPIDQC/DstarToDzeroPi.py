@@ -7,7 +7,7 @@
 __version__ = "$Id: DstarToDzeroPi.py,v 1.5 2009-10-30 17:54:36 powell Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
-from LHCbKernel.Configuration import *
+from RichKernel.Configuration import *
 from Configurables import SelDSTWriter
               
 ## @class DstarToDzeroPiConf
@@ -15,7 +15,7 @@ from Configurables import SelDSTWriter
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @author Andrew Powell
 #  @date   15/08/2008
-class DstarToDzeroPiConf(LHCbConfigurableUser) :
+class DstarToDzeroPiConf(RichConfigurableUser) :
 
     ## Selection Name
     __sel_name__ = "RichDstarToD0PiSel"
@@ -25,14 +25,21 @@ class DstarToDzeroPiConf(LHCbConfigurableUser) :
     
     ## Steering options
     __slots__ = {
-        "Sequencer"   : None    # The sequencer to add the calibration algorithms too
+         "Context"         : "Offline"  # The context within which to run
+        ,"OutputLevel"     : INFO  # The output level to set all algorithms and tools to use
+        ,"Sequencer"    : None    # The sequencer to add the calibration algorithms too
         ,"RunSelection" : True
         ,"RunMonitors"  : True
         ,"MCChecks"   : False
         ,"MakeNTuple" : False
         ,"MakeSelDST" : False
         ,"DSTPreScaleFraction" : 1.0
+        ,"PlotTools" : [ ]
         }
+
+    ## Set general job options
+    def setOptions(self,alg):
+        if self.isPropertySet("OutputLevel") : alg.OutputLevel = self.getProp("OutputLevel")
 
     ## Configure Ds -> Phi Pi selection
     def __apply_configuration__(self) :
@@ -55,6 +62,7 @@ class DstarToDzeroPiConf(LHCbConfigurableUser) :
             trackfilterName = self.__sel_name__+"_TrackFilter"
             trackfilter = FilterDesktop(trackfilterName)
             trackfilter.Code = "(PT > 0.4*GeV) & (P > 2.0*GeV) & (TRCHI2DOF < 10) & (MIPCHI2DV(PRIMARY) > 6)"
+            self.setOptions(trackfilter)
             trackfilterSel = Selection( trackfilterName+'Sel',
                                         Algorithm = trackfilter,
                                         RequiredSelections = [stdPions,stdKaons] )
@@ -63,6 +71,7 @@ class DstarToDzeroPiConf(LHCbConfigurableUser) :
             pionfilterName = self.__sel_name__+"_PiFilter"
             pionfilter = FilterDesktop(pionfilterName)
             pionfilter.Code = "(PT > 110*MeV) & (MIPCHI2DV(PRIMARY) > 2)"
+            self.setOptions(pionfilter)
             pionfilterSel = Selection( pionfilterName+'Sel',
                                        Algorithm = pionfilter,
                                        RequiredSelections = [stdPions] )
@@ -77,6 +86,7 @@ class DstarToDzeroPiConf(LHCbConfigurableUser) :
                                "& (VFASPF(VCHI2/VDOF)< 10.0)"\
                                "& (BPVDIRA > 0.9999)"\
                                "& (BPVVDCHI2 > 12)"
+            self.setOptions(d02kpi)
             d02kpiSel = Selection( d02kpiName+'Sel',
                                    Algorithm = d02kpi,
                                    RequiredSelections = [trackfilterSel] )
@@ -90,6 +100,7 @@ class DstarToDzeroPiConf(LHCbConfigurableUser) :
                                    "& (PT > 2.2*GeV)"\
                                    "& (VFASPF(VCHI2/VDOF)< 15.0)"\
                                    "& (M-MAXTREE('D0'==ABSID,M)<155.5)"
+            self.setOptions(dstar2d0pi)
             dstar2d0piSel = Selection( dstar2d0piName+'Sel',
                                        Algorithm = dstar2d0pi,
                                        RequiredSelections = [d02kpiSel,pionfilterSel] )
@@ -112,9 +123,8 @@ class DstarToDzeroPiConf(LHCbConfigurableUser) :
             plotter.SideBandCut = "(M-MAXTREE('D0'==ABSID,M)>147.43) "\
                                   "& (M-MAXTREE('D0'==ABSID,M)<143.43) "\
                                   "& (INTREE((ABSID=='D0') & (ADMASS('D0') > 15*MeV) ))"
-            plotter.PlotTools = [ "MassPlotTool","MomentumPlotTool",
-                                  "CombinedPidPlotTool",
-                                  "RichPlotTool","CaloPlotTool","MuonPlotTool" ]
+            plotter.PlotTools   = self.getProp("PlotTools") 
+            self.setOptions(plotter)
             seq.Members += [ plotter ]
 
         # Make a DST ?
@@ -137,6 +147,7 @@ class DstarToDzeroPiConf(LHCbConfigurableUser) :
             from Configurables import ParticleEffPurMoni
             mcPerf = ParticleEffPurMoni(dstar2d0piName+"MCPerf")
             mcPerf.InputLocations = ["Phys/"+dstar2d0piName]
+            self.setOptions(mcPerf)
             seq.Members += [mcPerf]
     
         # Ntuple ?
