@@ -12,7 +12,8 @@ This is a production version for processing 2010 data and Montecarlo
 Output requires DaVinci v25r2p3 or later if saving packed DST, DaVinci v24r5p1
 or later otherwise
 
-Simulation should be produced with Boole v21r5 or later
+For consistent deployment of bug fix #69634, should not be used with simulation
+produced with Gauss v38r6 or earlier, Boole v21r5 or earlier
 
 - New tuning:
   . Changes available in SQLDDDB v5r33:
@@ -89,7 +90,7 @@ This is a development version for processing 2010 data and Montecarlo
 Output requires DaVinci v25r2p3 or later if saving packed DST, DaVinci v24r5p1
 or later otherwise
 
-Simulation should be produced with Boole v21r5 or later
+Simulation should be produced with Boole v21r5
 
 - New tuning
   . Changes available in SQLDDDB v5r30:
