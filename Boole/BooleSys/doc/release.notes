@@ -9,7 +9,8 @@ This version uses projects LCGCMT 58d, Gaudi v21r10, LHCb v31r3, Lbcom v9r5
  and SQLDDDB v5r33, ParamFiles v8r2, FieldMap v5r5, L0TCK v3r5, AppConfig v3r*
 
 Development version for 2010 simulation. 
-Output needs Brunel v37r4 or later
+For consistent deployment of bug fix #69634, should use input data from 
+Gauss v38r7 or later, and reconstruct with Brunel v37r5 or later
 Needs SQLDDDB v5r25 or later with SIMCOND tags from *-20100412*
 
 - New tuning:
@@ -37,7 +38,7 @@ This version uses projects Gaudi v21r9, LHCb v31r2, Lbcom v9r4
  and SQLDDDB v5r30, ParamFiles v8r2, FieldMap v5r4, L0TCK v3r1, AppConfig v3r*
 
 Development version for 2010 simulation. 
-Output needs Brunel v37r4 or later
+Output needs Brunel v37r4
 Needs SQLDDDB v5r25 or later with SIMCOND tags from *-20100412*
 
  - New tuning:
