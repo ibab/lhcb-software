@@ -22,7 +22,7 @@ richhpdsdict = { 'R1U' : 14 , 'R1D' : 14, 'R2A' : 16, 'R2D' : 16 }
  
 
 def usage(argv):
-    print 'python '+argv[0]+' <root-file> <xml 0> ... <xml n> <ID> <rich=1 or 2> <box=0 or 1> <col=0 ..>'
+    print 'python '+argv[0]+' <root-file> <xml 0> ... <xml n> <box=R1U,R1D,R2A,R2C> <col=0 ..>'
     sys.exit(2)
 
 def getHistogramFromFile( rootfile, hpd ):
@@ -73,15 +73,18 @@ if len(sys.argv) < 5:
     usage( sys.argv )
 else:
     rootfilename = sys.argv[1]
-    if not os.path.exists( rootfilename ):
-        sys.exit(2)
+    if not os.path.exists( rootfilename ) or '.root' not in rootfilename:
+        usage(sys.argv)
+       
     xmllist = []
     for arg in sys.argv:
         if '.xml' in arg:
             if os.path.exists(arg):
                 xmllist += [ arg ]
+
     if 0 == len(xmllist):
-        sys.exit(2)
+        usage(sys.argv)
+
     box = sys.argv[len(sys.argv)-2]
     col = sys.argv[len(sys.argv)-1]
     firstHPD = richcopydict[box] + int(col)*richhpdsdict[box]

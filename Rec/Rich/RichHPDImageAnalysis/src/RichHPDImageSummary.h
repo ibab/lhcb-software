@@ -102,8 +102,7 @@ namespace Rich
       bool m_compareCondDB;
       
       /// Maximum allowed movement before triggering the update
-      double m_maxMovement;
-      
+      double m_maxMovement;      
     };
   } // namespae Mon
 } // namespace Rich 

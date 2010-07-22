@@ -13,6 +13,10 @@ from math import fabs
 
 import os, sys
 
+def usage( args ):
+    print 'python ' + args[0] + ' <overide> <xml file 0> ... <xml file n>'
+    sys.exit(2)
+
 def appendCondDBOveride( file, det, hpd, x0, y0 ):
     """
     Append x0, y0 silicon sensor offset for HPD 'hpd' in RICH 'det' to CondDB overide file
@@ -47,7 +51,7 @@ def produceCondDBOverideFromXML( xmlfilelist, condbfilename ):
 
 
 if len(sys.argv) < 3:
-    sys.exit(2)
+    usage(sys.argv)
 else:
     xmlarr = []
     for i in range(2,len(sys.argv)):

@@ -50,9 +50,9 @@ namespace Rich
     {
       setProperty( "StatPrint", false );
       declareProperty( "DisplaySmartIDWarnings" , m_displayWarnings = false );
-      declareProperty( "CutThreshold" , m_cutFraction = 0.1 );
-      declareProperty( "MinimumOccupancy", m_minOccupancy = 1000 );
-      declareProperty( "MinimumFittedPixels" , m_minBoundary = 3 );
+      declareProperty( "BoundaryCutThreshold" , m_cutFraction = 0.1 );
+      declareProperty( "MinHPDOccupancy", m_minOccupancy = 1000 );
+      declareProperty( "MinBoundaryPixels" , m_minBoundary = 3 );
       declareProperty( "CompareToCondDB" , m_compareCondDB = true );
       declareProperty( "MaxAllowedMovement" , m_maxMovement = 0.3 );
     }
@@ -171,15 +171,13 @@ namespace Rich
         debug() << "    Algorithm has seen " << m_nEvt << " events" << endmsg;
       }
       
-      if ( msgLevel(MSG::DEBUG) ){ 
-        debug() << " Creating summary information " << endmsg;
-      }
+      if ( msgLevel(MSG::DEBUG) ) debug() << " Creating summary information " << endmsg;
       
       for ( m_iter = m_histo.begin() ; m_iter != m_histo.end() ; ++m_iter ){
         summaryINFO( m_iter->first, m_iter->second );
       }
       
-      if ( !(produceHistos()) ){  
+      if ( !msgLevel(MSG::DEBUG) ){  
         for ( m_iter = m_histo.begin() ; m_iter != m_histo.end() ; ++m_iter ){
           delete m_iter->second;
         }
@@ -196,7 +194,8 @@ namespace Rich
     
     TH2D* RichHPDImageSummary::create2D( const std::string& name )
     {
-      if ( produceHistos() ){
+      if ( msgLevel(MSG::DEBUG) ) {
+        info() << " Why am I here!" << endmsg;
         IHistogram2D* hist = book2D(name,name,-0.5,31.5,32, -0.5,31.5,32) ;
         return Gaudi::Utils::Aida2ROOT::aida2root( hist );
       }
@@ -266,28 +265,36 @@ namespace Rich
       double y0 = -1.0*localYFromPixels( Row );
 
       double ds = distanceToCondDBValue( ID, x0, y0 );
+
       plot1D( ds, "dPosCondDB", "Distance between image centre and CondDB value",0.0,3.0,30);
       plot1D( ID, "dPosCondDBvsCopyNr", "Distance versus HPD Copy Nr",-0.5,483.5,484,ds);
       
+      plot1D( 2*ID+1 , "dPosXvsCopyNr", "x-displacement versus HPD Copy Nr",-0.5,967.5,968,nPix*x0);
+      plot1D( 2*ID+1 , "dPosYvsCopyNr", "y-displacement versus HPD Copy Nr",-0.5,967.5,968,nPix*y0);
+      plot1D( 2*ID   , "dPosXvsCopyNr", "x entries for HPD Copy Nr",-0.5,967.5,968,nPix);
+      plot1D( 2*ID   , "dPosYvsCopyNr", "y entries for HPD Copy Nr",-0.5,967.5,968,nPix);
+      
+      double Rad = m_pixelsize*migrad.Value("Radius");
+      double RadErrSq = pow(m_pixelsize*migrad.Error("Radius"),2);
+      
+      plot1D( 2*ID+1 , "RadiusvsCopyNr", "Fitted image radius vs HPD Copy Nr",-0.5,967.5,968,nPix*Rad);
+      plot1D( 2*ID   , "RadiusvsCopyNr", "Fitted image radius HPD Copy Nr",-0.5,967.5,968,nPix);
+              
       if ( m_compareCondDB && ( ds < m_maxMovement ) ){
         if ( msgLevel(MSG::DEBUG) ) debug() << " Exisiting CondDB value ok for " << ID <<  endmsg;
       }
       else {
         std::string nameHPD = "RICH_HPD_" + boost::lexical_cast<std::string>( ID );
         
-        if ( msgLevel(MSG::DEBUG) ) debug() << " Adding " << nameHPD << endmsg ;
+        if ( msgLevel(MSG::DEBUG) ) debug() << " Adding counter " << nameHPD << endmsg ;
         
         double x0ErrSq = pow(m_pixelsize*migrad.Error("Col0"),2);
         double y0ErrSq = pow(m_pixelsize*migrad.Error("Row0"),2);
-        
-        double Rad = m_pixelsize*migrad.Value("Radius");
-        double RadErrSq = pow(m_pixelsize*migrad.Error("Radius"),2);
         
         counter( nameHPD + "_XOffset" ) = StatEntity( nPix, nPix*x0, nPix*x0ErrSq, 0. , 0. );
         counter( nameHPD + "_YOffset" ) = StatEntity( nPix, nPix*y0, nPix*y0ErrSq, 0. , 0. );
         counter( nameHPD + "_Radius" )  = StatEntity( nPix, nPix*Rad, nPix*RadErrSq, 0. , 0. );
       }
-      
       return;
     }
     

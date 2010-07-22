@@ -22,7 +22,7 @@ def countersFromXMLFileList( filelist ):
     Return dictionary of counters from list of XML input files
     """
     vtree = xmlSummary.Merge( filelist )
-    return vtree.counter_dict() 
+    return (vtree.counter_dict())['counters'] 
 
 
 def counterFromDict( countername, counterdict ):
