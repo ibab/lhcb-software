@@ -73,8 +73,6 @@ StatusCode CaloCorrectionBase::finalize() {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
 
-    info() << "Condition '" << m_conditionName
-              << "' not found --  options parameters applied !" << endmsg;
   for( std::vector<std::string>::iterator it = m_corrections.begin() ; m_corrections.end() != it ; ++it){
     info() << "Accepted corrections :  '" << *it <<"'" << endmsg;
   }

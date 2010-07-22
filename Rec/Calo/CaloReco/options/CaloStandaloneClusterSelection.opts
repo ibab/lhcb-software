@@ -1,7 +1,7 @@
 //-------------------------------------------
 // Select neutral clusters for Photon hypo
 //-------------------------------------------
-SinglePhotonRec.SelectionTools   += { 
+SinglePhotonRec.SelectionTools   = { 
   //"CaloSelectCluster/PhotonClusterSelect",
   "CaloSelectClusterWithPrs/EcalClusterWithPrs",
   "CaloSelectNeutralClusterWithSpd/EcalClusterWithNoSpd"
@@ -14,7 +14,7 @@ SinglePhotonRec.EcalClusterWithPrs.MinEnergy = 10*MeV ;
 //-------------------------------------------
 // Select charged clusters for Electron hypo
 //-------------------------------------------
-ElectronRec.SelectionTools  +=  { 
+ElectronRec.SelectionTools  =  { 
   //"CaloSelectCluster/ElectronClusterSelect",
   "CaloSelectClusterWithPrs/EcalClusterWithPrs",  
   "CaloSelectChargedClusterWithSpd/EcalClusterWithSpd"
