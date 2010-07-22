@@ -5,6 +5,7 @@
 // from TrackEvent
 #include "Event/Node.h"
 #include "Event/Measurement.h"
+#include "GaudiKernel/boost_allocator.h"
 
 namespace LHCb
 {
@@ -113,6 +114,18 @@ namespace LHCb
     /// set predicted state from backward filter
     void setPredictedStateBackward( const State& predictedStateBackward );
 
+    /// retrieve state filtered by the kalman filter step
+    const State& filteredStateForward() const { return m_filteredStateForward; }
+    
+    /// set state filtered by the kalman filter
+    void setFilteredStateForward( const State& s ) { m_filteredStateForward = s ; }
+    
+    /// retrieve filtered state from backward filter
+    const State& filteredStateBackward() const { return m_filteredStateBackward; }
+    
+    /// set filtered state from backward filter
+    void setFilteredStateBackward( const State& s ) { m_filteredStateBackward = s ; }
+    
     /// retrieve unbiased residual
     double unbiasedResidual() const 
     { return residual() * errMeasure2() / errResidual2() ; }
@@ -165,6 +178,39 @@ namespace LHCb
 
     /// get the delta-energy
     double doca() const { return m_doca ; }
+
+#ifndef GOD_NOALLOC
+    /// operator new
+    static void* operator new ( size_t size )
+    {
+      return ( sizeof(FitNode) == size ? 
+               boost::singleton_pool<FitNode, sizeof(FitNode)>::malloc() :
+               ::operator new(size) );
+    }
+  
+    /// placement operator new
+    /// it is needed by libstdc++ 3.2.3 (e.g. in std::vector)
+    /// it is not needed in libstdc++ >= 3.4
+    static void* operator new ( size_t size, void* pObj )
+    {
+      return ::operator new (size,pObj);
+    }
+  
+    /// operator delete
+    static void operator delete ( void* p )
+    {
+      boost::singleton_pool<FitNode, sizeof(FitNode)>::is_from(p) ?
+      boost::singleton_pool<FitNode, sizeof(FitNode)>::free(p) :
+      ::operator delete(p);
+    }
+  
+    /// placement operator delete
+    /// not sure if really needed, but it does not harm
+    static void operator delete ( void* p, void* pObj )
+    {
+      ::operator delete (p, pObj);
+    }
+#endif
   private:
 
     Gaudi::TrackMatrix    m_transportMatrix;    ///< transport matrix for propagation from previous node to this one
@@ -175,6 +221,8 @@ namespace LHCb
     double                m_refResidual;        ///< residual of the reference    
     State                 m_predictedStateForward;  ///< predicted state of forward filter
     State                 m_predictedStateBackward; ///< predicted state of backward filter (bi-directional fit only)
+    State                 m_filteredStateForward;  ///< filtered state of forward filter
+    State                 m_filteredStateBackward; ///< filtered state of backward filter (bi-directional fit only)
     double                m_deltaChi2Forward;       ///< chisq contribution in forward filter
     double                m_deltaChi2Backward;      ///< chisq contribution in backward filter (bi-directional fit only)
     Gaudi::TrackMatrix    m_smootherGainMatrix ;    ///< smoother gain matrix (smoothedfit only)
