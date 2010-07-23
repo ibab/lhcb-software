@@ -1,8 +1,8 @@
-# $Id: StrippingDstarVeryLooseWithD02HH.py,v 1.1 2010-05-19 14:17:46 gcowan Exp $
+# $Id: StrippingDstarVeryLooseWithD02HH.py,v 1.2 2010-07-23 18:30:07 gcowan Exp $
 
 __author__ = 'Greig Cowan, Marta Calvi'
 __date__ = '18/05/2010'
-__version__ = '$Revision: 1.1 $'
+__version__ = '$Revision: 1.2 $'
 
 '''
 Prompt Dstar->D0(Kpi)pi stripping selection for studying Dstar in Bd->Dstar mu nu.
@@ -14,7 +14,7 @@ from Gaudi.Configuration import *
 from GaudiKernel.SystemOfUnits import MeV
 from LHCbKernel.Configuration import *
 from Configurables import FilterDesktop, CombineParticles, OfflineVertexFitter	
-from PhysSelPython.Wrappers import Selection, SelectionSequence, DataOnDemand
+from PhysSelPython.Wrappers import Selection, SelectionSequence, DataOnDemand, MergedSelection
 
 class StrippingDstarVeryLooseWithD02HHConf(LHCbConfigurableUser):
     __slots__ = { 
@@ -34,7 +34,8 @@ class StrippingDstarVeryLooseWithD02HHConf(LHCbConfigurableUser):
     def DstarVeryLooseWithD02HH( self ):
 	stdVeryLooseDstar = DataOnDemand(Location = "Phys/StdVeryLooseDstarWithD02KPi")
 	stdVeryLooseDstarDCS = DataOnDemand(Location = "Phys/StdVeryLooseDstarWithD02KPiDCS")
-	
+	orOfVeryLooseDstar = MergedSelection('orOfVeryLooseDstar', RequiredSelections = [stdVeryLooseDstar, stdVeryLooseDstarDCS])
+
 	# D* has the following decay chain:  D*+ -> ( D0 -> K pi ) pi 
 	Dstar = FilterDesktop("FilterDstarVeryLooseWithD02HH")
 	
@@ -62,7 +63,7 @@ class StrippingDstarVeryLooseWithD02HHConf(LHCbConfigurableUser):
 
 	DstarSel = Selection("DstarVeryLooseWithD02HH",
                  	Algorithm = Dstar,
-                 	RequiredSelections = [stdVeryLooseDstar, stdVeryLooseDstarDCS])
+                 	RequiredSelections = [orOfVeryLooseDstar])
 	return DstarSel
 
     def getProps(self) :

@@ -1,8 +1,8 @@
-# $Id: StrippingBd2DstarMuNuLoose.py,v 1.6 2010-06-16 13:00:18 gcowan Exp $
+# $Id: StrippingBd2DstarMuNuLoose.py,v 1.7 2010-07-23 18:30:07 gcowan Exp $
 
 __author__ = 'Greig Cowan, Marta Calvi'
 __date__ = '10/12/2009'
-__version__ = '$Revision: 1.6 $'
+__version__ = '$Revision: 1.7 $'
 
 '''
 Bd->Dstar mu nu loose stripping selection using LoKi::Hybrid and python
@@ -38,9 +38,8 @@ class StrippingBd2DstarMuNuLooseConf(LHCbConfigurableUser):
 	return StrippingLine('Bd2DstarMuNuLooseLine', prescale = 1, algos = [Bd2DstarMuNuSeq])
      	
     def Bd2DstarMuNu( self ):
-	stdVeryLooseMuons = DataOnDemand(Location = "Phys/StdVeryLooseMuons")
+	stdLooseMuons = DataOnDemand(Location = "Phys/StdLooseMuons")
 	stdVeryLooseDstar = DataOnDemand(Location = "Phys/StdVeryLooseDstarWithD02KPi")
-	stdVeryLooseDstarDCS = DataOnDemand(Location = "Phys/StdVeryLooseDstarWithD02KPiDCS")
 	
 	Bd2DstarMu = CombineParticles("Bd2DstarMuNuLoose")
 	Bd2DstarMu.DecayDescriptors = ["[B0 -> D*(2010)- mu+]cc", "[B0 -> D*(2010)+ mu+]cc"] # includes wrong sign
@@ -82,7 +81,7 @@ class StrippingBd2DstarMuNuLooseConf(LHCbConfigurableUser):
 	
 	Bd2DstarMuSel = Selection("SelBd2DstarMuNuLoose",
                  	Algorithm = Bd2DstarMu,
-                 	RequiredSelections = [stdVeryLooseMuons, stdVeryLooseDstar, stdVeryLooseDstarDCS])
+                 	RequiredSelections = [stdVeryLooseDstar, stdLooseMuons])
 	return Bd2DstarMuSel
 
     def getProps(self) :
