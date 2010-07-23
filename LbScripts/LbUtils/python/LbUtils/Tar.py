@@ -139,9 +139,9 @@ def listTarBallObjects(dirname, pathfilter=None, prefix=None, top_most=False):
     for root, dirs, files in os.walk(dirname, topdown=True) :
         relroot = root.replace(dirname,"")
         objs = files + dirs
+        if top_most :
+            dirs_to_remove = []
         for o in objs :
-            if top_most :
-                dirs_to_remove = []
             fullo = os.path.join(root, o)
             relo  = os.path.join(relroot, o)
             if prefix :
@@ -153,8 +153,9 @@ def listTarBallObjects(dirname, pathfilter=None, prefix=None, top_most=False):
                     yield fullo, relo
             else :
                 yield fullo, relo
-        for d in dirs_to_remove :
-            dirs.remove(d)
+        if top_most :
+            for d in dirs_to_remove :
+                dirs.remove(d)
 
 def updateTarBallFromFilter(srcdirs, filename, pathfilter=None,
                             prefix=None, dereference=False):
