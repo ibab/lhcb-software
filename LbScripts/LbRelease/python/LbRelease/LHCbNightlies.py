@@ -14,6 +14,7 @@ def fork_call(func):
             return func(self, *args, **kwargs)
         elif os.fork() == 0:
             func(self, *args, **kwargs)
+            time.sleep(10)
             sys.exit()
     return f
 
@@ -77,8 +78,8 @@ class LHCbProjectBuilder(object):
             self.configContents = file(self.config._configFile).read()
         else:
             self.configContents = None
-
         self.outputFile = None
+
     def system(self, cmd, logfile=None):
         if logfile is not None:
             log = ' 2>&1 | tee -a %s' % logfile
@@ -432,6 +433,21 @@ class LHCbProjectBuilder(object):
                 os.system('echo "Copying documentation to AFS finished: '+ time.strftime('%c', time.localtime()) +'"')
         return 0
 
+    def sendMails(self, slot, project, platform, subject, message):
+        import smtplib
+        project = project.getName()
+        if project in self.config._mailTo and len(self.config._mailTo[project]) > 0:
+            mailList = self.config._mailTo[project]
+        elif project.lower() in self.config._mailTo and len(self.config._mailTo[project.lower()]) > 0:
+            mailList = self.config._mailTo[project.lower()]
+        else:
+            return
+        mailFrom = self.config._generalConfig['mailfrom']
+        mailHeaders = 'From: %s\nTo:%s\nSubject: %s\n\n' % (mailFrom, ';'.join(mailList), subject)
+        s = smtplib.SMTP('localhost')
+        s.sendmail(mailFrom, mailList, mailHeaders + message)
+        s.quit()
+
     @fork_call
     def install(self):
         print "[LHCb] install"
@@ -441,6 +457,7 @@ class LHCbProjectBuilder(object):
 
         copyLogs = True
         nWarn, nErr, nMkErr, nCMTErr = checkLogFiles.checkBuildLogs(self.slot, self.project, self.day, self.plat, self.config._generalConfig)
+
         if self.systemType == 'windows':
             copyNotShared = False
             copyShared = False
@@ -494,6 +511,16 @@ class LHCbProjectBuilder(object):
                 )
 
             if not os.path.exists(os.path.join(releasePath, 'configuration.xml')):  shutil.copy2(os.path.join(os.environ['LCG_XMLCONFIGDIR'], 'configuration.xml'), releasePath)
+        if self.systemType != 'windows' and nWarn + nErr + nMkErr + nCMTErr > 0:
+            self.sendMails(self.slot, self.project, self.plat,"[LHCb Nightlies] %s, %s on %s results of automated build" % (str(self.project.getTag()), str(self.slot.getName()), self.plat),"""
++++> Errors found in log file for tag """ + self.project.getTag() + """ slot """ + self.slot.getName() + """
+     while building for: """ + self.plat + """
+         Number  of make errors : """ + str(nMkErr) + """
+         Total number of errors : """ + str(nErr + nMkErr + nCMTErr) + """
+         Number of warnings     : """ + str(nWarn) + """
+
+     Log file(s) available from:
+     http://cern.ch/lhcb-nightlies""")
         return 0
 
     @fork_call

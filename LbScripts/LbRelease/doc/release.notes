@@ -1,6 +1,11 @@
+2010-07-23  Karol Kruzelecki  <Karol.Kruzelecki@cern.ch>
+
+	* python/LbRelease/LHCbNightlies.py: send e-mails with build summary when
+	the project build is completed
+
 2010-07-23  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* python/LbRelease/TarBall.py: 
+	* python/LbRelease/TarBall.py:
 	- added the LHCbGrid tag.
 	- fixed the case where the tarball already exists
 
