@@ -4,6 +4,9 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+! 2010-07-23 Wouter Hulsbergen
+ - Added Calo to Measurement::Types
+
 !======================= TrackEvent v5r5 2010-06-18 ==========================
 ! 2010-06-14 Albert Bursche
  - Added Track History type for Tracks imported from Hlt
