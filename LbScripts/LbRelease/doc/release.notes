@@ -1,3 +1,9 @@
+2010-07-23  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbRelease/TarBall.py: 
+	- added the LHCbGrid tag.
+	- fixed the case where the tarball already exists
+
 2010-07-22  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbRelease/TarBall.py: lcg tarball script completed.

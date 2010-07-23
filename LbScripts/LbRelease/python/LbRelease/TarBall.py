@@ -628,7 +628,7 @@ def generateLCGTar(project, version=None, cmtconfig=None,
                 bin_prefix = os.sep.join([shared_prefix, cmtconfig])
                 ext_binary_dict[bin_location] = bin_prefix
                 log.debug("Adding %s to %s" % (bin_location, bin_prefix))
-        os.environ["CMTEXTRATAGS"] = "LHCb"
+        os.environ["CMTEXTRATAGS"] = "LHCb,LHCbGrid"
         ext_dict = {}
         for p in prj.binaryExternalPackages(cmtprojectpath=os.environ["CMTPROJECTPATH"], 
                                             binary=cmtconfig) :
@@ -665,29 +665,29 @@ def generateLCGTar(project, version=None, cmtconfig=None,
         log.info("Adding %d binary locations" % len(ext_binary_dict))         
 #        print ext_shared_dict
 #        print ext_binary_dict
-    log.debug("="*100)
-    if os.path.exists(filename) and not (overwrite or update) :
-        log.info("The file %s already exists. Skipping." % filename)
-        status = 2
-    else :
-        if overwrite :
-            os.remove(filename)
-        if cmtconfig :
-            binary_pathfilter = lambda x : projectFilter(x, cmtconfig)
-        shared_pathfilter = projectFilter        
-        status = createTarBallFromFilterDict(ext_shared_dict, filename, shared_pathfilter, dereference=False, update=update)
-        if status != 0 :
-            if status == 1 :
-                log.fatal("The source directories do not exist")
-        else:
-            status = updateTarBallFromFilterDict(ext_binary_dict, filename, binary_pathfilter, dereference=False)
-#        else :
-#            if md5 :
-#                generateMD5(project, version, cmtconfig, output_dir)
-#            if html :
-#                generateHTML(project, version, cmtconfig, top_dir, output_dir)
-    if status == 0 :
-        log.info("The file %s was successfully generated" % filename)
+        log.debug("="*100)
+        if os.path.exists(filename) and not (overwrite or update) :
+            log.info("The file %s already exists. Skipping." % filename)
+            status = 2
+        else :
+            if overwrite :
+                os.remove(filename)
+            if cmtconfig :
+                binary_pathfilter = lambda x : projectFilter(x, cmtconfig)
+            shared_pathfilter = projectFilter        
+            status = createTarBallFromFilterDict(ext_shared_dict, filename, shared_pathfilter, dereference=False, update=update)
+            if status != 0 :
+                if status == 1 :
+                    log.fatal("The source directories do not exist")
+            else:
+                status = updateTarBallFromFilterDict(ext_binary_dict, filename, binary_pathfilter, dereference=False)
+    #        else :
+    #            if md5 :
+    #                generateMD5(project, version, cmtconfig, output_dir)
+    #            if html :
+    #                generateHTML(project, version, cmtconfig, top_dir, output_dir)
+        if status == 0 :
+            log.info("The file %s was successfully generated" % filename)
     return status
 
 
