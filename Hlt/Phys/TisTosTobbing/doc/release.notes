@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.60 2010-07-21 21:22:16 tskwarni Exp $
+! $Id: release.notes,v 1.61 2010-07-23 20:51:48 tskwarni Exp $
 ! Package     : TisTosTobbing
 ! Responsible : Tomasz Skwarnicki
 ! Purpose     : TisTosTobbing of the trigger 
 ! ====================================================================
+
+! 2010-07-23 - Tomasz Skwarnicki
+ - Add TisTosParticleTagger. Add protection in ParticleTisTos. 
 
 ! 2010-07-21 - Tomasz Skwarnicki
  - Major rewrite of all the code. TisTos, ParticleTisTos added (new lower level tools).

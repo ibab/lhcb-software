@@ -1,4 +1,4 @@
-// $Id: ParticleTisTos.cpp,v 1.1 2010-07-21 21:22:16 tskwarni Exp $
+// $Id: ParticleTisTos.cpp,v 1.2 2010-07-23 20:51:48 tskwarni Exp $
 // Include files 
 #include <algorithm>
 #include <vector>
@@ -267,13 +267,13 @@ bool ParticleTisTos::addToSignal( const LHCb::Particle & particle )
   bool sigModified(false);
   
   if ( msgLevel(MSG::VERBOSE) ) verbose() << " addToSignal with Particle ENTER " << endmsg;
-  const SmartRefVector<LHCb::Particle> & daughters = particle.daughters();  
+  std::vector<const LHCb::Particle*> daughters = particle.daughtersVector(); 
   if( daughters.size() >0 ){
-    for(SmartRefVector<LHCb::Particle>::const_iterator p = daughters.begin(); p!=daughters.end(); ++p){
+    for(std::vector<const LHCb::Particle*>::const_iterator p = daughters.begin(); p!=daughters.end(); ++p){
       if ( msgLevel(MSG::VERBOSE) ) verbose() << " addToSignal with Particle DAUGHTER " << endmsg;
-      if( *p ){
-        const LHCb::Particle & part = *(*p);
-        if( addToSignal(part) )sigModified=true;        
+      if(*p){
+          const LHCb::Particle & part = *(*p);
+          if( addToSignal(part) )sigModified=true;        
       }
     }
   } else {
@@ -467,7 +467,7 @@ unsigned int ParticleTisTos::tisTos(const LHCb::Particle & particle)
     unsigned int resultTPS=0;
     bool empty(true);
     for( std::vector<const LHCb::Particle*>::const_iterator p = daughters.begin(); p!=daughters.end(); ++p){
-      if(!(*p))continue;        
+      if(!(*p))continue;       
       const LHCb::Particle & daug = *(*p);
       unsigned int result = tisTos( daug );
       if( m_compositeTPSviaPartialTOSonly ){
