@@ -769,12 +769,6 @@ def getProjectList(name, version, binary=None):
     if not check_only :
         getFile(url_dist + 'html/', tar_file + '.html')
 
-    disthtm = os.path.join(this_html_dir, "distribution.htm")
-
-    if not check_only :
-        if os.path.exists(disthtm) :
-            os.remove(disthtm)
-        getFile(url_dist + "html", disthtm)
 
     # loop over projects to be downloaded
     project_list = {}
@@ -1208,10 +1202,8 @@ def getVersionList(pname, ver=None):
                 elif ver :
                     if filename.find(ver + ".") != -1 :
                         plist.append(filename)
-#                        log.info(filename)
                 else :
                     plist.append(filename)
-#                    log.info(filename)
 
     atexit.register(urlcleanup)
     return sortStrings(plist, safe=True)

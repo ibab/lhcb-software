@@ -5,6 +5,7 @@
 	to be done manually.
 	- added a fallback on VO_LHCB_SW_DIR/lib if the MYSITEROOT variable is not set. It
 	issues a warning. 
+	- removed the download of the useless distribution.htm file
 	* scripts/mkLHCbtar: remove obsolete dependency on the system/<cmtconfig>.tar.gz
 	tarball
 
