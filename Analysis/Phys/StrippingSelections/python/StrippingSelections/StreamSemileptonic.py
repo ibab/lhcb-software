@@ -18,14 +18,17 @@ from StrippingSelections import Strippingb2DMuX
 
 
 from StrippingSelections.StrippingB2XuMuNu import StrippingB2XuMuNuConf
+from StrippingSelections.StrippingB2DMuNuX import StrippingB2DMuNuXConf
 
 stream = StrippingStream("Semileptonic")
 stream.appendLines( [ 
 		        StrippingBd2DstarMuNu.line, 
 		        #StrippingBd2DstarMuNuLooseConf().line(), 
 		        #StrippingBsDsMuNu.line, 
-			Strippingb2DMuX.line, 
-			Strippingb2DMuX.line1
+                        StrippingB2DMuNuXConf().b2D0MuXLine(),
+                        StrippingB2DMuNuXConf().b2DpMuXLine(),
+                        StrippingB2DMuNuXConf().b2DsMuXLine(),
+                	StrippingB2DMuNuXConf().b2LcMuXLine()                                                  
                         # Lines from P. Urquijo, 23-05-10
                         , StrippingB2XuMuNuConf().K_line()
                         , StrippingB2XuMuNuConf().Pi_line()

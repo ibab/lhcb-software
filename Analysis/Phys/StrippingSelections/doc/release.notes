@@ -5,6 +5,11 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-07-23 - Liming Zhang
+ - Update inclusive B->DMuNuX lines by changing Mu and D reconstruction order and
+   tightening cuts. The timing is 0.6ms/event. Removed old lines in Strippingb2DMuX.py, 
+   added new lines in StrippingB2DMuNuXConf
+
 ! 2010-07-23 - Sam GREGSON
  - Updated D2KS0h_KS02PiPi stripping line to reduce timing and retention rate on min bias data
 
