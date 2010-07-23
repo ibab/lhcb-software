@@ -1,0 +1,43 @@
+package Phys/MvaPreSelB2DH
+version v1r0
+
+#############################################################
+# BRANCHES
+#############################################################
+branches src cmt doc 
+
+#############################################################
+#############################################################
+# USE
+#############################################################
+use DaVinciKernel      v*  Phys
+use PhysDict           v*  Phys
+use DaVinci            v*  Phys
+use MCEvent            v*  Event
+use PhysEvent          v*  Event
+use LinkerEvent        v*  Event
+use RecEvent           v*  Event
+use DAQEvent           v*  Event
+use L0Event            v*  Event
+use HltEvent           v*  Event
+
+#apply_pattern install_python_modules
+
+private
+
+use MicroDSTInterfaces v*  MicroDST
+use MicroDSTBase       v*  MicroDST
+use MicroDSTAlgorithm  v*  MicroDST
+macro_append   ROOT_linkopts   " -lMLP -lTMVA -lGraf -lHist -lMatrix -lTreePlayer -lGpad -lGraf3d" \
+ WIN32   " libMLP.lib libTMVA.lib libGraf.lib libHist.lib libMatrix.lib libTreePlayer.lib libGpad.lib libGraf3d.lib"
+
+end_private
+#############################################################
+#apply_pattern install_more_includes more=MvaPreSelB2DH
+#############################################################
+# BUILD
+#############################################################
+# build a component library
+library MvaPreSelB2DH  ../src/*.cpp
+apply_pattern component_library library=MvaPreSelB2DH
+

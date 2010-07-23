@@ -1,0 +1,79 @@
+#Ganga# File created by Ganga - Fri Jun 18 13:39:38 2010
+#Ganga#
+#Ganga# Object properties may be freely edited before reloading into Ganga
+#Ganga#
+#Ganga# Lines beginning #Ganga# are used to divide object definitions,
+#Ganga# and must not be deleted
+
+#Ganga# LHCbDataset object (category: datasets)
+LHCbDataset (
+ depth = 0 ,
+ files = [ PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/data/2010/BHADRON.DST/00006593/0000/00006593_00000001_1.bhadron.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/data/2010/BHADRON.DST/00006593/0000/00006593_00000002_1.bhadron.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/data/2010/BHADRON.DST/00006593/0000/00006593_00000003_1.bhadron.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/data/2010/BHADRON.DST/00006593/0000/00006593_00000004_1.bhadron.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/data/2010/BHADRON.DST/00006593/0000/00006593_00000005_1.bhadron.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/data/2010/BHADRON.DST/00006593/0000/00006593_00000006_1.bhadron.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/data/2010/BHADRON.DST/00006593/0000/00006593_00000007_1.bhadron.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/data/2010/BHADRON.DST/00006593/0000/00006593_00000009_1.bhadron.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/data/2010/BHADRON.DST/00006593/0000/00006593_00000010_1.bhadron.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/data/2010/BHADRON.DST/00006593/0000/00006593_00000011_1.bhadron.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/data/2010/BHADRON.DST/00006593/0000/00006593_00000012_1.bhadron.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/data/2010/BHADRON.DST/00006593/0000/00006593_00000013_1.bhadron.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/data/2010/BHADRON.DST/00006593/0000/00006593_00000014_1.bhadron.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/data/2010/BHADRON.DST/00006593/0000/00006593_00000015_1.bhadron.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/data/2010/BHADRON.DST/00006593/0000/00006593_00000016_1.bhadron.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/data/2010/BHADRON.DST/00006593/0000/00006593_00000017_1.bhadron.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/data/2010/BHADRON.DST/00006593/0000/00006593_00000018_1.bhadron.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/data/2010/BHADRON.DST/00006593/0000/00006593_00000019_1.bhadron.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/data/2010/BHADRON.DST/00006593/0000/00006593_00000020_1.bhadron.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/data/2010/BHADRON.DST/00006593/0000/00006593_00000021_1.bhadron.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/data/2010/BHADRON.DST/00006593/0000/00006593_00000023_1.bhadron.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/data/2010/BHADRON.DST/00006593/0000/00006593_00000024_1.bhadron.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/data/2010/BHADRON.DST/00006593/0000/00006593_00000025_1.bhadron.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/data/2010/BHADRON.DST/00006593/0000/00006593_00000026_1.bhadron.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/data/2010/BHADRON.DST/00006593/0000/00006593_00000027_1.bhadron.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/data/2010/BHADRON.DST/00006593/0000/00006593_00000028_1.bhadron.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/data/2010/BHADRON.DST/00006593/0000/00006593_00000029_1.bhadron.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/data/2010/BHADRON.DST/00006593/0000/00006593_00000030_1.bhadron.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/data/2010/BHADRON.DST/00006593/0000/00006593_00000031_1.bhadron.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/data/2010/BHADRON.DST/00006593/0000/00006593_00000032_1.bhadron.dst' 
+    ) , PhysicalFile (
+    name = '/castor/cern.ch/grid/lhcb/data/2010/BHADRON.DST/00006593/0000/00006593_00000033_1.bhadron.dst' 
+    ) , ] ,
+ XMLCatalogueSlice = File (
+    name = '' ,
+    subdir = '.' 
+    ) 
+ ) 
+
