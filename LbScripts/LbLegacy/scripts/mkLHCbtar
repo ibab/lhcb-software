@@ -377,11 +377,6 @@ def make_tar(pname, pversion, binary=''):
             dep.write('[<A HREF=source/' + dtar + '.tar.gz>' + dtar + '</A>]\n')
         os.chdir(here)
 
-# get system dependency
-    if platform != 'win32' and binary != '':
-        dtar = tar_opt[1:]
-        dep.write('[<A HREF=system/' + dtar + '.tar.gz>' + dtar + '</A>]\n')
-
 # close the dephtml file
     dep.write('</MENU>\n')
     dep.close()
