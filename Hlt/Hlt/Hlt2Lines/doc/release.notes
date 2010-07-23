@@ -8,6 +8,8 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2010-07-23 - Chris Thomas
+ - added one-stage track fit lines to B2DX
 
 ! 2010-07-21 - O. Deschamps for R. Lefevre
  - update Hlt2B2HHPi0Line.py

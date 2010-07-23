@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2010-07-23 - Chris Thomas
+ - added one-stage track fit lines to B2DX
+
 ! 2010-07-21 - V. Gligorov
  - Increase default prescales for monitoring topo lines.
 
