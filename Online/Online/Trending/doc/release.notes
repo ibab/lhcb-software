@@ -4,6 +4,9 @@
 ! Purpose     : Provide tools for fast trending in C++
 !-----------------------------------------------------------------------------
 
+! 2010-07-23 - Olivier Callot
+ - Initialize the directory buffer when reading the file
+
 ! 2010-06-15 - Olivier Callot
  - Protect against too big tag array, at 10% of buffer size.
  - Improve the runTest script to test the trending tool.

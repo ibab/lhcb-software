@@ -1,4 +1,4 @@
-// $Id: TrendingTool.cpp,v 1.3 2010-06-15 15:33:27 ocallot Exp $
+// $Id: TrendingTool.cpp,v 1.4 2010-07-23 15:03:45 ocallot Exp $
 // Include files
 #include <ctime>
 
@@ -499,6 +499,11 @@ bool TrendingTool::openRead( std::string name ) {
   if ( !loadTags( -1 ) ) return false;   // Get the latest tags, return an error if...
   m_forWriting = false;
 
+  //== read the first directory record...
+  m_dirAddressInFile = m_firstDirAddress;
+  fseek( m_file, m_dirAddressInFile, SEEK_SET );
+  fread( &m_dir, 1, sizeof(DirectoryRecord), m_file );
+  
   return true;
 }
 //=========================================================================
