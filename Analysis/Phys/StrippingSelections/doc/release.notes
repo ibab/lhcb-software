@@ -5,6 +5,10 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+
+! 2010-07-23 - Marcin Kucharczyk
+ - New tuning for StrippingHighPtJets line wrt higher luminosity
+
 ! 2010-07-22 - Thomas BLAKE
  - Updated Stream leptonic to fix lines breaking the stripping
 
@@ -245,7 +249,6 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
   . v1r22
 
 !========================== StrippingSelections v1r21 2010-05-24 ==============
-
 
 ! 2010-05-24 - Philip Hunt
  - Added standard and robust lines for D*->(D0->K3Pi)pi:
