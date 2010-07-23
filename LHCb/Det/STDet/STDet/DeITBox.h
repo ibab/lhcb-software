@@ -1,10 +1,11 @@
 // $Id: DeITBox.h,v 1.7 2009-03-14 09:18:07 mneedham Exp $
 #ifndef _DeITBox_H_
-#define _DeITBox_H_
+#define _DeITBox_H_ 1
 
 #include <string>
 #include <vector>
 #include "STDet/DeSTBaseElement.h"
+#include "STDet/DeITLayer.h"
 
 class DeITLayer;
 class DeITStation;
@@ -80,6 +81,12 @@ public:
    /** vector of children **/
    const DeITBox::Children& layers() const;
 
+   /** first layer in a box */
+   const DeITLayer* firstLayer() const;
+
+   /** first layer in a box */
+   const DeITLayer* lastLayer() const;
+
    /** print to stream */
    std::ostream& printOut( std::ostream& os ) const;
      
@@ -101,6 +108,10 @@ private:
    parent_type* m_parent;
    unsigned int m_id;
    std::string m_nickname;
+   DeITLayer* m_firstLayer;
+   DeITLayer* m_lastLayer;
+
+
 };
 
 
@@ -143,6 +154,16 @@ inline MsgStream& operator<<( MsgStream& os , const DeITBox* aBox )
 inline const std::string& DeITBox::nickname() const{
   return m_nickname;
 } 
+
+
+inline const DeITLayer* DeITBox::firstLayer() const {
+  return m_firstLayer;
+}
+
+inline const DeITLayer* DeITBox::lastLayer() const{
+  return m_lastLayer;
+}
+
 
 #endif // _DeITBox_H
 

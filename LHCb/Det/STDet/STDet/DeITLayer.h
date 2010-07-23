@@ -3,8 +3,8 @@
 #define _DeITLayer_H_
 
 #include <string>
-
 #include "STDet/DeSTLayer.h"
+
 
 /** @class DeITLayer DeITLayer.h "STDet/DeITLayer.h"
  *
@@ -20,7 +20,9 @@
 
 static const CLID CLID_DeITLayer = 9204; // needs fixing !
 
-class DeITBox;
+class DeITSector;
+class DeSTSector;
+class DeITLadder;
 
 class DeITLayer : public DeSTLayer  {
 
@@ -82,6 +84,12 @@ public:
   */
   double fractionActive() const;
 
+  /** get the first sector in the layer */
+  const DeITSector* firstSector() const;
+
+  /** get the last sector in the layer */
+  const DeITSector* lastSector() const;
+
 private:
 
    /** make flat list of lowest descendents  and also layers*/
@@ -89,24 +97,29 @@ private:
  
    Children m_ladders;
    parent_type* m_parent;   
+   DeITSector* m_firstSector;
+   DeITSector* m_lastSector;
 
 };
 
 
 
-#include "STDet/DeITBox.h"
+
 #include "STDet/DeITLadder.h"
+#include "STDet/DeITLayer.h"
 
-
-inline bool DeITLayer::contains(const LHCb::STChannelID aChannel) const{
-  return (elementID().layer() == aChannel.layer() && 
-         (m_parent->contains(aChannel))); 
-}
 
 inline const DeITLayer::Children& DeITLayer::ladders() const{
   return m_ladders;
 }
 
+inline const DeITSector* DeITLayer::firstSector() const {
+  return m_firstSector;
+}
+
+inline const DeITSector* DeITLayer::lastSector() const{
+  return m_lastSector;
+}
 
 #endif // _DeITLayer_H
 

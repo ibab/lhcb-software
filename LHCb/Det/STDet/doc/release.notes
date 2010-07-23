@@ -3,6 +3,10 @@
 !Package manager : M. Needham
 !-------------------------------------------------------------------------
 
+! 2010-07-23 M Needham
+  - Add first and lastSector method to DeITLayer
+  - Add first and lastLayer method to DeITBox  
+
 !======================== STDet v4r21 2010-07-19 =========================
 ! 2010-07-12 M Needham
  - Add find methods for enum string conversion to StatusMap

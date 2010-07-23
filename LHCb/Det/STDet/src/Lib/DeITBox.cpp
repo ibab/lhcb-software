@@ -55,6 +55,16 @@ StatusCode DeITBox::initialize() {
     setElementID(chan);
     m_layers = getChildren<DeITBox>();
 
+    // set the first and last layers
+    DeITBox::Children::const_iterator start = m_layers.begin();
+    DeITBox::Children::const_iterator childEnd = m_layers.end();
+    m_firstLayer = *start; m_lastLayer = *start;
+    for (; start != childEnd; ++start){
+      unsigned int testID = (*start)->id();
+      if (testID < m_firstLayer->id()) m_firstLayer = *start;
+      if (testID > m_lastLayer->id()) m_lastLayer = *start;
+    }
+
     m_nickname = ITNames().UniqueBoxToString(chan);
 
   }

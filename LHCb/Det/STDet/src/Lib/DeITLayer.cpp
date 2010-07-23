@@ -55,6 +55,15 @@ StatusCode DeITLayer::initialize() {
     setElementID(chan);
     m_nickname = ITNames().UniqueLayerToString(chan);
     m_ladders = getChildren<DeITLayer>();
+   // set the first and last layers
+    DeITLayer::Children::const_iterator start = m_ladders.begin();
+    DeITLayer::Children::const_iterator childEnd = m_ladders.end();
+    m_firstSector = (*start)->sector(); m_lastSector = (*start)->sector();
+    for (; start != childEnd; ++start){
+      unsigned int testID = (*start)->id();
+      if (testID < m_firstSector->id()) m_firstSector = (*start)->sector();
+      if (testID > m_lastSector->id()) m_lastSector = (*start)->sector();
+    }
     flatten();
   }
 
@@ -91,5 +100,9 @@ double DeITLayer::fractionActive() const {
   return std::accumulate(m_ladders.begin(), m_ladders.end(), 0.0,  _1 + bind(&DeITLadder::fractionActive,_2))/double(m_ladders.size());   
 }
 
+bool DeITLayer::contains(const LHCb::STChannelID aChannel) const{
+  return (elementID().layer() == aChannel.layer() && 
+         (m_parent->contains(aChannel))); 
+}
 
 
