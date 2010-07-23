@@ -16,7 +16,8 @@ class Hlt2B2DXLinesConf(HltLinesConfigurableUser) :
     #------------------------
     # Don't touch my variables!
 
-    __slots__ = { 'RobAllTrkPtLL'        : 200          # in MeV
+    __slots__ = { ## Robust cuts
+                  'RobAllTrkPtLL'        : 200          # in MeV
                   , 'RobAllTrkPLL'         : 2000       # in MeV
                   , 'RobAllTrkPVIPLL'      : 0.125      # in mm
                   , 'RobPairMinDocaUL'     : 0.2        # in mm
@@ -26,6 +27,7 @@ class Hlt2B2DXLinesConf(HltLinesConfigurableUser) :
                   , 'RobVtxPVRDispLL'      : 0.2        # in mm
                   , 'RobUseGEC'            : True       # do or do not 
                   , 'RobGEC'               : 120        # max number of tracks
+                  ## Post track-fit cuts
                   , 'TFAllTrkPtLL'         : 200        # in MeV
                   , 'TFKsDDPtLL'           : 100        # in MeV
                   , 'TFPtBachelorLL'       : 350        # in MeV
@@ -40,7 +42,9 @@ class Hlt2B2DXLinesConf(HltLinesConfigurableUser) :
                   , 'TFVtxPVDispChi2LL'    : 225        # unitless
                   , 'TFVtxPVDDispChi2LL'   : 196        # for the D: unitless
                   , 'TFVtxDispUL'          : 20
+                  ## Robust coplanar cut
                   , 'RobCoplanUL'          : 1.0        # in mm
+                  ## Pre- and post-scales
                   , 'Prescale'                : {'Hlt2B2D2hhhBachelorWithKsBroadMW'            : 0.01           # Broad MW sidebands lines
                                                  , 'Hlt2B2D2hhBachelorBroadMW'                 : 0.01
                                                  , 'Hlt2B2D2hhhBachelorBroadMW'                : 0.01
@@ -54,6 +58,10 @@ class Hlt2B2DXLinesConf(HltLinesConfigurableUser) :
                                                  , 'Hlt2B2D2hhBachelorBroadMWMonitor'          : 0.001
                                                  , 'Hlt2B2D2hhhBachelorBroadMWMonitor'         : 0.001
                                                  , 'Hlt2B2D2hhKstarBroadMWMonitor'             : 0.001
+                                                 , 'Hlt2B2D2hhhBachelorWithKsOSTFBroadMW'      : 0.01           # OSTF Broad MW sidebands lines
+                                                 , 'Hlt2B2D2hhBachelorOSTFBroadMW'             : 0.01
+                                                 , 'Hlt2B2D2hhhBachelorOSTFBroadMW'            : 0.01
+                                                 , 'Hlt2B2D2hhKstarOSTFBroadMW'                : 0.01
                                                  }
                   }
 
@@ -285,8 +293,8 @@ class Hlt2B2DXLinesConf(HltLinesConfigurableUser) :
                                  , InputLocations = inputSeq
                                  , Code = extracode
                                  )
+                        
         return bindMembers( name, inputSeq + [ filter ] )
-        
 
     def __apply_configuration__(self) :
         ###################################################################
@@ -319,14 +327,13 @@ class Hlt2B2DXLinesConf(HltLinesConfigurableUser) :
         ###################################################################
         ## Filter the input particles.
         ###################################################################
-        from Hlt2SharedParticles.GoodParticles import GoodPions, GoodKaons
+        from Hlt2SharedParticles.GoodParticles import GoodKaons
         B2DXRobInputKaons = self.__RobInputParticleFilter('DXInputKaons', [ GoodKaons ])
                 
         ###################################################################
         # Create sequences for the shared 2 and 3-body combinatorics of the
         # robust stages.
         ##################################################################
-
         Robust2Body = self.__RobustCombine(  name = 'Robust2Body'
                                              , inputSeq = [ B2DXRobInputKaons ]
                                              , decayDesc = ["K*(892)0 -> K+ K+", "K*(892)0 -> K+ K-", "K*(892)0 -> K- K-"]
@@ -345,32 +352,48 @@ class Hlt2B2DXLinesConf(HltLinesConfigurableUser) :
         Robust3BodySeq = self.__RobustFilter('Robust3BodySeq', [Robust3Body])
         
         ###################################################################
-        # Now absorb the post-track fit shared particles into this configurable
+        # Absorb the post-track fit kaons into this configurable
         ###################################################################
-        from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedKaons,BiKalmanFittedPions
-        from Hlt2SharedParticles.Ks import KsDD        
-        
+        from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedKaons
         B2DXTFInputKaons = self.__TfInputParticleFilter('B2DXTFInputKaons', [ BiKalmanFittedKaons ] )
-        B2DXTFInputPions = self.__TfInputParticleFilter('B2DXTFInputPions', [ BiKalmanFittedPions ] )
-        B2DXTFInputKS0DD = self.__TfKS0InputParticleFilter('B2DXTFInputKS0', [ KsDD ])
-        
+
         ################################################################### 
         # Create sequences for the shared combinatorics of the post-track-fit
-        # stages: D->hh, D->hshh and D->Kshh
+        # stages: D->hh
         ###################################################################        
         TF2Body = self.__TfCombine(  name = 'TF2Body'
                                      , inputSeq = [ B2DXTFInputKaons ]
                                      , decayDesc = ["K*(892)0 -> K+ K+", "K*(892)0 -> K+ K-", "K*(892)0 -> K- K-"]
                                      , extracuts = { 'CombinationCut' : "(AMINDOCA('LoKi::TrgDistanceCalculator')< %(TFPairMinDocaUL)s )" % self.getProps() }
                                      )
+        
+        ###################################################################
+        # Filter events that fail the post track-fit two-body combination
+        # (these are only used in conjunction with the Ks)
+        ###################################################################
+        TF2BodyCombSeq = self.__TFFilter('TF2BodyCombSeq'
+                                         ,[TF2Body]
+                                         ,'ALL')
 
+        ###################################################################
+        # Absorb the post-track fit pions and Kshorts into this configurable
+        ###################################################################
+        from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedPions
+        B2DXTFInputPions = self.__TfInputParticleFilter('B2DXTFInputPions', [ BiKalmanFittedPions ] )
+        from Hlt2SharedParticles.Ks import KsDD        
+        B2DXTFInputKS0DD = self.__TfKS0InputParticleFilter('B2DXTFInputKS0', [ KsDD ])
+
+        ################################################################### 
+        # Create sequences for the shared combinatorics of the post-track-fit
+        # stages: D->hhh and D->Kshh
+        ###################################################################        
         TF3Body = self.__TfCombine(  name = 'TF3Body'
-                                     , inputSeq = [ B2DXTFInputPions, TF2Body ]
+                                     , inputSeq = [ TF2Body, B2DXTFInputPions ]
                                      , decayDesc =[ "D*(2010)+ -> K*(892)0 pi+", "D*(2010)+ -> K*(892)0 pi-"]
                                      , extracuts = {'MotherCut'      : "(BPVVDCHI2> %(TFVtxPVDDispChi2LL)s )" % self.getProps()})
 
         TF3BodyWithKs = self.__TfCombine(  name = 'TF3BodyWithKs'
-                                           , inputSeq = [ B2DXTFInputKS0DD, TF2Body ]
+                                           , inputSeq = [ TF2BodyCombSeq, B2DXTFInputKS0DD ]
                                            , decayDesc =[ "D*(2010)+ -> K*(892)0 KS0"]
                                            , extracuts = {'MotherCut'      : "(BPVVDCHI2> %(TFVtxPVDDispChi2LL)s )" % self.getProps()})
         
@@ -394,13 +417,13 @@ class Hlt2B2DXLinesConf(HltLinesConfigurableUser) :
         # B -> D(hh)h ; B->D(hhh)h ; B -> D(hh)K* ; B -> D(Kshh)h 
         ###################################################################
         B2D2hhBachelorSeq = self.__TfCombine(name = 'B2D2hhBachelorSeq'
-                                             , inputSeq = [ B2DXTFInputPions, TF2BodySeq ]
+                                             , inputSeq = [ TF2BodySeq, B2DXTFInputPions ]
                                              , decayDesc = ["B0 -> K*(892)0  pi-","B0 -> K*(892)0  pi+"]
                                              , extracuts = {'MotherCut'      : "(BPVVDCHI2> %(TFVtxPVDispChi2LL)s ) & (D2DVVDSIGN(1)< %(TFVtxDispUL)s)" % self.getProps(),
                                                             'pi+':"(PT> %(TFPtBachelorLL)s *MeV)" % self.getProps()})
         
         B2D2hhhBachelorSeq = self.__TfCombine(name = 'B2D2hhhBachelorSeq'
-                                              , inputSeq = [ B2DXTFInputKaons, TF3Body ]
+                                              , inputSeq = [ TF3Body, B2DXTFInputKaons ]
                                               , decayDesc = ["B0 -> D*(2010)+ K-","B0 -> D*(2010)- K+"]
                                               , extracuts = {'MotherCut'      : "(BPVVDCHI2> %(TFVtxPVDispChi2LL)s ) & (D2DVVDSIGN(1)< %(TFVtxDispUL)s)" % self.getProps(),
                                                              'pi+':"(PT> %(TFPtBachelorLL)s *MeV)" % self.getProps()})
@@ -410,49 +433,49 @@ class Hlt2B2DXLinesConf(HltLinesConfigurableUser) :
                                               , decayDesc = ["B0 -> K*(892)0 K*(892)0  ","B0 -> K*(892)0 K*(892)0"]
                                               , extracuts = {'MotherCut'      : "(BPVVDCHI2> %(TFVtxPVDispChi2LL)s )  & (D2DVVDSIGN(1)< %(TFVtxDispUL)s)" % self.getProps()})
         
-        
         B2D2hhhBachelorWithKsSeq = self.__TfCombine(name = 'B2D2hhhBachelorWithKsSeq'
-                                                    , inputSeq = [ B2DXTFInputPions, TF3BodyWithKs]
+                                                    , inputSeq = [ TF3BodyWithKs, B2DXTFInputPions ]
                                                     , decayDesc = ["B0 -> D*(2010)+ pi-","B0 -> D*(2010)- pi+"]
                                                     , extracuts = {'MotherCut'      : "(BPVVDCHI2> %(TFVtxPVDispChi2LL)s )  & (D2DVVDSIGN(1)< %(TFVtxDispUL)s)" % self.getProps(),
                                                                    'pi+':"(PT> %(TFPtBachelorLL)s *MeV)" % self.getProps()})
 
+        
         ###################################################################
         # Filter everything in signal and broad mass windows
         ###################################################################
-        B2D2hhhBachelorWithKsSeqSignalFilter = self.__TFFilter('B2D2hhhBachelorWithKsSeqSignalFilter', [B2D2hhhBachelorWithKsSeq], extracode = "(M>5.0*GeV) & (M<5.5*GeV)")
-        B2D2hhhBachelorWithKsSeqBroadMWFilter = self.__TFFilter('B2D2hhhBachelorWithKsSeqBroadMWFilter', [B2D2hhhBachelorWithKsSeq], extracode = "(M>4*GeV) & (M<6*GeV)")
         B2D2hhBachelorSeqSignalFilter = self.__TFFilter('B2D2hhBachelorSeqSignalFilter', [B2D2hhBachelorSeq], extracode = "(M>5.0*GeV) & (M<5.5*GeV)")
         B2D2hhhBachelorSeqSignalFilter = self.__TFFilter('B2D2hhhBachelorSeqSignalFilter', [B2D2hhhBachelorSeq], extracode = "(M>5.0*GeV) & (M<5.5*GeV)")
         B2D2hhKstarPhiSeqSignalFilter = self.__TFFilter('B2D2hhKstarPhiSeqSignalFilter', [B2D2hhKstarPhiSeq], extracode = "(M>5.0*GeV) & (M<5.5*GeV)")
         B2D2hhBachelorSeqBroadMWFilter = self.__TFFilter('B2D2hhBachelorSeqBroadMWFilter', [B2D2hhBachelorSeq], extracode = "(M>4*GeV) & (M<6*GeV)")
         B2D2hhhBachelorSeqBroadMWFilter = self.__TFFilter('B2D2hhhBachelorSeqBroadMWFilter', [B2D2hhhBachelorSeq], extracode = "(M>4*GeV) & (M<6*GeV)")
-        B2D2hhKstarPhiSeqBroadMWFilter = self.__TFFilter('B2D2hhKstarPhiSeqBroadMWFilter', [B2D2hhKstarPhiSeq], extracode = "(M>4*GeV) & (M<6*GeV)")
-     
+        B2D2hhKstarPhiSeqBroadMWFilter = self.__TFFilter('B2D2hhKstarPhiSeqBroadMWFilter', [B2D2hhKstarPhiSeq], extracode = "(M>4*GeV) & (M<6*GeV)")        
+        B2D2hhhBachelorWithKsSeqSignalFilter = self.__TFFilter('B2D2hhhBachelorWithKsSeqSignalFilter', [B2D2hhhBachelorWithKsSeq], extracode = "(M>5.0*GeV) & (M<5.5*GeV)")
+        B2D2hhhBachelorWithKsSeqBroadMWFilter = self.__TFFilter('B2D2hhhBachelorWithKsSeqBroadMWFilter', [B2D2hhhBachelorWithKsSeq], extracode = "(M>4*GeV) & (M<6*GeV)")
+
         ###################################################################
         # Make the lines for signal
         ###################################################################
-        line = Hlt2Line('B2D2hhhBachelorWithKsSignal', prescale = self.prescale , algos = [ Robust3BodySeq, B2D2hhhBachelorWithKsSeqSignalFilter], postscale = self.postscale)
-        HltANNSvc().Hlt2SelectionID.update( { "Hlt2B2D2hhhBachelorWithKsSignalDecision" : 52100 } )
         line = Hlt2Line('B2D2hhBachelorSignal', prescale = self.prescale , algos = [ Robust3BodySeq, B2D2hhBachelorSeqSignalFilter], postscale = self.postscale)
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2B2D2hhBachelorSignalDecision" : 52110 } )
         line = Hlt2Line('B2D2hhhBachelorSignal', prescale = self.prescale , algos = [ Robust3BodySeq, B2D2hhhBachelorSeqSignalFilter], postscale = self.postscale)
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2B2D2hhhBachelorSignalDecision" : 52120 } )
         line = Hlt2Line('B2D2hhKstarSignal', prescale = self.prescale , algos = [ Robust3BodySeq, B2D2hhKstarPhiSeqSignalFilter], postscale = self.postscale)
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2B2D2hhKstarSignalDecision" : 52130 } )
+        line = Hlt2Line('B2D2hhhBachelorWithKsSignal', prescale = self.prescale , algos = [ B2D2hhhBachelorWithKsSeqSignalFilter], postscale = self.postscale)
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2B2D2hhhBachelorWithKsSignalDecision" : 52100 } )
 
         ###################################################################
         # and for the broader mass window
         ###################################################################
-        line = Hlt2Line('B2D2hhhBachelorWithKsBroadMW', prescale = self.prescale , algos = [ Robust3BodySeq, B2D2hhhBachelorWithKsSeqBroadMWFilter], postscale = self.postscale)
-        HltANNSvc().Hlt2SelectionID.update( { "Hlt2B2D2hhhBachelorWithKsBroadMWDecision" : 52140 } )
         line = Hlt2Line('B2D2hhBachelorBroadMW', prescale = self.prescale , algos = [ Robust3BodySeq, B2D2hhBachelorSeqBroadMWFilter], postscale = self.postscale)
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2B2D2hhBachelorBroadMWDecision" : 52150 } )
         line = Hlt2Line('B2D2hhhBachelorBroadMW', prescale = self.prescale , algos = [ Robust3BodySeq, B2D2hhhBachelorSeqBroadMWFilter], postscale = self.postscale)
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2B2D2hhhBachelorBroadMWDecision" : 52160 } )
         line = Hlt2Line('B2D2hhKstarBroadMW', prescale = self.prescale , algos = [ Robust3BodySeq, B2D2hhKstarPhiSeqBroadMWFilter], postscale = self.postscale)
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2B2D2hhKstarBroadMWDecision" : 52170 } )
-
+        line = Hlt2Line('B2D2hhhBachelorWithKsBroadMW', prescale = self.prescale , algos = [ Robust3BodySeq, B2D2hhhBachelorWithKsSeqBroadMWFilter], postscale = self.postscale)
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2B2D2hhhBachelorWithKsBroadMWDecision" : 52140 } )
+        
         ###################################################################
         #Robust monitoring Lines
         ###################################################################
@@ -462,23 +485,46 @@ class Hlt2B2DXLinesConf(HltLinesConfigurableUser) :
         ###################################################################
         # Post TF monitoring lines
         ###################################################################
-        line = Hlt2Line('B2D2hhhBachelorWithKsSignalMonitor', prescale = self.prescale , algos = [ B2D2hhhBachelorWithKsSeqSignalFilter], postscale = self.postscale)
-        HltANNSvc().Hlt2SelectionID.update( { "Hlt2B2D2hhhBachelorWithKsSignalMonitorDecision" : 52190 } )
         line = Hlt2Line('B2D2hhBachelorSignalMonitor', prescale = self.prescale , algos = [ B2D2hhBachelorSeqSignalFilter], postscale = self.postscale)
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2B2D2hhBachelorSignalMonitorDecision" : 52200 } )
         line = Hlt2Line('B2D2hhhBachelorSignalMonitor', prescale = self.prescale , algos = [ B2D2hhhBachelorSeqSignalFilter], postscale = self.postscale)
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2B2D2hhhBachelorSignalMonitorDecision" : 52210 } )
         line = Hlt2Line('B2D2hhKstarSignalMonitor', prescale = self.prescale , algos = [ B2D2hhKstarPhiSeqSignalFilter], postscale = self.postscale)
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2B2D2hhKstarSignalMonitorDecision" : 52220 } )
-        line = Hlt2Line('B2D2hhhBachelorWithKsBroadMWMonitor', prescale = self.prescale , algos = [ B2D2hhhBachelorWithKsSeqBroadMWFilter], postscale = self.postscale)
-        HltANNSvc().Hlt2SelectionID.update( { "Hlt2B2D2hhhBachelorWithKsBroadMWMonitorDecision" : 52230 } )
+        line = Hlt2Line('B2D2hhhBachelorWithKsSignalMonitor', prescale = self.prescale , algos = [ B2D2hhhBachelorWithKsSeqSignalFilter], postscale = self.postscale)
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2B2D2hhhBachelorWithKsSignalMonitorDecision" : 52190 } )
         line = Hlt2Line('B2D2hhBachelorBroadMWMonitor', prescale = self.prescale , algos = [ B2D2hhBachelorSeqBroadMWFilter], postscale = self.postscale)
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2B2D2hhBachelorBroadMWMonitorDecision" : 52240 } )
         line = Hlt2Line('B2D2hhhBachelorBroadMWMonitor', prescale = self.prescale , algos = [ B2D2hhhBachelorSeqBroadMWFilter], postscale = self.postscale)
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2B2D2hhhBachelorBroadMWMonitorDecision" : 52250 } )
         line = Hlt2Line('B2D2hhKstarBroadMWMonitor', prescale = self.prescale , algos = [ B2D2hhKstarPhiSeqBroadMWFilter], postscale = self.postscale)
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2B2D2hhKstarBroadMWMonitorDecision" : 52260 } )
+        line = Hlt2Line('B2D2hhhBachelorWithKsBroadMWMonitor', prescale = self.prescale , algos = [ B2D2hhhBachelorWithKsSeqBroadMWFilter], postscale = self.postscale)
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2B2D2hhhBachelorWithKsBroadMWMonitorDecision" : 52230 } )
 
+        ###################################################################
+        # OSTF lines
+        ###################################################################
+        line = Hlt2Line('B2D2hhBachelorOSTFSignal', prescale = self.prescale , algos = [ B2D2hhBachelorSeqSignalFilter], postscale = self.postscale)
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2B2D2hhBachelorOSTFSignalDecision" : 53110 } )
+        line = Hlt2Line('B2D2hhhBachelorOSTFSignal', prescale = self.prescale , algos = [ B2D2hhhBachelorSeqSignalFilter], postscale = self.postscale)
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2B2D2hhhBachelorOSTFSignalDecision" : 53120 } )
+        line = Hlt2Line('B2D2hhKstarOSTFSignal', prescale = self.prescale , algos = [ B2D2hhKstarPhiSeqSignalFilter], postscale = self.postscale)
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2B2D2hhKstarOSTFSignalDecision" : 53130 } )
+        line = Hlt2Line('B2D2hhhBachelorWithKsOSTFSignal', prescale = self.prescale , algos = [ B2D2hhhBachelorWithKsSeqSignalFilter], postscale = self.postscale)
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2B2D2hhhBachelorWithKsOSTFSignalDecision" : 53100 } )
+
+        ###################################################################
+        # OSTF lines, broader mass window
+        ###################################################################
+        line = Hlt2Line('B2D2hhBachelorOSTFBroadMW', prescale = self.prescale , algos = [ B2D2hhBachelorSeqBroadMWFilter], postscale = self.postscale)
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2B2D2hhBachelorOSTFBroadMWDecision" : 53150 } )
+        line = Hlt2Line('B2D2hhhBachelorOSTFBroadMW', prescale = self.prescale , algos = [ B2D2hhhBachelorSeqBroadMWFilter], postscale = self.postscale)
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2B2D2hhhBachelorOSTFBroadMWDecision" : 53160 } )
+        line = Hlt2Line('B2D2hhKstarOSTFBroadMW', prescale = self.prescale , algos = [ B2D2hhKstarPhiSeqBroadMWFilter], postscale = self.postscale)
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2B2D2hhKstarOSTFBroadMWDecision" : 53170 } )
+        line = Hlt2Line('B2D2hhhBachelorWithKsOSTFBroadMW', prescale = self.prescale , algos = [ B2D2hhhBachelorWithKsSeqBroadMWFilter], postscale = self.postscale)
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2B2D2hhhBachelorWithKsOSTFBroadMWDecision" : 53140 } )
 
 
 
