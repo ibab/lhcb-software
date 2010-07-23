@@ -1,5 +1,8 @@
 2010-07-23  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
+	* python/LbLegacy/install_project.py: fixed the autorestart of the script with
+	a message on windows. The script cannot be restarted automatically and so it has
+	to be done manually.
 	* scripts/mkLHCbtar: remove obsolete dependency on the system/<cmtconfig>.tar.gz
 	tarball
 

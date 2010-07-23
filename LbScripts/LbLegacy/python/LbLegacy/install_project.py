@@ -1111,7 +1111,10 @@ def getMySelf():
         shutil.copy(the_install, old_install)
         shutil.copy(new_install, the_install)
         newscript = os.path.join(mysiteroot, the_install)
-        os.execv(sys.executable, [sys.executable, newscript] + sys.argv[1:])
+        if sys.platform != "win32" :
+            os.execv(sys.executable, [sys.executable, newscript] + sys.argv[1:])
+        else :
+            print "please restart the command. This cannot be done automatically on windows"
     os.chdir(here)
 
 #
