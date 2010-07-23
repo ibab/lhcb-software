@@ -13,22 +13,20 @@ from Gaudi.Configuration import *
 from Configurables import GaudiSequencer
 from GaudiKernel.SystemOfUnits import *
 from CommonParticles.Utils import *
-from Configurables import PatPV3D
 from Configurables import TrackClusterFinder
 from StrippingConf.StrippingLine import StrippingLine
 
-PatPV = PatPV3D("PatPV")
 TrkClusterFinder = TrackClusterFinder("TrkClusterFinder")
-TrkClusterFinder.MinWeightSeed = 6
+TrkClusterFinder.MinWeightSeed = 7
 TrkClusterFinder.ConeExtFactor = 4.0
-TrkClusterFinder.MaxDeltaPhi   = 8.5
-TrkClusterFinder.MaxDeltaEta   = 0.16
-TrkClusterFinder.Min1stJetPt   = 3.0
+TrkClusterFinder.MaxDeltaPhi   = 7.0
+TrkClusterFinder.MaxDeltaEta   = 0.1
+TrkClusterFinder.Min1stJetPt   = 10.0
 TrkClusterFinder.Min2ndJetPt   = 0.0
 TrkClusterFinder.JetMult       = 1
 
 # Create line for high-pt jets selection
 line1 = StrippingLine('HighPtJetsSel'
                       , prescale = 1.0
-                      , algos = [PatPV,TrkClusterFinder]
+                      , algos = [TrkClusterFinder]
                      )
