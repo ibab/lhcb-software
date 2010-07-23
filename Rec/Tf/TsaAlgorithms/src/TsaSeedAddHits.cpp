@@ -13,6 +13,8 @@
 // gsl
 #include "gsl/gsl_cdf.h"
 
+#include "STDet/DeSTLayer.h"
+
 using namespace Tf::Tsa;
 
 DECLARE_TOOL_FACTORY( SeedAddHits );
@@ -56,6 +58,9 @@ StatusCode SeedAddHits::initialize(){
     return Error("Failed to initialize",sc);
   }
 
+  // get the children ---> boxes                                              
+  std::vector<const DeITLayer*> layers;
+
   m_hitMan = tool<ITHitMan>(m_dataSvcType,m_dataSvcName);
   m_fitLine = new SeedLineFit(msg(), TsaConstants::z0, TsaConstants::sth,
 		  m_outlierCutLine);
@@ -68,12 +73,12 @@ StatusCode SeedAddHits::initialize(){
     // get the z of the boxes
     const DeITStation* iStation = dynamic_cast<const DeITStation*>(*iter);
 
-    // get the children ---> boxes
     const DeITStation::Children& boxes = iStation->boxes();
     DeITStation::Children::const_iterator iterBox = boxes.begin();
     for (; iterBox != boxes.end(); ++iterBox){
       Gaudi::XYZPoint aPoint = (*iterBox)->globalCentre();
       m_zBox.push_back(aPoint.z());
+      layers.push_back((*iterBox)->firstLayer());
       // get the first layer in the box
     }
   } // iter
@@ -87,9 +92,9 @@ StatusCode SeedAddHits::initialize(){
   m_yMax.resize(m_zBox.size());
   for (unsigned int iStation = 1; iStation <= m_nStations ;++iStation) {
     for (unsigned int iBox = 1; iBox <= m_nBox; ++iBox ){
-      DeSTSector* firstSector = m_tracker->findSector(LHCb::STChannelID(LHCb::STChannelID::typeIT, iStation,1,iBox,1,0));
-      DeSTSector* lastSector = m_tracker->findSector(LHCb::STChannelID(LHCb::STChannelID::typeIT, iStation,1,iBox,7,0));
-
+      const DeSTSector* firstSector = layers[iBox]->firstSector();
+      const DeSTSector* lastSector =  layers[iBox]->lastSector();
+      
       // get trajectories
       std::auto_ptr<LHCb::Trajectory> firstTraj = firstSector->trajectoryFirstStrip();
       std::auto_ptr<LHCb::Trajectory> lastTraj = lastSector->trajectoryLastStrip();

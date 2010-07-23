@@ -4,6 +4,9 @@
 ! Purpose     : Tsa algorithms
 !----------------------------------------------------------------------------
 
+! 2010-07-23  M Needham
+ - Fix hardcoding of first and last sectors in the overlap hit adder 
+
 !======================= TsaAlgorithms v3r22 2010-07-20 =====================
 ! 2010-07-15 - Stephanie Hansmann-Menzemer
  - use new more detailed procStatus interface
