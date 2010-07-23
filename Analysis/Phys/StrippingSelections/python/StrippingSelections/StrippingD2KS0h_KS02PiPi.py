@@ -2,7 +2,7 @@
 
 __author__ = 'Sam Gregson'
 __date__ = '14/07/2010'
-__version__ = '$Revision: 1.1 $'
+__version__ = '$Revision: 1.2 $'
 
 '''
 D->KS0(PiPi)Pi stripping selection using LoKi::Hybrid and python
@@ -93,7 +93,7 @@ class StrippingD2KS0h_KS02PiPiConf(LHCbConfigurableUser):
         import GaudiKernel.SystemOfUnits as Units
 
         # Outline the KS0 daughter pion cuts
-        KS0_DaughterCut = "CHILDCUT((MIPCHI2DV(PRIMARY)>100),1) & CHILDCUT((MIPCHI2DV(PRIMARY)>100),2) & (MIPCHI2DV(PRIMARY) > 9)" 
+        KS0_DaughterCut = "(MIPCHI2DV(PRIMARY) > 9) & CHILDCUT((MIPCHI2DV(PRIMARY)>100),1) & CHILDCUT((MIPCHI2DV(PRIMARY)>100),2)" 
       
         KS0ForD2KS0h_KS02PiPi = FilterDesktop("StripKS0ForD2KS0h_KS02PiPi")
         KS0ForD2KS0h_KS02PiPi.InputLocations = [ "StdLooseKsLL", "StdLooseKsDD"]
@@ -110,20 +110,30 @@ class StrippingD2KS0h_KS02PiPiConf(LHCbConfigurableUser):
         from Configurables import CombineParticles
         import GaudiKernel.SystemOfUnits as Units
        
-        D_DaughterCut = { "pi+" : "(P > 2*GeV) & (MIPCHI2DV(PRIMARY) > 49) & (TRCHI2DOF < 20)" }
-        D_ComboCut = "(AM> 1380*MeV) & (AM < 2220*MeV) " 
-        D_MotherCut = "(VFASPF(VCHI2/VDOF) < 50) & (MIPCHI2DV(PRIMARY) < 4) & (MM> 1400*MeV) & (MM < 2200*MeV) " 
-        
+        D_DaughterCut = { "pi+" : "(P > 2*GeV) & (TRCHI2DOF < 10) & PPCUT(PP_RICHTHRES_PI) & (MIPCHI2DV(PRIMARY) > 49)" }
+        D_ComboCut = "(AM> 1380*MeV) & (AM < 2220*MeV) & (AMAXDOCA('') < 1.0*mm)" 
+        D_MotherCut = "(VFASPF(VCHI2/VDOF) < 20) & (MM> 1400*MeV) & (MM < 2200*MeV) & (MIPCHI2DV(PRIMARY) < 4)"
+
+       
         DForD2KS0h_KS02PiPi = CombineParticles("StripDForD2KS0h_KS02PiPi")
         DForD2KS0h_KS02PiPi.DecayDescriptor = "[D+ -> KS0 pi+]cc"
         DForD2KS0h_KS02PiPi.InputLocations =  ["StripKS0ForD2KS0h_KS02PiPi",
                                                    "StdLoosePions"
                                                   ]
         
+        DForD2KS0h_KS02PiPi.Preambulo = [ "from LoKiProtoParticles.decorators import *"]
+
+      
         DForD2KS0h_KS02PiPi.DaughtersCuts = D_DaughterCut
         DForD2KS0h_KS02PiPi.CombinationCut = D_ComboCut
         DForD2KS0h_KS02PiPi.MotherCut = D_MotherCut
+      
        
         return DForD2KS0h_KS02PiPi
 
 
+##(AMAXDOCA('') < 0.6*mm)
+## (PIDK - PIDpi > -0.1) & (PIDK - PIDpi < 0.1)
+##  Bachelor_Cut = { "pi+" : "(P > 2*GeV) & (TRCHI2DOF < 10) &
+##PPCUT(PP_RICHTRES_PI) & (MIPCHI2DV(PRIMARY) > 49)" }
+##myAlg.Preambulo = [ "from LoKiProtoParticles.decorators import *"]

@@ -5,6 +5,8 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-07-23 - Sam GREGSON
+ - Updated D2KS0h_KS02PiPi stripping line to reduce timing and retention rate on min bias data
 
 ! 2010-07-23 - Marcin Kucharczyk
  - New tuning for StrippingHighPtJets line wrt higher luminosity
