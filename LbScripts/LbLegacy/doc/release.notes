@@ -1,8 +1,10 @@
 2010-07-23  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* python/LbLegacy/install_project.py: fixed the autorestart of the script with
-	a message on windows. The script cannot be restarted automatically and so it has
+	* python/LbLegacy/install_project.py: 
+	- fixed the autorestart of the script with a message on windows. The script cannot be restarted automatically and so it has
 	to be done manually.
+	- added a fallback on VO_LHCB_SW_DIR/lib if the MYSITEROOT variable is not set. It
+	issues a warning. 
 	* scripts/mkLHCbtar: remove obsolete dependency on the system/<cmtconfig>.tar.gz
 	tarball
 

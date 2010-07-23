@@ -2098,7 +2098,15 @@ def main():
 
 
     if not os.environ.has_key("MYSITEROOT") :
-        sys.exit('please set $MYSITEROOT == $INSTALLDIR:$MYSITEROOT before running the python script \n')
+        thelog.warning("The env variable MYSITEROOT is not set")
+        if os.environ.has_key("VO_LHCB_SW_DIR") :
+            thelog.debug("The env VO_LHCB_SW_DIR is set to %s" % os.environ["VO_LHCB_SW_DIR"])
+            fallback_mysiteroot = os.path.join(os.environ["VO_LHCB_SW_DIR"], "lib")
+            if os.path.exists(fallback_mysiteroot) :
+                thelog.warning("Using $VO_LHCB_SW_DIR/lib for MYSTITEROOT")
+                os.environ["MYSITEROOT"] = fallback_mysiteroot
+            else :
+                sys.exit('please set MYSITEROOT to $INSTALLDIR:$MYSITEROOT before running the python script \n')
 
 
     if not check_only and fix_perm:
