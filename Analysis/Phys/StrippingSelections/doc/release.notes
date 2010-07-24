@@ -5,6 +5,9 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-07-24 - Francesco Dettori 
+ - Tightened cuts on StrippingDstarD02xx.py and StrippingLambdac.py 
+
 ! 2010-07-23 - Greig Cowan
  - Added Ds line to Charm stream.
  - Fixed bugs in Bd2DstarMuNuLoose and DstarVeryLoose lines caused by change in

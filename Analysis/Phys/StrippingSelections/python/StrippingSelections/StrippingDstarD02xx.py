@@ -1,7 +1,7 @@
 #
 __author__ = ['Francesco Dettori', 'Walter Bonivento']
 __date__ = '2010/04/23'
-__version__ = '$Revision: 1.3 $'
+__version__ = '$Revision: 1.4 $'
 
 '''
   Stripping for D*(2010)+ -> pi+ (D0->xx) selection:
@@ -28,19 +28,20 @@ class StrippingDstarD02xxConf(LHCbConfigurableUser):
                   , 'PrescaleeeBox'    : 1.
                   , 'PrescalepimuBox'    : 1.
                   , 'PrescaleKmuBox'    : 1.
-                  ,'DMassWin'           : 150.       # MeV
+                  ,'DMassWin'           : 100.       # MeV
+                  ,'DVtxChi2'           :  20.       # adimensional
                   ,'doca'               : 7.0        # mm
                   ,'XminPT'             : 750.       # MeV
-                  ,'XmaxPT'             : 750.       # MeV
+                  ,'XmaxPT'             : 1100.       # MeV
                   ,'XminP'              : 3000.      # MeV
                   ,'XminIPCHI2'         : 1          # adimensional
                   ,'DDira'              : 0.999     # adimensional
                   ,'PiMinPT'            : 110.       # MeV
-                  ,'PiMaxIPCHI2'        : 98.         # adimensional
-                  ,'D0MinPT'            : 1600.      # MeV
+                  ,'PiMaxIPCHI2'        : 10.         # adimensional
+                  ,'D0MinPT'            : 1800.      # MeV
                   ,'D0MinD'             : 0.         # mm
-                  ,'D0MaxIPCHI2'        : 24.       # mm
-                  ,'DstMassWin'         : 160.       # MeV
+                  ,'D0MaxIPCHI2'        : 10.       # adimensional
+                  ,'DstMassWin'         : 110.       # MeV
                   ,'DstD0DMWin'         : 10.        # MeV
                   }
 
@@ -60,17 +61,17 @@ class StrippingDstarD02xxConf(LHCbConfigurableUser):
     ####### Template for combine particles for D0 -> x+ y-  ######
     def combinetwobody(self, xplus, xminus) :
         from Configurables import CombineParticles
-        d0comb_combcut =       "(AMAXDOCA('')< %(doca)s *mm) & (ADAMASS('D0')< %(DMassWin)s *MeV) & (AMAXCHILD(PT)>%(XmaxPT)s *MeV)"
-        d0comb_combcut_tight = "(AMAXDOCA('')< %(doca)s *mm) & (ADAMASS('D0')< %(DMassWin)s *MeV) & (AMAXCHILD(PT)>%(XmaxPT)s *MeV)" 
+        d0comb_combcut =  " (ADAMASS('D0')< %(DMassWin)s *MeV) & (AMAXCHILD(PT)>%(XmaxPT)s *MeV)"
+
 
         d0comb_childcut = "(PT> %(XminPT)s *MeV) & (P>%(XminP)s *MeV) & (BPVIPCHI2()> %(XminIPCHI2)s)" 
-        d0comb_d0cut = "(BPVDIRA> %(DDira)s)"
+        d0comb_d0cut = "(BPVDIRA> %(DDira)s) & (VFASPF(VCHI2/VDOF)< %(DVtxChi2)s )"
         name = "D02"+xplus+xminus
         tbline = CombineParticles( name )
         inputLoc = {
              "pi" : "StdNoPIDsPions"
             ,"mu" : "StdLooseMuons"
-            ,"K" : "StdNoPIDsKaons"
+            ,"K" : "StdLooseKaons"
             ,"e" : "StdLooseElectrons"
             }
         if xplus != xminus :
