@@ -37,6 +37,8 @@ void Rich::Rec::GlobalPID::CommonBase<PBASE>::initConstructor()
                          m_richGPIDLocation = 
                          this->contextSpecificTES(LHCb::RichGlobalPIDLocation::Default) );
   this->declareProperty( "GlobalName", m_richGPIDName = "RichGloPID"+this->context() );
+  // turn off histo printing by default
+  this->setProperty ( "HistoPrint", false );
 }
 
 //=============================================================================

@@ -4,9 +4,6 @@
  *
  *  Implementation file for RICH Global PID algorithm class : Rich::Rec::GlobalPID::Likelihood
  *
- *  CVS Log :-
- *  $Id: RichGlobalPIDLikelihood.cpp,v 1.13 2009-10-02 13:09:50 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
  */
@@ -85,6 +82,7 @@ StatusCode Likelihood::execute()
   {
     // Cache selected tracks
     LHCb::RichGlobalPIDTrack::Vector gtracks;
+    gtracks.reserve(gpidTracks()->size());
     for ( LHCb::RichGlobalPIDTracks::const_iterator iT = gpidTracks()->begin();
           iT != gpidTracks()->end(); ++iT ) 
     {
@@ -123,7 +121,10 @@ StatusCode Likelihood::execute()
     LHCb::RichGlobalPIDTrack::Vector gtracks;
     gtracks.reserve(gpidTracks()->size());
     for ( LHCb::RichGlobalPIDTracks::const_iterator iT = gpidTracks()->begin();
-          iT != gpidTracks()->end(); ++iT ) { gtracks.push_back(*iT); }
+          iT != gpidTracks()->end(); ++iT ) 
+    { 
+      gtracks.push_back(*iT); 
+    }
     m_pidTool->pids( gtracks );
 
   }

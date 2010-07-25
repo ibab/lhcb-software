@@ -4,9 +4,6 @@
  *
  *  Header file for RICH global PID algorithm base class : Rich::Rec::GlobalPID::AlgBase
  *
- *  CVS Log :-
- *  $Id: RichGlobalPIDAlgBase.h,v 1.11 2008-03-25 16:26:44 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2002-11-30
  */
@@ -16,7 +13,7 @@
 #define RICHGLOBALPID_RichGlobalPIDAlgBase_H 1
 
 // base class
-#include "RichRecBase/RichRecAlgBase.h"
+#include "RichRecBase/RichRecHistoAlgBase.h"
 #include "RichGlobalPIDCommonBase.h"
 
 namespace Rich
@@ -36,7 +33,7 @@ namespace Rich
        */
       //--------------------------------------------------------------------------
 
-      class AlgBase : public CommonBase<Rich::Rec::AlgBase>
+      class AlgBase : public CommonBase<Rich::Rec::HistoAlgBase>
       {
 
       public:
@@ -44,7 +41,7 @@ namespace Rich
         ///< Standard constructor
         AlgBase( const std::string& name,
                  ISvcLocator* pSvcLocator )
-          : CommonBase<Rich::Rec::AlgBase>( name, pSvcLocator ) { }
+          : CommonBase<Rich::Rec::HistoAlgBase>( name, pSvcLocator ) { }
 
         virtual StatusCode sysExecute(); ///< system execute
 

@@ -4,9 +4,6 @@
  *
  *  Header file for RICH global PID algorithm base class : Rich::Rec::GlobalPID::ToolBase
  *
- *  CVS Log :-
- *  $Id: RichGlobalPIDToolBase.h,v 1.1 2008-03-25 16:26:44 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2002-11-30
  */
@@ -20,7 +17,7 @@
 #include "GaudiKernel/IIncidentSvc.h"
 
 // base class
-#include "RichRecBase/RichRecToolBase.h"
+#include "RichRecBase/RichRecHistoToolBase.h"
 #include "RichGlobalPIDCommonBase.h"
 
 namespace Rich
@@ -40,7 +37,7 @@ namespace Rich
        */
       //--------------------------------------------------------------------------
 
-      class ToolBase : public CommonBase<Rich::Rec::ToolBase>,
+      class ToolBase : public CommonBase<Rich::Rec::HistoToolBase>,
                        virtual public IIncidentListener
       {
 
@@ -50,7 +47,7 @@ namespace Rich
         ToolBase( const std::string& type,
                   const std::string& name,
                   const IInterface* parent )
-          : CommonBase<Rich::Rec::ToolBase>( type, name, parent ) { }
+          : CommonBase<Rich::Rec::HistoToolBase>( type, name, parent ) { }
 
         // Initialization of the algorithm after creation
         virtual StatusCode initialize();

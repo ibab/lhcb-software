@@ -4,9 +4,6 @@
  *
  *  Implementation file for RICH Global PID tool : Rich::Rec::GlobalPID::LikelihoodTool
  *
- *  CVS Log :-
- *  $Id: RichGlobalPIDLikelihoodTool.cpp,v 1.8 2009-07-30 11:06:48 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2008-03-01
  */
@@ -51,7 +48,7 @@ LikelihoodTool::LikelihoodTool( const std::string& type,
                    "Minimum signal value for full calculation of log(1-exp(-signal))" );
 
   declareProperty( "TrackFreezeOutDLL", m_freezeOutDll = 4,
-                   "Track freeze out value ( the point at which it is no longer considered for change)" );
+                   "Track freeze out value (The point at which it is no longer considered for change)" );
 
   declareProperty( "TrackForceChangeDLL", m_forceChangeDll = -2,
                    "Track DLL Thresdhold for forced change" );
@@ -92,7 +89,7 @@ StatusCode LikelihoodTool::initialize()
   statusCreator();
 
   // Initialise parameters
-  m_logMinSig = std::log( std::exp(m_minSig) - 1.0 );
+  m_logMinSig = logExp(m_minSig);
 
   // Printout some initialisation info
   info() << "Maximum event iterations                  = " << m_maxEventIterations << endmsg;
@@ -102,6 +99,11 @@ StatusCode LikelihoodTool::initialize()
   info() << "Maximum track changes per event iteration = " << m_maxTkChanges << endmsg;
 
   return sc;
+}
+
+StatusCode LikelihoodTool::finalize()
+{
+  return Rich::Rec::GlobalPID::ToolBase::finalize();
 }
 
 //=============================================================================

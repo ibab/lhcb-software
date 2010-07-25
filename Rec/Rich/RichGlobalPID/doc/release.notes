@@ -4,6 +4,9 @@
 ! Purpose     : The Rich Global PID algorithm
 !-----------------------------------------------------------------------------
 
+! 2010-07-25 - Chris Jones
+ - Add a fast approximate log(exp(x)-1) expression.
+
 !======================= RichGlobalPID v3r14 2010-07-20 ======================
 ! 2010-07-08 - Chris Jones
  - Adapt calls to ProcStat to use new interface that includes additional abort
