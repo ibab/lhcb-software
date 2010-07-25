@@ -141,13 +141,13 @@ str_cutOffline3B_asCombCut = '(AHASCHILD((MIPCHI2DV(PRIMARY)) > 30.0))'
 # 4) Flight distance of D+ from PV (applied as MOTHERCUT)
 str_cutOffline4A_asMothCut = '((BPVVDCHI2 > 150.0) & (VFASPF(VMINVDDV(PRIMARY)) > 3.0*mm))'# mod. in 9/5
 str_cutOffline4HHH_asMothCut = '((BPVVDCHI2 > 100.0) & (VFASPF(VMINVDDV(PRIMARY)) > 2.0*mm))'# mod. in 9/5
-str_cutOffline4B_asMothCut = '(BPVVDCHI2 > 25.0)'
+str_cutOffline4B_asMothCut = '(BPVVDCHI2 > 40.0)'
 
 # 5) Vertex quality of D+
 # For 'A' we apply both a chi^2 cut (MOTHERCUT) and a daughter pairwise DOCA cut (COMBINATIONCUT).
 # For 'B' we apply just the chi^2 cut (MOTHERCUT).
 str_cutOffline5AMoth = '(VFASPF(VCHI2)<12.0)' # mod. in 9/5
-str_cutOffline5Moth = '(VFASPF(VCHI2)<8.0)'
+str_cutOffline5Moth = '(VFASPF(VCHI2)<18.0)'
 str_cutOffline5HHHMoth = '(VFASPF(VCHI2)<15.0)'
 str_cutOffline5AComb = "(AMAXDOCA('') < 0.20*mm)" # mod. in 9/5
 str_cutOffline5Comb = "(AMAXDOCA('') < 0.12*mm)"
@@ -172,13 +172,14 @@ str_cutOffline6BMoth = '(PT >1800*MeV)'
 # For 'B' individually: use DAUGHTERSCUT.
 str_cutOffline7A_asCombCut = '(ACHILD(TRPCHI2,1)*ACHILD(TRPCHI2,2)*ACHILD(TRPCHI2,3) > 1.0E-15)' # mod. in 9/5
 str_cutOffline7HHH_asCombCut = '(ACHILD(TRPCHI2,1)*ACHILD(TRPCHI2,2)*ACHILD(TRPCHI2,3) > 1.0E-15)' # mod. in 9/5
-str_cutOffline7B_asCombCut = '(AMINCHILD(TRPCHI2) > 0.0001)'
-str_cutOffline7B_asDaugCut = '(TRPCHI2 > 0.0001)'
+#str_cutOffline7B_asCombCut = '(AMINCHILD(TRPCHI2) > 0.0001)'
+str_cutOffline7B_asDaugCut = '(TRCHI2DOF < 10.0)'
 
 # 8) PID and track lists
 str_OfflinePionListNoPID = 'StdNoPIDsPions'
 str_OfflineKaonListNoPID = 'StdNoPIDsKaons'
 str_OfflineKaonListLoosePID = 'StdLooseKaons'
+str_cutOffline8B_asDaugCut = "(((ABSID=='K+') & (PIDK-PIDpi > 3.0)) | ((ABSID=='pi+') & (PIDK-PIDpi < 10.0)))"
 
 # Mass cuts (big envelope; we may go back and chop out bits later)
 str_cutOfflineMassPreFit = '((AM > 1580*MeV) & (AM < 2260*MeV))'
@@ -196,7 +197,7 @@ str_cutOfflineMassHHHPreFit = '((AM > 900*MeV) & (AM < 2300*MeV))'
 # B: 1=Moth, 2=Moth, 3=Comb, 4=Moth, 5=Moth,      6=Comb+Moth+Daug, 7=Daug
 str_cutOfflineDaugA      = '(' + str_cutOffline3A_asDaugCut + '&' + str_cutOffline6DaugA + ')'
 str_cutOfflineDaugHHH    = '(' + str_cutOffline3HHH_asDaugCut + '&' + str_cutOffline6DaugHHH + ')'
-str_cutOfflineDaugB      = '(' + str_cutOffline6DaugB + '&' + str_cutOffline7B_asDaugCut + ')'
+str_cutOfflineDaugB      = '(' + str_cutOffline6DaugB + '&' + str_cutOffline7B_asDaugCut +'&'+ str_cutOffline8B_asDaugCut +')'
 str_cutOfflineMothB      = '(' + str_cutOffline1B_asMothCut + '&'  + str_cutOffline4B_asMothCut + '&' + str_cutOffline5Moth + '&' + str_cutOffline6BMoth + '&' + str_cutOfflineMassPostFit + ')'#'&' + str_cutOffline2B_asMothCut + '&'
 str_cutOfflineCombA      = '(' + str_cutOffline6A_asCombCut + '&' + str_cutOffline7A_asCombCut + '&' + str_cutOfflineMassPreFit + '&' + str_cutOffline5AComb + ')'
 str_cutOfflineCombB      = '(' + str_cutOfflineMassPreFit + '&' + str_cutOffline6BComb + '&' + str_cutOffline3B_asCombCut + ')'

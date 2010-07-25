@@ -23,44 +23,12 @@
 #
 #  * These are critical signal windows and should never be prescaled:
 #     
-#      * lineD2KKK_B_LoosePID_Sig
 #      * lineD2KKP_B_LoosePID_Sig
-#      * lineD2KPP_B_NoPID_Sig
-#      * lineDs2KPP_B_LoosePID_Sig
-#
-#  * These are high-statistics control modes for our signals ("standard
-#    candles"). They are useful and are not prescaled by default, but if
-#    the rate needs to be brought they could be (but not to zero!).
-#     
-#      * lineD2KPP_B_LoosePID_Sig
-#      * lineD2KPP_B_LoosePID_Sig
-#      * lineD2PPP_B_NoPID_Sig
-#
-#  * These are calibration/test channels to study PID performance. It is vital
-# to have some events here for crosschecks, but they can be prescaled safely.
-#      * lineD2KKP_B_NoPID_Sig
-#      * lineD2KKP_B_NoPID_Bkg
-#      * lineD2KKP_B_LoosePID_Sig
-#      * lineD2KKP_B_LoosePID_Bkg
-#
-#  * These are the sidebands  to our signals. They can be prescaled (and
-#    are by default) but we need enough events here to study the backgrounds
-#    and test the MC behaviour.
-#     
-#     
-#      * lineD2KPP_B_NoPID_Bkg
-#      * lineD2KKP_B_LoosePID_Bkg
-#      * lineDs2KPP_B_LoosePID_Bkg
-#  * These are the sidebands to our control channels. They are less critical,
-#    but we need enough events to fit the mass spectrum and test out sideband
-#    subtraction methods on the control channels. They are prescaled by default.
-#      * lineD2KPP_A_NoPID_Bkg
-#      * lineD2PPP_B_NoPID_Bkg
-#      * lineD2KPP_A_LoosePID_Bkg
+#      * lineD2KPP_B_LoosePID_Sig    
 #      * lineD2KPP_B_LoosePID_Bkg
-#      * lineD2KKK_A_LoosePID_Bkg
-#      * lineD2KKK_B_LoosePID_Bkg
+#      * lineD2KKP_B_LoosePID_Bkg
 #
+# None of the other cross-section lines are important and they can be turned off if necessary.
 
 
 from Gaudi.Configuration import *
@@ -81,14 +49,14 @@ str_cutOffline1B_asMothCut = '(BPVDIRA > 0.9999)'
 
 # 3) IP of D+ daughters to PV.
 # This has to be a COMBINATIONCUT.
-str_cutOffline3B_asCombCut = '(AHASCHILD((MIPCHI2DV(PRIMARY)) > 30.0))'
-
+str_cutOffline3B_asCombCut = '((AHASCHILD((MIPCHI2DV(PRIMARY)) > 30.0)) & (ANUM(MIPCHI2DV(PRIMARY) > 8.0) >= 2))'
+str_cutOffline3DaugB = '(MIPCHI2DV(PRIMARY) > 2.0)'
 # 4) Flight distance of D+ from PV (applied as MOTHERCUT)
 # 25 is now standard in the 3h selection as well
-str_cutOffline4B_asMothCut = '(BPVVDCHI2 > 25.0)'
+str_cutOffline4B_asMothCut = '(BPVVDCHI2 > 60.0)'
 
 # 5) Vertex quality of D+
-str_cutOffline5Moth = '(VFASPF(VCHI2)<8.0)'
+str_cutOffline5Moth = '(VFASPF(VCHI2)<18.0)'
 
 
 # 6) PT cuts
@@ -104,13 +72,15 @@ str_cutOffline6BComb = '( (ANUM(PT > 400.0*MeV) >= 2))'
 # 7) Track quality of D+ daughters
 # For each line individually: use DAUGHTERSCUT.
 
-str_cutOffline7B_asCombCut = '(AMINCHILD(TRPCHI2) > 0.0001)'
-str_cutOffline7B_asDaugCut = '(TRPCHI2 > 0.0001)'
+#str_cutOffline7B_asCombCut = '(AMINCHILD(TRPCHI2) > 0.0001)'
+str_cutOffline7B_asDaugCut = '(TRCHI2DOF < 10.0)'
 
 # 8) PID and track lists
 str_OfflinePionListNoPID = 'StdNoPIDsPions'
 str_OfflineKaonListNoPID = 'StdNoPIDsKaons'
 str_OfflineKaonListLoosePID = 'StdLooseKaons'
+str_cutOffline8B_asDaugCut = "(((ABSID=='K+') & (PIDK-PIDpi > 3.0)) | (ABSID=='pi+') & (PIDK-PIDpi < 12.0))"
+
 
 # Mass cuts (big envelope; we may go back and chop out bits later)
 str_cutOfflineMassPreFit = '((AM > 1580*MeV) & (AM < 2260*MeV))'
@@ -119,7 +89,7 @@ str_cutOfflineMassPostFit = '((M > 1780*MeV) & (M < 2060*MeV))'
 # Combined cuts:
 # B: 1=Moth, 2=Moth, 3=Comb, 4=Moth, 5=Moth,      6=Comb+Moth+Daug, 7=Daug
 
-str_cutOfflineDaugB      = '(' + str_cutOffline6DaugB + '&' + str_cutOffline7B_asDaugCut + ')'
+str_cutOfflineDaugB      = '(' + str_cutOffline3DaugB + '&'+str_cutOffline6DaugB + '&' + str_cutOffline7B_asDaugCut + '&'+ str_cutOffline8B_asDaugCut + ')'
 str_cutOfflineMothB      = '(' + str_cutOffline1B_asMothCut + '&' + str_cutOffline4B_asMothCut + '&' + str_cutOffline5Moth + '&' + str_cutOfflineMassPostFit + ')'
 
 str_cutOfflineCombB      = '(' + str_cutOfflineMassPreFit + '&' + str_cutOffline6BComb + '&' + str_cutOffline3B_asCombCut + ')'

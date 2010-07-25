@@ -5,6 +5,11 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-07-25 - Hamish Gordon
+- Tightened cuts on D->3h B lines for CP and XS measurements.
+- Uncommented StrippingD2hhhXS.lineD2KKP_B_LoosePID_BkgXS and StrippingD2hhhXS.lineD2KKP_B_LoosePID_BkgXS in StreamCharm.py
+
+
 ! 2010-07-24 - Francesco Dettori 
  - Tightened cuts on StrippingDstarD02xx.py and StrippingLambdac.py 
 
