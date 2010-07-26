@@ -1,3 +1,121 @@
+2010-07-23  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* cmt/requirements: release of version v5r3
+
+    * python/LbConfiguration/LbLogin.py: forced the version of LCGCMT to be used to 5[0-8]*. This is
+	to prevent windows of using missing python 2.6.
+	* python/LbConfiguration/SetupProject.py: added prompt modification for the sh and csh shells.
+	- If the SP_PROMPT env variable is set, "[<project> <version>]" is prepended to the prompt
+	- If the SP_PROMPT env variable is set to "without_version", "[<project>]" is prepended to
+	the prompt
+	- If the SP_PROMPT env variable is not set, nothing is done.
+	* python/LbConfiguration/LbLogin.py: 
+	- fixed the usage of the internal path to the Compat binaries for the windows platform.
+	- removed useless SAVE_PATH variables
+	- added a few more debug printout
+	* python/LbConfiguration/Project.py: removed the alias SetupDirac
+    * python/SetupProject.py: if Dirac is asked, then return LHCbDirac (Joel)
+	* scripts/doxygen: New file. Wrapper script to call the version of doxygen specified
+	in the LbConfiguration.External module. The wrapper takes 2 options
+	  --lcgcmt-version : specifiy the interface version (ex 58c)
+	  --doxygen-version : override the default version
+	* scripts/getExtVersion: New file. Script to extract the external version from the
+	LbConfiguration.External module
+	* python/LbConfiguration/External.py:
+	- added the getExternalVersion function.
+	- added the doxygen_version.
+
+	* python/LbLegacy/install_project.py: 
+	- fixed the autorestart of the script with a message on windows. The script cannot be restarted automatically and so it has
+	to be done manually.
+	- added a fallback on VO_LHCB_SW_DIR/lib if the MYSITEROOT variable is not set. It
+	issues a warning. 
+	- removed the download of the useless distribution.htm file
+	* scripts/mkLHCbtar: remove obsolete dependency on the system/<cmtconfig>.tar.gz
+	tarball
+	* python/LbLegacy/install_project.py: fixed up the problem with the missing <cmtconfig>.tar.gz
+	tarball.
+	* scripts/mkMCGentar: fixed erroneous error about lhapdf.
+	* python/LbLegacy/install_project.py: fixed path separator for windows.
+	* python/LbLegacy/install_project.py: fixed MYSITEROOT splitting.
+    * scripts/archive_project: add the tools to remove the package on the grid (Joel)
+	* python/LbLegacy/vol_for_releases.py: used the generic createVolume function from LbUtils.afs
+
+	* python/LbRelease/LHCbNightlies.py: send e-mails with build summary when
+	the project build is completed (Karol)
+	* python/LbRelease/LHCbDoc.py: Fixed a problem occurring with empty DOC directories
+	(can appen only in case of some previous errors).
+	Moved the code to generate the links to the "latest" versions to a separate
+	function (to be able to use it to fix problems) (Marco Cl.).
+	* python/LbRelease/LHCbNightlies.py: fork instead of threads for install/test
+	actions; cmt config after checkout; copying of shared files only if the build
+	was sucessful; html test summaries; bugfix for waitforflag option (Karol)
+	* scripts/GridEnv.csh: add GridEnv (Joel)
+	* scripts/GridEnv.sh: add GridEnv (Joel)
+	* cmt/requirements: add GridEnv (Joel)
+	* scripts/usedProjects: Add Moore, Ganga (Joel)
+    * python/AfsProjectSpace.py: first version (Joel)
+	* python/LbConfiguration/GetPack.py: bugfix of Getpack asking for a repository
+	also while in batch mode (Karol)
+	* python/LbRelease/LHCbNightlies.py: Server class added to the module;
+	directories replacements for Windows moved to the class; -j & -l values
+	of make fixed for the moment to 50 and 15; tests, docs, and install on
+	separate threads after the build step, joined per project (Karol).
+    * scripts/lhcb-proxy-info: change Dirac by LHCbDirac (Joel)
+	* python/LbRelease/LHCbDoc.py: Added the possibility of skipping the actual
+	generation of the documentation using the environment variable LHCBDOC_TESTING.
+	Changed the structure of the global directory to have one directory per
+	project with links for the versions, pointing directly to the html directory (Marco Cl.).
+	* python/LbRelease/LHCbDoc.py: Use SVG to display the graph of dependencies.
+	Exclude LHCbDirac from the allowed projects (it causes a segfault in doxygen).
+	Improved generation of dependency graph in SVG format, to be visible on more
+	browsers (Marco Cl.).
+	* python/LbRelease/LHCbDoc.py (Marco Cl.): 
+	- Added the generation of a graph for the dependencies between projects (using 'dot').
+	- Added the possibility of triggering a re-build of the documentation with a
+	special file in the doc directory.
+	- Added options to clean up documentations referring to archived projects and
+	unreferenced ones.
+	- Include LHCbDirac in the allowed projects.
+	* python/LbRelease/LHCbNightlies.py: -j, -l parameters added to the build
+	procedure (Karol)
+	* python/LbRelease/LHCbDoc.py (Marco Cl.): 
+	- Added a simple (weak) locking of the doc directories.
+	- Moved the generation of the symlinks of the general directory to the end of the build step (was in 'add').
+	- Added a function to locate all the projects in the release area (instead
+	of having to pass them on the command line).
+	- Added functions to get the list of doc directories broken (all contained
+	projects archived) and of those not referenced by any link in the common
+	directory.
+	- Removed the usage of doxypy (not needed with Doxygen 1.5.9).
+	Added a simple main page with links to the project pages.
+	* python/LbRelease/rcs.py: added a function to the Subversion back-end
+	to get the URL to a module (Marco Cl.)
+	* scripts/svnpath: script to print the Subversion URL to a package or a
+	project (trunk or tags) (Marco Cl.)
+	
+	* python/LbScriptsPolicy/PathStripper.py: added protection against directories which are 
+	not listable. They are ignored.
+	* python/LbScriptsPolicy/PathStripper.py: Modified to accept zip files
+	in the path (Marco Cl.).
+
+
+	* python/LbUtils/Script.py: changed the default config file location. Now uses 
+	XDG_CONFIG_HOME
+	* scripts/killtree: new file; wrapper over killTree python function
+	from LbUtils.Processes (Karol)
+	* python/LbUtils/Lock.py: fixed usage of relative paths.
+	* LbUtils/python/LbUtils/File.py: use the AFSLockFile class for the md5 file creation.
+	* LbUtils/python/LbUtils/Script.py: fixe pylint warnings.
+	* python/LbUtils/afs/directory.py: Implemented AFSLockFile which is a plain copy of the LockFile
+	class using the AFSLock class.
+	* python/LbUtils/Script.py: added the possibility to use the docstring of
+	the class as script description and the support for the optional class
+	members __usage__ and __version__ (Marco Cl.).
+	* python/LbUtils/afs/volume.py:
+	- inserted speed up for quota adjustment.
+	- fixed the matching of the volume names that contain ".". Now this is escaped.
+
 2010-06-03  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* doc/release.notes: fixed tabulations.
