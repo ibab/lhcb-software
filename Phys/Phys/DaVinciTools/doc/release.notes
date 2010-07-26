@@ -1,8 +1,10 @@
-! $Id: release.notes,v 1.563 2010-07-22 11:12:35 jonrob Exp $
+! $Id: release.notes,v 1.564 2010-07-26 12:26:51 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+!========================== DaVinciTools v21r4 2010-07-26 ===================
 
 ! 2010-07-22 - Chris Jones
  - Update OnOfflineTool to 'support' context() == "" or "Offline", or "HLT",
