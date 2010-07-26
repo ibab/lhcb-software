@@ -133,9 +133,9 @@ str_cutOffline2HHH_asMothCut = '(MIPDV(PRIMARY) < 0.08*mm)'
 # For selection 'A' this is easiest done as a DAUGHTERSCUT but can
 #   also be done as a COMBINATIONCUT. So we implement it both ways
 #   (so that 'A' and 'B' cuts can be OR'd).
-str_cutOffline3A_asCombCut = '(MIPCHI2DV(PRIMARY) > 4)'# mod. in 9/5
-str_cutOffline3A_asDaugCut = '(MIPCHI2DV(PRIMARY) > 4)'# mod. in 9/5
-str_cutOffline3HHH_asDaugCut = '(MIPCHI2DV(PRIMARY) > 2)'# mod. in 9/5
+str_cutOffline3A_asCombCut = '(MIPCHI2DV(PRIMARY) > 6)'# mod. in 23/7/10
+str_cutOffline3A_asDaugCut = '(MIPCHI2DV(PRIMARY) > 6)'# mod. in 23/7/10
+str_cutOffline3HHH_asDaugCut = '(MIPCHI2DV(PRIMARY) > 3)'# mod. in 23/7/10
 str_cutOffline3B_asCombCut = '(AHASCHILD((MIPCHI2DV(PRIMARY)) > 30.0))'
 
 # 4) Flight distance of D+ from PV (applied as MOTHERCUT)
@@ -158,12 +158,12 @@ str_cutOffline5HHHComb = "(AMAXDOCA('') < 0.20*mm)" # mod. in 9/5
 # There are also cuts that apply to the combination or to the mother.
 # For 'A' individually: use A daughter & A combination cut
 # For 'B' individually: use B daughter & B mother cut & B combination cut
-str_cutOffline6DaugA      = '(PT > 200*MeV)' # mod. in 9/5
+str_cutOffline6DaugA      = '(PT > 250*MeV)' # mod. in 23/7/10
 str_cutOffline6DaugHHH      = '(PT > 200*MeV)'
 str_cutOffline6DaugB      = '((PT > 200*MeV) & (P > 3200*MeV) & (P < 100*GeV))'
-str_cutOffline6A_asCombCut = '((AHASCHILD((PT > 200*MeV))) & (ACHILD(PT,1)+ACHILD(PT,2)+ACHILD(PT,3) > 1400*MeV))' # mod. in 9/5
+str_cutOffline6A_asCombCut = '((AHASCHILD((PT > 250*MeV))) & (ACHILD(PT,1)+ACHILD(PT,2)+ACHILD(PT,3) > 1400*MeV))' # mod. in 23/7/10
 str_cutOffline6HHH_asCombCut = '((ACHILD(PT,1)+ACHILD(PT,2)+ACHILD(PT,3) > 1200*MeV))' # mod. in 9/5
-str_cutOffline6A_asMothCut = '((NINGENERATION((PT>200*MeV),1) >= 1) & (CHILD(PT,1)+CHILD(PT,2)+CHILD(PT,3) > 1400*MeV))' # mod. in 9/5
+str_cutOffline6A_asMothCut = '((NINGENERATION((PT>250*MeV),1) >= 1) & (CHILD(PT,1)+CHILD(PT,2)+CHILD(PT,3) > 1400*MeV))' # mod. in 23/7/10
 str_cutOffline6BComb = '((APT > 1500*MeV) & (ANUM(PT > 600.0*MeV) >= 2))' # PT cut is looser than post-fit (mother) cut to allow for modification by fit
 str_cutOffline6BMoth = '(PT >1800*MeV)'
 
@@ -179,6 +179,9 @@ str_cutOffline7B_asDaugCut = '(TRCHI2DOF < 10.0)'
 str_OfflinePionListNoPID = 'StdNoPIDsPions'
 str_OfflineKaonListNoPID = 'StdNoPIDsKaons'
 str_OfflineKaonListLoosePID = 'StdLooseKaons'
+str_OfflinePionListLoosePID = 'StdLoosePions'   # mod in 23/07/10
+str_OfflineKaonListPID = 'StdTightKaons'  # mod in 23/07/10
+str_OfflinePionListPID = 'StdTightPions'   # mod in 23/07/10        
 str_cutOffline8B_asDaugCut = "(((ABSID=='K+') & (PIDK-PIDpi > 3.0)) | ((ABSID=='pi+') & (PIDK-PIDpi < 10.0)))"
 
 # Mass cuts (big envelope; we may go back and chop out bits later)
@@ -219,7 +222,7 @@ str_cutOfflineCombHHH    = '(' + str_cutOffline6HHH_asCombCut + '&' + str_cutOff
 # 'A' selection lines (no PID)
 
 combineOfflineD2PPP_A_NoPID = StrippingMember( CombineParticles, 'Combine'
-                                               , InputLocations = [ str_OfflinePionListNoPID ]
+                                               , InputLocations = [ str_OfflinePionListLoosePID ]   # mod in 23/07/10 (Alberto)
                                                , DecayDescriptor = '[D+ -> pi- pi+ pi+]cc'
                                                , DaughtersCuts = { 'pi+' : str_cutOfflineDaugA }
                                                , CombinationCut = str_cutOfflineCombA
@@ -227,7 +230,7 @@ combineOfflineD2PPP_A_NoPID = StrippingMember( CombineParticles, 'Combine'
                                                )
 combineOfflineD2KPP_A_NoPID = StrippingMember( CombineParticles
                                                , 'Combine'
-                                               , InputLocations = [ str_OfflinePionListNoPID, str_OfflineKaonListNoPID ]
+                                               , InputLocations = [ str_OfflinePionListLoosePID, str_OfflineKaonListPID ] # mod in 23/07/10
                                                , DecayDescriptor = '[D+ -> K- pi+ pi+]cc'
                                                , DaughtersCuts = { 'pi+' : str_cutOfflineDaugA, 'K+' : str_cutOfflineDaugA }
                                                , CombinationCut = str_cutOfflineCombA
@@ -236,7 +239,7 @@ combineOfflineD2KPP_A_NoPID = StrippingMember( CombineParticles
 
 combineOfflineD2KKP_A_NoPID = StrippingMember( CombineParticles
                                                , 'Combine'
-                                               , InputLocations = [ str_OfflinePionListNoPID, str_OfflineKaonListNoPID ]
+                                               , InputLocations = [ str_OfflinePionListLoosePID, str_OfflineKaonListPID ] # mod in 23/07/10 
                                                , DecayDescriptor = '[D+ -> K- K+ pi+]cc'
                                                , DaughtersCuts = { 'pi+' : str_cutOfflineDaugA, 'K+' : str_cutOfflineDaugA }
                                                , CombinationCut = str_cutOfflineCombA
@@ -453,7 +456,7 @@ ps_KPP_Bkg_LoosePID_A = 0.1
 ps_KPP_Bkg_LoosePID_B = 1.0
 ps_KPP_Sig            = 1.0
 ps_KKP_Bkg_NoPID      = 0.05
-ps_KKP_Sig_NoPID      = 0.1
+ps_KKP_Sig_NoPID      = 1.0  # mod. in 23/07/10 (Alberto)
 ps_KKP_Bkg_LoosePID   = 1.0
 ps_KKP_Sig_LoosePID   = 1.0
 ps_KKK_Bkg            = 1.0
