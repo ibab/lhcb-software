@@ -3,6 +3,23 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
+</PRE><H1><A NAME=v37r5>2010-07-22 Brunel v37r6</A></H1><PRE>
+This version uses projects LCG 58d, Gaudi v21r10, LHCb v31r3, Lbcom v9r5,
+ Rec v10r3 and SQLDDDB v5r33, ParamFiles v8r2, FieldMap v5r5, AppConfig v3r*
+
+This is a production version for processing 2010 data and Montecarlo
+
+WARNING: an LHCb base package (RichRecBase) has been added to this version so might cause problems in configuration
+
+- New minor version to fix urgent problems in production:
+  . Crashes in brunel from a segfault in KalmanFitResult savannah bug #70643
+  . Rich processing speed improved by a factor of 5 with better Aerogel cuts
+
+- This release goes hand-in-hand with the CondDB patch #4301 which updates the tile calbration
+
+For further information see the release notes for REC v10r3
+
+
 </PRE><H1><A NAME=v37r5>2010-07-22 Brunel v37r5</A></H1><PRE>
 This version uses projects LCG 58d, Gaudi v21r10, LHCb v31r3, Lbcom v9r5,
  Rec v10r2 and SQLDDDB v5r33, ParamFiles v8r2, FieldMap v5r5, AppConfig v3r*
