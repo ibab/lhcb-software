@@ -9,7 +9,7 @@ Purpose: LHCb reconstruction packages.
 </PRE><H1><A NAME=v10r3>2010-07-26 RecSys v10r3</A></H1><PRE>
 This version uses Gaudi v21r10 and LHCb v31r3
 
-WARNING: an LHCb base package (RichRecBase) has been added to this version so might cause problems in configuration
+WARNING: two LHCb base package (RichRecBase and TrackEvent) have been added to this version so might cause problems in configuration. To make a release stack it will be necessary to release these packages in LHCb.
 
 - New minor version to fix urgent problems in production:
   . Crashes in brunel from a segfault in KalmanFitResult savannah bug #70643
@@ -19,7 +19,8 @@ WARNING: an LHCb base package (RichRecBase) has been added to this version so mi
 
 - Packages Added:
   Rich/RichRecBase v4r0, required for the rich speed up.
-  This package comes from LHCb so will need to be removed again in the next release.
+  Event/TrackEvent v5r6, required for the TrackFitEvent changes
+  These packages come from LHCb so will need to be removed again in the next release.
 
 - Packages modified:
   Rich/RichGlobalPID v3r14p1, Rich/RichHPDImageAnalysis v1r1, Rich/RichRecMonitors v2r29,
