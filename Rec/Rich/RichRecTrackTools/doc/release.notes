@@ -4,6 +4,7 @@
 ! Purpose     : Utility tracks tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+!======================== RichRecTrackTools v1r23 2010-07-26 =================
 ! 2010-07-26 - Chris Jones
  - Tighten up the maximum CK theta resolution value cutoffs in 
    RichFunctionalCKResForRecoTracks.cpp
