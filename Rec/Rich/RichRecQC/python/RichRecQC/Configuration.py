@@ -516,7 +516,6 @@ class RichRecQCConf(RichConfigurableUser):
     def hpdImageShifts(self,sequence):
         from Configurables import Rich__Mon__RichHPDImageSummary
         imageSummary = Rich__Mon__RichHPDImageSummary("RichHPDImageSummary")
-        imageSummary.HistoProduce = False
         imageSummary.StatEntityList +=  [ ".*HPD.*" ]
         imageSummary.StatEntityList +=  [ ".*EventTime.*" ]
         sequence.Members += [imageSummary]
