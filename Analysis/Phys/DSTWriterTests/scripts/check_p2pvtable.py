@@ -2,7 +2,7 @@
 '''
 Check standard TES locations with Particle->PV relations in a DST and print a summary of the number relations for each From, To TES location pair. Uses stored Particle->PV relations tables.
 Useage:
-./check_p2pvtable.py --input <some file name> --location <location of trunk - default "/Event">
+./check_p2pvtable.py --input <some file name> --location <location of trunk - default "/Event"> --table-name <Name of relations table. Default: Particle2VertexRelations>
 '''
 
 __author__ = "Juan PALACIOS juan.palacios@cern.ch"
@@ -23,13 +23,18 @@ if __name__ == '__main__' :
 
     filename = ''
     location = '/Event'
-    opts, args = getopt.getopt(sys.argv[1:], "l:i", ["input=", "location="])
+    tablename = 'Particle2VertexRelations'
+    opts, args = getopt.getopt(sys.argv[1:], "l:i:t", ["input=",
+                                                       "location=",
+                                                       "table-name="])
 
     for o, a in opts:
         if o in ("-i", "--input"):
             filename = a
         if o in ("-l", "--location") :
             location = a
+        if o in ("-t", "--table-name") :
+            tablename = a
             
     assert(filename != '')
 
@@ -60,7 +65,7 @@ if __name__ == '__main__' :
     while ( nextEvent() ) :
         nEvents+=1
         leaves = evtSvc.nodes(node = location, forceload = True)
-        leaves = filter(lambda s : s.endswith('/Particle2VertexRelations'), leaves)
+        leaves = filter(lambda s : s.endswith('/'+ tablename), leaves)
         for leaf in leaves :
             p2pv = evtSvc[leaf]
             if p2pv :
@@ -77,7 +82,7 @@ if __name__ == '__main__' :
                     print 'Particle->PV relations', leaf, 'empty'
 
     print '==================================================================='
-    print 'Analysed', nEvents, 'in location', location
+    print 'Analysed', nEvents, 'events in location', location
     for key, value in p2pvSummaries.iteritems() :
         print '-----------------------------------------------------------------'
         print key, ':', value, 'entries'
