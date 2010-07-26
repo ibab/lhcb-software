@@ -64,7 +64,7 @@ FunctionalCKResForRecoTracks ( const std::string& type,
 
   declareProperty( "HPDErrors",           m_hpdErr = list_of(0.0005)(0.0006)(0.0002) );
 
-  declareProperty( "MaxCKThetaRes",       m_maxRes = list_of(0.01)(0.01)(0.01) );
+  declareProperty( "MaxCKThetaRes",       m_maxRes = list_of(0.003)(0.0025)(0.001) );
 
   declareProperty( "UseLastMeasPoint", m_useLastMP = list_of(false)(false)(false) );
 
