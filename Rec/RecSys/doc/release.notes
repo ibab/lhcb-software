@@ -25,7 +25,7 @@ WARNING: an LHCb base package (RichRecBase) has been added to this version so mi
   Rich/RichGlobalPID v3r14p1, Rich/RichHPDImageAnalysis v1r1, Rich/RichRecMonitors v2r29,
   Rich/RichRecQC v2r44, Rich/RichRecSys v3r31, Rich/RichRecTrackTools v1r23,
   Tf/TsaAlgorithms v3r22p1, Tr/TrackFitEvent v5r2, Tr/TrackFitter v2r50,
-  Tr/TrackTools  v3r34
+  Tr/TrackTools  v3r34, Tr/TrackMonitors v1r28
 
 - In Rich/RichGlobalPID v3r14p1:
   . Add a fast approximate log(exp(x)-1) expression. 
@@ -68,6 +68,10 @@ WARNING: an LHCb base package (RichRecBase) has been added to this version so mi
 
 - In Tr/TrackTools  v3r34:
   . cleaned up TrackInterpolator by using cached filtered states in FitNode 
+
+- In Tr/TrackMonitors  v1r28:
+  . Added property "Online" to OTTrackMonitor and OTHitEfficiencyMonitor to control
+    number of produced histograms in online monitoring
 
 
 
