@@ -1,3 +1,7 @@
+2010-07-23  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* cmt/requirements: release of version v2r10
+
 2010-07-13  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbScriptsPolicy/PathStripper.py: added protection against directories which are 

@@ -1,5 +1,5 @@
 package LbScriptsPolicy
-version v2r9
+version v2r10
 
 
 macro install_excludes " -xCVS -x.svn"
