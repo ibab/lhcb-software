@@ -128,6 +128,8 @@ void PIDPlots::plots( const LHCb::RichPID * pid,
   plots( pid->track(), hypo, config );
 
   // Now, plots that require RichPID info ...
+  if ( msgLevel(MSG::DEBUG) )
+    debug() << "RichPID " << *pid << endmsg;
 
   // Extra plots
   if ( m_extraHistos )
