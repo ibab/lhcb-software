@@ -1,5 +1,5 @@
 package GaussSys
-version v38r6
+version v38r7
 
 branches cmt doc
 
@@ -8,7 +8,7 @@ branches cmt doc
 #==================================================================
 
 # Gauss application: the application is not built on Win32
-macro Gauss_use         "Gauss        v38r6 Sim"  WIN32 ""
+macro Gauss_use         "Gauss        v38r7 Sim"  WIN32 ""
 use ${Gauss_use} 
 
 # Generator packages: Basic configuration
