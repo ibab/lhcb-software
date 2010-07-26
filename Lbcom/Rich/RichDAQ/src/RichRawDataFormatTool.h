@@ -4,9 +4,6 @@
  *
  *  Header file for tool : Rich::DAQ::RawDataFormatTool
  *
- *  CVS Log :-
- *  $Id: RichRawDataFormatTool.h,v 1.41 2010-02-08 15:52:37 jonrob Exp $
- *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-18
  */
