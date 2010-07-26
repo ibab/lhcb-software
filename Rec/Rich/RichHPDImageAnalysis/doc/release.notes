@@ -4,6 +4,7 @@
 ! Purpose     : HPD image analysis from accumulated hit maps
 !-----------------------------------------------------------------------------
 
+!================= Rich/RichHPDImageAnalysis v1r1 2010-07-26 =================
 ! 2010-07-22 - Thomas BLAKE
  - Added histogramming of X,Y offsets.
 
