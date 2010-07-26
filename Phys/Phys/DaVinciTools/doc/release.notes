@@ -1,10 +1,16 @@
-! $Id: release.notes,v 1.564 2010-07-26 12:26:51 jpalac Exp $
+! $Id: release.notes,v 1.565 2010-07-26 16:12:57 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
 
 !========================== DaVinciTools v21r4 2010-07-26 ===================
+
+! 2010-07-26 - Juan Palacios
+ - Add BestPVAlg, takes Particles and RecVertices or a Particle->RecVertex
+   relations table and finds the "best" PV for each particle using an
+   IRelatedPVFinder. Writes the the table in location controlled by property
+   P2PVRelationsOutputLocation.
 
 ! 2010-07-22 - Chris Jones
  - Update OnOfflineTool to 'support' context() == "" or "Offline", or "HLT",
