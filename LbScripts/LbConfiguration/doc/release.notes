@@ -1,3 +1,7 @@
+2010-07-23  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* cmt/requirements: release of version v5r3
+
 2010-07-22  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbConfiguration/LbLogin.py: forced the version of LCGCMT to be used to 5[0-8]*. This is
