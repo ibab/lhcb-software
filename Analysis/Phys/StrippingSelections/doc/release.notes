@@ -5,6 +5,10 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-07-26 - Phillip Urquijo
+ - updates to StrippingB2XMuMuSS.py, StrippingB2XuMuNu.py, StrippingD2XuMuMu.py, StreamSemileptonic.py
+ - timing improvements (by reordering reconstruction order) and cut updates for data.
+
 ! 2010-07-26 - Thomas BLAKE
  - Fix for broken nightlies
  - Updated FD cut in Bd -> K* mu mu signal lines

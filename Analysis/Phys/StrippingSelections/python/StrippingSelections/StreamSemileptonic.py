@@ -36,7 +36,7 @@ stream.appendLines( [
                         , StrippingB2XuMuNuConf().Rho_line()
                         , StrippingB2XuMuNuConf().KSS_line()
                         , StrippingB2XuMuNuConf().Kstar_line()
-                        , StrippingB2XuMuNuConf().KstarSS_line()
+#                        , StrippingB2XuMuNuConf().KstarSS_line()
 		    ] )
 
 
