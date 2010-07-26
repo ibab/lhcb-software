@@ -4,13 +4,12 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+!======================= RichRecQC v2r44 2010-07-26 ========================
 ! 2010-07-26 - Thomas BLAKE
  - Update Configuration.py to turn on histogram production for image centre 
 	 analysis.
 
 
-
-!======================= RichRecQC v2r44 2010-07-26 ========================
 ! 2010-07-26 - Chris Jones
  - Fix for problem with the import of RichPIDQCConf
  - Reduce aerogel resolution plot range to +- 0.018 mrad
