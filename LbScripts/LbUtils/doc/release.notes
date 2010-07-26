@@ -1,5 +1,9 @@
 2010-07-23  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
+	* cmt/requirements: release of version v2r3
+	
+2010-07-23  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
 	* python/LbUtils/Tar.py: fixed the top_most feature in listTarBallObjects.
 
 2010-07-22  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
