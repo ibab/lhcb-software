@@ -42,7 +42,7 @@ class RichRecSysConf(RichConfigurableUser):
         "UseCaloMomentumTracks" : False # Use Tracks cloned from originals with P updated using the CALO
        ,"Context":    "Offline"   # The context within which to run
        ,"Radiators": None         # The radiators to use
-       ,"Particles": None         # The particle species to consider. Default is (el,mu,pi,ka,pr)
+       ,"Particles": None         # The particle species to consider. Default is (el,mu,pi,ka,pr,bt)
        ,"ConfigureTools":  True   # Configure the general RICH reconstruction tools
        ,"ConfigureAlgs":   True   # Configure the reconstruction algorithms
        ,"PreloadRawEvent": False  # Preload the RawEvent prior to the RICH algorithms
@@ -96,14 +96,17 @@ class RichRecSysConf(RichConfigurableUser):
         if usedRads[2] : usedDets[1] = True
         return usedDets
 
-    # Access the Track Configurable
+    ## Access the Track Configurable
     def trackConfig(self) : return self.getRichCU(RichTrackCreatorConfig)
 
-    # Access the Pixel Configurable
+    ## Access the Pixel Configurable
     def pixelConfig(self) : return self.getRichCU(RichPixelCreatorConfig)
 
-    # Access the Photon Configurable
+    ## Access the Photon Configurable
     def photonConfig(self) : return self.getRichCU(RichPhotonCreatorConfig)
+
+    ## Access the global PID configurable
+    def gpidConfig(self) : return self.getRichCU(RichGlobalPIDConfig)
 
     ## @brief Apply the configuration to the configured GaudiSequencer
     def applyConf(self) :
@@ -256,7 +259,7 @@ class RichRecSysConf(RichConfigurableUser):
             sequence.Members += [ pidSeq ]
             
             if pidMode == "FullGlobal" or pidMode == "FastGlobal":
-                pidConf = self.getRichCU(RichGlobalPIDConfig)
+                pidConf = self.gpidConfig()
                 if pidMode == "FastGlobal": pidConf.Mode = "Fast"
                 gpidSeq = self.makeRichAlg(GaudiSequencer,"Rich"+cont+"GPIDSeq")
                 gpidSeq.MeasureTime = True

@@ -42,16 +42,18 @@ class RichGlobalPIDConfig(RichConfigurableUser):
         "TrackForceChangeDLL"     : None,
         "LikelihoodThreshold"     : None,
         "MaxTrackChangesPerIt"    : None,
-        "MinSignalForNoLLCalc"    : None
-       ,"PidSequencer"            : None # The sequencer to add the RICH reconstruction algorithms to
-       ,"OutputLevel"             : INFO # The output level to set all algorithms and tools to use
-       ,"TrackCuts"               : None
+        "MinSignalForNoLLCalc"    : None,
+        "PidSequencer"            : None, # The sequencer to add the RICH reconstruction algorithms to
+        "OutputLevel"             : INFO, # The output level to set all algorithms and tools to use
+        "TrackCuts"               : None,
+        "SingleTrackMode"         : None 
         }
 
     ## Initialize 
     def initialize(self):
         # default values
-        self.setRichDefaults("NIterations",{"Offline":2,"HLT":2})
+        self.setRichDefaults( "SingleTrackMode", { "Offline" : False, "HLT" : False } )
+        self.setRichDefaults( "NIterations", { "Offline" : 2, "HLT" : 2 } )
         self.setRichDefaults("TrackFreezeOutDLL",
                              { "Offline" : [ 2, 4, 5, 6 ],
                                "HLT"     : [ 2, 4, 5, 6 ] } )
@@ -130,6 +132,8 @@ class RichGlobalPIDConfig(RichConfigurableUser):
             # Likelihood minimisation
             lik = self.makeRichAlg( Rich__Rec__GlobalPID__Likelihood,
                                     "Rich"+cont+"GPIDLLIt" + `it` )
+            # Likelihood minimisation mode
+            lik.SingleTrackMode = self.getProp("SingleTrackMode")
 
             # configure the likelihood minimisation
             pidTool = self.makeRichAlg(Rich__Rec__GlobalPID__LikelihoodTool,"GPIDLikelihoodTool")
