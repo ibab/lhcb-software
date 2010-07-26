@@ -5,10 +5,26 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+<<<<<<< release.notes
+! 2010-07-26 - Jibo He
+ - StrippingCcbar2Ppbar.py
+   . Ccbar2PpbarLoose prescaled by 100
+
+! 2010-07-26 - Jibo He
+ - StrippingDiElectron.py
+   . LooseJpsi2ee pre-scaled by 1000
+   . BiasedIncDiElectronLowMass prescaled further, now by 100
+   . IncDiElectronLowMass prescaled further, now by 100
+   . Jpsi2ee: PIDe>2 added, PT cut increasd to 850
+   . IncDiElectron: PIDe>2 added, PT cut increased to 1 GeV
+   . BiasedIncDiElectron: PIDe>2 added, PT cut increased to 500 MeV
+
+=======
 ! 2010-07-26 - Anton Poluektov 
  - updated StrippingB02D0Kstar_D02KPiPi0.py and added a new 
    StrippingB02D0Kstar_D02K3Pi.py lines by Aurelien Martens
 
+>>>>>>> 1.296
 ! 2010-07-26 - Phillip Urquijo
  - updates to StrippingB2XMuMuSS.py, StrippingB2XuMuNu.py, StrippingD2XuMuMu.py, StreamSemileptonic.py
  - timing improvements (by reordering reconstruction order) and cut updates for data.
@@ -92,7 +108,7 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! 2010-07-18 - Jibo He
  - StrippingDiElectron.py, StrippingBc2JpsiH.py, StrippingBc2JpsiHDetached.py, 
    StrippingBc2JpsiMuX.py
-	 Removed unnecessary SelectionSequence
+   Removed unnecessary SelectionSequence
 
 ! 2010-07-17 - Alexandr Kozlinskiy
  - updated cuts and added some documentation to StrippingDstarPromptWithD02HHNoPt

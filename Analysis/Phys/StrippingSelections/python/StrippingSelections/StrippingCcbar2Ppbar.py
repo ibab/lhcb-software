@@ -1,6 +1,6 @@
 __author__ = 'Serezha.Barsuk@cern.ch, Jibo.He@cern.ch'
 __date__ = '12/04/2010'
-__version__ = '$Revision: 1.2 $'
+__version__ = '$Revision: 1.3 $'
 
 """
  Charmonium -> p pbar, including eta(1S) -> psi(2S)
@@ -38,7 +38,7 @@ class StrippingCcbar2PpbarConf(LHCbConfigurableUser):
     def Loose_Line(self):
         from StrippingConf.StrippingLine import StrippingLine, StrippingMember
         StripCcbar2PpbarLoose = self.combineCcbarLoose()
-        return StrippingLine('Ccbar2PpbarLoose', prescale = 1,  algos = [ StripCcbar2PpbarLoose ] )
+        return StrippingLine('Ccbar2PpbarLoose', prescale = 0.01,  algos = [ StripCcbar2PpbarLoose ] )
    
     
     

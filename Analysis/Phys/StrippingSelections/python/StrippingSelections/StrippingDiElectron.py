@@ -1,4 +1,4 @@
-# $Id: StrippingDiElectron.py,v 1.4 2010-07-18 17:04:41 jhe Exp $
+# $Id: StrippingDiElectron.py,v 1.5 2010-07-26 16:37:00 jhe Exp $
 ## #####################################################################
 # Stripping selections for inclusive di-electron, J/psi(1S) -> e+ e- 
 #
@@ -22,12 +22,14 @@ class StrippingDiElectronConf(LHCbConfigurableUser):
         ,"LooseJpsi2ee_MinMass"                 : 2000.  # MeV
         ,"LooseJpsi2ee_MaxMass"                 : 3800.  # MeV
     
-        ,"Jpsi2ee_ElectronPT"                   :  750.  # MeV
+        ,"Jpsi2ee_ElectronPT"                   :  850.  # MeV
+        ,"Jpsi2ee_ElectronPIDe"                 :    2.  
         ,"Jpsi2ee_VertexCHI2"                   :   25.
         ,"Jpsi2ee_MinMass"                      : 2000.  # MeV
         ,"Jpsi2ee_MaxMass"                      : 3800.  # MeV
         
-        ,"IncDiElectron_ElectronPT"             :  750.  # MeV
+        ,"IncDiElectron_ElectronPT"             : 1000.  # MeV
+        ,"IncDiElectron_ElectronPIDe"           :    2.  
         ,"IncDiElectron_MinMass"                : 2000.  # MeV
         ,"IncDiElectron_VertexCHI2"             :   25.
         
@@ -35,7 +37,8 @@ class StrippingDiElectronConf(LHCbConfigurableUser):
         ,"IncDiElectronLowMass_VertexCHI2"      :   25.
         ,"IncDiElectronLowMass_MinMass"         :   30.  # MeV        
         
-        ,"BiasedIncDiElectron_ElectronPT"       :  300.  # MeV
+        ,"BiasedIncDiElectron_ElectronPT"       :  500.  # MeV
+        ,"BiasedIncDiElectron_ElectronPIDe"     :    2.
         ,"BiasedIncDiElectron_ElectronMIPCHI2"  :    1.
         ,"BiasedIncDiElectron_VertexCHI2"       :   25.
         ,"BiasedIncDiElectron_MinMass"          : 2000.  # MeV
@@ -66,7 +69,7 @@ class StrippingDiElectronConf(LHCbConfigurableUser):
                                     Algorithm = _RefineLooseJpsi2ee,
                                     RequiredSelections = [ _LooseJpsi2ee ]                           
                                     )
-	return StrippingLine('LooseJpsi2ee', prescale = 1, algos = [ SelLooseJpsi2ee ])
+	return StrippingLine('LooseJpsi2ee', prescale = 0.001, algos = [ SelLooseJpsi2ee ])
 
 
 
@@ -79,6 +82,7 @@ class StrippingDiElectronConf(LHCbConfigurableUser):
 	_Jpsi2ee =  DataOnDemand(Location = 'Phys/StdLooseJpsi2ee')
         _RefineJpsi2ee = FilterDesktop("RefineJpsi2ee",
                                        Code = "(MINTREE('e-'==ABSID,PT)> %(Jpsi2ee_ElectronPT)s *MeV)"\
+                                       " & (MINTREE('e-'==ABSID,PIDe)> %(Jpsi2ee_ElectronPIDe)s)" \
                                        " & (VFASPF(VCHI2/VDOF) < %(Jpsi2ee_VertexCHI2)s)" \
                                        " & (MM > %(Jpsi2ee_MinMass)s *MeV)" \
                                        " & (MM < %(Jpsi2ee_MaxMass)s *MeV)" % self.getProps()
@@ -102,6 +106,7 @@ class StrippingDiElectronConf(LHCbConfigurableUser):
 	_IncDiElectron =  DataOnDemand(Location = 'Phys/StdLooseDiElectron')
         _RefineIncDiElectron = FilterDesktop("RefineIncDiElectron",
                                              Code = "(MINTREE('e-'==ABSID,PT)> %(IncDiElectron_ElectronPT)s *MeV)"\
+                                             " & (MINTREE('e-'==ABSID,PIDe)> %(IncDiElectron_ElectronPIDe)s)"\
                                              " & (VFASPF(VCHI2/VDOF) < %(IncDiElectron_VertexCHI2)s)" \
                                              " & (MM>%(IncDiElectron_MinMass)s *MeV)" % self.getProps()
                                              ) 
@@ -131,7 +136,7 @@ class StrippingDiElectronConf(LHCbConfigurableUser):
                                             Algorithm = _RefineIncDiElectronLowMass,
                                             RequiredSelections = [ _IncDiElectronLowMass ]                           
                                             )
-	return StrippingLine('IncDiElectronLowMass', prescale = 0.1, algos = [ SelIncDiElectronLowMass ])
+	return StrippingLine('IncDiElectronLowMass', prescale = 0.01, algos = [ SelIncDiElectronLowMass ])
     
 
     
@@ -146,6 +151,7 @@ class StrippingDiElectronConf(LHCbConfigurableUser):
         _RefineBiasedIncDiElectron = FilterDesktop(
             "RefineBiasedIncDiElectron",
             Code = "(MINTREE('e-'==ABSID,PT)> %(BiasedIncDiElectron_ElectronPT)s *MeV)"\
+            " & (MINTREE('e-'==ABSID,PIDe)> %(BiasedIncDiElectron_ElectronPIDe)s)"\
             " & (MINTREE('e-'==ABSID,MIPCHI2DV(PRIMARY))> %(BiasedIncDiElectron_ElectronMIPCHI2)s )"\
             " & (VFASPF(VCHI2/VDOF) < %(BiasedIncDiElectron_VertexCHI2)s)" \
             " & (MM>%(BiasedIncDiElectron_MinMass)s *MeV)" % self.getProps()
@@ -179,7 +185,7 @@ class StrippingDiElectronConf(LHCbConfigurableUser):
                                                   Algorithm = _RefineBiasedIncDiElectronLowMass,
                                                   RequiredSelections = [ _BiasedIncDiElectronLowMass ]                           
                                                   )
-	return StrippingLine('BiasedIncDiElectronLowMass', prescale = 0.1, algos = [ SelBiasedIncDiElectronLowMass ])
+	return StrippingLine('BiasedIncDiElectronLowMass', prescale = 0.01, algos = [ SelBiasedIncDiElectronLowMass ])
     
         
     def getProps(self) :
