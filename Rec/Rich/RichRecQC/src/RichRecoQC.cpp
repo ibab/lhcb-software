@@ -52,7 +52,7 @@ RecoQC::RecoQC( const std::string& name,
   declareProperty( "ChThetaRecHistoLimitMax",
                    m_ckThetaMax = list_of(0.325)(0.065)(0.036) );
   declareProperty( "CKResHistoRange",
-                   m_ckResRange = list_of(0.025)(0.006)(0.004) );
+                   m_ckResRange = list_of(0.018)(0.006)(0.004) );
 
   declareProperty( "Radiators", m_rads = list_of(true)(true)(true) );
 

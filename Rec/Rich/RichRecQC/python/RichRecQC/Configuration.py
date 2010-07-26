@@ -13,6 +13,15 @@ from Configurables import ( GaudiSequencer, MessageSvc )
 #from DDDB.Configuration import DDDBConf
 
 # -------------------------------------------------------------------------------------------
+# Workaround for Configurables problem
+import Configurables
+if "RichPIDQCConf" in Configurables.__all__:
+    from Configurables import RichPIDQCConf
+else:
+    from Gaudi.Configuration import ConfigurableUser
+    class RichPIDQCConf(ConfigurableUser):
+        pass
+# -------------------------------------------------------------------------------------------
 
 ## @class RichRecQCConf
 #  High level Configuration tools for RICH Data Quality monitoring
@@ -21,7 +30,7 @@ from Configurables import ( GaudiSequencer, MessageSvc )
 class RichRecQCConf(RichConfigurableUser):
 
     ## Possible used Configurables
-    __used_configurables__ = [ (RichAlignmentConf,None), ("RichPIDQCConf",None) ]
+    __used_configurables__ = [ (RichAlignmentConf,None), (RichPIDQCConf,None) ]
 
     ## Default Histogram set
     __default_histo_set__ = "OfflineFull"
@@ -54,7 +63,7 @@ class RichRecQCConf(RichConfigurableUser):
     ## Steering options
     __slots__ = {
         "Context": "Offline"  # The context within which to run
-       ,"DataType" : "2008" # Data type, can be ['DC06','2008',2009','2010']
+       ,"DataType" : "2010" # Data type, can be ['DC06','2008',2009','2010']
        ,"MoniSequencer" : None # The sequencer to add the RICH monitoring algorithms to
        ,"Monitors" : { "Expert"         : [ "L1SizeMonitoring", "DBConsistencyCheck",
                                             "DataDecodingErrors", "ODIN",
@@ -483,9 +492,9 @@ class RichRecQCConf(RichConfigurableUser):
             aeroMoni = self.createMonitor(Rich__Rec__MC__RecoQC,name,trackType)
             aeroMoni.HistoPrint = False
             aeroMoni.Radiators  = [ True, False, False ] # Only run on aerogel segments
-            aeroMoni.MaxRadSegs = [ 5, 0, 0, ]
+            #aeroMoni.MaxRadSegs = [ 5, 0, 0, ]
             aeroMoni.CheckAeroGasPhots = True
-            #aeroMoni.TrackSelector.MinPCut = 3
+            aeroMoni.TrackSelector.MinPCut = 10
             # Add to sequence
             sequence.Members += [aeroMoni]
 
