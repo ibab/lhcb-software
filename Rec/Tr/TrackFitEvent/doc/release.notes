@@ -4,6 +4,7 @@
 ! Purpose     : Package for the tracking fitting-related classes
 !-----------------------------------------------------------------------------
 
+=========================== TrackFitEvent v5r2 2010-07-26 ==================
 ! 2010-07-22 - Wouter Hulsbergen
  - added filtered states to FitNode
  - added boost allocator to FitNode
