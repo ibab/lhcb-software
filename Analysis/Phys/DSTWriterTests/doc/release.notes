@@ -4,6 +4,12 @@
 ! Purpose     : Options to generate selection or Micro DSTs and scripts to test them.
 !-----------------------------------------------------------------------------
 
+! 2010-07-26 - Juan Palacios
+ - cmt/requirements
+  . Increase to v1r4p1
+ - scripts/check_p2pvtable.py
+  . Add command line option --table-name to give name of P->PV relations table.
+
 ! ========================== DstwriterTests v1r4 2010-06-24 ==================
 
 ! 2010-06-21 - Juan Palacios
