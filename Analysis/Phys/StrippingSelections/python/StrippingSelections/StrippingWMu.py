@@ -69,15 +69,15 @@ lineloose = StrippingLine('W2Muloose'
 
 
 
-
-
 # Create W -> mu candidates out of std No PIDs muons
 ## ############################################################
 _NoPIDsmuons =  DataOnDemand(Location = 'Phys/StdNoPIDsMuons')
 
+mucut_2 =  '(PT>10*GeV)&(TRPCHI2>0.0001)'
+
 
 _WNoPIDs = FilterDesktop(name+"NoPIDs"
-                    , Code = mucut
+                    , Code = mucut_2
                                )
                          
 WNoPIDs = Selection( "Sel"+name+"NoPIDs",

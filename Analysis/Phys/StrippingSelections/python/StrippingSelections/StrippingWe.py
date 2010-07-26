@@ -19,7 +19,7 @@ from PhysSelPython.Wrappers import DataOnDemand, Selection, SelectionSequence
 ## ############################################################
 _electrons =  DataOnDemand(Location = 'Phys/StdLooseElectrons')
 
-ecut = '(PT>10*GeV)'
+ecut = '(PT>10*GeV)&(TRPCHI2>0.0001)'
 
 _W = FilterDesktop(name
                     , Code = ecut
