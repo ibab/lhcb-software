@@ -1,6 +1,6 @@
 __author__ = 'Patrick Koppenburg, Rob Lambert, Mitesh Patel'
 __date__ = '21/01/2009'
-__version__ = '$Revision: 1.28 $'
+__version__ = '$Revision: 1.29 $'
 
 """
 Bd->K*MuMu selections 
@@ -23,7 +23,7 @@ class StrippingBd2KstarMuMuConf(LHCbConfigurableUser):
                 ,  'BMassMedWin'        :  300       # MeV, high mass window
                 ,  'BMassLowWin'        :  150       # MeV, high mass window
                 ,  'BDIRA'              : 0.9999     # adimentional
-                ,  'BFlightCHI2'        : 16         # adimentional 
+                ,  'BFlightCHI2'        : 100        # adimentional 
                 ,  'BFlightCHI2Tight'   : 100        # adimentional 
                 ,  'BIPCHI2'            : 64         # adimentional  
                 ,  'BIPCHI2Tight'       : 36         # adimentional  

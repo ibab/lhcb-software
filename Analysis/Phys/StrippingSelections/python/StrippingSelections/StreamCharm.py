@@ -39,6 +39,9 @@ from StrippingSelections.StrippingD0ForBXX import StrippingD0forBXXConf
 from StrippingSelections.StrippingBd2KstarMuMu import StrippingBd2KstarMuMuConf
 from StrippingSelections.StrippingLambdac      import StrippingLambdacConf
 
+
+from StrippingSelections.StrippingDs2piPhiNoPt import StrippingDs2piPhiConf
+
 stream = StrippingStream("Charm")
 
 stream.appendLines( [
@@ -115,7 +118,7 @@ stream.appendLines( [
 #        , StrippingDstarD02KKpipiRegular.line1
         , StrippingDstarD02KKmumuRobust.line1
         , StrippingDstarD02KKmumuRegular.line1
-# 	,StrippingDs2piPhiConf().line() 
+          ,StrippingDs2piPhiConf().line() 
     ] )
 stream.appendLines( StrippingDstarPromptWithD02HHConf().lines() )
 stream.appendLines( StrippingDstarD2KShhConf().MakeLines() )

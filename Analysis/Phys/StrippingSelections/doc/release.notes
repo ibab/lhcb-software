@@ -5,6 +5,12 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-07-26 - Thomas BLAKE
+ - Fix for broken nightlies
+ - Updated FD cut in Bd -> K* mu mu signal lines
+
+
+
 ! 2010-07-26 - Juan Palacios
  - Fix broken nightlies.
 
