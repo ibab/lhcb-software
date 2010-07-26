@@ -4,6 +4,7 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+!====================== RichRecSys v3r31 2010-07-26 ==========================
 ! 2010-07-26 - Chris Jones
  - Tighten up the search windows for Aerogel photons, to match the improved
    resolution using the new tile calibration DB values.
