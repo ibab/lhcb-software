@@ -4,9 +4,6 @@
  *
  *  Implementation file for algorithm class : RichCherenkovResMoni
  *
- *  CVS Log :-
- *  $Id: RichCherenkovResMoni.cpp,v 1.15 2010-02-11 19:57:25 jonrob Exp $
- *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
  */
@@ -73,6 +70,9 @@ StatusCode CherenkovResMoni::execute()
   MAX_CKTHETA_RAD;
   MIN_CKTHETA_RAD;
 
+  // Is MC available
+  const bool mcTrackOK = m_richRecMCTruth->trackToMCPAvailable();
+
   // Iterate over segments
   for ( LHCb::RichRecSegments::const_iterator iSeg = richSegments()->begin();
         iSeg != richSegments()->end(); ++iSeg )
@@ -83,7 +83,8 @@ StatusCode CherenkovResMoni::execute()
     if ( !m_trSelector->trackSelected(segment->richRecTrack()) ) continue;
 
     // MC type
-    const Rich::ParticleIDType mcType = m_richRecMCTruth->mcParticleType( segment );
+    const Rich::ParticleIDType mcType = ( !mcTrackOK ? Rich::Pion :
+                                          m_richRecMCTruth->mcParticleType(segment) );
     if ( mcType == Rich::Unknown ) continue;
 
     // track segment
