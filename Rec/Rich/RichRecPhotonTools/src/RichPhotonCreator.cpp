@@ -4,9 +4,6 @@
  *
  *  Implementation file for tool : Rich::Rec::PhotonCreator
  *
- *  CVS Log :-
- *  $Id: RichPhotonCreator.cpp,v 1.4 2009-07-30 11:20:00 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */

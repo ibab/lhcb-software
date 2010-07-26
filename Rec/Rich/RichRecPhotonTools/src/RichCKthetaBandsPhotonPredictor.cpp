@@ -4,9 +4,6 @@
  *
  *  Implementation file for tool : Rich::Rec::CKthetaBandsPhotonPredictor
  *
- *  CVS Log :-
- *  $Id: RichCKthetaBandsPhotonPredictor.cpp,v 1.4 2009-07-30 11:20:00 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   26/07/2007
  */
@@ -127,7 +124,7 @@ CKthetaBandsPhotonPredictor::photonPossible( LHCb::RichRecSegment * segment,
     const Rich::RadiatorType rad = segment->trackSegment().radiator();
 
     // Central region cut
-    // Most useful for aerogel since true photons tend to be in the out regions of
+    // Most useful for aerogel since true photons tend to be in the outer regions of
     // the detector plane, and cutting central photons removes a significant number
     // of fake photon candidates
     const Gaudi::XYZPoint& locPos = pixel->radCorrLocalPositions().position(rad);
