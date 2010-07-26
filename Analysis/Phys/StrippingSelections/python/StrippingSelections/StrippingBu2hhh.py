@@ -3,12 +3,24 @@
 # Options for pre-selecting B->hhh' events
 #
 # @author Jussara  Miranda, Alvaro Gomes, Rafael Coutinho
-# @date 2010-07-15
+# @date 2010-07-26
 #
 ########################################################################                   
 
 from Configurables import GaudiSequencer, CombineParticles
 from StrippingConf.StrippingLine import StrippingLine
+
+from Configurables import LoKi__VoidFilter as VoidFilter
+from Configurables import LoKi__Hybrid__CoreFactory as CoreFactory
+modules =  CoreFactory('CoreFactory').Modules
+for i in [ 'LoKiTrigger.decorators' ] :
+    if i not in modules : modules.append(i)
+   
+######################################################################## 
+
+StripBu2hhh_NumTracksGEC = VoidFilter('StripBu2hhh_NumTracksGEC'
+                  , Code = "TrSOURCE('Rec/Track/Best') >> (TrSIZE < 240 )"
+                  )
 
 StripBu2hhh = CombineParticles("StripBu2hhh")
 StripBu2hhh.InputLocations  = ["StdLoosePions"]
@@ -21,5 +33,5 @@ StripBu2hhh.MotherCut = "(BPVDIRA>0.999) & (VFASPF(VMINVDDV(PRIMARY))>3) & (VFAS
 # Create the line for this selection
 line = StrippingLine('Bu2hhhLine'
                , prescale = 1
-               ,  algos = [ StripBu2hhh ]
+               ,  algos = [ StripBu2hhh_NumTracksGEC, StripBu2hhh ]
                )
