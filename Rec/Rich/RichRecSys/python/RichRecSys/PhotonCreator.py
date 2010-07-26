@@ -41,10 +41,10 @@ class RichPhotonCreatorConfig(RichConfigurableUser):
 
         from Configurables import RichTools
 
-        # First data options. To be removed eventually...
-        if "earlyData" in self.getProp("SpecialData") :
-            if not self.getProp("Simulation") :
-                self.richTools().photonReco().CKThetaQuartzRefractCorrections = [ -0.00325,0,0 ]
+        # First data options. To be removed eventually ...
+        #if "earlyData" in self.getProp("SpecialData") :
+        if not self.getProp("Simulation") :
+            self.richTools().photonReco().CKThetaQuartzRefractCorrections = [ -0.00625,0,0 ]
 
         # Context
         context = self.getProp("Context")
@@ -81,8 +81,32 @@ class RichPhotonCreatorConfig(RichConfigurableUser):
             # ================================================================
             # Photon Predictor cuts
             # ================================================================
+            # No # sigma cut 
+            creator.Predictor.NSigma         = [  17,    8,     12    ]
+            # Min and max search window for track centre - hit seperation
+            creator.Predictor.MinTrackROI    = [  230,    0,     0    ]
+            creator.Predictor.MaxTrackROI    = [  540,   86,    165   ]
+            # ================================================================
+
+            # ================================================================
+            # Photon Creator cuts
+            # ================================================================
+            # Allow all photon CK theta values
+            creator.MinAllowedCherenkovTheta = [ 0.200, 0.005, 0.005 ]
+            creator.MaxAllowedCherenkovTheta = [ 0.310, 0.075, 0.035 ]
             # No # sigma cut
-            creator.Predictor.NSigma         = [ 25,   8,   12  ]
+            creator.NSigma                   = [ 9,    6.5,   5.5   ]
+            # Any probability
+            creator.MinPhotonProbability     = [ 1e-15, 1e-15, 1e-15 ]
+            # ================================================================
+
+        elif selMode == "OldTight" :
+            
+            # ================================================================
+            # Photon Predictor cuts
+            # ================================================================
+            # No # sigma cut
+            creator.Predictor.NSigma         = [  25,    8,     12    ]
             # Min and max search window for track centre - hit seperation
             creator.Predictor.MinTrackROI    = [  230,    0,     0    ]
             creator.Predictor.MaxTrackROI    = [  540,   86,    165   ]
