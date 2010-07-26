@@ -6,6 +6,71 @@ Purpose: LHCb reconstruction packages.
          by one or more LHCb applications. 
 
 
+</PRE><H1><A NAME=v10r3>2010-07-26 RecSys v10r3</A></H1><PRE>
+This version uses Gaudi v21r10 and LHCb v31r3
+
+WARNING: an LHCb base package (RichRecBase) has been added to this version so might cause problems in configuration
+
+- New minor version to fix urgent problems in production:
+  . Crashes in brunel from a segfault in KalmanFitResult savannah bug #70643
+  . Rich processing speed improved by a factor of 5 with better Aerogel cuts
+
+- This release goes hand-in-hand with the CondDB patch #4301 which updates the tile calbration
+
+- Packages Added:
+  Rich/RichRecBase v4r0, required for the rich speed up.
+  This package comes from LHCb so will need to be removed again in the next release.
+
+- Packages modified:
+  Rich/RichGlobalPID v3r14p1, Rich/RichHPDImageAnalysis v1r1, Rich/RichRecMonitors v2r29,
+  Rich/RichRecQC v2r44, Rich/RichRecSys v3r31, Rich/RichRecTrackTools v1r23,
+  Tf/TsaAlgorithms v3r22p1, Tr/TrackFitEvent v5r2, Tr/TrackFitter v2r50,
+  Tr/TrackTools  v3r34
+
+- In Rich/RichGlobalPID v3r14p1:
+  . Add a fast approximate log(exp(x)-1) expression. 
+
+- In Rich/RichHPDImageAnalysis v1r1:
+  . Update to add additional histograms of X,Y offset vs copy nr. 
+
+- In Rich/RichRecMonitors v2r29:
+  . Update RichCherenkovResMoni to make some plots for real data where possible 
+
+- In Rich/RichRecQC v2r44:
+  . Reduce aerogel resolution plot range to +- 0.018 mrad 
+  . Turned on histogram production for Rich/RichHPDImageAnalyis monitor
+  . Add histogram axis labels to all plots in RichRecoQC. 
+  . Add an monitor monitoring option "RichPerfFromData" that runs the PID selections from RichPIDQC 
+    to monitor the PID performance without the need for MC information (i.e. on real data). 
+    NOTE : This option requires runtime access to DaVinci components, so has to be run under a combined environment 
+    like > SetupProject Brunel vXrY --runtime DaVinci vNrM --use DaVinciSys 
+    where vXrY and vNrM are compatible versions (share the same underlying projects). 
+    For this reason, it is not enabled by default in any histogram mode. 
+
+- In Rich/RichRecSys v3r31:
+  . Tighten up the search windows for Aerogel photons, to match the improved resolution 
+    using the new tile calibration DB values. CondDB patch #4301
+  . Add some small extensions to the Configurables for the GPID. 
+
+- In Rich/RichRecTrackTools v1r23:
+  . Tighten up the maximum CK theta resolution value cutoffs in RichFunctionalCKResForRecoTracks.cpp
+
+- In Tf/TsaAlgorithms v3r22p1:
+  . Fix hardcoding of first and last sectors in the overlap hit adder
+
+- In Tr/TrackFitEvent v5r2:
+  . added filtered states to FitNode 
+  . added boost allocator to FitNode 
+  . protected KalmanFitResult::computeChi2 against tracks with zero nodes 
+
+- In Tr/TrackFitter v2r50:
+  . fill filtered states in FitNode 
+
+- In Tr/TrackTools  v3r34:
+  . cleaned up TrackInterpolator by using cached filtered states in FitNode 
+
+
+
 </PRE><H1><A NAME=v10r2>2010-07-21 RecSys v10r2</A></H1><PRE>
 This version uses Gaudi v21r10 and LHCb v31r3
 
