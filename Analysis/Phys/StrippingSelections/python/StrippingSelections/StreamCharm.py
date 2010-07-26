@@ -115,7 +115,7 @@ stream.appendLines( [
 #        , StrippingDstarD02KKpipiRegular.line1
         , StrippingDstarD02KKmumuRobust.line1
         , StrippingDstarD02KKmumuRegular.line1
- 	,StrippingDs2piPhiConf().line() 
+# 	,StrippingDs2piPhiConf().line() 
     ] )
 stream.appendLines( StrippingDstarPromptWithD02HHConf().lines() )
 stream.appendLines( StrippingDstarD2KShhConf().MakeLines() )
