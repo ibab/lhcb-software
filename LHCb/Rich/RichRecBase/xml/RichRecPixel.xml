@@ -25,7 +25,6 @@
         &KeyedObject;
             
         <import name="GaudiKernel/ContainedObject"/>
-        <!--import name="LoKi/Range"/-->
         <import name="RichRecBase/RichRecPixelParentType"/>
         <import name="Kernel/RichRadiatorType"/>
         <import name="Kernel/RichDetectorType"/>
@@ -64,7 +63,7 @@
 
         <constructor 
                 desc     = "Constructor with arguments" 
-                initList = "m_hpdPixelCluster(hpdPixelCluster), m_globalPosition(gPos), m_localPosition(lPos), m_radCorrLocalPositions(lPos), m_currentBackground(0), m_parentType(parentType), m_parentPixel(parent)">
+                initList = "m_hpdPixelCluster(hpdPixelCluster), m_globalPosition(gPos), m_localPosition(lPos), m_radCorrLocalPositions(lPos), m_currentBackground(0), m_parentType(parentType), m_parentPixel(parent), m_photonDetOccupancy(0)">
                 <arg                  const="TRUE"  name="hpdPixelCluster" type="Rich::HPDPixelCluster" />
                 <arg                  const="TRUE"  name="gPos"       type="Gaudi::XYZPoint"            />
                 <arg                  const="TRUE"  name="lPos"       type="Gaudi::XYZPoint"            />
@@ -79,7 +78,7 @@ richRecTracks().reserve(3);
 
         <constructor 
                 desc     = "Constructor with arguments" 
-                initList = "m_hpdPixelCluster(smartID), m_globalPosition(gPos), m_localPosition(lPos), m_currentBackground(0), m_parentType(parentType), m_parentPixel(parent)">
+                initList = "m_hpdPixelCluster(smartID), m_globalPosition(gPos), m_localPosition(lPos), m_currentBackground(0), m_parentType(parentType), m_parentPixel(parent), m_photonDetOccupancy(0)">
                 <arg                  const="TRUE"  name="smartID"    type="LHCb::RichSmartID"          />
                 <arg                  const="TRUE"  name="gPos"       type="Gaudi::XYZPoint"            />
                 <arg                  const="TRUE"  name="lPos"       type="Gaudi::XYZPoint"            />
@@ -94,7 +93,7 @@ richRecTracks().reserve(3);
 
         <constructor 
                 desc     = "Copy Constructor. Creates a new RichRecPixel with the same physics content." 
-                initList = "KeyedObject&lt;int&gt;(), m_hpdPixelCluster(pixel.hpdPixelCluster()), m_globalPosition(pixel.globalPosition()), m_localPosition(pixel.localPosition()), m_radCorrLocalPositions(pixel.radCorrLocalPositions()), m_currentBackground(pixel.currentBackground()), m_parentType(pixel.parentType()), m_parentPixel(pixel.parentPixel()), m_richRecTracks(pixel.richRecTracks()), m_richRecPhotons(pixel.richRecPhotons())">
+                initList = "KeyedObject&lt;int&gt;(), m_hpdPixelCluster(pixel.hpdPixelCluster()), m_globalPosition(pixel.globalPosition()), m_localPosition(pixel.localPosition()), m_radCorrLocalPositions(pixel.radCorrLocalPositions()), m_currentBackground(pixel.currentBackground()), m_parentType(pixel.parentType()), m_parentPixel(pixel.parentPixel()), m_richRecTracks(pixel.richRecTracks()), m_richRecPhotons(pixel.richRecPhotons()), m_photonDetOccupancy(pixel.photonDetOccupancy())">
                 <arg  const="TRUE" name="pixel" type="LHCb::RichRecPixel" />
                 <code/>
         </constructor>
@@ -368,6 +367,13 @@ richRecTracks().reserve(3);
                 name    = "associatedCluster"
                 type    = "Rich::HPDPixelCluster"
         /-->
+
+        <attribute 
+                desc    = "The occupancy of the photon detector associated to this pixel" 
+                name    = "photonDetOccupancy"
+                type    = "unsigned int"
+                init    = "0"
+        />
 
 </class>
 

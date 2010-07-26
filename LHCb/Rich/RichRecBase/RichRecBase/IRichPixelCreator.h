@@ -4,9 +4,6 @@
  *
  *  Header file for RICH reconstruction tool interface : Rich::Rec::IPixelCreator
  *
- *  CVS Log :-
- *  $Id: IRichPixelCreator.h,v 1.14 2008-03-25 16:01:13 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */

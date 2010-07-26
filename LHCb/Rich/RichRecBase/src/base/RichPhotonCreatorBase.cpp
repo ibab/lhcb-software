@@ -28,7 +28,7 @@ namespace Rich
     PhotonCreatorBase::PhotonCreatorBase( const std::string& type,
                                           const std::string& name,
                                           const IInterface* parent )
-      : RichRecToolBase         ( type, name, parent ),
+      : ToolBase                ( type, name, parent ),
         m_hasBeenCalled         ( false ),
         m_photonPredictor       ( NULL ),
         m_photonSignal          ( NULL ),
@@ -77,13 +77,15 @@ namespace Rich
                        "The CK theta # sigma selection range for each radiator (Aero/R1Gas/R2Gas)");
       declareProperty( "MaxPhotons", m_maxPhotons = 9999999,
                        "The maximum number of photon candidates to allow per event" );
+      declareProperty( "MaxPhotDetOcc", m_maxHPDOccForReco = list_of(15)(99999)(99999),
+                       "Max Photon Detector occupancy for photon reconstruction (per radiator)" );
 
     }
 
     StatusCode PhotonCreatorBase::initialize()
     {
       // base class initilize
-      const StatusCode sc = RichRecToolBase::initialize();
+      const StatusCode sc = ToolBase::initialize();
       if ( sc.isFailure() ) { return sc; }
 
       if ( m_richRecPhotonLocation.empty() )
@@ -138,6 +140,8 @@ namespace Rich
                << endmsg;
       }
 
+      info() << "Maximun HPD pixels (Aero/R1Gas/R2Gas) = " << m_maxHPDOccForReco << endmsg;
+
       m_pidTypes = m_richPartProp->particleTypes();
       info() << "Particle types considered = " << m_pidTypes << endmsg;
 
@@ -152,7 +156,7 @@ namespace Rich
       printStats();
 
       // base class finalize
-      return RichRecToolBase::finalize();
+      return ToolBase::finalize();
     }
 
     // Method that handles various Gaudi "software events"
@@ -278,10 +282,6 @@ namespace Rich
                     for ( IPixelCreator::PixelRange::const_iterator iPixel = range.begin();
                           iPixel != range.end(); ++iPixel )
                     {
-                      //if ( msgLevel(MSG::VERBOSE) )
-                      //{
-                      //  verbose() << " -> Trying pixel " << (*iPixel)->key() << endmsg;
-                      //}
                       reconstructPhoton( segment, *iPixel );
                     } // pixel loop
 
@@ -341,6 +341,17 @@ namespace Rich
         verbose() << "Trying photon reco. with segment " << segment->key()
                   << " and pixel " << pixel->key() << " " << pixel->hpdPixelCluster()
                   << endmsg;
+      }
+
+      // Check HPD occupancy for this pixel
+      if ( pixel->photonDetOccupancy() > 
+           m_maxHPDOccForReco[segment->trackSegment().radiator()] )
+      {
+        if ( msgLevel(MSG::VERBOSE) )
+        {
+          verbose() << "   -> FAILED HPD occupancy check -> reject" << endmsg;
+        }
+        return NULL;
       }
 
       // check photon is possible before proceeding
@@ -611,8 +622,7 @@ namespace Rich
             hypo != m_pidTypes.end(); ++hypo )
       {
         const double predPixSig = m_photonSignal->predictedPixelSignal( photon, *hypo );
-        const double minPixSig  = m_minPhotonProb[ photon->richRecSegment()->trackSegment().radiator() ];
-        if ( predPixSig > minPixSig )
+        if ( predPixSig > m_minPhotonProb[photon->richRecSegment()->trackSegment().radiator()] )
         {
           keepPhoton = true;
         }

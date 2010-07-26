@@ -4,9 +4,6 @@
  *
  *  Header file for tool base class : Rich::Rec::PhotonCreatorBase
  *
- *  CVS Log :-
- *  $Id: RichPhotonCreatorBase.h,v 1.11 2007-08-13 12:41:32 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/05/2005
  */
@@ -272,9 +269,6 @@ namespace Rich
       /// Number of events processed tally
       unsigned int m_Nevts;
 
-      /// Tolerence on Cherenkov Angle
-      //std::vector<double> m_CKTol;
-
       /// N sigma for acceptance bands
       std::vector<double> m_nSigma;   
 
@@ -285,7 +279,10 @@ namespace Rich
       std::vector<double> m_minCKtheta;
 
       /// minimum cut value for photon probability
-      mutable std::vector<double> m_minPhotonProb;
+      std::vector<double> m_minPhotonProb;
+
+      /// Max Photon Detector occupancy for photon reconstruction (per radiator)
+      std::vector<double> m_maxHPDOccForReco;
 
       /// Flag to turn on or off the book keeping features to save cpu time.
       bool m_bookKeep;

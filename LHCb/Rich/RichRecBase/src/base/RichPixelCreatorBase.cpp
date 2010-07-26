@@ -333,7 +333,8 @@ namespace Rich
                       for ( LHCb::RichSmartID::Vector::const_iterator iID = smartIDs.begin();
                             iID != smartIDs.end(); ++iID )
                       {
-                        buildPixel( *iID );
+                        LHCb::RichRecPixel * pixel = buildPixel( *iID );
+                        if (pixel) pixel->setPhotonDetOccupancy(smartIDs.size());
                       }
 
                     }
@@ -356,7 +357,11 @@ namespace Rich
                         {
                           // make a single pixel for this cluster
                           LHCb::RichRecPixel * pixel = buildPixel( (*iC)->pixels() );
-                          if (pixel) pixel->setAssociatedCluster( (*iC)->pixels() );
+                          if (pixel) 
+                          {
+                            pixel->setAssociatedCluster( (*iC)->pixels() );
+                            pixel->setPhotonDetOccupancy(smartIDs.size());
+                          }
                         }
                         else
                         {
@@ -365,7 +370,11 @@ namespace Rich
                                 iID != (*iC)->pixels().smartIDs().end(); ++iID )
                           {
                             LHCb::RichRecPixel * pixel = buildPixel( *iID );
-                            if (pixel) pixel->setAssociatedCluster( (*iC)->pixels() );
+                            if (pixel) 
+                            {
+                              pixel->setAssociatedCluster( (*iC)->pixels() );
+                              pixel->setPhotonDetOccupancy(smartIDs.size());
+                            }
                           }
                         }
 

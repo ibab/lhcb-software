@@ -4,6 +4,13 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+! 2010-07-26 - Chris Jones
+ - Add anew data member to RichRecPixel to store the occupancy of the HPD
+   the pixel is in.
+ - Update the pixel creator base class to set the pixel HPD occupancy.
+ - Add a new option to the photon creator base class to reject pixels based
+   on a HPD maximum occupancy (different for each radiator).
+
 !===================== RichRecBase v3r31 2010-07-19 ==========================
 ! 2010-07-17 - Chris Jones
  - Protect some debug() calls behind msgLevel(MSG::DEBUG) checks
