@@ -30,7 +30,8 @@ from Configurables import ( GaudiSequencer, MessageSvc )
 class RichRecQCConf(RichConfigurableUser):
 
     ## Possible used Configurables
-    __used_configurables__ = [ (RichAlignmentConf,None), (RichPIDQCConf,None) ]
+    __used_configurables__ = [ (RichAlignmentConf,None) ]
+    #__used_configurables__ = [ (RichAlignmentConf,None), (RichPIDQCConf,None) ]
 
     ## Default Histogram set
     __default_histo_set__ = "OfflineFull"
