@@ -578,6 +578,8 @@ class Brunel(LHCbConfigurableUser):
         self.setOtherProps(RecSysConf(),["Histograms","SpecialData","Context",
                                          "OutputType","DataType","Simulation"])
         self.setOtherProps(RecMoniConf(),["Histograms","Context","DataType"])
+        self.setOtherProps(TrackSys(),["DataType"])
+        
         if self.isPropertySet("RecoSequence") :
             self.setOtherProp(RecSysConf(),"RecoSequence")
         GaudiKernel.ProcessJobOptions.PrintOn()

@@ -6,6 +6,10 @@ Purpose: LHCb reconstruction program
 </PRE><H1><A NAME=v37r6>2010-07-26 Brunel v37r6</A></H1><PRE>
 - Dummy release to pick up the latest Rec, v10r3
 
+- Updated references for tests
+
+- Propagate DataType to TrackSys
+
 </PRE><H1><A NAME=v37r5>2010-07-22 Brunel v37r5</A></H1><PRE>
 - Changes to references to reflect changes in Brunel v37r5 output:
   . OTHitEfficiencyMonitor: Add 2D histos per layer (TrackMonitors)
