@@ -22,8 +22,7 @@ class Hlt2B2HHLinesConf(HltLinesConfigurableUser) :
         from Configurables import HltANNSvc
         from Configurables import CombineParticles, PhysDesktop
         from Configurables import FilterDesktop
-        from Hlt2SharedParticles.GoodParticles import GoodPions            
-        
+        from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedPions        
         
 
         Hlt2B2HH = Hlt2Member( CombineParticles 
@@ -32,7 +31,7 @@ class Hlt2B2HHLinesConf(HltLinesConfigurableUser) :
                                , CombinationCut = "((AM> %(BMassWinLow)s *MeV) & (AM< %(BMassWinHigh)s *MeV) & (AMAXDOCA('LoKi::TrgDistanceCalculator')< %(doca)s ))" % self.getProps()
                                , DaughtersCuts = { "pi+" : "(PT> %(PionPTmin)s *MeV) & (MIPDV(PRIMARY)> %(PionIPmin)s )" % self.getProps() }
                                , MotherCut = "(BPVIP()< %(BIP)s ) & (BPVVDSIGN> %(BSignDistFlight)s ) & (INTREE ( (ABSID=='pi+') & (PT> %(PionPTmax)s *MeV))) & ( INTREE(( ABSID=='pi+') & (MIPDV(PRIMARY)> %(PionIPmax)s )))" % self.getProps()
-                               , InputLocations = [GoodPions])
+                               , InputLocations = [ BiKalmanFittedPions ])
         ###########################################################################
         # Define the Hlt2 Line
         #
