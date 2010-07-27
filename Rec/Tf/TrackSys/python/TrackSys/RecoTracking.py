@@ -73,13 +73,18 @@ def RecoTracking(exclude=[]):
          Tf__PatVeloGeneralTracking("PatVeloGeneralTracking").PointErrorMin = 2*mm;
          Tf__PatVeloGeneralTracking("PatVeloGeneralTracking").addTool(Tf__PatVeloTrackTool("PatVeloTrackTool"))
          Tf__PatVeloTrackTool("PatVeloTrackTool").highChargeFract = 0.5;
+         if TrackSys().timing() :
+            Tf__PatVeloGeneralTracking("PatVeloGeneralTracking").TimingMeasurement = True;
       else:
          GaudiSequencer("RecoVELOSeq").Members += [ Tf__PatVeloRTracking("PatVeloRTracking"),
                                                     Tf__PatVeloSpaceTracking("PatVeloSpaceTracking"),
                                                     Tf__PatVeloGeneralTracking("PatVeloGeneralTracking")]
          Tf__PatVeloSpaceTracking("PatVeloSpaceTracking").addTool( Tf__PatVeloSpaceTool(), name="PatVeloSpaceTool" )
          Tf__PatVeloSpaceTracking("PatVeloSpaceTracking").PatVeloSpaceTool.MarkClustersUsed = True;
-         
+         if TrackSys().timing() :
+            Tf__PatVeloSpaceTracking("PatVeloSpaceTracking").TimingMeasurement = True;
+            Tf__PatVeloRTracking("PatVeloRTracking").TimingMeasurement = True;
+            Tf__PatVeloGeneralTracking("PatVeloGeneralTracking").TimingMeasurement = True;
          
          
    ## Special OT decoder for cosmics to merge spills.
@@ -124,7 +129,9 @@ def RecoTracking(exclude=[]):
       track.DetectorList += [ "ForwardPat" ]
       GaudiSequencer("TrackForwardPatSeq").Members +=  [ PatForward("PatForward") ]
       from PatAlgorithms import PatAlgConf
-      PatAlgConf.ForwardConf().configureAlg()      
+      PatAlgConf.ForwardConf().configureAlg()
+      if TrackSys().timing() :
+         PatForward("PatForward").TimingMeasurement = True;    
       cloneKiller.TracksInContainers += ["Rec/Track/Forward"]
    
    ## Seed pattern
@@ -136,6 +143,8 @@ def RecoTracking(exclude=[]):
                                                     Tf__Tsa__SeedTrackCnv( "TsaSeedTrackCnv" )]
       from TsaAlgorithms import TsaAlgConf
       TsaAlgConf.TsaSeedConf().configureAlg()
+      if TrackSys().timing() :
+         Tf__Tsa__Seed("TsaSeed").TimingMeasurement = True;
       
    if "PatSeed" in trackAlgs :
       track.DetectorList += [ "SeedPat" ]
@@ -143,6 +152,10 @@ def RecoTracking(exclude=[]):
       from PatAlgorithms import PatAlgConf
       PatAlgConf.SeedingConf().configureAlg()
       
+      if TrackSys().timing() :
+         PatSeeding("PatSeeding").TimingMeasurement = True;
+      
+
       if TrackSys().cosmics() :
          from PatAlgorithms import PatAlgConf
          PatAlgConf.CosmicConf().configureAlg()
@@ -172,6 +185,9 @@ def RecoTracking(exclude=[]):
       from TrackMatching import TrackMatchConf
       TrackMatchConf.MatchingConf().configureAlg()      
       TrackMatchVeloSeed("TrackMatch").LikCut = -99999.
+      if TrackSys().timing() :
+         TrackMatchVeloSeed("TrackMatch").TimingMeasurement = True;
+
    if "PatMatch" in trackAlgs :
       track.DetectorList += [ "MatchPat" ]
       GaudiSequencer("TrackMatchPatSeq").Members += [ PatMatch("PatMatch") ]
@@ -185,6 +201,9 @@ def RecoTracking(exclude=[]):
       cloneKiller.TracksInContainers += ["Rec/Track/Downstream"]
       from PatAlgorithms import PatAlgConf
       PatAlgConf.DownstreamConf().configureAlg()
+      if TrackSys().timing() :
+         PatDownstream("PatDownstream").TimingMeasurement = True;
+      
       
    ## Velo-TT pattern
    if "VeloTT" in trackAlgs :
@@ -193,6 +212,8 @@ def RecoTracking(exclude=[]):
       from PatVeloTT import PatVeloConf
       PatVeloConf.PatVeloTTConf().configureAlg()      
       cloneKiller.TracksInContainers += ["Rec/Track/VeloTT"]
+      if TrackSys().timing() :
+         PatVeloTT("PatVeloTT").TimingMeasurement = True;
          
 
    ### Clean clone and fit
