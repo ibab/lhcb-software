@@ -1,10 +1,13 @@
-! $Id: release.notes,v 1.56 2010-06-08 17:18:06 ggiacomo Exp $
+! $Id: release.notes,v 1.57 2010-07-27 13:57:21 ggiacomo Exp $
 ! Package     : OnlineHistDB
 ! Responsible : Giacomo Graziani
 !
 ! user manual in pdf format is available at /afs/cern.ch/user/g/ggrazian/www/lhcb/histdbdoc.pdf
 ! or using makedoc script in this folder
 !
+
+! 20100727 v7r1
+- small fixes to web interface
 
 ! 20100608 v7r0
 - new variables for conditional analysis
