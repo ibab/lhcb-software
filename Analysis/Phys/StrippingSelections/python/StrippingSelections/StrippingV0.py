@@ -59,7 +59,7 @@ Get the list of *ALL* configured lines
 # =============================================================================
 __author__  = 'Vanya BELYAEV Ivan.Belyaev@itep.ru'
 __date__    = '2010-01-14'
-__version__ = 'CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.10 $'
+__version__ = 'CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.11 $'
 # =============================================================================
 
 from Gaudi.Configuration       import *
@@ -114,8 +114,8 @@ class StrippingV0Conf(LHCbConfigurableUser):
         'Use_Geo_K0S'            : True               ## Use 'Geometrical' selection of K0S
         , 'Use_Geo_Lambda'       : True               ## Use 'Geometrical' selection of Lambda0
         , 'SameSignPrescale'     : 0.10               ## Prescale same-sign combinations
-        , 'K0S_DDPrescale'       : 0.20               ## Prescale K0S DD-combinations
-        , 'Lambda0_DDPrescale'   : 1.00               ## Prescale Lambda0 DD-combinations
+        , 'K0S_DDPrescale'       : 0.04               ## Prescale K0S DD-combinations
+        , 'Lambda0_DDPrescale'   : 0.20               ## Prescale Lambda0 DD-combinations
         , 'TrackCutSet'          : "NULL"             ## TrackCutsSet to be used
         , 'TrackQuality'         : " TRCHI2DOF < 25 " ## Track quality selection 
         , 'VertexChi2'           :  25                ## Cut on Vertex chi2-quality
@@ -204,7 +204,7 @@ class StrippingV0Conf(LHCbConfigurableUser):
 
         line_K0 = StrippingLine (
             'K0SLine'          ,
-            prescale   = 1     ,
+            prescale   = 0.2   ,
             checkPV    = True  , ## attention! PV is required!
             postscale  = 1     ,
             HLT        = self.getProp('HLT') , 
@@ -321,7 +321,7 @@ class StrippingV0Conf(LHCbConfigurableUser):
         
         line_L0 = StrippingLine (
             'Lambda0Line'      ,
-            prescale   = 1     ,
+            prescale   = 0.2     ,
             checkPV    = True  , ## attention! PV is required!
             postscale  = 1     ,
             HLT        = self.getProp('HLT') , 

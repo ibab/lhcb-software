@@ -5,13 +5,22 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-07-27 - Greig Cowan
+ - Prescaled three V0 and three V0Geo lines by a further factor 5 to get retention
+   rate down to something acceptable (<1%).
+  StrippingK0SLine
+  StrippingK0S_DDLine
+  StrippingKSAllGeoLine
+  StrippingLambda0Line
+  StrippingLambda0_DDLine
+  StrippingLambdaAllGeoLine
+
+ - Altered cuts in B2KShh line on behalf of Jussara.
+ 
 ! 2010-07-27 - Thomas BLAKE
  - Updated stream Bhadron to add B2D3H lines from S. Blusk
  - Added StrippingB2D3H.py
 
-
-
-<<<<<<< release.notes
 ! 2010-07-26 - Jibo He
  - StrippingCcbar2Ppbar.py
    . Ccbar2PpbarLoose prescaled by 100
@@ -25,12 +34,10 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
    . IncDiElectron: PIDe>2 added, PT cut increased to 1 GeV
    . BiasedIncDiElectron: PIDe>2 added, PT cut increased to 500 MeV
 
-=======
 ! 2010-07-26 - Anton Poluektov 
  - updated StrippingB02D0Kstar_D02KPiPi0.py and added a new 
    StrippingB02D0Kstar_D02K3Pi.py lines by Aurelien Martens
 
->>>>>>> 1.296
 ! 2010-07-26 - Phillip Urquijo
  - updates to StrippingB2XMuMuSS.py, StrippingB2XuMuNu.py, StrippingD2XuMuMu.py, StreamSemileptonic.py
  - timing improvements (by reordering reconstruction order) and cut updates for data.

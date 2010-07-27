@@ -69,14 +69,14 @@ KsAllCombineGeo = StrippingMember(
 ##########################################################################
 line_lambda_all= StrippingLine(
     'LambdaAllGeoLine'
-    , prescale = 0.5
+    , prescale = 0.1
     , HLT = "HLT_PASS_RE('Hlt1MBMicro.*Decision')"
     , algos = [  LambdaAllCombineGeo ])
 
 
 line_KS_all= StrippingLine(
     'KSAllGeoLine'
-    , prescale = 0.5
+    , prescale = 0.1
     , HLT = "HLT_PASS_RE('Hlt1MBMicro.*Decision')"
     , algos = [  KsAllCombineGeo ])
 

@@ -1,7 +1,7 @@
 
 __author__ = 'Jussara Miranda'
 __date__ = '02/04/2010'
-__version__ = '$Revision: 1.2 $'
+__version__ = '$Revision: 1.3 $'
 
 '''
 Stripping selection for B->KShh' , B==(Bs,Bd); h,h'=(K+-,pi+-) 
@@ -24,9 +24,9 @@ class StrippingB2KShhConf(LHCbConfigurableUser):
         ,  'B_Vchi2'         :  15.   
         ,  'B_IPPTmax'       :  0.05   
         ,  'B_pointpt'       :  0.2   
-        ,  'B_IPsumhh'       :  0.08 
+        ,  'B_IPsumhh'       :  0.0 
 	,  'TrackCHI2DOF'    :  10. 
-        ,  'DOCAhh'          :  0.2   
+        ,  'DOCAhh'          :  0.3   
         ,  'KS_Mwindow'      :  30.   
         ,  'B_IP_LL'         :  0.08   
         ,  'B_PTmed_LL'      :  500.   
