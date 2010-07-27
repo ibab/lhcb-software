@@ -1,14 +1,14 @@
 package Gaucho
-version v6r27
+version v6r28
 branches Gaucho src cmt doc
 
 # add "use" statements
 #use GaudiKernel v*  
-use AIDA v* LCG_Interfaces
-use DIM v* Online
+use AIDA     v* LCG_Interfaces
+use DIM      v* Online
 use GaudiAlg v*  
-use Boost v* LCG_Interfaces
-use ROOT v* LCG_Interfaces
+use Boost    v* LCG_Interfaces
+use ROOT     v* LCG_Interfaces
 use DAQEvent v* Event
 use MDF      v* DAQ
 use OnlineKernel v* Online
