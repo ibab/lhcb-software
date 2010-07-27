@@ -89,7 +89,7 @@ namespace  {
 }
 
 DimTaskFSM::DimTaskFSM(IInterface*) 
-: m_name(RTL::processName()), m_stateName(ST_NAME_UNKNOWN), 
+: m_name(RTL::processName()), m_stateName(ST_NAME_UNKNOWN), m_prevStateName(ST_NAME_UNKNOWN),
   m_haveEventLoop(false), m_refCount(1)
 {
   m_propertyMgr  = new PropertyMgr(this);
@@ -197,6 +197,7 @@ std::string DimTaskFSM::stateName(int state) {
 
 StatusCode DimTaskFSM::_declareState(const std::string& new_state)  {
   std::string old_state = m_stateName;
+  m_prevStateName = m_stateName;
   m_stateName = new_state;
   //output(MSG::DEBUG,std::string("Declare state:"+new_state).c_str());
   m_service->updateService((char*)m_stateName.c_str());

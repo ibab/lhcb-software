@@ -98,6 +98,8 @@ namespace LHCb  {
     std::string   m_name;
     /// Variable to contain the state name
     std::string   m_stateName;
+    /// Variable to contain the previous state name
+    std::string   m_prevStateName;
     /// Variable to contain the process name
     std::string   m_procName;
     /// Pointer to dim command to treceive transition changes

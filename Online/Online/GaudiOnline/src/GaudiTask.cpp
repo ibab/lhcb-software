@@ -179,6 +179,9 @@ void GaudiTask::handle(const Incident& inc)    {
   if ( inc.type() == "DAQ_ERROR" )  {
     IOCSENSOR.send(this,ERROR);
   }
+  if ( inc.type() == "DAQ_ERROR_CLEAR" )  {
+    declareState(ST_RUNNING);
+  }
   else if ( inc.type() == "DAQ_FATAL" )  {
     error();
   }
