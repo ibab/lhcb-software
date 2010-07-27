@@ -49,7 +49,7 @@ Seed::Seed(const std::string& name,
   declareProperty( "maxITHits" ,  m_maxNumberITHits = 3000);  
   declareProperty( "maxOTHits" , m_maxNumberOTHits = 10000 );
   declareProperty("ITLiteClusters", m_clusterLocation = LHCb::STLiteClusterLocation::ITClusters);
-
+  declareProperty( "TimingMeasurement", m_doTiming = true);
 
 }
 
@@ -92,6 +92,12 @@ StatusCode Seed::initialize()
   m_extendStubs =  tool<ITsaStubExtender>("Tf::Tsa::StubExtender","stubExtender",this);
 
   
+  if ( m_doTiming) {
+    m_timerTool = tool<ISequencerTimerTool>( "SequencerTimerTool" );
+    m_timerTool->increaseIndent();
+    m_seedTime = m_timerTool->addTimer( "Internal TsaSeeding" );
+    m_timerTool->decreaseIndent();
+  }
   
   return sc;
 }
@@ -100,7 +106,9 @@ StatusCode Seed::execute(){
   //-------------------------------------------------------------------------
   //  Steering routine for track seeding
   //-------------------------------------------------------------------------
-
+ 
+  if ( m_doTiming ) m_timerTool->start( m_seedTime );
+  
   //  startTimer();
   SeedTracks* seedSel = new SeedTracks();    //  Selected seed candidates
   seedSel->reserve(1000);
@@ -116,12 +124,12 @@ StatusCode Seed::execute(){
       // give some indication that we had to skip this event
       // (ProcStatus returns zero status for us in cases where we don't
       // explicitly add a status code)
-      procStat->addAlgorithmStatus( name(), "Tracking", "LimitOfITHitsExceeded", -3 , true );
-   
-    return Warning("To many IT hits event rejected", StatusCode::SUCCESS, 1);
+     procStat->addAlgorithmStatus( name(), "Tracking", "LimitOfITHitsExceeded", -3 , true );
+     return Warning("To many IT hits event rejected", StatusCode::SUCCESS, 1);
   }  
 
- 
+  
+
   const unsigned int nHitsInOT = m_rawBankDecoder->totalNumberOfHits();
   if (nHitsInOT > m_maxNumberOTHits){
     LHCb::ProcStatus* procStat =
@@ -130,7 +138,7 @@ StatusCode Seed::execute(){
       // give some indication that we had to skip this event
       // (ProcStatus returns zero status for us in cases where we don't
       // explicitly add a status code)
-     procStat->addAlgorithmStatus( name(), "Tracking", "LimitOfOTHitsExceeded", -3 , true );
+     procStat->addAlgorithmStatus( name(), "Tracking", "LimitOfOTHitsExceeded", -3 , true )
     return Warning("To Many OT hits event rejected", StatusCode::SUCCESS,1); 
   }
 
@@ -340,5 +348,7 @@ StatusCode Seed::execute(){
 
   debug() << "Created " << seedSel->size() << " SeedTracks at " << m_seedTrackLocation << endreq;
 
+  if ( m_doTiming ) m_timerTool->stop( m_seedTime );
+  
   return StatusCode::SUCCESS;
 }
