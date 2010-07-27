@@ -13,8 +13,6 @@
 #include "xercesc/util/XMLUni.hpp"
 #include "xercesc/util/XMLURL.hpp"
 #include "xercesc/util/XMLString.hpp"
-#include "xercesc/dom/DOMImplementation.hpp"
-#include "xercesc/dom/DOMWriter.hpp"
 #include "xercesc/dom/DOM.hpp"
 
 #include <memory>
@@ -197,10 +195,19 @@ void XMLDocument::commit(const string& fname)    {
       string xmlfile = getfile(fname,true);
       XMLStr ii("LS");
       DOMImplementation *imp = DOMImplementationRegistry::getDOMImplementation(ii);
-      DOMWriter         *wr  = ((DOMImplementationLS*)imp)->createDOMWriter();
       XMLFormatTarget   *tar = new LocalFileFormatTarget(xmlfile.c_str());
+#if _XERCES_VERSION <= 30000
+      DOMWriter         *wr  = ((DOMImplementationLS*)imp)->createDOMWriter();
       wr->setFeature(XMLUni::fgDOMWRTFormatPrettyPrint, true);
       wr->writeNode(tar, *m_doc);
+#else
+      DOMLSOutput       *out = imp->createLSOutput();
+      out->setByteStream(tar);
+      DOMLSSerializer   *wr = imp->createLSSerializer();
+      wr->getDomConfig()->setParameter(XMLStr("format-pretty-print"), true);
+      wr->write(m_doc, out);
+      out->release();
+#endif
       wr->release();
       delete  tar;
     }
