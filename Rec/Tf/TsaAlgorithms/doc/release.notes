@@ -3,6 +3,8 @@
 ! Responsible : M Needham
 ! Purpose     : Tsa algorithms
 !----------------------------------------------------------------------------
+! 2010-07-27 Stephanie Hansmann-Menzemer
+ - add switches for timing measurements
 
 !======================= TsaAlgorithms v3r22p1 2010-07-26 ====================
 ! 2010-07-23  M Needham
