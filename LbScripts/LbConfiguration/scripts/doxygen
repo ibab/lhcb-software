@@ -2,7 +2,7 @@
 
 LCGCMT_VERSION=
 #DOXYGEN_VERSION="-v 1.6.2"
-DOXYGEN_VERSION=$(getExtVersion doxygen)
+DOXYGEN_VERSION="-v $(getExtVersion doxygen)"
 
 while [ $# -ne 0 ] ; do
 	case $1 in
