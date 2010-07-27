@@ -4,6 +4,9 @@
 ! Purpose     : The Rich Global PID algorithm
 !-----------------------------------------------------------------------------
 
+! 2010-07-27 - Chris Jones
+ - Tidy up a little the previous commit.
+
 !======================= RichGlobalPID v3r14p1 2010-07-26 =====================
 ! 2010-07-25 - Chris Jones
  - Add a fast approximate log(exp(x)-1) expression.
