@@ -1,5 +1,5 @@
 package DaVinciSys
-version v25r6
+version v25r7
 
 branches doc cmt
 
@@ -7,10 +7,6 @@ branches doc cmt
 use  DaVinci                 	v25r6   Phys
 use  DaVinciTests               v1r1
 
-# Patches
-use  DaVinciTools               v21r3p1 Phys
-use  DecayTreeFitter            v1r9    Phys
-use  LoKiFitters                v2r6    Phys
 # Declare this as a container package
 apply_pattern container_package
 
