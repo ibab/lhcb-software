@@ -4,11 +4,15 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2010-07-27 - Chris Jones
+ - Temporarily disable the PID checks from data, since there are problems
+   with the Configurables.
+ - Revert an inadvertant change in the number of bins in the pixel monitor
+
 !======================= RichRecQC v2r44 2010-07-26 ========================
 ! 2010-07-26 - Thomas BLAKE
  - Update Configuration.py to turn on histogram production for image centre 
 	 analysis.
-
 
 ! 2010-07-26 - Chris Jones
  - Fix for problem with the import of RichPIDQCConf

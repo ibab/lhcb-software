@@ -4,8 +4,6 @@
  *
  *  Implementation file for algorithm class : Rich::Rec::MC::HPDHitsMoni
  *
- *  $Id: RichHPDHitsMoni.cpp,v 1.12 2010-02-11 20:01:30 jonrob Exp $
- *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
  */

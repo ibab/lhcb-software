@@ -14,13 +14,13 @@ from Configurables import ( GaudiSequencer, MessageSvc )
 
 # -------------------------------------------------------------------------------------------
 # Workaround for Configurables problem
-import Configurables
-if "RichPIDQCConf" in Configurables.__all__:
-    from Configurables import RichPIDQCConf
-else:
-    from Gaudi.Configuration import ConfigurableUser
-    class RichPIDQCConf(ConfigurableUser):
-        pass
+#import Configurables
+#if "RichPIDQCConf" in Configurables.__all__:
+#    from Configurables import RichPIDQCConf
+#else:
+#    from Gaudi.Configuration import ConfigurableUser
+#    class RichPIDQCConf(ConfigurableUser):
+#        pass
 # -------------------------------------------------------------------------------------------
 
 ## @class RichRecQCConf
@@ -706,32 +706,30 @@ class RichRecQCConf(RichConfigurableUser):
 
         check = "RichPerfFromData"
         if check in checks:
-            
+
+            pass # Disable until COnfigurable problems are fixed
+        
             # Warning : This option requires access to some items from the Analysis software stack
             #         : Will only work in a Brunel + DaVinci software environment
             #         : Use 'SetupProject Brunel vXrY --runtime DaVinci vNrM --use DaVinciSys'
             
-            from Configurables import ( GaudiSequencer, ChargedProtoParticleAddRichInfo,
-                                        ChargedProtoCombineDLLsAlg, RichPIDQCConf )
+            #from Configurables import ( GaudiSequencer, ChargedProtoParticleAddRichInfo,
+            #                            ChargedProtoCombineDLLsAlg, RichPIDQCConf )
  
             # General sequence
-            seq = self.newSeq(sequence,check)
+            #seq = self.newSeq(sequence,check)
 
             # make sure ProtoParticles are all up to date with the RICH info
-            seq.Members += [ ChargedProtoParticleAddRichInfo("ChargedProtoPAddRich"),
-                             ChargedProtoCombineDLLsAlg("ChargedProtoPCombDLL") ]
+            #seq.Members += [ ChargedProtoParticleAddRichInfo("ChargedProtoPAddRich"),
+            #                 ChargedProtoCombineDLLsAlg("ChargedProtoPCombDLL") ]
 
             # Set up PID monitoring sequence
-            pidSeq = GaudiSequencer("RichPIDSelections")
-            seq.Members += [pidSeq]
+            #pidSeq = GaudiSequencer("RichPIDSelections")
+            #seq.Members += [pidSeq]
 
             # Get the PID QC configurable
-            pidqcConf = self.getRichCU(RichPIDQCConf)
+            #pidqcConf = self.getRichCU(RichPIDQCConf)
 
             # Set options
-            self.setOtherProps(pidqcConf,['OutputLevel','Context'])
-            pidqcConf.setProp("CalibSequencer",pidSeq)
-
-            # Only run the PID monitors, not the selections themselves
-            #pidqcConf.RunSelection = False
-            #pidqcConf.RunMonitors = True
+            #self.setOtherProps(pidqcConf,['OutputLevel','Context'])
+            #pidqcConf.setProp("CalibSequencer",pidSeq)

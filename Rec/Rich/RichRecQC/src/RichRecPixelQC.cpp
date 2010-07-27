@@ -62,7 +62,7 @@ StatusCode PixelQC::prebookHistograms()
                  "Average overall HPD occupancy (nHits>0)",
                  0.5, 150.5, 150 );
     richHisto1D( Rich::HistogramID("nTotalPixs",*rich), 
-                 "Overall occupancy (nHits>0)", -0.5, m_maxPixels+0.5, m_maxPixels+1 );
+                 "Overall occupancy (nHits>0)", 0, m_maxPixels, nBins1D() );
     richHisto1D( Rich::HistogramID("nActiveHPDs",*rich), 
                  "# Active HPDs (nHits>0)", -0.5, 300.5, 301 );
   }

@@ -4,9 +4,6 @@
  *
  *  Implementation file for monitor : Rich::DAQ::RawDataSize
  *
- *  CVS Log :-
- *  $Id: RichRawDataSize.cpp,v 1.11 2010-02-11 20:01:30 jonrob Exp $
- *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2008-10-14
  */
