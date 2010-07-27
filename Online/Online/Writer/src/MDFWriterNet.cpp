@@ -205,6 +205,7 @@ void MDFWriterNet::constructNet()
   declareProperty("MaxQueueSizeBytes",     m_maxQueueSizeBytes=1073741824);
   declareProperty("EnableMD5",             m_enableMD5=false);
   declareProperty("UpdatePeriod",          m_UpdatePeriod=2); //0 is no update
+  declareProperty("MaxRetry",              m_MaxRetry=5); //0 is no retry, but try once 
   m_log = new MsgStream(msgSvc(), name());
 }
 
@@ -289,10 +290,10 @@ StatusCode MDFWriterNet::initialize(void)
     m_MonitorSvc->declareInfo("TotEvts", m_TotEvts, "Total events seen", this);
   }
 
-
   m_discardCurrentRun = false;
   m_currentRunNumber=0;
   m_CleanUpStop = false;
+  m_Finalized = false;
 
   if (pthread_mutex_init(&m_SyncFileList, NULL)) {
     *m_log << MSG::ERROR << WHERE << "Failed to initialize mutex" << endmsg;
@@ -318,12 +319,13 @@ StatusCode MDFWriterNet::finalize(void)
          << " Finalizing." << endmsg;
 
   m_CleanUpStop = true;
+  m_StopRetry = true;
+  m_Finalized = true;
 
   File *tmpFile;
   tmpFile = m_openFiles.getFirstFile();
 
   while(tmpFile) {
-
     if(tmpFile->isOpen()) {
       *m_log << MSG:: INFO << WHERE
              << "Closing file " << *(tmpFile->getFileName())
@@ -600,12 +602,11 @@ void MDFWriterNet::closeFile(File *currFile)
  */
 void  MDFWriterNet::handle(const Incident& inc)    {
    *m_log << MSG::INFO << "Got incident:" << inc.source() << " of type " << inc.type() << endmsg;
-  if (inc.type() == "DAQ_CANCEL" || inc.type() == "DAQ_ERROR")  {
+  if (inc.type() == "DAQ_CANCEL" ||  inc.type() == "DAQ_ERROR" ) {
       this->stopRetrying();
       m_srvConnection->stopRetrying();
   }
 }
-
 /*
  * Stop the endless retries on XML RPC call failures.
  */
@@ -933,7 +934,8 @@ inline unsigned int MDFWriterNet::getRunNumber(MDFHeader *mHeader, size_t /*len*
 /**
  * For statistics, get some routing bit information from the MDFHeader and count them exclusive and inclusive.
  * Interesting bits are:
- * - Physics = Bit 46 AND Bit 11
+ * - Physics Hlt1 = Bit 46 AND Bit 11
+ * - Physics Hlt2 = Bit 77
  * - Minimum bias = bit 47
  * - Lumi = bit 33
  * - Beam-gas = bit 49 
@@ -989,18 +991,18 @@ see https://twiki.cern.ch/twiki/bin/view/LHCb/HltEfficiency.
 > -          BeamGas = bit 49 AND ( bits(0:1) = ‘01’  OR bits(0:1) = ‘10’ )
 > -          Other    = the rest. This means random, “physics” trigger on beam-empty not seen by the beam gas, and anything else
 
-routingBits = {  0 : '( ODIN_BXTYP == LHCb.ODIN.Beam1 ) | ( ODIN_BXTYP == LHCb.ODIN.BeamCrossing )'
+        routingBits = {  0 : '( ODIN_BXTYP == LHCb.ODIN.Beam1 ) | ( ODIN_BXTYP == LHCb.ODIN.BeamCrossing )'
                       ,  1 : '( ODIN_BXTYP == LHCb.ODIN.Beam2 ) | ( ODIN_BXTYP == LHCb.ODIN.BeamCrossing )'
-                      ,  8 : 'L0_DECISION'
+                      ,  8 : 'L0_DECISION_PHYSICS'
                       ,  9 : "L0_CHANNEL_RE('B?gas')"
-                      , 10 : "|".join( [ "L0_CHANNEL('%s')" % chan for chan in [ 'CALO','MUON,minbias','PU','SPD40','PU20' ] ] )
-                      , 11 : "|".join( [ "L0_CHANNEL('%s')" % chan for chan in [ 'Photon','Hadron','Muon','DiMuon','Muon,lowMult','DiMuon,LowMult','LocalPi0','GlobalPi0'] ] )
+                      , 10 : "|".join( [ "L0_CHANNEL('%s')" % chan for chan in [ 'SPD','CALO','MUON,minbias','PU','SPD40','PU20' ] ] )
+                      , 11 : "|".join( [ "L0_CHANNEL('%s')" % chan for chan in [ 'Electron','Photon','Hadron','Muon','DiMuon','Muon,lowMult','DiMuon,lowMult','LocalPi0','GlobalPi0'] ] )
+                      , 12 : "L0_CHANNEL('CALO')" # note: need to take into account prescale in L0...
                       , 32 : "HLT_PASS('Hlt1Global')"
                       , 33 : "HLT_PASS_SUBSTR('Hlt1Lumi')"
                       , 34 : "HLT_PASS_RE('Hlt1(?!Lumi).*Decision')"  # note: we need the 'Decision' at the end to _exclude_ Hlt1Global
                       , 35 : "HLT_PASS_SUBSTR('Hlt1Velo')"
                       , 36 : "scale(%s,RATE(%s))" % ( "HLT_PASS_RE('Hlt2Express.*Decision')|Hlt1ExpressPhysics", self.getProp('ExpressStreamRateLimit') )
-- Hide quoted text -
                       , 37 : "HLT_PASS('Hlt1ODINPhysicsDecision')"
                       , 38 : "HLT_PASS('Hlt1ODINTechnicalDecision')"
                       , 39 : "HLT_PASS_SUBSTR('Hlt1L0')"
@@ -1014,12 +1016,29 @@ routingBits = {  0 : '( ODIN_BXTYP == LHCb.ODIN.Beam1 ) | ( ODIN_BXTYP == LHCb.O
                       , 47 : "HLT_PASS_RE('Hlt1MBMicroBias.*Decision')"
                       , 48 : "HLT_PASS('Hlt1MBNoBiasDecision')"
                       , 49 : "HLT_PASS_SUBSTR('Hlt1BeamGas')"
+                      , 50 : "HLT_PASS('Hlt1LumiLowBeamCrossingDecision')"
+                      , 51 : "HLT_PASS('Hlt1LumiMidBeamCrossingDecision')"
+                      , 52 : "HLT_PASS_RE('Hlt1.*SingleHadron.*Decision')"
+                      , 53 : "HLT_PASS_RE('Hlt1.*DiHadron.*Decision')"
+                      , 54 : "HLT_PASS_RE('Hlt1.*(SingleMuon|DiMuon|MuTrack).*Decision')"
                       # 64--96: Hlt2
                       , 64 : "HLT_PASS('Hlt2Global')"
                       , 65 : "HLT_PASS('Hlt2DebugEventDecision')"
                       , 66 : "HLT_PASS_RE('Hlt2(?!Transparent).*Decision')"
-                      }
-
+                      , 67 : "HLT_PASS_RE('Hlt2.*SingleMuon.*Decision')"
+                      , 68 : "HLT_PASS_RE('Hlt2.*DiMuon.*Decision')"
+                      , 69 : "HLT_PASS_RE('Hlt2.*MuTrack.*Decision')"
+                      , 70 : "HLT_PASS_RE('Hlt2.*Topo.*Decision')"
+                      , 71 : "HLT_PASS_RE('Hlt2.*Charm.*Decision')"
+                      , 72 : "HLT_PASS_RE('Hlt2.*IncPhi.*Decision')"
+                      , 73 : "HLT_PASS_RE('Hlt2.*B.*Gamma.*Decision')"
+                      , 74 : "HLT_PASS_RE('Hlt2.*B2D2.*Decision')"
+                      , 75 : "HLT_PASS_RE('Hlt2.*IncDiProton.*Decision')"
+                      , 76 : "HLT_PASS_RE('Hlt2.*(Bu2|Bs2|Bd2|Bc2|B2HH|B2JpsiX|Dst2|diphotonDiMuon|DisplVertices).*Decision')"
+                      , 77 : "HLT_PASS_RE('Hlt2(?!Forward)(?!DebugEvent)(?!Express)(?!Transparent)(?!PassThrough).*Decision')"
+                      , 78 : "HLT_PASS_RE('Hlt2.*(SingleMuon|DiMuon|MuTrack).*Decision')"
+                      , 79 : "HLT_PASS_RE('Hlt2.*(Topo|Charm|IncPhi|B2D2).*Decision')"
+                         }
 
 */
 
@@ -1166,8 +1185,10 @@ void MDFWriterNet::notifyClose(struct cmd_header *cmd)
   struct cmd_stop_pdu *pdu=(struct cmd_stop_pdu *) ((char*)cmd + sizeof(struct cmd_header));
     *m_log << MSG::INFO << WHERE << " notifyClose start" << endmsg;
 
+  unsigned int i=0;
+
   // In a loop, catch recoverable first, if so, continue, else catch failure and manage
-  while(!m_StopRetry) {
+  while( !m_StopRetry || (m_Finalized && i++ <= m_MaxRetry)) {
     /* The RunDb generates file names now */
     try {
       m_rpcObj->updateFile(cmd->file_name,
@@ -1211,8 +1232,9 @@ void MDFWriterNet::notifyClose(struct cmd_header *cmd)
     break;
   }
 
+  i=0;
   // In a loop, catch recoverable first, if so, continue, else catch failure and manage
-  while(!m_StopRetry) {
+  while( !m_StopRetry || (i++ <= m_MaxRetry)) {
     /* The RunDb generates file names now */
     try {
       m_rpcObj->confirmFile(cmd->file_name,
@@ -1287,6 +1309,7 @@ void MDFWriterNet::notifyClose(struct cmd_header *cmd)
          << endmsg;
     break;
   }
+
   *m_log << MSG::INFO << WHERE << " notifyClose end" << endmsg;
 }
 

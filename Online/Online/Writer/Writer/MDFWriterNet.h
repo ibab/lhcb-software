@@ -329,12 +329,20 @@ namespace LHCb {
     typedef LHCb::Connection Connection;
   protected:
 
+    
+
+    /// The maximum number of retry on finalize call runDB communication.
+    unsigned int m_MaxRetry;
+
     /// A boolean to notify that events of the current run number should be discarded.
     /// Useful in case of run close and no more file opening possible.
     bool m_discardCurrentRun;
 
     /// A boolean to tell to stop RPC tries
     bool m_StopRetry;
+
+    /// A boolean to tell to stop RPC tries
+    bool m_Finalized;
 
     /// Period between two updates.
     int m_UpdatePeriod;
