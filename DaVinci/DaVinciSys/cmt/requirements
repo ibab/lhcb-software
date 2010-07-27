@@ -4,7 +4,7 @@ version v25r7
 branches doc cmt
 
 #=======================================================
-use  DaVinci                 	v25r6   Phys
+use  DaVinci                 	v25r7   Phys
 use  DaVinciTests               v1r1
 
 # Declare this as a container package
