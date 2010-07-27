@@ -77,7 +77,7 @@ namespace Rich
                        "The CK theta # sigma selection range for each radiator (Aero/R1Gas/R2Gas)");
       declareProperty( "MaxPhotons", m_maxPhotons = 9999999,
                        "The maximum number of photon candidates to allow per event" );
-      declareProperty( "MaxPhotDetOcc", m_maxHPDOccForReco = list_of(25)(99999)(99999),
+      declareProperty( "MaxPhotDetOcc", m_maxHPDOccForReco = list_of(15)(99999)(99999),
                        "Max Photon Detector occupancy for photon reconstruction for each radiator (Aero/R1Gas/R2Gas)" );
 
     }
