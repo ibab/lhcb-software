@@ -61,6 +61,8 @@ BaseTrackSelector::BaseTrackSelector( const std::string& type,
 
   declareProperty( "AcceptClones", m_acceptClones = false );
 
+  declareProperty( "AcceptFitFailures", m_acceptFitFailures = false );
+
   declareProperty( "RejectNonIsolated", m_rejectNonIsolated = false );
 }
 
@@ -150,7 +152,9 @@ MsgStream & BaseTrackSelector::printSel( MsgStream & os ) const
     os << boost::format( " : GhostProb = %|-4.2e|->%|-4.2e|" ) % m_minGhostProb % m_maxGhostProb ;
   }
 
-  if ( m_acceptClones   ) os << " clonesOK";
+  if ( m_acceptClones ) os << " clonesOK";
+
+  if ( m_acceptFitFailures ) os << " fitFailuresOK";
 
   if ( m_chargeSel != 0 ) os << " chargeSel=" << m_chargeSel;
 
@@ -178,6 +182,15 @@ BaseTrackSelector::trackSelected( const LHCb::Track * track ) const
   {
     verbose() << "Trying Track key = " << track->key() << " type = " << track->type()
               << endmsg;
+  }
+
+  // Fit status
+  if ( !m_acceptFitFailures && 
+       track->fitStatus() == LHCb::Track::FitFailed )
+  {
+    if ( msgLevel(MSG::VERBOSE) )
+      verbose() << " -> Fit Status FAILED -> Reject" << endmsg;
+    return false;
   }
 
   // cut p
@@ -297,6 +310,8 @@ BaseTrackSelector::trackSelected( const LHCb::RichRecTrack * track ) const
     verbose() << "Trying RichRecTrack " << track->key() << " " << track->trackID().trackType()
               << endmsg;
   }
+
+  /** @todo Add fit status cut for RichRecTracks */
 
   // cut p
   const double p = track->vertexMomentum() / Gaudi::Units::GeV;

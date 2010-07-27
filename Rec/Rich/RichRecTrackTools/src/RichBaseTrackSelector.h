@@ -147,6 +147,8 @@ namespace Rich
       double m_minGhostProb; ///< minimum ghost probability cut
       double m_maxGhostProb; ///< maximum ghost probability cut
 
+      bool m_acceptFitFailures; ///< Accept tracks with a FAILED fit status
+
       mutable bool m_chiSqCutEnabled;
       mutable bool m_ghostProbCutEnabled;
       mutable bool m_cloneDistCutEnabled;

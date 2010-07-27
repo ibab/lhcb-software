@@ -4,6 +4,10 @@
 ! Purpose     : Utility tracks tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+! 2010-07-27 - Chris Jones
+ - Add criteria to the Track Selectors to allow rejection of tracks with a
+   failed fit status (default is enabled).
+
 !======================== RichRecTrackTools v1r23 2010-07-26 =================
 ! 2010-07-26 - Chris Jones
  - Tighten up the maximum CK theta resolution value cutoffs in 
