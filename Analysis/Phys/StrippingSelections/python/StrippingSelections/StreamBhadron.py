@@ -28,13 +28,16 @@ from StrippingSelections.StrippingBs2PhiKst0 import StrippingBs2PhiKstConf
 from StrippingSelections.StrippingB2hhLTUnbiased import StrippingB2hhLTUnbiasedConf
 from StrippingSelections.StrippingB2DX import B2DXLines
 
+from StrippingSelections.StrippingB2D3H import StrippingB2D3HConf, StrippingB2D3HNominal, StrippingB2D3HLoose
+
+
 stream = StrippingStream("Bhadron")
 stream.appendLines( [ 
 		        StrippingB2Charged2Body.line,  
 #		        StrippingB2Charged2Body.line1,  
 #		        StrippingB2Charged2Body.line2,  
-                        StrippingB2D3Pi.line1,
-                        StrippingB2D3Pi.line2,
+#                        StrippingB2D3Pi.line1,
+#                        StrippingB2D3Pi.line2,
 			StrippingBs2PhiPhiConf().normal(),  #StrippingBs2PhiPhi.line1, 
 			StrippingBs2PhiPhiConf().wide(),    #StrippingBs2PhiPhi.line2, 
 		        StrippingBu2D0K_D02KSPiPiConf().Bu2D0K_KSLL(), #StrippingBu2D0K_D02KSPiPi.line1,  
@@ -58,3 +61,4 @@ stream.appendLines( B2DXLines() ) # B2DX lines with default cuts
 stream.appendLines( B02D0Kstar_D02KPiPi0Conf().lines ) 
 stream.appendLines( B02D0Kstar_D02K3PiConf().lines ) 
 
+stream.appendLines( StrippingB2D3HLoose('Loose').lines ) # B2D3H Lines

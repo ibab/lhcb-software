@@ -5,6 +5,12 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-07-27 - Thomas BLAKE
+ - Updated stream Bhadron to add B2D3H lines from S. Blusk
+ - Added StrippingB2D3H.py
+
+
+
 <<<<<<< release.notes
 ! 2010-07-26 - Jibo He
  - StrippingCcbar2Ppbar.py
