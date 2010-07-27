@@ -58,9 +58,13 @@ for line in lines:
       os.stat('.svn')
       proto = 'svn'
       l=open('.svn/entries').readlines()
-      vsn = l[4][:l[4].rfind(os.sep)]
+      vsn = l[4][:-1]
+      if vsn.rfind(os.sep+'v')>0:
+        vsn = l[4][:l[4].rfind(os.sep)]
+      tags  = vsn.replace('/trunk/','/tags/')
       trunk = vsn.replace('/tags/','/trunk/')
-      #print vsn, trunk
+      #trunk = trunk[:trunk.rfind('/')]
+      #print vsn, tags, trunk
       lines = os.popen('svn list '+vsn).readlines()
       l = len(lines)-1
       if l==1: last_tag=[lines[l][:-1]]
@@ -82,7 +86,8 @@ for line in lines:
         if line.find('Existing Tags:')>0:
           p = 1
     if proto == 'svn':
-      pipe = os.popen3('svn diff '+trunk+' '+vsn+'/'+version)
+      #print 'svn diff '+trunk+' '+tags+'/'+version
+      pipe = os.popen3('svn diff '+trunk+' '+tags+'/'+version)
     else:
       pipe = os.popen3('cvs diff -r HEAD -r '+version)
     diffs = pipe[1].readlines()
