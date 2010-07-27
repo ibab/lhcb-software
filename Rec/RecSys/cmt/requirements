@@ -63,7 +63,7 @@ use TfTools              v1r13   Tf   # Stephanie Hansmann-Menzemer
 use TrackMatching        v2r30   Tf   # Eduardo Rodrigues
 use TrackSeeding         v1r5    Tf   # Eduardo Rodrigues, Henk Jan Bulten
 use TrackSys             v4r35   Tf   # Stephanie Hansmann-Menzemer 
-use TsaAlgorithms        v3r22p1 Tf   # Matt Needham
+use TsaAlgorithms        v3r22   Tf   # Matt Needham
 
 
 # Tr packages: Track Fit & Pattern Reco Validation with MonteCarlo

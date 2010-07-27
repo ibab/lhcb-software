@@ -25,7 +25,7 @@ WARNING: two LHCb base package (RichRecBase and TrackEvent) have been added to t
 - Packages modified:
   Rich/RichGlobalPID v3r14p1, Rich/RichHPDImageAnalysis v1r1, Rich/RichRecMonitors v2r29,
   Rich/RichRecQC v2r44, Rich/RichRecSys v3r31, Rich/RichRecTrackTools v1r23,
-  Tf/TsaAlgorithms v3r22p1, Tr/TrackFitEvent v5r2, Tr/TrackFitter v2r50,
+  Tr/TrackFitEvent v5r2, Tr/TrackFitter v2r50,
   Tr/TrackTools  v3r34, Tr/TrackMonitors v1r28
 
 - In Rich/RichGlobalPID v3r14p1:
@@ -55,9 +55,6 @@ WARNING: two LHCb base package (RichRecBase and TrackEvent) have been added to t
 
 - In Rich/RichRecTrackTools v1r23:
   . Tighten up the maximum CK theta resolution value cutoffs in RichFunctionalCKResForRecoTracks.cpp
-
-- In Tf/TsaAlgorithms v3r22p1:
-  . Fix hardcoding of first and last sectors in the overlap hit adder
 
 - In Tr/TrackFitEvent v5r2:
   . added filtered states to FitNode 
