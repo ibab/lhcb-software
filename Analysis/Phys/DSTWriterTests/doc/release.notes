@@ -4,6 +4,11 @@
 ! Purpose     : Options to generate selection or Micro DSTs and scripts to test them.
 !-----------------------------------------------------------------------------
 
+! ========================== DstwriterTests v1r4p1 2010-07-27 ================
+
+! 2010-07-27 - Juan Palacios
+ - scripts/check_p2pvtable.py -> scripts/check_relationstable.py
+
 ! 2010-07-26 - Juan Palacios
  - cmt/requirements
   . Increase to v1r4p1
