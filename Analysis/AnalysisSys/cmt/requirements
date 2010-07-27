@@ -1,6 +1,6 @@
-# $Id: requirements,v 1.200 2010-07-12 12:29:55 jpalac Exp $
+# $Id: requirements,v 1.201 2010-07-27 13:57:25 jpalac Exp $
 package AnalysisSys
-version v4r7
+version v4r8
 
 branches doc cmt
 
@@ -9,15 +9,15 @@ branches doc cmt
 
 use  AnalysisConf               v2r0     Phys   # Patrick Koppenburg, Juan Palacios
 use  DSTWriters                 v1r8     Phys   # Juan Palacios
-use  DSTWriterTests             v1r4     Phys   # Juan Palacios
+use  DSTWriterTests             v1r4p1   Phys   # Juan Palacios
 #===================================================================
 #use  AnalysisDict               v1r0     Phys   # TEMPORARY!
 #===================================================================
 use  CommonParticles            v7r3     Phys   # Patrick Koppenburg, WGs
 use  FlavourTagging             v11r3    Phys   # Marco Musy
 
-use  DaVinciMonitors            v1r12    Phys   # Patrick Koppenburg
-use  RichPIDQC                  v1r4     Rich   # Chris Jones
+use  DaVinciMonitors            v1r12p1  Phys   # Patrick Koppenburg
+use  RichPIDQC                  v1r5     Rich   # Chris Jones
 use  KaliCalo                   v4r2p2   Phys   # Vanya Belyaev
 ####################################################################
 use  DaVinciMCTools     	v9r25p4  Phys   # Juan Palacios
@@ -41,7 +41,7 @@ use PyAna                       v1r2     Analysis
 #
 use StrippingAlgs               v1r3   Phys   # Anton Poluektov
 use StrippingConf               v3r6   Phys   # Anton Poluektov
-use StrippingSelections         v1r24  Phys   # Anton Poluektov
+use StrippingSelections         v1r25  Phys   # Anton Poluektov
 
 ####################################################################
 use  MicroDSTBase        	v1r7p4  MicroDST          # Juan Palacios
