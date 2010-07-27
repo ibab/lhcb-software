@@ -3,6 +3,11 @@
 ! Responsible : Eduardo Rodrigues
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
+
+!============================ TrackSys v4r36 2010-07-20 ======================
+! 2010-07-27 - Rob Lambert
+ - Added slot for DataType propagated from Brunel()
+
 ! 2010-07-27 - Stephanie Hansmann-Menzemer
  - add switches for timing measurements in RecoTracking.py
 

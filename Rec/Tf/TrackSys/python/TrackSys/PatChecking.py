@@ -80,7 +80,10 @@ def PatChecking():
    ConfigureEffCheckTools(TrackEffChecker("Downstream"))
    
    GaudiSequencer("CheckPatSeq").Members  += [TrackOccupChecker("OccupancyCheck")]
-   GaudiSequencer("CheckPatSeq").Members  += [PrimaryVertexChecker("PVOfflineCheck")]
+
+   #don't do this for DC06 because there's an FPE.
+   if TrackSys().getProp('DataType')!="DC06":
+      GaudiSequencer("CheckPatSeq").Members  += [PrimaryVertexChecker("PVOfflineCheck")]
 
 def ConfigureEffCheckTools(EffCheck):
    EffCheck.addTool(MCReconstructible, name="Selector")
