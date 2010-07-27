@@ -8,8 +8,12 @@ from shutil import copy2
 import fnmatch
 import tarfile
 import logging
-import os
+import os, sys
 
+
+if "set" not in dir(__builtins__):
+    # pylint: disable-msg=W0622
+    from sets import Set as set
 
 _tar_exclusion_list = []
 
@@ -217,8 +221,6 @@ def updateTarBallFromFilterDict(srcdict, filename, pathfilter=None, dereference=
                 dstprefix = os.path.join(tmpdir.getName(), prefix)
                 if not os.path.exists(dstprefix) :
                     os.makedirs(dstprefix)
-#            else :
-#                dstprefix = tmpdir.getName()
             for y in listTarBallObjects(dirname, pathfilter, prefix) :
                 if y[1] not in extracted_objs :
                     tobeupdated = True
@@ -238,7 +240,8 @@ def updateTarBallFromFilterDict(srcdict, filename, pathfilter=None, dereference=
     return status
 
 def createTarBallFromFilterDict(srcdict, filename, pathfilter=None, 
-                                dereference=False, update=False):
+                                dereference=False, update=False,
+                                use_tmp=False):
     """ function to create a tarball. The srcdict parameter is a dictionary
     containing the path of the source as the key and the prefix in the tarball as value.
     @param srcdict: dictionary with the src directory and their prefix
@@ -247,11 +250,17 @@ def createTarBallFromFilterDict(srcdict, filename, pathfilter=None,
                        the path as to be included in the tarball or not.
     @param dereference: dereference links in the tarball or not 
     @param update: if the tarball has to be either updated or replaced 
+    @param use_tmp: if True, creates the file in a temporary directory and move it.
     """
     log = logging.getLogger()
     status = 0
     if not update :
-        log.debug("Creating %s" % filename )        
+        log.debug("Creating %s" % filename )
+        if use_tmp :
+            tmpdir = TempDir("createTarBallFromFilter")
+            real_name = filename
+            filename = os.path.join(tmpdir.getName(), os.path.basename(filename))
+            log.debug("Using temporary file %s" % filename)
         tarf, lock = openTar(filename, tar_mode="w")
         keep_tar = False
         srcexist = False
@@ -277,6 +286,9 @@ def createTarBallFromFilterDict(srcdict, filename, pathfilter=None,
                 log.warning("%s file is empty. Removing it." % filename)
                 os.remove(filename)
                 status = 2 # status=2 means that the tarball was empty
+            if use_tmp :
+                copy2(filename, real_name)
+                log.debug("Copying %s to %s" % (filename, real_name))
     else :
         status = updateTarBallFromFilterDict(srcdict, filename, pathfilter, dereference)
     return status

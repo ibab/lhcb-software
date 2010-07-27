@@ -11,7 +11,11 @@ import fnmatch
 import stat
 import os, sys
 
-if sys.version_info[:3] >= (2,6,0) :
+if "set" not in dir(__builtins__):
+    # pylint: disable-msg=W0622
+    from sets import Set as set
+
+if sys.version_info >= (2,6) :
     from hashlib import md5
 else :
     from md5 import md5

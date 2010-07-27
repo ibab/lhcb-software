@@ -1,3 +1,11 @@
+2010-07-26  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* LbUtils/python/LbUtils/File.py: 
+	* LbUtils/python/LbUtils/Tar.py: 
+	* LbUtils/python/LbUtils/VersionsDB.py: added a protection for the used of the builtin "set". Use
+	the Set class from the sets modules if the builtin is not available. This is the case
+	for python version < 2.4.
+
 2010-07-23  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/requirements: release of version v2r3
