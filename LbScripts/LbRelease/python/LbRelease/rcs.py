@@ -5,6 +5,11 @@ import os, re, sys
 from subprocess import Popen, PIPE
 import logging
 
+if "set" not in dir(__builtins__):
+    # pylint: disable-msg=W0622
+    from sets import Set as set
+
+
 _use_shell = sys.platform.startswith("win")
 _call_command_log = logging.getLogger("_call_command")
 def _call_command(cmd, *args, **kwargs):

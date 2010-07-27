@@ -9,6 +9,10 @@ from LbConfiguration import createProjectMakefile
 from LbConfiguration.Repository import repositories as __repositories__, SVNReposInfo, CVSReposInfo
 import rcs
 
+if "set" not in dir(__builtins__):
+    # pylint: disable-msg=W0622
+    from sets import Set as set
+
 ## Class to select valid version tags according to LHCb policy
 class LHCbVersionFilter(object):
     def __init__(self, regexp = r'v([0-9]+)r([0-9]+)(?:p([0-9]+))?(?:-pre([0-9]+))?|(?:\w+_([0-9]{4})([0-9]{2})([0-9]{2})[a-z]?)'):

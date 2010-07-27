@@ -1,3 +1,11 @@
+2010-07-26  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* LbRelease/python/LbRelease/GetPack.py: 
+	* LbRelease/python/LbRelease/LHCbDoc.py: 
+	* LbRelease/python/LbRelease/rcs.py: added a protection for the used of the builtin "set". Use
+	the Set class from the sets modules if the builtin is not available. This is the case
+	for python version < 2.4.
+
 2010-07-23  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/requirements: release of version v3r3

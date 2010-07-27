@@ -10,6 +10,11 @@ from subprocess import Popen, PIPE
 from stat import ST_SIZE
 from LbUtils.afs.directory import isAFSDir, isMountPoint
 
+if "set" not in dir(__builtins__):
+    # pylint: disable-msg=W0622
+    from sets import Set as set
+
+
 import logging
 _log = logging.getLogger(__name__)
 
