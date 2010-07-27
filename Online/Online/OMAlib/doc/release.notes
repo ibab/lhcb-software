@@ -1,7 +1,9 @@
-! $Id: release.notes,v 1.51 2010-07-22 16:21:50 ggiacomo Exp $
+! $Id: release.notes,v 1.52 2010-07-27 13:58:28 ggiacomo Exp $
 ! Package     : OMAlib
 ! Responsible : G. Graziani
 ! Purpose     : Online Monitoring Analysis library
+
+! ======== v3r1 ===============
 
 ! 20100722 GG
  - remove (harmless) crash at the end of Saveset2HistDB
