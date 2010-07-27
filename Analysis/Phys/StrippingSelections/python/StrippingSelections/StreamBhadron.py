@@ -15,7 +15,6 @@ from StrippingConf.StrippingStream import StrippingStream
 from StrippingSelections import StrippingB2Charged2Body
 from StrippingSelections.StrippingB02D0Kstar_D02KPiPi0 import B02D0Kstar_D02KPiPi0Conf
 from StrippingSelections.StrippingB02D0Kstar_D02K3Pi import B02D0Kstar_D02K3PiConf
-from StrippingSelections import StrippingB2D3Pi
 from StrippingSelections.StrippingBs2PhiPhi import StrippingBs2PhiPhiConf #from StrippingSelections import StrippingBs2PhiPhi
 from StrippingSelections.StrippingBu2D0K_D02KSPiPi import StrippingBu2D0K_D02KSPiPiConf
 from StrippingSelections.StrippingBu2D0h_D02KShh_NoPID import StrippingBu2D0h_D02KShh_NoPIDConf
@@ -36,8 +35,6 @@ stream.appendLines( [
 		        StrippingB2Charged2Body.line,  
 #		        StrippingB2Charged2Body.line1,  
 #		        StrippingB2Charged2Body.line2,  
-#                        StrippingB2D3Pi.line1,
-#                        StrippingB2D3Pi.line2,
 			StrippingBs2PhiPhiConf().normal(),  #StrippingBs2PhiPhi.line1, 
 			StrippingBs2PhiPhiConf().wide(),    #StrippingBs2PhiPhi.line2, 
 		        StrippingBu2D0K_D02KSPiPiConf().Bu2D0K_KSLL(), #StrippingBu2D0K_D02KSPiPi.line1,  

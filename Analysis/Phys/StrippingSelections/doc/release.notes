@@ -16,6 +16,7 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
   StrippingLambdaAllGeoLine
 
  - Altered cuts in B2KShh line on behalf of Jussara.
+ - Removed StrippingB2D3Pi.py on request of Steve Blusk since it is no longer used.
  
 ! 2010-07-27 - Thomas BLAKE
  - Updated stream Bhadron to add B2D3H lines from S. Blusk
