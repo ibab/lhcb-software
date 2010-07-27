@@ -5,6 +5,8 @@
 ! Purpose     : PID Calbriation and Monitoring on Data
 !-----------------------------------------------------------------------------
 
+!========================== RichPIDQC v1r5 2010-07-27 ========================
+
 ! 2010-07-22 - Chris Jones
  - Some more minor improvements to the Configuration options
   + Make the tools to run a configurable option
