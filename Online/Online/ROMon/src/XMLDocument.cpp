@@ -13,6 +13,8 @@
 #include "xercesc/util/XMLUni.hpp"
 #include "xercesc/util/XMLURL.hpp"
 #include "xercesc/util/XMLString.hpp"
+#include "xercesc/dom/DOMImplementation.hpp"
+#include "xercesc/dom/DOMWriter.hpp"
 #include "xercesc/dom/DOM.hpp"
 
 #include <memory>
