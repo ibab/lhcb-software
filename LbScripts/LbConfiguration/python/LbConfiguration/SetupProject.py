@@ -1777,7 +1777,7 @@ class SetupProject:
             #I have to touch a file to tell the release manager which version of the project I'm using
             output_script += self._touch_project_logfiles()
 
-        if os.environ.has_key("SP_PROMPT") :
+        if os.environ.has_key("SP_PROMPT") and not self.build_env:
             output_script += self._prepend_prompt()
 
         self._verbose("########## done ##########")

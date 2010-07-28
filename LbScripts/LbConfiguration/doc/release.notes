@@ -1,3 +1,8 @@
+2010-07-28  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbConfiguration/SetupProject.py: fixed the used of the comand line prompt update: doesn't do
+	it if --build-env is used.
+
 2010-07-26  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* LbConfiguration/scripts/doxygen: fixed argument passing to SetupProject. The "-v" was
