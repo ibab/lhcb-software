@@ -5,6 +5,33 @@
 ! Purpose     : LHCb base classes and event model
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v31r4>2010-07-28 LHCbSys v31r4</A></H1><PRE>
+This version uses Gaudi v21r10p1 and LCG_58e
+
+- It was discovered that LCG_58d has major problems with Oracle, Pyroot and Xerces.
+  Gaudi v21r10p1 will pick up the patched LCGCMT.
+
+- Packages Removed:
+    GaudiPatches
+
+- Packages Modified:
+    Event/TrackEvent v5r6, Phys/DaVinciInterfaces v2r5,
+    Rich/RichRecBase v4r0
+
+- In Event/TrackEvent v5r6:
+  . added Calo to Measurement::Types enum 
+
+- In Phys/DaVinciInterfaces v2r5:
+  . Changes to TisTos interfaces needed for new Phys/TisTosTobbing. 
+    Needed for new Phys/TisTosTobbing (HLT). 
+
+- In Rich/RichRecBase v4r0:
+  . Add anew data member to RichRecPixel to store the occupancy of the HPD the pixel is in. 
+  . Update the pixel creator base class to set the pixel HPD occupancy. 
+  . Add a new option to the photon creator base class to reject pixels based on a HPD maximum occupancy (different for each radiator). 
+  . Set Aerogel cut to < 15 in each HPD
+
+
 </PRE><H1><A NAME=v31r3>2010-07-19 LHCbSys v31r3</A></H1><PRE>
 This version uses Gaudi v21r10 and LCG_58d
 
