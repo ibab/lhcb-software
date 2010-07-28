@@ -6,6 +6,14 @@
 !             : project contain components used by all applications except Gauss
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v9r5p1>2010-07-28 LbcomSys v9r5p1</A></H1><PRE>
+This version uses Gaudi v21r10p1 and LHCb v31r4
+
+- It was discovered that LCG_58d has major problems with Oracle, Pyroot and Xerces.
+  Gaudi v21r10p1 will pick up the patched LCGCMT.
+
+- There are no ther changes in Lbcom
+
 </PRE><H1><A NAME=v9r5>2010-07-21 LbcomSys v9r5</A></H1><PRE>
 This version uses Gaudi v21r10 and LHCb v31r3
 
