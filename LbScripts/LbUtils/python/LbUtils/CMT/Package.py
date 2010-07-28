@@ -386,6 +386,23 @@ class Package(object):
             log.debug("return code of 'cmt show macro_value %s' in %s is %s" % (macro_name, wdir, retcode))
         os.chdir(here)
         return macro_val
+
+    def getSetValue(self, set_name):
+        here = os.getcwd()
+        log = logging.getLogger()
+        wdir = os.path.join(self.fullLocation(), "cmt")
+        env = Env.getDefaultEnv()
+        env["PWD"] = wdir
+        os.chdir(wdir)
+        p = Popen(["cmt", "show", "set_value", set_name], stdout=PIPE, stderr=PIPE, close_fds=True)
+        set_val = p.stdout.read()[:-1]
+        for line in p.stderr:
+            CMTLog(line[:-1])
+        retcode = os.waitpid(p.pid, 0)[1]
+        if retcode != 0:
+            log.debug("return code of 'cmt show set_value %s' in %s is %s" % (set_name, wdir, retcode))
+        os.chdir(here)
+        return set_val
         
 def hasRequirementsFile(dirpath):
     hasfile = False

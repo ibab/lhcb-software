@@ -2,8 +2,10 @@
 
 	* python/LbUtils/Links.py: removed useless messages.
 	* python/LbUtils/CMT/Common.py: created a new function CMTLog for the logging of CMT messages
-	* python/LbUtils/CMT/Package.py: factored out the "cmt show macro_value" in a new method
-	called getMacroValue.
+	* python/LbUtils/CMT/Package.py: 
+	-factored out the "cmt show macro_value" in a new method called getMacroValue.
+	-factored out the "cmt show set_value" in a new method called getSetValue.
+	
 
 2010-07-26  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
