@@ -372,6 +372,15 @@ if ( !_lhcb().constants ) {
 	  iconCls:'ELOG32',
 	  size:   {width:  1000,	height: 850}
 	},
+	rundb: {
+	  src:    'http://lbrundb.cern.ch/',
+	  img:    this.images.lookprod,
+	  title:  'LHCb run database',
+	  nick:   'lhcb-rundb-win',
+	  cls:    'bogus',
+	  iconCls:'bogus',
+	  size:   {width:  1000,	height: 850}
+	},
 	weekly_meetings: {
 	  src:    'http://indico.cern.ch/categOverview.py?selCateg=1l22&period=week&detail=conference',
 	  img:    this.images.indico,

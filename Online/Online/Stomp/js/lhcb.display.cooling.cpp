@@ -21,9 +21,10 @@ var CoolingStatus = function(msg)   {
     var opts = {style:'Arial12pt',legend:true,logger:this.logger};
     this.left.addItem(lhcb.widgets.DSS.CaVPlantStatus('It',opts));
     this.left.addItem(lhcb.widgets.DSS.CaVPlantStatus('Tt',opts));
+    this.left.addItem(lhcb.widgets.DSS.MixedWaterStatus(opts));
     this.left.addSpacer('30px');
 
-    this.right.addItem(lhcb.widgets.DSS.MixedWaterStatus(opts));
+    opts.showStatus = true;
     this.right.addItem(lhcb.widgets.DSS.CaVPlantStatus('Ot',opts));
     this.right.addItem(lhcb.widgets.DSS.CaVPlantStatus('Rich',opts));
   };

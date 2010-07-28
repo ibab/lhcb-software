@@ -78,10 +78,23 @@ var CaloStatus = function(msg)   {
     };
     tab.hcalTell1 = function() {
       var tb = this.body('HCAL Tell1 Board Status');
-      tb.appendChild(this.addFSMRow(['ECTELL05', 'ECTELL01']));
-      tb.appendChild(this.addFSMRow(['ECTELL06', 'ECTELL02']));
-      tb.appendChild(this.addFSMRow(['ECTELL07', 'ECTELL03']));
-      tb.appendChild(this.addFSMRow(['ECTELL08', 'ECTELL04']));
+      tb.appendChild(this.addFSMRow(['HCTELL05', 'HCTELL01']));
+      tb.appendChild(this.addFSMRow(['HCTELL06', 'HCTELL02']));
+      tb.appendChild(this.addFSMRow(['HCTELL07', 'HCTELL03']));
+      tb.appendChild(this.addFSMRow(['HCTELL08', 'HCTELL04']));
+      return this;
+    };
+    tab.prsTell1 = function() {
+      var tb = this.body('PRS Tell1 Board Status');
+      tb.appendChild(this.addFSMRow(['PSTELL05', 'PSTELL01']));
+      tb.appendChild(this.addFSMRow(['PSTELL06', 'PSTELL02']));
+      tb.appendChild(this.addFSMRow(['PSTELL07', 'PSTELL03']));
+      tb.appendChild(this.addFSMRow(['PSTELL08', 'PSTELL04']));
+      return this;
+    };
+    tab.prsDCSST = function() {
+      var tb = this.body('PRS DCS Stations');
+      tb.appendChild(this.addFSMRow(['PSDCST1_A', 'PSDCST1_C']));
       return this;
     };
     return tab;
@@ -125,7 +138,9 @@ var CaloStatus = function(msg)   {
     this.addRow([lhcb.widgets.calo.Systems(opts).caloLV(),
 		 lhcb.widgets.calo.Systems(opts).caloMV()]);
     this.addRow([lhcb.widgets.calo.Systems(opts).ecalTell1(),
-		 lhcb.widgets.calo.Systems(opts).hcalTell1()]);
+		 [lhcb.widgets.calo.Systems(opts).hcalTell1(),
+		  lhcb.widgets.calo.Systems(opts).prsTell1(),
+		  lhcb.widgets.calo.Systems(opts).prsDCSST()]]);
 
     this.tbody.appendChild(tr0);
     td0.appendChild(tab);
@@ -157,8 +172,8 @@ var CaloStatus = function(msg)   {
   };
 
   table.attachWidgets = function() {
-    var opts = {style:'Arial12pt',legend:true,calo:true,logger:this.logger};
-    this.right.addItem(lhcb.widgets.LHCStateSummary(opts));
+    //var opts = {style:'Arial12pt',legend:true,calo:true,logger:this.logger};
+    //this.right.addItem(lhcb.widgets.LHCStateSummary(opts));
   };
   return table;
 };

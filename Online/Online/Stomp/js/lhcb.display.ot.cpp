@@ -41,7 +41,7 @@ var OtStatus = function(msg)   {
   };
 
   table.attachWidgets = function() {
-    var opts = {style:'Arial12pt',legend:true,logger:this.logger};
+    var opts = {style:'Arial12pt',legend:true,logger:this.logger,showStatus:true};
     var otDAQ = lhcb.widgets.SystemSummary({style:'Arial12pt',
 						    system: 'OT',
 						    title: 'OT Subsystem State',

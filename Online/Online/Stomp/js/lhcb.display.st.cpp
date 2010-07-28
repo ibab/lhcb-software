@@ -46,7 +46,7 @@ var StStatus = function(msg)   {
   };
 
   table.beforeComment = function() {
-    var opts = {style:'Arial12pt',legend:true,logger:this.logger};
+    var opts = {style:'Arial12pt',legend:true,logger:this.logger,showStatus:false};
     var ttDAQ = lhcb.widgets.SystemSummary({style:'Arial12pt',
 						    system: 'TT',
 						    title: 'TT Subsystem State',

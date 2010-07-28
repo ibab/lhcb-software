@@ -44,7 +44,7 @@ var ItemListener = function(logger,provider) {
   return this;
 };
 
-var DetectorListener = function(logger,provider,parent,msg) {
+var DetectorListener = function(logger,provider,parent,msg,opts) {
   this.inheritsFrom = ItemListener;
   this.inheritsFrom(logger,provider);
   this._messages = msg;
@@ -54,8 +54,8 @@ var DetectorListener = function(logger,provider,parent,msg) {
   this._display  = null;
   this._root     = parent;
   this._type     = RunStatusDisplay;
+  this._opts     = opts;
   this.url_base  = the_displayObject.url_base;
-
   this.bind_children = function(items, sys_names, sys_states, set_data) {
     for(var i=0; i<sys_states.length; ++i) {
       var item = items[sys_names[i]];
@@ -139,7 +139,7 @@ var DetectorListener = function(logger,provider,parent,msg) {
 
   this.subscribeSubListeners = function() {
     if ( this._trigger == null ) {
-      this._trigger = new DetectorListener(this.logger,this.provider,null,this._messages);
+      this._trigger = new DetectorListener(this.logger,this.provider,null,this._messages,this._opts);
       this._trigger.master = this;
       this._trigger.subscribeSubListeners = function() {};
       this._trigger.handle_data = function(partition, sys_names, sys_states) {
@@ -149,7 +149,7 @@ var DetectorListener = function(logger,provider,parent,msg) {
       this._trigger.start(this.partition,'lbWeb.'+this.partition+'.FSM.triggers');
     }
     if ( this._detector == null ) {
-      this._detector = new DetectorListener(this.logger,this.provider,null,this._messages);
+      this._detector = new DetectorListener(this.logger,this.provider,null,this._messages,this._opts);
       this._detector.master = this;
       this._detector.subscribeSubListeners = function() {};
       this._detector.handle_data = function(partition, sys_names, sys_states) {
@@ -197,6 +197,7 @@ var DetectorListener = function(logger,provider,parent,msg) {
     }
     this.handle_data(this.partition, sys_names, sys_states);
     this.subscribeSubListeners();
+    if ( this._opts && this._opts.size_call ) this._opts.size_call();
     return this;
   };
 
@@ -205,7 +206,7 @@ var DetectorListener = function(logger,provider,parent,msg) {
 
 var FSMListener = function(logger,provider,parent,msg) {
   this.inheritsFrom = DetectorListener;
-  this.inheritsFrom(logger,provider,parent,msg);
+  this.inheritsFrom(logger,provider,parent,msg,null);
   this._type = FSMStatusDisplay;
 
   this.subscribeSubListeners = function() {  };

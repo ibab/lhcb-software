@@ -73,10 +73,9 @@ var RichStatus = function(msg)   {
     this.subscriptions.push(this.rich2DAQ);
   };
   table.attachWidgets = function() {
-    var opts = {style:'Arial12pt',legend:true,rich:true,logger:this.logger};
-    this.left.addItem(this.hvSummary({system:'RICH1',hv:true,lv:true,nosplit:true}));
-    this.left.addItem(this.hvSummary({system:'RICH2',hv:true,lv:true,nosplit:true}));
-    this.left.addSpacer(10);
+    var opts = {style:'Arial12pt',legend:true,rich:true,logger:this.logger,showStatus:true};
+    this.left.addItem(this.hvSummary({system:['RICH1','RICH2'],hv:true,lv:true,nosplit:true}));
+    this.left.addSpacer(70);
     this.left.addItem(lhcb.widgets.SafetySummary(opts));
 
     this.right.addItem(lhcb.widgets.LHCStateSummary(opts));

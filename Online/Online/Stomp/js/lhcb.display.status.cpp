@@ -1,9 +1,13 @@
 _loadScript('lhcb.display.data.cpp');
 _loadScript('lhcb.display.items.cpp');
 _loadScript('lhcb.display.listener.cpp');
+_loadScript('lhcb.display.zoom.cpp');
 _loadFile('lhcb.display.general','css');
 _loadFile('lhcb.display.status','css');
 _loadFile('lhcb.display.fsm','css');
+
+var s_display_font_size = null;
+var s_org_display_font_size = null;
 
 var SelectionBox = function() {
   select = document.createElement('select');
@@ -55,7 +59,19 @@ var PartitionSelector = function(msg) {
   table.body.cellpadding = 0;
 
   table.heading = table.add();
-  table.heading.appendChild(Cell('LHCb Run Status Display',1,'RunStatusHeader'));
+  table.heading.innerHTML = 'LHCb Run Status Display';
+  table.heading.colSpan = 2;
+  table.heading.className = 'RunStatusHeader';
+  table.heading.style.width = '100%';
+  table.heading.style.textAlign='left';
+  td = Cell('A<sup>+</sup>',1,'MonitorDataHeader');
+  td.onclick     = function() { zoom_increaseFontSize();};
+  tooltips.set(td,'Increase font size');
+  table.heading.parentNode.appendChild(td);
+  td = Cell('A<sup>-</sup>',1,'MonitorDataHeader');
+  td.onclick     = function() { zoom_decreaseFontSize();};
+  tooltips.set(td,'Decrease font size');
+  table.heading.parentNode.appendChild(td);
 
   table.row = document.createElement('tr');
   table.label = StatusText('Select partition:',1);
@@ -71,7 +87,10 @@ var PartitionSelector = function(msg) {
   table.change.handler     = table;
   table.change.innerHTML   = 'Show';
   table.change.className   = 'DisplayButton';
-  table.change.onclick     = function() { this.handler.createDisplay();  };
+  table.change.onclick     = function() { 
+    if (s_org_display_font_size) s_display_font_size = s_org_display_font_size; 
+    this.handler.createDisplay();
+  };
   tooltips.set(table.change,'Click to invoke display for selected partition');
   table.row.appendChild(table.change);
 
@@ -105,13 +124,33 @@ var PartitionSelector = function(msg) {
     table.row.appendChild(table.update=document.createElement('td'));
   };
 
+  table.callbackNo = 3;
+  table.resize_font = function() {
+    if ( s_display_font_size != null ) {
+      if ( _isInternetExplorer() ) zoom_changeFontSizeEx(2);
+      else  zoom_changeFontSizeEx(0);
+      //alert(s_display_font_size); 
+      zoom_changeFontSizeEx(s_display_font_size);
+      s_org_display_font_size = s_display_font_size;
+      s_display_font_size = null;
+    }
+  };
+  table.size_call = function()  {
+    ++this.callbackNo;
+    //alert(this.callbackNo);
+    if ( (this.callbackNo%3)==0 && s_display_font_size != null ) {
+      setTimeout(this.resize_font,3000);
+    }
+  };
   table.createDisplay = function()   {
     var partition = this.selectBox.get_value();
+    var opts = {'size_call': this.size_call};
     if ( null != this.listener )   {
       this.listener.close();
       this.provider.start();
     }
-    this.listener = new DetectorListener(this.logger,this.provider,this.display,this.messages);
+    this.callbackNo = 3;
+    this.listener = new DetectorListener(this.logger,this.provider,this.display,this.messages,this);
     this.listener.trace = false;
     this.listener.start(partition,'lbWeb.'+partition+'.FSM.children');
     setWindowTitle(partition+' Run Status');
@@ -166,6 +205,7 @@ var status_body = function()  {
   var tips = init_tooltips(body);
   var selector = new PartitionSelector(msg);
 
+  s_display_font_size = the_displayObject['size'];
   body.appendChild(selector);
   body.className = 'MainBody';
 

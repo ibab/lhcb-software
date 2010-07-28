@@ -12,8 +12,8 @@ function _loadWidgets() {
     var tr = document.createElement('tr');
     var cell;
 
-    tooltips.set(tab,'Current fill statistics<br>Click to see LHC status');
-    tab.onclick = function() { document.location = lhcb.constants.lhcb_display_url("lhc");};
+    tooltips.set(tab,'Current fill statistics<br>Click to see LHC operations planning page');
+    tab.onclick = function() { document.location = "http://op-webtools.web.cern.ch/op-webtools/vistar/vistars.php?usr=LHCCOORD"; };
 
     tab.className = tb.className   = 'MonitorPage';
     if ( options.fontSize ) {
@@ -29,6 +29,7 @@ function _loadWidgets() {
     tab.currFill       = StyledItem('lbWeb.LHCbPerformance.CurrentFill',null,null);
     tab.currFillStart  = StyledItem('lbWeb.LHCbPerformance.CurrentFillStart',null,null);
     tab.currFillRamped = StyledItem('lbWeb.LHCbPerformance.CurrentFillRamped',null,null);
+    tab.currFillSqueeze= StyledItem('lbWeb.LHCbPerformance.CurrentFillSqueezed',null,null);
     tab.currFillStable = StyledItem('lbWeb.LHCbPerformance.CurrentFillStable',null,null);
     tab.currFillEnded  = StyledItem('lbWeb.LHCbPerformance.CurrentFillEnded',null,null);
 
@@ -67,6 +68,22 @@ function _loadWidgets() {
 	var fillNo = parseInt(v[0]);
 	t.rampedTime.colSpan = 3;
 	t.rampedTime.innerHTML = ' Fill '+t.currFill.fillNo+' was never ramped';
+      }
+    };
+    tab.currFillSqueeze.parent = tab;
+    tab.currFillSqueeze.display = function(data) {
+      var v = data[1].split('/',20);
+      var t = this.parent;
+      if ( v.length>9 ) {
+	t.squeezeTime.colSpan = 1;
+	t.squeezeTime.innerHTML  = v[1].substr(v[1].indexOf('-')+1);
+	t.squeezeIntB1.innerHTML = sprintf('%7.2e',parseFloat(v[9]));
+	t.squeezeIntB2.innerHTML = sprintf('%7.2e',parseFloat(v[10]));
+      }
+      else {
+	var fillNo = parseInt(v[0]);
+	t.squeezeTime.colSpan = 3;
+	t.squeezeTime.innerHTML = ' Fill '+t.currFill.fillNo+' was never squeezed';
       }
     };
     tab.currFillStable.parent = tab;
@@ -122,6 +139,13 @@ function _loadWidgets() {
     tb.appendChild(tr);
 
     tr = document.createElement('tr');
+    tr.appendChild(Cell('Squeeze',null,'MonitorDataHeader'));
+    tr.appendChild(tab.squeezeTime=Cell('', null,null));
+    tr.appendChild(tab.squeezeIntB1=Cell('', null,null));
+    tr.appendChild(tab.squeezeIntB2=Cell('', null,null));
+    tb.appendChild(tr);
+
+    tr = document.createElement('tr');
     tr.appendChild(Cell('Stable',null,'MonitorDataHeader'));
     tr.appendChild(tab.stableTime=Cell('', null,null));
     tr.appendChild(tab.stableIntB1=Cell('', null,null));
@@ -162,10 +186,9 @@ function _loadWidgets() {
       provider.subscribeItem(this.currFill);
       provider.subscribeItem(this.currFillStart);
       provider.subscribeItem(this.currFillRamped);
+      provider.subscribeItem(this.currFillSqueeze);
       provider.subscribeItem(this.currFillStable);
       provider.subscribeItem(this.currFillEnded);
-      //provider.subscribeItem(this.fillTimes);
-      //provider.subscribeItem(this.fillIntensities);
     };
 
     return tab;
@@ -183,7 +206,7 @@ function _loadWidgets() {
       tab.style.fontSize = tb.style.fontSize = options.fontSize;
     }
     if ( options.style ) {
-      tr.appendChild(Cell('Luminosity Statistics',3,options.style));
+      tr.appendChild(Cell('FILL Luminosity Statistics',3,options.style));
       tb.appendChild(tr);
       tr = document.createElement('tr');
     }
@@ -192,15 +215,19 @@ function _loadWidgets() {
     tab.lumiNOW     = StyledItem('lbWeb.LHCCOM/LHC.LHCb.Internal.Luminosity.LumiInst_GP','Text-Right','%9.3f');
     tab.neventsRec  = StyledItem('lbWeb.LHCb_RunInfo.HLTFarm.hltNTriggers','Text-Right',null);
     tab.neventsIn   = StyledItem('lbWeb.LHCb_RunInfo.TFC.nTriggers','Text-Right',null);
+    tab.lumiYearDel = StyledItem('lbWeb.LHCCOM/LHC.LHCb.Internal.Luminosity.LumiIntDel_annual_3500','Text-Right',"%9.0f");
+    tab.lumiYearRec = StyledItem('lbWeb.LHCCOM/LHC.LHCb.Internal.Luminosity.LumiIntRec_annual_3500','Text-Right',"%9.0f");
 
     tab.lumi = StyledItem('lbWeb.LHCbPerformance.CurrentLuminosities',null,null);
     tab.lumi.parent = tab;
     tab.lumi.display = function(data) {
       var v = data[1].split('/',20);
       var t = this.parent;
-      t.lumiNOW.display(    [22,v[10]]);
+      t.lumiNOW.display(    [22,v[8]]);
       t.lumiREC.display(    [22,v[11]]);
       t.lumiDEL.display(    [22,v[12]]);
+      t.lumiYearRec.display([22,v[9]]);
+      t.lumiYearDel.display([22,v[10]]);
     };
 
     tr.appendChild(Cell('Lumi NOW', null,'MonitorDataHeader'));
@@ -210,35 +237,44 @@ function _loadWidgets() {
     cell.style.width='25%';
     tb.appendChild(tr);
     /*
-    tr = document.createElement('tr');
+    tb.appendChild(tr = document.createElement('tr'));
     tr.appendChild(Cell('Last 30 min.',null,'MonitorDataHeader'));
     tr.appendChild(tab.lumi30min=Cell('', null,null));
     tr.appendChild(Cell('&mu;b<sup>-1</sup>/s',null,'Text-Left'));
-    tb.appendChild(tr);
     */
-    tr = document.createElement('tr');
+    tb.appendChild(tr = document.createElement('tr'));
     tr.appendChild(Cell('Fill from start',null,'MonitorDataHeader'));
     tr.appendChild(tab.lumiDEL);
     tr.appendChild(Cell('&mu;b<sup>-1</sup>',null,'Text-Left'));
-    tb.appendChild(tr);
 
-    tr = document.createElement('tr');
+    tb.appendChild(tr = document.createElement('tr'));
     tr.appendChild(Cell('Fill recorded',null,'MonitorDataHeader'));
     tr.appendChild(tab.lumiREC);
     tr.appendChild(Cell('&mu;b<sup>-1</sup>',null,'Text-Left'));
-    tb.appendChild(tr);
 
-    tr = document.createElement('tr');
+    tb.appendChild(tr = document.createElement('tr'));
     tr.appendChild(Cell('No. L&Oslash; events',null,'MonitorDataHeader'));
     tr.appendChild(tab.neventsIn);
-    tab.neventsIn.colSpan = 2;
-    tb.appendChild(tr);
+    tr.appendChild(Cell('',null,null));
 
-    tr = document.createElement('tr');
+    tb.appendChild(tr = document.createElement('tr'));
     tr.appendChild(Cell('Evts.recorded',null,'MonitorDataHeader'));
     tr.appendChild(tab.neventsRec);
-    tab.neventsRec.colSpan = 2;
-    tb.appendChild(tr);
+    tr.appendChild(Cell('',null,null));
+
+    if ( options.style ) {
+      tb.appendChild(tr = document.createElement('tr'));
+      tr.appendChild(Cell('Luminosity this year',3,options.style));
+    }
+    tb.appendChild(tr = document.createElement('tr'));
+    tr.appendChild(Cell('Delivered',null,'MonitorDataHeader'));
+    tr.appendChild(tab.lumiYearDel);
+    tr.appendChild(Cell('&mu;b<sup>-1</sup>',null,'Text-Left'));
+
+    tb.appendChild(tr = document.createElement('tr'));
+    tr.appendChild(Cell('Recorded',null,'MonitorDataHeader'));
+    tr.appendChild(tab.lumiYearRec);
+    tr.appendChild(Cell('&mu;b<sup>-1</sup>',null,'Text-Left'));
 
     tab.appendChild(tb);
 
@@ -257,111 +293,79 @@ function _loadWidgets() {
     var tr = document.createElement('tr');
     var cell;
 
-    tooltips.set(tab,'Current Interaction rate statistics<br>Click to see LHC status');
-    tab.onclick = function() { document.location = lhcb.constants.lhcb_display_url("lhc");};
+    tooltips.set(tab,'Current Interaction rate statistics<br>Click to see Trigger counters');
+    tab.onclick = function() { document.location = lhcb.constants.lhcb_display_url("trigger");};
     tab.className = tb.className = 'MonitorPage';
 
     tab.fillNo = -1;
-    tab.lumiPP     = StyledItem('lbWeb.LHCCOM/LHC.LHCb.Internal.Luminosity.LumiInst_hadron',   'Text-Right','%7.3f');
-    tab.lumiPPrec  = StyledItem('lbWeb.LHCCOM/LHC.LHCb.Internal.Luminosity.LumiIntRec_hadron', 'Text-Right','%7.3f');
-    tab.lumiHad    = StyledItem('lbWeb.LHCCOM/LHC.LHCb.Internal.Luminosity.LumiInst_pp_rate',  'Text-Right','%7.3f');
-    tab.lumiHadrec = StyledItem('lbWeb.LHCCOM/LHC.LHCb.Internal.Luminosity.LumiIntRec_pp_rate','Text-Right','%7.3f');
-    tab.lumiSMu    = StyledItem('lbWeb.LHCCOM/LHC.LHCb.Internal.Luminosity.LumiInst_smu',      'Text-Right','%7.3f');
-    tab.lumiSMurec = StyledItem('lbWeb.LHCCOM/LHC.LHCb.Internal.Luminosity.LumiIntRec_smu',    'Text-Right','%7.3f');
-    tab.lumiDMu    = StyledItem('lbWeb.LHCCOM/LHC.LHCb.Internal.Luminosity.LumiInst_dimu',     'Text-Right','%7.3f');
-    tab.lumiDMurec = StyledItem('lbWeb.LHCCOM/LHC.LHCb.Internal.Luminosity.LumiIntRec_dimu',   'Text-Right','%7.3f');
-    tab.lumiGP     = StyledItem('lbWeb.LHCCOM/LHC.LHCb.Internal.Luminosity.LumiInst_GP',       'Text-Right','%7.3f');
-    tab.lumiGPrec  = StyledItem('lbWeb.LHCCOM/LHC.LHCb.Internal.Luminosity.LumiIntRec_GP',     'Text-Right','%7.3f');
-    tab.lumi = StyledItem('lbWeb.LHCbPerformance.CurrentLuminosities',null,null);
+    tab.lumiPP     = StyledItem('', 'Text-Right','%7.3f');
+    tab.lumiBLSA   = StyledItem('', 'Text-Right','%7.3f');
+    tab.lumiBLSC   = StyledItem('', 'Text-Right','%7.3f');
+    tab.lumiBRAN4L8= StyledItem('', 'Text-Right','%7.3f');
+    tab.lumiBRAN4R8= StyledItem('', 'Text-Right','%7.3f');
+    tab.lumiIdeal  = StyledItem('', 'Text-Right','%7.3f');
+    tab.lumiGP     = StyledItem('', 'Text-Right','%7.3f');
+    tab.lumi       = StyledItem('lbWeb.LHCbPerformance.CurrentLuminosities',null,null);
     tab.lumi.parent = tab;
     tab.lumi.display = function(data) {
       var v = data[1].split('/',20);
       var t = this.parent;
       t.fillNo = parseInt(v[0]);
       t.lumiPP.display(     [22,v[2]]);
-      t.lumiPPrec.display(  [22,v[3]]);
-      t.lumiHad.display(    [22,v[4]]);
-      t.lumiHadrec.display( [22,v[5]]);
-      t.lumiSMu.display(    [22,v[6]]);
-      t.lumiSMurec.display( [22,v[7]]);
-      t.lumiDMu.display(    [22,v[8]]);
-      t.lumiDMurec.display( [22,v[9]]);
-      t.lumiGP.display(     [22,v[10]]);
-      t.lumiGPrec.display(  [22,v[11]]);
+      t.lumiBLSA.display(   [22,v[3]]);
+      t.lumiBLSC.display(   [22,v[4]]);
+      t.lumiBRAN4L8.display([22,v[5]]);
+      t.lumiBRAN4R8.display([22,v[6]]);
+      t.lumiIdeal.display(  [22,v[7]]);
+      t.lumiGP.display(     [22,v[8]]);
     };
-
 
     if ( options.fontSize )
       tab.style.fontSize = tb.style.fontSize = options.fontSize;
     if ( options.style )
-      tr.appendChild(Cell('Interaction Rates',null,options.style));
+      tr.appendChild(Cell('Instantaneous Luminosity Measurements',3,options.style));
     else
-      tr.appendChild(Cell('', null,null));
-
-    tr.appendChild(cell=Cell('Instantaneous', 2,'MonitorDataHeader'));
-    cell.style.textAlign='right';
-    tr.appendChild(cell=Cell('Recorded', 2,'MonitorDataHeader'));
-    cell.style.textAlign='right';
+      tr.appendChild(Cell('',3,null));
     tb.appendChild(tr);
 
-    tr = document.createElement('tr');
+    tb.appendChild(tr = document.createElement('tr'));
     tr.appendChild(Cell('pp Inelastic', null,'MonitorDataHeader'));
     tr.appendChild(tab.lumiPP);
     tr.appendChild(Cell('&mu;b<sup>-1</sup>/s', null,'Text-Right'));
-    tr.appendChild(tab.lumiPPrec);
-    tr.appendChild(Cell('&mu;b<sup>-1</sup>', null,'Text-Right'));
-    tb.appendChild(tr);
 
-    tr = document.createElement('tr');
-    tr.appendChild(Cell('Hadron', null,'MonitorDataHeader'));
-    tr.appendChild(tab.lumiHad);
+    tb.appendChild(tr = document.createElement('tr'));
+    tr.appendChild(Cell('BLS A', null,'MonitorDataHeader'));
+    tr.appendChild(tab.lumiBLSA);
     tr.appendChild(Cell('&mu;b<sup>-1</sup>/s', null,'Text-Right'));
-    tr.appendChild(tab.lumiHadrec);
-    tr.appendChild(Cell('&mu;b<sup>-1</sup>', null,'Text-Right'));
-    tb.appendChild(tr);
 
-    tr = document.createElement('tr');
-    tr.appendChild(Cell('Single Muon', null,'MonitorDataHeader'));
-    tr.appendChild(tab.lumiSMu);
+    tb.appendChild(tr = document.createElement('tr'));
+    tr.appendChild(Cell('BLS C', null,'MonitorDataHeader'));
+    tr.appendChild(tab.lumiBLSC);
     tr.appendChild(Cell('&mu;b<sup>-1</sup>/s', null,'Text-Right'));
-    tr.appendChild(tab.lumiSMurec);
-    tr.appendChild(Cell('&mu;b<sup>-1</sup>', null,'Text-Right'));
-    tb.appendChild(tr);
 
-    tr = document.createElement('tr');
-    tr.appendChild(Cell('Di-Muon', null,'MonitorDataHeader'));
-    tr.appendChild(tab.lumiDMu);
+    tb.appendChild(tr = document.createElement('tr'));
+    tr.appendChild(Cell('BRAN 4R8', null,'MonitorDataHeader'));
+    tr.appendChild(tab.lumiBRAN4R8);
     tr.appendChild(Cell('&mu;b<sup>-1</sup>/s', null,'Text-Right'));
-    tr.appendChild(tab.lumiDMurec);
-    tr.appendChild(Cell('&mu;b<sup>-1</sup>', null,'Text-Right'));
-    tb.appendChild(tr);
 
-    tr = document.createElement('tr');
-    tr.appendChild(Cell('Best estimate', null,'MonitorDataHeader'));
+    tb.appendChild(tr = document.createElement('tr'));
+    tr.appendChild(Cell('BRAN 4L8', null,'MonitorDataHeader'));
+    tr.appendChild(tab.lumiBRAN4L8);
+    tr.appendChild(Cell('&mu;b<sup>-1</sup>/s', null,'Text-Right'));
+
+    tb.appendChild(tr = document.createElement('tr'));
+    tr.appendChild(Cell('Ideal', null,'MonitorDataHeader'));
+    tr.appendChild(tab.lumiIdeal);
+    tr.appendChild(Cell('&mu;b<sup>-1</sup>/s', null,'Text-Right'));
+
+    tb.appendChild(tr = document.createElement('tr'));
+    tr.appendChild(Cell('Best Estimate', null,'MonitorDataHeader'));
     tr.appendChild(tab.lumiGP);
     tr.appendChild(Cell('&mu;b<sup>-1</sup>/s', null,'Text-Right'));
-    tr.appendChild(tab.lumiGPrec);
-    tr.appendChild(Cell('&mu;b<sup>-1</sup>', null,'Text-Right'));
-    tb.appendChild(tr);
-
 
     tab.appendChild(tb);
 
-    tab.subscribe = function(provider) {
-      provider.subscribeItem(this.lumi);
-      /*
-      provider.subscribeItem(this.lumiPP);
-      provider.subscribeItem(this.lumiPPrec);
-      provider.subscribeItem(this.lumiHad);
-      provider.subscribeItem(this.lumiHadrec);
-      provider.subscribeItem(this.lumiSMu);
-      provider.subscribeItem(this.lumiSMurec);
-      provider.subscribeItem(this.lumiDMu);
-      provider.subscribeItem(this.lumiDMurec);
-      provider.subscribeItem(this.lumiGP);
-      provider.subscribeItem(this.lumiGPrec);
-      */
-    };
+    tab.subscribe = function(provider) {      provider.subscribeItem(this.lumi);    };
     return tab;
   };
 
@@ -376,14 +380,9 @@ function _loadWidgets() {
     if ( options.fontSize ) {
       tab.style.fontSize = tb.style.fontSize = options.fontSize;
     }
-    if ( options.style ) {
-      tr = document.createElement('tr');
-      tr.appendChild(Cell('Experiment efficiency',3,options.style));
-      tb.appendChild(tr);
-    }
 
-    tab.lumiGPrec  = StyledItem('lbWeb.LHCCOM/LHC.LHCb.Internal.Luminosity.LumiIntRec_GP','Text-Right','%7.3f');
-    tab.lumiGPdel  = StyledItem('lbWeb.LHCCOM/LHC.LHCb.Internal.Luminosity.LumiIntDel_GP','Text-Right','%7.3f');
+    tab.lumiGPrec  = StyledItem('','Text-Right','%7.3f');
+    tab.lumiGPdel  = StyledItem('','Text-Right','%7.3f');
     tab.eff_HV     = StyledItem('lbWeb.LHCbEfficiency.ResultsLumi.HV','Text-Right','%7.2f %%');
     tab.eff_VELO   = StyledItem('lbWeb.LHCbEfficiency.ResultsLumi.VELO','Text-Right','%7.2f %%');
     tab.eff_DAQ    = StyledItem('lbWeb.LHCbEfficiency.ResultsLumi.DAQ','Text-Right','%7.2f %%');
@@ -405,8 +404,14 @@ function _loadWidgets() {
       this.target.updateMatrix();
     };
 
+    tab.update_lumi2 = function(data) {
+      this.data=parseFloat(data[1])/100.;
+      this.target.updateMatrix();
+    };
+
     tab.lumiGPrec.target = tab.eff_HV.target = tab.eff_VELO.target = tab.eff_DAQ.target = tab.eff_DEAD.target = tab;
-    tab.lumiGPrec.display = tab.eff_HV.display = tab.eff_VELO.display = tab.eff_DAQ.display = tab.eff_DEAD.display = tab.update_lumi;
+    tab.lumiGPrec.display = tab.update_lumi;
+    tab.eff_HV.display = tab.eff_VELO.display = tab.eff_DAQ.display = tab.eff_DEAD.display = tab.update_lumi2;
 
     tab.updateMatrix = function() {
       var val0, val1, val2, val3;
@@ -463,33 +468,34 @@ function _loadWidgets() {
       }
     };
 
-    tr = document.createElement('tr');
+    tb.appendChild(tr = document.createElement('tr'));
     tr.appendChild(cell=Cell('Delivered',1,'MonitorDataHeader'));
     cell.style.width = "30%";
     tr.appendChild(tab.lumi_DELIVERED=Cell('',1,'Text-Right'));
     tr.appendChild(Cell('&mu;b<sup>-1</sup>',1,null));
-    tr.appendChild(Cell('',5,null));
-    tb.appendChild(tr);
+    if ( options.style )
+      tr.appendChild(cell=Cell('Experiment efficiency',5,options.style));
+    else
+      tr.appendChild(cell=Cell('',5,null));
+    cell.style.textAlign = 'right';
 
     var left = '&nbsp;&nbsp;&nbsp;<IMG SRC="'+lhcb.constants.lhcb_static('Images/Left.png')+'" HEIGHT="8" WIDTH="120"/>';
-    tr = document.createElement('tr');
+    tb.appendChild(tr = document.createElement('tr'));
     tr.appendChild(Cell('&nbsp;HV Ready',1,'MonitorDataHeader'));
     tr.appendChild(tab.lumi_HV=Cell('',1,'Text-Right'));
     tr.appendChild(Cell('&mu;b<sup>-1</sup>',1,null));
     tr.appendChild(tab.eff_HV);
     tr.appendChild(Cell(left+' Detector operation inefficiency',4,'MonitorDataHeader'));
-    tb.appendChild(tr);
 
-    tr = document.createElement('tr');
+    tb.appendChild(tr = document.createElement('tr'));
     tr.appendChild(Cell('&nbsp;VELO IN',1,'MonitorDataHeader'));
     tr.appendChild(tab.lumi_VELO=Cell('',1,'Text-Right'));
     tr.appendChild(Cell('&mu;b<sup>-1</sup>',1,null));
     tr.appendChild(tab.eff_VELO_HV=Cell('',1,'Text-Right'));
     tr.appendChild(tab.eff_VELO);
     tr.appendChild(cell=Cell(left+' VELO operation inefficiency',3,'MonitorDataHeader'));
-    tb.appendChild(tr);
 
-    tr = document.createElement('tr');
+    tb.appendChild(tr = document.createElement('tr'));
     tr.appendChild(Cell('&nbsp;Running',1,'MonitorDataHeader'));
     tr.appendChild(tab.lumi_DAQ=Cell('',1,'Text-Right'));
     tr.appendChild(Cell('&mu;b<sup>-1</sup>',1,null));
@@ -497,11 +503,9 @@ function _loadWidgets() {
     tr.appendChild(tab.eff_DAQ_VELO=Cell('',1,'Text-Right'));
     tr.appendChild(tab.eff_DAQ);
     tr.appendChild(Cell(left+' DAQ inefficiency',2,'MonitorDataHeader'));
-    tb.appendChild(tr);
 
-    tr = document.createElement('tr');
+    tb.appendChild(tr = document.createElement('tr'));
     tr.appendChild(Cell('&nbsp;Recorded',1,'MonitorDataHeader'));
-    //tr.appendChild(tab.lumiGPrec);
     tr.appendChild(tab.lumi_DEAD=Cell('',1,'Text-Right'));
     tr.appendChild(Cell('&mu;b<sup>-1</sup>',1,null));
     tr.appendChild(tab.eff_DEAD_DAQ_VELO_HV=Cell('',1,'Text-Right'));
@@ -509,15 +513,10 @@ function _loadWidgets() {
     tr.appendChild(tab.eff_DEAD_DAQ=Cell('',1,'Text-Right'));
     tr.appendChild(tab.eff_DEAD);
     tr.appendChild(Cell(left+' Dead time',1,'MonitorDataHeader'));
-    tb.appendChild(tr);
 
-    tr = document.createElement('tr');
-    tb.appendChild(tr);
     tab.appendChild(tb);
     
     tab.subscribe = function(provider) {
-      //provider.subscribeItem(this.lumiGPrec);
-      //provider.subscribeItem(this.lumiGPdel);
       provider.subscribeItem(this.lumi);
       provider.subscribeItem(this.eff_HV);
       provider.subscribeItem(this.eff_VELO);
@@ -546,7 +545,25 @@ function _loadWidgets() {
     tab.showInefficiencies = 0;
     if ( options.style ) {
       tr = document.createElement('tr');
-      tr.appendChild(Cell('Luminosity and performace status of recent fills',3,options.style));
+      tr.appendChild(cell=Cell('Luminosity and performace status of recent fills',3,options.style));
+
+      cell = cell=lhcb.widgets.button('Show Eff.',null);
+      tr.appendChild(cell[0]);
+      cell[1].parent  = tab;
+      cell[1].onclick = function() {
+	if ( this.parent.showInefficiencies==0 )
+	  this.value = 'Breakdown';
+	else if ( this.parent.showInefficiencies==1 )
+	  this.value = 'Show Ineff.';
+	else if ( this.parent.showInefficiencies==2 )
+	  this.value = 'Show Eff.';
+	++this.parent.showInefficiencies;
+	if ( this.parent.showInefficiencies > 2 )this.parent.showInefficiencies=0;
+	this.parent.current.display(this.parent.current.data);
+	this.parent.hist.display(this.parent.hist.data);
+      };
+      cell = cell[0];
+      /*
       tr.appendChild(cell=Cell('Show Eff.',1,null));
       cell.parent = tab;
       cell.onclick = function() {
@@ -564,6 +581,7 @@ function _loadWidgets() {
       cell.style.borderStyle = 'outset';
       cell.style.borderColor = '#999999';
       cell.style.borderWidth='thick';
+      */
       tr.appendChild(tab.eff_header=Cell('',4,'MonitorDataHeaderRED'));
       cell.style.textAlign = 'center';
       tr.appendChild(cell=Cell('Infficiencies',2,'MonitorDataHeaderRED'));
@@ -644,22 +662,30 @@ function _loadWidgets() {
       }
       tr.daq.innerHTML         = sprintf('%7.2f %%  /  ',(veloin<1e-9) ? 0. : (1.-(d[5]/veloin))*100.);
       tr.daq2.innerHTML        = sprintf('%7.2f &mu;b<sup>-1</sup>',d[4]-d[5]);
+      if ( tot == 1.0 ) {
+	tr.hvon.innerHTML        = '--';
+	tr.veloin.innerHTML      = '--';
+	tr.running.innerHTML     = '--';
+	tr.logged.innerHTML      = '--';
+	tr.daq.innerHTML         = '--';
+	tr.daq2.innerHTML        = '';
+      }
       return tr;
     };
     tab.lineNo = 0;
     tab.addLine = function(data) {
       var tr = document.createElement('tr');
       tr.lineNo = ++tab.lineNo;
-      tr.appendChild(tr.fill=Cell('',null,'Text-Right'));
-      tr.appendChild(tr.date=Cell('',null,'Text-Right'));
-      tr.appendChild(tr.lumi_total=Cell('',null,'Text-Right'));
-      tr.appendChild(tr.lumi_logged=Cell('',null,'Text-Right'));
-      tr.appendChild(tr.hvon=Cell('',null,'Text-Right'));
-      tr.appendChild(tr.veloin=Cell('',null,'Text-Right'));
-      tr.appendChild(tr.running=Cell('',null,'Text-Right'));
-      tr.appendChild(tr.logged=Cell('',null,'Text-Right'));
-      tr.appendChild(tr.daq=Cell('',null,'Text-Right'));
-      tr.appendChild(tr.daq2=Cell('',null,'Text-Left'));
+      tr.appendChild(tr.fill        = Cell('',null,'Text-Right'));
+      tr.appendChild(tr.date        = Cell('',null,'Text-Right'));
+      tr.appendChild(tr.lumi_total  = Cell('',null,'Text-Right'));
+      tr.appendChild(tr.lumi_logged = Cell('',null,'Text-Right'));
+      tr.appendChild(tr.hvon        = Cell('',null,'Text-Right'));
+      tr.appendChild(tr.veloin      = Cell('',null,'Text-Right'));
+      tr.appendChild(tr.running     = Cell('',null,'Text-Right'));
+      tr.appendChild(tr.logged      = Cell('',null,'Text-Right'));
+      tr.appendChild(tr.daq         = Cell('',null,'Text-Right'));
+      tr.appendChild(tr.daq2        = Cell('',null,'Text-Left'));
       return (data) ? this.setLine(tr,data) : tr;
     };
 
@@ -732,21 +758,25 @@ var BigBrother = function(msg)   {
     var history     = lhcb.widgets.fillHistory(opts);
 
     tr.vAlign='top';
-    td = document.createElement('td');
     tr.appendChild(td=document.createElement('td'));
     td.style.width = '35%';
     td.appendChild(fillTimes);
-    td = document.createElement('td');
-    tr.appendChild(td=document.createElement('td'));
-    td.appendChild(fillLumi);
-    td = document.createElement('td');
+
     tr.appendChild(td=document.createElement('td'));
     td.appendChild(interactionRates);
+    td.rowSpan = 2;
+    tr.appendChild(td=document.createElement('td'));
+    td.appendChild(fillLumi);
+    td.rowSpan = 2;
 
     tab = document.createElement('table');
-    tab.appendChild(tb = document.createElement('tbody'));    
+    tb = document.createElement('tbody');    
     tab.style.width=tb.style.width='100%';
     tb.appendChild(tr);
+    tb.appendChild(tr=document.createElement('tr'));
+    cell=lhcb.widgets.button('See Run Database',
+				 function() { document.location = lhcb.constants.urls.lhcb.rundb.src;});
+    tr.appendChild(cell[0]);
 
     tr = document.createElement('tr');
     tr.appendChild(td=document.createElement('td'));
@@ -769,7 +799,10 @@ var BigBrother = function(msg)   {
     td.colSpan = 2;
     td.appendChild(tab);
 
+    tab.appendChild(tb);    
+
     this.tbody.appendChild(tr);
+
     this.subscriptions.push(fillTimes);
     this.subscriptions.push(fillLumi);
     this.subscriptions.push(interactionRates);
