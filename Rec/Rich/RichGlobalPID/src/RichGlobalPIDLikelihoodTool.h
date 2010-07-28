@@ -150,10 +150,8 @@ namespace Rich
         double deltaLogLikelihood( LHCb::RichRecTrack * track,
                                    const Rich::ParticleIDType newHypo ) const;
 
-      private:
-
         /// Power Approximation of log(exp(x)-1) (Mathematica)
-        inline double logExp( const double x ) const;
+        double logExp( const double x ) const;
 
         /// Returns log( exp(x) - 1 ) or an approximation for small signals
         inline double sigFunc( const double x ) const
@@ -162,16 +160,10 @@ namespace Rich
         }
 
         /// Returns the force change Dll value
-        inline double forceChangeDll() const
-        {
-          return m_forceChangeDll;
-        }
+        inline double forceChangeDll() const { return m_forceChangeDll; }
         
         /// Returns the freeze out Dll value
-        inline double freezeOutDll() const
-        {
-          return m_freezeOutDll;
-        }
+        inline double freezeOutDll() const { return m_freezeOutDll; }
         
         /// Sets flags to say if the given set of tracks are in Rich1 and/or Rich2
         void updateRichFlags( const MinTrList & minTracks ) const;
