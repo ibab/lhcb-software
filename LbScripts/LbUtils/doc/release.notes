@@ -1,5 +1,6 @@
 2010-07-28  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
+	* python/LbUtils/Links.py: removed useless messages.
 	* python/LbUtils/CMT/Common.py: created a new function CMTLog for the logging of CMT messages
 	* python/LbUtils/CMT/Package.py: factored out the "cmt show macro_value" in a new method
 	called getMacroValue.
