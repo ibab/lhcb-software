@@ -6,21 +6,17 @@ Purpose: LHCb reconstruction packages.
          by one or more LHCb applications. 
 
 
-</PRE><H1><A NAME=v10r3>2010-07-26 RecSys v10r3</A></H1><PRE>
-This version uses Gaudi v21r10 and LHCb v31r3
+</PRE><H1><A NAME=v10r3>2010-07-28 RecSys v10r3</A></H1><PRE>
+This version uses Gaudi v21r10p1 and LHCb v31r4
 
-WARNING: two LHCb base package (RichRecBase and TrackEvent) have been added to this version so might cause problems in configuration. To make a release stack it will be necessary to release these packages in LHCb.
+- It was discovered that LCG_58d has major problems with Oracle, Pyroot and Xerces.
+  Gaudi v21r10p1 will pick up the patched LCGCMT.
 
 - New minor version to fix urgent problems in production:
   . Crashes in brunel from a segfault in KalmanFitResult savannah bug #70643
   . Rich processing speed improved by a factor of 5 with better Aerogel cuts
 
 - This release goes hand-in-hand with the CondDB patch #4301 which updates the tile calbration
-
-- Packages Added:
-  Rich/RichRecBase v4r0, required for the rich speed up.
-  Event/TrackEvent v5r6, required for the TrackFitEvent changes
-  These packages come from LHCb so will need to be removed again in the next release.
 
 - Packages modified:
   Rich/RichGlobalPID v3r14p1, Rich/RichHPDImageAnalysis v1r1, Rich/RichRecMonitors v2r29,

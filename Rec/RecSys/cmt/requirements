@@ -7,10 +7,6 @@ branches cmt doc tests
 # LHCb reconstruction packages
 #=======================================================
 
-#Added to this version from LHCb, should be removed in future
-use RichRecBase          v4r0    Rich #Chris Jones
-use TrackEvent           v5r6    Event #Wouter Hulsbergen
-
 # Calorimeter                         # Maintainer
 use CaloMoniDst          v5r3    Calo # Olivier Deschamps
 use CaloPIDs             v5r6p1	 Calo # Victor Egorychev, Vanya Belyaev
