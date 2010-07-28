@@ -12,7 +12,9 @@
 
 // data model
 #include "Event/RawEvent.h"
-#include "Event/RawBank.h"
+
+// stl
+#include <algorithm>
 
 //-----------------------------------------------------------------------------
 
@@ -45,6 +47,7 @@ PrepareVeloFullRawBuffer::PrepareVeloFullRawBuffer( const std::string& name,
   declareProperty("RawEventLocation", m_rawEventLoc=LHCb::RawEventLocation::Default);
   declareProperty("ADCLocation", m_veloADCDataContainer=VeloFullBankLocation::Default);
   declareProperty("RoundRobin", m_roundRobin=false);
+  declareProperty("DecodeErrorStream", m_decodeErrorStream=false);
 }
 //=============================================================================
 // Destructor
@@ -140,10 +143,13 @@ StatusCode PrepareVeloFullRawBuffer::getRawBanks()
   // check if there is non-zero suppressed bank present
   const std::vector<LHCb::RawBank*>& fullBanks=
         m_rawEvent->banks(LHCb::RawBank::VeloFull);
+  const std::vector<LHCb::RawBank*>& errorBanks=
+        m_rawEvent->banks(LHCb::RawBank::VeloError);
   std::vector<LHCb::RawBank*>::const_iterator bIt;
   // if so get all info needed to decoding
   if(fullBanks.size()!=0){
-    setNumberOfSensors(fullBanks.size());
+    m_decodeErrorStream ? setNumberOfSensors(errorBanks.size()) :
+                          setNumberOfSensors(fullBanks.size()-errorBanks.size());
     setADCBankFlag();
     m_veloADCData=new VeloFullBanks();
     //
@@ -154,9 +160,20 @@ StatusCode PrepareVeloFullRawBuffer::getRawBanks()
       if(LHCb::RawBank::MagicPattern!=aBank->magic()){
         debug()<< " --> Bank with source ID: " << (aBank->sourceID())
                << " is corrupted! " <<endmsg;
+        return ( StatusCode::FAILURE );
       }
       // get the sensor number == sourceID
       int sensor=aBank->sourceID();
+      // skip data send out together with an error bank
+      if(0!=errorBanks.size()){
+        std::vector<LHCb::RawBank*>::const_iterator isError;
+        isError=find_if(errorBanks.begin(), errorBanks.end(), errorBankFinder(sensor));
+        if(m_decodeErrorStream){
+          if(isError==errorBanks.end()) continue;
+        }else{
+          if(isError!=errorBanks.end()) continue;
+        }
+      }
       debug()<< " sensor number: " << sensor <<endmsg;
       debug()<< " sensor vect size: " << m_sensors.size() <<endmsg;
       m_sensors.push_back(sensor);

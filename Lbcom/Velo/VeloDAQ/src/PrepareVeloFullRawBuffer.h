@@ -16,6 +16,8 @@
 #include "Tell1Kernel/VeloTell1Core.h"
 #include "VeloEvent/VeloFullBank.h"
 
+#include "Event/RawBank.h"
+
 /** @class PrepareVeloFullRawBuffer PrepareVeloFullRawBuffer.h
  *  
  *
@@ -34,7 +36,6 @@
 namespace LHCb
 {
   class RawEvent;
-  class RawBank;
 }
 
 using namespace VeloTELL1;
@@ -121,6 +122,23 @@ private:
   bool m_pedBankPresent;               /// flag to check if ped is sent out
   bool m_runWithODIN;
   bool m_roundRobin;
+  bool m_decodeErrorStream;
   
 };
 #endif // DECODEVELOFULLRAWBUFFER_H
+
+struct errorBankFinder{
+
+  errorBankFinder(unsigned int tell1): 
+    currentTell1 (tell1) 
+  { }
+
+  bool operator()(LHCb::RawBank* aBank) const{ 
+    return (aBank->sourceID())==static_cast<int>(currentTell1);
+  }
+
+private:
+
+  unsigned int currentTell1;
+
+};

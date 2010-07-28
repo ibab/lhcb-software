@@ -2,6 +2,13 @@
 ! Package     : VeloDAQ
 ! Responsible : Kurt Rinnert, Chris Parkes
 !--------------------------------------------------------------------------
+! 2010-07-28 - Tomasz Szumlak
+ - nzs data stream decoder code changed to cope with corrupted banks
+   PrepareVeloFullRawBuffer can now discard banks that contains data
+   for which error was triggered. The corrupted data can be analysed
+   in a separate job with flag:
+
+   DecodeErrorStream = True 
 
 !=========================  VeloDAQ v5r3 2010-07-20 =======================
 ! 2010-07-05 - David Hutchcroft
