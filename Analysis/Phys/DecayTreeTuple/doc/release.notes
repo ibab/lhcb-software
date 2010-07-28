@@ -4,6 +4,10 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2010-07-28 - Patrick Koppenburg
+ - TupleToolRecoStats: add quantitites we use to discard huge events.
+   Code by Fatima Soomro and Jibo He.
+
 !========================== DecayTreeTuple v3r6 2010-07-08 ==================
 
 ! 2010-07-03 - Tomasz Skwarnicki
