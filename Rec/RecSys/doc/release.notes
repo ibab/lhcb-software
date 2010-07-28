@@ -26,7 +26,7 @@ WARNING: two LHCb base package (RichRecBase and TrackEvent) have been added to t
   Rich/RichGlobalPID v3r14p1, Rich/RichHPDImageAnalysis v1r1, Rich/RichRecMonitors v2r29,
   Rich/RichRecQC v2r44, Rich/RichRecSys v3r31, Rich/RichRecTrackTools v1r23,
   Tr/TrackFitEvent v5r2, Tr/TrackFitter v2r50,
-  Tr/TrackTools  v3r34, Tr/TrackMonitors v1r28
+  Tr/TrackTools  v3r34, Tr/TrackMonitors v1r28, Tf/TrackSys v4r36
 
 - In Rich/RichGlobalPID v3r14p1:
   . Add a fast approximate log(exp(x)-1) expression. 
@@ -71,6 +71,9 @@ WARNING: two LHCb base package (RichRecBase and TrackEvent) have been added to t
   . Added property "Online" to OTTrackMonitor and OTHitEfficiencyMonitor to control
     number of produced histograms in online monitoring
 
+- In Tf/TrackSys v4r36:
+  . Added slot for DataType, propagated from Brunel
+  . Supressed PrimaryVertexChecker if DataType is DC06 savannah bug #70698
 
 
 </PRE><H1><A NAME=v10r2>2010-07-21 RecSys v10r2</A></H1><PRE>
