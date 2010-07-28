@@ -1,3 +1,7 @@
+2010-07-28  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbRelease/TarBall.py: fixed the extraction of the list of LCG externals.
+
 2010-07-26  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* LbRelease/python/LbRelease/GetPack.py: 
