@@ -942,6 +942,7 @@ inline unsigned int MDFWriterNet::getRunNumber(MDFHeader *mHeader, size_t /*len*
  * - Random/Other = the rest
  */
 inline void MDFWriterNet::countRouteStat(MDFHeader *mHeader, size_t) {
+  static const unsigned int bit77 =0x2000;
   static const unsigned int bit46 =0x4000;
   static const unsigned int bit11 =0x800;
   static const unsigned int bit33 =0x2;
@@ -952,19 +953,20 @@ inline void MDFWriterNet::countRouteStat(MDFHeader *mHeader, size_t) {
 
   unsigned int routeBitMask0 = mHeader->subHeader().H1->m_trMask[0];
   unsigned int routeBitMask1 = mHeader->subHeader().H1->m_trMask[1];
-//  unsigned int routeBitMask2 = mHeader->subHeader().H1->m_trMask[2];
-//  unsigned int routeBitMask3 = mHeader->subHeader().H1->m_trMask[3];
+  unsigned int routeBitMask2 = mHeader->subHeader().H1->m_trMask[2];
+  unsigned int routeBitMask3 = mHeader->subHeader().H1->m_trMask[3];
 
-  bool isPhys = false, isMBias = false, isLumi = false, isBeamGas = false;
+  bool isPhysHlt2 = false, isPhysHlt1 = false, isMBias = false, isLumi = false, isBeamGas = false;
   
     
-
-  isPhys = ((routeBitMask1 & bit46) && (routeBitMask0 & bit11));
+  isPhysHlt1 = (routeBitMask1 & bit46);
+  isPhysHlt2 = (routeBitMask2 & bit77);
   isMBias = (routeBitMask1 & bit47);
   isLumi = (routeBitMask1 & bit33);
   isBeamGas = (routeBitMask1 & bit49);
 
-  if(isPhys) m_currFile->incPhysEventsIn();
+//  if(isPhysHlt1) m_currFile->incPhysEventsIn();
+  if(isPhysHlt2) m_currFile->incPhysEventsIn();
   if(isMBias) m_currFile->incMBiasEventsIn();
   if(isLumi) m_currFile->incLumiEventsIn();
   if(isBeamGas) m_currFile->incBeamGasEventsIn();
@@ -972,11 +974,11 @@ inline void MDFWriterNet::countRouteStat(MDFHeader *mHeader, size_t) {
   if(routeBitMask1 & bit50) m_currFile->incLowLumi();
   if(routeBitMask1 & bit51) m_currFile->incMidLumi();
 
-  if(!isPhys && !isMBias && !isLumi && !isBeamGas) m_currFile->incRandEventsEx(); 
-  if(isPhys && !isMBias && !isLumi && !isBeamGas) m_currFile->incPhysEventsEx();
-  if(!isPhys && isMBias && !isLumi && !isBeamGas) m_currFile->incMBiasEventsEx();
-  if(!isPhys && !isMBias && isLumi && !isBeamGas) m_currFile->incLumiEventsEx();
-  if(!isPhys && !isMBias && !isLumi && isBeamGas) m_currFile->incBeamGasEventsEx();
+  if(!isPhysHlt2 && !isMBias && !isLumi && !isBeamGas) m_currFile->incRandEventsEx(); 
+  if(isPhysHlt2 && !isMBias && !isLumi && !isBeamGas) m_currFile->incPhysEventsEx();
+  if(!isPhysHlt2 && isMBias && !isLumi && !isBeamGas) m_currFile->incMBiasEventsEx();
+  if(!isPhysHlt2 && !isMBias && isLumi && !isBeamGas) m_currFile->incLumiEventsEx();
+  if(!isPhysHlt2 && !isMBias && !isLumi && isBeamGas) m_currFile->incBeamGasEventsEx();
 
 }
 /*
