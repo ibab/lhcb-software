@@ -3,13 +3,16 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
-</PRE><H1><A NAME=v37r5>2010-07-22 Brunel v37r6</A></H1><PRE>
-This version uses projects LCG 58d, Gaudi v21r10, LHCb v31r3, Lbcom v9r5,
+</PRE><H1><A NAME=v37r6>2010-07-28 Brunel v37r6</A></H1><PRE>
+This version uses projects LCG 58e, Gaudi v21r10p1, LHCb v31r4, Lbcom v9r5p1,
  Rec v10r3 and SQLDDDB v5r33, ParamFiles v8r2, FieldMap v5r5, AppConfig v3r*
 
 This is a production version for processing 2010 data and Montecarlo
 
-WARNING: an LHCb base package (RichRecBase) has been added to this version so might cause problems in configuration
+
+- It was discovered that LCG_58d has major problems with Oracle, Pyroot and Xerces.
+  Gaudi v21r10p1 will pick up the patched LCGCMT.
+
 
 - New minor version to fix urgent problems in production:
   . Crashes in brunel from a segfault in KalmanFitResult savannah bug #70643
