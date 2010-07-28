@@ -1,6 +1,6 @@
 # local imports
 from Common import setCMTPathEnv, doesDirMatchNameAndVersion, isDirSelected
-from Common import addCMTTag, isCMTWarning
+from Common import addCMTTag, CMTLog
 
 
 
@@ -78,10 +78,7 @@ class Package(object):
 #                        words = line.split()
 #                        self._parentprojectpath = os.path.realpath(words[-2].replace(")",""))
                 for line in p.stderr:
-                    if isCMTWarning(line) and line.find("not found") != -1 :
-                        log.debug(line[:-1])
-                    else : 
-                        log.warning(line[:-1])
+                    CMTLog(line[:-1])
                 retcode = os.waitpid(p.pid, 0)[1]
                 if retcode != 0:
                     log.warning("return code of 'cmt show project' in %s is %s", wdir, retcode)
@@ -99,10 +96,7 @@ class Package(object):
             for line in p.stdout:
                 self._version = line[:-1]
             for line in p.stderr:
-                if isCMTWarning(line) and line.find("not found") != -1 :
-                    log.debug(line[:-1])
-                else : 
-                    log.warning(line[:-1])
+                CMTLog(line[:-1])
             retcode = os.waitpid(p.pid, 0)[1]
             if retcode != 0:
                 log.warning("return code of 'cmt show version' in %s is %s", wdir, retcode)
@@ -136,23 +130,8 @@ class Package(object):
         return versiondir
     
     def coreName(self):
-        log = logging.getLogger()
         if self._corename is None:
-            wdir = os.path.join(self.fullLocation(), "cmt")
-            os.chdir(wdir)
-            env = Env.getDefaultEnv()
-            env["PWD"] = wdir
-            p = Popen(["cmt", "show", "macro_value", "package"], stdout=PIPE, stderr=PIPE, close_fds=True)
-            for line in p.stdout:
-                self._corename = line[:-1]
-            for line in p.stderr:
-                if isCMTWarning(line) and line.find("not found") != -1 :
-                    log.debug(line[:-1])
-                else : 
-                    log.warning(line[:-1])
-            retcode = os.waitpid(p.pid, 0)[1]
-            if retcode != 0:
-                log.warning("return code of 'cmt show macro_value package' in %s is %s", wdir, retcode)
+            self._corename = self.getMacroValue("package")
             if self._corename == self.realVersion() :
                 if self.hasVersionDirectory() :
                     self._corename = self.location().split(os.sep)[-2]                    
@@ -217,29 +196,16 @@ class Package(object):
         if not self._constituents.has_key(binary):
             self._constituents[binary] = Set()
         if not self._constituents[binary] :
-            wdir = os.path.join(self.fullLocation(), "cmt")
-            os.chdir(wdir)
-            env["PWD"] = wdir
-            p = Popen(["cmt", "show", "macro_value", "all_constituents"], 
-                      stdout=PIPE, stderr=PIPE, close_fds=True)
-            for line in p.stdout:
-                for c in line[:-1].split() :
-                    if c in self._allconstituents :
-                        for a in self._allconstituents :
-                            if a == c :
-                                self._constituents[binary].add(a)
-                                break
-                    else :
-                        self._constituents[binary].add(c)
-                        self._allconstituents.add(c)
-            for line in p.stderr:
-                if isCMTWarning(line) and line.find("not found") != -1 :
-                    log.debug(line[:-1])
-                else : 
-                    log.warning(line[:-1])
-            retcode = os.waitpid(p.pid, 0)[1]
-            if retcode != 0:
-                log.warning("return code of 'cmt show macro_value all_constituents' in %s is %s", wdir, retcode)
+            const_val = self.getMacroValue("all_constituents")
+            for c in const_val.split() :
+                if c in self._allconstituents :
+                    for a in self._allconstituents :
+                        if a == c :
+                            self._constituents[binary].add(a)
+                            break
+                else :
+                    self._constituents[binary].add(c)
+                    self._allconstituents.add(c)
             log.debug("Found %s constituents in %s for binary %s" % (len(self._constituents[binary]), self.name(), binary) )
 
         return self._constituents[binary]
@@ -321,10 +287,7 @@ class Package(object):
                         else :
                             packagelist.add(self.__class__(thepack, parentprojectpath=parentprojectpath))
             for line in p.stderr:
-                if isCMTWarning(line) and line.find("not found") != -1 :
-                    log.debug(line[:-1])
-                else : 
-                    log.warning(line[:-1])
+                CMTLog(line[:-1])
             retcode = os.waitpid(p.pid, 0)[1]
             if retcode != 0:
                 log.warning("return code of 'cmt show uses' in %s is %s", wdir, retcode)
@@ -407,6 +370,22 @@ class Package(object):
             self._extpaklist[indx] = self.binaryExternalPackages(cmtpath, cmtprojectpath)
         return self._extpaklist[indx]
 
+    def getMacroValue(self, macro_name):
+        here = os.getcwd()
+        log = logging.getLogger()
+        wdir = os.path.join(self.fullLocation(), "cmt")
+        env = Env.getDefaultEnv()
+        env["PWD"] = wdir
+        os.chdir(wdir)
+        p = Popen(["cmt", "show", "macro_value", macro_name], stdout=PIPE, stderr=PIPE, close_fds=True)
+        macro_val = p.stdout.read()[:-1]
+        for line in p.stderr:
+            CMTLog(line[:-1])
+        retcode = os.waitpid(p.pid, 0)[1]
+        if retcode != 0:
+            log.debug("return code of 'cmt show macro_value %s' in %s is %s" % (macro_name, wdir, retcode))
+        os.chdir(here)
+        return macro_val
         
 def hasRequirementsFile(dirpath):
     hasfile = False

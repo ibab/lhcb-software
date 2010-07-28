@@ -1,3 +1,9 @@
+2010-07-28  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbUtils/CMT/Common.py: created a new function CMTLog for the logging of CMT messages
+	* python/LbUtils/CMT/Package.py: factored out the "cmt show macro_value" in a new method
+	called getMacroValue.
+
 2010-07-26  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* LbUtils/python/LbUtils/File.py: 

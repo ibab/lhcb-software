@@ -3,6 +3,7 @@
 from LbUtils.Env import getDefaultEnv
 
 # global imports
+import logging
 import os
 
 
@@ -107,4 +108,9 @@ def isCMTMessage(line, extra=None):
 def isCMTWarning(line):
     return isCMTMessage(line, " Warning:")
 
-        
+def CMTLog(msg):
+    log = logging.getLogger()
+    if isCMTWarning(msg) and msg.find("not found") != -1 :
+        log.debug(msg)
+    else : 
+        log.warning(msg)
