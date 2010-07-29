@@ -3,9 +3,19 @@
 ! Responsible : Gerhard Raven
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
+
+! 2010-07-29 - Vanya Belyaev
+
+ - fix Hlt::TrackFilter & Hlt::TrackPipe 
+
+ - cmt/requirments 
+
+     version increment to v6r1 
+
 !========================== HltCommon v6r0p1 2010-06-06 ===================
 ! 2010-06-06 - Gerhard Raven
  - add functors to cut on ImpactParameter Significance
+
 
 !========================== HltCommon v6r0 2010-05-27 ===================
 ! 2010-05-19 - V. Gligorov
