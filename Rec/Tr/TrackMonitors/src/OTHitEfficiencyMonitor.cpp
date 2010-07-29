@@ -187,7 +187,7 @@ OTHitEfficiencyMonitor::OTHitEfficiencyMonitor( const std::string& name,
     m_linearextrapolator("TrackLinearExtrapolator")
 {
   declareProperty( "TrackLocation", m_trackLocation = LHCb::TrackLocation::Default  );
-  declareProperty( "MinOTHits",m_minOTHitsPerTrack = 5   ) ;
+  declareProperty( "MinOTHits",m_minOTHitsPerTrack = 15   ) ;
   declareProperty( "MaxChi2PerDoF",m_maxChi2PerDoF = 2   ) ;
   declareProperty( "MaxDistError", m_maxDistError = 0.2 ) ;
   declareProperty( "RawBankDecoder",m_decoder ) ;
