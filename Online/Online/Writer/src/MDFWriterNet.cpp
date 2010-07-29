@@ -262,11 +262,13 @@ StatusCode MDFWriterNet::initialize(void)
       char* msg = (char*) malloc(msg_size);
       snprintf(msg, msg_size, "start%c%i", DELIMITER, getpid());
       if(mq_send(m_mq, msg, msg_size, 0) < 0)  {
-          *m_log << MSG::WARNING
-                 << "Could not send message, errno=" << errno
-                 << ". Closing queue"
-                << endmsg;
-          m_mq_available = false; // prevent from further trying to protect writer
+          if(errno != EAGAIN) {
+              *m_log << MSG::WARNING
+                     << "Could not send message, errno=" << errno
+                     << ". Closing queue"
+                     << endmsg;
+              m_mq_available = false; // prevent from further trying to protect writer
+          }
       }
       free(msg);
       msg = NULL;
@@ -358,11 +360,13 @@ StatusCode MDFWriterNet::finalize(void)
       char* msg = (char*) malloc(msg_size);
       snprintf(msg, msg_size, "stop%c%i", DELIMITER,  getpid() );
       if(mq_send(m_mq, msg, msg_size, 0) < 0) {
-          *m_log << MSG::WARNING
-                 << "Could not send message, errno=" << errno
-                 << ". Closing queue"
-                 << endmsg;
-          m_mq_available = false;
+          if(errno != EAGAIN) {
+              *m_log << MSG::WARNING
+                     << "Could not send message, errno=" << errno
+                     << ". Closing queue"
+                     << endmsg;
+              m_mq_available = false;
+          }
       }
       free(msg);
       msg = NULL;
@@ -459,11 +463,13 @@ File* MDFWriterNet::createAndOpenFile(unsigned int runNumber)
           DELIMITER, (unsigned int) tv.tv_sec,
           DELIMITER, (int) tv.tv_usec);
       if(mq_send(m_mq, msg, msg_size, 0) < 0) {
-          *m_log << MSG::WARNING
-                 << "Could not send message, errno=" << errno
-                 << ". Closing queue"
-                 << endmsg;
-          m_mq_available = false;
+          if(errno != EAGAIN) {
+              *m_log << MSG::WARNING
+                     << "Could not send message, errno=" << errno
+                     << ". Closing queue"
+                     << endmsg;
+              m_mq_available = false;
+          }
       }
       free(msg);
       msg = NULL;
@@ -584,11 +590,13 @@ void MDFWriterNet::closeFile(File *currFile)
           DELIMITER, (int) tv.tv_usec,
           DELIMITER, statEventsCharString); 
       if(mq_send(m_mq, msg, msg_size, 0) < 0) {
-          *m_log << MSG::WARNING
-                 << "Could not send message, errno=" << errno
-                 << ". Closing queue"
-                 << endmsg;
-          m_mq_available = false;
+          if(errno != EAGAIN) {
+              *m_log << MSG::WARNING
+                     << "Could not send message, errno=" << errno
+                     << ". Closing queue"
+                     << endmsg;
+              m_mq_available = false;
+          }
       }
       free(msg);
       msg = NULL;
@@ -844,7 +852,6 @@ StatusCode MDFWriterNet::writeBuffer(void *const /*fd*/, const void *data, size_
  
   // after every MB send statistics
   if (m_mq_available && (totalBytesWritten % (30*1048576) < len || tv.tv_sec - m_prevMsgQueue.tv_sec > 0.5)) {
-
       unsigned int statEvents[MAX_STAT_TYPES];
       if(m_currFile->getStatEvents(statEvents, MAX_STAT_TYPES) != 0) {
         *m_log << MSG::ERROR << WHERE << "Error getting the routed event statistics" << endmsg;
@@ -880,11 +887,13 @@ StatusCode MDFWriterNet::writeBuffer(void *const /*fd*/, const void *data, size_
       DELIMITER, statEventsCharString );
 
       if(mq_send(m_mq, msg, msg_size, 0) < 0) {
-          *m_log << MSG::WARNING
-                 << "Could not send message, errno=" << errno
-                 << ". Closing queue"
-                 << endmsg;
+          if(errno != EAGAIN) {
+              *m_log << MSG::WARNING
+                     << "Could not send message, errno=" << errno
+                     << ". Closing queue"
+                     << endmsg;
               m_mq_available = false;
+          }
       }
       free(msg);
       msg = NULL;
@@ -944,17 +953,17 @@ inline unsigned int MDFWriterNet::getRunNumber(MDFHeader *mHeader, size_t /*len*
 inline void MDFWriterNet::countRouteStat(MDFHeader *mHeader, size_t) {
   static const unsigned int bit77 =0x2000;
   static const unsigned int bit46 =0x4000;
-  static const unsigned int bit11 =0x800;
+//  static const unsigned int bit11 =0x800;
   static const unsigned int bit33 =0x2;
   static const unsigned int bit47 =0x8000;
   static const unsigned int bit49 =0x20000;
   static const unsigned int bit50 =0x40000;
   static const unsigned int bit51 =0x80000;
 
-  unsigned int routeBitMask0 = mHeader->subHeader().H1->m_trMask[0];
+//  unsigned int routeBitMask0 = mHeader->subHeader().H1->m_trMask[0];
   unsigned int routeBitMask1 = mHeader->subHeader().H1->m_trMask[1];
   unsigned int routeBitMask2 = mHeader->subHeader().H1->m_trMask[2];
-  unsigned int routeBitMask3 = mHeader->subHeader().H1->m_trMask[3];
+//  unsigned int routeBitMask3 = mHeader->subHeader().H1->m_trMask[3];
 
   bool isPhysHlt2 = false, isPhysHlt1 = false, isMBias = false, isLumi = false, isBeamGas = false;
   
