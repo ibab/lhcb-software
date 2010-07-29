@@ -616,94 +616,95 @@ def generateLCGTar(project, version=None, cmtconfig=None,
         else :
             filename = os.path.join(output_dir, prj_conf.LCGTarBallName(version, cmtconfig, full=True))
         log.info("The output file name is %s" % filename)
-        shared_pathfilter = projectFilter        
-        if cmtconfig :
-            binary_pathfilter = lambda x : projectFilter(x, cmtconfig)
-        ext_shared_dict = {}
-        ext_binary_dict = {}
-        shared_location = lcg_prj.fullLocation()
-        if os.path.exists(shared_location) :
-            shared_prefix   = os.sep.join(["external", lcg_prj.name(), lcg_prj.version()])
-            ext_shared_dict[shared_location] = shared_prefix
-            log.debug("Adding %s to %s" % (shared_location, shared_prefix))
-        if cmtconfig :
-            for bin_location, bin_prefix in listTarBallObjects(shared_location, binary_pathfilter, shared_prefix, top_most=True) :
-                if os.path.exists(bin_location):
-                    ext_binary_dict[bin_location] = bin_prefix
-                    log.debug("Adding %s to %s" % (bin_location, bin_prefix))
-        os.environ["CMTEXTRATAGS"] = "LHCb,LHCbGrid"
-        ext_dict = {}
-        lcg_relloc = None
-        lcg_extloc = None
-        for p in prj.binaryExternalPackages(cmtprojectpath=os.environ["CMTPROJECTPATH"], 
-                                            binary=cmtconfig) :
-            if p.name().split(os.sep)[0] == "LCG_Interfaces" :
-                if not lcg_relloc :
-                    lcg_relloc = p.getMacroValue("LCG_release")
-                if not lcg_extloc :
-                    lcg_relloc = p.getMacroValue("LCG_external")
-                ext_name = os.sep.join(p.name().split(os.sep)[1:])
-                ext_dict[ext_name] = []
-                ext_dict[ext_name].append(p.fullLocation())
-                ext_home = p.getMacroValue("%s_home" % ext_name)
-                ext_home = ext_home.replace("\\", os.sep)
-                ext_home = ext_home.replace("%SITEROOT%", os.environ.get("SITEROOT", ""))
-                ext_dict[ext_name].append(ext_home)
-                ext_config_version = p.getMacroValue("%s_config_version" % ext_name)
-                ext_dict[ext_name].append(ext_config_version)
-                ext_native_version = p.getMacroValue("%s_native_version" % ext_name)
-                ext_dict[ext_name].append(ext_native_version)
-                if lcg_extloc and ext_home.startswith(lcg_extloc) :
-                    lcg_prefix = lcg_extloc
-                elif lcg_relloc and ext_home.startswith(lcg_relloc) :
-                    lcg_prefix = lcg_relloc
-                else :
-                    lcg_prefix = ""
-                ext_dict[ext_name].append(lcg_prefix)
-                ext_coreloc = ""
-                if ext_home :
-                    core_list = []
-                    ext_coreloc = ext_home.replace(lcg_prefix + os.sep,"")
-                    for c in ext_coreloc.split(os.sep) :
-                        core_list.append(c)
-                        if c == ext_native_version :
-                            break
-                    if core_list :
-                        ext_coreloc = os.sep.join(core_list)
-                    path_list = []
-                    ext_pathloc = ext_home
-                    for c in ext_home.split(os.sep) :
-                        path_list.append(c)
-                        if c == ext_native_version :
-                            break
-                    if path_list :
-                        ext_pathloc = os.sep.join(path_list)
-                ext_dict[ext_name].append(ext_pathloc)
-                ext_dict[ext_name].append(ext_coreloc)
-
-                
-        for p in ext_dict.keys() :
-            if ext_dict[p][1] :
-                shared_prefix = os.path.join("external",ext_dict[p][6])
-                shared_location = ext_dict[p][5]
-                if shared_location.endswith(shared_prefix) and os.path.exists(shared_location):
-                    ext_shared_dict[shared_location] = shared_prefix
-                    log.debug("Adding %s to %s" % (shared_location, shared_prefix))
-                if cmtconfig :
-                    for bin_location, bin_prefix in listTarBallObjects(shared_location, binary_pathfilter, shared_prefix, top_most=True) :
-                        if os.path.exists(bin_location):
-                            ext_binary_dict[bin_location] = bin_prefix
-                            log.debug("Adding %s to %s" % (bin_location, bin_prefix))
-                                    
-        log.info("Adding %d shared locations" % len(ext_shared_dict))         
-        log.info("Adding %d binary locations" % len(ext_binary_dict))         
-#        print ext_shared_dict
-#        print ext_binary_dict
-        log.debug("="*100)
         if os.path.exists(filename) and not (overwrite or update) :
             log.info("The file %s already exists. Skipping." % filename)
             status = 2
         else :
+            shared_pathfilter = projectFilter        
+            if cmtconfig :
+                binary_pathfilter = lambda x : projectFilter(x, cmtconfig)
+            ext_shared_dict = {}
+            ext_binary_dict = {}
+            shared_location = lcg_prj.fullLocation()
+            if os.path.exists(shared_location) :
+                shared_prefix   = os.sep.join(["external", lcg_prj.name(), lcg_prj.version()])
+                ext_shared_dict[shared_location] = shared_prefix
+                log.debug("Adding %s to %s" % (shared_location, shared_prefix))
+            if cmtconfig :
+                for bin_location, bin_prefix in listTarBallObjects(shared_location, binary_pathfilter, shared_prefix, top_most=True) :
+                    if os.path.exists(bin_location):
+                        ext_binary_dict[bin_location] = bin_prefix
+                        log.debug("Adding %s to %s" % (bin_location, bin_prefix))
+            os.environ["CMTEXTRATAGS"] = "LHCb,LHCbGrid"
+            ext_dict = {}
+            lcg_relloc = None
+            lcg_extloc = None
+            for p in prj.binaryExternalPackages(cmtprojectpath=os.environ["CMTPROJECTPATH"], 
+                                                binary=cmtconfig) :
+                if p.name().split(os.sep)[0] == "LCG_Interfaces" :
+                    if not lcg_relloc :
+                        lcg_relloc = p.getMacroValue("LCG_release")
+                    if not lcg_extloc :
+                        lcg_relloc = p.getMacroValue("LCG_external")
+                    ext_name = os.sep.join(p.name().split(os.sep)[1:])
+                    ext_dict[ext_name] = []
+                    ext_dict[ext_name].append(p.fullLocation())
+                    ext_home = p.getMacroValue("%s_home" % ext_name)
+                    ext_home = ext_home.replace("\\", os.sep)
+                    ext_home = ext_home.replace("%SITEROOT%", os.environ.get("SITEROOT", ""))
+                    ext_dict[ext_name].append(ext_home)
+                    ext_config_version = p.getMacroValue("%s_config_version" % ext_name)
+                    ext_dict[ext_name].append(ext_config_version)
+                    ext_native_version = p.getMacroValue("%s_native_version" % ext_name)
+                    ext_dict[ext_name].append(ext_native_version)
+                    if lcg_extloc and ext_home.startswith(lcg_extloc) :
+                        lcg_prefix = lcg_extloc
+                    elif lcg_relloc and ext_home.startswith(lcg_relloc) :
+                        lcg_prefix = lcg_relloc
+                    else :
+                        lcg_prefix = ""
+                    ext_dict[ext_name].append(lcg_prefix)
+                    ext_coreloc = ""
+                    ext_pathloc = ""
+                    if ext_home :
+                        core_list = []
+                        ext_coreloc = ext_home.replace(lcg_prefix + os.sep,"")
+                        for c in ext_coreloc.split(os.sep) :
+                            core_list.append(c)
+                            if c == ext_native_version :
+                                break
+                        if core_list :
+                            ext_coreloc = os.sep.join(core_list)
+                        path_list = []
+                        ext_pathloc = ext_home
+                        for c in ext_home.split(os.sep) :
+                            path_list.append(c)
+                            if c == ext_native_version :
+                                break
+                        if path_list :
+                            ext_pathloc = os.sep.join(path_list)
+                    ext_dict[ext_name].append(ext_pathloc)
+                    ext_dict[ext_name].append(ext_coreloc)
+    
+                    
+            for p in ext_dict.keys() :
+                if ext_dict[p][1] :
+                    shared_prefix = os.path.join("external",ext_dict[p][6])
+                    shared_location = ext_dict[p][5]
+                    if shared_location.endswith(shared_prefix) and os.path.exists(shared_location):
+                        ext_shared_dict[shared_location] = shared_prefix
+                        log.debug("Adding %s to %s" % (shared_location, shared_prefix))
+                    if cmtconfig :
+                        for bin_location, bin_prefix in listTarBallObjects(shared_location, binary_pathfilter, shared_prefix, top_most=True) :
+                            if os.path.exists(bin_location):
+                                ext_binary_dict[bin_location] = bin_prefix
+                                log.debug("Adding %s to %s" % (bin_location, bin_prefix))
+                                        
+            log.info("Adding %d shared locations" % len(ext_shared_dict))         
+            log.info("Adding %d binary locations" % len(ext_binary_dict))         
+    #        print ext_shared_dict
+    #        print ext_binary_dict
+            log.debug("="*100)
             if overwrite :
                 os.remove(filename)
             status = createTarBallFromFilterDict(ext_shared_dict, filename, shared_pathfilter, 

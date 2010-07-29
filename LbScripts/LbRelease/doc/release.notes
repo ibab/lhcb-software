@@ -1,3 +1,7 @@
+2010-07-29  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbRelease/TarBall.py: added an early check on the existence of the output file.
+
 2010-07-28  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbRelease/TarBall.py: fixed the extraction of the list of LCG externals.
