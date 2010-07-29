@@ -1,8 +1,8 @@
-# $Id: StrippingLambdab2JpsiLambda.py,v 1.2 2010-07-29 16:45:20 yamhis Exp $
+# $Id: StrippingLambdab2JpsiLambda.py,v 1.3 2010-07-29 18:36:22 yamhis Exp $
 
 __author__ = ['Yasmine Amhis']
 __date__ = '29/07/2010'
-__version__ = '$Revision: 1.2 $'
+__version__ = '$Revision: 1.3 $'
 
 '''
 StrippingSelections for Lambda_b0-> Jpsi Lambda ( LL and DD )
@@ -42,8 +42,8 @@ class StrippingLambdab2JpsiLambdaConf(LHCbConfigurableUser):
         #Lambda_b cuts
         #---------------------------------------------------------         
         ,	"LambdabMassWin"     : 500.0	# MeV
-        ,	"LambdabVCHI2" 	: 9.0	# adimensional
-        ,       "LambdabDirection": 1  # adimentional only used to make sure that the PV-refit is done        
+        ,	"LambdabVCHI2" 	     : 25.0	# adimensional
+        ,       "LambdabDirection"   : 1  # adimentional only used to make sure that the PV-refit is done        
         }
     
     

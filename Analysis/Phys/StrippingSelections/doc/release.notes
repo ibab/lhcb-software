@@ -4,6 +4,10 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
+
+! 2010-07-29 -Yasmine Amhis 
+    -Change a cut (LambdabVCHI2) in StrippingLambdab2JpsiLambda
+
 ! 2010-07-29 - Philip Hunt
   - Added new stripping lines for D0 -> K3Pi and D*+ -> (D0 -> K3Pi) pi+ for
     the cross-section measurement (StrippingD02K3Pi.py).
