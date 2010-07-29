@@ -110,7 +110,7 @@ def isCMTWarning(line):
 
 def CMTLog(msg):
     log = logging.getLogger()
-    if isCMTWarning(msg) and msg.find("not found") != -1 :
+    if isCMTWarning(msg) and ( msg.find("not found") != -1 or msg.find("Structuring style") != -1 ) :
         log.debug(msg)
     else : 
         log.warning(msg)

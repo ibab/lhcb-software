@@ -2,7 +2,7 @@
 # local import
 from Package import Package, getPackagesFromDir
 from Common import doesDirMatchNameAndVersion, isDirSelected, setCMTPathEnv
-from Common import isCMTWarning
+from Common import isCMTWarning, CMTLog
 
 # package imports
 from LbUtils import Env
@@ -84,10 +84,7 @@ class Project(object):
             line = p.stdout.readline()[:-1]
             self._name = line.split()[0]
             for line in p.stderr:
-                if isCMTWarning(line) and line.find("not found") != -1 :
-                    log.debug(line[:-1])
-                else : 
-                    log.warning(line[:-1])
+                CMTLog(line[:-1])
             retcode = os.waitpid(p.pid, 0)[1]
             if retcode != 0 :
                 log.warning("return code of 'cmt show projects' in %s is %s", wdir, retcode)
@@ -156,7 +153,7 @@ class Project(object):
                             if m : 
                                 self._baselist.add(self.__class__(m.group(1)))
             for line in p.stderr:
-                log.debug(line[:-1])
+                CMTLog(line[:-1])
             os.waitpid(p.pid, 0)[1]
         return self._baselist
     
