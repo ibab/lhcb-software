@@ -397,7 +397,7 @@ const string& NodeTaskMon::updateConnections() {
     // cout << "Updating connection status of " << name() << endl;
     for(j=m_connections.begin(); j != m_connections.end(); ++j) {
       if ( force || (*j).second > 0 ) {
-	MethodCall c("ping",Args((*j).first,1,9000));
+	MethodCall c("ping",Args((*j).first,2,9000));
 	//cout << " ... PING " << (*j).first << " from " << name() << endl;
 	MethodResponse r(Server(name(),8088)(c));
 	//r.print();
@@ -407,7 +407,7 @@ const string& NodeTaskMon::updateConnections() {
 	  if ( l->size() >= 1 ) {
 	    l = (list<Arg>*)(*l->begin()).data.tuple->data;
 	    for(list<Arg>::const_iterator i=l->begin(); i != l->end(); ++i) {
-	      if ( (*i).type==Arg::STRING && ::strstr((*i).data.str," 1 received")!=0) 
+	      if ( (*i).type==Arg::STRING && ::strstr((*i).data.str," 100% packet loss")==0) 
 		(*j).second = 0;
 	    }
 	  }
