@@ -26,8 +26,8 @@ from StrippingSelections import StrippingDstarD02KKpipiRobust
 from StrippingSelections import StrippingDstarD02KKpipiRegular
 from StrippingSelections import StrippingDstarD02KKmumuRobust
 from StrippingSelections import StrippingDstarD02KKmumuRegular
-from StrippingSelections.StrippingDstarPromptWithD02K3Pi import StrippingDstarPromptWithD02K3PiConf
-from StrippingSelections.StrippingD02K3PiForCrossSection import StrippingD02K3PiForCrossSectionConf
+#from StrippingSelections.StrippingDstarPromptWithD02K3Pi import StrippingDstarPromptWithD02K3PiConf
+#from StrippingSelections.StrippingD02K3PiForCrossSection import StrippingD02K3PiForCrossSectionConf
 
 from StrippingSelections.StrippingDstarPromptWithD02HH import StrippingDstarPromptWithD02HHConf
 from StrippingSelections.StrippingDstarVeryLooseWithD02HH import StrippingDstarVeryLooseWithD02HHConf
@@ -39,8 +39,9 @@ from StrippingSelections.StrippingD0ForBXX import StrippingD0forBXXConf
 from StrippingSelections.StrippingBd2KstarMuMu import StrippingBd2KstarMuMuConf
 from StrippingSelections.StrippingLambdac      import StrippingLambdacConf
 
-
 from StrippingSelections.StrippingDs2piPhiNoPt import StrippingDs2piPhiConf
+
+from StrippingSelections.StrippingD02K3Pi import StrippingD02K3PiForXSectionConf 
 
 stream = StrippingStream("Charm")
 
@@ -128,4 +129,8 @@ stream.appendLines( [ StrippingCcbar2PpbarConf().Nominal_Line() ] )
 stream.appendLines( [ StrippingCcbar2PpbarConf().Loose_Line() ] )
 #stream.appendLines( StrippingDstarPromptWithD02K3PiConf().lines() )
 #stream.appendLines( StrippingD02K3PiForCrossSectionConf().lines() )
+D02K3PiForXSection = StrippingD02K3PiForXSectionConf(
+  'D02K3PiForCrossSection'
+  , config = StrippingD02K3PiForXSectionConf._default_config)
+
 stream.appendLines( StrippingLambdacConf().lines() )

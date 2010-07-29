@@ -4,6 +4,17 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
+! 2010-07-29 - Philip Hunt
+  - Added new stripping lines for D0 -> K3Pi and D*+ -> (D0 -> K3Pi) pi+ for
+    the cross-section measurement (StrippingD02K3Pi.py).
+    These are based on the "Selection" framework requirement, and will replace
+    the previous lines found in StrippingD02K3PiForXSection.py.
+    The lines now take about ~2ns per event on average on the previous test
+    data, and ~17ns per event on average for the Reco04-Stripping07 high pileup
+    data
+  - The physics line for D*+ -> (D0 -> K3Pi) pi+ , found in
+    StrippingDstarPromptWithD02K3Pi.py will be left disabled until these lines 
+    have been optimised for the current run conditions
 
 ! 2010-07-29 -Yasmine Amhis
   - Update  StrippingLambdab2JpsiLambda.py
