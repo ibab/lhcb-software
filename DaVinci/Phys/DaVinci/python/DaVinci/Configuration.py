@@ -1,7 +1,7 @@
 """
 High level configuration tools for DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.115 2010-07-22 07:05:30 jpalac Exp $"
+__version__ = "$Id: Configuration.py,v 1.116 2010-07-29 15:54:54 panmanj Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -223,7 +223,7 @@ class DaVinci(LHCbConfigurableUser) :
         LumiAlgsConf().LumiSequencer = lumiSeq
         seq += [ lumiSeq ]
         # add integrator for normalization
-        self.setOtherProps(LumiIntegratorConf(),["InputType"])
+        self.setOtherProps(LumiIntegratorConf(),["InputType","TupleFile"])
         lumiInt = GaudiSequencer("IntegratorSeq")
         LumiIntegratorConf().LumiSequencer = lumiInt
         seq += [ lumiInt ]

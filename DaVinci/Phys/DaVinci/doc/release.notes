@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.435 2010-07-27 14:09:29 jpalac Exp $
+! $Id: release.notes,v 1.436 2010-07-29 15:54:54 panmanj Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -8,6 +8,9 @@
 ! Do not forget to update requirements and job/DaVinci_Ganga.py before tagging
 !
 !-----------------------------------------------------------------------------
+
+! 2010-07-29 - Jaap Panman
+ - Configuration: Pass ntuple file name on to LumiAlgsConf
 
 !========================== DaVinci v25r7 2010-07-27 =======================
 
