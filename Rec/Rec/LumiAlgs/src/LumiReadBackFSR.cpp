@@ -76,6 +76,11 @@ StatusCode LumiReadBackFSR::finalize() {
   // use tool to get summay for this file
   info() << "integrated normalization: " << m_integratorTool->integral( ) << endmsg;
 
+  // final results
+  info() << "Integrated luminosity: " 
+	 << m_integratorTool->lumiValue() << " +/- "
+	 << m_integratorTool->lumiError() << " [pb-1]" << endmsg;
+
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
 

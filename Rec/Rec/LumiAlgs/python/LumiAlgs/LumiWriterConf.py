@@ -83,9 +83,9 @@ class LumiWriterConf(LHCbConfigurableUser):
     writeLumiSequence( HltLumiSummaryDecoder( OutputLevel = debugOPL ))
     # add filter to check if this was L0 triggered
     filterRan = FilterOnLumiSummary('LumiRandomFilter', CounterName = "Random", ValueName = "RandomMethod")
-    filterLow = FilterOnLumiSummary('LumiLowFilter', CounterName = "Method", ValueName = "L0RateMethod")
+    #filterLow = FilterOnLumiSummary('LumiLowFilter', CounterName = "Method", ValueName = "L0RateMethod")
     writeLumiSequence( Sequence('filterLumi', 
-                                Members = [filterRan, filterLow],  
+                                Members = [filterRan], #, filterLow],  
                                 ModeOR = True,
                                 ShortCircuit = True,
                                 IgnoreFilterPassed = False,

@@ -12,6 +12,11 @@
 #include "Event/HltLumiSummary.h"
 #include "Event/LumiFSR.h"
 #include "Event/LumiCounters.h"
+#include "Event/LumiMethods.h"
+
+// CondDB
+#include "DetDesc/Condition.h"
+#include "GaudiKernel/IDetDataSvc.h"
 
 // local
 #include "LumiAccounting.h"
@@ -65,6 +70,27 @@ StatusCode LumiAccounting::initialize() {
   m_lumiFSRs = new LHCb::LumiFSRs();
   m_lumiFSR = 0;
   put(m_fileRecordSvc, m_lumiFSRs, m_FSRName);
+
+  // initialize calibration factors
+  for ( int key = 0; key <= LHCb::LumiCounters::Random; key++ ) {
+    std::string counterName = LHCb::LumiCounters::counterKeyToString( key );
+    m_calibThresholds.push_back(0);
+  }
+
+  // get the detectorDataSvc
+  m_dds = detSvc();
+  if (m_dds == NULL) {
+    error() << "No thresholds defined for lumi counters (no dds)" << endmsg ;
+    m_statusThresholds = 0;         // no database
+    return StatusCode::SUCCESS;
+  }
+
+  // register conditions for database acces
+  sc = registerDB(); // must be executed first
+  if ( sc.isFailure() ) {
+    error() << "No thresholds defined for lumi counters (no registration)" << endmsg ;
+    m_statusThresholds = 0;         // no database
+  }
 
   return StatusCode::SUCCESS;
 }
@@ -140,6 +166,11 @@ StatusCode LumiAccounting::execute() {
     int value = summaryIter->second;
     // increment!
     m_lumiFSR->incrementInfo(key, value);
+    // check if over threshold and increment with offset
+    // TODO: !!!  threholds should be in database !!!
+    int threshold = m_calibThresholds[key];
+    int binary = value > threshold ? 1 : 0 ;
+    m_lumiFSR->incrementInfo(key + LHCb::LumiMethods::PoissonOffset, binary);
   }
 
   return StatusCode::SUCCESS;
@@ -162,7 +193,7 @@ StatusCode LumiAccounting::finalize() {
       // sum up the information
       sumFSR += *(*fsr);
       // print the individual FSR
-      info() << "FSR: " << *(*fsr) << endmsg; 
+      verbose() << "FSR: " << *(*fsr) << endmsg; 
     }
     // print the integral
     info() << "INTEGRAL: " << sumFSR << endmsg; 
@@ -197,3 +228,40 @@ StatusCode LumiAccounting::finalize() {
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
 
+
+//=============================================================================
+// DB access
+//=============================================================================
+StatusCode LumiAccounting::registerDB() {
+  // register the DB conditions for the update maganer
+  debug() << "==> Register DB" << endmsg;
+
+  // register thresholds
+  try {
+    registerCondition("Conditions/Lumi/LHCb/ThresholdCalibration",
+                      m_condThresholds, &LumiAccounting::i_cacheThresholdData);
+  }
+  catch (GaudiException &err){
+    error() << err << endmsg;
+    m_statusThresholds = 0;        // no thresholds
+    return StatusCode::SUCCESS;
+  }
+  return StatusCode::SUCCESS;
+}
+
+//=========================================================================
+//  Extract data from relativeCalibration
+//=========================================================================
+StatusCode LumiAccounting::i_cacheThresholdData() {
+
+  debug() << "callback ThresholdCalibration:" << endmsg;
+  std::vector<double> cal = m_condThresholds->paramVect<double>("Thresholds");
+  if ( cal.size() == m_calibThresholds.size() ) {
+    m_calibThresholds = cal;
+    return StatusCode::SUCCESS;
+  }
+  fatal() << "inconsistent number of parameters in RelativeCalibration:" << cal.size() << endmsg;
+  m_statusThresholds = 0;        // no thresholds
+  return StatusCode::SUCCESS;
+
+}

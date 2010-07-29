@@ -46,6 +46,8 @@ protected:
   virtual void add_to_xml();          ///< add counters to xmlfile at Algorithm finalization
 
   virtual StatusCode registerDB();    ///< register DB conditions
+  std::vector<double> one_vector(std::vector<double> a, 
+				 std::vector<double> b, int offset); ///< create one vector
 
 protected:
   /// Reference to run records data service
@@ -65,19 +67,25 @@ protected:
 private:
   ILumiIntegrator *m_integratorTool;            ///< tool to integrate luminosity
   StatusCode i_cacheRelativeData();             ///< Function extracting data from Condition
+  StatusCode i_cacheRelativeDataLog();          ///< Function extracting data from Condition
   StatusCode i_cacheAbsoluteData();             ///< Function extracting data from Condition
   StatusCode i_cacheCoefficientData();          ///< Function extracting data from Condition
+  StatusCode i_cacheCoefficientDataLog();       ///< Function extracting data from Condition
   StatusCode i_cacheSamplingData();             ///< Function extracting data from Condition
 
   // database conditions and calibration factors
   Condition *m_condRelative;                    ///< Condition for relative calibration
+  Condition *m_condRelativeLog;                 ///< Condition for relative calibration
   Condition *m_condAbsolute;                    ///< Condition for absolute scale
   Condition *m_condCoefficients;                ///< Condition for usage coefficients
+  Condition *m_condCoefficientsLog;             ///< Condition for usage coefficients
   Condition *m_condSampling;                    ///< Condition for sampling coefficients
   Condition *m_condGUIDs;                       ///< Condition for GUID based constants
   
   std::vector<double> m_calibRelative;          ///< relative calibration factors
   std::vector<double> m_calibCoefficients;      ///< usage factors
+  std::vector<double> m_calibRelativeLog;       ///< relative calibration factors
+  std::vector<double> m_calibCoefficientsLog;   ///< usage factors
   double m_statusScale;                         ///< absolute scale  set to zero if no lumi
   double m_calibScale;                          ///< absolute scale
   double m_calibScaleError;                     ///< absolute scale error

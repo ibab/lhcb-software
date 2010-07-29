@@ -12,7 +12,7 @@ from LHCbKernel.Configuration import *
 from Configurables import GaudiSequencer as Sequence
 from Configurables import ( LHCbConfigurableUser, LHCbApp )
 
-from Configurables import createODIN, DumpFSR
+from Configurables import DumpFSR
 
 import GaudiKernel.ProcessJobOptions
 
@@ -49,10 +49,6 @@ class LumiFsrReaderConf(LHCbConfigurableUser):
     '''
     create reader sequence
     '''
-    # create ODIN by hand - just to get the events
-    #odin =  createODIN ('createODIN')
-    #sequence.Members+=[ odin ]
-
     # dump FSR
     dump =  DumpFSR ('dumpFSR', AsciiFileName = self.getProp('asciiFile'),
                      OutputLevel = self.getProp("OutputLevel") )
@@ -69,7 +65,6 @@ class LumiFsrReaderConf(LHCbConfigurableUser):
   def __apply_configuration__(self):
 
     GaudiKernel.ProcessJobOptions.PrintOff()
-    # EventPersistencySvc().CnvServices.append( 'LHCb::RawDataCnvSvc' )
 
     # forward some settings...
     self.setOtherProps( LHCbApp(), ['EvtMax','SkipEvents','DataType'] )

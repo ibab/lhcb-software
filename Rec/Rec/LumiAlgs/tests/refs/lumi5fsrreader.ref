@@ -1,12 +1,12 @@
-# --> Including file '/afs/cern.ch/user/r/rlambert/cmtuser/Rec_v10r1/Rec/LumiAlgs/job/LumiFsrReader.py'
-# <-- End of file '/afs/cern.ch/user/r/rlambert/cmtuser/Rec_v10r1/Rec/LumiAlgs/job/LumiFsrReader.py'
+# --> Including file '/afs/cern.ch/user/p/panmanj/cmtuser/Brunel_v37r5/Rec/LumiAlgs/job/LumiFsrReader.py'
+# <-- End of file '/afs/cern.ch/user/p/panmanj/cmtuser/Brunel_v37r5/Rec/LumiAlgs/job/LumiFsrReader.py'
 # applying configuration of LumiFsrReaderConf
-# WARNING: Using default tag head-20100518 for partition DDDB
-# WARNING: Using default tag head-20100531 for partition LHCBCOND
+# WARNING: Using default tag head-20100624 for partition DDDB
+# WARNING: Using default tag head-20100715 for partition LHCBCOND
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
-                                                   Welcome to ApplicationMgr $Revision: 1.77 $
-                                          running on lxplus203.cern.ch on Wed Jun 23 10:13:26 2010
+                                                   Welcome to Brunel version v37r5
+                                          running on lxplus237.cern.ch on Thu Jul 29 13:58:16 2010
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 DetectorPersist...   INFO  'CnvServices':[ 'XmlCnvSvc/XmlCnvSvc' ]
@@ -17,7 +17,7 @@ LumiSeq              INFO Member list: DumpFSR/dumpFSR
 RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
 RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-ToolSvc.Sequenc...   INFO This machine has a speed about   1.74 times the speed of a 2.8 GHz Xeon.
+ToolSvc.Sequenc...   INFO This machine has a speed about   2.35 times the speed of a 2.8 GHz Xeon.
 FileRecordPersi...   INFO  'CnvServices':[ 'FileRecordCnvSvc' ]
 EventPersistenc...   INFO  'CnvServices':[ 'PoolRootEvtCnvSvc' , 'PoolRootTreeEvtCnvSvc' , 'PoolRootKeyEvtCnvSvc' ]
 EventPersistenc...   INFO Added successfully Conversion service:PoolRootEvtCnvSvc
@@ -32,48 +32,36 @@ PoolRootTreeEvt...   INFO Records token:[DB=AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517
 FileRecordPersi...   INFO Added successfully Conversion service:FileRecordCnvSvc
 EventSelector     SUCCESS Reading Event record 1. Record number within stream 1: 1
 dumpFSR              INFO lu address: /FileRecords/AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517/LumiFSRNoBeam
-dumpFSR              INFO /FileRecords/AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517/LumiFSRNoBeam: LumiFSR: {  runs : 71185  files : b3190bc2-5651-11df-8bb8-00074305d05b  info (key/incr/integral) : 0 29 0 / 1 29 0 / 2 29 0 / 6 29 0 / 7 29 11691 / 8 29 0 / 10 29 0 / 21 29 58 /  }
+dumpFSR              INFO /FileRecords/AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517/LumiFSRNoBeam: LumiFSR: {  runs : 75710  files : 0238bd38-9252-11df-8bb8-00188b856c33  info (key/incr/integral) : 0 14 0 / 1 14 0 / 2 14 0 / 6 14 0 / 7 14 5366 / 8 14 0 / 11 14 0 / 21 14 28 / 50 14 0 / 51 14 0 / 52 14 0 / 56 14 0 / 57 14 0 / 58 14 0 / 61 14 0 / 71 14 14 /  }
 dumpFSR              INFO lu address: /FileRecords/AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517/LumiFSRBeamCrossing
-dumpFSR              INFO /FileRecords/AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517/LumiFSRBeamCrossing: LumiFSR: {  runs : 71185  files : b3190bc2-5651-11df-8bb8-00074305d05b  info (key/incr/integral) : 0 505 90 / 1 505 164 / 2 505 16 / 6 505 996 / 7 505 264175 / 8 505 0 / 10 505 0 / 20 14 14 / 21 505 1010 /  }
+dumpFSR              INFO /FileRecords/AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517/LumiFSRBeamCrossing: LumiFSR: {  runs : 75710  files : 0238bd38-9252-11df-8bb8-00188b856c33  info (key/incr/integral) : 0 205 2235 / 1 205 6648 / 2 205 1971 / 6 205 21506 / 7 205 1342995 / 8 205 0 / 11 205 137 / 21 205 410 / 50 205 121 / 51 205 125 / 52 205 110 / 56 205 124 / 57 205 124 / 58 205 0 / 61 205 98 / 71 205 205 /  }
 dumpFSR              INFO lu address: /FileRecords/AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517/LumiFSRBeam1
-dumpFSR              INFO /FileRecords/AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517/LumiFSRBeam1: LumiFSR: {  runs : 71185  files : b3190bc2-5651-11df-8bb8-00074305d05b  info (key/incr/integral) : 0 104 1 / 1 104 0 / 2 104 0 / 6 104 0 / 7 104 39416 / 8 104 0 / 10 104 0 / 21 104 208 /  }
+dumpFSR              INFO /FileRecords/AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517/LumiFSRBeam1: LumiFSR: {  runs : 75710  files : 0238bd38-9252-11df-8bb8-00188b856c33  info (key/incr/integral) : 0 51 0 / 1 51 0 / 2 51 0 / 6 51 0 / 7 51 20129 / 8 51 0 / 11 51 0 / 21 51 102 / 50 51 0 / 51 51 0 / 52 51 0 / 56 51 0 / 57 51 0 / 58 51 0 / 61 51 0 / 71 51 51 /  }
 dumpFSR              INFO lu address: /FileRecords/AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517/LumiFSRBeam2
-dumpFSR              INFO /FileRecords/AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517/LumiFSRBeam2: LumiFSR: {  runs : 71185  files : b3190bc2-5651-11df-8bb8-00074305d05b  info (key/incr/integral) : 0 61 0 / 1 61 0 / 2 61 0 / 6 61 0 / 7 61 22759 / 8 61 0 / 10 61 0 / 21 61 122 /  }
-dumpFSR              INFO lo address: /FileRecords/AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517/LumiLowFSRNoBeam
-dumpFSR              INFO lo address: /FileRecords/AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517/LumiLowFSRBeamCrossing
-dumpFSR              INFO /FileRecords/AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517/LumiLowFSRBeamCrossing: LumiLowFSR: {  runs : 71185  files : b3190bc2-5651-11df-8bb8-00074305d05b  info (key/incr/integral) : 0 213 850 / 1 213 2004 / 2 213 330 / 6 213 10567 / 7 213 929047 / 8 213 0 / 10 213 1 / 20 213 213 / 21 14 28 /  }
-dumpFSR              INFO lo address: /FileRecords/AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517/LumiLowFSRBeam1
-dumpFSR              INFO /FileRecords/AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517/LumiLowFSRBeam1: LumiLowFSR: {  runs : 71185  files : b3190bc2-5651-11df-8bb8-00074305d05b  info (key/incr/integral) : 0 1 1 / 1 1 0 / 2 1 0 / 6 1 11 / 7 1 1879 / 8 1 0 / 10 1 0 / 20 1 1 /  }
-dumpFSR              INFO lo address: /FileRecords/AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517/LumiLowFSRBeam2
+dumpFSR              INFO /FileRecords/AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517/LumiFSRBeam2: LumiFSR: {  runs : 75710  files : 0238bd38-9252-11df-8bb8-00188b856c33  info (key/incr/integral) : 0 28 0 / 1 28 0 / 2 28 0 / 6 28 0 / 7 28 11532 / 8 28 0 / 11 28 0 / 21 28 56 / 50 28 0 / 51 28 0 / 52 28 0 / 56 28 0 / 57 28 0 / 58 28 0 / 61 28 0 / 71 28 28 /  }
 dumpFSR              INFO ev address: /FileRecords/AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517/EventCountFSR
 dumpFSR              INFO /FileRecords/AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517/EventCountFSR: EventCountFSR: {  input : 1000 output : 1000 statusFlag : VERIFIED }
 dumpFSR              INFO ts address: /FileRecords/AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517/TimeSpanFSR
-dumpFSR              INFO /FileRecords/AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517/TimeSpanFSR: TimeSpanFSR: {  earliest : 1272849358040384 - latest : 1272849358813632 }
+dumpFSR              INFO /FileRecords/AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517/TimeSpanFSR: TimeSpanFSR: {  earliest : 1279445209468928 - latest : 1279445214575488 }
 ApplicationMgr       INFO Application Manager Stopped successfully
 dumpFSR              INFO number of files seen: 1
 dumpFSR              INFO number of events seen: 1000
 dumpFSR              INFO lu address: /FileRecords/AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517/LumiFSRNoBeam
-dumpFSR              INFO /FileRecords/AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517/LumiFSRNoBeam: LumiFSR: {  runs : 71185  files : b3190bc2-5651-11df-8bb8-00074305d05b  info (key/incr/integral) : 0 29 0 / 1 29 0 / 2 29 0 / 6 29 0 / 7 29 11691 / 8 29 0 / 10 29 0 / 21 29 58 /  }
+dumpFSR              INFO /FileRecords/AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517/LumiFSRNoBeam: LumiFSR: {  runs : 75710  files : 0238bd38-9252-11df-8bb8-00188b856c33  info (key/incr/integral) : 0 14 0 / 1 14 0 / 2 14 0 / 6 14 0 / 7 14 5366 / 8 14 0 / 11 14 0 / 21 14 28 / 50 14 0 / 51 14 0 / 52 14 0 / 56 14 0 / 57 14 0 / 58 14 0 / 61 14 0 / 71 14 14 /  }
 dumpFSR              INFO lu address: /FileRecords/AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517/LumiFSRBeamCrossing
-dumpFSR              INFO /FileRecords/AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517/LumiFSRBeamCrossing: LumiFSR: {  runs : 71185  files : b3190bc2-5651-11df-8bb8-00074305d05b  info (key/incr/integral) : 0 505 90 / 1 505 164 / 2 505 16 / 6 505 996 / 7 505 264175 / 8 505 0 / 10 505 0 / 20 14 14 / 21 505 1010 /  }
+dumpFSR              INFO /FileRecords/AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517/LumiFSRBeamCrossing: LumiFSR: {  runs : 75710  files : 0238bd38-9252-11df-8bb8-00188b856c33  info (key/incr/integral) : 0 205 2235 / 1 205 6648 / 2 205 1971 / 6 205 21506 / 7 205 1342995 / 8 205 0 / 11 205 137 / 21 205 410 / 50 205 121 / 51 205 125 / 52 205 110 / 56 205 124 / 57 205 124 / 58 205 0 / 61 205 98 / 71 205 205 /  }
 dumpFSR              INFO lu address: /FileRecords/AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517/LumiFSRBeam1
-dumpFSR              INFO /FileRecords/AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517/LumiFSRBeam1: LumiFSR: {  runs : 71185  files : b3190bc2-5651-11df-8bb8-00074305d05b  info (key/incr/integral) : 0 104 1 / 1 104 0 / 2 104 0 / 6 104 0 / 7 104 39416 / 8 104 0 / 10 104 0 / 21 104 208 /  }
+dumpFSR              INFO /FileRecords/AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517/LumiFSRBeam1: LumiFSR: {  runs : 75710  files : 0238bd38-9252-11df-8bb8-00188b856c33  info (key/incr/integral) : 0 51 0 / 1 51 0 / 2 51 0 / 6 51 0 / 7 51 20129 / 8 51 0 / 11 51 0 / 21 51 102 / 50 51 0 / 51 51 0 / 52 51 0 / 56 51 0 / 57 51 0 / 58 51 0 / 61 51 0 / 71 51 51 /  }
 dumpFSR              INFO lu address: /FileRecords/AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517/LumiFSRBeam2
-dumpFSR              INFO /FileRecords/AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517/LumiFSRBeam2: LumiFSR: {  runs : 71185  files : b3190bc2-5651-11df-8bb8-00074305d05b  info (key/incr/integral) : 0 61 0 / 1 61 0 / 2 61 0 / 6 61 0 / 7 61 22759 / 8 61 0 / 10 61 0 / 21 61 122 /  }
-dumpFSR              INFO lo address: /FileRecords/AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517/LumiLowFSRNoBeam
-dumpFSR              INFO lo address: /FileRecords/AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517/LumiLowFSRBeamCrossing
-dumpFSR              INFO /FileRecords/AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517/LumiLowFSRBeamCrossing: LumiLowFSR: {  runs : 71185  files : b3190bc2-5651-11df-8bb8-00074305d05b  info (key/incr/integral) : 0 213 850 / 1 213 2004 / 2 213 330 / 6 213 10567 / 7 213 929047 / 8 213 0 / 10 213 1 / 20 213 213 / 21 14 28 /  }
-dumpFSR              INFO lo address: /FileRecords/AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517/LumiLowFSRBeam1
-dumpFSR              INFO /FileRecords/AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517/LumiLowFSRBeam1: LumiLowFSR: {  runs : 71185  files : b3190bc2-5651-11df-8bb8-00074305d05b  info (key/incr/integral) : 0 1 1 / 1 1 0 / 2 1 0 / 6 1 11 / 7 1 1879 / 8 1 0 / 10 1 0 / 20 1 1 /  }
-dumpFSR              INFO lo address: /FileRecords/AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517/LumiLowFSRBeam2
+dumpFSR              INFO /FileRecords/AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517/LumiFSRBeam2: LumiFSR: {  runs : 75710  files : 0238bd38-9252-11df-8bb8-00188b856c33  info (key/incr/integral) : 0 28 0 / 1 28 0 / 2 28 0 / 6 28 0 / 7 28 11532 / 8 28 0 / 11 28 0 / 21 28 56 / 50 28 0 / 51 28 0 / 52 28 0 / 56 28 0 / 57 28 0 / 58 28 0 / 61 28 0 / 71 28 28 /  }
 dumpFSR              INFO ev address: /FileRecords/AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517/EventCountFSR
 dumpFSR              INFO /FileRecords/AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517/EventCountFSR: EventCountFSR: {  input : 1000 output : 1000 statusFlag : VERIFIED }
 dumpFSR              INFO ts address: /FileRecords/AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517/TimeSpanFSR
-dumpFSR              INFO /FileRecords/AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517/TimeSpanFSR: TimeSpanFSR: {  earliest : 1272849358040384 - latest : 1272849358813632 }
+dumpFSR              INFO /FileRecords/AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517/TimeSpanFSR: TimeSpanFSR: {  earliest : 1279445209468928 - latest : 1279445214575488 }
 EventLoopMgr         INFO Histograms converted successfully according to request.
 ToolSvc              INFO Removing all tools created by ToolSvc
 ToolSvc.Sequenc...   INFO ------------------------------------------------------------------------------------------------
-ToolSvc.Sequenc...   INFO This machine has a speed about   1.74 times the speed of a 2.8 GHz Xeon.
+ToolSvc.Sequenc...   INFO This machine has a speed about   2.35 times the speed of a 2.8 GHz Xeon.
 ToolSvc.Sequenc...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 ToolSvc.Sequenc...   INFO ------------------------------------------------------------------------------------------------
 ToolSvc.Sequenc...   INFO ------------------------------------------------------------------------------------------------

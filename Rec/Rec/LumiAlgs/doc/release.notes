@@ -4,6 +4,10 @@
 ! Purpose     : Accounting of LumiSummaries (offline code)
 !-----------------------------------------------------------------------------
 
+! 2010-07-29 - Jaap Panman
+ - changes in code and configurables to move to -log(P) method for normalization
+ - requirements: updated database required 
+
 !========================== LumiAlgs v3r7 2010-07-20 =========================
 ! 2010-07-08 - Yasmine Amhis 
   - src/GetIntegratedLuminosity.cpp/h

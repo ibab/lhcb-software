@@ -38,6 +38,7 @@ class LumiAlgsConf(LHCbConfigurableUser):
        ,"SetFSRStatus"  : ""         # overwrite the event FSR status to something ['UNRELIABLE', 'ERROR','VERIFIED']
        ,"LumiSequencer" : None       # The sequencer to add the Lumi Accounting to - essential input
        ,"BXTypes"       : [ 'NoBeam', 'BeamCrossing','Beam1','Beam2'] # bunch crossing types
+       ,"UseLumiLow"    : False      # flag to use the LumiLow event for counting
        ,"OutputLevel"   : INFO       
         }
 
@@ -49,6 +50,7 @@ class LumiAlgsConf(LHCbConfigurableUser):
        ,"SetFSRStatus"  : "overwrite the event FSR status to something ['UNRELIABLE', 'ERROR','VERIFIED']"
        ,"LumiSequencer" : "The sequencer to add the Lumi Accounting to - essential input"
        ,"BXTypes"       : "bunch crossing types [ 'NoBeam', 'BeamCrossing','Beam1','Beam2'] "
+       ,"UseLumiLow"    : "flag to use the LumiLow event for counting [False]"
        ,"OutputLevel"   : "printed output"
        }
     
@@ -209,8 +211,9 @@ class LumiAlgsConf(LHCbConfigurableUser):
             # Create sub-sequences according to BXTypes
             sequence.Members += self.fillFSR()
 
-            # add other method LumiSummaries
-            sequence.Members += self.fillLowLumiFSR()
+            # add other method LumiSummaries - deprecated 
+            if self.getProp('UseLumiLow'): 
+                sequence.Members += self.fillLowLumiFSR()
             
             if status is None or status=='':
                 #by definition, all raw files are verified

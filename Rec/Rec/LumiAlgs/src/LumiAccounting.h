@@ -6,6 +6,9 @@
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
 
+// for DB
+#include "GaudiKernel/IDetDataSvc.h"
+
 // event model
 #include "Event/HltLumiSummary.h"
 #include "Event/LumiFSR.h"
@@ -28,19 +31,32 @@ public:
   virtual StatusCode execute   ();    ///< Algorithm execution
   virtual StatusCode finalize  ();    ///< Algorithm finalization
 
+
+protected:
+  virtual StatusCode registerDB();    ///< register DB conditions
+private:
+  StatusCode i_cacheThresholdData();  ///< Function extracting data from Condition
+
 protected:
   /// Reference to file records data service
   IDataProviderSvc* m_fileRecordSvc;
 
-  std::string m_rawEventLocation;     // Location where we get the RawEvent
-  std::string m_DataName;             // input location of summary data
-  std::string m_FSRName;              // output location of summary data in FSR
+  std::string m_rawEventLocation;     		///< Location where we get the RawEvent
+  std::string m_DataName;             		///< input location of summary data
+  std::string m_FSRName;              		///< output location of summary data in FSR
 
-  LHCb::LumiFSRs* m_lumiFSRs;         // TDS container
-  LHCb::LumiFSR* m_lumiFSR;           // FSR for current file
+  LHCb::LumiFSRs* m_lumiFSRs;         		///< TDS container
+  LHCb::LumiFSR* m_lumiFSR;           		///< FSR for current file
 
-  std::string m_current_fname;        // current file ID string 
-  int         m_count_files;          // number of files read
+  std::string m_current_fname;        		///< current file ID string 
+  int         m_count_files;          		///< number of files read
+
+  // database conditions and calibration factors
+  SmartIF<IDetDataSvc> m_dds;                   ///< DetectorDataSvc
+  Condition *m_condThresholds;                  ///< Condition for relative calibration
+  std::vector<double> m_calibThresholds;        ///< relative calibration factors
+  int m_statusThresholds;                       ///<                   
+
 private:
 
 };

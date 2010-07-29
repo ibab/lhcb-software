@@ -17,11 +17,8 @@ from LumiAlgs.LumiReaderConf import LumiReaderConf as LumiReader
 #-- File catalogs. First one is read-write
 FileCatalog().Catalogs = [ "xmlcatalog_file:MyCatalog.xml",
                            ]
-
 # input file
-files = [  
-"file:testout.mdf",
-]
+files = [ "file:testout.mdf"]
 ofilename='testout.dat'
 
 LumiReader().inputFiles = files

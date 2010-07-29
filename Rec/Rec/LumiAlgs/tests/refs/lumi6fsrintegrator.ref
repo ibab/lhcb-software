@@ -1,5 +1,5 @@
-# --> Including file '/afs/cern.ch/user/r/rlambert/cmtuser/Rec_v10r1/Rec/LumiAlgs/job/LumiFsrIntegrator.py'
-# --> Including file '/afs/cern.ch/sw/Gaudi/releases/GAUDI/GAUDI_v21r9/GaudiPoolDb/options/GaudiPoolDbRoot.opts'
+# --> Including file '/afs/cern.ch/user/p/panmanj/cmtuser/Brunel_v37r5/Rec/LumiAlgs/job/LumiFsrIntegrator.py'
+# --> Including file '/afs/cern.ch/sw/Gaudi/releases/GAUDI/GAUDI_v21r10/GaudiPoolDb/options/GaudiPoolDbRoot.opts'
 # ApplicationMgr.ExtSvc    += { "Gaudi::MultiFileCatalog/FileCatalog",                              "Gaudi::IODataManager/IODataManager",                              "PoolDbCacheSvc/PoolDbCacheSvc",                              "PoolDbCnvSvc/PoolRootEvtCnvSvc",                              "PoolDbCnvSvc/PoolRootKeyEvtCnvSvc",                              "PoolDbCnvSvc/PoolRootTreeEvtCnvSvc"                            };
 # EventPersistencySvc.CnvServices += { "PoolRootEvtCnvSvc" };
 # EventPersistencySvc.CnvServices += { "PoolRootTreeEvtCnvSvc" };
@@ -20,10 +20,11 @@
 # PoolRootEvtCnvSvc.EnableIncident      =    1;
 # PoolRootKeyEvtCnvSvc.EnableIncident   =    1;
 # PoolRootTreeEvtCnvSvc.EnableIncident  =    1;
-# <-- End of file '/afs/cern.ch/sw/Gaudi/releases/GAUDI/GAUDI_v21r9/GaudiPoolDb/options/GaudiPoolDbRoot.opts'
-# <-- End of file '/afs/cern.ch/user/r/rlambert/cmtuser/Rec_v10r1/Rec/LumiAlgs/job/LumiFsrIntegrator.py'
+# <-- End of file '/afs/cern.ch/sw/Gaudi/releases/GAUDI/GAUDI_v21r10/GaudiPoolDb/options/GaudiPoolDbRoot.opts'
+# <-- End of file '/afs/cern.ch/user/p/panmanj/cmtuser/Brunel_v37r5/Rec/LumiAlgs/job/LumiFsrIntegrator.py'
 # applying configuration of LumiAlgsConf
 # /***** User LumiAlgsConf/LumiAlgsConf **************************************************************
+# |-UseLumiLow        = False
 # |-ForceFullSequence = False
 # |-DataType          = '2010'
 # |-SetFSRStatus      = ''
@@ -31,15 +32,15 @@
 # |-BXTypes           = ['NoBeam', 'BeamCrossing', 'Beam1', 'Beam2']
 # |                   (default: ['NoBeam', 'BeamCrossing', 'Beam1', 'Beam2'])
 # |-Context           = 'Offline'
-# |-LumiSequencer     = <GaudiSequencer/LumiSeq at 0xf7fc1dbcL>  (default: None)
+# |-LumiSequencer     = <GaudiSequencer/LumiSeq at 0xc0eeca0>  (default: None)
 # |-InputType         = 'DST'  (default: 'MDF')
 # \----- (End of User LumiAlgsConf/LumiAlgsConf) -----------------------------------------------------
 # applying configuration of LHCbApp
 # /***** User LHCbApp/LHCbApp ************************************************************************
-# |-OutputLevel = 3
 # |-DataType    = '2009'
 # |-TimeStamp   = False
 # |-SkipEvents  = 0
+# |-OutputLevel = 3
 # |-EvtMax      = -1
 # |-Simulation  = False
 # |-Monitors    = []  (default: [])
@@ -47,9 +48,15 @@
 # |-CondDBtag   = ''
 # |-DDDBtag     = ''
 # \----- (End of User LHCbApp/LHCbApp) ---------------------------------------------------------------
+# applying configuration of LumiIntegratorConf
+# /***** User LumiIntegratorConf/LumiIntegratorConf **************************************************
+# |-TupleFile     = ''
+# |-LumiSequencer = <GaudiSequencer/LumiIntSeq at 0xc06f170>  (default: None)
+# |-InputType     = 'DST'
+# \----- (End of User LumiIntegratorConf/LumiIntegratorConf) -----------------------------------------
 # applying configuration of DDDBConf
-# WARNING: Using default tag head-20100518 for partition DDDB
-# WARNING: Using default tag head-20100531 for partition LHCBCOND
+# WARNING: Using default tag head-20100624 for partition DDDB
+# WARNING: Using default tag head-20100715 for partition LHCBCOND
 # WARNING: Using default tag MC-20100412-vc15mm-md100 for partition SIMCOND
 # /***** User DDDBConf/DDDBConf **********************************************************************
 # |-DataType   = '2009'
@@ -61,14 +68,14 @@
 # |-XMLSummary = 'summary.xml'  (default: None)
 # \----- (End of User XMLSummary/XMLSummary) ---------------------------------------------------------
 # applying configuration of CondDB
-# --> Including file '/afs/cern.ch/lhcb/software/DEV/DBASE/Det/SQLDDDB/options/SQLDDDB.py'
-# <-- End of file '/afs/cern.ch/lhcb/software/DEV/DBASE/Det/SQLDDDB/options/SQLDDDB.py'
+# --> Including file '/afs/cern.ch/lhcb/software/releases/DBASE/Det/SQLDDDB/v5r33/options/SQLDDDB.py'
+# <-- End of file '/afs/cern.ch/lhcb/software/releases/DBASE/Det/SQLDDDB/v5r33/options/SQLDDDB.py'
 # /***** User CondDB/CondDB **************************************************************************
 # |-PartitionConnectionString = {}  (default: {})
 # |-LocalTags                 = {}  (default: {})
 # |-IgnoreHeartBeat           = False
 # |-Tags                      = {}  (default: {})
-# |-Overrides                 = []  (default: [])
+# |-Overrides                 = [(0, <CondDBAccessSvc/automatic_LHCBCOND at 0xc117fb0>)]  (default: [])
 # |-DisableLFC                = False
 # |-Simulation                = False
 # |-SQLiteLocalCopiesDir      = ''
@@ -81,8 +88,8 @@
 # \----- (End of User CondDB/CondDB) -----------------------------------------------------------------
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
-                                                   Welcome to ApplicationMgr $Revision: 1.77 $
-                                          running on lxplus203.cern.ch on Wed Jun 23 10:20:08 2010
+                                                   Welcome to Brunel version v37r5
+                                          running on lxplus237.cern.ch on Thu Jul 29 13:58:20 2010
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 DetectorPersist...   INFO  'CnvServices':[ 'XmlCnvSvc/XmlCnvSvc' ]
@@ -93,14 +100,18 @@ LumiSeq              INFO OR Member list: EventAccounting/EventAccount
 RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
 RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-ToolSvc.Sequenc...   INFO This machine has a speed about   1.74 times the speed of a 2.8 GHz Xeon.
+ToolSvc.Sequenc...   INFO This machine has a speed about   2.33 times the speed of a 2.8 GHz Xeon.
 FileRecordPersi...   INFO  'CnvServices':[ 'FileRecordCnvSvc' ]
+LumiIntSeq           INFO Member list: LumiIntegrateFSR/IntegrateBeamCrossing
+IntegrateBeamCr...   INFO Primary  BXType BeamCrossing
+IntegrateBeamCr...   INFO Add      BXType NoBeam
+IntegrateBeamCr...   INFO Subtract BXType Beam1
+IntegrateBeamCr...   INFO Subtract BXType Beam2
 EventPersistenc...   INFO  'CnvServices':[ 'PoolRootEvtCnvSvc' , 'PoolRootTreeEvtCnvSvc' , 'PoolRootKeyEvtCnvSvc' ]
+EventClockSvc.F...   INFO Event times generated from 0 with steps of 0
 EventPersistenc...   INFO Added successfully Conversion service:PoolRootEvtCnvSvc
 EventPersistenc...   INFO Added successfully Conversion service:PoolRootTreeEvtCnvSvc
 EventSelector        INFO Stream:EventSelector.DataStreamTool_1 Def:DATAFILE='PFN:testFSRout.dst' TYP='POOL_ROOTTREE'  OPT='REC'
-DumpFSR              INFO ev address: /FileRecords/EventCountFSR
-DumpFSR              INFO /FileRecords/EventCountFSR: EventCountFSR: {  input : 0 output : 0 statusFlag : UNCHECKED }
 HistogramPersis...   INFO  'CnvServices':[ 'HbookHistSvc' , 'RootHistSvc' ]
 HistogramPersis...WARNING Histograms saving not required.
 ApplicationMgr       INFO Application Manager Initialized successfully
@@ -109,57 +120,44 @@ RootDBase.open    SUCCESS testFSRout.dst File version:52600
 PoolRootTreeEvt...   INFO Records token:[DB=AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517][CNT=/FileRecords][CLID=00000001-0000-0000-0000-000000000000][TECH=00000202][OID=00000009-00000000]
 FileRecordPersi...   INFO Added successfully Conversion service:FileRecordCnvSvc
 EventSelector     SUCCESS Reading Event record 1. Record number within stream 1: 1
-DumpFSR              INFO lu address: /FileRecords/AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517/LumiFSRNoBeam
-DumpFSR              INFO /FileRecords/AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517/LumiFSRNoBeam: LumiFSR: {  runs : 71185  files : b3190bc2-5651-11df-8bb8-00074305d05b  info (key/incr/integral) : 0 29 0 / 1 29 0 / 2 29 0 / 6 29 0 / 7 29 11691 / 8 29 0 / 10 29 0 / 21 29 58 /  }
-DumpFSR              INFO lu address: /FileRecords/AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517/LumiFSRBeamCrossing
-DumpFSR              INFO /FileRecords/AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517/LumiFSRBeamCrossing: LumiFSR: {  runs : 71185  files : b3190bc2-5651-11df-8bb8-00074305d05b  info (key/incr/integral) : 0 505 90 / 1 505 164 / 2 505 16 / 6 505 996 / 7 505 264175 / 8 505 0 / 10 505 0 / 20 14 14 / 21 505 1010 /  }
-DumpFSR              INFO lu address: /FileRecords/AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517/LumiFSRBeam1
-DumpFSR              INFO /FileRecords/AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517/LumiFSRBeam1: LumiFSR: {  runs : 71185  files : b3190bc2-5651-11df-8bb8-00074305d05b  info (key/incr/integral) : 0 104 1 / 1 104 0 / 2 104 0 / 6 104 0 / 7 104 39416 / 8 104 0 / 10 104 0 / 21 104 208 /  }
-DumpFSR              INFO lu address: /FileRecords/AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517/LumiFSRBeam2
-DumpFSR              INFO /FileRecords/AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517/LumiFSRBeam2: LumiFSR: {  runs : 71185  files : b3190bc2-5651-11df-8bb8-00074305d05b  info (key/incr/integral) : 0 61 0 / 1 61 0 / 2 61 0 / 6 61 0 / 7 61 22759 / 8 61 0 / 10 61 0 / 21 61 122 /  }
-DumpFSR              INFO lo address: /FileRecords/AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517/LumiLowFSRNoBeam
-DumpFSR              INFO lo address: /FileRecords/AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517/LumiLowFSRBeamCrossing
-DumpFSR              INFO /FileRecords/AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517/LumiLowFSRBeamCrossing: LumiLowFSR: {  runs : 71185  files : b3190bc2-5651-11df-8bb8-00074305d05b  info (key/incr/integral) : 0 213 850 / 1 213 2004 / 2 213 330 / 6 213 10567 / 7 213 929047 / 8 213 0 / 10 213 1 / 20 213 213 / 21 14 28 /  }
-DumpFSR              INFO lo address: /FileRecords/AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517/LumiLowFSRBeam1
-DumpFSR              INFO /FileRecords/AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517/LumiLowFSRBeam1: LumiLowFSR: {  runs : 71185  files : b3190bc2-5651-11df-8bb8-00074305d05b  info (key/incr/integral) : 0 1 1 / 1 1 0 / 2 1 0 / 6 1 11 / 7 1 1879 / 8 1 0 / 10 1 0 / 20 1 1 /  }
-DumpFSR              INFO lo address: /FileRecords/AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517/LumiLowFSRBeam2
-DumpFSR              INFO ev address: /FileRecords/EventCountFSR
-DumpFSR              INFO /FileRecords/EventCountFSR: EventCountFSR: {  input : 1 output : 0 statusFlag : UNCHECKED }
-DumpFSR              INFO ev address: /FileRecords/AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517/EventCountFSR
-DumpFSR              INFO /FileRecords/AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517/EventCountFSR: EventCountFSR: {  input : 1000 output : 1000 statusFlag : VERIFIED }
-DumpFSR              INFO ts address: /FileRecords/AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517/TimeSpanFSR
-DumpFSR              INFO /FileRecords/AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517/TimeSpanFSR: TimeSpanFSR: {  earliest : 1272849358040384 - latest : 1272849358813632 }
+COOLConfSvc          INFO CORAL Connection Retrial Period set to 60s
+COOLConfSvc          INFO CORAL Connection Retrial Time-Out set to 900s
+automatic_LHCBCOND   INFO Connected to database "sqlite_file:LHCBCOND_Lumi_IOV.db/LHCBCOND"
+automatic_LHCBCOND   INFO Using TAG ""
+DDDB                 INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/releases/DBASE/Det/SQLDDDB/v5r33/db/DDDB.db/DDDB"
+DDDB                 INFO Using TAG "head-20100624"
 ApplicationMgr       INFO Application Manager Stopped successfully
-DumpFSR              INFO number of files seen: 1
-DumpFSR              INFO number of events seen: 1000
-DumpFSR              INFO lu address: /FileRecords/AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517/LumiFSRNoBeam
-DumpFSR              INFO /FileRecords/AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517/LumiFSRNoBeam: LumiFSR: {  runs : 71185  files : b3190bc2-5651-11df-8bb8-00074305d05b  info (key/incr/integral) : 0 29 0 / 1 29 0 / 2 29 0 / 6 29 0 / 7 29 11691 / 8 29 0 / 10 29 0 / 21 29 58 /  }
-DumpFSR              INFO lu address: /FileRecords/AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517/LumiFSRBeamCrossing
-DumpFSR              INFO /FileRecords/AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517/LumiFSRBeamCrossing: LumiFSR: {  runs : 71185  files : b3190bc2-5651-11df-8bb8-00074305d05b  info (key/incr/integral) : 0 505 90 / 1 505 164 / 2 505 16 / 6 505 996 / 7 505 264175 / 8 505 0 / 10 505 0 / 20 14 14 / 21 505 1010 /  }
-DumpFSR              INFO lu address: /FileRecords/AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517/LumiFSRBeam1
-DumpFSR              INFO /FileRecords/AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517/LumiFSRBeam1: LumiFSR: {  runs : 71185  files : b3190bc2-5651-11df-8bb8-00074305d05b  info (key/incr/integral) : 0 104 1 / 1 104 0 / 2 104 0 / 6 104 0 / 7 104 39416 / 8 104 0 / 10 104 0 / 21 104 208 /  }
-DumpFSR              INFO lu address: /FileRecords/AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517/LumiFSRBeam2
-DumpFSR              INFO /FileRecords/AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517/LumiFSRBeam2: LumiFSR: {  runs : 71185  files : b3190bc2-5651-11df-8bb8-00074305d05b  info (key/incr/integral) : 0 61 0 / 1 61 0 / 2 61 0 / 6 61 0 / 7 61 22759 / 8 61 0 / 10 61 0 / 21 61 122 /  }
-DumpFSR              INFO lo address: /FileRecords/AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517/LumiLowFSRNoBeam
-DumpFSR              INFO lo address: /FileRecords/AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517/LumiLowFSRBeamCrossing
-DumpFSR              INFO /FileRecords/AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517/LumiLowFSRBeamCrossing: LumiLowFSR: {  runs : 71185  files : b3190bc2-5651-11df-8bb8-00074305d05b  info (key/incr/integral) : 0 213 850 / 1 213 2004 / 2 213 330 / 6 213 10567 / 7 213 929047 / 8 213 0 / 10 213 1 / 20 213 213 / 21 14 28 /  }
-DumpFSR              INFO lo address: /FileRecords/AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517/LumiLowFSRBeam1
-DumpFSR              INFO /FileRecords/AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517/LumiLowFSRBeam1: LumiLowFSR: {  runs : 71185  files : b3190bc2-5651-11df-8bb8-00074305d05b  info (key/incr/integral) : 0 1 1 / 1 1 0 / 2 1 0 / 6 1 11 / 7 1 1879 / 8 1 0 / 10 1 0 / 20 1 1 /  }
-DumpFSR              INFO lo address: /FileRecords/AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517/LumiLowFSRBeam2
-DumpFSR              INFO ev address: /FileRecords/EventCountFSR
-DumpFSR              INFO /FileRecords/EventCountFSR: EventCountFSR: {  input : 1000 output : 0 statusFlag : UNRELIABLE }
-DumpFSR              INFO ev address: /FileRecords/AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517/EventCountFSR
-DumpFSR              INFO /FileRecords/AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517/EventCountFSR: EventCountFSR: {  input : 1000 output : 1000 statusFlag : VERIFIED }
-DumpFSR              INFO ts address: /FileRecords/AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517/TimeSpanFSR
-DumpFSR              INFO /FileRecords/AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517/TimeSpanFSR: TimeSpanFSR: {  earliest : 1272849358040384 - latest : 1272849358813632 }
+IntegrateBeamCr...   INFO ========== Integrating luminosity normalization: START ==========
+IntegrateBeamCr...   INFO run: [] Revolution frequency 11245 RandomFrequencyBB 697.9 CollidingBunches 8
+IntegrateBeamCr...   INFO Luminosity scale used: 1.634e-11 relative uncertainty 0.1
+IntegrateBeamCr...   INFO counter PUMult: 0 205 197.952
+IntegrateBeamCr...   INFO counter RZVelo: 1 205 204.485
+IntegrateBeamCr...   INFO counter RZVeloBW: 2 205 217.586
+IntegrateBeamCr...   INFO counter SPDMult: 6 205 200.378
+IntegrateBeamCr...   INFO counter CaloEt: 7 205 198.358
+IntegrateBeamCr...   INFO counter TTIP: 8 205 0
+IntegrateBeamCr...   INFO counter PV3D: 11 205 187.974
+IntegrateBeamCr...   INFO counter Random: 21 205 0
+IntegrateBeamCr...   INFO counter PoissonPUMult: 50 205 207.176
+IntegrateBeamCr...   INFO counter PoissonRZVelo: 51 205 192.902
+IntegrateBeamCr...   INFO counter PoissonRZVeloBW: 52 205 208.24
+IntegrateBeamCr...   INFO counter PoissonSPDMult: 56 205 189.715
+IntegrateBeamCr...   INFO counter PoissonCaloEt: 57 205 197.948
+IntegrateBeamCr...   INFO counter PoissonTTIP: 58 205 0
+IntegrateBeamCr...   INFO counter PoissonPV3D: 61 205 184.404
+IntegrateBeamCr...   INFO counter PoissonRandom: 71 205 0
+IntegrateBeamCr...   INFO Integrated luminosity: 4.06297e-07 +/- 4.06297e-08 [pb-1]
+IntegrateBeamCr...   INFO ========== Integrating luminosity normalization: END ==========
 EventLoopMgr         INFO Histograms converted successfully according to request.
 ToolSvc              INFO Removing all tools created by ToolSvc
 ToolSvc.Sequenc...   INFO ------------------------------------------------------------------------------------------------
-ToolSvc.Sequenc...   INFO This machine has a speed about   1.74 times the speed of a 2.8 GHz Xeon.
+ToolSvc.Sequenc...   INFO This machine has a speed about   2.33 times the speed of a 2.8 GHz Xeon.
 ToolSvc.Sequenc...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 ToolSvc.Sequenc...   INFO ------------------------------------------------------------------------------------------------
-ToolSvc.Sequenc...   INFO LumiSeq                       |     0.005 |     0.005 |    0.004       0.0 |    1000 |     0.005 |
-ToolSvc.Sequenc...   INFO   EventAccount                |     0.004 |     0.002 |    0.001       0.0 |    1000 |     0.002 |
+ToolSvc.Sequenc...   INFO LumiSeq                       |     0.005 |     0.003 |    0.002       0.0 |    1000 |     0.003 |
+ToolSvc.Sequenc...   INFO   EventAccount                |     0.002 |     0.002 |    0.001       0.0 |    1000 |     0.002 |
+ToolSvc.Sequenc...   INFO LumiIntSeq                    |     0.002 |     0.003 |    0.002       0.0 |    1000 |     0.003 |
+ToolSvc.Sequenc...   INFO   IntegrateBeamCrossing       |     0.001 |     0.001 |    0.001       0.0 |    1000 |     0.001 |
 ToolSvc.Sequenc...   INFO ------------------------------------------------------------------------------------------------
 CounterSummarySvc    INFO filling counters...
 CounterSummarySvc    INFO counters filled OK

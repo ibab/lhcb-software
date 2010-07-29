@@ -1,12 +1,12 @@
-# --> Including file '/afs/cern.ch/user/r/rlambert/cmtuser/Rec_v10r1/Rec/LumiAlgs/job/LumiReader.py'
-# <-- End of file '/afs/cern.ch/user/r/rlambert/cmtuser/Rec_v10r1/Rec/LumiAlgs/job/LumiReader.py'
+# --> Including file '/afs/cern.ch/user/p/panmanj/cmtuser/Brunel_v37r5/Rec/LumiAlgs/job/LumiReader.py'
+# <-- End of file '/afs/cern.ch/user/p/panmanj/cmtuser/Brunel_v37r5/Rec/LumiAlgs/job/LumiReader.py'
 # applying configuration of LumiReaderConf
-# WARNING: Using default tag head-20100518 for partition DDDB
-# WARNING: Using default tag head-20100531 for partition LHCBCOND
+# WARNING: Using default tag head-20100624 for partition DDDB
+# WARNING: Using default tag head-20100715 for partition LHCBCOND
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
-                                                   Welcome to ApplicationMgr $Revision: 1.77 $
-                                          running on lxplus203.cern.ch on Wed Jun 23 10:12:55 2010
+                                                   Welcome to Brunel version v37r5
+                                          running on lxplus237.cern.ch on Thu Jul 29 13:58:01 2010
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 DetectorPersist...   INFO  'CnvServices':[ 'XmlCnvSvc/XmlCnvSvc' ]
@@ -16,7 +16,7 @@ LumiSeq              INFO Member list: GaudiSequencer/readLumiSeq
 RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
 RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-ToolSvc.Sequenc...   INFO This machine has a speed about   1.49 times the speed of a 2.8 GHz Xeon.
+ToolSvc.Sequenc...   INFO This machine has a speed about   2.32 times the speed of a 2.8 GHz Xeon.
 readLumiSeq         DEBUG Property update for OutputLevel : new value = 2
 readLumiSeq         DEBUG Property update for OutputLevel : new value = 2
 readLumiSeq         DEBUG Initialize base class GaudiCommon<Algorithm>
@@ -194,20 +194,20 @@ LumiFileReader      DEBUG ==> Execute
 LumiFileReader      DEBUG LumiSummary loaded!!
 LumiFileReader      DEBUG The object of type 'LHCb::HltLumiSummary*' has been retrieved from TS at address 'Hlt/LumiSummary'
 LumiFileReader      DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
-LumiFileReader      DEBUG ODIN RunNumber: 71185
+LumiFileReader      DEBUG ODIN RunNumber: 75710
 LumiFileReader      DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
 LumiFileReader      DEBUG Bank size: 1
 LumiFileReader      DEBUG Bank size:   16 Total Data bank size 4
-LumiFileReader       INFO RunInfo record: B3190BC2-5651-11DF-8BB8-00074305D05B
+LumiFileReader       INFO RunInfo record: 238BD389-2521-1DF8-BB80-0188B856C33
 InputDump           DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
 InputDump            INFO 1 banks of type 15: [size, source, version, magic]
 InputDump            INFO   [48, 0, 16, cbcb] Data follows...
-InputDump            INFO    ... [b4] [b4] [b4] [0] [13700] [3] [3] [1] [1] [11611]
-InputDump            INFO    ... [2005f1a] [6fa]
+InputDump            INFO    ... [b4] [b4] [b4] [0] [13700] [3] [3] [1] [1] [127be]
+InputDump            INFO    ... [ccf3da] [447]
 InputDump            INFO
 InputDump            INFO 1 banks of type 16: [size, source, version, magic]
 InputDump            INFO   [40, 16, 6, cbcb] Data follows...
-InputDump            INFO    ... [11611] [0] [2005f1a] [0] [2deabd7] [485a6] [55d6b140] [0] [e206fa] [51710]
+InputDump            INFO    ... [127be] [0] [ccf3da] [0] [1ef9605] [48ba6] [d74ee00] [0] [e20447] [13001f]
 InputDump            INFO
 InputDump            INFO 1 banks of type 53: [size, source, version, magic]
 InputDump            INFO   [12, 0, 0, cbcb] Data follows...
@@ -215,11 +215,11 @@ InputDump            INFO    ... [3] [3] [1]
 InputDump            INFO
 InputDump            INFO 1 banks of type 56: [size, source, version, magic]
 InputDump            INFO   [32, 0, 0, cbcb] Data follows...
-InputDump            INFO    ... [0] [10000] [20000] [60000] [7013f] [80000] [a0000] [150002]
+InputDump            INFO    ... [b] [10024] [20008] [6007a] [718af] [80000] [b0001] [150002]
 InputDump            INFO
 InputDump            INFO 1 banks of type 62: [size, source, version, magic]
 InputDump            INFO   [16, 0, 0, cbcb] Data follows...
-InputDump            INFO    ... [4305d05b] [8bb80007] [565111df] [b3190bc2]
+InputDump            INFO    ... [8b856c33] [8bb80018] [925211df] [238bd38]
 InputDump            INFO
 EventSelector     SUCCESS Reading Event record 2. Record number within stream 1: 2
 readLumiSeq         DEBUG ==> Execute
@@ -227,20 +227,20 @@ LumiFileReader      DEBUG ==> Execute
 LumiFileReader      DEBUG LumiSummary loaded!!
 LumiFileReader      DEBUG The object of type 'LHCb::HltLumiSummary*' has been retrieved from TS at address 'Hlt/LumiSummary'
 LumiFileReader      DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
-LumiFileReader      DEBUG ODIN RunNumber: 71185
+LumiFileReader      DEBUG ODIN RunNumber: 75710
 LumiFileReader      DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
 LumiFileReader      DEBUG Bank size: 1
 LumiFileReader      DEBUG Bank size:   16 Total Data bank size 4
-LumiFileReader       INFO RunInfo record: B3190BC2-5651-11DF-8BB8-00074305D05B
+LumiFileReader       INFO RunInfo record: 238BD389-2521-1DF8-BB80-0188B856C33
 InputDump           DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
 InputDump            INFO 1 banks of type 15: [size, source, version, magic]
 InputDump            INFO   [48, 0, 16, cbcb] Data follows...
-InputDump            INFO    ... [b4] [b4] [b4] [0] [13700] [3] [3] [1] [1] [11611]
-InputDump            INFO    ... [2005f2b] [6fa]
+InputDump            INFO    ... [b4] [b4] [b4] [0] [13700] [3] [3] [1] [1] [127be]
+InputDump            INFO    ... [ccf5f0] [7c2]
 InputDump            INFO
 InputDump            INFO 1 banks of type 16: [size, source, version, magic]
 InputDump            INFO   [40, 16, 6, cbcb] Data follows...
-InputDump            INFO    ... [11611] [0] [2005f2b] [0] [2deabee] [485a6] [55d6b700] [0] [e206fa] [51710]
+InputDump            INFO    ... [127be] [0] [ccf5f0] [0] [1ef9af3] [48ba6] [d75a780] [0] [e207c2] [13001f]
 InputDump            INFO
 InputDump            INFO 1 banks of type 53: [size, source, version, magic]
 InputDump            INFO   [12, 0, 0, cbcb] Data follows...
@@ -248,11 +248,11 @@ InputDump            INFO    ... [3] [3] [1]
 InputDump            INFO
 InputDump            INFO 1 banks of type 56: [size, source, version, magic]
 InputDump            INFO   [32, 0, 0, cbcb] Data follows...
-InputDump            INFO    ... [0] [10000] [20000] [60000] [7018f] [80000] [a0000] [150002]
+InputDump            INFO    ... [17] [10047] [20015] [60093] [73d2b] [80000] [b0001] [150002]
 InputDump            INFO
 InputDump            INFO 1 banks of type 62: [size, source, version, magic]
 InputDump            INFO   [16, 0, 0, cbcb] Data follows...
-InputDump            INFO    ... [4305d05b] [8bb80007] [565111df] [b3190bc2]
+InputDump            INFO    ... [8b856c33] [8bb80018] [925211df] [238bd38]
 InputDump            INFO
 EventSelector     SUCCESS Reading Event record 3. Record number within stream 1: 3
 readLumiSeq         DEBUG ==> Execute
@@ -260,20 +260,20 @@ LumiFileReader      DEBUG ==> Execute
 LumiFileReader      DEBUG LumiSummary loaded!!
 LumiFileReader      DEBUG The object of type 'LHCb::HltLumiSummary*' has been retrieved from TS at address 'Hlt/LumiSummary'
 LumiFileReader      DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
-LumiFileReader      DEBUG ODIN RunNumber: 71185
+LumiFileReader      DEBUG ODIN RunNumber: 75710
 LumiFileReader      DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
 LumiFileReader      DEBUG Bank size: 1
 LumiFileReader      DEBUG Bank size:   16 Total Data bank size 4
-LumiFileReader       INFO RunInfo record: B3190BC2-5651-11DF-8BB8-00074305D05B
+LumiFileReader       INFO RunInfo record: 238BD389-2521-1DF8-BB80-0188B856C33
 InputDump           DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
 InputDump            INFO 1 banks of type 15: [size, source, version, magic]
 InputDump            INFO   [48, 0, 16, cbcb] Data follows...
-InputDump            INFO    ... [b4] [b4] [b4] [0] [13700] [3] [3] [1] [1] [11611]
-InputDump            INFO    ... [2005f24] [6fa]
+InputDump            INFO    ... [b4] [b4] [b4] [0] [13700] [3] [3] [1] [1] [127be]
+InputDump            INFO    ... [ccf6a1] [6fa]
 InputDump            INFO
 InputDump            INFO 1 banks of type 16: [size, source, version, magic]
 InputDump            INFO   [40, 16, 6, cbcb] Data follows...
-InputDump            INFO    ... [11611] [0] [2005f24] [0] [2deabe4] [485a6] [55d6b4c0] [0] [e206fa] [51710]
+InputDump            INFO    ... [127be] [0] [ccf6a1] [0] [1ef9c9f] [48ba6] [d75e500] [0] [e206fa] [13001f]
 InputDump            INFO
 InputDump            INFO 1 banks of type 53: [size, source, version, magic]
 InputDump            INFO   [12, 0, 0, cbcb] Data follows...
@@ -281,11 +281,11 @@ InputDump            INFO    ... [3] [3] [1]
 InputDump            INFO
 InputDump            INFO 1 banks of type 56: [size, source, version, magic]
 InputDump            INFO   [32, 0, 0, cbcb] Data follows...
-InputDump            INFO    ... [0] [10000] [20000] [60000] [70167] [80000] [a0000] [150002]
+InputDump            INFO    ... [1] [10000] [20000] [60000] [70153] [80000] [b0000] [150002]
 InputDump            INFO
 InputDump            INFO 1 banks of type 62: [size, source, version, magic]
 InputDump            INFO   [16, 0, 0, cbcb] Data follows...
-InputDump            INFO    ... [4305d05b] [8bb80007] [565111df] [b3190bc2]
+InputDump            INFO    ... [8b856c33] [8bb80018] [925211df] [238bd38]
 InputDump            INFO
 EventSelector     SUCCESS Reading Event record 4. Record number within stream 1: 4
 readLumiSeq         DEBUG ==> Execute
@@ -293,32 +293,32 @@ LumiFileReader      DEBUG ==> Execute
 LumiFileReader      DEBUG LumiSummary loaded!!
 LumiFileReader      DEBUG The object of type 'LHCb::HltLumiSummary*' has been retrieved from TS at address 'Hlt/LumiSummary'
 LumiFileReader      DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
-LumiFileReader      DEBUG ODIN RunNumber: 71185
+LumiFileReader      DEBUG ODIN RunNumber: 75710
 LumiFileReader      DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
 LumiFileReader      DEBUG Bank size: 1
 LumiFileReader      DEBUG Bank size:   16 Total Data bank size 4
-LumiFileReader       INFO RunInfo record: B3190BC2-5651-11DF-8BB8-00074305D05B
+LumiFileReader       INFO RunInfo record: 238BD389-2521-1DF8-BB80-0188B856C33
 InputDump           DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
 InputDump            INFO 1 banks of type 15: [size, source, version, magic]
 InputDump            INFO   [48, 0, 16, cbcb] Data follows...
-InputDump            INFO    ... [b4] [b4] [b4] [0] [13700] [2] [3] [1] [1] [11611]
-InputDump            INFO    ... [2005f32] [37f]
+InputDump            INFO    ... [b4] [b4] [b4] [0] [13700] [3] [3] [1] [1] [127be]
+InputDump            INFO    ... [ccf5aa] [447]
 InputDump            INFO
 InputDump            INFO 1 banks of type 16: [size, source, version, magic]
 InputDump            INFO   [40, 16, 6, cbcb] Data follows...
-InputDump            INFO    ... [11611] [0] [2005f32] [0] [2deabf7] [485a6] [55d6b980] [0] [a2037f] [51710]
+InputDump            INFO    ... [127be] [0] [ccf5aa] [0] [1ef9a4c] [48ba6] [d758f00] [0] [e20447] [13001f]
 InputDump            INFO
 InputDump            INFO 1 banks of type 53: [size, source, version, magic]
 InputDump            INFO   [12, 0, 0, cbcb] Data follows...
-InputDump            INFO    ... [2] [3] [1]
+InputDump            INFO    ... [3] [3] [1]
 InputDump            INFO
 InputDump            INFO 1 banks of type 56: [size, source, version, magic]
 InputDump            INFO   [32, 0, 0, cbcb] Data follows...
-InputDump            INFO    ... [0] [10000] [20000] [60000] [70103] [80000] [a0000] [150002]
+InputDump            INFO    ... [0] [10000] [20000] [60000] [7017b] [80000] [b0000] [150002]
 InputDump            INFO
 InputDump            INFO 1 banks of type 62: [size, source, version, magic]
 InputDump            INFO   [16, 0, 0, cbcb] Data follows...
-InputDump            INFO    ... [4305d05b] [8bb80007] [565111df] [b3190bc2]
+InputDump            INFO    ... [8b856c33] [8bb80018] [925211df] [238bd38]
 InputDump            INFO
 EventSelector     SUCCESS Reading Event record 5. Record number within stream 1: 5
 readLumiSeq         DEBUG ==> Execute
@@ -326,32 +326,32 @@ LumiFileReader      DEBUG ==> Execute
 LumiFileReader      DEBUG LumiSummary loaded!!
 LumiFileReader      DEBUG The object of type 'LHCb::HltLumiSummary*' has been retrieved from TS at address 'Hlt/LumiSummary'
 LumiFileReader      DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
-LumiFileReader      DEBUG ODIN RunNumber: 71185
+LumiFileReader      DEBUG ODIN RunNumber: 75710
 LumiFileReader      DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
 LumiFileReader      DEBUG Bank size: 1
 LumiFileReader      DEBUG Bank size:   16 Total Data bank size 4
-LumiFileReader       INFO RunInfo record: B3190BC2-5651-11DF-8BB8-00074305D05B
+LumiFileReader       INFO RunInfo record: 238BD389-2521-1DF8-BB80-0188B856C33
 InputDump           DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
 InputDump            INFO 1 banks of type 15: [size, source, version, magic]
 InputDump            INFO   [48, 0, 16, cbcb] Data follows...
-InputDump            INFO    ... [b4] [b4] [b4] [0] [13700] [503] [48087] [5] [1] [11611]
-InputDump            INFO    ... [2005f1e] [6fa]
+InputDump            INFO    ... [b4] [b4] [b4] [0] [13700] [3] [3] [1] [1] [127be]
+InputDump            INFO    ... [ccf616] [447]
 InputDump            INFO
 InputDump            INFO 1 banks of type 16: [size, source, version, magic]
 InputDump            INFO   [40, 16, 6, cbcb] Data follows...
-InputDump            INFO    ... [11611] [0] [2005f1e] [0] [2deabdc] [485a6] [55d6b280] [0] [e206fa] [51710]
+InputDump            INFO    ... [127be] [0] [ccf616] [0] [1ef9b44] [48ba6] [d75b480] [0] [e20447] [13001f]
 InputDump            INFO
 InputDump            INFO 1 banks of type 53: [size, source, version, magic]
 InputDump            INFO   [12, 0, 0, cbcb] Data follows...
-InputDump            INFO    ... [503] [48087] [5]
+InputDump            INFO    ... [3] [3] [1]
 InputDump            INFO
 InputDump            INFO 1 banks of type 56: [size, source, version, magic]
 InputDump            INFO   [32, 0, 0, cbcb] Data follows...
-InputDump            INFO    ... [4] [10002] [20001] [60008] [70383] [80000] [a0000] [140001]
+InputDump            INFO    ... [0] [10000] [20000] [60000] [70103] [80000] [b0000] [150002]
 InputDump            INFO
 InputDump            INFO 1 banks of type 62: [size, source, version, magic]
 InputDump            INFO   [16, 0, 0, cbcb] Data follows...
-InputDump            INFO    ... [4305d05b] [8bb80007] [565111df] [b3190bc2]
+InputDump            INFO    ... [8b856c33] [8bb80018] [925211df] [238bd38]
 InputDump            INFO
 EventSelector     SUCCESS Reading Event record 6. Record number within stream 1: 6
 readLumiSeq         DEBUG ==> Execute
@@ -359,32 +359,32 @@ LumiFileReader      DEBUG ==> Execute
 LumiFileReader      DEBUG LumiSummary loaded!!
 LumiFileReader      DEBUG The object of type 'LHCb::HltLumiSummary*' has been retrieved from TS at address 'Hlt/LumiSummary'
 LumiFileReader      DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
-LumiFileReader      DEBUG ODIN RunNumber: 71185
+LumiFileReader      DEBUG ODIN RunNumber: 75710
 LumiFileReader      DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
 LumiFileReader      DEBUG Bank size: 1
 LumiFileReader      DEBUG Bank size:   16 Total Data bank size 4
-LumiFileReader       INFO RunInfo record: B3190BC2-5651-11DF-8BB8-00074305D05B
+LumiFileReader       INFO RunInfo record: 238BD389-2521-1DF8-BB80-0188B856C33
 InputDump           DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
 InputDump            INFO 1 banks of type 15: [size, source, version, magic]
 InputDump            INFO   [48, 0, 16, cbcb] Data follows...
-InputDump            INFO    ... [b4] [b4] [b4] [0] [13700] [503] [48087] [5] [1] [11611]
-InputDump            INFO    ... [2005f17] [6fa]
+InputDump            INFO    ... [b4] [b4] [b4] [0] [13700] [3] [3] [1] [1] [127be]
+InputDump            INFO    ... [ccf772] [6fa]
 InputDump            INFO
 InputDump            INFO 1 banks of type 16: [size, source, version, magic]
 InputDump            INFO   [40, 16, 6, cbcb] Data follows...
-InputDump            INFO    ... [11611] [0] [2005f17] [0] [2deabd0] [485a6] [55d6b040] [0] [e206fa] [51710]
+InputDump            INFO    ... [127be] [0] [ccf772] [0] [1ef9e8e] [48ba6] [d762d80] [0] [e206fa] [13001f]
 InputDump            INFO
 InputDump            INFO 1 banks of type 53: [size, source, version, magic]
 InputDump            INFO   [12, 0, 0, cbcb] Data follows...
-InputDump            INFO    ... [503] [48087] [5]
+InputDump            INFO    ... [3] [3] [1]
 InputDump            INFO
 InputDump            INFO 1 banks of type 56: [size, source, version, magic]
 InputDump            INFO   [32, 0, 0, cbcb] Data follows...
-InputDump            INFO    ... [1] [10007] [20002] [60029] [716bb] [80000] [a0000] [140001]
+InputDump            INFO    ... [8] [10014] [20003] [60046] [71c1f] [80000] [b0001] [150002]
 InputDump            INFO
 InputDump            INFO 1 banks of type 62: [size, source, version, magic]
 InputDump            INFO   [16, 0, 0, cbcb] Data follows...
-InputDump            INFO    ... [4305d05b] [8bb80007] [565111df] [b3190bc2]
+InputDump            INFO    ... [8b856c33] [8bb80018] [925211df] [238bd38]
 InputDump            INFO
 EventSelector     SUCCESS Reading Event record 7. Record number within stream 1: 7
 readLumiSeq         DEBUG ==> Execute
@@ -392,32 +392,32 @@ LumiFileReader      DEBUG ==> Execute
 LumiFileReader      DEBUG LumiSummary loaded!!
 LumiFileReader      DEBUG The object of type 'LHCb::HltLumiSummary*' has been retrieved from TS at address 'Hlt/LumiSummary'
 LumiFileReader      DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
-LumiFileReader      DEBUG ODIN RunNumber: 71185
+LumiFileReader      DEBUG ODIN RunNumber: 75710
 LumiFileReader      DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
 LumiFileReader      DEBUG Bank size: 1
 LumiFileReader      DEBUG Bank size:   16 Total Data bank size 4
-LumiFileReader       INFO RunInfo record: B3190BC2-5651-11DF-8BB8-00074305D05B
+LumiFileReader       INFO RunInfo record: 238BD389-2521-1DF8-BB80-0188B856C33
 InputDump           DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
 InputDump            INFO 1 banks of type 15: [size, source, version, magic]
 InputDump            INFO   [48, 0, 16, cbcb] Data follows...
-InputDump            INFO    ... [b4] [b4] [b4] [0] [13700] [503] [48087] [5] [1] [11611]
-InputDump            INFO    ... [2005f2d] [6fa]
+InputDump            INFO    ... [b4] [b4] [b4] [0] [13700] [903] [3] [1] [1] [127be]
+InputDump            INFO    ... [ccf6ef] [826]
 InputDump            INFO
 InputDump            INFO 1 banks of type 16: [size, source, version, magic]
 InputDump            INFO   [40, 16, 6, cbcb] Data follows...
-InputDump            INFO    ... [11611] [0] [2005f2d] [0] [2deabf1] [485a6] [55d6b7c0] [0] [e206fa] [51710]
+InputDump            INFO    ... [127be] [0] [ccf6ef] [0] [1ef9d4a] [48ba6] [d760000] [0] [e20826] [13001f]
 InputDump            INFO
 InputDump            INFO 1 banks of type 53: [size, source, version, magic]
 InputDump            INFO   [12, 0, 0, cbcb] Data follows...
-InputDump            INFO    ... [503] [48087] [5]
+InputDump            INFO    ... [903] [3] [1]
 InputDump            INFO
 InputDump            INFO 1 banks of type 56: [size, source, version, magic]
 InputDump            INFO   [32, 0, 0, cbcb] Data follows...
-InputDump            INFO    ... [8] [10003] [20000] [60026] [70ca7] [80000] [a0000] [140001]
+InputDump            INFO    ... [4e] [100ee] [2005e] [601b8] [76067] [80000] [b0003] [150002]
 InputDump            INFO
 InputDump            INFO 1 banks of type 62: [size, source, version, magic]
 InputDump            INFO   [16, 0, 0, cbcb] Data follows...
-InputDump            INFO    ... [4305d05b] [8bb80007] [565111df] [b3190bc2]
+InputDump            INFO    ... [8b856c33] [8bb80018] [925211df] [238bd38]
 InputDump            INFO
 EventSelector     SUCCESS Reading Event record 8. Record number within stream 1: 8
 readLumiSeq         DEBUG ==> Execute
@@ -425,119 +425,20 @@ LumiFileReader      DEBUG ==> Execute
 LumiFileReader      DEBUG LumiSummary loaded!!
 LumiFileReader      DEBUG The object of type 'LHCb::HltLumiSummary*' has been retrieved from TS at address 'Hlt/LumiSummary'
 LumiFileReader      DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
-LumiFileReader      DEBUG ODIN RunNumber: 71185
+LumiFileReader      DEBUG ODIN RunNumber: 75710
 LumiFileReader      DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
 LumiFileReader      DEBUG Bank size: 1
 LumiFileReader      DEBUG Bank size:   16 Total Data bank size 4
-LumiFileReader       INFO RunInfo record: B3190BC2-5651-11DF-8BB8-00074305D05B
+LumiFileReader       INFO RunInfo record: 238BD389-2521-1DF8-BB80-0188B856C33
 InputDump           DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
 InputDump            INFO 1 banks of type 15: [size, source, version, magic]
 InputDump            INFO   [48, 0, 16, cbcb] Data follows...
-InputDump            INFO    ... [b4] [b4] [b4] [0] [13700] [3] [3] [1] [1] [11611]
-InputDump            INFO    ... [2005f83] [6fa]
+InputDump            INFO    ... [b4] [b4] [b4] [0] [13700] [1] [3] [1] [1] [127be]
+InputDump            INFO    ... [ccf800] [1]
 InputDump            INFO
 InputDump            INFO 1 banks of type 16: [size, source, version, magic]
 InputDump            INFO   [40, 16, 6, cbcb] Data follows...
-InputDump            INFO    ... [11611] [0] [2005f83] [0] [2deac65] [485a6] [55d6d5c0] [0] [e206fa] [51710]
-InputDump            INFO
-InputDump            INFO 1 banks of type 53: [size, source, version, magic]
-InputDump            INFO   [12, 0, 0, cbcb] Data follows...
-InputDump            INFO    ... [3] [3] [1]
-InputDump            INFO
-InputDump            INFO 1 banks of type 56: [size, source, version, magic]
-InputDump            INFO   [32, 0, 0, cbcb] Data follows...
-InputDump            INFO    ... [0] [10000] [20000] [60000] [7018f] [80000] [a0000] [150002]
-InputDump            INFO
-InputDump            INFO 1 banks of type 62: [size, source, version, magic]
-InputDump            INFO   [16, 0, 0, cbcb] Data follows...
-InputDump            INFO    ... [4305d05b] [8bb80007] [565111df] [b3190bc2]
-InputDump            INFO
-EventSelector     SUCCESS Reading Event record 9. Record number within stream 1: 9
-readLumiSeq         DEBUG ==> Execute
-LumiFileReader      DEBUG ==> Execute
-LumiFileReader      DEBUG LumiSummary loaded!!
-LumiFileReader      DEBUG The object of type 'LHCb::HltLumiSummary*' has been retrieved from TS at address 'Hlt/LumiSummary'
-LumiFileReader      DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
-LumiFileReader      DEBUG ODIN RunNumber: 71185
-LumiFileReader      DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-LumiFileReader      DEBUG Bank size: 1
-LumiFileReader      DEBUG Bank size:   16 Total Data bank size 4
-LumiFileReader       INFO RunInfo record: B3190BC2-5651-11DF-8BB8-00074305D05B
-InputDump           DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-InputDump            INFO 1 banks of type 15: [size, source, version, magic]
-InputDump            INFO   [48, 0, 16, cbcb] Data follows...
-InputDump            INFO    ... [b4] [b4] [b4] [0] [13700] [3] [3] [1] [1] [11611]
-InputDump            INFO    ... [2005f93] [6fa]
-InputDump            INFO
-InputDump            INFO 1 banks of type 16: [size, source, version, magic]
-InputDump            INFO   [40, 16, 6, cbcb] Data follows...
-InputDump            INFO    ... [11611] [0] [2005f93] [0] [2deac7b] [485a6] [55d6db40] [0] [e206fa] [51710]
-InputDump            INFO
-InputDump            INFO 1 banks of type 53: [size, source, version, magic]
-InputDump            INFO   [12, 0, 0, cbcb] Data follows...
-InputDump            INFO    ... [3] [3] [1]
-InputDump            INFO
-InputDump            INFO 1 banks of type 56: [size, source, version, magic]
-InputDump            INFO   [32, 0, 0, cbcb] Data follows...
-InputDump            INFO    ... [0] [10000] [20000] [60000] [70167] [80000] [a0000] [150002]
-InputDump            INFO
-InputDump            INFO 1 banks of type 62: [size, source, version, magic]
-InputDump            INFO   [16, 0, 0, cbcb] Data follows...
-InputDump            INFO    ... [4305d05b] [8bb80007] [565111df] [b3190bc2]
-InputDump            INFO
-EventSelector     SUCCESS Reading Event record 10. Record number within stream 1: 10
-readLumiSeq         DEBUG ==> Execute
-LumiFileReader      DEBUG ==> Execute
-LumiFileReader      DEBUG LumiSummary loaded!!
-LumiFileReader      DEBUG The object of type 'LHCb::HltLumiSummary*' has been retrieved from TS at address 'Hlt/LumiSummary'
-LumiFileReader      DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
-LumiFileReader      DEBUG ODIN RunNumber: 71185
-LumiFileReader      DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-LumiFileReader      DEBUG Bank size: 1
-LumiFileReader      DEBUG Bank size:   16 Total Data bank size 4
-LumiFileReader       INFO RunInfo record: B3190BC2-5651-11DF-8BB8-00074305D05B
-InputDump           DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-InputDump            INFO 1 banks of type 15: [size, source, version, magic]
-InputDump            INFO   [48, 0, 16, cbcb] Data follows...
-InputDump            INFO    ... [b4] [b4] [b4] [0] [13700] [503] [48087] [5] [1] [11611]
-InputDump            INFO    ... [2005f32] [6fa]
-InputDump            INFO
-InputDump            INFO 1 banks of type 16: [size, source, version, magic]
-InputDump            INFO   [40, 16, 6, cbcb] Data follows...
-InputDump            INFO    ... [11611] [0] [2005f32] [0] [2deabf8] [485a6] [55d6b980] [0] [e206fa] [51710]
-InputDump            INFO
-InputDump            INFO 1 banks of type 53: [size, source, version, magic]
-InputDump            INFO   [12, 0, 0, cbcb] Data follows...
-InputDump            INFO    ... [503] [48087] [5]
-InputDump            INFO
-InputDump            INFO 1 banks of type 56: [size, source, version, magic]
-InputDump            INFO   [32, 0, 0, cbcb] Data follows...
-InputDump            INFO    ... [1] [10008] [20002] [6005e] [70c43] [80000] [a0000] [140001]
-InputDump            INFO
-InputDump            INFO 1 banks of type 62: [size, source, version, magic]
-InputDump            INFO   [16, 0, 0, cbcb] Data follows...
-InputDump            INFO    ... [4305d05b] [8bb80007] [565111df] [b3190bc2]
-InputDump            INFO
-EventSelector     SUCCESS Reading Event record 11. Record number within stream 1: 11
-readLumiSeq         DEBUG ==> Execute
-LumiFileReader      DEBUG ==> Execute
-LumiFileReader      DEBUG LumiSummary loaded!!
-LumiFileReader      DEBUG The object of type 'LHCb::HltLumiSummary*' has been retrieved from TS at address 'Hlt/LumiSummary'
-LumiFileReader      DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
-LumiFileReader      DEBUG ODIN RunNumber: 71185
-LumiFileReader      DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-LumiFileReader      DEBUG Bank size: 1
-LumiFileReader      DEBUG Bank size:   16 Total Data bank size 4
-LumiFileReader       INFO RunInfo record: B3190BC2-5651-11DF-8BB8-00074305D05B
-InputDump           DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-InputDump            INFO 1 banks of type 15: [size, source, version, magic]
-InputDump            INFO   [48, 0, 16, cbcb] Data follows...
-InputDump            INFO    ... [b4] [b4] [b4] [0] [13700] [1] [3] [1] [1] [11611]
-InputDump            INFO    ... [2005f99] [1]
-InputDump            INFO
-InputDump            INFO 1 banks of type 16: [size, source, version, magic]
-InputDump            INFO   [40, 16, 6, cbcb] Data follows...
-InputDump            INFO    ... [11611] [0] [2005f99] [0] [2deac83] [485a6] [55d6dd00] [0] [620001] [51710]
+InputDump            INFO    ... [127be] [0] [ccf800] [0] [1ef9ff1] [48ba6] [d765e80] [0] [620001] [13001f]
 InputDump            INFO
 InputDump            INFO 1 banks of type 53: [size, source, version, magic]
 InputDump            INFO   [12, 0, 0, cbcb] Data follows...
@@ -545,11 +446,110 @@ InputDump            INFO    ... [1] [3] [1]
 InputDump            INFO
 InputDump            INFO 1 banks of type 56: [size, source, version, magic]
 InputDump            INFO   [32, 0, 0, cbcb] Data follows...
-InputDump            INFO    ... [0] [10000] [20000] [60000] [70153] [80000] [a0000] [150002]
+InputDump            INFO    ... [0] [10000] [20000] [60000] [7013f] [80000] [b0000] [150002]
 InputDump            INFO
 InputDump            INFO 1 banks of type 62: [size, source, version, magic]
 InputDump            INFO   [16, 0, 0, cbcb] Data follows...
-InputDump            INFO    ... [4305d05b] [8bb80007] [565111df] [b3190bc2]
+InputDump            INFO    ... [8b856c33] [8bb80018] [925211df] [238bd38]
+InputDump            INFO
+EventSelector     SUCCESS Reading Event record 9. Record number within stream 1: 9
+readLumiSeq         DEBUG ==> Execute
+LumiFileReader      DEBUG ==> Execute
+LumiFileReader      DEBUG LumiSummary loaded!!
+LumiFileReader      DEBUG The object of type 'LHCb::HltLumiSummary*' has been retrieved from TS at address 'Hlt/LumiSummary'
+LumiFileReader      DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
+LumiFileReader      DEBUG ODIN RunNumber: 75710
+LumiFileReader      DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
+LumiFileReader      DEBUG Bank size: 1
+LumiFileReader      DEBUG Bank size:   16 Total Data bank size 4
+LumiFileReader       INFO RunInfo record: 238BD389-2521-1DF8-BB80-0188B856C33
+InputDump           DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
+InputDump            INFO 1 banks of type 15: [size, source, version, magic]
+InputDump            INFO   [48, 0, 16, cbcb] Data follows...
+InputDump            INFO    ... [b4] [b4] [b4] [b9ba1f52] [13700] [903] [204107] [a045] [1] [127be]
+InputDump            INFO    ... [cce6d3] [37f]
+InputDump            INFO
+InputDump            INFO 1 banks of type 16: [size, source, version, magic]
+InputDump            INFO   [40, 16, 6, cbcb] Data follows...
+InputDump            INFO    ... [127be] [0] [cce6d3] [0] [1ef7707] [48ba6] [d706780] [0] [e2037f] [13001f]
+InputDump            INFO
+InputDump            INFO 1 banks of type 53: [size, source, version, magic]
+InputDump            INFO   [12, 0, 0, cbcb] Data follows...
+InputDump            INFO    ... [903] [204107] [a045]
+InputDump            INFO
+InputDump            INFO 1 banks of type 56: [size, source, version, magic]
+InputDump            INFO   [32, 0, 0, cbcb] Data follows...
+InputDump            INFO    ... [44] [100fe] [20060] [601d1] [79c2b] [80000] [b0003] [150002]
+InputDump            INFO
+InputDump            INFO 1 banks of type 62: [size, source, version, magic]
+InputDump            INFO   [16, 0, 0, cbcb] Data follows...
+InputDump            INFO    ... [8b856c33] [8bb80018] [925211df] [238bd38]
+InputDump            INFO
+EventSelector     SUCCESS Reading Event record 10. Record number within stream 1: 10
+readLumiSeq         DEBUG ==> Execute
+LumiFileReader      DEBUG ==> Execute
+LumiFileReader      DEBUG LumiSummary loaded!!
+LumiFileReader      DEBUG The object of type 'LHCb::HltLumiSummary*' has been retrieved from TS at address 'Hlt/LumiSummary'
+LumiFileReader      DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
+LumiFileReader      DEBUG ODIN RunNumber: 75710
+LumiFileReader      DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
+LumiFileReader      DEBUG Bank size: 1
+LumiFileReader      DEBUG Bank size:   16 Total Data bank size 4
+LumiFileReader       INFO RunInfo record: 238BD389-2521-1DF8-BB80-0188B856C33
+InputDump           DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
+InputDump            INFO 1 banks of type 15: [size, source, version, magic]
+InputDump            INFO   [48, 0, 16, cbcb] Data follows...
+InputDump            INFO    ... [b4] [b4] [b4] [0] [13700] [3] [3] [1] [1] [127be]
+InputDump            INFO    ... [ccf7e1] [7c2]
+InputDump            INFO
+InputDump            INFO 1 banks of type 16: [size, source, version, magic]
+InputDump            INFO   [40, 16, 6, cbcb] Data follows...
+InputDump            INFO    ... [127be] [0] [ccf7e1] [0] [1ef9fb2] [48ba6] [d765400] [0] [e207c2] [13001f]
+InputDump            INFO
+InputDump            INFO 1 banks of type 53: [size, source, version, magic]
+InputDump            INFO   [12, 0, 0, cbcb] Data follows...
+InputDump            INFO    ... [3] [3] [1]
+InputDump            INFO
+InputDump            INFO 1 banks of type 56: [size, source, version, magic]
+InputDump            INFO   [32, 0, 0, cbcb] Data follows...
+InputDump            INFO    ... [7] [1000c] [20001] [600cf] [7134b] [80000] [b0000] [150002]
+InputDump            INFO
+InputDump            INFO 1 banks of type 62: [size, source, version, magic]
+InputDump            INFO   [16, 0, 0, cbcb] Data follows...
+InputDump            INFO    ... [8b856c33] [8bb80018] [925211df] [238bd38]
+InputDump            INFO
+EventSelector     SUCCESS Reading Event record 11. Record number within stream 1: 11
+readLumiSeq         DEBUG ==> Execute
+LumiFileReader      DEBUG ==> Execute
+LumiFileReader      DEBUG LumiSummary loaded!!
+LumiFileReader      DEBUG The object of type 'LHCb::HltLumiSummary*' has been retrieved from TS at address 'Hlt/LumiSummary'
+LumiFileReader      DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
+LumiFileReader      DEBUG ODIN RunNumber: 75710
+LumiFileReader      DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
+LumiFileReader      DEBUG Bank size: 1
+LumiFileReader      DEBUG Bank size:   16 Total Data bank size 4
+LumiFileReader       INFO RunInfo record: 238BD389-2521-1DF8-BB80-0188B856C33
+InputDump           DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
+InputDump            INFO 1 banks of type 15: [size, source, version, magic]
+InputDump            INFO   [48, 0, 16, cbcb] Data follows...
+InputDump            INFO    ... [b4] [b4] [b4] [0] [13700] [3] [3] [1] [1] [127be]
+InputDump            INFO    ... [ccf88b] [826]
+InputDump            INFO
+InputDump            INFO 1 banks of type 16: [size, source, version, magic]
+InputDump            INFO   [40, 16, 6, cbcb] Data follows...
+InputDump            INFO    ... [127be] [0] [ccf88b] [0] [1efa11e] [48ba6] [d768f00] [0] [e20826] [13001f]
+InputDump            INFO
+InputDump            INFO 1 banks of type 53: [size, source, version, magic]
+InputDump            INFO   [12, 0, 0, cbcb] Data follows...
+InputDump            INFO    ... [3] [3] [1]
+InputDump            INFO
+InputDump            INFO 1 banks of type 56: [size, source, version, magic]
+InputDump            INFO   [32, 0, 0, cbcb] Data follows...
+InputDump            INFO    ... [5] [10008] [20002] [6004e] [70f63] [80000] [b0000] [150002]
+InputDump            INFO
+InputDump            INFO 1 banks of type 62: [size, source, version, magic]
+InputDump            INFO   [16, 0, 0, cbcb] Data follows...
+InputDump            INFO    ... [8b856c33] [8bb80018] [925211df] [238bd38]
 InputDump            INFO
 EventSelector     SUCCESS Reading Event record 12. Record number within stream 1: 12
 readLumiSeq         DEBUG ==> Execute
@@ -557,32 +557,32 @@ LumiFileReader      DEBUG ==> Execute
 LumiFileReader      DEBUG LumiSummary loaded!!
 LumiFileReader      DEBUG The object of type 'LHCb::HltLumiSummary*' has been retrieved from TS at address 'Hlt/LumiSummary'
 LumiFileReader      DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
-LumiFileReader      DEBUG ODIN RunNumber: 71185
+LumiFileReader      DEBUG ODIN RunNumber: 75710
 LumiFileReader      DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
 LumiFileReader      DEBUG Bank size: 1
 LumiFileReader      DEBUG Bank size:   16 Total Data bank size 4
-LumiFileReader       INFO RunInfo record: B3190BC2-5651-11DF-8BB8-00074305D05B
+LumiFileReader       INFO RunInfo record: 238BD389-2521-1DF8-BB80-0188B856C33
 InputDump           DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
 InputDump            INFO 1 banks of type 15: [size, source, version, magic]
 InputDump            INFO   [48, 0, 16, cbcb] Data follows...
-InputDump            INFO    ... [b4] [b4] [b4] [0] [13700] [3] [3] [1] [1] [11611]
-InputDump            INFO    ... [2005f9a] [6fa]
+InputDump            INFO    ... [b4] [b4] [b4] [0] [13700] [1] [3] [1] [1] [127be]
+InputDump            INFO    ... [ccf850] [12d]
 InputDump            INFO
 InputDump            INFO 1 banks of type 16: [size, source, version, magic]
 InputDump            INFO   [40, 16, 6, cbcb] Data follows...
-InputDump            INFO    ... [11611] [0] [2005f9a] [0] [2deac86] [485a6] [55d6ddc0] [0] [e206fa] [51710]
+InputDump            INFO    ... [127be] [0] [ccf850] [0] [1efa0a0] [48ba6] [d767a80] [0] [62012d] [13001f]
 InputDump            INFO
 InputDump            INFO 1 banks of type 53: [size, source, version, magic]
 InputDump            INFO   [12, 0, 0, cbcb] Data follows...
-InputDump            INFO    ... [3] [3] [1]
+InputDump            INFO    ... [1] [3] [1]
 InputDump            INFO
 InputDump            INFO 1 banks of type 56: [size, source, version, magic]
 InputDump            INFO   [32, 0, 0, cbcb] Data follows...
-InputDump            INFO    ... [0] [10000] [20000] [60000] [701cb] [80000] [a0000] [150002]
+InputDump            INFO    ... [0] [10000] [20000] [60000] [70167] [80000] [b0000] [150002]
 InputDump            INFO
 InputDump            INFO 1 banks of type 62: [size, source, version, magic]
 InputDump            INFO   [16, 0, 0, cbcb] Data follows...
-InputDump            INFO    ... [4305d05b] [8bb80007] [565111df] [b3190bc2]
+InputDump            INFO    ... [8b856c33] [8bb80018] [925211df] [238bd38]
 InputDump            INFO
 EventSelector     SUCCESS Reading Event record 13. Record number within stream 1: 13
 readLumiSeq         DEBUG ==> Execute
@@ -590,32 +590,32 @@ LumiFileReader      DEBUG ==> Execute
 LumiFileReader      DEBUG LumiSummary loaded!!
 LumiFileReader      DEBUG The object of type 'LHCb::HltLumiSummary*' has been retrieved from TS at address 'Hlt/LumiSummary'
 LumiFileReader      DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
-LumiFileReader      DEBUG ODIN RunNumber: 71185
+LumiFileReader      DEBUG ODIN RunNumber: 75710
 LumiFileReader      DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
 LumiFileReader      DEBUG Bank size: 1
 LumiFileReader      DEBUG Bank size:   16 Total Data bank size 4
-LumiFileReader       INFO RunInfo record: B3190BC2-5651-11DF-8BB8-00074305D05B
+LumiFileReader       INFO RunInfo record: 238BD389-2521-1DF8-BB80-0188B856C33
 InputDump           DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
 InputDump            INFO 1 banks of type 15: [size, source, version, magic]
 InputDump            INFO   [48, 0, 16, cbcb] Data follows...
-InputDump            INFO    ... [b4] [b4] [b4] [0] [13700] [3] [3] [1] [1] [11611]
-InputDump            INFO    ... [2005f97] [6fa]
+InputDump            INFO    ... [b4] [b4] [b4] [0] [13700] [903] [3] [1] [1] [127be]
+InputDump            INFO    ... [ccf7dc] [4ab]
 InputDump            INFO
 InputDump            INFO 1 banks of type 16: [size, source, version, magic]
 InputDump            INFO   [40, 16, 6, cbcb] Data follows...
-InputDump            INFO    ... [11611] [0] [2005f97] [0] [2deac80] [485a6] [55d6dc80] [0] [e206fa] [51710]
+InputDump            INFO    ... [127be] [0] [ccf7dc] [0] [1ef9fa3] [48ba6] [d765240] [0] [e204ab] [13001f]
 InputDump            INFO
 InputDump            INFO 1 banks of type 53: [size, source, version, magic]
 InputDump            INFO   [12, 0, 0, cbcb] Data follows...
-InputDump            INFO    ... [3] [3] [1]
+InputDump            INFO    ... [903] [3] [1]
 InputDump            INFO
 InputDump            INFO 1 banks of type 56: [size, source, version, magic]
 InputDump            INFO   [32, 0, 0, cbcb] Data follows...
-InputDump            INFO    ... [0] [10000] [20000] [60000] [7012b] [80000] [a0000] [150002]
+InputDump            INFO    ... [38] [100a6] [20048] [6019c] [7481b] [80000] [b0003] [150002]
 InputDump            INFO
 InputDump            INFO 1 banks of type 62: [size, source, version, magic]
 InputDump            INFO   [16, 0, 0, cbcb] Data follows...
-InputDump            INFO    ... [4305d05b] [8bb80007] [565111df] [b3190bc2]
+InputDump            INFO    ... [8b856c33] [8bb80018] [925211df] [238bd38]
 InputDump            INFO
 EventSelector     SUCCESS Reading Event record 14. Record number within stream 1: 14
 readLumiSeq         DEBUG ==> Execute
@@ -623,32 +623,32 @@ LumiFileReader      DEBUG ==> Execute
 LumiFileReader      DEBUG LumiSummary loaded!!
 LumiFileReader      DEBUG The object of type 'LHCb::HltLumiSummary*' has been retrieved from TS at address 'Hlt/LumiSummary'
 LumiFileReader      DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
-LumiFileReader      DEBUG ODIN RunNumber: 71185
+LumiFileReader      DEBUG ODIN RunNumber: 75710
 LumiFileReader      DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
 LumiFileReader      DEBUG Bank size: 1
 LumiFileReader      DEBUG Bank size:   16 Total Data bank size 4
-LumiFileReader       INFO RunInfo record: B3190BC2-5651-11DF-8BB8-00074305D05B
+LumiFileReader       INFO RunInfo record: 238BD389-2521-1DF8-BB80-0188B856C33
 InputDump           DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
 InputDump            INFO 1 banks of type 15: [size, source, version, magic]
 InputDump            INFO   [48, 0, 16, cbcb] Data follows...
-InputDump            INFO    ... [b4] [b4] [b4] [0] [13700] [3] [3] [1] [1] [11611]
-InputDump            INFO    ... [2005faf] [6fa]
+InputDump            INFO    ... [b4] [b4] [b4] [0] [13700] [1] [3] [1] [1] [127be]
+InputDump            INFO    ... [ccf8e4] [c9]
 InputDump            INFO
 InputDump            INFO 1 banks of type 16: [size, source, version, magic]
 InputDump            INFO   [40, 16, 6, cbcb] Data follows...
-InputDump            INFO    ... [11611] [0] [2005faf] [0] [2deaca5] [485a6] [55d6e500] [0] [e206fa] [51710]
+InputDump            INFO    ... [127be] [0] [ccf8e4] [0] [1efa1ed] [48ba6] [d76ae00] [0] [6200c9] [13001f]
 InputDump            INFO
 InputDump            INFO 1 banks of type 53: [size, source, version, magic]
 InputDump            INFO   [12, 0, 0, cbcb] Data follows...
-InputDump            INFO    ... [3] [3] [1]
+InputDump            INFO    ... [1] [3] [1]
 InputDump            INFO
 InputDump            INFO 1 banks of type 56: [size, source, version, magic]
 InputDump            INFO   [32, 0, 0, cbcb] Data follows...
-InputDump            INFO    ... [0] [10000] [20000] [60000] [701cb] [80000] [a0000] [150002]
+InputDump            INFO    ... [0] [10000] [20000] [60000] [7018f] [80000] [b0000] [150002]
 InputDump            INFO
 InputDump            INFO 1 banks of type 62: [size, source, version, magic]
 InputDump            INFO   [16, 0, 0, cbcb] Data follows...
-InputDump            INFO    ... [4305d05b] [8bb80007] [565111df] [b3190bc2]
+InputDump            INFO    ... [8b856c33] [8bb80018] [925211df] [238bd38]
 InputDump            INFO
 EventSelector     SUCCESS Reading Event record 15. Record number within stream 1: 15
 readLumiSeq         DEBUG ==> Execute
@@ -656,32 +656,32 @@ LumiFileReader      DEBUG ==> Execute
 LumiFileReader      DEBUG LumiSummary loaded!!
 LumiFileReader      DEBUG The object of type 'LHCb::HltLumiSummary*' has been retrieved from TS at address 'Hlt/LumiSummary'
 LumiFileReader      DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
-LumiFileReader      DEBUG ODIN RunNumber: 71185
+LumiFileReader      DEBUG ODIN RunNumber: 75710
 LumiFileReader      DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
 LumiFileReader      DEBUG Bank size: 1
 LumiFileReader      DEBUG Bank size:   16 Total Data bank size 4
-LumiFileReader       INFO RunInfo record: B3190BC2-5651-11DF-8BB8-00074305D05B
+LumiFileReader       INFO RunInfo record: 238BD389-2521-1DF8-BB80-0188B856C33
 InputDump           DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
 InputDump            INFO 1 banks of type 15: [size, source, version, magic]
 InputDump            INFO   [48, 0, 16, cbcb] Data follows...
-InputDump            INFO    ... [b4] [b4] [b4] [0] [13700] [503] [48087] [5] [1] [11611]
-InputDump            INFO    ... [2005f8d] [6fa]
+InputDump            INFO    ... [b4] [b4] [b4] [0] [13700] [3] [3] [1] [1] [127be]
+InputDump            INFO    ... [ccf91d] [7c2]
 InputDump            INFO
 InputDump            INFO 1 banks of type 16: [size, source, version, magic]
 InputDump            INFO   [40, 16, 6, cbcb] Data follows...
-InputDump            INFO    ... [11611] [0] [2005f8d] [0] [2deac72] [485a6] [55d6d940] [0] [e206fa] [51710]
+InputDump            INFO    ... [127be] [0] [ccf91d] [0] [1efa281] [48ba6] [d76c1c0] [0] [e207c2] [13001f]
 InputDump            INFO
 InputDump            INFO 1 banks of type 53: [size, source, version, magic]
 InputDump            INFO   [12, 0, 0, cbcb] Data follows...
-InputDump            INFO    ... [503] [48087] [5]
+InputDump            INFO    ... [3] [3] [1]
 InputDump            INFO
 InputDump            INFO 1 banks of type 56: [size, source, version, magic]
 InputDump            INFO   [32, 0, 0, cbcb] Data follows...
-InputDump            INFO    ... [c] [10004] [20004] [6000f] [7044b] [80000] [a0000] [140001]
+InputDump            INFO    ... [0] [10000] [20000] [60000] [7017b] [80000] [b0000] [150002]
 InputDump            INFO
 InputDump            INFO 1 banks of type 62: [size, source, version, magic]
 InputDump            INFO   [16, 0, 0, cbcb] Data follows...
-InputDump            INFO    ... [4305d05b] [8bb80007] [565111df] [b3190bc2]
+InputDump            INFO    ... [8b856c33] [8bb80018] [925211df] [238bd38]
 InputDump            INFO
 EventSelector     SUCCESS Reading Event record 16. Record number within stream 1: 16
 readLumiSeq         DEBUG ==> Execute
@@ -689,20 +689,20 @@ LumiFileReader      DEBUG ==> Execute
 LumiFileReader      DEBUG LumiSummary loaded!!
 LumiFileReader      DEBUG The object of type 'LHCb::HltLumiSummary*' has been retrieved from TS at address 'Hlt/LumiSummary'
 LumiFileReader      DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
-LumiFileReader      DEBUG ODIN RunNumber: 71185
+LumiFileReader      DEBUG ODIN RunNumber: 75710
 LumiFileReader      DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
 LumiFileReader      DEBUG Bank size: 1
 LumiFileReader      DEBUG Bank size:   16 Total Data bank size 4
-LumiFileReader       INFO RunInfo record: B3190BC2-5651-11DF-8BB8-00074305D05B
+LumiFileReader       INFO RunInfo record: 238BD389-2521-1DF8-BB80-0188B856C33
 InputDump           DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
 InputDump            INFO 1 banks of type 15: [size, source, version, magic]
 InputDump            INFO   [48, 0, 16, cbcb] Data follows...
-InputDump            INFO    ... [b4] [b4] [b4] [0] [13700] [3] [3] [1] [1] [11611]
-InputDump            INFO    ... [2005fb7] [6fa]
+InputDump            INFO    ... [b4] [b4] [b4] [0] [13700] [3] [3] [1] [1] [127be]
+InputDump            INFO    ... [ccf987] [447]
 InputDump            INFO
 InputDump            INFO 1 banks of type 16: [size, source, version, magic]
 InputDump            INFO   [40, 16, 6, cbcb] Data follows...
-InputDump            INFO    ... [11611] [0] [2005fb7] [0] [2deacb1] [485a6] [55d6e7c0] [0] [e206fa] [51710]
+InputDump            INFO    ... [127be] [0] [ccf987] [0] [1efa379] [48ba6] [d76e680] [0] [e20447] [13001f]
 InputDump            INFO
 InputDump            INFO 1 banks of type 53: [size, source, version, magic]
 InputDump            INFO   [12, 0, 0, cbcb] Data follows...
@@ -710,11 +710,11 @@ InputDump            INFO    ... [3] [3] [1]
 InputDump            INFO
 InputDump            INFO 1 banks of type 56: [size, source, version, magic]
 InputDump            INFO   [32, 0, 0, cbcb] Data follows...
-InputDump            INFO    ... [0] [10000] [20000] [60000] [7018f] [80000] [a0000] [150002]
+InputDump            INFO    ... [3] [10013] [2000a] [60026] [70a27] [80000] [b0001] [150002]
 InputDump            INFO
 InputDump            INFO 1 banks of type 62: [size, source, version, magic]
 InputDump            INFO   [16, 0, 0, cbcb] Data follows...
-InputDump            INFO    ... [4305d05b] [8bb80007] [565111df] [b3190bc2]
+InputDump            INFO    ... [8b856c33] [8bb80018] [925211df] [238bd38]
 InputDump            INFO
 EventSelector     SUCCESS Reading Event record 17. Record number within stream 1: 17
 readLumiSeq         DEBUG ==> Execute
@@ -722,32 +722,32 @@ LumiFileReader      DEBUG ==> Execute
 LumiFileReader      DEBUG LumiSummary loaded!!
 LumiFileReader      DEBUG The object of type 'LHCb::HltLumiSummary*' has been retrieved from TS at address 'Hlt/LumiSummary'
 LumiFileReader      DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
-LumiFileReader      DEBUG ODIN RunNumber: 71185
+LumiFileReader      DEBUG ODIN RunNumber: 75710
 LumiFileReader      DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
 LumiFileReader      DEBUG Bank size: 1
 LumiFileReader      DEBUG Bank size:   16 Total Data bank size 4
-LumiFileReader       INFO RunInfo record: B3190BC2-5651-11DF-8BB8-00074305D05B
+LumiFileReader       INFO RunInfo record: 238BD389-2521-1DF8-BB80-0188B856C33
 InputDump           DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
 InputDump            INFO 1 banks of type 15: [size, source, version, magic]
 InputDump            INFO   [48, 0, 16, cbcb] Data follows...
-InputDump            INFO    ... [b4] [b4] [b4] [0] [13700] [503] [48087] [5] [1] [11611]
-InputDump            INFO    ... [2005f87] [6fa]
+InputDump            INFO    ... [b4] [b4] [b4] [0] [13700] [2] [3] [1] [1] [127be]
+InputDump            INFO    ... [ccf8d1] [b40]
 InputDump            INFO
 InputDump            INFO 1 banks of type 16: [size, source, version, magic]
 InputDump            INFO   [40, 16, 6, cbcb] Data follows...
-InputDump            INFO    ... [11611] [0] [2005f87] [0] [2deac6b] [485a6] [55d6d700] [0] [e206fa] [51710]
+InputDump            INFO    ... [127be] [0] [ccf8d1] [0] [1efa1c2] [48ba6] [d76a780] [0] [a20b40] [13001f]
 InputDump            INFO
 InputDump            INFO 1 banks of type 53: [size, source, version, magic]
 InputDump            INFO   [12, 0, 0, cbcb] Data follows...
-InputDump            INFO    ... [503] [48087] [5]
+InputDump            INFO    ... [2] [3] [1]
 InputDump            INFO
 InputDump            INFO 1 banks of type 56: [size, source, version, magic]
 InputDump            INFO   [32, 0, 0, cbcb] Data follows...
-InputDump            INFO    ... [4] [10004] [20000] [60022] [70b53] [80000] [a0000] [140001]
+InputDump            INFO    ... [0] [10000] [20000] [60000] [702a7] [80000] [b0000] [150002]
 InputDump            INFO
 InputDump            INFO 1 banks of type 62: [size, source, version, magic]
 InputDump            INFO   [16, 0, 0, cbcb] Data follows...
-InputDump            INFO    ... [4305d05b] [8bb80007] [565111df] [b3190bc2]
+InputDump            INFO    ... [8b856c33] [8bb80018] [925211df] [238bd38]
 InputDump            INFO
 EventSelector     SUCCESS Reading Event record 18. Record number within stream 1: 18
 readLumiSeq         DEBUG ==> Execute
@@ -755,20 +755,20 @@ LumiFileReader      DEBUG ==> Execute
 LumiFileReader      DEBUG LumiSummary loaded!!
 LumiFileReader      DEBUG The object of type 'LHCb::HltLumiSummary*' has been retrieved from TS at address 'Hlt/LumiSummary'
 LumiFileReader      DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
-LumiFileReader      DEBUG ODIN RunNumber: 71185
+LumiFileReader      DEBUG ODIN RunNumber: 75710
 LumiFileReader      DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
 LumiFileReader      DEBUG Bank size: 1
 LumiFileReader      DEBUG Bank size:   16 Total Data bank size 4
-LumiFileReader       INFO RunInfo record: B3190BC2-5651-11DF-8BB8-00074305D05B
+LumiFileReader       INFO RunInfo record: 238BD389-2521-1DF8-BB80-0188B856C33
 InputDump           DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
 InputDump            INFO 1 banks of type 15: [size, source, version, magic]
 InputDump            INFO   [48, 0, 16, cbcb] Data follows...
-InputDump            INFO    ... [b4] [b4] [b4] [0] [13700] [3] [3] [1] [1] [11611]
-InputDump            INFO    ... [2005fb9] [6fa]
+InputDump            INFO    ... [b4] [b4] [b4] [0] [13700] [3] [3] [1] [1] [127be]
+InputDump            INFO    ... [ccf9a2] [37f]
 InputDump            INFO
 InputDump            INFO 1 banks of type 16: [size, source, version, magic]
 InputDump            INFO   [40, 16, 6, cbcb] Data follows...
-InputDump            INFO    ... [11611] [0] [2005fb9] [0] [2deacb5] [485a6] [55d6e880] [0] [e206fa] [51710]
+InputDump            INFO    ... [127be] [0] [ccf9a2] [0] [1efa3ac] [48ba6] [d76f000] [0] [e2037f] [13001f]
 InputDump            INFO
 InputDump            INFO 1 banks of type 53: [size, source, version, magic]
 InputDump            INFO   [12, 0, 0, cbcb] Data follows...
@@ -776,11 +776,11 @@ InputDump            INFO    ... [3] [3] [1]
 InputDump            INFO
 InputDump            INFO 1 banks of type 56: [size, source, version, magic]
 InputDump            INFO   [32, 0, 0, cbcb] Data follows...
-InputDump            INFO    ... [0] [10000] [20000] [60000] [70153] [80000] [a0000] [150002]
+InputDump            INFO    ... [0] [10000] [20000] [60000] [70103] [80000] [b0000] [150002]
 InputDump            INFO
 InputDump            INFO 1 banks of type 62: [size, source, version, magic]
 InputDump            INFO   [16, 0, 0, cbcb] Data follows...
-InputDump            INFO    ... [4305d05b] [8bb80007] [565111df] [b3190bc2]
+InputDump            INFO    ... [8b856c33] [8bb80018] [925211df] [238bd38]
 InputDump            INFO
 EventSelector     SUCCESS Reading Event record 19. Record number within stream 1: 19
 readLumiSeq         DEBUG ==> Execute
@@ -788,32 +788,32 @@ LumiFileReader      DEBUG ==> Execute
 LumiFileReader      DEBUG LumiSummary loaded!!
 LumiFileReader      DEBUG The object of type 'LHCb::HltLumiSummary*' has been retrieved from TS at address 'Hlt/LumiSummary'
 LumiFileReader      DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
-LumiFileReader      DEBUG ODIN RunNumber: 71185
+LumiFileReader      DEBUG ODIN RunNumber: 75710
 LumiFileReader      DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
 LumiFileReader      DEBUG Bank size: 1
 LumiFileReader      DEBUG Bank size:   16 Total Data bank size 4
-LumiFileReader       INFO RunInfo record: B3190BC2-5651-11DF-8BB8-00074305D05B
+LumiFileReader       INFO RunInfo record: 238BD389-2521-1DF8-BB80-0188B856C33
 InputDump           DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
 InputDump            INFO 1 banks of type 15: [size, source, version, magic]
 InputDump            INFO   [48, 0, 16, cbcb] Data follows...
-InputDump            INFO    ... [b4] [b4] [b4] [0] [13700] [503] [48087] [5] [1] [11611]
-InputDump            INFO    ... [2005fa6] [6fa]
+InputDump            INFO    ... [b4] [b4] [b4] [0] [13700] [2] [3] [1] [1] [127be]
+InputDump            INFO    ... [ccf983] [b40]
 InputDump            INFO
 InputDump            INFO 1 banks of type 16: [size, source, version, magic]
 InputDump            INFO   [40, 16, 6, cbcb] Data follows...
-InputDump            INFO    ... [11611] [0] [2005fa6] [0] [2deac96] [485a6] [55d6e1c0] [0] [e206fa] [51710]
+InputDump            INFO    ... [127be] [0] [ccf983] [0] [1efa372] [48ba6] [d76e540] [0] [a20b40] [13001f]
 InputDump            INFO
 InputDump            INFO 1 banks of type 53: [size, source, version, magic]
 InputDump            INFO   [12, 0, 0, cbcb] Data follows...
-InputDump            INFO    ... [503] [48087] [5]
+InputDump            INFO    ... [2] [3] [1]
 InputDump            INFO
 InputDump            INFO 1 banks of type 56: [size, source, version, magic]
 InputDump            INFO   [32, 0, 0, cbcb] Data follows...
-InputDump            INFO    ... [0] [10000] [20000] [60004] [708ab] [80000] [a0000] [140001]
+InputDump            INFO    ... [0] [10000] [20000] [60000] [7013f] [80000] [b0000] [150002]
 InputDump            INFO
 InputDump            INFO 1 banks of type 62: [size, source, version, magic]
 InputDump            INFO   [16, 0, 0, cbcb] Data follows...
-InputDump            INFO    ... [4305d05b] [8bb80007] [565111df] [b3190bc2]
+InputDump            INFO    ... [8b856c33] [8bb80018] [925211df] [238bd38]
 InputDump            INFO
 EventSelector     SUCCESS Reading Event record 20. Record number within stream 1: 20
 readLumiSeq         DEBUG ==> Execute
@@ -821,32 +821,32 @@ LumiFileReader      DEBUG ==> Execute
 LumiFileReader      DEBUG LumiSummary loaded!!
 LumiFileReader      DEBUG The object of type 'LHCb::HltLumiSummary*' has been retrieved from TS at address 'Hlt/LumiSummary'
 LumiFileReader      DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
-LumiFileReader      DEBUG ODIN RunNumber: 71185
+LumiFileReader      DEBUG ODIN RunNumber: 75710
 LumiFileReader      DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
 LumiFileReader      DEBUG Bank size: 1
 LumiFileReader      DEBUG Bank size:   16 Total Data bank size 4
-LumiFileReader       INFO RunInfo record: B3190BC2-5651-11DF-8BB8-00074305D05B
+LumiFileReader       INFO RunInfo record: 238BD389-2521-1DF8-BB80-0188B856C33
 InputDump           DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
 InputDump            INFO 1 banks of type 15: [size, source, version, magic]
 InputDump            INFO   [48, 0, 16, cbcb] Data follows...
-InputDump            INFO    ... [b4] [b4] [b4] [0] [13700] [3] [3] [1] [1] [11611]
-InputDump            INFO    ... [2005fbc] [6fa]
+InputDump            INFO    ... [b4] [b4] [b4] [0] [13700] [0] [3] [1] [1] [127be]
+InputDump            INFO    ... [ccfa82] [875]
 InputDump            INFO
 InputDump            INFO 1 banks of type 16: [size, source, version, magic]
 InputDump            INFO   [40, 16, 6, cbcb] Data follows...
-InputDump            INFO    ... [11611] [0] [2005fbc] [0] [2deacb8] [485a6] [55d6e980] [0] [e206fa] [51710]
+InputDump            INFO    ... [127be] [0] [ccfa82] [0] [1efa5bc] [48ba6] [d773dc0] [0] [220875] [13001f]
 InputDump            INFO
 InputDump            INFO 1 banks of type 53: [size, source, version, magic]
 InputDump            INFO   [12, 0, 0, cbcb] Data follows...
-InputDump            INFO    ... [3] [3] [1]
+InputDump            INFO    ... [0] [3] [1]
 InputDump            INFO
 InputDump            INFO 1 banks of type 56: [size, source, version, magic]
 InputDump            INFO   [32, 0, 0, cbcb] Data follows...
-InputDump            INFO    ... [0] [10000] [20000] [60000] [70117] [80000] [a0000] [150002]
+InputDump            INFO    ... [0] [10000] [20000] [60000] [701b7] [80000] [b0000] [150002]
 InputDump            INFO
 InputDump            INFO 1 banks of type 62: [size, source, version, magic]
 InputDump            INFO   [16, 0, 0, cbcb] Data follows...
-InputDump            INFO    ... [4305d05b] [8bb80007] [565111df] [b3190bc2]
+InputDump            INFO    ... [8b856c33] [8bb80018] [925211df] [238bd38]
 InputDump            INFO
 readLumiSeq         DEBUG Property update for OutputLevel : new value = 2
 readLumiSeq         DEBUG ==> endRun
@@ -896,18 +896,18 @@ Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye
 
 ToolSvc              INFO Removing all tools created by ToolSvc
 ToolSvc.Sequenc...   INFO ------------------------------------------------------------------------------------------------
-ToolSvc.Sequenc...   INFO This machine has a speed about   1.49 times the speed of a 2.8 GHz Xeon.
+ToolSvc.Sequenc...   INFO This machine has a speed about   2.32 times the speed of a 2.8 GHz Xeon.
 ToolSvc.Sequenc...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 ToolSvc.Sequenc...   INFO ------------------------------------------------------------------------------------------------
-ToolSvc.Sequenc...   INFO readLumiSeq                   |     0.800 |     0.811 |    0.691       2.7 |      20 |     0.016 |
-ToolSvc.Sequenc...   INFO   createODIN                  |     0.100 |     0.102 |    0.062       0.8 |      20 |     0.002 |
-ToolSvc.Sequenc...   INFO   OdinTriggerTypes            |     0.000 |     0.015 |    0.007       0.2 |      20 |     0.000 |
-ToolSvc.Sequenc...   INFO   LumiDecoder                 |     0.050 |     0.043 |    0.028       0.3 |      20 |     0.001 |
-ToolSvc.Sequenc...   INFO   filterLumi                  |     0.100 |     0.022 |    0.014       0.1 |      20 |     0.000 |
-ToolSvc.Sequenc...   INFO     LumiRandomFilter          |     0.050 |     0.012 |    0.008       0.1 |      20 |     0.000 |
-ToolSvc.Sequenc...   INFO     LumiLowFilter             |     0.000 |     0.009 |    0.007       0.0 |       7 |     0.000 |
-ToolSvc.Sequenc...   INFO   LumiFileReader              |     0.150 |     0.174 |    0.142       0.6 |      20 |     0.003 |
-ToolSvc.Sequenc...   INFO   InputDump                   |     0.400 |     0.430 |    0.404       0.7 |      20 |     0.009 |
+ToolSvc.Sequenc...   INFO readLumiSeq                   |     0.550 |     1.076 |    0.934       2.7 |      20 |     0.022 |
+ToolSvc.Sequenc...   INFO   createODIN                  |     0.100 |     0.079 |    0.036       0.8 |      20 |     0.002 |
+ToolSvc.Sequenc...   INFO   OdinTriggerTypes            |     0.000 |     0.011 |    0.003       0.1 |      20 |     0.000 |
+ToolSvc.Sequenc...   INFO   LumiDecoder                 |     0.050 |     0.027 |    0.014       0.3 |      20 |     0.001 |
+ToolSvc.Sequenc...   INFO   filterLumi                  |     0.000 |     0.011 |    0.006       0.1 |      20 |     0.000 |
+ToolSvc.Sequenc...   INFO     LumiRandomFilter          |     0.000 |     0.008 |    0.004       0.1 |      20 |     0.000 |
+ToolSvc.Sequenc...   INFO     LumiLowFilter             |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+ToolSvc.Sequenc...   INFO   LumiFileReader              |     0.000 |     0.289 |    0.248       0.6 |      20 |     0.006 |
+ToolSvc.Sequenc...   INFO   InputDump                   |     0.350 |     0.627 |    0.586       0.8 |      20 |     0.013 |
 ToolSvc.Sequenc...   INFO ------------------------------------------------------------------------------------------------
 ApplicationMgr       INFO Application Manager Finalized successfully
 ApplicationMgr       INFO Application Manager Terminated successfully

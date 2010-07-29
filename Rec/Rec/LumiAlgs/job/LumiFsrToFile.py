@@ -1,10 +1,7 @@
 #!/usr/bin/env gaudirun.py
 #
-# Minimal file for running LumiFsrReader from python prompt
 # Syntax is:
-#   gaudirun.py ../job/LumiFsrReader.py
-# or just
-#   ../job/LumiFsrReader.py
+#   gaudirun.py ../job/LumiFsrToFile.py
 #
 import os
 from Gaudi.Configuration import *

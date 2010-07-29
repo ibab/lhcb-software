@@ -29,6 +29,15 @@
     <logical/>
   </File>
 
+  <File ID="0238bd38-9252-11df-8bb8-00188b856c33">
+     <physical>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/75710/075710_0000000186.raw?svcClass=lhcbraw&amp;castorVersion=2"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/75710/075710_0000000186.raw"/>
+     </logical>
+   </File>
+
   <File ID="AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517">
     <physical>
       <pfn filetype="ROOT_All" name="testFSRout.dst"/>
