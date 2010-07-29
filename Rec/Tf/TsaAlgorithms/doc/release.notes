@@ -3,6 +3,9 @@
 ! Responsible : M Needham
 ! Purpose     : Tsa algorithms
 !----------------------------------------------------------------------------
+
+! 2010-07-29 New tuning of seeding for early data [see Tracking meeting 29/07)
+
 ! 2010-07-29 Stephanie Hansmann-Menzemer
  - commit forgotten header file for last changes
 
