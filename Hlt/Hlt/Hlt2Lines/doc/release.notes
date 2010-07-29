@@ -8,6 +8,11 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2010-07-29
+ - Cosmaethic changes in Hlt2DisplVertices.py, adapt and change comments
+ - Hlt2DisplVertices lines : stop saving candidates in TES. 
+   Not needed anymore for the line tell it has fired.
+
 ! 2010-07-27
  - Changed InputLocation for Hlt2B2HHLine from GoodPions to BiKalmanFittedPions
 

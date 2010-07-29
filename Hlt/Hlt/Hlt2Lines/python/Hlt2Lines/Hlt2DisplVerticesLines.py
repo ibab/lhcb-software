@@ -1,33 +1,38 @@
-############################################################
-#
-# Hlt2DisplVertices : a Line for displaced vertices hunting
-#
-# Maintainer : Neal Gauvin 
-# Date       : 16 july 2009
-# Revised    : 20 avril 2010
-#
-# 3 steps :
-#      - Reconstruction of all vertices with >= 4 tracks
-#        with PatPV3D, with optimized cuts for "smaller" vertices
-#        than PV's.
-#      - Hlt2PreSelDV loops on all reconstructed vertices.
-#        The one with lowest z (upstream) is not considered
-#        Vertices with at least one backward track are not considered.
-#        Vertices close to the beam line removed.
-#        To allow for kinematical cuts, association is done between the Velo
-#        tracks participating to the vertex and the reconstructed Hlt2Pions.
-#        When no Hlt2Pions found, default pions with 0.4 GeV pt are created.
-#        Vertices that are found to be close to the detector material
-#        could be possibly eliminated.
-#      - Hlt2SelDV : basic cuts on the selected candidates
-#        2 kinds of cuts are applied to the set of displaced vertices :
-#           >1 prey passing thighter cuts
-#               --> when hunting single long-lived particles
-#           >2 preys passing looser cuts
-#               --> when looking for 2 particles, coming from a mother one.
-#
-#
-############################################################
+"""
+Module for the selection of events with displaced vertices.
+
+The selection of displaced vertices is achieved in 3 steps :
+      - Reconstruction of all vertices with >= 4 tracks
+        with PatPV3D, with optimized cuts for smaller vertices
+        than PV's.
+      - Hlt2PreSelDV loops on all reconstructed vertices.
+        The one with lowest z (upstream) is not considered
+        Vertices with at least one backward track are not considered.
+        Vertices close to the beam line removed.
+        To allow for kinematical cuts, association is done between the Velo
+        tracks participating to the vertex and the reconstructed Hlt2Pions.
+        When no Hlt2Pions found, default pions with 0.4 GeV pt are created.
+        Vertices that are found to be close to the detector material
+        could be possibly eliminated.
+      - Hlt2SelDV : basic cuts on the selected candidates
+        2 kinds of cuts are applied to the set of displaced vertices :
+           >1 prey passing thighter cuts
+               --> when hunting single long-lived particles
+           >2 preys passing looser cuts
+               --> when looking for 2 particles, coming from a mother one.
+
+Maintainer : Neal Gauvin
+Please do not edit without the permission of the author.
+
+Exported symbols (use python help!):
+      - Hlt2DisplVerticesLinesConf
+
+"""
+
+__author__ = ['Neal Gauvin']
+__date__ = '12/01/2009'
+__version__ = '$Revision: 1.19 $'
+__all__ = ('Hlt2DisplVerticesLinesConf')
 
 from Gaudi.Configuration import *
 from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
@@ -69,10 +74,12 @@ class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
         from Configurables import GaudiSequencer, HltANNSvc
         from Configurables import PatPV3D, PVOfflineTool, PVSeed3DTool, LSAdaptPV3DFitter
         from Hlt2SharedParticles.BasicParticles import NoCutsPions
+        #from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedPions
         from HltTracking.HltPVs import PV3D
         from HltTracking.Hlt2TrackingConfigurations import Hlt2UnfittedForwardTracking
         Hlt2UnfittedForwardTracking = Hlt2UnfittedForwardTracking()
-
+        #from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedForwardTracking
+        #Hlt2BiKalmanFittedForwardTracking = Hlt2BiKalmanFittedForwardTracking()
         #######################################################################
         # Eventually get primary vertices
         DVSeq = []
@@ -99,6 +106,7 @@ class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
         #######################################################################
         #Get the pions
         DVSeq.append( NoCutsPions )
+        #DVSeq.append( BiKalmanFittedPions )
         
         #######################################################################
         #Run Get the candidates
@@ -107,6 +115,7 @@ class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
         Hlt2RV2P = Hlt2PreSelDV("Hlt2RV2P")
         DVSeq.append( Hlt2RV2P )
         Hlt2RV2P.InputLocations = [NoCutsPions.outputSelection()]
+        #Hlt2RV2P.InputLocations = [BiKalmanFittedPions.outputSelection()]
         Hlt2RV2P.RecVerticesLocation = [Hlt2PatPV3D.OutputVerticesName] 
         Hlt2RV2P.RCutMethod = self.getProp('RCutMethod')
         Hlt2RV2P.RMin = self.getProp('RMin')['Hlt2RV2P']
@@ -125,9 +134,11 @@ class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
         Hlt2SingleLonglived.PreyMinMass = self.getProp('MinMass')['Hlt2SingleLonglived']
         Hlt2SingleLonglived.PreyMinSumpt = self.getProp('MinSumpt')['Hlt2SingleLonglived']
         Hlt2SingleLonglived.NbTracks = self.getProp('MinNbTracks')['Hlt2SingleLonglived']
-        Hlt2SingleLonglived.SaveOnTES = True
+        Hlt2SingleLonglived.SaveOnTES = False
 
         line = Hlt2Line( 'DisplVerticesSingle'
+                         #, VoidFilter = ''
+                         #, VoidFilter = " CONTAINS( 'Hlt/Track/Velo') > 349"
                         , prescale = self.prescale
                         , algos = DVSeq + [ Hlt2SingleLonglived ]
                         , postscale = self.postscale
@@ -143,9 +154,11 @@ class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
         Hlt2DoubleLonglived.PreyMinMass = self.getProp('MinMass')['Hlt2DoubleLonglived']
         Hlt2DoubleLonglived.PreyMinSumpt = self.getProp('MinSumpt')['Hlt2DoubleLonglived']
         Hlt2DoubleLonglived.NbTracks = self.getProp('MinNbTracks')['Hlt2SingleLonglived']
-        Hlt2DoubleLonglived.SaveOnTES = True
+        Hlt2DoubleLonglived.SaveOnTES = False
 
         line = Hlt2Line('DisplVerticesDouble'
+                         #, VoidFilter = ''
+                         #, VoidFilter = " CONTAINS( 'Hlt/Track/Velo') > 349"
                         , prescale = self.prescale
                         , algos = DVSeq + [ Hlt2DoubleLonglived ]
                         , postscale = self.postscale
