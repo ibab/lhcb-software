@@ -15,6 +15,17 @@
 ! 
 ! -----------------------------------------------------------------------------
 
+! 2010-07-29 - Vanya Belyaev
+
+ - LoKi/Streamers.h
+   LoKi/apply.h
+
+    minor modification for streamers 
+
+ - cmt/requirements 
+
+     version increment to v10r3 
+
 ! =========================== LoKiCore v10r2 2010-06-19 =======================
 ! 2010-06-19 - Vanya Belyaev
 

@@ -104,15 +104,15 @@ operator >> ( typename LoKi::Functor<TYPE,TYPE2>::argument a ,
               const LoKi::Functor<TYPE,TYPE2>&             o )
 { return LoKi::apply ( o , a ) ; }
 // ============================================================================
-/** evaluate the vector function  ("map" or "yield")
+/** evaluate the vector function  ("map")
  *
  *  @code 
  *
- *  typedef Functor<Type1,Type2>             Func ;
+ *  typedef Functor<Type1,double>             Func ;
  *
  *  const std::vector<Type1> input = ...
  *
- *  std::vector<Type2> output = input >> fun ;
+ *  std::vector<double> output = input >> fun ;
  *
  *  @endcode  
  *
@@ -125,12 +125,12 @@ operator >> ( typename LoKi::Functor<TYPE,TYPE2>::argument a ,
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  *  @date 2001-01-23   
  */  
-template <class TYPEI, class TYPE,class TYPE2>
-inline std::vector<typename LoKi::Functor<TYPE,TYPE2>::result_type>
-operator >> ( const std::vector<TYPEI>&        input ,  
-              const LoKi::Functor<TYPE,TYPE2>& funct )
+template <class TYPEI, class TYPE>
+inline std::vector<double>
+operator >> ( const std::vector<TYPEI>&         input ,  
+              const LoKi::Functor<TYPE,double>& funct )
 {
-  typedef std::vector<typename LoKi::Functor<TYPE,TYPE2>::result_type> OUTPUT ;
+  typedef std::vector<double> OUTPUT ;
   OUTPUT out ;
   out.reserve ( input.size() ) ;
   //
@@ -161,10 +161,10 @@ operator >> ( const std::vector<TYPEI>&        input ,
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  *  @date 2001-01-23   
  */  
-template <class TYPEI, class TYPE,class TYPE2>
-inline typename LoKi::Functor<std::vector<TYPE>,TYPE2>::result_type
-operator >> ( const std::vector<TYPEI>&                     input ,  
-              const LoKi::Functor<std::vector<TYPE>,TYPE2>& funct )
+template <class TYPEI, class TYPE>
+inline typename LoKi::Functor<std::vector<TYPE>,double>::result_type
+operator >> ( const std::vector<TYPEI>&                      input ,  
+              const LoKi::Functor<std::vector<TYPE>,double>& funct )
 {
   typedef std::vector<TYPE> INPUT ;
   return LoKi::apply ( funct , INPUT( input.begin() , input.end() ) ) ;
@@ -283,8 +283,8 @@ operator>> ( const Gaudi::NamedRange_<CONTAINER>&   a ,
 template <class TYPE>
 inline std::vector<TYPE> 
 operator >> 
-( const LoKi::Functor<void,std::vector<TYPE> >& source , 
-  std::vector<TYPE>&                            dest   ) 
+( const typename LoKi::BasicFunctors<TYPE>::Source& source , 
+  std::vector<TYPE>&                                dest   ) 
 {
   dest = source.evaluate() ;
   return dest ;
@@ -314,8 +314,8 @@ operator >>
 template <class TYPE>
 inline std::vector<const TYPE*> 
 operator >> 
-( const LoKi::Functor<void,std::vector<TYPE*> >& source , 
-  std::vector<const TYPE*>&                      dest   ) 
+( const typename LoKi::BasicFunctors<TYPE*>::Source& source , 
+  std::vector<const TYPE*>&                          dest   ) 
 {
   std::vector<TYPE*>& aux = source.evaluate() ;
   dest = std::vector<const TYPE*>( aux.begin() , aux.end() ) ;
@@ -346,8 +346,8 @@ operator >>
 template <class TYPE>
 inline std::vector<TYPE*> 
 operator >> 
-( const LoKi::Functor<void,std::vector<const TYPE*> >& source , 
-  std::vector<TYPE*>&                                  dest   ) 
+( const typename LoKi::BasicFunctors<const TYPE*>::Source& source , 
+  std::vector<TYPE*>&                                      dest   ) 
 {
   /// evaluate the functor 
   std::vector<const TYPE*>& aux = source.evaluate() ;
@@ -360,6 +360,39 @@ operator >>
       LoKi::Cast::ConstAway<TYPE>() ) ;
   /// 
   return dest ;                   
+}
+// ============================================================================
+// pipe
+// ============================================================================
+template <class TYPE>
+inline std::vector<TYPE*> 
+operator>> 
+( const std::vector<TYPE*>&                        input ,
+  const typename LoKi::BasicFunctors<TYPE*>::Pipe& pipe  )  
+{
+  return pipe.evaluate ( input ) ;
+}
+// ============================================================================
+// pipe
+// ============================================================================
+template <class TYPE>
+inline std::vector<const TYPE*> 
+operator>> 
+( const std::vector<const TYPE*>&                        input ,
+  const typename LoKi::BasicFunctors<const TYPE*>::Pipe& pipe  )  
+{
+  return pipe.evaluate ( input ) ;  
+}
+// ============================================================================
+// pipe with const-away cast 
+// ============================================================================
+template <class TYPE>
+inline std::vector<TYPE*> 
+operator>> 
+( const std::vector<TYPE*>&                              input ,
+  const typename LoKi::BasicFunctors<const TYPE*>::Pipe& pipe  )  
+{
+  return LoKi::apply ( pipe , input ) ;  
 }
 // ============================================================================
 /** chaining/composition of the vector-function and the scalar one 

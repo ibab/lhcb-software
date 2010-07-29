@@ -17,6 +17,7 @@
 // LoKi
 // ============================================================================
 #include "LoKi/Functor.h"
+#include "LoKi/BasicFunctors.h"
 // ============================================================================
 namespace LoKi 
 {
@@ -273,6 +274,25 @@ namespace LoKi
     const CONTAINER cnt ( first , last ) ;
     return LoKi::apply ( o , cnt ) ;  
   }
+  // ==========================================================================  
+  template <class TYPE>
+  inline 
+  std::vector<TYPE*>
+  apply 
+  ( const typename LoKi::BasicFunctors<const TYPE*>::Pipe& pipe   , 
+    const std::vector<TYPE*>&                              input  )
+  {
+    // adapt the argument:
+    const std::vector<const TYPE*>* _vct_= 
+      reinterpret_cast<const std::vector<const TYPE*>*> ( &input ) ;
+    // use functor 
+    const std::vector<const TYPE*>  _out = pipe ( *_vct_) ;
+    // adapt result:
+    const std::vector<TYPE*>* _out_ = 
+      reinterpret_cast<const std::vector<TYPE*>*> ( &_out ) ;
+    //
+    return *_out_;
+  }  
   // ==========================================================================  
   //   template <class CONTAINER, class TYPE2> 
   //   inline 
