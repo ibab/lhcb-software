@@ -4,7 +4,7 @@
 ! Purpose     : Accounting of LumiSummaries (offline code)
 !-----------------------------------------------------------------------------
 
-!========================== LumiAlgs v3r8 2010-07-29 =========================
+!========================== LumiAlgs v4r0 2010-07-29 =========================
 ! 2010-07-29 - Jaap Panman
  - changes in code and configurables to move to -log(P) method for normalization
  - requirements: updated database required 
