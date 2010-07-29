@@ -7,6 +7,8 @@
 
 #include "TsaBaseAlg.h"
 
+#include "GaudiAlg/ISequencerTimerTool.h"
+
 //#include "TsaKernel/TimeSummary.h"
 #include "TsaKernel/ITsaSeedStep.h"
 #include "TsaKernel/ITsaStubFind.h"
@@ -75,7 +77,9 @@ namespace Tf
       
       IOTRawBankDecoder* m_rawBankDecoder;
       std::string m_clusterLocation;
-      
+      ISequencerTimerTool* m_timerTool;
+      int  m_seedTime;
+      bool m_doTiming;
 
     };
 
