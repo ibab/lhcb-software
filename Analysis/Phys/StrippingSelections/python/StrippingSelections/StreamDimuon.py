@@ -41,6 +41,8 @@ from StrippingSelections.StrippingD2XMuMuSS import StrippingD2XMuMuSSConf
 
 from StrippingSelections.StrippingDKPiMu import StrippingDKPiMuConf
 
+from StrippingSelections.StrippingLambda2JpsiLambda import StrippingLambdab2JpsiLambdaConf
+
 stream = StrippingStream("Dimuon")
 stream.appendLines( [ 
 		        StrippingDiMuonConf().nominal_line(), 
@@ -94,6 +96,10 @@ stream.appendLines( [
 
                         
                         , StrippingDKPiMuConf().line_DKpimu()
+                        ## Add b-Baryon Y.Amhis 29-07-10
+                        , StrippingLambdab2JpsiLambdaConf(),line_LL()
+                        , StrippingLambdab2JpsiLambdaConf(),line_DD()
+                        
                         ] )
 ###
 # Stripping lines for Bs2MuMu

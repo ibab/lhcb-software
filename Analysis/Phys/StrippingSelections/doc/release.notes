@@ -5,6 +5,10 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-07-29 - Yasmie Amhis 
+  - Add  new stripping lines for Lambda_b -> Jpsi Lambda 
+   StrippingLambdab2JpsiLambda (LL and DD lines)
+  - Added to StreamDimuon   
 !========================== StrippingSelections v1r25 2010-07-27 ==============
 
 ! 2010-07-27 - Greig Cowan
