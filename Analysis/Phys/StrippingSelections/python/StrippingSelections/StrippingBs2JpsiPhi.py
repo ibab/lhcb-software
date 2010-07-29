@@ -1,8 +1,8 @@
-# $Id: StrippingBs2JpsiPhi.py,v 1.7 2010-06-29 15:18:51 jpalac Exp $
+# $Id: StrippingBs2JpsiPhi.py,v 1.8 2010-07-29 16:40:08 gcowan Exp $
 
 __author__ = ['Greig Cowan']
 __date__ = '24/01/2010'
-__version__ = '$Revision: 1.7 $'
+__version__ = '$Revision: 1.8 $'
 
 '''
 Bs->JpsiPhi lifetime unbiased stripping selection using LoKi::Hybrid and
@@ -100,7 +100,7 @@ class StrippingBs2JpsiPhiConf(LHCbConfigurableUser):
 
 	Bs = Selection("SelBs2JpsiPhiLoose",
                  	Algorithm = _Bs,
-                 	RequiredSelections = [Jpsi, Phi])
+                 	RequiredSelections = [Phi, Jpsi])
 	return Bs
 
     def Bs2JpsiPhi( self ):
@@ -118,7 +118,7 @@ class StrippingBs2JpsiPhiConf(LHCbConfigurableUser):
 
 	Bs = Selection("SelBs2JpsiPhi",
                  	Algorithm = _Bs,
-                 	RequiredSelections = [Jpsi, Phi])
+                 	RequiredSelections = [Phi, Jpsi])
 	return Bs
 
     def getProps(self) :

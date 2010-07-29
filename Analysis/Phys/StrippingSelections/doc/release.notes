@@ -13,6 +13,10 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 	RunID	FillID	TCK		
 	75414	1224	0x0013001F
 
+  - Modified StrippingBd2JpsiKstar.py tight and loose lines so that Jpsi comes
+    first in the sequence, before the Kstar is filtered. This speeds up the line.
+  - As above but for Bs2JpsiPhi.
+
 ! 2010-07-29 - Yasmie Amhis 
   - Add  new stripping lines for Lambda_b -> Jpsi Lambda 
    StrippingLambdab2JpsiLambda (LL and DD lines)
