@@ -30,6 +30,7 @@
       <import name="vector" std="TRUE"/>
       <import name="GaudiKernel/VectorMap" />
       <import name="Event/LumiFSR" />
+      <import name="math.h" std="TRUE"/>
 
 
 <!--
@@ -325,6 +326,7 @@
         </code>
       </method>
 
+      <!--  ordinary merge -->
       <method
         desc="sums the values for existing keys normalized to *this"
         name="mergeInfoNormalized"
@@ -377,6 +379,114 @@
         </code>
       </method>
 
+      <!--  merge - use -log from given key onwards -->
+      <method
+        desc="sums the values for existing keys normalized to *this"
+        name="mergeInfoNormalized"
+        type="ExtraInfo"
+	>
+	<arg name="rhs" type="ExtraInfo" const="TRUE"/>
+	<arg name="factor" type="double" const="TRUE"/>
+	<arg name="fromkey" type="int" const="TRUE" />
+        <code> 
+   // sum info or add new key
+   ExtraInfo::iterator iterB;
+   for ( iterB = rhs.begin(); iterB != rhs.end(); iterB++ ) {
+      int key = (*iterB).first;
+      ValuePair valueB = (*iterB).second;
+      ValuePair valueA = info (key, ValuePair(0,0));
+      if ( valueB.first ) {
+      	 if ( hasInfo(key) ) {
+      	    eraseInfo(key);
+      	 }
+
+         // scale with the existing data except if factor == 0
+         double scale;
+         double usefactor;
+         int increment;
+         double initial;
+         if ( factor == 0 ) {
+           scale = 1.;
+           usefactor = 1.;
+           increment = valueB.first;
+           initial = 0;
+         } else {
+           scale = (double)valueA.first/(double)valueB.first;
+           usefactor = factor;
+           increment = valueA.first;
+           initial = valueA.second;
+         }
+
+         // add normalized - use -log from the from key
+         double addition;
+         if ( key &lt; fromkey ) {
+            addition = usefactor * (double)valueB.second * scale;
+         } else {
+            double frac = (double)valueB.second/(double)valueB.first;
+            if ( frac == 1.0 ) frac = 0.995;
+            addition = usefactor * (-1.) * log( 1.0 - frac ) * (double)increment;
+         }
+      	 addInfo( key, increment, initial + addition );
+      }
+   }
+   return m_extraInfo;
+        </code>
+      </method>
+
+      <method
+        desc="sums the values for existing keys normalized to *this"
+        name="mergeInfoNormalized"
+        type="ExtraInfo"
+	>
+	<arg name="rhs" type="LongExtraInfo" const="TRUE"/>
+	<arg name="factor" type="double" const="TRUE"/>
+	<arg name="fromkey" type="int" const="TRUE" />
+        <code> 
+   // sum info or add new key
+   LongExtraInfo::iterator iterB;
+   for ( iterB = rhs.begin(); iterB != rhs.end(); iterB++ ) {
+      int key = (*iterB).first;
+      LongValuePair valueB = (*iterB).second;
+      ValuePair valueA = info (key, ValuePair(0,0));
+      if ( valueB.first ) {
+      	 if ( hasInfo(key) ) {
+      	    eraseInfo(key);
+      	 }
+
+         // scale with the existing data except if factor == 0
+         double scale;
+         double usefactor;
+         int increment;
+         double initial;
+         if ( factor == 0 ) {
+           scale = 1.;
+           usefactor = 1.;
+           increment = valueB.first;
+           initial = 0;
+         } else {
+           scale = (double)valueA.first/(double)valueB.first;
+           usefactor = factor;
+           increment = valueA.first;
+           initial = valueA.second;
+         }
+
+         // add normalized - use -log from the from key
+         double addition;
+         if ( key &lt; fromkey ) {
+            addition = usefactor * (double)valueB.second * scale;
+         } else {
+            double frac = (double)valueB.second/(double)valueB.first;
+            if ( frac == 1.0 ) frac = 0.995;
+            addition = usefactor * (-1.) * log( 1.0 - frac ) * (double)increment;
+         }
+      	 addInfo( key, increment, initial + addition );
+      }
+   }
+   return m_extraInfo;
+        </code>
+      </method>
+
+
       <method
         desc="increments the values for existing keys and inserts a new key if needed"
         name="incrementInfo"
@@ -415,7 +525,6 @@
         </code>
       </method> 
  
-
       <method
         desc="Addition operator"
         name="operator+"
@@ -423,20 +532,10 @@
 	>
 	<arg name="rhs" type="LHCb::LumiIntegral*" const="TRUE"/>   
         <code>   
-<!--
-   if ( this != rhs ) {   
-      // merge run number sets
-      mergeRuns(rhs->m_runNumbers);
-      // merge file ID sets
-      mergeFileIDs(rhs->m_fileIDs);
-      // merge the extraInfo
-      mergeInfo(rhs->m_extraInfo);
-   }
--->
+
    return *this = *this + *rhs;
         </code>
       </method> 
- 
 
       <method
         desc="Addition (increment) operator"
@@ -576,6 +675,68 @@
         <code>   
    // merge the extraInfo
    mergeInfoNormalized(rhs->extraInfo(), factor);
+   return *this;
+        </code>
+      </method> 
+
+ 
+      <!-- add/subtract the counter contents scaled to the increment of the first - using -log for later keys --> 
+      <method
+        desc="Add scaled to norm"
+        name="addNormalized"
+        type="LHCb::LumiIntegral&amp;"
+	>
+	<arg name="rhs" type="LHCb::LumiIntegral" const="TRUE"/>   
+	<arg name="factor" type="double" const="TRUE" />
+	<arg name="fromkey" type="int" const="TRUE" />
+        <code>   
+   // merge the extraInfo
+   mergeInfoNormalized(rhs.extraInfo(), factor, fromkey);
+   return *this;
+        </code>
+      </method> 
+
+      <method
+        desc="Add scaled to norm"
+        name="addNormalized"
+        type="LHCb::LumiIntegral&amp;"
+	>
+	<arg name="rhs" type="LHCb::LumiIntegral*" const="TRUE"/>   
+	<arg name="factor" type="double" const="TRUE" />
+	<arg name="fromkey" type="int" const="TRUE" />
+        <code>   
+   // merge the extraInfo
+   mergeInfoNormalized(rhs->extraInfo(), factor, fromkey);
+   return *this;
+        </code>
+      </method> 
+
+      <method
+        desc="Add scaled to norm"
+        name="addNormalized"
+        type="LHCb::LumiIntegral&amp;"
+	>
+	<arg name="rhs" type="LHCb::LumiFSR" const="TRUE"/>   
+	<arg name="factor" type="double" const="TRUE" />
+	<arg name="fromkey" type="int" const="TRUE" />
+        <code>   
+   // merge the extraInfo
+   mergeInfoNormalized(rhs.extraInfo(), factor, fromkey);
+   return *this;
+        </code>
+      </method> 
+
+      <method
+        desc="Add scaled to norm"
+        name="addNormalized"
+        type="LHCb::LumiIntegral&amp;"
+	>
+	<arg name="rhs" type="LHCb::LumiFSR*" const="TRUE"/>   
+	<arg name="factor" type="double" const="TRUE" />
+	<arg name="fromkey" type="int" const="TRUE" />
+        <code>   
+   // merge the extraInfo
+   mergeInfoNormalized(rhs->extraInfo(), factor, fromkey);
    return *this;
         </code>
       </method> 
