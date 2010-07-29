@@ -377,7 +377,9 @@
   <TaskList name="ControlsPC"/>
   <Task name="TANServ"/>
   <Task name="ROcollect"/>
+<!--
   <Task name="FarmMon_0"/>
+-->
   <Task name="FarmStomp"/>
   <Task name="StatusStomp"/>
   <Task name="OrbitedSrv"/>

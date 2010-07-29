@@ -1,0 +1,9 @@
+<TaskInventory>
+  <NodeList name="ECS04">
+  <Name>ECS04</Name>
+  <Node name="ecs04"   type="DefaultNode"/>
+  <TaskList name="ControlsPC"/>
+  <Task name="TANServ"/>
+  <Task name="ROcollect"/>
+ </NodeList>
+</TaskInventory>

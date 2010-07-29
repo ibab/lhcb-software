@@ -1,7 +1,0 @@
-<TaskInventory>
-  <NodeList name="ECS04">
-  <Name>ECS04</Name>
-  <TaskList name="FMC"/>
-  <Task name="TANServ"/>
-  </NodeList>
-</TaskInventory>
