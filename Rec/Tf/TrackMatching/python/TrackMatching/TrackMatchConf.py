@@ -19,5 +19,5 @@ class MatchingConf(object):
                 
         if TrackSys().earlyData():
             tkMatch.LikCut = -35
-            tkMatch.Chi2MatchingCut = 950
+            tkMatch.Chi2MatchingCut = 900
         

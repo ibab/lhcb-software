@@ -4,6 +4,9 @@
 ! Purpose     : Package for the track matching algorithms
 !-----------------------------------------------------------------------------
 
+! 2010-07-29 M Needham
+ - New tuning for early data as discussed in the tracking meeting
+
 !========================= TrackMatching v2r30 2010-07-20 ====================
 ! 2010-07-15 - Jeroen VAN TILBURG
  - Changed include location of ISTClusterPosition (now in Tr/TrackInterfaces).
