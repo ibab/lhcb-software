@@ -5,6 +5,10 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-07-29 -Yasmine Amhis
+  - Update  StrippingLambdab2JpsiLambda.py
+    . Version  added on the same day was  WRONG ! 
+
 ! 2010-07-29 - Greig Cowan 
   - Added list of Reco04-Stripping07 LFNs to tests directory. Updated the test
     script to use them. This data is more representative of current running
