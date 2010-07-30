@@ -117,11 +117,14 @@ private:
   IAddTTClusterTool*   m_addTTClusterTool;
   
   double m_zMagnet;
+  double m_zMagnetTx2;
+  double m_zMagnetDsl2;
   double m_zMatchY;
   double m_dxTol;
   double m_dxTolSlope;
   double m_dyTol;
   double m_dyTolSlope;
+  double m_magnetBend;
   double m_momentumScale;
   double m_maxChi2;
   

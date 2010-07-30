@@ -4,6 +4,10 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+! 2010-07-30 - Olivier Callot
+ - New tuning of PatMatchTool to get similar performance as the TrackMatching
+   code.
+
 ======================== PatAlgorithms v4r5 2010-07-20 =======================
 ! 2010-07-17 - Chris Jones
  - Update PatSeedingTool to use detailed ProcStatus interface

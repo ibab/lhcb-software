@@ -62,31 +62,10 @@ StatusCode PatAddTTCoord::initialize ( ) {
 }
 
 //=========================================================================
-//
-//=========================================================================
-// StatusCode addTTClusters( LHCb::Track& track, 
-//                                     std::vector<LHCb::STCluster*>& ttClusters,
-//                           std::vector<double>& ttChi2s ){
-//   ; // -- Method not implemented, only there because of interface
-//   return StatusCode::SUCCESS;
-  
-  
-// }
-//=========================================================================
-//
-//=========================================================================
-// double PatAdddistanceToStrip( const LHCb::Track& track, 
-//                         const LHCb::STCluster& ttCluster ){
-//   ; // -- Method not implemented, only there because of interface
-//   return 0;
-  
-  
-// }
-//=========================================================================
 //  Add the TT hits on the track, only the ids.
 //=========================================================================
 StatusCode PatAddTTCoord::addTTClusters( LHCb::Track& track){
-  
+
   LHCb::State state = track.closestState( m_zTTProj );
   PatTTHits myTTHits;
   double chi2 = 0;
@@ -100,10 +79,10 @@ StatusCode PatAddTTCoord::addTTClusters( LHCb::Track& track){
     // ----------------------------------
     if (  msgLevel( MSG::WARNING ) ) Warning("--- Received no hits. Will add no hits to long tracks",sc).ignore();
     // ----------------------------------
-    
+
     return StatusCode::SUCCESS;
   }
-  
+
   // -- Only add hits if there are 3 or more
   if( myTTHits.size() < 3 ) return StatusCode::SUCCESS;
 
@@ -111,14 +90,14 @@ StatusCode PatAddTTCoord::addTTClusters( LHCb::Track& track){
   for ( PatTTHits::iterator itT = myTTHits.begin(); myTTHits.end() != itT; ++itT ) {
 
     // ----------------------------------
-    if (  msgLevel( MSG::DEBUG ) ) debug() << "--- Adding Hit in Layer: " << (*itT)->planeCode() 
+    if (  msgLevel( MSG::DEBUG ) ) debug() << "--- Adding Hit in Layer: " << (*itT)->planeCode()
                                            << " with projection: " << (*itT)->projection() << endmsg;
     // ----------------------------------
-    
+
     track.addToLhcbIDs( (*itT)->hit()->lhcbID() );
     (*itT)->hit()->setUsed( true );
   }
-  
+
   return StatusCode::SUCCESS;
 
 }
@@ -128,7 +107,7 @@ StatusCode PatAddTTCoord::addTTClusters( LHCb::Track& track){
 //=========================================================================
 //  Return the TT hits
 //=========================================================================
-StatusCode PatAddTTCoord::returnTTClusters( LHCb::State& state, PatTTHits& ttHits, double& finalChi2, double p){  
+StatusCode PatAddTTCoord::returnTTClusters( LHCb::State& state, PatTTHits& ttHits, double& finalChi2, double p){
 
   // -- If no momentum is given, use the one from the state
   if(p < 1e-10){
@@ -136,17 +115,15 @@ StatusCode PatAddTTCoord::returnTTClusters( LHCb::State& state, PatTTHits& ttHit
   }
 
   m_ttHitManager->prepareHits();
-  
+
   PatTTHits selected; // -- The container for all the hits compatible with the track
   PatTTHits goodTT; // -- The container with one "group" of hits
   PatTTHits myTtCoords; // -- The container for the final selection of hits
- 
+
   double bestChi2 = m_maxChi2Tol + m_maxChi2Slope/(p - m_maxChi2POffset);
   double chi2  = 0.;
 
-  // ----------------------------------
   if ( msgLevel( MSG::DEBUG ) ) debug() << "--- Entering addTTClusters ---" << endmsg;
-  // ----------------------------------
 
   // -- Get the container with all the hits compatible with the tack
   selectHits(selected, state, p);
@@ -167,42 +144,42 @@ StatusCode PatAddTTCoord::returnTTClusters( LHCb::State& state, PatTTHits& ttHit
     int nbPlane = 0;
     std::vector<int> firedPlanes(4, 0);
     PatTTHits::iterator itEnd = itBeg;
-    
+
     double maxProj =  firstProj + sqrt( m_minAxProj * m_minAxProj * (1 - firstProj*firstProj/( m_majAxProj * m_majAxProj )));
-        
+
     // -- Make "group" of hits which are within a certain distance to the first hit of the group
     while ( itEnd != selected.end() ) {
 
       if ( (*itEnd)->projection() > maxProj ) break;
-	
+
       if ( 0 == firedPlanes[ (*itEnd)->planeCode() ] ) {
-	firedPlanes[ (*itEnd)->planeCode() ] = 1; // -- Count number of fired planes
-	nbPlane++;
+        firedPlanes[ (*itEnd)->planeCode() ] = 1; // -- Count number of fired planes
+        nbPlane++;
       }
 
       goodTT.push_back( *itEnd++ );
     }
 
-    
+
     if ( 3 > nbPlane ) continue; // -- Need at least hits in 3 planes
     // -- group of hits has to be at least as large than best group at this stage
-    if ( myTtCoords.size() > goodTT.size() ) continue; 
+    if ( myTtCoords.size() > goodTT.size() ) continue;
 
     // ----------------------------------
-    if (  msgLevel( MSG::DEBUG ) ) info() << "Start fit, first proj " << firstProj << " nbPlane " << nbPlane
-			    << " size " << goodTT.size() << endmsg;
+    if (  msgLevel( MSG::DEBUG ) ) debug() << "Start fit, first proj " << firstProj << " nbPlane " << nbPlane
+                           << " size " << goodTT.size() << endmsg;
     // ----------------------------------
-    
+
     // -- Set variables for the chi2 calculation
-    
+
     double dist = 0;
     chi2 = 1.e20;
     PatTTHits::iterator worst;
 
-    
+
     calculateChi2(goodTT, chi2, bestChi2, dist, p );
-      
-    // -- If this group has a better chi2 than all the others 
+
+    // -- If this group has a better chi2 than all the others
     // -- and is at least as large as all the others, then make this group the new candidate
     if ( bestChi2 > chi2 && goodTT.size() >= myTtCoords.size() ) {
 
@@ -217,8 +194,7 @@ StatusCode PatAddTTCoord::returnTTClusters( LHCb::State& state, PatTTHits& ttHit
   // -- Assign the final hit container and chi2 to the variables which are returned.
   ttHits = myTtCoords;
   finalChi2 = chi2;
-  
-  
+
   return StatusCode::SUCCESS;
 }
 
@@ -232,13 +208,11 @@ void PatAddTTCoord::selectHits(PatTTHits& selected, const LHCb::State& state, co
   double yTol = m_yTolSlope / p ;
   double xTol = m_xTol + m_xTolSlope / p;
   selected.clear();
-  
-  // ----------------------------------
-  if ( msgLevel( MSG::DEBUG ) ) debug() << "State z " << state.z() << " x " << state.x() <<
-                     " y " << state.y() << " tx " << state.tx() << " ty " <<
-                     state.ty() << " p " << p << endmsg;
-  // ----------------------------------
-  
+
+  if ( msgLevel( MSG::DEBUG ) ) debug() << "State z " << state.z() << " x " << state.x() 
+                                        << " y " << state.y() << " tx " << state.tx() << " ty " 
+                                        << state.ty() << " p " << p << endmsg;
+
   Tf::TTStationHitManager<PatTTHit>::HitRange hits = m_ttHitManager->hits();
 
   // -- Loop over all the TT hits, get all TT hits whose projection is compatible with the track
@@ -275,18 +249,15 @@ void PatAddTTCoord::selectHits(PatTTHits& selected, const LHCb::State& state, co
 //=========================================================================
 // Calculate Chi2
 //=========================================================================
-void PatAddTTCoord::calculateChi2(PatTTHits& goodTT, double& chi2, const double& bestChi2, 
-                                     double& finalDist, const double& p ){
+void PatAddTTCoord::calculateChi2(PatTTHits& goodTT, double& chi2, const double& bestChi2,
+                                  double& finalDist, const double& p ){
 
   // -- Fit a straight line to the points and calculate the chi2 of the hits with respect to the fitted track
-  
+
   PatTTHits::iterator worst;
 
- 
   double dist = 0;
   chi2 = 1.e20;
-  
-  
 
   double xTol = m_xTol + m_xTolSlope / p;
   double fixedWeight = 9./(xTol*xTol);
@@ -307,7 +278,7 @@ void PatAddTTCoord::calculateChi2(PatTTHits& goodTT, double& chi2, const double&
     rhs[0] = 0.;
     rhs[1] = 0.;
     rhs[2] = 0.;
-  
+
     for ( PatTTHits::iterator itSel = goodTT.begin(); goodTT.end() != itSel; ++itSel ) {
       PatTTHit* tt = *itSel;
       double w    = tt->hit()->weight();
@@ -323,11 +294,11 @@ void PatAddTTCoord::calculateChi2(PatTTHits& goodTT, double& chi2, const double&
       rhs[0] += w * dist;
       rhs[1] += w * dist * dz;
       rhs[2] += w * dist * t ;
-    
+
       if ( 0 ==  differentPlanes[tt->planeCode()]++ ) ++nDoF;
 
     }
-  
+
     CholeskyDecomp<double, 3> decomp(mat);
     if (!decomp) {
       chi2 = 1e42;
@@ -335,17 +306,17 @@ void PatAddTTCoord::calculateChi2(PatTTHits& goodTT, double& chi2, const double&
     } else {
       decomp.Solve(rhs);
     }
-  
+
     double offset = rhs[0];
     double slope = rhs[1];
     double offsetY = rhs[2];
-  
+
     chi2 = fixedWeight * ( offset * offset +
-			   offsetY * offsetY +
-			   (m_zTTProj-m_zTTField)*(m_zTTProj-m_zTTField)*slope * slope );
-  
+                           offsetY * offsetY +
+                           (m_zTTProj-m_zTTField)*(m_zTTProj-m_zTTField)*slope * slope );
+
     unsigned int nIndep = nDoF;
-    
+
 
     for ( PatTTHits::iterator itSel = goodTT.begin(); goodTT.end() != itSel; ++itSel ) {
       PatTTHit* tt = *itSel;
@@ -353,8 +324,8 @@ void PatAddTTCoord::calculateChi2(PatTTHits& goodTT, double& chi2, const double&
       double dz   = tt->z() - m_zTTProj;
       dist = tt->projection() - offset - slope * dz - offsetY * tt->hit()->sinT();
       if ( ( 1 < differentPlanes[tt->planeCode()] || nIndep == goodTT.size() ) && worstDiff < w * dist * dist ) {
-	worstDiff = w * dist * dist;
-	worst = itSel;
+        worstDiff = w * dist * dist;
+        worst = itSel;
       }
       chi2 += w * dist * dist;
     }
@@ -362,22 +333,20 @@ void PatAddTTCoord::calculateChi2(PatTTHits& goodTT, double& chi2, const double&
 
     chi2 /= nDoF;
 
-    // ----------------------------------
     if (  msgLevel( MSG::DEBUG ) && worstDiff > 0. ) {
       info() << format( " chi2 %10.2f nDoF%2d wors %8.2f proj %6.2f offset %8.3f slope %10.6f offsetY %10.6f",
-			chi2, nDoF, worstDiff, (*worst)->projection(), offset, slope, offsetY)
-	     << endmsg;
+                        chi2, nDoF, worstDiff, (*worst)->projection(), offset, slope, offsetY)
+             << endmsg;
     }
-    // ----------------------------------
 
     // -- Remove last point (outlier) if bad fit...
     if ( worstDiff > 0. && bestChi2 < chi2 && goodTT.size() > 3  ) {
-     
+
       goodTT.erase( worst );
       chi2 = 1.e11;  // -- Start new iteration
-      
+
     }
-   
+
   }
 
 
@@ -398,10 +367,10 @@ void PatAddTTCoord::printInfo(const PatTTHits& goodTT, double dist, double chi2,
     PatTTHit* tt = *itSel;
     double z     = tt->z();
     double mPred = tt->x() + dist;
-    MsgStream& msg = info() << tt->planeCode()
-			    << format( " z%7.0f  x straight %7.2f pred %7.2f  x %7.2f diff %7.2f ",
-				       z, state.x() + state.tx() * ( z-state.z() ), mPred, tt->hit()->xMid(), dist );
-    msg << endmsg;
+    info() << tt->planeCode()
+           << format( " z%7.0f  x straight %7.2f pred %7.2f  x %7.2f diff %7.2f ",
+                      z, state.x() + state.tx() * ( z-state.z() ), mPred, tt->hit()->xMid(), dist )
+           << endmsg;
   }
 
 }

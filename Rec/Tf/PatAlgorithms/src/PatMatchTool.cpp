@@ -28,13 +28,16 @@ PatMatchTool::PatMatchTool( const std::string& type,
   declareInterface<IMatchTool>(this);
   declareInterface<ITrackMatch>(this);
  
-  declareProperty( "zMagnet"         , m_zMagnet       = 5290. * Gaudi::Units::mm   );
+  declareProperty( "zMagnet"         , m_zMagnet       = 5200. * Gaudi::Units::mm   );
+  declareProperty( "zMagnetTx2"      , m_zMagnetTx2    =-1700. * Gaudi::Units::mm   );
+  declareProperty( "zMagnetDsl2"     , m_zMagnetDsl2   =  500. * Gaudi::Units::mm   );
   declareProperty( "zMatchY"         , m_zMatchY       = 8420. * Gaudi::Units::mm   );
   declareProperty( "dxTol"           , m_dxTol         =    8. * Gaudi::Units::mm   );
   declareProperty( "dxTolSlope"      , m_dxTolSlope    =   80. * Gaudi::Units::mm   );
-  declareProperty( "dyTol"           , m_dyTol         =    8. * Gaudi::Units::mm   );
-  declareProperty( "dyTolSlope"      , m_dyTolSlope    =  240. * Gaudi::Units::mm   );
-  declareProperty( "maxMatchChi2"    , m_maxChi2       = 9                          );
+  declareProperty( "dyTol"           , m_dyTol         =    6. * Gaudi::Units::mm   );
+  declareProperty( "dyTolSlope"      , m_dyTolSlope    =  300. * Gaudi::Units::mm   );
+  declareProperty( "MagnetBend"      , m_magnetBend    =-1000. * Gaudi::Units::mm   );
+  declareProperty( "maxMatchChi2"    , m_maxChi2       = 4                          );
   declareProperty( "FastMomentumToolName",	m_fastMomentumToolName	= "FastMomentumEstimate" );
   declareProperty( "AddTTClusters"   , m_addTT = true );
   
@@ -98,6 +101,8 @@ StatusCode PatMatchTool::match(const LHCb::Tracks& velos,
   LHCb::Tracks::const_iterator itV, itS;
 
   for ( itV = velos.begin(); velos.end() != itV; ++itV ) {
+    if ( (*itV)->checkFlag( LHCb::Track::Backward ) ) continue;
+    if ( (*itV)->checkFlag( LHCb::Track::Invalid  ) ) continue;
    
     for ( itS = seeds.begin(); seeds.end() != itS; ++itS ) {
      
@@ -138,7 +143,7 @@ StatusCode PatMatchTool::match(const LHCb::Tracks& velos,
 
     if(m_addTT) m_addTTClusterTool->addTTClusters( *match );
     matchs.insert( match);
-  
+
   }//end loop match cands
 
   return StatusCode::SUCCESS;
@@ -161,29 +166,38 @@ double PatMatchTool::getChi2Match(const LHCb::Track& velo,
 {
   
   double chi2 = 1e6;
-  double dxTol2 = m_dxTol * m_dxTol;
-  double dxTolSlope2 = m_dxTolSlope * m_dxTolSlope;
   if ( velo.checkFlag( LHCb::Track::Invalid  ) ) return chi2;
   if ( velo.checkFlag( LHCb::Track::Backward ) ) return chi2;
   if ( seed.checkFlag( LHCb::Track::Invalid  ) ) return chi2;
-  if ( seed.checkFlag( LHCb::Track::Backward ) ) return chi2;
   
   const LHCb::State& vState = velo.closestState( 0.);
-  double xV = vState.x() + ( m_zMagnet - vState.z() ) * vState.tx();
-  double yV = vState.y() + ( m_zMatchY - vState.z() ) * vState.ty();
-  double teta2 = vState.tx() * vState.tx() + vState.ty() * vState.ty();
-  double tolY  = m_dyTol * m_dyTol + teta2 * m_dyTolSlope * m_dyTolSlope;
-  
   const LHCb::State& sState = seed.closestState( m_zMatchY );
-  double xS = sState.x() + ( m_zMagnet - sState.z() ) * sState.tx();
+
+  double dSlope = vState.tx() - sState.tx();
+  double zForX = m_zMagnet 
+    + m_zMagnetTx2 * vState.tx() * vState.tx()
+    + m_zMagnetDsl2 * dSlope * dSlope;
+  double dxTol2 = m_dxTol * m_dxTol;
+  double dxTolSlope2 = m_dxTolSlope * m_dxTolSlope;
+  
+  double xV = vState.x() + ( zForX     - vState.z() ) * vState.tx();
+  double yV = vState.y() + ( m_zMatchY - vState.z() ) * vState.ty();
+  yV += vState.ty() * dSlope * dSlope * m_magnetBend;
+
+  double xS = sState.x() + ( zForX     - sState.z() ) * sState.tx();
   double yS = sState.y() + ( m_zMatchY - sState.z() ) * sState.ty();
-      
+  
   double distX = xS - xV;
   double distY = yS - yV;
   double dslx  = vState.tx() - sState.tx();
   double tolX = dxTol2 + dslx * dslx *  dxTolSlope2;
-  
+  double teta2 = vState.tx() * vState.tx() + vState.ty() * vState.ty();
+  double tolY  = m_dyTol * m_dyTol + teta2 * m_dyTolSlope * m_dyTolSlope;  
+
   chi2 = distX * distX / tolX + distY * distY /tolY;
+
+  double dSlY = sState.ty() - vState.ty();
+  chi2 += dSlY * dSlY / sState.errTy2() / 16;
   
   return chi2;
 }

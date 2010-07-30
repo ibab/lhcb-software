@@ -91,7 +91,6 @@ private:
   
   ILHCbMagnetSvc*     m_magFieldSvc; 
 
-
 };
 
 #endif // PATADDTTCOORD_H
