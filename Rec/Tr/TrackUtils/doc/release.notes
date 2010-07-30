@@ -4,6 +4,9 @@
 ! Purpose     : Package for general utility algorithms
 !-----------------------------------------------------------------------------
 
+! 2010-07-30 - Olivier Callot
+ - Add PatMatch and PatSeeding as known tracks in TrackAddLikeliood.cpp
+
 !========================== TrackUtils v1r37 2010-06-21 ======================
 ! 2010-06-17 - Olivier Callot
  - Add new algorithms FilterMatchTracks, FilterDownstreamTracks and 
