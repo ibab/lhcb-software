@@ -1,7 +1,7 @@
 """
 High level configuration tools for DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.116 2010-07-29 15:54:54 panmanj Exp $"
+__version__ = "$Id: Configuration.py,v 1.117 2010-07-30 15:31:21 raaij Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -187,11 +187,11 @@ class DaVinci(LHCbConfigurableUser) :
         if ( self.getProp( "Lumi" )):
             # luminosity
             log.info("Creating Lumi Algorithms")
-            lumi = self.lumi()
-            init.Members += lumi
             tupleFile = self.getProp('TupleFile')
             if tupleFile == '' :
                 self.setProp('TupleFile', 'lumi.root')
+            lumi = self.lumi()
+            init.Members += lumi
         # Phys
         inputType = self.getProp( "InputType" ).upper()
         if inputType != 'MDST' :
@@ -438,7 +438,7 @@ class DaVinci(LHCbConfigurableUser) :
             tupleFile = self.getProp("TupleFile")
             ApplicationMgr().ExtSvc +=  [ NTupleSvc() ]
             tuple = "FILE1 DATAFILE='"+tupleFile+"' TYP='ROOT' OPT='NEW'"
-            NTupleSvc().Output = [ tuple ]
+            NTupleSvc().Output += [ tuple ]
             NTupleSvc().OutputLevel = 1 
         if ( self.isPropertySet('ETCFile') and self.getProp("ETCFile") != "" ):
             if ( self.getProp("WriteFSR") ):

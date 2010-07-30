@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.436 2010-07-29 15:54:54 panmanj Exp $
+! $Id: release.notes,v 1.437 2010-07-30 15:31:21 raaij Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -8,6 +8,11 @@
 ! Do not forget to update requirements and job/DaVinci_Ganga.py before tagging
 !
 !-----------------------------------------------------------------------------
+
+! 2010-07-30 - Roel Aaij
+ - python/DaVinci/Configuration.py
+   . Fix order of tuple file name assignment in case the user did not set it.
+   . Changed setting of NTupleSvc().Ouput to appending to it.
 
 ! 2010-07-29 - Jaap Panman
  - Configuration: Pass ntuple file name on to LumiAlgsConf
