@@ -12,6 +12,11 @@
 // local
 #include "Hlt2PreSelDV.h"
 
+//calorimeter
+#include "CaloDet/DeCalorimeter.h"
+#include "Event/CaloDigit.h"
+
+
 using namespace Gaudi::Units ;
 using namespace LHCb ;
 using namespace std ;
@@ -29,12 +34,13 @@ DECLARE_ALGORITHM_FACTORY( Hlt2PreSelDV );
 // Standard constructor, initializes variables
 //=============================================================================
 Hlt2PreSelDV::Hlt2PreSelDV( const std::string& name,
-                ISvcLocator* pSvcLocator)
+                            ISvcLocator* pSvcLocator)
   : DVAlgorithm ( name , pSvcLocator )
-    , m_vFit(0)
-    , pi(3.1415926)
-    , m_pt(400.)
-{
+  , m_vFit(0)
+  , pi(3.1415926)
+  , m_MapCalled(false)
+  , m_pt(400.)
+{ 
   declareProperty("SaveTuple", m_SaveTuple = false );//save prey infos in Tuple
   declareProperty("Prey", m_Prey = "~chi_10" );
   //Bc+ Mass 6.286GeV
@@ -166,7 +172,7 @@ StatusCode Hlt2PreSelDV::initialize() {
   }
 
   //Initialize the beam line
-  if( m_RCut !="FromBeamLine" ) m_BeamLine = new Particle();
+  m_BeamLine = new Particle();
 
   //Set beam line to z axis
   if( m_RCut =="" ){
@@ -174,7 +180,7 @@ StatusCode Hlt2PreSelDV::initialize() {
     m_BeamLine->setMomentum( Gaudi::LorentzVector( 0., 0., 1., 0. ) );
   } 
 
-  if( m_RemFromRFFoil || m_RemVtxFromDet == 4){
+  if( m_RemFromRFFoil || m_RemVtxFromDet == 4 || m_SaveTuple ){
     //get the Velo geometry
     string velo = "/dd/Structure/LHCb/BeforeMagnetRegion/Velo/Velo";
     const IDetectorElement* lefthalv = getDet<IDetectorElement>( velo+"Left" );
@@ -214,7 +220,7 @@ StatusCode Hlt2PreSelDV::initialize() {
 
   //Set the beam line
   if( m_RCut=="FromBeamLine" ){
-    if( exist<Particles>( m_BLLoc ) ){
+    if( exist<Particle::Range>( m_BLLoc ) ){
       const Particle::Range BL = get<Particle::Range>( m_BLLoc );      
       const LHCb::Particle* tmp = *(BL.begin());
       m_BeamLine->setReferencePoint( tmp->referencePoint() );
@@ -235,19 +241,24 @@ StatusCode Hlt2PreSelDV::initialize() {
       debug() <<"Upstream PV position "<< UpPV->position() << endmsg;
   }
 
-  if( m_UseMap ) m_map.clear(); //Re-initialize the map
+  if( m_UseMap ){ 
+    m_map.clear(); //Re-initialize the map
+    m_MapCalled = false; //The map hasn't been called yet.
+  }
+  
+      
 
   //Retrieve data Particles from Desktop.
   const Particle::ConstVector & Parts = desktop()->particles();
   int size = Parts.size() ;
   if( msgLevel(MSG::DEBUG) )
     debug()<< "Number of Particles in TES " << size << endmsg;
+  
 
   //Retrieve Reconstructed Vertices
   RecVertex::ConstVector RV;
   GetRecVertices( RV );
   if( RV.size() < 1 ) return StatusCode::SUCCESS;
-
 
   //The PV is assumed to be the rec vertex with lowest z
   //sort rec vertex according to z position
@@ -410,7 +421,7 @@ bool Hlt2PreSelDV::RecVertex2Particle( const RecVertex* rv,
   int endkey = rv->tracks().back()->key();
 
   //Create map if necessary
-  if( m_UseMap && m_map.empty() ) CreateMap( Parts );
+  if( m_UseMap && !m_MapCalled ) CreateMap( Parts );
 
   if( m_Fitter == "none" ){
 
@@ -584,8 +595,9 @@ void Hlt2PreSelDV::CreateMap( const Particle::ConstVector & Parts ){
   int nb = 0;
 
   for ( Particle::ConstVector::const_iterator j = Parts.begin();
-	j != Parts.end();++j) {
+        j != Parts.end();++j) {
 
+    if( (*j)->proto() == NULL ) continue;
     if( (*j)->proto()->track() == NULL ) continue;
     const Track * tk = (*j)->proto()->track();
     
@@ -612,6 +624,8 @@ void Hlt2PreSelDV::CreateMap( const Particle::ConstVector & Parts ){
   //debug() <<"eff "<< eff <<" nb of clone "<< clone <<" Nb of Part "
   //        << Parts.size() <<" Map size "<< m_map.size() << endmsg;
   //}
+
+  m_MapCalled = true;
   
   return;
 }
@@ -817,7 +831,7 @@ StatusCode Hlt2PreSelDV::SavePreysTuple( Tuple & tuple,
   if( true ) SaveGEC( tuple, RecParts );
 
   vector<int>  nboftracks;
-  vector<double> chindof, px, py, pz, e, x, y, z, sumpts, indets, muons;
+  vector<double> chindof, px, py, pz, e, x, y, z, errx, erry, errz, sumpts, indets, muons;
   
   Particle::ConstVector::const_iterator iend = RecParts.end();
   for( Particle::ConstVector::const_iterator is = RecParts.begin();
@@ -830,11 +844,14 @@ StatusCode Hlt2PreSelDV::SavePreysTuple( Tuple & tuple,
     Gaudi::LorentzVector mom = p->momentum();
     double sumpt = GetSumPt(p);
     double muon = HasMuons(p);
+    const Gaudi::SymMatrix3x3 & Cov = p->endVertex()->covMatrix();
 
     nboftracks.push_back( nbtrks ); chindof.push_back( chi );
     e.push_back(mom.e()); muons.push_back(muon);
     px.push_back(mom.x()); py.push_back(mom.y()); pz.push_back(mom.z());
     x.push_back(pos.x()); y.push_back(pos.y()); z.push_back(pos.z());
+    errx.push_back(sqrt(Cov(0,0))); erry.push_back(sqrt(Cov(1,1)));
+    errz.push_back(sqrt(Cov(2,2)));
 
     double indet = 0;
     if( IsAPointInDet( *p, 2 ) ) indet += 1;
@@ -844,8 +861,8 @@ StatusCode Hlt2PreSelDV::SavePreysTuple( Tuple & tuple,
     sumpts.push_back(sumpt);
   }
   const int NbPreyMax = 20;
-  //if( !SaveCaloInfos(tuple)  ) return StatusCode::FAILURE;
   if( !fillHeader(tuple) ) return StatusCode::FAILURE;
+  if( !SaveCaloInfos(tuple)  ) return StatusCode::FAILURE;
   tuple->farray( "PreyPX", px.begin(), px.end(), "NbPrey", NbPreyMax );
   tuple->farray( "PreyPY", py.begin(), py.end(), "NbPrey", NbPreyMax );
   tuple->farray( "PreyPZ", pz.begin(), pz.end(), "NbPrey", NbPreyMax );
@@ -853,6 +870,9 @@ StatusCode Hlt2PreSelDV::SavePreysTuple( Tuple & tuple,
   tuple->farray( "PreyXX", x.begin(), x.end(), "NbPrey", NbPreyMax );
   tuple->farray( "PreyXY", y.begin(), y.end(), "NbPrey", NbPreyMax );
   tuple->farray( "PreyXZ", z.begin(), z.end(), "NbPrey", NbPreyMax );
+  tuple->farray( "PreyerrX", errx.begin(), errx.end(), "NbPrey", NbPreyMax );
+  tuple->farray( "PreyerrY", erry.begin(), erry.end(), "NbPrey", NbPreyMax );
+  tuple->farray( "PreyerrZ", errz.begin(), errz.end(), "NbPrey", NbPreyMax );
   tuple->farray( "PreySumPt", sumpts.begin(), sumpts.end(), 
 		 "NbPrey", NbPreyMax );
   tuple->farray( "Muon", muons.begin(), muons.end(), "NbPrey", NbPreyMax );
@@ -864,7 +884,9 @@ StatusCode Hlt2PreSelDV::SavePreysTuple( Tuple & tuple,
   tuple->column( "BLX", m_BeamLine->referencePoint().x() );
   tuple->column( "BLY", m_BeamLine->referencePoint().y() );
   tuple->column( "BLZ", m_BeamLine->referencePoint().z() );
-  
+  //Save number of Velo tracks...
+  const Track::Range VeloTrks = get<Track::Range>( "Hlt/Track/Velo" );
+  tuple->column( "NbVelo", VeloTrks.size() );
   return tuple->write();
 }
 
@@ -905,6 +927,87 @@ StatusCode Hlt2PreSelDV::fillHeader( Tuple & tuple ){
   }
 
 
+  return StatusCode::SUCCESS ;
+}
+
+//============================================================================
+//  Save Total Transverse Energy in Calorimeters
+//============================================================================
+StatusCode Hlt2PreSelDV::SaveCaloInfos( Tuple& tuple ){
+
+  double E = 0; double Et = 0.;
+  StatusCode sc = GetCaloInfos( "Ecal", E, Et ) && 
+    GetCaloInfos( "Hcal", E, Et ) &&
+    //GetCaloInfos( "Prs", E, Et ) && GetCaloInfos( "Spd", E, Et ) &&
+    GetCaloInfos( "Muon", E, Et );
+  tuple->column( "TotEt", Et );
+  return sc;  
+}
+
+StatusCode Hlt2PreSelDV::GetCaloInfos( string CaloType, double & En, double & Et ){
+
+  double EC = 0; double EtC = 0.;
+
+  if( CaloType == "Muon" ){
+
+    const MuonPIDs* pMU = get<MuonPIDs>( MuonPIDLocation::Default );
+    for(  MuonPIDs::const_iterator imu = pMU->begin() ; 
+	  imu !=  pMU->end() ; ++imu ){
+      const MuonPID* myMu = *imu;
+      const LHCb::Track* myTrk = myMu->idTrack();
+      double Q = myTrk->charge();
+      double CloneDist = myTrk->info(LHCb::Track::CloneDist,9999.); 
+      if (Q==0.) { continue; }
+      if (CloneDist!=9999.) { continue; }
+      
+      double myP = myTrk->p();
+      double mE = sqrt((myP*myP) + 105.66*105.66)/ GeV;
+      double mET = mE*sqrt(myTrk->position().Perp2()/myTrk->position().Mag2());
+//       debug() << "P (GeV) : " << myP / Gaudi::Units::GeV  
+// 	      << " is muon=" << (*imu)->IsMuon() << endmsg;
+      EC += mE;
+      EtC += mET;
+
+    }
+
+  } else {
+    double x=0,y=0,z=0;
+    //CaloDigitLocation::Spd
+    const CaloDigits*  digitsCalo = get<CaloDigits>("Raw/"+CaloType+"/Digits");
+    //Nothing in here...
+    //const CaloDigits*  digitsCalo = get<CaloDigits>("Raw/"+CaloType+"/AllDigits");
+    //Nothing in here...
+    //const CaloDigits*  digitsCalo = get<CaloDigits>("Raw/"+CaloType+"/Hlt1Digits");
+
+    //DeCalorimeterLocation::Spd
+    const DeCalorimeter*  Dcalo = getDet<DeCalorimeter>
+      ( "/dd/Structure/LHCb/DownstreamRegion/"+CaloType );
+
+    for ( CaloDigits::const_iterator idigit=digitsCalo->begin(); 
+	  digitsCalo->end()!=idigit ; ++idigit ){  
+      const CaloDigit* digit = *idigit ;
+      if ( 0 == digit ) { continue ; }
+      // get unique calorimeter cell identifier
+      const CaloCellID& cellID = digit->cellID() ;
+      // get the energy of the digit
+      const double e = digit->e()  / Gaudi::Units::GeV ;
+      // get the position of the cell (center)
+      const Gaudi::XYZPoint& xcenter = Dcalo->cellCenter( cellID ) ;
+      //Compute transverse energy !
+      x = xcenter.x();
+      y = xcenter.y();
+      z = xcenter.z();
+      EC += e;
+      EtC+= e*sqrt( (x*x + y*y)/(x*x + y*y + z*z) );
+    }
+  }
+
+  if( msgLevel( MSG::DEBUG ) )
+    debug() << CaloType <<" : Total Energy "<< EC <<" GeV, total Et "<< EtC 
+            << endmsg;
+  
+  En += EC;
+  Et += EtC;
   return StatusCode::SUCCESS ;
 }
 

@@ -3,7 +3,7 @@
 # Maintainer : Neal Gauvin 
 #============================================================================
 package Hlt/HltDisplVertices
-version        v2r4
+version        v2r5
 #============================================================================
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -15,9 +15,9 @@ branches          cmt doc src options
 # Used packages. 
 #============================================================================
 
-use  DaVinciKernel   v*    Phys
+use DaVinciKernel   v*    Phys
 use DetDesc v* Det
-
+use CaloDet             v* Det
 
 include_path      none
 #============================================================================

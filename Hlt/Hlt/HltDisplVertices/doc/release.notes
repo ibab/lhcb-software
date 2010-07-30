@@ -4,6 +4,12 @@
 ! Purpose     : Apply some cuts on reconstructed vertices
 !-----------------------------------------------------------------------------
 
+! 2010-07-27 - Neal Gauvin
+ - Bug fixed in Hlt2PreselDV and Hlt2SelDV when working with RCutMethod = "FromBeamLine"
+
+! 2010-07-23 - Neal Gauvin
+ - Hlt2PreselDV capable of working without any given input Particles (Only RecVertex made of Velo tracks).
+
 !========================== HltDisplVertices v2r4 2010-06-08 ===================
 ! 2010-07-01 - Neal Gauvin
  - Remove use of new in execute() to avoid potential leaks

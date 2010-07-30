@@ -69,6 +69,8 @@ private:
   StatusCode SavePreysTuple( Tuple &, LHCb::Particle::ConstVector & );
   StatusCode fillHeader( Tuple & );
   StatusCode SaveGEC( Tuple &,  LHCb::Particle::ConstVector & );
+  StatusCode SaveCaloInfos( Tuple & );
+  StatusCode GetCaloInfos( std::string, double &, double & );
 
   //Geometric tools
   double RFromBL( const Gaudi::XYZPoint& );
@@ -112,9 +114,10 @@ private:
   double m_DetDist;           ///< Min distance to det material 
   ///Remove vtx if found in RF-Foil area, based on geometric cuts
   bool   m_RemFromRFFoil;
-  bool   m_KeepLowestZ ;      ///< keep the RV with the lowest Z (particle gun)
-  bool   m_SaveTuple ;        ///< Save candidate infos in a tuple
-  bool   m_UseMap ;           ///< Use a map to store Particle Track relation
+  bool   m_KeepLowestZ;       ///< keep the RV with the lowest Z (particle gun)
+  bool   m_SaveTuple;         ///< Save candidate infos in a tuple
+  bool   m_UseMap;            ///< Use a map to store Particle Track relation
+  bool   m_MapCalled;         ///< has the map been already called in event ?
   /// Where RecVertices are stored on the TES
   std::vector<std::string> m_RVLocation ;
   std::string m_Fitter ;      ///< method for fitting the RecVertex

@@ -1,4 +1,4 @@
-// $Id: Hlt2SelDV.h,v 1.2 2010-07-01 13:59:34 ngueissa Exp $
+// $Id: Hlt2SelDV.h,v 1.3 2010-07-30 15:33:35 ngueissa Exp $
 #ifndef HLT2SELDV_H 
 #define HLT2SELDV_H 1
 
@@ -38,7 +38,7 @@ private:
   ITransportSvc * m_transSvc;
   IGeometryInfo* m_lhcbGeo;
 
-  StatusCode SaveGEC( Tuple &,  LHCb::Particle::ConstVector & );
+
   //questions
   bool IsAPointInDet( const LHCb::Particle *, int mode = 2,
                       double range = 1*Gaudi::Units::mm );
@@ -49,7 +49,10 @@ private:
   double GetSumPt( const LHCb::Particle * );
   double GetRFromBL( const Gaudi::XYZPoint& );
   void GetUpstreamPV(); ///< Get the Upstream PV
+  StatusCode SaveGEC( Tuple &,  LHCb::Particle::ConstVector & );
   StatusCode fillHeader( Tuple & );
+  StatusCode SaveCaloInfos( Tuple & );
+  StatusCode GetCaloInfos( std::string, double &, double & );
 
   //Geometric tools
   double Mult( const Gaudi::XYZPoint &, const Gaudi::XYZPoint & );
