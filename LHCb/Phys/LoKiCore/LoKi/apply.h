@@ -18,6 +18,7 @@
 // ============================================================================
 #include "LoKi/Functor.h"
 #include "LoKi/BasicFunctors.h"
+#include "LoKi/Const.h"
 // ============================================================================
 namespace LoKi 
 {
@@ -274,26 +275,45 @@ namespace LoKi
     const CONTAINER cnt ( first , last ) ;
     return LoKi::apply ( o , cnt ) ;  
   }
-  // ==========================================================================  
+  // ==========================================================================
   template <class TYPE>
   inline 
-  std::vector<TYPE*>
+  std::vector<typename LoKi::NonConst<TYPE*>::Value* > 
   apply 
-  ( const typename LoKi::BasicFunctors<const TYPE*>::Pipe& pipe   , 
-    const std::vector<TYPE*>&                              input  )
+  ( const typename LoKi::BasicFunctors<typename LoKi::Const<TYPE>::Value*>::Pipe& pipe   , 
+    const std::vector<typename LoKi::NonConst<TYPE>::Value*>&                     input  )
   {
+    typedef  std::vector<typename LoKi::Const   <TYPE>::Value*>  _CVector ;
+    typedef  std::vector<typename LoKi::NonConst<TYPE>::Value*>  _NVector ;
     // adapt the argument:
-    const std::vector<const TYPE*>* _vct_= 
-      reinterpret_cast<const std::vector<const TYPE*>*> ( &input ) ;
+    const _CVector* _vct_ = reinterpret_cast<const _CVector*> ( &input ) ;
     // use functor 
-    const std::vector<const TYPE*>  _out = pipe ( *_vct_) ;
+    const _CVector  _out  = pipe ( *_vct_) ;
     // adapt result:
-    const std::vector<TYPE*>* _out_ = 
-      reinterpret_cast<const std::vector<TYPE*>*> ( &_out ) ;
+    const _NVector* _out_ = reinterpret_cast<const _NVector*>  ( &_out  ) ;
     //
     return *_out_;
   }  
   // ==========================================================================  
+  template <class TYPE>
+  inline 
+  std::vector<typename LoKi::Const<TYPE*>::Value* > 
+  apply 
+  ( const typename LoKi::BasicFunctors<typename LoKi::NonConst<TYPE>::Value*>::Pipe& pipe   , 
+    const std::vector<typename LoKi::Const<TYPE>::Value*>&                           input  )
+  {
+    typedef  std::vector< typename LoKi::Const   <TYPE>::Value* >  _CVector ;
+    typedef  std::vector< typename LoKi::NonConst<TYPE>::Value* >  _NVector ;
+    // adapt the argument:
+    const _NVector* _vct_ = reinterpret_cast<const _NVector*> ( &input ) ; 
+    // use functor 
+    const _NVector  _out  = pipe ( *_vct_) ;
+    // adapt result:
+    const _CVector* _out_ = reinterpret_cast<const _CVector*> ( &_out  ) ;
+    //
+    return *_out_;
+  }  
+  // =======================================================================
   //   template <class CONTAINER, class TYPE2> 
   //   inline 
   //   typename LoKi::Functor<CONTAINER,TYPE2>::result_type 

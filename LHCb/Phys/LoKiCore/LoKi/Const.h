@@ -22,7 +22,7 @@
 namespace LoKi 
 {
   // ==========================================================================
-  /** @struct Const Const.h LoKi/Const.h
+  /** @struct Const LoKi/Const.h
    *  Auxillary structure to define "const-traits"
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
    *  @date   2006-03-29
@@ -43,9 +43,30 @@ namespace LoKi
   struct  Const<TYPE&>
   { typedef typename  Const<TYPE>::Value const &       Value ; } ;
   // ==========================================================================
-} // end of namespace LoKi
+  /** @struct NonConst LoKi/Const.h
+   *  Auxillary structure to define "const-traits"
+   *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+   *  @date   2010-07-30
+   */
+  template <class TYPE>
+  struct  NonConst 
+  { typedef           TYPE                             Value ; } ;
+  // ==========================================================================
+  template <class TYPE>
+  struct  NonConst<const TYPE>
+  { typedef typename  NonConst<TYPE>::Value            Value ; } ;
+  // ==========================================================================
+  template <class TYPE>
+  struct  NonConst<TYPE*>
+  { typedef typename  NonConst<TYPE>::Value*           Value ; } ;
+  // ==========================================================================
+  template <class TYPE>
+  struct  NonConst<TYPE&>
+  { typedef typename  NonConst<TYPE>::Value&           Value ; } ;
+  // ==========================================================================
+} //                                                      end of namespace LoKi
 // ============================================================================
-// The END 
+//                                                                      The END 
 // ============================================================================
 #endif // LOKI_CONST_H
 // ============================================================================

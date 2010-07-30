@@ -15,6 +15,14 @@
 ! 
 ! -----------------------------------------------------------------------------
 
+! 2010-07-30 - Vanya Belyaev
+ - Cast.h
+   Const.h
+   apply.h
+
+      solve the problem with const/non-const ambiguity 
+
+
 ! 2010-07-29 - Vanya Belyaev
 
  - LoKi/Streamers.h
