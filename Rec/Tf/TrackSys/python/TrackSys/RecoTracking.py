@@ -162,7 +162,7 @@ def RecoTracking(exclude=[]):
          
    if "TsaSeed" in trackAlgs or "PatSeed" in trackAlgs :
       cloneKiller.TracksInContainers += ["Rec/Track/Seed"]
-      if stdSeq or "Match" in trackAlgs :
+      if "Match" in trackAlgs :
          # Fit now
          track.DetectorList += [ "SeedFit" ]
          ## Seed fit initialization

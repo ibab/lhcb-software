@@ -4,6 +4,9 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+! 2010-07-30 - Olivier Callot
+ - Fit the seed only if the MATCH algorithm is there. PatMatch doesn't need it.
+
 !============================ TrackSys v4r36 2010-07-27 ======================
 ! 2010-07-27 - Rob Lambert
  - Added slot for DataType propagated from Brunel()
