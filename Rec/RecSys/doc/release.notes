@@ -16,22 +16,14 @@ This version uses Gaudi v21r10p1 and LHCb v31r4
   . Crashes in brunel from a segfault in KalmanFitResult savannah bug #70643
   . Rich processing speed improved by a factor of 5 with better Aerogel cuts
 
-- Also we take this opportunity to update the Luminosity calculation methods
-  -log(P) will now be used, which requires new FSRs in the new reconstruction and a new database
 
 - This release goes hand-in-hand with the CondDB patch #4301 which updates the tile calibration
-- This release goes hand-in-hand with the CondDB patch #4313 which updates the luminosity information
 
 - Packages modified:
-  Rec/LumiAlgs v4r0,
   Rich/RichGlobalPID v3r14p1, Rich/RichHPDImageAnalysis v1r1, Rich/RichRecMonitors v2r29,
   Rich/RichRecQC v2r44, Rich/RichRecSys v3r31, Rich/RichRecTrackTools v1r23,
   Tr/TrackFitEvent v5r2, Tr/TrackFitter v2r50,
   Tr/TrackTools  v3r34, Tr/TrackMonitors v1r28, Tf/TrackSys v4r36
-
-- In Rec/LumiAlgs v4r0:
-  . changes in code and configurables to move to -log(P) method for normalization
-  . requirements: updated database required , patch #4313
 
 - In Rich/RichGlobalPID v3r14p1:
   . Add a fast approximate log(exp(x)-1) expression. 
