@@ -4,6 +4,7 @@
 ! Purpose     : EventModel for Lumi data
 !-----------------------------------------------------------------------------
 
+!======================== LumiEvent v3r0 2010-07-30 ==========================
 ! 2010-07-29 - Jaap Panman
  - xml/LumiIntegral: to move to -log(P) method for normalization
 
