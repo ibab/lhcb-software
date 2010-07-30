@@ -182,7 +182,7 @@ class RevisionControlSystem(object):
         """
         if not self.hasModule(module, isProject):
             raise RCSUnknownModuleError(module, self.repository, isProject)
-        
+
     def _retrieveVersions(self, module, isProject):
         """
         Extract from the repository the list of symbolic names for the module.
@@ -213,25 +213,25 @@ class RevisionControlSystem(object):
         If no destination is specified, the current directory is used.
         """
         pass
-    
+
     def tag(self, module, version, isProject = False):
         """
         Create a tag for the given module.
         Retursn the error code of the underlying command.
         """
-        return 0 
+        return 0
 
     def _getRequirements(self, module, version = "head"):
         """
         Return the content of the trunk/HEAD version of the requirements/project.cmt
-        file of the module for the requested version (in the repository). 
+        file of the module for the requested version (in the repository).
         """
         return ""
 
     def getDeclaredVersion(self, module, version = "head"):
         """
         Return the version number that the trunk/HEAD version of the module has
-        in the requirements/project.cmt file (in the repository). 
+        in the requirements/project.cmt file (in the repository).
         """
         requirements = self._getRequirements(module, version)
         for l in requirements.splitlines():
@@ -239,7 +239,7 @@ class RevisionControlSystem(object):
             if l and l.startswith("version"):
                 return l.split()[1]
         return None
-    
+
     def _create_vers_cmt(self, base, version = "v*"):
         """Create the version.cmt file in 'base'/cmt.
         The file will contain the version found in the requirements file. If there is no
@@ -411,8 +411,8 @@ class CVS(RevisionControlSystem):
 
         if not vers_dir and not project:
             # create version.cmt file
-            self._create_vers_cmt(os.path.join(dest, module), version)    
-    
+            self._create_vers_cmt(os.path.join(dest, module), version)
+
     def tag(self, module, version, isProject = False):
         """
         Create a tag for the given module.
@@ -421,11 +421,11 @@ class CVS(RevisionControlSystem):
         options = ("-d", self.repository, "rtag", version, module)
         _, _, retcode = apply(_cvs, options, {"stdout": None, "stderr": None})
         return retcode
-    
+
     def _getRequirements(self, module, version = "head"):
         """
         Return the content of the trunk/HEAD version of the requirements/project.cmt
-        file of the module for the requested version (in the repository). 
+        file of the module for the requested version (in the repository).
         """
         self._assertModule(module, isProject = False)
         module_dir =  self._paths[module]
@@ -491,7 +491,7 @@ class SubversionCmd(RevisionControlSystem):
                 ( ( m.group(cls.SVN_PROTOCOL) == "file" and not m.group(cls.SVN_HOST) ) or \
                   ( m.group(cls.SVN_PROTOCOL) != "file" and m.group(cls.SVN_HOST) ) )
         return valid
-    
+
     def _ls(self, path):
         """
         List the content of a directory or a list of directories in the repository.
@@ -526,7 +526,7 @@ class SubversionCmd(RevisionControlSystem):
         for d in dirs:
             for w in self._walk("/".join([path, d])):
                 yield w
-    
+
     def _find(self, left, right = "", levels = 1, exists_only = False):
         """
         Return a list of valid values of x for x such that
@@ -535,7 +535,7 @@ class SubversionCmd(RevisionControlSystem):
         many levels must be included in x).
         If the parameter exists_only is set to True, the function returns only
         the first match, for the cases where only a match is requested and not
-        the complete list.  
+        the complete list.
         """
         if not left.endswith("/"):
             left += "/"
@@ -561,8 +561,8 @@ class SubversionCmd(RevisionControlSystem):
             else:
                 # no need to check for exists_only because we cannot do less than "ls"
                 matches = candidates
-        return matches 
-    
+        return matches
+
     def _propGet(self, property, path = None):
         """
         Returns the value of the requested property for the specified path.
@@ -594,10 +594,10 @@ class SubversionCmd(RevisionControlSystem):
         Return the content of the modules property of the 'packages' directory as a list.
         """
         modules = {}
-        
+
         if self.forceScan: # do not check the content of the property
             return modules
-        
+
         if self.repositoryVersion < (2,0):
             out = self._propGet("modules", "packages")
             for m in out.splitlines():
@@ -624,12 +624,12 @@ class SubversionCmd(RevisionControlSystem):
             # In repository >= 2.0 the packages are distributed in the various
             # projects and, if dropped from the release, only in the tags directory
             #
-            # ProjectA/trunk/PackageA1 
+            # ProjectA/trunk/PackageA1
             #               /PackageA2
-            #         /tags/PackageA0/vXrY 
-            # ProjectB/trunk/PackageB1 
-            #               /PackageB2 
-            #               /Hat/PackageB3 
+            #         /tags/PackageA0/vXrY
+            # ProjectB/trunk/PackageB1
+            #               /PackageB2
+            #               /Hat/PackageB3
             #         /tags/Hat/PackageB0/vXrY
             #
             # The only sensible way to locate the packages is to loop in all the
@@ -648,7 +648,7 @@ class SubversionCmd(RevisionControlSystem):
             # to be in the same directory or not.
             for p in self.projects:
                 P = p.upper() + '/'
-                # look in the trunk for normal packages 
+                # look in the trunk for normal packages
                 for m in self._find("/".join([p,"trunk"]), "cmt/requirements", levels = 1):
                     modules[m] = p
                 # and packages with hat
@@ -666,7 +666,7 @@ class SubversionCmd(RevisionControlSystem):
                     #   one */cmt/requirements inside
                     for m in [ c
                                for c in self._ls("/".join([p,d]))
-                               if c.endswith("/") and c != P and c not in modules and 
+                               if c.endswith("/") and c != P and c not in modules and
                                    self._find("/".join([p,d,c]), "cmt/requirements",
                                               levels = 1, exists_only = True)]:
                         modules[m] = p
@@ -677,12 +677,12 @@ class SubversionCmd(RevisionControlSystem):
                                if h.endswith("/") and h != P and h not in modules ]:
                         for m in [ c
                                    for c in [ h+c for c in self._ls("/".join([p,d,h]))]
-                                   if c.endswith("/") and c not in modules and 
+                                   if c.endswith("/") and c not in modules and
                                        self._find("/".join([p,d,c]), "cmt/requirements",
                                                   levels = 1, exists_only = True)]:
                             modules[m] = p
             # FIXME: We should look for packages in the projects tags too
-            
+
             # remove trailing "/" from keys
             tmp = {}
             for m in modules:
@@ -696,13 +696,13 @@ class SubversionCmd(RevisionControlSystem):
             # if _getModulesFromProp is empty, try _scanModules
             self._modules = self._getModulesFromProp() or self._scanModules()
         return self._modules
-        
+
     def _retrievePackages(self):
         # Delegate to the modules property
         packs = self.modules.keys()
         packs.sort()
         return packs
-        
+
     def _retrieveProjects(self):
         if self.repositoryVersion < (2,0):
             return [ l[:-1] for l in self._ls("projects") if l.endswith("/") ]
@@ -713,16 +713,16 @@ class SubversionCmd(RevisionControlSystem):
             # register the list of projects in a top-level property, with the
             # possibility of scanning the repository (using "cmt/project.cmt"
             # as signature, may be both in trunk and tags)
-            
+
             # First try to read the "projects" property if not disabled
             if not self.forceScan:
                 projects = splitlines(self._propGet("projects", ""))
                 if projects:
                     return projects
-            
+
             # all the projects that have an "active" development
             projects = self._find("", "trunk/cmt/project.cmt")
-            
+
             # projects that exist only in tags or branches:
             candidates = [ p
                            for p in self._ls("")
@@ -735,7 +735,7 @@ class SubversionCmd(RevisionControlSystem):
                     projects.append(c)
             # Return a list with the trailing "/" stripped
             return [ p[:-1] for p in projects ]
-    
+
     def _topLevel(self, isProject = False):
         if isProject:
             return "projects"
@@ -752,7 +752,7 @@ class SubversionCmd(RevisionControlSystem):
             et = ElementTree.fromstring(out)
             self._latestRevisionCached = int(et.find('entry').get('revision', 0))
         return self._latestRevisionCached
-            
+
     def _retrieveVersions(self, module, isProject):
         """
         Extract from the repository the list of symbolic names for the module.
@@ -852,7 +852,7 @@ class SubversionCmd(RevisionControlSystem):
 
     def url(self, module, version = "trunk", isProject = False):
         """
-        Return the full URL to the module in the repository. 
+        Return the full URL to the module in the repository.
         """
         return self._computePaths(module, version, isProject)[0]
 
@@ -874,6 +874,44 @@ class SubversionCmd(RevisionControlSystem):
             dest = "." # If not specified, use local directory
 
         src, dst = self._computePaths(module, version, project, vers_dir)
+
+        # Check if we can do an advanced (eclipse-friendly checkout)
+        # - first prepare the top level directory if needed
+        if not project and not vers_dir: # we can do it on packages without version
+            workspace_path = os.path.dirname(os.path.realpath(dest))
+            if os.path.exists(os.path.join(workspace_path, ".metadata")):
+                # this is an eclipse workspace
+                if not os.path.exists(os.path.join(dest, ".svn")):
+                    # there is no svn directory, make a checkout of the project
+                    # containing the package
+                    psrc, _ = self._computePaths(self.modules[module], "trunk", isProject = True)
+                    psrc = psrc.rsplit("/", 1)[0] # _computePaths return the path to cmt for projects
+                    _svn("co", "-N", psrc, dest, stdout = None, stderr = None)
+                    # top level directory ready
+        # - check if we can use the top level directory
+        if os.path.exists(os.path.join(dest, ".svn")):
+            out = _svn("info", dest, stderr = None)[0]
+            try:
+                url = (l for l in out.splitlines() if l.startswith("URL:")).next().split()[-1]
+                # check if the trunk directory of the package is the same as the top dir
+                if src.replace("tags", "trunk").startswith(url):
+                    # the package is in the same project dir
+                    ldst = dst.replace("\\", "/").split("/")
+                    step = dest
+                    while ldst:
+                        step = os.path.join(step, ldst.pop(0))
+                        if ldst:
+                            # non-recursive checkout for the intermediate levels
+                            if _svn("up", "-N", step)[2]:
+                                break
+                        else:
+                            # full check-out for the final one
+                            _svn("up", step, stdout = None)
+            except:
+                # ignore errors
+                pass
+
+        # full path to destination
         dst = os.path.join(dest, dst)
 
         if os.path.isdir(os.path.join(dst,".svn")): # looks like a SVN working copy
@@ -888,7 +926,7 @@ class SubversionCmd(RevisionControlSystem):
         if not vers_dir and not project:
             # create version.cmt file
             self._create_vers_cmt(os.path.join(dest, module), version)
-    
+
     def tag(self, module, version, isProject = False):
         """
         Create a tag for the given module.
@@ -905,12 +943,12 @@ class SubversionCmd(RevisionControlSystem):
                                                             module, version),
                              trunkUrl, versionUrl, stdout = None, stderr = None)
         return retcode
-    
-    
+
+
     def _getRequirements(self, module, version = "head"):
         """
         Return the content of the trunk/HEAD version of the requirements/project.cmt
-        file of the module for the requested version (in the repository). 
+        file of the module for the requested version (in the repository).
         """
         self._assertModule(module, isProject = False)
         url = self.url(module, version, isProject = False)

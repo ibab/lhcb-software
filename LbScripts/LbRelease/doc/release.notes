@@ -1,3 +1,8 @@
+2010-07-30  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* LbRelease/python/LbRelease/rcs.py: modified the svn check out procedure to
+	produce eclipse-friendly working copies (in special cases).
+
 2010-07-29  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbRelease/TarBall.py: added an early check on the existence of the output file.
