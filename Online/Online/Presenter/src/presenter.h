@@ -1,4 +1,4 @@
-// $Id: presenter.h,v 1.100 2010-06-22 23:34:49 robbep Exp $
+// $Id: presenter.h,v 1.101 2010-07-31 11:27:37 ggiacomo Exp $
 #ifndef PRESENTER_H_
 #define PRESENTER_H_
 
@@ -209,14 +209,16 @@ namespace pres
 //  static TPRegexp s_histogramUTGIDRegexp("^(([^/_]+)_)([^/_]+)_([^/]+)_([^/]+)$");
 //  static TPRegexp s_histogramUTGIDRegexpEFF("^([^/_]+)_([^/]+)_([^/]+)$");
 
-  static TPRegexp s_histogramUrlRegexpEFF("^(MonP1|MonH1D|MonH2D|H1D|H2D|P1D|HPD|P2D|CNT)?/?([^/]+)/([^/]+)/([^/]+)/(([^_]+)(_\\$)?(.*))$");                                                                                                    
-  static TPRegexp s_histogramUrlRegexp("^(MonP1|MonH1D|MonH2D|H1D|H2D|P1D|HPD|P2D|CNT)?/?([^/]+)/([^/]+)/(([^_]+)(_\\$)?(.*))$");
+  // static TPRegexp s_histogramUrlRegexpEFF("^(MonP1|MonH1D|MonH2D|H1D|H2D|P1D|HPD|P2D|CNT)?/?([^/]+)/([^/]+)/([^/]+)/(([^_]+)(_\\$)?(.*))$");                                                                                                    
+  static TPRegexp s_histogramUrlRegexp("^(MonP1|MonH1D|MonH2D|H1D|H2D|P1D|HPD|P2D|CNT)?/?([^/]+)/([^/]+)/(([^/]+)/?(.*))$");
   
 //  RICH1_Adder_1
 //  HLTA0101_Adder_1
 //  LHCb_MONA0805_L0CaloDAQMon_00  
   static TPRegexp s_histogramUTGIDRegexp("^([^_/]+)_([^_/]+)_([^_/]+)_?([^_/]+)?$");  
   
+  static TPRegexp s_histogramNameRegexp("^([^_]*)(_\\$)?(.*)$");
+
   // MuonDAQMon-20091010T113224.root
   // MuonDAQMon-345-20091010T113224.root
 //  static TPRegexp s_fileDateRegexp("^(.*)-(\\d{8}T\\d{6})(-EOR)?\\.root$");

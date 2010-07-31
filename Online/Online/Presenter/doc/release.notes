@@ -4,6 +4,9 @@
 ! Purpose     : GUI to allow the visualization of all data quality histograms
 !-----------------------------------------------------------------------------
 
+! 2010-07-31 G. Graziani
+ - modifications to HistogramIdentifier to properly handle DIM services from EFF and MF
+
 ! 2010-06-29 - Patrick Robbe
  - src/DbRootHist.cpp: remove stat box by default
 

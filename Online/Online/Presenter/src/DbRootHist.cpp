@@ -1,4 +1,4 @@
-// $Id: DbRootHist.cpp,v 1.173 2010-06-30 11:17:46 robbep Exp $
+// $Id: DbRootHist.cpp,v 1.174 2010-07-31 11:27:37 ggiacomo Exp $
 #include "DbRootHist.h"
 
 // STL 
@@ -1679,6 +1679,7 @@ std::string DbRootHist::findDimServiceName(const std::string & dimServiceType) {
     dimServiceNameQueryBegining = s_DimWildcard;    
   }
   
+
   boost::recursive_mutex::scoped_lock oraLock(*m_oraMutex);
   if (oraLock && m_onlineHistogram &&  m_session) {
     bool botherDimBrowser(true);

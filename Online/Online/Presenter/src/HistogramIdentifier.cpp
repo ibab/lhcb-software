@@ -1,4 +1,4 @@
-// $Id: HistogramIdentifier.cpp,v 1.37 2010-05-16 18:09:40 robbep Exp $
+// $Id: HistogramIdentifier.cpp,v 1.38 2010-07-31 11:27:37 ggiacomo Exp $
 // STL
 #include <iostream>
 
@@ -85,6 +85,7 @@ void HistogramIdentifier::setIdentifiersFromDim(std::string newDimServiceName)
     if (m_histogramType.empty()) {
       m_histogramType = s_CNT;
     } else if (m_histogramUrlTS.BeginsWith(s_CNT.c_str())) {
+
       m_histogramType = s_CNT;
       m_histogramUrlTS.Remove(0, s_CNT.length()+1);
     }
@@ -106,8 +107,8 @@ void HistogramIdentifier::setIdentifiersFromDim(std::string newDimServiceName)
       } else if ( 3 == histogramUTGIDMatchGroup->GetLast()) {
         m_isEFF = true;
         m_nodeName = "";
-        m_taskName = (((TObjString *)histogramUTGIDMatchGroup->At(2))->
-                     GetString()).Data();
+        m_taskName = (((TObjString *)histogramUrlMatchGroup->At(3))->GetString()).Data();
+        matchOffset =2;
       }
     } else {
         m_taskName = m_histogramUTGID;
@@ -118,21 +119,23 @@ void HistogramIdentifier::setIdentifiersFromDim(std::string newDimServiceName)
     }
     m_algorithmName = (((TObjString *)histogramUrlMatchGroup->At(3 + matchOffset))->
       GetString()).Data();
-      
-    TString setSwitch = ((TObjString *)histogramUrlMatchGroup->At(6 + matchOffset))->
-      GetString();
+
+    m_histogramFullName= (((TObjString *)histogramUrlMatchGroup->At(4 + matchOffset))->
+      GetString()).Data();
+
+    TString m_fullname = m_histogramFullName.c_str();
+    TObjArray*  histogramHnameMatchGroup = s_histogramNameRegexp.MatchS(m_fullname);
+
+    TString setSwitch = ((TObjString *)histogramHnameMatchGroup->At(2))->GetString();
 
     if (s_setSwitch == setSwitch) {
       m_isFromHistogramSet = true;
-      m_setName = (((TObjString *)histogramUrlMatchGroup->At(5 + matchOffset))->
-        GetString()).Data();
-      m_histogramName = (((TObjString *)histogramUrlMatchGroup->At(7 + matchOffset))->
-        GetString()).Data();
+      m_setName = (((TObjString *)histogramHnameMatchGroup->At(1))->GetString()).Data();
+      m_histogramName = (((TObjString *)histogramUrlMatchGroup->At(3))->GetString()).Data();
     } else if ("" == setSwitch) {
       m_isFromHistogramSet = false;
       m_setName = "";
-      m_histogramName = (((TObjString *)histogramUrlMatchGroup->At(4 + matchOffset))->
-        GetString()).Data();
+      m_histogramName = m_histogramFullName;
     }
 
     if (m_isPlausible && m_histogramType != "") {
@@ -147,12 +150,6 @@ void HistogramIdentifier::setIdentifiersFromDim(std::string newDimServiceName)
   histogramUrlMatchGroup->Delete();
   delete histogramUrlMatchGroup;
   
-  if (m_isFromHistogramSet) {
-    m_histogramFullName = m_setName + s_setSwitch + m_histogramName;
-  }
-  else {
-    m_histogramFullName = m_histogramName;
-  }
   m_identifier =  m_taskName + s_slash + m_algorithmName +
     s_slash + m_histogramFullName;
 
@@ -196,7 +193,6 @@ void HistogramIdentifier::setIdentifiersFromDim(std::string newDimServiceName)
        m_dbHistogramType >= OnlineHistDBEnv_constants::NHTYPES ) {
     m_isPlausible = false;
   }
-
 }
 
 void HistogramIdentifier::dumpMembersToConsole()
