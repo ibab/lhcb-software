@@ -1,4 +1,4 @@
-# $Id: Hlt2CommissioningLines.py,v 1.25 2010-07-06 08:40:35 graven Exp $
+# $Id: Hlt2CommissioningLines.py,v 1.26 2010-07-31 15:25:52 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of Hlt Lines for commissioning 
@@ -10,7 +10,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.25 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.26 $"
 # =============================================================================
 
 from HltLine.HltLinesConfigurableUser import *
@@ -31,7 +31,7 @@ class Hlt2CommissioningLinesConf(HltLinesConfigurableUser):
             , prescale = self.prescale
             , postscale = self.postscale
             )
-        Line('Transparent' ,  HLT = "HLT_PASS_RE('^Hlt1(ODIN.*|L0.*|Lumi.*|MB.*|Velo.*|Incident|Tell1Error|HadronMonComp|ErrorEvent)Decision$')"
+        Line('Transparent' ,  HLT = "HLT_PASS_RE('^Hlt1(ODIN.*|L0.*|Lumi.*|MB.*|Velo.*|BeamGas.*|Incident|Tell1Error|HadronMonComp|ErrorEvent)Decision$')"
             , VoidFilter = '' # make sure we DO NOT get a filter thrown on top of us!!!
             , prescale = self.prescale
             , postscale = self.postscale
