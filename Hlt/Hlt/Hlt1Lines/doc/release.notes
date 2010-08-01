@@ -1,9 +1,16 @@
-! $Id: release.notes,v 1.189 2010-07-07 19:44:11 graven Exp $
+! $Id: release.notes,v 1.190 2010-08-01 23:01:11 gligorov Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
+
+! 2010-08-02 - V. Gligorov
+ - Hlt1GECs : a module which will contain the definitions of the GEC
+              filters for Hlt1. Defines a filter on the number of IT
+              and velo clusters for now.
+ - Hlt1CommissioningLines : add Velo/IT commissioning lines using the
+                            above filters; rate limit to 5 Hz.   
 
 !========================== Hlt1Lines v4r1   2010-07-07 ===================
 ! 2010-07-07 - Johannes Albrecht

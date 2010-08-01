@@ -9,7 +9,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.8 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.9 $"
 # =============================================================================
 
 from HltLine.HltLinesConfigurableUser import *
@@ -22,12 +22,26 @@ class Hlt1CommissioningLinesConf(HltLinesConfigurableUser):
                               , 'Hlt1Tell1Error'     : 0
                               }
                , 'Postscale' : { 'Hlt1Incident'     : 'RATE(1)' 
-                               , 'Hlt1ErrorEvent'   : 'RATE(1)' }
+                               , 'Hlt1ErrorEvent'   : 'RATE(1)' 
+                               , 'Hlt1VeloGECPassThrough' : 'RATE(5)'
+                               , 'Hlt1ITGECPassThrough'   : 'RATE(5)'}
                , 'ODINPhysics'   : '( ODIN_TRGTYP == LHCb.ODIN.PhysicsTrigger )'
                , 'ODINTechnical' : '( ODIN_TRGTYP == LHCb.ODIN.TechnicalTrigger )'
                }
    def __apply_configuration__(self):
         from HltLine.HltLine import Hlt1Line   as Line
+        from Hlt1GECs import Hlt1_IT_GEC, Hlt1_Velo_GEC
+
+        Line('VeloGECPassThrough' 
+            , prescale = self.prescale
+            , postscale = self.postscale
+            , algos = [Hlt1_Velo_GEC(">")]
+            )
+        Line('ITGECPassThrough' 
+            , prescale = self.prescale
+            , postscale = self.postscale
+            , algos = [Hlt1_IT_GEC(">")]
+            )
         Line('ODINPhysics',   ODIN = self.getProp('ODINPhysics')
             , prescale = self.prescale
             , postscale = self.postscale
