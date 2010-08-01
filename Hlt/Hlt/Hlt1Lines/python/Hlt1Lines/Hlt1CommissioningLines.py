@@ -9,7 +9,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.9 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.10 $"
 # =============================================================================
 
 from HltLine.HltLinesConfigurableUser import *
@@ -23,8 +23,8 @@ class Hlt1CommissioningLinesConf(HltLinesConfigurableUser):
                               }
                , 'Postscale' : { 'Hlt1Incident'     : 'RATE(1)' 
                                , 'Hlt1ErrorEvent'   : 'RATE(1)' 
-                               , 'Hlt1VeloGECPassThrough' : 'RATE(5)'
-                               , 'Hlt1ITGECPassThrough'   : 'RATE(5)'}
+                               , 'Hlt1VeloGECPassThrough' : 0.01
+                               , 'Hlt1ITGECPassThrough'   : 0.01}
                , 'ODINPhysics'   : '( ODIN_TRGTYP == LHCb.ODIN.PhysicsTrigger )'
                , 'ODINTechnical' : '( ODIN_TRGTYP == LHCb.ODIN.TechnicalTrigger )'
                }
