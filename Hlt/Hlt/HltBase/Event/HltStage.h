@@ -1,4 +1,4 @@
-// $Id: HltStage.h,v 1.6 2010-08-01 17:18:05 ibelyaev Exp $ 
+// $Id: HltStage.h,v 1.7 2010-08-01 18:25:37 ibelyaev Exp $ 
 // =============================================================================
 #ifndef HltEvent_Stage_H
 #define HltEvent_Stage_H 1
@@ -84,7 +84,8 @@ namespace Hlt
       HltTrack      =   3 , 
       HltVertex     =   4 , 
       HltMultiTrack =   5 , 
-      HltCandidate  =   6       
+      HltStage      =   6 ,      
+      HltCandidate  =   7       
     } ;  
     // ========================================================================    
   public:
@@ -158,11 +159,17 @@ namespace Hlt
     /// Fill the ASCII output stream
     virtual std::ostream& fillStream(std::ostream& s) const;
     /** Get a wrapped object
-     *   @code
-     *  LHCb::Track* track = stage->get<LHCb::Track>();
+     *  @code
+     *  const LHCb::Track* track = stage->get<LHCb::Track>();
      *  @endcode
      */
     template<typename T> const T* get() const;
+    /** Get a wrapped object (non-const)
+     *  @code
+     *  LHCb::Track* track = stage->get<LHCb::Track>();
+     *  @endcode
+     */
+    template<typename T> T* get() ;
     /// Get a wrapped object (suitable for python)
     const ContainedObject* _get() const;
     /** Set a wrapped object
@@ -286,6 +293,7 @@ namespace Hlt
     SmartRef<Hlt::MultiTrack>         m_multitrack          ;
     SmartRef<Hlt::L0DiMuonCandidate>  m_l0_dimuon_candidate ;
     SmartRef<Hlt::Candidate>          m_candidate           ;
+    SmartRef<Hlt::Stage>              m_stage               ;
     /// cache 
     Cache                             m_cache               ; // cache 
     /// history 
@@ -311,9 +319,32 @@ namespace Hlt
 {
   // ==========================================================================
   template<>
+  inline const Hlt::Stage* 
+  Hlt::Stage::get<Hlt::Stage>() const { return m_stage ; }
+  // ==========================================================================
+  template<>
+  inline       Hlt::Stage* 
+  Hlt::Stage::get<Hlt::Stage>()       { _checkLock () ; return m_stage ; }
+  // ==========================================================================
+  template<> 
+  inline void 
+  Hlt::Stage::set<Hlt::Stage>(const Hlt::Stage* value) 
+  {
+    SetAllToNull();
+    m_stage = value;
+  }
+  // ==========================================================================
+  template<> 
+  inline bool 
+  Hlt::Stage::is<Hlt::Stage>() const { return m_stage != 0; }
+  // ==========================================================================
+  template<>
   inline const Hlt::Candidate* 
-  Hlt::Stage::get<Hlt::Candidate>() const 
-  { return m_candidate ; }
+  Hlt::Stage::get<Hlt::Candidate>() const { return m_candidate ; }
+  // ==========================================================================
+  template<>
+  inline       Hlt::Candidate* 
+  Hlt::Stage::get<Hlt::Candidate>()       { _checkLock() ; return m_candidate ; }
   // ==========================================================================
   template<> 
   inline void 
@@ -329,8 +360,11 @@ namespace Hlt
   // ==========================================================================
   template<>
   inline const LHCb::Track* 
-  Hlt::Stage::get<LHCb::Track>() const 
-  { return m_track;}
+  Hlt::Stage::get<LHCb::Track>() const { return m_track;}
+  // ============================================================================
+  template<>
+  inline       LHCb::Track* 
+  Hlt::Stage::get<LHCb::Track>()       { _checkLock() ; return m_track ; }
   // ============================================================================
   template<> 
   inline void 
@@ -345,10 +379,12 @@ namespace Hlt
   Hlt::Stage::is<LHCb::Track>() const { return m_track != 0; }
   // ==========================================================================
   template<> 
-  inline
-  const LHCb::RecVertex* 
-  Hlt::Stage::get<LHCb::RecVertex>() const 
-  { return m_rec_vertex; }
+  inline const LHCb::RecVertex* 
+  Hlt::Stage::get<LHCb::RecVertex>() const { return m_rec_vertex; }
+  // ==========================================================================
+  template<> 
+  inline       LHCb::RecVertex* 
+  Hlt::Stage::get<LHCb::RecVertex>()       { _checkLock() ; return m_rec_vertex; }
   // ==========================================================================
   template<> 
   inline void 
@@ -365,8 +401,12 @@ namespace Hlt
   // ==========================================================================
   template<> 
   inline const LHCb::L0CaloCandidate* 
-  Hlt::Stage::get<LHCb::L0CaloCandidate>() const 
-  { return m_l0_calo_candidate; }
+  Hlt::Stage::get<LHCb::L0CaloCandidate>() const { return m_l0_calo_candidate; }
+  // ==========================================================================
+  template<> 
+  inline       LHCb::L0CaloCandidate* 
+  Hlt::Stage::get<LHCb::L0CaloCandidate>() 
+  { _checkLock() ; return m_l0_calo_candidate; }
   // ==========================================================================
   template<> 
   inline void 
@@ -383,8 +423,12 @@ namespace Hlt
   // ==========================================================================
   template<>  
   inline const LHCb::L0MuonCandidate*
-  Hlt::Stage::get<LHCb::L0MuonCandidate>() const 
-  { return m_l0_muon_candidate; }
+  Hlt::Stage::get<LHCb::L0MuonCandidate>() const { return m_l0_muon_candidate; }
+  // ==========================================================================
+  template<>  
+  inline       LHCb::L0MuonCandidate*
+  Hlt::Stage::get<LHCb::L0MuonCandidate>()      
+  { _checkLock() ; return m_l0_muon_candidate; }
   // ==========================================================================
   template<> 
   inline void 
@@ -400,8 +444,12 @@ namespace Hlt
   // ==========================================================================
   template<> 
   inline const Hlt::MultiTrack* 
-  Hlt::Stage::get<Hlt::MultiTrack>() const 
-  { return m_multitrack; }
+  Hlt::Stage::get<Hlt::MultiTrack>() const { return m_multitrack; }
+  // ==========================================================================
+  template<> 
+  inline       Hlt::MultiTrack* 
+  Hlt::Stage::get<Hlt::MultiTrack>()      
+  { _checkLock() ; return m_multitrack; }
   // ==========================================================================
   template<> 
   inline void 
@@ -418,8 +466,12 @@ namespace Hlt
   // ==========================================================================
   template<> 
   inline const Hlt::L0DiMuonCandidate*
-  Hlt::Stage::get<Hlt::L0DiMuonCandidate>() const 
-  { return m_l0_dimuon_candidate; }
+  Hlt::Stage::get<Hlt::L0DiMuonCandidate>() const { return m_l0_dimuon_candidate; }
+  // ==========================================================================
+  template<> 
+  inline       Hlt::L0DiMuonCandidate*
+  Hlt::Stage::get<Hlt::L0DiMuonCandidate>() 
+  { _checkLock() ; return m_l0_dimuon_candidate; }
   // ==========================================================================
   template<> 
   inline void 

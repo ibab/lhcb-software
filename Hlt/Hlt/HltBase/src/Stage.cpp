@@ -1,4 +1,4 @@
-// $Id: Stage.cpp,v 1.5 2010-08-01 17:18:06 ibelyaev Exp $ 
+// $Id: Stage.cpp,v 1.6 2010-08-01 18:25:37 ibelyaev Exp $ 
 // ============================================================================
 // HltBase 
 // ============================================================================
@@ -60,6 +60,7 @@ void Hlt::Stage::SetAllToNull()
   m_multitrack = 0;
   m_l0_dimuon_candidate = 0;
   m_candidate = 0;
+  m_stage = 0;
 }
 // ============================================================================
 const ContainedObject* Hlt::Stage::_get() const 
@@ -71,6 +72,7 @@ const ContainedObject* Hlt::Stage::_get() const
   if (is<Hlt::MultiTrack> ()) return  get<Hlt::MultiTrack>();
   if (is<Hlt::L0DiMuonCandidate> ()) return get<Hlt::L0DiMuonCandidate>();
   if (is<Hlt::Candidate> ()) return get<Hlt::Candidate>();
+  if (is<Hlt::Stage> ()) return get<Hlt::Stage>();
   return 0;
 }
 // ============================================================================
@@ -113,6 +115,8 @@ std::ostream& Hlt::Stage::fillStream(std::ostream& s) const
     s << "L0DiMuonCandidate " << get<Hlt::L0DiMuonCandidate> ();
   else if (is<Hlt::Candidate> ())
     s << "Candidate " << get<Hlt::Candidate> ();
+  else if (is<Hlt::Stage> ())
+    s << "Stage " << get<Hlt::Stage> ();
   else s << "NULL";
   
   
@@ -136,6 +140,7 @@ Hlt::Stage::Type Hlt::Stage::stageType() const
   else if ( is<LHCb::Track>            () ) { return Hlt::Stage::HltTrack      ; }
   else if ( is<LHCb::RecVertex>        () ) { return Hlt::Stage::HltVertex     ; }
   else if ( is<Hlt::MultiTrack>        () ) { return Hlt::Stage::HltMultiTrack ; }
+  else if ( is<Hlt::Stage>             () ) { return Hlt::Stage::HltStage      ; }
   else if ( is<Hlt::Candidate>         () ) { return Hlt::Stage::HltCandidate  ; }
   //
   return Hlt::Stage::Unknown ;
