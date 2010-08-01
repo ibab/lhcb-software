@@ -10,9 +10,9 @@
 #include "LoKi/Functions.h"
 #include "LoKi/BiFunctions.h"
 // ============================================================================
-// Forward declarations
+// Event 
 // ============================================================================
-namespace LHCb { class Track ; }
+#include "Event/Track.h"
 // ============================================================================
 namespace LoKi 
 {

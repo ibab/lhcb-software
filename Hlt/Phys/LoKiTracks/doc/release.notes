@@ -5,6 +5,9 @@
 ! Purpose     : tarcj-related functors for LoKi-framework 
 ! -----------------------------------------------------------------------------
 
+! 2010-08-01 - Vanya Belyaev
+ - minor fix 
+
 ! 2010-07-18 - Vanya Belyaev
  - the first import  
 
