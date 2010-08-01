@@ -1,9 +1,69 @@
-! $Id: release.notes,v 1.165 2010-05-09 17:05:42 gcorti Exp $
+! $Id: release.notes,v 1.166 2010-08-01 11:18:45 ibelyaev Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Gen/Generators
 ! Responsible : Patrick ROBBE
 ! Purpose     : Common algorithms and tools for all production engines
 !-----------------------------------------------------------------------------
+
+! 2010-08-01 - Vanya Belyaev
+
+ - GenericGenCutTool.cpp
+
+      New generic generator cut tool.
+      It allows fine tuning and configuration of generator 
+      level cuts, inclusing 'LHCb-acceptance'-cuts 
+
+   *  @code
+   *                                            
+   *  from Cofigurable import LoKi__GenCutTool as GenCutTool 
+   * 
+   *  myalg.addTool ( GenCutTool , 'MyGenCutTool' ) 
+   * 
+   *  myAlg.MyGenCutTool.Decay = " [B0 => ^pi+ ^pi-]CC "
+   *
+   *  myAlg.MyGenCutTool.Cuts = { 
+   *   '[pi+]cc'  : " in_range( 0.010 , GTHETA , 0.400 ) "
+   *  }
+   *  
+   *  @endcode 
+   *
+   *  One can specify different crietria for different particles,
+   *  ignore certain particles (e.g. neutrinos) etc...
+   *
+   *  @code
+   *                                            
+   *  from Cofigurable import LoKi__GenCutTool as GenCutTool 
+   * 
+   *  myalg.addTool ( GenCutTool , 'MyGenCutTool' ) 
+   * 
+   *  myAlg.MyGenCutTool.Decay = " [B0 -> ( K*(892)0 => ^K- ^pi+) gamma ]CC "
+   *
+   *  ## no cuts for gamma
+   *  myAlg.MyGenCutTool.Cuts = { 
+   *   '[pi+]cc'  : " in_range( 0.010 , GTHETA , 0.400 ) "
+   *   '[K+]cc'   : " in_range( 0.010 , GTHETA , 0.300 ) "
+   *  }
+   *
+   *  @endcode 
+   *
+   *
+   *  The tool also produce the generatorcut efficiencty 2D-histogram.
+   *  The histogram can be cofigured therough property:
+   * 
+   *  @code
+   * 
+   *  ## efficiency 2D-histogram: pt ( in GeV) versus rapidity:
+   *  myAlg.MyGenCutTool.XAxis= ( 0.0 , 10.0 , 20 , 'GPT/GeV') 
+   *  myAlg.MyGenCutTool.YAxis= ( 2.0 ,  5.0 ,  6 , 'GY'     ) 
+   *  
+   *  ## efficiency 2D-histogram: pt ( in GeV) versus pseudo-rapidity:
+   *  myAlg.MyGenCutTool.XAxis= ( 0.0 , 10.0 , 20 , 'GPT/GeV' ) 
+   *  myAlg.MyGenCutTool.YAxis= ( 2.0 ,  5.0 ,  6 , 'GETA'    ) 
+   *  
+   *  @endcode 
+
+ In this wa
+
 
 !====================== Generators v10r8 2010-05-09 ==========================
 ! 2010-05-06 - Gloria CORTI
