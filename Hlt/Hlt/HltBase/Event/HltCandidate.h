@@ -1,4 +1,4 @@
-// $Id: HltCandidate.h,v 1.3 2010-07-19 16:23:52 ibelyaev Exp $ 
+// $Id: HltCandidate.h,v 1.4 2010-08-01 17:18:05 ibelyaev Exp $ 
 // ============================================================================
 #ifndef HltEvent_Candidate_H
 #define HltEvent_Candidate_H 1
@@ -12,11 +12,11 @@
 // ============================================================================
 // GaudiKernel
 // ============================================================================
-#include "GaudiKernel/NamedRange.h"
-#include "GaudiKernel/INamedInterface.h"
 #include "GaudiKernel/ContainedObject.h"
 #include "GaudiKernel/ObjectVector.h"
 #include "GaudiKernel/SmartRefVector.h"
+#include "GaudiKernel/NamedRange.h"
+#include "GaudiKernel/INamedInterface.h"
 // ============================================================================
 // HltBase 
 // ============================================================================
@@ -35,6 +35,8 @@
 // ============================================================================
 // Forward declarations
 // ============================================================================
+namespace Hlt { class Stage ; }
+// ============================================================================
 namespace Hlt
 {
   // ==========================================================================
@@ -51,7 +53,8 @@ namespace Hlt
   // ===========================================================================
   /** @class Candidate Event/Candidate.h
    *
-   * Shows mutation history of tracks, particles,... (which are wrapped by Phases objects)
+   * Shows mutation history of tracks, particles,... 
+   *  (which are wrapped by Stage-objects)
    * Store processing history: list of algorithms (Workers)
    *
    * @author alexander.mazurov@gmail.com

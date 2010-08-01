@@ -4,6 +4,13 @@
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
 
+! 2010-08-01 - Vanya Belyaev
+
+ - small polishing in Hlt::Stage 
+
+ - cmt/requirements
+    version increment to v9r2 
+
 ! 2010-07-19 Sasha Mazurov
 
  - add detailed template specialization of HltStage  methods

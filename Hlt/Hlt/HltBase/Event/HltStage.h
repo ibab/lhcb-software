@@ -1,4 +1,4 @@
-// $Id: HltStage.h,v 1.5 2010-07-19 19:27:19 amazurov Exp $ 
+// $Id: HltStage.h,v 1.6 2010-08-01 17:18:05 ibelyaev Exp $ 
 // =============================================================================
 #ifndef HltEvent_Stage_H
 #define HltEvent_Stage_H 1
@@ -32,6 +32,7 @@
 // HltBase 
 // =============================================================================
 #include "Event/HltMultiTrack.h"
+#include "Event/HltCandidate.h"
 #include "Event/HltL0DiMuonCandidate.h"
 #include "HltBase/Cache.h"
 // =============================================================================
@@ -48,6 +49,8 @@
 // =============================================================================
 // Forward declarations
 // =============================================================================
+namespace Hlt { class Candidate ; }
+// ==============================================================================
 namespace Hlt 
 {
   // ===========================================================================
@@ -56,12 +59,12 @@ namespace Hlt
   {
     // =========================================================================
     /** @var Default 
-     *  The defaull TES-location of HLT-Stages 
+     *  The default TES-location of HLT-Stages 
      */
     static const std::string& Default = "Hlt/Stages";
   }
   // ===========================================================================
-  /** @class Stage Stage.h
+  /** @class Stage Event/HltStage.h
    *
    * Wrapper class for tracks, l0 candidates,...
    *
@@ -71,6 +74,19 @@ namespace Hlt
    */
   class Stage: public ContainedObject 
   {
+  public:
+    // ========================================================================
+    enum Type {
+      Unknown       =  -1 , 
+      L0Muon        =   0 , 
+      L0Calo        =   1 , 
+      L0DiMuon      =   2 , 
+      HltTrack      =   3 , 
+      HltVertex     =   4 , 
+      HltMultiTrack =   5 , 
+      HltCandidate  =   6       
+    } ;  
+    // ========================================================================    
   public:
     // ========================================================================
     /// typedef for std::vector of Stage
@@ -85,7 +101,7 @@ namespace Hlt
     /// the actual type of history 
     typedef std::vector<std::string> History;
     // ========================================================================
-    /** @class Lock Stage.h
+    /** @class Lock Event/HltStage.h
      * Locker class for stage
      * @author alexander.mazurov@gmail.com
      * @author ivan.belyaev@cern.ch
@@ -240,8 +256,13 @@ namespace Hlt
     // get the current locker 
     const INamedInterface* locked() const { return m_locker; }
     // ========================================================================
+  public:
+    // ========================================================================
+    /// the actual type of the stage 
+    Type stageType() const ;                   // the actual type of the stage 
+    // ========================================================================
   private:
-    // =======================================================================-
+    // ========================================================================
     //
     void _lock   ( const INamedInterface* locker);
     void _unlock ( const INamedInterface* locker);
@@ -264,6 +285,7 @@ namespace Hlt
     SmartRef<LHCb::L0MuonCandidate>   m_l0_muon_candidate   ;
     SmartRef<Hlt::MultiTrack>         m_multitrack          ;
     SmartRef<Hlt::L0DiMuonCandidate>  m_l0_dimuon_candidate ;
+    SmartRef<Hlt::Candidate>          m_candidate           ;
     /// cache 
     Cache                             m_cache               ; // cache 
     /// history 
@@ -281,21 +303,47 @@ namespace Hlt
     return obj.fillStream(str);
   }
   // ==========================================================================
+} //                                                       end of namespace Hlt
+// ============================================================================
+#include "Event/HltCandidate.h"
+// ============================================================================
+namespace Hlt 
+{
+  // ==========================================================================
+  template<>
+  inline const Hlt::Candidate* 
+  Hlt::Stage::get<Hlt::Candidate>() const 
+  { return m_candidate ; }
+  // ==========================================================================
+  template<> 
+  inline void 
+  Hlt::Stage::set<Hlt::Candidate>(const Hlt::Candidate* value) 
+  {
+    SetAllToNull();
+    m_candidate = value;
+  }
+  // ==========================================================================
+  template<> 
+  inline bool 
+  Hlt::Stage::is<Hlt::Candidate>() const { return m_candidate != 0; }
+  // ==========================================================================
   template<>
   inline const LHCb::Track* 
   Hlt::Stage::get<LHCb::Track>() const 
   { return m_track;}
-  // ==========================================================================
+  // ============================================================================
   template<> 
-  inline void Hlt::Stage::set<LHCb::Track>(const LHCb::Track* value) 
+  inline void 
+  Hlt::Stage::set<LHCb::Track>(const LHCb::Track* value) 
   {
     SetAllToNull();
     m_track = value;
   }
   // ==========================================================================
   template<> 
-  inline bool Hlt::Stage::is<LHCb::Track>() const { return m_track != 0; }
-  // =============================================================================
+  inline bool 
+  Hlt::Stage::is<LHCb::Track>() const { return m_track != 0; }
+  // ==========================================================================
   template<> 
   inline
   const LHCb::RecVertex* 
@@ -303,14 +351,16 @@ namespace Hlt
   { return m_rec_vertex; }
   // ==========================================================================
   template<> 
-  inline void Hlt::Stage::set<LHCb::RecVertex>(const LHCb::RecVertex* value) 
+  inline void 
+  Hlt::Stage::set<LHCb::RecVertex>(const LHCb::RecVertex* value) 
   {
     SetAllToNull();
     m_rec_vertex = value;
   }
   // ==========================================================================
   template<> 
-  inline bool Hlt::Stage::is<LHCb::RecVertex>() const 
+  inline bool 
+  Hlt::Stage::is<LHCb::RecVertex>() const 
   { return m_rec_vertex != 0; }
   // ==========================================================================
   template<> 
@@ -319,14 +369,16 @@ namespace Hlt
   { return m_l0_calo_candidate; }
   // ==========================================================================
   template<> 
-  inline void Hlt::Stage::set<LHCb::L0CaloCandidate>(const LHCb::L0CaloCandidate* value) 
+  inline void 
+  Hlt::Stage::set<LHCb::L0CaloCandidate>(const LHCb::L0CaloCandidate* value) 
   {
     SetAllToNull();
     m_l0_calo_candidate = value;
   }
   // ==========================================================================
   template<> 
-  inline bool Hlt::Stage::is<LHCb::L0CaloCandidate>() const 
+  inline bool 
+  Hlt::Stage::is<LHCb::L0CaloCandidate>() const 
   { return m_l0_calo_candidate != 0; }
   // ==========================================================================
   template<>  
@@ -352,14 +404,16 @@ namespace Hlt
   { return m_multitrack; }
   // ==========================================================================
   template<> 
-  inline void Hlt::Stage::set<Hlt::MultiTrack>(const Hlt::MultiTrack* value) 
+  inline void 
+  Hlt::Stage::set<Hlt::MultiTrack>(const Hlt::MultiTrack* value) 
   {
     SetAllToNull();
     m_multitrack = value;
   }
   // ==========================================================================
   template<> 
-  inline bool Hlt::Stage::is<Hlt::MultiTrack>() const 
+  inline bool 
+  Hlt::Stage::is<Hlt::MultiTrack>() const 
   { return m_multitrack != 0; }
   // ==========================================================================
   template<> 
@@ -376,11 +430,13 @@ namespace Hlt
   }
   // ==========================================================================
   template<> 
-  inline bool Hlt::Stage::is<Hlt::L0DiMuonCandidate>() const 
+  inline bool 
+  Hlt::Stage::is<Hlt::L0DiMuonCandidate>() const 
   {return m_l0_dimuon_candidate != 0; }
   // ==========================================================================
   template<typename T> 
-  inline bool Stage::_insertInfo(const std::string& key, const T& value) 
+  inline bool 
+  Stage::_insertInfo(const std::string& key, const T& value) 
   {
     _checkLock();
     return m_cache.insert<T>(key, value);
@@ -398,33 +454,38 @@ namespace Hlt
   {
     return _insertInfo(key, value);
   }
-  // =========================================================================
-  template<> inline
-  bool Stage::insertInfo<double>(const std::string &key, const double& value) 
+  // ==========================================================================
+  template<> 
+  inline bool 
+  Stage::insertInfo<double>(const std::string &key, const double& value) 
   {
     return _insertInfo(key, value);
   }
   // ==========================================================================
   template<> 
-  inline bool Stage::insertInfo<std::string>(const std::string &key, 
-                                                      const std::string& value)
+  inline bool 
+  Stage::insertInfo<std::string>(const std::string &key, 
+                                 const std::string& value)
   {
     return _insertInfo(key, value);
   }
   // ==========================================================================
   template<typename T> 
-  inline void Stage::_updateInfo(const std::string& key, const T& value) 
+  inline void 
+  Stage::_updateInfo(const std::string& key, const T& value) 
   {
     _checkLock();
     m_cache.update<T>(key, value);
   }
   // ==========================================================================
   template<> 
-  inline void Stage::updateInfo<bool>(const std::string& key, const bool& value) 
+  inline void 
+  Stage::updateInfo<bool>(const std::string& key, const bool& value) 
   { _updateInfo(key,value); }
   // ==========================================================================
   template<> 
-  inline void Stage::updateInfo<int>(const std::string& key, const int& value) 
+  inline void 
+  Stage::updateInfo<int>(const std::string& key, const int& value) 
   { _updateInfo(key,value); }
   // ==========================================================================
   template<> 
@@ -435,11 +496,12 @@ namespace Hlt
   template<> 
   inline void 
   Stage::updateInfo<std::string>(const std::string& key, 
-                                                      const std::string& value) 
+                                 const std::string& value) 
   { _updateInfo(key,value); }
   // ==========================================================================
   template<typename T> 
-  inline T Stage::_info(const std::string& key, const T& default_value) const 
+  inline T 
+  Stage::_info(const std::string& key, const T& default_value) const 
   { return m_cache.info<T>(key, default_value); }
   // ==========================================================================
   template<> 
@@ -455,18 +517,18 @@ namespace Hlt
   template<> 
   inline double 
   Stage::info<double>(const std::string& key, 
-                                             const double& default_value) const 
+                      const double& default_value) const 
   { return _info(key, default_value); }
   // ==========================================================================
   template<> 
   inline std::string 
   Stage::info<std::string>(const std::string& key, 
-                                        const std::string& default_value) const 
+                           const std::string& default_value) const 
   {
     return _info(key, default_value);
   }
   // ==========================================================================
-} //                                                       end of namespace Hlt
+} //                                                       end of namespace Hlt 
 // ============================================================================
 //                                                                      The END 
 // ============================================================================
