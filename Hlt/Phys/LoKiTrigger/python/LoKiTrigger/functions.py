@@ -11,6 +11,11 @@
 #  contributions and advices from G.Raven, J.van Tilburg, 
 #  A.Golutvin, P.Koppenburg have been used in the design.
 #
+#  By usage of this code one clearly states the disagreement 
+#  with the campain of Dr.O.Callot et al.: 
+#   ``No Vanya's lines are allowed in LHCb/Gaudi software.''
+#    
+#
 #  @author Vanya BELYAEV ibelyaev@physics.syr.edu
 #  @date 2007-06-09
 # =============================================================================
@@ -26,6 +31,9 @@ Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas,
 contributions and advices from G.Raven, J.van Tilburg, 
 A.Golutvin, P.Koppenburg have been used in the design.
 
+By usage of this code one clearly states the disagreement 
+with the campain of Dr.O.Callot et al.: 
+   ``No Vanya's lines are allowed in LHCb/Gaudi software.''
 
 """
 # =============================================================================
@@ -38,10 +46,113 @@ import LoKiCore.decorators as _LoKiCore
 
 
 # Namespaces:
-_global  = _LoKiCore._global 
-std      = _global.std
-LoKi     = _global.LoKi
-LHCb     = _global.LHCb
+_global  = _LoKiCore._global
+cpp      = _global 
+std      = cpp.std
+LoKi     = cpp.LoKi
+LHCb     = cpp.LHCb
+Hlt      = cpp.Hlt 
+
+# =============================================================================
+## new stuff ## 
+# =============================================================================
+_TC = 'const Hlt::Candidate*'
+_TS = 'const Hlt::Stage*'
+_vC = std.vector( _TC      ) ## std::vetcor<const Hlt::Candidate*>
+_vD = std.vector( 'double' ) ## std::vetcor<double>
+
+
+## @see LoKi::Types::TC_Func
+TC_Func      = LoKi.Functor                 ( _TC    , 'double' ) 
+## @see LoKi::Types::TC_Cuts
+TC_Cuts      = LoKi.Functor                 ( _TC    ,  bool    ) 
+## @see LoKi::Types::TC_Fun
+TC_Fun       = LoKi.FunctorFromFunctor      ( _TC    , 'double' ) 
+## @see LoKi::Types::TC_Cut
+TC_Cut       = LoKi.FunctorFromFunctor      ( _TC    ,  bool    ) 
+
+## @see LoKi::Types::TS_Func
+TS_Func      = LoKi.Functor                 ( _TS    , 'double' ) 
+## @see LoKi::Types::TC_Cuts
+TS_Cuts      = LoKi.Functor                 ( _TS    ,  bool    ) 
+## @see LoKi::Types::TC_Fun
+TS_Fun       = LoKi.FunctorFromFunctor      ( _TS    , 'double' ) 
+## @see LoKi::Types::TC_Cut
+TS_Cut       = LoKi.FunctorFromFunctor      ( _TS    ,  bool    ) 
+
+## @see LoKi::Types::TC_Maps 
+TC_Maps      = LoKi.Functor                 ( _vC    , _vD      )
+## @see LoKi::Types::TC_Map
+TC_Map       = LoKi.FunctorFromFunctor      ( _vC    , _vD      )
+## @see LoKi::Types::TC_Pipes 
+TC_Pipes     = LoKi.Functor                 ( _vC    , _vC      )
+## @see LoKi::Types::TC_Pipe
+TC_Pipe      = LoKi.FunctorFromFunctor      ( _vC    , _vC      )
+## @see LoKi::Types::TC_FunVals
+TC_FunVals   = LoKi.Functor                 ( _vC    , 'double' )
+## @see LoKi::Types::TC_FunVal
+TC_FunVal    = LoKi.FunctorFromFunctor      ( _vC    , 'double' )
+## @see LoKi::Types::TC_CutVals
+TC_CutVals   = LoKi.Functor                 ( _vC    , bool     )
+## @see LoKi::Types::TC_CutVal
+TC_CutVal    = LoKi.FunctorFromFunctor      ( _vC    , bool     )
+## @see LoKi::Types::TC_Elements 
+TC_Elements  = LoKi.Functor                 ( _vC    , _TC      ) 
+## @see LoKi::Types::TC_Element
+TC_Element   = LoKi.FunctorFromFunctor      ( _vC    , _TC      ) 
+## @see LoKi::Types::TC_Sources 
+TC_Sources   = LoKi.Functor                 ( 'void' , _vC      ) 
+## @see LoKi::Types::TC_Source
+TC_Source    = LoKi.FunctorFromFunctor      ( 'void' , _vC      ) 
+
+
+## @see LoKi::Cuts::TC_TOTSTAGES 
+TC_TOTSTAGES = LoKi.Candidates.TotalStages ()
+## @see LoKi::Cuts::TC_NSTAGES 
+TC_NSTAGES   = LoKi.Candidates.NStages
+## @see LoKi::Cuts::TC_StFUN 
+TC_StFUN     = LoKi.Candidates.StageFun
+## @see LoKi::Cuts::TC_StCUT
+TC_StCUT     = LoKi.Candidates.StageCut
+
+## @see LoKi::Cuts::TS_ISTRACK 
+TS_ISTRACK      = LoKi.Stages.IsTrack       ()
+## @see LoKi::Cuts::TS_ISL0MUON 
+TS_ISL0MUON     = LoKi.Stages.IsL0Muon      ()
+## @see LoKi::Cuts::TS_ISL0DIMUON 
+TS_ISL0DIMUON   = LoKi.Stages.IsL0DiMuon    ()
+## @see LoKi::Cuts::TS_ISL0CALO
+TS_ISL0CALO     = LoKi.Stages.IsL0Calo      ()
+## @see LoKi::Cuts::TS_ISVERTEX
+TS_ISVERTEX     = LoKi.Stages.IsVertex      ()
+## @see LoKi::Cuts::TS_ISMULTITRACK
+TS_ISMULTITRACK = LoKi.Stages.IsMultiTrack  ()
+## @see LoKi::Cuts::TS_ISSTAGE 
+TS_ISSTAGE      = LoKi.Stages.IsStage       ()
+## @see LoKi::Cuts::TS_ISCANDIDATE 
+TS_ISCANDIDATE  = LoKi.Stages.IsCandidate   ()
+
+## @see LoKi::Cuts::TS_TYPE
+TS_TYPE         = LoKi.Stages.Type          ()
+
+## @see LoKi::Cuts::TS_TrFUN
+TS_TrFUN        = LoKi.Stages.TrFun 
+## @see LoKi::Cuts::TS_TrCUT
+TS_TrCUT        = LoKi.Stages.TrCut 
+
+## @see LoKi::Cuts::TS_LOCKED
+TS_LOCKED       = LoKi.Stages.Locked        ()
+
+
+
+# =============================================================================
+## end of new stuff ## 
+# =============================================================================
+
+
+
+
+
 
 ## helper objects
 TrackFunction       = LoKi.Hlt1.TrackFunction

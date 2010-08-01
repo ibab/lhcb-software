@@ -17,6 +17,11 @@
 // ============================================================================
 #include "HltBase/HltSelection.h"
 // ============================================================================
+// HltBase 
+// ============================================================================
+#include "Event/HltCandidate.h"
+#include "Event/HltStage.h"
+// ============================================================================
 // LoKi 
 // ============================================================================
 #include "HltBase/IHltRegister.h"
@@ -69,6 +74,15 @@ namespace Hlt
     Hlt::IData*     hltSvc () const ;
     /// accessor to Assigned Names & Numbers Service 
     IANNSvc*        annSvc () const ;
+    // ========================================================================
+  protected:
+    // ========================================================================
+    /// get or create the TES-container of Hlt-Candidates 
+    Hlt::Candidate::Container* hltCandidates 
+    ( const std::string& location = Hlt::CandidateLocation::Default ) const ;
+    /// get or create the TES-container of Hlt-Stages 
+    Hlt::Stage::Container*     hltStages  
+    ( const std::string& location = Hlt::StageLocation::Default     ) const ;
     // ========================================================================
   protected:
     // ========================================================================

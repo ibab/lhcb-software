@@ -5,6 +5,19 @@
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
 
+! 2010-08-01 - Vanya Belyaev
+
+ - start the creation of new functors :
+
+      Hlt::Candidiate 
+      Hlt::Stage 
+
+ - new algorithms: 
+
+      L0Calo -> Candidate 
+      L0Muon -> Candidate 
+
+
 ! 2010-07-18 - Vanya Belyaev
 
     prepare the scene for creation of "new"-functors for *new* Hlt1-event model

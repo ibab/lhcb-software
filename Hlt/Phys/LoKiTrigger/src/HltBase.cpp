@@ -119,6 +119,28 @@ std::string Hlt::Base::hltInfoName
   return i->first;
 }
 // ============================================================================
+// get or create the TES-container of Hlt-Candidates 
+// ============================================================================
+Hlt::Candidate::Container* Hlt::Base::hltCandidates 
+( const std::string& location ) const 
+{ 
+  IDataProviderSvc* s = evtSvc() ;
+  return 
+    getOrCreate< Hlt::Candidate::Container, 
+    Hlt::Candidate::Container>  ( s , location ) ; 
+}      
+// ============================================================================
+// get or create the TES-container of Hlt-Stages 
+// ============================================================================
+Hlt::Stage::Container*     Hlt::Base::hltStages  
+( const std::string& location ) const 
+{
+  IDataProviderSvc* s = evtSvc() ;
+  return 
+    getOrCreate< Hlt::Stage::Container, 
+    Hlt::Stage::Container>  ( s , location ) ; 
+}      
+// ============================================================================
 // The END 
 // ============================================================================
 

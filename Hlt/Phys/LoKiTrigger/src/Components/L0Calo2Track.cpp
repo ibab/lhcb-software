@@ -69,7 +69,6 @@ namespace Hlt
       // get InfoID 
       m_infoID = hltInfoID ( m_infoName ) ;
       //
-      
       StringProperty empty ;
       update1 ( empty ) ;
       update2 ( empty ) ;

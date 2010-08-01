@@ -1,13 +1,3 @@
-<!-- 
-     * $Id: LoKiTrigger.xml,v 1.21 2010-04-06 20:24:49 ibelyaev Exp $ 
-     * ========================================================================
-     * @file
-     * The seleciton file to build Reflex dictionaries for Phys/LoKiGen package
-     * @author Vanya BELYAEV ibelyaev@physics.syr.edu
-     * @date 2006-02-06
-     * ========================================================================
--->
-
 <lcgdict>
   
   <class name    = "Hlt::IRegister"        />
@@ -23,15 +13,38 @@
   <class name    = "LoKi::Hlt1::TrackBiFunction"     />
   <class name    = "LoKi::Hlt1::MatchTVelo"          />
   <class name    = "LoKi::Hlt1::TrackVertexFunction" />
+
+  <class pattern = "LoKi::Functor<*Hlt::Candidate*>"            />
+  <class pattern = "LoKi::FunctorFromFunctor<*Hlt::Candidate*>" />
+  <class pattern = "LoKi::Constant<*Hlt::Candidate*>"           />
+  <class pattern = "LoKi::Size<*Hlt::Candidate*>"               />
+  <class pattern = "LoKi::Empty<*Hlt::Candidate*>"              />
+
+  <class pattern = "LoKi::Dicts::FunCalls<*Hlt::Candidate*>"    />
+  <class pattern = "LoKi::Dicts::CutCalls<*Hlt::Candidate*>"    />
+  <class pattern = "LoKi::Dicts::FuncOps<*Hlt::Candidate*>"     />
+  <class pattern = "LoKi::Dicts::CutsOps<*Hlt::Candidate*>"     />
+  <class pattern = "LoKi::Dicts::MapsOps<*Hlt::Candidate*>"     />
+  <class pattern = "LoKi::Dicts::PipeOps<*Hlt::Candidate*>"     />
+  <class pattern = "LoKi::Dicts::FunValOps<*Hlt::Candidate*>"   />
+  <class pattern = "LoKi::Dicts::CutValOps<*Hlt::Candidate*>"   />
+  <class pattern = "LoKi::Dicts::ElementOps<*Hlt::Candidate*>"  />
+  <class pattern = "LoKi::Dicts::SourceOps<*Hlt::Candidate*>"   />
+  
+  <class pattern = "LoKi::Candidates::*" /> 
+  
+  <class pattern = "LoKi::Functor<*Hlt::Stage*>"            />
+  <class pattern = "LoKi::FunctorFromFunctor<*Hlt::Stage*>" />
+  <class pattern = "LoKi::Constant<*Hlt::Stage*>"           />
+  
+  <class pattern = "LoKi::Dicts::FunCalls<*Hlt::Stage*>"    />
+  <class pattern = "LoKi::Dicts::CutCalls<*Hlt::Stage*>"    />
+  <class pattern = "LoKi::Dicts::FuncOps<*Hlt::Stage*>"     />
+  <class pattern = "LoKi::Dicts::CutsOps<*Hlt::Stage*>"     />
+  
+  <class pattern = "LoKi::Stages::*" /> 
   
   <!-- 
-  
-  <class pattern   = "LoKi::Functor<*LHCb::Tr*>"                 />
-  <class pattern   = "LoKi::FunctorFromFunctor<*LHCb::Tr*>"      />
-  <class pattern   = "LoKi::Constant<*LHCb::Tr*>"                />
-  <class pattern   = "LoKi::Functor<*LHCb::Re*>"                 />
-  <class pattern   = "LoKi::FunctorFromFunctor<*LHCb::Re*>"      />
-  <class pattern   = "LoKi::Constant<*LHCb::Re*>"                />
   
   <class pattern   = "LoKi::HltBinders::HltBin*"      />
   <class pattern   = "LoKi::HltBinders::BinderFun*"   />

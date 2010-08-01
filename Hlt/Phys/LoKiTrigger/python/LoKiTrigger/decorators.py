@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # =============================================================================
 ## @file 
-#  The set of basic decorator for objects from LoKiTrigger library
+#  The set of basic decorations for objects from LoKiTrigger library
 #
 #        This file is a part of LoKi project - 
 #    "C++ ToolKit  for Smart and Friendly Physics Analysis"
@@ -19,7 +19,7 @@
 #  @daet 2007-06-09
 # =============================================================================
 """
-The set of basic decorators for obejcts from LoKiTrigger library
+The set of basic decorations for objects from LoKiTrigger library
 
       This file is a part of LoKi project - 
 ``C++ ToolKit  for Smart and Friendly Physics Analysis''
@@ -53,8 +53,90 @@ def _decorate ( name = _name  ) :
     """
     import LoKiCore.decorators as _LoKiCore
     
+    tC = 'const Hlt::Candidate*'
+    tS = 'const Hlt::Stage*' 
+    vC = 'std::vector<const Hlt::Candidate*>'
+    vD = 'std::vector<double>'
+    #
+    
+    ## "function" : Hlt::Candidate -> double 
+    
+    _decorated  = _LoKiCore.getAndDecorateFunctions (  
+        name                                   , ## module name  
+        LoKi.Functor        ( tC ,'double'  )  , ## the base
+        LoKi.Dicts.FunCalls ( Hlt.Candidate )  , ## call-traits
+        LoKi.Dicts.FuncOps  ( tC , tC       )  ) ## operators&operations
+    
+    ## "predicate/cut" :  Hlt::Candidate -> bool
+    
+    _decorated |= _LoKiCore.getAndDecoratePredicates ( 
+        name                                    , ## module name  
+        LoKi.Functor        ( tC , bool     )   , ## the base
+        LoKi.Dicts.CutCalls ( Hlt.Candidate )   , ## call-traits
+        LoKi.Dicts.CutsOps  ( tC , tC       )   ) ## operators&operations
+
+    ## "function" : Hlt::Stage -> double 
+    
+    _decorated  = _LoKiCore.getAndDecorateFunctions (  
+        name                                   , ## module name  
+        LoKi.Functor        ( tS ,'double'  )  , ## the base
+        LoKi.Dicts.FunCalls ( Hlt.Stage     )  , ## call-traits
+        LoKi.Dicts.FuncOps  ( tS , tS       )  ) ## operators&operations
+    
+    ## "predicate/cut" :  Hlt::Stage -> bool
+    
+    _decorated |= _LoKiCore.getAndDecoratePredicates ( 
+        name                                    , ## module name  
+        LoKi.Functor        ( tS , bool     )   , ## the base
+        LoKi.Dicts.CutCalls ( Hlt.Stage     )   , ## call-traits
+        LoKi.Dicts.CutsOps  ( tS , tS       )   ) ## operators&operations
+
+    ## functional part:
+    
+    # "map" : vector<T> -> vector<double>
+    
+    _decorated |= _LoKiCore.getAndDecorateMaps (
+        name                                   , ## module name  
+        LoKi.Functor       ( vC , vD )         , ## the base
+        LoKi.Dicts.MapsOps ( tC      )         ) ## call-traits
+    
+    # "pipe" : vector<T> -> vector<T>
+    
+    _decorated |= _LoKiCore.getAndDecoratePipes (
+        name                                   , ## module name  
+        LoKi.Functor       ( vC , vC )         , ## the base
+        LoKi.Dicts.PipeOps ( tC , tC )         ) ## call-traits
+
+     # "funval" : vector<T> -> double 
+    
+    _decorated |= _LoKiCore.getAndDecorateFunVals ( 
+        name                                   , ## module name  
+        LoKi.Functor         ( vC , 'double' ) , ## the base
+        LoKi.Dicts.FunValOps ( tC )            ) ## call-traits
+
+    # "cutval" : vector<T> -> bool
+    
+    _decorated |= _LoKiCore.getAndDecorateCutVals (
+        name                                   , ## module name  
+        LoKi.Functor         ( vC , bool )     , ## the base
+        LoKi.Dicts.CutValOps ( tC        )     ) ## call-traits
+
+    # "element": vector<T> -> T
+    
+    _decorated |= _LoKiCore.getAndDecorateElements (  
+        name                                   , ## module name  
+        LoKi.Functor          ( vC , tC )      , ## the base
+        LoKi.Dicts.ElementOps ( tC , tC )      ) ## call-traits
+
+    # 'source' : void -> vector<T>
+    
+    _decorated |= _LoKiCore.getAndDecorateSources  (  
+        name                                   , ## module name  
+        LoKi.Functor         ( 'void' , vC )   , ## the base
+        LoKi.Dicts.SourceOps ( tC     , tC )   ) ## call-traits
+
     ## 
-    return ()                                     ## RETURN
+    return _decorated                            ## RETURN
 
 # =============================================================================
 ## perform the decoration 
@@ -67,11 +149,12 @@ from LoKiTracks.decorators import *
 if __name__ == '__main__' :
     print '*'*120
     print                      __doc__
-    print ' Author  : %s ' %   __author__    
-    print ' Version : %s ' %   __version__
-    print ' Date    : %s ' %   __date__
+    print ' Author    : %s ' %   __author__    
+    print ' Version   : %s ' %   __version__
+    print ' Date      : %s ' %   __date__
+    print ' Decorated : %s ' %   len ( _decorated ) 
     print '*'*120
-
+    
 # =============================================================================
 # The END 
 # =============================================================================

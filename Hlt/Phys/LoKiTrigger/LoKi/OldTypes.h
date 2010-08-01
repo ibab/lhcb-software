@@ -10,13 +10,10 @@
 #include "LoKi/Functions.h"
 #include "LoKi/BiFunctions.h"
 // ============================================================================
-// Forward declarations
+// Event 
 // ============================================================================
-namespace LHCb
-{
-  class Track     ;
-  class RecVertex ;
-}
+#include "Event/Track.h"
+#include "Event/RecVertex.h"
 // ============================================================================
 namespace LoKi 
 {
