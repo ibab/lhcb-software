@@ -64,6 +64,13 @@
   <class name = "LoKi::TES::Contains" >
     <field name = "m_algorithm" transient = "true"/>
   </class>
+  
+  <class name = "LoKi::Status::Check"  >
+    <field name = "m_tool" transient = "true"/>
+  </class>
+  <class name = "LoKi::Status::Accept" >
+    <field name = "m_tool" transient = "true"/>
+  </class>
 
   <enum name = "LoKi::Scalers::RateLimitType"  />
   

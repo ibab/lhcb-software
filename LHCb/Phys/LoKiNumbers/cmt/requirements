@@ -4,7 +4,7 @@
 # Maintainer : Vanya BELYAEV ibelyaev@physics.syr.edu 
 # =============================================================================
 package            LoKiNumbers
-version            v9r1
+version            v9r2
 
 # ================ structure ==================================================
 branches           cmt doc dict python 

@@ -76,6 +76,10 @@ XVector   = std.vector(_d)
 EXISTS    = LoKi.TES.Exists
 ## @see LoKi::Cuts::CONTAINS 
 CONTAINS  = LoKi.TES.Contains
+## @see LoKi::Cuts::CHECK
+CHECK     = LoKi.Status.Check
+## @see LoKi::Cuts::ACCEPT 
+ACCEPT    = LoKi.Status.Accept
 
 # random numbers:
 ## @see LoKi::Cuts::XRANDOM 

@@ -19,6 +19,7 @@
 #include "LoKi/Scalers.h"
 #include "LoKi/Filters.h"
 #include "LoKi/TES.h"
+#include "LoKi/Status.h"
 // ============================================================================
 /** @file
  *  Simpe file to build the dictionaries for LoKi's functors, which 

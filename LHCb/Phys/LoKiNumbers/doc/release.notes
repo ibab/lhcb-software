@@ -4,6 +4,14 @@
 ! Purpose     : Set of dictionaries for LoKi functions 
 ! -----------------------------------------------------------------------------
 
+! 2010-08-02 - Vanya Belyaev
+
+ - add new functors CHECK & ACCEPT, 
+     needed for Global Event Cuts in Hlt, see task #16675 
+
+ - cmt/requirements 
+     version increment to v9r2 
+
 !========================== LoKiNumbers v9r1 2010-06-18 =======================
 ! 2010-06-05 - Vanya Belyaev
 
