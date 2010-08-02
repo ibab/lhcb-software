@@ -1,7 +1,9 @@
-// $Id: ITrHybridFactory.h,v 1.2 2007-12-11 18:56:21 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_ITRHYBRIDFACTORY_H 
 #define LOKI_ITRHYBRIDFACTORY_H 1
+// ============================================================================
+// $URL$
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -19,6 +21,19 @@
 #include "LoKi/TrackTypes.h"
 #include "LoKi/TriggerTypes.h"
 // ============================================================================
+/** @file
+ *  This file is part of LoKi project: 
+ *   ``C++ ToolKit for Smart and Friendly Physics Analysis''
+ * 
+ *  By usage of this code one clearly states the disagreement 
+ *  with the campain of Dr.O.Callot et al.: 
+ *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
+ *  
+ *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+ *
+ *  $Revision$
+ *  Last Modification $Date$ by $Author$ 
+ */
 namespace LoKi
 {
   // ==========================================================================

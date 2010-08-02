@@ -1,4 +1,4 @@
-// $Id: VxCreator.h,v 1.1 2008-11-14 12:56:03 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_VXMAKERTOOL_H 
 #define LOKI_VXMAKERTOOL_H 1

@@ -1,4 +1,4 @@
-// $Id: LoKiTriggerDict.h,v 1.21 2010-06-06 08:33:35 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_LOKITRIGGERDICT_H 
 #define LOKI_LOKITRIGGERDICT_H 1
@@ -17,6 +17,7 @@
 #include "LoKi/TriggerTypes.h"
 #include "LoKi/HltCandidates.h"
 #include "LoKi/HltStages.h"
+#include "LoKi/Hlt1.h"
 // ============================================================================
 #include "LoKi/Dicts.h"
 #include "LoKi/FuncOps.h"

@@ -1,4 +1,4 @@
-// $Id: TrHybridLock.h,v 1.1.1.1 2007-07-27 15:56:42 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_TRHYBRIDLOCK_H 
 #define LOKI_TRHYBRIDLOCK_H 1

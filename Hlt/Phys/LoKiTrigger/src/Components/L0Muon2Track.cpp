@@ -1,4 +1,4 @@
-// $Id: L0Muon2Track.cpp,v 1.5 2009-12-23 10:37:35 graven Exp $
+// $Id$
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -182,7 +182,7 @@ StatusCode Hlt::L0Muon2Track::execute  ()
   LHCb::Track::Container* muons = new LHCb::Track::Container() ;
   put ( muons , "Hlt/Track/" + m_selection -> id ().str() );
   
-  using namespace Hlt::L0Utils ;
+  using namespace LoKi::L0 ;
   
   L0MuonCut cut ( m_L0Channel );  
 
@@ -192,7 +192,7 @@ StatusCode Hlt::L0Muon2Track::execute  ()
     //@TODO: Cache, depending on L0 TCK
     //@TODO: what about L0 dimuon trigger? Can we represent it by cuts on single muons?????????
     L0MuonCuts cuts ;
-    StatusCode sc = Hlt::L0Utils::getL0Cuts 
+    StatusCode sc = LoKi::L0::getL0Cuts 
       ( l0 , m_L0Channel , m_l0data_names , cuts ) ;
     Assert ( sc.isSuccess  () , "Unable to extract the proper L0MuonCuts" , sc ) ;
     noMuon = ( cuts.size() != 1 );

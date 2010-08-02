@@ -1,4 +1,4 @@
-// $Id: L0Calo2Track.cpp,v 1.3 2009-12-23 10:37:35 graven Exp $
+// $Id$
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -183,7 +183,7 @@ namespace Hlt
       MsgStream& log = msgLevel( MSG::DEBUG ) ? debug() : info () ;
       if ( !log.isActive() )      { return ; }                     // RETURN
       log << " ConditionIDs to be used: " ;
-      for ( Hlt::L0Utils::CaloTypes::const_iterator  imap = m_types1.begin() ;
+      for ( LoKi::L0::CaloTypes::const_iterator  imap = m_types1.begin() ;
             m_types1.end() != imap ; ++imap ) 
       { log << std::endl <<  "'" << imap->first << "' :\t" << imap->second ; }
       //
@@ -206,7 +206,7 @@ namespace Hlt
       if ( !log.isActive() )      { return ; }                     // RETURN
       //
       log << " ChannelsIDs to be used: " ;
-      for ( Hlt::L0Utils::CaloTypes::const_iterator  imap = m_types2.begin() ;
+      for ( LoKi::L0::CaloTypes::const_iterator  imap = m_types2.begin() ;
             m_types2.end() != imap ; ++imap ) 
       { log << std::endl <<  "'" << imap->first << "' :\t" << imap->second ; }
       //
@@ -252,9 +252,9 @@ namespace Hlt
   private:
     // ========================================================================
     /// map : name -> type  
-    Hlt::L0Utils::CaloTypes m_types1 ;                    // map : name -> type  
+    LoKi::L0::CaloTypes m_types1 ;                        // map : name -> type  
     /// map : name -> type  
-    Hlt::L0Utils::CaloTypes m_types2 ;                    // map : name -> type  
+    LoKi::L0::CaloTypes m_types2 ;                        // map : name -> type  
     // ========================================================================
   private:    
     // ========================================================================
@@ -288,7 +288,7 @@ StatusCode Hlt::L0Calo2Track::execute  ()
   LHCb::Track::Container* tracks = new LHCb::Track::Container() ;
   put ( tracks , "Hlt/Track/" + m_selection -> id ().str() );
   
-  using namespace Hlt::L0Utils ;
+  using namespace LoKi::L0 ;
   
   // The cuts to be used:
   L0CaloCuts cuts ;

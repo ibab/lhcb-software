@@ -1,7 +1,9 @@
-// $Id: HltL0.h,v 1.4 2010-05-24 09:11:20 graven Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKITRIGGER_HLTL0_H 
 #define LOKITRIGGER_HLTL0_H 1
+// ============================================================================
+// $URL$
 // ============================================================================
 // Include files
 // ============================================================================
@@ -21,36 +23,45 @@
 #include "Event/L0CaloCandidate.h"
 #include "Event/L0MuonCandidate.h"
 // ============================================================================
-namespace Hlt 
+// LoKi
+// ============================================================================
+#include "LoKi/BasicFunctors.h"
+// ============================================================================
+/** @file  LoKi/HltL0.h
+ *  Implementation for L0-related functions 
+ * 
+ *  This file is part of LoKi project: 
+ *   ``C++ ToolKit for Smart and Friendly Physics Analysis''
+ * 
+ *  By usage of this code one clearly states the disagreement 
+ *  with the campain of Dr.O.Callot et al.: 
+ *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
+ *  
+ *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+ *
+ *  $Revision$
+ *  Last Modification $Date$ by $Author$ 
+ */
+namespace LoKi
 {
   // ==========================================================================
-  /** @namespace Hlt:L0Utils  HltL0.h
-   *  Collection of simple functions to deal with L0 candidates
-   *
-   *  The actual lines are stollen from 
-   *    Gerhard "The Great" Raven & Jose Angel Hernando Morata
-   *
-   *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
-   *  @date   2009-03-23
-   */
-  namespace L0Utils 
+  namespace L0
   {
     // ========================================================================
     /** the error codes 
-     *  @see Hlt::L0Utils::getElementaryL0Data 
+     *  @see Hlt::L0::getElementaryL0Data 
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date   2009-03-23
      */     
-    enum Codes 
-      {
-        L0Report_Invalid = 850 ,
-        L0Config_Invalid       ,
-        L0Channel_Unknown      ,
-        L0Channel_Invalid      ,
-        L0Condition_Invalid    ,
-        L0Data_Invalid         ,
-        L0Channel_InvalidMap     
-      };
+    enum Codes {
+      L0Report_Invalid = 850 ,
+      L0Config_Invalid       ,
+      L0Channel_Unknown      ,
+      L0Channel_Invalid      ,
+      L0Condition_Invalid    ,
+      L0Data_Invalid         ,
+      L0Channel_InvalidMap     
+    };
     // ========================================================================
     /** @class L0CaloCut 
      *  simple "cut" for L0Calocandidates 
@@ -59,40 +70,31 @@ namespace Hlt
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date   2009-03-23
      */
-    class L0CaloCut
+    class L0CaloCut 
+      : public LoKi::BasicFunctors<const LHCb::L0CaloCandidate*>::Predicate
     {
     public:
       // ======================================================================
       /// constructor 
-      L0CaloCut
-      ( const L0DUBase::CaloType::Type type ) 
-        : m_type         ( type  )
-        , m_hasThreshold ( false )
-        , m_threshold    ( -1    ) 
-      {}
+      L0CaloCut ( const L0DUBase::CaloType::Type type ) ;
       /// constructor 
       L0CaloCut 
       ( const L0DUBase::CaloType::Type type      , 
-        const int                      threshold ) 
-        : m_type         ( type      )
-        , m_hasThreshold ( true      )
-        , m_threshold    ( threshold ) 
-      {}
-      // the only essential method 
-      inline bool operator()( const LHCb::L0CaloCandidate* calo) const 
-      {
-        return 
-          ( 0      != calo         ) && 
-          ( m_type == calo->type() ) && 
-          ( !m_hasThreshold || m_threshold <= calo->etCode() ) ;
-      }
+        const int                      threshold ) ;
+      /// constructor 
+      L0CaloCut () ;
+      /// MANDATORY: virtual desctructor 
+      virtual ~L0CaloCut() ;
+      /// MANDATORY: clone method ("virtual construtor")
+      virtual  L0CaloCut* clone() const ;
+      /// the only essential method 
+      result_type  operator()( argument calo) const ;
+      /// OPTIONAL:  standard printout 
+      std::ostream& fillStream ( std::ostream& s ) const ;
       // ======================================================================
     public:
       // ======================================================================
-      // standard printout 
-      std::ostream& fillStream ( std::ostream& s ) const ;
-      /// conversion to string 
-      std::string   toString   ()                  const ;
+      L0CaloCut& operator=( const L0CaloCut& ) ;
       // ======================================================================
     private:
       // ======================================================================
@@ -105,9 +107,6 @@ namespace Hlt
       // ======================================================================
     };
     // ========================================================================
-    inline std::ostream& operator<< (std::ostream& s , const L0CaloCut& cut )
-    { return cut.fillStream ( s ) ; }
-    // ========================================================================
     /// the actual tyle of cuts list:
     typedef std::vector<L0CaloCut>                                  L0CaloCuts;
     // ========================================================================
@@ -117,44 +116,27 @@ namespace Hlt
      *  @date   2009-03-23
      */
     class L0MuonCut 
+      : public LoKi::BasicFunctors<const LHCb::L0MuonCandidate*>::Predicate
     {
     public:
       // ======================================================================
       /// constructor 
-      L0MuonCut
-      ( const std::string& type  ) 
-        : m_type         ( type  )
-        , m_hasThreshold ( false )
-        , m_threshold    ( -1    ) 
-      {}
+      L0MuonCut ( const std::string& type = "" ) ;
       /// constructor 
-      L0MuonCut 
-      ( const std::string& type      , 
-        const int          threshold ) 
-        : m_type         ( type      )
-        , m_hasThreshold ( true      )
-        , m_threshold    ( threshold ) 
-      {}
-      /// default constructor 
-      L0MuonCut () 
-        : m_type         (       )
-        , m_hasThreshold ( false )
-        , m_threshold    ( -1    ) 
-      {}
-      // the only essential method 
-      inline bool operator()( const LHCb::L0MuonCandidate* muon ) const 
-      {
-        return 
-          ( 0      != muon         ) && 
-          ( !m_hasThreshold || m_threshold < (muon->encodedPt()&0x7F) ) ;
-      }
+      L0MuonCut ( const std::string& type      , 
+                  const int          threshold ) ;
+      /// MANDATORY: virtual desctructor 
+      virtual ~L0MuonCut() ;
+      /// MANDATORY: clone method ("virtual construtor")
+      virtual  L0MuonCut* clone() const ;
+      /// the only essential method 
+      virtual result_type operator()( argument muon ) const ;
+      // standard printout 
+      virtual std::ostream& fillStream ( std::ostream& s ) const ;
       // ======================================================================
     public:
       // ======================================================================
-      // standard printout 
-      std::ostream& fillStream ( std::ostream& s ) const ;
-      /// conversion to string 
-      std::string   toString   ()                  const ;
+      L0MuonCut& operator=( const L0MuonCut& ) ;
       // ======================================================================
     private:
       // ======================================================================
@@ -167,10 +149,7 @@ namespace Hlt
       // ======================================================================
     };
     // ========================================================================
-    inline std::ostream& operator<< (std::ostream& s , const L0MuonCut& cut )
-    { return cut.fillStream ( s ) ; }
-    // ========================================================================
-    /// the actual tyle of cuts list:
+    /// the actual type of cuts list:
     typedef std::vector<L0MuonCut>                                  L0MuonCuts;
     // ========================================================================
     /// the actual type for vector of names 
@@ -298,7 +277,7 @@ namespace Hlt
         ( report->configuration () ,  channel , names , data ) ;      // RETURN
     }
     // ========================================================================
-    /** get L0Muon cuts form the L0-trigge report 
+    /** get L0Muon cuts from the L0-trigger report 
      *  @param report  (INPUT)  L0DUReport object
      *  @param channel (INPUT)  the channel under the interest 
      *  @param names   (INPUT)  the list of names 
@@ -340,9 +319,9 @@ namespace Hlt
         ( report->configuration () ,  channel , types , cuts ) ;      // RETURN
     }
     // ========================================================================
-  } // end of namespace Hlt::L0Utils 
+  } //                                           end of namespace Hlt::L0Utils 
   // ==========================================================================
-} // end of namespace Hlt 
+} //                                                      end of namespace Hlt 
 // ============================================================================
 // The END 
 // ============================================================================

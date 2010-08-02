@@ -1,10 +1,25 @@
-// $Id: HltTool.h,v 1.2 2009-07-15 16:31:47 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_HLTTOOL_H 
 #define LOKI_HLTTOOL_H 1
 // ============================================================================
+// $URL$
+// ============================================================================
 // Include files
 // ============================================================================
+/** @file  LoKi/HltTool.h
+ *  This file is part of LoKi project: 
+ *   ``C++ ToolKit for Smart and Friendly Physics Analysis''
+ * 
+ *  By usage of this code one clearly states the disagreement 
+ *  with the campain of Dr.O.Callot et al.: 
+ *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
+ *  
+ *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+ *
+ *  $Revision$
+ *  Last Modification $Date$ by $Author$ 
+ */
 namespace LoKi 
 {
   // ==========================================================================

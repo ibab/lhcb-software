@@ -1,7 +1,9 @@
-// $Id: $
+// $Id$
 // ============================================================================
 #ifndef LOKI_HLTSTAGES_H 
 #define LOKI_HLTSTAGES_H 1
+// ============================================================================
+// $URL$
 // ============================================================================
 // Include files
 // ============================================================================
@@ -14,6 +16,10 @@
 #include "LoKi/BasicFunctors.h"
 #include "LoKi/TrackTypes.h"
 // ============================================================================
+// Boost
+// ============================================================================
+#include "boost/regex.hpp"
+// ============================================================================
 /** @file  LoKi/HltStages.h
  *
  *  Hlt-Stages functors 
@@ -24,9 +30,12 @@
  *  By usage of this code one clearly states the disagreement 
  *  with the campain of Dr.O.Callot et al.: 
  *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
- *  
+ *
  *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
  *  @date 2010-08-01
+ *
+ *  $Revision$
+ *  Last Modification $Date$ by $Author$ 
  */
 // ============================================================================
 namespace LoKi 
@@ -235,7 +244,7 @@ namespace LoKi
     /** @class TrFun
      *  trivial adaptor for track-stage  
      *  @author Vanya BELAYEV Ivan.Belyaev@nikhef.nl
-     *  @see LoKi::Cuts::TS_TRFUN
+     *  @see LoKi::Cuts::TS_TrFUN
      *  @date 2010-08-01
      */
     class TrFun 
@@ -328,7 +337,281 @@ namespace LoKi
       // ======================================================================
     } ;
     // ========================================================================
+    /** @class History 
+     *  simple predicate to check the presence of algorithm in history 
+     *  @see LoKi::Cuts::TS_HISTORY 
+     *  @author Vanya BELAYEV Ivan.Belyaev@nikhef.nl
+     *  @date 2010-08-02
+     */     
+    class History 
+      : public LoKi::BasicFunctors<const Hlt::Stage*>::Predicate
+    {
+    public:
+      // ======================================================================
+      /// constructor from the algorithm name
+      History ( const std::string& alg ) ;
+      /// MANDATORY: virtual descructor 
+      virtual ~History() ;
+      /// MANDATORY: clone method ("virtual destructor")
+      virtual  History* clone() const ;
+      /// MANDATORY: the only one essential method 
+      virtual  result_type operator() ( argument a ) const ;
+      /// OPTIONAL: the ince printout 
+      virtual  std::ostream& fillStream ( std::ostream& s ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the default constructor is disabled 
+      History () ;                       // the default constructor is disabled 
+      // ======================================================================
+    protected:
+      // ======================================================================
+      /// the algorithm to be checked 
+      std::string m_algorithm ;                  // the algorithm to be checked 
+      // ======================================================================
+    } ;
+    // ========================================================================
+    /** @class HistorySub 
+     *  simple predicate to check the presence of algorithm in history 
+     *  @see LoKi::Cuts::TS_HISTORY_SUB 
+     *  @author Vanya BELAYEV Ivan.Belyaev@nikhef.nl
+     *  @date 2010-08-02
+     */     
+    class HistorySub : public History 
+    {
+    public:
+      // ======================================================================
+      /// constructor from the algorithm name substring
+      HistorySub ( const std::string& alg ) ;
+      /// MANDATORY: virtual descructor 
+      virtual ~HistorySub () ;
+      /// MANDATORY: clone method ("virtual destructor")
+      virtual  HistorySub* clone() const ;
+      /// MANDATORY: the only one essential method 
+      virtual  result_type operator() ( argument a ) const ;
+      /// OPTIONAL: the ince printout 
+      virtual  std::ostream& fillStream ( std::ostream& s ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the default constructor is disabled 
+      HistorySub () ;                    // the default constructor is disabled 
+      // ======================================================================
+    } ;
+    // ========================================================================
+    /** @class HistoryRegex 
+     *  simple predicate to check the presence of algorithm in history 
+     *  @see LoKi::Cuts::TS_HISTORY_RE
+     *  @author Vanya BELAYEV Ivan.Belyaev@nikhef.nl
+     *  @date 2010-08-02
+     */     
+    class HistoryRegex : public HistorySub
+    {
+    public:
+      // ======================================================================
+      /// constructor from the algorithm name pattern
+      HistoryRegex ( const std::string& alg ) ;
+      /// MANDATORY: virtual descructor 
+      virtual ~HistoryRegex () ;
+      /// MANDATORY: clone method ("virtual destructor")
+      virtual  HistoryRegex* clone() const ;
+      /// MANDATORY: the only one essential method 
+      virtual  result_type operator() ( argument a ) const ;
+      /// OPTIONAL: the ince printout 
+      virtual  std::ostream& fillStream ( std::ostream& s ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the default constructor is disabled 
+      HistoryRegex () ;                  // the default constructor is disabled
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the regular expression 
+      boost::regex  m_expression ;                    // the regular expression 
+      // ======================================================================
+    } ;
+    // ========================================================================
   } //                                            end of namespace LoKi::Stages 
+  // ==========================================================================
+  namespace Cuts 
+  {
+    // ========================================================================
+    /** @var TS_TRACK 
+     *  trivial predicate to check the type of Hlt::Stage 
+     *  @see Hlt::Stage 
+     *  @see Hlt::Stage::is<LHCb::Track>
+     *  @see LHCb::Track
+     *  @author Vanya BELAYEV Ivan.Belyaev@nikhef.nl
+     *  @date 2010-08-02
+     */
+    const LoKi::Stages::IsTrack                                      TS_TRACK ;
+    // ========================================================================
+    /** @var TS_L0MUON 
+     *  trivial predicate to check the type of Hlt::Stage 
+     *  @see Hlt::Stage 
+     *  @see Hlt::Stage::is<LHCb::L0MuonCandidate>
+     *  @see LHCb::L0MuonCandidate
+     *  @author Vanya BELAYEV Ivan.Belyaev@nikhef.nl
+     *  @date 2010-08-02
+     */
+    const LoKi::Stages::IsL0Muon                                    TS_L0MUON ;    
+    // ========================================================================
+    /** @var TS_LDI0MUON 
+     *  trivial predicate to check the type of Hlt::Stage 
+     *  @see Hlt::Stage 
+     *  @see Hlt::Stage::is<Hlt::L0DiMuonCandidate>
+     *  @author Vanya BELAYEV Ivan.Belyaev@nikhef.nl
+     *  @date 2010-08-02
+     */
+    const LoKi::Stages::IsL0DiMuon                                TS_L0DIMUON ;    
+    // ========================================================================
+    /** @var TS_L0CALO
+     *  trivial predicate to check the type of Hlt::Stage 
+     *  @see Hlt::Stage 
+     *  @see Hlt::Stage::is<LHCb::L0CaloCandidate>
+     *  @see LHCb::L0CaloCandidate
+     *  @author Vanya BELAYEV Ivan.Belyaev@nikhef.nl
+     *  @date 2010-08-02
+     */
+    const LoKi::Stages::IsL0Calo                                    TS_L0CALO ;
+    // ========================================================================
+    /** @var TS_VERTEX
+     *  trivial predicate to check the type of Hlt::Stage 
+     *  @see Hlt::Stage 
+     *  @see Hlt::Stage::is<LHCb::RecVertex>
+     *  @see LHCb::RecVertex
+     *  @author Vanya BELAYEV Ivan.Belyaev@nikhef.nl
+     *  @date 2010-08-02
+     */
+    const LoKi::Stages::IsVertex                                    TS_VERTEX ;
+    // ========================================================================
+    /** @var TS_MULTITRACK
+     *  trivial predicate to check the type of Hlt::Stage 
+     *  @see Hlt::Stage 
+     *  @see Hlt::Stage::is<Hlt::MultiTrack>
+     *  @author Vanya BELAYEV Ivan.Belyaev@nikhef.nl
+     *  @date 2010-08-02
+     */
+    const LoKi::Stages::IsMultiTrack                            TS_MULTITRACK ;
+    // ========================================================================
+    /** @var TS_STAGE
+     *  trivial predicate to check the type of Hlt::Stage 
+     *  @see Hlt::Stage 
+     *  @see Hlt::Stage::is<Hlt::Stage>
+     *  @author Vanya BELAYEV Ivan.Belyaev@nikhef.nl
+     *  @date 2010-08-02
+     */
+    const LoKi::Stages::IsStage                                      TS_STAGE ;
+    // ========================================================================
+    /** @var TS_CANDIDATE
+     *  trivial predicate to check the type of Hlt::Stage 
+     *  @see Hlt::Stage 
+     *  @see Hlt::Stage::is<Hlt::Candidate>
+     *  @author Vanya BELAYEV Ivan.Belyaev@nikhef.nl
+     *  @date 2010-08-02
+     */
+    const LoKi::Stages::IsCandidate                              TS_CANDIDATE ;
+    // ========================================================================
+    /** @var TS_TYPE
+     *  trivial functor to check the type of Hlt::Stage 
+     *  @see Hlt::Stage 
+     *  @see Hlt::Stage::stageType
+     *  @author Vanya BELAYEV Ivan.Belyaev@nikhef.nl
+     *  @date 2010-08-02
+     */
+    const LoKi::Stages::Type                                          TS_TYPE ;
+    // ========================================================================
+    /** @typedef TS_TrFUN
+     *  trivial adapter for Track-function 
+     *
+     *  @code
+     *  
+     *   const TS_TrFUN pt ( TrPT ) ;
+     *
+     *  @endcode 
+     *
+     *  @see Hlt::Stage 
+     *  @see LHCb::Track
+     *  @author Vanya BELAYEV Ivan.Belyaev@nikhef.nl
+     *  @date 2010-08-02
+     */
+    typedef LoKi::Stages::TrFun                                      TS_TrFUN ;
+    // ========================================================================
+    /** @typedef TS_TrCUT
+     *  trivial adapter for Track-predicate 
+     *
+     *  @code
+     *  
+     *   const TS_TrCUT ok ( TrPT > 500 * MeV  ) ;
+     *
+     *  @endcode 
+     *
+     *  @see Hlt::Stage 
+     *  @see LHCb::Track
+     *  @author Vanya BELAYEV Ivan.Belyaev@nikhef.nl
+     *  @date 2010-08-02
+     */
+    typedef LoKi::Stages::TrCut                                      TS_TrCUT ;
+    // ========================================================================
+    /** @var TS_LOCKED
+     *  trivial predicate to check if Hlt::Stage is locked 
+     *  @see Hlt::Stage
+     *  @see Hlt::Stage::locked 
+     *  @author Vanya BELAYEV Ivan.Belyaev@nikhef.nl
+     *  @date 2010-08-02
+     */
+    const LoKi::Stages::Locked                                      TS_LOCKED ;
+    // ========================================================================
+    /** @typedef TS_HISTORY
+     *  trivial predicate to checkcertain algorithm in history 
+     *
+     *  @code
+     *  
+     *   const TS_HISTORY ok ( "MyAlgorithm" ) ;
+     *
+     *  @endcode 
+     *
+     *  @see Hlt::Stage 
+     *  @see LHCb::Track
+     *  @author Vanya BELAYEV Ivan.Belyaev@nikhef.nl
+     *  @date 2010-08-02
+     */
+    typedef LoKi::Stages::History                                  TS_HISTORY ;
+    // ========================================================================
+    /** @typedef TS_HISTORY_SUB
+     *  trivial predicate to check certain sub-string algorithm in history 
+     *
+     *  @code
+     *  
+     *   const TS_HISTORY_SUB ok ( "DiMuon" ) ;
+     *
+     *  @endcode 
+     *
+     *  @see Hlt::Stage 
+     *  @see LHCb::Track
+     *  @author Vanya BELAYEV Ivan.Belyaev@nikhef.nl
+     *  @date 2010-08-02
+     */
+    typedef LoKi::Stages::HistorySub                           TS_HISTORY_SUB ;
+    // ========================================================================
+    /** @typedef TS_HISTORY_RE
+     *  trivial predicate to check certain sub-string algorithm in history 
+     *
+     *  @code
+     *  
+     *   const TS_HISTORY_RE ok ( "Hlt1.*MuonDecision" ) ;
+     *
+     *  @endcode 
+     *
+     *  @see Hlt::Stage 
+     *  @see LHCb::Track
+     *  @author Vanya BELAYEV Ivan.Belyaev@nikhef.nl
+     *  @date 2010-08-02
+     */
+    typedef LoKi::Stages::HistoryRegex                          TS_HISTORY_RE ;
+    // ========================================================================
+  } //                                              end of namespace LoKi::Cuts 
   // ==========================================================================
 } //                                                      end of namespace LoKi
 // ============================================================================

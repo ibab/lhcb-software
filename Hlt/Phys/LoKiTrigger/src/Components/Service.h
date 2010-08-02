@@ -1,4 +1,4 @@
-// $Id: Service.h,v 1.6 2009-12-23 10:37:35 graven Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKITRIGGER_SERVICE_H 
 #define LOKITRIGGER_SERVICE_H 1 

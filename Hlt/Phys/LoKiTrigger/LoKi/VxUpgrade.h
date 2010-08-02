@@ -1,4 +1,4 @@
-// $Id: VxUpgrade.h,v 1.4 2010-03-12 08:38:25 gligorov Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_VXUPGRADE_H 
 #define LOKI_VXUPGRADE_H 1

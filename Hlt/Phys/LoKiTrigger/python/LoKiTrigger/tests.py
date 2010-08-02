@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: tests.py,v 1.6 2010-01-12 07:39:56 graven Exp $
+# $Id$
 # =============================================================================
 ## @file   LoKiTrigger/tests.py
 #  The simple test script for Phys/LoKiTrigger package
@@ -39,7 +39,7 @@ with the campain of Dr.O.Callot et al.:
 # =============================================================================
 __author__   = "Vanya BELYAEV  Ivan.Belyaev@nikhef.nl"
 __date__     = "2007-05-29"
-__version__  = "CVS tag $Name: not supported by cvs2svn $, verison $Revision: 1.6 $ "
+__version__  = "CVS tag $Name: not supported by cvs2svn $, verison $Revision$ "
 # =============================================================================
 
 

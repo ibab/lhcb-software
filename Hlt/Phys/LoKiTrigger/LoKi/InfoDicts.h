@@ -1,4 +1,4 @@
-// $Id: InfoDicts.h,v 1.2 2007-11-28 14:56:23 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_INFODICTS_H 
 #define LOKI_INFODICTS_H 1

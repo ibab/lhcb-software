@@ -1,4 +1,4 @@
-// $Id: MatchConf.h,v 1.1 2008-11-17 17:38:49 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_MATCHCONF_H 
 #define LOKI_MATCHCONF_H 1

@@ -1,4 +1,4 @@
-// $Id: Hlt1.cpp,v 1.9 2010-01-25 09:30:10 graven Exp $
+// $Id$
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -16,6 +16,109 @@
  *  @date 2008-11-10 
  *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
  */
+// ============================================================================
+// constructor from the selection 
+// ============================================================================
+LoKi::Hlt1::Selection::Selection 
+( const Hlt::TSelection<Hlt::Candidate>* selection ) 
+  : LoKi::BasicFunctors<const Hlt::Candidate*>::Source () 
+  , m_selection ( selection )
+{
+  Assert ( 0 != m_selection , "Hlt::TSelection<Hlt::Selection>* points to NULL!" ) ;
+  m_selName = m_selection->id() ;
+}
+// ============================================================================
+// constructor from the selection 
+// ============================================================================
+LoKi::Hlt1::Selection::Selection 
+( const Hlt::Selection* sel ) 
+  : LoKi::BasicFunctors<const Hlt::Candidate*>::Source () 
+  , m_selection ( 0 ) 
+{
+  Assert ( 0 != sel , "Hlt::Selection* point to NULL!" ) ;
+  m_selection = LoKi::Hlt1::Utils::cast<Hlt::Candidate> ( sel ) ;
+  Assert ( 0 != m_selection , "Hlt::TSelection<LHCb::HltCandidate>* points to NULL!" ) ;
+  m_selName = m_selection->id() ;
+}
+// ============================================================================
+// constructor from the selection 
+// ============================================================================
+LoKi::Hlt1::Selection::Selection 
+( const std::string&    selection ) 
+  : LoKi::BasicFunctors<const Hlt::Candidate*>::Source () 
+  , m_selection ( 0 )
+  , m_selName ( selection ) 
+{
+  // get selection form the Hlt Unit/Hlt Data service 
+  SmartIF<Hlt::IUnit> unit = LoKi::Hlt1::Utils::getUnit ( *this ) ;
+  Assert ( !(!unit) , "Hlt::IUnit* point to NULL" ) ;
+  const Hlt::Selection* sel = unit->declareInput ( selection , *this ) ;
+  Assert ( 0 != sel         , "Hlt::Selection                   points to NULL!" ) ;  
+  m_selection = LoKi::Hlt1::Utils::cast<Hlt::Candidate> ( sel ) ;
+  Assert ( 0 != m_selection , "Hlt::TSelection<Hlt::Candidate>* points to NULL!" ) ;  
+}
+// ============================================================================
+// MANDATORY: the only one essential method 
+// ============================================================================
+LoKi::Hlt1::Selection::result_type
+LoKi::Hlt1::Selection::operator() () const 
+{
+  Assert ( 0 != m_selection , "Hlt::TSelection<Hlt::Candidate>* points to NULL!" ) ;  
+  return result_type ( m_selection->begin () , m_selection->end() ) ;
+}
+// ============================================================================
+// OPTIONAL: the nice printout
+// ============================================================================
+std::ostream& LoKi::Hlt1::Selection::fillStream ( std::ostream& s ) const 
+{ return s << "TC_SELECTION('" << selName() << "')" ; }
+// ============================================================================
+
+
+// ============================================================================
+// constructor from the selection 
+// ============================================================================
+LoKi::Hlt1::Sink::Sink
+( const std::string&    selection ) 
+  : LoKi::BasicFunctors<const Hlt::Candidate*>::Pipe () 
+  , m_selection ( 0 )
+  , m_selName ( selection ) 
+{
+  SmartIF<Hlt::IUnit> unit = LoKi::Hlt1::Utils::getUnit ( *this ) ;
+  Assert ( !(!unit) , "Hlt::IUnit* point to NULL" ) ;
+  // declare the selection  
+  m_selection = unit->declareOutput<Hlt::Candidate> ( selName(), *this ) ;
+  Assert ( 0 != m_selection , "Hlt::TSelection<Hlt::Candidate>* points to NULL!" ) ;  
+}
+// ============================================================================
+// MANDATORY: the only one essential method 
+// ============================================================================
+LoKi::Hlt1::Sink::result_type
+LoKi::Hlt1::Sink::operator() 
+  ( LoKi::Hlt1::Sink::argument a ) const 
+{
+  Assert ( 0 != m_selection , 
+           "Hlt::TSelection<Hlt::Candidate>* point to NULL!" ) ;  
+  //
+  for ( Hlt::Candidate::ConstVector::const_iterator ia = a.begin() ; 
+        a.end() != ia ; ++ia ) 
+  {
+    const Hlt::Candidate* t = *ia ;
+    if ( 0 == t ) { continue ; }
+    m_selection->push_back ( const_cast<Hlt::Candidate*> ( t ) ) ;
+  }
+  //
+  return a ;
+}
+// ============================================================================
+// OPTIONAL: the nice printout
+// ============================================================================
+std::ostream& LoKi::Hlt1::Sink::fillStream ( std::ostream& s ) const 
+{ return s << "TC_SINK('" << selName() << "')" ; }
+// ============================================================================
+
+
+
+
 // ============================================================================
 // constructor from the selection 
 // ============================================================================

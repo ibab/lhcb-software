@@ -1,4 +1,4 @@
-// $Id: Hlt1Wrappers.h,v 1.1 2009-04-01 12:36:09 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_HLT1WRAPPERS_H 
 #define LOKI_HLT1WRAPPERS_H 1

@@ -1,4 +1,4 @@
-// $Id: TrackTypes.h,v 1.6 2008-11-22 17:21:57 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_OLDTYPES_H 
 #define LOKI_OLDTYPES_H 1

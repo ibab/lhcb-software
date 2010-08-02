@@ -1,11 +1,13 @@
-// $Id: $
+// $Id$
+// ============================================================================
+// $URL$
 // ============================================================================
 #ifndef LOKI_HLTCANDIDATES_H 
 #define LOKI_HLTCANDIDATES_H 1
 // ============================================================================
 // Include files
 // ============================================================================
-// HltBsse 
+// HltBase 
 // ============================================================================
 #include "Event/HltCandidate.h"
 // ============================================================================
@@ -27,6 +29,9 @@
  *  
  *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
  *  @date 2010-08-01
+ *
+ *  $Revision$
+ *  Last Modification $Date$ by $Author$ 
  */
 // ============================================================================
 namespace LoKi 
@@ -46,7 +51,8 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.BElyaev@nikhef.nl
      *  @date 2010-08-01
      */
-    class TotalStages : public LoKi::BasicFunctors<const Hlt::Candidate*>::Function
+    class TotalStages
+      : public LoKi::BasicFunctors<const Hlt::Candidate*>::Function
     {
     public:
       // ======================================================================
@@ -90,6 +96,28 @@ namespace LoKi
       // ======================================================================
       /// the actual predicate 
       LoKi::TriggerTypes::TS_Cut m_cut ;                // the actual predicate 
+      // ======================================================================
+    } ;  
+    // ========================================================================
+    /** trivial functor to check if Candidate is 'branch', e.g. resutl 
+     *  of split of another candidate or stage 
+     *  @see LoKi::Cuts::TC_BRANCH 
+     *  @author Vanya Belyaev Ivan.BElyaev@nikhef.nl
+     *  @date 2010-08-01
+     */
+    class Branch
+      : public LoKi::BasicFunctors<const Hlt::Candidate*>::Predicate
+    {
+    public:
+      // ======================================================================
+      /// MANDATORY: virtual desctructor 
+      virtual ~Branch () ;
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  Branch* clone() const ;
+      /// MANDATORY: the only one essential method 
+      virtual result_type operator() ( argument a ) const ;
+      /// OPTIONAL: the nice printout 
+      virtual std::ostream& fillStream( std::ostream& s ) const ;
       // ======================================================================
     } ;  
     // ========================================================================

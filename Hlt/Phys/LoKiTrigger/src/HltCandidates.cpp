@@ -1,4 +1,4 @@
-// $Id: $
+// $Id$
 // ============================================================================
 // Include files
 // ============================================================================
@@ -97,6 +97,44 @@ std::ostream& LoKi::Candidates::NStages::fillStream ( std::ostream& s ) const
 { return s << " TC_NSTAGES(" << m_cut << ") " ; }
 
 
+// ============================================================================
+// MANDATORY: virtual desctructor 
+// ============================================================================
+LoKi::Candidates::Branch::~Branch (){}
+// ============================================================================
+// MANDATORY: clone method ("virtual constructor")
+// ============================================================================
+LoKi::Candidates::Branch*
+LoKi::Candidates::Branch::clone() const 
+{ return new LoKi::Candidates::Branch( *this ) ; }
+// ============================================================================
+// MANDATORY: the only one essential method 
+// ============================================================================
+LoKi::Candidates::Branch::result_type 
+LoKi::Candidates::Branch::operator() 
+  ( LoKi::Candidates::Branch::argument a ) const
+{
+  if ( 0 == a ) 
+  {
+    Error("Hlt::Candidate* points to NULL, return false") ;
+    return false ;
+  }
+  //
+  const Hlt::Stage* s = a->initiatorStage() ;
+  if ( 0 == s ) 
+  {
+    Error("Hlt::Stage* points to NULL, return false") ;
+    return false ;
+  }
+  //
+  return 
+    s->is<Hlt::Candidate>() || s->is<Hlt::Stage>() ;
+}
+// ============================================================================
+// OPTIONAL: the nice printout 
+// ============================================================================
+std::ostream& LoKi::Candidates::Branch::fillStream ( std::ostream& s ) const
+{ return s << " TC_BRANCH " ; }
 
 // ============================================================================
 // constructor 

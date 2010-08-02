@@ -1,5 +1,9 @@
 #!/usr/bin/env python
 # =============================================================================
+# $Id$ 
+# =============================================================================
+# $URL$ 
+# =============================================================================
 ## @file 
 #  The set of basic decorations for objects from LoKiTrigger library
 #
@@ -16,7 +20,7 @@
 #  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
 #
 #  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-#  @daet 2007-06-09
+#  @date 2007-06-09
 # =============================================================================
 """
 The set of basic decorations for objects from LoKiTrigger library
@@ -33,10 +37,10 @@ By usage of this code one clearly states the disagreement
 with the campain of Dr.O.Callot et al.: 
  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
  
-"""
+ """
 # =============================================================================
-__date__     = "2007-05-29"
-__version__  = "CVS tag $Name: not supported by cvs2svn $, verison $Revision: 1.6 $ "
+__date__     = "2007-05-29; last modified $Date$ by $Author$"
+__version__  = "SVN version $Revision$"
 __author__   = "Vanya BELYAEV ibelyaev@physics.syr.edu" 
 # =============================================================================
 
@@ -148,11 +152,11 @@ from LoKiTracks.decorators import *
 # =============================================================================
 if __name__ == '__main__' :
     print '*'*120
-    print                      __doc__
-    print ' Author    : %s ' %   __author__    
-    print ' Version   : %s ' %   __version__
-    print ' Date      : %s ' %   __date__
-    print ' Decorated : %s ' %   len ( _decorated ) 
+    print                               __doc__
+    print ' Author    : %s '        %   __author__    
+    print ' Version   : %s '        %   __version__
+    print ' Date      : %s '        %   __date__
+    print ' Decorated : %s symbols' %   len ( _decorated ) 
     print '*'*120
     
 # =============================================================================

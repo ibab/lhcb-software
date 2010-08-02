@@ -1,4 +1,4 @@
-// $Id: Hlt1Binders.h,v 1.4 2009-05-09 19:33:47 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKITRIGGER_HLT1BINDERS_H 
 #define LOKITRIGGER_HLT1BINDERS_H 1

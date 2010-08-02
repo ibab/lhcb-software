@@ -1,4 +1,6 @@
-// $Id: HltBase.h,v 1.3 2009-12-23 10:37:34 graven Exp $
+// $Id$
+// ============================================================================
+// $URL$
 // ============================================================================
 #ifndef LOKI_HLTBASE_H 
 #define LOKI_HLTBASE_H 1
@@ -27,6 +29,21 @@
 #include "HltBase/IHltRegister.h"
 #include "HltBase/IHltData.h"
 // ============================================================================
+/** @file LoKi/HltBase.h
+ * 
+ *  This file is part of LoKi project: 
+ *   ``C++ ToolKit for Smart and Friendly Physics Analysis''
+ * 
+ *  By usage of this code one clearly states the disagreement 
+ *  with the campain of Dr.O.Callot et al.: 
+ *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
+ *  
+ *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+ *  @date 2010-08-01
+ *
+ *  $Revision$
+ *  Last Modification $Date$ by $Author$ 
+ */
 namespace Hlt 
 {
   // ==========================================================================

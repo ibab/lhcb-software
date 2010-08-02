@@ -39,7 +39,7 @@ with the campain of Dr.O.Callot et al.:
 # =============================================================================
 __author__  = "Vanya BELYAEV ibelyaev@physics.syr.edu" 
 __date__    = "2007-06-09"
-__version__ = "CVS Tag: $Name:$, version $Revision: $ "
+__version__ = "CVS Tag: $Name:$, version $Revision$ "
 # =============================================================================
 
 import LoKiCore.decorators as _LoKiCore 
@@ -105,6 +105,12 @@ TC_Sources   = LoKi.Functor                 ( 'void' , _vC      )
 ## @see LoKi::Types::TC_Source
 TC_Source    = LoKi.FunctorFromFunctor      ( 'void' , _vC      ) 
 
+TC_ALL       = LoKi.Constant ( _TC , bool ) ( True  )
+TC_NONE      = LoKi.Constant ( _TC , bool ) ( False )
+
+TS_ALL       = LoKi.Constant ( _TS , bool ) ( True  )
+TS_NONE      = LoKi.Constant ( _TS , bool ) ( False )
+
 
 ## @see LoKi::Cuts::TC_TOTSTAGES 
 TC_TOTSTAGES = LoKi.Candidates.TotalStages ()
@@ -114,6 +120,9 @@ TC_NSTAGES   = LoKi.Candidates.NStages
 TC_StFUN     = LoKi.Candidates.StageFun
 ## @see LoKi::Cuts::TC_StCUT
 TC_StCUT     = LoKi.Candidates.StageCut
+## @see LoKi::Cuts::TC_BRANCH
+TC_BRANCH    = LoKi.Candidates.Branch       ()
+
 
 ## @see LoKi::Cuts::TS_ISTRACK 
 TS_ISTRACK      = LoKi.Stages.IsTrack       ()
@@ -143,6 +152,26 @@ TS_TrCUT        = LoKi.Stages.TrCut
 ## @see LoKi::Cuts::TS_LOCKED
 TS_LOCKED       = LoKi.Stages.Locked        ()
 
+## @see LoKi::Cuts::TS_HISTORY
+TS_HISTORY      = LoKi.Stages.History
+
+## @see LoKi::Cuts::TS_HISTORY_SUB
+TS_HISTORY_SUB  = LoKi.Stages.HistorySub    
+
+## @see LoKi::Cuts::TS_HISTORY_RE
+TS_HISTORY_RE   = LoKi.Stages.HistoryRegex
+
+
+
+## @see LoKi::Cuts::TC_SELECTION
+TC_SELECTION    = LoKi.Hlt1.Selection  
+## @see LoKi::Cuts::SELECTION
+SELECTION       = LoKi.Hlt1.Selection  
+
+## @see LoKi::Cuts::TC_SINK
+TC_SINK         = LoKi.Hlt1.Sink
+## @see LoKi::Cuts::SINK
+SINK            = LoKi.Hlt1.Sink
 
 
 # =============================================================================

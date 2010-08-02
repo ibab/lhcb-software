@@ -1,4 +1,6 @@
-// $Id: L0Calo2Track.cpp,v 1.3 2009-12-23 10:37:35 graven Exp $
+// $Id$
+// ============================================================================
+// $URL$
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -19,6 +21,19 @@
 // ============================================================================
 #include "LoKi/HltBase.h"
 // ============================================================================
+/** @file
+ *  This file is part of LoKi project: 
+ *   ``C++ ToolKit for Smart and Friendly Physics Analysis''
+ * 
+ *  By usage of this code one clearly states the disagreement 
+ *  with the campain of Dr.O.Callot et al.: 
+ *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
+ *  
+ *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+ *
+ *  $Revision$
+ *  Last Modification $Date$ by $Author$ 
+ */
 namespace Hlt 
 {
   // ==========================================================================

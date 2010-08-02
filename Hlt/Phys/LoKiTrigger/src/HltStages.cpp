@@ -1,6 +1,12 @@
-// $Id: $
+// $Id$
+// ============================================================================
+// $URL$
 // ============================================================================
 // Include files 
+// ============================================================================
+// GaudiKernel
+// ============================================================================
+#include "GaudiKernel/ToStream.h"
 // ============================================================================
 // LoKi
 // ============================================================================
@@ -23,6 +29,9 @@
  *
  *  @see LoKi::TriggerTypes 
  *  @see Hlt::Candidate 
+ *
+ *  $Revision$
+ *  Last Modification $Date$ by $Author$ 
  */
 // ============================================================================
 // MANDATORY: virtual destructor 
@@ -424,7 +433,7 @@ LoKi::Stages::Locked::clone() const
 // ============================================================================
 LoKi::Stages::Locked::result_type 
 LoKi::Stages::Locked::operator() 
-  ( LoKi::Stages::IsTrack::argument a ) const 
+  ( LoKi::Stages::Locked::argument a ) const 
 {
   if ( 0 == a ) 
   {
@@ -436,8 +445,152 @@ LoKi::Stages::Locked::operator()
 // ============================================================================
 // OPTIONAL: the ince printout 
 // ============================================================================
-std::ostream& LoKi::Stages::Locked::fillStream ( std::ostream& s ) const 
+std::ostream& LoKi::Stages::Locked::fillStream ( std::ostream& s ) const
 { return s << "TS_LOCKED" ; }
+
+
+
+
+// ============================================================================
+// constructot from the algorithm name
+// ============================================================================
+LoKi::Stages::History::History ( const std::string& alg ) 
+  :  LoKi::BasicFunctors<const Hlt::Stage*>::Predicate () 
+  , m_algorithm ( alg ) 
+{}
+// ============================================================================
+// MANDATORY: virtual destructor 
+// ============================================================================
+LoKi::Stages::History::~History(){}
+// ============================================================================
+// MANDATORY: clone method ("virtual constructor")
+// ============================================================================
+LoKi::Stages::History*
+LoKi::Stages::History::clone() const 
+{ return new LoKi::Stages::History(*this) ; }
+// ============================================================================
+// MANDATORY: the only one essential method 
+// ============================================================================
+LoKi::Stages::History::result_type 
+LoKi::Stages::History::operator() 
+  ( LoKi::Stages::History::argument a ) const 
+{
+  if ( 0 == a ) 
+  {
+    Error ("Hlt::Stage* points to NULL, return false " ) ; 
+    return false ;
+  }
+  const Hlt::Stage::History& history = a->history() ;
+  return history.end() != std::find ( history.begin () , 
+                                      history.end   () , 
+                                      m_algorithm      ) ;
+}
+// ============================================================================
+// OPTIONAL: the ince printout 
+// ============================================================================
+std::ostream& LoKi::Stages::History::fillStream ( std::ostream& s ) const 
+{ 
+  s << " TS_HISTORY(" ; 
+  Gaudi::Utils::toStream ( m_algorithm , s ) ;
+  return s << ") " ;
+}
+
+// ============================================================================
+// constructor from the algorithm name
+// ============================================================================
+LoKi::Stages::HistorySub::HistorySub ( const std::string& alg ) 
+  :  LoKi::Stages::History ( alg ) 
+{}
+// ============================================================================
+// MANDATORY: virtual destructor 
+// ============================================================================
+LoKi::Stages::HistorySub::~HistorySub () {}
+// ============================================================================
+// MANDATORY: clone method ("virtual constructor")
+// ============================================================================
+LoKi::Stages::HistorySub*
+LoKi::Stages::HistorySub::clone() const 
+{ return new LoKi::Stages::HistorySub(*this) ; }
+// ============================================================================
+// MANDATORY: the only one essential method 
+// ============================================================================
+LoKi::Stages::HistorySub::result_type 
+LoKi::Stages::HistorySub::operator() 
+  ( LoKi::Stages::HistorySub::argument a ) const 
+{
+  if ( 0 == a ) 
+  {
+    Error ("Hlt::Stage* points to NULL, return false " ) ; 
+    return false ;
+  }
+  const Hlt::Stage::History& history = a->history() ;
+  for ( Hlt::Stage::History::const_iterator item = history.begin() ; 
+        history.end() != item ; ++item ) 
+  {
+    if ( m_algorithm.size() <= item->size() && 
+         std::string::npos != item->find ( m_algorithm ) ) { return true ; }
+  }
+  return false ;
+}
+// ============================================================================
+// OPTIONAL: the ince printout 
+// ============================================================================
+std::ostream& LoKi::Stages::HistorySub::fillStream ( std::ostream& s ) const 
+{ 
+  s << " TS_HISTORY_SUB(" ; 
+  Gaudi::Utils::toStream ( m_algorithm , s ) ;
+  return s << ") " ;
+}
+
+
+// ============================================================================
+// constructor from the algorithm name
+// ============================================================================
+LoKi::Stages::HistoryRegex::HistoryRegex ( const std::string& alg ) 
+  :LoKi::Stages::HistorySub ( alg ) 
+  , m_expression ( alg ) 
+{}
+// ============================================================================
+// MANDATORY: virtual destructor 
+// ============================================================================
+LoKi::Stages::HistoryRegex::~HistoryRegex () {}
+// ============================================================================
+// MANDATORY: clone method ("virtual constructor")
+// ============================================================================
+LoKi::Stages::HistoryRegex*
+LoKi::Stages::HistoryRegex::clone() const 
+{ return new LoKi::Stages::HistoryRegex(*this) ; }
+// ============================================================================
+// MANDATORY: the only one essential method 
+// ============================================================================
+LoKi::Stages::HistoryRegex::result_type 
+LoKi::Stages::HistoryRegex::operator() 
+  ( LoKi::Stages::HistoryRegex::argument a ) const 
+{
+  if ( 0 == a ) 
+  {
+    Error ("Hlt::Stage* points to NULL, return false " ) ; 
+    return false ;
+  }
+  //
+  const Hlt::Stage::History& history = a->history() ;
+  for ( Hlt::Stage::History::const_iterator item = history.begin() ; 
+        history.end() != item ; ++item ) 
+  {
+    if ( boost::regex_match ( *item , m_expression ) ) { return true ; }
+  }
+  //
+  return false ;
+}
+// ============================================================================
+// OPTIONAL: the ince printout 
+// ============================================================================
+std::ostream& LoKi::Stages::HistoryRegex::fillStream ( std::ostream& s ) const 
+{ 
+  s << " TS_HISTORY_RE(" ; 
+  Gaudi::Utils::toStream ( m_algorithm , s ) ;
+  return s << ") " ;
+}
 
 
 

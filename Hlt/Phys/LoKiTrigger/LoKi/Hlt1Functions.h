@@ -1,4 +1,6 @@
-// $Id: Hlt1Functions.h,v 1.2 2009-04-01 12:36:09 ibelyaev Exp $
+// $Id$
+// ============================================================================
+// $URL$
 // ============================================================================
 #ifndef LOKI_HLT1FUNCTIONS_H 
 #define LOKI_HLT1FUNCTIONS_H 1
@@ -11,10 +13,20 @@
 #include "LoKi/Interface.h"
 // ============================================================================
 /** @file LoKi/Hlt1Functions.h
- *  collection of specific functions for Hl1 implementation
+ *  Collection of specific functions for Hl1 implementation
  * 
+ *  This file is part of LoKi project: 
+ *   ``C++ ToolKit for Smart and Friendly Physics Analysis''
+ * 
+ *  By usage of this code one clearly states the disagreement 
+ *  with the campain of Dr.O.Callot et al.: 
+ *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
+ *  
  *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
  *  @date   2009-03-30
+ *
+ *  $Revision$
+ *  Last Modification $Date$ by $Author$ 
  */
 // ============================================================================
 namespace LoKi

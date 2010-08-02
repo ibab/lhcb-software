@@ -1,4 +1,4 @@
-// $Id: HltBindersDicts.h,v 1.4 2009-07-13 19:02:49 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_HLTBINDERSDICTS_H 
 #define LOKI_HLTBINDERSDICTS_H 1

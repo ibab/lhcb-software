@@ -1,4 +1,4 @@
-// $Id: RecVertices.h,v 1.5 2009-10-05 07:36:51 graven Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_RECVERTICES_H 
 #define LOKI_RECVERTICES_H 1

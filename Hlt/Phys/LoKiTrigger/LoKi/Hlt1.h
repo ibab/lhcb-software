@@ -1,4 +1,6 @@
-// $Id: Hlt1.h,v 1.6 2010-01-25 09:30:09 graven Exp $
+// $Id$
+// ============================================================================
+// $URL$
 // ============================================================================
 #ifndef LOKI_HLT1_H 
 #define LOKI_HLT1_H 1
@@ -16,6 +18,10 @@
 #include "HltBase/HltSelection.h"
 #include "HltBase/IHltUnit.h"
 // ============================================================================
+// HltBase 
+// ============================================================================
+#include "Event/HltCandidate.h"
+// ============================================================================
 // LoKi
 // ============================================================================
 #include "LoKi/BasicFunctors.h"
@@ -23,11 +29,120 @@
 #include "LoKi/TrackTypes.h"
 #include "LoKi/TriggerTypes.h"
 // ============================================================================
+/** @file  LoKi/Hlt1.
+ *  Collection of Hlt1-related functors 
+ * 
+ *  This file is part of LoKi project: 
+ *   ``C++ ToolKit for Smart and Friendly Physics Analysis''
+ * 
+ *  By usage of this code one clearly states the disagreement 
+ *  with the campain of Dr.O.Callot et al.: 
+ *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
+ *  
+ *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+ *
+ *  $Revision$
+ *  Last Modification $Date$ by $Author$ 
+ */
 namespace LoKi 
 {
   // ==========================================================================
   namespace Hlt1
   {
+    // ========================================================================
+    /** @class Selection 
+     *  Get "selection" from Hlt-service
+     *  @see LoKi::Cuts::TC_SELECTION
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     */
+    class Selection 
+      : public LoKi::BasicFunctors<const Hlt::Candidate*>::Source
+    {
+    public:
+      // ======================================================================
+      /// constructor from the selection 
+      Selection ( const Hlt::TSelection<Hlt::Candidate>* selection ) ;
+      /// constructor from the selection 
+      Selection ( const std::string&                     selection ) ;
+      /// constructor from the selection 
+      Selection ( const Hlt::Selection*                  selection ) ;
+      /// MANDATORY: virtual destructor 
+      virtual ~Selection() {}
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  Selection* clone() const { return new Selection(*this) ; }
+      /// MANDATORY: the only one essential method 
+      virtual result_type operator() ()  const ;
+      /// OPTIONAL: the nice printout
+      virtual std::ostream& fillStream ( std::ostream& s ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// get the selection 
+      const Hlt::TSelection<Hlt::Candidate>* selection () const 
+      { return m_selection ; }
+      /// get the selection name 
+      const std::string& selName   () const { return m_selName.str() ; }
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// default constructor is disabled
+      Selection () ;                         // default constructor is disabled
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the selection itself 
+      const Hlt::TSelection<Hlt::Candidate>* m_selection ;
+      Gaudi::StringKey                       m_selName   ;
+      // ======================================================================
+    };
+    // ========================================================================
+    /** @class Sink
+     *  simple functor which register its input in Hlt Store 
+     *  Tracks are copied to Hlt::IData
+     *  @see Hlt::IData
+     *  @see Hlt::IUnit
+     *  @see LoKi::Cuts::TC_SINK
+     *  @see LoKi::Cuts::SINK
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2008-11-10
+     */
+    class Sink : public LoKi::BasicFunctors<const Hlt::Candidate*>::Pipe
+    {
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// constructor from the selection 
+      Sink ( const std::string&  selection ) ;
+      /// MANDATORY: virtual destructor 
+      virtual ~Sink () {}
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  Sink* clone() const { return new Sink (*this) ; }
+      /// MANDATORY: the only one essential method 
+      virtual result_type operator() ( argument a )  const ;
+      /// OPTIONAL: the nice printout
+      virtual std::ostream& fillStream ( std::ostream& s ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// get the selection 
+      const Hlt::TSelection<Hlt::Candidate>* selection () const 
+      { return m_selection ; }
+      /// get the selection name 
+      const std::string&      selName() const { return m_selName.str() ; }
+      const Gaudi::StringKey& output () const { return m_selName       ; }
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// default constructor is disabled
+      Sink () ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the selection itself 
+      Hlt::TSelection<Hlt::Candidate>* m_selection ;
+      Gaudi::StringKey                 m_selName   ;
+      // ======================================================================
+    };
     // ========================================================================
     /** @class TrSelection
      *  simple functor which acts as a source for the tracks
@@ -331,9 +446,9 @@ namespace LoKi
       // ======================================================================      
     };   
     // ========================================================================
-  } // end of namespace LoKi::Hlt1
+  } //                                              end of namespace LoKi::Hlt1
   // ==========================================================================
-} // end of namespace LoKi 
+} //                                                      end of namespace LoKi 
 // ============================================================================
 // The END 
 // ============================================================================

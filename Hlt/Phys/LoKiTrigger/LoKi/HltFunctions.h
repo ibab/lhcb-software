@@ -1,4 +1,6 @@
-// $Id: HltFunctions.h,v 1.7 2009-03-30 19:06:49 ibelyaev Exp $
+// $Id$
+// ============================================================================
+// $URL$
 // ============================================================================
 #ifndef LOKI_HLTFUNCTIONS_H 
 #define LOKI_HLTFUNCTIONS_H 1
@@ -15,6 +17,21 @@
 // ============================================================================
 #include "HltBase/IBiFunctionTool.h"
 // ============================================================================
+/** @file
+ *  Implementation for Hlt-specific track-(bi)functions 
+ * 
+ *  This file is part of LoKi project: 
+ *   ``C++ ToolKit for Smart and Friendly Physics Analysis''
+ * 
+ *  By usage of this code one clearly states the disagreement 
+ *  with the campain of Dr.O.Callot et al.: 
+ *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
+ *  
+ *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+ *
+ *  $Revision$
+ *  Last Modification $Date$ by $Author$ 
+ */
 namespace LoKi 
 {
   // ==========================================================================

@@ -1,4 +1,4 @@
-// $Id: TrHybridEngineActor.h,v 1.2 2007-12-11 18:56:21 ibelyaev Exp $
+// $Id$
 // ===========================================================================
 #ifndef LOKI_TRHYBRIDENGINEACTOR_H 
 #define LOKI_TRHYBRIDENGINEACTOR_H 1

@@ -1,4 +1,4 @@
-// $Id: RecVertexCuts.h,v 1.3 2009-10-05 07:36:51 graven Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_RECVERTEXCUTS_H 
 #define LOKI_RECVERTEXCUTS_H 1

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Service.py,v 1.2 2009-07-12 15:59:10 ibelyaev Exp $ 
+# $Id$ 
 # =============================================================================
 ## @file LoKiTrigger/Service.py
 #  Useful decorator for Hlt::Service 
@@ -16,7 +16,7 @@ Useful decorator for HLT Service and its interfaces
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision$"
 # =============================================================================
 __all__ = ( 'iHltInspector', )
 # =============================================================================

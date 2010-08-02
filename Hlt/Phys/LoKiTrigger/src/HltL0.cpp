@@ -1,4 +1,6 @@
-// $Id: HltL0.cpp,v 1.1 2009-03-24 17:33:26 ibelyaev Exp $
+// $Id$
+// ============================================================================
+// $URL$
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -19,45 +21,159 @@
 #include "LoKi/HltL0.h"
 // ============================================================================
 /** @file
- *  Implementation file for functions frn manespace Hlt::L0Utils 
+ *  Implementation file for functions frn manespace LoKi::L0 
+ *
+ *  This file is part of LoKi project: 
+ *   ``C++ ToolKit for Smart and Friendly Physics Analysis''
+ * 
+ *  By usage of this code one clearly states the disagreement 
+ *  with the campain of Dr.O.Callot et al.: 
+ *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
+ *   
  *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
  *  @date   2009-03-23
+ *
+ *  $Revision$
+ *  Last Modification $Date$ by $Author$ 
  */
+// ============================================================================
+// constructor 
+// ============================================================================
+LoKi::L0::L0CaloCut::L0CaloCut
+( const L0DUBase::CaloType::Type type ) 
+  : LoKi::BasicFunctors<const LHCb::L0CaloCandidate*>::Predicate () 
+  , m_type         ( type  )
+  , m_hasThreshold ( false )
+  , m_threshold    ( -1    ) 
+{}
+// ============================================================================
+// constructor 
+// ============================================================================
+LoKi::L0::L0CaloCut::L0CaloCut
+( const L0DUBase::CaloType::Type type      , 
+  const int                      threshold ) 
+  : LoKi::BasicFunctors<const LHCb::L0CaloCandidate*>::Predicate () 
+  , m_type         ( type      )
+  , m_hasThreshold ( false     )
+  , m_threshold    ( threshold ) 
+{}
+// ============================================================================
+// constructor 
+// ============================================================================
+LoKi::L0::L0CaloCut::L0CaloCut () 
+  : LoKi::BasicFunctors<const LHCb::L0CaloCandidate*>::Predicate () 
+  , m_type         (       )
+  , m_hasThreshold ( false )
+  , m_threshold    ( -1    ) 
+{}
+// ============================================================================
+// assignement 
+// ============================================================================
+LoKi::L0::L0CaloCut& 
+LoKi::L0::L0CaloCut::operator=( const LoKi::L0::L0CaloCut& right ) 
+{
+  if ( &right == this ) { return *this ; }
+  //
+  m_type         = right.m_type         ;
+  m_hasThreshold = right.m_hasThreshold ;
+  m_threshold    = right.m_threshold    ;
+  //
+  return *this ;
+}
+// ============================================================================
+// MANDATORY: virtual desctructor 
+// ============================================================================
+LoKi::L0::L0CaloCut::~L0CaloCut(){}
+// ============================================================================
+// MANDATORY: clone method ("virtual construtor")
+// ============================================================================
+LoKi::L0::L0CaloCut*
+LoKi::L0::L0CaloCut::clone() const 
+{ return new LoKi::L0::L0CaloCut ( *this ) ; }
+// ============================================================================
+// the only essential method 
+// ============================================================================
+LoKi::L0::L0CaloCut::result_type  
+LoKi::L0::L0CaloCut::operator()
+  ( LoKi::L0::L0CaloCut::argument calo) const 
+{
+  return 
+    ( 0      != calo         ) && 
+    ( m_type == calo->type() ) && 
+    ( !m_hasThreshold || m_threshold <= calo->etCode() ) ;
+} 
 // ============================================================================
 // standard printout 
 // ============================================================================
-std::ostream& Hlt::L0Utils::L0CaloCut::fillStream ( std::ostream& s ) const 
+std::ostream& LoKi::L0::L0CaloCut::fillStream ( std::ostream& s ) const 
 {
   s << "L0CaloCut(" << m_type ;
   if ( m_hasThreshold ) { s << "," << m_threshold ; }
   return s << ")" ;
 }
+
 // ============================================================================
-// conversion to string 
+// constructor 
 // ============================================================================
-std::string Hlt::L0Utils::L0CaloCut::toString   () const 
+LoKi::L0::L0MuonCut::L0MuonCut ( const std::string& t ) 
+  : LoKi::BasicFunctors<const LHCb::L0MuonCandidate*>::Predicate () 
+  , m_type ( t ) 
+  , m_hasThreshold ( false )
+  , m_threshold    ( -1    ) 
+{}
+// ============================================================================
+// constructor 
+// ============================================================================
+LoKi::L0::L0MuonCut::L0MuonCut ( const std::string& t         , 
+                                 const int          threshold ) 
+  : LoKi::BasicFunctors<const LHCb::L0MuonCandidate*>::Predicate () 
+  , m_type ( t ) 
+  , m_hasThreshold ( true      )
+  , m_threshold    ( threshold ) 
+{}
+// ============================================================================
+// MANDATORY: virtual desctructor 
+// ============================================================================
+LoKi::L0::L0MuonCut::~L0MuonCut(){}
+// ============================================================================
+// MANDATORY: clone method ("virtual construtor")
+// ============================================================================
+LoKi::L0::L0MuonCut*
+LoKi::L0::L0MuonCut::clone() const 
+{ return new LoKi::L0::L0MuonCut ( *this ) ; }
+// ============================================================================
+// assignement 
+// ============================================================================
+LoKi::L0::L0MuonCut& 
+LoKi::L0::L0MuonCut::operator=( const LoKi::L0::L0MuonCut& right ) 
 {
-  std::ostringstream s ;
-  fillStream ( s ) ;
-  return s.str() ;
+  if ( &right == this ) { return *this ; }
+  //
+  m_type         = right.m_type         ;
+  m_hasThreshold = right.m_hasThreshold ;
+  m_threshold    = right.m_threshold    ;
+  //
+  return *this ;
 }
+// ============================================================================
+// the only essential method 
+// ============================================================================
+LoKi::L0::L0MuonCut::result_type  
+LoKi::L0::L0MuonCut::operator()
+  ( LoKi::L0::L0MuonCut::argument muon ) const 
+{
+  return
+    ( 0      != muon         ) && 
+    ( !m_hasThreshold || m_threshold < (muon->encodedPt()&0x7F) ) ;
+} 
 // ============================================================================
 // standard printout 
 // ============================================================================
-std::ostream& Hlt::L0Utils::L0MuonCut::fillStream ( std::ostream& s ) const 
+std::ostream& LoKi::L0::L0MuonCut::fillStream ( std::ostream& s ) const 
 {
   s << "L0MuonCut('" << m_type << "'" ;
   if ( m_hasThreshold ) { s << "," << m_threshold ; }
   return s << ")" ;
-}
-// ============================================================================
-// conversion to string 
-// ============================================================================
-std::string Hlt::L0Utils::L0MuonCut::toString   () const 
-{
-  std::ostringstream s ;
-  fillStream ( s ) ;
-  return s.str() ;
 }
 // ============================================================================
 /*  get the elementary data for the given channel by names 
@@ -68,11 +184,11 @@ std::string Hlt::L0Utils::L0MuonCut::toString   () const
  *  @return status code 
  */
 // ============================================================================
-StatusCode Hlt::L0Utils::getElementaryL0Data 
-( const LHCb::L0DUConfig*    config  , 
-  const std::string&         channel ,
-  const Hlt::L0Utils::Names& names   , 
-  Hlt::L0Utils::Data&        data    ) 
+StatusCode LoKi::L0::getElementaryL0Data 
+( const LHCb::L0DUConfig*     config  , 
+  const std::string&          channel ,
+  const LoKi::L0::Names&      names   , 
+  LoKi::L0::Data&             data    ) 
 {
   data.clear() ;
   if ( 0 == config ) { return L0Config_Invalid ; }                   // RETURN 
@@ -91,10 +207,10 @@ StatusCode Hlt::L0Utils::getElementaryL0Data
  *  @return status code 
  */
 // ============================================================================
-StatusCode Hlt::L0Utils::getElementaryL0Data 
+StatusCode LoKi::L0::getElementaryL0Data 
 ( const LHCb::L0DUChannel* channel ,
-  const Hlt::L0Utils::Names& names , 
-  Hlt::L0Utils::Data&        data  ) 
+  const LoKi::L0::Names&   names , 
+  LoKi::L0::Data&          data  ) 
 {
   data.clear() ;
   if ( 0 == channel ) { return L0Channel_Invalid ; }                  // RETURN 
@@ -125,14 +241,14 @@ StatusCode Hlt::L0Utils::getElementaryL0Data
  *  @param channel the channel name 
  *  @param types the map  { name : type } 
  *  @param cuts  (OUTPUT) the list of L0Calo cuts 
- *  @see Hlt::L0Utils::L0CaloCut
+ *  @see LoKi::L0::L0CaloCut
  */
 // ============================================================================
-StatusCode Hlt::L0Utils::getL0Cuts 
+StatusCode LoKi::L0::getL0Cuts 
 ( const LHCb::L0DUConfig*        config  , 
   const std::string&             channel ,
-  const Hlt::L0Utils::CaloTypes& types   , 
-  Hlt::L0Utils::L0CaloCuts&      cuts    ) 
+  const LoKi::L0::CaloTypes& types   , 
+  LoKi::L0::L0CaloCuts&      cuts    ) 
 {
   cuts.clear() ;
   if ( 0 == config ) { return L0Config_Invalid ; }                    // RETURN 
@@ -149,13 +265,13 @@ StatusCode Hlt::L0Utils::getL0Cuts
  *  @param channel the channel name 
  *  @param types the map  { name : type } 
  *  @param cuts  (OUTPUT) the list of LCalo cuts 
- *  @see Hlt::L0Utils::L0CaloCut
+ *  @see LoKi::L0::L0CaloCut
  */
 // ============================================================================
-StatusCode Hlt::L0Utils::getL0Cuts 
+StatusCode LoKi::L0::getL0Cuts 
 ( const LHCb::L0DUChannel*       channel ,
-  const Hlt::L0Utils::CaloTypes& types   , 
-  Hlt::L0Utils::L0CaloCuts&      cuts    ) 
+  const LoKi::L0::CaloTypes&     types   , 
+  LoKi::L0::L0CaloCuts&          cuts    ) 
 {
   cuts.clear() ;
   if ( 0 == channel ) { return L0Channel_Invalid ; }                  // RETURN
@@ -188,13 +304,13 @@ StatusCode Hlt::L0Utils::getL0Cuts
 /*  get the cuts for L0 Calo channels 
  *  @param types the map  { name : type } 
  *  @param cuts  (OUTPUT) the list of LCalo cuts 
- *  @see Hlt::L0Utils::L0CaloCut
+ *  @see LoKi::L0::L0CaloCut
  */
 // ============================================================================
-StatusCode Hlt::L0Utils::getL0Cuts
+StatusCode LoKi::L0::getL0Cuts
 ( const std::string&             channel ,
-  const Hlt::L0Utils::CaloTypes& types   , 
-  Hlt::L0Utils::L0CaloCuts&      cuts    ) 
+  const LoKi::L0::CaloTypes& types   , 
+  LoKi::L0::L0CaloCuts&      cuts    ) 
 {
   cuts.clear() ;
   CaloTypes::const_iterator itype = types.find ( channel ) ;
@@ -210,10 +326,10 @@ StatusCode Hlt::L0Utils::getL0Cuts
  *  @return status code 
  */
 // ============================================================================
-StatusCode Hlt::L0Utils::getL0Cuts 
+StatusCode LoKi::L0::getL0Cuts 
 ( const LHCb::L0DUChannel*   channel ,
-  const Hlt::L0Utils::Names& names   , 
-  Hlt::L0Utils::L0MuonCuts&  cuts    )
+  const LoKi::L0::Names& names   , 
+  LoKi::L0::L0MuonCuts&  cuts    )
 {
   cuts.clear() ;
   if ( 0 == channel ) { return L0Channel_Invalid ; }                  // RETURN 
@@ -249,14 +365,14 @@ StatusCode Hlt::L0Utils::getL0Cuts
  *  @param channel the channel name 
  *  @param types the map  { name : type } 
  *  @param cuts  (OUTPUT) the list of LCalo cuts 
- *  @see Hlt::L0Utils::L0CaloCut
+ *  @see LoKi::L0::L0CaloCut
  */
 // ============================================================================ 
-StatusCode Hlt::L0Utils::getL0Cuts
+StatusCode LoKi::L0::getL0Cuts
 ( const LHCb::L0DUConfig*    config  , 
   const std::string&         channel ,
-  const Hlt::L0Utils::Names& names   , 
-  Hlt::L0Utils::L0MuonCuts&  cuts    ) 
+  const LoKi::L0::Names&     names   , 
+  LoKi::L0::L0MuonCuts&      cuts    ) 
 {
   cuts.clear() ;
   if ( 0 == config ) { return L0Config_Invalid ; }                    // RETURN 

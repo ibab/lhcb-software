@@ -1,4 +1,4 @@
-// $Id: VxMaker.h,v 1.3 2009-12-23 10:37:34 graven Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_VXMAKER_H 
 #define LOKI_VXMAKER_H 1

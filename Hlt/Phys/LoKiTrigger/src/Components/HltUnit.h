@@ -1,4 +1,4 @@
-// $Id: HltUnit.h,v 1.11 2010-01-25 09:30:11 graven Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_HLTUNIT_H 
 #define LOKI_HLTUNIT_H 1

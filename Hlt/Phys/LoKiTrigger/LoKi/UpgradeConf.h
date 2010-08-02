@@ -1,4 +1,4 @@
-// $Id: UpgradeConf.h,v 1.2 2008-11-17 13:51:27 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_UPGRADECONF_H 
 #define LOKI_UPGRADECONF_H 1

@@ -1,9 +1,9 @@
-// $Id: UpgradeTool.h,v 1.2 2009-10-17 17:21:49 graven Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_UPGRADETOOL_H 
 #define LOKI_UPGRADETOOL_H 1
 // ============================================================================
-// Include files
+// $URL$
 // ============================================================================
 // Include files
 // ============================================================================
@@ -12,6 +12,7 @@
 // TrackEvent/RecEvent
 // ============================================================================
 #include "Event/Track.h"
+#include "Event/HltCandidate.h"
 // ============================================================================
 // TrackInterfaces 
 // ============================================================================
@@ -32,7 +33,7 @@ namespace LoKi
   namespace Hlt1
   {
     // ========================================================================
-    /** @class UpgradeTool UpgradeTool.h LoKi/UpgradeTool.h
+    /** @class UpgradeTool LoKi/UpgradeTool.h
      *  Simple replacement of HltTrackUpgradeTool 
      *  @see ITracksFromTrack
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
@@ -64,7 +65,16 @@ namespace LoKi
       StatusCode upgrade 
       ( const LHCb::Track*        itrack , 
         LHCb::Track::ConstVector& otracks ) const ;
-      // ======================================================================
+      // ======================================================================      
+      /** upgrade the candidates          
+       *  @param itrack  input track/seeds 
+       *  @param otracks output container of upgraded tracks (cumulative) 
+       *  @return status code 
+       */
+      StatusCode upgrade 
+      ( const Hlt::Candidate::ConstVector& input  , 
+        Hlt::Candidate::ConstVector&       output ) const ;
+      // ======================================================================      
     public:
       // ======================================================================
       /// ITracksFromTrack tool name 
@@ -89,7 +99,7 @@ namespace LoKi
       /// recoID 
       int recoID    () const { return m_recoID ; }
       /// configuration 
-      const LoKi::Hlt1::UpgradeConf& config () const { return m_config    ; }      
+      const LoKi::Hlt1::UpgradeConf& config  () const { return m_config    ; }      
       /// configuration 
       operator const LoKi::Hlt1::UpgradeConf&() const { return  config () ; }      
       // ======================================================================      
@@ -164,9 +174,9 @@ namespace LoKi
       // ======================================================================
     };  
     // ========================================================================
-  } // end of namespace LoKi::Hlt1
+  } //                                              end of namespace LoKi::Hlt1
   // ==========================================================================
-} // end of namespace LoKi
+} //                                                      end of namespace LoKi
 // ============================================================================
 // The END 
 // ============================================================================
