@@ -20,7 +20,6 @@ import logging
 import os
 import tarfile
 import shutil
-from subprocess import Popen, PIPE
 
 class EmptyTarBallException(Exception): pass
 class EmptySourceDirsException(Exception): pass
@@ -584,6 +583,35 @@ def checkTar(project, version=None, cmtconfig=None, input_dir=None,
 
 
 #=========================================================================
+def generateLCGMD5(project, version, cmtconfig=None, input_dir=None):
+    log = logging.getLogger()
+    prj_conf = Project.getProject(project)
+    if not input_dir :
+        input_dir = prj_conf.LCGTarBallDir()
+
+    prefix = prj_conf.releasePrefix(version)
+    ppath = os.path.join(prj_conf.ReleaseArea(), prefix)
+    prj = CMT.Project(ppath)
+    for data in CMT.walk(top=prj, cmtprojectpath=os.environ["CMTPROJECTPATH"]) :
+        if data[0].name() == "LCGCMT" :
+            lcg_prj = data[0]
+            break
+    lcg_version = version
+    if prj_conf.LCGTarBallName() == "LCGCMT" :
+        lcg_version = lcg_prj.version().split("_")[-1]
+    filename = os.path.join(input_dir, prj_conf.LCGTarBallName(lcg_version, cmtconfig, full=True))
+
+    if os.path.exists(filename) :
+        md5fname = os.path.join(input_dir, prj_conf.LCGmd5FileName(lcg_version, cmtconfig))
+        targetname = os.path.basename(filename)
+        if os.path.exists(md5fname) :
+            os.remove(md5fname)
+            log.info("Replacing %s for %s" % (md5fname, filename))
+        else :
+            log.info("Creating %s for %s" % (md5fname, filename))                
+        createMD5File(filename, md5fname, targetname)
+    else :
+        log.warning("The file %s doesn't exist. Skipping md5 creation." % filename)
 
 def generateLCGTar(project, version=None, cmtconfig=None, 
                    top_dir=None, output_dir=None, overwrite=False,
@@ -610,11 +638,10 @@ def generateLCGTar(project, version=None, cmtconfig=None,
             if data[0].name() == "LCGCMT" :
                 lcg_prj = data[0]
                 break
+        lcg_version = version
         if prj_conf.LCGTarBallName() == "LCGCMT" :
             lcg_version = lcg_prj.version().split("_")[-1]
-            filename = os.path.join(output_dir, prj_conf.LCGTarBallName(lcg_version, cmtconfig, full=True))
-        else :
-            filename = os.path.join(output_dir, prj_conf.LCGTarBallName(version, cmtconfig, full=True))
+        filename = os.path.join(output_dir, prj_conf.LCGTarBallName(lcg_version, cmtconfig, full=True))
         log.info("The output file name is %s" % filename)
         if os.path.exists(filename) and not (overwrite or update) :
             log.info("The file %s already exists. Skipping." % filename)
@@ -715,6 +742,14 @@ def generateLCGTar(project, version=None, cmtconfig=None,
                     log.fatal("The source directories do not exist")
             else:
                 status = updateTarBallFromFilterDict(ext_binary_dict, filename, binary_pathfilter, dereference=False)
+                if status != 0 :
+                    if status == 1 :
+                        log.fatal("The source directories do not exist")
+                else :
+                    if md5 :
+                        generateLCGMD5(project, version, cmtconfig, output_dir)
+                    if html :
+                        pass
     #        else :
     #            if md5 :
     #                generateMD5(project, version, cmtconfig, output_dir)

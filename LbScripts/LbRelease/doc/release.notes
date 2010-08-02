@@ -1,3 +1,7 @@
+2010-08-02  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbRelease/TarBall.py: added the generation of the MD5 sum for the LCGCMT tarball.
+
 2010-07-30  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* LbRelease/python/LbRelease/rcs.py: modified the svn check out procedure to
