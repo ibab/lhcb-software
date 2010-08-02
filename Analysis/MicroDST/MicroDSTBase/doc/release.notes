@@ -1,10 +1,19 @@
-!$Id: release.notes,v 1.51 2010-06-24 16:14:11 jpalac Exp $
+!$Id: release.notes,v 1.52 2010-08-02 16:39:27 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : MicroDST/MicroDSTBase
 ! Responsible : Juan Palacios
 ! Purpose     : Base classes for MicroDST algorithms and tools, plus helper
 !               functions and functors.
 !-----------------------------------------------------------------------------
+
+! 2010-08-02 - Juan Palacios
+ - MicroDST/Functions.h, src/Lib/Functions.cpp
+  . Add MicroDST::isValid(T) functions to test validity of pointers, ints,
+    doubles, floats. This is to allow numeric types with value 0 passing!
+ - MicroDST/RelTableFunctors.h
+  . Use MicroDST::isValid methods.
+ - cmt/requirements
+  . Increase version to v1r8.
 
 !====================== MicroDSTBase v1r7p4 2010-06-24 ======================
 
