@@ -28,7 +28,8 @@ package_names = ['XmlDDDB',
                  'HltTCK',
                  'AppConfig',
                  'Emacs',
-                 'eclipse']
+                 'eclipse',
+                 'jre']
 
 class PackageConfException(Exception): 
     pass
@@ -203,5 +204,7 @@ AppConfig.setProject("DBASE")#IGNORE:E0602
 Emacs.setHat("Tools")#IGNORE:E0602
 Emacs.setProject("TOOLS")#IGNORE:E0602
 
+jre.setHat("Java")#IGNORE:E0602
+jre.setProject("TOOLS")#IGNORE:E0602
 
 eclipse.setProject("TOOLS")#IGNORE:E0602

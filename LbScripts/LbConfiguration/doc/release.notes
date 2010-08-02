@@ -1,7 +1,8 @@
 2010-08-02  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* python/LbConfiguration/Package.py: added the support for the packaging of the eclipse package
-	in the versionless TOOLS project.
+	* python/LbConfiguration/Package.py: 
+	- added the support for the packaging of the eclipse package in the versionless TOOLS project.
+	- added the support for the packaging of the Java/jre package in the versionless TOOLS project.
 
 2010-07-28  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
