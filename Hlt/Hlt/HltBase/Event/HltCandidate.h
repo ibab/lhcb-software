@@ -1,4 +1,4 @@
-// $Id: HltCandidate.h,v 1.4 2010-08-01 17:18:05 ibelyaev Exp $ 
+// $Id: HltCandidate.h,v 1.5 2010-08-02 18:15:37 ibelyaev Exp $ 
 // ============================================================================
 #ifndef HltEvent_Candidate_H
 #define HltEvent_Candidate_H 1
@@ -127,13 +127,15 @@ namespace Hlt
     /// Retrieve (non-const)  Reference to the stages
     inline       SmartRefVector<Hlt::Stage>& stages()       { return m_stages ; }
     /// Update  Reference to the stages
-    void setStages(const SmartRefVector<Hlt::Stage>& value) { m_stages = value ; }
+    void setStages(const SmartRefVector<Hlt::Stage>& value) ; 
     /// Add to (pointer) reference to the stages
-    void addToStages(const Hlt::Stage* value) { m_stages.push_back(value); }
+    void addToStages ( const Hlt::Stage* value ) ; 
     /// Remove from  reference to the stages
     void removeFromStages(const Hlt::Stage* value) ;
     /// Clear  Reference to the stages
     void clearStages() { m_stages.clear() ; }
+    /// Has stage ?
+    bool hasStages ( const Hlt::Stage* stage ) const ;
     // ========================================================================
   public: // standard 
     // ========================================================================  

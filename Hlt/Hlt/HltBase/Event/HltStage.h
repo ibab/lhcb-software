@@ -1,4 +1,4 @@
-// $Id: HltStage.h,v 1.7 2010-08-01 18:25:37 ibelyaev Exp $ 
+// $Id: HltStage.h,v 1.8 2010-08-02 18:15:38 ibelyaev Exp $ 
 // =============================================================================
 #ifndef HltEvent_Stage_H
 #define HltEvent_Stage_H 1
@@ -74,6 +74,10 @@ namespace Hlt
    */
   class Stage: public ContainedObject 
   {
+    // ========================================================================
+    // friend class 
+    friend class Hlt::Candidate ;
+    // ========================================================================
   public:
     // ========================================================================
     enum Type {
@@ -261,9 +265,19 @@ namespace Hlt
   public: // Locker 
     // ========================================================================
     // get the current locker 
-    const INamedInterface* locked() const { return m_locker; }
+    const INamedInterface* locked () const { return m_locker ; }
+    // get own candidate 
+    const Hlt::Candidate*  owner  () const { return m_owner  ; }  
+    // ========================================================================
+  protected:
+    // ========================================================================
+    /// set own candidate 
+    void  setOwner ( const Hlt::Candidate* c ) ;          // set own candidate 
     // ========================================================================
   public:
+    // ========================================================================
+    /// history 
+    const History& history() const { return m_history ; }            // history 
     // ========================================================================
     /// the actual type of the stage 
     Type stageType() const ;                   // the actual type of the stage 
@@ -300,6 +314,8 @@ namespace Hlt
     History                           m_history             ; // history
     /// locker 
     SmartIF<INamedInterface>          m_locker              ; // locker 
+    /// my candidate 
+    SmartRef<Hlt::Candidate>          m_owner               ; // my candidate 
     // ========================================================================
   }; // 
   // ==========================================================================

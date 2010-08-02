@@ -1,4 +1,4 @@
-// $Id: Candidate.cpp,v 1.1 2010-07-19 16:24:08 ibelyaev Exp $
+// $Id: Candidate.cpp,v 1.2 2010-08-02 18:15:38 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -38,6 +38,37 @@ void Hlt::Candidate::removeFromStages(const Hlt::Stage* value)
   SmartRefVector<Hlt::Stage>::iterator iter =
     std::remove(m_stages.begin(), m_stages.end(), ref);
   m_stages.erase(iter, m_stages.end());
+}
+// ===========================================================================
+// Update  Reference to the stages
+// ===========================================================================
+void Hlt::Candidate::setStages( const SmartRefVector<Hlt::Stage>& value ) 
+{
+  m_stages.clear() ;
+  for ( SmartRefVector<Hlt::Stage>::const_iterator istage = value.begin() ;
+        value.end() != istage ; ++istage ) { addToStages ( *istage ); }
+}
+// ===========================================================================
+// Add to (pointer) reference to the stages
+// ===========================================================================
+void Hlt::Candidate::addToStages ( const Hlt::Stage* value ) 
+{ 
+  if ( 0 != value ) 
+  {
+    m_stages.push_back ( value ) ;
+    m_stages.back()->setOwner ( this ) ;
+  }
+}
+// ===========================================================================
+// Has stage ? 
+// ===========================================================================
+bool Hlt::Candidate::hasStages ( const Hlt::Stage* stage ) const
+{
+  return 
+    0 != stage && 
+    m_stages.end() != std::find ( m_stages.begin () , 
+                                  m_stages.end   () , 
+                                  SmartRef<Hlt::Stage> ( stage  ) ) ;
 }
 // ============================================================================
 // the output operator 

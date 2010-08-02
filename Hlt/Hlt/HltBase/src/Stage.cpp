@@ -1,4 +1,4 @@
-// $Id: Stage.cpp,v 1.6 2010-08-01 18:25:37 ibelyaev Exp $ 
+// $Id: Stage.cpp,v 1.7 2010-08-02 18:15:38 ibelyaev Exp $ 
 // ============================================================================
 // HltBase 
 // ============================================================================
@@ -130,6 +130,28 @@ std::ostream& Hlt::Stage::fillStream(std::ostream& s) const
   }
   s << "]";
   return s;
+}
+// ============================================================================
+// set own candidate 
+// ============================================================================
+void  Hlt::Stage::setOwner ( const Hlt::Candidate* c ) 
+{
+  //
+  if ( 0 == c ) 
+  {
+    throw GaudiException ( "Invalid Hlt::Candidate" ,
+                           "Stage::setOwner"        ,
+                           StatusCode::FAILURE      ) ;
+  }
+  //
+  if ( 0 != m_owner && c != m_owner ) 
+  {
+    throw GaudiException ( "Owner is already set"   ,
+                           "Stage::setOwner"        ,
+                           StatusCode::FAILURE      ) ;
+  } 
+  //
+  m_owner = c ;
 }
 // ============================================================================
 Hlt::Stage::Type Hlt::Stage::stageType() const 
