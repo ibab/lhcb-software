@@ -100,7 +100,6 @@ StatusCode Particle2BackgroundCategoryRelationsAlg::backCategoriseParticles(cons
   for(LHCb::Particle::Range::const_iterator iP = myParticles.begin(); 
       iP != myParticles.end(); ++iP ){
     int thisCat = static_cast<int>(m_bkg->category(*iP));
-    std::cout << "XXX Relating with category " << thisCat << std::endl;
     catRelations->i_relate(*iP,thisCat);
   }
 
