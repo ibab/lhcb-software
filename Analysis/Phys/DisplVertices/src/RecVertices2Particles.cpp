@@ -9,6 +9,10 @@
 //Use ODIN
 #include "Event/ODIN.h"
 
+//calorimeter
+#include "CaloDet/DeCalorimeter.h"
+#include "Event/CaloDigit.h"
+
 // local
 #include "RecVertices2Particles.h"
 
@@ -29,10 +33,11 @@ DECLARE_ALGORITHM_FACTORY( RecVertices2Particles );
 // Standard constructor, initializes variables
 //=============================================================================
 RecVertices2Particles::RecVertices2Particles( const std::string& name,
-                ISvcLocator* pSvcLocator)
+                                              ISvcLocator* pSvcLocator)
   : DVAlgorithm ( name , pSvcLocator )
     , m_vFit(0)
     , pi(3.1415926)
+    , m_MapCalled(false)
     , m_pt(400.)
 {
   declareProperty("SaveTuple", m_SaveTuple = false );//save prey infos in Tuple
@@ -55,7 +60,7 @@ RecVertices2Particles::RecVertices2Particles( const std::string& name,
   //"", "FromUpstreamPV", "FromBeamLine"
   declareProperty("RCutMethod", m_RCut = "FromUpstreamPV" );
   declareProperty("BeamLineLocation", 
-		  m_BLLoc = "HLT/Hlt2LineDisplVertices/BeamLine");
+		  m_BLLoc = "/Event/BeamLine");
   declareProperty("UseMap", m_UseMap = false );
   declareProperty("PVnbtrks", m_PVnbtrks = 5 ); //corr. to 'tight' PV reco
 }
@@ -173,7 +178,7 @@ StatusCode RecVertices2Particles::initialize() {
   }
 
   //Initialize the beam line
-  if( m_RCut !="FromBeamLine" ) m_BeamLine = new Particle();
+  m_BeamLine = new Particle();
 
   //Set beam line to z axis
   if( m_RCut =="" ){
@@ -181,7 +186,7 @@ StatusCode RecVertices2Particles::initialize() {
     m_BeamLine->setMomentum( Gaudi::LorentzVector( 0., 0., 1., 0. ) );
   } 
 
-  if( m_RemFromRFFoil || m_RemVtxFromDet == 4){
+  if( m_RemFromRFFoil || m_RemVtxFromDet == 4 || m_SaveTuple ){
     //get the Velo geometry
     string velo = "/dd/Structure/LHCb/BeforeMagnetRegion/Velo/Velo";
     const IDetectorElement* lefthalv = getDet<IDetectorElement>( velo+"Left" );
@@ -221,8 +226,8 @@ StatusCode RecVertices2Particles::initialize() {
 
   //Set the beam line
   if( m_RCut=="FromBeamLine" ){
-    if( exist<Particles>( m_BLLoc ) ){
-      const Particle::Range BL = get<Particle::Range>( m_BLLoc );      
+    if( exist<Particle::Range>( m_BLLoc ) ){
+      const Particle::Range & BL = get<Particle::Range>( m_BLLoc );      
       const LHCb::Particle* tmp = *(BL.begin());
       m_BeamLine->setReferencePoint( tmp->referencePoint() );
       m_BeamLine->setMomentum( tmp->momentum() );
@@ -242,7 +247,10 @@ StatusCode RecVertices2Particles::initialize() {
       debug() <<"Upstream PV position "<< UpPV->position() << endmsg;
   }
 
-  if( m_UseMap ) m_map.clear(); //Re-initialize the map
+  if( m_UseMap ){ 
+    m_map.clear(); //Re-initialize the map
+    m_MapCalled = false; //The map hasn't been called yet.
+  }
 
   //Retrieve data Particles from Desktop.
   const Particle::ConstVector & Parts = desktop()->particles();
@@ -360,7 +368,7 @@ void RecVertices2Particles::GetRecVertices( RecVertex::ConstVector & RV )
   vector<string>::iterator itName;
   for( itName = m_RVLocation.begin(); itName != m_RVLocation.end();
        ++itName ) {
-    const RecVertex::Range tRV = get<RecVertex::Range>( *itName );
+    const RecVertex::Range & tRV = get<RecVertex::Range>( *itName );
     if(tRV.empty()) {
       warning() << "No reconstructed vertices found at location: " 
                 << *itName << endmsg;
@@ -376,12 +384,26 @@ void RecVertices2Particles::GetRecVertices( RecVertex::ConstVector & RV )
   
 }
 
+//============================================================================
+// Get Nb of Velo tracks in event
+//============================================================================
+unsigned int RecVertices2Particles::GetNbVeloTracks(){
+
+  unsigned int nbv = 0;
+  const Track::Range & Trks = get<Track::Range>( TrackLocation::Default );
+  for(Track::Range::const_iterator itr = Trks.begin(); 
+        Trks.end() != itr; ++itr) {
+      if( (*itr)->hasVelo() ) ++nbv;
+  }
+  return nbv;
+}
+
 //=============================================================================
 // Get the upstream PV
 //=============================================================================
 const RecVertex * RecVertices2Particles::GetUpstreamPV(){
 
-  const RecVertex::Range PVs = this->primaryVertices();
+  const RecVertex::Range & PVs = this->primaryVertices();
   const RecVertex * upPV = NULL;
   double tmp = 1000;
   for ( RecVertex::Range::const_iterator i = PVs.begin(); 
@@ -422,7 +444,7 @@ bool RecVertices2Particles::RecVertex2Particle( const RecVertex* rv,
   int endkey = rv->tracks().back()->key();
 
   //Create map if necessary
-  if( m_UseMap && m_map.empty() ) CreateMap( Parts );
+  if( m_UseMap && !m_MapCalled ) CreateMap( Parts );
 
   if( m_Fitter == "none" ){
 
@@ -600,6 +622,7 @@ void RecVertices2Particles::CreateMap( const Particle::ConstVector & Parts ){
   for ( Particle::ConstVector::const_iterator j = Parts.begin();
 	j != Parts.end();++j) {
 
+    if( (*j)->proto() == NULL ) continue;
     if( (*j)->proto()->track() == NULL ) continue;
     const Track * tk = (*j)->proto()->track();
     
@@ -628,6 +651,8 @@ void RecVertices2Particles::CreateMap( const Particle::ConstVector & Parts ){
   //debug() <<"eff "<< eff <<" nb of clone "<< clone <<" Nb of Part "
   //        << Parts.size() <<" Map size "<< m_map.size() << endmsg;
   //}
+
+  m_MapCalled = true;
   
   return;
 }
@@ -831,7 +856,7 @@ bool RecVertices2Particles::IsAPointInDet( const Particle & P, int mode,
 StatusCode RecVertices2Particles::SavePreysTuple( Tuple & tuple, Particle::ConstVector & RecParts ){
 
   vector<int>  nboftracks;
-  vector<double> chindof, px, py, pz, e, x, y, z, sumpts, indets, muons;
+  vector<double> chindof, px, py, pz, e, x, y, z, errx, erry, errz, sumpts, indets, muons;
   
   Particle::ConstVector::const_iterator iend = RecParts.end();
   for( Particle::ConstVector::const_iterator is = RecParts.begin();
@@ -844,11 +869,14 @@ StatusCode RecVertices2Particles::SavePreysTuple( Tuple & tuple, Particle::Const
     Gaudi::LorentzVector mom = p->momentum();
     double sumpt = GetSumPt(p);
     double muon = HasMuons(p);
+    const Gaudi::SymMatrix3x3 & err = p->endVertex()->covMatrix();
 
     nboftracks.push_back( nbtrks ); chindof.push_back( chi );
     e.push_back(mom.e()); muons.push_back(muon);
     px.push_back(mom.x()); py.push_back(mom.y()); pz.push_back(mom.z());
     x.push_back(pos.x()); y.push_back(pos.y()); z.push_back(pos.z());
+    errx.push_back(sqrt(err(0,0))); erry.push_back(sqrt(err(1,1)));
+    errz.push_back(sqrt(err(2,2)));
 
     double indet = 0;
     if( IsAPointInDet( *p, 2 ) ) indet += 1;
@@ -858,7 +886,7 @@ StatusCode RecVertices2Particles::SavePreysTuple( Tuple & tuple, Particle::Const
     sumpts.push_back(sumpt);
   }
   const int NbPreyMax = 20;
-  //if( !SaveCaloInfos(tuple)  ) return StatusCode::FAILURE;
+  if( !SaveCaloInfos(tuple)  ) return StatusCode::FAILURE;
   if( !fillHeader(tuple) ) return StatusCode::FAILURE;
   tuple->farray( "PreyPX", px.begin(), px.end(), "NbPrey", NbPreyMax );
   tuple->farray( "PreyPY", py.begin(), py.end(), "NbPrey", NbPreyMax );
@@ -867,6 +895,9 @@ StatusCode RecVertices2Particles::SavePreysTuple( Tuple & tuple, Particle::Const
   tuple->farray( "PreyXX", x.begin(), x.end(), "NbPrey", NbPreyMax );
   tuple->farray( "PreyXY", y.begin(), y.end(), "NbPrey", NbPreyMax );
   tuple->farray( "PreyXZ", z.begin(), z.end(), "NbPrey", NbPreyMax );
+  tuple->farray( "PreyerrX", errx.begin(), errx.end(), "NbPrey", NbPreyMax );
+  tuple->farray( "PreyerrY", erry.begin(), erry.end(), "NbPrey", NbPreyMax );
+  tuple->farray( "PreyerrZ", errz.begin(), errz.end(), "NbPrey", NbPreyMax );
   tuple->farray( "PreySumPt", sumpts.begin(), sumpts.end(), 
 		 "NbPrey", NbPreyMax );
   tuple->farray( "Muon", muons.begin(), muons.end(), "NbPrey", NbPreyMax );
@@ -878,7 +909,7 @@ StatusCode RecVertices2Particles::SavePreysTuple( Tuple & tuple, Particle::Const
   tuple->column( "BLX", m_BeamLine->referencePoint().x() );
   tuple->column( "BLY", m_BeamLine->referencePoint().y() );
   tuple->column( "BLZ", m_BeamLine->referencePoint().z() );
-  
+  tuple->column( "NbVelo", GetNbVeloTracks() );
   return tuple->write();
 }
 
@@ -920,6 +951,85 @@ StatusCode RecVertices2Particles::fillHeader( Tuple & tuple ){
 
 
   return StatusCode::SUCCESS ;
+}
+
+//============================================================================
+//  Save Calorimeter info for a Prey
+//============================================================================
+StatusCode RecVertices2Particles::SaveCaloInfos( Tuple& tuple ){
+  double E = 0; double Et = 0.;
+  StatusCode sc = GetCaloInfos( "Ecal", E, Et ) && 
+    GetCaloInfos( "Hcal", E, Et ) &&
+    //GetCaloInfos( "Prs", E, Et ) && GetCaloInfos( "Spd", E, Et ) &&
+    GetCaloInfos( "Muon", E, Et );
+  tuple->column( "TotEt", Et );
+  return sc;  
+}
+
+StatusCode RecVertices2Particles::GetCaloInfos( string CaloType, double& En, double& Et ){
+  double EC = 0; double EtC = 0.;
+
+  if( CaloType == "Muon" ){
+
+    const MuonPIDs* pMU = get<MuonPIDs>( MuonPIDLocation::Default );
+    for(  MuonPIDs::const_iterator imu = pMU->begin() ; 
+	  imu !=  pMU->end() ; ++imu ){
+      const MuonPID* myMu = *imu;
+      const LHCb::Track* myTrk = myMu->idTrack();
+      double Q = myTrk->charge();
+      double CloneDist = myTrk->info(LHCb::Track::CloneDist,9999.); 
+      if (Q==0.) { continue; }
+      if (CloneDist!=9999.) { continue; }
+      
+      double myP = myTrk->p();
+      double mE = sqrt((myP*myP) + 105.66*105.66)/ GeV;
+      double mET = mE*sqrt(myTrk->position().Perp2()/myTrk->position().Mag2());
+//       debug() << "P (GeV) : " << myP / Gaudi::Units::GeV  
+// 	      << " is muon=" << (*imu)->IsMuon() << endmsg;
+      EC += mE;
+      EtC += mET;
+
+    }
+
+  } else {
+    double x=0,y=0,z=0;
+    //CaloDigitLocation::Spd
+    const CaloDigits*  digitsCalo = get<CaloDigits>("Raw/"+CaloType+"/Digits");
+    //Nothing in here...
+    //const CaloDigits*  digitsCalo = get<CaloDigits>("Raw/"+CaloType+"/AllDigits");
+    //Nothing in here...
+    //const CaloDigits*  digitsCalo = get<CaloDigits>("Raw/"+CaloType+"/Hlt1Digits");
+
+    //DeCalorimeterLocation::Spd
+    const DeCalorimeter*  Dcalo = getDet<DeCalorimeter>
+      ( "/dd/Structure/LHCb/DownstreamRegion/"+CaloType );
+
+    for ( CaloDigits::const_iterator idigit=digitsCalo->begin(); 
+	  digitsCalo->end()!=idigit ; ++idigit ){  
+      const CaloDigit* digit = *idigit ;
+      if ( 0 == digit ) { continue ; }
+      // get unique calorimeter cell identifier
+      const CaloCellID& cellID = digit->cellID() ;
+      // get the energy of the digit
+      const double e = digit->e()  / Gaudi::Units::GeV ;
+      // get the position of the cell (center)
+      const Gaudi::XYZPoint& xcenter = Dcalo->cellCenter( cellID ) ;
+      //Compute transverse energy !
+      x = xcenter.x();
+      y = xcenter.y();
+      z = xcenter.z();
+      EC += e;
+      EtC+= e*sqrt( (x*x + y*y)/(x*x + y*y + z*z) );
+    }
+  }
+
+  if( msgLevel( MSG::DEBUG ) )
+    debug() << CaloType <<" : Total Energy "<< EC <<" GeV, total Et "<< EtC 
+            << endmsg;
+  
+  En += EC;
+  Et += EtC;
+  return StatusCode::SUCCESS;
 }
 
 //=============================================================================
@@ -1080,7 +1190,7 @@ void RecVertices2Particles::PrintTrackandParticles(){
 
   //TrackLocation::Default = Rec/Track/Best 
   //(Upstream,Long,Ttrack,Downstream, Velo)
-  const Track::Range BestTrks = get<Track::Range>( TrackLocation::Default );
+  const Track::Range & BestTrks = get<Track::Range>( TrackLocation::Default );
   debug()<<"Dumping "<< TrackLocation::Default <<" Track content, size "
 	 << BestTrks.size() <<endmsg;
   for(Track::Range::const_iterator itr = BestTrks.begin(); 

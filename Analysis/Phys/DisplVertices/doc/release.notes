@@ -5,6 +5,17 @@
 !               of events with exotic displaced vertices
 !-----------------------------------------------------------------------------
 
+! 2010-08-02 - Neal Gauvin
+ - Code improvements for speed.
+ - Add new features for tupling.
+
+! 2010-07-27 - Neal Gauvin
+ - Bug fixed in RecVertices2Particles and DisplVertices when working with RCutMethod = "FromBeamLine"
+ - Added some more comments in CalibrateIP
+
+! 2010-07-23 - Neal Gauvin
+ - RecVertices2Particles capable of working without any given input Particles (Only RecVertex made of Velo tracks).
+
 !========================== DisplVertices v6r9 2010-07-08 ===================
 
 ! 2010-07-01 - Neal Gauvin

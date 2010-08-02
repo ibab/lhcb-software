@@ -46,11 +46,12 @@ CalibrateIP::CalibrateIP( const std::string& name,
   : GaudiHistoAlg( name , pSvcLocator )
     , m_vertexer("TrackVertexer")
     , m_nbevent(0)
+    , m_nbpv(0)
     , m_bin(500)
     , m_beamstab(0.05)
 {
   declareProperty( "PVContainer", m_PVContainerName = LHCb::RecVertexLocation::Primary ) ;
-  declareProperty( "OutputLocation", m_outloc = "/Event/"+name+"/BeamLine" );
+  declareProperty( "OutputLocation", m_outloc = "/Event/"+name );
   declareProperty( "RefitPVwithLongOnly", m_refit = false );
   declareProperty( "LocalVeloFrame", m_local = false );
   declareProperty( "IPbyHistFit", m_histo = false );
@@ -62,6 +63,9 @@ CalibrateIP::CalibrateIP( const std::string& name,
   declareProperty( "MaxChi2ODoF", m_maxchi = 2 );
   declareProperty( "MinNbLongTrks", m_minlongs = 6 );
   declareProperty( "MinNbTrks", m_mintrks = 10 );
+  //Setting a initial z value < -1000. ensures the beam line estimate is not 
+  //  saved on TES till an estimation is done. Can be avoided for MC where 
+  //  you already know where the beam line is before beginning...
   declareProperty("BeamLineInitPos", m_BLInitPos ); 
   declareProperty("BeamLineInitDir", m_BLInitDir );
   declareProperty("BeamLineCycle", m_cycle = 1000 );
@@ -203,8 +207,8 @@ StatusCode CalibrateIP::execute() {
              <<" Number of associated tracks "<< nbtrks 
              <<" Number of long tracks " << nblongs 
              <<" Chi2/NDoF " << pv->chi2PerDoF() << endmsg;
-      debug()<<" PV in Velo local frame "<< localPV << endmsg;
-      debug()<<" Refitted PV with long tracks only "<< refitpv->position() 
+      debug()<<"PV in Velo local frame "<< localPV << endmsg;
+      debug()<<"Refitted PV with long tracks only "<< refitpv->position() 
              <<" R "<< refitpv->position().rho() 
              <<" Chi2/NDoF " << refitpv->chi2PerDoF() << endmsg;
     }
@@ -438,6 +442,7 @@ void CalibrateIP::SmearPV( Gaudi::XYZPoint & PV ){
 // Save the beam line on the TES.
 //=============================================================================
 void CalibrateIP::SaveBeamLine(){
+  //Note : pointers cannot be avoided...
   
   Particle * p = new Particle();
 
@@ -446,10 +451,10 @@ void CalibrateIP::SaveBeamLine(){
                 m_Beam->GetZEigenVector().y(), 
                 m_Beam->GetZEigenVector().z(), 0. );
   p->setMomentum( mom );
-  p->setReferencePoint( m_Beam->GetIPPosition() );  
+  p->setReferencePoint( m_Beam->GetIPPosition() );
 
   Particles* vec = new Particles();
-  vec->insert( p ); 
+  vec->insert( p );  
   put( vec, m_outloc );
 
 }

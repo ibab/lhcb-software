@@ -49,6 +49,8 @@ private:
   void GetRecVertices( LHCb::RecVertex::ConstVector & );
   ///Get the upstream PV
   const LHCb::RecVertex * GetUpstreamPV();
+  ///Get Nb of Velo tracks in event
+  unsigned int GetNbVeloTracks();
   ///Turn a RecVertex into a Particle
   bool RecVertex2Particle( const LHCb::RecVertex*, 
 			   const LHCb::Particle::ConstVector &, 
@@ -71,6 +73,8 @@ private:
   /// Cut on the RF-Foil position
   bool IsInRFFoil( const Gaudi::XYZPoint & );
   StatusCode SavePreysTuple( Tuple &, LHCb::Particle::ConstVector & );
+  StatusCode SaveCaloInfos( Tuple & );
+  StatusCode GetCaloInfos( std::string, double &, double & );
   StatusCode fillHeader( Tuple & );
 
   //Geometric tools
@@ -118,6 +122,7 @@ private:
   bool   m_KeepLowestZ;      ///< keep the RV with the lowest Z (particle gun)
   bool   m_SaveTuple;        ///< Save candidate infos in a tuple
   bool   m_UseMap;           ///< Use a map to store Particle Track relation
+  bool   m_MapCalled;         ///< has the map been already called in event ?
   /// Where RecVertices are stored on the TES
   std::vector<std::string> m_RVLocation;
   std::string m_Fitter;      ///< method for fitting the RecVertex
