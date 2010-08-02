@@ -1,14 +1,13 @@
 ''' '''
-#$Id: dstwriters.py,v 1.3 2010-05-20 17:27:22 marcocle Exp $
+#$Id: dstwriters.py,v 1.4 2010-08-02 11:35:13 jpalac Exp $
 
 
 __author__ = "Juan PALACIOS juan.palacios@nikhef.nl"
 
-__version__ = '$Revision: 1.3 $'
+__version__ = '$Revision: 1.4 $'
 
 
 from Configurables import GaudiSequencer, InputCopyStream, OutputStream
-from Configurables import LHCb__InputCopyStream as InputCopyStream
 
 from streamconf import OutputStreamConf
 

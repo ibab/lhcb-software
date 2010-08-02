@@ -2,7 +2,7 @@
 Write a DST for a single selection sequence. Writes out the entire
 contents of the input DST
 """
-__version__ = "$Id: SelDSTWriter.py,v 1.11 2010-07-07 17:35:42 jpalac Exp $"
+__version__ = "$Id: SelDSTWriter.py,v 1.12 2010-08-02 11:31:41 jpalac Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -35,7 +35,7 @@ class SelDSTWriter(MicroDSTWriter) :
         return len(self.selectionSequences()) > 1
 
     def outputStreamType(self) :
-        from Configurables import LHCb__InputCopyStream as InputCopyStream
+        from Configurables import InputCopyStream
         return InputCopyStream
 
     def extendStream(self, seq, stream) :
