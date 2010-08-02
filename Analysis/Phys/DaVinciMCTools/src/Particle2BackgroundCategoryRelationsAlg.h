@@ -14,7 +14,7 @@ class IBackgroundCategory;
  *  BackgroundCategories to the TES. The table is Particle*->int. 
  *
  *  InputLocations : the TES locations of the particles for which the table is to be written.
- *                      The table is written to InputLocations+"/P2BCRelations"
+ *                      The table is written to InputLocations-"/Particles"+"/P2BCRelations"
  *
  *  @author V. Gligorov
  *  @date   2009-11-30

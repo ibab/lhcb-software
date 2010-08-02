@@ -7,6 +7,7 @@
 #include "Event/Particle.h"
 // DaVinci
 #include "Kernel/IBackgroundCategory.h"
+#include "Kernel/DaVinciStringUtils.h"
 // local
 #include "Particle2BackgroundCategoryRelationsAlg.h"
 
@@ -99,10 +100,14 @@ StatusCode Particle2BackgroundCategoryRelationsAlg::backCategoriseParticles(cons
   for(LHCb::Particle::Range::const_iterator iP = myParticles.begin(); 
       iP != myParticles.end(); ++iP ){
     int thisCat = static_cast<int>(m_bkg->category(*iP));
+    std::cout << "XXX Relating with category " << thisCat << std::endl;
     catRelations->i_relate(*iP,thisCat);
   }
 
-  put(catRelations, location+"/P2BCRelations");
+  std::string outputLocation = location;
+  DaVinci::StringUtils::removeEnding(outputLocation, "/Particles");
+
+  put(catRelations, outputLocation+"/P2BCRelations");
 
   return StatusCode::SUCCESS;
   
