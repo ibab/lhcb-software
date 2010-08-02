@@ -1,4 +1,4 @@
-!$Id: release.notes,v 1.42 2010-08-02 11:39:49 jpalac Exp $
+!$Id: release.notes,v 1.43 2010-08-02 12:38:43 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DSTWriters
 ! Responsible : Juan PALACIOS
@@ -8,6 +8,11 @@
 ! ======================== DSTWriters v1r9 2010-08-02 ========================
 
 ! 2010-08-02 - Juan Palacios
+ - python/DSTWriters/dstwriters.py
+  . Changes to encapsulate input sequence and only add DST writing algorithms
+    externally.
+ - python/DSTWriters/microdstelements.py
+  . Typo bug fixes.
  - python/DSTWriters/BaseDSTWriter.py
  - python/DSTWriters/SelDSTWriter.py
  - python/DSTWriters/dstwriters.py
