@@ -42,6 +42,7 @@
 #include "Kernel/Inspectors.h"
 #include "Kernel/HitPattern.h"
 #include "Kernel/IReferenceRate.h"
+#include "Kernel/IAccept.h"
 
 // end include files
 

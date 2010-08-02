@@ -4,6 +4,11 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+! 2010-08-02 - Vanya Belyaev
+ - Add interface IAccept for generic accept-tool 
+ - cmt/requirements 
+    version increment to v12r3 
+
 !===================== LHCbKernel v12r2 2010-07-19 ========================
 ! 2010-07-15 - Jeroen VAN TILBURG
  - Moved ISTClusterPosition to Tr/TrackInterfaces.

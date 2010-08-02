@@ -44,6 +44,9 @@
   <class name = "LHCb::TTNames"   />
   <class name = "LHCb::ITNames"   />
   <class name = "LHCb::Inspector" />
+  <class name = "IAccept"                      />
+  <class name = "extend_interfaces1<IAlgTool>" />
+
 <!--- These should really be moved to GaudiKernel or Reflex --> 
   <class name="std::pair<Gaudi::XYZPoint,Gaudi::XYZPoint>" />
 </lcgdict>
