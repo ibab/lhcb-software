@@ -1,3 +1,8 @@
+2010-08-02  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbLegacy/install_project.py: added the -u/--url option in order to switch to
+	another download location.
+
 2010-07-23  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/requirements: release of version v3r3

@@ -14,7 +14,7 @@ import socket
 from urllib import urlretrieve, urlopen, urlcleanup
 from shutil import rmtree
 
-script_version = '100722'
+script_version = '100802'
 python_version = sys.version_info[:3]
 txt_python_version = ".".join([str(k) for k in python_version])
 lbscripts_version = "v5r2"
@@ -107,6 +107,7 @@ def usage() :
       --retry=<nb>       : nb of retries for the download (default=1)
       -C                 : show compatible CMTCONFIGs for that platform
       --dev-install      : use the devel location for the self-update
+      -u or --url        : use of different distribution location
 
     Perequisite:
       requires python version >= 2.3.4 on Win32 and python >=2.3 on Linux
@@ -1971,6 +1972,7 @@ def parseArgs():
     global compat_version
     global latest_data_link
     global dev_install
+    global url_dist
 
 
 
@@ -1985,12 +1987,12 @@ def parseArgs():
         usage()
         sys.exit(2)
     try:
-        opts, args = getopt.getopt(arguments, 'hdflrbp:v:c:ng:s:C',
+        opts, args = getopt.getopt(arguments, 'hdflrbp:v:c:ng:s:Cu:',
             ['help', 'debug', 'full', 'list', 'remove', 'binary=',
              'project=', 'cmtversion=', 'nocheck',
              'retry=', 'grid=', 'setup-script=', 'check', 'overwrite',
              'compatversion=', 'retrytime=', 'nofixperm', 'version',
-             'compatible-configs', "latest-data-link"])
+             'compatible-configs', "latest-data-link","url"])
 
     except getopt.GetoptError, err:
         print str(err)
@@ -2050,6 +2052,9 @@ def parseArgs():
             overwrite_mode = True
         if key == "--dev-install" :
             dev_install = True
+        if key in ('-u', '--url'):
+            url_dist = value
+
 
     if not pname and len(args) > 0 :
         pname = args[0]
