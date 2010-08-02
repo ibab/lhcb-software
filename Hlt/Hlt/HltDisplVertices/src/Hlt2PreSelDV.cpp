@@ -221,7 +221,7 @@ StatusCode Hlt2PreSelDV::initialize() {
   //Set the beam line
   if( m_RCut=="FromBeamLine" ){
     if( exist<Particle::Range>( m_BLLoc ) ){
-      const Particle::Range BL = get<Particle::Range>( m_BLLoc );      
+      const Particle::Range & BL = get<Particle::Range>( m_BLLoc );      
       const LHCb::Particle* tmp = *(BL.begin());
       m_BeamLine->setReferencePoint( tmp->referencePoint() );
       m_BeamLine->setMomentum( tmp->momentum() );
@@ -360,7 +360,7 @@ void Hlt2PreSelDV::GetRecVertices( RecVertex::ConstVector & RV )
   vector<string>::iterator itName;
   for( itName = m_RVLocation.begin(); itName != m_RVLocation.end();
        ++itName ) {
-    const RecVertex::Range tRV = get<RecVertex::Range>( *itName );
+    const RecVertex::Range & tRV = get<RecVertex::Range>( *itName );
     if(tRV.empty()) {
       warning() << "No reconstructed vertices found at location: " 
                 << *itName << endmsg;
@@ -885,7 +885,7 @@ StatusCode Hlt2PreSelDV::SavePreysTuple( Tuple & tuple,
   tuple->column( "BLY", m_BeamLine->referencePoint().y() );
   tuple->column( "BLZ", m_BeamLine->referencePoint().z() );
   //Save number of Velo tracks...
-  const Track::Range VeloTrks = get<Track::Range>( "Hlt/Track/Velo" );
+  const Track::Range & VeloTrks = get<Track::Range>( "Hlt/Track/Velo" );
   tuple->column( "NbVelo", VeloTrks.size() );
   return tuple->write();
 }
@@ -1169,7 +1169,7 @@ void Hlt2PreSelDV::PrintTrackandParticles(){
 
   //TrackLocation::Default = Rec/Track/Best 
   //(Upstream,Long,Ttrack,Downstream, Velo)
-  const Track::Range BestTrks = get<Track::Range>( TrackLocation::Default );
+  const Track::Range & BestTrks = get<Track::Range>( TrackLocation::Default );
   debug()<<"Dumping "<< TrackLocation::Default <<" Track content, size "
 	 << BestTrks.size() <<endmsg;
   for(Track::Range::const_iterator itr = BestTrks.begin(); 
@@ -1210,7 +1210,7 @@ StatusCode  Hlt2PreSelDV::SaveGEC( Tuple & tuple,
   double sumXYTrackfirstStates = 0.;
 
   //Get forward tracks
-  Track::Range inputTracks = get<Track::Range>(TrackLocation::Default);
+  const Track::Range & inputTracks = get<Track::Range>(TrackLocation::Default);
 
   for(Track::Range::const_iterator itr = inputTracks.begin(); 
       inputTracks.end() != itr; itr++) {

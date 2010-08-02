@@ -4,6 +4,9 @@
 ! Purpose     : Apply some cuts on reconstructed vertices
 !-----------------------------------------------------------------------------
 
+! 2010-08-02 - Neal Gauvin
+ - Speed improvements
+
 ! 2010-07-27 - Neal Gauvin
  - Bug fixed in Hlt2PreselDV and Hlt2SelDV when working with RCutMethod = "FromBeamLine"
 
