@@ -1,0 +1,26 @@
+#!/bin/bash
+
+ECLIPSE_VERSION="v3r6"
+#ECLIPSE_VERSION="-v $(getExtVersion eclipse)"
+
+while [ $# -ne 0 ] ; do
+	case $1 in
+        --eclipse-version)  shift
+                            ECLIPSE_VERSION="$1"
+                            shift
+                            ;;
+        *) break ;;
+    esac
+done
+
+args=( "$@" )
+shift $#
+
+. SetupProject.sh --silent Tools --use "eclipse $ECLIPSE_VERSION"
+
+if [ "$SetupProjectStatus" != 0 ] ; then
+    echo "ERROR: Cannot prepare the environment to use Eclipse."
+    exit 1
+fi
+
+eclipse "${args[@]}"
