@@ -1,4 +1,4 @@
-// $Id: Functions.cpp,v 1.6 2009-04-16 15:32:29 jpalac Exp $
+// $Id: Functions.cpp,v 1.7 2010-08-02 16:37:51 jpalac Exp $
 // Include files 
 
 
@@ -54,7 +54,25 @@ namespace MicroDST
       return std::string(location);
     }
     
-  }
-  
+  }  
   //===========================================================================
+  
+  template <>
+  bool isValid(int) 
+  {
+    return true;
+  }
+
+  template <>
+  bool isValid(double) 
+  {
+    return true;
+  }
+
+  template <>
+  bool isValid(float) 
+  {
+    return true;
+  }
+  //==========================================================================================
 }

@@ -1,4 +1,4 @@
-// $Id: Functions.h,v 1.5 2009-04-16 15:32:28 jpalac Exp $
+// $Id: Functions.h,v 1.6 2010-08-02 16:37:51 jpalac Exp $
 #ifndef MICRODST_FUNCTIONS_H 
 #define MICRODST_FUNCTIONS_H 1
 
@@ -7,7 +7,7 @@
 #include <string>
 #include <map>
 #include <GaudiKernel/StatusCode.h>
-
+#include <GaudiKernel/SmartRef.h>
 class IInterface;
 class DataObject;
 
@@ -59,6 +59,31 @@ namespace MicroDST {
    * @author Juan Palacios juancho@nikhef.nl
    **/
   std::string trunkLocation(const std::string& location);  
+
+
+  template <typename T>
+  bool isValid(T obj);
+
+  template <typename T>
+  bool isValid(T* obj) 
+  {
+    return obj;
+  }
+
+  template <typename T>
+  bool isValid(SmartRef<T> obj) 
+  {
+    return isValid(obj.target());
+  }
+
+  template <>
+  bool isValid(int);
+
+  template <>
+  bool isValid(double);
+
+  template <>
+  bool isValid(float);
 
 }
 #endif // MICRODST_FUNCTIONS_H
