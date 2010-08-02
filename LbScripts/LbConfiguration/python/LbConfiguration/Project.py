@@ -200,6 +200,10 @@ class ProjectConf(ProjectBaseConf):
         mfname = self.tarBallName(version, cmtconfig, full=False)
         mfname += ".md5"
         return mfname
+    def LCGmd5FileName(self, version=None, cmtconfig=None):
+        mfname = self.LCGTarBallName(version, cmtconfig, full=False)
+        mfname += ".md5"
+        return mfname
     def htmlFileName(self, version=None, cmtconfig=None):
         hname  = self.tarBallName(version, cmtconfig, full=False)
         hname += ".html"

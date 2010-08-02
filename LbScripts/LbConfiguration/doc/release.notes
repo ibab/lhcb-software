@@ -1,3 +1,7 @@
+2010-08-02  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbConfiguration/Project.py: added the LCGmd5FileName method.
+
 2010-08-02  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* scripts/eclipse : Added wrapper script for eclipse (requires the presence of the project "Tools")
