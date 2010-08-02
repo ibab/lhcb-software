@@ -1,4 +1,4 @@
-!$Id: release.notes,v 1.40 2010-08-02 11:32:01 jpalac Exp $
+!$Id: release.notes,v 1.41 2010-08-02 11:35:47 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DSTWriters
 ! Responsible : Juan PALACIOS
@@ -8,6 +8,7 @@
 ! 2010-08-02 - Juan Palacios
  - python/DSTWriters/BaseDSTWriter.py
  - python/DSTWriters/SelDSTWriter.py
+ - python/DSTWriters/dstwriters.py
   . Use new Gaudi InputCopyStream instead of LHCb::InputCopyStream.
  - cmt/requirements
   . Increase version to v1r9.
