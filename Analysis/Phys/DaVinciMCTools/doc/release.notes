@@ -1,8 +1,15 @@
-! $Id: release.notes,v 1.300 2010-06-24 15:49:05 jpalac Exp $
+! $Id: release.notes,v 1.301 2010-08-02 16:48:41 jpalac Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
 !=============================================================================
+
+! 2010-08-02 - Juan Palacios
+ - src/Particle2BackgroundCategoryRelationsAlg.cpp
+  . Relations table written to parent of input Particle container. So
+    Phys/SomeAlg/P2BCRelations instead of Phys/SomeAlg/Particles/P2BCRelations.
+ - cmt/requirements
+  . Increase version to v9r26.
 
 !========================== DaVinciMCTools v9r25p4 2010-06-24 ================
 
@@ -50,7 +57,7 @@
 
 ! 2010-02-01 - Juan Palacios
  - src/Particle2BackgroundCategoryRelationsAlg.cpp
-  . ParticleLocaitons -> InputLocations
+  . ParticleLocations -> InputLocations
 
 ! 2010-02-01 - V. Gligorov
  - src/Particle2BackgroundCategoryRelationsAlg.{cpp,h}
