@@ -1,10 +1,12 @@
 2010-08-02  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* scripts/eclipse : Added wrapper script for eclipse (requires the presence of the project "Tools")
+	* python/LbConfiguration/SetupProject.py: Extended to know about projects without a container package
+	(LCGCMT plus those in LbConfiguration.Package.project_names)
 
 2010-08-02  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* python/LbConfiguration/Package.py: 
+	* python/LbConfiguration/Package.py:
 	- added the support for the packaging of the eclipse package in the versionless TOOLS project.
 	- added the support for the packaging of the Java/jre package in the versionless TOOLS project.
 

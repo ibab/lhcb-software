@@ -53,8 +53,12 @@ log = logging.getLogger(os.path.basename(__file__))
 ########################################################################
 lhcb_style_version = re.compile(r'v([0-9]+)r([0-9]+)(?:p([0-9]+))?')
 lcg_style_version = re.compile(r'([0-9]+)([a-z]?)')
+# LHCb standard projects
 from LbConfiguration.Project import project_names
-project_names.append("LCGCMT") # This is not an LHCb project but we know about it
+# LHCb projects without container
+from LbConfiguration.Package import project_names as package_project_names
+package_project_names.append("LCGCMT") # This is not an LHCb project but we know about it
+project_names += package_project_names # Add the projects without container to the full list
 
 # List of pairs (project,[packages]) to automatically select for override
 # The project are prepended to the list of overriding packages and
@@ -499,7 +503,7 @@ class ProjectInfo:
                     container = self.name + "Release"
                 else:
                     container = self.name
-            elif self.name == 'LCGCMT':
+            elif self.name in package_project_names: # Project without container
                 container = None
             else:
                 container = self.name + 'Sys'
@@ -1741,10 +1745,10 @@ class SetupProject:
                             del proj_file
                         else:
                             messages.append('Cannot create user project in %s' % user_proj_dir)
-                    # Create a project Makefile
-                    createProjectMakefile(os.path.join(user_proj_dir, "Makefile"), overwrite = False)
-
+                    # do the rest only if the user project directory is present
                     if os.path.isdir(user_proj_dir):
+                        # Create a project Makefile
+                        createProjectMakefile(os.path.join(user_proj_dir, "Makefile"), overwrite = False)
                         # Let's enter the user project directory
                         script += "cd %s\n" % user_proj_dir
                         messages.append("Current directory is '%s'." % user_proj_dir)
