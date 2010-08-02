@@ -1,8 +1,9 @@
-// $Id: RelTableFunctors.h,v 1.3 2010-02-04 11:24:39 jpalac Exp $
+// $Id: RelTableFunctors.h,v 1.4 2010-08-02 16:38:16 jpalac Exp $
 #ifndef MICRODST_RELTABLEFUNCTORS_H 
 #define MICRODST_RELTABLEFUNCTORS_H 1
 
 // Include files
+#include "MicroDST/Functions.h"
 /** @namespace MicroDST RelTableFunctors.h MicroDST/RelTableFunctors.h
  *  
  *
@@ -93,7 +94,7 @@ namespace MicroDST
            iRel != relations.end();
            ++iRel ) {
         typename TABLE::Entry entryClone = m_cloner(*iRel);
-        if (entryClone.from() && entryClone.to() ) {
+        if (isValid(entryClone.from()) && isValid(entryClone.to()) ) {
           cloneTable->add(entryClone);
         }
       } // loop on all relations
