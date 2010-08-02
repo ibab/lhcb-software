@@ -3,7 +3,7 @@
 '''
 
 from copy import copy
-from dstwruterutils import setCloneFilteredParticlesToTrue
+from dstwriterutils import setCloneFilteredParticlesToTrue, ConfigurableList
 
 class MicroDSTExtras(object) :
     def __init__(self, branch = 'MicroDST', callables = []) :
