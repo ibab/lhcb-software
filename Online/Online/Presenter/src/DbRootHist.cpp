@@ -1,4 +1,4 @@
-// $Id: DbRootHist.cpp,v 1.174 2010-07-31 11:27:37 ggiacomo Exp $
+// $Id: DbRootHist.cpp,v 1.175 2010-08-02 09:42:35 ggiacomo Exp $
 #include "DbRootHist.h"
 
 // STL 
@@ -580,7 +580,8 @@ void DbRootHist::initHistogram() {
       std::cout << "initializing virtual histogram " << m_identifier << std::endl;
     }
     boost::recursive_mutex::scoped_lock oraLock(*m_oraMutex);
-    if (oraLock) {
+    boost::recursive_mutex::scoped_lock rootLock(*m_rootMutex);
+    if (oraLock && rootLock) {
       std::vector<TH1*> sources(m_anaSources.size());
       bool sourcesOk = true;
       
@@ -861,16 +862,20 @@ void DbRootHist::fillHistogram() {
       }
     }      
   } else if (m_isAnaHist && m_anaSources.size()>0)  { // virtual histogram
-    std::vector<TH1*> sources(m_anaSources.size());
-    bool sourcesOk = true;
-    for (unsigned int i=0; i< m_anaSources.size(); ++i) {
-      m_anaSources[i]->fillHistogram();
-      sources[i]= m_anaSources[i]->m_rootHistogram;
-      if (m_anaSources[i]->isEmptyHisto() ) 
-        sourcesOk = false;
-    }
-    if(sourcesOk) {
-      makeVirtualHistogram(sources);
+    boost::recursive_mutex::scoped_lock oraLock(*m_oraMutex);
+    boost::recursive_mutex::scoped_lock rootLock(*m_rootMutex);
+    if (oraLock && rootLock) {
+      std::vector<TH1*> sources(m_anaSources.size());
+      bool sourcesOk = true;
+      for (unsigned int i=0; i< m_anaSources.size(); ++i) {
+        m_anaSources[i]->fillHistogram();
+        sources[i]= m_anaSources[i]->m_rootHistogram;
+        if (m_anaSources[i]->isEmptyHisto() ) 
+          sourcesOk = false;
+      }
+      if(sourcesOk) {
+        makeVirtualHistogram(sources);
+      }
     }
   }
   if( m_onlineHistogram) {
@@ -954,7 +959,9 @@ bool DbRootHist::connectToDB(OnlineHistDB* onlineHistDbSession,
 // Set histogram from database
 //=============================================================================
 void DbRootHist::setTH1FromDB() {
-  if (m_historyTrendPlotMode) return;
+  if (m_historyTrendPlotMode) { //unset bin labels 
+    return;
+  }
   if ( ( 0 == m_onlineHistogram ) || ( 0 == m_rootHistogram ) )
     return ;
   boost::recursive_mutex::scoped_lock oraLock(*m_oraMutex);
@@ -1598,6 +1605,7 @@ void DbRootHist::normalizeReference() {
 }
 
 void DbRootHist::referenceHistogram(ReferenceVisibility visibility) {
+  std::string sopt;
   if ( 0 == m_rootHistogram ) return ;
   boost::recursive_mutex::scoped_lock rootLock(*m_rootMutex);
   if ( rootLock && (s_H2D != m_histogramType) && 
@@ -1608,19 +1616,6 @@ void DbRootHist::referenceHistogram(ReferenceVisibility visibility) {
          (m_rootHistogram->GetDimension() == 1) &&
          (Show == visibility)) {
 
-      // this makes no sense to me (GG)
-      //std::string subdet("");
-      //if (m_onlineHistogram && m_session) {
-      //  OnlineHistTask histTask(*(dynamic_cast<OnlineHistDBEnv*>(m_session)), m_onlineHistogram->task());
-      //   if (-1 < histTask.ndet()) {
-      //    for (int i = 0; i < histTask.ndet(); i++) {
-      //      if (s_hltNodePrefix == histTask.det(i)) {
-      //         subdet = s_hltNodePrefix;
-      //        break;
-      //       }
-      //     }
-      //   }
-      // }
       TH1* ref = NULL;
       std::string tck(s_default_tck);
       if (m_presenterApp) {
@@ -1648,9 +1643,22 @@ void DbRootHist::referenceHistogram(ReferenceVisibility visibility) {
       // normalization
       normalizeReference();
       TVirtualPad *padsav = gPad;
-      m_hostingPad->cd();    
-      m_reference->Draw("SAME");
+      m_hostingPad->cd();
+      std::string refdopt="SAME";
+      if (m_onlineHistogram->getDisplayOption("REFDRAWOPTS", &sopt) ) {
+        refdopt += sopt;
+      }
+      m_reference->Draw(refdopt.c_str());
       m_reference->SetStats(0);
+
+      TProfile* p= dynamic_cast<TProfile*>(m_rootHistogram);
+      TProfile* pref=dynamic_cast<TProfile*>(m_reference);
+      if (p && pref) {
+        // spread display option is not propagated to online TProfile (while works in history mode):
+        // use option for reference also for the online histogram
+        p->SetErrorOption(pref->GetErrorOption());
+      }
+
       m_hostingPad->Modified();
       padsav->cd();
     } else if (Hide == visibility) {

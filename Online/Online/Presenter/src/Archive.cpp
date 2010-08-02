@@ -1,4 +1,4 @@
-// $Id: Archive.cpp,v 1.83 2010-06-30 11:17:46 robbep Exp $
+// $Id: Archive.cpp,v 1.84 2010-08-02 09:42:35 ggiacomo Exp $
 #include <iostream>
 #include <sstream>
 #include <algorithm>
@@ -198,9 +198,9 @@ void Archive::fillHistogram(DbRootHist* histogram,
             newh->SetBinError(i+1, ((TH1*)list->At(i))->GetMeanError() );
           }
           setHistoryLabels(newh, goodRootFiles);
+          histogram -> setHistoryTrendPlotMode(true);
           histogram -> deleteRootHistogram( ) ;
           histogram -> setRootHistogram( newh ) ;
-          histogram -> setHistoryTrendPlotMode(true);
         }
       }
       else {
