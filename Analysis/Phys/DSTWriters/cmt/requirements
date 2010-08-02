@@ -1,10 +1,10 @@
-#$Id: requirements,v 1.19 2010-07-07 17:35:18 jpalac Exp $
+#$Id: requirements,v 1.20 2010-08-02 11:31:52 jpalac Exp $
 #============================================================================
 # Created    : 2009-11-30
 # Maintainer : Juan PALACIOS
 #============================================================================
 package           DSTWriters
-version           v1r8
+version           v1r9
 
 #============================================================================
 # Structure, i.e. directories to process. 
