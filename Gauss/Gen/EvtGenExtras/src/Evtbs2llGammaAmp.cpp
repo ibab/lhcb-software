@@ -28,6 +28,7 @@
 //  A.Popov		   Oktober 22, 2008     Add Bramsstrahlung in the amplidude
 //  A.Popov & N.Nikitin    March   02, 2010     New description for CP-violation
 //  N.Nikitin              March   07, 2010     New algorithm for maximum calculation
+//  N.Nikitin              July    16, 2010     Correction of the found bugs
 //
 //-----------------------------------------------------------------------------------------
 //
@@ -254,25 +255,21 @@ void Evtbs2llGammaAmp::CalcAmp(EvtParticle *parent,
   }
 
 
-  EvtComplex Fv_b2q,  Fv_barb2barq;      
-  EvtComplex Fa_b2q,  Fa_barb2barq;
+  EvtComplex Fv, Fa; // The change of the sign is included in the amplitudes definition! 
   EvtComplex Ftv_b2q, Ftv_barb2barq;
   EvtComplex Fta_b2q, Fta_barb2barq;
 
   // foton energy cut and removal of the J/psi amd psi' resonant area
   if(Egam < Egamma_min||(res_swch==1&&q2>=9.199&&q2<=15.333)){
     fb            = 0.0;
-    Fa_b2q        = unit1*0.0;
-    Fa_barb2barq  = unit1*0.0;
-    Fv_b2q        = unit1*0.0;
-    Fv_barb2barq  = unit1*0.0;
+    Fa            = unit1*0.0;
+    Fv            = unit1*0.0;
     Fta_b2q       = unit1*0.0;
     Fta_barb2barq = unit1*0.0;
     Ftv_b2q       = unit1*0.0;
     Ftv_barb2barq = unit1*0.0; 
   }
   else{
-    // For \bar B^0_q -> l^+ l^- gamma
 
     if(fb<0.01){
       report(ERROR,"EvtGen") 
@@ -282,18 +279,17 @@ void Evtbs2llGammaAmp::CalcAmp(EvtParticle *parent,
      ::abort();
     }
 
+    // For \bar B^0_q -> l^+ l^- gamma
     formFactors->getPhotonFF(0, fb, parent->getId(),    
                              q2, M1, mb, mq, c7gam, a1, 
                              lambda_qu, lambda_qc, 
-                             Fv_b2q, Fa_b2q, 
-                             Ftv_b2q, Fta_b2q);
+                             Fv, Fa, Ftv_b2q, Fta_b2q);
 
     // For B^0_q -> l^+ l^- gamma
     formFactors->getPhotonFF(1, fb, parent->getId(),    
                              q2, M1, mb, mq, c7gam, a1, 
                              lambda_qu, lambda_qc, 
-                             Fv_barb2barq, Fa_barb2barq, 
-                             Ftv_barb2barq, Fta_barb2barq);
+                             Fv, Fa, Ftv_barb2barq, Fta_barb2barq);
   }
  
   
@@ -322,12 +318,10 @@ void Evtbs2llGammaAmp::CalcAmp(EvtParticle *parent,
       << "\n Form-factors"
       << "\n Egam          = " << Egam
       << "\n Egamma_min    = " << Egamma_min
-      << "\n Fv_b2q        = " << Fv_b2q
-      << "\n Fa_b2q        = " << Fa_b2q 
+      << "\n Fv            = " << Fv
+      << "\n Fa            = " << Fa 
       << "\n Ftv_b2q       = " << Ftv_b2q
       << "\n Fta_b2q       = " << Fta_b2q
-      << "\n Fv_barb2barq  = " << Fv_barb2barq 
-      << "\n Fa_barb2barq  = " << Fa_barb2barq
       << "\n Ftv_barb2barq = " << Ftv_barb2barq
       << "\n Fta_barb2barq = " << Fta_barb2barq
       << "\n ============================================================================"
@@ -346,24 +340,24 @@ void Evtbs2llGammaAmp::CalcAmp(EvtParticle *parent,
 
 
   // Hadronic matrix element coefficients
-  EvtComplex a_b2q, a_barb2barq, b_b2q, b_barb2barq, e, f_b2q, f_barb2barq, brammS, brammT;
+  EvtComplex a_b2q, a_barb2barq, b_b2q, b_barb2barq, e_b2q, e_barb2barq, f_b2q, f_barb2barq;
+  EvtComplex brammS, brammT;
   
-  a_b2q       =  c9eff_b2q*Fv_b2q             + 2.0*c7gam*Ftv_b2q*mb*M1/q2;
-  a_barb2barq =  c9eff_barb2barq*Fv_barb2barq + 2.0*c7gam*Ftv_barb2barq*mb*M1/q2;
+  a_b2q       =  c9eff_b2q*Fv             + 2.0*c7gam*Ftv_b2q*mb*M1/q2;
+  a_barb2barq =  c9eff_barb2barq*Fv + 2.0*c7gam*Ftv_barb2barq*mb*M1/q2;
 
-  b_b2q       = (c9eff_b2q*Fa_b2q             + 2.0*c7gam*Fta_b2q*mb*M1/q2)*pk/(M1*M1);
-  b_barb2barq = (c9eff_barb2barq*Fa_barb2barq + 2.0*c7gam*Fta_barb2barq*mb*M1/q2)*pk/(M1*M1);
+  b_b2q       = (c9eff_b2q*Fa             + 2.0*c7gam*Fta_b2q*mb*M1/q2)*pk/(M1*M1);
+  b_barb2barq = (c9eff_barb2barq*Fa + 2.0*c7gam*Fta_barb2barq*mb*M1/q2)*pk/(M1*M1);
 
-  e = c10a*Fv_b2q;
+  e_b2q       = c10a*Fv;
+  e_barb2barq = e_b2q;
 
-  f_b2q       = c10a*Fa_b2q*pk/(M1*M1);
-  f_barb2barq = c10a*Fa_barb2barq*pk/(M1*M1);
+  f_b2q       = c10a*Fa*pk/(M1*M1);
+  f_barb2barq = f_b2q;
 
-  brammS = c10a*ml*fb*(1.0/p2k - 1.0/p1k);      // for Bramsstrahlung 
-  brammT = 0.5*c10a*ml*fb*(1.0/p2k + 1.0/p1k);  
+  brammS = 0.0;                                 // in the Bq-meson rest frame!
+  brammT = 0.5*c10a*ml*fb*(1.0/p2k + 1.0/p1k);  // for Bramsstrahlung 
 
-  brammS = 0.0;
-  brammT = 0.0;
 
      
   EvtTensor4C T1,T2;       // hadronic matrix element tensor structures
@@ -400,7 +394,7 @@ void Evtbs2llGammaAmp::CalcAmp(EvtParticle *parent,
     T1 = - a_b2q*unit1*dual(EvtGenFunctions::directProd(hatp,hatk))
          - b_b2q*uniti*EvtTensor4C::g();
 
-    T2 = - e*unit1*dual(EvtGenFunctions::directProd(hatp,hatk))
+    T2 = - e_b2q*unit1*dual(EvtGenFunctions::directProd(hatp,hatk))
          - f_b2q*uniti*EvtTensor4C::g(); 
 
     // spin combinations for vector lepton current
@@ -494,11 +488,11 @@ void Evtbs2llGammaAmp::CalcAmp(EvtParticle *parent,
     // q bar b -> gamma ell^+ ell^-
 
     T1 = -a_barb2barq*unit1*dual(EvtGenFunctions::directProd(hatp,hatk))
-         -b_barb2barq*uniti*EvtTensor4C::g();
+         +b_barb2barq*uniti*EvtTensor4C::g();
 
 
-    T2 = -e*unit1*dual(EvtGenFunctions::directProd(hatp,hatk))
-         -f_barb2barq*uniti*EvtTensor4C::g();
+    T2 = -e_barb2barq*unit1*dual(EvtGenFunctions::directProd(hatp,hatk))
+         +f_barb2barq*uniti*EvtTensor4C::g();
 
      
     lvc11=EvtLeptonVCurrent(lepPlus->spParent(1),
@@ -552,13 +546,13 @@ void Evtbs2llGammaAmp::CalcAmp(EvtParticle *parent,
          CKM_factor=0.0*unit1; 
       }
 
-      amp.vertex(i,1,1,conj(CKM_factor)*(lvc11*E1+lac11*E2+uniti*lsc11*E3+
+      amp.vertex(i,1,1,conj(CKM_factor)*(lvc11*E1+lac11*E2+uniti*lsc11*E3+          // -?
                                        uniti*((ltc11.cont2(hatp))*epsG)*brammT));
-      amp.vertex(i,1,0,conj(CKM_factor)*(lvc12*E1+lac12*E2+uniti*lsc12*E3+
+      amp.vertex(i,1,0,conj(CKM_factor)*(lvc12*E1+lac12*E2+uniti*lsc12*E3+          // -?
                                        uniti*((ltc12.cont2(hatp))*epsG)*brammT));
-      amp.vertex(i,0,1,conj(CKM_factor)*(lvc21*E1+lac21*E2+uniti*lsc21*E3+
+      amp.vertex(i,0,1,conj(CKM_factor)*(lvc21*E1+lac21*E2+uniti*lsc21*E3+          // -?
                                        uniti*((ltc21.cont2(hatp))*epsG)*brammT));
-      amp.vertex(i,0,0,conj(CKM_factor)*(lvc22*E1+lac22*E2+uniti*lsc22*E3+
+      amp.vertex(i,0,0,conj(CKM_factor)*(lvc22*E1+lac22*E2+uniti*lsc22*E3+          // -?
                                        uniti*((ltc22.cont2(hatp))*epsG)*brammT));
     } 
                             
