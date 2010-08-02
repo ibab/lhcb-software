@@ -1,4 +1,4 @@
-# $Id: Phi2KK.py,v 1.3 2009-10-02 09:18:25 jpalac Exp $
+# $Id: Phi2KK.py,v 1.4 2010-08-02 13:13:01 jpalac Exp $
 import GaudiKernel.SystemOfUnits as Units
 from Gaudi.Configuration import *
 from Configurables import FilterDesktop
@@ -15,8 +15,7 @@ Phi2KK.Code = "  (MINTREE('K+'==ABSID, PIDK) > 0.0)" \
 
 from PhysSelPython.Wrappers import Selection, DataOnDemand
 
-MyStdPhi = DataOnDemand('DODStdLoosePhi2KK',
-                        Location = 'Phys/StdLoosePhi2KK')
+MyStdPhi = DataOnDemand(Location = 'Phys/StdLoosePhi2KK')
 
 SelPhi2KK = Selection("SelPhi2KK",
                       Algorithm = Phi2KK,
