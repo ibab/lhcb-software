@@ -1,4 +1,4 @@
-// $Id: DeVeloPhiType.cpp,v 1.43 2009-07-27 10:36:15 jonrob Exp $
+// $Id: $
 //==============================================================================
 #define VELODET_DEVELOPHITYPE_CPP 1
 //==============================================================================
@@ -115,6 +115,7 @@ StatusCode DeVeloPhiType::initialize()
   }
   m_debug   = (msgSvc()->outputLevel("DeVeloPhiType") == MSG::DEBUG  ) ;
   m_verbose = (msgSvc()->outputLevel("DeVeloPhiType") == MSG::VERBOSE) ;
+  if(m_verbose) m_debug = true;
 
   m_numberOfZones=2;
   m_nbInner = param<int>("NbPhiInner");
@@ -124,19 +125,12 @@ StatusCode DeVeloPhiType::initialize()
   m_middleRadius = param<double>("PhiBoundRadius"); // PhiBound
   // Point where strips of inner/outer regions cross
   m_phiOrigin = param<double>("PhiOrigin");
-  //  std::cout << "m_phiOrigin " << m_phiOrigin;
   m_phiOrigin -= Gaudi::Units::halfpi;
-  //  std::cout << " m_phiOrigin " << m_phiOrigin;
   /* Inner strips (dist. to origin defined by angle between
      extrapolated strip and phi)*/
   m_innerDistToOrigin = param<double>("InnerDistToOrigin");
-  //  std::cout << " dist2O " << m_innerDistToOrigin;
   m_innerTilt = asin(m_innerDistToOrigin/innerRadius());
-  //  std::cout << " tilt " << m_innerTilt;
   m_innerTilt += m_phiOrigin;
-  //  std::cout << " tilt " << m_innerTilt;
-  //  m_innerTilt = 4.6235;
-  //  std::cout << " tilt " << m_innerTilt << std::endl;
   // Outer strips
   m_outerDistToOrigin = param<double>("OuterDistToOrigin");
   m_outerTilt = asin(m_outerDistToOrigin/m_middleRadius);
@@ -144,10 +138,11 @@ StatusCode DeVeloPhiType::initialize()
     asin( m_innerDistToOrigin / m_middleRadius );
   m_outerTilt += phiAtBoundary;
   double phi = m_outerTilt - asin( m_outerDistToOrigin/outerRadius() );
-  msg() << MSG::DEBUG << "Phi (degree) inner "    << m_phiOrigin/Gaudi::Units::degree
-        << " at boundary " << phiAtBoundary/Gaudi::Units::degree
-        << " and outside " << phi/Gaudi::Units::degree
-        << endreq;
+  if(m_debug) msg() << MSG::DEBUG << "Phi (degree) inner "    
+		    << m_phiOrigin/Gaudi::Units::degree
+		    << " at boundary " << phiAtBoundary/Gaudi::Units::degree
+		    << " and outside " << phi/Gaudi::Units::degree
+		    << endreq;
 
   // Angular coverage
   m_innerCoverage = param<double>("InnerCoverage");
@@ -358,12 +353,11 @@ StatusCode DeVeloPhiType::neighbour(const LHCb::VeloChannelID& start,
 //==============================================================================
 StatusCode DeVeloPhiType::isInActiveArea(const Gaudi::XYZPoint& point) const
 {
-  msg() << MSG::VERBOSE << "isInActiveArea: x=" << point.x() << ",y=" << point.y()
-        << endreq;
+  if(m_verbose) msg() << MSG::VERBOSE << "isInActiveArea: x=" << point.x() 
+		      << ",y=" << point.y() << endreq;
   //  check boundaries....
   double radius=point.Rho();
   if(innerRadius() >= radius || outerRadius() <= radius) {
-    //    msg() << MSG::VERBOSE << "Outside active radii " << radius << endreq;
     return StatusCode::FAILURE;
   }
   bool isInner=true;
@@ -371,20 +365,17 @@ StatusCode DeVeloPhiType::isInActiveArea(const Gaudi::XYZPoint& point) const
     isInner=false;
   }
   // Dead region
-  if(m_middleRadius+m_rGap > radius && m_middleRadius-m_rGap < radius){
-    /*    msg() << MSG::VERBOSE << "Inner " << isInner
-          << " Inside dead region from bias line: " << radius
-          << endreq;*/
+  if(m_middleRadius+(m_rGap/2.) > radius && 
+     m_middleRadius-(m_rGap/2.) < radius){
     return StatusCode::FAILURE;
   }
+
   // Corner cut-offs
   //  if(m_isDownstream) y = -y;
   double x=point.x();
   double y=point.y();
   bool cutOff=isCutOff(x,y);
   if(cutOff) {
-    /*    msg() << MSG::VERBOSE << "Inner " << isInner << " Inside corner cut-off "
-          << x << "," << y << endreq;*/
     return StatusCode::FAILURE;
   }
   // Work out if x/y is outside first/last strip in zone..
@@ -401,12 +392,8 @@ StatusCode DeVeloPhiType::isInActiveArea(const Gaudi::XYZPoint& point) const
   double phiStrip=phiOfStrip(endStrip,0.0,radius);
   //  double pitch=phiPitch(radius);
   if(0 > y) {
-    //    phiStrip -= pitch/2;
-    //    std::cout << ",phiStrip=" << phiStrip/Gaudi::Units::degree << std::endl;
     if(phiStrip > phi) return StatusCode::FAILURE;
   } else {
-    //    phiStrip += pitch/2;
-    //    std::cout << ",phiStrip=" << phiStrip/Gaudi::Units::degree << std::endl;
     if(phiStrip < phi) return StatusCode::FAILURE;
   }
   return StatusCode::SUCCESS;
@@ -505,12 +492,14 @@ StatusCode DeVeloPhiType::residual(const Gaudi::XYZPoint& point,
   double sigma = m_resolution.first*phiPitch(radius) - m_resolution.second;
   chi2 = gsl_pow_2(residual/sigma);
 
-  msg() << MSG::VERBOSE << "Residual; sensor " << channel.sensor()
-        << " strip " << strip
-        << " x " << x << " y " << y << endreq;
-  msg() << MSG::VERBOSE << " xNear " << xNear << " yNear " << yNear
-        << " residual " << residual << " sigma = " << sigma
-        << " chi2 = " << chi2 << endreq;
+  if(m_verbose) {
+    msg() << MSG::VERBOSE << "Residual; sensor " << channel.sensor()
+	  << " strip " << strip
+	  << " x " << x << " y " << y << endreq;
+    msg() << MSG::VERBOSE << " xNear " << xNear << " yNear " << yNear
+	  << " residual " << residual << " sigma = " << sigma
+	  << " chi2 = " << chi2 << endreq;
+  }
   return StatusCode::SUCCESS;
 }
 //==============================================================================
@@ -558,22 +547,24 @@ void DeVeloPhiType::BuildRoutingLineMap(){
   m_patternConfig.push_back(std::pair<unsigned int,unsigned int>(m_nbInner+3,4));
 
   unsigned int count=0;
-  msg() << MSG::DEBUG << "Building routing line map for sensor "
-        << (this->sensorNumber()) << endreq;
+  if(m_debug){
+    msg() << MSG::DEBUG << "Building routing line map for sensor "
+	  << (this->sensorNumber()) << endreq;
+  }
   for(unsigned int routLine=m_minRoutingLine;routLine<=m_maxRoutingLine;++routLine,++count){
     if(0 == count%6){
-      msg() << MSG::DEBUG << "Pattern of six ---------------------------------------\n";
+      if(m_debug) msg() << MSG::DEBUG << "Pattern of six ---------------------------------------\n";
     }
     strip=this->strip(routLine);
 
     m_mapStripToRoutingLine[strip]=routLine;
     m_mapRoutingLineToStrip[routLine]=strip;
 
-    msg() << MSG::DEBUG << "Routing line " << routLine
-          << " Patttern element " << (patternElement(routLine))
-          << " number " << (patternNumber(routLine))
-          << " strip " << strip
-          << endreq;
+    if(m_debug) msg() << MSG::DEBUG << "Routing line " << routLine
+		      << " Patttern element " << (patternElement(routLine))
+		      << " number " << (patternNumber(routLine))
+		      << " strip " << strip
+		      << endreq;
   }
 }
 //==============================================================================

@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.223 2010-05-06 13:03:41 krinnert Exp $
+! $Id: $
 ! package VeloDet
 ! package manager : Velo Group
 !-----------------------------------------------------------------------------
+
+! 2010-08-03 - David Hutchcroft
+ - Fixed the too large dead region between inner/outer phi regions
+ - Prevented more debug/verbose messages begin created if not needed
 
 !======================== VeloDet v13r11 2010-07-19 ==========================
 ! 2010-06-24 - Rob Lambert

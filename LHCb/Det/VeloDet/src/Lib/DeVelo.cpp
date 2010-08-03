@@ -1,4 +1,4 @@
-// $Id: DeVelo.cpp,v 1.89 2009-07-27 10:36:15 jonrob Exp $
+// $Id: $
 //
 // ============================================================================
 #define  VELODET_DEVELO_CPP 1
@@ -79,11 +79,12 @@ StatusCode DeVelo::initialize() {
   }
   m_debug   = (msgSvc()->outputLevel("DeVelo") == MSG::DEBUG  ) ;
   m_verbose = (msgSvc()->outputLevel("DeVelo") == MSG::VERBOSE) ;
+  if( m_verbose ) m_debug = true;
   // get all of the pointers to the child detector elements
   std::vector<DeVeloSensor*> veloSensors = findVeloSensors();
 
-  msg() << MSG::DEBUG << "Found " << veloSensors.size()
-        << " sensors in the XML" << endreq;
+  if( m_debug ) msg() << MSG::DEBUG << "Found " << veloSensors.size()
+		      << " sensors in the XML" << endreq;
 
   std::vector<DeVeloSensor*>::iterator iDESensor;
   m_nSensors=m_nRSensors=m_nPhiSensors=m_nPileUpSensors=0;
@@ -112,13 +113,13 @@ StatusCode DeVelo::initialize() {
     // Sensors are pre-sorted in XML such that they increase with z position
     m_vpSensors.push_back(*iDESensor);
     unsigned int index=m_vpSensors.size()-1;
-    msg() << MSG::DEBUG << "type " << (*iDESensor)->fullType()
-          << " index " << index
-          << " R " << (*iDESensor)->isR()
-          << " PHI " << (*iDESensor)->isPhi()
-          << " PU " << (*iDESensor)->isPileUp()
-          << " SNO " <<  (*iDESensor)->sensorNumber()
-          << endmsg;
+    if(m_debug) msg() << MSG::DEBUG << "type " << (*iDESensor)->fullType()
+		      << " index " << index
+		      << " R " << (*iDESensor)->isR()
+		      << " PHI " << (*iDESensor)->isPhi()
+		      << " PU " << (*iDESensor)->isPileUp()
+		      << " SNO " <<  (*iDESensor)->sensorNumber()
+		      << endmsg;
 
     bool isLeftSensor=false;
     // Check if sensor is on Left/Right side of LHCb
@@ -166,13 +167,14 @@ StatusCode DeVelo::initialize() {
       msg() << MSG::ERROR << "Sensor type is unknown" << endreq;
     }
     m_sensors[m_vpSensors[index]->sensorNumber()]= m_vpSensors[index];
-    msg() << MSG::DEBUG << "Module " << m_vpSensors[index]->module()
-          << " sensor " << m_vpSensors[index]->sensorNumber()
-          << " type " << m_vpSensors[index]->fullType()
-          << " z = " << m_vpSensors[index]->z()
-          << " and in VELO frame "
-          << geometry()->toLocal(Gaudi::XYZPoint(0,0,m_vpSensors[index]->z())).z()
-          << endreq;
+    if(m_debug) msg() << MSG::DEBUG << "Module " 
+		      << m_vpSensors[index]->module()
+		      << " sensor " << m_vpSensors[index]->sensorNumber()
+		      << " type " << m_vpSensors[index]->fullType()
+		      << " z = " << m_vpSensors[index]->z()
+		      << " and in VELO frame "
+		      << geometry()->toLocal(Gaudi::XYZPoint(0,0,m_vpSensors[index]->z())).z()
+		      << endreq;
   }
 
   // Set the associated and other side sensor links.  This makes assumptions about the
@@ -206,15 +208,16 @@ StatusCode DeVelo::initialize() {
 
   }
 
-  msg() << MSG::DEBUG << "There are " << m_nSensors << " sensors: Left " << m_nLeftSensors
-        << " Right " << m_nRightSensors << endreq;
-  msg() << MSG::DEBUG << "There are " << m_nRSensors << " R sensors: Left " << m_nLeftRSensors
-        << " Right " << m_nRightRSensors << endreq;
-  msg() << MSG::DEBUG << "There are " << m_nPhiSensors << " Phi sensors: Left " << m_nLeftPhiSensors
-        << " Right " << m_nRightPhiSensors << endreq;
-  msg() << MSG::DEBUG << "There are " << m_nPileUpSensors << " Pile Up sensors: Left " << m_nLeftPUSensors
-        << " Right " << m_nRightPUSensors << endreq;
-
+  if(m_debug){
+    msg() << MSG::DEBUG << "There are " << m_nSensors << " sensors: Left " << m_nLeftSensors
+	  << " Right " << m_nRightSensors << endreq;
+    msg() << MSG::DEBUG << "There are " << m_nRSensors << " R sensors: Left " << m_nLeftRSensors
+	  << " Right " << m_nRightRSensors << endreq;
+    msg() << MSG::DEBUG << "There are " << m_nPhiSensors << " Phi sensors: Left " << m_nLeftPhiSensors
+	  << " Right " << m_nRightPhiSensors << endreq;
+    msg() << MSG::DEBUG << "There are " << m_nPileUpSensors << " Pile Up sensors: Left " << m_nLeftPUSensors
+	  << " Right " << m_nRightPUSensors << endreq;
+  }
   sc = registerConditionCallBacks();
   if (sc.isFailure()) {
     msg() << MSG::ERROR << "Failure to register condition update call backs." << endreq;
@@ -264,18 +267,20 @@ void DeVelo::scanDetectorElement(IDetectorElement* detElem,
   std::vector<IDetectorElement*> veloSensors =
     detElem->childIDetectorElements();
 
-  msg() << MSG::DEBUG << "scanDetectorElement" << endreq;
+  if(m_debug) msg() << MSG::DEBUG << "scanDetectorElement" << endreq;
 
   std::vector<IDetectorElement*>::iterator iVeloSensors=veloSensors.begin();
 
   for (;iVeloSensors!=veloSensors.end(); ++iVeloSensors ) {
-    msg() << MSG::DEBUG << std::setw(12) << std::setiosflags(std::ios::left)
-          << (*iVeloSensors)->name() << endreq;
+    if(m_debug) msg() << MSG::DEBUG << std::setw(12) 
+		      << std::setiosflags(std::ios::left)
+		      << (*iVeloSensors)->name() << endreq;
     DeVeloSensor* pSensor = dynamic_cast<DeVeloSensor*>((*iVeloSensors));
     if (pSensor) {
       sensors.push_back(pSensor);
-      msg() << MSG::DEBUG << "Storing detector " <<   (*iVeloSensors)->name()
-            << endreq;
+      if(m_debug) msg() << MSG::DEBUG << "Storing detector " 
+			<<   (*iVeloSensors)->name()
+			<< endreq;
 
     }
 

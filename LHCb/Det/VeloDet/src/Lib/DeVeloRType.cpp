@@ -1,4 +1,4 @@
-// $Id: DeVeloRType.cpp,v 1.51 2010-05-06 13:03:41 krinnert Exp $
+// $Id: $
 //==============================================================================
 #define VELODET_DEVELORTYPE_CPP 1
 //==============================================================================
@@ -173,6 +173,7 @@ StatusCode DeVeloRType::initialize()
   }
   m_debug   = (msgSvc()->outputLevel("DeVeloRType") == MSG::DEBUG  ) ;
   m_verbose = (msgSvc()->outputLevel("DeVeloRType") == MSG::VERBOSE) ;
+  if(m_verbose) m_debug = true;
 
   m_numberOfZones = 4;
   m_stripsInZone = numberOfStrips() / m_numberOfZones;
@@ -257,20 +258,16 @@ StatusCode DeVeloRType::isInActiveArea(const Gaudi::XYZPoint& point) const
   // check boundaries....
   double radius=point.Rho();
   if(innerRadius() >= radius || outerRadius() <= radius) {
-    //msg() << MSG::VERBOSE << "Outside active radii " << radius << endreq;
     return StatusCode::FAILURE;
   }
   // Dead region from bias line
   double y=point.y();
   if (m_phiGap > y && -m_phiGap < y) {
-    //msg() << MSG::VERBOSE << "Inside dead region from bias line " << y << endreq;
     return StatusCode::FAILURE;
   }
   // corner cut-offs
   bool cutOff=isCutOff(point.x(),point.y());
   if(cutOff) {
-    /*msg() << MSG::VERBOSE << "cut off: x,y " << point.x() << "," << point.y()
-      << endreq;    */
     return StatusCode::FAILURE;
   }
   return StatusCode::SUCCESS;
@@ -424,7 +421,7 @@ StatusCode DeVeloRType::residual(const Gaudi::XYZPoint& point,
 void DeVeloRType::calcStripLimits()
 {
 
-  msg() << MSG::VERBOSE << "calcStripLimits" << endreq;
+  if(m_verbose) msg() << MSG::VERBOSE << "calcStripLimits" << endreq;
   m_innerR = innerRadius() + m_innerPitch / 2;
   m_outerR = outerRadius() - m_outerPitch / 2;
 
@@ -637,7 +634,6 @@ unsigned int DeVeloRType::RoutingLineArea(unsigned int routingLine){
 //=============================================================================
 unsigned int DeVeloRType::RoutLineToStrip(unsigned int routLine, unsigned int routArea){
   unsigned int strip;
-  //  std::cout << "routLine " << routLine << " area " << routArea << std::endl;
   if(0 == routArea){
     strip = (m_nChan1+routLine-1);
   } else if(1 == routArea) {
@@ -647,9 +643,6 @@ unsigned int DeVeloRType::RoutLineToStrip(unsigned int routLine, unsigned int ro
   } else if(3 == routArea){
     strip = (m_maxRoutingLine-m_nChan3-routLine);
   } else strip=9999;
-  //  std::cout << "strip " << strip << " scram " << ScrambleStrip(strip)
-  //            << " rl " << routLine << " scram " << ScrambleStrip(routLine)
-  //        << std::endl;
   return ScrambleStrip(strip);
 }
 //==============================================================================
