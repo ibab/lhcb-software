@@ -125,7 +125,12 @@ StatusCode BestPIDParticleMaker::makeParticles( Particle::Vector & parts ){
     const Track * track = (*ipp)->track();
     if ( !track ) 
       return Error( "Charged ProtoParticle has null track reference !" );
-    
+
+    if (track->states().empty()){
+      Warning("Track has empty states. This is likely to be bug https://savannah.cern.ch/bugs/index.php?70979");
+      continue ;
+    }
+   
     TrackTally & tally = m_nTracks[ track->type() ];
     ++tally.totProtos;
     
