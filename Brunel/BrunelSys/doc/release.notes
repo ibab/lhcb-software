@@ -5,6 +5,16 @@ Purpose: LHCb reconstruction programs
 
 </PRE><H1><A NAME=v37r6>2010-07-28 Brunel v37r6</A></H1><PRE>
 This version uses projects LCG 58e, Gaudi v21r10p1, LHCb v31r4, Lbcom v9r5p1,
+ Rec v10r3p1 and SQLDDDB v5r34, ParamFiles v8r2, FieldMap v5r5, AppConfig v3r*
+
+- Patch release to fix problems with the Best track container
+
+- The new track fit/clone removing ordering left tracks with no states in Best
+
+- Only one package is changed Tr/TrackTools
+
+</PRE><H1><A NAME=v37r6>2010-07-28 Brunel v37r6</A></H1><PRE>
+This version uses projects LCG 58e, Gaudi v21r10p1, LHCb v31r4, Lbcom v9r5p1,
  Rec v10r3 and SQLDDDB v5r33, ParamFiles v8r2, FieldMap v5r5, AppConfig v3r*
 
 This is a production version for processing 2010 data and Montecarlo
