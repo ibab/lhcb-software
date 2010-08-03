@@ -1,4 +1,4 @@
-// $Id: DbRootHist.cpp,v 1.175 2010-08-02 09:42:35 ggiacomo Exp $
+// $Id: DbRootHist.cpp,v 1.176 2010-08-03 14:59:30 robbep Exp $
 #include "DbRootHist.h"
 
 // STL 
@@ -1252,8 +1252,12 @@ void DbRootHist::setDrawOptionsFromDB(TPad* pad) {
       m_rootHistogram->SetDrawOption(sopt.c_str());
     }
     if (m_onlineHistogram->getDisplayOption("LOGX", &iopt)) pad->SetLogx(1);
-    if (m_onlineHistogram->getDisplayOption("LOGY", &iopt)) 
-      if (m_rootHistogram->GetEntries()>0) pad->SetLogy(1);
+    if (m_onlineHistogram->getDisplayOption("LOGY", &iopt)) {
+      if (m_rootHistogram->GetEntries()>0) pad->SetLogy(1) ;
+      // Set log scale also if the minimum and maximum scale is not 0
+      else if ( ( m_rootHistogram -> GetMinimum() > 0. ) &&
+		( m_rootHistogram -> GetMaximum() > 0. ) ) pad -> SetLogy( 1 ) ;
+    }
 
     int gridx = gStyle->GetPadGridX();
     int gridy = gStyle->GetPadGridY();
@@ -1480,13 +1484,15 @@ bool DbRootHist::saveTH1ToDB(TPad* pad) {
 }
 
 
+//===========================================================================================
+// Draw the histogram on the page
+//===========================================================================================
 void DbRootHist::draw(TCanvas* editorCanvas, double xlow, double ylow, double xup, double yup, 
-                      bool fastHitMapDraw, TPad* overlayOnPad)
-{
+                      bool fastHitMapDraw, TPad* overlayOnPad) {
   m_fastHitmapPlot = fastHitMapDraw;
   TPad* pad=overlayOnPad;
   m_isOverlap = (NULL != overlayOnPad);
-  // if (NULL == m_session) {  
+
   if (!m_isOverlap) {
     pad = new TPad(m_identifier.c_str(),
                    TString(""),
@@ -1505,14 +1511,9 @@ void DbRootHist::draw(TCanvas* editorCanvas, double xlow, double ylow, double xu
     pad->SetFillColor(10);
   }
   
-  //  int curStat = gStyle->GetOptStat();
-  //  gStyle->SetOptStat(0);
   if (0 != m_rootHistogram) {
     if (TH2D::Class() == m_rootHistogram->IsA() &&
         m_fastHitmapPlot) {
-      //      if (m_histogramImage) {
-      //        delete m_histogramImage; m_histogramImage = NULL;
-      //      } else
       if (NULL == m_histogramImage) {      
         m_histogramImage = TImage::Create();
         m_histogramImage->SetConstRatio(false);
@@ -1522,18 +1523,17 @@ void DbRootHist::draw(TCanvas* editorCanvas, double xlow, double ylow, double xu
 				 ((TH2D*)m_rootHistogram)->GetNbinsX() + 2,
 				 ((TH2D*)m_rootHistogram)->GetNbinsY() + 2, 
 				 m_prettyPalette); // gWebImagePalette
-      //gHistImagePalette
       m_histogramImage->Draw();
-      //      m_histogramImage->DrawText(m_textTitle, 0, 0);
-      //      pad->SetTitle(m_histoRootTitle);
     } else {
       std::string opt =  m_isOverlap ? "SAME" : "";
       m_rootHistogram->Draw(opt.c_str());      
     }
   }
-  //  gStyle->SetOptStat(curStat);
   setDrawOptionsFromDB(pad);
-  fit(); // fit if requested
+
+  // fit if requested
+  fit(); 
+
   if (!m_isOverlap) pad->SetName(m_histoRootName);
 
   m_hostingPad = pad;
@@ -1587,6 +1587,9 @@ void DbRootHist::draw(TCanvas* editorCanvas, double xlow, double ylow, double xu
   }
 }
 
+//==========================================================================================
+// Normalize histogram
+//==========================================================================================
 void DbRootHist::normalizeReference() {
   if (m_reference && (m_histogramType != s_CNT)) {
     double normFactor = m_rootHistogram->GetNormFactor();
