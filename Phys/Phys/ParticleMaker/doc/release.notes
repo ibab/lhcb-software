@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.117 2010-06-24 13:31:43 jpalac Exp $ 
+! $Id: release.notes,v 1.118 2010-08-03 07:23:59 pkoppenb Exp $ 
 ! Package     : ParticleMaker
 ! Responsible : Chris Jones, J. Palacios, Olivier Deschamps
 !==============================================================================
+
+!========================== ParticleMaker v5r6p2 2010-08-03 ==================
+! 2010-08-03 - Patrick Koppenburg
+ - Protect against Traks with no states. See https://savannah.cern.ch/bugs/index.php?70979
 
 !========================== ParticleMaker v5r6p1 2010-06-24 ==================
 

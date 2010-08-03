@@ -4,7 +4,7 @@
  * Implmentation file for Particle maker CombinedParticleMaker
  *
  * CVS Log :-
- * $Id: CombinedParticleMaker.cpp,v 1.35 2009-12-08 12:55:07 pkoppenb Exp $
+ * $Id: CombinedParticleMaker.cpp,v 1.36 2010-08-03 07:23:59 pkoppenb Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2006-05-03
@@ -156,6 +156,11 @@ StatusCode CombinedParticleMaker::makeParticles( Particle::Vector & parts ){
 
     // Select tracks
     if (msgLevel(MSG::VERBOSE)) verbose() << "Trying Track " << track->key() << endmsg;
+    
+    if (track->states().empty()){
+      Warning("Track has empty states. This is likely to be bug https://savannah.cern.ch/bugs/index.php?70979");
+      continue ;
+    }
     if ( !trSel()->accept(*track) ) continue;
     if (msgLevel(MSG::VERBOSE)) {
       verbose() << " -> Track selected " << track->key()  

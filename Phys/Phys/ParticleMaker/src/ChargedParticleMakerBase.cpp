@@ -1,4 +1,4 @@
-// $Id: ChargedParticleMakerBase.cpp,v 1.4 2009-12-08 12:55:07 pkoppenb Exp $
+// $Id: ChargedParticleMakerBase.cpp,v 1.5 2010-08-03 07:23:59 pkoppenb Exp $
 // Include files
 
 #include "GaudiKernel/DeclareFactoryEntries.h"
@@ -92,6 +92,8 @@ StatusCode ChargedParticleMakerBase::setPPs( const std::string& pid )
 const LHCb::State* ChargedParticleMakerBase::usedState( const LHCb::Track* track) const{
   if ( 0==track) Exception("NULL track");
   const LHCb::State* uState = 0 ;
+  if (msgLevel(MSG::VERBOSE)) 
+  { verbose() << "ChargedParticleMakerBase::usedState :: Looking for State" << endmsg ; }
   // default: closest to the beam:
   if ( 0 == uState ) { uState = track->stateAt( LHCb::State::ClosestToBeam    ) ; }
   // if not availabel: first measurementr 

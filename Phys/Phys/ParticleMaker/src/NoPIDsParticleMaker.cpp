@@ -1,4 +1,4 @@
-// $Id: NoPIDsParticleMaker.cpp,v 1.18 2009-12-08 12:55:08 pkoppenb Exp $
+// $Id: NoPIDsParticleMaker.cpp,v 1.19 2010-08-03 07:23:59 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -87,48 +87,61 @@ StatusCode NoPIDsParticleMaker::makeParticles
   for(LHCb:: ProtoParticles::const_iterator ipp = pps->begin() ; 
       pps->end() != ipp ; ++ipp ) 
   {
+    if (msgLevel(MSG::VERBOSE)) verbose() << "Trying PP " << *ipp << endmsg;
     const LHCb::ProtoParticle* pp = *ipp ;
     if ( 0 == pp                ) { continue ; }              // CONTINUE
-      if ( 0 == pp -> charge ()   ) { continue ; }              // CONTINUE
-      
-      const LHCb::Track* ptrack = pp->track();
-      if ( 0==ptrack ) {
-        Warning("Charged protoparticle with no Track found. Ignoring.");
-        continue ;
-      }
-      // Select tracks
-      if (msgLevel(MSG::VERBOSE)) verbose() << "Trying Track " << ptrack->key() << endmsg;
-      if ( !trSel()->accept(*ptrack) ) continue;
-      if (msgLevel(MSG::VERBOSE)) {
-        verbose() << " -> Track selected " << ptrack->key()  
-                  << " " << ptrack->firstState().momentum() << endmsg;
-      }
-      LHCb::Particle* particle = new LHCb::Particle();
-      
-      StatusCode sc = StatusCode::FAILURE ;
-      if      ( m_pp  -> charge() == pp -> charge () ) 
-      { sc = fillParticle( pp , m_pp , particle ) ; }
-      else if ( m_app -> charge() == pp -> charge () ) 
-      { sc = fillParticle( pp , m_app , particle ) ; }
-      
-      if( sc.isFailure() ) 
-      {
-        Warning("Error from 'fillParticle'", sc );
-        delete particle ; particle = 0 ; continue ;           // CONTINUE
-      }
-      
-      // put particle into the output container 
-      particles.push_back( particle );
-      ++number ;
-      
+    if (msgLevel(MSG::VERBOSE)) verbose() << "Trying PP " << *pp << endmsg;
+   
+    const LHCb::Track* ptrack = pp->track();
+    if ( 0==ptrack ) {
+      Warning("Charged protoparticle with no Track found. Ignoring.");
+      continue ;
+    }
+    if (ptrack->states().empty()){
+      Warning("Track has empty states. This is likely to be bug https://savannah.cern.ch/bugs/index.php?70979");
+      continue ;
+    }  
+
+    //    if ( 0 == pp -> charge ()   ) { continue ; }              // CONTINUE
+    // if (msgLevel(MSG::VERBOSE)) verbose() << "Trying PP of charge " << pp -> charge () << endmsg;
+
+    // Select tracks
+    if (msgLevel(MSG::VERBOSE)) verbose() << "Trying Track " << ptrack->key() 
+                                          << " fit Status: " << ptrack->fitStatus() << endmsg;
+    if ( !trSel()->accept(*ptrack) ){
+      if (msgLevel(MSG::VERBOSE)) verbose() << "Track type rejected, looping" << endmsg ;
+      continue;
+    }
+    if (msgLevel(MSG::VERBOSE)) {
+      verbose() << " -> Track selected " << ptrack->key()  << endmsg;
+    }
+    LHCb::Particle* particle = new LHCb::Particle();
+    
+    StatusCode sc = StatusCode::FAILURE ;
+    if      ( m_pp  -> charge() == pp -> charge () ) 
+    { sc = fillParticle( pp , m_pp , particle ) ; }
+    else if ( m_app -> charge() == pp -> charge () ) 
+    { sc = fillParticle( pp , m_app , particle ) ; }
+    
+    if( sc.isFailure() ) 
+    {
+      Warning("Error from 'fillParticle'", sc );
+      delete particle ; particle = 0 ; continue ;           // CONTINUE
+    }
+    
+    // put particle into the output container 
+    particles.push_back( particle );
+    ++number ;
+    
   } // loop over protoparticles
+  
+  if (msgLevel(MSG::VERBOSE)) verbose() << "All tracks done " << particles.size() << endmsg ;
   
   m_sum   +=          number ;
   m_sum2  += number * number ;
 
   return StatusCode::SUCCESS ;  
 }
-
 // ============================================================================
 /** Fill the particle from protoparticle using ID  
  *  @param proto    pointer to ProtoParticle
@@ -142,6 +155,7 @@ StatusCode NoPIDsParticleMaker::fillParticle
   const LHCb::ParticleProperty* property , 
   LHCb::Particle*               particle ) const 
 {
+  if (msgLevel(MSG::VERBOSE)) verbose() << "fillParticle " << endmsg ;
   if ( 0 == proto    ) 
   { return Error ( "fillParticle: ProtoParticle*    is NULL" , 120 ) ; }
   if ( 0 == property ) 
