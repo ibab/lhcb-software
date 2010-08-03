@@ -855,18 +855,19 @@ std::ostream& LoKi::Particles::VertexChi2DistanceDV::fillStream
 // ============================================================================
 // constructor 
 // ============================================================================
-LoKi::Particles::LifeTimeDV::LifeTimeDV() 
+LoKi::Particles::LifeTimeDV::LifeTimeDV( const double chi2 ) 
   : LoKi::AuxDesktopBase ()
-  , LoKi::Particles::LifeTime ( s_LTIME , s_VERTEX ) 
-  , m_fit ( s_LIFETIME         ) 
+  , LoKi::Particles::LifeTime ( s_LTIME , s_VERTEX , chi2 ) 
+  , m_fit ( s_LIFETIME         )
 {}
 // ============================================================================
 // constructor 
 // ============================================================================
 LoKi::Particles::LifeTimeDV::LifeTimeDV
-( const std::string& fit ) 
+( const std::string& fit  , 
+  const double       chi2 ) 
   : LoKi::AuxDesktopBase ()
-  , LoKi::Particles::LifeTime ( s_LTIME , s_VERTEX ) 
+  , LoKi::Particles::LifeTime ( s_LTIME , s_VERTEX , chi2 ) 
   , m_fit ( fit  ) 
 {}
 // ============================================================================
@@ -907,20 +908,25 @@ LoKi::Particles::LifeTimeDV::operator()
 // ============================================================================
 // OPTIONAL: the specific printout 
 // ============================================================================
-std::ostream& LoKi::Particles::LifeTimeDV::fillStream 
-( std::ostream& s ) const { return s << "BPVLTIME('" << fitter() << "')" ; }
+std::ostream& LoKi::Particles::LifeTimeDV::fillStream ( std::ostream& s ) const 
+{ 
+  s << " BPVLTIME('" << fitter() << "'" ;
+  if ( 0 < chi2cut() ) { s << "," << chi2cut() ; }
+  return s << ") ";
+}
 // ============================================================================
 // constructor 
 // ============================================================================
-LoKi::Particles::LifeTimeChi2DV::LifeTimeChi2DV() 
-  : LoKi::Particles::LifeTimeDV () 
+LoKi::Particles::LifeTimeChi2DV::LifeTimeChi2DV( const double chi2 ) 
+  : LoKi::Particles::LifeTimeDV ( chi2 ) 
 {}
 // ============================================================================
 // constructor 
 // ============================================================================
 LoKi::Particles::LifeTimeChi2DV::LifeTimeChi2DV
-( const std::string& fit ) 
-  : LoKi::Particles::LifeTimeDV ( fit ) 
+( const std::string& fit  , 
+  const double       chi2 )
+  : LoKi::Particles::LifeTimeDV ( fit , chi2 ) 
 {}
 // ============================================================================
 // MANDATORY: clone method ("virtual constructor")
@@ -958,22 +964,26 @@ LoKi::Particles::LifeTimeChi2DV::operator()
 // ============================================================================
 // OPTIONAL: the specific printout 
 // ============================================================================
-std::ostream& LoKi::Particles::LifeTimeChi2DV::fillStream 
-( std::ostream& s ) const { return s << "BPVLTCHI2('" << fitter() << "')" ; }
-// ============================================================================
-
+std::ostream& LoKi::Particles::LifeTimeChi2DV::fillStream ( std::ostream& s ) const
+{
+  s << " BPVLTCHI2('" << fitter() << "'" ;
+  if ( 0 < chi2cut() ) { s << "," << chi2cut() ; }
+  return s << ") ";
+}
 // ============================================================================
 // constructor 
 // ============================================================================
-LoKi::Particles::LifeTimeSignedChi2DV::LifeTimeSignedChi2DV() 
-  : LoKi::Particles::LifeTimeChi2DV () 
+LoKi::Particles::LifeTimeSignedChi2DV::LifeTimeSignedChi2DV
+( const double chi2 ) 
+  : LoKi::Particles::LifeTimeChi2DV ( chi2 ) 
 {}
 // ============================================================================
 // constructor 
 // ============================================================================
 LoKi::Particles::LifeTimeSignedChi2DV::LifeTimeSignedChi2DV
-( const std::string& fit ) 
-  : LoKi::Particles::LifeTimeChi2DV ( fit ) 
+( const std::string& fit  ,
+  const double       chi2 ) 
+  : LoKi::Particles::LifeTimeChi2DV ( fit , chi2 ) 
 {}
 // ============================================================================
 // MANDATORY: clone method ("virtual constructor")
@@ -1012,7 +1022,12 @@ LoKi::Particles::LifeTimeSignedChi2DV::operator()
 // OPTIONAL: the specific printout 
 // ============================================================================
 std::ostream& LoKi::Particles::LifeTimeSignedChi2DV::fillStream 
-( std::ostream& s ) const { return s << "BPVLTSIGNCHI2('" << fitter() << "')" ; }
+( std::ostream& s ) const 
+{
+  s << " BPVLTSIGNCHI2('" << fitter() << "'" ;
+  if ( 0 < chi2cut() ) { s << "," << chi2cut() ; }
+  return s << ") ";
+}
 // ============================================================================
 
 // ============================================================================

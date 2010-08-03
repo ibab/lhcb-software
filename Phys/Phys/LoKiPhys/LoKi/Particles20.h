@@ -833,9 +833,10 @@ namespace LoKi
     public:
       // ======================================================================
       /// the "default" constructor
-      LifeTimeDV () ;
+      LifeTimeDV ( const double       chi2cut = -1 ) ;
       /// the constructor form tool type/name 
-      LifeTimeDV ( const std::string& fit ) ;
+      LifeTimeDV ( const std::string& fit          , 
+                   const double       chi2cut = -1 ) ;
       /// MANDATORY: virtual destructor
       virtual ~LifeTimeDV() {} 
       /// MANDATORY: clone method ("virtual constructor")
@@ -847,11 +848,12 @@ namespace LoKi
       // ======================================================================
     public:
       // ======================================================================
-      const std::string& fitter () const { return m_fit ; }
+      const std::string& fitter  () const { return m_fit     ; }
       // ======================================================================
     private:
+      // ======================================================================
       /// the tool type/name 
-      std::string               m_fit ;  // the tool type/name 
+      std::string               m_fit     ;  // the tool type/name 
       // ======================================================================
     } ;
     // ========================================================================
@@ -878,9 +880,10 @@ namespace LoKi
     public:
       // ======================================================================
       /// the "default" constructor
-      LifeTimeChi2DV () ;
+      LifeTimeChi2DV ( const double       chi2cut = -1 ) ;
       /// the constructor form tool type/name 
-      LifeTimeChi2DV ( const std::string& fit ) ;
+      LifeTimeChi2DV ( const std::string& fit          , 
+                       const double       chi2cut = -1 ) ;
       /// MANDATORY: virtual destructor
       virtual ~LifeTimeChi2DV() {} 
       /// MANDATORY: clone method ("virtual constructor")
@@ -915,9 +918,10 @@ namespace LoKi
     public:
       // ======================================================================
       /// the "default" constructor
-      LifeTimeSignedChi2DV () ;
+      LifeTimeSignedChi2DV ( const double       chi2cut = -1 ) ;
       /// the constructor form tool type/name 
-      LifeTimeSignedChi2DV ( const std::string& fit ) ;
+      LifeTimeSignedChi2DV ( const std::string& fit          ,
+                             const double       chi2cut = -1 ) ;
       /// MANDATORY: virtual destructor
       virtual ~LifeTimeSignedChi2DV() {} 
       /// MANDATORY: clone method ("virtual constructor")

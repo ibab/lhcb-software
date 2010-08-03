@@ -7,6 +7,30 @@
 
 ! 2010-08-03 - Vanya Belyaev
 
+ - add more functionality into "LifeTime"-functors 
+
+   From now one can specify the optional argument in 
+   constructor "chi2cut". In case of any positive value 
+   the evaluation e.g. of lifetime or lifetime-chi2 or signed
+   lifetime-chi2 is performed using embeded cut on chi2 of lifetiem fit.
+   in case of chi2 of lifetiem fit exceed the predefined POSITIVE value , 
+
+    - the lifetime             evaluator returns LoKi::Constants::InvalidTime 
+    - the lifetime-chi2        evaluator returns LoKi::Constants::InvalidChi2 
+    - the signed lifetime-chi2 evaluator returns LoKi::Constants::InvalidChi2 
+
+   As a result, instead of 
+
+       xxx.Code = " ( BPTLTFITCHI2() < 9 ) & ( BPVLTIME() > 1 * ps ) "
+
+   One can use more compact & equivalent way:
+
+       xxx.Code = " BPVLTIME ( 9 ) > 1 * ps  "
+
+
+
+! 2010-08-03 - Vanya Belyaev
+
  - Particles6.cpp
 
     bug fix in CHILD functor 

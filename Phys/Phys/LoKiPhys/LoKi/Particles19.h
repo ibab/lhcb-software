@@ -58,17 +58,21 @@ namespace LoKi
     public:
       // ======================================================================
       /// constructor 
-      LifeTime ( const LHCb::VertexBase* vertex , 
-                 const ILifetimeFitter*  tool   ) ;
+      LifeTime ( const LHCb::VertexBase* vertex       , 
+                 const ILifetimeFitter*  tool         , 
+                 const double            chi2cut = -1 ) ;
       /// constructor 
-      LifeTime ( const ILifetimeFitter*  tool   , 
-                 const LHCb::VertexBase* vertex ) ;
+      LifeTime ( const ILifetimeFitter*  tool         , 
+                 const LHCb::VertexBase* vertex       ,
+                 const double            chi2cut = -1 ) ;
       /// constructor 
-      LifeTime ( const LHCb::VertexBase*                  vertex , 
-                 const LoKi::Interface<ILifetimeFitter>&  tool   ) ;
+      LifeTime ( const LHCb::VertexBase*                  vertex       , 
+                 const LoKi::Interface<ILifetimeFitter>&  tool         ,
+                 const double                             chi2cut = -1 ) ;
       /// constructor 
-      LifeTime ( const LoKi::Interface<ILifetimeFitter>&  tool   , 
-                 const LHCb::VertexBase*                  vertex ) ;
+      LifeTime ( const LoKi::Interface<ILifetimeFitter>&  tool         , 
+                 const LHCb::VertexBase*                  vertex       ,
+                 const double                             chi2cut = -1 ) ;
       /// MANDATORY: virtual destructor 
       virtual ~LifeTime() {}
       /// MANDATORY: clone method ("virtual constructor")
@@ -77,8 +81,7 @@ namespace LoKi
       virtual result_type operator() ( argument p ) const 
       { return lifeTime ( p )  ; }
       /// OPTIONAL: the specific printout 
-      virtual std::ostream& fillStream ( std::ostream& s ) const 
-      { return s << "LIFETIME" ; }
+      virtual std::ostream& fillStream ( std::ostream& s ) const ;
       // ======================================================================
     public:
       // ======================================================================
@@ -94,18 +97,26 @@ namespace LoKi
       // cast to the fitter 
       operator const LoKi::Interface<ILifetimeFitter>&() const 
       { return m_fitter ; }
+      /// the embedded chi20cut 
+      double  chi2cut() const { return m_chi2cut ; }
       // ======================================================================
     public:
       // ======================================================================
-      /// evaluate the lifetime 
+      /** evaluate the lifetime 
+       *  @attention apply embedded chi2-cut
+       */
       result_type lifeTime           ( argument p ) const ;
-      // evaluate the lifetime chi2 
+      /** evaluate the lifetime chi2 
+       *  @attention apply embedded chi2-cut
+       */
       result_type lifeTimeChi2       ( argument p ) const ;
-      // evaluate the lifetime signed chi2 
+      /** evaluate the lifetime signed chi2 
+       *  @attention apply embedded chi2-cut
+       */
       result_type lifeTimeSignedChi2 ( argument p ) const ;
-      // evaluate the lifetime fit chi2 
+      /// evaluate the lifetime fit chi2 
       result_type lifeTimeFitChi2    ( argument p ) const ;
-      // evaluate the lifetime error 
+      /// evaluate the lifetime error 
       result_type lifeTimeError      ( argument p ) const ;
       // ======================================================================
     private:
@@ -117,6 +128,8 @@ namespace LoKi
       // ======================================================================
       /// the lifetime fitter itself
       mutable LoKi::Interface<ILifetimeFitter> m_fitter ; // the lifetime fitter
+      /// the embedded chi2 cut 
+      double                                   m_chi2cut ; // chi2 cut 
       // ======================================================================
     };
     // ========================================================================
@@ -135,22 +148,31 @@ namespace LoKi
     class LifeTimeChi2 : public LifeTime 
     {
     public:
+      // ======================================================================
       /// constructor 
-      LifeTimeChi2 ( const LHCb::VertexBase* vertex , 
-                     const ILifetimeFitter*  tool   ) 
-        : LifeTime ( vertex , tool ) {}      
+      LifeTimeChi2 ( const LHCb::VertexBase* vertex       , 
+                     const ILifetimeFitter*  tool         ,
+                     const double            chi2cut = -1 ) 
+      : LifeTime ( vertex , tool , chi2cut ) 
+      {}      
       /// constructor 
-      LifeTimeChi2 ( const ILifetimeFitter*  tool   , 
-                     const LHCb::VertexBase* vertex ) 
-        : LifeTime ( vertex , tool ) {}      
+      LifeTimeChi2 ( const ILifetimeFitter*  tool         , 
+                     const LHCb::VertexBase* vertex       ,
+                     const double            chi2cut = -1 ) 
+      : LifeTime ( vertex , tool , chi2cut ) 
+      {}      
       /// constructor 
-      LifeTimeChi2 ( const LHCb::VertexBase*                  vertex , 
-                     const LoKi::Interface<ILifetimeFitter>&  tool   ) 
-        : LifeTime ( vertex , tool ) {}      
+      LifeTimeChi2 ( const LHCb::VertexBase*                  vertex       , 
+                     const LoKi::Interface<ILifetimeFitter>&  tool         ,
+                     const double                             chi2cut = -1 ) 
+      : LifeTime ( vertex , tool , chi2cut ) 
+      {}      
       /// constructor 
-      LifeTimeChi2 ( const LoKi::Interface<ILifetimeFitter>&  tool   , 
-                     const LHCb::VertexBase*                  vertex ) 
-        : LifeTime ( vertex , tool ) {}      
+      LifeTimeChi2 ( const LoKi::Interface<ILifetimeFitter>&  tool         , 
+                     const LHCb::VertexBase*                  vertex       ,
+                     const double                             chi2cut = -1 ) 
+      : LifeTime ( vertex , tool , chi2cut ) 
+      {}      
       /// MANDATORY: virtual destructor 
       virtual ~LifeTimeChi2 () {}
       /// MANDATORY: clone method ("virtual constructor")
@@ -160,8 +182,7 @@ namespace LoKi
       virtual result_type operator() ( argument p ) const 
       { return lifeTimeChi2 ( p ) ; }
       /// OPTIONAL: the specific printout 
-      virtual std::ostream& fillStream ( std::ostream& s ) const 
-      { return s << "LTCHI2" ; }
+      virtual std::ostream& fillStream ( std::ostream& s ) const ;
       // ======================================================================
     private:
       // ======================================================================
@@ -188,24 +209,32 @@ namespace LoKi
       // ======================================================================
       /// constructor 
       LifeTimeSignedChi2
-      ( const LHCb::VertexBase* vertex , 
-        const ILifetimeFitter*  tool   ) 
-        : LoKi::Particles::LifeTimeChi2 (  vertex , tool ) {}
+      ( const LHCb::VertexBase* vertex       , 
+        const ILifetimeFitter*  tool         , 
+        const double            chi2cut = -1 ) 
+        : LoKi::Particles::LifeTimeChi2 (  vertex , tool , chi2cut )
+      {}
       /// constructor 
       LifeTimeSignedChi2
-      ( const ILifetimeFitter*  tool   , 
-        const LHCb::VertexBase* vertex ) 
-        : LoKi::Particles::LifeTimeChi2 (  vertex , tool ) {}
+      ( const ILifetimeFitter*  tool         , 
+        const LHCb::VertexBase* vertex       , 
+        const double            chi2cut = -1 ) 
+        : LoKi::Particles::LifeTimeChi2 (  vertex , tool , chi2cut ) 
+      {}
       /// constructor 
       LifeTimeSignedChi2
-      ( const LHCb::VertexBase*                  vertex , 
-        const LoKi::Interface<ILifetimeFitter>&  tool   ) 
-        : LoKi::Particles::LifeTimeChi2 (  vertex , tool ) {}
+      ( const LHCb::VertexBase*                  vertex       ,     
+        const LoKi::Interface<ILifetimeFitter>&  tool         ,
+        const double                             chi2cut = -1 ) 
+        : LoKi::Particles::LifeTimeChi2 (  vertex , tool , chi2cut ) 
+      {}
       /// constructor 
       LifeTimeSignedChi2
-      ( const LoKi::Interface<ILifetimeFitter>&  tool   , 
-        const LHCb::VertexBase*                  vertex ) 
-        : LoKi::Particles::LifeTimeChi2 (  vertex , tool ) {}
+      ( const LoKi::Interface<ILifetimeFitter>&  tool         , 
+        const LHCb::VertexBase*                  vertex       , 
+        const double                             chi2cut = -1 ) 
+        : LoKi::Particles::LifeTimeChi2 (  vertex , tool , chi2cut )
+      {}
       /// MANDATORY: virtual destructor 
       virtual ~LifeTimeSignedChi2 () {}
       /// MANDATORY: clone method ("virtual constructor")
@@ -215,8 +244,7 @@ namespace LoKi
       virtual result_type operator() ( argument p ) const 
       { return lifeTimeSignedChi2 ( p ) ; }
       /// OPTIONAL: the specific printout 
-      virtual std::ostream& fillStream ( std::ostream& s ) const
-      { return s << "LTSIGNCHI2" ; }
+      virtual std::ostream& fillStream ( std::ostream& s ) const ;
       // ======================================================================
     private:
       // ======================================================================
@@ -271,8 +299,7 @@ namespace LoKi
       virtual result_type operator() ( argument p ) const 
       { return lifeTimeFitChi2 ( p ) ; }
       /// OPTIONAL: the specific printout 
-      virtual std::ostream& fillStream ( std::ostream& s ) const 
-      { return s << "LTFITCHI2" ; }
+      virtual std::ostream& fillStream ( std::ostream& s ) const ;
       // ======================================================================
     private:
       // ======================================================================
@@ -333,9 +360,10 @@ namespace LoKi
       LifeTimeError () ; ///< the default constructor is disabled
       // ======================================================================
     };
-   // ========================================================================
-  } // end of namespace LoKi::Particles 
-} // end of namespace LoKi
+   // =========================================================================
+  } //                                         end of namespace LoKi::Particles 
+  // ==========================================================================
+} //                                                      end of namespace LoKi
 // ============================================================================
 // The END
 // ============================================================================

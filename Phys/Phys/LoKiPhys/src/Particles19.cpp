@@ -31,40 +31,48 @@
 // ============================================================================
 LoKi::Particles::LifeTime::LifeTime
 ( const LHCb::VertexBase* vertex , 
-  const ILifetimeFitter*  tool   ) 
+  const ILifetimeFitter*  tool   ,
+  const double            chi2   ) 
   : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
   , LoKi::Vertices::VertexHolder ( vertex  ) 
-  , m_fitter ( tool ) 
+  , m_fitter  ( tool ) 
+  , m_chi2cut ( chi2 ) 
 {}
 // ============================================================================
 // constructor 
 // ============================================================================
 LoKi::Particles::LifeTime::LifeTime
 ( const ILifetimeFitter*  tool   , 
-  const LHCb::VertexBase* vertex )
+  const LHCb::VertexBase* vertex ,
+  const double            chi2   ) 
   : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
   , LoKi::Vertices::VertexHolder ( vertex  ) 
-  , m_fitter ( tool ) 
+  , m_fitter  ( tool ) 
+  , m_chi2cut ( chi2 ) 
 {}
 // ============================================================================
 // constructor 
 // ============================================================================
 LoKi::Particles::LifeTime::LifeTime
 ( const LHCb::VertexBase*                 vertex , 
-  const LoKi::Interface<ILifetimeFitter>& tool   ) 
+  const LoKi::Interface<ILifetimeFitter>& tool   ,
+  const double                            chi2   ) 
   : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
   , LoKi::Vertices::VertexHolder ( vertex  ) 
-  , m_fitter ( tool ) 
+  , m_fitter  ( tool ) 
+  , m_chi2cut ( chi2 ) 
 {}
 // ============================================================================
 // constructor 
 // ============================================================================
 LoKi::Particles::LifeTime::LifeTime
 ( const LoKi::Interface<ILifetimeFitter>& tool   , 
-  const LHCb::VertexBase*                 vertex )
+  const LHCb::VertexBase*                 vertex ,
+  const double                            chi2   ) 
   : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
   , LoKi::Vertices::VertexHolder ( vertex  ) 
-  , m_fitter ( tool ) 
+  , m_fitter  ( tool ) 
+  , m_chi2cut ( chi2 ) 
 {}
 // ============================================================================
 // MANDATORY: the only one essential method 
@@ -94,6 +102,12 @@ LoKi::Particles::LifeTime::lifeTime
     Error ( "Error from IlifetimeFitter::fit, return -InvalidTime" , sc ) ;
     return -LoKi::Constants::InvalidTime ;                         // RETURN 
   }
+  /** apply embedded chi2-cut! 
+   *  @attention apply embedded chi2-cut
+   */
+  if ( 0 < chi2cut() && chi2cut() < i_chi2 )  
+  { return -LoKi::Constants::InvalidTime ; }                       // RETURN
+  //
   return i_time ;                                                  // RETURN 
 }
 // ============================================================================
@@ -124,6 +138,11 @@ LoKi::Particles::LifeTime::lifeTimeChi2
     Error ( "Error from IlifetimeFitter::fit, return -InvalidChi2" , sc ) ;
     return LoKi::Constants::InvalidChi2 ;                         // RETURN 
   }
+  //
+  // apply embedded chi2-cut! 
+  if ( 0 < chi2cut() && chi2cut() < i_chi2 )  
+  { return  LoKi::Constants::InvalidChi2 ; }                       // RETURN
+  //
   // evaluate chi2 
   return Gaudi::Math::pow ( i_time / i_error , 2 ) ; // RETURN 
 }
@@ -155,6 +174,10 @@ LoKi::Particles::LifeTime::lifeTimeSignedChi2
     Error ( "Error from IlifetimeFitter::fit, return InvalidChi2" , sc ) ;
     return LoKi::Constants::InvalidChi2 ;                         // RETURN 
   }
+  // apply embedded chi2-cut! 
+  if ( 0 < chi2cut() && chi2cut() < i_chi2 )  
+  { return  LoKi::Constants::InvalidChi2 ; }                       // RETURN
+  //
   // evaluate chi2:
   const double res = Gaudi::Math::pow ( i_time / i_error , 2 ) ; 
   // set the sign:
@@ -191,11 +214,10 @@ LoKi::Particles::LifeTime::lifeTimeFitChi2
     Error ( "Error from IlifetimeFitter::fit, return InvalidChi2" , sc ) ;
     return LoKi::Constants::InvalidChi2 ;                         // RETURN 
   }
-  return i_chi2 ;                                                // RETURN 
+  //
+  return i_chi2 ;                                                 // RETURN 
 }
 // ============================================================================
-
-
 
 // ============================================================================
 // MANDATORY: the only one essential method 
@@ -229,9 +251,39 @@ LoKi::Particles::LifeTime::lifeTimeError
   return i_error ;                                                    // RETURN 
 }
 // ============================================================================
-
-
-
+// OPTIONAL: the specific printout 
+// ============================================================================
+std::ostream& LoKi::Particles::LifeTime::fillStream ( std::ostream& s ) const 
+{
+  s << "LIFETIME" ;
+  if ( 0 < chi2cut() ) { s << "(" << chi2cut() << ")" ; }
+  return s ;
+}
+// ============================================================================
+// OPTIONAL: the specific printout 
+// ============================================================================
+std::ostream& LoKi::Particles::LifeTimeChi2::fillStream ( std::ostream& s ) const 
+{
+  s << "LTCHI2" ;
+  if ( 0 < chi2cut() ) { s << "(" << chi2cut() << ")" ; }
+  return s ;
+}
+// ============================================================================
+// OPTIONAL: the specific printout 
+// ============================================================================
+std::ostream& 
+LoKi::Particles::LifeTimeSignedChi2::fillStream ( std::ostream& s ) const 
+{
+  s << "LTSIGNCHI2" ;
+  if ( 0 < chi2cut() ) { s << "(" << chi2cut() << ")" ; }
+  return s ;
+}
+// ============================================================================
+// OPTIONAL: the specific printout 
+// ============================================================================
+std::ostream& 
+LoKi::Particles::LifeTimeFitChi2::fillStream ( std::ostream& s ) const 
+{ return s << "LTFITCHI2" ; }
 
 // ============================================================================
 // The END
