@@ -1,4 +1,4 @@
-// $Id: presenter.cpp,v 1.76 2010-06-11 13:02:03 ggiacomo Exp $
+// $Id: presenter.cpp,v 1.77 2010-08-03 15:01:04 robbep Exp $
 // STL
 #include <iostream>
 #include <fstream>
@@ -164,7 +164,7 @@ int main(int argc, char* argv[])
     // program argument -> histo list
     options_description hidden("Histogram list");
     hidden.add_options()
-      ("startup-histograms,D", value< std::vector<std::string> >(), "startup histograms")
+      ("startup-histograms,H", value< std::vector<std::string> >(), "startup histograms")
       ;
 
     options_description cmdline_options;
