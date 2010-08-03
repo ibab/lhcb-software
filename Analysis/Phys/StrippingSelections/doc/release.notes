@@ -5,6 +5,10 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-08-03 - Vanya Belyaev
+
+ - StrippingPromptCharm.py
+
 ! 2010-07-29 -Yasmine Amhis 
     -Change a cut (LambdabVCHI2) in StrippingLambdab2JpsiLambda
 
