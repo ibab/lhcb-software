@@ -1,10 +1,10 @@
 ''' '''
-#$Id: dstwriters.py,v 1.6 2010-08-03 16:47:25 jpalac Exp $
+#$Id: dstwriters.py,v 1.7 2010-08-03 16:51:01 jpalac Exp $
 
 
 __author__ = "Juan PALACIOS juan.palacios@nikhef.nl"
 
-__version__ = '$Revision: 1.6 $'
+__version__ = '$Revision: 1.7 $'
 
 
 from Configurables import GaudiSequencer, InputCopyStream, OutputStream, RecordStream
@@ -48,7 +48,6 @@ class DSTWriterSelectionSequence(object) :
         if None != extras :
             for _algs in [x(selSequence) for x in extras] :
                 self.algos += _algs
-            print 'XXX ADDING', extras.output, 'to stream', self.stream.name() 
             self.stream.OptItemList += [extras.output]
         self.algos.append(self.stream)
 
@@ -64,7 +63,6 @@ def outputStream(conf) :
 
     stream = conf.streamType('OStream'+conf.name,
                              Output = _poolFileName(conf.filePrefix + conf.name + conf.extension))
-    print 'XXX adding extraitems', conf.extraItems, 'for conf name', conf.name
     stream.OptItemList += conf.extraItems
     return stream
 
