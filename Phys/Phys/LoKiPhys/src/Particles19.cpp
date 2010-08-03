@@ -99,14 +99,14 @@ LoKi::Particles::LifeTime::lifeTime
     m_fitter -> fit ( *vertex() , *p , i_time , i_error , i_chi2 ) ;
   if ( sc.isFailure() ) 
   {
-    Error ( "Error from IlifetimeFitter::fit, return -InvalidTime" , sc ) ;
-    return -LoKi::Constants::InvalidTime ;                         // RETURN 
+    Error ( "Error from IlifetimeFitter::fit, return InvalidTime" , sc ) ;
+    return LoKi::Constants::InvalidTime ;  // RETURN 
   }
   /** apply embedded chi2-cut! 
    *  @attention apply embedded chi2-cut
    */
   if ( 0 < chi2cut() && chi2cut() < i_chi2 )  
-  { return -LoKi::Constants::InvalidTime ; }                       // RETURN
+  { return LoKi::Constants::InvalidTime ; }           // RETURN
   //
   return i_time ;                                                  // RETURN 
 }
