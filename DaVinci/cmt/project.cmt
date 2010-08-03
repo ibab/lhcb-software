@@ -3,7 +3,7 @@ project DAVINCI
 use HLT      HLT_v10r6
 use PHYS     PHYS_v9r8
 use ANALYSIS ANALYSIS_v4r8
-use REC      REC_v10r3
+use REC      REC_v10r3p1
 use LBCOM    LBCOM_v9r5p1
 
 build_strategy with_installarea
