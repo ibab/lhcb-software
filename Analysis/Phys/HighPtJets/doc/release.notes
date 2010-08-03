@@ -3,6 +3,10 @@
 ! Responsible : Marcin Kucharczyk
 !-----------------------------------------------------------------------------
 
+!==================== Phys/HighPtJets v1r1p1 2010-08-03 =====================
+! 2010-08-03 - Patrick Koppenburg
+ - Protect against stateless tracks
+
 !==================== Phys/HighPtJets v1r1 2010-05-25 =====================
 
 !==================== Phys/HighPtJets v1r0 2010-04-30 =====================

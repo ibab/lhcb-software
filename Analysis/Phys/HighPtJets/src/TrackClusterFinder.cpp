@@ -78,6 +78,7 @@ StatusCode TrackClusterFinder::execute() {
         inputTracks->end() != itr; itr++) {
       trackIndex++;
       tmpTrack track;
+      if ((*itr)->states().empty()) continue ;
       track.index = trackIndex;
       track.weight = 0;
       track.phi = (*itr)->phi();
