@@ -190,8 +190,8 @@ LoKi::Particles::ChildFunction::ChildFunction
 ( const unsigned int           index ,
   const LoKi::PhysTypes::Func& fun   ) 
   : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
-  , m_fun   ( fun       ) 
-  , m_child ( 1 , index ) 
+  , m_fun   ( fun   ) 
+  , m_child ( index ) 
 {} 
 // ============================================================================
 /*  constructor from the function and child selector 

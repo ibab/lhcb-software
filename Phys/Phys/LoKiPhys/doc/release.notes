@@ -5,6 +5,18 @@
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
 
+! 2010-08-03 - Vanya Belyaev
+
+ - Particles6.cpp
+
+    bug fix in CHILD functor 
+    
+     " CHILD( fun , index ) " was correct, 
+       while " CHILD( index , fun )" was buggy
+
+    thanks to Steve Blusk for pointing to the problem.
+
+
 ! 2010-07-12 - Roel Aaij
  - Added two new and related functors: DLS and BPVDLS
 
