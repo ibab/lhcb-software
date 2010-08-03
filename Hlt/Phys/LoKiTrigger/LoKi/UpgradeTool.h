@@ -106,8 +106,7 @@ namespace LoKi
     public:
       // ======================================================================
       /// access the tool 
-      const LoKi::Interface<ITracksFromTrack>& upgrade() const 
-      { return m_upgrade ; }
+      ITracksFromTrack* upgradeTool() const { return m_upgrade ; }
       // ======================================================================
     private:
       // ======================================================================

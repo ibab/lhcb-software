@@ -46,14 +46,25 @@
   
   <class pattern = "LoKi::Stages::*" /> 
   
+
+  <class name    = "LoKi::Hlt1::UpgradeTool"/>
   
   <exclusion>    
     <class name="LoKi::Stages::HistoryRegex" >
       <field name = "m_expression"/>
     </class>
   </exclusion>
+
+  <exclusion>    
+    <class name="LoKi::Hlt1::UpgradeTool" >
+      <field  name = "m_upgrade"    />
+      <field  name = "m_alg"        />
+      <method name = "upgradeTool"  />
+    </class>
+  </exclusion>
   
-  <class name    = "LoKi::Hlt1::UpgradeTool"         />
+  
+
   
   <!-- 
 

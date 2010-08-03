@@ -180,15 +180,11 @@ SINK            = LoKi.Hlt1.Sink
 
 
 
-
-
-
 ## helper objects
-TrackFunction       = LoKi.Hlt1.TrackFunction
-TrackBiFunction     = LoKi.Hlt1.TrackBiFunction
-MatchTVelo          = LoKi.Hlt1.MatchTVelo
-TrackVertexFunction = LoKi.Hlt1.TrackVertexFunction
-
+## TrackFunction       = LoKi.Hlt1.TrackFunction
+## TrackBiFunction     = LoKi.Hlt1.TrackBiFunction
+## MatchTVelo          = LoKi.Hlt1.MatchTVelo
+## TrackVertexFunction = LoKi.Hlt1.TrackVertexFunction
 
 # functional stuff
 
