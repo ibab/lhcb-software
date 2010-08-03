@@ -20,12 +20,12 @@ namespace VeloDAQ {
    *   @arg assumeChipChannels if true, assume chip channels instead of strip numbers in raw bank
    *   @arg clusters keyed container to which decoded clusters will be appended
    *   @arg number of bytes in the bank, including 4 byte header, without padding bytes at the end. Is set by this function.
-   *   @return number of decoded clusters appended
+   *   @return number of decoded clusters appended (-1 = header error)
    *   @see VeloCluster
    *   @author Kurt Rinnert
    *   @date   2006-02-17
    */
-  unsigned int decodeRawBankToClustersV2(
+  int decodeRawBankToClustersV2(
       const SiDAQ::buffer_word* bank, 
       const DeVeloSensor* sensor,
       const bool assumeChipChannels,
@@ -44,12 +44,12 @@ namespace VeloDAQ {
    *   @arg assumeChipChannels if true, assume chip channels instead of strip numbers in raw bank
    *   @arg clusters keyed container to which decoded clusters will be appended
    *   @arg number of bytes in the bank, including 4 byte header, without padding bytes at the end. Is set by this function.
-   *   @return number of decoded clusters appended
+   *   @return number of decoded clusters appended (-1 = header error)
    *   @see VeloCluster
    *   @author Kurt Rinnert
    *   @date   2006-02-17
    */
-  unsigned int decodeRawBankToClustersV3(
+  int decodeRawBankToClustersV3(
       const SiDAQ::buffer_word* bank, 
       const DeVeloSensor* sensor,
       const bool assumeChipChannels,

@@ -5,7 +5,7 @@
 #include "VeloRawBankDecoder.h"
 #include "DecodeRawBankToLiteClusters.h"
 
-unsigned int VeloDAQ::decodeRawBankToLiteClusters (
+int VeloDAQ::decodeRawBankToLiteClusters (
     const SiDAQ::buffer_word* bank, 
     const DeVeloSensor* sensor,
     const bool assumeChipChannels,
@@ -16,7 +16,7 @@ unsigned int VeloDAQ::decodeRawBankToLiteClusters (
   VeloRawBankDecoder decoder(bank);
 
   // only decode banks without errors
-  if ( decoder.hasError() ) { return 0; }
+  if ( decoder.hasError() ) { return -1; }
 
   // decode the clusterpositions, create lite clusters and
   // append them to the container

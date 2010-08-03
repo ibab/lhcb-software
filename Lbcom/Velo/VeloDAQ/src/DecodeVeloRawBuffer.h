@@ -42,6 +42,7 @@ public:
     UnsupportedBufferVersion = 2,
     CorruptVeloBuffer = 3,
     TooManyClusters = 4,
+    HeaderErrorBit = 5,
     Other = 99
   };
     

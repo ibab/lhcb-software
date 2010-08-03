@@ -36,7 +36,7 @@ DECLARE_ALGORITHM_FACTORY( DecodeVeloRawBuffer );
 // Standard constructor, initializes variables
 //=============================================================================
 DecodeVeloRawBuffer::DecodeVeloRawBuffer( const std::string& name,
-                              ISvcLocator* pSvcLocator)
+					  ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator ) 
   , m_forcedBankVersion(0) // there is no version 0, so this means bank version is not enforced
 {
@@ -76,9 +76,9 @@ StatusCode DecodeVeloRawBuffer::initialize() {
         break;
       default: // not supported, bail out
         error() << "User enforced VELO raw buffer version " 
-          << m_forcedBankVersion 
-          << " is not supported."
-          << endmsg;
+		<< m_forcedBankVersion 
+	        << " is not supported."
+	        << endmsg;
         return StatusCode::FAILURE;
     }
   }
@@ -173,10 +173,19 @@ StatusCode DecodeVeloRawBuffer::decodeToVeloLiteClusters(const std::vector<LHCb:
     int byteCount;
     const SiDAQ::buffer_word* rawBank = static_cast<const SiDAQ::buffer_word*>(rb->data());
    
-    VeloDAQ::decodeRawBankToLiteClusters(rawBank,sensor,
-                                         m_assumeChipChannelsInRawBuffer,
-                                         fastCont, byteCount);
-    
+    int nClusters = 
+      VeloDAQ::decodeRawBankToLiteClusters(rawBank,sensor,
+					   m_assumeChipChannelsInRawBuffer,
+					   fastCont, byteCount);
+    if( nClusters == -1 ){
+      debug() << "Header error bit set in raw bank source ID " 
+	      << rb->sourceID() << endmsg;
+      failEvent(format("Header error bit set in the VELO, bank source ID %i",
+                       rb->sourceID()),
+                "HeaderErrorVeloBuffer",HeaderErrorBit,false);
+      // no clusters produced so continue
+      continue;
+    }
     if (rb->size() != byteCount) {      
       debug() << "Byte count mismatch between RawBank size and decoded bytes." 
 	      << " RawBank: " << rb->size() 
@@ -191,8 +200,7 @@ StatusCode DecodeVeloRawBuffer::decodeToVeloLiteClusters(const std::vector<LHCb:
              fastCont->back().channelID().sensor() == badSensor ) {
         fastCont->pop_back(); // actually the only deletion method of FastClusterContainer!
       }
-    } 
-
+    }
   }
   if( fastCont->size() > m_maxVeloClusters){
     fastCont->clear();
@@ -244,28 +252,42 @@ StatusCode DecodeVeloRawBuffer::decodeToVeloClusters(const std::vector<LHCb::Raw
       continue;
     }
 
-    //info() << "Decoding Clusters on sensor " << sensor << endmsg;
-
     unsigned int bankVersion = m_forcedBankVersion ? m_forcedBankVersion : rb->version();
 
+    int nClusters = 0;
     std::string errorMsg;
     switch (bankVersion) {
-      case VeloDAQ::v2:
-        VeloDAQ::decodeRawBankToClustersV2(rawBank,sensor,m_assumeChipChannelsInRawBuffer,clusters,byteCount);
-        break;
-      case VeloDAQ::v3:
-        VeloDAQ::decodeRawBankToClustersV3(rawBank,sensor,m_assumeChipChannelsInRawBuffer,clusters,byteCount,errorMsg);
-        if ( !errorMsg.empty() ) {
-          unsigned int msgCount = 0;
-          if ( msgLevel(MSG::DEBUG) ) msgCount = 10;
-          Warning(errorMsg, StatusCode::SUCCESS, msgCount).ignore();
-        }
-        break;
-      default: // bank version is not supported: kill the event
-        failEvent(format("VELO raw buffer version %i is not supported.",
-                         rb->sourceID()),
-                  "UnsupportedBufferVersion",UnsupportedBufferVersion,false);
-        continue;
+    case VeloDAQ::v2:
+      nClusters = 
+	VeloDAQ::decodeRawBankToClustersV2(rawBank,sensor,
+					   m_assumeChipChannelsInRawBuffer,
+					   clusters,byteCount);
+      break;
+    case VeloDAQ::v3:
+      nClusters = 
+	VeloDAQ::decodeRawBankToClustersV3(rawBank,sensor,
+					   m_assumeChipChannelsInRawBuffer,
+					   clusters,byteCount,errorMsg);
+      if ( !errorMsg.empty() ) {
+	unsigned int msgCount = 0;
+	if ( msgLevel(MSG::DEBUG) ) msgCount = 10;
+	Warning(errorMsg, StatusCode::SUCCESS, msgCount).ignore();
+      }
+      break;
+    default: // bank version is not supported: kill the event
+      failEvent(format("VELO raw buffer version %i is not supported.",
+		       rb->sourceID()),
+		"UnsupportedBufferVersion",UnsupportedBufferVersion,false);
+      continue;
+    }
+    if( nClusters == -1 ){
+      debug() << "Header error bit set in raw bank source ID " 
+	      << rb->sourceID() << endmsg;
+      failEvent(format("Header error bit set in the VELO, bank source ID %i",
+                       rb->sourceID()),
+                "HeaderErrorVeloBuffer",HeaderErrorBit,false);
+      // no clusters produced so continue
+      continue;
     }
     if (rb->size() != byteCount) {      
       debug() << "Byte count mismatch between RawBank size and decoded bytes." 
@@ -273,22 +295,22 @@ StatusCode DecodeVeloRawBuffer::decodeToVeloClusters(const std::vector<LHCb::Raw
 	      << " Decoded: " << byteCount 
 	      << endmsg;
       failEvent(format("Raw data corruption in the VELO, bank source ID %i",
-                      rb->sourceID()),
-                "CorruptVeloBuffer",CorruptVeloBuffer,false);
+		       rb->sourceID()),
+		"CorruptVeloBuffer",CorruptVeloBuffer,false);
       unsigned int badSensor = sensor->sensorNumber();
-      // assume all clusters from the bad sensor at the end
+      // assume all clusters from the bad sensor at the end 
       LHCb::VeloClusters::iterator iClus = clusters->begin();
       while( iClus != clusters->end() && 
-             (*iClus)->channelID().sensor() != badSensor )  ++iClus;
+	     (*iClus)->channelID().sensor() != badSensor )  ++iClus;
       clusters->erase(iClus,clusters->end());
-    } 
+    }
 
   }
 
   if( clusters->size() > m_maxVeloClusters){
     clusters->clear();
     failEvent(format("Deleted all full VELO clusters as more than limit %i in the event",m_maxVeloClusters),
-              "TooManyClusters",TooManyClusters,true);
+	      "TooManyClusters",TooManyClusters,true);
   }
 
   put(clusters,m_veloClusterLocation);
@@ -311,7 +333,7 @@ void DecodeVeloRawBuffer::dumpVeloClusters(const LHCb::VeloClusters* clusters) c
     unsigned int centroidStrip = clu->channelID().strip();
 
     // interstrip position in 1/8 of strip pitch (as it is encoded in raw bank)
-//     float interStripPos = static_cast<unsigned int>((clu->interStripFraction())*8.0)/8.0;
+    //     float interStripPos = static_cast<unsigned int>((clu->interStripFraction())*8.0)/8.0;
     double interStripPos = clu->interStripFraction();
 
     info() << "DEC::POSDUMP:"
@@ -345,14 +367,14 @@ void DecodeVeloRawBuffer::createEmptyBanks() {
 }
 
 void DecodeVeloRawBuffer::failEvent(const std::string &ErrorText,
-                                    const std::string &ProcText,
-                                    AlgStatusType status,
-                                    bool procAborted){ 
+				    const std::string &ProcText,
+				    AlgStatusType status,
+				    bool procAborted){ 
   // set ProcStat for this event to failed in DecodeVeloRawBuffer
   LHCb::ProcStatus *pStat = 
     getOrCreate<LHCb::ProcStatus,LHCb::ProcStatus>(LHCb::ProcStatusLocation::Default);
   pStat->addAlgorithmStatus("DecodeVeloRawBuffer",
-                            "VELO",ProcText,status,procAborted);
+			    "VELO",ProcText,status,procAborted);
   unsigned int msgCount = 1;
   if ( msgLevel(MSG::DEBUG) ) msgCount = 10;
   Error(ErrorText,StatusCode::SUCCESS,msgCount).ignore();

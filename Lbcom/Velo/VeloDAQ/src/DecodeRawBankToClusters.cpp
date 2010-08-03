@@ -9,7 +9,7 @@
 #include "VeloRawBankDecoder.h"
 #include "DecodeRawBankToClusters.h"
 
-unsigned int VeloDAQ::decodeRawBankToClustersV2(
+int VeloDAQ::decodeRawBankToClustersV2(
     const SiDAQ::buffer_word* bank, 
     const DeVeloSensor* sensor,
     const bool assumeChipChannels,
@@ -20,7 +20,7 @@ unsigned int VeloDAQ::decodeRawBankToClustersV2(
   VeloRawBankDecoder decoder(bank);
 
   // only decode banks without errors
-  if ( decoder.hasError() ) { return 0; }
+  if ( decoder.hasError() ) { return -1; }
 
   // make sure we have enough capacity in the container
   // to avoid unnecessary relocations
@@ -82,7 +82,7 @@ unsigned int VeloDAQ::decodeRawBankToClustersV2(
 }
 
 // decoding of bank version 3, treating isp rounding like the TELL1
-unsigned int VeloDAQ::decodeRawBankToClustersV3(
+int VeloDAQ::decodeRawBankToClustersV3(
     const SiDAQ::buffer_word* bank, 
     const DeVeloSensor* sensor,
     const bool assumeChipChannels,
@@ -94,7 +94,7 @@ unsigned int VeloDAQ::decodeRawBankToClustersV3(
   VeloRawBankDecoder decoder(bank);
 
   // only decode banks without errors
-  if ( decoder.hasError() ) { return 0; }
+  if ( decoder.hasError() ) { return -1; }
 
   // make sure we have enough capacity in the container
   // to avoid unnecessary relocations

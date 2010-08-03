@@ -17,12 +17,12 @@ namespace VeloDAQ {
    *   @arg sensor sensor corresponding to bank, needed to create channel id and for channel to strip mapping
    *   @arg assumeChipChannels if true, assume chip channels instead of strip numbers in raw bank
    *   @arg clusters fast container to which decoded clusters will be appended
-   *   @return number of decoded clusters appended
+   *   @return number of decoded clusters appended (-1 = Header error)
    *   @see VeloLiteCluster
    *   @author Kurt Rinnert
    *   @date   2006-02-17
    */
-  unsigned int decodeRawBankToLiteClusters(
+  int decodeRawBankToLiteClusters(
       const SiDAQ::buffer_word* bank, 
       const DeVeloSensor* sensor,
       const bool assumeChipChannels,
