@@ -14,10 +14,10 @@ import socket
 from urllib import urlretrieve, urlopen, urlcleanup
 from shutil import rmtree
 
-script_version = '100802'
+script_version = '100803'
 python_version = sys.version_info[:3]
 txt_python_version = ".".join([str(k) for k in python_version])
-lbscripts_version = "v5r2"
+lbscripts_version = "v5r3"
 compat_version = None
 #-----------------------------------------------------------------------------------
 
