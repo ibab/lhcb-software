@@ -1,5 +1,5 @@
 package Presenter
-version v1r7
+version v1r8
 
 # Structure, i.e. directories to process.
 #============================================================================
@@ -13,10 +13,13 @@ use Gaucho        v*  Online
 
 use OnlineHistDB  v*  Online
 use OMAlib        v*  Online
+use Trending      v*  Online
 
 use ROOT          v*  LCG_Interfaces
 use Python        v*  LCG_Interfaces
 use Boost         v*  LCG_Interfaces
+
+use CLHEP         v*  LCG_Interfaces
 
 # Application building rule
 #============================================================================
