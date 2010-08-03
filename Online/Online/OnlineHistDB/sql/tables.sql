@@ -188,7 +188,7 @@ create table HISTOGRAMSET (
  HSALGO varchar2(64) constraint nnu_hsalgo NOT NULL,
  HSTITLE varchar2(100) constraint nnu_hstitle NOT NULL,
  CONSTRAINT HS_UNQ UNIQUE (HSTASK,HSALGO,HSTITLE) USING INDEX ,
- HSTYPE varchar2(3) constraint  nnu_hstype NOT NULL CONSTRAINT HS_TY_CK CHECK (HSTYPE IN ('H1D','H2D','P1D','P2D','CNT')),
+ HSTYPE varchar2(3) constraint  nnu_hstype NOT NULL CONSTRAINT HS_TY_CK CHECK (HSTYPE IN ('H1D','H2D','P1D','P2D','CNT','TRE')),
  NANALYSIS number(2) DEFAULT 0,
  DESCR varchar2(4000),
  DOC varchar2(200),

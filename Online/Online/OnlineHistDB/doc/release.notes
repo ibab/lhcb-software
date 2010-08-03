@@ -1,10 +1,13 @@
-! $Id: release.notes,v 1.57 2010-07-27 13:57:21 ggiacomo Exp $
+! $Id: release.notes,v 1.58 2010-08-03 15:19:48 ggiacomo Exp $
 ! Package     : OnlineHistDB
 ! Responsible : Giacomo Graziani
 !
 ! user manual in pdf format is available at /afs/cern.ch/user/g/ggrazian/www/lhcb/histdbdoc.pdf
 ! or using makedoc script in this folder
 !
+
+! 20100803
+- support for new "TRE" (trend) histogram type
 
 ! 20100727 v7r1
 - small fixes to web interface

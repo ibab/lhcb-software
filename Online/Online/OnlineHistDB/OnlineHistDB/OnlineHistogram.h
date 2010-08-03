@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistogram.h,v 1.35 2010-06-10 16:57:50 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistogram.h,v 1.36 2010-08-03 15:19:48 ggiacomo Exp $
 #ifndef ONLINEHISTOGRAM_H
 #define ONLINEHISTOGRAM_H 1
 /** @class  OnlineHistogram OnlineHistogram.h OnlineHistDB/OnlineHistogram.h
@@ -45,19 +45,21 @@ class  OnlineHistogram : public OnlineHistDBEnv
   inline std::string& hid() {return m_hid;}
   /// number of histograms in set
   inline int nhs() const {return m_nhs;}
-  /// histogram type (``H1D'', ``H2D'', ``P1D'',``P2D'' or ``CNT'' )
+  /// histogram type (``H1D'', ``H2D'', ``P1D'',``P2D'', ``CNT'' or ``TRE'' )
   inline std::string& hstype() {return m_hstype;}
-  /// histogram type (``H1D'', ``H2D'', ``P1D'',``P2D'' or ``CNT'' )
+  /// histogram type (``H1D'', ``H2D'', ``P1D'',``P2D'', ``CNT'' or ``TRE'' )
   inline OnlineHistDBEnv::HistType type() {return m_type;}
   /// histogram dimension (1 or 2 for histograms, 0 for counters)
   inline int dimension() { 
     int out=-1;
     switch (m_type) {
     case OnlineHistDBEnv::SAM :
-    case OnlineHistDBEnv::CNT ://should be 1?
+    case OnlineHistDBEnv::CNT ://should be 1?      
       out=0; break;
     case OnlineHistDBEnv::H1D :
     case OnlineHistDBEnv::P1D :
+    case OnlineHistDBEnv::TRE :
+    default:
       out=1; break;
     case OnlineHistDBEnv::H2D :
     case OnlineHistDBEnv::P2D :
