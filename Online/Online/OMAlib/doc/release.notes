@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.52 2010-07-27 13:58:28 ggiacomo Exp $
+! $Id: release.notes,v 1.53 2010-08-03 12:08:14 ggiacomo Exp $
 ! Package     : OMAlib
 ! Responsible : G. Graziani
 ! Purpose     : Online Monitoring Analysis library
+
+! 20100803 GG
+ - support for asymmetric error bins in OMAEfficiency
 
 ! ======== v3r1 ===============
 
