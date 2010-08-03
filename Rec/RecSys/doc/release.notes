@@ -6,6 +6,15 @@ Purpose: LHCb reconstruction packages.
          by one or more LHCb applications. 
 
 
+</PRE><H1><A NAME=v10r3p1>2010-08-03 RecSys v10r3p1</A></H1><PRE>
+This version uses Gaudi v21r10p1 and LHCb v31r4
+
+- Patch release to fix problems with the Best track container
+
+- The new track fit/clone removing ordering left tracks with no states in Best
+  
+- Only one package is changed Tr/TrackTools v3r34p1
+
 </PRE><H1><A NAME=v10r3>2010-07-28 RecSys v10r3</A></H1><PRE>
 This version uses Gaudi v21r10p1 and LHCb v31r4
 

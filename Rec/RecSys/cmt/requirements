@@ -1,5 +1,5 @@
 package RecSys
-version v10r3
+version v10r3p1
 
 branches cmt doc tests
  
@@ -74,7 +74,7 @@ use TrackIdealPR         v2r19   Tr   # Eduardo Rodrigues
 use TrackMCTools         v2r26   Tr   # Eduardo Rodrigues
 use TrackMonitors        v1r28   Tr   # Wouter Hulsbergen, Stephanie Menzemer
 use TrackProjectors      v2r28p2 Tr   # Wouter Hulsbergen
-use TrackTools           v3r34   Tr   # Eduardo Rodrigues
+use TrackTools           v3r34p1 Tr   # Eduardo Rodrigues
 use TrackUtils           v1r37   Tr   # Eduardo Rodrigues
 
 # Primary Vertex Finder
