@@ -2,9 +2,11 @@
 
 __author__ = "Juan PALACIOS juan.palacios@nikhef.nl"
 
-__version__ = '$Revision: 1.1 $'
+__version__ = '$Revision: 1.2 $'
 
 __all__ = ('OutputStreamConf')
+
+from copy import copy
 
 class OutputStreamConf(object) :
     def __init__(self,
@@ -15,6 +17,6 @@ class OutputStreamConf(object) :
         self.streamType = streamType
         self.filePrefix = filePrefix
         self.extension = fileExtension
-        self.extraItems = extraItems
+        self.extraItems = copy(extraItems)
         self.name = ''
 

@@ -1,13 +1,13 @@
 ''' '''
-#$Id: dstwriters.py,v 1.5 2010-08-02 12:38:24 jpalac Exp $
+#$Id: dstwriters.py,v 1.6 2010-08-03 16:47:25 jpalac Exp $
 
 
 __author__ = "Juan PALACIOS juan.palacios@nikhef.nl"
 
-__version__ = '$Revision: 1.5 $'
+__version__ = '$Revision: 1.6 $'
 
 
-from Configurables import GaudiSequencer, InputCopyStream, OutputStream
+from Configurables import GaudiSequencer, InputCopyStream, OutputStream, RecordStream
 
 from streamconf import OutputStreamConf
 
@@ -33,18 +33,24 @@ class DSTWriterSelectionSequence(object) :
     def __init__(self,
                  selSequence,
                  outputStreamConfiguration = baseDSTWriterConf,
+                 writeFSR = True,
                  extras = None ) :
 
         outputStreamConfiguration.name=selSequence.name()
-        stream = outputStream(outputStreamConfiguration)
+        self.stream = outputStream(outputStreamConfiguration)
+        self.stream.OutputLevel=1
+        self.fsrStream = fsrStream(outputStreamConfiguration)
         self.algos = [selSequence.sequence()]
+        if writeFSR :
+            self.algos.insert(0, self.fsrStream)
         self.name = "DSTWriter"+selSequence.name()
         self.mainSeq = None
         if None != extras :
             for _algs in [x(selSequence) for x in extras] :
                 self.algos += _algs
-            stream.OptItemList += [extras.output]
-        self.algos.append(stream)
+            print 'XXX ADDING', extras.output, 'to stream', self.stream.name() 
+            self.stream.OptItemList += [extras.output]
+        self.algos.append(self.stream)
 
     def sequence(self, sequencerType = GaudiSequencer) :
         if self.mainSeq == None :
@@ -55,10 +61,20 @@ def outputStream(conf) :
     '''
     Create an output stream object based in a stream configuration input.
     '''
+
     stream = conf.streamType('OStream'+conf.name,
-                             OptItemList = conf.extraItems,
                              Output = _poolFileName(conf.filePrefix + conf.name + conf.extension))
+    print 'XXX adding extraitems', conf.extraItems, 'for conf name', conf.name
+    stream.OptItemList += conf.extraItems
     return stream
+
+def fsrStream(conf) :
+    return RecordStream('FileRecordStream' + conf.name,
+                        ItemList         = [ "/FileRecords#999" ],
+                        EvtDataSvc       = "FileRecordDataSvc",
+                        EvtConversionSvc = "FileRecordPersistencySvc",
+                        Output           = _poolFileName(conf.filePrefix + conf.name + conf.extension)
+                        )
 
 def _poolFileName(name) :
     '''
