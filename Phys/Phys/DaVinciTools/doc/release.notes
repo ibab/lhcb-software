@@ -1,8 +1,15 @@
-! $Id: release.notes,v 1.565 2010-07-26 16:12:57 jpalac Exp $
+! $Id: release.notes,v 1.566 2010-08-04 14:53:07 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2010-08-04 - Juan Palacios
+ - BestPVAlg
+  . Process multiple Particle or Particle -> PV relations tables inputs in parallel.
+    Output tables' locations determined from input.
+ - cmt/requirements
+  . Increase to v21r5.
 
 !========================== DaVinciTools v21r4 2010-07-26 ===================
 
