@@ -1,8 +1,14 @@
-''' Helpers for DST writing.
+''' Helpers functions and classes for DST and MicroDST writing.
 '''
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
-__all__ = ('ConfigurableList', 'setCloneFilteredParticlesToTrue', 'flattenList')
+__all__ = ('ConfigurableList',
+           'setCloneFilteredParticlesToTrue',
+           'flattenList',
+           'personaliseName',
+           'dataLocations',
+           'MicroDSTElement',
+           'MicroDSTElementList')
 
 def isIterable(obj) :
     '''
@@ -74,3 +80,29 @@ class ConfigurableList(object) :
         else :
             return ConfigurableList._algos['DEFAULT'](self._sel)
 
+class MicroDSTElementList(object) :
+    '''
+    Wrap a set of MicroDST callables in a list-like interface.
+    Set the TES branch of each to the input branch.
+    Export the output location trunk of all the callables.
+    '''
+    def __init__(self, branch = 'MicroDST', callables = []) :
+        self.callables = callables
+        self.branch = branch
+        self.output = '/Event/'+branch+'#99'
+        for c in self.callables :
+            c.branch = self.branch
+    def __getitem__(self, index) :
+        return self.callables[index]
+
+class MicroDSTElement(object) :
+    '''
+    Base class for MicroDSTElement callables. Stores the TES branch and makes dataLocations and personaliseName functions accessible.
+    Derived classes must implement __call__(self, sel) method, where sel is a SelectionSequence. Method should return list of all configured algorithms necessary to produce the data to be cloned and the cloners.
+    '''
+    def __init__(self, branch = '') :
+        self.branch = branch
+        self.personaliseName = personaliseName
+        self.dataLocations = dataLocations
+    def setOutputPrefix(self,alg) :
+        alg.OutputPrefix = self.branch
