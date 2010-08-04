@@ -58,7 +58,7 @@ use PatVeloTT            v3r14   Tf   # Mariusz Witek
 use TfTools              v1r13   Tf   # Stephanie Hansmann-Menzemer
 use TrackMatching        v2r30   Tf   # Eduardo Rodrigues
 use TrackSeeding         v1r5    Tf   # Eduardo Rodrigues, Henk Jan Bulten
-use TrackSys             v4r36   Tf   # Stephanie Hansmann-Menzemer 
+use TrackSys             v4r37   Tf   # Stephanie Hansmann-Menzemer 
 use TsaAlgorithms        v3r22   Tf   # Matt Needham
 
 
@@ -74,7 +74,7 @@ use TrackIdealPR         v2r19   Tr   # Eduardo Rodrigues
 use TrackMCTools         v2r26   Tr   # Eduardo Rodrigues
 use TrackMonitors        v1r28   Tr   # Wouter Hulsbergen, Stephanie Menzemer
 use TrackProjectors      v2r28p2 Tr   # Wouter Hulsbergen
-use TrackTools           v3r34p1 Tr   # Eduardo Rodrigues
+use TrackTools           v3r34p  Tr   # Eduardo Rodrigues
 use TrackUtils           v1r37   Tr   # Eduardo Rodrigues
 
 # Primary Vertex Finder
