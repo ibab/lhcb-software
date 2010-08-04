@@ -33,6 +33,27 @@ def setCloneFilteredParticlesToTrue(algs) :
             except :
                 pass
 
+def personaliseName(obj, name) :
+    '''
+    Prepend a string to the name of named object obj.
+    obj must have method obj.name().
+    '''
+    return name + "_" + obj.name()
+
+def dataLocations(selSequence, extension) :
+    '''
+    Add an extension to each of the locations in selSequence.oupputLocations().
+    Returns a new list of locations.
+    '''
+    loc = []
+    for output in selSequence.outputLocations() :
+        location = output+"/"+extension
+        location = location.replace("//", "/")
+        if location.endswith('/') :
+            location = location[:len(location)-1]
+        loc += [location]
+    return loc
+
 class ConfigurableList(object) :
     '''
     Return a list of plain configurables from a SelectionSequence style object.
