@@ -3,14 +3,15 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
-</PRE><H1><A NAME=v37r6p1>2010-08-06 Brunel v37r6p1</A></H1><PRE>
-- Dummy release to pick up the latest Rec, v10r3
+</PRE><H1><A NAME=v37r6p1>2010-08-04 Brunel v37r6p1</A></H1><PRE>
 
-- Patch release to fix problems with the Best track container
+- There were a few bugs in the v10r3 Rec release. This is an emergency patch of those.
 
-- The new track fit/clone removing ordering left tracks with no states in Best
+- bug #70990, problems with stateless tracks in the Best track container
+  . Only one package is changed Tf/TrackSys v4r37
 
-- Only one package is changed Tf/TrackSys
+- bug #71012, new fit mechanism for tracks breaks Calo photon reconstruction
+  . Two packages are reverted to older versions: Tr/TrackFitter v2r49, Tr/TrackTools v3r33
 
 </PRE><H1><A NAME=v37r6>2010-07-26 Brunel v37r6</A></H1><PRE>
 - Dummy release to pick up the latest Rec, v10r3
