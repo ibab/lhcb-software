@@ -1,8 +1,16 @@
-! $Id: release.notes,v 1.193 2010-07-26 12:29:39 jpalac Exp $
+! $Id: release.notes,v 1.194 2010-08-04 13:06:15 jpalac Exp $
 !===========================================================================
 ! Package     : VertexFit
 ! Responsible : Yuehong Xie
 !===========================================================================
+
+! 2010-08-04 - Juan Palacios
+ - PVReFitterAlg
+  . Can now process many particle input locations in parallel.
+    Use property ParticleInputLocations. ParticleInputLocation is now
+    deprecated but still works.
+ - cmt/requirements
+  . Increase to v6r4.
 
 !========================== VertexFit v6r3p1 2010-07-26 ===============
 
