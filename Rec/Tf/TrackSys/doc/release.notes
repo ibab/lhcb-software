@@ -3,9 +3,14 @@
 ! Responsible : Eduardo Rodrigues
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
+
+!============================ TrackSys v4r37 2010-08-04 ======================
 ! 2010-08-04 - Stephanie Hansmann-Menzemer
  - add a extra copy step to the best track container, to remove tracks with
    failed fit
+
+! 2010-07-27 - Rob Lambert
+ - Propagate DataType into a slot of TrackSys
 
 ! 2010-07-30 - Olivier Callot
  - Fit the seed only if the MATCH algorithm is there. PatMatch doesn't need it.
@@ -17,6 +22,7 @@
 
 ! 2010-07-27 - Stephanie Hansmann-Menzemer
  - add switches for timing measurements in RecoTracking.py
+
 
 !============================ TrackSys v4r35 2010-07-20 ======================
 ! 2010-07-20 - Marco Cattaneo
