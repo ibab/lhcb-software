@@ -2,7 +2,7 @@
 Write a DST for a single selection sequence. Writes out the entire
 contents of the input DST
 """
-__version__ = "$Id: SelDSTWriter.py,v 1.2 2010-08-03 16:47:36 jpalac Exp $"
+__version__ = "$Id: SelDSTWriter.py,v 1.3 2010-08-04 16:43:06 jpalac Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -21,5 +21,5 @@ class SelDSTWriter(MicroDSTWriter) :
     """
     __slots__ = { "StreamConf"           : selDSTWriterConf,
                   "MicroDSTElements" : [CloneParticleTrees(copyProtoParticles = False),
-                                        ClonePVRelations({"Particle2VertexRelations":True})]
+                                        ClonePVRelations("Particle2VertexRelations",True)]
                   }

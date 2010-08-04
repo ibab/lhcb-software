@@ -5,10 +5,9 @@
 from copy import copy
 from dstwriterutils import (setCloneFilteredParticlesToTrue,
                             ConfigurableList,
-                            personaliseName,
                             MicroDSTElement)
 
-
+from GaudiConf.Configuration import *
 
 class CloneRecHeader(MicroDSTElement) :
     def __call__(self, sel):
@@ -98,35 +97,48 @@ class CloneBTaggingInfo(MicroDSTElement) :
 
 
 class ClonePVRelations(MicroDSTElement) :
-    def __init__(self, PVRelationsMap, branch='') :
+    def __init__(self, location, clonePVs=True, branch = '') :
         MicroDSTElement.__init__(self, branch)
-        self.PVRelMap = PVRelationsMap
-        
+        self.location = location
+        self.clonePVs = clonePVs
     def __call__(self, sel) :
-        """
-        loop over related PV locations and copy each table.
-        If no PV copying, keep original PV, but only if no PV re-fitting
-        has been performed. If it has, then copy the PV too.
-        """
-        cloners = []
-        for loc, copyPV in self.PVRelMap.iteritems() :
-            print "Copy PV relations ", loc
-            fullLoc = self.dataLocations(sel, loc)
-            cloner = _copyP2PVRelations(sel,"CopyP2PV_"+loc, fullLoc)
-            clonerType = cloner.getProp('ClonerType')
-            if copyPV == False :
-                cloner.ClonerType = 'NONE'
-                if hasattr(sel,'algorithm') :
-                    alg = sel.algorithm()
-                    refitPVs = False
-                    if alg != None and alg.properties().has_key('ReFitPVs') :
-                        refitPVs =  alg.getProp('ReFitPVs')
-                    if refitPVs :
-                        cloner.ClonerType = clonerType
-            self.setOutputPrefix(cloner)
-            cloners += [cloner]
-            return cloners
+        from Configurables import CopyParticle2PVRelations
+        cloner = CopyParticle2PVRelations(self.personaliseName(sel, "CopyP2PV_"+self.location))
+        cloner.InputLocations = self.dataLocations(sel, self.location)
+        cloner.OutputLevel=4
+        clonerType = cloner.getProp('ClonerType')
+        if self.clonePVs == False :
+            cloner.ClonerType = 'NONE'
+            if hasattr(sel,'algorithm') :
+                alg = sel.algorithm()
+                refitPVs = False
+                if alg != None and alg.properties().has_key('ReFitPVs') :
+                    refitPVs =  alg.getProp('ReFitPVs')
+                if refitPVs :
+                    cloner.ClonerType = clonerType
+        self.setOutputPrefix(cloner)
+        return [cloner]
 
+
+class ReFitAndClonePVs(MicroDSTElement) :
+    '''
+    Re-fit PVs and find the best one for each particle in a selection.
+    Store Particle->PV table and re-fitted PVs in MicroDST.
+    Runs a sequence of PVReFitterAlg, BestPVAlg and CopyParticle2PVRelations.
+    Relations tables go to ".../<selection name>/BestPV_P2PV"
+    '''
+
+    def __call__(self, sel) :
+        from Configurables import CopyParticle2PVRelations
+        from Configurables import PVReFitterAlg, BestPVAlg
+        refitPVs = PVReFitterAlg(self.personaliseName(sel, 'ReFitPvs'))
+        refitPVs.ParticleInputLocations = self.dataLocations(sel, 'Particles')
+        bestPV = BestPVAlg(self.personaliseName(sel, 'BestPV'))
+        bestPV.P2PVRelationsInputLocations = self.dataLocations(sel, refitPVs.name()+'_P2PV')
+        cloner = CopyParticle2PVRelations(self.personaliseName(sel, 'CopyReFitP2PV'))
+        cloner.InputLocations = self.dataLocations(sel, bestPV.name()+'_P2PV')                    
+        return [refitPVs, bestPV, cloner]
+        
 class CloneL0DUReport(MicroDSTElement) :
     def __call__(self, sel) :
         from Configurables import CopyL0DUReport
@@ -152,12 +164,3 @@ class CloneBackCat(MicroDSTElement) :
         cloner.OutputLevel=4
         self.setOutputPrefix(cloner)
         return [backCatAlg, cloner]
-
-def _copyP2PVRelations(sel, name, locations) :
-    from Configurables import CopyParticle2PVRelations
-    cloner = CopyParticle2PVRelations(personaliseName(sel,name))
-    cloner.InputLocations = locations
-    cloner.OutputLevel=4
-    return cloner
-
-

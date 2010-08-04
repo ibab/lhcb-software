@@ -1,7 +1,7 @@
 """
 
 """
-__version__ = "$Id: MicroDSTWriter.py,v 1.4 2010-08-04 09:31:28 jpalac Exp $"
+__version__ = "$Id: MicroDSTWriter.py,v 1.5 2010-08-04 16:43:06 jpalac Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from DSTWriters.__dev__.BaseDSTWriter import BaseDSTWriter
@@ -15,7 +15,8 @@ from DSTWriters.microdstelements import  (CloneRecHeader,
                                           ClonePVRelations,
                                           CloneMCInfo,
                                           CloneBackCat,
-                                          CloneBTaggingInfo)
+                                          CloneBTaggingInfo,
+                                          ReFitAndClonePVs)
 
 class MicroDSTWriter(BaseDSTWriter) :
     """
@@ -27,7 +28,7 @@ class MicroDSTWriter(BaseDSTWriter) :
                                         CloneODIN(),
                                         ClonePVs(),
                                         CloneParticleTrees(copyProtoParticles = False),
-                                        ClonePVRelations({"Particle2VertexRelations":True}),
+                                        ClonePVRelations("Particle2VertexRelations",True),
                                         CloneBTaggingInfo(),
                                         CloneMCInfo()]
                   }
