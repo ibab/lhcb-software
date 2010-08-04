@@ -10,7 +10,7 @@ Purpose: LHCb reconstruction program
 
 - The new track fit/clone removing ordering left tracks with no states in Best
 
-- Only one package is changed Tr/TrackTools
+- Only one package is changed Tf/TrackSys
 
 </PRE><H1><A NAME=v37r6>2010-07-26 Brunel v37r6</A></H1><PRE>
 - Dummy release to pick up the latest Rec, v10r3
