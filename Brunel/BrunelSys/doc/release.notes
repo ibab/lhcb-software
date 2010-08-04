@@ -11,7 +11,7 @@ This version uses projects LCG 58e, Gaudi v21r10p1, LHCb v31r4, Lbcom v9r5p1,
 
 - The new track fit/clone removing ordering left tracks with no states in Best
 
-- Only one package is changed Tr/TrackTools
+- Only one package is changed Tf/TrackSys
 
 </PRE><H1><A NAME=v37r6>2010-07-28 Brunel v37r6</A></H1><PRE>
 This version uses projects LCG 58e, Gaudi v21r10p1, LHCb v31r4, Lbcom v9r5p1,
