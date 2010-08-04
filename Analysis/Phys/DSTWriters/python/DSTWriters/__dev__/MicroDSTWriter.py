@@ -1,7 +1,7 @@
 """
 
 """
-__version__ = "$Id: MicroDSTWriter.py,v 1.2 2010-08-03 16:47:36 jpalac Exp $"
+__version__ = "$Id: MicroDSTWriter.py,v 1.3 2010-08-04 07:07:21 jpalac Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -18,8 +18,7 @@ from DSTWriters.microdstelements import  (CloneRecHeader,
                                           ClonePVRelations,
                                           CloneMCInfo,
                                           CloneBackCat,
-                                          CloneBTaggingInfo,
-                                          MicroDSTExtras)
+                                          CloneBTaggingInfo)
 
 class MicroDSTWriter(BaseDSTWriter) :
     """
