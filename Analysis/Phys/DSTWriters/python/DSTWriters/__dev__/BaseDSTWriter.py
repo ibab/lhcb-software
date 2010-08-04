@@ -2,11 +2,12 @@
 Write a DST for a single selection sequence. Writes out the entire
 contents of the input DST
 """
-__version__ = "$Id: BaseDSTWriter.py,v 1.4 2010-08-04 07:26:53 jpalac Exp $"
+__version__ = "$Id: BaseDSTWriter.py,v 1.5 2010-08-04 09:31:28 jpalac Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
 from GaudiConf.Configuration import *
+from Configurables import GaudiSequencer
 
 from DSTWriters.dstwriters import DSTWriterSelectionSequence, baseDSTWriterConf
 from DSTWriters.dstwriterutils import MicroDSTElementList
@@ -41,11 +42,7 @@ class BaseDSTWriter(ConfigurableUser) :
         Build list of callables that will be used by the BaseDSTWriter.
         '''
         clonerList = copy(self.getProp('MicroDSTElements'))
-        _tesBranch = selSeq.name()
-        
-        print self.name(), ": Extra sequence members ", clonerList 
-
-        return MicroDSTElementList(branch = _tesBranch, callables = clonerList)
+        return MicroDSTElementList(branch = selSeq.name(), callables = clonerList)
 
     def sequence(self) :
         return GaudiSequencer(self.name() + "MainSeq",
@@ -54,7 +51,8 @@ class BaseDSTWriter(ConfigurableUser) :
 
     def __apply_configuration__(self) :
         """
-        BaseDSTWriter configuration
+        BaseDSTWriter configuration. Creates a DSTWriterSelectionSequence for
+        each input SelectionSequence and adds it to the main sequence.
         """
         log.info("Configuring BaseDSTWriter")
         sc = copy(self.getProp('StreamConf'))
@@ -66,5 +64,3 @@ class BaseDSTWriter(ConfigurableUser) :
                                              outputStreamConfiguration = _sc,
                                              extras = self.buildClonerList(sel))
             self.sequence().Members += [ seq.sequence() ]
-            
-
