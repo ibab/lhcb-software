@@ -14,6 +14,7 @@
 #include <Event/RecVertex.h>
 
 #include <TH1D.h>
+#include <TH2D.h>
 #include <TProfile.h>
 #include <TRandom3.h>
 #include <TF1.h>
@@ -22,6 +23,7 @@
 #include "Event/MCParticle.h"
 #include "Kernel/Particle2MCLinker.h"
 
+#include <utility>
 
 /** @class VeloIPResolutionMonitor VeloIPResolutionMonitor.h
  *  
@@ -62,10 +64,6 @@ namespace Velo
 
     bool m_withMC;
 
-    TRandom3* m_randGen ;
-    bool m_scaleInversePT ;
-    TF1* m_inversePTFun ;
-
     bool m_useLogScale;
     bool m_statOverflows;
     std::vector<double> m_bins;
@@ -99,6 +97,22 @@ namespace Velo
     TH1D* m_h_TrackMultiplicity;
     TH1D* m_h_InversePTFreq;
 
+    TH2D* m_h_ipXVsPhi ;
+    TH1D* m_h_ipXVsPhiMean ;
+    TH1D* m_h_ipXVsPhiSigma ;
+    
+    TH2D* m_h_ipXVsEta ;
+    TH1D* m_h_ipXVsEtaMean ;
+    TH1D* m_h_ipXVsEtaSigma ;
+    
+    TH2D* m_h_ipYVsPhi ;
+    TH1D* m_h_ipYVsPhiMean ;
+    TH1D* m_h_ipYVsPhiSigma ;
+    
+    TH2D* m_h_ipYVsEta ;
+    TH1D* m_h_ipYVsEtaMean ;
+    TH1D* m_h_ipYVsEtaSigma ;
+    
     std::string m_fitOption;
     
     TProfile* m_p_3DphiResiduals;
@@ -130,6 +144,14 @@ namespace Velo
     StatusCode fitDbl2DGausAndPlotMean( std::vector< TH1D* >, TH1D* );
     StatusCode fitLandauAndPlotMPV( std::vector< TH1D* >, TH1D* );
 
+
+    void fillMeanAndProfile( TH1D* mean, TH1D* profile, TH1D** histos, int option ) ;
+    void getBinsFromTH2D( TH2D* h, std::string id, std::string title, std::string unit, TH1D** out ) ;
+    std::pair< std::pair<Double_t,Double_t>, std::pair<Double_t,Double_t> > result1D( TH1D* h, int opt );
+
+    void rebinHisto( TH1D*, int nbins=0 ) ;
+    void rebinHistos( TH1D** , int , int nbins=0 ) ;
+    
     StatusCode checkMCAssoc( const LHCb::Track*, const LHCb::RecVertex*, LHCb::MCVertex*&, double&, unsigned int& );
     
   };

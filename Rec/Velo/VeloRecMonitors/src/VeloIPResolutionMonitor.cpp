@@ -25,6 +25,9 @@
 #include <VeloDet/DeVeloPhiType.h>
 #include <VeloDet/DeVeloRType.h>
 
+#include "TFitResultPtr.h"
+#include "TFitResult.h"
+
 using namespace LHCb;
 using namespace Gaudi::Utils;
 using namespace Gaudi::Units;
@@ -60,9 +63,6 @@ Velo::VeloIPResolutionMonitor::VeloIPResolutionMonitor( const string& name,
   // set whether to write the ntuple
   declareProperty("WriteTuple",m_writeTuple=false);
 
-  // set whether to scale accepted entries with pt frequency
-  declareProperty("ScaleByPTFrequency", m_scaleInversePT=false ) ;
-
   // set whether to do comparison to MC
   declareProperty("WithMC",m_withMC=false);
 
@@ -94,7 +94,7 @@ Velo::VeloIPResolutionMonitor::VeloIPResolutionMonitor( const string& name,
   declareProperty("RefitPVs", m_refitPVs = false );
 
   // Set fit option for output profiles
-  declareProperty("FitOption", m_fitOption = "NoFit");
+  declareProperty("FitOption", m_fitOption = "FitSingle");
   
 }
 //=============================================================================
@@ -123,13 +123,6 @@ StatusCode Velo::VeloIPResolutionMonitor::initialize() {
 
   // get the track extrapolator used in calculating the IPs
   m_trackExtrapolator = tool<ITrackExtrapolator>("TrackMasterExtrapolator","Extrapolator",this);
-
-  if( m_scaleInversePT ){ 
-    m_randGen = new TRandom3( 0 ) ;
-    m_inversePTFun = new TF1( "InversePTFun", "landaun", 0, 10 ) ;
-    m_inversePTFun->SetParameters( 1, 1.69, 0.648 ) ;
-    m_inversePTFun->SetParameter( 0, 1./m_inversePTFun->GetMaximum() ) ;
-  }  
 
   // if useVariableBins=false (default) and no bin values have been defined in the options file, 
   // m_nBins equal sized bins between m_InversePTMin and m_InversePTMax are used
@@ -282,6 +275,72 @@ StatusCode Velo::VeloIPResolutionMonitor::initialize() {
 
   }
 
+
+  // plots vs phi
+  float limit1D = m_limitFactor * ( m_limitGradient1D * (float)(*(m_bins.rbegin())) + m_limitIntercept1D );
+
+  m_h_ipXVsPhi = Aida2ROOT::aida2root( book2D( "IPXVsPhi","IP_{X} Vs #phi", -pi, pi, 32, -limit1D, limit1D, 500 ) ) ;
+  m_h_ipXVsPhi->SetXTitle("#phi (rad)");
+	m_h_ipXVsPhi->SetYTitle("IP_{X} (mm)");
+	m_h_ipXVsPhi->Sumw2();
+
+	m_h_ipXVsPhiSigma = Aida2ROOT::aida2root( book("IPXResVsPhi","Resolution of IP_{X} Vs #phi", -pi, pi, 32 ) );
+	m_h_ipXVsPhiSigma->SetXTitle("#phi (rad)");
+	m_h_ipXVsPhiSigma->SetYTitle("mm");
+	m_h_ipXVsPhiSigma->Sumw2();
+
+	m_h_ipXVsPhiMean = Aida2ROOT::aida2root( book("IPXMeanVsPhi","Mean of IP_{X} Vs #phi", -pi, pi, 32 ) );
+	m_h_ipXVsPhiMean->SetXTitle("#phi (rad)");
+	m_h_ipXVsPhiMean->SetYTitle("mm");
+	m_h_ipXVsPhiMean->Sumw2();
+
+  m_h_ipYVsPhi = Aida2ROOT::aida2root( book2D( "IPYVsPhi","IP_{Y} Vs #phi", -pi, pi, 32, -limit1D, limit1D, 500 ) ) ;
+  m_h_ipYVsPhi->SetXTitle("#phi (rad)");
+	m_h_ipYVsPhi->SetYTitle("IP_{Y} (mm)");
+	m_h_ipYVsPhi->Sumw2();
+
+	m_h_ipYVsPhiSigma = Aida2ROOT::aida2root( book("IPYResVsPhi","Resolution of IP_{Y} Vs #phi", -pi, pi, 32 ) );
+	m_h_ipYVsPhiSigma->SetXTitle("#phi (rad)");
+	m_h_ipYVsPhiSigma->SetYTitle("mm");
+	m_h_ipYVsPhiSigma->Sumw2();
+
+	m_h_ipYVsPhiMean = Aida2ROOT::aida2root( book("IPYMeanVsPhi","Mean of IP_{Y} Vs #phi", -pi, pi, 32 ) );
+	m_h_ipYVsPhiMean->SetXTitle("#phi (rad)");
+	m_h_ipYVsPhiMean->SetYTitle("mm");
+	m_h_ipYVsPhiMean->Sumw2();
+
+
+  // plots vs eta
+  m_h_ipXVsEta = Aida2ROOT::aida2root( book2D( "IPXVsEta","IP_{X} Vs #eta", 0, 6, 50, -limit1D, limit1D, 500 ) ) ;
+  m_h_ipXVsEta->SetXTitle("#eta");
+	m_h_ipXVsEta->SetYTitle("IP_{X} (mm)");
+	m_h_ipXVsEta->Sumw2();
+
+	m_h_ipXVsEtaSigma = Aida2ROOT::aida2root( book("IPXResVsEta","Resolution of IP_{X} Vs #eta", 0, 6, 50 ) );
+	m_h_ipXVsEtaSigma->SetXTitle("#eta");
+	m_h_ipXVsEtaSigma->SetYTitle("mm");
+	m_h_ipXVsEtaSigma->Sumw2();
+
+	m_h_ipXVsEtaMean = Aida2ROOT::aida2root( book("IPXMeanVsEta","Mean of IP_{X} Vs #eta", 0, 6, 50 ) );
+	m_h_ipXVsEtaMean->SetXTitle("#eta");
+	m_h_ipXVsEtaMean->SetYTitle("mm");
+	m_h_ipXVsEtaMean->Sumw2();
+
+  m_h_ipYVsEta = Aida2ROOT::aida2root( book2D( "IPYVsEta","IP_{Y} Vs #eta", 0, 6, 50, -limit1D, limit1D, 500 ) ) ;
+  m_h_ipYVsEta->SetXTitle("#eta");
+	m_h_ipYVsEta->SetYTitle("IP_{Y} (mm)");
+	m_h_ipYVsEta->Sumw2();
+
+	m_h_ipYVsEtaSigma = Aida2ROOT::aida2root( book("IPYResVsEta","Resolution of IP_{Y} Vs #eta", 0, 6, 50 ) );
+	m_h_ipYVsEtaSigma->SetXTitle("#eta");
+	m_h_ipYVsEtaSigma->SetYTitle("mm");
+	m_h_ipYVsEtaSigma->Sumw2();
+
+	m_h_ipYVsEtaMean = Aida2ROOT::aida2root( book("IPYMeanVsEta","Mean of IP_{Y} Vs #eta", 0, 6, 50 ) );
+	m_h_ipYVsEtaMean->SetXTitle("#eta");
+	m_h_ipYVsEtaMean->SetYTitle("mm");
+	m_h_ipYVsEtaMean->Sumw2();
+
   return sc;
 }
 
@@ -358,19 +417,9 @@ StatusCode Velo::VeloIPResolutionMonitor::execute() {
 
       // only select Long tracks for reliable PT measurement, unless tracks are to be written to tuple
       // Skip tracks outwith the bin range, unless tuple is to be written, then all tracks are taken
-      if( (inversePT > *(m_bins.rbegin()) || *(m_bins.begin()) > inversePT || (*tr)->type() != Track::Long ) 
+      if( (*tr)->type() != Track::Long 
           && !m_writeTuple ) continue;
 
-      // discard tracks according to their 1/pt frequency, if set
-      if( m_scaleInversePT && 
-          (
-           (!m_track->checkType( Track::Velo ) && 
-            m_randGen->Rndm() > m_inversePTFun->Eval( m_bins[1] ) / 0.8 / m_inversePTFun->Eval( inversePT ) )
-           ||
-           ( m_track->checkType( Track::Velo ) && m_randGen->Rndm() > 0.5 )
-           )
-          ) 
-        continue ;
 
       counter("Tracks selected")++;
         
@@ -413,6 +462,12 @@ StatusCode Velo::VeloIPResolutionMonitor::execute() {
                                     ip3d - m_res3DyIntercept - m_res3Dgrad * inversePT 
                                     - m_res3Dquad * inversePT * inversePT );
         }
+      }
+      if( m_track->type() == Track::Long ){
+        m_h_ipXVsPhi->Fill( m_track->phi(), ipx ) ;
+        m_h_ipYVsPhi->Fill( m_track->phi(), ipy ) ;
+        m_h_ipXVsEta->Fill( m_track->pseudoRapidity(), ipx ) ;
+        m_h_ipYVsEta->Fill( m_track->pseudoRapidity(), ipy ) ;
       }
 
       if( m_writeTuple ){
@@ -543,6 +598,35 @@ StatusCode Velo::VeloIPResolutionMonitor::finalize() {
   StatusCode sc( StatusCode::SUCCESS );
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
+
+  TH1D* m_ipXPhiHistos[32] ;
+  TH1D* m_ipYPhiHistos[32] ;
+  TH1D* m_ipXEtaHistos[50] ;
+  TH1D* m_ipYEtaHistos[50] ;
+
+	getBinsFromTH2D( m_h_ipXVsPhi, "IPX_phi", "IP_{X}", "#phi (rad)", &m_ipXPhiHistos[0] ) ;
+  rebinHistos( m_ipXPhiHistos, 32 ) ;
+	getBinsFromTH2D( m_h_ipYVsPhi, "IPY_phi", "IP_{Y}", "#phi (rad)", &m_ipYPhiHistos[0] ) ;
+  rebinHistos( m_ipYPhiHistos, 32 ) ;
+
+	getBinsFromTH2D( m_h_ipXVsEta, "IPX_eta", "IP_{X}", "#eta", &m_ipXEtaHistos[0] ) ;
+  rebinHistos( m_ipXEtaHistos, 32 ) ;
+	getBinsFromTH2D( m_h_ipYVsEta, "IPY_eta", "IP_{Y}", "#eta", &m_ipYEtaHistos[0] ) ;
+  rebinHistos( m_ipYEtaHistos, 32 ) ;
+
+  int option = m_fitOption == "FitDouble" ? 9 :
+    m_fitOption == "FitSingle" ? 4 : 
+    0 ;
+
+  fillMeanAndProfile( m_h_ipXVsEtaMean, m_h_ipXVsEtaSigma, m_ipXEtaHistos, option ) ;
+  fillMeanAndProfile( m_h_ipYVsEtaMean, m_h_ipYVsEtaSigma, m_ipYEtaHistos, option ) ;
+	
+  fillMeanAndProfile( m_h_ipXVsPhiMean, m_h_ipXVsPhiSigma, m_ipXPhiHistos, option ) ;
+  fillMeanAndProfile( m_h_ipYVsPhiMean, m_h_ipYVsPhiSigma, m_ipYPhiHistos, option ) ;
+
+  rebinHistos( &m_IPres_unsigned3D_histos[0], m_nBins ) ;
+  rebinHistos( &m_IPres_X_histos[0], m_nBins ) ;
+  rebinHistos( &m_IPres_Y_histos[0], m_nBins ) ;
 
   if( m_fitOption == "FitDouble" ) {
     fitDbl2DGausAndPlotMean( m_IPres_unsigned3D_histos, m_h_MeanVsInversePT_unsigned3D );
@@ -712,7 +796,7 @@ StatusCode Velo::VeloIPResolutionMonitor::fitGaussAndPlotWidth ( vector< TH1D* >
     if( sourceHistos[i]->GetEntries() == 0 ) continue;
     
     Gauss->SetParameters( sourceHistos[i]->GetMaximum(), sourceHistos[i]->GetMean(), sourceHistos[i]->GetRMS() );
-    fitResult = sourceHistos[i]->Fit( Gauss, "QN" );
+    fitResult = sourceHistos[i]->Fit( Gauss, "QO" );
     if( fitResult!=0 ){
       if( msgLevel(MSG::DEBUG) ) debug() << "Fit failed for histo '" << sourceHistos[i]->GetTitle() << "'" << endmsg;} 
     else{
@@ -746,7 +830,7 @@ StatusCode Velo::VeloIPResolutionMonitor::fitDblGaussAndPlotWidth ( vector< TH1D
     
     Gauss->SetParameters( sourceHistos[i]->GetMaximum(), sourceHistos[i]->GetMean(), sourceHistos[i]->GetRMS(),
                           sourceHistos[i]->GetMaximum()/10., sourceHistos[i]->GetMean(), sourceHistos[i]->GetRMS()*10. );
-    fitResult = sourceHistos[i]->Fit( Gauss, "QN" );
+    fitResult = sourceHistos[i]->Fit( Gauss, "QO" );
     if( fitResult!=0 ){
       if( msgLevel(MSG::DEBUG) ) debug() << "Fit failed for histo '" << sourceHistos[i]->GetTitle() << "'" << endmsg;} 
     else{
@@ -785,7 +869,7 @@ StatusCode Velo::VeloIPResolutionMonitor::fitLandauAndPlotMPV ( vector< TH1D* > 
     if( sourceHistos[i]->GetEntries() == 0 ) continue;
 
     Landau->SetParameters( sourceHistos[i]->GetMaximum(), sourceHistos[i]->GetMean(), sourceHistos[i]->GetRMS() );
-    fitResult = sourceHistos[i]->Fit( Landau, "QN" );
+    fitResult = sourceHistos[i]->Fit( Landau, "QO" );
     if( fitResult!=0 ){
       if( msgLevel(MSG::DEBUG) ) debug() << "Fit failed for histo '" << sourceHistos[i]->GetTitle() << "'" << endmsg;} 
     else{
@@ -820,7 +904,7 @@ StatusCode Velo::VeloIPResolutionMonitor::fit2DGausAndPlotMean ( vector< TH1D* >
 
     Gaus2D->SetParameters( sourceHistos[i]->GetMaximum(), sqrt( 2./pi )*sourceHistos[i]->GetMean() );
     
-    fitResult = sourceHistos[i]->Fit( Gaus2D, "QN" );
+    fitResult = sourceHistos[i]->Fit( Gaus2D, "QO" );
     if( fitResult!=0 ){
       if( msgLevel(MSG::DEBUG) ) debug() << "Fit failed for histo '" << sourceHistos[i]->GetTitle() << "'" << endmsg;} 
     else{
@@ -854,7 +938,7 @@ StatusCode Velo::VeloIPResolutionMonitor::fitDbl2DGausAndPlotMean ( vector< TH1D
 
     Gaus2D->SetParameters( sourceHistos[i]->GetMaximum(), sqrt( 2./pi )*sourceHistos[i]->GetMean(), 
                            sourceHistos[i]->GetMaximum()/100., sqrt( 2./pi )*sourceHistos[i]->GetMean()/10. );
-    fitResult = sourceHistos[i]->Fit( Gaus2D, "QN" );
+    fitResult = sourceHistos[i]->Fit( Gaus2D, "QO" );
     if( fitResult!=0 ){
       if( msgLevel(MSG::DEBUG) ) debug() << "Fit failed for histo '" << sourceHistos[i]->GetTitle() << "'" << endmsg;} 
     else{
@@ -896,6 +980,236 @@ StatusCode Velo::VeloIPResolutionMonitor::plotMean ( vector< TH1D* > sourceHisto
   
   return StatusCode::SUCCESS;
   
+}
+
+//====================================================================
+// get mean and sigma and their errors from a given histo with different fit options
+//====================================================================
+std::pair< pair< Double_t, Double_t >, pair< Double_t, Double_t > > Velo::VeloIPResolutionMonitor::result1D( TH1D* h, int opt ){
+
+  pair< pair< Double_t, Double_t >, pair< Double_t, Double_t > > 
+    out( pair<Double_t,Double_t>( 0,0 ), pair<Double_t,Double_t>( 0, 0 ) ) ;
+
+	TF1* f = h->GetFunction("fun");
+	if( f ) delete f ;
+
+	if( h->GetEntries() < 100 ) return out ;
+
+	else if( opt==0 ){
+    out.first.first = h->GetMean() ;
+    out.first.second = h->GetMeanError() ;
+    out.second.first = h->GetRMS() ;
+    out.second.second = h->GetRMSError() ;
+  }
+  
+	else if( opt==1 ){
+		TF1 fun = TF1("fun","gaus(0)");
+		fun.FixParameter(1,0);
+		fun.SetParameters( h->GetEntries(), 0, h->GetRMS() );
+		Int_t result = h->Fit( &fun, "QO" );
+		if( result==0 ){ 
+      out.first.first = 0 ;
+      out.first.second = 0 ;
+      out.second.first = fabs(fun.GetParameter(2)) ;
+      out.second.second = fun.GetParError(2) ;
+    }
+	}
+
+	else if( opt==4 ){
+		TF1 fun = TF1("fun","gaus(0)");
+		fun.SetParameters( h->GetEntries(), 0, h->GetRMS() );
+		Int_t result = h->Fit( &fun, "QO" );
+		if( result==0 ){ 
+      out.first.first = fun.GetParameter(1) ;
+      out.first.second = fun.GetParError(1) ;
+      out.second.first = fabs(fun.GetParameter(2)) ;
+      out.second.second = fun.GetParError(2) ;
+    }
+	}
+
+	else if( opt==5 ){
+		Double_t rms = sqrt( pow( h->GetRMS(), 2 ) + pow( h->GetMean(), 2 ) ) ;
+		Double_t rmserr = rms / sqrt( h->GetEntries() ) ;
+    out.first.first = h->GetMean() ;
+    out.first.second = h->GetMeanError() ;
+		out.second.first = rms ;
+    out.second.second = rmserr ;
+	}
+
+	else if( opt==6 ){
+		h->GetXaxis()->SetRangeUser( h->GetMean() - 8.*h->GetRMS(), h->GetMean() + 8.*h->GetRMS() ) ;
+		h->GetXaxis()->SetRangeUser( h->GetMean() - 7.*h->GetRMS(), h->GetMean() + 7.*h->GetRMS() ) ;
+
+		TF1 fun( "fun", "gausn(0)" ) ;
+		fun.SetRange( h->GetMean() - h->GetRMS(), h->GetMean() + h->GetRMS() ) ;
+		fun.SetParameters( h->GetEntries(), h->GetMean(), h->GetRMS() ) ;
+		h->Fit( &fun, "QNOR" ) ;
+
+		//h->GetXaxis()->SetRangeUser( fun.GetParameter(1) - 6.*fabs(fun.GetParameter(2)), 
+		//fun.GetParameter(1) + 6.*fabs(fun.GetParameter(2)) ) ;
+		//fun.SetRange( h->GetMean() - h->GetRMS(), h->GetMean() + h->GetRMS() ) ;
+		fun.SetRange( fun.GetParameter(1) - 6.*fabs(fun.GetParameter(2)), fun.GetParameter(1) + 6.*fabs(fun.GetParameter(2)) ) ;
+		h->Fit( &fun, "QNOR" ) ;
+
+		//h->GetXaxis()->SetRangeUser( fun.GetParameter(1) - 5.*fabs(fun.GetParameter(2)), 
+		//fun.GetParameter(1) + 5.*fabs(fun.GetParameter(2)) ) ;
+		//fun.SetRange( h->GetMean() - h->GetRMS(), h->GetMean() + h->GetRMS() ) ;
+		fun.SetRange( fun.GetParameter(1) - 5.*fabs(fun.GetParameter(2)), fun.GetParameter(1) + 5.*fabs(fun.GetParameter(2)) ) ;
+		h->Fit( &fun, "QNOR" ) ;
+
+		//h->GetXaxis()->SetRangeUser( fun.GetParameter(1) - 4.*fabs(fun.GetParameter(2)), 
+		//fun.GetParameter(1) + 4.*fabs(fun.GetParameter(2)) ) ;
+		//fun.SetRange( h->GetMean() - h->GetRMS(), h->GetMean() + h->GetRMS() ) ;
+		fun.SetRange( fun.GetParameter(1) - 4.*fabs(fun.GetParameter(2)), fun.GetParameter(1) + 4.*fabs(fun.GetParameter(2)) ) ;
+		h->Fit( &fun, "QNOR" ) ;
+
+		fun.SetRange( fun.GetParameter(1) - 3.*fabs(fun.GetParameter(2)), fun.GetParameter(1) + 3.*fabs(fun.GetParameter(2)) ) ;
+		int result = h->Fit( &fun, "QOR" ) ;
+		if( result==0 ) {
+      out.first.first = fun.GetParameter(1) ;
+      out.first.second = fun.GetParError(1) ;
+      out.second.first = fabs(fun.GetParameter(2)) ;
+      out.second.second = fun.GetParError(2) ;
+    }
+	}
+
+	else if( opt == 7 ){
+		TF1 fun = TF1("fun","gausn(0)+gausn(3)+[6]" );
+		TF1 gaus = TF1("gaus","gausn") ;
+		gaus.SetParameters( h->GetEntries(), h->GetMean(), h->GetRMS() ) ;
+		//h->Fit( &gaus, "QN" ) ;
+		fun.SetParameters( h->GetEntries(), h->GetMean(), h->GetRMS()*0.1, h->GetEntries()/20. , h->GetMean(), h->GetRMS(), h->GetEntries()/1000. ) ;
+		fun.SetParLimits( 0, 0, 2.*h->GetEntries() ) ;
+		fun.SetParLimits( 2, 0, 2.*h->GetRMS() ) ;
+		fun.SetParLimits( 3, 0, 2.*h->GetEntries() ) ;
+		fun.SetParLimits( 5, 0, 2.*h->GetRMS() ) ;
+		fun.SetParLimits( 6, 0, 2.*h->GetEntries() ) ;
+		//fun.FixParameter( 1, gaus.GetParameter(1) ) ;
+		//fun.FixParameter( 4, gaus.GetParameter(1) ) ;
+		fun.FixParameter( 1, h->GetMean() ) ;
+		fun.FixParameter( 4, h->GetMean() ) ;
+		Int_t result = h->Fit( &fun, "QO" ) ;
+    if( result ==0 ){
+      out.first.first = h->GetMean() ;
+      out.first.second = h->GetMeanError() ;
+      if( fun.GetParameter(0) > fun.GetParameter(2) ) {
+        out.second.first = fabs(fun.GetParameter(2)) ;
+        out.second.second = fun.GetParError(2) ;
+      }
+      
+      else{
+        out.second.first = fabs(fun.GetParameter(5)) ;
+        out.second.second = fun.GetParError(5) ;
+      } 
+    }
+	}
+	/*else if( opt == 8 ){
+		TF1 fun = TF1("fun","gausn(0)+gausn(3)+[6]" );
+		TF1 gaus = TF1("gaus","gausn") ;
+		gaus.SetParameters( h->GetEntries(), h->GetMean(), h->GetRMS() ) ;
+		//h->Fit( &gaus, "QN" ) ;
+		fun.SetParameters( h->GetEntries(), h->GetMean(), h->GetRMS()*0.1, h->GetEntries()/20. , h->GetMean(), h->GetRMS(), h->GetEntries()/1000. ) ;
+		fun.SetParLimits( 0, 0, 2.*h->GetEntries() ) ;
+		fun.SetParLimits( 2, 0, 2.*h->GetRMS() ) ;
+		fun.SetParLimits( 3, 0, 2.*h->GetEntries() ) ;
+		fun.SetParLimits( 5, 0, 2.*h->GetRMS() ) ;
+		fun.SetParLimits( 6, 0, 2.*h->GetEntries() ) ;
+		//fun.FixParameter( 1, gaus.GetParameter(1) ) ;
+		//fun.FixParameter( 4, gaus.GetParameter(1) ) ;
+		fun.FixParameter( 1, h->GetMean() ) ;
+		fun.FixParameter( 4, h->GetMean() ) ;
+		TFitResultPtr result = h->Fit( &fun, "QOS" ) ;
+		if( result == 0 ) { 
+			// take weighted sum in quadrature of sigmas
+			double N1 = fun.GetParameter(0) ;
+			double sigma1 = fun.GetParameter( 2 ) ;
+			double sigma1err = fun.GetParError( 2 ) ;
+
+			double N2 = fun.GetParameter(3) ;
+			double sigma2 = fun.GetParameter( 5 ) ;
+			double sigma2err = fun.GetParError( 5 ) ;
+
+			double cov = result->GetCovarianceMatrix()(2,5) ;
+
+			double sigma = sqrt( ( pow( N1*sigma1, 2) + pow( N2*sigma2, 2) + 2*N1*N2*cov ) ) /
+								 ( N1 + N2 ) 
+								  ;
+			double sigmaerr = sqrt( ( pow( N1*N1*sigma1*sigma1err, 2 ) + pow( N2*N2*sigma2*sigma2err, 2 ) )/
+									( pow( N1*sigma1, 2 ) + pow( N2*sigma2, 2 ) )/
+									( pow( N1, 2 ) + pow( N2, 2 ) )
+									) ;
+      out.first.first = h->GetMean() ;
+      out.first.second = h->GetMeanError() ;
+      out.second.first =  sigma ;
+      out.second.second = sigmaerr ;
+		}
+    }*/
+  
+	else{
+		TF1 fun = TF1("fun","gaus(0)+gaus(3)");
+		fun.FixParameter(1,0);
+		fun.FixParameter(4,0);
+		fun.SetParameters( h->GetEntries(), 0, h->GetRMS(), h->GetEntries()/5., 0, h->GetRMS()*5 );
+		Int_t result = h->Fit( &fun, "QO" );
+    if( result ==0 ){
+      out.first.first = 0 ;
+      out.first.second = 0 ;
+      if( fun.GetParameter(0) > fun.GetParameter(2) ) {
+        out.second.first = fabs(fun.GetParameter(2)) ;
+        out.second.second = fun.GetParError(2) ;
+      }
+      else{
+        out.second.first = fabs(fun.GetParameter(5)) ;
+        out.first.first = fun.GetParError(5) ;
+      }
+    }
+
+	}
+
+  return out ;
+  
+}
+
+//====================================================================
+// fill mean and sigma profiles from a set of histos in bins
+//====================================================================
+void Velo::VeloIPResolutionMonitor::fillMeanAndProfile( TH1D* mean, TH1D* sigma, TH1D** histos, int option ) {
+	int nbins = (int)mean->GetNbinsX() ;
+  
+  for( int i=0; i<nbins; ++i ){
+    pair< pair<Double_t,Double_t>, pair<Double_t,Double_t> > 
+      result = result1D( histos[i], option ) ;
+    mean->SetBinContent( i+1, result.first.first ) ;
+    mean->SetBinError( i+1, result.first.second ) ;
+    sigma->SetBinContent( i+1, result.second.first ) ;
+    sigma->SetBinError( i+1, result.second.second ) ;
+  }
+  
+}
+
+//====================================================================
+// get histos in individual bins from a th2d
+//====================================================================
+void Velo::VeloIPResolutionMonitor::getBinsFromTH2D( TH2D* h, string id, string title, string unit, TH1D** out ){
+
+	int nbins = h->GetNbinsX() ;
+
+	for( int i=0 ; i<nbins ; ++i ){
+		float low = h->GetXaxis()->GetBinLowEdge( i+1 ) ;
+		float high = h->GetXaxis()->GetBinUpEdge( i+1 ) ;
+		ostringstream idX ;
+		idX << id << "_" << low << "to" << high ;
+		out[i] = h->ProjectionY( idX.str().c_str(), i+1, i+1 ) ;
+		ostringstream titleX ;
+		titleX << title << " for " << low << " < " << unit	<< " < " << high ;
+		out[i]->SetTitle( titleX.str().c_str() ) ;
+		out[i]->SetXTitle( "mm" ) ;
+		if( -5.*out[i]->GetRMS() > out[i]->GetXaxis()->GetXmin() && 
+			5.*out[i]->GetRMS() < out[i]->GetXaxis()->GetXmax() )
+			out[i]->GetXaxis()->SetRangeUser( -5.*out[i]->GetRMS(), 5.*out[i]->GetRMS() ) ;
+
+	}
+
 }
 
 //=========================================================================
@@ -971,3 +1285,22 @@ Gaudi::XYZPoint Velo::VeloIPResolutionMonitor::extrapolateToPOCA(const Track *tr
   return result;
 }
 
+//====================================================================
+// rebin histos to roughly optimal values
+//====================================================================
+void Velo::VeloIPResolutionMonitor::rebinHisto( TH1D* h, int nbins )
+{
+  if( nbins != 0 ){
+    h->Rebin( nbins ) ;
+  }
+  else{
+    double nentries = h->GetEntries() ;
+    int nbins = nentries > 0 ? (int)floor( h->GetXaxis()->GetNbins()/sqrt( nentries )/3. ) : 0 ;
+    if( nbins > 1 ) h->Rebin( nbins ) ;
+  }
+}
+
+void Velo::VeloIPResolutionMonitor::rebinHistos( TH1D** histos, int nHistos, int nbins )
+{
+  for( int i=0; i<nHistos; ++i ) rebinHisto( histos[i], nbins ) ;
+}

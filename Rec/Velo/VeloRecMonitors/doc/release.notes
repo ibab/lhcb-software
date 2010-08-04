@@ -4,6 +4,11 @@
 ! Purpose     : VELO monitoring algorithms for reconstruction data (ZS data)
 !-----------------------------------------------------------------------------
 
+! 2010-08-04 - Michael Alexander
+ - VeloIPResolutionMonitor: added plots of mean and sigma of IPX and IPY Vs eta
+	 and phi to the	default monitoring plots.
+
+
 !======================= VeloRecMonitors v2r10p1 2010-06-21 ===================
 ! 2010-06-08 - Rob Lambert
  - Fixed final windows warning
