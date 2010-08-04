@@ -2,14 +2,14 @@
 Write a DST for a single selection sequence. Writes out the entire
 contents of the input DST
 """
-__version__ = "$Id: BaseDSTWriter.py,v 1.2 2010-08-03 16:47:36 jpalac Exp $"
+__version__ = "$Id: BaseDSTWriter.py,v 1.3 2010-08-04 07:07:00 jpalac Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
 from GaudiConf.Configuration import *
 
 from DSTWriters.dstwriters import DSTWriterSelectionSequence, baseDSTWriterConf
-from DSTWriters.microdstelements import MicroDSTExtras
+from DSTWriters.microdstelements import MicroDSTElementList
 
 from copy import copy
 
@@ -45,7 +45,7 @@ class BaseDSTWriter(ConfigurableUser) :
         
         print self.name(), ": Extra sequence members ", clonerList 
 
-        return MicroDSTExtras(branch = _tesBranch, callables = clonerList)
+        return MicroDSTElementList(branch = _tesBranch, callables = clonerList)
 
     def sequence(self) :
         return GaudiSequencer(self.name() + "MainSeq",
