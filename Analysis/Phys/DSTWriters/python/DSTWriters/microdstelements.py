@@ -136,7 +136,8 @@ class ReFitAndClonePVs(MicroDSTElement) :
         bestPV = BestPVAlg(self.personaliseName(sel, 'BestPV'))
         bestPV.P2PVRelationsInputLocations = self.dataLocations(sel, refitPVs.name()+'_P2PV')
         cloner = CopyParticle2PVRelations(self.personaliseName(sel, 'CopyReFitP2PV'))
-        cloner.InputLocations = self.dataLocations(sel, bestPV.name()+'_P2PV')                    
+        cloner.InputLocations = self.dataLocations(sel, bestPV.name()+'_P2PV')
+        self.setOutputPrefix(cloner)
         return [refitPVs, bestPV, cloner]
         
 class CloneL0DUReport(MicroDSTElement) :
