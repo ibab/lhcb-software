@@ -6,14 +6,17 @@ Purpose: LHCb reconstruction packages.
          by one or more LHCb applications. 
 
 
-</PRE><H1><A NAME=v10r3p1>2010-08-03 RecSys v10r3p1</A></H1><PRE>
+</PRE><H1><A NAME=v10r3p1>2010-08-04 RecSys v10r3p1</A></H1><PRE>
 This version uses Gaudi v21r10p1 and LHCb v31r4
 
-- Patch release to fix problems with the Best track container
+- There were a few bugs in the v10r3 Rec release. This is an emergency patch of those.
 
-- The new track fit/clone removing ordering left tracks with no states in Best
-  
-- Only one package is changed Tf/TrackSys v4r37
+- bug #70990, problems with stateless tracks in the Best track container
+  . Only one package is changed Tf/TrackSys v4r37
+
+- bug #71012, new fit mechanism for tracks breaks Calo photon reconstruction
+  . Two packages are reverted to older versions: Tr/TrackFitter v2r49, Tr/TrackTools v3r33
+
 
 </PRE><H1><A NAME=v10r3>2010-07-28 RecSys v10r3</A></H1><PRE>
 This version uses Gaudi v21r10p1 and LHCb v31r4
