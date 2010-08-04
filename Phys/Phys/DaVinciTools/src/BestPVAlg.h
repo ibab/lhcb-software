@@ -1,4 +1,4 @@
-// $Id: BestPVAlg.h,v 1.1 2010-07-26 16:12:40 jpalac Exp $
+// $Id: BestPVAlg.h,v 1.2 2010-08-04 14:52:55 jpalac Exp $
 #ifndef BESTPVALG_H 
 #define BESTPVALG_H 1
 
@@ -23,42 +23,33 @@ class IRelatedPVFinder;
  *
  *  <b>Properties</b>
  *
- *  <b>ParticleInputLocation</b> : TES location of input LHCb::Particles. 
- *  Default: "". Must be set by user unless <b>P2PVRelationsInputLocation<b> is set
+ *  <b>ParticleInputLocations</b> : TES locations of input LHCb::Particles. 
+ *  Default: none. Must be set by user unless <b>P2PVRelationsInputLocations<b> is set
  *
  *  <b>PrimaryVertexInputLocation</b> : TES location of input LHCb::RecVertices. 
  *  Default: LHCb::RecVertexLocation::Primary
  *
- *  <b>P2PVRelationsInputLocation</b> : TES location of input Particle2Vertex::Table. 
- *  Default: "".
- *
- *  <b>P2PVRelationsOutputLocation</b> : TES location of the output 
- *  Particle2Vertex::WTable with the newly sorted relations. Default "".
- *  Must be set by user.
+ *  <b>P2PVRelationsInputLocations</b> : TES locations of input Particle2Vertex::Tables. 
+ *  Default: None.
  *
  *  Besides the properties that <b>must</b> be set, there are two extra 
- *  conditions: neither <b>ParticleInputLocation</b> nor <b>PrimaryVertexInputLocation<b> 
- *  can be set if <b>P2PVRelationsInputLocation<b> is set. This will result in 
+ *  conditions: neither <b>ParticleInputLocations</b> nor <b>PrimaryVertexInputLocations<b> 
+ *  can be set if <b>P2PVRelationsInputLocations<b> is set. This will result in 
  *  the initalize() method returning a StatusCode::FAILURE.
  *
  *  <b>Example</b>: Create a Particle2Vertex::Table relating LHCb::Particles from
- *  "Phys/DC06selBd2Jpsi2MuMu_Kst2KPi/Particles" to default primary vertices and 
- *  put it in "Phys/DC06selBd2Jpsi2MuMu_Kst2KPi/P2DefaultPVRelations". Create 
- *  another Particle2Vertex::WTable relating LHCb::Particles to re-fitted PVs 
- *  starting from a Particle2Vertex::WTable in "Phys/DC06selBd2Jpsi2MuMu_Kst2KPi/P2ReFitPVRelations" 
- *  and put it in "Phys/DC06selBd2Jpsi2MuMu_Kst2KPi/P2ReFitPVSortedRelations"
+ *  "Phys/DC06selBd2Jpsi2MuMu_Kst2KPi/Particles" to default primary vertices. 
+ *  Create another Particle2Vertex::Table relating LHCb::Particles to re-fitted PVs 
+ *  starting from a Particle2Vertex::Table in "Phys/DC06selBd2Jpsi2MuMu_Kst2KPi/P2ReFitPVRelations".
  *
  *  @code
  *  from Configurables import BestPVAlg
- *  # Default PVs
+ *  # Default PVs. Table written to "Phys/DC06selBd2Jpsi2MuMu_Kst2KPi/P2StandardVertices_P2PV".
  *  p2PV = BestPVAlg("P2StandardVertices")
- *  p2PV.ParticleInputLocation = "Phys/DC06selBd2Jpsi2MuMu_Kst2KPi/Particles"
- *  p2PV.P2PVRelationsOutputLocation = "Phys/DC06selBd2Jpsi2MuMu_Kst2KPi/P2DefaultPVRelations"
- *  # re-fitted PVs
+ *  p2PV.ParticleInputLocations = ["Phys/DC06selBd2Jpsi2MuMu_Kst2KPi/Particles"]
+ *  # re-fitted PVs. Talbe written to "Phys/DC06selBd2Jpsi2MuMu_Kst2KPi/P2ReFitVertices_P2PV".
  *  p2RefitPV = BestPVAlg("P2ReFitVertices")
- *  p2RefitPV.ParticleInputLocation = "Phys/DC06selBd2Jpsi2MuMu_Kst2KPi/Particles"
- *  p2RefitPV.P2PVRelationsInputLocation = "Phys/DC06selBd2Jpsi2MuMu_Kst2KPi/P2ReFitPVRelations"
- *  p2RefitPV.P2PVRelationsOutputLocation = "Phys/DC06selBd2Jpsi2MuMu_Kst2KPi/P2ReFitPVSortedRelations"
+ *  p2RefitPV.P2PVRelationsInputLocations = ["Phys/DC06selBd2Jpsi2MuMu_Kst2KPi/P2ReFitPVRelations"]
  *  # Add it to a selection sequence
  *  seq = GaudiSequencer('SeqDC06selBd2Jpsi2MuMu_Kst2KPi')
  *  seq.Members += [p2PV, P2RefitPV]
@@ -89,17 +80,21 @@ private:
     return exist<T>(location) ? get<T>( location ) : 0 ;
   }
 
-  Particle2Vertex::Table* table() const;
+  void tables() const;
   
-  Particle2Vertex::Table* tableFromTable() const;
+  void tablesFromTables() const;
+
+  std::string tableLocation(const std::string& location) const;
+  
+  void checkTable(const Particle2Vertex::Table* table,
+                  const std::string& tableLoc) const;
 
 private:
 
-  std::string m_particleInputLocation;
   std::string m_PVInputLocation;
-  std::string m_P2PVInputLocation;
-  std::string m_P2PVOutputLocation;
-  bool m_useTable;
+  std::vector<std::string> m_particleInputLocations;
+  std::vector<std::string> m_P2PVInputLocations;
+  bool m_useTables;
   IOnOffline* m_OnOffline ; ///< context switch tool. To be deprecated.
   IRelatedPVFinder* m_pvRelator ; ///< Tool that relates the Particle to a PV
 
