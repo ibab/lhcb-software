@@ -1,4 +1,4 @@
-// $Id: PVReFitterAlg.h,v 1.16 2010-06-21 12:32:11 jpalac Exp $
+// $Id: PVReFitterAlg.h,v 1.17 2010-08-04 12:59:29 jpalac Exp $
 #ifndef PVREFITTERALG_H 
 #define PVREFITTERALG_H 1
 
@@ -31,12 +31,12 @@ class IOnOffline;
  *
  * <b>UseIPVReFitter</b> : bool, apply IPVReFitter::remove method. Default: true.
  *
- * <b>ParticleInputLocation</b>: TES location of the particles who's related primary vertices will be re-fitted. Default "".
+ * <b>ParticleInputLocations</b>: Vector of TES locations of the particles who's related primary vertices will be re-fitted. Default "".
  *
  * <b>PrimaryVertexInputLocation</b>: TES location of the LHCb::RecVertices to be
  * re-fitted. Default "". By default, location is obtained from an IOnOffline tol.
  *
- * The algorithm iterates over the LHCb::Particles in ParticleInputLocation,
+ * The algorithm iterates over the LHCb::Particles in each of the ParticleInputLocations,
  * and the LHCb::RecVertices in PrimaryVertexLocation, re-fits clones of the
  * vertices excluding any 
  * tracks that originate from the particle, and creates a relations table
@@ -44,7 +44,7 @@ class IOnOffline;
  * are stored  in a KeyedContainer<LHCb::RecVertex>,
  * which is placed in <location>/<instance name>_PVs. The relations table 
  * is placed in <location>/<instance name>_P2PV. <location> 
- * is obtained by stripping away "/Particles" from <b> ParticleInputLocation</b>
+ * is obtained by stripping away "/Particles" from each of the <b> ParticleInputLocations</b>
  *
  * The re-fitting itself is a sequence of
  * IPVOfflineTool::reDoSinglePV (if UseIPVOfflineTool==true), 
@@ -78,7 +78,8 @@ private:
                  LHCb::Track::ConstVector& tracks) const;
 
 
-  void removeEnding(std::string& a, const std::string& ending);
+  void executeForLocation(const std::string& particleLocation,
+                          const LHCb::RecVertex::Range& vertices) const;
 
 private:
 
@@ -92,6 +93,7 @@ private:
   bool m_useIPVOfflineTool;
   bool m_useIPVReFitter;
   std::string m_particleInputLocation;
+  std::vector<std::string> m_particleInputLocations;
   std::string m_PVInputLocation;
   std::string m_particle2VertexRelationsOutputLocation;
   std::string m_vertexOutputLocation;

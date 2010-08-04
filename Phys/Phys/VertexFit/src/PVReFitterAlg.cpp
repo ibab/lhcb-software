@@ -1,4 +1,4 @@
-// $Id: PVReFitterAlg.cpp,v 1.18 2010-06-21 12:32:11 jpalac Exp $
+// $Id: PVReFitterAlg.cpp,v 1.19 2010-08-04 12:59:29 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -43,6 +43,7 @@ PVReFitterAlg::PVReFitterAlg( const std::string& name,
   m_useIPVOfflineTool(false),
   m_useIPVReFitter(true),
   m_particleInputLocation(""),
+  m_particleInputLocations(),
   m_PVInputLocation(""),
   m_particle2VertexRelationsOutputLocation(""),
   m_vertexOutputLocation(""),
@@ -55,6 +56,7 @@ PVReFitterAlg::PVReFitterAlg( const std::string& name,
   declareProperty("UseIPVOfflineTool", m_useIPVOfflineTool);
   declareProperty("UseIPVReFitter",    m_useIPVReFitter);
   declareProperty("ParticleInputLocation",  m_particleInputLocation);
+  declareProperty("ParticleInputLocations",  m_particleInputLocations);
   declareProperty("PrimaryVertexInputLocation",  m_PVInputLocation);
   
 }
@@ -73,6 +75,22 @@ StatusCode PVReFitterAlg::initialize() {
   if ( sc.isFailure() ) return sc;  // error printed already by DVAlgorithm
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
+
+  if ( !m_particleInputLocations.empty() && m_particleInputLocation != "" ) {
+    return Error("You have set both ParticleInputLocation AND ParticleInputLocations properties");
+  }
+
+  if (m_particleInputLocations.empty()) {
+
+    if (m_particleInputLocation == "" ) {
+      return Error("You have to set either ParticleInputLocation OR ParticleInputLocations properties");
+    } else {
+      Warning("ParticleInputLocation is deprecated. Please use ParticleInputLocations list.",
+              StatusCode::SUCCESS);
+    }
+    
+    m_particleInputLocations.push_back(m_particleInputLocation);
+  }
 
   if (m_useIPVOfflineTool) {    
     m_pvOfflineTool = tool<IPVOfflineTool> (m_pvOfflinetoolType, this);
@@ -97,19 +115,6 @@ StatusCode PVReFitterAlg::initialize() {
   if (m_PVInputLocation=="") {
     m_PVInputLocation=m_onOfflineTool->primaryVertexLocation();
   }
-  
-
-  m_outputLocation = m_particleInputLocation;
-  
-  removeEnding(m_outputLocation, "/Particles");
-
-  std::string instanceName = this->name();
-  
-  DaVinci::StringUtils::expandLocation(m_outputLocation,
-                                       m_onOfflineTool->trunkOnTES());
-
-  m_vertexOutputLocation = m_outputLocation + "/"+instanceName+"_PVs";
-  m_particle2VertexRelationsOutputLocation = m_outputLocation + "/"+instanceName+"_P2PV";
 
   return sc;
   
@@ -122,25 +127,9 @@ StatusCode PVReFitterAlg::execute() {
   
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
 
-  if (!exist<LHCb::Particle::Container>(m_particleInputLocation) &&
-      !exist<LHCb::Particle::Range>(m_particleInputLocation) ) {
-    return Error("No LHCb::Particle::Range found at " + 
-                 m_particleInputLocation,
-                 StatusCode::SUCCESS);
-  }
-  if (!exist<LHCb::RecVertex::Container>(m_PVInputLocation) &&
-      !exist<LHCb::RecVertex::Selection>(m_PVInputLocation) ) {
+  if (!exist<LHCb::RecVertex::Range>(m_PVInputLocation) ) {
     return Error("No LHCb::RecVertex::Range found at " +
                  m_PVInputLocation,
-                 StatusCode::SUCCESS);
-  }
-
-  const LHCb::Particle::Range particles = 
-    get<LHCb::Particle::Range>(m_particleInputLocation);
-
-  if (particles.empty()) {
-    return Error("No LHCb::Particles in LHCb::Particle::Range " +
-                 m_particleInputLocation,
                  StatusCode::SUCCESS);
   }
 
@@ -152,21 +141,65 @@ StatusCode PVReFitterAlg::execute() {
                  m_PVInputLocation,
                  StatusCode::SUCCESS);
   }
+
+  std::vector<std::string>::const_iterator iLoc = m_particleInputLocations.begin();
+  std::vector<std::string>::const_iterator locEnd = m_particleInputLocations.end();
+
+  for ( ; iLoc != locEnd; ++iLoc ) {
+    executeForLocation(*iLoc, vertices);
+  }
   
+
+  setFilterPassed(true);
+
+
+  return StatusCode::SUCCESS;
+}
+//=============================================================================
+void PVReFitterAlg::executeForLocation(const std::string& particleLocation,
+                                       const LHCb::RecVertex::Range& vertices) const
+{
+
+  if (!exist<LHCb::Particle::Range>(particleLocation) ) {
+    Error("No LHCb::Particle::Range found at " + 
+          particleLocation,
+          StatusCode::SUCCESS).ignore();
+  }
+
+  const LHCb::Particle::Range particles = 
+    get<LHCb::Particle::Range>(particleLocation);
+
+  if (particles.empty()) {
+    Error("No LHCb::Particles in LHCb::Particle::Range " +
+          particleLocation,
+          StatusCode::SUCCESS).ignore();
+  }
+
+  std::string outputLocation = particleLocation;
+  
+  DaVinci::StringUtils::removeEnding(outputLocation, "/Particles");
+  
+  DaVinci::StringUtils::expandLocation(outputLocation,
+                                       m_onOfflineTool->trunkOnTES());
+
+  const std::string& instanceName = this->name();
+  const std::string vertexOutputLocation = outputLocation + "/"+instanceName+"_PVs";
+  const std::string particle2VertexRelationsOutputLocation = outputLocation + "/"+instanceName+"_P2PV";
+
   LHCb::RecVertex::Container* vertexContainer = 
     new  LHCb::RecVertex::Container();
 
   verbose() << "Storing re-fitted vertices in " 
-            << m_vertexOutputLocation << endmsg;
+            << vertexOutputLocation << endmsg;
 
-  put(vertexContainer, m_vertexOutputLocation);  
+  put(vertexContainer, vertexOutputLocation);  
 
   Particle2Vertex::Table* newTable = new Particle2Vertex::Table();
 
   verbose() << "Storing Particle->Refitted Vtx relations table in "
-            << m_particle2VertexRelationsOutputLocation << endmsg;
+            << particle2VertexRelationsOutputLocation << endmsg;
 
-  put( newTable, m_particle2VertexRelationsOutputLocation);
+  put( newTable, particle2VertexRelationsOutputLocation);
 
   verbose() << "Loop over " << particles.size() << " particles" << endmsg;
 
@@ -192,35 +225,33 @@ StatusCode PVReFitterAlg::execute() {
       }
     }
   }
-  
-  setFilterPassed(true);
 
-  if (exist<LHCb::RecVertex::Container>(m_vertexOutputLocation) )
+  // check output.
+  if (exist<LHCb::RecVertex::Container>(vertexOutputLocation) )
   {  
     const LHCb::RecVertex::Container* vertices = 
-      get<LHCb::RecVertex::Container>(m_vertexOutputLocation);
+      get<LHCb::RecVertex::Container>(vertexOutputLocation);
     verbose() << "CHECK: stored " 
               << vertices->size()
               << " re-fitted vertices in " 
               << m_vertexOutputLocation << endmsg;
   } else {
-    return Error("No re-fitted vertices at "+
-                 m_vertexOutputLocation,
-                 StatusCode::SUCCESS);
+    Error("No re-fitted vertices at "+
+          m_vertexOutputLocation,
+          StatusCode::SUCCESS).ignore();
   }
 
 
-  if (exist<Particle2Vertex::Table>(m_particle2VertexRelationsOutputLocation) )
+  if (exist<Particle2Vertex::Table>(particle2VertexRelationsOutputLocation) )
   {  
     verbose() << "CHECK: table is at " 
-              << m_particle2VertexRelationsOutputLocation << endmsg;
+              << particle2VertexRelationsOutputLocation << endmsg;
   } else {
-    return Error("No LHCb::Particle->LHCb::RecVertex table found at "+
-                 m_particle2VertexRelationsOutputLocation,
-                 StatusCode::SUCCESS);
+    Error("No LHCb::Particle->LHCb::RecVertex table found at "+
+          m_particle2VertexRelationsOutputLocation,
+          StatusCode::SUCCESS).ignore();
   }
 
-  return StatusCode::SUCCESS;
 }
 //=============================================================================
 LHCb::RecVertex* PVReFitterAlg::refitVertex(const LHCb::RecVertex* v,
@@ -276,16 +307,5 @@ StatusCode PVReFitterAlg::finalize() {
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
 
   return GaudiAlgorithm::finalize();  // must be called after all other actions
-}
-
-//=============================================================================
-void PVReFitterAlg::removeEnding(std::string& a, const std::string& ending)
-{
-  std::string::size_type pos = a.rfind(ending);
-  if ( pos != std::string::npos ) {
-    std::cout << "found " << ending << " at " << pos << std::endl;
-    a = std::string(a, 0, pos);
-    
-  }
 }
 //=============================================================================
