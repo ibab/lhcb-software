@@ -3,6 +3,9 @@
 ! Responsible : Eduardo Rodrigues
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
+! 2010-08-04 - Stephanie Hansmann-Menzemer
+ - add a extra copy step to the best track container, to remove tracks with
+   failed fit
 
 ! 2010-07-30 - Olivier Callot
  - Fit the seed only if the MATCH algorithm is there. PatMatch doesn't need it.

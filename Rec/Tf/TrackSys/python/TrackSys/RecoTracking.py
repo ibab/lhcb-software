@@ -218,10 +218,17 @@ def RecoTracking(exclude=[]):
 
    ### Clean clone and fit
    track.DetectorList += ["Fit"]
+   cloneKiller.TracksOutContainer = "Rec/Track/AllBest"
    GaudiSequencer("TrackFitSeq").Members += [ cloneKiller ]
    GaudiSequencer("TrackFitSeq").Members += [TrackStateInitAlg("InitBestFit")]
-   GaudiSequencer("TrackFitSeq").Members += [ConfiguredFit("FitBest","Rec/Track/Best")]      
-      
+   TrackStateInitAlg("InitBestFit").TrackLocation = "Rec/Track/AllBest"
+   GaudiSequencer("TrackFitSeq").Members += [ConfiguredFit("FitBest","Rec/Track/AllBest")]      
+   from Configurables import TrackContainerCopy
+   copyBest = TrackContainerCopy( "CopyBest" )
+   copyBest.inputLocation = "Rec/Track/AllBest";
+   GaudiSequencer("TrackFitSeq").Members += [ copyBest ]
+
+                                 
    ## Velo fitting
    if "Velo" in trackAlgs :
       ## Prepare the velo tracks for the fit
@@ -231,7 +238,6 @@ def RecoTracking(exclude=[]):
       GaudiSequencer("TrackVeloFitSeq").Members += [ ConfiguredFit("FitVelo","Rec/Track/PreparedVelo") ]
       ## copy the velo tracks to the "best" container (except in RDST case)
       if TrackSys().getProp( "OutputType" ).upper() != "RDST":
-         from Configurables import TrackContainerCopy
          copyVelo = TrackContainerCopy( "CopyVelo" )
          copyVelo.inputLocation = "Rec/Track/PreparedVelo";
          GaudiSequencer("TrackVeloFitSeq").Members += [ copyVelo ]
