@@ -1,9 +1,13 @@
-!$Id: release.notes,v 1.46 2010-08-04 07:09:47 jpalac Exp $
+!$Id: release.notes,v 1.47 2010-08-04 16:43:18 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DSTWriters
 ! Responsible : Juan PALACIOS
 ! Purpose     : Python code for DST writers.
 !-----------------------------------------------------------------------------
+
+! 2010-08-04 - Juan Palacios
+ - python/DSTWriters/microdstelements.py
+  . Simplify ClonePVRelations. Add ReFitAndClonePVs.
 
 ! 2010-08-03 - Juan Palacios
 
