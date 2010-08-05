@@ -29,6 +29,10 @@ def flattenList(sequence) :
     return flatList
 
 def setCloneFilteredParticlesToTrue(algs) :
+    '''
+    Loop over algs and try to set attribute CloneFilteredParticles to True.
+    If a member of algs is a GaudiSequencer, loop over its Members.
+    '''
     for alg in algs :
         try :
             alg.CloneFilteredParticles = True
@@ -81,11 +85,19 @@ class ConfigurableList(object) :
             return ConfigurableList._algos['DEFAULT'](self._sel)
 
 class MicroDSTElementList(object) :
-    '''
+    """
     Wrap a set of MicroDST callables in a list-like interface.
     Set the TES branch of each to the input branch.
     Export the output location trunk of all the callables.
-    '''
+    Each callable must satisfy the following conditions:
+
+    Data member 'branch' controlling the TES location
+    to which the contained algorithms write data to.
+
+    Attribute __call__(self, sel) accepting a SelectionSequenc-like object,
+    returning suitably ordered list of suitably configured Configurables.
+    
+    """
     def __init__(self, branch = 'MicroDST', callables = []) :
         self.callables = callables
         self.branch = branch
@@ -97,8 +109,11 @@ class MicroDSTElementList(object) :
 
 class MicroDSTElement(object) :
     '''
-    Base class for MicroDSTElement callables. Stores the TES branch and makes dataLocations and personaliseName functions accessible.
-    Derived classes must implement __call__(self, sel) method, where sel is a SelectionSequence. Method should return list of all configured algorithms necessary to produce the data to be cloned and the cloners.
+    Base class for MicroDSTElement callables.
+    Stores the TES branch and makes dataLocations and personaliseName functions accessible.
+    Derived classes must implement __call__(self, sel) method, where sel is a SelectionSequence.
+    Method should return list of all configured algorithms necessary to produce the data to be cloned
+    and the cloners.
     '''
     def __init__(self, branch = '') :
         self.branch = branch
