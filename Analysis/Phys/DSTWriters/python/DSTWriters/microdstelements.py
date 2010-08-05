@@ -17,7 +17,8 @@ __all__ = ( 'CloneRecHeader',
             'ReFitAndClonePVs',
             'CloneL0DUReport',
             'CloneHltDecReports',
-            'CloneBackCat'        )
+            'CloneBackCat',
+            'CloneHltReportRawBanks')
 
 from dstwriterutils import (setCloneFilteredParticlesToTrue,
                             ConfigurableList,
@@ -177,6 +178,9 @@ class ReFitAndClonePVs(MicroDSTElement) :
         return [refitPVs, bestPV, cloner]
         
 class CloneL0DUReport(MicroDSTElement) :
+    """
+    Configurables necessary to copy LODUReport from standard location.
+    """
     def __call__(self, sel) :
         from Configurables import CopyL0DUReport
         cloner = CopyL0DUReport(self.personaliseName(sel,'CopyL0DUReport'))
@@ -184,11 +188,26 @@ class CloneL0DUReport(MicroDSTElement) :
         return [cloner]
     
 class CloneHltDecReports(MicroDSTElement) :
+        """
+    Configurables necessary to copy HltDecReports from standard location.
+    """
     def __call__(self, sel) :
         from Configurables import CopyHltDecReports
         cloner = CopyHltDecReports(self.personaliseName(sel,'CopyHltDecReports'))
         self.setOutputPrefix(cloner)
         return [cloner]
+
+class CloneHltReportRawBanks(MicroDSTElement) :
+    """
+    Configurables to copy HltDecReports and HltSelReports raw banks
+    to '<branch>/DAW/RawEvent'.
+    """
+    def __call__(self, sel) :
+        from Configurables import RawEventSelectiveCopy
+        rawBankCopy = RawEventSelectiveCopy(self.personaliseName(sel, 'CloneRawBank'))
+        rawBankCopy.RawBanksToCopy += [ "HltDecReports" , "HltSelReports" ] 
+        rawBankCopy.OutputRawEventLocation = self.branch + "/DAQ/RawEvent" 
+        return [rawBankCopy]
 
 class CloneBackCat(MicroDSTElement) :
     """
