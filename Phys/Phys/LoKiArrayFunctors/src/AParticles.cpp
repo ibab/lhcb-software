@@ -1,4 +1,6 @@
-// $Id: AParticles.cpp,v 1.14 2010-05-14 15:30:36 ibelyaev Exp $
+// $Id$
+// ============================================================================
+// $URL$
 // ============================================================================
 // Include files 
 // ===========================================================================
@@ -1599,8 +1601,90 @@ std::ostream&  LoKi::AParticles::MinVal::fillStream ( std::ostream& s ) const
   //
   return s << " )" ;  
 }
+// ============================================================================
 
-
+// ============================================================================
+// constructor from the functor 
+// ============================================================================
+LoKi::AParticles::Sum::Sum 
+( const LoKi::Types::Func& fun , 
+  const double             ini ) 
+  : LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function () 
+  , m_fun     ( fun  ) 
+  , m_cut     (  LoKi::BasicFunctors<const LHCb::Particle*>::BooleanConstant( true ) ) 
+  , m_ini     ( ini  )
+  , m_trivial ( true ) 
+{}
+// ============================================================================
+// constructor from the functor & predicate 
+// ============================================================================
+LoKi::AParticles::Sum::Sum 
+( const LoKi::Types::Func& fun , 
+  const LoKi::Types::Cuts& cut , 
+  const double             ini ) 
+  : LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function () 
+  , m_fun     ( fun   ) 
+  , m_cut     ( cut   ) 
+  , m_ini     ( ini   )
+  , m_trivial ( false ) 
+{}
+// ============================================================================
+// constructor from the functor & predicate 
+// ============================================================================
+LoKi::AParticles::Sum::Sum 
+( const LoKi::Types::Cuts& cut , 
+  const LoKi::Types::Func& fun , 
+  const double             ini ) 
+  : LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function () 
+  , m_fun     ( fun   ) 
+  , m_cut     ( cut   ) 
+  , m_ini     ( ini   )
+  , m_trivial ( false ) 
+{}
+// ============================================================================
+// MANDATORY: virtual descructor 
+// ============================================================================
+LoKi::AParticles::Sum::~Sum(){}
+// ============================================================================
+// MANDATORY: clone method ("virtual constructor")
+// ============================================================================
+LoKi::AParticles::Sum*
+LoKi::AParticles::Sum::clone() const
+{ return new LoKi::AParticles::Sum ( *this ) ;}
+// ============================================================================
+// MANDATORY: the only one essential method 
+// ============================================================================
+LoKi::AParticles::Sum::result_type 
+LoKi::AParticles::Sum::operator() 
+  ( LoKi::AParticles::Sum::argument a ) const
+{
+  //
+  double result = m_ini ;
+  //
+  return 
+    m_trivial ? 
+    LoKi::Algs::accumulate ( a. begin ()         , 
+                             a. end   ()         , 
+                             m_fun               , 
+                             result              , 
+                             std::plus<double>() ) :  
+    LoKi::Algs::accumulate ( a. begin ()         , 
+                             a. end   ()         , 
+                             m_fun               , 
+                             m_cut               , 
+                             result              , 
+                             std::plus<double>() ) ;
+}
+// ============================================================================
+// OPTIONAL: nice printout 
+// ============================================================================
+std::ostream& LoKi::AParticles::Sum::fillStream ( std::ostream& s ) const 
+{
+  s << " ASUM(" << m_fun ;
+  if ( !m_trivial  ) { s << "," << m_cut ; }
+  if ( 0 != m_ini  ) { s << "," << m_ini ; }
+  return s << ") ";
+}
 // ============================================================================
 // The END 
 // ============================================================================

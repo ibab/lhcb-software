@@ -1,4 +1,4 @@
-// $Id: HybridLock.h,v 1.2 2009-11-17 12:41:41 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_HYBRIDLOCK_H 
 #define LOKI_HYBRIDLOCK_H 1

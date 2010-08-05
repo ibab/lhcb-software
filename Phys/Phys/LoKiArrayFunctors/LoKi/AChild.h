@@ -1,4 +1,4 @@
-// $Id: AChild.h,v 1.4 2008-05-28 11:39:20 cattanem Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_ACHILD_H 
 #define LOKI_ACHILD_H 1

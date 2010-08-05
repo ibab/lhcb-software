@@ -1,4 +1,4 @@
-// $Id: Preambulo.h,v 1.1 2009-11-20 16:06:14 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_PREAMBULO_H 
 #define LOKI_PREAMBULO_H 1

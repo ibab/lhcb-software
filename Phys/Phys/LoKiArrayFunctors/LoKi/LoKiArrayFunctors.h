@@ -1,4 +1,4 @@
-// $Id: LoKiArrayFunctors.h,v 1.3 2007-07-26 13:25:09 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_LOKIEXHLT_H 
 #define LOKI_LOKIEXHLT_H 1

@@ -1,4 +1,4 @@
-// $Id: AKinematics.h,v 1.5 2008-05-28 11:39:20 cattanem Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_AKINEMATICS_H 
 #define LOKI_AKINEMATICS_H 1

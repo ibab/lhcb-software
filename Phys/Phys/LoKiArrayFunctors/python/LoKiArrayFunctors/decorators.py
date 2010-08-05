@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: decorators.py,v 1.7 2010-04-06 20:23:18 ibelyaev Exp $ 
+# $Id$ 
 # =============================================================================
 ## @file  LoKiArrayFunctors/decorators.py
 #  The set of basic decorator for objects from LoKiHlt library

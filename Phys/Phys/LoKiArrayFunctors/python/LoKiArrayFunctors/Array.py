@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Array.py,v 1.3 2010-04-13 12:23:28 ibelyaev Exp $ 
+# $Id$ 
 # =============================================================================
 ## @file
 #  collection of utilities for useful 'decoration' of Array-objects

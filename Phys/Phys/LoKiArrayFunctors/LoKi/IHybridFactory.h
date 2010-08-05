@@ -1,4 +1,4 @@
-// $Id: IHybridFactory.h,v 1.4 2010-05-27 19:29:55 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_IHYBRIDFACTORY_H 
 #define LOKI_IHYBRIDFACTORY_H 1

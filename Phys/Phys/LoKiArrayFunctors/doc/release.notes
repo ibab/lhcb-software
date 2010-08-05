@@ -1,9 +1,17 @@
-$Id: release.notes,v 1.63 2010-06-03 06:06:12 jpalac Exp $ 
+$Id$ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiArrayFunctors
 ! Responsible : Vanya BELYAEV
 ! Purpose     : Some special "vector-like" functors to Exclusive "HLT"
 ! -----------------------------------------------------------------------------
+
+! 2010-08-05 - Vanya Belyaev
+
+ - add ASUM metafunctor 
+
+ - cmt/requirements 
+
+   version increment to v9r3 
 
 !========================== LoKiArrayFunctors v9r2 2010-06-24 =================
 

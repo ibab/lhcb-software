@@ -1,4 +1,4 @@
-// $Id: AParticles.h,v 1.16 2010-06-03 06:06:12 jpalac Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_APARTICLES_H 
 #define LOKI_APARTICLES_H 1
@@ -1788,7 +1788,53 @@ namespace LoKi
       // ======================================================================
     } ;
     // ========================================================================
-    
+    /** @class Sum 
+     *  Simple meta-function to calculate the sum
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2010-08-05
+     */
+    class Sum 
+      : public LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function
+    {
+    public:
+      // ======================================================================
+      /// constructor from the functor 
+      Sum ( const LoKi::Types::Func& fun     , 
+            const double             ini = 0 ) ;
+      /// constructor from the functor & predicate 
+      Sum ( const LoKi::Types::Func& fun     , 
+            const LoKi::Types::Cuts& cut     , 
+            const double             ini = 0 ) ;
+      /// constructor from the functor & predicate 
+      Sum ( const LoKi::Types::Cuts& cut     ,
+            const LoKi::Types::Func& fun     , 
+            const double             ini = 0 ) ;
+      /// MANDATORY: virtual descructor 
+      virtual ~Sum() ;
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  Sum* clone() const ;
+          /// MANDATORY: the only one essential method 
+      virtual result_type operator() ( argument a ) const ;
+      /// OPTIONAL: nice printout 
+      virtual std::ostream& fillStream ( std::ostream& s ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the default constructor is disabled 
+      Sum () ;                           // the default constructor is disabled 
+      // ======================================================================      
+    private:
+      // ======================================================================      
+      /// the function to be accumulated 
+      LoKi::Types::Fun m_fun     ;            // the function to be accumulated 
+      /// the predicate to be used  
+      LoKi::Types::Cut m_cut     ;            //       the predicate to be used  
+      /// initial value 
+      double           m_ini     ;            //                  initial value 
+      /// trivial predicate ?
+      bool             m_trivial ;            //            trivial predicate ?
+      // ======================================================================      
+    } ;
     // ========================================================================
   } //                                        end of namespace LoKi::AParticles
   // ==========================================================================

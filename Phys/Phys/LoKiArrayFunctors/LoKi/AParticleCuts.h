@@ -1,7 +1,9 @@
-// $Id: AParticleCuts.h,v 1.8 2010-06-03 06:06:12 jpalac Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_APARTICLECUTS_H 
 #define LOKI_APARTICLECUTS_H 1
+// ============================================================================
+// $URL$
 // ============================================================================
 // Include files
 // ============================================================================
@@ -12,6 +14,7 @@
 // ============================================================================
 namespace LoKi 
 {
+  // ==========================================================================
   namespace Cuts 
   {
     // ========================================================================
@@ -1486,6 +1489,26 @@ namespace LoKi
      *  @date 2007-03-03 
      */        
     typedef LoKi::Monitoring::Counter<LoKi::ATypes::Combination,double> ASTAT ;
+    // ========================================================================
+    /** @typedef ASUM
+     *  Simple meta-functor to calculate the sum of some predicate over 
+     *  the daughter particles 
+     * 
+     *  @code 
+     * 
+     *    // get the combination:
+     *    const LHCb::Paricle::ConstVector& comb = ... ;
+     *
+     *    const ASUM sumPT    = ASUM  ( PT ) ;
+     *
+     *    const double value  = sumPT ( comb ) ;
+     *
+     *  @endcode 
+     *
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2010-08-05 
+     */
+    typedef LoKi::AParticles::Sum                                        ASUM ;
     // ========================================================================
     /** @var ASWITCH
      *

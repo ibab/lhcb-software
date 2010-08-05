@@ -1,4 +1,4 @@
-// $Id: HybridEngine.h,v 1.5 2010-05-27 19:29:55 ibelyaev Exp $
+// $Id$
 // ===========================================================================
 #ifndef LOKI_HYBRID_ENGINE_H 
 #define LOKI_HYBRID_ENGINE_H 1

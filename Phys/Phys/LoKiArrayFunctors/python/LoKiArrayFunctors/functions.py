@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: functions.py,v 1.17 2010-04-13 12:23:28 ibelyaev Exp $ 
+# $Id$ 
+# =============================================================================
+# $URL:$
 # =============================================================================
 ## @file
 #  The set of basic objects from LoKiHlt library
@@ -14,8 +16,16 @@
 #  contributions and advices from G.Raven, J.van Tilburg, 
 #  A.Golutvin, P.Koppenburg have been used in the design.
 #
+#  By usage of this code one clearly states the disagreement 
+#  with the campain of Dr.O.Callot et al.: 
+#   ``No Vanya's lines are allowed in LHCb/Gaudi software.''
+#    
 #  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-#  @daet 2007-06-09
+#  @date 2007-06-09
+#
+#  $Revision$
+#  Last modification $Date$
+#                 by $Author$
 # =============================================================================
 """
 The set of basic objects from LoKiTrack library
@@ -27,9 +37,19 @@ The package has been designed with the kind help from
 Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
 contributions and advices from G.Raven, J.van Tilburg, 
 A.Golutvin, P.Koppenburg have been used in the design.
+
+By usage of this code one clearly states the disagreement 
+with the campain of Dr.O.Callot et al.: 
+``No Vanya's lines are allowed in LHCb/Gaudi software.''
+
+$Revision$
+Last modification $Date$
+               by $Author$
 """
 # =============================================================================
-__author__ = "Vanya BELYAEV ibelyaev@physics.syr.edu" 
+__author__  = "Vanya BELYAEV ibelyaev@physics.syr.edu" 
+__version__ = " $Revision$ "
+__date__    = " 2007-06-09 "
 # =============================================================================
 
 import LoKiCore.decorators as _LoKiCore 
@@ -184,8 +204,13 @@ APT4          = LoKi.AParticles.TransverseMomentum ( 4 )
 
 ## @see LoKi::Cuts::ASAME
 # ASAME         = LoKi.TheSame    ( _T )
+
 ## @see LoKi::Cuts::ASIZE
 ASIZE         = LoKi.AParticles.Size   ()
+
+## @see LoKi::Cuts::ASUM
+ASUM          = LoKi.AParticles.Sum
+
 
 ## @see LoKi::Cuts::AUNIQUE
 AUNIQUE       = LoKi.AParticles.Unique 
@@ -309,8 +334,12 @@ PDGM. __doc__ += '\n' + LoKi.Particles.massFromPID  . __doc__
 
 # =============================================================================
 if '__main__' == __name__ :
-    for o in dir() : print o        
-
+    print 80*'*'
+    print __doc__
+    print ' Author  : ' , __author__
+    print ' Version : ' , __version__
+    print ' Date    : ' , __date__    
+    print 80*'*'
 
 # =============================================================================
 # The END 
