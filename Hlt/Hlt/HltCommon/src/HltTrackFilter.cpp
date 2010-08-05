@@ -1,4 +1,4 @@
-// $Id: HltTrackFilter.cpp,v 1.13 2010-07-29 12:16:24 ibelyaev Exp $ 
+// $Id: HltTrackFilter.cpp,v 1.14 2010-08-05 08:44:32 ibelyaev Exp $ 
 // ============================================================================
 // Include files  
 // ============================================================================
@@ -29,7 +29,7 @@
 // ============================================================================
 // LoKi :-)
 // ============================================================================
-#include "LoKi/ITrHybridFactory.h"
+#include "LoKi/ITrackFunctorFactory.h"
 #include "LoKi/BasicFunctors.h"
 #include "LoKi/TrackTypes.h"
 // ============================================================================
@@ -137,7 +137,7 @@ Hlt::TrackFilter::TrackFilter
   ISvcLocator*       pSvcLocator )
   : HltAlgorithm        ( name , pSvcLocator )
   , m_selection         ( *this )
-  , m_factory           ( "LoKi::Hybrid::TrTool/TrHybridFactory:PUBLIC" ) 
+  , m_factory           ( "LoKi::Hybrid::TrackFunctorFactory/TrackFunctorFactory:PUBLIC" ) 
   , m_code_updated      ( false )
   , m_preambulo_updated ( false )
 {
@@ -207,21 +207,24 @@ StatusCode Hlt::TrackFilter::finalize()
 // ============================================================================
 StatusCode Hlt::TrackFilter::decode() 
 {
-  LoKi::ITrHybridFactory* factory = tool<LoKi::ITrHybridFactory>( m_factory, this ) ;
+  LoKi::ITrackFunctorFactory* factory = 
+    tool<LoKi::ITrackFunctorFactory>( m_factory, this ) ;
   //
   m_predicates.clear();
   m_predicates.reserve(m_code.size());
-  for (std::vector<std::string>::const_iterator i = m_code.begin(); i != m_code.end(); ++i) 
+  for ( std::vector<std::string>::const_iterator i = m_code.begin(); i != m_code.end(); ++i) 
   {
+    //
     LoKi::TrackTypes::TrCut cut = LoKi::BasicFunctors<const LHCb::Track*>::BooleanConstant( false ) ;
-    StatusCode sc = factory->get( *i, cut, m_preambulo );
+    StatusCode sc = factory->get ( *i, cut, m_preambulo );
     if (sc.isFailure()) return sc;
     std::string title = boost::str(boost::format("%02d:%s") % m_predicates.size() % *i);
-    m_predicates.push_back( Filter (  cut 
-                                      ,  &counter( title )
-                                      ,  &counter( title + " candidates" )
-                                      )       );
+    m_predicates.push_back 
+      ( Filter (  cut                               ,  
+                  &counter( title )                 ,  
+                  &counter( title + " candidates" ) ) ) ;
   }
+  //
   this->release(factory);
   m_code_updated      = false ;
   m_preambulo_updated = false ;

@@ -4,6 +4,10 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+! 2010-08-05 - Vanya Belyaev
+
+ - fix pipe & filter 
+
 ! 2010-08-02 - Vanya Belyaev
 
  - add Hlt::GEC

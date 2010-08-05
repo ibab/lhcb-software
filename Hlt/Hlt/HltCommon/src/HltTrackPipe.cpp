@@ -1,4 +1,4 @@
-// $Id: HltTrackPipe.cpp,v 1.2 2010-07-29 12:16:24 ibelyaev Exp $
+// $Id: HltTrackPipe.cpp,v 1.3 2010-08-05 08:44:32 ibelyaev Exp $
 // ============================================================================
 // Incldue files 
 // ============================================================================
@@ -27,11 +27,12 @@
 // ============================================================================
 // LoKi :-) 
 // ============================================================================
-#include "LoKi/ITrHybridFactory.h"
+#include "LoKi/ITrackFunctorFactory.h"
 #include "LoKi/BasicFunctors.h"
 #include "LoKi/TrackTypes.h"
 #include "LoKi/apply.h"
 #include "LoKi/Filters.h"
+#include "LoKi/Streamers.h"
 // ============================================================================
 /** @file
  *  The basic track-piping algorithm for Hlt-framework
@@ -103,12 +104,30 @@ Hlt::TrackPipe::TrackPipe( const std::string& name,
   , m_preambulo_updated(false)
 {
   m_selection.declareProperties( );
-  declareProperty("Factory", m_factory = "LoKi::Hybrid::TrTool/TrHybridFactory:PUBLIC");
-  declareProperty("Code", m_code) ->declareUpdateHandler( &TrackPipe::updateCode, this );
-  declareProperty("Preambulo", m_preambulo_)->declareUpdateHandler(&TrackPipe::updatePreambulo , this);
-  declareProperty("Monitor", m_monitor = false );
-  declareProperty("InputMonitor", m_postMonitor = "" );
-  declareProperty("OutputMonitor", m_preMonitor = "" );
+  declareProperty 
+    ( "Factory"   , 
+      m_factory = "LoKi::Hybrid::TrackFunctorFactory/TrackFunctorFactory:PUBLIC" , 
+      "The C++/Python LoKi/Bender  factory for functors" ) ;
+  declareProperty 
+    ( "Code"      , 
+      m_code      ,
+      "The actual LoKi/Bender python functor to be used " ) 
+    ->declareUpdateHandler( &TrackPipe::updateCode, this );
+  declareProperty 
+    ( "Preambulo"  , 
+      m_preambulo_ ,
+      "The Preambulo lines to be added into Bender script")
+    ->declareUpdateHandler(&TrackPipe::updatePreambulo , this);
+  //
+  declareProperty 
+    ( "Monitor"       , 
+      m_monitor     = false ) ;
+  declareProperty 
+    ( "InputMonitor"  , 
+      m_postMonitor = ""    ) ;
+  declareProperty 
+    ( "OutputMonitor" , 
+      m_preMonitor  = ""    ) ;
 }
 //=============================================================================
 // Initialization
@@ -128,18 +147,13 @@ StatusCode Hlt::TrackPipe::execute()
 {
   counter("#input")  +=  m_selection.input<1>()->size();
   if (m_monitor) { }
-  //TODO: make m_pipe a vector of pipes...
-  assert( m_selection.output()->empty() );
   //
-  /// set of rather dirty lines, 
-  ///    to be moved into $LOKICOREROOT/LoKi/Streamers.h
-  /// 
-  const LHCb::Track::Vector&      _vct  = m_selection.input<1>() -> vct () ;
-  const LHCb::Track::ConstVector* _vct_ =
-    reinterpret_cast<const LHCb::Track::ConstVector*>( &_vct  ) ;
-  const LHCb::Track::ConstVector  _out  = m_pipe     ( *_vct_ ) ;
-  const LHCb::Track::Vector*      _out_ =
-    reinterpret_cast<const LHCb::Track::Vector*>( &_out ) ;
+  Assert( m_selection.output()->empty() , "Output is not empty!" ) ;
+  //
+  const LHCb::Track::Vector& _in   = m_selection.input<1>()->vct() ;
+  const LHCb::Track::Vector& _out  = _in >> m_pipe ;
+  // const LHCb::Track::Vector& _out  = LoKi::apply ( m_pipe , _in ) ;
+  const LHCb::Track::Vector* _out_ = &_out ;
   //
   m_selection.output()->insert
     ( m_selection.output()->end() , 
@@ -149,6 +163,7 @@ StatusCode Hlt::TrackPipe::execute()
   if (m_monitor) { }
   //
   setFilterPassed( !m_selection.output()->empty() );
+  //
   return StatusCode::SUCCESS;
 }
 // ============================================================================
@@ -156,8 +171,7 @@ StatusCode Hlt::TrackPipe::execute()
 // ============================================================================
 StatusCode Hlt::TrackPipe::finalize() 
 {
-  m_pipe = s_PIPE ; // delete at finalize to make sure that if the predicate
-  // has picked up some tools, they get released...
+  m_pipe = s_PIPE ; 
   return HltAlgorithm::finalize();
 }
 // ============================================================================
@@ -165,12 +179,15 @@ StatusCode Hlt::TrackPipe::finalize()
 // ============================================================================
 StatusCode Hlt::TrackPipe::decode() 
 {
-  LoKi::ITrHybridFactory* factory = tool<LoKi::ITrHybridFactory>( m_factory,this ) ;
+  LoKi::ITrackFunctorFactory* factory = 
+    tool<LoKi::ITrackFunctorFactory>( m_factory,this ) ;
   //
   m_pipe        = s_PIPE ;
   StatusCode sc = factory->get( m_code, m_pipe, m_preambulo );
   if (sc.isFailure()) return sc;
+  //
   this->release(factory);
+  //
   m_code_updated      = false ;
   m_preambulo_updated = false ;
   return StatusCode::SUCCESS;
@@ -203,7 +220,7 @@ void Hlt::TrackPipe::updatePreambulo ( Property& /* p */ )
   if ( Gaudi::StateMachine::INITIALIZED > FSMState() ) { return ; }
   // postpone the action
   if ( !m_code_updated ) { return ; }
-
+  
   // perform the actual immediate decoding
   StatusCode sc = decode  () ;
   Assert ( sc.isFailure() , "Error from Hlt::TrackPipe::decode()" , sc ) ;
