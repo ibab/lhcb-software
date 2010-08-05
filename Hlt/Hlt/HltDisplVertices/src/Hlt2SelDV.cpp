@@ -216,7 +216,7 @@ StatusCode Hlt2SelDV::execute() {
   //------------------Set the beam line------------------
   if( m_RCut=="FromBeamLine" ){
     if( exist<Particle::Range>( m_BLLoc ) ){
-      const Particle::Range & BL = get<Particle::Range>( m_BLLoc );      
+      const Particle::Range BL = get<Particle::Range>( m_BLLoc );      
       const LHCb::Particle* tmp = *(BL.begin());
       m_BeamLine->setReferencePoint( tmp->referencePoint() );
       m_BeamLine->setMomentum( tmp->momentum() );

@@ -221,7 +221,7 @@ StatusCode Hlt2PreSelDV::initialize() {
   //Set the beam line
   if( m_RCut=="FromBeamLine" ){
     if( exist<Particle::Range>( m_BLLoc ) ){
-      const Particle::Range & BL = get<Particle::Range>( m_BLLoc );      
+      const Particle::Range BL = get<Particle::Range>( m_BLLoc );      
       const LHCb::Particle* tmp = *(BL.begin());
       m_BeamLine->setReferencePoint( tmp->referencePoint() );
       m_BeamLine->setMomentum( tmp->momentum() );
@@ -249,7 +249,7 @@ StatusCode Hlt2PreSelDV::initialize() {
       
 
   //Retrieve data Particles from Desktop.
-  const Particle::ConstVector & Parts = desktop()->particles();
+  const Particle::ConstVector Parts = desktop()->particles();
   int size = Parts.size() ;
   if( msgLevel(MSG::DEBUG) )
     debug()<< "Number of Particles in TES " << size << endmsg;
@@ -360,7 +360,7 @@ void Hlt2PreSelDV::GetRecVertices( RecVertex::ConstVector & RV )
   vector<string>::iterator itName;
   for( itName = m_RVLocation.begin(); itName != m_RVLocation.end();
        ++itName ) {
-    const RecVertex::Range & tRV = get<RecVertex::Range>( *itName );
+    const RecVertex::Range tRV = get<RecVertex::Range>( *itName );
     if(tRV.empty()) {
       warning() << "No reconstructed vertices found at location: " 
                 << *itName << endmsg;
