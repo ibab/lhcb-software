@@ -1,4 +1,4 @@
-!$Id: release.notes,v 1.48 2010-08-05 10:16:22 jpalac Exp $
+!$Id: release.notes,v 1.49 2010-08-05 16:17:41 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DSTWriters
 ! Responsible : Juan PALACIOS
@@ -6,6 +6,10 @@
 !-----------------------------------------------------------------------------
 
 ! 2010-08-05 - Juan Palacios
+ - python/DSTWriters/__dev__/MicroDSTWriter.py
+  . Remove B-tagging from defaults.
+ - python/DSTWriters/microdstelements.py
+  . Add element for cloning of HltSelReports and HltDecReports raw banks.
  - python/DSTWriters/dstwriters.py
   . "default" output stream configurations are now functions returning 
     a new instance each time.
