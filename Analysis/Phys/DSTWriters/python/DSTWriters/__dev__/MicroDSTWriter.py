@@ -1,7 +1,7 @@
 """
 
 """
-__version__ = "$Id: MicroDSTWriter.py,v 1.5 2010-08-04 16:43:06 jpalac Exp $"
+__version__ = "$Id: MicroDSTWriter.py,v 1.6 2010-08-05 10:14:53 jpalac Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from DSTWriters.__dev__.BaseDSTWriter import BaseDSTWriter
@@ -23,7 +23,7 @@ class MicroDSTWriter(BaseDSTWriter) :
     Write a MicroDST for a set of selection sequences.
     """
 
-    __slots__ = { "StreamConf"           : microDSTWriterConf,
+    __slots__ = { "StreamConf"           : microDSTWriterConf(),
                   "MicroDSTElements" : [CloneRecHeader(),
                                         CloneODIN(),
                                         ClonePVs(),
