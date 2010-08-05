@@ -1,5 +1,5 @@
 ########################################################################
-# $Id: DVTutorial_3.py,v 1.8 2009-06-11 16:22:28 rlambert Exp $
+# $Id: DVTutorial_3.py,v 1.9 2010-08-05 07:30:52 jpalac Exp $
 #
 # Options for exercise 3
 #
@@ -18,7 +18,7 @@ tutorialseq = GaudiSequencer("TutorialSeq")
 #
 # 2) Add the J/psi
 #
-from Configurables import TutorialAlgorithm, PhysDesktop
+from Configurables import TutorialAlgorithm
 jpsi2mumu = TutorialAlgorithm("Jpsi2MuMu")
 jpsi2mumu.InputLocations = [ "StdLooseMuons" ]
 from GaudiKernel.SystemOfUnits import MeV
@@ -31,7 +31,6 @@ tutorialseq.Members += [ jpsi2mumu ]
 # 2) Add the Phi
 #
 phi2kk = TutorialAlgorithm("Phi2KK");
-
 phi2kk.InputLocations = [ "StdLooseKaons" ]
 phi2kk.MassWindow = 50*MeV 
 phi2kk.Particle =  "phi(1020)" 
