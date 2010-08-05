@@ -281,16 +281,16 @@ operator>> ( const Gaudi::NamedRange_<CONTAINER>&   a ,
  *   @date 2001-01-23   
  */  
 template <class TYPE>
-inline std::vector<TYPE> 
+inline std::vector<TYPE>& 
 operator >> 
-( const typename LoKi::BasicFunctors<TYPE>::Source& source , 
-  std::vector<TYPE>&                                dest   ) 
+( const LoKi::Functor<void,std::vector<TYPE> >& source , 
+  std::vector<TYPE>&                            dest   ) 
 {
   dest = source.evaluate() ;
   return dest ;
 }
 // ============================================================================
-/** "source": produce the sequnce from nothing 
+/** "source": produce the sequence from nothing 
  *
  *   @code
  *  
@@ -312,14 +312,20 @@ operator >>
  *   @date 2001-01-23   
  */  
 template <class TYPE>
-inline std::vector<const TYPE*> 
+inline const std::vector<const TYPE*>& 
 operator >> 
-( const typename LoKi::BasicFunctors<TYPE*>::Source& source , 
-  std::vector<const TYPE*>&                          dest   ) 
+( const LoKi::Functor<void,std::vector<TYPE*> >& source , 
+  std::vector<const TYPE*>&                      dest   ) 
 {
-  std::vector<TYPE*>& aux = source.evaluate() ;
-  dest = std::vector<const TYPE*>( aux.begin() , aux.end() ) ;
-  return dest ;  
+  typedef std::vector<const TYPE*> _CVector ;
+  typedef std::vector<      TYPE*> _NVector ;
+  //
+  const _NVector&  aux  = source.evaluate() ;
+  const _CVector* _out_ = reinterpret_cast<const _CVector*>( &aux ) ;
+  //
+  dest = *_out_ ;
+  //
+  return dest ;
 }
 // ============================================================================
 /** "source" : produce the sequence from nothing 
@@ -344,44 +350,20 @@ operator >>
  *   @date 2001-01-23   
  */  
 template <class TYPE>
-inline std::vector<TYPE*> 
+inline std::vector<TYPE*>& 
 operator >> 
-( const typename LoKi::BasicFunctors<const TYPE*>::Source& source , 
-  std::vector<TYPE*>&                                      dest   ) 
+( const LoKi::Functor<void,std::vector<const TYPE*> >& source , 
+  std::vector<TYPE*>&                                  dest   ) 
 {
-  /// evaluate the functor 
-  std::vector<const TYPE*>& aux = source.evaluate() ;
-  dest.erase() ;
-  dest.reserve( aux.size() ) ;
-  std::transform 
-    ( aux.begin ()                  , 
-      aux.end   ()                  , 
-      std::back_inserter ( dest )   , 
-      LoKi::Cast::ConstAway<TYPE>() ) ;
-  /// 
-  return dest ;                   
-}
-// ============================================================================
-// pipe
-// ============================================================================
-template <class TYPE>
-inline std::vector<TYPE*> 
-operator>> 
-( const std::vector<TYPE*>&                        input ,
-  const typename LoKi::BasicFunctors<TYPE*>::Pipe& pipe  )  
-{
-  return pipe.evaluate ( input ) ;
-}
-// ============================================================================
-// pipe
-// ============================================================================
-template <class TYPE>
-inline std::vector<const TYPE*> 
-operator>> 
-( const std::vector<const TYPE*>&                        input ,
-  const typename LoKi::BasicFunctors<const TYPE*>::Pipe& pipe  )  
-{
-  return pipe.evaluate ( input ) ;  
+  typedef std::vector<const TYPE*> _CVector ;
+  typedef std::vector<      TYPE*> _NVector ;
+  //
+  const _CVector&  aux  = source.evaluate() ;
+  const _NVector* _out_ = reinterpret_cast<const _NVector*>( &aux ) ;
+  //
+  dest = *_out_ ;
+  //
+  return dest ;
 }
 // ============================================================================
 // pipe with const-away cast 
@@ -389,8 +371,8 @@ operator>>
 template <class TYPE>
 inline std::vector<TYPE*> 
 operator>> 
-( const std::vector<TYPE*>&                              input ,
-  const typename LoKi::BasicFunctors<const TYPE*>::Pipe& pipe  )  
+( const std::vector<TYPE*>&                                                 input ,
+  const LoKi::Functor<std::vector<const TYPE*>, std::vector<const TYPE*> >& pipe  )  
 {
   return LoKi::apply ( pipe , input ) ;  
 }

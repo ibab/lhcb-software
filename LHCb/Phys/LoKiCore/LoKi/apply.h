@@ -278,60 +278,23 @@ namespace LoKi
   // ==========================================================================
   template <class TYPE>
   inline 
-  std::vector<typename LoKi::NonConst<TYPE*>::Value* > 
+  std::vector<TYPE*> 
   apply 
-  ( const typename LoKi::BasicFunctors<typename LoKi::Const<TYPE>::Value*>::Pipe& pipe   , 
-    const std::vector<typename LoKi::NonConst<TYPE>::Value*>&                     input  )
+  ( const LoKi::Functor<std::vector<const TYPE*>,std::vector<const TYPE*> >& pipe  ,
+    const std::vector<TYPE*>&                                                input )
   {
-    typedef  std::vector<typename LoKi::Const   <TYPE>::Value*>  _CVector ;
-    typedef  std::vector<typename LoKi::NonConst<TYPE>::Value*>  _NVector ;
+    typedef  std::vector<typename LoKi::Const<TYPE>::Value*>  _CVector ;
+    typedef  std::vector<                     TYPE*        >  _NVector ;
     // adapt the argument:
     const _CVector* _vct_ = reinterpret_cast<const _CVector*> ( &input ) ;
     // use functor 
-    const _CVector  _out  = pipe ( *_vct_) ;
+    const _CVector& _out  = pipe.evaluate ( *_vct_) ;
     // adapt result:
     const _NVector* _out_ = reinterpret_cast<const _NVector*>  ( &_out  ) ;
     //
     return *_out_;
-  }  
-  // ==========================================================================  
-  template <class TYPE>
-  inline 
-  std::vector<typename LoKi::Const<TYPE*>::Value* > 
-  apply 
-  ( const typename LoKi::BasicFunctors<typename LoKi::NonConst<TYPE>::Value*>::Pipe& pipe   , 
-    const std::vector<typename LoKi::Const<TYPE>::Value*>&                           input  )
-  {
-    typedef  std::vector< typename LoKi::Const   <TYPE>::Value* >  _CVector ;
-    typedef  std::vector< typename LoKi::NonConst<TYPE>::Value* >  _NVector ;
-    // adapt the argument:
-    const _NVector* _vct_ = reinterpret_cast<const _NVector*> ( &input ) ; 
-    // use functor 
-    const _NVector  _out  = pipe ( *_vct_) ;
-    // adapt result:
-    const _CVector* _out_ = reinterpret_cast<const _CVector*> ( &_out  ) ;
-    //
-    return *_out_;
-  }  
-  // =======================================================================
-  //   template <class CONTAINER, class TYPE2> 
-  //   inline 
-  //   typename LoKi::Functor<CONTAINER,TYPE2>::result_type 
-  //   apply ( const LoKi::Functor<CONTAINER,TYPE2>& o , 
-  //           const Gaudi::Range_<CONTAINER>&       a )
-  //   {
-  //     return LoKi::apply ( o , a.begin() , a.end() ) ;
-  //   }
-  //   // ==========================================================================
-  //   template <class CONTAINER, class TYPE2> 
-  //   inline 
-  //   typename LoKi::Functor<CONTAINER,TYPE2>::result_type 
-  //   apply ( const LoKi::Functor<CONTAINER,TYPE2>& o , 
-  //           const Gaudi::NamedRange_<CONTAINER>&  a )
-  //   {
-  //     return LoKi::apply ( o , a.begin() , a.end() ) ;
-  //   }
-  // ==========================================================================
+  }
+  // ==============================================================================
   template <class CONTAINER, class TYPEI, class TYPE2> 
   inline 
   typename LoKi::Functor<std::vector<TYPEI>,TYPE2>::result_type 

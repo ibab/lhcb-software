@@ -1003,7 +1003,7 @@ namespace LoKi
     public:
       // ======================================================================
       // __rshift__
-      static typename Source::result_type __rshift__ 
+      static typename Source::result_type& __rshift__ 
       ( const Source& fun , std::vector<TYPE>& res ) 
       { res = fun() ; return res ; }
       // __rshift__
