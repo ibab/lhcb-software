@@ -1,4 +1,4 @@
-// $Id: FilterOps.h,v 1.2 2007-12-11 09:35:48 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_FILTEROPS_H 
 #define LOKI_FILTEROPS_H 1

@@ -1,4 +1,4 @@
-// $Id: Reference.h,v 1.5 2009-06-28 13:26:09 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_REFERENCE_H 
 #define LOKI_REFERENCE_H 1 

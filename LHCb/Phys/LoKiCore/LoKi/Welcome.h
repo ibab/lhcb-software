@@ -1,4 +1,4 @@
-// $Id: Welcome.h,v 1.9 2008-11-22 16:19:57 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_WELCOME_H 
 #define LOKI_WELCOME_H 1

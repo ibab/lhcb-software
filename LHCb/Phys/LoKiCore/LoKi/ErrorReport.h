@@ -1,4 +1,4 @@
-// $Id: ErrorReport.h,v 1.11 2010-01-13 11:04:17 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_ERRORREPORT_H 
 #define LOKI_ERRORREPORT_H 1

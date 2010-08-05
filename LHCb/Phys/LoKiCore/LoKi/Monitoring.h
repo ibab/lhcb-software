@@ -1,4 +1,4 @@
-// $Id: Monitoring.h,v 1.6 2009-03-22 17:55:23 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_MONITORING_H 
 #define LOKI_MONITORING_H 1

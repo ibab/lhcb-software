@@ -1,4 +1,4 @@
-// $Id: DecayDescriptor.h,v 1.1 2009-05-22 18:12:36 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_DECAYDESCRIPTOR_H 
 #define LOKI_DECAYDESCRIPTOR_H 1

@@ -1,4 +1,4 @@
-// $Id: Combiner.h,v 1.8 2010-04-06 20:06:39 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_Combiner_H 
 #define LOKI_Combiner_H 1

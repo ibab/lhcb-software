@@ -1,4 +1,4 @@
-// $Id: HistoBook.h,v 1.4 2009-03-22 17:55:23 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_HISTOBOOK_H 
 #define LOKI_HISTOBOOK_H 1

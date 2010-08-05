@@ -1,4 +1,4 @@
-// $Id: shifts.h,v 1.3 2009-05-09 19:15:53 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_SHIFTS_H 
 #define LOKI_SHIFTS_H 1

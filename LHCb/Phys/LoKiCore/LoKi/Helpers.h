@@ -1,4 +1,4 @@
-// $Id: Helpers.h,v 1.5 2007-07-23 17:07:38 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_HELPERS_H 
 #define LOKI_HELPERS_H 1

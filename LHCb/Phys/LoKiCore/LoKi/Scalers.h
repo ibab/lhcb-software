@@ -1,4 +1,4 @@
-// $Id: Scalers.h,v 1.6 2010-04-17 22:05:07 graven Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_SCALERS_H 
 #define LOKI_SCALERS_H 1

@@ -1,4 +1,4 @@
-// $Id: Primitives.h,v 1.22 2010-06-05 20:13:30 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_PRIMITIVES_H 
 #define LOKI_PRIMITIVES_H 1

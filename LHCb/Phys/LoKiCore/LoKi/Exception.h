@@ -1,4 +1,4 @@
-// $Id: Exception.h,v 1.7 2008-06-12 08:14:31 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_EXCEPTION_H 
 #define LOKI_EXCEPTION_H 1

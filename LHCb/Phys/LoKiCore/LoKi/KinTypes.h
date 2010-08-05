@@ -1,4 +1,4 @@
-// $Id: KinTypes.h,v 1.1 2008-07-26 17:19:56 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_KINTYPES_H 
 #define LOKI_KINTYPES_H 1

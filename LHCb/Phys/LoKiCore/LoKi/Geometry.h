@@ -1,4 +1,4 @@
-// $Id: Geometry.h,v 1.7 2008-05-28 13:40:29 cattanem Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_GEOMETRY_H 
 #define LOKI_GEOMETRY_H 1

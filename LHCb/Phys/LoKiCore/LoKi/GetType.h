@@ -1,4 +1,4 @@
-// $Id: GetType.h,v 1.2 2007-07-23 17:07:38 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_GETTYPE_H 
 #define LOKI_GETTYPE_H 1

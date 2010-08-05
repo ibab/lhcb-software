@@ -1,4 +1,4 @@
-// $Id: FuncCast.h,v 1.6 2007-11-28 13:56:32 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_FUNCCAST_H 
 #define LOKI_FUNCCAST_H 1

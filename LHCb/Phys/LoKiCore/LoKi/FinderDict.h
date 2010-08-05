@@ -1,4 +1,4 @@
-// $Id: FinderDict.h,v 1.1 2009-06-28 18:22:42 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_FINDERDICT_H 
 #define LOKI_FINDERDICT_H 1

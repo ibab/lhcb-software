@@ -1,4 +1,4 @@
-// $Id: TreeGrammar.h,v 1.4 2009-12-03 12:53:20 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef DECAYS_TREEGRAMMAR_H 
 #define DECAYS_TREEGRAMMAR_H 1

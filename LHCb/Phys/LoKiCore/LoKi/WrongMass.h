@@ -1,6 +1,6 @@
-// $Id: WrongMass.h,v 1.8 2008-05-28 13:40:29 cattanem Exp $
+// $Id$
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, verision $Revision: 1.8 $
+// CVS tag $Name: not supported by cvs2svn $, verision $Revision$
 // ============================================================================
 #ifndef LOKI_WRONGMASS_H 
 #define LOKI_WRONGMASS_H 1

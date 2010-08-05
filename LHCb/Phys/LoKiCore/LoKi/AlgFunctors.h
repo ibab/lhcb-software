@@ -1,4 +1,4 @@
-// $Id: AlgFunctors.h,v 1.1 2008-10-19 16:11:40 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_ALGFUNCTORS_H 
 #define LOKI_ALGFUNCTORS_H 1

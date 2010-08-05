@@ -1,4 +1,4 @@
-// $Id: TreeOps.h,v 1.3 2009-06-02 16:47:34 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_TREEOPS_H 
 #define LOKI_TREEOPS_H 1

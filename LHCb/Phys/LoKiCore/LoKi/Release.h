@@ -1,4 +1,4 @@
-// $Id: Release.h,v 1.7 2009-05-09 19:15:53 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_RELEASE_H 
 #define LOKI_RELEASE_H 1

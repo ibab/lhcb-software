@@ -1,4 +1,4 @@
-// $Id: AlgCuts.h,v 1.1 2008-10-19 16:11:39 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_ALGCUTS_H 
 #define LOKI_ALGCUTS_H 1

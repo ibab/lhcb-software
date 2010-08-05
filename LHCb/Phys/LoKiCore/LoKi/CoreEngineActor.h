@@ -1,4 +1,4 @@
-// $Id: CoreEngineActor.h,v 1.1 2008-10-19 16:11:40 ibelyaev Exp $
+// $Id$
 #ifndef LOKI_COREENGINEACTOR_H 
 #define LOKI_COREENGINEACTOR_H 1
 // ============================================================================

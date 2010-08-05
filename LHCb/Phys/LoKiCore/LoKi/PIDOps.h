@@ -1,4 +1,4 @@
-// $Id: PIDOps.h,v 1.4 2010-04-06 20:06:39 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_PIDOPS_H 
 #define LOKI_PIDOPS_H 1

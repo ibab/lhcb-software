@@ -1,6 +1,6 @@
-// $Id: CCGrammarTest.cpp,v 1.1 2009-06-02 16:47:35 ibelyaev Exp $
+// $Id$
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision$
 // ============================================================================
 // Include files 
 // ============================================================================

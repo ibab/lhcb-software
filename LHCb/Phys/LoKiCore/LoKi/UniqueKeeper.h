@@ -1,4 +1,4 @@
-// $Id: UniqueKeeper.h,v 1.10 2009-08-11 18:19:25 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_UNIQUEKEEPER_H 
 #define LOKI_UNIQUEKEEPER_H 1

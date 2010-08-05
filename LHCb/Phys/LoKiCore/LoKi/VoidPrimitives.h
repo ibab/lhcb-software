@@ -1,4 +1,4 @@
-// $Id: VoidPrimitives.h,v 1.11 2010-06-05 20:13:30 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_VOIDPRIMITIVES_H 
 #define LOKI_VOIDPRIMITIVES_H 1

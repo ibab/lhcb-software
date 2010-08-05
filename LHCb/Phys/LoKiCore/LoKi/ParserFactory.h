@@ -1,4 +1,4 @@
-// $Id: ParserFactory.h,v 1.1 2009-05-23 15:54:19 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_PARSERFACTORY_H 
 #define LOKI_PARSERFACTORY_H 1

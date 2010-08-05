@@ -1,4 +1,4 @@
-// $Id: Filters.h,v 1.9 2010-06-05 20:13:30 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_FILTERS_H 
 #define LOKI_FILTERS_H 1

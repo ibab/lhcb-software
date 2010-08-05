@@ -1,4 +1,4 @@
-// $Id: Trees.h,v 1.11 2009-06-02 16:47:34 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef DECAYS_TREES_H 
 #define DECAYS_TREES_H 1

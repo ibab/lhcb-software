@@ -1,4 +1,4 @@
-// $Id: ConstReference.h,v 1.1 2009-06-28 13:26:06 ibelyaev Exp $
+// $Id$
 #ifndef LOKI_CONSTREFERENCE_H 
 #define LOKI_CONSTREFERENCE_H 1
 // ============================================================================

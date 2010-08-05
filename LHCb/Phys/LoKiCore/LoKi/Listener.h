@@ -1,4 +1,4 @@
-// $Id: Listener.h,v 1.4 2010-04-21 12:28:37 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_LISTENER_H 
 #define LOKI_LISTENER_H 1

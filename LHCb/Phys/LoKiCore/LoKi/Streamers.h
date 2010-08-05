@@ -1,4 +1,4 @@
-// $Id: Streamers.h,v 1.3 2010-04-06 20:06:40 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_STREAMERS_H 
 #define LOKI_STREAMERS_H 1

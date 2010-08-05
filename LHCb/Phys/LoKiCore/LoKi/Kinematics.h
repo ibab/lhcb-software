@@ -1,4 +1,4 @@
-// $Id: Kinematics.h,v 1.21 2010-06-02 15:40:31 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_KINEMATICS_H 
 #define LOKI_KINEMATICS_H 1

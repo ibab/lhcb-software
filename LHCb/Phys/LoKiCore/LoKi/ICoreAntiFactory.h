@@ -1,4 +1,4 @@
-// $Id: ICoreAntiFactory.h,v 1.1 2008-10-19 16:11:40 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_ICOREANTIFACTORY_H 
 #define LOKI_ICOREANTIFACTORY_H 1

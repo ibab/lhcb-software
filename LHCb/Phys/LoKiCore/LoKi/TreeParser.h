@@ -1,4 +1,4 @@
-// $Id: TreeParser.h,v 1.1 2009-05-22 18:12:36 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef DECAYS_TREEPARSER_H 
 #define DECAYS_TREEPARSER_H 1

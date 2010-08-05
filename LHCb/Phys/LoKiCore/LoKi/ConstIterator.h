@@ -1,4 +1,4 @@
-// $Id: ConstIterator.h,v 1.5 2007-07-23 17:07:37 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_CONSTITERATOR_H 
 #define LOKI_CONSTITERATOR_H 1

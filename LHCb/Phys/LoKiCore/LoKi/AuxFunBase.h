@@ -1,4 +1,4 @@
-// $Id: AuxFunBase.h,v 1.12 2008-12-04 14:37:30 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_AUXFUNBASE_H 
 #define LOKI_AUXFUNBASE_H 1

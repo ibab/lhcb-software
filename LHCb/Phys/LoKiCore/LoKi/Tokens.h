@@ -1,4 +1,4 @@
-// $Id: Tokens.h,v 1.5 2007-07-23 17:07:40 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_TOKENS_H 
 #define LOKI_TOKENS_H 1

@@ -1,6 +1,6 @@
-// $Id: TreeGrammarTest.cpp,v 1.3 2009-09-01 09:02:43 ibelyaev Exp $
+// $Id$
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision$
 // ============================================================================
 // Include files 
 // ============================================================================

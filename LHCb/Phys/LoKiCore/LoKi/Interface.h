@@ -1,4 +1,4 @@
-// $Id: Interface.h,v 1.12 2008-12-04 14:37:31 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_INTERFACE_H 
 #define LOKI_INTERFACE_H 1

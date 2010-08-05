@@ -1,4 +1,4 @@
-// $Id: select.h,v 1.6 2007-07-23 17:07:41 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_SELECT_H 
 #define LOKI_SELECT_H 1

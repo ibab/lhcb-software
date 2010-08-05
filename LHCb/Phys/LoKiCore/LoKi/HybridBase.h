@@ -1,4 +1,4 @@
-// $Id: HybridBase.h,v 1.3 2009-04-17 14:48:56 cattanem Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKIHYBRID_HYBRIDBASE_H 
 #define LOKIHYBRID_HYBRIDBASE_H 1

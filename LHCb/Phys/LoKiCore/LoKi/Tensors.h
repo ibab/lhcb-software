@@ -1,4 +1,4 @@
-// $Id: Tensors.h,v 1.6 2009-05-09 19:15:53 ibelyaev Exp $
+// $Id$
 // ===============================================================
 #ifndef LOKI_TENSORS_H 
 #define LOKI_TENSORS_H 1

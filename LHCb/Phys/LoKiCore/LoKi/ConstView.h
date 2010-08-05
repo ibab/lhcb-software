@@ -1,4 +1,4 @@
-// $Id: ConstView.h,v 1.5 2007-07-23 17:07:37 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_CONSTVIEW_H 
 #define LOKI_CONSTVIEW_H 1

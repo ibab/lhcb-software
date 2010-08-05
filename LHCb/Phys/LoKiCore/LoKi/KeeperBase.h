@@ -1,4 +1,4 @@
-// $Id: KeeperBase.h,v 1.3 2007-08-13 09:59:02 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_KEEPERBASE_H 
 #define LOKI_KEEPERBASE_H 1

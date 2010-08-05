@@ -1,4 +1,4 @@
-// $Id: Record.h,v 1.5 2007-07-23 17:07:40 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_RECORD_H 
 #define LOKI_RECORD_H 1

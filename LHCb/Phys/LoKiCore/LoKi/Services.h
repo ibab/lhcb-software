@@ -1,4 +1,4 @@
-// $Id: Services.h,v 1.10 2009-03-22 17:55:23 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_SERVICES_H 
 #define LOKI_SERVICES_H 1
